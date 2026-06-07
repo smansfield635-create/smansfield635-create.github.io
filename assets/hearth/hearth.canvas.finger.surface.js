@@ -1,19 +1,23 @@
 // /assets/hearth/hearth.canvas.finger.surface.js
 // HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_TNT_v5
 // Internal controlled renewal:
-// HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_TNT_v5_1
+// HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_TNT_v5_2
 // Full-file replacement.
+//
 // Canvas Finger 3 / Surface / Pointer Finger / Surface Pointer Bishop / Hex Expression Socket only.
+//
 // Purpose:
 // - Preserve the public v5 Surface Pointer Bishop contract.
-// - Simplify Surface into the Hex-facing Surface Expression Socket.
-// - Accept Hex Surface transmission packets through the public Pointer Finger Surface alias front.
-// - Provide renderable Surface expression samples to Hex Surface.
-// - Keep Hex Surface responsible for projection and Canvas draw execution.
-// - Keep Inspect responsible for downstream finger-stretch inspection/management.
+// - Preserve the v5_1 simplified Hex socket bridge.
+// - Repair the map-math alignment gap by binding Surface expression sampling to the
+//   canonical Hex Four-Pair Authority tuple whenever that authority is available.
+// - Establish the lawful math path:
+//     input coord -> Hex Authority sample/read/getCell -> canonical tuple -> Surface expression.
+// - Keep local coordinate fallback available only as explicit receipt-visible fallback.
 // - Preserve legacy Surface/Finger/Bishop aliases required by Canvas, Hex Surface, and diagnostics.
-// - Do not manage Boundary, Mass, Light, Inspect, Composite, route conductor, diagnostic rail, or Canvas lifecycle.
-// - Do not draw Canvas, mount DOM, boot Canvas, or claim visual pass.
+// - Do not manage Boundary, Mass, Light, Inspect, Composite, route conductor, diagnostic rail,
+//   or Canvas lifecycle.
+// - Do not draw Canvas, mount DOM, boot Canvas Hub, mutate Hex Authority, or claim visual pass.
 // - Do not claim terrain truth, hydrology truth, material truth, elevation truth, composite truth,
 //   F13, F21, ready text, completion latch, generated image, GraphicBox, or WebGL.
 
@@ -23,13 +27,21 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const CONTRACT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_TNT_v5";
-  const RECEIPT = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT_v5";
-  const PACKET = "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_PACKET_v5";
+  const CONTRACT =
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_TNT_v5";
+  const RECEIPT =
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT_v5";
+  const PACKET =
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_PACKET_v5";
 
   const INTERNAL_IMPLEMENTATION_CONTRACT =
-    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_TNT_v5_1";
+    "HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_TNT_v5_2";
   const INTERNAL_IMPLEMENTATION_RECEIPT =
+    "HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_RECEIPT_v5_2";
+
+  const PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT =
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_TNT_v5_1";
+  const PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT =
     "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_RECEIPT_v5_1";
 
   const PREVIOUS_CONTRACT =
@@ -47,7 +59,7 @@
     "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1";
 
   const VERSION =
-    "2026-06-06.hearth-canvas-finger-surface-pointer-bishop-simplified-hex-socket-bridge-v5-1";
+    "2026-06-07.hearth-canvas-finger-surface-hex-authority-tuple-binding-v5-2";
 
   const FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const ROUTE = "/showroom/globe/hearth/";
@@ -63,6 +75,9 @@
   const INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
   const COMPOSITE_FILE = "/assets/hearth/hearth.canvas.finger.composite.js";
 
+  const EXPECTED_HEX_AUTHORITY_CONTRACT =
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+
   const FINGER_NAME = "surface";
   const FINGER_ROLE = "pointer-finger-surface-expression-socket";
   const FINGER_ORDER = 3;
@@ -77,10 +92,12 @@
   const BISHOP_CARDINAL_DISPOSITION = "NON_CARDINAL_POINTER";
 
   const TRANSMISSION_PACKET =
-    "HEARTH_SURFACE_POINTER_BISHOP_HEX_TRANSMISSION_ACK_PACKET_v5_1";
+    "HEARTH_SURFACE_POINTER_BISHOP_HEX_TRANSMISSION_ACK_PACKET_v5_2";
 
   const EXPRESSION_PACKET =
-    "HEARTH_SURFACE_POINTER_BISHOP_RENDERABLE_EXPRESSION_PACKET_v5_1";
+    "HEARTH_SURFACE_POINTER_BISHOP_RENDERABLE_EXPRESSION_PACKET_v5_2";
+
+  const DEG = Math.PI / 180;
 
   const FINAL_FALSE = Object.freeze({
     f13Claimed: false,
@@ -113,6 +130,21 @@
     webGL: false,
     webgl: false
   });
+
+  const HEX_AUTHORITY_ALIAS_PATHS = Object.freeze([
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+    "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH_HEX_HANDSHAKE_AUTHORITY",
+    "HEARTH_HEXGRID_AUTHORITY",
+    "HEARTH.hexFourPairAuthority",
+    "HEARTH.hexAuthority",
+    "HEARTH.hexPixelHandshakeAuthority",
+    "HEARTH.hexFourPairPixelHandshakeAuthority",
+    "DEXTER_LAB.hearthHexFourPairAuthority",
+    "DEXTER_LAB.hearthHexAuthority",
+    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority"
+  ]);
 
   const SURFACE_ALIAS_PATHS = Object.freeze([
     "HEARTH_CANVAS_FINGER_SURFACE",
@@ -206,6 +238,8 @@
     packet: PACKET,
     internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
     internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+    previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     lineageV4Contract: LINEAGE_V4_CONTRACT,
@@ -251,6 +285,29 @@
     hexTransmissionReceiverActive: true,
     renderableSurfaceExpressionProviderActive: true,
 
+    hexAuthorityTupleBindingActive: true,
+    hexAuthorityObserved: false,
+    hexAuthoritySource: "NONE",
+    hexAuthorityContract: "UNKNOWN",
+    hexAuthorityReceipt: "UNKNOWN",
+    hexAuthorityRecognized: false,
+    hexAuthoritySampleMethodUsed: "NONE",
+    canonicalTupleResolved: false,
+    canonicalTupleSource: "NONE",
+    canonicalTupleCellId: "NONE",
+    canonicalTupleStateId: "UNKNOWN",
+    canonicalTupleRow: "UNKNOWN",
+    canonicalTupleColumn: "UNKNOWN",
+    localCoordFallbackUsed: false,
+    localCoordFallbackReason: "NONE",
+    surfaceExpressionCoordSource: "NONE",
+    mapAlignmentStatus: "WAITING_SAMPLE",
+    mapAlignmentDetail: "WAITING_HEX_SURFACE_TRANSMISSION_OR_SAMPLE_REQUEST",
+    inputCellClaimStatus: "NO_INPUT_CELL_CLAIM",
+    lastInputCellId: "NONE",
+    lastResolvedCellId: "NONE",
+    lastTupleBindingAt: "",
+
     inspectOwnsFingerStretchManagement: true,
     surfaceOwnsFingerStretchManagement: false,
     surfaceOwnsOtherFingerInspection: false,
@@ -280,6 +337,10 @@
     expressionRequestCount: 0,
     expressionServedCount: 0,
     expressionRejectedCount: 0,
+    hexAuthorityTupleRequestCount: 0,
+    hexAuthorityTupleResolvedCount: 0,
+    localCoordFallbackCount: 0,
+    inputCellVarianceCount: 0,
     aliasPublishCount: 0,
     receiptPublishCount: 0,
 
@@ -297,19 +358,22 @@
     firstFailedCoordinate: "WAITING_HEX_SURFACE_TRANSMISSION_OR_SAMPLE_REQUEST",
     recommendedNextFile: HEX_SURFACE_FILE,
     recommendedNextRenewalTarget: HEX_SURFACE_FILE,
-    postgameStatus: "SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_READY",
+    postgameStatus: "SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_READY",
 
     lastTransmissionPacket: null,
     lastTransmissionAckPacket: null,
     lastRejectedPacket: null,
     lastRejectionReason: "",
     lastSurfaceExpression: null,
+    lastCanonicalTuple: null,
+    lastTupleBinding: null,
     surfacePacket: null,
     pointerFingerPacket: null,
     pointerBishopPacket: null,
 
     expressionLedger: [],
     transmissionLedger: [],
+    tupleBindingLedger: [],
     localEvents: [],
     errors: [],
 
@@ -339,7 +403,11 @@
 
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
-    return String(value);
+    try {
+      return String(value);
+    } catch (_error) {
+      return fallback;
+    }
   }
 
   function safeNumber(value, fallback = 0) {
@@ -347,11 +415,39 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function finiteNumber(value) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
   function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
     if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
     if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
     return fallback;
+  }
+
+  function firstDefined(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && value !== "") return value;
+    }
+    return undefined;
+  }
+
+  function firstText(...values) {
+    for (const value of values) {
+      const text = safeString(value).trim();
+      if (text && text !== "UNKNOWN" && text !== "NONE" && text !== "NOT_FOUND") return text;
+    }
+    return "";
+  }
+
+  function firstFinite(...values) {
+    for (const value of values) {
+      const n = finiteNumber(value);
+      if (n !== null) return n;
+    }
+    return null;
   }
 
   function clamp(value, min, max) {
@@ -471,7 +567,7 @@
     };
 
     state.localEvents.push(item);
-    trimArray(state.localEvents, 120);
+    trimArray(state.localEvents, 160);
     state.updatedAt = item.at;
     return item;
   }
@@ -485,7 +581,7 @@
     };
 
     state.errors.push(item);
-    trimArray(state.errors, 80);
+    trimArray(state.errors, 100);
     state.updatedAt = item.at;
     return item;
   }
@@ -500,6 +596,7 @@
     let cursor = root;
 
     for (const part of parts) {
+      if (!part) continue;
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
@@ -515,6 +612,7 @@
 
     for (let index = 0; index < parts.length - 1; index += 1) {
       const part = parts[index];
+      if (!part) continue;
       if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
       cursor = cursor[part];
     }
@@ -523,9 +621,151 @@
     return true;
   }
 
+  function firstGlobal(names) {
+    for (const name of names || []) {
+      const value = readPath(name);
+      if (value && (isObject(value) || isFunction(value))) return { name, value };
+    }
+
+    return { name: "NONE", value: null };
+  }
+
   function setDataset(key, value) {
     if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function readField(source, keys, fallback = "") {
+    const s = isObject(source) || isFunction(source) ? source : {};
+
+    for (const key of keys) {
+      if (s[key] !== undefined && s[key] !== null && s[key] !== "") return s[key];
+
+      const lower = key.toLowerCase();
+      try {
+        for (const candidate of Object.keys(s)) {
+          if (candidate.toLowerCase() === lower) {
+            const value = s[candidate];
+            if (value !== undefined && value !== null && value !== "") return value;
+          }
+        }
+      } catch (_error) {}
+    }
+
+    return fallback;
+  }
+
+  function readAuthorityReceipt(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority)) || authority === api) return null;
+
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getStatus",
+      "getReport",
+      "getState"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+
+      try {
+        const result = authority[method]();
+        if (isObject(result)) return result;
+      } catch (_error) {}
+    }
+
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.state)) return authority.state;
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) {
+      return authority;
+    }
+
+    return null;
+  }
+
+  function contractOf(value) {
+    return firstText(
+      readField(value, [
+        "hexAuthorityContract",
+        "hexContract",
+        "contract",
+        "CONTRACT",
+        "sourceContract",
+        "currentContract"
+      ], ""),
+      value && value.contract,
+      value && value.CONTRACT
+    );
+  }
+
+  function receiptOf(value) {
+    return firstText(
+      readField(value, [
+        "hexAuthorityReceipt",
+        "hexReceipt",
+        "receipt",
+        "RECEIPT",
+        "sourceReceipt",
+        "currentReceipt"
+      ], ""),
+      value && value.receipt,
+      value && value.RECEIPT
+    );
+  }
+
+  function hexAuthorityContractRecognized(contract) {
+    const text = safeString(contract);
+    return (
+      text === EXPECTED_HEX_AUTHORITY_CONTRACT ||
+      text.includes("HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY")
+    );
+  }
+
+  function readHexAuthority() {
+    const found = firstGlobal(HEX_AUTHORITY_ALIAS_PATHS);
+    const receipt = readAuthorityReceipt(found.value) || {};
+    const ds = doc && doc.documentElement && doc.documentElement.dataset
+      ? doc.documentElement.dataset
+      : {};
+
+    const contract = firstText(
+      contractOf(receipt),
+      found.value && found.value.contract,
+      found.value && found.value.CONTRACT,
+      ds.hearthHexAuthorityContract,
+      ds.hearthHexFourPairAuthorityContract,
+      ds.hearthHexFourPairPixelHandshakeAuthorityContract
+    );
+
+    const receiptName = firstText(
+      receiptOf(receipt),
+      found.value && found.value.receipt,
+      found.value && found.value.RECEIPT,
+      ds.hearthHexAuthorityReceipt,
+      ds.hearthHexFourPairAuthorityReceipt,
+      ds.hearthHexFourPairPixelHandshakeAuthorityReceipt
+    );
+
+    const observed = Boolean(found.value);
+    const recognized = hexAuthorityContractRecognized(contract);
+
+    state.hexAuthorityObserved = observed;
+    state.hexAuthoritySource = found.name;
+    state.hexAuthorityContract = contract || "UNKNOWN";
+    state.hexAuthorityReceipt = receiptName || "UNKNOWN";
+    state.hexAuthorityRecognized = recognized;
+
+    return {
+      observed,
+      name: found.name,
+      authority: found.value,
+      receipt,
+      contract: contract || "UNKNOWN",
+      receiptName: receiptName || "UNKNOWN",
+      recognized
+    };
   }
 
   function hasForbiddenClaim(packet) {
@@ -585,46 +825,171 @@
     );
   }
 
-  function normalizeCoord(input = {}) {
-    const packet = isObject(input) ? input : {};
-    const coord = isObject(packet.coord) ? packet.coord : packet;
+  function parseCellAddress(value) {
+    const text = safeString(value).trim();
+    if (!text) return null;
 
-    let u = coord.u;
-    let v = coord.v;
-    let lon = coord.lon !== undefined ? coord.lon : coord.longitude;
-    let lat = coord.lat !== undefined ? coord.lat : coord.latitude;
+    const match = text.match(/R(\d{1,3})_C(\d{1,3})/i);
+    if (!match) return null;
 
-    if ((u === undefined || v === undefined) && lon !== undefined && lat !== undefined) {
-      u = wrap01((safeNumber(lon, 0) + 180) / 360);
-      v = clamp01((90 - safeNumber(lat, 0)) / 180);
+    return {
+      row: safeNumber(match[1], 0),
+      column: safeNumber(match[2], 0),
+      cellId: text
+    };
+  }
+
+  function extractCellClaim(input = {}) {
+    const p = isObject(input) ? input : {};
+    const nested = [
+      p,
+      isObject(p.coord) ? p.coord : null,
+      isObject(p.hexPacket) ? p.hexPacket : null,
+      isObject(p.cell) ? p.cell : null,
+      isObject(p.sourceCell) ? p.sourceCell : null,
+      isObject(p.canonicalTuple) ? p.canonicalTuple : null,
+      isObject(p.originalPacket) ? p.originalPacket : null,
+      isObject(p.hexFramePacket) ? p.hexFramePacket : null,
+      isObject(p.hexFramePacket && p.hexFramePacket.originalPacket) ? p.hexFramePacket.originalPacket : null
+    ].filter(Boolean);
+
+    let cellId = "";
+    let hexId = "";
+    let row = null;
+    let column = null;
+    let stateId = null;
+
+    for (const item of nested) {
+      cellId = cellId || firstText(item.cellId, item.hexId, item.id);
+      hexId = hexId || firstText(item.hexId, item.cellId, item.id);
+      row = row === null ? firstFinite(item.row, item.hexRow, item.rIndex) : row;
+      column = column === null ? firstFinite(item.column, item.col, item.hexColumn, item.cIndex) : column;
+      stateId = stateId === null ? firstFinite(item.stateId, item.state, item.stateIndex) : stateId;
     }
 
-    if ((lon === undefined || lat === undefined) && u !== undefined && v !== undefined) {
+    const parsed = parseCellAddress(cellId || hexId);
+    if (parsed) {
+      row = row === null ? parsed.row : row;
+      column = column === null ? parsed.column : column;
+      cellId = cellId || parsed.cellId;
+      hexId = hexId || parsed.cellId;
+    }
+
+    return {
+      hasClaim: Boolean(cellId || hexId || row !== null || column !== null || stateId !== null),
+      cellId: cellId || "NONE",
+      hexId: hexId || cellId || "NONE",
+      row,
+      column,
+      stateId
+    };
+  }
+
+  function extractCoordinateCandidate(input = {}) {
+    const p = isObject(input) ? input : {};
+    const claim = extractCellClaim(p);
+
+    const candidates = [
+      p,
+      isObject(p.coord) ? p.coord : null,
+      isObject(p.coordinate) ? p.coordinate : null,
+      isObject(p.location) ? p.location : null,
+      isObject(p.hexPacket) ? p.hexPacket : null,
+      isObject(p.cell) ? p.cell : null,
+      isObject(p.sourceCell) ? p.sourceCell : null,
+      isObject(p.canonicalTuple) ? p.canonicalTuple : null,
+      isObject(p.originalPacket) ? p.originalPacket : null,
+      isObject(p.hexFramePacket) ? p.hexFramePacket : null,
+      isObject(p.hexFramePacket && p.hexFramePacket.originalPacket) ? p.hexFramePacket.originalPacket : null,
+      isObject(p.viewState) ? p.viewState : null,
+      isObject(p.projectionState) ? p.projectionState : null
+    ].filter(Boolean);
+
+    let u = null;
+    let v = null;
+    let lon = null;
+    let lat = null;
+    let x = null;
+    let y = null;
+    let z = null;
+
+    for (const item of candidates) {
+      u = u === null ? firstFinite(item.u, item.sourceU, item.normalizedX) : u;
+      v = v === null ? firstFinite(item.v, item.sourceV, item.normalizedY) : v;
+      lon = lon === null ? firstFinite(item.lon, item.longitude, item.sourceLon, item.lonDegrees) : lon;
+      lat = lat === null ? firstFinite(item.lat, item.latitude, item.sourceLat, item.latDegrees) : lat;
+      x = x === null ? firstFinite(item.x, item.sourceX) : x;
+      y = y === null ? firstFinite(item.y, item.sourceY) : y;
+      z = z === null ? firstFinite(item.z, item.sourceZ) : z;
+    }
+
+    if ((u === null || v === null) && lon !== null && lat !== null) {
+      u = wrap01((lon + 180) / 360);
+      v = clamp01((90 - lat) / 180);
+    }
+
+    if ((lon === null || lat === null) && u !== null && v !== null) {
       lon = wrapDeg(wrap01(u) * 360 - 180);
       lat = 90 - clamp01(v) * 180;
     }
 
-    if ((u === undefined || v === undefined) && coord.x !== undefined && coord.y !== undefined) {
-      u = clamp01(coord.x);
-      v = clamp01(coord.y);
+    const candidate = {
+      u,
+      v,
+      lon,
+      lat,
+      longitude: lon,
+      latitude: lat,
+      x,
+      y,
+      z,
+      row: claim.row,
+      column: claim.column,
+      cellId: claim.cellId !== "NONE" ? claim.cellId : undefined,
+      hexId: claim.hexId !== "NONE" ? claim.hexId : undefined,
+      stateId: claim.stateId,
+      inputCellClaim: claim
+    };
+
+    return candidate;
+  }
+
+  function localNormalizeCoord(input = {}) {
+    const candidate = extractCoordinateCandidate(input);
+    let u = candidate.u;
+    let v = candidate.v;
+    let lon = candidate.lon;
+    let lat = candidate.lat;
+
+    if ((u === null || v === null) && candidate.x !== null && candidate.y !== null) {
+      u = clamp01(candidate.x);
+      v = clamp01(candidate.y);
       lon = wrapDeg(u * 360 - 180);
       lat = 90 - v * 180;
     }
 
-    if ((u === undefined || v === undefined) && (packet.stateId !== undefined || packet.hexId || packet.cellId)) {
-      const seedText = safeString(packet.hexId || packet.cellId || packet.stateId || "0");
+    if ((u === null || v === null) && candidate.inputCellClaim.hasClaim) {
+      const seedText = safeString(
+        candidate.inputCellClaim.cellId !== "NONE"
+          ? candidate.inputCellClaim.cellId
+          : candidate.inputCellClaim.stateId !== null
+            ? candidate.inputCellClaim.stateId
+            : "0"
+      );
+
       let seed = 0;
       for (let i = 0; i < seedText.length; i += 1) seed += seedText.charCodeAt(i) * (i + 1);
+
       u = wrap01((seed * 0.61803398875) % 1);
-      v = clamp01(((seed * 0.41421356237) % 1));
+      v = clamp01((seed * 0.41421356237) % 1);
       lon = wrapDeg(u * 360 - 180);
       lat = 90 - v * 180;
     }
 
-    u = wrap01(u === undefined ? 0.5 : u);
-    v = clamp01(v === undefined ? 0.5 : v);
-    lon = wrapDeg(lon === undefined ? u * 360 - 180 : lon);
-    lat = clamp(lat === undefined ? 90 - v * 180 : lat, -90, 90);
+    u = wrap01(u === null ? 0.5 : u);
+    v = clamp01(v === null ? 0.5 : v);
+    lon = wrapDeg(lon === null ? u * 360 - 180 : lon);
+    lat = clamp(lat === null ? 90 - v * 180 : lat, -90, 90);
 
     return {
       u,
@@ -633,10 +998,470 @@
       lat,
       lonDegrees: lon,
       latDegrees: lat,
+      x: candidate.x,
+      y: candidate.y,
+      z: candidate.z
+    };
+  }
+
+  function tupleFromHexResult(result, methodName, authorityInfo, request = {}) {
+    if (!isObject(result)) return null;
+    if (result.ok === false || result.rejected === true) return null;
+
+    const resultCoord = isObject(result.coord) ? result.coord : {};
+    const sourceCoord = isObject(result.sourceCoord) ? result.sourceCoord : {};
+    const inputClaim = extractCellClaim(request);
+
+    let u = firstFinite(result.u, result.sourceU, resultCoord.u, sourceCoord.u);
+    let v = firstFinite(result.v, result.sourceV, resultCoord.v, sourceCoord.v);
+    let lon = firstFinite(result.lon, result.sourceLon, result.longitude, resultCoord.lon, sourceCoord.lon);
+    let lat = firstFinite(result.lat, result.sourceLat, result.latitude, resultCoord.lat, sourceCoord.lat);
+
+    if ((u === null || v === null) && lon !== null && lat !== null) {
+      u = wrap01((lon + 180) / 360);
+      v = clamp01((90 - lat) / 180);
+    }
+
+    if ((lon === null || lat === null) && u !== null && v !== null) {
+      lon = wrapDeg(wrap01(u) * 360 - 180);
+      lat = 90 - clamp01(v) * 180;
+    }
+
+    const cellId = firstText(result.cellId, result.hexId, result.id, result.centerCellId);
+    const hexId = firstText(result.hexId, result.cellId, result.id, result.centerCellId);
+    let row = firstFinite(result.row, result.hexRow);
+    let column = firstFinite(result.column, result.col, result.hexColumn);
+    const stateId = firstFinite(result.stateId, result.centerStateId, result.state);
+    const q = firstFinite(result.q);
+    const r = firstFinite(result.r);
+    const s = firstFinite(result.s);
+    const parsed = parseCellAddress(cellId || hexId);
+
+    if (parsed) {
+      row = row === null ? parsed.row : row;
+      column = column === null ? parsed.column : column;
+    }
+
+    const resolved = Boolean(
+      u !== null &&
+      v !== null &&
+      lon !== null &&
+      lat !== null &&
+      (cellId || hexId || (row !== null && column !== null))
+    );
+
+    if (!resolved) return null;
+
+    return {
+      tupleSource: "HEX_AUTHORITY",
+      tupleMethod: methodName,
+      authoritySource: authorityInfo.name,
+      authorityContract: authorityInfo.contract,
+      authorityReceipt: authorityInfo.receiptName,
+      authorityRecognized: authorityInfo.recognized,
+      contract: firstText(result.contract, result.CONTRACT, authorityInfo.contract),
+      receipt: firstText(result.receipt, result.RECEIPT, authorityInfo.receiptName),
+      cellId: cellId || (parsed ? parsed.cellId : "UNKNOWN"),
+      hexId: hexId || cellId || (parsed ? parsed.cellId : "UNKNOWN"),
+      row: row === null ? "UNKNOWN" : row,
+      column: column === null ? "UNKNOWN" : column,
+      q: q === null ? "UNKNOWN" : q,
+      r: r === null ? "UNKNOWN" : r,
+      s: s === null ? "UNKNOWN" : s,
+      stateId: stateId === null ? "UNKNOWN" : stateId,
+      stateClass: firstText(result.stateClass),
+      parity: firstText(result.parity),
+      edgeRole: firstText(result.edgeRole),
+      gridColumns: firstFinite(result.gridColumns),
+      gridRows: firstFinite(result.gridRows),
+      gridMode: firstText(result.gridMode),
+      u: wrap01(u),
+      v: clamp01(v),
+      lon: wrapDeg(lon),
+      lat: clamp(lat, -90, 90),
+      lonDegrees: wrapDeg(lon),
+      latDegrees: clamp(lat, -90, 90),
+      x: firstFinite(result.x, result.sourceX),
+      y: firstFinite(result.y, result.sourceY),
+      z: firstFinite(result.z, result.sourceZ),
+      fourPairObserved: Boolean(result.fourPair || result.fourPairSet),
+      fourPairSet: clonePlain(result.fourPair || result.fourPairSet || null),
+      north: clonePlain(result.north || (result.fourPair && result.fourPair.north) || null),
+      south: clonePlain(result.south || (result.fourPair && result.fourPair.south) || null),
+      east: clonePlain(result.east || (result.fourPair && result.fourPair.east) || null),
+      west: clonePlain(result.west || (result.fourPair && result.fourPair.west) || null),
+      inputCellClaim: clonePlain(inputClaim),
+      rawHexResult: clonePlain(result)
+    };
+  }
+
+  function buildHexAuthorityCallInputs(input = {}) {
+    const candidate = extractCoordinateCandidate(input);
+    const claim = candidate.inputCellClaim || extractCellClaim(input);
+    const out = [];
+
+    const base = {};
+
+    if (candidate.u !== null && candidate.v !== null) {
+      base.u = wrap01(candidate.u);
+      base.v = clamp01(candidate.v);
+    }
+
+    if (candidate.lon !== null && candidate.lat !== null) {
+      base.lon = wrapDeg(candidate.lon);
+      base.lat = clamp(candidate.lat, -90, 90);
+      base.longitude = base.lon;
+      base.latitude = base.lat;
+    }
+
+    if (candidate.x !== null && candidate.y !== null && candidate.z !== null) {
+      base.x = candidate.x;
+      base.y = candidate.y;
+      base.z = candidate.z;
+    }
+
+    if (claim.row !== null && claim.column !== null) {
+      out.push({
+        mode: "cell",
+        row: claim.row,
+        column: claim.column,
+        cellId: claim.cellId !== "NONE" ? claim.cellId : undefined,
+        hexId: claim.hexId !== "NONE" ? claim.hexId : undefined
+      });
+
+      out.push({
+        row: claim.row,
+        column: claim.column,
+        cellId: claim.cellId !== "NONE" ? claim.cellId : undefined,
+        hexId: claim.hexId !== "NONE" ? claim.hexId : undefined
+      });
+    }
+
+    if (Object.keys(base).length) {
+      out.push(base);
+      out.push({ mode: "four-pair", ...base });
+    }
+
+    if (claim.cellId !== "NONE" || claim.hexId !== "NONE" || claim.stateId !== null) {
+      out.push({
+        cellId: claim.cellId !== "NONE" ? claim.cellId : undefined,
+        hexId: claim.hexId !== "NONE" ? claim.hexId : undefined,
+        stateId: claim.stateId
+      });
+    }
+
+    out.push({ u: 0.5, v: 0.5, fallbackProbe: true });
+
+    return out;
+  }
+
+  function callHexAuthorityMethod(authority, methodName, callInput) {
+    if (!authority || !isFunction(authority[methodName])) return null;
+
+    try {
+      if (methodName === "getCell" || methodName === "getNeighbors" || methodName === "getFourPairSet") {
+        return authority[methodName](callInput);
+      }
+
+      if (methodName === "read" && callInput && callInput.mode) {
+        return authority[methodName](callInput);
+      }
+
+      return authority[methodName](callInput);
+    } catch (error) {
+      recordError("SURFACE_POINTER_BISHOP_HEX_AUTHORITY_CALL_FAILED", error, {
+        methodName,
+        callInput
+      });
+      return null;
+    }
+  }
+
+  function resolveFromHexAuthority(input = {}) {
+    state.hexAuthorityTupleRequestCount += 1;
+
+    const authorityInfo = readHexAuthority();
+
+    if (!authorityInfo.observed || !authorityInfo.authority) {
+      return {
+        resolved: false,
+        reason: "HEX_AUTHORITY_UNAVAILABLE",
+        authorityInfo,
+        tuple: null,
+        method: "NONE"
+      };
+    }
+
+    if (!authorityInfo.recognized) {
+      return {
+        resolved: false,
+        reason: "HEX_AUTHORITY_CONTRACT_NOT_RECOGNIZED",
+        authorityInfo,
+        tuple: null,
+        method: "NONE"
+      };
+    }
+
+    const callInputs = buildHexAuthorityCallInputs(input);
+    const methods = ["sample", "read", "getCell"];
+
+    for (const callInput of callInputs) {
+      for (const method of methods) {
+        const result = callHexAuthorityMethod(authorityInfo.authority, method, callInput);
+        const tuple = tupleFromHexResult(result, method, authorityInfo, input);
+
+        if (tuple) {
+          state.hexAuthorityTupleResolvedCount += 1;
+
+          return {
+            resolved: true,
+            reason: "HEX_AUTHORITY_CANONICAL_TUPLE_RESOLVED",
+            authorityInfo,
+            tuple,
+            method
+          };
+        }
+      }
+    }
+
+    return {
+      resolved: false,
+      reason: "HEX_AUTHORITY_RETURNED_NO_USABLE_TUPLE",
+      authorityInfo,
+      tuple: null,
+      method: "NONE"
+    };
+  }
+
+  function localFallbackTuple(input = {}, reason = "LOCAL_FALLBACK_REQUIRED") {
+    const coord = localNormalizeCoord(input);
+    const claim = extractCellClaim(input);
+
+    return {
+      tupleSource: "LOCAL_FALLBACK",
+      tupleMethod: "LOCAL_NORMALIZE_COORD",
+      authoritySource: "NONE",
+      authorityContract: "UNKNOWN",
+      authorityReceipt: "UNKNOWN",
+      authorityRecognized: false,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      cellId: claim.cellId !== "NONE" ? claim.cellId : "LOCAL_FALLBACK_CELL_UNKNOWN",
+      hexId: claim.hexId !== "NONE" ? claim.hexId : claim.cellId !== "NONE" ? claim.cellId : "LOCAL_FALLBACK_HEX_UNKNOWN",
+      row: claim.row === null ? "UNKNOWN" : claim.row,
+      column: claim.column === null ? "UNKNOWN" : claim.column,
+      q: "UNKNOWN",
+      r: "UNKNOWN",
+      s: "UNKNOWN",
+      stateId: claim.stateId === null ? "UNKNOWN" : claim.stateId,
+      stateClass: claim.stateId === null ? "UNKNOWN" : `state-${String(claim.stateId).padStart(3, "0")}`,
+      parity: "UNKNOWN",
+      edgeRole: "LOCAL_FALLBACK",
+      gridColumns: "UNKNOWN",
+      gridRows: "UNKNOWN",
+      gridMode: "LOCAL_FALLBACK_NOT_CANONICAL_HEX_GRID",
+      u: coord.u,
+      v: coord.v,
+      lon: coord.lon,
+      lat: coord.lat,
+      lonDegrees: coord.lon,
+      latDegrees: coord.lat,
       x: coord.x,
       y: coord.y,
-      z: coord.z
+      z: coord.z,
+      fourPairObserved: false,
+      fourPairSet: null,
+      north: null,
+      south: null,
+      east: null,
+      west: null,
+      inputCellClaim: clonePlain(claim),
+      localFallbackReason: reason,
+      rawHexResult: null
     };
+  }
+
+  function compareInputClaimToTuple(claim, tuple) {
+    if (!claim || !claim.hasClaim || !tuple) {
+      return {
+        status: "NO_INPUT_CELL_CLAIM",
+        detail: "NO_CELL_ROW_COLUMN_OR_STATE_CLAIM_SUPPLIED",
+        matched: "UNKNOWN"
+      };
+    }
+
+    const issues = [];
+
+    if (claim.cellId !== "NONE" && tuple.cellId !== "UNKNOWN" && claim.cellId !== tuple.cellId) {
+      issues.push(`CELL_ID:${claim.cellId}>${tuple.cellId}`);
+    }
+
+    if (claim.row !== null && tuple.row !== "UNKNOWN" && Number(claim.row) !== Number(tuple.row)) {
+      issues.push(`ROW:${claim.row}>${tuple.row}`);
+    }
+
+    if (claim.column !== null && tuple.column !== "UNKNOWN" && Number(claim.column) !== Number(tuple.column)) {
+      issues.push(`COLUMN:${claim.column}>${tuple.column}`);
+    }
+
+    if (claim.stateId !== null && tuple.stateId !== "UNKNOWN" && Number(claim.stateId) !== Number(tuple.stateId)) {
+      issues.push(`STATE:${claim.stateId}>${tuple.stateId}`);
+    }
+
+    if (issues.length) {
+      return {
+        status: "INPUT_CELL_VARIANCE_DETECTED",
+        detail: issues.join("|"),
+        matched: false
+      };
+    }
+
+    return {
+      status: "INPUT_CELL_CLAIM_MATCHED_CANONICAL_TUPLE",
+      detail: "INPUT_CELL_CLAIM_ALIGNED_WITH_HEX_AUTHORITY_TUPLE",
+      matched: true
+    };
+  }
+
+  function resolveCanonicalTuple(input = {}, options = {}) {
+    const hexResolution = resolveFromHexAuthority(input);
+    const claim = extractCellClaim(input);
+
+    let tuple = hexResolution.tuple;
+    let tupleSource = "HEX_AUTHORITY";
+    let localFallbackUsed = false;
+    let localFallbackReason = "NONE";
+    let mapAlignmentStatus = "BOUND_TO_HEX_AUTHORITY";
+    let mapAlignmentDetail = "CANONICAL_HEX_AUTHORITY_TUPLE_RESOLVED";
+
+    if (!hexResolution.resolved || !tuple) {
+      tuple = localFallbackTuple(input, hexResolution.reason);
+      tupleSource = "LOCAL_FALLBACK";
+      localFallbackUsed = true;
+      localFallbackReason = hexResolution.reason;
+      mapAlignmentStatus = hexResolution.authorityInfo && hexResolution.authorityInfo.observed
+        ? "FALLBACK_LOCAL_COORD_USED_AFTER_HEX_AUTHORITY_MISS"
+        : "HEX_AUTHORITY_UNAVAILABLE_LOCAL_COORD_FALLBACK_USED";
+      mapAlignmentDetail = hexResolution.reason;
+      state.localCoordFallbackCount += 1;
+    }
+
+    const claimComparison = compareInputClaimToTuple(claim, tuple);
+
+    if (claimComparison.status === "INPUT_CELL_VARIANCE_DETECTED") {
+      state.inputCellVarianceCount += 1;
+      mapAlignmentStatus = tupleSource === "HEX_AUTHORITY"
+        ? "BOUND_TO_HEX_AUTHORITY_WITH_INPUT_VARIANCE"
+        : "LOCAL_FALLBACK_WITH_INPUT_VARIANCE";
+      mapAlignmentDetail = claimComparison.detail;
+    }
+
+    const coord = {
+      u: wrap01(tuple.u),
+      v: clamp01(tuple.v),
+      lon: wrapDeg(tuple.lon),
+      lat: clamp(tuple.lat, -90, 90),
+      lonDegrees: wrapDeg(tuple.lon),
+      latDegrees: clamp(tuple.lat, -90, 90),
+      x: tuple.x,
+      y: tuple.y,
+      z: tuple.z
+    };
+
+    const binding = {
+      bindingPacketType: "HEARTH_SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_PACKET_v5_2",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
+
+      hexAuthorityTupleBindingActive: true,
+      hexAuthorityObserved: hexResolution.authorityInfo ? hexResolution.authorityInfo.observed : false,
+      hexAuthoritySource: hexResolution.authorityInfo ? hexResolution.authorityInfo.name : "NONE",
+      hexAuthorityContract: hexResolution.authorityInfo ? hexResolution.authorityInfo.contract : "UNKNOWN",
+      hexAuthorityReceipt: hexResolution.authorityInfo ? hexResolution.authorityInfo.receiptName : "UNKNOWN",
+      hexAuthorityRecognized: hexResolution.authorityInfo ? hexResolution.authorityInfo.recognized : false,
+      hexAuthoritySampleMethodUsed: hexResolution.method || "NONE",
+
+      canonicalTupleResolved: tupleSource === "HEX_AUTHORITY",
+      canonicalTupleSource: tupleSource,
+      canonicalTuple: clonePlain(tuple),
+      canonicalTupleCellId: tuple.cellId,
+      canonicalTupleHexId: tuple.hexId,
+      canonicalTupleStateId: tuple.stateId,
+      canonicalTupleRow: tuple.row,
+      canonicalTupleColumn: tuple.column,
+      canonicalTupleQ: tuple.q,
+      canonicalTupleR: tuple.r,
+      canonicalTupleS: tuple.s,
+      canonicalTupleFourPairObserved: Boolean(tuple.fourPairObserved),
+
+      coord,
+      surfaceExpressionCoordSource: tupleSource === "HEX_AUTHORITY"
+        ? "CANONICAL_HEX_TUPLE"
+        : "LOCAL_FALLBACK_COORD",
+
+      localCoordFallbackUsed,
+      localCoordFallbackReason,
+
+      inputCellClaim: clonePlain(claim),
+      inputCellClaimStatus: claimComparison.status,
+      inputCellClaimDetail: claimComparison.detail,
+      inputCellClaimMatched: claimComparison.matched,
+
+      mapAlignmentStatus,
+      mapAlignmentDetail,
+
+      productionMutationAuthorized: false,
+      canvasDrawingAuthorized: false,
+      canvasCreationAuthorized: false,
+      canvasRepairAuthorized: false,
+      routeRepairAuthorized: false,
+      controlMutationAuthorized: false,
+      hexAuthorityMutationAuthorized: false,
+      runtimeRestartAuthorized: false,
+
+      ...FINAL_FALSE,
+      resolvedAt: nowIso()
+    };
+
+    state.hexAuthoritySampleMethodUsed = binding.hexAuthoritySampleMethodUsed;
+    state.canonicalTupleResolved = binding.canonicalTupleResolved;
+    state.canonicalTupleSource = binding.canonicalTupleSource;
+    state.canonicalTupleCellId = binding.canonicalTupleCellId;
+    state.canonicalTupleStateId = binding.canonicalTupleStateId;
+    state.canonicalTupleRow = binding.canonicalTupleRow;
+    state.canonicalTupleColumn = binding.canonicalTupleColumn;
+    state.localCoordFallbackUsed = binding.localCoordFallbackUsed;
+    state.localCoordFallbackReason = binding.localCoordFallbackReason;
+    state.surfaceExpressionCoordSource = binding.surfaceExpressionCoordSource;
+    state.mapAlignmentStatus = binding.mapAlignmentStatus;
+    state.mapAlignmentDetail = binding.mapAlignmentDetail;
+    state.inputCellClaimStatus = binding.inputCellClaimStatus;
+    state.lastInputCellId = claim.cellId;
+    state.lastResolvedCellId = binding.canonicalTupleCellId;
+    state.lastTupleBindingAt = binding.resolvedAt;
+    state.lastCanonicalTuple = clonePlain(tuple);
+    state.lastTupleBinding = clonePlain(binding);
+
+    state.tupleBindingLedger.push({
+      at: binding.resolvedAt,
+      source: binding.canonicalTupleSource,
+      method: binding.hexAuthoritySampleMethodUsed,
+      cellId: binding.canonicalTupleCellId,
+      row: binding.canonicalTupleRow,
+      column: binding.canonicalTupleColumn,
+      stateId: binding.canonicalTupleStateId,
+      fallback: binding.localCoordFallbackUsed,
+      fallbackReason: binding.localCoordFallbackReason,
+      inputCellClaimStatus: binding.inputCellClaimStatus,
+      mapAlignmentStatus: binding.mapAlignmentStatus,
+      ...FINAL_FALSE
+    });
+    trimArray(state.tupleBindingLedger, 160);
+
+    return binding;
   }
 
   function bodyFieldAt(coord) {
@@ -650,10 +1475,10 @@
 
     for (let i = 0; i < BODY_MASS_HINTS.length; i += 1) {
       const mass = BODY_MASS_HINTS[i];
-      const dx = degDistance(coord.lon, mass.lon) * Math.cos(mass.lat * Math.PI / 180);
+      const dx = degDistance(coord.lon, mass.lon) * Math.cos(mass.lat * DEG);
       const dy = coord.lat - mass.lat;
-      const ca = Math.cos(mass.angle * Math.PI / 180);
-      const sa = Math.sin(mass.angle * Math.PI / 180);
+      const ca = Math.cos(mass.angle * DEG);
+      const sa = Math.sin(mass.angle * DEG);
       const x = dx * ca - dy * sa;
       const y = dx * sa + dy * ca;
       const nx = x / mass.rx;
@@ -754,22 +1579,30 @@
         rejectedReason: "FORBIDDEN_CLAIM_REJECTED_BY_SURFACE_POINTER_BISHOP",
         contract: CONTRACT,
         receipt: RECEIPT,
-        packet: EXPRESSION_PACKET,
+        packetType: EXPRESSION_PACKET,
         file: FILE,
         sourceFile: FILE,
         consumerFile: HEX_SURFACE_FILE,
         surfaceExpressionAuthority: true,
+        hexAuthorityTupleBindingActive: true,
+        canonicalTupleResolved: false,
+        canonicalTupleSource: "NONE",
+        mapAlignmentStatus: "REJECTED_FORBIDDEN_CLAIM",
         ...FINAL_FALSE
       };
     }
 
-    const coord = normalizeCoord(request);
+    const binding = resolveCanonicalTuple(request, options);
+    const coord = binding.coord;
+    const tuple = binding.canonicalTuple;
     const body = bodyFieldAt(coord);
+
+    const stateSeed = tuple && tuple.stateId !== "UNKNOWN" ? safeNumber(tuple.stateId, 0) : safeNumber(request.stateId, 0);
 
     const grain =
       fbm(
-        coord.u * 32 + safeNumber(request.stateId, 0) * 0.031,
-        coord.v * 24 - safeNumber(request.stateId, 0) * 0.027,
+        coord.u * 32 + stateSeed * 0.031,
+        coord.v * 24 - stateSeed * 0.027,
         2200,
         4
       );
@@ -803,6 +1636,8 @@
       packet: PACKET,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+      previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
       file: FILE,
       route: ROUTE,
 
@@ -833,14 +1668,46 @@
       canvasDrawingOwner: HEX_SURFACE_FILE,
       directCanvasDrawingSuppressed: true,
 
+      hexAuthorityTupleBindingActive: true,
+      hexAuthorityObserved: binding.hexAuthorityObserved,
+      hexAuthoritySource: binding.hexAuthoritySource,
+      hexAuthorityContract: binding.hexAuthorityContract,
+      hexAuthorityReceipt: binding.hexAuthorityReceipt,
+      hexAuthorityRecognized: binding.hexAuthorityRecognized,
+      hexAuthoritySampleMethodUsed: binding.hexAuthoritySampleMethodUsed,
+
+      canonicalTupleResolved: binding.canonicalTupleResolved,
+      canonicalTupleSource: binding.canonicalTupleSource,
+      canonicalTuple: clonePlain(binding.canonicalTuple),
+      canonicalTupleCellId: binding.canonicalTupleCellId,
+      canonicalTupleHexId: binding.canonicalTupleHexId,
+      canonicalTupleStateId: binding.canonicalTupleStateId,
+      canonicalTupleRow: binding.canonicalTupleRow,
+      canonicalTupleColumn: binding.canonicalTupleColumn,
+      canonicalTupleQ: binding.canonicalTupleQ,
+      canonicalTupleR: binding.canonicalTupleR,
+      canonicalTupleS: binding.canonicalTupleS,
+      canonicalTupleFourPairObserved: binding.canonicalTupleFourPairObserved,
+
+      localCoordFallbackUsed: binding.localCoordFallbackUsed,
+      localCoordFallbackReason: binding.localCoordFallbackReason,
+      surfaceExpressionCoordSource: binding.surfaceExpressionCoordSource,
+      mapAlignmentStatus: binding.mapAlignmentStatus,
+      mapAlignmentDetail: binding.mapAlignmentDetail,
+      inputCellClaimStatus: binding.inputCellClaimStatus,
+      inputCellClaimDetail: binding.inputCellClaimDetail,
+      inputCellClaimMatched: binding.inputCellClaimMatched,
+
       coord,
       hexPacket: {
-        cellId: safeString(request.cellId || request.hexId || request.id || "UNKNOWN"),
-        hexId: safeString(request.hexId || request.cellId || request.id || "UNKNOWN"),
-        stateId: safeNumber(request.stateId, 0),
-        q: safeNumber(request.q, 0),
-        r: safeNumber(request.r, 0),
-        s: safeNumber(request.s, 0)
+        cellId: binding.canonicalTupleCellId,
+        hexId: binding.canonicalTupleHexId,
+        stateId: binding.canonicalTupleStateId,
+        row: binding.canonicalTupleRow,
+        column: binding.canonicalTupleColumn,
+        q: binding.canonicalTupleQ,
+        r: binding.canonicalTupleR,
+        s: binding.canonicalTupleS
       },
 
       isLand,
@@ -895,16 +1762,35 @@
     state.latestExpressionLandPresence = landPresence;
     state.latestExpressionWaterPresence = waterPresence;
     state.lastSurfaceExpression = clonePlain(expression);
-    state.firstFailedCoordinate = "NONE_SURFACE_EXPRESSION_SAMPLE_AVAILABLE";
-    state.recommendedNextFile = HEX_SURFACE_FILE;
-    state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
-    state.postgameStatus = "SURFACE_POINTER_BISHOP_EXPRESSION_SAMPLE_SERVED_TO_HEX_SURFACE";
+
+    state.firstFailedCoordinate = binding.localCoordFallbackUsed
+      ? "HEX_AUTHORITY_TUPLE_FALLBACK_USED"
+      : binding.inputCellClaimStatus === "INPUT_CELL_VARIANCE_DETECTED"
+        ? "INPUT_CELL_VARIANCE_DETECTED"
+        : "NONE_SURFACE_EXPRESSION_BOUND_TO_HEX_AUTHORITY_TUPLE";
+
+    state.recommendedNextFile = binding.localCoordFallbackUsed || binding.inputCellClaimStatus === "INPUT_CELL_VARIANCE_DETECTED"
+      ? HEX_AUTHORITY_FILE
+      : HEX_SURFACE_FILE;
+
+    state.recommendedNextRenewalTarget = state.recommendedNextFile;
+
+    state.postgameStatus = binding.localCoordFallbackUsed
+      ? "SURFACE_POINTER_BISHOP_EXPRESSION_SERVED_WITH_LOCAL_FALLBACK"
+      : binding.inputCellClaimStatus === "INPUT_CELL_VARIANCE_DETECTED"
+        ? "SURFACE_POINTER_BISHOP_EXPRESSION_SERVED_WITH_INPUT_CELL_VARIANCE"
+        : "SURFACE_POINTER_BISHOP_EXPRESSION_SERVED_BOUND_TO_HEX_AUTHORITY_TUPLE";
 
     state.expressionLedger.push({
       at: expression.sampledAt,
       cellId: expression.hexPacket.cellId,
       hexId: expression.hexPacket.hexId,
       stateId: expression.hexPacket.stateId,
+      row: expression.hexPacket.row,
+      column: expression.hexPacket.column,
+      q: expression.hexPacket.q,
+      r: expression.hexPacket.r,
+      s: expression.hexPacket.s,
       u: coord.u,
       v: coord.v,
       lon: coord.lon,
@@ -913,6 +1799,11 @@
       materialClass,
       landPresence,
       waterPresence,
+      tupleSource: binding.canonicalTupleSource,
+      tupleMethod: binding.hexAuthoritySampleMethodUsed,
+      localCoordFallbackUsed: binding.localCoordFallbackUsed,
+      mapAlignmentStatus: binding.mapAlignmentStatus,
+      inputCellClaimStatus: binding.inputCellClaimStatus,
       source: state.latestExpressionSource,
       ...FINAL_FALSE
     });
@@ -949,11 +1840,13 @@
 
   function buildSurfaceModel() {
     return {
-      modelType: "HEARTH_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_MODEL",
+      modelType: "HEARTH_SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_MODEL",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+      previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
       file: FILE,
       route: ROUTE,
 
@@ -975,8 +1868,16 @@
       hexExpressionSocketActive: true,
       renderableSurfaceExpressionProviderActive: true,
 
+      hexAuthorityTupleBindingActive: true,
+      expectedHexAuthorityFile: HEX_AUTHORITY_FILE,
+      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
+      controllingMathPath:
+        "input coord -> Hex Authority sample/read/getCell -> canonical tuple -> Surface expression",
+      fallbackPolicy:
+        "LOCAL_COORD_FALLBACK_ALLOWED_ONLY_WHEN_HEX_AUTHORITY_TUPLE_IS_UNAVAILABLE_AND_MUST_BE_RECEIPT_VISIBLE",
+
       bodyMassHints: clonePlain(BODY_MASS_HINTS),
-      coordinateSpace: "u-v-lon-lat",
+      coordinateSpace: "canonical-hex-authority-tuple-u-v-lon-lat",
       sampleMethods: [
         "sampleHexSurfaceExpression",
         "sampleSurfaceExpression",
@@ -1005,12 +1906,14 @@
 
   function buildSurfacePacket() {
     const packet = {
-      packetType: "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_PACKET",
+      packetType: "HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+      previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       lineageV4Contract: LINEAGE_V4_CONTRACT,
@@ -1024,6 +1927,7 @@
       parentHubFile: PARENT_HUB_FILE,
       hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
+      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
 
       boundaryFile: BOUNDARY_FILE,
       massFile: MASS_FILE,
@@ -1059,6 +1963,22 @@
       surfacePacketReady: true,
       pointerFingerPacketReady: true,
       pointerBishopPacketReady: true,
+
+      hexAuthorityTupleBindingActive: true,
+      hexAuthorityObserved: state.hexAuthorityObserved,
+      hexAuthoritySource: state.hexAuthoritySource,
+      hexAuthorityContract: state.hexAuthorityContract,
+      hexAuthorityRecognized: state.hexAuthorityRecognized,
+      hexAuthoritySampleMethodUsed: state.hexAuthoritySampleMethodUsed,
+      canonicalTupleResolved: state.canonicalTupleResolved,
+      canonicalTupleSource: state.canonicalTupleSource,
+      canonicalTupleCellId: state.canonicalTupleCellId,
+      localCoordFallbackUsed: state.localCoordFallbackUsed,
+      localCoordFallbackReason: state.localCoordFallbackReason,
+      surfaceExpressionCoordSource: state.surfaceExpressionCoordSource,
+      mapAlignmentStatus: state.mapAlignmentStatus,
+      mapAlignmentDetail: state.mapAlignmentDetail,
+      inputCellClaimStatus: state.inputCellClaimStatus,
 
       sampleHexSurfaceExpressionAvailable: true,
       sampleSurfaceExpressionAvailable: true,
@@ -1118,6 +2038,7 @@
       file: FILE,
       route: ROUTE,
       hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
 
       fingerName: FINGER_NAME,
       fingerRole: FINGER_ROLE,
@@ -1133,6 +2054,7 @@
       surfacePacket: buildSurfacePacket(),
       sampleHexSurfaceExpressionAvailable: true,
       receiveHexSurfaceTransmissionPacketAvailable: true,
+      hexAuthorityTupleBindingActive: true,
 
       inspectOwnsFingerStretchManagement: true,
       surfaceOwnsFingerStretchManagement: false,
@@ -1148,7 +2070,7 @@
 
   function buildPointerBishopPacket() {
     const packet = {
-      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_PACKET",
+      packetType: "HEARTH_CANVAS_SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_PACKET",
       packetName: PACKET,
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1157,6 +2079,7 @@
       file: FILE,
       route: ROUTE,
       hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
 
       bishopName: BISHOP_NAME,
       bishopTitle: BISHOP_TITLE,
@@ -1174,6 +2097,7 @@
       simplifiedBridgeActive: true,
       hexExpressionSocketActive: true,
       renderableSurfaceExpressionProviderActive: true,
+      hexAuthorityTupleBindingActive: true,
       surfacePacket: buildSurfacePacket(),
 
       sampleHexSurfaceExpressionAvailable: true,
@@ -1230,9 +2154,12 @@
       receipt: RECEIPT,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+      previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
       file: FILE,
       route: ROUTE,
       hexSurfaceFile: HEX_SURFACE_FILE,
+      hexAuthorityFile: HEX_AUTHORITY_FILE,
 
       receiver: receiverName || "receiveHexSurfaceTransmissionPacket",
       receivedSourcePacketType: safeString(packet.packetType || packet.type || "UNKNOWN"),
@@ -1245,6 +2172,18 @@
       surfacePacketReady: true,
       pointerFingerPacketReady: true,
       pointerBishopPacketReady: true,
+
+      hexAuthorityTupleBindingActive: true,
+      hexAuthorityObserved: state.hexAuthorityObserved,
+      hexAuthoritySource: state.hexAuthoritySource,
+      hexAuthorityContract: state.hexAuthorityContract,
+      hexAuthorityRecognized: state.hexAuthorityRecognized,
+      hexAuthoritySampleMethodUsed: state.hexAuthoritySampleMethodUsed,
+      canonicalTupleResolved: state.canonicalTupleResolved,
+      canonicalTupleSource: state.canonicalTupleSource,
+      localCoordFallbackUsed: state.localCoordFallbackUsed,
+      surfaceExpressionCoordSource: state.surfaceExpressionCoordSource,
+      mapAlignmentStatus: state.mapAlignmentStatus,
 
       samplePreview,
       surfacePacket: getSurfacePacket({ rebuild: true }),
@@ -1293,6 +2232,7 @@
         contract: CONTRACT,
         receipt: RECEIPT,
         file: FILE,
+        hexAuthorityTupleBindingActive: true,
         ...FINAL_FALSE
       };
     }
@@ -1317,6 +2257,8 @@
       sourceFile: safeString(packet.sourceFile || packet.fromFile || "UNKNOWN"),
       accepted: true,
       surfaceExpressionReady: true,
+      hexAuthorityTupleBindingActive: true,
+      mapAlignmentStatus: state.mapAlignmentStatus,
       ...FINAL_FALSE
     });
     trimArray(state.transmissionLedger, 120);
@@ -1324,7 +2266,9 @@
     record("SURFACE_POINTER_BISHOP_ACCEPTED_HEX_TRANSMISSION", {
       receiver: options.receiver || "receiveHexSurfaceTransmissionPacket",
       sourcePacketType: packet.packetType || "UNKNOWN",
-      sourceFile: packet.sourceFile || "UNKNOWN"
+      sourceFile: packet.sourceFile || "UNKNOWN",
+      mapAlignmentStatus: state.mapAlignmentStatus,
+      tupleSource: state.canonicalTupleSource
     });
 
     updateDataset();
@@ -1414,6 +2358,7 @@
       projectionOwner: HEX_SURFACE_FILE,
       canvasDrawingOwner: HEX_SURFACE_FILE,
       directCanvasDrawingSuppressed: true,
+      hexAuthorityTupleBindingActive: true,
       ...FINAL_FALSE
     };
   }
@@ -1427,6 +2372,8 @@
   }
 
   function getReceiptLight() {
+    readHexAuthority();
+
     return {
       timestamp: state.timestamp || nowIso(),
       contract: CONTRACT,
@@ -1434,6 +2381,8 @@
       packet: PACKET,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
       internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+      previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+      previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       previousReceipt: PREVIOUS_RECEIPT,
       lineageV4Contract: LINEAGE_V4_CONTRACT,
@@ -1448,6 +2397,7 @@
       parentHubFile: PARENT_HUB_FILE,
       hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
+      expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
       boundaryFile: BOUNDARY_FILE,
       massFile: MASS_FILE,
       lightFile: LIGHT_FILE,
@@ -1479,6 +2429,29 @@
       hexTransmissionReceiverActive: state.hexTransmissionReceiverActive,
       renderableSurfaceExpressionProviderActive: state.renderableSurfaceExpressionProviderActive,
 
+      hexAuthorityTupleBindingActive: true,
+      hexAuthorityObserved: state.hexAuthorityObserved,
+      hexAuthoritySource: state.hexAuthoritySource,
+      hexAuthorityContract: state.hexAuthorityContract,
+      hexAuthorityReceipt: state.hexAuthorityReceipt,
+      hexAuthorityRecognized: state.hexAuthorityRecognized,
+      hexAuthoritySampleMethodUsed: state.hexAuthoritySampleMethodUsed,
+      canonicalTupleResolved: state.canonicalTupleResolved,
+      canonicalTupleSource: state.canonicalTupleSource,
+      canonicalTupleCellId: state.canonicalTupleCellId,
+      canonicalTupleStateId: state.canonicalTupleStateId,
+      canonicalTupleRow: state.canonicalTupleRow,
+      canonicalTupleColumn: state.canonicalTupleColumn,
+      localCoordFallbackUsed: state.localCoordFallbackUsed,
+      localCoordFallbackReason: state.localCoordFallbackReason,
+      surfaceExpressionCoordSource: state.surfaceExpressionCoordSource,
+      mapAlignmentStatus: state.mapAlignmentStatus,
+      mapAlignmentDetail: state.mapAlignmentDetail,
+      inputCellClaimStatus: state.inputCellClaimStatus,
+      lastInputCellId: state.lastInputCellId,
+      lastResolvedCellId: state.lastResolvedCellId,
+      lastTupleBindingAt: state.lastTupleBindingAt,
+
       inspectOwnsFingerStretchManagement: true,
       surfaceOwnsFingerStretchManagement: false,
       surfaceOwnsOtherFingerInspection: false,
@@ -1507,6 +2480,7 @@
       getRenderableSurfaceExpressionAvailable: true,
       getSurfaceExpressionAtAvailable: true,
       receiveHexSurfaceExpressionRequestAvailable: true,
+      resolveCanonicalTupleAvailable: true,
 
       receiveHexSurfaceTransmissionPacketAvailable: true,
       consumeHexSurfaceTransmissionPacketAvailable: true,
@@ -1521,6 +2495,10 @@
       expressionRequestCount: state.expressionRequestCount,
       expressionServedCount: state.expressionServedCount,
       expressionRejectedCount: state.expressionRejectedCount,
+      hexAuthorityTupleRequestCount: state.hexAuthorityTupleRequestCount,
+      hexAuthorityTupleResolvedCount: state.hexAuthorityTupleResolvedCount,
+      localCoordFallbackCount: state.localCoordFallbackCount,
+      inputCellVarianceCount: state.inputCellVarianceCount,
 
       latestTransmissionAt: state.latestTransmissionAt,
       latestTransmissionSource: state.latestTransmissionSource,
@@ -1558,9 +2536,13 @@
       lastTransmissionAckPacket: clonePlain(state.lastTransmissionAckPacket),
       lastRejectedPacket: clonePlain(state.lastRejectedPacket),
       lastSurfaceExpression: clonePlain(state.lastSurfaceExpression),
+      lastCanonicalTuple: clonePlain(state.lastCanonicalTuple),
+      lastTupleBinding: clonePlain(state.lastTupleBinding),
       expressionLedger: clonePlain(state.expressionLedger),
       transmissionLedger: clonePlain(state.transmissionLedger),
+      tupleBindingLedger: clonePlain(state.tupleBindingLedger),
       aliasPaths: clonePlain(SURFACE_ALIAS_PATHS),
+      hexAuthorityAliasPaths: clonePlain(HEX_AUTHORITY_ALIAS_PATHS),
       bodyMassHints: clonePlain(BODY_MASS_HINTS),
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
@@ -1572,7 +2554,7 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_RECEIPT",
+      "HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_RECEIPT",
       "",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
@@ -1580,6 +2562,7 @@
       line("packet", r.packet),
       line("internalImplementationContract", r.internalImplementationContract),
       line("internalImplementationReceipt", r.internalImplementationReceipt),
+      line("previousInternalImplementationContract", r.previousInternalImplementationContract),
       line("previousContract", r.previousContract),
       line("lineageV4Contract", r.lineageV4Contract),
       line("lineageV3Contract", r.lineageV3Contract),
@@ -1589,6 +2572,7 @@
       line("file", r.file),
       line("route", r.route),
       line("hexSurfaceFile", r.hexSurfaceFile),
+      line("hexAuthorityFile", r.hexAuthorityFile),
       "",
       "IDENTITY",
       line("fingerName", r.fingerName),
@@ -1601,6 +2585,26 @@
       line("bishopAddress", r.bishopAddress),
       line("bishopDirection", r.bishopDirection),
       line("bishopCardinalDisposition", r.bishopCardinalDisposition),
+      "",
+      "HEX_AUTHORITY_TUPLE_BINDING",
+      line("hexAuthorityTupleBindingActive", r.hexAuthorityTupleBindingActive),
+      line("hexAuthorityObserved", r.hexAuthorityObserved),
+      line("hexAuthoritySource", r.hexAuthoritySource),
+      line("hexAuthorityContract", r.hexAuthorityContract),
+      line("hexAuthorityRecognized", r.hexAuthorityRecognized),
+      line("hexAuthoritySampleMethodUsed", r.hexAuthoritySampleMethodUsed),
+      line("canonicalTupleResolved", r.canonicalTupleResolved),
+      line("canonicalTupleSource", r.canonicalTupleSource),
+      line("canonicalTupleCellId", r.canonicalTupleCellId),
+      line("canonicalTupleStateId", r.canonicalTupleStateId),
+      line("canonicalTupleRow", r.canonicalTupleRow),
+      line("canonicalTupleColumn", r.canonicalTupleColumn),
+      line("localCoordFallbackUsed", r.localCoordFallbackUsed),
+      line("localCoordFallbackReason", r.localCoordFallbackReason),
+      line("surfaceExpressionCoordSource", r.surfaceExpressionCoordSource),
+      line("mapAlignmentStatus", r.mapAlignmentStatus),
+      line("mapAlignmentDetail", r.mapAlignmentDetail),
+      line("inputCellClaimStatus", r.inputCellClaimStatus),
       "",
       "HEX_SOCKET",
       line("simplifiedBridgeActive", r.simplifiedBridgeActive),
@@ -1628,6 +2632,10 @@
       line("expressionRequestCount", r.expressionRequestCount),
       line("expressionServedCount", r.expressionServedCount),
       line("expressionRejectedCount", r.expressionRejectedCount),
+      line("hexAuthorityTupleRequestCount", r.hexAuthorityTupleRequestCount),
+      line("hexAuthorityTupleResolvedCount", r.hexAuthorityTupleResolvedCount),
+      line("localCoordFallbackCount", r.localCoordFallbackCount),
+      line("inputCellVarianceCount", r.inputCellVarianceCount),
       "",
       "NEXT",
       line("latestTransmissionStatus", r.latestTransmissionStatus),
@@ -1661,6 +2669,7 @@
     setDataset("hearthCanvasFingerSurfaceReceipt", RECEIPT);
     setDataset("hearthCanvasFingerSurfaceInternalImplementationContract", INTERNAL_IMPLEMENTATION_CONTRACT);
     setDataset("hearthCanvasFingerSurfaceInternalImplementationReceipt", INTERNAL_IMPLEMENTATION_RECEIPT);
+    setDataset("hearthCanvasFingerSurfacePreviousInternalImplementationContract", PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT);
     setDataset("hearthCanvasFingerSurfaceVersion", VERSION);
     setDataset("hearthCanvasFingerSurfaceFile", FILE);
 
@@ -1679,6 +2688,25 @@
     setDataset("hearthCanvasFingerSurfaceHexTransmissionReceiverActive", String(state.hexTransmissionReceiverActive));
     setDataset("hearthCanvasFingerSurfaceRenderableSurfaceExpressionProviderActive", String(state.renderableSurfaceExpressionProviderActive));
 
+    setDataset("hearthCanvasFingerSurfaceHexAuthorityTupleBindingActive", "true");
+    setDataset("hearthCanvasFingerSurfaceHexAuthorityObserved", String(state.hexAuthorityObserved));
+    setDataset("hearthCanvasFingerSurfaceHexAuthoritySource", state.hexAuthoritySource);
+    setDataset("hearthCanvasFingerSurfaceHexAuthorityContract", state.hexAuthorityContract);
+    setDataset("hearthCanvasFingerSurfaceHexAuthorityRecognized", String(state.hexAuthorityRecognized));
+    setDataset("hearthCanvasFingerSurfaceHexAuthoritySampleMethodUsed", state.hexAuthoritySampleMethodUsed);
+    setDataset("hearthCanvasFingerSurfaceCanonicalTupleResolved", String(state.canonicalTupleResolved));
+    setDataset("hearthCanvasFingerSurfaceCanonicalTupleSource", state.canonicalTupleSource);
+    setDataset("hearthCanvasFingerSurfaceCanonicalTupleCellId", state.canonicalTupleCellId);
+    setDataset("hearthCanvasFingerSurfaceCanonicalTupleStateId", String(state.canonicalTupleStateId));
+    setDataset("hearthCanvasFingerSurfaceCanonicalTupleRow", String(state.canonicalTupleRow));
+    setDataset("hearthCanvasFingerSurfaceCanonicalTupleColumn", String(state.canonicalTupleColumn));
+    setDataset("hearthCanvasFingerSurfaceLocalCoordFallbackUsed", String(state.localCoordFallbackUsed));
+    setDataset("hearthCanvasFingerSurfaceLocalCoordFallbackReason", state.localCoordFallbackReason);
+    setDataset("hearthCanvasFingerSurfaceExpressionCoordSource", state.surfaceExpressionCoordSource);
+    setDataset("hearthCanvasFingerSurfaceMapAlignmentStatus", state.mapAlignmentStatus);
+    setDataset("hearthCanvasFingerSurfaceMapAlignmentDetail", state.mapAlignmentDetail);
+    setDataset("hearthCanvasFingerSurfaceInputCellClaimStatus", state.inputCellClaimStatus);
+
     setDataset("hearthCanvasFingerSurfaceSampleHexSurfaceExpressionReady", String(state.sampleHexSurfaceExpressionReady));
     setDataset("hearthCanvasFingerSurfaceSampleSurfaceExpressionReady", String(state.sampleSurfaceExpressionReady));
     setDataset("hearthCanvasFingerSurfaceRenderableSurfaceExpressionReady", String(state.renderableSurfaceExpressionReady));
@@ -1689,6 +2717,10 @@
     setDataset("hearthCanvasFingerSurfaceExpressionRequestCount", String(state.expressionRequestCount));
     setDataset("hearthCanvasFingerSurfaceExpressionServedCount", String(state.expressionServedCount));
     setDataset("hearthCanvasFingerSurfaceExpressionRejectedCount", String(state.expressionRejectedCount));
+    setDataset("hearthCanvasFingerSurfaceHexAuthorityTupleRequestCount", String(state.hexAuthorityTupleRequestCount));
+    setDataset("hearthCanvasFingerSurfaceHexAuthorityTupleResolvedCount", String(state.hexAuthorityTupleResolvedCount));
+    setDataset("hearthCanvasFingerSurfaceLocalCoordFallbackCount", String(state.localCoordFallbackCount));
+    setDataset("hearthCanvasFingerSurfaceInputCellVarianceCount", String(state.inputCellVarianceCount));
 
     setDataset("hearthCanvasFingerSurfaceLatestTransmissionStatus", state.latestTransmissionStatus);
     setDataset("hearthCanvasFingerSurfaceLatestTransmissionReason", state.latestTransmissionReason);
@@ -1726,6 +2758,7 @@
     setDataset("hearthCanvasFingerSurfaceGeneratedImage", "false");
     setDataset("hearthCanvasFingerSurfaceGraphicBox", "false");
     setDataset("hearthCanvasFingerSurfaceWebGL", "false");
+
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
@@ -1758,6 +2791,8 @@
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_HEX_EXPRESSION_SOCKET_RECEIPT_v5 = receipt;
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_RECEIPT = receipt;
     root.HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BRIDGE_RECEIPT_v5_1 = receipt;
+    root.HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_RECEIPT = receipt;
+    root.HEARTH_CANVAS_FINGER_SURFACE_HEX_AUTHORITY_TUPLE_BINDING_RECEIPT_v5_2 = receipt;
 
     root.HEARTH_CANVAS_FINGER_SURFACE_PACKET = getSurfacePacket();
     root.HEARTH_CANVAS_POINTER_FINGER_SURFACE_PACKET = getPointerFingerPacket();
@@ -1769,6 +2804,7 @@
     hearth.canvasPointerBishopReceipt = receipt;
     hearth.canvasFingerSurfacePointerBishopHexExpressionSocketReceipt = receipt;
     hearth.canvasFingerSurfaceSimplifiedHexSocketBridgeReceipt = receipt;
+    hearth.canvasFingerSurfaceHexAuthorityTupleBindingReceipt = receipt;
 
     hearth.canvasFingerSurfacePacket = getSurfacePacket();
     hearth.canvasPointerFingerSurfacePacket = getPointerFingerPacket();
@@ -1780,6 +2816,7 @@
     lab.hearthCanvasPointerBishopReceipt = receipt;
     lab.hearthCanvasFingerSurfacePointerBishopHexExpressionSocketReceipt = receipt;
     lab.hearthCanvasFingerSurfaceSimplifiedHexSocketBridgeReceipt = receipt;
+    lab.hearthCanvasFingerSurfaceHexAuthorityTupleBindingReceipt = receipt;
 
     lab.hearthCanvasFingerSurfacePacket = getSurfacePacket();
     lab.hearthCanvasPointerFingerSurfacePacket = getPointerFingerPacket();
@@ -1803,6 +2840,7 @@
   function boot() {
     state.timestamp = state.timestamp || nowIso();
 
+    readHexAuthority();
     buildSurfacePacket();
     buildPointerFingerPacket();
     buildPointerBishopPacket();
@@ -1816,17 +2854,21 @@
     state.firstFailedCoordinate = "WAITING_HEX_SURFACE_TRANSMISSION_OR_SAMPLE_REQUEST";
     state.recommendedNextFile = HEX_SURFACE_FILE;
     state.recommendedNextRenewalTarget = HEX_SURFACE_FILE;
-    state.postgameStatus = "SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BOOTED_READY";
+    state.postgameStatus = "SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_BOOTED_READY";
 
     updateDataset();
     publishGlobals();
 
-    record("SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_BOOT_COMPLETE", {
+    record("SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_BOOT_COMPLETE", {
       contract: CONTRACT,
       internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
+      previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
       aliasCount: SURFACE_ALIAS_PATHS.length,
       receiveHexSurfaceTransmissionPacketAvailable: true,
       sampleHexSurfaceExpressionAvailable: true,
+      resolveCanonicalTupleAvailable: true,
+      hexAuthorityObserved: state.hexAuthorityObserved,
+      hexAuthorityRecognized: state.hexAuthorityRecognized,
       inspectOwnsFingerStretchManagement: true,
       surfaceOwnsFingerStretchManagement: false,
       visualPassClaimed: false
@@ -1853,6 +2895,8 @@
     PACKET,
     INTERNAL_IMPLEMENTATION_CONTRACT,
     INTERNAL_IMPLEMENTATION_RECEIPT,
+    PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+    PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
     PREVIOUS_CONTRACT,
     PREVIOUS_RECEIPT,
     LINEAGE_V4_CONTRACT,
@@ -1878,6 +2922,8 @@
     packet: PACKET,
     internalImplementationContract: INTERNAL_IMPLEMENTATION_CONTRACT,
     internalImplementationReceipt: INTERNAL_IMPLEMENTATION_RECEIPT,
+    previousInternalImplementationContract: PREVIOUS_INTERNAL_IMPLEMENTATION_CONTRACT,
+    previousInternalImplementationReceipt: PREVIOUS_INTERNAL_IMPLEMENTATION_RECEIPT,
     previousContract: PREVIOUS_CONTRACT,
     previousReceipt: PREVIOUS_RECEIPT,
     lineageV4Contract: LINEAGE_V4_CONTRACT,
@@ -1915,6 +2961,9 @@
     init,
     start,
     mount,
+
+    readHexAuthority,
+    resolveCanonicalTuple,
 
     receiveHexSurfaceTransmissionPacket,
     consumeHexSurfaceTransmissionPacket,
@@ -1964,6 +3013,7 @@
     supportsNonCardinalBishopLanguage: true,
     supportsLegacyFingerCompatibility: true,
     supportsSimplifiedHexSocketBridge: true,
+    supportsHexAuthorityTupleBinding: true,
     supportsHexSurfaceTransmissionPacket: true,
     supportsPointerFingerTransmissionPacket: true,
     supportsSampleHexSurfaceExpression: true,
@@ -1978,6 +3028,7 @@
     ownsRenderableSurfaceExpressionProvider: true,
     ownsSurfaceExpressionPacket: true,
     ownsPointerBishopPacket: true,
+    ownsHexAuthorityTupleBindingConsumer: true,
 
     ownsFingerStretchManagement: false,
     ownsBoundaryFinger: false,
@@ -1987,6 +3038,7 @@
     ownsCompositeFinger: false,
     ownsCanvasHub: false,
     ownsHexSurfaceProjection: false,
+    ownsHexAuthorityTruth: false,
     ownsCanvasDrawing: false,
     ownsCanvasMounting: false,
     ownsCanvasLifecycle: false,
@@ -2005,6 +3057,7 @@
     hexExpressionSocketActive: true,
     hexTransmissionReceiverActive: true,
     renderableSurfaceExpressionProviderActive: true,
+    hexAuthorityTupleBindingActive: true,
     canvasDrawingDelegatedToHexSurface: true,
     directCanvasDrawingSuppressed: true,
 
@@ -2018,6 +3071,7 @@
   try {
     state.timestamp = nowIso();
 
+    readHexAuthority();
     buildSurfacePacket();
     buildPointerFingerPacket();
     buildPointerBishopPacket();
@@ -2034,7 +3088,7 @@
       boot();
     }
   } catch (error) {
-    recordError("SURFACE_POINTER_BISHOP_SIMPLIFIED_HEX_SOCKET_INITIALIZATION_FAILED", error);
+    recordError("SURFACE_POINTER_BISHOP_HEX_AUTHORITY_TUPLE_BINDING_INITIALIZATION_FAILED", error);
 
     try {
       updateDataset();

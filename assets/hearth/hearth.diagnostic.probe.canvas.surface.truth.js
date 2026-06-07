@@ -1,15 +1,28 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
 // HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_LENS_TNT_v1_3
 // Full-file replacement.
-// Diagnostic-only Canvas surface truth / receipt hub probe.
+// Diagnostic-only Canvas surface truth / causal forensics lens.
 // Purpose:
 // - Preserve the existing NORTH-facing Canvas surface truth probe contract.
-// - Publish the F21 diagnostic authority synchronously before target probing.
-// - Prevent SCRIPT_ALREADY_PRESENT / observed:false chronology failures.
-// - Preserve the four-lane receipt hub from v1_1.
-// - Expand Canvas truth diagnosis into a coordinate-level ladder.
+// - Preserve synchronous F21 diagnostic authority publication.
+// - Preserve the four-lane receipt hub.
+// - Upgrade the probe from a DOM-only canvas check into a causal failure ladder.
+// - Distinguish:
+//   1. target access failure,
+//   2. Canvas script missing,
+//   3. Canvas script present but execution not proven,
+//   4. Canvas authority/public aliases missing,
+//   5. Canvas authority present but no real DOM canvas,
+//   6. real DOM canvas present but selector/mount mismatch,
+//   7. canvas present but zero internal size,
+//   8. canvas present but zero layout rect,
+//   9. canvas present but hidden/outside viewport,
+//   10. canvas present but no 2D context,
+//   11. canvas present but no visible pixels,
+//   12. canvas namespace/DOM receipt mismatch.
+// - Explicitly classify rendered-proof-without-DOM-canvas as non-surface truth.
 // - Do not create, draw, repair, release, restart, or mutate production state.
 
 (() => {
@@ -23,18 +36,29 @@
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_LENS_TNT_v1_3";
   const INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_LENS_RECEIPT_v1_3";
+
+  const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2";
+  const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_RECEIPT_v1_2";
 
   const VERSION =
-    "2026-06-07.hearth-diagnostic-probe-canvas-surface-truth-anchor-safe-coordinate-ladder-v1-2";
+    "2026-06-07.hearth-diagnostic-probe-canvas-surface-truth-causal-forensics-lens-v1-3";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const CANVAS_LAUNCH_FILE = "/assets/hearth/hearth.canvas.launch.js";
+  const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
+  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
+  const INDEX_FILE = "/showroom/globe/hearth/index.js";
+  const HTML_FILE = "/showroom/globe/hearth/index.html";
+
   const PROBE_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
   const SOUTH_SURFACE_POINTER_FILE =
     "/assets/hearth/hearth.diagnostic.south.surface.pointer.js";
@@ -48,12 +72,23 @@
 
   const ACCEPTED_CANVAS_CONTRACTS = Object.freeze([
     EXPECTED_CANVAS_CONTRACT,
+    "HEARTH_CANVAS_HUB_SOURCE_HOLD_PLANET_SURFACE_THRESHOLD_RECEIVER_TNT_v12_5",
     "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4",
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4",
+    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION_TNT_v12_4",
+    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2",
+    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1",
     "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
     "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
     "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
-    "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6"
+    "HEARTH_CANVAS_EXPRESSION_HUB_FINGER_MANAGER_TNT_v11_6",
+    "HEARTH_CANVAS_LOCAL_STATION_ROUTE_CONDUCTOR_V9_4_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_5",
+    "HEARTH_CANVAS_LOCAL_STATION_DIAGNOSTIC_BRIDGE_ALIGNMENT_TNT_v11_4",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_2",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
   ]);
 
   const NO_CLAIMS = Object.freeze({
@@ -98,9 +133,14 @@
     "canvas[data-hearth-planet-canvas='true']",
     "canvas[data-hearth-canvas='true']",
     "canvas[data-hearth-canvas-texture='true']",
+    "canvas[data-hearth-surface-canvas='true']",
+    "canvas[data-hearth-dom-surface='true']",
     "#hearthCanvasMount canvas",
     "[data-hearth-canvas-mount] canvas",
+    "[data-hearth-visible-planet-mount] canvas",
     "[data-hearth-expression-mount] canvas",
+    "[data-hearth-globe-stage] canvas",
+    "[data-hearth-planet-stage] canvas",
     "canvas"
   ]);
 
@@ -110,6 +150,7 @@
     "[data-hearth-visible-planet-mount]",
     "[data-hearth-planet-mount]",
     "[data-hearth-full-planet-visibility-mount]",
+    "[data-hearth-expression-mount]",
     "#hearthGlobeStage",
     "[data-hearth-globe-stage]",
     "[data-hearth-planet-stage]",
@@ -118,8 +159,130 @@
     "body"
   ]);
 
-  const PATHS = Object.freeze({
-    labNorth: Object.freeze([
+  const HEARTH_DATASET_SELECTORS = Object.freeze([
+    "[data-hearth-canvas]",
+    "[data-hearth-canvas-hub]",
+    "[data-hearth-expression-surface]",
+    "[data-hearth-visible-canvas]",
+    "[data-hearth-base-globe-canvas]",
+    "[data-hearth-planet-canvas]",
+    "[data-hearth-canvas-texture]",
+    "[data-hearth-visible-planet]",
+    "[data-hearth-visible-planet-mount]",
+    "[data-hearth-canvas-mount]",
+    "[data-hearth-globe-stage]",
+    "[data-hearth-planet-stage]",
+    "[data-hearth-expression-stage]",
+    "[data-hearth-canvas-contract]",
+    "[data-hearth-canvas-receipt]"
+  ]);
+
+  const CANVAS_AUTHORITY_PATHS = Object.freeze([
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_SOURCE_HOLD_PLANET_SURFACE_THRESHOLD_RECEIVER",
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
+    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION",
+    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER",
+    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER",
+    "HEARTH_CANVAS_HUB",
+    "HEARTH_CANVAS",
+    "HEARTH_CANVAS_PARENT",
+    "HEARTH_CANVAS_AUTHORITY",
+    "HEARTH_CANVAS_EXPRESSION_HUB",
+    "HEARTH_CANVAS_VISIBLE_PLANET",
+    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
+    "HEARTH.canvasHubSourceHoldPlanetSurfaceThresholdReceiver",
+    "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "HEARTH.canvasHubHexSurfacePointerFingerTransmission",
+    "HEARTH.canvasHubRafSphereRotationPairReceiver",
+    "HEARTH.canvasHubRafFastInteractiveDeferredHexRenderReceiver",
+    "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
+    "HEARTH.canvasHubPlanetaryViewControlReceiver",
+    "HEARTH.canvasHub",
+    "HEARTH.canvas",
+    "HEARTH.canvasParent",
+    "HEARTH.canvasAuthority",
+    "HEARTH.canvasExpressionHub",
+    "HEARTH.canvasVisiblePlanet",
+    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
+    "DEXTER_LAB.hearthCanvasHubSourceHoldPlanetSurfaceThresholdReceiver",
+    "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "DEXTER_LAB.hearthCanvasHubHexSurfacePointerFingerTransmission",
+    "DEXTER_LAB.hearthCanvasHubRafSphereRotationPairReceiver",
+    "DEXTER_LAB.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver",
+    "DEXTER_LAB.hearthCanvasHubFastViewTransformDeferredRenderReceiver",
+    "DEXTER_LAB.hearthCanvasHubPlanetaryViewControlReceiver",
+    "DEXTER_LAB.hearthCanvasHub",
+    "DEXTER_LAB.hearthCanvas",
+    "DEXTER_LAB.hearthCanvasParent",
+    "DEXTER_LAB.hearthCanvasExpressionHub",
+    "DEXTER_LAB.hearthCanvasVisiblePlanet"
+  ]);
+
+  const CANVAS_LAUNCH_PATHS = Object.freeze([
+    "HEARTH.canvasLaunch",
+    "HEARTH.canvasLaunchPrefaceGate",
+    "HEARTH.canvasPrefaceHoldGate",
+    "HEARTH.canvasPrefaceDecommissionGate",
+    "HEARTH_CANVAS_LAUNCH",
+    "HEARTH_CANVAS_LAUNCH_PREFACE_GATE",
+    "HEARTH_CANVAS_PREFACE_HOLD_GATE",
+    "HEARTH_CANVAS_PREFACE_DECOMMISSION_GATE",
+    "DEXTER_LAB.hearthCanvasLaunch",
+    "DEXTER_LAB.hearthCanvasLaunchPrefaceGate"
+  ]);
+
+  const ROUTE_CONDUCTOR_PATHS = Object.freeze([
+    "HEARTH_ROUTE_CONDUCTOR",
+    "HEARTH.routeConductor",
+    "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+    "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
+    "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
+    "DEXTER_LAB.hearthRouteConductor",
+    "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
+    "DEXTER_LAB.hearthRouteConductorGovernedSourceStackAdmissionCanvasHandoff",
+    "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel"
+  ]);
+
+  const CONTROL_PATHS = Object.freeze([
+    "HEARTH_CONTROLS",
+    "HEARTH_CONTROLS_QUEEN",
+    "HEARTH_QUEEN_CONTROLS",
+    "HEARTH.controls",
+    "HEARTH.controlsQueen",
+    "HEARTH.queenControls",
+    "HEARTH.planetaryControls",
+    "DEXTER_LAB.hearthControls",
+    "DEXTER_LAB.hearthQueenControls",
+    "DEXTER_LAB.hearthPlanetaryControls"
+  ]);
+
+  const FINGER_PATHS = Object.freeze([
+    "HEARTH.canvasFingerInspect",
+    "HEARTH.canvasPointerFinger",
+    "HEARTH.pointerFinger",
+    "HEARTH_CANVAS_FINGER_INSPECT",
+    "HEARTH_CANVAS_POINTER_FINGER",
+    "HEARTH_POINTER_FINGER",
+    "DEXTER_LAB.hearthCanvasFingerInspect",
+    "DEXTER_LAB.hearthCanvasPointerFinger"
+  ]);
+
+  const HEX_PATHS = Object.freeze([
+    "HEARTH.hexSurface",
+    "HEARTH.hexSurfaceRenderer",
+    "HEARTH.hexGate",
+    "HEARTH_HEX_SURFACE",
+    "HEARTH_HEX_SURFACE_RENDERER",
+    "HEARTH_HEX_GATE",
+    "DEXTER_LAB.hearthHexSurface",
+    "DEXTER_LAB.hearthHexSurfaceRenderer"
+  ]);
+
+  const LAB_PATHS = Object.freeze({
+    north: [
       "LAB_RUNTIME_TABLE_NORTH",
       "LAB_RUNTIME_TABLE",
       "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
@@ -128,8 +291,8 @@
       "DEXTER_LAB.runtimeTable",
       "DEXTER_LAB.cardinalRuntimeTableNorth",
       "DEXTER_LAB.northCentralTrainStation"
-    ]),
-    labEast: Object.freeze([
+    ],
+    east: [
       "LAB_RUNTIME_TABLE_EAST",
       "RUNTIME_TABLE_EAST",
       "HEARTH_EAST_IGNITION",
@@ -139,8 +302,8 @@
       "DEXTER_LAB.runtimeTableEast",
       "DEXTER_LAB.cardinalRuntimeTableEast",
       "DEXTER_LAB.hearthDiagnosticEast"
-    ]),
-    labSouth: Object.freeze([
+    ],
+    south: [
       "LAB_RUNTIME_TABLE_SOUTH",
       "RUNTIME_TABLE_SOUTH",
       "HEARTH_SOUTH_OUTPUT",
@@ -150,8 +313,8 @@
       "DEXTER_LAB.runtimeTableSouth",
       "DEXTER_LAB.cardinalRuntimeTableSouth",
       "DEXTER_LAB.hearthDiagnosticSouth"
-    ]),
-    labWest: Object.freeze([
+    ],
+    west: [
       "LAB_RUNTIME_TABLE_WEST",
       "RUNTIME_TABLE_WEST",
       "LAB_CYCLE_AWARE_ADMISSIBILITY_CLUTCH_WEST",
@@ -163,8 +326,11 @@
       "DEXTER_LAB.runtimeTableWest",
       "DEXTER_LAB.cardinalRuntimeTableWest",
       "DEXTER_LAB.hearthDiagnosticWest"
-    ]),
-    diagnosticNorth: Object.freeze([
+    ]
+  });
+
+  const DIAGNOSTIC_PATHS = Object.freeze({
+    north: [
       "HEARTH.diagnosticRail",
       "HEARTH.parallelDiagnosticRail",
       "HEARTH.diagnosticNorth",
@@ -175,32 +341,32 @@
       "HEARTH_DIAGNOSTIC_RAIL_NORTH",
       "DEXTER_LAB.hearthDiagnosticRail",
       "DEXTER_LAB.hearthDiagnosticNorth"
-    ]),
-    diagnosticEast: Object.freeze([
+    ],
+    east: [
       "HEARTH.diagnosticEast",
       "HEARTH.diagnosticRailEast",
       "HEARTH_DIAGNOSTIC_EAST",
       "HEARTH_DIAGNOSTIC_RAIL_EAST",
       "DEXTER_LAB.hearthDiagnosticEast",
       "DEXTER_LAB.hearthDiagnosticRailEast"
-    ]),
-    diagnosticWest: Object.freeze([
+    ],
+    west: [
       "HEARTH.diagnosticWest",
       "HEARTH.diagnosticRailWest",
       "HEARTH_DIAGNOSTIC_WEST",
       "HEARTH_DIAGNOSTIC_RAIL_WEST",
       "DEXTER_LAB.hearthDiagnosticWest",
       "DEXTER_LAB.hearthDiagnosticRailWest"
-    ]),
-    diagnosticSouth: Object.freeze([
+    ],
+    south: [
       "HEARTH.diagnosticSouth",
       "HEARTH.diagnosticRailSouth",
       "HEARTH_DIAGNOSTIC_SOUTH",
       "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
       "DEXTER_LAB.hearthDiagnosticSouth",
       "DEXTER_LAB.hearthDiagnosticRailSouth"
-    ]),
-    diagnosticProbeSouth: Object.freeze([
+    ],
+    probeSouth: [
       "HEARTH.diagnosticProbeSouth",
       "HEARTH.diagnosticRailProbeSouth",
       "HEARTH.diagnosticSouthProbe",
@@ -208,42 +374,8 @@
       "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
       "DEXTER_LAB.hearthDiagnosticProbeSouth",
       "DEXTER_LAB.hearthDiagnosticRailProbeSouth"
-    ]),
-    canvasHub: Object.freeze([
-      "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-      "HEARTH_CANVAS_HUB",
-      "HEARTH_CANVAS",
-      "HEARTH_CANVAS_EXPRESSION_HUB",
-      "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
-      "HEARTH.canvasHub",
-      "HEARTH.canvas",
-      "HEARTH.canvasParent",
-      "HEARTH.canvasAuthority",
-      "HEARTH.canvasExpressionHub",
-      "HEARTH.canvasVisiblePlanet",
-      "DEXTER_LAB.hearthCanvasHub",
-      "DEXTER_LAB.hearthCanvas",
-      "DEXTER_LAB.hearthCanvasParent",
-      "DEXTER_LAB.hearthCanvasExpressionHub"
-    ]),
-    bishopQueen: Object.freeze([
-      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
-      "HEARTH.hearthRouteConductorBishopQueenCanvasRecognitionFunnel",
-      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
-      "HEARTH.bishopQueenCanvasRecognitionFunnel",
-      "HEARTH_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL"
-    ]),
-    routeConductor: Object.freeze([
-      "HEARTH_ROUTE_CONDUCTOR",
-      "HEARTH.routeConductor",
-      "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
-      "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
-      "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
-      "DEXTER_LAB.hearthRouteConductor",
-      "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
-      "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel"
-    ]),
-    southSurfacePointer: Object.freeze([
+    ],
+    southSurfacePointer: [
       "HEARTH.diagnosticSouthSurfacePointer",
       "HEARTH.diagnosticSurfacePointerSouth",
       "HEARTH.diagnosticSouthBishopSurfacePointer",
@@ -251,45 +383,7 @@
       "HEARTH_DIAGNOSTIC_SOUTH_BISHOP_SURFACE_POINTER",
       "DEXTER_LAB.hearthDiagnosticSouthSurfacePointer",
       "DEXTER_LAB.hearthDiagnosticSouthBishopSurfacePointer"
-    ]),
-    fingerInspect: Object.freeze([
-      "HEARTH.canvasFingerInspect",
-      "HEARTH.hearthCanvasFingerInspect",
-      "HEARTH.diagnosticCanvasFingerInspect",
-      "DEXTER_LAB.hearthCanvasFingerInspect",
-      "DEXTER_LAB.hearthDiagnosticCanvasFingerInspect",
-      "HEARTH_CANVAS_FINGER_INSPECT",
-      "HEARTH_CANVAS_FINGER_INSPECT_RECEIPT"
-    ]),
-    hexSurface: Object.freeze([
-      "HEARTH.hexSurface",
-      "HEARTH.hearthHexSurface",
-      "HEARTH.canvasHexSurface",
-      "HEARTH.hearthCanvasHexSurface",
-      "DEXTER_LAB.hearthHexSurface",
-      "HEARTH_HEX_SURFACE",
-      "HEARTH_HEX_SURFACE_RECEIPT"
-    ]),
-    fourPairAuthority: Object.freeze([
-      "HEARTH.hexFourPairAuthority",
-      "HEARTH.hearthHexFourPairAuthority",
-      "HEARTH.fourPairAuthority",
-      "HEARTH.hexFourPairPixelHandshakeAuthority",
-      "DEXTER_LAB.hearthHexFourPairAuthority",
-      "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-      "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT"
-    ]),
-    surfacePacket: Object.freeze([
-      "HEARTH.surface",
-      "HEARTH.hearthSurface",
-      "HEARTH.surfacePacket",
-      "HEARTH.expressionSurface",
-      "HEARTH.canvasExpressionSurface",
-      "DEXTER_LAB.hearthSurface",
-      "DEXTER_LAB.hearthExpressionSurface",
-      "HEARTH_SURFACE",
-      "HEARTH_SURFACE_PACKET"
-    ])
+    ]
   });
 
   const api = {};
@@ -329,6 +423,18 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function bool(value, fallback = false) {
+    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return true;
+    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return false;
+    return fallback;
+  }
+
+  function boolText(value, fallback = "UNKNOWN") {
+    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
+    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
+    return fallback;
+  }
+
   function bounded(value, limit = 4000) {
     return safeString(value)
       .replace(/\n/g, " ")
@@ -352,7 +458,7 @@
 
     if (Array.isArray(value) || isObject(value)) {
       try {
-        return bounded(JSON.stringify(value), 16000) || fallback;
+        return bounded(JSON.stringify(value), 24000) || fallback;
       } catch (_error) {
         return bounded(value, 4000) || fallback;
       }
@@ -363,30 +469,6 @@
 
   function line(key, value) {
     return `${key}=${packetValue(value)}`;
-  }
-
-  function boolText(value, fallback = "UNKNOWN") {
-    if (
-      value === true ||
-      value === "true" ||
-      value === "TRUE" ||
-      value === 1 ||
-      value === "1"
-    ) {
-      return "true";
-    }
-
-    if (
-      value === false ||
-      value === "false" ||
-      value === "FALSE" ||
-      value === 0 ||
-      value === "0"
-    ) {
-      return "false";
-    }
-
-    return fallback;
   }
 
   function firstKnown(...values) {
@@ -421,772 +503,37 @@
     return fallback;
   }
 
-  function makeAnchorReport() {
-    return {
-      PACKET_NAME: "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_ANCHOR_PACKET_v1_2",
-      CONTRACT,
-      RECEIPT,
-      INTERNAL_RENEWAL_CONTRACT,
-      INTERNAL_RENEWAL_RECEIPT,
-      VERSION,
-      FILE,
-      TARGET_ROUTE,
-      DIAGNOSTIC_ROUTE,
-      CANVAS_FILE,
-      EXPECTED_CANVAS_CONTRACT,
-      DIAGNOSTIC_TIMESTAMP: nowIso(),
-
-      CANVAS_SURFACE_TRUTH_PROBE_STATUS: "ANCHOR_READY",
-      CANVAS_SURFACE_TRUTH_AVAILABLE: "UNKNOWN",
-      TRUTH_HUB_ACTIVE: "true",
-      TRUTH_HUB_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
-      TRUTH_HUB_RECEIPT_LANE_COUNT: "4",
-      TRUTH_HUB_RECEIPT_ROUTES:
-        "LAB_CARDINAL_RECEIPT_BUNDLE | DIAGNOSTIC_TRACK_RECEIPT | CANVAS_BISHOP_RECEIPT | FINGER_FILE_RECEIPT",
-      TRUTH_HUB_PACKET_TEXT_SAFE: "true",
-      RECEIPT_RETURN_MECHANISM_STATUS: "ANCHOR_SAFE_RECEIPT_READY",
-      DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY: "true",
-      NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
-
-      TARGET_CONTEXT_STATUS: "NOT_RUN",
-      TARGET_CONTEXT_SOURCE: "ANCHOR_ONLY",
-
-      CANVAS_ELEMENT_FOUND: false,
-      CANVAS_SELECTOR: "NOT_RUN",
-      CANVAS_MOUNT_FOUND: "UNKNOWN",
-      CANVAS_MOUNT_SELECTOR: "NOT_RUN",
-      CANVAS_IN_MOUNT: "UNKNOWN",
-      CANVAS_RECT_NONZERO: false,
-      CANVAS_COMPUTED_VISIBLE: "UNKNOWN",
-      CANVAS_VIEWPORT_INTERSECTING: "UNKNOWN",
-      CANVAS_CONTEXT_2D_READY: "UNKNOWN",
-      CANVAS_PIXEL_SAMPLE_STATUS: "NO_PIXEL_SAMPLE_ANCHOR_ONLY",
-      CANVAS_PIXEL_VISIBLE: "UNKNOWN",
-      CANVAS_LAYER_BLOCKED: "UNKNOWN",
-      CANVAS_LAYER_BLOCKER: "UNKNOWN",
-      CANVAS_NAMESPACE_PRESENT: "UNKNOWN",
-      CANVAS_NAMESPACE_PATH: "NONE",
-      CANVAS_NAMESPACE_CONTRACT: "UNKNOWN",
-      CANVAS_NAMESPACE_RECEIPT: "UNKNOWN",
-      CANVAS_NAMESPACE_MATCHES_DOM_SURFACE: "UNKNOWN",
-      CANVAS_PARENT_CONTRACT_RECOGNIZED: "UNKNOWN",
-
-      CANVAS_TRUTH_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
-      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: "NOT_RUN",
-      CANVAS_TRUTH_FAILURE_CLASS: "NOT_RUN",
-      CANVAS_TRUTH_FAILURE_REASON: "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL",
-      CANVAS_TRUTH_RECOMMENDED_OWNER: "NONE",
-      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE",
-      CANVAS_TRUTH_RECOMMENDED_ACTION:
-        "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE",
-
-      LAB_CARDINAL_RECEIPT_BUNDLE_STATUS: "ANCHOR_READY",
-      DIAGNOSTIC_TRACK_RECEIPT_STATUS: "ANCHOR_READY",
-      CANVAS_BISHOP_RECEIPT_STATUS: "ANCHOR_READY",
-      FINGER_FILE_RECEIPT_STATUS: "ANCHOR_READY",
-      PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS: "ANCHOR_READY",
-
-      PRODUCTION_MUTATION_AUTHORIZED: false,
-      CANVAS_DRAWING_AUTHORIZED: false,
-      CANVAS_CREATION_AUTHORIZED: false,
-      CANVAS_REPAIR_AUTHORIZED: false,
-      ROUTE_REPAIR_AUTHORIZED: false,
-      CONTROL_MUTATION_AUTHORIZED: false,
-      RUNTIME_RESTART_AUTHORIZED: false,
-
-      SECONDARY_EVIDENCE_NOTES:
-        "CANVAS_SURFACE_TRUTH_ANCHOR_PUBLISHED_SYNCHRONOUSLY | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
-      CANVAS_SURFACE_TRUTH_NOTES:
-        "ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_READY | HEAVY_TARGET_PROBE_NOT_RUN_DURING_PUBLISH",
-
-      ...NO_CLAIMS,
-      ...UPPER_NO_CLAIMS
-    };
+  function ensureObject(parent, key) {
+    if (!parent[key] || typeof parent[key] !== "object") parent[key] = {};
+    return parent[key];
   }
-
-  function buildReceipt(report = lastReport || makeAnchorReport()) {
-    const r = report || makeAnchorReport();
-
-    return {
-      packetType: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1_2",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      version: VERSION,
-      file: FILE,
-      targetRoute: TARGET_ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-      canvasFile: CANVAS_FILE,
-      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-
-      diagnosticOnly: true,
-      anchorSafeChronologyObservation: true,
-      productionMutationAuthorized: false,
-      canvasDrawingAuthorized: false,
-      canvasCreationAuthorized: false,
-      canvasRepairAuthorized: false,
-      routeRepairAuthorized: false,
-      controlMutationAuthorized: false,
-      runtimeRestartAuthorized: false,
-
-      canvasSurfaceTruthProbeStatus: getRaw(
-        r,
-        "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
-        "ANCHOR_READY"
-      ),
-      canvasSurfaceTruthAvailable: getRaw(
-        r,
-        "CANVAS_SURFACE_TRUTH_AVAILABLE",
-        "UNKNOWN"
-      ),
-      truthHubActive: true,
-      truthHubStatus: getRaw(
-        r,
-        "TRUTH_HUB_STATUS",
-        "ANCHOR_READY_TARGET_NOT_YET_PROBED"
-      ),
-      receiptLaneCount: 4,
-      receiptRoutes: [
-        "LAB_CARDINAL_RECEIPT_BUNDLE",
-        "DIAGNOSTIC_TRACK_RECEIPT",
-        "CANVAS_BISHOP_RECEIPT",
-        "FINGER_FILE_RECEIPT"
-      ],
-
-      canvasElementFound: getRaw(r, "CANVAS_ELEMENT_FOUND", false),
-      canvasMountFound: getRaw(r, "CANVAS_MOUNT_FOUND", "UNKNOWN"),
-      canvasInMount: getRaw(r, "CANVAS_IN_MOUNT", "UNKNOWN"),
-      canvasRectNonzero: getRaw(r, "CANVAS_RECT_NONZERO", false),
-      canvasComputedVisible: getRaw(r, "CANVAS_COMPUTED_VISIBLE", "UNKNOWN"),
-      canvasViewportIntersecting: getRaw(
-        r,
-        "CANVAS_VIEWPORT_INTERSECTING",
-        "UNKNOWN"
-      ),
-      canvasContext2dReady: getRaw(r, "CANVAS_CONTEXT_2D_READY", "UNKNOWN"),
-      canvasPixelSampleStatus: getRaw(
-        r,
-        "CANVAS_PIXEL_SAMPLE_STATUS",
-        "NO_PIXEL_SAMPLE"
-      ),
-      canvasPixelVisible: getRaw(r, "CANVAS_PIXEL_VISIBLE", "UNKNOWN"),
-      canvasLayerBlocked: getRaw(r, "CANVAS_LAYER_BLOCKED", "UNKNOWN"),
-      canvasNamespacePresent: getRaw(r, "CANVAS_NAMESPACE_PRESENT", "UNKNOWN"),
-      canvasParentContractRecognized: getRaw(
-        r,
-        "CANVAS_PARENT_CONTRACT_RECOGNIZED",
-        "UNKNOWN"
-      ),
-      canvasNamespaceMatchesDomSurface: getRaw(
-        r,
-        "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
-        "UNKNOWN"
-      ),
-
-      canvasTruthStatus: getRaw(
-        r,
-        "CANVAS_TRUTH_STATUS",
-        "ANCHOR_READY_TARGET_NOT_YET_PROBED"
-      ),
-      canvasTruthFirstFailedCoordinate: getRaw(
-        r,
-        "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
-        "NOT_RUN"
-      ),
-      canvasTruthFailureClass: getRaw(r, "CANVAS_TRUTH_FAILURE_CLASS", "NOT_RUN"),
-      canvasTruthFailureReason: getRaw(
-        r,
-        "CANVAS_TRUTH_FAILURE_REASON",
-        "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL"
-      ),
-      canvasTruthRecommendedOwner: getRaw(
-        r,
-        "CANVAS_TRUTH_RECOMMENDED_OWNER",
-        "NONE"
-      ),
-      canvasTruthRecommendedFile: getRaw(
-        r,
-        "CANVAS_TRUTH_RECOMMENDED_FILE",
-        "NONE"
-      ),
-      canvasTruthRecommendedAction: getRaw(
-        r,
-        "CANVAS_TRUTH_RECOMMENDED_ACTION",
-        "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE"
-      ),
-
-      labCardinalReceiptBundleStatus: getRaw(
-        r,
-        "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS",
-        "ANCHOR_READY"
-      ),
-      diagnosticTrackReceiptStatus: getRaw(
-        r,
-        "DIAGNOSTIC_TRACK_RECEIPT_STATUS",
-        "ANCHOR_READY"
-      ),
-      canvasBishopReceiptStatus: getRaw(
-        r,
-        "CANVAS_BISHOP_RECEIPT_STATUS",
-        "ANCHOR_READY"
-      ),
-      fingerFileReceiptStatus: getRaw(
-        r,
-        "FINGER_FILE_RECEIPT_STATUS",
-        "ANCHOR_READY"
-      ),
-      probeSouthToTruthHubTransferStatus: getRaw(
-        r,
-        "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS",
-        "ANCHOR_READY"
-      ),
-
-      receiptReturnMechanismStatus: getRaw(
-        r,
-        "RECEIPT_RETURN_MECHANISM_STATUS",
-        "ANCHOR_SAFE_RECEIPT_READY"
-      ),
-      diagnosticUiReadableReceiptSurfaceReady: getRaw(
-        r,
-        "DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY",
-        "true"
-      ),
-      northReadableReceiptSurfaceReady: getRaw(
-        r,
-        "NORTH_READABLE_RECEIPT_SURFACE_READY",
-        "true"
-      ),
-
-      runProbeCanvasSurfaceTruthApiAvailable: true,
-      runCanvasSurfaceTruthApiAvailable: true,
-      receiveSouthProbeReceiptApiAvailable: true,
-      receiveProbeSouthReceiptApiAvailable: true,
-      runProbeApiAvailable: true,
-      inspectApiAvailable: true,
-      runDiagnosticApiAvailable: true,
-      getReportApiAvailable: true,
-      getReceiptApiAvailable: true,
-      getReceiptLightApiAvailable: true,
-      getPacketTextApiAvailable: true,
-      getCompactSummaryApiAvailable: true,
-
-      ...NO_CLAIMS,
-      ...UPPER_NO_CLAIMS
-    };
-  }
-
-  function getReport() {
-    return clonePlain(lastReport || makeAnchorReport());
-  }
-
-  function getReceiptLight() {
-    if (!lastReceipt) lastReceipt = buildReceipt(lastReport || makeAnchorReport());
-    return clonePlain(lastReceipt);
-  }
-
-  function getReceipt() {
-    const report = lastReport || makeAnchorReport();
-
-    return {
-      ...getReceiptLight(),
-      report: clonePlain(report),
-      labCardinalReceiptBundle: clonePlain(
-        getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE", {})
-      ),
-      diagnosticTrackReceipt: clonePlain(
-        getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT", {})
-      ),
-      canvasBishopReceipt: clonePlain(getRaw(report, "CANVAS_BISHOP_RECEIPT", {})),
-      fingerFileReceipt: clonePlain(getRaw(report, "FINGER_FILE_RECEIPT", {})),
-      acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
-      canvasSelectors: CANVAS_SELECTORS.slice(),
-      mountSelectors: MOUNT_SELECTORS.slice(),
-      supportsAnchorSafeChronologyObservation: true,
-      supportsCoordinateSpecificFailure: true,
-      supportsFourLaneReceiptHub: true,
-      ...NO_CLAIMS,
-      ...UPPER_NO_CLAIMS
-    };
-  }
-
-  function getPacketText() {
-    if (!lastPacketText) {
-      lastPacketText = composePacketText(lastReport || makeAnchorReport());
-    }
-
-    return lastPacketText;
-  }
-
-  function getCompactSummary() {
-    if (!lastCompactSummary) {
-      lastCompactSummary = composeCompactSummary(lastReport || makeAnchorReport());
-    }
-
-    return lastCompactSummary;
-  }
-
-  function getStatusText() {
-    return getCompactSummary();
-  }
-
-  function publish() {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-    root.HEARTH.diagnosticProbeCanvasSurfaceTruth = api;
-    root.HEARTH.diagnosticCanvasSurfaceTruthProbe = api;
-    root.HEARTH.diagnosticProbeCanvasTruth = api;
-    root.HEARTH.diagnosticCanvasTruthProbe = api;
-    root.HEARTH.diagnosticRailProbeCanvasSurfaceTruth = api;
-    root.HEARTH.diagnosticCanvasSurfaceTruthReceiptHub = api;
-    root.HEARTH.diagnosticTruthHub = api;
-
-    root.DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth = api;
-    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe = api;
-    root.DEXTER_LAB.hearthDiagnosticCanvasTruthProbe = api;
-    root.DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth = api;
-    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthReceiptHub = api;
-    root.DEXTER_LAB.hearthDiagnosticTruthHub = api;
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = api;
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE = api;
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH = api;
-    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH = api;
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB = api;
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB = api;
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT =
-      getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_RECEIPT =
-      getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT =
-      getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_RECEIPT =
-      getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_RECEIPT = getReceiptLight();
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT = clonePlain(
-      lastReport || makeAnchorReport()
-    );
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_REPORT = clonePlain(
-      lastReport || makeAnchorReport()
-    );
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_REPORT = clonePlain(
-      lastReport || makeAnchorReport()
-    );
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_REPORT = clonePlain(
-      lastReport || makeAnchorReport()
-    );
-
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_LAB_CARDINAL_RECEIPT = clonePlain(
-      getRaw(lastReport || {}, "LAB_CARDINAL_RECEIPT_BUNDLE", {})
-    );
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_DIAGNOSTIC_TRACK_RECEIPT = clonePlain(
-      getRaw(lastReport || {}, "DIAGNOSTIC_TRACK_RECEIPT", {})
-    );
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_CANVAS_BISHOP_RECEIPT = clonePlain(
-      getRaw(lastReport || {}, "CANVAS_BISHOP_RECEIPT", {})
-    );
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_FINGER_FILE_RECEIPT = clonePlain(
-      getRaw(lastReport || {}, "FINGER_FILE_RECEIPT", {})
-    );
-
-    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT =
-      lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_TEXT =
-      lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_PACKET_TEXT = lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_COMPACT_SUMMARY =
-      lastCompactSummary || "";
-
-    return true;
-  }
-
-  Object.assign(api, {
-    CONTRACT,
-    RECEIPT,
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    version: VERSION,
-    file: FILE,
-    targetRoute: TARGET_ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
-    canvasFile: CANVAS_FILE,
-    expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-
-    diagnosticOnly: true,
-    anchorSafeChronologyObservation: true,
-    receiptHubActive: true,
-    fourLaneReceiptHubActive: true,
-
-    runProbeCanvasSurfaceTruth,
-    runCanvasSurfaceTruth,
-    runProbe,
-    inspect,
-    runDiagnostic,
-    receiveSouthProbeReceipt,
-    receiveProbeSouthReceipt,
-    ingestSouthProbeReceipt,
-
-    getReport,
-    getReceiptLight,
-    getReceipt,
-    getStatus: getReceiptLight,
-    getPacketText,
-    getCompactSummary,
-    getStatusText,
-
-    canvasSelectors: CANVAS_SELECTORS,
-    mountSelectors: MOUNT_SELECTORS,
-    acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS,
-
-    supportsAnchorSafeChronologyObservation: true,
-    supportsCanvasElementProbe: true,
-    supportsCanvasMountProbe: true,
-    supportsCanvasRectProbe: true,
-    supportsComputedVisibilityProbe: true,
-    supportsViewportIntersectionProbe: true,
-    supportsContext2dProbe: true,
-    supportsPixelSampleProbe: true,
-    supportsLayerObstructionProbe: true,
-    supportsNamespaceDomMatchProbe: true,
-    supportsCoordinateSpecificFailure: true,
-    supportsFourLaneReceiptHub: true,
-    supportsLabCardinalReceiptBundle: true,
-    supportsDiagnosticTrackReceipt: true,
-    supportsCanvasBishopReceipt: true,
-    supportsFingerFileReceipt: true,
-    supportsProbeSouthReceiptIngestion: true,
-    supportsCompactPacketText: true,
-
-    ownsDiagnosticProbeOnly: true,
-    ownsCanvasDrawing: false,
-    ownsCanvasCreation: false,
-    ownsCanvasRepair: false,
-    ownsRouteRepair: false,
-    ownsControlMutation: false,
-    ownsRuntimeRestart: false,
-    ownsTerrainTruth: false,
-    ownsHydrologyTruth: false,
-    ownsElevationTruth: false,
-    ownsMaterialTruth: false,
-    ownsF13: false,
-    ownsF21: false,
-    ownsReadyText: false,
-    ownsVisualPass: false,
-
-    productionMutationAuthorized: false,
-    canvasDrawingAuthorized: false,
-    canvasCreationAuthorized: false,
-    canvasRepairAuthorized: false,
-    routeRepairAuthorized: false,
-    controlMutationAuthorized: false,
-    runtimeRestartAuthorized: false,
-
-    ...NO_CLAIMS,
-    ...UPPER_NO_CLAIMS,
-
-    get evidence() {
-      return getReport();
-    },
-
-    get state() {
-      return getReport();
-    }
-  });
-
-  lastReceipt = buildReceipt(makeAnchorReport());
-  lastPacketText = composePacketText(makeAnchorReport());
-  lastCompactSummary = composeCompactSummary(makeAnchorReport());
-
-  publish();
 
   function readPath(base, path) {
     const parts = safeString(path).split(".");
     let cursor = base || root;
 
     for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) {
-        return null;
-      }
-
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
 
     return cursor || null;
   }
 
-  function getReceiptFromAuthority(authority) {
-    if (!authority || (!isObject(authority) && !isFunction(authority))) {
-      return null;
+  function setPath(path, value) {
+    const parts = safeString(path).split(".");
+    if (!parts.length) return false;
+
+    let cursor = root;
+
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const key = parts[index];
+      if (!cursor[key] || typeof cursor[key] !== "object") cursor[key] = {};
+      cursor = cursor[key];
     }
 
-    const methods = [
-      "getReceiptLight",
-      "getReceipt",
-      "getState",
-      "getStatus",
-      "getCanvasStationReceiptLight",
-      "getCanvasStationReceipt",
-      "getExpressionHubReceipt",
-      "getVisiblePlanetReceipt",
-      "getCarrierReceipt",
-      "getCompactSummary"
-    ];
-
-    for (const method of methods) {
-      if (!isFunction(authority[method])) continue;
-
-      try {
-        const output = authority[method]();
-        if (isObject(output)) return output;
-      } catch (_error) {}
-    }
-
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.receipt)) return authority.receipt;
-    if (isObject(authority.state)) return authority.state;
-    if (isObject(authority.report)) return authority.report;
-
-    if (
-      authority.contract ||
-      authority.CONTRACT ||
-      authority.receipt ||
-      authority.RECEIPT
-    ) {
-      return authority;
-    }
-
-    return null;
-  }
-
-  function contractOf(value) {
-    if (!isObject(value) && !isFunction(value)) return "UNKNOWN";
-
-    return firstKnown(
-      value.CONTRACT,
-      value.contract,
-      value.IMPLEMENTATION_CONTRACT,
-      value.implementationContract,
-      value.INTERNAL_RENEWAL_CONTRACT,
-      value.internalRenewalContract,
-      value.currentCanvasParentContract,
-      value.canvasContract,
-      value.hearthCanvasContract,
-      value.CANVAS_CONTRACT,
-      value.CANVAS_NAMESPACE_CONTRACT,
-      value.SOUTH_CONTRACT,
-      value.PROBE_SOUTH_CONTRACT,
-      value.EAST_CONTRACT,
-      value.WEST_CONTRACT,
-      value.NORTH_CONTRACT,
-      value.HEX_CONTRACT,
-      value.SURFACE_CONTRACT
-    );
-  }
-
-  function receiptOf(value) {
-    if (!isObject(value) && !isFunction(value)) return "UNKNOWN";
-
-    return firstKnown(
-      value.RECEIPT,
-      value.receipt,
-      value.IMPLEMENTATION_RECEIPT,
-      value.implementationReceipt,
-      value.INTERNAL_RENEWAL_RECEIPT,
-      value.internalRenewalReceipt,
-      value.currentCanvasParentReceipt,
-      value.canvasReceipt,
-      value.hearthCanvasReceipt,
-      value.CANVAS_RECEIPT,
-      value.CANVAS_NAMESPACE_RECEIPT,
-      value.SOUTH_RECEIPT,
-      value.PROBE_SOUTH_RECEIPT,
-      value.EAST_RECEIPT,
-      value.WEST_RECEIPT,
-      value.NORTH_RECEIPT,
-      value.HEX_RECEIPT,
-      value.SURFACE_RECEIPT
-    );
-  }
-
-  function primitiveSnapshot(value) {
-    if (!isObject(value)) return {};
-
-    const out = {};
-    const keys = Object.keys(value).slice(0, 96);
-
-    for (const key of keys) {
-      let item;
-
-      try {
-        item = value[key];
-      } catch (_error) {
-        continue;
-      }
-
-      if (
-        item === undefined ||
-        item === null ||
-        typeof item === "function" ||
-        (typeof item === "object" && !Array.isArray(item))
-      ) {
-        continue;
-      }
-
-      if (Array.isArray(item)) {
-        out[key] = item.length <= 16 ? clonePlain(item) : `ARRAY_LENGTH_${item.length}`;
-        continue;
-      }
-
-      out[key] = item;
-    }
-
-    return out;
-  }
-
-  function selectAuthority(name, paths, targetWindow) {
-    const scopes = [
-      { name: "TARGET_WINDOW", base: targetWindow || null },
-      { name: "DIAGNOSTIC_WINDOW", base: root }
-    ];
-
-    const candidates = [];
-
-    for (const scope of scopes) {
-      if (!scope.base) continue;
-
-      for (const path of paths || []) {
-        const authority = readPath(scope.base, path);
-        if (!authority) continue;
-
-        const receipt = getReceiptFromAuthority(authority) || {};
-        const contract = firstKnown(contractOf(receipt), contractOf(authority));
-        const receiptName = firstKnown(receiptOf(receipt), receiptOf(authority));
-
-        const methods =
-          isObject(authority) || isFunction(authority)
-            ? Object.keys(authority)
-                .filter((key) => isFunction(authority[key]))
-                .sort()
-                .slice(0, 24)
-            : [];
-
-        candidates.push({
-          name,
-          scope: scope.name,
-          path,
-          observed: true,
-          contract,
-          receipt: receiptName,
-          methodCount: methods.length,
-          methods,
-          primitiveSnapshot: primitiveSnapshot(receipt),
-          authority
-        });
-      }
-    }
-
-    const selected =
-      candidates.find((candidate) => candidate.contract !== "UNKNOWN") ||
-      candidates[0] ||
-      null;
-
-    return {
-      name,
-      observed: Boolean(selected),
-      scope: selected ? selected.scope : "NONE",
-      path: selected ? selected.path : "NONE",
-      contract: selected ? selected.contract : "UNKNOWN",
-      receipt: selected ? selected.receipt : "UNKNOWN",
-      methodCount: selected ? selected.methodCount : 0,
-      methods: selected ? selected.methods : [],
-      primitiveSnapshot: selected ? selected.primitiveSnapshot : {},
-      candidates: candidates.map((candidate) => ({
-        scope: candidate.scope,
-        path: candidate.path,
-        contract: candidate.contract,
-        receipt: candidate.receipt,
-        methodCount: candidate.methodCount
-      })),
-      authority: selected ? selected.authority : null
-    };
-  }
-
-  function compactAuthority(item) {
-    return {
-      observed: Boolean(item && item.observed),
-      scope: item ? item.scope : "NONE",
-      path: item ? item.path : "NONE",
-      contract: item ? item.contract : "UNKNOWN",
-      receipt: item ? item.receipt : "UNKNOWN",
-      methodCount: item ? item.methodCount : 0
-    };
-  }
-
-  function extractCurrentReport(input) {
-    if (isObject(input && input.currentReport)) return clonePlain(input.currentReport);
-    if (isObject(input && input.report)) return clonePlain(input.report);
-    if (isObject(input && input.REPORT_OBJECT)) return clonePlain(input.REPORT_OBJECT);
-
-    if (isObject(input && input.output) && isObject(input.output.REPORT_OBJECT)) {
-      return clonePlain(input.output.REPORT_OBJECT);
-    }
-
-    if (isObject(lastSouthProbeEnvelope && lastSouthProbeEnvelope.report)) {
-      return clonePlain(lastSouthProbeEnvelope.report);
-    }
-
-    return {};
-  }
-
-  function extractChronology(input, currentReport) {
-    if (Array.isArray(input && input.chronology)) return clonePlain(input.chronology);
-    if (Array.isArray(input && input.CHRONOLOGY_SEQUENCE)) {
-      return clonePlain(input.CHRONOLOGY_SEQUENCE);
-    }
-
-    if (Array.isArray(currentReport && currentReport.CHRONOLOGY_SEQUENCE)) {
-      return clonePlain(currentReport.CHRONOLOGY_SEQUENCE);
-    }
-
-    if (Array.isArray(currentReport && currentReport.chronology)) {
-      return clonePlain(currentReport.chronology);
-    }
-
-    return [];
-  }
-
-  function normalizeNotes(...sources) {
-    const out = [];
-    const seen = new Set();
-
-    for (const source of sources) {
-      if (
-        source === undefined ||
-        source === null ||
-        source === "" ||
-        source === "none"
-      ) {
-        continue;
-      }
-
-      const values = Array.isArray(source) ? source : safeString(source).split("|");
-
-      for (const raw of values) {
-        const clean = bounded(raw, 1200);
-        if (!clean || clean === "none") continue;
-        if (seen.has(clean)) continue;
-        seen.add(clean);
-        out.push(clean);
-      }
-    }
-
-    return out;
+    cursor[parts[parts.length - 1]] = value;
+    return true;
   }
 
   function q(doc, selector) {
@@ -1318,8 +665,8 @@
         /hearth/i.test(page) ||
         /hearth/i.test(alias) ||
         /planet engine|planet factory|visible globe|visible planet|canvas expression|mirrorland formation/i.test(context) ||
-        firstElement(doc, CANVAS_SELECTORS).element ||
-        firstElement(doc, MOUNT_SELECTORS).element
+        firstElement(doc, MOUNT_SELECTORS).element ||
+        firstElement(doc, CANVAS_SELECTORS).element
       );
     } catch (_error) {
       return false;
@@ -1332,6 +679,7 @@
     let targetWindow = null;
     let targetDocument = null;
     let targetSource = "UNKNOWN";
+    let targetAccessError = "NONE";
 
     try {
       if (payload.targetWindow && payload.targetDocument) {
@@ -1347,10 +695,11 @@
         targetDocument = payload.targetDocument;
         targetSource = "PAYLOAD_TARGET_DOCUMENT";
       }
-    } catch (_error) {
+    } catch (error) {
       targetWindow = null;
       targetDocument = null;
       targetSource = "PAYLOAD_TARGET_BLOCKED";
+      targetAccessError = error && error.message ? String(error.message) : safeString(error);
     }
 
     if (targetDocument && isDiagnosticReceiver(targetDocument, targetWindow)) {
@@ -1375,7 +724,9 @@
           targetDocument = frameDocument;
           targetSource = "PAYLOAD_FRAME_ELEMENT";
         }
-      } catch (_error) {}
+      } catch (error) {
+        targetAccessError = error && error.message ? String(error.message) : safeString(error);
+      }
     }
 
     if (!targetDocument && ownDocument) {
@@ -1411,7 +762,9 @@
             targetSource = "DISCOVERED_TARGET_IFRAME";
           }
         }
-      } catch (_error) {}
+      } catch (error) {
+        targetAccessError = error && error.message ? String(error.message) : safeString(error);
+      }
     }
 
     if (!targetDocument && ownDocument) {
@@ -1421,14 +774,134 @@
           targetDocument = ownDocument;
           targetSource = "CURRENT_HEARTH_DOCUMENT";
         }
-      } catch (_error) {}
+      } catch (error) {
+        targetAccessError = error && error.message ? String(error.message) : safeString(error);
+      }
     }
 
     return {
       targetWindow,
       targetDocument,
       targetSource,
-      targetAvailable: Boolean(targetWindow && targetDocument)
+      targetAvailable: Boolean(targetWindow && targetDocument),
+      targetAccessError
+    };
+  }
+
+  function normalizeUrlPath(src, base) {
+    const text = safeString(src);
+    if (!text) return "";
+
+    try {
+      const url = new URL(text, base || "https://diamondgatebridge.com");
+      return url.pathname;
+    } catch (_error) {
+      return text.split("?")[0];
+    }
+  }
+
+  function cacheKeyFromSrc(src) {
+    const text = safeString(src);
+    if (!text) return "NONE";
+
+    try {
+      const url = new URL(text, "https://diamondgatebridge.com");
+      return url.searchParams.get("v") || "NONE";
+    } catch (_error) {
+      const match = text.match(/[?&]v=([^&]+)/);
+      return match ? decodeURIComponent(match[1]) : "NONE";
+    }
+  }
+
+  function scriptInfo(targetDocument, targetWindow, path) {
+    const base = targetWindow && targetWindow.location && targetWindow.location.origin
+      ? targetWindow.location.origin
+      : "https://diamondgatebridge.com";
+
+    const scripts = qa(targetDocument, "script[src]");
+    const matches = scripts.filter((script) => {
+      const src = safeString(script.getAttribute("src"));
+      const pathname = normalizeUrlPath(src, base);
+
+      return pathname === path || pathname.endsWith(path) || src.includes(path);
+    });
+
+    const selected = matches[matches.length - 1] || null;
+    const src = selected ? safeString(selected.getAttribute("src")) : "NONE";
+
+    return {
+      file: path,
+      scriptPresent: matches.length > 0,
+      scriptCount: matches.length,
+      scriptSrc: src,
+      scriptCacheKey: cacheKeyFromSrc(src),
+      scriptAsync: selected ? bool(selected.async, false) : false,
+      scriptDefer: selected ? bool(selected.defer, false) : false,
+      scriptType: selected ? safeString(selected.getAttribute("type"), "classic") || "classic" : "NONE",
+      scriptId: selected && selected.id ? selected.id : "NONE",
+      scriptDataset: selected ? datasetSnapshot(selected) : {},
+      scriptTagOrder: selected ? scripts.indexOf(selected) : -1,
+      matchingScriptSrcs: matches.map((script) => safeString(script.getAttribute("src"))).slice(0, 8)
+    };
+  }
+
+  function datasetSnapshot(element) {
+    const out = {};
+    if (!element || !element.dataset) return out;
+
+    try {
+      Object.keys(element.dataset).slice(0, 32).forEach((key) => {
+        out[key] = safeString(element.dataset[key]);
+      });
+    } catch (_error) {}
+
+    return out;
+  }
+
+  function elementDescriptor(element) {
+    if (!element) return "NONE";
+
+    const tag = safeString(element.tagName, "UNKNOWN").toLowerCase();
+    const id = element.id ? `#${element.id}` : "";
+    let classes = "";
+
+    try {
+      classes =
+        element.classList && element.classList.length
+          ? `.${Array.from(element.classList).slice(0, 4).join(".")}`
+          : "";
+    } catch (_error) {}
+
+    return `${tag}${id}${classes}` || "UNKNOWN_ELEMENT";
+  }
+
+  function elementSummary(element, index = 0) {
+    if (!element) {
+      return {
+        index,
+        descriptor: "NONE",
+        tag: "NONE",
+        id: "NONE",
+        className: "NONE",
+        dataset: {}
+      };
+    }
+
+    let className = "NONE";
+
+    try {
+      className = element.className ? safeString(element.className) : "NONE";
+    } catch (_error) {
+      className = "UNREADABLE";
+    }
+
+    return {
+      index,
+      descriptor: elementDescriptor(element),
+      tag: safeString(element.tagName, "UNKNOWN").toLowerCase(),
+      id: element.id || "NONE",
+      className,
+      dataset: datasetSnapshot(element)
     };
   }
 
@@ -1491,21 +964,20 @@
       const display = safeString(style.display, "UNKNOWN");
       const visibility = safeString(style.visibility, "UNKNOWN");
       const opacity = safeString(style.opacity, "UNKNOWN");
-      const pointerEvents = safeString(style.pointerEvents, "UNKNOWN");
 
       return {
         visible: Boolean(
           display !== "none" &&
-            visibility !== "hidden" &&
-            visibility !== "collapse" &&
-            safeNumber(opacity, 1) > 0
+          visibility !== "hidden" &&
+          visibility !== "collapse" &&
+          safeNumber(opacity, 1) > 0
         ),
         display,
         visibility,
         opacity,
         position: safeString(style.position, "UNKNOWN"),
         zIndex: safeString(style.zIndex, "UNKNOWN"),
-        pointerEvents
+        pointerEvents: safeString(style.pointerEvents, "UNKNOWN")
       };
     } catch (_error) {
       return {
@@ -1531,21 +1003,135 @@
     }
   }
 
-  function elementDescriptor(element) {
-    if (!element) return "NONE";
-
-    const tag = safeString(element.tagName, "UNKNOWN").toLowerCase();
-    const id = element.id ? `#${element.id}` : "";
-    let classes = "";
+  function getCanvas2d(canvas) {
+    if (!canvas || !isFunction(canvas.getContext)) {
+      return { ready: false, ctx: null, status: "CANVAS_GET_CONTEXT_UNAVAILABLE" };
+    }
 
     try {
-      classes =
-        element.classList && element.classList.length
-          ? `.${Array.from(element.classList).slice(0, 4).join(".")}`
-          : "";
-    } catch (_error) {}
+      const ctx = canvas.getContext("2d", {
+        alpha: true,
+        willReadFrequently: true
+      });
 
-    return `${tag}${id}${classes}` || "UNKNOWN_ELEMENT";
+      return {
+        ready: Boolean(ctx),
+        ctx,
+        status: ctx ? "CONTEXT_2D_READY" : "CONTEXT_2D_NULL"
+      };
+    } catch (error) {
+      return {
+        ready: false,
+        ctx: null,
+        status: `CONTEXT_2D_ERROR:${bounded(error && error.message ? error.message : error, 500)}`
+      };
+    }
+  }
+
+  function samplePixels(canvas, ctx) {
+    if (!canvas || !ctx) {
+      return {
+        status: "NO_PIXEL_SAMPLE",
+        visible: false,
+        sampleCount: 0,
+        visiblePixelCount: 0,
+        alphaPixelCount: 0,
+        reason: "CANVAS_OR_CONTEXT_UNAVAILABLE"
+      };
+    }
+
+    const width = safeNumber(canvas.width, 0);
+    const height = safeNumber(canvas.height, 0);
+
+    if (width <= 0 || height <= 0 || !isFunction(ctx.getImageData)) {
+      return {
+        status: "NO_PIXEL_SAMPLE",
+        visible: false,
+        sampleCount: 0,
+        visiblePixelCount: 0,
+        alphaPixelCount: 0,
+        reason: "CANVAS_INTERNAL_SIZE_OR_GET_IMAGE_DATA_UNAVAILABLE"
+      };
+    }
+
+    try {
+      const sampleSize = Math.max(
+        3,
+        Math.min(18, Math.floor(Math.min(width, height) / 32))
+      );
+
+      const points = [
+        [0.5, 0.5],
+        [0.35, 0.35],
+        [0.65, 0.35],
+        [0.35, 0.65],
+        [0.65, 0.65],
+        [0.5, 0.28],
+        [0.5, 0.72]
+      ];
+
+      let sampleCount = 0;
+      let alphaPixelCount = 0;
+      let visiblePixelCount = 0;
+      let varianceSignal = 0;
+      let previous = null;
+
+      for (const [px, py] of points) {
+        const x = Math.max(
+          0,
+          Math.min(width - sampleSize, Math.floor(width * px - sampleSize / 2))
+        );
+        const y = Math.max(
+          0,
+          Math.min(height - sampleSize, Math.floor(height * py - sampleSize / 2))
+        );
+
+        const data = ctx.getImageData(x, y, sampleSize, sampleSize).data;
+        sampleCount += data.length / 4;
+
+        for (let index = 0; index < data.length; index += 4) {
+          const red = data[index] || 0;
+          const green = data[index + 1] || 0;
+          const blue = data[index + 2] || 0;
+          const alpha = data[index + 3] || 0;
+
+          if (alpha > 0) alphaPixelCount += 1;
+          if (alpha > 0 && (red > 4 || green > 4 || blue > 4)) visiblePixelCount += 1;
+
+          const current = `${red},${green},${blue},${alpha}`;
+          if (previous && previous !== current) varianceSignal += 1;
+          previous = current;
+        }
+      }
+
+      const visible = visiblePixelCount > 0;
+
+      return {
+        status: visible
+          ? "PIXEL_SAMPLE_VISIBLE"
+          : alphaPixelCount > 0
+            ? "PIXEL_SAMPLE_ALPHA_ONLY"
+            : "PIXEL_SAMPLE_BLANK",
+        visible,
+        sampleCount,
+        visiblePixelCount,
+        alphaPixelCount,
+        varianceSignal,
+        reason: visible
+          ? "VISIBLE_NON_BLANK_PIXELS_FOUND"
+          : "NO_VISIBLE_NON_BLANK_PIXELS_FOUND"
+      };
+    } catch (error) {
+      return {
+        status: "PIXEL_SAMPLE_UNREADABLE",
+        visible: false,
+        sampleCount: 0,
+        visiblePixelCount: 0,
+        alphaPixelCount: 0,
+        varianceSignal: 0,
+        reason: bounded(error && error.message ? error.message : error, 900)
+      };
+    }
   }
 
   function inspectLayerBlock(targetWindow, targetDocument, canvas, rect) {
@@ -1618,130 +1204,379 @@
     };
   }
 
-  function getCanvas2d(canvas) {
-    if (!canvas || !isFunction(canvas.getContext)) {
-      return { ready: false, ctx: null, status: "CANVAS_GET_CONTEXT_UNAVAILABLE" };
+  function primitiveSnapshot(value) {
+    if (!isObject(value)) return {};
+
+    const out = {};
+    const keys = Object.keys(value).slice(0, 120);
+
+    for (const key of keys) {
+      let item;
+
+      try {
+        item = value[key];
+      } catch (_error) {
+        continue;
+      }
+
+      if (
+        item === undefined ||
+        item === null ||
+        typeof item === "function" ||
+        (typeof item === "object" && !Array.isArray(item))
+      ) {
+        continue;
+      }
+
+      if (Array.isArray(item)) {
+        out[key] = item.length <= 16 ? clonePlain(item) : `ARRAY_LENGTH_${item.length}`;
+        continue;
+      }
+
+      out[key] = item;
     }
 
-    try {
-      const ctx = canvas.getContext("2d", {
-        alpha: true,
-        willReadFrequently: true
-      });
+    return out;
+  }
 
-      return {
-        ready: Boolean(ctx),
-        ctx,
-        status: ctx ? "CONTEXT_2D_READY" : "CONTEXT_2D_NULL"
-      };
-    } catch (error) {
-      return {
-        ready: false,
-        ctx: null,
-        status: `CONTEXT_2D_ERROR:${bounded(
-          error && error.message ? error.message : error,
-          500
-        )}`
-      };
+  function getReceiptFromAuthority(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return null;
+
+    const methods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getState",
+      "getStatus",
+      "getSummary",
+      "getReport",
+      "getCanvasStationReceiptLight",
+      "getCanvasStationReceipt",
+      "getExpressionHubReceipt",
+      "getVisiblePlanetReceipt",
+      "getCarrierReceipt",
+      "getPrefaceHandshakePacket",
+      "getCanvasSurfaceWorthinessPacket",
+      "getPrefaceDecommissionPacket",
+      "getCompactSummary"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+
+      try {
+        const output = authority[method]();
+        if (isObject(output)) return output;
+      } catch (_error) {}
+    }
+
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (isObject(authority.state)) return authority.state;
+    if (isObject(authority.report)) return authority.report;
+    if (isObject(authority.evidence)) return authority.evidence;
+
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) return authority;
+
+    return null;
+  }
+
+  function contractOf(value) {
+    if (!isObject(value) && !isFunction(value)) return "UNKNOWN";
+
+    return firstKnown(
+      value.CONTRACT,
+      value.contract,
+      value.IMPLEMENTATION_CONTRACT,
+      value.implementationContract,
+      value.INTERNAL_RENEWAL_CONTRACT,
+      value.internalRenewalContract,
+      value.currentCanvasParentContract,
+      value.canvasContract,
+      value.hearthCanvasContract,
+      value.CANVAS_CONTRACT,
+      value.CANVAS_NAMESPACE_CONTRACT,
+      value.SOUTH_CONTRACT,
+      value.PROBE_SOUTH_CONTRACT,
+      value.EAST_CONTRACT,
+      value.WEST_CONTRACT,
+      value.NORTH_CONTRACT,
+      value.HEX_CONTRACT,
+      value.SURFACE_CONTRACT
+    );
+  }
+
+  function receiptOf(value) {
+    if (!isObject(value) && !isFunction(value)) return "UNKNOWN";
+
+    return firstKnown(
+      value.RECEIPT,
+      value.receipt,
+      value.IMPLEMENTATION_RECEIPT,
+      value.implementationReceipt,
+      value.INTERNAL_RENEWAL_RECEIPT,
+      value.internalRenewalReceipt,
+      value.currentCanvasParentReceipt,
+      value.canvasReceipt,
+      value.hearthCanvasReceipt,
+      value.CANVAS_RECEIPT,
+      value.CANVAS_NAMESPACE_RECEIPT,
+      value.SOUTH_RECEIPT,
+      value.PROBE_SOUTH_RECEIPT,
+      value.EAST_RECEIPT,
+      value.WEST_RECEIPT,
+      value.NORTH_RECEIPT,
+      value.HEX_RECEIPT,
+      value.SURFACE_RECEIPT
+    );
+  }
+
+  function methodsOf(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return [];
+
+    try {
+      return Object.keys(authority)
+        .filter((key) => isFunction(authority[key]))
+        .sort()
+        .slice(0, 80);
+    } catch (_error) {
+      return [];
     }
   }
 
-  function samplePixels(canvas, ctx) {
-    if (!canvas || !ctx) {
-      return {
-        status: "NO_PIXEL_SAMPLE",
-        visible: false,
-        sampleCount: 0,
-        visiblePixelCount: 0,
-        alphaPixelCount: 0,
-        reason: "CANVAS_OR_CONTEXT_UNAVAILABLE"
-      };
+  function selectAuthority(name, paths, targetWindow) {
+    const scopes = [
+      { name: "TARGET_WINDOW", base: targetWindow || null },
+      { name: "DIAGNOSTIC_WINDOW", base: root }
+    ];
+
+    const candidates = [];
+
+    for (const scope of scopes) {
+      if (!scope.base) continue;
+
+      for (const path of paths || []) {
+        const authority = readPath(scope.base, path);
+        if (!authority || authority === api) continue;
+
+        const receipt = getReceiptFromAuthority(authority) || {};
+        const contract = firstKnown(contractOf(receipt), contractOf(authority));
+        const receiptName = firstKnown(receiptOf(receipt), receiptOf(authority));
+        const methods = methodsOf(authority);
+
+        candidates.push({
+          name,
+          scope: scope.name,
+          path,
+          observed: true,
+          contract,
+          receipt: receiptName,
+          methodCount: methods.length,
+          methods,
+          primitiveSnapshot: primitiveSnapshot(receipt),
+          authority
+        });
+      }
     }
 
-    const width = safeNumber(canvas.width, 0);
-    const height = safeNumber(canvas.height, 0);
+    const selected =
+      candidates.find((candidate) => ACCEPTED_CANVAS_CONTRACTS.includes(candidate.contract)) ||
+      candidates.find((candidate) => candidate.contract !== "UNKNOWN") ||
+      candidates.find((candidate) => candidate.methodCount > 0) ||
+      candidates[0] ||
+      null;
 
-    if (width <= 0 || height <= 0 || !isFunction(ctx.getImageData)) {
-      return {
-        status: "NO_PIXEL_SAMPLE",
-        visible: false,
-        sampleCount: 0,
-        visiblePixelCount: 0,
-        alphaPixelCount: 0,
-        reason: "CANVAS_INTERNAL_SIZE_OR_GET_IMAGE_DATA_UNAVAILABLE"
-      };
+    return {
+      name,
+      observed: Boolean(selected),
+      scope: selected ? selected.scope : "NONE",
+      path: selected ? selected.path : "NONE",
+      contract: selected ? selected.contract : "UNKNOWN",
+      receipt: selected ? selected.receipt : "UNKNOWN",
+      methodCount: selected ? selected.methodCount : 0,
+      methods: selected ? selected.methods : [],
+      primitiveSnapshot: selected ? selected.primitiveSnapshot : {},
+      candidates: candidates.map((candidate) => ({
+        scope: candidate.scope,
+        path: candidate.path,
+        contract: candidate.contract,
+        receipt: candidate.receipt,
+        methodCount: candidate.methodCount
+      })),
+      authority: selected ? selected.authority : null
+    };
+  }
+
+  function compactAuthority(item) {
+    return {
+      observed: Boolean(item && item.observed),
+      scope: item ? item.scope : "NONE",
+      path: item ? item.path : "NONE",
+      contract: item ? item.contract : "UNKNOWN",
+      receipt: item ? item.receipt : "UNKNOWN",
+      methodCount: item ? item.methodCount : 0,
+      methods: item && item.methods ? item.methods.slice(0, 24) : []
+    };
+  }
+
+  function methodPresence(methods) {
+    const list = Array.isArray(methods) ? methods : [];
+
+    const bootMethods = ["boot", "init", "start", "mount", "run"].filter((method) => list.includes(method));
+    const domMethods = [
+      "mount",
+      "boot",
+      "start",
+      "draw",
+      "render",
+      "paint",
+      "drawInteractiveFrame",
+      "drawPairFrame",
+      "ensureCanvas",
+      "ensureSurface",
+      "createCanvas",
+      "bindCanvas",
+      "mountCanvas"
+    ].filter((method) => list.includes(method));
+    const receiptMethods = [
+      "getReceiptLight",
+      "getReceipt",
+      "getStatus",
+      "getSummary",
+      "getReport",
+      "getCanvasStationReceipt",
+      "getVisiblePlanetReceipt"
+    ].filter((method) => list.includes(method));
+    const sourceReceiverMethods = [
+      "receiveGovernedSourceStackPacket",
+      "consumeGovernedSourceStackPacket",
+      "acceptGovernedSourceStackPacket",
+      "receiveGovernedSourcePacket",
+      "consumeGovernedSourcePacket",
+      "receiveSourceTruthPacket",
+      "receiveRouteConductorGovernedSourcePacket"
+    ].filter((method) => list.includes(method));
+    const launchMethods = [
+      "receivePrefaceLaunchPacket",
+      "receiveCanvasLaunchPacket",
+      "getPrefaceHandshakePacket",
+      "getCanvasSurfaceWorthinessPacket",
+      "getPrefaceDecommissionPacket"
+    ].filter((method) => list.includes(method));
+
+    return {
+      bootMethods,
+      domMethods,
+      receiptMethods,
+      sourceReceiverMethods,
+      launchMethods,
+      bootOrMountApiPresent: bootMethods.length > 0,
+      domSurfaceIntentApiPresent: domMethods.length > 0,
+      receiptApiPresent: receiptMethods.length > 0,
+      governedSourceReceiverApiPresent: sourceReceiverMethods.length > 0,
+      launchHandshakeApiPresent: launchMethods.length > 0
+    };
+  }
+
+  function scanOpenShadowCanvases(rootElement, limit = 32) {
+    const out = [];
+    const seen = new Set();
+
+    function visit(node) {
+      if (!node || out.length >= limit) return;
+
+      if (seen.has(node)) return;
+      seen.add(node);
+
+      try {
+        if (node.shadowRoot) {
+          const canvases = Array.from(node.shadowRoot.querySelectorAll("canvas")).slice(0, limit - out.length);
+          for (const canvas of canvases) out.push(canvas);
+
+          Array.from(node.shadowRoot.children || []).forEach(visit);
+        }
+
+        Array.from(node.children || []).slice(0, 80).forEach(visit);
+      } catch (_error) {}
     }
+
+    visit(rootElement);
+    return out;
+  }
+
+  function collectMountChildren(mount) {
+    if (!mount) return [];
 
     try {
-      const sampleSize = Math.max(
-        4,
-        Math.min(24, Math.floor(Math.min(width, height) / 28))
-      );
-
-      const points = [
-        [0.5, 0.5],
-        [0.35, 0.35],
-        [0.65, 0.35],
-        [0.35, 0.65],
-        [0.65, 0.65]
-      ];
-
-      let sampleCount = 0;
-      let alphaPixelCount = 0;
-      let visiblePixelCount = 0;
-
-      for (const [px, py] of points) {
-        const x = Math.max(
-          0,
-          Math.min(width - sampleSize, Math.floor(width * px - sampleSize / 2))
-        );
-        const y = Math.max(
-          0,
-          Math.min(height - sampleSize, Math.floor(height * py - sampleSize / 2))
-        );
-
-        const data = ctx.getImageData(x, y, sampleSize, sampleSize).data;
-        sampleCount += data.length / 4;
-
-        for (let index = 0; index < data.length; index += 4) {
-          const red = data[index];
-          const green = data[index + 1];
-          const blue = data[index + 2];
-          const alpha = data[index + 3];
-
-          if (alpha > 0) alphaPixelCount += 1;
-          if (alpha > 0 && (red > 4 || green > 4 || blue > 4)) {
-            visiblePixelCount += 1;
-          }
-        }
-      }
-
-      const visible = visiblePixelCount > 0;
-
-      return {
-        status: visible
-          ? "PIXEL_SAMPLE_VISIBLE"
-          : alphaPixelCount > 0
-            ? "PIXEL_SAMPLE_ALPHA_ONLY"
-            : "PIXEL_SAMPLE_BLANK",
-        visible,
-        sampleCount,
-        visiblePixelCount,
-        alphaPixelCount,
-        reason: visible
-          ? "VISIBLE_NON_BLANK_PIXELS_FOUND"
-          : "NO_VISIBLE_NON_BLANK_PIXELS_FOUND"
-      };
-    } catch (error) {
-      return {
-        status: "PIXEL_SAMPLE_UNREADABLE",
-        visible: false,
-        sampleCount: 0,
-        visiblePixelCount: 0,
-        alphaPixelCount: 0,
-        reason: bounded(error && error.message ? error.message : error, 900)
-      };
+      return Array.from(mount.children || [])
+        .slice(0, 18)
+        .map((child, index) => elementSummary(child, index));
+    } catch (_error) {
+      return [];
     }
+  }
+
+  function collectDatasetElements(targetDocument) {
+    const selector = HEARTH_DATASET_SELECTORS.join(",");
+    const nodes = qa(targetDocument, selector);
+
+    return nodes.slice(0, 24).map((node, index) => elementSummary(node, index));
+  }
+
+  function selectCanvasCandidate(targetDocument, mount) {
+    const selectorResult = firstElement(targetDocument, CANVAS_SELECTORS);
+    const allCanvas = qa(targetDocument, "canvas");
+    const shadowCanvas = scanOpenShadowCanvases(targetDocument.documentElement || targetDocument.body || null, 24);
+    const allKnownCanvas = allCanvas.concat(shadowCanvas.filter((item) => !allCanvas.includes(item)));
+
+    let canvas = selectorResult.element;
+    let selectionSource = selectorResult.element ? `SELECTOR:${selectorResult.selector}` : "NONE";
+    let selector = selectorResult.selector;
+
+    if (!canvas && mount) {
+      canvas = allKnownCanvas.find((candidate) => containsOrEquals(mount, candidate)) || null;
+      if (canvas) {
+        selectionSource = "FALLBACK_CANVAS_IN_MOUNT";
+        selector = "canvas";
+      }
+    }
+
+    if (!canvas && allKnownCanvas.length) {
+      canvas = allKnownCanvas[0];
+      selectionSource = "FALLBACK_FIRST_CANVAS_ANYWHERE";
+      selector = "canvas";
+    }
+
+    return {
+      canvas,
+      selector,
+      selectionSource,
+      allCanvas,
+      shadowCanvas,
+      allKnownCanvas
+    };
+  }
+
+  function summarizeCanvasCandidate(canvas, mount, targetWindow, targetDocument, index) {
+    const rect = getRect(canvas);
+    const css = cssSummary(targetWindow, canvas);
+    const inMount = Boolean(canvas && mount && containsOrEquals(mount, canvas));
+
+    return {
+      index,
+      descriptor: elementDescriptor(canvas),
+      id: canvas && canvas.id ? canvas.id : "NONE",
+      className: canvas && canvas.className ? safeString(canvas.className) : "NONE",
+      inMount,
+      width: safeNumber(canvas && canvas.width, 0),
+      height: safeNumber(canvas && canvas.height, 0),
+      rectWidth: rect.width,
+      rectHeight: rect.height,
+      rectNonzero: rectNonzero(rect),
+      computedVisible: css.visible,
+      viewportIntersecting: viewportIntersecting(targetWindow, rect),
+      dataset: datasetSnapshot(canvas),
+      ownerDocumentMatchesTarget: Boolean(canvas && canvas.ownerDocument === targetDocument)
+    };
   }
 
   function namespaceMatchesDomSurface(namespaceInfo, canvas) {
@@ -1761,8 +1596,9 @@
 
     const contractConsistent = Boolean(
       ACCEPTED_CANVAS_CONTRACTS.includes(namespaceInfo.contract) ||
-        ACCEPTED_CANVAS_CONTRACTS.includes(datasetContract) ||
-        (namespaceInfo.contract && namespaceInfo.contract.includes("HEARTH_CANVAS_"))
+      ACCEPTED_CANVAS_CONTRACTS.includes(datasetContract) ||
+      safeString(namespaceInfo.contract).includes("HEARTH_CANVAS_") ||
+      safeString(datasetContract).includes("HEARTH_CANVAS_")
     );
 
     const sizeConsistent =
@@ -1771,7 +1607,54 @@
     return Boolean(contractConsistent && sizeConsistent);
   }
 
-  function inspectCanvas(targetWindow, targetDocument, contextSource) {
+  function extractCurrentReport(input) {
+    if (isObject(input && input.currentReport)) return clonePlain(input.currentReport);
+    if (isObject(input && input.report)) return clonePlain(input.report);
+    if (isObject(input && input.REPORT_OBJECT)) return clonePlain(input.REPORT_OBJECT);
+
+    if (isObject(input && input.output) && isObject(input.output.REPORT_OBJECT)) {
+      return clonePlain(input.output.REPORT_OBJECT);
+    }
+
+    if (isObject(lastSouthProbeEnvelope && lastSouthProbeEnvelope.report)) {
+      return clonePlain(lastSouthProbeEnvelope.report);
+    }
+
+    return {};
+  }
+
+  function extractChronology(input, currentReport) {
+    if (Array.isArray(input && input.chronology)) return clonePlain(input.chronology);
+    if (Array.isArray(input && input.CHRONOLOGY_SEQUENCE)) return clonePlain(input.CHRONOLOGY_SEQUENCE);
+    if (Array.isArray(currentReport && currentReport.CHRONOLOGY_SEQUENCE)) return clonePlain(currentReport.CHRONOLOGY_SEQUENCE);
+    if (Array.isArray(currentReport && currentReport.chronology)) return clonePlain(currentReport.chronology);
+
+    return [];
+  }
+
+  function renderedProofFromReport(currentReport) {
+    const renderedReady = bool(getRaw(currentReport, "RENDERED_PLANET_PROOF_READY", false), false);
+    const visibleReady = bool(getRaw(currentReport, "VISIBLE_PLANET_PROOF_READY", false), false);
+    const surfaceReady = bool(getRaw(currentReport, "CANVAS_EXPRESSION_SURFACE_READY", false), false);
+    const richnessReady = bool(getRaw(currentReport, "CANVAS_EXPRESSION_RICHNESS_READY", false), false);
+
+    return {
+      renderedPlanetProofReady: renderedReady,
+      visiblePlanetProofReady: visibleReady,
+      canvasExpressionSurfaceReady: surfaceReady,
+      canvasExpressionRichnessReady: richnessReady,
+      visiblePlanetProofSource: firstKnown(
+        getRaw(currentReport, "VISIBLE_PLANET_PROOF_SOURCE", "UNKNOWN"),
+        getRaw(currentReport, "RENDERED_PLANET_PROOF_SOURCE", "UNKNOWN")
+      ),
+      canvasExpressionProofStatus: firstKnown(
+        getRaw(currentReport, "CANVAS_EXPRESSION_PROOF_STATUS", "UNKNOWN"),
+        getRaw(currentReport, "CANVAS_EXPRESSION_BOTTLENECK_CLASS", "UNKNOWN")
+      )
+    };
+  }
+
+  function inspectCanvasSurface(targetWindow, targetDocument, contextSource, currentReport) {
     const report = {
       TARGET_CONTEXT_STATUS:
         targetDocument && targetWindow
@@ -1779,11 +1662,62 @@
           : "TARGET_CONTEXT_UNAVAILABLE",
       TARGET_CONTEXT_SOURCE: contextSource || "UNKNOWN",
 
+      CANVAS_SCRIPT_PRESENT: false,
+      CANVAS_SCRIPT_COUNT: 0,
+      CANVAS_SCRIPT_SRC: "NONE",
+      CANVAS_SCRIPT_CACHE_KEY: "NONE",
+      CANVAS_SCRIPT_TAG_ORDER: -1,
+      CANVAS_SCRIPT_LOAD_INFERRED: false,
+      CANVAS_SCRIPT_EXECUTION_INFERRED: false,
+
+      CANVAS_LAUNCH_SCRIPT_PRESENT: false,
+      CANVAS_LAUNCH_SCRIPT_COUNT: 0,
+      CANVAS_LAUNCH_AUTHORITY_OBSERVED: false,
+      CANVAS_LAUNCH_AUTHORITY_PATH: "NONE",
+      CANVAS_LAUNCH_PREFACE_HELD: "UNKNOWN",
+      CANVAS_LAUNCH_PREFACE_DECOMMISSIONED: "UNKNOWN",
+
+      ROUTE_CONDUCTOR_SCRIPT_PRESENT: false,
+      INDEX_SCRIPT_PRESENT: false,
+      CONTROL_SCRIPT_PRESENT: false,
+
+      CANVAS_AUTHORITY_OBSERVED: false,
+      CANVAS_AUTHORITY_SCOPE: "NONE",
+      CANVAS_AUTHORITY_SOURCE_PATH: "NONE",
+      CANVAS_AUTHORITY_CONTRACT: "UNKNOWN",
+      CANVAS_AUTHORITY_RECEIPT: "UNKNOWN",
+      CANVAS_AUTHORITY_METHOD_COUNT: 0,
+      CANVAS_AUTHORITY_METHODS: [],
+      CANVAS_AUTHORITY_CANDIDATE_COUNT: 0,
+      CANVAS_AUTHORITY_CANDIDATES: [],
+
+      CANVAS_BOOT_OR_MOUNT_API_PRESENT: false,
+      CANVAS_DOM_SURFACE_INTENT_API_PRESENT: false,
+      CANVAS_RECEIPT_API_PRESENT: false,
+      CANVAS_GOVERNED_SOURCE_RECEIVER_API_PRESENT: false,
+      CANVAS_LAUNCH_HANDSHAKE_API_PRESENT: false,
+      CANVAS_BOOT_METHODS_PRESENT: [],
+      CANVAS_DOM_METHODS_PRESENT: [],
+      CANVAS_RECEIPT_METHODS_PRESENT: [],
+      CANVAS_SOURCE_RECEIVER_METHODS_PRESENT: [],
+      CANVAS_LAUNCH_METHODS_PRESENT: [],
+
       CANVAS_MOUNT_FOUND: false,
       CANVAS_MOUNT_SELECTOR: "NONE",
       CANVAS_MOUNT_DESCRIPTOR: "NONE",
+      CANVAS_MOUNT_CHILD_COUNT: 0,
+      CANVAS_MOUNT_CHILDREN: [],
+
+      HEARTH_DATASET_ELEMENT_COUNT: 0,
+      HEARTH_DATASET_ELEMENTS: [],
+
+      DOM_CANVAS_COUNT: 0,
+      DOM_SHADOW_CANVAS_COUNT: 0,
+      DOM_CANVAS_CANDIDATE_COUNT: 0,
+      DOM_CANVAS_CANDIDATES: [],
 
       CANVAS_ELEMENT_FOUND: false,
+      CANVAS_SELECTION_SOURCE: "NONE",
       CANVAS_SELECTOR: "NONE",
       CANVAS_TAG: "NONE",
       CANVAS_ID: "NONE",
@@ -1822,6 +1756,7 @@
       CANVAS_PIXEL_SAMPLE_COUNT: 0,
       CANVAS_VISIBLE_PIXEL_COUNT: 0,
       CANVAS_ALPHA_PIXEL_COUNT: 0,
+      CANVAS_PIXEL_VARIANCE_SIGNAL: 0,
       CANVAS_PIXEL_SAMPLE_REASON: "NOT_RUN",
 
       CANVAS_LAYER_BLOCKED: false,
@@ -1834,47 +1769,119 @@
       CANVAS_NAMESPACE_CONTRACT: "UNKNOWN",
       CANVAS_NAMESPACE_RECEIPT: "UNKNOWN",
       CANVAS_NAMESPACE_MATCHES_DOM_SURFACE: false,
-      CANVAS_PARENT_CONTRACT_RECOGNIZED: false
+      CANVAS_PARENT_CONTRACT_RECOGNIZED: false,
+
+      RENDERED_PLANET_PROOF_READY_INPUT: false,
+      VISIBLE_PLANET_PROOF_READY_INPUT: false,
+      VISIBLE_PLANET_PROOF_SOURCE_INPUT: "UNKNOWN",
+      CANVAS_EXPRESSION_SURFACE_READY_INPUT: false,
+      CANVAS_EXPRESSION_RICHNESS_READY_INPUT: false,
+      RENDERED_PROOF_CONFLICT_STATUS: "NOT_EVALUATED",
+      RENDERED_PROOF_CONFLICT_CLASS: "NONE"
     };
 
     if (!targetWindow || !targetDocument) {
-      const failure = {
-        coordinate: "TARGET_CONTEXT_STATUS",
-        failureClass: "TARGET_CONTEXT_UNAVAILABLE",
-        reason: "TARGET_DOCUMENT_OR_WINDOW_UNAVAILABLE",
-        owner: "DIAGNOSTIC_TARGET_ACCESS",
-        file: FILE,
-        action:
-          "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_CANVAS_SURFACE_TRUTH_PROBE"
-      };
-
-      return { ...report, failure };
+      return { ...report, failure: resolveCausalFailure(report) };
     }
 
-    const mountResult = firstElement(targetDocument, MOUNT_SELECTORS);
-    const canvasResult = firstElement(targetDocument, CANVAS_SELECTORS);
-    const mount = mountResult.element;
-    const canvas = canvasResult.element;
-    const canvasNamespace = selectAuthority("canvasHub", PATHS.canvasHub, targetWindow);
+    const canvasScript = scriptInfo(targetDocument, targetWindow, CANVAS_FILE);
+    const launchScript = scriptInfo(targetDocument, targetWindow, CANVAS_LAUNCH_FILE);
+    const routeScript = scriptInfo(targetDocument, targetWindow, ROUTE_CONDUCTOR_FILE);
+    const indexScript = scriptInfo(targetDocument, targetWindow, INDEX_FILE);
+    const controlScript = scriptInfo(targetDocument, targetWindow, CONTROL_FILE);
 
-    report.CANVAS_NAMESPACE_PRESENT = canvasNamespace.observed;
-    report.CANVAS_NAMESPACE_PATH = canvasNamespace.path;
-    report.CANVAS_NAMESPACE_CONTRACT = canvasNamespace.contract;
-    report.CANVAS_NAMESPACE_RECEIPT = canvasNamespace.receipt;
+    report.CANVAS_SCRIPT_PRESENT = canvasScript.scriptPresent;
+    report.CANVAS_SCRIPT_COUNT = canvasScript.scriptCount;
+    report.CANVAS_SCRIPT_SRC = canvasScript.scriptSrc;
+    report.CANVAS_SCRIPT_CACHE_KEY = canvasScript.scriptCacheKey;
+    report.CANVAS_SCRIPT_TAG_ORDER = canvasScript.scriptTagOrder;
+    report.CANVAS_SCRIPT_LOAD_INFERRED = canvasScript.scriptPresent;
+
+    report.CANVAS_LAUNCH_SCRIPT_PRESENT = launchScript.scriptPresent;
+    report.CANVAS_LAUNCH_SCRIPT_COUNT = launchScript.scriptCount;
+    report.ROUTE_CONDUCTOR_SCRIPT_PRESENT = routeScript.scriptPresent;
+    report.INDEX_SCRIPT_PRESENT = indexScript.scriptPresent;
+    report.CONTROL_SCRIPT_PRESENT = controlScript.scriptPresent;
+
+    const canvasAuthority = selectAuthority("canvas", CANVAS_AUTHORITY_PATHS, targetWindow);
+    const launchAuthority = selectAuthority("canvasLaunch", CANVAS_LAUNCH_PATHS, targetWindow);
+
+    report.CANVAS_AUTHORITY_OBSERVED = canvasAuthority.observed;
+    report.CANVAS_AUTHORITY_SCOPE = canvasAuthority.scope;
+    report.CANVAS_AUTHORITY_SOURCE_PATH = canvasAuthority.path;
+    report.CANVAS_AUTHORITY_CONTRACT = canvasAuthority.contract;
+    report.CANVAS_AUTHORITY_RECEIPT = canvasAuthority.receipt;
+    report.CANVAS_AUTHORITY_METHOD_COUNT = canvasAuthority.methodCount;
+    report.CANVAS_AUTHORITY_METHODS = canvasAuthority.methods.slice(0, 60);
+    report.CANVAS_AUTHORITY_CANDIDATE_COUNT = canvasAuthority.candidates.length;
+    report.CANVAS_AUTHORITY_CANDIDATES = canvasAuthority.candidates;
+
+    report.CANVAS_NAMESPACE_PRESENT = canvasAuthority.observed;
+    report.CANVAS_NAMESPACE_PATH = canvasAuthority.path;
+    report.CANVAS_NAMESPACE_CONTRACT = canvasAuthority.contract;
+    report.CANVAS_NAMESPACE_RECEIPT = canvasAuthority.receipt;
     report.CANVAS_PARENT_CONTRACT_RECOGNIZED = Boolean(
-      ACCEPTED_CANVAS_CONTRACTS.includes(canvasNamespace.contract) ||
-        (canvasNamespace.contract && canvasNamespace.contract.includes("HEARTH_CANVAS_"))
+      ACCEPTED_CANVAS_CONTRACTS.includes(canvasAuthority.contract) ||
+      safeString(canvasAuthority.contract).includes("HEARTH_CANVAS_")
     );
 
+    const presence = methodPresence(canvasAuthority.methods);
+    report.CANVAS_BOOT_OR_MOUNT_API_PRESENT = presence.bootOrMountApiPresent;
+    report.CANVAS_DOM_SURFACE_INTENT_API_PRESENT = presence.domSurfaceIntentApiPresent;
+    report.CANVAS_RECEIPT_API_PRESENT = presence.receiptApiPresent;
+    report.CANVAS_GOVERNED_SOURCE_RECEIVER_API_PRESENT = presence.governedSourceReceiverApiPresent;
+    report.CANVAS_LAUNCH_HANDSHAKE_API_PRESENT = presence.launchHandshakeApiPresent;
+    report.CANVAS_BOOT_METHODS_PRESENT = presence.bootMethods;
+    report.CANVAS_DOM_METHODS_PRESENT = presence.domMethods;
+    report.CANVAS_RECEIPT_METHODS_PRESENT = presence.receiptMethods;
+    report.CANVAS_SOURCE_RECEIVER_METHODS_PRESENT = presence.sourceReceiverMethods;
+    report.CANVAS_LAUNCH_METHODS_PRESENT = presence.launchMethods;
+
+    report.CANVAS_SCRIPT_EXECUTION_INFERRED = Boolean(
+      canvasAuthority.observed ||
+      report.CANVAS_NAMESPACE_PRESENT ||
+      report.CANVAS_AUTHORITY_METHOD_COUNT > 0 ||
+      dataValue(targetDocument, "hearthCanvasLoaded") === "true" ||
+      dataValue(targetDocument, "hearthCanvasHubActive") === "true"
+    );
+
+    report.CANVAS_LAUNCH_AUTHORITY_OBSERVED = launchAuthority.observed;
+    report.CANVAS_LAUNCH_AUTHORITY_PATH = launchAuthority.path;
+    report.CANVAS_LAUNCH_PREFACE_HELD = firstKnown(
+      getRaw(launchAuthority.primitiveSnapshot, "prefaceHeld", "UNKNOWN"),
+      dataValue(targetDocument, "hearthCanvasLaunchPrefaceHeld")
+    );
+    report.CANVAS_LAUNCH_PREFACE_DECOMMISSIONED = firstKnown(
+      getRaw(launchAuthority.primitiveSnapshot, "prefaceDecommissioned", "UNKNOWN"),
+      dataValue(targetDocument, "hearthCanvasLaunchPrefaceDecommissioned")
+    );
+
+    const mountResult = firstElement(targetDocument, MOUNT_SELECTORS);
+    const mount = mountResult.element;
     report.CANVAS_MOUNT_FOUND = Boolean(mount);
     report.CANVAS_MOUNT_SELECTOR = mountResult.selector;
     report.CANVAS_MOUNT_DESCRIPTOR = elementDescriptor(mount);
+    report.CANVAS_MOUNT_CHILD_COUNT = mount && mount.children ? mount.children.length : 0;
+    report.CANVAS_MOUNT_CHILDREN = collectMountChildren(mount);
+
+    const datasetElements = collectDatasetElements(targetDocument);
+    report.HEARTH_DATASET_ELEMENT_COUNT = datasetElements.length;
+    report.HEARTH_DATASET_ELEMENTS = datasetElements;
+
+    const selection = selectCanvasCandidate(targetDocument, mount);
+    const canvas = selection.canvas;
+
+    report.DOM_CANVAS_COUNT = selection.allCanvas.length;
+    report.DOM_SHADOW_CANVAS_COUNT = selection.shadowCanvas.length;
+    report.DOM_CANVAS_CANDIDATE_COUNT = selection.allKnownCanvas.length;
+    report.DOM_CANVAS_CANDIDATES = selection.allKnownCanvas
+      .slice(0, 12)
+      .map((candidate, index) => summarizeCanvasCandidate(candidate, mount, targetWindow, targetDocument, index));
 
     report.CANVAS_ELEMENT_FOUND = Boolean(canvas);
-    report.CANVAS_SELECTOR = canvasResult.selector;
-    report.CANVAS_TAG = canvas
-      ? safeString(canvas.tagName, "UNKNOWN").toLowerCase()
-      : "NONE";
+    report.CANVAS_SELECTION_SOURCE = selection.selectionSource;
+    report.CANVAS_SELECTOR = selection.selector;
+    report.CANVAS_TAG = canvas ? safeString(canvas.tagName, "UNKNOWN").toLowerCase() : "NONE";
     report.CANVAS_ID = canvas && canvas.id ? canvas.id : "NONE";
 
     try {
@@ -1937,6 +1944,7 @@
       report.CANVAS_PIXEL_SAMPLE_COUNT = pixels.sampleCount;
       report.CANVAS_VISIBLE_PIXEL_COUNT = pixels.visiblePixelCount;
       report.CANVAS_ALPHA_PIXEL_COUNT = pixels.alphaPixelCount;
+      report.CANVAS_PIXEL_VARIANCE_SIGNAL = pixels.varianceSignal;
       report.CANVAS_PIXEL_SAMPLE_REASON = pixels.reason;
 
       report.CANVAS_LAYER_BLOCKED = layer.blocked;
@@ -1944,16 +1952,31 @@
       report.CANVAS_LAYER_HIT_TARGET = layer.hitTarget;
       report.CANVAS_LAYER_HIT_WITHIN_CANVAS = layer.hitWithinCanvas;
 
-      report.CANVAS_NAMESPACE_MATCHES_DOM_SURFACE = namespaceMatchesDomSurface(
-        canvasNamespace,
-        canvas
-      );
+      report.CANVAS_NAMESPACE_MATCHES_DOM_SURFACE = namespaceMatchesDomSurface(canvasAuthority, canvas);
     }
 
-    return { ...report, failure: resolveFailure(report) };
+    const rendered = renderedProofFromReport(currentReport);
+    report.RENDERED_PLANET_PROOF_READY_INPUT = rendered.renderedPlanetProofReady;
+    report.VISIBLE_PLANET_PROOF_READY_INPUT = rendered.visiblePlanetProofReady;
+    report.VISIBLE_PLANET_PROOF_SOURCE_INPUT = rendered.visiblePlanetProofSource;
+    report.CANVAS_EXPRESSION_SURFACE_READY_INPUT = rendered.canvasExpressionSurfaceReady;
+    report.CANVAS_EXPRESSION_RICHNESS_READY_INPUT = rendered.canvasExpressionRichnessReady;
+
+    if ((rendered.renderedPlanetProofReady || rendered.visiblePlanetProofReady) && !report.CANVAS_ELEMENT_FOUND) {
+      report.RENDERED_PROOF_CONFLICT_STATUS = "RENDERED_PROOF_READY_WITHOUT_DOM_CANVAS";
+      report.RENDERED_PROOF_CONFLICT_CLASS = "NAMESPACE_OR_SURROGATE_PROOF_IS_NOT_CANVAS_SURFACE_TRUTH";
+    } else if ((rendered.renderedPlanetProofReady || rendered.visiblePlanetProofReady) && report.CANVAS_ELEMENT_FOUND) {
+      report.RENDERED_PROOF_CONFLICT_STATUS = "RENDERED_PROOF_HAS_DOM_CANVAS_CANDIDATE";
+      report.RENDERED_PROOF_CONFLICT_CLASS = "DOM_CANVAS_CANDIDATE_AVAILABLE_FOR_SURFACE_TRUTH";
+    } else {
+      report.RENDERED_PROOF_CONFLICT_STATUS = "NO_RENDERED_PROOF_CONFLICT";
+      report.RENDERED_PROOF_CONFLICT_CLASS = "NONE";
+    }
+
+    return { ...report, failure: resolveCausalFailure(report) };
   }
 
-  function resolveFailure(report) {
+  function resolveCausalFailure(report) {
     const checks = [
       [
         "TARGET_CONTEXT_STATUS",
@@ -1965,22 +1988,67 @@
         "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_CANVAS_SURFACE_TRUTH_PROBE"
       ],
       [
-        "CANVAS_MOUNT_FOUND",
-        report.CANVAS_MOUNT_FOUND !== true,
-        "CANVAS_MOUNT_NOT_FOUND",
-        "NO_EXPECTED_HEARTH_CANVAS_MOUNT_FOUND",
-        "HTML_SHELL_OR_STAGE_MARKUP",
-        "/showroom/globe/hearth/index.html",
-        "VERIFY_EXPECTED_CANVAS_MOUNT_OR_STAGE_MARKUP"
+        "CANVAS_SCRIPT_PRESENT",
+        report.CANVAS_SCRIPT_PRESENT !== true,
+        "CANVAS_SCRIPT_NOT_PRESENT",
+        "TARGET_DOCUMENT_DOES_NOT_CONTAIN_THE_CANVAS_SCRIPT",
+        "CANVAS_LOAD_CHAIN_OR_ROUTE_CONDUCTOR",
+        CANVAS_FILE,
+        "VERIFY_THE_TARGET_ROUTE_LOADS_ASSET_CANVAS_FILE"
+      ],
+      [
+        "CANVAS_SCRIPT_EXECUTION_INFERRED",
+        report.CANVAS_SCRIPT_PRESENT === true && report.CANVAS_SCRIPT_EXECUTION_INFERRED !== true,
+        "CANVAS_SCRIPT_PRESENT_BUT_EXECUTION_NOT_PROVEN",
+        "CANVAS_SCRIPT_TAG_EXISTS_BUT_NO_ALIAS_DATASET_OR_DOM_EXECUTION_SIGNAL_WAS_OBSERVED",
+        "CANVAS_SCRIPT_EXECUTION_OR_RUNTIME_ERROR",
+        CANVAS_FILE,
+        "AUDIT_CANVAS_FILE_TOP_LEVEL_EXECUTION_AND_EARLY_PUBLICATION"
+      ],
+      [
+        "CANVAS_AUTHORITY_OBSERVED",
+        report.CANVAS_AUTHORITY_OBSERVED !== true,
+        "CANVAS_AUTHORITY_NOT_PUBLISHED",
+        "CANVAS_SCRIPT_OR_ROUTE_MAY_LOAD_BUT_EXPECTED_CANVAS_PUBLIC_NAMESPACE_IS_MISSING",
+        "CANVAS_ALIAS_PUBLICATION",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_FILE_PUBLISHES_EXPECTED_PUBLIC_ALIASES_BEFORE_OR_DURING_BOOT"
+      ],
+      [
+        "CANVAS_BOOT_OR_MOUNT_API_PRESENT",
+        report.CANVAS_BOOT_OR_MOUNT_API_PRESENT !== true,
+        "CANVAS_BOOT_MOUNT_API_MISSING",
+        "CANVAS_AUTHORITY_EXISTS_BUT_HAS_NO_PUBLIC_BOOT_INIT_START_OR_MOUNT_METHOD",
+        "CANVAS_PUBLIC_API",
+        CANVAS_FILE,
+        "VERIFY_CANVAS_AUTHORITY_EXPOSES_BOOT_OR_MOUNT_PUBLIC_API"
+      ],
+      [
+        "DOM_CANVAS_COUNT",
+        safeNumber(report.DOM_CANVAS_CANDIDATE_COUNT, 0) <= 0,
+        "CANVAS_DOM_SURFACE_NOT_CREATED",
+        "CANVAS_AUTHORITY_EXISTS_BUT_NO_REAL_DOM_CANVAS_EXISTS_IN_TARGET_DOCUMENT_OR_OPEN_SHADOW_DOM",
+        "CANVAS_DOM_SURFACE_CREATION",
+        CANVAS_FILE,
+        "AUDIT_CANVAS_BOOT_PATH_FOR_REAL_DOCUMENT_CREATE_ELEMENT_CANVAS_OR_EXISTING_CANVAS_BIND"
       ],
       [
         "CANVAS_ELEMENT_FOUND",
         report.CANVAS_ELEMENT_FOUND !== true,
         "CANVAS_ELEMENT_NOT_FOUND",
-        "NO_CANVAS_ELEMENT_MATCHED_EXPECTED_SELECTORS",
+        "NO_CANVAS_ELEMENT_MATCHED_EXPECTED_SELECTORS_OR_FALLBACK_SCAN",
         "CANVAS_EXPRESSION_SURFACE",
         CANVAS_FILE,
         "VERIFY_CANVAS_FILE_CREATES_OR_BINDS_A_REAL_DOM_CANVAS_SURFACE"
+      ],
+      [
+        "CANVAS_MOUNT_FOUND",
+        report.CANVAS_MOUNT_FOUND !== true,
+        "CANVAS_MOUNT_NOT_FOUND",
+        "NO_EXPECTED_HEARTH_CANVAS_MOUNT_FOUND",
+        "HTML_SHELL_OR_STAGE_MARKUP",
+        HTML_FILE,
+        "VERIFY_EXPECTED_CANVAS_MOUNT_OR_STAGE_MARKUP"
       ],
       [
         "CANVAS_IN_MOUNT",
@@ -2024,7 +2092,7 @@
         "CANVAS_COMPUTED_STYLE_HIDDEN",
         "CANVAS_COMPUTED_STYLE_IS_NOT_VISIBLE",
         "CSS_VISIBILITY_OR_ROUTE_SHELL",
-        "/showroom/globe/hearth/index.html",
+        HTML_FILE,
         "AUDIT_DISPLAY_VISIBILITY_OPACITY_POINTER_EVENTS"
       ],
       [
@@ -2033,7 +2101,7 @@
         "CANVAS_OUTSIDE_VIEWPORT",
         "CANVAS_HAS_GEOMETRY_BUT_DOES_NOT_INTERSECT_VIEWPORT",
         "CSS_LAYOUT_OR_SCROLL_POSITION",
-        "/showroom/globe/hearth/index.html",
+        HTML_FILE,
         "AUDIT_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_INTERSECTION"
       ],
       [
@@ -2060,17 +2128,8 @@
         "CANVAS_LAYER_OBSTRUCTED",
         "CANVAS_IS_PRESENT_BUT_ELEMENT_FROM_POINT_HIT_TEST_INDICATES_OVERLAY_BLOCKAGE",
         "CSS_LAYERING_OR_OVERLAY",
-        "/showroom/globe/hearth/index.html",
+        HTML_FILE,
         "AUDIT_Z_INDEX_POINTER_LAYER_AND_OVERLAY_ELEMENTS"
-      ],
-      [
-        "CANVAS_NAMESPACE_PRESENT",
-        report.CANVAS_NAMESPACE_PRESENT !== true,
-        "CANVAS_NAMESPACE_NOT_PRESENT",
-        "DOM_CANVAS_EXISTS_BUT_CANVAS_AUTHORITY_NAMESPACE_NOT_FOUND",
-        "CANVAS_ALIAS_PUBLICATION",
-        CANVAS_FILE,
-        "VERIFY_CANVAS_FILE_PUBLISHES_EXPECTED_PUBLIC_ALIASES"
       ],
       [
         "CANVAS_PARENT_CONTRACT_RECOGNIZED",
@@ -2115,27 +2174,37 @@
     };
   }
 
+  function normalizeNotes(...sources) {
+    const out = [];
+    const seen = new Set();
+
+    for (const source of sources) {
+      if (source === undefined || source === null || source === "" || source === "none") continue;
+
+      const values = Array.isArray(source) ? source : safeString(source).split("|");
+
+      for (const raw of values) {
+        const clean = bounded(raw, 1400);
+        if (!clean || clean === "none") continue;
+        if (seen.has(clean)) continue;
+        seen.add(clean);
+        out.push(clean);
+      }
+    }
+
+    return out;
+  }
+
   function collectLabCardinalReceiptBundle(targetWindow, currentReport) {
-    const north = selectAuthority("north", PATHS.labNorth, targetWindow);
-    const east = selectAuthority("east", PATHS.labEast, targetWindow);
-    const south = selectAuthority("south", PATHS.labSouth, targetWindow);
-    const west = selectAuthority("west", PATHS.labWest, targetWindow);
+    const north = selectAuthority("north", LAB_PATHS.north, targetWindow);
+    const east = selectAuthority("east", LAB_PATHS.east, targetWindow);
+    const south = selectAuthority("south", LAB_PATHS.south, targetWindow);
+    const west = selectAuthority("west", LAB_PATHS.west, targetWindow);
 
-    if (currentReport.NORTH_CONTRACT && north.contract === "UNKNOWN") {
-      north.contract = currentReport.NORTH_CONTRACT;
-    }
-
-    if (currentReport.EAST_CONTRACT && east.contract === "UNKNOWN") {
-      east.contract = currentReport.EAST_CONTRACT;
-    }
-
-    if (currentReport.SOUTH_CONTRACT && south.contract === "UNKNOWN") {
-      south.contract = currentReport.SOUTH_CONTRACT;
-    }
-
-    if (currentReport.WEST_CONTRACT && west.contract === "UNKNOWN") {
-      west.contract = currentReport.WEST_CONTRACT;
-    }
+    if (currentReport.NORTH_CONTRACT && north.contract === "UNKNOWN") north.contract = currentReport.NORTH_CONTRACT;
+    if (currentReport.EAST_CONTRACT && east.contract === "UNKNOWN") east.contract = currentReport.EAST_CONTRACT;
+    if (currentReport.SOUTH_CONTRACT && south.contract === "UNKNOWN") south.contract = currentReport.SOUTH_CONTRACT;
+    if (currentReport.WEST_CONTRACT && west.contract === "UNKNOWN") west.contract = currentReport.WEST_CONTRACT;
 
     const observedCount = [north, east, south, west].filter(
       (item) => item.observed || item.contract !== "UNKNOWN"
@@ -2159,15 +2228,11 @@
   }
 
   function collectDiagnosticTrackReceipt(targetWindow, currentReport, chronology) {
-    const north = selectAuthority("diagnosticNorth", PATHS.diagnosticNorth, targetWindow);
-    const east = selectAuthority("diagnosticEast", PATHS.diagnosticEast, targetWindow);
-    const west = selectAuthority("diagnosticWest", PATHS.diagnosticWest, targetWindow);
-    const south = selectAuthority("diagnosticSouth", PATHS.diagnosticSouth, targetWindow);
-    const probeSouth = selectAuthority(
-      "diagnosticProbeSouth",
-      PATHS.diagnosticProbeSouth,
-      targetWindow
-    );
+    const north = selectAuthority("diagnosticNorth", DIAGNOSTIC_PATHS.north, targetWindow);
+    const east = selectAuthority("diagnosticEast", DIAGNOSTIC_PATHS.east, targetWindow);
+    const west = selectAuthority("diagnosticWest", DIAGNOSTIC_PATHS.west, targetWindow);
+    const south = selectAuthority("diagnosticSouth", DIAGNOSTIC_PATHS.south, targetWindow);
+    const probeSouth = selectAuthority("diagnosticProbeSouth", DIAGNOSTIC_PATHS.probeSouth, targetWindow);
 
     const entries = Array.isArray(chronology) ? chronology : [];
     const completeCount = entries.filter(
@@ -2208,42 +2273,41 @@
   }
 
   function collectCanvasBishopReceipt(targetWindow, canvasReport, currentReport) {
-    const canvasHub = selectAuthority("canvasHub", PATHS.canvasHub, targetWindow);
-    const bishopQueen = selectAuthority("bishopQueen", PATHS.bishopQueen, targetWindow);
-    const routeConductor = selectAuthority(
-      "routeConductor",
-      PATHS.routeConductor,
-      targetWindow
-    );
+    const canvasHub = selectAuthority("canvasHub", CANVAS_AUTHORITY_PATHS, targetWindow);
+    const canvasLaunch = selectAuthority("canvasLaunch", CANVAS_LAUNCH_PATHS, targetWindow);
+    const routeConductor = selectAuthority("routeConductor", ROUTE_CONDUCTOR_PATHS, targetWindow);
+    const control = selectAuthority("control", CONTROL_PATHS, targetWindow);
 
-    const bishopReady = Boolean(
-      bishopQueen.observed ||
-        /BISHOP_QUEEN/i.test(packetValue(currentReport.SECONDARY_EVIDENCE_NOTES, ""))
-    );
-
-    const canvasReady = Boolean(
+    const canvasDomReady = Boolean(
       canvasReport.CANVAS_ELEMENT_FOUND === true &&
-        canvasReport.CANVAS_RECT_NONZERO === true &&
-        canvasReport.CANVAS_CONTEXT_2D_READY === true &&
-        canvasReport.CANVAS_NAMESPACE_PRESENT === true
+      canvasReport.CANVAS_RECT_NONZERO === true &&
+      canvasReport.CANVAS_CONTEXT_2D_READY === true &&
+      canvasReport.CANVAS_PIXEL_VISIBLE === true
     );
+
+    const canvasAuthorityReady = Boolean(canvasReport.CANVAS_AUTHORITY_OBSERVED === true);
 
     return {
       receiptName: "CANVAS_BISHOP_RECEIPT",
       status:
-        canvasReady && bishopReady
+        canvasDomReady && canvasAuthorityReady
           ? "CANVAS_BISHOP_RECEIPT_COMPLETE"
-          : canvasReady || bishopReady
+          : canvasDomReady || canvasAuthorityReady
             ? "CANVAS_BISHOP_RECEIPT_PARTIAL"
             : "CANVAS_BISHOP_RECEIPT_NOT_OBSERVED",
-      canvasReady,
-      bishopReady,
+      canvasDomReady,
+      canvasAuthorityReady,
+      canvasScriptPresent: canvasReport.CANVAS_SCRIPT_PRESENT === true,
+      canvasScriptExecutionInferred: canvasReport.CANVAS_SCRIPT_EXECUTION_INFERRED === true,
       pixelVisible: canvasReport.CANVAS_PIXEL_VISIBLE === true,
       canvasPixelSampleStatus: canvasReport.CANVAS_PIXEL_SAMPLE_STATUS,
       canvasTruthFailureClass: canvasReport.CANVAS_TRUTH_FAILURE_CLASS || "UNKNOWN",
+      renderedProofConflictStatus: canvasReport.RENDERED_PROOF_CONFLICT_STATUS,
+      renderedProofConflictClass: canvasReport.RENDERED_PROOF_CONFLICT_CLASS,
       canvasHub: compactAuthority(canvasHub),
-      bishopQueen: compactAuthority(bishopQueen),
+      canvasLaunch: compactAuthority(canvasLaunch),
       routeConductor: compactAuthority(routeConductor),
+      control: compactAuthority(control),
       currentCanvasParentContract: firstKnown(
         currentReport.CURRENT_CANVAS_PARENT_CONTRACT,
         canvasReport.CANVAS_NAMESPACE_CONTRACT,
@@ -2261,10 +2325,7 @@
   function truthyAny(...values) {
     return values.some((value) => {
       if (value === true || value === 1 || value === "1") return true;
-      if (typeof value === "string" && /true|ready|active|complete|observed|present|valid/i.test(value)) {
-        return true;
-      }
-
+      if (typeof value === "string" && /true|ready|active|complete|observed|present|valid/i.test(value)) return true;
       return false;
     });
   }
@@ -2301,17 +2362,11 @@
   function collectFingerFileReceipt(targetWindow, currentReport, chronology, payload) {
     const surfacePointer = selectAuthority(
       "southSurfacePointer",
-      PATHS.southSurfacePointer,
+      DIAGNOSTIC_PATHS.southSurfacePointer,
       targetWindow
     );
-    const fingerInspect = selectAuthority("fingerInspect", PATHS.fingerInspect, targetWindow);
-    const hexSurface = selectAuthority("hexSurface", PATHS.hexSurface, targetWindow);
-    const fourPairAuthority = selectAuthority(
-      "fourPairAuthority",
-      PATHS.fourPairAuthority,
-      targetWindow
-    );
-    const surfacePacket = selectAuthority("surfacePacket", PATHS.surfacePacket, targetWindow);
+    const fingerInspect = selectAuthority("fingerInspect", FINGER_PATHS, targetWindow);
+    const hexSurface = selectAuthority("hexSurface", HEX_PATHS, targetWindow);
 
     const sidecarReport =
       callSidecarIfAvailable(surfacePointer.authority, {
@@ -2344,7 +2399,7 @@
     const surfaceReady = truthyAny(
       sidecarReport.SURFACE_FINGER_READY,
       getRaw(fingerInspect.primitiveSnapshot, "SURFACE_READY", undefined),
-      surfacePacket.observed
+      fingerInspect.observed
     );
     const lightReady = truthyAny(
       sidecarReport.LIGHT_FINGER_READY,
@@ -2355,24 +2410,13 @@
       sidecarReport.HEX_SURFACE_BRIDGE_READY,
       hexSurface.observed
     );
-    const fourPairReady = truthyAny(
-      sidecarReport.HEX_FOUR_PAIR_AUTHORITY_READY,
-      fourPairAuthority.observed
-    );
 
-    const readyCount = [
-      boundaryReady,
-      massReady,
-      surfaceReady,
-      lightReady,
-      hexReady,
-      fourPairReady
-    ].filter(Boolean).length;
+    const readyCount = [boundaryReady, massReady, surfaceReady, lightReady, hexReady].filter(Boolean).length;
 
     return {
       receiptName: "FINGER_FILE_RECEIPT",
       status:
-        readyCount >= 6
+        readyCount >= 5
           ? "FINGER_FILE_RECEIPT_COMPLETE"
           : readyCount > 0 || surfacePointer.observed || southEnvelopePresent
             ? "FINGER_FILE_RECEIPT_PARTIAL"
@@ -2383,16 +2427,13 @@
       surfacePointer: compactAuthority(surfacePointer),
       fingerInspect: compactAuthority(fingerInspect),
       hexSurface: compactAuthority(hexSurface),
-      fourPairAuthority: compactAuthority(fourPairAuthority),
-      surfacePacket: compactAuthority(surfacePacket),
       boundaryFingerReady: boolText(boundaryReady, "false"),
       massFingerReady: boolText(massReady, "false"),
       surfaceFingerReady: boolText(surfaceReady, "false"),
       lightFingerReady: boolText(lightReady, "false"),
       hexSurfaceBridgeReady: boolText(hexReady, "false"),
-      hexFourPairAuthorityReady: boolText(fourPairReady, "false"),
       readyCount,
-      expectedReadyCount: 6,
+      expectedReadyCount: 5,
       sidecarInterpretation: firstKnown(
         sidecarReport.SURFACE_POINTER_INTERPRETATION,
         sidecarReport.DOWNSTREAM_EXPRESSION_SET_STATUS
@@ -2421,26 +2462,125 @@
     return "TRUTH_HUB_RECEIPT_BUNDLE_NOT_OBSERVED";
   }
 
+  function makeAnchorReport() {
+    return {
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_ANCHOR_PACKET_v1_3",
+      CONTRACT,
+      RECEIPT,
+      INTERNAL_RENEWAL_CONTRACT,
+      INTERNAL_RENEWAL_RECEIPT,
+      PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      VERSION,
+      FILE,
+      TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE,
+      CANVAS_FILE,
+      CANVAS_LAUNCH_FILE,
+      EXPECTED_CANVAS_CONTRACT,
+      DIAGNOSTIC_TIMESTAMP: nowIso(),
+
+      CANVAS_SURFACE_TRUTH_PROBE_STATUS: "ANCHOR_READY",
+      CANVAS_SURFACE_TRUTH_AVAILABLE: "UNKNOWN",
+      TRUTH_HUB_ACTIVE: "true",
+      TRUTH_HUB_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      TRUTH_HUB_RECEIPT_LANE_COUNT: "4",
+      TRUTH_HUB_RECEIPT_ROUTES:
+        "LAB_CARDINAL_RECEIPT_BUNDLE | DIAGNOSTIC_TRACK_RECEIPT | CANVAS_BISHOP_RECEIPT | FINGER_FILE_RECEIPT",
+      TRUTH_HUB_PACKET_TEXT_SAFE: "true",
+      RECEIPT_RETURN_MECHANISM_STATUS: "ANCHOR_SAFE_RECEIPT_READY",
+      DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY: "true",
+      NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
+
+      CAUSAL_FORENSICS_LENS_ACTIVE: true,
+      CAUSAL_FORENSICS_VERSION: "v1_3",
+      TARGET_CONTEXT_STATUS: "NOT_RUN",
+      TARGET_CONTEXT_SOURCE: "ANCHOR_ONLY",
+
+      CANVAS_SCRIPT_PRESENT: "UNKNOWN",
+      CANVAS_SCRIPT_EXECUTION_INFERRED: "UNKNOWN",
+      CANVAS_AUTHORITY_OBSERVED: "UNKNOWN",
+      CANVAS_BOOT_OR_MOUNT_API_PRESENT: "UNKNOWN",
+      DOM_CANVAS_COUNT: "UNKNOWN",
+      DOM_CANVAS_CANDIDATE_COUNT: "UNKNOWN",
+
+      CANVAS_ELEMENT_FOUND: false,
+      CANVAS_SELECTOR: "NOT_RUN",
+      CANVAS_MOUNT_FOUND: "UNKNOWN",
+      CANVAS_MOUNT_SELECTOR: "NOT_RUN",
+      CANVAS_IN_MOUNT: "UNKNOWN",
+      CANVAS_RECT_NONZERO: false,
+      CANVAS_COMPUTED_VISIBLE: "UNKNOWN",
+      CANVAS_VIEWPORT_INTERSECTING: "UNKNOWN",
+      CANVAS_CONTEXT_2D_READY: "UNKNOWN",
+      CANVAS_PIXEL_SAMPLE_STATUS: "NO_PIXEL_SAMPLE_ANCHOR_ONLY",
+      CANVAS_PIXEL_VISIBLE: "UNKNOWN",
+      CANVAS_LAYER_BLOCKED: "UNKNOWN",
+      CANVAS_LAYER_BLOCKER: "UNKNOWN",
+      CANVAS_NAMESPACE_PRESENT: "UNKNOWN",
+      CANVAS_NAMESPACE_PATH: "NONE",
+      CANVAS_NAMESPACE_CONTRACT: "UNKNOWN",
+      CANVAS_NAMESPACE_RECEIPT: "UNKNOWN",
+      CANVAS_NAMESPACE_MATCHES_DOM_SURFACE: "UNKNOWN",
+      CANVAS_PARENT_CONTRACT_RECOGNIZED: "UNKNOWN",
+
+      RENDERED_PROOF_CONFLICT_STATUS: "NOT_RUN",
+      RENDERED_PROOF_CONFLICT_CLASS: "NOT_RUN",
+
+      CANVAS_TRUTH_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: "NOT_RUN",
+      CANVAS_TRUTH_FAILURE_CLASS: "NOT_RUN",
+      CANVAS_TRUTH_FAILURE_REASON: "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL",
+      CANVAS_TRUTH_RECOMMENDED_OWNER: "NONE",
+      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE",
+      CANVAS_TRUTH_RECOMMENDED_ACTION:
+        "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE_CAUSAL_CHAIN",
+
+      LAB_CARDINAL_RECEIPT_BUNDLE_STATUS: "ANCHOR_READY",
+      DIAGNOSTIC_TRACK_RECEIPT_STATUS: "ANCHOR_READY",
+      CANVAS_BISHOP_RECEIPT_STATUS: "ANCHOR_READY",
+      FINGER_FILE_RECEIPT_STATUS: "ANCHOR_READY",
+      PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS: "ANCHOR_READY",
+
+      PRODUCTION_MUTATION_AUTHORIZED: false,
+      CANVAS_DRAWING_AUTHORIZED: false,
+      CANVAS_CREATION_AUTHORIZED: false,
+      CANVAS_REPAIR_AUTHORIZED: false,
+      ROUTE_REPAIR_AUTHORIZED: false,
+      CONTROL_MUTATION_AUTHORIZED: false,
+      RUNTIME_RESTART_AUTHORIZED: false,
+
+      SECONDARY_EVIDENCE_NOTES:
+        "CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_ANCHOR_PUBLISHED_SYNCHRONOUSLY | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
+      CANVAS_SURFACE_TRUTH_NOTES:
+        "ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_READY | HEAVY_TARGET_PROBE_NOT_RUN_DURING_PUBLISH",
+
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
+  }
+
   function inspectCanvasSurfaceTruth(payload = {}) {
     const startedAt = nowIso();
     const currentReport = extractCurrentReport(payload);
     const chronology = extractChronology(payload, currentReport);
     const context = getTargetContext(payload);
 
-    const canvasProbe = inspectCanvas(
+    const canvasProbe = inspectCanvasSurface(
       context.targetWindow,
       context.targetDocument,
-      context.targetSource
+      context.targetSource,
+      currentReport
     );
 
-    const failure = canvasProbe.failure || resolveFailure(canvasProbe);
+    const failure = canvasProbe.failure || resolveCausalFailure(canvasProbe);
 
     const canvasReport = {
       ...canvasProbe,
       CANVAS_TRUTH_STATUS:
         failure.coordinate === "NONE"
           ? "CANVAS_SURFACE_TRUTH_PROVEN_NO_FINAL_CLAIM"
-          : "CANVAS_SURFACE_TRUTH_FAILED_AT_COORDINATE",
+          : "CANVAS_SURFACE_TRUTH_FAILED_AT_CAUSAL_COORDINATE",
       CANVAS_TRUTH_FIRST_FAILED_COORDINATE: failure.coordinate,
       CANVAS_TRUTH_FAILURE_CLASS: failure.failureClass,
       CANVAS_TRUTH_FAILURE_REASON: failure.reason,
@@ -2451,26 +2591,10 @@
 
     delete canvasReport.failure;
 
-    const labBundle = collectLabCardinalReceiptBundle(
-      context.targetWindow,
-      currentReport
-    );
-    const diagnosticTrackReceipt = collectDiagnosticTrackReceipt(
-      context.targetWindow,
-      currentReport,
-      chronology
-    );
-    const canvasBishopReceipt = collectCanvasBishopReceipt(
-      context.targetWindow,
-      canvasReport,
-      currentReport
-    );
-    const fingerFileReceipt = collectFingerFileReceipt(
-      context.targetWindow,
-      currentReport,
-      chronology,
-      payload
-    );
+    const labBundle = collectLabCardinalReceiptBundle(context.targetWindow, currentReport);
+    const diagnosticTrackReceipt = collectDiagnosticTrackReceipt(context.targetWindow, currentReport, chronology);
+    const canvasBishopReceipt = collectCanvasBishopReceipt(context.targetWindow, canvasReport, currentReport);
+    const fingerFileReceipt = collectFingerFileReceipt(context.targetWindow, currentReport, chronology, payload);
 
     const truthHubStatus = buildHubStatus(
       labBundle,
@@ -2482,7 +2606,7 @@
     const notes = normalizeNotes(
       currentReport.SECONDARY_EVIDENCE_NOTES,
       currentReport.NORTH_SECONDARY_EVIDENCE_NOTES,
-      "CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_ACTIVE",
+      "CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_LENS_ACTIVE",
       "TRUTH_HUB_RETURNS_FOUR_COMPACT_RECEIPT_LANES",
       "LAB_CARDINAL_RECEIPT_BUNDLE_INCLUDED",
       "DIAGNOSTIC_TRACK_RECEIPT_INCLUDED",
@@ -2490,23 +2614,31 @@
       "FINGER_FILE_RECEIPT_INCLUDED",
       "TRUTH_HUB_DOES_NOT_DRAW_CANVAS",
       "TRUTH_HUB_DOES_NOT_MUTATE_PRODUCTION",
+      `CANVAS_SCRIPT_PRESENT:${canvasReport.CANVAS_SCRIPT_PRESENT}`,
+      `CANVAS_SCRIPT_EXECUTION_INFERRED:${canvasReport.CANVAS_SCRIPT_EXECUTION_INFERRED}`,
+      `CANVAS_AUTHORITY_OBSERVED:${canvasReport.CANVAS_AUTHORITY_OBSERVED}`,
+      `DOM_CANVAS_CANDIDATE_COUNT:${canvasReport.DOM_CANVAS_CANDIDATE_COUNT}`,
       `CANVAS_TRUTH_FIRST_FAILED_COORDINATE:${canvasReport.CANVAS_TRUTH_FIRST_FAILED_COORDINATE}`,
       `CANVAS_TRUTH_FAILURE_CLASS:${canvasReport.CANVAS_TRUTH_FAILURE_CLASS}`,
+      `RENDERED_PROOF_CONFLICT_STATUS:${canvasReport.RENDERED_PROOF_CONFLICT_STATUS}`,
       `TRUTH_HUB_STATUS:${truthHubStatus}`
     );
 
     const report = {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_PACKET_v1_2",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_CAUSAL_FORENSICS_PACKET_v1_3",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
+      PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       VERSION,
       FILE,
       TARGET_ROUTE,
       DIAGNOSTIC_ROUTE,
       CANVAS_FILE,
+      CANVAS_LAUNCH_FILE,
       EXPECTED_CANVAS_CONTRACT,
       DIAGNOSTIC_TIMESTAMP: startedAt,
 
@@ -2519,9 +2651,13 @@
         "LAB_CARDINAL_RECEIPT_BUNDLE | DIAGNOSTIC_TRACK_RECEIPT | CANVAS_BISHOP_RECEIPT | FINGER_FILE_RECEIPT",
       TRUTH_HUB_PACKET_TEXT_SAFE: "true",
       RECEIPT_RETURN_MECHANISM_STATUS:
-        "TRUTH_HUB_COMPACT_RECEIPT_RETURN_READY",
+        "TRUTH_HUB_COMPACT_CAUSAL_FORENSICS_RECEIPT_RETURN_READY",
       DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY: "true",
       NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
+
+      CAUSAL_FORENSICS_LENS_ACTIVE: true,
+      CAUSAL_FORENSICS_VERSION: "v1_3",
+      TARGET_ACCESS_ERROR: context.targetAccessError || "NONE",
 
       PRODUCTION_MUTATION_AUTHORIZED: false,
       CANVAS_DRAWING_AUTHORIZED: false,
@@ -2565,60 +2701,160 @@
     return clonePlain(report);
   }
 
-  function runProbeCanvasSurfaceTruth(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function runCanvasSurfaceTruth(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function runProbe(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function inspect(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function runDiagnostic(payload = {}) {
-    return inspectCanvasSurfaceTruth(payload);
-  }
-
-  function receiveSouthProbeReceipt(input = {}) {
-    lastSouthProbeEnvelope = clonePlain({
-      receivedAt: nowIso(),
-      source: "PROBE_SOUTH_TO_CANVAS_SURFACE_TRUTH_HUB",
-      report: extractCurrentReport(input),
-      raw: input
-    });
-
-    const report = inspectCanvasSurfaceTruth({
-      currentReport: lastSouthProbeEnvelope.report,
-      southProbeReceipt: lastSouthProbeEnvelope.raw,
-      chronology: input.chronology || getRaw(input, "CHRONOLOGY_SEQUENCE", [])
-    });
+  function buildReceipt(report = lastReport || makeAnchorReport()) {
+    const r = report || makeAnchorReport();
 
     return {
-      ok: true,
+      packetType: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1_3",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      received: true,
-      report,
-      packetText: getPacketText(),
-      compactSummary: getCompactSummary(),
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      version: VERSION,
+      file: FILE,
+      targetRoute: TARGET_ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      canvasFile: CANVAS_FILE,
+      canvasLaunchFile: CANVAS_LAUNCH_FILE,
+      expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+
+      diagnosticOnly: true,
+      anchorSafeChronologyObservation: true,
+      causalForensicsLensActive: true,
+      productionMutationAuthorized: false,
+      canvasDrawingAuthorized: false,
+      canvasCreationAuthorized: false,
+      canvasRepairAuthorized: false,
+      routeRepairAuthorized: false,
+      controlMutationAuthorized: false,
+      runtimeRestartAuthorized: false,
+
+      canvasSurfaceTruthProbeStatus: getRaw(r, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY"),
+      canvasSurfaceTruthAvailable: getRaw(r, "CANVAS_SURFACE_TRUTH_AVAILABLE", "UNKNOWN"),
+      truthHubActive: true,
+      truthHubStatus: getRaw(r, "TRUTH_HUB_STATUS", "ANCHOR_READY_TARGET_NOT_YET_PROBED"),
+      receiptLaneCount: 4,
+      receiptRoutes: [
+        "LAB_CARDINAL_RECEIPT_BUNDLE",
+        "DIAGNOSTIC_TRACK_RECEIPT",
+        "CANVAS_BISHOP_RECEIPT",
+        "FINGER_FILE_RECEIPT"
+      ],
+
+      targetContextStatus: getRaw(r, "TARGET_CONTEXT_STATUS", "UNKNOWN"),
+      targetContextSource: getRaw(r, "TARGET_CONTEXT_SOURCE", "UNKNOWN"),
+
+      canvasScriptPresent: getRaw(r, "CANVAS_SCRIPT_PRESENT", "UNKNOWN"),
+      canvasScriptCount: getRaw(r, "CANVAS_SCRIPT_COUNT", "UNKNOWN"),
+      canvasScriptSrc: getRaw(r, "CANVAS_SCRIPT_SRC", "UNKNOWN"),
+      canvasScriptCacheKey: getRaw(r, "CANVAS_SCRIPT_CACHE_KEY", "UNKNOWN"),
+      canvasScriptExecutionInferred: getRaw(r, "CANVAS_SCRIPT_EXECUTION_INFERRED", "UNKNOWN"),
+
+      canvasAuthorityObserved: getRaw(r, "CANVAS_AUTHORITY_OBSERVED", "UNKNOWN"),
+      canvasAuthoritySourcePath: getRaw(r, "CANVAS_AUTHORITY_SOURCE_PATH", "NONE"),
+      canvasAuthorityContract: getRaw(r, "CANVAS_AUTHORITY_CONTRACT", "UNKNOWN"),
+      canvasAuthorityReceipt: getRaw(r, "CANVAS_AUTHORITY_RECEIPT", "UNKNOWN"),
+      canvasAuthorityMethodCount: getRaw(r, "CANVAS_AUTHORITY_METHOD_COUNT", 0),
+
+      canvasBootOrMountApiPresent: getRaw(r, "CANVAS_BOOT_OR_MOUNT_API_PRESENT", "UNKNOWN"),
+      canvasDomSurfaceIntentApiPresent: getRaw(r, "CANVAS_DOM_SURFACE_INTENT_API_PRESENT", "UNKNOWN"),
+      canvasReceiptApiPresent: getRaw(r, "CANVAS_RECEIPT_API_PRESENT", "UNKNOWN"),
+      canvasGovernedSourceReceiverApiPresent: getRaw(r, "CANVAS_GOVERNED_SOURCE_RECEIVER_API_PRESENT", "UNKNOWN"),
+      canvasLaunchHandshakeApiPresent: getRaw(r, "CANVAS_LAUNCH_HANDSHAKE_API_PRESENT", "UNKNOWN"),
+
+      canvasMountFound: getRaw(r, "CANVAS_MOUNT_FOUND", "UNKNOWN"),
+      canvasMountSelector: getRaw(r, "CANVAS_MOUNT_SELECTOR", "UNKNOWN"),
+      canvasMountChildCount: getRaw(r, "CANVAS_MOUNT_CHILD_COUNT", 0),
+
+      domCanvasCount: getRaw(r, "DOM_CANVAS_COUNT", "UNKNOWN"),
+      domShadowCanvasCount: getRaw(r, "DOM_SHADOW_CANVAS_COUNT", "UNKNOWN"),
+      domCanvasCandidateCount: getRaw(r, "DOM_CANVAS_CANDIDATE_COUNT", "UNKNOWN"),
+
+      canvasElementFound: getRaw(r, "CANVAS_ELEMENT_FOUND", false),
+      canvasSelectionSource: getRaw(r, "CANVAS_SELECTION_SOURCE", "UNKNOWN"),
+      canvasSelector: getRaw(r, "CANVAS_SELECTOR", "UNKNOWN"),
+      canvasInMount: getRaw(r, "CANVAS_IN_MOUNT", "UNKNOWN"),
+      canvasRectNonzero: getRaw(r, "CANVAS_RECT_NONZERO", false),
+      canvasComputedVisible: getRaw(r, "CANVAS_COMPUTED_VISIBLE", "UNKNOWN"),
+      canvasViewportIntersecting: getRaw(r, "CANVAS_VIEWPORT_INTERSECTING", "UNKNOWN"),
+      canvasContext2dReady: getRaw(r, "CANVAS_CONTEXT_2D_READY", "UNKNOWN"),
+      canvasPixelSampleStatus: getRaw(r, "CANVAS_PIXEL_SAMPLE_STATUS", "NO_PIXEL_SAMPLE"),
+      canvasPixelVisible: getRaw(r, "CANVAS_PIXEL_VISIBLE", "UNKNOWN"),
+      canvasLayerBlocked: getRaw(r, "CANVAS_LAYER_BLOCKED", "UNKNOWN"),
+      canvasNamespacePresent: getRaw(r, "CANVAS_NAMESPACE_PRESENT", "UNKNOWN"),
+      canvasParentContractRecognized: getRaw(r, "CANVAS_PARENT_CONTRACT_RECOGNIZED", "UNKNOWN"),
+      canvasNamespaceMatchesDomSurface: getRaw(r, "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE", "UNKNOWN"),
+
+      renderedProofConflictStatus: getRaw(r, "RENDERED_PROOF_CONFLICT_STATUS", "UNKNOWN"),
+      renderedProofConflictClass: getRaw(r, "RENDERED_PROOF_CONFLICT_CLASS", "UNKNOWN"),
+
+      canvasTruthStatus: getRaw(r, "CANVAS_TRUTH_STATUS", "ANCHOR_READY_TARGET_NOT_YET_PROBED"),
+      canvasTruthFirstFailedCoordinate: getRaw(r, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "NOT_RUN"),
+      canvasTruthFailureClass: getRaw(r, "CANVAS_TRUTH_FAILURE_CLASS", "NOT_RUN"),
+      canvasTruthFailureReason: getRaw(r, "CANVAS_TRUTH_FAILURE_REASON", "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL"),
+      canvasTruthRecommendedOwner: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_OWNER", "NONE"),
+      canvasTruthRecommendedFile: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_FILE", "NONE"),
+      canvasTruthRecommendedAction: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_ACTION", "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE_CAUSAL_CHAIN"),
+
+      labCardinalReceiptBundleStatus: getRaw(r, "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS", "ANCHOR_READY"),
+      diagnosticTrackReceiptStatus: getRaw(r, "DIAGNOSTIC_TRACK_RECEIPT_STATUS", "ANCHOR_READY"),
+      canvasBishopReceiptStatus: getRaw(r, "CANVAS_BISHOP_RECEIPT_STATUS", "ANCHOR_READY"),
+      fingerFileReceiptStatus: getRaw(r, "FINGER_FILE_RECEIPT_STATUS", "ANCHOR_READY"),
+      probeSouthToTruthHubTransferStatus: getRaw(r, "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", "ANCHOR_READY"),
+
+      receiptReturnMechanismStatus: getRaw(r, "RECEIPT_RETURN_MECHANISM_STATUS", "ANCHOR_SAFE_RECEIPT_READY"),
+      diagnosticUiReadableReceiptSurfaceReady: getRaw(r, "DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY", "true"),
+      northReadableReceiptSurfaceReady: getRaw(r, "NORTH_READABLE_RECEIPT_SURFACE_READY", "true"),
+
+      runProbeCanvasSurfaceTruthApiAvailable: true,
+      runCanvasSurfaceTruthApiAvailable: true,
+      receiveSouthProbeReceiptApiAvailable: true,
+      receiveProbeSouthReceiptApiAvailable: true,
+      runProbeApiAvailable: true,
+      inspectApiAvailable: true,
+      runDiagnosticApiAvailable: true,
+      getReportApiAvailable: true,
+      getReceiptApiAvailable: true,
+      getReceiptLightApiAvailable: true,
+      getPacketTextApiAvailable: true,
+      getCompactSummaryApiAvailable: true,
+
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
     };
   }
 
-  function receiveProbeSouthReceipt(input = {}) {
-    return receiveSouthProbeReceipt(input);
+  function getReport() {
+    return clonePlain(lastReport || makeAnchorReport());
   }
 
-  function ingestSouthProbeReceipt(input = {}) {
-    return receiveSouthProbeReceipt(input);
+  function getReceiptLight() {
+    if (!lastReceipt) lastReceipt = buildReceipt(lastReport || makeAnchorReport());
+    return clonePlain(lastReceipt);
+  }
+
+  function getReceipt() {
+    const report = lastReport || makeAnchorReport();
+
+    return {
+      ...getReceiptLight(),
+      report: clonePlain(report),
+      labCardinalReceiptBundle: clonePlain(getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE", {})),
+      diagnosticTrackReceipt: clonePlain(getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT", {})),
+      canvasBishopReceipt: clonePlain(getRaw(report, "CANVAS_BISHOP_RECEIPT", {})),
+      fingerFileReceipt: clonePlain(getRaw(report, "FINGER_FILE_RECEIPT", {})),
+      acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
+      canvasSelectors: CANVAS_SELECTORS.slice(),
+      mountSelectors: MOUNT_SELECTORS.slice(),
+      supportsAnchorSafeChronologyObservation: true,
+      supportsCoordinateSpecificFailure: true,
+      supportsCausalForensicsLens: true,
+      supportsFourLaneReceiptHub: true,
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
   }
 
   function orderedFields(report) {
@@ -2628,11 +2864,14 @@
       "RECEIPT",
       "INTERNAL_RENEWAL_CONTRACT",
       "INTERNAL_RENEWAL_RECEIPT",
+      "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
+      "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
       "VERSION",
       "FILE",
       "TARGET_ROUTE",
       "DIAGNOSTIC_ROUTE",
       "CANVAS_FILE",
+      "CANVAS_LAUNCH_FILE",
       "EXPECTED_CANVAS_CONTRACT",
       "DIAGNOSTIC_TIMESTAMP",
 
@@ -2647,13 +2886,68 @@
       "DIAGNOSTIC_UI_READABLE_RECEIPT_SURFACE_READY",
       "NORTH_READABLE_RECEIPT_SURFACE_READY",
 
+      "CAUSAL_FORENSICS_LENS_ACTIVE",
+      "CAUSAL_FORENSICS_VERSION",
       "TARGET_CONTEXT_STATUS",
       "TARGET_CONTEXT_SOURCE",
+      "TARGET_ACCESS_ERROR",
+
+      "CANVAS_SCRIPT_PRESENT",
+      "CANVAS_SCRIPT_COUNT",
+      "CANVAS_SCRIPT_SRC",
+      "CANVAS_SCRIPT_CACHE_KEY",
+      "CANVAS_SCRIPT_TAG_ORDER",
+      "CANVAS_SCRIPT_LOAD_INFERRED",
+      "CANVAS_SCRIPT_EXECUTION_INFERRED",
+
+      "CANVAS_LAUNCH_SCRIPT_PRESENT",
+      "CANVAS_LAUNCH_SCRIPT_COUNT",
+      "CANVAS_LAUNCH_AUTHORITY_OBSERVED",
+      "CANVAS_LAUNCH_AUTHORITY_PATH",
+      "CANVAS_LAUNCH_PREFACE_HELD",
+      "CANVAS_LAUNCH_PREFACE_DECOMMISSIONED",
+
+      "ROUTE_CONDUCTOR_SCRIPT_PRESENT",
+      "INDEX_SCRIPT_PRESENT",
+      "CONTROL_SCRIPT_PRESENT",
+
+      "CANVAS_AUTHORITY_OBSERVED",
+      "CANVAS_AUTHORITY_SCOPE",
+      "CANVAS_AUTHORITY_SOURCE_PATH",
+      "CANVAS_AUTHORITY_CONTRACT",
+      "CANVAS_AUTHORITY_RECEIPT",
+      "CANVAS_AUTHORITY_METHOD_COUNT",
+      "CANVAS_AUTHORITY_METHODS",
+      "CANVAS_AUTHORITY_CANDIDATE_COUNT",
+      "CANVAS_AUTHORITY_CANDIDATES",
+
+      "CANVAS_BOOT_OR_MOUNT_API_PRESENT",
+      "CANVAS_DOM_SURFACE_INTENT_API_PRESENT",
+      "CANVAS_RECEIPT_API_PRESENT",
+      "CANVAS_GOVERNED_SOURCE_RECEIVER_API_PRESENT",
+      "CANVAS_LAUNCH_HANDSHAKE_API_PRESENT",
+      "CANVAS_BOOT_METHODS_PRESENT",
+      "CANVAS_DOM_METHODS_PRESENT",
+      "CANVAS_RECEIPT_METHODS_PRESENT",
+      "CANVAS_SOURCE_RECEIVER_METHODS_PRESENT",
+      "CANVAS_LAUNCH_METHODS_PRESENT",
 
       "CANVAS_MOUNT_FOUND",
       "CANVAS_MOUNT_SELECTOR",
       "CANVAS_MOUNT_DESCRIPTOR",
+      "CANVAS_MOUNT_CHILD_COUNT",
+      "CANVAS_MOUNT_CHILDREN",
+
+      "HEARTH_DATASET_ELEMENT_COUNT",
+      "HEARTH_DATASET_ELEMENTS",
+
+      "DOM_CANVAS_COUNT",
+      "DOM_SHADOW_CANVAS_COUNT",
+      "DOM_CANVAS_CANDIDATE_COUNT",
+      "DOM_CANVAS_CANDIDATES",
+
       "CANVAS_ELEMENT_FOUND",
+      "CANVAS_SELECTION_SOURCE",
       "CANVAS_SELECTOR",
       "CANVAS_TAG",
       "CANVAS_ID",
@@ -2686,6 +2980,7 @@
       "CANVAS_PIXEL_SAMPLE_COUNT",
       "CANVAS_VISIBLE_PIXEL_COUNT",
       "CANVAS_ALPHA_PIXEL_COUNT",
+      "CANVAS_PIXEL_VARIANCE_SIGNAL",
       "CANVAS_PIXEL_SAMPLE_REASON",
       "CANVAS_LAYER_BLOCKED",
       "CANVAS_LAYER_BLOCKER",
@@ -2697,6 +2992,14 @@
       "CANVAS_NAMESPACE_RECEIPT",
       "CANVAS_PARENT_CONTRACT_RECOGNIZED",
       "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
+
+      "RENDERED_PLANET_PROOF_READY_INPUT",
+      "VISIBLE_PLANET_PROOF_READY_INPUT",
+      "VISIBLE_PLANET_PROOF_SOURCE_INPUT",
+      "CANVAS_EXPRESSION_SURFACE_READY_INPUT",
+      "CANVAS_EXPRESSION_RICHNESS_READY_INPUT",
+      "RENDERED_PROOF_CONFLICT_STATUS",
+      "RENDERED_PROOF_CONFLICT_CLASS",
 
       "CANVAS_TRUTH_STATUS",
       "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
@@ -2753,51 +3056,26 @@
   function composeCompactSummary(report = lastReport || makeAnchorReport()) {
     return [
       line("CONTRACT", getRaw(report, "CONTRACT", CONTRACT)),
-      line(
-        "INTERNAL_RENEWAL_CONTRACT",
-        getRaw(report, "INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)
-      ),
-      line(
-        "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
-        getRaw(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY")
-      ),
+      line("INTERNAL_RENEWAL_CONTRACT", getRaw(report, "INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)),
+      line("CANVAS_SURFACE_TRUTH_PROBE_STATUS", getRaw(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY")),
       line("TRUTH_HUB_STATUS", getRaw(report, "TRUTH_HUB_STATUS", "UNKNOWN")),
-      line(
-        "RECEIPT_RETURN_MECHANISM_STATUS",
-        getRaw(report, "RECEIPT_RETURN_MECHANISM_STATUS", "UNKNOWN")
-      ),
-      line(
-        "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS",
-        getRaw(report, "LAB_CARDINAL_RECEIPT_BUNDLE_STATUS", "UNKNOWN")
-      ),
-      line(
-        "DIAGNOSTIC_TRACK_RECEIPT_STATUS",
-        getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT_STATUS", "UNKNOWN")
-      ),
-      line(
-        "CANVAS_BISHOP_RECEIPT_STATUS",
-        getRaw(report, "CANVAS_BISHOP_RECEIPT_STATUS", "UNKNOWN")
-      ),
-      line(
-        "FINGER_FILE_RECEIPT_STATUS",
-        getRaw(report, "FINGER_FILE_RECEIPT_STATUS", "UNKNOWN")
-      ),
-      line(
-        "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
-        getRaw(report, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "UNKNOWN")
-      ),
-      line(
-        "CANVAS_TRUTH_FAILURE_CLASS",
-        getRaw(report, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN")
-      ),
-      line(
-        "CANVAS_TRUTH_RECOMMENDED_FILE",
-        getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN")
-      ),
-      line(
-        "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS",
-        getRaw(report, "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", "UNKNOWN")
-      ),
+      line("CAUSAL_FORENSICS_LENS_ACTIVE", getRaw(report, "CAUSAL_FORENSICS_LENS_ACTIVE", "UNKNOWN")),
+      line("TARGET_CONTEXT_STATUS", getRaw(report, "TARGET_CONTEXT_STATUS", "UNKNOWN")),
+      line("CANVAS_SCRIPT_PRESENT", getRaw(report, "CANVAS_SCRIPT_PRESENT", "UNKNOWN")),
+      line("CANVAS_SCRIPT_EXECUTION_INFERRED", getRaw(report, "CANVAS_SCRIPT_EXECUTION_INFERRED", "UNKNOWN")),
+      line("CANVAS_AUTHORITY_OBSERVED", getRaw(report, "CANVAS_AUTHORITY_OBSERVED", "UNKNOWN")),
+      line("CANVAS_AUTHORITY_SOURCE_PATH", getRaw(report, "CANVAS_AUTHORITY_SOURCE_PATH", "UNKNOWN")),
+      line("CANVAS_BOOT_OR_MOUNT_API_PRESENT", getRaw(report, "CANVAS_BOOT_OR_MOUNT_API_PRESENT", "UNKNOWN")),
+      line("DOM_CANVAS_CANDIDATE_COUNT", getRaw(report, "DOM_CANVAS_CANDIDATE_COUNT", "UNKNOWN")),
+      line("CANVAS_ELEMENT_FOUND", getRaw(report, "CANVAS_ELEMENT_FOUND", "UNKNOWN")),
+      line("CANVAS_PIXEL_SAMPLE_STATUS", getRaw(report, "CANVAS_PIXEL_SAMPLE_STATUS", "UNKNOWN")),
+      line("CANVAS_PIXEL_VISIBLE", getRaw(report, "CANVAS_PIXEL_VISIBLE", "UNKNOWN")),
+      line("RENDERED_PROOF_CONFLICT_STATUS", getRaw(report, "RENDERED_PROOF_CONFLICT_STATUS", "UNKNOWN")),
+      line("CANVAS_TRUTH_FIRST_FAILED_COORDINATE", getRaw(report, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "UNKNOWN")),
+      line("CANVAS_TRUTH_FAILURE_CLASS", getRaw(report, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN")),
+      line("CANVAS_TRUTH_RECOMMENDED_FILE", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN")),
+      line("CANVAS_TRUTH_RECOMMENDED_ACTION", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_ACTION", "UNKNOWN")),
+      line("PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", getRaw(report, "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS", "UNKNOWN")),
       "f13Claimed=false",
       "f21EligibleForNorth=false",
       "f21ClaimedByDiagnosticRail=false",
@@ -2809,8 +3087,184 @@
     ].join("\n");
   }
 
+  function getPacketText() {
+    if (!lastPacketText) lastPacketText = composePacketText(lastReport || makeAnchorReport());
+    return lastPacketText;
+  }
+
+  function getCompactSummary() {
+    if (!lastCompactSummary) lastCompactSummary = composeCompactSummary(lastReport || makeAnchorReport());
+    return lastCompactSummary;
+  }
+
+  function getStatusText() {
+    return getCompactSummary();
+  }
+
+  function runProbeCanvasSurfaceTruth(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function runCanvasSurfaceTruth(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function runProbe(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function inspect(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function runDiagnostic(payload = {}) {
+    return inspectCanvasSurfaceTruth(payload);
+  }
+
+  function receiveSouthProbeReceipt(input = {}) {
+    lastSouthProbeEnvelope = clonePlain({
+      receivedAt: nowIso(),
+      source: "PROBE_SOUTH_TO_CANVAS_SURFACE_TRUTH_HUB",
+      report: extractCurrentReport(input),
+      raw: input
+    });
+
+    const report = inspectCanvasSurfaceTruth({
+      currentReport: lastSouthProbeEnvelope.report,
+      southProbeReceipt: lastSouthProbeEnvelope.raw,
+      chronology: input.chronology || getRaw(input, "CHRONOLOGY_SEQUENCE", [])
+    });
+
+    return {
+      ok: true,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      received: true,
+      report,
+      packetText: getPacketText(),
+      compactSummary: getCompactSummary(),
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
+  }
+
+  function receiveProbeSouthReceipt(input = {}) {
+    return receiveSouthProbeReceipt(input);
+  }
+
+  function ingestSouthProbeReceipt(input = {}) {
+    return receiveSouthProbeReceipt(input);
+  }
+
+  function publish() {
+    ensureObject(root, "HEARTH");
+    ensureObject(root, "DEXTER_LAB");
+
+    root.HEARTH.diagnosticProbeCanvasSurfaceTruth = api;
+    root.HEARTH.diagnosticCanvasSurfaceTruthProbe = api;
+    root.HEARTH.diagnosticProbeCanvasTruth = api;
+    root.HEARTH.diagnosticCanvasTruthProbe = api;
+    root.HEARTH.diagnosticRailProbeCanvasSurfaceTruth = api;
+    root.HEARTH.diagnosticCanvasSurfaceTruthReceiptHub = api;
+    root.HEARTH.diagnosticTruthHub = api;
+
+    root.DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth = api;
+    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe = api;
+    root.DEXTER_LAB.hearthDiagnosticCanvasTruthProbe = api;
+    root.DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth = api;
+    root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthReceiptHub = api;
+    root.DEXTER_LAB.hearthDiagnosticTruthHub = api;
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = api;
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE = api;
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH = api;
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH = api;
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB = api;
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB = api;
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_RECEIPT = getReceiptLight();
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT = clonePlain(lastReport || makeAnchorReport());
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_REPORT = clonePlain(lastReport || makeAnchorReport());
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_REPORT = clonePlain(lastReport || makeAnchorReport());
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_REPORT = clonePlain(lastReport || makeAnchorReport());
+
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_LAB_CARDINAL_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "LAB_CARDINAL_RECEIPT_BUNDLE", {})
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_DIAGNOSTIC_TRACK_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "DIAGNOSTIC_TRACK_RECEIPT", {})
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_CANVAS_BISHOP_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "CANVAS_BISHOP_RECEIPT", {})
+    );
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_FINGER_FILE_RECEIPT = clonePlain(
+      getRaw(lastReport || {}, "FINGER_FILE_RECEIPT", {})
+    );
+
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_PACKET_TEXT = lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_COMPACT_SUMMARY = lastCompactSummary || "";
+
+    return true;
+  }
+
   Object.assign(api, {
+    CONTRACT,
+    RECEIPT,
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+    version: VERSION,
+    file: FILE,
+    targetRoute: TARGET_ROUTE,
+    diagnosticRoute: DIAGNOSTIC_ROUTE,
+    canvasFile: CANVAS_FILE,
+    canvasLaunchFile: CANVAS_LAUNCH_FILE,
+    expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+
+    diagnosticOnly: true,
+    anchorSafeChronologyObservation: true,
+    receiptHubActive: true,
+    fourLaneReceiptHubActive: true,
+    causalForensicsLensActive: true,
+
+    runProbeCanvasSurfaceTruth,
+    runCanvasSurfaceTruth,
+    runProbe,
+    inspect,
+    runDiagnostic,
+    receiveSouthProbeReceipt,
+    receiveProbeSouthReceipt,
+    ingestSouthProbeReceipt,
+
+    getReport,
+    getReceiptLight,
+    getReceipt,
+    getStatus: getReceiptLight,
+    getPacketText,
+    getCompactSummary,
+    getStatusText,
+
+    canvasSelectors: CANVAS_SELECTORS,
+    mountSelectors: MOUNT_SELECTORS,
+    acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS,
+
     supportsAnchorSafeChronologyObservation: true,
+    supportsCanvasScriptProbe: true,
+    supportsCanvasAuthorityProbe: true,
+    supportsCanvasPublicApiProbe: true,
     supportsCanvasElementProbe: true,
     supportsCanvasMountProbe: true,
     supportsCanvasRectProbe: true,
@@ -2820,7 +3274,9 @@
     supportsPixelSampleProbe: true,
     supportsLayerObstructionProbe: true,
     supportsNamespaceDomMatchProbe: true,
+    supportsRenderedProofConflictClassification: true,
     supportsCoordinateSpecificFailure: true,
+    supportsCausalForensicsLens: true,
     supportsFourLaneReceiptHub: true,
     supportsLabCardinalReceiptBundle: true,
     supportsDiagnosticTrackReceipt: true,
@@ -2845,9 +3301,29 @@
     ownsReadyText: false,
     ownsVisualPass: false,
 
+    productionMutationAuthorized: false,
+    canvasDrawingAuthorized: false,
+    canvasCreationAuthorized: false,
+    canvasRepairAuthorized: false,
+    routeRepairAuthorized: false,
+    controlMutationAuthorized: false,
+    runtimeRestartAuthorized: false,
+
     ...NO_CLAIMS,
-    ...UPPER_NO_CLAIMS
+    ...UPPER_NO_CLAIMS,
+
+    get evidence() {
+      return getReport();
+    },
+
+    get state() {
+      return getReport();
+    }
   });
+
+  lastReceipt = buildReceipt(makeAnchorReport());
+  lastPacketText = composePacketText(makeAnchorReport());
+  lastCompactSummary = composeCompactSummary(makeAnchorReport());
 
   publish();
 

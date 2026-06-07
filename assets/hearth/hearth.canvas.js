@@ -1,7 +1,7 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_TNT_v12_4_2
+// HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_TNT_v12_4_3
 // Full-file replacement.
 // Hearth Canvas presentation platter only.
 //
@@ -10,17 +10,18 @@
 //   diagnostics, Hex Surface, Pointer/Finger inspection, and Index.
 // - Preserve the v12_4 live-surface identity renewal as the current Canvas parent lane.
 // - Preserve v12_4_1 canonical DOM surface binding and zero-rect repair.
-// - Correct the observed regression where the local 2D fallback can repaint after the
-//   downstream expression surface has appeared.
-// - Treat #hearthCanvasMount as the HTML-owned mount.
-// - Treat #hearthVisibleCanvas as the Canvas-owned visible presentation surface.
-// - Keep the local 2D cartoon fallback available only while no downstream surface has
-//   been observed.
-// - Once downstream surface/frame/expression evidence is observed, latch it and suppress
-//   all later local fallback repaint attempts.
+// - Preserve v12_4_2 downstream-surface admission and fallback suppression.
+// - Repair the current North F21 failure:
+//   canonical canvas has pixel data but getBoundingClientRect() is zero.
+// - Lock the canonical surface to:
+//   #hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas
+// - Force a concrete CSS pixel frame synchronously before receipts and probes read it.
+// - Keep the local 2D fallback available only before downstream surface evidence appears.
+// - Once downstream surface/frame/expression evidence appears, latch it and suppress all
+//   later fallback repaint attempts.
 // - Never treat fallback pixels as final visual pass.
 // - Do not own Route Conductor authority, Controls motion authority, terrain truth,
-//   hydrology truth, elevation truth, material truth, Hex truth, Pointer Finger truth,
+//   hydrology truth, elevation truth, material truth, Hex truth, Pointer/Finger truth,
 //   F13 claim, F21 claim, ready text, final visual pass, generated image,
 //   GraphicBox, or WebGL.
 
@@ -42,15 +43,17 @@
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_TNT_v12_4_2";
+    "HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_TNT_v12_4_3";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT_v12_4_2";
+    "HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_RECEIPT_v12_4_3";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1";
+    "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_TNT_v12_4_2";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT_v12_4_1";
+    "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT_v12_4_2";
 
+  const LINEAGE_V12_4_1_CONTRACT =
+    "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_TNT_v12_4_1";
   const LINEAGE_V12_4_CONTRACT =
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
   const LINEAGE_V12_3_CONTRACT =
@@ -69,7 +72,7 @@
     "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7";
 
   const VERSION =
-    "2026-06-07.hearth-canvas-downstream-surface-admission-fallback-suppression-v12-4-2";
+    "2026-06-07.hearth-canvas-canonical-surface-rect-lock-downstream-fallback-suppression-v12-4-3";
 
   const ROUTE = "/showroom/globe/hearth/";
   const FILE = "/assets/hearth/hearth.canvas.js";
@@ -82,16 +85,19 @@
   const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
   const CANONICAL_MOUNT_ID = "hearthCanvasMount";
+  const CANONICAL_FRAME_ID = "hearthCanvasRectLockFrame";
   const CANONICAL_CANVAS_ID = "hearthVisibleCanvas";
 
   const ROUTE_PACKET_TYPE =
     "HEARTH_ROUTE_CONDUCTOR_TO_CANVAS_PRESENTATION_PLATTER_PACKET_v10_4";
   const CANVAS_ACCEPTANCE_PACKET =
-    "HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_PACKET_v12_4_2";
+    "HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_SCAN_PACKET_v12_4_3";
   const CONTROL_PACKET_TYPE =
     "HEARTH_CONTROLS_HEX_GATE_VIEW_DELTA_PACKET_v5";
 
   const FALLBACK_DELAY_MS = 180;
+  const MIN_SURFACE_SIZE = 260;
+  const MAX_SURFACE_SIZE = 680;
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -120,6 +126,34 @@
     graphicBox: false,
     webGL: false,
     webgl: false
+  });
+
+  const UPPER_NO_CLAIMS = Object.freeze({
+    F13_CLAIMED: false,
+    F13_ELIGIBLE_FOR_CANVAS: false,
+    F13_CLAIMED_BY_CANVAS: false,
+    F13_CLAIMED_BY_ROUTE_CONDUCTOR: false,
+    F21_ELIGIBLE_FOR_NORTH: false,
+    F21_CLAIMED: false,
+    F21_CLAIMED_BY_CANVAS: false,
+    F21_CLAIMED_BY_ROUTE_CONDUCTOR: false,
+    F21_SUBMITTED_TO_NORTH: false,
+    READY_TEXT_PERMISSION_GRANTED: false,
+    READY_TEXT_ALLOWED: false,
+    READY_TEXT_CLAIMED: false,
+    READY_TEXT_CLAIMED_BY_CANVAS: false,
+    CONTROL_READY_CLAIMED: false,
+    MOTION_READY_CLAIMED: false,
+    TOUCH_READY_CLAIMED: false,
+    DRAG_READY_CLAIMED: false,
+    DOWNSTREAM_RELEASE_CLAIMED: false,
+    COMPLETION_LATCHED: false,
+    FINAL_COMPLETION_LATCHED: false,
+    VISUAL_PASS_CLAIMED: false,
+    FINAL_VISUAL_PASS_CLAIMED: false,
+    GENERATED_IMAGE: false,
+    GRAPHIC_BOX: false,
+    WEBGL: false
   });
 
   const ACCEPTED_ROUTE_CONTRACTS = Object.freeze([
@@ -157,12 +191,14 @@
     disposed: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "CANVAS_V12_4_2_LOADED",
+    latestEvent: "CANVAS_V12_4_3_LOADED",
 
     canvasPresentationPlatterAuthority: true,
     liveSurfaceIdentityActive: true,
     unifiedVisible2dOutputActive: true,
     zeroRectCanonicalSurfaceBindingRepairActive: true,
+    canonicalSurfaceRectLockActive: true,
+    concreteSurfaceFrameActive: true,
     downstreamSurfaceAdmissionActive: true,
     fallbackSuppressionActive: true,
     fallbackDemotedToPlaceholder: true,
@@ -205,14 +241,23 @@
     mountRectNonzero: false,
     mountComputedVisible: false,
 
+    frameFound: false,
+    frameCreated: false,
+    frameSelector: "UNKNOWN",
+    frameRectNonzero: false,
+    frameComputedVisible: false,
+    frameConcreteSize: "NONE",
+
     canvasElementFound: false,
     canvasCreated: false,
     canvasMovedIntoMount: false,
     canvasInMount: false,
+    canvasInFrame: false,
     canvasSelector: "UNKNOWN",
-    canvasSelectionMode: "CANONICAL_HTML_MOUNT_VISIBLE_SURFACE_ONLY",
+    canvasSelectionMode: "CANONICAL_MOUNT_RECT_LOCK_VISIBLE_2D_SURFACE",
     canonicalCanvasId: CANONICAL_CANVAS_ID,
     canonicalMountId: CANONICAL_MOUNT_ID,
+    canonicalFrameId: CANONICAL_FRAME_ID,
     nonCanonicalCanvasCount: 0,
     temporaryCanvasIgnoredCount: 0,
 
@@ -228,6 +273,9 @@
     zeroRectRepairAttempted: false,
     zeroRectRepairApplied: false,
     zeroRectRepairReason: "NOT_RUN",
+    rectLockAttempted: false,
+    rectLockApplied: false,
+    rectLockReason: "NOT_RUN",
     concreteFallbackSizeApplied: false,
     concreteFallbackCssSize: "NONE",
 
@@ -277,6 +325,8 @@
     aliasPublishCount: 0,
     receiptPublishCount: 0,
     resizeCount: 0,
+    surfaceEnsureCount: 0,
+    surfaceScanCount: 0,
 
     firstFailedCoordinate: "CANVAS_BOOT_NOT_RUN",
     recommendedNextFile: FILE,
@@ -296,9 +346,9 @@
   };
 
   let mountElement = null;
+  let frameElement = null;
   let canvasElement = null;
   let context2d = null;
-  let bootPromise = null;
   let resizeRaf = 0;
   let fallbackTimer = 0;
 
@@ -342,6 +392,10 @@
     if (text === "false" || text === "no") return false;
 
     return fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
   function clonePlain(value) {
@@ -391,6 +445,7 @@
 
     for (let index = 0; index < parts.length - 1; index += 1) {
       const part = parts[index];
+      if (!part) continue;
       if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
       cursor = cursor[part];
     }
@@ -418,12 +473,14 @@
 
       const lower = safeString(key).toLowerCase();
 
-      for (const candidate of Object.keys(object)) {
-        if (candidate.toLowerCase() === lower) {
-          const value = object[candidate];
-          if (value !== undefined && value !== null && value !== "") return value;
+      try {
+        for (const candidate of Object.keys(object)) {
+          if (candidate.toLowerCase() === lower) {
+            const value = object[candidate];
+            if (value !== undefined && value !== null && value !== "") return value;
+          }
         }
-      }
+      } catch (_error) {}
     }
 
     return fallback;
@@ -538,7 +595,7 @@
     };
 
     state.events.push(item);
-    trim(state.events, 160);
+    trim(state.events, 180);
     state.latestEvent = item.event;
     state.updatedAt = item.at;
 
@@ -554,7 +611,7 @@
     };
 
     state.errors.push(item);
-    trim(state.errors, 100);
+    trim(state.errors, 120);
     state.latestEvent = item.code;
     state.updatedAt = item.at;
 
@@ -566,21 +623,21 @@
     doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
-  function q(selector) {
-    if (!doc) return null;
+  function q(selector, base = doc) {
+    if (!base || !isFunction(base.querySelector)) return null;
 
     try {
-      return doc.querySelector(selector);
+      return base.querySelector(selector);
     } catch (_error) {
       return null;
     }
   }
 
-  function qa(selector) {
-    if (!doc) return [];
+  function qa(selector, base = doc) {
+    if (!base || !isFunction(base.querySelectorAll)) return [];
 
     try {
-      return Array.from(doc.querySelectorAll(selector));
+      return Array.from(base.querySelectorAll(selector));
     } catch (_error) {
       return [];
     }
@@ -594,18 +651,18 @@
   }
 
   function setImportant(element, property, value) {
-    if (!element || !element.style || !element.style.setProperty) return false;
+    if (!element || !element.style) return false;
 
     try {
-      element.style.setProperty(property, value, "important");
+      if (isFunction(element.style.setProperty)) {
+        element.style.setProperty(property, value, "important");
+      } else {
+        element.style[property] = value;
+      }
+
       return true;
     } catch (_error) {
-      try {
-        element.style[property] = value;
-        return true;
-      } catch (__error) {
-        return false;
-      }
+      return false;
     }
   }
 
@@ -691,270 +748,8 @@
     state.pointerFingerContract = firstNonEmpty(contractOf(pointerFingerReceipt), pointerFinger.value && pointerFinger.value.contract, "UNKNOWN");
   }
 
-  function findMount() {
-    if (!doc) return null;
-
-    return (
-      q(`#${CANONICAL_MOUNT_ID}`) ||
-      q("[data-hearth-canvas-mount='true']") ||
-      q("[data-hearth-visible-planet-mount='true']")
-    );
-  }
-
-  function createMount() {
-    if (!doc || !isFunction(doc.createElement)) return null;
-
-    const target =
-      q("#hearthGlobeStage") ||
-      q("[data-hearth-globe-stage='true']") ||
-      q("#hearthPlanetStage") ||
-      q("[data-hearth-planet-stage='true']") ||
-      q("main") ||
-      doc.body ||
-      doc.documentElement;
-
-    if (!target) return null;
-
-    const mount = doc.createElement("section");
-    mount.id = CANONICAL_MOUNT_ID;
-    mount.setAttribute("data-hearth-canvas-mount", "true");
-    mount.setAttribute("data-hearth-visible-planet-mount", "true");
-    mount.setAttribute("aria-label", "Hearth visible canvas mount");
-
-    target.appendChild(mount);
-    state.mountCreated = true;
-
-    return mount;
-  }
-
-  function normalizeMountLayout(mount) {
-    if (!mount) return false;
-
-    try {
-      if (!mount.id) mount.id = CANONICAL_MOUNT_ID;
-      mount.setAttribute("data-hearth-canvas-mount", "true");
-      mount.setAttribute("data-hearth-visible-planet-mount", "true");
-      mount.setAttribute("data-hearth-canonical-canvas-mount", "true");
-      mount.setAttribute("data-hearth-html-owned-mount", "true");
-      mount.setAttribute("data-hearth-canvas-zero-rect-repair-mount", "true");
-      mount.setAttribute("data-hearth-downstream-surface-admission-target", "true");
-
-      setImportant(mount, "position", "relative");
-      setImportant(mount, "z-index", "4");
-      setImportant(mount, "display", "grid");
-      setImportant(mount, "place-items", "center");
-      setImportant(mount, "width", "100%");
-      setImportant(mount, "max-width", "100%");
-      setImportant(mount, "min-width", "0");
-      setImportant(mount, "min-height", "clamp(300px, 56svh, 680px)");
-      setImportant(mount, "height", "auto");
-      setImportant(mount, "overflow", "visible");
-      setImportant(mount, "visibility", "visible");
-      setImportant(mount, "opacity", "1");
-      setImportant(mount, "pointer-events", "auto");
-      setImportant(mount, "touch-action", "none");
-      setImportant(mount, "contain", "none");
-    } catch (error) {
-      recordError("CANVAS_MOUNT_LAYOUT_NORMALIZE_ERROR", error);
-      return false;
-    }
-
-    return true;
-  }
-
-  function ensureMount() {
-    if (mountElement && doc && doc.contains && doc.contains(mountElement)) {
-      normalizeMountLayout(mountElement);
-      return mountElement;
-    }
-
-    mountElement = findMount();
-
-    if (!mountElement) {
-      mountElement = createMount();
-    }
-
-    state.mountFound = Boolean(mountElement);
-    state.mountSelector = mountElement
-      ? (mountElement.id ? `#${mountElement.id}` : describeElement(mountElement))
-      : "UNKNOWN";
-
-    normalizeMountLayout(mountElement);
-    return mountElement;
-  }
-
-  function isCanvasElement(value) {
-    return Boolean(value && value.tagName && safeString(value.tagName).toLowerCase() === "canvas");
-  }
-
-  function isDrawable(value) {
-    if (!value) return false;
-
-    const tag = safeString(value.tagName).toLowerCase();
-    const ctor = value.constructor && value.constructor.name ? safeString(value.constructor.name) : "";
-
-    return Boolean(
-      tag === "canvas" ||
-      tag === "img" ||
-      tag === "video" ||
-      ctor === "ImageBitmap" ||
-      ctor === "OffscreenCanvas" ||
-      ctor === "HTMLCanvasElement" ||
-      ctor === "HTMLImageElement" ||
-      ctor === "HTMLVideoElement"
-    );
-  }
-
-  function isCanonicalCanvasCandidate(canvas, mount) {
-    if (!isCanvasElement(canvas)) return false;
-    if (canvas.id === CANONICAL_CANVAS_ID) return true;
-    if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthVisibleCanvas === "true") return true;
-    if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthExpressionSurface === "true") return true;
-    return false;
-  }
-
-  function countNonCanonicalCanvases(canonical) {
-    const canvases = qa("canvas");
-
-    state.nonCanonicalCanvasCount = canvases.filter((canvas) => canvas !== canonical).length;
-    state.temporaryCanvasIgnoredCount = canvases.filter((canvas) => {
-      if (canvas === canonical) return false;
-
-      if (canvas.dataset && (
-        canvas.dataset.hearthTemporaryCanvas === "true" ||
-        canvas.dataset.hearthGeneratedImage === "true" ||
-        canvas.dataset.generatedImage === "true" ||
-        canvas.dataset.graphicBox === "true"
-      )) {
-        return true;
-      }
-
-      if (!canvas.id && (!canvas.parentNode || canvas.parentNode !== mountElement)) return true;
-      return false;
-    }).length;
-  }
-
-  function findCanonicalCanvas(mount) {
-    if (!doc) return null;
-
-    const byId = q(`#${CANONICAL_CANVAS_ID}`);
-    if (isCanvasElement(byId)) return byId;
-
-    if (mount && mount.querySelector) {
-      const local =
-        mount.querySelector("canvas[data-hearth-visible-canvas='true']") ||
-        mount.querySelector("canvas[data-hearth-expression-surface='true']") ||
-        mount.querySelector("canvas[data-hearth-canvas-hub='true']") ||
-        mount.querySelector("canvas[data-hearth-canvas='true']") ||
-        mount.querySelector("canvas");
-
-      if (local && isCanonicalCanvasCandidate(local, mount)) return local;
-      if (local && !local.id) return local;
-    }
-
-    return null;
-  }
-
-  function createCanvas(mount) {
-    if (!doc || !mount || !isFunction(doc.createElement)) return null;
-
-    const canvas = doc.createElement("canvas");
-    canvas.id = CANONICAL_CANVAS_ID;
-    canvas.width = 1024;
-    canvas.height = 1024;
-    canvas.setAttribute("aria-label", "Hearth visible 2D planet surface");
-    canvas.setAttribute("role", "img");
-
-    mount.appendChild(canvas);
-    state.canvasCreated = true;
-
-    return canvas;
-  }
-
-  function moveCanvasIntoMountIfNeeded(canvas, mount) {
-    if (!canvas || !mount) return false;
-
-    try {
-      if (canvas.parentNode !== mount) {
-        mount.appendChild(canvas);
-        state.canvasMovedIntoMount = true;
-        return true;
-      }
-    } catch (error) {
-      recordError("CANVAS_MOVE_INTO_MOUNT_FAILED", error);
-    }
-
-    return false;
-  }
-
-  function markCanvas(canvas) {
-    if (!canvas) return;
-
-    try {
-      canvas.id = CANONICAL_CANVAS_ID;
-      canvas.setAttribute("data-hearth-expression-surface", "true");
-      canvas.setAttribute("data-hearth-visible-canvas", "true");
-      canvas.setAttribute("data-hearth-canvas-hub", "true");
-      canvas.setAttribute("data-hearth-canvas", "true");
-      canvas.setAttribute("data-hearth-planet-canvas", "true");
-      canvas.setAttribute("data-hearth-canvas-texture", "true");
-      canvas.setAttribute("data-hearth-canonical-visible-canvas", "true");
-      canvas.setAttribute("data-hearth-canvas-selection-mode", "CANONICAL_HTML_MOUNT_VISIBLE_SURFACE_ONLY");
-      canvas.setAttribute("data-hearth-canvas-contract", CONTRACT);
-      canvas.setAttribute("data-hearth-canvas-receipt", RECEIPT);
-      canvas.setAttribute("data-hearth-canvas-renewal-contract", RENEWAL_CONTRACT);
-      canvas.setAttribute("data-hearth-canvas-renewal-receipt", RENEWAL_RECEIPT);
-      canvas.setAttribute("data-hearth-canvas-internal-renewal-contract", INTERNAL_RENEWAL_CONTRACT);
-      canvas.setAttribute("data-hearth-canvas-internal-renewal-receipt", INTERNAL_RENEWAL_RECEIPT);
-      canvas.setAttribute("data-hearth-local-fallback-mode", state.localFallbackMode);
-      canvas.setAttribute("data-hearth-local-fallback-suppressed", String(state.localFallbackSuppressed));
-      canvas.setAttribute("data-hearth-downstream-surface-observed", String(state.downstreamSurfaceObserved));
-      canvas.setAttribute("data-hearth-downstream-surface-latched", String(state.downstreamSurfaceLatched));
-      canvas.setAttribute("data-generated-image", "false");
-      canvas.setAttribute("data-graphic-box", "false");
-      canvas.setAttribute("data-webgl", "false");
-      canvas.setAttribute("data-visual-pass-claimed", "false");
-    } catch (error) {
-      recordError("CANVAS_MARK_FAILED", error);
-    }
-  }
-
-  function normalizeCanvasLayout(canvas) {
-    if (!canvas) return false;
-
-    try {
-      setImportant(canvas, "position", "relative");
-      setImportant(canvas, "z-index", "5");
-      setImportant(canvas, "display", "block");
-      setImportant(canvas, "visibility", "visible");
-      setImportant(canvas, "opacity", "1");
-      setImportant(canvas, "box-sizing", "border-box");
-      setImportant(canvas, "width", "min(84vw, 56svh, 640px)");
-      setImportant(canvas, "height", "min(84vw, 56svh, 640px)");
-      setImportant(canvas, "min-width", "230px");
-      setImportant(canvas, "min-height", "230px");
-      setImportant(canvas, "max-width", "100%");
-      setImportant(canvas, "max-height", "640px");
-      setImportant(canvas, "aspect-ratio", "1 / 1");
-      setImportant(canvas, "object-fit", "contain");
-      setImportant(canvas, "margin", "auto");
-      setImportant(canvas, "border-radius", "50%");
-      setImportant(canvas, "transform", "none");
-      setImportant(canvas, "translate", "none");
-      setImportant(canvas, "pointer-events", "auto");
-      setImportant(canvas, "touch-action", "none");
-      setImportant(canvas, "user-select", "none");
-      setImportant(canvas, "-webkit-user-select", "none");
-    } catch (error) {
-      recordError("CANVAS_LAYOUT_NORMALIZE_ERROR", error);
-      return false;
-    }
-
-    return true;
-  }
-
-  function measure(element) {
-    if (!element || !element.getBoundingClientRect) {
+  function getRect(element) {
+    if (!element || !isFunction(element.getBoundingClientRect)) {
       return { width: 0, height: 0, left: 0, top: 0, right: 0, bottom: 0 };
     }
 
@@ -992,56 +787,501 @@
     }
   }
 
-  function fallbackCssSize() {
-    const vw = Math.max(320, safeNumber(root.innerWidth, 720));
-    const vh = Math.max(320, safeNumber(root.innerHeight, 720));
-    return Math.max(230, Math.min(640, Math.floor(vw * 0.84), Math.floor(vh * 0.56)));
-  }
+  function viewportIntersecting(rect) {
+    const viewportWidth = safeNumber(root.innerWidth, 0);
+    const viewportHeight = safeNumber(root.innerHeight, 0);
 
-  function forceConcreteCanvasSize(canvas, reason) {
-    if (!canvas) return false;
-
-    const size = fallbackCssSize();
-
-    setImportant(canvas, "width", `${size}px`);
-    setImportant(canvas, "height", `${size}px`);
-    setImportant(canvas, "min-width", `${Math.min(size, 230)}px`);
-    setImportant(canvas, "min-height", `${Math.min(size, 230)}px`);
-
-    if (mountElement) {
-      setImportant(mountElement, "min-height", `${Math.max(size, 300)}px`);
+    if (!rect || rect.width <= 0 || rect.height <= 0 || viewportWidth <= 0 || viewportHeight <= 0) {
+      return false;
     }
 
-    state.zeroRectRepairAttempted = true;
-    state.zeroRectRepairApplied = true;
-    state.zeroRectRepairReason = reason || "CANVAS_RECT_ZERO_CONCRETE_SIZE_APPLIED";
-    state.concreteFallbackSizeApplied = true;
-    state.concreteFallbackCssSize = `${size}px`;
+    return !(
+      rect.right <= 0 ||
+      rect.bottom <= 0 ||
+      rect.left >= viewportWidth ||
+      rect.top >= viewportHeight
+    );
+  }
 
-    record("CANVAS_ZERO_RECT_CONCRETE_SIZE_APPLIED", {
-      reason,
-      size
-    });
+  function chooseSurfaceSize() {
+    const viewportWidth = Math.max(320, safeNumber(root.innerWidth, 720));
+    const viewportHeight = Math.max(320, safeNumber(root.innerHeight, 720));
+
+    const parent =
+      (mountElement && mountElement.parentElement) ||
+      q("#hearthGlobeStage") ||
+      q("[data-hearth-globe-stage='true']") ||
+      q("#hearthPlanetStage") ||
+      q("[data-hearth-planet-stage='true']") ||
+      q("main") ||
+      (doc && doc.body) ||
+      null;
+
+    const parentRect = getRect(parent);
+    const parentWidth = parentRect.width > 0 ? parentRect.width : viewportWidth;
+
+    return Math.floor(
+      clamp(
+        Math.min(viewportWidth * 0.84, viewportHeight * 0.58, parentWidth * 0.92, MAX_SURFACE_SIZE),
+        MIN_SURFACE_SIZE,
+        MAX_SURFACE_SIZE
+      )
+    );
+  }
+
+  function isCanvasElement(value) {
+    return Boolean(value && value.tagName && safeString(value.tagName).toLowerCase() === "canvas");
+  }
+
+  function isDrawable(value) {
+    if (!value) return false;
+
+    const tag = safeString(value.tagName).toLowerCase();
+    const ctor = value.constructor && value.constructor.name ? safeString(value.constructor.name) : "";
+
+    return Boolean(
+      tag === "canvas" ||
+      tag === "img" ||
+      tag === "video" ||
+      ctor === "ImageBitmap" ||
+      ctor === "OffscreenCanvas" ||
+      ctor === "HTMLCanvasElement" ||
+      ctor === "HTMLImageElement" ||
+      ctor === "HTMLVideoElement"
+    );
+  }
+
+  function findMount() {
+    if (!doc) return null;
+
+    return (
+      q(`#${CANONICAL_MOUNT_ID}`) ||
+      q("[data-hearth-canvas-mount='true']") ||
+      q("[data-hearth-visible-planet-mount='true']")
+    );
+  }
+
+  function createMount() {
+    if (!doc || !isFunction(doc.createElement)) return null;
+
+    const target =
+      q("#hearthGlobeStage") ||
+      q("[data-hearth-globe-stage='true']") ||
+      q("#hearthPlanetStage") ||
+      q("[data-hearth-planet-stage='true']") ||
+      q("main") ||
+      doc.body ||
+      doc.documentElement;
+
+    if (!target) return null;
+
+    const mount = doc.createElement("section");
+    mount.id = CANONICAL_MOUNT_ID;
+    mount.setAttribute("data-hearth-canvas-mount", "true");
+    mount.setAttribute("data-hearth-visible-planet-mount", "true");
+    mount.setAttribute("aria-label", "Hearth visible canvas mount");
+
+    target.appendChild(mount);
+    state.mountCreated = true;
+
+    return mount;
+  }
+
+  function normalizePlacementChain(mount, size) {
+    if (!mount) return false;
+
+    const candidates = [
+      q("#hearthGlobeStage"),
+      q("[data-hearth-globe-stage='true']"),
+      q("#hearthPlanetStage"),
+      q("[data-hearth-planet-stage='true']"),
+      mount.parentElement
+    ].filter(Boolean);
+
+    for (const element of candidates) {
+      try {
+        setImportant(element, "display", "block");
+        setImportant(element, "position", "relative");
+        setImportant(element, "visibility", "visible");
+        setImportant(element, "opacity", "1");
+        setImportant(element, "overflow", "visible");
+        setImportant(element, "contain", "none");
+        setImportant(element, "content-visibility", "visible");
+        setImportant(element, "min-width", "0");
+        setImportant(element, "min-height", `${Math.max(size, 300)}px`);
+      } catch (_error) {}
+    }
 
     return true;
   }
 
-  function resizeCanvasToDisplayedRect() {
-    const canvas = canvasElement;
-    if (!canvas) return false;
+  function normalizeMountLayout(mount, size = chooseSurfaceSize()) {
+    if (!mount) return false;
 
-    let rect = measure(canvas);
+    try {
+      if (!mount.id) mount.id = CANONICAL_MOUNT_ID;
 
-    if (rect.width <= 0 || rect.height <= 0) {
-      forceConcreteCanvasSize(canvas, "resize-before-buffer-zero-rect");
-      rect = measure(canvas);
+      mount.setAttribute("data-hearth-canvas-mount", "true");
+      mount.setAttribute("data-hearth-visible-planet-mount", "true");
+      mount.setAttribute("data-hearth-canonical-canvas-mount", "true");
+      mount.setAttribute("data-hearth-html-owned-mount", "true");
+      mount.setAttribute("data-hearth-canvas-zero-rect-repair-mount", "true");
+      mount.setAttribute("data-hearth-canvas-rect-lock-mount", "true");
+      mount.setAttribute("data-hearth-downstream-surface-admission-target", "true");
+
+      setImportant(mount, "position", "relative");
+      setImportant(mount, "z-index", "4");
+      setImportant(mount, "display", "flex");
+      setImportant(mount, "align-items", "center");
+      setImportant(mount, "justify-content", "center");
+      setImportant(mount, "width", "100%");
+      setImportant(mount, "max-width", "100%");
+      setImportant(mount, "min-width", "0");
+      setImportant(mount, "height", `${size}px`);
+      setImportant(mount, "min-height", `${size}px`);
+      setImportant(mount, "overflow", "visible");
+      setImportant(mount, "visibility", "visible");
+      setImportant(mount, "opacity", "1");
+      setImportant(mount, "pointer-events", "auto");
+      setImportant(mount, "touch-action", "none");
+      setImportant(mount, "contain", "none");
+      setImportant(mount, "content-visibility", "visible");
+      setImportant(mount, "isolation", "isolate");
+
+      normalizePlacementChain(mount, size);
+    } catch (error) {
+      recordError("CANVAS_MOUNT_LAYOUT_NORMALIZE_ERROR", error);
+      return false;
     }
 
-    const cssWidth = Math.max(1, Math.floor(rect.width || fallbackCssSize()));
-    const cssHeight = Math.max(1, Math.floor(rect.height || cssWidth));
-    const dpr = Math.max(1, Math.min(2, safeNumber(root.devicePixelRatio, 1)));
-    const pixelWidth = Math.max(1, Math.floor(cssWidth * dpr));
-    const pixelHeight = Math.max(1, Math.floor(cssHeight * dpr));
+    return true;
+  }
+
+  function ensureMount() {
+    if (mountElement && doc && isFunction(doc.contains) && doc.contains(mountElement)) {
+      normalizeMountLayout(mountElement);
+      return mountElement;
+    }
+
+    mountElement = findMount();
+
+    if (!mountElement) {
+      mountElement = createMount();
+    }
+
+    state.mountFound = Boolean(mountElement);
+    state.mountSelector = mountElement
+      ? (mountElement.id ? `#${mountElement.id}` : describeElement(mountElement))
+      : "UNKNOWN";
+
+    normalizeMountLayout(mountElement);
+    return mountElement;
+  }
+
+  function findFrame(mount) {
+    if (!mount) return null;
+
+    const byId = q(`#${CANONICAL_FRAME_ID}`, mount);
+    if (byId) return byId;
+
+    return (
+      q("[data-hearth-canvas-rect-lock-frame='true']", mount) ||
+      q("[data-hearth-canvas-frame='true']", mount)
+    );
+  }
+
+  function createFrame(mount) {
+    if (!doc || !mount || !isFunction(doc.createElement)) return null;
+
+    const frame = doc.createElement("div");
+    frame.id = CANONICAL_FRAME_ID;
+    frame.setAttribute("data-hearth-canvas-frame", "true");
+    frame.setAttribute("data-hearth-canvas-rect-lock-frame", "true");
+    frame.setAttribute("aria-hidden", "true");
+
+    mount.appendChild(frame);
+    state.frameCreated = true;
+
+    return frame;
+  }
+
+  function normalizeFrameLayout(frame, size = chooseSurfaceSize()) {
+    if (!frame) return false;
+
+    try {
+      if (!frame.id) frame.id = CANONICAL_FRAME_ID;
+
+      frame.setAttribute("data-hearth-canvas-frame", "true");
+      frame.setAttribute("data-hearth-canvas-rect-lock-frame", "true");
+      frame.setAttribute("data-hearth-canvas-contract", CONTRACT);
+      frame.setAttribute("data-hearth-canvas-renewal-contract", RENEWAL_CONTRACT);
+      frame.setAttribute("data-hearth-canvas-internal-renewal-contract", INTERNAL_RENEWAL_CONTRACT);
+
+      setImportant(frame, "position", "relative");
+      setImportant(frame, "z-index", "5");
+      setImportant(frame, "display", "block");
+      setImportant(frame, "flex", `0 0 ${size}px`);
+      setImportant(frame, "width", `${size}px`);
+      setImportant(frame, "height", `${size}px`);
+      setImportant(frame, "min-width", `${size}px`);
+      setImportant(frame, "min-height", `${size}px`);
+      setImportant(frame, "max-width", `${size}px`);
+      setImportant(frame, "max-height", `${size}px`);
+      setImportant(frame, "aspect-ratio", "1 / 1");
+      setImportant(frame, "box-sizing", "border-box");
+      setImportant(frame, "overflow", "visible");
+      setImportant(frame, "visibility", "visible");
+      setImportant(frame, "opacity", "1");
+      setImportant(frame, "pointer-events", "auto");
+      setImportant(frame, "touch-action", "none");
+      setImportant(frame, "contain", "none");
+      setImportant(frame, "content-visibility", "visible");
+      setImportant(frame, "transform", "none");
+      setImportant(frame, "translate", "none");
+      setImportant(frame, "margin", "0 auto");
+      setImportant(frame, "border-radius", "50%");
+
+      state.frameConcreteSize = `${size}px`;
+    } catch (error) {
+      recordError("CANVAS_FRAME_LAYOUT_NORMALIZE_ERROR", error);
+      return false;
+    }
+
+    return true;
+  }
+
+  function ensureFrame(mount) {
+    if (!mount) return null;
+
+    if (frameElement && isFunction(mount.contains) && mount.contains(frameElement)) {
+      normalizeFrameLayout(frameElement);
+      return frameElement;
+    }
+
+    frameElement = findFrame(mount);
+
+    if (!frameElement) {
+      frameElement = createFrame(mount);
+    }
+
+    if (frameElement && frameElement.parentNode !== mount) {
+      try {
+        mount.appendChild(frameElement);
+      } catch (error) {
+        recordError("CANVAS_FRAME_MOVE_FAILED", error);
+      }
+    }
+
+    normalizeFrameLayout(frameElement);
+    return frameElement;
+  }
+
+  function isCanonicalCanvasCandidate(canvas, mount, frame) {
+    if (!isCanvasElement(canvas)) return false;
+    if (canvas.id === CANONICAL_CANVAS_ID) return true;
+    if (frame && isFunction(frame.contains) && frame.contains(canvas)) return true;
+    if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthVisibleCanvas === "true") return true;
+    if (mount && canvas.parentNode === mount && canvas.dataset && canvas.dataset.hearthExpressionSurface === "true") return true;
+    return false;
+  }
+
+  function findCanonicalCanvas(mount, frame) {
+    if (!doc) return null;
+
+    const byId = q(`#${CANONICAL_CANVAS_ID}`);
+    if (isCanvasElement(byId)) return byId;
+
+    if (frame) {
+      const local =
+        q("canvas[data-hearth-visible-canvas='true']", frame) ||
+        q("canvas[data-hearth-expression-surface='true']", frame) ||
+        q("canvas[data-hearth-canvas-hub='true']", frame) ||
+        q("canvas[data-hearth-canvas='true']", frame) ||
+        q("canvas", frame);
+
+      if (local && isCanvasElement(local)) return local;
+    }
+
+    if (mount) {
+      const local =
+        q("canvas[data-hearth-visible-canvas='true']", mount) ||
+        q("canvas[data-hearth-expression-surface='true']", mount) ||
+        q("canvas[data-hearth-canvas-hub='true']", mount) ||
+        q("canvas[data-hearth-canvas='true']", mount) ||
+        q("canvas", mount);
+
+      if (local && isCanonicalCanvasCandidate(local, mount, frame)) return local;
+      if (local && !local.id) return local;
+    }
+
+    return null;
+  }
+
+  function createCanvas(frame) {
+    if (!doc || !frame || !isFunction(doc.createElement)) return null;
+
+    const canvas = doc.createElement("canvas");
+    canvas.id = CANONICAL_CANVAS_ID;
+    canvas.width = 1024;
+    canvas.height = 1024;
+    canvas.setAttribute("aria-label", "Hearth visible 2D planet surface");
+    canvas.setAttribute("role", "img");
+
+    frame.appendChild(canvas);
+    state.canvasCreated = true;
+
+    return canvas;
+  }
+
+  function moveCanvasIntoFrameIfNeeded(canvas, frame) {
+    if (!canvas || !frame) return false;
+
+    try {
+      if (canvas.parentNode !== frame) {
+        frame.appendChild(canvas);
+        state.canvasMovedIntoMount = true;
+        return true;
+      }
+    } catch (error) {
+      recordError("CANVAS_MOVE_INTO_FRAME_FAILED", error);
+    }
+
+    return false;
+  }
+
+  function markCanvas(canvas) {
+    if (!canvas) return;
+
+    try {
+      canvas.id = CANONICAL_CANVAS_ID;
+      canvas.setAttribute("data-hearth-expression-surface", "true");
+      canvas.setAttribute("data-hearth-visible-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-hub", "true");
+      canvas.setAttribute("data-hearth-canvas", "true");
+      canvas.setAttribute("data-hearth-planet-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-texture", "true");
+      canvas.setAttribute("data-hearth-canonical-visible-canvas", "true");
+      canvas.setAttribute("data-hearth-canvas-rect-lock", "true");
+      canvas.setAttribute("data-hearth-canvas-selection-mode", state.canvasSelectionMode);
+      canvas.setAttribute("data-hearth-canvas-contract", CONTRACT);
+      canvas.setAttribute("data-hearth-canvas-receipt", RECEIPT);
+      canvas.setAttribute("data-hearth-canvas-renewal-contract", RENEWAL_CONTRACT);
+      canvas.setAttribute("data-hearth-canvas-renewal-receipt", RENEWAL_RECEIPT);
+      canvas.setAttribute("data-hearth-canvas-internal-renewal-contract", INTERNAL_RENEWAL_CONTRACT);
+      canvas.setAttribute("data-hearth-canvas-internal-renewal-receipt", INTERNAL_RENEWAL_RECEIPT);
+      canvas.setAttribute("data-hearth-local-fallback-mode", state.localFallbackMode);
+      canvas.setAttribute("data-hearth-local-fallback-suppressed", String(state.localFallbackSuppressed));
+      canvas.setAttribute("data-hearth-downstream-surface-observed", String(state.downstreamSurfaceObserved));
+      canvas.setAttribute("data-hearth-downstream-surface-latched", String(state.downstreamSurfaceLatched));
+      canvas.setAttribute("data-generated-image", "false");
+      canvas.setAttribute("data-graphic-box", "false");
+      canvas.setAttribute("data-webgl", "false");
+      canvas.setAttribute("data-visual-pass-claimed", "false");
+    } catch (error) {
+      recordError("CANVAS_MARK_FAILED", error);
+    }
+  }
+
+  function applyRectLock(canvas, frame, size, reason) {
+    if (!canvas || !frame) return false;
+
+    state.rectLockAttempted = true;
+    state.zeroRectRepairAttempted = true;
+
+    normalizeFrameLayout(frame, size);
+
+    try {
+      const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
+      const pixelSize = Math.max(1, Math.floor(size * dpr));
+
+      if (canvas.width !== pixelSize) canvas.width = pixelSize;
+      if (canvas.height !== pixelSize) canvas.height = pixelSize;
+
+      setImportant(canvas, "position", "absolute");
+      setImportant(canvas, "inset", "0");
+      setImportant(canvas, "z-index", "6");
+      setImportant(canvas, "display", "block");
+      setImportant(canvas, "visibility", "visible");
+      setImportant(canvas, "opacity", "1");
+      setImportant(canvas, "box-sizing", "border-box");
+      setImportant(canvas, "width", `${size}px`);
+      setImportant(canvas, "height", `${size}px`);
+      setImportant(canvas, "min-width", `${size}px`);
+      setImportant(canvas, "min-height", `${size}px`);
+      setImportant(canvas, "max-width", `${size}px`);
+      setImportant(canvas, "max-height", `${size}px`);
+      setImportant(canvas, "aspect-ratio", "1 / 1");
+      setImportant(canvas, "object-fit", "contain");
+      setImportant(canvas, "margin", "0");
+      setImportant(canvas, "padding", "0");
+      setImportant(canvas, "border", "0");
+      setImportant(canvas, "border-radius", "50%");
+      setImportant(canvas, "transform", "none");
+      setImportant(canvas, "translate", "none");
+      setImportant(canvas, "pointer-events", "auto");
+      setImportant(canvas, "touch-action", "none");
+      setImportant(canvas, "user-select", "none");
+      setImportant(canvas, "-webkit-user-select", "none");
+      setImportant(canvas, "contain", "none");
+      setImportant(canvas, "content-visibility", "visible");
+
+      state.rectLockApplied = true;
+      state.zeroRectRepairApplied = true;
+      state.rectLockReason = reason || "CANONICAL_SURFACE_RECT_LOCK_APPLIED";
+      state.zeroRectRepairReason = state.rectLockReason;
+      state.concreteFallbackSizeApplied = true;
+      state.concreteFallbackCssSize = `${size}px`;
+
+      return true;
+    } catch (error) {
+      recordError("CANVAS_RECT_LOCK_FAILED", error, { reason, size });
+      return false;
+    }
+  }
+
+  function countNonCanonicalCanvases(canonical) {
+    const canvases = qa("canvas");
+
+    state.nonCanonicalCanvasCount = canvases.filter((canvas) => canvas !== canonical).length;
+    state.temporaryCanvasIgnoredCount = canvases.filter((canvas) => {
+      if (canvas === canonical) return false;
+
+      if (canvas.dataset && (
+        canvas.dataset.hearthTemporaryCanvas === "true" ||
+        canvas.dataset.hearthGeneratedImage === "true" ||
+        canvas.dataset.generatedImage === "true" ||
+        canvas.dataset.graphicBox === "true"
+      )) {
+        return true;
+      }
+
+      if (!canvas.id && (!canvas.parentNode || canvas.parentNode !== frameElement)) return true;
+      return false;
+    }).length;
+  }
+
+  function getCanvas2d(canvas) {
+    if (!canvas || !isFunction(canvas.getContext)) return null;
+
+    try {
+      return canvas.getContext("2d", { alpha: true, willReadFrequently: true });
+    } catch (_error) {
+      try {
+        return canvas.getContext("2d");
+      } catch (__error) {
+        return null;
+      }
+    }
+  }
+
+  function syncCanvasBufferToRect(canvas, ctx, rect) {
+    if (!canvas || !ctx) return false;
+
+    const rectWidth = Math.max(1, Math.floor(rect && rect.width ? rect.width : chooseSurfaceSize()));
+    const rectHeight = Math.max(1, Math.floor(rect && rect.height ? rect.height : rectWidth));
+    const dpr = clamp(root.devicePixelRatio || 1, 1, 2);
+    const pixelWidth = Math.max(1, Math.floor(rectWidth * dpr));
+    const pixelHeight = Math.max(1, Math.floor(rectHeight * dpr));
 
     if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
       canvas.width = pixelWidth;
@@ -1050,16 +1290,101 @@
     }
 
     try {
-      context2d = context2d || canvas.getContext("2d", { willReadFrequently: true });
-      if (context2d && isFunction(context2d.setTransform)) {
-        context2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (isFunction(ctx.setTransform)) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
     } catch (_error) {}
 
     return true;
   }
 
+  function sampleCanvasPixel(canvas, ctx) {
+    if (!canvas || !ctx || canvas.width <= 0 || canvas.height <= 0 || !isFunction(ctx.getImageData)) {
+      return {
+        status: "PIXEL_SAMPLE_UNREADABLE",
+        visible: false,
+        alphaPixelCount: 0,
+        visiblePixelCount: 0,
+        sampleCount: 0
+      };
+    }
+
+    const points = [
+      [0.5, 0.5],
+      [0.34, 0.5],
+      [0.66, 0.5],
+      [0.5, 0.34],
+      [0.5, 0.66],
+      [0.25, 0.25],
+      [0.75, 0.75],
+      [0.25, 0.75],
+      [0.75, 0.25]
+    ];
+
+    let alpha = 0;
+    let visible = 0;
+    let sampled = 0;
+
+    try {
+      for (const point of points) {
+        const x = Math.max(0, Math.min(canvas.width - 1, Math.floor(canvas.width * point[0])));
+        const y = Math.max(0, Math.min(canvas.height - 1, Math.floor(canvas.height * point[1])));
+        const data = ctx.getImageData(x, y, 1, 1).data;
+
+        sampled += 1;
+
+        const red = data[0] || 0;
+        const green = data[1] || 0;
+        const blue = data[2] || 0;
+        const a = data[3] || 0;
+
+        if (a > 0) alpha += 1;
+        if (a > 0 && (red > 4 || green > 4 || blue > 4)) visible += 1;
+      }
+    } catch (error) {
+      return {
+        status: "PIXEL_SAMPLE_ERROR",
+        visible: false,
+        reason: safeString(error && error.message, "PIXEL_SAMPLE_ERROR"),
+        alphaPixelCount: alpha,
+        visiblePixelCount: visible,
+        sampleCount: sampled
+      };
+    }
+
+    if (visible > 0) {
+      return {
+        status: "PIXEL_SAMPLE_VISIBLE",
+        visible: true,
+        alphaPixelCount: alpha,
+        visiblePixelCount: visible,
+        sampleCount: sampled
+      };
+    }
+
+    if (alpha > 0) {
+      return {
+        status: "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK",
+        visible: false,
+        alphaPixelCount: alpha,
+        visiblePixelCount: visible,
+        sampleCount: sampled
+      };
+    }
+
+    return {
+      status: "PIXEL_SAMPLE_BLANK",
+      visible: false,
+      alphaPixelCount: alpha,
+      visiblePixelCount: visible,
+      sampleCount: sampled
+    };
+  }
+
   function ensureCanvasSurface(reason = "manual") {
+    state.surfaceEnsureCount += 1;
+
+    const size = chooseSurfaceSize();
     const mount = ensureMount();
 
     if (!mount) {
@@ -1074,10 +1399,29 @@
       return false;
     }
 
-    let canvas = findCanonicalCanvas(mount);
+    normalizeMountLayout(mount, size);
+
+    const frame = ensureFrame(mount);
+
+    if (!frame) {
+      state.frameFound = false;
+      state.canvasElementFound = false;
+      state.canvasSurfaceReady = false;
+      state.visibleSurfacePermissionGranted = false;
+      state.firstFailedCoordinate = "CANVAS_RECT_LOCK_FRAME_NOT_FOUND";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "CREATE_CANONICAL_CANVAS_RECT_LOCK_FRAME_INSIDE_HEARTH_CANVAS_MOUNT";
+      state.postgameStatus = "CANVAS_SURFACE_HELD_FRAME_PENDING";
+      updateDataset();
+      return false;
+    }
+
+    normalizeFrameLayout(frame, size);
+
+    let canvas = findCanonicalCanvas(mount, frame);
 
     if (!canvas) {
-      canvas = createCanvas(mount);
+      canvas = createCanvas(frame);
     }
 
     if (!canvas) {
@@ -1092,24 +1436,16 @@
       return false;
     }
 
+    mountElement = mount;
+    frameElement = frame;
     canvasElement = canvas;
-    moveCanvasIntoMountIfNeeded(canvasElement, mount);
+
+    moveCanvasIntoFrameIfNeeded(canvasElement, frameElement);
     markCanvas(canvasElement);
-    normalizeMountLayout(mount);
-    normalizeCanvasLayout(canvasElement);
-    countNonCanonicalCanvases(canvasElement);
+    applyRectLock(canvasElement, frameElement, size, `ensure:${reason}`);
 
-    try {
-      context2d = canvasElement.getContext("2d", { willReadFrequently: true });
-    } catch (_error) {
-      try {
-        context2d = canvasElement.getContext("2d");
-      } catch (__error) {
-        context2d = null;
-      }
-    }
-
-    resizeCanvasToDisplayedRect();
+    context2d = getCanvas2d(canvasElement);
+    syncCanvasBufferToRect(canvasElement, context2d, getRect(canvasElement));
     scanCanvasSurface({ repairIfZero: true });
 
     if (!state.canvasSurfaceReady) {
@@ -1119,7 +1455,7 @@
       state.recommendedNextFile = FILE;
       state.recommendedNextAction = state.canvasRectNonzero
         ? "RECHECK_CANVAS_CONTEXT_AND_COMPUTED_VISIBILITY"
-        : "VERIFY_CANONICAL_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT";
+        : "VERIFY_CANONICAL_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT_INSIDE_HEARTH_CANVAS_MOUNT";
       state.postgameStatus = "CANVAS_SURFACE_CREATED_PENDING_CONTEXT_RECT_OR_VISIBILITY";
     } else {
       state.firstFailedCoordinate = "NONE_CANVAS_DOM_SURFACE_READY";
@@ -1135,6 +1471,7 @@
     record("CANONICAL_CANVAS_SURFACE_ENSURED", {
       reason,
       mountFound: state.mountFound,
+      frameFound: state.frameFound,
       canvasElementFound: state.canvasElementFound,
       canvasCreated: state.canvasCreated,
       canvasMovedIntoMount: state.canvasMovedIntoMount,
@@ -1142,124 +1479,83 @@
       canvasSurfaceReady: state.canvasSurfaceReady,
       downstreamSurfaceLatched: state.downstreamSurfaceLatched,
       localFallbackSuppressed: state.localFallbackSuppressed,
-      temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount
+      rectLockApplied: state.rectLockApplied,
+      concreteFallbackCssSize: state.concreteFallbackCssSize
     });
 
     updateDataset();
     return state.canvasSurfaceReady;
   }
 
-  function sampleCanvasPixel(canvas, ctx) {
-    if (!canvas || !ctx || canvas.width <= 0 || canvas.height <= 0) {
-      return { status: "PIXEL_SAMPLE_UNREADABLE", visible: false };
-    }
-
-    const points = [
-      [0.5, 0.5],
-      [0.34, 0.5],
-      [0.66, 0.5],
-      [0.5, 0.34],
-      [0.5, 0.66],
-      [0.25, 0.25],
-      [0.75, 0.75]
-    ];
-
-    let alpha = 0;
-    let visible = 0;
-
-    try {
-      for (const point of points) {
-        const x = Math.max(0, Math.min(canvas.width - 1, Math.floor(canvas.width * point[0])));
-        const y = Math.max(0, Math.min(canvas.height - 1, Math.floor(canvas.height * point[1])));
-        const data = ctx.getImageData(x, y, 1, 1).data;
-        const r = data[0] || 0;
-        const g = data[1] || 0;
-        const b = data[2] || 0;
-        const a = data[3] || 0;
-
-        if (a > 0) alpha += 1;
-        if (a > 0 && (r > 4 || g > 4 || b > 4)) visible += 1;
-      }
-    } catch (error) {
-      return {
-        status: "PIXEL_SAMPLE_ERROR",
-        visible: false,
-        reason: safeString(error && error.message, "PIXEL_SAMPLE_ERROR")
-      };
-    }
-
-    if (visible > 0) return { status: "PIXEL_SAMPLE_VISIBLE", visible: true };
-    if (alpha > 0) return { status: "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK", visible: false };
-    return { status: "PIXEL_SAMPLE_BLANK", visible: false };
-  }
-
   function scanCanvasSurface(options = {}) {
+    state.surfaceScanCount += 1;
+
     const repairIfZero = options.repairIfZero !== false;
+    const size = chooseSurfaceSize();
 
     const mount = mountElement || findMount();
-    const canvas = canvasElement || findCanonicalCanvas(mount);
+    const frame = frameElement || (mount ? findFrame(mount) : null);
+    const canvas = canvasElement || findCanonicalCanvas(mount, frame);
 
     mountElement = mount || mountElement;
+    frameElement = frame || frameElement;
     canvasElement = canvas || canvasElement;
 
-    if (mountElement) normalizeMountLayout(mountElement);
+    if (mountElement) normalizeMountLayout(mountElement, size);
+    if (frameElement) normalizeFrameLayout(frameElement, size);
 
     if (canvasElement) {
       markCanvas(canvasElement);
-      normalizeCanvasLayout(canvasElement);
-    }
 
-    let mountRect = measure(mountElement);
-    let canvasRect = measure(canvasElement);
-
-    if (repairIfZero && canvasElement && (canvasRect.width <= 0 || canvasRect.height <= 0)) {
-      forceConcreteCanvasSize(canvasElement, "scan-canvas-zero-rect");
-      resizeCanvasToDisplayedRect();
-      canvasRect = measure(canvasElement);
-      mountRect = measure(mountElement);
-    }
-
-    let contextReady = false;
-
-    try {
-      if (canvasElement && isFunction(canvasElement.getContext)) {
-        context2d = context2d || canvasElement.getContext("2d", { willReadFrequently: true });
-        contextReady = Boolean(context2d);
+      if (frameElement && canvasElement.parentNode !== frameElement) {
+        moveCanvasIntoFrameIfNeeded(canvasElement, frameElement);
       }
-    } catch (_error) {
-      contextReady = Boolean(context2d);
+
+      applyRectLock(canvasElement, frameElement, size, repairIfZero ? "scan-rect-lock" : "scan-no-repair");
     }
+
+    let mountRect = getRect(mountElement);
+    let frameRect = getRect(frameElement);
+    let canvasRect = getRect(canvasElement);
+
+    if (repairIfZero && canvasElement && frameElement && (canvasRect.width <= 0 || canvasRect.height <= 0)) {
+      applyRectLock(canvasElement, frameElement, size, "scan-zero-rect-repair");
+      mountRect = getRect(mountElement);
+      frameRect = getRect(frameElement);
+      canvasRect = getRect(canvasElement);
+    }
+
+    context2d = context2d || getCanvas2d(canvasElement);
+    syncCanvasBufferToRect(canvasElement, context2d, canvasRect);
 
     const pixel = sampleCanvasPixel(canvasElement, context2d);
-    const viewportWidth = safeNumber(root.innerWidth, 0);
-    const viewportHeight = safeNumber(root.innerHeight, 0);
 
     state.mountFound = Boolean(mountElement);
     state.mountSelector = mountElement ? (mountElement.id ? `#${mountElement.id}` : describeElement(mountElement)) : "UNKNOWN";
     state.mountRectNonzero = mountRect.width > 0 && mountRect.height > 0;
     state.mountComputedVisible = computedVisible(mountElement);
 
+    state.frameFound = Boolean(frameElement);
+    state.frameSelector = frameElement ? (frameElement.id ? `#${frameElement.id}` : describeElement(frameElement)) : "UNKNOWN";
+    state.frameRectNonzero = frameRect.width > 0 && frameRect.height > 0;
+    state.frameComputedVisible = computedVisible(frameElement);
+
     state.canvasElementFound = Boolean(canvasElement);
-    state.canvasInMount = Boolean(mountElement && canvasElement && mountElement.contains && mountElement.contains(canvasElement));
+    state.canvasInMount = Boolean(mountElement && canvasElement && isFunction(mountElement.contains) && mountElement.contains(canvasElement));
+    state.canvasInFrame = Boolean(frameElement && canvasElement && isFunction(frameElement.contains) && frameElement.contains(canvasElement));
     state.canvasSelector = canvasElement ? `#${CANONICAL_CANVAS_ID}` : "UNKNOWN";
     state.canvasRectNonzero = canvasRect.width > 0 && canvasRect.height > 0;
     state.canvasComputedVisible = computedVisible(canvasElement);
-    state.canvasViewportIntersecting = Boolean(
-      state.canvasRectNonzero &&
-      viewportWidth > 0 &&
-      viewportHeight > 0 &&
-      canvasRect.left < viewportWidth &&
-      canvasRect.right > 0 &&
-      canvasRect.top < viewportHeight &&
-      canvasRect.bottom > 0
-    );
-    state.canvasContext2dReady = contextReady;
+    state.canvasViewportIntersecting = viewportIntersecting(canvasRect);
+    state.canvasContext2dReady = Boolean(context2d);
     state.canvasPixelVisible = Boolean(pixel.visible);
     state.canvasPixelSampleStatus = pixel.status;
     state.canvasSurfaceReady = Boolean(
       state.mountFound &&
+      state.frameFound &&
       state.canvasElementFound &&
       state.canvasInMount &&
+      state.canvasInFrame &&
       state.canvasRectNonzero &&
       state.canvasComputedVisible &&
       state.canvasContext2dReady
@@ -1271,14 +1567,26 @@
     }
 
     countNonCanonicalCanvases(canvasElement);
+
+    if (!state.canvasRectNonzero) {
+      state.firstFailedCoordinate = "CANVAS_RECT_NONZERO";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "VERIFY_CANONICAL_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT_INSIDE_HEARTH_CANVAS_MOUNT";
+      state.postgameStatus = "CANVAS_RECT_LOCK_FAILED_CANONICAL_SURFACE_STILL_ZERO_RECT";
+    }
+
     updateDataset();
 
     return {
       canvasMountFound: state.mountFound,
       canvasMountSelector: state.mountSelector,
       canvasMountRectNonzero: state.mountRectNonzero,
+      canvasFrameFound: state.frameFound,
+      canvasFrameSelector: state.frameSelector,
+      canvasFrameRectNonzero: state.frameRectNonzero,
       canvasElementFound: state.canvasElementFound,
       canvasInMount: state.canvasInMount,
+      canvasInFrame: state.canvasInFrame,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
       canvasViewportIntersecting: state.canvasViewportIntersecting,
@@ -1290,11 +1598,14 @@
       canvasSelector: state.canvasSelector,
       canonicalCanvasId: CANONICAL_CANVAS_ID,
       canonicalMountId: CANONICAL_MOUNT_ID,
+      canonicalFrameId: CANONICAL_FRAME_ID,
       canvasSelectionMode: state.canvasSelectionMode,
       nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
       temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
       zeroRectRepairApplied: state.zeroRectRepairApplied,
+      rectLockApplied: state.rectLockApplied,
       concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
+      concreteFallbackCssSize: state.concreteFallbackCssSize,
       downstreamSurfaceObserved: state.downstreamSurfaceObserved,
       downstreamSurfaceLatched: state.downstreamSurfaceLatched,
       localFallbackSuppressed: state.localFallbackSuppressed
@@ -1403,6 +1714,44 @@
     return true;
   }
 
+  function drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, ox, oy, sx, sy) {
+    const points = 18;
+    const x = cx + radius * (ox * Math.cos(yaw * 0.25) + Math.sin(yaw + ox) * 0.05) * zoom;
+    const y = cy + radius * (oy + Math.sin(pitch + oy) * 0.045) * zoom;
+    const rx = radius * sx * zoom;
+    const ry = radius * sy * zoom;
+
+    ctx.beginPath();
+
+    for (let index = 0; index <= points; index += 1) {
+      const angle = (Math.PI * 2 * index) / points;
+      const irregular =
+        1 +
+        Math.sin(angle * 3 + yaw * 0.9 + ox * 10) * 0.13 +
+        Math.cos(angle * 5 + pitch * 0.7 + oy * 12) * 0.08;
+
+      const px = x + Math.cos(angle) * rx * irregular;
+      const py = y + Math.sin(angle) * ry * irregular;
+
+      if (index === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+
+    ctx.closePath();
+
+    const grad = ctx.createLinearGradient(x - rx, y - ry, x + rx, y + ry);
+    grad.addColorStop(0, "#9e8b52");
+    grad.addColorStop(0.45, "#5f7d48");
+    grad.addColorStop(1, "#3e5b3b");
+
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(218, 210, 148, 0.20)";
+    ctx.lineWidth = Math.max(1, radius * 0.004);
+    ctx.stroke();
+  }
+
   function drawLocalFallbackSurface(reason = "manual-placeholder") {
     state.localFallbackDrawAttemptCount += 1;
 
@@ -1410,35 +1759,31 @@
       return false;
     }
 
-    if (!canvasElement || !context2d) {
-      ensureCanvasSurface(`fallback:${reason}`);
-    }
+    ensureCanvasSurface(`fallback:${reason}`);
 
     if (!canvasElement || !context2d) return false;
 
-    resizeCanvasToDisplayedRect();
+    scanCanvasSurface({ repairIfZero: true });
 
-    const rect = measure(canvasElement);
-    const cssWidth = Math.max(1, Math.floor(rect.width || fallbackCssSize()));
-    const cssHeight = Math.max(1, Math.floor(rect.height || cssWidth));
-    const w = cssWidth;
-    const h = cssHeight;
-    const cx = w / 2;
-    const cy = h / 2;
-    const radius = Math.max(80, Math.min(w, h) * 0.46);
+    const rect = getRect(canvasElement);
+    const width = Math.max(1, Math.floor(rect.width || chooseSurfaceSize()));
+    const height = Math.max(1, Math.floor(rect.height || width));
+    const cx = width / 2;
+    const cy = height / 2;
+    const radius = Math.max(80, Math.min(width, height) * 0.46);
     const yaw = state.viewYaw;
     const pitch = state.viewPitch;
     const zoom = state.viewZoom;
     const ctx = context2d;
 
     try {
-      ctx.clearRect(0, 0, w, h);
+      ctx.clearRect(0, 0, width, height);
 
       const bg = ctx.createRadialGradient(cx, cy, radius * 0.1, cx, cy, radius * 1.24);
       bg.addColorStop(0, "rgba(9, 20, 32, 0.10)");
       bg.addColorStop(1, "rgba(9, 20, 32, 0.72)");
       ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(0, 0, width, height);
 
       ctx.save();
       ctx.beginPath();
@@ -1513,47 +1858,8 @@
     }
   }
 
-  function drawFallbackLandMass(ctx, cx, cy, radius, yaw, pitch, zoom, ox, oy, sx, sy) {
-    const points = 18;
-    const x = cx + radius * (ox * Math.cos(yaw * 0.25) + Math.sin(yaw + ox) * 0.05) * zoom;
-    const y = cy + radius * (oy + Math.sin(pitch + oy) * 0.045) * zoom;
-    const rx = radius * sx * zoom;
-    const ry = radius * sy * zoom;
-
-    ctx.beginPath();
-
-    for (let i = 0; i <= points; i += 1) {
-      const a = (Math.PI * 2 * i) / points;
-      const irregular =
-        1 +
-        Math.sin(a * 3 + yaw * 0.9 + ox * 10) * 0.13 +
-        Math.cos(a * 5 + pitch * 0.7 + oy * 12) * 0.08;
-
-      const px = x + Math.cos(a) * rx * irregular;
-      const py = y + Math.sin(a) * ry * irregular;
-
-      if (i === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    }
-
-    ctx.closePath();
-
-    const grad = ctx.createLinearGradient(x - rx, y - ry, x + rx, y + ry);
-    grad.addColorStop(0, "#9e8b52");
-    grad.addColorStop(0.45, "#5f7d48");
-    grad.addColorStop(1, "#3e5b3b");
-
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(218, 210, 148, 0.20)";
-    ctx.lineWidth = Math.max(1, radius * 0.004);
-    ctx.stroke();
-  }
-
   function packetText(packet) {
     if (!packet) return "";
-
     if (typeof packet === "string") return packet;
 
     try {
@@ -1561,6 +1867,53 @@
     } catch (_error) {
       return safeString(packet);
     }
+  }
+
+  function findDrawableSource(packet = {}) {
+    const p = isObject(packet) ? packet : {};
+
+    const directKeys = [
+      "drawable",
+      "surface",
+      "surfaceCanvas",
+      "sourceCanvas",
+      "textureCanvas",
+      "canvas",
+      "frame",
+      "image",
+      "imageBitmap",
+      "bitmap",
+      "video"
+    ];
+
+    for (const key of directKeys) {
+      if (isDrawable(p[key])) {
+        return {
+          drawable: p[key],
+          type: key
+        };
+      }
+    }
+
+    if (isObject(p.payload)) {
+      const nested = findDrawableSource(p.payload);
+      if (nested.drawable) return nested;
+    }
+
+    if (isObject(p.framePacket)) {
+      const nested = findDrawableSource(p.framePacket);
+      if (nested.drawable) return nested;
+    }
+
+    if (isObject(p.surfacePacket)) {
+      const nested = findDrawableSource(p.surfacePacket);
+      if (nested.drawable) return nested;
+    }
+
+    return {
+      drawable: null,
+      type: "NONE"
+    };
   }
 
   function isDownstreamSurfacePacket(packet) {
@@ -1625,53 +1978,6 @@
     );
   }
 
-  function findDrawableSource(packet = {}) {
-    const p = isObject(packet) ? packet : {};
-
-    const directKeys = [
-      "drawable",
-      "surface",
-      "surfaceCanvas",
-      "sourceCanvas",
-      "textureCanvas",
-      "canvas",
-      "frame",
-      "image",
-      "imageBitmap",
-      "bitmap",
-      "video"
-    ];
-
-    for (const key of directKeys) {
-      if (isDrawable(p[key])) {
-        return {
-          drawable: p[key],
-          type: key
-        };
-      }
-    }
-
-    if (isObject(p.payload)) {
-      const nested = findDrawableSource(p.payload);
-      if (nested.drawable) return nested;
-    }
-
-    if (isObject(p.framePacket)) {
-      const nested = findDrawableSource(p.framePacket);
-      if (nested.drawable) return nested;
-    }
-
-    if (isObject(p.surfacePacket)) {
-      const nested = findDrawableSource(p.surfacePacket);
-      if (nested.drawable) return nested;
-    }
-
-    return {
-      drawable: null,
-      type: "NONE"
-    };
-  }
-
   function applyImageDataPacket(packet = {}) {
     if (!context2d || !canvasElement || !isObject(packet)) return false;
 
@@ -1703,10 +2009,10 @@
 
     if (found.drawable) {
       try {
-        resizeCanvasToDisplayedRect();
+        ensureCanvasSurface("apply-drawable-packet");
 
-        const rect = measure(canvasElement);
-        const width = Math.max(1, Math.floor(rect.width || fallbackCssSize()));
+        const rect = getRect(canvasElement);
+        const width = Math.max(1, Math.floor(rect.width || chooseSurfaceSize()));
         const height = Math.max(1, Math.floor(rect.height || width));
 
         context2d.clearRect(0, 0, width, height);
@@ -1769,16 +2075,23 @@
 
     scanCanvasSurface({ repairIfZero: true });
 
-    state.firstFailedCoordinate = "NONE_DOWNSTREAM_SURFACE_LATCHED";
+    state.firstFailedCoordinate = state.canvasRectNonzero
+      ? "NONE_DOWNSTREAM_SURFACE_LATCHED"
+      : "CANVAS_RECT_NONZERO";
     state.recommendedNextFile = FILE;
-    state.recommendedNextAction = "PRESERVE_DOWNSTREAM_SURFACE_AND_DO_NOT_REPAINT_LOCAL_FALLBACK";
-    state.postgameStatus = "CANVAS_DOWNSTREAM_SURFACE_LATCHED_LOCAL_FALLBACK_SUPPRESSED_NO_FINAL_CLAIM";
+    state.recommendedNextAction = state.canvasRectNonzero
+      ? "PRESERVE_DOWNSTREAM_SURFACE_AND_DO_NOT_REPAINT_LOCAL_FALLBACK"
+      : "VERIFY_CANONICAL_CANVAS_STYLE_SIZE_AND_PARENT_LAYOUT_INSIDE_HEARTH_CANVAS_MOUNT";
+    state.postgameStatus = state.canvasRectNonzero
+      ? "CANVAS_DOWNSTREAM_SURFACE_LATCHED_LOCAL_FALLBACK_SUPPRESSED_NO_FINAL_CLAIM"
+      : "CANVAS_DOWNSTREAM_SURFACE_LATCHED_BUT_CANONICAL_RECT_STILL_ZERO";
 
     record("CANVAS_DOWNSTREAM_SURFACE_LATCHED", {
       source: state.downstreamSurfaceSource,
       packetType: state.downstreamSurfacePacketType,
       contract: state.downstreamSurfaceContract,
       drawableApplied: applied,
+      canvasRectNonzero: state.canvasRectNonzero,
       canvasPixelVisible: state.canvasPixelVisible,
       visualPassClaimed: false
     });
@@ -1787,7 +2100,7 @@
     publishReceiptAliases();
 
     return {
-      packetType: "HEARTH_CANVAS_DOWNSTREAM_SURFACE_ADMISSION_RECEIPT_v12_4_2",
+      packetType: "HEARTH_CANVAS_DOWNSTREAM_SURFACE_ADMISSION_RECEIPT_v12_4_3",
       accepted: true,
       ok: true,
       contract: CONTRACT,
@@ -1808,7 +2121,8 @@
       canvasRectNonzero: state.canvasRectNonzero,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasPixelVisible: state.canvasPixelVisible,
-      ...NO_CLAIMS
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
   }
 
@@ -1872,16 +2186,22 @@
       bilateralRouteCanvasScanConfirmed: Boolean(accepted && routeActiveScanConfirmed),
 
       canonicalCanvasSelectionActive: true,
+      canonicalSurfaceRectLockActive: true,
+      concreteSurfaceFrameActive: true,
       canvasSelectionMode: state.canvasSelectionMode,
       canonicalCanvasId: CANONICAL_CANVAS_ID,
       canonicalMountId: CANONICAL_MOUNT_ID,
+      canonicalFrameId: CANONICAL_FRAME_ID,
       temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
       nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
 
       canvasMountFound: state.mountFound,
       canvasMountRectNonzero: state.mountRectNonzero,
+      canvasFrameFound: state.frameFound,
+      canvasFrameRectNonzero: state.frameRectNonzero,
       canvasElementFound: state.canvasElementFound,
       canvasInMount: state.canvasInMount,
+      canvasInFrame: state.canvasInFrame,
       canvasRectNonzero: state.canvasRectNonzero,
       canvasComputedVisible: state.canvasComputedVisible,
       canvasViewportIntersecting: state.canvasViewportIntersecting,
@@ -1894,6 +2214,9 @@
       zeroRectRepairAttempted: state.zeroRectRepairAttempted,
       zeroRectRepairApplied: state.zeroRectRepairApplied,
       zeroRectRepairReason: state.zeroRectRepairReason,
+      rectLockAttempted: state.rectLockAttempted,
+      rectLockApplied: state.rectLockApplied,
+      rectLockReason: state.rectLockReason,
       concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
       concreteFallbackCssSize: state.concreteFallbackCssSize,
 
@@ -1933,11 +2256,31 @@
         : state.postgameStatus,
 
       acceptedAt: nowIso(),
-      ...NO_CLAIMS
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
 
     state.lastAcceptancePacket = clonePlain(acceptance);
     return acceptance;
+  }
+
+  function publishPacketAliases(packet) {
+    const hearth = ensureObject(root, "HEARTH");
+    const lab = ensureObject(root, "DEXTER_LAB");
+    const cloned = clonePlain(packet);
+
+    root.HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_PACKET = cloned;
+    root.HEARTH_CANVAS_ACCEPTANCE_SCAN_PACKET = cloned;
+    root.HEARTH_CANVAS_BILATERAL_ROUTE_SCAN_RECEIPT = cloned;
+
+    hearth.canvasPresentationPlatterAcceptancePacket = cloned;
+    hearth.canvasAcceptanceScanPacket = cloned;
+    hearth.canvasBilateralRouteScanReceipt = cloned;
+
+    lab.hearthCanvasPresentationPlatterAcceptancePacket = cloned;
+    lab.hearthCanvasAcceptanceScanPacket = cloned;
+
+    return true;
   }
 
   function receiveRoutePresentationPlatterPacket(packet) {
@@ -2060,7 +2403,7 @@
     publishReceiptAliases();
 
     return {
-      packetType: "HEARTH_CANVAS_CONTROL_VIEW_PACKET_ACCEPTANCE_v12_4_2",
+      packetType: "HEARTH_CANVAS_CONTROL_VIEW_PACKET_ACCEPTANCE_v12_4_3",
       accepted: true,
       ok: true,
       contract: CONTRACT,
@@ -2083,7 +2426,8 @@
         zoom: state.viewZoom,
         phase: 0
       },
-      ...NO_CLAIMS
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
   }
 
@@ -2320,40 +2664,24 @@
     return applyControlPacket(packet);
   }
 
-  function publishPacketAliases(packet) {
-    const hearth = ensureObject(root, "HEARTH");
-    const lab = ensureObject(root, "DEXTER_LAB");
-    const cloned = clonePlain(packet);
-
-    root.HEARTH_CANVAS_PRESENTATION_PLATTER_ACCEPTANCE_PACKET = cloned;
-    root.HEARTH_CANVAS_ACCEPTANCE_SCAN_PACKET = cloned;
-    root.HEARTH_CANVAS_BILATERAL_ROUTE_SCAN_RECEIPT = cloned;
-
-    hearth.canvasPresentationPlatterAcceptancePacket = cloned;
-    hearth.canvasAcceptanceScanPacket = cloned;
-    hearth.canvasBilateralRouteScanReceipt = cloned;
-
-    lab.hearthCanvasPresentationPlatterAcceptancePacket = cloned;
-    lab.hearthCanvasAcceptanceScanPacket = cloned;
-
-    return true;
-  }
-
   function composeReceipt() {
     return {
-      packetType: "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT_PACKET_v12_4_2",
+      packetType: "HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_RECEIPT_PACKET_v12_4_3",
       contract: CONTRACT,
       receipt: RECEIPT,
       canvasContract: CONTRACT,
       canvasReceipt: RECEIPT,
       currentCanvasParentContract: RENEWAL_CONTRACT,
       currentCanvasParentReceipt: RENEWAL_RECEIPT,
+      currentCanvasParentRecognized: true,
+      canvasParentContractRecognized: true,
       renewalContract: RENEWAL_CONTRACT,
       renewalReceipt: RENEWAL_RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      lineageV1241Contract: LINEAGE_V12_4_1_CONTRACT,
       lineageV124Contract: LINEAGE_V12_4_CONTRACT,
       lineageV123Contract: LINEAGE_V12_3_CONTRACT,
       lineageV1232Contract: LINEAGE_V12_3_2_CONTRACT,
@@ -2380,6 +2708,8 @@
       liveSurfaceIdentityActive: true,
       unifiedVisible2dOutputActive: true,
       zeroRectCanonicalSurfaceBindingRepairActive: true,
+      canonicalSurfaceRectLockActive: true,
+      concreteSurfaceFrameActive: true,
       downstreamSurfaceAdmissionActive: true,
       fallbackSuppressionActive: true,
       fallbackDemotedToPlaceholder: true,
@@ -2422,14 +2752,23 @@
       canvasMountRectNonzero: state.mountRectNonzero,
       canvasMountComputedVisible: state.mountComputedVisible,
 
+      canvasFrameFound: state.frameFound,
+      canvasFrameCreated: state.frameCreated,
+      canvasFrameSelector: state.frameSelector,
+      canvasFrameRectNonzero: state.frameRectNonzero,
+      canvasFrameComputedVisible: state.frameComputedVisible,
+      canvasFrameConcreteSize: state.frameConcreteSize,
+
       canvasElementFound: state.canvasElementFound,
       canvasCreated: state.canvasCreated,
       canvasMovedIntoMount: state.canvasMovedIntoMount,
       canvasInMount: state.canvasInMount,
+      canvasInFrame: state.canvasInFrame,
       canvasSelector: state.canvasSelector,
       canvasSelectionMode: state.canvasSelectionMode,
       canonicalCanvasId: state.canonicalCanvasId,
       canonicalMountId: state.canonicalMountId,
+      canonicalFrameId: state.canonicalFrameId,
       nonCanonicalCanvasCount: state.nonCanonicalCanvasCount,
       temporaryCanvasIgnoredCount: state.temporaryCanvasIgnoredCount,
 
@@ -2440,11 +2779,16 @@
       canvasPixelSampleStatus: state.canvasPixelSampleStatus,
       canvasPixelVisible: state.canvasPixelVisible,
       canvasSurfaceReady: state.canvasSurfaceReady,
+      canvasNamespacePresent: true,
+      canvasNamespaceMatchesDomSurface: state.canvasElementFound,
       visibleSurfacePermissionGranted: state.visibleSurfacePermissionGranted,
 
       zeroRectRepairAttempted: state.zeroRectRepairAttempted,
       zeroRectRepairApplied: state.zeroRectRepairApplied,
       zeroRectRepairReason: state.zeroRectRepairReason,
+      rectLockAttempted: state.rectLockAttempted,
+      rectLockApplied: state.rectLockApplied,
+      rectLockReason: state.rectLockReason,
       concreteFallbackSizeApplied: state.concreteFallbackSizeApplied,
       concreteFallbackCssSize: state.concreteFallbackCssSize,
 
@@ -2496,6 +2840,8 @@
       aliasPublishCount: state.aliasPublishCount,
       receiptPublishCount: state.receiptPublishCount,
       resizeCount: state.resizeCount,
+      surfaceEnsureCount: state.surfaceEnsureCount,
+      surfaceScanCount: state.surfaceScanCount,
       booted: state.booted,
       disposed: state.disposed,
       latestEvent: state.latestEvent,
@@ -2511,6 +2857,8 @@
       supportsCanvasAcceptanceScanReturn: true,
       supportsCanvasDomSurfaceCreation: true,
       supportsCanonicalVisibleCanvasSelection: true,
+      supportsCanonicalSurfaceRectLock: true,
+      supportsConcreteSurfaceFrame: true,
       supportsTemporaryCanvasDisambiguation: true,
       supportsZeroRectRepair: true,
       supportsVisible2dOutput: true,
@@ -2521,6 +2869,7 @@
       supportsPlaceholderFallbackOnlyBeforeDownstream: true,
 
       ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS,
       updatedAt: nowIso()
     };
   }
@@ -2560,7 +2909,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT",
+      "HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_RECEIPT",
       "",
       "HEADER",
       line("contract", CONTRACT),
@@ -2579,6 +2928,8 @@
       line("domSurfaceCreationAuthority", true),
       line("canvasAcceptanceScanAuthority", true),
       line("zeroRectCanonicalSurfaceBindingRepairActive", true),
+      line("canonicalSurfaceRectLockActive", true),
+      line("concreteSurfaceFrameActive", true),
       line("downstreamSurfaceAdmissionActive", true),
       line("fallbackSuppressionActive", true),
       line("fallbackDemotedToPlaceholder", true),
@@ -2589,14 +2940,18 @@
       line("canvasSelectionMode", r.canvasSelectionMode),
       line("canonicalCanvasId", r.canonicalCanvasId),
       line("canonicalMountId", r.canonicalMountId),
+      line("canonicalFrameId", r.canonicalFrameId),
       line("nonCanonicalCanvasCount", r.nonCanonicalCanvasCount),
       line("temporaryCanvasIgnoredCount", r.temporaryCanvasIgnoredCount),
       "",
       "SURFACE",
       line("canvasMountFound", r.canvasMountFound),
       line("canvasMountRectNonzero", r.canvasMountRectNonzero),
+      line("canvasFrameFound", r.canvasFrameFound),
+      line("canvasFrameRectNonzero", r.canvasFrameRectNonzero),
       line("canvasElementFound", r.canvasElementFound),
       line("canvasInMount", r.canvasInMount),
+      line("canvasInFrame", r.canvasInFrame),
       line("canvasRectNonzero", r.canvasRectNonzero),
       line("canvasComputedVisible", r.canvasComputedVisible),
       line("canvasViewportIntersecting", r.canvasViewportIntersecting),
@@ -2628,6 +2983,9 @@
       line("zeroRectRepairAttempted", r.zeroRectRepairAttempted),
       line("zeroRectRepairApplied", r.zeroRectRepairApplied),
       line("zeroRectRepairReason", r.zeroRectRepairReason),
+      line("rectLockAttempted", r.rectLockAttempted),
+      line("rectLockApplied", r.rectLockApplied),
+      line("rectLockReason", r.rectLockReason),
       line("concreteFallbackSizeApplied", r.concreteFallbackSizeApplied),
       line("concreteFallbackCssSize", r.concreteFallbackCssSize),
       "",
@@ -2673,15 +3031,17 @@
     const r = getReceiptLight();
 
     return [
-      "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_STATUS",
+      "HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_STATUS",
       line("contract", r.contract),
       line("renewalContract", r.renewalContract),
       line("internalRenewalContract", r.internalRenewalContract),
       line("canvasSelectionMode", r.canvasSelectionMode),
       line("canvasMountFound", r.canvasMountFound),
+      line("canvasFrameFound", r.canvasFrameFound),
       line("canvasElementFound", r.canvasElementFound),
       line("canvasRectNonzero", r.canvasRectNonzero),
       line("canvasSurfaceReady", r.canvasSurfaceReady),
+      line("canvasViewportIntersecting", r.canvasViewportIntersecting),
       line("downstreamSurfaceObserved", r.downstreamSurfaceObserved),
       line("downstreamSurfaceLatched", r.downstreamSurfaceLatched),
       line("localFallbackAllowed", r.localFallbackAllowed),
@@ -2691,6 +3051,8 @@
       line("bilateralRouteCanvasScanConfirmed", r.bilateralRouteCanvasScanConfirmed),
       line("visibleSurfacePermissionGranted", r.visibleSurfacePermissionGranted),
       line("zeroRectRepairApplied", r.zeroRectRepairApplied),
+      line("rectLockApplied", r.rectLockApplied),
+      line("concreteFallbackCssSize", r.concreteFallbackCssSize),
       line("temporaryCanvasIgnoredCount", r.temporaryCanvasIgnoredCount),
       line("routePresentationPacketAccepted", r.routePresentationPacketAccepted),
       line("recommendedNextFile", r.recommendedNextFile),
@@ -2704,6 +3066,7 @@
     return {
       ...clonePlain(state),
       canvasElement: canvasElement ? describeElement(canvasElement) : "NONE",
+      frameElement: frameElement ? describeElement(frameElement) : "NONE",
       mountElement: mountElement ? describeElement(mountElement) : "NONE"
     };
   }
@@ -2765,6 +3128,8 @@
     setDataset("hearthCanvasLiveSurfaceIdentityActive", "true");
     setDataset("hearthCanvasUnifiedVisible2dOutputActive", "true");
     setDataset("hearthCanvasZeroRectCanonicalSurfaceBindingRepairActive", "true");
+    setDataset("hearthCanvasCanonicalSurfaceRectLockActive", "true");
+    setDataset("hearthCanvasConcreteSurfaceFrameActive", "true");
     setDataset("hearthCanvasDownstreamSurfaceAdmissionActive", "true");
     setDataset("hearthCanvasFallbackSuppressionActive", "true");
     setDataset("hearthCanvasFallbackDemotedToPlaceholder", "true");
@@ -2777,6 +3142,7 @@
     setDataset("hearthCanvasSelectionMode", state.canvasSelectionMode);
     setDataset("hearthCanvasCanonicalCanvasId", state.canonicalCanvasId);
     setDataset("hearthCanvasCanonicalMountId", state.canonicalMountId);
+    setDataset("hearthCanvasCanonicalFrameId", state.canonicalFrameId);
     setDataset("hearthCanvasNonCanonicalCanvasCount", String(state.nonCanonicalCanvasCount));
     setDataset("hearthCanvasTemporaryCanvasIgnoredCount", String(state.temporaryCanvasIgnoredCount));
 
@@ -2784,10 +3150,17 @@
     setDataset("hearthCanvasMountCreated", String(state.mountCreated));
     setDataset("hearthCanvasMountSelector", state.mountSelector);
     setDataset("hearthCanvasMountRectNonzero", String(state.mountRectNonzero));
+    setDataset("hearthCanvasFrameFound", String(state.frameFound));
+    setDataset("hearthCanvasFrameCreated", String(state.frameCreated));
+    setDataset("hearthCanvasFrameSelector", state.frameSelector);
+    setDataset("hearthCanvasFrameRectNonzero", String(state.frameRectNonzero));
+    setDataset("hearthCanvasFrameConcreteSize", state.frameConcreteSize);
+
     setDataset("hearthCanvasElementFound", String(state.canvasElementFound));
     setDataset("hearthCanvasCreated", String(state.canvasCreated));
     setDataset("hearthCanvasMovedIntoMount", String(state.canvasMovedIntoMount));
     setDataset("hearthCanvasInMount", String(state.canvasInMount));
+    setDataset("hearthCanvasInFrame", String(state.canvasInFrame));
     setDataset("hearthCanvasSelector", state.canvasSelector);
     setDataset("hearthCanvasRectNonzero", String(state.canvasRectNonzero));
     setDataset("hearthCanvasComputedVisible", String(state.canvasComputedVisible));
@@ -2796,11 +3169,16 @@
     setDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
     setDataset("hearthCanvasPixelVisible", String(state.canvasPixelVisible));
     setDataset("hearthCanvasSurfaceReady", String(state.canvasSurfaceReady));
+    setDataset("hearthCanvasNamespacePresent", "true");
+    setDataset("hearthCanvasNamespaceMatchesDomSurface", String(state.canvasElementFound));
     setDataset("hearthVisibleSurfacePermissionGranted", String(state.visibleSurfacePermissionGranted));
 
     setDataset("hearthCanvasZeroRectRepairAttempted", String(state.zeroRectRepairAttempted));
     setDataset("hearthCanvasZeroRectRepairApplied", String(state.zeroRectRepairApplied));
     setDataset("hearthCanvasZeroRectRepairReason", state.zeroRectRepairReason);
+    setDataset("hearthCanvasRectLockAttempted", String(state.rectLockAttempted));
+    setDataset("hearthCanvasRectLockApplied", String(state.rectLockApplied));
+    setDataset("hearthCanvasRectLockReason", state.rectLockReason);
     setDataset("hearthCanvasConcreteFallbackSizeApplied", String(state.concreteFallbackSizeApplied));
     setDataset("hearthCanvasConcreteFallbackCssSize", state.concreteFallbackCssSize);
 
@@ -2827,6 +3205,8 @@
     setDataset("hearthCanvasRenderCount", String(state.renderCount));
     setDataset("hearthCanvasPacketCount", String(state.packetCount));
     setDataset("hearthCanvasControlPacketCount", String(state.controlPacketCount));
+    setDataset("hearthCanvasSurfaceEnsureCount", String(state.surfaceEnsureCount));
+    setDataset("hearthCanvasSurfaceScanCount", String(state.surfaceScanCount));
 
     setDataset("hearthCanvasFirstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("hearthCanvasRecommendedNextFile", state.recommendedNextFile);
@@ -2858,6 +3238,7 @@
     ensureObject(root, "DEXTER_LAB");
 
     const paths = [
+      "HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION",
       "HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION",
       "HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR",
       "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
@@ -2875,6 +3256,7 @@
       "HEARTH_CANVAS_STATION",
       "HEARTH_CANVAS_EXPRESSION_HUB",
       "HEARTH_CANVAS_VISIBLE_PLANET",
+      "HEARTH.canvasHubCanonicalSurfaceRectLockAndDownstreamFallbackSuppression",
       "HEARTH.canvasHubDownstreamSurfaceAdmissionFallbackSuppression",
       "HEARTH.canvasHubZeroRectCanonicalSurfaceBindingRepair",
       "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
@@ -2892,6 +3274,7 @@
       "HEARTH.canvasStation",
       "HEARTH.canvasExpressionHub",
       "HEARTH.canvasVisiblePlanet",
+      "DEXTER_LAB.hearthCanvasHubCanonicalSurfaceRectLockAndDownstreamFallbackSuppression",
       "DEXTER_LAB.hearthCanvasHubDownstreamSurfaceAdmissionFallbackSuppression",
       "DEXTER_LAB.hearthCanvasHubZeroRectCanonicalSurfaceBindingRepair",
       "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
@@ -2925,6 +3308,7 @@
     root.HEARTH_CANVAS_HUB_RECEIPT = receipt;
     root.HEARTH_CANVAS_PARENT_RECEIPT = receipt;
     root.HEARTH_CANVAS_AUTHORITY_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_CANONICAL_SURFACE_RECT_LOCK_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_ZERO_RECT_CANONICAL_SURFACE_BINDING_REPAIR_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT = receipt;
@@ -2935,6 +3319,7 @@
     hearth.canvasHubReceipt = receipt;
     hearth.canvasParentReceipt = receipt;
     hearth.canvasAuthorityReceipt = receipt;
+    hearth.canvasHubCanonicalSurfaceRectLockAndDownstreamFallbackSuppressionReceipt = receipt;
     hearth.canvasHubDownstreamSurfaceAdmissionFallbackSuppressionReceipt = receipt;
     hearth.canvasHubZeroRectCanonicalSurfaceBindingRepairReceipt = receipt;
     hearth.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
@@ -2943,6 +3328,7 @@
 
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
+    lab.hearthCanvasHubCanonicalSurfaceRectLockAndDownstreamFallbackSuppressionReceipt = receipt;
     lab.hearthCanvasHubDownstreamSurfaceAdmissionFallbackSuppressionReceipt = receipt;
     lab.hearthCanvasHubZeroRectCanonicalSurfaceBindingRepairReceipt = receipt;
     lab.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
@@ -2963,8 +3349,10 @@
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       canvasSurfaceReady: state.canvasSurfaceReady,
       canvasRectNonzero: state.canvasRectNonzero,
+      canvasViewportIntersecting: state.canvasViewportIntersecting,
       downstreamSurfaceLatched: state.downstreamSurfaceLatched,
       localFallbackSuppressed: state.localFallbackSuppressed,
+      rectLockApplied: state.rectLockApplied,
       visualPassClaimed: false
     });
 
@@ -3022,29 +3410,21 @@
     return render();
   }
 
-  function start() {
-    return boot();
-  }
-
-  function init() {
-    return boot();
-  }
-
-  function run() {
-    return boot();
-  }
-
   function boot() {
-    if (bootPromise) return bootPromise;
+    if (state.booting) return getReceiptLight();
 
-    bootPromise = Promise.resolve().then(() => {
-      if (state.booted || state.booting) return getReceipt();
+    if (state.booted) {
+      ensureCanvasSurface("boot-already-complete");
+      publishGlobals("boot-already-complete");
+      return getReceiptLight();
+    }
 
-      state.booting = true;
-      state.startedAt = nowIso();
-      state.updatedAt = state.startedAt;
-      state.postgameStatus = "CANVAS_BOOTING_DOWNSTREAM_SURFACE_ADMISSION_FALLBACK_SUPPRESSION";
+    state.booting = true;
+    state.startedAt = nowIso();
+    state.updatedAt = state.startedAt;
+    state.postgameStatus = "CANVAS_BOOTING_CANONICAL_RECT_LOCK_DOWNSTREAM_FALLBACK_SUPPRESSION";
 
+    try {
       publishApiAliases();
       observeNeighborAuthorities();
       ensureCanvasSurface("boot");
@@ -3062,7 +3442,7 @@
         ? "WAIT_FOR_DOWNSTREAM_SURFACE_PACKET_OR_DELAYED_PLACEHOLDER_FALLBACK"
         : state.recommendedNextAction;
       state.postgameStatus = state.canvasSurfaceReady
-        ? "CANVAS_BOOTED_CANONICAL_SURFACE_READY_DOWNSTREAM_SURFACE_NOT_YET_LATCHED"
+        ? "CANVAS_BOOTED_CANONICAL_SURFACE_RECT_LOCKED_DOWNSTREAM_SURFACE_NOT_YET_LATCHED"
         : state.postgameStatus;
 
       if (!state.downstreamSurfaceLatched && !state.canvasPixelVisible) {
@@ -3097,15 +3477,25 @@
       }
 
       return getReceipt();
-    }).catch((error) => {
+    } catch (error) {
       state.booting = false;
       recordError("CANVAS_BOOT_FAILED", error);
       updateDataset();
       publishReceiptAliases();
       return getReceipt();
-    });
+    }
+  }
 
-    return bootPromise;
+  function start() {
+    return boot();
+  }
+
+  function init() {
+    return boot();
+  }
+
+  function run() {
+    return boot();
   }
 
   function dispose(reason = "manual-dispose") {
@@ -3146,12 +3536,15 @@
 
     canonicalCanvasId: CANONICAL_CANVAS_ID,
     canonicalMountId: CANONICAL_MOUNT_ID,
-    canvasSelectionMode: "CANONICAL_HTML_MOUNT_VISIBLE_SURFACE_ONLY",
+    canonicalFrameId: CANONICAL_FRAME_ID,
+    canvasSelectionMode: "CANONICAL_MOUNT_RECT_LOCK_VISIBLE_2D_SURFACE",
 
     canvasPresentationPlatterAuthority: true,
     liveSurfaceIdentityActive: true,
     unifiedVisible2dOutputActive: true,
     zeroRectCanonicalSurfaceBindingRepairActive: true,
+    canonicalSurfaceRectLockActive: true,
+    concreteSurfaceFrameActive: true,
     downstreamSurfaceAdmissionActive: true,
     fallbackSuppressionActive: true,
     fallbackDemotedToPlaceholder: true,
@@ -3270,6 +3663,8 @@
     supportsCanvasAcceptanceScanReturn: true,
     supportsCanvasDomSurfaceCreation: true,
     supportsCanonicalVisibleCanvasSelection: true,
+    supportsCanonicalSurfaceRectLock: true,
+    supportsConcreteSurfaceFrame: true,
     supportsTemporaryCanvasDisambiguation: true,
     supportsZeroRectRepair: true,
     supportsVisible2dOutput: true,
@@ -3294,6 +3689,7 @@
     ownsFinalVisualPassClaim: false,
 
     ...NO_CLAIMS,
+    ...UPPER_NO_CLAIMS,
 
     get state() {
       return state;

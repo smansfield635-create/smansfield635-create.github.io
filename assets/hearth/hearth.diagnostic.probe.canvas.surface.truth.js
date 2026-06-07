@@ -1,22 +1,31 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
 // HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_TNT_v1_3
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_TNT_v1_4
 // Full-file replacement.
-// Diagnostic-only Canvas surface truth / route-conductor admission forensics probe.
+// Diagnostic-only Canvas surface truth / route-conductor admission / controls-duty forensics probe.
 // Purpose:
 // - Preserve the existing NORTH-facing Canvas surface truth probe contract.
 // - Publish F21 diagnostic authority synchronously before target probing.
 // - Preserve anchor-safe chronology behavior.
 // - Preserve four-lane receipt-hub compatibility.
-// - Add a route-conductor admission forensics lens.
+// - Preserve route-conductor admission forensics from v1_3.
+// - Add a passive Controls duty lane without mutating Controls, Canvas, Hex, Route, Pointer Finger, or production state.
 // - Distinguish:
 //   1. CANVAS_SCRIPT_NOT_PRESENT
 //   2. CANVAS_SCRIPT_PRESENT_BUT_AUTHORITY_NOT_PUBLISHED
 //   3. CANVAS_AUTHORITY_PRESENT_BUT_DOM_SURFACE_NOT_BOUND
 //   4. ROUTE_CONDUCTOR_ADMISSION_RESULT_NOT_EXPORTED
-// - Report coordinate-specific next owner, file, and action.
-// - Do not create, draw, repair, release, restart, or mutate production state.
+//   5. CONTROLS_AUTHORITY_NOT_OBSERVED
+//   6. CONTROLS_HANDSHAKE_ACCEPTED_BUT_INPUT_NOT_BOUND
+//   7. CONTROLS_DELTA_OBSERVED_BUT_CANVAS_DELIVERY_NOT_CONFIRMED
+//   8. CONTROLS_READY_BUT_NOT_EXERCISED
+// - Report whether Controls merely handshakes, is armed, is bound, is publishing packets,
+//   is delivering to Canvas, and is exposing duty counters.
+// - Keep Controls duty as a parallel lane unless Canvas surface truth passes and the only remaining
+//   measurable failed coordinate is view/input duty.
+// - Do not create, draw, repair, release, restart, invoke lifecycle methods, dispatch input,
+//   or mutate production state.
 
 (() => {
   "use strict";
@@ -30,17 +39,22 @@
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_TNT_v1_3";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_TNT_v1_4";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_RECEIPT_v1_3";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_RECEIPT_v1_4";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_TNT_v1_3";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_RECEIPT_v1_3";
+
+  const LINEAGE_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_TNT_v1_2";
+  const LINEAGE_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_ANCHOR_SAFE_COORDINATE_LADDER_RECEIPT_v1_2";
 
   const VERSION =
-    "2026-06-07.hearth-diagnostic-probe-canvas-surface-truth-route-conductor-admission-forensics-v1-3";
+    "2026-06-07.hearth-diagnostic-probe-canvas-surface-truth-controls-duty-lane-v1-4";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -64,6 +78,10 @@
     "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
   const EXPECTED_ROUTE_CONDUCTOR_INTERNAL_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3";
+  const EXPECTED_CONTROL_CONTRACT =
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
+  const EXPECTED_CONTROL_INTERNAL_CONTRACT =
+    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5";
 
   const ACCEPTED_CANVAS_CONTRACTS = Object.freeze([
     EXPECTED_CANVAS_CONTRACT,
@@ -88,6 +106,9 @@
   const ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS = Object.freeze([
     EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
     EXPECTED_ROUTE_CONDUCTOR_INTERNAL_CONTRACT,
+    "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN_TNT_v10_7",
+    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5",
+    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4",
     "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
     "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9",
@@ -96,6 +117,14 @@
     "HEARTH_ROUTE_CONDUCTOR_NEWS_FIBONACCI_VISIBLE_GLOBE_PROOF_SYNCHRONIZATION_TNT_v9_6",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4"
+  ]);
+
+  const ACCEPTED_CONTROL_CONTRACTS = Object.freeze([
+    EXPECTED_CONTROL_CONTRACT,
+    EXPECTED_CONTROL_INTERNAL_CONTRACT,
+    "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT_TNT_v4_2",
+    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1",
+    "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2"
   ]);
 
   const NO_CLAIMS = Object.freeze({
@@ -167,6 +196,8 @@
     "HEARTH_ROUTE_CONDUCTOR_PRIMARY_GATE",
     "HEARTH_ROUTE_NORTH_BISHOP",
     "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
+    "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN",
+    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION",
     "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF",
     "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION",
     "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE",
@@ -176,6 +207,8 @@
     "HEARTH.routeConductorPrimaryGate",
     "HEARTH.routeNorthBishop",
     "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+    "HEARTH.routeConductorPassiveUiSafeManualScan",
+    "HEARTH.routeConductorSafePacketBridgeNoLifecycleIgnition",
     "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
     "HEARTH.routeConductorHexGatePointerFingerTransmission",
     "HEARTH.routeConductorCanvasDomSurfaceAdmissionAndRelease",
@@ -185,6 +218,8 @@
     "DEXTER_LAB.hearthRouteConductorPrimaryGate",
     "DEXTER_LAB.hearthRouteNorthBishop",
     "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
+    "DEXTER_LAB.hearthRouteConductorPassiveUiSafeManualScan",
+    "DEXTER_LAB.hearthRouteConductorSafePacketBridgeNoLifecycleIgnition",
     "DEXTER_LAB.hearthRouteConductorGovernedSourceStackAdmissionCanvasHandoff",
     "DEXTER_LAB.hearthRouteConductorHexGatePointerFingerTransmission",
     "DEXTER_LAB.hearthRouteConductorCanvasDomSurfaceAdmissionAndRelease",
@@ -238,6 +273,41 @@
     "DEXTER_LAB.hearthCanvasVisiblePlanet"
   ]);
 
+  const CONTROL_ALIASES = Object.freeze([
+    "HEARTH_CONTROLS",
+    "HEARTH_PLANETARY_CONTROLS",
+    "HEARTH_CONTROL_FILE",
+    "HEARTH_CONTROL_AUTHORITY",
+    "HEARTH_PLANETARY_VIEW_CONTROLS",
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
+    "HEARTH_CONTROLS_QUEEN",
+    "HEARTH_QUEEN_CONTROLS",
+    "HEARTH_QUEEN_SUPERCONDUCTOR_CONTROLS",
+    "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT",
+    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION",
+    "HEARTH.controls",
+    "HEARTH.planetaryControls",
+    "HEARTH.controlFile",
+    "HEARTH.controlAuthority",
+    "HEARTH.planetaryViewControls",
+    "HEARTH.controlsPlanetaryViewInputHandshake",
+    "HEARTH.controlsQueen",
+    "HEARTH.queenControls",
+    "HEARTH.queenSuperconductorControls",
+    "HEARTH.controlsVerticalPolaritySmoothCanvasHexPairAlignment",
+    "HEARTH.controlsHexGatePointerFingerTransmission",
+    "DEXTER_LAB.hearthControls",
+    "DEXTER_LAB.hearthPlanetaryControls",
+    "DEXTER_LAB.hearthControlFile",
+    "DEXTER_LAB.hearthControlAuthority",
+    "DEXTER_LAB.hearthPlanetaryViewControls",
+    "DEXTER_LAB.hearthControlsPlanetaryViewInputHandshake",
+    "DEXTER_LAB.hearthQueenControls",
+    "DEXTER_LAB.hearthQueenSuperconductorControls",
+    "DEXTER_LAB.hearthControlsVerticalPolaritySmoothCanvasHexPairAlignment",
+    "DEXTER_LAB.hearthControlsHexGatePointerFingerTransmission"
+  ]);
+
   const STRONG_CANVAS_SOURCE_RECEIVERS = Object.freeze([
     "receiveGovernedSourceStackPacket",
     "consumeGovernedSourceStackPacket",
@@ -269,6 +339,36 @@
     "receiveControlPacket",
     "drawInteractiveFrame",
     "drawPairFrame"
+  ]);
+
+  const CONTROL_HANDSHAKE_RECEIVERS = Object.freeze([
+    "receiveRouteConductorControlHandshake",
+    "consumeRouteConductorControlHandshake",
+    "receiveHexGateControlHandshake",
+    "consumeHexGateControlHandshake",
+    "receiveQueenControlHandshake",
+    "consumeQueenControlHandshake",
+    "receiveControlHandshakePacket",
+    "acceptControlHandshakePacket",
+    "receiveControlHandshake",
+    "consumeControlHandshake"
+  ]);
+
+  const CONTROL_DUTY_METHODS = Object.freeze([
+    "bindInputIfAdmitted",
+    "unbindInput",
+    "applyViewDelta",
+    "queueViewDelta",
+    "flushQueuedViewDelta",
+    "composeViewDeltaPacket",
+    "deliverControlPacketToCanvas",
+    "prewarmCanvasReceiver",
+    "readCanvasAuthority",
+    "readHexSurfaceAuthority",
+    "readHexAuthority",
+    "readPointerFingerAuthority",
+    "getViewPacket",
+    "getQueenBridgeState"
   ]);
 
   let lastReport = null;
@@ -342,7 +442,7 @@
 
     if (Array.isArray(value) || isObject(value)) {
       try {
-        return bounded(JSON.stringify(value), 20000) || fallback;
+        return bounded(JSON.stringify(value), 24000) || fallback;
       } catch (_error) {
         return bounded(value, 4000) || fallback;
       }
@@ -474,10 +574,20 @@
     }
   }
 
+  function datasetValueAny(doc, keys) {
+    for (const key of keys || []) {
+      const value = dataValue(doc, key);
+      if (value !== "UNKNOWN") return value;
+    }
+
+    return "UNKNOWN";
+  }
+
   function setDiagnosticDataset(key, value) {
     try {
       if (!root.document || !root.document.documentElement || !root.document.documentElement.dataset) return;
-      root.document.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+      root.document.documentElement.dataset[key] =
+        value === undefined || value === null ? "" : String(value);
     } catch (_error) {}
   }
 
@@ -739,6 +849,12 @@
     const methods = [
       "getReceiptLight",
       "getReceipt",
+      "getControlReceipt",
+      "getControlsReceipt",
+      "getControlHandshakeReceipt",
+      "getControlHandshakeSummary",
+      "getControlSummary",
+      "getControlState",
       "getStatus",
       "getReport",
       "getState",
@@ -795,6 +911,9 @@
       value.internalRenewalContract,
       value.IMPLEMENTATION_CONTRACT,
       value.implementationContract,
+      value.internalImplementationContract,
+      value.controlContract,
+      value.controlsContract,
       value.currentCanvasParentContract,
       value.canvasContract,
       value.hearthCanvasContract,
@@ -819,6 +938,9 @@
       value.internalRenewalReceipt,
       value.IMPLEMENTATION_RECEIPT,
       value.implementationReceipt,
+      value.internalImplementationReceipt,
+      value.controlReceipt,
+      value.controlsReceipt,
       value.currentCanvasParentReceipt,
       value.canvasReceipt,
       value.hearthCanvasReceipt,
@@ -837,7 +959,7 @@
       return Object.keys(authority)
         .filter((key) => isFunction(authority[key]))
         .sort()
-        .slice(0, 72);
+        .slice(0, 96);
     } catch (_error) {
       return [];
     }
@@ -879,6 +1001,8 @@
     }
 
     const selected =
+      candidates.find((candidate) => candidate.scope === "TARGET_WINDOW" && candidate.contract !== "UNKNOWN") ||
+      candidates.find((candidate) => candidate.scope === "TARGET_WINDOW") ||
       candidates.find((candidate) => candidate.contract !== "UNKNOWN") ||
       candidates[0] ||
       null;
@@ -917,6 +1041,14 @@
     return Boolean(
       ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.includes(text) ||
       /HEARTH_ROUTE_CONDUCTOR_/i.test(text)
+    );
+  }
+
+  function recognizedControlContract(contract) {
+    const text = safeString(contract);
+    return Boolean(
+      ACCEPTED_CONTROL_CONTRACTS.includes(text) ||
+      /HEARTH_CONTROLS|HEARTH_CONTROL/i.test(text)
     );
   }
 
@@ -999,6 +1131,561 @@
         getRaw(receipt, "governedSourcePacketAcceptedByCanvas", "UNKNOWN"),
         "UNKNOWN"
       )
+    };
+  }
+
+  function readDutyBool(receipt, targetDocument, receiptKeys, datasetKeys, fallback = false) {
+    const receiptValue = readField(receipt, receiptKeys, undefined);
+
+    if (receiptValue !== undefined && receiptValue !== null && receiptValue !== "") {
+      return safeBool(receiptValue, fallback);
+    }
+
+    const ds = datasetValueAny(targetDocument, datasetKeys);
+    if (ds !== "UNKNOWN") return safeBool(ds, fallback);
+
+    return fallback;
+  }
+
+  function readDutyText(receipt, targetDocument, receiptKeys, datasetKeys, fallback = "UNKNOWN") {
+    const receiptValue = readField(receipt, receiptKeys, undefined);
+
+    if (receiptValue !== undefined && receiptValue !== null && receiptValue !== "") {
+      return bounded(receiptValue, 4000) || fallback;
+    }
+
+    const ds = datasetValueAny(targetDocument, datasetKeys);
+    if (ds !== "UNKNOWN") return ds;
+
+    return fallback;
+  }
+
+  function readDutyNumber(receipt, targetDocument, receiptKeys, datasetKeys, fallback = 0) {
+    const receiptValue = readField(receipt, receiptKeys, undefined);
+
+    if (receiptValue !== undefined && receiptValue !== null && receiptValue !== "") {
+      return safeNumber(receiptValue, fallback);
+    }
+
+    const ds = datasetValueAny(targetDocument, datasetKeys);
+    if (ds !== "UNKNOWN") return safeNumber(ds, fallback);
+
+    return fallback;
+  }
+
+  function inspectControlsDuty(targetWindow, targetDocument, controlScript) {
+    const controlAuthority = inspectAuthority(
+      "controlsQueen",
+      CONTROL_ALIASES,
+      targetWindow
+    );
+
+    const receipt = isObject(controlAuthority.receiptObject)
+      ? controlAuthority.receiptObject
+      : {};
+
+    const methods = controlAuthority.methods || [];
+
+    const handshakeReceiverMethod =
+      CONTROL_HANDSHAKE_RECEIVERS.find((method) => methods.includes(method)) || "NONE";
+
+    const dutyMethodsObserved = CONTROL_DUTY_METHODS.filter((method) => methods.includes(method));
+
+    const contractRecognized = recognizedControlContract(controlAuthority.contract);
+
+    const handshakeAccepted = readDutyBool(
+      receipt,
+      targetDocument,
+      [
+        "handshakeAccepted",
+        "controlHandshakeAccepted",
+        "routeConductorControlHandshakeAccepted",
+        "controlHandshakeAcceptedByQueen",
+        "controlHandshakeSatisfied"
+      ],
+      [
+        "hearthControlHandshakeAccepted",
+        "hearthControlHandshakeAcceptedByQueen",
+        "hearthControlsHandshakeAccepted"
+      ],
+      false
+    );
+
+    const handshakeStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["handshakeStatus", "controlHandshakeStatus", "routeConductorControlIntegrationStatus"],
+      ["hearthControlHandshakeStatus", "hearthRouteConductorControlIntegrationStatus"],
+      "UNKNOWN"
+    );
+
+    const inputAdmissionOpen = readDutyBool(
+      receipt,
+      targetDocument,
+      ["inputAdmissionOpen"],
+      ["hearthControlInputAdmissionOpen"],
+      false
+    );
+
+    const inputBound = readDutyBool(
+      receipt,
+      targetDocument,
+      ["inputBound", "CONTROL_INPUT_BOUND"],
+      ["hearthControlInputBound"],
+      false
+    );
+
+    const inputTargetFound = readDutyBool(
+      receipt,
+      targetDocument,
+      ["inputTargetFound", "CONTROL_INPUT_TARGET_FOUND"],
+      ["hearthControlInputTargetFound"],
+      false
+    );
+
+    const inputTargetDescription = readDutyText(
+      receipt,
+      targetDocument,
+      ["inputTargetDescription", "CONTROL_INPUT_TARGET_DESCRIPTION"],
+      ["hearthControlInputTargetDescription"],
+      "UNKNOWN"
+    );
+
+    const inputStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["inputStatus", "PLANETARY_VIEW_INPUT_STATUS"],
+      ["hearthPlanetaryViewInputStatus"],
+      "UNKNOWN"
+    );
+
+    const touchStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["touchStatus", "PLANETARY_VIEW_TOUCH_STATUS"],
+      ["hearthPlanetaryViewTouchStatus"],
+      "UNKNOWN"
+    );
+
+    const dragStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["dragStatus", "PLANETARY_VIEW_DRAG_STATUS"],
+      ["hearthPlanetaryViewDragStatus"],
+      "UNKNOWN"
+    );
+
+    const motionStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["motionStatus", "PLANETARY_VIEW_MOTION_STATUS"],
+      ["hearthPlanetaryViewMotionStatus"],
+      "UNKNOWN"
+    );
+
+    const packetCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["packetCount", "CONTROL_PACKET_COUNT"],
+      ["hearthControlPacketCount"],
+      0
+    );
+
+    const deliveryCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["deliveryCount", "CONTROL_DELIVERY_COUNT"],
+      ["hearthControlDeliveryCount"],
+      0
+    );
+
+    const coalescedFrameCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["coalescedFrameCount", "CONTROL_COALESCED_FRAME_COUNT"],
+      ["hearthControlCoalescedFrameCount"],
+      0
+    );
+
+    const rawInputEventCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["rawInputEventCount", "CONTROL_RAW_INPUT_EVENT_COUNT"],
+      ["hearthControlRawInputEventCount"],
+      0
+    );
+
+    const lightweightFramePublishCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["lightweightFramePublishCount"],
+      ["hearthControlLightweightFramePublishCount"],
+      0
+    );
+
+    const droppedEmptyFrameCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["droppedEmptyFrameCount"],
+      ["hearthControlDroppedEmptyFrameCount"],
+      0
+    );
+
+    const canvasObservedByControls = readDutyBool(
+      receipt,
+      targetDocument,
+      ["canvasObserved", "CANVAS_OBSERVED"],
+      ["hearthControlsCanvasObserved"],
+      false
+    );
+
+    const canvasContractByControls = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasContract", "CANVAS_CONTRACT"],
+      ["hearthControlsCanvasContract"],
+      "UNKNOWN"
+    );
+
+    const canvasDeliveryStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasDeliveryStatus", "CANVAS_DELIVERY_STATUS"],
+      ["hearthControlCanvasDeliveryStatus"],
+      "UNKNOWN"
+    );
+
+    const canvasDeliveryMethod = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasDeliveryMethod", "CANVAS_DELIVERY_METHOD"],
+      ["hearthControlCanvasDeliveryMethod"],
+      "NONE"
+    );
+
+    const canvasDeliveryReason = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasDeliveryReason", "CANVAS_DELIVERY_REASON"],
+      ["hearthControlCanvasDeliveryReason"],
+      "UNKNOWN"
+    );
+
+    const receiverCacheStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasReceiverCacheStatus", "CONTROL_RECEIVER_CACHE_STATUS"],
+      ["hearthControlReceiverCacheStatus"],
+      "UNKNOWN"
+    );
+
+    const receiverCacheMethod = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasReceiverCacheMethod", "CONTROL_RECEIVER_CACHE_METHOD"],
+      ["hearthControlReceiverCacheMethod"],
+      "NONE"
+    );
+
+    const receiverPrewarmStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["canvasReceiverPrewarmStatus", "CONTROL_RECEIVER_PREWARM_STATUS"],
+      ["hearthControlReceiverPrewarmStatus"],
+      "UNKNOWN"
+    );
+
+    const receiverPrewarmCount = readDutyNumber(
+      receipt,
+      targetDocument,
+      ["canvasReceiverPrewarmCount", "CONTROL_RECEIVER_PREWARM_COUNT"],
+      ["hearthControlReceiverPrewarmCount"],
+      0
+    );
+
+    const hexSurfaceObservedByControls = readDutyBool(
+      receipt,
+      targetDocument,
+      ["hexSurfaceObserved", "HEX_SURFACE_OBSERVED"],
+      ["hearthControlsHexSurfaceObserved"],
+      false
+    );
+
+    const hexGateStatus = readDutyText(
+      receipt,
+      targetDocument,
+      ["hexGateStatus", "HEX_GATE_STATUS"],
+      ["hearthControlsHexGateStatus"],
+      "UNKNOWN"
+    );
+
+    const pointerFingerObservedByControls = readDutyBool(
+      receipt,
+      targetDocument,
+      ["pointerFingerObserved", "POINTER_FINGER_OBSERVED"],
+      ["hearthControlsPointerFingerObserved"],
+      false
+    );
+
+    const lifecycleSuppressed = readDutyBool(
+      receipt,
+      targetDocument,
+      [
+        "canvasLifecycleCallsSuppressedDuringDragFrames",
+        "CANVAS_LIFECYCLE_CALLS_SUPPRESSED_DURING_DRAG_FRAMES",
+        "suppressesCanvasLifecycleCallsDuringDragFrames"
+      ],
+      ["hearthControlsCanvasLifecycleCallsSuppressedDuringDragFrames"],
+      false
+    );
+
+    const packetPhaseFixedAtZero = readDutyBool(
+      receipt,
+      targetDocument,
+      ["packetPhaseFixedAtZero", "PACKET_PHASE_FIXED_AT_ZERO"],
+      ["hearthControlsPacketPhaseFixedAtZero"],
+      false
+    );
+
+    const noDirectPointer = readDutyBool(
+      receipt,
+      targetDocument,
+      ["pointerFingerDirectDeliverySuppressed", "POINTER_FINGER_DIRECT_DELIVERY_SUPPRESSED"],
+      ["hearthControlsPointerFingerDirectDeliverySuppressed"],
+      false
+    );
+
+    const deltaObserved = Boolean(
+      packetCount > 0 ||
+      coalescedFrameCount > 0 ||
+      rawInputEventCount > 0 ||
+      lightweightFramePublishCount > 0 ||
+      isObject(getRaw(receipt, "lastDeltaPacket", null)) ||
+      isObject(getRaw(receipt, "lastViewPacket", null))
+    );
+
+    const canvasDeliveryConfirmed = Boolean(
+      deliveryCount > 0 ||
+      /DELIVERED|RECEIVER_CALLED|CONTROL_PACKET_DELIVERED/i.test(canvasDeliveryStatus)
+    );
+
+    const receiverMethodResolved = Boolean(
+      canvasDeliveryMethod !== "NONE" ||
+      (receiverCacheMethod !== "NONE" && receiverCacheMethod !== "UNKNOWN")
+    );
+
+    const authorityApiReady = Boolean(
+      handshakeReceiverMethod !== "NONE" &&
+      dutyMethodsObserved.includes("bindInputIfAdmitted") &&
+      dutyMethodsObserved.includes("deliverControlPacketToCanvas") &&
+      dutyMethodsObserved.includes("composeViewDeltaPacket")
+    );
+
+    let laneStatus = "CONTROLS_DUTY_NOT_RUN";
+    let laneClean = false;
+    let laneBlocking = false;
+    let firstFailedCoordinate = "NONE";
+    let failureClass = "NONE";
+    let failureReason = "NONE";
+    let recommendedOwner = "NONE";
+    let recommendedFile = "NONE";
+    let recommendedAction = "NONE";
+
+    if (!controlScript.present) {
+      laneStatus = "CONTROLS_SCRIPT_NOT_PRESENT";
+      laneClean = false;
+      laneBlocking = false;
+      firstFailedCoordinate = "CONTROL_SCRIPT_PRESENT";
+      failureClass = "CONTROLS_SCRIPT_NOT_PRESENT";
+      failureReason = "TARGET_DOCUMENT_DOES_NOT_CONTAIN_THE_CONTROLS_SCRIPT";
+      recommendedOwner = "CONTROL_LOAD_CHAIN_OR_ROUTE_CONDUCTOR";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "VERIFY_TARGET_ROUTE_LOADS_ASSET_CONTROLS_FILE";
+    } else if (!controlAuthority.observed) {
+      laneStatus = "CONTROLS_SCRIPT_PRESENT_BUT_AUTHORITY_NOT_OBSERVED";
+      laneClean = false;
+      laneBlocking = true;
+      firstFailedCoordinate = "CONTROL_AUTHORITY_OBSERVED";
+      failureClass = "CONTROLS_AUTHORITY_NOT_OBSERVED";
+      failureReason = "CONTROLS_SCRIPT_EXISTS_BUT_EXPECTED_PUBLIC_CONTROLS_AUTHORITY_WAS_NOT_OBSERVED";
+      recommendedOwner = "CONTROLS_ALIAS_PUBLICATION_OR_CONTROLS_SCRIPT_EXECUTION";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "VERIFY_CONTROLS_FILE_EXECUTES_AND_PUBLISHES_EXPECTED_PUBLIC_ALIASES";
+    } else if (!contractRecognized) {
+      laneStatus = "CONTROLS_AUTHORITY_PRESENT_CONTRACT_UNRECOGNIZED";
+      laneClean = false;
+      laneBlocking = true;
+      firstFailedCoordinate = "CONTROL_CONTRACT_RECOGNIZED";
+      failureClass = "CONTROLS_CONTRACT_UNRECOGNIZED";
+      failureReason = "CONTROLS_NAMESPACE_EXISTS_BUT_CONTRACT_IS_NOT_IN_ACCEPTED_LINEAGE";
+      recommendedOwner = "CONTROLS_CONTRACT_PUBLICATION";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "VERIFY_CONTROLS_PUBLIC_CONTRACT_AND_ACCEPTED_LINEAGE";
+    } else if (!authorityApiReady) {
+      laneStatus = "CONTROLS_AUTHORITY_PRESENT_BUT_DUTY_API_INCOMPLETE";
+      laneClean = false;
+      laneBlocking = true;
+      firstFailedCoordinate = "CONTROL_DUTY_API_READY";
+      failureClass = "CONTROLS_DUTY_API_INCOMPLETE";
+      failureReason = "CONTROLS_HANDSHAKE_OR_DELTA_DELIVERY_METHODS_ARE_NOT_OBSERVED";
+      recommendedOwner = "CONTROLS_QUEEN";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "PUBLISH_HANDSHAKE_RECEIVER_AND_VIEW_DELTA_DELIVERY_DUTY_METHODS";
+    } else if (!handshakeAccepted) {
+      laneStatus = "CONTROLS_READY_WAITING_ROUTE_HANDSHAKE";
+      laneClean = true;
+      laneBlocking = false;
+      firstFailedCoordinate = "CONTROL_HANDSHAKE_ACCEPTED";
+      failureClass = "CONTROLS_READY_HANDSHAKE_NOT_ACCEPTED_YET";
+      failureReason = handshakeStatus;
+      recommendedOwner = "ROUTE_CONDUCTOR_OR_CONTROLS_HANDSHAKE";
+      recommendedFile = ROUTE_CONDUCTOR_FILE;
+      recommendedAction = "CONFIRM_ROUTE_TO_CONTROLS_HANDSHAKE_DELIVERY_AND_RETURN_STATUS";
+    } else if (handshakeAccepted && inputAdmissionOpen && !inputBound) {
+      laneStatus = "CONTROLS_HANDSHAKE_ACCEPTED_BUT_INPUT_NOT_BOUND";
+      laneClean = false;
+      laneBlocking = true;
+      firstFailedCoordinate = "CONTROL_INPUT_BOUND";
+      failureClass = "CONTROLS_HANDSHAKE_ACCEPTED_INPUT_NOT_BOUND";
+      failureReason = inputTargetFound
+        ? "INPUT_TARGET_FOUND_BUT_CONTROLS_DID_NOT_BIND_INPUT"
+        : "INPUT_TARGET_NOT_FOUND_OR_CONTROLS_DID_NOT_BIND_INPUT";
+      recommendedOwner = "CONTROLS_QUEEN_OR_CANVAS_DOM_TARGET";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "VERIFY_CONTROLS_BIND_INPUT_TO_CANVAS_SURFACE_AFTER_HANDSHAKE_WITHOUT_BUTTON_UI_HEAVY_SCAN";
+    } else if (deltaObserved && !canvasDeliveryConfirmed) {
+      laneStatus = "CONTROLS_DELTA_OBSERVED_BUT_CANVAS_DELIVERY_NOT_CONFIRMED";
+      laneClean = false;
+      laneBlocking = true;
+      firstFailedCoordinate = "CONTROL_CANVAS_DELIVERY_CONFIRMED";
+      failureClass = "CONTROLS_DELTA_DELIVERY_NOT_CONFIRMED";
+      failureReason = canvasDeliveryReason;
+      recommendedOwner = "CONTROLS_QUEEN_TO_CANVAS_PUBLIC_RECEIVER";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "VERIFY_CONTROLS_DELIVER_VIEW_DELTA_TO_CANVAS_PUBLIC_RECEIVER_AND_EXPORT_DELIVERY_COUNT";
+    } else if (handshakeAccepted && inputAdmissionOpen && inputBound && !deltaObserved) {
+      laneStatus = "CONTROLS_DUTY_READY_BUT_NOT_EXERCISED";
+      laneClean = true;
+      laneBlocking = false;
+      firstFailedCoordinate = "CONTROL_DELTA_OBSERVED";
+      failureClass = "CONTROLS_READY_NO_INPUT_DELTA_OBSERVED";
+      failureReason = "CONTROLS_ARE_ARMED_BUT_NO_POINTER_TOUCH_WHEEL_OR_KEYBOARD_DELTA_HAS_BEEN_OBSERVED";
+      recommendedOwner = "DIAGNOSTIC_OBSERVATION_OR_USER_INPUT";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "EXERCISE_INPUT_OR_READ_COUNTERS_AFTER_POINTER_TOUCH_WHEEL_OR_KEYBOARD_EVENT";
+    } else if (handshakeAccepted && inputAdmissionOpen && inputBound && deltaObserved && canvasDeliveryConfirmed) {
+      laneStatus = "CONTROLS_DUTIES_PERFORMED_AND_DELIVERY_CONFIRMED";
+      laneClean = true;
+      laneBlocking = false;
+    } else {
+      laneStatus = "CONTROLS_DUTY_STATE_PARTIAL";
+      laneClean = true;
+      laneBlocking = false;
+      firstFailedCoordinate = "CONTROL_DUTY_STATE_PARTIAL";
+      failureClass = "CONTROLS_DUTY_PARTIAL_NON_BLOCKING";
+      failureReason = "CONTROLS_AUTHORITY_IS_PRESENT_BUT_DUTY_PERFORMANCE_REQUIRES_EXERCISED_INPUT_OR_MORE_COUNTER_EVIDENCE";
+      recommendedOwner = "DIAGNOSTIC_OBSERVATION";
+      recommendedFile = CONTROL_FILE;
+      recommendedAction = "READ_CONTROLS_RECEIPT_AFTER_EXERCISING_INPUT";
+    }
+
+    const dutiesPerformed = Boolean(
+      handshakeAccepted &&
+      inputAdmissionOpen &&
+      inputBound &&
+      deltaObserved &&
+      canvasDeliveryConfirmed
+    );
+
+    const dutiesArmed = Boolean(
+      controlAuthority.observed &&
+      contractRecognized &&
+      authorityApiReady &&
+      handshakeAccepted &&
+      inputAdmissionOpen &&
+      inputBound
+    );
+
+    return {
+      CONTROL_DUTY_LANE_ACTIVE: true,
+      CONTROL_DUTY_LANE_STATUS: laneStatus,
+      CONTROL_DUTY_LANE_CLEAN: laneClean,
+      CONTROL_DUTY_LANE_BLOCKING: laneBlocking,
+      CONTROL_DUTY_FIRST_FAILED_COORDINATE: firstFailedCoordinate,
+      CONTROL_DUTY_FAILURE_CLASS: failureClass,
+      CONTROL_DUTY_FAILURE_REASON: failureReason,
+      CONTROL_DUTY_RECOMMENDED_OWNER: recommendedOwner,
+      CONTROL_DUTY_RECOMMENDED_FILE: recommendedFile,
+      CONTROL_DUTY_RECOMMENDED_ACTION: recommendedAction,
+
+      CONTROL_SCRIPT_PRESENT: controlScript.present,
+      CONTROL_SCRIPT_COUNT: controlScript.count,
+      CONTROL_SCRIPT_SRC: controlScript.src,
+      CONTROL_SCRIPT_CACHE_KEY: controlScript.cacheKey,
+      CONTROL_SCRIPT_TAG_ORDER: controlScript.lastOrder || "NONE",
+
+      CONTROL_AUTHORITY_OBSERVED: controlAuthority.observed,
+      CONTROL_AUTHORITY_SCOPE: controlAuthority.scope,
+      CONTROL_AUTHORITY_SOURCE_PATH: controlAuthority.path,
+      CONTROL_AUTHORITY_CONTRACT: controlAuthority.contract,
+      CONTROL_AUTHORITY_RECEIPT: controlAuthority.receipt,
+      CONTROL_AUTHORITY_CONTRACT_RECOGNIZED: contractRecognized,
+      CONTROL_AUTHORITY_METHOD_COUNT: controlAuthority.methodCount,
+      CONTROL_AUTHORITY_METHODS: methods.join(",") || "NONE",
+      CONTROL_AUTHORITY_CANDIDATE_COUNT: controlAuthority.candidates.length,
+      CONTROL_AUTHORITY_CANDIDATES: controlAuthority.candidates,
+
+      CONTROL_HANDSHAKE_RECEIVER_PRESENT: handshakeReceiverMethod !== "NONE",
+      CONTROL_HANDSHAKE_RECEIVER_METHOD: handshakeReceiverMethod,
+      CONTROL_DUTY_API_READY: authorityApiReady,
+      CONTROL_DUTY_METHOD_COUNT: dutyMethodsObserved.length,
+      CONTROL_DUTY_METHODS_OBSERVED: dutyMethodsObserved.join(",") || "NONE",
+
+      CONTROL_HANDSHAKE_STATUS: handshakeStatus,
+      CONTROL_HANDSHAKE_ACCEPTED: handshakeAccepted,
+      CONTROL_INPUT_ADMISSION_OPEN: inputAdmissionOpen,
+      CONTROL_INPUT_BOUND: inputBound,
+      CONTROL_INPUT_TARGET_FOUND: inputTargetFound,
+      CONTROL_INPUT_TARGET_DESCRIPTION: inputTargetDescription,
+      CONTROL_INPUT_STATUS: inputStatus,
+      CONTROL_TOUCH_STATUS: touchStatus,
+      CONTROL_DRAG_STATUS: dragStatus,
+      CONTROL_MOTION_STATUS: motionStatus,
+
+      CONTROL_PACKET_COUNT: packetCount,
+      CONTROL_DELIVERY_COUNT: deliveryCount,
+      CONTROL_COALESCED_FRAME_COUNT: coalescedFrameCount,
+      CONTROL_RAW_INPUT_EVENT_COUNT: rawInputEventCount,
+      CONTROL_LIGHTWEIGHT_FRAME_PUBLISH_COUNT: lightweightFramePublishCount,
+      CONTROL_DROPPED_EMPTY_FRAME_COUNT: droppedEmptyFrameCount,
+      CONTROL_DELTA_OBSERVED: deltaObserved,
+
+      CONTROL_CANVAS_OBSERVED_BY_CONTROLS: canvasObservedByControls,
+      CONTROL_CANVAS_CONTRACT_BY_CONTROLS: canvasContractByControls,
+      CONTROL_CANVAS_DELIVERY_STATUS: canvasDeliveryStatus,
+      CONTROL_CANVAS_DELIVERY_METHOD: canvasDeliveryMethod,
+      CONTROL_CANVAS_DELIVERY_REASON: canvasDeliveryReason,
+      CONTROL_CANVAS_DELIVERY_CONFIRMED: canvasDeliveryConfirmed,
+
+      CONTROL_RECEIVER_CACHE_STATUS: receiverCacheStatus,
+      CONTROL_RECEIVER_CACHE_METHOD: receiverCacheMethod,
+      CONTROL_RECEIVER_METHOD_RESOLVED: receiverMethodResolved,
+      CONTROL_RECEIVER_PREWARM_STATUS: receiverPrewarmStatus,
+      CONTROL_RECEIVER_PREWARM_COUNT: receiverPrewarmCount,
+
+      CONTROL_HEX_SURFACE_OBSERVED_BY_CONTROLS: hexSurfaceObservedByControls,
+      CONTROL_HEX_GATE_STATUS: hexGateStatus,
+      CONTROL_POINTER_FINGER_OBSERVED_BY_CONTROLS: pointerFingerObservedByControls,
+
+      CONTROL_CANVAS_LIFECYCLE_SUPPRESSED_DURING_DRAG: lifecycleSuppressed,
+      CONTROL_PACKET_PHASE_FIXED_AT_ZERO: packetPhaseFixedAtZero,
+      CONTROL_POINTER_FINGER_DIRECT_DELIVERY_SUPPRESSED: noDirectPointer,
+
+      CONTROL_DUTIES_ARMED: dutiesArmed,
+      CONTROL_DUTIES_PERFORMED: dutiesPerformed,
+      CONTROL_DUTY_CAN_DISTINGUISH_READY_FROM_PERFORMED: true,
+
+      authority: controlAuthority
     };
   }
 
@@ -1489,7 +2176,7 @@
     return report;
   }
 
-  function resolveFailure(report) {
+  function resolveCanvasFailure(report) {
     const checks = [
       [
         "TARGET_CONTEXT_STATUS",
@@ -1658,7 +2345,8 @@
         owner: "NONE",
         file: "NONE",
         action: "RETURN_CANVAS_SURFACE_TRUTH_TO_NORTH_FOR_NEXT_STANDARD_CHECK",
-        certainty: "DEFINITIVE_COORDINATE_PASS"
+        certainty: "DEFINITIVE_COORDINATE_PASS",
+        sourceLane: "CANVAS_SURFACE_TRUTH_LANE"
       };
     }
 
@@ -1669,8 +2357,28 @@
       owner: failed[4],
       file: failed[5],
       action: failed[6],
-      certainty: "DEFINITIVE_FIRST_FAILED_COORDINATE"
+      certainty: "DEFINITIVE_FIRST_FAILED_COORDINATE",
+      sourceLane: "CANVAS_SURFACE_TRUTH_LANE"
     };
+  }
+
+  function resolveFinalFailure(canvasFailure, controlsDuty) {
+    if (canvasFailure.coordinate !== "NONE") return canvasFailure;
+
+    if (controlsDuty && controlsDuty.CONTROL_DUTY_LANE_BLOCKING === true) {
+      return {
+        coordinate: controlsDuty.CONTROL_DUTY_FIRST_FAILED_COORDINATE,
+        failureClass: controlsDuty.CONTROL_DUTY_FAILURE_CLASS,
+        reason: controlsDuty.CONTROL_DUTY_FAILURE_REASON,
+        owner: controlsDuty.CONTROL_DUTY_RECOMMENDED_OWNER,
+        file: controlsDuty.CONTROL_DUTY_RECOMMENDED_FILE,
+        action: controlsDuty.CONTROL_DUTY_RECOMMENDED_ACTION,
+        certainty: "DEFINITIVE_CONTROL_DUTY_COORDINATE_AFTER_CANVAS_SURFACE_PASS",
+        sourceLane: "CONTROLS_DUTY_LANE"
+      };
+    }
+
+    return canvasFailure;
   }
 
   function collectLabCardinalReceiptBundle(targetWindow, currentReport) {
@@ -1689,7 +2397,7 @@
       },
       south: {
         contract: firstKnown(currentReport.SOUTH_CONTRACT, currentReport.LAB_SOUTH_CONTRACT),
-        observed: safeBool(currentReport.LAB_SOUTH_OBSERVED, false)
+        observed: safeBool(currentReport.MACRO_SOUTH_OBSERVED, safeBool(currentReport.LAB_SOUTH_OBSERVED, false))
       },
       west: {
         contract: firstKnown(currentReport.WEST_CONTRACT, currentReport.MACRO_WEST_CONTRACT),
@@ -1739,7 +2447,7 @@
 
     const bishopReady = Boolean(
       routeAuthority.observed &&
-      /BISHOP|QUEEN|CANVAS/i.test(
+      /BISHOP|QUEEN|CANVAS|ROUTE_CONDUCTOR/i.test(
         `${routeAuthority.path} ${routeAuthority.contract} ${packetValue(routeAuthority.receiptObject, "")}`
       )
     );
@@ -1864,6 +2572,36 @@
     };
   }
 
+  function collectControlsDutyReceipt(controlsDuty) {
+    return {
+      receiptName: "CONTROLS_DUTY_LANE_RECEIPT",
+      status: controlsDuty.CONTROL_DUTY_LANE_STATUS,
+      laneClean: controlsDuty.CONTROL_DUTY_LANE_CLEAN,
+      laneBlocking: controlsDuty.CONTROL_DUTY_LANE_BLOCKING,
+      scriptPresent: controlsDuty.CONTROL_SCRIPT_PRESENT,
+      authorityObserved: controlsDuty.CONTROL_AUTHORITY_OBSERVED,
+      contract: controlsDuty.CONTROL_AUTHORITY_CONTRACT,
+      contractRecognized: controlsDuty.CONTROL_AUTHORITY_CONTRACT_RECOGNIZED,
+      handshakeAccepted: controlsDuty.CONTROL_HANDSHAKE_ACCEPTED,
+      inputAdmissionOpen: controlsDuty.CONTROL_INPUT_ADMISSION_OPEN,
+      inputBound: controlsDuty.CONTROL_INPUT_BOUND,
+      deltaObserved: controlsDuty.CONTROL_DELTA_OBSERVED,
+      canvasDeliveryConfirmed: controlsDuty.CONTROL_CANVAS_DELIVERY_CONFIRMED,
+      packetCount: controlsDuty.CONTROL_PACKET_COUNT,
+      deliveryCount: controlsDuty.CONTROL_DELIVERY_COUNT,
+      coalescedFrameCount: controlsDuty.CONTROL_COALESCED_FRAME_COUNT,
+      rawInputEventCount: controlsDuty.CONTROL_RAW_INPUT_EVENT_COUNT,
+      receiverMethodResolved: controlsDuty.CONTROL_RECEIVER_METHOD_RESOLVED,
+      dutiesArmed: controlsDuty.CONTROL_DUTIES_ARMED,
+      dutiesPerformed: controlsDuty.CONTROL_DUTIES_PERFORMED,
+      firstFailedCoordinate: controlsDuty.CONTROL_DUTY_FIRST_FAILED_COORDINATE,
+      failureClass: controlsDuty.CONTROL_DUTY_FAILURE_CLASS,
+      failureReason: controlsDuty.CONTROL_DUTY_FAILURE_REASON,
+      recommendedFile: controlsDuty.CONTROL_DUTY_RECOMMENDED_FILE,
+      recommendedAction: controlsDuty.CONTROL_DUTY_RECOMMENDED_ACTION
+    };
+  }
+
   function buildHubStatus(lab, diagnostic, canvasBishop, finger) {
     const lanes = [lab, diagnostic, canvasBishop, finger];
     const complete = lanes.filter((lane) => /COMPLETE$/.test(lane.status)).length;
@@ -1925,13 +2663,15 @@
 
   function makeAnchorReport() {
     return {
-      PACKET_NAME: "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_ANCHOR_PACKET_v1_3",
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_ANCHOR_PACKET_v1_4",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+      LINEAGE_INTERNAL_RENEWAL_RECEIPT,
       VERSION,
       FILE,
       TARGET_ROUTE,
@@ -1944,6 +2684,8 @@
       EXPECTED_CANVAS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_INTERNAL_CONTRACT,
+      EXPECTED_CONTROL_CONTRACT,
+      EXPECTED_CONTROL_INTERNAL_CONTRACT,
       DIAGNOSTIC_TIMESTAMP: nowIso(),
 
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "ANCHOR_READY",
@@ -1959,7 +2701,11 @@
       NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
 
       CAUSAL_FORENSICS_LENS_ACTIVE: true,
-      CAUSAL_FORENSICS_VERSION: "v1_3",
+      CAUSAL_FORENSICS_VERSION: "v1_4",
+      CONTROLS_DUTY_LANE_ACTIVE: true,
+      CONTROLS_DUTY_LANE_MODE: "PASSIVE_RECEIPT_AND_NAMESPACE_OBSERVATION_ONLY",
+      CONTROLS_DUTY_LANE_DISRUPTION_RISK: "NONE_NO_METHOD_CALLS_EXCEPT_PASSIVE_RECEIPT_READS",
+
       TARGET_CONTEXT_STATUS: "NOT_RUN",
       TARGET_CONTEXT_SOURCE: "ANCHOR_ONLY",
       TARGET_ACCESS_ERROR: "NONE",
@@ -1988,6 +2734,27 @@
       ROUTE_CONDUCTOR_CANVAS_ADMISSION_RESULT_EXPORTED: "UNKNOWN",
       ROUTE_CONDUCTOR_CANVAS_ADMISSION_STATUS: "UNKNOWN",
       ROUTE_CONDUCTOR_CANVAS_ADMISSION_REASON: "UNKNOWN",
+
+      CONTROL_DUTY_LANE_STATUS: "ANCHOR_READY_TARGET_NOT_YET_PROBED",
+      CONTROL_DUTY_LANE_CLEAN: "UNKNOWN",
+      CONTROL_DUTY_LANE_BLOCKING: "UNKNOWN",
+      CONTROL_DUTY_FIRST_FAILED_COORDINATE: "NOT_RUN",
+      CONTROL_DUTY_FAILURE_CLASS: "NOT_RUN",
+      CONTROL_DUTY_FAILURE_REASON: "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL",
+      CONTROL_DUTY_RECOMMENDED_OWNER: "NONE",
+      CONTROL_DUTY_RECOMMENDED_FILE: "NONE",
+      CONTROL_DUTY_RECOMMENDED_ACTION: "CALL_runProbeCanvasSurfaceTruth",
+      CONTROL_SCRIPT_PRESENT: "UNKNOWN",
+      CONTROL_AUTHORITY_OBSERVED: "UNKNOWN",
+      CONTROL_AUTHORITY_CONTRACT: "UNKNOWN",
+      CONTROL_AUTHORITY_CONTRACT_RECOGNIZED: "UNKNOWN",
+      CONTROL_HANDSHAKE_ACCEPTED: "UNKNOWN",
+      CONTROL_INPUT_ADMISSION_OPEN: "UNKNOWN",
+      CONTROL_INPUT_BOUND: "UNKNOWN",
+      CONTROL_DELTA_OBSERVED: "UNKNOWN",
+      CONTROL_CANVAS_DELIVERY_CONFIRMED: "UNKNOWN",
+      CONTROL_DUTIES_ARMED: "UNKNOWN",
+      CONTROL_DUTIES_PERFORMED: "UNKNOWN",
 
       CANVAS_AUTHORITY_OBSERVED: "UNKNOWN",
       CANVAS_AUTHORITY_SCOPE: "NONE",
@@ -2027,6 +2794,7 @@
       CANVAS_TRUTH_RECOMMENDED_FILE: "NONE",
       CANVAS_TRUTH_RECOMMENDED_ACTION:
         "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE",
+      FINAL_ARBITRATION_SOURCE_LANE: "ANCHOR_ONLY",
       DIAGNOSTIC_CERTAINTY: "ANCHOR_ONLY",
       OBSERVABLE_CAUSE: "ANCHOR_PUBLISHED_TARGET_NOT_YET_PROBED",
       RECOMMENDED_NEXT_FILE: "NONE",
@@ -2036,6 +2804,7 @@
       DIAGNOSTIC_TRACK_RECEIPT_STATUS: "ANCHOR_READY",
       CANVAS_BISHOP_RECEIPT_STATUS: "ANCHOR_READY",
       FINGER_FILE_RECEIPT_STATUS: "ANCHOR_READY",
+      CONTROLS_DUTY_RECEIPT_STATUS: "ANCHOR_READY",
       PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS: "ANCHOR_READY",
 
       PRODUCTION_MUTATION_AUTHORIZED: false,
@@ -2047,7 +2816,7 @@
       RUNTIME_RESTART_AUTHORIZED: false,
 
       SECONDARY_EVIDENCE_NOTES:
-        "CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_ANCHOR_PUBLISHED_SYNCHRONOUSLY | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
+        "CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_ANCHOR_PUBLISHED_SYNCHRONOUSLY | TARGET_NOT_YET_PROBED | CONTROLS_DUTY_LANE_PASSIVE_ONLY | NO_PRODUCTION_MUTATION_AUTHORIZED",
       CANVAS_SURFACE_TRUTH_NOTES:
         "ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_READY | HEAVY_TARGET_PROBE_NOT_RUN_DURING_PUBLISH",
 
@@ -2085,6 +2854,7 @@
 
     const routeAdmission = inspectRouteConductorAdmission(routeAuthority);
     const domReport = inspectCanvasDom(targetWindow, targetDocument, canvasAuthority);
+    const controlsDuty = inspectControlsDuty(targetWindow, targetDocument, controlScript);
 
     const canvasBootOrMountApiPresent = Boolean(
       canvasAuthority.authority &&
@@ -2140,13 +2910,15 @@
 
     const baseReport = {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_PACKET_v1_3",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_PACKET_v1_4",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+      LINEAGE_INTERNAL_RENEWAL_RECEIPT,
       VERSION,
       FILE,
       TARGET_ROUTE,
@@ -2159,6 +2931,8 @@
       EXPECTED_CANVAS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_INTERNAL_CONTRACT,
+      EXPECTED_CONTROL_CONTRACT,
+      EXPECTED_CONTROL_INTERNAL_CONTRACT,
       DIAGNOSTIC_TIMESTAMP: startedAt,
 
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "CALL_RETURNED",
@@ -2174,7 +2948,10 @@
       NORTH_READABLE_RECEIPT_SURFACE_READY: "true",
 
       CAUSAL_FORENSICS_LENS_ACTIVE: true,
-      CAUSAL_FORENSICS_VERSION: "v1_3",
+      CAUSAL_FORENSICS_VERSION: "v1_4",
+      CONTROLS_DUTY_LANE_ACTIVE: true,
+      CONTROLS_DUTY_LANE_MODE: "PASSIVE_RECEIPT_AND_NAMESPACE_OBSERVATION_ONLY",
+      CONTROLS_DUTY_LANE_DISRUPTION_RISK: "NONE_NO_METHOD_CALLS_EXCEPT_PASSIVE_RECEIPT_READS",
 
       TARGET_CONTEXT_STATUS:
         context.targetAvailable
@@ -2204,8 +2981,6 @@
       ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY: routeScript.cacheKey,
       INDEX_SCRIPT_PRESENT: indexScript.present,
       INDEX_SCRIPT_SRC: indexScript.src,
-      CONTROL_SCRIPT_PRESENT: controlScript.present,
-      CONTROL_SCRIPT_SRC: controlScript.src,
 
       ROUTE_CONDUCTOR_OBSERVED: routeAuthority.observed,
       ROUTE_CONDUCTOR_SOURCE_PATH: routeAuthority.path,
@@ -2229,6 +3004,8 @@
       ROUTE_CONDUCTOR_SOURCE_STACK_READY: routeAdmission.sourceStackReady,
       ROUTE_CONDUCTOR_GOVERNED_SOURCE_PACKET_ACCEPTED_BY_CANVAS:
         routeAdmission.governedSourcePacketAcceptedByCanvas,
+
+      ...controlsDuty,
 
       CANVAS_AUTHORITY_OBSERVED: canvasAuthority.observed,
       CANVAS_AUTHORITY_SCOPE: canvasAuthority.scope,
@@ -2266,30 +3043,46 @@
       ...UPPER_NO_CLAIMS
     };
 
-    const failure = resolveFailure(baseReport);
+    delete baseReport.authority;
+
+    const canvasFailure = resolveCanvasFailure(baseReport);
+    const finalFailure = resolveFinalFailure(canvasFailure, controlsDuty);
 
     const canvasReport = {
       ...baseReport,
+      CANVAS_SURFACE_TRUTH_LANE_STATUS:
+        canvasFailure.coordinate === "NONE"
+          ? "CANVAS_SURFACE_TRUTH_LANE_PASSED_NO_FINAL_CLAIM"
+          : "CANVAS_SURFACE_TRUTH_LANE_FAILED",
+      CANVAS_SURFACE_TRUTH_LANE_CLEAN: canvasFailure.coordinate === "NONE",
+      CANVAS_SURFACE_TRUTH_LANE_FIRST_FAILED_COORDINATE: canvasFailure.coordinate,
+      CANVAS_SURFACE_TRUTH_LANE_FAILURE_CLASS: canvasFailure.failureClass,
+      CANVAS_SURFACE_TRUTH_LANE_FAILURE_REASON: canvasFailure.reason,
+
       CANVAS_TRUTH_STATUS:
-        failure.coordinate === "NONE"
+        finalFailure.coordinate === "NONE"
           ? "CANVAS_SURFACE_TRUTH_PROVEN_NO_FINAL_CLAIM"
-          : "CANVAS_SURFACE_TRUTH_FAILED_AT_COORDINATE",
-      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: failure.coordinate,
-      CANVAS_TRUTH_FAILURE_CLASS: failure.failureClass,
-      CANVAS_TRUTH_FAILURE_REASON: failure.reason,
-      CANVAS_TRUTH_RECOMMENDED_OWNER: failure.owner,
-      CANVAS_TRUTH_RECOMMENDED_FILE: failure.file,
-      CANVAS_TRUTH_RECOMMENDED_ACTION: failure.action,
-      DIAGNOSTIC_CERTAINTY: failure.certainty,
-      OBSERVABLE_CAUSE: `${failure.coordinate}:${failure.failureClass}:${failure.reason}`,
-      RECOMMENDED_NEXT_FILE: failure.file,
-      RECOMMENDED_NEXT_ACTION: failure.action
+          : finalFailure.sourceLane === "CONTROLS_DUTY_LANE"
+            ? "CANVAS_SURFACE_TRUTH_PROVEN_CONTROLS_DUTY_FAILED"
+            : "CANVAS_SURFACE_TRUTH_FAILED_AT_COORDINATE",
+      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: finalFailure.coordinate,
+      CANVAS_TRUTH_FAILURE_CLASS: finalFailure.failureClass,
+      CANVAS_TRUTH_FAILURE_REASON: finalFailure.reason,
+      CANVAS_TRUTH_RECOMMENDED_OWNER: finalFailure.owner,
+      CANVAS_TRUTH_RECOMMENDED_FILE: finalFailure.file,
+      CANVAS_TRUTH_RECOMMENDED_ACTION: finalFailure.action,
+      FINAL_ARBITRATION_SOURCE_LANE: finalFailure.sourceLane,
+      DIAGNOSTIC_CERTAINTY: finalFailure.certainty,
+      OBSERVABLE_CAUSE: `${finalFailure.sourceLane}:${finalFailure.coordinate}:${finalFailure.failureClass}:${finalFailure.reason}`,
+      RECOMMENDED_NEXT_FILE: finalFailure.file,
+      RECOMMENDED_NEXT_ACTION: finalFailure.action
     };
 
     const labBundle = collectLabCardinalReceiptBundle(targetWindow, currentReport);
     const diagnosticTrackReceipt = collectDiagnosticTrackReceipt(currentReport, chronology);
     const canvasBishopReceipt = collectCanvasBishopReceipt(canvasReport, routeAuthority, canvasAuthority);
     const fingerFileReceipt = collectFingerFileReceipt(targetWindow, currentReport, payload);
+    const controlsDutyReceipt = collectControlsDutyReceipt(controlsDuty);
 
     const truthHubStatus = buildHubStatus(
       labBundle,
@@ -2301,19 +3094,28 @@
     const notes = normalizeNotes(
       currentReport.SECONDARY_EVIDENCE_NOTES,
       currentReport.NORTH_SECONDARY_EVIDENCE_NOTES,
-      "CANVAS_SURFACE_TRUTH_ROUTE_CONDUCTOR_ADMISSION_FORENSICS_ACTIVE",
-      "F21_LENS_DISTINGUISHES_SCRIPT_AUTHORITY_DOM_BINDING_AND_ROUTE_ADMISSION_EXPORT",
+      "CANVAS_SURFACE_TRUTH_CONTROLS_DUTY_LANE_ACTIVE",
+      "F21_LENS_DISTINGUISHES_SCRIPT_AUTHORITY_DOM_BINDING_ROUTE_ADMISSION_AND_CONTROLS_DUTY",
       `CANVAS_SCRIPT_PRESENT:${canvasReport.CANVAS_SCRIPT_PRESENT}`,
       `CANVAS_SCRIPT_EXECUTION_INFERRED:${canvasReport.CANVAS_SCRIPT_EXECUTION_INFERRED}`,
       `ROUTE_CONDUCTOR_OBSERVED:${canvasReport.ROUTE_CONDUCTOR_OBSERVED}`,
       `ROUTE_CONDUCTOR_CANVAS_ADMISSION_RESULT_EXPORTED:${canvasReport.ROUTE_CONDUCTOR_CANVAS_ADMISSION_RESULT_EXPORTED}`,
       `CANVAS_AUTHORITY_OBSERVED:${canvasReport.CANVAS_AUTHORITY_OBSERVED}`,
       `CANVAS_DOM_SURFACE_FOUND:${canvasReport.CANVAS_DOM_SURFACE_FOUND}`,
+      `CONTROL_SCRIPT_PRESENT:${canvasReport.CONTROL_SCRIPT_PRESENT}`,
+      `CONTROL_AUTHORITY_OBSERVED:${canvasReport.CONTROL_AUTHORITY_OBSERVED}`,
+      `CONTROL_HANDSHAKE_ACCEPTED:${canvasReport.CONTROL_HANDSHAKE_ACCEPTED}`,
+      `CONTROL_INPUT_BOUND:${canvasReport.CONTROL_INPUT_BOUND}`,
+      `CONTROL_DELTA_OBSERVED:${canvasReport.CONTROL_DELTA_OBSERVED}`,
+      `CONTROL_CANVAS_DELIVERY_CONFIRMED:${canvasReport.CONTROL_CANVAS_DELIVERY_CONFIRMED}`,
+      `CONTROL_DUTY_LANE_STATUS:${canvasReport.CONTROL_DUTY_LANE_STATUS}`,
       `CANVAS_TRUTH_FIRST_FAILED_COORDINATE:${canvasReport.CANVAS_TRUTH_FIRST_FAILED_COORDINATE}`,
       `CANVAS_TRUTH_FAILURE_CLASS:${canvasReport.CANVAS_TRUTH_FAILURE_CLASS}`,
+      `FINAL_ARBITRATION_SOURCE_LANE:${canvasReport.FINAL_ARBITRATION_SOURCE_LANE}`,
       `TRUTH_HUB_STATUS:${truthHubStatus}`,
       "TRUTH_HUB_DOES_NOT_DRAW_CANVAS",
-      "TRUTH_HUB_DOES_NOT_MUTATE_PRODUCTION"
+      "TRUTH_HUB_DOES_NOT_MUTATE_PRODUCTION",
+      "CONTROLS_DUTY_LANE_DOES_NOT_CALL_CONTROLS_DUTY_METHODS"
     );
 
     const report = {
@@ -2331,6 +3133,9 @@
 
       FINGER_FILE_RECEIPT_STATUS: fingerFileReceipt.status,
       FINGER_FILE_RECEIPT: fingerFileReceipt,
+
+      CONTROLS_DUTY_RECEIPT_STATUS: controlsDutyReceipt.status,
+      CONTROLS_DUTY_RECEIPT: controlsDutyReceipt,
 
       PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS:
         fingerFileReceipt.southProbeToTruthHubTransferStatus,
@@ -2356,26 +3161,32 @@
     const r = report || makeAnchorReport();
 
     return {
-      packetType: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1_3",
+      packetType: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1_4",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+      lineageInternalRenewalReceipt: LINEAGE_INTERNAL_RENEWAL_RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       routeConductorFile: ROUTE_CONDUCTOR_FILE,
+      controlFile: CONTROL_FILE,
       canvasFile: CANVAS_FILE,
       canvasLaunchFile: CANVAS_LAUNCH_FILE,
       expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+      expectedControlContract: EXPECTED_CONTROL_CONTRACT,
 
       diagnosticOnly: true,
       anchorSafeChronologyObservation: true,
       causalForensicsLensActive: true,
-      causalForensicsVersion: "v1_3",
+      causalForensicsVersion: "v1_4",
+      controlsDutyLaneActive: true,
+      controlsDutyLaneMode: "PASSIVE_RECEIPT_AND_NAMESPACE_OBSERVATION_ONLY",
       productionMutationAuthorized: false,
       canvasDrawingAuthorized: false,
       canvasCreationAuthorized: false,
@@ -2436,6 +3247,33 @@
         "UNKNOWN"
       ),
 
+      controlsDutyLaneStatus: getRaw(r, "CONTROL_DUTY_LANE_STATUS", "UNKNOWN"),
+      controlsDutyLaneClean: getRaw(r, "CONTROL_DUTY_LANE_CLEAN", "UNKNOWN"),
+      controlsDutyLaneBlocking: getRaw(r, "CONTROL_DUTY_LANE_BLOCKING", "UNKNOWN"),
+      controlsDutyFirstFailedCoordinate: getRaw(r, "CONTROL_DUTY_FIRST_FAILED_COORDINATE", "UNKNOWN"),
+      controlsDutyFailureClass: getRaw(r, "CONTROL_DUTY_FAILURE_CLASS", "UNKNOWN"),
+      controlsDutyFailureReason: getRaw(r, "CONTROL_DUTY_FAILURE_REASON", "UNKNOWN"),
+      controlsDutyRecommendedFile: getRaw(r, "CONTROL_DUTY_RECOMMENDED_FILE", "UNKNOWN"),
+      controlsDutyRecommendedAction: getRaw(r, "CONTROL_DUTY_RECOMMENDED_ACTION", "UNKNOWN"),
+
+      controlScriptPresent: getRaw(r, "CONTROL_SCRIPT_PRESENT", "UNKNOWN"),
+      controlAuthorityObserved: getRaw(r, "CONTROL_AUTHORITY_OBSERVED", "UNKNOWN"),
+      controlAuthorityContract: getRaw(r, "CONTROL_AUTHORITY_CONTRACT", "UNKNOWN"),
+      controlAuthorityContractRecognized: getRaw(r, "CONTROL_AUTHORITY_CONTRACT_RECOGNIZED", "UNKNOWN"),
+      controlHandshakeReceiverPresent: getRaw(r, "CONTROL_HANDSHAKE_RECEIVER_PRESENT", "UNKNOWN"),
+      controlDutyApiReady: getRaw(r, "CONTROL_DUTY_API_READY", "UNKNOWN"),
+      controlHandshakeAccepted: getRaw(r, "CONTROL_HANDSHAKE_ACCEPTED", "UNKNOWN"),
+      controlInputAdmissionOpen: getRaw(r, "CONTROL_INPUT_ADMISSION_OPEN", "UNKNOWN"),
+      controlInputBound: getRaw(r, "CONTROL_INPUT_BOUND", "UNKNOWN"),
+      controlDeltaObserved: getRaw(r, "CONTROL_DELTA_OBSERVED", "UNKNOWN"),
+      controlCanvasDeliveryConfirmed: getRaw(r, "CONTROL_CANVAS_DELIVERY_CONFIRMED", "UNKNOWN"),
+      controlPacketCount: getRaw(r, "CONTROL_PACKET_COUNT", 0),
+      controlDeliveryCount: getRaw(r, "CONTROL_DELIVERY_COUNT", 0),
+      controlCoalescedFrameCount: getRaw(r, "CONTROL_COALESCED_FRAME_COUNT", 0),
+      controlRawInputEventCount: getRaw(r, "CONTROL_RAW_INPUT_EVENT_COUNT", 0),
+      controlDutiesArmed: getRaw(r, "CONTROL_DUTIES_ARMED", "UNKNOWN"),
+      controlDutiesPerformed: getRaw(r, "CONTROL_DUTIES_PERFORMED", "UNKNOWN"),
+
       canvasAuthorityObserved: getRaw(r, "CANVAS_AUTHORITY_OBSERVED", "UNKNOWN"),
       canvasAuthoritySourcePath: getRaw(r, "CANVAS_AUTHORITY_SOURCE_PATH", "NONE"),
       canvasAuthorityContract: getRaw(r, "CANVAS_AUTHORITY_CONTRACT", "UNKNOWN"),
@@ -2473,6 +3311,11 @@
         "UNKNOWN"
       ),
 
+      canvasSurfaceTruthLaneStatus: getRaw(
+        r,
+        "CANVAS_SURFACE_TRUTH_LANE_STATUS",
+        "UNKNOWN"
+      ),
       canvasTruthStatus: getRaw(
         r,
         "CANVAS_TRUTH_STATUS",
@@ -2504,6 +3347,7 @@
         "CANVAS_TRUTH_RECOMMENDED_ACTION",
         "CALL_runProbeCanvasSurfaceTruth_TO_MEASURE_CANVAS_SURFACE"
       ),
+      finalArbitrationSourceLane: getRaw(r, "FINAL_ARBITRATION_SOURCE_LANE", "UNKNOWN"),
       diagnosticCertainty: getRaw(r, "DIAGNOSTIC_CERTAINTY", "UNKNOWN"),
       observableCause: getRaw(r, "OBSERVABLE_CAUSE", "UNKNOWN"),
       recommendedNextFile: getRaw(r, "RECOMMENDED_NEXT_FILE", "NONE"),
@@ -2546,13 +3390,17 @@
       diagnosticTrackReceipt: clonePlain(getRaw(report, "DIAGNOSTIC_TRACK_RECEIPT", {})),
       canvasBishopReceipt: clonePlain(getRaw(report, "CANVAS_BISHOP_RECEIPT", {})),
       fingerFileReceipt: clonePlain(getRaw(report, "FINGER_FILE_RECEIPT", {})),
+      controlsDutyReceipt: clonePlain(getRaw(report, "CONTROLS_DUTY_RECEIPT", {})),
       acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS.slice(),
       acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS.slice(),
+      acceptedControlContracts: ACCEPTED_CONTROL_CONTRACTS.slice(),
       canvasSelectors: CANVAS_SELECTORS.slice(),
       mountSelectors: MOUNT_SELECTORS.slice(),
       supportsAnchorSafeChronologyObservation: true,
       supportsCoordinateSpecificFailure: true,
       supportsRouteConductorAdmissionForensics: true,
+      supportsControlsDutyLane: true,
+      supportsControlsReadyVsPerformedDistinction: true,
       supportsFourLaneReceiptHub: true,
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
@@ -2568,6 +3416,8 @@
       "INTERNAL_RENEWAL_RECEIPT",
       "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
       "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
+      "LINEAGE_INTERNAL_RENEWAL_CONTRACT",
+      "LINEAGE_INTERNAL_RENEWAL_RECEIPT",
       "VERSION",
       "FILE",
       "TARGET_ROUTE",
@@ -2580,6 +3430,8 @@
       "EXPECTED_CANVAS_CONTRACT",
       "EXPECTED_ROUTE_CONDUCTOR_CONTRACT",
       "EXPECTED_ROUTE_CONDUCTOR_INTERNAL_CONTRACT",
+      "EXPECTED_CONTROL_CONTRACT",
+      "EXPECTED_CONTROL_INTERNAL_CONTRACT",
       "DIAGNOSTIC_TIMESTAMP",
 
       "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
@@ -2595,6 +3447,9 @@
 
       "CAUSAL_FORENSICS_LENS_ACTIVE",
       "CAUSAL_FORENSICS_VERSION",
+      "CONTROLS_DUTY_LANE_ACTIVE",
+      "CONTROLS_DUTY_LANE_MODE",
+      "CONTROLS_DUTY_LANE_DISRUPTION_RISK",
       "TARGET_CONTEXT_STATUS",
       "TARGET_CONTEXT_SOURCE",
       "TARGET_ACCESS_ERROR",
@@ -2620,8 +3475,6 @@
       "ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY",
       "INDEX_SCRIPT_PRESENT",
       "INDEX_SCRIPT_SRC",
-      "CONTROL_SCRIPT_PRESENT",
-      "CONTROL_SCRIPT_SRC",
 
       "ROUTE_CONDUCTOR_OBSERVED",
       "ROUTE_CONDUCTOR_SOURCE_PATH",
@@ -2640,6 +3493,75 @@
       "ROUTE_CONDUCTOR_SOURCE_STACK_STATUS",
       "ROUTE_CONDUCTOR_SOURCE_STACK_READY",
       "ROUTE_CONDUCTOR_GOVERNED_SOURCE_PACKET_ACCEPTED_BY_CANVAS",
+
+      "CONTROL_DUTY_LANE_ACTIVE",
+      "CONTROL_DUTY_LANE_STATUS",
+      "CONTROL_DUTY_LANE_CLEAN",
+      "CONTROL_DUTY_LANE_BLOCKING",
+      "CONTROL_DUTY_FIRST_FAILED_COORDINATE",
+      "CONTROL_DUTY_FAILURE_CLASS",
+      "CONTROL_DUTY_FAILURE_REASON",
+      "CONTROL_DUTY_RECOMMENDED_OWNER",
+      "CONTROL_DUTY_RECOMMENDED_FILE",
+      "CONTROL_DUTY_RECOMMENDED_ACTION",
+
+      "CONTROL_SCRIPT_PRESENT",
+      "CONTROL_SCRIPT_COUNT",
+      "CONTROL_SCRIPT_SRC",
+      "CONTROL_SCRIPT_CACHE_KEY",
+      "CONTROL_SCRIPT_TAG_ORDER",
+      "CONTROL_AUTHORITY_OBSERVED",
+      "CONTROL_AUTHORITY_SCOPE",
+      "CONTROL_AUTHORITY_SOURCE_PATH",
+      "CONTROL_AUTHORITY_CONTRACT",
+      "CONTROL_AUTHORITY_RECEIPT",
+      "CONTROL_AUTHORITY_CONTRACT_RECOGNIZED",
+      "CONTROL_AUTHORITY_METHOD_COUNT",
+      "CONTROL_AUTHORITY_METHODS",
+      "CONTROL_AUTHORITY_CANDIDATE_COUNT",
+      "CONTROL_AUTHORITY_CANDIDATES",
+      "CONTROL_HANDSHAKE_RECEIVER_PRESENT",
+      "CONTROL_HANDSHAKE_RECEIVER_METHOD",
+      "CONTROL_DUTY_API_READY",
+      "CONTROL_DUTY_METHOD_COUNT",
+      "CONTROL_DUTY_METHODS_OBSERVED",
+      "CONTROL_HANDSHAKE_STATUS",
+      "CONTROL_HANDSHAKE_ACCEPTED",
+      "CONTROL_INPUT_ADMISSION_OPEN",
+      "CONTROL_INPUT_BOUND",
+      "CONTROL_INPUT_TARGET_FOUND",
+      "CONTROL_INPUT_TARGET_DESCRIPTION",
+      "CONTROL_INPUT_STATUS",
+      "CONTROL_TOUCH_STATUS",
+      "CONTROL_DRAG_STATUS",
+      "CONTROL_MOTION_STATUS",
+      "CONTROL_PACKET_COUNT",
+      "CONTROL_DELIVERY_COUNT",
+      "CONTROL_COALESCED_FRAME_COUNT",
+      "CONTROL_RAW_INPUT_EVENT_COUNT",
+      "CONTROL_LIGHTWEIGHT_FRAME_PUBLISH_COUNT",
+      "CONTROL_DROPPED_EMPTY_FRAME_COUNT",
+      "CONTROL_DELTA_OBSERVED",
+      "CONTROL_CANVAS_OBSERVED_BY_CONTROLS",
+      "CONTROL_CANVAS_CONTRACT_BY_CONTROLS",
+      "CONTROL_CANVAS_DELIVERY_STATUS",
+      "CONTROL_CANVAS_DELIVERY_METHOD",
+      "CONTROL_CANVAS_DELIVERY_REASON",
+      "CONTROL_CANVAS_DELIVERY_CONFIRMED",
+      "CONTROL_RECEIVER_CACHE_STATUS",
+      "CONTROL_RECEIVER_CACHE_METHOD",
+      "CONTROL_RECEIVER_METHOD_RESOLVED",
+      "CONTROL_RECEIVER_PREWARM_STATUS",
+      "CONTROL_RECEIVER_PREWARM_COUNT",
+      "CONTROL_HEX_SURFACE_OBSERVED_BY_CONTROLS",
+      "CONTROL_HEX_GATE_STATUS",
+      "CONTROL_POINTER_FINGER_OBSERVED_BY_CONTROLS",
+      "CONTROL_CANVAS_LIFECYCLE_SUPPRESSED_DURING_DRAG",
+      "CONTROL_PACKET_PHASE_FIXED_AT_ZERO",
+      "CONTROL_POINTER_FINGER_DIRECT_DELIVERY_SUPPRESSED",
+      "CONTROL_DUTIES_ARMED",
+      "CONTROL_DUTIES_PERFORMED",
+      "CONTROL_DUTY_CAN_DISTINGUISH_READY_FROM_PERFORMED",
 
       "CANVAS_AUTHORITY_OBSERVED",
       "CANVAS_AUTHORITY_SCOPE",
@@ -2707,6 +3629,12 @@
       "CANVAS_LAYER_HIT_WITHIN_CANVAS",
       "CANVAS_NAMESPACE_MATCHES_DOM_SURFACE",
 
+      "CANVAS_SURFACE_TRUTH_LANE_STATUS",
+      "CANVAS_SURFACE_TRUTH_LANE_CLEAN",
+      "CANVAS_SURFACE_TRUTH_LANE_FIRST_FAILED_COORDINATE",
+      "CANVAS_SURFACE_TRUTH_LANE_FAILURE_CLASS",
+      "CANVAS_SURFACE_TRUTH_LANE_FAILURE_REASON",
+
       "CANVAS_TRUTH_STATUS",
       "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
       "CANVAS_TRUTH_FAILURE_CLASS",
@@ -2714,6 +3642,7 @@
       "CANVAS_TRUTH_RECOMMENDED_OWNER",
       "CANVAS_TRUTH_RECOMMENDED_FILE",
       "CANVAS_TRUTH_RECOMMENDED_ACTION",
+      "FINAL_ARBITRATION_SOURCE_LANE",
       "DIAGNOSTIC_CERTAINTY",
       "OBSERVABLE_CAUSE",
       "RECOMMENDED_NEXT_FILE",
@@ -2723,12 +3652,14 @@
       "DIAGNOSTIC_TRACK_RECEIPT_STATUS",
       "CANVAS_BISHOP_RECEIPT_STATUS",
       "FINGER_FILE_RECEIPT_STATUS",
+      "CONTROLS_DUTY_RECEIPT_STATUS",
       "PROBE_SOUTH_TO_TRUTH_HUB_TRANSFER_STATUS",
 
       "LAB_CARDINAL_RECEIPT_BUNDLE",
       "DIAGNOSTIC_TRACK_RECEIPT",
       "CANVAS_BISHOP_RECEIPT",
       "FINGER_FILE_RECEIPT",
+      "CONTROLS_DUTY_RECEIPT",
 
       "PRODUCTION_MUTATION_AUTHORIZED",
       "CANVAS_DRAWING_AUTHORIZED",
@@ -2749,6 +3680,7 @@
     const out = [];
 
     for (const field of priority.concat(Object.keys(report || {}))) {
+      if (field === "authority") continue;
       if (seen.has(field)) continue;
       seen.add(field);
       out.push(field);
@@ -2773,10 +3705,18 @@
       line("CANVAS_SCRIPT_EXECUTION_INFERRED", getRaw(report, "CANVAS_SCRIPT_EXECUTION_INFERRED", "UNKNOWN")),
       line("ROUTE_CONDUCTOR_OBSERVED", getRaw(report, "ROUTE_CONDUCTOR_OBSERVED", "UNKNOWN")),
       line("ROUTE_CONDUCTOR_CANVAS_ADMISSION_RESULT_EXPORTED", getRaw(report, "ROUTE_CONDUCTOR_CANVAS_ADMISSION_RESULT_EXPORTED", "UNKNOWN")),
+      line("CONTROL_SCRIPT_PRESENT", getRaw(report, "CONTROL_SCRIPT_PRESENT", "UNKNOWN")),
+      line("CONTROL_AUTHORITY_OBSERVED", getRaw(report, "CONTROL_AUTHORITY_OBSERVED", "UNKNOWN")),
+      line("CONTROL_HANDSHAKE_ACCEPTED", getRaw(report, "CONTROL_HANDSHAKE_ACCEPTED", "UNKNOWN")),
+      line("CONTROL_INPUT_BOUND", getRaw(report, "CONTROL_INPUT_BOUND", "UNKNOWN")),
+      line("CONTROL_DELTA_OBSERVED", getRaw(report, "CONTROL_DELTA_OBSERVED", "UNKNOWN")),
+      line("CONTROL_CANVAS_DELIVERY_CONFIRMED", getRaw(report, "CONTROL_CANVAS_DELIVERY_CONFIRMED", "UNKNOWN")),
+      line("CONTROL_DUTY_LANE_STATUS", getRaw(report, "CONTROL_DUTY_LANE_STATUS", "UNKNOWN")),
       line("CANVAS_AUTHORITY_OBSERVED", getRaw(report, "CANVAS_AUTHORITY_OBSERVED", "UNKNOWN")),
       line("CANVAS_DOM_SURFACE_FOUND", getRaw(report, "CANVAS_DOM_SURFACE_FOUND", "UNKNOWN")),
       line("CANVAS_TRUTH_FIRST_FAILED_COORDINATE", getRaw(report, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "UNKNOWN")),
       line("CANVAS_TRUTH_FAILURE_CLASS", getRaw(report, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN")),
+      line("FINAL_ARBITRATION_SOURCE_LANE", getRaw(report, "FINAL_ARBITRATION_SOURCE_LANE", "UNKNOWN")),
       line("CANVAS_TRUTH_RECOMMENDED_FILE", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN")),
       line("DIAGNOSTIC_CERTAINTY", getRaw(report, "DIAGNOSTIC_CERTAINTY", "UNKNOWN")),
       "f13Claimed=false",
@@ -2815,6 +3755,7 @@
     root.HEARTH.diagnosticRailProbeCanvasSurfaceTruth = api;
     root.HEARTH.diagnosticCanvasSurfaceTruthReceiptHub = api;
     root.HEARTH.diagnosticTruthHub = api;
+    root.HEARTH.diagnosticControlsDutyLane = api;
 
     root.DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth = api;
     root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe = api;
@@ -2822,6 +3763,7 @@
     root.DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth = api;
     root.DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthReceiptHub = api;
     root.DEXTER_LAB.hearthDiagnosticTruthHub = api;
+    root.DEXTER_LAB.hearthDiagnosticControlsDutyLane = api;
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = api;
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE = api;
@@ -2829,6 +3771,7 @@
     root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH = api;
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB = api;
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB = api;
+    root.HEARTH_DIAGNOSTIC_CONTROLS_DUTY_LANE = api;
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_RECEIPT = getReceiptLight();
@@ -2836,26 +3779,32 @@
     root.HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CONTROLS_DUTY_LANE_RECEIPT = getReceiptLight();
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT = clonePlain(lastReport || makeAnchorReport());
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_REPORT = clonePlain(lastReport || makeAnchorReport());
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_REPORT = clonePlain(lastReport || makeAnchorReport());
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_REPORT = clonePlain(lastReport || makeAnchorReport());
+    root.HEARTH_DIAGNOSTIC_CONTROLS_DUTY_LANE_REPORT = clonePlain(lastReport || makeAnchorReport());
 
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_LAB_CARDINAL_RECEIPT = clonePlain(getRaw(lastReport || {}, "LAB_CARDINAL_RECEIPT_BUNDLE", {}));
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_DIAGNOSTIC_TRACK_RECEIPT = clonePlain(getRaw(lastReport || {}, "DIAGNOSTIC_TRACK_RECEIPT", {}));
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_CANVAS_BISHOP_RECEIPT = clonePlain(getRaw(lastReport || {}, "CANVAS_BISHOP_RECEIPT", {}));
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_FINGER_FILE_RECEIPT = clonePlain(getRaw(lastReport || {}, "FINGER_FILE_RECEIPT", {}));
+    root.HEARTH_DIAGNOSTIC_TRUTH_HUB_CONTROLS_DUTY_RECEIPT = clonePlain(getRaw(lastReport || {}, "CONTROLS_DUTY_RECEIPT", {}));
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB_PACKET_TEXT = lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_PACKET_TEXT = lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_TRUTH_HUB_COMPACT_SUMMARY = lastCompactSummary || "";
+    root.HEARTH_DIAGNOSTIC_CONTROLS_DUTY_LANE_PACKET_TEXT = lastPacketText || "";
 
     setDiagnosticDataset("hearthDiagnosticCanvasSurfaceTruthProbeContract", CONTRACT);
     setDiagnosticDataset("hearthDiagnosticCanvasSurfaceTruthProbeRenewalContract", INTERNAL_RENEWAL_CONTRACT);
     setDiagnosticDataset("hearthDiagnosticCanvasSurfaceTruthProbeStatus", getRaw(lastReport || {}, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY"));
     setDiagnosticDataset("hearthDiagnosticCanvasSurfaceTruthFailureClass", getRaw(lastReport || {}, "CANVAS_TRUTH_FAILURE_CLASS", "ANCHOR_READY"));
+    setDiagnosticDataset("hearthDiagnosticControlsDutyLaneStatus", getRaw(lastReport || {}, "CONTROL_DUTY_LANE_STATUS", "ANCHOR_READY"));
+    setDiagnosticDataset("hearthDiagnosticControlsDutyFailureClass", getRaw(lastReport || {}, "CONTROL_DUTY_FAILURE_CLASS", "ANCHOR_READY"));
 
     return true;
   }
@@ -2925,20 +3874,25 @@
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
     previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+    lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
+    lineageInternalRenewalReceipt: LINEAGE_INTERNAL_RENEWAL_RECEIPT,
     version: VERSION,
     file: FILE,
     targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     routeConductorFile: ROUTE_CONDUCTOR_FILE,
+    controlFile: CONTROL_FILE,
     canvasFile: CANVAS_FILE,
     canvasLaunchFile: CANVAS_LAUNCH_FILE,
     expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
+    expectedControlContract: EXPECTED_CONTROL_CONTRACT,
 
     diagnosticOnly: true,
     anchorSafeChronologyObservation: true,
     receiptHubActive: true,
     fourLaneReceiptHubActive: true,
     causalForensicsLensActive: true,
+    controlsDutyLaneActive: true,
 
     runProbeCanvasSurfaceTruth,
     runCanvasSurfaceTruth,
@@ -2961,12 +3915,21 @@
     mountSelectors: MOUNT_SELECTORS,
     acceptedCanvasContracts: ACCEPTED_CANVAS_CONTRACTS,
     acceptedRouteConductorContracts: ACCEPTED_ROUTE_CONDUCTOR_CONTRACTS,
+    acceptedControlContracts: ACCEPTED_CONTROL_CONTRACTS,
 
     supportsAnchorSafeChronologyObservation: true,
     supportsCanvasScriptPresenceProbe: true,
     supportsCanvasScriptExecutionInference: true,
     supportsRouteConductorAdmissionForensics: true,
     supportsRouteConductorAdmissionResultExportCheck: true,
+    supportsControlsDutyLane: true,
+    supportsControlsScriptPresenceProbe: true,
+    supportsControlsAuthorityPublicationProbe: true,
+    supportsControlsHandshakeAcceptedProbe: true,
+    supportsControlsInputBindingProbe: true,
+    supportsControlsDeltaCounterProbe: true,
+    supportsControlsCanvasDeliveryProbe: true,
+    supportsControlsReadyVsPerformedDistinction: true,
     supportsCanvasAuthorityPublicationProbe: true,
     supportsCanvasDomSurfaceBindingProbe: true,
     supportsCanvasElementProbe: true,

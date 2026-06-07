@@ -6,17 +6,14 @@
 // Diagnostic probe EAST child only.
 // Purpose:
 // - Preserve the public v1 Probe EAST contract expected by North chronology.
-// - Fix the chronology failure class where the script is already present but the Probe EAST
-//   authority is not observed at HEARTH.diagnosticProbeEast.
 // - Publish the Probe EAST authority immediately and synchronously before any target probing.
 // - Preserve runProbeEast as the public call method expected by North.
 // - Read source-side file composition, script footprints, global authority footprints,
 //   target-stage/mount/canvas/expression-surface selectors, and source-to-canvas handoff claims.
 // - Distinguish diagnostic-anchor failure from production/canvas failure.
 // - Preserve Rail EAST as the source-footprint evidence standard.
-// - Preserve Probe EAST as the under-hood file-composition / bridge-surface instrument.
 // - Do not renew Rail EAST.
-// - Do not mutate production, route, cache, controls, canvas, diagnostics chronology, or receiver HTML.
+// - Do not mutate production, route, cache, controls, canvas, diagnostic chronology, or receiver HTML.
 // - Do not claim F13, F21, ready text, final readiness, visual pass, generated image, GraphicBox, or WebGL.
 
 (() => {
@@ -46,7 +43,6 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11";
   const PARENT_NORTH_RECEIPT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT_v11";
-
   const PREVIOUS_PARENT_NORTH_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_EIGHT_WAY_PROBE_BRIDGE_ORCHESTRATOR_TNT_v9";
 
@@ -73,32 +69,26 @@
     railEast: "/assets/hearth/hearth.diagnostic.east.js",
     railWest: "/assets/hearth/hearth.diagnostic.west.js",
     railSouth: "/assets/hearth/hearth.diagnostic.south.js",
-
     probeNorth: "/assets/hearth/hearth.diagnostic.probe.north.js",
     probeEast: FILE,
     probeWest: "/assets/hearth/hearth.diagnostic.probe.west.js",
     probeCanvasSurfaceTruth:
       "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
     probeSouth: "/assets/hearth/hearth.diagnostic.probe.south.js",
-
     index: "/showroom/globe/hearth/index.js",
     routeConductor: "/showroom/globe/hearth/hearth.js",
     controls: "/assets/hearth/hearth.controls.js",
     canvas: "/assets/hearth/hearth.canvas.js",
     hexAuthority: "/assets/hearth/hearth.hex.four-pair.authority.js",
     hexSurface: "/assets/hearth/hearth.hex.surface.js",
-
     labNorth: "/assets/lab/runtime-table.js",
     labEast: "/assets/lab/runtime-table.east.js",
     labSouth: "/assets/lab/runtime-table.south.js",
     labWest: "/assets/lab/runtime-table.west.js",
-
     macroWest: "/assets/hearth/hearth.west.index-handoff.table.js",
-
     landChannel: "/assets/hearth/hearth.land.channel.js",
     waterChannel: "/assets/hearth/hearth.water.channel.js",
     airChannel: "/assets/hearth/hearth.air.channel.js",
-
     fingerBoundary: "/assets/hearth/hearth.canvas.finger.boundary.js",
     fingerMass: "/assets/hearth/hearth.canvas.finger.mass.js",
     fingerSurface: "/assets/hearth/hearth.canvas.finger.surface.js",
@@ -879,11 +869,7 @@
       const targetWindow = opts.targetWindow || opts.targetDocument.defaultView || null;
       if (!isDiagnosticReceiver(opts.targetDocument, targetWindow)) {
         state.targetAccessStatus = "TARGET_DOCUMENT_SUPPLIED";
-        return {
-          targetDocument: opts.targetDocument,
-          targetWindow,
-          source: "options.targetDocument"
-        };
+        return { targetDocument: opts.targetDocument, targetWindow, source: "options.targetDocument" };
       }
       addNote(state, "PROBE_EAST_IGNORED_SUPPLIED_DIAGNOSTIC_RECEIVER_DOCUMENT");
     }
@@ -921,11 +907,7 @@
 
     if (doc && doc.documentElement && !isDiagnosticReceiver(doc, root) && hasHearthTargetSignals(doc, root)) {
       state.targetAccessStatus = "CURRENT_HEARTH_DOCUMENT";
-      return {
-        targetDocument: doc,
-        targetWindow: root,
-        source: "currentHearthDocument"
-      };
+      return { targetDocument: doc, targetWindow: root, source: "currentHearthDocument" };
     }
 
     state.targetAccessStatus = "SOURCE_ONLY_NO_HEARTH_TARGET";
@@ -1426,7 +1408,7 @@
     state.railEastScriptPresent = boolText(Boolean(scripts.railEast && scripts.railEast.present));
     state.railEastAuthoritySource = authorities.railEast ? authorities.railEast.path : "NONE";
     state.railEastAuthorityPresent = boolText(Boolean(authorities.railEast && authorities.railEast.authority));
-    state.railEastContract = authorities.railEast && authorities.railEast.contract ? authorities.railEast.contract : "UNKNOWN";
+    state.railEastObservedContract = authorities.railEast && authorities.railEast.contract ? authorities.railEast.contract : "UNKNOWN";
     state.railEastStatus = readReceiptStatus(authorities.railEast || {});
 
     state.probeNorthScriptPresent = boolText(Boolean(scripts.probeNorth && scripts.probeNorth.present));
@@ -1622,7 +1604,7 @@
       anchorStatus: "ANCHOR_PUBLISHED_SYNCHRONOUSLY",
       anchorSourcePathPrimary: "HEARTH.diagnosticProbeEast",
       anchorSourcePaths:
-        "HEARTH.diagnosticProbeEast,HEARTH.diagnosticEastProbe,HEARTH_DIAGNOSTIC_PROBE_EAST,DEXTER_LAB.hearthDiagnosticProbeEast",
+        "HEARTH.diagnosticProbeEast,HEARTH.diagnosticEastProbe,HEARTH_DIAGNOSTIC_PROBE_EAST,HEARTH_DIAGNOSTIC_EAST_PROBE,DEXTER_LAB.hearthDiagnosticProbeEast",
       anchorObserved: "true",
       chronologyObservationGuard: "PUBLIC_AUTHORITY_PUBLISHED_BEFORE_TARGET_PROBE",
       chronologyFailureClassAddressed: "SCRIPT_ALREADY_PRESENT_AUTHORITY_NOT_OBSERVED",
@@ -1722,7 +1704,7 @@
       railEastScriptPresent: "UNKNOWN",
       railEastAuthoritySource: "UNKNOWN",
       railEastAuthorityPresent: "UNKNOWN",
-      railEastContractObserved: "UNKNOWN",
+      railEastObservedContract: "UNKNOWN",
       railEastStatus: "UNKNOWN",
 
       probeNorthScriptPresent: "UNKNOWN",
@@ -1811,14 +1793,14 @@
       PROBE_EAST_VERSION: VERSION,
       PROBE_EAST_FILE: FILE,
 
-      TARGET_ROUTE: TARGET_ROUTE,
-      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+      TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE,
 
-      PARENT_NORTH_CONTRACT: PARENT_NORTH_CONTRACT,
-      PARENT_NORTH_RECEIPT: PARENT_NORTH_RECEIPT,
-      PREVIOUS_PARENT_NORTH_CONTRACT: PREVIOUS_PARENT_NORTH_CONTRACT,
-      RAIL_EAST_CONTRACT: RAIL_EAST_CONTRACT,
-      RAIL_EAST_IMPLEMENTATION_CONTRACT: RAIL_EAST_IMPLEMENTATION_CONTRACT,
+      PARENT_NORTH_CONTRACT,
+      PARENT_NORTH_RECEIPT,
+      PREVIOUS_PARENT_NORTH_CONTRACT,
+      RAIL_EAST_CONTRACT,
+      RAIL_EAST_IMPLEMENTATION_CONTRACT,
 
       PROBE_EAST_ANCHOR_STATUS: state.anchorStatus,
       PROBE_EAST_ANCHOR_OBSERVED: state.anchorObserved,
@@ -1911,7 +1893,7 @@
       RAIL_EAST_SCRIPT_PRESENT: state.railEastScriptPresent,
       RAIL_EAST_AUTHORITY_SOURCE: state.railEastAuthoritySource,
       RAIL_EAST_AUTHORITY_PRESENT: state.railEastAuthorityPresent,
-      RAIL_EAST_OBSERVED_CONTRACT: state.railEastContractObserved,
+      RAIL_EAST_OBSERVED_CONTRACT: state.railEastObservedContract,
       RAIL_EAST_STATUS: state.railEastStatus,
 
       PROBE_NORTH_SCRIPT_PRESENT: state.probeNorthScriptPresent,
@@ -2064,7 +2046,6 @@
 
         state.updatedAt = nowIso();
         publish(state);
-
         return clonePlain(lastEvidencePacket);
       }
 
@@ -2235,6 +2216,7 @@
       `targetAccessStatus=${evidence.TARGET_ACCESS_STATUS}`,
       `fileCompositionStatus=${evidence.FILE_COMPOSITION_STATUS}`,
       `bridgeSurfaceCompositionStatus=${evidence.BRIDGE_SURFACE_COMPOSITION_STATUS}`,
+      `canvasExpressionInstrumentationStatus=${evidence.CANVAS_EXPRESSION_INSTRUMENTATION_STATUS}`,
       `zoneOfInflictionOwner=${evidence.ZONE_OF_INFLICTION_OWNER}`,
       `zoneOfInflictionFile=${evidence.ZONE_OF_INFLICTION_FILE}`,
       `zoneOfInflictionClass=${evidence.ZONE_OF_INFLICTION_CLASS}`,

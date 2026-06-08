@@ -1,30 +1,26 @@
 // /assets/hearth/hearth.diagnostic.south.surface.pointer.js
 // HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_TNT_v1
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_TNT_v2
+// HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_CLASSIFIER_TNT_v3
 // Full-file replacement.
 // Diagnostic South Surface Pointer sidecar only.
 //
 // Purpose:
-// - Preserve the public v1 South Surface Pointer sidecar contract expected by Probe South.
-// - Pair with /assets/hearth/hearth.canvas.finger.inspect.js v2 without replacing it.
-// - Split responsibility:
-//   * Canvas Finger Inspect owns surface identity evidence, pointer/receiver evidence,
-//     Hex Surface receiver proof, and canvas pixel observation.
-//   * South Surface Pointer consumes that evidence and classifies what kind of surface
-//     was inspected before Canvas is blamed.
-// - Distinguish production canvas from temporary image, inner-scope feed, diagnostic
-//   frame surface, and unknown/misaligned surface.
-// - Prevent premature Canvas blame unless the inspected surface is confirmed as the
-//   production Hearth canvas.
-// - Publish stable aliases and packet text for Probe South / South Rail consumption.
-// - Preserve asymmetric tenth-sidecar status outside the nine-step chronology.
-// - Preserve read-only diagnostic behavior.
+// - Preserve the public v1 South Surface Pointer sidecar contract.
+// - Preserve v2 Canvas-feed classifier compatibility.
+// - Renew the active duty into scope-lens classification over the diagnostic receipt field.
+// - Add scoped lenses so a now-copyable receipt can be interpreted without becoming one blended mass.
+// - Classify North track, Surface Truth scope, Canvas blame eligibility, probe network,
+//   duty load, malpractice, construction readiness, and copy/manifest path.
+// - Read explicit status fields only for malpractice and duty-load lensing.
+// - Avoid raw-text false positives from schema/status vocabulary.
+// - Publish stable aliases and packet text for Probe South / South Rail / receiver consumption.
 //
 // Does not own:
-// - diagnostic North chronology
-// - South packet output
-// - Probe South packet meaning
+// - South packet compaction
+// - duplicate-standard collapse
+// - North final arbitration
+// - LabWest derivative map
 // - production mutation
 // - route conductor mutation
 // - Canvas drawing
@@ -38,6 +34,7 @@
 // - Pointer Finger truth
 // - final visual pass
 // - F13/F21/F55 claim
+//
 
 (() => {
   "use strict";
@@ -52,17 +49,17 @@
     "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_RECEIPT_v1";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_TNT_v2";
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_CLASSIFIER_TNT_v3";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_RECEIPT_v2";
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_CLASSIFIER_RECEIPT_v3";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_TNT_v1";
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_TNT_v2";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_RECEIPT_v1";
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_RECEIPT_v2";
 
   const VERSION =
-    "2026-06-07.hearth-diagnostic-south-surface-pointer-canvas-feed-classifier-v2";
+    "2026-06-08.hearth-diagnostic-south-surface-pointer-scope-lens-classifier-v3";
 
   const FILE = "/assets/hearth/hearth.diagnostic.south.surface.pointer.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -70,28 +67,18 @@
 
   const SOUTH_RAIL_FILE = "/assets/hearth/hearth.diagnostic.south.js";
   const PROBE_SOUTH_FILE = "/assets/hearth/hearth.diagnostic.probe.south.js";
+  const NORTH_RAIL_FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
   const CANVAS_FINGER_INSPECT_FILE =
     "/assets/hearth/hearth.canvas.finger.inspect.js";
+  const SURFACE_TRUTH_FILE =
+    "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-  const HEX_FOUR_PAIR_FILE =
-    "/assets/hearth/hearth.hex.four-pair.authority.js";
-  const POINTER_FINGER_FILE =
-    "/assets/hearth/hearth.canvas.finger.inspect.js";
+  const POINTER_SURFACE_FILE =
+    "/assets/hearth/hearth.canvas.finger.surface.js";
 
   const PACKET_NAME =
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_PACKET_v2";
-
-  const EXPECTED_CANVAS_CONTRACT =
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
-  const EXPECTED_CANVAS_RENEWAL_CANDIDATE =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
-  const EXPECTED_FINGER_INSPECT_CONTRACT =
-    "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1";
-  const EXPECTED_FINGER_INSPECT_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_FINGER_INSPECT_HEX_SURFACE_POINTER_RECEIVER_PROOF_TNT_v2";
-  const EXPECTED_PROBE_SOUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1";
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_PACKET_v3";
 
   const SURFACE_CLASS = Object.freeze({
     PRODUCTION_CANVAS: "PRODUCTION_CANVAS_SURFACE",
@@ -118,7 +105,19 @@
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webgl: false
+    webgl: false,
+
+    productionMutationAuthorized: false,
+    hearthRepairAuthorized: false,
+    routeRepairAuthorized: false,
+    routeConductorMutationAuthorized: false,
+    controlMutationAuthorized: false,
+    canvasDrawingAuthorized: false,
+    canvasCreationAuthorized: false,
+    canvasRepairAuthorized: false,
+    canvasReleaseAuthorized: false,
+    runtimeRestartAuthorized: false,
+    finalVisualPassAuthority: false
   });
 
   const UPPER_NO_CLAIMS = Object.freeze({
@@ -137,8 +136,45 @@
     FINAL_VISUAL_PASS_CLAIMED: false,
     GENERATED_IMAGE: false,
     GRAPHIC_BOX: false,
-    WEBGL: false
+    WEBGL: false,
+
+    PRODUCTION_MUTATION_AUTHORIZED: false,
+    HEARTH_REPAIR_AUTHORIZED: false,
+    ROUTE_REPAIR_AUTHORIZED: false,
+    ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
+    CONTROL_MUTATION_AUTHORIZED: false,
+    CANVAS_DRAWING_AUTHORIZED: false,
+    CANVAS_CREATION_AUTHORIZED: false,
+    CANVAS_REPAIR_AUTHORIZED: false,
+    CANVAS_RELEASE_AUTHORIZED: false,
+    RUNTIME_RESTART_AUTHORIZED: false,
+    FINAL_VISUAL_PASS_AUTHORITY: false
   });
+
+  const RECEIVER_ALIASES = Object.freeze([
+    "HEARTH.diagnosticGaugeVarianceReceiver",
+    "HEARTH.diagnosticConstructAlignmentGaugeReceiver",
+    "HEARTH.diagnosticRouteReceiver",
+    "HEARTH_DIAGNOSTIC_GAUGE_VARIANCE_RECEIVER",
+    "HEARTH_DIAGNOSTIC_CONSTRUCT_ALIGNMENT_GAUGE_RECEIVER",
+    "HEARTH_DIAGNOSTIC_ROUTE_RECEIVER",
+    "DEXTER_LAB.hearthDiagnosticGaugeVarianceReceiver",
+    "DEXTER_LAB.hearthDiagnosticRouteReceiver"
+  ]);
+
+  const SOUTH_RAIL_ALIASES = Object.freeze([
+    "HEARTH.diagnosticSouth",
+    "HEARTH.diagnosticRailSouth",
+    "HEARTH.diagnosticSouthReceiptSegregator",
+    "HEARTH.diagnosticSouthDuplicateStandardCollapse",
+    "HEARTH_DIAGNOSTIC_SOUTH",
+    "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+    "HEARTH_DIAGNOSTIC_SOUTH_RECEIPT_SEGREGATOR",
+    "HEARTH_DIAGNOSTIC_SOUTH_DUPLICATE_STANDARD_COLLAPSE",
+    "DEXTER_LAB.hearthDiagnosticSouth",
+    "DEXTER_LAB.hearthDiagnosticRailSouth",
+    "DEXTER_LAB.hearthDiagnosticSouthReceiptSegregator"
+  ]);
 
   const FINGER_INSPECT_ALIASES = Object.freeze([
     "HEARTH.canvasFingerInspect",
@@ -174,6 +210,8 @@
     "HEARTH.canvasParent",
     "HEARTH.canvasAuthority",
     "HEARTH.canvasVisiblePlanet",
+    "HEARTH.chapel1AssetsCanvasHub",
+    "HEARTH.CHAPEL_1_ASSETS_CANVAS_HUB",
     "DEXTER_LAB.hearthCanvas",
     "DEXTER_LAB.hearthCanvasHub",
     "DEXTER_LAB.hearthCanvasAuthority",
@@ -182,6 +220,19 @@
     "HEARTH_CANVAS_PARENT",
     "HEARTH_CANVAS_AUTHORITY",
     "HEARTH_CANVAS_VISIBLE_PLANET"
+  ]);
+
+  const EXPLICIT_DUTY_KEYS = Object.freeze([
+    "SELF_MEASUREMENT_STATUS",
+    "selfMeasurementStatus",
+    "DUTY_LOAD_STATUS",
+    "dutyLoadStatus",
+    "DIAGNOSTIC_CONTAINER_COLLAPSE_RISK",
+    "DIAGNOSTIC_CONTAINER_COLLAPSE_DETECTED",
+    "DIAGNOSTIC_OUTPUT_QUARANTINED",
+    "DIAGNOSTIC_MALPRACTICE_STATUS",
+    "DIAGNOSTIC_MALPRACTICE_DETECTED",
+    "DIAGNOSTIC_SELF_DUTY_STATUS"
   ]);
 
   const state = {
@@ -197,6 +248,8 @@
     diagnosticRoute: DIAGNOSTIC_ROUTE,
 
     loaded: true,
+    primaryDuty: "SCOPE_LENS_CLASSIFICATION",
+    legacyCanvasFeedClassifierCompatible: true,
     asymmetricTenthDiagnosticSidecar: true,
     chronologyOwner: false,
     nineCycleMutation: false,
@@ -205,29 +258,31 @@
     operationalDependencyForNorth: false,
     readableByProbeSouth: true,
 
-    splitResponsibilityActive: true,
-    consumesCanvasFingerInspectEvidence: true,
-    publishesProbeSouthClassifierPacket: true,
-    classifiesSurfaceBeforeCanvasBlame: true,
-    canvasBlameRequiresProductionCanvasConfirmation: true,
-
+    latestLensStatus: "NOT_RUN",
+    latestNorthTrackLens: "NOT_RUN",
+    latestSurfaceScopeLens: "NOT_RUN",
+    latestCanvasBlameLens: "NOT_RUN",
+    latestProbeNetworkLens: "NOT_RUN",
+    latestDutyLoadLens: "NOT_RUN",
+    latestMalpracticeLens: "NOT_RUN",
+    latestConstructionReadinessLens: "NOT_RUN",
+    latestCopyLens: "NOT_RUN",
     latestSurfaceClass: SURFACE_CLASS.UNKNOWN,
     latestCanvasBlameEligible: false,
     latestRecommendedOwner: "UNKNOWN",
     latestRecommendedFile: "UNKNOWN",
     latestRecommendedAction: "UNKNOWN",
-    latestInterpretation: "NOT_RUN",
 
     runCount: 0,
     aliasPublishCount: 0,
     receiptPublishCount: 0,
     receivedFingerReportCount: 0,
-    latestEvent: "SOUTH_SURFACE_POINTER_CLASSIFIER_LOADED",
+    latestEvent: "SOUTH_SURFACE_POINTER_SCOPE_LENS_LOADED",
     updatedAt: "",
     lastReport: null,
     lastPacketText: "",
     lastCompactSummary: "",
-    lastFingerInspectEvidence: null,
+    lastInputSource: "NONE",
     events: [],
     errors: [],
 
@@ -264,7 +319,7 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
-  function bounded(value, limit = 3000) {
+  function bounded(value, limit = 4000) {
     return safeString(value)
       .replace(/\n/g, " ")
       .replace(/\s+/g, " ")
@@ -404,22 +459,6 @@
     return cursor || null;
   }
 
-  function setPath(path, value) {
-    const parts = safeString(path).replace(/^window\./, "").split(".");
-    if (!parts.length) return false;
-
-    let cursor = root;
-    for (let index = 0; index < parts.length - 1; index += 1) {
-      const part = parts[index];
-      if (!part) continue;
-      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
-      cursor = cursor[part];
-    }
-
-    cursor[parts[parts.length - 1]] = value;
-    return true;
-  }
-
   function firstGlobal(paths) {
     for (const path of paths || []) {
       const value = readPath(path);
@@ -429,64 +468,50 @@
     return { path: "NONE", value: null };
   }
 
-  function readField(source, keys, fallback = "") {
-    const obj = isObject(source) || isFunction(source) ? source : {};
+  function parsePacketText(text) {
+    const out = {};
+    const source = safeString(text);
 
-    for (const key of keys || []) {
-      try {
-        if (obj[key] !== undefined && obj[key] !== null && obj[key] !== "") return obj[key];
-      } catch (_error) {}
+    source.split(/\r?\n/).forEach((row) => {
+      const index = row.indexOf("=");
+      if (index <= 0) return;
+      const key = row.slice(0, index).trim();
+      const value = row.slice(index + 1).trim();
+      if (key) out[key] = value;
+    });
 
-      const lower = safeString(key).toLowerCase();
+    return out;
+  }
+
+  function readAuthorityReceipt(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return null;
+
+    const methods = [
+      "getAlignmentPacket",
+      "getReport",
+      "getReceiptLight",
+      "getReceipt",
+      "getState"
+    ];
+
+    for (const method of methods) {
+      if (!isFunction(authority[method])) continue;
+
       try {
-        for (const candidate of Object.keys(obj)) {
-          if (candidate.toLowerCase() === lower) {
-            const value = obj[candidate];
-            if (value !== undefined && value !== null && value !== "") return value;
-          }
-        }
+        const output =
+          method === "getReport" ? authority[method]({ refresh: false }) : authority[method]();
+        if (isObject(output) && Object.keys(output).length) return output;
       } catch (_error) {}
     }
 
-    return fallback;
-  }
+    if (isObject(authority.report)) return authority.report;
+    if (isObject(authority.receiptObject)) return authority.receiptObject;
 
-  function contractOf(value) {
-    return firstKnown(
-      readField(value, [
-        "contract",
-        "CONTRACT",
-        "canvasContract",
-        "currentCanvasParentContract",
-        "hexSurfaceContract",
-        "hexAuthorityContract",
-        "sourceContract",
-        "implementationContract",
-        "internalImplementationContract",
-        "internalRenewalContract",
-        "INTERNAL_RENEWAL_CONTRACT"
-      ], ""),
-      "UNKNOWN"
-    );
-  }
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) {
+      return authority;
+    }
 
-  function receiptOf(value) {
-    return firstKnown(
-      readField(value, [
-        "receipt",
-        "RECEIPT",
-        "canvasReceipt",
-        "currentCanvasParentReceipt",
-        "hexSurfaceReceipt",
-        "hexAuthorityReceipt",
-        "sourceReceipt",
-        "implementationReceipt",
-        "internalImplementationReceipt",
-        "internalRenewalReceipt",
-        "INTERNAL_RENEWAL_RECEIPT"
-      ], ""),
-      "UNKNOWN"
-    );
+    return null;
   }
 
   function safeMethodList(value) {
@@ -496,48 +521,10 @@
       return Object.keys(value)
         .filter((key) => isFunction(value[key]))
         .sort()
-        .slice(0, 80);
+        .slice(0, 100);
     } catch (_error) {
       return [];
     }
-  }
-
-  function readAuthorityReceipt(authority) {
-    if (!authority || (!isObject(authority) && !isFunction(authority))) return null;
-
-    const getters = [
-      ["getReport", { refresh: false }],
-      ["getReceiptLight", null],
-      ["getReceipt", null],
-      ["getState", null],
-      ["report", null],
-      ["receiptObject", null]
-    ];
-
-    for (const entry of getters) {
-      const method = entry[0];
-      const arg = entry[1];
-
-      if (method === "report" || method === "receiptObject") {
-        try {
-          if (isObject(authority[method])) return authority[method];
-        } catch (_error) {}
-        continue;
-      }
-
-      if (!isFunction(authority[method])) continue;
-
-      try {
-        const output = arg === null ? authority[method]() : authority[method](arg);
-        if (isObject(output)) return output;
-      } catch (_error) {}
-    }
-
-    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) {
-      return authority;
-    }
-
-    return null;
   }
 
   function inspectAuthority(paths) {
@@ -548,18 +535,18 @@
     return {
       observed: Boolean(authority),
       path: found.path,
-      contract: firstKnown(contractOf(receipt), contractOf(authority), "UNKNOWN"),
-      receipt: firstKnown(receiptOf(receipt), receiptOf(authority), "UNKNOWN"),
-      internalRenewalContract: firstKnown(
-        getRaw(receipt, "INTERNAL_RENEWAL_CONTRACT", undefined),
-        getRaw(receipt, "internalRenewalContract", undefined),
-        getRaw(authority, "internalRenewalContract", undefined),
+      contract: firstKnown(
+        getRaw(receipt, "CONTRACT", undefined),
+        getRaw(receipt, "contract", undefined),
+        getRaw(authority || {}, "CONTRACT", undefined),
+        getRaw(authority || {}, "contract", undefined),
         "UNKNOWN"
       ),
-      internalRenewalReceipt: firstKnown(
-        getRaw(receipt, "INTERNAL_RENEWAL_RECEIPT", undefined),
-        getRaw(receipt, "internalRenewalReceipt", undefined),
-        getRaw(authority, "internalRenewalReceipt", undefined),
+      receipt: firstKnown(
+        getRaw(receipt, "RECEIPT", undefined),
+        getRaw(receipt, "receipt", undefined),
+        getRaw(authority || {}, "RECEIPT", undefined),
+        getRaw(authority || {}, "receipt", undefined),
         "UNKNOWN"
       ),
       methodCount: safeMethodList(authority).length,
@@ -568,85 +555,420 @@
     };
   }
 
-  function readFingerInspectEvidence(input = {}) {
-    if (isObject(input.fingerInspectEvidence)) {
-      state.receivedFingerReportCount += 1;
+  function normalizeInput(input = {}) {
+    if (typeof input === "string") {
+      const parsed = parsePacketText(input);
       return {
-        source: "INPUT_FINGER_INSPECT_EVIDENCE",
-        authority: inspectAuthority(FINGER_INSPECT_ALIASES),
-        report: clonePlain(input.fingerInspectEvidence)
+        source: "TEXT_INPUT",
+        object: Object.keys(parsed).length ? parsed : { RAW_TEXT: input },
+        text: input
       };
     }
 
-    if (isObject(input.fingerInspectReport)) {
-      state.receivedFingerReportCount += 1;
+    if (isObject(input.alignmentPacket)) {
       return {
-        source: "INPUT_FINGER_INSPECT_REPORT",
-        authority: inspectAuthority(FINGER_INSPECT_ALIASES),
-        report: clonePlain(input.fingerInspectReport)
+        source: "INPUT_ALIGNMENT_PACKET",
+        object: clonePlain(input.alignmentPacket),
+        text: ""
       };
     }
 
-    const authority = inspectAuthority(FINGER_INSPECT_ALIASES);
-    let report = {};
+    if (isObject(input.packet)) {
+      return {
+        source: "INPUT_PACKET",
+        object: clonePlain(input.packet),
+        text: ""
+      };
+    }
 
-    const value = readPath(authority.path);
+    if (isObject(input.report)) {
+      return {
+        source: "INPUT_REPORT",
+        object: clonePlain(input.report),
+        text: ""
+      };
+    }
 
-    if (value && isFunction(value.getReport)) {
+    if (isObject(input.currentReport)) {
+      return {
+        source: "INPUT_CURRENT_REPORT",
+        object: clonePlain(input.currentReport),
+        text: ""
+      };
+    }
+
+    if (isObject(input)) {
+      const coreKeys = [
+        "PACKET_NAME",
+        "CONTRACT",
+        "RECEIPT",
+        "specificReceipts",
+        "gaugeVariance",
+        "participantLoadState",
+        "participantActions"
+      ];
+
+      if (coreKeys.some((key) => input[key] !== undefined)) {
+        return {
+          source: "INPUT_OBJECT",
+          object: clonePlain(input),
+          text: ""
+        };
+      }
+    }
+
+    const receiver = firstGlobal(RECEIVER_ALIASES).value;
+    if (receiver) {
       try {
-        const output = value.getReport({ refresh: false });
-        if (isObject(output)) report = output;
+        if (isFunction(receiver.getAlignmentPacket)) {
+          const packet = receiver.getAlignmentPacket();
+          if (isObject(packet) && Object.keys(packet).length) {
+            return {
+              source: "RECEIVER_GET_ALIGNMENT_PACKET",
+              object: clonePlain(packet),
+              text: ""
+            };
+          }
+        }
+      } catch (_error) {}
+
+      try {
+        if (isFunction(receiver.getPacketText)) {
+          const text = receiver.getPacketText();
+          if (typeof text === "string" && text.trim()) {
+            return {
+              source: "RECEIVER_GET_PACKET_TEXT",
+              object: parsePacketText(text),
+              text
+            };
+          }
+        }
       } catch (_error) {}
     }
 
-    if (!isObject(report) || Object.keys(report).length === 0) {
-      report = clonePlain(authority.receiptObject || {});
+    const globalPacket =
+      readPath("HEARTH_DIAGNOSTIC_ALIGNMENT_GAUGE_VARIANCE_PACKET") ||
+      readPath("HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_REPORT");
+
+    if (isObject(globalPacket) && Object.keys(globalPacket).length) {
+      return {
+        source: "GLOBAL_ALIGNMENT_PACKET",
+        object: clonePlain(globalPacket),
+        text: ""
+      };
+    }
+
+    const globalText =
+      readPath("HEARTH_DIAGNOSTIC_ALIGNMENT_GAUGE_VARIANCE_PACKET_TEXT") ||
+      readPath("HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_PACKET_TEXT");
+
+    if (typeof globalText === "string" && globalText.trim()) {
+      return {
+        source: "GLOBAL_ALIGNMENT_PACKET_TEXT",
+        object: parsePacketText(globalText),
+        text: globalText
+      };
     }
 
     return {
-      source: authority.observed
-        ? "FINGER_INSPECT_ALIAS_REPORT_OR_RECEIPT"
-        : "FINGER_INSPECT_NOT_OBSERVED",
-      authority,
-      report: isObject(report) ? report : {}
+      source: "EMPTY_INPUT",
+      object: {
+        PACKET_NAME: "HEARTH_DIAGNOSTIC_SCOPE_LENS_EMPTY_INPUT_PACKET_v1",
+        INPUT_STATUS: "NO_ALIGNMENT_PACKET_FOUND"
+      },
+      text: ""
     };
   }
 
-  function extractCurrentReport(input = {}) {
-    if (isObject(input.currentReport)) return clonePlain(input.currentReport);
-    if (isObject(input.report)) return clonePlain(input.report);
-    if (isObject(input.REPORT_OBJECT)) return clonePlain(input.REPORT_OBJECT);
-    if (isObject(input.output) && isObject(input.output.REPORT_OBJECT)) {
-      return clonePlain(input.output.REPORT_OBJECT);
+  function getNested(source, path, fallback = undefined) {
+    const parts = safeString(path).split(".");
+    let cursor = source;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) {
+        return fallback;
+      }
+      cursor = cursor[part];
     }
+
+    return cursor === undefined || cursor === null ? fallback : cursor;
+  }
+
+  function receiptRecord(packet, id) {
+    return getNested(packet, `specificReceipts.${id}`, {});
+  }
+
+  function gaugeRecord(packet, id) {
+    return getNested(packet, `gaugeVariance.${id}`, {});
+  }
+
+  function participantRecord(packet, id) {
+    return getNested(packet, `participantLoadState.${id}`, {});
+  }
+
+  function actionRecord(packet, id) {
+    return getNested(packet, `participantActions.${id}`, {});
+  }
+
+  function statusOf(record, fallback = "UNKNOWN") {
+    return firstKnown(
+      getRaw(record, "status", undefined),
+      getRaw(record, "STATUS", undefined),
+      getRaw(record, "receiptStatus", undefined),
+      getRaw(record, "loadStatus", undefined),
+      fallback
+    );
+  }
+
+  function readReceiptPacket(record) {
+    const packet = getNested(record, "receipt.packet", null);
+    if (isObject(packet)) return packet;
+
+    const text = getNested(record, "receipt.packetText", "");
+    if (typeof text === "string" && text.trim()) return parsePacketText(text);
+
     return {};
   }
 
-  function q(selector) {
-    if (!doc || !selector || !doc.querySelector) return null;
+  function collectExplicitStatusFields(source, prefix = "", out = []) {
+    if (!isObject(source) && !Array.isArray(source)) return out;
 
-    try {
-      return doc.querySelector(selector);
-    } catch (_error) {
-      return null;
+    if (Array.isArray(source)) {
+      source.forEach((item, index) => {
+        if (isObject(item) || Array.isArray(item)) {
+          collectExplicitStatusFields(item, `${prefix}.${index}`, out);
+        }
+      });
+      return out;
     }
+
+    Object.keys(source).forEach((key) => {
+      const value = source[key];
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+
+      if (EXPLICIT_DUTY_KEYS.includes(key) || /STATUS$|Status$/.test(key)) {
+        if (!Array.isArray(value) && !isObject(value)) {
+          out.push({
+            key: fullKey,
+            field: key,
+            value: safeString(value)
+          });
+        }
+      }
+
+      if (isObject(value) || Array.isArray(value)) {
+        collectExplicitStatusFields(value, fullKey, out);
+      }
+    });
+
+    return out;
   }
 
-  function queryFirst(selectors) {
-    for (const selector of selectors || []) {
-      const node = q(selector);
-      if (node) return { selector, node };
+  function statusEquals(value, target) {
+    return safeString(value).toUpperCase() === safeString(target).toUpperCase();
+  }
+
+  function statusContains(value, fragment) {
+    return safeString(value).toUpperCase().indexOf(safeString(fragment).toUpperCase()) >= 0;
+  }
+
+  function computeCopyLens(packet) {
+    const south = receiptRecord(packet, "SOUTH_RAIL");
+    const southPacket = readReceiptPacket(south);
+    const southApi = inspectAuthority(SOUTH_RAIL_ALIASES);
+    const lastCompact =
+      getRaw(southPacket, "lastCompactManifestText", "") ||
+      getRaw(southPacket, "LAST_COMPACT_MANIFEST_TEXT", "") ||
+      getRaw(southPacket, "compactManifestText", "");
+
+    const southPresent = Boolean(getRaw(south, "present", false)) || southApi.observed;
+    const southReceiptPresent = Boolean(getRaw(south, "receiptPresent", false));
+    const compactReady =
+      typeof lastCompact === "string" &&
+      lastCompact.trim() &&
+      lastCompact !== "COMPACT_MANIFEST=NOT_RUN";
+
+    let status = "COPY_LENS_BLOCKED";
+    let reason = "SOUTH_RAIL_NOT_PRESENT";
+
+    if (southPresent && southReceiptPresent && compactReady) {
+      status = "COPY_LENS_COMPACT_MANIFEST_READY";
+      reason = "SOUTH_RAIL_HAS_COMPACT_MANIFEST_TEXT";
+    } else if (southPresent && southReceiptPresent && !compactReady) {
+      status = "COPY_LENS_READY_BUT_CURRENT_PACKET_NOT_HANDED_TO_SOUTH";
+      reason = "SOUTH_SEGREGATION_PRESENT_BUT_LAST_COMPACT_MANIFEST_NOT_RUN";
+    } else if (southPresent && !southReceiptPresent) {
+      status = "COPY_LENS_PARTIAL_SOUTH_PRESENT_NO_RECEIPT";
+      reason = "SOUTH_RAIL_PRESENT_WITHOUT_RECEIPT";
     }
 
-    return { selector: "NONE", node: null };
+    return {
+      id: "COPY_LENS",
+      status,
+      reason,
+      southPresent,
+      southReceiptPresent,
+      compactManifestReady: compactReady,
+      defaultCopySurfaceShouldBe:
+        compactReady ? "SOUTH_COMPACT_MANIFEST_TEXT" : "RECEIVER_COMPACT_SUMMARY_OR_ALIGNMENT_PACKET",
+      recommendedAction:
+        compactReady
+          ? "USE_SOUTH_COMPACT_MANIFEST_AS_DEFAULT_COPY_SURFACE"
+          : "WHEN_NEEDED_CALL_SOUTH_SEGREGATION_WITH_CURRENT_ALIGNMENT_PACKET"
+    };
+  }
+
+  function computeNorthTrackLens(packet) {
+    const northReceipt = receiptRecord(packet, "NORTH_RAIL");
+    const northLoad = participantRecord(packet, "NORTH_RAIL");
+    const northRun = actionRecord(packet, "NORTH_RAIL_RUN");
+
+    const northPresent =
+      boolValue(getRaw(northReceipt, "present", false), false) ||
+      boolValue(getRaw(northLoad, "present", false), false);
+
+    const loadStatus = firstKnown(
+      getRaw(northLoad, "loadStatus", undefined),
+      getRaw(northReceipt, "status", undefined),
+      "UNKNOWN"
+    );
+
+    const runApi =
+      statusContains(getRaw(northLoad, "publicApi", ""), "runDiagnostic") ||
+      statusContains(JSON.stringify(northRun || {}), "NORTH_RUN_API_AVAILABLE\":true");
+
+    const verdict =
+      boolValue(getRaw(packet, "NORTH_VERDICT_AVAILABLE", false), false) ||
+      boolValue(getNested(northRun, "result.NORTH_VERDICT_AVAILABLE", false), false);
+
+    let status = "NORTH_TRACK_BLOCKED";
+    let failureClass = "NORTH_NOT_PRESENT";
+    let recommendedAction = "RENEW_OR_REPUBLISH_NORTH_DIAGNOSTIC_RAIL_GLOBAL_SURFACE";
+
+    if (verdict) {
+      status = "NORTH_TRACK_VERDICT_AVAILABLE";
+      failureClass = "NONE";
+      recommendedAction = "NORTH_VERDICT_CAN_BE_CONSUMED";
+    } else if (northPresent && runApi) {
+      status = "NORTH_TRACK_PRESENT_BUT_VERDICT_MISSING";
+      failureClass = "NORTH_RUN_RETURN_OR_VERDICT_MISSING";
+      recommendedAction = "ALIGN_NORTH_RUN_RETURN_WITH_GAUGE_RECEIVER_CONSTRUCT";
+    } else if (loadStatus === "SCRIPT_LOADED_GLOBAL_NOT_FOUND") {
+      status = "NORTH_TRACK_SCRIPT_LOADED_GLOBAL_NOT_FOUND";
+      failureClass = "NORTH_PUBLICATION_SURFACE_MISSING";
+      recommendedAction = "RENEW_NORTH_RAIL_PUBLIC_ALIAS_AND_RUN_API_PUBLICATION";
+    } else if (!northPresent) {
+      status = "NORTH_TRACK_MISSING";
+      failureClass = "NORTH_RAIL_NOT_OBSERVED";
+      recommendedAction = "AUDIT_NORTH_RAIL_LOAD_PATH_AND_PUBLICATION_SURFACE";
+    }
+
+    return {
+      id: "NORTH_TRACK_LENS",
+      status,
+      failureClass,
+      northPresent,
+      loadStatus,
+      runApiPresent: runApi,
+      northVerdictAvailable: verdict,
+      recommendedFile: NORTH_RAIL_FILE,
+      recommendedAction
+    };
+  }
+
+  function computeSurfaceScopeLens(packet) {
+    const surfaceReceipt = receiptRecord(packet, "SURFACE_TRUTH_PROBE");
+    const surfacePacket = readReceiptPacket(surfaceReceipt);
+    const surfaceAction = getNested(packet, "participantActions.SURFACE_TRUTH_INSPECTION.result", {});
+    const measurement = getRaw(surfaceAction, "surfaceMeasurement", {}) || {};
+
+    const profilePresent =
+      boolValue(getRaw(surfaceReceipt, "present", false), false) ||
+      boolValue(getRaw(packet, "SURFACE_TRUTH_PROBE_PRESENT", false), false);
+
+    const receiptPresent =
+      boolValue(getRaw(surfaceReceipt, "receiptPresent", false), false) ||
+      boolValue(getRaw(packet, "SURFACE_TRUTH_PROBE_RECEIPT_PRESENT", false), false);
+
+    const measurementStatus = firstKnown(
+      getRaw(surfaceAction, "CANVAS_SURFACE_TRUTH_STATUS", undefined),
+      getRaw(measurement, "status", undefined),
+      "UNKNOWN"
+    );
+
+    const failureClass = firstKnown(
+      getRaw(surfaceAction, "CANVAS_SURFACE_TRUTH_FAILURE_CLASS", undefined),
+      getRaw(measurement, "failureClass", undefined),
+      "UNKNOWN"
+    );
+
+    const firstFailed = firstKnown(
+      getRaw(surfaceAction, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", undefined),
+      getRaw(measurement, "firstFailedCoordinate", undefined),
+      "UNKNOWN"
+    );
+
+    const mountFound = boolValue(getNested(measurement, "mount.found", false), false);
+    const canvasFound = boolValue(getNested(measurement, "canvas.found", false), false);
+
+    let scope = "UNKNOWN_SURFACE_SCOPE";
+    let status = "SURFACE_SCOPE_UNKNOWN";
+    let reason = "NO_SURFACE_TRUTH_MEASUREMENT";
+
+    if (profilePresent && receiptPresent && measurementStatus === "SURFACE_CONTRACT_MEASUREMENT_FAILED") {
+      status = "SURFACE_SCOPE_MEASURED_FAILURE";
+      if (failureClass === "CANONICAL_MOUNT_MISSING") {
+        scope = "NO_CANONICAL_MOUNT_IN_INSPECTED_DOCUMENT";
+        reason =
+          "SURFACE_TRUTH_PROFILE_EXISTS_BUT_INSPECTED_DOCUMENT_DID_NOT_CONTAIN_CANONICAL_HEARTH_MOUNT";
+      } else {
+        scope = "CANONICAL_SURFACE_PRESENT_BUT_FAILED";
+        reason = failureClass;
+      }
+    } else if (profilePresent && receiptPresent && mountFound && canvasFound) {
+      status = "SURFACE_SCOPE_PRODUCTION_CANDIDATE_PRESENT";
+      scope = "CANONICAL_MOUNT_AND_CANVAS_FOUND";
+      reason = "SURFACE_TRUTH_MEASUREMENT_FOUND_CANONICAL_MOUNT_AND_CANVAS";
+    } else if (profilePresent && receiptPresent) {
+      status = "SURFACE_SCOPE_PROFILE_READY_MEASUREMENT_INCONCLUSIVE";
+      scope = "PROFILE_PRESENT_MEASUREMENT_INCONCLUSIVE";
+      reason = measurementStatus;
+    } else if (!profilePresent) {
+      status = "SURFACE_SCOPE_BLOCKED_PROFILE_MISSING";
+      scope = "SURFACE_TRUTH_PROBE_MISSING";
+      reason = "SURFACE_TRUTH_PROBE_NOT_OBSERVED";
+    }
+
+    return {
+      id: "SURFACE_SCOPE_LENS",
+      status,
+      scope,
+      reason,
+      surfaceTruthPresent: profilePresent,
+      surfaceTruthReceiptPresent: receiptPresent,
+      measurementStatus,
+      failureClass,
+      firstFailedCoordinate: firstFailed,
+      canonicalMountFound: mountFound,
+      canvasFound,
+      likelyInspectionDocument:
+        failureClass === "CANONICAL_MOUNT_MISSING"
+          ? "DIAGNOSTIC_OR_NON_PRODUCTION_DOCUMENT_OR_TARGET_MOUNT_ABSENT"
+          : "UNKNOWN",
+      recommendedFile: SURFACE_TRUTH_FILE,
+      recommendedAction:
+        failureClass === "CANONICAL_MOUNT_MISSING"
+          ? "CONFIRM_SURFACE_TRUTH_PROBE_CONSUMES_TARGET_FRAME_DOCUMENT_OR_PRODUCTION_ROUTE_MOUNT_EXISTS"
+          : "KEEP_SURFACE_TRUTH_AS_CONTRACT_DEFINITION_EVIDENCE"
+    };
   }
 
   function classifyDomNode(node, selector) {
     if (!node) {
       return {
-        domClass: SURFACE_CLASS.UNKNOWN,
-        domReason: "NO_DOM_NODE_AVAILABLE",
-        domSelector: selector || "NONE"
+        surfaceClass: SURFACE_CLASS.UNKNOWN,
+        reason: "NO_DOM_NODE_AVAILABLE",
+        selector: selector || "NONE"
       };
     }
 
@@ -716,52 +1038,98 @@
 
     if (inDiagnosticSurface || /diagnostic/.test(text)) {
       return {
-        domClass: SURFACE_CLASS.DIAGNOSTIC_FRAME,
-        domReason: "DOM_NODE_IS_INSIDE_DIAGNOSTIC_SURFACE_OR_MARKED_DIAGNOSTIC",
-        domSelector: selectorText || "DOM_NODE"
+        surfaceClass: SURFACE_CLASS.DIAGNOSTIC_FRAME,
+        reason: "DOM_NODE_IS_INSIDE_DIAGNOSTIC_SURFACE_OR_MARKED_DIAGNOSTIC",
+        selector: selectorText || "DOM_NODE"
       };
     }
 
     if (generated || tag === "img") {
       return {
-        domClass: SURFACE_CLASS.TEMPORARY_IMAGE,
-        domReason: tag === "img"
-          ? "DOM_NODE_IS_IMAGE_NOT_PRODUCTION_CANVAS"
-          : "DOM_NODE_MARKED_TEMPORARY_OR_GENERATED_IMAGE",
-        domSelector: selectorText || "DOM_NODE"
+        surfaceClass: SURFACE_CLASS.TEMPORARY_IMAGE,
+        reason:
+          tag === "img"
+            ? "DOM_NODE_IS_IMAGE_NOT_PRODUCTION_CANVAS"
+            : "DOM_NODE_MARKED_TEMPORARY_OR_GENERATED_IMAGE",
+        selector: selectorText || "DOM_NODE"
       };
     }
 
     if (innerFeed) {
       return {
-        domClass: SURFACE_CLASS.INNER_SCOPE_FEED,
-        domReason: "DOM_NODE_MARKED_AS_INNER_SCOPE_OR_EXPRESSION_FEED",
-        domSelector: selectorText || "DOM_NODE"
+        surfaceClass: SURFACE_CLASS.INNER_SCOPE_FEED,
+        reason: "DOM_NODE_MARKED_AS_INNER_SCOPE_OR_EXPRESSION_FEED",
+        selector: selectorText || "DOM_NODE"
       };
     }
 
     if (production) {
       return {
-        domClass: SURFACE_CLASS.PRODUCTION_CANVAS,
-        domReason: "DOM_NODE_MATCHES_HEARTH_PRODUCTION_CANVAS_MOUNT_OR_DATASET",
-        domSelector: selectorText || "DOM_NODE"
+        surfaceClass: SURFACE_CLASS.PRODUCTION_CANVAS,
+        reason: "DOM_NODE_MATCHES_HEARTH_PRODUCTION_CANVAS_MOUNT_OR_DATASET",
+        selector: selectorText || "DOM_NODE"
       };
     }
 
     return {
-      domClass: SURFACE_CLASS.UNKNOWN,
-      domReason: "DOM_NODE_DID_NOT_MATCH_PRODUCTION_TEMPORARY_INNER_SCOPE_OR_DIAGNOSTIC_CLASS",
-      domSelector: selectorText || "DOM_NODE"
+      surfaceClass: SURFACE_CLASS.UNKNOWN,
+      reason: "DOM_NODE_DID_NOT_MATCH_PRODUCTION_TEMPORARY_INNER_SCOPE_OR_DIAGNOSTIC_CLASS",
+      selector: selectorText || "DOM_NODE"
     };
   }
 
-  function classifyFromEvidence(fingerReport = {}, currentReport = {}) {
+  function queryFirst(selectors) {
+    if (!doc || !doc.querySelector) return { selector: "NONE", node: null };
+
+    for (const selector of selectors || []) {
+      if (!selector || selector === "UNKNOWN") continue;
+      try {
+        const node = doc.querySelector(selector);
+        if (node) return { selector, node };
+      } catch (_error) {}
+    }
+
+    return { selector: "NONE", node: null };
+  }
+
+  function readLegacyFingerEvidence(input = {}) {
+    if (isObject(input.fingerInspectEvidence)) {
+      state.receivedFingerReportCount += 1;
+      return {
+        source: "INPUT_FINGER_INSPECT_EVIDENCE",
+        authority: inspectAuthority(FINGER_INSPECT_ALIASES),
+        report: clonePlain(input.fingerInspectEvidence)
+      };
+    }
+
+    if (isObject(input.fingerInspectReport)) {
+      state.receivedFingerReportCount += 1;
+      return {
+        source: "INPUT_FINGER_INSPECT_REPORT",
+        authority: inspectAuthority(FINGER_INSPECT_ALIASES),
+        report: clonePlain(input.fingerInspectReport)
+      };
+    }
+
+    const authority = inspectAuthority(FINGER_INSPECT_ALIASES);
+    return {
+      source: authority.observed
+        ? "FINGER_INSPECT_ALIAS_REPORT_OR_RECEIPT"
+        : "FINGER_INSPECT_NOT_OBSERVED",
+      authority,
+      report: clonePlain(authority.receiptObject || {})
+    };
+  }
+
+  function computeLegacyCanvasFeedClassifier(input = {}, packet = {}) {
+    const fingerEvidence = readLegacyFingerEvidence(input);
+    const fingerReport = fingerEvidence.report || {};
+    const currentReport = isObject(input.currentReport) ? input.currentReport : packet;
+
     const selector = firstKnown(
       getRaw(fingerReport, "CANVAS_SELECTOR", undefined),
       getRaw(fingerReport, "canvasSelector", undefined),
-      getRaw(fingerReport, "EXPRESSION_SURFACE_SELECTOR", undefined),
       getRaw(currentReport, "CANVAS_SELECTOR", undefined),
-      getRaw(currentReport, "canvasSelector", undefined),
       "#hearthCanvasMount canvas",
       "UNKNOWN"
     );
@@ -774,59 +1142,7 @@
       "UNKNOWN"
     );
 
-    const pixelStatus = firstKnown(
-      getRaw(fingerReport, "CANVAS_PIXEL_SAMPLE_STATUS", undefined),
-      getRaw(fingerReport, "canvasPixelSampleStatus", undefined),
-      getRaw(currentReport, "CANVAS_PIXEL_SAMPLE_STATUS", undefined),
-      getRaw(currentReport, "CANVAS_PIXEL_VARIANCE_STATUS", undefined),
-      "UNKNOWN"
-    );
-
-    const pixelVisible = firstKnown(
-      getRaw(fingerReport, "CANVAS_PIXEL_VISIBLE", undefined),
-      getRaw(fingerReport, "canvasPixelVisible", undefined),
-      getRaw(currentReport, "CANVAS_PIXEL_VISIBLE", undefined),
-      getRaw(currentReport, "CANVAS_PIXEL_NONEMPTY", undefined),
-      "UNKNOWN"
-    );
-
-    const viewportIntersecting = firstKnown(
-      getRaw(fingerReport, "CANVAS_VIEWPORT_INTERSECTING", undefined),
-      getRaw(fingerReport, "canvasViewportIntersecting", undefined),
-      getRaw(currentReport, "CANVAS_VIEWPORT_INTERSECTING", undefined),
-      "UNKNOWN"
-    );
-
-    const downstreamStatus = firstKnown(
-      getRaw(fingerReport, "DOWNSTREAM_EXPRESSION_SET_STATUS", undefined),
-      getRaw(currentReport, "DOWNSTREAM_EXPRESSION_SET_STATUS", undefined),
-      "UNKNOWN"
-    );
-
-    const downstreamClass = firstKnown(
-      getRaw(fingerReport, "DOWNSTREAM_EXPRESSION_VERDICT_CLASS", undefined),
-      getRaw(currentReport, "DOWNSTREAM_EXPRESSION_VERDICT_CLASS", undefined),
-      "UNKNOWN"
-    );
-
-    const downstreamRecommendedFile = firstKnown(
-      getRaw(fingerReport, "DOWNSTREAM_RECOMMENDED_FILE", undefined),
-      getRaw(currentReport, "DOWNSTREAM_RECOMMENDED_FILE", undefined),
-      "UNKNOWN"
-    );
-
-    const generatedImage = boolValue(
-      firstKnown(
-        getRaw(fingerReport, "GENERATED_IMAGE", undefined),
-        getRaw(fingerReport, "generatedImage", undefined),
-        getRaw(currentReport, "GENERATED_IMAGE", undefined),
-        getRaw(currentReport, "generatedImage", undefined),
-        "false"
-      ),
-      false
-    );
-
-    const visiblePlanetProofSource = firstKnown(
+    const proofSource = firstKnown(
       getRaw(currentReport, "VISIBLE_PLANET_PROOF_SOURCE", undefined),
       getRaw(currentReport, "CANVAS_EXPRESSION_PROOF_STATUS", undefined),
       getRaw(fingerReport, "CANVAS_PIXEL_SAMPLE_REASON", undefined),
@@ -835,31 +1151,29 @@
 
     const selectorLower = selector.toLowerCase();
     const contractLower = datasetContract.toLowerCase();
-    const proofLower = visiblePlanetProofSource.toLowerCase();
+    const proofLower = proofSource.toLowerCase();
 
     let evidenceClass = SURFACE_CLASS.UNKNOWN;
-    let evidenceReason = "NO_RECOGNIZED_EVIDENCE_CLASS";
+    let reason = "NO_RECOGNIZED_EVIDENCE_CLASS";
 
     if (
       selectorLower.includes("#hearthcanvasmount") ||
       selectorLower.includes("#hearthvisiblecanvas") ||
       selectorLower.includes("data-hearth-visible-canvas") ||
-      selectorLower.includes("data-hearth-canvas-hub") ||
       contractLower.includes("hearth_canvas")
     ) {
       evidenceClass = SURFACE_CLASS.PRODUCTION_CANVAS;
-      evidenceReason = "EVIDENCE_SELECTOR_OR_CONTRACT_MATCHES_PRODUCTION_HEARTH_CANVAS";
+      reason = "EVIDENCE_SELECTOR_OR_CONTRACT_MATCHES_PRODUCTION_HEARTH_CANVAS";
     }
 
     if (
-      generatedImage ||
       selectorLower.includes("img") ||
       selectorLower.includes("temporary") ||
       selectorLower.includes("snapshot") ||
       selectorLower.includes("preview")
     ) {
       evidenceClass = SURFACE_CLASS.TEMPORARY_IMAGE;
-      evidenceReason = "EVIDENCE_MARKS_TEMPORARY_IMAGE_OR_GENERATED_IMAGE";
+      reason = "EVIDENCE_MARKS_TEMPORARY_IMAGE_OR_GENERATED_IMAGE";
     }
 
     if (
@@ -871,260 +1185,335 @@
       proofLower.includes("inner")
     ) {
       evidenceClass = SURFACE_CLASS.INNER_SCOPE_FEED;
-      evidenceReason = "EVIDENCE_MARKS_INNER_SCOPE_OR_NAMESPACE_FEED";
+      reason = "EVIDENCE_MARKS_INNER_SCOPE_OR_NAMESPACE_FEED";
     }
 
-    if (
-      selectorLower.includes("diagnostic") ||
-      proofLower.includes("diagnostic-frame") ||
-      proofLower.includes("diagnostic")
-    ) {
+    if (selectorLower.includes("diagnostic") || proofLower.includes("diagnostic")) {
       evidenceClass = SURFACE_CLASS.DIAGNOSTIC_FRAME;
-      evidenceReason = "EVIDENCE_MARKS_DIAGNOSTIC_FRAME_SURFACE";
+      reason = "EVIDENCE_MARKS_DIAGNOSTIC_FRAME_SURFACE";
     }
 
-    let domClassification = {
-      domClass: SURFACE_CLASS.UNKNOWN,
-      domReason: "DOM_NOT_QUERIED_OR_NOT_AVAILABLE",
-      domSelector: "NONE"
-    };
+    const dom = queryFirst([
+      selector,
+      "#hearthVisibleCanvas",
+      "#hearthCanvasMount canvas",
+      "canvas[data-hearth-visible-canvas='true']",
+      "canvas[data-hearth-canvas-hub='true']",
+      "canvas[data-hearth-canvas='true']",
+      "img[data-hearth-temporary-image='true']",
+      "[data-hearth-inner-scope-feed='true']",
+      "[data-hearth-diagnostic-surface='true']"
+    ]);
 
-    if (doc) {
-      const queried = queryFirst([
-        selector,
-        "#hearthVisibleCanvas",
-        "#hearthCanvasMount canvas",
-        "canvas[data-hearth-visible-canvas='true']",
-        "canvas[data-hearth-canvas-hub='true']",
-        "canvas[data-hearth-canvas='true']",
-        "img[data-hearth-temporary-image='true']",
-        "[data-hearth-inner-scope-feed='true']",
-        "[data-hearth-diagnostic-surface='true']"
-      ]);
+    const domClass = classifyDomNode(dom.node, dom.selector);
 
-      domClassification = classifyDomNode(queried.node, queried.selector);
+    if (evidenceClass === SURFACE_CLASS.UNKNOWN && domClass.surfaceClass !== SURFACE_CLASS.UNKNOWN) {
+      evidenceClass = domClass.surfaceClass;
+      reason = domClass.reason;
     }
-
-    let finalClass = evidenceClass;
-    let finalReason = evidenceReason;
-    let classificationSource = "FINGER_INSPECT_OR_CURRENT_REPORT_EVIDENCE";
-
-    if (finalClass === SURFACE_CLASS.UNKNOWN && domClassification.domClass !== SURFACE_CLASS.UNKNOWN) {
-      finalClass = domClassification.domClass;
-      finalReason = domClassification.domReason;
-      classificationSource = "DOM_CLASSIFICATION_FALLBACK";
-    }
-
-    if (
-      finalClass === SURFACE_CLASS.PRODUCTION_CANVAS &&
-      domClassification.domClass !== SURFACE_CLASS.UNKNOWN &&
-      domClassification.domClass !== SURFACE_CLASS.PRODUCTION_CANVAS
-    ) {
-      finalClass = domClassification.domClass;
-      finalReason =
-        "DOM_CLASSIFICATION_OVERRIDES_PRODUCTION_ASSUMPTION:" +
-        domClassification.domReason;
-      classificationSource = "DOM_CLASSIFICATION_OVERRIDE";
-    }
-
-    const pixelBlank =
-      pixelStatus === "PIXEL_SAMPLE_BLANK" ||
-      pixelStatus === "PIXEL_EMPTY_OR_TRANSPARENT" ||
-      pixelStatus === "PIXEL_SAMPLE_ALPHA_ONLY_OR_BLACK" ||
-      boolValue(pixelVisible, true) === false;
-
-    const pixelVisibleConfirmed =
-      pixelStatus === "PIXEL_SAMPLE_VISIBLE" ||
-      pixelStatus === "PIXEL_SAMPLE_NONEMPTY" ||
-      pixelStatus === "PIXEL_VARIANCE_PRESENT" ||
-      boolValue(pixelVisible, false) === true;
 
     return {
-      surfaceClass: finalClass,
-      classificationSource,
-      classificationReason: finalReason,
-      domClassification,
+      id: "LEGACY_CANVAS_FEED_CLASSIFIER",
+      status: "LEGACY_COMPATIBLE",
+      surfaceClass: evidenceClass,
+      reason,
       selector,
       datasetContract,
-      pixelStatus,
-      pixelVisible,
-      pixelBlank,
-      pixelVisibleConfirmed,
-      viewportIntersecting,
-      downstreamStatus,
-      downstreamClass,
-      downstreamRecommendedFile,
-      visiblePlanetProofSource
+      proofSource,
+      domClassification: domClass,
+      fingerInspectObserved: fingerEvidence.authority.observed,
+      fingerInspectPath: fingerEvidence.authority.path
     };
   }
 
-  function deriveInterpretation(classification, fingerEvidence) {
-    const surfaceClass = classification.surfaceClass;
-    const pixelBlank = classification.pixelBlank;
-    const pixelVisibleConfirmed = classification.pixelVisibleConfirmed;
-    const viewportIntersecting = boolValue(classification.viewportIntersecting, true);
-    const downstreamClass = classification.downstreamClass;
-    const receivedCount = safeNumber(
-      getRaw(fingerEvidence.report, "RECEIVED_HEX_SURFACE_TRANSMISSION_COUNT", 0),
-      0
-    );
+  function computeCanvasBlameLens(packet, surfaceScopeLens, legacyClassifier) {
+    const surfaceClass = legacyClassifier.surfaceClass || SURFACE_CLASS.UNKNOWN;
+    const surfaceScope = surfaceScopeLens.scope || "UNKNOWN";
+    const surfaceFailure = surfaceScopeLens.failureClass || "UNKNOWN";
+
+    let status = "CANVAS_BLAME_HELD";
+    let eligible = false;
+    let reason = "PRODUCTION_CANVAS_NOT_CONFIRMED";
+    let recommendedFile = CANVAS_FINGER_INSPECT_FILE;
+    let recommendedAction =
+      "KEEP_CANVAS_BLAME_BLOCKED_UNTIL_PRODUCTION_CANVAS_SURFACE_IS_CONFIRMED";
 
     if (surfaceClass !== SURFACE_CLASS.PRODUCTION_CANVAS) {
-      return {
-        canvasBlameEligible: false,
-        interpretation: "INSPECTED_SURFACE_IS_NOT_CONFIRMED_PRODUCTION_CANVAS",
-        blameGateStatus: "CANVAS_BLAME_BLOCKED_SURFACE_CLASS_NOT_PRODUCTION_CANVAS",
-        recommendedOwner:
-          surfaceClass === SURFACE_CLASS.TEMPORARY_IMAGE
-            ? "TEMPORARY_IMAGE_OR_PREVIEW_FEED"
-            : surfaceClass === SURFACE_CLASS.INNER_SCOPE_FEED
-              ? "INNER_SCOPE_EXPRESSION_FEED_OR_ADAPTER"
-              : surfaceClass === SURFACE_CLASS.DIAGNOSTIC_FRAME
-                ? "DIAGNOSTIC_FRAME_SURFACE"
-                : "SURFACE_POINTER_CLASSIFICATION",
-        recommendedFile:
-          surfaceClass === SURFACE_CLASS.TEMPORARY_IMAGE
-            ? PROBE_SOUTH_FILE
-            : surfaceClass === SURFACE_CLASS.INNER_SCOPE_FEED
-              ? CANVAS_FINGER_INSPECT_FILE
-              : surfaceClass === SURFACE_CLASS.DIAGNOSTIC_FRAME
-                ? SOUTH_RAIL_FILE
-                : CANVAS_FINGER_INSPECT_FILE,
-        recommendedAction:
-          "DO_NOT_BLAME_CANVAS_UNTIL_PRODUCTION_CANVAS_SURFACE_IS_CONFIRMED"
-      };
-    }
-
-    if (!viewportIntersecting) {
-      return {
-        canvasBlameEligible: false,
-        interpretation: "PRODUCTION_CANVAS_CONFIRMED_BUT_NOT_VIEWPORT_INTERSECTING",
-        blameGateStatus: "CANVAS_BLAME_BLOCKED_LAYOUT_OR_SCROLL_POSITION_FIRST",
-        recommendedOwner: "CSS_LAYOUT_OR_SCROLL_POSITION",
-        recommendedFile: "/showroom/globe/hearth/index.html",
-        recommendedAction:
-          "REPAIR_STAGE_PLACEMENT_SCROLL_OR_VIEWPORT_INTERSECTION_BEFORE_CANVAS_DRAW_BLAME"
-      };
-    }
-
-    if (pixelVisibleConfirmed) {
-      return {
-        canvasBlameEligible: false,
-        interpretation: "PRODUCTION_CANVAS_CONFIRMED_WITH_VISIBLE_PIXEL_PROOF",
-        blameGateStatus: "CANVAS_BLAME_NOT_NEEDED_VISIBLE_PIXEL_PROOF_PRESENT",
-        recommendedOwner: "NONE",
-        recommendedFile: "NONE",
-        recommendedAction:
-          "NO_CANVAS_PIXEL_REPAIR_RECOMMENDED_FROM_SOUTH_SURFACE_POINTER"
-      };
-    }
-
-    if (/HEX_SURFACE|POINTER|DELIVERY|RECEIVER|GATE/i.test(downstreamClass) && receivedCount <= 0) {
-      return {
-        canvasBlameEligible: false,
-        interpretation: "PRODUCTION_CANVAS_CONFIRMED_BUT_DOWNSTREAM_DELIVERY_NOT_PROVEN",
-        blameGateStatus: "CANVAS_BLAME_BLOCKED_HEX_OR_POINTER_DELIVERY_FIRST",
-        recommendedOwner: "HEX_SURFACE_GATE_OR_POINTER_RECEIVER_ALIGNMENT",
-        recommendedFile: HEX_SURFACE_FILE,
-        recommendedAction:
-          "CONFIRM_HEX_SURFACE_DELIVERS_TO_POINTER_INSPECT_RECEIVER_BEFORE_CANVAS_DRAW_BLAME"
-      };
-    }
-
-    if (pixelBlank) {
-      return {
-        canvasBlameEligible: true,
-        interpretation: "PRODUCTION_CANVAS_CONFIRMED_AND_PIXEL_SAMPLE_BLANK_AFTER_DOWNSTREAM_EVIDENCE",
-        blameGateStatus: "CANVAS_BLAME_ELIGIBLE_PRODUCTION_CANVAS_CONFIRMED",
-        recommendedOwner: "CANVAS_DRAW_PATH_OR_FINAL_EXPRESSION_ADAPTER",
-        recommendedFile: CANVAS_FILE,
-        recommendedAction:
-          "AUDIT_CANVAS_DRAW_PATH_AFTER_PRODUCTION_CANVAS_IDENTITY_AND_DOWNSTREAM_EVIDENCE_ARE_CONFIRMED"
-      };
+      status = "CANVAS_BLAME_BLOCKED_SURFACE_CLASS_NOT_PRODUCTION_CANVAS";
+      reason = `LEGACY_CLASSIFIER_SURFACE_CLASS:${surfaceClass}`;
+    } else if (surfaceFailure === "CANONICAL_MOUNT_MISSING") {
+      status = "CANVAS_BLAME_BLOCKED_CANONICAL_MOUNT_MISSING";
+      reason =
+        "SURFACE_TRUTH_DID_NOT_CONFIRM_PRODUCTION_CANVAS_MOUNT_IN_INSPECTED_DOCUMENT";
+      recommendedFile = SURFACE_TRUTH_FILE;
+      recommendedAction =
+        "CONFIRM_SURFACE_TRUTH_TARGET_DOCUMENT_SCOPE_BEFORE_CANVAS_DRAW_BLAME";
+    } else if (surfaceScope === "CANONICAL_MOUNT_AND_CANVAS_FOUND") {
+      status = "CANVAS_BLAME_ELIGIBLE_AFTER_PRODUCTION_SURFACE_CONFIRMATION";
+      eligible = true;
+      reason = "PRODUCTION_CANVAS_SURFACE_CONFIRMED_BY_SCOPE_LENSES";
+      recommendedFile = CANVAS_FILE;
+      recommendedAction =
+        "AUDIT_CANVAS_DRAW_PATH_ONLY_AFTER_HEARTH_PRODUCTION_CANVAS_IS_CONFIRMED";
     }
 
     return {
-      canvasBlameEligible: false,
-      interpretation: "PRODUCTION_CANVAS_CONFIRMED_BUT_PIXEL_AND_DOWNSTREAM_STATUS_INCONCLUSIVE",
-      blameGateStatus: "CANVAS_BLAME_HELD_INCONCLUSIVE_PIXEL_EVIDENCE",
-      recommendedOwner: "CANVAS_FINGER_INSPECT_OR_SURFACE_POINTER_CLASSIFIER",
-      recommendedFile: CANVAS_FINGER_INSPECT_FILE,
-      recommendedAction:
-        "REFRESH_FINGER_INSPECT_EVIDENCE_AND CLASSIFY SURFACE BEFORE CANVAS DRAW BLAME"
+      id: "CANVAS_BLAME_LENS",
+      status,
+      canvasBlameEligible: eligible,
+      reason,
+      inspectedSurfaceClass: surfaceClass,
+      surfaceScope,
+      surfaceFailure,
+      recommendedFile,
+      recommendedAction
     };
   }
 
-  function normalizeNotes(...sources) {
-    const out = [];
-    const seen = new Set();
+  function computeProbeNetworkLens(packet) {
+    const records = [
+      "PROBE_NORTH",
+      "PROBE_EAST",
+      "PROBE_WEST",
+      "SURFACE_TRUTH_PROBE",
+      "PROBE_SOUTH"
+    ].map((id) => ({
+      id,
+      receipt: receiptRecord(packet, id),
+      load: participantRecord(packet, id)
+    }));
 
-    for (const source of sources) {
-      if (source === undefined || source === null || source === "") continue;
+    let present = 0;
+    let receiptPresent = 0;
+    let missing = 0;
+    let loading = 0;
+    const missingIds = [];
+    const presentNoReceiptIds = [];
 
-      const values = Array.isArray(source)
-        ? source
-        : safeString(source).split("|");
+    records.forEach((item) => {
+      const isPresent =
+        boolValue(getRaw(item.receipt, "present", false), false) ||
+        boolValue(getRaw(item.load, "present", false), false);
+      const hasReceipt = boolValue(getRaw(item.receipt, "receiptPresent", false), false);
+      const loadStatus = firstKnown(getRaw(item.load, "loadStatus", undefined), "UNKNOWN");
 
-      for (const raw of values) {
-        const clean = bounded(raw, 1200);
-        if (!clean || clean === "none") continue;
-        if (seen.has(clean)) continue;
-        seen.add(clean);
-        out.push(clean);
+      if (isPresent) present += 1;
+      else {
+        missing += 1;
+        missingIds.push(item.id);
       }
+
+      if (hasReceipt) receiptPresent += 1;
+      else if (isPresent) presentNoReceiptIds.push(item.id);
+
+      if (loadStatus === "LOADING") loading += 1;
+    });
+
+    let status = "PROBE_NETWORK_PARTIAL";
+    if (missing === 0 && presentNoReceiptIds.length === 0) status = "PROBE_NETWORK_ALIGNED";
+    if (missing > 0 && present > 0) status = "PROBE_NETWORK_PARTIAL";
+    if (present === 0) status = "PROBE_NETWORK_BLOCKED";
+
+    return {
+      id: "PROBE_NETWORK_LENS",
+      status,
+      presentCount: present,
+      receiptPresentCount: receiptPresent,
+      missingCount: missing,
+      loadingCount: loading,
+      missingIds,
+      presentNoReceiptIds,
+      recommendedFile: missingIds.includes("PROBE_SOUTH") ? PROBE_SOUTH_FILE : "NONE",
+      recommendedAction: missingIds.includes("PROBE_SOUTH")
+        ? "BUILD_OR_REPUBLISH_PROBE_SOUTH_TO_COMPLETE_OUTPUT_MEANING_LENS"
+        : "KEEP_PROBE_NETWORK_AS_SUPPORTING_EVIDENCE"
+    };
+  }
+
+  function computeDutyLoadLens(packet) {
+    const fields = collectExplicitStatusFields(packet, "", []);
+    const explicitDuty = fields.filter((item) =>
+      EXPLICIT_DUTY_KEYS.includes(item.field) ||
+      /DUTY|SELF_MEASUREMENT|COLLAPSE|QUARANTINED/i.test(item.key)
+    );
+
+    const riskFields = explicitDuty.filter((item) =>
+      statusContains(item.value, "COLLAPSE_RISK") ||
+      statusContains(item.value, "HEAVY_NON_COLLAPSED") ||
+      statusContains(item.value, "DUTY_LOAD_COLLAPSE_RISK")
+    );
+
+    const detectedFields = explicitDuty.filter((item) =>
+      statusContains(item.value, "COLLAPSE_DETECTED") ||
+      statusContains(item.value, "OUTPUT_QUARANTINED")
+    );
+
+    let status = "DUTY_LOAD_LENS_CLEAN_OR_LOW_SIGNAL";
+    let reason = "NO_EXPLICIT_DUTY_COLLAPSE_STATUS";
+
+    if (detectedFields.length) {
+      status = "DUTY_LOAD_LENS_COLLAPSE_DETECTED";
+      reason = "EXPLICIT_DUTY_COLLAPSE_OR_QUARANTINE_STATUS_FIELD";
+    } else if (riskFields.length) {
+      status = "DUTY_LOAD_LENS_RISK_OR_HEAVY_NON_COLLAPSED";
+      reason = "EXPLICIT_DUTY_RISK_OR_HEAVY_NON_COLLAPSED_STATUS_FIELD";
     }
 
-    return out;
+    return {
+      id: "DUTY_LOAD_LENS",
+      status,
+      reason,
+      explicitStatusFieldCount: explicitDuty.length,
+      riskFieldCount: riskFields.length,
+      detectedFieldCount: detectedFields.length,
+      sampledExplicitFields: explicitDuty.slice(0, 20),
+      rawTextScanUsed: false,
+      schemaVocabularyIgnored: true
+    };
+  }
+
+  function computeMalpracticeLens(packet) {
+    const fields = collectExplicitStatusFields(packet, "", []);
+
+    const explicitMalpracticeFields = fields.filter((item) =>
+      /MALPRACTICE/i.test(item.key) ||
+      /MALPRACTICE/i.test(item.field)
+    );
+
+    const detected = explicitMalpracticeFields.filter((item) =>
+      statusEquals(item.value, "DIAGNOSTIC_MALPRACTICE_DETECTED") ||
+      statusEquals(item.value, "MALPRACTICE_DETECTED")
+    );
+
+    const noMalpractice = explicitMalpracticeFields.filter((item) =>
+      statusEquals(item.value, "NO_DIAGNOSTIC_MALPRACTICE") ||
+      statusEquals(item.value, "NO_DIAGNOSTIC_MALPRACTICE_DETECTED")
+    );
+
+    let status = "MALPRACTICE_LENS_NO_EXPLICIT_DETECTION";
+    let reason = "NO_EXPLICIT_MALPRACTICE_DETECTED_STATUS_FIELD";
+
+    if (detected.length) {
+      status = "MALPRACTICE_LENS_EXPLICIT_DETECTION";
+      reason = "EXPLICIT_MALPRACTICE_STATUS_FIELD_EQUALS_DETECTED";
+    } else if (noMalpractice.length) {
+      status = "MALPRACTICE_LENS_EXPLICIT_CLEAR_OR_NON_DETECTED";
+      reason = "EXPLICIT_MALPRACTICE_STATUS_FIELD_IS_CLEAR";
+    }
+
+    return {
+      id: "MALPRACTICE_LENS",
+      status,
+      reason,
+      explicitMalpracticeFieldCount: explicitMalpracticeFields.length,
+      detectedFieldCount: detected.length,
+      clearFieldCount: noMalpractice.length,
+      sampledExplicitFields: explicitMalpracticeFields.slice(0, 20),
+      rawTextScanUsed: false,
+      schemaVocabularyIgnored: true,
+      falsePositiveGuard: "DO_NOT_COUNT_STATUS_LISTS_OR_SCHEMA_ENUM_VALUES_AS_ACTUAL_STATUS"
+    };
+  }
+
+  function computeConstructionReadinessLens(packet, northLens, surfaceLens, probeLens) {
+    const gauge = gaugeRecord(packet, "CONSTRUCTION_READINESS");
+    const gaugeStatus = firstKnown(getRaw(gauge, "status", undefined), "UNKNOWN");
+    const labWestPresent =
+      boolValue(getRaw(packet, "LABWEST_CONSTRUCT_PRESENT", false), false) ||
+      boolValue(getRaw(packet, "LABWEST_CONSTRUCT_RECEIPT_PRESENT", false), false);
+
+    const northReady = northLens.northVerdictAvailable === true;
+    const surfaceReady =
+      surfaceLens.status === "SURFACE_SCOPE_PRODUCTION_CANDIDATE_PRESENT" ||
+      surfaceLens.status === "SURFACE_SCOPE_PROFILE_READY_MEASUREMENT_INCONCLUSIVE";
+
+    let status = "CONSTRUCTION_READINESS_BLOCKED";
+    let reason = "NORTH_VERDICT_OR_SURFACE_SCOPE_NOT_READY";
+    let recommendedFile = NORTH_RAIL_FILE;
+    let recommendedAction = "ALIGN_NORTH_DIAGNOSTIC_TRACK_BEFORE_CANVAS_BUILD";
+
+    if (labWestPresent && northReady && surfaceReady && probeLens.missingCount === 0) {
+      status = "CONSTRUCTION_READINESS_SCOPED_PRECONDITIONS_PRESENT";
+      reason = "LABWEST_NORTH_SURFACE_AND_PROBE_LENSES_PRESENT";
+      recommendedFile = "WEST_DERIVATIVE_MAP";
+      recommendedAction = "ALLOW_WEST_TO_PREPARE_DERIVATIVE_CONSTRUCTION_MAP";
+    } else if (labWestPresent && !northReady) {
+      status = "CONSTRUCTION_READINESS_BLOCKED_BY_NORTH_TRACK";
+      reason = "LABWEST_PRESENT_BUT_NORTH_VERDICT_MISSING";
+      recommendedFile = NORTH_RAIL_FILE;
+      recommendedAction = "RENEW_NORTH_RAIL_PUBLICATION_AND_LABWEST_CONSTRUCT_CONSUMPTION";
+    } else if (labWestPresent && !surfaceReady) {
+      status = "CONSTRUCTION_READINESS_BLOCKED_BY_SURFACE_SCOPE";
+      reason = "LABWEST_PRESENT_BUT_SURFACE_SCOPE_NOT_CONFIRMED";
+      recommendedFile = SURFACE_TRUTH_FILE;
+      recommendedAction = "CONFIRM_SURFACE_TRUTH_SCOPE_BEFORE_CANVAS_BUILD";
+    }
+
+    return {
+      id: "CONSTRUCTION_READINESS_LENS",
+      status,
+      reason,
+      gaugeStatus,
+      labWestPresent,
+      northReady,
+      surfaceReady,
+      probeNetworkMissingCount: probeLens.missingCount,
+      recommendedFile,
+      recommendedAction
+    };
   }
 
   function buildReport(input = {}) {
-    const currentReport = extractCurrentReport(input);
-    const fingerEvidence = readFingerInspectEvidence(input);
-    const canvasAuthority = inspectAuthority(CANVAS_AUTHORITY_ALIASES);
+    const normalized = normalizeInput(input);
+    const packet = normalized.object || {};
+    state.lastInputSource = normalized.source;
 
-    const classification = classifyFromEvidence(
-      fingerEvidence.report || {},
-      currentReport || {}
-    );
+    const copyLens = computeCopyLens(packet);
+    const northLens = computeNorthTrackLens(packet);
+    const surfaceLens = computeSurfaceScopeLens(packet);
+    const legacyClassifier = computeLegacyCanvasFeedClassifier(input, packet);
+    const canvasLens = computeCanvasBlameLens(packet, surfaceLens, legacyClassifier);
+    const probeLens = computeProbeNetworkLens(packet);
+    const dutyLens = computeDutyLoadLens(packet);
+    const malpracticeLens = computeMalpracticeLens(packet);
+    const constructionLens =
+      computeConstructionReadinessLens(packet, northLens, surfaceLens, probeLens);
 
-    const interpretation = deriveInterpretation(classification, fingerEvidence);
+    const lenses = {
+      COPY_LENS: copyLens,
+      NORTH_TRACK_LENS: northLens,
+      SURFACE_SCOPE_LENS: surfaceLens,
+      CANVAS_BLAME_LENS: canvasLens,
+      PROBE_NETWORK_LENS: probeLens,
+      DUTY_LOAD_LENS: dutyLens,
+      MALPRACTICE_LENS: malpracticeLens,
+      CONSTRUCTION_READINESS_LENS: constructionLens,
+      LEGACY_CANVAS_FEED_CLASSIFIER: legacyClassifier
+    };
 
-    state.latestSurfaceClass = classification.surfaceClass;
-    state.latestCanvasBlameEligible = interpretation.canvasBlameEligible;
-    state.latestRecommendedOwner = interpretation.recommendedOwner;
-    state.latestRecommendedFile = interpretation.recommendedFile;
-    state.latestRecommendedAction = interpretation.recommendedAction;
-    state.latestInterpretation = interpretation.interpretation;
+    state.latestLensStatus =
+      Object.values(lenses).some((lens) => /BLOCKED|DETECTED|FAILED/i.test(lens.status))
+        ? "SCOPE_LENSES_ACTIVE_WITH_BLOCKERS"
+        : "SCOPE_LENSES_ACTIVE";
 
-    const notes = normalizeNotes(
-      getRaw(currentReport, "SECONDARY_EVIDENCE_NOTES", ""),
-      getRaw(currentReport, "NORTH_SECONDARY_EVIDENCE_NOTES", ""),
-      getRaw(fingerEvidence.report, "SECONDARY_EVIDENCE_NOTES", ""),
-      "SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_ACTIVE",
-      "SPLIT_RESPONSIBILITY_ACTIVE:FINGER_INSPECT_PUBLISHES_SURFACE_AND_RECEIVER_EVIDENCE",
-      "SPLIT_RESPONSIBILITY_ACTIVE:SOUTH_SURFACE_POINTER_CLASSIFIES_SURFACE_BEFORE_CANVAS_BLAME",
-      "CANVAS_BLAME_REQUIRES_PRODUCTION_CANVAS_CONFIRMATION",
-      `INSPECTED_SURFACE_CLASS:${classification.surfaceClass}`,
-      `CANVAS_BLAME_GATE:${interpretation.blameGateStatus}`,
-      "SIDE_CAR_IS_READ_ONLY",
-      "SIDE_CAR_DOES_NOT_DRAW_CANVAS",
-      "SIDE_CAR_DOES_NOT_CREATE_CANVAS",
-      "SIDE_CAR_DOES_NOT_REPAIR_CANVAS",
-      "SIDE_CAR_DOES_NOT_MUTATE_ROUTE",
-      "SIDE_CAR_DOES_NOT_RESTART_RUNTIME",
-      "SIDE_CAR_DOES_NOT_CLAIM_F13_F21_F55_OR_VISUAL_PASS"
-    );
+    state.latestNorthTrackLens = northLens.status;
+    state.latestSurfaceScopeLens = surfaceLens.status;
+    state.latestCanvasBlameLens = canvasLens.status;
+    state.latestProbeNetworkLens = probeLens.status;
+    state.latestDutyLoadLens = dutyLens.status;
+    state.latestMalpracticeLens = malpracticeLens.status;
+    state.latestConstructionReadinessLens = constructionLens.status;
+    state.latestCopyLens = copyLens.status;
+    state.latestSurfaceClass = legacyClassifier.surfaceClass;
+    state.latestCanvasBlameEligible = canvasLens.canvasBlameEligible;
+    state.latestRecommendedOwner = constructionLens.status.includes("CONSTRUCTION")
+      ? "DIAGNOSTIC_CONSTRUCT_ALIGNMENT"
+      : "UNKNOWN";
+    state.latestRecommendedFile = constructionLens.recommendedFile;
+    state.latestRecommendedAction = constructionLens.recommendedAction;
 
-    return {
+    const report = {
       PACKET_NAME,
-      TARGET_ROUTE,
-      DIAGNOSTIC_ROUTE,
-      DIAGNOSTIC_TIMESTAMP: firstKnown(
-        input.diagnosticTimestamp,
-        getRaw(currentReport, "DIAGNOSTIC_TIMESTAMP", undefined),
-        nowIso()
-      ),
-
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
@@ -1133,147 +1522,113 @@
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       VERSION,
       FILE,
+      TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE,
+      DIAGNOSTIC_TIMESTAMP: nowIso(),
 
-      SOUTH_SURFACE_POINTER_STATUS: "COMPLETE",
-      SOUTH_SURFACE_POINTER_CONTRACT: CONTRACT,
-      SOUTH_SURFACE_POINTER_RECEIPT: RECEIPT,
-      SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-      SOUTH_SURFACE_POINTER_VERSION: VERSION,
-      SOUTH_SURFACE_POINTER_FILE: FILE,
-      SOUTH_SURFACE_POINTER_ROLE:
-        "ASYMMETRIC_TENTH_DIAGNOSTIC_SIDECAR_SURFACE_CLASSIFIER",
-      SOUTH_SURFACE_POINTER_AUTHORITY:
-        "READ_ONLY_SURFACE_CLASSIFICATION_AND_PROBE_SOUTH_PACKET_EVIDENCE",
-      SOUTH_SURFACE_POINTER_CHRONOLOGY_POSITION: "OUTSIDE_NINE_STEP_CHRONOLOGY",
-      SOUTH_SURFACE_POINTER_IS_NINTH_CYCLE: "false",
-      SOUTH_SURFACE_POINTER_REPLACES_PROBE_SOUTH: "false",
-      SOUTH_SURFACE_POINTER_REPLACES_SOUTH_RAIL: "false",
-      SOUTH_SURFACE_POINTER_OPERATIONAL_DEPENDENCY_FOR_NORTH: "false",
-      SOUTH_SURFACE_POINTER_CONSUMER: PROBE_SOUTH_FILE,
+      PRIMARY_DUTY: "SCOPE_LENS_CLASSIFICATION",
+      PROFILE_CLASS: "SOUTH_SURFACE_POINTER_SCOPE_LENS_SIDECAR",
+      CHRONOLOGY_POSITION: "OUTSIDE_NINE_STEP_CHRONOLOGY",
+      ASYMMETRIC_TENTH_DIAGNOSTIC_SIDECAR: true,
 
-      SPLIT_RESPONSIBILITY_ACTIVE: "true",
-      FINGER_INSPECT_RESPONSIBILITY:
-        "SURFACE_IDENTITY_RECEIVER_METHODS_HEX_DELIVERY_AND_PIXEL_OBSERVATION",
-      SOUTH_SURFACE_POINTER_RESPONSIBILITY:
-        "SURFACE_CLASSIFICATION_AND_CANVAS_BLAME_GATE_FOR_PROBE_SOUTH",
-      CANVAS_BLAME_REQUIRES_PRODUCTION_CANVAS_CONFIRMATION: "true",
+      COPY_PROBLEM_IS_NOT_CURRENT_PRIMARY_PROBLEM: true,
+      PRESENT_PROBLEM: "DIAGNOSTIC_SCOPE_DEFINITION_BY_LENS",
+      LEGACY_CANVAS_FEED_CLASSIFIER_COMPATIBLE: true,
+      LEGACY_CANVAS_FEED_CLASSIFIER_PRIMARY: false,
 
-      SOUTH_RAIL_FILE,
-      PROBE_SOUTH_FILE,
-      CANVAS_FILE,
-      CANVAS_FINGER_INSPECT_FILE,
-      HEX_SURFACE_FILE,
-      HEX_FOUR_PAIR_FILE,
-      POINTER_FINGER_FILE,
+      SOUTH_DOES_PACKET_SEGREGATION: true,
+      SOUTH_SURFACE_POINTER_DOES_SCOPE_LENSING: true,
+      SOUTH_SURFACE_POINTER_DOES_NOT_SEGREGATE_RECEIPT: true,
+      SOUTH_SURFACE_POINTER_DOES_NOT_COLLAPSE_DUPLICATE_STANDARDS: true,
+      SOUTH_SURFACE_POINTER_DOES_NOT_CHANGE_COMPACT_MANIFEST: true,
+      SOUTH_SURFACE_POINTER_DOES_NOT_AUTHORIZE_REPAIR: true,
 
-      EXPECTED_CANVAS_CONTRACT,
-      EXPECTED_CANVAS_RENEWAL_CANDIDATE,
-      EXPECTED_FINGER_INSPECT_CONTRACT,
-      EXPECTED_FINGER_INSPECT_RENEWAL_CONTRACT,
-      EXPECTED_PROBE_SOUTH_CONTRACT,
+      INPUT_SOURCE: normalized.source,
+      INPUT_PACKET_NAME: firstKnown(getRaw(packet, "PACKET_NAME", undefined), "UNKNOWN"),
+      RECEIVER_CONTRACT_SEEN: firstKnown(getRaw(packet, "CONTRACT", undefined), "UNKNOWN"),
 
-      FINGER_INSPECT_OBSERVED: boolText(fingerEvidence.authority.observed, "false"),
-      FINGER_INSPECT_SOURCE: fingerEvidence.source,
-      FINGER_INSPECT_SELECTED_PATH: fingerEvidence.authority.path,
-      FINGER_INSPECT_CONTRACT: fingerEvidence.authority.contract,
-      FINGER_INSPECT_RECEIPT: fingerEvidence.authority.receipt,
-      FINGER_INSPECT_INTERNAL_RENEWAL_CONTRACT:
-        fingerEvidence.authority.internalRenewalContract,
-      FINGER_INSPECT_INTERNAL_RENEWAL_RECEIPT:
-        fingerEvidence.authority.internalRenewalReceipt,
-      FINGER_INSPECT_METHOD_COUNT: String(fingerEvidence.authority.methodCount),
+      SCOPE_LENS_STATUS: state.latestLensStatus,
 
-      CANVAS_AUTHORITY_OBSERVED_BY_SIDECAR: boolText(canvasAuthority.observed, "false"),
-      CANVAS_AUTHORITY_SELECTED_PATH_BY_SIDECAR: canvasAuthority.path,
-      CANVAS_AUTHORITY_CONTRACT_BY_SIDECAR: canvasAuthority.contract,
-      CANVAS_AUTHORITY_RECEIPT_BY_SIDECAR: canvasAuthority.receipt,
+      COPY_LENS_STATUS: copyLens.status,
+      COPY_LENS_REASON: copyLens.reason,
 
-      INSPECTED_SURFACE_CLASS: classification.surfaceClass,
-      SURFACE_CLASSIFICATION_SOURCE: classification.classificationSource,
-      SURFACE_CLASSIFICATION_REASON: classification.classificationReason,
-      SURFACE_SELECTOR_SEEN_BY_SIDECAR: classification.selector,
-      SURFACE_DATASET_CONTRACT_SEEN_BY_SIDECAR: classification.datasetContract,
-      SURFACE_VISIBLE_PROOF_SOURCE_SEEN_BY_SIDECAR:
-        classification.visiblePlanetProofSource,
+      NORTH_TRACK_LENS_STATUS: northLens.status,
+      NORTH_TRACK_FAILURE_CLASS: northLens.failureClass,
+      NORTH_TRACK_RECOMMENDED_FILE: northLens.recommendedFile,
+      NORTH_TRACK_RECOMMENDED_ACTION: northLens.recommendedAction,
 
-      DOM_SURFACE_CLASSIFICATION: clonePlain(classification.domClassification),
-      DOM_SURFACE_CLASS: classification.domClassification.domClass,
-      DOM_SURFACE_CLASS_REASON: classification.domClassification.domReason,
-      DOM_SURFACE_SELECTOR: classification.domClassification.domSelector,
+      SURFACE_SCOPE_LENS_STATUS: surfaceLens.status,
+      SURFACE_SCOPE: surfaceLens.scope,
+      SURFACE_SCOPE_FAILURE_CLASS: surfaceLens.failureClass,
+      SURFACE_SCOPE_RECOMMENDED_FILE: surfaceLens.recommendedFile,
+      SURFACE_SCOPE_RECOMMENDED_ACTION: surfaceLens.recommendedAction,
 
-      PRODUCTION_CANVAS_CONFIRMED: boolText(
-        classification.surfaceClass === SURFACE_CLASS.PRODUCTION_CANVAS,
-        "false"
-      ),
-      TEMPORARY_IMAGE_SURFACE_CONFIRMED: boolText(
-        classification.surfaceClass === SURFACE_CLASS.TEMPORARY_IMAGE,
-        "false"
-      ),
-      INNER_SCOPE_FEED_SURFACE_CONFIRMED: boolText(
-        classification.surfaceClass === SURFACE_CLASS.INNER_SCOPE_FEED,
-        "false"
-      ),
-      DIAGNOSTIC_FRAME_SURFACE_CONFIRMED: boolText(
-        classification.surfaceClass === SURFACE_CLASS.DIAGNOSTIC_FRAME,
-        "false"
-      ),
-      UNKNOWN_OR_MISALIGNED_SURFACE_CONFIRMED: boolText(
-        classification.surfaceClass === SURFACE_CLASS.UNKNOWN,
-        "false"
-      ),
+      CANVAS_BLAME_LENS_STATUS: canvasLens.status,
+      CANVAS_BLAME_ELIGIBLE: canvasLens.canvasBlameEligible,
+      CANVAS_BLAME_REASON: canvasLens.reason,
+      CANVAS_BLAME_RECOMMENDED_FILE: canvasLens.recommendedFile,
+      CANVAS_BLAME_RECOMMENDED_ACTION: canvasLens.recommendedAction,
 
-      FINGER_INSPECT_CANVAS_PIXEL_SAMPLE_STATUS: classification.pixelStatus,
-      FINGER_INSPECT_CANVAS_PIXEL_VISIBLE: classification.pixelVisible,
-      FINGER_INSPECT_CANVAS_PIXEL_BLANK: boolText(classification.pixelBlank, "false"),
-      FINGER_INSPECT_CANVAS_PIXEL_VISIBLE_CONFIRMED: boolText(
-        classification.pixelVisibleConfirmed,
-        "false"
-      ),
-      FINGER_INSPECT_CANVAS_VIEWPORT_INTERSECTING:
-        classification.viewportIntersecting,
-      FINGER_INSPECT_DOWNSTREAM_STATUS: classification.downstreamStatus,
-      FINGER_INSPECT_DOWNSTREAM_VERDICT_CLASS: classification.downstreamClass,
-      FINGER_INSPECT_DOWNSTREAM_RECOMMENDED_FILE:
-        classification.downstreamRecommendedFile,
+      PROBE_NETWORK_LENS_STATUS: probeLens.status,
+      PROBE_NETWORK_PRESENT_COUNT: probeLens.presentCount,
+      PROBE_NETWORK_RECEIPT_PRESENT_COUNT: probeLens.receiptPresentCount,
+      PROBE_NETWORK_MISSING_COUNT: probeLens.missingCount,
+      PROBE_NETWORK_MISSING_IDS: probeLens.missingIds.join(","),
 
-      CANVAS_BLAME_ELIGIBLE: boolText(interpretation.canvasBlameEligible, "false"),
-      CANVAS_BLAME_GATE_STATUS: interpretation.blameGateStatus,
-      SURFACE_POINTER_INTERPRETATION: interpretation.interpretation,
-      SURFACE_POINTER_RECOMMENDED_OWNER: interpretation.recommendedOwner,
-      SURFACE_POINTER_RECOMMENDED_FILE: interpretation.recommendedFile,
-      SURFACE_POINTER_RECOMMENDED_ACTION: interpretation.recommendedAction,
+      DUTY_LOAD_LENS_STATUS: dutyLens.status,
+      DUTY_LOAD_LENS_REASON: dutyLens.reason,
+      DUTY_LOAD_RAW_TEXT_SCAN_USED: false,
 
-      PRODUCTION_MUTATION_AUTHORIZED: "false",
-      HEARTH_REPAIR_AUTHORIZED: "false",
-      ROUTE_REPAIR_AUTHORIZED: "false",
-      ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: "false",
-      CONTROL_MUTATION_AUTHORIZED: "false",
-      CANVAS_DRAWING_AUTHORIZED: "false",
-      CANVAS_CREATION_AUTHORIZED: "false",
-      CANVAS_REPAIR_AUTHORIZED: "false",
-      CANVAS_RELEASE_AUTHORIZED: "false",
-      RUNTIME_RESTART_AUTHORIZED: "false",
-      FINAL_VISUAL_PASS_AUTHORITY: "false",
+      MALPRACTICE_LENS_STATUS: malpracticeLens.status,
+      MALPRACTICE_LENS_REASON: malpracticeLens.reason,
+      MALPRACTICE_RAW_TEXT_SCAN_USED: false,
+      MALPRACTICE_SCHEMA_VOCABULARY_IGNORED: true,
 
-      SECONDARY_EVIDENCE_NOTES: notes.join(" | "),
-      SOUTH_SURFACE_POINTER_NOTES: notes.join(" | "),
+      CONSTRUCTION_READINESS_LENS_STATUS: constructionLens.status,
+      CONSTRUCTION_READINESS_LENS_REASON: constructionLens.reason,
+      CONSTRUCTION_READINESS_RECOMMENDED_FILE: constructionLens.recommendedFile,
+      CONSTRUCTION_READINESS_RECOMMENDED_ACTION: constructionLens.recommendedAction,
 
-      FINGER_INSPECT_REPORT_SNAPSHOT: clonePlain(fingerEvidence.report || {}),
-      CURRENT_REPORT_SNAPSHOT: clonePlain(currentReport || {}),
+      INSPECTED_SURFACE_CLASS: legacyClassifier.surfaceClass,
+      LEGACY_SURFACE_CLASSIFICATION_REASON: legacyClassifier.reason,
+
+      SCOPE_LENSES: clonePlain(lenses),
+
+      PRODUCTION_MUTATION_AUTHORIZED: false,
+      HEARTH_REPAIR_AUTHORIZED: false,
+      ROUTE_REPAIR_AUTHORIZED: false,
+      ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
+      CONTROL_MUTATION_AUTHORIZED: false,
+      CANVAS_DRAWING_AUTHORIZED: false,
+      CANVAS_CREATION_AUTHORIZED: false,
+      CANVAS_REPAIR_AUTHORIZED: false,
+      CANVAS_RELEASE_AUTHORIZED: false,
+      RUNTIME_RESTART_AUTHORIZED: false,
+      FINAL_VISUAL_PASS_AUTHORITY: false,
+
+      SECONDARY_EVIDENCE_NOTES: [
+        "SOUTH_SURFACE_POINTER_SCOPE_LENS_CLASSIFIER_ACTIVE",
+        "COPY_SIZE_PROBLEM_NOT_CURRENT_PRIMARY_PROBLEM",
+        "CURRENT_PROBLEM_IS_DIAGNOSTIC_SCOPE_DEFINITION",
+        "MALPRACTICE_LENS_READS_EXPLICIT_STATUS_FIELDS_ONLY",
+        "DUTY_LOAD_LENS_READS_EXPLICIT_STATUS_FIELDS_ONLY",
+        "SCHEMA_STATUS_VOCABULARY_DOES_NOT_COUNT_AS_ACTUAL_DETECTION",
+        "CANVAS_BLAME_REQUIRES_PRODUCTION_CANVAS_CONFIRMATION",
+        `NORTH_TRACK_LENS:${northLens.status}`,
+        `SURFACE_SCOPE_LENS:${surfaceLens.status}`,
+        `CONSTRUCTION_READINESS_LENS:${constructionLens.status}`
+      ].join(" | "),
 
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
     };
+
+    return report;
   }
 
-  function orderedFields(report) {
+  function orderedKeys(report) {
     const priority = [
       "PACKET_NAME",
-      "TARGET_ROUTE",
-      "DIAGNOSTIC_ROUTE",
-      "DIAGNOSTIC_TIMESTAMP",
-
       "CONTRACT",
       "RECEIPT",
       "INTERNAL_RENEWAL_CONTRACT",
@@ -1282,115 +1637,64 @@
       "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
       "VERSION",
       "FILE",
+      "TARGET_ROUTE",
+      "DIAGNOSTIC_ROUTE",
+      "DIAGNOSTIC_TIMESTAMP",
 
-      "SOUTH_SURFACE_POINTER_STATUS",
-      "SOUTH_SURFACE_POINTER_CONTRACT",
-      "SOUTH_SURFACE_POINTER_RECEIPT",
-      "SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_CONTRACT",
-      "SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_RECEIPT",
-      "SOUTH_SURFACE_POINTER_VERSION",
-      "SOUTH_SURFACE_POINTER_FILE",
-      "SOUTH_SURFACE_POINTER_ROLE",
-      "SOUTH_SURFACE_POINTER_AUTHORITY",
-      "SOUTH_SURFACE_POINTER_CHRONOLOGY_POSITION",
-      "SOUTH_SURFACE_POINTER_IS_NINTH_CYCLE",
-      "SOUTH_SURFACE_POINTER_REPLACES_PROBE_SOUTH",
-      "SOUTH_SURFACE_POINTER_REPLACES_SOUTH_RAIL",
-      "SOUTH_SURFACE_POINTER_OPERATIONAL_DEPENDENCY_FOR_NORTH",
-      "SOUTH_SURFACE_POINTER_CONSUMER",
+      "PRIMARY_DUTY",
+      "PROFILE_CLASS",
+      "CHRONOLOGY_POSITION",
+      "ASYMMETRIC_TENTH_DIAGNOSTIC_SIDECAR",
+      "COPY_PROBLEM_IS_NOT_CURRENT_PRIMARY_PROBLEM",
+      "PRESENT_PROBLEM",
+      "LEGACY_CANVAS_FEED_CLASSIFIER_COMPATIBLE",
+      "LEGACY_CANVAS_FEED_CLASSIFIER_PRIMARY",
 
-      "SPLIT_RESPONSIBILITY_ACTIVE",
-      "FINGER_INSPECT_RESPONSIBILITY",
-      "SOUTH_SURFACE_POINTER_RESPONSIBILITY",
-      "CANVAS_BLAME_REQUIRES_PRODUCTION_CANVAS_CONFIRMATION",
-
-      "FINGER_INSPECT_OBSERVED",
-      "FINGER_INSPECT_SOURCE",
-      "FINGER_INSPECT_SELECTED_PATH",
-      "FINGER_INSPECT_CONTRACT",
-      "FINGER_INSPECT_RECEIPT",
-      "FINGER_INSPECT_INTERNAL_RENEWAL_CONTRACT",
-      "FINGER_INSPECT_INTERNAL_RENEWAL_RECEIPT",
-      "FINGER_INSPECT_METHOD_COUNT",
-
-      "CANVAS_AUTHORITY_OBSERVED_BY_SIDECAR",
-      "CANVAS_AUTHORITY_SELECTED_PATH_BY_SIDECAR",
-      "CANVAS_AUTHORITY_CONTRACT_BY_SIDECAR",
+      "SCOPE_LENS_STATUS",
+      "COPY_LENS_STATUS",
+      "NORTH_TRACK_LENS_STATUS",
+      "NORTH_TRACK_FAILURE_CLASS",
+      "SURFACE_SCOPE_LENS_STATUS",
+      "SURFACE_SCOPE",
+      "SURFACE_SCOPE_FAILURE_CLASS",
+      "CANVAS_BLAME_LENS_STATUS",
+      "CANVAS_BLAME_ELIGIBLE",
+      "PROBE_NETWORK_LENS_STATUS",
+      "PROBE_NETWORK_MISSING_IDS",
+      "DUTY_LOAD_LENS_STATUS",
+      "DUTY_LOAD_RAW_TEXT_SCAN_USED",
+      "MALPRACTICE_LENS_STATUS",
+      "MALPRACTICE_RAW_TEXT_SCAN_USED",
+      "MALPRACTICE_SCHEMA_VOCABULARY_IGNORED",
+      "CONSTRUCTION_READINESS_LENS_STATUS",
+      "CONSTRUCTION_READINESS_RECOMMENDED_FILE",
+      "CONSTRUCTION_READINESS_RECOMMENDED_ACTION",
 
       "INSPECTED_SURFACE_CLASS",
-      "SURFACE_CLASSIFICATION_SOURCE",
-      "SURFACE_CLASSIFICATION_REASON",
-      "SURFACE_SELECTOR_SEEN_BY_SIDECAR",
-      "SURFACE_DATASET_CONTRACT_SEEN_BY_SIDECAR",
-      "SURFACE_VISIBLE_PROOF_SOURCE_SEEN_BY_SIDECAR",
-
-      "DOM_SURFACE_CLASS",
-      "DOM_SURFACE_CLASS_REASON",
-      "DOM_SURFACE_SELECTOR",
-
-      "PRODUCTION_CANVAS_CONFIRMED",
-      "TEMPORARY_IMAGE_SURFACE_CONFIRMED",
-      "INNER_SCOPE_FEED_SURFACE_CONFIRMED",
-      "DIAGNOSTIC_FRAME_SURFACE_CONFIRMED",
-      "UNKNOWN_OR_MISALIGNED_SURFACE_CONFIRMED",
-
-      "FINGER_INSPECT_CANVAS_PIXEL_SAMPLE_STATUS",
-      "FINGER_INSPECT_CANVAS_PIXEL_VISIBLE",
-      "FINGER_INSPECT_CANVAS_PIXEL_BLANK",
-      "FINGER_INSPECT_CANVAS_PIXEL_VISIBLE_CONFIRMED",
-      "FINGER_INSPECT_CANVAS_VIEWPORT_INTERSECTING",
-      "FINGER_INSPECT_DOWNSTREAM_STATUS",
-      "FINGER_INSPECT_DOWNSTREAM_VERDICT_CLASS",
-      "FINGER_INSPECT_DOWNSTREAM_RECOMMENDED_FILE",
-
-      "CANVAS_BLAME_ELIGIBLE",
-      "CANVAS_BLAME_GATE_STATUS",
-      "SURFACE_POINTER_INTERPRETATION",
-      "SURFACE_POINTER_RECOMMENDED_OWNER",
-      "SURFACE_POINTER_RECOMMENDED_FILE",
-      "SURFACE_POINTER_RECOMMENDED_ACTION",
-
-      "SOUTH_RAIL_FILE",
-      "PROBE_SOUTH_FILE",
-      "CANVAS_FILE",
-      "CANVAS_FINGER_INSPECT_FILE",
-      "HEX_SURFACE_FILE",
-      "HEX_FOUR_PAIR_FILE",
-      "POINTER_FINGER_FILE",
+      "SECONDARY_EVIDENCE_NOTES",
 
       "PRODUCTION_MUTATION_AUTHORIZED",
       "HEARTH_REPAIR_AUTHORIZED",
-      "ROUTE_REPAIR_AUTHORIZED",
-      "ROUTE_CONDUCTOR_MUTATION_AUTHORIZED",
-      "CONTROL_MUTATION_AUTHORIZED",
       "CANVAS_DRAWING_AUTHORIZED",
-      "CANVAS_CREATION_AUTHORIZED",
       "CANVAS_REPAIR_AUTHORIZED",
       "CANVAS_RELEASE_AUTHORIZED",
       "RUNTIME_RESTART_AUTHORIZED",
-      "FINAL_VISUAL_PASS_AUTHORITY",
-
-      "SECONDARY_EVIDENCE_NOTES",
-      "SOUTH_SURFACE_POINTER_NOTES",
-
-      ...Object.keys(NO_CLAIMS),
-      ...Object.keys(UPPER_NO_CLAIMS)
+      "VISUAL_PASS_CLAIMED",
+      "FINAL_VISUAL_PASS_CLAIMED",
+      "F13_CLAIMED",
+      "F21_CLAIMED"
     ];
 
     const seen = new Set();
-    const out = [];
-
-    for (const key of priority.concat(Object.keys(report || {}))) {
-      if (seen.has(key)) continue;
+    return priority.concat(Object.keys(report || {})).filter((key) => {
+      if (seen.has(key)) return false;
       seen.add(key);
-      out.push(key);
-    }
-
-    return out;
+      return true;
+    });
   }
 
   function composePacketText(report) {
-    return orderedFields(report)
+    return orderedKeys(report)
       .map((key) => line(key, getRaw(report, key, "UNKNOWN")))
       .join("\n");
   }
@@ -1399,15 +1703,18 @@
     return [
       line("SOUTH_SURFACE_POINTER_CONTRACT", CONTRACT),
       line("SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT),
-      line("SPLIT_RESPONSIBILITY_ACTIVE", "true"),
-      line("FINGER_INSPECT_OBSERVED", report.FINGER_INSPECT_OBSERVED),
-      line("INSPECTED_SURFACE_CLASS", report.INSPECTED_SURFACE_CLASS),
-      line("PRODUCTION_CANVAS_CONFIRMED", report.PRODUCTION_CANVAS_CONFIRMED),
-      line("CANVAS_BLAME_ELIGIBLE", report.CANVAS_BLAME_ELIGIBLE),
-      line("CANVAS_BLAME_GATE_STATUS", report.CANVAS_BLAME_GATE_STATUS),
-      line("SURFACE_POINTER_INTERPRETATION", report.SURFACE_POINTER_INTERPRETATION),
-      line("SURFACE_POINTER_RECOMMENDED_FILE", report.SURFACE_POINTER_RECOMMENDED_FILE),
-      line("SURFACE_POINTER_RECOMMENDED_ACTION", report.SURFACE_POINTER_RECOMMENDED_ACTION)
+      line("PRESENT_PROBLEM", report.PRESENT_PROBLEM),
+      line("SCOPE_LENS_STATUS", report.SCOPE_LENS_STATUS),
+      line("COPY_LENS_STATUS", report.COPY_LENS_STATUS),
+      line("NORTH_TRACK_LENS_STATUS", report.NORTH_TRACK_LENS_STATUS),
+      line("SURFACE_SCOPE_LENS_STATUS", report.SURFACE_SCOPE_LENS_STATUS),
+      line("CANVAS_BLAME_LENS_STATUS", report.CANVAS_BLAME_LENS_STATUS),
+      line("PROBE_NETWORK_LENS_STATUS", report.PROBE_NETWORK_LENS_STATUS),
+      line("DUTY_LOAD_LENS_STATUS", report.DUTY_LOAD_LENS_STATUS),
+      line("MALPRACTICE_LENS_STATUS", report.MALPRACTICE_LENS_STATUS),
+      line("CONSTRUCTION_READINESS_LENS_STATUS", report.CONSTRUCTION_READINESS_LENS_STATUS),
+      line("CONSTRUCTION_READINESS_RECOMMENDED_FILE", report.CONSTRUCTION_READINESS_RECOMMENDED_FILE),
+      line("CONSTRUCTION_READINESS_RECOMMENDED_ACTION", report.CONSTRUCTION_READINESS_RECOMMENDED_ACTION)
     ].join("\n");
   }
 
@@ -1415,71 +1722,48 @@
     state.lastReport = clonePlain(report);
     state.lastPacketText = composePacketText(report);
     state.lastCompactSummary = composeCompactSummary(report);
-    state.lastFingerInspectEvidence = clonePlain(report.FINGER_INSPECT_REPORT_SNAPSHOT || {});
     state.updatedAt = nowIso();
-
     publishAliases();
   }
 
-  function runSouthSurfacePointerRead(input = {}) {
+  function runScopeLens(input = {}) {
     state.runCount += 1;
 
     try {
       const report = buildReport(input);
       publishReport(report);
 
-      record("SOUTH_SURFACE_POINTER_READ_COMPLETE", {
-        inspectedSurfaceClass: report.INSPECTED_SURFACE_CLASS,
-        canvasBlameEligible: report.CANVAS_BLAME_ELIGIBLE,
-        recommendedFile: report.SURFACE_POINTER_RECOMMENDED_FILE
+      record("SOUTH_SURFACE_POINTER_SCOPE_LENS_COMPLETE", {
+        scopeLensStatus: report.SCOPE_LENS_STATUS,
+        northTrackLens: report.NORTH_TRACK_LENS_STATUS,
+        surfaceScopeLens: report.SURFACE_SCOPE_LENS_STATUS,
+        constructionReadinessLens: report.CONSTRUCTION_READINESS_LENS_STATUS
       });
 
       return {
         ok: true,
         contract: CONTRACT,
         receipt: RECEIPT,
-        implementationContract: CONTRACT,
-        implementationReceipt: RECEIPT,
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
 
-        SOUTH_SURFACE_POINTER_STATUS: report.SOUTH_SURFACE_POINTER_STATUS,
-        SOUTH_SURFACE_POINTER_CONTRACT: CONTRACT,
-        SOUTH_SURFACE_POINTER_RECEIPT: RECEIPT,
-        SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_CONTRACT:
-          INTERNAL_RENEWAL_CONTRACT,
-        SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_RECEIPT:
-          INTERNAL_RENEWAL_RECEIPT,
+        SCOPE_LENS_STATUS: report.SCOPE_LENS_STATUS,
+        COPY_LENS_STATUS: report.COPY_LENS_STATUS,
+        NORTH_TRACK_LENS_STATUS: report.NORTH_TRACK_LENS_STATUS,
+        SURFACE_SCOPE_LENS_STATUS: report.SURFACE_SCOPE_LENS_STATUS,
+        CANVAS_BLAME_LENS_STATUS: report.CANVAS_BLAME_LENS_STATUS,
+        PROBE_NETWORK_LENS_STATUS: report.PROBE_NETWORK_LENS_STATUS,
+        DUTY_LOAD_LENS_STATUS: report.DUTY_LOAD_LENS_STATUS,
+        MALPRACTICE_LENS_STATUS: report.MALPRACTICE_LENS_STATUS,
+        CONSTRUCTION_READINESS_LENS_STATUS: report.CONSTRUCTION_READINESS_LENS_STATUS,
 
-        SPLIT_RESPONSIBILITY_ACTIVE: report.SPLIT_RESPONSIBILITY_ACTIVE,
-        FINGER_INSPECT_OBSERVED: report.FINGER_INSPECT_OBSERVED,
-        INSPECTED_SURFACE_CLASS: report.INSPECTED_SURFACE_CLASS,
-        PRODUCTION_CANVAS_CONFIRMED: report.PRODUCTION_CANVAS_CONFIRMED,
-        CANVAS_BLAME_ELIGIBLE: report.CANVAS_BLAME_ELIGIBLE,
-        CANVAS_BLAME_GATE_STATUS: report.CANVAS_BLAME_GATE_STATUS,
-        SURFACE_POINTER_INTERPRETATION: report.SURFACE_POINTER_INTERPRETATION,
-        SURFACE_POINTER_RECOMMENDED_OWNER:
-          report.SURFACE_POINTER_RECOMMENDED_OWNER,
-        SURFACE_POINTER_RECOMMENDED_FILE:
-          report.SURFACE_POINTER_RECOMMENDED_FILE,
-        SURFACE_POINTER_RECOMMENDED_ACTION:
-          report.SURFACE_POINTER_RECOMMENDED_ACTION,
-
-        evidence: report,
-        REPORT_OBJECT: report,
         report,
+        REPORT_OBJECT: report,
+        evidence: report,
         output: {
-          SOUTH_SURFACE_POINTER_STATUS: report.SOUTH_SURFACE_POINTER_STATUS,
-          SOUTH_SURFACE_POINTER_CONTRACT: CONTRACT,
-          SOUTH_SURFACE_POINTER_RECEIPT: RECEIPT,
-          INSPECTED_SURFACE_CLASS: report.INSPECTED_SURFACE_CLASS,
-          PRODUCTION_CANVAS_CONFIRMED: report.PRODUCTION_CANVAS_CONFIRMED,
-          CANVAS_BLAME_ELIGIBLE: report.CANVAS_BLAME_ELIGIBLE,
-          CANVAS_BLAME_GATE_STATUS: report.CANVAS_BLAME_GATE_STATUS,
-          SURFACE_POINTER_INTERPRETATION: report.SURFACE_POINTER_INTERPRETATION,
-          SURFACE_POINTER_RECOMMENDED_FILE:
-            report.SURFACE_POINTER_RECOMMENDED_FILE,
-          REPORT_OBJECT: report
+          REPORT_OBJECT: report,
+          SCOPE_LENSES: report.SCOPE_LENSES,
+          COMPACT_SUMMARY: state.lastCompactSummary
         },
         packetText: state.lastPacketText,
         compactSummary: state.lastCompactSummary,
@@ -1488,7 +1772,7 @@
         ...UPPER_NO_CLAIMS
       };
     } catch (error) {
-      recordError("SOUTH_SURFACE_POINTER_READ_FAILED", error);
+      recordError("SOUTH_SURFACE_POINTER_SCOPE_LENS_FAILED", error);
 
       const fallback = {
         PACKET_NAME,
@@ -1500,14 +1784,9 @@
         FILE,
         TARGET_ROUTE,
         DIAGNOSTIC_ROUTE,
-        SOUTH_SURFACE_POINTER_STATUS: "ERROR",
-        INSPECTED_SURFACE_CLASS: SURFACE_CLASS.UNKNOWN,
-        CANVAS_BLAME_ELIGIBLE: "false",
-        CANVAS_BLAME_GATE_STATUS: "CANVAS_BLAME_BLOCKED_SIDECAR_ERROR",
-        SURFACE_POINTER_INTERPRETATION: "SURFACE_POINTER_CLASSIFIER_ERROR",
-        SURFACE_POINTER_RECOMMENDED_FILE: FILE,
-        SURFACE_POINTER_RECOMMENDED_ACTION:
-          "REVIEW_SOUTH_SURFACE_POINTER_CLASSIFIER_ERROR",
+        DIAGNOSTIC_TIMESTAMP: nowIso(),
+        SCOPE_LENS_STATUS: "SCOPE_LENS_ERROR",
+        PRESENT_PROBLEM: "DIAGNOSTIC_SCOPE_DEFINITION_BY_LENS",
         ERROR_MESSAGE: bounded(error && error.message ? error.message : error, 2000),
         ...NO_CLAIMS,
         ...UPPER_NO_CLAIMS
@@ -1530,31 +1809,42 @@
     }
   }
 
+  function runSouthSurfacePointerRead(input = {}) {
+    return runScopeLens(input);
+  }
+
   function inspectSouthSurfacePointer(input = {}) {
-    return runSouthSurfacePointerRead(input);
+    return runScopeLens(input);
   }
 
   function inspectSurfacePointer(input = {}) {
-    return runSouthSurfacePointerRead(input);
+    return runScopeLens(input);
   }
 
   function runProbeSidecar(input = {}) {
-    return runSouthSurfacePointerRead(input);
+    return runScopeLens(input);
   }
 
   function inspect(input = {}) {
-    return runSouthSurfacePointerRead(input);
+    return runScopeLens(input);
+  }
+
+  function probe(input = {}) {
+    return runScopeLens(input);
+  }
+
+  function measure(input = {}) {
+    return runScopeLens(input);
   }
 
   function runDiagnostic(input = {}) {
-    return runSouthSurfacePointerRead(input);
+    return runScopeLens(input);
   }
 
   function receiveFingerInspectReport(packet = {}) {
     state.receivedFingerReportCount += 1;
-    return runSouthSurfacePointerRead({
+    return runScopeLens({
       fingerInspectReport: isObject(packet) ? packet : {},
-      diagnosticTimestamp: nowIso(),
       reason: "RECEIVE_FINGER_INSPECT_REPORT"
     });
   }
@@ -1576,12 +1866,16 @@
       return clonePlain(state.lastReport);
     }
 
-    const result = runSouthSurfacePointerRead({
-      diagnosticTimestamp: nowIso(),
+    const result = runScopeLens({
       reason: "GET_REPORT_REFRESH"
     });
 
     return clonePlain(result.report);
+  }
+
+  function getPacket(input) {
+    if (input !== undefined) return runScopeLens(input).report;
+    return getReport();
   }
 
   function getPacketText(options = {}) {
@@ -1602,18 +1896,27 @@
     return state.lastCompactSummary;
   }
 
+  function getScopeLenses(options = {}) {
+    const report = getReport(options);
+    return clonePlain(report.SCOPE_LENSES || {});
+  }
+
   function getState() {
     return {
-      role: "ASYMMETRIC_TENTH_DIAGNOSTIC_SIDECAR_SURFACE_CLASSIFIER",
+      role: "SOUTH_SURFACE_POINTER_SCOPE_LENS_SIDECAR",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       version: VERSION,
       file: FILE,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+      primaryDuty: state.primaryDuty,
+      legacyCanvasFeedClassifierCompatible: state.legacyCanvasFeedClassifierCompatible,
       asymmetricTenthDiagnosticSidecar: true,
       chronologyOwner: false,
       nineCycleMutation: false,
@@ -1622,18 +1925,21 @@
       operationalDependencyForNorth: false,
       readableByProbeSouth: true,
 
-      splitResponsibilityActive: true,
-      consumesCanvasFingerInspectEvidence: true,
-      publishesProbeSouthClassifierPacket: true,
-      classifiesSurfaceBeforeCanvasBlame: true,
-      canvasBlameRequiresProductionCanvasConfirmation: true,
+      latestLensStatus: state.latestLensStatus,
+      latestNorthTrackLens: state.latestNorthTrackLens,
+      latestSurfaceScopeLens: state.latestSurfaceScopeLens,
+      latestCanvasBlameLens: state.latestCanvasBlameLens,
+      latestProbeNetworkLens: state.latestProbeNetworkLens,
+      latestDutyLoadLens: state.latestDutyLoadLens,
+      latestMalpracticeLens: state.latestMalpracticeLens,
+      latestConstructionReadinessLens: state.latestConstructionReadinessLens,
+      latestCopyLens: state.latestCopyLens,
 
       latestSurfaceClass: state.latestSurfaceClass,
       latestCanvasBlameEligible: state.latestCanvasBlameEligible,
       latestRecommendedOwner: state.latestRecommendedOwner,
       latestRecommendedFile: state.latestRecommendedFile,
       latestRecommendedAction: state.latestRecommendedAction,
-      latestInterpretation: state.latestInterpretation,
 
       runCount: state.runCount,
       receivedFingerReportCount: state.receivedFingerReportCount,
@@ -1648,7 +1954,7 @@
 
   function getReceiptLight() {
     return {
-      role: "DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER",
+      role: "DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_CLASSIFIER",
       contract: CONTRACT,
       CONTRACT,
       receipt: RECEIPT,
@@ -1662,6 +1968,9 @@
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
+      primaryDuty: "SCOPE_LENS_CLASSIFICATION",
+      presentProblem: "DIAGNOSTIC_SCOPE_DEFINITION_BY_LENS",
+      copyProblemIsNotCurrentPrimaryProblem: true,
       chronologyPosition: "OUTSIDE_NINE_STEP_CHRONOLOGY",
       asymmetricTenthDiagnosticSidecar: true,
       replacesSouthRail: false,
@@ -1669,47 +1978,53 @@
       operationalDependencyForNorth: false,
       consumer: PROBE_SOUTH_FILE,
 
-      splitResponsibilityActive: true,
-      fingerInspectResponsibility:
-        "SURFACE_IDENTITY_RECEIVER_METHODS_HEX_DELIVERY_AND_PIXEL_OBSERVATION",
-      southSurfacePointerResponsibility:
-        "SURFACE_CLASSIFICATION_AND_CANVAS_BLAME_GATE_FOR_PROBE_SOUTH",
-      canvasBlameRequiresProductionCanvasConfirmation: true,
+      legacyCanvasFeedClassifierCompatible: true,
+      legacyCanvasFeedClassifierPrimary: false,
 
-      primaryCallable: "runSouthSurfacePointerRead",
+      scopeLensClassifierActive: true,
+      copyLensActive: true,
+      northTrackLensActive: true,
+      surfaceScopeLensActive: true,
+      canvasBlameLensActive: true,
+      probeNetworkLensActive: true,
+      dutyLoadLensActive: true,
+      malpracticeLensActive: true,
+      constructionReadinessLensActive: true,
+
+      malpracticeLensReadsExplicitStatusFieldsOnly: true,
+      dutyLoadLensReadsExplicitStatusFieldsOnly: true,
+      rawTextScanUsedForMalpractice: false,
+      rawTextScanUsedForDutyLoad: false,
+      schemaVocabularyIgnoredForMalpracticeDetection: true,
+
+      primaryCallable: "runScopeLens",
+      runScopeLensApiAvailable: true,
       runSouthSurfacePointerReadApiAvailable: true,
       inspectSouthSurfacePointerApiAvailable: true,
       inspectSurfacePointerApiAvailable: true,
       runProbeSidecarApiAvailable: true,
       inspectApiAvailable: true,
+      probeApiAvailable: true,
+      measureApiAvailable: true,
       runDiagnosticApiAvailable: true,
-      receiveFingerInspectReportApiAvailable: true,
-      consumeFingerInspectReportApiAvailable: true,
-      receiveCanvasFingerInspectPacketApiAvailable: true,
-      consumeCanvasFingerInspectPacketApiAvailable: true,
       getReportApiAvailable: true,
+      getPacketApiAvailable: true,
       getPacketTextApiAvailable: true,
       getCompactSummaryApiAvailable: true,
+      getScopeLensesApiAvailable: true,
       getStateApiAvailable: true,
       getReceiptApiAvailable: true,
       getReceiptLightApiAvailable: true,
 
-      productionMutationAuthorized: false,
-      hearthRepairAuthorized: false,
-      routeRepairAuthorized: false,
-      routeConductorMutationAuthorized: false,
-      controlMutationAuthorized: false,
-      canvasDrawingAuthorized: false,
-      canvasCreationAuthorized: false,
-      canvasRepairAuthorized: false,
-      canvasReleaseAuthorized: false,
-      runtimeRestartAuthorized: false,
-      finalVisualPassAuthority: false,
-
-      latestSurfaceClass: state.latestSurfaceClass,
-      latestCanvasBlameEligible: state.latestCanvasBlameEligible,
-      latestInterpretation: state.latestInterpretation,
-      latestRecommendedFile: state.latestRecommendedFile,
+      latestLensStatus: state.latestLensStatus,
+      latestNorthTrackLens: state.latestNorthTrackLens,
+      latestSurfaceScopeLens: state.latestSurfaceScopeLens,
+      latestCanvasBlameLens: state.latestCanvasBlameLens,
+      latestProbeNetworkLens: state.latestProbeNetworkLens,
+      latestDutyLoadLens: state.latestDutyLoadLens,
+      latestMalpracticeLens: state.latestMalpracticeLens,
+      latestConstructionReadinessLens: state.latestConstructionReadinessLens,
+      latestCopyLens: state.latestCopyLens,
 
       ...NO_CLAIMS,
       updatedAt: nowIso()
@@ -1730,17 +2045,12 @@
 
       SOUTH_RAIL_FILE,
       PROBE_SOUTH_FILE,
+      NORTH_RAIL_FILE,
       CANVAS_FILE,
       CANVAS_FINGER_INSPECT_FILE,
+      SURFACE_TRUTH_FILE,
       HEX_SURFACE_FILE,
-      HEX_FOUR_PAIR_FILE,
-      POINTER_FINGER_FILE,
-
-      EXPECTED_CANVAS_CONTRACT,
-      EXPECTED_CANVAS_RENEWAL_CANDIDATE,
-      EXPECTED_FINGER_INSPECT_CONTRACT,
-      EXPECTED_FINGER_INSPECT_RENEWAL_CONTRACT,
-      EXPECTED_PROBE_SOUTH_CONTRACT,
+      POINTER_SURFACE_FILE,
 
       reportObject: clonePlain(state.lastReport || {}),
       state: getState(),
@@ -1761,39 +2071,59 @@
     root.HEARTH.diagnosticBishopSurfacePointerSouth = api;
     root.HEARTH.diagnosticSouthSurfaceClassifier = api;
     root.HEARTH.diagnosticCanvasFeedClassifierSouth = api;
+    root.HEARTH.diagnosticSouthScopeLens = api;
+    root.HEARTH.diagnosticSouthSurfacePointerScopeLens = api;
+    root.HEARTH.diagnosticScopeLensSouth = api;
 
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER = api;
     root.HEARTH_DIAGNOSTIC_SOUTH_BISHOP_SURFACE_POINTER = api;
     root.HEARTH_DIAGNOSTIC_SURFACE_POINTER_SOUTH = api;
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_CLASSIFIER = api;
     root.HEARTH_DIAGNOSTIC_CANVAS_FEED_CLASSIFIER_SOUTH = api;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SCOPE_LENS = api;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS = api;
+    root.HEARTH_DIAGNOSTIC_SCOPE_LENS_SOUTH = api;
 
     root.DEXTER_LAB.hearthDiagnosticSouthSurfacePointer = api;
     root.DEXTER_LAB.hearthDiagnosticSouthBishopSurfacePointer = api;
     root.DEXTER_LAB.hearthDiagnosticSurfacePointerSouth = api;
     root.DEXTER_LAB.hearthDiagnosticSouthSurfaceClassifier = api;
     root.DEXTER_LAB.hearthDiagnosticCanvasFeedClassifierSouth = api;
+    root.DEXTER_LAB.hearthDiagnosticSouthScopeLens = api;
 
-    const receipt = getReceipt();
+    const receipt = getReceiptLight();
     state.receiptPublishCount += 1;
 
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RECEIPT = receipt;
     root.HEARTH_DIAGNOSTIC_SOUTH_BISHOP_SURFACE_POINTER_RECEIPT = receipt;
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_CLASSIFIER_RECEIPT = receipt;
     root.HEARTH_DIAGNOSTIC_CANVAS_FEED_CLASSIFIER_SOUTH_RECEIPT = receipt;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SCOPE_LENS_RECEIPT = receipt;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_RECEIPT = receipt;
+
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_REPORT =
       clonePlain(state.lastReport || {});
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_PACKET_TEXT =
       state.lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_COMPACT_SUMMARY =
       state.lastCompactSummary || "";
+    root.HEARTH_DIAGNOSTIC_SOUTH_SCOPE_LENS_REPORT =
+      clonePlain(state.lastReport || {});
+    root.HEARTH_DIAGNOSTIC_SOUTH_SCOPE_LENS_PACKET_TEXT =
+      state.lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_SOUTH_SCOPE_LENS_COMPACT_SUMMARY =
+      state.lastCompactSummary || "";
 
     root.HEARTH.diagnosticSouthSurfacePointerReceipt = receipt;
     root.HEARTH.diagnosticSouthSurfaceClassifierReceipt = receipt;
     root.HEARTH.diagnosticCanvasFeedClassifierSouthReceipt = receipt;
+    root.HEARTH.diagnosticSouthScopeLensReceipt = receipt;
+    root.HEARTH.diagnosticSouthScopeLensReport =
+      clonePlain(state.lastReport || {});
 
     root.DEXTER_LAB.hearthDiagnosticSouthSurfacePointerReceipt = receipt;
     root.DEXTER_LAB.hearthDiagnosticSouthSurfaceClassifierReceipt = receipt;
+    root.DEXTER_LAB.hearthDiagnosticSouthScopeLensReceipt = receipt;
 
     state.aliasPublishCount += 1;
     return true;
@@ -1814,8 +2144,11 @@
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     packetName: PACKET_NAME,
 
-    role: "ASYMMETRIC_TENTH_DIAGNOSTIC_SIDECAR_SURFACE_CLASSIFIER",
-    authority: "READ_ONLY_SURFACE_CLASSIFICATION_AND_PROBE_SOUTH_PACKET_EVIDENCE",
+    role: "SOUTH_SURFACE_POINTER_SCOPE_LENS_SIDECAR",
+    authority: "READ_ONLY_SCOPE_LENS_CLASSIFICATION_AND_PROBE_SOUTH_PACKET_EVIDENCE",
+    primaryDuty: "SCOPE_LENS_CLASSIFICATION",
+    presentProblem: "DIAGNOSTIC_SCOPE_DEFINITION_BY_LENS",
+    copyProblemIsNotCurrentPrimaryProblem: true,
     chronologyPosition: "OUTSIDE_NINE_STEP_CHRONOLOGY",
     asymmetricTenthDiagnosticSidecar: true,
     replacesSouthRail: false,
@@ -1823,73 +2156,68 @@
     operationalDependencyForNorth: false,
     consumer: PROBE_SOUTH_FILE,
 
+    legacyCanvasFeedClassifierCompatible: true,
+    legacyCanvasFeedClassifierPrimary: false,
+
     southRailFile: SOUTH_RAIL_FILE,
     probeSouthFile: PROBE_SOUTH_FILE,
+    northRailFile: NORTH_RAIL_FILE,
     canvasFile: CANVAS_FILE,
     canvasFingerInspectFile: CANVAS_FINGER_INSPECT_FILE,
+    surfaceTruthFile: SURFACE_TRUTH_FILE,
     hexSurfaceFile: HEX_SURFACE_FILE,
-    hexFourPairFile: HEX_FOUR_PAIR_FILE,
-    pointerFingerFile: POINTER_FINGER_FILE,
+    pointerSurfaceFile: POINTER_SURFACE_FILE,
 
-    expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
-    expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
-    expectedFingerInspectContract: EXPECTED_FINGER_INSPECT_CONTRACT,
-    expectedFingerInspectRenewalContract: EXPECTED_FINGER_INSPECT_RENEWAL_CONTRACT,
-    expectedProbeSouthContract: EXPECTED_PROBE_SOUTH_CONTRACT,
-
-    splitResponsibilityActive: true,
-    fingerInspectResponsibility:
-      "SURFACE_IDENTITY_RECEIVER_METHODS_HEX_DELIVERY_AND_PIXEL_OBSERVATION",
-    southSurfacePointerResponsibility:
-      "SURFACE_CLASSIFICATION_AND_CANVAS_BLAME_GATE_FOR_PROBE_SOUTH",
-    canvasBlameRequiresProductionCanvasConfirmation: true,
-
+    runScopeLens,
     runSouthSurfacePointerRead,
     inspectSouthSurfacePointer,
     inspectSurfacePointer,
     runProbeSidecar,
     inspect,
+    probe,
+    measure,
     runDiagnostic,
     receiveFingerInspectReport,
     consumeFingerInspectReport,
     receiveCanvasFingerInspectPacket,
     consumeCanvasFingerInspectPacket,
     getReport,
+    getPacket,
     getPacketText,
     getCompactSummary,
+    getScopeLenses,
     getState,
     getReceipt,
     getReceiptLight,
     publishAliases,
 
+    runScopeLensApiAvailable: true,
     runSouthSurfacePointerReadApiAvailable: true,
     inspectSouthSurfacePointerApiAvailable: true,
     inspectSurfacePointerApiAvailable: true,
     runProbeSidecarApiAvailable: true,
     inspectApiAvailable: true,
+    probeApiAvailable: true,
+    measureApiAvailable: true,
     runDiagnosticApiAvailable: true,
     receiveFingerInspectReportApiAvailable: true,
     consumeFingerInspectReportApiAvailable: true,
     receiveCanvasFingerInspectPacketApiAvailable: true,
     consumeCanvasFingerInspectPacketApiAvailable: true,
     getReportApiAvailable: true,
+    getPacketApiAvailable: true,
     getPacketTextApiAvailable: true,
     getCompactSummaryApiAvailable: true,
+    getScopeLensesApiAvailable: true,
     getStateApiAvailable: true,
     getReceiptApiAvailable: true,
     getReceiptLightApiAvailable: true,
 
-    productionMutationAuthorized: false,
-    hearthRepairAuthorized: false,
-    routeRepairAuthorized: false,
-    routeConductorMutationAuthorized: false,
-    controlMutationAuthorized: false,
-    canvasDrawingAuthorized: false,
-    canvasCreationAuthorized: false,
-    canvasRepairAuthorized: false,
-    canvasReleaseAuthorized: false,
-    runtimeRestartAuthorized: false,
-    finalVisualPassAuthority: false,
+    malpracticeLensReadsExplicitStatusFieldsOnly: true,
+    dutyLoadLensReadsExplicitStatusFieldsOnly: true,
+    rawTextScanUsedForMalpractice: false,
+    rawTextScanUsedForDutyLoad: false,
+    schemaVocabularyIgnoredForMalpracticeDetection: true,
 
     ...NO_CLAIMS,
 
@@ -1906,7 +2234,7 @@
     }
   });
 
-  publishReport(buildReport({ diagnosticTimestamp: nowIso(), reason: "INITIAL_PUBLICATION" }));
+  publishReport(buildReport({ reason: "INITIAL_PUBLICATION" }));
   publishAliases();
 
   if (typeof module !== "undefined" && module.exports) {

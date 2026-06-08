@@ -3,21 +3,20 @@
   lang="en"
   data-route="/showroom/globe/hearth/diagnostic/"
   data-page="hearth-diagnostic-route"
-  data-contract="HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_TNT_v6"
-  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_RECEIPT_v6"
-  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_TNT_v5"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7"
+  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_RECEIPT_v7"
+  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_TNT_v6"
   data-baseline-contract="HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1"
   data-role="thin-diagnostic-route-receiver"
-  data-receiver-standard="receipt-return-transport-receiver"
+  data-receiver-standard="labwest-construct-alignment-gauge-variance-receiver"
   data-diagnostic-target="/showroom/globe/hearth/"
-  data-route-calls-north-only="true"
-  data-diagnostic-law-authority="north-parent-only"
-  data-north-anchor-contract="HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11"
-  data-report-packet="HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v2"
-  data-receipt-return-transport-hardened="true"
-  data-receipt-return-global-fallback="true"
-  data-receipt-return-shape-normalization="true"
-  data-route-loads-child-assets-as-loading-convenience="true"
+  data-receipts-are-specific-diagnostic-evidence="true"
+  data-gauges-are-collective-diagnostic-variance="true"
+  data-gauges-do-not-replace-receipts="true"
+  data-run-control-enabled-by-receiver-load="true"
+  data-north-verdict-required-for-final-diagnostic-verdict="true"
+  data-labwest-construct-is-controlling-diagnostic-derivative="true"
+  data-north-diagnostic-track-must-align-to-labwest-construct="true"
   data-production-mutation-authorized="false"
   data-hearth-repair-authorized="false"
   data-runtime-restart-authorized="false"
@@ -33,18 +32,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth Diagnostic Receipt Receiver</title>
+  <title>Hearth Diagnostic Gauge Variance Receiver</title>
   <meta
     name="description"
-    content="Receipt-return transport receiver for the Hearth diagnostic rail. Calls North only and hardens diagnostic packet return into the visible receipt panel."
+    content="Gauge-variance diagnostic receiver for Hearth. Receipts remain specific diagnostic evidence; gauges summarize collective diagnostic variance."
   />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #030609;
-      --panel: rgba(13, 22, 34, 0.88);
-      --panel2: rgba(22, 35, 50, 0.9);
+      --panel: rgba(13, 22, 34, 0.9);
+      --panel2: rgba(22, 35, 50, 0.92);
       --line: rgba(220, 238, 255, 0.18);
       --line2: rgba(220, 238, 255, 0.1);
       --text: rgba(248, 251, 255, 0.97);
@@ -190,6 +189,11 @@
       line-height: 1.08;
     }
 
+    h3 {
+      font-size: 1.05rem;
+      line-height: 1.1;
+    }
+
     p {
       margin: 0;
       color: var(--muted);
@@ -247,7 +251,8 @@
     .grid-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
     .tile,
-    .card {
+    .card,
+    .gauge {
       border: 1px solid var(--line2);
       border-radius: 18px;
       background: rgba(0, 0, 0, 0.16);
@@ -257,7 +262,8 @@
 
     .label,
     .tile-label,
-    .card-subtitle {
+    .card-subtitle,
+    .gauge-subtitle {
       color: var(--soft);
       font-size: 0.74rem;
       font-weight: 850;
@@ -266,7 +272,8 @@
     }
 
     .tile-value,
-    .card-title {
+    .card-title,
+    .gauge-title {
       margin-top: 7px;
       font-size: 1.05rem;
       font-weight: 900;
@@ -405,6 +412,34 @@
       background: #020407;
     }
 
+    .gauge-meter {
+      position: relative;
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin: 12px 0 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .gauge-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0%;
+      border-radius: inherit;
+      background: currentColor;
+      opacity: 0.82;
+    }
+
+    .gauge-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
     .footer {
       color: var(--soft);
       padding: 18px 0 4px;
@@ -442,7 +477,7 @@
         <a href="/showroom/">Showroom</a>
         <a href="/showroom/globe/">Globe</a>
         <a href="/showroom/globe/hearth/">Hearth</a>
-        <span aria-current="page">Receipt Receiver</span>
+        <span aria-current="page">Gauge Variance Receiver</span>
       </div>
       <a class="button-link" href="/showroom/globe/hearth/">Open Hearth Route</a>
     </nav>
@@ -450,90 +485,84 @@
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-inner">
         <div class="chips" aria-label="Receiver authority markers">
-          <span class="chip">Receipt Return Transport</span>
-          <span class="chip">North v11 Anchor</span>
-          <span class="chip">North-only call</span>
-          <span class="chip">Global fallback</span>
-          <span class="chip">No F13 · No F21</span>
+          <span class="chip">LabWest Construct</span>
+          <span class="chip">Gauge Variance</span>
+          <span class="chip">Specific Receipts</span>
+          <span class="chip">Collective Diagnostics</span>
+          <span class="chip">No Repair Authority</span>
         </div>
 
-        <h1 id="page-title">Hearth Diagnostic Receipt Receiver</h1>
+        <h1 id="page-title">Hearth Diagnostic Gauge Variance Receiver</h1>
         <p class="hero-copy">
-          Receiver-only diagnostic route. This file loads diagnostic assets as a convenience, calls NORTH only,
-          normalizes all known return shapes, and writes the diagnostic receipt back into the visible raw-output panel.
-          It does not repair Hearth, draw Canvas, restart runtime, claim readiness, or claim a visual pass.
+          Receiver-only diagnostic route. Specific receipts remain exact diagnostic evidence.
+          Gauges show collective variance across the diagnostic field: load state, receipt health,
+          probe alignment, container collapse risk, duty load, malpractice risk, and construction readiness.
         </p>
 
         <div class="controls" aria-label="Diagnostic controls" style="margin-top: 18px;">
-          <button id="runDiagnosticButton" type="button" data-run-diagnostic disabled>Run Diagnostic</button>
-          <button id="copyReportButton" type="button" data-copy-report disabled>Copy Report</button>
+          <button id="runDiagnosticButton" type="button" data-run-diagnostic>Run Diagnostic Alignment</button>
+          <button id="copyReportButton" type="button" data-copy-report disabled>Copy Alignment Report</button>
+          <button id="resetGaugeButton" type="button" data-reset-gauge>Reset Gauges</button>
           <button id="refreshStatusButton" type="button" data-refresh-status>Refresh Status</button>
           <a class="button-link" href="#raw-output">Raw Output / Receipts</a>
         </div>
 
         <section class="grid grid-6" aria-label="Mission verdict strip" id="missionVerdictPanel">
-          <div class="tile"><div class="tile-label">Return Transport</div><div class="tile-value is-warn">INITIALIZING</div></div>
-          <div class="tile"><div class="tile-label">North API</div><div class="tile-value is-warn">LOADING</div></div>
-          <div class="tile"><div class="tile-label">Chronology</div><div class="tile-value is-warn">NOT RUN</div></div>
-          <div class="tile"><div class="tile-label">Canvas Truth</div><div class="tile-value is-warn">NOT RUN</div></div>
-          <div class="tile"><div class="tile-label">Receipt Source</div><div class="tile-value is-warn">NONE</div></div>
-          <div class="tile"><div class="tile-label">Next File</div><div class="tile-value is-warn">AWAITING RUN</div></div>
+          <div class="tile"><div class="tile-label">Control Gate</div><div class="tile-value is-good">RECEIVER READY</div></div>
+          <div class="tile"><div class="tile-label">North Verdict</div><div class="tile-value is-warn">NOT RUN</div></div>
+          <div class="tile"><div class="tile-label">Receipt Field</div><div class="tile-value is-warn">NOT RUN</div></div>
+          <div class="tile"><div class="tile-label">Gauge Variance</div><div class="tile-value is-warn">NOT RUN</div></div>
+          <div class="tile"><div class="tile-label">Surface Truth</div><div class="tile-value is-warn">NOT RUN</div></div>
+          <div class="tile"><div class="tile-label">Construction</div><div class="tile-value is-warn">BLOCKED</div></div>
         </section>
       </div>
     </section>
 
     <section class="panel-stack" aria-label="Diagnostic receiver panels">
       <details class="panel" open>
-        <summary><h2>Receipt Return Transport</h2></summary>
+        <summary><h2>Collective Diagnostic Gauges</h2></summary>
         <div class="panel-body">
           <p class="small">
-            This is the active fix surface. If North returns through any known result, getter, or global publication surface,
-            this receiver should write the packet into the raw output panel.
+            Gauge cards are screenshot-safe collective diagnostics. They summarize variance across many receipts,
+            but they do not replace receipts and do not authorize repair.
           </p>
-          <div class="grid grid-2">
-            <section class="card">
-              <h3>Transport Status</h3>
-              <div class="kv" id="transportPanel" style="margin-top: 12px;"></div>
-            </section>
-            <section class="card">
-              <h3>North Anchor</h3>
-              <div class="kv" id="northStatusPanel" style="margin-top: 12px;"></div>
-            </section>
-          </div>
+          <div class="grid grid-3" id="gaugeBoard"></div>
         </div>
       </details>
 
       <details class="panel" open>
-        <summary><h2>Receipt Buckets</h2></summary>
+        <summary><h2>Specific Receipt Field</h2></summary>
         <div class="panel-body">
           <p class="small">
-            Display-only split of returned receipt evidence. North remains the adjudicator; this receiver only groups readable output.
+            Each card reports one specific diagnostic profile, receipt, or packet surface. Missing receipts remain meaningful.
           </p>
-          <div class="grid grid-4" id="receiptBucketsPanel"></div>
+          <div class="grid grid-4" id="receiptFieldPanel"></div>
         </div>
       </details>
 
       <details class="panel" open>
-        <summary><h2>Cardinal / Probe Load State</h2></summary>
+        <summary><h2>Diagnostic Participant Load State</h2></summary>
         <div class="panel-body">
           <p class="small">
-            Script load state only. The receiver may load diagnostic assets, but it still calls only North.
+            Script load and public API state. The receiver may load assets as a convenience, but it does not mutate production.
           </p>
           <div class="grid grid-4" id="moduleDeck"></div>
         </div>
       </details>
 
-      <details class="panel">
-        <summary><h2>North Verdict Summary</h2></summary>
+      <details class="panel" open>
+        <summary><h2>Receiver / Control Gate</h2></summary>
         <div class="panel-body">
-          <div class="kv" id="northVerdictPanel"></div>
-        </div>
-      </details>
-
-      <details class="panel">
-        <summary><h2>Trace / Alignment Summary</h2></summary>
-        <div class="panel-body">
-          <div class="kv" id="tracePanel"></div>
+          <div class="grid grid-2">
+            <section class="card">
+              <h3>Receiver Status</h3>
+              <div class="kv" id="receiverStatusPanel" style="margin-top: 12px;"></div>
+            </section>
+            <section class="card">
+              <h3>North Verdict Gate</h3>
+              <div class="kv" id="northGatePanel" style="margin-top: 12px;"></div>
+            </section>
+          </div>
         </div>
       </details>
 
@@ -541,7 +570,7 @@
         <summary><h2>Rendered Target Viewport</h2></summary>
         <div class="panel-body">
           <p class="small">
-            Same-origin viewport passed to North. This receiver does not mutate the target route.
+            Same-origin viewport passed to diagnostic participants when available. This receiver does not mutate the target route.
           </p>
           <div class="target-frame-shell">
             <div class="target-frame-header">
@@ -567,31 +596,40 @@
       <details class="panel" id="raw-output" open>
         <summary><h2>Raw Output / Receipts</h2></summary>
         <div class="panel-body">
-          <p class="small">The packet panel is updated first after a run, before secondary display boards render.</p>
+          <p class="small">
+            Alignment output is receiver evidence. North verdict remains separate and is not synthesized when missing.
+          </p>
 
           <details class="raw-drawer" open>
-            <summary>Compact Summary</summary>
+            <summary>Compact Gauge Summary</summary>
             <div class="drawer-body">
               <pre id="compactSummary">COMPACT_SUMMARY=NOT_RUN</pre>
             </div>
           </details>
 
           <details class="raw-drawer" open>
-            <summary>Full Diagnostic Packet</summary>
+            <summary>Full Alignment Packet</summary>
             <div class="drawer-body">
-              <textarea id="packetOutput" spellcheck="false" aria-label="Full diagnostic packet output">FULL_PACKET_TEXT=NOT_RUN</textarea>
+              <textarea id="packetOutput" spellcheck="false" aria-label="Full diagnostic alignment packet output">FULL_ALIGNMENT_PACKET=NOT_RUN</textarea>
             </div>
           </details>
 
           <details class="raw-drawer">
-            <summary>North Verdict JSON</summary>
+            <summary>Specific Receipt JSON</summary>
             <div class="drawer-body">
-              <pre id="northVerdictJson">NORTH_VERDICT=NOT_RUN</pre>
+              <pre id="receiptJson">SPECIFIC_RECEIPTS=NOT_RUN</pre>
             </div>
           </details>
 
           <details class="raw-drawer">
-            <summary>Route Receiver Receipt</summary>
+            <summary>Gauge Variance JSON</summary>
+            <div class="drawer-body">
+              <pre id="gaugeJson">GAUGE_VARIANCE=NOT_RUN</pre>
+            </div>
+          </details>
+
+          <details class="raw-drawer">
+            <summary>Receiver Receipt</summary>
             <div class="drawer-body">
               <pre id="receiverReceiptJson">ROUTE_RECEIVER_RECEIPT=INITIALIZING</pre>
             </div>
@@ -601,8 +639,9 @@
     </section>
 
     <footer class="footer">
-      Contract: HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_TNT_v6.
-      Receiver only. No production mutation, no runtime restart, no Canvas release, no F13, no F21, no ready text, no visual pass.
+      Contract: HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7.
+      Receiver only. Gauges show collective variance; receipts show specific evidence. No production mutation, no runtime restart,
+      no Canvas release, no F13, no F21, no ready text, no visual pass.
     </footer>
   </main>
 
@@ -611,32 +650,81 @@
       "use strict";
 
       const CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_TNT_v6";
+        "HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7";
       const RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_RECEIPT_v6";
+        "HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_RECEIPT_v7";
       const PREVIOUS_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER_TNT_v5";
+        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_TNT_v6";
       const BASELINE_CONTRACT =
         "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1";
       const VERSION =
-        "2026-06-06.hearth-diagnostic-route-receipt-return-transport-receiver-v6";
+        "2026-06-08.hearth-diagnostic-route-labwest-construct-alignment-gauge-variance-receiver-v7";
 
       const TARGET_ROUTE = "/showroom/globe/hearth/";
       const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-      const REPORT_PACKET = "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RESULT_PACKET_v2";
+      const REPORT_PACKET = "HEARTH_DIAGNOSTIC_ALIGNMENT_GAUGE_VARIANCE_PACKET_v7";
 
-      const NORTH_CONTRACT =
-        "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11";
-      const NORTH_RECEIPT =
-        "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT_v11";
+      const root = window;
+      const doc = document;
 
-      const CHILD_SCRIPTS = Object.freeze([
+      const PARTICIPANTS = Object.freeze([
         {
-          name: "NORTH",
-          title: "North Chronology Hub",
+          id: "LAB_NORTH_GRAMMAR",
+          title: "Lab North Grammar",
+          type: "anchor-grammar",
+          file: "/assets/lab/runtime-table.js",
+          contract: "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1",
+          expectedReceiptClass: "grammar-source-receipt",
+          paths: [
+            "LAB_RUNTIME_TABLE",
+            "LAB_RUNTIME_TABLE_NORTH",
+            "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD",
+            "DEXTER_LAB.runtimeTable",
+            "DEXTER_LAB.runtimeTableNorth",
+            "DEXTER_LAB.northRuntimeTable",
+            "HEARTH.labRuntimeTable",
+            "HEARTH.labRuntimeTableNorth",
+            "HEARTH.LAB_RUNTIME_TABLE_NORTH"
+          ],
+          receiptMethods: [
+            "getReceipt",
+            "getReceiptLight",
+            "composeReceipt",
+            "composeReceiptLight",
+            "getNorthGrammarPacket"
+          ]
+        },
+        {
+          id: "LABWEST_CONSTRUCT",
+          title: "LabWest Construct",
+          type: "derivative-construct",
+          file: "/assets/lab/runtime-table.west.js",
+          contract: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_TNT_v5_2",
+          expectedReceiptClass: "derivative-construct-receipt",
+          paths: [
+            "LAB_RUNTIME_TABLE_WEST",
+            "LAB_RUNTIME_TABLE_CARDINAL_WEST",
+            "DEXTER_LAB.runtimeTableWest",
+            "DEXTER_LAB.cardinalWestRuntimeTable",
+            "HEARTH.labWestRuntimeTable",
+            "HEARTH.LAB_RUNTIME_TABLE_WEST"
+          ],
+          receiptMethods: [
+            "getReceipt",
+            "getReceiptLight",
+            "composeReceipt",
+            "composeReceiptLight",
+            "getReport",
+            "getPacket"
+          ]
+        },
+        {
+          id: "NORTH_RAIL",
+          title: "North Diagnostic Rail",
+          type: "north-diagnostic-track",
           file: "/assets/hearth/hearth.diagnostic.rail.js",
-          contract: NORTH_CONTRACT,
-          requiredForRun: true,
+          contract: "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11",
+          expectedReceiptClass: "north-rail-receipt",
           paths: [
             "HEARTH.diagnosticRail",
             "HEARTH.parallelDiagnosticRail",
@@ -654,13 +742,24 @@
             "DEXTER_LAB.hearthDiagnosticNorth",
             "DEXTER_LAB.hearthDiagnosticNorthChronologyHub",
             "DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub"
-          ]
+          ],
+          receiptMethods: [
+            "getReceipt",
+            "getReceiptLight",
+            "getReport",
+            "getPacket",
+            "getPacketText",
+            "getNorthVerdict"
+          ],
+          runMethods: ["runDiagnostic"]
         },
         {
-          name: "EAST",
-          title: "Served Source Evidence",
+          id: "EAST_RAIL",
+          title: "East Source Read",
+          type: "diagnostic-rail-child",
           file: "/assets/hearth/hearth.diagnostic.east.js",
           contract: "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1",
+          expectedReceiptClass: "source-read-receipt",
           paths: [
             "HEARTH.diagnosticEast",
             "HEARTH.diagnosticRailEast",
@@ -668,13 +767,16 @@
             "HEARTH_DIAGNOSTIC_RAIL_EAST",
             "DEXTER_LAB.hearthDiagnosticEast",
             "DEXTER_LAB.hearthDiagnosticRailEast"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         },
         {
-          name: "WEST",
-          title: "Rendered Target Evidence",
+          id: "WEST_RAIL",
+          title: "West Rendered Read",
+          type: "diagnostic-rail-child",
           file: "/assets/hearth/hearth.diagnostic.west.js",
           contract: "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1",
+          expectedReceiptClass: "rendered-read-receipt",
           paths: [
             "HEARTH.diagnosticWest",
             "HEARTH.diagnosticRailWest",
@@ -682,13 +784,16 @@
             "HEARTH_DIAGNOSTIC_RAIL_WEST",
             "DEXTER_LAB.hearthDiagnosticWest",
             "DEXTER_LAB.hearthDiagnosticRailWest"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         },
         {
-          name: "SOUTH",
-          title: "Packet Output Handoff",
+          id: "SOUTH_RAIL",
+          title: "South Packet Output",
+          type: "diagnostic-rail-child",
           file: "/assets/hearth/hearth.diagnostic.south.js",
           contract: "HEARTH_DIAGNOSTIC_SOUTH_PAIR_SIDE_PACKET_OUTPUT_HANDOFF_TNT_v10",
+          expectedReceiptClass: "packet-output-receipt",
           paths: [
             "HEARTH.diagnosticSouth",
             "HEARTH.diagnosticRailSouth",
@@ -696,172 +801,191 @@
             "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
             "DEXTER_LAB.hearthDiagnosticSouth",
             "DEXTER_LAB.hearthDiagnosticRailSouth"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         },
         {
-          name: "PROBE_NORTH",
+          id: "PROBE_NORTH",
           title: "North Probe",
+          type: "probe",
           file: "/assets/hearth/hearth.diagnostic.probe.north.js",
           contract: "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1",
+          expectedReceiptClass: "probe-receipt",
           paths: [
             "HEARTH.diagnosticProbeNorth",
             "HEARTH_DIAGNOSTIC_PROBE_NORTH",
             "DEXTER_LAB.hearthDiagnosticProbeNorth"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         },
         {
-          name: "PROBE_EAST",
+          id: "PROBE_EAST",
           title: "East Probe",
+          type: "probe",
           file: "/assets/hearth/hearth.diagnostic.probe.east.js",
           contract: "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1",
+          expectedReceiptClass: "probe-receipt",
           paths: [
             "HEARTH.diagnosticProbeEast",
             "HEARTH_DIAGNOSTIC_PROBE_EAST",
             "DEXTER_LAB.hearthDiagnosticProbeEast"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         },
         {
-          name: "PROBE_WEST",
+          id: "PROBE_WEST",
           title: "West Probe",
+          type: "probe",
           file: "/assets/hearth/hearth.diagnostic.probe.west.js",
           contract: "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1",
+          expectedReceiptClass: "probe-receipt",
           paths: [
             "HEARTH.diagnosticProbeWest",
             "HEARTH_DIAGNOSTIC_PROBE_WEST",
             "DEXTER_LAB.hearthDiagnosticProbeWest"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         },
         {
-          name: "CANVAS_TRUTH",
-          title: "Canvas Truth Hub",
+          id: "SURFACE_TRUTH_PROBE",
+          title: "Canvas Surface Truth",
+          type: "contract-definition-probe",
           file: "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
-          contract: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1",
+          contract: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CYCLE_BOUND_CONTRACT_DEFINITION_ALIGNMENT_TNT_v2",
+          expectedReceiptClass: "surface-truth-contract-definition-receipt",
           paths: [
             "HEARTH.diagnosticProbeCanvasSurfaceTruth",
-            "HEARTH.diagnosticCanvasSurfaceTruthProbe",
+            "HEARTH.canvasSurfaceTruthProbe",
+            "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
+            "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
             "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+            "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
             "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
+            "DEXTER_LAB.canvasSurfaceTruthProbe",
+            "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth",
             "DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth"
-          ]
+          ],
+          receiptMethods: [
+            "getReceipt",
+            "getReceiptLight",
+            "getProfileReceipt",
+            "composeProfileReceipt",
+            "getContractDefinitionReceipt",
+            "composeContractDefinitionPacket"
+          ],
+          runMethods: ["inspect", "probe", "measure", "run"]
         },
         {
-          name: "PROBE_SOUTH",
+          id: "PROBE_SOUTH",
           title: "South Probe",
+          type: "probe",
           file: "/assets/hearth/hearth.diagnostic.probe.south.js",
           contract: "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1",
+          expectedReceiptClass: "probe-receipt",
           paths: [
             "HEARTH.diagnosticProbeSouth",
             "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
             "DEXTER_LAB.hearthDiagnosticProbeSouth"
-          ]
-        },
-        {
-          name: "SOUTH_POINTER",
-          title: "South Surface Pointer Sidecar",
-          file: "/assets/hearth/hearth.diagnostic.south.surface.pointer.js",
-          contract: "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_TNT_v1",
-          paths: [
-            "HEARTH.diagnosticSouthSurfacePointer",
-            "HEARTH.diagnosticSurfacePointerSouth",
-            "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
-            "DEXTER_LAB.hearthDiagnosticSouthSurfacePointer"
-          ]
+          ],
+          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
         }
       ]);
 
-      const RECEIPT_BUCKETS = Object.freeze([
+      const GAUGE_DEFINITIONS = Object.freeze([
         {
-          id: "LAB_RUNTIME_AND_FIRST_ENGINES",
-          title: "North / Lab / First Engines",
-          keys: [
-            "LAB_NORTH_OBSERVED",
-            "LAB_NORTH_CONTRACT",
-            "MACRO_WEST_OBSERVED",
-            "MACRO_WEST_CONTRACT",
-            "ROUTE_CONDUCTOR_OBSERVED",
-            "ROUTE_CONDUCTOR_CONTRACT",
-            "CONTROL_AUTHORITY_OBSERVED",
-            "CONTROL_AUTHORITY_CONTRACT"
-          ]
+          id: "CONTROL_GATE",
+          title: "Control Gate",
+          subtitle: "Receiver admission",
+          inputs: ["RECEIVER_LOADED", "RUN_BUTTON_AVAILABLE", "ALIGNMENT_RUN_AVAILABLE"]
         },
         {
-          id: "DIAGNOSTIC_TRACK_ALIGNMENT",
-          title: "Diagnostic Track / Alignment",
-          keys: [
-            "CHRONOLOGY_COMPLETION_STATUS",
-            "DIAGNOSTIC_TRACK_NEWS_ALIGNMENT_STATUS",
-            "DIAGNOSTIC_TRACK_FIBONACCI_SYNCHRONIZATION_STATUS",
-            "FIRST_CHRONOLOGY_FAILURE_CLASS",
-            "DIAGNOSTIC_CHRONOLOGY_CLEAN",
-            "DIAGNOSTIC_RAIL_CLEAN"
-          ]
+          id: "RECEIPT_FIELD_HEALTH",
+          title: "Receipt Field Health",
+          subtitle: "Specific evidence presence",
+          inputs: ["RECEIPTS_PRESENT", "RECEIPTS_MISSING", "RECEIPTS_MALFORMED"]
         },
         {
-          id: "CANVAS_ALIGNMENT_AND_BISHOPS",
-          title: "Canvas / Bishop Alignment",
-          keys: [
-            "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
-            "CANVAS_TRUTH_FAILURE_CLASS",
-            "CANVAS_ELEMENT_FOUND",
-            "CANVAS_RECT_NONZERO",
-            "CANVAS_PIXEL_VISIBLE",
-            "CANVAS_LAYER_BLOCKED",
-            "VISIBLE_PLANET_PROOF_SOURCE",
-            "FOUR_WAY_CANVAS_HANDOFF_STATUS"
-          ]
+          id: "LABWEST_CONSTRUCT_ALIGNMENT",
+          title: "LabWest Construct",
+          subtitle: "Controlling derivative construct",
+          inputs: ["LABWEST_PRESENT", "LABWEST_RECEIPT", "LAB_NORTH_GRAMMAR"]
         },
         {
-          id: "FINGER_FILES_AND_SURFACE_POINTER",
-          title: "Finger Files / Surface Pointer",
-          keys: [
-            "BISHOP_QUEEN_FUNNEL_OBSERVED",
-            "FINGER_INSPECT_OBSERVED",
-            "SURFACE_PACKET_OBSERVED",
-            "HEX_SURFACE_OBSERVED",
-            "BOUNDARY_FINGER_READY",
-            "MASS_FINGER_READY",
-            "SURFACE_FINGER_READY",
-            "LIGHT_FINGER_READY",
-            "DOWNSTREAM_EXPRESSION_SET_STATUS"
-          ]
+          id: "NORTH_DIAGNOSTIC_TRACK",
+          title: "North Diagnostic Track",
+          subtitle: "Verdict availability",
+          inputs: ["NORTH_PRESENT", "NORTH_RUN_API", "NORTH_VERDICT"]
+        },
+        {
+          id: "SURFACE_TRUTH_CONTRACTS",
+          title: "Surface Truth Contracts",
+          subtitle: "Cycle-bound contract definitions",
+          inputs: ["SURFACE_TRUTH_PRESENT", "SURFACE_TRUTH_RECEIPT", "SURFACE_TRUTH_INSPECTION"]
+        },
+        {
+          id: "PROBE_NETWORK_VARIANCE",
+          title: "Probe Network",
+          subtitle: "Distributed probe field",
+          inputs: ["PROBE_PRESENT_COUNT", "PROBE_RECEIPT_COUNT", "PROBE_MISSING_COUNT"]
+        },
+        {
+          id: "CANVAS_CYCLE_BOUNDARY",
+          title: "Canvas Cycle Boundary",
+          subtitle: "Chapel / Bishop / Priest separation",
+          inputs: ["CANVAS_HUB_BOUNDARY", "HEX_SURFACE_BOUNDARY", "CHAPEL_2_BOUNDARY"]
+        },
+        {
+          id: "CONTAINER_COLLAPSE_RISK",
+          title: "Container Collapse Risk",
+          subtitle: "Borrowed contract / substitution spread",
+          inputs: ["BORROWED_CONTRACT_RISK", "SIBLING_SUBSTITUTION_RISK", "PARENT_CHILD_COLLAPSE_RISK"]
+        },
+        {
+          id: "DUTY_LOAD_MALPRACTICE",
+          title: "Duty Load / Malpractice",
+          subtitle: "Diagnostic self-boundary",
+          inputs: ["SELF_DUTY_STATUS", "DUTY_LOAD_STATUS", "MALPRACTICE_STATUS"]
+        },
+        {
+          id: "CONSTRUCTION_READINESS",
+          title: "Construction Readiness",
+          subtitle: "Derivative map precondition",
+          inputs: ["LABWEST_CONSTRUCT", "SURFACE_TRUTH_CONTRACTS", "NORTH_VERDICT"]
         }
       ]);
-
-      const root = window;
-      const doc = document;
 
       const state = {
-        loadStatus: {},
-        northAvailable: false,
-        receiptReturnStatus: "INITIALIZING",
-        receiptReturnSource: "NONE",
-        lastRunOk: false,
-        lastReport: null,
-        lastVerdict: null,
-        lastNorthReceipt: null,
-        lastPacketText: "FULL_PACKET_TEXT=NOT_RUN",
-        lastCompactSummary: "COMPACT_SUMMARY=NOT_RUN",
+        loadStarted: false,
+        loadComplete: false,
+        running: false,
         lastUpdatedAt: "",
-        lastError: "",
-        renderErrors: []
+        lastAlignmentPacket: null,
+        lastPacketText: "FULL_ALIGNMENT_PACKET=NOT_RUN",
+        lastCompactSummary: "COMPACT_SUMMARY=NOT_RUN",
+        participants: {},
+        receipts: {},
+        gauges: {},
+        errors: [],
+        targetFrameLoaded: false
       };
 
       const els = {
         run: doc.getElementById("runDiagnosticButton"),
         copy: doc.getElementById("copyReportButton"),
+        reset: doc.getElementById("resetGaugeButton"),
         refresh: doc.getElementById("refreshStatusButton"),
         summary: doc.getElementById("compactSummary"),
         packet: doc.getElementById("packetOutput"),
-        verdictJson: doc.getElementById("northVerdictJson"),
+        receiptJson: doc.getElementById("receiptJson"),
+        gaugeJson: doc.getElementById("gaugeJson"),
         receiverReceiptJson: doc.getElementById("receiverReceiptJson"),
         frame: doc.getElementById("hearthDiagnosticTargetFrame"),
         mission: doc.getElementById("missionVerdictPanel"),
-        transport: doc.getElementById("transportPanel"),
+        gaugeBoard: doc.getElementById("gaugeBoard"),
+        receiptField: doc.getElementById("receiptFieldPanel"),
         modules: doc.getElementById("moduleDeck"),
-        buckets: doc.getElementById("receiptBucketsPanel"),
-        northVerdict: doc.getElementById("northVerdictPanel"),
-        trace: doc.getElementById("tracePanel"),
-        northStatus: doc.getElementById("northStatusPanel")
+        receiverStatus: doc.getElementById("receiverStatusPanel"),
+        northGate: doc.getElementById("northGatePanel")
       };
 
       function nowIso() {
@@ -881,7 +1005,7 @@
         return String(value);
       }
 
-      function bounded(value, limit = 4000) {
+      function bounded(value, limit = 5000) {
         return safeString(value)
           .replace(/\n/g, " ")
           .replace(/\s+/g, " ")
@@ -906,6 +1030,14 @@
           .replace(/"/g, "&quot;");
       }
 
+      function targetWindow() {
+        try {
+          return els.frame && els.frame.contentWindow ? els.frame.contentWindow : null;
+        } catch (_error) {
+          return null;
+        }
+      }
+
       function readPath(base, path) {
         try {
           const parts = safeString(path).split(".");
@@ -922,41 +1054,31 @@
         }
       }
 
-      function targetWindow() {
-        try {
-          return els.frame && els.frame.contentWindow ? els.frame.contentWindow : null;
-        } catch (_error) {
-          return null;
-        }
-      }
-
       function findGlobal(paths) {
         for (const path of paths || []) {
           const found = readPath(root, path);
-          if (found) return found;
+          if (found) return { value: found, scope: "receiver-window", path };
         }
 
         const tw = targetWindow();
         if (tw) {
           for (const path of paths || []) {
             const found = readPath(tw, path);
-            if (found) return found;
+            if (found) return { value: found, scope: "target-window", path };
           }
         }
 
-        return null;
+        return { value: null, scope: "none", path: "NONE" };
       }
 
       function getRaw(source, key, fallback = undefined) {
         if (!isObject(source)) return fallback;
-
         if (Object.prototype.hasOwnProperty.call(source, key)) {
           const value = source[key];
           return value === undefined || value === null ? fallback : value;
         }
 
         const lower = key.toLowerCase();
-
         for (const candidate of Object.keys(source)) {
           if (candidate.toLowerCase() === lower) {
             const value = source[candidate];
@@ -967,66 +1089,20 @@
         return fallback;
       }
 
-      function toCamel(key) {
-        return safeString(key)
-          .toLowerCase()
-          .replace(/_([a-z0-9])/g, (_match, letter) => letter.toUpperCase());
-      }
-
-      function valueOf(key, fallback = "UNKNOWN") {
-        const report = state.lastReport || {};
-        const verdict = state.lastVerdict || {};
-        const camel = toCamel(key);
-
-        const sources = [
-          getRaw(report, key, undefined),
-          getRaw(report, camel, undefined),
-          getRaw(verdict, key, undefined),
-          getRaw(verdict, camel, undefined)
-        ];
-
-        for (const value of sources) {
-          if (value !== undefined && value !== null && value !== "") return value;
-        }
-
-        return fallback;
-      }
-
       function packetValue(value, fallback = "UNKNOWN") {
         if (value === undefined || value === null || value === "") return fallback;
-
         if (isObject(value) || Array.isArray(value)) {
           try { return JSON.stringify(value); }
           catch (_error) { return bounded(value, 4000) || fallback; }
         }
-
         return bounded(value, 4000) || fallback;
       }
 
       function objectToPacket(object) {
-        if (!isObject(object)) return "FULL_PACKET_TEXT=UNAVAILABLE";
-
+        if (!isObject(object)) return "FULL_ALIGNMENT_PACKET=UNAVAILABLE";
         return Object.keys(object)
           .map((key) => `${key}=${packetValue(object[key])}`)
           .join("\n");
-      }
-
-      function parsePacketText(text) {
-        const out = {};
-        const source = safeString(text);
-
-        for (const line of source.split(/\r?\n/)) {
-          const index = line.indexOf("=");
-          if (index <= 0) continue;
-
-          const key = line.slice(0, index).trim();
-          const value = line.slice(index + 1).trim();
-
-          if (!key) continue;
-          out[key] = value;
-        }
-
-        return out;
       }
 
       function statusKind(value) {
@@ -1040,11 +1116,11 @@
           text === "AVAILABLE" ||
           text.includes("READY") ||
           text.includes("LOADED") ||
-          text.includes("RETURN_RENDERED") ||
-          text.includes("RETURN_CAPTURED") ||
-          text.includes("ALIGNMENT_COMPLETE") ||
-          text.includes("SYNCHRONIZATION_COMPLETE") ||
-          text.includes("PROOF_READY") ||
+          text.includes("PRESENT") ||
+          text.includes("CLEAN") ||
+          text.includes("CONFIRMED") ||
+          text.includes("ALIGNED") ||
+          text.includes("LOW_VARIANCE") ||
           text.includes("ACTIVE")
         ) return "good";
 
@@ -1054,7 +1130,10 @@
           text.includes("BLOCKED") ||
           text.includes("UNAVAILABLE") ||
           text.includes("MISSING") ||
-          text.includes("NOT_FOUND")
+          text.includes("NOT_FOUND") ||
+          text.includes("COLLAPSE") ||
+          text.includes("MALPRACTICE") ||
+          text.includes("MALFORMED")
         ) return "bad";
 
         if (
@@ -1063,7 +1142,10 @@
           text.includes("UNKNOWN") ||
           text.includes("NOT_RUN") ||
           text.includes("PARTIAL") ||
-          text.includes("HOLD")
+          text.includes("HOLD") ||
+          text.includes("HIGH_VARIANCE") ||
+          text.includes("MEDIUM_VARIANCE") ||
+          text.includes("RISK")
         ) return "warn";
 
         return "info";
@@ -1075,6 +1157,55 @@
         if (kind === "bad") return "is-bad";
         if (kind === "warn") return "is-warn";
         return "is-info";
+      }
+
+      function scoreForStatus(status) {
+        const text = safeString(status).toUpperCase();
+
+        if (
+          text.includes("PRESENT") ||
+          text.includes("AVAILABLE") ||
+          text.includes("CONFIRMED") ||
+          text.includes("CLEAN") ||
+          text.includes("COMPLETE") ||
+          text.includes("ALIGNED") ||
+          text === "TRUE"
+        ) return 1;
+
+        if (
+          text.includes("PARTIAL") ||
+          text.includes("HEAVY") ||
+          text.includes("WARNING") ||
+          text.includes("RISK") ||
+          text.includes("UNKNOWN")
+        ) return 0.55;
+
+        if (
+          text.includes("MISSING") ||
+          text.includes("BLOCKED") ||
+          text.includes("FAILED") ||
+          text.includes("COLLAPSE") ||
+          text.includes("MALPRACTICE") ||
+          text.includes("MALFORMED") ||
+          text.includes("UNAVAILABLE") ||
+          text === "FALSE"
+        ) return 0.08;
+
+        if (text.includes("NOT_RUN")) return 0.2;
+
+        return 0.35;
+      }
+
+      function variance(values) {
+        if (!values.length) return 0;
+        const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+        return values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / values.length;
+      }
+
+      function varianceClass(value) {
+        if (value < 0.035) return "LOW_VARIANCE";
+        if (value < 0.09) return "MEDIUM_VARIANCE";
+        return "HIGH_VARIANCE";
       }
 
       function kvRow(key, value) {
@@ -1107,21 +1238,42 @@
         `;
       }
 
+      function gaugeCard(gauge) {
+        const score = Math.max(0, Math.min(1, Number(gauge.score || 0)));
+        const width = Math.round(score * 100);
+        const varianceText = `${gauge.varianceClass} · ${Number(gauge.variance || 0).toFixed(3)}`;
+
+        return `
+          <article class="gauge ${classFor(gauge.status)}">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+              <div>
+                <div class="gauge-title">${escapeHtml(gauge.title)}</div>
+                <div class="gauge-subtitle">${escapeHtml(gauge.subtitle)}</div>
+              </div>
+              ${statusChip(gauge.status)}
+            </div>
+            <div class="gauge-meter" aria-label="${escapeHtml(gauge.title)} score">
+              <div class="gauge-fill" style="width:${width}%"></div>
+            </div>
+            <div class="gauge-meta">
+              ${statusChip(`SCORE_${width}`)}
+              ${statusChip(varianceText)}
+              ${statusChip(`N_${gauge.inputCount}`)}
+            </div>
+            <div class="kv" style="margin-top:10px;">
+              ${kvRow("Evidence", gauge.evidence || "NONE")}
+              ${kvRow("Missing", gauge.missing || "NONE")}
+            </div>
+          </article>
+        `;
+      }
+
       function scriptAlreadyPresent(path) {
         try {
           return Boolean(doc.querySelector(`script[src*="${path}"]`));
         } catch (_error) {
           return false;
         }
-      }
-
-      function childLoaded(child) {
-        return Boolean(findGlobal(child.paths));
-      }
-
-      function getNorth() {
-        const north = CHILD_SCRIPTS.find((child) => child.name === "NORTH");
-        return north ? findGlobal(north.paths) : null;
       }
 
       function createScript(src, contract) {
@@ -1135,7 +1287,7 @@
           script.src = `${src}?v=${encodeURIComponent(contract || CONTRACT)}`;
           script.async = false;
           script.defer = false;
-          script.dataset.hearthDiagnosticReceiverLoaded = "true";
+          script.dataset.hearthDiagnosticGaugeVarianceReceiverLoaded = "true";
           script.dataset.hearthDiagnosticScript = src;
           script.dataset.hearthDiagnosticExpectedContract = contract || "";
           script.dataset.productionMutationAuthorized = "false";
@@ -1154,574 +1306,605 @@
         });
       }
 
-      async function loadOneChild(child) {
-        if (childLoaded(child)) {
-          state.loadStatus[child.name] = "ALREADY_AVAILABLE";
-          renderAll();
+      async function loadParticipant(participant) {
+        const existing = findGlobal(participant.paths);
+        if (existing.value) {
+          state.participants[participant.id] = {
+            id: participant.id,
+            title: participant.title,
+            file: participant.file,
+            type: participant.type,
+            loadStatus: "ALREADY_AVAILABLE",
+            present: true,
+            observedPath: existing.path,
+            observedScope: existing.scope,
+            publicApi: summarizeApi(existing.value)
+          };
           return;
         }
 
-        state.loadStatus[child.name] = "LOADING";
+        state.participants[participant.id] = {
+          id: participant.id,
+          title: participant.title,
+          file: participant.file,
+          type: participant.type,
+          loadStatus: "LOADING",
+          present: false,
+          observedPath: "NONE",
+          observedScope: "none",
+          publicApi: "NONE"
+        };
         renderAll();
 
-        const result = await createScript(child.file, child.contract);
-        const available = childLoaded(child);
+        const result = await createScript(participant.file, participant.contract);
+        const observed = findGlobal(participant.paths);
 
-        state.loadStatus[child.name] =
-          result.ok && available
-            ? "LOADED_AND_AVAILABLE"
-            : result.ok
-              ? "SCRIPT_LOADED_GLOBAL_NOT_FOUND"
-              : "SCRIPT_LOAD_FAILED";
+        state.participants[participant.id] = {
+          id: participant.id,
+          title: participant.title,
+          file: participant.file,
+          type: participant.type,
+          loadStatus:
+            result.ok && observed.value
+              ? "LOADED_AND_AVAILABLE"
+              : result.ok
+                ? "SCRIPT_LOADED_GLOBAL_NOT_FOUND"
+                : "SCRIPT_LOAD_FAILED",
+          present: Boolean(observed.value),
+          observedPath: observed.path,
+          observedScope: observed.scope,
+          publicApi: observed.value ? summarizeApi(observed.value) : "NONE"
+        };
 
         renderAll();
       }
 
-      async function loadChildChain() {
-        const north = CHILD_SCRIPTS.find((child) => child.name === "NORTH");
-        if (north) await loadOneChild(north);
+      async function loadParticipantChain() {
+        if (state.loadStarted) return;
+        state.loadStarted = true;
 
-        for (const child of CHILD_SCRIPTS) {
-          if (child.name === "NORTH") continue;
-          await loadOneChild(child);
+        for (const participant of PARTICIPANTS) {
+          await loadParticipant(participant);
         }
 
+        state.loadComplete = true;
         renderAll();
       }
 
-      function callGetter(object, methods) {
-        if (!object) return null;
+      function summarizeApi(api) {
+        if (!api || typeof api !== "object") return "NOT_OBJECT";
+        const methods = [
+          "getReceipt",
+          "getReceiptLight",
+          "getProfileReceipt",
+          "composeProfileReceipt",
+          "getReport",
+          "getPacket",
+          "getPacketText",
+          "getNorthVerdict",
+          "runDiagnostic",
+          "inspect",
+          "probe",
+          "measure",
+          "run"
+        ].filter((method) => isFunction(api[method]));
+        return methods.length ? methods.join(",") : "PRESENT_NO_STANDARD_METHODS";
+      }
 
-        for (const method of methods) {
-          if (!isFunction(object[method])) continue;
+      async function callMethod(api, method, args) {
+        if (!api || !isFunction(api[method])) return null;
+        try {
+          const value = api[method](args);
+          if (value && typeof value.then === "function") return await value;
+          return value === undefined ? null : value;
+        } catch (error) {
+          state.errors.push(`${method}:${bounded(error && error.message ? error.message : error, 1000)}`);
+          return null;
+        }
+      }
 
-          try {
-            const result = object[method]();
-            if (result !== undefined && result !== null && result !== "") return result;
-          } catch (_error) {}
+      function normalizeReceipt(value, participant, method) {
+        if (!value) return null;
+
+        if (typeof value === "string") {
+          if (!value.trim()) return null;
+
+          if (value.trim().startsWith("{")) {
+            try {
+              const parsed = JSON.parse(value);
+              if (isObject(parsed)) {
+                return {
+                  participantId: participant.id,
+                  sourceMethod: method,
+                  receiptShape: "JSON_STRING",
+                  packet: parsed
+                };
+              }
+            } catch (_error) {}
+          }
+
+          return {
+            participantId: participant.id,
+            sourceMethod: method,
+            receiptShape: "TEXT",
+            packetText: value
+          };
+        }
+
+        if (isObject(value)) {
+          return {
+            participantId: participant.id,
+            sourceMethod: method,
+            receiptShape: "OBJECT",
+            packet: clonePlain(value)
+          };
+        }
+
+        return {
+          participantId: participant.id,
+          sourceMethod: method,
+          receiptShape: typeof value,
+          packetText: bounded(value, 2000)
+        };
+      }
+
+      async function collectParticipantReceipt(participant) {
+        const found = findGlobal(participant.paths);
+        const api = found.value;
+
+        if (!api) {
+          return {
+            id: participant.id,
+            title: participant.title,
+            type: participant.type,
+            file: participant.file,
+            expectedContract: participant.contract,
+            present: false,
+            status: "MISSING",
+            observedPath: "NONE",
+            observedScope: "none",
+            receiptPresent: false,
+            receiptStatus: "MISSING",
+            receipt: null,
+            packetText: ""
+          };
+        }
+
+        let receipt = null;
+
+        for (const method of participant.receiptMethods || []) {
+          const value = await callMethod(api, method, {
+            receiverContract: CONTRACT,
+            receiverReceipt: RECEIPT,
+            diagnosticTarget: TARGET_ROUTE,
+            productionMutationAuthorized: false,
+            canvasReleaseAuthorized: false,
+            visualPassClaimed: false
+          });
+
+          const normalized = normalizeReceipt(value, participant, method);
+          if (normalized) {
+            receipt = normalized;
+            break;
+          }
+        }
+
+        return {
+          id: participant.id,
+          title: participant.title,
+          type: participant.type,
+          file: participant.file,
+          expectedContract: participant.contract,
+          present: true,
+          status: receipt ? "PRESENT_WITH_RECEIPT" : "PRESENT_NO_RECEIPT",
+          observedPath: found.path,
+          observedScope: found.scope,
+          publicApi: summarizeApi(api),
+          receiptPresent: Boolean(receipt),
+          receiptStatus: receipt ? "RECEIPT_PRESENT" : "RECEIPT_MISSING",
+          receipt: receipt,
+          packetText: receipt && receipt.packetText ? receipt.packetText : ""
+        };
+      }
+
+      async function runParticipantAction(participant) {
+        const found = findGlobal(participant.paths);
+        const api = found.value;
+        if (!api) return null;
+
+        const args = {
+          receiverContract: CONTRACT,
+          receiverReceipt: RECEIPT,
+          frameElement: els.frame,
+          targetWindow: targetWindow(),
+          targetDocument: targetWindow() && targetWindow().document ? targetWindow().document : null,
+          diagnosticTarget: TARGET_ROUTE,
+          includeNoClaimFieldsInPacket: true,
+          productionMutationAuthorized: false,
+          hearthRepairAuthorized: false,
+          runtimeRestartAuthorized: false,
+          canvasReleaseAuthorized: false,
+          f13Claimed: false,
+          f21ClaimedByDiagnosticRail: false,
+          readyTextClaimedByDiagnosticRail: false,
+          visualPassClaimed: false,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false
+        };
+
+        for (const method of participant.runMethods || []) {
+          const result = await callMethod(api, method, args);
+          if (result) {
+            return {
+              participantId: participant.id,
+              method,
+              result: clonePlain(result)
+            };
+          }
         }
 
         return null;
       }
 
-      function globalReport() {
+      async function collectReceiptsAndActions() {
+        const receipts = {};
+        const actions = {};
+
+        for (const participant of PARTICIPANTS) {
+          receipts[participant.id] = await collectParticipantReceipt(participant);
+        }
+
+        const north = PARTICIPANTS.find((p) => p.id === "NORTH_RAIL");
+        if (north) {
+          const found = findGlobal(north.paths);
+          if (found.value && isFunction(found.value.runDiagnostic)) {
+            actions.NORTH_RAIL_RUN = await runParticipantAction(north);
+          } else {
+            actions.NORTH_RAIL_RUN = {
+              participantId: "NORTH_RAIL",
+              method: "runDiagnostic",
+              result: {
+                NORTH_VERDICT_AVAILABLE: false,
+                NORTH_RUN_API_AVAILABLE: false,
+                STATUS: "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE"
+              }
+            };
+          }
+        }
+
+        const surface = PARTICIPANTS.find((p) => p.id === "SURFACE_TRUTH_PROBE");
+        if (surface) {
+          actions.SURFACE_TRUTH_INSPECTION = await runParticipantAction(surface);
+        }
+
+        return { receipts, actions };
+      }
+
+      function receiptPacket(receiptRecord) {
+        if (!receiptRecord || !receiptRecord.receipt) return null;
+        if (receiptRecord.receipt.packet) return receiptRecord.receipt.packet;
+        if (receiptRecord.receipt.packetText) return { PACKET_TEXT: receiptRecord.receipt.packetText };
+        return null;
+      }
+
+      function packetHasMalpractice(packet) {
+        const text = JSON.stringify(packet || {}).toUpperCase();
+        return text.includes("MALPRACTICE_DETECTED") || text.includes("DIAGNOSTIC_MALPRACTICE_DETECTED");
+      }
+
+      function packetHasCollapseRisk(packet) {
+        const text = JSON.stringify(packet || {}).toUpperCase();
+        return text.includes("COLLAPSE_RISK") || text.includes("BORROWED_CONTRACT_TEXT_REJECTED");
+      }
+
+      function packetStatusField(packet, fallback = "UNKNOWN") {
+        if (!isObject(packet)) return fallback;
         return (
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_REPORT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_REPORT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_REPORT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_RAIL_REPORT") ||
-          readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT") ||
-          null
+          getRaw(packet, "STATUS", null) ||
+          getRaw(packet, "status", null) ||
+          getRaw(packet, "SELF_MEASUREMENT_STATUS", null) ||
+          getRaw(packet, "DUTY_LOAD_STATUS", null) ||
+          getRaw(packet, "CANVAS_SURFACE_TRUTH_STATUS", null) ||
+          getRaw(packet, "RECEIPT_RETURN_STATUS", null) ||
+          fallback
         );
       }
 
-      function globalVerdict() {
-        return (
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_VERDICT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_VERDICT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_VERDICT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_RAIL_VERDICT") ||
-          readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT") ||
-          null
-        );
-      }
+      function computeGaugeInputStatuses(receipts, actions) {
+        const receiptList = Object.values(receipts);
+        const receiptPresent = receiptList.filter((r) => r.receiptPresent).length;
+        const missing = receiptList.filter((r) => !r.present).length;
+        const presentNoReceipt = receiptList.filter((r) => r.present && !r.receiptPresent).length;
 
-      function globalPacketText() {
-        return (
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_PACKET_TEXT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_PACKET_TEXT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_PACKET_TEXT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_RAIL_PACKET_TEXT") ||
-          null
-        );
-      }
+        const labNorth = receipts.LAB_NORTH_GRAMMAR;
+        const labWest = receipts.LABWEST_CONSTRUCT;
+        const north = receipts.NORTH_RAIL;
+        const surface = receipts.SURFACE_TRUTH_PROBE;
 
-      function globalReceipt() {
-        return (
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_RECEIPT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_NORTH_RECEIPT") ||
-          readPath(root, "HEARTH_DIAGNOSTIC_RAIL_RECEIPT") ||
-          readPath(root, "HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT") ||
-          null
-        );
-      }
+        const probeList = receiptList.filter((r) => r.type === "probe" || r.type === "contract-definition-probe");
+        const probePresent = probeList.filter((r) => r.present).length;
+        const probeReceipt = probeList.filter((r) => r.receiptPresent).length;
+        const probeMissing = probeList.filter((r) => !r.present).length;
 
-      function extractReport(north, result) {
-        const candidates = [
-          result && result.report,
-          result && result.REPORT_OBJECT,
-          result && result.evidence,
-          result && result.output && result.output.REPORT_OBJECT,
-          result && result.output && result.output.report,
-          result && result.state && result.state.reportObject,
-          callGetter(north, ["getReport"]),
-          globalReport()
-        ];
+        const surfaceInspection = actions.SURFACE_TRUTH_INSPECTION && actions.SURFACE_TRUTH_INSPECTION.result;
+        const northRun = actions.NORTH_RAIL_RUN && actions.NORTH_RAIL_RUN.result;
 
-        for (const candidate of candidates) {
-          if (isObject(candidate) && Object.keys(candidate).length) {
-            return { source: "REPORT_OBJECT", value: clonePlain(candidate) };
-          }
-        }
+        const packets = receiptList.map(receiptPacket).filter(Boolean);
+        if (surfaceInspection) packets.push(surfaceInspection);
+        if (northRun) packets.push(northRun);
 
-        return { source: "NONE", value: null };
-      }
+        const malpractice = packets.some(packetHasMalpractice);
+        const collapseRisk = packets.some(packetHasCollapseRisk);
 
-      function extractVerdict(north, result, report) {
-        const candidates = [
-          result && result.verdict,
-          result && result.northVerdict,
-          report && report.NORTH_VERDICT,
-          report && report.northVerdict,
-          callGetter(north, ["getNorthVerdict"]),
-          globalVerdict()
-        ];
+        const surfaceInspectionStatus =
+          surfaceInspection && isObject(surfaceInspection)
+            ? packetStatusField(surfaceInspection, "INSPECTION_RETURNED")
+            : surface && surface.present
+              ? "PRESENT_NO_INSPECTION"
+              : "MISSING";
 
-        for (const candidate of candidates) {
-          if (isObject(candidate) && Object.keys(candidate).length) {
-            return { source: "NORTH_VERDICT", value: clonePlain(candidate) };
-          }
-
-          if (typeof candidate === "string" && candidate.trim().startsWith("{")) {
-            try {
-              const parsed = JSON.parse(candidate);
-              if (isObject(parsed)) return { source: "NORTH_VERDICT_STRING", value: parsed };
-            } catch (_error) {}
-          }
-        }
-
-        return { source: "NONE", value: null };
-      }
-
-      function extractPacketText(north, result, report) {
-        const candidates = [
-          result && result.packetText,
-          result && result.fullPacketText,
-          result && result.output && result.output.packetText,
-          result && result.output && result.output.fullPacketText,
-          callGetter(north, ["getPacketText"]),
-          globalPacketText()
-        ];
-
-        for (const candidate of candidates) {
-          if (typeof candidate === "string" && candidate.trim()) {
-            return { source: "PACKET_TEXT", value: candidate };
-          }
-        }
-
-        if (isObject(report) && Object.keys(report).length) {
-          return { source: "COMPOSED_FROM_REPORT_OBJECT", value: objectToPacket(report) };
-        }
-
-        return { source: "NONE", value: "FULL_PACKET_TEXT=UNAVAILABLE" };
-      }
-
-      function extractCompactSummary(north, result, report, packetText) {
-        const candidates = [
-          result && result.compactSummary,
-          result && result.summary,
-          result && result.output && result.output.compactSummary,
-          callGetter(north, ["getCompactSummary"])
-        ];
-
-        for (const candidate of candidates) {
-          if (typeof candidate === "string" && candidate.trim()) {
-            return { source: "COMPACT_SUMMARY", value: candidate };
-          }
-        }
-
-        const r = isObject(report) ? report : parsePacketText(packetText);
+        const northVerdictAvailable =
+          northRun &&
+          JSON.stringify(northRun).toUpperCase().includes("PACKET_NAME") &&
+          !JSON.stringify(northRun).toUpperCase().includes("NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE");
 
         return {
-          source: "COMPOSED_COMPACT_SUMMARY",
-          value: [
-            `RECEIPT_RETURN_STATUS=${state.receiptReturnStatus || "RETURN_CAPTURED"}`,
-            `CHRONOLOGY_COMPLETION_STATUS=${packetValue(getRaw(r, "CHRONOLOGY_COMPLETION_STATUS", "UNKNOWN"))}`,
-            `ZONE_OF_INFLICTION_FILE=${packetValue(getRaw(r, "ZONE_OF_INFLICTION_FILE", "UNKNOWN"))}`,
-            `ZONE_OF_INFLICTION_CLASS=${packetValue(getRaw(r, "ZONE_OF_INFLICTION_CLASS", "UNKNOWN"))}`,
-            `CANVAS_TRUTH_FAILURE_CLASS=${packetValue(getRaw(r, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN"))}`,
-            `RECOMMENDED_NEXT_FILE=${packetValue(getRaw(r, "RECOMMENDED_NEXT_FILE", "UNKNOWN"))}`,
-            `RECEIPT_SOURCE=${state.receiptReturnSource || "UNKNOWN"}`
-          ].join("\n")
+          RECEIVER_LOADED: "PRESENT",
+          RUN_BUTTON_AVAILABLE: "PRESENT",
+          ALIGNMENT_RUN_AVAILABLE: "PRESENT",
+
+          RECEIPTS_PRESENT: receiptPresent > 0 ? "PRESENT" : "MISSING",
+          RECEIPTS_MISSING: missing > 0 || presentNoReceipt > 0 ? "PARTIAL" : "CLEAN",
+          RECEIPTS_MALFORMED: "NONE",
+
+          LABWEST_PRESENT: labWest && labWest.present ? "PRESENT" : "MISSING",
+          LABWEST_RECEIPT: labWest && labWest.receiptPresent ? "PRESENT" : "MISSING",
+          LAB_NORTH_GRAMMAR: labNorth && labNorth.receiptPresent ? "PRESENT" : labNorth && labNorth.present ? "PARTIAL" : "MISSING",
+
+          NORTH_PRESENT: north && north.present ? "PRESENT" : "MISSING",
+          NORTH_RUN_API:
+            north && north.publicApi && north.publicApi.includes("runDiagnostic")
+              ? "PRESENT"
+              : "MISSING",
+          NORTH_VERDICT: northVerdictAvailable ? "PRESENT" : "BLOCKED_OR_MISSING",
+
+          SURFACE_TRUTH_PRESENT: surface && surface.present ? "PRESENT" : "MISSING",
+          SURFACE_TRUTH_RECEIPT: surface && surface.receiptPresent ? "PRESENT" : "MISSING",
+          SURFACE_TRUTH_INSPECTION: surfaceInspectionStatus,
+
+          PROBE_PRESENT_COUNT: probePresent > 0 ? "PRESENT" : "MISSING",
+          PROBE_RECEIPT_COUNT: probeReceipt > 0 ? "PRESENT" : "MISSING",
+          PROBE_MISSING_COUNT: probeMissing > 0 ? "PARTIAL" : "CLEAN",
+
+          CANVAS_HUB_BOUNDARY: collapseRisk ? "RISK" : surfaceInspection ? "MEASURED" : "UNKNOWN",
+          HEX_SURFACE_BOUNDARY: collapseRisk ? "RISK" : surfaceInspection ? "MEASURED" : "UNKNOWN",
+          CHAPEL_2_BOUNDARY: collapseRisk ? "RISK" : surfaceInspection ? "MEASURED" : "UNKNOWN",
+
+          BORROWED_CONTRACT_RISK: collapseRisk ? "RISK" : "UNKNOWN",
+          SIBLING_SUBSTITUTION_RISK: collapseRisk ? "RISK" : "UNKNOWN",
+          PARENT_CHILD_COLLAPSE_RISK: collapseRisk ? "RISK" : "UNKNOWN",
+
+          SELF_DUTY_STATUS: malpractice ? "MALPRACTICE_DETECTED" : "CLEAN_OR_UNKNOWN",
+          DUTY_LOAD_STATUS: malpractice ? "DUTY_LOAD_COLLAPSE_RISK" : "CLEAN_OR_UNKNOWN",
+          MALPRACTICE_STATUS: malpractice ? "DIAGNOSTIC_MALPRACTICE_DETECTED" : "NO_DIAGNOSTIC_MALPRACTICE_DETECTED",
+
+          LABWEST_CONSTRUCT: labWest && labWest.receiptPresent ? "PRESENT" : "MISSING"
         };
       }
 
-      function extractReceipt(north, result) {
-        const candidates = [
-          result && isObject(result.receipt) ? result.receipt : null,
-          result && isObject(result.northReceipt) ? result.northReceipt : null,
-          callGetter(north, ["getReceipt", "getReceiptLight"]),
-          globalReceipt()
-        ];
+      function computeGauges(receipts, actions) {
+        const inputStatuses = computeGaugeInputStatuses(receipts, actions);
+        const gauges = {};
 
-        for (const candidate of candidates) {
-          if (isObject(candidate) && Object.keys(candidate).length) {
-            return { source: "NORTH_RECEIPT", value: clonePlain(candidate) };
-          }
-        }
+        for (const definition of GAUGE_DEFINITIONS) {
+          const statuses = definition.inputs.map((input) => inputStatuses[input] || "UNKNOWN");
+          const scores = statuses.map(scoreForStatus);
+          const mean = scores.length
+            ? scores.reduce((sum, value) => sum + value, 0) / scores.length
+            : 0;
+          const spread = variance(scores);
+          const vClass = varianceClass(spread);
 
-        return { source: "NONE", value: null };
-      }
+          let status = "PARTIAL";
+          if (mean >= 0.82 && spread < 0.09) status = "ALIGNED";
+          if (mean >= 0.55 && mean < 0.82) status = "PARTIAL";
+          if (mean < 0.55) status = "BLOCKED";
+          if (vClass === "HIGH_VARIANCE" && mean >= 0.55) status = "HIGH_VARIANCE_PARTIAL";
 
-      function absorbDiagnosticReturn(result, north, fallbackSource) {
-        const reportResult = extractReport(north, result);
-        let report = reportResult.value;
+          const missing = definition.inputs
+            .filter((input, index) => scoreForStatus(statuses[index]) < 0.2)
+            .join(", ") || "NONE";
 
-        const packetResult = extractPacketText(north, result, report);
-        const packetText = packetResult.value;
-
-        if (!report || !Object.keys(report).length) {
-          const parsed = parsePacketText(packetText);
-          if (Object.keys(parsed).length) {
-            report = parsed;
-            report.RECEIPT_RETURN_REPORT_SOURCE = "PARSED_FROM_PACKET_TEXT";
-          }
-        }
-
-        const verdictResult = extractVerdict(north, result, report);
-        const receiptResult = extractReceipt(north, result);
-        const summaryResult = extractCompactSummary(north, result, report, packetText);
-
-        const hasPacket =
-          typeof packetText === "string" &&
-          packetText.trim() &&
-          packetText !== "FULL_PACKET_TEXT=UNAVAILABLE" &&
-          packetText !== "FULL_PACKET_TEXT=NOT_RUN";
-
-        const hasReport = isObject(report) && Object.keys(report).length;
-
-        state.lastReport = hasReport ? clonePlain(report) : null;
-        state.lastVerdict = verdictResult.value || null;
-        state.lastNorthReceipt = receiptResult.value || null;
-        state.lastPacketText = hasPacket
-          ? packetText
-          : hasReport
-            ? objectToPacket(report)
-            : "FULL_PACKET_TEXT=UNAVAILABLE";
-        state.lastCompactSummary = summaryResult.value || "COMPACT_SUMMARY=UNAVAILABLE";
-        state.lastUpdatedAt = nowIso();
-        state.lastRunOk = Boolean(result && result.ok !== false && (hasPacket || hasReport));
-        state.receiptReturnStatus = hasPacket || hasReport
-          ? "DIAGNOSTIC_RECEIPT_RETURN_RENDERED"
-          : "DIAGNOSTIC_RECEIPT_RETURN_UNAVAILABLE";
-        state.receiptReturnSource = [
-          fallbackSource || "DIRECT_NORTH_RETURN",
-          reportResult.source,
-          packetResult.source,
-          verdictResult.source,
-          receiptResult.source,
-          summaryResult.source
-        ].filter(Boolean).join(" | ");
-
-        if (!hasPacket && !hasReport) {
-          state.lastError = "NORTH_RETURNED_BUT_NO_PACKET_OR_REPORT_SURFACE_WAS_READABLE";
-        } else {
-          state.lastError = "";
-        }
-
-        renderRaw();
-        publishRouteReceiver();
-        return Boolean(hasPacket || hasReport);
-      }
-
-      function renderRaw() {
-        if (els.summary) els.summary.textContent = state.lastCompactSummary || "COMPACT_SUMMARY=NOT_RUN";
-        if (els.packet) els.packet.value = state.lastPacketText || "FULL_PACKET_TEXT=NOT_RUN";
-        if (els.verdictJson) {
-          els.verdictJson.textContent = state.lastVerdict
-            ? JSON.stringify(state.lastVerdict, null, 2)
-            : "NORTH_VERDICT=NOT_RUN";
-        }
-        if (els.receiverReceiptJson) {
-          els.receiverReceiptJson.textContent = JSON.stringify(getRouteReceipt(), null, 2);
-        }
-
-        if (els.copy) {
-          const ready = Boolean(
-            state.lastPacketText &&
-            state.lastPacketText !== "FULL_PACKET_TEXT=NOT_RUN" &&
-            state.lastPacketText !== "FULL_PACKET_TEXT=UNAVAILABLE"
-          );
-          els.copy.disabled = !ready;
-        }
-      }
-
-      function renderMission() {
-        if (!els.mission) return;
-
-        els.mission.innerHTML = [
-          tile("Return Transport", state.receiptReturnStatus),
-          tile("North API", state.northAvailable ? "AVAILABLE" : "WAITING_NORTH"),
-          tile("Chronology", valueOf("CHRONOLOGY_COMPLETION_STATUS", "NOT_RUN")),
-          tile("Canvas Truth", valueOf("CANVAS_TRUTH_FAILURE_CLASS", valueOf("ZONE_OF_INFLICTION_CLASS", "NOT_RUN"))),
-          tile("Receipt Source", state.receiptReturnSource || "NONE"),
-          tile("Next File", valueOf("RECOMMENDED_NEXT_FILE", "AWAITING_RUN"))
-        ].join("");
-      }
-
-      function renderTransport() {
-        if (!els.transport) return;
-
-        els.transport.innerHTML = [
-          ["Receipt return status", state.receiptReturnStatus],
-          ["Receipt return source", state.receiptReturnSource],
-          ["Last run ok", state.lastRunOk],
-          ["Packet text readable", Boolean(state.lastPacketText && !state.lastPacketText.includes("NOT_RUN"))],
-          ["Report object readable", Boolean(state.lastReport)],
-          ["Verdict object readable", Boolean(state.lastVerdict)],
-          ["North receipt readable", Boolean(state.lastNorthReceipt)],
-          ["Last error", state.lastError || "NONE"],
-          ["Updated at", state.lastUpdatedAt || "NEVER"]
-        ].map(([key, value]) => kvRow(key, value)).join("");
-      }
-
-      function renderNorthStatus() {
-        const north = getNorth();
-        state.northAvailable = Boolean(north && isFunction(north.runDiagnostic));
-
-        if (!state.lastNorthReceipt && north) {
-          const receipt = extractReceipt(north, null).value;
-          if (receipt) state.lastNorthReceipt = receipt;
-        }
-
-        const receipt = state.lastNorthReceipt || {};
-
-        if (els.northStatus) {
-          els.northStatus.innerHTML = [
-            ["North API", state.northAvailable ? "AVAILABLE" : north ? "FOUND_RUN_API_MISSING" : "NOT_FOUND"],
-            ["Active contract", getRaw(receipt, "contract", getRaw(receipt, "CONTRACT", north && north.contract ? north.contract : "UNKNOWN"))],
-            ["Expected contract", NORTH_CONTRACT],
-            ["North receipt", getRaw(receipt, "receipt", getRaw(receipt, "RECEIPT", "UNKNOWN"))],
-            ["Run method", north && isFunction(north.runDiagnostic) ? "runDiagnostic" : "UNAVAILABLE"],
-            ["Getter packet", north && isFunction(north.getPacketText) ? "AVAILABLE" : "UNKNOWN"],
-            ["Getter report", north && isFunction(north.getReport) ? "AVAILABLE" : "UNKNOWN"],
-            ["Getter verdict", north && isFunction(north.getNorthVerdict) ? "AVAILABLE" : "UNKNOWN"],
-            ["Receiver calls North only", "true"]
-          ].map(([key, value]) => kvRow(key, value)).join("");
-        }
-
-        if (els.run) els.run.disabled = !state.northAvailable;
-      }
-
-      function renderModules() {
-        if (!els.modules) return;
-
-        els.modules.innerHTML = CHILD_SCRIPTS.map((child) => {
-          const status = state.loadStatus[child.name] || (childLoaded(child) ? "AVAILABLE" : "PENDING");
-          const found = childLoaded(child);
-          const authority = findGlobal(child.paths);
-
-          return card(child.name, child.title, found ? status : status, [
-            ["File", child.file],
-            ["Expected contract", child.contract],
-            ["Global observed", found],
-            ["Public API", authority && isFunction(authority.runDiagnostic) ? "runDiagnostic" : authority ? "present" : "not observed"]
-          ]);
-        }).join("");
-      }
-
-      function bucketStatus(bucket) {
-        const observed = bucket.keys.filter((key) => {
-          const v = valueOf(key, "");
-          return v !== "" && v !== "UNKNOWN" && v !== "NOT_RUN";
-        }).length;
-
-        if (observed === bucket.keys.length) return "COMPLETE";
-        if (observed > 0) return "PARTIAL";
-        return "NOT_RETURNED";
-      }
-
-      function renderBuckets() {
-        if (!els.buckets) return;
-
-        els.buckets.innerHTML = RECEIPT_BUCKETS.map((bucket) => {
-          const rows = bucket.keys.map((key) => [key, valueOf(key, "UNKNOWN")]);
-          return card(bucket.title, bucket.id, bucketStatus(bucket), rows);
-        }).join("");
-      }
-
-      function renderNorthVerdict() {
-        if (!els.northVerdict) return;
-
-        els.northVerdict.innerHTML = [
-          ["Primary case", valueOf("PRIMARY_CASE", "UNKNOWN")],
-          ["Calibration status", valueOf("CALIBRATION_STATUS", "UNKNOWN")],
-          ["Hold reason", valueOf("CALIBRATION_HOLD_REASON", "UNKNOWN")],
-          ["Diagnostic chronology clean", valueOf("DIAGNOSTIC_CHRONOLOGY_CLEAN", "UNKNOWN")],
-          ["Diagnostic rail clean", valueOf("DIAGNOSTIC_RAIL_CLEAN", "UNKNOWN")],
-          ["Calibration point reached", valueOf("CALIBRATION_POINT_REACHED", "UNKNOWN")],
-          ["Zone owner", valueOf("ZONE_OF_INFLICTION_OWNER", "UNKNOWN")],
-          ["Zone file", valueOf("ZONE_OF_INFLICTION_FILE", "UNKNOWN")],
-          ["Zone class", valueOf("ZONE_OF_INFLICTION_CLASS", "UNKNOWN")],
-          ["Zone reason", valueOf("ZONE_OF_INFLICTION_REASON", "UNKNOWN")],
-          ["Recommended owner", valueOf("RECOMMENDED_NEXT_OWNER", "UNKNOWN")],
-          ["Recommended file", valueOf("RECOMMENDED_NEXT_FILE", "UNKNOWN")],
-          ["Recommended action", valueOf("RECOMMENDED_NEXT_ACTION", "UNKNOWN")]
-        ].map(([key, value]) => kvRow(key, value)).join("");
-      }
-
-      function renderTrace() {
-        if (!els.trace) return;
-
-        els.trace.innerHTML = [
-          ["Target access", valueOf("DIAGNOSTIC_TARGET_ACCESS_STATUS", "UNKNOWN")],
-          ["Served HTML", valueOf("SERVED_HTML_CONTRACT", "UNKNOWN")],
-          ["Served Index JS", valueOf("SERVED_INDEX_JS_CONTRACT", "UNKNOWN")],
-          ["Served Route Conductor", valueOf("SERVED_ROUTE_CONDUCTOR_CONTRACT", "UNKNOWN")],
-          ["Current visible Hearth", valueOf("CURRENT_VISIBLE_HEARTH_STATUS", "UNKNOWN")],
-          ["Rendered planet proof", valueOf("RENDERED_PLANET_PROOF_READY", "UNKNOWN")],
-          ["Visible planet proof", valueOf("VISIBLE_PLANET_PROOF_READY", "UNKNOWN")],
-          ["Visible proof source", valueOf("VISIBLE_PLANET_PROOF_SOURCE", "UNKNOWN")],
-          ["Canvas truth status", valueOf("CANVAS_TRUTH_STATUS", "UNKNOWN")],
-          ["Canvas pixel status", valueOf("CANVAS_PIXEL_SAMPLE_STATUS", "UNKNOWN")],
-          ["Control status", valueOf("CONTROL_FILE_STATUS", "UNKNOWN")],
-          ["Motion touch status", valueOf("MOTION_TOUCH_STATUS", "UNKNOWN")],
-          ["South output status", valueOf("SOUTH_OUTPUT_STATUS", "UNKNOWN")],
-          ["South meaning preserved", valueOf("SOUTH_MEANING_PRESERVED", "UNKNOWN")]
-        ].map(([key, value]) => kvRow(key, value)).join("");
-      }
-
-      function safeRender(name, fn) {
-        try { fn(); }
-        catch (error) {
-          state.renderErrors.push(`${name}:${bounded(error && error.message ? error.message : error, 800)}`);
-        }
-      }
-
-      function renderAll() {
-        safeRender("raw", renderRaw);
-        safeRender("northStatus", renderNorthStatus);
-        safeRender("mission", renderMission);
-        safeRender("transport", renderTransport);
-        safeRender("modules", renderModules);
-        safeRender("buckets", renderBuckets);
-        safeRender("northVerdict", renderNorthVerdict);
-        safeRender("trace", renderTrace);
-        publishRouteReceiver();
-      }
-
-      async function runDiagnostic() {
-        const north = getNorth();
-
-        if (!north || !isFunction(north.runDiagnostic)) {
-          state.lastRunOk = false;
-          state.receiptReturnStatus = "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE";
-          state.receiptReturnSource = "RECEIVER_LOCAL";
-          state.lastError = "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE";
-          state.lastReport = {
-            PACKET_NAME: REPORT_PACKET,
-            TARGET_ROUTE,
-            DIAGNOSTIC_ROUTE,
-            DIAGNOSTIC_TIMESTAMP: nowIso(),
-            RECEIPT_RETURN_STATUS: state.receiptReturnStatus,
-            PRIMARY_CASE: "INCONCLUSIVE_EVIDENCE",
-            CALIBRATION_STATUS: "CALIBRATION_HOLD_NORTH_API_UNAVAILABLE",
-            DIAGNOSTIC_RAIL_CLEAN: "false",
-            CALIBRATION_POINT_REACHED: "false",
-            RECOMMENDED_NEXT_OWNER: "DIAGNOSTIC_ROUTE_RECEIVER",
-            RECOMMENDED_NEXT_FILE: "/showroom/globe/hearth/diagnostic/index.html",
-            RECOMMENDED_NEXT_ACTION: "VERIFY_NORTH_SCRIPT_LOAD_AND_PUBLIC_RUN_DIAGNOSTIC_API"
+          gauges[definition.id] = {
+            id: definition.id,
+            title: definition.title,
+            subtitle: definition.subtitle,
+            status,
+            score: mean,
+            variance: spread,
+            varianceClass: vClass,
+            inputCount: definition.inputs.length,
+            inputs: definition.inputs.reduce((out, input, index) => {
+              out[input] = statuses[index];
+              return out;
+            }, {}),
+            evidence: statuses.join(" | "),
+            missing
           };
-          state.lastPacketText = objectToPacket(state.lastReport);
-          state.lastCompactSummary = [
-            `RECEIPT_RETURN_STATUS=${state.receiptReturnStatus}`,
-            "PRIMARY_CASE=INCONCLUSIVE_EVIDENCE",
-            "ERROR=NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE"
-          ].join("\n");
-          renderAll();
-          return;
         }
+
+        return gauges;
+      }
+
+      function constructionStatus(gauges) {
+        const g = gauges.CONSTRUCTION_READINESS;
+        if (!g) return "NOT_RUN";
+        if (g.status === "ALIGNED") return "DERIVATIVE_MAP_PRECONDITIONS_PRESENT";
+        if (g.status.includes("PARTIAL")) return "CONSTRUCTION_HELD_PARTIAL_DIAGNOSTIC_FIELD";
+        return "CONSTRUCTION_BLOCKED_DIAGNOSTIC_FIELD";
+      }
+
+      async function runAlignment() {
+        state.running = true;
+        state.lastUpdatedAt = nowIso();
 
         if (els.run) {
+          els.run.textContent = "Running Alignment";
           els.run.disabled = true;
-          els.run.textContent = "Running Diagnostic";
         }
 
-        state.receiptReturnStatus = "RUNNING_NORTH";
-        state.receiptReturnSource = "AWAITING_NORTH_RETURN";
-        state.lastError = "";
         renderAll();
 
         try {
-          const result = await north.runDiagnostic({
-            frameElement: els.frame,
-            targetWindow: targetWindow(),
-            targetDocument: targetWindow() && targetWindow().document ? targetWindow().document : null,
-            includeNorthVerdict: true,
-            includeOptionalTraceFields: true,
-            includeNoClaimFieldsInPacket: true,
-            diagnosticInterest: "receipt-return-transport",
-            receiverContract: CONTRACT,
-            receiverReceipt: RECEIPT,
-            receiverCallsNorthOnly: true,
-            productionMutationAuthorized: false,
-            hearthRepairAuthorized: false,
-            runtimeRestartAuthorized: false,
-            canvasReleaseAuthorized: false,
-            f13Claimed: false,
-            f21ClaimedByDiagnosticRail: false,
-            readyTextClaimedByDiagnosticRail: false,
-            visualPassClaimed: false,
-            generatedImage: false,
-            graphicBox: false,
-            webGL: false
-          });
+          await loadParticipantChain();
 
-          const captured = absorbDiagnosticReturn(result, north, "DIRECT_NORTH_RUN_RETURN");
+          const collected = await collectReceiptsAndActions();
+          state.receipts = collected.receipts;
+          state.gauges = computeGauges(collected.receipts, collected.actions);
 
-          if (!captured) {
-            setTimeout(() => {
-              absorbDiagnosticReturn(null, north, "POST_RUN_GLOBAL_FALLBACK");
-              renderAll();
-            }, 250);
-          }
+          const receiptRecords = Object.values(state.receipts);
+          const presentCount = receiptRecords.filter((r) => r.present).length;
+          const receiptCount = receiptRecords.filter((r) => r.receiptPresent).length;
+          const missingCount = receiptRecords.filter((r) => !r.present).length;
+          const noReceiptCount = receiptRecords.filter((r) => r.present && !r.receiptPresent).length;
 
+          const northReceipt = state.receipts.NORTH_RAIL;
+          const surfaceReceipt = state.receipts.SURFACE_TRUTH_PROBE;
+          const labWestReceipt = state.receipts.LABWEST_CONSTRUCT;
+
+          const packet = {
+            PACKET_NAME: REPORT_PACKET,
+            CONTRACT,
+            RECEIPT,
+            PREVIOUS_CONTRACT,
+            BASELINE_CONTRACT,
+            VERSION,
+            TARGET_ROUTE,
+            DIAGNOSTIC_ROUTE,
+            DIAGNOSTIC_TIMESTAMP: state.lastUpdatedAt,
+
+            RECEIPTS_ARE_SPECIFIC_DIAGNOSTIC_EVIDENCE: true,
+            GAUGES_ARE_COLLECTIVE_DIAGNOSTIC_VARIANCE: true,
+            GAUGES_DO_NOT_REPLACE_RECEIPTS: true,
+            SCREENSHOT_SAFE_GAUGE_SURFACE_ACTIVE: true,
+
+            CONTROL_GATE_STATUS: "RECEIVER_ALIGNMENT_RUN_AVAILABLE",
+            RUN_BUTTON_LOCKED_BY_NORTH_API: false,
+            NORTH_VERDICT_SYNTHESIZED: false,
+            NORTH_VERDICT_AVAILABLE:
+              state.gauges.NORTH_DIAGNOSTIC_TRACK &&
+              state.gauges.NORTH_DIAGNOSTIC_TRACK.inputs.NORTH_VERDICT === "PRESENT",
+
+            LABWEST_CONSTRUCT_PRESENT: Boolean(labWestReceipt && labWestReceipt.present),
+            LABWEST_CONSTRUCT_RECEIPT_PRESENT: Boolean(labWestReceipt && labWestReceipt.receiptPresent),
+            SURFACE_TRUTH_PROBE_PRESENT: Boolean(surfaceReceipt && surfaceReceipt.present),
+            SURFACE_TRUTH_PROBE_RECEIPT_PRESENT: Boolean(surfaceReceipt && surfaceReceipt.receiptPresent),
+            NORTH_RAIL_PRESENT: Boolean(northReceipt && northReceipt.present),
+            NORTH_RAIL_RECEIPT_PRESENT: Boolean(northReceipt && northReceipt.receiptPresent),
+
+            PARTICIPANT_PRESENT_COUNT: presentCount,
+            SPECIFIC_RECEIPT_PRESENT_COUNT: receiptCount,
+            PARTICIPANT_MISSING_COUNT: missingCount,
+            PRESENT_WITHOUT_RECEIPT_COUNT: noReceiptCount,
+
+            COLLECTIVE_GAUGE_COUNT: Object.keys(state.gauges).length,
+            GAUGE_VARIANCE_SUMMARY: Object.keys(state.gauges)
+              .map((key) => `${key}:${state.gauges[key].status}:${state.gauges[key].varianceClass}`)
+              .join(" | "),
+
+            CONSTRUCTION_READINESS_STATUS: constructionStatus(state.gauges),
+
+            PRODUCTION_MUTATION_AUTHORIZED: false,
+            HEARTH_REPAIR_AUTHORIZED: false,
+            RUNTIME_RESTART_AUTHORIZED: false,
+            CANVAS_RELEASE_AUTHORIZED: false,
+            F13_CLAIMED: false,
+            F21_CLAIMED: false,
+            READY_TEXT_CLAIMED: false,
+            VISUAL_PASS_CLAIMED: false,
+            GENERATED_IMAGE: false,
+            GRAPHIC_BOX: false,
+            WEBGL: false,
+
+            specificReceipts: clonePlain(state.receipts),
+            gaugeVariance: clonePlain(state.gauges),
+            participantLoadState: clonePlain(state.participants),
+            participantActions: clonePlain(collected.actions),
+            receiverReceipt: getRouteReceipt()
+          };
+
+          state.lastAlignmentPacket = packet;
+          state.lastPacketText = objectToPacket(packet);
+          state.lastCompactSummary = [
+            `PACKET_NAME=${REPORT_PACKET}`,
+            `CONTROL_GATE_STATUS=${packet.CONTROL_GATE_STATUS}`,
+            `RUN_BUTTON_LOCKED_BY_NORTH_API=${packet.RUN_BUTTON_LOCKED_BY_NORTH_API}`,
+            `LABWEST_CONSTRUCT_RECEIPT_PRESENT=${packet.LABWEST_CONSTRUCT_RECEIPT_PRESENT}`,
+            `SURFACE_TRUTH_PROBE_RECEIPT_PRESENT=${packet.SURFACE_TRUTH_PROBE_RECEIPT_PRESENT}`,
+            `NORTH_RAIL_RECEIPT_PRESENT=${packet.NORTH_RAIL_RECEIPT_PRESENT}`,
+            `SPECIFIC_RECEIPT_PRESENT_COUNT=${packet.SPECIFIC_RECEIPT_PRESENT_COUNT}`,
+            `PARTICIPANT_MISSING_COUNT=${packet.PARTICIPANT_MISSING_COUNT}`,
+            `CONSTRUCTION_READINESS_STATUS=${packet.CONSTRUCTION_READINESS_STATUS}`
+          ].join("\n");
+
+          publishRouteReceiver();
           renderAll();
         } catch (error) {
-          const message = bounded(error && error.message ? error.message : error, 1200);
+          const message = bounded(error && error.message ? error.message : error, 1400);
+          state.errors.push(`runAlignment:${message}`);
 
-          state.lastRunOk = false;
-          state.receiptReturnStatus = "DIAGNOSTIC_RECEIPT_RETURN_ERROR";
-          state.receiptReturnSource = "RUN_EXCEPTION";
-          state.lastError = message;
-          state.lastReport = {
+          state.lastAlignmentPacket = {
             PACKET_NAME: REPORT_PACKET,
+            CONTRACT,
+            RECEIPT,
             TARGET_ROUTE,
             DIAGNOSTIC_ROUTE,
             DIAGNOSTIC_TIMESTAMP: nowIso(),
-            RECEIPT_RETURN_STATUS: state.receiptReturnStatus,
-            RECEIPT_RETURN_SOURCE: state.receiptReturnSource,
-            PRIMARY_CASE: "INCONCLUSIVE_EVIDENCE",
-            CALIBRATION_STATUS: "CALIBRATION_HOLD_RECEIVER_RUN_EXCEPTION",
-            DIAGNOSTIC_RAIL_CLEAN: "false",
-            CALIBRATION_POINT_REACHED: "false",
-            SECONDARY_EVIDENCE_NOTES: `ROUTE_RECEIVER_RUN_ERROR:${message}`,
-            RECOMMENDED_NEXT_OWNER: "DIAGNOSTIC_ROUTE_RECEIVER",
-            RECOMMENDED_NEXT_FILE: "/showroom/globe/hearth/diagnostic/index.html",
-            RECOMMENDED_NEXT_ACTION: "REVIEW_RECEIVER_RUN_EXCEPTION_AND_NORTH_RETURN_TRANSPORT"
+            CONTROL_GATE_STATUS: "RECEIVER_ALIGNMENT_RUN_EXCEPTION",
+            ERROR: message,
+            PRODUCTION_MUTATION_AUTHORIZED: false,
+            HEARTH_REPAIR_AUTHORIZED: false,
+            RUNTIME_RESTART_AUTHORIZED: false,
+            CANVAS_RELEASE_AUTHORIZED: false,
+            F13_CLAIMED: false,
+            F21_CLAIMED: false,
+            READY_TEXT_CLAIMED: false,
+            VISUAL_PASS_CLAIMED: false
           };
-          state.lastVerdict = null;
-          state.lastNorthReceipt = extractReceipt(north, null).value;
-          state.lastPacketText = objectToPacket(state.lastReport);
+          state.lastPacketText = objectToPacket(state.lastAlignmentPacket);
           state.lastCompactSummary = [
-            `RECEIPT_RETURN_STATUS=${state.receiptReturnStatus}`,
-            "PRIMARY_CASE=INCONCLUSIVE_EVIDENCE",
+            "CONTROL_GATE_STATUS=RECEIVER_ALIGNMENT_RUN_EXCEPTION",
             `ERROR=${message}`
           ].join("\n");
-          state.lastUpdatedAt = nowIso();
+
+          publishRouteReceiver();
           renderAll();
         } finally {
+          state.running = false;
           if (els.run) {
-            els.run.textContent = "Run Diagnostic";
+            els.run.textContent = "Run Diagnostic Alignment";
+            els.run.disabled = false;
           }
           renderAll();
         }
+      }
+
+      function resetGauges() {
+        state.lastAlignmentPacket = null;
+        state.lastPacketText = "FULL_ALIGNMENT_PACKET=NOT_RUN";
+        state.lastCompactSummary = "COMPACT_SUMMARY=NOT_RUN";
+        state.receipts = {};
+        state.gauges = {};
+        state.errors = [];
+        state.lastUpdatedAt = "";
+        renderAll();
+        publishRouteReceiver();
       }
 
       async function copyReport() {
         const text = els.packet && els.packet.value ? els.packet.value : state.lastPacketText || "";
-        if (!text || text === "FULL_PACKET_TEXT=NOT_RUN" || text === "FULL_PACKET_TEXT=UNAVAILABLE") return;
+        if (!text || text === "FULL_ALIGNMENT_PACKET=NOT_RUN") return;
 
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1733,95 +1916,242 @@
           }
 
           els.copy.textContent = "Copied";
-          setTimeout(() => { els.copy.textContent = "Copy Report"; }, 1200);
+          setTimeout(() => { els.copy.textContent = "Copy Alignment Report"; }, 1200);
         } catch (_error) {
           els.copy.textContent = "Copy Failed";
-          setTimeout(() => { els.copy.textContent = "Copy Report"; }, 1400);
+          setTimeout(() => { els.copy.textContent = "Copy Alignment Report"; }, 1400);
         }
+      }
+
+      function renderMission() {
+        if (!els.mission) return;
+
+        const north = state.gauges.NORTH_DIAGNOSTIC_TRACK;
+        const receipt = state.gauges.RECEIPT_FIELD_HEALTH;
+        const surface = state.gauges.SURFACE_TRUTH_CONTRACTS;
+        const construction = state.gauges.CONSTRUCTION_READINESS;
+
+        const varianceValues = Object.values(state.gauges || {}).map((g) => Number(g.variance || 0));
+        const totalVariance = varianceValues.length
+          ? varianceValues.reduce((sum, value) => sum + value, 0) / varianceValues.length
+          : 0;
+
+        els.mission.innerHTML = [
+          tile("Control Gate", "RECEIVER READY"),
+          tile("North Verdict", north ? north.inputs.NORTH_VERDICT : "NOT_RUN"),
+          tile("Receipt Field", receipt ? receipt.status : "NOT_RUN"),
+          tile("Gauge Variance", Object.keys(state.gauges).length ? varianceClass(totalVariance) : "NOT_RUN"),
+          tile("Surface Truth", surface ? surface.status : "NOT_RUN"),
+          tile("Construction", constructionStatus(state.gauges))
+        ].join("");
+      }
+
+      function renderGaugeBoard() {
+        if (!els.gaugeBoard) return;
+
+        const gauges = Object.values(state.gauges || {});
+        if (!gauges.length) {
+          els.gaugeBoard.innerHTML = GAUGE_DEFINITIONS.map((definition) => gaugeCard({
+            id: definition.id,
+            title: definition.title,
+            subtitle: definition.subtitle,
+            status: "NOT_RUN",
+            score: 0.2,
+            variance: 0,
+            varianceClass: "LOW_VARIANCE",
+            inputCount: definition.inputs.length,
+            evidence: "NOT_RUN",
+            missing: definition.inputs.join(", ")
+          })).join("");
+          return;
+        }
+
+        els.gaugeBoard.innerHTML = gauges.map(gaugeCard).join("");
+      }
+
+      function renderReceiptField() {
+        if (!els.receiptField) return;
+
+        const records = Object.values(state.receipts || {});
+        if (!records.length) {
+          els.receiptField.innerHTML = PARTICIPANTS.map((participant) => card(
+            participant.title,
+            participant.expectedReceiptClass,
+            "NOT_RUN",
+            [
+              ["File", participant.file],
+              ["Expected contract", participant.contract],
+              ["Receipt", "NOT_RUN"],
+              ["Role", participant.type]
+            ]
+          )).join("");
+          return;
+        }
+
+        els.receiptField.innerHTML = records.map((record) => card(
+          record.title,
+          record.expectedReceiptClass || record.type,
+          record.receiptStatus,
+          [
+            ["File", record.file],
+            ["Present", record.present],
+            ["Observed path", record.observedPath || "NONE"],
+            ["Observed scope", record.observedScope || "none"],
+            ["Receipt shape", record.receipt ? record.receipt.receiptShape : "NONE"],
+            ["Source method", record.receipt ? record.receipt.sourceMethod : "NONE"],
+            ["Expected contract", record.expectedContract]
+          ]
+        )).join("");
+      }
+
+      function renderModules() {
+        if (!els.modules) return;
+
+        els.modules.innerHTML = PARTICIPANTS.map((participant) => {
+          const record = state.participants[participant.id] || {
+            loadStatus: "PENDING",
+            present: false,
+            observedPath: "NONE",
+            observedScope: "none",
+            publicApi: "NONE"
+          };
+
+          return card(participant.title, participant.id, record.loadStatus, [
+            ["Type", participant.type],
+            ["File", participant.file],
+            ["Expected contract", participant.contract],
+            ["Global observed", record.present],
+            ["Observed path", record.observedPath],
+            ["Observed scope", record.observedScope],
+            ["Public API", record.publicApi]
+          ]);
+        }).join("");
+      }
+
+      function renderReceiverStatus() {
+        if (!els.receiverStatus) return;
+
+        els.receiverStatus.innerHTML = [
+          ["Contract", CONTRACT],
+          ["Receipt", RECEIPT],
+          ["Previous contract", PREVIOUS_CONTRACT],
+          ["Receiver loaded", true],
+          ["Run control requires North API", false],
+          ["Run control enabled by receiver load", true],
+          ["Receipts are specific evidence", true],
+          ["Gauges are collective variance", true],
+          ["Gauges authorize repair", false],
+          ["Last updated", state.lastUpdatedAt || "NEVER"],
+          ["Errors", state.errors.length ? state.errors.slice(-3).join(" | ") : "NONE"]
+        ].map(([key, value]) => kvRow(key, value)).join("");
+      }
+
+      function renderNorthGate() {
+        if (!els.northGate) return;
+
+        const north = state.receipts.NORTH_RAIL || {};
+        const northGauge = state.gauges.NORTH_DIAGNOSTIC_TRACK || null;
+
+        els.northGate.innerHTML = [
+          ["North present", Boolean(north.present)],
+          ["North receipt present", Boolean(north.receiptPresent)],
+          ["North run API", north.publicApi && north.publicApi.includes("runDiagnostic") ? "PRESENT" : "MISSING_OR_NOT_RUN"],
+          ["North verdict", northGauge ? northGauge.inputs.NORTH_VERDICT : "NOT_RUN"],
+          ["North verdict synthesized", false],
+          ["Final diagnostic verdict allowed", northGauge && northGauge.inputs.NORTH_VERDICT === "PRESENT"],
+          ["If missing", "DIAGNOSTIC_TRACK_ALIGNMENT_BLOCKED"]
+        ].map(([key, value]) => kvRow(key, value)).join("");
+      }
+
+      function renderRaw() {
+        if (els.summary) els.summary.textContent = state.lastCompactSummary || "COMPACT_SUMMARY=NOT_RUN";
+        if (els.packet) els.packet.value = state.lastPacketText || "FULL_ALIGNMENT_PACKET=NOT_RUN";
+        if (els.receiptJson) els.receiptJson.textContent = Object.keys(state.receipts).length
+          ? JSON.stringify(state.receipts, null, 2)
+          : "SPECIFIC_RECEIPTS=NOT_RUN";
+        if (els.gaugeJson) els.gaugeJson.textContent = Object.keys(state.gauges).length
+          ? JSON.stringify(state.gauges, null, 2)
+          : "GAUGE_VARIANCE=NOT_RUN";
+        if (els.receiverReceiptJson) els.receiverReceiptJson.textContent = JSON.stringify(getRouteReceipt(), null, 2);
+
+        if (els.copy) {
+          els.copy.disabled = !(
+            state.lastPacketText &&
+            state.lastPacketText !== "FULL_ALIGNMENT_PACKET=NOT_RUN"
+          );
+        }
+      }
+
+      function safeRender(name, fn) {
+        try { fn(); }
+        catch (error) {
+          state.errors.push(`${name}:${bounded(error && error.message ? error.message : error, 800)}`);
+        }
+      }
+
+      function renderAll() {
+        safeRender("mission", renderMission);
+        safeRender("gaugeBoard", renderGaugeBoard);
+        safeRender("receiptField", renderReceiptField);
+        safeRender("modules", renderModules);
+        safeRender("receiverStatus", renderReceiverStatus);
+        safeRender("northGate", renderNorthGate);
+        safeRender("raw", renderRaw);
+        publishRouteReceiver();
       }
 
       function getRouteReceipt() {
         return {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          previousContract: PREVIOUS_CONTRACT,
-          baselineContract: BASELINE_CONTRACT,
-          version: VERSION,
-          route: DIAGNOSTIC_ROUTE,
-          targetRoute: TARGET_ROUTE,
-          reportPacket: REPORT_PACKET,
+          CONTRACT,
+          RECEIPT,
+          PREVIOUS_CONTRACT,
+          BASELINE_CONTRACT,
+          VERSION,
+          ROUTE: DIAGNOSTIC_ROUTE,
+          TARGET_ROUTE,
+          REPORT_PACKET,
 
-          role: "thin-diagnostic-route-receiver",
-          receiverStandard: "receipt-return-transport-receiver",
-          northContract: NORTH_CONTRACT,
-          northReceipt: NORTH_RECEIPT,
+          ROLE: "thin-diagnostic-route-receiver",
+          RECEIVER_STANDARD: "labwest-construct-alignment-gauge-variance-receiver",
 
-          receiptReturnTransportHardened: true,
-          receiptReturnShapeNormalization: true,
-          receiptReturnGlobalFallback: true,
-          rawOutputPreserved: Boolean(els.summary && els.packet && els.verdictJson && els.receiverReceiptJson),
-          runDiagnosticControlPresent: Boolean(els.run),
-          copyReportControlPresent: Boolean(els.copy),
-          targetFramePresent: Boolean(els.frame),
+          RECEIPTS_ARE_SPECIFIC_DIAGNOSTIC_EVIDENCE: true,
+          GAUGES_ARE_COLLECTIVE_DIAGNOSTIC_VARIANCE: true,
+          GAUGES_DO_NOT_REPLACE_RECEIPTS: true,
+          GAUGES_AUTHORIZE_REPAIR: false,
 
-          receiptReturnStatus: state.receiptReturnStatus,
-          receiptReturnSource: state.receiptReturnSource,
-          lastRunOk: state.lastRunOk,
-          lastError: state.lastError || "NONE",
-          lastUpdatedAt: state.lastUpdatedAt || "NEVER",
+          CONTROL_GATE_ENABLES_ALIGNMENT_RUN_WHEN_RECEIVER_LOADED: true,
+          RUN_BUTTON_LOCKED_BY_NORTH_API: false,
+          NORTH_VERDICT_REQUIRED_FOR_FINAL_DIAGNOSTIC_VERDICT: true,
+          NORTH_VERDICT_SYNTHESIZED: false,
 
-          packetTextReadable: Boolean(
-            state.lastPacketText &&
-            state.lastPacketText !== "FULL_PACKET_TEXT=NOT_RUN" &&
-            state.lastPacketText !== "FULL_PACKET_TEXT=UNAVAILABLE"
-          ),
-          reportObjectReadable: Boolean(state.lastReport),
-          verdictObjectReadable: Boolean(state.lastVerdict),
-          northReceiptReadable: Boolean(state.lastNorthReceipt),
+          LABWEST_CONSTRUCT_IS_CONTROLLING_DIAGNOSTIC_DERIVATIVE: true,
+          NORTH_DIAGNOSTIC_TRACK_MUST_ALIGN_TO_LABWEST_CONSTRUCT: true,
+          ANCHOR_FILE_RETURN_IS_TARGET_HOPPING_UNLESS_CONSTRUCT_REQUIRES_IT: true,
 
-          childLoadStatus: clonePlain(state.loadStatus),
-          northAvailable: state.northAvailable,
+          PARTICIPANT_COUNT: PARTICIPANTS.length,
+          PARTICIPANT_LOAD_STARTED: state.loadStarted,
+          PARTICIPANT_LOAD_COMPLETE: state.loadComplete,
+          SPECIFIC_RECEIPT_COUNT: Object.values(state.receipts || {}).filter((r) => r.receiptPresent).length,
+          GAUGE_COUNT: Object.keys(state.gauges || {}).length,
 
-          receiptBuckets: RECEIPT_BUCKETS.map((bucket) => ({
-            id: bucket.id,
-            title: bucket.title,
-            status: bucketStatus(bucket),
-            keys: bucket.keys
-          })),
+          LAST_UPDATED_AT: state.lastUpdatedAt || "NEVER",
+          TARGET_FRAME_LOADED: state.targetFrameLoaded,
+          ERROR_COUNT: state.errors.length,
+          ERRORS: state.errors.slice(-8),
 
-          routeReceiverLoadsChildAssetsAsLoadingConvenience: true,
-          routeReceiverCallsNorthOnly: true,
-          northOnlyCallPreserved: true,
-          routeReceiverOwnsDiagnosticLaw: false,
-          routeReceiverOwnsEvidenceLaw: false,
-          routeReceiverOwnsClassificationLaw: false,
-          routeReceiverOwnsRecommendationLaw: false,
-          routeReceiverOwnsPlanetTruth: false,
-          routeReceiverOwnsCanvasTruth: false,
-          routeReceiverOwnsExpressionTruth: false,
-          routeReceiverCreatesPrimaryCases: false,
-          routeReceiverOverridesNorthVerdict: false,
-          routeReceiverOwnsRepair: false,
-          routeReceiverOwnsRuntimeRestart: false,
-          routeReceiverOwnsCanvasRelease: false,
+          PRODUCTION_MUTATION_AUTHORIZED: false,
+          HEARTH_REPAIR_AUTHORIZED: false,
+          RUNTIME_RESTART_AUTHORIZED: false,
+          CANVAS_RELEASE_AUTHORIZED: false,
+          F13_CLAIMED: false,
+          F21_CLAIMED: false,
+          READY_TEXT_CLAIMED: false,
+          VISUAL_PASS_CLAIMED: false,
+          GENERATED_IMAGE: false,
+          GRAPHIC_BOX: false,
+          WEBGL: false,
 
-          productionMutationAuthorized: false,
-          hearthRepairClaimed: false,
-          runtimeRestartClaimed: false,
-          canvasReleaseClaimed: false,
-          f13Claimed: false,
-          f21EligibleForNorth: false,
-          f21ClaimedByDiagnosticRail: false,
-          readyTextAllowed: false,
-          readyTextClaimedByDiagnosticRail: false,
-          visualPassClaimed: false,
-          generatedImage: false,
-          graphicBox: false,
-          webGL: false,
-          webgl: false,
-
-          renderErrors: state.renderErrors.slice(-12),
-          updatedAt: nowIso()
+          UPDATED_AT: nowIso()
         };
       }
 
@@ -1830,41 +2160,43 @@
         root.DEXTER_LAB = root.DEXTER_LAB || {};
 
         const api = {
-          contract: CONTRACT,
           CONTRACT,
-          receipt: RECEIPT,
           RECEIPT,
-          previousContract: PREVIOUS_CONTRACT,
-          baselineContract: BASELINE_CONTRACT,
-          version: VERSION,
-          targetRoute: TARGET_ROUTE,
-          diagnosticRoute: DIAGNOSTIC_ROUTE,
-          reportPacket: REPORT_PACKET,
+          PREVIOUS_CONTRACT,
+          BASELINE_CONTRACT,
+          VERSION,
+          TARGET_ROUTE,
+          DIAGNOSTIC_ROUTE,
+          REPORT_PACKET,
 
-          loadChildChain,
-          runDiagnostic,
+          loadParticipantChain,
+          runAlignment,
+          runDiagnostic: runAlignment,
+          resetGauges,
           getRouteReceipt,
           getReceipt: getRouteReceipt,
           getReceiptLight: getRouteReceipt,
           getState: () => clonePlain(state),
+          getAlignmentPacket: () => clonePlain(state.lastAlignmentPacket || {}),
           getPacketText: () => state.lastPacketText,
           getCompactSummary: () => state.lastCompactSummary,
-          getReport: () => clonePlain(state.lastReport || {}),
-          getNorthVerdict: () => clonePlain(state.lastVerdict || {}),
+          getSpecificReceipts: () => clonePlain(state.receipts || {}),
+          getGaugeVariance: () => clonePlain(state.gauges || {}),
 
-          receiptReturnTransportHardened: true,
-          routeReceiverCallsNorthOnly: true,
-          northOnlyCallPreserved: true,
-          diagnosticSystemChange: false,
+          receiptsAreSpecificDiagnosticEvidence: true,
+          gaugesAreCollectiveDiagnosticVariance: true,
+          gaugesDoNotReplaceReceipts: true,
+          gaugesAuthorizeRepair: false,
+          runControlLockedByNorthApi: false,
+          northVerdictSynthesized: false,
+
           productionMutationAuthorized: false,
           hearthRepairClaimed: false,
           runtimeRestartClaimed: false,
           canvasReleaseClaimed: false,
           f13Claimed: false,
-          f21EligibleForNorth: false,
-          f21ClaimedByDiagnosticRail: false,
-          readyTextAllowed: false,
-          readyTextClaimedByDiagnosticRail: false,
+          f21Claimed: false,
+          readyTextClaimed: false,
           visualPassClaimed: false,
           generatedImage: false,
           graphicBox: false,
@@ -1873,43 +2205,49 @@
         };
 
         root.HEARTH.diagnosticRouteReceiver = api;
-        root.HEARTH.diagnosticReceiptReturnTransportReceiver = api;
-        root.HEARTH.diagnosticCanvasExpressionObservatoryReceiver = api;
+        root.HEARTH.diagnosticGaugeVarianceReceiver = api;
+        root.HEARTH.diagnosticConstructAlignmentGaugeReceiver = api;
 
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER = api;
-        root.HEARTH_DIAGNOSTIC_RECEIPT_RETURN_TRANSPORT_RECEIVER = api;
-        root.HEARTH_DIAGNOSTIC_CANVAS_EXPRESSION_OBSERVATORY_RECEIVER = api;
+        root.HEARTH_DIAGNOSTIC_GAUGE_VARIANCE_RECEIVER = api;
+        root.HEARTH_DIAGNOSTIC_CONSTRUCT_ALIGNMENT_GAUGE_RECEIVER = api;
 
         root.DEXTER_LAB.hearthDiagnosticRouteReceiver = api;
-        root.DEXTER_LAB.hearthDiagnosticReceiptReturnTransportReceiver = api;
+        root.DEXTER_LAB.hearthDiagnosticGaugeVarianceReceiver = api;
 
         root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_RECEIPT = getRouteReceipt();
-        root.HEARTH_DIAGNOSTIC_RECEIPT_RETURN_TRANSPORT_RECEIVER_RECEIPT = getRouteReceipt();
+        root.HEARTH_DIAGNOSTIC_GAUGE_VARIANCE_RECEIVER_RECEIPT = getRouteReceipt();
 
-        if (state.lastReport) {
-          root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_REPORT = clonePlain(state.lastReport);
+        if (state.lastAlignmentPacket) {
+          root.HEARTH_DIAGNOSTIC_ALIGNMENT_GAUGE_VARIANCE_PACKET = clonePlain(state.lastAlignmentPacket);
         }
 
         if (state.lastPacketText) {
-          root.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_PACKET_TEXT = state.lastPacketText;
+          root.HEARTH_DIAGNOSTIC_ALIGNMENT_GAUGE_VARIANCE_PACKET_TEXT = state.lastPacketText;
         }
       }
 
       window.addEventListener("error", (event) => {
-        state.renderErrors.push(`window.error:${bounded(event && event.message ? event.message : "unknown", 900)}`);
-        state.lastError = state.lastError || bounded(event && event.message ? event.message : "unknown", 900);
-        renderRaw();
-        publishRouteReceiver();
+        state.errors.push(`window.error:${bounded(event && event.message ? event.message : "unknown", 900)}`);
+        renderAll();
       });
 
-      if (els.run) els.run.addEventListener("click", runDiagnostic);
+      if (els.run) els.run.addEventListener("click", runAlignment);
       if (els.copy) els.copy.addEventListener("click", copyReport);
+      if (els.reset) els.reset.addEventListener("click", resetGauges);
       if (els.refresh) els.refresh.addEventListener("click", renderAll);
-      if (els.frame) els.frame.addEventListener("load", renderAll);
+      if (els.frame) {
+        els.frame.addEventListener("load", () => {
+          state.targetFrameLoaded = true;
+          renderAll();
+        });
+      }
+
+      if (els.run) els.run.disabled = false;
 
       publishRouteReceiver();
       renderAll();
-      loadChildChain().then(renderAll);
+      loadParticipantChain().then(renderAll);
     })();
   </script>
 </body>

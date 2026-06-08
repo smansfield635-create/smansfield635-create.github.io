@@ -3,7 +3,7 @@
 <head>
   <!--
     /showroom/globe/hearth/index.html
-    HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5
+    HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6
     Full-file replacement.
 
     HTML shell / stage-layout / passive script-admission boundary only.
@@ -11,14 +11,30 @@
     Purpose:
     - Preserve the public HTML contract:
       HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1
-    - Preserve the restored canonical canvas DOM surface:
+    - Preserve the canonical canvas DOM chain exactly:
       #hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas
-    - Preserve nonzero used-size math on the route stage, expression surface, mount, frame, and canvas.
-    - Add static passive script admission for the governed visible-expression asset chain:
+    - Repair the suspected zero-rect failure at the stage/mount/frame/canvas used-size boundary.
+    - Remove dependence on a fragile parent-percentage-only sizing chain.
+    - Add explicit used-size floors to the stage, expression surface, mount, frame, and canvas.
+    - Preserve passive governed script admission order:
       hex authority -> hex surface -> canvas receiver -> controls gateway -> index buttons -> route conductor.
-    - Restore motion/touch admission opportunity without HTML owning controls, drawing, canvas creation,
-      lifecycle ignition, runtime restart, or visual-pass completion.
     - Keep route conductor, canvas, controls, hex, and downstream pointer files as separate runtime authorities.
+
+    Does not own:
+    - Canvas drawing
+    - Canvas creation
+    - Canvas lifecycle ignition
+    - Controls renewal
+    - Route conductor authority
+    - Runtime restart
+    - Hex truth
+    - Pointer truth
+    - Final visual pass
+    - Ready text
+    - F13 or F21 latch
+    - Generated image
+    - GraphicBox
+    - WebGL
   -->
 
   <meta charset="utf-8" />
@@ -45,7 +61,9 @@
       --hearth-safe-right: env(safe-area-inset-right, 0px);
       --hearth-safe-bottom: env(safe-area-inset-bottom, 0px);
       --hearth-safe-left: env(safe-area-inset-left, 0px);
-      --hearth-stage-size: min(920px, 72vmin, calc(100vw - 40px - var(--hearth-safe-left) - var(--hearth-safe-right)));
+      --hearth-stage-floor: 320px;
+      --hearth-stage-mobile-floor: 280px;
+      --hearth-stage-max: 920px;
     }
 
     * {
@@ -92,8 +110,9 @@
         calc(22px + var(--hearth-safe-bottom))
         calc(20px + var(--hearth-safe-left));
       display: grid;
-      grid-template-rows: auto minmax(280px, 1fr) auto;
+      grid-template-rows: auto auto auto;
       gap: 18px;
+      align-content: start;
     }
 
     .skip-link {
@@ -204,47 +223,64 @@
     }
 
     .hearth-stage-shell {
-      min-height: 280px;
-      display: grid;
-      place-items: center;
+      min-height: var(--hearth-stage-floor);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: visible;
+      isolation: isolate;
+      contain: none;
+      content-visibility: visible;
     }
 
     .planet-stage,
     .hearth-planet-stage {
-      width: var(--hearth-stage-size);
-      height: var(--hearth-stage-size);
-      max-width: 100%;
+      width: 72vmin;
+      height: 72vmin;
+      min-width: var(--hearth-stage-floor);
+      min-height: var(--hearth-stage-floor);
+      max-width: var(--hearth-stage-max);
+      max-height: var(--hearth-stage-max);
       aspect-ratio: 1 / 1;
       position: relative;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      flex: 0 0 auto;
       overflow: visible;
       isolation: isolate;
+      contain: none;
+      content-visibility: visible;
     }
 
     .hearth-expression-surface,
     .expression-surface {
       width: 100%;
       height: 100%;
-      min-width: 1px;
-      min-height: 1px;
+      min-width: var(--hearth-stage-floor);
+      min-height: var(--hearth-stage-floor);
       aspect-ratio: 1 / 1;
       position: relative;
       display: block;
+      flex: 0 0 auto;
       overflow: visible;
+      contain: none;
+      content-visibility: visible;
     }
 
     .globe-mount,
     #hearthCanvasMount {
       width: 100%;
       height: 100%;
-      min-width: 1px;
-      min-height: 1px;
+      min-width: var(--hearth-stage-floor);
+      min-height: var(--hearth-stage-floor);
       aspect-ratio: 1 / 1;
       position: relative;
       display: block;
+      flex: 0 0 auto;
       overflow: hidden;
+      contain: none;
+      content-visibility: visible;
       border-radius: 50%;
       background:
         radial-gradient(circle at 44% 35%, rgba(255, 255, 255, 0.14), transparent 0 34%, rgba(255, 255, 255, 0.05) 54%, rgba(0, 0, 0, 0.38) 100%),
@@ -259,11 +295,13 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      min-width: 1px;
-      min-height: 1px;
+      min-width: var(--hearth-stage-floor);
+      min-height: var(--hearth-stage-floor);
       aspect-ratio: 1 / 1;
       display: block;
       overflow: hidden;
+      contain: none;
+      content-visibility: visible;
       border-radius: 50%;
       transform: translateZ(0);
     }
@@ -271,11 +309,14 @@
     #hearthVisibleCanvas {
       width: 100%;
       height: 100%;
-      min-width: 1px;
-      min-height: 1px;
+      min-width: var(--hearth-stage-floor);
+      min-height: var(--hearth-stage-floor);
+      aspect-ratio: 1 / 1;
       display: block;
       border: 0;
       border-radius: 50%;
+      contain: none;
+      content-visibility: visible;
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
@@ -327,16 +368,21 @@
 
     @media (max-width: 780px) {
       :root {
-        --hearth-stage-size: min(680px, 88vw, calc(100vw - 32px - var(--hearth-safe-left) - var(--hearth-safe-right)));
+        --hearth-stage-floor: var(--hearth-stage-mobile-floor);
       }
 
       .hearth-page {
-        grid-template-rows: auto auto auto;
         padding:
           calc(16px + var(--hearth-safe-top))
           calc(16px + var(--hearth-safe-right))
           calc(18px + var(--hearth-safe-bottom))
           calc(16px + var(--hearth-safe-left));
+      }
+
+      .planet-stage,
+      .hearth-planet-stage {
+        width: 84vmin;
+        height: 84vmin;
       }
 
       .hearth-title-row {
@@ -355,7 +401,7 @@
 
     @media (max-width: 360px) {
       :root {
-        --hearth-stage-size: calc(100vw - 24px - var(--hearth-safe-left) - var(--hearth-safe-right));
+        --hearth-stage-floor: 268px;
       }
 
       .hearth-page {
@@ -364,6 +410,12 @@
           calc(12px + var(--hearth-safe-right))
           calc(16px + var(--hearth-safe-bottom))
           calc(12px + var(--hearth-safe-left));
+      }
+
+      .planet-stage,
+      .hearth-planet-stage {
+        width: 82vmin;
+        height: 82vmin;
       }
 
       .hearth-action,
@@ -393,10 +445,11 @@
   data-hearth-page-alias="Hearth"
   data-hearth-page-context="visible globe canvas expression shell"
   data-hearth-html-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
-  data-hearth-html-internal-renewal-contract="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5"
-  data-hearth-html-internal-renewal-receipt="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_RECEIPT_v5_1_5"
-  data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STATIC_CANONICAL_FRAME_CANVAS_USED_SIZE_RESTORE_TNT_v5_1_4"
+  data-hearth-html-internal-renewal-contract="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6"
+  data-hearth-html-internal-renewal-receipt="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_RECEIPT_v5_1_6"
+  data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5"
   data-hearth-canonical-mount-used-size-lock="true"
+  data-hearth-stage-used-size-floor-active="true"
   data-hearth-static-canonical-frame-canvas-restored="true"
   data-hearth-static-asset-admission-active="true"
   data-hearth-controls-static-script-admitted="true"
@@ -466,19 +519,25 @@
       aria-label="Hearth static stage shell"
       data-hearth-stage-shell="true"
       data-hearth-used-size-boundary="locked"
+      data-hearth-stage-used-size-floor="true"
     >
       <section
         id="hearthPlanetStage"
         class="planet-stage hearth-planet-stage"
         aria-label="Hearth planet stage"
+        data-hearth-globe-stage="true"
         data-hearth-planet-stage="true"
+        data-hearth-stage="true"
         data-hearth-stage-used-size="nonzero-required"
+        data-hearth-stage-used-size-floor="true"
       >
         <div
           id="hearthExpressionSurface"
           class="hearth-expression-surface expression-surface"
           data-hearth-expression-surface="true"
           data-hearth-dom-expression-surface="true"
+          data-hearth-expression-used-size="nonzero-required"
+          data-hearth-stage-used-size-floor="true"
         >
           <section
             id="hearthCanvasMount"
@@ -487,6 +546,7 @@
             data-hearth-canvas-mount="true"
             data-hearth-canonical-mount="true"
             data-hearth-mount-used-size="nonzero-required"
+            data-hearth-stage-used-size-floor="true"
           >
             <div
               id="hearthCanvasRectLockFrame"
@@ -494,6 +554,7 @@
               data-hearth-canvas-frame="true"
               data-hearth-canonical-frame="true"
               data-hearth-frame-used-size="nonzero-required"
+              data-hearth-stage-used-size-floor="true"
             >
               <canvas
                 id="hearthVisibleCanvas"
@@ -503,8 +564,11 @@
                 role="img"
                 aria-label="Hearth visible globe canvas"
                 data-hearth-visible-canvas="true"
+                data-hearth-canonical-visible-canvas="true"
                 data-hearth-canonical-canvas="true"
+                data-hearth-expression-surface="true"
                 data-hearth-canvas-used-size="nonzero-required"
+                data-hearth-stage-used-size-floor="true"
                 data-generated-image="false"
                 data-graphic-box="false"
                 data-webgl="false"
@@ -521,7 +585,7 @@
       <article class="hearth-panel">
         <h2>HTML boundary</h2>
         <p>
-          Static mount, frame, and canvas remain present in the HTML shell. Used-size math is locked before runtime admission.
+          Static stage, mount, frame, and canvas remain present in the HTML shell with explicit used-size floors.
         </p>
       </article>
 
@@ -547,7 +611,7 @@
       </span>
       <span>
         Internal renewal:
-        HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5.
+        HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6.
       </span>
     </footer>
   </main>
@@ -563,9 +627,10 @@
     "pageContext": "visible globe canvas expression shell",
     "contract": "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1",
     "hearthHtmlContract": "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1",
-    "hearthHtmlInternalRenewalContract": "HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5",
-    "hearthHtmlInternalRenewalReceipt": "HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_RECEIPT_v5_1_5",
-    "hearthHtmlPreviousInternalRenewalContract": "HEARTH_HTML_STATIC_CANONICAL_FRAME_CANVAS_USED_SIZE_RESTORE_TNT_v5_1_4",
+    "hearthHtmlInternalRenewalContract": "HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6",
+    "hearthHtmlInternalRenewalReceipt": "HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_RECEIPT_v5_1_6",
+    "hearthHtmlPreviousInternalRenewalContract": "HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5",
+    "hearthStageUsedSizeFloorActive": "true",
     "hearthStaticCanonicalFrameCanvasRestored": "true",
     "hearthCanonicalMountUsedSizeLock": "true",
     "hearthStaticAssetAdmissionActive": "true",
@@ -574,7 +639,7 @@
     "hearthCanvasMountId": "hearthCanvasMount",
     "hearthCanvasFrameId": "hearthCanvasRectLockFrame",
     "hearthVisibleCanvasId": "hearthVisibleCanvas",
-    "hearthStageUsedSizeBoundary": "LOCKED_BY_STATIC_HTML_CSS",
+    "hearthStageUsedSizeBoundary": "LOCKED_BY_STATIC_HTML_CSS_STAGE_FLOOR",
     "hearthAssetAdmissionOrder": [
       "/assets/hearth/hearth.hex.four-pair.authority.js",
       "/assets/hearth/hearth.hex.surface.js",
@@ -587,7 +652,7 @@
     "hearthControlContract": "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1",
     "hearthControlRenewalCandidate": "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5",
     "hearthSingleCausalFileProven": "false",
-    "hearthRecommendedDiagnosticAction": "RUN_DIAGNOSTIC_AFTER_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE",
+    "hearthRecommendedDiagnosticAction": "RUN_DIAGNOSTIC_AFTER_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE",
     "ownsCanvasDrawing": false,
     "ownsCanvasCreation": false,
     "ownsCanvasLifecycle": false,
@@ -615,9 +680,11 @@
     hidden
     data-hearth-page-receipt="true"
     data-hearth-html-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
-    data-hearth-html-internal-renewal-contract="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5"
-    data-hearth-html-internal-renewal-receipt="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_RECEIPT_v5_1_5"
+    data-hearth-html-internal-renewal-contract="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6"
+    data-hearth-html-internal-renewal-receipt="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_RECEIPT_v5_1_6"
+    data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5"
     data-hearth-canvas-selector="#hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas"
+    data-hearth-stage-used-size-floor-active="true"
     data-hearth-static-canonical-frame-canvas-restored="true"
     data-hearth-canonical-mount-used-size-lock="true"
     data-hearth-static-asset-admission-active="true"
@@ -629,8 +696,9 @@
     data-webgl="false"
   >
     HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1 |
-    HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5 |
+    HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6 |
     STATIC_CANONICAL_DOM_SURFACE:#hearthCanvasMount&gt;#hearthCanvasRectLockFrame&gt;#hearthVisibleCanvas |
+    STAGE_USED_SIZE_FLOOR_ACTIVE:true |
     USED_SIZE_BOUNDARY_LOCKED:true |
     STATIC_ASSET_ADMISSION_ACTIVE:true |
     CONTROLS_STATIC_SCRIPT_ADMITTED:true |

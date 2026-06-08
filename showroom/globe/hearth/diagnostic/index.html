@@ -4,13 +4,14 @@
   data-route="/showroom/globe/hearth/diagnostic/"
   data-page="hearth-diagnostic-instrument-chamber"
   data-contract="HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8"
+  data-internal-renewal="HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_DECK_SEQUENTIAL_COMPARTMENTALIZATION_TNT_v9"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta
     name="description"
-    content="Mirrorland Instrument Chamber · Planet Production Facility · Location Unknown · Fibonacci cardinal diagnostic receiver"
+    content="Mirrorland Instrument Chamber · Planet Production Facility · Location Unknown · living planet-engine gauges and sequential diagnostic receipts"
   />
   <title>Mirrorland Instrument Chamber · Hearth Diagnostic</title>
 
@@ -30,7 +31,9 @@
       --east: #ffc852;
       --south: #45f0a4;
       --west: #c678ff;
-      --violet: #8f7cff;
+      --truth: #49e7ff;
+      --canvas: #8f7cff;
+
       --red: #ff4f6e;
       --amber: #ffae42;
       --green: #39e99a;
@@ -51,9 +54,7 @@
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -100,12 +101,10 @@
       100% { transform: rotate(360deg) scale(1); }
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
 
     .page {
-      width: min(1420px, calc(100vw - 28px));
+      width: min(1440px, calc(100vw - 28px));
       margin: 0 auto;
       padding: 22px 0 34px;
     }
@@ -138,9 +137,7 @@
       animation: slowSpin 20s linear infinite;
     }
 
-    @keyframes slowSpin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes slowSpin { to { transform: rotate(360deg); } }
 
     .hero-top {
       position: relative;
@@ -168,7 +165,7 @@
     }
 
     .subtitle {
-      max-width: 850px;
+      max-width: 880px;
       margin: 14px 0 0;
       color: #cdd9f6;
       font-size: clamp(15px, 1.45vw, 18px);
@@ -176,7 +173,7 @@
     }
 
     .facility-stamp {
-      min-width: 240px;
+      min-width: 250px;
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 20px;
       background: rgba(4, 8, 22, 0.7);
@@ -215,7 +212,7 @@
       z-index: 1;
       margin-top: 22px;
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      grid-template-columns: minmax(0, 1.36fr) minmax(280px, 0.64fr);
       gap: 18px;
     }
 
@@ -226,7 +223,9 @@
       padding: 16px;
     }
 
-    .surface-title {
+    .surface-title,
+    .panel-heading,
+    .deck-heading {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -237,7 +236,8 @@
     .surface-title h2,
     .surface-title h3,
     .panel-heading h2,
-    .panel-heading h3 {
+    .panel-heading h3,
+    .deck-heading h2 {
       margin: 0;
       font-size: 13px;
       letter-spacing: 0.13em;
@@ -245,16 +245,30 @@
       color: #eaf2ff;
     }
 
+    .chamber-brief {
+      margin: 12px 0 0;
+      color: #dbe7ff;
+      font-size: 16px;
+      line-height: 1.42;
+    }
+
+    .small-brief {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
     .fibonacci-rail {
       display: grid;
       grid-template-columns: repeat(8, minmax(64px, 1fr));
       gap: 8px;
-      margin-top: 12px;
+      margin-top: 14px;
     }
 
     .fib-chip {
       position: relative;
-      min-height: 74px;
+      min-height: 76px;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
       background:
@@ -369,20 +383,20 @@
         rgba(9, 14, 30, 0.92);
     }
 
-    button:active {
-      transform: translateY(0);
-    }
+    button:active { transform: translateY(0); }
 
     button[data-tone="north"] { border-color: rgba(81,213,255,0.34); }
     button[data-tone="east"] { border-color: rgba(255,200,82,0.34); }
     button[data-tone="south"] { border-color: rgba(69,240,164,0.34); }
     button[data-tone="west"] { border-color: rgba(198,120,255,0.34); }
+    button[data-tone="truth"] { border-color: rgba(73,231,255,0.34); }
+    button[data-tone="canvas"] { border-color: rgba(143,124,255,0.34); }
     button[data-tone="raw"] { border-color: rgba(255,79,110,0.28); }
 
     .status-strip {
       margin-top: 18px;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -394,6 +408,7 @@
       background:
         linear-gradient(160deg, rgba(22, 32, 68, 0.72), rgba(5, 8, 20, 0.84));
       box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+      min-height: 210px;
     }
 
     .card::before {
@@ -409,12 +424,17 @@
     .card[data-card="north"] { --card-color: var(--north); }
     .card[data-card="east"] { --card-color: var(--east); }
     .card[data-card="south"] { --card-color: var(--south); }
+    .card[data-card="truth"] { --card-color: var(--truth); }
     .card[data-card="west"] { --card-color: var(--west); }
+    .card[data-card="canvas"] { --card-color: var(--canvas); }
 
     .card-inner {
       position: relative;
       z-index: 1;
       padding: 14px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     .card-top {
@@ -426,7 +446,7 @@
 
     .card h3 {
       margin: 0;
-      font-size: 19px;
+      font-size: 18px;
       letter-spacing: -0.02em;
     }
 
@@ -485,12 +505,6 @@
       box-shadow: 0 0 24px rgba(255,174,66,0.18);
     }
 
-    .card[data-status="unknown"] .gauge {
-      background:
-        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
-        conic-gradient(var(--unknown) 0 80deg, rgba(255,255,255,0.08) 80deg 360deg);
-    }
-
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -503,6 +517,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--unknown);
+      white-space: nowrap;
     }
 
     .status-pill::before {
@@ -529,8 +544,94 @@
       margin: 14px 0 0;
       color: #d8e4ff;
       font-size: 13px;
+      line-height: 1.36;
+      min-height: 54px;
+      flex: 1;
+    }
+
+    .card-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .card-actions button {
+      padding: 9px 10px;
+      font-size: 10px;
+    }
+
+    .receipt-deck {
+      margin-top: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 26px;
+      background:
+        linear-gradient(145deg, rgba(14, 22, 48, 0.8), rgba(4, 8, 22, 0.74));
+      padding: 16px;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.28);
+    }
+
+    .deck-copy {
+      margin: -4px 0 14px;
+      color: #c9d8f7;
+      line-height: 1.45;
+      font-size: 14px;
+      max-width: 920px;
+    }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .deck-card {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(73,231,255,0.08), transparent 8rem),
+        rgba(7, 12, 28, 0.72);
+      padding: 12px;
+      min-height: 138px;
+      overflow: hidden;
+    }
+
+    .deck-card[data-active="true"] {
+      border-color: rgba(73,231,255,0.42);
+      box-shadow: 0 0 0 1px rgba(73,231,255,0.12), 0 0 26px rgba(73,231,255,0.08);
+    }
+
+    .deck-number {
+      color: var(--cyan);
+      font: 900 12px/1 var(--mono);
+      letter-spacing: 0.12em;
+    }
+
+    .deck-card h3 {
+      margin: 8px 0 6px;
+      font-size: 15px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .deck-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
       line-height: 1.35;
-      min-height: 36px;
+    }
+
+    .deck-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .deck-actions button {
+      padding: 9px 10px;
+      font-size: 10px;
     }
 
     details {
@@ -553,9 +654,7 @@
       letter-spacing: -0.01em;
     }
 
-    summary::-webkit-details-marker {
-      display: none;
-    }
+    summary::-webkit-details-marker { display: none; }
 
     summary::after {
       content: "OPEN";
@@ -573,9 +672,7 @@
       border-color: rgba(73,231,255,0.35);
     }
 
-    .drawer-body {
-      padding: 0 16px 16px;
-    }
+    .drawer-body { padding: 0 16px 16px; }
 
     .drawer-grid {
       display: grid;
@@ -608,16 +705,12 @@
       word-break: break-word;
     }
 
-    .receipt-output {
-      display: none;
-    }
-
     .receipt-preview {
       margin: 12px 0 0;
       white-space: pre-wrap;
       word-break: break-word;
       overflow: auto;
-      max-height: 310px;
+      max-height: 360px;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
       background:
@@ -634,17 +727,7 @@
       margin-top: 18px;
     }
 
-    .panel-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .target-frame-wrap {
-      margin-top: 18px;
-    }
+    .target-frame-wrap { margin-top: 18px; }
 
     .target-frame {
       width: 100%;
@@ -694,6 +777,11 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    @media (max-width: 1180px) {
+      .status-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .deck-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 1020px) {
       .hero-top,
       .commander {
@@ -701,26 +789,19 @@
         display: grid;
       }
 
-      .facility-stamp {
-        min-width: 0;
-      }
+      .facility-stamp { min-width: 0; }
+      .fibonacci-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .drawer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
 
-      .fibonacci-rail {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .status-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .drawer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    @media (max-width: 760px) {
+      .status-strip,
+      .deck-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 640px) {
       .page {
-        width: min(100vw - 18px, 1420px);
+        width: min(100vw - 18px, 1440px);
         padding-top: 9px;
       }
 
@@ -731,14 +812,13 @@
 
       .fibonacci-rail,
       .status-strip,
+      .deck-grid,
       .drawer-grid,
       .micro-grid {
         grid-template-columns: 1fr;
       }
 
-      button {
-        width: 100%;
-      }
+      button { width: 100%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -763,29 +843,29 @@
           <p class="eyebrow">Planet Production Facility · Location Unknown</p>
           <h1 id="page-title">Mirrorland Instrument Chamber</h1>
           <p class="subtitle">
-            This chamber does not build the planet. It watches the multi-engine construct,
-            orders the evidence through Fibonacci synchronization, and tells the facility
-            which engine is allowed to act next.
+            A living planet-engine dashboard for Hearth. The gauges show where the build
+            stands, what the chamber can prove, and which focused receipt should move next.
+            The receipts carry the technical evidence; the instruments keep the story readable.
           </p>
         </div>
 
         <aside class="facility-stamp" aria-label="Diagnostic contract stamp">
-          <b>Receiver Contract</b>
+          <b>Chamber Seal</b>
           <div class="stamp-line">
             <span>Route</span>
             <strong>/diagnostic/</strong>
           </div>
           <div class="stamp-line">
             <span>Mode</span>
-            <strong>HTML RECEIVER</strong>
+            <strong>RECEIPT DECK</strong>
           </div>
           <div class="stamp-line">
             <span>Mutation</span>
             <strong>FORBIDDEN</strong>
           </div>
           <div class="stamp-line">
-            <span>Raw Packet</span>
-            <strong>DEBUG ONLY</strong>
+            <span>Archive</span>
+            <strong>ESCALATION ONLY</strong>
           </div>
         </aside>
       </div>
@@ -793,9 +873,16 @@
       <div class="commander">
         <section class="surface" aria-label="Primary Fibonacci commander surface">
           <div class="surface-title">
-            <h2>Fibonacci synchronization rail</h2>
-            <span class="status-pill" id="overallStatus" data-status="unknown">UNKNOWN</span>
+            <h2>Chamber Brief</h2>
+            <span class="status-pill" id="overallStatus" data-status="unknown">WAITING</span>
           </div>
+
+          <p class="chamber-brief" id="chamberBrief">
+            The chamber is standing by. Run a scan to read the current planet-engine field.
+          </p>
+          <p class="small-brief" id="nextReceiptHint">
+            Start with the Chamber Index when the field is unclear.
+          </p>
 
           <div class="fibonacci-rail" id="fibonacciRail">
             <div class="fib-chip" data-fib="F1" data-status="unknown">
@@ -830,7 +917,7 @@
             </div>
             <div class="fib-chip" data-fib="F21" data-status="unknown">
               <div class="fib-code">F21</div>
-              <div class="fib-label">West</div>
+              <div class="fib-label">West Gate</div>
               <div class="fib-state" data-fib-state="F21">UNKNOWN</div>
             </div>
             <div class="fib-chip" data-fib="F34" data-status="unknown">
@@ -841,55 +928,56 @@
           </div>
 
           <div class="controls" aria-label="Primary diagnostic controls">
-            <button type="button" id="runChamber">Run chamber scan</button>
-            <button type="button" data-copy="primary">Copy primary surface</button>
-            <button type="button" data-copy="north" data-tone="north">Copy North</button>
-            <button type="button" data-copy="east" data-tone="east">Copy East</button>
-            <button type="button" data-copy="south" data-tone="south">Copy South</button>
-            <button type="button" data-copy="west" data-tone="west">Copy West</button>
-            <button type="button" data-copy="raw" data-tone="raw">Copy full raw packet</button>
+            <button type="button" id="scanChamber">Scan Chamber</button>
+            <button type="button" data-copy-receipt="00">Copy Chamber Index</button>
+            <button type="button" data-copy-receipt="14">Copy Next Move</button>
+            <button type="button" data-copy-receipt="99" data-tone="raw">Copy Deep Archive</button>
           </div>
         </section>
 
         <section class="surface" aria-label="Commander summary">
           <div class="surface-title">
-            <h2>Commander surface</h2>
+            <h2>Planet Engine Progress</h2>
             <span id="scanTime" class="status-pill" data-status="unknown">WAITING</span>
           </div>
 
           <div class="micro-grid">
             <div class="metric">
-              <span>Final Bucket</span>
-              <strong id="metricFinalBucket">UNKNOWN</strong>
+              <span>Current Hold</span>
+              <strong id="metricCurrentHold">UNKNOWN</strong>
             </div>
             <div class="metric">
-              <span>First Blocker</span>
-              <strong id="metricFirstBlocker">UNKNOWN</strong>
+              <span>Next Receipt</span>
+              <strong id="metricNextReceipt">00 · Chamber Index</strong>
             </div>
             <div class="metric">
-              <span>Canvas Blame</span>
-              <strong id="metricCanvasBlame">UNKNOWN</strong>
+              <span>Canvas Boundary</span>
+              <strong id="metricCanvasBoundary">UNKNOWN</strong>
             </div>
             <div class="metric">
-              <span>Next Process</span>
-              <strong id="metricNextProcess">UNKNOWN</strong>
+              <span>Next Move</span>
+              <strong id="metricNextMove">UNKNOWN</strong>
             </div>
           </div>
         </section>
       </div>
 
-      <section class="status-strip" aria-label="Four cardinal receipt status">
+      <section class="status-strip" aria-label="Living planet-engine instruments">
         <article class="card" data-card="north" data-status="unknown">
           <div class="card-inner">
             <div class="card-top">
               <div>
-                <h3>North</h3>
-                <small>Chronology · validation · verdict</small>
+                <h3>North Signal</h3>
+                <small>Timeline · authority · verdict</small>
               </div>
-              <div class="gauge" id="northGauge">N</div>
+              <div class="gauge">N</div>
             </div>
             <p class="card-summary" id="northSummary">Waiting for chamber scan.</p>
             <span class="status-pill" id="northPill" data-status="unknown">UNKNOWN</span>
+            <div class="card-actions">
+              <button type="button" data-copy-receipt="04" data-tone="north">Copy Signal</button>
+              <button type="button" data-run-direct="north" data-tone="north">Direct Check</button>
+            </div>
           </div>
         </article>
 
@@ -897,13 +985,17 @@
           <div class="card-inner">
             <div class="card-top">
               <div>
-                <h3>East</h3>
-                <small>Source · file composition · expression path</small>
+                <h3>East Source</h3>
+                <small>Files · bridge · expression path</small>
               </div>
-              <div class="gauge" id="eastGauge">E</div>
+              <div class="gauge">E</div>
             </div>
             <p class="card-summary" id="eastSummary">Waiting for chamber scan.</p>
             <span class="status-pill" id="eastPill" data-status="unknown">UNKNOWN</span>
+            <div class="card-actions">
+              <button type="button" data-copy-receipt="05" data-tone="east">Copy Source</button>
+              <button type="button" data-run-direct="east" data-tone="east">Direct Probe</button>
+            </div>
           </div>
         </article>
 
@@ -911,13 +1003,35 @@
           <div class="card-inner">
             <div class="card-top">
               <div>
-                <h3>South</h3>
-                <small>Output proof · production surface lens</small>
+                <h3>South Lens</h3>
+                <small>Output proof · visible surface</small>
               </div>
-              <div class="gauge" id="southGauge">S</div>
+              <div class="gauge">S</div>
             </div>
             <p class="card-summary" id="southSummary">Waiting for chamber scan.</p>
             <span class="status-pill" id="southPill" data-status="unknown">UNKNOWN</span>
+            <div class="card-actions">
+              <button type="button" data-copy-receipt="06" data-tone="south">Copy Lens</button>
+              <button type="button" data-run-direct="south" data-tone="south">Lens Check</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-card="truth" data-status="unknown">
+          <div class="card-inner">
+            <div class="card-top">
+              <div>
+                <h3>Surface Truth</h3>
+                <small>Measurement · alignment · F13</small>
+              </div>
+              <div class="gauge">T</div>
+            </div>
+            <p class="card-summary" id="truthSummary">Waiting for chamber scan.</p>
+            <span class="status-pill" id="truthPill" data-status="unknown">UNKNOWN</span>
+            <div class="card-actions">
+              <button type="button" data-copy-receipt="10" data-tone="truth">Copy Measure</button>
+              <button type="button" data-run-direct="surfaceTruth" data-tone="truth">Measure</button>
+            </div>
           </div>
         </article>
 
@@ -925,66 +1039,76 @@
           <div class="card-inner">
             <div class="card-top">
               <div>
-                <h3>West</h3>
-                <small>Admissibility · blocker · next action</small>
+                <h3>West Gate</h3>
+                <small>Admissibility · blocker · next move</small>
               </div>
-              <div class="gauge" id="westGauge">W</div>
+              <div class="gauge">W</div>
             </div>
             <p class="card-summary" id="westSummary">Waiting for chamber scan.</p>
             <span class="status-pill" id="westPill" data-status="unknown">UNKNOWN</span>
+            <div class="card-actions">
+              <button type="button" data-copy-receipt="07" data-tone="west">Copy Gate</button>
+              <button type="button" data-run-direct="west" data-tone="west">Authority Check</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-card="canvas" data-status="unknown">
+          <div class="card-inner">
+            <div class="card-top">
+              <div>
+                <h3>Canvas Boundary</h3>
+                <small>Protected visual surface · F34</small>
+              </div>
+              <div class="gauge">C</div>
+            </div>
+            <p class="card-summary" id="canvasSummary">Waiting for chamber scan.</p>
+            <span class="status-pill" id="canvasPill" data-status="unknown">UNKNOWN</span>
+            <div class="card-actions">
+              <button type="button" data-copy-receipt="13" data-tone="canvas">Copy Boundary</button>
+            </div>
           </div>
         </article>
       </section>
     </section>
 
-    <section class="panels" aria-label="Expandable receipt categories">
+    <section class="receipt-deck" aria-label="Sequential receipt deck">
+      <div class="deck-heading">
+        <h2>Signal Deck · Focused Receipts</h2>
+        <span class="status-pill" id="deckStatus" data-status="unknown">READY</span>
+      </div>
+      <p class="deck-copy">
+        Choose one focused receipt at a time. The visible instruments stay readable; the copied
+        receipts preserve the structured diagnostic evidence needed for handoff.
+      </p>
+
+      <div class="deck-grid" id="receiptDeck"></div>
+    </section>
+
+    <section class="panels" aria-label="Receipt previews and target porthole">
       <details open>
-        <summary>Primary Surface · Fibonacci Commander Receipt</summary>
+        <summary>Selected Receipt · Copy Surface</summary>
         <div class="drawer-body">
-          <div class="drawer-grid" id="primaryBreakdown"></div>
-          <pre class="receipt-preview" id="primaryReceipt" aria-label="Primary receipt preview"></pre>
+          <div class="drawer-grid" id="selectedBreakdown"></div>
+          <pre class="receipt-preview" id="selectedReceiptPreview" aria-label="Selected receipt preview"></pre>
         </div>
       </details>
 
       <details>
-        <summary>North Receipt · Chronology / Validation</summary>
+        <summary>Chamber Brief · Reader Surface</summary>
         <div class="drawer-body">
-          <div class="drawer-grid" id="northBreakdown"></div>
-          <pre class="receipt-preview" id="northReceipt" aria-label="North receipt preview"></pre>
+          <div class="drawer-grid" id="briefBreakdown"></div>
+          <pre class="receipt-preview" id="briefReceiptPreview" aria-label="Brief receipt preview"></pre>
         </div>
       </details>
 
       <details>
-        <summary>East Receipt · Source / Composition</summary>
-        <div class="drawer-body">
-          <div class="drawer-grid" id="eastBreakdown"></div>
-          <pre class="receipt-preview" id="eastReceipt" aria-label="East receipt preview"></pre>
-        </div>
-      </details>
-
-      <details>
-        <summary>South Receipt · Surface Lens / Output Proof</summary>
-        <div class="drawer-body">
-          <div class="drawer-grid" id="southBreakdown"></div>
-          <pre class="receipt-preview" id="southReceipt" aria-label="South receipt preview"></pre>
-        </div>
-      </details>
-
-      <details>
-        <summary>West Receipt · Admissibility / Blocker</summary>
-        <div class="drawer-body">
-          <div class="drawer-grid" id="westBreakdown"></div>
-          <pre class="receipt-preview" id="westReceipt" aria-label="West receipt preview"></pre>
-        </div>
-      </details>
-
-      <details>
-        <summary>Full Raw Packet · Deep Archive / Debug Only</summary>
+        <summary>Deep Archive · Escalation Only</summary>
         <div class="drawer-body">
           <p class="raw-note">
-            The raw packet remains available for deep audit, but the chamber no longer uses it
-            as the primary copy surface. Use cardinal receipts first. Use raw only when a
-            specific gate cannot be classified.
+            The full packet remains available for deep audit, but this chamber no longer treats it
+            as the first copy surface. Use focused receipts first. Use the archive only when a
+            specific signal cannot be resolved.
           </p>
           <pre class="receipt-preview" id="rawReceiptPreview" aria-label="Raw packet preview"></pre>
         </div>
@@ -1006,6 +1130,7 @@
 
     <p class="footer">
       HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 ·
+      HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_DECK_SEQUENTIAL_COMPARTMENTALIZATION_TNT_v9 ·
       HTML receiver only · no production mutation · no Canvas build · no visual pass claim
     </p>
   </main>
@@ -1017,32 +1142,35 @@
       "use strict";
 
       const root = window;
+
       const CONTRACT =
         "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
       const RECEIPT =
         "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
       const INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_FOUR_CARDINAL_RECEIPT_SEGMENTATION_FIBONACCI_SYNC_TNT_v8_1";
+        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_DECK_SEQUENTIAL_COMPARTMENTALIZATION_TNT_v9";
       const INTERNAL_RENEWAL_RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_FOUR_CARDINAL_RECEIPT_SEGMENTATION_FIBONACCI_SYNC_RECEIPT_v8_1";
+        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_DECK_SEQUENTIAL_COMPARTMENTALIZATION_RECEIPT_v9";
+      const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+        "HEARTH_DIAGNOSTIC_ROUTE_FOUR_CARDINAL_RECEIPT_SEGMENTATION_FIBONACCI_SYNC_TNT_v8_1";
 
       const TARGET_ROUTE = "/showroom/globe/hearth/";
       const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
       const VERSION =
-        "2026-06-08.hearth-diagnostic-route-planet-production-facility-instrument-chamber-v8";
+        "2026-06-08.hearth-diagnostic-route-receipt-deck-sequential-compartmentalization-v9";
 
       const CURRENT_DIAGNOSTIC_QUESTION =
         "ARE_GATES_FUNCTIONING_AND_WHAT_IS_NEXT_LAWFUL_ACTION";
 
       const PARTICIPANT_SCRIPTS = [
         "/assets/lab/runtime-table.js",
-        "/assets/lab/runtime-table.west.js",
         "/assets/hearth/hearth.diagnostic.rail.js",
+        "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
         "/assets/hearth/hearth.diagnostic.east.js",
-        "/assets/hearth/hearth.diagnostic.west.js",
-        "/assets/hearth/hearth.diagnostic.south.js",
         "/assets/hearth/hearth.diagnostic.probe.east.js",
-        "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js"
+        "/assets/hearth/hearth.diagnostic.south.js",
+        "/assets/hearth/hearth.diagnostic.west.js",
+        "/assets/lab/runtime-table.west.js"
       ];
 
       const PATHS = {
@@ -1092,15 +1220,19 @@
           "LAB_CARDINAL_RUNTIME_TABLE_WEST",
           "LAB_RUNTIME_TABLE_CARDINAL_WEST",
           "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+          "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_CURRENT_AUTHORITY_RECHECK",
           "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+          "HEARTH_WEST_NORTH_CURRENT_AUTHORITY_RECHECK",
           "HEARTH.runtimeTableWest",
           "HEARTH.westRuntimeTable",
           "HEARTH.westAdmissibility",
           "HEARTH.westNorthStandardDerivativeRelease",
+          "HEARTH.westNorthCurrentAuthorityRecheck",
           "DEXTER_LAB.runtimeTableWest",
           "DEXTER_LAB.cardinalRuntimeTableWest",
           "DEXTER_LAB.hearthRuntimeTableWest",
-          "DEXTER_LAB.hearthWestNorthStandardDerivativeRelease"
+          "DEXTER_LAB.hearthWestNorthStandardDerivativeRelease",
+          "DEXTER_LAB.hearthWestNorthCurrentAuthorityRecheck"
         ],
         surfaceTruth: [
           "HEARTH.diagnosticProbeCanvasSurfaceTruth",
@@ -1128,25 +1260,46 @@
         ]
       };
 
+      const RECEIPT_DECK = [
+        ["00", "Chamber Index", "Start here when the field is unclear.", "index", ""],
+        ["01", "Receiver Health", "Checks whether this page is printing the evidence cleanly.", "receiver", ""],
+        ["02", "Target Access", "Confirms that the Hearth route is reachable.", "target", ""],
+        ["03", "Load Sequence", "Shows whether instruments loaded in a lawful order.", "load", ""],
+        ["04", "North Signal", "Reduced chronology and authority summary.", "cardinal", "north"],
+        ["05", "East Source", "Reduced file and bridge composition summary.", "cardinal", "east"],
+        ["06", "South Lens", "Reduced visible-surface and output summary.", "cardinal", "south"],
+        ["07", "West Gate", "Reduced admissibility and next-move summary.", "cardinal", "west"],
+        ["08", "North Direct", "One-component North execution receipt.", "direct", "north"],
+        ["09", "East Direct", "One-component East source probe receipt.", "direct", "east"],
+        ["10", "Surface Truth Direct", "One-component surface measurement receipt.", "direct", "surfaceTruth"],
+        ["11", "South Direct", "One-component South lens receipt.", "direct", "south"],
+        ["12", "West Direct", "One-component West authority check receipt.", "direct", "west"],
+        ["13", "Canvas Boundary", "Read-only Canvas blame and protection gate.", "canvas", ""],
+        ["14", "Next Lawful Move", "Final focused decision using trusted receipts.", "next", ""],
+        ["99", "Deep Archive", "Full raw packet. Escalation only.", "raw", ""]
+      ];
+
       const state = {
-        receipts: {
-          primary: "",
-          north: "",
-          east: "",
-          south: "",
-          west: "",
-          raw: ""
+        selectedReceiptId: "00",
+        receipts: {},
+        direct: {
+          north: { runExecuted: false, packet: {}, updatedAt: "" },
+          east: { runExecuted: false, packet: {}, updatedAt: "" },
+          surfaceTruth: { runExecuted: false, packet: {}, updatedAt: "" },
+          south: { runExecuted: false, packet: {}, updatedAt: "" },
+          west: { runExecuted: false, packet: {}, updatedAt: "" }
         },
+        scriptLoads: [],
+        collisions: [],
+        omissions: [],
         summary: null,
-        raw: null
+        raw: null,
+        scanCount: 0
       };
 
       function nowIso() {
-        try {
-          return new Date().toISOString();
-        } catch (_error) {
-          return "";
-        }
+        try { return new Date().toISOString(); }
+        catch (_error) { return ""; }
       }
 
       function isObject(value) {
@@ -1157,13 +1310,18 @@
         return typeof value === "function";
       }
 
+      function isScalar(value) {
+        return value === null ||
+          value === undefined ||
+          typeof value === "string" ||
+          typeof value === "number" ||
+          typeof value === "boolean";
+      }
+
       function safeString(value, fallback = "") {
         if (value === undefined || value === null) return fallback;
-        try {
-          return String(value);
-        } catch (_error) {
-          return fallback;
-        }
+        try { return String(value); }
+        catch (_error) { return fallback; }
       }
 
       function clean(value, limit = 1400) {
@@ -1173,18 +1331,27 @@
           .slice(0, limit);
       }
 
-      function toBool(value) {
-        if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return true;
-        if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return false;
-        const text = safeString(value).trim().toLowerCase();
-        if (["yes", "ready", "active", "accepted", "complete", "consumed", "present", "pass"].includes(text)) return true;
-        if (["no", "held", "blocked", "missing", "none", "fail", "failed"].includes(text)) return false;
-        return null;
+      function formatReceiptValue(value) {
+        if (value === undefined || value === null || value === "") return "UNKNOWN";
+        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+          return clean(value, 1800);
+        }
+        if (Array.isArray(value)) return `[ARRAY length=${value.length}]`;
+        if (isObject(value)) return `[OBJECT keys=${Object.keys(value).slice(0, 12).join(",") || "none"}]`;
+        return clean(value, 1800);
       }
 
       function kv(key, value) {
-        const out = value === undefined || value === null || value === "" ? "UNKNOWN" : value;
-        return `${key}=${out}`;
+        return `${key}=${formatReceiptValue(value)}`;
+      }
+
+      function toBool(value) {
+        if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return true;
+        if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return false;
+        const text = clean(value).toLowerCase();
+        if (["yes", "ready", "active", "accepted", "complete", "consumed", "present", "pass", "available", "confirmed"].includes(text)) return true;
+        if (["no", "held", "blocked", "missing", "none", "fail", "failed", "unavailable"].includes(text)) return false;
+        return null;
       }
 
       function readPath(base, path) {
@@ -1206,8 +1373,7 @@
 
       function parseKvText(text) {
         const out = {};
-        const source = safeString(text);
-        source.split(/\r?\n/).forEach((line) => {
+        safeString(text).split(/\r?\n/).forEach((line) => {
           const idx = line.indexOf("=");
           if (idx <= 0) return;
           const key = line.slice(0, idx).trim();
@@ -1221,21 +1387,22 @@
         if (value === null || value === undefined) return value;
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return value;
         if (typeof value === "function") return `[Function ${value.name || "anonymous"}]`;
-        if (depth > 5) return "[DepthLimit]";
+        if (depth > 6) return "[DepthLimit]";
         if (typeof Node !== "undefined" && value instanceof Node) return `[DOM ${value.nodeName}]`;
         if (typeof Window !== "undefined" && value instanceof Window) return "[Window]";
+
         if (isObject(value) || Array.isArray(value)) {
           if (seen.has(value)) return "[Circular]";
           seen.add(value);
         }
 
         if (Array.isArray(value)) {
-          return value.slice(0, 80).map((item) => jsonSafe(item, depth + 1, seen));
+          return value.slice(0, 90).map((item) => jsonSafe(item, depth + 1, seen));
         }
 
         if (isObject(value)) {
           const out = {};
-          Object.keys(value).slice(0, 160).forEach((key) => {
+          Object.keys(value).slice(0, 220).forEach((key) => {
             if (/element|node|context|canvas|document|window/i.test(key) && typeof value[key] === "object") {
               out[key] = "[Object suppressed]";
               return;
@@ -1248,7 +1415,7 @@
         return safeString(value);
       }
 
-      function readPacket(authority) {
+      function readPacket(authority, options = {}) {
         if (!authority) return {};
 
         if (isObject(authority) && !isFunction(authority.getReceipt) && !isFunction(authority.getReport)) {
@@ -1257,18 +1424,9 @@
           }
         }
 
-        const methods = [
-          "getCompactGateSummary",
-          "getGateBucketReceipt",
-          "getReport",
-          "getReceiptLight",
-          "getReceipt",
-          "getProfileReceipt",
-          "getContractDefinitionReceipt",
-          "getState",
-          "getStatus",
-          "getStatusText"
-        ];
+        const methods = options.preferDirect === true
+          ? ["getReceiptText", "getPacketText", "run", "inspect", "getReceipt", "getReport", "getState", "getStatusText", "getStatus"]
+          : ["getCompactGateSummary", "getGateBucketReceipt", "getReport", "getReceiptLight", "getReceipt", "getProfileReceipt", "getContractDefinitionReceipt", "getState", "getStatus", "getStatusText"];
 
         for (const method of methods) {
           if (!isFunction(authority[method])) continue;
@@ -1292,32 +1450,37 @@
 
         for (const win of windows) {
           if (!win) continue;
+
           for (const path of paths) {
             const value = readPath(win, path);
             if (value) {
               return {
+                name,
                 path,
                 authority: value,
                 packet: readPacket(value),
-                windowName: win === root ? "diagnosticWindow" : "targetWindow"
+                windowName: win === root ? "diagnosticWindow" : "targetWindow",
+                present: true
               };
             }
           }
         }
 
         return {
+          name,
           path: "NONE",
           authority: null,
           packet: {},
-          windowName: "NONE"
+          windowName: "NONE",
+          present: false
         };
       }
 
-      function getDeep(source, keys, maxDepth = 5) {
+      function getDeepAny(source, keys, maxDepth = 6) {
         const wanted = (keys || []).map((key) => safeString(key).toLowerCase());
         const seen = new WeakSet();
 
-        function visit(value, depth) {
+        function visit(value, depth, path) {
           if (!value || depth > maxDepth) return undefined;
           if (!isObject(value) && !Array.isArray(value)) return undefined;
           if (seen.has(value)) return undefined;
@@ -1327,35 +1490,57 @@
             for (const key of Object.keys(value)) {
               if (wanted.includes(key.toLowerCase())) {
                 const found = value[key];
-                if (found !== undefined && found !== null && found !== "") return found;
+                if (found !== undefined && found !== null && found !== "") {
+                  return { value: found, path: `${path}.${key}`.replace(/^\./, "") };
+                }
               }
             }
 
             for (const key of Object.keys(value)) {
-              const found = visit(value[key], depth + 1);
-              if (found !== undefined && found !== null && found !== "") return found;
+              const found = visit(value[key], depth + 1, `${path}.${key}`.replace(/^\./, ""));
+              if (found) return found;
             }
           }
 
           if (Array.isArray(value)) {
-            for (const item of value) {
-              const found = visit(item, depth + 1);
-              if (found !== undefined && found !== null && found !== "") return found;
+            for (let i = 0; i < value.length; i += 1) {
+              const found = visit(value[i], depth + 1, `${path}[${i}]`);
+              if (found) return found;
             }
           }
 
           return undefined;
         }
 
-        return visit(source, 0);
+        return visit(source, 0, "");
       }
 
-      function firstField(sources, keys, fallback = "UNKNOWN") {
+      function firstScalarField(sources, keys, fallback = "UNKNOWN", label = "") {
         for (const source of sources) {
-          const found = getDeep(source, keys);
-          if (found !== undefined && found !== null && found !== "") return clean(found, 900);
+          const found = getDeepAny(source, keys);
+          if (!found) continue;
+
+          if (isScalar(found.value)) return clean(found.value, 1000);
+
+          state.collisions.push({
+            label: label || keys[0] || "UNKNOWN_FIELD",
+            path: found.path,
+            type: Array.isArray(found.value) ? "array" : "object",
+            keys: isObject(found.value) ? Object.keys(found.value).slice(0, 16) : []
+          });
         }
+
         return fallback;
+      }
+
+      function firstKnown(...values) {
+        for (const value of values) {
+          const text = clean(value, 900);
+          if (!text) continue;
+          if (["UNKNOWN", "NONE", "NOT_FOUND", "UNREADABLE", "NULL", "[OBJECT OBJECT]"].includes(text.toUpperCase())) continue;
+          return text;
+        }
+        return "";
       }
 
       function accessTarget() {
@@ -1378,13 +1563,14 @@
           const confirmed = Boolean(
             route === TARGET_ROUTE ||
             route === TARGET_ROUTE.replace(/\/$/, "") ||
-            (targetDocument && targetDocument.querySelector("canvas, [data-production-canvas-surface], [data-hearth-production-surface], [data-hearth-canvas-mount]"))
+            (targetDocument && targetDocument.querySelector("canvas, [data-production-canvas-surface], [data-hearth-production-surface], [data-hearth-canvas-mount], #hearthCanvasMount"))
           );
 
           return {
             ok: Boolean(targetWindow && targetDocument && targetDocument.documentElement),
             status: confirmed ? "TARGET_ACCESS_CONFIRMED" : "TARGET_ACCESS_PARTIAL",
             source: "hearthDiagnosticTargetFrame",
+            route: route || "UNKNOWN",
             targetWindow,
             targetDocument,
             hearthTargetConfirmed: confirmed
@@ -1394,6 +1580,7 @@
             ok: false,
             status: "TARGET_ACCESS_BLOCKED",
             source: "hearthDiagnosticTargetFrame",
+            route: "UNKNOWN",
             targetWindow: null,
             targetDocument: null,
             hearthTargetConfirmed: false,
@@ -1406,10 +1593,10 @@
         const text = clean(value, 220).toUpperCase();
 
         if (!text || text === "UNKNOWN") return "UNKNOWN";
-        if (text.includes("PASS") || text.includes("READY") || text.includes("CONFIRMED") || text.includes("COMPLETE") || text.includes("AVAILABLE") || text.includes("ALIGNED")) return "PASS";
-        if (text.includes("PARTIAL") || text.includes("PENDING")) return "PARTIAL";
-        if (text.includes("BLOCK") || text.includes("FAILED") || text.includes("MISSING") || text.includes("ERROR")) return "BLOCKED";
-        if (text.includes("HELD") || text.includes("UNKNOWN")) return "HELD";
+        if (text.includes("FAILED") || text.includes("MISSING") || text.includes("ERROR") || text.includes("BLOCKED")) return "BLOCKED";
+        if (text.includes("HELD") || text.includes("HOLD") || text.includes("WAITING") || text.includes("NOT_RUN") || text.includes("NOT_YET") || text.includes("REQUIRED")) return "HELD";
+        if (text.includes("PARTIAL") || text.includes("PENDING") || text.includes("ANCHOR_READY") || text.includes("PROFILE")) return "PARTIAL";
+        if (text.includes("PASS") || text.includes("CONFIRMED") || text.includes("COMPLETE") || text.includes("AVAILABLE") || text.includes("ALIGNED") || text.includes("CLEAR")) return "PASS";
         return text;
       }
 
@@ -1422,184 +1609,155 @@
         return "unknown";
       }
 
-      function deriveSummary(raw) {
-        const packets = raw.packets;
-        const allSources = [
-          raw,
-          packets.north,
-          packets.east,
-          packets.south,
-          packets.southLens,
-          packets.west,
-          packets.surfaceTruth,
-          packets.canvas
-        ];
+      function directRunStatus(component) {
+        const item = state.direct[component];
+        return item && item.runExecuted ? "RUN_EXECUTED" : "NOT_RUN";
+      }
 
-        const northVerdictAvailable =
-          firstField(allSources, ["NORTH_VERDICT_AVAILABLE", "northVerdictAvailable"], "UNKNOWN");
-        const northRailStatus =
-          firstField(allSources, ["NORTH_RAIL_STATUS", "northRailStatus"], "UNKNOWN");
-        const northPresent =
-          firstField(allSources, ["NORTH_RAIL_PRESENT", "northRailPresent"], raw.authorities.north.authority ? "true" : "UNKNOWN");
+      function invokeDirect(component) {
+        const target = accessTarget();
+        const windows = [root];
+        if (target.targetWindow) windows.push(target.targetWindow);
 
-        const eastDisposition =
-          firstField(allSources, ["PROBE_EAST_DISPOSITION", "probeEastDisposition"], "UNKNOWN");
-        const eastSourceStatus =
-          firstField(allSources, ["SOURCE_SIDE_CURRENT_SPREAD_STATUS", "sourceSideCurrentSpreadStatus"], "UNKNOWN");
-        const fileCompositionStatus =
-          firstField(allSources, ["FILE_COMPOSITION_STATUS", "fileCompositionStatus"], "UNKNOWN");
-        const bridgeSurfaceStatus =
-          firstField(allSources, ["BRIDGE_SURFACE_COMPOSITION_STATUS", "bridgeSurfaceCompositionStatus"], "UNKNOWN");
+        const authorityName = component === "surfaceTruth" ? "surfaceTruth" : component;
+        const found = findAuthority(authorityName, windows);
+        let packet = {};
+        let status = "AUTHORITY_NOT_FOUND";
+        let error = "";
 
-        const southConclusion =
-          firstField(allSources, ["SOUTH_FINAL_CONCLUSION", "southFinalConclusion"], "UNKNOWN");
-        const sideCar =
-          firstField(allSources, ["SIDE_CAR", "sideCar", "sidecar"], "UNKNOWN");
-        const surface =
-          firstField(allSources, ["SURFACE", "surface", "surfaceClass", "INSPECTED_SURFACE_CLASS"], "UNKNOWN");
-        const southLensConsumed =
-          firstField(allSources, ["SOUTH_SURFACE_POINTER_LENS_CONSUMED", "southSurfacePointerLensConsumed"], sideCar === "SOUTH_SURFACE_POINTER_LENS_CONSUMED" ? "true" : "UNKNOWN");
-        const productionSurfaceConfirmed =
-          firstField(allSources, ["PRODUCTION_CANVAS_SURFACE_CONFIRMED", "productionCanvasSurfaceConfirmed"], surface === "PRODUCTION_CANVAS_SURFACE" ? "true" : "UNKNOWN");
-        const canvasBlameGate =
-          firstField(allSources, ["CANVAS_BLAME_GATE", "canvasBlameGate"], "UNKNOWN");
-        const rawRef =
-          firstField(allSources, ["RAW_REF", "rawRef", "RAW_REFERENCE", "rawReference"], "UNKNOWN");
+        if (found.authority) {
+          try {
+            if (component === "east") {
+              if (isFunction(found.authority.runProbeEast)) {
+                packet = jsonSafe(found.authority.runProbeEast({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  frameElement: document.getElementById("hearthDiagnosticTargetFrame"),
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              } else if (isFunction(found.authority.run)) {
+                packet = jsonSafe(found.authority.run({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              }
+            } else if (component === "north") {
+              if (isFunction(found.authority.runDiagnostic)) {
+                packet = jsonSafe(found.authority.runDiagnostic({
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              } else if (isFunction(found.authority.run)) {
+                packet = jsonSafe(found.authority.run({
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              }
+            } else if (component === "surfaceTruth") {
+              if (isFunction(found.authority.measure)) {
+                packet = jsonSafe(found.authority.measure({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              } else if (isFunction(found.authority.run)) {
+                packet = jsonSafe(found.authority.run({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              } else if (isFunction(found.authority.inspect)) {
+                packet = jsonSafe(found.authority.inspect({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              }
+            } else if (component === "south") {
+              if (isFunction(found.authority.run)) {
+                packet = jsonSafe(found.authority.run({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              } else if (isFunction(found.authority.inspect)) {
+                packet = jsonSafe(found.authority.inspect({
+                  targetWindow: target.targetWindow,
+                  targetDocument: target.targetDocument,
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              }
+            } else if (component === "west") {
+              if (isFunction(found.authority.run)) {
+                packet = jsonSafe(found.authority.run({
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false,
+                  canvasBuildAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              } else if (isFunction(found.authority.inspect)) {
+                packet = jsonSafe(found.authority.inspect({
+                  calledBy: "MIRRORLAND_INSTRUMENT_CHAMBER_RECEIPT_DECK_v9",
+                  mutationAuthorized: false,
+                  canvasBuildAuthorized: false
+                }));
+                status = "RUN_EXECUTED";
+              }
+            }
 
-        const surfaceTruthStatus =
-          firstField(allSources, ["SURFACE_TRUTH_STATUS", "CANVAS_SURFACE_TRUTH_STATUS", "surfaceTruthStatus"], "UNKNOWN");
-        const surfaceTruthFailureClass =
-          firstField(allSources, ["SURFACE_TRUTH_FAILURE_CLASS", "CANVAS_SURFACE_TRUTH_FAILURE_CLASS", "surfaceTruthFailureClass"], "UNKNOWN");
-        const surfaceTruthFirstFailedCoordinate =
-          firstField(allSources, ["SURFACE_TRUTH_FIRST_FAILED_COORDINATE", "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "surfaceTruthFirstFailedCoordinate"], "UNKNOWN");
-        const surfaceTruthV3 =
-          firstField(allSources, ["PROBE_CANVAS_SURFACE_TRUTH_V3_RECOGNIZED", "probeCanvasSurfaceTruthV3Recognized"], "UNKNOWN");
+            if (status !== "RUN_EXECUTED") {
+              packet = readPacket(found.authority, { preferDirect: true });
+              status = "DIRECT_RECEIPT_READ_ONLY";
+            }
+          } catch (runError) {
+            error = clean(runError && runError.message ? runError.message : runError, 900);
+            status = "RUN_EXCEPTION";
+          }
+        }
 
-        const constructionReadiness =
-          firstField(allSources, ["CONSTRUCTION_READINESS_STATUS", "constructionReadinessStatus"], "UNKNOWN");
-        const westGapClass =
-          firstField(allSources, ["WEST_GAP_CLASS", "westGapClass"], "UNKNOWN");
-        const westDecision =
-          firstField(allSources, ["WEST_DECISION", "westDecision"], "UNKNOWN");
-        const labWestV53 =
-          firstField(allSources, ["LABWEST_INTERNAL_V5_3_RECOGNIZED", "LABWEST_INTERNAL_V53_RECOGNIZED", "labWestInternalV53Recognized"], "UNKNOWN");
-
-        const canvasBuildAuthorized =
-          firstField(allSources, ["CANVAS_BUILD_AUTHORIZED", "canvasBuildAuthorized", "CANVAS_RELEASE_AUTHORIZED", "canvasReleaseAuthorized"], "false");
-        const nextProcess =
-          firstField(allSources, ["NEXT_PROCESS", "nextProcess"], "UNKNOWN");
-
-        const finalBucket =
-          firstKnown(
-            southConclusion,
-            constructionReadiness,
-            surfaceTruthStatus === "SURFACE_CONTRACT_MEASUREMENT_FAILED" ? "CONSTRUCTION_HELD_SURFACE_TRUTH_VARIANCE" : ""
-          ) || "UNKNOWN";
-
-        const f = {
-          F1: "PASS",
-          F2: raw.target.ok ? "PASS" : raw.target.status.includes("PARTIAL") ? "PARTIAL" : "BLOCKED",
-          F3: toBool(northVerdictAvailable) === true || northRailStatus.includes("VERDICT_AVAILABLE") ? "PASS" : raw.authorities.north.authority ? "PARTIAL" : "UNKNOWN",
-          F5: eastDisposition.includes("SOURCE_SIDE_OK") || fileCompositionStatus.includes("REACHES_CANVAS") ? "PASS" : fileCompositionStatus.includes("INCOMPLETE") ? "BLOCKED" : eastDisposition.includes("PARTIAL") ? "PARTIAL" : "UNKNOWN",
-          F8: sideCar === "SOUTH_SURFACE_POINTER_LENS_CONSUMED" || toBool(southLensConsumed) === true || surface === "PRODUCTION_CANVAS_SURFACE" ? "PASS" : raw.authorities.south.authority || raw.authorities.southLens.authority ? "PARTIAL" : "UNKNOWN",
-          F13: surfaceTruthStatus.includes("FAILED") || finalBucket.includes("SURFACE_TRUTH_VARIANCE") ? "BLOCKED" : surfaceTruthStatus.includes("COMPLETE") ? "PASS" : surfaceTruthV3 === "true" ? "PARTIAL" : "UNKNOWN",
-          F21: constructionReadiness.includes("READY") || westDecision.includes("RELEASE") ? "PASS" : constructionReadiness.includes("HELD") || westGapClass !== "UNKNOWN" ? "HELD" : labWestV53 === "true" ? "PARTIAL" : "UNKNOWN",
-          F34: canvasBlameGate === "UNKNOWN" || toBool(canvasBuildAuthorized) !== true ? "HELD" : "PASS"
-        };
-
-        const firstBlockingFib = ["F1", "F2", "F3", "F5", "F8", "F13", "F21", "F34"].find((key) => {
-          return f[key] === "BLOCKED" || f[key] === "HELD";
-        }) || "NONE";
-
-        const resolvedNextProcess =
-          firstKnown(
-            nextProcess,
-            firstBlockingFib === "F13" ? "ALIGN_SURFACE_TRUTH_CONTRACT_DEFINITION_BEFORE_CANVAS_BUILD" : "",
-            firstBlockingFib === "F5" ? "ALIGN_EAST_SOURCE_COMPOSITION_BEFORE_SURFACE_TRUTH" : "",
-            firstBlockingFib === "F3" ? "RESTORE_NORTH_VERDICT_AUTHORITY" : "",
-            "NO_NEXT_PROCESS_CLASSIFIED"
-          );
-
-        const nextFile =
-          firstBlockingFib === "F13"
-            ? "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js"
-            : firstBlockingFib === "F5"
-              ? "/assets/hearth/hearth.diagnostic.probe.east.js"
-              : firstBlockingFib === "F21"
-                ? "/assets/lab/runtime-table.west.js"
-                : "NONE";
-
-        return {
-          currentQuestion: CURRENT_DIAGNOSTIC_QUESTION,
-          fib: f,
-          finalBucket,
-          firstBlockingFib,
-          nextProcess: resolvedNextProcess,
-          nextFile,
-
-          north: {
-            status: f.F3,
-            targetAccessStatus: raw.target.status,
-            hearthTargetConfirmed: String(Boolean(raw.target.hearthTargetConfirmed)),
-            northPresent,
-            northVerdictAvailable,
-            northRailStatus,
-            blocking: f.F2 === "BLOCKED" || f.F3 === "BLOCKED"
-          },
-          east: {
-            status: f.F5,
-            eastDisposition,
-            eastSourceStatus,
-            fileCompositionStatus,
-            bridgeSurfaceStatus,
-            blocking: f.F5 === "BLOCKED"
-          },
-          south: {
-            status: f.F8,
-            southConclusion,
-            sideCar,
-            surface,
-            southLensConsumed,
-            productionSurfaceConfirmed,
-            canvasBlameGate,
-            rawRef,
-            blocking: f.F8 === "BLOCKED"
-          },
-          west: {
-            status: f.F13 === "BLOCKED" ? "BLOCKED" : f.F21,
-            surfaceTruthStatus,
-            surfaceTruthFailureClass,
-            surfaceTruthFirstFailedCoordinate,
-            surfaceTruthV3,
-            constructionReadiness,
-            westGapClass,
-            westDecision,
-            labWestV53,
-            canvasBuildAuthorized,
-            nextProcess: resolvedNextProcess,
-            nextFile,
-            blocking: f.F13 === "BLOCKED" || f.F21 === "BLOCKED" || f.F21 === "HELD"
-          },
-          canvas: {
-            status: f.F34,
-            canvasBlameGate,
-            canvasBuildAuthorized
-          },
+        state.direct[component] = {
+          runExecuted: status === "RUN_EXECUTED",
+          readOnly: status === "DIRECT_RECEIPT_READ_ONLY",
+          status,
+          authorityPath: found.path,
+          authorityPresent: Boolean(found.authority),
+          windowName: found.windowName,
+          packet,
+          error,
           updatedAt: nowIso()
         };
+
+        collectAndRender({ selectedReceiptId: directReceiptId(component) });
       }
 
-      function firstKnown(...values) {
-        for (const value of values) {
-          const text = clean(value, 900);
-          if (!text) continue;
-          if (["UNKNOWN", "NONE", "NOT_FOUND", "UNREADABLE", "NULL"].includes(text)) continue;
-          return text;
-        }
-        return "";
+      function directReceiptId(component) {
+        return {
+          north: "08",
+          east: "09",
+          surfaceTruth: "10",
+          south: "11",
+          west: "12"
+        }[component] || "00";
       }
 
-      function gatherRaw(options = {}) {
+      function gatherRaw() {
         const target = accessTarget();
         const windows = [root];
         if (target.targetWindow) windows.push(target.targetWindow);
@@ -1614,44 +1772,18 @@
           canvas: findAuthority("canvas", windows)
         };
 
-        if (options.run === true) {
-          try {
-            const east = authorities.east.authority;
-            if (east && isFunction(east.runProbeEast)) {
-              const packet = east.runProbeEast({
-                targetWindow: target.targetWindow,
-                targetDocument: target.targetDocument,
-                frameElement: document.getElementById("hearthDiagnosticTargetFrame")
-              });
-              authorities.east.packet = jsonSafe(packet);
-            } else if (east && isFunction(east.run)) {
-              authorities.east.packet = jsonSafe(east.run({
-                targetWindow: target.targetWindow,
-                targetDocument: target.targetDocument
-              }));
-            }
-          } catch (_error) {}
-
-          try {
-            const north = authorities.north.authority;
-            if (north && isFunction(north.runDiagnostic)) authorities.north.packet = jsonSafe(north.runDiagnostic());
-            else if (north && isFunction(north.run)) authorities.north.packet = jsonSafe(north.run());
-          } catch (_error) {}
-
-          try {
-            const west = authorities.west.authority;
-            if (west && isFunction(west.run)) authorities.west.packet = jsonSafe(west.run());
-            else if (west && isFunction(west.inspect)) authorities.west.packet = jsonSafe(west.inspect());
-          } catch (_error) {}
-        }
-
         return {
-          packetName: "HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER_RAW_PACKET_v8",
+          packetName: "HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER_RAW_PACKET_v9",
           contract: CONTRACT,
           receipt: RECEIPT,
           internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+          internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+          previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+          version: VERSION,
           target,
+          scriptLoads: state.scriptLoads.slice(),
           authorities,
+          direct: jsonSafe(state.direct),
           packets: {
             north: authorities.north.packet || {},
             east: authorities.east.packet || {},
@@ -1680,140 +1812,612 @@
         };
       }
 
-      function makePrimaryReceipt(summary) {
+      function deriveSummary(raw) {
+        state.collisions = [];
+        state.omissions = [];
+
+        const northSources = [state.direct.north.packet, raw.packets.north, raw.authorities.north.authority];
+        const eastSources = [state.direct.east.packet, raw.packets.east, raw.authorities.east.authority];
+        const southSources = [state.direct.south.packet, raw.packets.south, raw.packets.southLens, raw.authorities.south.authority, raw.authorities.southLens.authority];
+        const truthSources = [state.direct.surfaceTruth.packet, raw.packets.surfaceTruth, raw.authorities.surfaceTruth.authority];
+        const westSources = [state.direct.west.packet, raw.packets.west, raw.authorities.west.authority];
+        const canvasSources = [raw.packets.canvas, raw.authorities.canvas.authority];
+
+        const targetStatus = raw.target.status;
+        const northVerdictAvailable = firstScalarField(northSources, ["NORTH_VERDICT_AVAILABLE", "northVerdictAvailable", "northRailVerdictAvailable"], raw.authorities.north.present ? "UNKNOWN" : "false", "northVerdictAvailable");
+        const northRailStatus = firstScalarField(northSources, ["NORTH_RAIL_STATUS", "northRailStatus", "status"], raw.authorities.north.present ? "AUTHORITY_PRESENT_LIGHT_RECEIPT" : "AUTHORITY_NOT_FOUND", "northRailStatus");
+        const northVerdictStatus = firstScalarField(northSources, ["NORTH_VERDICT_STATUS", "northVerdictStatus", "verdictStatus"], "UNKNOWN", "northVerdictStatus");
+        const northVerdictClass = firstScalarField(northSources, ["NORTH_VERDICT_CLASS", "northVerdictClass", "verdictClass"], "UNKNOWN", "northVerdictClass");
+
+        const northPass = toBool(northVerdictAvailable) === true ||
+          northRailStatus.includes("VERDICT_AVAILABLE") ||
+          northVerdictStatus.includes("PACKET_RETURNED") ||
+          northVerdictClass.includes("NORTH_RAIL_RESTORED");
+
+        const eastDisposition = firstScalarField(eastSources, ["PROBE_EAST_DISPOSITION", "probeEastDisposition", "PROBE_EAST_RUN_STATUS", "probeEastRunStatus"], raw.authorities.east.present ? "ANCHOR_READY_WAITING_RUN" : "UNKNOWN", "eastDisposition");
+        const eastSourceStatus = firstScalarField(eastSources, ["SOURCE_SIDE_CURRENT_SPREAD_STATUS", "sourceSideCurrentSpreadStatus"], "UNKNOWN", "eastSourceStatus");
+        const fileCompositionStatus = firstScalarField(eastSources, ["FILE_COMPOSITION_STATUS", "fileCompositionStatus"], raw.authorities.east.present ? "ANCHOR_READY_TARGET_NOT_YET_PROBED" : "UNKNOWN", "fileCompositionStatus");
+        const bridgeSurfaceStatus = firstScalarField(eastSources, ["BRIDGE_SURFACE_COMPOSITION_STATUS", "bridgeSurfaceCompositionStatus"], raw.authorities.east.present ? "ANCHOR_READY_TARGET_NOT_YET_PROBED" : "UNKNOWN", "bridgeSurfaceStatus");
+
+        const southConclusion = firstScalarField(southSources, ["SOUTH_FINAL_CONCLUSION", "southFinalConclusion"], "UNKNOWN", "southConclusion");
+        const source = firstScalarField(southSources, ["SOURCE", "source"], "UNKNOWN", "southSource");
+        const sourceType = firstScalarField(southSources, ["SOURCE_TYPE", "sourceType"], "UNKNOWN", "southSourceType");
+        const sideCar = firstScalarField(southSources, ["SIDE_CAR", "sideCar", "sidecar"], "UNKNOWN", "southSidecar");
+        const surface = firstScalarField(southSources, ["SURFACE", "surface", "surfaceClass", "INSPECTED_SURFACE_CLASS"], "UNKNOWN", "southSurface");
+        const southLensConsumed = firstScalarField(southSources, ["SOUTH_SURFACE_POINTER_LENS_CONSUMED", "southSurfacePointerLensConsumed"], sideCar === "SOUTH_SURFACE_POINTER_LENS_CONSUMED" ? "true" : "UNKNOWN", "southLensConsumed");
+        const productionSurfaceConfirmed = firstScalarField(southSources, ["PRODUCTION_CANVAS_SURFACE_CONFIRMED", "productionCanvasSurfaceConfirmed", "PRODUCTION_CANVAS_CONFIRMED"], surface === "PRODUCTION_CANVAS_SURFACE" ? "true" : "UNKNOWN", "productionSurfaceConfirmed");
+        const rawRef = firstScalarField(southSources, ["RAW_REF", "rawRef", "RAW_REFERENCE", "rawReference"], "UNKNOWN", "southRawRef");
+
+        const surfaceTruthStatus = firstScalarField(truthSources, ["SURFACE_TRUTH_STATUS", "CANVAS_SURFACE_TRUTH_STATUS", "surfaceTruthStatus", "status"], raw.authorities.surfaceTruth.present ? "PUBLISHED_NOT_RUN" : "UNKNOWN", "surfaceTruthStatus");
+        const surfaceTruthFailureClass = firstScalarField(truthSources, ["SURFACE_TRUTH_FAILURE_CLASS", "CANVAS_SURFACE_TRUTH_FAILURE_CLASS", "surfaceTruthFailureClass", "failureClass"], "UNKNOWN", "surfaceTruthFailureClass");
+        const surfaceTruthFirstFailedCoordinate = firstScalarField(truthSources, ["SURFACE_TRUTH_FIRST_FAILED_COORDINATE", "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "surfaceTruthFirstFailedCoordinate", "firstFailedCoordinate"], "UNKNOWN", "surfaceTruthFirstFailedCoordinate");
+        const surfaceTruthV3 = firstScalarField(truthSources, ["PROBE_CANVAS_SURFACE_TRUTH_V3_RECOGNIZED", "probeCanvasSurfaceTruthV3Recognized", "V3_RECOGNIZED"], raw.authorities.surfaceTruth.present ? "true" : "UNKNOWN", "surfaceTruthV3");
+
+        const constructionReadiness = firstScalarField(westSources, ["CONSTRUCTION_READINESS_STATUS", "constructionReadinessStatus"], raw.authorities.west.present ? "WEST_PUBLISHED_AWAITING_EXPLICIT_CURRENT_AUTHORITY_RECHECK" : "UNKNOWN", "constructionReadiness");
+        const westGapClass = firstScalarField(westSources, ["WEST_GAP_CLASS_VALUE", "westGapClassValue", "WEST_GAP_CLASS", "westGapClass"], "UNKNOWN", "westGapClass");
+        const westDecision = firstScalarField(westSources, ["WEST_DECISION_VALUE", "westDecisionValue", "WEST_DECISION", "westDecision"], "UNKNOWN", "westDecision");
+        const labWestV53 = firstScalarField(westSources, ["LABWEST_INTERNAL_V5_3_RECOGNIZED", "LABWEST_INTERNAL_V53_RECOGNIZED", "labWestInternalV53Recognized"], "UNKNOWN", "labWestV53");
+        const westNorthAvailable = firstScalarField(westSources, ["NORTH_RAIL_VERDICT_AVAILABLE", "northRailVerdictAvailable", "NORTH_VERDICT_AVAILABLE"], "UNKNOWN", "westNorthAvailable");
+
+        const canvasElementFound = firstScalarField(canvasSources, ["CANVAS_ELEMENT_FOUND", "canvasElementFound"], "UNKNOWN", "canvasElementFound");
+        const canvasContextFound = firstScalarField(canvasSources, ["CANVAS_CONTEXT_FOUND", "canvasContextFound", "CONTEXT_2D", "context2d"], "UNKNOWN", "canvasContextFound");
+        const canvasRectNonzero = firstScalarField(canvasSources, ["CANVAS_RECT_NONZERO", "canvasRectNonzero", "rectNonzero"], "UNKNOWN", "canvasRectNonzero");
+        const pixelVisible = firstScalarField(canvasSources, ["PIXEL_VISIBLE", "pixelVisible"], "UNKNOWN", "pixelVisible");
+        const canvasBlameGate = firstScalarField([...canvasSources, ...southSources, ...westSources], ["CANVAS_BLAME_GATE", "canvasBlameGate"], "UNKNOWN", "canvasBlameGate");
+        const canvasBuildAuthorized = firstScalarField([...canvasSources, ...westSources], ["CANVAS_BUILD_AUTHORIZED", "canvasBuildAuthorized"], "false", "canvasBuildAuthorized");
+        const canvasReleaseAuthorized = firstScalarField(westSources, ["CANVAS_RELEASE_AUTHORIZED", "canvasReleaseAuthorized"], "false", "canvasReleaseAuthorized");
+
+        const f = {
+          F1: "PASS",
+          F2: raw.target.ok ? "PASS" : raw.target.status.includes("PARTIAL") ? "PARTIAL" : "BLOCKED",
+          F3: northPass ? "PASS" : raw.authorities.north.present ? "PARTIAL" : "UNKNOWN",
+          F5:
+            fileCompositionStatus.includes("REACHES_CANVAS") || eastSourceStatus.includes("PASS")
+              ? "PASS"
+              : fileCompositionStatus.includes("INCOMPLETE") || fileCompositionStatus.includes("FAILED")
+                ? "BLOCKED"
+                : raw.authorities.east.present
+                  ? "PARTIAL"
+                  : "UNKNOWN",
+          F8:
+            toBool(southLensConsumed) === true || surface === "PRODUCTION_CANVAS_SURFACE" || toBool(productionSurfaceConfirmed) === true
+              ? "PASS"
+              : raw.authorities.south.present || raw.authorities.southLens.present
+                ? "PARTIAL"
+                : "UNKNOWN",
+          F13:
+            surfaceTruthStatus.includes("FAILED") || surfaceTruthFailureClass.includes("FAILED")
+              ? "BLOCKED"
+              : surfaceTruthStatus.includes("COMPLETE") || surfaceTruthStatus.includes("PASS")
+                ? "PASS"
+                : raw.authorities.surfaceTruth.present
+                  ? "PARTIAL"
+                  : "UNKNOWN",
+          F21:
+            constructionReadiness.includes("READY") || westDecision.includes("RELEASE")
+              ? "PASS"
+              : constructionReadiness.includes("HELD") || constructionReadiness.includes("AWAITING") || constructionReadiness.includes("WAITING") || westGapClass !== "UNKNOWN"
+                ? "HELD"
+                : raw.authorities.west.present
+                  ? "PARTIAL"
+                  : "UNKNOWN",
+          F34:
+            toBool(canvasBuildAuthorized) === true || toBool(canvasReleaseAuthorized) === true
+              ? "PASS"
+              : "HELD"
+        };
+
+        const firstBlockingFib = ["F1", "F2", "F3", "F5", "F8", "F13", "F21", "F34"].find((key) => {
+          return f[key] === "BLOCKED" || f[key] === "HELD";
+        }) || "NONE";
+
+        const currentHold = firstBlockingFib === "NONE"
+          ? "No active hold"
+          : firstBlockingFib === "F21"
+            ? "West Gate"
+            : firstBlockingFib === "F13"
+              ? "Surface Truth"
+              : firstBlockingFib === "F34"
+                ? "Canvas Boundary"
+                : firstBlockingFib;
+
+        const nextProcess = chooseNextProcess({
+          f,
+          raw,
+          surfaceTruthStatus,
+          constructionReadiness,
+          westDecision,
+          westGapClass,
+          fileCompositionStatus,
+          southLensConsumed,
+          source,
+          sourceType,
+          firstBlockingFib
+        });
+
+        const nextReceiptRecommended = chooseNextReceipt({
+          raw,
+          f,
+          firstBlockingFib,
+          constructionReadiness,
+          surfaceTruthStatus,
+          state
+        });
+
+        const finalBucket = firstKnown(
+          firstBlockingFib === "F21" ? "WEST_GATE_HELD_AWAITING_DIRECT_AUTHORITY_CHECK" : "",
+          firstBlockingFib === "F13" ? "SURFACE_TRUTH_MEASUREMENT_HELD" : "",
+          firstBlockingFib === "F34" ? "CANVAS_BOUNDARY_HELD_READ_ONLY" : "",
+          southConclusion,
+          constructionReadiness,
+          "FIELD_CLASSIFIED_BY_RECEIPT_DECK"
+        );
+
+        return {
+          currentQuestion: CURRENT_DIAGNOSTIC_QUESTION,
+          fib: f,
+          finalBucket,
+          firstBlockingFib,
+          currentHold,
+          nextProcess,
+          nextReceiptRecommended,
+          nextReceiptLabel: receiptTitle(nextReceiptRecommended),
+          updatedAt: nowIso(),
+
+          receiverHealth: {
+            objectFieldCollisionCount: state.collisions.length,
+            objectFieldCollisions: state.collisions.slice(0, 12),
+            fullRawAvailable: true,
+            cardinalReceiptsAvailable: true,
+            directReceiptsAvailable: true,
+            htmlReducerBlocking: state.collisions.length > 0 ? "PARTIAL_OBJECT_COLLISION_OBSERVED" : "NO_OBJECT_COLLISION_OBSERVED",
+            nextReceiptRecommended: state.collisions.length > 0 ? "01" : nextReceiptRecommended
+          },
+
+          target: {
+            status: f.F2,
+            targetAccessStatus: targetStatus,
+            targetRoute: TARGET_ROUTE,
+            observedRoute: raw.target.route,
+            hearthTargetConfirmed: String(Boolean(raw.target.hearthTargetConfirmed)),
+            targetFramePresent: String(Boolean(document.getElementById("hearthDiagnosticTargetFrame"))),
+            targetDocumentAccessible: String(Boolean(raw.target.ok)),
+            blocking: f.F2 === "BLOCKED"
+          },
+
+          load: {
+            status: loadSequenceStatus(),
+            declaredOrder: PARTICIPANT_SCRIPTS.join(" -> "),
+            observedOrder: state.scriptLoads.map((item) => `${item.src}:${item.status}`).join(" -> ") || "NOT_RECORDED",
+            northPresent: String(Boolean(raw.authorities.north.present)),
+            eastPresent: String(Boolean(raw.authorities.east.present)),
+            southPresent: String(Boolean(raw.authorities.south.present)),
+            westPresent: String(Boolean(raw.authorities.west.present)),
+            surfaceTruthPresent: String(Boolean(raw.authorities.surfaceTruth.present)),
+            westLoadedBeforeNorth: String(westLoadedBeforeNorth()),
+            stalePreNorthRisk: String(westLoadedBeforeNorth()),
+            blocking: westLoadedBeforeNorth()
+          },
+
+          north: {
+            status: f.F3,
+            readerText: northPass ? "Chronology is clear. The chamber has a current North signal." : raw.authorities.north.present ? "North is present, but the direct verdict is not fully resolved." : "North has not been found.",
+            authorityPath: raw.authorities.north.path,
+            windowName: raw.authorities.north.windowName,
+            targetAccessStatus: targetStatus,
+            hearthTargetConfirmed: String(Boolean(raw.target.hearthTargetConfirmed)),
+            northPresent: String(Boolean(raw.authorities.north.present)),
+            northVerdictAvailable,
+            northRailStatus,
+            northVerdictStatus,
+            northVerdictClass,
+            directRunStatus: directRunStatus("north"),
+            blocking: f.F2 === "BLOCKED" || f.F3 === "BLOCKED"
+          },
+
+          east: {
+            status: f.F5,
+            readerText: f.F5 === "PASS" ? "The source path is aligned." : raw.authorities.east.present ? "The East source is anchored, but a focused probe may still be needed." : "East source witness has not been found.",
+            authorityPath: raw.authorities.east.path,
+            windowName: raw.authorities.east.windowName,
+            eastDisposition,
+            eastSourceStatus,
+            fileCompositionStatus,
+            bridgeSurfaceStatus,
+            directRunStatus: directRunStatus("east"),
+            blocking: f.F5 === "BLOCKED"
+          },
+
+          south: {
+            status: f.F8,
+            readerText: f.F8 === "PASS" ? "The South lens is reading a production surface." : raw.authorities.south.present || raw.authorities.southLens.present ? "The South lens is partial. Surface proof is not complete." : "South surface lens has not been found.",
+            authorityPath: raw.authorities.south.path,
+            lensAuthorityPath: raw.authorities.southLens.path,
+            windowName: raw.authorities.south.windowName,
+            southConclusion,
+            source,
+            sourceType,
+            sideCar,
+            surface,
+            southLensConsumed,
+            productionSurfaceConfirmed,
+            rawRef,
+            directRunStatus: directRunStatus("south"),
+            blocking: f.F8 === "BLOCKED"
+          },
+
+          surfaceTruth: {
+            status: f.F13,
+            readerText: f.F13 === "PASS" ? "Surface Truth has measured the visible world." : f.F13 === "BLOCKED" ? "Surface Truth found a blocking variance." : raw.authorities.surfaceTruth.present ? "Surface Truth is standing by. Measurement is not complete." : "Surface Truth has not been found.",
+            authorityPath: raw.authorities.surfaceTruth.path,
+            windowName: raw.authorities.surfaceTruth.windowName,
+            surfaceTruthStatus,
+            surfaceTruthFailureClass,
+            surfaceTruthFirstFailedCoordinate,
+            surfaceTruthV3,
+            directRunStatus: directRunStatus("surfaceTruth"),
+            blocking: f.F13 === "BLOCKED"
+          },
+
+          west: {
+            status: f.F21,
+            readerText: f.F21 === "PASS" ? "West has released the next move." : raw.authorities.west.present ? "West is holding until authority is checked directly." : "West gate has not been found.",
+            authorityPath: raw.authorities.west.path,
+            windowName: raw.authorities.west.windowName,
+            surfaceTruthStatus,
+            constructionReadiness,
+            westGapClass,
+            westDecision,
+            westNorthAvailable,
+            labWestV53,
+            canvasReleaseAuthorized,
+            canvasBuildAuthorized,
+            directRunStatus: directRunStatus("west"),
+            blocking: f.F21 === "BLOCKED" || f.F21 === "HELD"
+          },
+
+          canvas: {
+            status: f.F34,
+            readerText: f.F34 === "PASS" ? "Canvas is eligible for the next boundary review." : "Canvas remains protected until the chamber proves it owns the fault.",
+            canvasElementFound,
+            canvasContextFound,
+            canvasRectNonzero,
+            pixelVisible,
+            canvasBlameGate,
+            canvasBuildAuthorized,
+            canvasReleaseAuthorized,
+            blocking: f.F34 === "BLOCKED" || f.F34 === "HELD"
+          }
+        };
+      }
+
+      function chooseNextProcess(context) {
+        if (context.f.F2 === "BLOCKED") return "RESTORE_TARGET_ACCESS_BEFORE_COMPONENT_DIAGNOSTICS";
+        if (context.f.F3 !== "PASS") return "COPY_NORTH_DIRECT_RECEIPT_OR_RUN_NORTH_DIRECT_CHECK";
+        if (context.constructionReadiness.includes("AWAITING") || context.constructionReadiness.includes("WAITING")) return "RUN_WEST_AUTHORITY_CHECK";
+        if (context.f.F13 !== "PASS") return "RUN_SURFACE_TRUTH_MEASURE";
+        if (context.f.F5 !== "PASS") return "RUN_EAST_SOURCE_PROBE";
+        if (context.f.F8 !== "PASS") return "RUN_SOUTH_LENS_CHECK";
+        if (context.f.F34 === "HELD") return "COPY_CANVAS_BOUNDARY_RECEIPT";
+        return "COPY_NEXT_LAWFUL_MOVE_RECEIPT";
+      }
+
+      function chooseNextReceipt(context) {
+        if (state.collisions.length > 0) return "01";
+        if (context.f.F2 === "BLOCKED") return "02";
+        if (context.raw && westLoadedBeforeNorth()) return "03";
+        if (context.f.F3 !== "PASS") return "08";
+        if (context.constructionReadiness.includes("AWAITING") || context.constructionReadiness.includes("WAITING")) return "12";
+        if (context.f.F13 !== "PASS") return "10";
+        if (context.f.F5 !== "PASS") return "09";
+        if (context.f.F8 !== "PASS") return "11";
+        if (context.f.F34 === "HELD") return "13";
+        return "14";
+      }
+
+      function loadSequenceStatus() {
+        if (!state.scriptLoads.length) return "NOT_RECORDED";
+        if (state.scriptLoads.some((item) => item.status.includes("error") || item.status.includes("exception"))) return "PARTIAL_LOAD_ERROR";
+        if (westLoadedBeforeNorth()) return "STALE_PRE_NORTH_RISK";
+        return "LOAD_SEQUENCE_RECORDED";
+      }
+
+      function westLoadedBeforeNorth() {
+        const westIndex = state.scriptLoads.findIndex((item) => item.src.includes("runtime-table.west.js"));
+        const northIndex = state.scriptLoads.findIndex((item) => item.src.includes("hearth.diagnostic.rail.js"));
+        if (westIndex < 0 || northIndex < 0) return false;
+        return westIndex < northIndex;
+      }
+
+      function receiptTitle(id) {
+        const found = RECEIPT_DECK.find((item) => item[0] === id);
+        return found ? `${found[0]} · ${found[1]}` : "00 · Chamber Index";
+      }
+
+      function makeHeader(id, role, scope, component, runState, trustState, blocking, nextId) {
         return [
-          kv("PACKET", "HEARTH_DIAGNOSTIC_PRIMARY_FIBONACCI_COMMANDER_SURFACE_v8"),
+          kv("PACKET", `HEARTH_DIAGNOSTIC_RECEIPT_DECK_${id}_v9`),
+          kv("RECEIPT_LEVEL", receiptLevel(id)),
+          kv("RECEIPT_SEQUENCE", id),
+          kv("ROLE", role),
+          kv("SCOPE", scope),
+          kv("COMPONENT", component || "CHAMBER"),
           kv("CONTRACT", CONTRACT),
           kv("RECEIPT", RECEIPT),
           kv("INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT),
-          kv("CURRENT_DIAGNOSTIC_QUESTION", summary.currentQuestion),
-          "",
-          kv("F1_INTENT", summary.fib.F1),
-          kv("F2_TARGET_ACCESS", summary.fib.F2),
-          kv("F3_NORTH_VALIDATION", summary.fib.F3),
-          kv("F5_EAST_SOURCE_WITNESS", summary.fib.F5),
-          kv("F8_SOUTH_SURFACE_LENS", summary.fib.F8),
-          kv("F13_SURFACE_TRUTH_ALIGNMENT", summary.fib.F13),
-          kv("F21_WEST_ADMISSIBILITY", summary.fib.F21),
-          kv("F34_CANVAS_BOUNDARY", summary.fib.F34),
-          "",
-          kv("FINAL_BUCKET", summary.finalBucket),
-          kv("FIRST_BLOCKING_FIB", summary.firstBlockingFib),
-          kv("CANVAS_BLAME_GATE", summary.canvas.canvasBlameGate),
-          kv("CANVAS_BUILD_AUTHORIZED", summary.canvas.canvasBuildAuthorized),
-          kv("NEXT_PROCESS", summary.nextProcess),
-          kv("NEXT_FILE", summary.nextFile),
-          "",
-          kv("PRODUCTION_MUTATION_AUTHORIZED", "false"),
-          kv("HEARTH_REPAIR_AUTHORIZED", "false"),
-          kv("RUNTIME_RESTART_AUTHORIZED", "false"),
-          kv("F13_CLAIMED", "false"),
-          kv("F21_CLAIMED", "false"),
-          kv("VISUAL_PASS_CLAIMED", "false"),
-          kv("GENERATED_IMAGE", "false"),
-          kv("GRAPHIC_BOX", "false"),
-          kv("WEBGL", "false"),
-          kv("UPDATED_AT", summary.updatedAt)
-        ].join("\n");
+          kv("INTERNAL_RENEWAL_RECEIPT", INTERNAL_RENEWAL_RECEIPT),
+          kv("RUN_STATE", runState || "LIGHT_SCAN"),
+          kv("TRUST_STATE", trustState || "CURRENT_RECEIVER_PROJECTION"),
+          kv("BLOCKING", String(Boolean(blocking))),
+          kv("NEXT_RECEIPT_RECOMMENDED", receiptTitle(nextId || (state.summary && state.summary.nextReceiptRecommended) || "00"))
+        ];
       }
 
-      function makeNorthReceipt(summary) {
-        return [
-          kv("PACKET", "HEARTH_DIAGNOSTIC_NORTH_CARDINAL_RECEIPT_v8"),
-          kv("ROLE", "NORTH_CHRONOLOGY_VALIDATION"),
-          kv("FIBONACCI_POSITIONS", "F1_INTENT,F2_TARGET_ACCESS,F3_NORTH_VALIDATION"),
-          kv("CURRENT_DIAGNOSTIC_QUESTION", summary.currentQuestion),
+      function receiptLevel(id) {
+        if (id === "00") return "0_COMMANDER_INDEX";
+        if (["01", "02", "03"].includes(id)) return "1_RECEIVER_TARGET_LOAD";
+        if (["04", "05", "06", "07"].includes(id)) return "2_CARDINAL_SUMMARY";
+        if (["08", "09", "10", "11", "12"].includes(id)) return "3_DIRECT_EXECUTION";
+        if (["13", "14"].includes(id)) return "4_SYNTHESIS";
+        if (id === "99") return "9_DEEP_ARCHIVE";
+        return "UNKNOWN";
+      }
+
+      function makeReceipts(summary, raw) {
+        const receipts = {};
+
+        receipts["00"] = [
+          ...makeHeader("00", "CHAMBER_INDEX", "SEQUENTIAL_RECEIPT_MENU", "ALL", "LIGHT_SCAN", "CURRENT", false, summary.nextReceiptRecommended),
+          "",
+          kv("VISIBLE_NAME", "Chamber Index"),
+          kv("CHAMBER_BRIEF", chamberBriefText(summary)),
+          kv("CURRENT_HOLD", summary.currentHold),
+          kv("NEXT_RECEIPT", receiptTitle(summary.nextReceiptRecommended)),
+          kv("NEXT_MOVE", summary.nextProcess),
+          kv("DEEP_ARCHIVE_REQUIRED", "false"),
+          kv("RECEIPT_ORDER", "00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,99"),
+          kv("RULE", "COPY_ONE_RECEIPT_AT_A_TIME"),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+
+        receipts["01"] = [
+          ...makeHeader("01", "RECEIVER_HEALTH", "HTML_PROJECTION_AND_PRINT_SURFACE", "HTML_RECEIVER", "LIGHT_SCAN", summary.receiverHealth.htmlReducerBlocking, summary.receiverHealth.objectFieldCollisionCount > 0, summary.receiverHealth.nextReceiptRecommended),
+          "",
+          kv("OBJECT_FIELD_COLLISION_COUNT", summary.receiverHealth.objectFieldCollisionCount),
+          kv("OBJECT_FIELD_COLLISIONS", JSON.stringify(summary.receiverHealth.objectFieldCollisions)),
+          kv("FULL_RAW_AVAILABLE", summary.receiverHealth.fullRawAvailable),
+          kv("CARDINAL_RECEIPTS_AVAILABLE", summary.receiverHealth.cardinalReceiptsAvailable),
+          kv("DIRECT_RECEIPTS_AVAILABLE", summary.receiverHealth.directReceiptsAvailable),
+          kv("HTML_REDUCER_BLOCKING", summary.receiverHealth.htmlReducerBlocking),
+          kv("NO_OBJECT_OBJECT_PRINTING", "true"),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+
+        receipts["02"] = [
+          ...makeHeader("02", "TARGET_ACCESS", "ROUTE_AND_PORTHOLE_ACCESS", "HEARTH_TARGET", "LIGHT_SCAN", summary.target.status, summary.target.blocking, summary.nextReceiptRecommended),
+          "",
+          kv("F1_INTENT", summary.fib.F1),
+          kv("F2_TARGET_ACCESS", summary.fib.F2),
+          kv("TARGET_ROUTE", summary.target.targetRoute),
+          kv("OBSERVED_ROUTE", summary.target.observedRoute),
+          kv("TARGET_ACCESS_STATUS", summary.target.targetAccessStatus),
+          kv("HEARTH_TARGET_CONFIRMED", summary.target.hearthTargetConfirmed),
+          kv("TARGET_FRAME_PRESENT", summary.target.targetFramePresent),
+          kv("TARGET_DOCUMENT_ACCESSIBLE", summary.target.targetDocumentAccessible),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+
+        receipts["03"] = [
+          ...makeHeader("03", "LOAD_SEQUENCE", "PARTICIPANT_LOAD_AND_ALIAS_PRESENCE", "DIAGNOSTIC_PARTICIPANTS", "LIGHT_SCAN", summary.load.status, summary.load.blocking, summary.nextReceiptRecommended),
+          "",
+          kv("LOAD_ORDER_DECLARED", summary.load.declaredOrder),
+          kv("LOAD_ORDER_OBSERVED", summary.load.observedOrder),
+          kv("NORTH_PRESENT", summary.load.northPresent),
+          kv("EAST_PRESENT", summary.load.eastPresent),
+          kv("SOUTH_PRESENT", summary.load.southPresent),
+          kv("WEST_PRESENT", summary.load.westPresent),
+          kv("SURFACE_TRUTH_PRESENT", summary.load.surfaceTruthPresent),
+          kv("WEST_LOADED_BEFORE_NORTH", summary.load.westLoadedBeforeNorth),
+          kv("STALE_PRE_NORTH_RISK", summary.load.stalePreNorthRisk),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+
+        receipts["04"] = [
+          ...makeHeader("04", "NORTH_SIGNAL", "CARDINAL_SUMMARY", "NORTH", "LIGHT_SCAN", summary.north.status, summary.north.blocking, summary.nextReceiptRecommended),
+          "",
           kv("F1_INTENT", summary.fib.F1),
           kv("F2_TARGET_ACCESS", summary.fib.F2),
           kv("F3_NORTH_VALIDATION", summary.fib.F3),
-          "",
           kv("TARGET_ACCESS_STATUS", summary.north.targetAccessStatus),
           kv("HEARTH_TARGET_CONFIRMED", summary.north.hearthTargetConfirmed),
+          kv("NORTH_AUTHORITY_PATH", summary.north.authorityPath),
           kv("NORTH_RAIL_PRESENT", summary.north.northPresent),
           kv("NORTH_VERDICT_AVAILABLE", summary.north.northVerdictAvailable),
           kv("NORTH_RAIL_STATUS", summary.north.northRailStatus),
           kv("NORTH_BLOCKING", String(summary.north.blocking)),
-          "",
           kv("TOP_PROOF_1", `TARGET_ACCESS_STATUS=${summary.north.targetAccessStatus}`),
           kv("TOP_PROOF_2", `NORTH_VERDICT_AVAILABLE=${summary.north.northVerdictAvailable}`),
           kv("TOP_PROOF_3", `NORTH_RAIL_STATUS=${summary.north.northRailStatus}`),
           kv("UPDATED_AT", summary.updatedAt)
         ].join("\n");
-      }
 
-      function makeEastReceipt(summary) {
-        return [
-          kv("PACKET", "HEARTH_DIAGNOSTIC_EAST_CARDINAL_RECEIPT_v8"),
-          kv("ROLE", "EAST_SOURCE_FILE_COMPOSITION"),
-          kv("FIBONACCI_POSITION", "F5_EAST_SOURCE_WITNESS"),
-          kv("F5_EAST_SOURCE_WITNESS", summary.fib.F5),
+        receipts["05"] = [
+          ...makeHeader("05", "EAST_SOURCE", "CARDINAL_SUMMARY", "EAST", "LIGHT_SCAN", summary.east.status, summary.east.blocking, summary.nextReceiptRecommended),
           "",
+          kv("F5_EAST_SOURCE_WITNESS", summary.fib.F5),
+          kv("EAST_AUTHORITY_PATH", summary.east.authorityPath),
           kv("SOURCE_SIDE_CURRENT_SPREAD_STATUS", summary.east.eastSourceStatus),
           kv("FILE_COMPOSITION_STATUS", summary.east.fileCompositionStatus),
           kv("BRIDGE_SURFACE_COMPOSITION_STATUS", summary.east.bridgeSurfaceStatus),
           kv("PROBE_EAST_DISPOSITION", summary.east.eastDisposition),
           kv("EAST_BLOCKING", String(summary.east.blocking)),
-          "",
           kv("TOP_PROOF_1", `FILE_COMPOSITION_STATUS=${summary.east.fileCompositionStatus}`),
           kv("TOP_PROOF_2", `BRIDGE_SURFACE_COMPOSITION_STATUS=${summary.east.bridgeSurfaceStatus}`),
           kv("TOP_PROOF_3", `PROBE_EAST_DISPOSITION=${summary.east.eastDisposition}`),
           kv("UPDATED_AT", summary.updatedAt)
         ].join("\n");
-      }
 
-      function makeSouthReceipt(summary) {
-        return [
-          kv("PACKET", "HEARTH_DIAGNOSTIC_SOUTH_CARDINAL_RECEIPT_v8"),
-          kv("ROLE", "SOUTH_OUTPUT_PROOF_PRODUCTION_SURFACE_LENS"),
-          kv("FIBONACCI_POSITION", "F8_SOUTH_SURFACE_LENS"),
-          kv("F8_SOUTH_SURFACE_LENS", summary.fib.F8),
+        receipts["06"] = [
+          ...makeHeader("06", "SOUTH_LENS", "CARDINAL_SUMMARY", "SOUTH", "LIGHT_SCAN", summary.south.status, summary.south.blocking, summary.nextReceiptRecommended),
           "",
+          kv("F8_SOUTH_SURFACE_LENS", summary.fib.F8),
+          kv("SOUTH_AUTHORITY_PATH", summary.south.authorityPath),
+          kv("SOUTH_LENS_AUTHORITY_PATH", summary.south.lensAuthorityPath),
           kv("SOUTH_FINAL_CONCLUSION", summary.south.southConclusion),
+          kv("SOURCE", summary.south.source),
+          kv("SOURCE_TYPE", summary.south.sourceType),
           kv("SIDE_CAR", summary.south.sideCar),
           kv("SURFACE", summary.south.surface),
           kv("SOUTH_SURFACE_POINTER_LENS_CONSUMED", summary.south.southLensConsumed),
           kv("PRODUCTION_CANVAS_SURFACE_CONFIRMED", summary.south.productionSurfaceConfirmed),
-          kv("CANVAS_BLAME_GATE", summary.south.canvasBlameGate),
           kv("RAW_REF", summary.south.rawRef),
           kv("SOUTH_BLOCKING", String(summary.south.blocking)),
-          "",
           kv("TOP_PROOF_1", `SIDE_CAR=${summary.south.sideCar}`),
           kv("TOP_PROOF_2", `SURFACE=${summary.south.surface}`),
-          kv("TOP_PROOF_3", `CANVAS_BLAME_GATE=${summary.south.canvasBlameGate}`),
+          kv("TOP_PROOF_3", `SOURCE=${summary.south.source}`),
           kv("UPDATED_AT", summary.updatedAt)
         ].join("\n");
-      }
 
-      function makeWestReceipt(summary) {
-        return [
-          kv("PACKET", "HEARTH_DIAGNOSTIC_WEST_CARDINAL_RECEIPT_v8"),
-          kv("ROLE", "WEST_ADMISSIBILITY_BLOCKER_NEXT_ACTION"),
-          kv("FIBONACCI_POSITIONS", "F13_SURFACE_TRUTH_ALIGNMENT,F21_WEST_ADMISSIBILITY,F34_CANVAS_BOUNDARY"),
+        receipts["07"] = [
+          ...makeHeader("07", "WEST_GATE", "CARDINAL_SUMMARY", "WEST", "LIGHT_SCAN", summary.west.status, summary.west.blocking, summary.nextReceiptRecommended),
+          "",
           kv("F13_SURFACE_TRUTH_ALIGNMENT", summary.fib.F13),
           kv("F21_WEST_ADMISSIBILITY", summary.fib.F21),
           kv("F34_CANVAS_BOUNDARY", summary.fib.F34),
-          "",
+          kv("WEST_AUTHORITY_PATH", summary.west.authorityPath),
           kv("SURFACE_TRUTH_STATUS", summary.west.surfaceTruthStatus),
-          kv("SURFACE_TRUTH_FAILURE_CLASS", summary.west.surfaceTruthFailureClass),
-          kv("SURFACE_TRUTH_FIRST_FAILED_COORDINATE", summary.west.surfaceTruthFirstFailedCoordinate),
-          kv("SURFACE_TRUTH_V3_RECOGNIZED", summary.west.surfaceTruthV3),
           kv("CONSTRUCTION_READINESS_STATUS", summary.west.constructionReadiness),
-          kv("WEST_GAP_CLASS", summary.west.westGapClass),
-          kv("WEST_DECISION", summary.west.westDecision),
-          kv("LABWEST_INTERNAL_V5_3_RECOGNIZED", summary.west.labWestV53),
-          kv("FINAL_BUCKET", summary.finalBucket),
-          kv("BLOCKING_GATE", summary.firstBlockingFib),
-          kv("CANVAS_BLAME_GATE", summary.canvas.canvasBlameGate),
-          kv("CANVAS_BUILD_AUTHORIZED", summary.canvas.canvasBuildAuthorized),
-          kv("NEXT_PROCESS", summary.nextProcess),
-          kv("NEXT_FILE", summary.nextFile),
+          kv("WEST_GAP_CLASS_VALUE", summary.west.westGapClass),
+          kv("WEST_DECISION_VALUE", summary.west.westDecision),
+          kv("WEST_NORTH_RAIL_VERDICT_AVAILABLE", summary.west.westNorthAvailable),
+          kv("CANVAS_BUILD_AUTHORIZED", summary.west.canvasBuildAuthorized),
+          kv("CANVAS_RELEASE_AUTHORIZED", summary.west.canvasReleaseAuthorized),
           kv("WEST_BLOCKING", String(summary.west.blocking)),
-          "",
           kv("TOP_PROOF_1", `SURFACE_TRUTH_STATUS=${summary.west.surfaceTruthStatus}`),
           kv("TOP_PROOF_2", `CONSTRUCTION_READINESS_STATUS=${summary.west.constructionReadiness}`),
           kv("TOP_PROOF_3", `NEXT_PROCESS=${summary.nextProcess}`),
           kv("UPDATED_AT", summary.updatedAt)
         ].join("\n");
+
+        receipts["08"] = makeDirectReceipt("08", "NORTH_DIRECT_CHECK", "NORTH", "north", summary.north, summary.nextReceiptRecommended);
+        receipts["09"] = makeDirectReceipt("09", "EAST_DIRECT_PROBE", "EAST", "east", summary.east, summary.nextReceiptRecommended);
+        receipts["10"] = makeDirectReceipt("10", "SURFACE_TRUTH_DIRECT_MEASURE", "SURFACE_TRUTH", "surfaceTruth", summary.surfaceTruth, summary.nextReceiptRecommended);
+        receipts["11"] = makeDirectReceipt("11", "SOUTH_DIRECT_LENS_CHECK", "SOUTH", "south", summary.south, summary.nextReceiptRecommended);
+        receipts["12"] = makeDirectReceipt("12", "WEST_DIRECT_AUTHORITY_CHECK", "WEST", "west", summary.west, summary.nextReceiptRecommended);
+
+        receipts["13"] = [
+          ...makeHeader("13", "CANVAS_BOUNDARY", "READ_ONLY_CANVAS_BLAME_GATE", "CANVAS", "LIGHT_SCAN", summary.canvas.status, summary.canvas.blocking, summary.nextReceiptRecommended),
+          "",
+          kv("F34_CANVAS_BOUNDARY", summary.fib.F34),
+          kv("CANVAS_ELEMENT_FOUND", summary.canvas.canvasElementFound),
+          kv("CANVAS_CONTEXT_FOUND", summary.canvas.canvasContextFound),
+          kv("CANVAS_RECT_NONZERO", summary.canvas.canvasRectNonzero),
+          kv("PIXEL_VISIBLE", summary.canvas.pixelVisible),
+          kv("CANVAS_BLAME_GATE", summary.canvas.canvasBlameGate),
+          kv("CANVAS_BUILD_AUTHORIZED", summary.canvas.canvasBuildAuthorized),
+          kv("CANVAS_RELEASE_AUTHORIZED", summary.canvas.canvasReleaseAuthorized),
+          kv("CANVAS_REPAIR_AUTHORIZED", "false"),
+          kv("CANVAS_DRAWING_AUTHORIZED", "false"),
+          kv("BLOCKING", String(summary.canvas.blocking)),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+
+        receipts["14"] = [
+          ...makeHeader("14", "NEXT_LAWFUL_MOVE", "FINAL_FOCUSED_SYNTHESIS", "CHAMBER", "LIGHT_SCAN", "CURRENT_SYNTHESIS", summary.firstBlockingFib !== "NONE", summary.nextReceiptRecommended),
+          "",
+          kv("FIRST_BLOCKING_FIB", summary.firstBlockingFib),
+          kv("FIRST_BLOCKING_COMPONENT", summary.currentHold),
+          kv("FIRST_BLOCKING_REASON", summary.finalBucket),
+          kv("TRUSTED_RECEIPTS_USED", "00,01,02,03,04,05,06,07,13"),
+          kv("DIRECT_RECEIPTS_AVAILABLE", "08,09,10,11,12"),
+          kv("DIRECT_RECEIPTS_RUN", directRunList()),
+          kv("QUARANTINED_RECEIPTS", state.collisions.length > 0 ? "OBJECT_FIELD_COLLISIONS_IN_RECEIVER_PROJECTION" : "NONE"),
+          kv("HTML_RECEIVER_BLOCKING", summary.receiverHealth.objectFieldCollisionCount > 0 ? "PARTIAL" : "false"),
+          kv("RAIL_COMPONENT_BLOCKING", summary.firstBlockingFib),
+          kv("NEXT_FILE", nextFileFor(summary)),
+          kv("NEXT_ACTION", summary.nextProcess),
+          kv("DO_NOT_TOUCH", "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+
+        receipts["99"] = JSON.stringify(jsonSafe(raw), null, 2);
+
+        return receipts;
+      }
+
+      function makeDirectReceipt(id, role, componentLabel, componentKey, componentSummary, nextId) {
+        const direct = state.direct[componentKey] || {};
+        const packet = direct.packet || {};
+        const directContract = firstScalarField([packet], ["CONTRACT", "contract"], "UNKNOWN", `${componentKey}DirectContract`);
+        const directReceipt = firstScalarField([packet], ["RECEIPT", "receipt"], "UNKNOWN", `${componentKey}DirectReceipt`);
+
+        return [
+          ...makeHeader(id, role, "ONE_COMPONENT_DIRECT_EXECUTION", componentLabel, direct.status || "NOT_RUN", componentSummary.status || "UNKNOWN", componentSummary.blocking || false, nextId),
+          "",
+          kv("RUN_EXECUTED", String(Boolean(direct.runExecuted))),
+          kv("READ_ONLY_DIRECT_RECEIPT", String(Boolean(direct.readOnly))),
+          kv("DIRECT_AUTHORITY_PATH", direct.authorityPath || componentSummary.authorityPath || "UNKNOWN"),
+          kv("DIRECT_CONTRACT", directContract),
+          kv("DIRECT_RECEIPT", directReceipt),
+          kv("DIRECT_STATUS", direct.status || "NOT_RUN"),
+          kv("DIRECT_ERROR", direct.error || "NONE"),
+          kv("TRUST_STATE", componentSummary.status || "UNKNOWN"),
+          kv("PACKET_KEYS", isObject(packet) ? Object.keys(packet).slice(0, 24).join(",") : "NONE"),
+          kv("BLOCKING", String(Boolean(componentSummary.blocking))),
+          kv("NEXT_ACTION", direct.runExecuted ? "COPY_NEXT_LAWFUL_MOVE_OR_RECOMMENDED_RECEIPT" : `RUN_${componentLabel}_DIRECT_CHECK`),
+          kv("UPDATED_AT", direct.updatedAt || componentSummary.updatedAt || nowIso())
+        ].join("\n");
+      }
+
+      function directRunList() {
+        return Object.keys(state.direct)
+          .filter((key) => state.direct[key] && state.direct[key].runExecuted)
+          .join(",") || "NONE";
+      }
+
+      function nextFileFor(summary) {
+        if (summary.nextReceiptRecommended === "08") return "/assets/hearth/hearth.diagnostic.rail.js";
+        if (summary.nextReceiptRecommended === "09") return "/assets/hearth/hearth.diagnostic.probe.east.js";
+        if (summary.nextReceiptRecommended === "10") return "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
+        if (summary.nextReceiptRecommended === "11") return "/assets/hearth/hearth.diagnostic.south.js";
+        if (summary.nextReceiptRecommended === "12") return "/assets/lab/runtime-table.west.js";
+        if (summary.nextReceiptRecommended === "01") return "/showroom/globe/hearth/diagnostic/index.html";
+        if (summary.nextReceiptRecommended === "03") return "/showroom/globe/hearth/diagnostic/index.html";
+        return "NONE";
+      }
+
+      function chamberBriefText(summary) {
+        if (!summary) return "The chamber is standing by.";
+        return `The route is ${summary.target.targetAccessStatus.toLowerCase().replace(/_/g, " ")}. ${summary.north.readerText} ${summary.west.readerText} Next receipt: ${receiptTitle(summary.nextReceiptRecommended)}.`;
+      }
+
+      function renderDeck() {
+        const deck = document.getElementById("receiptDeck");
+        if (!deck) return;
+
+        deck.innerHTML = "";
+
+        RECEIPT_DECK.forEach(([id, title, use, kind, component]) => {
+          const div = document.createElement("article");
+          div.className = "deck-card";
+          div.dataset.receiptId = id;
+          div.dataset.active = state.selectedReceiptId === id ? "true" : "false";
+
+          const canRun = kind === "direct" && component;
+
+          div.innerHTML = `
+            <div class="deck-number">${id}</div>
+            <h3>${title}</h3>
+            <p>${use}</p>
+            <div class="deck-actions">
+              <button type="button" data-select-receipt="${id}">View</button>
+              <button type="button" data-copy-receipt="${id}">Copy</button>
+              ${canRun ? `<button type="button" data-run-direct="${component}">Run</button>` : ""}
+            </div>
+          `;
+
+          deck.appendChild(div);
+        });
       }
 
       function renderBreakdown(containerId, items) {
@@ -1860,27 +2464,30 @@
       function render(summary, raw) {
         state.summary = summary;
         state.raw = raw;
-
-        state.receipts.primary = makePrimaryReceipt(summary);
-        state.receipts.north = makeNorthReceipt(summary);
-        state.receipts.east = makeEastReceipt(summary);
-        state.receipts.south = makeSouthReceipt(summary);
-        state.receipts.west = makeWestReceipt(summary);
-        state.receipts.raw = JSON.stringify(jsonSafe(raw), null, 2);
+        state.receipts = makeReceipts(summary, raw);
 
         updateFib(summary);
+        renderDeck();
 
         const overall =
           summary.firstBlockingFib === "NONE"
             ? "PASS"
-            : summary.firstBlockingFib === "F13" || summary.firstBlockingFib === "F21" || summary.firstBlockingFib === "F34"
+            : ["F13", "F21", "F34"].includes(summary.firstBlockingFib)
               ? "HELD"
-              : "PARTIAL";
+              : summary.firstBlockingFib === "F1" || summary.firstBlockingFib === "F2"
+                ? "BLOCKED"
+                : "PARTIAL";
 
         const overallEl = document.getElementById("overallStatus");
         if (overallEl) {
           overallEl.dataset.status = cssStatus(overall);
           overallEl.textContent = overall;
+        }
+
+        const deckStatus = document.getElementById("deckStatus");
+        if (deckStatus) {
+          deckStatus.dataset.status = "pass";
+          deckStatus.textContent = "FOCUSED";
         }
 
         const scanTime = document.getElementById("scanTime");
@@ -1889,98 +2496,63 @@
           scanTime.textContent = "SCANNED";
         }
 
-        setText("metricFinalBucket", summary.finalBucket);
-        setText("metricFirstBlocker", summary.firstBlockingFib);
-        setText("metricCanvasBlame", summary.canvas.canvasBlameGate);
-        setText("metricNextProcess", summary.nextProcess);
+        setText("chamberBrief", chamberBriefText(summary));
+        setText("nextReceiptHint", `Recommended next receipt: ${receiptTitle(summary.nextReceiptRecommended)}.`);
+        setText("metricCurrentHold", summary.currentHold);
+        setText("metricNextReceipt", receiptTitle(summary.nextReceiptRecommended));
+        setText("metricCanvasBoundary", summary.canvas.status);
+        setText("metricNextMove", summary.nextProcess);
 
-        setStatusCard(
-          "north",
-          summary.north.status,
-          `Verdict=${summary.north.northVerdictAvailable}; target=${summary.north.targetAccessStatus}.`
-        );
-        setStatusCard(
-          "east",
-          summary.east.status,
-          `Source=${summary.east.fileCompositionStatus}; bridge=${summary.east.bridgeSurfaceStatus}.`
-        );
-        setStatusCard(
-          "south",
-          summary.south.status,
-          `Surface=${summary.south.surface}; sidecar=${summary.south.sideCar}.`
-        );
-        setStatusCard(
-          "west",
-          summary.west.status,
-          `Bucket=${summary.finalBucket}; next=${summary.nextProcess}.`
-        );
+        setStatusCard("north", summary.north.status, summary.north.readerText);
+        setStatusCard("east", summary.east.status, summary.east.readerText);
+        setStatusCard("south", summary.south.status, summary.south.readerText);
+        setStatusCard("truth", summary.surfaceTruth.status, summary.surfaceTruth.readerText);
+        setStatusCard("west", summary.west.status, summary.west.readerText);
+        setStatusCard("canvas", summary.canvas.status, summary.canvas.readerText);
 
-        setText("primaryReceipt", state.receipts.primary);
-        setText("northReceipt", state.receipts.north);
-        setText("eastReceipt", state.receipts.east);
-        setText("southReceipt", state.receipts.south);
-        setText("westReceipt", state.receipts.west);
+        setText("selectedReceiptPreview", state.receipts[state.selectedReceiptId] || state.receipts["00"]);
+        setText("briefReceiptPreview", state.receipts["00"]);
         setText(
           "rawReceiptPreview",
           [
-            "RAW_PACKET_AVAILABLE=true",
-            "RAW_PACKET_IS_DEBUG_ONLY=true",
-            `RAW_PACKET_BYTES_APPROX=${state.receipts.raw.length}`,
-            "Use COPY FULL RAW PACKET only when a specific cardinal segment cannot classify the issue."
+            "DEEP_ARCHIVE_AVAILABLE=true",
+            "DEEP_ARCHIVE_IS_ESCALATION_ONLY=true",
+            `RAW_PACKET_BYTES_APPROX=${(state.receipts["99"] || "").length}`,
+            `RECOMMENDED_NEXT_RECEIPT=${receiptTitle(summary.nextReceiptRecommended)}`,
+            "Use focused receipts first. Copy the archive only when focused receipts conflict or omit a required field."
           ].join("\n")
         );
 
-        renderBreakdown("primaryBreakdown", [
-          ["Current Question", summary.currentQuestion],
-          ["Final Bucket", summary.finalBucket],
-          ["First Blocking Fib", summary.firstBlockingFib],
-          ["Next Process", summary.nextProcess],
-          ["Next File", summary.nextFile],
-          ["Canvas Build Authorized", summary.canvas.canvasBuildAuthorized]
+        renderBreakdown("selectedBreakdown", [
+          ["Selected Receipt", receiptTitle(state.selectedReceiptId)],
+          ["Recommended Next", receiptTitle(summary.nextReceiptRecommended)],
+          ["Current Hold", summary.currentHold],
+          ["Next Move", summary.nextProcess],
+          ["Receiver Health", summary.receiverHealth.htmlReducerBlocking],
+          ["Archive Required", "false"]
         ]);
 
-        renderBreakdown("northBreakdown", [
-          ["F1 Intent", summary.fib.F1],
-          ["F2 Target Access", summary.fib.F2],
-          ["F3 North", summary.fib.F3],
-          ["Target Access Status", summary.north.targetAccessStatus],
-          ["Hearth Target Confirmed", summary.north.hearthTargetConfirmed],
-          ["North Verdict Available", summary.north.northVerdictAvailable]
+        renderBreakdown("briefBreakdown", [
+          ["Current Hold", summary.currentHold],
+          ["North", summary.north.status],
+          ["East", summary.east.status],
+          ["South", summary.south.status],
+          ["Surface Truth", summary.surfaceTruth.status],
+          ["West Gate", summary.west.status],
+          ["Canvas Boundary", summary.canvas.status],
+          ["Next Receipt", receiptTitle(summary.nextReceiptRecommended)],
+          ["Next Move", summary.nextProcess]
         ]);
 
-        renderBreakdown("eastBreakdown", [
-          ["F5 East", summary.fib.F5],
-          ["Source Spread", summary.east.eastSourceStatus],
-          ["File Composition", summary.east.fileCompositionStatus],
-          ["Bridge Surface", summary.east.bridgeSurfaceStatus],
-          ["Disposition", summary.east.eastDisposition],
-          ["East Blocking", String(summary.east.blocking)]
-        ]);
-
-        renderBreakdown("southBreakdown", [
-          ["F8 South", summary.fib.F8],
-          ["Conclusion", summary.south.southConclusion],
-          ["Sidecar", summary.south.sideCar],
-          ["Surface", summary.south.surface],
-          ["Canvas Blame Gate", summary.south.canvasBlameGate],
-          ["Raw Ref", summary.south.rawRef]
-        ]);
-
-        renderBreakdown("westBreakdown", [
-          ["F13 Surface Truth", summary.fib.F13],
-          ["F21 West", summary.fib.F21],
-          ["F34 Canvas Boundary", summary.fib.F34],
-          ["Surface Truth Status", summary.west.surfaceTruthStatus],
-          ["Construction Readiness", summary.west.constructionReadiness],
-          ["Next Process", summary.nextProcess]
-        ]);
+        publishApi();
       }
 
       function collectAndRender(options = {}) {
-        const raw = gatherRaw(options);
+        if (options.selectedReceiptId) state.selectedReceiptId = options.selectedReceiptId;
+        state.scanCount += 1;
+        const raw = gatherRaw();
         const summary = deriveSummary(raw);
         render(summary, raw);
-        publishApi();
       }
 
       function loadScript(src) {
@@ -1993,19 +2565,31 @@
             });
 
             if (existing) {
-              resolve({ src, status: "already-present" });
+              const result = { src, status: "already-present", at: nowIso() };
+              state.scriptLoads.push(result);
+              resolve(result);
               return;
             }
 
             const script = document.createElement("script");
             script.src = src;
             script.async = false;
-            script.dataset.loadedBy = "mirrorland-instrument-chamber";
-            script.onload = () => resolve({ src, status: "loaded" });
-            script.onerror = () => resolve({ src, status: "load-error" });
+            script.dataset.loadedBy = "mirrorland-instrument-chamber-receipt-deck";
+            script.onload = () => {
+              const result = { src, status: "loaded", at: nowIso() };
+              state.scriptLoads.push(result);
+              resolve(result);
+            };
+            script.onerror = () => {
+              const result = { src, status: "load-error", at: nowIso() };
+              state.scriptLoads.push(result);
+              resolve(result);
+            };
             document.head.appendChild(script);
           } catch (_error) {
-            resolve({ src, status: "load-exception" });
+            const result = { src, status: "load-exception", at: nowIso() };
+            state.scriptLoads.push(result);
+            resolve(result);
           }
         });
       }
@@ -2050,17 +2634,42 @@
         }
       }
 
-      function bindCopyButtons() {
-        document.querySelectorAll("[data-copy]").forEach((button) => {
-          button.addEventListener("click", () => {
-            const key = button.getAttribute("data-copy");
-            const label =
-              key === "raw"
-                ? "Full raw packet"
-                : key.charAt(0).toUpperCase() + key.slice(1) + " receipt";
-            copyText(state.receipts[key] || "", label);
-          });
+      function bindControls() {
+        document.addEventListener("click", (event) => {
+          const copyButton = event.target.closest("[data-copy-receipt]");
+          if (copyButton) {
+            const id = copyButton.getAttribute("data-copy-receipt") || "00";
+            if (!state.receipts[id]) collectAndRender({ selectedReceiptId: id });
+            state.selectedReceiptId = id;
+            collectAndRender({ selectedReceiptId: id });
+            copyText(state.receipts[id] || "", receiptTitle(id));
+            return;
+          }
+
+          const selectButton = event.target.closest("[data-select-receipt]");
+          if (selectButton) {
+            const id = selectButton.getAttribute("data-select-receipt") || "00";
+            state.selectedReceiptId = id;
+            collectAndRender({ selectedReceiptId: id });
+            showToast(`${receiptTitle(id)} selected`);
+            return;
+          }
+
+          const directButton = event.target.closest("[data-run-direct]");
+          if (directButton) {
+            const component = directButton.getAttribute("data-run-direct");
+            invokeDirect(component);
+            showToast(`${component} direct check complete`);
+          }
         });
+
+        const scan = document.getElementById("scanChamber");
+        if (scan) {
+          scan.addEventListener("click", () => {
+            collectAndRender();
+            showToast("Chamber scan complete");
+          });
+        }
       }
 
       function publishApi() {
@@ -2069,20 +2678,39 @@
           RECEIPT,
           INTERNAL_RENEWAL_CONTRACT,
           INTERNAL_RENEWAL_RECEIPT,
+          PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
           VERSION,
           TARGET_ROUTE,
           DIAGNOSTIC_ROUTE,
 
-          getPrimaryReceipt: () => state.receipts.primary,
-          getNorthReceipt: () => state.receipts.north,
-          getEastReceipt: () => state.receipts.east,
-          getSouthReceipt: () => state.receipts.south,
-          getWestReceipt: () => state.receipts.west,
+          getReceipt: (id = "00") => state.receipts[id] || "",
+          getReceiptDeck: () => jsonSafe(RECEIPT_DECK),
+          getChamberIndex: () => state.receipts["00"] || "",
+          getReceiverHealth: () => state.receipts["01"] || "",
+          getTargetAccess: () => state.receipts["02"] || "",
+          getLoadSequence: () => state.receipts["03"] || "",
+          getNorthReceipt: () => state.receipts["04"] || "",
+          getEastReceipt: () => state.receipts["05"] || "",
+          getSouthReceipt: () => state.receipts["06"] || "",
+          getWestReceipt: () => state.receipts["07"] || "",
+          getNorthDirectReceipt: () => state.receipts["08"] || "",
+          getEastDirectReceipt: () => state.receipts["09"] || "",
+          getSurfaceTruthDirectReceipt: () => state.receipts["10"] || "",
+          getSouthDirectReceipt: () => state.receipts["11"] || "",
+          getWestDirectReceipt: () => state.receipts["12"] || "",
+          getCanvasBoundaryReceipt: () => state.receipts["13"] || "",
+          getNextLawfulActionReceipt: () => state.receipts["14"] || "",
+          getRawPacketReceipt: () => state.receipts["99"] || "",
           getRawPacket: () => state.raw,
           getSummary: () => state.summary,
+
           run: () => {
-            collectAndRender({ run: true });
+            collectAndRender();
             return state.summary;
+          },
+          runDirect: (component) => {
+            invokeDirect(component);
+            return state.direct[component] || null;
           },
 
           productionMutationAuthorized: false,
@@ -2100,33 +2728,36 @@
           webgl: false
         };
 
+        root.MIRRORLAND_INSTRUMENT_CHAMBER = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
+        root.HEARTH_DIAGNOSTIC_RECEIPT_DECK = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
+
         const hearth = root.HEARTH || (root.HEARTH = {});
         hearth.instrumentChamber = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
         hearth.diagnosticInstrumentChamber = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
+        hearth.receiptDeck = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
 
         const lab = root.DEXTER_LAB || (root.DEXTER_LAB = {});
         lab.hearthInstrumentChamber = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
+        lab.hearthReceiptDeck = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
       }
 
       function init() {
-        bindCopyButtons();
-
-        document.getElementById("runChamber").addEventListener("click", () => {
-          collectAndRender({ run: true });
-        });
+        renderDeck();
+        bindControls();
+        publishApi();
 
         const frame = document.getElementById("hearthDiagnosticTargetFrame");
         if (frame) {
           frame.addEventListener("load", () => {
-            window.setTimeout(() => collectAndRender({ run: false }), 250);
+            window.setTimeout(() => collectAndRender(), 260);
           });
         }
 
         loadParticipants().then(() => {
-          window.setTimeout(() => collectAndRender({ run: false }), 250);
+          window.setTimeout(() => collectAndRender(), 280);
         });
 
-        collectAndRender({ run: false });
+        collectAndRender();
       }
 
       if (document.readyState === "loading") {

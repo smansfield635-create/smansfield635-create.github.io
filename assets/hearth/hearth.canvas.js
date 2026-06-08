@@ -1,23 +1,29 @@
 // /assets/hearth/hearth.canvas.js
 // HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3
 // Internal controlled renewal:
-// HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4
+// HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_TNT_v12_4_1
 // Full-file replacement.
 // Canvas Hub / canonical DOM surface receiver / visible 2D output carrier only.
+//
 // Purpose:
 // - Preserve the public v12_3 Canvas Hub contract expected by route conductor, diagnostics, and receipts.
-// - Add v12_4 live surface identity binding to the canonical HTML canvas chain.
+// - Upgrade the internal Canvas standard from v12_4 to v12_4_1.
 // - Bind only the existing canonical DOM chain:
 //   #hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas
+// - Correct REC-0 / rectangle-zero ambiguity by separating immediate geometry from settled geometry.
+// - Publish parent-chain, immediate, settled, and effective geometry facts without inventing single-file causality.
+// - Paint a first visible carrier frame as soon as the canonical canvas has usable geometry.
+// - Defer Hex Surface delivery until after first visible Canvas output, preventing downstream return from blocking first paint.
 // - Receive route-conductor canvas transaction packets through public receiver APIs.
+// - Receive view-control packets exactly once; do not double-apply yaw/pitch/zoom deltas.
 // - Compose and deliver Canvas Hex Gate packets to Hex Surface through public APIs only.
 // - Receive downstream Pointer Surface/Bishop expression packets back into Canvas through public APIs.
 // - Paint visible 2D output on the canonical canvas only.
-// - Publish receipts proving DOM binding, receiver readiness, Hex Surface delivery, and downstream return state.
-// - Preserve Controls as absent/held unless separately renewed.
+// - Preserve Controls as independent input authority.
 // - Preserve Hex Surface as downstream gate.
 // - Preserve Pointer Surface as downstream Bishop gate.
 // - Preserve Inspect as child proof/organizer, not primary endpoint.
+//
 // Does not own:
 // - HTML shell geometry repair
 // - Controls renewal or input authority
@@ -45,18 +51,17 @@
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT_v12_3";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
+    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_TNT_v12_4_1";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_v12_4";
+    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_RECEIPT_v12_4_1";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION_TNT_v12_4";
-
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
   const LINEAGE_INTERNAL_RENEWAL_CONTRACT =
     "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2";
 
   const VERSION =
-    "2026-06-08.hearth-canvas-hub-live-surface-identity-unified-visible-2d-output-v12-4";
+    "2026-06-08.hearth-canvas-hub-rec0-settled-geometry-single-view-application-deferred-hex-output-v12-4-1";
 
   const FILE = "/assets/hearth/hearth.canvas.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -99,11 +104,13 @@
     "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1";
 
   const CANVAS_HEX_GATE_PACKET =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_CANVAS_HEX_GATE_PACKET_v12_4";
+    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_CANVAS_HEX_GATE_PACKET_v12_4_1";
   const CANVAS_TRANSACTION_PACKET =
-    "HEARTH_CANVAS_HUB_ROUTE_CONDUCTOR_CANVAS_TRANSACTION_RECEIPT_PACKET_v12_4";
+    "HEARTH_CANVAS_HUB_ROUTE_CONDUCTOR_CANVAS_TRANSACTION_RECEIPT_PACKET_v12_4_1";
   const SURFACE_RETURN_PACKET =
-    "HEARTH_CANVAS_HUB_POINTER_SURFACE_RETURN_RECEIPT_PACKET_v12_4";
+    "HEARTH_CANVAS_HUB_POINTER_SURFACE_RETURN_RECEIPT_PACKET_v12_4_1";
+  const VIEW_CONTROL_PACKET =
+    "HEARTH_CANVAS_HUB_SINGLE_APPLICATION_VIEW_CONTROL_RECEIPT_PACKET_v12_4_1";
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -167,6 +174,7 @@
     "HEARTH_CANVAS_EXPRESSION_HUB",
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
+    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT",
     "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION",
     "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER",
     "HEARTH.canvas",
@@ -178,6 +186,7 @@
     "HEARTH.canvasExpressionHub",
     "HEARTH.canvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
     "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "HEARTH.canvasHubRec0SettledGeometrySingleViewApplicationDeferredHexOutput",
     "HEARTH.canvasHubHexSurfacePointerFingerTransmission",
     "HEARTH.canvasHexGatePointerFingerTransmissionReceiver",
     "DEXTER_LAB.hearthCanvas",
@@ -189,6 +198,7 @@
     "DEXTER_LAB.hearthCanvasExpressionHub",
     "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
     "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "DEXTER_LAB.hearthCanvasHubRec0SettledGeometrySingleViewApplicationDeferredHexOutput",
     "DEXTER_LAB.hearthCanvasHubHexSurfacePointerFingerTransmission"
   ]);
 
@@ -197,6 +207,36 @@
     "HEARTH.routeConductor",
     "HEARTH.routeAuthority",
     "DEXTER_LAB.hearthRouteConductor"
+  ]);
+
+  const CONTROL_ALIAS_PATHS = Object.freeze([
+    "HEARTH_CONTROLS",
+    "HEARTH_PLANETARY_CONTROLS",
+    "HEARTH_CONTROL_AUTHORITY",
+    "HEARTH_CONTROLS_QUEEN",
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
+    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION",
+    "HEARTH.controls",
+    "HEARTH.planetaryControls",
+    "HEARTH.controlAuthority",
+    "HEARTH.controlsQueen",
+    "HEARTH.controlsPlanetaryViewInputHandshake",
+    "HEARTH.controlsHexGatePointerFingerTransmission",
+    "DEXTER_LAB.hearthControls",
+    "DEXTER_LAB.hearthPlanetaryControls",
+    "DEXTER_LAB.hearthControlAuthority",
+    "DEXTER_LAB.hearthControlsQueen"
+  ]);
+
+  const HEX_AUTHORITY_ALIAS_PATHS = Object.freeze([
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+    "HEARTH_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH.hexFourPairPixelHandshakeAuthority",
+    "HEARTH.hexFourPairAuthority",
+    "HEARTH.pixelHandshakeAuthority",
+    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
+    "DEXTER_LAB.hearthHexFourPairAuthority"
   ]);
 
   const HEX_SURFACE_ALIAS_PATHS = Object.freeze([
@@ -218,36 +258,6 @@
     "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
     "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission",
     "DEXTER_LAB.hearthHexSurfaceCanonicalMapTupleBindingPointerTransmission"
-  ]);
-
-  const HEX_AUTHORITY_ALIAS_PATHS = Object.freeze([
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
-    "HEARTH_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH.hexFourPairPixelHandshakeAuthority",
-    "HEARTH.hexFourPairAuthority",
-    "HEARTH.pixelHandshakeAuthority",
-    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
-    "DEXTER_LAB.hearthHexFourPairAuthority"
-  ]);
-
-  const CONTROL_ALIAS_PATHS = Object.freeze([
-    "HEARTH_CONTROLS",
-    "HEARTH_PLANETARY_CONTROLS",
-    "HEARTH_CONTROL_AUTHORITY",
-    "HEARTH_CONTROLS_QUEEN",
-    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
-    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION",
-    "HEARTH.controls",
-    "HEARTH.planetaryControls",
-    "HEARTH.controlAuthority",
-    "HEARTH.controlsQueen",
-    "HEARTH.controlsPlanetaryViewInputHandshake",
-    "HEARTH.controlsHexGatePointerFingerTransmission",
-    "DEXTER_LAB.hearthControls",
-    "DEXTER_LAB.hearthPlanetaryControls",
-    "DEXTER_LAB.hearthControlAuthority",
-    "DEXTER_LAB.hearthControlsQueen"
   ]);
 
   const POINTER_SURFACE_ALIAS_PATHS = Object.freeze([
@@ -335,7 +345,7 @@
     disposed: false,
     startedAt: "",
     updatedAt: "",
-    latestEvent: "HEARTH_CANVAS_V12_4_LOADED",
+    latestEvent: "HEARTH_CANVAS_V12_4_1_LOADED",
 
     canvasCreatesDom: false,
     canvasUsesCanonicalDomOnly: true,
@@ -350,15 +360,41 @@
     pointerSurfaceOwned: false,
     pointerInspectOwned: false,
 
+    rec0ProbeActive: true,
+    rec0ImmediateRectZeroObserved: false,
+    rec0SettledRectRecovered: false,
+    rec0EffectiveGeometrySource: "NOT_MEASURED",
+    rec0Status: "NOT_MEASURED",
+    rec0FirstZeroCoordinate: "NONE",
+    rec0SettledSampleScheduled: false,
+    rec0SettledSampleCount: 0,
+
     canonicalMountFound: false,
     canonicalFrameFound: false,
     canonicalCanvasFound: false,
     canonicalCanvasInMount: false,
     canonicalCanvasInFrame: false,
+
     canonicalMountRectNonzero: false,
     canonicalFrameRectNonzero: false,
     canonicalCanvasRectNonzero: false,
     canonicalChainValid: false,
+
+    immediateCanonicalMountRectNonzero: false,
+    immediateCanonicalFrameRectNonzero: false,
+    immediateCanonicalCanvasRectNonzero: false,
+    immediateCanonicalChainValid: false,
+
+    settledCanonicalMountRectNonzero: false,
+    settledCanonicalFrameRectNonzero: false,
+    settledCanonicalCanvasRectNonzero: false,
+    settledCanonicalChainValid: false,
+
+    effectiveCanonicalMountRectNonzero: false,
+    effectiveCanonicalFrameRectNonzero: false,
+    effectiveCanonicalCanvasRectNonzero: false,
+    effectiveCanonicalChainValid: false,
+
     canvasContext2dReady: false,
     canvasComputedVisible: false,
     canvasViewportIntersecting: false,
@@ -373,6 +409,12 @@
     canvasVisiblePixelCount: 0,
     firstSurfaceFailureCoordinate: "NOT_MOUNTED",
 
+    parentChainStatus: "NOT_MEASURED",
+    firstCollapsedParentDescriptor: "NONE",
+    firstCollapsedParentDepth: -1,
+    firstCollapsedParentMissingFact: "NONE",
+    parentChain: [],
+
     routeConductorObserved: false,
     routeConductorSource: "NONE",
     routeConductorContract: "UNKNOWN",
@@ -384,10 +426,10 @@
     controlsContract: "UNKNOWN",
     controlsReceipt: "UNKNOWN",
     controlsRecognized: false,
-    controlHandshakeStatus: "CONTROL_FILE_NOT_RENEWED_BY_CANVAS",
-    motionTouchStatus: "WAITING_CONTROL_FILE",
-    dragStatus: "WAITING_CONTROL_FILE",
-    viewControlStatus: "CONTROL_VIEW_PACKETS_OPTIONAL_RECEIVER_READY",
+    controlHandshakeStatus: "CONTROL_FILE_INDEPENDENT",
+    motionTouchStatus: "CONTROL_FILE_INDEPENDENT_NOT_CANVAS_CLAIM",
+    dragStatus: "CONTROL_FILE_INDEPENDENT_NOT_CANVAS_CLAIM",
+    viewControlStatus: "CANVAS_VIEW_CONTROL_RECEIVER_READY_SINGLE_APPLICATION",
 
     hexAuthorityObserved: false,
     hexAuthoritySource: "NONE",
@@ -419,20 +461,29 @@
     routePacketAcceptedCount: 0,
     routePacketRejectedCount: 0,
     viewPacketReceivedCount: 0,
+    viewPacketAppliedCount: 0,
+    duplicateViewApplicationPreventedCount: 0,
     hexGatePacketComposedCount: 0,
     hexGateDeliveryAttemptCount: 0,
+    hexGateDeliveryDeferredCount: 0,
     hexGateDeliveryReturnCount: 0,
     hexGateDeliveryErrorCount: 0,
     surfaceReturnPacketReceivedCount: 0,
     surfaceReturnAcceptedCount: 0,
     surfaceReturnRejectedCount: 0,
     drawCount: 0,
+    firstPaintDrawCount: 0,
     resizeCount: 0,
     aliasPublishCount: 0,
     receiptPublishCount: 0,
     datasetPublishCount: 0,
     eventCount: 0,
     errorCount: 0,
+
+    firstPaintAttempted: false,
+    firstPaintCompleted: false,
+    firstPaintAt: "",
+    firstPaintStatus: "NOT_ATTEMPTED",
 
     lastReceivedMethod: "NONE",
     lastReceivedAt: "",
@@ -442,10 +493,12 @@
     lastRejectedPacket: null,
     lastRejectionReason: "",
     lastCanvasHexGatePacket: null,
+    lastDeferredHexGatePacket: null,
     lastHexSurfaceReturn: null,
     lastHexSurfaceDeliveryResult: null,
     lastSurfaceReturnPacket: null,
     lastSurfaceExpression: null,
+    lastViewControlPacketSummary: null,
     lastDrawReason: "NOT_DRAWN",
 
     viewState: {
@@ -466,7 +519,7 @@
 
     firstFailedCoordinate: "NOT_MOUNTED",
     recommendedNextFile: HTML_FILE,
-    recommendedNextAction: "CONFIRM_CANONICAL_CANVAS_DOM_CHAIN_HAS_NONZERO_RECT",
+    recommendedNextAction: "WAIT_FOR_SETTLED_CANONICAL_CANVAS_GEOMETRY_OR_CONFIRM_PARENT_CHAIN",
     postgameStatus: "CANVAS_LOADED_WAITING_BOOT",
 
     events: [],
@@ -483,6 +536,8 @@
   let resizeObserver = null;
   let bootPromise = null;
   let drawScheduled = false;
+  let settledGeometryTimer = null;
+  let deferredHexTimer = null;
 
   function nowIso() {
     try {
@@ -512,13 +567,6 @@
   function safeNumber(value, fallback = 0) {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
-  }
-
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
-    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
-    return fallback;
   }
 
   function clamp(value, min, max) {
@@ -579,12 +627,6 @@
 
   function line(key, value) {
     return `${key}=${packetValue(value)}`;
-  }
-
-  function boolText(value, fallback = "UNKNOWN") {
-    if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return "true";
-    if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return "false";
-    return fallback;
   }
 
   function trimLog(list, max) {
@@ -1067,7 +1109,134 @@
     );
   }
 
-  function bindCanonicalCanvas(reason = "bind") {
+  function elementDescriptor(element) {
+    if (!element) return "NONE";
+
+    const tag = safeString(element.tagName, "UNKNOWN").toLowerCase();
+    const id = element.id ? `#${element.id}` : "";
+    let classes = "";
+
+    try {
+      classes =
+        element.classList && element.classList.length
+          ? `.${Array.from(element.classList).slice(0, 5).join(".")}`
+          : "";
+    } catch (_error) {}
+
+    return `${tag}${id}${classes}` || "UNKNOWN_ELEMENT";
+  }
+
+  function measureParentChain(element) {
+    const chain = [];
+    let cursor = element || null;
+    let depth = 0;
+
+    while (cursor && depth < 24) {
+      const rect = rectOf(cursor);
+      let display = "UNKNOWN";
+      let visibility = "UNKNOWN";
+      let opacity = "UNKNOWN";
+      let width = "UNKNOWN";
+      let height = "UNKNOWN";
+      let minWidth = "UNKNOWN";
+      let minHeight = "UNKNOWN";
+      let overflow = "UNKNOWN";
+      let position = "UNKNOWN";
+      let contain = "UNKNOWN";
+      let contentVisibility = "UNKNOWN";
+
+      try {
+        const style = root.getComputedStyle ? root.getComputedStyle(cursor) : null;
+        if (style) {
+          display = safeString(style.display, "UNKNOWN");
+          visibility = safeString(style.visibility, "UNKNOWN");
+          opacity = safeString(style.opacity, "UNKNOWN");
+          width = safeString(style.width, "UNKNOWN");
+          height = safeString(style.height, "UNKNOWN");
+          minWidth = safeString(style.minWidth, "UNKNOWN");
+          minHeight = safeString(style.minHeight, "UNKNOWN");
+          overflow = safeString(style.overflow, "UNKNOWN");
+          position = safeString(style.position, "UNKNOWN");
+          contain = safeString(style.contain, "UNKNOWN");
+          contentVisibility = safeString(style.contentVisibility, "UNKNOWN");
+        }
+      } catch (_error) {}
+
+      chain.push({
+        depth,
+        descriptor: elementDescriptor(cursor),
+        rectWidth: rect.width,
+        rectHeight: rect.height,
+        rectNonzero: rect.nonzero,
+        offsetWidth: safeNumber(cursor.offsetWidth, 0),
+        offsetHeight: safeNumber(cursor.offsetHeight, 0),
+        clientWidth: safeNumber(cursor.clientWidth, 0),
+        clientHeight: safeNumber(cursor.clientHeight, 0),
+        display,
+        visibility,
+        opacity,
+        computedWidth: width,
+        computedHeight: height,
+        computedMinWidth: minWidth,
+        computedMinHeight: minHeight,
+        overflow,
+        position,
+        contain,
+        contentVisibility
+      });
+
+      cursor = cursor.parentElement || null;
+      depth += 1;
+    }
+
+    return chain;
+  }
+
+  function classifyParentChain(chain) {
+    if (!Array.isArray(chain) || !chain.length) {
+      return {
+        status: "PARENT_CHAIN_UNAVAILABLE",
+        firstCollapsedParentDescriptor: "NONE",
+        firstCollapsedParentDepth: -1,
+        firstCollapsedParentMissingFact: "PARENT_CHAIN_AVAILABLE"
+      };
+    }
+
+    const collapsed = chain.find((item) => item.rectNonzero === false);
+    const hidden = chain.find((item) =>
+      item.display === "none" ||
+      item.visibility === "hidden" ||
+      item.visibility === "collapse" ||
+      safeNumber(item.opacity, 1) <= 0
+    );
+
+    if (hidden) {
+      return {
+        status: "PARENT_CHAIN_HIDDEN_NODE",
+        firstCollapsedParentDescriptor: hidden.descriptor,
+        firstCollapsedParentDepth: hidden.depth,
+        firstCollapsedParentMissingFact: "COMPUTED_VISIBILITY_VISIBLE"
+      };
+    }
+
+    if (collapsed) {
+      return {
+        status: "PARENT_CHAIN_COLLAPSED_NODE",
+        firstCollapsedParentDescriptor: collapsed.descriptor,
+        firstCollapsedParentDepth: collapsed.depth,
+        firstCollapsedParentMissingFact: "BOUNDING_RECT_NONZERO"
+      };
+    }
+
+    return {
+      status: "PARENT_CHAIN_USED_SIZE_FACTS_PRESENT",
+      firstCollapsedParentDescriptor: "NONE",
+      firstCollapsedParentDepth: -1,
+      firstCollapsedParentMissingFact: "NONE"
+    };
+  }
+
+  function captureGeometrySnapshot(phase) {
     mountRef = query(CANONICAL_MOUNT_SELECTOR);
     frameRef = query(CANONICAL_FRAME_SELECTOR);
     canvasRef = query(CANONICAL_CANVAS_SELECTOR);
@@ -1075,30 +1244,149 @@
     const mountRect = rectOf(mountRef);
     const frameRect = rectOf(frameRef);
     const canvasRect = rectOf(canvasRef);
+    const parentChain = measureParentChain(canvasRef || frameRef || mountRef);
+    const chainClass = classifyParentChain(parentChain);
 
-    state.canonicalMountFound = Boolean(mountRef);
-    state.canonicalFrameFound = Boolean(frameRef);
-    state.canonicalCanvasFound = Boolean(canvasRef);
-    state.canonicalCanvasInMount = Boolean(mountRef && canvasRef && mountRef.contains(canvasRef));
-    state.canonicalCanvasInFrame = Boolean(frameRef && canvasRef && frameRef.contains(canvasRef));
-    state.canonicalMountRectNonzero = mountRect.nonzero;
-    state.canonicalFrameRectNonzero = frameRect.nonzero;
-    state.canonicalCanvasRectNonzero = canvasRect.nonzero;
-    state.canvasCssWidth = canvasRect.width;
-    state.canvasCssHeight = canvasRect.height;
-    state.canvasComputedVisible = computedVisible(canvasRef, canvasRect);
-    state.canvasViewportIntersecting = viewportIntersecting(canvasRect);
+    const snapshot = {
+      phase,
+      capturedAt: nowIso(),
 
-    state.canonicalChainValid = Boolean(
-      state.canonicalMountFound &&
-      state.canonicalFrameFound &&
-      state.canonicalCanvasFound &&
-      state.canonicalCanvasInMount &&
-      state.canonicalCanvasInFrame &&
-      state.canonicalMountRectNonzero &&
-      state.canonicalFrameRectNonzero &&
-      state.canonicalCanvasRectNonzero
-    );
+      mountFound: Boolean(mountRef),
+      frameFound: Boolean(frameRef),
+      canvasFound: Boolean(canvasRef),
+      canvasInMount: Boolean(mountRef && canvasRef && mountRef.contains(canvasRef)),
+      canvasInFrame: Boolean(frameRef && canvasRef && frameRef.contains(canvasRef)),
+
+      mountRect,
+      frameRect,
+      canvasRect,
+
+      mountRectNonzero: mountRect.nonzero,
+      frameRectNonzero: frameRect.nonzero,
+      canvasRectNonzero: canvasRect.nonzero,
+      chainValid: Boolean(
+        mountRef &&
+        frameRef &&
+        canvasRef &&
+        mountRef.contains(canvasRef) &&
+        frameRef.contains(canvasRef) &&
+        mountRect.nonzero &&
+        frameRect.nonzero &&
+        canvasRect.nonzero
+      ),
+
+      canvasComputedVisible: computedVisible(canvasRef, canvasRect),
+      canvasViewportIntersecting: viewportIntersecting(canvasRect),
+      parentChain,
+      parentChainStatus: chainClass.status,
+      firstCollapsedParentDescriptor: chainClass.firstCollapsedParentDescriptor,
+      firstCollapsedParentDepth: chainClass.firstCollapsedParentDepth,
+      firstCollapsedParentMissingFact: chainClass.firstCollapsedParentMissingFact
+    };
+
+    return snapshot;
+  }
+
+  function applyGeometrySnapshot(snapshot, target) {
+    const prefix = target === "settled" ? "settled" : "immediate";
+
+    if (prefix === "immediate") {
+      state.immediateCanonicalMountRectNonzero = snapshot.mountRectNonzero;
+      state.immediateCanonicalFrameRectNonzero = snapshot.frameRectNonzero;
+      state.immediateCanonicalCanvasRectNonzero = snapshot.canvasRectNonzero;
+      state.immediateCanonicalChainValid = snapshot.chainValid;
+    } else {
+      state.settledCanonicalMountRectNonzero = snapshot.mountRectNonzero;
+      state.settledCanonicalFrameRectNonzero = snapshot.frameRectNonzero;
+      state.settledCanonicalCanvasRectNonzero = snapshot.canvasRectNonzero;
+      state.settledCanonicalChainValid = snapshot.chainValid;
+      state.rec0SettledSampleCount += 1;
+    }
+
+    state.canonicalMountFound = snapshot.mountFound;
+    state.canonicalFrameFound = snapshot.frameFound;
+    state.canonicalCanvasFound = snapshot.canvasFound;
+    state.canonicalCanvasInMount = snapshot.canvasInMount;
+    state.canonicalCanvasInFrame = snapshot.canvasInFrame;
+
+    const effectiveValid =
+      snapshot.chainValid ||
+      state.settledCanonicalChainValid ||
+      state.immediateCanonicalChainValid;
+
+    const effectiveSource = snapshot.chainValid
+      ? snapshot.phase
+      : state.settledCanonicalChainValid
+        ? "SETTLED"
+        : state.immediateCanonicalChainValid
+          ? "IMMEDIATE"
+          : "NONE";
+
+    state.effectiveCanonicalMountRectNonzero =
+      snapshot.mountRectNonzero || state.settledCanonicalMountRectNonzero || state.immediateCanonicalMountRectNonzero;
+    state.effectiveCanonicalFrameRectNonzero =
+      snapshot.frameRectNonzero || state.settledCanonicalFrameRectNonzero || state.immediateCanonicalFrameRectNonzero;
+    state.effectiveCanonicalCanvasRectNonzero =
+      snapshot.canvasRectNonzero || state.settledCanonicalCanvasRectNonzero || state.immediateCanonicalCanvasRectNonzero;
+    state.effectiveCanonicalChainValid = effectiveValid;
+
+    state.canonicalMountRectNonzero = snapshot.mountRectNonzero;
+    state.canonicalFrameRectNonzero = snapshot.frameRectNonzero;
+    state.canonicalCanvasRectNonzero = snapshot.canvasRectNonzero;
+    state.canonicalChainValid = snapshot.chainValid;
+
+    state.canvasCssWidth = snapshot.canvasRect.width;
+    state.canvasCssHeight = snapshot.canvasRect.height;
+    state.canvasComputedVisible = snapshot.canvasComputedVisible;
+    state.canvasViewportIntersecting = snapshot.canvasViewportIntersecting;
+
+    state.parentChain = snapshot.parentChain;
+    state.parentChainStatus = snapshot.parentChainStatus;
+    state.firstCollapsedParentDescriptor = snapshot.firstCollapsedParentDescriptor;
+    state.firstCollapsedParentDepth = snapshot.firstCollapsedParentDepth;
+    state.firstCollapsedParentMissingFact = snapshot.firstCollapsedParentMissingFact;
+
+    if (target === "immediate" && !snapshot.chainValid) {
+      state.rec0ImmediateRectZeroObserved = Boolean(
+        snapshot.mountFound ||
+        snapshot.frameFound ||
+        snapshot.canvasFound
+      );
+      state.rec0FirstZeroCoordinate = firstGeometryFailure(snapshot);
+    }
+
+    if (state.rec0ImmediateRectZeroObserved && state.settledCanonicalChainValid) {
+      state.rec0SettledRectRecovered = true;
+      state.rec0Status = "REC0_TRANSIENT_IMMEDIATE_ZERO_SETTLED_NONZERO";
+    } else if (state.effectiveCanonicalChainValid) {
+      state.rec0Status = "CANONICAL_GEOMETRY_NONZERO";
+    } else if (state.rec0ImmediateRectZeroObserved) {
+      state.rec0Status = "REC0_CONFIRMED_OR_STILL_PENDING_SETTLED_GEOMETRY";
+    } else {
+      state.rec0Status = "CANONICAL_GEOMETRY_NOT_READY";
+    }
+
+    state.rec0EffectiveGeometrySource = effectiveSource;
+
+    return snapshot;
+  }
+
+  function firstGeometryFailure(snapshot) {
+    if (!snapshot.mountFound) return "CANONICAL_MOUNT_NOT_FOUND";
+    if (!snapshot.mountRectNonzero) return "CANONICAL_MOUNT_RECT_NONZERO";
+    if (!snapshot.frameFound) return "CANONICAL_FRAME_NOT_FOUND";
+    if (!snapshot.frameRectNonzero) return "CANONICAL_FRAME_RECT_NONZERO";
+    if (!snapshot.canvasFound) return "CANONICAL_CANVAS_NOT_FOUND";
+    if (!snapshot.canvasInMount) return "CANONICAL_CANVAS_IN_MOUNT";
+    if (!snapshot.canvasInFrame) return "CANONICAL_CANVAS_IN_FRAME";
+    if (!snapshot.canvasRectNonzero) return "CANONICAL_CANVAS_RECT_NONZERO";
+    return "NONE";
+  }
+
+  function bindCanonicalCanvas(reason = "bind", options = {}) {
+    const phase = options.phase || "IMMEDIATE";
+    const snapshot = captureGeometrySnapshot(phase);
+    applyGeometrySnapshot(snapshot, phase === "SETTLED" ? "settled" : "immediate");
 
     ctxRef = null;
     state.canvasContext2dReady = false;
@@ -1110,41 +1398,92 @@
         try {
           ctxRef = canvasRef.getContext("2d");
         } catch (error) {
-          recordError("HEARTH_CANVAS_CONTEXT_2D_BIND_FAILED", error, { reason });
+          recordError("HEARTH_CANVAS_CONTEXT_2D_BIND_FAILED", error, { reason, phase });
         }
       }
 
       state.canvasContext2dReady = Boolean(ctxRef);
     }
 
-    if (canvasRef && state.canonicalCanvasRectNonzero) {
-      resizeCanvasBackingStore(canvasRect);
+    if (canvasRef && snapshot.canvasRectNonzero) {
+      resizeCanvasBackingStore(snapshot.canvasRect);
     }
 
     deriveSurfaceFailureCoordinate();
 
-    state.mounted = Boolean(state.canonicalChainValid && state.canvasContext2dReady);
+    state.mounted = Boolean(snapshot.chainValid && state.canvasContext2dReady);
     state.firstFailedCoordinate = state.mounted ? "NONE" : state.firstSurfaceFailureCoordinate;
-    state.recommendedNextFile = state.mounted ? HEX_SURFACE_FILE : HTML_FILE;
-    state.recommendedNextAction = state.mounted
-      ? "DELIVER_ROUTE_CANVAS_TRANSACTION_PACKET_TO_HEX_SURFACE"
-      : "RESTORE_CANONICAL_CANVAS_DOM_CHAIN_RECT_AND_2D_CONTEXT";
-    state.postgameStatus = state.mounted
-      ? "CANVAS_CANONICAL_DOM_SURFACE_BOUND_AND_READY_FOR_ROUTE_TRANSACTION"
-      : "CANVAS_CANONICAL_DOM_SURFACE_NOT_READY";
+
+    if (state.mounted) {
+      state.recommendedNextFile = FILE;
+      state.recommendedNextAction = "DRAW_FIRST_VISIBLE_CARRIER_FRAME_THEN_DEFER_HEX_SURFACE_DELIVERY";
+      state.postgameStatus = "CANVAS_CANONICAL_DOM_SURFACE_BOUND_READY_FOR_VISIBLE_OUTPUT";
+    } else if (state.rec0ImmediateRectZeroObserved && !state.rec0SettledRectRecovered) {
+      state.recommendedNextFile = HTML_FILE;
+      state.recommendedNextAction = "WAIT_FOR_SETTLED_GEOMETRY_THEN_READ_PARENT_CHAIN_FACTS";
+      state.postgameStatus = "CANVAS_CANONICAL_DOM_SURFACE_PENDING_SETTLED_GEOMETRY";
+    } else {
+      state.recommendedNextFile = HTML_FILE;
+      state.recommendedNextAction = "RESTORE_CANONICAL_CANVAS_DOM_CHAIN_RECT_AND_2D_CONTEXT";
+      state.postgameStatus = "CANVAS_CANONICAL_DOM_SURFACE_NOT_READY";
+    }
 
     updateDataset();
     publishReceiptAliases();
 
     record("HEARTH_CANVAS_CANONICAL_DOM_BINDING_REFRESHED", {
       reason,
+      phase,
       canonicalChainValid: state.canonicalChainValid,
+      effectiveCanonicalChainValid: state.effectiveCanonicalChainValid,
       mounted: state.mounted,
       canvasContext2dReady: state.canvasContext2dReady,
-      firstFailedCoordinate: state.firstSurfaceFailureCoordinate
+      firstFailedCoordinate: state.firstSurfaceFailureCoordinate,
+      rec0Status: state.rec0Status,
+      parentChainStatus: state.parentChainStatus
     });
 
+    if (!snapshot.chainValid && options.scheduleSettled !== false) {
+      scheduleSettledGeometryProbe(`bind:${reason}`);
+    }
+
     return state.mounted;
+  }
+
+  function scheduleSettledGeometryProbe(reason = "settled-geometry") {
+    if (settledGeometryTimer) return false;
+
+    state.rec0SettledSampleScheduled = true;
+
+    const run = () => {
+      settledGeometryTimer = null;
+
+      bindCanonicalCanvas(reason, {
+        phase: "SETTLED",
+        scheduleSettled: false
+      });
+
+      if (state.canonicalChainValid && state.canvasContext2dReady && !state.firstPaintCompleted) {
+        drawVisibleFrame("settled-geometry-first-visible-output", {
+          deferHex: true
+        });
+      }
+
+      publishGlobals("settled-geometry-probe");
+    };
+
+    try {
+      const raf = root.requestAnimationFrame || ((fn) => setTimeout(fn, 16));
+      raf(() => {
+        raf(() => {
+          settledGeometryTimer = root.setTimeout ? root.setTimeout(run, 80) : setTimeout(run, 80);
+        });
+      });
+    } catch (_error) {
+      settledGeometryTimer = setTimeout(run, 160);
+    }
+
+    return true;
   }
 
   function deriveSurfaceFailureCoordinate() {
@@ -1230,7 +1569,10 @@
       if (resizeObserver && isFunction(resizeObserver.disconnect)) resizeObserver.disconnect();
 
       resizeObserver = new root.ResizeObserver(() => {
-        bindCanonicalCanvas("resize-observer");
+        bindCanonicalCanvas("resize-observer", {
+          phase: "SETTLED",
+          scheduleSettled: false
+        });
         scheduleDraw("resize-observer");
       });
 
@@ -1298,27 +1640,30 @@
     if (!isObject(packet)) return { accepted: false, reason: "PACKET_NOT_OBJECT" };
     if (hasForbiddenClaims(packet)) return { accepted: false, reason: "PACKET_CONTAINS_FORBIDDEN_FINAL_CLAIM" };
 
+    if (options.allowDirect === true) {
+      return { accepted: true, reason: "DIRECT_CANVAS_VIEW_OR_SURFACE_PACKET_ACCEPTED" };
+    }
+
     const summary = summarizePacket(packet);
     const sourceFile = safeString(summary.sourceFile);
     const sourceAuthority = safeString(summary.sourceAuthority);
     const packetType = safeString(summary.packetType);
     const contract = safeString(summary.contract);
+    const destinationFile = safeString(summary.destinationFile);
 
     const routeLike =
       sourceFile === ROUTE_CONDUCTOR_FILE ||
       sourceFile.endsWith("/showroom/globe/hearth/hearth.js") ||
       sourceAuthority.toUpperCase().includes("ROUTE") ||
       packetType.toUpperCase().includes("ROUTE") ||
-      packetType.toUpperCase().includes("CANVAS") ||
-      contract.includes("HEARTH_ROUTE_CONDUCTOR") ||
-      options.allowDirect === true;
+      contract.includes("HEARTH_ROUTE_CONDUCTOR");
 
     const canvasTargeted =
       packetType.toUpperCase().includes("CANVAS") ||
       safeString(packet.handoffTo || "").toUpperCase().includes("CANVAS") ||
-      safeString(packet.destinationFile || packet.targetFile || "").endsWith("/assets/hearth/hearth.canvas.js") ||
-      packet.canvasDeliveryAuthorized !== false ||
-      options.allowDirect === true;
+      destinationFile.endsWith("/assets/hearth/hearth.canvas.js") ||
+      destinationFile === FILE ||
+      packet.canvasDeliveryAuthorized === true;
 
     if (!routeLike) return { accepted: false, reason: "PACKET_SOURCE_NOT_ROUTE_CONDUCTOR_OR_CANVAS_TRANSACTION" };
     if (!canvasTargeted) return { accepted: false, reason: "PACKET_DOES_NOT_TARGET_CANVAS_RECEIVER" };
@@ -1354,7 +1699,12 @@
     state.lastRejectionReason = "";
 
     bindCanonicalCanvas(`receive-route:${method}`);
-    normalizeViewStateFromPacket(packet, method);
+
+    if (options.viewAlreadyApplied === true) {
+      state.duplicateViewApplicationPreventedCount += 1;
+    } else {
+      normalizeViewStateFromPacket(packet, method);
+    }
 
     const surfaceSamples = extractSurfaceSamples(packet);
     if (surfaceSamples.length) {
@@ -1364,26 +1714,32 @@
       state.activeSurfaceStatus = "ROUTE_PACKET_SURFACE_SAMPLES_AVAILABLE";
     }
 
-    const drawResult = drawVisibleFrame(`route-packet:${method}`);
+    const drawResult = drawVisibleFrame(`route-packet:${method}`, {
+      deferHex: true
+    });
+
     const hexPacket = composeCanvasHexGatePacket(packet, {
       receiver: method,
       drawResult,
       routePacketValidationReason: valid.reason
     });
-    const hexResult = deliverCanvasHexGatePacket(hexPacket);
 
-    state.postgameStatus = hexResult.returned
-      ? "CANVAS_ACCEPTED_ROUTE_PACKET_DREW_VISIBLE_OUTPUT_AND_HEX_SURFACE_RETURNED"
-      : "CANVAS_ACCEPTED_ROUTE_PACKET_DREW_VISIBLE_OUTPUT_HEX_SURFACE_WAITING_OR_NOT_OBSERVED";
+    const hexResult = scheduleDeferredHexDelivery(hexPacket, `route-packet:${method}`);
+
+    state.postgameStatus = state.firstPaintCompleted
+      ? "CANVAS_ACCEPTED_ROUTE_PACKET_DREW_VISIBLE_OUTPUT_HEX_DELIVERY_DEFERRED"
+      : "CANVAS_ACCEPTED_ROUTE_PACKET_WAITING_VISIBLE_OUTPUT";
 
     record("HEARTH_CANVAS_ROUTE_PACKET_ACCEPTED", {
       method,
       routePacketType: state.lastReceivedPacketType,
       canonicalChainValid: state.canonicalChainValid,
+      effectiveCanonicalChainValid: state.effectiveCanonicalChainValid,
       drawStatus: drawResult.status,
       hexSurfaceObserved: state.hexSurfaceObserved,
       hexSurfaceMethod: state.hexSurfaceMethod,
-      hexDeliveryStatus: hexResult.status
+      hexDeliveryStatus: hexResult.status,
+      viewAlreadyApplied: options.viewAlreadyApplied === true
     });
 
     publishReceiptAliases();
@@ -1437,7 +1793,9 @@
     current.zoom = clamp(zoom, current.minZoom, current.maxZoom);
     current.phase = safeNumber(source.phase, current.phase);
 
-    record("HEARTH_CANVAS_VIEW_STATE_UPDATED", {
+    state.viewPacketAppliedCount += 1;
+
+    record("HEARTH_CANVAS_VIEW_STATE_UPDATED_ONCE", {
       method,
       yaw: current.yaw,
       pitch: current.pitch,
@@ -1448,6 +1806,55 @@
     });
 
     return clonePlain(current);
+  }
+
+  function receiveViewControlCore(packet, method, options = {}) {
+    state.viewPacketReceivedCount += 1;
+    state.lastReceivedMethod = method;
+    state.lastReceivedAt = nowIso();
+    state.lastReceivedPacketType = firstKnown(packet && packet.packetType, packet && packet.type, VIEW_CONTROL_PACKET);
+    state.lastViewControlPacketSummary = summarizePacket(packet);
+
+    if (hasForbiddenClaims(packet || {})) {
+      state.routePacketRejectedCount += 1;
+      state.lastRejectionReason = "VIEW_CONTROL_PACKET_CONTAINS_FORBIDDEN_FINAL_CLAIM";
+      publishReceiptAliases();
+      updateDataset();
+      return getReceiptLight(false);
+    }
+
+    normalizeViewStateFromPacket(packet || {}, method);
+    bindCanonicalCanvas(`view-control:${method}`);
+
+    const drawResult = drawVisibleFrame(`view-control:${method}`, {
+      deferHex: true
+    });
+
+    const hexPacket = composeCanvasHexGatePacket(packet || {}, {
+      receiver: method,
+      drawResult,
+      routePacketValidationReason: "VIEW_CONTROL_SINGLE_APPLICATION_ACCEPTED"
+    });
+
+    const hexResult = options.deferHex === false
+      ? deliverCanvasHexGatePacket(hexPacket)
+      : scheduleDeferredHexDelivery(hexPacket, `view-control:${method}`);
+
+    publishReceiptAliases();
+    updateDataset();
+
+    return {
+      ...getReceiptLight(false),
+      accepted: true,
+      packetType: VIEW_CONTROL_PACKET,
+      receiver: method,
+      viewAppliedExactlyOnce: true,
+      duplicateViewApplicationPrevented: true,
+      drawResult,
+      hexSurfaceDelivery: clonePlain(hexResult),
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
   }
 
   function composeCanvasHexGatePacket(routePacket = {}, options = {}) {
@@ -1467,7 +1874,7 @@
 
       sourceFile: FILE,
       sourceAuthority: "HEARTH_CANVAS_HUB",
-      sourceRole: "canvas-hub-live-surface-identity-visible-2d-output-carrier",
+      sourceRole: "canvas-hub-rec0-settled-geometry-single-view-application-visible-2d-output-carrier",
       destinationFile: HEX_SURFACE_FILE,
       handoffTo: "HEARTH_HEX_SURFACE",
 
@@ -1497,6 +1904,12 @@
       constructPermissionGrantedByCanvas: state.canonicalChainValid && state.canvasContext2dReady,
       motionPermissionGranted: false,
 
+      rec0ProbeActive: true,
+      rec0Status: state.rec0Status,
+      rec0ImmediateRectZeroObserved: state.rec0ImmediateRectZeroObserved,
+      rec0SettledRectRecovered: state.rec0SettledRectRecovered,
+      rec0EffectiveGeometrySource: state.rec0EffectiveGeometrySource,
+
       canonicalMountSelector: CANONICAL_MOUNT_SELECTOR,
       canonicalFrameSelector: CANONICAL_FRAME_SELECTOR,
       canonicalCanvasSelector: CANONICAL_CANVAS_SELECTOR,
@@ -1510,6 +1923,7 @@
       canonicalFrameRectNonzero: state.canonicalFrameRectNonzero,
       canonicalCanvasRectNonzero: state.canonicalCanvasRectNonzero,
       canonicalChainValid: state.canonicalChainValid,
+      effectiveCanonicalChainValid: state.effectiveCanonicalChainValid,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasWidth: state.canvasWidth,
       canvasHeight: state.canvasHeight,
@@ -1530,6 +1944,8 @@
       controlsRenewedHere: false,
       controlsLoadedHere: false,
       controlHandshakeStatus: state.controlHandshakeStatus,
+      viewControlSingleApplication: true,
+      duplicateViewApplicationPreventedCount: state.duplicateViewApplicationPreventedCount,
 
       hexAuthorityObserved: state.hexAuthorityObserved,
       hexAuthoritySource: state.hexAuthoritySource,
@@ -1662,6 +2078,50 @@
     };
   }
 
+  function scheduleDeferredHexDelivery(packet, reason = "deferred-hex") {
+    state.hexGateDeliveryDeferredCount += 1;
+    state.lastDeferredHexGatePacket = clonePlain(packet || null);
+
+    if (deferredHexTimer) {
+      return {
+        returned: false,
+        deferred: true,
+        status: "HEX_SURFACE_DELIVERY_ALREADY_DEFERRED",
+        reason,
+        attemptedAt: nowIso()
+      };
+    }
+
+    const run = () => {
+      deferredHexTimer = null;
+      if (!state.lastDeferredHexGatePacket) return;
+
+      if (!state.firstPaintCompleted) {
+        scheduleDeferredHexDelivery(state.lastDeferredHexGatePacket, "waiting-first-paint-before-hex");
+        return;
+      }
+
+      deliverCanvasHexGatePacket(state.lastDeferredHexGatePacket);
+    };
+
+    try {
+      const raf = root.requestAnimationFrame || ((fn) => setTimeout(fn, 16));
+      raf(() => {
+        deferredHexTimer = root.setTimeout ? root.setTimeout(run, 24) : setTimeout(run, 24);
+      });
+    } catch (_error) {
+      deferredHexTimer = setTimeout(run, 48);
+    }
+
+    return {
+      returned: false,
+      deferred: true,
+      status: "HEX_SURFACE_DELIVERY_DEFERRED_UNTIL_AFTER_FIRST_VISIBLE_CANVAS_OUTPUT",
+      reason,
+      attemptedAt: nowIso()
+    };
+  }
+
   function deliverCanvasHexGatePacket(packet) {
     refreshAuthoritySnapshots();
 
@@ -1687,6 +2147,8 @@
       state.recommendedNextAction = "ENSURE_HEX_SURFACE_IS_LOADED_BY_EXISTING_ROUTE_CHAIN";
       state.postgameStatus = "CANVAS_HEX_GATE_PACKET_PUBLISHED_WAITING_HEX_SURFACE";
       publishTransmissionPacketGlobals(packet);
+      publishReceiptAliases();
+      updateDataset();
 
       return result;
     }
@@ -1809,12 +2271,14 @@
     });
 
     bindCanonicalCanvas(`surface-return:${method}`);
-    const drawResult = drawVisibleFrame(`surface-return:${method}`);
+    const drawResult = drawVisibleFrame(`surface-return:${method}`, {
+      deferHex: options.deferHex !== false
+    });
 
     state.recommendedNextFile = state.canonicalChainValid ? HEX_SURFACE_FILE : HTML_FILE;
     state.recommendedNextAction = state.canonicalChainValid
       ? "CONTINUE_ROUTE_TO_CANVAS_TO_HEX_SURFACE_TO_POINTER_SURFACE_TRANSACTION"
-      : "RESTORE_CANONICAL_CANVAS_DOM_SURFACE";
+      : "WAIT_FOR_SETTLED_GEOMETRY_OR_RESTORE_CANONICAL_CANVAS_DOM_SURFACE";
     state.postgameStatus = "CANVAS_RECEIVED_POINTER_SURFACE_RETURN_AND_DREW_VISIBLE_2D_OUTPUT";
 
     record("HEARTH_CANVAS_POINTER_SURFACE_RETURN_ACCEPTED", {
@@ -1969,24 +2433,34 @@
 
     raf(() => {
       drawScheduled = false;
-      drawVisibleFrame(reason);
+      drawVisibleFrame(reason, { deferHex: true });
     });
 
     return true;
   }
 
-  function drawVisibleFrame(reason = "draw") {
-    bindCanonicalCanvas(`draw:${reason}`);
+  function drawVisibleFrame(reason = "draw", options = {}) {
+    bindCanonicalCanvas(`draw:${reason}`, {
+      phase: options.phase || "IMMEDIATE",
+      scheduleSettled: options.scheduleSettled !== false
+    });
+
+    state.firstPaintAttempted = true;
 
     if (!state.canonicalChainValid || !ctxRef || !canvasRef) {
       state.lastDrawReason = `DRAW_SKIPPED:${state.firstSurfaceFailureCoordinate}`;
       state.canvasPixelVisible = false;
       state.canvasPixelSampleStatus = "DRAW_SKIPPED_CANONICAL_SURFACE_NOT_READY";
+      state.firstPaintStatus = state.firstPaintCompleted
+        ? state.firstPaintStatus
+        : "FIRST_PAINT_WAITING_FOR_CANONICAL_SURFACE";
 
       return {
         ok: false,
         status: "DRAW_SKIPPED_CANONICAL_SURFACE_NOT_READY",
         reason: state.firstSurfaceFailureCoordinate,
+        rec0Status: state.rec0Status,
+        parentChainStatus: state.parentChainStatus,
         canvasPixelVisible: false
       };
     }
@@ -2019,6 +2493,13 @@
       state.canvasPixelUniqueColorCount = pixel.uniqueColorCount;
       state.canvasVisiblePixelCount = pixel.visiblePixelCount;
 
+      if (state.canvasPixelVisible && !state.firstPaintCompleted) {
+        state.firstPaintCompleted = true;
+        state.firstPaintAt = nowIso();
+        state.firstPaintStatus = "FIRST_VISIBLE_CANVAS_OUTPUT_DRAWN";
+        state.firstPaintDrawCount += 1;
+      }
+
       publishReceiptAliases();
       updateDataset();
 
@@ -2029,6 +2510,7 @@
         canvasPixelVisible: state.canvasPixelVisible,
         canvasPixelSampleStatus: state.canvasPixelSampleStatus,
         drawCount: state.drawCount,
+        firstPaintCompleted: state.firstPaintCompleted,
         sampleCount: state.activeSurfaceSampleCount,
         ...NO_CLAIMS
       };
@@ -2400,39 +2882,19 @@
   }
 
   function receivePlanetaryViewControlPacket(packet, options = {}) {
-    state.viewPacketReceivedCount += 1;
-    normalizeViewStateFromPacket(packet || {}, "receivePlanetaryViewControlPacket");
-    return receiveRoutePacket(packet || {}, "receivePlanetaryViewControlPacket", {
-      ...options,
-      allowDirect: true
-    });
+    return receiveViewControlCore(packet || {}, "receivePlanetaryViewControlPacket", options);
   }
 
   function consumePlanetaryViewControlPacket(packet, options = {}) {
-    state.viewPacketReceivedCount += 1;
-    normalizeViewStateFromPacket(packet || {}, "consumePlanetaryViewControlPacket");
-    return receiveRoutePacket(packet || {}, "consumePlanetaryViewControlPacket", {
-      ...options,
-      allowDirect: true
-    });
+    return receiveViewControlCore(packet || {}, "consumePlanetaryViewControlPacket", options);
   }
 
   function receiveViewControlPacket(packet, options = {}) {
-    state.viewPacketReceivedCount += 1;
-    normalizeViewStateFromPacket(packet || {}, "receiveViewControlPacket");
-    return receiveRoutePacket(packet || {}, "receiveViewControlPacket", {
-      ...options,
-      allowDirect: true
-    });
+    return receiveViewControlCore(packet || {}, "receiveViewControlPacket", options);
   }
 
   function consumeViewControlPacket(packet, options = {}) {
-    state.viewPacketReceivedCount += 1;
-    normalizeViewStateFromPacket(packet || {}, "consumeViewControlPacket");
-    return receiveRoutePacket(packet || {}, "consumeViewControlPacket", {
-      ...options,
-      allowDirect: true
-    });
+    return receiveViewControlCore(packet || {}, "consumeViewControlPacket", options);
   }
 
   function receivePointerSurfaceExpressionPacket(packet, options = {}) {
@@ -2476,6 +2938,16 @@
       return receiveSurfaceReturnPacket(packet, "receive", options);
     }
 
+    if (isObject(packet) && (
+      packet.deltaYaw !== undefined ||
+      packet.deltaPitch !== undefined ||
+      packet.deltaZoom !== undefined ||
+      packet.rawWheelY !== undefined ||
+      isObject(packet.viewState)
+    )) {
+      return receiveViewControlCore(packet, "receive", options);
+    }
+
     return receiveRoutePacket(packet || {}, "receive", {
       ...options,
       allowDirect: true
@@ -2516,7 +2988,9 @@
       EXPECTED_POINTER_SURFACE_CONTRACT,
       EXPECTED_POINTER_INSPECT_CONTRACT,
 
-      CANVAS_HUB_LIVE_SURFACE_IDENTITY_ACTIVE: "true",
+      CANVAS_HUB_REC0_SETTLED_GEOMETRY_ACTIVE: "true",
+      CANVAS_VIEW_CONTROL_SINGLE_APPLICATION_ACTIVE: "true",
+      CANVAS_HEX_DELIVERY_DEFERRED_UNTIL_FIRST_PAINT: "true",
       CANVAS_USES_CANONICAL_DOM_ONLY: "true",
       CANVAS_CREATES_DOM: "false",
       CANVAS_OWNS_VISIBLE_2D_OUTPUT: "true",
@@ -2530,6 +3004,15 @@
       CANVAS_OWNS_POINTER_SURFACE: "false",
       CANVAS_OWNS_POINTER_INSPECT: "false",
 
+      REC0_PROBE_ACTIVE: String(state.rec0ProbeActive),
+      REC0_STATUS: state.rec0Status,
+      REC0_IMMEDIATE_RECT_ZERO_OBSERVED: String(state.rec0ImmediateRectZeroObserved),
+      REC0_SETTLED_RECT_RECOVERED: String(state.rec0SettledRectRecovered),
+      REC0_EFFECTIVE_GEOMETRY_SOURCE: state.rec0EffectiveGeometrySource,
+      REC0_FIRST_ZERO_COORDINATE: state.rec0FirstZeroCoordinate,
+      REC0_SETTLED_SAMPLE_SCHEDULED: String(state.rec0SettledSampleScheduled),
+      REC0_SETTLED_SAMPLE_COUNT: String(state.rec0SettledSampleCount),
+
       CANONICAL_MOUNT_SELECTOR,
       CANONICAL_FRAME_SELECTOR,
       CANONICAL_CANVAS_SELECTOR,
@@ -2539,6 +3022,22 @@
       CANONICAL_CANVAS_FOUND: String(state.canonicalCanvasFound),
       CANONICAL_CANVAS_IN_MOUNT: String(state.canonicalCanvasInMount),
       CANONICAL_CANVAS_IN_FRAME: String(state.canonicalCanvasInFrame),
+
+      IMMEDIATE_CANONICAL_MOUNT_RECT_NONZERO: String(state.immediateCanonicalMountRectNonzero),
+      IMMEDIATE_CANONICAL_FRAME_RECT_NONZERO: String(state.immediateCanonicalFrameRectNonzero),
+      IMMEDIATE_CANONICAL_CANVAS_RECT_NONZERO: String(state.immediateCanonicalCanvasRectNonzero),
+      IMMEDIATE_CANONICAL_CHAIN_VALID: String(state.immediateCanonicalChainValid),
+
+      SETTLED_CANONICAL_MOUNT_RECT_NONZERO: String(state.settledCanonicalMountRectNonzero),
+      SETTLED_CANONICAL_FRAME_RECT_NONZERO: String(state.settledCanonicalFrameRectNonzero),
+      SETTLED_CANONICAL_CANVAS_RECT_NONZERO: String(state.settledCanonicalCanvasRectNonzero),
+      SETTLED_CANONICAL_CHAIN_VALID: String(state.settledCanonicalChainValid),
+
+      EFFECTIVE_CANONICAL_MOUNT_RECT_NONZERO: String(state.effectiveCanonicalMountRectNonzero),
+      EFFECTIVE_CANONICAL_FRAME_RECT_NONZERO: String(state.effectiveCanonicalFrameRectNonzero),
+      EFFECTIVE_CANONICAL_CANVAS_RECT_NONZERO: String(state.effectiveCanonicalCanvasRectNonzero),
+      EFFECTIVE_CANONICAL_CHAIN_VALID: String(state.effectiveCanonicalChainValid),
+
       CANONICAL_MOUNT_RECT_NONZERO: String(state.canonicalMountRectNonzero),
       CANONICAL_FRAME_RECT_NONZERO: String(state.canonicalFrameRectNonzero),
       CANONICAL_CANVAS_RECT_NONZERO: String(state.canonicalCanvasRectNonzero),
@@ -2555,12 +3054,22 @@
       CANVAS_PIXEL_UNIQUE_COLOR_COUNT: String(state.canvasPixelUniqueColorCount),
       CANVAS_VISIBLE_PIXEL_COUNT: String(state.canvasVisiblePixelCount),
 
+      PARENT_CHAIN_STATUS: state.parentChainStatus,
+      FIRST_COLLAPSED_PARENT_DESCRIPTOR: state.firstCollapsedParentDescriptor,
+      FIRST_COLLAPSED_PARENT_DEPTH: String(state.firstCollapsedParentDepth),
+      FIRST_COLLAPSED_PARENT_MISSING_FACT: state.firstCollapsedParentMissingFact,
+
+      FIRST_PAINT_ATTEMPTED: String(state.firstPaintAttempted),
+      FIRST_PAINT_COMPLETED: String(state.firstPaintCompleted),
+      FIRST_PAINT_STATUS: state.firstPaintStatus,
+      FIRST_PAINT_AT: state.firstPaintAt || "NONE",
+
       ROUTE_CONDUCTOR_OBSERVED: String(state.routeConductorObserved),
       ROUTE_CONDUCTOR_SOURCE: state.routeConductorSource,
       ROUTE_CONDUCTOR_CONTRACT: state.routeConductorContract,
       ROUTE_CONDUCTOR_RECOGNIZED: String(state.routeConductorRecognized),
 
-      CONTROL_FILE_STATUS: state.controlsObserved ? "OBSERVED_NOT_RENEWED_BY_CANVAS" : "EXPECTED_NOT_YET_BUILT_OR_NOT_LOADED",
+      CONTROL_FILE_STATUS: state.controlsObserved ? "OBSERVED_INDEPENDENT_NOT_RENEWED_BY_CANVAS" : "NOT_OBSERVED_BY_CANVAS",
       CONTROL_GLOBAL_PRESENT: String(state.controlsObserved),
       CONTROL_CONTRACT: state.controlsContract,
       CONTROL_CONTRACT_RECOGNIZED: String(state.controlsRecognized),
@@ -2568,6 +3077,10 @@
       MOTION_TOUCH_STATUS: state.motionTouchStatus,
       DRAG_STATUS: state.dragStatus,
       VIEW_CONTROL_STATUS: state.viewControlStatus,
+
+      VIEW_PACKET_RECEIVED_COUNT: String(state.viewPacketReceivedCount),
+      VIEW_PACKET_APPLIED_COUNT: String(state.viewPacketAppliedCount),
+      DUPLICATE_VIEW_APPLICATION_PREVENTED_COUNT: String(state.duplicateViewApplicationPreventedCount),
 
       HEX_AUTHORITY_OBSERVED: String(state.hexAuthorityObserved),
       HEX_AUTHORITY_SOURCE: state.hexAuthoritySource,
@@ -2596,15 +3109,16 @@
       ROUTE_PACKET_RECEIVED_COUNT: String(state.routePacketReceivedCount),
       ROUTE_PACKET_ACCEPTED_COUNT: String(state.routePacketAcceptedCount),
       ROUTE_PACKET_REJECTED_COUNT: String(state.routePacketRejectedCount),
-      VIEW_PACKET_RECEIVED_COUNT: String(state.viewPacketReceivedCount),
       HEX_GATE_PACKET_COMPOSED_COUNT: String(state.hexGatePacketComposedCount),
       HEX_GATE_DELIVERY_ATTEMPT_COUNT: String(state.hexGateDeliveryAttemptCount),
+      HEX_GATE_DELIVERY_DEFERRED_COUNT: String(state.hexGateDeliveryDeferredCount),
       HEX_GATE_DELIVERY_RETURN_COUNT: String(state.hexGateDeliveryReturnCount),
       HEX_GATE_DELIVERY_ERROR_COUNT: String(state.hexGateDeliveryErrorCount),
       SURFACE_RETURN_PACKET_RECEIVED_COUNT: String(state.surfaceReturnPacketReceivedCount),
       SURFACE_RETURN_ACCEPTED_COUNT: String(state.surfaceReturnAcceptedCount),
       SURFACE_RETURN_REJECTED_COUNT: String(state.surfaceReturnRejectedCount),
       DRAW_COUNT: String(state.drawCount),
+      FIRST_PAINT_DRAW_COUNT: String(state.firstPaintDrawCount),
       RESIZE_COUNT: String(state.resizeCount),
 
       LAST_RECEIVED_METHOD: state.lastReceivedMethod,
@@ -2639,12 +3153,12 @@
   }
 
   function getReceiptLight(refreshFirst = false) {
-    if (refreshFirst) refresh();
+    if (refreshFirst) refresh({ draw: false });
 
     const diagnosticFields = composeDiagnosticFields();
 
     return {
-      packetType: "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT_PACKET_v12_4",
+      packetType: "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_RECEIPT_PACKET_v12_4_1",
       contract: CONTRACT,
       CONTRACT,
       receipt: RECEIPT,
@@ -2673,12 +3187,21 @@
       pointerBoundaryFile: POINTER_BOUNDARY_FILE,
       pointerLightFile: POINTER_LIGHT_FILE,
 
-      role: "canvas-hub-live-surface-identity-visible-2d-output-carrier",
+      role: "canvas-hub-rec0-settled-geometry-single-view-application-visible-2d-output-carrier",
 
       loaded: true,
       booted: state.booted,
       mounted: state.mounted,
       disposed: state.disposed,
+
+      rec0ProbeActive: state.rec0ProbeActive,
+      rec0Status: state.rec0Status,
+      rec0ImmediateRectZeroObserved: state.rec0ImmediateRectZeroObserved,
+      rec0SettledRectRecovered: state.rec0SettledRectRecovered,
+      rec0EffectiveGeometrySource: state.rec0EffectiveGeometrySource,
+      rec0FirstZeroCoordinate: state.rec0FirstZeroCoordinate,
+      rec0SettledSampleScheduled: state.rec0SettledSampleScheduled,
+      rec0SettledSampleCount: state.rec0SettledSampleCount,
 
       canvasCreatesDom: false,
       canvasUsesCanonicalDomOnly: true,
@@ -2702,6 +3225,22 @@
       canonicalCanvasFound: state.canonicalCanvasFound,
       canonicalCanvasInMount: state.canonicalCanvasInMount,
       canonicalCanvasInFrame: state.canonicalCanvasInFrame,
+
+      immediateCanonicalMountRectNonzero: state.immediateCanonicalMountRectNonzero,
+      immediateCanonicalFrameRectNonzero: state.immediateCanonicalFrameRectNonzero,
+      immediateCanonicalCanvasRectNonzero: state.immediateCanonicalCanvasRectNonzero,
+      immediateCanonicalChainValid: state.immediateCanonicalChainValid,
+
+      settledCanonicalMountRectNonzero: state.settledCanonicalMountRectNonzero,
+      settledCanonicalFrameRectNonzero: state.settledCanonicalFrameRectNonzero,
+      settledCanonicalCanvasRectNonzero: state.settledCanonicalCanvasRectNonzero,
+      settledCanonicalChainValid: state.settledCanonicalChainValid,
+
+      effectiveCanonicalMountRectNonzero: state.effectiveCanonicalMountRectNonzero,
+      effectiveCanonicalFrameRectNonzero: state.effectiveCanonicalFrameRectNonzero,
+      effectiveCanonicalCanvasRectNonzero: state.effectiveCanonicalCanvasRectNonzero,
+      effectiveCanonicalChainValid: state.effectiveCanonicalChainValid,
+
       canonicalMountRectNonzero: state.canonicalMountRectNonzero,
       canonicalFrameRectNonzero: state.canonicalFrameRectNonzero,
       canonicalCanvasRectNonzero: state.canonicalCanvasRectNonzero,
@@ -2718,6 +3257,16 @@
       canvasPixelUniqueColorCount: state.canvasPixelUniqueColorCount,
       canvasVisiblePixelCount: state.canvasVisiblePixelCount,
 
+      parentChainStatus: state.parentChainStatus,
+      firstCollapsedParentDescriptor: state.firstCollapsedParentDescriptor,
+      firstCollapsedParentDepth: state.firstCollapsedParentDepth,
+      firstCollapsedParentMissingFact: state.firstCollapsedParentMissingFact,
+
+      firstPaintAttempted: state.firstPaintAttempted,
+      firstPaintCompleted: state.firstPaintCompleted,
+      firstPaintStatus: state.firstPaintStatus,
+      firstPaintAt: state.firstPaintAt || "NONE",
+
       routeConductorObserved: state.routeConductorObserved,
       routeConductorSource: state.routeConductorSource,
       routeConductorContract: state.routeConductorContract,
@@ -2733,6 +3282,10 @@
       motionTouchStatus: state.motionTouchStatus,
       dragStatus: state.dragStatus,
       viewControlStatus: state.viewControlStatus,
+
+      viewPacketReceivedCount: state.viewPacketReceivedCount,
+      viewPacketAppliedCount: state.viewPacketAppliedCount,
+      duplicateViewApplicationPreventedCount: state.duplicateViewApplicationPreventedCount,
 
       hexAuthorityObserved: state.hexAuthorityObserved,
       hexAuthoritySource: state.hexAuthoritySource,
@@ -2766,15 +3319,16 @@
       routePacketReceivedCount: state.routePacketReceivedCount,
       routePacketAcceptedCount: state.routePacketAcceptedCount,
       routePacketRejectedCount: state.routePacketRejectedCount,
-      viewPacketReceivedCount: state.viewPacketReceivedCount,
       hexGatePacketComposedCount: state.hexGatePacketComposedCount,
       hexGateDeliveryAttemptCount: state.hexGateDeliveryAttemptCount,
+      hexGateDeliveryDeferredCount: state.hexGateDeliveryDeferredCount,
       hexGateDeliveryReturnCount: state.hexGateDeliveryReturnCount,
       hexGateDeliveryErrorCount: state.hexGateDeliveryErrorCount,
       surfaceReturnPacketReceivedCount: state.surfaceReturnPacketReceivedCount,
       surfaceReturnAcceptedCount: state.surfaceReturnAcceptedCount,
       surfaceReturnRejectedCount: state.surfaceReturnRejectedCount,
       drawCount: state.drawCount,
+      firstPaintDrawCount: state.firstPaintDrawCount,
       resizeCount: state.resizeCount,
 
       lastReceivedMethod: state.lastReceivedMethod,
@@ -2805,6 +3359,9 @@
       supportsCanvasHandoffPacket: true,
       supportsPresentationPacket: true,
       supportsPlanetaryViewControlPacket: true,
+      supportsSingleViewApplication: true,
+      supportsRec0ImmediateSettledGeometryDisambiguation: true,
+      supportsDeferredHexDeliveryAfterFirstPaint: true,
       supportsPointerSurfaceReturnPacket: true,
       supportsCanvasHexGatePacketComposition: true,
       supportsHexSurfacePublicDelivery: true,
@@ -2841,10 +3398,12 @@
         ...state,
         lastAcceptedRoutePacket: undefined,
         lastCanvasHexGatePacket: state.lastCanvasHexGatePacket ? summarizePacket(state.lastCanvasHexGatePacket) : null,
+        lastDeferredHexGatePacket: state.lastDeferredHexGatePacket ? summarizePacket(state.lastDeferredHexGatePacket) : null,
         lastSurfaceReturnPacket: state.lastSurfaceReturnPacket ? summarizePacket(state.lastSurfaceReturnPacket) : null
       }),
       events: clonePlain(state.events),
       errors: clonePlain(state.errors),
+      parentChain: clonePlain(state.parentChain),
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
     };
@@ -2854,7 +3413,7 @@
     const r = isObject(receipt) ? receipt : getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT",
+      "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_RECEIPT",
       "",
       "HEADER",
       line("contract", CONTRACT),
@@ -2865,6 +3424,16 @@
       line("file", FILE),
       line("targetRoute", TARGET_ROUTE),
       "",
+      "REC0",
+      line("rec0ProbeActive", r.rec0ProbeActive),
+      line("rec0Status", r.rec0Status),
+      line("rec0ImmediateRectZeroObserved", r.rec0ImmediateRectZeroObserved),
+      line("rec0SettledRectRecovered", r.rec0SettledRectRecovered),
+      line("rec0EffectiveGeometrySource", r.rec0EffectiveGeometrySource),
+      line("rec0FirstZeroCoordinate", r.rec0FirstZeroCoordinate),
+      line("parentChainStatus", r.parentChainStatus),
+      line("firstCollapsedParentDescriptor", r.firstCollapsedParentDescriptor),
+      "",
       "DOM",
       line("canonicalMountFound", r.canonicalMountFound),
       line("canonicalMountRectNonzero", r.canonicalMountRectNonzero),
@@ -2873,16 +3442,28 @@
       line("canonicalCanvasFound", r.canonicalCanvasFound),
       line("canonicalCanvasRectNonzero", r.canonicalCanvasRectNonzero),
       line("canonicalChainValid", r.canonicalChainValid),
+      line("settledCanonicalChainValid", r.settledCanonicalChainValid),
+      line("effectiveCanonicalChainValid", r.effectiveCanonicalChainValid),
       line("canvasContext2dReady", r.canvasContext2dReady),
       line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
       line("canvasPixelVisible", r.canvasPixelVisible),
+      "",
+      "FIRST_PAINT",
+      line("firstPaintAttempted", r.firstPaintAttempted),
+      line("firstPaintCompleted", r.firstPaintCompleted),
+      line("firstPaintStatus", r.firstPaintStatus),
+      line("firstPaintAt", r.firstPaintAt),
       "",
       "TRANSACTION",
       line("receiverMethodCount", r.receiverMethodCount),
       line("routePacketReceivedCount", r.routePacketReceivedCount),
       line("routePacketAcceptedCount", r.routePacketAcceptedCount),
+      line("viewPacketReceivedCount", r.viewPacketReceivedCount),
+      line("viewPacketAppliedCount", r.viewPacketAppliedCount),
+      line("duplicateViewApplicationPreventedCount", r.duplicateViewApplicationPreventedCount),
       line("hexGatePacketComposedCount", r.hexGatePacketComposedCount),
       line("hexGateDeliveryAttemptCount", r.hexGateDeliveryAttemptCount),
+      line("hexGateDeliveryDeferredCount", r.hexGateDeliveryDeferredCount),
       line("hexGateDeliveryReturnCount", r.hexGateDeliveryReturnCount),
       line("surfaceReturnPacketReceivedCount", r.surfaceReturnPacketReceivedCount),
       line("surfaceReturnAcceptedCount", r.surfaceReturnAcceptedCount),
@@ -2934,15 +3515,23 @@
     const r = getReceiptLight(false);
 
     return [
-      "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_STATUS",
+      "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_STATUS",
       line("contract", r.contract),
       line("internalRenewalContract", r.internalRenewalContract),
       line("mounted", r.mounted),
+      line("rec0Status", r.rec0Status),
       line("canonicalChainValid", r.canonicalChainValid),
+      line("settledCanonicalChainValid", r.settledCanonicalChainValid),
+      line("effectiveCanonicalChainValid", r.effectiveCanonicalChainValid),
       line("canvasContext2dReady", r.canvasContext2dReady),
       line("canvasPixelSampleStatus", r.canvasPixelSampleStatus),
       line("canvasPixelVisible", r.canvasPixelVisible),
+      line("firstPaintCompleted", r.firstPaintCompleted),
+      line("viewPacketReceivedCount", r.viewPacketReceivedCount),
+      line("viewPacketAppliedCount", r.viewPacketAppliedCount),
+      line("duplicateViewApplicationPreventedCount", r.duplicateViewApplicationPreventedCount),
       line("routePacketAcceptedCount", r.routePacketAcceptedCount),
+      line("hexGateDeliveryDeferredCount", r.hexGateDeliveryDeferredCount),
       line("hexGateDeliveryReturnCount", r.hexGateDeliveryReturnCount),
       line("surfaceReturnAcceptedCount", r.surfaceReturnAcceptedCount),
       line("hexSurfaceObserved", r.hexSurfaceObserved),
@@ -2975,6 +3564,13 @@
     setDataset("hearthCanvasCanonicalCanvasSelector", CANONICAL_CANVAS_SELECTOR);
     setDataset("hearthCanvasCanonicalChainSelector", CANONICAL_CHAIN_SELECTOR);
 
+    setDataset("hearthCanvasRec0ProbeActive", String(state.rec0ProbeActive));
+    setDataset("hearthCanvasRec0Status", state.rec0Status);
+    setDataset("hearthCanvasRec0ImmediateRectZeroObserved", String(state.rec0ImmediateRectZeroObserved));
+    setDataset("hearthCanvasRec0SettledRectRecovered", String(state.rec0SettledRectRecovered));
+    setDataset("hearthCanvasRec0EffectiveGeometrySource", state.rec0EffectiveGeometrySource);
+    setDataset("hearthCanvasRec0FirstZeroCoordinate", state.rec0FirstZeroCoordinate);
+
     setDataset("hearthCanvasCanonicalMountFound", String(state.canonicalMountFound));
     setDataset("hearthCanvasCanonicalFrameFound", String(state.canonicalFrameFound));
     setDataset("hearthCanvasCanonicalCanvasFound", String(state.canonicalCanvasFound));
@@ -2982,12 +3578,21 @@
     setDataset("hearthCanvasCanonicalFrameRectNonzero", String(state.canonicalFrameRectNonzero));
     setDataset("hearthCanvasCanonicalCanvasRectNonzero", String(state.canonicalCanvasRectNonzero));
     setDataset("hearthCanvasCanonicalChainValid", String(state.canonicalChainValid));
+    setDataset("hearthCanvasSettledCanonicalChainValid", String(state.settledCanonicalChainValid));
+    setDataset("hearthCanvasEffectiveCanonicalChainValid", String(state.effectiveCanonicalChainValid));
     setDataset("hearthCanvasContext2dReady", String(state.canvasContext2dReady));
     setDataset("hearthCanvasPixelVisible", String(state.canvasPixelVisible));
     setDataset("hearthCanvasPixelSampleStatus", state.canvasPixelSampleStatus);
 
+    setDataset("hearthCanvasFirstPaintCompleted", String(state.firstPaintCompleted));
+    setDataset("hearthCanvasFirstPaintStatus", state.firstPaintStatus);
+    setDataset("hearthCanvasViewPacketReceivedCount", String(state.viewPacketReceivedCount));
+    setDataset("hearthCanvasViewPacketAppliedCount", String(state.viewPacketAppliedCount));
+    setDataset("hearthCanvasDuplicateViewApplicationPreventedCount", String(state.duplicateViewApplicationPreventedCount));
+
     setDataset("hearthCanvasRoutePacketAcceptedCount", String(state.routePacketAcceptedCount));
     setDataset("hearthCanvasHexGatePacketComposedCount", String(state.hexGatePacketComposedCount));
+    setDataset("hearthCanvasHexGateDeliveryDeferredCount", String(state.hexGateDeliveryDeferredCount));
     setDataset("hearthCanvasHexGateDeliveryReturnCount", String(state.hexGateDeliveryReturnCount));
     setDataset("hearthCanvasSurfaceReturnAcceptedCount", String(state.surfaceReturnAcceptedCount));
     setDataset("hearthCanvasDrawCount", String(state.drawCount));
@@ -3001,6 +3606,10 @@
     setDataset("hearthCanvasHexSurfaceMethod", state.hexSurfaceMethod);
     setDataset("hearthCanvasPointerSurfaceObserved", String(state.pointerSurfaceObserved));
     setDataset("hearthCanvasPointerInspectObserved", String(state.pointerInspectObserved));
+
+    setDataset("hearthCanvasParentChainStatus", state.parentChainStatus);
+    setDataset("hearthCanvasFirstCollapsedParentDescriptor", state.firstCollapsedParentDescriptor);
+    setDataset("hearthCanvasFirstCollapsedParentMissingFact", state.firstCollapsedParentMissingFact);
 
     setDataset("hearthCanvasFirstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("hearthCanvasRecommendedNextFile", state.recommendedNextFile);
@@ -3060,6 +3669,7 @@
     root.HEARTH_CANVAS_VISIBLE_PLANET_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_RECEIPT = receipt;
     root.HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_RECEIPT = receipt;
+    root.HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_RECEIPT = receipt;
 
     hearth.canvasReceipt = receipt;
     hearth.canvasHubReceipt = receipt;
@@ -3068,6 +3678,7 @@
     hearth.canvasVisiblePlanetReceipt = receipt;
     hearth.canvasHubCompositeFirstFastViewDeferredHexRenderReceiverReceipt = receipt;
     hearth.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutputReceipt = receipt;
+    hearth.canvasHubRec0SettledGeometrySingleViewApplicationDeferredHexOutputReceipt = receipt;
 
     lab.hearthCanvasReceipt = receipt;
     lab.hearthCanvasHubReceipt = receipt;
@@ -3090,10 +3701,15 @@
       reason,
       contract: CONTRACT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      rec0Status: state.rec0Status,
       canonicalChainValid: state.canonicalChainValid,
+      effectiveCanonicalChainValid: state.effectiveCanonicalChainValid,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasPixelVisible: state.canvasPixelVisible,
+      firstPaintCompleted: state.firstPaintCompleted,
       routePacketAcceptedCount: state.routePacketAcceptedCount,
+      viewPacketAppliedCount: state.viewPacketAppliedCount,
+      hexGateDeliveryDeferredCount: state.hexGateDeliveryDeferredCount,
       hexGateDeliveryReturnCount: state.hexGateDeliveryReturnCount,
       controlsRenewedHere: false,
       visualPassClaimed: false
@@ -3119,29 +3735,40 @@
       state.booting = true;
       state.startedAt = nowIso();
       state.updatedAt = state.startedAt;
-      state.postgameStatus = "CANVAS_BOOTING_LIVE_SURFACE_IDENTITY_V12_4";
+      state.postgameStatus = "CANVAS_BOOTING_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_V12_4_1";
 
       publishAliasPaths();
       refreshAuthoritySnapshots();
-      bindCanonicalCanvas(options.reason || "boot");
+      bindCanonicalCanvas(options.reason || "boot", {
+        phase: "IMMEDIATE",
+        scheduleSettled: true
+      });
       setupResizeObserver();
 
       state.booted = true;
       state.booting = false;
 
-      drawVisibleFrame("boot-first-visible-output");
+      drawVisibleFrame("boot-first-visible-output", {
+        deferHex: true,
+        scheduleSettled: true
+      });
 
-      state.postgameStatus = state.mounted
-        ? "CANVAS_BOOTED_CANONICAL_SURFACE_BOUND_VISIBLE_2D_OUTPUT_READY"
-        : "CANVAS_BOOTED_CANONICAL_SURFACE_NOT_READY";
+      state.postgameStatus = state.firstPaintCompleted
+        ? "CANVAS_BOOTED_FIRST_VISIBLE_OUTPUT_READY_HEX_DELIVERY_DEFERRED"
+        : state.mounted
+          ? "CANVAS_BOOTED_CANONICAL_SURFACE_BOUND_WAITING_PIXEL_CONFIRMATION"
+          : "CANVAS_BOOTED_CANONICAL_SURFACE_WAITING_SETTLED_GEOMETRY";
 
-      record("HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_V12_4_BOOTED", {
+      record("HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_V12_4_1_BOOTED", {
         contract: CONTRACT,
         file: FILE,
         mounted: state.mounted,
+        rec0Status: state.rec0Status,
         canonicalChainValid: state.canonicalChainValid,
+        effectiveCanonicalChainValid: state.effectiveCanonicalChainValid,
         canvasContext2dReady: state.canvasContext2dReady,
         canvasPixelVisible: state.canvasPixelVisible,
+        firstPaintCompleted: state.firstPaintCompleted,
         routeConductorObserved: state.routeConductorObserved,
         hexSurfaceObserved: state.hexSurfaceObserved,
         pointerSurfaceObserved: state.pointerSurfaceObserved,
@@ -3158,9 +3785,17 @@
 
   function refresh(options = {}) {
     refreshAuthoritySnapshots();
-    bindCanonicalCanvas(options.reason || "refresh");
+    bindCanonicalCanvas(options.reason || "refresh", {
+      phase: options.phase || "IMMEDIATE",
+      scheduleSettled: options.scheduleSettled !== false
+    });
 
-    if (options.draw !== false) drawVisibleFrame("refresh");
+    if (options.draw !== false) {
+      drawVisibleFrame("refresh", {
+        deferHex: true,
+        scheduleSettled: options.scheduleSettled !== false
+      });
+    }
 
     publishGlobals("refresh");
 
@@ -3181,6 +3816,20 @@
       try {
         resizeObserver.disconnect();
       } catch (_error) {}
+    }
+
+    if (settledGeometryTimer) {
+      try {
+        root.clearTimeout ? root.clearTimeout(settledGeometryTimer) : clearTimeout(settledGeometryTimer);
+      } catch (_error) {}
+      settledGeometryTimer = null;
+    }
+
+    if (deferredHexTimer) {
+      try {
+        root.clearTimeout ? root.clearTimeout(deferredHexTimer) : clearTimeout(deferredHexTimer);
+      } catch (_error) {}
+      deferredHexTimer = null;
     }
 
     record("HEARTH_CANVAS_DISPOSED", { reason });
@@ -3242,6 +3891,7 @@
     dispose,
 
     bindCanonicalCanvas,
+    scheduleSettledGeometryProbe,
     setupResizeObserver,
     drawVisibleFrame,
     scheduleDraw,
@@ -3272,6 +3922,7 @@
     receive,
 
     composeCanvasHexGatePacket,
+    scheduleDeferredHexDelivery,
     deliverCanvasHexGatePacket,
     publishTransmissionPacketGlobals,
 
@@ -3299,6 +3950,9 @@
     supportsCanvasHandoffPacket: true,
     supportsPresentationPacket: true,
     supportsPlanetaryViewControlPacket: true,
+    supportsSingleViewApplication: true,
+    supportsRec0ImmediateSettledGeometryDisambiguation: true,
+    supportsDeferredHexDeliveryAfterFirstPaint: true,
     supportsPointerSurfaceReturnPacket: true,
     supportsCanvasHexGatePacketComposition: true,
     supportsHexSurfacePublicDelivery: true,

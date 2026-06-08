@@ -1,22 +1,17 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
 // HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_TNT_v1_8
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_TNT_v1_9
 // Full-file replacement.
 // Diagnostic-only Canvas surface truth probe.
 //
 // Purpose:
 // - Preserve the public NORTH-facing Canvas surface truth probe contract.
-// - Preserve v1_7 canonical DOM / layout / pixel truth arbitration.
-// - Add v1_8 Boundary Diagnosis Matrix.
-// - Stop reducing missing runtime proof to one recommended file unless single-file causality is proven.
-// - Diagnose the boundary where proof disappears:
-//   1. Route Conductor -> Canvas
-//   2. Canvas -> Hex Surface
-//   3. Hex Surface -> Pointer Surface Bishop
-//   4. Pointer Surface Bishop -> Canvas return
-//   5. Controls -> Canvas
-// - Return boundary-related facts around missing runtime proof without inventing missing facts.
+// - Upgrade the probe into a parent-chain / stage used-size / boundary-fact instrument.
+// - Report what is known, what is missing, and which boundary is unresolved.
+// - Avoid single-file causal recommendations unless a single causal file is proven.
+// - Produce one boundary row per boundary.
+// - Produce one missing-proof / missing-fact statement per unresolved boundary.
 // - Keep F21 as diagnostic evidence only; do not claim F21 authority.
 // - Do not create, draw, repair, release, restart, invoke lifecycle methods,
 //   dispatch input, or mutate production state.
@@ -27,26 +22,30 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const api = {};
 
-  const CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1";
-  const RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1";
+  const CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1";
+  const RECEIPT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_TNT_v1_8";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_TNT_v1_9";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_RECEIPT_v1_8";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT_v1_9";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LAYOUT_MATH_CONNECTION_BLINDSPOT_ARBITRATION_TNT_v1_7";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_TNT_v1_8";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LAYOUT_MATH_CONNECTION_BLINDSPOT_ARBITRATION_RECEIPT_v1_7";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_RECEIPT_v1_8";
 
+  const LINEAGE_V1_7_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LAYOUT_MATH_CONNECTION_BLINDSPOT_ARBITRATION_TNT_v1_7";
   const LINEAGE_V1_6_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CALL_GUARDED_TRANSITION_SURFACE_DISAMBIGUATION_TNT_v1_6";
   const LINEAGE_V1_5_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANONICAL_VISIBLE_SURFACE_DISAMBIGUATION_TNT_v1_5";
 
   const VERSION =
-    "2026-06-08.hearth-diagnostic-probe-canvas-surface-truth-boundary-diagnosis-matrix-v1-8";
+    "2026-06-08.hearth-diagnostic-probe-canvas-surface-truth-parent-chain-used-size-boundary-fact-matrix-v1-9";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -61,23 +60,23 @@
   const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
   const POINTER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   const POINTER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
-  const POINTER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
-  const POINTER_LIGHT_FILE = "/assets/hearth/hearth.canvas.finger.light.js";
 
-  const EXPECTED_CANVAS_CONTRACT =
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
-  const EXPECTED_CANVAS_RENEWAL_CANDIDATE =
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
+  const EXPECTED_HTML_CONTRACT =
+    "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
+  const EXPECTED_INDEX_JS_CONTRACT =
+    "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
   const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
   const EXPECTED_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
-  const EXPECTED_CONTROL_RENEWAL_CANDIDATE =
-    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5";
-  const EXPECTED_HEX_SURFACE_CONTRACT =
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
+  const EXPECTED_CANVAS_CONTRACT =
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
+  const EXPECTED_CANVAS_RENEWAL_CANDIDATE =
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
   const EXPECTED_HEX_AUTHORITY_CONTRACT =
     "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+  const EXPECTED_HEX_SURFACE_CONTRACT =
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
   const EXPECTED_POINTER_SURFACE_CONTRACT =
     "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4";
   const EXPECTED_POINTER_INSPECT_CONTRACT =
@@ -85,10 +84,12 @@
 
   const CANONICAL_MOUNT_SELECTOR = "#hearthCanvasMount";
   const CANONICAL_FRAME_SELECTOR = "#hearthCanvasRectLockFrame";
-  const CANONICAL_CANVAS_ID = "hearthVisibleCanvas";
+  const CANONICAL_CANVAS_SELECTOR = "#hearthVisibleCanvas";
+  const CANONICAL_CHAIN_SELECTOR =
+    "#hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas";
 
   const CANONICAL_CANVAS_SELECTORS = Object.freeze([
-    "#hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas",
+    CANONICAL_CHAIN_SELECTOR,
     "#hearthCanvasMount #hearthCanvasRectLockFrame #hearthVisibleCanvas",
     "#hearthCanvasMount #hearthVisibleCanvas",
     "#hearthCanvasMount canvas[data-hearth-canonical-visible-canvas='true']",
@@ -108,9 +109,10 @@
     "[data-hearth-planet-stage='true']",
     "[data-hearth-stage='true']",
     "[data-hearth-canvas-stage='true']",
-    ".hearth-globe-stage",
     ".hearth-stage",
-    ".hearth-canvas-stage"
+    ".hearth-canvas-stage",
+    ".globe-stage",
+    ".planet-stage"
   ]);
 
   const SCRIPT_PATHS = Object.freeze({
@@ -122,10 +124,54 @@
     hexAuthority: HEX_AUTHORITY_FILE,
     hexSurface: HEX_SURFACE_FILE,
     pointerSurface: POINTER_SURFACE_FILE,
-    pointerInspect: POINTER_INSPECT_FILE,
-    pointerBoundary: POINTER_BOUNDARY_FILE,
-    pointerLight: POINTER_LIGHT_FILE
+    pointerInspect: POINTER_INSPECT_FILE
   });
+
+  const SAFE_RECEIPT_METHODS = Object.freeze([
+    "getReceiptLight",
+    "getReceipt",
+    "getStatus",
+    "getReport",
+    "getState",
+    "getSummary",
+    "getReceiptText",
+    "getStatusText"
+  ]);
+
+  const CANVAS_AUTHORITY_ALIASES = Object.freeze([
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION",
+    "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER",
+    "HEARTH_CANVAS_HUB",
+    "HEARTH_CANVAS",
+    "HEARTH_CANVAS_PARENT",
+    "HEARTH_CANVAS_AUTHORITY",
+    "HEARTH_CANVAS_LOCAL_STATION",
+    "HEARTH_CANVAS_EXPRESSION_HUB",
+    "HEARTH_CANVAS_VISIBLE_PLANET",
+    "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
+    "HEARTH.canvasHubHexSurfacePointerFingerTransmission",
+    "HEARTH.canvasHexGatePointerFingerTransmissionReceiver",
+    "HEARTH.canvasHub",
+    "HEARTH.canvas",
+    "HEARTH.canvasParent",
+    "HEARTH.canvasAuthority",
+    "HEARTH.canvasLocalStation",
+    "HEARTH.canvasExpressionHub",
+    "HEARTH.canvasVisiblePlanet",
+    "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
+    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
+    "DEXTER_LAB.hearthCanvasHubHexSurfacePointerFingerTransmission",
+    "DEXTER_LAB.hearthCanvasHub",
+    "DEXTER_LAB.hearthCanvas",
+    "DEXTER_LAB.hearthCanvasParent",
+    "DEXTER_LAB.hearthCanvasAuthority",
+    "DEXTER_LAB.hearthCanvasLocalStation",
+    "DEXTER_LAB.hearthCanvasExpressionHub",
+    "DEXTER_LAB.hearthCanvasVisiblePlanet"
+  ]);
 
   const ROUTE_AUTHORITY_ALIASES = Object.freeze([
     "HEARTH_ROUTE_CONDUCTOR",
@@ -136,59 +182,34 @@
     "DEXTER_LAB.hearthRouteConductor"
   ]);
 
-  const CANVAS_AUTHORITY_ALIASES = Object.freeze([
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
-    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION",
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-    "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
-    "HEARTH_CANVAS_HUB",
-    "HEARTH_CANVAS",
-    "HEARTH_CANVAS_PARENT",
-    "HEARTH_CANVAS_AUTHORITY",
-    "HEARTH_CANVAS_LOCAL_STATION",
-    "HEARTH_CANVAS_EXPRESSION_HUB",
-    "HEARTH_CANVAS_VISIBLE_PLANET",
-    "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
-    "HEARTH.canvasHubHexSurfacePointerFingerTransmission",
-    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
-    "HEARTH.canvasCompositeFirstFastViewDeferredHexRenderReceiver",
-    "HEARTH.canvasHub",
-    "HEARTH.canvas",
-    "HEARTH.canvasParent",
-    "HEARTH.canvasAuthority",
-    "HEARTH.canvasLocalStation",
-    "HEARTH.canvasExpressionHub",
-    "HEARTH.canvasVisiblePlanet",
-    "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
-    "DEXTER_LAB.hearthCanvasHubHexSurfacePointerFingerTransmission",
-    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
-    "DEXTER_LAB.hearthCanvasHub",
-    "DEXTER_LAB.hearthCanvas",
-    "DEXTER_LAB.hearthCanvasParent",
-    "DEXTER_LAB.hearthCanvasAuthority",
-    "DEXTER_LAB.hearthCanvasExpressionHub",
-    "DEXTER_LAB.hearthCanvasVisiblePlanet"
-  ]);
-
   const CONTROL_AUTHORITY_ALIASES = Object.freeze([
     "HEARTH_CONTROLS",
     "HEARTH_PLANETARY_CONTROLS",
     "HEARTH_CONTROL_AUTHORITY",
     "HEARTH_CONTROLS_QUEEN",
-    "HEARTH_QUEEN_CONTROLS",
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
     "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION",
     "HEARTH.controls",
     "HEARTH.planetaryControls",
     "HEARTH.controlAuthority",
     "HEARTH.controlsQueen",
-    "HEARTH.queenControls",
     "HEARTH.controlsPlanetaryViewInputHandshake",
     "HEARTH.controlsHexGatePointerFingerTransmission",
     "DEXTER_LAB.hearthControls",
     "DEXTER_LAB.hearthPlanetaryControls",
     "DEXTER_LAB.hearthControlAuthority",
     "DEXTER_LAB.hearthControlsQueen"
+  ]);
+
+  const HEX_AUTHORITY_ALIASES = Object.freeze([
+    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+    "HEARTH_PIXEL_HANDSHAKE_AUTHORITY",
+    "HEARTH.hexFourPairPixelHandshakeAuthority",
+    "HEARTH.hexFourPairAuthority",
+    "HEARTH.pixelHandshakeAuthority",
+    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
+    "DEXTER_LAB.hearthHexFourPairAuthority"
   ]);
 
   const HEX_SURFACE_ALIASES = Object.freeze([
@@ -208,22 +229,7 @@
     "DEXTER_LAB.hearthHexSurfaceRenderer",
     "DEXTER_LAB.hearthHexSurfaceAuthority",
     "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
-    "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission",
-    "DEXTER_LAB.hearthHexSurfaceCanonicalMapTupleBindingPointerTransmission"
-  ]);
-
-  const HEX_AUTHORITY_ALIASES = Object.freeze([
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
-    "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_HANDSHAKE_AUTHORITY",
-    "HEARTH.hexFourPairPixelHandshakeAuthority",
-    "HEARTH.hexFourPairAuthority",
-    "HEARTH.hexPixelHandshakeAuthority",
-    "HEARTH.hexAuthority",
-    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
-    "DEXTER_LAB.hearthHexFourPairAuthority",
-    "DEXTER_LAB.hearthHexAuthority"
+    "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission"
   ]);
 
   const POINTER_SURFACE_ALIASES = Object.freeze([
@@ -249,34 +255,6 @@
     "DEXTER_LAB.hearthCanvasFingerInspect",
     "DEXTER_LAB.hearthPointerFingerInspect",
     "DEXTER_LAB.hearthPointerFingerReceiver"
-  ]);
-
-  const SAFE_RECEIPT_METHODS = Object.freeze([
-    "getReceiptLight",
-    "getReceipt",
-    "getStatus",
-    "getReport",
-    "getState",
-    "getSummary",
-    "getCanvasStationReceipt",
-    "getCanvasStationSummary",
-    "getVisiblePlanetReceipt",
-    "getHexSurfaceReceipt",
-    "getHexReceipt",
-    "getControlReceipt",
-    "getControlSummary",
-    "getReceiptText",
-    "getStatusText"
-  ]);
-
-  const FALLBACK_PATTERNS = Object.freeze([
-    /fallback/i,
-    /cartoon/i,
-    /placeholder/i,
-    /static/i,
-    /demo/i,
-    /sample/i,
-    /temporary/i
   ]);
 
   const NO_CLAIMS = Object.freeze({
@@ -363,13 +341,6 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === true || value === 1 || value === "1" || value === "true" || value === "TRUE") return true;
-    if (value === false || value === 0 || value === "0" || value === "false" || value === "FALSE") return false;
-    return fallback;
-  }
-
   function bounded(value, limit = 5000) {
     return safeString(value)
       .replace(/\n/g, " ")
@@ -393,7 +364,7 @@
 
     if (Array.isArray(value) || isObject(value)) {
       try {
-        return bounded(JSON.stringify(value), 40000) || fallback;
+        return bounded(JSON.stringify(value), 50000) || fallback;
       } catch (_error) {
         return bounded(value, 5000) || fallback;
       }
@@ -415,17 +386,6 @@
       return text;
     }
     return "UNKNOWN";
-  }
-
-  function firstRawKnown(...values) {
-    for (const value of values) {
-      if (value === undefined || value === null || value === "") continue;
-      const text = safeString(value);
-      if (text === "UNKNOWN" || text === "NONE" || text === "NOT_FOUND") continue;
-      if (text === "UNREADABLE" || text === "INACCESSIBLE") continue;
-      return value;
-    }
-    return undefined;
   }
 
   function getRaw(source, key, fallback = undefined) {
@@ -504,6 +464,16 @@
     return { element: null, selector: "NONE" };
   }
 
+  function pathMatches(win, route) {
+    try {
+      const path = win && win.location ? win.location.pathname : "";
+      const normal = safeString(route).replace(/\/$/, "");
+      return path === route || path === normal;
+    } catch (_error) {
+      return false;
+    }
+  }
+
   function dataValue(doc, key) {
     try {
       const html = doc && doc.documentElement;
@@ -551,16 +521,6 @@
       );
     } catch (_error) {
       return "UNKNOWN";
-    }
-  }
-
-  function pathMatches(win, route) {
-    try {
-      const path = win && win.location ? win.location.pathname : "";
-      const normal = safeString(route).replace(/\/$/, "");
-      return path === route || path === normal;
-    } catch (_error) {
-      return false;
     }
   }
 
@@ -780,7 +740,7 @@
       if (!isFunction(authority[method])) continue;
 
       try {
-        const output = method === "getReceiptLight" ? authority[method](false) : authority[method]();
+        const output = authority[method]();
         if (isObject(output)) return output;
       } catch (_error) {}
     }
@@ -805,8 +765,6 @@
       value.contract,
       value.INTERNAL_RENEWAL_CONTRACT,
       value.internalRenewalContract,
-      value.INTERNAL_IMPLEMENTATION_CONTRACT,
-      value.internalImplementationContract,
       value.RENEWAL_CONTRACT,
       value.renewalContract,
       value.currentCanvasParentContract,
@@ -814,8 +772,8 @@
       value.routeConductorContract,
       value.controlContract,
       value.controlsContract,
-      value.hexSurfaceContract,
       value.hexAuthorityContract,
+      value.hexSurfaceContract,
       value.pointerSurfaceContract,
       value.pointerFingerContract,
       value.sourceContract
@@ -830,8 +788,6 @@
       value.receipt,
       value.INTERNAL_RENEWAL_RECEIPT,
       value.internalRenewalReceipt,
-      value.INTERNAL_IMPLEMENTATION_RECEIPT,
-      value.internalImplementationReceipt,
       value.RENEWAL_RECEIPT,
       value.renewalReceipt,
       value.currentCanvasParentReceipt,
@@ -839,8 +795,8 @@
       value.routeConductorReceipt,
       value.controlReceipt,
       value.controlsReceipt,
-      value.hexSurfaceReceipt,
       value.hexAuthorityReceipt,
+      value.hexSurfaceReceipt,
       value.pointerSurfaceReceipt,
       value.pointerFingerReceipt,
       value.sourceReceipt
@@ -854,13 +810,55 @@
       return Object.keys(authority)
         .filter((key) => isFunction(authority[key]))
         .sort()
-        .slice(0, 180);
+        .slice(0, 160);
     } catch (_error) {
       return [];
     }
   }
 
-  function inspectAuthority(targetWindow, aliases) {
+  function contractRecognized(contract, family) {
+    const text = safeString(contract);
+
+    if (family === "route") {
+      return text === EXPECTED_ROUTE_CONDUCTOR_CONTRACT || text.includes("HEARTH_ROUTE_CONDUCTOR");
+    }
+
+    if (family === "controls") {
+      return text === EXPECTED_CONTROL_CONTRACT || text.includes("HEARTH_CONTROLS");
+    }
+
+    if (family === "canvas") {
+      return text === EXPECTED_CANVAS_CONTRACT ||
+        text === EXPECTED_CANVAS_RENEWAL_CANDIDATE ||
+        text.includes("HEARTH_CANVAS");
+    }
+
+    if (family === "hexAuthority") {
+      return text === EXPECTED_HEX_AUTHORITY_CONTRACT ||
+        text.includes("HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY");
+    }
+
+    if (family === "hexSurface") {
+      return text === EXPECTED_HEX_SURFACE_CONTRACT ||
+        text.includes("HEARTH_HEX_SURFACE");
+    }
+
+    if (family === "pointerSurface") {
+      return text === EXPECTED_POINTER_SURFACE_CONTRACT ||
+        text.includes("HEARTH_CANVAS_FINGER_SURFACE") ||
+        text.includes("HEARTH_POINTER_FINGER_SURFACE");
+    }
+
+    if (family === "pointerInspect") {
+      return text === EXPECTED_POINTER_INSPECT_CONTRACT ||
+        text.includes("HEARTH_CANVAS_FINGER_INSPECT") ||
+        text.includes("HEARTH_POINTER_FINGER_INSPECT");
+    }
+
+    return false;
+  }
+
+  function inspectAuthority(targetWindow, aliases, family) {
     const scopes = [
       { scope: "TARGET_WINDOW", base: targetWindow || null },
       { scope: "DIAGNOSTIC_WINDOW", base: root }
@@ -884,10 +882,9 @@
           observed: true,
           scope: scope.scope,
           path,
-          authority,
-          receiptObject: receipt,
           contract,
           receipt: receiptName,
+          contractRecognized: contractRecognized(contract, family),
           methodCount: methods.length,
           methods
         });
@@ -895,8 +892,10 @@
     }
 
     const selected =
+      candidates.find((candidate) => candidate.scope === "TARGET_WINDOW" && candidate.contractRecognized) ||
       candidates.find((candidate) => candidate.scope === "TARGET_WINDOW" && candidate.contract !== "UNKNOWN") ||
       candidates.find((candidate) => candidate.scope === "TARGET_WINDOW") ||
+      candidates.find((candidate) => candidate.contractRecognized) ||
       candidates.find((candidate) => candidate.contract !== "UNKNOWN") ||
       candidates[0] ||
       null;
@@ -905,10 +904,9 @@
       observed: Boolean(selected),
       scope: selected ? selected.scope : "NONE",
       path: selected ? selected.path : "NONE",
-      authority: selected ? selected.authority : null,
-      receiptObject: selected ? selected.receiptObject : {},
       contract: selected ? selected.contract : "UNKNOWN",
       receipt: selected ? selected.receipt : "UNKNOWN",
+      contractRecognized: selected ? selected.contractRecognized : false,
       methodCount: selected ? selected.methodCount : 0,
       methods: selected ? selected.methods : [],
       candidates: candidates.map((candidate) => ({
@@ -916,58 +914,10 @@
         path: candidate.path,
         contract: candidate.contract,
         receipt: candidate.receipt,
+        contractRecognized: candidate.contractRecognized,
         methodCount: candidate.methodCount
       }))
     };
-  }
-
-  function hasMethod(authoritySummary, namesOrRegex) {
-    const methods = Array.isArray(authoritySummary && authoritySummary.methods)
-      ? authoritySummary.methods
-      : [];
-
-    for (const candidate of namesOrRegex || []) {
-      if (candidate instanceof RegExp) {
-        if (methods.some((method) => candidate.test(method))) return true;
-      } else if (methods.includes(candidate)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  function receiptValue(authoritySummary, keys, fallback = undefined) {
-    const receipt = authoritySummary && isObject(authoritySummary.receiptObject)
-      ? authoritySummary.receiptObject
-      : {};
-    const authority = authoritySummary && authoritySummary.authority
-      ? authoritySummary.authority
-      : {};
-
-    for (const key of keys || []) {
-      const value = firstRawKnown(getRaw(receipt, key), getRaw(authority, key));
-      if (value !== undefined) return value;
-    }
-
-    return fallback;
-  }
-
-  function numericReceiptValue(authoritySummary, keys) {
-    const value = receiptValue(authoritySummary, keys, undefined);
-    const n = Number(value);
-    return Number.isFinite(n) ? n : 0;
-  }
-
-  function booleanReceiptSignal(authoritySummary, keys) {
-    const value = receiptValue(authoritySummary, keys, undefined);
-    if (value === undefined) return "UNKNOWN";
-    return safeBool(value, false) ? true : false;
-  }
-
-  function textReceiptSignal(authoritySummary, keys) {
-    const value = receiptValue(authoritySummary, keys, undefined);
-    return value === undefined ? "UNKNOWN" : safeString(value, "UNKNOWN");
   }
 
   function getRect(element) {
@@ -1012,34 +962,46 @@
   }
 
   function cssSummary(targetWindow, element) {
+    const unavailable = {
+      readable: false,
+      visible: false,
+      display: "UNKNOWN",
+      visibility: "UNKNOWN",
+      opacity: "UNKNOWN",
+      position: "UNKNOWN",
+      zIndex: "UNKNOWN",
+      pointerEvents: "UNKNOWN",
+      transform: "UNKNOWN",
+      overflow: "UNKNOWN",
+      overflowX: "UNKNOWN",
+      overflowY: "UNKNOWN",
+      contain: "UNKNOWN",
+      contentVisibility: "UNKNOWN",
+      width: "UNKNOWN",
+      height: "UNKNOWN",
+      minWidth: "UNKNOWN",
+      minHeight: "UNKNOWN",
+      maxWidth: "UNKNOWN",
+      maxHeight: "UNKNOWN",
+      flex: "UNKNOWN",
+      flexBasis: "UNKNOWN",
+      flexGrow: "UNKNOWN",
+      flexShrink: "UNKNOWN",
+      alignItems: "UNKNOWN",
+      alignSelf: "UNKNOWN",
+      justifyContent: "UNKNOWN",
+      boxSizing: "UNKNOWN",
+      aspectRatio: "UNKNOWN",
+      gridArea: "UNKNOWN",
+      gridColumn: "UNKNOWN",
+      gridRow: "UNKNOWN",
+      margin: "UNKNOWN",
+      padding: "UNKNOWN",
+      border: "UNKNOWN"
+    };
+
     if (!targetWindow || !element || !isFunction(targetWindow.getComputedStyle)) {
-      return {
-        readable: false,
-        visible: false,
-        display: "UNKNOWN",
-        visibility: "UNKNOWN",
-        opacity: "UNKNOWN",
-        position: "UNKNOWN",
-        zIndex: "UNKNOWN",
-        pointerEvents: "UNKNOWN",
-        transform: "UNKNOWN",
-        overflow: "UNKNOWN",
-        overflowX: "UNKNOWN",
-        overflowY: "UNKNOWN",
-        contain: "UNKNOWN",
-        contentVisibility: "UNKNOWN",
-        width: "UNKNOWN",
-        height: "UNKNOWN",
-        minWidth: "UNKNOWN",
-        minHeight: "UNKNOWN",
-        maxWidth: "UNKNOWN",
-        maxHeight: "UNKNOWN",
-        flex: "UNKNOWN",
-        flexBasis: "UNKNOWN",
-        alignItems: "UNKNOWN",
-        justifyContent: "UNKNOWN",
-        boxSizing: "UNKNOWN"
-      };
+      return unavailable;
     }
 
     try {
@@ -1076,37 +1038,29 @@
         maxHeight: safeString(style.maxHeight, "UNKNOWN"),
         flex: safeString(style.flex, "UNKNOWN"),
         flexBasis: safeString(style.flexBasis, "UNKNOWN"),
+        flexGrow: safeString(style.flexGrow, "UNKNOWN"),
+        flexShrink: safeString(style.flexShrink, "UNKNOWN"),
         alignItems: safeString(style.alignItems, "UNKNOWN"),
+        alignSelf: safeString(style.alignSelf, "UNKNOWN"),
         justifyContent: safeString(style.justifyContent, "UNKNOWN"),
-        boxSizing: safeString(style.boxSizing, "UNKNOWN")
+        boxSizing: safeString(style.boxSizing, "UNKNOWN"),
+        aspectRatio: safeString(style.aspectRatio, "UNKNOWN"),
+        gridArea: safeString(style.gridArea, "UNKNOWN"),
+        gridColumn: safeString(style.gridColumn, "UNKNOWN"),
+        gridRow: safeString(style.gridRow, "UNKNOWN"),
+        margin: safeString(style.margin, "UNKNOWN"),
+        padding: safeString(style.padding, "UNKNOWN"),
+        border: safeString(style.border, "UNKNOWN")
       };
     } catch (_error) {
       return {
-        readable: false,
-        visible: false,
+        ...unavailable,
         display: "UNREADABLE",
         visibility: "UNREADABLE",
         opacity: "UNREADABLE",
         position: "UNREADABLE",
-        zIndex: "UNREADABLE",
-        pointerEvents: "UNREADABLE",
-        transform: "UNREADABLE",
-        overflow: "UNREADABLE",
-        overflowX: "UNREADABLE",
-        overflowY: "UNREADABLE",
-        contain: "UNREADABLE",
-        contentVisibility: "UNREADABLE",
         width: "UNREADABLE",
-        height: "UNREADABLE",
-        minWidth: "UNREADABLE",
-        minHeight: "UNREADABLE",
-        maxWidth: "UNREADABLE",
-        maxHeight: "UNREADABLE",
-        flex: "UNREADABLE",
-        flexBasis: "UNREADABLE",
-        alignItems: "UNREADABLE",
-        justifyContent: "UNREADABLE",
-        boxSizing: "UNREADABLE"
+        height: "UNREADABLE"
       };
     }
   }
@@ -1121,7 +1075,7 @@
     try {
       classes =
         element.classList && element.classList.length
-          ? `.${Array.from(element.classList).slice(0, 5).join(".")}`
+          ? `.${Array.from(element.classList).slice(0, 6).join(".")}`
           : "";
     } catch (_error) {}
 
@@ -1139,45 +1093,256 @@
     }
   }
 
-  function canvasDataset(canvas) {
-    if (!canvas || !canvas.dataset) {
+  function numberFromStyleSize(value) {
+    const text = safeString(value);
+    const match = text.match(/^(-?\d+(?:\.\d+)?)px$/i);
+    return match ? safeNumber(match[1], 0) : null;
+  }
+
+  function usedSizeStatus(summary) {
+    if (!summary || summary.exists === false) {
       return {
-        contract: "UNKNOWN",
-        receipt: "UNKNOWN",
-        visibleCanvas: "UNKNOWN",
-        expressionSurface: "UNKNOWN",
-        canonicalVisibleCanvas: "UNKNOWN",
-        canvasHub: "UNKNOWN",
-        fallback: "UNKNOWN",
-        cartoon: "UNKNOWN",
-        downstreamObserved: "UNKNOWN",
-        downstreamLatched: "UNKNOWN",
-        selectionMode: "UNKNOWN"
+        clean: false,
+        class: "ELEMENT_NOT_FOUND",
+        firstMissingFact: "ELEMENT_PRESENT",
+        reason: "ELEMENT_NOT_FOUND"
+      };
+    }
+
+    if (!summary.cssReadable) {
+      return {
+        clean: false,
+        class: "COMPUTED_STYLE_UNREADABLE",
+        firstMissingFact: "COMPUTED_STYLE_READABLE",
+        reason: "COMPUTED_STYLE_UNREADABLE"
+      };
+    }
+
+    if (summary.computedDisplay === "none") {
+      return {
+        clean: false,
+        class: "DISPLAY_NONE",
+        firstMissingFact: "COMPUTED_DISPLAY_VISIBLE",
+        reason: "COMPUTED_DISPLAY_NONE"
+      };
+    }
+
+    if (summary.computedVisibility === "hidden" || summary.computedVisibility === "collapse") {
+      return {
+        clean: false,
+        class: "VISIBILITY_HIDDEN_OR_COLLAPSE",
+        firstMissingFact: "COMPUTED_VISIBILITY_VISIBLE",
+        reason: `COMPUTED_VISIBILITY_${summary.computedVisibility}`
+      };
+    }
+
+    if (safeNumber(summary.computedOpacity, 1) <= 0) {
+      return {
+        clean: false,
+        class: "OPACITY_ZERO",
+        firstMissingFact: "COMPUTED_OPACITY_NONZERO",
+        reason: "COMPUTED_OPACITY_ZERO"
+      };
+    }
+
+    if (!summary.rectNonzero) {
+      const cssWidth = numberFromStyleSize(summary.computedWidth);
+      const cssHeight = numberFromStyleSize(summary.computedHeight);
+
+      if (cssWidth === 0 || cssHeight === 0) {
+        return {
+          clean: false,
+          class: "CSS_USED_SIZE_ZERO",
+          firstMissingFact: cssWidth === 0 ? "COMPUTED_WIDTH_NONZERO" : "COMPUTED_HEIGHT_NONZERO",
+          reason: `COMPUTED_WIDTH:${summary.computedWidth}_COMPUTED_HEIGHT:${summary.computedHeight}`
+        };
+      }
+
+      if (!summary.offsetSizeNonzero && !summary.clientSizeNonzero) {
+        return {
+          clean: false,
+          class: "RECT_OFFSET_CLIENT_SIZE_ZERO",
+          firstMissingFact: "RECT_OR_OFFSET_OR_CLIENT_SIZE_NONZERO",
+          reason: `RECT:${summary.rectWidth}x${summary.rectHeight}_OFFSET:${summary.offsetWidth}x${summary.offsetHeight}_CLIENT:${summary.clientWidth}x${summary.clientHeight}`
+        };
+      }
+
+      return {
+        clean: false,
+        class: "BOUNDING_RECT_ZERO",
+        firstMissingFact: "BOUNDING_RECT_NONZERO",
+        reason: `RECT:${summary.rectWidth}x${summary.rectHeight}`
       };
     }
 
     return {
-      contract: firstKnown(
-        canvas.dataset.hearthCanvasContract,
-        canvas.dataset.contract,
-        canvas.dataset.hearthCanvasRenewalContract,
-        canvas.dataset.hearthCanvasCurrentParentContract
-      ),
-      receipt: firstKnown(
-        canvas.dataset.hearthCanvasReceipt,
-        canvas.dataset.receipt,
-        canvas.dataset.hearthCanvasRenewalReceipt,
-        canvas.dataset.hearthCanvasExpressionBridgeReceipt
-      ),
-      visibleCanvas: firstKnown(canvas.dataset.hearthVisibleCanvas),
-      expressionSurface: firstKnown(canvas.dataset.hearthExpressionSurface),
-      canonicalVisibleCanvas: firstKnown(canvas.dataset.hearthCanonicalVisibleCanvas),
-      canvasHub: firstKnown(canvas.dataset.hearthCanvasHub),
-      fallback: firstKnown(canvas.dataset.hearthFallback, canvas.dataset.fallback),
-      cartoon: firstKnown(canvas.dataset.hearthCartoon, canvas.dataset.cartoon),
-      downstreamObserved: firstKnown(canvas.dataset.hearthDownstreamSurfaceObserved),
-      downstreamLatched: firstKnown(canvas.dataset.hearthDownstreamSurfaceLatched),
-      selectionMode: firstKnown(canvas.dataset.hearthCanvasSelectionMode)
+      clean: true,
+      class: "USED_SIZE_FACTS_PRESENT",
+      firstMissingFact: "NONE",
+      reason: `RECT:${summary.rectWidth}x${summary.rectHeight}`
+    };
+  }
+
+  function measureElement(targetWindow, element, label, index = 0) {
+    const rect = getRect(element);
+    const css = cssSummary(targetWindow, element);
+
+    const offsetWidth = element ? safeNumber(element.offsetWidth, 0) : 0;
+    const offsetHeight = element ? safeNumber(element.offsetHeight, 0) : 0;
+    const clientWidth = element ? safeNumber(element.clientWidth, 0) : 0;
+    const clientHeight = element ? safeNumber(element.clientHeight, 0) : 0;
+    const scrollWidth = element ? safeNumber(element.scrollWidth, 0) : 0;
+    const scrollHeight = element ? safeNumber(element.scrollHeight, 0) : 0;
+
+    const summary = {
+      label,
+      index,
+      exists: Boolean(element),
+      descriptor: elementDescriptor(element, index),
+      id: element && element.id ? element.id : "NONE",
+      tagName: element ? safeString(element.tagName, "UNKNOWN") : "NONE",
+      className: element ? bounded(element.className || "NONE", 600) : "NONE",
+      parentDescriptor: elementDescriptor(element && element.parentElement),
+      childElementCount: element ? safeNumber(element.childElementCount, 0) : 0,
+
+      rectLeft: rect.left,
+      rectTop: rect.top,
+      rectRight: rect.right,
+      rectBottom: rect.bottom,
+      rectWidth: rect.width,
+      rectHeight: rect.height,
+      rectNonzero: rectNonzero(rect),
+
+      offsetWidth,
+      offsetHeight,
+      offsetSizeNonzero: offsetWidth > 0 && offsetHeight > 0,
+      clientWidth,
+      clientHeight,
+      clientSizeNonzero: clientWidth > 0 && clientHeight > 0,
+      scrollWidth,
+      scrollHeight,
+      scrollSizeNonzero: scrollWidth > 0 && scrollHeight > 0,
+
+      cssReadable: css.readable,
+      computedVisible: css.visible,
+      computedDisplay: css.display,
+      computedVisibility: css.visibility,
+      computedOpacity: css.opacity,
+      computedPosition: css.position,
+      computedZIndex: css.zIndex,
+      computedPointerEvents: css.pointerEvents,
+      computedTransform: css.transform,
+      computedOverflow: css.overflow,
+      computedOverflowX: css.overflowX,
+      computedOverflowY: css.overflowY,
+      computedContain: css.contain,
+      computedContentVisibility: css.contentVisibility,
+      computedWidth: css.width,
+      computedHeight: css.height,
+      computedMinWidth: css.minWidth,
+      computedMinHeight: css.minHeight,
+      computedMaxWidth: css.maxWidth,
+      computedMaxHeight: css.maxHeight,
+      computedFlex: css.flex,
+      computedFlexBasis: css.flexBasis,
+      computedFlexGrow: css.flexGrow,
+      computedFlexShrink: css.flexShrink,
+      computedAlignItems: css.alignItems,
+      computedAlignSelf: css.alignSelf,
+      computedJustifyContent: css.justifyContent,
+      computedBoxSizing: css.boxSizing,
+      computedAspectRatio: css.aspectRatio,
+      computedGridArea: css.gridArea,
+      computedGridColumn: css.gridColumn,
+      computedGridRow: css.gridRow,
+      computedMargin: css.margin,
+      computedPadding: css.padding,
+      computedBorder: css.border
+    };
+
+    const status = usedSizeStatus(summary);
+
+    return {
+      ...summary,
+      usedSizeClean: status.clean,
+      usedSizeClass: status.class,
+      usedSizeFirstMissingFact: status.firstMissingFact,
+      usedSizeReason: status.reason
+    };
+  }
+
+  function parentChain(targetWindow, element, stopAt) {
+    const chain = [];
+    let cursor = element || null;
+    let depth = 0;
+
+    while (cursor && depth < 24) {
+      const summary = measureElement(targetWindow, cursor, "PARENT_CHAIN_NODE", depth);
+      const parent = cursor.parentElement || null;
+
+      chain.push({
+        depth,
+        ...summary,
+        parentDescriptor: elementDescriptor(parent),
+        isStopNode: Boolean(stopAt && cursor === stopAt)
+      });
+
+      if (cursor === stopAt) break;
+      cursor = parent;
+      depth += 1;
+    }
+
+    return chain;
+  }
+
+  function classifyParentChain(chain) {
+    if (!Array.isArray(chain) || !chain.length) {
+      return {
+        status: "PARENT_CHAIN_UNAVAILABLE",
+        clean: false,
+        firstCollapsedDepth: -1,
+        firstCollapsedDescriptor: "NONE",
+        firstCollapsedMissingFact: "PARENT_CHAIN_AVAILABLE",
+        firstHiddenDepth: -1,
+        firstHiddenDescriptor: "NONE",
+        firstContainmentRiskDepth: -1,
+        firstContainmentRiskDescriptor: "NONE"
+      };
+    }
+
+    const collapsed = chain.find((item) => item.rectNonzero === false);
+    const hidden = chain.find((item) => item.computedVisible === false);
+    const containmentRisk = chain.find((item) =>
+      /paint|layout|strict|content/i.test(item.computedContain) ||
+      /hidden|auto/i.test(item.computedContentVisibility)
+    );
+
+    const status =
+      collapsed || hidden || containmentRisk
+        ? "PARENT_CHAIN_HAS_LAYOUT_RISK"
+        : "PARENT_CHAIN_USED_SIZE_FACTS_PRESENT";
+
+    return {
+      status,
+      clean: !collapsed && !hidden,
+      firstCollapsedDepth: collapsed ? collapsed.depth : -1,
+      firstCollapsedDescriptor: collapsed ? collapsed.descriptor : "NONE",
+      firstCollapsedWidth: collapsed ? collapsed.rectWidth : 0,
+      firstCollapsedHeight: collapsed ? collapsed.rectHeight : 0,
+      firstCollapsedComputedWidth: collapsed ? collapsed.computedWidth : "NONE",
+      firstCollapsedComputedHeight: collapsed ? collapsed.computedHeight : "NONE",
+      firstCollapsedMissingFact: collapsed ? collapsed.usedSizeFirstMissingFact : "NONE",
+      firstCollapsedClass: collapsed ? collapsed.usedSizeClass : "NONE",
+      firstHiddenDepth: hidden ? hidden.depth : -1,
+      firstHiddenDescriptor: hidden ? hidden.descriptor : "NONE",
+      firstHiddenDisplay: hidden ? hidden.computedDisplay : "NONE",
+      firstHiddenVisibility: hidden ? hidden.computedVisibility : "NONE",
+      firstHiddenOpacity: hidden ? hidden.computedOpacity : "NONE",
+      firstContainmentRiskDepth: containmentRisk ? containmentRisk.depth : -1,
+      firstContainmentRiskDescriptor: containmentRisk ? containmentRisk.descriptor : "NONE",
+      firstContainmentRiskContain: containmentRisk ? containmentRisk.computedContain : "NONE",
+      firstContainmentRiskContentVisibility:
+        containmentRisk ? containmentRisk.computedContentVisibility : "NONE"
     };
   }
 
@@ -1319,6 +1484,48 @@
     }
   }
 
+  function canvasDataset(canvas) {
+    if (!canvas || !canvas.dataset) {
+      return {
+        contract: "UNKNOWN",
+        receipt: "UNKNOWN",
+        visibleCanvas: "UNKNOWN",
+        expressionSurface: "UNKNOWN",
+        canonicalVisibleCanvas: "UNKNOWN",
+        canvasHub: "UNKNOWN",
+        fallback: "UNKNOWN",
+        cartoon: "UNKNOWN",
+        downstreamObserved: "UNKNOWN",
+        downstreamLatched: "UNKNOWN",
+        selectionMode: "UNKNOWN"
+      };
+    }
+
+    return {
+      contract: firstKnown(
+        canvas.dataset.hearthCanvasContract,
+        canvas.dataset.contract,
+        canvas.dataset.hearthCanvasRenewalContract,
+        canvas.dataset.hearthCanvasCurrentParentContract
+      ),
+      receipt: firstKnown(
+        canvas.dataset.hearthCanvasReceipt,
+        canvas.dataset.receipt,
+        canvas.dataset.hearthCanvasRenewalReceipt,
+        canvas.dataset.hearthCanvasExpressionBridgeReceipt
+      ),
+      visibleCanvas: firstKnown(canvas.dataset.hearthVisibleCanvas),
+      expressionSurface: firstKnown(canvas.dataset.hearthExpressionSurface),
+      canonicalVisibleCanvas: firstKnown(canvas.dataset.hearthCanonicalVisibleCanvas),
+      canvasHub: firstKnown(canvas.dataset.hearthCanvasHub),
+      fallback: firstKnown(canvas.dataset.hearthFallback, canvas.dataset.fallback),
+      cartoon: firstKnown(canvas.dataset.hearthCartoon, canvas.dataset.cartoon),
+      downstreamObserved: firstKnown(canvas.dataset.hearthDownstreamSurfaceObserved),
+      downstreamLatched: firstKnown(canvas.dataset.hearthDownstreamSurfaceLatched),
+      selectionMode: firstKnown(canvas.dataset.hearthCanvasSelectionMode)
+    };
+  }
+
   function fallbackSignals(targetDocument, element) {
     const text = bounded(
       [
@@ -1328,10 +1535,10 @@
         element && element.dataset ? JSON.stringify(element.dataset) : "",
         targetDocument && targetDocument.body ? targetDocument.body.innerText : ""
       ].join(" "),
-      12000
+      9000
     );
 
-    const matched = FALLBACK_PATTERNS.some((pattern) => pattern.test(text));
+    const matched = /fallback|cartoon|placeholder|static|demo|sample|temporary/i.test(text);
 
     return {
       fallbackTextObserved: matched,
@@ -1341,92 +1548,8 @@
     };
   }
 
-  function parentChain(targetWindow, element, stopAt) {
-    const chain = [];
-    let cursor = element || null;
-    let depth = 0;
-
-    while (cursor && depth < 16) {
-      const rect = getRect(cursor);
-      const css = cssSummary(targetWindow, cursor);
-      const parent = cursor.parentElement || null;
-
-      chain.push({
-        depth,
-        descriptor: elementDescriptor(cursor),
-        id: cursor.id || "NONE",
-        rectNonzero: rectNonzero(rect),
-        rectWidth: rect.width,
-        rectHeight: rect.height,
-        rectLeft: rect.left,
-        rectTop: rect.top,
-        computedVisible: css.visible,
-        display: css.display,
-        visibility: css.visibility,
-        opacity: css.opacity,
-        position: css.position,
-        zIndex: css.zIndex,
-        overflow: css.overflow,
-        contain: css.contain,
-        contentVisibility: css.contentVisibility,
-        width: css.width,
-        height: css.height,
-        minWidth: css.minWidth,
-        minHeight: css.minHeight,
-        flex: css.flex,
-        flexBasis: css.flexBasis,
-        parentDescriptor: elementDescriptor(parent)
-      });
-
-      if (cursor === stopAt) break;
-      cursor = parent;
-      depth += 1;
-    }
-
-    return chain;
-  }
-
-  function classifyParentChain(chain) {
-    if (!Array.isArray(chain) || !chain.length) {
-      return {
-        status: "PARENT_CHAIN_UNAVAILABLE",
-        firstCollapsedDepth: -1,
-        firstCollapsedDescriptor: "NONE",
-        firstHiddenDepth: -1,
-        firstHiddenDescriptor: "NONE",
-        firstContainmentRiskDepth: -1,
-        firstContainmentRiskDescriptor: "NONE"
-      };
-    }
-
-    const collapsed = chain.find((item) => item.rectNonzero === false);
-    const hidden = chain.find((item) => item.computedVisible === false);
-    const containmentRisk = chain.find((item) =>
-      /paint|layout|strict|content/i.test(item.contain) ||
-      /hidden|auto/i.test(item.contentVisibility)
-    );
-
-    return {
-      status:
-        collapsed || hidden || containmentRisk
-          ? "PARENT_CHAIN_HAS_LAYOUT_RISK"
-          : "PARENT_CHAIN_LAYOUT_READABLE",
-      firstCollapsedDepth: collapsed ? collapsed.depth : -1,
-      firstCollapsedDescriptor: collapsed ? collapsed.descriptor : "NONE",
-      firstCollapsedWidth: collapsed ? collapsed.rectWidth : 0,
-      firstCollapsedHeight: collapsed ? collapsed.rectHeight : 0,
-      firstHiddenDepth: hidden ? hidden.depth : -1,
-      firstHiddenDescriptor: hidden ? hidden.descriptor : "NONE",
-      firstContainmentRiskDepth: containmentRisk ? containmentRisk.depth : -1,
-      firstContainmentRiskDescriptor: containmentRisk ? containmentRisk.descriptor : "NONE",
-      firstContainmentRiskContain: containmentRisk ? containmentRisk.contain : "NONE",
-      firstContainmentRiskContentVisibility: containmentRisk ? containmentRisk.contentVisibility : "NONE"
-    };
-  }
-
   function describeCanvas(targetWindow, targetDocument, canvas, index, selector, canonicalMount, canonicalFrame) {
-    const rect = getRect(canvas);
-    const css = cssSummary(targetWindow, canvas);
+    const measured = measureElement(targetWindow, canvas, "CANVAS", index);
     const ctx = getCanvas2d(canvas);
     const pixels = samplePixels(canvas, ctx.ctx);
     const dataset = canvasDataset(canvas);
@@ -1436,21 +1559,27 @@
       canvas && safeNumber(canvas.width, 0) > 0 && safeNumber(canvas.height, 0) > 0
     );
 
-    const rectOk = rectNonzero(rect);
-    const viewportOk = viewportIntersecting(targetWindow, rect);
+    const viewportOk = viewportIntersecting(targetWindow, {
+      left: measured.rectLeft,
+      top: measured.rectTop,
+      right: measured.rectRight,
+      bottom: measured.rectBottom,
+      width: measured.rectWidth,
+      height: measured.rectHeight
+    });
+
     const inMount = Boolean(canonicalMount && canvas && containsOrEquals(canonicalMount, canvas));
     const inFrame = Boolean(canonicalFrame && canvas && containsOrEquals(canonicalFrame, canvas));
 
     const bufferCssWidthRatio =
-      rect.width > 0 ? safeNumber(canvas && canvas.width, 0) / rect.width : 0;
+      measured.rectWidth > 0 ? safeNumber(canvas && canvas.width, 0) / measured.rectWidth : 0;
     const bufferCssHeightRatio =
-      rect.height > 0 ? safeNumber(canvas && canvas.height, 0) / rect.height : 0;
+      measured.rectHeight > 0 ? safeNumber(canvas && canvas.height, 0) / measured.rectHeight : 0;
 
     return {
+      ...measured,
       index,
       selector: selector || "canvas",
-      descriptor: elementDescriptor(canvas, index),
-      id: canvas && canvas.id ? canvas.id : "NONE",
       datasetContract: dataset.contract,
       datasetReceipt: dataset.receipt,
       datasetVisibleCanvas: dataset.visibleCanvas,
@@ -1464,37 +1593,11 @@
       datasetSelectionMode: dataset.selectionMode,
       inCanonicalMount: inMount,
       inCanonicalFrame: inFrame,
-      directParentDescriptor: elementDescriptor(canvas && canvas.parentElement),
       widthAttribute: canvas ? safeNumber(canvas.width, 0) : 0,
       heightAttribute: canvas ? safeNumber(canvas.height, 0) : 0,
       internalSizeNonzero,
-      rectLeft: rect.left,
-      rectTop: rect.top,
-      rectRight: rect.right,
-      rectBottom: rect.bottom,
-      rectWidth: rect.width,
-      rectHeight: rect.height,
-      rectNonzero: rectOk,
       bufferCssWidthRatio,
       bufferCssHeightRatio,
-      computedVisible: css.visible,
-      computedDisplay: css.display,
-      computedVisibility: css.visibility,
-      computedOpacity: css.opacity,
-      computedPosition: css.position,
-      computedZIndex: css.zIndex,
-      computedPointerEvents: css.pointerEvents,
-      computedTransform: css.transform,
-      computedOverflow: css.overflow,
-      computedContain: css.contain,
-      computedContentVisibility: css.contentVisibility,
-      computedWidth: css.width,
-      computedHeight: css.height,
-      computedMinWidth: css.minWidth,
-      computedMinHeight: css.minHeight,
-      computedFlex: css.flex,
-      computedFlexBasis: css.flexBasis,
-      computedBoxSizing: css.boxSizing,
       viewportIntersecting: viewportOk,
       context2dReady: ctx.ready,
       context2dStatus: ctx.status,
@@ -1511,15 +1614,15 @@
       fallbackTextBasis: fallback.fallbackTextBasis,
       surfaceAdmissible: Boolean(
         internalSizeNonzero &&
-        rectOk &&
-        css.visible &&
+        measured.rectNonzero &&
+        measured.computedVisible &&
         viewportOk &&
         ctx.ready
       ),
       surfaceVisibleAdmissible: Boolean(
         internalSizeNonzero &&
-        rectOk &&
-        css.visible &&
+        measured.rectNonzero &&
+        measured.computedVisible &&
         viewportOk &&
         ctx.ready &&
         pixels.visible
@@ -1593,6 +1696,741 @@
     return firstElement(targetDocument, CANONICAL_CANVAS_SELECTORS);
   }
 
+  function makeBoundaryRow(input) {
+    const row = {
+      order: input.order || 0,
+      id: input.id || "UNKNOWN_BOUNDARY",
+      boundaryType: input.boundaryType || "UNKNOWN",
+      from: input.from || "UNKNOWN",
+      to: input.to || "UNKNOWN",
+      fromFile: input.fromFile || "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      toFile: input.toFile || "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      observed: Boolean(input.observed),
+      blocking: input.blocking !== false,
+      clean: Boolean(input.clean),
+      status: input.status || (input.clean ? "BOUNDARY_CLEAN" : "BOUNDARY_UNRESOLVED"),
+      class: input.class || (input.clean ? "BOUNDARY_FACTS_PRESENT" : "BOUNDARY_FACT_MISSING"),
+      firstMissingProof: input.firstMissingProof || (input.clean ? "NONE" : "BOUNDARY_PROOF_MISSING"),
+      firstMissingFact: input.firstMissingFact || (input.clean ? "NONE" : "BOUNDARY_FACT_MISSING"),
+      observedFacts: input.observedFacts || [],
+      missingFacts: input.missingFacts || [],
+      diagnosticFacts: input.diagnosticFacts || {},
+      singleCausalFileProven: Boolean(input.singleCausalFileProven),
+      recommendedOwner: input.recommendedOwner || "BOUNDARY_FACTS_ONLY",
+      recommendedFile: input.singleCausalFileProven
+        ? input.recommendedFile || "UNKNOWN_SINGLE_CAUSAL_FILE"
+        : "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      recommendedAction: input.recommendedAction || "READ_BOUNDARY_FACTS",
+      reason: input.reason || "UNKNOWN"
+    };
+
+    return {
+      ...row,
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
+    };
+  }
+
+  function compactElementFacts(summary) {
+    if (!summary) return {};
+    return {
+      exists: summary.exists,
+      descriptor: summary.descriptor,
+      parentDescriptor: summary.parentDescriptor,
+      rectNonzero: summary.rectNonzero,
+      rectWidth: summary.rectWidth,
+      rectHeight: summary.rectHeight,
+      offsetWidth: summary.offsetWidth,
+      offsetHeight: summary.offsetHeight,
+      clientWidth: summary.clientWidth,
+      clientHeight: summary.clientHeight,
+      computedDisplay: summary.computedDisplay,
+      computedVisibility: summary.computedVisibility,
+      computedOpacity: summary.computedOpacity,
+      computedPosition: summary.computedPosition,
+      computedOverflow: summary.computedOverflow,
+      computedContain: summary.computedContain,
+      computedContentVisibility: summary.computedContentVisibility,
+      computedWidth: summary.computedWidth,
+      computedHeight: summary.computedHeight,
+      computedMinWidth: summary.computedMinWidth,
+      computedMinHeight: summary.computedMinHeight,
+      computedFlex: summary.computedFlex,
+      computedFlexBasis: summary.computedFlexBasis,
+      computedBoxSizing: summary.computedBoxSizing,
+      usedSizeClean: summary.usedSizeClean,
+      usedSizeClass: summary.usedSizeClass,
+      usedSizeFirstMissingFact: summary.usedSizeFirstMissingFact,
+      usedSizeReason: summary.usedSizeReason
+    };
+  }
+
+  function buildLayoutBoundaryRows(snapshot) {
+    const rows = [];
+    const stage = snapshot.stageSummary;
+    const mount = snapshot.mountSummary;
+    const frame = snapshot.frameSummary;
+    const canvas = snapshot.canonicalSummary || {};
+    const mountChain = snapshot.mountParentChainClassification || {};
+    const canvasChain = snapshot.canonicalParentChainClassification || {};
+    const layering = snapshot.layering || {};
+
+    rows.push(makeBoundaryRow({
+      order: 1,
+      id: "TARGET_CONTEXT_ACCESS",
+      boundaryType: "CONTEXT",
+      from: "DIAGNOSTIC_PROBE",
+      to: "TARGET_DOCUMENT",
+      observed: snapshot.context.targetAvailable,
+      clean: snapshot.context.targetAvailable,
+      class: snapshot.context.targetAvailable ? "TARGET_CONTEXT_AVAILABLE" : "TARGET_CONTEXT_UNAVAILABLE",
+      firstMissingProof: snapshot.context.targetAvailable ? "NONE" : "TARGET_WINDOW_OR_DOCUMENT_ACCESS",
+      firstMissingFact: snapshot.context.targetAvailable ? "NONE" : "TARGET_DOCUMENT_AVAILABLE",
+      observedFacts: [
+        `TARGET_CONTEXT_SOURCE:${snapshot.context.targetSource}`,
+        `TARGET_ACCESS_ERROR:${snapshot.context.targetAccessError}`
+      ],
+      missingFacts: snapshot.context.targetAvailable ? [] : ["targetWindow", "targetDocument"],
+      diagnosticFacts: clonePlain(snapshot.context),
+      recommendedOwner: "DIAGNOSTIC_TARGET_ACCESS_BOUNDARY",
+      recommendedAction: snapshot.context.targetAvailable
+        ? "CONTINUE_LAYOUT_BOUNDARY_FACT_READ"
+        : "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_PROBE",
+      reason: snapshot.context.targetAvailable
+        ? "TARGET_DOCUMENT_AVAILABLE"
+        : "TARGET_DOCUMENT_OR_WINDOW_UNAVAILABLE"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 2,
+      id: "STAGE_SELECTION_BOUNDARY",
+      boundaryType: "LAYOUT",
+      from: "TARGET_DOCUMENT",
+      to: "HEARTH_STAGE",
+      observed: stage.exists,
+      clean: stage.exists,
+      class: stage.exists ? "STAGE_ELEMENT_SELECTED" : "STAGE_ELEMENT_NOT_SELECTED",
+      firstMissingProof: stage.exists ? "NONE" : "STAGE_SELECTOR_MATCH",
+      firstMissingFact: stage.exists ? "NONE" : "STAGE_ELEMENT_PRESENT",
+      observedFacts: [
+        `STAGE_SELECTOR:${snapshot.stageSelector}`,
+        `STAGE_DESCRIPTOR:${stage.descriptor}`
+      ],
+      missingFacts: stage.exists ? [] : ["stage element selector match"],
+      diagnosticFacts: compactElementFacts(stage),
+      recommendedOwner: "HTML_SHELL_OR_STAGE_LAYOUT_BOUNDARY",
+      recommendedAction: stage.exists
+        ? "READ_STAGE_USED_SIZE_FACTS"
+        : "CONFIRM_STAGE_SELECTOR_OR_ACCEPT_MOUNT_AS_PRIMARY_SURFACE_CONTAINER",
+      reason: stage.exists ? "STAGE_ELEMENT_OBSERVED" : "NO_STAGE_SELECTOR_MATCHED"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 3,
+      id: "STAGE_USED_SIZE_BOUNDARY",
+      boundaryType: "LAYOUT_USED_SIZE",
+      from: "HEARTH_STAGE",
+      to: "STAGE_BOX",
+      observed: stage.exists,
+      clean: !stage.exists || stage.usedSizeClean,
+      class: stage.exists ? stage.usedSizeClass : "STAGE_NOT_OBSERVED_NON_BLOCKING_IF_MOUNT_EXISTS",
+      firstMissingProof: stage.usedSizeClean ? "NONE" : "STAGE_USED_SIZE_PROOF",
+      firstMissingFact: stage.usedSizeFirstMissingFact,
+      observedFacts: [
+        `STAGE_RECT:${stage.rectWidth}x${stage.rectHeight}`,
+        `STAGE_COMPUTED_SIZE:${stage.computedWidth}x${stage.computedHeight}`,
+        `STAGE_DISPLAY:${stage.computedDisplay}`
+      ],
+      missingFacts: stage.usedSizeClean ? [] : [stage.usedSizeFirstMissingFact],
+      diagnosticFacts: compactElementFacts(stage),
+      recommendedOwner: "HTML_SHELL_OR_STAGE_LAYOUT_BOUNDARY",
+      recommendedAction: stage.usedSizeClean
+        ? "CONTINUE_TO_MOUNT_BOUNDARY"
+        : "READ_STAGE_PARENT_USED_SIZE_FACTS",
+      reason: stage.usedSizeReason
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 4,
+      id: "MOUNT_SELECTION_BOUNDARY",
+      boundaryType: "LAYOUT",
+      from: "TARGET_DOCUMENT",
+      to: "CANONICAL_MOUNT",
+      observed: mount.exists,
+      clean: mount.exists,
+      class: mount.exists ? "CANONICAL_MOUNT_FOUND" : "CANONICAL_MOUNT_NOT_FOUND",
+      firstMissingProof: mount.exists ? "NONE" : "CANONICAL_MOUNT_SELECTOR_MATCH",
+      firstMissingFact: mount.exists ? "NONE" : "CANONICAL_MOUNT_PRESENT",
+      observedFacts: [
+        `MOUNT_SELECTOR:${CANONICAL_MOUNT_SELECTOR}`,
+        `MOUNT_DESCRIPTOR:${mount.descriptor}`
+      ],
+      missingFacts: mount.exists ? [] : [CANONICAL_MOUNT_SELECTOR],
+      diagnosticFacts: compactElementFacts(mount),
+      recommendedOwner: "HTML_SHELL_OR_CANVAS_PLACEMENT_BOUNDARY",
+      recommendedAction: mount.exists
+        ? "READ_MOUNT_USED_SIZE_FACTS"
+        : "CONFIRM_CANONICAL_MOUNT_EXISTS_IN_TARGET_DOM",
+      reason: mount.exists
+        ? "#hearthCanvasMount_OBSERVED"
+        : "#hearthCanvasMount_NOT_FOUND"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 5,
+      id: "MOUNT_USED_SIZE_BOUNDARY",
+      boundaryType: "LAYOUT_USED_SIZE",
+      from: "CANONICAL_MOUNT",
+      to: "MOUNT_BOX",
+      observed: mount.exists,
+      clean: mount.exists && mount.usedSizeClean,
+      class: mount.exists ? mount.usedSizeClass : "CANONICAL_MOUNT_NOT_FOUND",
+      firstMissingProof: mount.usedSizeClean ? "NONE" : "CANONICAL_MOUNT_USED_SIZE_PROOF",
+      firstMissingFact: mount.usedSizeFirstMissingFact,
+      observedFacts: [
+        `MOUNT_RECT:${mount.rectWidth}x${mount.rectHeight}`,
+        `MOUNT_OFFSET:${mount.offsetWidth}x${mount.offsetHeight}`,
+        `MOUNT_CLIENT:${mount.clientWidth}x${mount.clientHeight}`,
+        `MOUNT_COMPUTED_SIZE:${mount.computedWidth}x${mount.computedHeight}`,
+        `MOUNT_DISPLAY:${mount.computedDisplay}`,
+        `MOUNT_POSITION:${mount.computedPosition}`
+      ],
+      missingFacts: mount.usedSizeClean ? [] : [mount.usedSizeFirstMissingFact],
+      diagnosticFacts: compactElementFacts(mount),
+      recommendedOwner: "HTML_SHELL_OR_STAGE_LAYOUT_BOUNDARY",
+      recommendedAction: mount.usedSizeClean
+        ? "CONTINUE_TO_FRAME_BOUNDARY"
+        : "READ_PARENT_CHAIN_AND_STAGE_USED_SIZE_FACTS",
+      reason: mount.usedSizeReason
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 6,
+      id: "MOUNT_PARENT_CHAIN_USED_SIZE_BOUNDARY",
+      boundaryType: "PARENT_CHAIN",
+      from: "CANONICAL_MOUNT",
+      to: "ANCESTOR_USED_SIZE_CHAIN",
+      observed: Array.isArray(snapshot.mountParentChain) && snapshot.mountParentChain.length > 0,
+      clean: mountChain.clean,
+      class: mountChain.status || "PARENT_CHAIN_UNAVAILABLE",
+      firstMissingProof: mountChain.clean ? "NONE" : "ANCESTOR_USED_SIZE_PROOF",
+      firstMissingFact: mountChain.firstCollapsedMissingFact || "PARENT_CHAIN_FACTS",
+      observedFacts: [
+        `FIRST_COLLAPSED:${mountChain.firstCollapsedDescriptor}`,
+        `FIRST_COLLAPSED_DEPTH:${mountChain.firstCollapsedDepth}`,
+        `FIRST_COLLAPSED_SIZE:${mountChain.firstCollapsedWidth}x${mountChain.firstCollapsedHeight}`,
+        `FIRST_COLLAPSED_COMPUTED_SIZE:${mountChain.firstCollapsedComputedWidth}x${mountChain.firstCollapsedComputedHeight}`
+      ],
+      missingFacts: mountChain.clean ? [] : [mountChain.firstCollapsedMissingFact || "ANCESTOR_RECT_NONZERO"],
+      diagnosticFacts: clonePlain(mountChain),
+      recommendedOwner: "HTML_SHELL_OR_STAGE_LAYOUT_BOUNDARY",
+      recommendedAction: mountChain.clean
+        ? "CONTINUE_TO_FRAME_BOUNDARY"
+        : "READ_PARENT_CHAIN_AND_STAGE_USED_SIZE_FACTS",
+      reason: mountChain.clean
+        ? "MOUNT_PARENT_CHAIN_USED_SIZE_FACTS_PRESENT"
+        : `PARENT_CHAIN_COLLAPSED_AT:${mountChain.firstCollapsedDescriptor}`
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 7,
+      id: "FRAME_SELECTION_BOUNDARY",
+      boundaryType: "LAYOUT",
+      from: "CANONICAL_MOUNT",
+      to: "CANONICAL_RECT_LOCK_FRAME",
+      observed: frame.exists,
+      clean: frame.exists,
+      class: frame.exists ? "CANONICAL_FRAME_FOUND" : "CANONICAL_FRAME_NOT_FOUND",
+      firstMissingProof: frame.exists ? "NONE" : "CANONICAL_FRAME_SELECTOR_MATCH",
+      firstMissingFact: frame.exists ? "NONE" : "CANONICAL_FRAME_PRESENT",
+      observedFacts: [
+        `FRAME_SELECTOR:${CANONICAL_FRAME_SELECTOR}`,
+        `FRAME_DESCRIPTOR:${frame.descriptor}`
+      ],
+      missingFacts: frame.exists ? [] : [CANONICAL_FRAME_SELECTOR],
+      diagnosticFacts: compactElementFacts(frame),
+      recommendedOwner: "CANVAS_DOM_BINDING_BOUNDARY",
+      recommendedAction: frame.exists
+        ? "READ_FRAME_USED_SIZE_FACTS"
+        : "CONFIRM_CANONICAL_RECT_LOCK_FRAME_EXISTS_UNDER_MOUNT",
+      reason: frame.exists
+        ? "#hearthCanvasRectLockFrame_OBSERVED"
+        : "#hearthCanvasRectLockFrame_NOT_FOUND"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 8,
+      id: "MOUNT_TO_FRAME_CONNECTION_BOUNDARY",
+      boundaryType: "DOM_CONNECTION",
+      from: "CANONICAL_MOUNT",
+      to: "CANONICAL_RECT_LOCK_FRAME",
+      observed: mount.exists && frame.exists,
+      clean: Boolean(mount.exists && frame.exists && containsOrEquals(snapshot.canonicalMount, snapshot.canonicalFrame)),
+      class: mount.exists && frame.exists && containsOrEquals(snapshot.canonicalMount, snapshot.canonicalFrame)
+        ? "FRAME_INSIDE_MOUNT"
+        : "FRAME_NOT_INSIDE_MOUNT_OR_UNOBSERVED",
+      firstMissingProof: mount.exists && frame.exists ? "NONE" : "MOUNT_FRAME_CONNECTION_PROOF",
+      firstMissingFact: mount.exists && frame.exists ? "NONE" : "MOUNT_AND_FRAME_PRESENT",
+      observedFacts: [
+        `MOUNT_FOUND:${mount.exists}`,
+        `FRAME_FOUND:${frame.exists}`,
+        `FRAME_IN_MOUNT:${containsOrEquals(snapshot.canonicalMount, snapshot.canonicalFrame)}`
+      ],
+      missingFacts: mount.exists && frame.exists ? [] : ["mount/frame DOM connection"],
+      diagnosticFacts: {
+        mountDescriptor: mount.descriptor,
+        frameDescriptor: frame.descriptor,
+        frameInMount: containsOrEquals(snapshot.canonicalMount, snapshot.canonicalFrame)
+      },
+      recommendedOwner: "CANVAS_DOM_BINDING_BOUNDARY",
+      recommendedAction: "VERIFY_MOUNT_FRAME_DOM_CONNECTION",
+      reason: containsOrEquals(snapshot.canonicalMount, snapshot.canonicalFrame)
+        ? "FRAME_IS_WITHIN_CANONICAL_MOUNT"
+        : "FRAME_NOT_CONFIRMED_WITHIN_CANONICAL_MOUNT"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 9,
+      id: "FRAME_USED_SIZE_BOUNDARY",
+      boundaryType: "LAYOUT_USED_SIZE",
+      from: "CANONICAL_RECT_LOCK_FRAME",
+      to: "FRAME_BOX",
+      observed: frame.exists,
+      clean: frame.exists && frame.usedSizeClean,
+      class: frame.exists ? frame.usedSizeClass : "CANONICAL_FRAME_NOT_FOUND",
+      firstMissingProof: frame.usedSizeClean ? "NONE" : "CANONICAL_FRAME_USED_SIZE_PROOF",
+      firstMissingFact: frame.usedSizeFirstMissingFact,
+      observedFacts: [
+        `FRAME_RECT:${frame.rectWidth}x${frame.rectHeight}`,
+        `FRAME_OFFSET:${frame.offsetWidth}x${frame.offsetHeight}`,
+        `FRAME_CLIENT:${frame.clientWidth}x${frame.clientHeight}`,
+        `FRAME_COMPUTED_SIZE:${frame.computedWidth}x${frame.computedHeight}`
+      ],
+      missingFacts: frame.usedSizeClean ? [] : [frame.usedSizeFirstMissingFact],
+      diagnosticFacts: compactElementFacts(frame),
+      recommendedOwner: "CANVAS_DOM_BINDING_OR_CSS_LAYOUT_BOUNDARY",
+      recommendedAction: frame.usedSizeClean
+        ? "CONTINUE_TO_CANVAS_BOUNDARY"
+        : "READ_FRAME_PARENT_CHAIN_USED_SIZE_FACTS",
+      reason: frame.usedSizeReason
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 10,
+      id: "CANVAS_SELECTION_BOUNDARY",
+      boundaryType: "LAYOUT",
+      from: "CANONICAL_RECT_LOCK_FRAME",
+      to: "CANONICAL_CANVAS",
+      observed: Boolean(snapshot.canonicalCanvas),
+      clean: Boolean(snapshot.canonicalCanvas),
+      class: snapshot.canonicalCanvas ? "CANONICAL_CANVAS_FOUND" : "CANONICAL_CANVAS_NOT_FOUND",
+      firstMissingProof: snapshot.canonicalCanvas ? "NONE" : "CANONICAL_CANVAS_SELECTOR_MATCH",
+      firstMissingFact: snapshot.canonicalCanvas ? "NONE" : "CANONICAL_CANVAS_PRESENT",
+      observedFacts: [
+        `CANVAS_SELECTOR:${snapshot.canonicalFound.selector}`,
+        `CANVAS_DESCRIPTOR:${canvas.descriptor || "NONE"}`
+      ],
+      missingFacts: snapshot.canonicalCanvas ? [] : [CANONICAL_CHAIN_SELECTOR],
+      diagnosticFacts: compactElementFacts(canvas),
+      recommendedOwner: "CANVAS_DOM_BINDING_BOUNDARY",
+      recommendedAction: snapshot.canonicalCanvas
+        ? "READ_CANVAS_USED_SIZE_FACTS"
+        : "CONFIRM_CANONICAL_CANVAS_SELECTOR_CHAIN",
+      reason: snapshot.canonicalCanvas
+        ? "#hearthVisibleCanvas_OBSERVED"
+        : "NO_CANONICAL_CANVAS_SELECTOR_MATCHED"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 11,
+      id: "FRAME_TO_CANVAS_CONNECTION_BOUNDARY",
+      boundaryType: "DOM_CONNECTION",
+      from: "CANONICAL_RECT_LOCK_FRAME",
+      to: "CANONICAL_CANVAS",
+      observed: frame.exists && Boolean(snapshot.canonicalCanvas),
+      clean: Boolean(frame.exists && snapshot.canonicalCanvas && canvas.inCanonicalFrame),
+      class: canvas.inCanonicalFrame ? "CANVAS_INSIDE_FRAME" : "CANVAS_NOT_INSIDE_FRAME_OR_UNOBSERVED",
+      firstMissingProof: canvas.inCanonicalFrame ? "NONE" : "FRAME_CANVAS_CONNECTION_PROOF",
+      firstMissingFact: canvas.inCanonicalFrame ? "NONE" : "CANVAS_IN_FRAME",
+      observedFacts: [
+        `FRAME_FOUND:${frame.exists}`,
+        `CANVAS_FOUND:${Boolean(snapshot.canonicalCanvas)}`,
+        `CANVAS_IN_FRAME:${canvas.inCanonicalFrame === true}`,
+        `CANVAS_IN_MOUNT:${canvas.inCanonicalMount === true}`
+      ],
+      missingFacts: canvas.inCanonicalFrame ? [] : ["canvas must be inside #hearthCanvasRectLockFrame"],
+      diagnosticFacts: {
+        frameDescriptor: frame.descriptor,
+        canvasDescriptor: canvas.descriptor || "NONE",
+        canvasInFrame: canvas.inCanonicalFrame === true,
+        canvasInMount: canvas.inCanonicalMount === true
+      },
+      recommendedOwner: "CANVAS_DOM_BINDING_BOUNDARY",
+      recommendedAction: "VERIFY_FRAME_CANVAS_DOM_CONNECTION",
+      reason: canvas.inCanonicalFrame
+        ? "CANVAS_IS_WITHIN_CANONICAL_RECT_LOCK_FRAME"
+        : "CANVAS_NOT_CONFIRMED_WITHIN_CANONICAL_RECT_LOCK_FRAME"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 12,
+      id: "CANVAS_USED_SIZE_BOUNDARY",
+      boundaryType: "LAYOUT_USED_SIZE",
+      from: "CANONICAL_CANVAS",
+      to: "CANVAS_DOM_BOX",
+      observed: Boolean(snapshot.canonicalCanvas),
+      clean: Boolean(snapshot.canonicalCanvas && canvas.usedSizeClean),
+      class: snapshot.canonicalCanvas ? canvas.usedSizeClass : "CANONICAL_CANVAS_NOT_FOUND",
+      firstMissingProof: canvas.usedSizeClean ? "NONE" : "CANONICAL_CANVAS_USED_SIZE_PROOF",
+      firstMissingFact: canvas.usedSizeFirstMissingFact || "CANONICAL_CANVAS_RECT_NONZERO",
+      observedFacts: [
+        `CANVAS_RECT:${canvas.rectWidth || 0}x${canvas.rectHeight || 0}`,
+        `CANVAS_OFFSET:${canvas.offsetWidth || 0}x${canvas.offsetHeight || 0}`,
+        `CANVAS_CLIENT:${canvas.clientWidth || 0}x${canvas.clientHeight || 0}`,
+        `CANVAS_COMPUTED_SIZE:${canvas.computedWidth || "UNKNOWN"}x${canvas.computedHeight || "UNKNOWN"}`
+      ],
+      missingFacts: canvas.usedSizeClean ? [] : [canvas.usedSizeFirstMissingFact || "CANVAS_RECT_NONZERO"],
+      diagnosticFacts: compactElementFacts(canvas),
+      recommendedOwner: "CSS_LAYOUT_OR_CANVAS_PLACEMENT_BOUNDARY",
+      recommendedAction: canvas.usedSizeClean
+        ? "CONTINUE_TO_CANVAS_BUFFER_BOUNDARY"
+        : "READ_CANVAS_AND_PARENT_CHAIN_USED_SIZE_FACTS",
+      reason: canvas.usedSizeReason || "CANVAS_USED_SIZE_FACTS_UNAVAILABLE"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 13,
+      id: "CANVAS_BUFFER_TO_DOM_SIZE_BOUNDARY",
+      boundaryType: "CANVAS_BUFFER",
+      from: "CANVAS_WIDTH_HEIGHT_ATTRIBUTES",
+      to: "CANVAS_DOM_BOX",
+      observed: Boolean(snapshot.canonicalCanvas),
+      clean: Boolean(canvas.internalSizeNonzero),
+      class: canvas.internalSizeNonzero ? "CANVAS_INTERNAL_BUFFER_NONZERO" : "CANVAS_INTERNAL_BUFFER_ZERO_OR_UNOBSERVED",
+      firstMissingProof: canvas.internalSizeNonzero ? "NONE" : "CANVAS_BUFFER_SIZE_PROOF",
+      firstMissingFact: canvas.internalSizeNonzero ? "NONE" : "CANVAS_WIDTH_HEIGHT_ATTRIBUTES_NONZERO",
+      observedFacts: [
+        `WIDTH_ATTRIBUTE:${canvas.widthAttribute || 0}`,
+        `HEIGHT_ATTRIBUTE:${canvas.heightAttribute || 0}`,
+        `BUFFER_CSS_RATIO:${canvas.bufferCssWidthRatio || 0}x${canvas.bufferCssHeightRatio || 0}`
+      ],
+      missingFacts: canvas.internalSizeNonzero ? [] : ["canvas.width", "canvas.height"],
+      diagnosticFacts: {
+        widthAttribute: canvas.widthAttribute || 0,
+        heightAttribute: canvas.heightAttribute || 0,
+        internalSizeNonzero: canvas.internalSizeNonzero || false,
+        bufferCssWidthRatio: canvas.bufferCssWidthRatio || 0,
+        bufferCssHeightRatio: canvas.bufferCssHeightRatio || 0
+      },
+      recommendedOwner: "CANVAS_DOM_SURFACE_BOUNDARY",
+      recommendedAction: canvas.internalSizeNonzero
+        ? "CONTINUE_TO_VIEWPORT_BOUNDARY"
+        : "VERIFY_CANONICAL_CANVAS_BUFFER_WIDTH_AND_HEIGHT_ATTRIBUTES",
+      reason: canvas.internalSizeNonzero
+        ? "CANVAS_INTERNAL_BUFFER_NONZERO"
+        : "CANVAS_WIDTH_OR_HEIGHT_ATTRIBUTE_ZERO"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 14,
+      id: "CANVAS_VIEWPORT_BOUNDARY",
+      boundaryType: "VIEWPORT",
+      from: "CANONICAL_CANVAS_DOM_BOX",
+      to: "VIEWPORT",
+      observed: Boolean(snapshot.canonicalCanvas),
+      clean: Boolean(canvas.viewportIntersecting),
+      class: canvas.viewportIntersecting ? "CANVAS_INTERSECTS_VIEWPORT" : "CANVAS_OUTSIDE_VIEWPORT_OR_ZERO_RECT",
+      firstMissingProof: canvas.viewportIntersecting ? "NONE" : "CANVAS_VIEWPORT_INTERSECTION_PROOF",
+      firstMissingFact: canvas.viewportIntersecting ? "NONE" : "CANVAS_VIEWPORT_INTERSECTING",
+      observedFacts: [
+        `CANVAS_RECT:${canvas.rectLeft || 0},${canvas.rectTop || 0},${canvas.rectRight || 0},${canvas.rectBottom || 0}`,
+        `VIEWPORT:${safeNumber(snapshot.context.targetWindow && snapshot.context.targetWindow.innerWidth, 0)}x${safeNumber(snapshot.context.targetWindow && snapshot.context.targetWindow.innerHeight, 0)}`
+      ],
+      missingFacts: canvas.viewportIntersecting ? [] : ["canvas visible rect must intersect viewport"],
+      diagnosticFacts: {
+        viewportIntersecting: canvas.viewportIntersecting || false,
+        rectLeft: canvas.rectLeft || 0,
+        rectTop: canvas.rectTop || 0,
+        rectRight: canvas.rectRight || 0,
+        rectBottom: canvas.rectBottom || 0
+      },
+      recommendedOwner: "CSS_LAYOUT_OR_SCROLL_POSITION_BOUNDARY",
+      recommendedAction: canvas.viewportIntersecting
+        ? "CONTINUE_TO_LAYER_BOUNDARY"
+        : "READ_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_FACTS",
+      reason: canvas.viewportIntersecting
+        ? "CANVAS_INTERSECTS_VIEWPORT"
+        : "CANVAS_DOES_NOT_INTERSECT_VIEWPORT_OR_RECT_IS_ZERO"
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 15,
+      id: "CANVAS_LAYER_BOUNDARY",
+      boundaryType: "LAYERING",
+      from: "CANONICAL_CANVAS",
+      to: "TOPMOST_CENTER_ELEMENT",
+      observed: layering.status === "EVALUATED",
+      clean: layering.status !== "EVALUATED" || layering.possibleLayerBlocker === "false",
+      class: layering.status === "EVALUATED"
+        ? layering.possibleLayerBlocker === "false"
+          ? "CANVAS_TOPMOST_OR_CONTAINS_CENTER_ELEMENT"
+          : "CANVAS_LAYER_BLOCKED_OR_NOT_TOPMOST"
+        : layering.status || "NOT_EVALUATED",
+      firstMissingProof: layering.possibleLayerBlocker === "false" ? "NONE" : "CANVAS_TOPMOST_PROOF",
+      firstMissingFact: layering.possibleLayerBlocker === "false" ? "NONE" : "CANVAS_LAYER_TOPMOST",
+      observedFacts: [
+        `LAYER_STATUS:${layering.status || "UNKNOWN"}`,
+        `CENTER_ELEMENT:${layering.centerElementDescriptor || "NONE"}`,
+        `POSSIBLE_BLOCKER:${layering.possibleLayerBlocker || "UNKNOWN"}`
+      ],
+      missingFacts: layering.possibleLayerBlocker === "false" ? [] : ["elementFromPoint center must resolve to canvas or contained child"],
+      diagnosticFacts: clonePlain(layering),
+      recommendedOwner: "CSS_LAYERING_OR_ROUTE_STAGE_BOUNDARY",
+      recommendedAction: layering.possibleLayerBlocker === "false"
+        ? "CONTINUE_TO_PIXEL_BOUNDARY"
+        : "READ_LAYERING_Z_INDEX_AND_OVERLAY_FACTS",
+      reason: layering.possibleLayerBlocker === "false"
+        ? "CANVAS_CENTER_NOT_BLOCKED"
+        : `CENTER_POINT_TOP_ELEMENT_IS_${layering.centerElementDescriptor || "UNKNOWN"}`
+    }));
+
+    rows.push(makeBoundaryRow({
+      order: 16,
+      id: "CANVAS_PIXEL_BOUNDARY",
+      boundaryType: "PIXEL_SURFACE",
+      from: "CANVAS_2D_CONTEXT",
+      to: "VISIBLE_PIXEL_SAMPLE",
+      observed: Boolean(snapshot.canonicalCanvas),
+      clean: Boolean(canvas.pixelVisible),
+      class: canvas.pixelVisible ? "CANVAS_PIXEL_SAMPLE_VISIBLE" : "CANVAS_PIXEL_SAMPLE_NOT_VISIBLE",
+      firstMissingProof: canvas.pixelVisible ? "NONE" : "VISIBLE_CANVAS_PIXEL_PROOF",
+      firstMissingFact: canvas.pixelVisible ? "NONE" : "CANVAS_PIXEL_VISIBLE",
+      observedFacts: [
+        `CONTEXT_2D_READY:${canvas.context2dReady || false}`,
+        `PIXEL_SAMPLE_STATUS:${canvas.pixelSampleStatus || "UNKNOWN"}`,
+        `VISIBLE_PIXEL_COUNT:${canvas.visiblePixelCount || 0}`,
+        `UNIQUE_COLOR_COUNT:${canvas.uniqueColorCount || 0}`
+      ],
+      missingFacts: canvas.pixelVisible ? [] : ["visible non-blank sampled pixels"],
+      diagnosticFacts: {
+        context2dReady: canvas.context2dReady || false,
+        pixelSampleStatus: canvas.pixelSampleStatus || "UNKNOWN",
+        pixelSampleReason: canvas.pixelSampleReason || "UNKNOWN",
+        visiblePixelCount: canvas.visiblePixelCount || 0,
+        uniqueColorCount: canvas.uniqueColorCount || 0
+      },
+      recommendedOwner: "CANVAS_DRAW_PATH_OR_DOWNSTREAM_EXPRESSION_BOUNDARY",
+      recommendedAction: canvas.pixelVisible
+        ? "RETURN_CANONICAL_SURFACE_TRUTH_PASS_TO_NORTH"
+        : "DO_NOT_AUDIT_PIXEL_DRAW_PATH_UNTIL_USED_SIZE_BOUNDARIES_ARE_CLEAN",
+      reason: canvas.pixelSampleReason || "PIXEL_SAMPLE_NOT_VISIBLE"
+    }));
+
+    return rows;
+  }
+
+  function runtimeNodeRow(id, role, file, family, authority, script) {
+    return {
+      id,
+      role,
+      file,
+      family,
+      observed: Boolean(authority.observed || (script && script.present)),
+      authorityPresent: Boolean(authority.observed),
+      scriptPresent: Boolean(script && script.present),
+      scriptCount: script ? script.count : 0,
+      scriptSrc: script ? script.src : "NONE",
+      scriptCacheKey: script ? script.cacheKey : "NONE",
+      authorityScope: authority.scope || "NONE",
+      authorityPath: authority.path || "NONE",
+      contract: authority.contract || "UNKNOWN",
+      receipt: authority.receipt || "UNKNOWN",
+      contractRecognized: Boolean(authority.contractRecognized),
+      methodCount: authority.methodCount || 0,
+      publicMethods: Array.isArray(authority.methods) ? authority.methods.slice(0, 80) : [],
+      nodeStatus: authority.observed
+        ? authority.contractRecognized
+          ? "AUTHORITY_OBSERVED_CONTRACT_RECOGNIZED"
+          : "AUTHORITY_OBSERVED_CONTRACT_UNRECOGNIZED"
+        : script && script.present
+          ? "SCRIPT_PRESENT_AUTHORITY_NOT_OBSERVED"
+          : "SCRIPT_AND_AUTHORITY_NOT_OBSERVED",
+      missingRuntimeFact: authority.observed
+        ? authority.contractRecognized
+          ? "NONE"
+          : "CONTRACT_RECOGNITION_OR_ALIAS_FAMILY_ALIGNMENT"
+        : script && script.present
+          ? "PUBLIC_AUTHORITY_ALIAS_OBSERVED"
+          : "SCRIPT_PRESENT_OR_PUBLIC_AUTHORITY_ALIAS_OBSERVED"
+    };
+  }
+
+  function buildRuntimeBoundaryRows(snapshot) {
+    const scripts = snapshot.scripts || {};
+    const nodes = snapshot.runtimeNodes || {};
+
+    const route = nodes.route;
+    const controls = nodes.controls;
+    const canvas = nodes.canvas;
+    const hexAuthority = nodes.hexAuthority;
+    const hexSurface = nodes.hexSurface;
+    const pointerSurface = nodes.pointerSurface;
+    const pointerInspect = nodes.pointerInspect;
+
+    const relationships = [
+      {
+        order: 1,
+        id: "ROUTE_TO_CONTROLS_CONTROL_HANDSHAKE",
+        from: route,
+        to: controls,
+        fromFile: ROUTE_CONDUCTOR_FILE,
+        toFile: CONTROL_FILE,
+        requiredForVisibleSurface: false,
+        expectedMode: "HANDSHAKE"
+      },
+      {
+        order: 2,
+        id: "ROUTE_TO_CANVAS_GOVERNED_SOURCE_HANDSHAKE",
+        from: route,
+        to: canvas,
+        fromFile: ROUTE_CONDUCTOR_FILE,
+        toFile: CANVAS_FILE,
+        requiredForVisibleSurface: true,
+        expectedMode: "HANDSHAKE"
+      },
+      {
+        order: 3,
+        id: "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE",
+        from: controls,
+        to: canvas,
+        fromFile: CONTROL_FILE,
+        toFile: CANVAS_FILE,
+        requiredForVisibleSurface: false,
+        expectedMode: "HANDSHAKE"
+      },
+      {
+        order: 4,
+        id: "CANVAS_TO_HEX_AUTHORITY_TRUTH_READ",
+        from: canvas,
+        to: hexAuthority,
+        fromFile: CANVAS_FILE,
+        toFile: HEX_AUTHORITY_FILE,
+        requiredForVisibleSurface: true,
+        expectedMode: "READ_OR_HANDOFF"
+      },
+      {
+        order: 5,
+        id: "CANVAS_TO_HEX_SURFACE_EXPRESSION_GATE",
+        from: canvas,
+        to: hexSurface,
+        fromFile: CANVAS_FILE,
+        toFile: HEX_SURFACE_FILE,
+        requiredForVisibleSurface: true,
+        expectedMode: "HANDSHAKE_OR_HANDOFF"
+      },
+      {
+        order: 6,
+        id: "HEX_SURFACE_TO_POINTER_SURFACE_BISHOP_GATE",
+        from: hexSurface,
+        to: pointerSurface,
+        fromFile: HEX_SURFACE_FILE,
+        toFile: POINTER_SURFACE_FILE,
+        requiredForVisibleSurface: true,
+        expectedMode: "HANDOFF"
+      },
+      {
+        order: 7,
+        id: "POINTER_SURFACE_BISHOP_TO_CANVAS_RETURN_SOCKET",
+        from: pointerSurface,
+        to: canvas,
+        fromFile: POINTER_SURFACE_FILE,
+        toFile: CANVAS_FILE,
+        requiredForVisibleSurface: true,
+        expectedMode: "RETURN_SOCKET"
+      },
+      {
+        order: 8,
+        id: "POINTER_SURFACE_BISHOP_TO_INSPECT_PRIEST_CHILD_ORGANIZER",
+        from: pointerSurface,
+        to: pointerInspect,
+        fromFile: POINTER_SURFACE_FILE,
+        toFile: POINTER_INSPECT_FILE,
+        requiredForVisibleSurface: false,
+        expectedMode: "CHILD_ORGANIZER"
+      }
+    ];
+
+    return relationships.map((rel) => {
+      const fromObserved = Boolean(rel.from && rel.from.observed);
+      const toObserved = Boolean(rel.to && rel.to.observed);
+      const fromRecognized = Boolean(rel.from && rel.from.contractRecognized);
+      const toRecognized = Boolean(rel.to && rel.to.contractRecognized);
+      const endpointFactsPresent = fromObserved && toObserved;
+      const recognizedEnough = fromRecognized && (toRecognized || rel.expectedMode === "CHILD_ORGANIZER");
+
+      let clean = endpointFactsPresent && recognizedEnough;
+      let firstMissingFact = "NONE";
+      let klass = "RUNTIME_BOUNDARY_FACTS_PRESENT";
+
+      if (!fromObserved) {
+        clean = false;
+        firstMissingFact = "FROM_AUTHORITY_MISSING_OR_ALIAS_NOT_OBSERVED";
+        klass = "FROM_ENDPOINT_NOT_OBSERVED";
+      } else if (!toObserved) {
+        clean = false;
+        firstMissingFact = "TO_AUTHORITY_MISSING_OR_ALIAS_NOT_OBSERVED";
+        klass = "TO_ENDPOINT_NOT_OBSERVED";
+      } else if (!fromRecognized) {
+        clean = false;
+        firstMissingFact = "FROM_CONTRACT_NOT_RECOGNIZED";
+        klass = "FROM_CONTRACT_UNRECOGNIZED";
+      } else if (!toRecognized && rel.expectedMode !== "CHILD_ORGANIZER") {
+        clean = false;
+        firstMissingFact = "TO_CONTRACT_NOT_RECOGNIZED";
+        klass = "TO_CONTRACT_UNRECOGNIZED";
+      }
+
+      return makeBoundaryRow({
+        order: rel.order,
+        id: rel.id,
+        boundaryType: "RUNTIME_RELATIONSHIP_FACT",
+        from: rel.from ? rel.from.id : "UNKNOWN_FROM",
+        to: rel.to ? rel.to.id : "UNKNOWN_TO",
+        fromFile: rel.fromFile,
+        toFile: rel.toFile,
+        observed: endpointFactsPresent,
+        clean,
+        blocking: rel.requiredForVisibleSurface,
+        class: klass,
+        firstMissingProof: clean ? "NONE" : "RUNTIME_RELATIONSHIP_ENDPOINT_PROOF",
+        firstMissingFact,
+        observedFacts: [
+          `FROM_OBSERVED:${fromObserved}`,
+          `TO_OBSERVED:${toObserved}`,
+          `FROM_CONTRACT:${rel.from ? rel.from.contract : "UNKNOWN"}`,
+          `TO_CONTRACT:${rel.to ? rel.to.contract : "UNKNOWN"}`,
+          `FROM_RECOGNIZED:${fromRecognized}`,
+          `TO_RECOGNIZED:${toRecognized}`,
+          `EXPECTED_MODE:${rel.expectedMode}`
+        ],
+        missingFacts: clean ? [] : [firstMissingFact],
+        diagnosticFacts: {
+          from: clonePlain(rel.from || {}),
+          to: clonePlain(rel.to || {}),
+          requiredForVisibleSurface: rel.requiredForVisibleSurface,
+          expectedMode: rel.expectedMode
+        },
+        recommendedOwner: "RUNTIME_BOUNDARY_FACTS_ONLY",
+        recommendedAction: clean
+          ? "CONTINUE_RUNTIME_BOUNDARY_SCAN"
+          : "CONFIRM_PUBLIC_AUTHORITY_ALIAS_CONTRACT_AND_RELATIONSHIP_PERMISSION_FACTS",
+        reason: clean
+          ? "RUNTIME_BOUNDARY_FACTS_PRESENT"
+          : `${rel.id}:${firstMissingFact}`
+      });
+    });
+  }
+
   function captureSurfaceSnapshot(payload = {}, phase = "IMMEDIATE_SYNC") {
     const context = getTargetContext(payload);
     const targetWindow = context.targetWindow;
@@ -1600,33 +2438,37 @@
 
     const scripts = inspectScripts(targetDocument);
 
-    const authorities = {
-      route: inspectAuthority(targetWindow, ROUTE_AUTHORITY_ALIASES),
-      canvas: inspectAuthority(targetWindow, CANVAS_AUTHORITY_ALIASES),
-      controls: inspectAuthority(targetWindow, CONTROL_AUTHORITY_ALIASES),
-      hexSurface: inspectAuthority(targetWindow, HEX_SURFACE_ALIASES),
-      hexAuthority: inspectAuthority(targetWindow, HEX_AUTHORITY_ALIASES),
-      pointerSurface: inspectAuthority(targetWindow, POINTER_SURFACE_ALIASES),
-      pointerInspect: inspectAuthority(targetWindow, POINTER_INSPECT_ALIASES)
+    const routeAuthority = inspectAuthority(targetWindow, ROUTE_AUTHORITY_ALIASES, "route");
+    const controlAuthority = inspectAuthority(targetWindow, CONTROL_AUTHORITY_ALIASES, "controls");
+    const canvasAuthority = inspectAuthority(targetWindow, CANVAS_AUTHORITY_ALIASES, "canvas");
+    const hexAuthority = inspectAuthority(targetWindow, HEX_AUTHORITY_ALIASES, "hexAuthority");
+    const hexSurfaceAuthority = inspectAuthority(targetWindow, HEX_SURFACE_ALIASES, "hexSurface");
+    const pointerSurfaceAuthority = inspectAuthority(targetWindow, POINTER_SURFACE_ALIASES, "pointerSurface");
+    const pointerInspectAuthority = inspectAuthority(targetWindow, POINTER_INSPECT_ALIASES, "pointerInspect");
+
+    const runtimeNodes = {
+      route: runtimeNodeRow("ROUTE_CONDUCTOR", "route-permission-and-active-scan-authority", ROUTE_CONDUCTOR_FILE, "route", routeAuthority, scripts.routeConductor),
+      controls: runtimeNodeRow("CONTROLS_QUEEN", "motion-input-and-view-control-gateway", CONTROL_FILE, "controls", controlAuthority, scripts.controls),
+      canvas: runtimeNodeRow("CANVAS_RECEIVER", "canonical-visible-2d-output-carrier", CANVAS_FILE, "canvas", canvasAuthority, scripts.canvas),
+      hexAuthority: runtimeNodeRow("HEX_AUTHORITY", "hex-four-pair-truth-authority", HEX_AUTHORITY_FILE, "hexAuthority", hexAuthority, scripts.hexAuthority),
+      hexSurface: runtimeNodeRow("HEX_SURFACE_GATE", "downstream-hex-surface-gate-before-pointer-surface", HEX_SURFACE_FILE, "hexSurface", hexSurfaceAuthority, scripts.hexSurface),
+      pointerSurface: runtimeNodeRow("POINTER_SURFACE_BISHOP", "pointer-surface-bishop-gate", POINTER_SURFACE_FILE, "pointerSurface", pointerSurfaceAuthority, scripts.pointerSurface),
+      pointerInspect: runtimeNodeRow("POINTER_INSPECT_PRIEST", "child-organizer-priest-not-primary-endpoint", POINTER_INSPECT_FILE, "pointerInspect", pointerInspectAuthority, scripts.pointerInspect)
     };
 
     const stageFound = findStage(targetDocument);
     const stageElement = stageFound.element;
-    const stageRect = getRect(stageElement);
-    const stageCss = cssSummary(targetWindow, stageElement);
+    const stageSummary = measureElement(targetWindow, stageElement, "STAGE");
 
     const canonicalMount = q(targetDocument, CANONICAL_MOUNT_SELECTOR);
     const canonicalFrame = q(targetDocument, CANONICAL_FRAME_SELECTOR);
     const canonicalFound = findCanonicalCanvas(targetDocument);
     const canonicalCanvas = canonicalFound.element;
 
-    const mountRect = getRect(canonicalMount);
-    const mountCss = cssSummary(targetWindow, canonicalMount);
-    const frameRect = getRect(canonicalFrame);
-    const frameCss = cssSummary(targetWindow, canonicalFrame);
+    const mountSummary = measureElement(targetWindow, canonicalMount, "CANONICAL_MOUNT");
+    const frameSummary = measureElement(targetWindow, canonicalFrame, "CANONICAL_FRAME");
 
     const allCanvases = qa(targetDocument, "canvas");
-
     const allCanvasSummaries = allCanvases.map((canvas, index) =>
       describeCanvas(
         targetWindow,
@@ -1678,6 +2520,7 @@
     const canonicalSurfaceAdmissible = Boolean(
       canonicalSummary &&
       canonicalSummary.inCanonicalMount &&
+      canonicalSummary.inCanonicalFrame &&
       canonicalSummary.surfaceAdmissible
     );
 
@@ -1699,60 +2542,36 @@
 
     const layering = inspectLayering(targetWindow, targetDocument, canonicalCanvas);
 
-    return {
+    const snapshot = {
       phase,
       capturedAt: nowIso(),
 
       context,
       targetWindow,
       targetDocument,
-      scripts,
-      authorities,
 
-      stageFound: Boolean(stageElement),
+      scripts,
+      routeAuthority,
+      controlAuthority,
+      canvasAuthority,
+      hexAuthority,
+      hexSurfaceAuthority,
+      pointerSurfaceAuthority,
+      pointerInspectAuthority,
+      runtimeNodes,
+
+      stageElement,
       stageSelector: stageFound.selector,
-      stageDescriptor: elementDescriptor(stageElement),
-      stageRectNonzero: rectNonzero(stageRect),
-      stageRectWidth: stageRect.width,
-      stageRectHeight: stageRect.height,
-      stageComputedVisible: stageCss.visible,
-      stageComputedDisplay: stageCss.display,
-      stageComputedPosition: stageCss.position,
-      stageComputedOverflow: stageCss.overflow,
+      stageSummary,
 
       canonicalMount,
-      canonicalMountFound: Boolean(canonicalMount),
-      canonicalMountDescriptor: elementDescriptor(canonicalMount),
-      canonicalMountRectNonzero: rectNonzero(mountRect),
-      canonicalMountRectWidth: mountRect.width,
-      canonicalMountRectHeight: mountRect.height,
-      canonicalMountComputedVisible: mountCss.visible,
-      canonicalMountComputedDisplay: mountCss.display,
-      canonicalMountComputedPosition: mountCss.position,
-      canonicalMountComputedOverflow: mountCss.overflow,
-      canonicalMountComputedContain: mountCss.contain,
-      canonicalMountComputedContentVisibility: mountCss.contentVisibility,
-      canonicalMountComputedWidth: mountCss.width,
-      canonicalMountComputedHeight: mountCss.height,
-
       canonicalFrame,
-      canonicalFrameFound: Boolean(canonicalFrame),
-      canonicalFrameDescriptor: elementDescriptor(canonicalFrame),
-      canonicalFrameRectNonzero: rectNonzero(frameRect),
-      canonicalFrameRectWidth: frameRect.width,
-      canonicalFrameRectHeight: frameRect.height,
-      canonicalFrameComputedVisible: frameCss.visible,
-      canonicalFrameComputedDisplay: frameCss.display,
-      canonicalFrameComputedPosition: frameCss.position,
-      canonicalFrameComputedOverflow: frameCss.overflow,
-      canonicalFrameComputedContain: frameCss.contain,
-      canonicalFrameComputedContentVisibility: frameCss.contentVisibility,
-      canonicalFrameComputedWidth: frameCss.width,
-      canonicalFrameComputedHeight: frameCss.height,
-
       canonicalCanvas,
       canonicalFound,
+      mountSummary,
+      frameSummary,
       canonicalSummary,
+
       canonicalParentChain,
       canonicalParentChainClassification,
       mountParentChain,
@@ -1771,12 +2590,36 @@
       fallbackObserved,
       layering
     };
+
+    snapshot.layoutBoundaryRows = buildLayoutBoundaryRows(snapshot);
+    snapshot.runtimeBoundaryRows = buildRuntimeBoundaryRows(snapshot);
+    snapshot.boundaryRows = snapshot.layoutBoundaryRows.concat(snapshot.runtimeBoundaryRows);
+
+    return snapshot;
   }
 
-  function resolveSurfaceVerdict(snapshot) {
+  function firstFailedBoundary(rows, options = {}) {
+    const onlyBlocking = options.onlyBlocking !== false;
+
+    const found = (rows || []).find((row) =>
+      row &&
+      row.clean === false &&
+      (onlyBlocking ? row.blocking !== false : true)
+    );
+
+    return found || null;
+  }
+
+  function resolveBoundaryVerdict(snapshot) {
     const canonicalSummary = snapshot.canonicalSummary || {};
-    const chain = snapshot.canonicalParentChainClassification || {};
+    const mount = snapshot.mountSummary || {};
+    const frame = snapshot.frameSummary || {};
+    const stage = snapshot.stageSummary || {};
     const mountChain = snapshot.mountParentChainClassification || {};
+    const canvasChain = snapshot.canonicalParentChainClassification || {};
+    const layoutFirst = firstFailedBoundary(snapshot.layoutBoundaryRows || [], { onlyBlocking: true });
+    const runtimeFirst = firstFailedBoundary(snapshot.runtimeBoundaryRows || [], { onlyBlocking: true });
+    const anyFirst = layoutFirst || runtimeFirst;
 
     if (!snapshot.context.targetAvailable) {
       return {
@@ -1784,77 +2627,92 @@
         clean: false,
         coordinate: "TARGET_CONTEXT_STATUS",
         failureClass: "TARGET_CONTEXT_UNAVAILABLE",
-        owner: "DIAGNOSTIC_TARGET_ACCESS",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "DIAGNOSTIC_TARGET_ACCESS_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "TARGET_DOCUMENT_OR_WINDOW_UNAVAILABLE",
         action: "PROVIDE_TARGET_DOCUMENT_OR_TARGET_WINDOW_TO_CANVAS_SURFACE_TRUTH_PROBE",
         certainty: "DEFINITIVE_TARGET_CONTEXT_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
-    if (!snapshot.canonicalMountFound) {
+    if (!mount.exists) {
       return {
         status: "CANONICAL_CANVAS_MOUNT_NOT_FOUND",
         clean: false,
         coordinate: "CANONICAL_MOUNT_FOUND",
         failureClass: "CANONICAL_CANVAS_MOUNT_NOT_FOUND",
         owner: "HTML_SHELL_OR_CANVAS_PLACEMENT_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "#hearthCanvasMount_WAS_NOT_FOUND_IN_TARGET_DOCUMENT",
-        action: "READ_SURFACE_DOM_BOUNDARY_FACTS_BEFORE_FILE_RENEWAL",
+        action: "CONFIRM_CANONICAL_MOUNT_EXISTS_IN_TARGET_DOM",
         certainty: "DEFINITIVE_CANONICAL_MOUNT_ABSENCE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
-    if (snapshot.canonicalMountFound && !snapshot.canonicalMountRectNonzero) {
+    if (mount.exists && !mount.rectNonzero) {
+      const collapsedDescriptor =
+        mountChain.firstCollapsedDescriptor && mountChain.firstCollapsedDescriptor !== "NONE"
+          ? mountChain.firstCollapsedDescriptor
+          : mount.descriptor;
+
       return {
         status: "CANONICAL_MOUNT_ZERO_RECT",
         clean: false,
         coordinate: "CANONICAL_MOUNT_RECT_NONZERO",
         failureClass: "CANONICAL_MOUNT_ZERO_RECT",
         owner: "HTML_SHELL_OR_STAGE_LAYOUT_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-        reason: `#hearthCanvasMount_EXISTS_BUT_RECT_IS_ZERO_PARENT_CHAIN:${mountChain.firstCollapsedDescriptor || "UNKNOWN"}`,
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        reason: `#hearthCanvasMount_EXISTS_BUT_RECT_IS_ZERO_PARENT_CHAIN:${collapsedDescriptor}`,
         action: "READ_PARENT_CHAIN_AND_STAGE_USED_SIZE_FACTS",
         certainty: "DEFINITIVE_MOUNT_LAYOUT_MATH_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
-    if (!snapshot.canonicalFrameFound) {
+    if (!frame.exists) {
       return {
         status: "CANONICAL_RECT_LOCK_FRAME_NOT_FOUND",
         clean: false,
         coordinate: "CANONICAL_FRAME_FOUND",
         failureClass: "CANONICAL_RECT_LOCK_FRAME_NOT_FOUND",
-        owner: "HTML_CANVAS_DOM_CHAIN_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "CANVAS_DOM_BINDING_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "#hearthCanvasMount_EXISTS_BUT_#hearthCanvasRectLockFrame_IS_MISSING",
-        action: "READ_CANONICAL_DOM_CHAIN_OWNERSHIP_FACTS",
+        action: "CONFIRM_CANONICAL_RECT_LOCK_FRAME_EXISTS_UNDER_MOUNT",
         certainty: "DEFINITIVE_CANONICAL_FRAME_CONNECTION_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
-    if (snapshot.canonicalFrameFound && !snapshot.canonicalFrameRectNonzero) {
+    if (frame.exists && !frame.rectNonzero) {
       return {
         status: "CANONICAL_RECT_LOCK_FRAME_ZERO_RECT",
         clean: false,
         coordinate: "CANONICAL_FRAME_RECT_NONZERO",
         failureClass: "CANONICAL_RECT_LOCK_FRAME_ZERO_RECT",
-        owner: "HTML_CANVAS_DOM_CHAIN_LAYOUT_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "CANVAS_DOM_BINDING_OR_CSS_LAYOUT_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "#hearthCanvasRectLockFrame_EXISTS_BUT_RECT_IS_ZERO",
-        action: "READ_RECT_LOCK_FRAME_STYLE_WIDTH_HEIGHT_FLEX_BASIS_AND_PARENT_LAYOUT_FACTS",
+        action: "READ_FRAME_AND_PARENT_CHAIN_USED_SIZE_FACTS",
         certainty: "DEFINITIVE_CANONICAL_FRAME_LAYOUT_MATH_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1864,13 +2722,15 @@
         clean: false,
         coordinate: "CANONICAL_CANVAS_FOUND",
         failureClass: "CANONICAL_CANVAS_NOT_FOUND",
-        owner: "HTML_CANVAS_DOM_CHAIN_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "CANVAS_DOM_BINDING_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "#hearthCanvasMount_EXISTS_BUT_NO_CANONICAL_CANVAS_SELECTOR_MATCHED",
-        action: "READ_CANONICAL_SELECTOR_AND_PIXEL_BEARING_SURFACE_FACTS",
+        action: "CONFIRM_CANONICAL_CANVAS_SELECTOR_CHAIN",
         certainty: "DEFINITIVE_CANONICAL_CANVAS_CONNECTION_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1884,13 +2744,15 @@
         clean: false,
         coordinate: "PIXEL_BEARING_CANVAS_IS_CANONICAL",
         failureClass: "PIXEL_BEARING_CANVAS_NOT_CANONICAL",
-        owner: "CANVAS_IDENTITY_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "CANVAS_SELECTOR_OR_CANVAS_PLACEMENT_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "VISIBLE_PIXELS_EXIST_BUT_THE_PIXEL_BEARING_CANVAS_IS_NOT_THE_CANONICAL_CANVAS",
-        action: "READ_PIXEL_BEARING_CANVAS_IDENTITY_AND_CANONICAL_SELECTOR_FACTS",
+        action: "ALIGN_RENDERED_PIXEL_SURFACE_WITH_CANONICAL_SELECTOR_CHAIN",
         certainty: "DEFINITIVE_CANVAS_IDENTITY_DIVERGENCE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1900,13 +2762,15 @@
         clean: false,
         coordinate: "CANVAS_IN_MOUNT",
         failureClass: "CANONICAL_CANVAS_CONNECTION_MISMATCH",
-        owner: "HTML_CANVAS_DOM_CHAIN_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "CANVAS_DOM_BINDING_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "CANONICAL_CANVAS_SELECTOR_MATCHED_BUT_CANVAS_IS_NOT_INSIDE_#hearthCanvasMount",
-        action: "READ_CANONICAL_CANVAS_PLACEMENT_FACTS",
+        action: "VERIFY_CANONICAL_CANVAS_DOM_PLACEMENT_UNDER_MOUNT",
         certainty: "DEFINITIVE_CANVAS_CONNECTION_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1916,13 +2780,15 @@
         clean: false,
         coordinate: "CANVAS_IN_FRAME",
         failureClass: "CANONICAL_CANVAS_FRAME_CONNECTION_MISMATCH",
-        owner: "HTML_CANVAS_DOM_CHAIN_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        owner: "CANVAS_DOM_BINDING_BOUNDARY",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "CANONICAL_CANVAS_IS_IN_MOUNT_BUT_NOT_IN_#hearthCanvasRectLockFrame",
-        action: "READ_CANONICAL_FRAME_PLACEMENT_FACTS",
+        action: "VERIFY_CANONICAL_CANVAS_DOM_PLACEMENT_UNDER_RECT_LOCK_FRAME",
         certainty: "DEFINITIVE_CANVAS_FRAME_CONNECTION_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1933,19 +2799,21 @@
         coordinate: "CANVAS_INTERNAL_SIZE_NONZERO",
         failureClass: "CANONICAL_CANVAS_INTERNAL_SIZE_ZERO",
         owner: "CANVAS_DOM_SURFACE_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "CANONICAL_CANVAS_WIDTH_OR_HEIGHT_ATTRIBUTE_IS_ZERO",
-        action: "READ_CANONICAL_CANVAS_BUFFER_WIDTH_AND_HEIGHT_FACTS",
+        action: "VERIFY_CANONICAL_CANVAS_BUFFER_WIDTH_AND_HEIGHT_ATTRIBUTES",
         certainty: "DEFINITIVE_CANVAS_BUFFER_MATH_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
     if (!canonicalSummary.rectNonzero) {
       const collapsedDescriptor =
-        chain.firstCollapsedDescriptor && chain.firstCollapsedDescriptor !== "NONE"
-          ? chain.firstCollapsedDescriptor
+        canvasChain.firstCollapsedDescriptor && canvasChain.firstCollapsedDescriptor !== "NONE"
+          ? canvasChain.firstCollapsedDescriptor
           : canonicalSummary.descriptor;
 
       return {
@@ -1954,14 +2822,14 @@
         coordinate: "CANVAS_RECT_NONZERO",
         failureClass: "CANONICAL_CANVAS_ZERO_RECT",
         owner: "CSS_LAYOUT_OR_CANVAS_PLACEMENT_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-        reason: canonicalSummary.pixelVisible
-          ? `CANONICAL_CANVAS_HAS_PIXEL_DATA_BUT_BOUNDING_RECT_IS_ZERO_COLLAPSED_AT:${collapsedDescriptor}`
-          : `CANONICAL_CANVAS_EXISTS_BUT_BOUNDING_RECT_IS_ZERO_COLLAPSED_AT:${collapsedDescriptor}`,
-        action: "READ_CANONICAL_CANVAS_CSS_USED_SIZE_PARENT_CHAIN_AND_RECT_LOCK_MATH_FACTS",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        reason: `CANONICAL_CANVAS_EXISTS_BUT_BOUNDING_RECT_IS_ZERO_COLLAPSED_AT:${collapsedDescriptor}`,
+        action: "READ_CANVAS_AND_PARENT_CHAIN_USED_SIZE_FACTS",
         certainty: "DEFINITIVE_CANONICAL_RECT_MATH_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1972,12 +2840,14 @@
         coordinate: "CANVAS_COMPUTED_VISIBLE",
         failureClass: "CANONICAL_CANVAS_COMPUTED_STYLE_HIDDEN",
         owner: "CSS_VISIBILITY_OR_ROUTE_SHELL_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "CANONICAL_CANVAS_HAS_GEOMETRY_BUT_COMPUTED_STYLE_IS_NOT_VISIBLE",
-        action: "READ_DISPLAY_VISIBILITY_OPACITY_AND_ROUTE_STAGE_VISIBILITY_FACTS",
+        action: "READ_DISPLAY_VISIBILITY_OPACITY_AND_ROUTE_STAGE_FACTS",
         certainty: "DEFINITIVE_CANONICAL_VISIBILITY_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -1988,12 +2858,14 @@
         coordinate: "CANVAS_VIEWPORT_INTERSECTING",
         failureClass: "CANONICAL_CANVAS_OUTSIDE_VIEWPORT",
         owner: "CSS_LAYOUT_OR_SCROLL_POSITION_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "CANONICAL_CANVAS_HAS_GEOMETRY_BUT_DOES_NOT_INTERSECT_VIEWPORT",
-        action: "READ_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_INTERSECTION_FACTS",
+        action: "READ_STAGE_PLACEMENT_SCROLL_AND_VIEWPORT_FACTS",
         certainty: "DEFINITIVE_CANONICAL_VIEWPORT_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -2004,12 +2876,14 @@
         coordinate: "CANVAS_CONTEXT_2D_READY",
         failureClass: "CANONICAL_CANVAS_CONTEXT_2D_NOT_READY",
         owner: "CANVAS_DOM_SURFACE_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: canonicalSummary.context2dStatus,
-        action: "READ_CANONICAL_DOM_SURFACE_CONTEXT_FACTS",
+        action: "VERIFY_CANONICAL_DOM_SURFACE_IS_STANDARD_2D_CANVAS",
         certainty: "DEFINITIVE_CANONICAL_CONTEXT_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -2023,12 +2897,14 @@
         coordinate: "CANVAS_LAYER_TOPMOST",
         failureClass: "CANONICAL_CANVAS_LAYER_BLOCKED_OR_NOT_TOPMOST",
         owner: "CSS_LAYERING_OR_ROUTE_STAGE_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: `CENTER_POINT_TOP_ELEMENT_IS_${snapshot.layering.centerElementDescriptor}`,
-        action: "READ_CANVAS_LAYERING_Z_INDEX_AND_OVERLAY_FACTS",
+        action: "READ_LAYERING_Z_INDEX_AND_OVERLAY_FACTS",
         certainty: "DEFINITIVE_CANONICAL_LAYERING_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [HTML_FILE, CANVAS_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -2039,12 +2915,14 @@
         coordinate: "FALLBACK_CARTOON_SIGNAL",
         failureClass: "CANONICAL_CANVAS_FALLBACK_OR_CARTOON_SURFACE",
         owner: "CANVAS_FALLBACK_PATH_OR_ROUTE_CONDUCTOR_SETTLED_STATE_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: "CANONICAL_CANVAS_IS_VISIBLE_AND_PIXEL_BEARING_BUT_FALLBACK_OR_CARTOON_SIGNAL_IS_PRESENT",
         action: "READ_ROUTE_SETTLED_STATE_AND_DOWNSTREAM_FALLBACK_SUPPRESSION_FACTS",
         certainty: "DEFINITIVE_FALLBACK_SURFACE_SIGNAL",
         singleCausalFileProven: false,
-        adjacentFiles: [ROUTE_CONDUCTOR_FILE, CANVAS_FILE, HEX_SURFACE_FILE, POINTER_SURFACE_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -2055,12 +2933,14 @@
         coordinate: "CANVAS_PIXEL_VISIBLE",
         failureClass: "CANONICAL_CANVAS_BOUND_BUT_PIXEL_BLANK",
         owner: "CANVAS_DRAW_PATH_OR_DOWNSTREAM_EXPRESSION_BOUNDARY",
-        provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+        file: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
         reason: canonicalSummary.pixelSampleReason,
-        action: "READ_BOUNDARY_DIAGNOSIS_MATRIX_FOR_MISSING_RUNTIME_PROOF",
+        action: "READ_CANVAS_DRAW_AND_DOWNSTREAM_EXPRESSION_FACTS",
         certainty: "DEFINITIVE_CANONICAL_PIXEL_FAILURE",
         singleCausalFileProven: false,
-        adjacentFiles: [ROUTE_CONDUCTOR_FILE, CANVAS_FILE, HEX_SURFACE_FILE, POINTER_SURFACE_FILE]
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -2071,12 +2951,14 @@
         coordinate: "NONE",
         failureClass: "CANONICAL_CANVAS_SURFACE_TRUTH_PASSED",
         owner: "NONE",
-        provenFile: "NONE",
+        file: "NONE",
         reason: "CANONICAL_CANVAS_IS_MOUNTED_FRAMED_NONZERO_VISIBLE_VIEWPORT_INTERSECTING_CONTEXT_READY_AND_PIXEL_BEARING",
         action: "RETURN_CANONICAL_CANVAS_SURFACE_TRUTH_TO_NORTH_FOR_NEXT_LAWFUL_CHECK",
         certainty: "DEFINITIVE_CANONICAL_SURFACE_PASS_NO_FINAL_CLAIM",
         singleCausalFileProven: false,
-        adjacentFiles: []
+        layoutFirst,
+        runtimeFirst,
+        anyFirst
       };
     }
 
@@ -2086,491 +2968,14 @@
       coordinate: "UNCLASSIFIED_CANVAS_SURFACE_TRUTH_STATE",
       failureClass: "DIAGNOSTIC_BLIND_SPOT",
       owner: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-      provenFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      file: FILE,
       reason: "CANONICAL_CANVAS_STATE_DID_NOT_MATCH_ANY_DEFINED_FAILURE_OR_PASS_CLASS",
       action: "EXPAND_DIAGNOSTIC_CLASSIFIER_FOR_THIS_SURFACE_STATE",
       certainty: "BLIND_SPOT_IDENTIFIED",
-      singleCausalFileProven: false,
-      adjacentFiles: [FILE]
-    };
-  }
-
-  function signalTruth(value) {
-    if (value === true) return true;
-    if (value === false) return false;
-    if (value === "UNKNOWN") return "UNKNOWN";
-    return safeBool(value, false);
-  }
-
-  function statusFromBoundary(row) {
-    if (!row.fromObserved) return "FROM_AUTHORITY_NOT_OBSERVED";
-    if (!row.toObserved) return "TO_AUTHORITY_NOT_OBSERVED";
-    if (!row.toReceiverAvailable) return "TO_PUBLIC_RECEIVER_NOT_OBSERVED";
-    if (row.requestObserved === false) return "REQUEST_NOT_OBSERVED";
-    if (row.grantObserved === false) return "REQUEST_OBSERVED_GRANT_NOT_CONFIRMED";
-    if (row.expectsReturn && row.returnObserved === false) return "GRANT_OBSERVED_RETURN_NOT_CONFIRMED";
-    if (row.ackRequired && row.ackObserved === false) return "ACK_NOT_CONFIRMED";
-    if (row.pixelEffectRequired && row.pixelEffectObserved === false) return "PIXEL_EFFECT_NOT_CONFIRMED";
-    if (row.requestObserved === "UNKNOWN" || row.grantObserved === "UNKNOWN") return "BOUNDARY_FACTS_PARTIAL";
-    if (row.expectsReturn && row.returnObserved === "UNKNOWN") return "BOUNDARY_FACTS_PARTIAL";
-    if (row.ackRequired && row.ackObserved === "UNKNOWN") return "BOUNDARY_FACTS_PARTIAL";
-    return row.expectsReturn ? "HANDSHAKE_BOUNDARY_CONFIRMED" : "ONE_WAY_HANDOFF_BOUNDARY_CONFIRMED";
-  }
-
-  function missingRuntimeFact(row) {
-    if (!row.fromObserved) return "FROM_AUTHORITY_MISSING_OR_ALIAS_NOT_OBSERVED";
-    if (!row.toObserved) return "TO_AUTHORITY_MISSING_OR_ALIAS_NOT_OBSERVED";
-    if (!row.toReceiverAvailable) return "TO_PUBLIC_RECEIVER_METHOD_NOT_OBSERVED";
-    if (row.requestObserved === false) return "REQUEST_PACKET_OR_COUNTER_NOT_OBSERVED";
-    if (row.grantObserved === false) return "RECEIVER_GRANT_OR_ACCEPT_COUNTER_NOT_OBSERVED";
-    if (row.expectsReturn && row.returnObserved === false) return "RETURN_PACKET_OR_RETURN_COUNTER_NOT_OBSERVED";
-    if (row.ackRequired && row.ackObserved === false) return "ACK_COUNTER_OR_RECEIPT_NOT_OBSERVED";
-    if (row.pixelEffectRequired && row.pixelEffectObserved === false) return "PIXEL_EFFECT_NOT_OBSERVED_AFTER_BOUNDARY";
-    if (
-      row.requestObserved === "UNKNOWN" ||
-      row.grantObserved === "UNKNOWN" ||
-      (row.expectsReturn && row.returnObserved === "UNKNOWN") ||
-      (row.ackRequired && row.ackObserved === "UNKNOWN")
-    ) {
-      return "BOUNDARY_FACT_PARTIAL_OR_NOT_EXPOSED";
-    }
-    return "NONE";
-  }
-
-  function makeBoundaryRow(config, snapshot) {
-    const from = config.from;
-    const to = config.to;
-
-    const requestObserved = signalTruth(config.requestObserved(snapshot));
-    const grantObserved = signalTruth(config.grantObserved(snapshot));
-    const returnObserved = signalTruth(config.returnObserved(snapshot));
-    const ackObserved = signalTruth(config.ackObserved(snapshot));
-    const pixelEffectObserved = signalTruth(config.pixelEffectObserved(snapshot));
-
-    const row = {
-      id: config.id,
-      relationship: config.relationship,
-      fromOwner: config.fromOwner,
-      toOwner: config.toOwner,
-      fromFile: config.fromFile,
-      toFile: config.toFile,
-      fromObserved: Boolean(from.observed),
-      toObserved: Boolean(to.observed),
-      fromScope: from.scope || "NONE",
-      toScope: to.scope || "NONE",
-      fromSourcePath: from.path || "NONE",
-      toSourcePath: to.path || "NONE",
-      fromContract: from.contract || "UNKNOWN",
-      toContract: to.contract || "UNKNOWN",
-      fromReceipt: from.receipt || "UNKNOWN",
-      toReceipt: to.receipt || "UNKNOWN",
-      fromMethodAvailable: config.fromMethodAvailable(from),
-      toReceiverAvailable: config.toReceiverAvailable(to),
-      requestObserved,
-      grantObserved,
-      returnObserved,
-      ackObserved,
-      pixelEffectObserved,
-      expectsReturn: config.expectsReturn === true,
-      ackRequired: config.ackRequired === true,
-      pixelEffectRequired: config.pixelEffectRequired === true,
-      proofBasis: config.proofBasis(snapshot),
-      adjacentFiles: config.adjacentFiles.slice(),
-      causalFileProven: false,
-      provenCausalFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      provenCausalReason: "BOUNDARY_RELATED_FACTS_ONLY_SINGLE_FILE_CAUSALITY_NOT_PROVEN"
-    };
-
-    row.boundaryStatus = statusFromBoundary(row);
-    row.missingRuntimeFact = missingRuntimeFact(row);
-
-    return row;
-  }
-
-  function globalPacketObserved(targetWindow, names) {
-    const scopes = [targetWindow, root].filter(Boolean);
-
-    for (const scope of scopes) {
-      for (const name of names || []) {
-        const value = readPath(scope, name);
-        if (value !== null && value !== undefined) return true;
-      }
-    }
-
-    return false;
-  }
-
-  function buildBoundaryMatrix(snapshot) {
-    const a = snapshot.authorities || {};
-    const canvasPixelVisible = Boolean(snapshot.canonicalSummary && snapshot.canonicalSummary.pixelVisible);
-    const canonicalSurfaceAdmissible = Boolean(snapshot.canonicalSurfaceAdmissible);
-
-    const routeAcceptedCount = numericReceiptValue(a.canvas, [
-      "routePacketAcceptedCount",
-      "ROUTE_PACKET_ACCEPTED_COUNT"
-    ]);
-
-    const hexGateComposedCount = numericReceiptValue(a.canvas, [
-      "hexGatePacketComposedCount",
-      "HEX_GATE_PACKET_COMPOSED_COUNT"
-    ]);
-
-    const hexGateReturnCount = numericReceiptValue(a.canvas, [
-      "hexGateDeliveryReturnCount",
-      "HEX_GATE_DELIVERY_RETURN_COUNT"
-    ]);
-
-    const surfaceReturnAcceptedCount = numericReceiptValue(a.canvas, [
-      "surfaceReturnAcceptedCount",
-      "SURFACE_RETURN_ACCEPTED_COUNT"
-    ]);
-
-    const drawCount = numericReceiptValue(a.canvas, [
-      "drawCount",
-      "DRAW_COUNT"
-    ]);
-
-    const hexAcceptedCount = numericReceiptValue(a.hexSurface, [
-      "acceptedPacketCount",
-      "ACCEPTED_PACKET_COUNT"
-    ]);
-
-    const hexTransmissionCount = numericReceiptValue(a.hexSurface, [
-      "transmissionCount",
-      "TRANSMISSION_COUNT"
-    ]);
-
-    const hexDeliveryCount = numericReceiptValue(a.hexSurface, [
-      "deliveryCount",
-      "DELIVERY_COUNT"
-    ]);
-
-    const pointerActiveCount = numericReceiptValue(a.hexSurface, [
-      "pointerFingerActiveCount",
-      "POINTER_FINGER_ACTIVE_COUNT"
-    ]);
-
-    const viewPacketCount = numericReceiptValue(a.canvas, [
-      "viewPacketReceivedCount",
-      "VIEW_PACKET_RECEIVED_COUNT"
-    ]);
-
-    const configs = [
-      {
-        id: "ROUTE_CONDUCTOR_TO_CANVAS",
-        relationship: "ROUTE_CONDUCTOR -> CANVAS",
-        fromOwner: "ROUTE_CONDUCTOR",
-        toOwner: "CANVAS_RECEIVER",
-        fromFile: ROUTE_CONDUCTOR_FILE,
-        toFile: CANVAS_FILE,
-        from: a.route || {},
-        to: a.canvas || {},
-        expectsReturn: true,
-        ackRequired: true,
-        pixelEffectRequired: false,
-        adjacentFiles: [ROUTE_CONDUCTOR_FILE, CANVAS_FILE],
-        fromMethodAvailable: (from) => hasMethod(from, [
-          "composeCanvasHandoffPacket",
-          "getCanvasHandoffPacket",
-          "getHandoffPacket",
-          "composePresentationPacket",
-          "loadMissingDirectChain",
-          "runSafePacketBridgeScan",
-          /Canvas/i
-        ]),
-        toReceiverAvailable: (to) => hasMethod(to, [
-          "receiveRouteConductorCanvasTransactionPacket",
-          "consumeRouteConductorCanvasTransactionPacket",
-          "acceptRouteConductorCanvasTransactionPacket",
-          "receiveRouteConductorHandoffPacket",
-          "receiveGovernedSourcePacket",
-          "receiveCanvasHandoffPacket",
-          "receivePresentationPacket",
-          "receive",
-          /RouteConductor/i,
-          /CanvasHandoff/i
-        ]),
-        requestObserved: () => {
-          const routeRequest = booleanReceiptSignal(a.route, [
-            "routeCanvasPairPermissionRequested",
-            "routeCanvasPairPermissionGranted",
-            "canvasAssetTransactionResetActive"
-          ]);
-          return routeRequest !== "UNKNOWN"
-            ? routeRequest
-            : globalPacketObserved(snapshot.targetWindow, [
-                "HEARTH_ROUTE_CONDUCTOR_CANVAS_HANDOFF_PACKET",
-                "HEARTH_ROUTE_CONDUCTOR_HANDOFF_PACKET",
-                "HEARTH.routeConductorCanvasHandoffPacket"
-              ]);
-        },
-        grantObserved: () => routeAcceptedCount > 0 || booleanReceiptSignal(a.route, [
-          "routeCanvasPairPermissionGranted",
-          "canvasReceiverReady",
-          "routeCanvasHandoffStatus"
-        ]) === true,
-        returnObserved: () => hexGateComposedCount > 0 || booleanReceiptSignal(a.route, [
-          "routeCanvasPairPermissionGranted",
-          "routeCanvasHandoffStatus"
-        ]) === true,
-        ackObserved: () => routeAcceptedCount > 0 || hexGateComposedCount > 0,
-        pixelEffectObserved: () => canvasPixelVisible,
-        proofBasis: () => ({
-          canvasRoutePacketAcceptedCount: routeAcceptedCount,
-          canvasHexGatePacketComposedCount: hexGateComposedCount,
-          routeCanvasHandoffStatus: textReceiptSignal(a.route, ["routeCanvasHandoffStatus"]),
-          routeCanvasPairPermissionGranted: booleanReceiptSignal(a.route, ["routeCanvasPairPermissionGranted"])
-        })
-      },
-      {
-        id: "CANVAS_TO_HEX_SURFACE",
-        relationship: "CANVAS -> HEX_SURFACE",
-        fromOwner: "CANVAS_RECEIVER",
-        toOwner: "HEX_SURFACE_GATE",
-        fromFile: CANVAS_FILE,
-        toFile: HEX_SURFACE_FILE,
-        from: a.canvas || {},
-        to: a.hexSurface || {},
-        expectsReturn: true,
-        ackRequired: true,
-        pixelEffectRequired: false,
-        adjacentFiles: [CANVAS_FILE, HEX_SURFACE_FILE],
-        fromMethodAvailable: (from) => hasMethod(from, [
-          "composeCanvasHexGatePacket",
-          "deliverCanvasHexGatePacket",
-          "publishTransmissionPacketGlobals",
-          /HexGate/i,
-          /HexSurface/i
-        ]),
-        toReceiverAvailable: (to) => hasMethod(to, [
-          "receiveCanvasHexGatePacket",
-          "consumeCanvasHexGatePacket",
-          "acceptCanvasHexGatePacket",
-          "receiveCanvasViewPacket",
-          "consumeCanvasViewPacket",
-          "receiveInteractiveFramePacket",
-          "drawInteractiveFrame",
-          "drawPairFrame",
-          "receive",
-          /CanvasHex/i,
-          /CanvasView/i
-        ]),
-        requestObserved: () => hexGateComposedCount > 0 || globalPacketObserved(snapshot.targetWindow, [
-          "HEARTH_CANVAS_HEX_GATE_PACKET",
-          "HEARTH_CANVAS_LAST_HEX_GATE_PACKET",
-          "HEARTH.canvasHexGatePacket"
-        ]),
-        grantObserved: () => hexAcceptedCount > 0 || textReceiptSignal(a.hexSurface, [
-          "lastValidationStatus",
-          "LAST_VALIDATION_STATUS"
-        ]) === "ACCEPTED",
-        returnObserved: () => hexGateReturnCount > 0 || textReceiptSignal(a.canvas, [
-          "lastHexSurfaceDeliveryResult.status",
-          "HEX_SURFACE_METHOD"
-        ]) !== "UNKNOWN",
-        ackObserved: () => hexTransmissionCount > 0 || hexDeliveryCount > 0 || hexAcceptedCount > 0,
-        pixelEffectObserved: () => canvasPixelVisible,
-        proofBasis: () => ({
-          canvasHexGatePacketComposedCount: hexGateComposedCount,
-          canvasHexGateDeliveryReturnCount: hexGateReturnCount,
-          hexSurfaceAcceptedPacketCount: hexAcceptedCount,
-          hexSurfaceTransmissionCount: hexTransmissionCount,
-          hexSurfaceDeliveryCount: hexDeliveryCount
-        })
-      },
-      {
-        id: "HEX_SURFACE_TO_POINTER_SURFACE_BISHOP",
-        relationship: "HEX_SURFACE -> POINTER_SURFACE_BISHOP",
-        fromOwner: "HEX_SURFACE_GATE",
-        toOwner: "POINTER_SURFACE_BISHOP",
-        fromFile: HEX_SURFACE_FILE,
-        toFile: POINTER_SURFACE_FILE,
-        from: a.hexSurface || {},
-        to: a.pointerSurface || {},
-        expectsReturn: false,
-        ackRequired: true,
-        pixelEffectRequired: false,
-        adjacentFiles: [HEX_SURFACE_FILE, POINTER_SURFACE_FILE],
-        fromMethodAvailable: (from) => hasMethod(from, [
-          "composePointerFingerTransmissionPacket",
-          "deliverPointerFingerTransmission",
-          "publishTransmissionGlobals",
-          /PointerFinger/i,
-          /Transmission/i
-        ]),
-        toReceiverAvailable: (to) => hasMethod(to, [
-          "receiveHexSurfaceTransmissionPacket",
-          "consumeHexSurfaceTransmissionPacket",
-          "receivePointerFingerTransmissionPacket",
-          "consumePointerFingerTransmissionPacket",
-          "receiveCanvasFingerPacket",
-          "receiveHexGatePacket",
-          "receiveSurfacePacket",
-          "acceptTransmissionPacket",
-          "receive",
-          /Transmission/i,
-          /Surface/i
-        ]),
-        requestObserved: () => hexTransmissionCount > 0 || globalPacketObserved(snapshot.targetWindow, [
-          "HEARTH_HEX_SURFACE_POINTER_FINGER_TRANSMISSION_PACKET",
-          "HEARTH_HEX_SURFACE_CANONICAL_MAP_TUPLE_POINTER_FINGER_TRANSMISSION_PACKET",
-          "HEARTH_POINTER_FINGER_TRANSMISSION_PACKET",
-          "HEARTH.hexSurfacePointerFingerTransmissionPacket"
-        ]),
-        grantObserved: () => pointerActiveCount > 0 || booleanReceiptSignal(a.hexSurface, [
-          "pointerFingerSurfaceObserved",
-          "POINTER_FINGER_SURFACE_OBSERVED"
-        ]) === true,
-        returnObserved: () => "NOT_REQUIRED_ONE_WAY_HANDOFF",
-        ackObserved: () => pointerActiveCount > 0 || hexDeliveryCount > 0,
-        pixelEffectObserved: () => canvasPixelVisible,
-        proofBasis: () => ({
-          hexSurfaceTransmissionCount: hexTransmissionCount,
-          hexSurfaceDeliveryCount: hexDeliveryCount,
-          pointerFingerActiveCount: pointerActiveCount,
-          pointerSurfaceObservedByHexSurface: booleanReceiptSignal(a.hexSurface, [
-            "pointerFingerSurfaceObserved",
-            "POINTER_FINGER_SURFACE_OBSERVED"
-          ])
-        })
-      },
-      {
-        id: "POINTER_SURFACE_BISHOP_TO_CANVAS_RETURN",
-        relationship: "POINTER_SURFACE_BISHOP -> CANVAS",
-        fromOwner: "POINTER_SURFACE_BISHOP",
-        toOwner: "CANVAS_RECEIVER",
-        fromFile: POINTER_SURFACE_FILE,
-        toFile: CANVAS_FILE,
-        from: a.pointerSurface || {},
-        to: a.canvas || {},
-        expectsReturn: true,
-        ackRequired: true,
-        pixelEffectRequired: true,
-        adjacentFiles: [POINTER_SURFACE_FILE, CANVAS_FILE],
-        fromMethodAvailable: (from) => hasMethod(from, [
-          "composeSurfaceExpressionPacket",
-          "returnSurfaceExpressionPacket",
-          "publishSurfaceExpressionPacket",
-          "receiveHexSurfaceTransmissionPacket",
-          /Surface/i,
-          /Expression/i,
-          /Canvas/i
-        ]),
-        toReceiverAvailable: (to) => hasMethod(to, [
-          "receivePointerSurfaceExpressionPacket",
-          "consumePointerSurfaceExpressionPacket",
-          "acceptPointerSurfaceExpressionPacket",
-          "receiveSurfaceExpressionPacket",
-          "consumeSurfaceExpressionPacket",
-          "acceptSurfaceExpressionPacket",
-          "receiveCanvasFingerSurfacePacket",
-          "receiveHexSurfaceReturnPacket",
-          "receiveHexSurfaceTransmissionPacket",
-          "receive",
-          /PointerSurface/i,
-          /SurfaceExpression/i
-        ]),
-        requestObserved: () => globalPacketObserved(snapshot.targetWindow, [
-          "HEARTH_POINTER_SURFACE_CANVAS_RETURN_PACKET",
-          "HEARTH_CANVAS_FINGER_SURFACE_EXPRESSION_PACKET",
-          "HEARTH_SURFACE_EXPRESSION_PACKET",
-          "HEARTH.pointerSurfaceExpressionPacket"
-        ]),
-        grantObserved: () => surfaceReturnAcceptedCount > 0,
-        returnObserved: () => surfaceReturnAcceptedCount > 0,
-        ackObserved: () => drawCount > 0 && surfaceReturnAcceptedCount > 0,
-        pixelEffectObserved: () => canvasPixelVisible,
-        proofBasis: () => ({
-          canvasSurfaceReturnAcceptedCount: surfaceReturnAcceptedCount,
-          canvasDrawCount: drawCount,
-          canvasPixelVisible,
-          canonicalSurfaceAdmissible
-        })
-      },
-      {
-        id: "CONTROLS_TO_CANVAS",
-        relationship: "CONTROLS -> CANVAS",
-        fromOwner: "CONTROLS_QUEEN",
-        toOwner: "CANVAS_RECEIVER",
-        fromFile: CONTROL_FILE,
-        toFile: CANVAS_FILE,
-        from: a.controls || {},
-        to: a.canvas || {},
-        expectsReturn: true,
-        ackRequired: true,
-        pixelEffectRequired: false,
-        adjacentFiles: [CONTROL_FILE, CANVAS_FILE],
-        fromMethodAvailable: (from) => hasMethod(from, [
-          "receiveRouteConductorControlHandshakePacket",
-          "composePlanetaryViewPacket",
-          "deliverViewPacket",
-          "bind",
-          "start",
-          /View/i,
-          /Control/i,
-          /Pointer/i
-        ]),
-        toReceiverAvailable: (to) => hasMethod(to, [
-          "receivePlanetaryViewControlPacket",
-          "consumePlanetaryViewControlPacket",
-          "receiveViewControlPacket",
-          "consumeViewControlPacket",
-          "receive",
-          /ViewControl/i,
-          /PlanetaryView/i
-        ]),
-        requestObserved: () => viewPacketCount > 0 || booleanReceiptSignal(a.controls, [
-          "hexGateTransmissionActive",
-          "smoothInputRenewalActive",
-          "canvasPublicReceiverRequired",
-          "CONTROL_HANDSHAKE_STATUS"
-        ]) === true,
-        grantObserved: () => viewPacketCount > 0 || textReceiptSignal(a.canvas, [
-          "controlHandshakeStatus",
-          "CONTROL_HANDSHAKE_STATUS"
-        ]) !== "UNKNOWN",
-        returnObserved: () => viewPacketCount > 0 || booleanReceiptSignal(a.controls, [
-          "canvasReceiverCacheActive",
-          "canvasReceiverPrewarmActive"
-        ]) === true,
-        ackObserved: () => viewPacketCount > 0 || textReceiptSignal(a.canvas, [
-          "viewControlStatus",
-          "VIEW_CONTROL_STATUS"
-        ]) !== "UNKNOWN",
-        pixelEffectObserved: () => canvasPixelVisible,
-        proofBasis: () => ({
-          canvasViewPacketReceivedCount: viewPacketCount,
-          controlsContract: a.controls ? a.controls.contract : "UNKNOWN",
-          canvasControlHandshakeStatus: textReceiptSignal(a.canvas, ["controlHandshakeStatus", "CONTROL_HANDSHAKE_STATUS"]),
-          canvasViewControlStatus: textReceiptSignal(a.canvas, ["viewControlStatus", "VIEW_CONTROL_STATUS"])
-        })
-      }
-    ];
-
-    const rows = configs.map((config) => makeBoundaryRow(config, snapshot));
-
-    const failedRows = rows.filter((row) => !/CONFIRMED$/.test(row.boundaryStatus));
-    const firstFailed = failedRows[0] || null;
-    const partialRows = rows.filter((row) => row.boundaryStatus === "BOUNDARY_FACTS_PARTIAL");
-
-    return {
-      matrixVersion: "HEARTH_BOUNDARY_DIAGNOSIS_MATRIX_v1_8",
-      generatedAt: nowIso(),
-      boundaryDiagnosisAvailable: true,
-      boundaryRelationshipCount: rows.length,
-      boundaryConfirmedCount: rows.filter((row) => /CONFIRMED$/.test(row.boundaryStatus)).length,
-      boundaryFailedOrPartialCount: failedRows.length,
-      boundaryPartialCount: partialRows.length,
-      singleCausalFileProven: false,
-      provenCausalFile: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      provenCausalReason: "BOUNDARY_MATRIX_REPORTS_MISSING_RUNTIME_FACT_LOCATION_NOT_SINGLE_FILE_CAUSALITY",
-      missingRuntimeFactLocation: firstFailed ? "BOUNDARY_NOT_FILE" : "NONE",
-      firstFailedBoundary: firstFailed ? firstFailed.id : "NONE",
-      firstFailedBoundaryRelationship: firstFailed ? firstFailed.relationship : "NONE",
-      firstFailedBoundaryStatus: firstFailed ? firstFailed.boundaryStatus : "NONE",
-      firstMissingRuntimeFact: firstFailed ? firstFailed.missingRuntimeFact : "NONE",
-      firstAdjacentFiles: firstFailed ? firstFailed.adjacentFiles.slice() : [],
-      rows
+      singleCausalFileProven: true,
+      layoutFirst,
+      runtimeFirst,
+      anyFirst
     };
   }
 
@@ -2592,9 +2997,9 @@
       "PIXEL_BEARING_CANVAS_IS_CANONICAL",
       "FALLBACK_OR_CARTOON_SIGNAL_OBSERVED",
       "CANVAS_LAYER_POSSIBLE_BLOCKER",
-      "BOUNDARY_FIRST_FAILED_BOUNDARY",
-      "BOUNDARY_FIRST_FAILED_STATUS",
-      "BOUNDARY_FIRST_MISSING_RUNTIME_FACT"
+      "BOUNDARY_LAYOUT_FIRST_FAILED",
+      "BOUNDARY_RUNTIME_FIRST_FAILED",
+      "BOUNDARY_FIRST_MISSING_FACT"
     ];
 
     const changed = fields
@@ -2623,28 +3028,35 @@
   }
 
   function buildReportFromSnapshot(snapshot, transitionMode = "IMMEDIATE_SYNC") {
-    const surfaceVerdict = resolveSurfaceVerdict(snapshot);
-    const boundaryMatrix = buildBoundaryMatrix(snapshot);
+    const verdict = resolveBoundaryVerdict(snapshot);
     const canonicalSummary = snapshot.canonicalSummary || {};
     const firstPixelBearingSummary = snapshot.firstPixelBearingSummary || {};
     const scripts = snapshot.scripts || {};
-    const authorities = snapshot.authorities || {};
     const layering = snapshot.layering || {};
     const chain = snapshot.canonicalParentChainClassification || {};
     const mountChain = snapshot.mountParentChainClassification || {};
+    const stage = snapshot.stageSummary || {};
+    const mount = snapshot.mountSummary || {};
+    const frame = snapshot.frameSummary || {};
+    const runtimeNodes = snapshot.runtimeNodes || {};
+    const layoutFirst = verdict.layoutFirst || null;
+    const runtimeFirst = verdict.runtimeFirst || null;
+    const anyFirst = verdict.anyFirst || layoutFirst || runtimeFirst || null;
     const comparison = compareImmediateToSettled(lastReport, lastSettledReport);
 
-    const boundaryRows = boundaryMatrix.rows || [];
-    const boundaryText = boundaryRows
-      .map((row) => `${row.id}:${row.boundaryStatus}:${row.missingRuntimeFact}`)
-      .join(" | ");
+    const boundaryClean = !firstFailedBoundary(snapshot.boundaryRows || [], { onlyBlocking: true });
+    const layoutClean = !firstFailedBoundary(snapshot.layoutBoundaryRows || [], { onlyBlocking: true });
+    const runtimeClean = !firstFailedBoundary(snapshot.runtimeBoundaryRows || [], { onlyBlocking: true });
 
-    const adjacentFiles = Array.from(new Set(
-      (surfaceVerdict.adjacentFiles || []).concat(boundaryMatrix.firstAdjacentFiles || [])
-    ));
+    const darkRuntimeFiles = Object.values(runtimeNodes).filter((node) =>
+      node &&
+      node.observed &&
+      node.contractRecognized === false
+    );
 
     const notes = [
-      "V1_8_BOUNDARY_DIAGNOSIS_MATRIX_ACTIVE",
+      "V1_9_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ACTIVE",
+      "V1_8_BOUNDARY_DIAGNOSIS_MATRIX_PRESERVED",
       "V1_7_LAYOUT_MATH_CONNECTION_BLINDSPOT_ARBITRATION_PRESERVED",
       "V1_6_CALL_GUARDED_TRANSITION_SURFACE_DISAMBIGUATION_PRESERVED",
       "V1_5_CANONICAL_VISIBLE_SURFACE_DISAMBIGUATION_PRESERVED",
@@ -2658,10 +3070,10 @@
       "NO_ROUTE_REPAIR",
       "NO_CONTROL_MUTATION",
       "NO_RUNTIME_RESTART",
-      `CANONICAL_MOUNT_FOUND:${snapshot.canonicalMountFound}`,
-      `CANONICAL_MOUNT_RECT_NONZERO:${snapshot.canonicalMountRectNonzero}`,
-      `CANONICAL_FRAME_FOUND:${snapshot.canonicalFrameFound}`,
-      `CANONICAL_FRAME_RECT_NONZERO:${snapshot.canonicalFrameRectNonzero}`,
+      `CANONICAL_MOUNT_FOUND:${mount.exists}`,
+      `CANONICAL_MOUNT_RECT_NONZERO:${mount.rectNonzero}`,
+      `CANONICAL_FRAME_FOUND:${frame.exists}`,
+      `CANONICAL_FRAME_RECT_NONZERO:${frame.rectNonzero}`,
       `CANONICAL_CANVAS_FOUND:${Boolean(snapshot.canonicalCanvas)}`,
       `CANONICAL_CANVAS_IN_MOUNT:${canonicalSummary.inCanonicalMount === true}`,
       `CANONICAL_CANVAS_IN_FRAME:${canonicalSummary.inCanonicalFrame === true}`,
@@ -2672,21 +3084,23 @@
       `NON_CANONICAL_PIXEL_BEARING_CANVAS_COUNT:${snapshot.nonCanonicalPixelBearingCanvasCount}`,
       `PARENT_CHAIN_STATUS:${chain.status || "UNKNOWN"}`,
       `MOUNT_PARENT_CHAIN_STATUS:${mountChain.status || "UNKNOWN"}`,
-      `CANVAS_TRUTH_FAILURE_CLASS:${surfaceVerdict.failureClass}`,
-      `BOUNDARY_FIRST_FAILED:${boundaryMatrix.firstFailedBoundary}`,
-      `BOUNDARY_FIRST_MISSING_RUNTIME_FACT:${boundaryMatrix.firstMissingRuntimeFact}`,
-      `DIAGNOSTIC_CERTAINTY:${surfaceVerdict.certainty}`
+      `BOUNDARY_LAYOUT_FIRST_FAILED:${layoutFirst ? layoutFirst.id : "NONE"}`,
+      `BOUNDARY_RUNTIME_FIRST_FAILED:${runtimeFirst ? runtimeFirst.id : "NONE"}`,
+      `BOUNDARY_FIRST_MISSING_FACT:${anyFirst ? anyFirst.firstMissingFact : "NONE"}`,
+      `CANVAS_TRUTH_FAILURE_CLASS:${verdict.failureClass}`,
+      `DIAGNOSTIC_CERTAINTY:${verdict.certainty}`
     ];
 
     return {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_PACKET_v1_8",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_PACKET_v1_9",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      LINEAGE_V1_7_CONTRACT,
       LINEAGE_V1_6_CONTRACT,
       LINEAGE_V1_5_CONTRACT,
       VERSION,
@@ -2702,15 +3116,14 @@
       HEX_SURFACE_FILE,
       POINTER_SURFACE_FILE,
       POINTER_INSPECT_FILE,
-      POINTER_BOUNDARY_FILE,
-      POINTER_LIGHT_FILE,
-      EXPECTED_CANVAS_CONTRACT,
-      EXPECTED_CANVAS_RENEWAL_CANDIDATE,
+      EXPECTED_HTML_CONTRACT,
+      EXPECTED_INDEX_JS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
       EXPECTED_CONTROL_CONTRACT,
-      EXPECTED_CONTROL_RENEWAL_CANDIDATE,
-      EXPECTED_HEX_SURFACE_CONTRACT,
+      EXPECTED_CANVAS_CONTRACT,
+      EXPECTED_CANVAS_RENEWAL_CANDIDATE,
       EXPECTED_HEX_AUTHORITY_CONTRACT,
+      EXPECTED_HEX_SURFACE_CONTRACT,
       EXPECTED_POINTER_SURFACE_CONTRACT,
       EXPECTED_POINTER_INSPECT_CONTRACT,
       DIAGNOSTIC_TIMESTAMP: nowIso(),
@@ -2718,20 +3131,9 @@
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "CALL_RETURNED",
       CANVAS_SURFACE_TRUTH_AVAILABLE: snapshot.context.targetAvailable ? "true" : "false",
       CANVAS_SURFACE_TRUTH_SCOPE:
-        "CANONICAL_SURFACE_TRUTH_PLUS_BOUNDARY_DIAGNOSIS_MATRIX_ONLY",
+        "CANONICAL_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
       CANVAS_SURFACE_TRUTH_RENEWAL_FOCUS:
-        "BOUNDARY_RELATED_FACTS_AROUND_MISSING_RUNTIME_PROOF",
-
-      NEWS_ALIGNMENT_PROTOCOL_ACTIVE: true,
-      NEWS_ALIGNMENT_STATUS: "NORTH_EAST_WEST_SOUTH_BOUNDARY_DIAGNOSIS_ALIGNED",
-      NEWS_NORTH_ROLE: "ARBITRATION_OUTPUT_NO_F21_CLAIM",
-      NEWS_EAST_ROLE: "SOURCE_OBSERVATION_NO_MUTATION",
-      NEWS_WEST_ROLE: "BOUNDARY_COMPARISON_NO_SINGLE_FILE_COLLAPSE",
-      NEWS_SOUTH_ROLE: "PACKET_RETURN_NO_DRAW_REPAIR_RELEASE",
-      FIBONACCI_SYNCHRONIZATION_ACTIVE: true,
-      FIBONACCI_SEQUENCE:
-        "F1_ANCHOR | F2_TARGET_CONTEXT | F3_DOM_SURFACE | F5_PIXEL_IDENTITY | F8_AUTHORITY_OBSERVATION | F13_BOUNDARY_MATRIX | F21_ARBITRATION_NO_AUTHORITY_CLAIM | F34_OUTPUT | F55_SETTLED_SAMPLE",
-      FIBONACCI_CURRENT_STAGE: "F13_BOUNDARY_MATRIX_TO_F21_DIAGNOSTIC_ARBITRATION",
+        "REPORT_BOUNDARY_FACTS_WITHOUT_SINGLE_FILE_CAUSALITY_INVENTION",
 
       TRANSITION_MEASUREMENT_MODE: transitionMode,
       TRANSITION_SAMPLE_PHASE: snapshot.phase,
@@ -2751,118 +3153,125 @@
       INDEX_SCRIPT_SRC: scripts.index ? scripts.index.src : "NONE",
       ROUTE_CONDUCTOR_SCRIPT_PRESENT: scripts.routeConductor ? scripts.routeConductor.present : false,
       ROUTE_CONDUCTOR_SCRIPT_SRC: scripts.routeConductor ? scripts.routeConductor.src : "NONE",
+      ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY: scripts.routeConductor ? scripts.routeConductor.cacheKey : "NONE",
       CONTROL_SCRIPT_PRESENT: scripts.controls ? scripts.controls.present : false,
       CONTROL_SCRIPT_SRC: scripts.controls ? scripts.controls.src : "NONE",
       CANVAS_SCRIPT_PRESENT: scripts.canvas ? scripts.canvas.present : false,
       CANVAS_SCRIPT_COUNT: scripts.canvas ? scripts.canvas.count : 0,
       CANVAS_SCRIPT_SRC: scripts.canvas ? scripts.canvas.src : "NONE",
       CANVAS_SCRIPT_CACHE_KEY: scripts.canvas ? scripts.canvas.cacheKey : "NONE",
-      CANVAS_SCRIPT_TAG_ORDER: scripts.canvas ? scripts.canvas.lastOrder : 0,
-      CANVAS_SCRIPT_LOAD_INFERRED: Boolean(scripts.canvas && scripts.canvas.present),
-      CANVAS_SCRIPT_EXECUTION_INFERRED: Boolean(
-        scripts.canvas &&
-        scripts.canvas.present &&
-        (
-          authorities.canvas.observed ||
-          Boolean(snapshot.canonicalCanvas) ||
-          snapshot.allCanvases.length > 0 ||
-          dataValue(snapshot.targetDocument, "hearthCanvasLoaded") === "true"
-        )
-      ),
+      HEX_AUTHORITY_SCRIPT_PRESENT: scripts.hexAuthority ? scripts.hexAuthority.present : false,
       HEX_SURFACE_SCRIPT_PRESENT: scripts.hexSurface ? scripts.hexSurface.present : false,
-      HEX_SURFACE_SCRIPT_SRC: scripts.hexSurface ? scripts.hexSurface.src : "NONE",
       POINTER_SURFACE_SCRIPT_PRESENT: scripts.pointerSurface ? scripts.pointerSurface.present : false,
-      POINTER_SURFACE_SCRIPT_SRC: scripts.pointerSurface ? scripts.pointerSurface.src : "NONE",
+      POINTER_INSPECT_SCRIPT_PRESENT: scripts.pointerInspect ? scripts.pointerInspect.present : false,
 
-      ROUTE_AUTHORITY_OBSERVED: authorities.route.observed || false,
-      ROUTE_AUTHORITY_SCOPE: authorities.route.scope || "NONE",
-      ROUTE_AUTHORITY_SOURCE_PATH: authorities.route.path || "NONE",
-      ROUTE_AUTHORITY_CONTRACT: authorities.route.contract || "UNKNOWN",
-      ROUTE_AUTHORITY_RECEIPT: authorities.route.receipt || "UNKNOWN",
-      ROUTE_AUTHORITY_METHOD_COUNT: authorities.route.methodCount || 0,
+      ROUTE_AUTHORITY_OBSERVED: runtimeNodes.route ? runtimeNodes.route.authorityPresent : false,
+      ROUTE_AUTHORITY_SOURCE_PATH: runtimeNodes.route ? runtimeNodes.route.authorityPath : "NONE",
+      ROUTE_AUTHORITY_CONTRACT: runtimeNodes.route ? runtimeNodes.route.contract : "UNKNOWN",
+      ROUTE_AUTHORITY_RECOGNIZED: runtimeNodes.route ? runtimeNodes.route.contractRecognized : false,
 
-      CANVAS_AUTHORITY_OBSERVED: authorities.canvas.observed || false,
-      CANVAS_AUTHORITY_SCOPE: authorities.canvas.scope || "NONE",
-      CANVAS_AUTHORITY_SOURCE_PATH: authorities.canvas.path || "NONE",
-      CANVAS_AUTHORITY_CONTRACT: authorities.canvas.contract || "UNKNOWN",
-      CANVAS_AUTHORITY_RECEIPT: authorities.canvas.receipt || "UNKNOWN",
-      CANVAS_AUTHORITY_METHOD_COUNT: authorities.canvas.methodCount || 0,
-      CANVAS_AUTHORITY_METHODS: Array.isArray(authorities.canvas.methods)
-        ? authorities.canvas.methods.join(",") || "NONE"
-        : "NONE",
-      CANVAS_AUTHORITY_CANDIDATE_COUNT: Array.isArray(authorities.canvas.candidates)
-        ? authorities.canvas.candidates.length
-        : 0,
-      CANVAS_AUTHORITY_CANDIDATES: clonePlain(authorities.canvas.candidates || []),
+      CONTROL_AUTHORITY_OBSERVED: runtimeNodes.controls ? runtimeNodes.controls.authorityPresent : false,
+      CONTROL_AUTHORITY_SOURCE_PATH: runtimeNodes.controls ? runtimeNodes.controls.authorityPath : "NONE",
+      CONTROL_AUTHORITY_CONTRACT: runtimeNodes.controls ? runtimeNodes.controls.contract : "UNKNOWN",
+      CONTROL_AUTHORITY_RECOGNIZED: runtimeNodes.controls ? runtimeNodes.controls.contractRecognized : false,
 
-      CONTROL_AUTHORITY_OBSERVED: authorities.controls.observed || false,
-      CONTROL_AUTHORITY_SOURCE_PATH: authorities.controls.path || "NONE",
-      CONTROL_AUTHORITY_CONTRACT: authorities.controls.contract || "UNKNOWN",
-      CONTROL_AUTHORITY_RECEIPT: authorities.controls.receipt || "UNKNOWN",
+      CANVAS_AUTHORITY_OBSERVED: runtimeNodes.canvas ? runtimeNodes.canvas.authorityPresent : false,
+      CANVAS_AUTHORITY_SOURCE_PATH: runtimeNodes.canvas ? runtimeNodes.canvas.authorityPath : "NONE",
+      CANVAS_AUTHORITY_CONTRACT: runtimeNodes.canvas ? runtimeNodes.canvas.contract : "UNKNOWN",
+      CANVAS_AUTHORITY_RECEIPT: runtimeNodes.canvas ? runtimeNodes.canvas.receipt : "UNKNOWN",
+      CANVAS_AUTHORITY_RECOGNIZED: runtimeNodes.canvas ? runtimeNodes.canvas.contractRecognized : false,
 
-      HEX_SURFACE_AUTHORITY_OBSERVED: authorities.hexSurface.observed || false,
-      HEX_SURFACE_AUTHORITY_SOURCE_PATH: authorities.hexSurface.path || "NONE",
-      HEX_SURFACE_AUTHORITY_CONTRACT: authorities.hexSurface.contract || "UNKNOWN",
-      HEX_SURFACE_AUTHORITY_RECEIPT: authorities.hexSurface.receipt || "UNKNOWN",
-      HEX_SURFACE_AUTHORITY_METHOD_COUNT: authorities.hexSurface.methodCount || 0,
+      HEX_AUTHORITY_OBSERVED: runtimeNodes.hexAuthority ? runtimeNodes.hexAuthority.authorityPresent : false,
+      HEX_AUTHORITY_CONTRACT: runtimeNodes.hexAuthority ? runtimeNodes.hexAuthority.contract : "UNKNOWN",
+      HEX_AUTHORITY_RECOGNIZED: runtimeNodes.hexAuthority ? runtimeNodes.hexAuthority.contractRecognized : false,
 
-      HEX_AUTHORITY_OBSERVED: authorities.hexAuthority.observed || false,
-      HEX_AUTHORITY_SOURCE_PATH: authorities.hexAuthority.path || "NONE",
-      HEX_AUTHORITY_CONTRACT: authorities.hexAuthority.contract || "UNKNOWN",
-      HEX_AUTHORITY_RECEIPT: authorities.hexAuthority.receipt || "UNKNOWN",
+      HEX_SURFACE_AUTHORITY_OBSERVED: runtimeNodes.hexSurface ? runtimeNodes.hexSurface.authorityPresent : false,
+      HEX_SURFACE_AUTHORITY_CONTRACT: runtimeNodes.hexSurface ? runtimeNodes.hexSurface.contract : "UNKNOWN",
+      HEX_SURFACE_AUTHORITY_RECOGNIZED: runtimeNodes.hexSurface ? runtimeNodes.hexSurface.contractRecognized : false,
 
-      POINTER_SURFACE_BISHOP_OBSERVED: authorities.pointerSurface.observed || false,
-      POINTER_SURFACE_BISHOP_SOURCE_PATH: authorities.pointerSurface.path || "NONE",
-      POINTER_SURFACE_BISHOP_CONTRACT: authorities.pointerSurface.contract || "UNKNOWN",
-      POINTER_SURFACE_BISHOP_RECEIPT: authorities.pointerSurface.receipt || "UNKNOWN",
-      POINTER_INSPECT_PRIEST_OBSERVED: authorities.pointerInspect.observed || false,
-      POINTER_INSPECT_PRIEST_SOURCE_PATH: authorities.pointerInspect.path || "NONE",
-      POINTER_INSPECT_PRIEST_CONTRACT: authorities.pointerInspect.contract || "UNKNOWN",
-      POINTER_INSPECT_PRIEST_RECEIPT: authorities.pointerInspect.receipt || "UNKNOWN",
+      POINTER_SURFACE_BISHOP_OBSERVED: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.observed : false,
+      POINTER_SURFACE_BISHOP_SCRIPT_PRESENT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.scriptPresent : false,
+      POINTER_SURFACE_BISHOP_AUTHORITY_PRESENT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.authorityPresent : false,
+      POINTER_SURFACE_BISHOP_CONTRACT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.contract : "UNKNOWN",
+      POINTER_SURFACE_BISHOP_RECOGNIZED: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.contractRecognized : false,
 
-      STAGE_PRESENT: snapshot.stageFound,
+      POINTER_INSPECT_PRIEST_OBSERVED: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.observed : false,
+      POINTER_INSPECT_PRIEST_SCRIPT_PRESENT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.scriptPresent : false,
+      POINTER_INSPECT_PRIEST_AUTHORITY_PRESENT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.authorityPresent : false,
+      POINTER_INSPECT_PRIEST_CONTRACT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.contract : "UNKNOWN",
+      POINTER_INSPECT_PRIEST_RECOGNIZED: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.contractRecognized : false,
+      POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT: false,
+      POINTER_INSPECT_IS_CHILD_ORGANIZER: true,
+
+      STAGE_PRESENT: stage.exists,
       STAGE_SELECTOR: snapshot.stageSelector,
-      STAGE_DESCRIPTOR: snapshot.stageDescriptor,
-      STAGE_RECT_NONZERO: snapshot.stageRectNonzero,
-      STAGE_RECT_WIDTH: snapshot.stageRectWidth,
-      STAGE_RECT_HEIGHT: snapshot.stageRectHeight,
-      STAGE_COMPUTED_VISIBLE: snapshot.stageComputedVisible,
-      STAGE_COMPUTED_DISPLAY: snapshot.stageComputedDisplay,
-      STAGE_COMPUTED_POSITION: snapshot.stageComputedPosition,
-      STAGE_COMPUTED_OVERFLOW: snapshot.stageComputedOverflow,
+      STAGE_DESCRIPTOR: stage.descriptor,
+      STAGE_RECT_NONZERO: stage.rectNonzero,
+      STAGE_RECT_WIDTH: stage.rectWidth,
+      STAGE_RECT_HEIGHT: stage.rectHeight,
+      STAGE_OFFSET_WIDTH: stage.offsetWidth,
+      STAGE_OFFSET_HEIGHT: stage.offsetHeight,
+      STAGE_CLIENT_WIDTH: stage.clientWidth,
+      STAGE_CLIENT_HEIGHT: stage.clientHeight,
+      STAGE_COMPUTED_VISIBLE: stage.computedVisible,
+      STAGE_COMPUTED_DISPLAY: stage.computedDisplay,
+      STAGE_COMPUTED_POSITION: stage.computedPosition,
+      STAGE_COMPUTED_OVERFLOW: stage.computedOverflow,
+      STAGE_COMPUTED_WIDTH: stage.computedWidth,
+      STAGE_COMPUTED_HEIGHT: stage.computedHeight,
+      STAGE_USED_SIZE_CLASS: stage.usedSizeClass,
+      STAGE_USED_SIZE_FIRST_MISSING_FACT: stage.usedSizeFirstMissingFact,
 
       CANONICAL_MOUNT_SELECTOR,
       CANONICAL_FRAME_SELECTOR,
-      CANONICAL_CANVAS_ID,
+      CANONICAL_CANVAS_SELECTOR,
+      CANONICAL_CHAIN_SELECTOR,
       CANONICAL_CANVAS_SELECTORS: CANONICAL_CANVAS_SELECTORS.slice(),
 
-      CANONICAL_MOUNT_FOUND: snapshot.canonicalMountFound,
-      CANONICAL_MOUNT_DESCRIPTOR: snapshot.canonicalMountDescriptor,
-      CANONICAL_MOUNT_RECT_NONZERO: snapshot.canonicalMountRectNonzero,
-      CANONICAL_MOUNT_RECT_WIDTH: snapshot.canonicalMountRectWidth,
-      CANONICAL_MOUNT_RECT_HEIGHT: snapshot.canonicalMountRectHeight,
-      CANONICAL_MOUNT_COMPUTED_VISIBLE: snapshot.canonicalMountComputedVisible,
-      CANONICAL_MOUNT_COMPUTED_DISPLAY: snapshot.canonicalMountComputedDisplay,
-      CANONICAL_MOUNT_COMPUTED_POSITION: snapshot.canonicalMountComputedPosition,
-      CANONICAL_MOUNT_COMPUTED_OVERFLOW: snapshot.canonicalMountComputedOverflow,
-      CANONICAL_MOUNT_COMPUTED_CONTAIN: snapshot.canonicalMountComputedContain,
-      CANONICAL_MOUNT_COMPUTED_CONTENT_VISIBILITY: snapshot.canonicalMountComputedContentVisibility,
-      CANONICAL_MOUNT_COMPUTED_WIDTH: snapshot.canonicalMountComputedWidth,
-      CANONICAL_MOUNT_COMPUTED_HEIGHT: snapshot.canonicalMountComputedHeight,
+      CANONICAL_MOUNT_FOUND: mount.exists,
+      CANONICAL_MOUNT_DESCRIPTOR: mount.descriptor,
+      CANONICAL_MOUNT_RECT_NONZERO: mount.rectNonzero,
+      CANONICAL_MOUNT_RECT_WIDTH: mount.rectWidth,
+      CANONICAL_MOUNT_RECT_HEIGHT: mount.rectHeight,
+      CANONICAL_MOUNT_OFFSET_WIDTH: mount.offsetWidth,
+      CANONICAL_MOUNT_OFFSET_HEIGHT: mount.offsetHeight,
+      CANONICAL_MOUNT_CLIENT_WIDTH: mount.clientWidth,
+      CANONICAL_MOUNT_CLIENT_HEIGHT: mount.clientHeight,
+      CANONICAL_MOUNT_COMPUTED_VISIBLE: mount.computedVisible,
+      CANONICAL_MOUNT_COMPUTED_DISPLAY: mount.computedDisplay,
+      CANONICAL_MOUNT_COMPUTED_POSITION: mount.computedPosition,
+      CANONICAL_MOUNT_COMPUTED_OVERFLOW: mount.computedOverflow,
+      CANONICAL_MOUNT_COMPUTED_CONTAIN: mount.computedContain,
+      CANONICAL_MOUNT_COMPUTED_CONTENT_VISIBILITY: mount.computedContentVisibility,
+      CANONICAL_MOUNT_COMPUTED_WIDTH: mount.computedWidth,
+      CANONICAL_MOUNT_COMPUTED_HEIGHT: mount.computedHeight,
+      CANONICAL_MOUNT_COMPUTED_MIN_WIDTH: mount.computedMinWidth,
+      CANONICAL_MOUNT_COMPUTED_MIN_HEIGHT: mount.computedMinHeight,
+      CANONICAL_MOUNT_COMPUTED_FLEX: mount.computedFlex,
+      CANONICAL_MOUNT_COMPUTED_FLEX_BASIS: mount.computedFlexBasis,
+      CANONICAL_MOUNT_USED_SIZE_CLASS: mount.usedSizeClass,
+      CANONICAL_MOUNT_USED_SIZE_FIRST_MISSING_FACT: mount.usedSizeFirstMissingFact,
+      CANONICAL_MOUNT_USED_SIZE_REASON: mount.usedSizeReason,
 
-      CANONICAL_FRAME_FOUND: snapshot.canonicalFrameFound,
-      CANONICAL_FRAME_DESCRIPTOR: snapshot.canonicalFrameDescriptor,
-      CANONICAL_FRAME_RECT_NONZERO: snapshot.canonicalFrameRectNonzero,
-      CANONICAL_FRAME_RECT_WIDTH: snapshot.canonicalFrameRectWidth,
-      CANONICAL_FRAME_RECT_HEIGHT: snapshot.canonicalFrameRectHeight,
-      CANONICAL_FRAME_COMPUTED_VISIBLE: snapshot.canonicalFrameComputedVisible,
-      CANONICAL_FRAME_COMPUTED_DISPLAY: snapshot.canonicalFrameComputedDisplay,
-      CANONICAL_FRAME_COMPUTED_POSITION: snapshot.canonicalFrameComputedPosition,
-      CANONICAL_FRAME_COMPUTED_OVERFLOW: snapshot.canonicalFrameComputedOverflow,
-      CANONICAL_FRAME_COMPUTED_CONTAIN: snapshot.canonicalFrameComputedContain,
-      CANONICAL_FRAME_COMPUTED_CONTENT_VISIBILITY: snapshot.canonicalFrameComputedContentVisibility,
-      CANONICAL_FRAME_COMPUTED_WIDTH: snapshot.canonicalFrameComputedWidth,
-      CANONICAL_FRAME_COMPUTED_HEIGHT: snapshot.canonicalFrameComputedHeight,
+      CANONICAL_FRAME_FOUND: frame.exists,
+      CANONICAL_FRAME_DESCRIPTOR: frame.descriptor,
+      CANONICAL_FRAME_RECT_NONZERO: frame.rectNonzero,
+      CANONICAL_FRAME_RECT_WIDTH: frame.rectWidth,
+      CANONICAL_FRAME_RECT_HEIGHT: frame.rectHeight,
+      CANONICAL_FRAME_OFFSET_WIDTH: frame.offsetWidth,
+      CANONICAL_FRAME_OFFSET_HEIGHT: frame.offsetHeight,
+      CANONICAL_FRAME_CLIENT_WIDTH: frame.clientWidth,
+      CANONICAL_FRAME_CLIENT_HEIGHT: frame.clientHeight,
+      CANONICAL_FRAME_COMPUTED_VISIBLE: frame.computedVisible,
+      CANONICAL_FRAME_COMPUTED_DISPLAY: frame.computedDisplay,
+      CANONICAL_FRAME_COMPUTED_POSITION: frame.computedPosition,
+      CANONICAL_FRAME_COMPUTED_OVERFLOW: frame.computedOverflow,
+      CANONICAL_FRAME_COMPUTED_CONTAIN: frame.computedContain,
+      CANONICAL_FRAME_COMPUTED_CONTENT_VISIBILITY: frame.computedContentVisibility,
+      CANONICAL_FRAME_COMPUTED_WIDTH: frame.computedWidth,
+      CANONICAL_FRAME_COMPUTED_HEIGHT: frame.computedHeight,
+      CANONICAL_FRAME_USED_SIZE_CLASS: frame.usedSizeClass,
+      CANONICAL_FRAME_USED_SIZE_FIRST_MISSING_FACT: frame.usedSizeFirstMissingFact,
 
       CANONICAL_CANVAS_FOUND: Boolean(snapshot.canonicalCanvas),
       CANONICAL_CANVAS_SELECTOR: snapshot.canonicalFound.selector,
@@ -2874,9 +3283,9 @@
       CANVAS_ELEMENT_FOUND: Boolean(snapshot.canonicalCanvas),
       CANVAS_DOM_SURFACE_FOUND: Boolean(snapshot.canonicalCanvas),
       CANVAS_SELECTOR: snapshot.canonicalFound.selector,
-      CANVAS_MOUNT_FOUND: snapshot.canonicalMountFound,
+      CANVAS_MOUNT_FOUND: mount.exists,
       CANVAS_MOUNT_SELECTOR: CANONICAL_MOUNT_SELECTOR,
-      CANVAS_FRAME_FOUND: snapshot.canonicalFrameFound,
+      CANVAS_FRAME_FOUND: frame.exists,
       CANVAS_FRAME_SELECTOR: CANONICAL_FRAME_SELECTOR,
       CANVAS_IN_MOUNT: canonicalSummary.inCanonicalMount || false,
       CANVAS_IN_FRAME: canonicalSummary.inCanonicalFrame || false,
@@ -2892,6 +3301,10 @@
       CANVAS_RECT_WIDTH: canonicalSummary.rectWidth || 0,
       CANVAS_RECT_HEIGHT: canonicalSummary.rectHeight || 0,
       CANVAS_RECT_NONZERO: canonicalSummary.rectNonzero || false,
+      CANVAS_OFFSET_WIDTH: canonicalSummary.offsetWidth || 0,
+      CANVAS_OFFSET_HEIGHT: canonicalSummary.offsetHeight || 0,
+      CANVAS_CLIENT_WIDTH: canonicalSummary.clientWidth || 0,
+      CANVAS_CLIENT_HEIGHT: canonicalSummary.clientHeight || 0,
       CANVAS_BUFFER_CSS_WIDTH_RATIO: canonicalSummary.bufferCssWidthRatio || 0,
       CANVAS_BUFFER_CSS_HEIGHT_RATIO: canonicalSummary.bufferCssHeightRatio || 0,
 
@@ -2913,6 +3326,10 @@
       CANVAS_COMPUTED_FLEX: canonicalSummary.computedFlex || "UNKNOWN",
       CANVAS_COMPUTED_FLEX_BASIS: canonicalSummary.computedFlexBasis || "UNKNOWN",
       CANVAS_COMPUTED_BOX_SIZING: canonicalSummary.computedBoxSizing || "UNKNOWN",
+      CANVAS_USED_SIZE_CLASS: canonicalSummary.usedSizeClass || "UNKNOWN",
+      CANVAS_USED_SIZE_FIRST_MISSING_FACT:
+        canonicalSummary.usedSizeFirstMissingFact || "UNKNOWN",
+      CANVAS_USED_SIZE_REASON: canonicalSummary.usedSizeReason || "UNKNOWN",
 
       CANVAS_VIEWPORT_INTERSECTING: canonicalSummary.viewportIntersecting || false,
       CANVAS_CONTEXT_2D_READY: canonicalSummary.context2dReady || false,
@@ -2943,17 +3360,22 @@
       CANONICAL_PARENT_FIRST_COLLAPSED_DESCRIPTOR: chain.firstCollapsedDescriptor,
       CANONICAL_PARENT_FIRST_COLLAPSED_WIDTH: chain.firstCollapsedWidth,
       CANONICAL_PARENT_FIRST_COLLAPSED_HEIGHT: chain.firstCollapsedHeight,
+      CANONICAL_PARENT_FIRST_COLLAPSED_COMPUTED_WIDTH: chain.firstCollapsedComputedWidth,
+      CANONICAL_PARENT_FIRST_COLLAPSED_COMPUTED_HEIGHT: chain.firstCollapsedComputedHeight,
+      CANONICAL_PARENT_FIRST_COLLAPSED_CLASS: chain.firstCollapsedClass,
+      CANONICAL_PARENT_FIRST_COLLAPSED_MISSING_FACT: chain.firstCollapsedMissingFact,
       CANONICAL_PARENT_FIRST_HIDDEN_DEPTH: chain.firstHiddenDepth,
       CANONICAL_PARENT_FIRST_HIDDEN_DESCRIPTOR: chain.firstHiddenDescriptor,
-      CANONICAL_PARENT_FIRST_CONTAINMENT_RISK_DEPTH: chain.firstContainmentRiskDepth,
-      CANONICAL_PARENT_FIRST_CONTAINMENT_RISK_DESCRIPTOR: chain.firstContainmentRiskDescriptor,
-      CANONICAL_PARENT_FIRST_CONTAINMENT_RISK_CONTAIN: chain.firstContainmentRiskContain,
-      CANONICAL_PARENT_FIRST_CONTAINMENT_RISK_CONTENT_VISIBILITY:
-        chain.firstContainmentRiskContentVisibility,
 
       MOUNT_PARENT_CHAIN_STATUS: mountChain.status || "UNKNOWN",
       MOUNT_PARENT_FIRST_COLLAPSED_DEPTH: mountChain.firstCollapsedDepth,
       MOUNT_PARENT_FIRST_COLLAPSED_DESCRIPTOR: mountChain.firstCollapsedDescriptor,
+      MOUNT_PARENT_FIRST_COLLAPSED_WIDTH: mountChain.firstCollapsedWidth,
+      MOUNT_PARENT_FIRST_COLLAPSED_HEIGHT: mountChain.firstCollapsedHeight,
+      MOUNT_PARENT_FIRST_COLLAPSED_COMPUTED_WIDTH: mountChain.firstCollapsedComputedWidth,
+      MOUNT_PARENT_FIRST_COLLAPSED_COMPUTED_HEIGHT: mountChain.firstCollapsedComputedHeight,
+      MOUNT_PARENT_FIRST_COLLAPSED_CLASS: mountChain.firstCollapsedClass,
+      MOUNT_PARENT_FIRST_COLLAPSED_MISSING_FACT: mountChain.firstCollapsedMissingFact,
       MOUNT_PARENT_FIRST_HIDDEN_DEPTH: mountChain.firstHiddenDepth,
       MOUNT_PARENT_FIRST_HIDDEN_DESCRIPTOR: mountChain.firstHiddenDescriptor,
 
@@ -2981,80 +3403,89 @@
         firstPixelBearingSummary.inCanonicalMount || false,
       NON_CANONICAL_PIXEL_BEARING_CANVAS_COUNT: snapshot.nonCanonicalPixelBearingCanvasCount,
 
-      BOUNDARY_DIAGNOSIS_AVAILABLE: true,
-      BOUNDARY_DIAGNOSIS_MATRIX_VERSION: boundaryMatrix.matrixVersion,
-      BOUNDARY_RELATIONSHIP_COUNT: boundaryMatrix.boundaryRelationshipCount,
-      BOUNDARY_CONFIRMED_COUNT: boundaryMatrix.boundaryConfirmedCount,
-      BOUNDARY_FAILED_OR_PARTIAL_COUNT: boundaryMatrix.boundaryFailedOrPartialCount,
-      BOUNDARY_PARTIAL_COUNT: boundaryMatrix.boundaryPartialCount,
-      BOUNDARY_FIRST_FAILED_BOUNDARY: boundaryMatrix.firstFailedBoundary,
-      BOUNDARY_FIRST_FAILED_RELATIONSHIP: boundaryMatrix.firstFailedBoundaryRelationship,
-      BOUNDARY_FIRST_FAILED_STATUS: boundaryMatrix.firstFailedBoundaryStatus,
-      BOUNDARY_FIRST_MISSING_RUNTIME_FACT: boundaryMatrix.firstMissingRuntimeFact,
-      BOUNDARY_MISSING_RUNTIME_FACT_LOCATION: boundaryMatrix.missingRuntimeFactLocation,
-      BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN: boundaryMatrix.singleCausalFileProven,
-      BOUNDARY_PROVEN_CAUSAL_FILE: boundaryMatrix.provenCausalFile,
-      BOUNDARY_PROVEN_CAUSAL_REASON: boundaryMatrix.provenCausalReason,
-      BOUNDARY_ADJACENT_FILES: adjacentFiles.join(" | ") || "NONE",
-      BOUNDARY_MATRIX_SUMMARY_TEXT: boundaryText || "NONE",
-      BOUNDARY_MATRIX: clonePlain(boundaryMatrix.rows),
-      BOUNDARY_MATRIX_JSON: clonePlain(boundaryMatrix.rows),
+      BOUNDARY_FACT_MATRIX_ACTIVE: true,
+      BOUNDARY_ONE_ROW_PER_BOUNDARY: true,
+      BOUNDARY_ONE_MISSING_PROOF_ONE_MISSING_FACT: true,
+      BOUNDARY_NO_SINGLE_FILE_RECOMMENDATION_UNLESS_PROVEN: true,
+      BOUNDARY_TOTAL_ROW_COUNT: snapshot.boundaryRows.length,
+      BOUNDARY_LAYOUT_ROW_COUNT: snapshot.layoutBoundaryRows.length,
+      BOUNDARY_RUNTIME_ROW_COUNT: snapshot.runtimeBoundaryRows.length,
+      BOUNDARY_ALL_BLOCKING_CLEAN: boundaryClean,
+      BOUNDARY_LAYOUT_BLOCKING_CLEAN: layoutClean,
+      BOUNDARY_RUNTIME_BLOCKING_CLEAN: runtimeClean,
+      BOUNDARY_FIRST_FAILED: anyFirst ? anyFirst.id : "NONE",
+      BOUNDARY_FIRST_FAILED_CLASS: anyFirst ? anyFirst.class : "NONE",
+      BOUNDARY_FIRST_MISSING_PROOF: anyFirst ? anyFirst.firstMissingProof : "NONE",
+      BOUNDARY_FIRST_MISSING_FACT: anyFirst ? anyFirst.firstMissingFact : "NONE",
+      BOUNDARY_FIRST_RECOMMENDED_OWNER: anyFirst ? anyFirst.recommendedOwner : "NONE",
+      BOUNDARY_FIRST_RECOMMENDED_FILE: anyFirst ? anyFirst.recommendedFile : "NONE",
+      BOUNDARY_FIRST_RECOMMENDED_ACTION: anyFirst ? anyFirst.recommendedAction : "NONE",
+      BOUNDARY_LAYOUT_FIRST_FAILED: layoutFirst ? layoutFirst.id : "NONE",
+      BOUNDARY_LAYOUT_FIRST_MISSING_FACT: layoutFirst ? layoutFirst.firstMissingFact : "NONE",
+      BOUNDARY_RUNTIME_FIRST_FAILED: runtimeFirst ? runtimeFirst.id : "NONE",
+      BOUNDARY_RUNTIME_FIRST_MISSING_FACT: runtimeFirst ? runtimeFirst.firstMissingFact : "NONE",
+      BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN: verdict.singleCausalFileProven === true,
+      BOUNDARY_SINGLE_CAUSAL_FILE: verdict.singleCausalFileProven ? verdict.file : "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
 
-      ROUTE_TO_CANVAS_BOUNDARY_STATUS:
-        getBoundaryField(boundaryRows, "ROUTE_CONDUCTOR_TO_CANVAS", "boundaryStatus"),
-      CANVAS_TO_HEX_SURFACE_BOUNDARY_STATUS:
-        getBoundaryField(boundaryRows, "CANVAS_TO_HEX_SURFACE", "boundaryStatus"),
-      HEX_SURFACE_TO_POINTER_SURFACE_BOUNDARY_STATUS:
-        getBoundaryField(boundaryRows, "HEX_SURFACE_TO_POINTER_SURFACE_BISHOP", "boundaryStatus"),
-      POINTER_SURFACE_TO_CANVAS_BOUNDARY_STATUS:
-        getBoundaryField(boundaryRows, "POINTER_SURFACE_BISHOP_TO_CANVAS_RETURN", "boundaryStatus"),
-      CONTROLS_TO_CANVAS_BOUNDARY_STATUS:
-        getBoundaryField(boundaryRows, "CONTROLS_TO_CANVAS", "boundaryStatus"),
-
-      CANVAS_IDENTITY_DISAMBIGUATION_STATUS: surfaceVerdict.status,
-      CANVAS_SURFACE_TRUTH_LANE_STATUS: surfaceVerdict.clean
+      CANVAS_IDENTITY_DISAMBIGUATION_STATUS: verdict.status,
+      CANVAS_SURFACE_TRUTH_LANE_STATUS: verdict.clean
         ? "CANVAS_SURFACE_TRUTH_LANE_PASSED_NO_FINAL_CLAIM"
         : "CANVAS_SURFACE_TRUTH_LANE_FAILED",
-      CANVAS_SURFACE_TRUTH_LANE_CLEAN: surfaceVerdict.clean,
+      CANVAS_SURFACE_TRUTH_LANE_CLEAN: verdict.clean,
 
-      CANVAS_TRUTH_STATUS: surfaceVerdict.status,
-      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: surfaceVerdict.coordinate,
-      CANVAS_TRUTH_FAILURE_CLASS: surfaceVerdict.failureClass,
-      CANVAS_TRUTH_FAILURE_REASON: surfaceVerdict.reason,
-      CANVAS_TRUTH_RECOMMENDED_OWNER: surfaceVerdict.owner,
-      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      CANVAS_TRUTH_RECOMMENDED_ACTION: surfaceVerdict.action,
+      CANVAS_TRUTH_STATUS: verdict.status,
+      CANVAS_TRUTH_FIRST_FAILED_COORDINATE: verdict.coordinate,
+      CANVAS_TRUTH_FAILURE_CLASS: verdict.failureClass,
+      CANVAS_TRUTH_FAILURE_REASON: verdict.reason,
+      CANVAS_TRUTH_RECOMMENDED_OWNER: verdict.owner,
+      CANVAS_TRUTH_RECOMMENDED_FILE: verdict.file,
+      CANVAS_TRUTH_RECOMMENDED_ACTION: verdict.action,
 
-      SINGLE_CAUSAL_FILE_PROVEN: false,
-      PROVEN_CAUSAL_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      PROVEN_CAUSAL_REASON:
-        "DIAGNOSTIC_REPORTS_SURFACE_AND_BOUNDARY_FACTS_NO_SINGLE_FILE_CAUSALITY_PROVEN",
-      MISSING_RUNTIME_FACT_LOCATION:
-        surfaceVerdict.clean ? boundaryMatrix.missingRuntimeFactLocation : "SURFACE_OR_BOUNDARY_FACTS",
+      ZONE_OF_INFLICTION_OWNER: verdict.owner,
+      ZONE_OF_INFLICTION_FILE: verdict.file,
+      ZONE_OF_INFLICTION_CLASS: verdict.failureClass,
+      ZONE_OF_INFLICTION_REASON: verdict.reason,
+
       FINAL_ARBITRATION_SOURCE_LANE:
-        "CANONICAL_SURFACE_TRUTH_AND_BOUNDARY_DIAGNOSIS_MATRIX",
-      DIAGNOSTIC_CERTAINTY: surfaceVerdict.certainty,
+        "PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_LANE",
+      DIAGNOSTIC_CERTAINTY: verdict.certainty,
       OBSERVABLE_CAUSE:
-        `CANONICAL:${surfaceVerdict.coordinate}:${surfaceVerdict.failureClass}:${surfaceVerdict.reason}`,
-      RECOMMENDED_NEXT_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      RECOMMENDED_NEXT_ACTION: "READ_BOUNDARY_DIAGNOSIS_MATRIX_AND_SURFACE_FACTS",
+        `CANONICAL:${verdict.coordinate}:${verdict.failureClass}:${verdict.reason}`,
+      RECOMMENDED_NEXT_OWNER: verdict.owner,
+      RECOMMENDED_NEXT_FILE: verdict.file,
+      RECOMMENDED_NEXT_ACTION: verdict.action,
 
+      RUNTIME_DARK_FILE_COUNT: darkRuntimeFiles.length,
+      RUNTIME_DARK_FILES: clonePlain(darkRuntimeFiles),
+      FIRST_DARK_RUNTIME_OWNER: darkRuntimeFiles[0] ? darkRuntimeFiles[0].id : "NONE",
+      FIRST_DARK_RUNTIME_FILE: darkRuntimeFiles[0] ? darkRuntimeFiles[0].file : "NONE",
+      FIRST_DARK_RUNTIME_CLASS: darkRuntimeFiles[0] ? darkRuntimeFiles[0].nodeStatus : "NONE",
+      FIRST_DARK_RUNTIME_ACTION: darkRuntimeFiles[0]
+        ? "CONFIRM_PUBLIC_AUTHORITY_CONTRACT_AND_ALIAS_FAMILY_ALIGNMENT"
+        : "NONE",
+
+      BOUNDARY_FACT_ROWS: clonePlain(snapshot.boundaryRows),
+      LAYOUT_BOUNDARY_FACT_ROWS: clonePlain(snapshot.layoutBoundaryRows),
+      RUNTIME_BOUNDARY_FACT_ROWS: clonePlain(snapshot.runtimeBoundaryRows),
+      RUNTIME_NODES: clonePlain(runtimeNodes),
       CANONICAL_CANVAS_SUMMARY: clonePlain(canonicalSummary),
+      STAGE_USED_SIZE_SUMMARY: clonePlain(stage),
+      MOUNT_USED_SIZE_SUMMARY: clonePlain(mount),
+      FRAME_USED_SIZE_SUMMARY: clonePlain(frame),
       FIRST_PIXEL_BEARING_CANVAS_SUMMARY: clonePlain(firstPixelBearingSummary),
       PIXEL_BEARING_CANVAS_SUMMARIES: clonePlain(snapshot.pixelBearingSummaries),
       ALL_CANVAS_SUMMARIES: clonePlain(snapshot.allCanvasSummaries),
       CANONICAL_PARENT_CHAIN: clonePlain(snapshot.canonicalParentChain),
       MOUNT_PARENT_CHAIN: clonePlain(snapshot.mountParentChain),
 
-      CONTROL_DUTY_LANE_STATUS: "BOUNDARY_MATRIX_EVALUATED_READ_ONLY",
-      DELEGATORY_PERMISSION_LANE_STATUS: "BOUNDARY_MATRIX_EVALUATED_READ_ONLY",
+      CONTROL_DUTY_LANE_STATUS: "READ_ONLY_RUNTIME_BOUNDARY_FACTS_REPORTED",
+      DELEGATORY_PERMISSION_LANE_STATUS: "READ_ONLY_BOUNDARY_FACTS_REPORTED_NO_PERMISSION_INVENTION",
       ROUTE_CONDUCTOR_LANE_STATUS: "OBSERVED_READ_ONLY_NO_REPAIR",
       HEX_SURFACE_LANE_STATUS: "OBSERVED_READ_ONLY_NO_REPAIR",
-      POINTER_SURFACE_LANE_STATUS: "OBSERVED_READ_ONLY_NO_REPAIR",
-      TRUTH_HUB_STATUS: "CANONICAL_SURFACE_TRUTH_PLUS_BOUNDARY_DIAGNOSIS_MATRIX",
+      TRUTH_HUB_STATUS: "PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
       TRUTH_HUB_RECEIPT_LANE_COUNT: "2",
       TRUTH_HUB_RECEIPT_ROUTES:
-        "CANONICAL_SURFACE_TRUTH_LANE | BOUNDARY_DIAGNOSIS_MATRIX_LANE",
+        "LAYOUT_PARENT_CHAIN_USED_SIZE_BOUNDARY_LANE|RUNTIME_RELATIONSHIP_BOUNDARY_FACT_LANE",
 
       PRODUCTION_MUTATION_AUTHORIZED: false,
       CANVAS_DRAWING_AUTHORIZED: false,
@@ -3072,17 +3503,12 @@
     };
   }
 
-  function getBoundaryField(rows, id, field) {
-    const row = Array.isArray(rows) ? rows.find((entry) => entry.id === id) : null;
-    return row ? row[field] : "UNKNOWN";
-  }
-
   function makeErrorReport(error, payload = {}) {
     const message = bounded(error && error.message ? error.message : error, 1200);
 
     return {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_ERROR_PACKET_v1_8",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ERROR_PACKET_v1_9",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
@@ -3099,46 +3525,37 @@
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "CALL_RETURNED_WITH_INTERNAL_ERROR_PACKET",
       CANVAS_SURFACE_TRUTH_AVAILABLE: "false",
       CANVAS_SURFACE_TRUTH_SCOPE:
-        "CALL_GUARDED_CANONICAL_SURFACE_TRUTH_PLUS_BOUNDARY_DIAGNOSIS_MATRIX_ONLY",
+        "CALL_GUARDED_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
       TARGET_CONTEXT_STATUS: "UNKNOWN",
       TARGET_CONTEXT_SOURCE: "UNKNOWN",
       TARGET_ACCESS_ERROR: "UNKNOWN",
 
-      BOUNDARY_DIAGNOSIS_AVAILABLE: false,
-      BOUNDARY_DIAGNOSIS_MATRIX_VERSION: "UNAVAILABLE_ERROR_PACKET",
-      BOUNDARY_RELATIONSHIP_COUNT: 0,
-      BOUNDARY_FIRST_FAILED_BOUNDARY: "PROBE_CALL_GUARD",
-      BOUNDARY_FIRST_FAILED_STATUS: "PROBE_INTERNAL_ERROR_PACKET_RETURNED",
-      BOUNDARY_FIRST_MISSING_RUNTIME_FACT: message || "UNKNOWN_INTERNAL_ERROR",
-      BOUNDARY_MISSING_RUNTIME_FACT_LOCATION: "DIAGNOSTIC_PROBE_CALL_GUARD",
-      BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN: false,
-      BOUNDARY_PROVEN_CAUSAL_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      BOUNDARY_PROVEN_CAUSAL_REASON: "PROBE_INTERNAL_ERROR_DOES_NOT_PROVE_PRODUCTION_FILE_CAUSALITY",
-      BOUNDARY_ADJACENT_FILES: FILE,
-      BOUNDARY_MATRIX: [],
-
       CANVAS_IDENTITY_DISAMBIGUATION_STATUS: "PROBE_INTERNAL_ERROR_PACKET_RETURNED",
       CANVAS_SURFACE_TRUTH_LANE_STATUS: "CANVAS_SURFACE_TRUTH_LANE_FAILED",
       CANVAS_SURFACE_TRUTH_LANE_CLEAN: false,
+
+      BOUNDARY_FACT_MATRIX_ACTIVE: true,
+      BOUNDARY_FIRST_FAILED: "PROBE_CALL_GUARD",
+      BOUNDARY_FIRST_MISSING_PROOF: "PROBE_RETURN_PACKET_PROOF",
+      BOUNDARY_FIRST_MISSING_FACT: "PROBE_INTERNAL_ERROR_ABSENT",
+      BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN: true,
+      BOUNDARY_SINGLE_CAUSAL_FILE: FILE,
 
       CANVAS_TRUTH_STATUS: "PROBE_INTERNAL_ERROR_PACKET_RETURNED",
       CANVAS_TRUTH_FIRST_FAILED_COORDINATE: "PROBE_CALL_GUARD",
       CANVAS_TRUTH_FAILURE_CLASS: "PROBE_INTERNAL_ERROR_PACKET_RETURNED",
       CANVAS_TRUTH_FAILURE_REASON: message || "UNKNOWN_INTERNAL_ERROR",
       CANVAS_TRUTH_RECOMMENDED_OWNER: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      CANVAS_TRUTH_RECOMMENDED_FILE: FILE,
       CANVAS_TRUTH_RECOMMENDED_ACTION:
         "RENEW_PROBE_CANVAS_SURFACE_TRUTH_CALL_GUARD_OR_RETURN_PACKET",
 
-      SINGLE_CAUSAL_FILE_PROVEN: false,
-      PROVEN_CAUSAL_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      PROVEN_CAUSAL_REASON: "PROBE_INTERNAL_ERROR_DOES_NOT_PROVE_PRODUCTION_FILE_CAUSALITY",
-      MISSING_RUNTIME_FACT_LOCATION: "DIAGNOSTIC_PROBE_CALL_GUARD",
       FINAL_ARBITRATION_SOURCE_LANE:
-        "CALL_GUARDED_BOUNDARY_DIAGNOSIS_MATRIX_ERROR_PACKET",
+        "PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_LANE",
       DIAGNOSTIC_CERTAINTY: "DEFINITIVE_PROBE_INTERNAL_ERROR",
       OBSERVABLE_CAUSE: `PROBE_CALL_GUARD:${message || "UNKNOWN_INTERNAL_ERROR"}`,
-      RECOMMENDED_NEXT_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      RECOMMENDED_NEXT_OWNER: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      RECOMMENDED_NEXT_FILE: FILE,
       RECOMMENDED_NEXT_ACTION:
         "RENEW_PROBE_CANVAS_SURFACE_TRUTH_CALL_GUARD_OR_RETURN_PACKET",
 
@@ -3157,7 +3574,7 @@
       RUNTIME_RESTART_AUTHORIZED: false,
 
       SECONDARY_EVIDENCE_NOTES:
-        "V1_8_CALL_GUARD_RETURNED_ERROR_PACKET | NO_THROW_TO_NORTH | NO_SINGLE_FILE_CAUSALITY_CLAIMED | NO_PRODUCTION_MUTATION_AUTHORIZED",
+        "V1_9_CALL_GUARD_RETURNED_ERROR_PACKET | NO_THROW_TO_NORTH | NO_PRODUCTION_MUTATION_AUTHORIZED",
       CANVAS_SURFACE_TRUTH_NOTES:
         "CALL_GUARD_PREVENTED_CHRONOLOGY_HARD_FAILURE",
 
@@ -3186,8 +3603,6 @@
         root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
           clonePlain(lastSettledReport);
         root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
-          clonePlain(lastSettledReport);
-        root.HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX_SETTLED_REPORT =
           clonePlain(lastSettledReport);
 
         publish();
@@ -3243,13 +3658,14 @@
   function makeAnchorReport() {
     return {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_ANCHOR_PACKET_v1_8",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ANCHOR_PACKET_v1_9",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      LINEAGE_V1_7_CONTRACT,
       LINEAGE_V1_6_CONTRACT,
       LINEAGE_V1_5_CONTRACT,
       VERSION,
@@ -3264,28 +3680,28 @@
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "ANCHOR_READY",
       CANVAS_SURFACE_TRUTH_AVAILABLE: "UNKNOWN",
       CANVAS_SURFACE_TRUTH_SCOPE:
-        "CALL_GUARDED_CANONICAL_SURFACE_TRUTH_PLUS_BOUNDARY_DIAGNOSIS_MATRIX_ONLY",
+        "CALL_GUARDED_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
       TARGET_CONTEXT_STATUS: "NOT_RUN",
       TARGET_CONTEXT_SOURCE: "ANCHOR_ONLY",
       TARGET_ACCESS_ERROR: "NONE",
 
-      NEWS_ALIGNMENT_PROTOCOL_ACTIVE: true,
-      NEWS_ALIGNMENT_STATUS: "ANCHOR_READY",
-      FIBONACCI_SYNCHRONIZATION_ACTIVE: true,
-      FIBONACCI_CURRENT_STAGE: "F1_ANCHOR",
+      TRANSITION_MEASUREMENT_MODE: "ANCHOR_ONLY",
+      TRANSITION_SAMPLE_PHASE: "ANCHOR_ONLY",
+      TRANSITION_SETTLED_SAMPLE_SCHEDULED: false,
+      TRANSITION_SETTLED_SAMPLE_AVAILABLE: false,
+      TRANSITION_COMPARISON_STATUS: "NOT_RUN",
+      TRANSITION_COMPARISON_CLASS: "NOT_RUN",
+      TRANSITION_COMPARISON_REASON: "ANCHOR_ONLY",
 
-      BOUNDARY_DIAGNOSIS_AVAILABLE: true,
-      BOUNDARY_DIAGNOSIS_MATRIX_VERSION: "HEARTH_BOUNDARY_DIAGNOSIS_MATRIX_v1_8",
-      BOUNDARY_RELATIONSHIP_COUNT: 5,
-      BOUNDARY_FIRST_FAILED_BOUNDARY: "NOT_RUN",
-      BOUNDARY_FIRST_FAILED_STATUS: "NOT_RUN",
-      BOUNDARY_FIRST_MISSING_RUNTIME_FACT: "ANCHOR_ONLY",
-      BOUNDARY_MISSING_RUNTIME_FACT_LOCATION: "NOT_RUN",
+      BOUNDARY_FACT_MATRIX_ACTIVE: true,
+      BOUNDARY_ONE_ROW_PER_BOUNDARY: true,
+      BOUNDARY_ONE_MISSING_PROOF_ONE_MISSING_FACT: true,
+      BOUNDARY_NO_SINGLE_FILE_RECOMMENDATION_UNLESS_PROVEN: true,
+      BOUNDARY_FIRST_FAILED: "NOT_RUN",
+      BOUNDARY_FIRST_MISSING_PROOF: "NOT_RUN",
+      BOUNDARY_FIRST_MISSING_FACT: "NOT_RUN",
       BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN: false,
-      BOUNDARY_PROVEN_CAUSAL_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      BOUNDARY_PROVEN_CAUSAL_REASON: "ANCHOR_ONLY",
-      BOUNDARY_ADJACENT_FILES: "NONE",
-      BOUNDARY_MATRIX: [],
+      BOUNDARY_SINGLE_CAUSAL_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
 
       CANVAS_IDENTITY_DISAMBIGUATION_STATUS:
         "ANCHOR_READY_TARGET_NOT_YET_PROBED",
@@ -3298,15 +3714,8 @@
       CANVAS_TRUTH_FAILURE_CLASS: "NOT_RUN",
       CANVAS_TRUTH_FAILURE_REASON: "ANCHOR_PUBLISHED_WAITING_FOR_NORTH_CALL",
       CANVAS_TRUTH_RECOMMENDED_OWNER: "NONE",
-      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
+      CANVAS_TRUTH_RECOMMENDED_FILE: "NONE",
       CANVAS_TRUTH_RECOMMENDED_ACTION: "CALL_runProbeCanvasSurfaceTruth",
-
-      SINGLE_CAUSAL_FILE_PROVEN: false,
-      PROVEN_CAUSAL_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      PROVEN_CAUSAL_REASON: "ANCHOR_ONLY",
-      MISSING_RUNTIME_FACT_LOCATION: "NOT_RUN",
-      RECOMMENDED_NEXT_FILE: "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
-      RECOMMENDED_NEXT_ACTION: "CALL_runProbeCanvasSurfaceTruth",
 
       PRODUCTION_MUTATION_AUTHORIZED: false,
       CANVAS_DRAWING_AUTHORIZED: false,
@@ -3317,7 +3726,7 @@
       RUNTIME_RESTART_AUTHORIZED: false,
 
       SECONDARY_EVIDENCE_NOTES:
-        "V1_8_ANCHOR_READY | BOUNDARY_DIAGNOSIS_MATRIX_READY | CALL_GUARDED | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
+        "V1_9_ANCHOR_READY | CALL_GUARDED | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
       CANVAS_SURFACE_TRUTH_NOTES:
         "ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_READY | HEAVY_TARGET_PROBE_NOT_RUN_DURING_PUBLISH",
 
@@ -3331,13 +3740,14 @@
 
     return {
       packetType:
-        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_RECEIPT_PACKET_v1_8",
+        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT_PACKET_v1_9",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      lineageV17Contract: LINEAGE_V1_7_CONTRACT,
       lineageV16Contract: LINEAGE_V1_6_CONTRACT,
       lineageV15Contract: LINEAGE_V1_5_CONTRACT,
       version: VERSION,
@@ -3345,42 +3755,27 @@
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       canvasFile: CANVAS_FILE,
-      hexSurfaceFile: HEX_SURFACE_FILE,
-      pointerSurfaceFile: POINTER_SURFACE_FILE,
       expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
       expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
 
       diagnosticOnly: true,
       anchorSafeChronologyObservation: true,
       callGuardActive: true,
+      parentChainUsedSizeFactMatrixActive: true,
+      boundaryDiagnosisMatrixActive: true,
+      oneBoundaryOneRowActive: true,
+      oneMissingProofOneMissingFactActive: true,
+      noSingleFileRecommendationUnlessProven: true,
       layoutMathArbitrationActive: true,
       connectionArbitrationActive: true,
       blindSpotArbitrationActive: true,
       canonicalVisibleSurfaceDisambiguationActive: true,
       transitionSurfaceDisambiguationActive: true,
-      flashToFallbackMeasurementActive: true,
-      boundaryDiagnosisMatrixActive: true,
-      oneBoundaryOneRow: true,
-      oneMissingProofOneMissingFact: true,
-      noSingleFileRecommendationUnlessProven: true,
+      focusedOnCanonicalCanvasIdentity: true,
 
       canvasSurfaceTruthProbeStatus: getRaw(r, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY"),
       targetContextStatus: getRaw(r, "TARGET_CONTEXT_STATUS", "UNKNOWN"),
       targetContextSource: getRaw(r, "TARGET_CONTEXT_SOURCE", "UNKNOWN"),
-
-      boundaryDiagnosisAvailable: getRaw(r, "BOUNDARY_DIAGNOSIS_AVAILABLE", true),
-      boundaryDiagnosisMatrixVersion: getRaw(r, "BOUNDARY_DIAGNOSIS_MATRIX_VERSION", "HEARTH_BOUNDARY_DIAGNOSIS_MATRIX_v1_8"),
-      boundaryRelationshipCount: getRaw(r, "BOUNDARY_RELATIONSHIP_COUNT", 5),
-      boundaryConfirmedCount: getRaw(r, "BOUNDARY_CONFIRMED_COUNT", 0),
-      boundaryFailedOrPartialCount: getRaw(r, "BOUNDARY_FAILED_OR_PARTIAL_COUNT", 0),
-      boundaryFirstFailedBoundary: getRaw(r, "BOUNDARY_FIRST_FAILED_BOUNDARY", "UNKNOWN"),
-      boundaryFirstFailedRelationship: getRaw(r, "BOUNDARY_FIRST_FAILED_RELATIONSHIP", "UNKNOWN"),
-      boundaryFirstFailedStatus: getRaw(r, "BOUNDARY_FIRST_FAILED_STATUS", "UNKNOWN"),
-      boundaryFirstMissingRuntimeFact: getRaw(r, "BOUNDARY_FIRST_MISSING_RUNTIME_FACT", "UNKNOWN"),
-      boundaryMissingRuntimeFactLocation: getRaw(r, "BOUNDARY_MISSING_RUNTIME_FACT_LOCATION", "UNKNOWN"),
-      boundarySingleCausalFileProven: getRaw(r, "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN", false),
-      boundaryProvenCausalFile: getRaw(r, "BOUNDARY_PROVEN_CAUSAL_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN"),
-      boundaryAdjacentFiles: getRaw(r, "BOUNDARY_ADJACENT_FILES", "NONE"),
 
       transitionMeasurementMode: getRaw(r, "TRANSITION_MEASUREMENT_MODE", "UNKNOWN"),
       transitionSamplePhase: getRaw(r, "TRANSITION_SAMPLE_PHASE", "UNKNOWN"),
@@ -3390,14 +3785,28 @@
       transitionComparisonClass: getRaw(r, "TRANSITION_COMPARISON_CLASS", "UNKNOWN"),
       transitionComparisonReason: getRaw(r, "TRANSITION_COMPARISON_REASON", "UNKNOWN"),
 
+      boundaryFactMatrixActive: getRaw(r, "BOUNDARY_FACT_MATRIX_ACTIVE", true),
+      boundaryTotalRowCount: getRaw(r, "BOUNDARY_TOTAL_ROW_COUNT", 0),
+      boundaryLayoutRowCount: getRaw(r, "BOUNDARY_LAYOUT_ROW_COUNT", 0),
+      boundaryRuntimeRowCount: getRaw(r, "BOUNDARY_RUNTIME_ROW_COUNT", 0),
+      boundaryFirstFailed: getRaw(r, "BOUNDARY_FIRST_FAILED", "UNKNOWN"),
+      boundaryFirstMissingProof: getRaw(r, "BOUNDARY_FIRST_MISSING_PROOF", "UNKNOWN"),
+      boundaryFirstMissingFact: getRaw(r, "BOUNDARY_FIRST_MISSING_FACT", "UNKNOWN"),
+      boundarySingleCausalFileProven: getRaw(r, "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN", false),
+      boundarySingleCausalFile: getRaw(r, "BOUNDARY_SINGLE_CAUSAL_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN"),
+      boundaryLayoutFirstFailed: getRaw(r, "BOUNDARY_LAYOUT_FIRST_FAILED", "UNKNOWN"),
+      boundaryRuntimeFirstFailed: getRaw(r, "BOUNDARY_RUNTIME_FIRST_FAILED", "UNKNOWN"),
+
       canvasScriptPresent: getRaw(r, "CANVAS_SCRIPT_PRESENT", "UNKNOWN"),
-      canvasScriptExecutionInferred: getRaw(r, "CANVAS_SCRIPT_EXECUTION_INFERRED", "UNKNOWN"),
       canvasAuthorityObserved: getRaw(r, "CANVAS_AUTHORITY_OBSERVED", "UNKNOWN"),
       canvasAuthoritySourcePath: getRaw(r, "CANVAS_AUTHORITY_SOURCE_PATH", "NONE"),
       canvasAuthorityContract: getRaw(r, "CANVAS_AUTHORITY_CONTRACT", "UNKNOWN"),
 
       canonicalMountFound: getRaw(r, "CANONICAL_MOUNT_FOUND", "UNKNOWN"),
       canonicalMountRectNonzero: getRaw(r, "CANONICAL_MOUNT_RECT_NONZERO", "UNKNOWN"),
+      canonicalMountUsedSizeClass: getRaw(r, "CANONICAL_MOUNT_USED_SIZE_CLASS", "UNKNOWN"),
+      canonicalMountUsedSizeFirstMissingFact:
+        getRaw(r, "CANONICAL_MOUNT_USED_SIZE_FIRST_MISSING_FACT", "UNKNOWN"),
       canonicalFrameFound: getRaw(r, "CANONICAL_FRAME_FOUND", "UNKNOWN"),
       canonicalFrameRectNonzero: getRaw(r, "CANONICAL_FRAME_RECT_NONZERO", "UNKNOWN"),
       canonicalCanvasFound: getRaw(r, "CANONICAL_CANVAS_FOUND", "UNKNOWN"),
@@ -3415,12 +3824,15 @@
       canvasPixelSampleStatus: getRaw(r, "CANVAS_PIXEL_SAMPLE_STATUS", "NO_PIXEL_SAMPLE"),
       canvasPixelVisible: getRaw(r, "CANVAS_PIXEL_VISIBLE", "UNKNOWN"),
 
-      canonicalParentChainStatus: getRaw(r, "CANONICAL_PARENT_CHAIN_STATUS", "UNKNOWN"),
-      canonicalParentFirstCollapsedDescriptor:
-        getRaw(r, "CANONICAL_PARENT_FIRST_COLLAPSED_DESCRIPTOR", "UNKNOWN"),
+      stageUsedSizeClass: getRaw(r, "STAGE_USED_SIZE_CLASS", "UNKNOWN"),
       mountParentChainStatus: getRaw(r, "MOUNT_PARENT_CHAIN_STATUS", "UNKNOWN"),
       mountParentFirstCollapsedDescriptor:
         getRaw(r, "MOUNT_PARENT_FIRST_COLLAPSED_DESCRIPTOR", "UNKNOWN"),
+      mountParentFirstCollapsedMissingFact:
+        getRaw(r, "MOUNT_PARENT_FIRST_COLLAPSED_MISSING_FACT", "UNKNOWN"),
+      canonicalParentChainStatus: getRaw(r, "CANONICAL_PARENT_CHAIN_STATUS", "UNKNOWN"),
+      canonicalParentFirstCollapsedDescriptor:
+        getRaw(r, "CANONICAL_PARENT_FIRST_COLLAPSED_DESCRIPTOR", "UNKNOWN"),
 
       fallbackOrCartoonSignalObserved: getRaw(r, "FALLBACK_OR_CARTOON_SIGNAL_OBSERVED", "UNKNOWN"),
       canvasLayerCheckStatus: getRaw(r, "CANVAS_LAYER_CHECK_STATUS", "UNKNOWN"),
@@ -3439,11 +3851,8 @@
       canvasTruthFailureClass: getRaw(r, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN"),
       canvasTruthFailureReason: getRaw(r, "CANVAS_TRUTH_FAILURE_REASON", "UNKNOWN"),
       canvasTruthRecommendedOwner: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_OWNER", "UNKNOWN"),
-      canvasTruthRecommendedFile: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN"),
+      canvasTruthRecommendedFile: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN"),
       canvasTruthRecommendedAction: getRaw(r, "CANVAS_TRUTH_RECOMMENDED_ACTION", "UNKNOWN"),
-      singleCausalFileProven: getRaw(r, "SINGLE_CAUSAL_FILE_PROVEN", false),
-      provenCausalFile: getRaw(r, "PROVEN_CAUSAL_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN"),
-      missingRuntimeFactLocation: getRaw(r, "MISSING_RUNTIME_FACT_LOCATION", "UNKNOWN"),
       finalArbitrationSourceLane: getRaw(r, "FINAL_ARBITRATION_SOURCE_LANE", "UNKNOWN"),
       diagnosticCertainty: getRaw(r, "DIAGNOSTIC_CERTAINTY", "UNKNOWN"),
       observableCause: getRaw(r, "OBSERVABLE_CAUSE", "UNKNOWN"),
@@ -3474,6 +3883,7 @@
       "INTERNAL_RENEWAL_RECEIPT",
       "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
       "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
+      "LINEAGE_V1_7_CONTRACT",
       "LINEAGE_V1_6_CONTRACT",
       "LINEAGE_V1_5_CONTRACT",
       "VERSION",
@@ -3489,21 +3899,12 @@
       "HEX_SURFACE_FILE",
       "POINTER_SURFACE_FILE",
       "POINTER_INSPECT_FILE",
-      "POINTER_BOUNDARY_FILE",
-      "POINTER_LIGHT_FILE",
-      "EXPECTED_CANVAS_CONTRACT",
-      "EXPECTED_CANVAS_RENEWAL_CANDIDATE",
       "DIAGNOSTIC_TIMESTAMP",
 
       "CANVAS_SURFACE_TRUTH_PROBE_STATUS",
       "CANVAS_SURFACE_TRUTH_AVAILABLE",
       "CANVAS_SURFACE_TRUTH_SCOPE",
       "CANVAS_SURFACE_TRUTH_RENEWAL_FOCUS",
-
-      "NEWS_ALIGNMENT_PROTOCOL_ACTIVE",
-      "NEWS_ALIGNMENT_STATUS",
-      "FIBONACCI_SYNCHRONIZATION_ACTIVE",
-      "FIBONACCI_CURRENT_STAGE",
 
       "TRANSITION_MEASUREMENT_MODE",
       "TRANSITION_SAMPLE_PHASE",
@@ -3517,50 +3918,51 @@
       "TARGET_CONTEXT_SOURCE",
       "TARGET_ACCESS_ERROR",
 
+      "BOUNDARY_FACT_MATRIX_ACTIVE",
+      "BOUNDARY_ONE_ROW_PER_BOUNDARY",
+      "BOUNDARY_ONE_MISSING_PROOF_ONE_MISSING_FACT",
+      "BOUNDARY_NO_SINGLE_FILE_RECOMMENDATION_UNLESS_PROVEN",
+      "BOUNDARY_TOTAL_ROW_COUNT",
+      "BOUNDARY_LAYOUT_ROW_COUNT",
+      "BOUNDARY_RUNTIME_ROW_COUNT",
+      "BOUNDARY_ALL_BLOCKING_CLEAN",
+      "BOUNDARY_LAYOUT_BLOCKING_CLEAN",
+      "BOUNDARY_RUNTIME_BLOCKING_CLEAN",
+      "BOUNDARY_FIRST_FAILED",
+      "BOUNDARY_FIRST_FAILED_CLASS",
+      "BOUNDARY_FIRST_MISSING_PROOF",
+      "BOUNDARY_FIRST_MISSING_FACT",
+      "BOUNDARY_FIRST_RECOMMENDED_OWNER",
+      "BOUNDARY_FIRST_RECOMMENDED_FILE",
+      "BOUNDARY_FIRST_RECOMMENDED_ACTION",
+      "BOUNDARY_LAYOUT_FIRST_FAILED",
+      "BOUNDARY_LAYOUT_FIRST_MISSING_FACT",
+      "BOUNDARY_RUNTIME_FIRST_FAILED",
+      "BOUNDARY_RUNTIME_FIRST_MISSING_FACT",
+      "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN",
+      "BOUNDARY_SINGLE_CAUSAL_FILE",
+
       "INDEX_SCRIPT_PRESENT",
       "INDEX_SCRIPT_SRC",
       "ROUTE_CONDUCTOR_SCRIPT_PRESENT",
       "ROUTE_CONDUCTOR_SCRIPT_SRC",
+      "ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY",
       "CONTROL_SCRIPT_PRESENT",
       "CONTROL_SCRIPT_SRC",
       "CANVAS_SCRIPT_PRESENT",
       "CANVAS_SCRIPT_COUNT",
       "CANVAS_SCRIPT_SRC",
       "CANVAS_SCRIPT_CACHE_KEY",
-      "CANVAS_SCRIPT_TAG_ORDER",
-      "CANVAS_SCRIPT_LOAD_INFERRED",
-      "CANVAS_SCRIPT_EXECUTION_INFERRED",
+      "HEX_AUTHORITY_SCRIPT_PRESENT",
       "HEX_SURFACE_SCRIPT_PRESENT",
-      "HEX_SURFACE_SCRIPT_SRC",
       "POINTER_SURFACE_SCRIPT_PRESENT",
-      "POINTER_SURFACE_SCRIPT_SRC",
+      "POINTER_INSPECT_SCRIPT_PRESENT",
 
-      "ROUTE_AUTHORITY_OBSERVED",
-      "ROUTE_AUTHORITY_SOURCE_PATH",
-      "ROUTE_AUTHORITY_CONTRACT",
-      "ROUTE_AUTHORITY_RECEIPT",
       "CANVAS_AUTHORITY_OBSERVED",
-      "CANVAS_AUTHORITY_SCOPE",
       "CANVAS_AUTHORITY_SOURCE_PATH",
       "CANVAS_AUTHORITY_CONTRACT",
       "CANVAS_AUTHORITY_RECEIPT",
-      "CANVAS_AUTHORITY_METHOD_COUNT",
-      "CONTROL_AUTHORITY_OBSERVED",
-      "CONTROL_AUTHORITY_SOURCE_PATH",
-      "CONTROL_AUTHORITY_CONTRACT",
-      "HEX_SURFACE_AUTHORITY_OBSERVED",
-      "HEX_SURFACE_AUTHORITY_SOURCE_PATH",
-      "HEX_SURFACE_AUTHORITY_CONTRACT",
-      "HEX_SURFACE_AUTHORITY_METHOD_COUNT",
-      "HEX_AUTHORITY_OBSERVED",
-      "HEX_AUTHORITY_SOURCE_PATH",
-      "HEX_AUTHORITY_CONTRACT",
-      "POINTER_SURFACE_BISHOP_OBSERVED",
-      "POINTER_SURFACE_BISHOP_SOURCE_PATH",
-      "POINTER_SURFACE_BISHOP_CONTRACT",
-      "POINTER_INSPECT_PRIEST_OBSERVED",
-      "POINTER_INSPECT_PRIEST_SOURCE_PATH",
-      "POINTER_INSPECT_PRIEST_CONTRACT",
+      "CANVAS_AUTHORITY_RECOGNIZED",
 
       "STAGE_PRESENT",
       "STAGE_SELECTOR",
@@ -3568,147 +3970,70 @@
       "STAGE_RECT_NONZERO",
       "STAGE_RECT_WIDTH",
       "STAGE_RECT_HEIGHT",
+      "STAGE_COMPUTED_WIDTH",
+      "STAGE_COMPUTED_HEIGHT",
+      "STAGE_USED_SIZE_CLASS",
+      "STAGE_USED_SIZE_FIRST_MISSING_FACT",
 
       "CANONICAL_MOUNT_SELECTOR",
       "CANONICAL_FRAME_SELECTOR",
-      "CANONICAL_CANVAS_ID",
-      "CANONICAL_CANVAS_SELECTORS",
-
+      "CANONICAL_CANVAS_SELECTOR",
+      "CANONICAL_CHAIN_SELECTOR",
       "CANONICAL_MOUNT_FOUND",
       "CANONICAL_MOUNT_DESCRIPTOR",
       "CANONICAL_MOUNT_RECT_NONZERO",
       "CANONICAL_MOUNT_RECT_WIDTH",
       "CANONICAL_MOUNT_RECT_HEIGHT",
-      "CANONICAL_MOUNT_COMPUTED_VISIBLE",
+      "CANONICAL_MOUNT_OFFSET_WIDTH",
+      "CANONICAL_MOUNT_OFFSET_HEIGHT",
+      "CANONICAL_MOUNT_CLIENT_WIDTH",
+      "CANONICAL_MOUNT_CLIENT_HEIGHT",
       "CANONICAL_MOUNT_COMPUTED_DISPLAY",
       "CANONICAL_MOUNT_COMPUTED_POSITION",
-      "CANONICAL_MOUNT_COMPUTED_OVERFLOW",
-      "CANONICAL_MOUNT_COMPUTED_CONTAIN",
-      "CANONICAL_MOUNT_COMPUTED_CONTENT_VISIBILITY",
       "CANONICAL_MOUNT_COMPUTED_WIDTH",
       "CANONICAL_MOUNT_COMPUTED_HEIGHT",
+      "CANONICAL_MOUNT_COMPUTED_FLEX",
+      "CANONICAL_MOUNT_COMPUTED_FLEX_BASIS",
+      "CANONICAL_MOUNT_USED_SIZE_CLASS",
+      "CANONICAL_MOUNT_USED_SIZE_FIRST_MISSING_FACT",
+      "CANONICAL_MOUNT_USED_SIZE_REASON",
+
+      "MOUNT_PARENT_CHAIN_STATUS",
+      "MOUNT_PARENT_FIRST_COLLAPSED_DEPTH",
+      "MOUNT_PARENT_FIRST_COLLAPSED_DESCRIPTOR",
+      "MOUNT_PARENT_FIRST_COLLAPSED_WIDTH",
+      "MOUNT_PARENT_FIRST_COLLAPSED_HEIGHT",
+      "MOUNT_PARENT_FIRST_COLLAPSED_COMPUTED_WIDTH",
+      "MOUNT_PARENT_FIRST_COLLAPSED_COMPUTED_HEIGHT",
+      "MOUNT_PARENT_FIRST_COLLAPSED_CLASS",
+      "MOUNT_PARENT_FIRST_COLLAPSED_MISSING_FACT",
 
       "CANONICAL_FRAME_FOUND",
       "CANONICAL_FRAME_DESCRIPTOR",
       "CANONICAL_FRAME_RECT_NONZERO",
       "CANONICAL_FRAME_RECT_WIDTH",
       "CANONICAL_FRAME_RECT_HEIGHT",
-      "CANONICAL_FRAME_COMPUTED_VISIBLE",
-      "CANONICAL_FRAME_COMPUTED_DISPLAY",
-      "CANONICAL_FRAME_COMPUTED_POSITION",
-      "CANONICAL_FRAME_COMPUTED_OVERFLOW",
-      "CANONICAL_FRAME_COMPUTED_CONTAIN",
-      "CANONICAL_FRAME_COMPUTED_CONTENT_VISIBILITY",
-      "CANONICAL_FRAME_COMPUTED_WIDTH",
-      "CANONICAL_FRAME_COMPUTED_HEIGHT",
+      "CANONICAL_FRAME_USED_SIZE_CLASS",
+      "CANONICAL_FRAME_USED_SIZE_FIRST_MISSING_FACT",
 
       "CANONICAL_CANVAS_FOUND",
       "CANONICAL_CANVAS_SELECTOR",
       "CANONICAL_CANVAS_DESCRIPTOR",
-      "CANONICAL_CANVAS_INDEX",
       "CANONICAL_CANVAS_IN_CANONICAL_MOUNT",
       "CANONICAL_CANVAS_IN_CANONICAL_FRAME",
 
-      "CANVAS_ELEMENT_FOUND",
-      "CANVAS_DOM_SURFACE_FOUND",
-      "CANVAS_SELECTOR",
-      "CANVAS_MOUNT_FOUND",
-      "CANVAS_MOUNT_SELECTOR",
-      "CANVAS_FRAME_FOUND",
-      "CANVAS_FRAME_SELECTOR",
-      "CANVAS_IN_MOUNT",
-      "CANVAS_IN_FRAME",
-
-      "CANVAS_WIDTH_ATTRIBUTE",
-      "CANVAS_HEIGHT_ATTRIBUTE",
-      "CANVAS_INTERNAL_SIZE_NONZERO",
-      "CANVAS_RECT_LEFT",
-      "CANVAS_RECT_TOP",
-      "CANVAS_RECT_RIGHT",
-      "CANVAS_RECT_BOTTOM",
       "CANVAS_RECT_WIDTH",
       "CANVAS_RECT_HEIGHT",
       "CANVAS_RECT_NONZERO",
-
-      "CANVAS_COMPUTED_VISIBLE",
-      "CANVAS_COMPUTED_DISPLAY",
-      "CANVAS_COMPUTED_VISIBILITY",
-      "CANVAS_COMPUTED_OPACITY",
-      "CANVAS_COMPUTED_POSITION",
-      "CANVAS_COMPUTED_Z_INDEX",
-      "CANVAS_COMPUTED_POINTER_EVENTS",
-      "CANVAS_COMPUTED_TRANSFORM",
-      "CANVAS_COMPUTED_OVERFLOW",
-      "CANVAS_COMPUTED_CONTAIN",
-      "CANVAS_COMPUTED_CONTENT_VISIBILITY",
       "CANVAS_COMPUTED_WIDTH",
       "CANVAS_COMPUTED_HEIGHT",
-      "CANVAS_COMPUTED_MIN_WIDTH",
-      "CANVAS_COMPUTED_MIN_HEIGHT",
-      "CANVAS_COMPUTED_FLEX",
-      "CANVAS_COMPUTED_FLEX_BASIS",
-      "CANVAS_COMPUTED_BOX_SIZING",
-
+      "CANVAS_USED_SIZE_CLASS",
+      "CANVAS_USED_SIZE_FIRST_MISSING_FACT",
       "CANVAS_VIEWPORT_INTERSECTING",
       "CANVAS_CONTEXT_2D_READY",
-      "CANVAS_CONTEXT_2D_STATUS",
       "CANVAS_PIXEL_SAMPLE_STATUS",
-      "CANVAS_PIXEL_SAMPLE_READABLE",
       "CANVAS_PIXEL_VISIBLE",
-      "CANVAS_PIXEL_SAMPLE_COUNT",
-      "CANVAS_VISIBLE_PIXEL_COUNT",
-      "CANVAS_ALPHA_PIXEL_COUNT",
-      "CANVAS_PIXEL_UNIQUE_COLOR_COUNT",
-      "CANVAS_PIXEL_AVERAGE_BRIGHTNESS",
-      "CANVAS_PIXEL_SAMPLE_REASON",
 
-      "CANONICAL_PARENT_CHAIN_STATUS",
-      "CANONICAL_PARENT_FIRST_COLLAPSED_DEPTH",
-      "CANONICAL_PARENT_FIRST_COLLAPSED_DESCRIPTOR",
-      "CANONICAL_PARENT_FIRST_COLLAPSED_WIDTH",
-      "CANONICAL_PARENT_FIRST_COLLAPSED_HEIGHT",
-      "MOUNT_PARENT_CHAIN_STATUS",
-      "MOUNT_PARENT_FIRST_COLLAPSED_DEPTH",
-      "MOUNT_PARENT_FIRST_COLLAPSED_DESCRIPTOR",
-
-      "FALLBACK_OR_CARTOON_SIGNAL_OBSERVED",
-      "FALLBACK_OR_CARTOON_SIGNAL_BASIS",
-      "CANVAS_LAYER_CHECK_STATUS",
-      "CANVAS_LAYER_CENTER_ELEMENT_DESCRIPTOR",
-      "CANVAS_LAYER_POSSIBLE_BLOCKER",
-
-      "TOTAL_CANVAS_COUNT",
-      "PIXEL_BEARING_CANVAS_FOUND",
-      "PIXEL_BEARING_CANVAS_COUNT",
-      "PIXEL_BEARING_CANVAS_IS_CANONICAL",
-      "PIXEL_BEARING_CANVAS_SELECTOR",
-      "PIXEL_BEARING_CANVAS_DESCRIPTOR",
-      "NON_CANONICAL_PIXEL_BEARING_CANVAS_COUNT",
-
-      "BOUNDARY_DIAGNOSIS_AVAILABLE",
-      "BOUNDARY_DIAGNOSIS_MATRIX_VERSION",
-      "BOUNDARY_RELATIONSHIP_COUNT",
-      "BOUNDARY_CONFIRMED_COUNT",
-      "BOUNDARY_FAILED_OR_PARTIAL_COUNT",
-      "BOUNDARY_FIRST_FAILED_BOUNDARY",
-      "BOUNDARY_FIRST_FAILED_RELATIONSHIP",
-      "BOUNDARY_FIRST_FAILED_STATUS",
-      "BOUNDARY_FIRST_MISSING_RUNTIME_FACT",
-      "BOUNDARY_MISSING_RUNTIME_FACT_LOCATION",
-      "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN",
-      "BOUNDARY_PROVEN_CAUSAL_FILE",
-      "BOUNDARY_PROVEN_CAUSAL_REASON",
-      "BOUNDARY_ADJACENT_FILES",
-      "BOUNDARY_MATRIX_SUMMARY_TEXT",
-      "ROUTE_TO_CANVAS_BOUNDARY_STATUS",
-      "CANVAS_TO_HEX_SURFACE_BOUNDARY_STATUS",
-      "HEX_SURFACE_TO_POINTER_SURFACE_BOUNDARY_STATUS",
-      "POINTER_SURFACE_TO_CANVAS_BOUNDARY_STATUS",
-      "CONTROLS_TO_CANVAS_BOUNDARY_STATUS",
-
-      "CANVAS_IDENTITY_DISAMBIGUATION_STATUS",
-      "CANVAS_SURFACE_TRUTH_LANE_STATUS",
-      "CANVAS_SURFACE_TRUTH_LANE_CLEAN",
       "CANVAS_TRUTH_STATUS",
       "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
       "CANVAS_TRUTH_FAILURE_CLASS",
@@ -3716,25 +4041,21 @@
       "CANVAS_TRUTH_RECOMMENDED_OWNER",
       "CANVAS_TRUTH_RECOMMENDED_FILE",
       "CANVAS_TRUTH_RECOMMENDED_ACTION",
-
-      "SINGLE_CAUSAL_FILE_PROVEN",
-      "PROVEN_CAUSAL_FILE",
-      "PROVEN_CAUSAL_REASON",
-      "MISSING_RUNTIME_FACT_LOCATION",
-      "FINAL_ARBITRATION_SOURCE_LANE",
+      "ZONE_OF_INFLICTION_OWNER",
+      "ZONE_OF_INFLICTION_FILE",
+      "ZONE_OF_INFLICTION_CLASS",
+      "ZONE_OF_INFLICTION_REASON",
       "DIAGNOSTIC_CERTAINTY",
       "OBSERVABLE_CAUSE",
+      "RECOMMENDED_NEXT_OWNER",
       "RECOMMENDED_NEXT_FILE",
       "RECOMMENDED_NEXT_ACTION",
 
-      "CONTROL_DUTY_LANE_STATUS",
-      "DELEGATORY_PERMISSION_LANE_STATUS",
-      "ROUTE_CONDUCTOR_LANE_STATUS",
-      "HEX_SURFACE_LANE_STATUS",
-      "POINTER_SURFACE_LANE_STATUS",
-      "TRUTH_HUB_STATUS",
-      "TRUTH_HUB_RECEIPT_LANE_COUNT",
-      "TRUTH_HUB_RECEIPT_ROUTES",
+      "RUNTIME_DARK_FILE_COUNT",
+      "FIRST_DARK_RUNTIME_OWNER",
+      "FIRST_DARK_RUNTIME_FILE",
+      "FIRST_DARK_RUNTIME_CLASS",
+      "FIRST_DARK_RUNTIME_ACTION",
 
       "PRODUCTION_MUTATION_AUTHORIZED",
       "CANVAS_DRAWING_AUTHORIZED",
@@ -3775,9 +4096,18 @@
       line("INTERNAL_RENEWAL_CONTRACT", getRaw(report, "INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)),
       line("CANVAS_SURFACE_TRUTH_PROBE_STATUS", getRaw(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY")),
       line("TRANSITION_COMPARISON_STATUS", getRaw(report, "TRANSITION_COMPARISON_STATUS", "UNKNOWN")),
-      line("CANVAS_IDENTITY_DISAMBIGUATION_STATUS", getRaw(report, "CANVAS_IDENTITY_DISAMBIGUATION_STATUS", "UNKNOWN")),
+      line("BOUNDARY_FACT_MATRIX_ACTIVE", getRaw(report, "BOUNDARY_FACT_MATRIX_ACTIVE", true)),
+      line("BOUNDARY_FIRST_FAILED", getRaw(report, "BOUNDARY_FIRST_FAILED", "UNKNOWN")),
+      line("BOUNDARY_FIRST_MISSING_PROOF", getRaw(report, "BOUNDARY_FIRST_MISSING_PROOF", "UNKNOWN")),
+      line("BOUNDARY_FIRST_MISSING_FACT", getRaw(report, "BOUNDARY_FIRST_MISSING_FACT", "UNKNOWN")),
+      line("BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN", getRaw(report, "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN", false)),
+      line("BOUNDARY_SINGLE_CAUSAL_FILE", getRaw(report, "BOUNDARY_SINGLE_CAUSAL_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN")),
       line("CANONICAL_MOUNT_FOUND", getRaw(report, "CANONICAL_MOUNT_FOUND", "UNKNOWN")),
       line("CANONICAL_MOUNT_RECT_NONZERO", getRaw(report, "CANONICAL_MOUNT_RECT_NONZERO", "UNKNOWN")),
+      line("CANONICAL_MOUNT_USED_SIZE_CLASS", getRaw(report, "CANONICAL_MOUNT_USED_SIZE_CLASS", "UNKNOWN")),
+      line("CANONICAL_MOUNT_USED_SIZE_FIRST_MISSING_FACT", getRaw(report, "CANONICAL_MOUNT_USED_SIZE_FIRST_MISSING_FACT", "UNKNOWN")),
+      line("MOUNT_PARENT_FIRST_COLLAPSED_DESCRIPTOR", getRaw(report, "MOUNT_PARENT_FIRST_COLLAPSED_DESCRIPTOR", "UNKNOWN")),
+      line("MOUNT_PARENT_FIRST_COLLAPSED_MISSING_FACT", getRaw(report, "MOUNT_PARENT_FIRST_COLLAPSED_MISSING_FACT", "UNKNOWN")),
       line("CANONICAL_FRAME_FOUND", getRaw(report, "CANONICAL_FRAME_FOUND", "UNKNOWN")),
       line("CANONICAL_FRAME_RECT_NONZERO", getRaw(report, "CANONICAL_FRAME_RECT_NONZERO", "UNKNOWN")),
       line("CANONICAL_CANVAS_FOUND", getRaw(report, "CANONICAL_CANVAS_FOUND", "UNKNOWN")),
@@ -3788,17 +4118,11 @@
       line("CANVAS_VIEWPORT_INTERSECTING", getRaw(report, "CANVAS_VIEWPORT_INTERSECTING", "UNKNOWN")),
       line("CANVAS_CONTEXT_2D_READY", getRaw(report, "CANVAS_CONTEXT_2D_READY", "UNKNOWN")),
       line("CANVAS_PIXEL_VISIBLE", getRaw(report, "CANVAS_PIXEL_VISIBLE", "UNKNOWN")),
-      line("BOUNDARY_FIRST_FAILED_BOUNDARY", getRaw(report, "BOUNDARY_FIRST_FAILED_BOUNDARY", "UNKNOWN")),
-      line("BOUNDARY_FIRST_FAILED_STATUS", getRaw(report, "BOUNDARY_FIRST_FAILED_STATUS", "UNKNOWN")),
-      line("BOUNDARY_FIRST_MISSING_RUNTIME_FACT", getRaw(report, "BOUNDARY_FIRST_MISSING_RUNTIME_FACT", "UNKNOWN")),
-      line("BOUNDARY_MISSING_RUNTIME_FACT_LOCATION", getRaw(report, "BOUNDARY_MISSING_RUNTIME_FACT_LOCATION", "UNKNOWN")),
-      line("BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN", getRaw(report, "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN", false)),
-      line("BOUNDARY_PROVEN_CAUSAL_FILE", getRaw(report, "BOUNDARY_PROVEN_CAUSAL_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN")),
-      line("BOUNDARY_ADJACENT_FILES", getRaw(report, "BOUNDARY_ADJACENT_FILES", "NONE")),
       line("CANVAS_TRUTH_FIRST_FAILED_COORDINATE", getRaw(report, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "UNKNOWN")),
       line("CANVAS_TRUTH_FAILURE_CLASS", getRaw(report, "CANVAS_TRUTH_FAILURE_CLASS", "UNKNOWN")),
       line("CANVAS_TRUTH_FAILURE_REASON", getRaw(report, "CANVAS_TRUTH_FAILURE_REASON", "UNKNOWN")),
-      line("CANVAS_TRUTH_RECOMMENDED_FILE", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN")),
+      line("CANVAS_TRUTH_RECOMMENDED_OWNER", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_OWNER", "UNKNOWN")),
+      line("CANVAS_TRUTH_RECOMMENDED_FILE", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_FILE", "UNKNOWN")),
       line("CANVAS_TRUTH_RECOMMENDED_ACTION", getRaw(report, "CANVAS_TRUTH_RECOMMENDED_ACTION", "UNKNOWN")),
       line("DIAGNOSTIC_CERTAINTY", getRaw(report, "DIAGNOSTIC_CERTAINTY", "UNKNOWN")),
       "f13Claimed=false",
@@ -3832,37 +4156,44 @@
       ...getReceiptLight(),
       report: clonePlain(report),
       settledReport: clonePlain(lastSettledReport || {}),
-      boundaryMatrix: clonePlain(getRaw(report, "BOUNDARY_MATRIX", [])),
+      boundaryFactRows: clonePlain(getRaw(report, "BOUNDARY_FACT_ROWS", [])),
+      layoutBoundaryFactRows: clonePlain(getRaw(report, "LAYOUT_BOUNDARY_FACT_ROWS", [])),
+      runtimeBoundaryFactRows: clonePlain(getRaw(report, "RUNTIME_BOUNDARY_FACT_ROWS", [])),
+      runtimeNodes: clonePlain(getRaw(report, "RUNTIME_NODES", {})),
       canonicalCanvasSummary: clonePlain(getRaw(report, "CANONICAL_CANVAS_SUMMARY", {})),
+      stageUsedSizeSummary: clonePlain(getRaw(report, "STAGE_USED_SIZE_SUMMARY", {})),
+      mountUsedSizeSummary: clonePlain(getRaw(report, "MOUNT_USED_SIZE_SUMMARY", {})),
+      frameUsedSizeSummary: clonePlain(getRaw(report, "FRAME_USED_SIZE_SUMMARY", {})),
       firstPixelBearingCanvasSummary: clonePlain(getRaw(report, "FIRST_PIXEL_BEARING_CANVAS_SUMMARY", {})),
       pixelBearingCanvasSummaries: clonePlain(getRaw(report, "PIXEL_BEARING_CANVAS_SUMMARIES", [])),
       allCanvasSummaries: clonePlain(getRaw(report, "ALL_CANVAS_SUMMARIES", [])),
       canonicalParentChain: clonePlain(getRaw(report, "CANONICAL_PARENT_CHAIN", [])),
       mountParentChain: clonePlain(getRaw(report, "MOUNT_PARENT_CHAIN", [])),
-      canvasAuthorityCandidates: clonePlain(getRaw(report, "CANVAS_AUTHORITY_CANDIDATES", [])),
       canonicalCanvasSelectors: CANONICAL_CANVAS_SELECTORS.slice(),
-      routeAuthorityAliases: ROUTE_AUTHORITY_ALIASES.slice(),
       canvasAuthorityAliases: CANVAS_AUTHORITY_ALIASES.slice(),
+      routeAuthorityAliases: ROUTE_AUTHORITY_ALIASES.slice(),
       controlAuthorityAliases: CONTROL_AUTHORITY_ALIASES.slice(),
+      hexAuthorityAliases: HEX_AUTHORITY_ALIASES.slice(),
       hexSurfaceAliases: HEX_SURFACE_ALIASES.slice(),
       pointerSurfaceAliases: POINTER_SURFACE_ALIASES.slice(),
+      pointerInspectAliases: POINTER_INSPECT_ALIASES.slice(),
       supportsCallGuardedReturnPacket: true,
+      supportsParentChainUsedSizeFacts: true,
+      supportsBoundaryFactMatrix: true,
+      supportsOneBoundaryOneRow: true,
+      supportsOneMissingProofOneMissingFact: true,
+      supportsNoSingleFileRecommendationUnlessProven: true,
       supportsLayoutMathArbitration: true,
       supportsConnectionArbitration: true,
       supportsBlindSpotArbitration: true,
       supportsCanonicalVisibleSurfaceDisambiguation: true,
       supportsTransitionSurfaceDisambiguation: true,
-      supportsFlashToFallbackMeasurement: true,
       supportsPixelBearingCanvasIdentityCheck: true,
       supportsCanonicalZeroRectCheck: true,
       supportsParentChainCollapseCheck: true,
       supportsCanonicalBlankPixelCheck: true,
       supportsLayerBlockerCheck: true,
       supportsFallbackCartoonSignalCheck: true,
-      supportsBoundaryDiagnosisMatrix: true,
-      supportsOneBoundaryOneRow: true,
-      supportsMissingRuntimeFactLocation: true,
-      supportsSingleFileCausalitySuppression: true,
       supportsSimplifiedF21Focus: true,
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
@@ -3900,21 +4231,21 @@
       "HEARTH.diagnosticTruthHub",
       "HEARTH.diagnosticCanonicalCanvasSurfaceTruth",
       "HEARTH.diagnosticCanvasLayoutMathConnectionBlindspot",
-      "HEARTH.diagnosticCanvasBoundaryDiagnosisMatrix",
+      "HEARTH.diagnosticCanvasParentChainUsedSizeBoundaryFactMatrix",
       "DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth",
       "DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe",
       "DEXTER_LAB.hearthDiagnosticCanvasTruthProbe",
       "DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth",
       "DEXTER_LAB.hearthDiagnosticCanonicalCanvasSurfaceTruth",
       "DEXTER_LAB.hearthDiagnosticCanvasLayoutMathConnectionBlindspot",
-      "DEXTER_LAB.hearthDiagnosticCanvasBoundaryDiagnosisMatrix",
+      "DEXTER_LAB.hearthDiagnosticCanvasParentChainUsedSizeBoundaryFactMatrix",
       "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
       "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
       "HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH",
       "HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH",
       "HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH",
       "HEARTH_DIAGNOSTIC_CANVAS_LAYOUT_MATH_CONNECTION_BLINDSPOT",
-      "HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX"
+      "HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX"
     ];
 
     for (const path of aliasPaths) setPath(path, api);
@@ -3923,7 +4254,8 @@
     root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_CANVAS_LAYOUT_MATH_CONNECTION_BLINDSPOT_RECEIPT = getReceiptLight();
-    root.HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX_RECEIPT = getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT =
+      getReceiptLight();
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT =
       clonePlain(lastReport || makeAnchorReport());
@@ -3933,15 +4265,16 @@
       clonePlain(lastReport || makeAnchorReport());
     root.HEARTH_DIAGNOSTIC_CANVAS_LAYOUT_MATH_CONNECTION_BLINDSPOT_REPORT =
       clonePlain(lastReport || makeAnchorReport());
-    root.HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX_REPORT =
+    root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_REPORT =
       clonePlain(lastReport || makeAnchorReport());
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
-    root.HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX_PACKET_TEXT = lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_COMPACT_SUMMARY =
       lastCompactSummary || "";
-    root.HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX_COMPACT_SUMMARY =
+    root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_PACKET_TEXT =
+      lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_COMPACT_SUMMARY =
       lastCompactSummary || "";
 
     if (lastSettledReport) {
@@ -3949,35 +4282,9 @@
         clonePlain(lastSettledReport);
       root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
         clonePlain(lastSettledReport);
-      root.HEARTH_DIAGNOSTIC_CANVAS_BOUNDARY_DIAGNOSIS_MATRIX_SETTLED_REPORT =
+      root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_SETTLED_REPORT =
         clonePlain(lastSettledReport);
     }
-
-    try {
-      if (root.document && root.document.documentElement && root.document.documentElement.dataset) {
-        root.document.documentElement.dataset.hearthDiagnosticCanvasSurfaceTruthProbeContract = CONTRACT;
-        root.document.documentElement.dataset.hearthDiagnosticCanvasSurfaceTruthProbeRenewalContract =
-          INTERNAL_RENEWAL_CONTRACT;
-        root.document.documentElement.dataset.hearthDiagnosticCanvasSurfaceTruthProbeStatus =
-          getRaw(lastReport || {}, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasSurfaceTruthFailureClass =
-          getRaw(lastReport || {}, "CANVAS_TRUTH_FAILURE_CLASS", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanonicalCanvasSurfaceTruthStatus =
-          getRaw(lastReport || {}, "CANVAS_IDENTITY_DISAMBIGUATION_STATUS", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasTransitionComparisonStatus =
-          getRaw(lastReport || {}, "TRANSITION_COMPARISON_STATUS", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasLayoutMathCoordinate =
-          getRaw(lastReport || {}, "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasBoundaryDiagnosisStatus =
-          getRaw(lastReport || {}, "BOUNDARY_FIRST_FAILED_STATUS", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasBoundaryFirstFailed =
-          getRaw(lastReport || {}, "BOUNDARY_FIRST_FAILED_BOUNDARY", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasBoundaryMissingRuntimeFact =
-          getRaw(lastReport || {}, "BOUNDARY_FIRST_MISSING_RUNTIME_FACT", "ANCHOR_READY");
-        root.document.documentElement.dataset.hearthDiagnosticCanvasSingleCausalFileProven =
-          String(getRaw(lastReport || {}, "SINGLE_CAUSAL_FILE_PROVEN", false));
-      }
-    } catch (_error) {}
 
     return true;
   }
@@ -4011,6 +4318,7 @@
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
     previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+    lineageV17Contract: LINEAGE_V1_7_CONTRACT,
     lineageV16Contract: LINEAGE_V1_6_CONTRACT,
     lineageV15Contract: LINEAGE_V1_5_CONTRACT,
     version: VERSION,
@@ -4026,25 +4334,33 @@
     hexSurfaceFile: HEX_SURFACE_FILE,
     pointerSurfaceFile: POINTER_SURFACE_FILE,
     pointerInspectFile: POINTER_INSPECT_FILE,
+    expectedHtmlContract: EXPECTED_HTML_CONTRACT,
+    expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
+    expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+    expectedControlContract: EXPECTED_CONTROL_CONTRACT,
     expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
     expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
+    expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
+    expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
+    expectedPointerSurfaceContract: EXPECTED_POINTER_SURFACE_CONTRACT,
+    expectedPointerInspectContract: EXPECTED_POINTER_INSPECT_CONTRACT,
 
     diagnosticOnly: true,
     anchorSafeChronologyObservation: true,
     callGuardActive: true,
+    parentChainUsedSizeFactMatrixActive: true,
+    boundaryDiagnosisMatrixActive: true,
+    oneBoundaryOneRowActive: true,
+    oneMissingProofOneMissingFactActive: true,
+    noSingleFileRecommendationUnlessProven: true,
     layoutMathArbitrationActive: true,
     connectionArbitrationActive: true,
     blindSpotArbitrationActive: true,
     canonicalVisibleSurfaceDisambiguationActive: true,
     transitionSurfaceDisambiguationActive: true,
-    flashToFallbackMeasurementActive: true,
-    boundaryDiagnosisMatrixActive: true,
-    oneBoundaryOneRow: true,
-    oneMissingProofOneMissingFact: true,
-    noSingleFileRecommendationUnlessProven: true,
     focusedOnCanonicalCanvasIdentity: true,
-    controlsDutyLaneEvaluated: true,
-    delegatoryMatrixEvaluated: true,
+    controlsDutyLaneEvaluated: false,
+    delegatoryMatrixEvaluated: false,
     southFingerBundleEvaluated: false,
     labCardinalReceiptsEvaluated: false,
 
@@ -4065,39 +4381,40 @@
 
     canonicalMountSelector: CANONICAL_MOUNT_SELECTOR,
     canonicalFrameSelector: CANONICAL_FRAME_SELECTOR,
-    canonicalCanvasId: CANONICAL_CANVAS_ID,
+    canonicalCanvasSelector: CANONICAL_CANVAS_SELECTOR,
+    canonicalChainSelector: CANONICAL_CHAIN_SELECTOR,
     canonicalCanvasSelectors: CANONICAL_CANVAS_SELECTORS,
-    routeAuthorityAliases: ROUTE_AUTHORITY_ALIASES,
+    stageSelectors: STAGE_SELECTORS,
     canvasAuthorityAliases: CANVAS_AUTHORITY_ALIASES,
+    routeAuthorityAliases: ROUTE_AUTHORITY_ALIASES,
     controlAuthorityAliases: CONTROL_AUTHORITY_ALIASES,
-    hexSurfaceAliases: HEX_SURFACE_ALIASES,
     hexAuthorityAliases: HEX_AUTHORITY_ALIASES,
+    hexSurfaceAliases: HEX_SURFACE_ALIASES,
     pointerSurfaceAliases: POINTER_SURFACE_ALIASES,
     pointerInspectAliases: POINTER_INSPECT_ALIASES,
 
     supportsCallGuardedReturnPacket: true,
+    supportsParentChainUsedSizeFacts: true,
+    supportsBoundaryFactMatrix: true,
+    supportsOneBoundaryOneRow: true,
+    supportsOneMissingProofOneMissingFact: true,
+    supportsNoSingleFileRecommendationUnlessProven: true,
     supportsLayoutMathArbitration: true,
     supportsConnectionArbitration: true,
     supportsBlindSpotArbitration: true,
     supportsCanonicalVisibleSurfaceDisambiguation: true,
     supportsTransitionSurfaceDisambiguation: true,
-    supportsFlashToFallbackMeasurement: true,
     supportsPixelBearingCanvasIdentityCheck: true,
     supportsCanonicalZeroRectCheck: true,
     supportsParentChainCollapseCheck: true,
     supportsCanonicalBlankPixelCheck: true,
     supportsLayerBlockerCheck: true,
     supportsFallbackCartoonSignalCheck: true,
-    supportsBoundaryDiagnosisMatrix: true,
-    supportsOneBoundaryOneRow: true,
-    supportsMissingRuntimeFactLocation: true,
-    supportsSingleFileCausalitySuppression: true,
+    supportsSimplifiedF21Focus: true,
     supportsCoordinateSpecificFailure: true,
     supportsCompactPacketText: true,
-    supportsSimplifiedF21Focus: true,
 
     ownsDiagnosticProbeOnly: true,
-    ownsBoundaryDiagnosisOnly: true,
     ownsCanvasDrawing: false,
     ownsCanvasCreation: false,
     ownsCanvasRepair: false,

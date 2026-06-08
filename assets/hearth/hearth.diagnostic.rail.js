@@ -1,46 +1,25 @@
 // /assets/hearth/hearth.diagnostic.rail.js
 // HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TNT_v11_4
+// HEARTH_DIAGNOSTIC_RAIL_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_TNT_v11_5
 // Full-file replacement.
 // Diagnostic rail NORTH parent only.
 //
 // Purpose:
-// - Preserve public NORTH v11 contract and receipt expected by diagnostic route.
+// - Preserve public NORTH v11 contract and receipt expected by the diagnostic route.
 // - Preserve diagnostic receiver behavior: receiver still calls NORTH only.
-// - Preserve v11_3 delegatory handshake / intended-handoff variance matrix.
-// - Correct the prior self-conflict where chronology success, canvas-surface failure,
-//   and delegatory permission failure competed for the same recommendation slot.
-// - Split post-evidence handling into separate lanes:
-//   1. chronology execution lane
-//   2. canvas surface truth lane
-//   3. delegatory permission lane
-//   4. final arbitration lane
-// - Treat completed diagnostic chronology as execution success, not visual success.
-// - Treat explicit Canvas Surface Truth failure as the primary visible-surface owner.
-// - Keep delegatory permission gaps reportable without letting them override a harder
-//   canvas/load/draw/viewport failure.
-// - Preserve Controls as Queen motion/input authority.
-// - Preserve Route Conductor / neighboring Showroom Bishop as upstream permission and active scan authority.
-// - Preserve Canvas as presentation/output receiver, DOM surface owner, and bridge to downstream surface expression.
-// - Preserve Hex Surface as downstream gate before Pointer Finger.
-// - Preserve Pointer Finger as downstream expression/finger inspection authority.
-// - Preserve source truth outside Canvas.
-// - Preserve diagnostic-only authority: no production mutation, no repair, no runtime restart, no Canvas release.
-// - Preserve no F13 claim, no F21 claim, no ready text, no visual pass, no generated image, no GraphicBox, no WebGL.
-//
-// Does not own:
-// - diagnostic UI shell
-// - production route repair
-// - Hearth runtime restart
-// - Route Conductor implementation
-// - Controls implementation
-// - Canvas drawing
-// - Hex rendering
-// - Pointer Finger implementation
-// - terrain / hydrology / material / elevation truth
-// - final visual pass
-// - F21 latch
+// - Preserve post-evidence lane arbitration from v11_4.
+// - Correct the downstream expression map:
+//   Route Conductor -> Controls Queen -> Canvas Receiver -> Hex Surface Gate
+//   -> Pointer Surface Bishop -> child organizer/proof files -> Canvas return.
+// - Add /assets/hearth/hearth.canvas.finger.surface.js as the Pointer Surface Bishop.
+// - Demote /assets/hearth/hearth.canvas.finger.inspect.js from chain endpoint to
+//   Pointer Surface child organizer / priest evidence.
+// - Keep Canvas Surface Truth failure dominant over advisory delegatory gaps.
+// - Report dark/missing runtime files explicitly, including Pointer Surface Bishop.
+// - Never mutate production, repair route files, draw Canvas, restart runtime,
+//   release Canvas, claim F13/F21, claim ready text, claim visual pass,
+//   generate image, GraphicBox, or WebGL.
 
 (() => {
   "use strict";
@@ -55,23 +34,28 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT_v11";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TNT_v11_4";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_TNT_v11_5";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_RECEIPT_v11_4";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_RECEIPT_v11_5";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_TNT_v11_3";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TNT_v11_4";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_RECEIPT_v11_3";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_POST_EVIDENCE_LANE_ARBITRATION_RECEIPT_v11_4";
 
   const LINEAGE_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_TNT_v11_2";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_TNT_v11_3";
   const LINEAGE_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_RECEIPT_v11_2";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_RECEIPT_v11_3";
 
   const FOUNDATION_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_SCRIPT_PRESENT_AUTHORITY_RECOVERY_AND_F21_FAILURE_TAXONOMY_TNT_v11_1";
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_TNT_v11_2";
   const FOUNDATION_INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ANCHOR_RECEIPT_v11_2";
+
+  const BASELINE_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_SCRIPT_PRESENT_AUTHORITY_RECOVERY_AND_F21_FAILURE_TAXONOMY_TNT_v11_1";
+  const BASELINE_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_SCRIPT_PRESENT_AUTHORITY_RECOVERY_AND_F21_FAILURE_TAXONOMY_RECEIPT_v11_1";
 
   const PREVIOUS_NORTH_CONTRACT =
@@ -80,7 +64,7 @@
     "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_RECEIPT_v10";
 
   const VERSION =
-    "2026-06-07.hearth-diagnostic-rail-north-post-evidence-lane-arbitration-v11-4";
+    "2026-06-08.hearth-diagnostic-rail-north-pointer-surface-bishop-mapping-arbitration-v11-5";
 
   const FILE = "/assets/hearth/hearth.diagnostic.rail.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -92,9 +76,14 @@
   const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const CONTROL_FILE = "/assets/hearth/hearth.controls.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
-  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
   const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
-  const POINTER_FINGER_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
+  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
+  const POINTER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
+  const POINTER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
+
+  // Compatibility only. Legacy receipts used POINTER_FINGER_FILE for inspect.
+  // The v11_5 map treats surface as Bishop and inspect as child organizer.
+  const POINTER_FINGER_FILE = POINTER_INSPECT_FILE;
 
   const RAIL_EAST_FILE = "/assets/hearth/hearth.diagnostic.east.js";
   const RAIL_WEST_FILE = "/assets/hearth/hearth.diagnostic.west.js";
@@ -113,8 +102,6 @@
     "HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4";
   const EXPECTED_ROUTE_CONDUCTOR_CONTRACT =
     "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
-  const EXPECTED_ROUTE_CONDUCTOR_RENEWAL_CONTRACT =
-    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3";
   const EXPECTED_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
   const EXPECTED_CONTROL_RENEWAL_CANDIDATE =
@@ -123,29 +110,14 @@
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const EXPECTED_CANVAS_RENEWAL_CANDIDATE =
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4";
-  const EXPECTED_HEX_SURFACE_CONTRACT =
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
   const EXPECTED_HEX_AUTHORITY_CONTRACT =
     "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
-  const EXPECTED_POINTER_FINGER_CONTRACT =
-    "HEARTH_CANVAS_FINGER_INSPECT";
-
-  const EXPECTED_EAST_CONTRACT =
-    "HEARTH_DIAGNOSTIC_EAST_CANVAS_EXPRESSION_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v8";
-  const EXPECTED_WEST_CONTRACT =
-    "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7";
-  const EXPECTED_SOUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v8";
-  const EXPECTED_PROBE_NORTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1";
-  const EXPECTED_PROBE_EAST_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1";
-  const EXPECTED_PROBE_WEST_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1";
-  const EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1";
-  const EXPECTED_PROBE_SOUTH_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1";
+  const EXPECTED_HEX_SURFACE_CONTRACT =
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
+  const EXPECTED_POINTER_SURFACE_CONTRACT =
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4";
+  const EXPECTED_POINTER_INSPECT_CONTRACT =
+    "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1";
 
   const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
@@ -185,7 +157,7 @@
       id: "NORTH_RAIL",
       order: 1,
       fibonacciStage: "F1",
-      role: "north-post-evidence-lane-arbitration-hub",
+      role: "north-pointer-surface-bishop-mapping-arbitration-hub",
       file: FILE,
       expectedContract: CONTRACT,
       owner: "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
@@ -196,22 +168,17 @@
         "HEARTH.diagnosticRailNorth",
         "HEARTH.diagnosticNorthChronologyHub",
         "HEARTH.diagnosticNorthCanvasSurfaceTruthChronologyHub",
-        "HEARTH.diagnosticNorthDelegatoryHandshakeMatrix",
-        "HEARTH.diagnosticNorthPostEvidenceLaneArbitration",
+        "HEARTH.diagnosticNorthPointerSurfaceBishopMappingArbitration",
         "HEARTH_DIAGNOSTIC_RAIL",
         "HEARTH_PARALLEL_DIAGNOSTIC_RAIL",
         "HEARTH_DIAGNOSTIC_NORTH",
         "HEARTH_DIAGNOSTIC_RAIL_NORTH",
         "HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
-        "HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB",
-        "HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX",
-        "HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION",
+        "HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION",
         "DEXTER_LAB.hearthDiagnosticRail",
         "DEXTER_LAB.hearthDiagnosticNorth",
         "DEXTER_LAB.hearthDiagnosticNorthChronologyHub",
-        "DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub",
-        "DEXTER_LAB.hearthDiagnosticNorthDelegatoryHandshakeMatrix",
-        "DEXTER_LAB.hearthDiagnosticNorthPostEvidenceLaneArbitration"
+        "DEXTER_LAB.hearthDiagnosticNorthPointerSurfaceBishopMappingArbitration"
       ],
       methods: []
     },
@@ -221,25 +188,15 @@
       fibonacciStage: "F2",
       role: "file-composition-zone-coordinator",
       file: PROBE_NORTH_FILE,
-      expectedContract: EXPECTED_PROBE_NORTH_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1",
       owner: "DIAGNOSTIC_PROBE_NORTH",
       paths: [
         "HEARTH.diagnosticProbeNorth",
         "HEARTH.diagnosticRailProbeNorth",
-        "HEARTH.diagnosticNorthProbe",
         "HEARTH_DIAGNOSTIC_PROBE_NORTH",
-        "HEARTH_DIAGNOSTIC_RAIL_PROBE_NORTH",
-        "DEXTER_LAB.hearthDiagnosticProbeNorth",
-        "DEXTER_LAB.hearthDiagnosticRailProbeNorth"
+        "DEXTER_LAB.hearthDiagnosticProbeNorth"
       ],
-      methods: [
-        "runProbeNorth",
-        "inspectFileComposition",
-        "composeFileComposition",
-        "runProbe",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["runProbeNorth", "inspectFileComposition", "runProbe", "inspect", "runDiagnostic"]
     },
     {
       id: "RAIL_EAST",
@@ -247,24 +204,16 @@
       fibonacciStage: "F3",
       role: "served-source-evidence",
       file: RAIL_EAST_FILE,
-      expectedContract: EXPECTED_EAST_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_EAST_CANVAS_EXPRESSION_SOURCE_FOOTPRINT_ALIGNMENT_TNT_v8",
       owner: "DIAGNOSTIC_RAIL_EAST",
       paths: [
         "HEARTH.diagnosticEast",
         "HEARTH.diagnosticRailEast",
         "HEARTH_DIAGNOSTIC_EAST",
         "HEARTH_DIAGNOSTIC_RAIL_EAST",
-        "DEXTER_LAB.hearthDiagnosticEast",
-        "DEXTER_LAB.hearthDiagnosticRailEast"
+        "DEXTER_LAB.hearthDiagnosticEast"
       ],
-      methods: [
-        "runEastSourceRead",
-        "readServedSource",
-        "runEast",
-        "inspectSource",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["runEastSourceRead", "readServedSource", "runEast", "inspectSource", "inspect", "runDiagnostic"]
     },
     {
       id: "PROBE_EAST",
@@ -272,25 +221,15 @@
       fibonacciStage: "F5",
       role: "served-source-file-composition-probe",
       file: PROBE_EAST_FILE,
-      expectedContract: EXPECTED_PROBE_EAST_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1",
       owner: "DIAGNOSTIC_PROBE_EAST",
       paths: [
         "HEARTH.diagnosticProbeEast",
         "HEARTH.diagnosticEastProbe",
-        "HEARTH.diagnosticProbeEastServedSourceFileComposition",
         "HEARTH_DIAGNOSTIC_PROBE_EAST",
-        "HEARTH_DIAGNOSTIC_EAST_PROBE",
-        "DEXTER_LAB.hearthDiagnosticProbeEast",
-        "DEXTER_LAB.hearthDiagnosticEastProbe"
+        "DEXTER_LAB.hearthDiagnosticProbeEast"
       ],
-      methods: [
-        "runProbeEast",
-        "inspectServedSourceComposition",
-        "inspectSourceComposition",
-        "runProbe",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["runProbeEast", "inspectServedSourceComposition", "runProbe", "inspect", "runDiagnostic"]
     },
     {
       id: "RAIL_WEST",
@@ -298,24 +237,16 @@
       fibonacciStage: "F8",
       role: "rendered-target-evidence",
       file: RAIL_WEST_FILE,
-      expectedContract: EXPECTED_WEST_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_WEST_CANVAS_EXPRESSION_RENDERED_RANGE_OBSERVATORY_TNT_v7",
       owner: "DIAGNOSTIC_RAIL_WEST",
       paths: [
         "HEARTH.diagnosticWest",
         "HEARTH.diagnosticRailWest",
         "HEARTH_DIAGNOSTIC_WEST",
         "HEARTH_DIAGNOSTIC_RAIL_WEST",
-        "DEXTER_LAB.hearthDiagnosticWest",
-        "DEXTER_LAB.hearthDiagnosticRailWest"
+        "DEXTER_LAB.hearthDiagnosticWest"
       ],
-      methods: [
-        "runWestRenderedRead",
-        "readRenderedTarget",
-        "runWest",
-        "inspectRenderedTarget",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["runWestRenderedRead", "readRenderedTarget", "runWest", "inspectRenderedTarget", "inspect", "runDiagnostic"]
     },
     {
       id: "PROBE_WEST",
@@ -323,25 +254,16 @@
       fibonacciStage: "F13",
       role: "rendered-target-file-composition-probe",
       file: PROBE_WEST_FILE,
-      expectedContract: EXPECTED_PROBE_WEST_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1",
       owner: "DIAGNOSTIC_PROBE_WEST",
       paths: [
         "HEARTH.diagnosticProbeWest",
         "HEARTH.diagnosticRailProbeWest",
         "HEARTH.diagnosticWestProbe",
         "HEARTH_DIAGNOSTIC_PROBE_WEST",
-        "HEARTH_DIAGNOSTIC_RAIL_PROBE_WEST",
-        "DEXTER_LAB.hearthDiagnosticProbeWest",
-        "DEXTER_LAB.hearthDiagnosticRailProbeWest"
+        "DEXTER_LAB.hearthDiagnosticProbeWest"
       ],
-      methods: [
-        "runProbeWest",
-        "inspectRenderedTargetComposition",
-        "inspectRenderedComposition",
-        "runProbe",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["runProbeWest", "inspectRenderedTargetComposition", "runProbe", "inspect", "runDiagnostic"]
     },
     {
       id: "PROBE_CANVAS_SURFACE_TRUTH",
@@ -349,36 +271,22 @@
       fibonacciStage: "F21",
       role: "canvas-surface-truth-probe",
       file: PROBE_CANVAS_SURFACE_TRUTH_FILE,
-      expectedContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1",
       owner: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
       paths: [
         "HEARTH.diagnosticProbeCanvasSurfaceTruth",
         "HEARTH.diagnosticCanvasSurfaceTruthProbe",
-        "HEARTH.diagnosticProbeCanvasTruth",
-        "HEARTH.diagnosticCanvasTruthProbe",
-        "HEARTH.diagnosticRailProbeCanvasSurfaceTruth",
-        "HEARTH.diagnosticCanvasSurfaceTruthReceiptHub",
         "HEARTH.diagnosticTruthHub",
         "HEARTH.canvasSurfaceTruthProbe",
         "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
         "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
-        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH",
-        "HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH",
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_RECEIPT_HUB",
-        "HEARTH_DIAGNOSTIC_TRUTH_HUB",
         "DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth",
-        "DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe",
-        "DEXTER_LAB.hearthDiagnosticCanvasTruthProbe",
-        "DEXTER_LAB.hearthDiagnosticRailProbeCanvasSurfaceTruth",
-        "DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthReceiptHub",
-        "DEXTER_LAB.hearthDiagnosticTruthHub",
-        "DEXTER_LAB.hearthCanvasSurfaceTruthProbe"
+        "DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe"
       ],
       methods: [
         "runProbeCanvasSurfaceTruth",
         "runCanvasSurfaceTruth",
         "inspectCanvasSurfaceTruth",
-        "inspectCanvasSurface",
         "runCanvasSurfaceTruthProbe",
         "runProbe",
         "inspect",
@@ -391,23 +299,16 @@
       fibonacciStage: "F34",
       role: "packet-output",
       file: RAIL_SOUTH_FILE,
-      expectedContract: EXPECTED_SOUTH_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_SOUTH_PRIORITY_CONTROL_QUEEN_PACKET_CONFORMANCE_TNT_v8",
       owner: "DIAGNOSTIC_RAIL_SOUTH",
       paths: [
         "HEARTH.diagnosticSouth",
         "HEARTH.diagnosticRailSouth",
         "HEARTH_DIAGNOSTIC_SOUTH",
         "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-        "DEXTER_LAB.hearthDiagnosticSouth",
-        "DEXTER_LAB.hearthDiagnosticRailSouth"
+        "DEXTER_LAB.hearthDiagnosticSouth"
       ],
-      methods: [
-        "composeSouthReport",
-        "runSouth",
-        "composeReport",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["composeSouthReport", "runSouth", "composeReport", "inspect", "runDiagnostic"]
     },
     {
       id: "PROBE_SOUTH",
@@ -415,25 +316,16 @@
       fibonacciStage: "F55",
       role: "packet-meaning-file-composition-probe",
       file: PROBE_SOUTH_FILE,
-      expectedContract: EXPECTED_PROBE_SOUTH_CONTRACT,
+      expectedContract: "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1",
       owner: "DIAGNOSTIC_PROBE_SOUTH",
       paths: [
         "HEARTH.diagnosticProbeSouth",
         "HEARTH.diagnosticRailProbeSouth",
         "HEARTH.diagnosticSouthProbe",
         "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
-        "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
-        "DEXTER_LAB.hearthDiagnosticProbeSouth",
-        "DEXTER_LAB.hearthDiagnosticRailProbeSouth"
+        "DEXTER_LAB.hearthDiagnosticProbeSouth"
       ],
-      methods: [
-        "runProbeSouth",
-        "inspectPacketMeaning",
-        "inspectPacketComposition",
-        "runProbe",
-        "inspect",
-        "runDiagnostic"
-      ]
+      methods: ["runProbeSouth", "inspectPacketMeaning", "inspectPacketComposition", "runProbe", "inspect", "runDiagnostic"]
     }
   ]);
 
@@ -441,12 +333,14 @@
     {
       id: "ROUTE_CONDUCTOR",
       file: ROUTE_CONDUCTOR_FILE,
-      role: "north-bishop-route-permission-and-active-scan-authority",
+      role: "route-permission-and-active-scan-authority",
+      family: "HEARTH_ROUTE_CONDUCTOR",
       expectedContracts: [
-        EXPECTED_ROUTE_CONDUCTOR_RENEWAL_CONTRACT,
         EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
+        "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN_TNT_v10_7",
         "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5",
         "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4",
+        "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3",
         "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
         "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
         "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9",
@@ -456,64 +350,53 @@
         "HEARTH_ROUTE_CONDUCTOR_CANVAS_EXPRESSION_HUB_VISIBLE_GLOBE_PROOF_INGESTION_TNT_v9_5",
         "HEARTH_ROUTE_CONDUCTOR_CANVAS_LOCAL_STATION_BRIDGE_ALIGNMENT_TNT_v9_4"
       ],
-      family: "HEARTH_ROUTE_CONDUCTOR",
       aliases: [
         "HEARTH_ROUTE_CONDUCTOR",
         "HEARTH.routeConductor",
-        "HEARTH.routeConductorPrimaryGate",
         "HEARTH.routeNorthBishop",
         "HEARTH.routeConductorShowtimeNewsFibonacciQueenCanvasSync",
+        "HEARTH.routeConductorPassiveUiSafeManualScan",
+        "HEARTH.routeConductorSafePacketBridgeNoLifecycleIgnition",
         "HEARTH.routeConductorGovernedSourceStackAdmissionCanvasHandoff",
         "HEARTH.routeConductorHexGatePointerFingerTransmission",
-        "HEARTH.routeConductorCanvasDomSurfaceAdmissionAndRelease",
-        "HEARTH.routeConductorBishopQueenCanvasRecognitionFunnel",
         "DEXTER_LAB.hearthRouteConductor",
-        "DEXTER_LAB.hearthRouteConductorPrimaryGate",
-        "DEXTER_LAB.hearthRouteNorthBishop",
-        "DEXTER_LAB.hearthRouteConductorShowtimeNewsFibonacciQueenCanvasSync",
-        "DEXTER_LAB.hearthRouteConductorGovernedSourceStackAdmissionCanvasHandoff",
-        "DEXTER_LAB.hearthRouteConductorHexGatePointerFingerTransmission",
-        "DEXTER_LAB.hearthRouteConductorCanvasDomSurfaceAdmissionAndRelease",
-        "DEXTER_LAB.hearthRouteConductorBishopQueenCanvasRecognitionFunnel"
+        "DEXTER_LAB.hearthRouteNorthBishop"
       ]
     },
     {
       id: "CONTROLS_QUEEN",
       file: CONTROL_FILE,
-      role: "queen-motion-input-and-gateway-permission-authority",
+      role: "motion-input-and-view-control-gateway",
+      family: "HEARTH_CONTROLS",
       expectedContracts: [
         EXPECTED_CONTROL_CONTRACT,
         EXPECTED_CONTROL_RENEWAL_CANDIDATE,
         "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT_TNT_v4_2",
-        "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1"
+        "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1",
+        "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2"
       ],
-      family: "HEARTH_CONTROLS",
       aliases: [
         "HEARTH_CONTROLS",
+        "HEARTH_CONTROLS_QUEEN",
         "HEARTH.controls",
-        "HEARTH.planetaryControls",
-        "HEARTH.controlFile",
-        "HEARTH.controlAuthority",
-        "HEARTH.controlsPlanetaryViewInputHandshake",
         "HEARTH.controlsQueen",
         "HEARTH.queenControls",
+        "HEARTH.planetaryControls",
+        "HEARTH.controlFile",
         "HEARTH.controlsHexGatePointerFingerTransmission",
         "DEXTER_LAB.hearthControls",
-        "DEXTER_LAB.hearthPlanetaryControls",
-        "DEXTER_LAB.hearthControlFile",
-        "DEXTER_LAB.hearthControlAuthority",
-        "DEXTER_LAB.hearthControlsPlanetaryViewInputHandshake",
-        "DEXTER_LAB.hearthQueenControls",
-        "DEXTER_LAB.hearthControlsHexGatePointerFingerTransmission"
+        "DEXTER_LAB.hearthQueenControls"
       ]
     },
     {
       id: "CANVAS_RECEIVER",
       file: CANVAS_FILE,
-      role: "presentation-surface-output-carrier-and-downstream-bridge",
+      role: "presentation-surface-output-carrier-and-return-receiver",
+      family: "HEARTH_CANVAS",
       expectedContracts: [
         EXPECTED_CANVAS_RENEWAL_CANDIDATE,
         EXPECTED_CANVAS_CONTRACT,
+        "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4",
         "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION_TNT_v12_4",
         "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2",
         "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1",
@@ -522,107 +405,121 @@
         "HEARTH_CANVAS_HUB_THREE_FILE_STRETCH_VISIBLE_EXPRESSION_COORDINATION_TNT_v12",
         "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7"
       ],
-      family: "HEARTH_CANVAS",
       aliases: [
         "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
         "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
         "HEARTH_CANVAS",
+        "HEARTH_CANVAS_HUB",
         "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
         "HEARTH.canvasHubCompositeFirstFastViewDeferredHexReceiver",
-        "HEARTH.canvasCompositeFirstFastViewDeferredHexReceiver",
-        "HEARTH.canvasHubRafSphereRotationPairReceiver",
-        "HEARTH.canvasHubRafFastInteractiveDeferredHexRenderReceiver",
-        "HEARTH.canvasHubFastViewTransformDeferredRenderReceiver",
-        "HEARTH.canvasPlanetaryViewControlReceiver",
         "HEARTH.canvasHub",
         "HEARTH.canvas",
         "HEARTH.canvasParent",
         "HEARTH.canvasAuthority",
         "HEARTH.canvasLocalStation",
-        "HEARTH.canvasStation",
         "HEARTH.canvasExpressionHub",
         "HEARTH.canvasVisiblePlanet",
-        "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
-        "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexReceiver",
-        "DEXTER_LAB.hearthCanvasCompositeFirstFastViewDeferredHexReceiver",
-        "DEXTER_LAB.hearthCanvasHubRafSphereRotationPairReceiver",
-        "DEXTER_LAB.hearthCanvasHubRafFastInteractiveDeferredHexRenderReceiver",
-        "DEXTER_LAB.hearthCanvasHubFastViewTransformDeferredRenderReceiver",
-        "DEXTER_LAB.hearthCanvasPlanetaryViewControlReceiver",
         "DEXTER_LAB.hearthCanvasHub",
         "DEXTER_LAB.hearthCanvas",
-        "DEXTER_LAB.hearthCanvasParent",
-        "DEXTER_LAB.hearthCanvasLocalStation",
-        "DEXTER_LAB.hearthCanvasStation",
-        "DEXTER_LAB.hearthCanvasExpressionHub",
-        "DEXTER_LAB.hearthCanvasVisiblePlanet"
-      ]
-    },
-    {
-      id: "HEX_SURFACE_GATE",
-      file: HEX_SURFACE_FILE,
-      role: "hex-surface-render-gate-before-pointer-finger",
-      expectedContracts: [
-        EXPECTED_HEX_SURFACE_CONTRACT,
-        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_1",
-        "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE_TNT_v5"
-      ],
-      family: "HEARTH_HEX_SURFACE",
-      aliases: [
-        "HEARTH_HEX_SURFACE",
-        "HEARTH.hexSurfacePairPointerFingerGate",
-        "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
-        "HEARTH.hexSurfaceRenderer",
-        "HEARTH.hexSurface",
-        "HEARTH.hexGate",
-        "HEARTH.hexRenderGate",
-        "DEXTER_LAB.hearthHexSurfacePairPointerFingerGate",
-        "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
-        "DEXTER_LAB.hearthHexSurfaceRenderer",
-        "DEXTER_LAB.hearthHexSurface",
-        "DEXTER_LAB.hearthHexGate"
+        "DEXTER_LAB.hearthCanvasParent"
       ]
     },
     {
       id: "HEX_AUTHORITY",
       file: HEX_AUTHORITY_FILE,
-      role: "hex-pair-authority",
-      expectedContracts: [EXPECTED_HEX_AUTHORITY_CONTRACT],
+      role: "hex-four-pair-authority",
       family: "HEARTH_HEX_FOUR_PAIR",
+      expectedContracts: [EXPECTED_HEX_AUTHORITY_CONTRACT],
       aliases: [
         "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
         "HEARTH.hexFourPairPixelHandshakeAuthority",
+        "HEARTH.hexFourPairAuthority",
         "HEARTH.hexPixelHandshakeAuthority",
         "HEARTH.hexAuthority",
-        "HEARTH.hexFourPairAuthority",
         "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
-        "DEXTER_LAB.hearthHexPixelHandshakeAuthority",
         "DEXTER_LAB.hearthHexAuthority"
       ]
     },
     {
-      id: "POINTER_FINGER",
-      file: POINTER_FINGER_FILE,
-      role: "downstream-pointer-finger-expression",
-      expectedContracts: [EXPECTED_POINTER_FINGER_CONTRACT],
-      family: "HEARTH_CANVAS_FINGER",
+      id: "HEX_SURFACE_GATE",
+      file: HEX_SURFACE_FILE,
+      role: "downstream-hex-surface-gate-before-pointer-surface",
+      family: "HEARTH_HEX_SURFACE",
+      expectedContracts: [
+        "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE_TNT_v5",
+        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_2",
+        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_1",
+        EXPECTED_HEX_SURFACE_CONTRACT,
+        "HEARTH_HEX_SURFACE_RENDERER_TNT_v3",
+        "HEARTH_HEX_SURFACE_RENDERER_TNT_v2",
+        "HEARTH_HEX_SURFACE_RENDERER_TNT_v1"
+      ],
+      aliases: [
+        "HEARTH_HEX_SURFACE",
+        "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE",
+        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+        "HEARTH.hexSurface",
+        "HEARTH.hexSurfacePairPointerFingerGate",
+        "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+        "HEARTH.hexGate",
+        "HEARTH.hexRenderGate",
+        "DEXTER_LAB.hearthHexSurface",
+        "DEXTER_LAB.hearthHexGate"
+      ]
+    },
+    {
+      id: "POINTER_SURFACE_BISHOP",
+      file: POINTER_SURFACE_FILE,
+      role: "pointer-surface-bishop-gate-opening-child-expression-files",
+      family: "HEARTH_CANVAS_FINGER_SURFACE",
+      expectedContracts: [
+        EXPECTED_POINTER_SURFACE_CONTRACT,
+        "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3",
+        "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2",
+        "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1"
+      ],
+      aliases: [
+        "HEARTH_CANVAS_FINGER_SURFACE",
+        "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP",
+        "HEARTH_CANVAS_BISHOP_SURFACE_POINTER",
+        "HEARTH_CANVAS_SURFACE_BISHOP",
+        "HEARTH_POINTER_SURFACE_BISHOP",
+        "HEARTH.pointerSurfaceBishop",
+        "HEARTH.canvasFingerSurface",
+        "HEARTH.canvasFingerSurfaceBishop",
+        "HEARTH.canvasBishopSurfacePointer",
+        "HEARTH.canvasSurfaceBishop",
+        "HEARTH.canvasFingerSurfacePointerBishop",
+        "DEXTER_LAB.hearthPointerSurfaceBishop",
+        "DEXTER_LAB.hearthCanvasFingerSurface",
+        "DEXTER_LAB.hearthCanvasFingerSurfaceBishop",
+        "DEXTER_LAB.hearthCanvasSurfaceBishop"
+      ]
+    },
+    {
+      id: "POINTER_INSPECT_PRIEST",
+      file: POINTER_INSPECT_FILE,
+      role: "pointer-surface-child-organizer-and-proofreader-not-primary-chain-gate",
+      family: "HEARTH_CANVAS_FINGER_INSPECT",
+      expectedContracts: [
+        EXPECTED_POINTER_INSPECT_CONTRACT,
+        "HEARTH_CANVAS_FINGER_INSPECT",
+        "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1"
+      ],
       aliases: [
         "HEARTH_CANVAS_FINGER_INSPECT",
-        "HEARTH.pointerFinger",
-        "HEARTH.canvasPointerFinger",
+        "HEARTH_CANVAS_FINGER_POINTER",
+        "HEARTH_POINTER_FINGER",
         "HEARTH.canvasFingerInspect",
         "HEARTH.canvasFingerPointer",
-        "HEARTH.canvasFingerLight",
-        "HEARTH.canvasFingerBoundary",
-        "HEARTH.canvasFingerSurface",
-        "DEXTER_LAB.hearthPointerFinger",
-        "DEXTER_LAB.hearthCanvasPointerFinger",
+        "HEARTH.pointerFinger",
+        "HEARTH.canvasPointerFinger",
         "DEXTER_LAB.hearthCanvasFingerInspect",
-        "DEXTER_LAB.hearthCanvasFingerPointer",
-        "DEXTER_LAB.hearthCanvasFingerLight",
-        "DEXTER_LAB.hearthCanvasFingerBoundary",
-        "DEXTER_LAB.hearthCanvasFingerSurface"
-      ]
+        "DEXTER_LAB.hearthPointerFinger",
+        "DEXTER_LAB.hearthCanvasPointerFinger"
+      ],
+      childOf: "POINTER_SURFACE_BISHOP",
+      advisoryChild: true
     }
   ]);
 
@@ -634,16 +531,15 @@
       intendedMode: "HANDSHAKE",
       requiredForMotion: true,
       requiredForVisibleSurface: false,
+      topLevelBlocking: true,
+      expectedReturnPort: true,
       requestSignals: [
         "controlHandshakePacket",
         "queenControlHandshakePacket",
         "routeConductorControlHandshakePacket",
         "controlHandshakeAuthorized",
         "controlsHandshakeAuthorized",
-        "queenHandshakeAuthorized",
-        "controlAdmissionAuthorized",
-        "controlsAdmissionAuthorized",
-        "planetaryControlAdmissionAuthorized"
+        "queenHandshakeAuthorized"
       ],
       grantSignals: [
         "handshakeAccepted",
@@ -651,18 +547,15 @@
         "controlHandshakeAcceptedByQueen",
         "inputAdmissionOpen",
         "inputBound",
-        "CONTROL_HANDSHAKE_STATUS",
         "HANDSHAKE_VALID"
       ],
       returnSignals: [
         "routeConductorControlIntegrationStatus",
-        "controlHandshakeAcceptedByQueen",
         "controlHandshakeReceipt",
         "controlsHandshakeReceipt",
         "getControlHandshakeReceipt",
         "getControlHandshakeSummary"
-      ],
-      expectedReturnPort: true
+      ]
     },
     {
       id: "ROUTE_TO_CANVAS_GOVERNED_SOURCE_HANDSHAKE",
@@ -671,9 +564,10 @@
       intendedMode: "HANDSHAKE",
       requiredForMotion: false,
       requiredForVisibleSurface: true,
+      topLevelBlocking: true,
+      expectedReturnPort: true,
       requestSignals: [
         "governedSourcePacket",
-        "governedSourcePacketPublished",
         "canvasHandoffPacket",
         "canvasReleasePacket",
         "canvasGovernedSourceHandoffPacket",
@@ -687,18 +581,14 @@
         "sourceAccepted",
         "governedSourceAccepted",
         "receiveGovernedSourceStackPacket",
-        "consumeGovernedSourceStackPacket",
-        "acceptGovernedSourceStackPacket"
+        "consumeGovernedSourceStackPacket"
       ],
       returnSignals: [
         "canvasGovernedSourceDeliveryStatus",
         "canvasGovernedSourceReceiverMethod",
-        "sourceAccepted",
-        "governedSourceAccepted",
         "getCanvasStationReceipt",
         "getVisiblePlanetReceipt"
-      ],
-      expectedReturnPort: true
+      ]
     },
     {
       id: "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE",
@@ -707,19 +597,18 @@
       intendedMode: "HANDSHAKE",
       requiredForMotion: true,
       requiredForVisibleSurface: false,
+      topLevelBlocking: true,
+      expectedReturnPort: true,
       requestSignals: [
         "controlsViewPacket",
         "planetaryViewControlPacket",
         "queenHexGateViewPacket",
         "receiveViewControlPacket",
         "consumeViewControlPacket",
-        "receivePlanetaryViewControlPacket",
-        "consumePlanetaryViewControlPacket",
         "canvasDeliveryStatus",
         "canvasDeliveryMethod"
       ],
       grantSignals: [
-        "canvasDeliveryStatus",
         "CONTROL_PACKET_DELIVERED_TO_CANVAS_PUBLIC_RECEIVER_FOR_HEX_GATE",
         "receiveViewControlPacket",
         "consumeViewControlPacket",
@@ -731,10 +620,8 @@
         "canvasDeliveryMethod",
         "canvasReceiverCacheMethod",
         "getControlHandshakeReceipt",
-        "getControlSummary",
         "getCanvasStationReceipt"
-      ],
-      expectedReturnPort: true
+      ]
     },
     {
       id: "CANVAS_TO_HEX_SURFACE_EXPRESSION_GATE",
@@ -743,14 +630,16 @@
       intendedMode: "HANDSHAKE_OR_INTENDED_HANDOFF",
       requiredForMotion: true,
       requiredForVisibleSurface: true,
+      topLevelBlocking: true,
+      expectedReturnPort: false,
       requestSignals: [
         "hexGateTransmissionPacket",
         "hexGateTransmissionDelivered",
+        "hexGateRequiredBeforePointerSurface",
         "hexGateRequiredBeforePointerFinger",
         "canvasMayForwardToHexGate",
         "receiveCanvasHexGatePacket",
         "consumeCanvasHexGatePacket",
-        "hexSurfaceFile",
         "HEX_SURFACE"
       ],
       grantSignals: [
@@ -768,37 +657,112 @@
         "getHexSurfaceReceipt",
         "getHexSurfaceSummary",
         "hexSurfaceReceipt"
-      ],
-      expectedReturnPort: false
+      ]
     },
     {
-      id: "HEX_SURFACE_TO_POINTER_FINGER_HANDOFF",
+      id: "HEX_SURFACE_TO_POINTER_SURFACE_BISHOP_GATE",
       from: "HEX_SURFACE_GATE",
-      to: "POINTER_FINGER",
+      to: "POINTER_SURFACE_BISHOP",
       intendedMode: "HANDOFF",
       requiredForMotion: false,
-      requiredForVisibleSurface: false,
+      requiredForVisibleSurface: true,
+      topLevelBlocking: true,
+      expectedReturnPort: false,
       requestSignals: [
-        "pointerFingerTransmissionPacket",
-        "pointerFingerAdmissionAuthorized",
-        "hexGateRequiredBeforePointerFinger",
-        "receiveHexGatePointerFingerTransmissionPacket",
-        "consumeHexGatePointerFingerTransmissionPacket"
+        "pointerSurfacePacket",
+        "pointerSurfaceBishopPacket",
+        "pointerSurfaceAdmissionAuthorized",
+        "hexGateRequiredBeforePointerSurface",
+        "surfaceBishop",
+        "canvasFingerSurface",
+        "hearth.canvas.finger.surface.js",
+        "POINTER_SURFACE_FILE",
+        "POINTER_SURFACE_BISHOP"
       ],
       grantSignals: [
-        "pointerFingerObserved",
-        "pointerFingerVocabulary",
-        "receivePointerFingerTransmissionPacket",
-        "consumePointerFingerTransmissionPacket",
-        "acceptPointerFingerTransmissionPacket"
+        "pointerSurfaceObserved",
+        "pointerSurfaceBishopObserved",
+        "pointerSurfaceReady",
+        "surfaceBishopReady",
+        "receivePointerSurfacePacket",
+        "consumePointerSurfacePacket",
+        "receiveHexSurfacePacket",
+        "consumeHexSurfacePacket"
       ],
       returnSignals: [
-        "pointerFingerAdmissionDelivered",
-        "pointerFingerAdmissionAccepted",
-        "getPointerFingerReceipt",
-        "getFingerReceipt"
+        "pointerSurfaceAdmissionAccepted",
+        "pointerSurfaceReceipt",
+        "surfaceBishopReceipt",
+        "getPointerSurfaceReceipt",
+        "getSurfaceBishopReceipt"
+      ]
+    },
+    {
+      id: "POINTER_SURFACE_BISHOP_TO_INSPECT_PRIEST_CHILD_ORGANIZER",
+      from: "POINTER_SURFACE_BISHOP",
+      to: "POINTER_INSPECT_PRIEST",
+      intendedMode: "CHILD_ORGANIZER",
+      requiredForMotion: false,
+      requiredForVisibleSurface: false,
+      topLevelBlocking: false,
+      expectedReturnPort: false,
+      requestSignals: [
+        "inspectChild",
+        "childOrganizer",
+        "proofreader",
+        "fingerInspect",
+        "canvasFingerInspect",
+        "hearth.canvas.finger.inspect.js"
       ],
-      expectedReturnPort: false
+      grantSignals: [
+        "inspectReady",
+        "childOrganizerReady",
+        "fingerInspectReady",
+        "receiveInspectionPacket",
+        "consumeInspectionPacket"
+      ],
+      returnSignals: [
+        "inspectionReceipt",
+        "fingerInspectReceipt",
+        "getPointerFingerReceipt",
+        "getFingerReceipt",
+        "getInspectionReceipt"
+      ]
+    },
+    {
+      id: "POINTER_SURFACE_BISHOP_TO_CANVAS_RETURN_SOCKET",
+      from: "POINTER_SURFACE_BISHOP",
+      to: "CANVAS_RECEIVER",
+      intendedMode: "HANDSHAKE_OR_INTENDED_HANDOFF",
+      requiredForMotion: false,
+      requiredForVisibleSurface: true,
+      topLevelBlocking: true,
+      expectedReturnPort: true,
+      requestSignals: [
+        "canvasReturnPacket",
+        "canvasReturnReceipt",
+        "pointerSurfaceReturnPacket",
+        "surfaceBishopReturnPacket",
+        "returnToCanvas",
+        "canvasReturnArtifact"
+      ],
+      grantSignals: [
+        "canvasReturnReceiverReady",
+        "pointerSurfaceReturnAccepted",
+        "surfaceBishopReturnAccepted",
+        "receivePointerSurfaceReturnPacket",
+        "consumePointerSurfaceReturnPacket",
+        "receiveCanvasReturnPacket",
+        "consumeCanvasReturnPacket"
+      ],
+      returnSignals: [
+        "canvasReturnReceiptPublished",
+        "canvasReturnArtifactReceived",
+        "canvasReturnArtifactAccepted",
+        "canvasReturnArtifactApplied",
+        "getCanvasReturnReceipt",
+        "getReturnReceipt"
+      ]
     },
     {
       id: "ROUTE_TO_HEX_SURFACE_ACTIVE_SCAN_PERMISSION",
@@ -807,11 +771,11 @@
       intendedMode: "HANDSHAKE_OR_INTENDED_HANDOFF",
       requiredForMotion: false,
       requiredForVisibleSurface: false,
+      topLevelBlocking: false,
+      expectedReturnPort: false,
       requestSignals: [
         "hexGateTransmissionPacket",
         "hexSurfaceObserved",
-        "hexGateRequiredBeforePointerFinger",
-        "routeConductorBypassesHexGate",
         "receiveRouteConductorHexGateTransmissionPacket"
       ],
       grantSignals: [
@@ -825,8 +789,7 @@
         "hexGateTransmissionAccepted",
         "getHexSurfaceReceipt",
         "getHexSurfaceSummary"
-      ],
-      expectedReturnPort: false
+      ]
     }
   ]);
 
@@ -872,7 +835,6 @@
 
   function clonePlain(value) {
     if (value === undefined || value === null) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -925,6 +887,30 @@
     return "UNKNOWN";
   }
 
+  function getRaw(source, key, fallback = undefined) {
+    if (!isObject(source)) return fallback;
+
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      const value = source[key];
+      return value === undefined || value === null ? fallback : value;
+    }
+
+    const lower = key.toLowerCase();
+
+    for (const candidate of Object.keys(source)) {
+      if (candidate.toLowerCase() === lower) {
+        const value = source[candidate];
+        return value === undefined || value === null ? fallback : value;
+      }
+    }
+
+    return fallback;
+  }
+
+  function getValue(source, key, fallback = "UNKNOWN") {
+    return packetValue(getRaw(source, key, undefined), fallback, 8000);
+  }
+
   function normalizeNotes(...sources) {
     const out = [];
     const seen = new Set();
@@ -948,34 +934,9 @@
 
   function addNote(state, note) {
     if (!state || !Array.isArray(state.notes)) return;
-
     const clean = bounded(note, 1600);
     if (!clean || state.notes.includes(clean)) return;
     state.notes.push(clean);
-  }
-
-  function getRaw(source, key, fallback = undefined) {
-    if (!isObject(source)) return fallback;
-
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      const value = source[key];
-      return value === undefined || value === null ? fallback : value;
-    }
-
-    const lower = key.toLowerCase();
-
-    for (const candidate of Object.keys(source)) {
-      if (candidate.toLowerCase() === lower) {
-        const value = source[candidate];
-        return value === undefined || value === null ? fallback : value;
-      }
-    }
-
-    return fallback;
-  }
-
-  function getValue(source, key, fallback = "UNKNOWN") {
-    return packetValue(getRaw(source, key, undefined), fallback, 8000);
   }
 
   function readPath(base, path) {
@@ -1035,7 +996,7 @@
           ? root.location.origin
           : "https://diamondgatebridge.com";
       const url = new URL(src, base);
-      return url.pathname === path;
+      return url.pathname === path || url.pathname.endsWith(path);
     } catch (_error) {
       return src.includes(path);
     }
@@ -1081,7 +1042,7 @@
     };
   }
 
-  function appendScript(path, stepId, mode) {
+  function appendDiagnosticScript(path, stepId) {
     if (!doc) {
       return Promise.resolve({
         attempted: false,
@@ -1092,7 +1053,7 @@
       });
     }
 
-    const key = `${path}::${mode}`;
+    const key = `${path}::${INTERNAL_RENEWAL_CONTRACT}`;
 
     if (loadPromises[key]) return loadPromises[key];
 
@@ -1101,19 +1062,16 @@
         const script = doc.createElement("script");
         const stamp = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-        script.id = `hearth-diagnostic-north-${stepId.toLowerCase()}-${mode.toLowerCase()}-${stamp}`;
+        script.id = `hearth-diagnostic-north-${stepId.toLowerCase()}-${stamp}`;
         script.src =
           `${path}?v=${encodeURIComponent(INTERNAL_RENEWAL_CONTRACT)}` +
-          `&northRecovery=${encodeURIComponent(mode)}` +
+          `&northRecovery=${encodeURIComponent("DIAGNOSTIC_CHILD_ONLY")}` +
           `&t=${encodeURIComponent(stamp)}`;
         script.async = false;
         script.defer = false;
 
         script.dataset.loadedBy = CONTRACT;
         script.dataset.internalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
-        script.dataset.previousInternalRenewalContract = PREVIOUS_INTERNAL_RENEWAL_CONTRACT;
-        script.dataset.diagnosticNorthChronologyHub = "true";
-        script.dataset.diagnosticScriptRecoveryMode = mode;
         script.dataset.productionMutationPermissionGranted = "false";
         script.dataset.hearthRepairPermissionGranted = "false";
         script.dataset.runtimeRestartPermissionGranted = "false";
@@ -1128,7 +1086,7 @@
           resolve({
             attempted: true,
             loaded: true,
-            status: `${mode}_SCRIPT_LOAD_COMPLETE`,
+            status: "DIAGNOSTIC_CHILD_SCRIPT_LOAD_COMPLETE",
             path,
             src: script.src
           });
@@ -1138,7 +1096,7 @@
           resolve({
             attempted: true,
             loaded: false,
-            status: `${mode}_SCRIPT_LOAD_ERROR_OR_NOT_DEPLOYED`,
+            status: "DIAGNOSTIC_CHILD_SCRIPT_LOAD_ERROR_OR_NOT_DEPLOYED",
             path,
             src: script.src
           });
@@ -1149,7 +1107,7 @@
         resolve({
           attempted: true,
           loaded: false,
-          status: `${mode}_SCRIPT_LOAD_EXCEPTION:${bounded(error && error.message ? error.message : error, 1000)}`,
+          status: `DIAGNOSTIC_CHILD_SCRIPT_LOAD_EXCEPTION:${bounded(error && error.message ? error.message : error, 1000)}`,
           path,
           src: "SCRIPT_APPEND_EXCEPTION"
         });
@@ -1233,21 +1191,22 @@
       "getState",
       "getStatus",
       "getNorthVerdict",
-      "getRoutePrimaryGateReceipt",
-      "getRouteCycleReceipt",
       "getControlReceipt",
       "getControlHandshakeReceipt",
-      "getControlHandshakeSummary",
       "getControlSummary",
-      "getQueenBridgeState",
       "getCanvasStationReceipt",
       "getCanvasStationSummary",
       "getVisiblePlanetReceipt",
       "getVisibleGlobeReceipt",
       "getHexSurfaceReceipt",
       "getHexSurfaceSummary",
+      "getPointerSurfaceReceipt",
+      "getSurfaceBishopReceipt",
       "getPointerFingerReceipt",
       "getFingerReceipt",
+      "getInspectionReceipt",
+      "getCanvasReturnReceipt",
+      "getReturnReceipt",
       "getProbeEastReceipt",
       "getProbeWestReceipt",
       "getProbeSouthReceipt",
@@ -1273,7 +1232,10 @@
     if (isObject(authority.controlReceipt)) return authority.controlReceipt;
     if (isObject(authority.canvasStationReceipt)) return authority.canvasStationReceipt;
     if (isObject(authority.hexSurfaceReceipt)) return authority.hexSurfaceReceipt;
+    if (isObject(authority.pointerSurfaceReceipt)) return authority.pointerSurfaceReceipt;
+    if (isObject(authority.surfaceBishopReceipt)) return authority.surfaceBishopReceipt;
     if (isObject(authority.pointerFingerReceipt)) return authority.pointerFingerReceipt;
+    if (isObject(authority.inspectionReceipt)) return authority.inspectionReceipt;
 
     if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) {
       return authority;
@@ -1310,8 +1272,11 @@
         "controlsContract",
         "hexAuthorityContract",
         "hexSurfaceContract",
+        "pointerSurfaceContract",
+        "surfaceBishopContract",
         "pointerFingerContract",
         "fingerContract",
+        "inspectionContract",
         "routeConductorContract",
         "currentRouteConductorContract",
         "servedRouteConductorContract",
@@ -1336,8 +1301,11 @@
         "controlsReceipt",
         "hexAuthorityReceipt",
         "hexSurfaceReceipt",
+        "pointerSurfaceReceipt",
+        "surfaceBishopReceipt",
         "pointerFingerReceipt",
         "fingerReceipt",
+        "inspectionReceipt",
         "routeConductorReceipt",
         "currentRouteConductorReceipt",
         "receipt",
@@ -1359,7 +1327,7 @@
       return Object.keys(authority)
         .filter((key) => isFunction(authority[key]))
         .sort()
-        .slice(0, 140);
+        .slice(0, 160);
     } catch (_error) {
       return [];
     }
@@ -1375,7 +1343,7 @@
     return false;
   }
 
-  function buildAuthoritySignalText(authority, receipt, ds) {
+  function buildAuthoritySignalText(authority, receipt, ds, node) {
     const pieces = [];
 
     try {
@@ -1397,7 +1365,10 @@
         "governedSourcePacket",
         "canvasHandoffPacket",
         "hexGateTransmissionPacket",
-        "pointerFingerTransmissionPacket"
+        "pointerSurfacePacket",
+        "pointerSurfaceBishopPacket",
+        "pointerFingerTransmissionPacket",
+        "canvasReturnPacket"
       ]) {
         try {
           if (authority[key] !== undefined) pieces.push(`${key}:${packetValue(authority[key], "", 2000)}`);
@@ -1409,14 +1380,23 @@
       pieces.push(JSON.stringify(ds || {}));
     } catch (_error) {}
 
-    return pieces.join(" | ").slice(0, 60000);
+    if (node) {
+      pieces.push(node.id);
+      pieces.push(node.file);
+      pieces.push((node.expectedContracts || []).join(" "));
+    }
+
+    return pieces.join(" | ").slice(0, 80000);
   }
 
   function readNode(node, targetContext) {
-    const ds = getDataset(targetContext.targetDocument);
+    const targetDoc = targetContext.targetDocument || null;
+    const ds = getDataset(targetDoc);
     const found = findFirstPath(node.aliases || [], targetContext.bases);
+
     const receipt = getReceiptFromAuthority(found.value) || {};
-    const script = scriptInfo(node.file, targetContext.targetDocument || doc);
+    const scriptTarget = scriptInfo(node.file, targetDoc || doc);
+    const scriptDiagnostic = targetDoc ? scriptInfo(node.file, doc) : { present: false, count: 0, src: "NOT_CHECKED", cacheKey: "NONE" };
 
     const datasetCandidates = [
       ds.hearthRouteConductorContract,
@@ -1428,6 +1408,9 @@
       ds.hearthCanvasCurrentParentContract,
       ds.hearthHexSurfaceContract,
       ds.hearthHexAuthorityContract,
+      ds.hearthPointerSurfaceContract,
+      ds.hearthPointerSurfaceBishopContract,
+      ds.hearthCanvasFingerSurfaceContract,
       ds.hearthPointerFingerContract,
       ds.hearthCanvasFingerInspectContract
     ];
@@ -1439,12 +1422,32 @@
       ds.hearthCanvasReceipt,
       ds.hearthHexSurfaceReceipt,
       ds.hearthHexAuthorityReceipt,
+      ds.hearthPointerSurfaceReceipt,
+      ds.hearthPointerSurfaceBishopReceipt,
+      ds.hearthCanvasFingerSurfaceReceipt,
       ds.hearthPointerFingerReceipt,
       ds.hearthCanvasFingerInspectReceipt
     ]);
 
     const methods = publicMethodNames(found.value);
-    const observed = Boolean(found.value || contract !== "UNKNOWN" || script.present);
+    const authorityPresent = Boolean(found.value);
+    const scriptPresent = Boolean(scriptTarget.present || scriptDiagnostic.present);
+    const observed = Boolean(authorityPresent || contract !== "UNKNOWN" || scriptPresent);
+    const recognized = contractRecognized(contract, node);
+
+    let darknessClass = "NONE";
+    let nodeStatus = "OBSERVED";
+
+    if (!observed) {
+      nodeStatus = "NOT_OBSERVED";
+      darknessClass = "FILE_NOT_OBSERVED";
+    } else if (scriptPresent && !authorityPresent) {
+      nodeStatus = "SCRIPT_PRESENT_AUTHORITY_DARK";
+      darknessClass = "SCRIPT_PRESENT_AUTHORITY_NOT_PUBLISHED";
+    } else if (authorityPresent && !recognized) {
+      nodeStatus = "AUTHORITY_OBSERVED_CONTRACT_UNRECOGNIZED";
+      darknessClass = "CONTRACT_UNRECOGNIZED";
+    }
 
     return {
       id: node.id,
@@ -1452,21 +1455,34 @@
       file: node.file,
       family: node.family,
       expectedContracts: (node.expectedContracts || []).slice(),
+      childOf: node.childOf || "NONE",
+      advisoryChild: node.advisoryChild === true,
+
       observed,
+      authorityPresent,
+      scriptPresent,
+      scriptCount: (scriptTarget.count || 0) + (scriptDiagnostic.count || 0),
+      scriptTargetPresent: scriptTarget.present,
+      scriptTargetSrc: scriptTarget.src,
+      scriptTargetCacheKey: scriptTarget.cacheKey,
+      scriptDiagnosticPresent: scriptDiagnostic.present,
+      scriptDiagnosticSrc: scriptDiagnostic.src,
+      scriptDiagnosticCacheKey: scriptDiagnostic.cacheKey,
+
       selectedAliasPath: found.path,
       selectedAliasFullPath: found.fullPath,
       contextLabel: found.contextLabel,
-      scriptPresent: script.present,
-      scriptCount: script.count,
-      scriptSrc: script.src,
-      scriptCacheKey: script.cacheKey,
       contract,
       receipt: receiptName,
-      contractRecognized: contractRecognized(contract, node),
+      contractRecognized: recognized,
       publicMethodCount: methods.length,
       publicMethods: methods,
       receiptObject: clonePlain(receipt),
-      authorityText: buildAuthoritySignalText(found.value, receipt, ds),
+      authorityText: buildAuthoritySignalText(found.value, receipt, ds, node),
+      nodeStatus,
+      darknessClass,
+      dark: darknessClass !== "NONE",
+
       ...NO_CLAIMS
     };
   }
@@ -1522,6 +1538,16 @@
         : !fromObserved
           ? "SOURCE_ENDPOINT_UNOBSERVED"
           : "TARGET_ENDPOINT_UNOBSERVED";
+    } else if (relationship.intendedMode === "CHILD_ORGANIZER") {
+      if (requestObserved || grantObserved || returnObserved) {
+        relationshipStatus = "CHILD_ORGANIZER_OBSERVED_UNDER_POINTER_SURFACE";
+        varianceClass = "CHILD_ORGANIZER_OBSERVED";
+        permissionGranted = true;
+      } else {
+        relationshipStatus = "CHILD_ORGANIZER_NOT_CONFIRMED_ADVISORY_ONLY";
+        varianceClass = "CHILD_ORGANIZER_NOT_CONFIRMED";
+        permissionGranted = false;
+      }
     } else if (relationship.intendedMode === "HANDSHAKE") {
       if (requestObserved && grantObserved && returnObserved) {
         relationshipStatus = "HANDSHAKE_PERMISSION_CONFIRMED_WITH_RETURN_PORT";
@@ -1538,7 +1564,7 @@
         varianceClass = "REQUEST_AND_GRANT_NOT_CONFIRMED";
       }
     } else if (relationship.intendedMode === "HANDOFF") {
-      if (requestObserved || grantObserved) {
+      if (requestObserved || grantObserved || returnObserved) {
         relationshipStatus = "INTENDED_HANDOFF_PERMISSION_CONFIRMED";
         varianceClass = "INTENDED_ONE_WAY_HANDOFF_CONFIRMED";
         permissionGranted = true;
@@ -1564,6 +1590,10 @@
       }
     }
 
+    if (relationship.topLevelBlocking === false && relationship.intendedMode === "CHILD_ORGANIZER") {
+      permissionGranted = Boolean(permissionGranted);
+    }
+
     return {
       id: relationship.id,
       from: relationship.from,
@@ -1574,6 +1604,7 @@
       expectedReturnPort: relationship.expectedReturnPort === true,
       requiredForMotion: relationship.requiredForMotion === true,
       requiredForVisibleSurface: relationship.requiredForVisibleSurface === true,
+      topLevelBlocking: relationship.topLevelBlocking !== false,
       fromObserved,
       toObserved,
       fromContract: fromNode ? fromNode.contract : "UNKNOWN",
@@ -1608,6 +1639,8 @@
       lineageInternalRenewalReceipt: LINEAGE_INTERNAL_RENEWAL_RECEIPT,
       foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
       foundationInternalRenewalReceipt: FOUNDATION_INTERNAL_RENEWAL_RECEIPT,
+      baselineInternalRenewalContract: BASELINE_INTERNAL_RENEWAL_CONTRACT,
+      baselineInternalRenewalReceipt: BASELINE_INTERNAL_RENEWAL_RECEIPT,
       previousNorthContract: PREVIOUS_NORTH_CONTRACT,
       previousNorthReceipt: PREVIOUS_NORTH_RECEIPT,
       version: VERSION,
@@ -1625,11 +1658,14 @@
       routeCanvasPermissionGatePairAuditActive: true,
       delegatoryHandshakeMatrixActive: true,
       multiHandshakeVarianceAuditActive: true,
-      intendedHandoffVarianceIncluded: true,
-      singleHandshakeGreenLightBlocked: true,
+      pointerSurfaceBishopMappingActive: true,
+      pointerInspectPriestDemotionActive: true,
+      inspectFileNotPrimaryChainEndpoint: true,
       postEvidenceLaneArbitrationActive: true,
       chronologyLaneSeparatedFromSurfaceTruth: true,
       delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
+      intendedHandoffVarianceIncluded: true,
+      singleHandshakeGreenLightBlocked: true,
       canvasSurfaceTruthProbeExpected: true,
       receiverStillCallsNorthOnly: true,
       diagnosticRouteHtmlRenewalRequired: false,
@@ -1638,17 +1674,14 @@
       evidenceByStep: {},
       notes: [
         "NORTH_V11_PUBLIC_CONTRACT_PRESERVED",
-        "NORTH_INTERNAL_V11_4_POST_EVIDENCE_LANE_ARBITRATION_ACTIVE",
-        "PREVIOUS_V11_3_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_PRESERVED",
-        "LINEAGE_V11_2_ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_PRESERVED",
-        "FOUNDATION_V11_1_SCRIPT_PRESENT_AUTHORITY_RECOVERY_PRESERVED",
-        "NORTH_IS_HUB_NOT_EVIDENCE_OWNER",
-        "DIAGNOSTIC_RECEIVER_STILL_CALLS_NORTH_ONLY",
-        "CHILDREN_AND_PROBES_RETAIN_SEPARATE_AUTHORITY",
+        "NORTH_INTERNAL_V11_5_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_ACTIVE",
+        "PREVIOUS_V11_4_POST_EVIDENCE_LANE_ARBITRATION_PRESERVED",
+        "LINEAGE_V11_3_DELEGATORY_HANDSHAKE_HANDOFF_VARIANCE_MATRIX_PRESERVED",
+        "POINTER_SURFACE_FILE_ADMITTED_AS_BISHOP_GATE",
+        "POINTER_INSPECT_FILE_DEMOTED_TO_CHILD_ORGANIZER_PRIEST",
+        "INSPECT_FILE_NOT_PRIMARY_CHAIN_ENDPOINT",
         "CHRONOLOGY_EXECUTION_SEPARATED_FROM_CANVAS_SURFACE_TRUTH",
         "DELEGATORY_PERMISSION_SEPARATED_FROM_VISIBLE_SURFACE_FAILURE",
-        "ONE_CONFIRMED_HANDSHAKE_DOES_NOT_GRANT_WHOLE_CHAIN_PERMISSION",
-        "INTENDED_HANDOFF_VARIANCE_INCLUDED",
         "NO_PRODUCTION_MUTATION_PERMISSION_GRANTED"
       ],
 
@@ -1722,6 +1755,11 @@
       chronologyExecutionFirstFailureFile: "UNKNOWN",
       chronologyExecutionFirstFailureClass: "UNKNOWN",
       chronologyExecutionFirstFailureReason: "UNKNOWN",
+      chronologyCompletionStatus: "NOT_RUN",
+      firstChronologyFailureOwner: "UNKNOWN",
+      firstChronologyFailureFile: "UNKNOWN",
+      firstChronologyFailureClass: "UNKNOWN",
+      firstChronologyFailureReason: "UNKNOWN",
 
       canvasSurfaceTruthLaneStatus: "NOT_RUN",
       canvasSurfaceTruthLaneClean: "false",
@@ -1743,12 +1781,6 @@
       finalArbitrationSource: "UNKNOWN",
       finalArbitrationReason: "UNKNOWN",
 
-      chronologyCompletionStatus: "NOT_RUN",
-      firstChronologyFailureOwner: "UNKNOWN",
-      firstChronologyFailureFile: "UNKNOWN",
-      firstChronologyFailureClass: "UNKNOWN",
-      firstChronologyFailureReason: "UNKNOWN",
-
       zoneOfInflictionOwner: "UNKNOWN",
       zoneOfInflictionFile: "UNKNOWN",
       zoneOfInflictionClass: "UNKNOWN",
@@ -1762,6 +1794,27 @@
       delegatoryAuditFirstRecommendedOwner: "UNKNOWN",
       delegatoryAuditFirstRecommendedFile: "UNKNOWN",
       delegatoryAuditFirstRecommendedAction: "UNKNOWN",
+
+      runtimeDarkFileCount: 0,
+      runtimeDarkFiles: [],
+      firstDarkRuntimeOwner: "UNKNOWN",
+      firstDarkRuntimeFile: "UNKNOWN",
+      firstDarkRuntimeClass: "UNKNOWN",
+      firstDarkRuntimeAction: "UNKNOWN",
+
+      pointerSurfaceBishopObserved: "UNKNOWN",
+      pointerSurfaceBishopScriptPresent: "UNKNOWN",
+      pointerSurfaceBishopAuthorityPresent: "UNKNOWN",
+      pointerSurfaceBishopContract: "UNKNOWN",
+      pointerSurfaceBishopRecognized: "UNKNOWN",
+      pointerSurfaceBishopStatus: "UNKNOWN",
+      pointerInspectPriestObserved: "UNKNOWN",
+      pointerInspectPriestScriptPresent: "UNKNOWN",
+      pointerInspectPriestAuthorityPresent: "UNKNOWN",
+      pointerInspectPriestContract: "UNKNOWN",
+      pointerInspectPriestRecognized: "UNKNOWN",
+      pointerInspectPriestStatus: "UNKNOWN",
+
       motionPermissionGranted: false,
       visibleSurfacePermissionGranted: false,
       pairPermissionGranted: false,
@@ -1774,7 +1827,7 @@
 
       primaryCase: "INCONCLUSIVE_EVIDENCE",
       calibrationStatus: "CALIBRATION_NOT_RUN",
-      calibrationHoldReason: "RUN_NORTH_POST_EVIDENCE_LANE_ARBITRATION",
+      calibrationHoldReason: "RUN_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION",
       diagnosticChronologyClean: "false",
       diagnosticRailClean: "false",
       calibrationPointReached: "false",
@@ -1795,7 +1848,7 @@
 
       recommendedNextOwner: "DIAGNOSTIC_NORTH_CHRONOLOGY_HUB",
       recommendedNextFile: FILE,
-      recommendedNextAction: "RUN_NORTH_POST_EVIDENCE_LANE_ARBITRATION",
+      recommendedNextAction: "RUN_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION",
 
       reportObject: {},
       northVerdict: {},
@@ -1809,7 +1862,6 @@
 
   function extractEvidence(output) {
     if (!isObject(output)) return {};
-
     if (isObject(output.evidence)) return output.evidence;
     if (isObject(output.report)) return output.report;
     if (isObject(output.REPORT_OBJECT)) return output.REPORT_OBJECT;
@@ -1817,7 +1869,6 @@
     if (isObject(output.output) && isObject(output.output.report)) return output.output.report;
     if (isObject(output.state) && isObject(output.state.reportObject)) return output.state.reportObject;
     if (isObject(output.canvasSurfaceTruth)) return output.canvasSurfaceTruth;
-
     return output;
   }
 
@@ -1833,6 +1884,8 @@
     state.routeConductorScriptSrc = firstKnown(getValue(evidence, "ROUTE_CONDUCTOR_SCRIPT_SRC", ""), state.routeConductorScriptSrc);
     state.routeConductorScriptCacheKey = firstKnown(getValue(evidence, "ROUTE_CONDUCTOR_SCRIPT_CACHE_KEY", ""), state.routeConductorScriptCacheKey);
     state.cacheOrServedContractMismatch = firstKnown(getValue(evidence, "CACHE_OR_SERVED_CONTRACT_MISMATCH", ""), state.cacheOrServedContractMismatch);
+    state.cacheKeyStaleNonBlocking = firstKnown(getValue(evidence, "CACHE_KEY_STALE_NON_BLOCKING", ""), state.cacheKeyStaleNonBlocking);
+    state.servedContractMismatchIsBlocking = firstKnown(getValue(evidence, "SERVED_CONTRACT_MISMATCH_IS_BLOCKING", ""), state.servedContractMismatchIsBlocking);
     state.currentVisibleHearthStatus = firstKnown(getValue(evidence, "CURRENT_VISIBLE_HEARTH_STATUS", ""), state.currentVisibleHearthStatus);
 
     state.renderedPlanetProofReady = firstKnown(getValue(evidence, "RENDERED_PLANET_PROOF_READY", ""), state.renderedPlanetProofReady);
@@ -1924,52 +1977,29 @@
       return findFirstPath(step.paths, [{ label: "DIAGNOSTIC", root }]);
     }
 
-    if (!scriptBefore.present) {
-      const load = await appendScript(step.file, step.id, "PRIMARY_LOAD");
-      entry.loadAttempted = load.attempted === true;
-      entry.loadStatus = load.status;
-      entry.scriptRecoverySrc = load.src;
+    const load = await appendDiagnosticScript(step.file, step.id);
+    entry.loadAttempted = load.attempted === true;
+    entry.loadStatus = load.status;
+    entry.scriptRecoverySrc = load.src;
+    entry.authorityRecoveryAttempted = load.attempted === true;
+    entry.authorityRecoveryStatus = load.status;
 
-      const foundAfterPrimary = findFirstPath(step.paths, [{ label: "DIAGNOSTIC", root }]);
-      const scriptAfterPrimary = scriptInfo(step.file, doc);
+    const foundAfter = findFirstPath(step.paths, [{ label: "DIAGNOSTIC", root }]);
+    const scriptAfter = scriptInfo(step.file, doc);
 
-      entry.scriptPresentAfter = scriptAfterPrimary.present;
-      entry.scriptCountAfter = scriptAfterPrimary.count;
-      entry.scriptSrc = scriptAfterPrimary.src;
-      entry.scriptCacheKey = scriptAfterPrimary.cacheKey;
+    entry.scriptPresentAfter = scriptAfter.present;
+    entry.scriptCountAfter = scriptAfter.count;
+    entry.scriptSrc = scriptAfter.src;
+    entry.scriptCacheKey = scriptAfter.cacheKey;
+    entry.authorityObservedAfterRecovery = Boolean(foundAfter.value);
 
-      if (foundAfterPrimary.value) {
-        entry.authorityObservedAfterRecovery = true;
-        entry.authorityRecoveryStatus = "PRIMARY_LOAD_PUBLISHED_AUTHORITY";
-        return foundAfterPrimary;
-      }
-    } else {
-      entry.loadStatus = "SCRIPT_ALREADY_PRESENT_AUTHORITY_NOT_OBSERVED";
+    if (foundAfter.value) {
+      entry.authorityRecoveryStatus = `${load.status}_AUTHORITY_OBSERVED`;
+    } else if (scriptAfter.present) {
+      entry.authorityRecoveryStatus = `${load.status}_AUTHORITY_STILL_NOT_OBSERVED`;
     }
 
-    const recoveryLoad = await appendScript(step.file, step.id, "AUTHORITY_RECOVERY");
-    entry.loadAttempted = entry.loadAttempted || recoveryLoad.attempted === true;
-    entry.authorityRecoveryAttempted = recoveryLoad.attempted === true;
-    entry.authorityRecoveryStatus = recoveryLoad.status;
-    entry.recoveryScriptSrc = recoveryLoad.src;
-    entry.loadStatus = recoveryLoad.status;
-
-    const foundAfterRecovery = findFirstPath(step.paths, [{ label: "DIAGNOSTIC", root }]);
-    const scriptAfterRecovery = scriptInfo(step.file, doc);
-
-    entry.scriptPresentAfter = scriptAfterRecovery.present;
-    entry.scriptCountAfter = scriptAfterRecovery.count;
-    entry.scriptSrc = scriptAfterRecovery.src;
-    entry.scriptCacheKey = scriptAfterRecovery.cacheKey;
-    entry.authorityObservedAfterRecovery = Boolean(foundAfterRecovery.value);
-
-    if (foundAfterRecovery.value) {
-      entry.authorityRecoveryStatus = `${recoveryLoad.status}_AUTHORITY_OBSERVED`;
-    } else if (scriptAfterRecovery.present) {
-      entry.authorityRecoveryStatus = `${recoveryLoad.status}_AUTHORITY_STILL_NOT_OBSERVED`;
-    }
-
-    return foundAfterRecovery;
+    return foundAfter;
   }
 
   async function processStep(state, step, targetContext, options = {}) {
@@ -2068,6 +2098,7 @@
         internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
         previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
         previousNorthContract: PREVIOUS_NORTH_CONTRACT,
+
         chronologyHubActive: true,
         nineStepChronologyActive: true,
         scriptPresentAuthorityRecoveryActive: true,
@@ -2075,34 +2106,46 @@
         routeCanvasPermissionGatePairAuditActive: true,
         delegatoryHandshakeMatrixActive: true,
         multiHandshakeVarianceAuditActive: true,
+        pointerSurfaceBishopMappingActive: true,
+        pointerInspectPriestDemotionActive: true,
+        inspectFileNotPrimaryChainEndpoint: true,
         postEvidenceLaneArbitrationActive: true,
         chronologyLaneSeparatedFromSurfaceTruth: true,
         delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
         intendedHandoffVarianceIncluded: true,
         singleHandshakeGreenLightBlocked: true,
         canvasSurfaceTruthProbeExpected: true,
+
         targetRoute: TARGET_ROUTE,
         diagnosticRoute: DIAGNOSTIC_ROUTE,
         currentReport: clonePlain(state.reportObject || {}),
         chronology: clonePlain(state.chronology),
         evidenceByStep: clonePlain(state.evidenceByStep),
+
         expectedHtmlContract: EXPECTED_HTML_CONTRACT,
         expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
         expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
-        expectedRouteConductorRenewalContract: EXPECTED_ROUTE_CONDUCTOR_RENEWAL_CONTRACT,
         expectedControlContract: EXPECTED_CONTROL_CONTRACT,
         expectedControlRenewalCandidate: EXPECTED_CONTROL_RENEWAL_CANDIDATE,
         expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
         expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
+        expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
         expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
-        expectedProbeCanvasSurfaceTruthContract: EXPECTED_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT,
+        expectedPointerSurfaceContract: EXPECTED_POINTER_SURFACE_CONTRACT,
+        expectedPointerInspectContract: EXPECTED_POINTER_INSPECT_CONTRACT,
+
+        pointerSurfaceFile: POINTER_SURFACE_FILE,
+        pointerInspectFile: POINTER_INSPECT_FILE,
+        pointerFingerFileLegacy: POINTER_FINGER_FILE,
+
         targetWindow: targetContext.targetWindow,
         targetDocument: targetContext.targetDocument,
         frameElement: targetContext.frameElement,
+
         noClaims: clonePlain(NO_CLAIMS),
         options: {
           loadMissingScripts: options.loadMissingScripts !== false,
-          source: "DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION"
+          source: "DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION"
         }
       };
 
@@ -2112,7 +2155,7 @@
       entry.callReturned = true;
       entry.callStatus = "CALL_RETURNED";
       entry.status = "COMPLETE";
-      entry.outputKeys = Object.keys(evidence || {}).slice(0, 80).join(",") || "OUTPUT_EMPTY";
+      entry.outputKeys = Object.keys(evidence || {}).slice(0, 100).join(",") || "OUTPUT_EMPTY";
 
       state.chronology.push(entry);
       updateStateFromEvidence(state, step, evidence);
@@ -2140,11 +2183,7 @@
 
   function classifyChronologyFailure(entry) {
     if (!entry) {
-      return {
-        className: "NONE",
-        reason: "NONE",
-        action: "NONE"
-      };
+      return { className: "NONE", reason: "NONE", action: "NONE" };
     }
 
     if (entry.status === "NOT_OBSERVED") {
@@ -2319,11 +2358,14 @@
     if (textIsFalse(state.canvasRectNonzero)) {
       state.canvasSurfaceTruthLaneStatus = "CANVAS_SURFACE_TRUTH_LANE_FAILED";
       state.canvasSurfaceTruthLaneClean = "false";
-      state.canvasSurfaceTruthLaneOwner = "CANVAS_LAYOUT_SURFACE";
-      state.canvasSurfaceTruthLaneFile = CANVAS_FILE;
-      state.canvasSurfaceTruthLaneClass = "CANVAS_RECT_ZERO";
-      state.canvasSurfaceTruthLaneReason = "CANVAS_RECT_NONZERO_FALSE";
-      state.canvasSurfaceTruthLaneAction = "RENEW_CANVAS_OR_LAYOUT_TO_PRODUCE_NONZERO_SURFACE_RECT";
+      state.canvasSurfaceTruthLaneOwner = "HTML_SHELL_OR_STAGE_LAYOUT";
+      state.canvasSurfaceTruthLaneFile = HTML_FILE;
+      state.canvasSurfaceTruthLaneClass = "CANONICAL_MOUNT_ZERO_RECT";
+      state.canvasSurfaceTruthLaneReason = firstKnown(
+        state.canvasTruthFailureReason,
+        "#hearthCanvasMount_EXISTS_BUT_RECT_IS_ZERO_PARENT_CHAIN"
+      );
+      state.canvasSurfaceTruthLaneAction = "AUDIT_HEARTH_CANVAS_MOUNT_PARENT_LAYOUT_AND_STAGE_SIZE";
       return;
     }
 
@@ -2378,13 +2420,20 @@
       return evaluateRelationship(relationship, nodesById);
     });
 
-    const firstNotGranted = relationships.find((entry) => entry.relationshipPermissionGranted !== true) || null;
+    const darkNodes = nodes.filter((node) => node.dark === true);
+    const blockingRelationships = relationships.filter((entry) => entry.topLevelBlocking === true);
+    const endpointFailures = blockingRelationships.filter((entry) => entry.varianceClass.includes("ENDPOINT_UNOBSERVED"));
+    const firstNotGranted =
+      endpointFailures[0] ||
+      blockingRelationships.find((entry) => entry.relationshipPermissionGranted !== true) ||
+      null;
+
+    const complete = relationships.filter((entry) => entry.relationshipPermissionGranted === true);
     const handshakeFrontOnly = relationships.filter((entry) => entry.varianceClass === "HANDSHAKE_FRONTPORT_ONLY");
     const missingEndpoints = relationships.filter((entry) => entry.varianceClass.includes("ENDPOINT_UNOBSERVED"));
-    const complete = relationships.filter((entry) => entry.relationshipPermissionGranted === true);
 
-    const motionRequired = relationships.filter((entry) => entry.requiredForMotion);
-    const visibleRequired = relationships.filter((entry) => entry.requiredForVisibleSurface);
+    const motionRequired = relationships.filter((entry) => entry.requiredForMotion && entry.topLevelBlocking === true);
+    const visibleRequired = relationships.filter((entry) => entry.requiredForVisibleSurface && entry.topLevelBlocking === true);
 
     const motionGranted = motionRequired.every((entry) => entry.relationshipPermissionGranted === true);
     const visibleGranted = visibleRequired.every((entry) => entry.relationshipPermissionGranted === true);
@@ -2403,52 +2452,96 @@
       laneClass = firstNotGranted.varianceClass;
       laneReason = firstNotGranted.relationshipStatus;
       nextAction =
-        firstNotGranted.varianceClass === "HANDSHAKE_FRONTPORT_ONLY"
-          ? "ADD_OR_CONFIRM_RETURN_PORT_RECEIPT_FOR_THIS_HANDSHAKE"
-          : firstNotGranted.varianceClass.includes("ENDPOINT_UNOBSERVED")
-            ? "CONFIRM_PUBLIC_AUTHORITY_PUBLICATION_FOR_UNOBSERVED_ENDPOINT"
+        firstNotGranted.varianceClass.includes("ENDPOINT_UNOBSERVED")
+          ? "CONFIRM_PUBLIC_AUTHORITY_PUBLICATION_FOR_UNOBSERVED_ENDPOINT"
+          : firstNotGranted.varianceClass === "HANDSHAKE_FRONTPORT_ONLY"
+            ? "ADD_OR_CONFIRM_RETURN_PORT_RECEIPT_FOR_THIS_HANDSHAKE"
             : "CONFIRM_RELATIONSHIP_PERMISSION_REQUEST_AND_GRANT_SIGNALS";
     }
 
+    const pointerSurfaceNode = nodesById.POINTER_SURFACE_BISHOP || {};
+    const pointerInspectNode = nodesById.POINTER_INSPECT_PRIEST || {};
     const canvasNode = nodesById.CANVAS_RECEIVER || {};
     const routeNode = nodesById.ROUTE_CONDUCTOR || {};
     const controlsNode = nodesById.CONTROLS_QUEEN || {};
     const hexSurfaceNode = nodesById.HEX_SURFACE_GATE || {};
 
     const routeCanvasPair = relationships.find((entry) => entry.id === "ROUTE_TO_CANVAS_GOVERNED_SOURCE_HANDSHAKE") || {};
-    const controlCanvasPair = relationships.find((entry) => entry.id === "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE") || {};
+    const controlsCanvasPair = relationships.find((entry) => entry.id === "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE") || {};
     const canvasHexPair = relationships.find((entry) => entry.id === "CANVAS_TO_HEX_SURFACE_EXPRESSION_GATE") || {};
+    const hexPointerSurfacePair = relationships.find((entry) => entry.id === "HEX_SURFACE_TO_POINTER_SURFACE_BISHOP_GATE") || {};
+    const surfaceInspectChild = relationships.find((entry) => entry.id === "POINTER_SURFACE_BISHOP_TO_INSPECT_PRIEST_CHILD_ORGANIZER") || {};
+    const surfaceCanvasReturn = relationships.find((entry) => entry.id === "POINTER_SURFACE_BISHOP_TO_CANVAS_RETURN_SOCKET") || {};
+
+    const firstDark = darkNodes[0] || null;
+
+    state.runtimeDarkFiles = darkNodes.map((node) => ({
+      id: node.id,
+      role: node.role,
+      file: node.file,
+      childOf: node.childOf,
+      advisoryChild: node.advisoryChild,
+      observed: node.observed,
+      authorityPresent: node.authorityPresent,
+      scriptPresent: node.scriptPresent,
+      contract: node.contract,
+      contractRecognized: node.contractRecognized,
+      nodeStatus: node.nodeStatus,
+      darknessClass: node.darknessClass
+    }));
+    state.runtimeDarkFileCount = state.runtimeDarkFiles.length;
+    state.firstDarkRuntimeOwner = firstDark ? firstDark.id : "NONE";
+    state.firstDarkRuntimeFile = firstDark ? firstDark.file : "NONE";
+    state.firstDarkRuntimeClass = firstDark ? firstDark.darknessClass : "NONE";
+    state.firstDarkRuntimeAction = firstDark
+      ? `CONFIRM_OR_RENEW_${firstDark.id}_PUBLIC_AUTHORITY_AND_SCRIPT_LOAD`
+      : "NONE";
+
+    state.pointerSurfaceBishopObserved = String(pointerSurfaceNode.observed === true);
+    state.pointerSurfaceBishopScriptPresent = String(pointerSurfaceNode.scriptPresent === true);
+    state.pointerSurfaceBishopAuthorityPresent = String(pointerSurfaceNode.authorityPresent === true);
+    state.pointerSurfaceBishopContract = pointerSurfaceNode.contract || "UNKNOWN";
+    state.pointerSurfaceBishopRecognized = String(pointerSurfaceNode.contractRecognized === true);
+    state.pointerSurfaceBishopStatus = pointerSurfaceNode.nodeStatus || "UNKNOWN";
+
+    state.pointerInspectPriestObserved = String(pointerInspectNode.observed === true);
+    state.pointerInspectPriestScriptPresent = String(pointerInspectNode.scriptPresent === true);
+    state.pointerInspectPriestAuthorityPresent = String(pointerInspectNode.authorityPresent === true);
+    state.pointerInspectPriestContract = pointerInspectNode.contract || "UNKNOWN";
+    state.pointerInspectPriestRecognized = String(pointerInspectNode.contractRecognized === true);
+    state.pointerInspectPriestStatus = pointerInspectNode.nodeStatus || "UNKNOWN";
 
     const threeFileStrategy = {
-      strategyName: "ROUTE_CONTROLS_CANVAS_HEX_SURFACE_DELEGATORY_PERMISSION_STRATEGY_v11_4",
+      strategyName: "ROUTE_CONTROLS_CANVAS_HEX_SURFACE_POINTER_SURFACE_BISHOP_MAPPING_STRATEGY_v11_5",
       routeConductorActiveScanAuthority: true,
       controlsRemainMotionAndInputGatewayAuthority: true,
-      canvasRemainsPresentationSurfaceAndBridgeAuthority: true,
-      hexSurfaceRemainsDownstreamGateAuthority: true,
-      pointerFingerRemainsDownstreamExpressionAuthority: true,
-      canvasDoesNotOwnSourceTruth: true,
-      controlsDoNotOwnCanvasDrawing: true,
-      routeDoesNotOwnCanvasDrawing: true,
+      canvasRemainsPresentationSurfaceAndReturnReceiver: true,
+      hexSurfaceRemainsDownstreamGateBeforePointerSurface: true,
+      pointerSurfaceIsBishopGate: true,
+      pointerInspectIsChildOrganizerPriest: true,
+      inspectFileNotPrimaryChainEndpoint: true,
+      pointerSurfaceFile: POINTER_SURFACE_FILE,
+      pointerInspectFile: POINTER_INSPECT_FILE,
       routeCanvasPairPermissionGranted: routeCanvasPair.relationshipPermissionGranted === true,
-      controlsCanvasMotionPermissionGranted: controlCanvasPair.relationshipPermissionGranted === true,
+      controlsCanvasMotionPermissionGranted: controlsCanvasPair.relationshipPermissionGranted === true,
       canvasHexSurfacePermissionGranted: canvasHexPair.relationshipPermissionGranted === true,
+      hexPointerSurfacePermissionGranted: hexPointerSurfacePair.relationshipPermissionGranted === true,
+      pointerSurfaceCanvasReturnPermissionGranted: surfaceCanvasReturn.relationshipPermissionGranted === true,
+      pointerSurfaceInspectChildObserved: surfaceInspectChild.relationshipPermissionGranted === true,
       routeObserved: routeNode.observed === true,
       controlsObserved: controlsNode.observed === true,
       canvasObserved: canvasNode.observed === true,
       hexSurfaceObserved: hexSurfaceNode.observed === true,
+      pointerSurfaceObserved: pointerSurfaceNode.observed === true,
+      pointerInspectObserved: pointerInspectNode.observed === true,
+      darkRuntimeFiles: clonePlain(state.runtimeDarkFiles),
       matrixRecommendationIsAdvisoryWhenCanvasSurfaceTruthFailed: true,
       recommendedConstructAction:
-        canvasNode.observed !== true
-          ? "RENEW_CANVAS_PUBLIC_AUTHORITY_AND_DOM_SURFACE_BINDING"
-          : routeNode.observed !== true
-            ? "RENEW_ROUTE_CONDUCTOR_PUBLIC_AUTHORITY_PUBLICATION_IN_TARGET_CONTEXT"
-            : controlsNode.observed !== true
-              ? "RENEW_CONTROLS_PUBLIC_AUTHORITY_PUBLICATION_IN_TARGET_CONTEXT"
-              : hexSurfaceNode.observed !== true
-                ? "RENEW_OR_LOAD_HEX_SURFACE_PUBLIC_GATE"
-                : firstNotGranted
-                  ? nextAction
-                  : "PROCEED_TO_TARGETED_PAIR_OR_TRIAD_RENEWAL_WITH_MATRIX_AS_CONTROL_RECEIPT"
+        pointerSurfaceNode.observed !== true
+          ? "RENEW_OR_LOAD_POINTER_SURFACE_BISHOP_BEFORE_TREATING_INSPECT_AS_CHAIN_ENDPOINT"
+          : firstNotGranted
+            ? nextAction
+            : "PROCEED_WITH_POINTER_SURFACE_BISHOP_MAP_CONFIRMED_NO_VISUAL_PASS_CLAIM"
     };
 
     state.delegatoryPermissionLaneStatus = firstNotGranted
@@ -2473,7 +2566,7 @@
     state.motionPermissionGranted = motionGranted;
     state.visibleSurfacePermissionGranted = visibleGranted;
     state.pairPermissionGranted = routeCanvasPair.relationshipPermissionGranted === true;
-    state.constructPermissionGranted = relationships.every((entry) => entry.relationshipPermissionGranted === true);
+    state.constructPermissionGranted = blockingRelationships.every((entry) => entry.relationshipPermissionGranted === true);
 
     state.handshakeFrontOnlyCount = handshakeFrontOnly.length;
     state.unobservedEndpointRelationshipCount = missingEndpoints.length;
@@ -2481,6 +2574,14 @@
     state.delegatoryNodes = nodes;
     state.delegatoryRelationships = relationships;
     state.threeFileConstructStrategy = threeFileStrategy;
+
+    if (pointerSurfaceNode.observed !== true) {
+      addNote(state, `POINTER_SURFACE_BISHOP_DARK:${POINTER_SURFACE_FILE}`);
+    }
+
+    if (pointerInspectNode.observed === true && pointerSurfaceNode.observed !== true) {
+      addNote(state, "INSPECT_PRIEST_OBSERVED_WITHOUT_POINTER_SURFACE_BISHOP_PARENT");
+    }
 
     if (firstNotGranted) {
       addNote(state, `DELEGATORY_PERMISSION_LANE_PARTIAL:${firstNotGranted.id}:${firstNotGranted.varianceClass}`);
@@ -2673,7 +2774,7 @@
 
   function buildNorthVerdict(state) {
     return {
-      schema: "HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_VERDICT_SCHEMA_v11_4",
+      schema: "HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_VERDICT_SCHEMA_v11_5",
       northContract: CONTRACT,
       northReceipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
@@ -2682,6 +2783,7 @@
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
       foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
+      baselineInternalRenewalContract: BASELINE_INTERNAL_RENEWAL_CONTRACT,
       previousNorthContract: PREVIOUS_NORTH_CONTRACT,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
@@ -2696,6 +2798,9 @@
         routeCanvasPermissionGatePairAuditActive: true,
         delegatoryHandshakeMatrixActive: true,
         multiHandshakeVarianceAuditActive: true,
+        pointerSurfaceBishopMappingActive: true,
+        pointerInspectPriestDemotionActive: true,
+        inspectFileNotPrimaryChainEndpoint: true,
         postEvidenceLaneArbitrationActive: true,
         chronologyLaneSeparatedFromSurfaceTruth: true,
         delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
@@ -2704,6 +2809,19 @@
         canvasSurfaceTruthProbeExpected: true,
         receiverStillCallsNorthOnly: true,
         diagnosticRouteHtmlRenewalRequired: false
+      },
+
+      correctedChain: {
+        routeConductorFile: ROUTE_CONDUCTOR_FILE,
+        controlsFile: CONTROL_FILE,
+        canvasFile: CANVAS_FILE,
+        hexAuthorityFile: HEX_AUTHORITY_FILE,
+        hexSurfaceFile: HEX_SURFACE_FILE,
+        pointerSurfaceFile: POINTER_SURFACE_FILE,
+        pointerInspectFile: POINTER_INSPECT_FILE,
+        pointerSurfaceRole: "BISHOP_GATE",
+        pointerInspectRole: "CHILD_ORGANIZER_PRIEST",
+        inspectIsPrimaryChainEndpoint: false
       },
 
       lanes: {
@@ -2738,6 +2856,30 @@
           source: state.finalArbitrationSource,
           reason: state.finalArbitrationReason
         }
+      },
+
+      darkRuntimeFiles: clonePlain(state.runtimeDarkFiles),
+      firstDarkRuntimeFile: state.firstDarkRuntimeFile,
+      firstDarkRuntimeClass: state.firstDarkRuntimeClass,
+
+      pointerSurfaceBishop: {
+        file: POINTER_SURFACE_FILE,
+        observed: state.pointerSurfaceBishopObserved,
+        scriptPresent: state.pointerSurfaceBishopScriptPresent,
+        authorityPresent: state.pointerSurfaceBishopAuthorityPresent,
+        contract: state.pointerSurfaceBishopContract,
+        recognized: state.pointerSurfaceBishopRecognized,
+        status: state.pointerSurfaceBishopStatus
+      },
+
+      pointerInspectPriest: {
+        file: POINTER_INSPECT_FILE,
+        observed: state.pointerInspectPriestObserved,
+        scriptPresent: state.pointerInspectPriestScriptPresent,
+        authorityPresent: state.pointerInspectPriestAuthorityPresent,
+        contract: state.pointerInspectPriestContract,
+        recognized: state.pointerInspectPriestRecognized,
+        status: state.pointerInspectPriestStatus
       },
 
       chronology: clonePlain(state.chronology),
@@ -2821,6 +2963,8 @@
       NORTH_LINEAGE_INTERNAL_RENEWAL_RECEIPT: LINEAGE_INTERNAL_RENEWAL_RECEIPT,
       NORTH_FOUNDATION_INTERNAL_RENEWAL_CONTRACT: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
       NORTH_FOUNDATION_INTERNAL_RENEWAL_RECEIPT: FOUNDATION_INTERNAL_RENEWAL_RECEIPT,
+      NORTH_BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
+      NORTH_BASELINE_INTERNAL_RENEWAL_RECEIPT: BASELINE_INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_NORTH_CONTRACT,
       PREVIOUS_NORTH_RECEIPT,
 
@@ -2832,6 +2976,9 @@
       ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ACTIVE: true,
       DELEGATORY_HANDSHAKE_MATRIX_ACTIVE: true,
       MULTI_HANDSHAKE_VARIANCE_AUDIT_ACTIVE: true,
+      POINTER_SURFACE_BISHOP_MAPPING_ACTIVE: true,
+      POINTER_INSPECT_PRIEST_DEMOTION_ACTIVE: true,
+      INSPECT_FILE_NOT_PRIMARY_CHAIN_ENDPOINT: true,
       POST_EVIDENCE_LANE_ARBITRATION_ACTIVE: true,
       CHRONOLOGY_LANE_SEPARATED_FROM_SURFACE_TRUTH: true,
       DELEGATORY_MATRIX_ADVISORY_WHEN_SURFACE_TRUTH_FAILED: true,
@@ -2850,9 +2997,11 @@
       ROUTE_CONDUCTOR_FILE,
       CONTROL_FILE,
       CANVAS_FILE,
-      HEX_SURFACE_FILE,
       HEX_AUTHORITY_FILE,
-      POINTER_FINGER_FILE,
+      HEX_SURFACE_FILE,
+      POINTER_SURFACE_FILE,
+      POINTER_INSPECT_FILE,
+      POINTER_FINGER_FILE_LEGACY: POINTER_FINGER_FILE,
 
       RAIL_NORTH_FILE: FILE,
       RAIL_EAST_FILE,
@@ -2867,14 +3016,14 @@
       EXPECTED_HTML_CONTRACT,
       EXPECTED_INDEX_JS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
-      EXPECTED_ROUTE_CONDUCTOR_RENEWAL_CONTRACT,
       EXPECTED_CONTROL_CONTRACT,
       EXPECTED_CONTROL_RENEWAL_CANDIDATE,
       EXPECTED_CANVAS_CONTRACT,
       EXPECTED_CANVAS_RENEWAL_CANDIDATE,
-      EXPECTED_HEX_SURFACE_CONTRACT,
       EXPECTED_HEX_AUTHORITY_CONTRACT,
-      EXPECTED_POINTER_FINGER_CONTRACT,
+      EXPECTED_HEX_SURFACE_CONTRACT,
+      EXPECTED_POINTER_SURFACE_CONTRACT,
+      EXPECTED_POINTER_INSPECT_CONTRACT,
 
       CHRONOLOGY_SEQUENCE: clonePlain(state.chronology),
       CHRONOLOGY_SEQUENCE_JSON: clonePlain(state.chronology),
@@ -2978,6 +3127,27 @@
       VIEW_CONTROL_STATUS: state.viewControlStatus,
       VISIBLE_PLANET_ALLOWED_WITHOUT_CONTROLS: state.visiblePlanetAllowedWithoutControls,
 
+      POINTER_SURFACE_BISHOP_OBSERVED: state.pointerSurfaceBishopObserved,
+      POINTER_SURFACE_BISHOP_SCRIPT_PRESENT: state.pointerSurfaceBishopScriptPresent,
+      POINTER_SURFACE_BISHOP_AUTHORITY_PRESENT: state.pointerSurfaceBishopAuthorityPresent,
+      POINTER_SURFACE_BISHOP_CONTRACT: state.pointerSurfaceBishopContract,
+      POINTER_SURFACE_BISHOP_RECOGNIZED: state.pointerSurfaceBishopRecognized,
+      POINTER_SURFACE_BISHOP_STATUS: state.pointerSurfaceBishopStatus,
+
+      POINTER_INSPECT_PRIEST_OBSERVED: state.pointerInspectPriestObserved,
+      POINTER_INSPECT_PRIEST_SCRIPT_PRESENT: state.pointerInspectPriestScriptPresent,
+      POINTER_INSPECT_PRIEST_AUTHORITY_PRESENT: state.pointerInspectPriestAuthorityPresent,
+      POINTER_INSPECT_PRIEST_CONTRACT: state.pointerInspectPriestContract,
+      POINTER_INSPECT_PRIEST_RECOGNIZED: state.pointerInspectPriestRecognized,
+      POINTER_INSPECT_PRIEST_STATUS: state.pointerInspectPriestStatus,
+
+      RUNTIME_DARK_FILE_COUNT: state.runtimeDarkFileCount,
+      RUNTIME_DARK_FILES: clonePlain(state.runtimeDarkFiles),
+      FIRST_DARK_RUNTIME_OWNER: state.firstDarkRuntimeOwner,
+      FIRST_DARK_RUNTIME_FILE: state.firstDarkRuntimeFile,
+      FIRST_DARK_RUNTIME_CLASS: state.firstDarkRuntimeClass,
+      FIRST_DARK_RUNTIME_ACTION: state.firstDarkRuntimeAction,
+
       DELEGATORY_AUDIT_STATUS: state.delegatoryAuditStatus,
       DELEGATORY_AUDIT_COMPLETE_RELATIONSHIP_COUNT: state.delegatoryAuditCompleteRelationshipCount,
       DELEGATORY_AUDIT_TOTAL_RELATIONSHIP_COUNT: state.delegatoryAuditTotalRelationshipCount,
@@ -3045,17 +3215,12 @@
       "NORTH_CHRONOLOGY_HUB_ACTIVE",
       "NORTH_IS_HUB_ONLY",
       "NINE_STEP_CHRONOLOGY_ACTIVE",
-      "SCRIPT_PRESENT_AUTHORITY_RECOVERY_ACTIVE",
-      "F21_FAILURE_TAXONOMY_ACTIVE",
-      "ROUTE_CANVAS_PERMISSION_GATE_PAIR_AUDIT_ACTIVE",
-      "DELEGATORY_HANDSHAKE_MATRIX_ACTIVE",
-      "MULTI_HANDSHAKE_VARIANCE_AUDIT_ACTIVE",
+      "POINTER_SURFACE_BISHOP_MAPPING_ACTIVE",
+      "POINTER_INSPECT_PRIEST_DEMOTION_ACTIVE",
+      "INSPECT_FILE_NOT_PRIMARY_CHAIN_ENDPOINT",
       "POST_EVIDENCE_LANE_ARBITRATION_ACTIVE",
       "CHRONOLOGY_LANE_SEPARATED_FROM_SURFACE_TRUTH",
       "DELEGATORY_MATRIX_ADVISORY_WHEN_SURFACE_TRUTH_FAILED",
-      "INTENDED_HANDOFF_VARIANCE_INCLUDED",
-      "SINGLE_HANDSHAKE_GREEN_LIGHT_BLOCKED",
-      "CANVAS_SURFACE_TRUTH_PROBE_EXPECTED",
       "CHRONOLOGY_COMPLETION_STATUS",
       "CHRONOLOGY_EXECUTION_LANE_STATUS",
       "CANVAS_SURFACE_TRUTH_LANE_STATUS",
@@ -3067,6 +3232,21 @@
       "ZONE_OF_INFLICTION_FILE",
       "ZONE_OF_INFLICTION_CLASS",
       "ZONE_OF_INFLICTION_REASON",
+      "POINTER_SURFACE_FILE",
+      "POINTER_INSPECT_FILE",
+      "POINTER_SURFACE_BISHOP_OBSERVED",
+      "POINTER_SURFACE_BISHOP_SCRIPT_PRESENT",
+      "POINTER_SURFACE_BISHOP_AUTHORITY_PRESENT",
+      "POINTER_SURFACE_BISHOP_CONTRACT",
+      "POINTER_SURFACE_BISHOP_RECOGNIZED",
+      "POINTER_SURFACE_BISHOP_STATUS",
+      "POINTER_INSPECT_PRIEST_OBSERVED",
+      "POINTER_INSPECT_PRIEST_STATUS",
+      "RUNTIME_DARK_FILE_COUNT",
+      "FIRST_DARK_RUNTIME_OWNER",
+      "FIRST_DARK_RUNTIME_FILE",
+      "FIRST_DARK_RUNTIME_CLASS",
+      "FIRST_DARK_RUNTIME_ACTION",
       "DELEGATORY_AUDIT_STATUS",
       "DELEGATORY_AUDIT_FIRST_NOT_GRANTED_RELATIONSHIP",
       "DELEGATORY_AUDIT_FIRST_VARIANCE_CLASS",
@@ -3125,6 +3305,9 @@
       line("FINAL_ARBITRATION_SOURCE", getValue(report, "FINAL_ARBITRATION_SOURCE", "UNKNOWN")),
       line("ZONE_OF_INFLICTION_FILE", getValue(report, "ZONE_OF_INFLICTION_FILE", "UNKNOWN")),
       line("ZONE_OF_INFLICTION_CLASS", getValue(report, "ZONE_OF_INFLICTION_CLASS", "UNKNOWN")),
+      line("POINTER_SURFACE_FILE", getValue(report, "POINTER_SURFACE_FILE", POINTER_SURFACE_FILE)),
+      line("POINTER_SURFACE_BISHOP_STATUS", getValue(report, "POINTER_SURFACE_BISHOP_STATUS", "UNKNOWN")),
+      line("FIRST_DARK_RUNTIME_FILE", getValue(report, "FIRST_DARK_RUNTIME_FILE", "UNKNOWN")),
       line("DELEGATORY_AUDIT_FIRST_NOT_GRANTED_RELATIONSHIP", getValue(report, "DELEGATORY_AUDIT_FIRST_NOT_GRANTED_RELATIONSHIP", "UNKNOWN")),
       line("CANVAS_SURFACE_TRUTH_PROBE_STATUS", getValue(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "UNKNOWN")),
       line("CANVAS_PIXEL_VISIBLE", getValue(report, "CANVAS_PIXEL_VISIBLE", "UNKNOWN")),
@@ -3159,15 +3342,13 @@
     root.HEARTH.diagnosticRailNorth = api;
     root.HEARTH.diagnosticNorthChronologyHub = api;
     root.HEARTH.diagnosticNorthCanvasSurfaceTruthChronologyHub = api;
-    root.HEARTH.diagnosticNorthDelegatoryHandshakeMatrix = api;
-    root.HEARTH.diagnosticNorthPostEvidenceLaneArbitration = api;
+    root.HEARTH.diagnosticNorthPointerSurfaceBishopMappingArbitration = api;
 
     root.DEXTER_LAB.hearthDiagnosticRail = api;
     root.DEXTER_LAB.hearthDiagnosticNorth = api;
     root.DEXTER_LAB.hearthDiagnosticNorthChronologyHub = api;
     root.DEXTER_LAB.hearthDiagnosticNorthCanvasSurfaceTruthChronologyHub = api;
-    root.DEXTER_LAB.hearthDiagnosticNorthDelegatoryHandshakeMatrix = api;
-    root.DEXTER_LAB.hearthDiagnosticNorthPostEvidenceLaneArbitration = api;
+    root.DEXTER_LAB.hearthDiagnosticNorthPointerSurfaceBishopMappingArbitration = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL = api;
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL = api;
@@ -3175,8 +3356,7 @@
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH = api;
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB = api;
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB = api;
-    root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX = api;
-    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION = api;
+    root.HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION = api;
 
     root.HEARTH_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_RECEIPT = getReceipt();
@@ -3184,31 +3364,27 @@
     root.HEARTH_DIAGNOSTIC_RAIL_NORTH_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_RECEIPT = getReceipt();
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_RECEIPT = getReceipt();
-    root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_RECEIPT = getReceipt();
-    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_RECEIPT = getReceipt();
+    root.HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_RECEIPT = getReceipt();
 
     root.HEARTH_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_REPORT = clonePlain(lastReport);
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_REPORT = clonePlain(lastReport);
-    root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_REPORT = clonePlain(lastReport);
-    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_REPORT = clonePlain(lastReport);
+    root.HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_REPORT = clonePlain(lastReport);
 
     root.HEARTH_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_PARALLEL_DIAGNOSTIC_RAIL_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_VERDICT = clonePlain(lastVerdict);
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_VERDICT = clonePlain(lastVerdict);
-    root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_VERDICT = clonePlain(lastVerdict);
-    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_VERDICT = clonePlain(lastVerdict);
+    root.HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_VERDICT = clonePlain(lastVerdict);
 
     root.HEARTH_DIAGNOSTIC_RAIL_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_CHRONOLOGY_HUB_PACKET_TEXT = lastPacketText;
     root.HEARTH_DIAGNOSTIC_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_PACKET_TEXT = lastPacketText;
-    root.HEARTH_DIAGNOSTIC_NORTH_DELEGATORY_HANDSHAKE_MATRIX_PACKET_TEXT = lastPacketText;
-    root.HEARTH_DIAGNOSTIC_NORTH_POST_EVIDENCE_LANE_ARBITRATION_PACKET_TEXT = lastPacketText;
+    root.HEARTH_DIAGNOSTIC_NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_PACKET_TEXT = lastPacketText;
 
     return true;
   }
@@ -3246,7 +3422,9 @@
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
         previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-        postEvidenceLaneArbitrationActive: true,
+        pointerSurfaceBishopMappingActive: true,
+        pointerInspectPriestDemotionActive: true,
+        inspectFileNotPrimaryChainEndpoint: true,
         chronologyLaneSeparatedFromSurfaceTruth: true,
         delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
         verdict: clonePlain(lastVerdict),
@@ -3259,12 +3437,12 @@
       };
     } catch (error) {
       state.primaryCase = "INCONCLUSIVE_EVIDENCE";
-      state.calibrationStatus = "CALIBRATION_NORTH_POST_EVIDENCE_LANE_ARBITRATION_TOP_LEVEL_ERROR";
+      state.calibrationStatus = "CALIBRATION_NORTH_POINTER_SURFACE_BISHOP_MAPPING_TOP_LEVEL_ERROR";
       state.calibrationHoldReason = bounded(error && error.message ? error.message : error, 1000);
       state.diagnosticChronologyClean = "false";
       state.diagnosticRailClean = "false";
       state.calibrationPointReached = "false";
-      state.chronologyCompletionStatus = "NORTH_POST_EVIDENCE_LANE_ARBITRATION_TOP_LEVEL_ERROR";
+      state.chronologyCompletionStatus = "NORTH_POINTER_SURFACE_BISHOP_MAPPING_TOP_LEVEL_ERROR";
       state.chronologyExecutionLaneStatus = "CHRONOLOGY_EXECUTION_LANE_TOP_LEVEL_ERROR";
       state.chronologyExecutionLaneClean = "false";
       state.finalArbitrationStatus = "FINAL_ARBITRATION_TOP_LEVEL_ERROR";
@@ -3335,7 +3513,7 @@
     const state = lastState || makeState();
 
     return {
-      parentRole: "NORTH_POST_EVIDENCE_LANE_ARBITRATION_HUB",
+      parentRole: "NORTH_POINTER_SURFACE_BISHOP_MAPPING_ARBITRATION_HUB",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
@@ -3344,6 +3522,7 @@
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
       foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
+      baselineInternalRenewalContract: BASELINE_INTERNAL_RENEWAL_CONTRACT,
       previousNorthContract: PREVIOUS_NORTH_CONTRACT,
       previousNorthReceipt: PREVIOUS_NORTH_RECEIPT,
       version: VERSION,
@@ -3363,6 +3542,9 @@
       routeCanvasPermissionGatePairAuditActive: true,
       delegatoryHandshakeMatrixActive: true,
       multiHandshakeVarianceAuditActive: true,
+      pointerSurfaceBishopMappingActive: true,
+      pointerInspectPriestDemotionActive: true,
+      inspectFileNotPrimaryChainEndpoint: true,
       postEvidenceLaneArbitrationActive: true,
       chronologyLaneSeparatedFromSurfaceTruth: true,
       delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
@@ -3378,15 +3560,23 @@
       finalArbitrationStatus: state.finalArbitrationStatus,
       finalArbitrationSource: state.finalArbitrationSource,
 
-      chronologyCompletionStatus: state.chronologyCompletionStatus,
       zoneOfInflictionOwner: state.zoneOfInflictionOwner,
       zoneOfInflictionFile: state.zoneOfInflictionFile,
       zoneOfInflictionClass: state.zoneOfInflictionClass,
       zoneOfInflictionReason: state.zoneOfInflictionReason,
 
+      pointerSurfaceFile: POINTER_SURFACE_FILE,
+      pointerInspectFile: POINTER_INSPECT_FILE,
+      pointerSurfaceBishopObserved: state.pointerSurfaceBishopObserved,
+      pointerSurfaceBishopStatus: state.pointerSurfaceBishopStatus,
+      pointerInspectPriestObserved: state.pointerInspectPriestObserved,
+      pointerInspectPriestStatus: state.pointerInspectPriestStatus,
+
+      runtimeDarkFileCount: state.runtimeDarkFileCount,
+      firstDarkRuntimeFile: state.firstDarkRuntimeFile,
+      firstDarkRuntimeClass: state.firstDarkRuntimeClass,
+
       delegatoryAuditStatus: state.delegatoryAuditStatus,
-      delegatoryAuditCompleteRelationshipCount: state.delegatoryAuditCompleteRelationshipCount,
-      delegatoryAuditTotalRelationshipCount: state.delegatoryAuditTotalRelationshipCount,
       delegatoryAuditFirstNotGrantedRelationship: state.delegatoryAuditFirstNotGrantedRelationship,
       delegatoryAuditFirstVarianceClass: state.delegatoryAuditFirstVarianceClass,
       delegatoryAuditFirstRecommendedFile: state.delegatoryAuditFirstRecommendedFile,
@@ -3397,14 +3587,10 @@
       constructPermissionGranted: state.constructPermissionGranted,
 
       canvasSurfaceTruthProbeStatus: state.canvasSurfaceTruthProbeStatus,
-      canvasSurfaceTruthAvailable: state.canvasSurfaceTruthAvailable,
       canvasElementFound: state.canvasElementFound,
       canvasRectNonzero: state.canvasRectNonzero,
-      canvasComputedVisible: state.canvasComputedVisible,
-      canvasViewportIntersecting: state.canvasViewportIntersecting,
       canvasContext2dReady: state.canvasContext2dReady,
       canvasPixelVisible: state.canvasPixelVisible,
-      canvasLayerBlocked: state.canvasLayerBlocked,
 
       runDiagnosticApiAvailable: true,
       getReportApiAvailable: true,
@@ -3450,9 +3636,11 @@
       routeConductorFile: ROUTE_CONDUCTOR_FILE,
       controlFile: CONTROL_FILE,
       canvasFile: CANVAS_FILE,
-      hexSurfaceFile: HEX_SURFACE_FILE,
       hexAuthorityFile: HEX_AUTHORITY_FILE,
-      pointerFingerFile: POINTER_FINGER_FILE,
+      hexSurfaceFile: HEX_SURFACE_FILE,
+      pointerSurfaceFile: POINTER_SURFACE_FILE,
+      pointerInspectFile: POINTER_INSPECT_FILE,
+      pointerFingerFileLegacy: POINTER_FINGER_FILE,
 
       railNorthFile: FILE,
       railEastFile: RAIL_EAST_FILE,
@@ -3466,8 +3654,11 @@
 
       chronology: clonePlain((lastState || makeState()).chronology),
       chronologySteps: clonePlain(CHRONOLOGY_STEPS),
+      nodeRegistry: clonePlain(NODE_REGISTRY),
+      relationshipRegistry: clonePlain(RELATIONSHIP_REGISTRY),
       delegatoryNodes: clonePlain((lastState || makeState()).delegatoryNodes),
       delegatoryRelationships: clonePlain((lastState || makeState()).delegatoryRelationships),
+      darkRuntimeFiles: clonePlain((lastState || makeState()).runtimeDarkFiles),
       threeFileConstructStrategy: clonePlain((lastState || makeState()).threeFileConstructStrategy),
       northVerdict: clonePlain(lastVerdict || buildNorthVerdict(lastState || makeState())),
       reportObject: clonePlain(lastReport || buildReportObject(lastState || makeState())),
@@ -3480,6 +3671,8 @@
       supportsDelegatoryHandshakeMatrix: true,
       supportsMultiHandshakeVarianceAudit: true,
       supportsPostEvidenceLaneArbitration: true,
+      supportsPointerSurfaceBishopMapping: true,
+      supportsPointerInspectPriestDemotion: true,
       supportsChronologyLaneSurfaceTruthSeparation: true,
       supportsDelegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
       supportsIntendedHandoffVariance: true,
@@ -3504,6 +3697,7 @@
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     lineageInternalRenewalContract: LINEAGE_INTERNAL_RENEWAL_CONTRACT,
     foundationInternalRenewalContract: FOUNDATION_INTERNAL_RENEWAL_CONTRACT,
+    baselineInternalRenewalContract: BASELINE_INTERNAL_RENEWAL_CONTRACT,
     previousNorthContract: PREVIOUS_NORTH_CONTRACT,
     previousNorthReceipt: PREVIOUS_NORTH_RECEIPT,
     version: VERSION,
@@ -3524,6 +3718,9 @@
     routeCanvasPermissionGatePairAuditActive: true,
     delegatoryHandshakeMatrixActive: true,
     multiHandshakeVarianceAuditActive: true,
+    pointerSurfaceBishopMappingActive: true,
+    pointerInspectPriestDemotionActive: true,
+    inspectFileNotPrimaryChainEndpoint: true,
     postEvidenceLaneArbitrationActive: true,
     chronologyLaneSeparatedFromSurfaceTruth: true,
     delegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
@@ -3532,6 +3729,17 @@
     canvasSurfaceTruthProbeExpected: true,
     diagnosticRouteHtmlRenewalRequired: false,
     receiverStillCallsNorthOnly: true,
+
+    htmlFile: HTML_FILE,
+    indexFile: INDEX_FILE,
+    routeConductorFile: ROUTE_CONDUCTOR_FILE,
+    controlFile: CONTROL_FILE,
+    canvasFile: CANVAS_FILE,
+    hexAuthorityFile: HEX_AUTHORITY_FILE,
+    hexSurfaceFile: HEX_SURFACE_FILE,
+    pointerSurfaceFile: POINTER_SURFACE_FILE,
+    pointerInspectFile: POINTER_INSPECT_FILE,
+    pointerFingerFileLegacy: POINTER_FINGER_FILE,
 
     railNorthFile: FILE,
     railEastFile: RAIL_EAST_FILE,
@@ -3549,14 +3757,14 @@
     expectedHtmlContract: EXPECTED_HTML_CONTRACT,
     expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
     expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
-    expectedRouteConductorRenewalContract: EXPECTED_ROUTE_CONDUCTOR_RENEWAL_CONTRACT,
     expectedControlContract: EXPECTED_CONTROL_CONTRACT,
     expectedControlRenewalCandidate: EXPECTED_CONTROL_RENEWAL_CANDIDATE,
     expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
     expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
-    expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
     expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
-    expectedPointerFingerContract: EXPECTED_POINTER_FINGER_CONTRACT,
+    expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
+    expectedPointerSurfaceContract: EXPECTED_POINTER_SURFACE_CONTRACT,
+    expectedPointerInspectContract: EXPECTED_POINTER_INSPECT_CONTRACT,
 
     runDiagnostic,
     runParallelDiagnostic: runDiagnostic,
@@ -3581,6 +3789,8 @@
     supportsDelegatoryHandshakeMatrix: true,
     supportsMultiHandshakeVarianceAudit: true,
     supportsPostEvidenceLaneArbitration: true,
+    supportsPointerSurfaceBishopMapping: true,
+    supportsPointerInspectPriestDemotion: true,
     supportsChronologyLaneSurfaceTruthSeparation: true,
     supportsDelegatoryMatrixAdvisoryWhenSurfaceTruthFailed: true,
     supportsIntendedHandoffVariance: true,

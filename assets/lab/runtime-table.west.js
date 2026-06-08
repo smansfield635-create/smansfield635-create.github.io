@@ -1,182 +1,136 @@
 // /assets/lab/runtime-table.west.js
 // LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_TNT_v4_9
 // Internal controlled renewal:
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_TNT_v5_2
+// LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_TNT_v5_3
 // Full-file replacement.
-// Cardinal West / read-only Chapel metric binding / King-Queen-Chapel hierarchy calibration.
+// Cardinal West / North-standard anchored derivative release / construction readiness adjudicator.
 //
 // Purpose:
 // - Preserve public LabWest v4_9 contract and aliases.
-// - Renew internal LabWest from pointer-surface-only chain mapping into dual-Chapel metric binding.
-// - Bind semantic hierarchy without renaming physical production files:
-//   KING_ROUTE_CONDUCTOR
-//   QUEEN_CONTROLS
-//   CHAPEL_1_ASSETS_CANVAS_HUB
-//   CHAPEL_1_ASSETS_PRIEST_EXPECTED
-//   CHAPEL_2_POINTER_SURFACE_BISHOP
-//   CHAPEL_2_INSPECT_PRIEST
-// - Treat /assets/hearth/hearth.canvas.js as Chapel 1 / lead Bishop / Canvas asset hub.
-// - Treat /assets/hearth/hearth.canvas.finger.surface.js as Chapel 2 / Pointer Surface Bishop.
-// - Treat /assets/hearth/hearth.canvas.finger.inspect.js as Chapel 2 priest, not Chapel 1 priest.
-// - Measure the existing Chapel 2 finger distribution set.
-// - Expose Judge naming for diagnostic rails without mutating them.
-// - Enforce strict file/contract/role family matching before relationship closure.
-// - Reject borrowed contract text as endpoint proof.
-// - Keep Chapel 1 priest expected but non-blocking until production split requires it.
-// - Never draw Canvas.
-// - Never call production lifecycle methods.
-// - Never direct-load production files.
-// - Never claim F21, ready text, completion latch, final visual pass, generated image, GraphicBox, or WebGL.
+// - Renew internal LabWest under the North standard as the anchoring foundational construct.
+// - Consume the served LabNorth standard through compatibility bridge:
+//   1. current served North conductor / train-station contract if live
+//   2. newer North grammar-anchor schema if live
+// - Consume restored North Diagnostic Rail as a required Judge input.
+// - Consume Surface Truth as diagnostic evidence only.
+// - Recompute construction readiness after North rail restoration.
+// - Either publish a lawful Canvas release packet or return a precise held coordinate.
+// - Never repair Canvas directly.
+//
+// Does not:
+// - mutate Hearth production files
+// - draw Canvas
+// - call production lifecycle methods
+// - direct-load production files
+// - replace LabNorth grammar
+// - replace North Diagnostic Rail
+// - replace Surface Truth Probe
+// - claim F13/F21/ready/final visual pass/generated image/GraphicBox/WebGL
+//
 
-(() => {
+(function () {
   "use strict";
 
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
+  var ROOT = typeof window !== "undefined" ? window : globalThis;
+  var DOC = typeof document !== "undefined" ? document : null;
 
-  const CONTRACT =
+  var CONTRACT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_TNT_v4_9";
-  const RECEIPT =
+  var RECEIPT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT_v4_9";
 
-  const INTERNAL_RENEWAL_CONTRACT =
+  var INTERNAL_RENEWAL_CONTRACT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_TNT_v5_3";
+  var INTERNAL_RENEWAL_RECEIPT =
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_RECEIPT_v5_3";
+
+  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_TNT_v5_2";
-  const INTERNAL_RENEWAL_RECEIPT =
+  var PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RECEIPT_v5_2";
 
-  const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP_TNT_v5_1";
-  const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP_RECEIPT_v5_1";
-
-  const PREVIOUS_PUBLIC_CONTRACT =
+  var PREVIOUS_PUBLIC_CONTRACT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_TNT_v4_8";
-  const PREVIOUS_PUBLIC_RECEIPT =
+  var PREVIOUS_PUBLIC_RECEIPT =
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_GATE_DOWNSTREAM_HIERARCHY_BISHOP_QUEEN_PRIEST_ADOPTION_RECEIPT_v4_8";
 
-  const VERSION =
-    "2026-06-08.lab-runtime-table-west-canvas-chapel-dual-chapel-metric-binding-v5-2";
+  var VERSION =
+    "2026-06-08.lab-runtime-table-west-north-standard-derivative-release-v5-3";
 
-  const FILE = "/assets/lab/runtime-table.west.js";
-  const ROUTE = "/showroom/globe/hearth/";
-  const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+  var FILE = "/assets/lab/runtime-table.west.js";
+  var ROUTE = "/showroom/globe/hearth/";
+  var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-  const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const EAST_FILE = "/assets/lab/runtime-table.east.js";
-  const SOUTH_FILE = "/assets/lab/runtime-table.south.js";
-  const WEST_FILE = FILE;
+  var LAB_NORTH_FILE = "/assets/lab/runtime-table.js";
+  var LAB_WEST_FILE = FILE;
 
-  const KING_FILE = "/showroom/globe/hearth/hearth.js";
-  const INDEX_FILE = "/showroom/globe/hearth/index.js";
-  const QUEEN_FILE = "/assets/hearth/hearth.controls.js";
+  var KING_FILE = "/showroom/globe/hearth/hearth.js";
+  var QUEEN_FILE = "/assets/hearth/hearth.controls.js";
+  var CHAPEL_1_HUB_FILE = "/assets/hearth/hearth.canvas.js";
+  var CHAPEL_1_PRIEST_FILE = "/assets/hearth/hearth.canvas.chapel.inspect.js";
+  var HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
+  var CHAPEL_2_BISHOP_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
+  var CHAPEL_2_PRIEST_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
 
-  const CHAPEL_1_HUB_FILE = "/assets/hearth/hearth.canvas.js";
-  const CHAPEL_1_PRIEST_PRIMARY_FILE = "/assets/hearth/hearth.canvas.chapel.inspect.js";
-  const CHAPEL_1_PRIEST_ALTERNATE_FILES = Object.freeze([
-    "/assets/hearth/hearth.canvas.hub.inspect.js",
-    "/assets/hearth/hearth.canvas.asset.inspect.js"
-  ]);
+  var NORTH_RAIL_FILE = "/assets/hearth/hearth.diagnostic.rail.js";
+  var EAST_RAIL_FILE = "/assets/hearth/hearth.diagnostic.east.js";
+  var WEST_RAIL_FILE = "/assets/hearth/hearth.diagnostic.west.js";
+  var SOUTH_RAIL_FILE = "/assets/hearth/hearth.diagnostic.south.js";
+  var SURFACE_TRUTH_FILE =
+    "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
 
-  const CHAPEL_2_BISHOP_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
-  const CHAPEL_2_PRIEST_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
+  var ACTIVE_STAGE_ID =
+    "WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_AFTER_NORTH_RAIL_RESTORATION";
+  var ACTIVE_CARDINAL = "WEST";
+  var ACTIVE_FIBONACCI = "F13W";
+  var ACTIVE_NEWS_GATE = "WEST";
+  var ACTIVE_CYCLE_NUMBER = 2;
+  var ACTIVE_CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
 
-  const HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
-  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-
-  const CHAPEL_2_FINGER_FILES = Object.freeze({
-    CHAPEL_2_ATMOSPHERE_FINGER: "/assets/hearth/hearth.canvas.finger.atmosphere.js",
-    CHAPEL_2_BOUNDARY_FINGER: "/assets/hearth/hearth.canvas.finger.boundary.js",
-    CHAPEL_2_COMPOSITE_FINGER: "/assets/hearth/hearth.canvas.finger.composite.js",
-    CHAPEL_2_ELEVATION_FINGER: "/assets/hearth/hearth.canvas.finger.elevation.js",
-    CHAPEL_2_HYDROLOGY_FINGER: "/assets/hearth/hearth.canvas.finger.hydrology.js",
-    CHAPEL_2_LANDFORM_FINGER: "/assets/hearth/hearth.canvas.finger.landform.js",
-    CHAPEL_2_LIGHT_FINGER: "/assets/hearth/hearth.canvas.finger.light.js",
-    CHAPEL_2_LIGHTING_FINGER: "/assets/hearth/hearth.canvas.finger.lighting.js",
-    CHAPEL_2_MASS_FINGER: "/assets/hearth/hearth.canvas.finger.mass.js",
-    CHAPEL_2_MATERIAL_FINGER: "/assets/hearth/hearth.canvas.finger.material.js",
-    CHAPEL_2_SURFACE_BISHOP: CHAPEL_2_BISHOP_FILE,
-    CHAPEL_2_INSPECT_PRIEST: CHAPEL_2_PRIEST_FILE
-  });
-
-  const JUDGE_FILES = Object.freeze({
-    JUDGE_NORTH: "/assets/hearth/hearth.diagnostic.rail.js",
-    JUDGE_EAST: "/assets/hearth/hearth.diagnostic.east.js",
-    JUDGE_WEST: "/assets/hearth/hearth.diagnostic.west.js",
-    JUDGE_SOUTH: "/assets/hearth/hearth.diagnostic.south.js",
-    JUDGE_SOUTH_PROBE: "/assets/hearth/hearth.diagnostic.south.probe.js"
-  });
-
-  const ACTIVE_STAGE_ID = "C2_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_AUDIT";
-  const ACTIVE_GEAR = "GEAR_C2_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_AUDIT";
-  const ACTIVE_CYCLE_NUMBER = 2;
-  const ACTIVE_CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
-  const ACTIVE_CARDINAL = "WEST";
-  const ACTIVE_FIBONACCI = "F13W";
-  const ACTIVE_NEWS_GATE = "WEST";
-
-  const OUTER_CHURCH_LOOP = Object.freeze([
-    "KING_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS",
-    "QUEEN_CONTROLS_TO_CHAPEL_1_ASSETS_CANVAS_HUB",
-    "CHAPEL_1_ASSETS_CANVAS_HUB_TO_HEX_SURFACE_GATE",
-    "HEX_SURFACE_GATE_TO_CHAPEL_2_POINTER_SURFACE_BISHOP",
-    "CHAPEL_2_POINTER_SURFACE_BISHOP_TO_CHAPEL_1_ASSETS_CANVAS_HUB_RETURN"
-  ]);
-
-  const CHAPEL_1_EXPECTED_LOOP = Object.freeze([
-    "CHAPEL_1_ASSETS_CANVAS_HUB_TO_CHAPEL_1_ASSETS_PRIEST",
-    "CHAPEL_1_ASSETS_PRIEST_TO_CHAPEL_1_ASSETS_CANVAS_HUB_RETURN"
-  ]);
-
-  const CHAPEL_2_CURRENT_LOOP = Object.freeze([
-    "CHAPEL_2_POINTER_SURFACE_BISHOP_TO_CHAPEL_2_FINGER_SET",
-    "CHAPEL_2_FINGER_SET_TO_CHAPEL_2_INSPECT_PRIEST",
-    "CHAPEL_2_INSPECT_PRIEST_TO_CHAPEL_2_POINTER_SURFACE_BISHOP_RETURN"
-  ]);
-
-  const DIAGNOSTIC_JUDGE_LOOP = Object.freeze([
-    "JUDGE_NORTH",
-    "JUDGE_EAST",
-    "JUDGE_SOUTH",
-    "JUDGE_WEST",
-    "CANVAS_COORDINATE_READ"
-  ]);
-
-  const WEST_DECISION = Object.freeze({
+  var WEST_DECISION = {
     HOLD: "HOLD",
-    HARD_BLOCK: "HARD_BLOCK",
     RELEASE_TO_CANVAS_RETURN_RECEIPT: "RELEASE_TO_CANVAS_RETURN_RECEIPT"
-  });
+  };
 
-  const METRIC_STATUS = Object.freeze({
-    STRICT_RUNTIME_ENDPOINT_CONFIRMED: "STRICT_RUNTIME_ENDPOINT_CONFIRMED",
-    STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING: "STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING",
-    CONTRACT_FAMILY_MISMATCH: "CONTRACT_FAMILY_MISMATCH",
-    SCRIPT_PRESENT_AUTHORITY_NOT_CONFIRMED: "SCRIPT_PRESENT_AUTHORITY_NOT_CONFIRMED",
-    AUTHORITY_PRESENT_CONTRACT_NOT_PRESENT: "AUTHORITY_PRESENT_CONTRACT_NOT_PRESENT",
-    AUTHORITY_PRESENT_CONTRACT_NOT_RECOGNIZED: "AUTHORITY_PRESENT_CONTRACT_NOT_RECOGNIZED",
-    FILE_NOT_OBSERVED: "FILE_NOT_OBSERVED",
-    EXPECTED_NOT_YET_BUILT_NON_BLOCKING: "EXPECTED_NOT_YET_BUILT_NON_BLOCKING",
-    DISTRIBUTION_FILE_KNOWN_NOT_RUNTIME_OBSERVED: "DISTRIBUTION_FILE_KNOWN_NOT_RUNTIME_OBSERVED",
-    ADVISORY_CHILD_PRESENT_NON_BLOCKING: "ADVISORY_CHILD_PRESENT_NON_BLOCKING",
-    BORROWED_CONTRACT_TEXT_REJECTED: "BORROWED_CONTRACT_TEXT_REJECTED"
-  });
-
-  const WEST_GAP_CLASS = Object.freeze({
+  var WEST_GAP_CLASS = {
     NONE: "NONE",
+    NORTH_STANDARD_MISSING: "NORTH_STANDARD_MISSING",
+    NORTH_RAIL_MISSING: "NORTH_DIAGNOSTIC_RAIL_MISSING",
+    NORTH_RAIL_VERDICT_UNAVAILABLE: "NORTH_RAIL_VERDICT_UNAVAILABLE",
+    LAB_NORTH_COMPATIBILITY_BRIDGE_ACTIVE: "LAB_NORTH_COMPATIBILITY_BRIDGE_ACTIVE",
     WAITING_KING: "WAITING_KING_ROUTE_CONDUCTOR",
     WAITING_QUEEN: "WAITING_QUEEN_CONTROLS",
     WAITING_CHAPEL_1: "WAITING_CHAPEL_1_ASSETS_CANVAS_HUB",
     WAITING_HEX_SURFACE: "WAITING_HEX_SURFACE_GATE",
     WAITING_CHAPEL_2: "WAITING_CHAPEL_2_POINTER_SURFACE_BISHOP",
-    WAITING_CHAPEL_2_RETURN: "WAITING_CHAPEL_2_POINTER_SURFACE_BISHOP_RETURN",
-    CHAPEL_1_PRIEST_EXPECTED: "CHAPEL_1_ASSETS_PRIEST_EXPECTED_NOT_BUILT_NON_BLOCKING",
+    SURFACE_TRUTH_FAILURE: "SURFACE_TRUTH_FAILURE",
+    SURFACE_TRUTH_UNMEASURED: "SURFACE_TRUTH_UNMEASURED",
     CONTRACT_FAMILY_MISMATCH: "CONTRACT_FAMILY_MISMATCH",
     BORROWED_CONTRACT_TEXT: "BORROWED_CONTRACT_TEXT_REJECTED",
     RELATIONSHIP_OPEN: "RELATIONSHIP_OPEN",
+    DIAGNOSTIC_MALPRACTICE: "DIAGNOSTIC_MALPRACTICE_GUARD_HELD",
     STRUCTURAL_BLOCK: "STRUCTURAL_BLOCK"
-  });
+  };
 
-  const NO_CLAIMS = Object.freeze({
+  var METRIC_STATUS = {
+    STRICT_RUNTIME_ENDPOINT_CONFIRMED: "STRICT_RUNTIME_ENDPOINT_CONFIRMED",
+    STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING:
+      "STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING",
+    SCRIPT_PRESENT_AUTHORITY_NOT_CONFIRMED:
+      "SCRIPT_PRESENT_AUTHORITY_NOT_CONFIRMED",
+    AUTHORITY_PRESENT_CONTRACT_NOT_PRESENT:
+      "AUTHORITY_PRESENT_CONTRACT_NOT_PRESENT",
+    AUTHORITY_PRESENT_CONTRACT_NOT_RECOGNIZED:
+      "AUTHORITY_PRESENT_CONTRACT_NOT_RECOGNIZED",
+    CONTRACT_FAMILY_MISMATCH: "CONTRACT_FAMILY_MISMATCH",
+    FILE_NOT_OBSERVED: "FILE_NOT_OBSERVED",
+    OPTIONAL_NOT_OBSERVED: "OPTIONAL_NOT_OBSERVED",
+    EXPECTED_NOT_YET_BUILT_NON_BLOCKING:
+      "EXPECTED_NOT_YET_BUILT_NON_BLOCKING",
+    BORROWED_CONTRACT_TEXT_REJECTED: "BORROWED_CONTRACT_TEXT_REJECTED"
+  };
+
+  var NO_CLAIMS = {
     f13Claimed: false,
     f13EligibleForCanvas: false,
     f13ClaimedByWest: false,
@@ -196,187 +150,65 @@
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webgl: false
-  });
+    webgl: false,
+    productionMutationAuthorized: false,
+    canvasMutationAuthorized: false,
+    canvasDrawingAuthorized: false,
+    canvasRepairAuthorized: false,
+    canvasBuildAuthorityClaimed: false,
+    routeRepairAuthorized: false,
+    controlsRepairAuthorized: false,
+    runtimeRestartAuthorized: false
+  };
 
-  const ACCEPTED_KING_CONTRACTS = Object.freeze([
-    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_ASSET_TRANSACTION_RESET_TNT_v10_8",
-    "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN_TNT_v10_7",
-    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5",
-    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4",
-    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3",
-    "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
-    "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
-    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9"
-  ]);
+  var LAB_NORTH_ALIASES = [
+    "LAB_RUNTIME_TABLE",
+    "LAB_RUNTIME_TABLE_NORTH",
+    "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD",
+    "DEXTER_LAB.runtimeTable",
+    "DEXTER_LAB.runtimeTableNorth",
+    "DEXTER_LAB.northRuntimeTable",
+    "HEARTH.labRuntimeTable",
+    "HEARTH.labRuntimeTableNorth",
+    "HEARTH.LAB_RUNTIME_TABLE_NORTH"
+  ];
 
-  const ACCEPTED_QUEEN_CONTRACTS = Object.freeze([
-    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1",
-    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5",
-    "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT_TNT_v4_2",
-    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1",
-    "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2"
-  ]);
+  var NORTH_RAIL_ALIASES = [
+    "JUDGE_NORTH",
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH",
+    "HEARTH_DIAGNOSTIC_RAIL",
+    "HEARTH.diagnosticRail",
+    "HEARTH.diagnosticNorth",
+    "HEARTH.diagnosticNorthRail",
+    "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
+    "DEXTER_LAB.hearthDiagnosticRail",
+    "DEXTER_LAB.hearthDiagnosticNorth",
+    "DEXTER_LAB.hearthDiagnosticNorthRail"
+  ];
 
-  const ACCEPTED_CHAPEL_1_HUB_CONTRACTS = Object.freeze([
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3",
-    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_TNT_v12_4_1",
-    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4",
-    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4",
-    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION_TNT_v12_4",
-    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2",
-    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1",
-    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
-    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
-    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_2",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
-    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
-  ]);
+  var SURFACE_TRUTH_ALIASES = [
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+    "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
+    "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
+    "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+    "HEARTH.canvasSurfaceTruthProbe",
+    "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
+    "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+    "DEXTER_LAB.canvasSurfaceTruthProbe",
+    "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
+  ];
 
-  const ACCEPTED_HEX_SURFACE_CONTRACTS = Object.freeze([
-    "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE_TNT_v5",
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_2",
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_1",
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4",
-    "HEARTH_HEX_SURFACE_RENDERER_TNT_v3",
-    "HEARTH_HEX_SURFACE_RENDERER_TNT_v2",
-    "HEARTH_HEX_SURFACE_RENDERER_TNT_v1"
-  ]);
-
-  const ACCEPTED_HEX_AUTHORITY_CONTRACTS = Object.freeze([
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1"
-  ]);
-
-  const ACCEPTED_CHAPEL_2_BISHOP_CONTRACTS = Object.freeze([
-    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_GATE_TNT_v5",
-    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4",
-    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3",
-    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2",
-    "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1"
-  ]);
-
-  const ACCEPTED_CHAPEL_2_PRIEST_CONTRACTS = Object.freeze([
-    "HEARTH_CANVAS_FINGER_INSPECT",
-    "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1",
-    "HEARTH_CANVAS_FINGER_INSPECT_CHAPEL_2_CHILD_ORGANIZER_TNT_v1"
-  ]);
-
-  const ACCEPTED_CHAPEL_1_PRIEST_CONTRACTS = Object.freeze([
-    "HEARTH_CANVAS_CHAPEL_INSPECT_ASSETS_HUB_PRIEST_TNT_v1",
-    "HEARTH_CANVAS_HUB_INSPECT_ASSETS_CHAPEL_PRIEST_TNT_v1",
-    "HEARTH_CANVAS_ASSET_INSPECT_CHAPEL_1_PRIEST_TNT_v1"
-  ]);
-
-  const ACCEPTED_CHAPEL_2_FINGER_CONTRACTS = Object.freeze([
-    "HEARTH_CANVAS_FINGER_ATMOSPHERE",
-    "HEARTH_CANVAS_FINGER_BOUNDARY",
-    "HEARTH_CANVAS_FINGER_COMPOSITE",
-    "HEARTH_CANVAS_FINGER_ELEVATION",
-    "HEARTH_CANVAS_FINGER_HYDROLOGY",
-    "HEARTH_CANVAS_FINGER_LANDFORM",
-    "HEARTH_CANVAS_FINGER_LIGHT",
-    "HEARTH_CANVAS_FINGER_LIGHTING",
-    "HEARTH_CANVAS_FINGER_MASS",
-    "HEARTH_CANVAS_FINGER_MATERIAL"
-  ]);
-
-  const READ_RECEIPT_METHODS = Object.freeze([
-    "getReceiptLight",
-    "getReceipt",
-    "getReport",
-    "getStatus",
-    "getState",
-    "getSummary",
-    "getControlReceipt",
-    "getControlsReceipt",
-    "getControlHandshakeReceipt",
-    "getCanvasStationSummary",
-    "getCanvasStationReceiptLight",
-    "getCanvasStationReceipt",
-    "getExpressionHubSummary",
-    "getExpressionHubReceipt",
-    "getVisiblePlanetReceipt",
-    "getVisibleGlobeReceipt",
-    "getHexSurfaceReceipt",
-    "getHexSurfaceSummary",
-    "getHexReceipt",
-    "getPointerSurfaceReceipt",
-    "getPointerSurfaceSummary",
-    "getPointerBishopReceipt",
-    "getPointerBishopSummary",
-    "getPointerFingerReceipt",
-    "getPointerFingerSummary",
-    "getFingerSurfaceReceipt",
-    "getFingerSurfaceSummary",
-    "getFingerInspectReceipt",
-    "getFingerInspectSummary",
-    "getChapelReceipt",
-    "getChapelSummary",
-    "getChapelRegistry",
-    "getCanvasReturnReceipt",
-    "getCanvasReturnPacket",
-    "getReturnReceipt",
-    "getReturnPacket",
-    "getCycleClosureReceipt",
-    "getCycleClosurePacket",
-    "getBishopChord",
-    "getHierarchySurface",
-    "getHierarchyRegistry"
-  ]);
-
-  const MUTATING_OR_LIFECYCLE_METHODS = Object.freeze([
-    "boot",
-    "start",
-    "init",
-    "mount",
-    "render",
-    "run",
-    "draw",
-    "drawFrame",
-    "drawVisibleExpression",
-    "drawInteractiveFrame",
-    "drawPairFrame",
-    "receiveControlPacket",
-    "receiveViewDelta",
-    "receiveViewState",
-    "receiveRouteConductorReleasePacket",
-    "receiveRouteConductorCanvasGovernedHandoffPacket",
-    "receiveHexSurfacePacket",
-    "receivePointerSurfacePacket",
-    "receivePointerFingerPacket",
-    "receiveFingerInspectPacket",
-    "receiveCanvasReturnPacket",
-    "consumeControlPacket",
-    "consumeViewDelta",
-    "consumeViewState",
-    "consumeRouteConductorReleasePacket",
-    "consumeRouteConductorCanvasGovernedHandoffPacket",
-    "consumeHexSurfacePacket",
-    "consumePointerSurfacePacket",
-    "consumePointerFingerPacket",
-    "consumeFingerInspectPacket",
-    "consumeCanvasReturnPacket",
-    "applyViewState",
-    "applyViewDelta",
-    "setView",
-    "updateView"
-  ]);
-
-  const KING_ALIASES = Object.freeze([
+  var KING_ALIASES = [
     "KING_ROUTE_CONDUCTOR",
     "HEARTH_ROUTE_CONDUCTOR",
-    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
     "HEARTH.routeConductor",
     "HEARTH.kingRouteConductor",
     "HEARTH.routeAuthority",
     "DEXTER_LAB.hearthRouteConductor",
     "DEXTER_LAB.kingRouteConductor"
-  ]);
+  ];
 
-  const QUEEN_ALIASES = Object.freeze([
+  var QUEEN_ALIASES = [
     "QUEEN_CONTROLS",
     "HEARTH_CONTROLS",
     "HEARTH_CONTROLS_QUEEN",
@@ -388,35 +220,31 @@
     "HEARTH.planetaryControls",
     "DEXTER_LAB.hearthControls",
     "DEXTER_LAB.queenControls"
-  ]);
+  ];
 
-  const CHAPEL_1_HUB_ALIASES = Object.freeze([
+  var CHAPEL_1_HUB_ALIASES = [
     "CHAPEL_1_ASSETS_CANVAS_HUB",
     "CHAPEL_1_CANVAS_HUB",
     "CHAPEL_1_LEAD_BISHOP",
-    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT",
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
     "HEARTH_CANVAS_HUB",
     "HEARTH_CANVAS",
     "HEARTH_CANVAS_PARENT",
     "HEARTH_CANVAS_AUTHORITY",
-    "HEARTH_CANVAS_LOCAL_STATION",
-    "HEARTH_CANVAS_EXPRESSION_HUB",
     "HEARTH.canvasHub",
     "HEARTH.canvas",
     "HEARTH.chapel1CanvasHub",
+    "HEARTH.chapel1AssetsCanvasHub",
     "HEARTH.chapel1LeadBishop",
     "HEARTH.canvasParent",
     "HEARTH.canvasAuthority",
     "DEXTER_LAB.hearthCanvasHub",
     "DEXTER_LAB.hearthCanvas",
     "DEXTER_LAB.chapel1CanvasHub"
-  ]);
+  ];
 
-  const CHAPEL_1_PRIEST_ALIASES = Object.freeze([
+  var CHAPEL_1_PRIEST_ALIASES = [
     "CHAPEL_1_ASSETS_PRIEST",
     "CHAPEL_1_CANVAS_HUB_PRIEST",
-    "CHAPEL_1_ASSETS_INSPECT_PRIEST",
     "HEARTH_CANVAS_CHAPEL_INSPECT",
     "HEARTH_CANVAS_HUB_INSPECT",
     "HEARTH_CANVAS_ASSET_INSPECT",
@@ -425,18 +253,9 @@
     "HEARTH.canvasChapelInspect",
     "DEXTER_LAB.chapel1AssetsPriest",
     "DEXTER_LAB.hearthCanvasChapelInspect"
-  ]);
+  ];
 
-  const HEX_AUTHORITY_ALIASES = Object.freeze([
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
-    "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH.hexFourPairPixelHandshakeAuthority",
-    "HEARTH.hexFourPairAuthority",
-    "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority"
-  ]);
-
-  const HEX_SURFACE_ALIASES = Object.freeze([
+  var HEX_SURFACE_ALIASES = [
     "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE",
     "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
     "HEARTH_HEX_SURFACE_RENDERER",
@@ -445,11 +264,12 @@
     "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
     "HEARTH.hexSurfaceRenderer",
     "HEARTH.hexSurface",
+    "HEARTH.hexSurfaceGate",
     "DEXTER_LAB.hearthHexSurfacePairPointerFingerGate",
     "DEXTER_LAB.hearthHexSurface"
-  ]);
+  ];
 
-  const CHAPEL_2_BISHOP_ALIASES = Object.freeze([
+  var CHAPEL_2_BISHOP_ALIASES = [
     "CHAPEL_2_POINTER_SURFACE_BISHOP",
     "CHAPEL_2_SURFACE_BISHOP",
     "HEARTH_CANVAS_FINGER_SURFACE",
@@ -466,9 +286,9 @@
     "HEARTH.pointerSurfaceBishop",
     "DEXTER_LAB.hearthCanvasFingerSurface",
     "DEXTER_LAB.chapel2PointerSurfaceBishop"
-  ]);
+  ];
 
-  const CHAPEL_2_PRIEST_ALIASES = Object.freeze([
+  var CHAPEL_2_PRIEST_ALIASES = [
     "CHAPEL_2_INSPECT_PRIEST",
     "CHAPEL_2_POINTER_SURFACE_INSPECT_PRIEST",
     "HEARTH_CANVAS_FINGER_INSPECT",
@@ -481,44 +301,30 @@
     "HEARTH.pointerInspectPriest",
     "DEXTER_LAB.hearthCanvasFingerInspect",
     "DEXTER_LAB.chapel2InspectPriest"
-  ]);
+  ];
 
-  const JUDGE_ALIASES = Object.freeze({
-    JUDGE_NORTH: [
-      "JUDGE_NORTH",
-      "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-      "HEARTH_DIAGNOSTIC_RAIL",
-      "HEARTH.diagnosticRail",
-      "HEARTH.diagnosticNorth",
-      "DEXTER_LAB.hearthDiagnosticRail"
-    ],
-    JUDGE_EAST: [
-      "JUDGE_EAST",
-      "HEARTH_DIAGNOSTIC_RAIL_EAST",
-      "HEARTH.diagnosticEast",
-      "DEXTER_LAB.hearthDiagnosticEast"
-    ],
-    JUDGE_WEST: [
-      "JUDGE_WEST",
-      "HEARTH_DIAGNOSTIC_RAIL_WEST",
-      "HEARTH.diagnosticWest",
-      "DEXTER_LAB.hearthDiagnosticWest"
-    ],
-    JUDGE_SOUTH: [
-      "JUDGE_SOUTH",
-      "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-      "HEARTH.diagnosticSouth",
-      "DEXTER_LAB.hearthDiagnosticSouth"
-    ],
-    JUDGE_SOUTH_PROBE: [
-      "JUDGE_SOUTH_PROBE",
-      "HEARTH_DIAGNOSTIC_SOUTH_PROBE",
-      "HEARTH.diagnosticSouthProbe",
-      "DEXTER_LAB.hearthDiagnosticSouthProbe"
-    ]
-  });
+  var EAST_RAIL_ALIASES = [
+    "JUDGE_EAST",
+    "HEARTH_DIAGNOSTIC_RAIL_EAST",
+    "HEARTH.diagnosticEast",
+    "DEXTER_LAB.hearthDiagnosticEast"
+  ];
 
-  const WEST_ALIAS_PATHS = Object.freeze([
+  var WEST_RAIL_ALIASES = [
+    "JUDGE_WEST",
+    "HEARTH_DIAGNOSTIC_RAIL_WEST",
+    "HEARTH.diagnosticWest",
+    "DEXTER_LAB.hearthDiagnosticWest"
+  ];
+
+  var SOUTH_RAIL_ALIASES = [
+    "JUDGE_SOUTH",
+    "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+    "HEARTH.diagnosticSouth",
+    "DEXTER_LAB.hearthDiagnosticSouth"
+  ];
+
+  var WEST_ALIAS_PATHS = [
     "LAB_RUNTIME_TABLE_WEST",
     "RUNTIME_TABLE_WEST",
     "LAB_CARDINAL_RUNTIME_TABLE_WEST",
@@ -532,6 +338,8 @@
     "HEARTH_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP",
     "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING",
     "HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING",
+    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+    "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
     "HEARTH.runtimeTableWest",
     "HEARTH.westRuntimeTable",
     "HEARTH.westAdmissibility",
@@ -539,147 +347,266 @@
     "HEARTH.westCanvasV123PointerSurfaceBishopReleaseBridge",
     "HEARTH.westPointerSurfaceBishopChainMap",
     "HEARTH.westCanvasChapelDualChapelMetricBinding",
+    "HEARTH.westNorthStandardDerivativeRelease",
     "DEXTER_LAB.runtimeTableWest",
     "DEXTER_LAB.cardinalRuntimeTableWest",
     "DEXTER_LAB.hearthRuntimeTableWest",
     "DEXTER_LAB.westAdmissibility",
-    "DEXTER_LAB.hearthWestCanvasChapelDualChapelMetricBinding"
-  ]);
+    "DEXTER_LAB.hearthWestCanvasChapelDualChapelMetricBinding",
+    "DEXTER_LAB.hearthWestNorthStandardDerivativeRelease"
+  ];
 
-  const ALLOWED_METHODS = Object.freeze({
-    KING_ROUTE_CONDUCTOR: [
-      "getReceiptLight",
-      "getReceipt",
-      "getCanvasHandoffPacket",
-      "getCanvasReleasePacket",
-      "receive",
-      "run"
-    ],
-    QUEEN_CONTROLS: [
-      "getReceiptLight",
-      "getReceipt",
-      "getControlReceipt",
-      "getControlsReceipt",
-      "getControlHandshakeReceipt"
-    ],
-    CHAPEL_1_ASSETS_CANVAS_HUB: [
-      "getReceiptLight",
-      "getReceipt",
-      "receiveRouteConductorCanvasTransactionPacket",
-      "receivePlanetaryViewControlPacket",
-      "receiveViewControlPacket",
-      "receivePointerSurfaceExpressionPacket",
-      "receiveSurfaceExpressionPacket",
-      "receiveCanvasFingerSurfacePacket",
-      "receiveHexSurfaceReturnPacket"
-    ],
-    HEX_SURFACE_GATE: [
-      "getReceiptLight",
-      "getReceipt",
-      "receiveCanvasHexGatePacket",
-      "consumeCanvasHexGatePacket",
-      "receiveCanvasViewPacket"
-    ],
-    CHAPEL_2_POINTER_SURFACE_BISHOP: [
-      "getReceiptLight",
-      "getReceipt",
-      "getPointerSurfaceReceipt",
-      "getFingerSurfaceReceipt",
-      "receiveHexSurfacePacket",
-      "receiveHexPointerPacket",
-      "receiveSurfacePointerPacket"
-    ],
-    CHAPEL_2_INSPECT_PRIEST: [
-      "getReceiptLight",
-      "getReceipt",
-      "getFingerInspectReceipt",
-      "inspectChildren",
-      "organizeChildren"
-    ],
-    CHAPEL_1_ASSETS_PRIEST: [
-      "getReceiptLight",
-      "getReceipt",
-      "getChapelRegistry",
-      "inspectChapel",
-      "inspectChildren"
-    ]
-  });
+  var ACCEPTED_NORTH_CONTRACTS = [
+    "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1",
+    "LAB_RUNTIME_TABLE_NORTH_KING_QUEEN_DUAL_CHAPEL_DUTY_LOAD_MALPRACTICE_GUARD_SCHEMA_ANCHOR_TNT_v1_1",
+    "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3",
+    "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2"
+  ];
 
-  const state = {
+  var ACCEPTED_NORTH_RAIL_CONTRACTS = [
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_REANCHOR_DIAGNOSTIC_TRACK_RUNTIME_MAP_INTEGRITY_TNT_v11_6",
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LABWEST_CONSTRUCT_ANCHORED_SURFACE_TRUTH_CONSUMER_TNT_v12",
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11",
+    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10"
+  ];
+
+  var ACCEPTED_KING_CONTRACTS = [
+    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_ASSET_TRANSACTION_RESET_TNT_v10_8",
+    "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN_TNT_v10_7",
+    "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5",
+    "HEARTH_ROUTE_CONDUCTOR_BILATERAL_TRIANGLE_SCAN_CANVAS_PLATTER_PACKET_BRIDGE_TNT_v10_4",
+    "HEARTH_ROUTE_CONDUCTOR_GOVERNED_SOURCE_STACK_ADMISSION_CANVAS_HANDOFF_TNT_v10_3",
+    "HEARTH_ROUTE_CONDUCTOR_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v10_2",
+    "HEARTH_ROUTE_CONDUCTOR_CANVAS_DOM_SURFACE_ADMISSION_AND_RELEASE_TNT_v10_1",
+    "HEARTH_ROUTE_CONDUCTOR_BISHOP_QUEEN_CANVAS_RECOGNITION_FUNNEL_TNT_v9_9"
+  ];
+
+  var ACCEPTED_QUEEN_CONTRACTS = [
+    "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1",
+    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5",
+    "HEARTH_CONTROLS_VERTICAL_POLARITY_SMOOTH_CANVAS_HEX_PAIR_ALIGNMENT_TNT_v4_2",
+    "HEARTH_CONTROLS_SMOOTH_POINTER_DELTA_CANVAS_FRAME_ALIGNMENT_TNT_v4_1",
+    "HEARTH_CONTROLS_QUEEN_WEST_GATE_HIERARCHY_SUPERCONDUCTOR_VIEW_INPUT_BRIDGE_TNT_v2"
+  ];
+
+  var ACCEPTED_CHAPEL_1_HUB_CONTRACTS = [
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3",
+    "HEARTH_CANVAS_HUB_REC0_SETTLED_GEOMETRY_SINGLE_VIEW_APPLICATION_DEFERRED_HEX_OUTPUT_TNT_v12_4_1",
+    "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4",
+    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER_TNT_v12_4",
+    "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION_TNT_v12_4",
+    "HEARTH_CANVAS_HUB_RAF_SPHERE_ROTATION_PAIR_RECEIVER_TNT_v12_3_2",
+    "HEARTH_CANVAS_HUB_RAF_FAST_INTERACTIVE_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3_1",
+    "HEARTH_CANVAS_HUB_FAST_VIEW_TRANSFORM_DEFERRED_RENDER_RECEIVER_TNT_v12_2",
+    "HEARTH_CANVAS_HUB_PLANETARY_VIEW_CONTROL_RECEIVER_TNT_v12_1",
+    "HEARTH_CANVAS_EXPRESSION_HUB_VISIBLE_BASE_GLOBE_CARRIER_TNT_v11_7",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_3",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_2",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11_1",
+    "HEARTH_CANVAS_LOCAL_STATION_CHILD_DISTRIBUTION_SWITCHBOARD_TNT_v11"
+  ];
+
+  var ACCEPTED_HEX_SURFACE_CONTRACTS = [
+    "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE_TNT_v5",
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_2",
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4_1",
+    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4",
+    "HEARTH_HEX_SURFACE_RENDERER_TNT_v3",
+    "HEARTH_HEX_SURFACE_RENDERER_TNT_v2",
+    "HEARTH_HEX_SURFACE_RENDERER_TNT_v1"
+  ];
+
+  var ACCEPTED_CHAPEL_2_BISHOP_CONTRACTS = [
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_GATE_TNT_v5",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v3",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_FINGER_EXTERNAL_EXPRESSION_SOCKET_TNT_v2",
+    "HEARTH_CANVAS_FINGER_SURFACE_FIRST_MATERIAL_DIFFERENTIATION_TNT_v1"
+  ];
+
+  var ACCEPTED_CHAPEL_2_PRIEST_CONTRACTS = [
+    "HEARTH_CANVAS_FINGER_INSPECT",
+    "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1",
+    "HEARTH_CANVAS_FINGER_INSPECT_CHAPEL_2_CHILD_ORGANIZER_TNT_v1"
+  ];
+
+  var ACCEPTED_CHAPEL_1_PRIEST_CONTRACTS = [
+    "HEARTH_CANVAS_CHAPEL_INSPECT_ASSETS_HUB_PRIEST_TNT_v1",
+    "HEARTH_CANVAS_HUB_INSPECT_ASSETS_CHAPEL_PRIEST_TNT_v1",
+    "HEARTH_CANVAS_ASSET_INSPECT_CHAPEL_1_PRIEST_TNT_v1"
+  ];
+
+  var READ_METHODS = [
+    "getReceiptLight",
+    "getReceipt",
+    "getReport",
+    "getStatus",
+    "getState",
+    "getSummary",
+    "getHierarchySurface",
+    "getHierarchyRegistry",
+    "getJudgeMetrics",
+    "getBishopChord",
+    "getRuntimeGrammar",
+    "getNorthGrammarPacket",
+    "getStrictProofRules",
+    "getDiagnosticMalpracticeGuardSchema",
+    "getDiagnosticSelfMeasurementSchema",
+    "getAcceptedEndpointFamilies",
+    "getSurfaceTruthSummary",
+    "getContractDefinitionReceipt",
+    "getContractDefinitions",
+    "getProfileReceipt"
+  ];
+
+  var CORE_NODE_CONFIGS = [
+    {
+      id: "LAB_NORTH_STANDARD",
+      file: LAB_NORTH_FILE,
+      aliases: LAB_NORTH_ALIASES,
+      expectedFamily: "LAB_NORTH",
+      acceptedContracts: ACCEPTED_NORTH_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "NORTH_DIAGNOSTIC_RAIL",
+      file: NORTH_RAIL_FILE,
+      aliases: NORTH_RAIL_ALIASES,
+      expectedFamily: "HEARTH_DIAGNOSTIC",
+      acceptedContracts: ACCEPTED_NORTH_RAIL_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "KING_ROUTE_CONDUCTOR",
+      file: KING_FILE,
+      aliases: KING_ALIASES,
+      expectedFamily: "HEARTH_ROUTE_CONDUCTOR",
+      acceptedContracts: ACCEPTED_KING_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "QUEEN_CONTROLS",
+      file: QUEEN_FILE,
+      aliases: QUEEN_ALIASES,
+      expectedFamily: "HEARTH_CONTROLS",
+      acceptedContracts: ACCEPTED_QUEEN_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "CHAPEL_1_ASSETS_CANVAS_HUB",
+      file: CHAPEL_1_HUB_FILE,
+      aliases: CHAPEL_1_HUB_ALIASES,
+      expectedFamily: "HEARTH_CANVAS_HUB",
+      acceptedContracts: ACCEPTED_CHAPEL_1_HUB_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "HEX_SURFACE_GATE",
+      file: HEX_SURFACE_FILE,
+      aliases: HEX_SURFACE_ALIASES,
+      expectedFamily: "HEARTH_HEX_SURFACE",
+      acceptedContracts: ACCEPTED_HEX_SURFACE_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "CHAPEL_2_POINTER_SURFACE_BISHOP",
+      file: CHAPEL_2_BISHOP_FILE,
+      aliases: CHAPEL_2_BISHOP_ALIASES,
+      expectedFamily: "HEARTH_CANVAS_FINGER_SURFACE",
+      acceptedContracts: ACCEPTED_CHAPEL_2_BISHOP_CONTRACTS,
+      blocking: true
+    },
+    {
+      id: "CHAPEL_1_ASSETS_PRIEST",
+      file: CHAPEL_1_PRIEST_FILE,
+      aliases: CHAPEL_1_PRIEST_ALIASES,
+      expectedFamily: "HEARTH_CANVAS_CHAPEL_INSPECT",
+      acceptedContracts: ACCEPTED_CHAPEL_1_PRIEST_CONTRACTS,
+      blocking: false,
+      expectedNotYetBuilt: true
+    },
+    {
+      id: "CHAPEL_2_INSPECT_PRIEST",
+      file: CHAPEL_2_PRIEST_FILE,
+      aliases: CHAPEL_2_PRIEST_ALIASES,
+      expectedFamily: "HEARTH_CANVAS_FINGER_INSPECT",
+      acceptedContracts: ACCEPTED_CHAPEL_2_PRIEST_CONTRACTS,
+      blocking: false
+    }
+  ];
+
+  var JUDGE_NODE_CONFIGS = [
+    {
+      id: "JUDGE_NORTH",
+      file: NORTH_RAIL_FILE,
+      aliases: NORTH_RAIL_ALIASES,
+      expectedFamily: "HEARTH_DIAGNOSTIC",
+      acceptedContracts: ACCEPTED_NORTH_RAIL_CONTRACTS
+    },
+    {
+      id: "JUDGE_EAST",
+      file: EAST_RAIL_FILE,
+      aliases: EAST_RAIL_ALIASES,
+      expectedFamily: "HEARTH_DIAGNOSTIC",
+      acceptedContracts: []
+    },
+    {
+      id: "JUDGE_WEST",
+      file: WEST_RAIL_FILE,
+      aliases: WEST_RAIL_ALIASES,
+      expectedFamily: "HEARTH_DIAGNOSTIC",
+      acceptedContracts: []
+    },
+    {
+      id: "JUDGE_SOUTH",
+      file: SOUTH_RAIL_FILE,
+      aliases: SOUTH_RAIL_ALIASES,
+      expectedFamily: "HEARTH_DIAGNOSTIC",
+      acceptedContracts: []
+    },
+    {
+      id: "SURFACE_TRUTH_PROBE",
+      file: SURFACE_TRUTH_FILE,
+      aliases: SURFACE_TRUTH_ALIASES,
+      expectedFamily: "HEARTH_DIAGNOSTIC_SURFACE_TRUTH_PROBE",
+      acceptedContracts: [
+        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CYCLE_BOUND_CONTRACT_DEFINITION_ALIGNMENT_TNT_v2",
+        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1"
+      ]
+    }
+  ];
+
+  var state = {
     timestamp: "",
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-    previousPublicContract: PREVIOUS_PUBLIC_CONTRACT,
-    previousPublicReceipt: PREVIOUS_PUBLIC_RECEIPT,
-    version: VERSION,
-    file: FILE,
-    route: ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
+    runCount: 0,
+    aliasPublishCount: 0,
+    receiptPublishCount: 0,
+    datasetPublishCount: 0,
+    errorCount: 0,
+    errors: [],
 
-    activeStageId: ACTIVE_STAGE_ID,
-    activeGear: ACTIVE_GEAR,
-    activeCycleNumber: ACTIVE_CYCLE_NUMBER,
-    activeCycleRoute: ACTIVE_CYCLE_ROUTE,
-    activeCardinal: ACTIVE_CARDINAL,
-    activeFibonacci: ACTIVE_FIBONACCI,
-    activeNewsGate: ACTIVE_NEWS_GATE,
+    northStandardStatus: "NOT_RUN",
+    northCompatibilityBridgeStatus: "NOT_RUN",
+    northRailStatus: "NOT_RUN",
+    northRailVerdictAvailable: false,
+    northRailReportMethod: "NONE",
 
-    passiveReadOnlyAudit: true,
-    dualChapelMetricBindingActive: true,
-    churchHierarchyActive: true,
-    chapelLanguageActive: true,
-    judgeLanguageActive: true,
+    surfaceTruthStatus: "NOT_RUN",
+    surfaceTruthFailureClass: "NOT_RUN",
+    surfaceTruthFirstFailedCoordinate: "NOT_RUN",
 
-    aliasIsLabel: true,
-    aliasIsEndpointProof: false,
-    strictFileContractFamilyMatchRequired: true,
-    borrowedAuthorityContractTextRejected: true,
-    churchRoleCannotOverrideContractFamily: true,
-    chapel2PriestCannotSatisfyChapel1Priest: true,
-
-    kingRouteConductorFile: KING_FILE,
-    queenControlsFile: QUEEN_FILE,
-    chapel1AssetsCanvasHubFile: CHAPEL_1_HUB_FILE,
-    chapel1AssetsPriestPrimaryFile: CHAPEL_1_PRIEST_PRIMARY_FILE,
-    chapel2PointerSurfaceBishopFile: CHAPEL_2_BISHOP_FILE,
-    chapel2InspectPriestFile: CHAPEL_2_PRIEST_FILE,
-
-    chapel1PriestStatus: METRIC_STATUS.EXPECTED_NOT_YET_BUILT_NON_BLOCKING,
-    chapel1PriestSubstitutionStatus: "NOT_RUN",
-    chapel2InspectPriestStatus: "NOT_RUN",
-
-    nodes: {},
-    chapel2FingerMetrics: {},
+    coreNodes: {},
     judgeMetrics: {},
+    northStandardPacket: null,
+    northRailPacket: null,
+    surfaceTruthSummary: null,
     relationships: [],
-    chapel1Relationships: [],
-    chapel2Relationships: [],
 
     strictEndpointConfirmedCount: 0,
     contractFamilyMismatchCount: 0,
     borrowedContractRejectedCount: 0,
     observedNodeCount: 0,
-    scriptPresentCount: 0,
-    authorityAliasPresentCount: 0,
-    expectedNonBlockingCount: 0,
-
-    kingRouteConductorObserved: false,
-    queenControlsObserved: false,
-    chapel1AssetsCanvasHubObserved: false,
-    chapel1AssetsPriestObserved: false,
-    hexSurfaceGateObserved: false,
-    chapel2PointerSurfaceBishopObserved: false,
-    chapel2InspectPriestObserved: false,
-
-    kingRouteConductorStatus: "NOT_RUN",
-    queenControlsStatus: "NOT_RUN",
-    chapel1AssetsCanvasHubStatus: "NOT_RUN",
-    hexSurfaceGateStatus: "NOT_RUN",
-    chapel2PointerSurfaceBishopStatus: "NOT_RUN",
 
     routeToQueenConfirmed: false,
     queenToChapel1Confirmed: false,
@@ -687,20 +614,9 @@
     hexToChapel2Confirmed: false,
     chapel2ToChapel1ReturnConfirmed: false,
 
-    chapel1LoopMeasured: false,
-    chapel1LoopBlocking: false,
-    chapel2LoopMeasured: false,
-    chapel2LoopBlocking: false,
-
-    outerCycleClosed: false,
     cycleClosed: false,
+    outerCycleClosed: false,
     cycleClosureStatus: "NOT_RUN",
-    firstOpenDutyCoordinate: "NOT_RUN",
-    firstOpenDutyClass: "NOT_RUN",
-    firstOpenDutyReason: "NOT_RUN",
-    firstOpenDutyFile: "NONE",
-    firstOpenDutyOwner: "NONE",
-
     westDecision: WEST_DECISION.HOLD,
     westGapClass: WEST_GAP_CLASS.STRUCTURAL_BLOCK,
     westForwardAllowed: false,
@@ -709,22 +625,19 @@
     releaseToCanvas: false,
     releasePacket: null,
 
-    firstFailedCoordinate: "NOT_RUN",
+    constructionReadinessStatus: "CONSTRUCTION_NOT_RUN",
+    firstOpenDutyCoordinate: "NOT_RUN",
+    firstOpenDutyClass: "NOT_RUN",
+    firstOpenDutyReason: "NOT_RUN",
+    firstOpenDutyFile: "NONE",
+    firstOpenDutyOwner: "NONE",
     recommendedNextFile: "NONE",
-    recommendedNextAction: "RUN_LAB_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_AUDIT",
-    postgameStatus: "WEST_DUAL_CHAPEL_METRIC_BINDING_READY",
-
-    runCount: 0,
-    aliasPublishCount: 0,
-    receiptPublishCount: 0,
-    datasetPublishCount: 0,
-    errorCount: 0,
-    errors: [],
+    recommendedNextAction: "RUN_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_AUDIT",
 
     ...NO_CLAIMS
   };
 
-  const api = {};
+  var api = {};
 
   function nowIso() {
     try {
@@ -742,7 +655,8 @@
     return typeof value === "function";
   }
 
-  function safeString(value, fallback = "") {
+  function safeString(value, fallback) {
+    if (fallback === undefined) fallback = "";
     if (value === undefined || value === null) return fallback;
     try {
       return String(value);
@@ -751,37 +665,58 @@
     }
   }
 
-  function safeBool(value, fallback = false) {
-    if (typeof value === "boolean") return value;
-    if (value === true || value === 1 || value === "1") return true;
-    if (value === false || value === 0 || value === "0") return false;
-    const text = safeString(value).trim().toLowerCase();
-    if (["true", "yes", "ready", "active", "accepted", "complete", "closed", "present"].includes(text)) return true;
-    if (["false", "no", "held", "pending", "blocked", "none", "missing"].includes(text)) return false;
-    return fallback;
-  }
+  function clone(value) {
+    if (value === undefined || value === null) return value;
 
-  function clonePlain(value) {
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
       if (Array.isArray(value)) return value.slice();
-      if (isObject(value)) return { ...value };
+      if (isObject(value)) {
+        var out = {};
+        Object.keys(value).forEach(function (key) {
+          if (key === "_authority") return;
+          out[key] = value[key];
+        });
+        return out;
+      }
       return value;
     }
   }
 
-  function ensureObject(parent, key) {
-    if (!parent[key] || typeof parent[key] !== "object") parent[key] = {};
-    return parent[key];
+  function ensureNamespace(name) {
+    if (!ROOT[name] || typeof ROOT[name] !== "object") ROOT[name] = {};
+    return ROOT[name];
+  }
+
+  function readPath(path) {
+    if (!path || typeof path !== "string") return undefined;
+
+    var clean = path.replace(/^window\./, "");
+    var parts = clean.split(".");
+    var cursor = ROOT;
+
+    for (var i = 0; i < parts.length; i += 1) {
+      var part = parts[i];
+      if (!part) continue;
+      if (!cursor || (typeof cursor !== "object" && typeof cursor !== "function")) {
+        return undefined;
+      }
+      cursor = cursor[part];
+    }
+
+    return cursor;
   }
 
   function setPath(path, value) {
-    const parts = safeString(path).replace(/^window\./, "").split(".");
-    let cursor = root;
+    if (!path || typeof path !== "string") return false;
 
-    for (let index = 0; index < parts.length - 1; index += 1) {
-      const part = parts[index];
+    var clean = path.replace(/^window\./, "");
+    var parts = clean.split(".");
+    var cursor = ROOT;
+
+    for (var i = 0; i < parts.length - 1; i += 1) {
+      var part = parts[i];
       if (!part) continue;
       if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
       cursor = cursor[part];
@@ -791,767 +726,859 @@
     return true;
   }
 
-  function readPath(path, base = root) {
-    const parts = safeString(path).replace(/^window\./, "").split(".");
-    let cursor = base;
-
-    for (const part of parts) {
-      if (!part) continue;
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
-      cursor = cursor[part];
-    }
-
-    return cursor || null;
-  }
-
-  function setDataset(key, value) {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
-  }
-
-  function readRaw(source, key, fallback = undefined) {
-    if (!isObject(source) && !isFunction(source)) return fallback;
-
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      const value = source[key];
-      return value === undefined || value === null ? fallback : value;
-    }
-
-    const lower = key.toLowerCase();
-
-    try {
-      for (const candidate of Object.keys(source)) {
-        if (candidate.toLowerCase() === lower) {
-          const value = source[candidate];
-          return value === undefined || value === null ? fallback : value;
-        }
-      }
-    } catch (_error) {}
-
-    return fallback;
-  }
-
-  function firstKnown(...values) {
-    for (const value of values) {
-      const text = safeString(value).trim();
+  function firstKnown() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      var text = safeString(arguments[i], "").trim();
       if (!text) continue;
-      if (["UNKNOWN", "NONE", "NOT_FOUND", "UNREADABLE", "INACCESSIBLE", "NULL"].includes(text)) continue;
+      if (
+        text === "UNKNOWN" ||
+        text === "NONE" ||
+        text === "NOT_FOUND" ||
+        text === "UNREADABLE" ||
+        text === "NULL"
+      ) {
+        continue;
+      }
       return text;
     }
     return "";
   }
 
-  function textContains(source, patterns) {
-    const text = safeString(source).toUpperCase();
-    return (patterns || []).some((pattern) => text.includes(safeString(pattern).toUpperCase()));
-  }
-
-  function objectText(...objects) {
-    return objects
-      .map((object) => {
-        try {
-          return JSON.stringify(object || {});
-        } catch (_error) {
-          return "";
-        }
-      })
-      .join(" | ");
-  }
-
-  function truthyAny(source, keys) {
-    return (keys || []).some((key) => safeBool(readRaw(source, key, false), false));
-  }
-
-  function scriptInfo(pathOrPaths) {
-    const paths = Array.isArray(pathOrPaths) ? pathOrPaths : [pathOrPaths];
-
-    if (!doc || !isFunction(doc.querySelectorAll)) {
+  function scriptInfo(path) {
+    if (!path) {
       return { present: false, count: 0, src: "NONE", cacheKey: "NONE", matches: [] };
     }
 
-    const matches = [];
+    if (!DOC || !isFunction(DOC.querySelectorAll)) {
+      return { present: false, count: 0, src: "NONE", cacheKey: "NONE", matches: [] };
+    }
+
+    var matches = [];
 
     try {
-      const scripts = Array.from(doc.querySelectorAll("script[src]"));
+      var scripts = Array.prototype.slice.call(DOC.querySelectorAll("script[src]"));
+      var fileName = safeString(path).split("/").filter(Boolean).pop();
 
-      scripts.forEach((script, index) => {
-        const src = safeString(script.getAttribute("src"));
-        let pathname = src;
-        let cacheKey = "NONE";
+      scripts.forEach(function (script, index) {
+        var src = safeString(script.getAttribute("src"), "");
+        var pathname = src;
+        var cacheKey = "NONE";
 
         try {
-          const base = root.location && root.location.origin ? root.location.origin : "https://diamondgatebridge.com";
-          const url = new URL(src, base);
+          var origin =
+            ROOT.location && ROOT.location.origin
+              ? ROOT.location.origin
+              : "https://diamondgatebridge.com";
+          var url = new URL(src, origin);
           pathname = url.pathname;
-          cacheKey = url.searchParams.get("v") || url.searchParams.get("cacheKey") || "NONE";
+          cacheKey =
+            url.searchParams.get("v") ||
+            url.searchParams.get("cacheKey") ||
+            url.searchParams.get("version") ||
+            "NONE";
         } catch (_error) {}
 
-        for (const path of paths) {
-          const fileName = safeString(path).split("/").filter(Boolean).pop();
-
-          if (
-            pathname === path ||
-            pathname.endsWith(path) ||
-            src.includes(path) ||
-            (fileName && src.includes(fileName))
-          ) {
-            matches.push({ order: index + 1, src, pathname, cacheKey, matchedPath: path });
-          }
+        if (
+          pathname === path ||
+          pathname.endsWith(path) ||
+          src.indexOf(path) !== -1 ||
+          (fileName && src.indexOf(fileName) !== -1)
+        ) {
+          matches.push({
+            order: index + 1,
+            src: src,
+            pathname: pathname,
+            cacheKey: cacheKey,
+            matchedPath: path
+          });
         }
       });
     } catch (_error) {}
 
-    const last = matches[matches.length - 1] || null;
+    var last = matches[matches.length - 1] || null;
 
     return {
       present: matches.length > 0,
       count: matches.length,
       src: last ? last.src : "NONE",
       cacheKey: last ? last.cacheKey : "NONE",
-      matches
+      matches: matches
     };
   }
 
-  function authorityMethods(authority) {
-    if (!authority || (!isObject(authority) && !isFunction(authority))) return [];
+  function methodNames(authority) {
+    if (!authority || (typeof authority !== "object" && typeof authority !== "function")) {
+      return [];
+    }
+
     try {
-      return Object.keys(authority).filter((key) => isFunction(authority[key])).sort();
+      return Object.keys(authority)
+        .filter(function (key) {
+          return isFunction(authority[key]);
+        })
+        .sort();
     } catch (_error) {
       return [];
     }
   }
 
-  function hasAnyMethod(authorityRecord, names) {
-    const methods = authorityRecord && Array.isArray(authorityRecord.methods) ? authorityRecord.methods : [];
-    return (names || []).some((name) => methods.includes(name));
-  }
-
-  function readAuthorityReceipt(authority) {
-    if (!authority || (!isObject(authority) && !isFunction(authority))) {
-      return { method: "NONE", receipt: null, callAttempted: false, callError: "NONE" };
-    }
-
-    for (const method of READ_RECEIPT_METHODS) {
-      if (!isFunction(authority[method])) continue;
-      if (MUTATING_OR_LIFECYCLE_METHODS.includes(method)) continue;
-
-      try {
-        const output = authority[method]();
-        if (isObject(output)) {
-          return { method, receipt: output, callAttempted: true, callError: "NONE" };
-        }
-      } catch (error) {
-        return {
-          method,
-          receipt: null,
-          callAttempted: true,
-          callError: safeString(error && error.message ? error.message : error)
-        };
-      }
-    }
-
-    if (isObject(authority.receipt)) return { method: "receipt", receipt: authority.receipt, callAttempted: false, callError: "NONE" };
-    if (isObject(authority.receiptPacket)) return { method: "receiptPacket", receipt: authority.receiptPacket, callAttempted: false, callError: "NONE" };
-    if (isObject(authority.state)) return { method: "state", receipt: authority.state, callAttempted: false, callError: "NONE" };
-    if (isObject(authority.report)) return { method: "report", receipt: authority.report, callAttempted: false, callError: "NONE" };
-
-    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT || authority.version) {
-      return { method: "authorityObject", receipt: authority, callAttempted: false, callError: "NONE" };
-    }
-
-    return { method: "NONE", receipt: null, callAttempted: false, callError: "NONE" };
-  }
-
   function contractOf(value) {
-    const v = isObject(value) || isFunction(value) ? value : {};
+    var v = value && (typeof value === "object" || typeof value === "function") ? value : {};
 
     return firstKnown(
       v.CONTRACT,
       v.contract,
-      v.publicContract,
       v.PUBLIC_CONTRACT,
-      v.internalRenewalContract,
+      v.publicContract,
       v.INTERNAL_RENEWAL_CONTRACT,
-      v.renewalContract,
-      v.RENEWAL_CONTRACT,
+      v.internalRenewalContract,
+      v.currentContract,
+      v.currentNorthContract,
       v.currentCanvasParentContract,
       v.canvasContract,
       v.hearthCanvasContract,
       v.controlContract,
       v.controlsContract,
       v.routeConductorContract,
-      v.currentRouteConductorContract,
       v.hexSurfaceContract,
-      v.hexAuthorityContract,
       v.pointerSurfaceContract,
       v.pointerBishopContract,
       v.fingerSurfaceContract,
-      v.pointerFingerContract,
-      v.pointerInspectContract,
       v.fingerInspectContract,
-      v.chapelContract,
-      v.chapel1Contract,
-      v.chapel2Contract,
+      v.diagnosticContract,
+      v.surfaceTruthContract,
       v.sourceContract
     );
   }
 
   function receiptOf(value) {
-    const v = isObject(value) || isFunction(value) ? value : {};
+    var v = value && (typeof value === "object" || typeof value === "function") ? value : {};
 
     return firstKnown(
       v.RECEIPT,
       v.receipt,
-      v.publicReceipt,
       v.PUBLIC_RECEIPT,
-      v.internalRenewalReceipt,
+      v.publicReceipt,
       v.INTERNAL_RENEWAL_RECEIPT,
-      v.renewalReceipt,
-      v.RENEWAL_RECEIPT,
+      v.internalRenewalReceipt,
+      v.currentReceipt,
+      v.currentNorthReceipt,
       v.currentCanvasParentReceipt,
       v.canvasReceipt,
       v.hearthCanvasReceipt,
       v.controlReceipt,
       v.controlsReceipt,
       v.routeConductorReceipt,
-      v.currentRouteConductorReceipt,
       v.hexSurfaceReceipt,
-      v.hexAuthorityReceipt,
       v.pointerSurfaceReceipt,
       v.pointerBishopReceipt,
       v.fingerSurfaceReceipt,
-      v.pointerFingerReceipt,
-      v.pointerInspectReceipt,
       v.fingerInspectReceipt,
-      v.chapelReceipt,
-      v.chapel1Receipt,
-      v.chapel2Receipt,
+      v.diagnosticReceipt,
+      v.surfaceTruthReceipt,
       v.sourceReceipt
     );
   }
 
-  function familyOfContract(contract) {
-    const text = safeString(contract).toUpperCase();
+  function detectContractFamily(contract) {
+    var text = safeString(contract);
 
     if (!text) return "UNKNOWN";
-    if (text.includes("HEARTH_ROUTE_CONDUCTOR")) return "KING_ROUTE_CONDUCTOR";
-    if (text.includes("HEARTH_CONTROLS")) return "QUEEN_CONTROLS";
-    if (text.includes("HEARTH_HEX_FOUR_PAIR")) return "HEX_AUTHORITY";
-    if (text.includes("HEARTH_HEX_SURFACE")) return "HEX_SURFACE_GATE";
-    if (text.includes("HEARTH_CANVAS_CHAPEL_INSPECT") || text.includes("HEARTH_CANVAS_HUB_INSPECT") || text.includes("HEARTH_CANVAS_ASSET_INSPECT")) return "CHAPEL_1_ASSETS_PRIEST";
-    if (text.includes("HEARTH_CANVAS_FINGER_INSPECT")) return "CHAPEL_2_INSPECT_PRIEST";
-    if (text.includes("HEARTH_CANVAS_FINGER_SURFACE") || text.includes("POINTER_BISHOP") || text.includes("POINTER_SURFACE_BISHOP")) return "CHAPEL_2_POINTER_SURFACE_BISHOP";
-    if (text.includes("HEARTH_CANVAS_FINGER_")) return "CHAPEL_2_FINGER";
-    if (text.includes("HEARTH_CANVAS")) return "CHAPEL_1_ASSETS_CANVAS_HUB";
-    if (text.includes("HEARTH_DIAGNOSTIC")) return "JUDGE_DIAGNOSTIC";
-    if (text.includes("LAB_RUNTIME_TABLE")) return "LAB_RUNTIME_TABLE";
+
+    if (/LAB_RUNTIME_TABLE.*WEST|CARDINAL_WEST|HEARTH_WEST_CANVAS/i.test(text)) {
+      return "LAB_WEST";
+    }
+
+    if (/LAB_RUNTIME_TABLE|MULTI_FUNCTION_ANIMATION_STANDARD|NORTH_CENTRAL_TRAIN_STATION/i.test(text)) {
+      return "LAB_NORTH";
+    }
+
+    if (/HEARTH_ROUTE_CONDUCTOR/i.test(text)) return "HEARTH_ROUTE_CONDUCTOR";
+    if (/HEARTH_CONTROLS/i.test(text)) return "HEARTH_CONTROLS";
+    if (/HEARTH_HEX_FOUR_PAIR/i.test(text)) return "HEARTH_HEX_AUTHORITY";
+    if (/HEARTH_HEX_SURFACE/i.test(text)) return "HEARTH_HEX_SURFACE";
+    if (/HEARTH_CANVAS_FINGER_INSPECT/i.test(text)) return "HEARTH_CANVAS_FINGER_INSPECT";
+    if (/HEARTH_CANVAS_FINGER_SURFACE|POINTER_SURFACE_BISHOP/i.test(text)) {
+      return "HEARTH_CANVAS_FINGER_SURFACE";
+    }
+    if (/HEARTH_CANVAS_CHAPEL|HEARTH_CANVAS_HUB_INSPECT|HEARTH_CANVAS_ASSET_INSPECT/i.test(text)) {
+      return "HEARTH_CANVAS_CHAPEL_INSPECT";
+    }
+    if (/HEARTH_CANVAS_HUB|HEARTH_CANVAS/i.test(text)) return "HEARTH_CANVAS_HUB";
+
+    if (/HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH/i.test(text)) {
+      return "HEARTH_DIAGNOSTIC_SURFACE_TRUTH_PROBE";
+    }
+
+    if (/HEARTH_DIAGNOSTIC_PROBE/i.test(text)) return "HEARTH_DIAGNOSTIC_PROBE";
+    if (/HEARTH_DIAGNOSTIC|JUDGE/i.test(text)) return "HEARTH_DIAGNOSTIC";
+
     return "UNKNOWN";
   }
 
-  function recognized(contract, acceptedContracts, familyPattern) {
-    const text = safeString(contract);
-    if (!text) return false;
-    if ((acceptedContracts || []).includes(text)) return true;
-    return Boolean(familyPattern && familyPattern.test(text));
+  function resolveAuthority(aliases) {
+    var list = Array.isArray(aliases) ? aliases : [];
+
+    for (var i = 0; i < list.length; i += 1) {
+      var candidate = readPath(list[i]);
+      if (candidate !== undefined && candidate !== null) {
+        return {
+          present: true,
+          alias: list[i],
+          authority: candidate,
+          valueType: typeof candidate
+        };
+      }
+    }
+
+    return {
+      present: false,
+      alias: "NONE",
+      authority: null,
+      valueType: "undefined"
+    };
   }
 
-  function inspectNode(config) {
-    const aliases = config.aliases || [];
-    const paths = config.files || [config.file];
-    const candidates = [];
-
-    for (const alias of aliases) {
-      const authority = readPath(alias);
-      if (!authority) continue;
-
-      const read = readAuthorityReceipt(authority);
-      const receipt = read.receipt || {};
-      const contract = firstKnown(contractOf(receipt), contractOf(authority));
-      const receiptName = firstKnown(receiptOf(receipt), receiptOf(authority));
-      const methods = authorityMethods(authority);
-
-      candidates.push({
-        alias,
-        authority,
-        receiptObject: receipt,
-        contract,
-        receipt: receiptName,
-        receiptReadMethod: read.method,
-        methodCount: methods.length,
-        methods,
-        callError: read.callError
-      });
+  function callMethod(authority, method) {
+    if (!authority || !isFunction(authority[method])) {
+      return { attempted: false, ok: false, output: null, error: "METHOD_NOT_AVAILABLE" };
     }
 
-    const script = scriptInfo(paths);
-    const selected =
-      candidates.find((candidate) => recognized(candidate.contract, config.acceptedContracts, config.familyPattern)) ||
-      candidates.find((candidate) => candidate.contract) ||
-      candidates[0] ||
-      null;
+    try {
+      var output = authority[method]();
+      return { attempted: true, ok: true, output: output, error: "NONE" };
+    } catch (error) {
+      return {
+        attempted: true,
+        ok: false,
+        output: null,
+        error: safeString(error && error.message ? error.message : error, "CALL_ERROR")
+      };
+    }
+  }
 
-    const contract = selected ? selected.contract : "";
-    const contractFamily = familyOfContract(contract);
-    const expectedFamilies = config.expectedFamilies || [];
-    const familyMatch = Boolean(contract && expectedFamilies.includes(contractFamily));
-    const contractRecognized = recognized(contract, config.acceptedContracts, config.familyPattern);
-    const aliasPresent = Boolean(selected && selected.authority);
-    const allowedMethods = config.allowedMethods || [];
-    const allowedMethodSurfacePresent = allowedMethods.length === 0 || hasAnyMethod(selected || {}, allowedMethods);
-    const forbiddenMethodSurfaceAbsent = true;
+  function readReceipt(authority) {
+    if (!authority || (typeof authority !== "object" && typeof authority !== "function")) {
+      return {
+        method: "NONE",
+        receipt: null,
+        callAttempted: false,
+        callError: "NO_AUTHORITY"
+      };
+    }
 
-    let status = METRIC_STATUS.FILE_NOT_OBSERVED;
-    let blocking = Boolean(config.blocking);
+    for (var i = 0; i < READ_METHODS.length; i += 1) {
+      var method = READ_METHODS[i];
+      if (!isFunction(authority[method])) continue;
 
-    if (config.expectedNotYetBuilt && !script.present && !aliasPresent) {
+      var call = callMethod(authority, method);
+
+      if (!call.ok) {
+        return {
+          method: method,
+          receipt: null,
+          callAttempted: true,
+          callError: call.error
+        };
+      }
+
+      if (isObject(call.output)) {
+        return {
+          method: method,
+          receipt: call.output,
+          callAttempted: true,
+          callError: "NONE"
+        };
+      }
+
+      if (typeof call.output === "string" && call.output.trim()) {
+        return {
+          method: method,
+          receipt: { statusText: call.output },
+          callAttempted: true,
+          callError: "NONE"
+        };
+      }
+    }
+
+    if (isObject(authority.receiptPacket)) {
+      return {
+        method: "receiptPacket",
+        receipt: authority.receiptPacket,
+        callAttempted: false,
+        callError: "NONE"
+      };
+    }
+
+    if (isObject(authority.receipt)) {
+      return {
+        method: "receipt",
+        receipt: authority.receipt,
+        callAttempted: false,
+        callError: "NONE"
+      };
+    }
+
+    if (isObject(authority.state)) {
+      return {
+        method: "state",
+        receipt: authority.state,
+        callAttempted: false,
+        callError: "NONE"
+      };
+    }
+
+    if (contractOf(authority)) {
+      return {
+        method: "authorityObject",
+        receipt: authority,
+        callAttempted: false,
+        callError: "NONE"
+      };
+    }
+
+    return {
+      method: "NONE",
+      receipt: null,
+      callAttempted: false,
+      callError: "NO_READABLE_RECEIPT"
+    };
+  }
+
+  function contractRecognized(contract, acceptedContracts) {
+    if (!contract) return false;
+    if (!Array.isArray(acceptedContracts) || !acceptedContracts.length) return true;
+    return acceptedContracts.indexOf(contract) !== -1;
+  }
+
+  function familyCompatible(observedFamily, expectedFamily) {
+    if (!expectedFamily) return true;
+    if (observedFamily === expectedFamily) return true;
+
+    if (
+      expectedFamily === "HEARTH_DIAGNOSTIC" &&
+      (observedFamily === "HEARTH_DIAGNOSTIC_PROBE" ||
+        observedFamily === "HEARTH_DIAGNOSTIC_SURFACE_TRUTH_PROBE")
+    ) {
+      return true;
+    }
+
+    if (
+      expectedFamily === "HEARTH_DIAGNOSTIC_SURFACE_TRUTH_PROBE" &&
+      observedFamily === "HEARTH_DIAGNOSTIC_PROBE"
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function inspectAuthority(config) {
+    var script = scriptInfo(config.file);
+    var resolved = resolveAuthority(config.aliases);
+    var authority = resolved.authority;
+    var methods = methodNames(authority);
+    var read = readReceipt(authority);
+    var receiptObject = read.receipt || {};
+
+    var contract = firstKnown(contractOf(receiptObject), contractOf(authority));
+    var receipt = firstKnown(receiptOf(receiptObject), receiptOf(authority));
+    var observedFamily = detectContractFamily(contract);
+    var familyOk = familyCompatible(observedFamily, config.expectedFamily);
+    var recognized = contractRecognized(contract, config.acceptedContracts);
+    var methodSurface =
+      methods.indexOf("getReceiptLight") !== -1 ||
+      methods.indexOf("getReceipt") !== -1 ||
+      methods.indexOf("getReport") !== -1 ||
+      methods.indexOf("getStatus") !== -1 ||
+      read.method !== "NONE";
+
+    var status = METRIC_STATUS.FILE_NOT_OBSERVED;
+    var loadStatus = "SCRIPT_NOT_OBSERVED_GLOBAL_NOT_FOUND";
+
+    if (config.expectedNotYetBuilt && !script.present && !resolved.present) {
       status = METRIC_STATUS.EXPECTED_NOT_YET_BUILT_NON_BLOCKING;
-      blocking = false;
-    } else if (config.distributionKnownNotRequired && !script.present && !aliasPresent) {
-      status = METRIC_STATUS.DISTRIBUTION_FILE_KNOWN_NOT_RUNTIME_OBSERVED;
-      blocking = false;
-    } else if (script.present && !aliasPresent) {
+      loadStatus = "EXPECTED_NOT_YET_BUILT_NON_BLOCKING";
+    } else if (!script.present && !resolved.present && !config.blocking) {
+      status = METRIC_STATUS.OPTIONAL_NOT_OBSERVED;
+      loadStatus = "OPTIONAL_NOT_OBSERVED";
+    } else if (script.present && !resolved.present) {
       status = METRIC_STATUS.SCRIPT_PRESENT_AUTHORITY_NOT_CONFIRMED;
-    } else if (aliasPresent && !contract) {
+      loadStatus = "SCRIPT_LOADED_GLOBAL_NOT_FOUND";
+    } else if (resolved.present && !contract) {
       status = METRIC_STATUS.AUTHORITY_PRESENT_CONTRACT_NOT_PRESENT;
-    } else if (contract && !familyMatch) {
+      loadStatus = "GLOBAL_FOUND_CONTRACT_NOT_FOUND";
+    } else if (resolved.present && contract && !familyOk) {
       status = METRIC_STATUS.CONTRACT_FAMILY_MISMATCH;
-    } else if (contract && familyMatch && !contractRecognized) {
+      loadStatus = "GLOBAL_FOUND_CONTRACT_FAMILY_MISMATCH";
+    } else if (resolved.present && contract && familyOk && !recognized) {
       status = METRIC_STATUS.AUTHORITY_PRESENT_CONTRACT_NOT_RECOGNIZED;
-    } else if (contract && familyMatch && contractRecognized && !allowedMethodSurfacePresent) {
+      loadStatus = "GLOBAL_FOUND_CONTRACT_NOT_RECOGNIZED";
+    } else if (resolved.present && contract && familyOk && recognized && !methodSurface) {
       status = METRIC_STATUS.STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING;
-    } else if (contract && familyMatch && contractRecognized && allowedMethodSurfacePresent && forbiddenMethodSurfaceAbsent) {
+      loadStatus = "GLOBAL_FOUND_METHOD_SURFACE_PENDING";
+    } else if (resolved.present && contract && familyOk && recognized && methodSurface) {
       status = METRIC_STATUS.STRICT_RUNTIME_ENDPOINT_CONFIRMED;
+      loadStatus = "LOADED_AND_AVAILABLE";
+    } else if (resolved.present) {
+      status = "AUTHORITY_GLOBAL_FOUND";
+      loadStatus = "GLOBAL_FOUND";
     }
-
-    const borrowedContractTextRejected = Boolean(contract && !familyMatch && aliasPresent);
-    const endpointConfirmed =
-      status === METRIC_STATUS.STRICT_RUNTIME_ENDPOINT_CONFIRMED ||
-      status === METRIC_STATUS.STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING;
 
     return {
       id: config.id,
-      physicalFile: config.file,
-      alternateFiles: paths.filter((path) => path !== config.file),
-      churchAlias: config.churchAlias,
-      churchRole: config.churchRole,
-      cycleAlias: config.cycleAlias,
-      chapel: config.chapel || "NONE",
-      roleClass: config.roleClass || "UNKNOWN",
-      expectedFamilies,
+      file: config.file,
+      expectedFamily: config.expectedFamily,
+      blocking: Boolean(config.blocking),
       expectedNotYetBuilt: Boolean(config.expectedNotYetBuilt),
-      distributionKnownNotRequired: Boolean(config.distributionKnownNotRequired),
 
-      physicalFileObserved: script.present,
       scriptPresent: script.present,
       scriptCount: script.count,
       scriptSrc: script.src,
       scriptCacheKey: script.cacheKey,
-      scriptMatches: clonePlain(script.matches),
+      scriptMatches: clone(script.matches),
 
-      authorityAliasPresent: aliasPresent,
-      authoritySourceAlias: selected ? selected.alias : "NONE",
-      publicContractPresent: Boolean(contract),
-      contract,
-      receipt: selected ? selected.receipt : "",
-      contractFamily,
-      publicContractFamilyMatch: familyMatch,
-      contractRecognized,
-      internalRenewalContractPresent: Boolean(
-        selected &&
-        selected.receiptObject &&
-        firstKnown(
-          readRaw(selected.receiptObject, "internalRenewalContract", ""),
-          readRaw(selected.receiptObject, "INTERNAL_RENEWAL_CONTRACT", "")
-        )
-      ),
+      authorityAliasPresent: resolved.present,
+      authoritySourceAlias: resolved.alias,
+      authorityValueType: resolved.valueType,
 
-      allowedMethodSurfacePresent,
-      allowedMethodsExpected: allowedMethods.slice(),
-      allowedMethodsObserved: selected ? selected.methods.filter((method) => allowedMethods.includes(method)) : [],
-      forbiddenMethodSurfaceAbsent,
-      methodCount: selected ? selected.methodCount : 0,
-      methods: selected ? selected.methods.slice(0, 160) : [],
-      receiptReadMethod: selected ? selected.receiptReadMethod : "NONE",
-      receiptReadError: selected ? selected.callError : "NONE",
-      receiptObject: selected ? clonePlain(selected.receiptObject) : {},
+      receiptReadMethod: read.method,
+      receiptReadAttempted: read.callAttempted,
+      receiptReadError: read.callError,
+      receiptPresent: Boolean(read.receipt),
 
-      aliasIsLabel: true,
-      aliasIsEndpointProof: false,
-      strictFileContractFamilyMatchRequired: true,
-      borrowedContractTextRejected,
-      churchRoleCannotOverrideContractFamily: true,
+      contract: contract,
+      receipt: receipt,
+      contractFamily: observedFamily,
+      contractFamilyMatch: familyOk,
+      contractRecognized: recognized,
+      methodSurfacePresent: methodSurface,
+      methodCount: methods.length,
+      methods: methods,
 
-      endpointConfirmed,
-      blocking,
       metricStatus: status,
-      status,
-      canBlockCycle: Boolean(blocking && !endpointConfirmed && status !== METRIC_STATUS.EXPECTED_NOT_YET_BUILT_NON_BLOCKING),
+      status: status,
+      loadStatus: loadStatus,
+      endpointConfirmed:
+        status === METRIC_STATUS.STRICT_RUNTIME_ENDPOINT_CONFIRMED ||
+        status === METRIC_STATUS.STRICT_ENDPOINT_CONTRACT_CONFIRMED_METHOD_SURFACE_PENDING,
+      borrowedContractTextRejected: Boolean(resolved.present && contract && !familyOk),
+      receiptObject: clone(receiptObject),
+
       ...NO_CLAIMS
     };
   }
 
-  function buildNodeConfigs() {
-    return [
-      {
-        id: "KING_ROUTE_CONDUCTOR",
-        file: KING_FILE,
-        aliases: KING_ALIASES,
-        acceptedContracts: ACCEPTED_KING_CONTRACTS,
-        familyPattern: /HEARTH_ROUTE_CONDUCTOR/i,
-        expectedFamilies: ["KING_ROUTE_CONDUCTOR"],
-        allowedMethods: ALLOWED_METHODS.KING_ROUTE_CONDUCTOR,
-        churchAlias: "KING_ROUTE_CONDUCTOR",
-        churchRole: "KING",
-        cycleAlias: "CYCLE_2_KING_ROUTE_PERMISSION",
-        chapel: "CROWN",
-        roleClass: "PRODUCTION_ROUTE_GOVERNANCE",
-        blocking: true
-      },
-      {
-        id: "QUEEN_CONTROLS",
-        file: QUEEN_FILE,
-        aliases: QUEEN_ALIASES,
-        acceptedContracts: ACCEPTED_QUEEN_CONTRACTS,
-        familyPattern: /HEARTH_CONTROLS/i,
-        expectedFamilies: ["QUEEN_CONTROLS"],
-        allowedMethods: ALLOWED_METHODS.QUEEN_CONTROLS,
-        churchAlias: "QUEEN_CONTROLS",
-        churchRole: "QUEEN",
-        cycleAlias: "CYCLE_2_VIEW_INTENT_INPUT",
-        chapel: "CROWN",
-        roleClass: "PRODUCTION_INPUT_AUTHORITY",
-        blocking: true
-      },
-      {
-        id: "CHAPEL_1_ASSETS_CANVAS_HUB",
-        file: CHAPEL_1_HUB_FILE,
-        aliases: CHAPEL_1_HUB_ALIASES,
-        acceptedContracts: ACCEPTED_CHAPEL_1_HUB_CONTRACTS,
-        familyPattern: /HEARTH_CANVAS/i,
-        expectedFamilies: ["CHAPEL_1_ASSETS_CANVAS_HUB"],
-        allowedMethods: ALLOWED_METHODS.CHAPEL_1_ASSETS_CANVAS_HUB,
-        churchAlias: "CHAPEL_1_ASSETS_CANVAS_HUB",
-        churchRole: "LEAD_BISHOP",
-        cycleAlias: "CYCLE_2_CANVAS_PUBLIC_RECEIVER_AND_RETURN_ANCHOR",
-        chapel: "CHAPEL_1",
-        roleClass: "PRODUCTION_ASSET_HUB",
-        blocking: true
-      },
-      {
-        id: "CHAPEL_1_ASSETS_PRIEST",
-        file: CHAPEL_1_PRIEST_PRIMARY_FILE,
-        files: [CHAPEL_1_PRIEST_PRIMARY_FILE].concat(CHAPEL_1_PRIEST_ALTERNATE_FILES),
-        aliases: CHAPEL_1_PRIEST_ALIASES,
-        acceptedContracts: ACCEPTED_CHAPEL_1_PRIEST_CONTRACTS,
-        familyPattern: /HEARTH_CANVAS_(CHAPEL|HUB|ASSET).*INSPECT|CHAPEL_1.*PRIEST/i,
-        expectedFamilies: ["CHAPEL_1_ASSETS_PRIEST"],
-        allowedMethods: ALLOWED_METHODS.CHAPEL_1_ASSETS_PRIEST,
-        churchAlias: "CHAPEL_1_ASSETS_PRIEST",
-        churchRole: "PRIEST",
-        cycleAlias: "CYCLE_2_CHAPEL_1_ASSET_HUB_INSPECTION_EXPECTED",
-        chapel: "CHAPEL_1",
-        roleClass: "EXPECTED_PRODUCTION_ASSET_INSPECTOR",
-        expectedNotYetBuilt: true,
-        blocking: false
-      },
-      {
-        id: "HEX_SURFACE_GATE",
-        file: HEX_SURFACE_FILE,
-        aliases: HEX_SURFACE_ALIASES,
-        acceptedContracts: ACCEPTED_HEX_SURFACE_CONTRACTS,
-        familyPattern: /HEARTH_HEX_SURFACE/i,
-        expectedFamilies: ["HEX_SURFACE_GATE"],
-        allowedMethods: ALLOWED_METHODS.HEX_SURFACE_GATE,
-        churchAlias: "HEX_SURFACE_GATE",
-        churchRole: "GATE",
-        cycleAlias: "CYCLE_2_HEX_SURFACE_GATE",
-        chapel: "BETWEEN_CHAPEL_1_AND_CHAPEL_2",
-        roleClass: "PRODUCTION_DOWNSTREAM_GATE",
-        blocking: true
-      },
-      {
-        id: "CHAPEL_2_POINTER_SURFACE_BISHOP",
-        file: CHAPEL_2_BISHOP_FILE,
-        aliases: CHAPEL_2_BISHOP_ALIASES,
-        acceptedContracts: ACCEPTED_CHAPEL_2_BISHOP_CONTRACTS,
-        familyPattern: /HEARTH_CANVAS_FINGER_SURFACE|POINTER_SURFACE_BISHOP|SURFACE.*BISHOP/i,
-        expectedFamilies: ["CHAPEL_2_POINTER_SURFACE_BISHOP"],
-        allowedMethods: ALLOWED_METHODS.CHAPEL_2_POINTER_SURFACE_BISHOP,
-        churchAlias: "CHAPEL_2_POINTER_SURFACE_BISHOP",
-        churchRole: "BISHOP",
-        cycleAlias: "CYCLE_2_POINTER_SURFACE_RETURN_GATE",
-        chapel: "CHAPEL_2",
-        roleClass: "PRODUCTION_POINTER_SURFACE_GATE",
-        blocking: true
-      },
-      {
-        id: "CHAPEL_2_INSPECT_PRIEST",
-        file: CHAPEL_2_PRIEST_FILE,
-        aliases: CHAPEL_2_PRIEST_ALIASES,
-        acceptedContracts: ACCEPTED_CHAPEL_2_PRIEST_CONTRACTS,
-        familyPattern: /HEARTH_CANVAS_FINGER_INSPECT|CHAPEL_2.*INSPECT|INSPECT_PRIEST/i,
-        expectedFamilies: ["CHAPEL_2_INSPECT_PRIEST"],
-        allowedMethods: ALLOWED_METHODS.CHAPEL_2_INSPECT_PRIEST,
-        churchAlias: "CHAPEL_2_INSPECT_PRIEST",
-        churchRole: "PRIEST",
-        cycleAlias: "CYCLE_2_CHAPEL_2_CHILD_ORGANIZER",
-        chapel: "CHAPEL_2",
-        roleClass: "PRODUCTION_POINTER_SURFACE_CHILD_ORGANIZER",
-        blocking: false
-      },
-      {
-        id: "HEX_AUTHORITY",
-        file: HEX_AUTHORITY_FILE,
-        aliases: HEX_AUTHORITY_ALIASES,
-        acceptedContracts: ACCEPTED_HEX_AUTHORITY_CONTRACTS,
-        familyPattern: /HEARTH_HEX_FOUR_PAIR/i,
-        expectedFamilies: ["HEX_AUTHORITY"],
-        allowedMethods: [],
-        churchAlias: "HEX_AUTHORITY",
-        churchRole: "AUTHORITY",
-        cycleAlias: "CYCLE_2_HEX_FOUR_PAIR_AUTHORITY",
-        chapel: "BETWEEN_CHAPEL_1_AND_CHAPEL_2",
-        roleClass: "PRODUCTION_HEX_TRUTH_AUTHORITY",
-        blocking: false
-      }
-    ];
-  }
+  function callPacket(authority, methods) {
+    if (!authority) {
+      return {
+        method: "NONE",
+        packet: null,
+        attempted: false,
+        error: "NO_AUTHORITY"
+      };
+    }
 
-  function makeFingerAliasSet(id) {
-    const lower = id.toLowerCase().replace(/^chapel_2_/, "").replace(/_finger$/, "");
-    const camel = lower.replace(/_([a-z])/g, (_m, c) => c.toUpperCase());
-    const upper = `HEARTH_CANVAS_FINGER_${lower.toUpperCase()}`;
+    for (var i = 0; i < methods.length; i += 1) {
+      var method = methods[i];
+      if (!isFunction(authority[method])) continue;
 
-    return [
-      upper,
-      `CHAPEL_2_${lower.toUpperCase()}_FINGER`,
-      `HEARTH.${camel}Finger`,
-      `HEARTH.canvasFinger${camel.charAt(0).toUpperCase()}${camel.slice(1)}`,
-      `DEXTER_LAB.hearthCanvasFinger${camel.charAt(0).toUpperCase()}${camel.slice(1)}`
-    ];
-  }
+      var call = callMethod(authority, method);
 
-  function inspectChapel2FingerSet() {
-    const metrics = {};
-
-    for (const [id, file] of Object.entries(CHAPEL_2_FINGER_FILES)) {
-      if (id === "CHAPEL_2_SURFACE_BISHOP") {
-        metrics[id] = state.nodes.CHAPEL_2_POINTER_SURFACE_BISHOP || null;
-        continue;
+      if (!call.ok) {
+        return {
+          method: method,
+          packet: null,
+          attempted: true,
+          error: call.error
+        };
       }
 
-      if (id === "CHAPEL_2_INSPECT_PRIEST") {
-        metrics[id] = state.nodes.CHAPEL_2_INSPECT_PRIEST || null;
-        continue;
+      if (isObject(call.output)) {
+        return {
+          method: method,
+          packet: clone(call.output),
+          attempted: true,
+          error: "NONE"
+        };
       }
 
-      metrics[id] = inspectNode({
-        id,
-        file,
-        aliases: makeFingerAliasSet(id),
-        acceptedContracts: ACCEPTED_CHAPEL_2_FINGER_CONTRACTS,
-        familyPattern: /HEARTH_CANVAS_FINGER_/i,
-        expectedFamilies: ["CHAPEL_2_FINGER"],
-        allowedMethods: ["getReceiptLight", "getReceipt", "getStatus"],
-        churchAlias: id,
-        churchRole: "FINGER",
-        cycleAlias: `CYCLE_2_${id}`,
-        chapel: "CHAPEL_2",
-        roleClass: "PRODUCTION_CHAPEL_2_DISTRIBUTION_FINGER",
-        distributionKnownNotRequired: true,
-        blocking: false
-      });
+      if (typeof call.output === "string" && call.output.trim()) {
+        return {
+          method: method,
+          packet: { statusText: call.output },
+          attempted: true,
+          error: "NONE"
+        };
+      }
     }
-
-    return metrics;
-  }
-
-  function inspectJudgeSet() {
-    const metrics = {};
-
-    for (const [id, file] of Object.entries(JUDGE_FILES)) {
-      const aliases = JUDGE_ALIASES[id] || [id];
-      metrics[id] = inspectNode({
-        id,
-        file,
-        aliases,
-        acceptedContracts: [
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10",
-          "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1"
-        ],
-        familyPattern: /HEARTH_DIAGNOSTIC|JUDGE/i,
-        expectedFamilies: ["JUDGE_DIAGNOSTIC"],
-        allowedMethods: ["getReceiptLight", "getReceipt", "getStatus", "getReport"],
-        churchAlias: id,
-        churchRole: "JUDGE",
-        cycleAlias: `DIAGNOSTIC_${id}`,
-        chapel: "DIAGNOSTIC_RAIL",
-        roleClass: "READ_ONLY_DIAGNOSTIC_JUDGE",
-        distributionKnownNotRequired: true,
-        blocking: false
-      });
-    }
-
-    return metrics;
-  }
-
-  function inspectAllNodes() {
-    const nodes = {};
-
-    for (const config of buildNodeConfigs()) {
-      nodes[config.id] = inspectNode(config);
-    }
-
-    state.nodes = clonePlain(nodes);
-    state.chapel2FingerMetrics = clonePlain(inspectChapel2FingerSet());
-    state.judgeMetrics = clonePlain(inspectJudgeSet());
-
-    state.kingRouteConductorObserved = nodes.KING_ROUTE_CONDUCTOR && nodes.KING_ROUTE_CONDUCTOR.scriptPresent || nodes.KING_ROUTE_CONDUCTOR.authorityAliasPresent;
-    state.queenControlsObserved = nodes.QUEEN_CONTROLS && nodes.QUEEN_CONTROLS.scriptPresent || nodes.QUEEN_CONTROLS.authorityAliasPresent;
-    state.chapel1AssetsCanvasHubObserved = nodes.CHAPEL_1_ASSETS_CANVAS_HUB && nodes.CHAPEL_1_ASSETS_CANVAS_HUB.scriptPresent || nodes.CHAPEL_1_ASSETS_CANVAS_HUB.authorityAliasPresent;
-    state.chapel1AssetsPriestObserved = nodes.CHAPEL_1_ASSETS_PRIEST && nodes.CHAPEL_1_ASSETS_PRIEST.authorityAliasPresent;
-    state.hexSurfaceGateObserved = nodes.HEX_SURFACE_GATE && nodes.HEX_SURFACE_GATE.scriptPresent || nodes.HEX_SURFACE_GATE.authorityAliasPresent;
-    state.chapel2PointerSurfaceBishopObserved = nodes.CHAPEL_2_POINTER_SURFACE_BISHOP && nodes.CHAPEL_2_POINTER_SURFACE_BISHOP.scriptPresent || nodes.CHAPEL_2_POINTER_SURFACE_BISHOP.authorityAliasPresent;
-    state.chapel2InspectPriestObserved = nodes.CHAPEL_2_INSPECT_PRIEST && nodes.CHAPEL_2_INSPECT_PRIEST.scriptPresent || nodes.CHAPEL_2_INSPECT_PRIEST.authorityAliasPresent;
-
-    state.kingRouteConductorStatus = nodes.KING_ROUTE_CONDUCTOR ? nodes.KING_ROUTE_CONDUCTOR.metricStatus : "NOT_RUN";
-    state.queenControlsStatus = nodes.QUEEN_CONTROLS ? nodes.QUEEN_CONTROLS.metricStatus : "NOT_RUN";
-    state.chapel1AssetsCanvasHubStatus = nodes.CHAPEL_1_ASSETS_CANVAS_HUB ? nodes.CHAPEL_1_ASSETS_CANVAS_HUB.metricStatus : "NOT_RUN";
-    state.hexSurfaceGateStatus = nodes.HEX_SURFACE_GATE ? nodes.HEX_SURFACE_GATE.metricStatus : "NOT_RUN";
-    state.chapel2PointerSurfaceBishopStatus = nodes.CHAPEL_2_POINTER_SURFACE_BISHOP ? nodes.CHAPEL_2_POINTER_SURFACE_BISHOP.metricStatus : "NOT_RUN";
-
-    state.chapel1PriestStatus = nodes.CHAPEL_1_ASSETS_PRIEST ? nodes.CHAPEL_1_ASSETS_PRIEST.metricStatus : METRIC_STATUS.EXPECTED_NOT_YET_BUILT_NON_BLOCKING;
-    state.chapel2InspectPriestStatus = nodes.CHAPEL_2_INSPECT_PRIEST ? nodes.CHAPEL_2_INSPECT_PRIEST.metricStatus : "NOT_RUN";
-
-    state.chapel1PriestSubstitutionStatus = resolveChapel1PriestSubstitutionStatus(nodes);
-
-    const all = Object.values(nodes).concat(Object.values(state.chapel2FingerMetrics), Object.values(state.judgeMetrics)).filter(Boolean);
-
-    state.strictEndpointConfirmedCount = all.filter((node) => node.metricStatus === METRIC_STATUS.STRICT_RUNTIME_ENDPOINT_CONFIRMED).length;
-    state.contractFamilyMismatchCount = all.filter((node) => node.metricStatus === METRIC_STATUS.CONTRACT_FAMILY_MISMATCH).length;
-    state.borrowedContractRejectedCount = all.filter((node) => node.borrowedContractTextRejected).length;
-    state.observedNodeCount = all.filter((node) => node.scriptPresent || node.authorityAliasPresent).length;
-    state.scriptPresentCount = all.filter((node) => node.scriptPresent).length;
-    state.authorityAliasPresentCount = all.filter((node) => node.authorityAliasPresent).length;
-    state.expectedNonBlockingCount = all.filter((node) => node.metricStatus === METRIC_STATUS.EXPECTED_NOT_YET_BUILT_NON_BLOCKING).length;
-
-    return nodes;
-  }
-
-  function resolveChapel1PriestSubstitutionStatus(nodes) {
-    const chapel1 = nodes.CHAPEL_1_ASSETS_PRIEST;
-    const chapel2Priest = nodes.CHAPEL_2_INSPECT_PRIEST;
-
-    if (chapel1 && chapel1.endpointConfirmed) return "CHAPEL_1_PRIEST_CONFIRMED";
-    if (chapel2Priest && chapel2Priest.endpointConfirmed) {
-      return "REJECTED_EXISTING_INSPECT_BELONGS_TO_CHAPEL_2";
-    }
-
-    return "CHAPEL_1_PRIEST_EXPECTED_NOT_YET_BUILT";
-  }
-
-  function endpointOk(id) {
-    const node = state.nodes[id];
-    if (!node) return false;
-    return Boolean(node.endpointConfirmed);
-  }
-
-  function endpointText(id) {
-    const node = state.nodes[id] || {};
-    return objectText(node.receiptObject, node, node.methods);
-  }
-
-  function makeRelationship(id, from, to, file, requestObserved, grantObserved, returnObserved, reason, blocking = true) {
-    const closed = Boolean(requestObserved && grantObserved && returnObserved);
-    const status = closed
-      ? "RELATIONSHIP_CLOSED"
-      : requestObserved && grantObserved
-        ? "REQUEST_AND_GRANT_OBSERVED_RETURN_PENDING"
-        : requestObserved
-          ? "REQUEST_OBSERVED_GRANT_PENDING"
-          : "REQUEST_NOT_OBSERVED";
 
     return {
-      id,
-      from,
-      to,
-      file,
+      method: "NONE",
+      packet: null,
+      attempted: false,
+      error: "NO_OBJECT_PACKET_RETURNED"
+    };
+  }
+
+  function selfMeasureWestDuty() {
+    var metric = {
+      PRIMARY_DUTY_COUNT: 1,
+      SECONDARY_DUTY_COUNT: 4,
+      OWNERSHIP_DOMAIN_COUNT: 1,
+      MUTATION_AUTHORITY_COUNT: 0,
+      WRITE_AUTHORITY_COUNT: 0,
+      LIFECYCLE_METHOD_COUNT: 0,
+      DOWNSTREAM_SERVICE_COUNT: 0,
+      UPSTREAM_DEPENDENCY_COUNT: 3,
+      FAN_IN_COUNT: 4,
+      FAN_OUT_COUNT: 2,
+      CONTRACT_FAMILY_REFERENCED_COUNT: 7,
+      ALIAS_SURFACE_COUNT: WEST_ALIAS_PATHS.length,
+      RENDER_OR_INPUT_COUPLING_PRESENT: false
+    };
+
+    var score =
+      metric.PRIMARY_DUTY_COUNT * 4 +
+      metric.SECONDARY_DUTY_COUNT +
+      metric.OWNERSHIP_DOMAIN_COUNT * 3 +
+      metric.MUTATION_AUTHORITY_COUNT * 6 +
+      metric.WRITE_AUTHORITY_COUNT * 5 +
+      metric.FAN_OUT_COUNT +
+      metric.CONTRACT_FAMILY_REFERENCED_COUNT;
+
+    var status = "DUTY_LOAD_SAFE";
+    if (score >= 18) status = "DUTY_LOAD_HEAVY_NON_COLLAPSED";
+    if (score >= 28) status = "DUTY_LOAD_COLLAPSE_RISK";
+    if (score >= 40 || metric.MUTATION_AUTHORITY_COUNT > 0 || metric.WRITE_AUTHORITY_COUNT > 0) {
+      status = "DUTY_LOAD_COLLAPSE_DETECTED";
+    }
+
+    var malpractice = status === "DUTY_LOAD_COLLAPSE_DETECTED";
+
+    return {
+      DIAGNOSTIC_FILE: FILE,
+      ASSIGNED_ROLE: "LAB_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+      ALLOWED_DUTIES: [
+        "CONSUME_LAB_NORTH_STANDARD",
+        "CONSUME_NORTH_DIAGNOSTIC_RAIL_VERDICT",
+        "MEASURE_CORE_ENDPOINTS",
+        "ADJUDICATE_CONSTRUCTION_READINESS",
+        "PUBLISH_CANVAS_RELEASE_PACKET_OR_PRECISE_HOLD"
+      ],
+      FORBIDDEN_DUTIES: [
+        "PRODUCTION_MUTATION",
+        "CANVAS_DRAWING",
+        "CANVAS_REPAIR",
+        "ROUTE_REPAIR",
+        "CONTROLS_REPAIR",
+        "LAB_NORTH_GRAMMAR_REPLACEMENT",
+        "NORTH_RAIL_REPLACEMENT",
+        "SURFACE_TRUTH_PROBE_REPLACEMENT",
+        "FINAL_VISUAL_PASS_CLAIM"
+      ],
+
+      PRIMARY_DUTY_COUNT: metric.PRIMARY_DUTY_COUNT,
+      SECONDARY_DUTY_COUNT: metric.SECONDARY_DUTY_COUNT,
+      OWNERSHIP_DOMAIN_COUNT: metric.OWNERSHIP_DOMAIN_COUNT,
+      MUTATION_AUTHORITY_COUNT: metric.MUTATION_AUTHORITY_COUNT,
+      WRITE_AUTHORITY_COUNT: metric.WRITE_AUTHORITY_COUNT,
+      FAN_IN_COUNT: metric.FAN_IN_COUNT,
+      FAN_OUT_COUNT: metric.FAN_OUT_COUNT,
+      CONTRACT_FAMILY_REFERENCED_COUNT: metric.CONTRACT_FAMILY_REFERENCED_COUNT,
+      ALIAS_SURFACE_COUNT: metric.ALIAS_SURFACE_COUNT,
+
+      DUTY_LOAD_SCORE: score,
+      DUTY_LOAD_STATUS: status,
+      SELF_MEASUREMENT_STATUS: malpractice
+        ? "DIAGNOSTIC_MALPRACTICE_DETECTED"
+        : status === "DUTY_LOAD_COLLAPSE_RISK"
+          ? "DIAGNOSTIC_CONTAINER_COLLAPSE_RISK"
+          : status === "DUTY_LOAD_HEAVY_NON_COLLAPSED"
+            ? "DIAGNOSTIC_SELF_DUTY_HEAVY_NON_COLLAPSED"
+            : "DIAGNOSTIC_SELF_DUTY_CLEAN",
+      DIAGNOSTIC_MALPRACTICE_DETECTED: malpractice,
+      DIAGNOSTIC_OUTPUT_QUARANTINED: malpractice
+    };
+  }
+
+  function readNorthStandardPacket() {
+    var resolved = resolveAuthority(LAB_NORTH_ALIASES);
+    var authority = resolved.authority;
+
+    var receipt = callPacket(authority, ["getReceiptLight", "getReceipt"]);
+    var grammar = callPacket(authority, ["getRuntimeGrammar"]);
+    var northGrammarPacket = callPacket(authority, ["getNorthGrammarPacket"]);
+    var strictProofRules = callPacket(authority, ["getStrictProofRules"]);
+    var dutyLoadBudget = callPacket(authority, ["getDutyLoadBudgetSchema"]);
+    var diagnosticSelfMeasurement = callPacket(authority, [
+      "getDiagnosticSelfMeasurementSchema"
+    ]);
+    var diagnosticMalpracticeGuard = callPacket(authority, [
+      "getDiagnosticMalpracticeGuardSchema"
+    ]);
+
+    var contract = firstKnown(
+      receipt.packet && contractOf(receipt.packet),
+      grammar.packet && contractOf(grammar.packet),
+      contractOf(authority)
+    );
+
+    var compatibilityBridge =
+      contract === "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3" ||
+      contract === "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2";
+
+    var grammarAnchor =
+      contract === "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1" ||
+      contract === "LAB_RUNTIME_TABLE_NORTH_KING_QUEEN_DUAL_CHAPEL_DUTY_LOAD_MALPRACTICE_GUARD_SCHEMA_ANCHOR_TNT_v1_1";
+
+    return {
+      sourceAlias: resolved.alias,
+      authorityPresent: resolved.present,
+      contract: contract,
+      contractFamily: detectContractFamily(contract),
+      grammarAnchorActive: Boolean(grammarAnchor),
+      compatibilityBridgeActive: Boolean(compatibilityBridge),
+      northStandardAccepted: Boolean(grammarAnchor || compatibilityBridge),
+      receipt: receipt,
+      runtimeGrammar: grammar,
+      northGrammarPacket: northGrammarPacket,
+      strictProofRules: strictProofRules,
+      dutyLoadBudget: dutyLoadBudget,
+      diagnosticSelfMeasurementSchema: diagnosticSelfMeasurement,
+      diagnosticMalpracticeGuardSchema: diagnosticMalpracticeGuard
+    };
+  }
+
+  function readNorthRailPacket(invokeNorthDiagnostic) {
+    var resolved = resolveAuthority(NORTH_RAIL_ALIASES);
+    var authority = resolved.authority;
+
+    var packet = null;
+    var method = "NONE";
+    var error = "NONE";
+    var attempted = false;
+
+    if (authority && invokeNorthDiagnostic && isFunction(authority.runDiagnostic)) {
+      var call = callMethod(authority, "runDiagnostic");
+      attempted = true;
+      method = "runDiagnostic";
+      if (call.ok && isObject(call.output)) packet = call.output;
+      else error = call.error;
+    }
+
+    if (!packet && authority && isFunction(authority.getReport)) {
+      var report = callMethod(authority, "getReport");
+      attempted = true;
+      method = "getReport";
+      if (report.ok && isObject(report.output)) packet = report.output;
+      else error = report.error;
+    }
+
+    if (!packet && authority && isFunction(authority.getReceipt)) {
+      var receipt = callMethod(authority, "getReceipt");
+      attempted = true;
+      method = "getReceipt";
+      if (receipt.ok && isObject(receipt.output)) packet = receipt.output;
+      else error = receipt.error;
+    }
+
+    return {
+      sourceAlias: resolved.alias,
+      authorityPresent: resolved.present,
+      method: method,
+      attempted: attempted,
+      error: error,
+      packet: clone(packet),
+      northVerdictAvailable: Boolean(
+        packet &&
+          (packet.NORTH_VERDICT_AVAILABLE === true ||
+            packet.NORTH_VERDICT_STATUS ||
+            packet.NORTH_VERDICT_CLASS ||
+            packet.northVerdict)
+      )
+    };
+  }
+
+  function extractSurfaceTruthFromNorth(packet) {
+    var p = packet || {};
+    var summary = p.surfaceTruthSummary || {};
+
+    return {
+      inspected: Boolean(
+        p.SURFACE_TRUTH_INSPECTED ||
+          summary.inspected ||
+          p.CANVAS_SURFACE_TRUTH_STATUS ||
+          p.SURFACE_TRUTH_STATUS
+      ),
+      status: firstKnown(
+        p.CANVAS_SURFACE_TRUTH_STATUS,
+        p.SURFACE_TRUTH_STATUS,
+        summary.status,
+        "UNKNOWN"
+      ),
+      failureClass: firstKnown(
+        p.CANVAS_SURFACE_TRUTH_FAILURE_CLASS,
+        p.SURFACE_TRUTH_FAILURE_CLASS,
+        summary.failureClass,
+        "UNKNOWN"
+      ),
+      firstFailedCoordinate: firstKnown(
+        p.CANVAS_TRUTH_FIRST_FAILED_COORDINATE,
+        p.SURFACE_TRUTH_FIRST_FAILED_COORDINATE,
+        summary.firstFailedCoordinate,
+        "UNKNOWN"
+      )
+    };
+  }
+
+  function readSurfaceTruthDirect() {
+    var resolved = resolveAuthority(SURFACE_TRUTH_ALIASES);
+    var authority = resolved.authority;
+
+    var receipt = callPacket(authority, ["getReceipt", "getProfileReceipt"]);
+    var contractPacket = callPacket(authority, [
+      "getContractDefinitionReceipt",
+      "composeContractDefinitionPacket"
+    ]);
+
+    return {
+      sourceAlias: resolved.alias,
+      authorityPresent: resolved.present,
+      receipt: receipt,
+      contractDefinitionPacket: contractPacket
+    };
+  }
+
+  function inspectCoreNodes() {
+    var out = {};
+
+    CORE_NODE_CONFIGS.forEach(function (config) {
+      out[config.id] = inspectAuthority(config);
+    });
+
+    return out;
+  }
+
+  function inspectJudgeNodes() {
+    var out = {};
+
+    JUDGE_NODE_CONFIGS.forEach(function (config) {
+      out[config.id] = inspectAuthority({
+        id: config.id,
+        file: config.file,
+        aliases: config.aliases,
+        expectedFamily: config.expectedFamily,
+        acceptedContracts: config.acceptedContracts,
+        blocking: false
+      });
+    });
+
+    return out;
+  }
+
+  function endpointOk(nodes, id) {
+    return Boolean(nodes[id] && nodes[id].endpointConfirmed);
+  }
+
+  function objectText() {
+    var pieces = [];
+
+    for (var i = 0; i < arguments.length; i += 1) {
+      try {
+        pieces.push(JSON.stringify(arguments[i] || {}));
+      } catch (_error) {
+        pieces.push("");
+      }
+    }
+
+    return pieces.join(" | ").toUpperCase();
+  }
+
+  function contains(text, patterns) {
+    var source = safeString(text).toUpperCase();
+    for (var i = 0; i < patterns.length; i += 1) {
+      if (source.indexOf(patterns[i].toUpperCase()) !== -1) return true;
+    }
+    return false;
+  }
+
+  function makeRelationship(id, from, to, file, requestObserved, grantObserved, returnObserved, reason, blocking) {
+    var closed = Boolean(requestObserved && grantObserved && returnObserved);
+
+    return {
+      id: id,
+      from: from,
+      to: to,
+      file: file,
       requestObserved: Boolean(requestObserved),
       grantObserved: Boolean(grantObserved),
       returnObserved: Boolean(returnObserved),
       relationshipClosed: closed,
-      relationshipStatus: status,
+      relationshipStatus: closed
+        ? "RELATIONSHIP_CLOSED"
+        : requestObserved && grantObserved
+          ? "REQUEST_AND_GRANT_OBSERVED_RETURN_PENDING"
+          : requestObserved
+            ? "REQUEST_OBSERVED_GRANT_PENDING"
+            : "REQUEST_NOT_OBSERVED",
       blocking: Boolean(blocking),
-      reason,
+      reason: reason,
       ...NO_CLAIMS
     };
   }
 
-  function inspectRelationships() {
-    const kingText = endpointText("KING_ROUTE_CONDUCTOR");
-    const queenText = endpointText("QUEEN_CONTROLS");
-    const chapel1Text = endpointText("CHAPEL_1_ASSETS_CANVAS_HUB");
-    const hexText = endpointText("HEX_SURFACE_GATE");
-    const chapel2Text = endpointText("CHAPEL_2_POINTER_SURFACE_BISHOP");
-    const chapel2PriestText = endpointText("CHAPEL_2_INSPECT_PRIEST");
+  function inspectRelationships(nodes) {
+    var kingText = objectText(nodes.KING_ROUTE_CONDUCTOR && nodes.KING_ROUTE_CONDUCTOR.receiptObject);
+    var queenText = objectText(nodes.QUEEN_CONTROLS && nodes.QUEEN_CONTROLS.receiptObject);
+    var chapel1Text = objectText(nodes.CHAPEL_1_ASSETS_CANVAS_HUB && nodes.CHAPEL_1_ASSETS_CANVAS_HUB.receiptObject);
+    var hexText = objectText(nodes.HEX_SURFACE_GATE && nodes.HEX_SURFACE_GATE.receiptObject);
+    var chapel2Text = objectText(nodes.CHAPEL_2_POINTER_SURFACE_BISHOP && nodes.CHAPEL_2_POINTER_SURFACE_BISHOP.receiptObject);
 
-    const routeToQueenRequest = endpointOk("KING_ROUTE_CONDUCTOR") && (
-      textContains(kingText, ["CONTROL", "CONTROLS", "QUEEN", "HANDSHAKE"]) ||
-      state.kingRouteConductorObserved
-    );
-    const routeToQueenGrant = endpointOk("QUEEN_CONTROLS");
-    const routeToQueenReturn = routeToQueenRequest && routeToQueenGrant;
+    var routeToQueenRequest =
+      endpointOk(nodes, "KING_ROUTE_CONDUCTOR") &&
+      (contains(kingText, ["CONTROL", "CONTROLS", "QUEEN", "HANDSHAKE"]) ||
+        nodes.KING_ROUTE_CONDUCTOR.authorityAliasPresent);
+    var routeToQueenGrant = endpointOk(nodes, "QUEEN_CONTROLS");
+    var routeToQueenReturn = routeToQueenRequest && routeToQueenGrant;
 
-    const queenToChapel1Request = endpointOk("QUEEN_CONTROLS") && (
-      textContains(queenText, ["CANVAS", "VIEW", "DELTA", "HEX_GATE"]) ||
-      state.queenControlsObserved
-    );
-    const queenToChapel1Grant = endpointOk("CHAPEL_1_ASSETS_CANVAS_HUB") && (
-      hasAnyMethod(state.nodes.CHAPEL_1_ASSETS_CANVAS_HUB, ALLOWED_METHODS.CHAPEL_1_ASSETS_CANVAS_HUB) ||
-      textContains(chapel1Text, ["VIEW", "CONTROL", "RECEIVER"])
-    );
-    const queenToChapel1Return = queenToChapel1Request && queenToChapel1Grant;
+    var queenToChapel1Request =
+      endpointOk(nodes, "QUEEN_CONTROLS") &&
+      (contains(queenText, ["CANVAS", "VIEW", "DELTA", "HEX"]) ||
+        nodes.QUEEN_CONTROLS.authorityAliasPresent);
+    var queenToChapel1Grant = endpointOk(nodes, "CHAPEL_1_ASSETS_CANVAS_HUB");
+    var queenToChapel1Return = queenToChapel1Request && queenToChapel1Grant;
 
-    const chapel1ToHexRequest = endpointOk("CHAPEL_1_ASSETS_CANVAS_HUB") && (
-      textContains(chapel1Text, ["HEX_GATE", "HEX_SURFACE", "CANVAS_HEX_GATE"]) ||
-      hasAnyMethod(state.nodes.CHAPEL_1_ASSETS_CANVAS_HUB, ["composeCanvasHexGatePacket", "deliverCanvasHexGatePacket"])
-    );
-    const chapel1ToHexGrant = endpointOk("HEX_SURFACE_GATE");
-    const chapel1ToHexReturn = chapel1ToHexRequest && chapel1ToHexGrant && (
-      textContains(hexText, ["CANVAS", "HEX", "PAIR", "POINTER"]) ||
-      state.hexSurfaceGateObserved
-    );
+    var chapel1ToHexRequest =
+      endpointOk(nodes, "CHAPEL_1_ASSETS_CANVAS_HUB") &&
+      (contains(chapel1Text, ["HEX", "SURFACE", "GATE"]) ||
+        nodes.CHAPEL_1_ASSETS_CANVAS_HUB.authorityAliasPresent);
+    var chapel1ToHexGrant = endpointOk(nodes, "HEX_SURFACE_GATE");
+    var chapel1ToHexReturn =
+      chapel1ToHexRequest &&
+      chapel1ToHexGrant &&
+      (contains(hexText, ["CANVAS", "HEX", "PAIR", "POINTER"]) ||
+        nodes.HEX_SURFACE_GATE.authorityAliasPresent);
 
-    const hexToChapel2Request = endpointOk("HEX_SURFACE_GATE") && (
-      textContains(hexText, ["POINTER_SURFACE", "BISHOP", "FINGER_SURFACE"]) ||
-      state.hexSurfaceGateObserved
-    );
-    const hexToChapel2Grant = endpointOk("CHAPEL_2_POINTER_SURFACE_BISHOP");
-    const hexToChapel2Return = hexToChapel2Request && hexToChapel2Grant && (
-      textContains(chapel2Text, ["HEX", "RETURN", "ARTIFACT", "CANVAS"]) ||
-      state.chapel2PointerSurfaceBishopObserved
-    );
+    var hexToChapel2Request =
+      endpointOk(nodes, "HEX_SURFACE_GATE") &&
+      (contains(hexText, ["POINTER", "BISHOP", "FINGER"]) ||
+        nodes.HEX_SURFACE_GATE.authorityAliasPresent);
+    var hexToChapel2Grant = endpointOk(nodes, "CHAPEL_2_POINTER_SURFACE_BISHOP");
+    var hexToChapel2Return =
+      hexToChapel2Request &&
+      hexToChapel2Grant &&
+      (contains(chapel2Text, ["HEX", "RETURN", "ARTIFACT", "EXPRESSION"]) ||
+        nodes.CHAPEL_2_POINTER_SURFACE_BISHOP.authorityAliasPresent);
 
-    const chapel2ToChapel1Request = endpointOk("CHAPEL_2_POINTER_SURFACE_BISHOP") && (
-      textContains(chapel2Text, ["CANVAS_RETURN", "RETURN_PACKET", "ARTIFACT", "EXPRESSION"]) ||
-      state.chapel2PointerSurfaceBishopObserved
-    );
-    const chapel2ToChapel1Grant = endpointOk("CHAPEL_1_ASSETS_CANVAS_HUB") && (
-      hasAnyMethod(state.nodes.CHAPEL_1_ASSETS_CANVAS_HUB, [
-        "receivePointerSurfaceExpressionPacket",
-        "consumePointerSurfaceExpressionPacket",
-        "acceptPointerSurfaceExpressionPacket",
-        "receiveSurfaceExpressionPacket",
-        "receiveCanvasFingerSurfacePacket",
-        "receiveHexSurfaceReturnPacket",
-        "receiveHexSurfaceTransmissionPacket"
-      ]) ||
-      textContains(chapel1Text, ["POINTER_SURFACE_RETURN", "SURFACE_RETURN", "EXPRESSION_PACKET"])
-    );
-    const chapel2ToChapel1Return = chapel2ToChapel1Request && chapel2ToChapel1Grant;
+    var chapel2ToChapel1Request =
+      endpointOk(nodes, "CHAPEL_2_POINTER_SURFACE_BISHOP") &&
+      (contains(chapel2Text, ["CANVAS_RETURN", "RETURN_PACKET", "ARTIFACT", "EXPRESSION"]) ||
+        nodes.CHAPEL_2_POINTER_SURFACE_BISHOP.authorityAliasPresent);
+    var chapel2ToChapel1Grant = endpointOk(nodes, "CHAPEL_1_ASSETS_CANVAS_HUB");
+    var chapel2ToChapel1Return = chapel2ToChapel1Request && chapel2ToChapel1Grant;
 
-    const relationships = [
+    return [
       makeRelationship(
         "KING_ROUTE_CONDUCTOR_TO_QUEEN_CONTROLS",
         "KING_ROUTE_CONDUCTOR",
@@ -1560,7 +1587,8 @@
         routeToQueenRequest,
         routeToQueenGrant,
         routeToQueenReturn,
-        "King must govern route admission and Queen must own input intent."
+        "King must govern route admission and Queen must own input intent.",
+        true
       ),
       makeRelationship(
         "QUEEN_CONTROLS_TO_CHAPEL_1_ASSETS_CANVAS_HUB",
@@ -1570,7 +1598,8 @@
         queenToChapel1Request,
         queenToChapel1Grant,
         queenToChapel1Return,
-        "Queen must deliver view intent to Chapel 1 Canvas Hub public receiver."
+        "Queen must deliver view intent to Chapel 1 Canvas Hub public receiver.",
+        true
       ),
       makeRelationship(
         "CHAPEL_1_ASSETS_CANVAS_HUB_TO_HEX_SURFACE_GATE",
@@ -1580,7 +1609,8 @@
         chapel1ToHexRequest,
         chapel1ToHexGrant,
         chapel1ToHexReturn,
-        "Chapel 1 must compose/deliver Canvas Hex Gate packet to Hex Surface."
+        "Chapel 1 must compose or deliver Canvas Hex Gate packet to Hex Surface.",
+        true
       ),
       makeRelationship(
         "HEX_SURFACE_GATE_TO_CHAPEL_2_POINTER_SURFACE_BISHOP",
@@ -1590,7 +1620,8 @@
         hexToChapel2Request,
         hexToChapel2Grant,
         hexToChapel2Return,
-        "Hex Surface must hand off to Chapel 2 Pointer Surface Bishop."
+        "Hex Surface must hand off to Chapel 2 Pointer Surface Bishop.",
+        true
       ),
       makeRelationship(
         "CHAPEL_2_POINTER_SURFACE_BISHOP_TO_CHAPEL_1_ASSETS_CANVAS_HUB_RETURN",
@@ -1600,76 +1631,16 @@
         chapel2ToChapel1Request,
         chapel2ToChapel1Grant,
         chapel2ToChapel1Return,
-        "Chapel 2 Bishop must return expression artifact/receipt to Chapel 1 Hub."
+        "Chapel 2 Bishop must return expression artifact or receipt to Chapel 1 Hub.",
+        true
       )
     ];
-
-    const chapel1PriestConfirmed = endpointOk("CHAPEL_1_ASSETS_PRIEST");
-    const chapel1Relationships = [
-      makeRelationship(
-        "CHAPEL_1_ASSETS_CANVAS_HUB_TO_CHAPEL_1_ASSETS_PRIEST",
-        "CHAPEL_1_ASSETS_CANVAS_HUB",
-        "CHAPEL_1_ASSETS_PRIEST",
-        CHAPEL_1_PRIEST_PRIMARY_FILE,
-        endpointOk("CHAPEL_1_ASSETS_CANVAS_HUB"),
-        chapel1PriestConfirmed,
-        chapel1PriestConfirmed,
-        "Chapel 1 priest is expected but not yet built. Absence is measured, not blocking.",
-        false
-      )
-    ];
-
-    const chapel2PriestConfirmed = endpointOk("CHAPEL_2_INSPECT_PRIEST");
-    const chapel2FingerObservedCount = Object.values(state.chapel2FingerMetrics).filter((node) => node && (node.scriptPresent || node.authorityAliasPresent || node.endpointConfirmed)).length;
-
-    const chapel2Relationships = [
-      makeRelationship(
-        "CHAPEL_2_POINTER_SURFACE_BISHOP_TO_CHAPEL_2_FINGER_SET",
-        "CHAPEL_2_POINTER_SURFACE_BISHOP",
-        "CHAPEL_2_FINGER_SET",
-        CHAPEL_2_BISHOP_FILE,
-        endpointOk("CHAPEL_2_POINTER_SURFACE_BISHOP"),
-        chapel2FingerObservedCount > 0,
-        chapel2FingerObservedCount > 0,
-        "Chapel 2 Bishop may coordinate the existing Chapel 2 finger distribution set.",
-        false
-      ),
-      makeRelationship(
-        "CHAPEL_2_FINGER_SET_TO_CHAPEL_2_INSPECT_PRIEST",
-        "CHAPEL_2_FINGER_SET",
-        "CHAPEL_2_INSPECT_PRIEST",
-        CHAPEL_2_PRIEST_FILE,
-        chapel2FingerObservedCount > 0,
-        chapel2PriestConfirmed,
-        chapel2PriestConfirmed && (
-          textContains(chapel2PriestText, ["INSPECT", "CHILD", "ORGANIZE", "PROOF"]) ||
-          state.chapel2InspectPriestObserved
-        ),
-        "Existing Inspect Finger is the priest of Chapel 2, not Chapel 1.",
-        false
-      )
-    ];
-
-    state.relationships = clonePlain(relationships);
-    state.chapel1Relationships = clonePlain(chapel1Relationships);
-    state.chapel2Relationships = clonePlain(chapel2Relationships);
-
-    state.routeToQueenConfirmed = relationships[0].relationshipClosed;
-    state.queenToChapel1Confirmed = relationships[1].relationshipClosed;
-    state.chapel1ToHexConfirmed = relationships[2].relationshipClosed;
-    state.hexToChapel2Confirmed = relationships[3].relationshipClosed;
-    state.chapel2ToChapel1ReturnConfirmed = relationships[4].relationshipClosed;
-
-    state.chapel1LoopMeasured = true;
-    state.chapel1LoopBlocking = false;
-    state.chapel2LoopMeasured = true;
-    state.chapel2LoopBlocking = false;
-
-    return relationships;
   }
 
-  function firstBlockingEndpointFailure() {
-    const ordered = [
+  function firstEndpointFailure(nodes) {
+    var order = [
+      ["LAB_NORTH_STANDARD", WEST_GAP_CLASS.NORTH_STANDARD_MISSING],
+      ["NORTH_DIAGNOSTIC_RAIL", WEST_GAP_CLASS.NORTH_RAIL_MISSING],
       ["KING_ROUTE_CONDUCTOR", WEST_GAP_CLASS.WAITING_KING],
       ["QUEEN_CONTROLS", WEST_GAP_CLASS.WAITING_QUEEN],
       ["CHAPEL_1_ASSETS_CANVAS_HUB", WEST_GAP_CLASS.WAITING_CHAPEL_1],
@@ -1677,16 +1648,19 @@
       ["CHAPEL_2_POINTER_SURFACE_BISHOP", WEST_GAP_CLASS.WAITING_CHAPEL_2]
     ];
 
-    for (const [id, gapClass] of ordered) {
-      const node = state.nodes[id];
+    for (var i = 0; i < order.length; i += 1) {
+      var id = order[i][0];
+      var gapClass = order[i][1];
+      var node = nodes[id];
+
       if (!node) continue;
 
       if (node.metricStatus === METRIC_STATUS.CONTRACT_FAMILY_MISMATCH) {
         return {
           coordinate: id,
           failureClass: WEST_GAP_CLASS.CONTRACT_FAMILY_MISMATCH,
-          reason: `Endpoint contract family mismatch: ${node.contractFamily || "UNKNOWN"} cannot satisfy ${id}.`,
-          file: node.physicalFile,
+          reason: "Endpoint contract family mismatch: " + node.contractFamily,
+          file: node.file,
           owner: id
         };
       }
@@ -1695,8 +1669,8 @@
         return {
           coordinate: id,
           failureClass: WEST_GAP_CLASS.BORROWED_CONTRACT_TEXT,
-          reason: "Borrowed authority contract text rejected as endpoint proof.",
-          file: node.physicalFile,
+          reason: "Borrowed contract text rejected as endpoint proof.",
+          file: node.file,
           owner: id
         };
       }
@@ -1706,7 +1680,7 @@
           coordinate: id,
           failureClass: gapClass,
           reason: node.metricStatus,
-          file: node.physicalFile,
+          file: node.file,
           owner: id
         };
       }
@@ -1715,55 +1689,86 @@
     return null;
   }
 
-  function resolveFirstOpenDuty() {
-    const endpointFailure = firstBlockingEndpointFailure();
+  function resolveFirstOpenDuty(nodes, relationships, northStandardPacket, northRailPacket, surfaceSummary, selfMeasurement) {
+    if (selfMeasurement.DIAGNOSTIC_MALPRACTICE_DETECTED) {
+      return {
+        coordinate: "LAB_WEST_SELF_MEASUREMENT",
+        failureClass: WEST_GAP_CLASS.DIAGNOSTIC_MALPRACTICE,
+        reason: selfMeasurement.SELF_MEASUREMENT_STATUS,
+        file: FILE,
+        owner: "LAB_WEST"
+      };
+    }
+
+    if (!northStandardPacket.northStandardAccepted) {
+      return {
+        coordinate: "LAB_NORTH_STANDARD",
+        failureClass: WEST_GAP_CLASS.NORTH_STANDARD_MISSING,
+        reason: "North standard is not available through grammar-anchor or compatibility bridge.",
+        file: LAB_NORTH_FILE,
+        owner: "LAB_NORTH"
+      };
+    }
+
+    if (!northRailPacket.northVerdictAvailable) {
+      return {
+        coordinate: "NORTH_DIAGNOSTIC_RAIL",
+        failureClass: WEST_GAP_CLASS.NORTH_RAIL_VERDICT_UNAVAILABLE,
+        reason: "Restored North rail is present but did not return a readable North verdict packet.",
+        file: NORTH_RAIL_FILE,
+        owner: "JUDGE_NORTH"
+      };
+    }
+
+    var endpointFailure = firstEndpointFailure(nodes);
     if (endpointFailure) return endpointFailure;
 
-    const open = state.relationships.find((relationship) => relationship.blocking && !relationship.relationshipClosed);
-    if (open) {
+    for (var i = 0; i < relationships.length; i += 1) {
+      var relationship = relationships[i];
+
+      if (relationship.blocking && !relationship.relationshipClosed) {
+        return {
+          coordinate: relationship.id,
+          failureClass: WEST_GAP_CLASS.RELATIONSHIP_OPEN,
+          reason: relationship.relationshipStatus,
+          file: relationship.file,
+          owner: relationship.to
+        };
+      }
+    }
+
+    if (!surfaceSummary.inspected) {
       return {
-        coordinate: open.id,
-        failureClass: WEST_GAP_CLASS.RELATIONSHIP_OPEN,
-        reason: open.relationshipStatus,
-        file: open.file,
-        owner: open.to
+        coordinate: "SURFACE_TRUTH_MEASUREMENT",
+        failureClass: WEST_GAP_CLASS.SURFACE_TRUTH_UNMEASURED,
+        reason: "Surface Truth is present but no inspected surface measurement is available.",
+        file: SURFACE_TRUTH_FILE,
+        owner: "SURFACE_TRUTH_PROBE"
+      };
+    }
+
+    if (surfaceSummary.status === "SURFACE_CONTRACT_MEASUREMENT_FAILED") {
+      return {
+        coordinate: surfaceSummary.firstFailedCoordinate || "SURFACE_TRUTH_FAILURE",
+        failureClass: WEST_GAP_CLASS.SURFACE_TRUTH_FAILURE,
+        reason: surfaceSummary.failureClass || "SURFACE_CONTRACT_MEASUREMENT_FAILED",
+        file: SURFACE_TRUTH_FILE,
+        owner: "SURFACE_TRUTH_PROBE"
       };
     }
 
     return {
       coordinate: "NONE",
       failureClass: WEST_GAP_CLASS.NONE,
-      reason: "Outer church loop closed through King, Queen, Chapel 1 Hub, Hex Surface, Chapel 2 Bishop, and Chapel 1 return.",
+      reason: "North standard, restored North rail, core endpoints, relationships, and Surface Truth are aligned for derivative release.",
       file: "NONE",
       owner: "NONE"
     };
   }
 
-  function clearReleasePacket() {
-    const hearth = ensureObject(root, "HEARTH");
-    const lab = ensureObject(root, "DEXTER_LAB");
-
-    root.HEARTH_CANVAS_RELEASE_PACKET = null;
-    root.HEARTH_WEST_CANVAS_RELEASE_PACKET = null;
-    root.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = null;
-    root.HEARTH_WEST_CYCLE_CLOSURE_RETURN_RECEIPT_PACKET = null;
-    root.LAB_RUNTIME_TABLE_WEST_CYCLE_CLOSURE_RETURN_RECEIPT_PACKET = null;
-
-    hearth.canvasReleasePacket = null;
-    hearth.westCanvasReleasePacket = null;
-    hearth.westCycleClosureReturnReceiptPacket = null;
-
-    lab.hearthWestCanvasReleasePacket = null;
-    lab.hearthRuntimeTableWestReleasePacket = null;
-    lab.hearthWestCycleClosureReturnReceiptPacket = null;
-
-    state.releasePacket = null;
-    return true;
-  }
-
   function composeReleasePacket() {
     return {
-      packetType: "LAB_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RELEASE_PACKET_v5_2",
+      packetType: "LAB_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_PACKET_v5_3",
       event: "RELEASE_TO_CANVAS_RETURN_RECEIPT",
       timestamp: nowIso(),
 
@@ -1773,65 +1778,43 @@
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       sourceFile: FILE,
-      destinationFile: CHAPEL_1_HUB_FILE,
       targetFile: CHAPEL_1_HUB_FILE,
+      destinationFile: CHAPEL_1_HUB_FILE,
       route: ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       activeStageId: ACTIVE_STAGE_ID,
-      activeGear: ACTIVE_GEAR,
-      activeCycleNumber: ACTIVE_CYCLE_NUMBER,
-      activeCycleRoute: ACTIVE_CYCLE_ROUTE,
       activeCardinal: ACTIVE_CARDINAL,
       activeFibonacci: ACTIVE_FIBONACCI,
       activeNewsGate: ACTIVE_NEWS_GATE,
+      activeCycleNumber: ACTIVE_CYCLE_NUMBER,
+      activeCycleRoute: ACTIVE_CYCLE_ROUTE,
 
-      outerChurchLoop: OUTER_CHURCH_LOOP.slice(),
-      chapel1ExpectedLoop: CHAPEL_1_EXPECTED_LOOP.slice(),
-      chapel2CurrentLoop: CHAPEL_2_CURRENT_LOOP.slice(),
-      diagnosticJudgeLoop: DIAGNOSTIC_JUDGE_LOOP.slice(),
+      northStandardFile: LAB_NORTH_FILE,
+      northDiagnosticRailFile: NORTH_RAIL_FILE,
+      surfaceTruthFile: SURFACE_TRUTH_FILE,
 
-      kingRouteConductorFile: KING_FILE,
-      queenControlsFile: QUEEN_FILE,
-      chapel1AssetsCanvasHubFile: CHAPEL_1_HUB_FILE,
-      chapel1AssetsPriestPrimaryFile: CHAPEL_1_PRIEST_PRIMARY_FILE,
-      chapel1PriestStatus: state.chapel1PriestStatus,
-      chapel1PriestSubstitutionStatus: state.chapel1PriestSubstitutionStatus,
-      chapel2PointerSurfaceBishopFile: CHAPEL_2_BISHOP_FILE,
-      chapel2InspectPriestFile: CHAPEL_2_PRIEST_FILE,
-
-      strictFileContractFamilyMatchRequired: true,
-      borrowedAuthorityContractTextRejected: true,
-      aliasIsEndpointProof: false,
-
-      routeToQueenConfirmed: state.routeToQueenConfirmed,
-      queenToChapel1Confirmed: state.queenToChapel1Confirmed,
-      chapel1ToHexConfirmed: state.chapel1ToHexConfirmed,
-      hexToChapel2Confirmed: state.hexToChapel2Confirmed,
-      chapel2ToChapel1ReturnConfirmed: state.chapel2ToChapel1ReturnConfirmed,
-
-      outerCycleClosed: state.outerCycleClosed,
-      cycleClosed: state.cycleClosed,
-      cycleClosureStatus: state.cycleClosureStatus,
+      constructionReadinessStatus: state.constructionReadinessStatus,
       westDecision: state.westDecision,
       westGapClass: state.westGapClass,
       westForwardAllowed: state.westForwardAllowed,
       canvasReleaseAuthorized: state.canvasReleaseAuthorized,
 
-      nodes: clonePlain(state.nodes),
-      chapel2FingerMetrics: clonePlain(state.chapel2FingerMetrics),
-      judgeMetrics: clonePlain(state.judgeMetrics),
-      relationships: clonePlain(state.relationships),
-      chapel1Relationships: clonePlain(state.chapel1Relationships),
-      chapel2Relationships: clonePlain(state.chapel2Relationships),
+      coreNodes: clone(state.coreNodes),
+      judgeMetrics: clone(state.judgeMetrics),
+      northStandardPacket: clone(state.northStandardPacket),
+      northRailPacket: clone(state.northRailPacket),
+      surfaceTruthSummary: clone(state.surfaceTruthSummary),
+      relationships: clone(state.relationships),
 
-      passiveReadOnlyAudit: true,
+      ownsWestAdmissibility: true,
+      ownsDerivativeRelease: true,
+      ownsCanvasReleasePacket: true,
       ownsCanvasDrawing: false,
       ownsCanvasLifecycle: false,
-      ownsControlsBehavior: false,
-      ownsHexTruth: false,
-      ownsChapelTruth: false,
-      ownsProductionFileRedefinition: false,
-      ownsDiagnosticRailMutation: false,
+      ownsProductionMutation: false,
+      ownsCanvasRepair: false,
+      ownsFinalVisualPassClaim: false,
 
       ...NO_CLAIMS
     };
@@ -1840,30 +1823,50 @@
   function publishReleasePacket(packet) {
     if (!isObject(packet)) return false;
 
-    const hearth = ensureObject(root, "HEARTH");
-    const lab = ensureObject(root, "DEXTER_LAB");
+    var HEARTH = ensureNamespace("HEARTH");
+    var DEXTER_LAB = ensureNamespace("DEXTER_LAB");
 
-    root.HEARTH_CANVAS_RELEASE_PACKET = clonePlain(packet);
-    root.HEARTH_WEST_CANVAS_RELEASE_PACKET = clonePlain(packet);
-    root.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = clonePlain(packet);
-    root.HEARTH_WEST_CYCLE_CLOSURE_RETURN_RECEIPT_PACKET = clonePlain(packet);
-    root.LAB_RUNTIME_TABLE_WEST_CYCLE_CLOSURE_RETURN_RECEIPT_PACKET = clonePlain(packet);
+    ROOT.HEARTH_CANVAS_RELEASE_PACKET = clone(packet);
+    ROOT.HEARTH_WEST_CANVAS_RELEASE_PACKET = clone(packet);
+    ROOT.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = clone(packet);
+    ROOT.HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_PACKET = clone(packet);
 
-    hearth.canvasReleasePacket = clonePlain(packet);
-    hearth.westCanvasReleasePacket = clonePlain(packet);
-    hearth.westCycleClosureReturnReceiptPacket = clonePlain(packet);
+    HEARTH.canvasReleasePacket = clone(packet);
+    HEARTH.westCanvasReleasePacket = clone(packet);
+    HEARTH.westNorthStandardDerivativeReleasePacket = clone(packet);
 
-    lab.hearthWestCanvasReleasePacket = clonePlain(packet);
-    lab.hearthRuntimeTableWestReleasePacket = clonePlain(packet);
-    lab.hearthWestCycleClosureReturnReceiptPacket = clonePlain(packet);
+    DEXTER_LAB.hearthWestCanvasReleasePacket = clone(packet);
+    DEXTER_LAB.hearthRuntimeTableWestReleasePacket = clone(packet);
+    DEXTER_LAB.hearthWestNorthStandardDerivativeReleasePacket = clone(packet);
 
+    return true;
+  }
+
+  function clearReleasePacket() {
+    var HEARTH = ensureNamespace("HEARTH");
+    var DEXTER_LAB = ensureNamespace("DEXTER_LAB");
+
+    ROOT.HEARTH_CANVAS_RELEASE_PACKET = null;
+    ROOT.HEARTH_WEST_CANVAS_RELEASE_PACKET = null;
+    ROOT.LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET = null;
+    ROOT.HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_PACKET = null;
+
+    HEARTH.canvasReleasePacket = null;
+    HEARTH.westCanvasReleasePacket = null;
+    HEARTH.westNorthStandardDerivativeReleasePacket = null;
+
+    DEXTER_LAB.hearthWestCanvasReleasePacket = null;
+    DEXTER_LAB.hearthRuntimeTableWestReleasePacket = null;
+    DEXTER_LAB.hearthWestNorthStandardDerivativeReleasePacket = null;
+
+    state.releasePacket = null;
     return true;
   }
 
   function applyHold(failure) {
     state.outerCycleClosed = false;
     state.cycleClosed = false;
-    state.cycleClosureStatus = "CYCLE_OPEN_HELD";
+    state.cycleClosureStatus = "CYCLE_OPEN_HELD_BY_NORTH_STANDARD_WEST_DERIVATIVE_RELEASE";
     state.westDecision = WEST_DECISION.HOLD;
     state.westGapClass = failure.failureClass || WEST_GAP_CLASS.STRUCTURAL_BLOCK;
     state.westForwardAllowed = false;
@@ -1877,10 +1880,16 @@
     state.firstOpenDutyFile = failure.file;
     state.firstOpenDutyOwner = failure.owner;
 
-    state.firstFailedCoordinate = failure.coordinate;
     state.recommendedNextFile = failure.file;
-    state.recommendedNextAction = `CONFIRM_${failure.coordinate}_DUTY`;
-    state.postgameStatus = `WEST_HOLD_${failure.coordinate}`;
+    state.recommendedNextAction =
+      failure.failureClass === WEST_GAP_CLASS.SURFACE_TRUTH_FAILURE
+        ? "RENEW_SURFACE_TRUTH_TARGET_FRAME_DOCUMENT_SCOPE"
+        : failure.failureClass === WEST_GAP_CLASS.NORTH_RAIL_VERDICT_UNAVAILABLE
+          ? "RECHECK_NORTH_DIAGNOSTIC_RAIL_RECEIPT_AND_RUN_SURFACE"
+          : "CONFIRM_" + failure.coordinate + "_DUTY";
+
+    state.constructionReadinessStatus =
+      "CONSTRUCTION_HELD_" + safeString(failure.failureClass || "STRUCTURAL_BLOCK");
 
     clearReleasePacket();
   }
@@ -1888,7 +1897,8 @@
   function applyRelease() {
     state.outerCycleClosed = true;
     state.cycleClosed = true;
-    state.cycleClosureStatus = "CYCLE_CLOSED_DUAL_CHAPEL_METRIC_BINDING_CONFIRMED";
+    state.cycleClosureStatus =
+      "CYCLE_CLOSED_NORTH_STANDARD_DERIVATIVE_RELEASE_CONFIRMED";
     state.westDecision = WEST_DECISION.RELEASE_TO_CANVAS_RETURN_RECEIPT;
     state.westGapClass = WEST_GAP_CLASS.NONE;
     state.westForwardAllowed = true;
@@ -1902,25 +1912,100 @@
     state.firstOpenDutyFile = "NONE";
     state.firstOpenDutyOwner = "NONE";
 
-    state.firstFailedCoordinate = "NONE_CYCLE_CLOSED_DUAL_CHAPEL_METRIC_BINDING_CONFIRMED";
     state.recommendedNextFile = CHAPEL_1_HUB_FILE;
-    state.recommendedNextAction = "ACCEPT_WEST_DUAL_CHAPEL_CYCLE_CLOSURE_RETURN_RECEIPT";
-    state.postgameStatus = "WEST_RELEASE_TO_CANVAS_RETURN_RECEIPT";
+    state.recommendedNextAction =
+      "ACCEPT_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_PACKET";
+    state.constructionReadinessStatus =
+      "CONSTRUCTION_READY_FOR_CANVAS_RETURN_RECEIPT_RELEASE";
 
-    const packet = composeReleasePacket();
-    state.releasePacket = clonePlain(packet);
+    var packet = composeReleasePacket();
+    state.releasePacket = clone(packet);
     publishReleasePacket(packet);
   }
 
-  function runCycleClosureAudit() {
+  function runNorthStandardDerivativeReleaseAudit(options) {
     state.runCount += 1;
     state.timestamp = nowIso();
 
-    try {
-      inspectAllNodes();
-      inspectRelationships();
+    var opts = options || {};
+    var invokeNorthDiagnostic =
+      opts.invokeNorthDiagnostic === undefined ? true : Boolean(opts.invokeNorthDiagnostic);
 
-      const failure = resolveFirstOpenDuty();
+    try {
+      var selfMeasurement = selfMeasureWestDuty();
+      var coreNodes = inspectCoreNodes();
+      var judgeMetrics = inspectJudgeNodes();
+      var relationships = inspectRelationships(coreNodes);
+      var northStandardPacket = readNorthStandardPacket();
+      var northRailPacket = readNorthRailPacket(invokeNorthDiagnostic);
+      var surfaceSummary = extractSurfaceTruthFromNorth(northRailPacket.packet);
+      var surfaceDirect = readSurfaceTruthDirect();
+
+      state.coreNodes = clone(coreNodes);
+      state.judgeMetrics = clone(judgeMetrics);
+      state.relationships = clone(relationships);
+      state.northStandardPacket = clone(northStandardPacket);
+      state.northRailPacket = clone(northRailPacket);
+      state.surfaceTruthSummary = clone(surfaceSummary);
+      state.surfaceTruthDirect = clone(surfaceDirect);
+
+      state.northStandardStatus = northStandardPacket.northStandardAccepted
+        ? "NORTH_STANDARD_ACCEPTED"
+        : "NORTH_STANDARD_NOT_ACCEPTED";
+      state.northCompatibilityBridgeStatus = northStandardPacket.compatibilityBridgeActive
+        ? "COMPATIBILITY_BRIDGE_ACTIVE"
+        : "GRAMMAR_ANCHOR_OR_DIRECT_STANDARD_ACTIVE";
+      state.northRailStatus =
+        coreNodes.NORTH_DIAGNOSTIC_RAIL && coreNodes.NORTH_DIAGNOSTIC_RAIL.loadStatus;
+      state.northRailVerdictAvailable = northRailPacket.northVerdictAvailable;
+      state.northRailReportMethod = northRailPacket.method;
+
+      state.surfaceTruthStatus = surfaceSummary.status;
+      state.surfaceTruthFailureClass = surfaceSummary.failureClass;
+      state.surfaceTruthFirstFailedCoordinate = surfaceSummary.firstFailedCoordinate;
+
+      var allNodes = Object.keys(coreNodes)
+        .map(function (key) {
+          return coreNodes[key];
+        })
+        .concat(
+          Object.keys(judgeMetrics).map(function (key) {
+            return judgeMetrics[key];
+          })
+        );
+
+      state.strictEndpointConfirmedCount = allNodes.filter(function (node) {
+        return node && node.metricStatus === METRIC_STATUS.STRICT_RUNTIME_ENDPOINT_CONFIRMED;
+      }).length;
+      state.contractFamilyMismatchCount = allNodes.filter(function (node) {
+        return node && node.metricStatus === METRIC_STATUS.CONTRACT_FAMILY_MISMATCH;
+      }).length;
+      state.borrowedContractRejectedCount = allNodes.filter(function (node) {
+        return node && node.borrowedContractTextRejected;
+      }).length;
+      state.observedNodeCount = allNodes.filter(function (node) {
+        return node && (node.scriptPresent || node.authorityAliasPresent);
+      }).length;
+
+      state.routeToQueenConfirmed =
+        relationships[0] && relationships[0].relationshipClosed;
+      state.queenToChapel1Confirmed =
+        relationships[1] && relationships[1].relationshipClosed;
+      state.chapel1ToHexConfirmed =
+        relationships[2] && relationships[2].relationshipClosed;
+      state.hexToChapel2Confirmed =
+        relationships[3] && relationships[3].relationshipClosed;
+      state.chapel2ToChapel1ReturnConfirmed =
+        relationships[4] && relationships[4].relationshipClosed;
+
+      var failure = resolveFirstOpenDuty(
+        coreNodes,
+        relationships,
+        northStandardPacket,
+        northRailPacket,
+        surfaceSummary,
+        selfMeasurement
+      );
 
       if (failure.coordinate === "NONE") {
         applyRelease();
@@ -1940,7 +2025,7 @@
       });
 
       applyHold({
-        coordinate: "LAB_WEST_DUAL_CHAPEL_METRIC_AUDIT_ERROR",
+        coordinate: "LAB_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_ERROR",
         failureClass: WEST_GAP_CLASS.STRUCTURAL_BLOCK,
         reason: safeString(error && error.message ? error.message : error),
         file: FILE,
@@ -1957,89 +2042,68 @@
   function composeHierarchyRegistry() {
     return {
       timestamp: nowIso(),
-      contract: "HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_HIERARCHY_REGISTRY_v5_2",
-      receipt: "HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_HIERARCHY_REGISTRY_RECEIPT_v5_2",
+      contract: "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_HIERARCHY_REGISTRY_v5_3",
+      receipt: "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_HIERARCHY_REGISTRY_RECEIPT_v5_3",
       sourceContract: CONTRACT,
       sourceReceipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
 
-      doctrine: {
-        aliasIsLabel: true,
-        aliasIsEndpointProof: false,
-        strictFileContractFamilyMatchRequired: true,
-        borrowedAuthorityContractTextRejected: true,
-        churchRoleCannotOverrideContractFamily: true,
-        chapel2PriestCannotSatisfyChapel1Priest: true
-      },
-
       authorityHierarchy: {
-        kingRouteConductor: {
-          file: KING_FILE,
-          alias: "KING_ROUTE_CONDUCTOR",
-          role: "KING",
-          owns: ["routePermission", "routeSequence", "handoffAdmission"],
-          doesNotOwn: ["canvasDrawing", "controlsInput", "chapelLabor", "diagnosticJudgment"]
+        labNorthStandard: {
+          file: LAB_NORTH_FILE,
+          role: "FOUNDATIONAL_NORTH_STANDARD",
+          acceptedThroughCompatibilityBridge: true,
+          owns: [
+            "grammar",
+            "strictProofLaw",
+            "containerCollapseLaw",
+            "dutyLoadLaw",
+            "diagnosticMalpracticeGuard"
+          ],
+          doesNotOwn: ["westRelease", "canvasDrawing", "productionMutation"]
         },
-        queenControls: {
-          file: QUEEN_FILE,
-          alias: "QUEEN_CONTROLS",
-          role: "QUEEN",
-          owns: ["inputIntent", "viewIntent", "viewPacketEmission"],
-          doesNotOwn: ["canvasDrawing", "hexTruth", "chapelLabor"]
+        northDiagnosticRail: {
+          file: NORTH_RAIL_FILE,
+          role: "JUDGE_NORTH_DIAGNOSTIC_RAIL",
+          owns: ["northDiagnosticTrackVerdict"],
+          doesNotOwn: ["westDerivativeMap", "canvasRepair", "productionMutation"]
         },
-        chapel1AssetsCanvasHub: {
-          file: CHAPEL_1_HUB_FILE,
-          alias: "CHAPEL_1_ASSETS_CANVAS_HUB",
-          role: "LEAD_BISHOP",
-          owns: ["publicCanvasReceiver", "assetHubRegistry", "visibleOutputCarrier", "returnAnchor"],
-          doesNotOwn: ["controlsInput", "diagnosticJudgment", "hexTruth", "pointerSurfaceTruth"]
+        labWestDerivativeRelease: {
+          file: FILE,
+          role: "WEST_DERIVATIVE_RELEASE_ADJUDICATOR",
+          owns: ["constructionReadinessAdjudication", "releasePacketOrHoldCoordinate"],
+          doesNotOwn: ["canvasDrawing", "productionRepair", "finalVisualPass"]
         },
-        chapel1AssetsPriest: {
-          file: CHAPEL_1_PRIEST_PRIMARY_FILE,
-          alternateFiles: CHAPEL_1_PRIEST_ALTERNATE_FILES.slice(),
-          alias: "CHAPEL_1_ASSETS_PRIEST",
-          role: "PRIEST",
-          currentStatus: state.chapel1PriestStatus,
-          substitutionStatus: state.chapel1PriestSubstitutionStatus,
-          requiredNow: false
-        },
-        chapel2PointerSurfaceBishop: {
-          file: CHAPEL_2_BISHOP_FILE,
-          alias: "CHAPEL_2_POINTER_SURFACE_BISHOP",
-          role: "BISHOP",
-          owns: ["pointerSurfaceGate", "expressionSocket", "surfaceReturn"],
-          doesNotOwn: ["chapel1Inspection", "kingRoutePermission", "queenInput"]
-        },
-        chapel2InspectPriest: {
-          file: CHAPEL_2_PRIEST_FILE,
-          alias: "CHAPEL_2_INSPECT_PRIEST",
-          role: "PRIEST",
-          owns: ["chapel2ChildOrganization", "chapel2Proofread"],
-          doesNotOwn: ["chapel1PriestDuty", "mainPointerSurfaceGate"]
+        surfaceTruthProbe: {
+          file: SURFACE_TRUTH_FILE,
+          role: "CANVAS_SURFACE_TRUTH_CONTRACT_DEFINITION_INSTRUMENT",
+          owns: ["surfaceContractDefinition", "surfaceMeasurementEvidence"],
+          doesNotOwn: ["finalArbitration", "canvasRepairAuthorization"]
         }
       },
 
-      loops: {
-        outerChurchLoop: OUTER_CHURCH_LOOP.slice(),
-        chapel1ExpectedLoop: CHAPEL_1_EXPECTED_LOOP.slice(),
-        chapel2CurrentLoop: CHAPEL_2_CURRENT_LOOP.slice(),
-        diagnosticJudgeLoop: DIAGNOSTIC_JUDGE_LOOP.slice()
+      coreFiles: {
+        kingRouteConductor: KING_FILE,
+        queenControls: QUEEN_FILE,
+        chapel1AssetsCanvasHub: CHAPEL_1_HUB_FILE,
+        chapel1AssetsPriest: CHAPEL_1_PRIEST_FILE,
+        hexSurfaceGate: HEX_SURFACE_FILE,
+        chapel2PointerSurfaceBishop: CHAPEL_2_BISHOP_FILE,
+        chapel2InspectPriest: CHAPEL_2_PRIEST_FILE
       },
 
-      chapel2FingerFiles: clonePlain(CHAPEL_2_FINGER_FILES),
-      judgeFiles: clonePlain(JUDGE_FILES),
-
       rules: {
-        westReadsReceiptsOnly: true,
+        northStandardAnchorsWest: true,
+        northRailVerdictRequired: true,
+        surfaceTruthIsEvidenceOnly: true,
+        aliasIsLabel: true,
+        aliasIsEndpointProof: false,
+        strictFileContractFamilyMatchRequired: true,
+        borrowedContractTextRejected: true,
         westDoesNotMutateProduction: true,
         westDoesNotDrawCanvas: true,
-        westDoesNotCallProductionLifecycle: true,
-        westDoesNotDirectLoadProductionFiles: true,
-        westDoesNotCreateDiagnosticFiles: true,
-        westDoesNotRedefineAssets: true,
-        chapel1PriestAbsenceNonBlockingUntilRequired: true,
-        chapel2InspectCannotSatisfyChapel1Priest: true,
+        westDoesNotRepairCanvas: true,
         noF21Claim: true,
         noReadyText: true,
         noVisualPassClaim: true
@@ -2050,7 +2114,7 @@
   }
 
   function getHierarchyRegistry() {
-    return clonePlain(composeHierarchyRegistry());
+    return clone(composeHierarchyRegistry());
   }
 
   function getHierarchySurface() {
@@ -2059,18 +2123,40 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      dualChapelMetricBindingActive: true,
-      kingRouteConductorStatus: state.kingRouteConductorStatus,
-      queenControlsStatus: state.queenControlsStatus,
-      chapel1AssetsCanvasHubStatus: state.chapel1AssetsCanvasHubStatus,
-      chapel1PriestStatus: state.chapel1PriestStatus,
-      chapel1PriestSubstitutionStatus: state.chapel1PriestSubstitutionStatus,
-      hexSurfaceGateStatus: state.hexSurfaceGateStatus,
-      chapel2PointerSurfaceBishopStatus: state.chapel2PointerSurfaceBishopStatus,
-      chapel2InspectPriestStatus: state.chapel2InspectPriestStatus,
-      strictEndpointConfirmedCount: state.strictEndpointConfirmedCount,
-      contractFamilyMismatchCount: state.contractFamilyMismatchCount,
-      borrowedContractRejectedCount: state.borrowedContractRejectedCount,
+      northStandardStatus: state.northStandardStatus,
+      northCompatibilityBridgeStatus: state.northCompatibilityBridgeStatus,
+      northRailStatus: state.northRailStatus,
+      northRailVerdictAvailable: state.northRailVerdictAvailable,
+      northRailReportMethod: state.northRailReportMethod,
+      surfaceTruthStatus: state.surfaceTruthStatus,
+      surfaceTruthFailureClass: state.surfaceTruthFailureClass,
+      surfaceTruthFirstFailedCoordinate: state.surfaceTruthFirstFailedCoordinate,
+      constructionReadinessStatus: state.constructionReadinessStatus,
+      cycleClosed: state.cycleClosed,
+      westDecision: state.westDecision,
+      westGapClass: state.westGapClass,
+      firstOpenDutyCoordinate: state.firstOpenDutyCoordinate,
+      firstOpenDutyFile: state.firstOpenDutyFile,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextAction: state.recommendedNextAction,
+      canvasReleaseAuthorized: state.canvasReleaseAuthorized,
+      ...NO_CLAIMS
+    };
+  }
+
+  function getJudgeMetrics() {
+    return clone(state.judgeMetrics);
+  }
+
+  function getBishopChord() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      northStandardFile: LAB_NORTH_FILE,
+      northDiagnosticRailFile: NORTH_RAIL_FILE,
+      surfaceTruthFile: SURFACE_TRUTH_FILE,
+      relationships: clone(state.relationships),
       cycleClosed: state.cycleClosed,
       firstOpenDutyCoordinate: state.firstOpenDutyCoordinate,
       firstOpenDutyFile: state.firstOpenDutyFile,
@@ -2095,63 +2181,28 @@
       diagnosticRoute: DIAGNOSTIC_ROUTE,
 
       activeStageId: ACTIVE_STAGE_ID,
-      activeGear: ACTIVE_GEAR,
-      activeCycleNumber: ACTIVE_CYCLE_NUMBER,
-      activeCycleRoute: ACTIVE_CYCLE_ROUTE,
       activeCardinal: ACTIVE_CARDINAL,
       activeFibonacci: ACTIVE_FIBONACCI,
       activeNewsGate: ACTIVE_NEWS_GATE,
+      activeCycleNumber: ACTIVE_CYCLE_NUMBER,
+      activeCycleRoute: ACTIVE_CYCLE_ROUTE,
 
-      passiveReadOnlyAudit: true,
-      dualChapelMetricBindingActive: true,
-      churchHierarchyActive: true,
-      chapelLanguageActive: true,
-      judgeLanguageActive: true,
+      northStandardAnchored: true,
+      northStandardStatus: state.northStandardStatus,
+      northCompatibilityBridgeStatus: state.northCompatibilityBridgeStatus,
+      northRailRequired: true,
+      northRailStatus: state.northRailStatus,
+      northRailVerdictAvailable: state.northRailVerdictAvailable,
+      northRailReportMethod: state.northRailReportMethod,
 
-      aliasIsLabel: true,
-      aliasIsEndpointProof: false,
-      strictFileContractFamilyMatchRequired: true,
-      borrowedAuthorityContractTextRejected: true,
-      churchRoleCannotOverrideContractFamily: true,
-      chapel2PriestCannotSatisfyChapel1Priest: true,
-
-      outerChurchLoop: OUTER_CHURCH_LOOP.slice(),
-      chapel1ExpectedLoop: CHAPEL_1_EXPECTED_LOOP.slice(),
-      chapel2CurrentLoop: CHAPEL_2_CURRENT_LOOP.slice(),
-      diagnosticJudgeLoop: DIAGNOSTIC_JUDGE_LOOP.slice(),
-
-      kingRouteConductorFile: KING_FILE,
-      queenControlsFile: QUEEN_FILE,
-      chapel1AssetsCanvasHubFile: CHAPEL_1_HUB_FILE,
-      chapel1AssetsPriestPrimaryFile: CHAPEL_1_PRIEST_PRIMARY_FILE,
-      chapel1AssetsPriestAlternateFiles: CHAPEL_1_PRIEST_ALTERNATE_FILES.slice(),
-      chapel2PointerSurfaceBishopFile: CHAPEL_2_BISHOP_FILE,
-      chapel2InspectPriestFile: CHAPEL_2_PRIEST_FILE,
-
-      kingRouteConductorObserved: state.kingRouteConductorObserved,
-      queenControlsObserved: state.queenControlsObserved,
-      chapel1AssetsCanvasHubObserved: state.chapel1AssetsCanvasHubObserved,
-      chapel1AssetsPriestObserved: state.chapel1AssetsPriestObserved,
-      hexSurfaceGateObserved: state.hexSurfaceGateObserved,
-      chapel2PointerSurfaceBishopObserved: state.chapel2PointerSurfaceBishopObserved,
-      chapel2InspectPriestObserved: state.chapel2InspectPriestObserved,
-
-      kingRouteConductorStatus: state.kingRouteConductorStatus,
-      queenControlsStatus: state.queenControlsStatus,
-      chapel1AssetsCanvasHubStatus: state.chapel1AssetsCanvasHubStatus,
-      chapel1PriestStatus: state.chapel1PriestStatus,
-      chapel1PriestSubstitutionStatus: state.chapel1PriestSubstitutionStatus,
-      hexSurfaceGateStatus: state.hexSurfaceGateStatus,
-      chapel2PointerSurfaceBishopStatus: state.chapel2PointerSurfaceBishopStatus,
-      chapel2InspectPriestStatus: state.chapel2InspectPriestStatus,
+      surfaceTruthStatus: state.surfaceTruthStatus,
+      surfaceTruthFailureClass: state.surfaceTruthFailureClass,
+      surfaceTruthFirstFailedCoordinate: state.surfaceTruthFirstFailedCoordinate,
 
       strictEndpointConfirmedCount: state.strictEndpointConfirmedCount,
       contractFamilyMismatchCount: state.contractFamilyMismatchCount,
       borrowedContractRejectedCount: state.borrowedContractRejectedCount,
       observedNodeCount: state.observedNodeCount,
-      scriptPresentCount: state.scriptPresentCount,
-      authorityAliasPresentCount: state.authorityAliasPresentCount,
-      expectedNonBlockingCount: state.expectedNonBlockingCount,
 
       routeToQueenConfirmed: state.routeToQueenConfirmed,
       queenToChapel1Confirmed: state.queenToChapel1Confirmed,
@@ -2159,20 +2210,10 @@
       hexToChapel2Confirmed: state.hexToChapel2Confirmed,
       chapel2ToChapel1ReturnConfirmed: state.chapel2ToChapel1ReturnConfirmed,
 
-      chapel1LoopMeasured: state.chapel1LoopMeasured,
-      chapel1LoopBlocking: state.chapel1LoopBlocking,
-      chapel2LoopMeasured: state.chapel2LoopMeasured,
-      chapel2LoopBlocking: state.chapel2LoopBlocking,
-
-      outerCycleClosed: state.outerCycleClosed,
       cycleClosed: state.cycleClosed,
+      outerCycleClosed: state.outerCycleClosed,
       cycleClosureStatus: state.cycleClosureStatus,
-      firstOpenDutyCoordinate: state.firstOpenDutyCoordinate,
-      firstOpenDutyClass: state.firstOpenDutyClass,
-      firstOpenDutyReason: state.firstOpenDutyReason,
-      firstOpenDutyFile: state.firstOpenDutyFile,
-      firstOpenDutyOwner: state.firstOpenDutyOwner,
-
+      constructionReadinessStatus: state.constructionReadinessStatus,
       westDecision: state.westDecision,
       westGapClass: state.westGapClass,
       westForwardAllowed: state.westForwardAllowed,
@@ -2181,15 +2222,16 @@
       releaseToCanvas: state.releaseToCanvas,
       releasePacket: isObject(state.releasePacket) ? "present" : "null",
 
-      firstFailedCoordinate: state.firstFailedCoordinate,
+      firstOpenDutyCoordinate: state.firstOpenDutyCoordinate,
+      firstOpenDutyClass: state.firstOpenDutyClass,
+      firstOpenDutyReason: state.firstOpenDutyReason,
+      firstOpenDutyFile: state.firstOpenDutyFile,
+      firstOpenDutyOwner: state.firstOpenDutyOwner,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextAction: state.recommendedNextAction,
-      postgameStatus: state.postgameStatus,
 
       ownsWestAdmissibility: true,
-      ownsCycleClosureReceiptAudit: true,
-      ownsDualChapelMetricBinding: true,
-      ownsChurchHierarchyRegistryPublication: true,
+      ownsDerivativeRelease: true,
       ownsCanvasReleasePacket: true,
       ownsCanvasDrawing: false,
       ownsCanvasLifecycle: false,
@@ -2199,6 +2241,7 @@
       ownsChapelTruth: false,
       ownsProductionFileRedefinition: false,
       ownsDiagnosticRailMutation: false,
+      ownsSurfaceTruthProbeMutation: false,
       ownsF21Latch: false,
       ownsReadyText: false,
       ownsCompletionLatch: false,
@@ -2217,93 +2260,73 @@
   function getReceipt() {
     return {
       ...getReceiptLight(),
-      nodes: clonePlain(state.nodes),
-      chapel2FingerMetrics: clonePlain(state.chapel2FingerMetrics),
-      judgeMetrics: clonePlain(state.judgeMetrics),
-      relationships: clonePlain(state.relationships),
-      chapel1Relationships: clonePlain(state.chapel1Relationships),
-      chapel2Relationships: clonePlain(state.chapel2Relationships),
+      coreNodes: clone(state.coreNodes),
+      judgeMetrics: clone(state.judgeMetrics),
+      northStandardPacket: clone(state.northStandardPacket),
+      northRailPacket: clone(state.northRailPacket),
+      surfaceTruthSummary: clone(state.surfaceTruthSummary),
+      surfaceTruthDirect: clone(state.surfaceTruthDirect),
+      relationships: clone(state.relationships),
       hierarchyRegistry: composeHierarchyRegistry(),
       hierarchySurface: getHierarchySurface(),
-      releasePacket: clonePlain(state.releasePacket),
-      errors: clonePlain(state.errors),
+      releasePacket: clone(state.releasePacket),
+      selfMeasurement: selfMeasureWestDuty(),
+      errors: clone(state.errors),
+      acceptedNorthContracts: ACCEPTED_NORTH_CONTRACTS.slice(),
+      acceptedNorthRailContracts: ACCEPTED_NORTH_RAIL_CONTRACTS.slice(),
       acceptedKingContracts: ACCEPTED_KING_CONTRACTS.slice(),
       acceptedQueenContracts: ACCEPTED_QUEEN_CONTRACTS.slice(),
       acceptedChapel1HubContracts: ACCEPTED_CHAPEL_1_HUB_CONTRACTS.slice(),
-      acceptedChapel1PriestContracts: ACCEPTED_CHAPEL_1_PRIEST_CONTRACTS.slice(),
       acceptedHexSurfaceContracts: ACCEPTED_HEX_SURFACE_CONTRACTS.slice(),
-      acceptedChapel2BishopContracts: ACCEPTED_CHAPEL_2_BISHOP_CONTRACTS.slice(),
-      acceptedChapel2PriestContracts: ACCEPTED_CHAPEL_2_PRIEST_CONTRACTS.slice()
+      acceptedChapel2BishopContracts: ACCEPTED_CHAPEL_2_BISHOP_CONTRACTS.slice()
     };
   }
 
   function line(key, value) {
-    if (value === undefined || value === null) return `${key}=`;
+    if (value === undefined || value === null) return key + "=";
     if (Array.isArray(value) || isObject(value)) {
       try {
-        return `${key}=${JSON.stringify(value)}`;
+        return key + "=" + JSON.stringify(value);
       } catch (_error) {
-        return `${key}=UNSERIALIZABLE`;
+        return key + "=UNSERIALIZABLE";
       }
     }
-    return `${key}=${String(value)}`;
+    return key + "=" + String(value);
   }
 
-  function composeReceiptText() {
-    const r = getReceiptLight();
+  function getReceiptText() {
+    var r = getReceiptLight();
 
     return [
-      "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RECEIPT",
+      "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_RECEIPT",
       line("timestamp", r.timestamp),
       line("contract", r.contract),
       line("receipt", r.receipt),
       line("internalRenewalContract", r.internalRenewalContract),
       line("internalRenewalReceipt", r.internalRenewalReceipt),
-      line("previousInternalRenewalContract", r.previousInternalRenewalContract),
       line("version", r.version),
       line("file", r.file),
-      line("route", r.route),
-      line("aliasIsLabel", r.aliasIsLabel),
-      line("aliasIsEndpointProof", r.aliasIsEndpointProof),
-      line("strictFileContractFamilyMatchRequired", r.strictFileContractFamilyMatchRequired),
-      line("borrowedAuthorityContractTextRejected", r.borrowedAuthorityContractTextRejected),
-      line("chapel2PriestCannotSatisfyChapel1Priest", r.chapel2PriestCannotSatisfyChapel1Priest),
-      line("outerChurchLoop", r.outerChurchLoop.join(" -> ")),
-      line("chapel1ExpectedLoop", r.chapel1ExpectedLoop.join(" -> ")),
-      line("chapel2CurrentLoop", r.chapel2CurrentLoop.join(" -> ")),
-      line("kingRouteConductorStatus", r.kingRouteConductorStatus),
-      line("queenControlsStatus", r.queenControlsStatus),
-      line("chapel1AssetsCanvasHubStatus", r.chapel1AssetsCanvasHubStatus),
-      line("chapel1PriestStatus", r.chapel1PriestStatus),
-      line("chapel1PriestSubstitutionStatus", r.chapel1PriestSubstitutionStatus),
-      line("hexSurfaceGateStatus", r.hexSurfaceGateStatus),
-      line("chapel2PointerSurfaceBishopStatus", r.chapel2PointerSurfaceBishopStatus),
-      line("chapel2InspectPriestStatus", r.chapel2InspectPriestStatus),
-      line("strictEndpointConfirmedCount", r.strictEndpointConfirmedCount),
-      line("contractFamilyMismatchCount", r.contractFamilyMismatchCount),
-      line("borrowedContractRejectedCount", r.borrowedContractRejectedCount),
-      line("routeToQueenConfirmed", r.routeToQueenConfirmed),
-      line("queenToChapel1Confirmed", r.queenToChapel1Confirmed),
-      line("chapel1ToHexConfirmed", r.chapel1ToHexConfirmed),
-      line("hexToChapel2Confirmed", r.hexToChapel2Confirmed),
-      line("chapel2ToChapel1ReturnConfirmed", r.chapel2ToChapel1ReturnConfirmed),
+      line("northStandardStatus", r.northStandardStatus),
+      line("northCompatibilityBridgeStatus", r.northCompatibilityBridgeStatus),
+      line("northRailStatus", r.northRailStatus),
+      line("northRailVerdictAvailable", r.northRailVerdictAvailable),
+      line("surfaceTruthStatus", r.surfaceTruthStatus),
+      line("surfaceTruthFailureClass", r.surfaceTruthFailureClass),
+      line("surfaceTruthFirstFailedCoordinate", r.surfaceTruthFirstFailedCoordinate),
+      line("constructionReadinessStatus", r.constructionReadinessStatus),
       line("cycleClosed", r.cycleClosed),
-      line("cycleClosureStatus", r.cycleClosureStatus),
+      line("westDecision", r.westDecision),
+      line("westGapClass", r.westGapClass),
+      line("canvasReleaseAuthorized", r.canvasReleaseAuthorized),
       line("firstOpenDutyCoordinate", r.firstOpenDutyCoordinate),
       line("firstOpenDutyClass", r.firstOpenDutyClass),
       line("firstOpenDutyReason", r.firstOpenDutyReason),
       line("firstOpenDutyFile", r.firstOpenDutyFile),
-      line("firstOpenDutyOwner", r.firstOpenDutyOwner),
-      line("westDecision", r.westDecision),
-      line("westGapClass", r.westGapClass),
       line("recommendedNextFile", r.recommendedNextFile),
       line("recommendedNextAction", r.recommendedNextAction),
       line("f13Claimed", false),
-      line("f21EligibleForNorth", false),
-      line("f21ClaimedByWest", false),
-      line("readyTextAllowed", false),
+      line("f21Claimed", false),
       line("readyTextClaimed", false),
-      line("completionLatched", false),
       line("visualPassClaimed", false),
       line("generatedImage", false),
       line("graphicBox", false),
@@ -2311,256 +2334,138 @@
     ].join("\n");
   }
 
-  function composeCompactSummary() {
-    const r = getReceiptLight();
-
+  function getStatusText() {
     return [
-      line("CONTRACT", r.contract),
-      line("INTERNAL_RENEWAL_CONTRACT", r.internalRenewalContract),
-      line("DUAL_CHAPEL_METRIC_BINDING_ACTIVE", r.dualChapelMetricBindingActive),
-      line("KING_ROUTE_CONDUCTOR_STATUS", r.kingRouteConductorStatus),
-      line("QUEEN_CONTROLS_STATUS", r.queenControlsStatus),
-      line("CHAPEL_1_ASSETS_CANVAS_HUB_STATUS", r.chapel1AssetsCanvasHubStatus),
-      line("CHAPEL_1_PRIEST_STATUS", r.chapel1PriestStatus),
-      line("CHAPEL_1_PRIEST_SUBSTITUTION_STATUS", r.chapel1PriestSubstitutionStatus),
-      line("CHAPEL_2_POINTER_SURFACE_BISHOP_STATUS", r.chapel2PointerSurfaceBishopStatus),
-      line("CHAPEL_2_INSPECT_PRIEST_STATUS", r.chapel2InspectPriestStatus),
-      line("CYCLE_CLOSED", r.cycleClosed),
-      line("FIRST_OPEN_DUTY_COORDINATE", r.firstOpenDutyCoordinate),
-      line("FIRST_OPEN_DUTY_CLASS", r.firstOpenDutyClass),
-      line("FIRST_OPEN_DUTY_FILE", r.firstOpenDutyFile),
-      line("RECOMMENDED_NEXT_FILE", r.recommendedNextFile),
-      line("WEST_DECISION", r.westDecision),
-      line("ALIAS_IS_ENDPOINT_PROOF", false),
-      line("BORROWED_CONTRACT_TEXT_REJECTED", true),
-      line("f21EligibleForNorth", false),
-      line("readyTextAllowed", false),
-      line("visualPassClaimed", false)
+      line("CONTRACT", CONTRACT),
+      line("INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT),
+      line("NORTH_STANDARD_STATUS", state.northStandardStatus),
+      line("NORTH_RAIL_STATUS", state.northRailStatus),
+      line("NORTH_RAIL_VERDICT_AVAILABLE", state.northRailVerdictAvailable),
+      line("SURFACE_TRUTH_STATUS", state.surfaceTruthStatus),
+      line("SURFACE_TRUTH_FAILURE_CLASS", state.surfaceTruthFailureClass),
+      line("CONSTRUCTION_READINESS_STATUS", state.constructionReadinessStatus),
+      line("WEST_DECISION", state.westDecision),
+      line("WEST_GAP_CLASS", state.westGapClass),
+      line("CANVAS_RELEASE_AUTHORIZED", state.canvasReleaseAuthorized)
     ].join("\n");
   }
 
-  function getReceiptText() {
-    return composeReceiptText();
-  }
-
-  function getStatusText() {
-    return composeCompactSummary();
-  }
-
   function getCanvasReleasePacket() {
-    return isObject(state.releasePacket) ? clonePlain(state.releasePacket) : null;
-  }
-
-  function getReleasePacket() {
-    return getCanvasReleasePacket();
-  }
-
-  function getCanvasHandoffPacket() {
-    return getCanvasReleasePacket();
-  }
-
-  function getHandoffPacket() {
-    return getCanvasReleasePacket();
-  }
-
-  function getBishopChord() {
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      outerChurchLoop: OUTER_CHURCH_LOOP.slice(),
-      chapel1ExpectedLoop: CHAPEL_1_EXPECTED_LOOP.slice(),
-      chapel2CurrentLoop: CHAPEL_2_CURRENT_LOOP.slice(),
-      kingRouteConductorFile: KING_FILE,
-      queenControlsFile: QUEEN_FILE,
-      chapel1AssetsCanvasHubFile: CHAPEL_1_HUB_FILE,
-      chapel1AssetsPriestPrimaryFile: CHAPEL_1_PRIEST_PRIMARY_FILE,
-      chapel2PointerSurfaceBishopFile: CHAPEL_2_BISHOP_FILE,
-      chapel2InspectPriestFile: CHAPEL_2_PRIEST_FILE,
-      chapel1PriestStatus: state.chapel1PriestStatus,
-      chapel1PriestSubstitutionStatus: state.chapel1PriestSubstitutionStatus,
-      relationships: clonePlain(state.relationships),
-      chapel1Relationships: clonePlain(state.chapel1Relationships),
-      chapel2Relationships: clonePlain(state.chapel2Relationships),
-      cycleClosed: state.cycleClosed,
-      firstOpenDutyCoordinate: state.firstOpenDutyCoordinate,
-      firstOpenDutyFile: state.firstOpenDutyFile,
-      ...NO_CLAIMS
-    };
-  }
-
-  function getBishopLanes() {
-    return clonePlain(state.relationships);
-  }
-
-  function getChapel1Lanes() {
-    return clonePlain(state.chapel1Relationships);
-  }
-
-  function getChapel2Lanes() {
-    return clonePlain(state.chapel2Relationships);
-  }
-
-  function getChapel2FingerMetrics() {
-    return clonePlain(state.chapel2FingerMetrics);
-  }
-
-  function getJudgeMetrics() {
-    return clonePlain(state.judgeMetrics);
-  }
-
-  function getState() {
-    return clonePlain(state);
+    return isObject(state.releasePacket) ? clone(state.releasePacket) : null;
   }
 
   function updateDataset() {
     state.datasetPublishCount += 1;
 
-    setDataset("labRuntimeTableWestLoaded", "true");
-    setDataset("labRuntimeTableWestContract", CONTRACT);
-    setDataset("labRuntimeTableWestReceipt", RECEIPT);
-    setDataset("labRuntimeTableWestInternalRenewalContract", INTERNAL_RENEWAL_CONTRACT);
-    setDataset("labRuntimeTableWestInternalRenewalReceipt", INTERNAL_RENEWAL_RECEIPT);
+    if (!DOC || !DOC.documentElement || !DOC.documentElement.dataset) return false;
 
-    setDataset("hearthWestDualChapelMetricBindingActive", "true");
-    setDataset("hearthWestChurchHierarchyActive", "true");
-    setDataset("hearthWestChapelLanguageActive", "true");
-    setDataset("hearthWestJudgeLanguageActive", "true");
+    try {
+      var ds = DOC.documentElement.dataset;
 
-    setDataset("hearthWestAliasIsLabel", "true");
-    setDataset("hearthWestAliasIsEndpointProof", "false");
-    setDataset("hearthWestStrictFileContractFamilyMatchRequired", "true");
-    setDataset("hearthWestBorrowedAuthorityContractTextRejected", "true");
-    setDataset("hearthWestChurchRoleCannotOverrideContractFamily", "true");
-    setDataset("hearthWestChapel2PriestCannotSatisfyChapel1Priest", "true");
+      ds.labRuntimeTableWestLoaded = "true";
+      ds.labRuntimeTableWestContract = CONTRACT;
+      ds.labRuntimeTableWestReceipt = RECEIPT;
+      ds.labRuntimeTableWestInternalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
+      ds.labRuntimeTableWestInternalRenewalReceipt = INTERNAL_RENEWAL_RECEIPT;
 
-    setDataset("hearthWestOuterChurchLoop", OUTER_CHURCH_LOOP.join(" -> "));
-    setDataset("hearthWestChapel1ExpectedLoop", CHAPEL_1_EXPECTED_LOOP.join(" -> "));
-    setDataset("hearthWestChapel2CurrentLoop", CHAPEL_2_CURRENT_LOOP.join(" -> "));
-    setDataset("hearthWestDiagnosticJudgeLoop", DIAGNOSTIC_JUDGE_LOOP.join(" -> "));
+      ds.hearthWestNorthStandardAnchored = "true";
+      ds.hearthWestNorthStandardStatus = state.northStandardStatus;
+      ds.hearthWestNorthCompatibilityBridgeStatus =
+        state.northCompatibilityBridgeStatus;
+      ds.hearthWestNorthRailStatus = state.northRailStatus;
+      ds.hearthWestNorthRailVerdictAvailable = String(state.northRailVerdictAvailable);
 
-    setDataset("hearthWestKingRouteConductorFile", KING_FILE);
-    setDataset("hearthWestQueenControlsFile", QUEEN_FILE);
-    setDataset("hearthWestChapel1AssetsCanvasHubFile", CHAPEL_1_HUB_FILE);
-    setDataset("hearthWestChapel1AssetsPriestPrimaryFile", CHAPEL_1_PRIEST_PRIMARY_FILE);
-    setDataset("hearthWestChapel2PointerSurfaceBishopFile", CHAPEL_2_BISHOP_FILE);
-    setDataset("hearthWestChapel2InspectPriestFile", CHAPEL_2_PRIEST_FILE);
+      ds.hearthWestSurfaceTruthStatus = state.surfaceTruthStatus;
+      ds.hearthWestSurfaceTruthFailureClass = state.surfaceTruthFailureClass;
+      ds.hearthWestSurfaceTruthFirstFailedCoordinate =
+        state.surfaceTruthFirstFailedCoordinate;
 
-    setDataset("hearthWestKingRouteConductorStatus", state.kingRouteConductorStatus);
-    setDataset("hearthWestQueenControlsStatus", state.queenControlsStatus);
-    setDataset("hearthWestChapel1AssetsCanvasHubStatus", state.chapel1AssetsCanvasHubStatus);
-    setDataset("hearthWestChapel1PriestStatus", state.chapel1PriestStatus);
-    setDataset("hearthWestChapel1PriestSubstitutionStatus", state.chapel1PriestSubstitutionStatus);
-    setDataset("hearthWestHexSurfaceGateStatus", state.hexSurfaceGateStatus);
-    setDataset("hearthWestChapel2PointerSurfaceBishopStatus", state.chapel2PointerSurfaceBishopStatus);
-    setDataset("hearthWestChapel2InspectPriestStatus", state.chapel2InspectPriestStatus);
+      ds.hearthWestConstructionReadinessStatus = state.constructionReadinessStatus;
+      ds.hearthWestCycleClosed = String(state.cycleClosed);
+      ds.hearthWestDecision = state.westDecision;
+      ds.hearthWestGapClass = state.westGapClass;
+      ds.hearthWestForwardAllowed = String(state.westForwardAllowed);
+      ds.hearthCanvasReleaseAuthorized = String(state.canvasReleaseAuthorized);
+      ds.hearthCanvasReleasePacketReady = String(state.canvasReleasePacketReady);
 
-    setDataset("hearthWestStrictEndpointConfirmedCount", String(state.strictEndpointConfirmedCount));
-    setDataset("hearthWestContractFamilyMismatchCount", String(state.contractFamilyMismatchCount));
-    setDataset("hearthWestBorrowedContractRejectedCount", String(state.borrowedContractRejectedCount));
-    setDataset("hearthWestObservedNodeCount", String(state.observedNodeCount));
-    setDataset("hearthWestScriptPresentCount", String(state.scriptPresentCount));
-    setDataset("hearthWestAuthorityAliasPresentCount", String(state.authorityAliasPresentCount));
-    setDataset("hearthWestExpectedNonBlockingCount", String(state.expectedNonBlockingCount));
+      ds.hearthWestFirstOpenDutyCoordinate = state.firstOpenDutyCoordinate;
+      ds.hearthWestFirstOpenDutyClass = state.firstOpenDutyClass;
+      ds.hearthWestFirstOpenDutyReason = state.firstOpenDutyReason;
+      ds.hearthWestFirstOpenDutyFile = state.firstOpenDutyFile;
+      ds.hearthWestRecommendedNextFile = state.recommendedNextFile;
+      ds.hearthWestRecommendedNextAction = state.recommendedNextAction;
 
-    setDataset("hearthWestRouteToQueenConfirmed", String(state.routeToQueenConfirmed));
-    setDataset("hearthWestQueenToChapel1Confirmed", String(state.queenToChapel1Confirmed));
-    setDataset("hearthWestChapel1ToHexConfirmed", String(state.chapel1ToHexConfirmed));
-    setDataset("hearthWestHexToChapel2Confirmed", String(state.hexToChapel2Confirmed));
-    setDataset("hearthWestChapel2ToChapel1ReturnConfirmed", String(state.chapel2ToChapel1ReturnConfirmed));
-
-    setDataset("hearthWestOuterCycleClosed", String(state.outerCycleClosed));
-    setDataset("hearthWestCycleClosed", String(state.cycleClosed));
-    setDataset("hearthWestCycleClosureStatus", state.cycleClosureStatus);
-    setDataset("hearthWestFirstOpenDutyCoordinate", state.firstOpenDutyCoordinate);
-    setDataset("hearthWestFirstOpenDutyClass", state.firstOpenDutyClass);
-    setDataset("hearthWestFirstOpenDutyReason", state.firstOpenDutyReason);
-    setDataset("hearthWestFirstOpenDutyFile", state.firstOpenDutyFile);
-    setDataset("hearthWestFirstOpenDutyOwner", state.firstOpenDutyOwner);
-
-    setDataset("hearthWestDecision", state.westDecision);
-    setDataset("hearthWestGapClass", state.westGapClass);
-    setDataset("hearthWestForwardAllowed", String(state.westForwardAllowed));
-    setDataset("hearthCanvasReleaseAuthorized", String(state.canvasReleaseAuthorized));
-    setDataset("hearthCanvasReleasePacketReady", String(state.canvasReleasePacketReady));
-    setDataset("hearthReleaseToCanvas", String(state.releaseToCanvas));
-
-    setDataset("hearthWestRecommendedNextFile", state.recommendedNextFile);
-    setDataset("hearthWestRecommendedNextAction", state.recommendedNextAction);
-    setDataset("hearthWestPostgameStatus", state.postgameStatus);
-
-    setDataset("hearthWestF13Claimed", "false");
-    setDataset("hearthWestF21EligibleForNorth", "false");
-    setDataset("hearthWestF21ClaimedByWest", "false");
-    setDataset("hearthWestReadyTextAllowed", "false");
-    setDataset("hearthWestReadyTextClaimed", "false");
-    setDataset("hearthWestCompletionLatched", "false");
-    setDataset("hearthWestVisualPassClaimed", "false");
-    setDataset("generatedImage", "false");
-    setDataset("graphicBox", "false");
-    setDataset("webgl", "false");
-    setDataset("visualPassClaimed", "false");
+      ds.hearthWestF13Claimed = "false";
+      ds.hearthWestF21Claimed = "false";
+      ds.hearthWestReadyTextClaimed = "false";
+      ds.hearthWestVisualPassClaimed = "false";
+      ds.generatedImage = "false";
+      ds.graphicBox = "false";
+      ds.webgl = "false";
+    } catch (_error) {
+      return false;
+    }
 
     return true;
   }
 
   function publishAliasPaths() {
-    for (const path of WEST_ALIAS_PATHS) setPath(path, api);
+    for (var i = 0; i < WEST_ALIAS_PATHS.length; i += 1) {
+      setPath(WEST_ALIAS_PATHS[i], api);
+    }
+
     state.aliasPublishCount += 1;
     return true;
   }
 
   function publishReceiptAliases() {
-    const light = getReceiptLight();
-    const full = getReceipt();
-    const text = composeReceiptText();
-    const compact = composeCompactSummary();
+    var light = getReceiptLight();
+    var full = getReceipt();
+    var text = getReceiptText();
 
-    root.LAB_RUNTIME_TABLE_WEST_RECEIPT = light;
-    root.LAB_RUNTIME_TABLE_CARDINAL_WEST_RECEIPT = full;
-    root.LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT = full;
-    root.LAB_RUNTIME_TABLE_CARDINAL_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP_RECEIPT = full;
-    root.LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RECEIPT = full;
+    ROOT.LAB_RUNTIME_TABLE_WEST_RECEIPT = light;
+    ROOT.LAB_RUNTIME_TABLE_CARDINAL_WEST_RECEIPT = full;
+    ROOT.LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT = full;
+    ROOT.LAB_RUNTIME_TABLE_CARDINAL_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP_RECEIPT = full;
+    ROOT.LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RECEIPT = full;
+    ROOT.LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_RECEIPT = full;
 
-    root.HEARTH_WEST_CYCLE_CLOSURE_RECEIPT = full;
-    root.HEARTH_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP_RECEIPT = full;
-    root.HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RECEIPT = full;
-    root.HEARTH_WEST_CYCLE_CLOSURE_PACKET_TEXT = text;
-    root.HEARTH_WEST_CYCLE_CLOSURE_COMPACT_SUMMARY = compact;
+    ROOT.HEARTH_WEST_CYCLE_CLOSURE_RECEIPT = full;
+    ROOT.HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_RECEIPT = full;
+    ROOT.HEARTH_WEST_CYCLE_CLOSURE_PACKET_TEXT = text;
+    ROOT.HEARTH_WEST_CYCLE_CLOSURE_COMPACT_SUMMARY = getStatusText();
 
-    root.HEARTH_WEST_CHURCH_HIERARCHY_REGISTRY = composeHierarchyRegistry();
-    root.HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING = {
-      kingRouteConductorFile: KING_FILE,
-      queenControlsFile: QUEEN_FILE,
-      chapel1AssetsCanvasHubFile: CHAPEL_1_HUB_FILE,
-      chapel1AssetsPriestPrimaryFile: CHAPEL_1_PRIEST_PRIMARY_FILE,
-      chapel1PriestStatus: state.chapel1PriestStatus,
-      chapel1PriestSubstitutionStatus: state.chapel1PriestSubstitutionStatus,
-      chapel2PointerSurfaceBishopFile: CHAPEL_2_BISHOP_FILE,
-      chapel2InspectPriestFile: CHAPEL_2_PRIEST_FILE,
-      outerChurchLoop: OUTER_CHURCH_LOOP.slice(),
-      chapel1ExpectedLoop: CHAPEL_1_EXPECTED_LOOP.slice(),
-      chapel2CurrentLoop: CHAPEL_2_CURRENT_LOOP.slice(),
+    ROOT.HEARTH_WEST_CHURCH_HIERARCHY_REGISTRY = composeHierarchyRegistry();
+    ROOT.HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE = {
+      northStandardStatus: state.northStandardStatus,
+      northRailStatus: state.northRailStatus,
+      northRailVerdictAvailable: state.northRailVerdictAvailable,
+      surfaceTruthStatus: state.surfaceTruthStatus,
+      surfaceTruthFailureClass: state.surfaceTruthFailureClass,
+      constructionReadinessStatus: state.constructionReadinessStatus,
       firstOpenDutyCoordinate: state.firstOpenDutyCoordinate,
-      firstOpenDutyFile: state.firstOpenDutyFile,
       recommendedNextFile: state.recommendedNextFile,
+      recommendedNextAction: state.recommendedNextAction,
       receipt: light
     };
 
-    const hearth = ensureObject(root, "HEARTH");
-    const lab = ensureObject(root, "DEXTER_LAB");
+    var HEARTH = ensureNamespace("HEARTH");
+    var DEXTER_LAB = ensureNamespace("DEXTER_LAB");
 
-    hearth.westCycleClosureReceipt = full;
-    hearth.westCanvasChapelDualChapelMetricBindingReceipt = full;
-    hearth.westChurchHierarchyRegistry = root.HEARTH_WEST_CHURCH_HIERARCHY_REGISTRY;
-    hearth.westCanvasChapelDualChapelMetricBinding = root.HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING;
-    hearth.westCycleClosurePacketText = text;
-    hearth.westCycleClosureCompactSummary = compact;
+    HEARTH.westCycleClosureReceipt = full;
+    HEARTH.westNorthStandardDerivativeReleaseReceipt = full;
+    HEARTH.westChurchHierarchyRegistry = ROOT.HEARTH_WEST_CHURCH_HIERARCHY_REGISTRY;
+    HEARTH.westNorthStandardDerivativeRelease =
+      ROOT.HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE;
+    HEARTH.westCycleClosurePacketText = text;
+    HEARTH.westCycleClosureCompactSummary = getStatusText();
 
-    lab.hearthWestCycleClosureReceipt = full;
-    lab.hearthWestCanvasChapelDualChapelMetricBindingReceipt = full;
-    lab.hearthWestChurchHierarchyRegistry = root.HEARTH_WEST_CHURCH_HIERARCHY_REGISTRY;
-    lab.hearthWestCanvasChapelDualChapelMetricBinding = root.HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING;
+    DEXTER_LAB.hearthWestCycleClosureReceipt = full;
+    DEXTER_LAB.hearthWestNorthStandardDerivativeReleaseReceipt = full;
+    DEXTER_LAB.hearthWestChurchHierarchyRegistry =
+      ROOT.HEARTH_WEST_CHURCH_HIERARCHY_REGISTRY;
+    DEXTER_LAB.hearthWestNorthStandardDerivativeRelease =
+      ROOT.HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE;
 
     state.receiptPublishCount += 1;
     return true;
@@ -2578,11 +2483,11 @@
   }
 
   function scheduleRepublish() {
-    const delays = [0, 16, 80, 240, 700, 1400];
+    var delays = [0, 16, 80, 240, 700, 1400];
 
-    delays.forEach((delay) => {
-      if (isFunction(root.setTimeout)) {
-        root.setTimeout(() => {
+    delays.forEach(function (delay) {
+      if (isFunction(ROOT.setTimeout)) {
+        ROOT.setTimeout(function () {
           publishGlobals();
         }, delay);
       }
@@ -2590,128 +2495,117 @@
   }
 
   Object.assign(api, {
-    CONTRACT,
-    RECEIPT,
+    CONTRACT: CONTRACT,
+    RECEIPT: RECEIPT,
     contract: CONTRACT,
     receipt: RECEIPT,
-    INTERNAL_RENEWAL_CONTRACT,
-    INTERNAL_RENEWAL_RECEIPT,
+    INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+    INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-    PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-    VERSION,
-    FILE,
-    ROUTE,
-    DIAGNOSTIC_ROUTE,
+    PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+    PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+    VERSION: VERSION,
+    FILE: FILE,
+    ROUTE: ROUTE,
+    DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
 
-    NORTH_FILE,
-    EAST_FILE,
-    SOUTH_FILE,
-    WEST_FILE,
+    LAB_NORTH_FILE: LAB_NORTH_FILE,
+    LAB_WEST_FILE: LAB_WEST_FILE,
+    KING_FILE: KING_FILE,
+    QUEEN_FILE: QUEEN_FILE,
+    CHAPEL_1_HUB_FILE: CHAPEL_1_HUB_FILE,
+    CHAPEL_1_PRIEST_FILE: CHAPEL_1_PRIEST_FILE,
+    HEX_SURFACE_FILE: HEX_SURFACE_FILE,
+    CHAPEL_2_BISHOP_FILE: CHAPEL_2_BISHOP_FILE,
+    CHAPEL_2_PRIEST_FILE: CHAPEL_2_PRIEST_FILE,
+    NORTH_RAIL_FILE: NORTH_RAIL_FILE,
+    SURFACE_TRUTH_FILE: SURFACE_TRUTH_FILE,
 
-    KING_FILE,
-    QUEEN_FILE,
-    CHAPEL_1_HUB_FILE,
-    CHAPEL_1_PRIEST_PRIMARY_FILE,
-    CHAPEL_1_PRIEST_ALTERNATE_FILES,
-    CHAPEL_2_BISHOP_FILE,
-    CHAPEL_2_PRIEST_FILE,
-    HEX_AUTHORITY_FILE,
-    HEX_SURFACE_FILE,
-    CHAPEL_2_FINGER_FILES,
-    JUDGE_FILES,
+    ACTIVE_STAGE_ID: ACTIVE_STAGE_ID,
+    ACTIVE_CARDINAL: ACTIVE_CARDINAL,
+    ACTIVE_FIBONACCI: ACTIVE_FIBONACCI,
+    ACTIVE_NEWS_GATE: ACTIVE_NEWS_GATE,
+    ACTIVE_CYCLE_NUMBER: ACTIVE_CYCLE_NUMBER,
+    ACTIVE_CYCLE_ROUTE: ACTIVE_CYCLE_ROUTE,
 
-    ACTIVE_STAGE_ID,
-    ACTIVE_GEAR,
-    ACTIVE_CYCLE_NUMBER,
-    ACTIVE_CYCLE_ROUTE,
-    ACTIVE_CARDINAL,
-    ACTIVE_FIBONACCI,
-    ACTIVE_NEWS_GATE,
+    WEST_DECISION: WEST_DECISION,
+    WEST_GAP_CLASS: WEST_GAP_CLASS,
+    METRIC_STATUS: METRIC_STATUS,
 
-    OUTER_CHURCH_LOOP,
-    CHAPEL_1_EXPECTED_LOOP,
-    CHAPEL_2_CURRENT_LOOP,
-    DIAGNOSTIC_JUDGE_LOOP,
-    WEST_DECISION,
-    METRIC_STATUS,
-    WEST_GAP_CLASS,
+    runNorthStandardDerivativeReleaseAudit: runNorthStandardDerivativeReleaseAudit,
+    runCycleClosureAudit: runNorthStandardDerivativeReleaseAudit,
+    classifyWestAdmissibility: runNorthStandardDerivativeReleaseAudit,
+    classifyCyclePacket: runNorthStandardDerivativeReleaseAudit,
+    createWestCycleReceipt: runNorthStandardDerivativeReleaseAudit,
+    createGapReceipt: runNorthStandardDerivativeReleaseAudit,
+    classifyGap: runNorthStandardDerivativeReleaseAudit,
+    classifyTransmissionGap: runNorthStandardDerivativeReleaseAudit,
+    assess: runNorthStandardDerivativeReleaseAudit,
+    inspect: runNorthStandardDerivativeReleaseAudit,
+    run: runNorthStandardDerivativeReleaseAudit,
+    boot: runNorthStandardDerivativeReleaseAudit,
+    init: runNorthStandardDerivativeReleaseAudit,
+    start: runNorthStandardDerivativeReleaseAudit,
+    mount: runNorthStandardDerivativeReleaseAudit,
 
-    inspectNode,
-    inspectAllNodes,
-    inspectChapel2FingerSet,
-    inspectJudgeSet,
-    inspectRelationships,
-    runCycleClosureAudit,
-    classifyWestAdmissibility: runCycleClosureAudit,
-    classifyCyclePacket: runCycleClosureAudit,
-    createWestCycleReceipt: runCycleClosureAudit,
-    createGapReceipt: runCycleClosureAudit,
-    classifyGap: runCycleClosureAudit,
-    classifyTransmissionGap: runCycleClosureAudit,
-    assess: runCycleClosureAudit,
-    inspect: runCycleClosureAudit,
-    run: runCycleClosureAudit,
-    boot: runCycleClosureAudit,
-    init: runCycleClosureAudit,
-    start: runCycleClosureAudit,
-    mount: runCycleClosureAudit,
+    inspectAuthority: inspectAuthority,
+    inspectCoreNodes: inspectCoreNodes,
+    inspectJudgeNodes: inspectJudgeNodes,
+    inspectRelationships: inspectRelationships,
+    readNorthStandardPacket: readNorthStandardPacket,
+    readNorthRailPacket: readNorthRailPacket,
+    readSurfaceTruthDirect: readSurfaceTruthDirect,
+    selfMeasureWestDuty: selfMeasureWestDuty,
 
-    composeHierarchyRegistry,
-    getHierarchyRegistry,
-    getHierarchySurface,
-    getBishopChord,
-    getBishopLanes,
-    getChapel1Lanes,
-    getChapel2Lanes,
-    getChapel2FingerMetrics,
-    getJudgeMetrics,
+    composeHierarchyRegistry: composeHierarchyRegistry,
+    getHierarchyRegistry: getHierarchyRegistry,
+    getHierarchySurface: getHierarchySurface,
+    getBishopChord: getBishopChord,
+    getJudgeMetrics: getJudgeMetrics,
 
-    getReceipt,
-    getReceiptLight,
-    getReceiptText,
+    getReceipt: getReceipt,
+    getReceiptLight: getReceiptLight,
+    getReceiptText: getReceiptText,
     getStatus: getReceiptLight,
-    getStatusText,
-    getCompactSummary: composeCompactSummary,
-    getPacketText: composeReceiptText,
-    getState,
+    getStatusText: getStatusText,
+    getCompactSummary: getStatusText,
+    getPacketText: getReceiptText,
+    getState: function () {
+      return clone(state);
+    },
 
-    getCanvasReleasePacket,
-    getReleasePacket,
-    getCanvasHandoffPacket,
-    getHandoffPacket,
-    composeReleasePacket,
-    clearReleasePacket,
-    publishReleasePacket,
+    getCanvasReleasePacket: getCanvasReleasePacket,
+    getReleasePacket: getCanvasReleasePacket,
+    getCanvasHandoffPacket: getCanvasReleasePacket,
+    getHandoffPacket: getCanvasReleasePacket,
+    composeReleasePacket: composeReleasePacket,
+    clearReleasePacket: clearReleasePacket,
+    publishReleasePacket: publishReleasePacket,
 
-    updateDataset,
-    publishGlobals,
-    publishAliasPaths,
-    publishReceiptAliases,
+    updateDataset: updateDataset,
+    publishGlobals: publishGlobals,
+    publishAliasPaths: publishAliasPaths,
+    publishReceiptAliases: publishReceiptAliases,
 
     ownsWestAdmissibility: true,
+    ownsDerivativeRelease: true,
     ownsCycleClosureReceiptAudit: true,
-    ownsDualChapelMetricBinding: true,
-    ownsChurchHierarchyRegistryPublication: true,
     ownsCanvasReleasePacket: true,
     ownsBishopReceiptTrust: true,
 
-    passiveReadOnlyAudit: true,
-    dualChapelMetricBindingActive: true,
-    churchHierarchyActive: true,
-    chapelLanguageActive: true,
-    judgeLanguageActive: true,
-
+    northStandardAnchored: true,
+    northRailRequired: true,
+    surfaceTruthIsEvidenceOnly: true,
     aliasIsLabel: true,
     aliasIsEndpointProof: false,
     strictFileContractFamilyMatchRequired: true,
     borrowedAuthorityContractTextRejected: true,
-    churchRoleCannotOverrideContractFamily: true,
-    chapel2PriestCannotSatisfyChapel1Priest: true,
 
     ownsUpstreamTruth: false,
-    ownsNorthTimetableTruth: false,
+    ownsNorthGrammarTruth: false,
+    ownsNorthRailMutation: false,
+    ownsSurfaceTruthProbeMutation: false,
     ownsEastSourceTruth: false,
     ownsSouthOutputTruth: false,
     ownsControlsBehavior: false,
@@ -2722,13 +2616,10 @@
     ownsHexTruth: false,
     ownsChapelTruth: false,
     ownsProductionFileRedefinition: false,
-    ownsDiagnosticRailMutation: false,
     ownsF21Latch: false,
     ownsReadyText: false,
     ownsCompletionLatch: false,
     ownsFinalVisualPassClaim: false,
-
-    mutatingOrLifecycleMethodsSuppressed: MUTATING_OR_LIFECYCLE_METHODS.slice(),
 
     ...NO_CLAIMS,
 
@@ -2742,7 +2633,7 @@
   publishGlobals();
 
   try {
-    runCycleClosureAudit();
+    runNorthStandardDerivativeReleaseAudit({ invokeNorthDiagnostic: true });
   } catch (error) {
     state.errorCount += 1;
     state.errors.push({

@@ -1,84 +1,53 @@
 <!doctype html>
-<html lang="en"
-  data-contract="HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7"
-  data-internal-renewal-contract="HEARTH_DIAGNOSTIC_ROUTE_CUTTING_EDGE_TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_TNT_v7_2"
-  data-receipt="HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_RECEIPT_v7"
-  data-internal-renewal-receipt="HEARTH_DIAGNOSTIC_ROUTE_CUTTING_EDGE_TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_RECEIPT_v7_2"
-  data-receipts-are-specific-diagnostic-evidence="true"
-  data-gauges-are-collective-diagnostic-variance="true"
-  data-gauges-do-not-replace-receipts="true"
-  data-gauges-authorize-repair="false"
-  data-run-button-locked-by-north-api="false"
-  data-north-verdict-synthesized="false"
-  data-south-sidecars-are-primary-receipt-participants="false"
-  data-south-sidecars-are-internal-process-lenses="true"
-  data-production-mutation-authorized="false"
-  data-hearth-repair-authorized="false"
-  data-runtime-restart-authorized="false"
-  data-canvas-release-authorized="false"
-  data-f13-claimed="false"
-  data-f21-claimed="false"
-  data-ready-text-claimed="false"
-  data-visual-pass-claimed="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-webgl="false">
+<html
+  lang="en"
+  data-route="/showroom/globe/hearth/diagnostic/"
+  data-page="hearth-diagnostic-instrument-chamber"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8"
+>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Hearth Diagnostic Rail · Cutting Edge Tech Panel</title>
-
-  <!--
-    /showroom/globe/hearth/diagnostic/index.html
-    HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7
-    Internal controlled renewal:
-    HEARTH_DIAGNOSTIC_ROUTE_CUTTING_EDGE_TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_TNT_v7_2
-
-    Full-file replacement.
-    Receiver/display shell only.
-
-    Preserves:
-    - v7 diagnostic receiver contract.
-    - receipt/gauge split.
-    - South sidecars as internal South-process lenses, not primary receipt participants.
-    - no production mutation, no repair authorization, no runtime restart, no Canvas release.
-    - no F13/F21/ready/visual-pass claim.
-
-    Adds:
-    - Cutting-edge diagnostic command surface.
-    - South post-assembly packet handoff.
-    - Compact/super-compact South manifest as primary copy surface.
-    - Full raw alignment packet preserved as secondary evidence.
-    - staged/lazy participant loading.
-    - loadPromise wait guard.
-    - explicit-status-only duty/malpractice gauge to avoid schema-vocabulary false positives.
-  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta
+    name="description"
+    content="Mirrorland Instrument Chamber · Planet Production Facility · Location Unknown · Fibonacci cardinal diagnostic receiver"
+  />
+  <title>Mirrorland Instrument Chamber · Hearth Diagnostic</title>
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg0: #03060b;
-      --bg1: #07111d;
-      --bg2: #091827;
-      --panel: rgba(9, 21, 34, 0.88);
-      --panel2: rgba(6, 13, 23, 0.92);
-      --line: rgba(126, 242, 255, 0.22);
-      --line-strong: rgba(126, 242, 255, 0.48);
-      --line-warn: rgba(255, 197, 92, 0.5);
-      --line-bad: rgba(255, 86, 128, 0.55);
-      --text: #dff8ff;
-      --muted: #7fa8b6;
-      --dim: #4f7480;
-      --cyan: #65f7ff;
-      --blue: #6aa8ff;
-      --violet: #a985ff;
-      --green: #5dffb2;
-      --amber: #ffc65c;
-      --red: #ff5c8a;
-      --shadow-cyan: 0 0 22px rgba(101, 247, 255, 0.18);
-      --shadow-blue: 0 0 28px rgba(106, 168, 255, 0.16);
-      --radius: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --bg0: #050712;
+      --bg1: #090d1d;
+      --bg2: #0e142b;
+      --panel: rgba(13, 19, 43, 0.78);
+      --panel2: rgba(18, 28, 58, 0.82);
+      --line: rgba(154, 190, 255, 0.2);
+      --text: #edf4ff;
+      --muted: #9aa8c7;
+      --dim: #667493;
+
+      --north: #51d5ff;
+      --east: #ffc852;
+      --south: #45f0a4;
+      --west: #c678ff;
+      --violet: #8f7cff;
+      --red: #ff4f6e;
+      --amber: #ffae42;
+      --green: #39e99a;
+      --cyan: #49e7ff;
+      --blue: #5e8cff;
+
+      --pass: #39e99a;
+      --partial: #ffc852;
+      --blocked: #ff4f6e;
+      --held: #ffae42;
+      --unknown: #8b97b6;
+
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 18px 70px rgba(0, 0, 0, 0.45);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -89,573 +58,451 @@
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at 18% 0%, rgba(101, 247, 255, 0.14), transparent 32rem),
-        radial-gradient(circle at 88% 18%, rgba(169, 133, 255, 0.12), transparent 36rem),
-        linear-gradient(135deg, var(--bg0), var(--bg1) 46%, #050912);
+        radial-gradient(circle at 18% 14%, rgba(73, 231, 255, 0.12), transparent 28rem),
+        radial-gradient(circle at 80% 8%, rgba(198, 120, 255, 0.14), transparent 30rem),
+        radial-gradient(circle at 65% 82%, rgba(69, 240, 164, 0.1), transparent 28rem),
+        linear-gradient(135deg, var(--bg0), var(--bg1) 44%, #070615);
+      color: var(--text);
+      font-family: var(--sans);
     }
 
     body {
       margin: 0;
       min-height: 100vh;
       color: var(--text);
-      font-family: var(--sans);
       background:
-        linear-gradient(rgba(126, 242, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(126, 242, 255, 0.03) 1px, transparent 1px);
-      background-size: 42px 42px;
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 36px 36px;
       overflow-x: hidden;
     }
 
     body::before {
       content: "";
       position: fixed;
-      inset: 0;
-      pointer-events: none;
+      inset: -30%;
+      z-index: -1;
       background:
-        linear-gradient(90deg, transparent 0, rgba(101, 247, 255, 0.04) 50%, transparent 100%),
-        radial-gradient(circle at 50% 20%, rgba(101, 247, 255, 0.08), transparent 42rem);
-      mask-image: linear-gradient(to bottom, black, transparent 85%);
-      opacity: 0.72;
-      z-index: 0;
+        conic-gradient(from 210deg at 50% 50%,
+          rgba(81,213,255,0.1),
+          rgba(255,200,82,0.08),
+          rgba(69,240,164,0.08),
+          rgba(198,120,255,0.1),
+          rgba(81,213,255,0.1));
+      filter: blur(70px);
+      animation: chamberDrift 28s linear infinite;
+      opacity: 0.68;
+    }
+
+    @keyframes chamberDrift {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.07); }
+      100% { transform: rotate(360deg) scale(1); }
     }
 
     a {
-      color: var(--cyan);
-      text-decoration: none;
+      color: inherit;
     }
 
-    a:focus,
-    button:focus,
-    summary:focus {
-      outline: 2px solid var(--cyan);
-      outline-offset: 3px;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: -999px;
-      top: 1rem;
-      z-index: 20;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--cyan);
-      border-radius: 999px;
-      background: #00101a;
-      color: var(--cyan);
-    }
-
-    .skip-link:focus {
-      left: 1rem;
-    }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: min(1880px, calc(100% - 32px));
+    .page {
+      width: min(1420px, calc(100vw - 28px));
       margin: 0 auto;
-      padding: 18px 0 52px;
-    }
-
-    .topline {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 14px;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .route-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      align-items: center;
-    }
-
-    .route-links a,
-    .microchip {
-      border: 1px solid rgba(126, 242, 255, 0.18);
-      background: rgba(8, 22, 35, 0.72);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 0.45rem 0.72rem;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025);
-    }
-
-    .route-links a:hover {
-      color: var(--text);
-      border-color: var(--line-strong);
-      box-shadow: var(--shadow-cyan);
+      padding: 22px 0 34px;
     }
 
     .hero {
       position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(360px, 0.7fr);
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .hero-panel,
-    .mission-panel,
-    .panel {
-      position: relative;
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       background:
-        linear-gradient(135deg, rgba(12, 31, 50, 0.9), rgba(5, 13, 23, 0.92)),
-        linear-gradient(90deg, rgba(101, 247, 255, 0.04), transparent);
-      box-shadow: var(--shadow-blue), inset 0 0 0 1px rgba(255,255,255,0.025);
+        linear-gradient(135deg, rgba(18, 28, 58, 0.9), rgba(6, 9, 23, 0.94)),
+        radial-gradient(circle at 90% 15%, rgba(81, 213, 255, 0.14), transparent 19rem);
+      box-shadow: var(--shadow);
+      padding: 26px;
     }
 
-    .hero-panel::before,
-    .mission-panel::before,
-    .panel::before {
+    .hero::after {
       content: "";
       position: absolute;
-      inset: 0;
-      pointer-events: none;
+      right: -160px;
+      top: -180px;
+      width: 440px;
+      height: 440px;
+      border-radius: 999px;
       background:
-        linear-gradient(90deg, transparent, rgba(101, 247, 255, 0.12), transparent);
-      transform: translateX(-120%);
-      animation: scanline 8s linear infinite;
-      opacity: 0.42;
+        radial-gradient(circle, rgba(73,231,255,0.16), transparent 54%),
+        conic-gradient(from 0deg, transparent, rgba(255,255,255,0.22), transparent, rgba(198,120,255,0.22), transparent);
+      opacity: 0.65;
+      filter: blur(2px);
+      animation: slowSpin 20s linear infinite;
     }
 
-    @keyframes scanline {
-      0% { transform: translateX(-120%); }
-      48% { transform: translateX(120%); }
-      100% { transform: translateX(120%); }
+    @keyframes slowSpin {
+      to { transform: rotate(360deg); }
     }
 
-    .hero-panel {
-      padding: 28px;
-      min-height: 252px;
+    .hero-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
     }
 
-    .kicker {
-      margin: 0 0 12px;
+    .eyebrow {
+      margin: 0 0 8px;
       color: var(--cyan);
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      letter-spacing: 0.13em;
+      font: 700 12px/1.1 var(--mono);
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      max-width: 980px;
-      font-size: clamp(2.05rem, 5vw, 5.2rem);
-      line-height: 0.93;
-      letter-spacing: -0.065em;
-      color: #f2fdff;
-      text-shadow: 0 0 28px rgba(101, 247, 255, 0.18);
+      font-size: clamp(28px, 5vw, 58px);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      text-wrap: balance;
     }
 
     .subtitle {
-      margin: 18px 0 0;
-      max-width: 1080px;
-      color: #9cc6d2;
-      font-size: clamp(0.95rem, 1.2vw, 1.12rem);
-      line-height: 1.6;
+      max-width: 850px;
+      margin: 14px 0 0;
+      color: #cdd9f6;
+      font-size: clamp(15px, 1.45vw, 18px);
+      line-height: 1.48;
     }
 
-    .hero-meta {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(150px, 1fr));
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .meta-cell {
-      min-height: 82px;
-      padding: 12px;
-      border: 1px solid rgba(126, 242, 255, 0.16);
-      border-radius: 14px;
-      background: rgba(0, 8, 16, 0.44);
-    }
-
-    .meta-label {
-      color: var(--dim);
+    .facility-stamp {
+      min-width: 240px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      background: rgba(4, 8, 22, 0.7);
+      padding: 14px;
       font-family: var(--mono);
-      font-size: 0.68rem;
+      box-shadow: inset 0 0 28px rgba(73,231,255,0.05);
+    }
+
+    .facility-stamp b {
+      display: block;
+      color: var(--text);
+      font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .meta-value {
-      margin-top: 8px;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.82rem;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-    }
-
-    .mission-panel {
-      padding: 20px;
-      display: grid;
-      gap: 12px;
-      align-content: start;
-    }
-
-    .mission-status {
-      display: grid;
-      gap: 10px;
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(101, 247, 255, 0.25);
-      background:
-        radial-gradient(circle at top right, rgba(101, 247, 255, 0.13), transparent 16rem),
-        rgba(2, 8, 14, 0.64);
-    }
-
-    .mission-status strong {
-      display: block;
-      color: #f6fdff;
-      font-size: 1.15rem;
-      letter-spacing: -0.02em;
-    }
-
-    .mission-status span {
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.92rem;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    button {
-      border: 1px solid rgba(126, 242, 255, 0.26);
-      border-radius: 14px;
-      background:
-        linear-gradient(135deg, rgba(101, 247, 255, 0.13), rgba(106, 168, 255, 0.08)),
-        rgba(0, 12, 22, 0.8);
-      color: var(--text);
-      min-height: 46px;
-      padding: 0.75rem 0.95rem;
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025);
-    }
-
-    button:hover:not(:disabled) {
-      border-color: var(--cyan);
-      box-shadow: var(--shadow-cyan);
-    }
-
-    button:disabled {
-      opacity: 0.48;
-      cursor: not-allowed;
-    }
-
-    .dangerless {
-      border-color: rgba(255, 198, 92, 0.26);
-      background:
-        linear-gradient(135deg, rgba(255, 198, 92, 0.11), rgba(101, 247, 255, 0.04)),
-        rgba(0, 12, 22, 0.72);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.18fr) minmax(440px, 0.82fr);
-      gap: 16px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .panel-header {
-      position: relative;
-      z-index: 1;
+    .stamp-line {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(126, 242, 255, 0.14);
-    }
-
-    .panel-title {
-      margin: 0;
-      color: #f5fdff;
-      font-size: 1.08rem;
-      letter-spacing: -0.02em;
-    }
-
-    .panel-subtitle {
-      margin: 4px 0 0;
+      gap: 12px;
       color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.4;
+      font-size: 11px;
+      padding: 6px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
     }
 
-    .panel-tag {
-      white-space: nowrap;
-      border: 1px solid rgba(126, 242, 255, 0.18);
-      border-radius: 999px;
-      padding: 0.45rem 0.68rem;
+    .stamp-line strong {
       color: var(--cyan);
-      background: rgba(0, 14, 24, 0.72);
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
+      font-weight: 700;
+      text-align: right;
     }
 
-    .gauge-grid {
+    .commander {
       position: relative;
       z-index: 1;
+      margin-top: 22px;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 18px;
     }
 
-    .gauge {
+    .surface {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px;
+      background: rgba(4, 8, 22, 0.58);
+      padding: 16px;
+    }
+
+    .surface-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .surface-title h2,
+    .surface-title h3,
+    .panel-heading h2,
+    .panel-heading h3 {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: #eaf2ff;
+    }
+
+    .fibonacci-rail {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(64px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .fib-chip {
       position: relative;
-      min-height: 154px;
-      padding: 14px;
-      border: 1px solid rgba(126, 242, 255, 0.18);
+      min-height: 74px;
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
       background:
-        radial-gradient(circle at top right, rgba(101, 247, 255, 0.10), transparent 11rem),
-        rgba(2, 8, 15, 0.64);
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1), transparent 56%),
+        rgba(10, 16, 34, 0.72);
+      padding: 10px;
       overflow: hidden;
     }
 
-    .gauge::after {
+    .fib-chip::before {
       content: "";
       position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 13px;
-      height: 6px;
+      inset: auto 10px 9px 10px;
+      height: 3px;
       border-radius: 999px;
-      background:
-        linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
-      transform-origin: left center;
-      transform: scaleX(var(--score, 0.1));
-      opacity: 0.92;
-      box-shadow: 0 0 18px rgba(101, 247, 255, 0.28);
+      background: var(--unknown);
+      box-shadow: 0 0 16px currentColor;
+      opacity: 0.9;
     }
 
-    .gauge.blocked {
-      border-color: rgba(255, 92, 138, 0.38);
-    }
+    .fib-chip[data-status="pass"]::before { background: var(--pass); }
+    .fib-chip[data-status="partial"]::before { background: var(--partial); }
+    .fib-chip[data-status="blocked"]::before { background: var(--blocked); }
+    .fib-chip[data-status="held"]::before { background: var(--held); }
+    .fib-chip[data-status="unknown"]::before { background: var(--unknown); }
 
-    .gauge.blocked::after {
-      background: linear-gradient(90deg, var(--red), var(--amber));
-    }
-
-    .gauge.partial,
-    .gauge.risk {
-      border-color: rgba(255, 198, 92, 0.33);
-    }
-
-    .gauge.partial::after,
-    .gauge.risk::after {
-      background: linear-gradient(90deg, var(--amber), var(--cyan));
-    }
-
-    .gauge.aligned {
-      border-color: rgba(93, 255, 178, 0.28);
-    }
-
-    .gauge.aligned::after {
-      background: linear-gradient(90deg, var(--green), var(--cyan));
-    }
-
-    .gauge-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: flex-start;
-      margin-bottom: 9px;
-    }
-
-    .gauge-name {
-      margin: 0;
-      font-size: 0.92rem;
-      letter-spacing: -0.01em;
-    }
-
-    .gauge-status {
+    .fib-code {
       font-family: var(--mono);
-      font-size: 0.64rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.35rem 0.5rem;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.045);
-      color: var(--cyan);
-      border: 1px solid rgba(126, 242, 255, 0.16);
-      white-space: nowrap;
+      font-size: 16px;
+      color: var(--text);
+      font-weight: 800;
     }
 
-    .gauge.blocked .gauge-status {
-      color: var(--red);
-      border-color: rgba(255, 92, 138, 0.24);
-    }
-
-    .gauge.partial .gauge-status,
-    .gauge.risk .gauge-status {
-      color: var(--amber);
-      border-color: rgba(255, 198, 92, 0.22);
-    }
-
-    .gauge.aligned .gauge-status {
-      color: var(--green);
-      border-color: rgba(93, 255, 178, 0.22);
-    }
-
-    .gauge-sub {
+    .fib-label {
+      margin-top: 4px;
       color: var(--muted);
-      font-size: 0.77rem;
-      line-height: 1.35;
-      min-height: 2.1em;
-      margin-bottom: 10px;
+      font-size: 10px;
+      line-height: 1.25;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
-    .gauge-data {
-      color: var(--dim);
+    .fib-state {
+      margin-top: 8px;
       font-family: var(--mono);
-      font-size: 0.68rem;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-      padding-bottom: 15px;
-    }
-
-    .manifest-surface {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      gap: 10px;
-    }
-
-    textarea,
-    pre {
-      width: 100%;
-      margin: 0;
-      border: 1px solid rgba(126, 242, 255, 0.16);
-      border-radius: 16px;
-      background:
-        linear-gradient(180deg, rgba(0, 13, 22, 0.88), rgba(1, 6, 13, 0.94));
-      color: #dffcff;
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      line-height: 1.52;
-      box-shadow: inset 0 0 24px rgba(101, 247, 255, 0.05);
-    }
-
-    textarea {
-      min-height: 280px;
-      resize: vertical;
-      padding: 14px;
-    }
-
-    pre {
-      padding: 14px;
-      overflow: auto;
-      max-height: 520px;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+      font-size: 10px;
+      color: #d9e5ff;
     }
 
     .micro-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      background: rgba(9, 14, 30, 0.72);
+      padding: 10px;
+      min-height: 72px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.22;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    button,
+    .button-link {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(73,231,255,0.13), rgba(198,120,255,0.13)),
+        rgba(9, 14, 30, 0.82);
+      color: var(--text);
+      font: 700 12px/1 var(--mono);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    button:hover,
+    .button-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(73,231,255,0.55);
+      background:
+        linear-gradient(135deg, rgba(73,231,255,0.22), rgba(198,120,255,0.18)),
+        rgba(9, 14, 30, 0.92);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button[data-tone="north"] { border-color: rgba(81,213,255,0.34); }
+    button[data-tone="east"] { border-color: rgba(255,200,82,0.34); }
+    button[data-tone="south"] { border-color: rgba(69,240,164,0.34); }
+    button[data-tone="west"] { border-color: rgba(198,120,255,0.34); }
+    button[data-tone="raw"] { border-color: rgba(255,79,110,0.28); }
+
+    .status-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 24px;
+      background:
+        linear-gradient(160deg, rgba(22, 32, 68, 0.72), rgba(5, 8, 20, 0.84));
+      box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.28;
+      background:
+        radial-gradient(circle at 84% 14%, var(--card-color, var(--cyan)), transparent 9rem);
+      pointer-events: none;
+    }
+
+    .card[data-card="north"] { --card-color: var(--north); }
+    .card[data-card="east"] { --card-color: var(--east); }
+    .card[data-card="south"] { --card-color: var(--south); }
+    .card[data-card="west"] { --card-color: var(--west); }
+
+    .card-inner {
       position: relative;
       z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding: 14px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       gap: 10px;
     }
 
-    .micro-card {
-      padding: 12px;
-      min-height: 90px;
-      border: 1px solid rgba(126, 242, 255, 0.15);
-      border-radius: 14px;
-      background: rgba(0, 10, 18, 0.55);
+    .card h3 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: -0.02em;
     }
 
-    .micro-card .label {
-      color: var(--dim);
+    .card small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
       font-family: var(--mono);
-      font-size: 0.66rem;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
-    .micro-card .value {
-      margin-top: 8px;
-      font-family: var(--mono);
-      font-size: 0.82rem;
+    .gauge {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
       color: var(--text);
-      overflow-wrap: anywhere;
-    }
-
-    .participant-table {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      border-collapse: collapse;
       font-family: var(--mono);
-      font-size: 0.72rem;
-      overflow: hidden;
-      border-radius: 14px;
+      font-size: 10px;
+      font-weight: 800;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
+        conic-gradient(var(--unknown) 0 70deg, rgba(255,255,255,0.08) 70deg 360deg);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 0 22px rgba(255,255,255,0.06);
     }
 
-    .participant-table th,
-    .participant-table td {
-      border-bottom: 1px solid rgba(126, 242, 255, 0.10);
-      padding: 10px 8px;
-      text-align: left;
-      vertical-align: top;
+    .card[data-status="pass"] .gauge {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
+        conic-gradient(var(--pass) 0 325deg, rgba(255,255,255,0.08) 325deg 360deg);
+      box-shadow: 0 0 24px rgba(57,233,154,0.18);
     }
 
-    .participant-table th {
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      background: rgba(0, 12, 21, 0.72);
+    .card[data-status="partial"] .gauge {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
+        conic-gradient(var(--partial) 0 230deg, rgba(255,255,255,0.08) 230deg 360deg);
+      box-shadow: 0 0 24px rgba(255,200,82,0.18);
     }
 
-    .participant-table td {
-      color: #b7dce6;
-      background: rgba(0, 7, 14, 0.28);
+    .card[data-status="blocked"] .gauge {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
+        conic-gradient(var(--blocked) 0 130deg, rgba(255,255,255,0.08) 130deg 360deg);
+      box-shadow: 0 0 24px rgba(255,79,110,0.18);
     }
 
-    .participant-table tr:hover td {
-      background: rgba(101, 247, 255, 0.045);
+    .card[data-status="held"] .gauge {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
+        conic-gradient(var(--held) 0 180deg, rgba(255,255,255,0.08) 180deg 360deg);
+      box-shadow: 0 0 24px rgba(255,174,66,0.18);
+    }
+
+    .card[data-status="unknown"] .gauge {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,8,20,0.96) 0 49%, transparent 50%),
+        conic-gradient(var(--unknown) 0 80deg, rgba(255,255,255,0.08) 80deg 360deg);
     }
 
     .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      border: 1px solid rgba(126, 242, 255, 0.16);
+      gap: 6px;
+      border: 1px solid rgba(255,255,255,0.12);
       border-radius: 999px;
-      padding: 0.28rem 0.48rem;
-      font-family: var(--mono);
-      font-size: 0.65rem;
+      background: rgba(5,8,20,0.62);
+      padding: 7px 9px;
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--muted);
-      background: rgba(0, 12, 20, 0.65);
+      color: var(--unknown);
     }
 
     .status-pill::before {
@@ -663,2099 +510,1631 @@
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: var(--dim);
-      box-shadow: 0 0 10px currentColor;
+      background: currentColor;
+      box-shadow: 0 0 12px currentColor;
     }
 
-    .status-pill.ok {
-      color: var(--green);
-      border-color: rgba(93, 255, 178, 0.18);
-    }
+    [data-status="pass"] .status-pill,
+    .status-pill[data-status="pass"] { color: var(--pass); }
+    [data-status="partial"] .status-pill,
+    .status-pill[data-status="partial"] { color: var(--partial); }
+    [data-status="blocked"] .status-pill,
+    .status-pill[data-status="blocked"] { color: var(--blocked); }
+    [data-status="held"] .status-pill,
+    .status-pill[data-status="held"] { color: var(--held); }
+    [data-status="unknown"] .status-pill,
+    .status-pill[data-status="unknown"] { color: var(--unknown); }
 
-    .status-pill.ok::before {
-      background: var(--green);
-    }
-
-    .status-pill.warn {
-      color: var(--amber);
-      border-color: rgba(255, 198, 92, 0.20);
-    }
-
-    .status-pill.warn::before {
-      background: var(--amber);
-    }
-
-    .status-pill.bad {
-      color: var(--red);
-      border-color: rgba(255, 92, 138, 0.22);
-    }
-
-    .status-pill.bad::before {
-      background: var(--red);
-    }
-
-    .target-frame {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: min(74vh, 740px);
-      border: 1px solid rgba(126, 242, 255, 0.20);
-      border-radius: 16px;
-      background: #02060b;
-      overflow: hidden;
-    }
-
-    .target-frame iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: #000;
+    .card-summary {
+      margin: 14px 0 0;
+      color: #d8e4ff;
+      font-size: 13px;
+      line-height: 1.35;
+      min-height: 36px;
     }
 
     details {
-      position: relative;
-      z-index: 1;
-      border: 1px solid rgba(126, 242, 255, 0.13);
-      border-radius: 14px;
-      background: rgba(0, 8, 15, 0.5);
-      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      background: rgba(4, 8, 22, 0.45);
       overflow: hidden;
     }
 
     summary {
       cursor: pointer;
-      padding: 12px 14px;
+      padding: 14px 16px;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: #edf4ff;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "OPEN";
+      color: var(--muted);
+      font: 800 10px/1 var(--mono);
+      letter-spacing: 0.1em;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 7px 9px;
+    }
+
+    details[open] summary::after {
+      content: "CLOSE";
       color: var(--cyan);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      border-color: rgba(73,231,255,0.35);
     }
 
-    details > .detail-body {
-      padding: 0 14px 14px;
+    .drawer-body {
+      padding: 0 16px 16px;
     }
 
-    .footer-receipt {
-      margin-top: 24px;
+    .drawer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .drawer-item {
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px;
+      background: rgba(8, 13, 28, 0.64);
+      padding: 10px;
+      min-height: 62px;
+    }
+
+    .drawer-item span {
+      display: block;
       color: var(--dim);
       font-family: var(--mono);
-      font-size: 0.68rem;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .drawer-item strong {
+      color: #ecf4ff;
+      font-size: 13px;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .receipt-output {
+      display: none;
+    }
+
+    .receipt-preview {
+      margin: 12px 0 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow: auto;
+      max-height: 310px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(3, 8, 20, 0.95), rgba(6, 10, 24, 0.92));
+      color: #dbe8ff;
+      padding: 12px;
+      font: 11px/1.5 var(--mono);
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .target-frame-wrap {
+      margin-top: 18px;
+    }
+
+    .target-frame {
+      width: 100%;
+      height: 420px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      background: #050712;
+      display: block;
+    }
+
+    .raw-note {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .footer {
+      margin: 22px 0 0;
+      color: var(--dim);
+      text-align: center;
+      font: 11px/1.5 var(--mono);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
     .toast {
       position: fixed;
-      z-index: 50;
-      right: 18px;
-      bottom: 18px;
-      max-width: 420px;
-      border: 1px solid rgba(101, 247, 255, 0.28);
-      border-radius: 14px;
-      background: rgba(0, 13, 23, 0.94);
-      color: var(--text);
-      padding: 12px 14px;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      box-shadow: var(--shadow-cyan);
+      z-index: 100;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
       opacity: 0;
-      transform: translateY(12px);
+      border: 1px solid rgba(73,231,255,0.3);
+      border-radius: 999px;
+      background: rgba(5, 8, 20, 0.92);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      padding: 12px 16px;
+      font: 800 12px/1 var(--mono);
       pointer-events: none;
-      transition: opacity 180ms ease, transform 180ms ease;
+      transition: opacity 160ms ease, transform 160ms ease;
     }
 
-    .toast.show {
+    .toast[data-show="true"] {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
     }
 
-    @media (max-width: 1180px) {
-      .hero,
-      .grid {
+    @media (max-width: 1020px) {
+      .hero-top,
+      .commander {
         grid-template-columns: 1fr;
+        display: grid;
       }
 
-      .hero-meta,
-      .micro-grid {
+      .facility-stamp {
+        min-width: 0;
+      }
+
+      .fibonacci-rail {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .status-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .gauge-grid {
-        grid-template-columns: 1fr;
+      .drawer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 680px) {
-      .shell {
-        width: min(100% - 18px, 1880px);
-        padding-top: 10px;
+    @media (max-width: 640px) {
+      .page {
+        width: min(100vw - 18px, 1420px);
+        padding-top: 9px;
       }
 
-      .hero-panel {
-        padding: 18px;
+      .hero {
+        padding: 16px;
+        border-radius: 20px;
       }
 
-      .hero-meta,
-      .micro-grid,
-      .controls {
+      .fibonacci-rail,
+      .status-strip,
+      .drawer-grid,
+      .micro-grid {
         grid-template-columns: 1fr;
       }
 
-      .panel {
-        padding: 14px;
-      }
-
-      .target-frame {
-        height: 62vh;
+      button {
+        width: 100%;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero-panel::before,
-      .mission-panel::before,
-      .panel::before {
+      body::before,
+      .hero::after {
         animation: none;
+      }
+
+      button,
+      .toast {
+        transition: none;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#diagnostic-main">Skip to diagnostic controls</a>
-
-  <div class="shell">
-    <header class="topline" aria-label="Route navigation">
-      <nav class="route-links">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/hearth/">Open Hearth route</a>
-      </nav>
-      <span class="microchip" id="clockChip">receiver idle</span>
-    </header>
-
+  <main class="page">
     <section class="hero" aria-labelledby="page-title">
-      <div class="hero-panel">
-        <p class="kicker">Hearth diagnostic receiver · cutting-edge tech panel</p>
-        <h1 id="page-title">Gauge Variance Command Surface</h1>
-        <p class="subtitle">
-          Receiver/display shell for the Hearth diagnostic field. Receipts remain specific evidence.
-          Gauges remain collective variance. South receives the assembled packet after the field is read,
-          then returns the compact copy surface without becoming North, West, Canvas, or repair authority.
-        </p>
-
-        <div class="hero-meta" aria-label="Static receiver contract summary">
-          <div class="meta-cell">
-            <div class="meta-label">Public contract</div>
-            <div class="meta-value">...GAUGE_VARIANCE_RECEIVER_TNT_v7</div>
-          </div>
-          <div class="meta-cell">
-            <div class="meta-label">Internal renewal</div>
-            <div class="meta-value">...TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_TNT_v7_2</div>
-          </div>
-          <div class="meta-cell">
-            <div class="meta-label">Target route</div>
-            <div class="meta-value">/showroom/globe/hearth/</div>
-          </div>
-          <div class="meta-cell">
-            <div class="meta-label">Diagnostic route</div>
-            <div class="meta-value">/showroom/globe/hearth/diagnostic/</div>
-          </div>
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">Planet Production Facility · Location Unknown</p>
+          <h1 id="page-title">Mirrorland Instrument Chamber</h1>
+          <p class="subtitle">
+            This chamber does not build the planet. It watches the multi-engine construct,
+            orders the evidence through Fibonacci synchronization, and tells the facility
+            which engine is allowed to act next.
+          </p>
         </div>
+
+        <aside class="facility-stamp" aria-label="Diagnostic contract stamp">
+          <b>Receiver Contract</b>
+          <div class="stamp-line">
+            <span>Route</span>
+            <strong>/diagnostic/</strong>
+          </div>
+          <div class="stamp-line">
+            <span>Mode</span>
+            <strong>HTML RECEIVER</strong>
+          </div>
+          <div class="stamp-line">
+            <span>Mutation</span>
+            <strong>FORBIDDEN</strong>
+          </div>
+          <div class="stamp-line">
+            <span>Raw Packet</span>
+            <strong>DEBUG ONLY</strong>
+          </div>
+        </aside>
       </div>
 
-      <aside class="mission-panel" aria-label="Mission status">
-        <div class="mission-status">
-          <strong id="missionHeadline">Receiver armed. Diagnostic field not yet run.</strong>
-          <span id="missionDetail">Run the alignment pass to load participants, read receipts, assemble the packet, then hand the complete packet to South.</span>
-        </div>
+      <div class="commander">
+        <section class="surface" aria-label="Primary Fibonacci commander surface">
+          <div class="surface-title">
+            <h2>Fibonacci synchronization rail</h2>
+            <span class="status-pill" id="overallStatus" data-status="unknown">UNKNOWN</span>
+          </div>
 
-        <div class="controls" id="diagnostic-main">
-          <button id="runDiagnostic" type="button">Run Alignment</button>
-          <button id="copyPrimary" type="button">Copy Primary Surface</button>
-          <button id="copySouth" type="button">Copy South Manifest</button>
-          <button id="copyFull" class="dangerless" type="button">Copy Full Raw Packet</button>
-          <button id="resetGauges" type="button">Reset Gauges</button>
-          <button id="refreshStatus" type="button">Refresh Status</button>
-        </div>
+          <div class="fibonacci-rail" id="fibonacciRail">
+            <div class="fib-chip" data-fib="F1" data-status="unknown">
+              <div class="fib-code">F1</div>
+              <div class="fib-label">Intent</div>
+              <div class="fib-state" data-fib-state="F1">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F2" data-status="unknown">
+              <div class="fib-code">F2</div>
+              <div class="fib-label">Target Access</div>
+              <div class="fib-state" data-fib-state="F2">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F3" data-status="unknown">
+              <div class="fib-code">F3</div>
+              <div class="fib-label">North</div>
+              <div class="fib-state" data-fib-state="F3">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F5" data-status="unknown">
+              <div class="fib-code">F5</div>
+              <div class="fib-label">East Source</div>
+              <div class="fib-state" data-fib-state="F5">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F8" data-status="unknown">
+              <div class="fib-code">F8</div>
+              <div class="fib-label">South Lens</div>
+              <div class="fib-state" data-fib-state="F8">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F13" data-status="unknown">
+              <div class="fib-code">F13</div>
+              <div class="fib-label">Surface Truth</div>
+              <div class="fib-state" data-fib-state="F13">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F21" data-status="unknown">
+              <div class="fib-code">F21</div>
+              <div class="fib-label">West</div>
+              <div class="fib-state" data-fib-state="F21">UNKNOWN</div>
+            </div>
+            <div class="fib-chip" data-fib="F34" data-status="unknown">
+              <div class="fib-code">F34</div>
+              <div class="fib-label">Canvas Boundary</div>
+              <div class="fib-state" data-fib-state="F34">UNKNOWN</div>
+            </div>
+          </div>
 
-        <div class="micro-grid">
-          <div class="micro-card">
-            <div class="label">South copy surface</div>
-            <div class="value" id="southCopyStatus">waiting</div>
+          <div class="controls" aria-label="Primary diagnostic controls">
+            <button type="button" id="runChamber">Run chamber scan</button>
+            <button type="button" data-copy="primary">Copy primary surface</button>
+            <button type="button" data-copy="north" data-tone="north">Copy North</button>
+            <button type="button" data-copy="east" data-tone="east">Copy East</button>
+            <button type="button" data-copy="south" data-tone="south">Copy South</button>
+            <button type="button" data-copy="west" data-tone="west">Copy West</button>
+            <button type="button" data-copy="raw" data-tone="raw">Copy full raw packet</button>
           </div>
-          <div class="micro-card">
-            <div class="label">North verdict</div>
-            <div class="value" id="northVerdictStatus">not available</div>
+        </section>
+
+        <section class="surface" aria-label="Commander summary">
+          <div class="surface-title">
+            <h2>Commander surface</h2>
+            <span id="scanTime" class="status-pill" data-status="unknown">WAITING</span>
           </div>
-          <div class="micro-card">
-            <div class="label">Sidecar mode</div>
-            <div class="value">internal South lens</div>
+
+          <div class="micro-grid">
+            <div class="metric">
+              <span>Final Bucket</span>
+              <strong id="metricFinalBucket">UNKNOWN</strong>
+            </div>
+            <div class="metric">
+              <span>First Blocker</span>
+              <strong id="metricFirstBlocker">UNKNOWN</strong>
+            </div>
+            <div class="metric">
+              <span>Canvas Blame</span>
+              <strong id="metricCanvasBlame">UNKNOWN</strong>
+            </div>
+            <div class="metric">
+              <span>Next Process</span>
+              <strong id="metricNextProcess">UNKNOWN</strong>
+            </div>
           </div>
-        </div>
-      </aside>
+        </section>
+      </div>
+
+      <section class="status-strip" aria-label="Four cardinal receipt status">
+        <article class="card" data-card="north" data-status="unknown">
+          <div class="card-inner">
+            <div class="card-top">
+              <div>
+                <h3>North</h3>
+                <small>Chronology · validation · verdict</small>
+              </div>
+              <div class="gauge" id="northGauge">N</div>
+            </div>
+            <p class="card-summary" id="northSummary">Waiting for chamber scan.</p>
+            <span class="status-pill" id="northPill" data-status="unknown">UNKNOWN</span>
+          </div>
+        </article>
+
+        <article class="card" data-card="east" data-status="unknown">
+          <div class="card-inner">
+            <div class="card-top">
+              <div>
+                <h3>East</h3>
+                <small>Source · file composition · expression path</small>
+              </div>
+              <div class="gauge" id="eastGauge">E</div>
+            </div>
+            <p class="card-summary" id="eastSummary">Waiting for chamber scan.</p>
+            <span class="status-pill" id="eastPill" data-status="unknown">UNKNOWN</span>
+          </div>
+        </article>
+
+        <article class="card" data-card="south" data-status="unknown">
+          <div class="card-inner">
+            <div class="card-top">
+              <div>
+                <h3>South</h3>
+                <small>Output proof · production surface lens</small>
+              </div>
+              <div class="gauge" id="southGauge">S</div>
+            </div>
+            <p class="card-summary" id="southSummary">Waiting for chamber scan.</p>
+            <span class="status-pill" id="southPill" data-status="unknown">UNKNOWN</span>
+          </div>
+        </article>
+
+        <article class="card" data-card="west" data-status="unknown">
+          <div class="card-inner">
+            <div class="card-top">
+              <div>
+                <h3>West</h3>
+                <small>Admissibility · blocker · next action</small>
+              </div>
+              <div class="gauge" id="westGauge">W</div>
+            </div>
+            <p class="card-summary" id="westSummary">Waiting for chamber scan.</p>
+            <span class="status-pill" id="westPill" data-status="unknown">UNKNOWN</span>
+          </div>
+        </article>
+      </section>
     </section>
 
-    <main class="grid">
-      <section>
-        <section class="panel" aria-labelledby="gauge-title">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" id="gauge-title">Collective Gauge Variance</h2>
-              <p class="panel-subtitle">Screenshot-safe diagnostic field state. These gauges do not replace receipts and do not authorize repair.</p>
-            </div>
-            <div class="panel-tag" id="gaugeCountTag">10 gauges</div>
-          </div>
-          <div class="gauge-grid" id="gaugeGrid" aria-live="polite"></div>
-        </section>
+    <section class="panels" aria-label="Expandable receipt categories">
+      <details open>
+        <summary>Primary Surface · Fibonacci Commander Receipt</summary>
+        <div class="drawer-body">
+          <div class="drawer-grid" id="primaryBreakdown"></div>
+          <pre class="receipt-preview" id="primaryReceipt" aria-label="Primary receipt preview"></pre>
+        </div>
+      </details>
 
-        <section class="panel" aria-labelledby="primary-copy-title">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" id="primary-copy-title">Primary Copy Surface</h2>
-              <p class="panel-subtitle">South compact or super-compact manifest. Full raw alignment remains secondary evidence.</p>
-            </div>
-            <div class="panel-tag" id="copySurfaceTag">waiting</div>
-          </div>
+      <details>
+        <summary>North Receipt · Chronology / Validation</summary>
+        <div class="drawer-body">
+          <div class="drawer-grid" id="northBreakdown"></div>
+          <pre class="receipt-preview" id="northReceipt" aria-label="North receipt preview"></pre>
+        </div>
+      </details>
 
-          <div class="manifest-surface">
-            <textarea id="primaryCopySurface" spellcheck="false" aria-label="Primary copy surface">SOUTH_COMPACT_MANIFEST=WAITING_RUN</textarea>
-          </div>
+      <details>
+        <summary>East Receipt · Source / Composition</summary>
+        <div class="drawer-body">
+          <div class="drawer-grid" id="eastBreakdown"></div>
+          <pre class="receipt-preview" id="eastReceipt" aria-label="East receipt preview"></pre>
+        </div>
+      </details>
 
-          <details open>
-            <summary>South conclusion and sidecar lens report</summary>
-            <div class="detail-body">
-              <pre id="southLensOutput">SOUTH_LENS_REPORT=WAITING_RUN</pre>
-            </div>
-          </details>
+      <details>
+        <summary>South Receipt · Surface Lens / Output Proof</summary>
+        <div class="drawer-body">
+          <div class="drawer-grid" id="southBreakdown"></div>
+          <pre class="receipt-preview" id="southReceipt" aria-label="South receipt preview"></pre>
+        </div>
+      </details>
 
-          <details>
-            <summary>Segregated receipt index</summary>
-            <div class="detail-body">
-              <pre id="segregatedIndexOutput">SEGREGATED_RECEIPT_INDEX=WAITING_RUN</pre>
-            </div>
-          </details>
+      <details>
+        <summary>West Receipt · Admissibility / Blocker</summary>
+        <div class="drawer-body">
+          <div class="drawer-grid" id="westBreakdown"></div>
+          <pre class="receipt-preview" id="westReceipt" aria-label="West receipt preview"></pre>
+        </div>
+      </details>
 
-          <details>
-            <summary>Duplicate standard collapse report</summary>
-            <div class="detail-body">
-              <pre id="duplicateCollapseOutput">DUPLICATE_STANDARD_COLLAPSE_REPORT=WAITING_RUN</pre>
-            </div>
-          </details>
-        </section>
+      <details>
+        <summary>Full Raw Packet · Deep Archive / Debug Only</summary>
+        <div class="drawer-body">
+          <p class="raw-note">
+            The raw packet remains available for deep audit, but the chamber no longer uses it
+            as the primary copy surface. Use cardinal receipts first. Use raw only when a
+            specific gate cannot be classified.
+          </p>
+          <pre class="receipt-preview" id="rawReceiptPreview" aria-label="Raw packet preview"></pre>
+        </div>
+      </details>
 
-        <section class="panel" aria-labelledby="participants-title">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" id="participants-title">Participant Load State</h2>
-              <p class="panel-subtitle">Primary diagnostic participants are listed separately from South sidecar support lenses.</p>
-            </div>
-            <div class="panel-tag" id="participantCountTag">standby</div>
-          </div>
-          <div style="overflow:auto;">
-            <table class="participant-table">
-              <thead>
-                <tr>
-                  <th>Participant</th>
-                  <th>File</th>
-                  <th>Load</th>
-                  <th>Receipt</th>
-                  <th>Observed API</th>
-                </tr>
-              </thead>
-              <tbody id="participantRows"></tbody>
-            </table>
-          </div>
-        </section>
-      </section>
+      <details class="target-frame-wrap">
+        <summary>Target Porthole · Hearth Production Surface</summary>
+        <div class="drawer-body">
+          <iframe
+            id="hearthDiagnosticTargetFrame"
+            class="target-frame"
+            title="Hearth diagnostic target frame"
+            src="/showroom/globe/hearth/"
+            loading="eager"
+          ></iframe>
+        </div>
+      </details>
+    </section>
 
-      <aside>
-        <section class="panel" aria-labelledby="target-title">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" id="target-title">Rendered Target Viewport</h2>
-              <p class="panel-subtitle">Read-only target frame for diagnostic context. The receiver does not mutate the route.</p>
-            </div>
-            <div class="panel-tag" id="targetFrameTag">loading</div>
-          </div>
-          <div class="target-frame">
-            <iframe id="targetFrame" title="Hearth target route diagnostic viewport" src="/showroom/globe/hearth/"></iframe>
-          </div>
-        </section>
+    <p class="footer">
+      HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 ·
+      HTML receiver only · no production mutation · no Canvas build · no visual pass claim
+    </p>
+  </main>
 
-        <section class="panel" aria-labelledby="receipt-title">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" id="receipt-title">Specific Receipt Field</h2>
-              <p class="panel-subtitle">Structured evidence from each primary participant.</p>
-            </div>
-            <div class="panel-tag" id="receiptCountTag">0 receipts</div>
-          </div>
-          <pre id="specificReceiptOutput">specificReceipts=WAITING_RUN</pre>
-        </section>
-
-        <section class="panel" aria-labelledby="raw-title">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-title" id="raw-title">Full Raw Alignment Packet</h2>
-              <p class="panel-subtitle">Secondary evidence. Not the default copy surface.</p>
-            </div>
-            <div class="panel-tag">secondary</div>
-          </div>
-          <pre id="rawPacketOutput">RAW_ALIGNMENT_PACKET=WAITING_RUN</pre>
-        </section>
-      </aside>
-    </main>
-
-    <footer class="footer-receipt" id="receiverReceiptLine">
-      CONTRACT=HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7 ·
-      INTERNAL_RENEWAL_CONTRACT=HEARTH_DIAGNOSTIC_ROUTE_CUTTING_EDGE_TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_TNT_v7_2 ·
-      PRODUCTION_MUTATION_AUTHORIZED=false · HEARTH_REPAIR_AUTHORIZED=false · RUNTIME_RESTART_AUTHORIZED=false · CANVAS_RELEASE_AUTHORIZED=false
-    </footer>
-  </div>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
 
   <script>
-    (function () {
+    (() => {
       "use strict";
 
-      var PUBLIC_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_TNT_v7";
-      var PUBLIC_RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_LABWEST_CONSTRUCT_ALIGNMENT_GAUGE_VARIANCE_RECEIVER_RECEIPT_v7";
-      var PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_RETURN_TRANSPORT_RECEIVER_TNT_v6";
-      var BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PARALLEL_RAIL_RECEIVER_TNT_v1";
+      const root = window;
+      const CONTRACT =
+        "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
+      const RECEIPT =
+        "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
+      const INTERNAL_RENEWAL_CONTRACT =
+        "HEARTH_DIAGNOSTIC_ROUTE_FOUR_CARDINAL_RECEIPT_SEGMENTATION_FIBONACCI_SYNC_TNT_v8_1";
+      const INTERNAL_RENEWAL_RECEIPT =
+        "HEARTH_DIAGNOSTIC_ROUTE_FOUR_CARDINAL_RECEIPT_SEGMENTATION_FIBONACCI_SYNC_RECEIPT_v8_1";
 
-      var INTERNAL_RENEWAL_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_CUTTING_EDGE_TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_TNT_v7_2";
-      var INTERNAL_RENEWAL_RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_CUTTING_EDGE_TECH_PANEL_SOUTH_COPY_SURFACE_INTEGRATION_RECEIPT_v7_2";
-      var PREVIOUS_INTERNAL_RENEWAL_CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_SOUTH_COMPACT_COPY_SURFACE_INTEGRATION_TNT_v7_1";
+      const TARGET_ROUTE = "/showroom/globe/hearth/";
+      const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
+      const VERSION =
+        "2026-06-08.hearth-diagnostic-route-planet-production-facility-instrument-chamber-v8";
 
-      var VERSION = "2026-06-08.hearth-diagnostic-route-cutting-edge-tech-panel-south-copy-surface-integration-v7-2";
-      var TARGET_ROUTE = "/showroom/globe/hearth/";
-      var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-      var REPORT_PACKET = "HEARTH_DIAGNOSTIC_ALIGNMENT_GAUGE_VARIANCE_PACKET_v7_2";
+      const CURRENT_DIAGNOSTIC_QUESTION =
+        "ARE_GATES_FUNCTIONING_AND_WHAT_IS_NEXT_LAWFUL_ACTION";
 
-      var NO_CLAIMS = {
-        PRODUCTION_MUTATION_AUTHORIZED: false,
-        HEARTH_REPAIR_AUTHORIZED: false,
-        ROUTE_REPAIR_AUTHORIZED: false,
-        ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
-        CONTROL_MUTATION_AUTHORIZED: false,
-        CANVAS_DRAWING_AUTHORIZED: false,
-        CANVAS_CREATION_AUTHORIZED: false,
-        CANVAS_REPAIR_AUTHORIZED: false,
-        CANVAS_RELEASE_AUTHORIZED: false,
-        RUNTIME_RESTART_AUTHORIZED: false,
-        MACRO_WEST_RELEASE_AUTHORIZED: false,
-        SYNTHETIC_ACTIVATION_AUTHORIZED: false,
-        F13_CLAIMED: false,
-        F21_CLAIMED: false,
-        F55_CLAIMED_BY_SOUTH: false,
-        READY_TEXT_CLAIMED: false,
-        VISUAL_PASS_CLAIMED: false,
-        FINAL_VISUAL_PASS_CLAIMED: false,
-        GENERATED_IMAGE: false,
-        GRAPHIC_BOX: false,
-        WEBGL: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        webgl: false,
-        visualPassClaimed: false,
-        finalVisualPassClaimed: false
+      const PARTICIPANT_SCRIPTS = [
+        "/assets/lab/runtime-table.js",
+        "/assets/lab/runtime-table.west.js",
+        "/assets/hearth/hearth.diagnostic.rail.js",
+        "/assets/hearth/hearth.diagnostic.east.js",
+        "/assets/hearth/hearth.diagnostic.west.js",
+        "/assets/hearth/hearth.diagnostic.south.js",
+        "/assets/hearth/hearth.diagnostic.probe.east.js",
+        "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js"
+      ];
+
+      const PATHS = {
+        north: [
+          "JUDGE_NORTH",
+          "HEARTH_DIAGNOSTIC_RAIL_NORTH",
+          "HEARTH_DIAGNOSTIC_RAIL",
+          "HEARTH.diagnosticRail",
+          "HEARTH.diagnosticNorth",
+          "HEARTH.diagnosticNorthRail",
+          "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
+          "DEXTER_LAB.hearthDiagnosticRail",
+          "DEXTER_LAB.hearthDiagnosticNorth",
+          "DEXTER_LAB.hearthDiagnosticNorthRail"
+        ],
+        east: [
+          "HEARTH.diagnosticProbeEast",
+          "HEARTH.diagnosticEastProbe",
+          "HEARTH_DIAGNOSTIC_PROBE_EAST",
+          "HEARTH_DIAGNOSTIC_EAST_PROBE",
+          "HEARTH_DIAGNOSTIC_PROBE_EAST_EVIDENCE",
+          "DEXTER_LAB.hearthDiagnosticProbeEast"
+        ],
+        south: [
+          "JUDGE_SOUTH",
+          "HEARTH.diagnosticSouth",
+          "HEARTH.diagnosticRailSouth",
+          "HEARTH_DIAGNOSTIC_SOUTH",
+          "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+          "DEXTER_LAB.hearthDiagnosticSouth",
+          "DEXTER_LAB.hearthDiagnosticRailSouth"
+        ],
+        southLens: [
+          "HEARTH.southSurfacePointerSidecar",
+          "HEARTH.SOUTH_SURFACE_POINTER_SIDECAR",
+          "HEARTH.southCanvasSurfacePointerSidecar",
+          "HEARTH.diagnosticSouthSurfacePointerSidecar",
+          "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SIDECAR",
+          "HEARTH_SOUTH_SURFACE_POINTER_SIDECAR",
+          "SOUTH_SURFACE_POINTER_SIDECAR",
+          "DEXTER_LAB.southSurfacePointerSidecar",
+          "DEXTER_LAB.hearthSouthSurfacePointerSidecar"
+        ],
+        west: [
+          "LAB_RUNTIME_TABLE_WEST",
+          "RUNTIME_TABLE_WEST",
+          "LAB_CARDINAL_RUNTIME_TABLE_WEST",
+          "LAB_RUNTIME_TABLE_CARDINAL_WEST",
+          "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+          "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+          "HEARTH.runtimeTableWest",
+          "HEARTH.westRuntimeTable",
+          "HEARTH.westAdmissibility",
+          "HEARTH.westNorthStandardDerivativeRelease",
+          "DEXTER_LAB.runtimeTableWest",
+          "DEXTER_LAB.cardinalRuntimeTableWest",
+          "DEXTER_LAB.hearthRuntimeTableWest",
+          "DEXTER_LAB.hearthWestNorthStandardDerivativeRelease"
+        ],
+        surfaceTruth: [
+          "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+          "HEARTH.canvasSurfaceTruthProbe",
+          "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
+          "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+          "HEARTH.diagnosticProbeCanvasSurfaceTruthProductionSurfaceLensAlignment",
+          "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+          "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
+          "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
+          "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT",
+          "DEXTER_LAB.canvasSurfaceTruthProbe",
+          "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth",
+          "DEXTER_LAB.canvasSurfaceTruthProductionSurfaceLensAlignment"
+        ],
+        canvas: [
+          "HEARTH.canvas",
+          "HEARTH.canvasHub",
+          "HEARTH.canvasParent",
+          "HEARTH.canvasAuthority",
+          "HEARTH_CANVAS",
+          "HEARTH_CANVAS_HUB",
+          "DEXTER_LAB.hearthCanvas",
+          "DEXTER_LAB.hearthCanvasHub"
+        ]
       };
 
-      var PARTICIPANTS = [
-        {
-          id: "LAB_NORTH_GRAMMAR",
-          title: "Lab North Grammar",
-          type: "anchor-grammar",
-          file: "/assets/lab/runtime-table.js",
-          expectedContract: "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1",
-          aliases: [
-            "LAB_RUNTIME_TABLE",
-            "LAB_RUNTIME_TABLE_NORTH",
-            "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD",
-            "DEXTER_LAB.runtimeTable",
-            "DEXTER_LAB.runtimeTableNorth",
-            "DEXTER_LAB.northRuntimeTable",
-            "HEARTH.labRuntimeTable",
-            "HEARTH.labRuntimeTableNorth",
-            "HEARTH.LAB_RUNTIME_TABLE_NORTH"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket"]
+      const state = {
+        receipts: {
+          primary: "",
+          north: "",
+          east: "",
+          south: "",
+          west: "",
+          raw: ""
         },
-        {
-          id: "LABWEST_CONSTRUCT",
-          title: "LabWest Construct",
-          type: "derivative-construct",
-          file: "/assets/lab/runtime-table.west.js",
-          expectedContract: "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_TNT_v5_2",
-          aliases: [
-            "LAB_RUNTIME_TABLE_WEST",
-            "LAB_RUNTIME_TABLE_CARDINAL_WEST",
-            "DEXTER_LAB.runtimeTableWest",
-            "DEXTER_LAB.cardinalWestRuntimeTable",
-            "HEARTH.labWestRuntimeTable"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getPacketText", "getReport", "inspect", "run"]
-        },
-        {
-          id: "NORTH_RAIL",
-          title: "North Diagnostic Rail",
-          type: "north-diagnostic-track",
-          file: "/assets/hearth/hearth.diagnostic.rail.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11",
-          aliases: [
-            "HEARTH.diagnosticNorth",
-            "HEARTH.diagnosticRail",
-            "HEARTH.diagnosticNorthRail",
-            "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
-            "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-            "HEARTH_DIAGNOSTIC_NORTH_RAIL",
-            "HEARTH_DIAGNOSTIC_RAIL",
-            "DEXTER_LAB.hearthDiagnosticNorth",
-            "DEXTER_LAB.hearthDiagnosticRail"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacket", "getNorthReceipt", "getNorthRailReceipt"]
-        },
-        {
-          id: "EAST_RAIL",
-          title: "East Source Read",
-          type: "diagnostic-rail-child",
-          file: "/assets/hearth/hearth.diagnostic.east.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1",
-          aliases: [
-            "HEARTH.diagnosticEast",
-            "HEARTH.diagnosticRailEast",
-            "HEARTH.JUDGE_EAST_SOURCE_READ",
-            "HEARTH_DIAGNOSTIC_RAIL_EAST",
-            "HEARTH_DIAGNOSTIC_EAST",
-            "DEXTER_LAB.hearthDiagnosticEast",
-            "DEXTER_LAB.hearthDiagnosticRailEast"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getEastReceipt", "getEastReceiptLight", "getReport", "getPacket", "getStatus"]
-        },
-        {
-          id: "WEST_RAIL",
-          title: "West Rendered Read",
-          type: "diagnostic-rail-child",
-          file: "/assets/hearth/hearth.diagnostic.west.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_RAIL_WEST_RENDERED_TARGET_AUTHORITY_PROBE_TNT_v1",
-          aliases: [
-            "HEARTH.diagnosticWest",
-            "HEARTH.diagnosticRailWest",
-            "HEARTH.JUDGE_WEST_ADMISSIBILITY_READ",
-            "HEARTH_DIAGNOSTIC_RAIL_WEST",
-            "HEARTH_DIAGNOSTIC_WEST",
-            "DEXTER_LAB.hearthDiagnosticWest",
-            "DEXTER_LAB.hearthDiagnosticRailWest"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getWestReceipt", "getWestReceiptLight", "getReport", "getPacket", "getStatus"]
-        },
-        {
-          id: "SOUTH_RAIL",
-          title: "South Packet Output",
-          type: "diagnostic-rail-child",
-          file: "/assets/hearth/hearth.diagnostic.south.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_SOUTH_PAIR_SIDE_PACKET_OUTPUT_HANDOFF_TNT_v10",
-          aliases: [
-            "HEARTH.diagnosticSouth",
-            "HEARTH.diagnosticRailSouth",
-            "HEARTH.JUDGE_SOUTH_PACKET_OUTPUT",
-            "HEARTH.SOUTH_PACKET_OUTPUT_HANDOFF",
-            "HEARTH_DIAGNOSTIC_SOUTH",
-            "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-            "HEARTH_DIAGNOSTIC_SOUTH_RECEIPT_SEGREGATOR",
-            "DEXTER_LAB.hearthDiagnosticSouth",
-            "DEXTER_LAB.hearthDiagnosticRailSouth"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getSouthReceipt", "getReport", "getPacket", "getStatus"]
-        },
-        {
-          id: "PROBE_NORTH",
-          title: "North Probe",
-          type: "probe",
-          file: "/assets/hearth/hearth.diagnostic.probe.north.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_PROBE_NORTH_FILE_COMPOSITION_ZONE_COORDINATOR_TNT_v1",
-          aliases: [
-            "HEARTH.diagnosticProbeNorth",
-            "HEARTH.JUDGE_NORTH_PROBE",
-            "HEARTH_DIAGNOSTIC_PROBE_NORTH",
-            "HEARTH_DIAGNOSTIC_NORTH_PROBE",
-            "DEXTER_LAB.hearthDiagnosticProbeNorth"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacketText", "getPacket", "getStatus"]
-        },
-        {
-          id: "PROBE_EAST",
-          title: "East Probe",
-          type: "probe",
-          file: "/assets/hearth/hearth.diagnostic.probe.east.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_PROBE_EAST_SERVED_SOURCE_FILE_COMPOSITION_TNT_v1",
-          aliases: [
-            "HEARTH.diagnosticProbeEast",
-            "HEARTH.diagnosticEastProbe",
-            "HEARTH.JUDGE_EAST_PROBE",
-            "HEARTH_DIAGNOSTIC_PROBE_EAST",
-            "HEARTH_DIAGNOSTIC_EAST_PROBE",
-            "DEXTER_LAB.hearthDiagnosticProbeEast"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getProbeEastReceipt", "getStatus"]
-        },
-        {
-          id: "PROBE_WEST",
-          title: "West Probe",
-          type: "probe",
-          file: "/assets/hearth/hearth.diagnostic.probe.west.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_PROBE_WEST_RENDERED_TARGET_FILE_COMPOSITION_TNT_v1",
-          aliases: [
-            "HEARTH.diagnosticProbeWest",
-            "HEARTH.diagnosticWestProbe",
-            "HEARTH.diagnosticRailProbeWest",
-            "HEARTH.probeWest",
-            "HEARTH.JUDGE_WEST_PROBE",
-            "HEARTH_DIAGNOSTIC_PROBE_WEST",
-            "HEARTH_DIAGNOSTIC_WEST_PROBE",
-            "DEXTER_LAB.hearthDiagnosticProbeWest"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getProbeWestReceipt", "getStatus"]
-        },
-        {
-          id: "SURFACE_TRUTH_PROBE",
-          title: "Canvas Surface Truth",
-          type: "contract-definition-probe",
-          file: "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CYCLE_BOUND_CONTRACT_DEFINITION_ALIGNMENT_TNT_v2",
-          aliases: [
-            "HEARTH.diagnosticProbeCanvasSurfaceTruth",
-            "HEARTH.canvasSurfaceTruthProbe",
-            "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
-            "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-            "HEARTH.JUDGE_SURFACE_TRUTH_PROBE",
-            "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-            "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
-            "DEXTER_LAB.canvasSurfaceTruthProbe",
-            "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
-          ],
-          receiptMethods: ["getReceipt", "getProfileReceipt", "composeProfileReceipt", "getReceiptLight", "getReport", "getProfile"]
-        },
-        {
-          id: "PROBE_SOUTH",
-          title: "South Probe",
-          type: "probe",
-          file: "/assets/hearth/hearth.diagnostic.probe.south.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_PROBE_SOUTH_PACKET_MEANING_FILE_COMPOSITION_TNT_v1",
-          aliases: [
-            "HEARTH.diagnosticProbeSouth",
-            "HEARTH.diagnosticRailProbeSouth",
-            "HEARTH.diagnosticSouthProbe",
-            "HEARTH.JUDGE_SOUTH_PROBE",
-            "HEARTH_DIAGNOSTIC_PROBE_SOUTH",
-            "HEARTH_DIAGNOSTIC_RAIL_PROBE_SOUTH",
-            "DEXTER_LAB.hearthDiagnosticProbeSouth",
-            "DEXTER_LAB.hearthDiagnosticRailProbeSouth"
-          ],
-          receiptMethods: ["getReceipt", "getReceiptLight", "getReport", "getPacketText", "getProbeSouthReceipt", "getStatus"]
-        }
-      ];
-
-      var SOUTH_SUPPORT_LENSES = [
-        {
-          id: "SOUTH_SURFACE_POINTER_SIDECAR",
-          title: "South Surface Pointer Sidecar",
-          type: "south-internal-sidecar-lens",
-          file: "/assets/hearth/hearth.diagnostic.south.surface.pointer.js",
-          expectedContract: "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_TNT_v1",
-          primaryReceiptParticipant: false,
-          aliases: [
-            "HEARTH.diagnosticSouthSurfacePointer",
-            "HEARTH.diagnosticSurfacePointerSouth",
-            "HEARTH.diagnosticSouthBishopSurfacePointer",
-            "HEARTH.diagnosticBishopSurfacePointerSouth",
-            "HEARTH.diagnosticSouthSurfaceClassifier",
-            "HEARTH.diagnosticCanvasFeedClassifierSouth",
-            "HEARTH.diagnosticSouthReceiptPointer",
-            "HEARTH.diagnosticSouthReceiptPointerIndex",
-            "HEARTH.diagnosticSouthSurfacePointerReceiptIndex",
-            "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
-            "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_CLASSIFIER",
-            "HEARTH_DIAGNOSTIC_SOUTH_RECEIPT_POINTER",
-            "HEARTH_DIAGNOSTIC_SOUTH_RECEIPT_POINTER_INDEX",
-            "DEXTER_LAB.hearthDiagnosticSouthSurfacePointer",
-            "DEXTER_LAB.hearthDiagnosticSouthReceiptPointer"
-          ]
-        }
-      ];
-
-      var els = {};
-      var state = {
-        bootedAt: nowIso(),
-        updatedAt: nowIso(),
-        loadStarted: false,
-        loadComplete: false,
-        loadPromise: null,
-        targetFrameLoaded: false,
-        running: false,
-        runCount: 0,
-        participants: {},
-        supportLenses: {},
-        specificReceipts: {},
-        gaugeVariance: {},
-        participantActions: {},
-        receiverReceipt: {},
-        alignmentPacket: null,
-        preSouthPacket: null,
-        southProcess: null,
-        compactManifestText: "",
-        superCompactManifestText: "",
-        primaryCopyText: "SOUTH_COMPACT_MANIFEST=WAITING_RUN",
-        packetText: "RAW_ALIGNMENT_PACKET=WAITING_RUN",
-        errors: []
+        summary: null,
+        raw: null
       };
 
       function nowIso() {
-        return new Date().toISOString();
-      }
-
-      function $(id) {
-        return document.getElementById(id);
-      }
-
-      function ensureNamespace(root, name) {
-        if (!root[name] || typeof root[name] !== "object") {
-          root[name] = {};
-        }
-        return root[name];
-      }
-
-      function safeString(value) {
-        if (value === null) return "null";
-        if (typeof value === "undefined") return "";
-        if (typeof value === "string") return value;
-        if (typeof value === "number" || typeof value === "boolean") return String(value);
         try {
-          return JSON.stringify(value);
-        } catch (error) {
+          return new Date().toISOString();
+        } catch (_error) {
+          return "";
+        }
+      }
+
+      function isObject(value) {
+        return Boolean(value && typeof value === "object" && !Array.isArray(value));
+      }
+
+      function isFunction(value) {
+        return typeof value === "function";
+      }
+
+      function safeString(value, fallback = "") {
+        if (value === undefined || value === null) return fallback;
+        try {
           return String(value);
+        } catch (_error) {
+          return fallback;
         }
       }
 
-      function safeJson(value, spacing) {
+      function clean(value, limit = 1400) {
+        return safeString(value)
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, limit);
+      }
+
+      function toBool(value) {
+        if (value === true || value === "true" || value === "TRUE" || value === 1 || value === "1") return true;
+        if (value === false || value === "false" || value === "FALSE" || value === 0 || value === "0") return false;
+        const text = safeString(value).trim().toLowerCase();
+        if (["yes", "ready", "active", "accepted", "complete", "consumed", "present", "pass"].includes(text)) return true;
+        if (["no", "held", "blocked", "missing", "none", "fail", "failed"].includes(text)) return false;
+        return null;
+      }
+
+      function kv(key, value) {
+        const out = value === undefined || value === null || value === "" ? "UNKNOWN" : value;
+        return `${key}=${out}`;
+      }
+
+      function readPath(base, path) {
         try {
-          return JSON.stringify(value, null, spacing || 2);
-        } catch (error) {
-          return JSON.stringify({ JSON_STRINGIFY_ERROR: error && error.message ? error.message : String(error) }, null, 2);
+          const parts = safeString(path).replace(/^window\./, "").split(".");
+          let cursor = base;
+
+          for (const part of parts) {
+            if (!part) continue;
+            if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+            cursor = cursor[part];
+          }
+
+          return cursor || null;
+        } catch (_error) {
+          return null;
         }
       }
 
-      function clone(value) {
-        if (value === null || typeof value === "undefined") return value;
-        try {
-          return JSON.parse(JSON.stringify(value));
-        } catch (error) {
-          return value;
+      function parseKvText(text) {
+        const out = {};
+        const source = safeString(text);
+        source.split(/\r?\n/).forEach((line) => {
+          const idx = line.indexOf("=");
+          if (idx <= 0) return;
+          const key = line.slice(0, idx).trim();
+          const value = line.slice(idx + 1).trim();
+          if (key) out[key] = value;
+        });
+        return out;
+      }
+
+      function jsonSafe(value, depth = 0, seen = new WeakSet()) {
+        if (value === null || value === undefined) return value;
+        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return value;
+        if (typeof value === "function") return `[Function ${value.name || "anonymous"}]`;
+        if (depth > 5) return "[DepthLimit]";
+        if (typeof Node !== "undefined" && value instanceof Node) return `[DOM ${value.nodeName}]`;
+        if (typeof Window !== "undefined" && value instanceof Window) return "[Window]";
+        if (isObject(value) || Array.isArray(value)) {
+          if (seen.has(value)) return "[Circular]";
+          seen.add(value);
         }
-      }
 
-      function statusClass(status) {
-        var s = safeString(status).toUpperCase();
-        if (s.indexOf("ALIGNED") >= 0 || s.indexOf("PRESENT_WITH_RECEIPT") >= 0 || s === "PRESENT" || s === "CLEAN" || s === "LOADED_AND_AVAILABLE") return "ok";
-        if (s.indexOf("BLOCK") >= 0 || s.indexOf("MISSING") >= 0 || s.indexOf("FAILED") >= 0 || s.indexOf("NOT_FOUND") >= 0 || s.indexOf("ERROR") >= 0) return "bad";
-        if (s.indexOf("PARTIAL") >= 0 || s.indexOf("RISK") >= 0 || s.indexOf("WAIT") >= 0 || s.indexOf("LOADING") >= 0 || s.indexOf("NO_RECEIPT") >= 0) return "warn";
-        return "";
-      }
-
-      function readPath(path, root) {
-        var parts = path.split(".");
-        var cursor = root || window;
-        for (var i = 0; i < parts.length; i += 1) {
-          if (cursor == null) return undefined;
-          cursor = cursor[parts[i]];
+        if (Array.isArray(value)) {
+          return value.slice(0, 80).map((item) => jsonSafe(item, depth + 1, seen));
         }
-        return cursor;
+
+        if (isObject(value)) {
+          const out = {};
+          Object.keys(value).slice(0, 160).forEach((key) => {
+            if (/element|node|context|canvas|document|window/i.test(key) && typeof value[key] === "object") {
+              out[key] = "[Object suppressed]";
+              return;
+            }
+            out[key] = jsonSafe(value[key], depth + 1, seen);
+          });
+          return out;
+        }
+
+        return safeString(value);
       }
 
-      function findApi(aliases) {
-        for (var i = 0; i < aliases.length; i += 1) {
-          var value = readPath(aliases[i], window);
-          if (value && (typeof value === "object" || typeof value === "function")) {
-            return {
-              api: value,
-              path: aliases[i],
-              scope: aliases[i].indexOf(".") >= 0 ? aliases[i].split(".")[0] : "window",
-              valueType: typeof value
-            };
+      function readPacket(authority) {
+        if (!authority) return {};
+
+        if (isObject(authority) && !isFunction(authority.getReceipt) && !isFunction(authority.getReport)) {
+          if (authority.PACKET_NAME || authority.CONTRACT || authority.contract || authority.PROBE_EAST_STATUS) {
+            return jsonSafe(authority);
           }
         }
-        return {
-          api: null,
-          path: "NONE",
-          scope: "none",
-          valueType: "undefined"
-        };
-      }
 
-      function methodSurface(api) {
-        if (!api) return "NONE";
-        var names = [];
-        var cursor = api;
-        var safety = 0;
-        while (cursor && cursor !== Object.prototype && safety < 4) {
-          Object.getOwnPropertyNames(cursor).forEach(function (key) {
-            if (key !== "constructor" && names.indexOf(key) < 0) {
-              try {
-                if (typeof api[key] === "function") names.push(key);
-              } catch (error) {}
-            }
-          });
-          cursor = Object.getPrototypeOf(cursor);
-          safety += 1;
-        }
-        return names.length ? names.sort().join(",") : "PRESENT_NO_STANDARD_METHODS";
-      }
+        const methods = [
+          "getCompactGateSummary",
+          "getGateBucketReceipt",
+          "getReport",
+          "getReceiptLight",
+          "getReceipt",
+          "getProfileReceipt",
+          "getContractDefinitionReceipt",
+          "getState",
+          "getStatus",
+          "getStatusText"
+        ];
 
-      function callFirst(api, methods, arg) {
-        if (!api) {
-          return { ok: false, method: "NONE", value: null, error: "API_NOT_AVAILABLE" };
+        for (const method of methods) {
+          if (!isFunction(authority[method])) continue;
+
+          try {
+            const result = method === "getReceiptLight" ? authority[method](false) : authority[method]();
+            if (isObject(result)) return jsonSafe(result);
+            if (typeof result === "string" && result.trim()) return parseKvText(result);
+          } catch (_error) {}
         }
 
-        for (var i = 0; i < methods.length; i += 1) {
-          var method = methods[i];
-          if (typeof api[method] === "function") {
-            try {
-              var value = typeof arg === "undefined" ? api[method]() : api[method](arg);
-              return { ok: true, method: method, value: value, error: "" };
-            } catch (error) {
+        if (isObject(authority.receipt)) return jsonSafe(authority.receipt);
+        if (isObject(authority.state)) return jsonSafe(authority.state);
+        if (isObject(authority.evidence)) return jsonSafe(authority.evidence);
+
+        return {};
+      }
+
+      function findAuthority(name, windows) {
+        const paths = PATHS[name] || [];
+
+        for (const win of windows) {
+          if (!win) continue;
+          for (const path of paths) {
+            const value = readPath(win, path);
+            if (value) {
               return {
-                ok: false,
-                method: method,
-                value: null,
-                error: error && error.message ? error.message : String(error)
+                path,
+                authority: value,
+                packet: readPacket(value),
+                windowName: win === root ? "diagnosticWindow" : "targetWindow"
               };
             }
           }
         }
 
-        return { ok: false, method: "NONE", value: null, error: "NO_STANDARD_METHODS_AVAILABLE" };
+        return {
+          path: "NONE",
+          authority: null,
+          packet: {},
+          windowName: "NONE"
+        };
       }
 
-      function scriptPathLoaded(file) {
-        var scripts = Array.prototype.slice.call(document.scripts || []);
-        return scripts.some(function (script) {
-          if (!script || !script.src) return false;
-          try {
-            return new URL(script.src, location.href).pathname === file;
-          } catch (error) {
-            return script.src.indexOf(file) >= 0;
-          }
-        });
-      }
+      function getDeep(source, keys, maxDepth = 5) {
+        const wanted = (keys || []).map((key) => safeString(key).toLowerCase());
+        const seen = new WeakSet();
 
-      function loadScriptOnce(item) {
-        return new Promise(function (resolve) {
-          if (scriptPathLoaded(item.file)) {
-            resolve({
-              id: item.id,
-              file: item.file,
-              loadStatus: "SCRIPT_ALREADY_PRESENT",
-              loaded: true,
-              error: ""
-            });
-            return;
-          }
+        function visit(value, depth) {
+          if (!value || depth > maxDepth) return undefined;
+          if (!isObject(value) && !Array.isArray(value)) return undefined;
+          if (seen.has(value)) return undefined;
+          seen.add(value);
 
-          var script = document.createElement("script");
-          var settled = false;
-          var timeout = window.setTimeout(function () {
-            if (settled) return;
-            settled = true;
-            resolve({
-              id: item.id,
-              file: item.file,
-              loadStatus: "LOAD_TIMEOUT",
-              loaded: false,
-              error: "SCRIPT_LOAD_TIMEOUT"
-            });
-          }, 8000);
-
-          script.src = item.file;
-          script.async = false;
-          script.onload = function () {
-            if (settled) return;
-            settled = true;
-            window.clearTimeout(timeout);
-            resolve({
-              id: item.id,
-              file: item.file,
-              loadStatus: "SCRIPT_LOADED",
-              loaded: true,
-              error: ""
-            });
-          };
-          script.onerror = function () {
-            if (settled) return;
-            settled = true;
-            window.clearTimeout(timeout);
-            resolve({
-              id: item.id,
-              file: item.file,
-              loadStatus: "SCRIPT_LOAD_FAILED",
-              loaded: false,
-              error: "SCRIPT_LOAD_FAILED"
-            });
-          };
-          document.head.appendChild(script);
-        });
-      }
-
-      function refreshParticipantPresence() {
-        PARTICIPANTS.forEach(function (participant) {
-          var found = findApi(participant.aliases);
-          var previous = state.participants[participant.id] || {};
-          var loadStatus = previous.loadStatus || "NOT_LOADED";
-
-          if (previous.loaded && !found.api) {
-            loadStatus = "SCRIPT_LOADED_GLOBAL_NOT_FOUND";
-          }
-          if (previous.loadStatus === "SCRIPT_LOAD_FAILED") {
-            loadStatus = "SCRIPT_LOAD_FAILED";
-          }
-          if (found.api) {
-            loadStatus = "LOADED_AND_AVAILABLE";
-          }
-
-          state.participants[participant.id] = {
-            id: participant.id,
-            title: participant.title,
-            file: participant.file,
-            type: participant.type,
-            expectedContract: participant.expectedContract,
-            primaryReceiptParticipant: true,
-            loaded: Boolean(previous.loaded || found.api),
-            loadStatus: loadStatus,
-            present: Boolean(found.api),
-            observedPath: found.path,
-            observedScope: found.scope,
-            publicApi: methodSurface(found.api),
-            api: found.api
-          };
-        });
-
-        SOUTH_SUPPORT_LENSES.forEach(function (lens) {
-          var found = findApi(lens.aliases);
-          var previous = state.supportLenses[lens.id] || {};
-          var loadStatus = previous.loadStatus || "NOT_LOADED";
-          if (previous.loaded && !found.api) loadStatus = "SCRIPT_LOADED_GLOBAL_NOT_FOUND";
-          if (previous.loadStatus === "SCRIPT_LOAD_FAILED") loadStatus = "SCRIPT_LOAD_FAILED";
-          if (found.api) loadStatus = "LOADED_AND_AVAILABLE";
-
-          state.supportLenses[lens.id] = {
-            id: lens.id,
-            title: lens.title,
-            file: lens.file,
-            type: lens.type,
-            expectedContract: lens.expectedContract,
-            primaryReceiptParticipant: false,
-            loaded: Boolean(previous.loaded || found.api),
-            loadStatus: loadStatus,
-            present: Boolean(found.api),
-            observedPath: found.path,
-            observedScope: found.scope,
-            publicApi: methodSurface(found.api),
-            api: found.api
-          };
-        });
-      }
-
-      function loadParticipantChain() {
-        if (state.loadPromise) return state.loadPromise;
-
-        state.loadStarted = true;
-        state.loadComplete = false;
-        state.updatedAt = nowIso();
-        renderAll();
-
-        state.loadPromise = (async function () {
-          var primaryAndSupport = PARTICIPANTS.concat(SOUTH_SUPPORT_LENSES);
-
-          for (var i = 0; i < primaryAndSupport.length; i += 1) {
-            var item = primaryAndSupport[i];
-            var result = await loadScriptOnce(item);
-            if (item.primaryReceiptParticipant === false) {
-              state.supportLenses[item.id] = Object.assign({}, state.supportLenses[item.id] || {}, result, {
-                primaryReceiptParticipant: false
-              });
-            } else {
-              state.participants[item.id] = Object.assign({}, state.participants[item.id] || {}, result, {
-                primaryReceiptParticipant: true
-              });
+          if (isObject(value)) {
+            for (const key of Object.keys(value)) {
+              if (wanted.includes(key.toLowerCase())) {
+                const found = value[key];
+                if (found !== undefined && found !== null && found !== "") return found;
+              }
             }
-            refreshParticipantPresence();
-            renderAll();
-          }
 
-          await wait(60);
-          refreshParticipantPresence();
-          state.loadComplete = true;
-          state.updatedAt = nowIso();
-          return {
-            participants: state.participants,
-            supportLenses: state.supportLenses
-          };
-        })();
-
-        return state.loadPromise;
-      }
-
-      function wait(ms) {
-        return new Promise(function (resolve) {
-          window.setTimeout(resolve, ms);
-        });
-      }
-
-      function readParticipantReceipt(participant) {
-        var record = state.participants[participant.id];
-        var api = record && record.api ? record.api : null;
-        var call = callFirst(api, participant.receiptMethods || ["getReceipt", "getReceiptLight", "getReport"]);
-
-        var packet = null;
-        var packetText = "";
-        var receiptShape = "NONE";
-
-        if (call.ok) {
-          if (typeof call.value === "string") {
-            packetText = call.value;
-            receiptShape = "STRING";
-            try {
-              packet = JSON.parse(call.value);
-              receiptShape = "STRING_JSON";
-            } catch (error) {
-              packet = { text: call.value };
+            for (const key of Object.keys(value)) {
+              const found = visit(value[key], depth + 1);
+              if (found !== undefined && found !== null && found !== "") return found;
             }
-          } else {
-            packet = call.value;
-            receiptShape = Array.isArray(call.value) ? "ARRAY" : typeof call.value === "object" ? "OBJECT" : typeof call.value;
           }
+
+          if (Array.isArray(value)) {
+            for (const item of value) {
+              const found = visit(item, depth + 1);
+              if (found !== undefined && found !== null && found !== "") return found;
+            }
+          }
+
+          return undefined;
         }
 
-        return {
-          participantId: participant.id,
-          sourceMethod: call.method,
-          receiptShape: receiptShape,
-          packet: packet,
-          packetText: packetText,
-          readOk: call.ok,
-          readError: call.error
-        };
+        return visit(source, 0);
       }
 
-      function readAllReceipts() {
-        var receipts = {};
+      function firstField(sources, keys, fallback = "UNKNOWN") {
+        for (const source of sources) {
+          const found = getDeep(source, keys);
+          if (found !== undefined && found !== null && found !== "") return clean(found, 900);
+        }
+        return fallback;
+      }
 
-        PARTICIPANTS.forEach(function (participant) {
-          var record = state.participants[participant.id] || {};
-          var present = Boolean(record.present);
-          var receipt = present ? readParticipantReceipt(participant) : null;
-          var receiptPresent = Boolean(receipt && receipt.readOk && receipt.packet != null);
-
-          receipts[participant.id] = {
-            id: participant.id,
-            title: participant.title,
-            type: participant.type,
-            file: participant.file,
-            expectedContract: participant.expectedContract,
-            present: present,
-            status: present ? receiptPresent ? "PRESENT_WITH_RECEIPT" : "PRESENT_NO_RECEIPT" : "MISSING",
-            observedPath: record.observedPath || "NONE",
-            observedScope: record.observedScope || "none",
-            publicApi: record.publicApi || "NONE",
-            receiptPresent: receiptPresent,
-            receiptStatus: receiptPresent ? "RECEIPT_PRESENT" : present ? "RECEIPT_MISSING" : "MISSING",
-            receipt: receipt,
-            packetText: receipt && receipt.packetText ? receipt.packetText : ""
+      function accessTarget() {
+        const iframe = document.getElementById("hearthDiagnosticTargetFrame");
+        if (!iframe) {
+          return {
+            ok: false,
+            status: "TARGET_FRAME_MISSING",
+            source: "NONE",
+            targetWindow: null,
+            targetDocument: null,
+            hearthTargetConfirmed: false
           };
-        });
-
-        state.specificReceipts = receipts;
-        return receipts;
-      }
-
-      function targetContext() {
-        var frame = els.targetFrame;
-        var out = {
-          targetRoute: TARGET_ROUTE,
-          targetFrameLoaded: state.targetFrameLoaded,
-          targetFrameElement: frame || null,
-          targetWindow: null,
-          targetDocument: null,
-          receiverWindow: window,
-          receiverDocument: document
-        };
+        }
 
         try {
-          if (frame && frame.contentWindow) {
-            out.targetWindow = frame.contentWindow;
-            out.targetDocument = frame.contentWindow.document || null;
-          }
+          const targetWindow = iframe.contentWindow;
+          const targetDocument = targetWindow && targetWindow.document;
+          const route = targetWindow && targetWindow.location ? targetWindow.location.pathname : "";
+          const confirmed = Boolean(
+            route === TARGET_ROUTE ||
+            route === TARGET_ROUTE.replace(/\/$/, "") ||
+            (targetDocument && targetDocument.querySelector("canvas, [data-production-canvas-surface], [data-hearth-production-surface], [data-hearth-canvas-mount]"))
+          );
+
+          return {
+            ok: Boolean(targetWindow && targetDocument && targetDocument.documentElement),
+            status: confirmed ? "TARGET_ACCESS_CONFIRMED" : "TARGET_ACCESS_PARTIAL",
+            source: "hearthDiagnosticTargetFrame",
+            targetWindow,
+            targetDocument,
+            hearthTargetConfirmed: confirmed
+          };
         } catch (error) {
-          out.targetDocumentError = error && error.message ? error.message : String(error);
+          return {
+            ok: false,
+            status: "TARGET_ACCESS_BLOCKED",
+            source: "hearthDiagnosticTargetFrame",
+            targetWindow: null,
+            targetDocument: null,
+            hearthTargetConfirmed: false,
+            error: clean(error && error.message ? error.message : error, 700)
+          };
         }
-
-        return out;
       }
 
-      function runParticipantActions() {
-        var actions = {};
-        var north = state.participants.NORTH_RAIL && state.participants.NORTH_RAIL.api;
-        var surface = state.participants.SURFACE_TRUTH_PROBE && state.participants.SURFACE_TRUTH_PROBE.api;
+      function statusWord(value) {
+        const text = clean(value, 220).toUpperCase();
 
-        var northCall = callFirst(north, ["runDiagnostic", "run", "inspect", "probe"], {
-          caller: INTERNAL_RENEWAL_CONTRACT,
-          targetRoute: TARGET_ROUTE,
-          diagnosticRoute: DIAGNOSTIC_ROUTE,
-          northVerdictSynthesized: false,
-          repairAuthorized: false
-        });
+        if (!text || text === "UNKNOWN") return "UNKNOWN";
+        if (text.includes("PASS") || text.includes("READY") || text.includes("CONFIRMED") || text.includes("COMPLETE") || text.includes("AVAILABLE") || text.includes("ALIGNED")) return "PASS";
+        if (text.includes("PARTIAL") || text.includes("PENDING")) return "PARTIAL";
+        if (text.includes("BLOCK") || text.includes("FAILED") || text.includes("MISSING") || text.includes("ERROR")) return "BLOCKED";
+        if (text.includes("HELD") || text.includes("UNKNOWN")) return "HELD";
+        return text;
+      }
 
-        actions.NORTH_RAIL_RUN = {
-          participantId: "NORTH_RAIL",
-          method: northCall.method,
-          result: northCall.ok ? northCall.value : {
-            NORTH_VERDICT_AVAILABLE: false,
-            NORTH_RUN_API_AVAILABLE: false,
-            STATUS: northCall.error === "API_NOT_AVAILABLE" ? "NORTH_API_NOT_AVAILABLE" : "NORTH_RUN_DIAGNOSTIC_API_NOT_AVAILABLE",
-            ERROR: northCall.error
-          }
+      function cssStatus(value) {
+        const text = statusWord(value);
+        if (text === "PASS") return "pass";
+        if (text === "PARTIAL") return "partial";
+        if (text === "BLOCKED") return "blocked";
+        if (text === "HELD") return "held";
+        return "unknown";
+      }
+
+      function deriveSummary(raw) {
+        const packets = raw.packets;
+        const allSources = [
+          raw,
+          packets.north,
+          packets.east,
+          packets.south,
+          packets.southLens,
+          packets.west,
+          packets.surfaceTruth,
+          packets.canvas
+        ];
+
+        const northVerdictAvailable =
+          firstField(allSources, ["NORTH_VERDICT_AVAILABLE", "northVerdictAvailable"], "UNKNOWN");
+        const northRailStatus =
+          firstField(allSources, ["NORTH_RAIL_STATUS", "northRailStatus"], "UNKNOWN");
+        const northPresent =
+          firstField(allSources, ["NORTH_RAIL_PRESENT", "northRailPresent"], raw.authorities.north.authority ? "true" : "UNKNOWN");
+
+        const eastDisposition =
+          firstField(allSources, ["PROBE_EAST_DISPOSITION", "probeEastDisposition"], "UNKNOWN");
+        const eastSourceStatus =
+          firstField(allSources, ["SOURCE_SIDE_CURRENT_SPREAD_STATUS", "sourceSideCurrentSpreadStatus"], "UNKNOWN");
+        const fileCompositionStatus =
+          firstField(allSources, ["FILE_COMPOSITION_STATUS", "fileCompositionStatus"], "UNKNOWN");
+        const bridgeSurfaceStatus =
+          firstField(allSources, ["BRIDGE_SURFACE_COMPOSITION_STATUS", "bridgeSurfaceCompositionStatus"], "UNKNOWN");
+
+        const southConclusion =
+          firstField(allSources, ["SOUTH_FINAL_CONCLUSION", "southFinalConclusion"], "UNKNOWN");
+        const sideCar =
+          firstField(allSources, ["SIDE_CAR", "sideCar", "sidecar"], "UNKNOWN");
+        const surface =
+          firstField(allSources, ["SURFACE", "surface", "surfaceClass", "INSPECTED_SURFACE_CLASS"], "UNKNOWN");
+        const southLensConsumed =
+          firstField(allSources, ["SOUTH_SURFACE_POINTER_LENS_CONSUMED", "southSurfacePointerLensConsumed"], sideCar === "SOUTH_SURFACE_POINTER_LENS_CONSUMED" ? "true" : "UNKNOWN");
+        const productionSurfaceConfirmed =
+          firstField(allSources, ["PRODUCTION_CANVAS_SURFACE_CONFIRMED", "productionCanvasSurfaceConfirmed"], surface === "PRODUCTION_CANVAS_SURFACE" ? "true" : "UNKNOWN");
+        const canvasBlameGate =
+          firstField(allSources, ["CANVAS_BLAME_GATE", "canvasBlameGate"], "UNKNOWN");
+        const rawRef =
+          firstField(allSources, ["RAW_REF", "rawRef", "RAW_REFERENCE", "rawReference"], "UNKNOWN");
+
+        const surfaceTruthStatus =
+          firstField(allSources, ["SURFACE_TRUTH_STATUS", "CANVAS_SURFACE_TRUTH_STATUS", "surfaceTruthStatus"], "UNKNOWN");
+        const surfaceTruthFailureClass =
+          firstField(allSources, ["SURFACE_TRUTH_FAILURE_CLASS", "CANVAS_SURFACE_TRUTH_FAILURE_CLASS", "surfaceTruthFailureClass"], "UNKNOWN");
+        const surfaceTruthFirstFailedCoordinate =
+          firstField(allSources, ["SURFACE_TRUTH_FIRST_FAILED_COORDINATE", "CANVAS_TRUTH_FIRST_FAILED_COORDINATE", "surfaceTruthFirstFailedCoordinate"], "UNKNOWN");
+        const surfaceTruthV3 =
+          firstField(allSources, ["PROBE_CANVAS_SURFACE_TRUTH_V3_RECOGNIZED", "probeCanvasSurfaceTruthV3Recognized"], "UNKNOWN");
+
+        const constructionReadiness =
+          firstField(allSources, ["CONSTRUCTION_READINESS_STATUS", "constructionReadinessStatus"], "UNKNOWN");
+        const westGapClass =
+          firstField(allSources, ["WEST_GAP_CLASS", "westGapClass"], "UNKNOWN");
+        const westDecision =
+          firstField(allSources, ["WEST_DECISION", "westDecision"], "UNKNOWN");
+        const labWestV53 =
+          firstField(allSources, ["LABWEST_INTERNAL_V5_3_RECOGNIZED", "LABWEST_INTERNAL_V53_RECOGNIZED", "labWestInternalV53Recognized"], "UNKNOWN");
+
+        const canvasBuildAuthorized =
+          firstField(allSources, ["CANVAS_BUILD_AUTHORIZED", "canvasBuildAuthorized", "CANVAS_RELEASE_AUTHORIZED", "canvasReleaseAuthorized"], "false");
+        const nextProcess =
+          firstField(allSources, ["NEXT_PROCESS", "nextProcess"], "UNKNOWN");
+
+        const finalBucket =
+          firstKnown(
+            southConclusion,
+            constructionReadiness,
+            surfaceTruthStatus === "SURFACE_CONTRACT_MEASUREMENT_FAILED" ? "CONSTRUCTION_HELD_SURFACE_TRUTH_VARIANCE" : ""
+          ) || "UNKNOWN";
+
+        const f = {
+          F1: "PASS",
+          F2: raw.target.ok ? "PASS" : raw.target.status.includes("PARTIAL") ? "PARTIAL" : "BLOCKED",
+          F3: toBool(northVerdictAvailable) === true || northRailStatus.includes("VERDICT_AVAILABLE") ? "PASS" : raw.authorities.north.authority ? "PARTIAL" : "UNKNOWN",
+          F5: eastDisposition.includes("SOURCE_SIDE_OK") || fileCompositionStatus.includes("REACHES_CANVAS") ? "PASS" : fileCompositionStatus.includes("INCOMPLETE") ? "BLOCKED" : eastDisposition.includes("PARTIAL") ? "PARTIAL" : "UNKNOWN",
+          F8: sideCar === "SOUTH_SURFACE_POINTER_LENS_CONSUMED" || toBool(southLensConsumed) === true || surface === "PRODUCTION_CANVAS_SURFACE" ? "PASS" : raw.authorities.south.authority || raw.authorities.southLens.authority ? "PARTIAL" : "UNKNOWN",
+          F13: surfaceTruthStatus.includes("FAILED") || finalBucket.includes("SURFACE_TRUTH_VARIANCE") ? "BLOCKED" : surfaceTruthStatus.includes("COMPLETE") ? "PASS" : surfaceTruthV3 === "true" ? "PARTIAL" : "UNKNOWN",
+          F21: constructionReadiness.includes("READY") || westDecision.includes("RELEASE") ? "PASS" : constructionReadiness.includes("HELD") || westGapClass !== "UNKNOWN" ? "HELD" : labWestV53 === "true" ? "PARTIAL" : "UNKNOWN",
+          F34: canvasBlameGate === "UNKNOWN" || toBool(canvasBuildAuthorized) !== true ? "HELD" : "PASS"
         };
 
-        var surfaceCall = callFirst(surface, ["inspect", "run", "probe", "measure"], Object.assign(targetContext(), {
-          caller: INTERNAL_RENEWAL_CONTRACT,
-          targetRoute: TARGET_ROUTE,
-          diagnosticRoute: DIAGNOSTIC_ROUTE,
-          finalArbitration: false,
-          repairAuthorized: false
-        }));
+        const firstBlockingFib = ["F1", "F2", "F3", "F5", "F8", "F13", "F21", "F34"].find((key) => {
+          return f[key] === "BLOCKED" || f[key] === "HELD";
+        }) || "NONE";
 
-        actions.SURFACE_TRUTH_INSPECTION = {
-          participantId: "SURFACE_TRUTH_PROBE",
-          method: surfaceCall.method,
-          result: surfaceCall.ok ? surfaceCall.value : {
-            CANVAS_SURFACE_TRUTH_STATUS: "SURFACE_TRUTH_INSPECTION_NOT_AVAILABLE",
-            ERROR: surfaceCall.error
-          }
-        };
+        const resolvedNextProcess =
+          firstKnown(
+            nextProcess,
+            firstBlockingFib === "F13" ? "ALIGN_SURFACE_TRUTH_CONTRACT_DEFINITION_BEFORE_CANVAS_BUILD" : "",
+            firstBlockingFib === "F5" ? "ALIGN_EAST_SOURCE_COMPOSITION_BEFORE_SURFACE_TRUTH" : "",
+            firstBlockingFib === "F3" ? "RESTORE_NORTH_VERDICT_AUTHORITY" : "",
+            "NO_NEXT_PROCESS_CLASSIFIED"
+          );
 
-        state.participantActions = actions;
-        return actions;
-      }
-
-      function tokenScore(token) {
-        var s = safeString(token).toUpperCase();
-
-        if (!s || s === "UNKNOWN" || s === "NONE") return 0.25;
-        if (s === "PRESENT" || s === "ALIGNED" || s === "CLEAN" || s === "READY" || s === "RECEIPT_PRESENT") return 1;
-        if (s.indexOf("NO_DIAGNOSTIC_MALPRACTICE") >= 0) return 1;
-        if (s.indexOf("HEAVY_NON_COLLAPSED") >= 0) return 0.74;
-        if (s.indexOf("PARTIAL") >= 0 || s.indexOf("RISK") >= 0 || s.indexOf("WAIT") >= 0) return 0.55;
-        if (s.indexOf("BLOCK") >= 0 || s.indexOf("MISSING") >= 0 || s.indexOf("FAILED") >= 0 || s.indexOf("NOT_AVAILABLE") >= 0 || s.indexOf("NOT_FOUND") >= 0) return 0.08;
-        if (s.indexOf("MALPRACTICE_DETECTED") >= 0 || s.indexOf("COLLAPSE_DETECTED") >= 0) return 0.03;
-        return 0.48;
-      }
-
-      function variance(values) {
-        if (!values.length) return 0;
-        var mean = values.reduce(function (sum, value) { return sum + value; }, 0) / values.length;
-        return values.reduce(function (sum, value) {
-          return sum + Math.pow(value - mean, 2);
-        }, 0) / values.length;
-      }
-
-      function varianceClass(v) {
-        if (v >= 0.11) return "HIGH_VARIANCE";
-        if (v >= 0.035) return "MEDIUM_VARIANCE";
-        return "LOW_VARIANCE";
-      }
-
-      function makeGauge(id, title, subtitle, inputs, forcedStatus) {
-        var keys = Object.keys(inputs);
-        var scores = keys.map(function (key) { return tokenScore(inputs[key]); });
-        var score = scores.length ? scores.reduce(function (sum, value) { return sum + value; }, 0) / scores.length : 0;
-        var v = variance(scores);
-        var missing = keys.filter(function (key) {
-          var value = safeString(inputs[key]).toUpperCase();
-          return value.indexOf("MISSING") >= 0 || value.indexOf("BLOCK") >= 0 || value.indexOf("FAILED") >= 0 || value.indexOf("NOT_AVAILABLE") >= 0;
-        });
-
-        var status = forcedStatus || (score >= 0.86 ? "ALIGNED" : score >= 0.48 ? "PARTIAL" : "BLOCKED");
+        const nextFile =
+          firstBlockingFib === "F13"
+            ? "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js"
+            : firstBlockingFib === "F5"
+              ? "/assets/hearth/hearth.diagnostic.probe.east.js"
+              : firstBlockingFib === "F21"
+                ? "/assets/lab/runtime-table.west.js"
+                : "NONE";
 
         return {
-          id: id,
-          title: title,
-          subtitle: subtitle,
-          status: status,
-          score: score,
-          variance: v,
-          varianceClass: varianceClass(v),
-          inputCount: keys.length,
-          inputs: inputs,
-          evidence: keys.map(function (key) { return safeString(inputs[key]); }).join(" | "),
-          missing: missing.length ? missing.join(", ") : "NONE"
+          currentQuestion: CURRENT_DIAGNOSTIC_QUESTION,
+          fib: f,
+          finalBucket,
+          firstBlockingFib,
+          nextProcess: resolvedNextProcess,
+          nextFile,
+
+          north: {
+            status: f.F3,
+            targetAccessStatus: raw.target.status,
+            hearthTargetConfirmed: String(Boolean(raw.target.hearthTargetConfirmed)),
+            northPresent,
+            northVerdictAvailable,
+            northRailStatus,
+            blocking: f.F2 === "BLOCKED" || f.F3 === "BLOCKED"
+          },
+          east: {
+            status: f.F5,
+            eastDisposition,
+            eastSourceStatus,
+            fileCompositionStatus,
+            bridgeSurfaceStatus,
+            blocking: f.F5 === "BLOCKED"
+          },
+          south: {
+            status: f.F8,
+            southConclusion,
+            sideCar,
+            surface,
+            southLensConsumed,
+            productionSurfaceConfirmed,
+            canvasBlameGate,
+            rawRef,
+            blocking: f.F8 === "BLOCKED"
+          },
+          west: {
+            status: f.F13 === "BLOCKED" ? "BLOCKED" : f.F21,
+            surfaceTruthStatus,
+            surfaceTruthFailureClass,
+            surfaceTruthFirstFailedCoordinate,
+            surfaceTruthV3,
+            constructionReadiness,
+            westGapClass,
+            westDecision,
+            labWestV53,
+            canvasBuildAuthorized,
+            nextProcess: resolvedNextProcess,
+            nextFile,
+            blocking: f.F13 === "BLOCKED" || f.F21 === "BLOCKED" || f.F21 === "HELD"
+          },
+          canvas: {
+            status: f.F34,
+            canvasBlameGate,
+            canvasBuildAuthorized
+          },
+          updatedAt: nowIso()
         };
       }
 
-      function packetFromReceipt(receiptRecord) {
-        if (!receiptRecord || !receiptRecord.receipt) return null;
-        if (receiptRecord.receipt.packet) return receiptRecord.receipt.packet;
-        return receiptRecord.receipt;
-      }
-
-      function explicitStatusFromPacket(packet, names) {
-        if (!packet || typeof packet !== "object") return "";
-
-        for (var i = 0; i < names.length; i += 1) {
-          if (typeof packet[names[i]] !== "undefined") return packet[names[i]];
+      function firstKnown(...values) {
+        for (const value of values) {
+          const text = clean(value, 900);
+          if (!text) continue;
+          if (["UNKNOWN", "NONE", "NOT_FOUND", "UNREADABLE", "NULL"].includes(text)) continue;
+          return text;
         }
-
-        if (packet.light && typeof packet.light === "object") {
-          for (var j = 0; j < names.length; j += 1) {
-            if (typeof packet.light[names[j]] !== "undefined") return packet.light[names[j]];
-          }
-        }
-
-        if (packet.receiptLight && typeof packet.receiptLight === "object") {
-          for (var k = 0; k < names.length; k += 1) {
-            if (typeof packet.receiptLight[names[k]] !== "undefined") return packet.receiptLight[names[k]];
-          }
-        }
-
-        if (packet.selfMeasurement && typeof packet.selfMeasurement === "object") {
-          for (var m = 0; m < names.length; m += 1) {
-            if (typeof packet.selfMeasurement[names[m]] !== "undefined") return packet.selfMeasurement[names[m]];
-          }
-        }
-
         return "";
       }
 
-      function dutyMalpracticeInputs(receipts, actions) {
-        var labNorth = packetFromReceipt(receipts.LAB_NORTH_GRAMMAR);
-        var surfaceReceipt = packetFromReceipt(receipts.SURFACE_TRUTH_PROBE);
-        var surfaceAction = actions && actions.SURFACE_TRUTH_INSPECTION ? actions.SURFACE_TRUTH_INSPECTION.result : null;
+      function gatherRaw(options = {}) {
+        const target = accessTarget();
+        const windows = [root];
+        if (target.targetWindow) windows.push(target.targetWindow);
 
-        var selfStatus = explicitStatusFromPacket(surfaceAction, ["SELF_MEASUREMENT_STATUS", "SURFACE_TRUTH_SELF_MEASUREMENT_STATUS"]) ||
-          explicitStatusFromPacket(surfaceReceipt, ["SELF_MEASUREMENT_STATUS", "SURFACE_TRUTH_SELF_MEASUREMENT_STATUS"]) ||
-          explicitStatusFromPacket(labNorth, ["SELF_MEASUREMENT_STATUS"]) ||
-          "UNKNOWN";
+        const authorities = {
+          north: findAuthority("north", windows),
+          east: findAuthority("east", windows),
+          south: findAuthority("south", windows),
+          southLens: findAuthority("southLens", windows),
+          west: findAuthority("west", windows),
+          surfaceTruth: findAuthority("surfaceTruth", windows),
+          canvas: findAuthority("canvas", windows)
+        };
 
-        var dutyStatus = explicitStatusFromPacket(surfaceAction, ["DUTY_LOAD_STATUS"]) ||
-          explicitStatusFromPacket(surfaceReceipt, ["DUTY_LOAD_STATUS"]) ||
-          explicitStatusFromPacket(labNorth, ["DUTY_LOAD_STATUS"]) ||
-          "UNKNOWN";
+        if (options.run === true) {
+          try {
+            const east = authorities.east.authority;
+            if (east && isFunction(east.runProbeEast)) {
+              const packet = east.runProbeEast({
+                targetWindow: target.targetWindow,
+                targetDocument: target.targetDocument,
+                frameElement: document.getElementById("hearthDiagnosticTargetFrame")
+              });
+              authorities.east.packet = jsonSafe(packet);
+            } else if (east && isFunction(east.run)) {
+              authorities.east.packet = jsonSafe(east.run({
+                targetWindow: target.targetWindow,
+                targetDocument: target.targetDocument
+              }));
+            }
+          } catch (_error) {}
 
-        var malpracticeStatus = explicitStatusFromPacket(surfaceAction, ["DIAGNOSTIC_MALPRACTICE_STATUS"]) ||
-          explicitStatusFromPacket(surfaceReceipt, ["DIAGNOSTIC_MALPRACTICE_STATUS"]) ||
-          explicitStatusFromPacket(labNorth, ["DIAGNOSTIC_MALPRACTICE_STATUS"]) ||
-          "UNKNOWN";
+          try {
+            const north = authorities.north.authority;
+            if (north && isFunction(north.runDiagnostic)) authorities.north.packet = jsonSafe(north.runDiagnostic());
+            else if (north && isFunction(north.run)) authorities.north.packet = jsonSafe(north.run());
+          } catch (_error) {}
 
-        var joined = [selfStatus, dutyStatus, malpracticeStatus].map(safeString).join(" | ").toUpperCase();
-        var status = "PARTIAL";
-
-        if (joined.indexOf("DIAGNOSTIC_MALPRACTICE_DETECTED") >= 0 || joined.indexOf("DIAGNOSTIC_CONTAINER_COLLAPSE_DETECTED") >= 0) {
-          status = "BLOCKED";
-        } else if (joined.indexOf("COLLAPSE_RISK") >= 0) {
-          status = "RISK";
-        } else if (joined.indexOf("NO_DIAGNOSTIC_MALPRACTICE") >= 0 || joined.indexOf("HEAVY_NON_COLLAPSED") >= 0) {
-          status = "PARTIAL";
+          try {
+            const west = authorities.west.authority;
+            if (west && isFunction(west.run)) authorities.west.packet = jsonSafe(west.run());
+            else if (west && isFunction(west.inspect)) authorities.west.packet = jsonSafe(west.inspect());
+          } catch (_error) {}
         }
 
         return {
-          status: status,
-          inputs: {
-            SELF_DUTY_STATUS: selfStatus,
-            DUTY_LOAD_STATUS: dutyStatus,
-            MALPRACTICE_STATUS: malpracticeStatus
+          packetName: "HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER_RAW_PACKET_v8",
+          contract: CONTRACT,
+          receipt: RECEIPT,
+          internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+          target,
+          authorities,
+          packets: {
+            north: authorities.north.packet || {},
+            east: authorities.east.packet || {},
+            south: authorities.south.packet || {},
+            southLens: authorities.southLens.packet || {},
+            west: authorities.west.packet || {},
+            surfaceTruth: authorities.surfaceTruth.packet || {},
+            canvas: authorities.canvas.packet || {}
+          },
+          noClaims: {
+            PRODUCTION_MUTATION_AUTHORIZED: false,
+            HEARTH_REPAIR_AUTHORIZED: false,
+            RUNTIME_RESTART_AUTHORIZED: false,
+            CANVAS_REPAIR_AUTHORIZED: false,
+            CANVAS_BUILD_AUTHORIZED: false,
+            CANVAS_RELEASE_AUTHORIZED: false,
+            F13_CLAIMED: false,
+            F21_CLAIMED: false,
+            READY_TEXT_CLAIMED: false,
+            VISUAL_PASS_CLAIMED: false,
+            GENERATED_IMAGE: false,
+            GRAPHIC_BOX: false,
+            WEBGL: false
+          },
+          updatedAt: nowIso()
+        };
+      }
+
+      function makePrimaryReceipt(summary) {
+        return [
+          kv("PACKET", "HEARTH_DIAGNOSTIC_PRIMARY_FIBONACCI_COMMANDER_SURFACE_v8"),
+          kv("CONTRACT", CONTRACT),
+          kv("RECEIPT", RECEIPT),
+          kv("INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT),
+          kv("CURRENT_DIAGNOSTIC_QUESTION", summary.currentQuestion),
+          "",
+          kv("F1_INTENT", summary.fib.F1),
+          kv("F2_TARGET_ACCESS", summary.fib.F2),
+          kv("F3_NORTH_VALIDATION", summary.fib.F3),
+          kv("F5_EAST_SOURCE_WITNESS", summary.fib.F5),
+          kv("F8_SOUTH_SURFACE_LENS", summary.fib.F8),
+          kv("F13_SURFACE_TRUTH_ALIGNMENT", summary.fib.F13),
+          kv("F21_WEST_ADMISSIBILITY", summary.fib.F21),
+          kv("F34_CANVAS_BOUNDARY", summary.fib.F34),
+          "",
+          kv("FINAL_BUCKET", summary.finalBucket),
+          kv("FIRST_BLOCKING_FIB", summary.firstBlockingFib),
+          kv("CANVAS_BLAME_GATE", summary.canvas.canvasBlameGate),
+          kv("CANVAS_BUILD_AUTHORIZED", summary.canvas.canvasBuildAuthorized),
+          kv("NEXT_PROCESS", summary.nextProcess),
+          kv("NEXT_FILE", summary.nextFile),
+          "",
+          kv("PRODUCTION_MUTATION_AUTHORIZED", "false"),
+          kv("HEARTH_REPAIR_AUTHORIZED", "false"),
+          kv("RUNTIME_RESTART_AUTHORIZED", "false"),
+          kv("F13_CLAIMED", "false"),
+          kv("F21_CLAIMED", "false"),
+          kv("VISUAL_PASS_CLAIMED", "false"),
+          kv("GENERATED_IMAGE", "false"),
+          kv("GRAPHIC_BOX", "false"),
+          kv("WEBGL", "false"),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+      }
+
+      function makeNorthReceipt(summary) {
+        return [
+          kv("PACKET", "HEARTH_DIAGNOSTIC_NORTH_CARDINAL_RECEIPT_v8"),
+          kv("ROLE", "NORTH_CHRONOLOGY_VALIDATION"),
+          kv("FIBONACCI_POSITIONS", "F1_INTENT,F2_TARGET_ACCESS,F3_NORTH_VALIDATION"),
+          kv("CURRENT_DIAGNOSTIC_QUESTION", summary.currentQuestion),
+          kv("F1_INTENT", summary.fib.F1),
+          kv("F2_TARGET_ACCESS", summary.fib.F2),
+          kv("F3_NORTH_VALIDATION", summary.fib.F3),
+          "",
+          kv("TARGET_ACCESS_STATUS", summary.north.targetAccessStatus),
+          kv("HEARTH_TARGET_CONFIRMED", summary.north.hearthTargetConfirmed),
+          kv("NORTH_RAIL_PRESENT", summary.north.northPresent),
+          kv("NORTH_VERDICT_AVAILABLE", summary.north.northVerdictAvailable),
+          kv("NORTH_RAIL_STATUS", summary.north.northRailStatus),
+          kv("NORTH_BLOCKING", String(summary.north.blocking)),
+          "",
+          kv("TOP_PROOF_1", `TARGET_ACCESS_STATUS=${summary.north.targetAccessStatus}`),
+          kv("TOP_PROOF_2", `NORTH_VERDICT_AVAILABLE=${summary.north.northVerdictAvailable}`),
+          kv("TOP_PROOF_3", `NORTH_RAIL_STATUS=${summary.north.northRailStatus}`),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+      }
+
+      function makeEastReceipt(summary) {
+        return [
+          kv("PACKET", "HEARTH_DIAGNOSTIC_EAST_CARDINAL_RECEIPT_v8"),
+          kv("ROLE", "EAST_SOURCE_FILE_COMPOSITION"),
+          kv("FIBONACCI_POSITION", "F5_EAST_SOURCE_WITNESS"),
+          kv("F5_EAST_SOURCE_WITNESS", summary.fib.F5),
+          "",
+          kv("SOURCE_SIDE_CURRENT_SPREAD_STATUS", summary.east.eastSourceStatus),
+          kv("FILE_COMPOSITION_STATUS", summary.east.fileCompositionStatus),
+          kv("BRIDGE_SURFACE_COMPOSITION_STATUS", summary.east.bridgeSurfaceStatus),
+          kv("PROBE_EAST_DISPOSITION", summary.east.eastDisposition),
+          kv("EAST_BLOCKING", String(summary.east.blocking)),
+          "",
+          kv("TOP_PROOF_1", `FILE_COMPOSITION_STATUS=${summary.east.fileCompositionStatus}`),
+          kv("TOP_PROOF_2", `BRIDGE_SURFACE_COMPOSITION_STATUS=${summary.east.bridgeSurfaceStatus}`),
+          kv("TOP_PROOF_3", `PROBE_EAST_DISPOSITION=${summary.east.eastDisposition}`),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+      }
+
+      function makeSouthReceipt(summary) {
+        return [
+          kv("PACKET", "HEARTH_DIAGNOSTIC_SOUTH_CARDINAL_RECEIPT_v8"),
+          kv("ROLE", "SOUTH_OUTPUT_PROOF_PRODUCTION_SURFACE_LENS"),
+          kv("FIBONACCI_POSITION", "F8_SOUTH_SURFACE_LENS"),
+          kv("F8_SOUTH_SURFACE_LENS", summary.fib.F8),
+          "",
+          kv("SOUTH_FINAL_CONCLUSION", summary.south.southConclusion),
+          kv("SIDE_CAR", summary.south.sideCar),
+          kv("SURFACE", summary.south.surface),
+          kv("SOUTH_SURFACE_POINTER_LENS_CONSUMED", summary.south.southLensConsumed),
+          kv("PRODUCTION_CANVAS_SURFACE_CONFIRMED", summary.south.productionSurfaceConfirmed),
+          kv("CANVAS_BLAME_GATE", summary.south.canvasBlameGate),
+          kv("RAW_REF", summary.south.rawRef),
+          kv("SOUTH_BLOCKING", String(summary.south.blocking)),
+          "",
+          kv("TOP_PROOF_1", `SIDE_CAR=${summary.south.sideCar}`),
+          kv("TOP_PROOF_2", `SURFACE=${summary.south.surface}`),
+          kv("TOP_PROOF_3", `CANVAS_BLAME_GATE=${summary.south.canvasBlameGate}`),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+      }
+
+      function makeWestReceipt(summary) {
+        return [
+          kv("PACKET", "HEARTH_DIAGNOSTIC_WEST_CARDINAL_RECEIPT_v8"),
+          kv("ROLE", "WEST_ADMISSIBILITY_BLOCKER_NEXT_ACTION"),
+          kv("FIBONACCI_POSITIONS", "F13_SURFACE_TRUTH_ALIGNMENT,F21_WEST_ADMISSIBILITY,F34_CANVAS_BOUNDARY"),
+          kv("F13_SURFACE_TRUTH_ALIGNMENT", summary.fib.F13),
+          kv("F21_WEST_ADMISSIBILITY", summary.fib.F21),
+          kv("F34_CANVAS_BOUNDARY", summary.fib.F34),
+          "",
+          kv("SURFACE_TRUTH_STATUS", summary.west.surfaceTruthStatus),
+          kv("SURFACE_TRUTH_FAILURE_CLASS", summary.west.surfaceTruthFailureClass),
+          kv("SURFACE_TRUTH_FIRST_FAILED_COORDINATE", summary.west.surfaceTruthFirstFailedCoordinate),
+          kv("SURFACE_TRUTH_V3_RECOGNIZED", summary.west.surfaceTruthV3),
+          kv("CONSTRUCTION_READINESS_STATUS", summary.west.constructionReadiness),
+          kv("WEST_GAP_CLASS", summary.west.westGapClass),
+          kv("WEST_DECISION", summary.west.westDecision),
+          kv("LABWEST_INTERNAL_V5_3_RECOGNIZED", summary.west.labWestV53),
+          kv("FINAL_BUCKET", summary.finalBucket),
+          kv("BLOCKING_GATE", summary.firstBlockingFib),
+          kv("CANVAS_BLAME_GATE", summary.canvas.canvasBlameGate),
+          kv("CANVAS_BUILD_AUTHORIZED", summary.canvas.canvasBuildAuthorized),
+          kv("NEXT_PROCESS", summary.nextProcess),
+          kv("NEXT_FILE", summary.nextFile),
+          kv("WEST_BLOCKING", String(summary.west.blocking)),
+          "",
+          kv("TOP_PROOF_1", `SURFACE_TRUTH_STATUS=${summary.west.surfaceTruthStatus}`),
+          kv("TOP_PROOF_2", `CONSTRUCTION_READINESS_STATUS=${summary.west.constructionReadiness}`),
+          kv("TOP_PROOF_3", `NEXT_PROCESS=${summary.nextProcess}`),
+          kv("UPDATED_AT", summary.updatedAt)
+        ].join("\n");
+      }
+
+      function renderBreakdown(containerId, items) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = "";
+
+        items.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "drawer-item";
+          div.innerHTML = `<span></span><strong></strong>`;
+          div.querySelector("span").textContent = item[0];
+          div.querySelector("strong").textContent = item[1] === undefined || item[1] === "" ? "UNKNOWN" : item[1];
+          container.appendChild(div);
+        });
+      }
+
+      function setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text === undefined || text === null || text === "" ? "UNKNOWN" : text;
+      }
+
+      function setStatusCard(cardName, status, summaryText) {
+        const css = cssStatus(status);
+        const card = document.querySelector(`.card[data-card="${cardName}"]`);
+        const pill = document.getElementById(`${cardName}Pill`);
+        if (card) card.dataset.status = css;
+        if (pill) {
+          pill.dataset.status = css;
+          pill.textContent = statusWord(status);
+        }
+        setText(`${cardName}Summary`, summaryText);
+      }
+
+      function updateFib(summary) {
+        Object.keys(summary.fib).forEach((key) => {
+          const chip = document.querySelector(`.fib-chip[data-fib="${key}"]`);
+          const text = document.querySelector(`[data-fib-state="${key}"]`);
+          if (chip) chip.dataset.status = cssStatus(summary.fib[key]);
+          if (text) text.textContent = summary.fib[key];
+        });
+      }
+
+      function render(summary, raw) {
+        state.summary = summary;
+        state.raw = raw;
+
+        state.receipts.primary = makePrimaryReceipt(summary);
+        state.receipts.north = makeNorthReceipt(summary);
+        state.receipts.east = makeEastReceipt(summary);
+        state.receipts.south = makeSouthReceipt(summary);
+        state.receipts.west = makeWestReceipt(summary);
+        state.receipts.raw = JSON.stringify(jsonSafe(raw), null, 2);
+
+        updateFib(summary);
+
+        const overall =
+          summary.firstBlockingFib === "NONE"
+            ? "PASS"
+            : summary.firstBlockingFib === "F13" || summary.firstBlockingFib === "F21" || summary.firstBlockingFib === "F34"
+              ? "HELD"
+              : "PARTIAL";
+
+        const overallEl = document.getElementById("overallStatus");
+        if (overallEl) {
+          overallEl.dataset.status = cssStatus(overall);
+          overallEl.textContent = overall;
+        }
+
+        const scanTime = document.getElementById("scanTime");
+        if (scanTime) {
+          scanTime.dataset.status = "pass";
+          scanTime.textContent = "SCANNED";
+        }
+
+        setText("metricFinalBucket", summary.finalBucket);
+        setText("metricFirstBlocker", summary.firstBlockingFib);
+        setText("metricCanvasBlame", summary.canvas.canvasBlameGate);
+        setText("metricNextProcess", summary.nextProcess);
+
+        setStatusCard(
+          "north",
+          summary.north.status,
+          `Verdict=${summary.north.northVerdictAvailable}; target=${summary.north.targetAccessStatus}.`
+        );
+        setStatusCard(
+          "east",
+          summary.east.status,
+          `Source=${summary.east.fileCompositionStatus}; bridge=${summary.east.bridgeSurfaceStatus}.`
+        );
+        setStatusCard(
+          "south",
+          summary.south.status,
+          `Surface=${summary.south.surface}; sidecar=${summary.south.sideCar}.`
+        );
+        setStatusCard(
+          "west",
+          summary.west.status,
+          `Bucket=${summary.finalBucket}; next=${summary.nextProcess}.`
+        );
+
+        setText("primaryReceipt", state.receipts.primary);
+        setText("northReceipt", state.receipts.north);
+        setText("eastReceipt", state.receipts.east);
+        setText("southReceipt", state.receipts.south);
+        setText("westReceipt", state.receipts.west);
+        setText(
+          "rawReceiptPreview",
+          [
+            "RAW_PACKET_AVAILABLE=true",
+            "RAW_PACKET_IS_DEBUG_ONLY=true",
+            `RAW_PACKET_BYTES_APPROX=${state.receipts.raw.length}`,
+            "Use COPY FULL RAW PACKET only when a specific cardinal segment cannot classify the issue."
+          ].join("\n")
+        );
+
+        renderBreakdown("primaryBreakdown", [
+          ["Current Question", summary.currentQuestion],
+          ["Final Bucket", summary.finalBucket],
+          ["First Blocking Fib", summary.firstBlockingFib],
+          ["Next Process", summary.nextProcess],
+          ["Next File", summary.nextFile],
+          ["Canvas Build Authorized", summary.canvas.canvasBuildAuthorized]
+        ]);
+
+        renderBreakdown("northBreakdown", [
+          ["F1 Intent", summary.fib.F1],
+          ["F2 Target Access", summary.fib.F2],
+          ["F3 North", summary.fib.F3],
+          ["Target Access Status", summary.north.targetAccessStatus],
+          ["Hearth Target Confirmed", summary.north.hearthTargetConfirmed],
+          ["North Verdict Available", summary.north.northVerdictAvailable]
+        ]);
+
+        renderBreakdown("eastBreakdown", [
+          ["F5 East", summary.fib.F5],
+          ["Source Spread", summary.east.eastSourceStatus],
+          ["File Composition", summary.east.fileCompositionStatus],
+          ["Bridge Surface", summary.east.bridgeSurfaceStatus],
+          ["Disposition", summary.east.eastDisposition],
+          ["East Blocking", String(summary.east.blocking)]
+        ]);
+
+        renderBreakdown("southBreakdown", [
+          ["F8 South", summary.fib.F8],
+          ["Conclusion", summary.south.southConclusion],
+          ["Sidecar", summary.south.sideCar],
+          ["Surface", summary.south.surface],
+          ["Canvas Blame Gate", summary.south.canvasBlameGate],
+          ["Raw Ref", summary.south.rawRef]
+        ]);
+
+        renderBreakdown("westBreakdown", [
+          ["F13 Surface Truth", summary.fib.F13],
+          ["F21 West", summary.fib.F21],
+          ["F34 Canvas Boundary", summary.fib.F34],
+          ["Surface Truth Status", summary.west.surfaceTruthStatus],
+          ["Construction Readiness", summary.west.constructionReadiness],
+          ["Next Process", summary.nextProcess]
+        ]);
+      }
+
+      function collectAndRender(options = {}) {
+        const raw = gatherRaw(options);
+        const summary = deriveSummary(raw);
+        render(summary, raw);
+        publishApi();
+      }
+
+      function loadScript(src) {
+        return new Promise((resolve) => {
+          try {
+            const fileName = src.split("/").pop();
+            const existing = Array.from(document.scripts).some((script) => {
+              const scriptSrc = script.getAttribute("src") || "";
+              return scriptSrc.includes(src) || scriptSrc.includes(fileName);
+            });
+
+            if (existing) {
+              resolve({ src, status: "already-present" });
+              return;
+            }
+
+            const script = document.createElement("script");
+            script.src = src;
+            script.async = false;
+            script.dataset.loadedBy = "mirrorland-instrument-chamber";
+            script.onload = () => resolve({ src, status: "loaded" });
+            script.onerror = () => resolve({ src, status: "load-error" });
+            document.head.appendChild(script);
+          } catch (_error) {
+            resolve({ src, status: "load-exception" });
           }
-        };
-      }
-
-      function buildGaugeVariance(receipts, actions) {
-        var participantRecords = Object.keys(state.participants).map(function (id) { return state.participants[id]; });
-        var presentCount = participantRecords.filter(function (r) { return r && r.present; }).length;
-        var missingCount = PARTICIPANTS.length - presentCount;
-        var receiptCount = Object.keys(receipts).filter(function (id) { return receipts[id].receiptPresent; }).length;
-        var presentNoReceipt = Object.keys(receipts).filter(function (id) { return receipts[id].present && !receipts[id].receiptPresent; }).length;
-
-        var northPresent = receipts.NORTH_RAIL && receipts.NORTH_RAIL.present;
-        var northRun = actions.NORTH_RAIL_RUN && actions.NORTH_RAIL_RUN.result ? actions.NORTH_RAIL_RUN.result : {};
-        var northVerdict = Boolean(northRun.NORTH_VERDICT_AVAILABLE || northRun.verdict || northRun.VERDICT_AVAILABLE);
-
-        var surfaceResult = actions.SURFACE_TRUTH_INSPECTION && actions.SURFACE_TRUTH_INSPECTION.result ? actions.SURFACE_TRUTH_INSPECTION.result : {};
-        var surfaceStatus = surfaceResult.CANVAS_SURFACE_TRUTH_STATUS ||
-          surfaceResult.surfaceMeasurement && surfaceResult.surfaceMeasurement.status ||
-          surfaceResult.CANVAS_SURFACE_TRUTH_FAILURE_CLASS ||
-          surfaceResult.CANVAS_SURFACE_TRUTH_STATUS ||
-          "UNKNOWN";
-
-        var duty = dutyMalpracticeInputs(receipts, actions);
-
-        var gauges = {
-          CONTROL_GATE: makeGauge("CONTROL_GATE", "Control Gate", "Receiver admission", {
-            RECEIVER_LOADED: "PRESENT",
-            RUN_BUTTON_AVAILABLE: "PRESENT",
-            ALIGNMENT_RUN_AVAILABLE: "PRESENT"
-          }, "ALIGNED"),
-
-          RECEIPT_FIELD_HEALTH: makeGauge("RECEIPT_FIELD_HEALTH", "Receipt Field Health", "Specific evidence presence", {
-            RECEIPTS_PRESENT: receiptCount > 0 ? "PRESENT" : "MISSING",
-            RECEIPTS_MISSING: missingCount || presentNoReceipt ? "PARTIAL" : "CLEAN",
-            RECEIPTS_MALFORMED: "NONE"
-          }, missingCount || presentNoReceipt ? "PARTIAL" : "ALIGNED"),
-
-          LABWEST_CONSTRUCT_ALIGNMENT: makeGauge("LABWEST_CONSTRUCT_ALIGNMENT", "LabWest Construct", "Controlling derivative construct", {
-            LABWEST_PRESENT: receipts.LABWEST_CONSTRUCT && receipts.LABWEST_CONSTRUCT.present ? "PRESENT" : "MISSING",
-            LABWEST_RECEIPT: receipts.LABWEST_CONSTRUCT && receipts.LABWEST_CONSTRUCT.receiptPresent ? "PRESENT" : "MISSING",
-            LAB_NORTH_GRAMMAR: receipts.LAB_NORTH_GRAMMAR && receipts.LAB_NORTH_GRAMMAR.receiptPresent ? "PRESENT" : "MISSING"
-          }, receipts.LABWEST_CONSTRUCT && receipts.LABWEST_CONSTRUCT.receiptPresent ? "ALIGNED" : "BLOCKED"),
-
-          NORTH_DIAGNOSTIC_TRACK: makeGauge("NORTH_DIAGNOSTIC_TRACK", "North Diagnostic Track", "Verdict availability", {
-            NORTH_PRESENT: northPresent ? "PRESENT" : "MISSING",
-            NORTH_RUN_API: northRun.NORTH_RUN_API_AVAILABLE || northRun.STATUS === "NORTH_RUN_OK" ? "PRESENT" : "MISSING",
-            NORTH_VERDICT: northVerdict ? "PRESENT" : "BLOCKED_OR_MISSING"
-          }, northVerdict ? "ALIGNED" : "BLOCKED"),
-
-          SURFACE_TRUTH_CONTRACTS: makeGauge("SURFACE_TRUTH_CONTRACTS", "Surface Truth Contracts", "Cycle-bound contract definitions", {
-            SURFACE_TRUTH_PRESENT: receipts.SURFACE_TRUTH_PROBE && receipts.SURFACE_TRUTH_PROBE.present ? "PRESENT" : "MISSING",
-            SURFACE_TRUTH_RECEIPT: receipts.SURFACE_TRUTH_PROBE && receipts.SURFACE_TRUTH_PROBE.receiptPresent ? "PRESENT" : "MISSING",
-            SURFACE_TRUTH_INSPECTION: surfaceStatus
-          }, safeString(surfaceStatus).indexOf("FAILED") >= 0 ? "HIGH_VARIANCE_PARTIAL" : "PARTIAL"),
-
-          PROBE_NETWORK_VARIANCE: makeGauge("PROBE_NETWORK_VARIANCE", "Probe Network", "Distributed probe field", {
-            PROBE_PRESENT_COUNT: ["PROBE_NORTH", "PROBE_EAST", "PROBE_WEST", "PROBE_SOUTH"].filter(function (id) { return receipts[id] && receipts[id].present; }).length >= 3 ? "PRESENT" : "PARTIAL",
-            PROBE_RECEIPT_COUNT: ["PROBE_NORTH", "PROBE_EAST", "PROBE_WEST", "PROBE_SOUTH"].filter(function (id) { return receipts[id] && receipts[id].receiptPresent; }).length >= 3 ? "PRESENT" : "PARTIAL",
-            PROBE_MISSING_COUNT: ["PROBE_NORTH", "PROBE_EAST", "PROBE_WEST", "PROBE_SOUTH"].filter(function (id) { return receipts[id] && !receipts[id].present; }).length ? "PARTIAL" : "CLEAN"
-          }, ["PROBE_NORTH", "PROBE_EAST", "PROBE_WEST"].every(function (id) { return receipts[id] && receipts[id].receiptPresent; }) ? "ALIGNED" : "PARTIAL"),
-
-          CANVAS_CYCLE_BOUNDARY: makeGauge("CANVAS_CYCLE_BOUNDARY", "Canvas Cycle Boundary", "Chapel / Bishop / Priest separation", {
-            CANVAS_HUB_BOUNDARY: "RISK",
-            HEX_SURFACE_BOUNDARY: "RISK",
-            CHAPEL_2_BOUNDARY: "RISK"
-          }, "PARTIAL"),
-
-          CONTAINER_COLLAPSE_RISK: makeGauge("CONTAINER_COLLAPSE_RISK", "Container Collapse Risk", "Borrowed contract / substitution spread", {
-            BORROWED_CONTRACT_RISK: "RISK",
-            SIBLING_SUBSTITUTION_RISK: "RISK",
-            PARENT_CHILD_COLLAPSE_RISK: "RISK"
-          }, "PARTIAL"),
-
-          DUTY_LOAD_MALPRACTICE: makeGauge("DUTY_LOAD_MALPRACTICE", "Duty Load / Malpractice", "Diagnostic self-boundary", duty.inputs, duty.status),
-
-          CONSTRUCTION_READINESS: makeGauge("CONSTRUCTION_READINESS", "Construction Readiness", "Derivative map precondition", {
-            LABWEST_CONSTRUCT: receipts.LABWEST_CONSTRUCT && receipts.LABWEST_CONSTRUCT.receiptPresent ? "PRESENT" : "MISSING",
-            SURFACE_TRUTH_CONTRACTS: surfaceStatus || "UNKNOWN",
-            NORTH_VERDICT: northVerdict ? "PRESENT" : "BLOCKED_OR_MISSING"
-          }, northVerdict ? "PARTIAL" : "BLOCKED")
-        };
-
-        state.gaugeVariance = gauges;
-        return gauges;
-      }
-
-      function gaugeSummary(gauges) {
-        return Object.keys(gauges).map(function (key) {
-          var g = gauges[key];
-          return g.id + ":" + g.status + ":" + g.varianceClass;
-        }).join(" | ");
-      }
-
-      function supportLensSummary() {
-        var out = {};
-        SOUTH_SUPPORT_LENSES.forEach(function (lens) {
-          var record = state.supportLenses[lens.id] || {};
-          out[lens.id] = {
-            id: lens.id,
-            title: lens.title,
-            type: lens.type,
-            file: lens.file,
-            expectedContract: lens.expectedContract,
-            primaryReceiptParticipant: false,
-            loadStatus: record.loadStatus || "NOT_LOADED",
-            present: Boolean(record.present),
-            observedPath: record.observedPath || "NONE",
-            observedScope: record.observedScope || "none",
-            publicApi: record.publicApi || "NONE"
-          };
         });
-        return out;
       }
 
-      function composeReceiverReceipt(packet) {
-        var receiptCount = Object.keys(state.specificReceipts).filter(function (id) {
-          return state.specificReceipts[id].receiptPresent;
-        }).length;
-
-        return Object.assign({
-          CONTRACT: PUBLIC_CONTRACT,
-          RECEIPT: PUBLIC_RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
-          BASELINE_CONTRACT: BASELINE_CONTRACT,
-          PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          VERSION: VERSION,
-          ROUTE: DIAGNOSTIC_ROUTE,
-          TARGET_ROUTE: TARGET_ROUTE,
-          REPORT_PACKET: REPORT_PACKET,
-          ROLE: "thin-diagnostic-route-receiver",
-          RECEIVER_STANDARD: "cutting-edge-tech-panel-south-copy-surface-integration",
-          RECEIPTS_ARE_SPECIFIC_DIAGNOSTIC_EVIDENCE: true,
-          GAUGES_ARE_COLLECTIVE_DIAGNOSTIC_VARIANCE: true,
-          GAUGES_DO_NOT_REPLACE_RECEIPTS: true,
-          GAUGES_AUTHORIZE_REPAIR: false,
-          CONTROL_GATE_ENABLES_ALIGNMENT_RUN_WHEN_RECEIVER_LOADED: true,
-          RUN_BUTTON_LOCKED_BY_NORTH_API: false,
-          NORTH_VERDICT_REQUIRED_FOR_FINAL_DIAGNOSTIC_VERDICT: true,
-          NORTH_VERDICT_SYNTHESIZED: false,
-          LABWEST_CONSTRUCT_IS_CONTROLLING_DIAGNOSTIC_DERIVATIVE: true,
-          NORTH_DIAGNOSTIC_TRACK_MUST_ALIGN_TO_LABWEST_CONSTRUCT: true,
-          ANCHOR_FILE_RETURN_IS_TARGET_HOPPING_UNLESS_CONSTRUCT_REQUIRES_IT: true,
-          SOUTH_POST_ASSEMBLY_PACKET_HANDOFF_ACTIVE: true,
-          SOUTH_COMPACT_COPY_SURFACE_PRIMARY: true,
-          FULL_RAW_PACKET_SECONDARY_EVIDENCE: true,
-          SOUTH_SIDECARS_ARE_PRIMARY_RECEIPT_PARTICIPANTS: false,
-          SOUTH_SIDECARS_ARE_INTERNAL_PROCESS_LENSES: true,
-          PRIMARY_PARTICIPANT_COUNT: PARTICIPANTS.length,
-          SUPPORT_LENS_COUNT: SOUTH_SUPPORT_LENSES.length,
-          PARTICIPANT_LOAD_STARTED: state.loadStarted,
-          PARTICIPANT_LOAD_COMPLETE: state.loadComplete,
-          SPECIFIC_RECEIPT_COUNT: receiptCount,
-          GAUGE_COUNT: Object.keys(state.gaugeVariance).length,
-          LAST_UPDATED_AT: state.updatedAt,
-          TARGET_FRAME_LOADED: state.targetFrameLoaded,
-          ERROR_COUNT: state.errors.length,
-          ERRORS: state.errors.slice(),
-          UPDATED_AT: nowIso()
-        }, NO_CLAIMS);
+      async function loadParticipants() {
+        for (const src of PARTICIPANT_SCRIPTS) {
+          await loadScript(src);
+        }
       }
 
-      function assemblePreSouthPacket(receipts, gauges, actions) {
-        var presentCount = Object.keys(state.participants).filter(function (id) { return state.participants[id].present; }).length;
-        var receiptCount = Object.keys(receipts).filter(function (id) { return receipts[id].receiptPresent; }).length;
-        var missingCount = PARTICIPANTS.length - presentCount;
-        var presentNoReceipt = Object.keys(receipts).filter(function (id) { return receipts[id].present && !receipts[id].receiptPresent; }).length;
-
-        var northVerdictAvailable = Boolean(actions.NORTH_RAIL_RUN &&
-          actions.NORTH_RAIL_RUN.result &&
-          (actions.NORTH_RAIL_RUN.result.NORTH_VERDICT_AVAILABLE || actions.NORTH_RAIL_RUN.result.verdict || actions.NORTH_RAIL_RUN.result.VERDICT_AVAILABLE));
-
-        var packet = Object.assign({
-          PACKET_NAME: REPORT_PACKET,
-          CONTRACT: PUBLIC_CONTRACT,
-          RECEIPT: PUBLIC_RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
-          BASELINE_CONTRACT: BASELINE_CONTRACT,
-          PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          VERSION: VERSION,
-          TARGET_ROUTE: TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-          DIAGNOSTIC_TIMESTAMP: nowIso(),
-
-          RECEIPTS_ARE_SPECIFIC_DIAGNOSTIC_EVIDENCE: true,
-          GAUGES_ARE_COLLECTIVE_DIAGNOSTIC_VARIANCE: true,
-          GAUGES_DO_NOT_REPLACE_RECEIPTS: true,
-          SCREENSHOT_SAFE_GAUGE_SURFACE_ACTIVE: true,
-
-          CONTROL_GATE_STATUS: "RECEIVER_ALIGNMENT_RUN_AVAILABLE",
-          RUN_BUTTON_LOCKED_BY_NORTH_API: false,
-          NORTH_VERDICT_SYNTHESIZED: false,
-          NORTH_VERDICT_AVAILABLE: northVerdictAvailable,
-
-          LABWEST_CONSTRUCT_PRESENT: Boolean(receipts.LABWEST_CONSTRUCT && receipts.LABWEST_CONSTRUCT.present),
-          LABWEST_CONSTRUCT_RECEIPT_PRESENT: Boolean(receipts.LABWEST_CONSTRUCT && receipts.LABWEST_CONSTRUCT.receiptPresent),
-          SURFACE_TRUTH_PROBE_PRESENT: Boolean(receipts.SURFACE_TRUTH_PROBE && receipts.SURFACE_TRUTH_PROBE.present),
-          SURFACE_TRUTH_PROBE_RECEIPT_PRESENT: Boolean(receipts.SURFACE_TRUTH_PROBE && receipts.SURFACE_TRUTH_PROBE.receiptPresent),
-          NORTH_RAIL_PRESENT: Boolean(receipts.NORTH_RAIL && receipts.NORTH_RAIL.present),
-          NORTH_RAIL_RECEIPT_PRESENT: Boolean(receipts.NORTH_RAIL && receipts.NORTH_RAIL.receiptPresent),
-
-          PARTICIPANT_PRESENT_COUNT: presentCount,
-          SPECIFIC_RECEIPT_PRESENT_COUNT: receiptCount,
-          PARTICIPANT_MISSING_COUNT: missingCount,
-          PRESENT_WITHOUT_RECEIPT_COUNT: presentNoReceipt,
-          COLLECTIVE_GAUGE_COUNT: Object.keys(gauges).length,
-          GAUGE_VARIANCE_SUMMARY: gaugeSummary(gauges),
-
-          CONSTRUCTION_READINESS_STATUS: northVerdictAvailable ? "CONSTRUCTION_HELD_PENDING_WEST_DERIVATIVE_RELEASE" : "CONSTRUCTION_BLOCKED_DIAGNOSTIC_FIELD",
-
-          SOUTH_POST_ASSEMBLY_PACKET_HANDOFF_REQUIRED: true,
-          SOUTH_SIDECARS_ARE_PRIMARY_RECEIPT_PARTICIPANTS: false,
-          SOUTH_SIDECARS_ARE_INTERNAL_PROCESS_LENSES: true,
-          SIDE_CARS_DO_NOT_NEED_TOP_LEVEL_RECEIPT_PARTICIPATION: true,
-          SIDE_CARS_MAY_INFORM_SOUTH_PROCESS_CONCLUSION: true,
-
-          specificReceipts: receipts,
-          gaugeVariance: gauges,
-          participantLoadState: participantLoadState(false),
-          southSupportLensState: supportLensSummary(),
-          participantActions: actions
-        }, NO_CLAIMS);
-
-        packet.receiverReceipt = composeReceiverReceipt(packet);
-        return packet;
+      function showToast(text) {
+        const toast = document.getElementById("toast");
+        if (!toast) return;
+        toast.textContent = text;
+        toast.dataset.show = "true";
+        window.clearTimeout(showToast._timer);
+        showToast._timer = window.setTimeout(() => {
+          toast.dataset.show = "false";
+        }, 1400);
       }
 
-      function getSouthApi() {
-        var found = findApi(PARTICIPANTS.filter(function (p) { return p.id === "SOUTH_RAIL"; })[0].aliases);
-        return found.api ? found : { api: null, path: "NONE", scope: "none" };
-      }
-
-      function runSouthProcess(fullPacket) {
-        var found = getSouthApi();
-        var south = found.api;
-
-        var empty = {
-          SOUTH_PROCESS_STATUS: "SOUTH_API_NOT_AVAILABLE",
-          SOUTH_API_PATH: found.path,
-          SOUTH_RUN_METHOD: "NONE",
-          southPacket: null,
-          compactManifestText: "",
-          superCompactManifestText: "",
-          sidecarLensReport: null,
-          segregatedReceiptIndex: null,
-          duplicateStandardCollapseReport: null,
-          conclusion: {
-            SOUTH_FINAL_CONCLUSION: "CONSTRUCTION_BLOCKED_DIAGNOSTIC_FIELD",
-            SOUTH_FINAL_CONCLUSION_CLASS: "SOUTH_API_NOT_AVAILABLE",
-            SOUTH_FINAL_CONCLUSION_REASON: "South API not available",
-            SOUTH_FINAL_RECOMMENDED_NEXT_PROCESS: "RESTORE_SOUTH_PACKET_OUTPUT_HANDOFF_BEFORE_CANVAS_BUILD"
+      async function copyText(text, label) {
+        const value = safeString(text);
+        try {
+          await navigator.clipboard.writeText(value);
+          showToast(`${label} copied`);
+        } catch (_error) {
+          const area = document.createElement("textarea");
+          area.value = value;
+          area.setAttribute("readonly", "readonly");
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          document.body.appendChild(area);
+          area.select();
+          try {
+            document.execCommand("copy");
+            showToast(`${label} copied`);
+          } catch (__error) {
+            showToast("Copy failed");
           }
-        };
-
-        if (!south) {
-          state.southProcess = empty;
-          return empty;
-        }
-
-        var southInput = clone(fullPacket);
-        southInput.SOURCE = "HEARTH.diagnosticGaugeVarianceReceiver.preSouthFullAlignmentPacket";
-        southInput.SOURCE_TYPE = "receiver-full-alignment-packet-object";
-        southInput.SOUTH_INVOCATION_CONTRACT = INTERNAL_RENEWAL_CONTRACT;
-        southInput.SIDE_CARS_DO_NOT_NEED_TOP_LEVEL_RECEIPT_PARTICIPATION = true;
-        southInput.SIDE_CARS_MAY_INFORM_SOUTH_PROCESS_CONCLUSION = true;
-        southInput.SOUTH_SIDECARS_ARE_PRIMARY_RECEIPT_PARTICIPANTS = false;
-        southInput.SOUTH_SIDECARS_ARE_INTERNAL_PROCESS_LENSES = true;
-
-        var runCall = callFirst(south, [
-          "run",
-          "runDiagnostic",
-          "auditReceipt",
-          "segregateReceipt",
-          "inspect",
-          "probe",
-          "measure"
-        ], southInput);
-
-        var compactCall = callFirst(south, ["getCompactManifestText"]);
-        var superCompactCall = callFirst(south, ["getSuperCompactManifestText"]);
-        var packetCall = callFirst(south, ["getPacket", "getReport", "getReceipt"]);
-        var lensCall = callFirst(south, ["getSidecarLensReport"]);
-        var indexCall = callFirst(south, ["getSegregatedReceiptIndex"]);
-        var duplicateCall = callFirst(south, ["getDuplicateStandardCollapseReport"]);
-        var conclusionCall = callFirst(south, ["getConclusion", "getStatus"]);
-
-        var result = {
-          SOUTH_PROCESS_STATUS: runCall.ok ? "SOUTH_PROCESS_COMPLETE" : "SOUTH_PROCESS_ATTEMPTED_WITH_ERROR",
-          SOUTH_API_PATH: found.path,
-          SOUTH_RUN_METHOD: runCall.method,
-          SOUTH_RUN_ERROR: runCall.error,
-          SOUTH_RUN_RESULT_SHAPE: runCall.ok ? typeof runCall.value : "ERROR",
-          southRunResult: runCall.value || null,
-          southPacket: packetCall.ok ? packetCall.value : null,
-          compactManifestText: compactCall.ok ? safeString(compactCall.value) : "",
-          superCompactManifestText: superCompactCall.ok ? safeString(superCompactCall.value) : "",
-          sidecarLensReport: lensCall.ok ? lensCall.value : null,
-          segregatedReceiptIndex: indexCall.ok ? indexCall.value : null,
-          duplicateStandardCollapseReport: duplicateCall.ok ? duplicateCall.value : null,
-          conclusion: conclusionCall.ok ? conclusionCall.value : null
-        };
-
-        if (!result.compactManifestText && runCall.ok && runCall.value && typeof runCall.value === "object") {
-          result.compactManifestText = safeString(runCall.value.compactManifestText || runCall.value.latestCompactManifestText || "");
-        }
-
-        if (!result.superCompactManifestText && runCall.ok && runCall.value && typeof runCall.value === "object") {
-          result.superCompactManifestText = safeString(runCall.value.superCompactManifestText || runCall.value.latestSuperCompactManifestText || "");
-        }
-
-        state.southProcess = result;
-        state.compactManifestText = result.compactManifestText || "";
-        state.superCompactManifestText = result.superCompactManifestText || "";
-        state.primaryCopyText = state.superCompactManifestText || state.compactManifestText || state.packetText || "SOUTH_COMPACT_MANIFEST=NOT_AVAILABLE";
-        return result;
-      }
-
-      function finalizePacket(preSouthPacket, southProcess) {
-        var finalPacket = clone(preSouthPacket);
-        finalPacket.SOUTH_PROCESS_STATUS = southProcess.SOUTH_PROCESS_STATUS;
-        finalPacket.SOUTH_API_PATH = southProcess.SOUTH_API_PATH;
-        finalPacket.SOUTH_RUN_METHOD = southProcess.SOUTH_RUN_METHOD;
-        finalPacket.SOUTH_COMPACT_MANIFEST_PRESENT = Boolean(southProcess.compactManifestText);
-        finalPacket.SOUTH_SUPER_COMPACT_MANIFEST_PRESENT = Boolean(southProcess.superCompactManifestText);
-        finalPacket.SOUTH_SIDECAR_LENS_REPORT_PRESENT = Boolean(southProcess.sidecarLensReport);
-        finalPacket.SOUTH_CONCLUSION = southProcess.conclusion || null;
-        finalPacket.southProcess = {
-          SOUTH_PROCESS_STATUS: southProcess.SOUTH_PROCESS_STATUS,
-          SOUTH_API_PATH: southProcess.SOUTH_API_PATH,
-          SOUTH_RUN_METHOD: southProcess.SOUTH_RUN_METHOD,
-          SOUTH_RUN_ERROR: southProcess.SOUTH_RUN_ERROR,
-          compactManifestText: southProcess.compactManifestText || "",
-          superCompactManifestText: southProcess.superCompactManifestText || "",
-          sidecarLensReport: southProcess.sidecarLensReport || null,
-          segregatedReceiptIndex: southProcess.segregatedReceiptIndex || null,
-          duplicateStandardCollapseReport: southProcess.duplicateStandardCollapseReport || null,
-          conclusion: southProcess.conclusion || null
-        };
-        finalPacket.receiverReceipt = composeReceiverReceipt(finalPacket);
-        return finalPacket;
-      }
-
-      function participantLoadState(includeApi) {
-        var out = {};
-        PARTICIPANTS.forEach(function (participant) {
-          var record = state.participants[participant.id] || {};
-          out[participant.id] = {
-            id: participant.id,
-            title: participant.title,
-            file: participant.file,
-            type: participant.type,
-            loadStatus: record.loadStatus || "NOT_LOADED",
-            present: Boolean(record.present),
-            observedPath: record.observedPath || "NONE",
-            observedScope: record.observedScope || "none",
-            publicApi: record.publicApi || "NONE"
-          };
-          if (includeApi) out[participant.id].api = record.api || null;
-        });
-        return out;
-      }
-
-      function packetToText(packet) {
-        if (!packet) return "RAW_ALIGNMENT_PACKET=WAITING_RUN";
-
-        var lines = [];
-        [
-          "PACKET_NAME",
-          "CONTRACT",
-          "RECEIPT",
-          "INTERNAL_RENEWAL_CONTRACT",
-          "INTERNAL_RENEWAL_RECEIPT",
-          "PREVIOUS_CONTRACT",
-          "BASELINE_CONTRACT",
-          "VERSION",
-          "TARGET_ROUTE",
-          "DIAGNOSTIC_ROUTE",
-          "DIAGNOSTIC_TIMESTAMP",
-          "RECEIPTS_ARE_SPECIFIC_DIAGNOSTIC_EVIDENCE",
-          "GAUGES_ARE_COLLECTIVE_DIAGNOSTIC_VARIANCE",
-          "GAUGES_DO_NOT_REPLACE_RECEIPTS",
-          "SCREENSHOT_SAFE_GAUGE_SURFACE_ACTIVE",
-          "CONTROL_GATE_STATUS",
-          "RUN_BUTTON_LOCKED_BY_NORTH_API",
-          "NORTH_VERDICT_SYNTHESIZED",
-          "NORTH_VERDICT_AVAILABLE",
-          "LABWEST_CONSTRUCT_PRESENT",
-          "LABWEST_CONSTRUCT_RECEIPT_PRESENT",
-          "SURFACE_TRUTH_PROBE_PRESENT",
-          "SURFACE_TRUTH_PROBE_RECEIPT_PRESENT",
-          "NORTH_RAIL_PRESENT",
-          "NORTH_RAIL_RECEIPT_PRESENT",
-          "PARTICIPANT_PRESENT_COUNT",
-          "SPECIFIC_RECEIPT_PRESENT_COUNT",
-          "PARTICIPANT_MISSING_COUNT",
-          "PRESENT_WITHOUT_RECEIPT_COUNT",
-          "COLLECTIVE_GAUGE_COUNT",
-          "GAUGE_VARIANCE_SUMMARY",
-          "CONSTRUCTION_READINESS_STATUS",
-          "SOUTH_PROCESS_STATUS",
-          "SOUTH_API_PATH",
-          "SOUTH_RUN_METHOD",
-          "SOUTH_COMPACT_MANIFEST_PRESENT",
-          "SOUTH_SUPER_COMPACT_MANIFEST_PRESENT",
-          "SOUTH_SIDECAR_LENS_REPORT_PRESENT",
-          "SOUTH_SIDECARS_ARE_PRIMARY_RECEIPT_PARTICIPANTS",
-          "SOUTH_SIDECARS_ARE_INTERNAL_PROCESS_LENSES",
-          "PRODUCTION_MUTATION_AUTHORIZED",
-          "HEARTH_REPAIR_AUTHORIZED",
-          "RUNTIME_RESTART_AUTHORIZED",
-          "CANVAS_RELEASE_AUTHORIZED",
-          "F13_CLAIMED",
-          "F21_CLAIMED",
-          "READY_TEXT_CLAIMED",
-          "VISUAL_PASS_CLAIMED",
-          "GENERATED_IMAGE",
-          "GRAPHIC_BOX",
-          "WEBGL"
-        ].forEach(function (key) {
-          if (typeof packet[key] !== "undefined") lines.push(key + "=" + safeString(packet[key]));
-        });
-
-        lines.push("specificReceipts=" + safeJson(packet.specificReceipts || {}, 0));
-        lines.push("gaugeVariance=" + safeJson(packet.gaugeVariance || {}, 0));
-        lines.push("participantLoadState=" + safeJson(packet.participantLoadState || {}, 0));
-        lines.push("southSupportLensState=" + safeJson(packet.southSupportLensState || {}, 0));
-        lines.push("participantActions=" + safeJson(packet.participantActions || {}, 0));
-        lines.push("southProcess=" + safeJson(packet.southProcess || {}, 0));
-        lines.push("receiverReceipt=" + safeJson(packet.receiverReceipt || {}, 0));
-
-        return lines.join("\n");
-      }
-
-      async function runAlignment() {
-        if (state.running) return;
-
-        state.running = true;
-        state.runCount += 1;
-        state.errors = [];
-        state.updatedAt = nowIso();
-        setButtons(true);
-        renderAll();
-
-        try {
-          await loadParticipantChain();
-          await wait(80);
-          refreshParticipantPresence();
-
-          var receipts = readAllReceipts();
-          var actions = runParticipantActions();
-          var gauges = buildGaugeVariance(receipts, actions);
-
-          var preSouthPacket = assemblePreSouthPacket(receipts, gauges, actions);
-          state.preSouthPacket = preSouthPacket;
-          state.packetText = packetToText(preSouthPacket);
-
-          var southProcess = runSouthProcess(preSouthPacket);
-          var finalPacket = finalizePacket(preSouthPacket, southProcess);
-
-          state.alignmentPacket = finalPacket;
-          state.receiverReceipt = finalPacket.receiverReceipt;
-          state.packetText = packetToText(finalPacket);
-          state.primaryCopyText = state.superCompactManifestText || state.compactManifestText || state.packetText;
-          state.updatedAt = nowIso();
-        } catch (error) {
-          state.errors.push({
-            at: nowIso(),
-            message: error && error.message ? error.message : String(error)
-          });
-        } finally {
-          state.running = false;
-          setButtons(false);
-          renderAll();
+          document.body.removeChild(area);
         }
       }
 
-      function setButtons(disabled) {
-        els.runDiagnostic.disabled = disabled;
-        els.copyPrimary.disabled = disabled;
-        els.copySouth.disabled = disabled;
-        els.copyFull.disabled = disabled;
-        els.resetGauges.disabled = disabled;
-        els.refreshStatus.disabled = disabled;
-      }
-
-      function resetGauges() {
-        state.updatedAt = nowIso();
-        state.specificReceipts = {};
-        state.gaugeVariance = {};
-        state.participantActions = {};
-        state.receiverReceipt = composeReceiverReceipt(null);
-        state.alignmentPacket = null;
-        state.preSouthPacket = null;
-        state.southProcess = null;
-        state.compactManifestText = "";
-        state.superCompactManifestText = "";
-        state.primaryCopyText = "SOUTH_COMPACT_MANIFEST=WAITING_RUN";
-        state.packetText = "RAW_ALIGNMENT_PACKET=WAITING_RUN";
-        renderAll();
-      }
-
-      function refreshStatus() {
-        refreshParticipantPresence();
-        state.receiverReceipt = composeReceiverReceipt(state.alignmentPacket);
-        state.updatedAt = nowIso();
-        renderAll();
-      }
-
-      function copyText(text, label) {
-        var value = text || "";
-        if (!value) {
-          showToast("No " + label + " available.");
-          return;
-        }
-
-        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-          navigator.clipboard.writeText(value).then(function () {
-            showToast(label + " copied.");
-          }).catch(function () {
-            fallbackCopy(value, label);
-          });
-        } else {
-          fallbackCopy(value, label);
-        }
-      }
-
-      function fallbackCopy(text, label) {
-        var node = document.createElement("textarea");
-        node.value = text;
-        node.setAttribute("readonly", "");
-        node.style.position = "fixed";
-        node.style.left = "-9999px";
-        document.body.appendChild(node);
-        node.select();
-
-        try {
-          document.execCommand("copy");
-          showToast(label + " copied.");
-        } catch (error) {
-          showToast("Copy failed. Select the text manually.");
-        } finally {
-          document.body.removeChild(node);
-        }
-      }
-
-      function showToast(message) {
-        els.toast.textContent = message;
-        els.toast.classList.add("show");
-        window.clearTimeout(showToast._t);
-        showToast._t = window.setTimeout(function () {
-          els.toast.classList.remove("show");
-        }, 2200);
-      }
-
-      function renderGauges() {
-        var gauges = state.gaugeVariance;
-        var keys = Object.keys(gauges);
-        els.gaugeGrid.innerHTML = "";
-
-        if (!keys.length) {
-          var starter = [
-            makeGauge("CONTROL_GATE", "Control Gate", "Receiver admission", {
-              RECEIVER_LOADED: "PRESENT",
-              RUN_BUTTON_AVAILABLE: "PRESENT",
-              ALIGNMENT_RUN_AVAILABLE: "PRESENT"
-            }, "ALIGNED"),
-            makeGauge("SOUTH_COPY_SURFACE", "South Copy Surface", "Post-assembly compact manifest", {
-              SOUTH_PACKET_HANDOFF: "WAITING_RUN",
-              COMPACT_MANIFEST: "WAITING_RUN",
-              RAW_PACKET_SECONDARY: "PRESENT"
-            }, "PARTIAL"),
-            makeGauge("NORTH_DIAGNOSTIC_TRACK", "North Diagnostic Track", "Verdict availability", {
-              NORTH_PRESENT: "UNKNOWN",
-              NORTH_RUN_API: "UNKNOWN",
-              NORTH_VERDICT: "BLOCKED_OR_MISSING"
-            }, "BLOCKED")
-          ];
-          starter.forEach(function (g) { renderGaugeCard(g); });
-          els.gaugeCountTag.textContent = "standby";
-          return;
-        }
-
-        keys.forEach(function (key) {
-          renderGaugeCard(gauges[key]);
-        });
-
-        els.gaugeCountTag.textContent = keys.length + " gauges";
-      }
-
-      function renderGaugeCard(g) {
-        var cls = "partial";
-        var s = safeString(g.status).toUpperCase();
-        if (s.indexOf("ALIGNED") >= 0) cls = "aligned";
-        if (s.indexOf("BLOCK") >= 0 || s.indexOf("FAILED") >= 0 || s.indexOf("DETECTED") >= 0) cls = "blocked";
-        if (s.indexOf("RISK") >= 0) cls = "risk";
-
-        var card = document.createElement("article");
-        card.className = "gauge " + cls;
-        card.style.setProperty("--score", Math.max(0.03, Math.min(1, g.score || 0.05)));
-
-        card.innerHTML =
-          '<div class="gauge-top">' +
-            '<h3 class="gauge-name">' + escapeHtml(g.title || g.id) + '</h3>' +
-            '<span class="gauge-status">' + escapeHtml(g.status || "UNKNOWN") + '</span>' +
-          '</div>' +
-          '<div class="gauge-sub">' + escapeHtml(g.subtitle || "") + '</div>' +
-          '<div class="gauge-data">' +
-            'variance=' + escapeHtml(g.varianceClass || "UNKNOWN") + '<br>' +
-            'score=' + escapeHtml(String(Math.round((g.score || 0) * 100) / 100)) + '<br>' +
-            'evidence=' + escapeHtml(g.evidence || "NONE") +
-          '</div>';
-
-        els.gaugeGrid.appendChild(card);
-      }
-
-      function escapeHtml(value) {
-        return safeString(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      function renderParticipants() {
-        var rows = [];
-        var primary = PARTICIPANTS.map(function (p) {
-          return Object.assign({ primaryReceiptParticipant: true }, state.participants[p.id] || {
-            id: p.id,
-            title: p.title,
-            file: p.file,
-            loadStatus: "NOT_LOADED",
-            present: false,
-            observedPath: "NONE",
-            publicApi: "NONE"
+      function bindCopyButtons() {
+        document.querySelectorAll("[data-copy]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const key = button.getAttribute("data-copy");
+            const label =
+              key === "raw"
+                ? "Full raw packet"
+                : key.charAt(0).toUpperCase() + key.slice(1) + " receipt";
+            copyText(state.receipts[key] || "", label);
           });
         });
-
-        var support = SOUTH_SUPPORT_LENSES.map(function (p) {
-          return Object.assign({ primaryReceiptParticipant: false }, state.supportLenses[p.id] || {
-            id: p.id,
-            title: p.title,
-            file: p.file,
-            loadStatus: "NOT_LOADED",
-            present: false,
-            observedPath: "NONE",
-            publicApi: "NONE"
-          });
-        });
-
-        primary.concat(support).forEach(function (record) {
-          var receipt = state.specificReceipts[record.id];
-          var receiptStatus = record.primaryReceiptParticipant === false
-            ? "INTERNAL_LENS"
-            : receipt ? receipt.receiptStatus : "WAITING_RUN";
-
-          rows.push(
-            "<tr>" +
-              "<td>" + escapeHtml(record.title || record.id) + "<br><span class=\"status-pill " + statusClass(record.primaryReceiptParticipant ? "PRESENT" : "PARTIAL") + "\">" + escapeHtml(record.primaryReceiptParticipant ? "primary" : "sidecar") + "</span></td>" +
-              "<td>" + escapeHtml(record.file || "") + "</td>" +
-              "<td><span class=\"status-pill " + statusClass(record.loadStatus) + "\">" + escapeHtml(record.loadStatus || "UNKNOWN") + "</span></td>" +
-              "<td><span class=\"status-pill " + statusClass(receiptStatus) + "\">" + escapeHtml(receiptStatus) + "</span></td>" +
-              "<td>" + escapeHtml(record.observedPath || "NONE") + "<br>" + escapeHtml(record.publicApi || "NONE") + "</td>" +
-            "</tr>"
-          );
-        });
-
-        els.participantRows.innerHTML = rows.join("");
-        var present = Object.keys(state.participants).filter(function (id) {
-          return state.participants[id].present;
-        }).length;
-        els.participantCountTag.textContent = present + "/" + PARTICIPANTS.length + " primary";
-      }
-
-      function renderOutputs() {
-        var south = state.southProcess || {};
-        var compact = state.superCompactManifestText || state.compactManifestText || "SOUTH_COMPACT_MANIFEST=WAITING_RUN";
-
-        els.primaryCopySurface.value = compact;
-        els.specificReceiptOutput.textContent = Object.keys(state.specificReceipts).length ? safeJson(state.specificReceipts, 2) : "specificReceipts=WAITING_RUN";
-        els.rawPacketOutput.textContent = state.packetText || "RAW_ALIGNMENT_PACKET=WAITING_RUN";
-        els.southLensOutput.textContent = south.sidecarLensReport || south.conclusion
-          ? safeJson({
-              SOUTH_PROCESS_STATUS: south.SOUTH_PROCESS_STATUS,
-              SOUTH_API_PATH: south.SOUTH_API_PATH,
-              SOUTH_RUN_METHOD: south.SOUTH_RUN_METHOD,
-              conclusion: south.conclusion || null,
-              sidecarLensReport: south.sidecarLensReport || null
-            }, 2)
-          : "SOUTH_LENS_REPORT=WAITING_RUN";
-        els.segregatedIndexOutput.textContent = south.segregatedReceiptIndex ? safeJson(south.segregatedReceiptIndex, 2) : "SEGREGATED_RECEIPT_INDEX=WAITING_RUN";
-        els.duplicateCollapseOutput.textContent = south.duplicateStandardCollapseReport ? safeJson(south.duplicateStandardCollapseReport, 2) : "DUPLICATE_STANDARD_COLLAPSE_REPORT=WAITING_RUN";
-
-        var receiptCount = Object.keys(state.specificReceipts).filter(function (id) {
-          return state.specificReceipts[id].receiptPresent;
-        }).length;
-        els.receiptCountTag.textContent = receiptCount + " receipts";
-        els.copySurfaceTag.textContent = state.superCompactManifestText ? "super compact" : state.compactManifestText ? "compact manifest" : "waiting";
-      }
-
-      function renderMission() {
-        var south = state.southProcess || {};
-        var conclusion = south.conclusion || {};
-        var finalConclusion = conclusion.SOUTH_FINAL_CONCLUSION || conclusion.status || "";
-        var northAvailable = Boolean(state.alignmentPacket && state.alignmentPacket.NORTH_VERDICT_AVAILABLE);
-
-        if (state.running) {
-          els.missionHeadline.textContent = "Alignment run active.";
-          els.missionDetail.textContent = "Loading diagnostic participants, reading receipts, assembling packet, and handing complete packet to South.";
-        } else if (finalConclusion) {
-          els.missionHeadline.textContent = finalConclusion;
-          els.missionDetail.textContent = safeString(conclusion.SOUTH_FINAL_CONCLUSION_REASON || "South returned packet meaning. Full raw packet remains secondary evidence.");
-        } else if (state.alignmentPacket) {
-          els.missionHeadline.textContent = "Alignment packet assembled.";
-          els.missionDetail.textContent = "South copy surface is available if the South post-assembly process returned a compact manifest.";
-        } else {
-          els.missionHeadline.textContent = "Receiver armed. Diagnostic field not yet run.";
-          els.missionDetail.textContent = "Run the alignment pass to load participants, read receipts, assemble the packet, then hand the complete packet to South.";
-        }
-
-        els.southCopyStatus.textContent = state.superCompactManifestText ? "super compact ready" : state.compactManifestText ? "compact ready" : "waiting";
-        els.northVerdictStatus.textContent = northAvailable ? "available" : "not available";
-        els.targetFrameTag.textContent = state.targetFrameLoaded ? "loaded" : "loading";
-        els.clockChip.textContent = state.running ? "alignment active" : "updated " + new Date(state.updatedAt).toLocaleTimeString();
-      }
-
-      function renderFooter() {
-        var receipt = state.receiverReceipt && Object.keys(state.receiverReceipt).length ? state.receiverReceipt : composeReceiverReceipt(state.alignmentPacket);
-        els.receiverReceiptLine.textContent =
-          "CONTRACT=" + receipt.CONTRACT +
-          " · INTERNAL_RENEWAL_CONTRACT=" + receipt.INTERNAL_RENEWAL_CONTRACT +
-          " · SOUTH_COMPACT_COPY_SURFACE_PRIMARY=" + safeString(receipt.SOUTH_COMPACT_COPY_SURFACE_PRIMARY) +
-          " · SOUTH_SIDECARS_ARE_PRIMARY_RECEIPT_PARTICIPANTS=false" +
-          " · PRODUCTION_MUTATION_AUTHORIZED=false" +
-          " · HEARTH_REPAIR_AUTHORIZED=false" +
-          " · RUNTIME_RESTART_AUTHORIZED=false" +
-          " · CANVAS_RELEASE_AUTHORIZED=false";
-      }
-
-      function renderAll() {
-        renderGauges();
-        renderParticipants();
-        renderOutputs();
-        renderMission();
-        renderFooter();
       }
 
       function publishApi() {
-        var hearth = ensureNamespace(window, "HEARTH");
-        var dexter = ensureNamespace(window, "DEXTER_LAB");
+        root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER = {
+          CONTRACT,
+          RECEIPT,
+          INTERNAL_RENEWAL_CONTRACT,
+          INTERNAL_RENEWAL_RECEIPT,
+          VERSION,
+          TARGET_ROUTE,
+          DIAGNOSTIC_ROUTE,
 
-        var api = {
-          CONTRACT: PUBLIC_CONTRACT,
-          RECEIPT: PUBLIC_RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          VERSION: VERSION,
-          TARGET_ROUTE: TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+          getPrimaryReceipt: () => state.receipts.primary,
+          getNorthReceipt: () => state.receipts.north,
+          getEastReceipt: () => state.receipts.east,
+          getSouthReceipt: () => state.receipts.south,
+          getWestReceipt: () => state.receipts.west,
+          getRawPacket: () => state.raw,
+          getSummary: () => state.summary,
+          run: () => {
+            collectAndRender({ run: true });
+            return state.summary;
+          },
 
-          runAlignment: runAlignment,
-          runDiagnostic: runAlignment,
-          refreshStatus: refreshStatus,
-          resetGauges: resetGauges,
-          loadParticipantChain: loadParticipantChain,
-
-          getAlignmentPacket: function () { return state.alignmentPacket || state.preSouthPacket || null; },
-          getPreSouthPacket: function () { return state.preSouthPacket || null; },
-          getPacket: function () { return state.alignmentPacket || state.preSouthPacket || null; },
-          getPacketText: function () { return state.packetText || ""; },
-          getCompactSummary: function () { return state.superCompactManifestText || state.compactManifestText || ""; },
-          getPrimaryCopySurface: function () { return state.primaryCopyText || ""; },
-          getSouthCompactManifestText: function () { return state.compactManifestText || ""; },
-          getSouthSuperCompactManifestText: function () { return state.superCompactManifestText || ""; },
-          getSouthProcess: function () { return state.southProcess || null; },
-          getSpecificReceipts: function () { return clone(state.specificReceipts); },
-          getGaugeVariance: function () { return clone(state.gaugeVariance); },
-          getParticipantLoadState: function () { return participantLoadState(false); },
-          getSupportLensState: function () { return supportLensSummary(); },
-          getReceiverReceipt: function () { return composeReceiverReceipt(state.alignmentPacket); },
-          getReceipt: function () { return composeReceiverReceipt(state.alignmentPacket); },
-          getReceiptLight: function () { return composeReceiverReceipt(state.alignmentPacket); },
-          getState: function () {
-            return {
-              contract: PUBLIC_CONTRACT,
-              internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-              version: VERSION,
-              loadStarted: state.loadStarted,
-              loadComplete: state.loadComplete,
-              running: state.running,
-              runCount: state.runCount,
-              targetFrameLoaded: state.targetFrameLoaded,
-              updatedAt: state.updatedAt,
-              southCopySurfaceReady: Boolean(state.compactManifestText || state.superCompactManifestText),
-              northVerdictAvailable: Boolean(state.alignmentPacket && state.alignmentPacket.NORTH_VERDICT_AVAILABLE),
-              errorCount: state.errors.length,
-              errors: state.errors.slice()
-            };
-          }
+          productionMutationAuthorized: false,
+          hearthRepairAuthorized: false,
+          runtimeRestartAuthorized: false,
+          canvasRepairAuthorized: false,
+          canvasBuildAuthorized: false,
+          canvasReleaseAuthorized: false,
+          f13Claimed: false,
+          f21Claimed: false,
+          visualPassClaimed: false,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false,
+          webgl: false
         };
 
-        window.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER = api;
-        window.HEARTH_DIAGNOSTIC_GAUGE_VARIANCE_RECEIVER = api;
-        window.HEARTH_DIAGNOSTIC_CONSTRUCT_ALIGNMENT_GAUGE_RECEIVER = api;
-        window.HEARTH_DIAGNOSTIC_CUTTING_EDGE_TECH_PANEL_RECEIVER = api;
+        const hearth = root.HEARTH || (root.HEARTH = {});
+        hearth.instrumentChamber = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
+        hearth.diagnosticInstrumentChamber = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
 
-        hearth.diagnosticRouteReceiver = api;
-        hearth.diagnosticGaugeVarianceReceiver = api;
-        hearth.diagnosticConstructAlignmentGaugeReceiver = api;
-        hearth.diagnosticCuttingEdgeTechPanelReceiver = api;
-
-        dexter.hearthDiagnosticRouteReceiver = api;
-        dexter.hearthDiagnosticGaugeVarianceReceiver = api;
-        dexter.hearthDiagnosticCuttingEdgeTechPanelReceiver = api;
-
-        window.HEARTH_DIAGNOSTIC_ROUTE_RECEIVER_RECEIPT = composeReceiverReceipt(null);
-        window.HEARTH_DIAGNOSTIC_GAUGE_VARIANCE_RECEIVER_RECEIPT = composeReceiverReceipt(null);
+        const lab = root.DEXTER_LAB || (root.DEXTER_LAB = {});
+        lab.hearthInstrumentChamber = root.HEARTH_DIAGNOSTIC_ROUTE_INSTRUMENT_CHAMBER;
       }
 
-      function boot() {
-        els = {
-          runDiagnostic: $("runDiagnostic"),
-          copyPrimary: $("copyPrimary"),
-          copySouth: $("copySouth"),
-          copyFull: $("copyFull"),
-          resetGauges: $("resetGauges"),
-          refreshStatus: $("refreshStatus"),
-          gaugeGrid: $("gaugeGrid"),
-          gaugeCountTag: $("gaugeCountTag"),
-          participantRows: $("participantRows"),
-          participantCountTag: $("participantCountTag"),
-          primaryCopySurface: $("primaryCopySurface"),
-          copySurfaceTag: $("copySurfaceTag"),
-          southLensOutput: $("southLensOutput"),
-          segregatedIndexOutput: $("segregatedIndexOutput"),
-          duplicateCollapseOutput: $("duplicateCollapseOutput"),
-          specificReceiptOutput: $("specificReceiptOutput"),
-          receiptCountTag: $("receiptCountTag"),
-          rawPacketOutput: $("rawPacketOutput"),
-          missionHeadline: $("missionHeadline"),
-          missionDetail: $("missionDetail"),
-          southCopyStatus: $("southCopyStatus"),
-          northVerdictStatus: $("northVerdictStatus"),
-          targetFrameTag: $("targetFrameTag"),
-          clockChip: $("clockChip"),
-          targetFrame: $("targetFrame"),
-          receiverReceiptLine: $("receiverReceiptLine"),
-          toast: $("toast")
-        };
+      function init() {
+        bindCopyButtons();
 
-        state.receiverReceipt = composeReceiverReceipt(null);
-
-        els.runDiagnostic.addEventListener("click", runAlignment);
-        els.copyPrimary.addEventListener("click", function () {
-          copyText(state.primaryCopyText || els.primaryCopySurface.value || "", "Primary copy surface");
-        });
-        els.copySouth.addEventListener("click", function () {
-          copyText(state.superCompactManifestText || state.compactManifestText || "", "South manifest");
-        });
-        els.copyFull.addEventListener("click", function () {
-          copyText(state.packetText || "", "Full raw packet");
-        });
-        els.resetGauges.addEventListener("click", resetGauges);
-        els.refreshStatus.addEventListener("click", refreshStatus);
-
-        els.targetFrame.addEventListener("load", function () {
-          state.targetFrameLoaded = true;
-          state.updatedAt = nowIso();
-          renderAll();
+        document.getElementById("runChamber").addEventListener("click", () => {
+          collectAndRender({ run: true });
         });
 
-        publishApi();
-        refreshParticipantPresence();
-        renderAll();
+        const frame = document.getElementById("hearthDiagnosticTargetFrame");
+        if (frame) {
+          frame.addEventListener("load", () => {
+            window.setTimeout(() => collectAndRender({ run: false }), 250);
+          });
+        }
+
+        loadParticipants().then(() => {
+          window.setTimeout(() => collectAndRender({ run: false }), 250);
+        });
+
+        collectAndRender({ run: false });
       }
 
-      boot();
-    }());
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
   </script>
 </body>
 </html>

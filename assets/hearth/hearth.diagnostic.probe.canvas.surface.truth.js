@@ -1,17 +1,21 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
 // HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_TNT_v1_9
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_TNT_v2_0
 // Full-file replacement.
 // Diagnostic-only Canvas surface truth probe.
 //
 // Purpose:
 // - Preserve the public NORTH-facing Canvas surface truth probe contract.
-// - Upgrade the probe into a parent-chain / stage used-size / boundary-fact instrument.
-// - Report what is known, what is missing, and which boundary is unresolved.
-// - Avoid single-file causal recommendations unless a single causal file is proven.
+// - Correct the runtime boundary map used by the probe:
+//   Route Conductor -> Controls Queen -> Canvas Receiver -> Hex Surface Gate
+//   -> Pointer Surface Bishop -> child organizer/proof files -> Canvas return.
+// - Treat /assets/hearth/hearth.canvas.finger.surface.js as Pointer Surface Bishop.
+// - Treat /assets/hearth/hearth.canvas.finger.inspect.js as child organizer / priest evidence only.
+// - Preserve parent-chain / used-size / boundary-fact reporting.
 // - Produce one boundary row per boundary.
 // - Produce one missing-proof / missing-fact statement per unresolved boundary.
+// - Avoid single-file causal recommendations unless a single causal file is proven.
 // - Keep F21 as diagnostic evidence only; do not claim F21 authority.
 // - Do not create, draw, repair, release, restart, invoke lifecycle methods,
 //   dispatch input, or mutate production state.
@@ -28,15 +32,17 @@
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT_v1";
 
   const INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_TNT_v1_9";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_TNT_v2_0";
   const INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT_v1_9";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_RECEIPT_v2_0";
 
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_TNT_v1_8";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_TNT_v1_9";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_RECEIPT_v1_8";
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT_v1_9";
 
+  const LINEAGE_V1_8_CONTRACT =
+    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_BOUNDARY_DIAGNOSIS_MATRIX_TNT_v1_8";
   const LINEAGE_V1_7_CONTRACT =
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LAYOUT_MATH_CONNECTION_BLINDSPOT_ARBITRATION_TNT_v1_7";
   const LINEAGE_V1_6_CONTRACT =
@@ -45,7 +51,7 @@
     "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANONICAL_VISIBLE_SURFACE_DISAMBIGUATION_TNT_v1_5";
 
   const VERSION =
-    "2026-06-08.hearth-diagnostic-probe-canvas-surface-truth-parent-chain-used-size-boundary-fact-matrix-v1-9";
+    "2026-06-08.hearth-diagnostic-probe-canvas-surface-truth-pointer-surface-bishop-boundary-fact-matrix-v2-0";
 
   const FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -69,6 +75,8 @@
     "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10";
   const EXPECTED_CONTROL_CONTRACT =
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1";
+  const EXPECTED_CONTROL_RENEWAL_CANDIDATE =
+    "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5";
   const EXPECTED_CANVAS_CONTRACT =
     "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3";
   const EXPECTED_CANVAS_RENEWAL_CANDIDATE =
@@ -77,8 +85,12 @@
     "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
   const EXPECTED_HEX_SURFACE_CONTRACT =
     "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4";
+  const EXPECTED_HEX_SURFACE_RENEWAL_CANDIDATE =
+    "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE_TNT_v5";
   const EXPECTED_POINTER_SURFACE_CONTRACT =
     "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4";
+  const EXPECTED_POINTER_SURFACE_RENEWAL_CANDIDATE =
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_GATE_TNT_v5";
   const EXPECTED_POINTER_INSPECT_CONTRACT =
     "HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1";
 
@@ -135,14 +147,77 @@
     "getState",
     "getSummary",
     "getReceiptText",
-    "getStatusText"
+    "getStatusText",
+    "getControlReceipt",
+    "getControlsReceipt",
+    "getControlHandshakeReceipt",
+    "getCanvasStationReceipt",
+    "getCanvasStationSummary",
+    "getVisiblePlanetReceipt",
+    "getVisibleGlobeReceipt",
+    "getHexSurfaceReceipt",
+    "getHexSurfaceSummary",
+    "getPointerSurfaceReceipt",
+    "getPointerSurfaceSummary",
+    "getPointerBishopReceipt",
+    "getPointerBishopSummary",
+    "getSurfaceBishopReceipt",
+    "getSurfaceBishopSummary",
+    "getFingerSurfaceReceipt",
+    "getFingerSurfaceSummary",
+    "getFingerInspectReceipt",
+    "getFingerInspectSummary",
+    "getCanvasReturnReceipt",
+    "getReturnReceipt",
+    "getBishopChord",
+    "getHierarchySurface",
+    "getHierarchyRegistry"
+  ]);
+
+  const MUTATING_OR_LIFECYCLE_METHODS = Object.freeze([
+    "boot",
+    "start",
+    "init",
+    "mount",
+    "render",
+    "run",
+    "draw",
+    "drawFrame",
+    "drawVisibleExpression",
+    "drawInteractiveFrame",
+    "drawPairFrame",
+    "receiveControlPacket",
+    "receiveViewDelta",
+    "receiveViewState",
+    "receiveRouteConductorReleasePacket",
+    "receiveRouteConductorCanvasGovernedHandoffPacket",
+    "receiveHexSurfacePacket",
+    "receivePointerSurfacePacket",
+    "receivePointerFingerPacket",
+    "receiveFingerInspectPacket",
+    "receiveCanvasReturnPacket",
+    "consumeControlPacket",
+    "consumeViewDelta",
+    "consumeViewState",
+    "consumeRouteConductorReleasePacket",
+    "consumeRouteConductorCanvasGovernedHandoffPacket",
+    "consumeHexSurfacePacket",
+    "consumePointerSurfacePacket",
+    "consumePointerFingerPacket",
+    "consumeFingerInspectPacket",
+    "consumeCanvasReturnPacket",
+    "applyViewState",
+    "applyViewDelta",
+    "setView",
+    "updateView"
   ]);
 
   const CANVAS_AUTHORITY_ALIASES = Object.freeze([
     "HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT",
-    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_HUB_INTERNALIZED_EXPRESSION_SURFACE_PROOF_RECEIVER",
     "HEARTH_CANVAS_HUB_HEX_SURFACE_POINTER_FINGER_TRANSMISSION",
-    "HEARTH_CANVAS_HEX_GATE_POINTER_FINGER_TRANSMISSION_RECEIVER",
+    "HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
+    "HEARTH_CANVAS_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER",
     "HEARTH_CANVAS_HUB",
     "HEARTH_CANVAS",
     "HEARTH_CANVAS_PARENT",
@@ -151,9 +226,9 @@
     "HEARTH_CANVAS_EXPRESSION_HUB",
     "HEARTH_CANVAS_VISIBLE_PLANET",
     "HEARTH.canvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
-    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
+    "HEARTH.canvasHubInternalizedExpressionSurfaceProofReceiver",
     "HEARTH.canvasHubHexSurfacePointerFingerTransmission",
-    "HEARTH.canvasHexGatePointerFingerTransmissionReceiver",
+    "HEARTH.canvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
     "HEARTH.canvasHub",
     "HEARTH.canvas",
     "HEARTH.canvasParent",
@@ -162,8 +237,9 @@
     "HEARTH.canvasExpressionHub",
     "HEARTH.canvasVisiblePlanet",
     "DEXTER_LAB.hearthCanvasHubLiveSurfaceIdentityUnifiedVisible2dOutput",
-    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
+    "DEXTER_LAB.hearthCanvasHubInternalizedExpressionSurfaceProofReceiver",
     "DEXTER_LAB.hearthCanvasHubHexSurfacePointerFingerTransmission",
+    "DEXTER_LAB.hearthCanvasHubCompositeFirstFastViewDeferredHexRenderReceiver",
     "DEXTER_LAB.hearthCanvasHub",
     "DEXTER_LAB.hearthCanvas",
     "DEXTER_LAB.hearthCanvasParent",
@@ -175,84 +251,124 @@
 
   const ROUTE_AUTHORITY_ALIASES = Object.freeze([
     "HEARTH_ROUTE_CONDUCTOR",
+    "HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC",
     "HEARTH_ROUTE_CONDUCTOR_PASSIVE_UI_SAFE_MANUAL_SCAN",
     "HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION",
     "HEARTH.routeConductor",
+    "HEARTH.routeNorthBishop",
     "HEARTH.routeAuthority",
-    "DEXTER_LAB.hearthRouteConductor"
+    "DEXTER_LAB.hearthRouteConductor",
+    "DEXTER_LAB.hearthRouteNorthBishop"
   ]);
 
   const CONTROL_AUTHORITY_ALIASES = Object.freeze([
     "HEARTH_CONTROLS",
+    "HEARTH_CONTROLS_QUEEN",
+    "HEARTH_QUEEN_CONTROLS",
     "HEARTH_PLANETARY_CONTROLS",
     "HEARTH_CONTROL_AUTHORITY",
-    "HEARTH_CONTROLS_QUEEN",
     "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE",
     "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION",
     "HEARTH.controls",
+    "HEARTH.controlsQueen",
+    "HEARTH.queenControls",
     "HEARTH.planetaryControls",
     "HEARTH.controlAuthority",
-    "HEARTH.controlsQueen",
     "HEARTH.controlsPlanetaryViewInputHandshake",
     "HEARTH.controlsHexGatePointerFingerTransmission",
     "DEXTER_LAB.hearthControls",
+    "DEXTER_LAB.hearthQueenControls",
     "DEXTER_LAB.hearthPlanetaryControls",
-    "DEXTER_LAB.hearthControlAuthority",
-    "DEXTER_LAB.hearthControlsQueen"
+    "DEXTER_LAB.hearthControlAuthority"
   ]);
 
   const HEX_AUTHORITY_ALIASES = Object.freeze([
     "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
     "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+    "HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY",
     "HEARTH_PIXEL_HANDSHAKE_AUTHORITY",
     "HEARTH.hexFourPairPixelHandshakeAuthority",
     "HEARTH.hexFourPairAuthority",
+    "HEARTH.hexPixelHandshakeAuthority",
+    "HEARTH.hexAuthority",
     "HEARTH.pixelHandshakeAuthority",
     "DEXTER_LAB.hearthHexFourPairPixelHandshakeAuthority",
-    "DEXTER_LAB.hearthHexFourPairAuthority"
+    "DEXTER_LAB.hearthHexFourPairAuthority",
+    "DEXTER_LAB.hearthHexAuthority"
   ]);
 
   const HEX_SURFACE_ALIASES = Object.freeze([
-    "HEARTH_HEX_SURFACE",
-    "HEARTH_HEX_SURFACE_RENDERER",
-    "HEARTH_HEX_SURFACE_AUTHORITY",
+    "HEARTH_HEX_SURFACE_PAIR_POINTER_FINGER_GATE",
     "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+    "HEARTH_HEX_SURFACE_RENDERER",
+    "HEARTH_HEX_SURFACE",
+    "HEARTH_HEX_SURFACE_AUTHORITY",
     "HEARTH_HEX_SURFACE_CANVAS_GATE_POINTER_FINGER_TRANSMISSION",
     "HEARTH_HEX_SURFACE_CANONICAL_MAP_TUPLE_BINDING_POINTER_TRANSMISSION",
-    "HEARTH.hexSurface",
-    "HEARTH.hexSurfaceRenderer",
-    "HEARTH.hexSurfaceAuthority",
+    "HEARTH.hexSurfacePairPointerFingerGate",
     "HEARTH.hexSurfaceInteractiveSpherePairRenderer",
+    "HEARTH.hexSurfaceRenderer",
+    "HEARTH.hexSurface",
+    "HEARTH.hexSurfaceAuthority",
+    "HEARTH.hexGate",
+    "HEARTH.hexRenderGate",
     "HEARTH.hexSurfaceCanvasGatePointerFingerTransmission",
     "HEARTH.hexSurfaceCanonicalMapTupleBindingPointerTransmission",
+    "DEXTER_LAB.hearthHexSurfacePairPointerFingerGate",
     "DEXTER_LAB.hearthHexSurface",
     "DEXTER_LAB.hearthHexSurfaceRenderer",
     "DEXTER_LAB.hearthHexSurfaceAuthority",
-    "DEXTER_LAB.hearthHexSurfaceInteractiveSpherePairRenderer",
-    "DEXTER_LAB.hearthHexSurfaceCanvasGatePointerFingerTransmission"
+    "DEXTER_LAB.hearthHexGate"
   ]);
 
   const POINTER_SURFACE_ALIASES = Object.freeze([
     "HEARTH_CANVAS_FINGER_SURFACE",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP",
+    "HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_GATE",
+    "HEARTH_CANVAS_POINTER_SURFACE_BISHOP",
+    "HEARTH_POINTER_SURFACE_BISHOP",
+    "HEARTH_SURFACE_POINTER_BISHOP",
+    "HEARTH_CANVAS_BISHOP_SURFACE_POINTER",
+    "HEARTH_CANVAS_SURFACE_BISHOP",
     "HEARTH_CANVAS_POINTER_FINGER_SURFACE",
     "HEARTH_POINTER_FINGER_SURFACE",
     "HEARTH.canvasFingerSurface",
+    "HEARTH.canvasFingerSurfacePointerBishop",
+    "HEARTH.canvasFingerSurfacePointerBishopGate",
+    "HEARTH.canvasFingerSurfaceBishop",
+    "HEARTH.canvasPointerSurfaceBishop",
+    "HEARTH.pointerSurfaceBishop",
+    "HEARTH.surfacePointerBishop",
+    "HEARTH.canvasBishopSurfacePointer",
+    "HEARTH.canvasSurfaceBishop",
     "HEARTH.canvasPointerFingerSurface",
     "HEARTH.pointerFingerSurface",
     "DEXTER_LAB.hearthCanvasFingerSurface",
+    "DEXTER_LAB.hearthCanvasFingerSurfacePointerBishop",
+    "DEXTER_LAB.hearthCanvasFingerSurfaceBishop",
+    "DEXTER_LAB.hearthCanvasPointerSurfaceBishop",
+    "DEXTER_LAB.hearthPointerSurfaceBishop",
+    "DEXTER_LAB.hearthCanvasSurfaceBishop",
     "DEXTER_LAB.hearthPointerFingerSurface"
   ]);
 
   const POINTER_INSPECT_ALIASES = Object.freeze([
     "HEARTH_CANVAS_FINGER_INSPECT",
+    "HEARTH_CANVAS_FINGER_INSPECT_PRIEST",
+    "HEARTH_CANVAS_FINGER_CHILD_ORGANIZER",
+    "HEARTH_POINTER_INSPECT_PRIEST",
     "HEARTH_CANVAS_POINTER_FINGER_INSPECT",
     "HEARTH_POINTER_FINGER_INSPECT",
     "HEARTH_POINTER_FINGER_RECEIVER",
     "HEARTH.canvasFingerInspect",
+    "HEARTH.canvasFingerInspectPriest",
+    "HEARTH.canvasFingerChildOrganizer",
+    "HEARTH.pointerInspectPriest",
     "HEARTH.canvasPointerFingerInspect",
     "HEARTH.pointerFingerInspect",
     "HEARTH.pointerFingerReceiver",
     "DEXTER_LAB.hearthCanvasFingerInspect",
+    "DEXTER_LAB.hearthPointerInspectPriest",
     "DEXTER_LAB.hearthPointerFingerInspect",
     "DEXTER_LAB.hearthPointerFingerReceiver"
   ]);
@@ -337,8 +453,8 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
   }
 
   function bounded(value, limit = 5000) {
@@ -385,6 +501,7 @@
       if (text === "UNREADABLE" || text === "INACCESSIBLE") continue;
       return text;
     }
+
     return "UNKNOWN";
   }
 
@@ -427,8 +544,8 @@
 
     let cursor = root;
 
-    for (let i = 0; i < parts.length - 1; i += 1) {
-      const part = parts[i];
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const part = parts[index];
       if (!part) continue;
       if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
       cursor = cursor[part];
@@ -461,6 +578,7 @@
       const element = q(doc, selector);
       if (element) return { element, selector };
     }
+
     return { element: null, selector: "NONE" };
   }
 
@@ -695,6 +813,8 @@
         cacheKey =
           url.searchParams.get("v") ||
           url.searchParams.get("cacheKey") ||
+          url.searchParams.get("cache") ||
+          url.searchParams.get("version") ||
           url.searchParams.get("northRecovery") ||
           "NONE";
       } catch (_error) {}
@@ -730,6 +850,7 @@
     for (const [key, path] of Object.entries(SCRIPT_PATHS)) {
       out[key] = scriptInfo(targetDocument, path);
     }
+
     return out;
   }
 
@@ -738,6 +859,7 @@
 
     for (const method of SAFE_RECEIPT_METHODS) {
       if (!isFunction(authority[method])) continue;
+      if (MUTATING_OR_LIFECYCLE_METHODS.includes(method)) continue;
 
       try {
         const output = authority[method]();
@@ -775,7 +897,12 @@
       value.hexAuthorityContract,
       value.hexSurfaceContract,
       value.pointerSurfaceContract,
+      value.surfaceBishopContract,
+      value.pointerBishopContract,
+      value.fingerSurfaceContract,
       value.pointerFingerContract,
+      value.pointerInspectContract,
+      value.fingerInspectContract,
       value.sourceContract
     );
   }
@@ -798,7 +925,12 @@
       value.hexAuthorityReceipt,
       value.hexSurfaceReceipt,
       value.pointerSurfaceReceipt,
+      value.surfaceBishopReceipt,
+      value.pointerBishopReceipt,
+      value.fingerSurfaceReceipt,
       value.pointerFingerReceipt,
+      value.pointerInspectReceipt,
+      value.fingerInspectReceipt,
       value.sourceReceipt
     );
   }
@@ -810,7 +942,7 @@
       return Object.keys(authority)
         .filter((key) => isFunction(authority[key]))
         .sort()
-        .slice(0, 160);
+        .slice(0, 180);
     } catch (_error) {
       return [];
     }
@@ -824,35 +956,55 @@
     }
 
     if (family === "controls") {
-      return text === EXPECTED_CONTROL_CONTRACT || text.includes("HEARTH_CONTROLS");
+      return (
+        text === EXPECTED_CONTROL_CONTRACT ||
+        text === EXPECTED_CONTROL_RENEWAL_CANDIDATE ||
+        text.includes("HEARTH_CONTROLS")
+      );
     }
 
     if (family === "canvas") {
-      return text === EXPECTED_CANVAS_CONTRACT ||
+      return (
+        text === EXPECTED_CANVAS_CONTRACT ||
         text === EXPECTED_CANVAS_RENEWAL_CANDIDATE ||
-        text.includes("HEARTH_CANVAS");
+        text.includes("HEARTH_CANVAS")
+      );
     }
 
     if (family === "hexAuthority") {
-      return text === EXPECTED_HEX_AUTHORITY_CONTRACT ||
-        text.includes("HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY");
+      return (
+        text === EXPECTED_HEX_AUTHORITY_CONTRACT ||
+        text.includes("HEARTH_HEX_FOUR_PAIR") ||
+        text.includes("PIXEL_HANDSHAKE_AUTHORITY")
+      );
     }
 
     if (family === "hexSurface") {
-      return text === EXPECTED_HEX_SURFACE_CONTRACT ||
-        text.includes("HEARTH_HEX_SURFACE");
+      return (
+        text === EXPECTED_HEX_SURFACE_CONTRACT ||
+        text === EXPECTED_HEX_SURFACE_RENEWAL_CANDIDATE ||
+        text.includes("HEARTH_HEX_SURFACE")
+      );
     }
 
     if (family === "pointerSurface") {
-      return text === EXPECTED_POINTER_SURFACE_CONTRACT ||
+      return (
+        text === EXPECTED_POINTER_SURFACE_CONTRACT ||
+        text === EXPECTED_POINTER_SURFACE_RENEWAL_CANDIDATE ||
         text.includes("HEARTH_CANVAS_FINGER_SURFACE") ||
-        text.includes("HEARTH_POINTER_FINGER_SURFACE");
+        text.includes("HEARTH_POINTER_SURFACE") ||
+        text.includes("SURFACE_BISHOP") ||
+        text.includes("POINTER_BISHOP")
+      );
     }
 
     if (family === "pointerInspect") {
-      return text === EXPECTED_POINTER_INSPECT_CONTRACT ||
+      return (
+        text === EXPECTED_POINTER_INSPECT_CONTRACT ||
         text.includes("HEARTH_CANVAS_FINGER_INSPECT") ||
-        text.includes("HEARTH_POINTER_FINGER_INSPECT");
+        text.includes("HEARTH_POINTER_FINGER_INSPECT") ||
+        text.includes("INSPECT")
+      );
     }
 
     return false;
@@ -886,7 +1038,8 @@
           receipt: receiptName,
           contractRecognized: contractRecognized(contract, family),
           methodCount: methods.length,
-          methods
+          methods,
+          receiptObject: clonePlain(receipt)
         });
       }
     }
@@ -909,6 +1062,7 @@
       contractRecognized: selected ? selected.contractRecognized : false,
       methodCount: selected ? selected.methodCount : 0,
       methods: selected ? selected.methods : [],
+      receiptObject: selected ? clonePlain(selected.receiptObject) : {},
       candidates: candidates.map((candidate) => ({
         scope: candidate.scope,
         path: candidate.path,
@@ -1497,7 +1651,10 @@
         cartoon: "UNKNOWN",
         downstreamObserved: "UNKNOWN",
         downstreamLatched: "UNKNOWN",
-        selectionMode: "UNKNOWN"
+        selectionMode: "UNKNOWN",
+        pointerSurfaceObserved: "UNKNOWN",
+        pointerSurfaceLatched: "UNKNOWN",
+        pointerInspectObserved: "UNKNOWN"
       };
     }
 
@@ -1522,7 +1679,21 @@
       cartoon: firstKnown(canvas.dataset.hearthCartoon, canvas.dataset.cartoon),
       downstreamObserved: firstKnown(canvas.dataset.hearthDownstreamSurfaceObserved),
       downstreamLatched: firstKnown(canvas.dataset.hearthDownstreamSurfaceLatched),
-      selectionMode: firstKnown(canvas.dataset.hearthCanvasSelectionMode)
+      selectionMode: firstKnown(canvas.dataset.hearthCanvasSelectionMode),
+      pointerSurfaceObserved: firstKnown(
+        canvas.dataset.hearthPointerSurfaceObserved,
+        canvas.dataset.hearthPointerSurfaceBishopObserved,
+        canvas.dataset.hearthCanvasFingerSurfaceObserved
+      ),
+      pointerSurfaceLatched: firstKnown(
+        canvas.dataset.hearthPointerSurfaceLatched,
+        canvas.dataset.hearthPointerSurfaceBishopLatched,
+        canvas.dataset.hearthCanvasFingerSurfaceLatched
+      ),
+      pointerInspectObserved: firstKnown(
+        canvas.dataset.hearthPointerInspectObserved,
+        canvas.dataset.hearthCanvasFingerInspectObserved
+      )
     };
   }
 
@@ -1591,6 +1762,9 @@
       datasetDownstreamObserved: dataset.downstreamObserved,
       datasetDownstreamLatched: dataset.downstreamLatched,
       datasetSelectionMode: dataset.selectionMode,
+      datasetPointerSurfaceObserved: dataset.pointerSurfaceObserved,
+      datasetPointerSurfaceLatched: dataset.pointerSurfaceLatched,
+      datasetPointerInspectObserved: dataset.pointerInspectObserved,
       inCanonicalMount: inMount,
       inCanonicalFrame: inFrame,
       widthAttribute: canvas ? safeNumber(canvas.width, 0) : 0,
@@ -1697,7 +1871,9 @@
   }
 
   function makeBoundaryRow(input) {
-    const row = {
+    const clean = Boolean(input.clean);
+
+    return {
       order: input.order || 0,
       id: input.id || "UNKNOWN_BOUNDARY",
       boundaryType: input.boundaryType || "UNKNOWN",
@@ -1707,11 +1883,11 @@
       toFile: input.toFile || "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
       observed: Boolean(input.observed),
       blocking: input.blocking !== false,
-      clean: Boolean(input.clean),
-      status: input.status || (input.clean ? "BOUNDARY_CLEAN" : "BOUNDARY_UNRESOLVED"),
-      class: input.class || (input.clean ? "BOUNDARY_FACTS_PRESENT" : "BOUNDARY_FACT_MISSING"),
-      firstMissingProof: input.firstMissingProof || (input.clean ? "NONE" : "BOUNDARY_PROOF_MISSING"),
-      firstMissingFact: input.firstMissingFact || (input.clean ? "NONE" : "BOUNDARY_FACT_MISSING"),
+      clean,
+      status: input.status || (clean ? "BOUNDARY_CLEAN" : "BOUNDARY_UNRESOLVED"),
+      class: input.class || (clean ? "BOUNDARY_FACTS_PRESENT" : "BOUNDARY_FACT_MISSING"),
+      firstMissingProof: input.firstMissingProof || (clean ? "NONE" : "BOUNDARY_PROOF_MISSING"),
+      firstMissingFact: input.firstMissingFact || (clean ? "NONE" : "BOUNDARY_FACT_MISSING"),
       observedFacts: input.observedFacts || [],
       missingFacts: input.missingFacts || [],
       diagnosticFacts: input.diagnosticFacts || {},
@@ -1721,11 +1897,7 @@
         ? input.recommendedFile || "UNKNOWN_SINGLE_CAUSAL_FILE"
         : "NONE_SINGLE_CAUSAL_FILE_NOT_PROVEN",
       recommendedAction: input.recommendedAction || "READ_BOUNDARY_FACTS",
-      reason: input.reason || "UNKNOWN"
-    };
-
-    return {
-      ...row,
+      reason: input.reason || "UNKNOWN",
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
     };
@@ -1809,6 +1981,7 @@
       to: "HEARTH_STAGE",
       observed: stage.exists,
       clean: stage.exists,
+      blocking: false,
       class: stage.exists ? "STAGE_ELEMENT_SELECTED" : "STAGE_ELEMENT_NOT_SELECTED",
       firstMissingProof: stage.exists ? "NONE" : "STAGE_SELECTOR_MATCH",
       firstMissingFact: stage.exists ? "NONE" : "STAGE_ELEMENT_PRESENT",
@@ -1833,6 +2006,7 @@
       to: "STAGE_BOX",
       observed: stage.exists,
       clean: !stage.exists || stage.usedSizeClean,
+      blocking: false,
       class: stage.exists ? stage.usedSizeClass : "STAGE_NOT_OBSERVED_NON_BLOCKING_IF_MOUNT_EXISTS",
       firstMissingProof: stage.usedSizeClean ? "NONE" : "STAGE_USED_SIZE_PROOF",
       firstMissingFact: stage.usedSizeFirstMissingFact,
@@ -2229,15 +2403,34 @@
     return rows;
   }
 
-  function runtimeNodeRow(id, role, file, family, authority, script) {
+  function runtimeNodeRow(id, role, file, family, authority, script, options = {}) {
+    const observed = Boolean(authority.observed || (script && script.present));
+    const authorityPresent = Boolean(authority.observed);
+    const scriptPresent = Boolean(script && script.present);
+    const recognized = Boolean(authority.contractRecognized);
+
+    let nodeStatus = "SCRIPT_AND_AUTHORITY_NOT_OBSERVED";
+    let missingRuntimeFact = "SCRIPT_PRESENT_OR_PUBLIC_AUTHORITY_ALIAS_OBSERVED";
+
+    if (authorityPresent && recognized) {
+      nodeStatus = "AUTHORITY_OBSERVED_CONTRACT_RECOGNIZED";
+      missingRuntimeFact = "NONE";
+    } else if (authorityPresent && !recognized) {
+      nodeStatus = "AUTHORITY_OBSERVED_CONTRACT_UNRECOGNIZED";
+      missingRuntimeFact = "CONTRACT_RECOGNITION_OR_ALIAS_FAMILY_ALIGNMENT";
+    } else if (scriptPresent && !authorityPresent) {
+      nodeStatus = "SCRIPT_PRESENT_AUTHORITY_NOT_OBSERVED";
+      missingRuntimeFact = "PUBLIC_AUTHORITY_ALIAS_OBSERVED";
+    }
+
     return {
       id,
       role,
       file,
       family,
-      observed: Boolean(authority.observed || (script && script.present)),
-      authorityPresent: Boolean(authority.observed),
-      scriptPresent: Boolean(script && script.present),
+      observed,
+      authorityPresent,
+      scriptPresent,
       scriptCount: script ? script.count : 0,
       scriptSrc: script ? script.src : "NONE",
       scriptCacheKey: script ? script.cacheKey : "NONE",
@@ -2245,44 +2438,29 @@
       authorityPath: authority.path || "NONE",
       contract: authority.contract || "UNKNOWN",
       receipt: authority.receipt || "UNKNOWN",
-      contractRecognized: Boolean(authority.contractRecognized),
+      contractRecognized: recognized,
       methodCount: authority.methodCount || 0,
-      publicMethods: Array.isArray(authority.methods) ? authority.methods.slice(0, 80) : [],
-      nodeStatus: authority.observed
-        ? authority.contractRecognized
-          ? "AUTHORITY_OBSERVED_CONTRACT_RECOGNIZED"
-          : "AUTHORITY_OBSERVED_CONTRACT_UNRECOGNIZED"
-        : script && script.present
-          ? "SCRIPT_PRESENT_AUTHORITY_NOT_OBSERVED"
-          : "SCRIPT_AND_AUTHORITY_NOT_OBSERVED",
-      missingRuntimeFact: authority.observed
-        ? authority.contractRecognized
-          ? "NONE"
-          : "CONTRACT_RECOGNITION_OR_ALIAS_FAMILY_ALIGNMENT"
-        : script && script.present
-          ? "PUBLIC_AUTHORITY_ALIAS_OBSERVED"
-          : "SCRIPT_PRESENT_OR_PUBLIC_AUTHORITY_ALIAS_OBSERVED"
+      publicMethods: Array.isArray(authority.methods) ? authority.methods.slice(0, 100) : [],
+      candidates: clonePlain(authority.candidates || []),
+      childOf: options.childOf || "NONE",
+      advisoryChild: options.advisoryChild === true,
+      primaryChainGate: options.primaryChainGate === true,
+      nodeStatus,
+      missingRuntimeFact,
+      ...NO_CLAIMS,
+      ...UPPER_NO_CLAIMS
     };
   }
 
   function buildRuntimeBoundaryRows(snapshot) {
-    const scripts = snapshot.scripts || {};
     const nodes = snapshot.runtimeNodes || {};
-
-    const route = nodes.route;
-    const controls = nodes.controls;
-    const canvas = nodes.canvas;
-    const hexAuthority = nodes.hexAuthority;
-    const hexSurface = nodes.hexSurface;
-    const pointerSurface = nodes.pointerSurface;
-    const pointerInspect = nodes.pointerInspect;
 
     const relationships = [
       {
         order: 1,
         id: "ROUTE_TO_CONTROLS_CONTROL_HANDSHAKE",
-        from: route,
-        to: controls,
+        from: nodes.route,
+        to: nodes.controls,
         fromFile: ROUTE_CONDUCTOR_FILE,
         toFile: CONTROL_FILE,
         requiredForVisibleSurface: false,
@@ -2291,8 +2469,8 @@
       {
         order: 2,
         id: "ROUTE_TO_CANVAS_GOVERNED_SOURCE_HANDSHAKE",
-        from: route,
-        to: canvas,
+        from: nodes.route,
+        to: nodes.canvas,
         fromFile: ROUTE_CONDUCTOR_FILE,
         toFile: CANVAS_FILE,
         requiredForVisibleSurface: true,
@@ -2301,8 +2479,8 @@
       {
         order: 3,
         id: "CONTROLS_TO_CANVAS_VIEW_DELTA_HANDSHAKE",
-        from: controls,
-        to: canvas,
+        from: nodes.controls,
+        to: nodes.canvas,
         fromFile: CONTROL_FILE,
         toFile: CANVAS_FILE,
         requiredForVisibleSurface: false,
@@ -2311,8 +2489,8 @@
       {
         order: 4,
         id: "CANVAS_TO_HEX_AUTHORITY_TRUTH_READ",
-        from: canvas,
-        to: hexAuthority,
+        from: nodes.canvas,
+        to: nodes.hexAuthority,
         fromFile: CANVAS_FILE,
         toFile: HEX_AUTHORITY_FILE,
         requiredForVisibleSurface: true,
@@ -2321,8 +2499,8 @@
       {
         order: 5,
         id: "CANVAS_TO_HEX_SURFACE_EXPRESSION_GATE",
-        from: canvas,
-        to: hexSurface,
+        from: nodes.canvas,
+        to: nodes.hexSurface,
         fromFile: CANVAS_FILE,
         toFile: HEX_SURFACE_FILE,
         requiredForVisibleSurface: true,
@@ -2331,8 +2509,8 @@
       {
         order: 6,
         id: "HEX_SURFACE_TO_POINTER_SURFACE_BISHOP_GATE",
-        from: hexSurface,
-        to: pointerSurface,
+        from: nodes.hexSurface,
+        to: nodes.pointerSurface,
         fromFile: HEX_SURFACE_FILE,
         toFile: POINTER_SURFACE_FILE,
         requiredForVisibleSurface: true,
@@ -2341,8 +2519,8 @@
       {
         order: 7,
         id: "POINTER_SURFACE_BISHOP_TO_CANVAS_RETURN_SOCKET",
-        from: pointerSurface,
-        to: canvas,
+        from: nodes.pointerSurface,
+        to: nodes.canvas,
         fromFile: POINTER_SURFACE_FILE,
         toFile: CANVAS_FILE,
         requiredForVisibleSurface: true,
@@ -2351,12 +2529,13 @@
       {
         order: 8,
         id: "POINTER_SURFACE_BISHOP_TO_INSPECT_PRIEST_CHILD_ORGANIZER",
-        from: pointerSurface,
-        to: pointerInspect,
+        from: nodes.pointerSurface,
+        to: nodes.pointerInspect,
         fromFile: POINTER_SURFACE_FILE,
         toFile: POINTER_INSPECT_FILE,
         requiredForVisibleSurface: false,
-        expectedMode: "CHILD_ORGANIZER"
+        expectedMode: "CHILD_ORGANIZER",
+        advisoryChild: true
       }
     ];
 
@@ -2366,7 +2545,10 @@
       const fromRecognized = Boolean(rel.from && rel.from.contractRecognized);
       const toRecognized = Boolean(rel.to && rel.to.contractRecognized);
       const endpointFactsPresent = fromObserved && toObserved;
-      const recognizedEnough = fromRecognized && (toRecognized || rel.expectedMode === "CHILD_ORGANIZER");
+      const recognizedEnough =
+        rel.expectedMode === "CHILD_ORGANIZER"
+          ? fromRecognized && toObserved
+          : fromRecognized && toRecognized;
 
       let clean = endpointFactsPresent && recognizedEnough;
       let firstMissingFact = "NONE";
@@ -2393,7 +2575,9 @@
       return makeBoundaryRow({
         order: rel.order,
         id: rel.id,
-        boundaryType: "RUNTIME_RELATIONSHIP_FACT",
+        boundaryType: rel.expectedMode === "CHILD_ORGANIZER"
+          ? "RUNTIME_ADVISORY_CHILD_RELATIONSHIP_FACT"
+          : "RUNTIME_RELATIONSHIP_FACT",
         from: rel.from ? rel.from.id : "UNKNOWN_FROM",
         to: rel.to ? rel.to.id : "UNKNOWN_TO",
         fromFile: rel.fromFile,
@@ -2411,14 +2595,16 @@
           `TO_CONTRACT:${rel.to ? rel.to.contract : "UNKNOWN"}`,
           `FROM_RECOGNIZED:${fromRecognized}`,
           `TO_RECOGNIZED:${toRecognized}`,
-          `EXPECTED_MODE:${rel.expectedMode}`
+          `EXPECTED_MODE:${rel.expectedMode}`,
+          `ADVISORY_CHILD:${rel.advisoryChild === true}`
         ],
         missingFacts: clean ? [] : [firstMissingFact],
         diagnosticFacts: {
           from: clonePlain(rel.from || {}),
           to: clonePlain(rel.to || {}),
           requiredForVisibleSurface: rel.requiredForVisibleSurface,
-          expectedMode: rel.expectedMode
+          expectedMode: rel.expectedMode,
+          advisoryChild: rel.advisoryChild === true
         },
         recommendedOwner: "RUNTIME_BOUNDARY_FACTS_ONLY",
         recommendedAction: clean
@@ -2449,11 +2635,27 @@
     const runtimeNodes = {
       route: runtimeNodeRow("ROUTE_CONDUCTOR", "route-permission-and-active-scan-authority", ROUTE_CONDUCTOR_FILE, "route", routeAuthority, scripts.routeConductor),
       controls: runtimeNodeRow("CONTROLS_QUEEN", "motion-input-and-view-control-gateway", CONTROL_FILE, "controls", controlAuthority, scripts.controls),
-      canvas: runtimeNodeRow("CANVAS_RECEIVER", "canonical-visible-2d-output-carrier", CANVAS_FILE, "canvas", canvasAuthority, scripts.canvas),
+      canvas: runtimeNodeRow("CANVAS_RECEIVER", "canonical-visible-2d-output-carrier-and-return-receiver", CANVAS_FILE, "canvas", canvasAuthority, scripts.canvas),
       hexAuthority: runtimeNodeRow("HEX_AUTHORITY", "hex-four-pair-truth-authority", HEX_AUTHORITY_FILE, "hexAuthority", hexAuthority, scripts.hexAuthority),
       hexSurface: runtimeNodeRow("HEX_SURFACE_GATE", "downstream-hex-surface-gate-before-pointer-surface", HEX_SURFACE_FILE, "hexSurface", hexSurfaceAuthority, scripts.hexSurface),
-      pointerSurface: runtimeNodeRow("POINTER_SURFACE_BISHOP", "pointer-surface-bishop-gate", POINTER_SURFACE_FILE, "pointerSurface", pointerSurfaceAuthority, scripts.pointerSurface),
-      pointerInspect: runtimeNodeRow("POINTER_INSPECT_PRIEST", "child-organizer-priest-not-primary-endpoint", POINTER_INSPECT_FILE, "pointerInspect", pointerInspectAuthority, scripts.pointerInspect)
+      pointerSurface: runtimeNodeRow(
+        "POINTER_SURFACE_BISHOP",
+        "main-chain-pointer-surface-bishop-gate",
+        POINTER_SURFACE_FILE,
+        "pointerSurface",
+        pointerSurfaceAuthority,
+        scripts.pointerSurface,
+        { primaryChainGate: true }
+      ),
+      pointerInspect: runtimeNodeRow(
+        "POINTER_INSPECT_PRIEST",
+        "child-organizer-priest-not-primary-chain-endpoint",
+        POINTER_INSPECT_FILE,
+        "pointerInspect",
+        pointerInspectAuthority,
+        scripts.pointerInspect,
+        { childOf: "POINTER_SURFACE_BISHOP", advisoryChild: true }
+      )
     };
 
     const stageFound = findStage(targetDocument);
@@ -2614,7 +2816,6 @@
     const canonicalSummary = snapshot.canonicalSummary || {};
     const mount = snapshot.mountSummary || {};
     const frame = snapshot.frameSummary || {};
-    const stage = snapshot.stageSummary || {};
     const mountChain = snapshot.mountParentChainClassification || {};
     const canvasChain = snapshot.canonicalParentChainClassification || {};
     const layoutFirst = firstFailedBoundary(snapshot.layoutBoundaryRows || [], { onlyBlocking: true });
@@ -2944,6 +3145,24 @@
       };
     }
 
+    if (runtimeFirst && runtimeFirst.blocking !== false) {
+      return {
+        status: "CANONICAL_CANVAS_SURFACE_VISIBLE_BUT_RUNTIME_BOUNDARY_PARTIAL",
+        clean: false,
+        coordinate: runtimeFirst.id,
+        failureClass: runtimeFirst.class,
+        owner: runtimeFirst.recommendedOwner,
+        file: runtimeFirst.recommendedFile,
+        reason: runtimeFirst.reason,
+        action: runtimeFirst.recommendedAction,
+        certainty: "RUNTIME_BOUNDARY_FACT_FAILURE_NO_SINGLE_FILE_CAUSALITY",
+        singleCausalFileProven: false,
+        layoutFirst,
+        runtimeFirst,
+        anyFirst: runtimeFirst
+      };
+    }
+
     if (snapshot.canonicalSurfaceTruthPassed) {
       return {
         status: "CANONICAL_CANVAS_SURFACE_TRUTH_PASSED",
@@ -2999,7 +3218,10 @@
       "CANVAS_LAYER_POSSIBLE_BLOCKER",
       "BOUNDARY_LAYOUT_FIRST_FAILED",
       "BOUNDARY_RUNTIME_FIRST_FAILED",
-      "BOUNDARY_FIRST_MISSING_FACT"
+      "BOUNDARY_FIRST_MISSING_FACT",
+      "POINTER_SURFACE_BISHOP_OBSERVED",
+      "POINTER_SURFACE_BISHOP_RECOGNIZED",
+      "POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT"
     ];
 
     const changed = fields
@@ -3050,16 +3272,23 @@
 
     const darkRuntimeFiles = Object.values(runtimeNodes).filter((node) =>
       node &&
-      node.observed &&
-      node.contractRecognized === false
+      (
+        node.observed === false ||
+        node.authorityPresent === false ||
+        node.contractRecognized === false
+      )
     );
 
     const notes = [
-      "V1_9_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ACTIVE",
+      "V2_0_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ACTIVE",
+      "V1_9_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_PRESERVED",
       "V1_8_BOUNDARY_DIAGNOSIS_MATRIX_PRESERVED",
       "V1_7_LAYOUT_MATH_CONNECTION_BLINDSPOT_ARBITRATION_PRESERVED",
       "V1_6_CALL_GUARDED_TRANSITION_SURFACE_DISAMBIGUATION_PRESERVED",
       "V1_5_CANONICAL_VISIBLE_SURFACE_DISAMBIGUATION_PRESERVED",
+      "POINTER_SURFACE_FILE_IS_BISHOP_GATE",
+      "POINTER_INSPECT_FILE_IS_CHILD_ORGANIZER_PRIEST_ONLY",
+      "INSPECT_FILE_NOT_PRIMARY_CHAIN_ENDPOINT",
       "ONE_BOUNDARY_ONE_ROW",
       "ONE_MISSING_PROOF_ONE_MISSING_FACT",
       "NO_SINGLE_FILE_RECOMMENDATION_UNLESS_SINGLE_FILE_CAUSALITY_PROVEN",
@@ -3087,19 +3316,22 @@
       `BOUNDARY_LAYOUT_FIRST_FAILED:${layoutFirst ? layoutFirst.id : "NONE"}`,
       `BOUNDARY_RUNTIME_FIRST_FAILED:${runtimeFirst ? runtimeFirst.id : "NONE"}`,
       `BOUNDARY_FIRST_MISSING_FACT:${anyFirst ? anyFirst.firstMissingFact : "NONE"}`,
+      `POINTER_SURFACE_BISHOP_STATUS:${runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.nodeStatus : "UNKNOWN"}`,
+      `POINTER_INSPECT_PRIEST_STATUS:${runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.nodeStatus : "UNKNOWN"}`,
       `CANVAS_TRUTH_FAILURE_CLASS:${verdict.failureClass}`,
       `DIAGNOSTIC_CERTAINTY:${verdict.certainty}`
     ];
 
     return {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_PACKET_v1_9",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_PACKET_v2_0",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      LINEAGE_V1_8_CONTRACT,
       LINEAGE_V1_7_CONTRACT,
       LINEAGE_V1_6_CONTRACT,
       LINEAGE_V1_5_CONTRACT,
@@ -3120,20 +3352,34 @@
       EXPECTED_INDEX_JS_CONTRACT,
       EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
       EXPECTED_CONTROL_CONTRACT,
+      EXPECTED_CONTROL_RENEWAL_CANDIDATE,
       EXPECTED_CANVAS_CONTRACT,
       EXPECTED_CANVAS_RENEWAL_CANDIDATE,
       EXPECTED_HEX_AUTHORITY_CONTRACT,
       EXPECTED_HEX_SURFACE_CONTRACT,
+      EXPECTED_HEX_SURFACE_RENEWAL_CANDIDATE,
       EXPECTED_POINTER_SURFACE_CONTRACT,
+      EXPECTED_POINTER_SURFACE_RENEWAL_CANDIDATE,
       EXPECTED_POINTER_INSPECT_CONTRACT,
       DIAGNOSTIC_TIMESTAMP: nowIso(),
 
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "CALL_RETURNED",
       CANVAS_SURFACE_TRUTH_AVAILABLE: snapshot.context.targetAvailable ? "true" : "false",
       CANVAS_SURFACE_TRUTH_SCOPE:
-        "CANONICAL_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
+        "CANONICAL_CANVAS_PARENT_CHAIN_USED_SIZE_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ONLY",
       CANVAS_SURFACE_TRUTH_RENEWAL_FOCUS:
-        "REPORT_BOUNDARY_FACTS_WITHOUT_SINGLE_FILE_CAUSALITY_INVENTION",
+        "REPORT_BOUNDARY_FACTS_WITH_POINTER_SURFACE_BISHOP_MAP_WITHOUT_SINGLE_FILE_CAUSALITY_INVENTION",
+
+      POINTER_SURFACE_BISHOP_MAPPING_ACTIVE: true,
+      POINTER_SURFACE_BISHOP_FILE: POINTER_SURFACE_FILE,
+      POINTER_INSPECT_PRIEST_FILE: POINTER_INSPECT_FILE,
+      POINTER_SURFACE_IS_MAIN_CHAIN_BISHOP_GATE: true,
+      POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT: false,
+      POINTER_INSPECT_IS_CHILD_ORGANIZER: true,
+      POINTER_INSPECT_CAN_BLOCK_MAIN_LOOP: false,
+
+      CORRECTED_EXPRESSION_CHAIN:
+        "ROUTE_CONDUCTOR -> CONTROLS_QUEEN -> CANVAS_RECEIVER -> HEX_SURFACE_GATE -> POINTER_SURFACE_BISHOP -> CHILD_ORGANIZER_PROOF_FILES -> CANVAS_RETURN",
 
       TRANSITION_MEASUREMENT_MODE: transitionMode,
       TRANSITION_SAMPLE_PHASE: snapshot.phase,
@@ -3163,7 +3409,10 @@
       HEX_AUTHORITY_SCRIPT_PRESENT: scripts.hexAuthority ? scripts.hexAuthority.present : false,
       HEX_SURFACE_SCRIPT_PRESENT: scripts.hexSurface ? scripts.hexSurface.present : false,
       POINTER_SURFACE_SCRIPT_PRESENT: scripts.pointerSurface ? scripts.pointerSurface.present : false,
+      POINTER_SURFACE_SCRIPT_SRC: scripts.pointerSurface ? scripts.pointerSurface.src : "NONE",
+      POINTER_SURFACE_SCRIPT_CACHE_KEY: scripts.pointerSurface ? scripts.pointerSurface.cacheKey : "NONE",
       POINTER_INSPECT_SCRIPT_PRESENT: scripts.pointerInspect ? scripts.pointerInspect.present : false,
+      POINTER_INSPECT_SCRIPT_SRC: scripts.pointerInspect ? scripts.pointerInspect.src : "NONE",
 
       ROUTE_AUTHORITY_OBSERVED: runtimeNodes.route ? runtimeNodes.route.authorityPresent : false,
       ROUTE_AUTHORITY_SOURCE_PATH: runtimeNodes.route ? runtimeNodes.route.authorityPath : "NONE",
@@ -3192,16 +3441,21 @@
       POINTER_SURFACE_BISHOP_OBSERVED: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.observed : false,
       POINTER_SURFACE_BISHOP_SCRIPT_PRESENT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.scriptPresent : false,
       POINTER_SURFACE_BISHOP_AUTHORITY_PRESENT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.authorityPresent : false,
+      POINTER_SURFACE_BISHOP_AUTHORITY_PATH: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.authorityPath : "NONE",
       POINTER_SURFACE_BISHOP_CONTRACT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.contract : "UNKNOWN",
+      POINTER_SURFACE_BISHOP_RECEIPT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.receipt : "UNKNOWN",
       POINTER_SURFACE_BISHOP_RECOGNIZED: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.contractRecognized : false,
+      POINTER_SURFACE_BISHOP_STATUS: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.nodeStatus : "UNKNOWN",
+      POINTER_SURFACE_BISHOP_MISSING_RUNTIME_FACT: runtimeNodes.pointerSurface ? runtimeNodes.pointerSurface.missingRuntimeFact : "UNKNOWN",
 
       POINTER_INSPECT_PRIEST_OBSERVED: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.observed : false,
       POINTER_INSPECT_PRIEST_SCRIPT_PRESENT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.scriptPresent : false,
       POINTER_INSPECT_PRIEST_AUTHORITY_PRESENT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.authorityPresent : false,
+      POINTER_INSPECT_PRIEST_AUTHORITY_PATH: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.authorityPath : "NONE",
       POINTER_INSPECT_PRIEST_CONTRACT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.contract : "UNKNOWN",
+      POINTER_INSPECT_PRIEST_RECEIPT: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.receipt : "UNKNOWN",
       POINTER_INSPECT_PRIEST_RECOGNIZED: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.contractRecognized : false,
-      POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT: false,
-      POINTER_INSPECT_IS_CHILD_ORGANIZER: true,
+      POINTER_INSPECT_PRIEST_STATUS: runtimeNodes.pointerInspect ? runtimeNodes.pointerInspect.nodeStatus : "UNKNOWN",
 
       STAGE_PRESENT: stage.exists,
       STAGE_SELECTOR: snapshot.stageSelector,
@@ -3352,6 +3606,12 @@
       CANONICAL_CANVAS_DATASET_DOWNSTREAM_OBSERVED: canonicalSummary.datasetDownstreamObserved || "UNKNOWN",
       CANONICAL_CANVAS_DATASET_DOWNSTREAM_LATCHED: canonicalSummary.datasetDownstreamLatched || "UNKNOWN",
       CANONICAL_CANVAS_DATASET_SELECTION_MODE: canonicalSummary.datasetSelectionMode || "UNKNOWN",
+      CANONICAL_CANVAS_DATASET_POINTER_SURFACE_OBSERVED:
+        canonicalSummary.datasetPointerSurfaceObserved || "UNKNOWN",
+      CANONICAL_CANVAS_DATASET_POINTER_SURFACE_LATCHED:
+        canonicalSummary.datasetPointerSurfaceLatched || "UNKNOWN",
+      CANONICAL_CANVAS_DATASET_POINTER_INSPECT_OBSERVED:
+        canonicalSummary.datasetPointerInspectObserved || "UNKNOWN",
       CANONICAL_CANVAS_PIXEL_VISIBLE: canonicalSummary.pixelVisible || false,
       CANONICAL_CANVAS_SURFACE_ADMISSIBLE: snapshot.canonicalSurfaceAdmissible,
 
@@ -3447,7 +3707,7 @@
       ZONE_OF_INFLICTION_REASON: verdict.reason,
 
       FINAL_ARBITRATION_SOURCE_LANE:
-        "PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_LANE",
+        "POINTER_SURFACE_BISHOP_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_LANE",
       DIAGNOSTIC_CERTAINTY: verdict.certainty,
       OBSERVABLE_CAUSE:
         `CANONICAL:${verdict.coordinate}:${verdict.failureClass}:${verdict.reason}`,
@@ -3482,10 +3742,12 @@
       DELEGATORY_PERMISSION_LANE_STATUS: "READ_ONLY_BOUNDARY_FACTS_REPORTED_NO_PERMISSION_INVENTION",
       ROUTE_CONDUCTOR_LANE_STATUS: "OBSERVED_READ_ONLY_NO_REPAIR",
       HEX_SURFACE_LANE_STATUS: "OBSERVED_READ_ONLY_NO_REPAIR",
-      TRUTH_HUB_STATUS: "PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
+      POINTER_SURFACE_BISHOP_LANE_STATUS: "OBSERVED_READ_ONLY_NO_REPAIR",
+      POINTER_INSPECT_PRIEST_LANE_STATUS: "ADVISORY_CHILD_READ_ONLY_NO_REPAIR",
+      TRUTH_HUB_STATUS: "POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ONLY",
       TRUTH_HUB_RECEIPT_LANE_COUNT: "2",
       TRUTH_HUB_RECEIPT_ROUTES:
-        "LAYOUT_PARENT_CHAIN_USED_SIZE_BOUNDARY_LANE|RUNTIME_RELATIONSHIP_BOUNDARY_FACT_LANE",
+        "LAYOUT_PARENT_CHAIN_USED_SIZE_BOUNDARY_LANE|RUNTIME_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_LANE",
 
       PRODUCTION_MUTATION_AUTHORIZED: false,
       CANVAS_DRAWING_AUTHORIZED: false,
@@ -3508,7 +3770,7 @@
 
     return {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ERROR_PACKET_v1_9",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ERROR_PACKET_v2_0",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
@@ -3520,15 +3782,23 @@
       TARGET_ROUTE,
       DIAGNOSTIC_ROUTE,
       CANVAS_FILE,
+      POINTER_SURFACE_FILE,
+      POINTER_INSPECT_FILE,
       DIAGNOSTIC_TIMESTAMP: nowIso(),
 
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "CALL_RETURNED_WITH_INTERNAL_ERROR_PACKET",
       CANVAS_SURFACE_TRUTH_AVAILABLE: "false",
       CANVAS_SURFACE_TRUTH_SCOPE:
-        "CALL_GUARDED_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
+        "CALL_GUARDED_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ONLY",
       TARGET_CONTEXT_STATUS: "UNKNOWN",
       TARGET_CONTEXT_SOURCE: "UNKNOWN",
       TARGET_ACCESS_ERROR: "UNKNOWN",
+
+      POINTER_SURFACE_BISHOP_MAPPING_ACTIVE: true,
+      POINTER_SURFACE_IS_MAIN_CHAIN_BISHOP_GATE: true,
+      POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT: false,
+      POINTER_INSPECT_IS_CHILD_ORGANIZER: true,
+      POINTER_INSPECT_CAN_BLOCK_MAIN_LOOP: false,
 
       CANVAS_IDENTITY_DISAMBIGUATION_STATUS: "PROBE_INTERNAL_ERROR_PACKET_RETURNED",
       CANVAS_SURFACE_TRUTH_LANE_STATUS: "CANVAS_SURFACE_TRUTH_LANE_FAILED",
@@ -3551,7 +3821,7 @@
         "RENEW_PROBE_CANVAS_SURFACE_TRUTH_CALL_GUARD_OR_RETURN_PACKET",
 
       FINAL_ARBITRATION_SOURCE_LANE:
-        "PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_LANE",
+        "POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_LANE",
       DIAGNOSTIC_CERTAINTY: "DEFINITIVE_PROBE_INTERNAL_ERROR",
       OBSERVABLE_CAUSE: `PROBE_CALL_GUARD:${message || "UNKNOWN_INTERNAL_ERROR"}`,
       RECOMMENDED_NEXT_OWNER: "DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
@@ -3574,7 +3844,7 @@
       RUNTIME_RESTART_AUTHORIZED: false,
 
       SECONDARY_EVIDENCE_NOTES:
-        "V1_9_CALL_GUARD_RETURNED_ERROR_PACKET | NO_THROW_TO_NORTH | NO_PRODUCTION_MUTATION_AUTHORIZED",
+        "V2_0_CALL_GUARD_RETURNED_ERROR_PACKET | NO_THROW_TO_NORTH | NO_PRODUCTION_MUTATION_AUTHORIZED",
       CANVAS_SURFACE_TRUTH_NOTES:
         "CALL_GUARD_PREVENTED_CHRONOLOGY_HARD_FAILURE",
 
@@ -3603,6 +3873,8 @@
         root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
           clonePlain(lastSettledReport);
         root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
+          clonePlain(lastSettledReport);
+        root.HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_SETTLED_REPORT =
           clonePlain(lastSettledReport);
 
         publish();
@@ -3658,13 +3930,14 @@
   function makeAnchorReport() {
     return {
       PACKET_NAME:
-        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ANCHOR_PACKET_v1_9",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ANCHOR_PACKET_v2_0",
       CONTRACT,
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      LINEAGE_V1_8_CONTRACT,
       LINEAGE_V1_7_CONTRACT,
       LINEAGE_V1_6_CONTRACT,
       LINEAGE_V1_5_CONTRACT,
@@ -3673,17 +3946,30 @@
       TARGET_ROUTE,
       DIAGNOSTIC_ROUTE,
       CANVAS_FILE,
+      POINTER_SURFACE_FILE,
+      POINTER_INSPECT_FILE,
       EXPECTED_CANVAS_CONTRACT,
       EXPECTED_CANVAS_RENEWAL_CANDIDATE,
+      EXPECTED_POINTER_SURFACE_CONTRACT,
+      EXPECTED_POINTER_SURFACE_RENEWAL_CANDIDATE,
+      EXPECTED_POINTER_INSPECT_CONTRACT,
       DIAGNOSTIC_TIMESTAMP: nowIso(),
 
       CANVAS_SURFACE_TRUTH_PROBE_STATUS: "ANCHOR_READY",
       CANVAS_SURFACE_TRUTH_AVAILABLE: "UNKNOWN",
       CANVAS_SURFACE_TRUTH_SCOPE:
-        "CALL_GUARDED_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_ONLY",
+        "CALL_GUARDED_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_ONLY",
       TARGET_CONTEXT_STATUS: "NOT_RUN",
       TARGET_CONTEXT_SOURCE: "ANCHOR_ONLY",
       TARGET_ACCESS_ERROR: "NONE",
+
+      POINTER_SURFACE_BISHOP_MAPPING_ACTIVE: true,
+      POINTER_SURFACE_BISHOP_FILE: POINTER_SURFACE_FILE,
+      POINTER_INSPECT_PRIEST_FILE: POINTER_INSPECT_FILE,
+      POINTER_SURFACE_IS_MAIN_CHAIN_BISHOP_GATE: true,
+      POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT: false,
+      POINTER_INSPECT_IS_CHILD_ORGANIZER: true,
+      POINTER_INSPECT_CAN_BLOCK_MAIN_LOOP: false,
 
       TRANSITION_MEASUREMENT_MODE: "ANCHOR_ONLY",
       TRANSITION_SAMPLE_PHASE: "ANCHOR_ONLY",
@@ -3726,7 +4012,7 @@
       RUNTIME_RESTART_AUTHORIZED: false,
 
       SECONDARY_EVIDENCE_NOTES:
-        "V1_9_ANCHOR_READY | CALL_GUARDED | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
+        "V2_0_ANCHOR_READY | POINTER_SURFACE_BISHOP_MAP_ACTIVE | INSPECT_DEMOTED_TO_CHILD_ORGANIZER | CALL_GUARDED | TARGET_NOT_YET_PROBED | NO_PRODUCTION_MUTATION_AUTHORIZED",
       CANVAS_SURFACE_TRUTH_NOTES:
         "ANCHOR_SAFE_CHRONOLOGY_OBSERVATION_READY | HEAVY_TARGET_PROBE_NOT_RUN_DURING_PUBLISH",
 
@@ -3740,13 +4026,14 @@
 
     return {
       packetType:
-        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT_PACKET_v1_9",
+        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_RECEIPT_PACKET_v2_0",
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      lineageV18Contract: LINEAGE_V1_8_CONTRACT,
       lineageV17Contract: LINEAGE_V1_7_CONTRACT,
       lineageV16Contract: LINEAGE_V1_6_CONTRACT,
       lineageV15Contract: LINEAGE_V1_5_CONTRACT,
@@ -3755,12 +4042,23 @@
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
       canvasFile: CANVAS_FILE,
+      pointerSurfaceFile: POINTER_SURFACE_FILE,
+      pointerInspectFile: POINTER_INSPECT_FILE,
       expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
       expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
+      expectedPointerSurfaceContract: EXPECTED_POINTER_SURFACE_CONTRACT,
+      expectedPointerSurfaceRenewalCandidate: EXPECTED_POINTER_SURFACE_RENEWAL_CANDIDATE,
+      expectedPointerInspectContract: EXPECTED_POINTER_INSPECT_CONTRACT,
 
       diagnosticOnly: true,
       anchorSafeChronologyObservation: true,
       callGuardActive: true,
+      pointerSurfaceBishopBoundaryFactMatrixActive: true,
+      pointerSurfaceBishopMappingActive: true,
+      pointerSurfaceIsMainChainBishopGate: true,
+      pointerInspectIsPrimaryChainEndpoint: false,
+      pointerInspectIsChildOrganizer: true,
+      pointerInspectCanBlockMainLoop: false,
       parentChainUsedSizeFactMatrixActive: true,
       boundaryDiagnosisMatrixActive: true,
       oneBoundaryOneRowActive: true,
@@ -3801,6 +4099,19 @@
       canvasAuthorityObserved: getRaw(r, "CANVAS_AUTHORITY_OBSERVED", "UNKNOWN"),
       canvasAuthoritySourcePath: getRaw(r, "CANVAS_AUTHORITY_SOURCE_PATH", "NONE"),
       canvasAuthorityContract: getRaw(r, "CANVAS_AUTHORITY_CONTRACT", "UNKNOWN"),
+
+      pointerSurfaceBishopObserved: getRaw(r, "POINTER_SURFACE_BISHOP_OBSERVED", "UNKNOWN"),
+      pointerSurfaceBishopScriptPresent: getRaw(r, "POINTER_SURFACE_BISHOP_SCRIPT_PRESENT", "UNKNOWN"),
+      pointerSurfaceBishopAuthorityPresent: getRaw(r, "POINTER_SURFACE_BISHOP_AUTHORITY_PRESENT", "UNKNOWN"),
+      pointerSurfaceBishopContract: getRaw(r, "POINTER_SURFACE_BISHOP_CONTRACT", "UNKNOWN"),
+      pointerSurfaceBishopRecognized: getRaw(r, "POINTER_SURFACE_BISHOP_RECOGNIZED", "UNKNOWN"),
+      pointerSurfaceBishopStatus: getRaw(r, "POINTER_SURFACE_BISHOP_STATUS", "UNKNOWN"),
+      pointerInspectPriestObserved: getRaw(r, "POINTER_INSPECT_PRIEST_OBSERVED", "UNKNOWN"),
+      pointerInspectPriestScriptPresent: getRaw(r, "POINTER_INSPECT_PRIEST_SCRIPT_PRESENT", "UNKNOWN"),
+      pointerInspectPriestAuthorityPresent: getRaw(r, "POINTER_INSPECT_PRIEST_AUTHORITY_PRESENT", "UNKNOWN"),
+      pointerInspectPriestContract: getRaw(r, "POINTER_INSPECT_PRIEST_CONTRACT", "UNKNOWN"),
+      pointerInspectPriestRecognized: getRaw(r, "POINTER_INSPECT_PRIEST_RECOGNIZED", "UNKNOWN"),
+      pointerInspectPriestStatus: getRaw(r, "POINTER_INSPECT_PRIEST_STATUS", "UNKNOWN"),
 
       canonicalMountFound: getRaw(r, "CANONICAL_MOUNT_FOUND", "UNKNOWN"),
       canonicalMountRectNonzero: getRaw(r, "CANONICAL_MOUNT_RECT_NONZERO", "UNKNOWN"),
@@ -3883,6 +4194,7 @@
       "INTERNAL_RENEWAL_RECEIPT",
       "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
       "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
+      "LINEAGE_V1_8_CONTRACT",
       "LINEAGE_V1_7_CONTRACT",
       "LINEAGE_V1_6_CONTRACT",
       "LINEAGE_V1_5_CONTRACT",
@@ -3905,6 +4217,15 @@
       "CANVAS_SURFACE_TRUTH_AVAILABLE",
       "CANVAS_SURFACE_TRUTH_SCOPE",
       "CANVAS_SURFACE_TRUTH_RENEWAL_FOCUS",
+
+      "POINTER_SURFACE_BISHOP_MAPPING_ACTIVE",
+      "POINTER_SURFACE_BISHOP_FILE",
+      "POINTER_INSPECT_PRIEST_FILE",
+      "POINTER_SURFACE_IS_MAIN_CHAIN_BISHOP_GATE",
+      "POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT",
+      "POINTER_INSPECT_IS_CHILD_ORGANIZER",
+      "POINTER_INSPECT_CAN_BLOCK_MAIN_LOOP",
+      "CORRECTED_EXPRESSION_CHAIN",
 
       "TRANSITION_MEASUREMENT_MODE",
       "TRANSITION_SAMPLE_PHASE",
@@ -3942,6 +4263,25 @@
       "BOUNDARY_SINGLE_CAUSAL_FILE_PROVEN",
       "BOUNDARY_SINGLE_CAUSAL_FILE",
 
+      "POINTER_SURFACE_BISHOP_OBSERVED",
+      "POINTER_SURFACE_BISHOP_SCRIPT_PRESENT",
+      "POINTER_SURFACE_BISHOP_AUTHORITY_PRESENT",
+      "POINTER_SURFACE_BISHOP_AUTHORITY_PATH",
+      "POINTER_SURFACE_BISHOP_CONTRACT",
+      "POINTER_SURFACE_BISHOP_RECEIPT",
+      "POINTER_SURFACE_BISHOP_RECOGNIZED",
+      "POINTER_SURFACE_BISHOP_STATUS",
+      "POINTER_SURFACE_BISHOP_MISSING_RUNTIME_FACT",
+
+      "POINTER_INSPECT_PRIEST_OBSERVED",
+      "POINTER_INSPECT_PRIEST_SCRIPT_PRESENT",
+      "POINTER_INSPECT_PRIEST_AUTHORITY_PRESENT",
+      "POINTER_INSPECT_PRIEST_AUTHORITY_PATH",
+      "POINTER_INSPECT_PRIEST_CONTRACT",
+      "POINTER_INSPECT_PRIEST_RECEIPT",
+      "POINTER_INSPECT_PRIEST_RECOGNIZED",
+      "POINTER_INSPECT_PRIEST_STATUS",
+
       "INDEX_SCRIPT_PRESENT",
       "INDEX_SCRIPT_SRC",
       "ROUTE_CONDUCTOR_SCRIPT_PRESENT",
@@ -3956,7 +4296,9 @@
       "HEX_AUTHORITY_SCRIPT_PRESENT",
       "HEX_SURFACE_SCRIPT_PRESENT",
       "POINTER_SURFACE_SCRIPT_PRESENT",
+      "POINTER_SURFACE_SCRIPT_SRC",
       "POINTER_INSPECT_SCRIPT_PRESENT",
+      "POINTER_INSPECT_SCRIPT_SRC",
 
       "CANVAS_AUTHORITY_OBSERVED",
       "CANVAS_AUTHORITY_SOURCE_PATH",
@@ -4095,6 +4437,13 @@
       line("CONTRACT", getRaw(report, "CONTRACT", CONTRACT)),
       line("INTERNAL_RENEWAL_CONTRACT", getRaw(report, "INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT)),
       line("CANVAS_SURFACE_TRUTH_PROBE_STATUS", getRaw(report, "CANVAS_SURFACE_TRUTH_PROBE_STATUS", "ANCHOR_READY")),
+      line("POINTER_SURFACE_IS_MAIN_CHAIN_BISHOP_GATE", getRaw(report, "POINTER_SURFACE_IS_MAIN_CHAIN_BISHOP_GATE", true)),
+      line("POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT", getRaw(report, "POINTER_INSPECT_IS_PRIMARY_CHAIN_ENDPOINT", false)),
+      line("POINTER_INSPECT_IS_CHILD_ORGANIZER", getRaw(report, "POINTER_INSPECT_IS_CHILD_ORGANIZER", true)),
+      line("POINTER_SURFACE_BISHOP_STATUS", getRaw(report, "POINTER_SURFACE_BISHOP_STATUS", "UNKNOWN")),
+      line("POINTER_SURFACE_BISHOP_OBSERVED", getRaw(report, "POINTER_SURFACE_BISHOP_OBSERVED", "UNKNOWN")),
+      line("POINTER_SURFACE_BISHOP_RECOGNIZED", getRaw(report, "POINTER_SURFACE_BISHOP_RECOGNIZED", "UNKNOWN")),
+      line("POINTER_INSPECT_PRIEST_STATUS", getRaw(report, "POINTER_INSPECT_PRIEST_STATUS", "UNKNOWN")),
       line("TRANSITION_COMPARISON_STATUS", getRaw(report, "TRANSITION_COMPARISON_STATUS", "UNKNOWN")),
       line("BOUNDARY_FACT_MATRIX_ACTIVE", getRaw(report, "BOUNDARY_FACT_MATRIX_ACTIVE", true)),
       line("BOUNDARY_FIRST_FAILED", getRaw(report, "BOUNDARY_FIRST_FAILED", "UNKNOWN")),
@@ -4160,6 +4509,7 @@
       layoutBoundaryFactRows: clonePlain(getRaw(report, "LAYOUT_BOUNDARY_FACT_ROWS", [])),
       runtimeBoundaryFactRows: clonePlain(getRaw(report, "RUNTIME_BOUNDARY_FACT_ROWS", [])),
       runtimeNodes: clonePlain(getRaw(report, "RUNTIME_NODES", {})),
+      runtimeDarkFiles: clonePlain(getRaw(report, "RUNTIME_DARK_FILES", [])),
       canonicalCanvasSummary: clonePlain(getRaw(report, "CANONICAL_CANVAS_SUMMARY", {})),
       stageUsedSizeSummary: clonePlain(getRaw(report, "STAGE_USED_SIZE_SUMMARY", {})),
       mountUsedSizeSummary: clonePlain(getRaw(report, "MOUNT_USED_SIZE_SUMMARY", {})),
@@ -4195,6 +4545,9 @@
       supportsLayerBlockerCheck: true,
       supportsFallbackCartoonSignalCheck: true,
       supportsSimplifiedF21Focus: true,
+      supportsPointerSurfaceBishopMapping: true,
+      supportsPointerInspectPriestDemotion: true,
+      supportsRuntimeDarkFileInventory: true,
       ...NO_CLAIMS,
       ...UPPER_NO_CLAIMS
     };
@@ -4232,6 +4585,8 @@
       "HEARTH.diagnosticCanonicalCanvasSurfaceTruth",
       "HEARTH.diagnosticCanvasLayoutMathConnectionBlindspot",
       "HEARTH.diagnosticCanvasParentChainUsedSizeBoundaryFactMatrix",
+      "HEARTH.diagnosticCanvasPointerSurfaceBishopBoundaryFactMatrix",
+      "HEARTH.diagnosticPointerSurfaceBishopCanvasSurfaceTruth",
       "DEXTER_LAB.hearthDiagnosticProbeCanvasSurfaceTruth",
       "DEXTER_LAB.hearthDiagnosticCanvasSurfaceTruthProbe",
       "DEXTER_LAB.hearthDiagnosticCanvasTruthProbe",
@@ -4239,13 +4594,17 @@
       "DEXTER_LAB.hearthDiagnosticCanonicalCanvasSurfaceTruth",
       "DEXTER_LAB.hearthDiagnosticCanvasLayoutMathConnectionBlindspot",
       "DEXTER_LAB.hearthDiagnosticCanvasParentChainUsedSizeBoundaryFactMatrix",
+      "DEXTER_LAB.hearthDiagnosticCanvasPointerSurfaceBishopBoundaryFactMatrix",
+      "DEXTER_LAB.hearthDiagnosticPointerSurfaceBishopCanvasSurfaceTruth",
       "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
       "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
       "HEARTH_DIAGNOSTIC_PROBE_CANVAS_TRUTH",
       "HEARTH_DIAGNOSTIC_RAIL_PROBE_CANVAS_SURFACE_TRUTH",
       "HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH",
       "HEARTH_DIAGNOSTIC_CANVAS_LAYOUT_MATH_CONNECTION_BLINDSPOT",
-      "HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX"
+      "HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX",
+      "HEARTH_DIAGNOSTIC_CANVAS_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX",
+      "HEARTH_DIAGNOSTIC_POINTER_SURFACE_BISHOP_CANVAS_SURFACE_TRUTH"
     ];
 
     for (const path of aliasPaths) setPath(path, api);
@@ -4255,6 +4614,8 @@
     root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_CANVAS_LAYOUT_MATH_CONNECTION_BLINDSPOT_RECEIPT = getReceiptLight();
     root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_RECEIPT =
+      getReceiptLight();
+    root.HEARTH_DIAGNOSTIC_CANVAS_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_RECEIPT =
       getReceiptLight();
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_REPORT =
@@ -4267,6 +4628,8 @@
       clonePlain(lastReport || makeAnchorReport());
     root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_REPORT =
       clonePlain(lastReport || makeAnchorReport());
+    root.HEARTH_DIAGNOSTIC_CANVAS_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_REPORT =
+      clonePlain(lastReport || makeAnchorReport());
 
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_PACKET_TEXT = lastPacketText || "";
@@ -4276,6 +4639,10 @@
       lastPacketText || "";
     root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_COMPACT_SUMMARY =
       lastCompactSummary || "";
+    root.HEARTH_DIAGNOSTIC_CANVAS_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_PACKET_TEXT =
+      lastPacketText || "";
+    root.HEARTH_DIAGNOSTIC_CANVAS_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_COMPACT_SUMMARY =
+      lastCompactSummary || "";
 
     if (lastSettledReport) {
       root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
@@ -4283,6 +4650,8 @@
       root.HEARTH_DIAGNOSTIC_CANONICAL_CANVAS_SURFACE_TRUTH_SETTLED_REPORT =
         clonePlain(lastSettledReport);
       root.HEARTH_DIAGNOSTIC_CANVAS_PARENT_CHAIN_USED_SIZE_BOUNDARY_FACT_MATRIX_SETTLED_REPORT =
+        clonePlain(lastSettledReport);
+      root.HEARTH_DIAGNOSTIC_CANVAS_POINTER_SURFACE_BISHOP_BOUNDARY_FACT_MATRIX_SETTLED_REPORT =
         clonePlain(lastSettledReport);
     }
 
@@ -4318,6 +4687,7 @@
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
     previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+    lineageV18Contract: LINEAGE_V1_8_CONTRACT,
     lineageV17Contract: LINEAGE_V1_7_CONTRACT,
     lineageV16Contract: LINEAGE_V1_6_CONTRACT,
     lineageV15Contract: LINEAGE_V1_5_CONTRACT,
@@ -4338,11 +4708,14 @@
     expectedIndexJsContract: EXPECTED_INDEX_JS_CONTRACT,
     expectedRouteConductorContract: EXPECTED_ROUTE_CONDUCTOR_CONTRACT,
     expectedControlContract: EXPECTED_CONTROL_CONTRACT,
+    expectedControlRenewalCandidate: EXPECTED_CONTROL_RENEWAL_CANDIDATE,
     expectedCanvasContract: EXPECTED_CANVAS_CONTRACT,
     expectedCanvasRenewalCandidate: EXPECTED_CANVAS_RENEWAL_CANDIDATE,
     expectedHexAuthorityContract: EXPECTED_HEX_AUTHORITY_CONTRACT,
     expectedHexSurfaceContract: EXPECTED_HEX_SURFACE_CONTRACT,
+    expectedHexSurfaceRenewalCandidate: EXPECTED_HEX_SURFACE_RENEWAL_CANDIDATE,
     expectedPointerSurfaceContract: EXPECTED_POINTER_SURFACE_CONTRACT,
+    expectedPointerSurfaceRenewalCandidate: EXPECTED_POINTER_SURFACE_RENEWAL_CANDIDATE,
     expectedPointerInspectContract: EXPECTED_POINTER_INSPECT_CONTRACT,
 
     diagnosticOnly: true,
@@ -4350,6 +4723,12 @@
     callGuardActive: true,
     parentChainUsedSizeFactMatrixActive: true,
     boundaryDiagnosisMatrixActive: true,
+    pointerSurfaceBishopBoundaryFactMatrixActive: true,
+    pointerSurfaceBishopMappingActive: true,
+    pointerSurfaceIsMainChainBishopGate: true,
+    pointerInspectIsPrimaryChainEndpoint: false,
+    pointerInspectIsChildOrganizer: true,
+    pointerInspectCanBlockMainLoop: false,
     oneBoundaryOneRowActive: true,
     oneMissingProofOneMissingFactActive: true,
     noSingleFileRecommendationUnlessProven: true,
@@ -4360,7 +4739,7 @@
     transitionSurfaceDisambiguationActive: true,
     focusedOnCanonicalCanvasIdentity: true,
     controlsDutyLaneEvaluated: false,
-    delegatoryMatrixEvaluated: false,
+    delegatoryMatrixEvaluated: true,
     southFingerBundleEvaluated: false,
     labCardinalReceiptsEvaluated: false,
 
@@ -4413,6 +4792,9 @@
     supportsSimplifiedF21Focus: true,
     supportsCoordinateSpecificFailure: true,
     supportsCompactPacketText: true,
+    supportsPointerSurfaceBishopMapping: true,
+    supportsPointerInspectPriestDemotion: true,
+    supportsRuntimeDarkFileInventory: true,
 
     ownsDiagnosticProbeOnly: true,
     ownsCanvasDrawing: false,
@@ -4425,6 +4807,8 @@
     ownsHydrologyTruth: false,
     ownsElevationTruth: false,
     ownsMaterialTruth: false,
+    ownsPointerSurfaceTruth: false,
+    ownsPointerInspectTruth: false,
     ownsF13: false,
     ownsF21: false,
     ownsReadyText: false,

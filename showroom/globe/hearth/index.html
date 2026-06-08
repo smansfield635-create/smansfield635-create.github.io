@@ -1,358 +1,290 @@
 <!-- /showroom/globe/hearth/index.html -->
 <!-- HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1 -->
-<!-- Internal controlled renewal: HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2 -->
+<!-- Internal controlled renewal: HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_TNT_v5_1_3 -->
 <!-- Full-file replacement. -->
-<!-- HTML shell / canonical mount geometry / root script admission only. -->
+<!-- HTML shell / canonical mount used-size boundary only. -->
+<!-- Purpose:
+  - Preserve public HTML contract expected by the diagnostic rail.
+  - Stop #hearthCanvasMount from collapsing to zero rect.
+  - Provide a nonzero stage → mount → frame → canvas CSS used-size chain.
+  - Preserve route conductor, index button authority, control handshake, and diagnostic access.
+  - Do not create canvas truth, draw pixels, mutate runtime state, claim visual pass, or repair JS.
+-->
+
 <!doctype html>
 <html
   lang="en"
+  data-route="/showroom/globe/hearth/"
+  data-page="hearth"
+  data-page-alias="Hearth"
+  data-page-context="visible globe canvas expression shell"
+  data-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
   data-hearth-html-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
-  data-hearth-html-internal-renewal-contract="HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2"
+  data-hearth-html-internal-renewal-contract="HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_TNT_v5_1_3"
+  data-hearth-html-internal-renewal-receipt="HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_RECEIPT_v5_1_3"
+  data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2"
+  data-hearth-canonical-mount-used-size-lock="true"
+  data-hearth-single-causal-file-proven="false"
+  data-hearth-visual-pass-claimed="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-webgl="false"
 >
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
 
   <title>Hearth · Survival Becomes Shelter</title>
   <meta
     name="description"
-    content="Hearth globe inspection route. HTML owns only the canonical shell geometry and root script admission."
-  />
-
-  <meta name="hearth-html-contract" content="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1" />
-  <meta name="hearth-html-internal-renewal-contract" content="HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2" />
-  <meta name="hearth-index-js-contract" content="HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4" />
-  <meta name="hearth-route-conductor-contract" content="HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10" />
-  <meta name="hearth-route-conductor-script-cache-key" content="HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5" />
-  <meta name="hearth-control-contract" content="HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1" />
-  <meta name="hearth-control-renewal-candidate" content="HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5" />
-  <meta name="hearth-canvas-contract" content="HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3" />
-  <meta name="hearth-canvas-renewal-candidate" content="HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4" />
-  <meta name="hearth-hex-authority-contract" content="HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1" />
-  <meta name="hearth-hex-surface-contract" content="HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER_TNT_v4" />
-  <meta name="hearth-pointer-surface-contract" content="HEARTH_CANVAS_FINGER_SURFACE_POINTER_BISHOP_INTERNAL_EXTERNAL_EXPRESSION_SOCKET_TNT_v4" />
-  <meta name="hearth-pointer-inspect-contract" content="HEARTH_CANVAS_FINGER_INSPECT_DOWNSTREAM_EXPRESSION_PROOF_TNT_v1" />
-
-  <link
-    rel="preload"
-    as="script"
-    href="/assets/hearth/hearth.controls.js?v=HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5"
+    content="Hearth visible globe route. Canvas surface shell with nonzero canonical mount boundary."
   />
 
   <style>
     :root {
-      color-scheme: dark;
-      --hearth-bg: #05070a;
-      --hearth-bg-2: #0b1118;
-      --hearth-panel: rgba(9, 16, 24, 0.82);
-      --hearth-line: rgba(184, 205, 225, 0.2);
-      --hearth-text: #edf5ff;
-      --hearth-muted: #aebdca;
-      --hearth-dim: #7f8d99;
-      --hearth-accent: #d8a85d;
-      --hearth-max-page: 1180px;
-      --hearth-canvas-size: min(86vw, 820px);
-      --hearth-canvas-min: 320px;
+      --hearth-shell-bg: #071015;
+      --hearth-panel-bg: rgba(8, 18, 24, 0.84);
+      --hearth-line: rgba(214, 229, 219, 0.22);
+      --hearth-text: #e8eee7;
+      --hearth-muted: #a9b8af;
+      --hearth-globe-side: clamp(260px, min(86vw, 76svh), 960px);
+      --hearth-shell-pad: clamp(14px, 3vw, 40px);
     }
 
-    * {
+    @supports not (height: 100svh) {
+      :root {
+        --hearth-globe-side: clamp(260px, min(86vw, 76vh), 960px);
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
     }
 
     html {
+      min-width: 100%;
       min-height: 100%;
-      margin: 0;
-      background: var(--hearth-bg);
+      background: var(--hearth-shell-bg);
+      color: var(--hearth-text);
+      text-size-adjust: 100%;
     }
 
     body {
-      min-height: 100vh;
-      min-height: 100dvh;
       margin: 0;
-      overflow-x: hidden;
+      min-width: 100%;
+      min-height: 100vh;
+      min-height: 100svh;
       background:
-        radial-gradient(circle at 50% 18%, rgba(87, 138, 176, 0.2), transparent 34rem),
-        radial-gradient(circle at 50% 70%, rgba(154, 105, 48, 0.13), transparent 36rem),
-        linear-gradient(180deg, var(--hearth-bg-2), var(--hearth-bg) 52%, #020304);
+        radial-gradient(circle at 50% 18%, rgba(63, 93, 83, 0.28), transparent 36rem),
+        linear-gradient(180deg, #071015 0%, #0b1419 48%, #05090c 100%);
       color: var(--hearth-text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
     }
 
     a {
       color: inherit;
     }
 
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 1000;
-      transform: translateY(-150%);
-      border: 1px solid var(--hearth-line);
-      border-radius: 999px;
-      padding: 0.65rem 0.9rem;
-      background: #101923;
-      color: var(--hearth-text);
-      text-decoration: none;
-    }
-
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    .hearth-page {
+    .hearth-shell {
       min-height: 100vh;
-      min-height: 100dvh;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
-    }
-
-    .hearth-shell {
-      width: min(100%, var(--hearth-max-page));
-      margin-inline: auto;
-      padding: clamp(1rem, 3vw, 2.25rem);
+      align-items: stretch;
+      contain: none;
+      content-visibility: visible;
     }
 
     .hearth-topbar {
+      flex: 0 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      min-height: 3rem;
-      color: var(--hearth-muted);
-      font-size: 0.86rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      padding: clamp(14px, 2vw, 22px) var(--hearth-shell-pad);
+      border-bottom: 1px solid var(--hearth-line);
+      background: rgba(5, 10, 13, 0.62);
     }
 
-    .hearth-topbar nav {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .hearth-topbar a {
-      text-decoration: none;
-      opacity: 0.9;
-    }
-
-    .hearth-topbar a:hover,
-    .hearth-topbar a:focus {
-      opacity: 1;
-      text-decoration: underline;
-      text-underline-offset: 0.25em;
-    }
-
-    .hearth-main {
-      flex: 1 1 auto;
-      width: 100%;
-      display: block;
-    }
-
-    .hearth-hero {
-      width: 100%;
-      min-height: calc(100vh - 6rem);
-      min-height: calc(100dvh - 6rem);
+    .hearth-brand {
       display: grid;
-      grid-template-rows: auto minmax(var(--hearth-canvas-min), 1fr) auto;
-      gap: clamp(1.25rem, 3vw, 2rem);
-      align-items: center;
+      gap: 0.15rem;
+      min-width: 0;
     }
 
-    .hearth-heading {
-      max-width: 780px;
-      margin-inline: auto;
-      text-align: center;
+    .hearth-brand strong {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
     }
 
-    .hearth-kicker {
-      margin: 0 0 0.4rem;
-      color: var(--hearth-accent);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .hearth-heading h1 {
-      margin: 0;
-      font-size: clamp(2.4rem, 7vw, 6.25rem);
-      line-height: 0.95;
-      letter-spacing: -0.055em;
-    }
-
-    .hearth-subtitle {
-      margin: 0.85rem auto 0;
-      max-width: 48rem;
+    .hearth-brand span {
       color: var(--hearth-muted);
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      line-height: 1.55;
-    }
-
-    .hearth-globe-stage {
-      width: 100%;
-      min-height: clamp(420px, 70vh, 900px);
-      display: grid;
-      place-items: center;
-      position: relative;
-      padding: clamp(0.5rem, 2vw, 1.5rem);
-      overflow: visible;
-    }
-
-    .hearth-globe-stage::before {
-      content: "";
-      position: absolute;
-      inset: clamp(0.5rem, 4vw, 2rem);
-      z-index: 0;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle, rgba(84, 144, 188, 0.15), transparent 58%),
-        radial-gradient(circle, rgba(216, 168, 93, 0.09), transparent 68%);
-      filter: blur(10px);
-      pointer-events: none;
-    }
-
-    #hearthCanvasMount.globe-mount {
-      width: var(--hearth-canvas-size);
-      min-width: var(--hearth-canvas-min);
-      max-width: 820px;
-      min-height: var(--hearth-canvas-min);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      position: relative;
-      z-index: 1;
-      margin: 0 auto;
-      visibility: visible;
-      opacity: 1;
-      overflow: visible;
-      isolation: isolate;
-      contain: layout paint;
-    }
-
-    #hearthCanvasRectLockFrame {
-      width: 100%;
-      min-width: var(--hearth-canvas-min);
-      min-height: var(--hearth-canvas-min);
-      aspect-ratio: 1 / 1;
-      display: block;
-      position: relative;
-      border-radius: 50%;
-      overflow: visible;
-      background:
-        radial-gradient(circle at 40% 28%, rgba(255, 255, 255, 0.08), transparent 22%),
-        radial-gradient(circle at 50% 50%, rgba(74, 124, 167, 0.08), transparent 68%);
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.06),
-        0 2.5rem 7rem rgba(0, 0, 0, 0.38);
-    }
-
-    #hearthVisibleCanvas {
-      display: block;
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      min-width: var(--hearth-canvas-min);
-      min-height: var(--hearth-canvas-min);
-      max-width: 100%;
-      max-height: 100%;
-      border: 0;
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      outline: none;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #hearthVisibleCanvas:focus-visible {
-      box-shadow: 0 0 0 3px rgba(95, 176, 255, 0.45);
-    }
-
-    @supports not (aspect-ratio: 1 / 1) {
-      #hearthCanvasMount.globe-mount,
-      #hearthCanvasRectLockFrame {
-        height: var(--hearth-canvas-size);
-      }
-    }
-
-    .hearth-status-panel {
-      width: min(100%, 820px);
-      margin-inline: auto;
-      border: 1px solid var(--hearth-line);
-      border-radius: 1.1rem;
-      padding: clamp(0.85rem, 2vw, 1.1rem);
-      background: var(--hearth-panel);
-      color: var(--hearth-muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .hearth-status-panel strong {
-      color: var(--hearth-text);
-      font-weight: 650;
+      font-size: 0.82rem;
+      line-height: 1.25;
     }
 
     .hearth-actions {
       display: flex;
-      gap: 0.75rem;
       flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      margin-top: 0.95rem;
+      justify-content: flex-end;
+      gap: 0.5rem;
     }
 
-    .hearth-action {
+    .hearth-action,
+    .hearth-action:visited {
+      appearance: none;
+      border: 1px solid var(--hearth-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--hearth-text);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 2.5rem;
+      min-height: 2.25rem;
+      padding: 0.45rem 0.85rem;
+      text-decoration: none;
+      font: inherit;
+      font-size: 0.84rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hearth-action:focus-visible {
+      outline: 2px solid rgba(232, 238, 231, 0.78);
+      outline-offset: 3px;
+    }
+
+    .hearth-main {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      justify-items: center;
+      gap: clamp(14px, 2.4vw, 28px);
+      padding: var(--hearth-shell-pad);
+      contain: none;
+      content-visibility: visible;
+    }
+
+    #hearthGlobeStage {
+      width: 100%;
+      min-width: 0;
+      min-height: max(420px, calc(100svh - 210px));
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: visible;
+      contain: none;
+      content-visibility: visible;
+    }
+
+    @supports not (height: 100svh) {
+      #hearthGlobeStage {
+        min-height: max(420px, calc(100vh - 210px));
+      }
+    }
+
+    #hearthCanvasMount {
+      width: var(--hearth-globe-side);
+      height: var(--hearth-globe-side);
+      min-width: min(260px, 86vw);
+      min-height: min(260px, 86vw);
+      aspect-ratio: 1 / 1;
+      display: block;
+      position: relative;
+      flex: 0 0 auto;
+      overflow: visible;
+      contain: none;
+      content-visibility: visible;
+      pointer-events: auto;
+      touch-action: none;
+      isolation: isolate;
+    }
+
+    #hearthCanvasMount::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(214, 229, 219, 0.13);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #hearthCanvasRectLockFrame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-width: 100%;
+      min-height: 100%;
+      display: block;
+      overflow: visible;
+      contain: none;
+      content-visibility: visible;
+      pointer-events: auto;
+      touch-action: none;
+      z-index: 1;
+    }
+
+    #hearthVisibleCanvas,
+    #hearthCanvasMount canvas {
+      width: 100%;
+      height: 100%;
+      min-width: 100%;
+      min-height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      position: relative;
+      overflow: visible;
+      contain: none;
+      content-visibility: visible;
+      pointer-events: auto;
+      touch-action: none;
+      z-index: 2;
+    }
+
+    .hearth-route-note {
+      width: min(100%, 960px);
+      padding: 0.85rem 1rem;
       border: 1px solid var(--hearth-line);
-      border-radius: 999px;
-      padding: 0.65rem 0.9rem;
-      background: rgba(13, 23, 34, 0.88);
-      color: var(--hearth-text);
-      text-decoration: none;
-      font-size: 0.88rem;
+      border-radius: 1rem;
+      background: var(--hearth-panel-bg);
+      color: var(--hearth-muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
     }
 
-    .hearth-action:hover,
-    .hearth-action:focus {
-      border-color: rgba(216, 168, 93, 0.5);
-      text-decoration: none;
-    }
-
-    .hearth-footer {
-      width: min(100%, var(--hearth-max-page));
-      margin-inline: auto;
-      padding: 1rem clamp(1rem, 3vw, 2.25rem) 2rem;
-      color: var(--hearth-dim);
-      font-size: 0.78rem;
-      line-height: 1.5;
+    .hearth-hidden-receipts {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     @media (max-width: 720px) {
-      :root {
-        --hearth-canvas-size: min(92vw, 560px);
-        --hearth-canvas-min: 280px;
-      }
-
       .hearth-topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .hearth-hero {
-        min-height: auto;
-        grid-template-rows: auto auto auto;
+      .hearth-actions {
+        justify-content: flex-start;
       }
 
-      .hearth-globe-stage {
-        min-height: max(340px, 58vh);
+      #hearthGlobeStage {
+        min-height: max(340px, calc(100svh - 260px));
       }
     }
 
@@ -360,192 +292,140 @@
       *,
       *::before,
       *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
       }
     }
   </style>
 </head>
 
 <body
-  data-route="/showroom/globe/hearth/"
-  data-target-route="/showroom/globe/hearth/"
-  data-diagnostic-route="/showroom/globe/hearth/diagnostic/"
-  data-hearth-route-signal="HEARTH"
-  data-hearth-page-signal="SHOWROOM_GLOBE_HEARTH"
-  data-hearth-page-context="GLOBE_HEARTH"
+  data-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
   data-hearth-html-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
-  data-hearth-html-internal-renewal-contract="HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2"
-  data-index-js-contract="HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4"
-  data-route-conductor-contract="HEARTH_ROUTE_CONDUCTOR_SHOWTIME_NEWS_FIBONACCI_QUEEN_CANVAS_SYNC_TNT_v10"
-  data-route-conductor-current="HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5"
-  data-control-contract="HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1"
-  data-control-renewal-candidate="HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5"
-  data-canvas-contract="HEARTH_CANVAS_HUB_COMPOSITE_FIRST_FAST_VIEW_DEFERRED_HEX_RENDER_RECEIVER_TNT_v12_3"
-  data-canvas-renewal-candidate="HEARTH_CANVAS_HUB_LIVE_SURFACE_IDENTITY_UNIFIED_VISIBLE_2D_OUTPUT_TNT_v12_4"
+  data-hearth-html-internal-renewal-contract="HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_TNT_v5_1_3"
+  data-hearth-route="/showroom/globe/hearth/"
+  data-hearth-target-route="/showroom/globe/hearth/"
+  data-hearth-diagnostic-route="/showroom/globe/hearth/diagnostic/"
+  data-hearth-canvas-mount-required="true"
+  data-hearth-canvas-mount-used-size-required="true"
+  data-hearth-canvas-creation-authorized="false"
+  data-hearth-canvas-drawing-authorized="false"
+  data-hearth-route-repair-authorized="false"
+  data-hearth-control-mutation-authorized="false"
+  data-hearth-runtime-restart-authorized="false"
+  data-hearth-ready-text-allowed="false"
+  data-hearth-visual-pass-claimed="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-webgl="false"
 >
-  <a class="skip-link" href="#hearthCanvasMount">Skip to Hearth canvas</a>
+  <div class="hearth-shell" id="hearthShell">
+    <header class="hearth-topbar" id="hearthRouteHeader">
+      <div class="hearth-brand">
+        <strong>Hearth</strong>
+        <span>Survival Becomes Shelter</span>
+      </div>
 
-  <div
-    id="hearthRouteRoot"
-    class="hearth-page"
-    data-hearth-route-root="true"
-    data-hearth-shell-authority="HTML_CANONICAL_MOUNT_GEOMETRY_AND_ROOT_SCRIPT_ADMISSION_ONLY"
-    data-production-mutation-authorized="false"
-    data-canvas-creation-authorized="false"
-    data-canvas-drawing-authorized="false"
-    data-control-mutation-authorized="false"
-    data-runtime-restart-authorized="false"
-    data-final-visual-pass-claimed="false"
-  >
-    <header class="hearth-shell hearth-topbar" aria-label="Hearth route header">
-      <div aria-label="Route position">Showroom / Globe / Hearth</div>
-      <nav aria-label="Hearth navigation">
-        <a href="/">Compass</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/showroom/globe/">Globe</a>
-        <a href="/showroom/globe/hearth/diagnostic/">Diagnostic</a>
+      <nav class="hearth-actions" aria-label="Hearth route controls">
+        <a class="hearth-action" id="hearthDiagnosticLink" href="/showroom/globe/hearth/diagnostic/">
+          Diagnostic Rail
+        </a>
+        <button class="hearth-action" id="hearthRunButton" type="button" data-hearth-action="run">
+          Run
+        </button>
+        <button class="hearth-action" id="hearthRefreshButton" type="button" data-hearth-action="refresh">
+          Refresh
+        </button>
       </nav>
     </header>
 
-    <main id="hearthMain" class="hearth-main">
+    <main class="hearth-main" id="hearthMain">
       <section
-        id="hearthRouteStage"
-        class="hearth-shell hearth-hero"
-        aria-labelledby="hearthTitle"
-        data-hearth-route-stage="true"
+        id="hearthGlobeStage"
+        class="hearth-globe-stage"
+        aria-label="Hearth globe stage"
+        data-hearth-globe-stage="true"
+        data-hearth-planet-stage="true"
+        data-hearth-stage="true"
+        data-hearth-canvas-stage="true"
+        data-hearth-stage-used-size-boundary="true"
       >
-        <div class="hearth-heading">
-          <p class="hearth-kicker">Hearth · Globe Inspection Route</p>
-          <h1 id="hearthTitle">Hearth</h1>
-          <p class="hearth-subtitle">Survival Becomes Shelter.</p>
-        </div>
-
         <section
-          id="hearthPlanetStage"
-          class="hearth-globe-stage"
-          aria-label="Hearth visible globe stage"
-          data-hearth-planet-stage="true"
-          data-canonical-stage="true"
-          data-stage-layout-owner="HTML_SHELL_OR_STAGE_LAYOUT"
-          data-stage-layout-renewal="HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2"
-        >
-          <section
-            id="hearthCanvasMount"
-            class="globe-mount"
-            aria-label="Hearth canonical canvas mount"
-            data-hearth-canvas-mount="canonical"
-            data-canonical-mount="true"
-            data-canonical-mount-selector="#hearthCanvasMount"
-            data-canvas-mount-rect-required="true"
-          >
-            <div
-              id="hearthCanvasRectLockFrame"
-              class="hearth-canvas-rect-lock-frame"
-              data-hearth-canvas-rect-lock-frame="canonical"
-              data-canonical-frame="true"
-              data-canonical-frame-selector="#hearthCanvasRectLockFrame"
-              data-frame-rect-required="true"
-            >
-              <canvas
-                id="hearthVisibleCanvas"
-                class="hearth-visible-canvas"
-                width="1024"
-                height="1024"
-                role="img"
-                aria-label="Hearth visible globe canvas"
-                tabindex="0"
-                data-hearth-visible-canvas="canonical"
-                data-canonical-canvas="true"
-                data-canonical-canvas-selector="#hearthVisibleCanvas"
-                data-canvas-parent-selector="#hearthCanvasMount"
-                data-canvas-frame-selector="#hearthCanvasRectLockFrame"
-                data-canvas-rect-required="true"
-                data-generated-image="false"
-                data-graphic-box="false"
-                data-webgl="false"
-              ></canvas>
-            </div>
-          </section>
-        </section>
-
-        <aside class="hearth-status-panel" aria-label="Hearth route status" data-hearth-status-panel="true">
-          <strong>Route status:</strong>
-          canonical mount geometry and controls gateway admission are present. Canvas, route conductor,
-          hex surface, and pointer/finger files retain separate authority.
-
-          <div class="hearth-actions" aria-label="Hearth route actions">
-            <a class="hearth-action" href="/showroom/globe/hearth/diagnostic/">Open diagnostic rail</a>
-            <a class="hearth-action" href="/showroom/globe/">Return to Globe</a>
-          </div>
-        </aside>
+          id="hearthCanvasMount"
+          class="globe-mount"
+          aria-label="Hearth canonical canvas mount"
+          data-hearth-canvas-mount="true"
+          data-hearth-canonical-mount="true"
+          data-hearth-canonical-visible-surface-parent="true"
+          data-hearth-mount-used-size-locked="true"
+        ></section>
       </section>
-    </main>
 
-    <footer class="hearth-footer" aria-label="Hearth route footer">
-      <span>Hearth shell · no generated image · no GraphicBox · no WebGL · no final visual pass claimed by HTML.</span>
-    </footer>
+      <aside class="hearth-route-note" id="hearthRouteNote">
+        Hearth route shell. The canonical canvas mount is held at a nonzero used size; canvas rendering, pixel truth,
+        motion, and downstream expression remain owned by their runtime files.
+      </aside>
+    </main>
   </div>
 
-  <script>
-    (function publishHearthHtmlShellReceipt() {
-      "use strict";
+  <div class="hearth-hidden-receipts" aria-hidden="true">
+    <p id="hearthHtmlReceipt">
+      PACKET_NAME=HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_PACKET_v5_1_3
+      CONTRACT=HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1
+      RECEIPT=HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_RECEIPT_v5_1
+      INTERNAL_RENEWAL_CONTRACT=HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_TNT_v5_1_3
+      INTERNAL_RENEWAL_RECEIPT=HEARTH_HTML_CANONICAL_GLOBE_USED_SIZE_BOUNDARY_LOCK_RECEIPT_v5_1_3
+      TARGET_ROUTE=/showroom/globe/hearth/
+      DIAGNOSTIC_ROUTE=/showroom/globe/hearth/diagnostic/
+      HTML_FILE=/showroom/globe/hearth/index.html
+      INDEX_FILE=/showroom/globe/hearth/index.js
+      ROUTE_CONDUCTOR_FILE=/showroom/globe/hearth/hearth.js
+      CONTROL_FILE=/assets/hearth/hearth.controls.js
+      CANVAS_FILE=/assets/hearth/hearth.canvas.js
+      HEX_AUTHORITY_FILE=/assets/hearth/hearth.hex.four-pair.authority.js
+      HEX_SURFACE_FILE=/assets/hearth/hearth.hex.surface.js
+      POINTER_SURFACE_FILE=/assets/hearth/hearth.canvas.finger.surface.js
+      POINTER_INSPECT_FILE=/assets/hearth/hearth.canvas.finger.inspect.js
+      CANONICAL_STAGE_SELECTOR=#hearthGlobeStage
+      CANONICAL_MOUNT_SELECTOR=#hearthCanvasMount
+      CANONICAL_FRAME_SELECTOR=#hearthCanvasRectLockFrame
+      CANONICAL_CANVAS_ID=hearthVisibleCanvas
+      HTML_USED_SIZE_BOUNDARY_LOCK_ACTIVE=true
+      STAGE_USED_SIZE_BOUNDARY_ACTIVE=true
+      MOUNT_USED_SIZE_BOUNDARY_ACTIVE=true
+      FRAME_AND_CANVAS_CSS_RECEIVER_RULES_PRESENT=true
+      SINGLE_CAUSAL_FILE_PROVEN=false
+      NO_SINGLE_FILE_RECOMMENDATION_UNLESS_SINGLE_FILE_CAUSALITY_PROVEN=true
+      PRODUCTION_MUTATION_AUTHORIZED=false
+      CANVAS_DRAWING_AUTHORIZED=false
+      CANVAS_CREATION_AUTHORIZED=false
+      CANVAS_REPAIR_AUTHORIZED=false
+      ROUTE_REPAIR_AUTHORIZED=false
+      CONTROL_MUTATION_AUTHORIZED=false
+      RUNTIME_RESTART_AUTHORIZED=false
+      READY_TEXT_ALLOWED=false
+      VISUAL_PASS_CLAIMED=false
+      FINAL_VISUAL_PASS_CLAIMED=false
+      GENERATED_IMAGE=false
+      GRAPHIC_BOX=false
+      WEBGL=false
+    </p>
+  </div>
 
-      var receipt = {
-        packetName: "HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_PACKET_v5_1_2",
-        contract: "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1",
-        receipt: "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_RECEIPT_v5_1",
-        internalRenewalContract: "HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_TNT_v5_1_2",
-        internalRenewalReceipt: "HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_RECEIPT_v5_1_2",
-        targetRoute: "/showroom/globe/hearth/",
-        diagnosticRoute: "/showroom/globe/hearth/diagnostic/",
-        htmlFile: "/showroom/globe/hearth/index.html",
-        indexFile: "/showroom/globe/hearth/index.js",
-        routeConductorFile: "/showroom/globe/hearth/hearth.js",
-        controlFile: "/assets/hearth/hearth.controls.js",
-        canvasFile: "/assets/hearth/hearth.canvas.js",
-        hexAuthorityFile: "/assets/hearth/hearth.hex.four-pair.authority.js",
-        hexSurfaceFile: "/assets/hearth/hearth.hex.surface.js",
-        pointerSurfaceFile: "/assets/hearth/hearth.canvas.finger.surface.js",
-        pointerInspectFile: "/assets/hearth/hearth.canvas.finger.inspect.js",
-        canonicalMountSelector: "#hearthCanvasMount",
-        canonicalFrameSelector: "#hearthCanvasRectLockFrame",
-        canonicalCanvasSelector: "#hearthVisibleCanvas",
-        canonicalChain: "#hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas",
-        shellOwnsCanonicalMountGeometry: true,
-        shellOwnsRootScriptAdmission: true,
-        shellOwnsCanvasDrawing: false,
-        shellOwnsControlsBehavior: false,
-        shellOwnsRuntimeRestart: false,
-        canvasCreationAuthorized: false,
-        canvasDrawingAuthorized: false,
-        controlMutationAuthorized: false,
-        routeRepairAuthorized: false,
-        runtimeRestartAuthorized: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        webgl: false,
-        readyTextClaimed: false,
-        visualPassClaimed: false,
-        finalVisualPassClaimed: false,
-        updatedAt: new Date().toISOString()
-      };
-
-      window.HEARTH_HTML_SHELL_RECEIPT = receipt;
-      window.HEARTH_HTML_CANONICAL_MOUNT_AND_CONTROL_GATEWAY_ADMISSION_RECEIPT = receipt;
-    })();
-  </script>
-
-  <script
-    src="/showroom/globe/hearth/hearth.js?v=HEARTH_ROUTE_CONDUCTOR_SAFE_PACKET_BRIDGE_NO_LIFECYCLE_IGNITION_TNT_v10_5"
-    defer
-  ></script>
-  <script
-    src="/assets/hearth/hearth.controls.js?v=HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5"
-    defer
-  ></script>
   <script
     src="/showroom/globe/hearth/index.js?v=HEARTH_INDEX_JS_FRONTEND_BUTTON_AUTHORITY_RESET_TNT_v5_4"
+    defer
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/hearth.js?v=HEARTH_ROUTE_CONDUCTOR_CANVAS_ASSET_TRANSACTION_RESET_TNT_v10_8"
+    defer
+  ></script>
+
+  <script
+    src="/assets/hearth/hearth.controls.js?v=HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5"
     defer
   ></script>
 </body>

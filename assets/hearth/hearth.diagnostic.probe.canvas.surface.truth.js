@@ -1045,7 +1045,7 @@
         status: "NO_PIXEL_SAMPLE",
         readable: false,
         visible: false,
-        sampleCount: 0,
+        sampleCount: 0, 
         visiblePixelCount: 0,
         alphaPixelCount: 0,
         uniqueColorCount: 0,

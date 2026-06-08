@@ -1,24 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-route="/showroom/globe/hearth/"
+  data-page="hearth-facility-window"
+  data-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
+  data-internal-renewal="HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2"
+>
 <head>
   <!--
     /showroom/globe/hearth/index.html
-    HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6
+    HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2
     Full-file replacement.
 
-    HTML shell / stage-layout / passive script-admission boundary only.
+    Public contract preserved:
+    HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1
 
-    Purpose:
-    - Preserve the public HTML contract:
-      HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1
-    - Preserve the canonical canvas DOM chain exactly:
-      #hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas
-    - Repair the suspected zero-rect failure at the stage/mount/frame/canvas used-size boundary.
-    - Remove dependence on a fragile parent-percentage-only sizing chain.
-    - Add explicit used-size floors to the stage, expression surface, mount, frame, and canvas.
-    - Preserve passive governed script admission order:
-      hex authority -> hex surface -> canvas receiver -> controls gateway -> index buttons -> route conductor.
-    - Keep route conductor, canvas, controls, hex, and downstream pointer files as separate runtime authorities.
+    Supersedes internally:
+    HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6
+
+    HTML shell / stage-layout / public narrative integration / passive script-admission boundary only.
+
+    Preserves canonical canvas DOM chain exactly:
+    #hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas
+
+    Preserves passive governed script admission order:
+    hex authority -> hex surface -> canvas receiver -> controls gateway -> index buttons -> route conductor.
+
+    Visible premise:
+    - Hearth is the facility in a location unknown.
+    - Audralia is the first applied-science playground for Frontier studies.
+    - Characters, crews, and scientific communities shape systems that later become Frontier products.
+    - The page uses narrative bubbles, expandable pathways, and tabs to carry substantial text without forcing it into one wall.
 
     Does not own:
     - Canvas drawing
@@ -41,29 +53,53 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#11130f" />
 
-  <title>Hearth · Survival Becomes Shelter</title>
+  <title>Hearth · Facility in a Location Unknown</title>
   <meta
     name="description"
-    content="Hearth visible globe route. Static canonical canvas shell with passive governed asset admission."
+    content="Hearth is the hidden facility where characters, crews, and scientific communities shape systems before the Frontier opens."
   />
 
   <style>
     :root {
       color-scheme: dark;
-      --hearth-bg: #0b0d0a;
-      --hearth-panel: rgba(255, 255, 255, 0.065);
-      --hearth-panel-strong: rgba(255, 255, 255, 0.105);
-      --hearth-text: #f3eedf;
-      --hearth-muted: rgba(243, 238, 223, 0.72);
-      --hearth-line: rgba(243, 238, 223, 0.18);
-      --hearth-radius: 28px;
-      --hearth-safe-top: env(safe-area-inset-top, 0px);
-      --hearth-safe-right: env(safe-area-inset-right, 0px);
-      --hearth-safe-bottom: env(safe-area-inset-bottom, 0px);
-      --hearth-safe-left: env(safe-area-inset-left, 0px);
-      --hearth-stage-floor: 320px;
-      --hearth-stage-mobile-floor: 280px;
-      --hearth-stage-max: 920px;
+
+      --bg0: #080907;
+      --bg1: #11130f;
+      --bg2: #17180f;
+      --panel: rgba(255, 255, 255, 0.066);
+      --panel-strong: rgba(255, 255, 255, 0.108);
+      --glass: rgba(11, 13, 10, 0.62);
+      --text: #f3eedf;
+      --muted: rgba(243, 238, 223, 0.72);
+      --dim: rgba(243, 238, 223, 0.52);
+      --line: rgba(243, 238, 223, 0.18);
+      --line-strong: rgba(243, 238, 223, 0.32);
+
+      --ember: #ffb25f;
+      --gold: #f2d28a;
+      --water: #70d7ff;
+      --green: #8ff0b1;
+      --violet: #c9a4ff;
+      --red: #ff6f7d;
+
+      --radius-xl: 34px;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+
+      --stage-floor: 320px;
+      --stage-mobile-floor: 280px;
+      --stage-max: 920px;
+
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --shadow: 0 26px 90px rgba(0, 0, 0, 0.42);
     }
 
     * {
@@ -74,7 +110,13 @@
       min-width: 320px;
       min-height: 100%;
       overflow-x: hidden;
-      background: var(--hearth-bg);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(255, 178, 95, 0.12), transparent 28rem),
+        radial-gradient(circle at 82% 8%, rgba(112, 215, 255, 0.11), transparent 30rem),
+        radial-gradient(circle at 55% 86%, rgba(143, 240, 177, 0.08), transparent 30rem),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+      color: var(--text);
+      scroll-behavior: smooth;
     }
 
     body {
@@ -84,35 +126,42 @@
       min-height: 100svh;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 18%, rgba(151, 111, 55, 0.24), transparent 30%),
-        radial-gradient(circle at 50% 70%, rgba(62, 93, 114, 0.18), transparent 38%),
-        linear-gradient(180deg, #11130f 0%, #080907 100%);
-      color: var(--hearth-text);
-      font-family:
-        ui-serif,
-        Georgia,
-        Cambria,
-        "Times New Roman",
-        serif;
+        linear-gradient(rgba(243, 238, 223, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(243, 238, 223, 0.022) 1px, transparent 1px),
+        radial-gradient(circle at 50% 18%, rgba(151, 111, 55, 0.18), transparent 31%),
+        radial-gradient(circle at 50% 70%, rgba(62, 93, 114, 0.15), transparent 42%);
+      background-size: 40px 40px, 40px 40px, auto, auto;
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -25%;
+      z-index: -1;
+      background:
+        conic-gradient(
+          from 200deg at 50% 50%,
+          rgba(255, 178, 95, 0.13),
+          rgba(112, 215, 255, 0.08),
+          rgba(143, 240, 177, 0.08),
+          rgba(201, 164, 255, 0.1),
+          rgba(255, 178, 95, 0.13)
+        );
+      filter: blur(80px);
+      opacity: 0.64;
+      animation: hearthDrift 34s linear infinite;
+    }
+
+    @keyframes hearthDrift {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.05); }
+      100% { transform: rotate(360deg) scale(1); }
     }
 
     a {
       color: inherit;
-    }
-
-    .hearth-page {
-      width: 100%;
-      min-height: 100vh;
-      min-height: 100svh;
-      padding:
-        calc(20px + var(--hearth-safe-top))
-        calc(20px + var(--hearth-safe-right))
-        calc(22px + var(--hearth-safe-bottom))
-        calc(20px + var(--hearth-safe-left));
-      display: grid;
-      grid-template-rows: auto auto auto;
-      gap: 18px;
-      align-content: start;
     }
 
     .skip-link {
@@ -122,108 +171,249 @@
       z-index: 20;
       padding: 10px 14px;
       border-radius: 999px;
-      background: #f3eedf;
+      background: var(--text);
       color: #11130f;
       text-decoration: none;
-      font-family: system-ui, sans-serif;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .skip-link:focus {
       left: 14px;
     }
 
-    .hearth-header,
-    .hearth-footer,
-    .hearth-stage-shell,
-    .hearth-panel-row {
-      width: min(1180px, 100%);
+    .page {
+      width: min(1440px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding:
+        calc(20px + var(--safe-top))
+        var(--safe-right)
+        calc(34px + var(--safe-bottom))
+        var(--safe-left);
+    }
+
+    .hero,
+    .stage-card,
+    .orbit-card,
+    .pathways,
+    .bridge-card,
+    .footer-card {
+      width: min(1240px, 100%);
       margin-inline: auto;
     }
 
-    .hearth-header {
-      display: grid;
-      gap: 14px;
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(140deg, rgba(25, 27, 19, 0.9), rgba(8, 9, 7, 0.92)),
+        radial-gradient(circle at 86% 16%, rgba(255, 178, 95, 0.12), transparent 20rem);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 3vw, 34px);
     }
 
-    .hearth-breadcrumbs {
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -170px;
+      top: -210px;
+      width: 480px;
+      height: 480px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle, rgba(255, 210, 138, 0.16), transparent 54%),
+        conic-gradient(from 0deg, transparent, rgba(255,255,255,0.18), transparent, rgba(112,215,255,0.18), transparent);
+      opacity: 0.7;
+      animation: slowSpin 26s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes slowSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    .breadcrumbs {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
-      font-family: system-ui, sans-serif;
-      font-size: 0.875rem;
-      color: var(--hearth-muted);
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 18px;
     }
 
-    .hearth-breadcrumbs a {
+    .breadcrumbs a {
       text-decoration: none;
       border-bottom: 1px solid transparent;
     }
 
-    .hearth-breadcrumbs a:focus,
-    .hearth-breadcrumbs a:hover {
+    .breadcrumbs a:hover,
+    .breadcrumbs a:focus-visible {
       border-bottom-color: currentColor;
+      outline: none;
     }
 
-    .hearth-title-row {
+    .hero-grid {
+      position: relative;
+      z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 18px;
+      grid-template-columns: minmax(0, 1fr) minmax(270px, 0.42fr);
+      gap: 24px;
       align-items: end;
     }
 
-    .hearth-title {
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font: 800 0.75rem/1 var(--mono);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
       margin: 0;
-      font-size: clamp(2rem, 5vw, 5rem);
-      line-height: 0.92;
-      letter-spacing: -0.055em;
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 7vw, 6.6rem);
+      line-height: 0.88;
+      letter-spacing: -0.065em;
       text-wrap: balance;
     }
 
-    .hearth-subtitle {
-      margin: 8px 0 0;
-      max-width: 62ch;
-      color: var(--hearth-muted);
-      font-family: system-ui, sans-serif;
-      line-height: 1.5;
+    .hero-lede {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: rgba(243, 238, 223, 0.82);
+      font-size: clamp(1.03rem, 1.7vw, 1.34rem);
+      line-height: 1.52;
     }
 
-    .hearth-actions {
+    .hero-actions,
+    .bubble-actions,
+    .card-actions,
+    .bridge-actions {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: 10px;
     }
 
-    .hearth-action,
-    .hearth-action:visited {
+    .hero-actions {
+      justify-content: flex-end;
+    }
+
+    .button,
+    button {
       appearance: none;
-      border: 1px solid var(--hearth-line);
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--hearth-panel);
-      color: var(--hearth-text);
+      background:
+        linear-gradient(135deg, rgba(255, 178, 95, 0.12), rgba(112, 215, 255, 0.09)),
+        rgba(255, 255, 255, 0.055);
+      color: var(--text);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
-      padding: 0 15px;
+      min-height: 44px;
+      padding: 0 16px;
       text-decoration: none;
-      font-family: system-ui, sans-serif;
-      font-size: 0.9rem;
-      line-height: 1;
+      font: 800 0.82rem/1 var(--sans);
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
       white-space: nowrap;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
-    .hearth-action:hover,
-    .hearth-action:focus-visible {
-      background: var(--hearth-panel-strong);
+    .button:hover,
+    .button:focus-visible,
+    button:hover,
+    button:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(255, 210, 138, 0.52);
+      background:
+        linear-gradient(135deg, rgba(255, 178, 95, 0.18), rgba(112, 215, 255, 0.12)),
+        rgba(255, 255, 255, 0.08);
       outline: none;
     }
 
-    .hearth-stage-shell {
-      min-height: var(--hearth-stage-floor);
+    .button.primary {
+      border-color: rgba(255, 210, 138, 0.42);
+      background:
+        linear-gradient(135deg, rgba(255, 178, 95, 0.2), rgba(143, 240, 177, 0.12)),
+        rgba(255, 255, 255, 0.07);
+    }
+
+    .facility-seal {
+      border: 1px solid rgba(243, 238, 223, 0.13);
+      border-radius: 24px;
+      background: rgba(8, 9, 7, 0.62);
+      padding: 16px;
+      box-shadow: inset 0 0 34px rgba(255, 178, 95, 0.04);
+    }
+
+    .facility-seal b {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--text);
+      font: 900 0.78rem/1 var(--mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .seal-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid rgba(243, 238, 223, 0.09);
+      padding: 8px 0;
+      color: var(--muted);
+      font: 0.76rem/1.2 var(--mono);
+    }
+
+    .seal-line strong {
+      color: var(--gold);
+      text-align: right;
+    }
+
+    .stage-card {
+      margin-top: 18px;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 0.7fr) minmax(320px, 1.1fr) minmax(0, 0.7fr);
+      gap: 16px;
+      align-items: center;
+    }
+
+    .side-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--glass);
+      padding: 16px;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .side-panel h2 {
+      margin: 0;
+      color: var(--gold);
+      font: 900 0.75rem/1 var(--mono);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .side-panel p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.98rem;
+    }
+
+    .stage-shell {
+      min-height: var(--stage-floor);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -237,10 +427,10 @@
     .hearth-planet-stage {
       width: 72vmin;
       height: 72vmin;
-      min-width: var(--hearth-stage-floor);
-      min-height: var(--hearth-stage-floor);
-      max-width: var(--hearth-stage-max);
-      max-height: var(--hearth-stage-max);
+      min-width: var(--stage-floor);
+      min-height: var(--stage-floor);
+      max-width: var(--stage-max);
+      max-height: var(--stage-max);
       aspect-ratio: 1 / 1;
       position: relative;
       display: flex;
@@ -253,12 +443,27 @@
       content-visibility: visible;
     }
 
-    .hearth-expression-surface,
-    .expression-surface {
+    .planet-stage::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border: 1px solid rgba(255, 210, 138, 0.18);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 58%, rgba(255, 178, 95, 0.09) 61%, transparent 66%),
+        conic-gradient(from 30deg, transparent, rgba(112, 215, 255, 0.18), transparent, rgba(255,178,95,0.14), transparent);
+      filter: blur(0.2px);
+      opacity: 0.78;
+      animation: slowSpin 44s linear infinite;
+      pointer-events: none;
+    }
+
+    .expression-surface,
+    .hearth-expression-surface {
       width: 100%;
       height: 100%;
-      min-width: var(--hearth-stage-floor);
-      min-height: var(--hearth-stage-floor);
+      min-width: var(--stage-floor);
+      min-height: var(--stage-floor);
       aspect-ratio: 1 / 1;
       position: relative;
       display: block;
@@ -272,8 +477,8 @@
     #hearthCanvasMount {
       width: 100%;
       height: 100%;
-      min-width: var(--hearth-stage-floor);
-      min-height: var(--hearth-stage-floor);
+      min-width: var(--stage-floor);
+      min-height: var(--stage-floor);
       aspect-ratio: 1 / 1;
       position: relative;
       display: block;
@@ -283,11 +488,12 @@
       content-visibility: visible;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 44% 35%, rgba(255, 255, 255, 0.14), transparent 0 34%, rgba(255, 255, 255, 0.05) 54%, rgba(0, 0, 0, 0.38) 100%),
+        radial-gradient(circle at 42% 32%, rgba(255, 255, 255, 0.16), transparent 0 32%, rgba(255, 255, 255, 0.055) 53%, rgba(0, 0, 0, 0.42) 100%),
         #10140f;
       box-shadow:
         0 0 0 1px rgba(243, 238, 223, 0.16),
-        0 28px 90px rgba(0, 0, 0, 0.42);
+        0 28px 90px rgba(0, 0, 0, 0.44),
+        inset -18px -24px 54px rgba(0, 0, 0, 0.36);
     }
 
     #hearthCanvasRectLockFrame {
@@ -295,8 +501,8 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      min-width: var(--hearth-stage-floor);
-      min-height: var(--hearth-stage-floor);
+      min-width: var(--stage-floor);
+      min-height: var(--stage-floor);
       aspect-ratio: 1 / 1;
       display: block;
       overflow: hidden;
@@ -309,8 +515,8 @@
     #hearthVisibleCanvas {
       width: 100%;
       height: 100%;
-      min-width: var(--hearth-stage-floor);
-      min-height: var(--hearth-stage-floor);
+      min-width: var(--stage-floor);
+      min-height: var(--stage-floor);
       aspect-ratio: 1 / 1;
       display: block;
       border: 0;
@@ -324,59 +530,436 @@
       background: transparent;
     }
 
-    .hearth-panel-row {
+    .orbit-card {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(22, 24, 16, 0.78), rgba(8, 9, 7, 0.72)),
+        radial-gradient(circle at 90% 0%, rgba(112, 215, 255, 0.08), transparent 22rem);
+      padding: 16px;
+      box-shadow: 0 14px 50px rgba(0, 0, 0, 0.24);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .section-heading p {
+      margin: 0;
+      max-width: 58ch;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.96rem;
+    }
+
+    .bubble-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .bubble {
+      min-height: 138px;
+      text-align: left;
+      border-radius: 24px;
+      padding: 14px;
+      border: 1px solid rgba(243, 238, 223, 0.13);
+      background:
+        radial-gradient(circle at 92% 12%, var(--bubble-glow, rgba(255, 178, 95, 0.12)), transparent 7rem),
+        rgba(255, 255, 255, 0.055);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      white-space: normal;
+      text-transform: none;
+      letter-spacing: 0;
+      font: inherit;
+    }
+
+    .bubble[data-tone="gold"] { --bubble-glow: rgba(255, 210, 138, 0.15); }
+    .bubble[data-tone="water"] { --bubble-glow: rgba(112, 215, 255, 0.15); }
+    .bubble[data-tone="green"] { --bubble-glow: rgba(143, 240, 177, 0.14); }
+    .bubble[data-tone="violet"] { --bubble-glow: rgba(201, 164, 255, 0.14); }
+
+    .bubble strong {
+      display: block;
+      font-size: 1.03rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .bubble span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .bubble em {
+      margin-top: 12px;
+      color: var(--gold);
+      font-style: normal;
+      font: 900 0.68rem/1 var(--mono);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .pathways {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    details.pathway {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(22, 24, 16, 0.72), rgba(8, 9, 7, 0.68));
+      overflow: hidden;
+      box-shadow: 0 14px 46px rgba(0, 0, 0, 0.21);
+    }
+
+    .pathway summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pathway summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .summary-title {
+      display: grid;
+      gap: 7px;
+    }
+
+    .summary-title b {
+      color: var(--gold);
+      font: 900 0.72rem/1 var(--mono);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .summary-title strong {
+      font-family: var(--serif);
+      font-size: clamp(1.55rem, 2.6vw, 2.5rem);
+      line-height: 0.96;
+      letter-spacing: -0.042em;
+    }
+
+    .summary-title span {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.38;
+    }
+
+    .open-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 10px;
+      color: var(--muted);
+      font: 900 0.68rem/1 var(--mono);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    details[open] .open-pill {
+      color: var(--gold);
+      border-color: rgba(255, 210, 138, 0.42);
+    }
+
+    .pathway-body {
+      border-top: 1px solid rgba(243, 238, 223, 0.1);
+      padding: 16px 18px 18px;
+    }
+
+    .pathway-intro {
+      max-width: 92ch;
+      color: rgba(243, 238, 223, 0.82);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+
+    .tabs {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tab-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-button {
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.74rem;
+    }
+
+    .tab-button[aria-selected="true"] {
+      border-color: rgba(255, 210, 138, 0.48);
+      background:
+        linear-gradient(135deg, rgba(255, 178, 95, 0.2), rgba(143, 240, 177, 0.09)),
+        rgba(255, 255, 255, 0.08);
+    }
+
+    .tab-panel {
+      display: none;
+      border: 1px solid rgba(243, 238, 223, 0.12);
+      border-radius: 22px;
+      background: rgba(0, 0, 0, 0.18);
+      padding: 15px;
+    }
+
+    .tab-panel[data-active="true"] {
+      display: block;
+    }
+
+    .tab-panel h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .tab-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.56;
+    }
+
+    .tab-panel p + p {
+      margin-top: 10px;
+    }
+
+    .mini-card-grid {
+      margin-top: 12px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      font-family: system-ui, sans-serif;
+      gap: 10px;
     }
 
-    .hearth-panel {
-      border: 1px solid var(--hearth-line);
+    .mini-card {
+      border: 1px solid rgba(243, 238, 223, 0.11);
       border-radius: 18px;
-      background: var(--hearth-panel);
-      padding: 14px;
-      min-height: 104px;
+      background: rgba(255, 255, 255, 0.046);
+      padding: 12px;
+      min-height: 126px;
     }
 
-    .hearth-panel h2 {
-      margin: 0 0 8px;
-      font-size: 0.82rem;
-      text-transform: uppercase;
+    .mini-card b {
+      display: block;
+      color: var(--gold);
+      font: 900 0.68rem/1 var(--mono);
       letter-spacing: 0.12em;
-      color: rgba(243, 238, 223, 0.62);
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .hearth-panel p {
+    .mini-card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .mini-card span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.38;
+    }
+
+    .bridge-card {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .bridge-panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 92% 8%, rgba(255, 210, 138, 0.11), transparent 14rem),
+        rgba(8, 9, 7, 0.7);
+      padding: 18px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bridge-panel h2 {
       margin: 0;
-      color: var(--hearth-muted);
+      font-family: var(--serif);
+      font-size: clamp(1.7rem, 3vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .bridge-panel p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 1rem;
+    }
+
+    .bridge-actions {
+      margin-top: 18px;
+    }
+
+    .footer-card {
+      margin-top: 18px;
+      color: var(--dim);
+      text-align: center;
+      font-size: 0.83rem;
       line-height: 1.45;
-      font-size: 0.95rem;
     }
 
-    .hearth-footer {
-      color: rgba(243, 238, 223, 0.52);
-      font-family: system-ui, sans-serif;
-      font-size: 0.82rem;
-      line-height: 1.4;
-    }
-
-    .hearth-receipt[hidden],
-    #hearthHtmlReceipt[hidden] {
+    .hidden-receipt,
+    #hearthHtmlReceipt[hidden],
+    #hearthPageReceipt[hidden] {
       display: none !important;
+    }
+
+    dialog {
+      width: min(680px, calc(100vw - 28px));
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(145deg, rgba(20, 22, 15, 0.96), rgba(7, 8, 6, 0.96));
+      color: var(--text);
+      box-shadow: var(--shadow);
+      padding: 0;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(4px);
+    }
+
+    .dialog-inner {
+      padding: 20px;
+    }
+
+    .dialog-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .dialog-top h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+    }
+
+    .dialog-body {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .dialog-close {
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 0.72rem;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 100;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      border: 1px solid rgba(255, 210, 138, 0.36);
+      border-radius: 999px;
+      background: rgba(8, 9, 7, 0.92);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      padding: 12px 16px;
+      font: 900 0.74rem/1 var(--mono);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .toast[data-show="true"] {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1160px) {
+      .stage-card {
+        grid-template-columns: 1fr;
+      }
+
+      .side-panel {
+        min-height: auto;
+      }
+
+      .bubble-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .bridge-card {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        justify-content: flex-start;
+      }
+
+      .section-heading {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .mini-card-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 780px) {
       :root {
-        --hearth-stage-floor: var(--hearth-stage-mobile-floor);
+        --stage-floor: var(--stage-mobile-floor);
       }
 
-      .hearth-page {
-        padding:
-          calc(16px + var(--hearth-safe-top))
-          calc(16px + var(--hearth-safe-right))
-          calc(18px + var(--hearth-safe-bottom))
-          calc(16px + var(--hearth-safe-left));
+      .page {
+        width: min(100vw - 18px, 1440px);
+        padding-top: calc(12px + var(--safe-top));
+      }
+
+      .hero {
+        border-radius: 24px;
       }
 
       .planet-stage,
@@ -385,44 +968,37 @@
         height: 84vmin;
       }
 
-      .hearth-title-row {
+      .bubble-grid {
         grid-template-columns: 1fr;
-        align-items: start;
       }
 
-      .hearth-actions {
-        justify-content: flex-start;
+      .pathway summary {
+        grid-template-columns: 1fr;
       }
 
-      .hearth-panel-row {
-        grid-template-columns: 1fr;
+      .open-pill {
+        width: max-content;
+      }
+
+      .button,
+      button {
+        width: 100%;
+      }
+
+      .tab-button {
+        width: auto;
       }
     }
 
     @media (max-width: 360px) {
       :root {
-        --hearth-stage-floor: 268px;
-      }
-
-      .hearth-page {
-        padding:
-          calc(12px + var(--hearth-safe-top))
-          calc(12px + var(--hearth-safe-right))
-          calc(16px + var(--hearth-safe-bottom))
-          calc(12px + var(--hearth-safe-left));
+        --stage-floor: 268px;
       }
 
       .planet-stage,
       .hearth-planet-stage {
         width: 82vmin;
         height: 82vmin;
-      }
-
-      .hearth-action,
-      .hearth-action:visited {
-        min-height: 40px;
-        padding: 0 12px;
-        font-size: 0.84rem;
       }
     }
 
@@ -443,11 +1019,11 @@
   data-hearth-route="/showroom/globe/hearth/"
   data-hearth-page="hearth"
   data-hearth-page-alias="Hearth"
-  data-hearth-page-context="visible globe canvas expression shell"
+  data-hearth-page-context="facility window narrative canvas expression shell"
   data-hearth-html-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
-  data-hearth-html-internal-renewal-contract="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6"
-  data-hearth-html-internal-renewal-receipt="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_RECEIPT_v5_1_6"
-  data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5"
+  data-hearth-html-internal-renewal-contract="HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2"
+  data-hearth-html-internal-renewal-receipt="HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_RECEIPT_v5_2"
+  data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6"
   data-hearth-canonical-mount-used-size-lock="true"
   data-hearth-stage-used-size-floor-active="true"
   data-hearth-static-canonical-frame-canvas-restored="true"
@@ -471,16 +1047,16 @@
   data-hearth-pointer-inspect-file="/assets/hearth/hearth.canvas.finger.inspect.js"
   data-hearth-canvas-selector="#hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas"
 >
-  <a class="skip-link" href="#hearth-main">Skip to Hearth globe</a>
+  <a class="skip-link" href="#hearth-main">Skip to Hearth facility window</a>
 
   <main
     id="hearth-main"
-    class="hearth-page"
+    class="page"
     data-hearth-shell="true"
     data-hearth-shell-owner="HTML_SHELL_OR_STAGE_LAYOUT_BOUNDARY"
   >
-    <header class="hearth-header" aria-labelledby="hearth-title">
-      <nav class="hearth-breadcrumbs" aria-label="Breadcrumb">
+    <section class="hero" aria-labelledby="hearth-title">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="/">Compass</a>
         <span aria-hidden="true">/</span>
         <a href="/showroom/">Showroom</a>
@@ -490,131 +1066,745 @@
         <span>Hearth</span>
       </nav>
 
-      <div class="hearth-title-row">
+      <div class="hero-grid">
         <div>
-          <h1 id="hearth-title" class="hearth-title">Hearth</h1>
-          <p class="hearth-subtitle">
-            Survival becomes shelter. This route provides the static canonical canvas shell and
-            passively admits the governed runtime chain for expression, input, motion, and diagnostic arbitration.
+          <p class="eyebrow">Facility in a location unknown</p>
+          <h1 id="hearth-title">Hearth</h1>
+          <p class="hero-lede">
+            Before the Frontier opens, the systems begin here. Hearth is the hidden facility
+            where characters, crews, and scientific communities shape energy, water,
+            infrastructure, closed-loop flow, urban systems, and waste reuse before those
+            systems become Frontier product pathways.
           </p>
         </div>
 
-        <div class="hearth-actions" aria-label="Hearth route actions">
-          <a class="hearth-action" href="/showroom/globe/hearth/diagnostic/" data-hearth-open-diagnostic>
-            Open Diagnostic
-          </a>
-          <button class="hearth-action" type="button" id="hearthCopyReceiptButton" data-hearth-copy-receipt>
-            Copy Receipt
-          </button>
-          <button class="hearth-action" type="button" id="hearthRefreshStatusButton" data-hearth-refresh-status>
-            Refresh Status
-          </button>
-        </div>
+        <aside class="facility-seal" aria-label="Hearth facility seal">
+          <b>Facility Seal</b>
+          <div class="seal-line">
+            <span>First playground</span>
+            <strong>Audralia</strong>
+          </div>
+          <div class="seal-line">
+            <span>Facility</span>
+            <strong>Hearth</strong>
+          </div>
+          <div class="seal-line">
+            <span>Mode</span>
+            <strong>Becoming</strong>
+          </div>
+          <div class="seal-line">
+            <span>Door</span>
+            <strong>Instrument Chamber</strong>
+          </div>
+        </aside>
       </div>
-    </header>
 
-    <section
-      id="hearthStageShell"
-      class="hearth-stage-shell"
-      aria-label="Hearth static stage shell"
-      data-hearth-stage-shell="true"
-      data-hearth-used-size-boundary="locked"
-      data-hearth-stage-used-size-floor="true"
-    >
+      <div class="hero-actions" aria-label="Hearth route actions" style="position: relative; z-index: 1; margin-top: 22px;">
+        <a class="button primary" href="/showroom/globe/hearth/diagnostic/" data-hearth-open-diagnostic>
+          Enter Instrument Chamber
+        </a>
+        <button class="button" type="button" id="hearthCopyReceiptButton" data-hearth-copy-receipt>
+          Copy Route Receipt
+        </button>
+        <button class="button" type="button" id="hearthRefreshStatusButton" data-hearth-refresh-status>
+          Refresh Facility Window
+        </button>
+      </div>
+    </section>
+
+    <section class="stage-card" aria-label="Hearth facility window">
+      <article class="side-panel">
+        <div>
+          <h2>The facility window</h2>
+          <p>
+            Most people only see a product after it is finished. Hearth shows the earlier
+            moment: when a system is still being shaped, when a question becomes a crew,
+            and when a crew begins moving toward the Frontier.
+          </p>
+        </div>
+        <div class="card-actions" style="margin-top: 16px;">
+          <button type="button" data-open-story="facility">Open Story</button>
+        </div>
+      </article>
+
       <section
-        id="hearthPlanetStage"
-        class="planet-stage hearth-planet-stage"
-        aria-label="Hearth planet stage"
-        data-hearth-globe-stage="true"
-        data-hearth-planet-stage="true"
-        data-hearth-stage="true"
-        data-hearth-stage-used-size="nonzero-required"
+        id="hearthStageShell"
+        class="stage-shell"
+        aria-label="Hearth protected facility window"
+        data-hearth-stage-shell="true"
+        data-hearth-used-size-boundary="locked"
         data-hearth-stage-used-size-floor="true"
       >
-        <div
-          id="hearthExpressionSurface"
-          class="hearth-expression-surface expression-surface"
-          data-hearth-expression-surface="true"
-          data-hearth-dom-expression-surface="true"
-          data-hearth-expression-used-size="nonzero-required"
+        <section
+          id="hearthPlanetStage"
+          class="planet-stage hearth-planet-stage"
+          aria-label="Hearth planet stage"
+          data-hearth-globe-stage="true"
+          data-hearth-planet-stage="true"
+          data-hearth-stage="true"
+          data-hearth-stage-used-size="nonzero-required"
           data-hearth-stage-used-size-floor="true"
         >
-          <section
-            id="hearthCanvasMount"
-            class="globe-mount"
-            aria-label="Hearth canonical canvas mount"
-            data-hearth-canvas-mount="true"
-            data-hearth-canonical-mount="true"
-            data-hearth-mount-used-size="nonzero-required"
+          <div
+            id="hearthExpressionSurface"
+            class="hearth-expression-surface expression-surface"
+            data-hearth-expression-surface="true"
+            data-hearth-dom-expression-surface="true"
+            data-hearth-expression-used-size="nonzero-required"
             data-hearth-stage-used-size-floor="true"
           >
-            <div
-              id="hearthCanvasRectLockFrame"
-              class="hearth-canvas-rect-lock-frame"
-              data-hearth-canvas-frame="true"
-              data-hearth-canonical-frame="true"
-              data-hearth-frame-used-size="nonzero-required"
+            <section
+              id="hearthCanvasMount"
+              class="globe-mount"
+              aria-label="Hearth canonical canvas mount"
+              data-hearth-canvas-mount="true"
+              data-hearth-canonical-mount="true"
+              data-hearth-mount-used-size="nonzero-required"
               data-hearth-stage-used-size-floor="true"
             >
-              <canvas
-                id="hearthVisibleCanvas"
-                class="hearth-visible-canvas"
-                width="1600"
-                height="1600"
-                role="img"
-                aria-label="Hearth visible globe canvas"
-                data-hearth-visible-canvas="true"
-                data-hearth-canonical-visible-canvas="true"
-                data-hearth-canonical-canvas="true"
-                data-hearth-expression-surface="true"
-                data-hearth-canvas-used-size="nonzero-required"
+              <div
+                id="hearthCanvasRectLockFrame"
+                class="hearth-canvas-rect-lock-frame"
+                data-hearth-canvas-frame="true"
+                data-hearth-canonical-frame="true"
+                data-hearth-frame-used-size="nonzero-required"
                 data-hearth-stage-used-size-floor="true"
-                data-generated-image="false"
-                data-graphic-box="false"
-                data-webgl="false"
               >
-                Hearth visible globe canvas.
-              </canvas>
-            </div>
-          </section>
-        </div>
+                <canvas
+                  id="hearthVisibleCanvas"
+                  class="hearth-visible-canvas"
+                  width="1600"
+                  height="1600"
+                  role="img"
+                  aria-label="Hearth visible facility window canvas"
+                  data-hearth-visible-canvas="true"
+                  data-hearth-canonical-visible-canvas="true"
+                  data-hearth-canonical-canvas="true"
+                  data-hearth-expression-surface="true"
+                  data-hearth-canvas-used-size="nonzero-required"
+                  data-hearth-stage-used-size-floor="true"
+                  data-generated-image="false"
+                  data-graphic-box="false"
+                  data-webgl="false"
+                >
+                  Hearth visible facility window canvas.
+                </canvas>
+              </div>
+            </section>
+          </div>
+        </section>
       </section>
-    </section>
 
-    <section class="hearth-panel-row" aria-label="Hearth route status">
-      <article class="hearth-panel">
-        <h2>HTML boundary</h2>
-        <p>
-          Static stage, mount, frame, and canvas remain present in the HTML shell with explicit used-size floors.
-        </p>
-      </article>
-
-      <article class="hearth-panel">
-        <h2>Asset admission</h2>
-        <p>
-          Hex authority, hex surface, canvas receiver, controls, index buttons, and route conductor are statically admitted in order.
-        </p>
-      </article>
-
-      <article class="hearth-panel">
-        <h2>Claims withheld</h2>
-        <p>
-          No visual pass, no generated image, no WebGL claim, no canvas drawing claim, and no single-file causality claim.
-        </p>
+      <article class="side-panel">
+        <div>
+          <h2>Audralia first</h2>
+          <p>
+            Audralia is the first applied-science playground for Frontier studies. Hearth is
+            not competing with it. Hearth is the facility where the systems gather before
+            they are ready to be explored.
+          </p>
+        </div>
+        <div class="card-actions" style="margin-top: 16px;">
+          <a class="button" href="/explore/frontier/">Open Frontier</a>
+        </div>
       </article>
     </section>
 
-    <footer class="hearth-footer">
-      <span>
-        Contract preserved:
-        HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1.
-      </span>
-      <span>
-        Internal renewal:
-        HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6.
-      </span>
-    </footer>
+    <section class="orbit-card" aria-labelledby="orbit-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="orbit-title">Choose a pathway</h2>
+        </div>
+        <p>
+          The facility carries a large story without forcing it into one place. Open a bubble,
+          unfold a pathway, or step into the chamber when the signals need a clearer reading.
+        </p>
+      </div>
+
+      <div class="bubble-grid" aria-label="Hearth narrative pathway bubbles">
+        <button class="bubble" type="button" data-scroll-target="path-audralia" data-tone="gold">
+          <span>
+            <strong>Audralia First</strong>
+            <span>The first applied-science playground.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-scroll-target="path-characters" data-tone="water">
+          <span>
+            <strong>Characters at Work</strong>
+            <span>Every profile is a doorway into active work.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-scroll-target="path-crews" data-tone="green">
+          <span>
+            <strong>Crews and Communities</strong>
+            <span>A question becomes motion through teams and fields.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-scroll-target="path-systems" data-tone="violet">
+          <span>
+            <strong>System Lanes</strong>
+            <span>Energy, water, infrastructure, closed-loop, urban, and waste.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-scroll-target="path-products" data-tone="gold">
+          <span>
+            <strong>Frontier Products</strong>
+            <span>Systems travel far enough to become usable.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-scroll-target="path-chamber" data-tone="water">
+          <span>
+            <strong>Instrument Chamber</strong>
+            <span>Open the gauges and read the facility signals.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-scroll-target="path-construct" data-tone="green">
+          <span>
+            <strong>Construct Experience</strong>
+            <span>Meet the profiles, follow the crews, and watch systems form.</span>
+          </span>
+          <em>Open Path</em>
+        </button>
+
+        <button class="bubble" type="button" data-open-story="frontier" data-tone="violet">
+          <span>
+            <strong>Why it matters</strong>
+            <span>A world in development can teach how systems become real.</span>
+          </span>
+          <em>Open Note</em>
+        </button>
+      </div>
+    </section>
+
+    <section class="pathways" aria-label="Hearth narrative pathways">
+      <details class="pathway" id="path-audralia" open>
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 01</b>
+            <strong>Audralia First</strong>
+            <span>Audralia is the first applied-science playground for Frontier studies.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            Audralia is where systems can become living experience. Energy, water,
+            infrastructure, closed-loop flow, waste reuse, urban pressure, motion, signal,
+            and future planning can be explored as part of a world instead of only as
+            separate ideas.
+          </p>
+
+          <div class="tabs" data-tabs="audralia">
+            <div class="tab-list" role="tablist" aria-label="Audralia First tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="world">World</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="frontier">Frontier</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="products">Products</button>
+            </div>
+
+            <div class="tab-panel" data-panel="world" data-active="true">
+              <h3>The first playground</h3>
+              <p>
+                Audralia comes first because the Frontier needs a place where systems can be
+                experienced together. A product lane is easier to understand when it is not
+                isolated from water, energy, motion, pressure, people, and place.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="frontier">
+              <h3>The applied-science field</h3>
+              <p>
+                Frontier studies inspect future systems one lane at a time, then look at how
+                those lanes behave together. Audralia gives those inspections a living world
+                context.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="products">
+              <h3>Pathways toward use</h3>
+              <p>
+                The systems formed in Hearth can later become Frontier product pathways:
+                models, simulations, learning tools, planning instruments, and interactive
+                applied-science experiences.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="pathway" id="path-characters">
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 02</b>
+            <strong>Characters at Work</strong>
+            <span>Every profile is a doorway into active work.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            The characters inside Hearth are not static biographies. Each profile shows a
+            question, a role, a crew, and a system pathway. Choosing a character means
+            choosing which part of the work to follow.
+          </p>
+
+          <div class="tabs" data-tabs="characters">
+            <div class="tab-list" role="tablist" aria-label="Characters tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="profiles">Profiles</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="questions">Questions</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="missions">Missions</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="appearances">Appearances</button>
+            </div>
+
+            <div class="tab-panel" data-panel="profiles" data-active="true">
+              <h3>Profiles as doors</h3>
+              <p>
+                A profile is not just a name and a role. It is a door into a system lane.
+                The visitor sees who is carrying the question, who they work with, and what
+                the work may become.
+              </p>
+              <div class="mini-card-grid">
+                <button class="mini-card" type="button" data-open-story="profile-energy">
+                  <b>Profile</b>
+                  <strong>Energy Interpreter</strong>
+                  <span>Follows power, storage, and resilience questions.</span>
+                </button>
+                <button class="mini-card" type="button" data-open-story="profile-water">
+                  <b>Profile</b>
+                  <strong>Water Systems Reader</strong>
+                  <span>Studies movement, return, filtering, and reuse.</span>
+                </button>
+                <button class="mini-card" type="button" data-open-story="profile-city">
+                  <b>Profile</b>
+                  <strong>Urban Pressure Mapper</strong>
+                  <span>Watches how city systems respond under strain.</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-panel="questions">
+              <h3>The work begins as a question</h3>
+              <p>
+                How does power hold? How does water return? How does a city absorb pressure?
+                How does waste become useful again? The character profile lets a visitor
+                follow one question long enough to see it become a system.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="missions">
+              <h3>Current missions</h3>
+              <p>
+                A mission is the visible work of a character and crew. It gives the player a
+                focused task: inspect a signal, follow a field note, visit a work zone, or
+                return to the chamber for a clearer reading.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="appearances">
+              <h3>Where profiles appear</h3>
+              <p>
+                Profiles can appear on this page, in the Construct experience, inside the
+                Instrument Chamber, and along future Frontier pathways. The same character can
+                move across rooms as the system matures.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="pathway" id="path-crews">
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 03</b>
+            <strong>Crews and Communities</strong>
+            <span>A character carries the question. A crew turns it into motion.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            Hearth organizes the work through crews. Each crew connects to scientific
+            communities, field disciplines, and real-world pressure systems. The result is a
+            pathway from research to applied system design.
+          </p>
+
+          <div class="tabs" data-tabs="crews">
+            <div class="tab-list" role="tablist" aria-label="Crews and communities tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="crews">Crews</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="communities">Communities</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="australia">Australia</button>
+            </div>
+
+            <div class="tab-panel" data-panel="crews" data-active="true">
+              <h3>Working teams</h3>
+              <p>
+                Energy, water, infrastructure, closed-loop flow, urban systems, waste reuse,
+                motion, signal, and future planning each need a crew. The crew is where a
+                question becomes active.
+              </p>
+              <div class="mini-card-grid">
+                <div class="mini-card">
+                  <b>Crew</b>
+                  <strong>Energy Crew</strong>
+                  <span>Power, storage, resilience, transition, and protection.</span>
+                </div>
+                <div class="mini-card">
+                  <b>Crew</b>
+                  <strong>Water Crew</strong>
+                  <span>Movement, filtering, reuse, survival, and return.</span>
+                </div>
+                <div class="mini-card">
+                  <b>Crew</b>
+                  <strong>Infrastructure Crew</strong>
+                  <span>Support, pressure, access, motion, and adaptation.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-panel="communities">
+              <h3>Fields that give the work context</h3>
+              <p>
+                The facility learns from researchers, field teams, educators, ecological
+                thinkers, planners, designers, and communities already studying how places
+                survive, adapt, and recover.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="australia">
+              <h3>A real-world pressure field</h3>
+              <p>
+                Australia matters as a reference landscape because it carries powerful
+                questions about energy, water, distance, land, climate, cities, coastlines,
+                restoration, and resilience. Hearth turns those pressures into story.
+                Construct turns the story into interaction. Frontier turns the interaction
+                into product pathways. Audralia gives the pathways a playground.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="pathway" id="path-systems">
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 04</b>
+            <strong>System Lanes</strong>
+            <span>The facility studies systems before they become products.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            Each lane begins as a question. How does power hold? How does water move? How
+            does a city absorb pressure? How does waste return to use? How does
+            infrastructure support motion, safety, and adaptation?
+          </p>
+
+          <div class="tabs" data-tabs="systems">
+            <div class="tab-list" role="tablist" aria-label="System lane tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="energy">Energy</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="water">Water</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="infrastructure">Infrastructure</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="closed-loop">Closed Loop</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="urban">Urban</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="waste">Waste Reuse</button>
+            </div>
+
+            <div class="tab-panel" data-panel="energy" data-active="true">
+              <h3>Energy</h3>
+              <p>
+                Energy is not just power. It is resilience: production, storage, protection,
+                redirection, and the ability to keep a system alive when pressure changes.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="water">
+              <h3>Water</h3>
+              <p>
+                Water is not just supply. It is movement, storage, filtering, reuse, return,
+                and survival. A world cannot open if its water story cannot be understood.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="infrastructure">
+              <h3>Infrastructure</h3>
+              <p>
+                Infrastructure is the pattern that lets a place hold pressure without
+                collapsing. It connects movement, access, safety, repair, and growth.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="closed-loop">
+              <h3>Closed Loop</h3>
+              <p>
+                Closed-loop design studies how endings become beginnings again. It asks what
+                should return, what should be reused, and what should never become waste too
+                early.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="urban">
+              <h3>Urban Systems</h3>
+              <p>
+                Urban systems study the living arrangement between people, energy, buildings,
+                motion, water, waste, time, and stress.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="waste">
+              <h3>Waste Reuse</h3>
+              <p>
+                Waste reuse turns recovery into value. It studies what a system throws away,
+                why it throws it away, and how useful material can re-enter the flow.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="pathway" id="path-products">
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 05</b>
+            <strong>From System to Product</strong>
+            <span>A Frontier product is a system that has traveled far enough to become usable.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            Inside Hearth, a system may begin as a signal, then become a model, then a
+            simulation, then an interactive pathway, then a product lane. Frontier is where
+            these lanes are inspected. Audralia is where they can be experienced.
+          </p>
+
+          <div class="tabs" data-tabs="products">
+            <div class="tab-list" role="tablist" aria-label="System to product tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="signal">Signal</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="model">Model</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="simulation">Simulation</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="product">Product Lane</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="frontier">Frontier</button>
+            </div>
+
+            <div class="tab-panel" data-panel="signal" data-active="true">
+              <h3>Signal</h3>
+              <p>
+                The first evidence that something matters. A character notices it, a crew
+                gathers around it, and the facility begins to ask what it could become.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="model">
+              <h3>Model</h3>
+              <p>
+                The signal gains shape. The system becomes easier to explain, compare, and
+                improve.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="simulation">
+              <h3>Simulation</h3>
+              <p>
+                The system becomes interactive. The visitor can see how choices, pressures,
+                and relationships change the behavior of the lane.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="product">
+              <h3>Product Lane</h3>
+              <p>
+                The system travels far enough to become usable: a planning tool, a learning
+                instrument, a model, a dashboard, a simulation, or a practical applied-science
+                pathway.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="frontier">
+              <h3>Frontier</h3>
+              <p>
+                Frontier inspects the lane. Audralia gives it a playground. Hearth remembers
+                where the work began.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="pathway" id="path-chamber">
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 06</b>
+            <strong>Instrument Chamber</strong>
+            <span>When the work needs a clearer reading, enter the chamber.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            The Instrument Chamber reads the facility signals. It shows what is awake, what
+            is waiting, and what is ready to move next. It turns the hidden work of the
+            facility into clear gauges and focused receipts.
+          </p>
+
+          <div class="tabs" data-tabs="chamber">
+            <div class="tab-list" role="tablist" aria-label="Instrument chamber tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="signals">Signals</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="gauges">Gauges</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="move">Next Move</button>
+            </div>
+
+            <div class="tab-panel" data-panel="signals" data-active="true">
+              <h3>Signals</h3>
+              <p>
+                Signals tell the visitor what the facility can currently read. They do not
+                force certainty. They reveal direction.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="gauges">
+              <h3>Gauges</h3>
+              <p>
+                The gauges make development visible. Waiting, awake, held, measured, and ready
+                are all meaningful states inside a living facility.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="move">
+              <h3>Next Move</h3>
+              <p>
+                The chamber does not end the story. It tells the visitor where the story can
+                go next.
+              </p>
+            </div>
+          </div>
+
+          <div class="card-actions" style="margin-top: 14px;">
+            <a class="button primary" href="/showroom/globe/hearth/diagnostic/">Enter Instrument Chamber</a>
+          </div>
+        </div>
+      </details>
+
+      <details class="pathway" id="path-construct">
+        <summary>
+          <span class="summary-title">
+            <b>Pathway 07</b>
+            <strong>Construct Experience</strong>
+            <span>Meet the profiles, follow the crews, and watch systems form.</span>
+          </span>
+          <span class="open-pill">Open</span>
+        </summary>
+        <div class="pathway-body">
+          <p class="pathway-intro">
+            In the Construct experience, the visitor does not simply read about the facility.
+            They enter it. They meet the characters, inspect the profiles, watch the crews
+            work, follow research threads, and see how a system begins as a question, becomes
+            a project, and moves toward the Frontier.
+          </p>
+
+          <div class="tabs" data-tabs="construct">
+            <div class="tab-list" role="tablist" aria-label="Construct experience tabs">
+              <button class="tab-button" type="button" role="tab" aria-selected="true" data-tab="profiles">Profiles</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="crews">Crews</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="lanes">System Lanes</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab="return">Return</button>
+            </div>
+
+            <div class="tab-panel" data-panel="profiles" data-active="true">
+              <h3>Choose a profile</h3>
+              <p>
+                The player chooses a character profile and follows that person’s work. Each
+                profile opens a different system question.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="crews">
+              <h3>Follow a crew</h3>
+              <p>
+                The player watches how a crew turns a question into movement: gathering notes,
+                observing pressure, testing a system, and preparing a pathway.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="lanes">
+              <h3>Watch a system form</h3>
+              <p>
+                Energy, water, infrastructure, closed-loop flow, urban systems, and waste reuse
+                can become interactive lanes that point toward Frontier products.
+              </p>
+            </div>
+
+            <div class="tab-panel" data-panel="return">
+              <h3>Return to the chamber</h3>
+              <p>
+                After following the work, the player can return to the Instrument Chamber to
+                see how the facility reads the current state.
+              </p>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="bridge-card" aria-label="Hearth bridges">
+      <article class="bridge-panel">
+        <div>
+          <h2>Enter the Work</h2>
+          <p>
+            Choose a character profile. Follow a crew. Watch a system being built. Each path
+            asks the same question: what does a world need before it is ready to open?
+          </p>
+        </div>
+        <div class="bridge-actions">
+          <button type="button" data-scroll-target="path-characters">Open Character Profiles</button>
+          <button type="button" data-scroll-target="path-systems">Explore System Lanes</button>
+        </div>
+      </article>
+
+      <article class="bridge-panel">
+        <div>
+          <h2>Read the Signals</h2>
+          <p>
+            When the work needs a clearer reading, step into the Instrument Chamber. The
+            chamber translates the facility’s signals into gauges, focused receipts, and a
+            next meaningful move.
+          </p>
+        </div>
+        <div class="bridge-actions">
+          <a class="button primary" href="/showroom/globe/hearth/diagnostic/">Enter Instrument Chamber</a>
+          <button type="button" data-hearth-copy-receipt>Copy Route Receipt</button>
+        </div>
+      </article>
+    </section>
+
+    <p class="footer-card">
+      Audralia is the first playground. Hearth is the hidden facility. The window shows the
+      becoming. The chamber explains the signals.
+    </p>
   </main>
+
+  <dialog id="hearthStoryDialog" aria-labelledby="hearthStoryDialogTitle">
+    <div class="dialog-inner">
+      <div class="dialog-top">
+        <h2 id="hearthStoryDialogTitle">Facility Note</h2>
+        <button class="dialog-close" type="button" data-close-dialog>Close</button>
+      </div>
+      <div class="dialog-body" id="hearthStoryDialogBody"></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="hearthToast" role="status" aria-live="polite">Copied</div>
 
   <script
     id="hearthHtmlReceipt"
@@ -624,12 +1814,13 @@
     "route": "/showroom/globe/hearth/",
     "page": "hearth",
     "pageAlias": "Hearth",
-    "pageContext": "visible globe canvas expression shell",
+    "pageContext": "facility window narrative canvas expression shell",
+    "publicPremise": "Hearth is the facility in a location unknown. Audralia is the first applied-science playground for Frontier studies. Characters, crews, and scientific communities shape systems that later become Frontier products.",
     "contract": "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1",
     "hearthHtmlContract": "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1",
-    "hearthHtmlInternalRenewalContract": "HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6",
-    "hearthHtmlInternalRenewalReceipt": "HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_RECEIPT_v5_1_6",
-    "hearthHtmlPreviousInternalRenewalContract": "HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5",
+    "hearthHtmlInternalRenewalContract": "HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2",
+    "hearthHtmlInternalRenewalReceipt": "HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_RECEIPT_v5_2",
+    "hearthHtmlPreviousInternalRenewalContract": "HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6",
     "hearthStageUsedSizeFloorActive": "true",
     "hearthStaticCanonicalFrameCanvasRestored": "true",
     "hearthCanonicalMountUsedSizeLock": "true",
@@ -640,6 +1831,23 @@
     "hearthCanvasFrameId": "hearthCanvasRectLockFrame",
     "hearthVisibleCanvasId": "hearthVisibleCanvas",
     "hearthStageUsedSizeBoundary": "LOCKED_BY_STATIC_HTML_CSS_STAGE_FLOOR",
+    "hearthNarrativePathways": [
+      "Audralia First",
+      "Characters at Work",
+      "Crews and Communities",
+      "System Lanes",
+      "From System to Product",
+      "Instrument Chamber",
+      "Construct Experience"
+    ],
+    "hearthFrontierSystemLanes": [
+      "Energy",
+      "Water",
+      "Infrastructure",
+      "Closed Loop",
+      "Urban Systems",
+      "Waste Reuse"
+    ],
     "hearthAssetAdmissionOrder": [
       "/assets/hearth/hearth.hex.four-pair.authority.js",
       "/assets/hearth/hearth.hex.surface.js",
@@ -652,7 +1860,7 @@
     "hearthControlContract": "HEARTH_CONTROLS_PLANETARY_VIEW_INPUT_HANDSHAKE_TNT_v1",
     "hearthControlRenewalCandidate": "HEARTH_CONTROLS_HEX_GATE_POINTER_FINGER_TRANSMISSION_TNT_v5",
     "hearthSingleCausalFileProven": "false",
-    "hearthRecommendedDiagnosticAction": "RUN_DIAGNOSTIC_AFTER_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE",
+    "hearthRecommendedDiagnosticAction": "OPEN_MIRRORLAND_INSTRUMENT_CHAMBER_FOR_FOCUSED_GAUGE_AND_RECEIPT_READING",
     "ownsCanvasDrawing": false,
     "ownsCanvasCreation": false,
     "ownsCanvasLifecycle": false,
@@ -676,13 +1884,13 @@
 
   <div
     id="hearthPageReceipt"
-    class="hearth-receipt"
+    class="hidden-receipt"
     hidden
     data-hearth-page-receipt="true"
     data-hearth-html-contract="HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1"
-    data-hearth-html-internal-renewal-contract="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6"
-    data-hearth-html-internal-renewal-receipt="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_RECEIPT_v5_1_6"
-    data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STATIC_ASSET_ADMISSION_CONTROL_TOUCH_RESTORE_TNT_v5_1_5"
+    data-hearth-html-internal-renewal-contract="HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2"
+    data-hearth-html-internal-renewal-receipt="HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_RECEIPT_v5_2"
+    data-hearth-html-previous-internal-renewal-contract="HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6"
     data-hearth-canvas-selector="#hearthCanvasMount > #hearthCanvasRectLockFrame > #hearthVisibleCanvas"
     data-hearth-stage-used-size-floor-active="true"
     data-hearth-static-canonical-frame-canvas-restored="true"
@@ -696,7 +1904,7 @@
     data-webgl="false"
   >
     HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1 |
-    HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6 |
+    HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2 |
     STATIC_CANONICAL_DOM_SURFACE:#hearthCanvasMount&gt;#hearthCanvasRectLockFrame&gt;#hearthVisibleCanvas |
     STAGE_USED_SIZE_FLOOR_ACTIVE:true |
     USED_SIZE_BOUNDARY_LOCKED:true |
@@ -710,10 +1918,363 @@
   </div>
 
   <noscript>
-    <div class="hearth-footer">
-      Hearth requires JavaScript for governed runtime expression. The static canonical canvas shell remains present.
+    <div class="footer-card">
+      Hearth requires JavaScript for governed runtime expression. The facility window remains present.
     </div>
   </noscript>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const root = window;
+
+      const CONTRACT =
+        "HEARTH_HTML_ROUTE_CONDUCTOR_OWNS_CONTROL_HANDSHAKE_SHELL_TNT_v5_1";
+      const INTERNAL_RENEWAL_CONTRACT =
+        "HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_TNT_v5_2";
+      const INTERNAL_RENEWAL_RECEIPT =
+        "HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_RECEIPT_v5_2";
+      const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+        "HEARTH_HTML_STAGE_USED_SIZE_FLOOR_CANONICAL_CANVAS_CHAIN_RESTORE_TNT_v5_1_6";
+
+      const STORY_NOTES = {
+        facility: {
+          title: "The Facility Window",
+          body: [
+            "This window is not here to pretend the work is complete.",
+            "It lets the visitor stand close to the moment of formation: when a question becomes a crew, a crew becomes a project, and a project begins moving toward the Frontier."
+          ]
+        },
+        frontier: {
+          title: "Why Hearth Matters",
+          body: [
+            "A finished product can impress you. A system in development can teach you how it becomes useful.",
+            "Hearth matters because it gives the unfinished state a purpose. It lets the visitor understand the work before the work becomes complete."
+          ]
+        },
+        "profile-energy": {
+          title: "Energy Interpreter",
+          body: [
+            "This profile follows power, storage, resilience, and transition.",
+            "The question is not only how energy is produced. The question is how power holds when pressure changes."
+          ]
+        },
+        "profile-water": {
+          title: "Water Systems Reader",
+          body: [
+            "This profile studies movement, filtering, return, and reuse.",
+            "The question is not only where water comes from. The question is how water keeps a system alive."
+          ]
+        },
+        "profile-city": {
+          title: "Urban Pressure Mapper",
+          body: [
+            "This profile watches how people, buildings, water, waste, energy, and motion interact under stress.",
+            "The question is how a city absorbs pressure without losing coherence."
+          ]
+        }
+      };
+
+      function nowIso() {
+        try {
+          return new Date().toISOString();
+        } catch (_error) {
+          return "";
+        }
+      }
+
+      function safeString(value, fallback = "") {
+        if (value === undefined || value === null) return fallback;
+        try {
+          return String(value);
+        } catch (_error) {
+          return fallback;
+        }
+      }
+
+      function clean(value, limit = 1400) {
+        return safeString(value)
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, limit);
+      }
+
+      function showToast(text) {
+        const toast = document.getElementById("hearthToast");
+        if (!toast) return;
+
+        toast.textContent = text;
+        toast.dataset.show = "true";
+
+        window.clearTimeout(showToast._timer);
+        showToast._timer = window.setTimeout(() => {
+          toast.dataset.show = "false";
+        }, 1400);
+      }
+
+      function readReceiptJson() {
+        const el = document.getElementById("hearthHtmlReceipt");
+        if (!el) return {};
+
+        try {
+          return JSON.parse(el.textContent || "{}");
+        } catch (_error) {
+          return {};
+        }
+      }
+
+      function buildReceiptText() {
+        const receipt = readReceiptJson();
+        const mount = document.getElementById("hearthCanvasMount");
+        const frame = document.getElementById("hearthCanvasRectLockFrame");
+        const canvas = document.getElementById("hearthVisibleCanvas");
+
+        const mountRect = mount ? mount.getBoundingClientRect() : null;
+        const frameRect = frame ? frame.getBoundingClientRect() : null;
+        const canvasRect = canvas ? canvas.getBoundingClientRect() : null;
+
+        return [
+          "PACKET=HEARTH_HTML_FACILITY_WINDOW_NARRATIVE_PATHWAY_CANONICAL_CANVAS_CHAIN_RECEIPT_v5_2",
+          `CONTRACT=${CONTRACT}`,
+          `INTERNAL_RENEWAL_CONTRACT=${INTERNAL_RENEWAL_CONTRACT}`,
+          `INTERNAL_RENEWAL_RECEIPT=${INTERNAL_RENEWAL_RECEIPT}`,
+          `PREVIOUS_INTERNAL_RENEWAL_CONTRACT=${PREVIOUS_INTERNAL_RENEWAL_CONTRACT}`,
+          "ROUTE=/showroom/globe/hearth/",
+          "PUBLIC_PREMISE=Hearth is the facility in a location unknown. Audralia is the first applied-science playground for Frontier studies.",
+          "NARRATIVE_PATHWAYS=Audralia First,Characters at Work,Crews and Communities,System Lanes,From System to Product,Instrument Chamber,Construct Experience",
+          "FRONTIER_SYSTEM_LANES=Energy,Water,Infrastructure,Closed Loop,Urban Systems,Waste Reuse",
+          "CANONICAL_CANVAS_CHAIN=#hearthCanvasMount>#hearthCanvasRectLockFrame>#hearthVisibleCanvas",
+          `MOUNT_RECT=${mountRect ? `${Math.round(mountRect.width)}x${Math.round(mountRect.height)}` : "UNKNOWN"}`,
+          `FRAME_RECT=${frameRect ? `${Math.round(frameRect.width)}x${Math.round(frameRect.height)}` : "UNKNOWN"}`,
+          `CANVAS_RECT=${canvasRect ? `${Math.round(canvasRect.width)}x${Math.round(canvasRect.height)}` : "UNKNOWN"}`,
+          `STAGE_USED_SIZE_FLOOR_ACTIVE=${receipt.hearthStageUsedSizeFloorActive || "true"}`,
+          `STATIC_ASSET_ADMISSION_ACTIVE=${receipt.hearthStaticAssetAdmissionActive || "true"}`,
+          `CONTROLS_STATIC_SCRIPT_ADMITTED=${receipt.hearthControlsStaticScriptAdmitted || "true"}`,
+          "OWNS_CANVAS_DRAWING=false",
+          "OWNS_CANVAS_CREATION=false",
+          "OWNS_CANVAS_LIFECYCLE=false",
+          "OWNS_CONTROLS_RENEWAL=false",
+          "OWNS_ROUTE_REPAIR=false",
+          "OWNS_RUNTIME_RESTART=false",
+          "VISUAL_PASS_CLAIMED=false",
+          "GENERATED_IMAGE=false",
+          "GRAPHIC_BOX=false",
+          "WEBGL=false",
+          "NEXT_RECOMMENDED_ROUTE=/showroom/globe/hearth/diagnostic/",
+          "NEXT_RECOMMENDED_ACTION=ENTER_INSTRUMENT_CHAMBER_FOR_FOCUSED_GAUGE_READING",
+          `UPDATED_AT=${nowIso()}`
+        ].join("\n");
+      }
+
+      async function copyText(text, label) {
+        const value = safeString(text);
+
+        try {
+          await navigator.clipboard.writeText(value);
+          showToast(`${label} copied`);
+        } catch (_error) {
+          const area = document.createElement("textarea");
+          area.value = value;
+          area.setAttribute("readonly", "readonly");
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          document.body.appendChild(area);
+          area.select();
+
+          try {
+            document.execCommand("copy");
+            showToast(`${label} copied`);
+          } catch (__error) {
+            showToast("Copy failed");
+          }
+
+          document.body.removeChild(area);
+        }
+      }
+
+      function openStory(key) {
+        const note = STORY_NOTES[key];
+        if (!note) return;
+
+        const dialog = document.getElementById("hearthStoryDialog");
+        const title = document.getElementById("hearthStoryDialogTitle");
+        const body = document.getElementById("hearthStoryDialogBody");
+
+        if (!dialog || !title || !body) return;
+
+        title.textContent = note.title;
+        body.innerHTML = note.body.map((line) => `<p>${line}</p>`).join("");
+
+        try {
+          dialog.showModal();
+        } catch (_error) {
+          dialog.setAttribute("open", "open");
+        }
+      }
+
+      function closeStory() {
+        const dialog = document.getElementById("hearthStoryDialog");
+        if (!dialog) return;
+
+        try {
+          dialog.close();
+        } catch (_error) {
+          dialog.removeAttribute("open");
+        }
+      }
+
+      function scrollToPath(id) {
+        const target = document.getElementById(id);
+        if (!target) return;
+
+        if (target.tagName.toLowerCase() === "details") {
+          target.open = true;
+        }
+
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function refreshWindowReading() {
+        const mount = document.getElementById("hearthCanvasMount");
+        const canvas = document.getElementById("hearthVisibleCanvas");
+        const mountRect = mount ? mount.getBoundingClientRect() : null;
+        const canvasRect = canvas ? canvas.getBoundingClientRect() : null;
+
+        root.HEARTH_FACILITY_WINDOW_READING = {
+          route: "/showroom/globe/hearth/",
+          contract: CONTRACT,
+          internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+          mountPresent: Boolean(mount),
+          canvasPresent: Boolean(canvas),
+          mountRect: mountRect
+            ? {
+                width: Math.round(mountRect.width),
+                height: Math.round(mountRect.height)
+              }
+            : null,
+          canvasRect: canvasRect
+            ? {
+                width: Math.round(canvasRect.width),
+                height: Math.round(canvasRect.height)
+              }
+            : null,
+          visualPassClaimed: false,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false,
+          updatedAt: nowIso()
+        };
+
+        showToast("Facility window refreshed");
+        return root.HEARTH_FACILITY_WINDOW_READING;
+      }
+
+      function setActiveTab(tabsRoot, targetName) {
+        if (!tabsRoot || !targetName) return;
+
+        tabsRoot.querySelectorAll(".tab-button").forEach((button) => {
+          const selected = button.getAttribute("data-tab") === targetName;
+          button.setAttribute("aria-selected", selected ? "true" : "false");
+        });
+
+        tabsRoot.querySelectorAll(".tab-panel").forEach((panel) => {
+          panel.dataset.active = panel.getAttribute("data-panel") === targetName ? "true" : "false";
+        });
+      }
+
+      function bindEvents() {
+        document.addEventListener("click", (event) => {
+          const copy = event.target.closest("[data-hearth-copy-receipt]");
+          if (copy) {
+            copyText(buildReceiptText(), "Route receipt");
+            return;
+          }
+
+          const refresh = event.target.closest("[data-hearth-refresh-status]");
+          if (refresh) {
+            refreshWindowReading();
+            return;
+          }
+
+          const story = event.target.closest("[data-open-story]");
+          if (story) {
+            openStory(story.getAttribute("data-open-story"));
+            return;
+          }
+
+          const close = event.target.closest("[data-close-dialog]");
+          if (close) {
+            closeStory();
+            return;
+          }
+
+          const scroll = event.target.closest("[data-scroll-target]");
+          if (scroll) {
+            scrollToPath(scroll.getAttribute("data-scroll-target"));
+            return;
+          }
+
+          const tabButton = event.target.closest(".tab-button[data-tab]");
+          if (tabButton) {
+            const tabsRoot = tabButton.closest("[data-tabs]");
+            setActiveTab(tabsRoot, tabButton.getAttribute("data-tab"));
+          }
+        });
+
+        const dialog = document.getElementById("hearthStoryDialog");
+        if (dialog) {
+          dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) closeStory();
+          });
+        }
+      }
+
+      function publishApi() {
+        root.HEARTH_HTML_FACILITY_WINDOW = {
+          CONTRACT,
+          INTERNAL_RENEWAL_CONTRACT,
+          INTERNAL_RENEWAL_RECEIPT,
+          PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+          route: "/showroom/globe/hearth/",
+          diagnosticRoute: "/showroom/globe/hearth/diagnostic/",
+          premise:
+            "Hearth is the facility in a location unknown. Audralia is the first applied-science playground for Frontier studies.",
+          getReceipt: buildReceiptText,
+          refreshWindowReading,
+          openInstrumentChamber: () => {
+            root.location.href = "/showroom/globe/hearth/diagnostic/";
+          },
+          ownsCanvasDrawing: false,
+          ownsCanvasCreation: false,
+          ownsCanvasLifecycle: false,
+          ownsControlsRenewal: false,
+          ownsRouteRepair: false,
+          ownsRuntimeRestart: false,
+          visualPassClaimed: false,
+          generatedImage: false,
+          graphicBox: false,
+          webGL: false,
+          webgl: false
+        };
+
+        const hearth = root.HEARTH || (root.HEARTH = {});
+        hearth.facilityWindow = root.HEARTH_HTML_FACILITY_WINDOW;
+      }
+
+      function init() {
+        bindEvents();
+        publishApi();
+        refreshWindowReading();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
+  </script>
 
   <!-- Passive governed asset-chain admission. HTML does not draw, create, restart, or claim completion. -->
   <script

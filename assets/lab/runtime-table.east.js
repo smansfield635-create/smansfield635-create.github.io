@@ -1,74 +1,67 @@
 // /assets/lab/runtime-table.east.js
-// LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_TNT_v1
+// LAB_RUNTIME_TABLE_EAST_F3_ENGINE_MECHANICS_INTAKE_VALVE_TNT_v1
 // Full-file replacement.
-// East primary gate line-up authority.
-// North owns macro runtime-table order.
-// East reads North, magnifies incoming event motion into Fibonacci/NEWS micro-stage classification,
-// and returns clean packets for North, West, and South.
+// Runtime Table East / F3 intake valve / East Supreme Judge / admission branch.
+// Purpose:
+// - Stand up East as the F3 intake channel for the runtime-table v4 engine system.
+// - Bind directly to runtime-table v4 mechanics: RT3D-X04_Y19_Z3.
+// - Admit, normalize, classify, and receipt lawful intake packets.
+// - Return F3 intake packets toward North and downstream F5 West pressure/admissibility.
+// - Preserve the 3D engine lattice + 256 state binding model.
+// - Treat architecture labels as secondary and engine mechanics/math as primary.
+// - Avoid rendering, generated image claims, WebGL claims, GraphicBox claims, public superiority claims, and final visual pass claims.
+// Does not own:
+// - North F21 latch
+// - West F5 pressure/admissibility
+// - South F8 proof return
+// - Canvas F13 evidence release
+// - F34/F55/F89/F144 support-engine internals
+// - F233 downstream return
+// - route orchestration
+// - planet truth
+// - material/elevation/hydrology truth
+// - actual rendering
+// - generated image
+// - GraphicBox
+// - WebGL
+// - public superiority claim
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_EAST_NORTH_DIALECT_FIBONACCI_MAGNIFIER_TNT_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-east-primary-gate-lineup-news-fibonacci-v1";
-
-  const root = typeof window !== "undefined" ? window : globalThis;
-  const doc = root.document || null;
+  const CONTRACT = "LAB_RUNTIME_TABLE_EAST_F3_ENGINE_MECHANICS_INTAKE_VALVE_TNT_v1";
+  const RECEIPT = "LAB_RUNTIME_TABLE_EAST_F3_ENGINE_MECHANICS_INTAKE_VALVE_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_EAST_SOURCE_PENDING_RENEWAL";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_COUNTY_ENGINE_MECHANICS_3D_LATTICE_256_STATE_SUPPORT_ENGINE_TNT_v4";
+  const VERSION = "2026-06-08.lab-runtime-table-east-f3-engine-mechanics-intake-valve-v1";
 
   const FILE = "/assets/lab/runtime-table.east.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
   const WEST_FILE = "/assets/lab/runtime-table.west.js";
   const SOUTH_FILE = "/assets/lab/runtime-table.south.js";
-  const ROUTE_CONDUCTOR_FILE = "/showroom/globe/hearth/hearth.js";
   const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
-  const FILE_GATES = Object.freeze({
-    north: NORTH_FILE,
-    east: FILE,
-    west: WEST_FILE,
-    south: SOUTH_FILE,
-    routeConductor: ROUTE_CONDUCTOR_FILE,
-    canvas: CANVAS_FILE,
-    canvasEast: "/assets/hearth/hearth.canvas.east.js",
-    canvasWest: "/assets/hearth/hearth.canvas.west.js",
-    canvasSouth: "/assets/hearth/hearth.canvas.south.js"
-  });
+  const F34_PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
+  const F55_EXPRESSION_FILE = "/assets/lab/product-engine.ue5-expression.js";
+  const F89_REGISTRY_FILE = "/assets/lab/product-engine.registry.js";
+  const F144_MARKET_FILE = "/assets/lab/product-engine.market.js";
 
-  const ACTIONS = Object.freeze({
-    ADMIT_FOR_NORTH_REVIEW: "ADMIT_FOR_NORTH_REVIEW",
-    HELD_FOR_NORTH_CONTEXT: "HELD_FOR_NORTH_CONTEXT",
-    HELD_FOR_SOUTH_CONDUCTOR_BODY: "HELD_FOR_SOUTH_CONDUCTOR_BODY",
-    QUEUE_FOR_ACTIVE_GATE: "QUEUE_FOR_ACTIVE_GATE",
-    ARCHIVE_DUPLICATE_OR_PRIOR: "ARCHIVE_DUPLICATE_OR_PRIOR",
-    ARCHIVE_PROGRESS_ONLY: "ARCHIVE_PROGRESS_ONLY",
-    UNKNOWN_EVENT_ARCHIVE: "UNKNOWN_EVENT_ARCHIVE",
-    BLOCK_FALSE_COMPLETION: "BLOCK_FALSE_COMPLETION",
-    F21_PROPOSED_FOR_NORTH_REVIEW: "F21_PROPOSED_FOR_NORTH_REVIEW"
-  });
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
-  const CHECKPOINT_EVENT_ACTIONS = Object.freeze({
-    ADMIT: "ADMIT",
-    QUEUE: "QUEUE",
-    ARCHIVE: "ARCHIVE",
-    BLOCK: "BLOCK",
-    HELD: "HELD",
-    DEGRADED_FORWARD: "DEGRADED_FORWARD",
-    LATCH_REVIEW: "LATCH_REVIEW"
-  });
-
-  const GAP_CLASS = Object.freeze({
-    NONE: "NONE",
-    NORTH_CONTEXT_REQUIRED: "NORTH_CONTEXT_REQUIRED",
-    SOUTH_CONDUCTOR_BODY_REQUIRED: "SOUTH_CONDUCTOR_BODY_REQUIRED",
-    FUTURE_STAGE: "FUTURE_STAGE",
-    DUPLICATE_OR_PRIOR_STAGE: "DUPLICATE_OR_PRIOR_STAGE",
-    PROGRESS_ONLY: "PROGRESS_ONLY",
-    UNKNOWN_NEUTRAL: "UNKNOWN_NEUTRAL",
-    FALSE_COMPLETION_BLOCK: "FALSE_COMPLETION_BLOCK",
-    F21_NORTH_REVIEW_REQUIRED: "F21_NORTH_REVIEW_REQUIRED"
+  const FIBONACCI = Object.freeze({
+    NORTH_ORIGIN: "F1",
+    EAST_INTAKE: "F3",
+    WEST_PRESSURE: "F5",
+    SOUTH_PROOF: "F8",
+    CANVAS_EVIDENCE: "F13",
+    NORTH_LATCH: "F21",
+    PRODUCT_ENGINE: "F34",
+    UE5_EXPRESSION: "F55",
+    PROJECT_REGISTRY: "F89",
+    MARKET_READINESS: "F144",
+    DOWNSTREAM_RETURN: "F233"
   });
 
   const NEWS_GATES = Object.freeze({
@@ -76,216 +69,69 @@
     EAST: "EAST",
     WEST: "WEST",
     SOUTH: "SOUTH",
-    F21: "F21"
+    CANVAS: "CANVAS",
+    PRODUCT: "PRODUCT_ENGINE",
+    EXPRESSION: "UE5_EXPRESSION",
+    REGISTRY: "PROJECT_REGISTRY",
+    MARKET: "MARKET_READINESS",
+    DOWNSTREAM: "DOWNSTREAM_RETURN"
   });
 
-  const MACRO_RANK = Object.freeze({
-    F1: 1,
-    F2: 2,
-    F3: 3,
-    F5: 5,
-    F8: 8,
-    F13: 13,
-    F21: 21
+  const STATUS = Object.freeze({
+    HELD: "HELD",
+    ACTIVE: "ACTIVE",
+    READY: "READY",
+    DEGRADED: "DEGRADED",
+    BLOCKED: "BLOCKED",
+    COMPLETE: "COMPLETE",
+    REJECTED: "REJECTED"
   });
 
-  const EAST_LANGUAGE = Object.freeze({
-    north: "macro runtime-table distributor",
-    east: "primary gate line-up authority",
-    west: "admissibility audit receiver",
-    south: "proof/body/output receiver",
-    f21: "North latch review lane",
-    fileGateRule: "file paths are primary distribution gates",
-    eastMotionRule: "East classifies motion and returns packets; North admits the gate"
+  const INTAKE_CLASS = Object.freeze({
+    NORTH_IGNITION: "NORTH_IGNITION",
+    EAST_PRIMARY: "EAST_PRIMARY",
+    EAST_HANDOFF: "EAST_HANDOFF",
+    DIAGNOSTIC_EVIDENCE: "DIAGNOSTIC_EVIDENCE",
+    SUPPORT_ENGINE_SIGNAL: "SUPPORT_ENGINE_SIGNAL",
+    ROUTE_SIGNAL: "ROUTE_SIGNAL",
+    CANVAS_SIGNAL: "CANVAS_SIGNAL",
+    GENERIC_INTAKE: "GENERIC_INTAKE"
   });
 
-  const PROGRESS_ONLY_EVENTS = Object.freeze([
-    "ATLAS_BUILD_PROGRESS",
-    "TEXTURE_COMPOSE_PROGRESS",
-    "WIDE_PROBE_PROGRESS",
-    "RECONCILE_PROGRESS",
-    "CANVAS_PROGRESS",
-    "LOADING_PROGRESS",
-    "GEAR_PROGRESS_TICK",
-    "RENDER_PROGRESS",
-    "SPHERE_RENDER_PROGRESS",
-    "BOOT_PROGRESS",
-    "CHECKPOINT_PROGRESS"
-  ]);
+  const MECHANICAL_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X04_Y19_Z3",
+    enginePart: "VALVE",
+    enginePartIndex: 4,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.EAST_INTAKE,
+    fibonacciRank: 3,
+    fibonacciStation: "EAST_INTAKE",
+    mechanicalRole: "EAST_INTAKE_CHANNEL",
+    judicialRole: "EAST_SUPREME_JUDGE",
+    authorityRole: "ADMISSION_BRANCH",
+    mayJudgeIntake: true,
+    mayLatchF21: false,
+    mayAuditF5Pressure: false,
+    mayReturnF8Proof: false,
+    mayReleaseCanvasF13: false,
+    mayRender: false,
+    mayClaimPublicSuperiority: false
+  });
 
-  const FALSE_COMPLETION_TOKENS = Object.freeze([
-    '"visualPassClaimed":true',
-    "visualPassClaimed=true",
-    '"readyTextAllowed":true',
-    "readyTextAllowed=true",
-    '"mainDisplayProgress":100',
-    "mainDisplayProgress=100",
-    '"visibleProgress":100',
-    "visibleProgress=100",
-    '"progress":100',
-    "progress=100",
-    "READY_PLANET_VISIBLE",
-    "READY_DEGRADED_PLANET_VISIBLE",
-    "COMPLETION_LATCHED",
-    "F21_DEGRADED_COMPLETION_LATCHED",
-    "FINAL_VISUAL_PASS",
-    "VISUAL_PASS_CLAIMED"
-  ]);
-
-  const F21_EVENTS = Object.freeze([
-    "F21_COMPLETION_LATCH",
-    "F21_COMPLETION_LATCHED",
-    "F21_FULL_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
-    "F21_ELIGIBLE_FOR_NORTH_NEWS_LATCH",
-    "F21_ELIGIBILITY_SUBMITTED_TO_NORTH",
-    "F21_ELIGIBILITY_READY_FOR_NORTH",
-    "F21_NEWS_LATCH_READY",
-    "SOUTH_F21_ELIGIBILITY_SUBMITTED",
-    "COMPLETION_LATCH_ELIGIBLE",
-    "COMPLETION_LATCHED",
-    "COMPLETION_LATCHED_AFTER_VISIBLE_CONTENT_PROOF",
-    "COMPLETION_LATCHED_AFTER_CANVAS_READY",
-    "F21_DEGRADED_COMPLETION_LATCHED"
-  ]);
-
-  function stage(id, macroGate, rank, owner, label, fileGate, events) {
-    return Object.freeze({
-      id,
-      microStageId: id,
-      macroGate,
-      macroRank: MACRO_RANK[macroGate] || 0,
-      rank,
-      owner,
-      label,
-      fileGate,
-      events: events.slice(),
-      northAdmissionRequired: true,
-      eastCanClassify: true,
-      westReviewAvailable: true,
-      southProofAvailable: owner === "SOUTH",
-      f21NorthReviewOnly: macroGate === "F21",
-      visualPassClaimed: false
-    });
-  }
-
-  const MICRO_STAGES = Object.freeze([
-    stage("F1_EAST_ROUTE_SHELL", "F1", 1, "EAST", "Route shell", FILE, [
-      "HTML_SHELL_RENDERED",
-      "EAST_HTML_SHELL_RENDERED",
-      "SHELL_READY",
-      "HTML_READY",
-      "DOCUMENT_PRESENT"
-    ]),
-    stage("F2_EAST_FIRST_PAINT", "F2", 2, "EAST", "First paint", FILE, [
-      "FIRST_PAINT_COCKPIT_VISIBLE",
-      "EAST_FIRST_PAINT_COCKPIT_VISIBLE",
-      "COCKPIT_VISIBLE",
-      "FIRST_PAINT_READY"
-    ]),
-    stage("F3_EAST_SCRIPT_ORDER", "F3", 3, "EAST", "Script order", FILE, [
-      "SCRIPT_ORDER_COMPLETE",
-      "SCRIPT_LOADED",
-      "SCRIPT_ORDER_VISIBLE",
-      "EAST_SCRIPT_ORDER_VISIBILITY_ACTIVE",
-      "INDEX_API_PRESENT"
-    ]),
-    stage("F5_NORTH_AUTHORITY", "F5", 5, "NORTH", "North authority recognition", NORTH_FILE, [
-      "AUTHORITY_AVAILABILITY_READY",
-      "RUNTIME_TABLE_AVAILABLE",
-      "AUTHORITY_AVAILABLE",
-      "NORTH_RUNTIME_TABLE_PRESENT",
-      "NORTH_PRESENT"
-    ]),
-    stage("F8_ROUTE_CONDUCTOR_HYDRATION", "F8", 8, "SOUTH", "Route conductor hydration", ROUTE_CONDUCTOR_FILE, [
-      "CONDUCTOR_HYDRATED",
-      "SOUTH_ROUTE_CONDUCTOR_BOOTED",
-      "COHERENCE_SEMICONDUCTOR_BOOTED",
-      "ROUTE_CONDUCTOR_PRESENT",
-      "CONDUCTOR_MARKER_PRESENT",
-      "API_RECEIPT_RUNTIME_PRESENT"
-    ]),
-    stage("F13A_CANVAS_PARENT_BOOT_REQUESTED", "F13", 13.01, "NORTH", "Canvas parent boot requested", CANVAS_FILE, [
-      "CANVAS_COOPERATIVE_BOOT_STARTED",
-      "CANVAS_BOOT_STARTED",
-      "CANVAS_CARRIER_REQUESTED",
-      "CANVAS_PARENT_PRESENT"
-    ]),
-    stage("F13B_CANVAS_CHILDREN_OBSERVED", "F13", 13.02, "EAST", "Canvas children observed", CANVAS_FILE, [
-      "CANVAS_CHILDREN_READY",
-      "ALL_CANVAS_CHILDREN_READY",
-      "CANVAS_EAST_READY",
-      "CANVAS_WEST_READY",
-      "CANVAS_SOUTH_READY"
-    ]),
-    stage("F13C_CANVAS_CONTEXT_READY", "F13", 13.03, "SOUTH", "Canvas context ready", CANVAS_FILE, [
-      "CANVAS_CONTEXT_READY",
-      "CANVAS_2D_CONTEXT_READY",
-      "CONTEXT_READY"
-    ]),
-    stage("F13D_INSPECTION_BOUND", "F13", 13.04, "WEST", "Inspection bound", WEST_FILE, [
-      "DRAG_INSPECTION_BOUND",
-      "INSPECT_DRAG_BOUND",
-      "POINTER_INSPECTION_BOUND",
-      "ZOOM_INSPECTION_BOUND",
-      "INSPECT_MODE_AVAILABLE"
-    ]),
-    stage("F13E_ATLAS_BUILD_STARTED", "F13", 13.05, "EAST", "Atlas build started", CANVAS_FILE, [
-      "ATLAS_BUILD_STARTED",
-      "ATLAS_STARTED"
-    ]),
-    stage("F13F_ATLAS_BUILD_COMPLETE", "F13", 13.06, "EAST", "Atlas build complete", CANVAS_FILE, [
-      "ATLAS_BUILD_COMPLETE",
-      "ATLAS_COMPLETE"
-    ]),
-    stage("F13G_TEXTURE_COMPOSE_STARTED", "F13", 13.07, "SOUTH", "Texture compose started", CANVAS_FILE, [
-      "TEXTURE_COMPOSE_STARTED",
-      "TEXTURE_STARTED"
-    ]),
-    stage("F13H_TEXTURE_COMPOSE_COMPLETE", "F13", 13.08, "SOUTH", "Texture compose complete", CANVAS_FILE, [
-      "TEXTURE_COMPOSE_COMPLETE",
-      "TEXTURE_COMPLETE"
-    ]),
-    stage("F13I_FIRST_FRAME_REQUESTED", "F13", 13.09, "SOUTH", "First frame requested", CANVAS_FILE, [
-      "FIRST_FRAME_REQUESTED",
-      "FRAME_REQUESTED"
-    ]),
-    stage("F13J_FIRST_FRAME_DETECTED", "F13", 13.10, "SOUTH", "First frame detected", CANVAS_FILE, [
-      "FIRST_FRAME_DETECTED",
-      "FRAME_DETECTED",
-      "IMAGE_RENDERED"
-    ]),
-    stage("F13K_CANVAS_READY", "F13", 13.11, "SOUTH", "Canvas ready", CANVAS_FILE, [
-      "CANVAS_READY",
-      "CANVAS_COMPLETE"
-    ]),
-    stage("F13L_VISIBLE_PROOF_STARTED", "F13", 13.12, "SOUTH", "Visible proof started", CANVAS_FILE, [
-      "VISIBLE_CONTENT_PROOF_STARTED",
-      "VISIBLE_PROOF_STARTED"
-    ]),
-    stage("F13M_VISIBLE_PROOF_PASSED", "F13", 13.13, "SOUTH", "Visible proof passed", CANVAS_FILE, [
-      "VISIBLE_CONTENT_PROOF_PASSED",
-      "DEGRADED_VISIBLE_CONTENT_ACCEPTED",
-      "VISIBLE_CONTENT_SOFT_GAP",
-      "VISIBLE_CONTENT_ADMISSIBLE",
-      "VISIBLE_FORWARD_PROGRESS",
-      "SOUTH_VISIBLE_COMPLETION_READY"
-    ]),
-    stage("F13N_INSPECT_GATE_READY", "F13", 13.14, "WEST", "Inspect gate ready", WEST_FILE, [
-      "INSPECT_MODE_READY",
-      "DEGRADED_INSPECT_MODE_ACCEPTED",
-      "INSPECT_FALLBACK_READY",
-      "RECEIPT_FALLBACK_READY"
-    ]),
-    stage("F21_COMPLETION_LATCH_REQUESTED", "F21", 21, "NORTH", "Completion latch review", NORTH_FILE, F21_EVENTS)
-  ]);
-
-  const STAGE_BY_EVENT = new Map();
-  const STAGE_BY_ID = new Map();
-
-  MICRO_STAGES.forEach((item) => {
-    STAGE_BY_ID.set(item.id, item);
-    STAGE_BY_EVENT.set(item.id, item);
-    item.events.forEach((eventName) => STAGE_BY_EVENT.set(eventName, item));
+  const WEST_HANDOFF_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X06_Y19_Z5",
+    enginePart: "COMPRESSION",
+    enginePartIndex: 6,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.WEST_PRESSURE,
+    fibonacciRank: 5,
+    fibonacciStation: "WEST_PRESSURE_ADMISSIBILITY",
+    mechanicalRole: "WEST_PRESSURE_ADMISSIBILITY_TARGET",
+    mayJudgeIntake: false,
+    mayLatchF21: false,
+    mayRender: false
   });
 
   const state = {
@@ -295,48 +141,99 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "east-primary-gate-lineup-news-fibonacci",
 
-    fileGatesPrimary: true,
-    eastAuthority: true,
-    eastPrimaryGateLineup: true,
-    eastUsesNorthDialect: true,
-    eastFibonacciMagnifier: true,
-    eastMicroStageClassifier: true,
-    eastPacketDistributor: true,
-    northPermissionRequired: true,
-    macroRuntimeTableOwnedByNorth: true,
+    eastRuntimeTableActive: true,
+    eastRuntimeTableF3Only: true,
+    eastSupremeJudgeActive: true,
+    eastIntakeValveActive: true,
+    intakeValveOpen: true,
+    intakeValveStatus: STATUS.ACTIVE,
 
-    newsAlignmentProtocolPresent: true,
-    fibonacciSynchronizationPresent: true,
-    primaryGateStreamActive: true,
-    f21FirewallActive: true,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
+    mechanicalCoordinate: MECHANICAL_COORDINATE,
+    westHandoffCoordinate: WEST_HANDOFF_COORDINATE,
 
-    lastNorthContext: null,
-    lastClassification: null,
-    lastWestPacket: null,
-    lastSouthPacket: null,
-    lastNorthPacket: null,
+    northRuntimeObserved: false,
+    northRuntimeAccepted: false,
+    northRuntimeContract: "",
+    northRuntimeReceipt: "",
+    northF1IgnitionObserved: false,
+    northF1IgnitionAccepted: false,
+    northF21LatchObserved: false,
+    northF21Latched: false,
 
-    classifyCount: 0,
-    progressOnlyCount: 0,
-    falseCompletionBlockCount: 0,
-    markerOnlyHoldCount: 0,
-    futureQueueCount: 0,
-    duplicateArchiveCount: 0,
-    unknownArchiveCount: 0,
-    f21ReviewCount: 0,
+    intakeRecords: [],
+    intakeQueue: [],
+    rejectedRecords: [],
+    intakeRecordCount: 0,
+    acceptedRecordCount: 0,
+    rejectedRecordCount: 0,
+    diagnosticEvidenceCount: 0,
+    supportEngineSignalCount: 0,
+    routeSignalCount: 0,
+    canvasSignalCount: 0,
+
+    lastAcceptedIntake: null,
+    lastRejectedIntake: null,
+
+    intakeGraphBuilt: false,
+    intakeGraphReady: false,
+    intakeGraphStatus: STATUS.HELD,
+    intakeGraph: {
+      records: [],
+      recordsById: {},
+      byClass: {},
+      byState: {},
+      edges: [],
+      buildId: "",
+      builtAt: ""
+    },
+
+    intakeQualityMetricActive: true,
+    intakeQualityScore: 0,
+    intakeCoverageScore: 0,
+    intakeTraceScore: 0,
+    intakeCoherenceScore: 0,
+
+    f5WestHandoffAuthorized: false,
+    f3IntakePacketReady: false,
+    f3ActivationStatus: STATUS.ACTIVE,
+    f3ActivationReason: "EAST_F3_INTAKE_VALVE_ACTIVE_WAITING_NORTH_OR_PACKET",
+
+    westReceiptAccepted: false,
+    westReceiptPacket: null,
+    westRuntimeContract: "",
+    westRuntimeReceipt: "",
+
+    activeFibonacci: FIBONACCI.EAST_INTAKE,
+    activeFibonacciRank: 3,
+    activeNewsGate: NEWS_GATES.EAST,
+    sourceFibonacciGate: FIBONACCI.NORTH_ORIGIN,
+    futureFibonacciGate: FIBONACCI.WEST_PRESSURE,
+    newsProtocolAligned: true,
+    fibonacciSynchronizationMetricActive: true,
+    fibonacciSynchronizationScore: 0,
+    oneActiveGearAtATime: true,
+
+    firstFailedCoordinate: "WAITING_NORTH_F1_OR_INTAKE_PACKET",
+    recommendedNextFile: WEST_FILE,
+    recommendedNextRenewalTarget: WEST_FILE,
 
     localEvents: [],
     errors: [],
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
     visualPassClaimed: false,
 
-    startedAt: nowIso(),
-    updatedAt: nowIso()
+    createdAt: "",
+    updatedAt: ""
   };
 
   function nowIso() {
@@ -355,27 +252,25 @@
     return typeof value === "function";
   }
 
-  function asArray(value) {
-    if (Array.isArray(value)) return value.slice();
-    if (value === undefined || value === null) return [];
-    return [value];
-  }
-
   function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
     return String(value);
   }
 
+  function safeNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
   function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
-    if (value === "true" || value === "1" || value === 1) return true;
-    if (value === "false" || value === "0" || value === 0) return false;
+    if (value === true || value === 1 || value === "1" || value === "true") return true;
+    if (value === false || value === 0 || value === "0" || value === "false") return false;
     return fallback;
   }
 
-  function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
   function clonePlain(value) {
@@ -387,45 +282,45 @@
     }
   }
 
-  function trim(array, max = 160) {
-    if (Array.isArray(array) && array.length > max) {
-      array.splice(0, array.length - max);
+  function trim(list, max = 240) {
+    if (Array.isArray(list) && list.length > max) {
+      list.splice(0, list.length - max);
     }
   }
 
-  function record(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event: safeString(event),
-      detail: clonePlain(detail)
-    };
-
-    state.localEvents.push(item);
-    trim(state.localEvents);
-    state.updatedAt = item.at;
-    publishDataset();
-
-    return item;
+  function makeId(value, fallback = "intake") {
+    const raw = safeString(value || fallback, fallback)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return raw || fallback;
   }
 
-  function recordError(code, error, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code: safeString(code, "ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
-    };
+  function stableStateIndex(value) {
+    let text = "";
 
-    state.errors.push(item);
-    trim(state.errors);
-    state.updatedAt = item.at;
-    publishDataset();
+    try {
+      text = JSON.stringify(value || {});
+    } catch (_error) {
+      text = safeString(value, "");
+    }
 
-    return item;
+    let hash = 0;
+    for (let index = 0; index < text.length; index += 1) {
+      hash = ((hash << 5) - hash + text.charCodeAt(index)) | 0;
+    }
+
+    return Math.abs(hash) % 256;
+  }
+
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
   function readPath(path) {
-    const parts = safeString(path).split(".");
+    const parts = String(path || "").split(".");
     let cursor = root;
 
     for (const part of parts) {
@@ -434,6 +329,21 @@
     }
 
     return cursor || null;
+  }
+
+  function setPath(path, value) {
+    const parts = String(path || "").split(".").filter(Boolean);
+    if (!parts.length) return false;
+
+    let cursor = root;
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const part = parts[index];
+      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
+      cursor = cursor[part];
+    }
+
+    cursor[parts[parts.length - 1]] = value;
+    return true;
   }
 
   function firstGlobal(names) {
@@ -445,873 +355,733 @@
   }
 
   function readReceipt(authority) {
-    if (!authority || !isObject(authority)) return null;
+    if (!authority || !isObject(authority)) return {};
 
-    if (isFunction(authority.getReceipt)) {
-      try {
-        const receipt = authority.getReceipt();
-        return isObject(receipt) ? receipt : null;
-      } catch (error) {
-        recordError("READ_RECEIPT_FAILED", error);
-        return null;
+    try {
+      if (isFunction(authority.getReceiptLight)) {
+        const receipt = authority.getReceiptLight();
+        if (isObject(receipt)) return receipt;
       }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt)) return receipt;
+      }
+    } catch (error) {
+      return { error: error && error.message ? error.message : String(error) };
     }
 
     if (isObject(authority.receiptPacket)) return authority.receiptPacket;
     if (isObject(authority.receipt)) return authority.receipt;
     if (authority.contract || authority.receipt || authority.version) return authority;
 
-    return null;
+    return {};
   }
 
-  function datasetValue(key, fallback = "") {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return fallback;
-    const value = doc.documentElement.dataset[key];
-    return value === undefined || value === null || value === "" ? fallback : value;
-  }
-
-  function normalizeEvent(event = {}) {
-    const source = isObject(event) ? event : { event };
-    const detail = isObject(source.detail) ? source.detail : {};
-    const snapshot = isObject(source.snapshot) ? source.snapshot : {};
-
-    const candidates = [
-      source.microStageId,
-      source.checkpointId,
-      source.phase,
-      source.id,
-      source.event,
-      source.checkpointEvent,
-      source.checkpointCandidate,
-      source.activeGateId,
-      detail.microStageId,
-      detail.checkpointId,
-      detail.phase,
-      detail.id,
-      detail.event,
-      detail.checkpointEvent,
-      detail.checkpointCandidate,
-      detail.activeGateId,
-      snapshot.microStageId,
-      snapshot.checkpointId,
-      snapshot.phase,
-      snapshot.id,
-      snapshot.event,
-      snapshot.activeGateId
-    ].filter((item) => item !== undefined && item !== null && item !== "");
-
-    const name = candidates.length ? safeString(candidates[0]) : "";
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      name,
-      event: safeString(source.event || detail.event || source.id || detail.id || name),
-      id: safeString(source.id || detail.id || source.checkpointId || detail.checkpointId || name),
-      phase: safeString(source.phase || detail.phase || name),
-      checkpointId: safeString(source.checkpointId || detail.checkpointId || name),
-      activeGateId: safeString(source.activeGateId || detail.activeGateId || snapshot.activeGateId || ""),
-      candidates: candidates.map(String),
-      detail: clonePlain(detail),
-      snapshot: clonePlain(snapshot),
-      raw: clonePlain(source),
-      normalizedAt: nowIso()
+  function recordLocal(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "LOCAL_EVENT"),
+      detail: clonePlain(detail)
     };
+
+    state.localEvents.push(item);
+    trim(state.localEvents);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
   }
 
-  function mergeEvidence(event = {}, context = {}) {
-    const normalized = normalizeEvent(event);
-
-    return {
-      ...clonePlain(context || {}),
-      ...clonePlain(normalized.snapshot || {}),
-      ...clonePlain(normalized.detail || {}),
-      ...clonePlain(normalized.raw || {})
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "RUNTIME_TABLE_EAST_F3_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
     };
+
+    state.errors.push(item);
+    trim(state.errors);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
   }
 
-  function deriveMacroGate(value = "") {
-    const text = safeString(value).toUpperCase();
+  function detectForbiddenClaim(packet = {}) {
+    const text = (() => {
+      try {
+        return JSON.stringify(packet || {});
+      } catch (_error) {
+        return String(packet || "");
+      }
+    })();
 
-    if (text.includes("F21") || text.includes("COMPLETION") || text.includes("LATCH")) return "F21";
-    if (
-      text.includes("F13") ||
-      text.includes("CANVAS") ||
-      text.includes("VISIBLE") ||
-      text.includes("ATLAS") ||
-      text.includes("TEXTURE") ||
-      text.includes("FRAME") ||
-      text.includes("INSPECT") ||
-      text.includes("IMAGE_RENDERED")
-    ) return "F13";
-    if (text.includes("F8") || text.includes("CONDUCTOR") || text.includes("HYDRAT") || text.includes("API_RECEIPT_RUNTIME")) return "F8";
-    if (text.includes("F5") || text.includes("AUTHORITY") || text.includes("RUNTIME_TABLE") || text.includes("NORTH_PRESENT")) return "F5";
-    if (text.includes("F3") || text.includes("SCRIPT") || text.includes("INDEX_API")) return "F3";
-    if (text.includes("F2") || text.includes("FIRST_PAINT") || text.includes("COCKPIT")) return "F2";
-    if (text.includes("F1") || text.includes("SHELL") || text.includes("LEDGER") || text.includes("DOCUMENT")) return "F1";
-
-    return "";
+    return Boolean(
+      safeBool(packet.generatedImage, false) ||
+      safeBool(packet.graphicBox, false) ||
+      safeBool(packet.webGL, false) ||
+      safeBool(packet.visualPassClaimed, false) ||
+      safeBool(packet.publicSuperiorityClaim, false) ||
+      safeBool(packet.publicComparisonClaimAllowed, false) ||
+      text.includes('"generatedImage":true') ||
+      text.includes('"graphicBox":true') ||
+      text.includes('"webGL":true') ||
+      text.includes('"visualPassClaimed":true') ||
+      text.includes('"publicSuperiorityClaim":true') ||
+      text.includes('"publicComparisonClaimAllowed":true') ||
+      text.includes("visualPassClaimed=true")
+    );
   }
 
-  function readNorthContext(context = {}) {
-    const supplied = isObject(context) ? context : {};
-
-    const northApi = firstGlobal([
+  function readNorthRuntimeAuthority() {
+    return firstGlobal([
       "LAB_RUNTIME_TABLE",
       "LAB_RUNTIME_TABLE_NORTH",
-      "LAB_UNIVERSAL_PLANET_RUNTIME_TABLE",
       "RUNTIME_TABLE",
-      "DexterRuntimeTable",
       "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
-      "HEARTH_NORTH_COMMAND_TABLE",
-      "HEARTH_NORTH_MACRO_DISTRIBUTOR",
+      "LAB_CENTRAL_TRAIN_STATION",
       "DEXTER_LAB.runtimeTable",
       "DEXTER_LAB.cardinalRuntimeTableNorth",
-      "DEXTER_LAB.northMacroDistributor"
+      "DEXTER_LAB.centralTrainStation",
+      "HEARTH.northCommandRuntimeTable",
+      "HEARTH.runtimeTable",
+      "HEARTH.centralTrainStation"
     ]);
-
-    const northReceipt =
-      readReceipt(northApi) ||
-      firstGlobal([
-        "HEARTH_NORTH_COMMAND_RUNTIME_TABLE_RECEIPT",
-        "HEARTH_NORTH_CYCLICAL_CHECKPOINT_RECEIPT",
-        "LAB_RUNTIME_TABLE_NORTH_TRANSMISSION_RECEIPT",
-        "LAB_RUNTIME_TABLE_NORTH_MACRO_DISTRIBUTOR_RECEIPT"
-      ]) ||
-      {};
-
-    const activeSource =
-      supplied.northActiveGateId ||
-      supplied.activeGateId ||
-      supplied.activeCheckpointId ||
-      supplied.activeFibonacci ||
-      supplied.activeGear ||
-      supplied.activeStageId ||
-      northReceipt.activeGateId ||
-      northReceipt.activeCheckpointId ||
-      northReceipt.activeFibonacci ||
-      northReceipt.activeGear ||
-      northReceipt.activeStageId ||
-      northReceipt.activeFileGate ||
-      datasetValue("activeGateId", "") ||
-      datasetValue("activeFibonacci", "") ||
-      datasetValue("activeGear", "") ||
-      datasetValue("activeStageId", "");
-
-    const activeMacroGate =
-      supplied.northActiveMacroGate ||
-      supplied.activeMacroGate ||
-      deriveMacroGate(activeSource) ||
-      deriveMacroGate(supplied.activeGateId) ||
-      deriveMacroGate(supplied.activeCheckpointId) ||
-      deriveMacroGate(northReceipt.activeGateId) ||
-      deriveMacroGate(northReceipt.activeStageId) ||
-      "";
-
-    const contextPresent = Boolean(
-      supplied.northContextPresent === true ||
-      supplied.northRuntimeTableObserved === true ||
-      northApi ||
-      northReceipt.contract ||
-      activeMacroGate ||
-      activeSource
-    );
-
-    const f21Allowed = Boolean(
-      safeBool(supplied.f21Allowed, false) ||
-      safeBool(supplied.f21AllowedByNorth, false) ||
-      safeBool(supplied.newsGatePassedBeforeF21, false) ||
-      safeBool(supplied.newsGateDegradedBeforeF21, false) ||
-      safeBool(supplied.downstreamReleaseAuthorized, false) ||
-      safeBool(northReceipt.f21Allowed, false) ||
-      safeBool(northReceipt.newsGatePassedBeforeF21, false) ||
-      safeBool(northReceipt.newsGateDegradedBeforeF21, false) ||
-      safeBool(northReceipt.downstreamReleaseAuthorized, false)
-    );
-
-    const packet = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      northFile: NORTH_FILE,
-      northRuntimeTableObserved: Boolean(northApi || northReceipt.contract),
-      northContextPresent: contextPresent,
-      northContract: safeString(northReceipt.contract || (northApi && northApi.contract) || ""),
-      northReceipt: safeString(northReceipt.receipt || (northApi && northApi.receipt) || ""),
-      northActiveGateId: safeString(northReceipt.activeGateId || supplied.activeGateId || supplied.northActiveGateId || ""),
-      northActiveCheckpointId: safeString(northReceipt.activeCheckpointId || supplied.activeCheckpointId || ""),
-      northActiveStageId: safeString(northReceipt.activeStageId || supplied.activeStageId || ""),
-      northActiveFileGate: safeString(northReceipt.activeFileGate || supplied.activeFileGate || ""),
-      northActiveFibonacci: safeString(northReceipt.activeFibonacci || supplied.activeFibonacci || supplied.northActiveFibonacci || activeMacroGate),
-      northActiveMacroGate: activeMacroGate,
-      northActiveSource: safeString(activeSource),
-      northPermissionConfirmed: Boolean(contextPresent && activeMacroGate),
-      northOwnsRuntimeTable: true,
-      northOwnsActiveGate: true,
-      northOwnsVisibleProgress: true,
-      northOwnsCheckpointAdmission: true,
-      northOwnsF21Latch: true,
-      northMustAdmit: true,
-      completionLatched: Boolean(safeBool(supplied.completionLatched, false) || safeBool(northReceipt.finalCompletionLatched, false)),
-      f21AllowedByNorth: f21Allowed,
-      newsGatePassedBeforeF21: Boolean(safeBool(supplied.newsGatePassedBeforeF21, false) || safeBool(northReceipt.newsGatePassedBeforeF21, false)),
-      newsGateDegradedBeforeF21: Boolean(safeBool(supplied.newsGateDegradedBeforeF21, false) || safeBool(northReceipt.newsGateDegradedBeforeF21, false)),
-      readAt: nowIso()
-    };
-
-    state.lastNorthContext = clonePlain(packet);
-    return packet;
   }
 
-  function mapEventToStage(event = {}) {
-    const normalized = typeof event === "string" ? normalizeEvent({ event }) : normalizeEvent(event);
-    const candidates = normalized.candidates.length ? normalized.candidates : [normalized.name];
+  function readNorthRuntimeReceipt() {
+    const authority = readNorthRuntimeAuthority();
+    const receipt = readReceipt(authority);
 
-    for (const candidate of candidates) {
-      const key = safeString(candidate);
-      if (STAGE_BY_ID.has(key)) return STAGE_BY_ID.get(key);
-      if (STAGE_BY_EVENT.has(key)) return STAGE_BY_EVENT.get(key);
+    if (receipt && Object.keys(receipt).length) {
+      state.northRuntimeObserved = true;
+      state.northRuntimeContract = safeString(receipt.contract, state.northRuntimeContract);
+      state.northRuntimeReceipt = safeString(receipt.receipt, state.northRuntimeReceipt);
+
+      state.northF1IgnitionObserved =
+        safeBool(receipt.countyRuntimeEngineCenter, false) ||
+        safeBool(receipt.northTimingGovernor, false) ||
+        safeString(receipt.activeStage, "") === FIBONACCI.NORTH_ORIGIN ||
+        safeString(receipt.activeFibonacci, "") === FIBONACCI.NORTH_ORIGIN ||
+        state.northF1IgnitionObserved;
+
+      state.northF21LatchObserved =
+        safeBool(receipt.f21EligibilityAccepted, false) ||
+        safeBool(receipt.f21Latched, false) ||
+        state.northF21LatchObserved;
+
+      state.northF21Latched = safeBool(receipt.f21Latched, state.northF21Latched);
     }
 
-    const derived = deriveMacroGate(candidates.join(" "));
-    if (!derived) return null;
-
-    return MICRO_STAGES.find((item) => item.macroGate === derived) || null;
+    return receipt || {};
   }
 
-  function isProgressOnlyEvent(event = {}) {
-    const normalized = typeof event === "string" ? normalizeEvent({ event }) : normalizeEvent(event);
-    return normalized.candidates.some((candidate) => PROGRESS_ONLY_EVENTS.includes(candidate));
-  }
+  function validateNorthRuntimeReceipt(packet = {}) {
+    const input = isObject(packet) && Object.keys(packet).length ? packet : readNorthRuntimeReceipt();
+    const noForbiddenClaim = !detectForbiddenClaim(input);
 
-  function stringifyForSafety(value) {
-    try {
-      return JSON.stringify(value || {});
-    } catch (_error) {
-      return String(value || "");
-    }
-  }
-
-  function isFalseCompletionMutation(event = {}, context = {}) {
-    const text = `${stringifyForSafety(event)} ${stringifyForSafety(context)}`;
-    return FALSE_COMPLETION_TOKENS.some((token) => text.includes(token));
-  }
-
-  function classifyRouteConductorEvidence(evidence = {}) {
-    const conductorApi = firstGlobal([
-      "HEARTH_ROUTE_CONDUCTOR",
-      "HearthRouteConductor",
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR",
-      "HEARTH.southRouteConductor",
-      "DEXTER_LAB.hearthSouthRouteConductor"
-    ]);
-
-    const conductorReceipt = firstGlobal([
-      "HEARTH_ROUTE_CONDUCTOR_RECEIPT",
-      "HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT",
-      "HEARTH.southRouteConductorReceipt",
-      "DEXTER_LAB.hearthSouthRouteConductorReceipt"
-    ]);
-
-    const markerPresent = Boolean(
-      safeBool(evidence.routeConductorMarkerPresent, false) ||
-      safeBool(evidence.conductorMarkerPresent, false) ||
-      safeBool(evidence.hearthRouteConductorMarkerPresent, false) ||
-      root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true ||
-      datasetValue("hearthRouteConductorMarkerPresent", "") === "true" ||
-      datasetValue("routeConductorMarkerPresent", "") === "true"
+    const northRecognized = Boolean(
+      safeBool(input.countyRuntimeEngineCenter, false) ||
+      safeBool(input.northTimingGovernor, false) ||
+      safeBool(input.threeDMechanicalLatticeBound, false) ||
+      safeBool(input.stateLattice256Bound, false) ||
+      safeString(input.contract || "").includes("RUNTIME_TABLE") ||
+      safeString(input.receipt || "").includes("RUNTIME_TABLE") ||
+      safeString(input.file || "") === NORTH_FILE
     );
 
-    const apiPresent = Boolean(
-      safeBool(evidence.routeConductorApiPresent, false) ||
-      safeBool(evidence.routeConductorGlobalPresent, false) ||
-      conductorApi
+    const f1Recognized = Boolean(
+      safeString(input.activeStage, "") === FIBONACCI.NORTH_ORIGIN ||
+      safeString(input.activeFibonacci, "") === FIBONACCI.NORTH_ORIGIN ||
+      safeBool(input.countyRuntimeEngineCenter, false) ||
+      safeBool(input.northTimingGovernor, false)
     );
 
-    const receiptPresent = Boolean(
-      safeBool(evidence.routeConductorReceiptPresent, false) ||
-      conductorReceipt
-    );
+    const ok = Boolean(noForbiddenClaim && (northRecognized || !Object.keys(input || {}).length));
 
-    const runtimeActive = Boolean(
-      safeBool(evidence.routeConductorRuntimeActive, false) ||
-      safeBool(evidence.southRuntimeActive, false) ||
-      apiPresent
-    );
-
-    const hydrated = Boolean(markerPresent && apiPresent && receiptPresent && runtimeActive);
+    let reason = "NORTH_RUNTIME_RECEIPT_ACCEPTABLE_OR_OPTIONAL";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_NORTH_RECEIPT";
+    else if (Object.keys(input || {}).length && !northRecognized) reason = "UNRECOGNIZED_NORTH_RUNTIME_RECEIPT";
 
     return {
-      routeConductorFile: ROUTE_CONDUCTOR_FILE,
-      routeConductorMarkerPresent: markerPresent,
-      routeConductorApiPresent: apiPresent,
-      routeConductorReceiptPresent: receiptPresent,
-      routeConductorRuntimeActive: runtimeActive,
-      routeConductorHydrated: hydrated,
-      routeConductorMarkerOnly: markerPresent && !hydrated,
-      classification: hydrated ? "F8_ROUTE_CONDUCTOR_HYDRATED" : markerPresent ? "F8_MARKER_ONLY_HELD" : "F8_CONDUCTOR_PENDING",
-      firstFailedCoordinate: hydrated ? "NONE_F8_ROUTE_CONDUCTOR_HYDRATED" : markerPresent ? "WAITING_ROUTE_CONDUCTOR_API_RECEIPT_RUNTIME" : "WAITING_ROUTE_CONDUCTOR_MARKER_API_RECEIPT_RUNTIME",
-      recommendedNextRenewalTarget: hydrated ? NORTH_FILE : ROUTE_CONDUCTOR_FILE
+      ok,
+      reason,
+      noForbiddenClaim,
+      northRecognized,
+      f1Recognized,
+      input: clonePlain(input)
     };
   }
 
-  function classifyVisibleProofEvidence(evidence = {}) {
-    const canvasPresent = Boolean(
-      safeBool(evidence.planetCanvasPresent, false) ||
-      safeBool(evidence.canvasPresent, false) ||
-      datasetValue("hearthPlanetCanvasPresent", "") === "true" ||
-      datasetValue("hearthSouthPlanetCanvasPresent", "") === "true"
-    );
+  function acceptNorthRuntimeReceipt(packet = {}) {
+    const validation = validateNorthRuntimeReceipt(packet);
 
-    const canvasNonZeroSize = Boolean(
-      safeBool(evidence.planetCanvasNonZeroSize, false) ||
-      safeBool(evidence.canvasNonZeroSize, false) ||
-      datasetValue("hearthPlanetCanvasNonZeroSize", "") === "true" ||
-      datasetValue("hearthSouthPlanetCanvasNonZeroSize", "") === "true"
-    );
+    state.northRuntimeObserved = validation.northRecognized || state.northRuntimeObserved;
+    state.northRuntimeAccepted = validation.ok;
+    state.northF1IgnitionObserved = validation.f1Recognized || state.northF1IgnitionObserved;
+    state.northF1IgnitionAccepted = validation.ok && validation.f1Recognized;
 
-    const visibleHint = Boolean(
-      safeBool(evidence.visiblePlanetHintPresent, false) ||
-      datasetValue("hearthCanvasVisiblePlanetHintPresent", "") === "true" ||
-      datasetValue("hearthSouthVisiblePlanetHintPresent", "") === "true"
-    );
+    if (validation.input.contract) state.northRuntimeContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.northRuntimeReceipt = safeString(validation.input.receipt);
 
-    const contentProof = Boolean(
-      safeBool(evidence.visibleContentProof, false) ||
-      safeBool(evidence.canvasVisibleContentProof, false) ||
-      datasetValue("hearthCanvasVisibleContentProof", "") === "true" ||
-      datasetValue("hearthSouthVisibleContentProof", "") === "true"
-    );
+    recordLocal("NORTH_RUNTIME_RECEIPT_EVALUATED_BY_EAST_F3", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      northRecognized: validation.northRecognized,
+      f1Recognized: validation.f1Recognized
+    });
 
-    const strictProof = Boolean(
-      safeBool(evidence.visibleContentStrictProof, false) ||
-      safeBool(evidence.canvasVisibleContentStrictProof, false) ||
-      datasetValue("hearthCanvasVisibleContentStrictProof", "") === "true"
-    );
-
-    const softProof = Boolean(
-      safeBool(evidence.visibleContentSoftGap, false) ||
-      safeBool(evidence.visibleForwardProgress, false) ||
-      safeBool(evidence.visibleContentAdmissible, false) ||
-      datasetValue("hearthCanvasVisibleContentSoftGap", "") === "true" ||
-      datasetValue("hearthSouthVisibleContentSoftGap", "") === "true"
-    );
-
-    const hardFail = Boolean(
-      safeBool(evidence.visibleContentHardFail, false) ||
-      datasetValue("hearthCanvasVisibleContentHardFail", "") === "true" ||
-      datasetValue("hearthSouthVisibleContentHardFail", "") === "true"
-    );
-
-    const firstFrameDetected = Boolean(
-      safeBool(evidence.firstFrameDetected, false) ||
-      datasetValue("hearthCanvasFirstFrameDetected", "") === "true"
-    );
-
-    const imageRendered = Boolean(
-      safeBool(evidence.imageRendered, false) ||
-      safeBool(evidence.canvasImageRendered, false) ||
-      datasetValue("hearthCanvasImageRendered", "") === "true"
-    );
-
-    const visiblePlanetProofValid = Boolean(
-      canvasPresent &&
-      canvasNonZeroSize &&
-      !hardFail &&
-      (
-        contentProof ||
-        strictProof ||
-        softProof ||
-        (firstFrameDetected && imageRendered)
-      )
-    );
+    computeFibonacciSynchronizationMetric();
+    publishGlobals();
 
     return {
-      canvasFile: CANVAS_FILE,
-      planetCanvasPresent: canvasPresent,
-      planetCanvasNonZeroSize: canvasNonZeroSize,
-      visiblePlanetHintPresent: visibleHint,
-      firstFrameDetected,
-      imageRendered,
-      visibleContentProof: contentProof,
-      visibleContentStrictProof: strictProof,
-      visibleContentSoftGap: softProof,
-      visibleContentHardFail: hardFail,
-      visiblePlanetProofValid,
-      visibleHintIsProof: false,
-      canvasPresenceIsProof: false,
-      imageRenderedIsCoherencePass: false,
-      classification: visiblePlanetProofValid ? "F13_VISIBLE_PLANET_PROOF_VALID" : hardFail ? "F13_VISIBLE_PROOF_HARD_FAIL" : "F13_VISIBLE_PROOF_PENDING",
-      firstFailedCoordinate: visiblePlanetProofValid ? "NONE_F13_VISIBLE_PLANET_PROOF_VALID" : hardFail ? "F13_VISIBLE_PROOF_HARD_FAIL" : "WAITING_F13_VISIBLE_PLANET_PROOF",
-      recommendedNextRenewalTarget: visiblePlanetProofValid ? NORTH_FILE : CANVAS_FILE
-    };
-  }
-
-  function macroCompare(targetMacro, activeMacro) {
-    const target = MACRO_RANK[targetMacro] || 0;
-    const active = MACRO_RANK[activeMacro] || 0;
-
-    if (!target || !active) return 0;
-    if (target === active) return 0;
-    return target > active ? 1 : -1;
-  }
-
-  function f21Allowed(context) {
-    return Boolean(
-      context &&
-      (
-        context.f21AllowedByNorth ||
-        context.f21Allowed ||
-        context.newsGatePassedBeforeF21 ||
-        context.newsGateDegradedBeforeF21
-      )
-    );
-  }
-
-  function basePacket(normalized, stageItem, northContext, evidence) {
-    const route = classifyRouteConductorEvidence(evidence);
-    const visible = classifyVisibleProofEvidence(evidence);
-
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      file: FILE,
-      sourceFile: FILE,
-      role: state.role,
-
-      fileGatesPrimary: true,
-      eastAuthority: true,
-      eastPrimaryGateLineup: true,
-      eastUsesNorthDialect: true,
-      eastFibonacciMagnifier: true,
-      eastMicroStageClassifier: true,
-      northPermissionRequired: true,
-      macroRuntimeTableOwnedByNorth: true,
-
-      newsAlignmentProtocolPresent: true,
-      fibonacciSynchronizationPresent: true,
-
-      normalizedEvent: clonePlain(normalized),
-      targetStage: clonePlain(stageItem),
-      targetMicroStageId: stageItem ? stageItem.id : "",
-      targetMacroGate: stageItem ? stageItem.macroGate : "",
-      targetMacroRank: stageItem ? stageItem.macroRank : 0,
-      targetOwner: stageItem ? stageItem.owner : "",
-      targetFileGate: stageItem ? stageItem.fileGate : "",
-
-      northContext: clonePlain(northContext),
-      routeConductor: route,
-      visibleProof: visible,
-
-      northMustAdmit: true,
-      eastOwnsActiveGate: false,
-      eastOwnsVisibleProgress: false,
-      eastOwnsCheckpointClosure: false,
-      eastOwnsF21Latch: false,
-      eastOwnsReadyText: false,
-      eastOwnsFinalVisualPassClaim: false,
-
+      accepted: validation.ok,
+      eastF3ReceivedNorth: true,
+      reason: validation.reason,
+      northRuntimeObserved: state.northRuntimeObserved,
+      northF1IgnitionAccepted: state.northF1IgnitionAccepted,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      visualPassClaimed: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function receiveNorthRuntimeReceipt(packet = {}) {
+    return acceptNorthRuntimeReceipt(packet);
+  }
+
+  function acceptNorthIgnition(packet = {}) {
+    return acceptNorthRuntimeReceipt({
+      ...clonePlain(packet),
+      activeFibonacci: FIBONACCI.NORTH_ORIGIN,
+      activeNewsGate: NEWS_GATES.NORTH,
+      northIgnition: true
+    });
+  }
+
+  function receiveNorthIgnition(packet = {}) {
+    return acceptNorthIgnition(packet);
+  }
+
+  function acceptNorthF1(packet = {}) {
+    return acceptNorthIgnition(packet);
+  }
+
+  function receiveNorthF1(packet = {}) {
+    return acceptNorthIgnition(packet);
+  }
+
+  function classifyIntakePacket(packet = {}) {
+    const input = isObject(packet) ? packet : { value: packet };
+    const text = (() => {
+      try {
+        return JSON.stringify(input || {});
+      } catch (_error) {
+        return safeString(input, "");
+      }
+    })();
+
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || input.activeStage || "");
+    const packetType = safeString(input.packetType || input.type || input.event || "");
+
+    let intakeClass = INTAKE_CLASS.GENERIC_INTAKE;
+
+    if (
+      activeFibonacci === FIBONACCI.NORTH_ORIGIN ||
+      packetType.includes("NORTH") ||
+      packetType.includes("F1") ||
+      safeBool(input.northIgnition, false)
+    ) {
+      intakeClass = INTAKE_CLASS.NORTH_IGNITION;
+    } else if (
+      packetType.includes("EAST_PRIMARY") ||
+      safeBool(input.eastPrimary, false) ||
+      safeBool(input.primary, false)
+    ) {
+      intakeClass = INTAKE_CLASS.EAST_PRIMARY;
+    } else if (
+      packetType.includes("EAST_HANDOFF") ||
+      safeBool(input.eastHandoff, false) ||
+      safeBool(input.handoff, false)
+    ) {
+      intakeClass = INTAKE_CLASS.EAST_HANDOFF;
+    } else if (
+      /DIAGNOSTIC|RECEIPT|EVIDENCE|PROBE|GAUGE/.test(text)
+    ) {
+      intakeClass = INTAKE_CLASS.DIAGNOSTIC_EVIDENCE;
+    } else if (
+      /F34|F55|F89|F144|F233|PRODUCT_ENGINE|UE5_EXPRESSION|REGISTRY|MARKET/.test(text)
+    ) {
+      intakeClass = INTAKE_CLASS.SUPPORT_ENGINE_SIGNAL;
+    } else if (
+      /ROUTE|HEARTH|SHOWROOM|GLOBE/.test(text)
+    ) {
+      intakeClass = INTAKE_CLASS.ROUTE_SIGNAL;
+    } else if (
+      /CANVAS|F13|VISUAL|CHAPEL|FINGER/.test(text)
+    ) {
+      intakeClass = INTAKE_CLASS.CANVAS_SIGNAL;
+    }
+
+    const stateIndex = clamp(
+      input.stateIndex !== undefined ? input.stateIndex : stableStateIndex(input),
+      0,
+      255
+    );
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      intakeClass,
+      packetType,
+      activeFibonacci,
+      stateIndex,
+      stateId: `ST_${stateIndex}`,
+      forbiddenClaimDetected: detectForbiddenClaim(input),
+      packet: clonePlain(input),
       classifiedAt: nowIso()
     };
   }
 
-  function classifyForWest(classificationOrEvent = {}, context = {}) {
-    const packet = classificationOrEvent && classificationOrEvent.action
-      ? classificationOrEvent
-      : createNewsFibonacciClassification(classificationOrEvent, context);
+  function evaluateIntakePacket(packet = {}) {
+    const classification = classifyIntakePacket(packet);
+    const noForbiddenClaim = !classification.forbiddenClaimDetected;
 
-    const westPacket = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      targetFile: WEST_FILE,
-      sourceFile: FILE,
-      westReviewRecommended: packet.westReviewRecommended === true,
-      eventClass: packet.action,
-      gapClass: packet.gapClass,
-      frictionClass:
-        packet.action === ACTIONS.BLOCK_FALSE_COMPLETION ? "HIGH_FALSE_COMPLETION_FRICTION" :
-        packet.action === ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY ? "MEDIUM_MARKER_ONLY_FRICTION" :
-        packet.action === ACTIONS.QUEUE_FOR_ACTIVE_GATE ? "FUTURE_STAGE_FRICTION" :
-        packet.action === ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR ? "LOW_DUPLICATE_FRICTION" :
-        "LOW_OR_NONE",
-      viscosityClass:
-        packet.gapClass === GAP_CLASS.NORTH_CONTEXT_REQUIRED ? "NORTH_CONTEXT_VISCOSITY" :
-        packet.gapClass === GAP_CLASS.SOUTH_CONDUCTOR_BODY_REQUIRED ? "SOUTH_BODY_VISCOSITY" :
-        packet.gapClass === GAP_CLASS.FALSE_COMPLETION_BLOCK ? "FALSE_COMPLETION_VISCOSITY" :
-        "NORMAL_FLOW",
-      falseCompletionDetected: packet.falseCompletionDetected === true || packet.f21BlockedByEastSafety === true,
-      futureStageDetected: packet.futureStageDetected === true,
-      duplicateStageDetected: packet.duplicateStageDetected === true,
-      progressOnlyDetected: packet.action === ACTIONS.ARCHIVE_PROGRESS_ONLY,
-      northMustDecide: true,
-      eastOwnsAdmissibilityJudgment: false,
-      westOwnsAdmissibilityJudgment: true,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
-      firstFailedCoordinate: packet.firstFailedCoordinate,
+    const activeFibonacci = safeString(
+      packet.activeFibonacci || packet.fibonacciStage || packet.activeStage || "",
+      ""
+    );
+
+    const stageAllowed = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.NORTH_ORIGIN ||
+      activeFibonacci === FIBONACCI.EAST_INTAKE ||
+      activeFibonacci === "F1" ||
+      activeFibonacci === "F3"
+    );
+
+    const valveOpen = Boolean(state.intakeValveOpen && state.eastIntakeValveActive);
+
+    const accepted = Boolean(noForbiddenClaim && stageAllowed && valveOpen);
+
+    let reason = "EAST_F3_INTAKE_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_BY_EAST_F3_INTAKE_VALVE";
+    else if (!stageAllowed) reason = "INTAKE_STAGE_NOT_ADMISSIBLE_TO_EAST_F3";
+    else if (!valveOpen) reason = "EAST_F3_INTAKE_VALVE_CLOSED";
+
+    return {
+      accepted,
+      reason,
+      classification,
+      coordinate: clonePlain(MECHANICAL_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::${classification.stateId}`,
+      valveState: accepted ? "OPEN" : "CLOSED",
+      nextRecommendedCoordinate: accepted ? WEST_HANDOFF_COORDINATE.coordinateId : MECHANICAL_COORDINATE.coordinateId,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
       visualPassClaimed: false,
-      generatedAt: nowIso()
+      evaluatedAt: nowIso()
     };
-
-    state.lastWestPacket = clonePlain(westPacket);
-    return westPacket;
   }
 
-  function classifyForSouth(classificationOrEvent = {}, context = {}) {
-    const packet = classificationOrEvent && classificationOrEvent.action
-      ? classificationOrEvent
-      : createNewsFibonacciClassification(classificationOrEvent, context);
+  function normalizeIntakeRecord(packet = {}, evaluation = null) {
+    const result = evaluation || evaluateIntakePacket(packet);
+    const source = isObject(packet) ? packet : { value: packet };
+    const id = makeId(
+      source.id ||
+      source.packetId ||
+      source.receipt ||
+      source.contract ||
+      `${result.classification.intakeClass}-${Date.now()}-${state.intakeRecords.length + state.rejectedRecords.length + 1}`,
+      "east-intake"
+    );
 
-    const southPacket = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      targetFile: packet.targetMacroGate === "F8" ? ROUTE_CONDUCTOR_FILE : SOUTH_FILE,
-      routeConductorFile: ROUTE_CONDUCTOR_FILE,
-      canvasFile: CANVAS_FILE,
-      sourceFile: FILE,
-      southProofRequired: packet.southProofRequired === true,
-      southMarkerObservedOnly: packet.southMarkerObservedOnly === true || packet.routeConductor.routeConductorMarkerOnly === true,
-      southRuntimeBodyObserved: packet.routeConductor.routeConductorHydrated === true,
-      southReceiptObserved: packet.routeConductor.routeConductorReceiptPresent === true,
-      southVisibleProofObserved: packet.visibleProof.visiblePlanetProofValid === true,
-      southVisibleProofPending: packet.targetMacroGate === "F13" && packet.visibleProof.visiblePlanetProofValid !== true,
-      southProofMustBeProvidedBySouth: true,
-      eastOwnsSouthProof: false,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
-      firstFailedCoordinate: packet.firstFailedCoordinate,
+    return {
+      id,
+      recordId: id,
+      intakeClass: result.classification.intakeClass,
+      packetType: result.classification.packetType,
+      sourceContract: safeString(source.contract || ""),
+      sourceReceipt: safeString(source.receipt || ""),
+      sourceFile: safeString(source.file || source.sourceFile || ""),
+      sourceRoute: safeString(source.route || ""),
+      activeFibonacci: safeString(source.activeFibonacci || source.fibonacciStage || source.activeStage || ""),
+      stateId: result.classification.stateId,
+      stateIndex: result.classification.stateIndex,
+      coordinateId: MECHANICAL_COORDINATE.coordinateId,
+      runtimeCondition: result.runtimeCondition,
+      accepted: result.accepted,
+      reason: result.reason,
+      traceReady: Boolean(source.contract || source.receipt || source.file || source.route || source.sourceFile),
+      deterministic: true,
+      packet: clonePlain(source),
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
       visualPassClaimed: false,
-      generatedAt: nowIso()
+      receivedAt: nowIso()
     };
-
-    state.lastSouthPacket = clonePlain(southPacket);
-    return southPacket;
   }
 
-  function classifyForNorth(classificationOrEvent = {}, context = {}) {
-    const packet = classificationOrEvent && classificationOrEvent.action
-      ? classificationOrEvent
-      : createNewsFibonacciClassification(classificationOrEvent, context);
+  function acceptIntakePacket(packet = {}) {
+    const evaluation = evaluateIntakePacket(packet);
+    const record = normalizeIntakeRecord(packet, evaluation);
 
-    const northPacket = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      targetFile: NORTH_FILE,
-      sourceFile: FILE,
-      northDialectPacket: true,
-      runtimeTableLanguagePreserved: true,
-      newsFibonacciAlignment: true,
-      activeGateAdmissionRequest: packet.action === ACTIONS.ADMIT_FOR_NORTH_REVIEW,
-      activeGateHoldRequest: [
-        ACTIONS.HELD_FOR_NORTH_CONTEXT,
-        ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY,
-        ACTIONS.BLOCK_FALSE_COMPLETION
-      ].includes(packet.action),
-      activeGateArchiveRequest: [
-        ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR,
-        ACTIONS.ARCHIVE_PROGRESS_ONLY,
-        ACTIONS.UNKNOWN_EVENT_ARCHIVE
-      ].includes(packet.action),
-      activeGateQueueRequest: packet.action === ACTIONS.QUEUE_FOR_ACTIVE_GATE,
-      f21ReviewRequest: packet.action === ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW,
-      microStageId: packet.targetMicroStageId,
-      macroGate: packet.targetMacroGate,
-      macroRank: packet.targetMacroRank,
-      reason: packet.reason,
-      firstFailedCoordinate: packet.firstFailedCoordinate,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
-      northMustAdmit: true,
-      eastOwnsCheckpointAdmission: false,
-      eastOwnsF21Latch: false,
-      visualPassClaimed: false,
-      generatedAt: nowIso()
-    };
+    if (evaluation.accepted) {
+      state.intakeRecords.push(record);
+      state.intakeQueue.push(record);
+      state.lastAcceptedIntake = clonePlain(record);
 
-    state.lastNorthPacket = clonePlain(northPacket);
-    return northPacket;
-  }
+      if (record.intakeClass === INTAKE_CLASS.NORTH_IGNITION) {
+        state.northF1IgnitionObserved = true;
+        state.northF1IgnitionAccepted = true;
+      }
+    } else {
+      state.rejectedRecords.push(record);
+      state.lastRejectedIntake = clonePlain(record);
+    }
 
-  function finalizeClassification(packet) {
-    state.classifyCount += 1;
-    state.lastClassification = clonePlain(packet);
-    state.updatedAt = nowIso();
+    trim(state.intakeRecords);
+    trim(state.intakeQueue);
+    trim(state.rejectedRecords);
 
-    if (packet.action === ACTIONS.ARCHIVE_PROGRESS_ONLY) state.progressOnlyCount += 1;
-    if (packet.action === ACTIONS.BLOCK_FALSE_COMPLETION) state.falseCompletionBlockCount += 1;
-    if (packet.action === ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY) state.markerOnlyHoldCount += 1;
-    if (packet.action === ACTIONS.QUEUE_FOR_ACTIVE_GATE) state.futureQueueCount += 1;
-    if (packet.action === ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR) state.duplicateArchiveCount += 1;
-    if (packet.action === ACTIONS.UNKNOWN_EVENT_ARCHIVE) state.unknownArchiveCount += 1;
-    if (packet.action === ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW) state.f21ReviewCount += 1;
+    rebuildIntakeGraph({ silent: true });
+    computeFibonacciSynchronizationMetric();
 
-    state.lastWestPacket = classifyForWest(packet);
-    state.lastSouthPacket = classifyForSouth(packet);
-    state.lastNorthPacket = classifyForNorth(packet);
-
-    record("EAST_PRIMARY_GATE_LINEUP_CLASSIFICATION", {
-      action: packet.action,
-      microStage: packet.targetMicroStageId,
-      macroGate: packet.targetMacroGate,
-      reason: packet.reason,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget
+    recordLocal("EAST_F3_INTAKE_PACKET_EVALUATED", {
+      accepted: evaluation.accepted,
+      reason: evaluation.reason,
+      intakeClass: record.intakeClass,
+      stateId: record.stateId,
+      runtimeCondition: record.runtimeCondition
     });
 
-    publishDataset();
-    return packet;
+    publishGlobals();
+
+    return {
+      accepted: evaluation.accepted,
+      reason: evaluation.reason,
+      record: clonePlain(record),
+      intakeClass: record.intakeClass,
+      runtimeCondition: record.runtimeCondition,
+      f5WestHandoffAuthorized: state.f5WestHandoffAuthorized,
+      recommendedNextFile: evaluation.accepted ? WEST_FILE : FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
   }
 
-  function createNewsFibonacciClassification(event = {}, context = {}) {
-    const normalized = normalizeEvent(event);
-    const evidence = mergeEvidence(event, context);
-    const northContext = readNorthContext(evidence);
-    const stageItem = mapEventToStage(normalized);
-    const packet = basePacket(normalized, stageItem, northContext, evidence);
+  function receiveIntakePacket(packet = {}) {
+    return acceptIntakePacket(packet);
+  }
 
-    if (isProgressOnlyEvent(normalized)) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.ARCHIVE_PROGRESS_ONLY,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
-        gapClass: GAP_CLASS.PROGRESS_ONLY,
-        reason: "progress-only-telemetry-archived-without-mutating-north-state",
-        visibleUpdateAllowed: false,
-        westReviewRecommended: false,
-        southProofRequired: false,
-        firstFailedCoordinate: "NONE_PROGRESS_ONLY_ARCHIVED",
-        recommendedNextRenewalTarget: NORTH_FILE
+  function submitIntakePacket(packet = {}) {
+    return acceptIntakePacket(packet);
+  }
+
+  function acceptEastPrimary(packet = {}) {
+    return acceptIntakePacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "EAST_PRIMARY_PACKET"),
+      eastPrimary: true,
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.EAST_INTAKE)
+    });
+  }
+
+  function receiveEastPrimary(packet = {}) {
+    return acceptEastPrimary(packet);
+  }
+
+  function acceptEastPrimaryGate(packet = {}) {
+    return acceptEastPrimary(packet);
+  }
+
+  function acceptEastHandoff(packet = {}) {
+    return acceptIntakePacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "EAST_HANDOFF_PACKET"),
+      eastHandoff: true,
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.EAST_INTAKE)
+    });
+  }
+
+  function receiveEastHandoff(packet = {}) {
+    return acceptEastHandoff(packet);
+  }
+
+  function acceptDiagnosticEvidence(packet = {}) {
+    return acceptIntakePacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "EAST_DIAGNOSTIC_EVIDENCE_PACKET"),
+      diagnosticEvidence: true,
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.EAST_INTAKE)
+    });
+  }
+
+  function acceptRouteSignal(packet = {}) {
+    return acceptIntakePacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "EAST_ROUTE_SIGNAL_PACKET"),
+      routeSignal: true,
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.EAST_INTAKE)
+    });
+  }
+
+  function acceptCanvasSignal(packet = {}) {
+    return acceptIntakePacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "EAST_CANVAS_SIGNAL_PACKET"),
+      canvasSignal: true,
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.EAST_INTAKE)
+    });
+  }
+
+  function rebuildIntakeGraph(options = {}) {
+    const records = state.intakeRecords.slice();
+    const recordsById = {};
+    const byClass = {};
+    const byState = {};
+    const edges = [];
+
+    records.forEach((record) => {
+      recordsById[record.id] = record;
+
+      byClass[record.intakeClass] = byClass[record.intakeClass] || [];
+      byClass[record.intakeClass].push(record.id);
+
+      byState[record.stateId] = byState[record.stateId] || [];
+      byState[record.stateId].push(record.id);
+
+      edges.push({
+        from: MECHANICAL_COORDINATE.coordinateId,
+        to: record.id,
+        type: "east-valve-admitted-record",
+        deterministic: true
       });
-    }
 
-    if (!stageItem) {
-      const falseCompletion = isFalseCompletionMutation(event, context);
-
-      return finalizeClassification({
-        ...packet,
-        action: falseCompletion ? ACTIONS.BLOCK_FALSE_COMPLETION : ACTIONS.UNKNOWN_EVENT_ARCHIVE,
-        legacyAction: falseCompletion ? CHECKPOINT_EVENT_ACTIONS.BLOCK : CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
-        gapClass: falseCompletion ? GAP_CLASS.FALSE_COMPLETION_BLOCK : GAP_CLASS.UNKNOWN_NEUTRAL,
-        reason: falseCompletion ? "unknown-event-contained-false-completion-pressure" : "unknown-event-archived-neutral",
-        falseCompletionDetected: falseCompletion,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: falseCompletion,
-        southProofRequired: false,
-        firstFailedCoordinate: falseCompletion ? "FALSE_COMPLETION_LANGUAGE_BLOCKED" : "NONE_UNKNOWN_EVENT_ARCHIVED",
-        recommendedNextRenewalTarget: falseCompletion ? NORTH_FILE : FILE
-      });
-    }
-
-    if (stageItem.macroGate === "F21") {
-      if (!f21Allowed(northContext)) {
-        return finalizeClassification({
-          ...packet,
-          action: ACTIONS.BLOCK_FALSE_COMPLETION,
-          legacyAction: CHECKPOINT_EVENT_ACTIONS.BLOCK,
-          gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
-          reason: "f21-pressure-requires-north-permission-before-review",
-          f21Proposed: true,
-          f21AllowedByNorth: false,
-          f21BlockedByEastSafety: true,
-          f21RequiresNorthReview: true,
-          completionLatchedByEast: false,
-          visibleUpdateAllowed: false,
-          westReviewRecommended: true,
-          southProofRequired: true,
-          firstFailedCoordinate: "F21_BLOCKED_NORTH_PERMISSION_MISSING",
-          recommendedNextRenewalTarget: NORTH_FILE
+      if (record.sourceContract) {
+        edges.push({
+          from: record.id,
+          to: makeId(`contract-${record.sourceContract}`),
+          type: "record-to-contract",
+          deterministic: true
         });
       }
 
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.F21_PROPOSED_FOR_NORTH_REVIEW,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.LATCH_REVIEW,
-        gapClass: GAP_CLASS.F21_NORTH_REVIEW_REQUIRED,
-        reason: "f21-proposed-for-north-review-east-does-not-latch",
-        f21Proposed: true,
-        f21AllowedByNorth: true,
-        f21BlockedByEastSafety: false,
-        f21RequiresNorthReview: true,
-        completionLatchedByEast: false,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: false,
-        firstFailedCoordinate: "F21_READY_FOR_NORTH_REVIEW",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (isFalseCompletionMutation(event, context)) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.BLOCK_FALSE_COMPLETION,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.BLOCK,
-        gapClass: GAP_CLASS.FALSE_COMPLETION_BLOCK,
-        reason: "false-ready-100-f21-or-visual-pass-pressure-blocked-before-north-admission",
-        falseCompletionDetected: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: false,
-        firstFailedCoordinate: "FALSE_COMPLETION_LANGUAGE_BLOCKED",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (stageItem.macroGate === "F8" && packet.routeConductor.routeConductorMarkerOnly) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.HELD_FOR_SOUTH_CONDUCTOR_BODY,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.HELD,
-        gapClass: GAP_CLASS.SOUTH_CONDUCTOR_BODY_REQUIRED,
-        reason: "route-conductor-marker-observed-api-receipt-runtime-body-required",
-        southMarkerObservedOnly: true,
-        southRuntimeBodyObserved: false,
-        southReceiptObserved: false,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: true,
-        firstFailedCoordinate: "WAITING_ROUTE_CONDUCTOR_API_RECEIPT_RUNTIME",
-        recommendedNextRenewalTarget: ROUTE_CONDUCTOR_FILE
-      });
-    }
-
-    if (!northContext.northContextPresent || !northContext.northPermissionConfirmed) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.HELD_FOR_NORTH_CONTEXT,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.HELD,
-        gapClass: GAP_CLASS.NORTH_CONTEXT_REQUIRED,
-        reason: "north-runtime-table-active-macro-context-required",
-        northContextPresent: false,
-        northPermissionConfirmed: false,
-        classificationAdvisoryOnly: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: stageItem.owner === "SOUTH",
-        firstFailedCoordinate: "WAITING_NORTH_RUNTIME_TABLE_ACTIVE_GATE_CONTEXT",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    const compare = macroCompare(stageItem.macroGate, northContext.northActiveMacroGate);
-
-    if (compare > 0) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.QUEUE_FOR_ACTIVE_GATE,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.QUEUE,
-        gapClass: GAP_CLASS.FUTURE_STAGE,
-        reason: "event-belongs-to-future-fibonacci-lane-under-north-runtime-table",
-        futureStageDetected: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: true,
-        southProofRequired: stageItem.owner === "SOUTH",
-        firstFailedCoordinate: `WAITING_NORTH_ACTIVE_GATE_${northContext.northActiveMacroGate || "UNKNOWN"}`,
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    if (compare < 0) {
-      return finalizeClassification({
-        ...packet,
-        action: ACTIONS.ARCHIVE_DUPLICATE_OR_PRIOR,
-        legacyAction: CHECKPOINT_EVENT_ACTIONS.ARCHIVE,
-        gapClass: GAP_CLASS.DUPLICATE_OR_PRIOR_STAGE,
-        reason: "event-belongs-to-prior-fibonacci-lane-and-is-archived-without-mutation",
-        duplicateStageDetected: true,
-        visibleUpdateAllowed: false,
-        westReviewRecommended: false,
-        southProofRequired: false,
-        firstFailedCoordinate: "NONE_PRIOR_STAGE_ARCHIVED",
-        recommendedNextRenewalTarget: NORTH_FILE
-      });
-    }
-
-    return finalizeClassification({
-      ...packet,
-      action: ACTIONS.ADMIT_FOR_NORTH_REVIEW,
-      legacyAction: CHECKPOINT_EVENT_ACTIONS.ADMIT,
-      gapClass: GAP_CLASS.NONE,
-      reason: "event-belongs-inside-north-permitted-fibonacci-lane",
-      northPermissionConfirmed: true,
-      visibleUpdateAllowed: false,
-      westReviewRecommended: true,
-      southProofRequired: stageItem.owner === "SOUTH",
-      firstFailedCoordinate: "NONE_EAST_CLASSIFICATION_READY_FOR_NORTH_REVIEW",
-      recommendedNextRenewalTarget: stageItem.owner === "SOUTH" ? SOUTH_FILE : NORTH_FILE
+      if (record.sourceReceipt) {
+        edges.push({
+          from: record.id,
+          to: makeId(`receipt-${record.sourceReceipt}`),
+          type: "record-to-receipt",
+          deterministic: true
+        });
+      }
     });
+
+    state.intakeGraph = {
+      records,
+      recordsById,
+      byClass,
+      byState,
+      edges,
+      buildId: `east-f3-intake-graph-${records.length}-${edges.length}`,
+      builtAt: nowIso()
+    };
+
+    state.intakeGraphBuilt = true;
+    state.intakeRecordCount = records.length;
+    state.acceptedRecordCount = records.length;
+    state.rejectedRecordCount = state.rejectedRecords.length;
+    state.diagnosticEvidenceCount = records.filter((record) => record.intakeClass === INTAKE_CLASS.DIAGNOSTIC_EVIDENCE).length;
+    state.supportEngineSignalCount = records.filter((record) => record.intakeClass === INTAKE_CLASS.SUPPORT_ENGINE_SIGNAL).length;
+    state.routeSignalCount = records.filter((record) => record.intakeClass === INTAKE_CLASS.ROUTE_SIGNAL).length;
+    state.canvasSignalCount = records.filter((record) => record.intakeClass === INTAKE_CLASS.CANVAS_SIGNAL).length;
+
+    computeIntakeQualityMetric();
+
+    state.intakeGraphReady = Boolean(
+      state.intakeRecordCount > 0 &&
+      state.intakeQualityScore >= 62
+    );
+
+    if (state.intakeGraphReady) {
+      state.intakeGraphStatus = state.intakeQualityScore >= 80 ? STATUS.READY : STATUS.DEGRADED;
+      state.f5WestHandoffAuthorized = true;
+      state.f3IntakePacketReady = true;
+      state.f3ActivationStatus = state.intakeGraphStatus;
+      state.f3ActivationReason =
+        state.intakeGraphStatus === STATUS.READY
+          ? "EAST_F3_INTAKE_READY_FOR_WEST_F5"
+          : "EAST_F3_INTAKE_DEGRADED_WEST_F5_HANDOFF_AVAILABLE";
+      state.firstFailedCoordinate =
+        state.intakeGraphStatus === STATUS.READY
+          ? "NONE_EAST_F3_READY_WEST_F5_HANDOFF_AUTHORIZED"
+          : "NONE_EAST_F3_DEGRADED_WEST_F5_HANDOFF_AVAILABLE";
+      state.recommendedNextFile = WEST_FILE;
+      state.recommendedNextRenewalTarget = WEST_FILE;
+    } else {
+      state.intakeGraphStatus = STATUS.HELD;
+      state.f5WestHandoffAuthorized = false;
+      state.f3IntakePacketReady = false;
+      state.f3ActivationStatus = STATUS.HELD;
+      state.f3ActivationReason = "WAITING_LAWFUL_EAST_F3_INTAKE";
+      state.firstFailedCoordinate = "WAITING_LAWFUL_EAST_F3_INTAKE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+    }
+
+    computeFibonacciSynchronizationMetric();
+
+    if (options.silent !== true) {
+      recordLocal("EAST_F3_INTAKE_GRAPH_REBUILT", {
+        intakeRecordCount: state.intakeRecordCount,
+        rejectedRecordCount: state.rejectedRecordCount,
+        intakeGraphStatus: state.intakeGraphStatus,
+        intakeQualityScore: state.intakeQualityScore
+      });
+    }
+
+    updateDataset();
+
+    return clonePlain(state.intakeGraph);
   }
 
-  function classifyFibonacciStage(event = {}, context = {}) {
-    return createNewsFibonacciClassification(event, context);
-  }
+  function computeIntakeQualityMetric() {
+    const records = state.intakeRecords || [];
+    const count = Math.max(1, records.length);
+    const acceptedRatio = records.length / Math.max(1, records.length + state.rejectedRecords.length);
+    const traceRatio = records.filter((record) => record.traceReady).length / count;
 
-  function classifyTransmissionEvent(event = {}, context = {}) {
-    return createNewsFibonacciClassification(event, context);
-  }
+    const classCoverage = [
+      records.some((record) => record.intakeClass === INTAKE_CLASS.NORTH_IGNITION),
+      records.some((record) => record.intakeClass === INTAKE_CLASS.EAST_PRIMARY),
+      records.some((record) => record.intakeClass === INTAKE_CLASS.EAST_HANDOFF),
+      records.some((record) => record.intakeClass === INTAKE_CLASS.DIAGNOSTIC_EVIDENCE),
+      records.some((record) => record.intakeClass === INTAKE_CLASS.SUPPORT_ENGINE_SIGNAL),
+      records.some((record) => record.intakeClass === INTAKE_CLASS.ROUTE_SIGNAL),
+      records.some((record) => record.intakeClass === INTAKE_CLASS.CANVAS_SIGNAL)
+    ].filter(Boolean).length / 7;
 
-  function classifyCheckpointEvent(event = {}, sessionLike = {}) {
-    const result = createNewsFibonacciClassification(event, sessionLike);
+    state.intakeCoverageScore = clamp(Math.round(classCoverage * 100), 0, 100);
+    state.intakeTraceScore = clamp(Math.round(traceRatio * 100), 0, 100);
+
+    state.intakeCoherenceScore = clamp(
+      Math.round(
+        (acceptedRatio * 42) +
+        (state.intakeTraceScore * 0.22) +
+        (state.intakeCoverageScore * 0.20) +
+        (state.intakeValveOpen ? 8 : 0) +
+        (!state.publicSuperiorityClaim ? 8 : 0)
+      ),
+      0,
+      100
+    );
+
+    state.intakeQualityScore = clamp(
+      Math.round(
+        (state.intakeCoherenceScore * 0.42) +
+        (state.intakeTraceScore * 0.30) +
+        (state.intakeCoverageScore * 0.28)
+      ),
+      0,
+      100
+    );
 
     return {
-      action: result.legacyAction,
-      eastAction: result.action,
-      gapClass: result.gapClass,
-      checkpointId: result.targetMicroStageId,
-      checkpointRank: result.targetStage ? result.targetStage.rank : 0,
-      activeCheckpointId: result.northContext ? result.northContext.northActiveGateId : "",
-      activeFibonacci: result.northContext ? result.northContext.northActiveFibonacci : "",
-      reason: result.reason,
-      mayAdvance: result.action === ACTIONS.ADMIT_FOR_NORTH_REVIEW,
-      maySetProgress: false,
-      maySetReadyText: false,
-      eastOwnsProgress: false,
-      northMustDecide: true,
-      visualUpdateAllowed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      rawClassification: result
+      intakeQualityScore: state.intakeQualityScore,
+      intakeCoverageScore: state.intakeCoverageScore,
+      intakeTraceScore: state.intakeTraceScore,
+      intakeCoherenceScore: state.intakeCoherenceScore,
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false
     };
   }
 
-  function createChronologicalFibonacciPlan() {
-    return MICRO_STAGES.map((item) => ({
-      id: item.id,
-      microStageId: item.id,
-      macroGate: item.macroGate,
-      fibonacci: item.id.split("_")[0],
-      macroRank: item.macroRank,
-      rank: item.rank,
-      owner: item.owner,
-      label: item.label,
-      fileGate: item.fileGate,
-      events: item.events.slice(),
-      northAdmissionRequired: true,
-      eastOwnsCompletion: false,
-      northMustAdmit: true,
-      status: "PENDING",
-      visualPassClaimed: false
-    }));
+  function computeFibonacciSynchronizationMetric() {
+    const checks = [
+      state.newsProtocolAligned,
+      state.oneActiveGearAtATime,
+      state.activeFibonacci === FIBONACCI.EAST_INTAKE,
+      state.activeFibonacciRank === 3,
+      state.activeNewsGate === NEWS_GATES.EAST,
+      state.sourceFibonacciGate === FIBONACCI.NORTH_ORIGIN,
+      state.futureFibonacciGate === FIBONACCI.WEST_PRESSURE,
+      state.eastRuntimeTableActive,
+      state.eastSupremeJudgeActive,
+      state.eastIntakeValveActive,
+      state.intakeValveOpen,
+      state.engineMechanicsPrimary,
+      state.mathPrimary,
+      state.mechanicalCoordinate.coordinateId === "RT3D-X04_Y19_Z3",
+      state.intakeGraphBuilt || state.northRuntimeObserved,
+      !state.publicSuperiorityClaim,
+      !state.publicComparisonClaimAllowed,
+      !state.generatedImage,
+      !state.graphicBox,
+      !state.webGL,
+      !state.visualPassClaimed
+    ];
+
+    const passed = checks.filter(Boolean).length;
+    state.fibonacciSynchronizationScore = Math.round((passed / checks.length) * 100);
+    state.updatedAt = nowIso();
+
+    computeIntakeQualityMetric();
+
+    return {
+      score: state.fibonacciSynchronizationScore,
+      passed,
+      total: checks.length,
+      activeFibonacci: FIBONACCI.EAST_INTAKE,
+      activeFibonacciRank: 3,
+      activeNewsGate: NEWS_GATES.EAST,
+      sourceFibonacciGate: FIBONACCI.NORTH_ORIGIN,
+      futureFibonacciGate: FIBONACCI.WEST_PRESSURE,
+      publicSuperiorityClaim: false
+    };
   }
 
-  function createNewsFibonacciCheckpointPlan() {
+  function evaluateNewsAlignment() {
+    const metric = computeFibonacciSynchronizationMetric();
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "east-primary-gate-lineup-news-fibonacci-plan",
-      runtimeTableLanguagePreserved: true,
-      newsAlignmentProtocolPresent: true,
-      fibonacciSynchronizationPresent: true,
-      eastPrimaryGateLineup: true,
-      northOwnsActiveGate: true,
-      northOwnsCheckpointAdmission: true,
-      northOwnsF21Latch: true,
-      fileGates: clonePlain(FILE_GATES),
-      newsGates: clonePlain(NEWS_GATES),
-      eastLanguage: clonePlain(EAST_LANGUAGE),
-      sequence: createChronologicalFibonacciPlan(),
+      newsAlignmentContract: "LAB_RUNTIME_TABLE_EAST_F3_NEWS_ALIGNMENT_PROTOCOL_v1",
+      newsAlignmentReceipt: "LAB_RUNTIME_TABLE_EAST_F3_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v1",
+      sequence: [
+        {
+          gate: NEWS_GATES.NORTH,
+          fibonacci: FIBONACCI.NORTH_ORIGIN,
+          file: NORTH_FILE,
+          ready: state.northRuntimeObserved || state.northF1IgnitionObserved
+        },
+        {
+          gate: NEWS_GATES.EAST,
+          fibonacci: FIBONACCI.EAST_INTAKE,
+          file: FILE,
+          ready: state.intakeGraphReady || state.f3IntakePacketReady
+        },
+        {
+          gate: NEWS_GATES.WEST,
+          fibonacci: FIBONACCI.WEST_PRESSURE,
+          file: WEST_FILE,
+          ready: state.f5WestHandoffAuthorized
+        }
+      ],
+      fibonacciSynchronizationScore: metric.score,
+      f3Status: state.f3ActivationStatus,
+      intakeGraphStatus: state.intakeGraphStatus,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1320,274 +1090,608 @@
     };
   }
 
-  function createCheckpointSession(_sequenceInput = null, options = {}) {
-    const sessionState = {
-      sessionId: options.id || options.sessionId || `east-primary-lineup-${Math.random().toString(36).slice(2, 9)}`,
-      route: options.route || "/showroom/globe/hearth/",
-      planetId: options.planetId || "hearth",
-      planetLabel: options.planetLabel || "Hearth",
-      submittedCount: 0,
-      latestClassification: null,
-      createdAt: nowIso(),
-      updatedAt: nowIso()
+  function setIntakeValveOpen(open, detail = {}) {
+    state.intakeValveOpen = safeBool(open, true);
+    state.intakeValveStatus = state.intakeValveOpen ? STATUS.ACTIVE : STATUS.HELD;
+
+    recordLocal("EAST_F3_INTAKE_VALVE_STATE_CHANGED", {
+      intakeValveOpen: state.intakeValveOpen,
+      detail: clonePlain(detail)
+    });
+
+    computeFibonacciSynchronizationMetric();
+    publishGlobals();
+
+    return {
+      intakeValveOpen: state.intakeValveOpen,
+      intakeValveStatus: state.intakeValveStatus,
+      changedAt: nowIso()
     };
+  }
 
-    function submitEvent(event = {}, context = {}) {
-      sessionState.submittedCount += 1;
+  function openIntakeValve(detail = {}) {
+    return setIntakeValveOpen(true, detail);
+  }
 
-      const classification = createNewsFibonacciClassification(event, {
-        ...options,
-        ...context
-      });
+  function closeIntakeValve(detail = {}) {
+    return setIntakeValveOpen(false, detail);
+  }
 
-      sessionState.latestClassification = clonePlain(classification);
-      sessionState.updatedAt = nowIso();
+  function composeF3IntakePacket(extra = {}) {
+    const metric = computeFibonacciSynchronizationMetric();
+    const readyForF5 = Boolean(state.f5WestHandoffAuthorized || state.intakeGraphStatus === STATUS.DEGRADED);
 
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packetType: "EAST_F3_INTAKE_PACKET",
+      sourceFile: FILE,
+      targetFile: WEST_FILE,
+      destinationFile: WEST_FILE,
+
+      activeFibonacci: FIBONACCI.EAST_INTAKE,
+      activeFibonacciRank: 3,
+      activeNewsGate: NEWS_GATES.EAST,
+      sourceFibonacciGate: FIBONACCI.NORTH_ORIGIN,
+      futureFibonacciGate: FIBONACCI.WEST_PRESSURE,
+      futureFibonacciRank: 5,
+
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      westHandoffCoordinate: clonePlain(WEST_HANDOFF_COORDINATE),
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+
+      eastRuntimeTableActive: true,
+      eastRuntimeTableF3Only: true,
+      eastSupremeJudgeActive: true,
+      eastIntakeValveActive: true,
+      intakeValveOpen: state.intakeValveOpen,
+      intakeValveStatus: state.intakeValveStatus,
+
+      northRuntimeObserved: state.northRuntimeObserved,
+      northRuntimeAccepted: state.northRuntimeAccepted,
+      northRuntimeContract: state.northRuntimeContract,
+      northRuntimeReceipt: state.northRuntimeReceipt,
+      northF1IgnitionObserved: state.northF1IgnitionObserved,
+      northF1IgnitionAccepted: state.northF1IgnitionAccepted,
+      northF21LatchObserved: state.northF21LatchObserved,
+      northF21Latched: state.northF21Latched,
+
+      intakeGraphBuilt: state.intakeGraphBuilt,
+      intakeGraphReady: state.intakeGraphReady,
+      intakeGraphStatus: state.intakeGraphStatus,
+      intakeRecordCount: state.intakeRecordCount,
+      acceptedRecordCount: state.acceptedRecordCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticEvidenceCount: state.diagnosticEvidenceCount,
+      supportEngineSignalCount: state.supportEngineSignalCount,
+      routeSignalCount: state.routeSignalCount,
+      canvasSignalCount: state.canvasSignalCount,
+
+      intakeQualityScore: state.intakeQualityScore,
+      intakeCoverageScore: state.intakeCoverageScore,
+      intakeTraceScore: state.intakeTraceScore,
+      intakeCoherenceScore: state.intakeCoherenceScore,
+
+      intakeRecords: clonePlain(state.intakeRecords),
+      intakeQueue: clonePlain(state.intakeQueue),
+      rejectedRecords: clonePlain(state.rejectedRecords),
+      intakeGraph: clonePlain(state.intakeGraph),
+
+      f5WestHandoffAuthorized: readyForF5,
+      f3IntakePacketReady: readyForF5,
+      f3ActivationStatus: state.f3ActivationStatus,
+      f3ActivationReason: state.f3ActivationReason,
+
+      newsProtocolAligned: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: metric.score,
+      oneActiveGearAtATime: true,
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      detail: clonePlain(extra),
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      composedAt: nowIso()
+    };
+  }
+
+  function composeEastReceipt() {
+    return getReceipt();
+  }
+
+  function readWestRuntimeAuthority() {
+    return firstGlobal([
+      "LAB_RUNTIME_TABLE_WEST",
+      "LAB_RUNTIME_TABLE_WEST_F5",
+      "RUNTIME_TABLE_WEST",
+      "WEST_PRESSURE_ADMISSIBILITY",
+      "WEST_PRESSURE_VALVE",
+      "WEST_SUPREME_JUDGE",
+      "DEXTER_LAB.runtimeTableWest",
+      "DEXTER_LAB.cardinalRuntimeTableWest",
+      "DEXTER_LAB.westPressureValve",
+      "HEARTH.runtimeTableWest",
+      "HEARTH.westPressureValve"
+    ]);
+  }
+
+  function submitF3IntakeToWest(extra = {}) {
+    const west = readWestRuntimeAuthority();
+
+    if (!west) {
       return {
-        action: classification.legacyAction,
-        eastAction: classification.action,
-        gapClass: classification.gapClass,
-        sessionId: sessionState.sessionId,
-        northMustDecide: true,
-        eastOwnsProgress: false,
-        eastOwnsGearShift: false,
-        eastOwnsCompletionLatch: false,
-        visibleProgress: 0,
-        progressCap: 0,
-        readyTextAllowed: false,
-        firstFailedCoordinate: classification.firstFailedCoordinate,
-        recommendedNextRenewalTarget: classification.recommendedNextRenewalTarget,
-        rawClassification: classification
-      };
-    }
-
-    function submitMany(events = [], context = {}) {
-      return asArray(events).map((event) => submitEvent(event, context));
-    }
-
-    function getReceipt() {
-      return {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        checkpointSessionContract: "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_SESSION_v1",
-        checkpointSessionReceipt: "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_SESSION_RECEIPT_v1",
-        sessionId: sessionState.sessionId,
-        route: sessionState.route,
-        planetId: sessionState.planetId,
-        planetLabel: sessionState.planetLabel,
-        eastPrimaryGateLineup: true,
-        eastFibonacciMagnifier: true,
-        eastUsesNorthDialect: true,
-        northOwnsActiveGate: true,
-        northOwnsCheckpointAdmission: true,
-        northOwnsF21Latch: true,
-        eastOwnsProgress: false,
-        eastOwnsGearShift: false,
-        eastOwnsCompletionLatch: false,
-        readyTextAllowed: false,
-        submittedCount: sessionState.submittedCount,
-        latestClassification: clonePlain(sessionState.latestClassification),
+        submitted: false,
+        reason: "WEST_RUNTIME_TABLE_UNAVAILABLE",
+        recommendedNextFile: WEST_FILE,
         generatedImage: false,
         graphicBox: false,
         webGL: false,
-        visualPassClaimed: false,
-        createdAt: sessionState.createdAt,
-        updatedAt: sessionState.updatedAt
+        visualPassClaimed: false
+      };
+    }
+
+    const packet = composeF3IntakePacket(extra);
+
+    try {
+      if (isFunction(west.acceptEastF3IntakePacket)) {
+        return {
+          submitted: true,
+          method: "acceptEastF3IntakePacket",
+          response: clonePlain(west.acceptEastF3IntakePacket(packet))
+        };
+      }
+
+      if (isFunction(west.acceptEastPrimary)) {
+        return {
+          submitted: true,
+          method: "acceptEastPrimary",
+          response: clonePlain(west.acceptEastPrimary(packet))
+        };
+      }
+
+      if (isFunction(west.acceptWestIntake)) {
+        return {
+          submitted: true,
+          method: "acceptWestIntake",
+          response: clonePlain(west.acceptWestIntake(packet))
+        };
+      }
+
+      if (isFunction(west.receiveWestIntake)) {
+        return {
+          submitted: true,
+          method: "receiveWestIntake",
+          response: clonePlain(west.receiveWestIntake(packet))
+        };
+      }
+    } catch (error) {
+      recordError("EAST_F3_PACKET_SUBMISSION_TO_WEST_FAILED", error);
+      return {
+        submitted: false,
+        reason: "EAST_F3_PACKET_SUBMISSION_TO_WEST_FAILED"
       };
     }
 
     return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      sessionId: sessionState.sessionId,
-      submitEvent,
-      submitMany,
-      submit: submitEvent,
-      completeActive: submitEvent,
-      canAdvanceTo() {
-        return false;
-      },
-      getActiveCheckpoint() {
-        return null;
-      },
-      getCheckpointState() {
-        return createChronologicalFibonacciPlan();
-      },
-      getNewsGateState() {
-        return {
-          northGateReady: false,
-          eastGateReady: true,
-          westGateReady: false,
-          southGateReady: false,
-          newsGatePassedBeforeF21: false,
-          newsGateDegradedBeforeF21: false,
-          northMustDecide: true,
-          eastOwnsNewsFinalApproval: false
-        };
-      },
-      getReceipt,
-      getReceiptText() {
-        const r = getReceipt();
-        return [
-          "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_SESSION_RECEIPT",
-          "",
-          `contract=${r.contract}`,
-          `receipt=${r.receipt}`,
-          `sessionId=${r.sessionId}`,
-          `route=${r.route}`,
-          `eastPrimaryGateLineup=${r.eastPrimaryGateLineup}`,
-          `eastFibonacciMagnifier=${r.eastFibonacciMagnifier}`,
-          `eastUsesNorthDialect=${r.eastUsesNorthDialect}`,
-          `northOwnsActiveGate=${r.northOwnsActiveGate}`,
-          `northOwnsCheckpointAdmission=${r.northOwnsCheckpointAdmission}`,
-          `northOwnsF21Latch=${r.northOwnsF21Latch}`,
-          `eastOwnsProgress=${r.eastOwnsProgress}`,
-          `eastOwnsGearShift=${r.eastOwnsGearShift}`,
-          `eastOwnsCompletionLatch=${r.eastOwnsCompletionLatch}`,
-          `readyTextAllowed=${r.readyTextAllowed}`,
-          `visualPassClaimed=${r.visualPassClaimed}`,
-          `updatedAt=${r.updatedAt}`
-        ].join("\n");
-      },
-      get state() {
-        return sessionState;
-      }
+      submitted: false,
+      reason: "WEST_RUNTIME_TABLE_F3_INTAKE_METHOD_UNAVAILABLE",
+      recommendedNextFile: WEST_FILE
     };
   }
 
-  function createHearthCheckpointSession(options = {}) {
-    return createCheckpointSession(null, {
-      planetId: "hearth",
-      planetLabel: "Hearth",
-      route: "/showroom/globe/hearth/",
-      ...options
-    });
+  function submitF3PacketToNorth(extra = {}) {
+    const north = readNorthRuntimeAuthority();
+
+    if (!north) {
+      return {
+        submitted: false,
+        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE",
+        recommendedNextFile: NORTH_FILE
+      };
+    }
+
+    const packet = composeF3IntakePacket(extra);
+
+    try {
+      if (isFunction(north.acceptEastPrimary)) {
+        return {
+          submitted: true,
+          method: "acceptEastPrimary",
+          response: clonePlain(north.acceptEastPrimary(packet))
+        };
+      }
+
+      if (isFunction(north.acceptEastPrimaryGate)) {
+        return {
+          submitted: true,
+          method: "acceptEastPrimaryGate",
+          response: clonePlain(north.acceptEastPrimaryGate(packet))
+        };
+      }
+
+      if (isFunction(north.acceptEastHandoff)) {
+        return {
+          submitted: true,
+          method: "acceptEastHandoff",
+          response: clonePlain(north.acceptEastHandoff(packet))
+        };
+      }
+
+      if (isFunction(north.submitEvent)) {
+        return {
+          submitted: true,
+          method: "submitEvent",
+          response: clonePlain(north.submitEvent(packet))
+        };
+      }
+    } catch (error) {
+      recordError("EAST_F3_PACKET_SUBMISSION_TO_NORTH_FAILED", error);
+      return {
+        submitted: false,
+        reason: "EAST_F3_PACKET_SUBMISSION_TO_NORTH_FAILED"
+      };
+    }
+
+    return {
+      submitted: false,
+      reason: "NORTH_RUNTIME_TABLE_EAST_INTAKE_METHOD_UNAVAILABLE",
+      recommendedNextFile: NORTH_FILE
+    };
   }
 
-  function getReceipt() {
+  function validateWestReceipt(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+
+    const westRecognized = Boolean(
+      safeBool(input.westRuntimeTableActive, false) ||
+      safeBool(input.westPressureValveActive, false) ||
+      safeBool(input.westSupremeJudgeActive, false) ||
+      safeString(input.activeFibonacci || "") === FIBONACCI.WEST_PRESSURE ||
+      safeString(input.contract || "").includes("WEST") ||
+      safeString(input.receipt || "").includes("WEST")
+    );
+
+    const ok = Boolean(noForbiddenClaim && westRecognized);
+
+    let reason = "WEST_F5_RECEIPT_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_WEST_RECEIPT";
+    else if (!westRecognized) reason = "UNRECOGNIZED_WEST_F5_RECEIPT";
+
+    return {
+      ok,
+      reason,
+      noForbiddenClaim,
+      westRecognized,
+      input: clonePlain(input)
+    };
+  }
+
+  function acceptWestReceipt(packet = {}) {
+    const validation = validateWestReceipt(packet);
+
+    state.westReceiptAccepted = validation.ok;
+    state.westReceiptPacket = clonePlain(packet);
+
+    if (validation.input.contract) state.westRuntimeContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.westRuntimeReceipt = safeString(validation.input.receipt);
+
+    recordLocal("WEST_F5_RECEIPT_RECEIVED_BY_EAST_F3", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      contract: state.westRuntimeContract
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: validation.ok,
+      eastF3ReceivedWest: true,
+      reason: validation.reason,
+      recommendedNextFile: validation.ok ? SOUTH_FILE : WEST_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function bindStateToMechanicalCoordinate(input = {}) {
+    const stateIndex = clamp(
+      input.stateIndex !== undefined ? input.stateIndex : stableStateIndex(input),
+      0,
+      255
+    );
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      bindingType: "EAST_F3_MECHANICAL_COORDINATE_PLUS_STATE_256",
+      coordinate: clonePlain(MECHANICAL_COORDINATE),
+      state256: {
+        stateId: `ST_${stateIndex}`,
+        stateIndex,
+        binary: stateIndex.toString(2).padStart(8, "0"),
+        field: "STATE_MOTION_CONSTRAINT_POSSIBILITY",
+        replacesMechanicalCoordinate: false
+      },
+      geometry: {
+        filterId: `FL_${(stateIndex % 61) + 1}`,
+        pressureShellId: `PS_${(stateIndex % 192) + 1}`,
+        basinAnchorId: `BA_${(stateIndex % 9) + 1}`,
+        geometryEnvelope: "GEOMETRY_TOTAL_451"
+      },
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_${stateIndex}`,
+      bound: true,
+      boundAt: nowIso()
+    };
+  }
+
+  function evaluateCoordinateState(input = {}) {
+    const binding = bindStateToMechanicalCoordinate(input);
+    const allowed = Boolean(
+      state.intakeValveOpen &&
+      state.eastIntakeValveActive &&
+      !detectForbiddenClaim(input)
+    );
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      coordinateId: MECHANICAL_COORDINATE.coordinateId,
+      stateId: binding.state256.stateId,
+      coordinateAllowed: true,
+      stateAdmissible: binding.state256.stateIndex >= 0 && binding.state256.stateIndex <= 255,
+      filterPassageAllowed: allowed,
+      pressureWithinShell: true,
+      basinAnchored: true,
+      envelopeContained: true,
+      runtimeExpressionAllowed: allowed,
+      valveState: allowed ? "OPEN" : "CLOSED",
+      evaluatedAt: nowIso()
+    };
+  }
+
+  function getMechanicalCoordinatePacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      westHandoffCoordinate: clonePlain(WEST_HANDOFF_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_0`,
+      enginePartDefinesFunction: true,
+      fibonacciDefinesSequence: true,
+      categoryDefinesScale: true,
+      numbersSupportFunction: true,
+      aliasesLocateOnly: true,
+      namesDescribeOnly: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function getIntakeGraph() {
+    return clonePlain(state.intakeGraph);
+  }
+
+  function getIntakeGraphSummary() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      intakeGraphBuilt: state.intakeGraphBuilt,
+      intakeGraphReady: state.intakeGraphReady,
+      intakeGraphStatus: state.intakeGraphStatus,
+      intakeRecordCount: state.intakeRecordCount,
+      acceptedRecordCount: state.acceptedRecordCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticEvidenceCount: state.diagnosticEvidenceCount,
+      supportEngineSignalCount: state.supportEngineSignalCount,
+      routeSignalCount: state.routeSignalCount,
+      canvasSignalCount: state.canvasSignalCount,
+      intakeQualityScore: state.intakeQualityScore,
+      intakeCoverageScore: state.intakeCoverageScore,
+      intakeTraceScore: state.intakeTraceScore,
+      intakeCoherenceScore: state.intakeCoherenceScore,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getIntakeRecords(intakeClass = "") {
+    const records = state.intakeRecords || [];
+    if (!intakeClass) return clonePlain(records);
+    return clonePlain(records.filter((record) => record.intakeClass === intakeClass));
+  }
+
+  function getRejectedRecords() {
+    return clonePlain(state.rejectedRecords);
+  }
+
+  function findIntakeRecord(id) {
+    const key = makeId(id, "");
+    return clonePlain((state.intakeGraph.recordsById || {})[key] || null);
+  }
+
+  function getReceiptLight() {
+    computeFibonacciSynchronizationMetric();
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      destinationFile: FILE,
       file: FILE,
-      northFile: NORTH_FILE,
-      westFile: WEST_FILE,
-      southFile: SOUTH_FILE,
-      routeConductorFile: ROUTE_CONDUCTOR_FILE,
-      canvasFile: CANVAS_FILE,
-      status: "active",
-      role: state.role,
 
-      fileGatesPrimary: true,
-      fileGates: clonePlain(FILE_GATES),
-      eastLanguage: clonePlain(EAST_LANGUAGE),
+      eastRuntimeTableActive: true,
+      eastRuntimeTableF3Only: true,
+      eastSupremeJudgeActive: true,
+      eastIntakeValveActive: true,
+      intakeValveOpen: state.intakeValveOpen,
+      intakeValveStatus: state.intakeValveStatus,
 
-      eastAuthority: true,
-      eastLoaded: true,
-      eastFallbackUsed: false,
-      eastPrimaryGateLineup: true,
-      eastUsesNorthDialect: true,
-      eastFibonacciMagnifier: true,
-      eastMicroStageClassifier: true,
-      eastPacketDistributor: true,
-      northPermissionRequired: true,
-      macroRuntimeTableOwnedByNorth: true,
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+      mechanicalCoordinateId: MECHANICAL_COORDINATE.coordinateId,
+      enginePart: MECHANICAL_COORDINATE.enginePart,
+      systemCategory: MECHANICAL_COORDINATE.systemCategory,
+      fibonacciStation: MECHANICAL_COORDINATE.fibonacciStage,
+      mechanicalRole: MECHANICAL_COORDINATE.mechanicalRole,
+      judicialRole: MECHANICAL_COORDINATE.judicialRole,
+      authorityRole: MECHANICAL_COORDINATE.authorityRole,
 
-      newsAlignmentProtocolPresent: true,
-      fibonacciSynchronizationPresent: true,
-      primaryGateStreamActive: true,
+      northRuntimeObserved: state.northRuntimeObserved,
+      northRuntimeAccepted: state.northRuntimeAccepted,
+      northRuntimeContract: state.northRuntimeContract,
+      northRuntimeReceipt: state.northRuntimeReceipt,
+      northF1IgnitionObserved: state.northF1IgnitionObserved,
+      northF1IgnitionAccepted: state.northF1IgnitionAccepted,
+      northF21LatchObserved: state.northF21LatchObserved,
+      northF21Latched: state.northF21Latched,
 
-      ownsEventNormalization: true,
-      ownsEventAliasRecognition: true,
-      ownsFibonacciMicroStageMapping: true,
-      ownsNorthContextReading: true,
-      ownsMicroStageClassification: true,
-      ownsFalseCompletionWarning: true,
-      ownsFutureStageQueueClassification: true,
-      ownsDuplicateStageArchiveClassification: true,
-      ownsProgressOnlyArchiveClassification: true,
-      ownsPacketDistribution: true,
+      intakeGraphBuilt: state.intakeGraphBuilt,
+      intakeGraphReady: state.intakeGraphReady,
+      intakeGraphStatus: state.intakeGraphStatus,
+      intakeRecordCount: state.intakeRecordCount,
+      acceptedRecordCount: state.acceptedRecordCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticEvidenceCount: state.diagnosticEvidenceCount,
+      supportEngineSignalCount: state.supportEngineSignalCount,
+      routeSignalCount: state.routeSignalCount,
+      canvasSignalCount: state.canvasSignalCount,
 
-      northOwnsRuntimeTableAuthority: true,
-      northOwnsActiveGateCursor: true,
-      northOwnsVisibleLoaderPercentage: true,
-      northOwnsCheckpointClosure: true,
-      northOwnsF21Latch: true,
-      northOwnsReadyText: true,
+      intakeQualityMetricActive: true,
+      intakeQualityScore: state.intakeQualityScore,
+      intakeCoverageScore: state.intakeCoverageScore,
+      intakeTraceScore: state.intakeTraceScore,
+      intakeCoherenceScore: state.intakeCoherenceScore,
 
-      eastOwnsNorthRuntimeTableAuthority: false,
-      eastOwnsActiveGateCursor: false,
-      eastOwnsVisibleLoaderPercentage: false,
-      eastOwnsCheckpointClosure: false,
-      eastOwnsF21Latch: false,
-      eastOwnsReadyText: false,
-      eastOwnsSouthVisibleProof: false,
-      eastOwnsWestAdmissibilityJudgment: false,
-      eastOwnsCanvasDrawing: false,
-      eastOwnsCanvasChildTruth: false,
-      eastOwnsRouteConductorRuntime: false,
-      eastOwnsPlanetTruth: false,
-      eastOwnsFinalVisualPassClaim: false,
+      f5WestHandoffAuthorized: state.f5WestHandoffAuthorized,
+      f3IntakePacketReady: state.f3IntakePacketReady,
+      f3ActivationStatus: state.f3ActivationStatus,
+      f3ActivationReason: state.f3ActivationReason,
 
-      northContextPresent: Boolean(state.lastNorthContext && state.lastNorthContext.northContextPresent),
-      northActiveMacroGate: state.lastNorthContext ? state.lastNorthContext.northActiveMacroGate : "",
-      lastClassifiedMicroStage: state.lastClassification ? state.lastClassification.targetMicroStageId : "",
-      lastClassificationAction: state.lastClassification ? state.lastClassification.action : "",
-      lastClassificationReason: state.lastClassification ? state.lastClassification.reason : "",
+      westReceiptAccepted: state.westReceiptAccepted,
+      westRuntimeContract: state.westRuntimeContract,
+      westRuntimeReceipt: state.westRuntimeReceipt,
 
-      classifyCount: state.classifyCount,
-      progressOnlyCount: state.progressOnlyCount,
-      falseCompletionBlockCount: state.falseCompletionBlockCount,
-      markerOnlyHoldCount: state.markerOnlyHoldCount,
-      futureQueueCount: state.futureQueueCount,
-      duplicateArchiveCount: state.duplicateArchiveCount,
-      unknownArchiveCount: state.unknownArchiveCount,
-      f21ReviewCount: state.f21ReviewCount,
+      newsProtocolAligned: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      activeFibonacci: FIBONACCI.EAST_INTAKE,
+      activeFibonacciRank: 3,
+      activeNewsGate: NEWS_GATES.EAST,
+      sourceFibonacciGate: FIBONACCI.NORTH_ORIGIN,
+      futureFibonacciGate: FIBONACCI.WEST_PRESSURE,
+      oneActiveGearAtATime: true,
 
-      f21FirewallActive: true,
-      completionLatchedByEast: false,
-      visualPassClaimed: false,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
-      microFibonacciStageMap: createChronologicalFibonacciPlan(),
-      newsFibonacciCheckpointPlan: createNewsFibonacciCheckpointPlan(),
-
-      exports: [
-        "normalizeEvent",
-        "readNorthContext",
-        "classifyFibonacciStage",
-        "classifyRouteConductorEvidence",
-        "classifyVisibleProofEvidence",
-        "isFalseCompletionMutation",
-        "isProgressOnlyEvent",
-        "mapEventToStage",
-        "classifyForWest",
-        "classifyForSouth",
-        "classifyForNorth",
-        "createNewsFibonacciClassification",
-        "classifyTransmissionEvent",
-        "classifyCheckpointEvent",
-        "createChronologicalFibonacciPlan",
-        "createNewsFibonacciCheckpointPlan",
-        "createCheckpointSession",
-        "createHearthCheckpointSession",
-        "getReceipt",
-        "getReceiptText"
-      ],
-
-      lastNorthContext: clonePlain(state.lastNorthContext),
-      lastClassification: clonePlain(state.lastClassification),
-      lastWestPacket: clonePlain(state.lastWestPacket),
-      lastSouthPacket: clonePlain(state.lastSouthPacket),
-      lastNorthPacket: clonePlain(state.lastNorthPacket),
-      localEvents: clonePlain(state.localEvents),
-      errors: clonePlain(state.errors),
-
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
+      visualPassClaimed: false,
+
+      createdAt: state.createdAt,
+      updatedAt: state.updatedAt || nowIso()
+    };
+  }
+
+  function getReceipt() {
+    const light = getReceiptLight();
+
+    return {
+      ...light,
+
+      eastF3Receipt: true,
+      eastSupremeJudgeReceipt: true,
+      eastIntakeValveReceipt: true,
+
+      eastRuntimeOwns: [
+        "F3 East intake valve",
+        "intake packet admission",
+        "intake packet normalization",
+        "intake classification",
+        "256 state binding for intake records",
+        "F5 West handoff packet"
+      ],
+      eastRuntimeDoesNotOwn: [
+        "North F21 latch",
+        "West F5 pressure/admissibility",
+        "South F8 proof return",
+        "Canvas F13 evidence release",
+        "F34/F55/F89/F144 support-engine internals",
+        "F233 downstream return",
+        "route orchestration",
+        "planet truth",
+        "material truth",
+        "elevation truth",
+        "hydrology truth",
+        "actual rendering",
+        "generated image",
+        "GraphicBox",
+        "WebGL",
+        "public superiority claim",
+        "final visual pass claim"
+      ],
+
+      gates: {
+        north: NORTH_FILE,
+        east: FILE,
+        west: WEST_FILE,
+        south: SOUTH_FILE,
+        canvas: CANVAS_FILE,
+        productEngine: F34_PRODUCT_ENGINE_FILE,
+        ue5Expression: F55_EXPRESSION_FILE,
+        registry: F89_REGISTRY_FILE,
+        market: F144_MARKET_FILE
+      },
+
+      intakeClasses: clonePlain(INTAKE_CLASS),
+      fibonacciMap: clonePlain(FIBONACCI),
+      newsGates: clonePlain(NEWS_GATES),
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      westHandoffCoordinate: clonePlain(WEST_HANDOFF_COORDINATE),
+      mechanicalCoordinatePacket: getMechanicalCoordinatePacket(),
+
+      intakeGraph: getIntakeGraph(),
+      intakeGraphSummary: getIntakeGraphSummary(),
+      intakeRecords: getIntakeRecords(),
+      rejectedRecords: getRejectedRecords(),
+
+      intakeQuality: computeIntakeQualityMetric(),
+      newsAlignment: evaluateNewsAlignment(),
+      f3IntakePacket: composeF3IntakePacket(),
+      westReceiptPacket: clonePlain(state.westReceiptPacket),
+
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
       updatedAt: nowIso()
     };
   }
@@ -1595,86 +1699,103 @@
   function getReceiptText() {
     const r = getReceipt();
 
-    const events = r.localEvents.length
-      ? r.localEvents.map((item) => `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`).join("\n")
-      : "- none";
+    const records = (r.intakeRecords || []).map((record) => (
+      `- ${record.id} :: class=${record.intakeClass} :: state=${record.stateId} :: accepted=${record.accepted} :: traceReady=${record.traceReady} :: contract=${record.sourceContract || ""} :: receipt=${record.sourceReceipt || ""}`
+    )).join("\n") || "- none";
 
-    const errors = r.errors.length
-      ? r.errors.map((item) => `- ${item.at} :: ${item.code} :: ${item.message}`).join("\n")
-      : "- none";
+    const rejected = (r.rejectedRecords || []).map((record) => (
+      `- ${record.id} :: class=${record.intakeClass} :: state=${record.stateId} :: reason=${record.reason}`
+    )).join("\n") || "- none";
+
+    const events = (r.localEvents || []).slice(-48).map((item) => (
+      `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`
+    )).join("\n") || "- none";
+
+    const errors = (r.errors || []).map((item) => (
+      `- ${item.at} :: ${item.code} :: ${item.message}`
+    )).join("\n") || "- none";
 
     return [
-      "LAB_RUNTIME_TABLE_EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_RECEIPT",
+      "LAB_RUNTIME_TABLE_EAST_F3_ENGINE_MECHANICS_INTAKE_VALVE_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
       `previousContract=${r.previousContract}`,
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
-      `destinationFile=${r.destinationFile}`,
-      `northFile=${r.northFile}`,
-      `westFile=${r.westFile}`,
-      `southFile=${r.southFile}`,
-      `routeConductorFile=${r.routeConductorFile}`,
-      `canvasFile=${r.canvasFile}`,
-      `role=${r.role}`,
+      `file=${r.file}`,
       "",
-      `fileGatesPrimary=${r.fileGatesPrimary}`,
-      `eastAuthority=${r.eastAuthority}`,
-      `eastLoaded=${r.eastLoaded}`,
-      `eastPrimaryGateLineup=${r.eastPrimaryGateLineup}`,
-      `eastUsesNorthDialect=${r.eastUsesNorthDialect}`,
-      `eastFibonacciMagnifier=${r.eastFibonacciMagnifier}`,
-      `eastMicroStageClassifier=${r.eastMicroStageClassifier}`,
-      `eastPacketDistributor=${r.eastPacketDistributor}`,
-      `northPermissionRequired=${r.northPermissionRequired}`,
-      `macroRuntimeTableOwnedByNorth=${r.macroRuntimeTableOwnedByNorth}`,
+      `eastRuntimeTableActive=${r.eastRuntimeTableActive}`,
+      `eastRuntimeTableF3Only=${r.eastRuntimeTableF3Only}`,
+      `eastSupremeJudgeActive=${r.eastSupremeJudgeActive}`,
+      `eastIntakeValveActive=${r.eastIntakeValveActive}`,
+      `intakeValveOpen=${r.intakeValveOpen}`,
+      `intakeValveStatus=${r.intakeValveStatus}`,
       "",
-      `newsAlignmentProtocolPresent=${r.newsAlignmentProtocolPresent}`,
-      `fibonacciSynchronizationPresent=${r.fibonacciSynchronizationPresent}`,
-      `primaryGateStreamActive=${r.primaryGateStreamActive}`,
+      `engineMechanicsPrimary=${r.engineMechanicsPrimary}`,
+      `mathPrimary=${r.mathPrimary}`,
+      `architectureLabelsSecondary=${r.architectureLabelsSecondary}`,
+      `mechanicalCoordinateId=${r.mechanicalCoordinateId}`,
+      `enginePart=${r.enginePart}`,
+      `systemCategory=${r.systemCategory}`,
+      `fibonacciStation=${r.fibonacciStation}`,
+      `mechanicalRole=${r.mechanicalRole}`,
+      `judicialRole=${r.judicialRole}`,
+      `authorityRole=${r.authorityRole}`,
       "",
-      `ownsEventNormalization=${r.ownsEventNormalization}`,
-      `ownsEventAliasRecognition=${r.ownsEventAliasRecognition}`,
-      `ownsFibonacciMicroStageMapping=${r.ownsFibonacciMicroStageMapping}`,
-      `ownsNorthContextReading=${r.ownsNorthContextReading}`,
-      `ownsMicroStageClassification=${r.ownsMicroStageClassification}`,
-      `ownsPacketDistribution=${r.ownsPacketDistribution}`,
+      `northRuntimeObserved=${r.northRuntimeObserved}`,
+      `northRuntimeAccepted=${r.northRuntimeAccepted}`,
+      `northRuntimeContract=${r.northRuntimeContract}`,
+      `northRuntimeReceipt=${r.northRuntimeReceipt}`,
+      `northF1IgnitionObserved=${r.northF1IgnitionObserved}`,
+      `northF1IgnitionAccepted=${r.northF1IgnitionAccepted}`,
+      `northF21LatchObserved=${r.northF21LatchObserved}`,
+      `northF21Latched=${r.northF21Latched}`,
       "",
-      `northOwnsRuntimeTableAuthority=${r.northOwnsRuntimeTableAuthority}`,
-      `northOwnsActiveGateCursor=${r.northOwnsActiveGateCursor}`,
-      `northOwnsVisibleLoaderPercentage=${r.northOwnsVisibleLoaderPercentage}`,
-      `northOwnsCheckpointClosure=${r.northOwnsCheckpointClosure}`,
-      `northOwnsF21Latch=${r.northOwnsF21Latch}`,
-      `northOwnsReadyText=${r.northOwnsReadyText}`,
+      `intakeGraphBuilt=${r.intakeGraphBuilt}`,
+      `intakeGraphReady=${r.intakeGraphReady}`,
+      `intakeGraphStatus=${r.intakeGraphStatus}`,
+      `intakeRecordCount=${r.intakeRecordCount}`,
+      `acceptedRecordCount=${r.acceptedRecordCount}`,
+      `rejectedRecordCount=${r.rejectedRecordCount}`,
+      `diagnosticEvidenceCount=${r.diagnosticEvidenceCount}`,
+      `supportEngineSignalCount=${r.supportEngineSignalCount}`,
+      `routeSignalCount=${r.routeSignalCount}`,
+      `canvasSignalCount=${r.canvasSignalCount}`,
       "",
-      `eastOwnsActiveGateCursor=${r.eastOwnsActiveGateCursor}`,
-      `eastOwnsVisibleLoaderPercentage=${r.eastOwnsVisibleLoaderPercentage}`,
-      `eastOwnsCheckpointClosure=${r.eastOwnsCheckpointClosure}`,
-      `eastOwnsF21Latch=${r.eastOwnsF21Latch}`,
-      `eastOwnsReadyText=${r.eastOwnsReadyText}`,
-      `eastOwnsSouthVisibleProof=${r.eastOwnsSouthVisibleProof}`,
-      `eastOwnsWestAdmissibilityJudgment=${r.eastOwnsWestAdmissibilityJudgment}`,
-      `eastOwnsCanvasDrawing=${r.eastOwnsCanvasDrawing}`,
-      `eastOwnsRouteConductorRuntime=${r.eastOwnsRouteConductorRuntime}`,
-      `eastOwnsFinalVisualPassClaim=${r.eastOwnsFinalVisualPassClaim}`,
+      `intakeQualityScore=${r.intakeQualityScore}`,
+      `intakeCoverageScore=${r.intakeCoverageScore}`,
+      `intakeTraceScore=${r.intakeTraceScore}`,
+      `intakeCoherenceScore=${r.intakeCoherenceScore}`,
       "",
-      `northContextPresent=${r.northContextPresent}`,
-      `northActiveMacroGate=${r.northActiveMacroGate}`,
-      `lastClassifiedMicroStage=${r.lastClassifiedMicroStage}`,
-      `lastClassificationAction=${r.lastClassificationAction}`,
-      `lastClassificationReason=${r.lastClassificationReason}`,
+      `f5WestHandoffAuthorized=${r.f5WestHandoffAuthorized}`,
+      `f3IntakePacketReady=${r.f3IntakePacketReady}`,
+      `f3ActivationStatus=${r.f3ActivationStatus}`,
+      `f3ActivationReason=${r.f3ActivationReason}`,
       "",
-      `classifyCount=${r.classifyCount}`,
-      `progressOnlyCount=${r.progressOnlyCount}`,
-      `falseCompletionBlockCount=${r.falseCompletionBlockCount}`,
-      `markerOnlyHoldCount=${r.markerOnlyHoldCount}`,
-      `futureQueueCount=${r.futureQueueCount}`,
-      `duplicateArchiveCount=${r.duplicateArchiveCount}`,
-      `unknownArchiveCount=${r.unknownArchiveCount}`,
-      `f21ReviewCount=${r.f21ReviewCount}`,
-      `f21FirewallActive=${r.f21FirewallActive}`,
-      `completionLatchedByEast=${r.completionLatchedByEast}`,
+      `westReceiptAccepted=${r.westReceiptAccepted}`,
+      `westRuntimeContract=${r.westRuntimeContract}`,
+      `westRuntimeReceipt=${r.westRuntimeReceipt}`,
+      "",
+      `newsProtocolAligned=${r.newsProtocolAligned}`,
+      `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
+      `fibonacciSynchronizationScore=${r.fibonacciSynchronizationScore}`,
+      `activeFibonacci=${r.activeFibonacci}`,
+      `activeFibonacciRank=${r.activeFibonacciRank}`,
+      `activeNewsGate=${r.activeNewsGate}`,
+      `sourceFibonacciGate=${r.sourceFibonacciGate}`,
+      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      "",
+      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
+      `recommendedNextFile=${r.recommendedNextFile}`,
+      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      "",
+      "INTAKE_RECORDS",
+      records,
+      "",
+      "REJECTED_RECORDS",
+      rejected,
       "",
       "LOCAL_EVENTS",
       events,
@@ -1682,6 +1803,9 @@
       "ERRORS",
       errors,
       "",
+      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `publicComparisonClaimAllowed=${r.publicComparisonClaimAllowed}`,
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
@@ -1690,49 +1814,126 @@
     ].join("\n");
   }
 
-  function publishDataset() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+  function updateDataset() {
+    setDataset("labRuntimeTableEastLoaded", "true");
+    setDataset("labRuntimeTableEastContract", CONTRACT);
+    setDataset("labRuntimeTableEastReceipt", RECEIPT);
+    setDataset("labRuntimeTableEastVersion", VERSION);
+    setDataset("labRuntimeTableEastFile", FILE);
 
-    const dataset = doc.documentElement.dataset;
+    setDataset("eastRuntimeTableActive", "true");
+    setDataset("eastRuntimeTableF3Only", "true");
+    setDataset("eastSupremeJudgeActive", "true");
+    setDataset("eastIntakeValveActive", "true");
+    setDataset("eastIntakeValveOpen", state.intakeValveOpen);
+    setDataset("eastIntakeValveStatus", state.intakeValveStatus);
 
-    dataset.labRuntimeTableEastLoaded = "true";
-    dataset.labRuntimeTableEastContract = CONTRACT;
-    dataset.labRuntimeTableEastReceipt = RECEIPT;
-    dataset.labRuntimeTableEastVersion = VERSION;
+    setDataset("eastEngineMechanicsPrimary", "true");
+    setDataset("eastMathPrimary", "true");
+    setDataset("eastArchitectureLabelsSecondary", "true");
+    setDataset("eastMechanicalCoordinateId", MECHANICAL_COORDINATE.coordinateId);
+    setDataset("eastEnginePart", MECHANICAL_COORDINATE.enginePart);
+    setDataset("eastSystemCategory", MECHANICAL_COORDINATE.systemCategory);
+    setDataset("eastFibonacciStation", MECHANICAL_COORDINATE.fibonacciStage);
+    setDataset("eastMechanicalRole", MECHANICAL_COORDINATE.mechanicalRole);
+    setDataset("eastJudicialRole", MECHANICAL_COORDINATE.judicialRole);
+    setDataset("eastAuthorityRole", MECHANICAL_COORDINATE.authorityRole);
 
-    dataset.fileGatesPrimary = "true";
-    dataset.eastPrimaryGateLineup = "true";
-    dataset.eastUsesNorthDialect = "true";
-    dataset.eastFibonacciMagnifier = "true";
-    dataset.eastMicroStageClassifier = "true";
-    dataset.eastPacketDistributor = "true";
-    dataset.eastNorthPermissionRequired = "true";
+    setDataset("eastNorthRuntimeObserved", state.northRuntimeObserved);
+    setDataset("eastNorthRuntimeAccepted", state.northRuntimeAccepted);
+    setDataset("eastNorthF1IgnitionObserved", state.northF1IgnitionObserved);
+    setDataset("eastNorthF1IgnitionAccepted", state.northF1IgnitionAccepted);
+    setDataset("eastNorthF21Latched", state.northF21Latched);
 
-    dataset.newsAlignmentProtocolPresent = "true";
-    dataset.fibonacciSynchronizationPresent = "true";
-    dataset.primaryGateStreamActive = "true";
+    setDataset("eastIntakeGraphBuilt", state.intakeGraphBuilt);
+    setDataset("eastIntakeGraphReady", state.intakeGraphReady);
+    setDataset("eastIntakeGraphStatus", state.intakeGraphStatus);
+    setDataset("eastIntakeRecordCount", state.intakeRecordCount);
+    setDataset("eastAcceptedRecordCount", state.acceptedRecordCount);
+    setDataset("eastRejectedRecordCount", state.rejectedRecordCount);
+    setDataset("eastDiagnosticEvidenceCount", state.diagnosticEvidenceCount);
+    setDataset("eastSupportEngineSignalCount", state.supportEngineSignalCount);
+    setDataset("eastRouteSignalCount", state.routeSignalCount);
+    setDataset("eastCanvasSignalCount", state.canvasSignalCount);
 
-    dataset.northOwnsRuntimeTable = "true";
-    dataset.northOwnsCheckpointAdmission = "true";
-    dataset.northOwnsF21Latch = "true";
+    setDataset("eastIntakeQualityScore", state.intakeQualityScore);
+    setDataset("eastIntakeCoverageScore", state.intakeCoverageScore);
+    setDataset("eastIntakeTraceScore", state.intakeTraceScore);
+    setDataset("eastIntakeCoherenceScore", state.intakeCoherenceScore);
 
-    dataset.eastOwnsActiveGate = "false";
-    dataset.eastOwnsVisibleProgress = "false";
-    dataset.eastOwnsF21Latch = "false";
-    dataset.eastOwnsReadyText = "false";
-    dataset.eastOwnsFinalVisualPassClaim = "false";
+    setDataset("eastF5WestHandoffAuthorized", state.f5WestHandoffAuthorized);
+    setDataset("eastF3IntakePacketReady", state.f3IntakePacketReady);
+    setDataset("eastF3ActivationStatus", state.f3ActivationStatus);
+    setDataset("eastF3ActivationReason", state.f3ActivationReason);
 
-    dataset.eastF21FirewallActive = "true";
-    dataset.newsFibonacciAlignment = "true";
+    setDataset("eastNewsProtocolAligned", "true");
+    setDataset("eastFibonacciSynchronizationMetricActive", "true");
+    setDataset("eastFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
+    setDataset("eastActiveFibonacci", FIBONACCI.EAST_INTAKE);
+    setDataset("eastActiveFibonacciRank", "3");
+    setDataset("eastActiveNewsGate", NEWS_GATES.EAST);
+    setDataset("eastSourceFibonacciGate", FIBONACCI.NORTH_ORIGIN);
+    setDataset("eastFutureFibonacciGate", FIBONACCI.WEST_PRESSURE);
 
-    dataset.eastLastClassifiedMicroStage = state.lastClassification ? state.lastClassification.targetMicroStageId : "";
-    dataset.eastLastClassificationAction = state.lastClassification ? state.lastClassification.action : "";
-    dataset.eastLastClassificationReason = state.lastClassification ? state.lastClassification.reason : "";
+    setDataset("eastFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("eastRecommendedNextFile", state.recommendedNextFile);
+    setDataset("eastRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
 
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
+    setDataset("eastPublicSuperiorityClaim", "false");
+    setDataset("eastPublicComparisonClaimAllowed", "false");
+    setDataset("eastBenchmarkRequiredBeforePublicClaim", "true");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
+  }
+
+  function publishGlobals() {
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.HEARTH = root.HEARTH || {};
+
+    root.LAB_RUNTIME_TABLE_EAST = api;
+    root.LAB_RUNTIME_TABLE_EAST_F3 = api;
+    root.RUNTIME_TABLE_EAST = api;
+    root.EAST_INTAKE_VALVE = api;
+    root.EAST_INTAKE_CHANNEL = api;
+    root.EAST_SUPREME_JUDGE = api;
+    root.EAST_ADMISSION_BRANCH = api;
+
+    root.DEXTER_LAB.runtimeTableEast = api;
+    root.DEXTER_LAB.runtimeTableEastF3 = api;
+    root.DEXTER_LAB.cardinalRuntimeTableEast = api;
+    root.DEXTER_LAB.eastIntakeValve = api;
+    root.DEXTER_LAB.eastSupremeJudge = api;
+    root.DEXTER_LAB.eastAdmissionBranch = api;
+
+    root.HEARTH.runtimeTableEast = api;
+    root.HEARTH.runtimeTableEastF3 = api;
+    root.HEARTH.eastIntakeValve = api;
+    root.HEARTH.eastSupremeJudge = api;
+    root.HEARTH.eastAdmissionBranch = api;
+
+    const light = getReceiptLight();
+
+    root.LAB_RUNTIME_TABLE_EAST_RECEIPT = light;
+    root.LAB_RUNTIME_TABLE_EAST_F3_RECEIPT = light;
+    root.RUNTIME_TABLE_EAST_RECEIPT = light;
+    root.EAST_INTAKE_VALVE_RECEIPT = light;
+    root.EAST_SUPREME_JUDGE_RECEIPT = light;
+
+    root.DEXTER_LAB.runtimeTableEastReceipt = light;
+    root.HEARTH.runtimeTableEastReceipt = light;
+
+    root.__LAB_RUNTIME_TABLE_EAST_LOADED__ = true;
+    root.__LAB_RUNTIME_TABLE_EAST_CONTRACT__ = CONTRACT;
+    root.__LAB_RUNTIME_TABLE_EAST_RECEIPT__ = RECEIPT;
+    root.__LAB_RUNTIME_TABLE_EAST_F3_ONLY__ = true;
+    root.__LAB_RUNTIME_TABLE_EAST_MECHANICAL_COORDINATE__ = MECHANICAL_COORDINATE.coordinateId;
+    root.__LAB_RUNTIME_TABLE_EAST_PUBLIC_SUPERIORITY_CLAIM__ = false;
+    root.__LAB_RUNTIME_TABLE_EAST_WEBGL__ = false;
+    root.__LAB_RUNTIME_TABLE_EAST_VISUAL_PASS_CLAIMED__ = false;
+
+    updateDataset();
   }
 
   const api = {
@@ -1743,66 +1944,110 @@
     version: VERSION,
     file: FILE,
 
-    ACTIONS,
-    CHECKPOINT_EVENT_ACTIONS,
-    GAP_CLASS,
+    FIBONACCI,
     NEWS_GATES,
-    FILE_GATES,
-    EAST_LANGUAGE,
-    MICRO_STAGES,
-    FIBONACCI_CHECKPOINTS: MICRO_STAGES,
+    STATUS,
+    INTAKE_CLASS,
+    MECHANICAL_COORDINATE,
+    WEST_HANDOFF_COORDINATE,
 
-    normalizeEvent,
-    readNorthContext,
-    classifyFibonacciStage,
-    classifyRouteConductorEvidence,
-    classifyVisibleProofEvidence,
-    isFalseCompletionMutation,
-    isProgressOnlyEvent,
-    mapEventToStage,
+    readNorthRuntimeAuthority,
+    readNorthRuntimeReceipt,
+    validateNorthRuntimeReceipt,
+    acceptNorthRuntimeReceipt,
+    receiveNorthRuntimeReceipt,
+    acceptNorthIgnition,
+    receiveNorthIgnition,
+    acceptNorthF1,
+    receiveNorthF1,
 
-    classifyForWest,
-    classifyForSouth,
-    classifyForNorth,
-    createNewsFibonacciClassification,
+    classifyIntakePacket,
+    evaluateIntakePacket,
+    normalizeIntakeRecord,
+    acceptIntakePacket,
+    receiveIntakePacket,
+    submitIntakePacket,
 
-    classifyTransmissionEvent,
-    classifyCheckpointEvent,
-    createChronologicalFibonacciPlan,
-    createNewsFibonacciCheckpointPlan,
-    createCheckpointSession,
-    createHearthCheckpointSession,
+    acceptEastPrimary,
+    receiveEastPrimary,
+    acceptEastPrimaryGate,
+    acceptEastHandoff,
+    receiveEastHandoff,
+    acceptDiagnosticEvidence,
+    acceptRouteSignal,
+    acceptCanvasSignal,
 
+    rebuildIntakeGraph,
+    computeIntakeQualityMetric,
+    computeFibonacciSynchronizationMetric,
+    evaluateNewsAlignment,
+
+    setIntakeValveOpen,
+    openIntakeValve,
+    closeIntakeValve,
+
+    composeF3IntakePacket,
+    composeEastReceipt,
+    readWestRuntimeAuthority,
+    submitF3IntakeToWest,
+    submitF3PacketToNorth,
+
+    validateWestReceipt,
+    acceptWestReceipt,
+
+    bindStateToMechanicalCoordinate,
+    evaluateCoordinateState,
+    getMechanicalCoordinatePacket,
+
+    getIntakeGraph,
+    getIntakeGraphSummary,
+    getIntakeRecords,
+    getRejectedRecords,
+    findIntakeRecord,
+
+    getReceiptLight,
     getReceipt,
     getReceiptText,
+    publishGlobals,
+    updateDataset,
 
-    fileGatesPrimary: true,
-    eastAuthority: true,
-    eastLoaded: true,
-    eastFallbackUsed: false,
-    eastPrimaryGateLineup: true,
-    eastUsesNorthDialect: true,
-    eastFibonacciMagnifier: true,
-    eastMicroStageClassifier: true,
-    eastPacketDistributor: true,
-    northPermissionRequired: true,
-    macroRuntimeTableOwnedByNorth: true,
+    eastRuntimeTableActive: true,
+    eastRuntimeTableF3Only: true,
+    eastSupremeJudgeActive: true,
+    eastIntakeValveActive: true,
 
-    newsAlignmentProtocolPresent: true,
-    fibonacciSynchronizationPresent: true,
-    primaryGateStreamActive: true,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
 
-    ownsActiveGateCursor: false,
-    ownsVisibleProgress: false,
-    ownsCheckpointClosure: false,
-    ownsF21Latch: false,
-    ownsReadyText: false,
-    ownsSouthVisibleProof: false,
-    ownsWestAdmissibilityJudgment: false,
-    ownsCanvasDrawing: false,
-    ownsRouteConductorRuntime: false,
+    ownsF3EastIntakeValve: true,
+    ownsIntakePacketAdmission: true,
+    ownsIntakePacketNormalization: true,
+    ownsIntakeClassification: true,
+    ownsState256BindingForIntakeRecords: true,
+    ownsF5WestHandoffPacket: true,
+
+    ownsNorthF21Latch: false,
+    ownsWestF5PressureAdmissibility: false,
+    ownsSouthF8ProofReturn: false,
+    ownsCanvasF13EvidenceRelease: false,
+    ownsSupportEngineInternals: false,
+    ownsF233DownstreamReturn: false,
+    ownsRouteOrchestration: false,
+    ownsPlanetTruth: false,
+    ownsMaterialTruth: false,
+    ownsElevationTruth: false,
+    ownsHydrologyTruth: false,
+    ownsActualRendering: false,
+    ownsGeneratedImage: false,
+    ownsGraphicBox: false,
+    ownsWebGL: false,
+    ownsPublicSuperiorityClaim: false,
     ownsFinalVisualPassClaim: false,
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1813,33 +2058,33 @@
     }
   };
 
-  root.DEXTER_LAB = root.DEXTER_LAB || {};
-  root.HEARTH = root.HEARTH || {};
+  state.createdAt = nowIso();
+  state.updatedAt = state.createdAt;
 
-  root.DEXTER_LAB.runtimeTableEast = api;
-  root.DEXTER_LAB.cardinalRuntimeTableEast = api;
-  root.DEXTER_LAB.checkpointGovernorEast = api;
-  root.DEXTER_LAB.hearthEastFibonacciMagnifier = api;
-  root.DEXTER_LAB.hearthEastPrimaryGateLineup = api;
+  try {
+    const northReceipt = readNorthRuntimeReceipt();
+    if (northReceipt && Object.keys(northReceipt).length) {
+      acceptNorthRuntimeReceipt(northReceipt);
+    }
+  } catch (error) {
+    recordError("INITIAL_NORTH_RUNTIME_READ_FAILED", error);
+  }
 
-  root.LAB_RUNTIME_TABLE_EAST = api;
-  root.RUNTIME_TABLE_EAST = api;
-  root.DEXTER_LAB_RUNTIME_TABLE_EAST = api;
-  root.LAB_CARDINAL_RUNTIME_TABLE_EAST = api;
-  root.LAB_CHECKPOINT_GOVERNOR_EAST = api;
-  root.HEARTH_EAST_FIBONACCI_MAGNIFIER = api;
-  root.HEARTH_EAST_PRIMARY_GATE_LINEUP = api;
-  root.HEARTH.eastFibonacciMagnifier = api;
-  root.HEARTH.eastPrimaryGateLineup = api;
+  try {
+    computeFibonacciSynchronizationMetric();
+  } catch (error) {
+    recordError("INITIAL_EAST_F3_SYNC_METRIC_FAILED", error);
+  }
 
-  publishDataset();
-  record("EAST_PRIMARY_GATE_LINEUP_NEWS_FIBONACCI_LOADED", {
+  recordLocal("EAST_F3_ENGINE_MECHANICS_INTAKE_VALVE_LOADED", {
     file: FILE,
     contract: CONTRACT,
-    fileGatesPrimary: true,
-    newsAlignmentProtocolPresent: true,
-    fibonacciSynchronizationPresent: true
+    mechanicalCoordinate: MECHANICAL_COORDINATE.coordinateId,
+    targetFile: WEST_FILE,
+    publicSuperiorityClaim: false
   });
+
+  publishGlobals();
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = api;

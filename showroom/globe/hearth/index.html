@@ -1,248 +1,248 @@
+<!-- TARGET FILE: /showroom/globe/hearth/index.html -->
+<!-- TNT FULL-FILE REPLACEMENT -->
+<!-- HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_STATIC_SHELL_TNT_v1 -->
 <!--
-  /showroom/globe/hearth/index.html
-  HEARTH_FACILITY_AUDRALIA_PRODUCTION_CHAMBER_TED_ORBIT_STATIC_SHELL_TNT_v1
-  First-file replacement.
-  Scope: public route shell only.
-  Does not own: canvas engine, controls engine, runtime loop, diagnostic internals, planet renderer.
-  Required surface-truth IDs preserved:
-  - #hearthCanvasMount
-  - #hearthVisibleCanvas
+  Hearth = facility alias.
+  Location = unknown.
+  Mirrorland-adjacent public showroom shell.
+
+  Owns:
+  - Hearth public showroom page structure
+  - three-file route split
+  - globe stage and mount targets
+  - orbit/lens/category panels
+  - diagnostic readout slots
+  - 4x4 chamber matrix
+  - 16x16 / 256 spectrum mount
+  - return-to-orbit hooks
+
+  Does not own:
+  - canvas rendering truth
+  - F13 canvas evidence release
+  - F21 latch
+  - diagnostic campus mutation
+  - production mutation
+  - WebGL
+  - GraphicBox
+  - generated image
+  - final visual pass claim
 -->
 
 <!doctype html>
-<html lang="en" data-route="/showroom/globe/hearth/" data-page="hearth-facility-audralia-production-chamber">
+<html lang="en" data-hearth-route="showroom" data-hearth-location="unknown">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>Hearth Facility · Audralia Production Chamber</title>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Hearth Facility · Location Unknown</title>
   <meta
     name="description"
-    content="Enter Hearth Facility, a planetary production chamber in the Unknown where Audralia is being developed as the first frontier-science world inside Mirrorland."
+    content="Hearth Facility is an unknown-location Mirrorland chamber: an eerie showroom receiver, orbit carrier, and diagnostic surface under inspection."
   />
 
-  <link rel="canonical" href="/showroom/globe/hearth/" />
-  <link rel="stylesheet" href="/showroom/globe/hearth/index.css?v=2026-06-09-hearth-facility-audralia-production-chamber-ted-orbit-v1" />
-  <script src="/showroom/globe/hearth/index.js?v=2026-06-09-hearth-facility-audralia-production-chamber-ted-orbit-v1" defer></script>
+  <link rel="stylesheet" href="/assets/site/site.css" />
+  <link rel="stylesheet" href="/showroom/globe/hearth/index.css" />
+
+  <script defer src="/showroom/globe/hearth/index.js"></script>
 </head>
 
-<body>
-  <a class="skip-link" href="#mainContent">Skip to Hearth Facility</a>
+<body
+  data-hearth-showroom-shell="HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_STATIC_SHELL_TNT_v1"
+  data-production-mutation-authorized="false"
+  data-canvas-release-authorized="false"
+  data-f13-claimed="false"
+  data-f21-claimed="false"
+  data-visual-pass-claimed="false"
+  data-generated-image="false"
+  data-graphic-box="false"
+  data-webgl="false"
+>
+  <a class="skip" href="#hearth-main">Skip to Hearth Facility</a>
 
-  <div class="page-shell" data-hearth-page-shell>
-    <header class="site-rail" aria-label="Hearth route navigation">
-      <a class="rail-link" href="/showroom/globe/">Return to Globe Window</a>
-      <a class="rail-link" href="/explore/frontier/">Frontier</a>
-      <a class="rail-link" href="/showroom/globe/audralia/">Audralia</a>
-      <a class="rail-link rail-link-strong" href="/showroom/globe/hearth/diagnostic/">Diagnostic Panel</a>
+  <main id="hearth-main" class="hearth-shell">
+    <header class="hearth-topbar" aria-label="Hearth facility header">
+      <a class="hearth-brand" href="/showroom/globe/" aria-label="Return to Atlas Study">
+        <span class="hearth-brand-mark" aria-hidden="true">H</span>
+        <span>
+          <small>Mirrorland Signal</small>
+          <strong>Hearth Facility</strong>
+        </span>
+      </a>
+
+      <nav class="hearth-nav" aria-label="Hearth navigation">
+        <a href="/showroom/">Atrium</a>
+        <a href="/showroom/globe/">Atlas</a>
+        <a href="/showroom/globe/hearth/diagnostic/">Diagnostics</a>
+        <button type="button" data-hearth-return-to-orbit>Return to Orbit</button>
+      </nav>
     </header>
 
-    <main id="mainContent" class="hearth-page" data-hearth-page>
-      <section class="hero keynote-panel" aria-labelledby="hearthTitle">
-        <p class="eyebrow">Mirrorland · The Unknown · Facility Access</p>
+    <section class="hearth-hero" data-hearth-focus-section="orbit">
+      <div class="hearth-hero-copy">
+        <p class="hearth-kicker">Facility alias confirmed · location unknown</p>
+        <h1>Hearth is awake, but it has not opened.</h1>
+        <p class="hearth-lead">
+          Mirrorland marks Hearth as a hidden facility, not a finished planet claim.
+          The surface below is a sealed receiver: part globe carrier, part chamber instrument,
+          part unknown-location signal.
+        </p>
 
-        <div class="hero-grid">
-          <div class="hero-copy">
-            <h1 id="hearthTitle">Hearth Facility</h1>
-            <p class="hero-thesis">
-              A planetary production chamber in the Unknown, where Audralia becomes the first frontier-science world under active development.
-            </p>
-            <p class="hero-body">
-              Hearth is not the planet. Hearth is the facility. Audralia is the first living subject entering the chamber: a possibility world where characters, systems, and frontier sciences can begin building thresholds the visitor will eventually enter.
-            </p>
-
-            <div class="hero-actions" aria-label="Primary actions">
-              <a class="primary-action" href="#facilityStage">View the Chamber</a>
-              <a class="secondary-action" href="/showroom/globe/hearth/diagnostic/">Open Diagnostic Panel</a>
-            </div>
-          </div>
-
-          <aside class="hero-card" aria-label="Facility identity">
-            <p class="card-kicker">Facility Alias</p>
-            <h2>Hearth</h2>
-            <p>Hidden production room in the Unknown.</p>
-
-            <p class="card-kicker">First Subject</p>
-            <h2>Audralia</h2>
-            <p>Frontier playground for science, character interaction, and threshold-building.</p>
-          </aside>
+        <div class="hearth-actions" aria-label="Primary Hearth actions">
+          <button type="button" class="hearth-button gold" data-hearth-lens-button="orbit">Orbit View</button>
+          <button type="button" class="hearth-button" data-hearth-lens-button="lattice">Lattice View</button>
+          <button type="button" class="hearth-button" data-hearth-lens-button="chamber">Chamber View</button>
+          <button type="button" class="hearth-button" data-hearth-lens-button="diagnostic">Diagnostic View</button>
         </div>
+      </div>
+
+      <section class="hearth-orbit-card" id="hearthOrbit" aria-label="Interactive Hearth orbit">
+        <div
+          id="hearthGlobeStage"
+          class="hearth-globe-stage"
+          data-hearth-globe-stage
+          aria-label="Hearth interactive globe carrier"
+        >
+          <div id="hearthGlobeMount" class="hearth-globe-mount" data-hearth-globe-mount></div>
+          <div class="hearth-stage-veil" aria-hidden="true"></div>
+          <div class="hearth-stage-label" data-hearth-stage-label>
+            <strong>Orbit View</strong> → sealed carrier · receiver pending
+          </div>
+        </div>
+
+        <aside class="hearth-lens-copy" aria-live="polite">
+          <b data-hearth-lens-title>Orbit View</b>
+          <p data-hearth-lens-copy>
+            The facility presents a carrier, not a final planet claim. Drag the surface to test motion.
+          </p>
+        </aside>
       </section>
+    </section>
 
-      <section id="facilityStage" class="facility-stage-section" aria-labelledby="stageTitle">
-        <div class="section-heading">
-          <p class="eyebrow">Production View</p>
-          <h2 id="stageTitle">Audralia in the Chamber</h2>
+    <section class="hearth-panel" data-hearth-focus-section="categories">
+      <div class="hearth-section-head">
+        <p class="hearth-kicker">Facility categories</p>
+        <h2>The chamber answers by category, not by confession.</h2>
+        <p>
+          Each category resolves to one exact panel before the page may focus, mute, highlight,
+          or scroll. Hearth remains readable even when a signal is held.
+        </p>
+      </div>
+
+      <div class="hearth-category-rail" aria-label="Hearth category controls">
+        <button type="button" data-hearth-category-button="surface" data-active="true">Surface</button>
+        <button type="button" data-hearth-category-button="motion">Motion</button>
+        <button type="button" data-hearth-category-button="chamber">Chamber</button>
+        <button type="button" data-hearth-category-button="mirrorland">Mirrorland Signal</button>
+        <button type="button" data-hearth-category-button="diagnostics">Diagnostics</button>
+      </div>
+
+      <div class="hearth-category-panels">
+        <article class="hearth-category-panel" data-hearth-category-panel="surface" data-active="true">
+          <b>Surface</b>
+          <h3>The visible body is a receiver.</h3>
           <p>
-            The visible field below is the public stage for the first planetary subject. As the engine develops, the chamber gauges and diagnostic receipts develop with it.
+            Hearth’s surface is treated as a sealed carrier under inspection. It may show orbit,
+            lattice, and diagnostic evidence without claiming final visual pass.
           </p>
-        </div>
-
-        <div class="stage-frame" data-stage-frame>
-          <div class="stage-header" aria-label="Stage status">
-            <span>Hearth Facility Window</span>
-            <span data-stage-status>Production subject: Audralia</span>
-          </div>
-
-          <div id="hearthCanvasMount" class="canvas-mount" data-canvas-mount>
-            <canvas
-              id="hearthVisibleCanvas"
-              class="visible-canvas"
-              width="1280"
-              height="720"
-              aria-label="Audralia planetary production viewport"
-              data-canvas="hearth-visible-canvas"
-            ></canvas>
-
-            <div class="canvas-fallback" data-canvas-fallback>
-              <p class="fallback-kicker">Awaiting visible expression</p>
-              <p>
-                The facility stage is prepared. The under-the-hood engines determine what becomes visible here.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="orbit-section" aria-labelledby="orbitTitle" data-orbit-section>
-        <div class="section-heading section-heading-centered">
-          <p class="eyebrow">TED-Style Facility Walkthrough</p>
-          <h2 id="orbitTitle">Choose a Facility Lens</h2>
-          <p>
-            Select one chamber lens at a time. Return to Orbit resets the presentation so the full facility map comes back into view.
-          </p>
-        </div>
-
-        <div class="lens-toggle" role="group" aria-label="Presentation lens">
-          <button type="button" class="lens-button is-active" data-lens="platform" aria-pressed="true">Platform</button>
-          <button type="button" class="lens-button" data-lens="engineering" aria-pressed="false">Engineering</button>
-        </div>
-
-        <div class="facility-orbit" aria-label="Hearth facility orbit selector">
-          <button type="button" class="orbit-node" data-orbit-node="unknown">
-            <span>The Unknown</span>
-          </button>
-
-          <button type="button" class="orbit-node" data-orbit-node="audralia">
-            <span>Audralia</span>
-          </button>
-
-          <button type="button" class="orbit-node" data-orbit-node="frontier">
-            <span>Frontier Sciences</span>
-          </button>
-
-          <button type="button" class="orbit-node" data-orbit-node="characters">
-            <span>Character Builders</span>
-          </button>
-
-          <button type="button" class="orbit-node" data-orbit-node="gauges">
-            <span>Facility Gauges</span>
-          </button>
-
-          <button type="button" class="orbit-node" data-orbit-node="underhood">
-            <span>Under the Hood</span>
-          </button>
-
-          <button type="button" class="orbit-node orbit-node-diagnostic" data-orbit-node="diagnostic">
-            <span>Diagnostic Panel</span>
-          </button>
-
-          <button type="button" class="orbit-return" data-return-orbit>
-            Return to Orbit
-          </button>
-        </div>
-
-        <article class="orbit-reading-panel" aria-live="polite" data-orbit-panel>
-          <p class="panel-kicker" data-panel-kicker>Facility Orbit</p>
-          <h3 data-panel-title>Hearth is the chamber. Audralia is the first subject.</h3>
-          <p data-panel-body>
-            Select a facility lens to focus the presentation. Each lens brings forward one part of the chamber while the rest of the orbit steps back.
-          </p>
-
-          <div class="panel-actions" data-panel-actions>
-            <a class="panel-link" href="/showroom/globe/hearth/diagnostic/">Open Diagnostic Panel</a>
-          </div>
         </article>
-      </section>
 
-      <section class="gauge-section" aria-labelledby="gaugeTitle">
-        <div class="section-heading">
-          <p class="eyebrow">Facility Instruments</p>
-          <h2 id="gaugeTitle">People-Friendly Gauges</h2>
+        <article class="hearth-category-panel" data-hearth-category-panel="motion" hidden>
+          <b>Motion</b>
+          <h3>Finger drag is allowed; release is not claimed.</h3>
           <p>
-            These gauges translate development state into readable signals. The receipts remain under the hood; the public page explains what they mean.
+            The showroom may support pointer movement, inertial glide, and return-to-orbit behavior.
+            Motion does not authorize F13, F21, or production mutation.
           </p>
-        </div>
+        </article>
 
-        <div class="gauge-grid" data-gauge-grid>
-          <article class="gauge-card" data-gauge="visual">
-            <span class="gauge-label">Visual Surface</span>
-            <strong>Stage being renewed</strong>
-            <p>The chamber is preparing a larger, cleaner place for the planetary view to appear.</p>
-          </article>
-
-          <article class="gauge-card" data-gauge="motion">
-            <span class="gauge-label">Motion + Touch</span>
-            <strong>Instrument pending</strong>
-            <p>Movement and interaction are measured separately from the public stage.</p>
-          </article>
-
-          <article class="gauge-card" data-gauge="narrative">
-            <span class="gauge-label">Narrative Layer</span>
-            <strong>Mirrorland aligned</strong>
-            <p>The facility now connects to Audralia, Frontier science, and character-built thresholds.</p>
-          </article>
-
-          <article class="gauge-card" data-gauge="diagnostic">
-            <span class="gauge-label">Under the Hood</span>
-            <strong>Diagnostic panel active</strong>
-            <p>The instrument room remains available for direct receipts and proof.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="frontier-section" aria-labelledby="frontierTitle">
-        <div class="section-heading section-heading-centered">
-          <p class="eyebrow">First Planetary Subject</p>
-          <h2 id="frontierTitle">Audralia as a Frontier Playground</h2>
+        <article class="hearth-category-panel" data-hearth-category-panel="chamber" hidden>
+          <b>Chamber</b>
+          <h3>The facility is a chamber before it is a world.</h3>
           <p>
-            Audralia is the first world being developed through Hearth Facility. It is a playground for frontier science, future character interaction, and systems that can be explored as they mature.
+            Hearth is framed as an unknown-location Mirrorland facility. Its page can host chapel,
+            bishop, priest, and finger-surface structures later, but this shell only prepares the room.
           </p>
-        </div>
+        </article>
 
-        <div class="threshold-grid">
-          <article class="threshold-card">
-            <h3>Science Thresholds</h3>
-            <p>Energy, water, waste, infrastructure, vision, urban systems, and closed-loop experiments become world-building lanes.</p>
-          </article>
-
-          <article class="threshold-card">
-            <h3>Character Builders</h3>
-            <p>The characters are not decoration. They become builders, guides, pressure points, and future interactive agents inside the frontier.</p>
-          </article>
-
-          <article class="threshold-card">
-            <h3>Facility Proof</h3>
-            <p>The diagnostic panel remains the instrument room where the friendly page can be checked against the actual build state.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="diagnostic-bridge" aria-labelledby="diagnosticTitle">
-        <div>
-          <p class="eyebrow">Under the Hood</p>
-          <h2 id="diagnosticTitle">Open the Instrument Room</h2>
+        <article class="hearth-category-panel" data-hearth-category-panel="mirrorland" hidden>
+          <b>Mirrorland Signal</b>
+          <h3>The estate found the alias first.</h3>
           <p>
-            The showroom explains the chamber. The diagnostic panel proves what the chamber can currently see, measure, and return.
+            Hearth belongs to the eerie side of the showroom: hidden, instrumented, partially awake,
+            and unwilling to reveal a location.
           </p>
-        </div>
+        </article>
 
-        <a class="diagnostic-button" href="/showroom/globe/hearth/diagnostic/">
-          Enter Diagnostic Panel
-        </a>
-      </section>
-    </main>
-  </div>
+        <article class="hearth-category-panel" data-hearth-category-panel="diagnostics" hidden>
+          <b>Diagnostics</b>
+          <h3>Proof is visible only where proof exists.</h3>
+          <p>
+            The shell exposes readout slots for route, canvas, orbit, lattice, chamber, and boundary state.
+            It does not mutate the diagnostic campus.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="hearth-panel" data-hearth-focus-section="diagnostics">
+      <div class="hearth-section-head">
+        <p class="hearth-kicker">Under the floor</p>
+        <h2>Hearth diagnostic readouts</h2>
+      </div>
+
+      <div class="hearth-diagnostic-grid" aria-label="Hearth diagnostic readouts">
+        <div><b>Route</b><span data-hearth-diagnostic-route>pending</span></div>
+        <div><b>Stage</b><span data-hearth-diagnostic-stage>pending</span></div>
+        <div><b>Canvas</b><span data-hearth-diagnostic-canvas>pending</span></div>
+        <div><b>Lens</b><span data-hearth-diagnostic-lens>orbit</span></div>
+        <div><b>Motion</b><span data-hearth-diagnostic-motion>pending</span></div>
+        <div><b>Lattice</b><span data-hearth-diagnostic-lattice>256 held</span></div>
+        <div><b>Boundary</b><span data-hearth-diagnostic-boundary>held</span></div>
+        <div><b>Visual Pass</b><span data-hearth-diagnostic-visual>not claimed</span></div>
+      </div>
+
+      <div class="hearth-matrix-wrap">
+        <section class="hearth-matrix" aria-label="Hearth 4 by 4 chamber matrix">
+          <button type="button" data-hearth-matrix-cell="north">North</button>
+          <button type="button" data-hearth-matrix-cell="east">East</button>
+          <button type="button" data-hearth-matrix-cell="west">West</button>
+          <button type="button" data-hearth-matrix-cell="south">South</button>
+          <button type="button" data-hearth-matrix-cell="surface">Surface</button>
+          <button type="button" data-hearth-matrix-cell="motion">Motion</button>
+          <button type="button" data-hearth-matrix-cell="chamber">Chamber</button>
+          <button type="button" data-hearth-matrix-cell="mirrorland">Signal</button>
+          <button type="button" data-hearth-matrix-cell="orbit">Orbit</button>
+          <button type="button" data-hearth-matrix-cell="lattice">Lattice</button>
+          <button type="button" data-hearth-matrix-cell="boundary">Boundary</button>
+          <button type="button" data-hearth-matrix-cell="return">Return</button>
+          <button type="button" data-hearth-matrix-cell="f3">F3</button>
+          <button type="button" data-hearth-matrix-cell="f5">F5</button>
+          <button type="button" data-hearth-matrix-cell="f8">F8</button>
+          <button type="button" data-hearth-matrix-cell="f13">F13 Held</button>
+        </section>
+
+        <section class="hearth-spectrum-card">
+          <b>256-state spectrum</b>
+          <p data-hearth-spectrum-readout>Selected state: none.</p>
+          <div class="hearth-spectrum" data-hearth-spectrum aria-label="Hearth 16 by 16 diagnostic spectrum"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="hearth-final-band" data-hearth-focus-section="return">
+      <p class="hearth-kicker">Return protocol</p>
+      <h2>When the chamber narrows, return to orbit.</h2>
+      <p>
+        Return-to-orbit clears focus, restores the carrier, releases muted panels,
+        and recenters the visitor without pretending Hearth is complete.
+      </p>
+      <button type="button" class="hearth-button gold" data-hearth-return-to-orbit>
+        Return to Orbit
+      </button>
+    </section>
+
+    <footer class="hearth-footer">
+      Hearth Facility · Location Unknown · Mirrorland-adjacent showroom route · final visual pass not claimed
+    </footer>
+  </main>
 </body>
 </html>

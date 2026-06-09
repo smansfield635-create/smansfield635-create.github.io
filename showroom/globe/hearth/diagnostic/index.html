@@ -1,30 +1,27 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 -->
-<!-- Internal controlled renewal: -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_HTML_BINDING_REPAIR_TNT_v9_4_3_1 -->
-<!-- Paired controller retained: -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_HTML_SHELL_TNT_v9_4_4 -->
+<!-- Paired controller: HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4 -->
 <!-- Full-file replacement. -->
-<!-- HTML shell only. Diagnostic logic remains in /showroom/globe/hearth/diagnostic/index.js -->
-<!-- Repair scope: duplicate ID removal, single report-action binding surface, raw-output target correction. -->
+<!-- HTML shell only. Diagnostic logic lives in /showroom/globe/hearth/diagnostic/index.js -->
+<!-- Design law: one category selector, one audit selector, one local report action surface. -->
 <!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-html-shell="v9_4_3_1">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_4">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth · Audit Template Console</title>
+  <title>Hearth · Single Audit Workbench</title>
 
   <style>
     :root {
       color-scheme: dark;
       --bg0: #03050a;
       --bg1: #070b13;
-      --panel: rgba(13, 22, 38, .82);
-      --panel2: rgba(18, 30, 51, .84);
-      --line: rgba(151, 182, 235, .22);
-      --line2: rgba(151, 182, 235, .46);
+      --panel: rgba(13, 22, 38, .86);
+      --panel2: rgba(18, 30, 51, .86);
+      --line: rgba(151, 182, 235, .24);
+      --line2: rgba(151, 182, 235, .48);
       --text: #eaf1ff;
       --soft: #b2c2dc;
       --muted: #8092ad;
@@ -62,6 +59,11 @@
       overflow-x: hidden;
     }
 
+    button,
+    select {
+      font-family: var(--sans);
+    }
+
     button {
       appearance: none;
       border: 1px solid var(--line);
@@ -88,8 +90,7 @@
     }
 
     button:focus-visible,
-    .choice-card:focus-visible,
-    .audit-card:focus-visible {
+    select:focus-visible {
       outline: 2px solid var(--blue);
       outline-offset: 3px;
     }
@@ -103,8 +104,26 @@
       background: rgba(10, 16, 28, .74);
     }
 
+    select {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, rgba(22, 35, 60, .95), rgba(8, 13, 23, .95));
+      padding: 0 15px;
+      font: 900 15px/1.2 var(--sans);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    option {
+      color: #101827;
+      background: #eef4ff;
+    }
+
     .shell {
-      width: min(1240px, calc(100vw - 20px));
+      width: min(1180px, calc(100vw - 20px));
       margin: 0 auto;
       padding: 10px 0 28px;
     }
@@ -231,121 +250,71 @@
       color: var(--bad);
     }
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 360px minmax(0, 1fr);
-      gap: 10px;
-      align-items: start;
-    }
-
-    .panel {
+    .workbench {
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
       background: var(--panel);
       box-shadow: var(--shadow);
       overflow: hidden;
-      min-width: 0;
     }
 
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
+    .workbench-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 12px;
       align-items: center;
-      padding: 14px;
+      padding: 16px;
       border-bottom: 1px solid var(--line);
       background:
-        linear-gradient(135deg, rgba(143, 183, 255, .10), transparent 54%),
+        linear-gradient(135deg, rgba(143, 183, 255, .12), transparent 54%),
         rgba(8, 13, 23, .58);
     }
 
-    .panel-head strong {
+    .workbench-head strong {
+      display: block;
       font: 950 11px/1 var(--mono);
       letter-spacing: .10em;
       text-transform: uppercase;
+      color: var(--cyan);
     }
 
-    .panel-head span {
-      color: var(--muted);
-      font: 800 10px/1.25 var(--mono);
-      text-align: right;
+    .workbench-head span {
+      display: block;
+      margin-top: 7px;
+      color: var(--soft);
+      font: 800 13px/1.35 var(--sans);
     }
 
-    .panel-body {
-      padding: 12px;
+    .workbench-head .pill {
+      color: var(--warn);
+      border: 1px solid rgba(255, 208, 109, .32);
+      background: rgba(255, 208, 109, .08);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font: 950 10px/1 var(--mono);
+      white-space: nowrap;
+    }
+
+    .selector-grid {
       display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5, 8, 15, .28);
     }
 
-    .choice-list,
-    .audit-list {
+    .field {
+      min-width: 0;
       display: grid;
       gap: 8px;
     }
 
-    .choice-card,
-    .audit-card {
-      width: 100%;
-      border-radius: 18px;
-      text-align: left;
-      background: rgba(8, 13, 23, .66);
-      border: 1px solid var(--line);
-      padding: 12px;
-      min-height: 74px;
-      box-shadow: none;
-    }
-
-    .choice-card.is-active,
-    .audit-card.is-active {
-      border-color: rgba(143, 183, 255, .70);
-      background: linear-gradient(180deg, rgba(55, 88, 150, .36), rgba(8, 13, 23, .72));
-    }
-
-    .choice-card .choice-kicker {
-      display: block;
-      color: var(--cyan);
-      font: 950 9px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      margin-bottom: 8px;
-    }
-
-    .choice-card strong,
-    .audit-card strong {
-      display: block;
-      color: var(--text);
-      font: 950 14px/1.1 var(--sans);
-    }
-
-    .choice-card small,
-    .audit-card small {
-      display: block;
+    .field label {
       color: var(--muted);
-      font: 750 11px/1.35 var(--mono);
-      margin-top: 7px;
-    }
-
-    .audit-card {
-      display: grid;
-      grid-template-columns: 44px minmax(0, 1fr);
-      gap: 10px;
-      align-items: start;
-    }
-
-    .audit-card > span {
-      display: grid;
-      place-items: center;
-      min-height: 38px;
-      border-radius: 14px;
-      color: var(--cyan);
-      background: rgba(127, 231, 255, .08);
-      border: 1px solid rgba(127, 231, 255, .22);
-      font: 950 11px/1 var(--mono);
-    }
-
-    .work {
-      display: grid;
-      gap: 10px;
+      font: 950 10px/1 var(--mono);
+      letter-spacing: .09em;
+      text-transform: uppercase;
     }
 
     .selected-audit {
@@ -376,7 +345,7 @@
 
     h2 {
       margin: 0;
-      font-size: clamp(24px, 5vw, 40px);
+      font-size: clamp(24px, 5vw, 42px);
       line-height: .98;
       letter-spacing: -.055em;
     }
@@ -385,11 +354,12 @@
       margin: 12px 0 0;
       color: var(--soft);
       font: 700 14px/1.5 var(--sans);
+      max-width: 850px;
     }
 
     .report-actions {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 8px;
       padding: 12px;
       border-bottom: 1px solid var(--line);
@@ -441,6 +411,11 @@
 
     .target-panel {
       margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
     .target-frame-shell {
@@ -486,7 +461,13 @@
       display: none !important;
     }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1080px) {
+      .report-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
       .shell {
         width: min(100vw - 12px, 980px);
         padding-top: 6px;
@@ -507,7 +488,15 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .main-grid {
+      .workbench-head {
+        grid-template-columns: 1fr;
+      }
+
+      .workbench-head .pill {
+        width: max-content;
+      }
+
+      .selector-grid {
         grid-template-columns: 1fr;
       }
 
@@ -563,8 +552,8 @@
       <div class="identity">
         <div class="mark" aria-hidden="true"></div>
         <div>
-          <h1>Hearth Audit Template Console</h1>
-          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3</p>
+          <h1>Hearth Single Audit Workbench</h1>
+          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4</p>
         </div>
       </div>
 
@@ -576,78 +565,76 @@
 
     <section class="status-strip" id="statusStrip" aria-label="Compact diagnostic status"></section>
 
-    <main class="main-grid">
-      <aside class="panel">
-        <div class="panel-head">
-          <strong>1 · Choose Audit Section</strong>
-          <span>Family first</span>
+    <main class="workbench">
+      <div class="workbench-head">
+        <div>
+          <strong>Single Audit Workbench</strong>
+          <span>Choose one category, choose one audit, create and copy the report from the same local surface.</span>
+        </div>
+        <div class="pill">Source of truth: auditSelect.value</div>
+      </div>
+
+      <section class="selector-grid" aria-label="Audit selection">
+        <div class="field">
+          <label for="categorySelect">1 · Category</label>
+          <select id="categorySelect" aria-label="Choose audit category"></select>
         </div>
 
-        <div class="panel-body">
-          <div class="choice-list" id="auditSectionList"></div>
+        <div class="field">
+          <label for="auditSelect">2 · Audit</label>
+          <select id="auditSelect" aria-label="Choose audit"></select>
         </div>
-      </aside>
+      </section>
 
-      <section class="work">
-        <section class="panel">
-          <div class="panel-head">
-            <strong>2 · Choose Audit</strong>
-            <span id="selectedSectionLabel">Chamber / Receiver</span>
-          </div>
+      <section class="selected-audit">
+        <div class="meta">
+          <span id="selectedAuditMeta">00 · SAFE</span>
+          <span id="selectedSectionLabel">Chamber / Receiver</span>
+        </div>
 
-          <div class="panel-body">
-            <div class="audit-list" id="auditList"></div>
-          </div>
-        </section>
+        <h2 id="selectedAuditTitle">Chamber Index</h2>
+        <p id="selectedAuditSummary">Choose a category, choose an audit, then create a report.</p>
+      </section>
 
-        <section class="panel">
-          <div class="selected-audit">
-            <div class="meta">
-              <span id="selectedAuditMeta">00 · SAFE</span>
-            </div>
+      <section class="report-actions" aria-label="Report controls">
+        <button class="primary" id="createReport" type="button">Create Report</button>
+        <button id="runDirectReport" type="button" hidden disabled>Run Direct Check</button>
+        <button id="copyReport" type="button" disabled>Copy Report</button>
+        <button id="copyRaw" type="button" disabled>Copy Raw</button>
+        <button class="ghost" id="copyArchive" type="button">Copy Deep Archive</button>
+        <button class="ghost" id="toggleRaw" type="button">Show / Hide Raw</button>
+        <button class="ghost" id="resetReport" type="button">Reset</button>
+      </section>
 
-            <h2 id="selectedAuditTitle">Chamber Index</h2>
-            <p id="selectedAuditSummary">Choose an audit section, choose an audit, then create a report.</p>
-          </div>
+      <section class="report-output" id="reportOutput">
+        <div class="report-title-row">
+          <strong id="reportTitle">No Report Created</strong>
+          <span id="reportMeta">WAITING</span>
+        </div>
 
-          <div class="report-actions" aria-label="Selected audit controls">
-            <button class="primary" id="createReport" type="button">Create Report</button>
-            <button id="runDirectReport" type="button" hidden>Run Direct Check</button>
-            <button id="copyReport" type="button" disabled>Copy Report</button>
-            <button id="copyRaw" type="button" disabled>Copy Raw</button>
-            <button class="ghost" id="copyArchive" type="button">Copy Deep Archive</button>
-            <button class="ghost" id="toggleRaw" type="button">Show / Hide Raw</button>
-            <button class="ghost" id="resetReport" type="button">Reset</button>
-          </div>
+        <pre id="generatedReport">Choose a category, choose an audit, then create a report.</pre>
 
-          <div class="report-output" id="reportOutput">
-            <div class="report-title-row">
-              <strong id="reportTitle">No Report Created</strong>
-              <span id="reportMeta">WAITING</span>
-            </div>
-
-            <pre id="generatedReport">Choose an audit section, choose an audit, then create a report.</pre>
-
-            <div id="rawOutput" hidden>
-              <pre id="rawReport"></pre>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel target-panel" id="targetPanel" hidden>
-          <div class="panel-head">
-            <strong>Target Frame</strong>
-            <span>/showroom/globe/hearth/</span>
-          </div>
-
-          <div class="panel-body">
-            <div class="target-frame-shell">
-              <iframe id="hearthDiagnosticTargetFrame" src="/showroom/globe/hearth/" title="Hearth target route"></iframe>
-            </div>
-          </div>
-        </section>
+        <div id="rawOutput" hidden>
+          <pre id="rawReport"></pre>
+        </div>
       </section>
     </main>
+
+    <section class="target-panel" id="targetPanel" hidden>
+      <div class="workbench-head">
+        <div>
+          <strong>Target Frame</strong>
+          <span>/showroom/globe/hearth/</span>
+        </div>
+        <div class="pill">Read-only diagnostic view</div>
+      </div>
+
+      <div class="report-output">
+        <div class="target-frame-shell">
+          <iframe id="hearthDiagnosticTargetFrame" src="/showroom/globe/hearth/" title="Hearth target route"></iframe>
+        </div>
+      </div>
+    </section>
   </div>
 
   <div class="toast" id="toast">Done</div>

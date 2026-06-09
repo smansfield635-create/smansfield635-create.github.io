@@ -1,219 +1,244 @@
 // /assets/lab/runtime-table.west.js
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_TNT_v4_9
-// Internal controlled renewal:
-// LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_CURRENT_AUTHORITY_RECHECK_TNT_v5_4
+// LAB_RUNTIME_TABLE_WEST_F5_ENGINE_MECHANICS_PRESSURE_ADMISSIBILITY_TNT_v1
 // Full-file replacement.
-// Cardinal West / current-authority recheck / stale North quarantine / explicit-run admissibility.
-//
-// Preserves public West v4_9 identity.
-// Preserves v5_3 compatibility.
-// Adds v5_4 current-authority recheck.
-// West is an admissibility and derivative-release authority only.
-// West does not mutate production, Canvas, controls, route conductor, North, East, South, or Surface Truth.
-// West does not draw Canvas, repair Canvas, claim F13/F21, claim ready text, or claim final visual pass.
+// Runtime Table West / F5 pressure admissibility / West Supreme Judge / compression branch.
+// Purpose:
+// - Stand up West as the F5 pressure/admissibility channel for the runtime-table v4 engine system.
+// - Bind directly to runtime-table v4 mechanics: RT3D-X06_Y19_Z5.
+// - Consume East F3 intake packets.
+// - Apply pressure, admissibility, constraint, and boundary checks.
+// - Return F5 pressure receipts toward North and F8 South proof/output.
+// - Preserve the 3D engine lattice + 256 state binding model.
+// - Treat architecture labels as secondary and engine mechanics/math as primary.
+// - Avoid rendering, generated image claims, WebGL claims, GraphicBox claims, public superiority claims, and final visual pass claims.
+// Does not own:
+// - North F21 latch
+// - East F3 intake admission
+// - South F8 proof return
+// - Canvas F13 evidence release
+// - F34/F55/F89/F144 support-engine internals
+// - F233 downstream return
+// - route orchestration
+// - planet truth
+// - material/elevation/hydrology truth
+// - actual rendering
+// - generated image
+// - GraphicBox
+// - WebGL
+// - public superiority claim
+// - final visual pass claim
 
-(function () {
+(() => {
   "use strict";
 
-  var ROOT = typeof window !== "undefined" ? window : globalThis;
+  const CONTRACT = "LAB_RUNTIME_TABLE_WEST_F5_ENGINE_MECHANICS_PRESSURE_ADMISSIBILITY_TNT_v1";
+  const RECEIPT = "LAB_RUNTIME_TABLE_WEST_F5_ENGINE_MECHANICS_PRESSURE_ADMISSIBILITY_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_WEST_SOURCE_PENDING_RENEWAL";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_COUNTY_ENGINE_MECHANICS_3D_LATTICE_256_STATE_SUPPORT_ENGINE_TNT_v4";
+  const VERSION = "2026-06-08.lab-runtime-table-west-f5-engine-mechanics-pressure-admissibility-v1";
 
-  var PUBLIC_CONTRACT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_TNT_v4_9";
-  var PUBLIC_RECEIPT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE_RECEIPT_v4_9";
+  const FILE = "/assets/lab/runtime-table.west.js";
+  const NORTH_FILE = "/assets/lab/runtime-table.js";
+  const EAST_FILE = "/assets/lab/runtime-table.east.js";
+  const SOUTH_FILE = "/assets/lab/runtime-table.south.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
-  var INTERNAL_RENEWAL_CONTRACT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_CURRENT_AUTHORITY_RECHECK_TNT_v5_4";
-  var INTERNAL_RENEWAL_RECEIPT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_CURRENT_AUTHORITY_RECHECK_RECEIPT_v5_4";
+  const F34_PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
+  const F55_EXPRESSION_FILE = "/assets/lab/product-engine.ue5-expression.js";
+  const F89_REGISTRY_FILE = "/assets/lab/product-engine.registry.js";
+  const F144_MARKET_FILE = "/assets/lab/product-engine.market.js";
 
-  var COMPAT_INTERNAL_RENEWAL_CONTRACT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_TNT_v5_3";
-  var COMPAT_INTERNAL_RENEWAL_RECEIPT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_RECEIPT_v5_3";
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
-  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_TNT_v5_2";
-  var PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING_RECEIPT_v5_2";
-
-  var VERSION =
-    "2026-06-08.lab-runtime-table-west-north-current-authority-recheck-v5-4";
-
-  var FILE = "/assets/lab/runtime-table.west.js";
-  var ROUTE = "/showroom/globe/hearth/";
-  var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-
-  var LAB_NORTH_FILE = "/assets/lab/runtime-table.js";
-  var LAB_WEST_FILE = "/assets/lab/runtime-table.west.js";
-  var NORTH_RAIL_FILE = "/assets/hearth/hearth.diagnostic.rail.js";
-  var SURFACE_TRUTH_FILE =
-    "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
-  var EAST_PROBE_FILE = "/assets/hearth/hearth.diagnostic.probe.east.js";
-  var SOUTH_RAIL_FILE = "/assets/hearth/hearth.diagnostic.south.js";
-
-  var ACTIVE_STAGE_ID =
-    "WEST_NORTH_CURRENT_AUTHORITY_RECHECK_STALE_PACKET_QUARANTINE";
-  var ACTIVE_CARDINAL = "WEST";
-  var ACTIVE_FIBONACCI = "F21W";
-  var ACTIVE_NEWS_GATE = "WEST";
-  var ACTIVE_CYCLE_NUMBER = 2;
-  var ACTIVE_CYCLE_ROUTE = "NORTH_EAST_SOUTH_WEST_CANVAS";
-
-  var TRUST_STATE = Object.freeze({
-    CURRENT: "CURRENT",
-    STALE_PRE_NORTH: "STALE_PRE_NORTH",
-    PROFILE_ONLY: "PROFILE_ONLY",
-    NOT_RUN: "NOT_RUN",
-    NO_SOURCE_CONTEXT: "NO_SOURCE_CONTEXT",
-    UNKNOWN: "UNKNOWN"
+  const FIBONACCI = Object.freeze({
+    NORTH_ORIGIN: "F1",
+    EAST_INTAKE: "F3",
+    WEST_PRESSURE: "F5",
+    SOUTH_PROOF: "F8",
+    CANVAS_EVIDENCE: "F13",
+    NORTH_LATCH: "F21",
+    PRODUCT_ENGINE: "F34",
+    UE5_EXPRESSION: "F55",
+    PROJECT_REGISTRY: "F89",
+    MARKET_READINESS: "F144",
+    DOWNSTREAM_RETURN: "F233"
   });
 
-  var WEST_DECISION = Object.freeze({
-    HOLD: "HOLD",
-    RELEASE_TO_CANVAS_RETURN_RECEIPT: "RELEASE_TO_CANVAS_RETURN_RECEIPT"
+  const NEWS_GATES = Object.freeze({
+    NORTH: "NORTH",
+    EAST: "EAST",
+    WEST: "WEST",
+    SOUTH: "SOUTH",
+    CANVAS: "CANVAS",
+    PRODUCT: "PRODUCT_ENGINE",
+    EXPRESSION: "UE5_EXPRESSION",
+    REGISTRY: "PROJECT_REGISTRY",
+    MARKET: "MARKET_READINESS",
+    DOWNSTREAM: "DOWNSTREAM_RETURN"
   });
 
-  var WEST_GAP_CLASS = Object.freeze({
-    NONE: "NONE",
-    NORTH_STANDARD_MISSING: "NORTH_STANDARD_MISSING",
-    NORTH_DIAGNOSTIC_RAIL_MISSING: "NORTH_DIAGNOSTIC_RAIL_MISSING",
-    NORTH_RAIL_VERDICT_UNAVAILABLE: "NORTH_RAIL_VERDICT_UNAVAILABLE",
-    SURFACE_TRUTH_UNMEASURED: "SURFACE_TRUTH_UNMEASURED",
-    SURFACE_TRUTH_FAILURE: "SURFACE_TRUTH_FAILURE",
-    STALE_PRE_NORTH_PACKET_QUARANTINED:
-      "STALE_PRE_NORTH_PACKET_QUARANTINED",
-    NO_SOURCE_CONTEXT_QUARANTINED: "NO_SOURCE_CONTEXT_QUARANTINED",
-    DIAGNOSTIC_MALPRACTICE_GUARD_HELD:
-      "DIAGNOSTIC_MALPRACTICE_GUARD_HELD",
-    STRUCTURAL_BLOCK: "STRUCTURAL_BLOCK"
+  const STATUS = Object.freeze({
+    HELD: "HELD",
+    ACTIVE: "ACTIVE",
+    READY: "READY",
+    DEGRADED: "DEGRADED",
+    BLOCKED: "BLOCKED",
+    COMPLETE: "COMPLETE",
+    REJECTED: "REJECTED"
   });
 
-  var ACCEPTED_LAB_NORTH_CONTRACTS = [
-    "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1",
-    "LAB_RUNTIME_TABLE_NORTH_KING_QUEEN_DUAL_CHAPEL_DUTY_LOAD_MALPRACTICE_GUARD_SCHEMA_ANCHOR_TNT_v1_1",
-    "LAB_RUNTIME_TABLE_NORTH_CENTRAL_TRAIN_STATION_PRODUCT_ENGINE_CONDUCTOR_TNT_v3",
-    "LAB_RUNTIME_TABLE_NORTH_NON_BLOCKING_PHASE_SCHEDULER_TWO_CYCLE_DISTRIBUTOR_TNT_v2"
-  ];
+  const PRESSURE_CLASS = Object.freeze({
+    EAST_INTAKE_PRESSURE: "EAST_INTAKE_PRESSURE",
+    DIAGNOSTIC_PRESSURE: "DIAGNOSTIC_PRESSURE",
+    SUPPORT_ENGINE_PRESSURE: "SUPPORT_ENGINE_PRESSURE",
+    ROUTE_PRESSURE: "ROUTE_PRESSURE",
+    CANVAS_PRESSURE: "CANVAS_PRESSURE",
+    CONSTRAINT_PRESSURE: "CONSTRAINT_PRESSURE",
+    GENERIC_PRESSURE: "GENERIC_PRESSURE"
+  });
 
-  var ACCEPTED_NORTH_RAIL_CONTRACTS = [
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_REANCHOR_DIAGNOSTIC_TRACK_RUNTIME_MAP_INTEGRITY_TNT_v11_6",
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LABWEST_CONSTRUCT_ANCHORED_SURFACE_TRUTH_CONSUMER_TNT_v12",
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CANVAS_SURFACE_TRUTH_CHRONOLOGY_HUB_TNT_v11",
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_CHRONOLOGY_HUB_STANDARD_TNT_v10"
-  ];
+  const MECHANICAL_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X06_Y19_Z5",
+    enginePart: "COMPRESSION",
+    enginePartIndex: 6,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.WEST_PRESSURE,
+    fibonacciRank: 5,
+    fibonacciStation: "WEST_PRESSURE_ADMISSIBILITY",
+    mechanicalRole: "WEST_PRESSURE_ADMISSIBILITY",
+    judicialRole: "WEST_SUPREME_JUDGE",
+    authorityRole: "ADMISSIBILITY_BRANCH",
+    mayJudgePressure: true,
+    mayLatchF21: false,
+    mayAdmitF3Intake: false,
+    mayReturnF8Proof: false,
+    mayReleaseCanvasF13: false,
+    mayRender: false,
+    mayClaimPublicSuperiority: false
+  });
 
-  var ACCEPTED_SURFACE_TRUTH_CONTRACTS = [
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_TNT_v3",
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CYCLE_BOUND_CONTRACT_DEFINITION_ALIGNMENT_TNT_v2",
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TNT_v1"
-  ];
+  const SOUTH_HANDOFF_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X07_Y19_Z8",
+    enginePart: "EXHAUST",
+    enginePartIndex: 7,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.SOUTH_PROOF,
+    fibonacciRank: 8,
+    fibonacciStation: "SOUTH_PROOF_EXHAUST_RETURN",
+    mechanicalRole: "SOUTH_PROOF_RETURN_TARGET",
+    mayJudgePressure: false,
+    mayLatchF21: false,
+    mayRender: false
+  });
 
-  var LAB_NORTH_ALIASES = [
-    "LAB_RUNTIME_TABLE",
-    "LAB_RUNTIME_TABLE_NORTH",
-    "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD",
-    "DEXTER_LAB.runtimeTable",
-    "DEXTER_LAB.runtimeTableNorth",
-    "DEXTER_LAB.northRuntimeTable",
-    "HEARTH.labRuntimeTable",
-    "HEARTH.labRuntimeTableNorth",
-    "HEARTH.LAB_RUNTIME_TABLE_NORTH"
-  ];
+  const state = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
+    version: VERSION,
+    file: FILE,
 
-  var NORTH_RAIL_ALIASES = [
-    "JUDGE_NORTH",
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-    "HEARTH_DIAGNOSTIC_RAIL",
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_REANCHOR_DIAGNOSTIC_TRACK_RUNTIME_MAP_INTEGRITY",
-    "HEARTH_DIAGNOSTIC_RAIL_NORTH_LABWEST_CONSTRUCT_ANCHORED_SURFACE_TRUTH_CONSUMER",
-    "HEARTH.diagnosticRail",
-    "HEARTH.diagnosticNorth",
-    "HEARTH.diagnosticNorthRail",
-    "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
-    "DEXTER_LAB.hearthDiagnosticRail",
-    "DEXTER_LAB.hearthDiagnosticNorth",
-    "DEXTER_LAB.hearthDiagnosticNorthRail"
-  ];
+    westRuntimeTableActive: true,
+    westRuntimeTableF5Only: true,
+    westSupremeJudgeActive: true,
+    westPressureValveActive: true,
+    westCompressionActive: true,
+    pressureValveOpen: true,
+    pressureValveStatus: STATUS.ACTIVE,
 
-  var SURFACE_TRUTH_ALIASES = [
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-    "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
-    "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT",
-    "HEARTH.diagnosticProbeCanvasSurfaceTruth",
-    "HEARTH.canvasSurfaceTruthProbe",
-    "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
-    "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-    "HEARTH.diagnosticProbeCanvasSurfaceTruthProductionSurfaceLensAlignment",
-    "DEXTER_LAB.canvasSurfaceTruthProbe",
-    "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth",
-    "DEXTER_LAB.canvasSurfaceTruthProductionSurfaceLensAlignment"
-  ];
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
+    mechanicalCoordinate: MECHANICAL_COORDINATE,
+    southHandoffCoordinate: SOUTH_HANDOFF_COORDINATE,
 
-  var WEST_ALIAS_PATHS = [
-    "LAB_RUNTIME_TABLE_WEST",
-    "RUNTIME_TABLE_WEST",
-    "LAB_CARDINAL_RUNTIME_TABLE_WEST",
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST",
-    "HEARTH_RUNTIME_TABLE_WEST",
-    "HEARTH_WEST_ADMISSIBILITY",
-    "HEARTH_MACRO_WEST_AUTHORITY",
+    eastRuntimeObserved: false,
+    eastRuntimeAccepted: false,
+    eastRuntimeContract: "",
+    eastRuntimeReceipt: "",
+    eastF3IntakeObserved: false,
+    eastF3IntakeAccepted: false,
 
-    "LAB_RUNTIME_TABLE_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE",
-    "HEARTH_WEST_CANVAS_V12_3_POINTER_SURFACE_BISHOP_RELEASE_BRIDGE",
+    pressureRecords: [],
+    pressureQueue: [],
+    rejectedRecords: [],
+    pressureRecordCount: 0,
+    admissibleRecordCount: 0,
+    rejectedRecordCount: 0,
+    diagnosticPressureCount: 0,
+    supportEnginePressureCount: 0,
+    routePressureCount: 0,
+    canvasPressureCount: 0,
+    constraintPressureCount: 0,
 
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP",
-    "HEARTH_WEST_POINTER_SURFACE_BISHOP_CHAIN_MAP",
+    lastAdmissiblePressure: null,
+    lastRejectedPressure: null,
 
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING",
-    "HEARTH_WEST_CANVAS_CHAPEL_DUAL_CHAPEL_METRIC_BINDING",
+    pressureGraphBuilt: false,
+    pressureGraphReady: false,
+    pressureGraphStatus: STATUS.HELD,
+    pressureGraph: {
+      records: [],
+      recordsById: {},
+      byClass: {},
+      byState: {},
+      byPressureShell: {},
+      edges: [],
+      buildId: "",
+      builtAt: ""
+    },
 
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
-    "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE",
+    pressureQualityMetricActive: true,
+    pressureQualityScore: 0,
+    pressureCoverageScore: 0,
+    pressureTraceScore: 0,
+    pressureCoherenceScore: 0,
+    admissibilityScore: 0,
+    compressionScore: 0,
+    boundaryScore: 0,
 
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_NORTH_CURRENT_AUTHORITY_RECHECK",
-    "HEARTH_WEST_NORTH_CURRENT_AUTHORITY_RECHECK",
+    f8SouthHandoffAuthorized: false,
+    f5PressurePacketReady: false,
+    f5ActivationStatus: STATUS.ACTIVE,
+    f5ActivationReason: "WEST_F5_PRESSURE_VALVE_ACTIVE_WAITING_EAST_F3_INTAKE",
 
-    "HEARTH.runtimeTableWest",
-    "HEARTH.westRuntimeTable",
-    "HEARTH.westAdmissibility",
-    "HEARTH.macroWestAuthority",
-    "HEARTH.westCanvasV123PointerSurfaceBishopReleaseBridge",
-    "HEARTH.westPointerSurfaceBishopChainMap",
-    "HEARTH.westCanvasChapelDualChapelMetricBinding",
-    "HEARTH.westNorthStandardDerivativeRelease",
-    "HEARTH.westNorthCurrentAuthorityRecheck",
+    southReceiptAccepted: false,
+    southReceiptPacket: null,
+    southRuntimeContract: "",
+    southRuntimeReceipt: "",
 
-    "DEXTER_LAB.runtimeTableWest",
-    "DEXTER_LAB.cardinalRuntimeTableWest",
-    "DEXTER_LAB.hearthRuntimeTableWest",
-    "DEXTER_LAB.westAdmissibility",
-    "DEXTER_LAB.hearthWestCanvasChapelDualChapelMetricBinding",
-    "DEXTER_LAB.hearthWestNorthStandardDerivativeRelease",
-    "DEXTER_LAB.hearthWestNorthCurrentAuthorityRecheck"
-  ];
+    activeFibonacci: FIBONACCI.WEST_PRESSURE,
+    activeFibonacciRank: 5,
+    activeNewsGate: NEWS_GATES.WEST,
+    sourceFibonacciGate: FIBONACCI.EAST_INTAKE,
+    futureFibonacciGate: FIBONACCI.SOUTH_PROOF,
+    newsProtocolAligned: true,
+    fibonacciSynchronizationMetricActive: true,
+    fibonacciSynchronizationScore: 0,
+    oneActiveGearAtATime: true,
 
-  var WEST_RECEIPT_ALIAS_PATHS = [
-    "LAB_RUNTIME_TABLE_WEST_RECEIPT",
-    "RUNTIME_TABLE_WEST_RECEIPT",
-    "LAB_CARDINAL_RUNTIME_TABLE_WEST_RECEIPT",
-    "LAB_RUNTIME_TABLE_CARDINAL_WEST_RECEIPT",
-    "HEARTH_RUNTIME_TABLE_WEST_RECEIPT",
-    "HEARTH_WEST_ADMISSIBILITY_RECEIPT",
-    "HEARTH_WEST_NORTH_STANDARD_DERIVATIVE_RELEASE_RECEIPT",
-    "HEARTH_WEST_NORTH_CURRENT_AUTHORITY_RECHECK_RECEIPT",
-    "HEARTH.westRuntimeTableReceipt",
-    "HEARTH.westAdmissibilityReceipt",
-    "HEARTH.westNorthStandardDerivativeReleaseReceipt",
-    "HEARTH.westNorthCurrentAuthorityRecheckReceipt",
-    "DEXTER_LAB.runtimeTableWestReceipt",
-    "DEXTER_LAB.hearthWestNorthStandardDerivativeReleaseReceipt",
-    "DEXTER_LAB.hearthWestNorthCurrentAuthorityRecheckReceipt"
-  ];
+    firstFailedCoordinate: "WAITING_EAST_F3_INTAKE_PACKET",
+    recommendedNextFile: SOUTH_FILE,
+    recommendedNextRenewalTarget: SOUTH_FILE,
 
-  var state = createInitialState();
-  var api = {};
+    localEvents: [],
+    errors: [],
+
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    visualPassClaimed: false,
+
+    createdAt: "",
+    updatedAt: ""
+  };
 
   function nowIso() {
     try {
@@ -231,1607 +256,1963 @@
     return typeof value === "function";
   }
 
-  function stringValue(value, fallback) {
-    if (value === undefined || value === null) return fallback || "";
+  function safeString(value, fallback = "") {
+    if (value === undefined || value === null) return fallback;
+    return String(value);
+  }
+
+  function safeNumber(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function safeBool(value, fallback = false) {
+    if (typeof value === "boolean") return value;
+    if (value === true || value === 1 || value === "1" || value === "true") return true;
+    if (value === false || value === 0 || value === "0" || value === "false") return false;
+    return fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, safeNumber(value, min)));
+  }
+
+  function clonePlain(value) {
+    if (!isObject(value) && !Array.isArray(value)) return value;
     try {
-      return String(value);
+      return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      return fallback || "";
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
-  function clean(value, limit) {
-    var text = stringValue(value, "");
-    text = text.replace(/\s+/g, " ").trim();
-    if (limit && text.length > limit) return text.slice(0, limit);
-    return text;
+  function trim(list, max = 240) {
+    if (Array.isArray(list) && list.length > max) {
+      list.splice(0, list.length - max);
+    }
   }
 
-  function boolValue(value) {
-    if (value === true || value === 1) return true;
-    if (value === false || value === 0) return false;
-
-    var text = clean(value).toLowerCase();
-    if (
-      text === "true" ||
-      text === "yes" ||
-      text === "present" ||
-      text === "available" ||
-      text === "active" ||
-      text === "ready" ||
-      text === "pass" ||
-      text === "complete" ||
-      text === "loaded_and_available" ||
-      text === "strict_runtime_endpoint_confirmed"
-    ) {
-      return true;
-    }
-
-    if (
-      text === "false" ||
-      text === "no" ||
-      text === "missing" ||
-      text === "unavailable" ||
-      text === "blocked" ||
-      text === "failed" ||
-      text === "not_observed" ||
-      text === "script_not_observed_global_not_found"
-    ) {
-      return false;
-    }
-
-    return null;
+  function makeId(value, fallback = "pressure") {
+    const raw = safeString(value || fallback, fallback)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return raw || fallback;
   }
 
-  function timeMs(value) {
-    var text = clean(value);
-    if (!text) return 0;
-    var ms = Date.parse(text);
-    return isNaN(ms) ? 0 : ms;
-  }
-
-  function safeJson(value, depth, seen) {
-    if (value === undefined || value === null) return value;
-    if (typeof value === "string") return value;
-    if (typeof value === "number" || typeof value === "boolean") return value;
-    if (typeof value === "function") {
-      return "[Function " + (value.name || "anonymous") + "]";
-    }
-
-    depth = depth || 0;
-    seen = seen || [];
-
-    if (depth > 5) return "[DepthLimit]";
-
-    if (typeof Node !== "undefined" && value instanceof Node) {
-      return "[DOM " + value.nodeName + "]";
-    }
-
-    if (typeof Window !== "undefined" && value instanceof Window) {
-      return "[Window]";
-    }
-
-    if (seen.indexOf(value) >= 0) return "[Circular]";
-    seen.push(value);
-
-    if (Array.isArray(value)) {
-      return value.slice(0, 80).map(function (item) {
-        return safeJson(item, depth + 1, seen);
-      });
-    }
-
-    if (isObject(value)) {
-      var out = {};
-      Object.keys(value)
-        .slice(0, 180)
-        .forEach(function (key) {
-          if (
-            /element|node|context|canvas|document|window/i.test(key) &&
-            typeof value[key] === "object"
-          ) {
-            out[key] = "[Object suppressed]";
-            return;
-          }
-          out[key] = safeJson(value[key], depth + 1, seen);
-        });
-      return out;
-    }
-
-    return stringValue(value, "");
-  }
-
-  function getPath(path) {
+  function stableStateIndex(value) {
+    let text = "";
     try {
-      var parts = stringValue(path, "").replace(/^window\./, "").split(".");
-      var cursor = ROOT;
-
-      for (var i = 0; i < parts.length; i += 1) {
-        var part = parts[i];
-        if (!part) continue;
-        if (!cursor || cursor[part] === undefined || cursor[part] === null) {
-          return null;
-        }
-        cursor = cursor[part];
-      }
-
-      return cursor || null;
+      text = JSON.stringify(value || {});
     } catch (_error) {
-      return null;
+      text = safeString(value, "");
     }
+
+    let hash = 0;
+    for (let index = 0; index < text.length; index += 1) {
+      hash = ((hash << 5) - hash + text.charCodeAt(index)) | 0;
+    }
+
+    return Math.abs(hash) % 256;
+  }
+
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function readPath(path) {
+    const parts = String(path || "").split(".");
+    let cursor = root;
+
+    for (const part of parts) {
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
+      cursor = cursor[part];
+    }
+
+    return cursor || null;
   }
 
   function setPath(path, value) {
-    try {
-      var parts = stringValue(path, "").replace(/^window\./, "").split(".");
-      var cursor = ROOT;
+    const parts = String(path || "").split(".").filter(Boolean);
+    if (!parts.length) return false;
 
-      for (var i = 0; i < parts.length - 1; i += 1) {
-        var part = parts[i];
-        if (!part) continue;
-        if (!cursor[part] || typeof cursor[part] !== "object") {
-          cursor[part] = {};
-        }
-        cursor = cursor[part];
-      }
-
-      cursor[parts[parts.length - 1]] = value;
-      return true;
-    } catch (_error) {
-      return false;
+    let cursor = root;
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const part = parts[index];
+      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
+      cursor = cursor[part];
     }
+
+    cursor[parts[parts.length - 1]] = value;
+    return true;
   }
 
-  function parseKvText(text) {
-    var out = {};
-    stringValue(text, "")
-      .split(/\r?\n/)
-      .forEach(function (line) {
-        var idx = line.indexOf("=");
-        if (idx <= 0) return;
-        var key = line.slice(0, idx).trim();
-        var value = line.slice(idx + 1).trim();
-        if (key) out[key] = value;
-      });
-    return out;
-  }
-
-  function deepGet(source, keys, maxDepth) {
-    var targetKeys = (keys || []).map(function (key) {
-      return stringValue(key, "").toLowerCase();
-    });
-    var seen = [];
-
-    function visit(value, depth) {
-      if (!value || depth > (maxDepth || 6)) return undefined;
-      if (!isObject(value) && !Array.isArray(value)) return undefined;
-      if (seen.indexOf(value) >= 0) return undefined;
-      seen.push(value);
-
-      if (isObject(value)) {
-        var objectKeys = Object.keys(value);
-
-        for (var i = 0; i < objectKeys.length; i += 1) {
-          var key = objectKeys[i];
-          if (targetKeys.indexOf(key.toLowerCase()) >= 0) {
-            var found = value[key];
-            if (found !== undefined && found !== null && found !== "") {
-              return found;
-            }
-          }
-        }
-
-        for (var j = 0; j < objectKeys.length; j += 1) {
-          var nestedKey = objectKeys[j];
-          var nested = visit(value[nestedKey], depth + 1);
-          if (nested !== undefined && nested !== null && nested !== "") {
-            return nested;
-          }
-        }
-      }
-
-      if (Array.isArray(value)) {
-        for (var k = 0; k < value.length; k += 1) {
-          var foundInArray = visit(value[k], depth + 1);
-          if (
-            foundInArray !== undefined &&
-            foundInArray !== null &&
-            foundInArray !== ""
-          ) {
-            return foundInArray;
-          }
-        }
-      }
-
-      return undefined;
+  function firstGlobal(names) {
+    for (const name of names || []) {
+      const found = readPath(name);
+      if (found) return found;
     }
-
-    return visit(source, 0);
-  }
-
-  function firstField(sources, keys, fallback) {
-    var list = Array.isArray(sources) ? sources : [sources];
-
-    for (var i = 0; i < list.length; i += 1) {
-      var found = deepGet(list[i], keys);
-      if (found !== undefined && found !== null && found !== "") {
-        return clean(found, 1200);
-      }
-    }
-
-    return fallback === undefined ? "" : fallback;
-  }
-
-  function findAuthority(paths) {
-    for (var i = 0; i < paths.length; i += 1) {
-      var path = paths[i];
-      var authority = getPath(path);
-      if (authority) {
-        return {
-          path: path,
-          authority: authority,
-          authorityPresent: true
-        };
-      }
-    }
-
-    return {
-      path: "NONE",
-      authority: null,
-      authorityPresent: false
-    };
-  }
-
-  function acceptedContract(contract, accepted) {
-    var text = clean(contract);
-    if (!text) return false;
-
-    for (var i = 0; i < accepted.length; i += 1) {
-      if (text === accepted[i]) return true;
-    }
-
-    return false;
-  }
-
-  function readAuthorityPacket(authority, options) {
-    options = options || {};
-    if (!authority) return {};
-
-    var methods = [];
-
-    if (options.invoke === true) {
-      methods = methods.concat([
-        "runDiagnostic",
-        "run",
-        "inspect",
-        "probe",
-        "measure"
-      ]);
-    }
-
-    methods = methods.concat([
-      "getReport",
-      "getReceiptLight",
-      "getReceipt",
-      "getStatus",
-      "getStatusText",
-      "getState"
-    ]);
-
-    for (var i = 0; i < methods.length; i += 1) {
-      var method = methods[i];
-
-      if (!isFunction(authority[method])) continue;
-
-      try {
-        var result;
-
-        if (method === "getReceiptLight") {
-          result = authority[method](false);
-        } else {
-          result = authority[method](options.callOptions || {});
-        }
-
-        if (isObject(result) || Array.isArray(result)) return safeJson(result);
-        if (typeof result === "string" && result.trim()) {
-          return parseKvText(result);
-        }
-      } catch (_error) {}
-    }
-
-    if (isObject(authority.receipt)) return safeJson(authority.receipt);
-    if (isObject(authority.state)) return safeJson(authority.state);
-    if (isObject(authority.evidence)) return safeJson(authority.evidence);
-
-    return safeJson(authority);
-  }
-
-  function createInitialState() {
-    var now = nowIso();
-
-    return {
-      timestamp: now,
-      publishedAt: now,
-      lastRunAt: "",
-      runCount: 0,
-      aliasPublishCount: 0,
-      receiptPublishCount: 0,
-      datasetPublishCount: 0,
-      errorCount: 0,
-      errors: [],
-
-      trustState: TRUST_STATE.NOT_RUN,
-      adjudicationRunState: "PUBLISHED_LIGHT_RECEIPT_ONLY",
-      autoFinalizedOnLoad: false,
-      explicitRunRequired: true,
-
-      northStandardStatus: "PUBLISHED_NOT_RUN",
-      northCompatibilityBridgeStatus: "UNKNOWN",
-
-      northRailStatus: "PUBLISHED_NOT_RUN_CURRENT_AUTHORITY_RECHECK_REQUIRED",
-      northRailVerdictAvailable: false,
-      northRailAuthorityPath: "UNKNOWN",
-      northRailTrustState: TRUST_STATE.NOT_RUN,
-
-      surfaceTruthStatus: "PUBLISHED_NOT_RUN",
-      surfaceTruthFailureClass: "UNKNOWN",
-      surfaceTruthFirstFailedCoordinate: "UNKNOWN",
-      surfaceTruthTrustState: TRUST_STATE.NOT_RUN,
-
-      stalePacketQuarantineActive: true,
-      stalePreNorthPacketQuarantined: false,
-      noSourcePacketQuarantined: false,
-      currentAuthorityOutranksStoredState: true,
-
-      cycleClosed: false,
-      outerCycleClosed: false,
-      cycleClosureStatus: "WEST_PUBLISHED_AWAITING_EXPLICIT_RUN",
-
-      westDecision: WEST_DECISION.HOLD,
-      westGapClass: WEST_GAP_CLASS.STRUCTURAL_BLOCK,
-      westForwardAllowed: false,
-      canvasReleaseAuthorized: false,
-      canvasReleasePacketReady: false,
-      releaseToCanvas: false,
-      releasePacket: null,
-
-      constructionReadinessStatus:
-        "WEST_PUBLISHED_AWAITING_EXPLICIT_CURRENT_AUTHORITY_RECHECK",
-
-      firstOpenDutyCoordinate: "WEST_EXPLICIT_RUN",
-      firstOpenDutyClass: "NOT_RUN",
-      firstOpenDutyReason:
-        "West published a light receipt only. Full admissibility requires explicit run.",
-      firstOpenDutyFile: FILE,
-      firstOpenDutyOwner: "WEST",
-
-      recommendedNextFile: FILE,
-      recommendedNextAction: "RUN_WEST_CURRENT_AUTHORITY_RECHECK",
-
-      f13Claimed: false,
-      f13EligibleForCanvas: false,
-      f13ClaimedByWest: false,
-      f21EligibleForNorth: false,
-      f21SubmittedToNorth: false,
-      f21EligibilitySubmittedToNorth: false,
-      f21Claimed: false,
-      f21ClaimedByWest: false,
-      readyTextPermissionGranted: false,
-      readyTextAllowed: false,
-      readyTextClaimed: false,
-      completionLatched: false,
-      finalCompletionLatched: false,
-      degradedCompletionLatched: false,
-      visualPassClaimed: false,
-      finalVisualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      webgl: false,
-      productionMutationAuthorized: false,
-      canvasMutationAuthorized: false,
-      canvasDrawingAuthorized: false,
-      canvasRepairAuthorized: false,
-      canvasBuildAuthorityClaimed: false,
-      routeRepairAuthorized: false,
-      controlsRepairAuthorized: false,
-      runtimeRestartAuthorized: false,
-
-      lastNorthStandardPacket: null,
-      lastNorthRailPacket: null,
-      lastSurfaceTruthPacket: null,
-      lastReceipt: null
-    };
-  }
-
-  function readNorthStandardPacket() {
-    var found = findAuthority(LAB_NORTH_ALIASES);
-    var authority = found.authority;
-    var packet = readAuthorityPacket(authority, { invoke: false });
-
-    var contract =
-      firstField([packet, authority], ["CONTRACT", "contract"], "") || "";
-    var accepted = acceptedContract(contract, ACCEPTED_LAB_NORTH_CONTRACTS);
-
-    var compatibilityBridgeActive =
-      accepted &&
-      contract !== "LAB_RUNTIME_TABLE_MULTI_FUNCTION_ANIMATION_STANDARD_TNT_v1";
-
-    return {
-      sourceAlias: found.path,
-      authorityPresent: found.authorityPresent,
-      contract: contract || "UNKNOWN",
-      contractAccepted: accepted,
-      northStandardAccepted: Boolean(found.authorityPresent && accepted),
-      compatibilityBridgeActive: compatibilityBridgeActive,
-      status:
-        found.authorityPresent && accepted
-          ? "NORTH_STANDARD_ACCEPTED"
-          : "NORTH_STANDARD_MISSING_OR_UNRECOGNIZED",
-      packet: packet
-    };
-  }
-
-  function readCurrentNorth(options) {
-    options = options || {};
-
-    var found = findAuthority(NORTH_RAIL_ALIASES);
-    var authority = found.authority;
-
-    var packet = readAuthorityPacket(authority, {
-      invoke: options.invokeNorthDiagnostic === true,
-      callOptions: {
-        calledBy: "LAB_RUNTIME_TABLE_WEST_CURRENT_AUTHORITY_RECHECK",
-        mutationAuthorized: false,
-        canvasBuildAuthorized: false
-      }
-    });
-
-    var contract = firstField(
-      [packet, authority],
-      ["CONTRACT", "contract", "internalRenewalContract", "INTERNAL_RENEWAL_CONTRACT"],
-      ""
-    );
-
-    var northVerdictAvailableRaw = firstField(
-      [authority, packet],
-      [
-        "NORTH_VERDICT_AVAILABLE",
-        "northVerdictAvailable",
-        "northRailVerdictAvailable"
-      ],
-      ""
-    );
-
-    var northVerdictStatus = firstField(
-      [packet, authority],
-      ["NORTH_VERDICT_STATUS", "northVerdictStatus", "verdictStatus"],
-      ""
-    );
-
-    var northVerdictClass = firstField(
-      [packet, authority],
-      ["NORTH_VERDICT_CLASS", "northVerdictClass", "verdictClass"],
-      ""
-    );
-
-    var directAuthorityAvailable =
-      boolValue(firstField([authority], ["NORTH_VERDICT_AVAILABLE"], "")) ===
-      true;
-
-    var packetVerdictAvailable =
-      boolValue(northVerdictAvailableRaw) === true ||
-      clean(northVerdictStatus).indexOf("NORTH_DIAGNOSTIC_TRACK_PACKET_RETURNED") >=
-        0 ||
-      clean(northVerdictClass).indexOf("NORTH_RAIL_RESTORED") >= 0;
-
-    var northVerdictAvailable = Boolean(
-      found.authorityPresent &&
-        (directAuthorityAvailable || packetVerdictAvailable)
-    );
-
-    var accepted = acceptedContract(contract, ACCEPTED_NORTH_RAIL_CONTRACTS);
-
-    var publishedAt = firstField(
-      [authority, packet],
-      ["publishedAt", "PUBLISHED_AT", "lastReceiptAt", "GENERATED_AT", "timestamp"],
-      ""
-    );
-
-    var trustState = found.authorityPresent
-      ? TRUST_STATE.CURRENT
-      : TRUST_STATE.NOT_RUN;
-
-    var status;
-    if (!found.authorityPresent) {
-      status = "NORTH_DIAGNOSTIC_RAIL_AUTHORITY_NOT_FOUND";
-    } else if (!accepted && contract) {
-      status = "NORTH_DIAGNOSTIC_RAIL_CONTRACT_NOT_RECOGNIZED";
-    } else if (northVerdictAvailable) {
-      status = "NORTH_CURRENT_VERDICT_AVAILABLE";
-    } else {
-      status = "NORTH_CURRENT_VERDICT_UNAVAILABLE";
-    }
-
-    return {
-      sourceAlias: found.path,
-      authorityPresent: found.authorityPresent,
-      contract: contract || "UNKNOWN",
-      contractAccepted: accepted,
-      packet: packet,
-      publishedAt: publishedAt,
-      northVerdictAvailable: northVerdictAvailable,
-      northVerdictStatus: northVerdictStatus || "UNKNOWN",
-      northVerdictClass: northVerdictClass || "UNKNOWN",
-      status: status,
-      trustState: trustState,
-      directAuthorityOutrankedStoredState: northVerdictAvailable
-    };
-  }
-
-  function readSurfaceTruthDirect(options) {
-    options = options || {};
-
-    var found = findAuthority(SURFACE_TRUTH_ALIASES);
-    var authority = found.authority;
-
-    var packet = readAuthorityPacket(authority, {
-      invoke: options.invokeSurfaceTruth === true,
-      callOptions: {
-        calledBy: "LAB_RUNTIME_TABLE_WEST_CURRENT_AUTHORITY_RECHECK",
-        mutationAuthorized: false,
-        canvasBuildAuthorized: false
-      }
-    });
-
-    var contract = firstField(
-      [packet, authority],
-      ["CONTRACT", "contract"],
-      ""
-    );
-
-    var status = firstField(
-      [packet, authority],
-      [
-        "CANVAS_SURFACE_TRUTH_STATUS",
-        "SURFACE_TRUTH_STATUS",
-        "surfaceTruthStatus",
-        "status"
-      ],
-      ""
-    );
-
-    var failureClass = firstField(
-      [packet, authority],
-      [
-        "CANVAS_SURFACE_TRUTH_FAILURE_CLASS",
-        "SURFACE_TRUTH_FAILURE_CLASS",
-        "surfaceTruthFailureClass",
-        "failureClass"
-      ],
-      "UNKNOWN"
-    );
-
-    var firstFailedCoordinate = firstField(
-      [packet, authority],
-      [
-        "CANVAS_TRUTH_FIRST_FAILED_COORDINATE",
-        "SURFACE_TRUTH_FIRST_FAILED_COORDINATE",
-        "surfaceTruthFirstFailedCoordinate",
-        "firstFailedCoordinate"
-      ],
-      "UNKNOWN"
-    );
-
-    var accepted = acceptedContract(contract, ACCEPTED_SURFACE_TRUTH_CONTRACTS);
-
-    var statusText = clean(status).toUpperCase();
-    var hasMeasurement =
-      statusText.indexOf("COMPLETE") >= 0 ||
-      statusText.indexOf("PASS") >= 0 ||
-      statusText.indexOf("FAILED") >= 0 ||
-      statusText.indexOf("MEASURED") >= 0;
-
-    var failed =
-      statusText.indexOf("FAILED") >= 0 ||
-      failureClass === "SURFACE_CONTRACT_MEASUREMENT_FAILED";
-
-    var trustState;
-    if (!found.authorityPresent) {
-      trustState = TRUST_STATE.NOT_RUN;
-    } else if (!hasMeasurement) {
-      trustState = TRUST_STATE.PROFILE_ONLY;
-    } else {
-      trustState = TRUST_STATE.CURRENT;
-    }
-
-    if (found.authorityPresent && !status) {
-      status = "PROFILE_PRESENT_MEASUREMENT_NOT_RUN";
-    }
-
-    return {
-      sourceAlias: found.path,
-      authorityPresent: found.authorityPresent,
-      contract: contract || "UNKNOWN",
-      contractAccepted: accepted,
-      packet: packet,
-      status: status || "SURFACE_TRUTH_NOT_RUN",
-      failureClass: failureClass,
-      firstFailedCoordinate: firstFailedCoordinate,
-      hasMeasurement: hasMeasurement,
-      failed: failed,
-      trustState: trustState
-    };
-  }
-
-  function classifyPacketTrust(packet, currentNorth) {
-    if (!packet) return TRUST_STATE.UNKNOWN;
-
-    var source = firstField([packet], ["SOURCE", "source"], "");
-    if (source === "NONE") return TRUST_STATE.NO_SOURCE_CONTEXT;
-
-    var statusText = clean(
-      firstField(
-        [packet],
-        [
-          "PROBE_EAST_RUN_STATUS",
-          "probeEastRunStatus",
-          "SURFACE_TRUTH_STATUS",
-          "CANVAS_SURFACE_TRUTH_STATUS",
-          "status"
-        ],
-        ""
-      )
-    ).toUpperCase();
-
-    if (
-      statusText.indexOf("WAITING_RUN") >= 0 ||
-      statusText.indexOf("NOT_RUN") >= 0 ||
-      statusText.indexOf("PROFILE_PRESENT") >= 0
-    ) {
-      return TRUST_STATE.NOT_RUN;
-    }
-
-    var packetTime = timeMs(
-      firstField([packet], ["GENERATED_AT", "timestamp", "updatedAt"], "")
-    );
-    var northTime = timeMs(currentNorth && currentNorth.publishedAt);
-
-    if (packetTime && northTime && packetTime < northTime) {
-      return TRUST_STATE.STALE_PRE_NORTH;
-    }
-
-    return TRUST_STATE.CURRENT;
-  }
-
-  function selfMeasureWestDuty() {
-    return {
-      DIAGNOSTIC_FILE: FILE,
-      ASSIGNED_ROLE: "WEST_ADMISSIBILITY_DERIVATIVE_RELEASE",
-      ALLOWED_DUTIES: [
-        "READ_LAB_NORTH_STANDARD",
-        "REREAD_CURRENT_NORTH_AUTHORITY",
-        "CONSUME_SURFACE_TRUTH_AS_EVIDENCE",
-        "QUARANTINE_STALE_PRE_NORTH_PACKETS",
-        "RETURN_WEST_ADMISSIBILITY_PACKET",
-        "PUBLISH_CANVAS_RELEASE_PACKET_ONLY_WHEN_ADMISSIBLE"
-      ],
-      FORBIDDEN_DUTIES: [
-        "PRODUCTION_MUTATION",
-        "CANVAS_DRAWING",
-        "CANVAS_REPAIR_AUTHORIZATION",
-        "ROUTE_REPAIR_AUTHORIZATION",
-        "CONTROLS_REPAIR_AUTHORIZATION",
-        "RUNTIME_RESTART_AUTHORIZATION",
-        "NORTH_GRAMMAR_REPLACEMENT",
-        "NORTH_RAIL_REPLACEMENT",
-        "SURFACE_TRUTH_PROBE_REPLACEMENT",
-        "FINAL_VISUAL_PASS_CLAIM"
-      ],
-      PRIMARY_DUTY_COUNT: 2,
-      SECONDARY_DUTY_COUNT: 4,
-      MUTATION_AUTHORITY_COUNT: 0,
-      WRITE_AUTHORITY_COUNT: 0,
-      DUTY_LOAD_STATUS: "DUTY_LOAD_SAFE",
-      DIAGNOSTIC_MALPRACTICE_DETECTED: false,
-      DIAGNOSTIC_CONTAINER_COLLAPSE_DETECTED: false,
-      SELF_MEASUREMENT_STATUS: "DIAGNOSTIC_SELF_DUTY_CLEAN"
-    };
-  }
-
-  function resolveFailure(labNorth, currentNorth, surfaceTruth, selfMeasurement) {
-    if (
-      selfMeasurement &&
-      selfMeasurement.DIAGNOSTIC_MALPRACTICE_DETECTED === true
-    ) {
-      return {
-        gapClass: WEST_GAP_CLASS.DIAGNOSTIC_MALPRACTICE_GUARD_HELD,
-        coordinate: "WEST_SELF_MEASUREMENT",
-        owner: "WEST",
-        file: FILE,
-        reason: "West self-measurement detected diagnostic duty malpractice.",
-        nextAction: "RENEW_WEST_DUTY_BOUNDARY_BEFORE_CANVAS_RELEASE"
-      };
-    }
-
-    if (!labNorth || !labNorth.northStandardAccepted) {
-      return {
-        gapClass: WEST_GAP_CLASS.NORTH_STANDARD_MISSING,
-        coordinate: "LAB_NORTH_STANDARD",
-        owner: "LAB_NORTH",
-        file: LAB_NORTH_FILE,
-        reason: "LabNorth standard is missing or not recognized.",
-        nextAction: "RESTORE_LAB_NORTH_STANDARD_BEFORE_WEST_ADMISSIBILITY"
-      };
-    }
-
-    if (!currentNorth || !currentNorth.authorityPresent) {
-      return {
-        gapClass: WEST_GAP_CLASS.NORTH_DIAGNOSTIC_RAIL_MISSING,
-        coordinate: "NORTH_DIAGNOSTIC_RAIL",
-        owner: "JUDGE_NORTH",
-        file: NORTH_RAIL_FILE,
-        reason: "Current North authority could not be found through any accepted alias.",
-        nextAction: "RESTORE_NORTH_DIAGNOSTIC_RAIL_ALIAS_PUBLICATION"
-      };
-    }
-
-    if (!currentNorth.northVerdictAvailable) {
-      return {
-        gapClass: WEST_GAP_CLASS.NORTH_RAIL_VERDICT_UNAVAILABLE,
-        coordinate: "NORTH_DIAGNOSTIC_RAIL",
-        owner: "JUDGE_NORTH",
-        file: NORTH_RAIL_FILE,
-        reason:
-          "Current North authority is present but did not expose a readable North verdict.",
-        nextAction: "RUN_OR_RENEW_NORTH_DIAGNOSTIC_RAIL_RECEIPT_RETURN"
-      };
-    }
-
-    if (!surfaceTruth || !surfaceTruth.authorityPresent) {
-      return {
-        gapClass: WEST_GAP_CLASS.SURFACE_TRUTH_UNMEASURED,
-        coordinate: "SURFACE_TRUTH_PROBE",
-        owner: "SURFACE_TRUTH_PROBE",
-        file: SURFACE_TRUTH_FILE,
-        reason: "Surface Truth authority is missing from the current diagnostic field.",
-        nextAction: "RESTORE_SURFACE_TRUTH_PROBE_BEFORE_CANVAS_BUILD"
-      };
-    }
-
-    if (surfaceTruth.failed) {
-      return {
-        gapClass: WEST_GAP_CLASS.SURFACE_TRUTH_FAILURE,
-        coordinate: "SURFACE_TRUTH_ALIGNMENT",
-        owner: "SURFACE_TRUTH_PROBE",
-        file: SURFACE_TRUTH_FILE,
-        reason:
-          "Surface Truth measurement failed before Canvas build could be admitted.",
-        nextAction: "ALIGN_SURFACE_TRUTH_CONTRACT_DEFINITION_BEFORE_CANVAS_BUILD"
-      };
-    }
-
-    if (!surfaceTruth.hasMeasurement) {
-      return {
-        gapClass: WEST_GAP_CLASS.SURFACE_TRUTH_UNMEASURED,
-        coordinate: "SURFACE_TRUTH_ALIGNMENT",
-        owner: "SURFACE_TRUTH_PROBE",
-        file: SURFACE_TRUTH_FILE,
-        reason:
-          "Surface Truth v3 is present, but only profile evidence is available. Measurement has not run.",
-        nextAction: "RUN_SURFACE_TRUTH_MEASUREMENT_BEFORE_CANVAS_BUILD"
-      };
-    }
-
     return null;
   }
 
-  function applyHold(failure) {
-    state.cycleClosed = false;
-    state.outerCycleClosed = false;
-    state.cycleClosureStatus =
-      "CYCLE_OPEN_HELD_BY_" + clean(failure.gapClass);
-    state.westDecision = WEST_DECISION.HOLD;
-    state.westGapClass = failure.gapClass;
-    state.westForwardAllowed = false;
-    state.canvasReleaseAuthorized = false;
-    state.canvasReleasePacketReady = false;
-    state.releaseToCanvas = false;
-    state.releasePacket = null;
-    state.constructionReadinessStatus =
-      "CONSTRUCTION_HELD_" + clean(failure.gapClass);
-    state.firstOpenDutyCoordinate = failure.coordinate;
-    state.firstOpenDutyClass = failure.gapClass;
-    state.firstOpenDutyReason = failure.reason;
-    state.firstOpenDutyFile = failure.file;
-    state.firstOpenDutyOwner = failure.owner;
-    state.recommendedNextFile = failure.file;
-    state.recommendedNextAction = failure.nextAction;
+  function readReceipt(authority) {
+    if (!authority || !isObject(authority)) return {};
+
+    try {
+      if (isFunction(authority.getReceiptLight)) {
+        const receipt = authority.getReceiptLight();
+        if (isObject(receipt)) return receipt;
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt)) return receipt;
+      }
+    } catch (error) {
+      return { error: error && error.message ? error.message : String(error) };
+    }
+
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (authority.contract || authority.receipt || authority.version) return authority;
+
+    return {};
   }
 
-  function composeReleasePacket(context) {
+  function recordLocal(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "LOCAL_EVENT"),
+      detail: clonePlain(detail)
+    };
+
+    state.localEvents.push(item);
+    trim(state.localEvents);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
+  }
+
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "RUNTIME_TABLE_WEST_F5_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trim(state.errors);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
+  }
+
+  function detectForbiddenClaim(packet = {}) {
+    const text = (() => {
+      try {
+        return JSON.stringify(packet || {});
+      } catch (_error) {
+        return String(packet || "");
+      }
+    })();
+
+    return Boolean(
+      safeBool(packet.generatedImage, false) ||
+      safeBool(packet.graphicBox, false) ||
+      safeBool(packet.webGL, false) ||
+      safeBool(packet.visualPassClaimed, false) ||
+      safeBool(packet.publicSuperiorityClaim, false) ||
+      safeBool(packet.publicComparisonClaimAllowed, false) ||
+      text.includes('"generatedImage":true') ||
+      text.includes('"graphicBox":true') ||
+      text.includes('"webGL":true') ||
+      text.includes('"visualPassClaimed":true') ||
+      text.includes('"publicSuperiorityClaim":true') ||
+      text.includes('"publicComparisonClaimAllowed":true') ||
+      text.includes("visualPassClaimed=true")
+    );
+  }
+
+  function readEastRuntimeAuthority() {
+    return firstGlobal([
+      "LAB_RUNTIME_TABLE_EAST",
+      "LAB_RUNTIME_TABLE_EAST_F3",
+      "RUNTIME_TABLE_EAST",
+      "EAST_INTAKE_VALVE",
+      "EAST_INTAKE_CHANNEL",
+      "EAST_SUPREME_JUDGE",
+      "EAST_ADMISSION_BRANCH",
+      "DEXTER_LAB.runtimeTableEast",
+      "DEXTER_LAB.runtimeTableEastF3",
+      "DEXTER_LAB.cardinalRuntimeTableEast",
+      "DEXTER_LAB.eastIntakeValve",
+      "HEARTH.runtimeTableEast",
+      "HEARTH.runtimeTableEastF3",
+      "HEARTH.eastIntakeValve"
+    ]);
+  }
+
+  function readEastF3IntakePacket() {
+    const authority = readEastRuntimeAuthority();
+    if (!authority) return {};
+
+    try {
+      if (isFunction(authority.composeF3IntakePacket)) {
+        const packet = authority.composeF3IntakePacket();
+        if (isObject(packet)) return packet;
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt) && isObject(receipt.f3IntakePacket)) return receipt.f3IntakePacket;
+      }
+
+      return readReceipt(authority);
+    } catch (error) {
+      recordError("EAST_F3_INTAKE_PACKET_READ_FAILED", error);
+      return {};
+    }
+  }
+
+  function hasMeaningfulEastF3Packet(packet = {}) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.contract ||
+      packet.receipt ||
+      packet.packetType === "EAST_F3_INTAKE_PACKET" ||
+      safeBool(packet.eastRuntimeTableActive, false) ||
+      safeBool(packet.eastIntakeValveActive, false) ||
+      safeBool(packet.f3IntakePacketReady, false) ||
+      safeBool(packet.intakeGraphBuilt, false) ||
+      Array.isArray(packet.intakeRecords)
+    );
+  }
+
+  function validateEastF3IntakePacket(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+    const meaningful = hasMeaningfulEastF3Packet(input);
+
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || input.activeStage || "");
+    const futureFibonacciGate = safeString(input.futureFibonacciGate || "");
+
+    const correctStage = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.EAST_INTAKE ||
+      activeFibonacci === "F3"
+    );
+
+    const correctFuture = Boolean(
+      !futureFibonacciGate ||
+      futureFibonacciGate === FIBONACCI.WEST_PRESSURE ||
+      futureFibonacciGate === "F5"
+    );
+
+    const intakeRecordsAcceptable = Boolean(
+      Array.isArray(input.intakeRecords) ||
+      Array.isArray(input.intakeQueue) ||
+      isObject(input.intakeGraph)
+    );
+
+    const accepted = Boolean(
+      noForbiddenClaim &&
+      meaningful &&
+      correctStage &&
+      correctFuture &&
+      intakeRecordsAcceptable
+    );
+
+    let reason = "EAST_F3_INTAKE_PACKET_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_EAST_F3_PACKET";
+    else if (!meaningful) reason = "EAST_F3_PACKET_NOT_MEANINGFUL";
+    else if (!correctStage) reason = "EAST_F3_PACKET_WRONG_ACTIVE_FIBONACCI";
+    else if (!correctFuture) reason = "EAST_F3_PACKET_WRONG_FUTURE_GATE";
+    else if (!intakeRecordsAcceptable) reason = "EAST_F3_PACKET_MISSING_INTAKE_RECORD_SOURCE";
+
     return {
-      PACKET_NAME:
-        "LAB_RUNTIME_TABLE_WEST_CANVAS_RETURN_RECEIPT_RELEASE_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      RECEIPT: PUBLIC_RECEIPT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-      COMPAT_INTERNAL_RENEWAL_CONTRACT: COMPAT_INTERNAL_RENEWAL_CONTRACT,
-      VERSION: VERSION,
-      FILE: FILE,
-      ROUTE: ROUTE,
-      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-      GENERATED_AT: nowIso(),
-      WEST_DECISION: WEST_DECISION.RELEASE_TO_CANVAS_RETURN_RECEIPT,
-      WEST_GAP_CLASS: WEST_GAP_CLASS.NONE,
-      NORTH_CURRENT_AUTHORITY_RECHECK_STATUS: "PASS",
-      NORTH_VERDICT_AVAILABLE: true,
-      SURFACE_TRUTH_STATUS: context.surfaceTruth.status,
-      SURFACE_TRUTH_FAILURE_CLASS: context.surfaceTruth.failureClass,
-      CANVAS_RELEASE_AUTHORIZED: true,
-      CANVAS_BUILD_AUTHORIZED: false,
-      CANVAS_REPAIR_AUTHORIZED: false,
-      PRODUCTION_MUTATION_AUTHORIZED: false,
-      F13_CLAIMED: false,
-      F21_CLAIMED: false,
-      READY_TEXT_CLAIMED: false,
-      VISUAL_PASS_CLAIMED: false,
-      GENERATED_IMAGE: false,
-      GRAPHIC_BOX: false,
-      WEBGL: false,
-      NEXT_PROCESS: "RETURN_CANVAS_RECEIPT_FOR_CANVAS_BOUNDARY_REVIEW",
-      NEXT_FILE: "/assets/hearth/hearth.canvas.js"
+      accepted,
+      reason,
+      noForbiddenClaim,
+      meaningful,
+      correctStage,
+      correctFuture,
+      intakeRecordsAcceptable,
+      input: clonePlain(input)
     };
   }
 
-  function applyRelease(context) {
-    state.cycleClosed = true;
-    state.outerCycleClosed = true;
-    state.cycleClosureStatus = "CYCLE_CLOSED_BY_CURRENT_AUTHORITY_RECHECK";
-    state.westDecision = WEST_DECISION.RELEASE_TO_CANVAS_RETURN_RECEIPT;
-    state.westGapClass = WEST_GAP_CLASS.NONE;
-    state.westForwardAllowed = true;
-    state.canvasReleaseAuthorized = true;
-    state.canvasReleasePacketReady = true;
-    state.releaseToCanvas = true;
-    state.releasePacket = composeReleasePacket(context);
-    state.constructionReadinessStatus =
-      "CONSTRUCTION_READY_FOR_CANVAS_RETURN_RECEIPT_RELEASE";
-    state.firstOpenDutyCoordinate = "NONE";
-    state.firstOpenDutyClass = "NONE";
-    state.firstOpenDutyReason = "No West blocker detected.";
-    state.firstOpenDutyFile = "NONE";
-    state.firstOpenDutyOwner = "NONE";
-    state.recommendedNextFile = "/assets/hearth/hearth.canvas.js";
-    state.recommendedNextAction =
-      "REVIEW_CANVAS_BOUNDARY_WITH_WEST_RELEASE_PACKET";
+  function acceptEastF3IntakePacket(packet = {}) {
+    const validation = validateEastF3IntakePacket(packet);
+
+    if (validation.accepted) {
+      state.eastRuntimeObserved = true;
+      state.eastRuntimeAccepted = true;
+      state.eastRuntimeContract = safeString(packet.contract, "");
+      state.eastRuntimeReceipt = safeString(packet.receipt, "");
+      state.eastF3IntakeObserved = true;
+      state.eastF3IntakeAccepted = true;
+
+      buildPressureGraph(packet);
+    }
+
+    recordLocal("EAST_F3_INTAKE_PACKET_EVALUATED_BY_WEST_F5", {
+      accepted: validation.accepted,
+      reason: validation.reason,
+      intakeRecordsPresent: validation.intakeRecordsAcceptable
+    });
+
+    computeFibonacciSynchronizationMetric();
+    publishGlobals();
+
+    return {
+      accepted: validation.accepted,
+      westF5ReceivedEast: true,
+      reason: validation.reason,
+      pressureGraphBuilt: state.pressureGraphBuilt,
+      pressureGraphReady: state.pressureGraphReady,
+      f8SouthHandoffAuthorized: state.f8SouthHandoffAuthorized,
+      recommendedNextFile: validation.accepted ? SOUTH_FILE : EAST_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
   }
 
-  function runNorthStandardDerivativeReleaseAudit(options) {
-    options = options || {};
+  function receiveEastF3IntakePacket(packet = {}) {
+    return acceptEastF3IntakePacket(packet);
+  }
 
-    state.timestamp = nowIso();
-    state.lastRunAt = state.timestamp;
-    state.runCount += 1;
-    state.trustState = TRUST_STATE.CURRENT;
-    state.adjudicationRunState = "EXPLICIT_RUN_COMPLETE";
-    state.autoFinalizedOnLoad = false;
+  function submitEastF3IntakePacket(packet = {}) {
+    return acceptEastF3IntakePacket(packet);
+  }
 
-    var selfMeasurement = selfMeasureWestDuty();
-    var labNorth = readNorthStandardPacket();
+  function acceptWestIntake(packet = {}) {
+    return acceptEastF3IntakePacket(packet);
+  }
 
-    var currentNorth = readCurrentNorth({
-      invokeNorthDiagnostic: options.invokeNorthDiagnostic !== false
+  function receiveWestIntake(packet = {}) {
+    return acceptWestIntake(packet);
+  }
+
+  function acceptEastPrimary(packet = {}) {
+    return acceptEastF3IntakePacket(packet);
+  }
+
+  function receiveEastPrimary(packet = {}) {
+    return acceptEastPrimary(packet);
+  }
+
+  function acceptWestPrimary(packet = {}) {
+    return acceptPressurePacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "WEST_PRIMARY_PRESSURE_PACKET"),
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.WEST_PRESSURE)
     });
+  }
 
-    var surfaceTruth = readSurfaceTruthDirect({
-      invokeSurfaceTruth: options.invokeSurfaceTruth === true
-    });
+  function receiveWestPrimary(packet = {}) {
+    return acceptWestPrimary(packet);
+  }
 
-    var staleTrust = classifyPacketTrust(state.lastReceipt, currentNorth);
-    state.stalePreNorthPacketQuarantined =
-      staleTrust === TRUST_STATE.STALE_PRE_NORTH;
-    state.noSourcePacketQuarantined =
-      staleTrust === TRUST_STATE.NO_SOURCE_CONTEXT;
+  function classifyPressurePacket(packet = {}) {
+    const input = isObject(packet) ? packet : { value: packet };
+    const text = (() => {
+      try {
+        return JSON.stringify(input || {});
+      } catch (_error) {
+        return safeString(input, "");
+      }
+    })();
 
-    state.northStandardStatus = labNorth.status;
-    state.northCompatibilityBridgeStatus = labNorth.compatibilityBridgeActive
-      ? "COMPATIBILITY_BRIDGE_ACTIVE"
-      : "DIRECT_STANDARD_ACCEPTED";
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || input.activeStage || "");
+    const packetType = safeString(input.packetType || input.type || input.event || "");
 
-    state.northRailStatus = currentNorth.status;
-    state.northRailVerdictAvailable = currentNorth.northVerdictAvailable;
-    state.northRailAuthorityPath = currentNorth.sourceAlias;
-    state.northRailTrustState = currentNorth.trustState;
+    let pressureClass = PRESSURE_CLASS.GENERIC_PRESSURE;
 
-    state.surfaceTruthStatus = surfaceTruth.status;
-    state.surfaceTruthFailureClass = surfaceTruth.failureClass;
-    state.surfaceTruthFirstFailedCoordinate =
-      surfaceTruth.firstFailedCoordinate;
-    state.surfaceTruthTrustState = surfaceTruth.trustState;
+    if (
+      activeFibonacci === FIBONACCI.EAST_INTAKE ||
+      packetType.includes("EAST_F3") ||
+      safeBool(input.eastRuntimeTableActive, false) ||
+      safeBool(input.eastIntakeValveActive, false)
+    ) {
+      pressureClass = PRESSURE_CLASS.EAST_INTAKE_PRESSURE;
+    } else if (
+      /DIAGNOSTIC|RECEIPT|EVIDENCE|PROBE|GAUGE/.test(text)
+    ) {
+      pressureClass = PRESSURE_CLASS.DIAGNOSTIC_PRESSURE;
+    } else if (
+      /F34|F55|F89|F144|F233|PRODUCT_ENGINE|UE5_EXPRESSION|REGISTRY|MARKET/.test(text)
+    ) {
+      pressureClass = PRESSURE_CLASS.SUPPORT_ENGINE_PRESSURE;
+    } else if (
+      /ROUTE|HEARTH|SHOWROOM|GLOBE/.test(text)
+    ) {
+      pressureClass = PRESSURE_CLASS.ROUTE_PRESSURE;
+    } else if (
+      /CANVAS|F13|VISUAL|CHAPEL|FINGER/.test(text)
+    ) {
+      pressureClass = PRESSURE_CLASS.CANVAS_PRESSURE;
+    } else if (
+      /CONSTRAINT|BOUNDARY|ADMISSIBLE|PRESSURE|FILTER|SHELL|BASIN/.test(text)
+    ) {
+      pressureClass = PRESSURE_CLASS.CONSTRAINT_PRESSURE;
+    }
 
-    state.lastNorthStandardPacket = labNorth;
-    state.lastNorthRailPacket = currentNorth;
-    state.lastSurfaceTruthPacket = surfaceTruth;
-
-    var failure = resolveFailure(
-      labNorth,
-      currentNorth,
-      surfaceTruth,
-      selfMeasurement
+    const stateIndex = clamp(
+      input.stateIndex !== undefined ? input.stateIndex : stableStateIndex(input),
+      0,
+      255
     );
 
-    if (failure) {
-      applyHold(failure);
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      pressureClass,
+      packetType,
+      activeFibonacci,
+      stateIndex,
+      stateId: `ST_${stateIndex}`,
+      pressureShellId: `PS_${(stateIndex % 192) + 1}`,
+      filterId: `FL_${(stateIndex % 61) + 1}`,
+      basinAnchorId: `BA_${(stateIndex % 9) + 1}`,
+      forbiddenClaimDetected: detectForbiddenClaim(input),
+      packet: clonePlain(input),
+      classifiedAt: nowIso()
+    };
+  }
+
+  function pressureScoreForClassification(classification = {}, packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    let score = 34;
+
+    if (classification.pressureClass === PRESSURE_CLASS.EAST_INTAKE_PRESSURE) score += 18;
+    if (classification.pressureClass === PRESSURE_CLASS.DIAGNOSTIC_PRESSURE) score += 12;
+    if (classification.pressureClass === PRESSURE_CLASS.SUPPORT_ENGINE_PRESSURE) score += 12;
+    if (classification.pressureClass === PRESSURE_CLASS.ROUTE_PRESSURE) score += 8;
+    if (classification.pressureClass === PRESSURE_CLASS.CANVAS_PRESSURE) score += 8;
+    if (classification.pressureClass === PRESSURE_CLASS.CONSTRAINT_PRESSURE) score += 14;
+
+    if (input.contract) score += 8;
+    if (input.receipt) score += 8;
+    if (input.file || input.sourceFile) score += 6;
+    if (input.route) score += 6;
+    if (Array.isArray(input.intakeRecords) && input.intakeRecords.length) score += 10;
+    if (safeBool(input.f3IntakePacketReady, false)) score += 8;
+
+    return clamp(score, 0, 100);
+  }
+
+  function evaluatePressurePacket(packet = {}) {
+    const classification = classifyPressurePacket(packet);
+    const noForbiddenClaim = !classification.forbiddenClaimDetected;
+
+    const activeFibonacci = safeString(
+      packet.activeFibonacci || packet.fibonacciStage || packet.activeStage || "",
+      ""
+    );
+
+    const stageAllowed = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.EAST_INTAKE ||
+      activeFibonacci === FIBONACCI.WEST_PRESSURE ||
+      activeFibonacci === "F3" ||
+      activeFibonacci === "F5"
+    );
+
+    const valveOpen = Boolean(state.pressureValveOpen && state.westPressureValveActive);
+    const pressureScore = pressureScoreForClassification(classification, packet);
+    const pressureWithinShell = pressureScore >= 55;
+    const basinAnchored = true;
+    const filterPassageAllowed = noForbiddenClaim && pressureScore >= 55;
+
+    const accepted = Boolean(
+      noForbiddenClaim &&
+      stageAllowed &&
+      valveOpen &&
+      pressureWithinShell &&
+      basinAnchored &&
+      filterPassageAllowed
+    );
+
+    let reason = "WEST_F5_PRESSURE_ADMISSIBLE";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_BY_WEST_F5_PRESSURE_VALVE";
+    else if (!stageAllowed) reason = "PRESSURE_STAGE_NOT_ADMISSIBLE_TO_WEST_F5";
+    else if (!valveOpen) reason = "WEST_F5_PRESSURE_VALVE_CLOSED";
+    else if (!pressureWithinShell) reason = "PRESSURE_BELOW_ADMISSIBLE_SHELL";
+    else if (!filterPassageAllowed) reason = "FILTER_PASSAGE_BLOCKED";
+
+    return {
+      accepted,
+      reason,
+      classification,
+      coordinate: clonePlain(MECHANICAL_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::${classification.stateId}`,
+      pressureScore,
+      pressureWithinShell,
+      filterPassageAllowed,
+      basinAnchored,
+      boundaryPass: noForbiddenClaim,
+      compressionState: accepted ? "COMPRESSED_AND_ADMISSIBLE" : "HELD_OR_REJECTED",
+      nextRecommendedCoordinate: accepted ? SOUTH_HANDOFF_COORDINATE.coordinateId : MECHANICAL_COORDINATE.coordinateId,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      evaluatedAt: nowIso()
+    };
+  }
+
+  function normalizePressureRecord(packet = {}, evaluation = null) {
+    const result = evaluation || evaluatePressurePacket(packet);
+    const source = isObject(packet) ? packet : { value: packet };
+
+    const id = makeId(
+      source.id ||
+      source.packetId ||
+      source.receipt ||
+      source.contract ||
+      `${result.classification.pressureClass}-${Date.now()}-${state.pressureRecords.length + state.rejectedRecords.length + 1}`,
+      "west-pressure"
+    );
+
+    return {
+      id,
+      recordId: id,
+      pressureClass: result.classification.pressureClass,
+      packetType: result.classification.packetType,
+      sourceContract: safeString(source.contract || ""),
+      sourceReceipt: safeString(source.receipt || ""),
+      sourceFile: safeString(source.file || source.sourceFile || ""),
+      sourceRoute: safeString(source.route || ""),
+      activeFibonacci: safeString(source.activeFibonacci || source.fibonacciStage || source.activeStage || ""),
+      stateId: result.classification.stateId,
+      stateIndex: result.classification.stateIndex,
+      filterId: result.classification.filterId,
+      pressureShellId: result.classification.pressureShellId,
+      basinAnchorId: result.classification.basinAnchorId,
+      coordinateId: MECHANICAL_COORDINATE.coordinateId,
+      runtimeCondition: result.runtimeCondition,
+      pressureScore: result.pressureScore,
+      pressureWithinShell: result.pressureWithinShell,
+      filterPassageAllowed: result.filterPassageAllowed,
+      basinAnchored: result.basinAnchored,
+      boundaryPass: result.boundaryPass,
+      accepted: result.accepted,
+      reason: result.reason,
+      traceReady: Boolean(source.contract || source.receipt || source.file || source.route || source.sourceFile),
+      deterministic: true,
+      packet: clonePlain(source),
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      receivedAt: nowIso()
+    };
+  }
+
+  function acceptPressurePacket(packet = {}) {
+    const evaluation = evaluatePressurePacket(packet);
+    const record = normalizePressureRecord(packet, evaluation);
+
+    if (evaluation.accepted) {
+      state.pressureRecords.push(record);
+      state.pressureQueue.push(record);
+      state.lastAdmissiblePressure = clonePlain(record);
     } else {
-      applyRelease({
-        labNorth: labNorth,
-        currentNorth: currentNorth,
-        surfaceTruth: surfaceTruth,
-        selfMeasurement: selfMeasurement
+      state.rejectedRecords.push(record);
+      state.lastRejectedPressure = clonePlain(record);
+    }
+
+    trim(state.pressureRecords);
+    trim(state.pressureQueue);
+    trim(state.rejectedRecords);
+
+    rebuildPressureGraph({ silent: true });
+    computeFibonacciSynchronizationMetric();
+
+    recordLocal("WEST_F5_PRESSURE_PACKET_EVALUATED", {
+      accepted: evaluation.accepted,
+      reason: evaluation.reason,
+      pressureClass: record.pressureClass,
+      stateId: record.stateId,
+      pressureScore: record.pressureScore,
+      runtimeCondition: record.runtimeCondition
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: evaluation.accepted,
+      reason: evaluation.reason,
+      record: clonePlain(record),
+      pressureClass: record.pressureClass,
+      runtimeCondition: record.runtimeCondition,
+      f8SouthHandoffAuthorized: state.f8SouthHandoffAuthorized,
+      recommendedNextFile: evaluation.accepted ? SOUTH_FILE : FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function receivePressurePacket(packet = {}) {
+    return acceptPressurePacket(packet);
+  }
+
+  function submitPressurePacket(packet = {}) {
+    return acceptPressurePacket(packet);
+  }
+
+  function buildPressureGraph(packet = {}, options = {}) {
+    const records = [];
+
+    const intakeRecords = Array.isArray(packet.intakeRecords)
+      ? packet.intakeRecords
+      : Array.isArray(packet.intakeQueue)
+        ? packet.intakeQueue
+        : isObject(packet.intakeGraph) && Array.isArray(packet.intakeGraph.records)
+          ? packet.intakeGraph.records
+          : [];
+
+    if (intakeRecords.length) {
+      intakeRecords.forEach((item) => {
+        const evaluation = evaluatePressurePacket({
+          ...clonePlain(item),
+          activeFibonacci: FIBONACCI.WEST_PRESSURE,
+          packetType: safeString(item.packetType || "EAST_INTAKE_PRESSURE_SOURCE")
+        });
+        records.push(normalizePressureRecord(item, evaluation));
+      });
+    } else if (hasMeaningfulEastF3Packet(packet)) {
+      const evaluation = evaluatePressurePacket(packet);
+      records.push(normalizePressureRecord(packet, evaluation));
+    }
+
+    records.forEach((record) => {
+      if (record.accepted) {
+        state.pressureRecords.push(record);
+        state.pressureQueue.push(record);
+        state.lastAdmissiblePressure = clonePlain(record);
+      } else {
+        state.rejectedRecords.push(record);
+        state.lastRejectedPressure = clonePlain(record);
+      }
+    });
+
+    trim(state.pressureRecords);
+    trim(state.pressureQueue);
+    trim(state.rejectedRecords);
+
+    return rebuildPressureGraph(options);
+  }
+
+  function rebuildPressureGraph(options = {}) {
+    const records = state.pressureRecords.slice();
+    const recordsById = {};
+    const byClass = {};
+    const byState = {};
+    const byPressureShell = {};
+    const edges = [];
+
+    records.forEach((record) => {
+      recordsById[record.id] = record;
+
+      byClass[record.pressureClass] = byClass[record.pressureClass] || [];
+      byClass[record.pressureClass].push(record.id);
+
+      byState[record.stateId] = byState[record.stateId] || [];
+      byState[record.stateId].push(record.id);
+
+      byPressureShell[record.pressureShellId] = byPressureShell[record.pressureShellId] || [];
+      byPressureShell[record.pressureShellId].push(record.id);
+
+      edges.push({
+        from: MECHANICAL_COORDINATE.coordinateId,
+        to: record.id,
+        type: "west-compression-admissible-record",
+        deterministic: true
+      });
+
+      if (record.sourceContract) {
+        edges.push({
+          from: record.id,
+          to: makeId(`contract-${record.sourceContract}`),
+          type: "record-to-contract",
+          deterministic: true
+        });
+      }
+
+      if (record.sourceReceipt) {
+        edges.push({
+          from: record.id,
+          to: makeId(`receipt-${record.sourceReceipt}`),
+          type: "record-to-receipt",
+          deterministic: true
+        });
+      }
+
+      if (record.accepted) {
+        edges.push({
+          from: record.id,
+          to: SOUTH_HANDOFF_COORDINATE.coordinateId,
+          type: "pressure-to-south-proof-target",
+          deterministic: true
+        });
+      }
+    });
+
+    state.pressureGraph = {
+      records,
+      recordsById,
+      byClass,
+      byState,
+      byPressureShell,
+      edges,
+      buildId: `west-f5-pressure-graph-${records.length}-${edges.length}`,
+      builtAt: nowIso()
+    };
+
+    state.pressureGraphBuilt = true;
+    state.pressureRecordCount = records.length;
+    state.admissibleRecordCount = records.length;
+    state.rejectedRecordCount = state.rejectedRecords.length;
+    state.diagnosticPressureCount = records.filter((record) => record.pressureClass === PRESSURE_CLASS.DIAGNOSTIC_PRESSURE).length;
+    state.supportEnginePressureCount = records.filter((record) => record.pressureClass === PRESSURE_CLASS.SUPPORT_ENGINE_PRESSURE).length;
+    state.routePressureCount = records.filter((record) => record.pressureClass === PRESSURE_CLASS.ROUTE_PRESSURE).length;
+    state.canvasPressureCount = records.filter((record) => record.pressureClass === PRESSURE_CLASS.CANVAS_PRESSURE).length;
+    state.constraintPressureCount = records.filter((record) => record.pressureClass === PRESSURE_CLASS.CONSTRAINT_PRESSURE).length;
+
+    computePressureQualityMetric();
+
+    state.pressureGraphReady = Boolean(
+      state.pressureRecordCount > 0 &&
+      state.pressureQualityScore >= 62 &&
+      state.boundaryScore >= 80
+    );
+
+    if (state.pressureGraphReady) {
+      state.pressureGraphStatus = state.pressureQualityScore >= 80 ? STATUS.READY : STATUS.DEGRADED;
+      state.f8SouthHandoffAuthorized = true;
+      state.f5PressurePacketReady = true;
+      state.f5ActivationStatus = state.pressureGraphStatus;
+      state.f5ActivationReason =
+        state.pressureGraphStatus === STATUS.READY
+          ? "WEST_F5_PRESSURE_READY_FOR_SOUTH_F8"
+          : "WEST_F5_PRESSURE_DEGRADED_SOUTH_F8_HANDOFF_AVAILABLE";
+      state.firstFailedCoordinate =
+        state.pressureGraphStatus === STATUS.READY
+          ? "NONE_WEST_F5_READY_SOUTH_F8_HANDOFF_AUTHORIZED"
+          : "NONE_WEST_F5_DEGRADED_SOUTH_F8_HANDOFF_AVAILABLE";
+      state.recommendedNextFile = SOUTH_FILE;
+      state.recommendedNextRenewalTarget = SOUTH_FILE;
+    } else {
+      state.pressureGraphStatus = STATUS.HELD;
+      state.f8SouthHandoffAuthorized = false;
+      state.f5PressurePacketReady = false;
+      state.f5ActivationStatus = STATUS.HELD;
+      state.f5ActivationReason = "WAITING_LAWFUL_WEST_F5_PRESSURE";
+      state.firstFailedCoordinate = "WAITING_LAWFUL_WEST_F5_PRESSURE";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+    }
+
+    computeFibonacciSynchronizationMetric();
+
+    if (options.silent !== true) {
+      recordLocal("WEST_F5_PRESSURE_GRAPH_REBUILT", {
+        pressureRecordCount: state.pressureRecordCount,
+        rejectedRecordCount: state.rejectedRecordCount,
+        pressureGraphStatus: state.pressureGraphStatus,
+        pressureQualityScore: state.pressureQualityScore
       });
     }
 
-    state.lastReceipt = composeReceipt("WEST_CURRENT_AUTHORITY_RECHECK_RECEIPT");
-    publishReceiptAliases();
     updateDataset();
 
-    return state.lastReceipt;
+    return clonePlain(state.pressureGraph);
   }
 
-  function noOpLifecycle() {
-    state.timestamp = nowIso();
-    state.adjudicationRunState =
-      "LIFECYCLE_NO_OP_LIGHT_RECEIPT_ONLY_EXPLICIT_RUN_REQUIRED";
-    state.autoFinalizedOnLoad = false;
-    state.explicitRunRequired = true;
-    state.lastReceipt = composeReceipt("WEST_LIGHT_RECEIPT");
-    publishReceiptAliases();
-    updateDataset();
-    return state.lastReceipt;
-  }
+  function computePressureQualityMetric() {
+    const records = state.pressureRecords || [];
+    const count = Math.max(1, records.length);
+    const acceptedRatio = records.length / Math.max(1, records.length + state.rejectedRecords.length);
+    const traceRatio = records.filter((record) => record.traceReady).length / count;
+    const pressureRatio = records.filter((record) => record.pressureWithinShell).length / count;
+    const filterRatio = records.filter((record) => record.filterPassageAllowed).length / count;
+    const boundaryRatio = records.filter((record) => record.boundaryPass).length / count;
 
-  function inspectAuthority() {
+    const classCoverage = [
+      records.some((record) => record.pressureClass === PRESSURE_CLASS.EAST_INTAKE_PRESSURE),
+      records.some((record) => record.pressureClass === PRESSURE_CLASS.DIAGNOSTIC_PRESSURE),
+      records.some((record) => record.pressureClass === PRESSURE_CLASS.SUPPORT_ENGINE_PRESSURE),
+      records.some((record) => record.pressureClass === PRESSURE_CLASS.ROUTE_PRESSURE),
+      records.some((record) => record.pressureClass === PRESSURE_CLASS.CANVAS_PRESSURE),
+      records.some((record) => record.pressureClass === PRESSURE_CLASS.CONSTRAINT_PRESSURE)
+    ].filter(Boolean).length / 6;
+
+    state.pressureCoverageScore = clamp(Math.round(classCoverage * 100), 0, 100);
+    state.pressureTraceScore = clamp(Math.round(traceRatio * 100), 0, 100);
+    state.admissibilityScore = clamp(Math.round(((pressureRatio + filterRatio) / 2) * 100), 0, 100);
+    state.compressionScore = clamp(Math.round(records.reduce((sum, record) => sum + safeNumber(record.pressureScore, 0), 0) / count), 0, 100);
+    state.boundaryScore = clamp(Math.round(boundaryRatio * 100), 0, 100);
+
+    state.pressureCoherenceScore = clamp(
+      Math.round(
+        (acceptedRatio * 28) +
+        (state.admissibilityScore * 0.20) +
+        (state.compressionScore * 0.18) +
+        (state.pressureTraceScore * 0.14) +
+        (state.pressureCoverageScore * 0.12) +
+        (state.boundaryScore * 0.08)
+      ),
+      0,
+      100
+    );
+
+    state.pressureQualityScore = clamp(
+      Math.round(
+        (state.pressureCoherenceScore * 0.34) +
+        (state.admissibilityScore * 0.24) +
+        (state.compressionScore * 0.18) +
+        (state.pressureTraceScore * 0.12) +
+        (state.pressureCoverageScore * 0.12)
+      ),
+      0,
+      100
+    );
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_AUTHORITY_INSPECTION_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      RECEIPT: PUBLIC_RECEIPT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      VERSION: VERSION,
-      FILE: FILE,
-      GENERATED_AT: nowIso(),
-      WEST_ALIAS_COUNT: WEST_ALIAS_PATHS.length,
-      WEST_RECEIPT_ALIAS_COUNT: WEST_RECEIPT_ALIAS_PATHS.length,
-      CURRENT_AUTHORITY_RECHECK_ACTIVE: true,
-      AUTO_FINALIZE_ON_LOAD: false,
-      EXPLICIT_RUN_REQUIRED: true,
-      PUBLIC_CONTRACT_PRESERVED: true,
-      V5_3_COMPATIBILITY_PRESERVED: true,
-      NO_PRODUCTION_MUTATION: true,
-      NO_CANVAS_DRAWING: true,
-      NO_CANVAS_REPAIR: true,
-      NO_RUNTIME_RESTART: true
+      pressureQualityScore: state.pressureQualityScore,
+      pressureCoverageScore: state.pressureCoverageScore,
+      pressureTraceScore: state.pressureTraceScore,
+      pressureCoherenceScore: state.pressureCoherenceScore,
+      admissibilityScore: state.admissibilityScore,
+      compressionScore: state.compressionScore,
+      boundaryScore: state.boundaryScore,
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false
     };
   }
 
-  function inspectCoreNodes() {
+  function computeFibonacciSynchronizationMetric() {
+    const checks = [
+      state.newsProtocolAligned,
+      state.oneActiveGearAtATime,
+      state.activeFibonacci === FIBONACCI.WEST_PRESSURE,
+      state.activeFibonacciRank === 5,
+      state.activeNewsGate === NEWS_GATES.WEST,
+      state.sourceFibonacciGate === FIBONACCI.EAST_INTAKE,
+      state.futureFibonacciGate === FIBONACCI.SOUTH_PROOF,
+      state.westRuntimeTableActive,
+      state.westSupremeJudgeActive,
+      state.westPressureValveActive,
+      state.westCompressionActive,
+      state.pressureValveOpen,
+      state.engineMechanicsPrimary,
+      state.mathPrimary,
+      state.mechanicalCoordinate.coordinateId === "RT3D-X06_Y19_Z5",
+      state.pressureGraphBuilt || state.eastRuntimeObserved,
+      !state.publicSuperiorityClaim,
+      !state.publicComparisonClaimAllowed,
+      !state.generatedImage,
+      !state.graphicBox,
+      !state.webGL,
+      !state.visualPassClaimed
+    ];
+
+    const passed = checks.filter(Boolean).length;
+    state.fibonacciSynchronizationScore = Math.round((passed / checks.length) * 100);
+    state.updatedAt = nowIso();
+
+    computePressureQualityMetric();
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_CORE_NODE_INSPECTION_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      GENERATED_AT: nowIso(),
-      LAB_NORTH: readNorthStandardPacket(),
-      NORTH_RAIL: readCurrentNorth({ invokeNorthDiagnostic: false }),
-      SURFACE_TRUTH: readSurfaceTruthDirect({ invokeSurfaceTruth: false })
+      score: state.fibonacciSynchronizationScore,
+      passed,
+      total: checks.length,
+      activeFibonacci: FIBONACCI.WEST_PRESSURE,
+      activeFibonacciRank: 5,
+      activeNewsGate: NEWS_GATES.WEST,
+      sourceFibonacciGate: FIBONACCI.EAST_INTAKE,
+      futureFibonacciGate: FIBONACCI.SOUTH_PROOF,
+      publicSuperiorityClaim: false
     };
   }
 
-  function inspectJudgeNodes() {
+  function evaluateNewsAlignment() {
+    const metric = computeFibonacciSynchronizationMetric();
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_JUDGE_NODE_INSPECTION_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      GENERATED_AT: nowIso(),
-      JUDGE_NORTH: readCurrentNorth({ invokeNorthDiagnostic: false }),
-      SURFACE_TRUTH_PROBE: readSurfaceTruthDirect({ invokeSurfaceTruth: false }),
-      WEST_SELF: selfMeasureWestDuty()
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      newsAlignmentContract: "LAB_RUNTIME_TABLE_WEST_F5_NEWS_ALIGNMENT_PROTOCOL_v1",
+      newsAlignmentReceipt: "LAB_RUNTIME_TABLE_WEST_F5_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v1",
+      sequence: [
+        {
+          gate: NEWS_GATES.EAST,
+          fibonacci: FIBONACCI.EAST_INTAKE,
+          file: EAST_FILE,
+          ready: state.eastRuntimeObserved || state.eastF3IntakeObserved
+        },
+        {
+          gate: NEWS_GATES.WEST,
+          fibonacci: FIBONACCI.WEST_PRESSURE,
+          file: FILE,
+          ready: state.pressureGraphReady || state.f5PressurePacketReady
+        },
+        {
+          gate: NEWS_GATES.SOUTH,
+          fibonacci: FIBONACCI.SOUTH_PROOF,
+          file: SOUTH_FILE,
+          ready: state.f8SouthHandoffAuthorized
+        }
+      ],
+      fibonacciSynchronizationScore: metric.score,
+      f5Status: state.f5ActivationStatus,
+      pressureGraphStatus: state.pressureGraphStatus,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
     };
   }
 
-  function inspectRelationships() {
+  function setPressureValveOpen(open, detail = {}) {
+    state.pressureValveOpen = safeBool(open, true);
+    state.pressureValveStatus = state.pressureValveOpen ? STATUS.ACTIVE : STATUS.HELD;
+
+    recordLocal("WEST_F5_PRESSURE_VALVE_STATE_CHANGED", {
+      pressureValveOpen: state.pressureValveOpen,
+      detail: clonePlain(detail)
+    });
+
+    computeFibonacciSynchronizationMetric();
+    publishGlobals();
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_RELATIONSHIP_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      GENERATED_AT: nowIso(),
-      RELATIONSHIP_1:
-        "LAB_NORTH_STANDARD -> NORTH_DIAGNOSTIC_RAIL -> WEST_ADMISSIBILITY",
-      RELATIONSHIP_2:
-        "SURFACE_TRUTH_PROBE -> WEST_ADMISSIBILITY -> CANVAS_BOUNDARY_REVIEW",
-      RELATIONSHIP_3:
-        "CURRENT_AUTHORITY_RECHECK_OUTRANKS_STALE_STORED_STATE",
-      RELATIONSHIP_4:
-        "STALE_PRE_NORTH_OR_NO_SOURCE_PACKETS_ARE_QUARANTINED",
-      RELATIONSHIP_5:
-        "WEST_DOES_NOT_MUTATE_PRODUCTION_OR_REPAIR_CANVAS"
+      pressureValveOpen: state.pressureValveOpen,
+      pressureValveStatus: state.pressureValveStatus,
+      changedAt: nowIso()
     };
   }
 
-  function getHierarchyRegistry() {
+  function openPressureValve(detail = {}) {
+    return setPressureValveOpen(true, detail);
+  }
+
+  function closePressureValve(detail = {}) {
+    return setPressureValveOpen(false, detail);
+  }
+
+  function composeF5PressurePacket(extra = {}) {
+    const metric = computeFibonacciSynchronizationMetric();
+    const readyForF8 = Boolean(state.f8SouthHandoffAuthorized || state.pressureGraphStatus === STATUS.DEGRADED);
+
     return {
-      LAB_NORTH_FILE: LAB_NORTH_FILE,
-      LAB_WEST_FILE: LAB_WEST_FILE,
-      NORTH_RAIL_FILE: NORTH_RAIL_FILE,
-      SURFACE_TRUTH_FILE: SURFACE_TRUTH_FILE,
-      EAST_PROBE_FILE: EAST_PROBE_FILE,
-      SOUTH_RAIL_FILE: SOUTH_RAIL_FILE,
-      ACTIVE_STAGE_ID: ACTIVE_STAGE_ID,
-      ACTIVE_CARDINAL: ACTIVE_CARDINAL,
-      ACTIVE_FIBONACCI: ACTIVE_FIBONACCI,
-      ACTIVE_NEWS_GATE: ACTIVE_NEWS_GATE,
-      ACTIVE_CYCLE_NUMBER: ACTIVE_CYCLE_NUMBER,
-      ACTIVE_CYCLE_ROUTE: ACTIVE_CYCLE_ROUTE
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packetType: "WEST_F5_PRESSURE_ADMISSIBILITY_PACKET",
+      sourceFile: FILE,
+      targetFile: SOUTH_FILE,
+      destinationFile: SOUTH_FILE,
+
+      activeFibonacci: FIBONACCI.WEST_PRESSURE,
+      activeFibonacciRank: 5,
+      activeNewsGate: NEWS_GATES.WEST,
+      sourceFibonacciGate: FIBONACCI.EAST_INTAKE,
+      futureFibonacciGate: FIBONACCI.SOUTH_PROOF,
+      futureFibonacciRank: 8,
+
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      southHandoffCoordinate: clonePlain(SOUTH_HANDOFF_COORDINATE),
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+
+      westRuntimeTableActive: true,
+      westRuntimeTableF5Only: true,
+      westSupremeJudgeActive: true,
+      westPressureValveActive: true,
+      westCompressionActive: true,
+      pressureValveOpen: state.pressureValveOpen,
+      pressureValveStatus: state.pressureValveStatus,
+
+      eastRuntimeObserved: state.eastRuntimeObserved,
+      eastRuntimeAccepted: state.eastRuntimeAccepted,
+      eastRuntimeContract: state.eastRuntimeContract,
+      eastRuntimeReceipt: state.eastRuntimeReceipt,
+      eastF3IntakeObserved: state.eastF3IntakeObserved,
+      eastF3IntakeAccepted: state.eastF3IntakeAccepted,
+
+      pressureGraphBuilt: state.pressureGraphBuilt,
+      pressureGraphReady: state.pressureGraphReady,
+      pressureGraphStatus: state.pressureGraphStatus,
+      pressureRecordCount: state.pressureRecordCount,
+      admissibleRecordCount: state.admissibleRecordCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticPressureCount: state.diagnosticPressureCount,
+      supportEnginePressureCount: state.supportEnginePressureCount,
+      routePressureCount: state.routePressureCount,
+      canvasPressureCount: state.canvasPressureCount,
+      constraintPressureCount: state.constraintPressureCount,
+
+      pressureQualityScore: state.pressureQualityScore,
+      pressureCoverageScore: state.pressureCoverageScore,
+      pressureTraceScore: state.pressureTraceScore,
+      pressureCoherenceScore: state.pressureCoherenceScore,
+      admissibilityScore: state.admissibilityScore,
+      compressionScore: state.compressionScore,
+      boundaryScore: state.boundaryScore,
+
+      pressureRecords: clonePlain(state.pressureRecords),
+      pressureQueue: clonePlain(state.pressureQueue),
+      rejectedRecords: clonePlain(state.rejectedRecords),
+      pressureGraph: clonePlain(state.pressureGraph),
+
+      f8SouthHandoffAuthorized: readyForF8,
+      f5PressurePacketReady: readyForF8,
+      f5ActivationStatus: state.f5ActivationStatus,
+      f5ActivationReason: state.f5ActivationReason,
+
+      newsProtocolAligned: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: metric.score,
+      oneActiveGearAtATime: true,
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      detail: clonePlain(extra),
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      composedAt: nowIso()
     };
   }
 
-  function getHierarchySurface() {
+  function composeWestReceipt() {
+    return getReceipt();
+  }
+
+  function readSouthRuntimeAuthority() {
+    return firstGlobal([
+      "LAB_RUNTIME_TABLE_SOUTH",
+      "LAB_RUNTIME_TABLE_SOUTH_F8",
+      "RUNTIME_TABLE_SOUTH",
+      "SOUTH_PROOF_RETURN",
+      "SOUTH_OUTPUT_EXHAUST",
+      "SOUTH_SUPREME_JUDGE",
+      "DEXTER_LAB.runtimeTableSouth",
+      "DEXTER_LAB.cardinalRuntimeTableSouth",
+      "DEXTER_LAB.southProofReturn",
+      "HEARTH.runtimeTableSouth",
+      "HEARTH.southProofReturn"
+    ]);
+  }
+
+  function submitF5PressureToSouth(extra = {}) {
+    const south = readSouthRuntimeAuthority();
+
+    if (!south) {
+      return {
+        submitted: false,
+        reason: "SOUTH_RUNTIME_TABLE_UNAVAILABLE",
+        recommendedNextFile: SOUTH_FILE,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      };
+    }
+
+    const packet = composeF5PressurePacket(extra);
+
+    try {
+      if (isFunction(south.acceptWestF5PressurePacket)) {
+        return {
+          submitted: true,
+          method: "acceptWestF5PressurePacket",
+          response: clonePlain(south.acceptWestF5PressurePacket(packet))
+        };
+      }
+
+      if (isFunction(south.acceptWestPrimary)) {
+        return {
+          submitted: true,
+          method: "acceptWestPrimary",
+          response: clonePlain(south.acceptWestPrimary(packet))
+        };
+      }
+
+      if (isFunction(south.acceptSouthPrimary)) {
+        return {
+          submitted: true,
+          method: "acceptSouthPrimary",
+          response: clonePlain(south.acceptSouthPrimary(packet))
+        };
+      }
+
+      if (isFunction(south.receiveSouthPrimary)) {
+        return {
+          submitted: true,
+          method: "receiveSouthPrimary",
+          response: clonePlain(south.receiveSouthPrimary(packet))
+        };
+      }
+    } catch (error) {
+      recordError("WEST_F5_PACKET_SUBMISSION_TO_SOUTH_FAILED", error);
+      return {
+        submitted: false,
+        reason: "WEST_F5_PACKET_SUBMISSION_TO_SOUTH_FAILED"
+      };
+    }
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_HIERARCHY_SURFACE_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      GENERATED_AT: nowIso(),
-      REGISTRY: getHierarchyRegistry(),
-      WEST_ROLE:
-        "ADMISSIBILITY_DERIVATIVE_RELEASE_CURRENT_AUTHORITY_RECHECK",
-      WEST_BOUNDARY:
-        "NO_PRODUCTION_MUTATION_NO_CANVAS_DRAWING_NO_CANVAS_REPAIR_NO_FINAL_VISUAL_PASS"
+      submitted: false,
+      reason: "SOUTH_RUNTIME_TABLE_F5_PRESSURE_METHOD_UNAVAILABLE",
+      recommendedNextFile: SOUTH_FILE
     };
   }
 
-  function getBishopChord() {
+  function submitF5PacketToNorth(extra = {}) {
+    const north = firstGlobal([
+      "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
+      "RUNTIME_TABLE",
+      "DEXTER_LAB.runtimeTable",
+      "HEARTH.northCommandRuntimeTable",
+      "HEARTH.runtimeTable"
+    ]);
+
+    if (!north) {
+      return {
+        submitted: false,
+        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE",
+        recommendedNextFile: NORTH_FILE
+      };
+    }
+
+    const packet = composeF5PressurePacket(extra);
+
+    try {
+      if (isFunction(north.acceptWestPrimary)) {
+        return {
+          submitted: true,
+          method: "acceptWestPrimary",
+          response: clonePlain(north.acceptWestPrimary(packet))
+        };
+      }
+
+      if (isFunction(north.acceptWestPrimaryGate)) {
+        return {
+          submitted: true,
+          method: "acceptWestPrimaryGate",
+          response: clonePlain(north.acceptWestPrimaryGate(packet))
+        };
+      }
+
+      if (isFunction(north.acceptWestHandoff)) {
+        return {
+          submitted: true,
+          method: "acceptWestHandoff",
+          response: clonePlain(north.acceptWestHandoff(packet))
+        };
+      }
+
+      if (isFunction(north.submitEvent)) {
+        return {
+          submitted: true,
+          method: "submitEvent",
+          response: clonePlain(north.submitEvent(packet))
+        };
+      }
+    } catch (error) {
+      recordError("WEST_F5_PACKET_SUBMISSION_TO_NORTH_FAILED", error);
+      return {
+        submitted: false,
+        reason: "WEST_F5_PACKET_SUBMISSION_TO_NORTH_FAILED"
+      };
+    }
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_BISHOP_CHORD_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      GENERATED_AT: nowIso(),
-      CHORD:
-        "NORTH_CURRENT_AUTHORITY -> SURFACE_TRUTH_EVIDENCE -> WEST_ADMISSIBILITY -> CANVAS_BOUNDARY_REVIEW",
-      BISHOP_RECEIPT_TRUST_ACTIVE: true,
-      STALE_PACKET_QUARANTINE_ACTIVE: true
+      submitted: false,
+      reason: "NORTH_RUNTIME_TABLE_WEST_PRESSURE_METHOD_UNAVAILABLE",
+      recommendedNextFile: NORTH_FILE
     };
   }
 
-  function getJudgeMetrics() {
+  function validateSouthReceipt(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+
+    const southRecognized = Boolean(
+      safeBool(input.southRuntimeTableActive, false) ||
+      safeBool(input.southProofReturnActive, false) ||
+      safeBool(input.southSupremeJudgeActive, false) ||
+      safeString(input.activeFibonacci || "") === FIBONACCI.SOUTH_PROOF ||
+      safeString(input.contract || "").includes("SOUTH") ||
+      safeString(input.receipt || "").includes("SOUTH")
+    );
+
+    const ok = Boolean(noForbiddenClaim && southRecognized);
+
+    let reason = "SOUTH_F8_RECEIPT_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_SOUTH_RECEIPT";
+    else if (!southRecognized) reason = "UNRECOGNIZED_SOUTH_F8_RECEIPT";
+
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_JUDGE_METRICS_PACKET_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      GENERATED_AT: nowIso(),
-      NORTH_RAIL_STATUS: state.northRailStatus,
-      NORTH_VERDICT_AVAILABLE: state.northRailVerdictAvailable,
-      SURFACE_TRUTH_STATUS: state.surfaceTruthStatus,
-      WEST_DECISION: state.westDecision,
-      WEST_GAP_CLASS: state.westGapClass,
-      CONSTRUCTION_READINESS_STATUS: state.constructionReadinessStatus
+      ok,
+      reason,
+      noForbiddenClaim,
+      southRecognized,
+      input: clonePlain(input)
     };
   }
 
-  function getState() {
-    return safeJson(state);
-  }
+  function acceptSouthReceipt(packet = {}) {
+    const validation = validateSouthReceipt(packet);
 
-  function getCanvasReleasePacket() {
-    return state.releasePacket || null;
-  }
+    state.southReceiptAccepted = validation.ok;
+    state.southReceiptPacket = clonePlain(packet);
 
-  function clearReleasePacket() {
-    state.releasePacket = null;
-    state.canvasReleasePacketReady = false;
-    state.canvasReleaseAuthorized = false;
-    state.releaseToCanvas = false;
-    publishReceiptAliases();
-    return getReceiptLight(false);
-  }
+    if (validation.input.contract) state.southRuntimeContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.southRuntimeReceipt = safeString(validation.input.receipt);
 
-  function publishReleasePacket() {
-    if (!state.releasePacket) return null;
+    recordLocal("SOUTH_F8_RECEIPT_RECEIVED_BY_WEST_F5", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      contract: state.southRuntimeContract
+    });
 
-    setPath("HEARTH_CANVAS_RELEASE_PACKET", state.releasePacket);
-    setPath("HEARTH_WEST_CANVAS_RELEASE_PACKET", state.releasePacket);
-    setPath("LAB_RUNTIME_TABLE_WEST_CANVAS_RELEASE_PACKET", state.releasePacket);
-    setPath("HEARTH.canvasReleasePacket", state.releasePacket);
-    setPath("HEARTH.westCanvasReleasePacket", state.releasePacket);
-    setPath("DEXTER_LAB.hearthWestCanvasReleasePacket", state.releasePacket);
+    publishGlobals();
 
-    return state.releasePacket;
-  }
-
-  function composeReceipt(packetName) {
     return {
-      PACKET_NAME:
-        packetName ||
-        "LAB_RUNTIME_TABLE_WEST_CURRENT_AUTHORITY_RECHECK_RECEIPT_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      RECEIPT: PUBLIC_RECEIPT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-      COMPAT_INTERNAL_RENEWAL_CONTRACT: COMPAT_INTERNAL_RENEWAL_CONTRACT,
-      COMPAT_INTERNAL_RENEWAL_RECEIPT: COMPAT_INTERNAL_RENEWAL_RECEIPT,
-      PREVIOUS_INTERNAL_RENEWAL_CONTRACT:
-        PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-      PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-      VERSION: VERSION,
-      FILE: FILE,
-      ROUTE: ROUTE,
-      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-      GENERATED_AT: nowIso(),
+      accepted: validation.ok,
+      westF5ReceivedSouth: true,
+      reason: validation.reason,
+      recommendedNextFile: validation.ok ? NORTH_FILE : SOUTH_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
 
-      ACTIVE_STAGE_ID: ACTIVE_STAGE_ID,
-      ACTIVE_CARDINAL: ACTIVE_CARDINAL,
-      ACTIVE_FIBONACCI: ACTIVE_FIBONACCI,
-      ACTIVE_NEWS_GATE: ACTIVE_NEWS_GATE,
-      ACTIVE_CYCLE_NUMBER: ACTIVE_CYCLE_NUMBER,
-      ACTIVE_CYCLE_ROUTE: ACTIVE_CYCLE_ROUTE,
+  function bindStateToMechanicalCoordinate(input = {}) {
+    const stateIndex = clamp(
+      input.stateIndex !== undefined ? input.stateIndex : stableStateIndex(input),
+      0,
+      255
+    );
 
-      PUBLIC_CONTRACT_PRESERVED: true,
-      V5_3_COMPATIBILITY_PRESERVED: true,
-      V5_4_CURRENT_AUTHORITY_RECHECK_ACTIVE: true,
-      AUTO_FINALIZE_ON_LOAD: false,
-      LIGHT_RECEIPT_ON_LOAD: true,
-      EXPLICIT_RUN_REQUIRED_FOR_ADJUDICATION: true,
-      CURRENT_AUTHORITY_OUTRANKS_STORED_STALE_PACKET:
-        state.currentAuthorityOutranksStoredState,
-      STALE_PRE_NORTH_PACKET_QUARANTINE_ACTIVE:
-        state.stalePacketQuarantineActive,
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      bindingType: "WEST_F5_MECHANICAL_COORDINATE_PLUS_STATE_256",
+      coordinate: clonePlain(MECHANICAL_COORDINATE),
+      state256: {
+        stateId: `ST_${stateIndex}`,
+        stateIndex,
+        binary: stateIndex.toString(2).padStart(8, "0"),
+        field: "STATE_MOTION_CONSTRAINT_POSSIBILITY",
+        replacesMechanicalCoordinate: false
+      },
+      geometry: {
+        filterId: `FL_${(stateIndex % 61) + 1}`,
+        pressureShellId: `PS_${(stateIndex % 192) + 1}`,
+        basinAnchorId: `BA_${(stateIndex % 9) + 1}`,
+        geometryEnvelope: "GEOMETRY_TOTAL_451"
+      },
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_${stateIndex}`,
+      bound: true,
+      boundAt: nowIso()
+    };
+  }
 
-      TRUST_STATE: state.trustState,
-      ADJUDICATION_RUN_STATE: state.adjudicationRunState,
-      NORTH_STANDARD_STATUS: state.northStandardStatus,
-      NORTH_COMPATIBILITY_BRIDGE_STATUS:
-        state.northCompatibilityBridgeStatus,
+  function evaluateCoordinateState(input = {}) {
+    const binding = bindStateToMechanicalCoordinate(input);
+    const pressureScore = pressureScoreForClassification(classifyPressurePacket(input), input);
+    const allowed = Boolean(
+      state.pressureValveOpen &&
+      state.westPressureValveActive &&
+      pressureScore >= 55 &&
+      !detectForbiddenClaim(input)
+    );
 
-      NORTH_RAIL_STATUS: state.northRailStatus,
-      NORTH_RAIL_AUTHORITY_PATH: state.northRailAuthorityPath,
-      NORTH_RAIL_VERDICT_AVAILABLE: state.northRailVerdictAvailable,
-      NORTH_RAIL_TRUST_STATE: state.northRailTrustState,
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      coordinateId: MECHANICAL_COORDINATE.coordinateId,
+      stateId: binding.state256.stateId,
+      coordinateAllowed: true,
+      stateAdmissible: binding.state256.stateIndex >= 0 && binding.state256.stateIndex <= 255,
+      filterPassageAllowed: allowed,
+      pressureWithinShell: pressureScore >= 55,
+      pressureScore,
+      basinAnchored: true,
+      envelopeContained: true,
+      runtimeExpressionAllowed: allowed,
+      valveState: allowed ? "OPEN" : "CLOSED",
+      compressionState: allowed ? "COMPRESSED_AND_ADMISSIBLE" : "HELD_OR_REJECTED",
+      evaluatedAt: nowIso()
+    };
+  }
 
-      SURFACE_TRUTH_STATUS: state.surfaceTruthStatus,
-      SURFACE_TRUTH_FAILURE_CLASS: state.surfaceTruthFailureClass,
-      SURFACE_TRUTH_FIRST_FAILED_COORDINATE:
-        state.surfaceTruthFirstFailedCoordinate,
-      SURFACE_TRUTH_TRUST_STATE: state.surfaceTruthTrustState,
+  function getMechanicalCoordinatePacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      southHandoffCoordinate: clonePlain(SOUTH_HANDOFF_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_0`,
+      enginePartDefinesFunction: true,
+      fibonacciDefinesSequence: true,
+      categoryDefinesScale: true,
+      numbersSupportFunction: true,
+      aliasesLocateOnly: true,
+      namesDescribeOnly: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
 
-      STALE_PRE_NORTH_PACKET_QUARANTINED:
-        state.stalePreNorthPacketQuarantined,
-      NO_SOURCE_PACKET_QUARANTINED: state.noSourcePacketQuarantined,
+  function getPressureGraph() {
+    return clonePlain(state.pressureGraph);
+  }
 
-      CYCLE_CLOSED: state.cycleClosed,
-      OUTER_CYCLE_CLOSED: state.outerCycleClosed,
-      CYCLE_CLOSURE_STATUS: state.cycleClosureStatus,
-      CONSTRUCTION_READINESS_STATUS: state.constructionReadinessStatus,
-      WEST_DECISION: state.westDecision,
-      WEST_GAP_CLASS: state.westGapClass,
-      WEST_FORWARD_ALLOWED: state.westForwardAllowed,
-      CANVAS_RELEASE_AUTHORIZED: state.canvasReleaseAuthorized,
-      CANVAS_RELEASE_PACKET_READY: state.canvasReleasePacketReady,
-      RELEASE_TO_CANVAS: state.releaseToCanvas,
+  function getPressureGraphSummary() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      pressureGraphBuilt: state.pressureGraphBuilt,
+      pressureGraphReady: state.pressureGraphReady,
+      pressureGraphStatus: state.pressureGraphStatus,
+      pressureRecordCount: state.pressureRecordCount,
+      admissibleRecordCount: state.admissibleRecordCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticPressureCount: state.diagnosticPressureCount,
+      supportEnginePressureCount: state.supportEnginePressureCount,
+      routePressureCount: state.routePressureCount,
+      canvasPressureCount: state.canvasPressureCount,
+      constraintPressureCount: state.constraintPressureCount,
+      pressureQualityScore: state.pressureQualityScore,
+      pressureCoverageScore: state.pressureCoverageScore,
+      pressureTraceScore: state.pressureTraceScore,
+      pressureCoherenceScore: state.pressureCoherenceScore,
+      admissibilityScore: state.admissibilityScore,
+      compressionScore: state.compressionScore,
+      boundaryScore: state.boundaryScore,
+      updatedAt: nowIso()
+    };
+  }
 
-      FIRST_OPEN_DUTY_COORDINATE: state.firstOpenDutyCoordinate,
-      FIRST_OPEN_DUTY_CLASS: state.firstOpenDutyClass,
-      FIRST_OPEN_DUTY_REASON: state.firstOpenDutyReason,
-      FIRST_OPEN_DUTY_FILE: state.firstOpenDutyFile,
-      FIRST_OPEN_DUTY_OWNER: state.firstOpenDutyOwner,
-      RECOMMENDED_NEXT_FILE: state.recommendedNextFile,
-      RECOMMENDED_NEXT_ACTION: state.recommendedNextAction,
+  function getPressureRecords(pressureClass = "") {
+    const records = state.pressureRecords || [];
+    if (!pressureClass) return clonePlain(records);
+    return clonePlain(records.filter((record) => record.pressureClass === pressureClass));
+  }
 
-      RUN_COUNT: state.runCount,
-      ALIAS_PUBLISH_COUNT: state.aliasPublishCount,
-      RECEIPT_PUBLISH_COUNT: state.receiptPublishCount,
-      DATASET_PUBLISH_COUNT: state.datasetPublishCount,
-      ERROR_COUNT: state.errorCount,
+  function getRejectedRecords() {
+    return clonePlain(state.rejectedRecords);
+  }
 
-      OWNS_WEST_ADMISSIBILITY: true,
-      OWNS_DERIVATIVE_RELEASE: true,
-      OWNS_CANVAS_RELEASE_PACKET: true,
-      OWNS_CANVAS_DRAWING: false,
-      OWNS_CANVAS_LIFECYCLE: false,
-      OWNS_CONTROLS_BEHAVIOR: false,
-      OWNS_ROUTE_CONDUCTOR_HANDSHAKE_TRUTH: false,
-      OWNS_NORTH_GRAMMAR_TRUTH: false,
-      OWNS_NORTH_RAIL_MUTATION: false,
-      OWNS_SURFACE_TRUTH_PROBE_MUTATION: false,
-      OWNS_PRODUCTION_FILE_REDEFINITION: false,
-      OWNS_F21_LATCH: false,
-      OWNS_READY_TEXT: false,
-      OWNS_COMPLETION_LATCH: false,
-      OWNS_FINAL_VISUAL_PASS_CLAIM: false,
+  function findPressureRecord(id) {
+    const key = makeId(id, "");
+    return clonePlain((state.pressureGraph.recordsById || {})[key] || null);
+  }
 
-      F13_CLAIMED: false,
-      F13_ELIGIBLE_FOR_CANVAS: false,
-      F13_CLAIMED_BY_WEST: false,
-      F21_ELIGIBLE_FOR_NORTH: false,
-      F21_SUBMITTED_TO_NORTH: false,
-      F21_ELIGIBILITY_SUBMITTED_TO_NORTH: false,
-      F21_CLAIMED: false,
-      F21_CLAIMED_BY_WEST: false,
-      READY_TEXT_PERMISSION_GRANTED: false,
-      READY_TEXT_ALLOWED: false,
-      READY_TEXT_CLAIMED: false,
-      COMPLETION_LATCHED: false,
-      FINAL_COMPLETION_LATCHED: false,
-      DEGRADED_COMPLETION_LATCHED: false,
-      VISUAL_PASS_CLAIMED: false,
-      FINAL_VISUAL_PASS_CLAIMED: false,
-      GENERATED_IMAGE: false,
-      GRAPHIC_BOX: false,
-      WEBGL: false,
-      PRODUCTION_MUTATION_AUTHORIZED: false,
-      CANVAS_MUTATION_AUTHORIZED: false,
-      CANVAS_DRAWING_AUTHORIZED: false,
-      CANVAS_REPAIR_AUTHORIZED: false,
-      CANVAS_BUILD_AUTHORITY_CLAIMED: false,
-      ROUTE_REPAIR_AUTHORIZED: false,
-      CONTROLS_REPAIR_AUTHORIZED: false,
-      RUNTIME_RESTART_AUTHORIZED: false
+  function getReceiptLight() {
+    computeFibonacciSynchronizationMetric();
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      baselineContract: BASELINE_CONTRACT,
+      version: VERSION,
+      file: FILE,
+
+      westRuntimeTableActive: true,
+      westRuntimeTableF5Only: true,
+      westSupremeJudgeActive: true,
+      westPressureValveActive: true,
+      westCompressionActive: true,
+      pressureValveOpen: state.pressureValveOpen,
+      pressureValveStatus: state.pressureValveStatus,
+
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+      mechanicalCoordinateId: MECHANICAL_COORDINATE.coordinateId,
+      enginePart: MECHANICAL_COORDINATE.enginePart,
+      systemCategory: MECHANICAL_COORDINATE.systemCategory,
+      fibonacciStation: MECHANICAL_COORDINATE.fibonacciStage,
+      mechanicalRole: MECHANICAL_COORDINATE.mechanicalRole,
+      judicialRole: MECHANICAL_COORDINATE.judicialRole,
+      authorityRole: MECHANICAL_COORDINATE.authorityRole,
+
+      eastRuntimeObserved: state.eastRuntimeObserved,
+      eastRuntimeAccepted: state.eastRuntimeAccepted,
+      eastRuntimeContract: state.eastRuntimeContract,
+      eastRuntimeReceipt: state.eastRuntimeReceipt,
+      eastF3IntakeObserved: state.eastF3IntakeObserved,
+      eastF3IntakeAccepted: state.eastF3IntakeAccepted,
+
+      pressureGraphBuilt: state.pressureGraphBuilt,
+      pressureGraphReady: state.pressureGraphReady,
+      pressureGraphStatus: state.pressureGraphStatus,
+      pressureRecordCount: state.pressureRecordCount,
+      admissibleRecordCount: state.admissibleRecordCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticPressureCount: state.diagnosticPressureCount,
+      supportEnginePressureCount: state.supportEnginePressureCount,
+      routePressureCount: state.routePressureCount,
+      canvasPressureCount: state.canvasPressureCount,
+      constraintPressureCount: state.constraintPressureCount,
+
+      pressureQualityMetricActive: true,
+      pressureQualityScore: state.pressureQualityScore,
+      pressureCoverageScore: state.pressureCoverageScore,
+      pressureTraceScore: state.pressureTraceScore,
+      pressureCoherenceScore: state.pressureCoherenceScore,
+      admissibilityScore: state.admissibilityScore,
+      compressionScore: state.compressionScore,
+      boundaryScore: state.boundaryScore,
+
+      f8SouthHandoffAuthorized: state.f8SouthHandoffAuthorized,
+      f5PressurePacketReady: state.f5PressurePacketReady,
+      f5ActivationStatus: state.f5ActivationStatus,
+      f5ActivationReason: state.f5ActivationReason,
+
+      southReceiptAccepted: state.southReceiptAccepted,
+      southRuntimeContract: state.southRuntimeContract,
+      southRuntimeReceipt: state.southRuntimeReceipt,
+
+      newsProtocolAligned: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      activeFibonacci: FIBONACCI.WEST_PRESSURE,
+      activeFibonacciRank: 5,
+      activeNewsGate: NEWS_GATES.WEST,
+      sourceFibonacciGate: FIBONACCI.EAST_INTAKE,
+      futureFibonacciGate: FIBONACCI.SOUTH_PROOF,
+      oneActiveGearAtATime: true,
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+
+      createdAt: state.createdAt,
+      updatedAt: state.updatedAt || nowIso()
     };
   }
 
   function getReceipt() {
-    state.lastReceipt = composeReceipt(
-      "LAB_RUNTIME_TABLE_WEST_CURRENT_AUTHORITY_RECHECK_RECEIPT_v5_4"
-    );
-    publishReceiptAliases();
-    return state.lastReceipt;
-  }
+    const light = getReceiptLight();
 
-  function getReceiptLight() {
     return {
-      PACKET_NAME: "LAB_RUNTIME_TABLE_WEST_LIGHT_RECEIPT_v5_4",
-      CONTRACT: PUBLIC_CONTRACT,
-      RECEIPT: PUBLIC_RECEIPT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-      COMPAT_INTERNAL_RENEWAL_CONTRACT: COMPAT_INTERNAL_RENEWAL_CONTRACT,
-      VERSION: VERSION,
-      FILE: FILE,
-      GENERATED_AT: nowIso(),
-      ACTIVE_STAGE_ID: ACTIVE_STAGE_ID,
-      ACTIVE_CARDINAL: ACTIVE_CARDINAL,
-      ACTIVE_FIBONACCI: ACTIVE_FIBONACCI,
-      CURRENT_AUTHORITY_RECHECK_ACTIVE: true,
-      AUTO_FINALIZE_ON_LOAD: false,
-      EXPLICIT_RUN_REQUIRED: true,
-      TRUST_STATE: state.trustState,
-      ADJUDICATION_RUN_STATE: state.adjudicationRunState,
-      NORTH_RAIL_STATUS: state.northRailStatus,
-      NORTH_RAIL_VERDICT_AVAILABLE: state.northRailVerdictAvailable,
-      SURFACE_TRUTH_STATUS: state.surfaceTruthStatus,
-      CONSTRUCTION_READINESS_STATUS: state.constructionReadinessStatus,
-      WEST_DECISION: state.westDecision,
-      WEST_GAP_CLASS: state.westGapClass,
-      CANVAS_RELEASE_AUTHORIZED: state.canvasReleaseAuthorized,
-      F13_CLAIMED: false,
-      F21_CLAIMED: false,
-      READY_TEXT_CLAIMED: false,
-      VISUAL_PASS_CLAIMED: false,
-      GENERATED_IMAGE: false,
-      GRAPHIC_BOX: false,
-      WEBGL: false
+      ...light,
+
+      westF5Receipt: true,
+      westSupremeJudgeReceipt: true,
+      westPressureValveReceipt: true,
+
+      westRuntimeOwns: [
+        "F5 West pressure valve",
+        "pressure packet evaluation",
+        "admissibility classification",
+        "constraint and boundary checking",
+        "256 state pressure binding",
+        "F8 South proof handoff packet"
+      ],
+      westRuntimeDoesNotOwn: [
+        "North F21 latch",
+        "East F3 intake admission",
+        "South F8 proof return",
+        "Canvas F13 evidence release",
+        "F34/F55/F89/F144 support-engine internals",
+        "F233 downstream return",
+        "route orchestration",
+        "planet truth",
+        "material truth",
+        "elevation truth",
+        "hydrology truth",
+        "actual rendering",
+        "generated image",
+        "GraphicBox",
+        "WebGL",
+        "public superiority claim",
+        "final visual pass claim"
+      ],
+
+      gates: {
+        north: NORTH_FILE,
+        east: EAST_FILE,
+        west: FILE,
+        south: SOUTH_FILE,
+        canvas: CANVAS_FILE,
+        productEngine: F34_PRODUCT_ENGINE_FILE,
+        ue5Expression: F55_EXPRESSION_FILE,
+        registry: F89_REGISTRY_FILE,
+        market: F144_MARKET_FILE
+      },
+
+      pressureClasses: clonePlain(PRESSURE_CLASS),
+      fibonacciMap: clonePlain(FIBONACCI),
+      newsGates: clonePlain(NEWS_GATES),
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      southHandoffCoordinate: clonePlain(SOUTH_HANDOFF_COORDINATE),
+      mechanicalCoordinatePacket: getMechanicalCoordinatePacket(),
+
+      pressureGraph: getPressureGraph(),
+      pressureGraphSummary: getPressureGraphSummary(),
+      pressureRecords: getPressureRecords(),
+      rejectedRecords: getRejectedRecords(),
+
+      pressureQuality: computePressureQualityMetric(),
+      newsAlignment: evaluateNewsAlignment(),
+      f5PressurePacket: composeF5PressurePacket(),
+      southReceiptPacket: clonePlain(state.southReceiptPacket),
+
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      updatedAt: nowIso()
     };
   }
 
-  function kv(key, value) {
-    var output =
-      value === undefined || value === null || value === "" ? "UNKNOWN" : value;
-    return key + "=" + output;
-  }
-
   function getReceiptText() {
-    var receipt = getReceipt();
-    return Object.keys(receipt)
-      .map(function (key) {
-        return kv(key, receipt[key]);
-      })
-      .join("\n");
-  }
+    const r = getReceipt();
 
-  function getStatusText() {
+    const records = (r.pressureRecords || []).map((record) => (
+      `- ${record.id} :: class=${record.pressureClass} :: state=${record.stateId} :: score=${record.pressureScore} :: accepted=${record.accepted} :: shell=${record.pressureShellId} :: filter=${record.filterId} :: reason=${record.reason}`
+    )).join("\n") || "- none";
+
+    const rejected = (r.rejectedRecords || []).map((record) => (
+      `- ${record.id} :: class=${record.pressureClass} :: state=${record.stateId} :: score=${record.pressureScore} :: reason=${record.reason}`
+    )).join("\n") || "- none";
+
+    const events = (r.localEvents || []).slice(-48).map((item) => (
+      `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`
+    )).join("\n") || "- none";
+
+    const errors = (r.errors || []).map((item) => (
+      `- ${item.at} :: ${item.code} :: ${item.message}`
+    )).join("\n") || "- none";
+
     return [
-      kv("CONTRACT", PUBLIC_CONTRACT),
-      kv("INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT),
-      kv("VERSION", VERSION),
-      kv("ACTIVE_STAGE_ID", ACTIVE_STAGE_ID),
-      kv("AUTO_FINALIZE_ON_LOAD", false),
-      kv("EXPLICIT_RUN_REQUIRED", true),
-      kv("TRUST_STATE", state.trustState),
-      kv("ADJUDICATION_RUN_STATE", state.adjudicationRunState),
-      kv("NORTH_STANDARD_STATUS", state.northStandardStatus),
-      kv("NORTH_RAIL_STATUS", state.northRailStatus),
-      kv("NORTH_RAIL_AUTHORITY_PATH", state.northRailAuthorityPath),
-      kv("NORTH_RAIL_VERDICT_AVAILABLE", state.northRailVerdictAvailable),
-      kv("SURFACE_TRUTH_STATUS", state.surfaceTruthStatus),
-      kv("SURFACE_TRUTH_FAILURE_CLASS", state.surfaceTruthFailureClass),
-      kv(
-        "SURFACE_TRUTH_FIRST_FAILED_COORDINATE",
-        state.surfaceTruthFirstFailedCoordinate
-      ),
-      kv("CONSTRUCTION_READINESS_STATUS", state.constructionReadinessStatus),
-      kv("WEST_DECISION", state.westDecision),
-      kv("WEST_GAP_CLASS", state.westGapClass),
-      kv("CANVAS_RELEASE_AUTHORIZED", state.canvasReleaseAuthorized),
-      kv("FIRST_OPEN_DUTY_COORDINATE", state.firstOpenDutyCoordinate),
-      kv("FIRST_OPEN_DUTY_CLASS", state.firstOpenDutyClass),
-      kv("FIRST_OPEN_DUTY_REASON", state.firstOpenDutyReason),
-      kv("RECOMMENDED_NEXT_FILE", state.recommendedNextFile),
-      kv("RECOMMENDED_NEXT_ACTION", state.recommendedNextAction),
-      kv("STALE_PRE_NORTH_PACKET_QUARANTINED", state.stalePreNorthPacketQuarantined),
-      kv("NO_SOURCE_PACKET_QUARANTINED", state.noSourcePacketQuarantined),
-      kv("PRODUCTION_MUTATION_AUTHORIZED", false),
-      kv("CANVAS_REPAIR_AUTHORIZED", false),
-      kv("CANVAS_DRAWING_AUTHORIZED", false),
-      kv("RUNTIME_RESTART_AUTHORIZED", false),
-      kv("F13_CLAIMED", false),
-      kv("F21_CLAIMED", false),
-      kv("READY_TEXT_CLAIMED", false),
-      kv("VISUAL_PASS_CLAIMED", false),
-      kv("GENERATED_IMAGE", false),
-      kv("GRAPHIC_BOX", false),
-      kv("WEBGL", false)
+      "LAB_RUNTIME_TABLE_WEST_F5_ENGINE_MECHANICS_PRESSURE_ADMISSIBILITY_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `baselineContract=${r.baselineContract}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      "",
+      `westRuntimeTableActive=${r.westRuntimeTableActive}`,
+      `westRuntimeTableF5Only=${r.westRuntimeTableF5Only}`,
+      `westSupremeJudgeActive=${r.westSupremeJudgeActive}`,
+      `westPressureValveActive=${r.westPressureValveActive}`,
+      `westCompressionActive=${r.westCompressionActive}`,
+      `pressureValveOpen=${r.pressureValveOpen}`,
+      `pressureValveStatus=${r.pressureValveStatus}`,
+      "",
+      `engineMechanicsPrimary=${r.engineMechanicsPrimary}`,
+      `mathPrimary=${r.mathPrimary}`,
+      `architectureLabelsSecondary=${r.architectureLabelsSecondary}`,
+      `mechanicalCoordinateId=${r.mechanicalCoordinateId}`,
+      `enginePart=${r.enginePart}`,
+      `systemCategory=${r.systemCategory}`,
+      `fibonacciStation=${r.fibonacciStation}`,
+      `mechanicalRole=${r.mechanicalRole}`,
+      `judicialRole=${r.judicialRole}`,
+      `authorityRole=${r.authorityRole}`,
+      "",
+      `eastRuntimeObserved=${r.eastRuntimeObserved}`,
+      `eastRuntimeAccepted=${r.eastRuntimeAccepted}`,
+      `eastRuntimeContract=${r.eastRuntimeContract}`,
+      `eastRuntimeReceipt=${r.eastRuntimeReceipt}`,
+      `eastF3IntakeObserved=${r.eastF3IntakeObserved}`,
+      `eastF3IntakeAccepted=${r.eastF3IntakeAccepted}`,
+      "",
+      `pressureGraphBuilt=${r.pressureGraphBuilt}`,
+      `pressureGraphReady=${r.pressureGraphReady}`,
+      `pressureGraphStatus=${r.pressureGraphStatus}`,
+      `pressureRecordCount=${r.pressureRecordCount}`,
+      `admissibleRecordCount=${r.admissibleRecordCount}`,
+      `rejectedRecordCount=${r.rejectedRecordCount}`,
+      `diagnosticPressureCount=${r.diagnosticPressureCount}`,
+      `supportEnginePressureCount=${r.supportEnginePressureCount}`,
+      `routePressureCount=${r.routePressureCount}`,
+      `canvasPressureCount=${r.canvasPressureCount}`,
+      `constraintPressureCount=${r.constraintPressureCount}`,
+      "",
+      `pressureQualityScore=${r.pressureQualityScore}`,
+      `pressureCoverageScore=${r.pressureCoverageScore}`,
+      `pressureTraceScore=${r.pressureTraceScore}`,
+      `pressureCoherenceScore=${r.pressureCoherenceScore}`,
+      `admissibilityScore=${r.admissibilityScore}`,
+      `compressionScore=${r.compressionScore}`,
+      `boundaryScore=${r.boundaryScore}`,
+      "",
+      `f8SouthHandoffAuthorized=${r.f8SouthHandoffAuthorized}`,
+      `f5PressurePacketReady=${r.f5PressurePacketReady}`,
+      `f5ActivationStatus=${r.f5ActivationStatus}`,
+      `f5ActivationReason=${r.f5ActivationReason}`,
+      "",
+      `southReceiptAccepted=${r.southReceiptAccepted}`,
+      `southRuntimeContract=${r.southRuntimeContract}`,
+      `southRuntimeReceipt=${r.southRuntimeReceipt}`,
+      "",
+      `newsProtocolAligned=${r.newsProtocolAligned}`,
+      `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
+      `fibonacciSynchronizationScore=${r.fibonacciSynchronizationScore}`,
+      `activeFibonacci=${r.activeFibonacci}`,
+      `activeFibonacciRank=${r.activeFibonacciRank}`,
+      `activeNewsGate=${r.activeNewsGate}`,
+      `sourceFibonacciGate=${r.sourceFibonacciGate}`,
+      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      "",
+      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
+      `recommendedNextFile=${r.recommendedNextFile}`,
+      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      "",
+      "PRESSURE_RECORDS",
+      records,
+      "",
+      "REJECTED_RECORDS",
+      rejected,
+      "",
+      "LOCAL_EVENTS",
+      events,
+      "",
+      "ERRORS",
+      errors,
+      "",
+      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `publicComparisonClaimAllowed=${r.publicComparisonClaimAllowed}`,
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      `updatedAt=${r.updatedAt}`
     ].join("\n");
   }
 
-  function getCompactSummary() {
-    return getStatusText();
-  }
-
   function updateDataset() {
-    try {
-      if (!ROOT.document || !ROOT.document.documentElement) return false;
+    setDataset("labRuntimeTableWestLoaded", "true");
+    setDataset("labRuntimeTableWestContract", CONTRACT);
+    setDataset("labRuntimeTableWestReceipt", RECEIPT);
+    setDataset("labRuntimeTableWestVersion", VERSION);
+    setDataset("labRuntimeTableWestFile", FILE);
 
-      var ds = ROOT.document.documentElement.dataset;
-      ds.labRuntimeTableWestContract = PUBLIC_CONTRACT;
-      ds.labRuntimeTableWestInternalRenewal = INTERNAL_RENEWAL_CONTRACT;
-      ds.labRuntimeTableWestVersion = VERSION;
-      ds.labRuntimeTableWestStage = ACTIVE_STAGE_ID;
-      ds.labRuntimeTableWestTrustState = state.trustState;
-      ds.labRuntimeTableWestNorthRailStatus = state.northRailStatus;
-      ds.labRuntimeTableWestNorthVerdictAvailable = String(
-        state.northRailVerdictAvailable
-      );
-      ds.labRuntimeTableWestSurfaceTruthStatus = state.surfaceTruthStatus;
-      ds.labRuntimeTableWestDecision = state.westDecision;
-      ds.labRuntimeTableWestGapClass = state.westGapClass;
-      ds.labRuntimeTableWestConstructionReadiness =
-        state.constructionReadinessStatus;
-      ds.labRuntimeTableWestCanvasReleaseAuthorized = String(
-        state.canvasReleaseAuthorized
-      );
-      ds.labRuntimeTableWestAutoFinalizeOnLoad = "false";
-      ds.labRuntimeTableWestExplicitRunRequired = "true";
+    setDataset("westRuntimeTableActive", "true");
+    setDataset("westRuntimeTableF5Only", "true");
+    setDataset("westSupremeJudgeActive", "true");
+    setDataset("westPressureValveActive", "true");
+    setDataset("westCompressionActive", "true");
+    setDataset("westPressureValveOpen", state.pressureValveOpen);
+    setDataset("westPressureValveStatus", state.pressureValveStatus);
 
-      state.datasetPublishCount += 1;
-      return true;
-    } catch (error) {
-      state.errorCount += 1;
-      state.errors.push({
-        at: nowIso(),
-        where: "updateDataset",
-        error: clean(error && error.message ? error.message : error, 600)
-      });
-      return false;
-    }
+    setDataset("westEngineMechanicsPrimary", "true");
+    setDataset("westMathPrimary", "true");
+    setDataset("westArchitectureLabelsSecondary", "true");
+    setDataset("westMechanicalCoordinateId", MECHANICAL_COORDINATE.coordinateId);
+    setDataset("westEnginePart", MECHANICAL_COORDINATE.enginePart);
+    setDataset("westSystemCategory", MECHANICAL_COORDINATE.systemCategory);
+    setDataset("westFibonacciStation", MECHANICAL_COORDINATE.fibonacciStage);
+    setDataset("westMechanicalRole", MECHANICAL_COORDINATE.mechanicalRole);
+    setDataset("westJudicialRole", MECHANICAL_COORDINATE.judicialRole);
+    setDataset("westAuthorityRole", MECHANICAL_COORDINATE.authorityRole);
+
+    setDataset("westEastRuntimeObserved", state.eastRuntimeObserved);
+    setDataset("westEastRuntimeAccepted", state.eastRuntimeAccepted);
+    setDataset("westEastF3IntakeObserved", state.eastF3IntakeObserved);
+    setDataset("westEastF3IntakeAccepted", state.eastF3IntakeAccepted);
+
+    setDataset("westPressureGraphBuilt", state.pressureGraphBuilt);
+    setDataset("westPressureGraphReady", state.pressureGraphReady);
+    setDataset("westPressureGraphStatus", state.pressureGraphStatus);
+    setDataset("westPressureRecordCount", state.pressureRecordCount);
+    setDataset("westAdmissibleRecordCount", state.admissibleRecordCount);
+    setDataset("westRejectedRecordCount", state.rejectedRecordCount);
+    setDataset("westDiagnosticPressureCount", state.diagnosticPressureCount);
+    setDataset("westSupportEnginePressureCount", state.supportEnginePressureCount);
+    setDataset("westRoutePressureCount", state.routePressureCount);
+    setDataset("westCanvasPressureCount", state.canvasPressureCount);
+    setDataset("westConstraintPressureCount", state.constraintPressureCount);
+
+    setDataset("westPressureQualityScore", state.pressureQualityScore);
+    setDataset("westPressureCoverageScore", state.pressureCoverageScore);
+    setDataset("westPressureTraceScore", state.pressureTraceScore);
+    setDataset("westPressureCoherenceScore", state.pressureCoherenceScore);
+    setDataset("westAdmissibilityScore", state.admissibilityScore);
+    setDataset("westCompressionScore", state.compressionScore);
+    setDataset("westBoundaryScore", state.boundaryScore);
+
+    setDataset("westF8SouthHandoffAuthorized", state.f8SouthHandoffAuthorized);
+    setDataset("westF5PressurePacketReady", state.f5PressurePacketReady);
+    setDataset("westF5ActivationStatus", state.f5ActivationStatus);
+    setDataset("westF5ActivationReason", state.f5ActivationReason);
+
+    setDataset("westNewsProtocolAligned", "true");
+    setDataset("westFibonacciSynchronizationMetricActive", "true");
+    setDataset("westFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
+    setDataset("westActiveFibonacci", FIBONACCI.WEST_PRESSURE);
+    setDataset("westActiveFibonacciRank", "5");
+    setDataset("westActiveNewsGate", NEWS_GATES.WEST);
+    setDataset("westSourceFibonacciGate", FIBONACCI.EAST_INTAKE);
+    setDataset("westFutureFibonacciGate", FIBONACCI.SOUTH_PROOF);
+
+    setDataset("westFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("westRecommendedNextFile", state.recommendedNextFile);
+    setDataset("westRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+
+    setDataset("westPublicSuperiorityClaim", "false");
+    setDataset("westPublicComparisonClaimAllowed", "false");
+    setDataset("westBenchmarkRequiredBeforePublicClaim", "true");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
   }
 
   function publishGlobals() {
-    WEST_ALIAS_PATHS.forEach(function (path) {
-      setPath(path, api);
-    });
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.HEARTH = root.HEARTH || {};
 
-    state.aliasPublishCount += 1;
-    return true;
+    root.LAB_RUNTIME_TABLE_WEST = api;
+    root.LAB_RUNTIME_TABLE_WEST_F5 = api;
+    root.RUNTIME_TABLE_WEST = api;
+    root.WEST_PRESSURE_VALVE = api;
+    root.WEST_PRESSURE_ADMISSIBILITY = api;
+    root.WEST_SUPREME_JUDGE = api;
+    root.WEST_ADMISSIBILITY_BRANCH = api;
+
+    root.DEXTER_LAB.runtimeTableWest = api;
+    root.DEXTER_LAB.runtimeTableWestF5 = api;
+    root.DEXTER_LAB.cardinalRuntimeTableWest = api;
+    root.DEXTER_LAB.westPressureValve = api;
+    root.DEXTER_LAB.westSupremeJudge = api;
+    root.DEXTER_LAB.westAdmissibilityBranch = api;
+
+    root.HEARTH.runtimeTableWest = api;
+    root.HEARTH.runtimeTableWestF5 = api;
+    root.HEARTH.westPressureValve = api;
+    root.HEARTH.westSupremeJudge = api;
+    root.HEARTH.westAdmissibilityBranch = api;
+
+    const light = getReceiptLight();
+
+    root.LAB_RUNTIME_TABLE_WEST_RECEIPT = light;
+    root.LAB_RUNTIME_TABLE_WEST_F5_RECEIPT = light;
+    root.RUNTIME_TABLE_WEST_RECEIPT = light;
+    root.WEST_PRESSURE_VALVE_RECEIPT = light;
+    root.WEST_SUPREME_JUDGE_RECEIPT = light;
+
+    root.DEXTER_LAB.runtimeTableWestReceipt = light;
+    root.HEARTH.runtimeTableWestReceipt = light;
+
+    root.__LAB_RUNTIME_TABLE_WEST_LOADED__ = true;
+    root.__LAB_RUNTIME_TABLE_WEST_CONTRACT__ = CONTRACT;
+    root.__LAB_RUNTIME_TABLE_WEST_RECEIPT__ = RECEIPT;
+    root.__LAB_RUNTIME_TABLE_WEST_F5_ONLY__ = true;
+    root.__LAB_RUNTIME_TABLE_WEST_MECHANICAL_COORDINATE__ = MECHANICAL_COORDINATE.coordinateId;
+    root.__LAB_RUNTIME_TABLE_WEST_PUBLIC_SUPERIORITY_CLAIM__ = false;
+    root.__LAB_RUNTIME_TABLE_WEST_WEBGL__ = false;
+    root.__LAB_RUNTIME_TABLE_WEST_VISUAL_PASS_CLAIMED__ = false;
+
+    updateDataset();
   }
 
-  function publishReceiptAliases() {
-    var receipt = getReceiptLight(false);
+  const api = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    baselineContract: BASELINE_CONTRACT,
+    version: VERSION,
+    file: FILE,
 
-    WEST_RECEIPT_ALIAS_PATHS.forEach(function (path) {
-      setPath(path, receipt);
-    });
+    FIBONACCI,
+    NEWS_GATES,
+    STATUS,
+    PRESSURE_CLASS,
+    MECHANICAL_COORDINATE,
+    SOUTH_HANDOFF_COORDINATE,
 
-    state.receiptPublishCount += 1;
-    return receipt;
-  }
+    readEastRuntimeAuthority,
+    readEastF3IntakePacket,
+    hasMeaningfulEastF3Packet,
+    validateEastF3IntakePacket,
+    acceptEastF3IntakePacket,
+    receiveEastF3IntakePacket,
+    submitEastF3IntakePacket,
+    acceptWestIntake,
+    receiveWestIntake,
+    acceptEastPrimary,
+    receiveEastPrimary,
+    acceptWestPrimary,
+    receiveWestPrimary,
 
-  function scheduleRepublish() {
-    try {
-      ROOT.setTimeout(function () {
-        publishGlobals();
-        publishReceiptAliases();
-        updateDataset();
-      }, 0);
+    classifyPressurePacket,
+    pressureScoreForClassification,
+    evaluatePressurePacket,
+    normalizePressureRecord,
+    acceptPressurePacket,
+    receivePressurePacket,
+    submitPressurePacket,
 
-      ROOT.setTimeout(function () {
-        publishGlobals();
-        publishReceiptAliases();
-        updateDataset();
-      }, 180);
-    } catch (_error) {}
-  }
+    buildPressureGraph,
+    rebuildPressureGraph,
+    computePressureQualityMetric,
+    computeFibonacciSynchronizationMetric,
+    evaluateNewsAlignment,
 
-  api = {
-    CONTRACT: PUBLIC_CONTRACT,
-    RECEIPT: PUBLIC_RECEIPT,
-    contract: PUBLIC_CONTRACT,
-    receipt: PUBLIC_RECEIPT,
+    setPressureValveOpen,
+    openPressureValve,
+    closePressureValve,
 
-    INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-    INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-    internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-    internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    composeF5PressurePacket,
+    composeWestReceipt,
+    readSouthRuntimeAuthority,
+    submitF5PressureToSouth,
+    submitF5PacketToNorth,
 
-    COMPAT_INTERNAL_RENEWAL_CONTRACT: COMPAT_INTERNAL_RENEWAL_CONTRACT,
-    COMPAT_INTERNAL_RENEWAL_RECEIPT: COMPAT_INTERNAL_RENEWAL_RECEIPT,
-    compatInternalRenewalContract: COMPAT_INTERNAL_RENEWAL_CONTRACT,
-    compatInternalRenewalReceipt: COMPAT_INTERNAL_RENEWAL_RECEIPT,
+    validateSouthReceipt,
+    acceptSouthReceipt,
 
-    PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-    PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+    bindStateToMechanicalCoordinate,
+    evaluateCoordinateState,
+    getMechanicalCoordinatePacket,
 
-    VERSION: VERSION,
-    FILE: FILE,
-    ROUTE: ROUTE,
-    DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+    getPressureGraph,
+    getPressureGraphSummary,
+    getPressureRecords,
+    getRejectedRecords,
+    findPressureRecord,
 
-    LAB_NORTH_FILE: LAB_NORTH_FILE,
-    LAB_WEST_FILE: LAB_WEST_FILE,
-    NORTH_RAIL_FILE: NORTH_RAIL_FILE,
-    SURFACE_TRUTH_FILE: SURFACE_TRUTH_FILE,
-    EAST_PROBE_FILE: EAST_PROBE_FILE,
-    SOUTH_RAIL_FILE: SOUTH_RAIL_FILE,
+    getReceiptLight,
+    getReceipt,
+    getReceiptText,
+    publishGlobals,
+    updateDataset,
 
-    ACTIVE_STAGE_ID: ACTIVE_STAGE_ID,
-    ACTIVE_CARDINAL: ACTIVE_CARDINAL,
-    ACTIVE_FIBONACCI: ACTIVE_FIBONACCI,
-    ACTIVE_NEWS_GATE: ACTIVE_NEWS_GATE,
-    ACTIVE_CYCLE_NUMBER: ACTIVE_CYCLE_NUMBER,
-    ACTIVE_CYCLE_ROUTE: ACTIVE_CYCLE_ROUTE,
+    westRuntimeTableActive: true,
+    westRuntimeTableF5Only: true,
+    westSupremeJudgeActive: true,
+    westPressureValveActive: true,
+    westCompressionActive: true,
 
-    TRUST_STATE: TRUST_STATE,
-    WEST_DECISION: WEST_DECISION,
-    WEST_GAP_CLASS: WEST_GAP_CLASS,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
 
-    // Core explicit-run methods
-    runNorthStandardDerivativeReleaseAudit:
-      runNorthStandardDerivativeReleaseAudit,
-    runCycleClosureAudit: runNorthStandardDerivativeReleaseAudit,
-    classifyWestAdmissibility: runNorthStandardDerivativeReleaseAudit,
-    classifyCyclePacket: runNorthStandardDerivativeReleaseAudit,
-    createWestCycleReceipt: runNorthStandardDerivativeReleaseAudit,
-    createGapReceipt: runNorthStandardDerivativeReleaseAudit,
-    classifyGap: runNorthStandardDerivativeReleaseAudit,
-    classifyTransmissionGap: runNorthStandardDerivativeReleaseAudit,
-    assess: runNorthStandardDerivativeReleaseAudit,
-    inspect: runNorthStandardDerivativeReleaseAudit,
-    run: runNorthStandardDerivativeReleaseAudit,
+    ownsF5WestPressureValve: true,
+    ownsPressurePacketEvaluation: true,
+    ownsAdmissibilityClassification: true,
+    ownsConstraintAndBoundaryChecking: true,
+    ownsState256PressureBinding: true,
+    ownsF8SouthProofHandoffPacket: true,
 
-    // Lifecycle methods are intentionally no-op under v5_4.
-    boot: noOpLifecycle,
-    init: noOpLifecycle,
-    start: noOpLifecycle,
-    mount: noOpLifecycle,
-
-    inspectAuthority: inspectAuthority,
-    inspectCoreNodes: inspectCoreNodes,
-    inspectJudgeNodes: inspectJudgeNodes,
-    inspectRelationships: inspectRelationships,
-
-    readNorthStandardPacket: readNorthStandardPacket,
-    readNorthRailPacket: readCurrentNorth,
-    readCurrentNorth: readCurrentNorth,
-    readSurfaceTruthDirect: readSurfaceTruthDirect,
-    classifyPacketTrust: classifyPacketTrust,
-    selfMeasureWestDuty: selfMeasureWestDuty,
-
-    composeHierarchyRegistry: getHierarchyRegistry,
-    getHierarchyRegistry: getHierarchyRegistry,
-    getHierarchySurface: getHierarchySurface,
-    getBishopChord: getBishopChord,
-    getJudgeMetrics: getJudgeMetrics,
-
-    getReceipt: getReceipt,
-    getReceiptLight: getReceiptLight,
-    getReceiptText: getReceiptText,
-    getPacketText: getReceiptText,
-    getStatus: getReceiptLight,
-    getStatusText: getStatusText,
-    getCompactSummary: getCompactSummary,
-    getState: getState,
-
-    getCanvasReleasePacket: getCanvasReleasePacket,
-    getReleasePacket: getCanvasReleasePacket,
-    getCanvasHandoffPacket: getCanvasReleasePacket,
-    getHandoffPacket: getCanvasReleasePacket,
-    composeReleasePacket: composeReleasePacket,
-    clearReleasePacket: clearReleasePacket,
-    publishReleasePacket: publishReleasePacket,
-
-    updateDataset: updateDataset,
-    publishGlobals: publishGlobals,
-    publishAliasPaths: publishGlobals,
-    publishReceiptAliases: publishReceiptAliases,
-
-    // Authority declarations
-    ownsWestAdmissibility: true,
-    ownsDerivativeRelease: true,
-    ownsCycleClosureReceiptAudit: true,
-    ownsCanvasReleasePacket: true,
-    ownsBishopReceiptTrust: true,
-    northStandardAnchored: true,
-    northRailRequired: true,
-    surfaceTruthIsEvidenceOnly: true,
-    aliasIsLabel: true,
-    aliasIsEndpointProof: false,
-    strictFileContractFamilyMatchRequired: true,
-    borrowedAuthorityContractTextRejected: true,
-    currentAuthorityOutranksStoredState: true,
-    stalePacketQuarantineActive: true,
-
-    ownsUpstreamTruth: false,
-    ownsNorthGrammarTruth: false,
-    ownsNorthRailMutation: false,
-    ownsSurfaceTruthProbeMutation: false,
-    ownsEastSourceTruth: false,
-    ownsSouthOutputTruth: false,
-    ownsControlsBehavior: false,
-    ownsRouteConductorHandshakeTruth: false,
-    ownsCanvasDrawing: false,
-    ownsCanvasLifecycle: false,
-    ownsCanvasChildInternals: false,
-    ownsHexTruth: false,
-    ownsChapelTruth: false,
-    ownsProductionFileRedefinition: false,
-    ownsF21Latch: false,
-    ownsReadyText: false,
-    ownsCompletionLatch: false,
+    ownsNorthF21Latch: false,
+    ownsEastF3IntakeAdmission: false,
+    ownsSouthF8ProofReturn: false,
+    ownsCanvasF13EvidenceRelease: false,
+    ownsSupportEngineInternals: false,
+    ownsF233DownstreamReturn: false,
+    ownsRouteOrchestration: false,
+    ownsPlanetTruth: false,
+    ownsMaterialTruth: false,
+    ownsElevationTruth: false,
+    ownsHydrologyTruth: false,
+    ownsActualRendering: false,
+    ownsGeneratedImage: false,
+    ownsGraphicBox: false,
+    ownsWebGL: false,
+    ownsPublicSuperiorityClaim: false,
     ownsFinalVisualPassClaim: false,
 
-    f13Claimed: false,
-    f13EligibleForCanvas: false,
-    f13ClaimedByWest: false,
-    f21EligibleForNorth: false,
-    f21SubmittedToNorth: false,
-    f21EligibilitySubmittedToNorth: false,
-    f21Claimed: false,
-    f21ClaimedByWest: false,
-    readyTextPermissionGranted: false,
-    readyTextAllowed: false,
-    readyTextClaimed: false,
-    completionLatched: false,
-    finalCompletionLatched: false,
-    degradedCompletionLatched: false,
-    visualPassClaimed: false,
-    finalVisualPassClaimed: false,
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webgl: false,
-    productionMutationAuthorized: false,
-    canvasMutationAuthorized: false,
-    canvasDrawingAuthorized: false,
-    canvasRepairAuthorized: false,
-    canvasBuildAuthorityClaimed: false,
-    routeRepairAuthorized: false,
-    controlsRepairAuthorized: false,
-    runtimeRestartAuthorized: false,
+    visualPassClaimed: false,
 
-    state: state
+    get state() {
+      return state;
+    }
   };
 
-  // Publish authority immediately.
-  // Do not run full adjudication on load.
-  // Load publishes light receipt only.
+  state.createdAt = nowIso();
+  state.updatedAt = state.createdAt;
+
+  try {
+    const eastPacket = readEastF3IntakePacket();
+    if (hasMeaningfulEastF3Packet(eastPacket)) {
+      acceptEastF3IntakePacket(eastPacket);
+    }
+  } catch (error) {
+    recordError("INITIAL_EAST_F3_PACKET_READ_FAILED", error);
+  }
+
+  try {
+    computeFibonacciSynchronizationMetric();
+  } catch (error) {
+    recordError("INITIAL_WEST_F5_SYNC_METRIC_FAILED", error);
+  }
+
+  recordLocal("WEST_F5_ENGINE_MECHANICS_PRESSURE_ADMISSIBILITY_LOADED", {
+    file: FILE,
+    contract: CONTRACT,
+    mechanicalCoordinate: MECHANICAL_COORDINATE.coordinateId,
+    targetFile: SOUTH_FILE,
+    publicSuperiorityClaim: false
+  });
+
   publishGlobals();
-  publishReceiptAliases();
-  updateDataset();
-  scheduleRepublish();
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
 })();

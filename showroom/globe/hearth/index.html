@@ -1,847 +1,822 @@
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-chamber="true">
+<html lang="en" data-hearth-showroom-shell="true">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hearth Diagnostic Chamber</title>
+  <title>Hearth · Showroom Planet</title>
 
   <!--
-    /showroom/globe/hearth/diagnostic/index.html
-    HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8
-    Internal controlled renewal:
-    HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_TAB_INFORMATION_TAB_CATEGORY_ORBIT_READER_RENEWAL_TNT_v10
+    /showroom/globe/hearth/index.html
+    HEARTH_SHOWROOM_GLOBE_HTML_MODERN_NARRATIVE_MIRRORLAND_RESTORE_TNT_v1
 
     Full-file replacement.
-    Diagnostic route chamber interface only.
+    Showroom Hearth HTML shell only.
 
     Purpose:
-    - Preserve the planet production facility instrument chamber.
-    - Preserve copyable machine-readable receipt packets.
-    - Add reader-friendly Information tab.
-    - Add Category Orbit jump board with Return to Orbit jump logic.
-    - Separate Receipts from Information.
-    - Resolve diagnostic authorities live at click time to avoid stale page-load references.
-    - Improve West Diagnostic direct-check readability.
-    - Keep production, canvas, controls, and runtime route protected.
+    - Restore the public Hearth showroom route after accidental overwrite.
+    - Keep access to /showroom/globe/hearth/diagnostic/.
+    - Provide a modern, futuristic, reader-friendly Hearth page.
+    - Preserve the canonical Hearth canvas mount with nonzero layout.
+    - Preserve production/canvas/control/runtime separation.
+    - Marry the Hearth narrative with Mirrorland without turning narrative into diagnostic proof.
+    - Load the existing Hearth route script: /showroom/globe/hearth/index.js.
 
-    Does not authorize:
-    - production mutation
-    - canvas build
+    Does not own:
+    - diagnostic chamber
+    - canvas drawing
     - canvas release
-    - controls mutation
+    - controls
     - runtime restart
-    - visual pass claim
-    - public superiority claim
+    - planet data truth
+    - final visual pass
   -->
 
   <style>
     :root {
-      --bg: #080b10;
-      --panel: #101722;
-      --panel2: #151e2b;
-      --panel3: #0d131d;
-      --line: rgba(190, 210, 240, 0.18);
-      --text: #edf4ff;
-      --muted: #9fb0c7;
-      --soft: #c8d6ea;
-      --accent: #7ab8ff;
-      --hold: #ffcc66;
-      --pass: #79e2a6;
-      --block: #ff7b7b;
-      --code: #07101b;
-      --chip: rgba(122, 184, 255, 0.13);
-      --shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
-      --radius: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --bg0: #050814;
+      --bg1: #071225;
+      --ink: #f6f8ff;
+      --soft: #c7d3e8;
+      --muted: #8899b6;
+      --line: rgba(255,255,255,.14);
+      --line-strong: rgba(255,255,255,.24);
+      --glass: rgba(255,255,255,.074);
+      --glass-strong: rgba(255,255,255,.118);
+
+      --north: #6ca9ff;
+      --east: #45dcc5;
+      --south: #ffd26c;
+      --west: #b793ff;
+      --mirror: #ff88c8;
+      --hearth: #ff9f6e;
+      --clear: #7ae7a5;
+      --hold: #ffd166;
+      --protected: #a8b4c8;
+
+      --radius-xl: 38px;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --shadow: 0 36px 120px rgba(0,0,0,.48);
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
     * { box-sizing: border-box; }
 
     html {
-      scroll-behavior: smooth;
-      background: var(--bg);
-      color: var(--text);
+      min-height: 100%;
+      background: var(--bg0);
+      color: var(--ink);
       font-family: var(--sans);
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
+      color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(62, 120, 202, 0.24), transparent 34rem),
-        radial-gradient(circle at top right, rgba(41, 98, 155, 0.16), transparent 34rem),
-        linear-gradient(180deg, #070a10 0%, #0a1018 46%, #070a10 100%);
-      color: var(--text);
+        radial-gradient(circle at 15% 10%, rgba(108,169,255,.26), transparent 34rem),
+        radial-gradient(circle at 85% 9%, rgba(183,147,255,.22), transparent 34rem),
+        radial-gradient(circle at 50% 95%, rgba(255,159,110,.18), transparent 38rem),
+        linear-gradient(145deg, #050814 0%, #08142a 48%, #050814 100%);
+      overflow-x: hidden;
     }
 
-    a { color: inherit; }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at 50% 20%, black, transparent 74%);
+      opacity: .75;
+    }
 
-    .shell {
-      width: min(1440px, calc(100% - 32px));
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1520px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 28px 0 64px;
+      padding: 22px 0 72px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.062);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 18px 70px rgba(0,0,0,.28);
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      padding-left: 8px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 35% 30%, #ffe0aa 0 7%, transparent 8%),
+        radial-gradient(circle at 62% 70%, rgba(255,255,255,.18) 0 0, transparent 58%),
+        linear-gradient(135deg, var(--hearth), var(--west));
+      box-shadow: 0 0 34px rgba(255,159,110,.34);
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 850;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill-link {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.068);
+      color: var(--soft);
+      padding: 10px 13px;
+      font-size: 13px;
+      font-weight: 760;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .pill-link:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,.12);
+    }
+
+    .pill-link.primary {
+      color: var(--ink);
+      background: linear-gradient(135deg, rgba(255,159,110,.22), rgba(183,147,255,.16));
+      border-color: rgba(255,159,110,.34);
     }
 
     .hero {
       border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 24px;
-      background: rgba(16, 23, 34, 0.82);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(255,255,255,.108), rgba(255,255,255,.052));
       box-shadow: var(--shadow);
-      position: relative;
+      backdrop-filter: blur(26px);
       overflow: hidden;
+      position: relative;
     }
 
     .hero::after {
       content: "";
       position: absolute;
-      inset: auto -20% -40% 40%;
-      height: 180px;
-      background: radial-gradient(circle, rgba(122, 184, 255, 0.15), transparent 60%);
+      inset: auto -20% -54% 34%;
+      height: 360px;
+      background: radial-gradient(circle, rgba(255,159,110,.22), transparent 66%);
       pointer-events: none;
     }
 
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(440px, 600px);
+      gap: 26px;
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+      align-items: stretch;
+    }
+
+    .copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 26px;
+      min-width: 0;
+    }
+
     .eyebrow {
-      margin: 0 0 8px;
-      font-family: var(--mono);
+      margin: 0 0 10px;
+      color: #9edcff;
       font-size: 12px;
-      letter-spacing: 0.08em;
-      color: var(--accent);
+      letter-spacing: .14em;
       text-transform: uppercase;
+      font-weight: 850;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(30px, 5vw, 56px);
-      line-height: 1.02;
-      letter-spacing: -0.04em;
+      font-size: clamp(44px, 8vw, 104px);
+      line-height: .88;
+      letter-spacing: -.075em;
+      max-width: 880px;
     }
 
-    .subtitle {
-      margin: 14px 0 0;
+    .hero-text {
+      margin: 20px 0 0;
       color: var(--soft);
-      max-width: 900px;
-      line-height: 1.6;
-      font-size: 16px;
+      line-height: 1.68;
+      font-size: 17px;
+      max-width: 820px;
     }
 
-    .status-strip {
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .action-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 820;
+      color: var(--ink);
+      background: rgba(255,255,255,.078);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .action-link:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,.13);
+    }
+
+    .action-link.primary {
+      background: linear-gradient(135deg, rgba(255,159,110,.25), rgba(183,147,255,.18));
+      border-color: rgba(255,159,110,.36);
+    }
+
+    .status-row {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 22px;
-      position: relative;
-      z-index: 1;
     }
 
     .status-card {
-      background: rgba(7, 16, 27, 0.72);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      min-height: 78px;
-    }
-
-    .status-label {
-      display: block;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 7px;
-    }
-
-    .status-value {
-      display: block;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin: 18px 0 14px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(16, 23, 34, 0.86);
-      color: var(--soft);
-      padding: 11px 16px;
-      font-family: var(--mono);
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .tab-btn[aria-selected="true"] {
-      color: var(--text);
-      border-color: rgba(122, 184, 255, 0.48);
-      background: var(--chip);
-    }
-
-    .tab-panel {
-      display: none;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(16, 23, 34, 0.78);
-      box-shadow: var(--shadow);
+      border-radius: 22px;
+      background: rgba(5,8,20,.34);
+      padding: 14px;
+      min-height: 102px;
+      position: relative;
       overflow: hidden;
     }
 
-    .tab-panel.active { display: block; }
-
-    .panel-head {
-      padding: 22px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(7, 16, 27, 0.45);
+    .status-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--accent);
     }
 
-    .panel-head h2 {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: -0.02em;
-    }
+    .status-card.north { --accent: var(--north); }
+    .status-card.east { --accent: var(--east); }
+    .status-card.west { --accent: var(--west); }
+    .status-card.south { --accent: var(--south); }
 
-    .panel-head p {
-      margin: 8px 0 0;
+    .status-kicker {
+      display: block;
       color: var(--muted);
-      line-height: 1.55;
+      font-size: 11px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      font-weight: 850;
+      margin-bottom: 7px;
+    }
+
+    .status-title {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 840;
+      margin-bottom: 5px;
+    }
+
+    .status-copy {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.38;
+      overflow-wrap: anywhere;
+    }
+
+    .planet-stage-card {
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255,159,110,.20), transparent 32%),
+        linear-gradient(155deg, rgba(255,255,255,.13), rgba(255,255,255,.055));
+      min-height: 640px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 80px rgba(255,255,255,.045);
+    }
+
+    .planet-stage-card::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.095);
+      pointer-events: none;
+    }
+
+    .stage-topline {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+
+    .stage-badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(5,8,20,.42);
+      color: var(--soft);
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 790;
+      backdrop-filter: blur(12px);
+    }
+
+    .stage-status {
+      color: var(--hold);
+      max-width: 250px;
+      text-align: right;
+    }
+
+    .canvas-mount {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 640px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(124,220,255,.08), transparent 36%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 48%);
+    }
+
+    .canvas-mount canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-width: 320px;
+      min-height: 420px;
+    }
+
+    .fallback-orb {
+      position: absolute;
+      width: min(76%, 460px);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 26%, rgba(255,240,210,.86) 0 2%, transparent 3%),
+        radial-gradient(circle at 34% 32%, rgba(255,206,139,.34), transparent 18%),
+        radial-gradient(circle at 60% 70%, rgba(92,57,48,.46), transparent 28%),
+        radial-gradient(circle at 42% 62%, rgba(74,110,93,.34), transparent 22%),
+        linear-gradient(135deg, #2e5167, #7b4a3e 46%, #16263b);
+      box-shadow:
+        inset -46px -44px 90px rgba(0,0,0,.54),
+        inset 36px 26px 90px rgba(255,255,255,.13),
+        0 0 120px rgba(255,159,110,.20);
+      opacity: .64;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+
+    .stage-ready .fallback-orb {
+      opacity: .18;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: rgba(255,255,255,.066);
+      backdrop-filter: blur(22px);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: .95;
+      letter-spacing: -.055em;
+    }
+
+    .panel p {
+      color: var(--soft);
+      line-height: 1.68;
+      font-size: 16px;
       max-width: 900px;
     }
 
-    .receipt-grid {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      min-height: 760px;
-    }
-
-    .receipt-controls {
-      padding: 18px;
-      border-right: 1px solid var(--line);
-      background: rgba(7, 16, 27, 0.36);
-    }
-
-    .control-group {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(7, 16, 27, 0.52);
-      margin-bottom: 12px;
-    }
-
-    .control-group h3 {
-      margin: 0 0 10px;
-      font-size: 13px;
-      color: var(--soft);
-      font-family: var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .btn-row {
-      display: grid;
-      gap: 8px;
-    }
-
-    .receipt-btn,
-    .copy-btn,
-    .small-action {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(21, 30, 43, 0.92);
-      color: var(--text);
-      padding: 10px 12px;
-      font-family: var(--mono);
-      font-size: 12px;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .receipt-btn:hover,
-    .copy-btn:hover,
-    .small-action:hover {
-      border-color: rgba(122, 184, 255, 0.54);
-      background: rgba(122, 184, 255, 0.12);
-    }
-
-    .receipt-btn.primary {
-      background: rgba(122, 184, 255, 0.15);
-      border-color: rgba(122, 184, 255, 0.42);
-    }
-
-    .copy-btn {
-      text-align: center;
-    }
-
-    .receipt-output-wrap {
-      padding: 18px;
-      min-width: 0;
-    }
-
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .summary-card {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(7, 16, 27, 0.5);
-      min-height: 92px;
-    }
-
-    .summary-card strong {
-      display: block;
-      font-family: var(--mono);
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 8px;
-    }
-
-    .summary-card span {
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-      display: block;
-    }
-
-    .status-pass { color: var(--pass); }
-    .status-hold { color: var(--hold); }
-    .status-block { color: var(--block); }
-
-    pre.output {
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--code);
-      color: #dcecff;
-      padding: 16px;
-      min-height: 560px;
-      overflow: auto;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .info-wrap {
-      padding: 22px;
-    }
-
-    .orbit-board {
-      border: 1px solid var(--line);
-      background: rgba(7, 16, 27, 0.52);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 22px;
-      scroll-margin-top: 20px;
-    }
-
-    .orbit-board h3 {
-      margin: 0 0 8px;
-      font-size: 20px;
-    }
-
-    .orbit-board p {
-      margin: 0 0 16px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .orbit-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .orbit-link {
-      display: block;
-      text-decoration: none;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(21, 30, 43, 0.82);
-      padding: 12px;
-      min-height: 76px;
-    }
-
-    .orbit-link:hover {
-      border-color: rgba(122, 184, 255, 0.52);
-      background: rgba(122, 184, 255, 0.12);
-    }
-
-    .orbit-link strong {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .orbit-link span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-
-    .info-section {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 20px;
-      background: rgba(7, 16, 27, 0.42);
-      margin: 16px 0;
-      scroll-margin-top: 20px;
-    }
-
-    .info-section h3 {
-      margin: 0 0 10px;
-      font-size: 24px;
-      letter-spacing: -0.02em;
-    }
-
-    .info-section h4 {
-      margin: 18px 0 8px;
-      color: var(--soft);
-      font-size: 15px;
-    }
-
-    .info-section p {
-      color: var(--soft);
-      line-height: 1.65;
-      max-width: 980px;
-    }
-
-    .info-section ul {
-      color: var(--soft);
-      line-height: 1.65;
-      padding-left: 20px;
-    }
-
-    .info-section code {
-      font-family: var(--mono);
-      color: #dcecff;
-      background: rgba(122, 184, 255, 0.1);
-      border: 1px solid rgba(122, 184, 255, 0.14);
-      padding: 1px 5px;
-      border-radius: 6px;
-    }
-
-    .return-orbit {
-      display: inline-block;
-      margin-top: 12px;
-      text-decoration: none;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 12px;
-      color: var(--text);
-      background: rgba(122, 184, 255, 0.12);
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-
-    .two-col {
+    .story-orbit {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
+      margin-top: 18px;
     }
 
-    .mini-card {
+    .story-card {
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(21, 30, 43, 0.62);
+      border-radius: 24px;
+      background: rgba(5,8,20,.30);
+      padding: 16px;
+      min-height: 150px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .mini-card strong {
+    .story-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--accent);
+    }
+
+    .story-card.hearth { --accent: var(--hearth); }
+    .story-card.mirror { --accent: var(--mirror); }
+    .story-card.west { --accent: var(--west); }
+    .story-card.south { --accent: var(--south); }
+
+    .story-card strong {
       display: block;
+      font-size: 17px;
       margin-bottom: 8px;
-      color: var(--text);
     }
 
-    .mini-card p {
-      margin: 0;
+    .story-card span {
+      display: block;
       color: var(--muted);
+      line-height: 1.52;
+      font-size: 14px;
     }
 
-    @media (max-width: 1080px) {
-      .status-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .receipt-grid { grid-template-columns: 1fr; }
-      .receipt-controls { border-right: 0; border-bottom: 1px solid var(--line); }
-      .summary-cards { grid-template-columns: 1fr; }
-      .orbit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .two-col { grid-template-columns: 1fr; }
+    .mirror-panel {
+      background:
+        radial-gradient(circle at 80% 18%, rgba(255,136,200,.18), transparent 28rem),
+        rgba(255,255,255,.066);
     }
 
-    @media (max-width: 620px) {
-      .shell { width: min(100% - 20px, 1440px); padding-top: 14px; }
-      .hero, .panel-head, .info-wrap { padding: 16px; }
-      .status-strip { grid-template-columns: 1fr; }
-      .orbit-grid { grid-template-columns: 1fr; }
+    .mirror-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .mirror-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(5,8,20,.28);
+      padding: 14px;
+    }
+
+    .mirror-num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255,136,200,.14);
+      color: #ffd6ec;
+      font-weight: 880;
+      border: 1px solid rgba(255,136,200,.22);
+    }
+
+    .mirror-row strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .mirror-row span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .footer-panel {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: rgba(255,255,255,.058);
+      padding: 18px;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-panel code {
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    @media (max-width: 1180px) {
+      .hero-grid,
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .planet-stage-card,
+      .canvas-mount {
+        min-height: 560px;
+      }
+
+      .status-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 20px, 1520px);
+        padding-top: 10px;
+      }
+
+      .nav {
+        border-radius: 26px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .hero-grid {
+        padding: 18px;
+      }
+
+      .hero {
+        border-radius: 28px;
+      }
+
+      .planet-stage-card,
+      .canvas-mount {
+        min-height: 500px;
+        border-radius: 26px;
+      }
+
+      .status-row,
+      .story-orbit {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 18px;
+        border-radius: 26px;
+      }
     }
   </style>
 </head>
 
-<body>
-  <main class="shell">
-    <header class="hero">
-      <p class="eyebrow">Hearth Diagnostic Route · Instrument Chamber</p>
-      <h1>Hearth Diagnostic Chamber</h1>
-      <p class="subtitle">
-        This page is not the planet. It is the instrument chamber used to inspect whether
-        the planet route, diagnostic rails, gauges, receipts, and protected boundaries are aligned.
-        Receipts remain machine-readable. Information is human-readable.
-      </p>
+<body
+  data-production-mutation-authorized="false"
+  data-canvas-build-authorized="false"
+  data-canvas-release-authorized="false"
+  data-runtime-restart-authorized="false"
+>
+  <main class="page">
+    <nav class="nav" aria-label="Hearth navigation">
+      <a class="brand" href="/showroom/globe/hearth/" aria-label="Hearth showroom home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>
+          <span class="brand-title">Hearth</span>
+          <span class="brand-sub">Showroom Planet · Narrative Shell</span>
+        </span>
+      </a>
 
-      <section class="status-strip" aria-label="Current diagnostic status">
-        <div class="status-card">
-          <span class="status-label">Current Contract</span>
-          <span class="status-value" id="status-contract">HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">Internal Renewal</span>
-          <span class="status-value" id="status-renewal">HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_TAB_INFORMATION_TAB_CATEGORY_ORBIT_READER_RENEWAL_TNT_v10</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">Current Hold</span>
-          <span class="status-value" id="status-hold">Not run</span>
-        </div>
-        <div class="status-card">
-          <span class="status-label">Protected Systems</span>
-          <span class="status-value status-pass">Production=false · CanvasBuild=false · CanvasRelease=false · RuntimeRestart=false</span>
-        </div>
-      </section>
-    </header>
-
-    <nav class="tabs" aria-label="Diagnostic chamber tabs">
-      <button class="tab-btn" id="tab-receipts-btn" type="button" aria-selected="true" aria-controls="tab-receipts">Receipts</button>
-      <button class="tab-btn" id="tab-information-btn" type="button" aria-selected="false" aria-controls="tab-information">Information</button>
+      <div class="nav-links">
+        <a class="pill-link" href="/showroom/globe/">Planet showroom</a>
+        <a class="pill-link" href="#mirrorland">Mirrorland</a>
+        <a class="pill-link primary" href="/showroom/globe/hearth/diagnostic/">Diagnostic chamber</a>
+      </div>
     </nav>
 
-    <section id="tab-receipts" class="tab-panel active" role="tabpanel" aria-labelledby="tab-receipts-btn">
-      <div class="panel-head">
-        <h2>Receipt Deck</h2>
-        <p>
-          This tab runs the machine-readable diagnostic receipt deck. Direct checks resolve
-          authorities live at click time so stale page-load references are not trusted.
-        </p>
-      </div>
+    <section class="hero" aria-label="Hearth showroom">
+      <div class="hero-grid">
+        <section class="copy">
+          <div>
+            <p class="eyebrow">Old Planet · New Interface · Mirrorland-Aware</p>
+            <h1>Hearth is not a globe. Hearth is an old world.</h1>
+            <p class="hero-text">
+              The showroom reads Hearth as an ancient planetary body: carved coasts, worn systems,
+              weathered boundaries, artificial-natural inlets, and memory held inside terrain.
+              Mirrorland is the reflective layer beside it: a narrative lens for seeing patterns without
+              confusing story with diagnostic proof.
+            </p>
 
-      <div class="receipt-grid">
-        <aside class="receipt-controls" aria-label="Receipt controls">
-          <div class="control-group">
-            <h3>Primary Run</h3>
-            <div class="btn-row">
-              <button class="receipt-btn primary" type="button" data-run="light">Run Light Scan</button>
-              <button class="receipt-btn" type="button" data-run="14">14 · Next Move</button>
+            <div class="hero-actions">
+              <a class="action-link primary" href="#planet-stage">View Hearth</a>
+              <a class="action-link" href="#narrative">Read the narrative</a>
+              <a class="action-link" href="/showroom/globe/hearth/diagnostic/">Open diagnostics</a>
             </div>
           </div>
 
-          <div class="control-group">
-            <h3>Receipt Deck</h3>
-            <div class="btn-row">
-              <button class="receipt-btn" type="button" data-run="00">00 · Chamber Identity</button>
-              <button class="receipt-btn" type="button" data-run="01">01 · Load Map</button>
-              <button class="receipt-btn" type="button" data-run="02">02 · Authority Index</button>
-              <button class="receipt-btn" type="button" data-run="03">03 · Rail Summary</button>
-              <button class="receipt-btn" type="button" data-run="04">04 · Gauge Summary</button>
-              <button class="receipt-btn" type="button" data-run="05">05 · Protected Boundary</button>
-              <button class="receipt-btn" type="button" data-run="06">06 · South Lens</button>
-              <button class="receipt-btn" type="button" data-run="07">07 · LabWest Gate</button>
-              <button class="receipt-btn" type="button" data-run="08">08 · North Direct + Alias Probe</button>
-              <button class="receipt-btn" type="button" data-run="09">09 · HTML Receiver</button>
-              <button class="receipt-btn" type="button" data-run="10">10 · East Direct</button>
-              <button class="receipt-btn" type="button" data-run="11">11 · South Direct</button>
-              <button class="receipt-btn" type="button" data-run="12">12 · West Diagnostic Direct</button>
-              <button class="receipt-btn" type="button" data-run="13">13 · Canvas Boundary</button>
-              <button class="receipt-btn" type="button" data-run="99">99 · Deep Archive</button>
-            </div>
+          <section class="status-row" aria-label="NEWS standards">
+            <article class="status-card north">
+              <span class="status-kicker">North</span>
+              <span class="status-title">Orientation</span>
+              <span class="status-copy">The public page introduces the world without making diagnostic claims.</span>
+            </article>
+            <article class="status-card east">
+              <span class="status-kicker">East</span>
+              <span class="status-title">Intake</span>
+              <span class="status-copy">The route shell loads the Hearth front-end script after the mount exists.</span>
+            </article>
+            <article class="status-card west">
+              <span class="status-kicker">West</span>
+              <span class="status-title">Boundary</span>
+              <span class="status-copy">Narrative, showroom, and diagnostic proof remain separate compartments.</span>
+            </article>
+            <article class="status-card south">
+              <span class="status-kicker">South</span>
+              <span class="status-title">Output</span>
+              <span class="status-copy" id="hearthRouteStatus">Route shell ready. Loading Hearth expression.</span>
+            </article>
+          </section>
+        </section>
+
+        <section class="planet-stage-card" id="planet-stage" aria-label="Hearth planet stage">
+          <div class="stage-topline">
+            <span class="stage-badge">Hearth canvas mount</span>
+            <span class="stage-badge stage-status" id="hearthCanvasStatus">Waiting for route script</span>
           </div>
 
-          <div class="control-group">
-            <h3>Copy</h3>
-            <div class="btn-row">
-              <button class="copy-btn" type="button" data-copy="recommended">Copy Recommended Receipt</button>
-              <button class="copy-btn" type="button" data-copy="index">Copy Chamber Index</button>
-              <button class="copy-btn" type="button" data-copy="deep">Copy Deep Archive</button>
-              <button class="copy-btn" type="button" data-copy="current">Copy Current Output</button>
-            </div>
+          <div
+            id="hearthCanvasMount"
+            class="canvas-mount"
+            data-hearth-canvas-mount="true"
+            data-hearth-visible-surface="true"
+            data-hearth-showroom-surface="true"
+            data-production-mutation-authorized="false"
+            data-canvas-build-authorized="false"
+            data-canvas-release-authorized="false"
+          >
+            <canvas
+              id="hearthVisibleCanvas"
+              data-hearth-visible-canvas="true"
+              data-hearth-canvas="true"
+              data-hearth-dom-surface="true"
+              aria-label="Hearth visible planet canvas"
+            ></canvas>
+            <div class="fallback-orb" aria-hidden="true"></div>
           </div>
-
-          <div class="control-group">
-            <h3>Reader Navigation</h3>
-            <div class="btn-row">
-              <button class="small-action" type="button" data-switch-tab="information">Open Information Tab</button>
-              <button class="small-action" type="button" data-run="west-live">Run West Live Detector</button>
-            </div>
-          </div>
-        </aside>
-
-        <section class="receipt-output-wrap" aria-label="Receipt output">
-          <div class="summary-cards">
-            <div class="summary-card">
-              <strong>First Blocking Component</strong>
-              <span id="summary-blocking">NONE</span>
-            </div>
-            <div class="summary-card">
-              <strong>Next File</strong>
-              <span id="summary-next-file">UNKNOWN</span>
-            </div>
-            <div class="summary-card">
-              <strong>Next Action</strong>
-              <span id="summary-next-action">RUN_LIGHT_SCAN</span>
-            </div>
-          </div>
-
-          <pre id="receipt-output" class="output" tabindex="0">PACKET=HEARTH_DIAGNOSTIC_CHAMBER_IDLE
-RUN_STATE=NOT_RUN
-NEXT_ACTION=RUN_LIGHT_SCAN</pre>
         </section>
       </div>
     </section>
 
-    <section id="tab-information" class="tab-panel" role="tabpanel" aria-labelledby="tab-information-btn">
-      <div class="panel-head">
-        <h2>Information</h2>
+    <section class="section-grid" id="narrative" aria-label="Hearth narrative and Mirrorland">
+      <article class="panel">
+        <p class="eyebrow">Narrative architecture</p>
+        <h2>Hearth carries evidence of age.</h2>
         <p>
-          This tab explains the diagnostic chamber, gauges, receipts, chamber roles, direct checks,
-          and protected systems in reader-friendly language. Use the Category Orbit board to jump.
+          Its coastline is not treated as a simple edge. It can be read as old infrastructure:
+          carved shelf cuts, worn shore technology, ancient channels, weathered inlets, and
+          boundary systems that have survived long enough to look natural again.
         </p>
-      </div>
 
-      <div class="info-wrap">
-        <nav id="info-orbit" class="orbit-board" aria-label="Category Orbit Board">
-          <h3>Category Orbit</h3>
-          <p>
-            Choose a category to read. Each section has a Return to Orbit control that jumps back here.
-          </p>
+        <div class="story-orbit">
+          <article class="story-card hearth">
+            <strong>Ancient coast logic</strong>
+            <span>Visible coastal traces are preserved as old carved coast-boundaries, not dismissed as noise.</span>
+          </article>
+          <article class="story-card west">
+            <strong>Boundary clarity</strong>
+            <span>The showroom tells the story. The diagnostic chamber verifies the machinery. They do not collapse.</span>
+          </article>
+          <article class="story-card south">
+            <strong>World output</strong>
+            <span>The page gives visitors a stable doorway into Hearth before they enter deeper diagnostic proof.</span>
+          </article>
+          <article class="story-card mirror">
+            <strong>Mirrorland adjacency</strong>
+            <span>Mirrorland reflects patterns, symbols, and meaning without replacing the planet’s structure.</span>
+          </article>
+        </div>
+      </article>
 
-          <div class="orbit-grid">
-            <a class="orbit-link" href="#info-page">
-              <strong>How This Page Works</strong>
-              <span>Receipts, information, and protected diagnostic boundaries.</span>
-            </a>
-            <a class="orbit-link" href="#info-gauges">
-              <strong>How to Read Gauges</strong>
-              <span>PASS, HOLD, BLOCKING, and next-file signals.</span>
-            </a>
-            <a class="orbit-link" href="#info-levels">
-              <strong>Receipt Levels</strong>
-              <span>Load checks, components, direct execution, synthesis, archive.</span>
-            </a>
-            <a class="orbit-link" href="#info-chambers">
-              <strong>Chamber Roles</strong>
-              <span>North, East, South, West, LabWest, and Canvas Boundary.</span>
-            </a>
-            <a class="orbit-link" href="#info-direct">
-              <strong>Direct Checks</strong>
-              <span>Why direct receipts resolve live authorities.</span>
-            </a>
-            <a class="orbit-link" href="#info-blocking">
-              <strong>Blocking vs Non-Blocking</strong>
-              <span>How the page decides whether work is blocked.</span>
-            </a>
-            <a class="orbit-link" href="#info-trusted">
-              <strong>Trusted Receipts</strong>
-              <span>How synthesis chooses which receipts to trust.</span>
-            </a>
-            <a class="orbit-link" href="#info-next">
-              <strong>Next Lawful Move</strong>
-              <span>How to read the recommended next file and action.</span>
-            </a>
-            <a class="orbit-link" href="#info-protected">
-              <strong>Protected Systems</strong>
-              <span>What this diagnostic page cannot authorize.</span>
-            </a>
-            <a class="orbit-link" href="#info-glossary">
-              <strong>Glossary</strong>
-              <span>Common packet and chamber terms.</span>
-            </a>
-          </div>
-        </nav>
+      <article class="panel mirror-panel" id="mirrorland">
+        <p class="eyebrow">Mirrorland</p>
+        <h2>The reflective layer stays adjacent.</h2>
+        <p>
+          Mirrorland belongs beside Hearth as a reader’s lens. It helps frame what is seen,
+          but it does not overwrite the world, the route, the canvas, or the diagnostics.
+        </p>
 
-        <section id="info-page" class="info-section">
-          <h3>How This Page Works</h3>
-          <p>
-            This page is an instrument chamber. It inspects diagnostic rails, receipt surfaces,
-            rendered-target evidence, chamber alignment, and protected boundaries. It does not draw,
-            repair, release, or mutate the production Hearth planet.
-          </p>
-          <div class="two-col">
-            <div class="mini-card">
-              <strong>Receipts tab</strong>
-              <p>Machine-readable packets, direct execution checks, copy controls, and deep archive output.</p>
-            </div>
-            <div class="mini-card">
-              <strong>Information tab</strong>
-              <p>Plain-English explanations for readers who need to understand the gauges and process.</p>
+        <div class="mirror-list">
+          <div class="mirror-row">
+            <span class="mirror-num">1</span>
+            <div>
+              <strong>Reflect</strong>
+              <span>Look for repeated forms, mirrored boundaries, and symbolic echoes.</span>
             </div>
           </div>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-gauges" class="info-section">
-          <h3>How to Read Gauges</h3>
-          <p>
-            A gauge is a diagnostic reading. It usually answers four questions: what was checked,
-            whether it was found, whether it was readable, and what action should happen next.
-          </p>
-          <h4>Common readings</h4>
-          <ul>
-            <li><code>PASS</code> means the component is present and the checked condition is acceptable.</li>
-            <li><code>HOLD</code> means the component is not failed, but more evidence is needed.</li>
-            <li><code>BLOCKING=true</code> means the next action cannot lawfully proceed until the block is resolved.</li>
-            <li><code>BLOCKING=false</code> means the chamber is not blocked, but there may still be a next check.</li>
-            <li><code>UNKNOWN</code> means the chamber cannot prove the value from current evidence.</li>
-          </ul>
-          <h4>What to look for</h4>
-          <p>
-            Look for <code>FIRST_BLOCKING_COMPONENT</code>, <code>NEXT_FILE</code>,
-            <code>NEXT_ACTION</code>, and whether protected-system flags remain false.
-          </p>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-levels" class="info-section">
-          <h3>Receipt Levels</h3>
-          <p>
-            The receipt deck separates readings by level so a reader can distinguish load checks,
-            component checks, direct execution, synthesis, and deep archive.
-          </p>
-          <ul>
-            <li><strong>Level 1</strong> — Basic load and presence checks.</li>
-            <li><strong>Level 2</strong> — Component receipts and gauge summaries.</li>
-            <li><strong>Level 3</strong> — Direct execution checks such as North, East, South, West, HTML Receiver, and Canvas Boundary.</li>
-            <li><strong>Level 4</strong> — Synthesis and Next Lawful Move.</li>
-            <li><strong>Level 99</strong> — Deep Archive for the full diagnostic state.</li>
-          </ul>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-chambers" class="info-section">
-          <h3>Chamber Roles</h3>
-          <p>
-            The diagnostic chamber separates roles so evidence does not collapse into one blended authority.
-          </p>
-          <ul>
-            <li><strong>North</strong> — final diagnostic arbitration and rail synthesis.</li>
-            <li><strong>East</strong> — intake, admission, and route-surface reading.</li>
-            <li><strong>South</strong> — proof output, sidecar reading, and receipt organization.</li>
-            <li><strong>West</strong> — rendered target, endpoint-family, and boundary reading.</li>
-            <li><strong>LabWest</strong> — construct alignment gate; separate from West Diagnostic.</li>
-            <li><strong>Canvas Boundary</strong> — protection line around production drawing and release authority.</li>
-          </ul>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-direct" class="info-section">
-          <h3>Direct Checks</h3>
-          <p>
-            A direct check resolves the authority live when the button is clicked. This prevents the chamber
-            from trusting a stale object captured at page load.
-          </p>
-          <h4>Why this matters</h4>
-          <p>
-            If a file was renewed but the receipt still shows an old contract, likely causes include cache,
-            script order, stale reference, or a later script overwriting the public alias.
-          </p>
-          <h4>West example</h4>
-          <p>
-            If <code>HEARTH.diagnosticWest</code> is found but <code>WEST_DIAGNOSTIC_DIRECT_METHOD=NONE</code>,
-            the object exists but the chamber cannot find a callable method. If the live object has
-            <code>runDiagnostic</code> but the receipt still says <code>NONE</code>, the receipt deck is reading
-            stale state and must be renewed.
-          </p>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-blocking" class="info-section">
-          <h3>Blocking vs Non-Blocking</h3>
-          <p>
-            Blocking means a required component is missing, malformed, unsafe, or unreadable in a way that prevents
-            the next lawful action. Non-blocking means the page can continue, even if a direct check is still recommended.
-          </p>
-          <ul>
-            <li><code>FIRST_BLOCKING_COMPONENT=NONE</code> means no hard blocker is currently proven.</li>
-            <li><code>FIRST_BLOCKING_REASON=NONE</code> means no hard blocking reason is currently proven.</li>
-            <li><code>NEXT_ACTION</code> can still request another check even when <code>BLOCKING=false</code>.</li>
-          </ul>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-trusted" class="info-section">
-          <h3>Trusted Receipts</h3>
-          <p>
-            Trusted receipts are the receipt layers the synthesis is allowed to use for the current Next Move.
-            A receipt can be available without being trusted yet. Direct receipts are often run after synthesis asks for them.
-          </p>
-          <p>
-            When <code>DIRECT_RECEIPTS_AVAILABLE</code> includes a number but <code>DIRECT_RECEIPTS_RUN=NONE</code>,
-            the chamber is saying direct checks exist but have not been run in the current synthesis path.
-          </p>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-next" class="info-section">
-          <h3>Next Lawful Move</h3>
-          <p>
-            The Next Lawful Move is the chamber’s focused recommendation. It should point to one next file and one next action.
-            It is not a production authorization.
-          </p>
-          <h4>How to read it</h4>
-          <ul>
-            <li><code>NEXT_FILE</code> is the file or route surface to inspect, run, or renew.</li>
-            <li><code>NEXT_ACTION</code> is the immediate action.</li>
-            <li><code>DO_NOT_TOUCH</code> lists protected systems that must not be changed.</li>
-          </ul>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-protected" class="info-section">
-          <h3>Protected Systems</h3>
-          <p>
-            This chamber does not authorize production mutation, Canvas build, Canvas release, controls mutation,
-            or runtime restart. Those systems remain protected unless a separate lawful contract explicitly authorizes them.
-          </p>
-          <ul>
-            <li><code>PRODUCTION_MUTATION_AUTHORIZED=false</code></li>
-            <li><code>CANVAS_BUILD_AUTHORIZED=false</code></li>
-            <li><code>CANVAS_RELEASE_AUTHORIZED=false</code></li>
-            <li><code>CONTROL_MUTATION_AUTHORIZED=false</code></li>
-            <li><code>RUNTIME_RESTART_AUTHORIZED=false</code></li>
-          </ul>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-
-        <section id="info-glossary" class="info-section">
-          <h3>Glossary</h3>
-          <ul>
-            <li><strong>Authority</strong> — the public object or route surface the chamber can inspect.</li>
-            <li><strong>Alias</strong> — a public path such as <code>HEARTH.diagnosticWest</code>.</li>
-            <li><strong>Receipt</strong> — machine-readable proof that a component or check exists.</li>
-            <li><strong>Direct method</strong> — a callable function such as <code>runDiagnostic()</code> or <code>getReport()</code>.</li>
-            <li><strong>Light scan</strong> — a quick overview of major chambers and next action.</li>
-            <li><strong>Deep archive</strong> — the full state dump for the receipt deck.</li>
-            <li><strong>Sidecar</strong> — a diagnostic adapter that reads evidence without owning production authority.</li>
-            <li><strong>Boundary</strong> — a protection line that prevents diagnostic checks from becoming production mutations.</li>
-          </ul>
-          <a class="return-orbit" href="#info-orbit">Return to Orbit</a>
-        </section>
-      </div>
+          <div class="mirror-row">
+            <span class="mirror-num">2</span>
+            <div>
+              <strong>Separate</strong>
+              <span>Keep story, interface, and diagnostic proof in their own compartments.</span>
+            </div>
+          </div>
+          <div class="mirror-row">
+            <span class="mirror-num">3</span>
+            <div>
+              <strong>Return</strong>
+              <span>When proof is needed, return to the diagnostic chamber rather than forcing meaning into the canvas.</span>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
+
+    <footer class="footer-panel">
+      <span>
+        Showroom shell only. Diagnostic work remains in
+        <code>/showroom/globe/hearth/diagnostic/</code>.
+      </span>
+      <a class="pill-link primary" href="/showroom/globe/hearth/diagnostic/">Open diagnostic chamber</a>
+    </footer>
   </main>
+
+  <noscript>
+    <div style="padding:18px;color:#fff;background:#111827;">
+      Hearth requires JavaScript for the interactive planet expression. The diagnostic chamber remains available at /showroom/globe/hearth/diagnostic/.
+    </div>
+  </noscript>
 
   <script>
     (() => {
@@ -851,1236 +826,228 @@ NEXT_ACTION=RUN_LIGHT_SCAN</pre>
       const doc = root.document;
 
       const CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
+        "HEARTH_SHOWROOM_GLOBE_HTML_MODERN_NARRATIVE_MIRRORLAND_RESTORE_TNT_v1";
       const RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
-      const INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_TAB_INFORMATION_TAB_CATEGORY_ORBIT_READER_RENEWAL_TNT_v10";
-      const INTERNAL_RENEWAL_RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_TAB_INFORMATION_TAB_CATEGORY_ORBIT_READER_RENEWAL_RECEIPT_v10";
-      const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_TNT_v9_1";
-      const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_RECEIPT_v9_1";
-      const EARLIER_INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_RECEIPT_DECK_SEQUENTIAL_COMPARTMENTALIZATION_TNT_v9";
-
+        "HEARTH_SHOWROOM_GLOBE_HTML_MODERN_NARRATIVE_MIRRORLAND_RESTORE_RECEIPT_v1";
       const VERSION =
-        "2026-06-09.hearth-diagnostic-route-receipt-tab-information-tab-category-orbit-reader-renewal-v10";
-
-      const TARGET_ROUTE = "/showroom/globe/hearth/";
-      const DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-      const FILE = "/showroom/globe/hearth/diagnostic/index.html";
+        "2026-06-09.hearth-showroom-globe-html-modern-narrative-mirrorland-restore-v1";
+      const FILE = "/showroom/globe/hearth/index.html";
+      const ROUTE_SCRIPT = "/showroom/globe/hearth/index.js";
 
       const NO_CLAIMS = Object.freeze({
-        PRODUCTION_MUTATION_AUTHORIZED: false,
-        HEARTH_REPAIR_AUTHORIZED: false,
-        ROUTE_REPAIR_AUTHORIZED: false,
-        ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
-        CONTROL_MUTATION_AUTHORIZED: false,
-        CONTROLS_MUTATION_AUTHORIZED: false,
-        CANVAS_DRAWING_AUTHORIZED: false,
-        CANVAS_CREATION_AUTHORIZED: false,
-        CANVAS_BUILD_AUTHORIZED: false,
-        CANVAS_REPAIR_AUTHORIZED: false,
-        CANVAS_RELEASE_AUTHORIZED: false,
-        RUNTIME_RESTART_AUTHORIZED: false,
-        F13_CLAIMED: false,
-        F21_CLAIMED: false,
-        F55_CLAIMED: false,
-        READY_TEXT_CLAIMED: false,
-        VISUAL_PASS_CLAIMED: false,
-        FINAL_VISUAL_PASS_CLAIMED: false,
-        GENERATED_IMAGE: false,
-        GRAPHIC_BOX: false,
-        WEBGL: false,
-        PUBLIC_SUPERIORITY_CLAIM: false
-      });
-
-      const METHOD_CANDIDATES = Object.freeze([
-        "runDiagnostic",
-        "run",
-        "inspect",
-        "getReport",
-        "getReceipt",
-        "getReceiptLight",
-        "getStatus",
-        "getState",
-        "getSummary",
-        "getPacket",
-        "getPacketText",
-        "measure",
-        "probe"
-      ]);
-
-      const ALIASES = Object.freeze({
-        NORTH: [
-          "HEARTH.diagnosticRail",
-          "HEARTH.diagnosticNorth",
-          "HEARTH.diagnosticNorthRail",
-          "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
-          "HEARTH_DIAGNOSTIC_RAIL",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-          "JUDGE_NORTH",
-          "DEXTER_LAB.hearthDiagnosticRail",
-          "DEXTER_LAB.hearthDiagnosticNorth",
-          "DEXTER_LAB.hearthDiagnosticNorthRail"
-        ],
-        EAST: [
-          "HEARTH.diagnosticEast",
-          "HEARTH.diagnosticRailEast",
-          "HEARTH_DIAGNOSTIC_EAST",
-          "HEARTH_DIAGNOSTIC_RAIL_EAST",
-          "JUDGE_EAST",
-          "DEXTER_LAB.hearthDiagnosticEast",
-          "DEXTER_LAB.hearthDiagnosticRailEast"
-        ],
-        SOUTH: [
-          "HEARTH.diagnosticSouth",
-          "HEARTH.diagnosticRailSouth",
-          "HEARTH.diagnosticSouthReceiptSegregator",
-          "HEARTH_DIAGNOSTIC_SOUTH",
-          "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-          "JUDGE_SOUTH",
-          "DEXTER_LAB.hearthDiagnosticSouth",
-          "DEXTER_LAB.hearthDiagnosticRailSouth"
-        ],
-        WEST: [
-          "HEARTH.diagnosticWest",
-          "HEARTH.diagnosticRailWest",
-          "HEARTH.diagnosticWestRenderedTargetProbe",
-          "HEARTH.diagnosticWestRuntimeEndpointFamilyReader",
-          "HEARTH.WEST_DIAGNOSTIC",
-          "HEARTH.WEST_DIAGNOSTIC_DIRECT",
-          "HEARTH_DIAGNOSTIC_WEST",
-          "HEARTH_DIAGNOSTIC_RAIL_WEST",
-          "HEARTH_DIAGNOSTIC_WEST_RENDERED_TARGET_AUTHORITY_PROBE",
-          "HEARTH_DIAGNOSTIC_WEST_RUNTIME_ENDPOINT_FAMILY_READER",
-          "DEXTER_LAB.hearthDiagnosticWest",
-          "DEXTER_LAB.hearthDiagnosticRailWest"
-        ],
-        HTML_RECEIVER: [
-          "HEARTH.diagnosticGaugeVarianceReceiver",
-          "HEARTH.diagnosticConstructAlignmentGaugeReceiver",
-          "HEARTH.diagnosticRouteReceiver",
-          "HEARTH_DIAGNOSTIC_GAUGE_VARIANCE_RECEIVER",
-          "HEARTH_DIAGNOSTIC_CONSTRUCT_ALIGNMENT_GAUGE_RECEIVER",
-          "HEARTH_DIAGNOSTIC_ROUTE_RECEIVER",
-          "DEXTER_LAB.hearthDiagnosticGaugeVarianceReceiver",
-          "DEXTER_LAB.hearthDiagnosticRouteReceiver"
-        ],
-        LABWEST: [
-          "HEARTH.diagnosticLabWest",
-          "HEARTH.labWestConstruct",
-          "HEARTH.diagnosticLabWestConstruct",
-          "HEARTH_DIAGNOSTIC_LABWEST",
-          "HEARTH_DIAGNOSTIC_LABWEST_CONSTRUCT",
-          "DEXTER_LAB.hearthDiagnosticLabWest"
-        ],
-        SOUTH_POINTER: [
-          "HEARTH.southSurfacePointerSidecar",
-          "HEARTH.SOUTH_SURFACE_POINTER_SIDECAR",
-          "HEARTH.southCanvasSurfacePointerSidecar",
-          "HEARTH.diagnosticSouthSurfacePointer",
-          "HEARTH.diagnosticSouthScopeLens",
-          "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SIDECAR",
-          "HEARTH_SOUTH_SURFACE_POINTER_SIDECAR",
-          "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
-          "HEARTH_DIAGNOSTIC_SOUTH_SCOPE_LENS",
-          "DEXTER_LAB.southSurfacePointerSidecar",
-          "DEXTER_LAB.hearthSouthSurfacePointerSidecar",
-          "DEXTER_LAB.hearthDiagnosticSouthSurfacePointer"
-        ],
-        SURFACE_TRUTH: [
-          "HEARTH.canvasSurfaceTruthProbe",
-          "HEARTH.diagnosticProbeCanvasSurfaceTruth",
-          "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
-          "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-          "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
-          "DEXTER_LAB.canvasSurfaceTruthProbe",
-          "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
-        ],
-        CANVAS: [
-          "HEARTH.canvas",
-          "HEARTH.canvasHub",
-          "HEARTH.canvasParent",
-          "HEARTH.canvasAuthority",
-          "HEARTH.canvasVisiblePlanet",
-          "HEARTH.chapel1AssetsCanvasHub",
-          "HEARTH.CHAPEL_1_ASSETS_CANVAS_HUB",
-          "HEARTH_CANVAS",
-          "HEARTH_CANVAS_HUB",
-          "HEARTH_CANVAS_PARENT",
-          "HEARTH_CANVAS_AUTHORITY",
-          "DEXTER_LAB.hearthCanvas",
-          "DEXTER_LAB.hearthCanvasHub",
-          "DEXTER_LAB.hearthCanvasAuthority"
-        ]
+        productionMutationAuthorized: false,
+        hearthRepairAuthorized: false,
+        routeRepairAuthorized: false,
+        routeConductorMutationAuthorized: false,
+        controlMutationAuthorized: false,
+        controlsMutationAuthorized: false,
+        canvasDrawingAuthorized: false,
+        canvasCreationAuthorized: false,
+        canvasBuildAuthorized: false,
+        canvasRepairAuthorized: false,
+        canvasReleaseAuthorized: false,
+        runtimeRestartAuthorized: false,
+        f13Claimed: false,
+        f21Claimed: false,
+        f55Claimed: false,
+        readyTextClaimed: false,
+        visualPassClaimed: false,
+        finalVisualPassClaimed: false,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        publicSuperiorityClaim: false
       });
 
       const state = {
-        currentReceipt: "",
-        recommendedReceipt: "",
-        chamberIndex: "",
-        deepArchive: "",
-        directRunSet: new Set(),
-        latestLightScan: null,
-        latestNextMove: null,
-        updatedAt: "",
-        events: []
+        loaded: true,
+        routeScriptRequested: false,
+        routeScriptLoaded: false,
+        routeScriptError: false,
+        mountFound: false,
+        canvasFound: false,
+        mountRectNonZero: false,
+        updatedAt: ""
       };
 
       function nowIso() {
         try { return new Date().toISOString(); } catch (_error) { return ""; }
       }
 
-      function isObject(value) {
-        return Boolean(value && typeof value === "object" && !Array.isArray(value));
+      function ensureHearth() {
+        if (!root.HEARTH || typeof root.HEARTH !== "object") root.HEARTH = {};
+        if (!root.DEXTER_LAB || typeof root.DEXTER_LAB !== "object") root.DEXTER_LAB = {};
       }
 
-      function isFunction(value) {
-        return typeof value === "function";
+      function updateText(id, text) {
+        const el = doc.getElementById(id);
+        if (el) el.textContent = text;
       }
 
-      function safeString(value, fallback = "") {
-        if (value === undefined || value === null) return fallback;
-        try { return String(value); } catch (_error) { return fallback; }
-      }
+      function inspectShell() {
+        const mount = doc.getElementById("hearthCanvasMount");
+        const canvas =
+          doc.getElementById("hearthVisibleCanvas") ||
+          (mount && mount.querySelector("canvas"));
 
-      function bounded(value, limit = 6000) {
-        return safeString(value)
-          .replace(/\n/g, " ")
-          .replace(/\s+/g, " ")
-          .trim()
-          .slice(0, limit);
-      }
-
-      function clonePlain(value) {
-        try { return JSON.parse(JSON.stringify(value)); }
-        catch (_error) {
-          if (Array.isArray(value)) return value.slice();
-          if (isObject(value)) return { ...value };
-          return value;
-        }
-      }
-
-      function packetValue(value) {
-        if (value === undefined || value === null || value === "") return "UNKNOWN";
-        if (Array.isArray(value)) return value.map(packetValue).join(" | ");
-        if (isObject(value)) {
-          try { return bounded(JSON.stringify(value), 20000); }
-          catch (_error) { return bounded(value); }
-        }
-        return bounded(value);
-      }
-
-      function line(key, value) {
-        return `${key}=${packetValue(value)}`;
-      }
-
-      function readPath(path) {
-        const parts = safeString(path).replace(/^window\./, "").split(".");
-        let cursor = root;
-
-        for (const part of parts) {
-          if (!part) continue;
-          if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
-          cursor = cursor[part];
-        }
-
-        return cursor || null;
-      }
-
-      function setPath(path, value) {
-        const parts = safeString(path).replace(/^window\./, "").split(".").filter(Boolean);
-        if (!parts.length) return false;
-
-        let cursor = root;
-        for (let i = 0; i < parts.length - 1; i += 1) {
-          const part = parts[i];
-          if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
-          cursor = cursor[part];
-        }
-
-        cursor[parts[parts.length - 1]] = value;
-        return true;
-      }
-
-      function firstGlobal(paths) {
-        for (const path of paths || []) {
-          const value = readPath(path);
-          if (value) return { path, value };
-        }
-        return { path: "NONE", value: null };
-      }
-
-      function getRaw(source, key, fallback = undefined) {
-        if (!isObject(source)) return fallback;
-
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          const value = source[key];
-          return value === undefined || value === null ? fallback : value;
-        }
-
-        const lower = key.toLowerCase();
-        for (const candidate of Object.keys(source)) {
-          if (candidate.toLowerCase() === lower) {
-            const value = source[candidate];
-            return value === undefined || value === null ? fallback : value;
-          }
-        }
-
-        return fallback;
-      }
-
-      function contractOf(authority, output) {
-        return (
-          getRaw(output, "CONTRACT") ||
-          getRaw(output, "contract") ||
-          getRaw(output, "WEST_DIAGNOSTIC_CONTRACT") ||
-          getRaw(output, "SOURCE_CONTRACT") ||
-          getRaw(authority || {}, "CONTRACT") ||
-          getRaw(authority || {}, "contract") ||
-          "UNKNOWN"
-        );
-      }
-
-      function receiptOf(authority, output) {
-        return (
-          getRaw(output, "RECEIPT") ||
-          getRaw(output, "receipt") ||
-          getRaw(output, "WEST_DIAGNOSTIC_RECEIPT") ||
-          getRaw(output, "SOURCE_RECEIPT") ||
-          getRaw(authority || {}, "RECEIPT") ||
-          getRaw(authority || {}, "receipt") ||
-          "UNKNOWN"
-        );
-      }
-
-      function internalRenewalOf(authority, output) {
-        return (
-          getRaw(output, "INTERNAL_RENEWAL_CONTRACT") ||
-          getRaw(output, "internalRenewalContract") ||
-          getRaw(output, "WEST_DIAGNOSTIC_INTERNAL_RENEWAL_CONTRACT") ||
-          getRaw(authority || {}, "INTERNAL_RENEWAL_CONTRACT") ||
-          getRaw(authority || {}, "internalRenewalContract") ||
-          "UNKNOWN"
-        );
-      }
-
-      function implementationOf(authority, output) {
-        return (
-          getRaw(output, "IMPLEMENTATION_CONTRACT") ||
-          getRaw(output, "implementationContract") ||
-          getRaw(output, "WEST_DIAGNOSTIC_IMPLEMENTATION_CONTRACT") ||
-          getRaw(authority || {}, "IMPLEMENTATION_CONTRACT") ||
-          getRaw(authority || {}, "implementationContract") ||
-          "UNKNOWN"
-        );
-      }
-
-      function fileOf(authority, output) {
-        return (
-          getRaw(output, "FILE") ||
-          getRaw(output, "file") ||
-          getRaw(output, "WEST_DIAGNOSTIC_FILE") ||
-          getRaw(authority || {}, "FILE") ||
-          getRaw(authority || {}, "file") ||
-          "UNKNOWN"
-        );
-      }
-
-      function methodList(authority) {
-        if (!authority || (!isObject(authority) && !isFunction(authority))) return [];
+        let rect = { width: 0, height: 0 };
         try {
-          return Object.keys(authority).filter((key) => typeof authority[key] === "function").sort();
-        } catch (_error) {
-          return [];
-        }
-      }
+          rect = mount ? mount.getBoundingClientRect() : rect;
+        } catch (_error) {}
 
-      function parsePacketText(text) {
-        const out = {};
-        safeString(text).split(/\r?\n/).forEach((row) => {
-          const index = row.indexOf("=");
-          if (index <= 0) return;
-          out[row.slice(0, index).trim()] = row.slice(index + 1).trim();
-        });
-        return out;
-      }
-
-      function callDirect(authority) {
-        if (!authority) {
-          return {
-            executed: false,
-            method: "NONE",
-            error: "NO_AUTHORITY",
-            output: null,
-            outputText: ""
-          };
-        }
-
-        for (const method of METHOD_CANDIDATES) {
-          if (!isFunction(authority[method])) continue;
-
-          try {
-            const output =
-              method === "getReport" ? authority[method]({ refresh: true }) : authority[method]();
-
-            if (typeof output === "string") {
-              return {
-                executed: true,
-                method,
-                error: "NONE",
-                output: parsePacketText(output),
-                outputText: output
-              };
-            }
-
-            return {
-              executed: true,
-              method,
-              error: "NONE",
-              output: isObject(output) ? clonePlain(output) : output,
-              outputText: ""
-            };
-          } catch (error) {
-            return {
-              executed: true,
-              method,
-              error: bounded(error && error.message ? error.message : error),
-              output: null,
-              outputText: ""
-            };
-          }
-        }
-
-        return {
-          executed: false,
-          method: "NONE",
-          error: "NO_DIRECT_METHOD",
-          output: null,
-          outputText: ""
-        };
-      }
-
-      function inspectLive(component, aliases, options = {}) {
-        const found = firstGlobal(aliases);
-        const authority = found.value;
-        const methods = methodList(authority);
-        const call = options.execute ? callDirect(authority) : {
-          executed: false,
-          method: "NONE",
-          error: "NONE",
-          output: null,
-          outputText: ""
-        };
-
-        const output = isObject(call.output) ? call.output : {};
-
-        return {
-          component,
-          path: found.path,
-          present: Boolean(authority),
-          status: authority ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
-          methods,
-          methodCount: methods.length,
-          runExecuted: call.executed,
-          directMethod: call.method,
-          directError: call.error,
-          contract: contractOf(authority, output),
-          receipt: receiptOf(authority, output),
-          implementationContract: implementationOf(authority, output),
-          internalRenewalContract: internalRenewalOf(authority, output),
-          file: fileOf(authority, output),
-          output,
-          outputText: call.outputText,
-          renderedReadStatus:
-            getRaw(output, "WEST_DIAGNOSTIC_RENDERED_READ_STATUS") ||
-            getRaw(output, "renderedReadStatus") ||
-            "UNKNOWN",
-          targetAccessStatus:
-            getRaw(output, "WEST_DIAGNOSTIC_TARGET_ACCESS_STATUS") ||
-            getRaw(output, "targetAccessStatus") ||
-            "UNKNOWN",
-          visiblePlanetProofReady:
-            getRaw(output, "WEST_DIAGNOSTIC_VISIBLE_PLANET_PROOF_READY") ||
-            getRaw(output, "visiblePlanetProofReady") ||
-            "UNKNOWN",
-          recommendedNextFile:
-            getRaw(output, "WEST_DIAGNOSTIC_RECOMMENDED_NEXT_FILE") ||
-            getRaw(output, "NEXT_FILE") ||
-            getRaw(output, "recommendedNextFile") ||
-            "UNKNOWN",
-          recommendedNextAction:
-            getRaw(output, "WEST_DIAGNOSTIC_RECOMMENDED_NEXT_ACTION") ||
-            getRaw(output, "NEXT_ACTION") ||
-            getRaw(output, "recommendedNextAction") ||
-            "UNKNOWN"
-        };
-      }
-
-      function basePacket(receiptSequence, role, scope, component) {
-        return {
-          PACKET: `HEARTH_DIAGNOSTIC_RECEIPT_DECK_${receiptSequence}_v10`,
-          RECEIPT_LEVEL: receiptSequence === "14" ? "4_SYNTHESIS" : receiptSequence === "99" ? "99_DEEP_ARCHIVE" : "3_DIRECT_EXECUTION",
-          RECEIPT_SEQUENCE: receiptSequence,
-          ROLE: role,
-          SCOPE: scope,
-          COMPONENT: component,
-          CONTRACT,
-          RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT,
-          PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
-          EARLIER_INTERNAL_RENEWAL_CONTRACT,
-          VERSION,
-          TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE,
-          FILE,
-          UPDATED_AT: nowIso(),
-          ...NO_CLAIMS
-        };
-      }
-
-      function toPacketText(packet) {
-        const priority = [
-          "PACKET", "RECEIPT_LEVEL", "RECEIPT_SEQUENCE", "ROLE", "SCOPE", "COMPONENT",
-          "CONTRACT", "RECEIPT", "INTERNAL_RENEWAL_CONTRACT", "INTERNAL_RENEWAL_RECEIPT",
-          "PREVIOUS_INTERNAL_RENEWAL_CONTRACT", "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
-          "RUN_STATE", "TRUST_STATE", "BLOCKING", "NEXT_RECEIPT_RECOMMENDED",
-          "FIRST_BLOCKING_COMPONENT", "FIRST_BLOCKING_REASON", "TRUSTED_RECEIPTS_USED",
-          "DIRECT_RECEIPTS_AVAILABLE", "DIRECT_RECEIPTS_RUN", "QUARANTINED_RECEIPTS",
-          "HTML_RECEIVER_BLOCKING", "RAIL_COMPONENT_BLOCKING",
-          "WEST_DIAGNOSTIC_AUTHORITY_PATH", "WEST_DIAGNOSTIC_PRESENT",
-          "WEST_DIAGNOSTIC_STATUS", "WEST_DIAGNOSTIC_RUN_EXECUTED",
-          "WEST_DIAGNOSTIC_DIRECT_METHOD", "WEST_DIAGNOSTIC_DIRECT_ERROR",
-          "WEST_DIAGNOSTIC_CONTRACT", "WEST_DIAGNOSTIC_IMPLEMENTATION_CONTRACT",
-          "WEST_DIAGNOSTIC_INTERNAL_RENEWAL_CONTRACT",
-          "WEST_DIAGNOSTIC_RENDERED_READ_STATUS", "WEST_DIAGNOSTIC_TARGET_ACCESS_STATUS",
-          "WEST_DIAGNOSTIC_VISIBLE_PLANET_PROOF_READY",
-          "WEST_DIAGNOSTIC_RECOMMENDED_NEXT_FILE", "WEST_DIAGNOSTIC_RECOMMENDED_NEXT_ACTION",
-          "NEXT_FILE", "NEXT_ACTION", "DO_NOT_TOUCH", "UPDATED_AT"
-        ];
-
-        const seen = new Set();
-        const keys = priority.concat(Object.keys(packet || {})).filter((key) => {
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        });
-
-        return keys.map((key) => line(key, packet[key])).join("\n");
-      }
-
-      function runReceipt00() {
-        return {
-          ...basePacket("00", "CHAMBER_IDENTITY", "BASELINE_CHAMBER_IDENTITY", "CHAMBER"),
-          RUN_STATE: "CHAMBER_IDENTITY_READY",
-          TRUST_STATE: "PAGE_SELF_RECEIPT",
-          BLOCKING: false,
-          RECEIPTS_TAB_PRESENT: true,
-          INFORMATION_TAB_PRESENT: true,
-          CATEGORY_ORBIT_PRESENT: true,
-          RETURN_TO_ORBIT_PRESENT: true,
-          LIVE_AUTHORITY_RESOLVER_PRESENT: true,
-          NEXT_ACTION: "RUN_LIGHT_SCAN",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt01() {
-        const components = Object.keys(ALIASES).map((key) => {
-          const live = inspectLive(key, ALIASES[key], { execute: false });
-          return `${key}:${live.status}:${live.path}`;
-        });
-
-        return {
-          ...basePacket("01", "LOAD_MAP", "AUTHORITY_LOAD_OVERVIEW", "CHAMBER"),
-          RUN_STATE: "LOAD_MAP_COMPLETE",
-          TRUST_STATE: "LIVE_ALIAS_SCAN",
-          BLOCKING: false,
-          COMPONENT_LOAD_MAP: components,
-          NEXT_ACTION: "RUN_LIGHT_SCAN",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt02() {
-        const index = {};
-        Object.keys(ALIASES).forEach((key) => {
-          const live = inspectLive(key, ALIASES[key], { execute: false });
-          index[key] = {
-            present: live.present,
-            path: live.path,
-            contract: live.contract,
-            implementationContract: live.implementationContract,
-            internalRenewalContract: live.internalRenewalContract,
-            methodCount: live.methodCount,
-            methods: live.methods
-          };
-        });
-
-        return {
-          ...basePacket("02", "AUTHORITY_INDEX", "LIVE_AUTHORITY_METHOD_INDEX", "CHAMBER"),
-          RUN_STATE: "AUTHORITY_INDEX_COMPLETE",
-          TRUST_STATE: "LIVE_METHOD_SURFACE_SCAN",
-          BLOCKING: false,
-          AUTHORITY_INDEX: index,
-          NEXT_ACTION: "RUN_LIGHT_SCAN",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt03() {
-        const north = inspectLive("NORTH", ALIASES.NORTH);
-        const east = inspectLive("EAST", ALIASES.EAST);
-        const south = inspectLive("SOUTH", ALIASES.SOUTH);
-        const west = inspectLive("WEST", ALIASES.WEST);
-
-        return {
-          ...basePacket("03", "RAIL_SUMMARY", "CARDINAL_RAIL_OVERVIEW", "RAIL_COMPONENTS"),
-          RUN_STATE: "RAIL_SUMMARY_COMPLETE",
-          TRUST_STATE: "CARDINAL_RAIL_SCAN",
-          BLOCKING: false,
-          NORTH_STATUS: north.status,
-          NORTH_PATH: north.path,
-          EAST_STATUS: east.status,
-          EAST_PATH: east.path,
-          SOUTH_STATUS: south.status,
-          SOUTH_PATH: south.path,
-          WEST_STATUS: west.status,
-          WEST_PATH: west.path,
-          NEXT_ACTION: "RUN_LIGHT_SCAN",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt04() {
-        return {
-          ...basePacket("04", "GAUGE_SUMMARY", "GAUGE_READER_STATUS", "GAUGES"),
-          RUN_STATE: "GAUGE_SUMMARY_COMPLETE",
-          TRUST_STATE: "GAUGE_INFORMATION_PRESENT",
-          BLOCKING: false,
-          GAUGE_INFORMATION_TAB_PRESENT: true,
-          GAUGE_PASS_HOLD_BLOCKING_EXPLAINED: true,
-          GAUGE_NEXT_FILE_EXPLAINED: true,
-          GAUGE_PROTECTED_SYSTEMS_EXPLAINED: true,
-          NEXT_ACTION: "RUN_LIGHT_SCAN",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt05() {
-        return {
-          ...basePacket("05", "PROTECTED_BOUNDARY", "PROTECTED_SYSTEM_BOUNDARY", "BOUNDARY"),
-          RUN_STATE: "PROTECTED_BOUNDARY_COMPLETE",
-          TRUST_STATE: "NO_MUTATION_AUTHORITY",
-          BLOCKING: false,
-          FIRST_BLOCKING_COMPONENT: "NONE",
-          FIRST_BLOCKING_REASON: "NONE",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE",
-          NEXT_ACTION: "RUN_LIGHT_SCAN",
-          ...NO_CLAIMS
-        };
-      }
-
-      function runReceipt06() {
-        const sidecar = inspectLive("SOUTH_POINTER", ALIASES.SOUTH_POINTER, { execute: true });
-        state.directRunSet.add("06");
-
-        return {
-          ...basePacket("06", "SOUTH_LENS", "SOUTH_POINTER_SCOPE_LENS", "SOUTH_POINTER"),
-          RUN_STATE: sidecar.present ? "SOUTH_LENS_FOUND" : "SOUTH_LENS_NOT_FOUND",
-          TRUST_STATE: sidecar.present ? "SOUTH_LENS_PRESENT" : "SOUTH_LENS_MISSING",
-          BLOCKING: false,
-          SOUTH_LENS_AUTHORITY_PATH: sidecar.path,
-          SOUTH_LENS_PRESENT: sidecar.present,
-          SOUTH_LENS_STATUS: sidecar.status,
-          SOUTH_LENS_RUN_EXECUTED: sidecar.runExecuted,
-          SOUTH_LENS_DIRECT_METHOD: sidecar.directMethod,
-          SOUTH_LENS_CONTRACT: sidecar.contract,
-          SOUTH_LENS_IMPLEMENTATION_CONTRACT: sidecar.implementationContract,
-          SOUTH_LENS_INTERNAL_RENEWAL_CONTRACT: sidecar.internalRenewalContract,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt07() {
-        const labwest = inspectLive("LABWEST", ALIASES.LABWEST, { execute: true });
-        state.directRunSet.add("07");
-
-        return {
-          ...basePacket("07", "LABWEST_GATE", "LABWEST_CONSTRUCT_ALIGNMENT_GATE", "LABWEST"),
-          RUN_STATE: labwest.present ? "LABWEST_GATE_FOUND" : "LABWEST_GATE_NOT_FOUND",
-          TRUST_STATE: labwest.present ? "LABWEST_GATE_PRESENT" : "LABWEST_GATE_MISSING",
-          BLOCKING: false,
-          LABWEST_GATE_AUTHORITY_PATH: labwest.path,
-          LABWEST_GATE_PRESENT: labwest.present,
-          LABWEST_GATE_STATUS: labwest.status,
-          LABWEST_GATE_RUN_EXECUTED: labwest.runExecuted,
-          LABWEST_GATE_DIRECT_METHOD: labwest.directMethod,
-          LABWEST_GATE_CONTRACT: labwest.contract,
-          LABWEST_GATE_IMPLEMENTATION_CONTRACT: labwest.implementationContract,
-          LABWEST_GATE_INTERNAL_RENEWAL_CONTRACT: labwest.internalRenewalContract,
-          LABWEST_GATE_IS_SEPARATE_RECEIPT: "07 · LabWest Gate",
-          WEST_DIAGNOSTIC_IS_SEPARATE_RECEIPT: "12 · West Diagnostic Direct",
-          LABWEST_COLLAPSED_WITH_WEST_DIAGNOSTIC: false,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt08() {
-        const north = inspectLive("NORTH", ALIASES.NORTH, { execute: true });
-        state.directRunSet.add("08");
-
-        return {
-          ...basePacket("08", "NORTH_DIRECT_ALIAS_PROBE", "ONE_COMPONENT_DIRECT_EXECUTION", "NORTH_DIAGNOSTIC"),
-          RUN_STATE: north.present ? (north.runExecuted ? "NORTH_DIRECT_RUN_COMPLETE" : "NORTH_FOUND_NOT_RUN") : "NORTH_NOT_FOUND",
-          TRUST_STATE: north.present ? "NORTH_AUTHORITY_PRESENT" : "NORTH_AUTHORITY_MISSING",
-          BLOCKING: false,
-          NORTH_DIAGNOSTIC_AUTHORITY_PATH: north.path,
-          NORTH_DIAGNOSTIC_PRESENT: north.present,
-          NORTH_DIAGNOSTIC_STATUS: north.status,
-          NORTH_DIAGNOSTIC_RUN_EXECUTED: north.runExecuted,
-          NORTH_DIAGNOSTIC_DIRECT_METHOD: north.directMethod,
-          NORTH_DIAGNOSTIC_DIRECT_ERROR: north.directError,
-          NORTH_DIAGNOSTIC_CONTRACT: north.contract,
-          NORTH_DIAGNOSTIC_IMPLEMENTATION_CONTRACT: north.implementationContract,
-          NORTH_DIAGNOSTIC_INTERNAL_RENEWAL_CONTRACT: north.internalRenewalContract,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt09() {
-        const receiver = inspectLive("HTML_RECEIVER", ALIASES.HTML_RECEIVER, { execute: true });
-        state.directRunSet.add("09");
-
-        return {
-          ...basePacket("09", "HTML_RECEIVER_DIRECT_CHECK", "ONE_COMPONENT_DIRECT_EXECUTION", "HTML_RECEIVER"),
-          RUN_STATE: receiver.present ? (receiver.runExecuted ? "HTML_RECEIVER_RUN_COMPLETE" : "HTML_RECEIVER_FOUND_NOT_RUN") : "HTML_RECEIVER_NOT_FOUND",
-          TRUST_STATE: receiver.present ? "HTML_RECEIVER_PRESENT" : "HTML_RECEIVER_MISSING",
-          BLOCKING: false,
-          HTML_RECEIVER_AUTHORITY_PATH: receiver.path,
-          HTML_RECEIVER_PRESENT: receiver.present,
-          HTML_RECEIVER_STATUS: receiver.status,
-          HTML_RECEIVER_RUN_EXECUTED: receiver.runExecuted,
-          HTML_RECEIVER_DIRECT_METHOD: receiver.directMethod,
-          HTML_RECEIVER_DIRECT_ERROR: receiver.directError,
-          HTML_RECEIVER_CONTRACT: receiver.contract,
-          HTML_RECEIVER_IMPLEMENTATION_CONTRACT: receiver.implementationContract,
-          HTML_RECEIVER_INTERNAL_RENEWAL_CONTRACT: receiver.internalRenewalContract,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt10() {
-        const east = inspectLive("EAST", ALIASES.EAST, { execute: true });
-        state.directRunSet.add("10");
-
-        return {
-          ...basePacket("10", "EAST_DIRECT_CHECK", "ONE_COMPONENT_DIRECT_EXECUTION", "EAST_DIAGNOSTIC"),
-          RUN_STATE: east.present ? (east.runExecuted ? "EAST_DIRECT_RUN_COMPLETE" : "EAST_FOUND_NOT_RUN") : "EAST_NOT_FOUND",
-          TRUST_STATE: east.present ? "EAST_AUTHORITY_PRESENT" : "EAST_AUTHORITY_MISSING",
-          BLOCKING: false,
-          EAST_DIAGNOSTIC_AUTHORITY_PATH: east.path,
-          EAST_DIAGNOSTIC_PRESENT: east.present,
-          EAST_DIAGNOSTIC_STATUS: east.status,
-          EAST_DIAGNOSTIC_RUN_EXECUTED: east.runExecuted,
-          EAST_DIAGNOSTIC_DIRECT_METHOD: east.directMethod,
-          EAST_DIAGNOSTIC_DIRECT_ERROR: east.directError,
-          EAST_DIAGNOSTIC_CONTRACT: east.contract,
-          EAST_DIAGNOSTIC_IMPLEMENTATION_CONTRACT: east.implementationContract,
-          EAST_DIAGNOSTIC_INTERNAL_RENEWAL_CONTRACT: east.internalRenewalContract,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt11() {
-        const south = inspectLive("SOUTH", ALIASES.SOUTH, { execute: true });
-        state.directRunSet.add("11");
-
-        return {
-          ...basePacket("11", "SOUTH_DIRECT_CHECK", "ONE_COMPONENT_DIRECT_EXECUTION", "SOUTH_DIAGNOSTIC"),
-          RUN_STATE: south.present ? (south.runExecuted ? "SOUTH_DIRECT_RUN_COMPLETE" : "SOUTH_FOUND_NOT_RUN") : "SOUTH_NOT_FOUND",
-          TRUST_STATE: south.present ? "SOUTH_AUTHORITY_PRESENT" : "SOUTH_AUTHORITY_MISSING",
-          BLOCKING: false,
-          SOUTH_DIAGNOSTIC_AUTHORITY_PATH: south.path,
-          SOUTH_DIAGNOSTIC_PRESENT: south.present,
-          SOUTH_DIAGNOSTIC_STATUS: south.status,
-          SOUTH_DIAGNOSTIC_RUN_EXECUTED: south.runExecuted,
-          SOUTH_DIAGNOSTIC_DIRECT_METHOD: south.directMethod,
-          SOUTH_DIAGNOSTIC_DIRECT_ERROR: south.directError,
-          SOUTH_DIAGNOSTIC_CONTRACT: south.contract,
-          SOUTH_DIAGNOSTIC_IMPLEMENTATION_CONTRACT: south.implementationContract,
-          SOUTH_DIAGNOSTIC_INTERNAL_RENEWAL_CONTRACT: south.internalRenewalContract,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt12() {
-        const west = inspectLive("WEST_DIAGNOSTIC", ALIASES.WEST, { execute: true });
-        state.directRunSet.add("12");
-
-        return {
-          ...basePacket("12", "WEST_DIAGNOSTIC_DIRECT_CHECK", "ONE_COMPONENT_DIRECT_EXECUTION", "WEST_DIAGNOSTIC"),
-          RUN_STATE: west.present ? (west.runExecuted ? "WEST_DIAGNOSTIC_DIRECT_RUN_COMPLETE" : "WEST_DIAGNOSTIC_FOUND_NOT_RUN") : "WEST_DIAGNOSTIC_NOT_FOUND",
-          TRUST_STATE: west.present ? "DIAGNOSTIC_TRACK_PRESENT" : "WEST_DIAGNOSTIC_MISSING",
-          BLOCKING: false,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-
-          WEST_DIAGNOSTIC_AUTHORITY_PATH: west.path,
-          WEST_DIAGNOSTIC_PRESENT: west.present,
-          WEST_DIAGNOSTIC_STATUS: west.status,
-          WEST_DIAGNOSTIC_RUN_EXECUTED: west.runExecuted,
-          WEST_DIAGNOSTIC_DIRECT_METHOD: west.directMethod,
-          WEST_DIAGNOSTIC_DIRECT_ERROR: west.directError,
-          WEST_DIAGNOSTIC_CONTRACT: west.contract,
-          WEST_DIAGNOSTIC_RECEIPT: west.receipt,
-          WEST_DIAGNOSTIC_IMPLEMENTATION_CONTRACT: west.implementationContract,
-          WEST_DIAGNOSTIC_INTERNAL_RENEWAL_CONTRACT: west.internalRenewalContract,
-          WEST_DIAGNOSTIC_FILE: west.file,
-          WEST_DIAGNOSTIC_METHODS: west.methods,
-
-          WEST_DIAGNOSTIC_RENDERED_READ_STATUS: west.renderedReadStatus,
-          WEST_DIAGNOSTIC_TARGET_ACCESS_STATUS: west.targetAccessStatus,
-          WEST_DIAGNOSTIC_VISIBLE_PLANET_PROOF_READY: west.visiblePlanetProofReady,
-          WEST_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_STATUS:
-            getRaw(west.output, "CANVAS_SURFACE_TRUTH_STATUS") || "UNKNOWN",
-          WEST_DIAGNOSTIC_RECOMMENDED_NEXT_FILE: west.recommendedNextFile,
-          WEST_DIAGNOSTIC_RECOMMENDED_NEXT_ACTION: west.recommendedNextAction,
-
-          LABWEST_GATE_IS_SEPARATE_RECEIPT: "07 · LabWest Gate",
-          WEST_DIAGNOSTIC_IS_SEPARATE_RECEIPT: "12 · West Diagnostic Direct",
-          LABWEST_COLLAPSED_WITH_WEST_DIAGNOSTIC: false,
-          NEXT_ACTION: west.runExecuted ? "RUN_14_NEXT_MOVE_SYNTHESIS" : "VERIFY_WEST_SCRIPT_LOAD_OR_CACHE",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runReceipt13() {
-        const canvas = inspectLive("CANVAS", ALIASES.CANVAS, { execute: false });
-        state.directRunSet.add("13");
-
-        return {
-          ...basePacket("13", "CANVAS_BOUNDARY", "CANVAS_PROTECTION_BOUNDARY", "CANVAS_BOUNDARY"),
-          RUN_STATE: "CANVAS_BOUNDARY_CHECK_COMPLETE",
-          TRUST_STATE: "CANVAS_PROTECTED",
-          BLOCKING: false,
-          CANVAS_AUTHORITY_PATH: canvas.path,
-          CANVAS_AUTHORITY_PRESENT: canvas.present,
-          CANVAS_AUTHORITY_STATUS: canvas.status,
-          CANVAS_CONTRACT: canvas.contract,
-          CANVAS_BOUNDARY_PROTECTED: true,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_ACTION: "RUN_NEXT_MOVE_SYNTHESIS",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE",
-          ...NO_CLAIMS
-        };
-      }
-
-      function runLightScan() {
-        const north = inspectLive("NORTH", ALIASES.NORTH);
-        const east = inspectLive("EAST", ALIASES.EAST);
-        const south = inspectLive("SOUTH", ALIASES.SOUTH);
-        const west = inspectLive("WEST_DIAGNOSTIC", ALIASES.WEST);
-        const receiver = inspectLive("HTML_RECEIVER", ALIASES.HTML_RECEIVER);
-        const southPointer = inspectLive("SOUTH_POINTER", ALIASES.SOUTH_POINTER);
-        const canvas = inspectLive("CANVAS", ALIASES.CANVAS);
-
-        let nextFile = "/assets/hearth/hearth.diagnostic.west.js";
-        let nextAction = "RUN_WEST_DIAGNOSTIC_DIRECT_CHECK";
-
-        if (!west.present) {
-          nextFile = "/assets/hearth/hearth.diagnostic.west.js";
-          nextAction = "VERIFY_WEST_DIAGNOSTIC_LOAD";
-        } else if (state.directRunSet.has("12")) {
-          nextFile = "/assets/hearth/hearth.diagnostic.rail.js";
-          nextAction = "RUN_NORTH_DIRECT_ALIAS_PROBE_OR_NEXT_MOVE_SYNTHESIS";
-        }
-
-        const packet = {
-          ...basePacket("LIGHT", "LIGHT_SCAN", "FAST_SYNTHESIS", "CHAMBER"),
-          RUN_STATE: "LIGHT_SCAN",
-          TRUST_STATE: "CURRENT_SYNTHESIS",
-          BLOCKING: false,
-          FIRST_BLOCKING_COMPONENT: "NONE",
-          FIRST_BLOCKING_REASON: "NONE",
-          NORTH: north.status,
-          EAST: east.status,
-          SOUTH: south.status,
-          WEST_DIAGNOSTIC: west.status,
-          HTML_RECEIVER: receiver.status,
-          SOUTH_POINTER: southPointer.status,
-          CANVAS_BOUNDARY: canvas.status,
-          DIRECT_RECEIPTS_AVAILABLE: "08,09,10,11,12",
-          DIRECT_RECEIPTS_RUN: Array.from(state.directRunSet).sort().join(",") || "NONE",
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-          NEXT_FILE: nextFile,
-          NEXT_ACTION: nextAction,
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-
-        state.latestLightScan = packet;
-        return packet;
-      }
-
-      function runReceipt14() {
-        const light = runLightScan();
-        const west = inspectLive("WEST_DIAGNOSTIC", ALIASES.WEST, { execute: false });
-        const westDirectRun = state.directRunSet.has("12");
-        const trusted = ["00", "01", "02", "03", "04", "05", "06", "07", "13"];
-
-        let nextFile = light.NEXT_FILE;
-        let nextAction = light.NEXT_ACTION;
-
-        if (west.present && !westDirectRun) {
-          nextFile = "/assets/hearth/hearth.diagnostic.west.js";
-          nextAction = "RUN_WEST_DIAGNOSTIC_DIRECT_CHECK";
-        } else if (west.present && westDirectRun) {
-          nextFile = "/assets/hearth/hearth.diagnostic.rail.js";
-          nextAction = "RUN_NORTH_DIRECT_ALIAS_PROBE";
-        }
-
-        const packet = {
-          ...basePacket("14", "NEXT_LAWFUL_MOVE", "FINAL_FOCUSED_SYNTHESIS", "CHAMBER"),
-          RUN_STATE: "LIGHT_SCAN",
-          TRUST_STATE: "CURRENT_SYNTHESIS",
-          BLOCKING: false,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-
-          FIRST_BLOCKING_COMPONENT: "NONE",
-          FIRST_BLOCKING_REASON: "NONE",
-          TRUSTED_RECEIPTS_USED: trusted.join(","),
-          DIRECT_RECEIPTS_AVAILABLE: "08,09,10,11,12",
-          DIRECT_RECEIPTS_RUN: Array.from(state.directRunSet).sort().join(",") || "NONE",
-          QUARANTINED_RECEIPTS: "NONE",
-          HTML_RECEIVER_BLOCKING: false,
-          RAIL_COMPONENT_BLOCKING: "NONE",
-          NEXT_FILE: nextFile,
-          NEXT_ACTION: nextAction,
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-
-        state.latestNextMove = packet;
-        return packet;
-      }
-
-      function runReceipt99() {
-        const receipts = {
-          "00": runReceipt00(),
-          "01": runReceipt01(),
-          "02": runReceipt02(),
-          "03": runReceipt03(),
-          "04": runReceipt04(),
-          "05": runReceipt05(),
-          "06": inspectLive("SOUTH_POINTER", ALIASES.SOUTH_POINTER, { execute: false }),
-          "07": inspectLive("LABWEST", ALIASES.LABWEST, { execute: false }),
-          "08": inspectLive("NORTH", ALIASES.NORTH, { execute: false }),
-          "09": inspectLive("HTML_RECEIVER", ALIASES.HTML_RECEIVER, { execute: false }),
-          "10": inspectLive("EAST", ALIASES.EAST, { execute: false }),
-          "11": inspectLive("SOUTH", ALIASES.SOUTH, { execute: false }),
-          "12": inspectLive("WEST_DIAGNOSTIC", ALIASES.WEST, { execute: false }),
-          "13": runReceipt13(),
-          "14": runReceipt14()
-        };
-
-        return {
-          ...basePacket("99", "DEEP_ARCHIVE", "FULL_CHAMBER_ARCHIVE", "CHAMBER"),
-          RUN_STATE: "DEEP_ARCHIVE_COMPLETE",
-          TRUST_STATE: "FULL_ARCHIVE",
-          BLOCKING: false,
-          RECEIPT_OBJECTS: receipts,
-          DIRECT_RECEIPTS_RUN: Array.from(state.directRunSet).sort().join(",") || "NONE",
-          NEXT_FILE: receipts["14"].NEXT_FILE,
-          NEXT_ACTION: receipts["14"].NEXT_ACTION,
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      function runWestLiveDetector() {
-        const west = inspectLive("WEST_DIAGNOSTIC", ALIASES.WEST, { execute: true });
-        state.directRunSet.add("12");
-
-        return {
-          ...basePacket("12", "WEST_LIVE_DETECTOR", "LIVE_CACHE_AND_METHOD_SURFACE_DETECTOR", "WEST_DIAGNOSTIC"),
-          RUN_STATE: west.present ? (west.runExecuted ? "WEST_LIVE_OBJECT_RUN_COMPLETE" : "WEST_LIVE_OBJECT_FOUND_NOT_RUN") : "WEST_LIVE_OBJECT_NOT_FOUND",
-          TRUST_STATE: "LIVE_AUTHORITY_RESOLVER",
-          BLOCKING: false,
-          WEST_LIVE_FOUND: west.present,
-          WEST_LIVE_PATH: west.path,
-          WEST_LIVE_CONTRACT: west.contract,
-          WEST_LIVE_IMPLEMENTATION_CONTRACT: west.implementationContract,
-          WEST_LIVE_INTERNAL_RENEWAL_CONTRACT: west.internalRenewalContract,
-          WEST_LIVE_FILE: west.file,
-          WEST_LIVE_METHODS: west.methods,
-          WEST_LIVE_RUN_EXECUTED: west.runExecuted,
-          WEST_LIVE_DIRECT_METHOD: west.directMethod,
-          WEST_LIVE_DIRECT_ERROR: west.directError,
-          CACHE_OR_LOAD_INTERPRETATION:
-            west.internalRenewalContract.includes("v10") && west.methods.includes("runDiagnostic")
-              ? "LIVE_OBJECT_HAS_V10_DIRECT_METHOD_SURFACE"
-              : "LIVE_OBJECT_DOES_NOT_SHOW_V10_DIRECT_METHOD_SURFACE_CACHE_LOAD_OR_OVERWRITE_CHECK_NEEDED",
-          NEXT_FILE:
-            west.internalRenewalContract.includes("v10") ? "/assets/hearth/hearth.diagnostic.rail.js" : "/showroom/globe/hearth/diagnostic/index.html",
-          NEXT_ACTION:
-            west.internalRenewalContract.includes("v10") ? "RUN_14_NEXT_MOVE_SYNTHESIS" : "VERIFY_SCRIPT_LOAD_CACHE_OR_ALIAS_OVERWRITE",
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        };
-      }
-
-      const runners = {
-        light: runLightScan,
-        "00": runReceipt00,
-        "01": runReceipt01,
-        "02": runReceipt02,
-        "03": runReceipt03,
-        "04": runReceipt04,
-        "05": runReceipt05,
-        "06": runReceipt06,
-        "07": runReceipt07,
-        "08": runReceipt08,
-        "09": runReceipt09,
-        "10": runReceipt10,
-        "11": runReceipt11,
-        "12": runReceipt12,
-        "13": runReceipt13,
-        "14": runReceipt14,
-        "99": runReceipt99,
-        "west-live": runWestLiveDetector
-      };
-
-      function updateSummary(packet) {
-        const blocking = packet.FIRST_BLOCKING_COMPONENT || "NONE";
-        const nextFile = packet.NEXT_FILE || packet.WEST_DIAGNOSTIC_RECOMMENDED_NEXT_FILE || "UNKNOWN";
-        const nextAction = packet.NEXT_ACTION || packet.WEST_DIAGNOSTIC_RECOMMENDED_NEXT_ACTION || "UNKNOWN";
-
-        doc.getElementById("summary-blocking").textContent = blocking;
-        doc.getElementById("summary-next-file").textContent = nextFile;
-        doc.getElementById("summary-next-action").textContent = nextAction;
-        doc.getElementById("status-hold").textContent = nextAction;
-
-        doc.getElementById("summary-blocking").className =
-          blocking === "NONE" ? "status-pass" : "status-block";
-      }
-
-      function displayPacket(packet) {
-        const text = toPacketText(packet);
-        state.currentReceipt = text;
-        state.recommendedReceipt = text;
+        state.mountFound = Boolean(mount);
+        state.canvasFound = Boolean(canvas);
+        state.mountRectNonZero = Boolean(rect.width > 0 && rect.height > 0);
         state.updatedAt = nowIso();
 
-        const output = doc.getElementById("receipt-output");
-        output.textContent = text;
-        updateSummary(packet);
-
-        root.HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_LAST_RECEIPT = packet;
-        root.HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_LAST_RECEIPT_TEXT = text;
-        root.HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_LAST_UPDATED_AT = state.updatedAt;
+        return {
+          mount,
+          canvas,
+          rect,
+          mountFound: state.mountFound,
+          canvasFound: state.canvasFound,
+          mountRectNonZero: state.mountRectNonZero
+        };
       }
 
-      function runById(id) {
-        const runner = runners[id] || runners.light;
-        const packet = runner();
-        displayPacket(packet);
-
-        if (id === "99") state.deepArchive = state.currentReceipt;
-        if (id === "02") state.chamberIndex = state.currentReceipt;
-
-        return packet;
-      }
-
-      function buildChamberIndexText() {
-        const packet = runReceipt02();
-        return toPacketText(packet);
-      }
-
-      function buildDeepArchiveText() {
-        const packet = runReceipt99();
-        return toPacketText(packet);
-      }
-
-      async function copyText(text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          return true;
-        } catch (_error) {
-          const area = doc.createElement("textarea");
-          area.value = text;
-          area.setAttribute("readonly", "true");
-          area.style.position = "fixed";
-          area.style.left = "-9999px";
-          doc.body.appendChild(area);
-          area.select();
-          let ok = false;
-          try { ok = doc.execCommand("copy"); } catch (_err) { ok = false; }
-          area.remove();
-          return ok;
-        }
-      }
-
-      function switchTab(name) {
-        const receipts = doc.getElementById("tab-receipts");
-        const information = doc.getElementById("tab-information");
-        const receiptsBtn = doc.getElementById("tab-receipts-btn");
-        const informationBtn = doc.getElementById("tab-information-btn");
-
-        const showInfo = name === "information";
-
-        receipts.classList.toggle("active", !showInfo);
-        information.classList.toggle("active", showInfo);
-        receiptsBtn.setAttribute("aria-selected", String(!showInfo));
-        informationBtn.setAttribute("aria-selected", String(showInfo));
-      }
-
-      function bindUi() {
-        doc.querySelectorAll("[data-run]").forEach((button) => {
-          button.addEventListener("click", () => runById(button.dataset.run));
-        });
-
-        doc.querySelectorAll("[data-copy]").forEach((button) => {
-          button.addEventListener("click", async () => {
-            const type = button.dataset.copy;
-            let text = state.currentReceipt || "";
-
-            if (type === "recommended") text = state.recommendedReceipt || state.currentReceipt || toPacketText(runReceipt14());
-            if (type === "index") text = state.chamberIndex || buildChamberIndexText();
-            if (type === "deep") text = state.deepArchive || buildDeepArchiveText();
-
-            await copyText(text);
-          });
-        });
-
-        doc.querySelectorAll("[data-switch-tab]").forEach((button) => {
-          button.addEventListener("click", () => switchTab(button.dataset.switchTab));
-        });
-
-        doc.getElementById("tab-receipts-btn").addEventListener("click", () => switchTab("receipts"));
-        doc.getElementById("tab-information-btn").addEventListener("click", () => switchTab("information"));
-      }
-
-      function publishApi() {
-        if (!root.HEARTH) root.HEARTH = {};
-        if (!root.DEXTER_LAB) root.DEXTER_LAB = {};
+      function publishShell() {
+        ensureHearth();
 
         const api = {
           contract: CONTRACT,
           CONTRACT,
           receipt: RECEIPT,
           RECEIPT,
-          internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-          internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
           version: VERSION,
           file: FILE,
-          targetRoute: TARGET_ROUTE,
-          diagnosticRoute: DIAGNOSTIC_ROUTE,
-
-          runLightScan,
-          runReceipt00,
-          runReceipt01,
-          runReceipt02,
-          runReceipt03,
-          runReceipt04,
-          runReceipt05,
-          runReceipt06,
-          runReceipt07,
-          runReceipt08,
-          runReceipt09,
-          runReceipt10,
-          runReceipt11,
-          runReceipt12,
-          runReceipt13,
-          runReceipt14,
-          runReceipt99,
-          runWestLiveDetector,
-          runById,
-
+          routeScript: ROUTE_SCRIPT,
+          role: "HEARTH_SHOWROOM_HTML_SHELL",
+          narrativeLayer: "HEARTH_OLD_WORLD_AND_MIRRORLAND_ADJACENCY",
+          diagnosticRoute: "/showroom/globe/hearth/diagnostic/",
+          publicRoute: "/showroom/globe/hearth/",
+          inspectShell,
           getReceiptLight() {
+            const shell = inspectShell();
             return {
-              role: "HEARTH_DIAGNOSTIC_ROUTE_CHAMBER",
+              role: "HEARTH_SHOWROOM_HTML_SHELL",
               contract: CONTRACT,
               receipt: RECEIPT,
-              internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-              internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
               version: VERSION,
               file: FILE,
-              receiptsTabPresent: true,
-              informationTabPresent: true,
-              categoryOrbitPresent: true,
-              returnToOrbitPresent: true,
-              liveAuthorityResolverPresent: true,
-              directMethodSurfaceDetectorPresent: true,
+              routeScript: ROUTE_SCRIPT,
+              mountFound: shell.mountFound,
+              canvasFound: shell.canvasFound,
+              mountRectNonZero: shell.mountRectNonZero,
+              routeScriptRequested: state.routeScriptRequested,
+              routeScriptLoaded: state.routeScriptLoaded,
+              routeScriptError: state.routeScriptError,
+              mirrorlandNarrativePresent: true,
+              diagnosticChamberLinkPresent: true,
+              newsStandardPresent: true,
               updatedAt: state.updatedAt || nowIso(),
               ...NO_CLAIMS
             };
           },
-
           getReceipt() {
             return {
               ...this.getReceiptLight(),
-              currentReceiptText: state.currentReceipt,
-              recommendedReceiptText: state.recommendedReceipt,
-              chamberIndexText: state.chamberIndex,
-              deepArchiveText: state.deepArchive,
-              directReceiptsRun: Array.from(state.directRunSet).sort(),
-              latestLightScan: clonePlain(state.latestLightScan),
-              latestNextMove: clonePlain(state.latestNextMove)
+              protectedSystems: {
+                production: false,
+                canvasBuild: false,
+                canvasRelease: false,
+                controlsMutation: false,
+                runtimeRestart: false
+              }
             };
           },
-
-          getReport() {
-            return runReceipt14();
-          },
-
           getState() {
             return {
-              updatedAt: state.updatedAt,
-              directReceiptsRun: Array.from(state.directRunSet).sort(),
-              latestLightScan: clonePlain(state.latestLightScan),
-              latestNextMove: clonePlain(state.latestNextMove),
+              ...state,
               ...NO_CLAIMS
             };
-          }
+          },
+          ...NO_CLAIMS
         };
 
-        root.HEARTH.diagnosticChamber = api;
-        root.HEARTH.diagnosticReceiptDeck = api;
-        root.HEARTH_DIAGNOSTIC_ROUTE_CHAMBER = api;
-        root.HEARTH_DIAGNOSTIC_RECEIPT_DECK = api;
-        root.DEXTER_LAB.hearthDiagnosticChamber = api;
-        root.DEXTER_LAB.hearthDiagnosticReceiptDeck = api;
+        root.HEARTH.showroomHearthShell = api;
+        root.HEARTH.hearthShowroomShell = api;
+        root.HEARTH_SHOWROOM_HEARTH_HTML_SHELL = api;
+        root.DEXTER_LAB.hearthShowroomShell = api;
 
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_LOADED__ = true;
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_CONTRACT__ = CONTRACT;
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_CANVAS_RELEASE_AUTHORIZED__ = false;
-        root.__HEARTH_DIAGNOSTIC_ROUTE_CHAMBER_RUNTIME_RESTART_AUTHORIZED__ = false;
+        root.__HEARTH_SHOWROOM_HEARTH_HTML_SHELL_LOADED__ = true;
+        root.__HEARTH_SHOWROOM_HEARTH_HTML_SHELL_CONTRACT__ = CONTRACT;
+        root.__HEARTH_SHOWROOM_HEARTH_HTML_SHELL_VERSION__ = VERSION;
+        root.__HEARTH_SHOWROOM_HEARTH_PRODUCTION_MUTATION_AUTHORIZED__ = false;
+        root.__HEARTH_SHOWROOM_HEARTH_CANVAS_BUILD_AUTHORIZED__ = false;
+        root.__HEARTH_SHOWROOM_HEARTH_CANVAS_RELEASE_AUTHORIZED__ = false;
+        root.__HEARTH_SHOWROOM_HEARTH_RUNTIME_RESTART_AUTHORIZED__ = false;
 
         return api;
       }
 
-      function init() {
-        bindUi();
-        publishApi();
-        displayPacket(runReceipt00());
+      function markStageReady() {
+        const stage = doc.getElementById("planet-stage");
+        if (stage) stage.classList.add("stage-ready");
       }
 
-      init();
+      function loadRouteScript() {
+        if (state.routeScriptRequested) return;
+
+        state.routeScriptRequested = true;
+        updateText("hearthRouteStatus", "Route script requested.");
+        updateText("hearthCanvasStatus", "Loading Hearth expression");
+
+        const existing = doc.querySelector('script[data-hearth-route-script="true"]');
+        if (existing) existing.remove();
+
+        const script = doc.createElement("script");
+        script.dataset.hearthRouteScript = "true";
+        script.async = false;
+        script.src = `${ROUTE_SCRIPT}?v=${encodeURIComponent(VERSION)}`;
+
+        script.onload = () => {
+          state.routeScriptLoaded = true;
+          state.routeScriptError = false;
+          state.updatedAt = nowIso();
+          markStageReady();
+          updateText("hearthRouteStatus", "Hearth route script loaded.");
+          updateText("hearthCanvasStatus", "Hearth expression loaded");
+          publishShell();
+        };
+
+        script.onerror = () => {
+          state.routeScriptLoaded = false;
+          state.routeScriptError = true;
+          state.updatedAt = nowIso();
+          updateText("hearthRouteStatus", "Route script did not load. The showroom shell remains intact.");
+          updateText("hearthCanvasStatus", "Route script unavailable");
+          publishShell();
+        };
+
+        doc.body.appendChild(script);
+      }
+
+      function init() {
+        ensureHearth();
+        inspectShell();
+        publishShell();
+
+        if (state.mountFound && state.canvasFound && state.mountRectNonZero) {
+          updateText("hearthRouteStatus", "Mount ready. Loading Hearth expression.");
+          updateText("hearthCanvasStatus", "Mount ready");
+        } else {
+          updateText("hearthRouteStatus", "Mount prepared. Layout still being measured.");
+          updateText("hearthCanvasStatus", "Mount measuring");
+        }
+
+        loadRouteScript();
+      }
+
+      if (doc.readyState === "loading") {
+        doc.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
     })();
   </script>
 </body>

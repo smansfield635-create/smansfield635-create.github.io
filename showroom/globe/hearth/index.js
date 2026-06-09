@@ -1,50 +1,43 @@
 /*
   /showroom/globe/hearth/index.js
-  HEARTH_FACILITY_AUDRALIA_PRODUCTION_CHAMBER_TED_ORBIT_CONTROLLER_TNT_v1
-  Third-file replacement.
-  Scope: public route controller only.
+  HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_RENEWAL_TNT_v2
+  Full-file replacement.
+  Scope: public route controller/content only.
   Purpose:
-  - Control TED-style facility orbit.
-  - Control Return to Orbit.
-  - Control Platform / Engineering lens.
-  - Maintain people-friendly gauge text.
-  - Preserve and measure #hearthCanvasMount and #hearthVisibleCanvas.
-  - Optionally bridge to existing Hearth canvas authorities through public APIs only.
+  - Make every orbit button visibly functional.
+  - Render TED Talk-style presentation content into the reading chamber.
+  - Scroll to the selected content panel on mobile.
+  - Make Return to Orbit visibly reset the chamber.
+  - Preserve Hearth = facility, Audralia = first planetary subject.
+  - Preserve diagnostic bridge.
   Does not own:
-  - canvas engine source
-  - controls engine source
-  - runtime loop source
-  - diagnostic participant source
-  - planet renderer source
+  - canvas engine
+  - controls engine
+  - runtime loop
+  - diagnostic internals
+  - planet renderer
 */
 
-(function hearthFacilityAudraliaProductionChamberController() {
+(function hearthFacilityOrbitContentController() {
   "use strict";
 
   var root = window;
   var doc = document;
 
-  var CONTRACT = "HEARTH_FACILITY_AUDRALIA_PRODUCTION_CHAMBER_TED_ORBIT_CONTROLLER_TNT_v1";
-  var RECEIPT = "HEARTH_FACILITY_AUDRALIA_PRODUCTION_CHAMBER_TED_ORBIT_CONTROLLER_RECEIPT_v1";
-  var VERSION = "2026-06-09.hearth-facility-audralia-production-chamber-ted-orbit-controller-v1";
+  var CONTRACT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_RENEWAL_TNT_v2";
+  var RECEIPT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_RENEWAL_RECEIPT_v2";
+  var VERSION = "2026-06-09.hearth-facility-orbit-content-controller-renewal-v2";
 
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-
   var REQUIRED_MOUNT_ID = "hearthCanvasMount";
   var REQUIRED_CANVAS_ID = "hearthVisibleCanvas";
-
-  var OPTIONAL_ENGINE_SCRIPTS = [
-    "/assets/hearth/hearth.hex.four-pair.authority.js?v=2026-06-09-hearth-facility-optional-bridge-v1",
-    "/assets/hearth/hearth.hex.surface.js?v=2026-06-09-hearth-facility-optional-bridge-v1",
-    "/assets/hearth/hearth.canvas.js?v=2026-06-09-hearth-facility-optional-bridge-v1"
-  ];
 
   var state = {
     contract: CONTRACT,
     receipt: RECEIPT,
     version: VERSION,
-    route: TARGET_ROUTE,
+    targetRoute: TARGET_ROUTE,
     diagnosticRoute: DIAGNOSTIC_ROUTE,
     initializedAt: "",
     updatedAt: "",
@@ -54,13 +47,6 @@
     mountRectNonZero: false,
     canvasExists: false,
     canvasRectNonZero: false,
-    stagePrepared: false,
-    canvasAuthorityFound: false,
-    canvasAuthorityPath: "NONE",
-    canvasBridgeAttempted: false,
-    canvasBridgeStatus: "NOT_RUN",
-    loadedOptionalScripts: [],
-    failedOptionalScripts: [],
     productionMutationAuthorized: false,
     canvasRepairAuthorized: false,
     canvasBuildAuthorized: false,
@@ -69,184 +55,255 @@
     runtimeRestartAuthorized: false,
     routeRepairAuthorized: false,
     targetRouteRendererMutationAuthorized: false,
+    readyTextClaimed: false,
     visualPassClaimed: false,
     webGL: false
   };
 
-  var els = {
-    body: doc.body,
-    page: null,
-    mount: null,
-    canvas: null,
-    fallback: null,
-    stageStatus: null,
-    orbit: null,
-    orbitNodes: [],
-    returnButton: null,
-    lensButtons: [],
-    panel: null,
-    panelKicker: null,
-    panelTitle: null,
-    panelBody: null,
-    panelActions: null,
-    gaugeGrid: null,
-    gauges: {}
-  };
+  var els = {};
 
-  var orbitCopy = {
+  var slides = {
     orbit: {
       platform: {
         kicker: "Facility Orbit",
         title: "Hearth is the chamber. Audralia is the first subject.",
-        body: "Select a facility lens to focus the presentation. Each lens brings one part of the chamber forward while the rest of the orbit steps back.",
-        actions: [
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        thesis: "This page is a public facility presentation. It introduces the Unknown, the first planetary subject, the frontier sciences, the character builders, the gauges, and the under-the-hood diagnostic panel.",
+        points: [
+          "Hearth is not the planet. Hearth is the facility alias.",
+          "Audralia is the first planetary production subject.",
+          "The orbit lets visitors focus on one chamber lens at a time.",
+          "Return to Orbit resets the experience and brings the full map back."
+        ],
+        quote: "The website is the window. Hearth is the chamber behind the window.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       },
       engineering: {
-        kicker: "System View",
-        title: "Route shell, stage surface, orbit controller, diagnostic bridge.",
-        body: "The public route owns presentation and layout. The diagnostic route owns inspection. The canvas engine, controls engine, and runtime loop remain separate authorities.",
-        actions: [
-          { label: "Inspect the Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        kicker: "Route Controller",
+        title: "Presentation shell, measurable stage, diagnostic bridge.",
+        thesis: "This route owns public layout and narrative interaction. It does not repair canvas internals, controls, runtime, or diagnostic files.",
+        points: [
+          "The route preserves #hearthCanvasMount and #hearthVisibleCanvas.",
+          "The controller measures whether those elements have nonzero layout.",
+          "The diagnostic panel remains the proof source.",
+          "No visual pass or production repair is claimed here."
+        ],
+        quote: "Public presentation and diagnostic proof stay separate.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       }
     },
 
     unknown: {
       platform: {
         kicker: "The Unknown",
-        title: "The facility is hidden before the world is visible.",
-        body: "Hearth is the alias for a planetary production facility in the Unknown. The visitor is not entering a normal globe page. They are entering the observation room where a first world begins to take shape.",
-        actions: [
+        title: "Before the world appears, the visitor enters the facility.",
+        thesis: "The Unknown is the narrative place where Hearth exists. It should feel like a doorway into something larger than a globe demo: a hidden production room where worlds are measured before they are fully visible.",
+        points: [
+          "The visitor is entering an observation chamber.",
+          "The facility has instruments, gauges, and hidden machinery.",
+          "The visible planet is not the whole system; it is the subject in production.",
+          "The Unknown gives the page mystery without breaking the build logic."
+        ],
+        quote: "Hearth is the name on the door. The Unknown is where the door opens.",
+        cta: [
           { label: "Return to Globe Window", href: "/showroom/globe/" },
           { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
         ]
       },
       engineering: {
-        kicker: "Route Identity",
-        title: "Hearth is facility context, not planetary identity.",
-        body: "The route presents a facility shell. Audralia is the first planetary subject. The page must preserve the measurable mount and canvas IDs while avoiding production mutation claims.",
-        actions: [
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        kicker: "Location Logic",
+        title: "Hearth facility context separates location from subject.",
+        thesis: "This prevents the page from confusing facility identity with planet identity. The facility provides stage, gauges, route access, and diagnostic bridge. Audralia carries the world identity.",
+        points: [
+          "Facility identity: Hearth.",
+          "Narrative location: the Unknown.",
+          "First production subject: Audralia.",
+          "Proof room: the diagnostic panel."
+        ],
+        quote: "The route shell explains the chamber; the diagnostic panel proves what is measurable.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       }
     },
 
     audralia: {
       platform: {
-        kicker: "First Planetary Subject",
-        title: "Audralia is the possibility world entering production.",
-        body: "Audralia is the frontier playground: a world where science, terrain, characters, thresholds, and future interaction can develop together without flattening into a standard demo.",
-        actions: [
+        kicker: "Audralia",
+        title: "The first world in the chamber is a possibility planet.",
+        thesis: "Audralia is the frontier playground: a living possibility world where science, systems, characters, experiments, terrain, civilization, and future interaction can develop together.",
+        points: [
+          "Audralia is the first planetary subject under Hearth production.",
+          "It is not just a sphere to view; it is a world to build toward.",
+          "It gives the project a clean-slate frontier field.",
+          "It becomes the place where characters and sciences can eventually become interactive."
+        ],
+        quote: "Audralia is where possibility stops being abstract and starts becoming explorable.",
+        cta: [
           { label: "Visit Audralia", href: "/showroom/globe/audralia/" },
           { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
         ]
       },
       engineering: {
         kicker: "Planetary Subject",
-        title: "Audralia is the public subject; Hearth is the production facility.",
-        body: "The route should keep the subject/facility split clear. Hearth prepares the chamber and reads instruments. Audralia carries the world-object identity.",
-        actions: [
-          { label: "Visit Audralia", href: "/showroom/globe/audralia/" }
-        ]
+        title: "Audralia is the output; Hearth is the production context.",
+        thesis: "The page should keep the subject/facility split intact. Hearth prepares the stage and gathers proof. Audralia receives the frontier-science world identity.",
+        points: [
+          "Do not call Hearth the planet.",
+          "Do call Audralia the first planetary subject.",
+          "Use the stage to host the visible production viewport.",
+          "Use diagnostic receipts to determine what the stage can currently prove."
+        ],
+        quote: "Facility and subject must not collapse into the same label.",
+        cta: [{ label: "Visit Audralia", href: "/showroom/globe/audralia/" }]
       }
     },
 
     frontier: {
       platform: {
         kicker: "Frontier Sciences",
-        title: "The science lanes become buildable world thresholds.",
-        body: "Closed Loop, Energy, Infrastructure, Lattice, Manual, Trajectory, Shimmer, Waste, Water, Vision, and Urban systems can become the frontier disciplines that shape Audralia.",
-        actions: [
+        title: "The science lanes become world-building thresholds.",
+        thesis: "Frontier gives Audralia its applied-science backbone. The lanes are not decorative categories. They are future systems that can become experiments, missions, tools, and interaction paths.",
+        points: [
+          "Closed Loop turns waste, output, and reuse into playable system logic.",
+          "Energy becomes infrastructure, power, storage, and frontier capability.",
+          "Water, Waste, Urban, Vision, Lattice, and Infrastructure become world-shaping disciplines.",
+          "The page should make these sciences readable before making them technical."
+        ],
+        quote: "Frontier is the map. Hearth is the chamber. Audralia is the field.",
+        cta: [
           { label: "Open Frontier", href: "/explore/frontier/" },
           { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
         ]
       },
       engineering: {
-        kicker: "Applied Science Lanes",
-        title: "Frontier provides the category system; Hearth provides the chamber.",
-        body: "The page should translate Frontier into readable chamber gauges and future interaction categories, not copy the full Frontier directory into this route.",
-        actions: [
-          { label: "Open Frontier", href: "/explore/frontier/" }
-        ]
+        kicker: "Applied Lanes",
+        title: "Use Frontier as a category system, not a directory dump.",
+        thesis: "Hearth should translate Frontier into chamber gauges and future production lenses. The visitor should understand the science lanes without leaving the facility story.",
+        points: [
+          "Keep the eleven-lane Frontier architecture as source logic.",
+          "Condense it into readable production categories.",
+          "Show how science lanes become thresholds on Audralia.",
+          "Keep engineering detail available through diagnostics, not public overload."
+        ],
+        quote: "The public page explains the system without exhausting the visitor.",
+        cta: [{ label: "Open Frontier", href: "/explore/frontier/" }]
       }
     },
 
     characters: {
       platform: {
         kicker: "Character Builders",
-        title: "The characters are the builders of frontier thresholds.",
-        body: "The characters are not decoration. They become guides, builders, pressure points, and future interactive agents as Audralia develops its frontier sciences.",
-        actions: [
+        title: "The characters are builders of the frontier thresholds.",
+        thesis: "The characters are not art assets. They are the narrative interface for future interaction. They can become guides, builders, pressure points, scientists, operators, and witnesses inside Audralia’s frontier development.",
+        points: [
+          "Characters give the science a human doorway.",
+          "They can carry missions, choices, conflict, and discovery.",
+          "They turn frontier systems into stories the visitor can follow.",
+          "Eventually, the visitor should interact with characters as the sciences mature."
+        ],
+        quote: "The characters do not stand beside the world. They build the thresholds into it.",
+        cta: [
           { label: "Meet the Characters", href: "/characters/" },
           { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
         ]
       },
       engineering: {
-        kicker: "Narrative Interface",
-        title: "Character logic becomes interaction logic.",
-        body: "The character layer should eventually connect user-facing narrative, world-state choices, and developing science lanes without confusing fiction with diagnostic proof.",
-        actions: [
-          { label: "Meet the Characters", href: "/characters/" }
-        ]
+        kicker: "Interaction Layer",
+        title: "Character logic becomes future interface logic.",
+        thesis: "Characters can eventually bridge narrative state, world state, and scientific systems. That future layer should remain distinct from current diagnostic proof.",
+        points: [
+          "Narrative roles should map to frontier functions.",
+          "Interaction should grow after stable route, canvas, and controls evidence.",
+          "Characters should not fake system readiness.",
+          "The page can preview the future without claiming it is complete."
+        ],
+        quote: "Narrative promise must stay aligned with build evidence.",
+        cta: [{ label: "Meet the Characters", href: "/characters/" }]
       }
     },
 
     gauges: {
       platform: {
         kicker: "Facility Gauges",
-        title: "The build state should be readable before it becomes technical.",
-        body: "The public gauges explain what the facility is doing in human language: visual surface, motion and touch, narrative alignment, and diagnostic readiness.",
-        actions: [
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        title: "The gauges translate build state into human language.",
+        thesis: "A visitor should not need to read raw diagnostic receipts to understand the facility. Gauges summarize the stage, motion, narrative, and proof layers in plain language.",
+        points: [
+          "Visual Surface tells whether the stage is ready to show the subject.",
+          "Motion + Touch separates interaction from visual readiness.",
+          "Narrative Layer tracks whether the page matches Mirrorland, Frontier, and Audralia.",
+          "Under the Hood points to diagnostic proof."
+        ],
+        quote: "Good gauges do not hide complexity. They make it readable.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       },
       engineering: {
-        kicker: "Instrument Layer",
-        title: "Friendly gauges summarize receipt-backed evidence.",
-        body: "The gauges should never claim final visual success. They should summarize state while the diagnostic panel remains the source of direct proof.",
-        actions: [
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        kicker: "Receipt Translation",
+        title: "Friendly gauges should summarize, not replace, receipts.",
+        thesis: "The gauges are public-facing interpretations. The diagnostic panel remains the authority for direct execution, target surface measurement, and next lawful moves.",
+        points: [
+          "Do not claim final visual pass from public gauges.",
+          "Do not claim canvas repair from layout readiness alone.",
+          "Use diagnostic receipts to validate stage measurements.",
+          "Keep people-friendly language tied to measurable state."
+        ],
+        quote: "A gauge is a translation layer, not a proof source.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       }
     },
 
     underhood: {
       platform: {
         kicker: "Under the Hood",
-        title: "The engine room stays available without taking over the page.",
-        body: "The public page explains the chamber. The diagnostic panel proves what the chamber can see, measure, and return.",
-        actions: [
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        title: "The instrument room is available without taking over the presentation.",
+        thesis: "The public page should feel like a keynote: clear, visual, and readable. The under-the-hood panel should remain one click away for proof, inspection, direct checks, and next-move synthesis.",
+        points: [
+          "The showroom explains what the visitor is seeing.",
+          "The diagnostic panel proves what the system can currently measure.",
+          "The two experiences should support each other without merging.",
+          "A visitor can stay in the story, while a builder can enter the receipts."
+        ],
+        quote: "The public room inspires. The instrument room verifies.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       },
       engineering: {
-        kicker: "Diagnostic Boundary",
-        title: "Diagnostics inspect. The public route presents.",
-        body: "This file can measure route layout and bridge to public canvas APIs, but it does not repair canvas internals, controls, runtime, or diagnostic participant files.",
-        actions: [
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        kicker: "No-Touch Boundary",
+        title: "This controller inspects layout and interaction only.",
+        thesis: "This file may update presentation state, scroll behavior, panel content, and public gauge text. It must not mutate canvas engines, controls, runtime, or diagnostic participants.",
+        points: [
+          "Allowed: orbit UI, panel rendering, gauge text, layout measurement.",
+          "Not allowed: canvas repair, controls repair, runtime restart, renderer mutation.",
+          "Diagnostic route remains the proof chamber.",
+          "Route shell work remains separate from engine authority."
+        ],
+        quote: "Do not confuse public interactivity with engine mutation.",
+        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       }
     },
 
     diagnostic: {
       platform: {
         kicker: "Diagnostic Panel",
-        title: "The instrument room shows what the chamber can prove.",
-        body: "Open the diagnostic panel when you want direct receipts, route evidence, source checks, surface truth, and next lawful move synthesis.",
-        actions: [
-          { label: "Enter Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        title: "The diagnostic panel is the under-the-hood proof room.",
+        thesis: "When the public presentation needs proof, the diagnostic panel provides direct receipts: source evidence, surface truth, no-touch boundaries, and next lawful move synthesis.",
+        points: [
+          "Open diagnostics to inspect what the target route can actually measure.",
+          "Use direct checks to verify individual authorities.",
+          "Use Next Move to avoid guessing the next owner.",
+          "Keep public claims aligned with receipts."
+        ],
+        quote: "The page can tell the story. The panel tells the truth of the build.",
+        cta: [{ label: "Enter Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       },
       engineering: {
         kicker: "Proof Room",
-        title: "Direct receipts remain separate from public presentation.",
-        body: "Use the diagnostic panel for direct execution reports, surface measurements, no-touch boundary checks, and next-move synthesis.",
-        actions: [
-          { label: "Enter Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
+        title: "Diagnostics remain the formal authority for build state.",
+        thesis: "The public route should never replace direct receipts. Use the panel to validate surface measurements, direct execution packets, and next-file ownership.",
+        points: [
+          "Run Surface Truth Direct to measure mount and canvas geometry.",
+          "Run Next Move to confirm the next lawful owner.",
+          "Do not repair engines from the showroom controller.",
+          "Do not claim visual pass without receipt support."
+        ],
+        quote: "Receipt before repair. Measurement before claim.",
+        cta: [{ label: "Enter Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
       }
     }
   };
@@ -255,36 +312,32 @@
     return new Date().toISOString();
   }
 
-  function query(selector, scope) {
+  function $(selector, scope) {
     return (scope || doc).querySelector(selector);
   }
 
-  function queryAll(selector, scope) {
+  function $all(selector, scope) {
     return Array.prototype.slice.call((scope || doc).querySelectorAll(selector));
   }
 
-  function setText(node, value) {
-    if (node) node.textContent = value;
+  function safeText(value) {
+    return String(value == null ? "" : value);
   }
 
-  function setClass(node, className, enabled) {
-    if (!node) return;
-    node.classList.toggle(className, Boolean(enabled));
+  function getSlide(key) {
+    var activeKey = slides[key] ? key : "orbit";
+    var group = slides[activeKey];
+    return group[state.activeLens] || group.platform;
   }
 
-  function getRectStatus(node) {
+  function rectState(node) {
     if (!node || typeof node.getBoundingClientRect !== "function") {
-      return {
-        exists: Boolean(node),
-        width: 0,
-        height: 0,
-        nonzero: false
-      };
+      return { exists: Boolean(node), width: 0, height: 0, nonzero: false };
     }
 
     var rect = node.getBoundingClientRect();
-    var width = Math.max(0, Math.round(rect.width));
-    var height = Math.max(0, Math.round(rect.height));
+    var width = Math.round(rect.width || 0);
+    var height = Math.round(rect.height || 0);
 
     return {
       exists: true,
@@ -295,385 +348,295 @@
   }
 
   function captureElements() {
-    els.page = query("[data-hearth-page]");
+    els.body = doc.body;
+    els.orbitSection = $("[data-orbit-section]") || $(".orbit-section");
+    els.orbit = $(".facility-orbit");
+    els.orbitNodes = $all("[data-orbit-node]");
+    els.returnOrbit = $("[data-return-orbit]");
+    els.lensButtons = $all("[data-lens]");
+    els.panel = $("[data-orbit-panel]");
     els.mount = doc.getElementById(REQUIRED_MOUNT_ID);
     els.canvas = doc.getElementById(REQUIRED_CANVAS_ID);
-    els.fallback = query("[data-canvas-fallback]");
-    els.stageStatus = query("[data-stage-status]");
-    els.orbit = query(".facility-orbit");
-    els.orbitNodes = queryAll("[data-orbit-node]");
-    els.returnButton = query("[data-return-orbit]");
-    els.lensButtons = queryAll("[data-lens]");
-    els.panel = query("[data-orbit-panel]");
-    els.panelKicker = query("[data-panel-kicker]");
-    els.panelTitle = query("[data-panel-title]");
-    els.panelBody = query("[data-panel-body]");
-    els.panelActions = query("[data-panel-actions]");
-    els.gaugeGrid = query("[data-gauge-grid]");
-
-    els.gauges = {
-      visual: query('[data-gauge="visual"]'),
-      motion: query('[data-gauge="motion"]'),
-      narrative: query('[data-gauge="narrative"]'),
-      diagnostic: query('[data-gauge="diagnostic"]')
-    };
+    els.stageStatus = $("[data-stage-status]");
+    els.gaugeVisual = $('[data-gauge="visual"]');
+    els.gaugeMotion = $('[data-gauge="motion"]');
+    els.gaugeNarrative = $('[data-gauge="narrative"]');
+    els.gaugeDiagnostic = $('[data-gauge="diagnostic"]');
   }
 
-  function updateStageMeasurement() {
-    var mountStatus = getRectStatus(els.mount);
-    var canvasStatus = getRectStatus(els.canvas);
+  function measureStage() {
+    var mount = rectState(els.mount);
+    var canvas = rectState(els.canvas);
 
-    state.mountExists = mountStatus.exists;
-    state.mountRectNonZero = mountStatus.nonzero;
-    state.canvasExists = canvasStatus.exists;
-    state.canvasRectNonZero = canvasStatus.nonzero;
-    state.stagePrepared = Boolean(
-      state.mountExists &&
-      state.mountRectNonZero &&
-      state.canvasExists &&
-      state.canvasRectNonZero
-    );
+    state.mountExists = mount.exists;
+    state.mountRectNonZero = mount.nonzero;
+    state.canvasExists = canvas.exists;
+    state.canvasRectNonZero = canvas.nonzero;
     state.updatedAt = now();
 
     if (els.mount) {
-      els.mount.dataset.mountExists = String(state.mountExists);
       els.mount.dataset.mountRectNonZero = String(state.mountRectNonZero);
-      els.mount.dataset.canvasExists = String(state.canvasExists);
       els.mount.dataset.canvasRectNonZero = String(state.canvasRectNonZero);
+      els.mount.dataset.measuredWidth = String(mount.width);
+      els.mount.dataset.measuredHeight = String(mount.height);
     }
 
     if (els.canvas) {
       els.canvas.dataset.canvasRectNonZero = String(state.canvasRectNonZero);
-      els.canvas.dataset.measuredWidth = String(canvasStatus.width);
-      els.canvas.dataset.measuredHeight = String(canvasStatus.height);
+      els.canvas.dataset.measuredWidth = String(canvas.width);
+      els.canvas.dataset.measuredHeight = String(canvas.height);
     }
 
-    setText(
-      els.stageStatus,
-      state.stagePrepared
-        ? "Stage prepared · surface is measurable"
-        : "Stage preparing · surface measurement pending"
-    );
-
-    updateGaugeText();
-  }
-
-  function updateGaugeText() {
-    var visualStrong = els.gauges.visual ? query("strong", els.gauges.visual) : null;
-    var visualText = els.gauges.visual ? query("p", els.gauges.visual) : null;
-
-    if (state.stagePrepared) {
-      setText(visualStrong, "Stage measurable");
-      setText(
-        visualText,
-        "The chamber now gives the planetary viewport physical space for visible expression."
-      );
-    } else {
-      setText(visualStrong, "Stage being renewed");
-      setText(
-        visualText,
-        "The chamber is preparing a larger, cleaner place for the planetary view to appear."
-      );
+    if (els.stageStatus) {
+      els.stageStatus.textContent =
+        state.mountRectNonZero && state.canvasRectNonZero
+          ? "Stage prepared · surface is measurable"
+          : "Stage preparing · surface measurement pending";
     }
 
-    var motionStrong = els.gauges.motion ? query("strong", els.gauges.motion) : null;
-    var motionText = els.gauges.motion ? query("p", els.gauges.motion) : null;
-    setText(motionStrong, state.canvasAuthorityFound ? "Canvas bridge detected" : "Instrument pending");
-    setText(
-      motionText,
-      state.canvasAuthorityFound
-        ? "The page found a public Hearth canvas authority and attempted a safe mount bridge."
-        : "Movement and interaction are measured separately from the public stage."
+    updateGauges();
+  }
+
+  function updateGaugeCard(card, strongText, bodyText) {
+    if (!card) return;
+
+    var strong = $("strong", card);
+    var body = $("p", card);
+
+    if (strong) strong.textContent = strongText;
+    if (body) body.textContent = bodyText;
+  }
+
+  function updateGauges() {
+    updateGaugeCard(
+      els.gaugeVisual,
+      state.mountRectNonZero && state.canvasRectNonZero ? "Stage measurable" : "Stage being renewed",
+      state.mountRectNonZero && state.canvasRectNonZero
+        ? "The chamber now gives the production viewport physical space."
+        : "The chamber shell exists, but the measurable stage has not fully proved nonzero layout yet."
     );
 
-    var diagnosticStrong = els.gauges.diagnostic ? query("strong", els.gauges.diagnostic) : null;
-    var diagnosticText = els.gauges.diagnostic ? query("p", els.gauges.diagnostic) : null;
-    setText(diagnosticStrong, "Diagnostic panel active");
-    setText(
-      diagnosticText,
-      "The instrument room remains available for direct receipts and proof."
+    updateGaugeCard(
+      els.gaugeMotion,
+      "Awaiting interaction proof",
+      "Motion and touch should be proven separately from route-shell layout."
+    );
+
+    updateGaugeCard(
+      els.gaugeNarrative,
+      "Mirrorland aligned",
+      "Hearth now reads as a facility in the Unknown with Audralia as the first planetary subject."
+    );
+
+    updateGaugeCard(
+      els.gaugeDiagnostic,
+      "Diagnostic panel active",
+      "The instrument room remains the under-the-hood proof source."
     );
   }
 
-  function createActionLink(action) {
-    var link = doc.createElement("a");
-    link.className = "panel-link";
-    link.href = action.href;
-    link.textContent = action.label;
-    return link;
+  function actionHTML(actions) {
+    return (actions || [])
+      .map(function mapAction(action) {
+        return (
+          '<a class="panel-link" href="' +
+          safeText(action.href) +
+          '">' +
+          safeText(action.label) +
+          "</a>"
+        );
+      })
+      .join("");
   }
 
-  function updatePanel() {
-    var key = state.activeOrbit || "orbit";
-    var lens = state.activeLens || "platform";
-    var copyGroup = orbitCopy[key] || orbitCopy.orbit;
-    var copy = copyGroup[lens] || copyGroup.platform || orbitCopy.orbit.platform;
+  function renderPanel(key) {
+    if (!els.panel) return;
 
-    setText(els.panelKicker, copy.kicker);
-    setText(els.panelTitle, copy.title);
-    setText(els.panelBody, copy.body);
+    var slide = getSlide(key);
+    var points = (slide.points || [])
+      .map(function mapPoint(point) {
+        return "<li>" + safeText(point) + "</li>";
+      })
+      .join("");
 
-    if (els.panelActions) {
-      els.panelActions.innerHTML = "";
-      (copy.actions || []).forEach(function appendAction(action) {
-        els.panelActions.appendChild(createActionLink(action));
-      });
+    els.panel.innerHTML =
+      '<div class="panel-content">' +
+        '<p class="panel-kicker">' + safeText(slide.kicker) + "</p>" +
+        "<h3>" + safeText(slide.title) + "</h3>" +
+        '<p class="panel-thesis">' + safeText(slide.thesis) + "</p>" +
+        '<ul class="panel-points">' + points + "</ul>" +
+        '<blockquote class="panel-quote">' + safeText(slide.quote) + "</blockquote>" +
+        '<div class="panel-actions">' + actionHTML(slide.cta) + "</div>" +
+      "</div>";
+
+    els.panel.dataset.activeOrbit = key;
+    els.panel.dataset.activeLens = state.activeLens;
+  }
+
+  function updateNodeState() {
+    els.orbitNodes.forEach(function eachNode(node) {
+      var key = node.getAttribute("data-orbit-node");
+      var active = key === state.activeOrbit;
+      node.classList.toggle("is-active", active);
+      node.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
+    if (els.orbit) {
+      els.orbit.classList.toggle("has-active", state.activeOrbit !== "orbit");
     }
-  }
 
-  function setLens(lens) {
-    var nextLens = lens === "engineering" ? "engineering" : "platform";
-    state.activeLens = nextLens;
-    state.updatedAt = now();
+    els.lensButtons.forEach(function eachLens(button) {
+      var active = button.getAttribute("data-lens") === state.activeLens;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
 
     if (els.body) {
-      els.body.dataset.hearthLens = nextLens;
+      els.body.dataset.hearthLens = state.activeLens;
+      els.body.dataset.hearthOrbit = state.activeOrbit;
     }
-
-    els.lensButtons.forEach(function updateLensButton(button) {
-      var isActive = button.getAttribute("data-lens") === nextLens;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", isActive ? "true" : "false");
-    });
-
-    updatePanel();
   }
 
-  function setOrbit(key) {
-    var valid = Boolean(orbitCopy[key]);
-    state.activeOrbit = valid ? key : "orbit";
+  function scrollToPanel() {
+    if (!els.panel) return;
+
+    setTimeout(function delayedScroll() {
+      try {
+        els.panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        els.panel.scrollIntoView(true);
+      }
+    }, 40);
+  }
+
+  function scrollToOrbit() {
+    var target = els.orbitSection || els.orbit;
+    if (!target) return;
+
+    setTimeout(function delayedScroll() {
+      try {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        target.scrollIntoView(true);
+      }
+    }, 40);
+  }
+
+  function setOrbit(key, options) {
+    var opts = options || {};
+    state.activeOrbit = slides[key] ? key : "orbit";
     state.updatedAt = now();
 
-    els.orbitNodes.forEach(function updateOrbitNode(button) {
-      var isActive = button.getAttribute("data-orbit-node") === state.activeOrbit;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", isActive ? "true" : "false");
-    });
+    updateNodeState();
+    renderPanel(state.activeOrbit);
 
-    setClass(els.orbit, "has-active", state.activeOrbit !== "orbit");
-    updatePanel();
-
-    if (state.activeOrbit !== "orbit" && els.panel) {
-      els.panel.setAttribute("tabindex", "-1");
-      try {
-        els.panel.focus({ preventScroll: true });
-      } catch (error) {
-        els.panel.focus();
-      }
+    if (state.activeOrbit !== "orbit" && opts.scroll !== false) {
+      scrollToPanel();
     }
   }
 
   function returnToOrbit() {
-    setOrbit("orbit");
+    setOrbit("orbit", { scroll: false });
+    scrollToOrbit();
   }
 
-  function bindOrbitControls() {
-    els.orbitNodes.forEach(function bindNode(button) {
-      button.setAttribute("aria-pressed", "false");
+  function setLens(lens) {
+    state.activeLens = lens === "engineering" ? "engineering" : "platform";
+    state.updatedAt = now();
 
-      button.addEventListener("click", function onOrbitClick() {
-        setOrbit(button.getAttribute("data-orbit-node"));
+    updateNodeState();
+    renderPanel(state.activeOrbit || "orbit");
+  }
+
+  function bindControls() {
+    els.orbitNodes.forEach(function bindOrbitNode(node) {
+      node.setAttribute("type", "button");
+      node.setAttribute("aria-pressed", "false");
+
+      node.addEventListener("click", function onClick(event) {
+        event.preventDefault();
+        setOrbit(node.getAttribute("data-orbit-node"));
       });
     });
 
-    if (els.returnButton) {
-      els.returnButton.addEventListener("click", returnToOrbit);
-    }
+    els.lensButtons.forEach(function bindLensButton(button) {
+      button.setAttribute("type", "button");
 
-    els.lensButtons.forEach(function bindLens(button) {
-      button.addEventListener("click", function onLensClick() {
+      button.addEventListener("click", function onClick(event) {
+        event.preventDefault();
         setLens(button.getAttribute("data-lens"));
       });
     });
 
+    if (els.returnOrbit) {
+      els.returnOrbit.setAttribute("type", "button");
+      els.returnOrbit.addEventListener("click", function onReturn(event) {
+        event.preventDefault();
+        returnToOrbit();
+      });
+    }
+
+    doc.addEventListener("click", function delegatedClick(event) {
+      var orbitNode = event.target.closest && event.target.closest("[data-orbit-node]");
+      var lensNode = event.target.closest && event.target.closest("[data-lens]");
+      var returnNode = event.target.closest && event.target.closest("[data-return-orbit]");
+
+      if (orbitNode) {
+        event.preventDefault();
+        setOrbit(orbitNode.getAttribute("data-orbit-node"));
+      } else if (lensNode) {
+        event.preventDefault();
+        setLens(lensNode.getAttribute("data-lens"));
+      } else if (returnNode) {
+        event.preventDefault();
+        returnToOrbit();
+      }
+    });
+
     doc.addEventListener("keydown", function onKeydown(event) {
-      if (event.key === "Escape" && state.activeOrbit !== "orbit") {
+      if (event.key === "Escape") {
         returnToOrbit();
       }
     });
   }
 
-  function scriptAlreadyPresent(pathWithoutQuery) {
-    return queryAll("script").some(function hasScript(script) {
-      return Boolean(script.src && script.src.indexOf(pathWithoutQuery) !== -1);
-    });
-  }
-
-  function loadScript(src) {
-    return new Promise(function loadScriptPromise(resolve) {
-      var pathWithoutQuery = src.split("?")[0];
-
-      if (scriptAlreadyPresent(pathWithoutQuery)) {
-        state.loadedOptionalScripts.push({
-          src: src,
-          status: "already-present"
-        });
-        resolve(true);
-        return;
-      }
-
-      var script = doc.createElement("script");
-      script.src = src;
-      script.async = false;
-      script.dataset.hearthFacilityOptionalBridge = "true";
-
-      script.onload = function onLoad() {
-        state.loadedOptionalScripts.push({
-          src: src,
-          status: "loaded"
-        });
-        resolve(true);
-      };
-
-      script.onerror = function onError() {
-        state.failedOptionalScripts.push({
-          src: src,
-          status: "failed"
-        });
-        resolve(false);
-      };
-
-      doc.head.appendChild(script);
-    });
-  }
-
-  function findCanvasAuthority() {
-    var hearth = root.HEARTH || {};
-    var dexter = root.DEXTER_LAB || {};
-
-    var candidates = [
-      { path: "HEARTH_CANVAS", value: root.HEARTH_CANVAS },
-      { path: "HEARTH_CANVAS_HUB", value: root.HEARTH_CANVAS_HUB },
-      { path: "HEARTH.canvas", value: hearth.canvas },
-      { path: "HEARTH.canvasHub", value: hearth.canvasHub },
-      { path: "HEARTH.hearthCanvas", value: hearth.hearthCanvas },
-      { path: "HEARTH.mountHearthCanvas", value: hearth.mountHearthCanvas },
-      { path: "DEXTER_LAB.hearthCanvas", value: dexter.hearthCanvas },
-      { path: "DEXTER_LAB.hearthCanvasHub", value: dexter.hearthCanvasHub },
-      { path: "mountHearthCanvas", value: root.mountHearthCanvas }
-    ];
-
-    for (var i = 0; i < candidates.length; i += 1) {
-      if (candidates[i].value) {
-        return candidates[i];
-      }
+  function readHash() {
+    var key = (root.location.hash || "").replace("#", "").trim();
+    if (slides[key]) {
+      setOrbit(key, { scroll: false });
     }
-
-    return {
-      path: "NONE",
-      value: null
-    };
   }
 
-  function callAuthorityMethod(authority, methodName, payload) {
-    if (!authority) return false;
-
-    try {
-      if (typeof authority === "function" && methodName === "mount") {
-        authority(payload);
-        return true;
-      }
-
-      if (authority && typeof authority[methodName] === "function") {
-        authority[methodName](payload);
-        return true;
-      }
-    } catch (error) {
-      state.canvasBridgeStatus = "PUBLIC_API_CALL_ERROR:" + methodName;
-      return false;
-    }
-
-    return false;
-  }
-
-  function bridgeToCanvasAuthority() {
-    var found = findCanvasAuthority();
-
-    state.canvasBridgeAttempted = true;
-    state.canvasAuthorityFound = Boolean(found.value);
-    state.canvasAuthorityPath = found.path;
-
-    if (!found.value) {
-      state.canvasBridgeStatus = "NO_PUBLIC_CANVAS_AUTHORITY_FOUND";
-      updateGaugeText();
-      return;
-    }
-
-    var payload = {
-      route: TARGET_ROUTE,
-      mount: els.mount,
-      canvas: els.canvas,
-      mountId: REQUIRED_MOUNT_ID,
-      canvasId: REQUIRED_CANVAS_ID,
-      source: CONTRACT
-    };
-
-    var booted = callAuthorityMethod(found.value, "boot", payload);
-    var initialized = callAuthorityMethod(found.value, "init", payload);
-    var mounted = callAuthorityMethod(found.value, "mount", payload);
-    var started = callAuthorityMethod(found.value, "start", payload);
-
-    state.canvasBridgeStatus = [
-      "PUBLIC_CANVAS_AUTHORITY_FOUND",
-      "boot=" + String(booted),
-      "init=" + String(initialized),
-      "mount=" + String(mounted),
-      "start=" + String(started)
-    ].join(";");
-
-    if (mounted || started || booted || initialized) {
-      setClass(els.mount, "is-live", true);
-      if (els.mount) {
-        els.mount.dataset.canvasState = "live";
-      }
-    }
-
-    updateGaugeText();
-  }
-
-  function loadOptionalCanvasBridge() {
-    if (!els.mount || !els.canvas) {
-      state.canvasBridgeStatus = "SKIPPED_REQUIRED_SURFACE_MISSING";
-      return Promise.resolve(false);
-    }
-
-    return OPTIONAL_ENGINE_SCRIPTS.reduce(function chain(promise, src) {
-      return promise.then(function loadNext() {
-        return loadScript(src);
-      });
-    }, Promise.resolve(true)).then(function afterScripts() {
-      bridgeToCanvasAuthority();
-      return true;
-    });
-  }
-
-  function publishGlobals() {
+  function publishAPI() {
     var api = {
       contract: CONTRACT,
       receipt: RECEIPT,
       version: VERSION,
+      setOrbit: setOrbit,
+      returnToOrbit: returnToOrbit,
+      setLens: setLens,
+      measureStage: function publicMeasureStage() {
+        measureStage();
+        return api.getReceiptLight();
+      },
       getState: function getState() {
-        updateStageMeasurement();
+        measureStage();
         return JSON.parse(JSON.stringify(state));
       },
       getReceiptLight: function getReceiptLight() {
-        updateStageMeasurement();
+        measureStage();
         return {
           CONTRACT: CONTRACT,
           RECEIPT: RECEIPT,
           VERSION: VERSION,
           TARGET_ROUTE: TARGET_ROUTE,
           DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-          ACTIVE_LENS: state.activeLens,
           ACTIVE_ORBIT: state.activeOrbit,
+          ACTIVE_LENS: state.activeLens,
           MOUNT_EXISTS: state.mountExists,
           MOUNT_RECT_NONZERO: state.mountRectNonZero,
           CANVAS_EXISTS: state.canvasExists,
           CANVAS_RECT_NONZERO: state.canvasRectNonZero,
-          STAGE_PREPARED: state.stagePrepared,
-          CANVAS_AUTHORITY_FOUND: state.canvasAuthorityFound,
-          CANVAS_AUTHORITY_PATH: state.canvasAuthorityPath,
-          CANVAS_BRIDGE_STATUS: state.canvasBridgeStatus,
           PRODUCTION_MUTATION_AUTHORIZED: false,
           CANVAS_REPAIR_AUTHORIZED: false,
           CANVAS_BUILD_AUTHORIZED: false,
@@ -683,45 +646,16 @@
           VISUAL_PASS_CLAIMED: false,
           WEBGL: false
         };
-      },
-      returnToOrbit: returnToOrbit,
-      setOrbit: setOrbit,
-      setLens: setLens,
-      measureStage: updateStageMeasurement
+      }
     };
 
-    root.HEARTH_FACILITY_AUDRALIA_PRODUCTION_CHAMBER = api;
+    root.HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER = api;
 
     root.HEARTH = root.HEARTH || {};
-    root.HEARTH.facilityAudraliaProductionChamber = api;
+    root.HEARTH.facilityOrbitContentController = api;
 
     root.DEXTER_LAB = root.DEXTER_LAB || {};
-    root.DEXTER_LAB.hearthFacilityAudraliaProductionChamber = api;
-  }
-
-  function bindResizeMeasurement() {
-    root.addEventListener("resize", function onResize() {
-      updateStageMeasurement();
-    }, { passive: true });
-
-    if ("ResizeObserver" in root && els.mount) {
-      var observer = new ResizeObserver(function onObservedResize() {
-        updateStageMeasurement();
-      });
-
-      observer.observe(els.mount);
-
-      if (els.canvas) {
-        observer.observe(els.canvas);
-      }
-    }
-  }
-
-  function readInitialHash() {
-    var hash = (root.location.hash || "").replace("#", "").trim();
-    if (hash && orbitCopy[hash]) {
-      setOrbit(hash);
-    }
+    root.DEXTER_LAB.hearthFacilityOrbitContentController = api;
   }
 
   function init() {
@@ -729,19 +663,21 @@
     state.updatedAt = state.initializedAt;
 
     captureElements();
-    bindOrbitControls();
-    bindResizeMeasurement();
-    publishGlobals();
+    bindControls();
+    publishAPI();
 
     setLens("platform");
-    updateStageMeasurement();
-    returnToOrbit();
-    readInitialHash();
+    setOrbit("orbit", { scroll: false });
+    readHash();
+    measureStage();
 
-    loadOptionalCanvasBridge().then(function afterOptionalBridge() {
-      updateStageMeasurement();
-      publishGlobals();
-    });
+    root.addEventListener("resize", measureStage, { passive: true });
+
+    if ("ResizeObserver" in root && els.mount) {
+      var observer = new ResizeObserver(measureStage);
+      observer.observe(els.mount);
+      if (els.canvas) observer.observe(els.canvas);
+    }
   }
 
   if (doc.readyState === "loading") {

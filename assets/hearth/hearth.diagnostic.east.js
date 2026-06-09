@@ -1,17 +1,16 @@
 // /assets/hearth/hearth.diagnostic.east.js
 // HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_SOURCE_READ_METHOD_SURFACE_TNT_v2
-// Internal bridge renewal:
-// HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_TNT_v2_1
+// HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_BRIDGE_TNT_v3
 // Full-file replacement.
-// EAST / served-source evidence / direct source-read method surface / receipt-light callable bridge.
+// EAST / served-source evidence / direct packet return bridge.
 //
-// Receipt-forced reason:
-// - 99 · DEEP_ARCHIVE proves EAST file loaded and JUDGE_EAST alias now present.
-// - 09 · EAST proves v2 receipt fields settled.
-// - 09 · EAST still reports RUN_EXECUTED=false and DIRECT_METHOD=NONE.
-// - Therefore the callable method surface must be bridged onto the receipt-light surface the chamber is actually reading.
+// Purpose:
+// - Preserve the served EAST authority contract expected by the diagnostic chamber.
+// - Preserve the canonical EAST aliases already used by the receiver.
+// - Keep the public direct method surface simple: runEastSourceRead, getEastReceipt, getEastState.
+// - Make runEastSourceRead return a plain structured packet instead of a callable/circular receipt object.
+// - Keep diagnostic scope read-only.
 //
 // Does not authorize:
 // - production mutation
@@ -21,9 +20,10 @@
 // - controls mutation
 // - runtime restart
 // - route repair
+// - target route renderer mutation
 // - visual pass claim
 
-(function hearthDiagnosticEastReceiptLightCallableBridge(global) {
+(function hearthDiagnosticEastDirectPacketReturnBridge(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
@@ -33,20 +33,20 @@
   var RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_RECEIPT_v1";
 
   var INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_SOURCE_READ_METHOD_SURFACE_TNT_v2";
+    "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_BRIDGE_TNT_v3";
   var INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_SOURCE_READ_METHOD_SURFACE_RECEIPT_v2";
+    "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_BRIDGE_RECEIPT_v3";
 
-  var RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT =
+  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
     "HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_TNT_v2_1";
-  var RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT =
+  var PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT_v2_1";
 
-  var PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
-  var PREVIOUS_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_RECEIPT_v1";
+  var BASELINE_CONTRACT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_TNT_v1";
+  var BASELINE_RECEIPT = "HEARTH_DIAGNOSTIC_RAIL_EAST_SERVED_SOURCE_EVIDENCE_RECEIPT_v1";
 
   var VERSION =
-    "2026-06-09.hearth-diagnostic-rail-east-receipt-light-callable-bridge-v2-1";
+    "2026-06-09.hearth-diagnostic-rail-east-direct-packet-return-bridge-v3";
 
   var FILE = "/assets/hearth/hearth.diagnostic.east.js";
   var TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -54,11 +54,11 @@
 
   var ROLE = "EAST";
   var COMPONENT = "EAST";
-  var AUTHORITY_PATH = "JUDGE_EAST";
-  var CANONICAL_AUTHORITY_PATH = "HEARTH_DIAGNOSTIC_RAIL_EAST";
+  var DIRECT_METHOD = "runEastSourceRead";
+  var DIRECT_AUTHORITY_PATH = "HEARTH_DIAGNOSTIC_RAIL_EAST";
+  var LEGACY_AUTHORITY_PATH = "JUDGE_EAST";
 
-  var DIRECT_METHODS_PUBLISHED =
-    "run,runDiagnostic,runEastSourceRead,inspect,getReport,getReceipt,getReceiptLight,getCallableReceiptLight,getStatus,getState,getPacket,getPacketText,getSummary";
+  var PUBLIC_METHOD_KEYS = "runEastSourceRead,getEastReceipt,getEastState";
 
   var SOURCE_PATHS = [
     "/assets/lab/runtime-table.js",
@@ -99,14 +99,7 @@
       "DEXTER_LAB.hearthDiagnosticNorth",
       "DEXTER_LAB.hearthDiagnosticNorthRail"
     ],
-    EAST: [
-      "JUDGE_EAST",
-      "HEARTH_DIAGNOSTIC_RAIL_EAST",
-      "HEARTH.diagnosticEast",
-      "HEARTH.diagnosticRailEast",
-      "HEARTH.JUDGE_EAST_SOURCE_READ",
-      "DEXTER_LAB.hearthDiagnosticEast"
-    ],
+    EAST: EAST_ALIAS_PATHS,
     EAST_PROBE: [
       "HEARTH_DIAGNOSTIC_PROBE_EAST",
       "HEARTH.diagnosticProbeEast",
@@ -159,50 +152,45 @@
 
   var NO_TOUCH = {
     productionMutationAuthorized: false,
-    hearthRepairAuthorized: false,
-    routeRepairAuthorized: false,
-    routeConductorMutationAuthorized: false,
-    controlMutationAuthorized: false,
-    controlsMutationAuthorized: false,
-    canvasDrawingAuthorized: false,
-    canvasCreationAuthorized: false,
-    canvasBuildAuthorized: false,
     canvasRepairAuthorized: false,
+    canvasBuildAuthorized: false,
     canvasReleaseAuthorized: false,
+    controlsRepairAuthorized: false,
     runtimeRestartAuthorized: false,
+    routeRepairAuthorized: false,
+    targetRouteRendererMutationAuthorized: false,
+    readyTextClaimed: false,
     f13Claimed: false,
     f21Claimed: false,
-    f55Claimed: false,
-    readyTextClaimed: false,
     visualPassClaimed: false,
-    finalVisualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    publicSuperiorityClaim: false,
 
     PRODUCTION_MUTATION_AUTHORIZED: false,
-    HEARTH_REPAIR_AUTHORIZED: false,
-    ROUTE_REPAIR_AUTHORIZED: false,
-    ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
-    CONTROL_MUTATION_AUTHORIZED: false,
-    CONTROLS_MUTATION_AUTHORIZED: false,
-    CANVAS_DRAWING_AUTHORIZED: false,
-    CANVAS_CREATION_AUTHORIZED: false,
-    CANVAS_BUILD_AUTHORIZED: false,
     CANVAS_REPAIR_AUTHORIZED: false,
+    CANVAS_BUILD_AUTHORIZED: false,
     CANVAS_RELEASE_AUTHORIZED: false,
+    CONTROLS_REPAIR_AUTHORIZED: false,
     RUNTIME_RESTART_AUTHORIZED: false,
+    ROUTE_REPAIR_AUTHORIZED: false,
+    TARGET_ROUTE_RENDERER_MUTATION_AUTHORIZED: false,
+    READY_TEXT_CLAIMED: false,
     F13_CLAIMED: false,
     F21_CLAIMED: false,
-    F55_CLAIMED: false,
-    READY_TEXT_CLAIMED: false,
     VISUAL_PASS_CLAIMED: false,
-    FINAL_VISUAL_PASS_CLAIMED: false,
     GENERATED_IMAGE: false,
     GRAPHIC_BOX: false,
-    WEBGL: false,
-    PUBLIC_SUPERIORITY_CLAIM: false
+    WEBGL: false
+  };
+
+  var state = {
+    loadedAt: nowIso(),
+    lastRunAt: "NONE",
+    runCount: 0,
+    lastPacket: null,
+    lastState: null,
+    lastError: "NONE"
   };
 
   function nowIso() {
@@ -232,7 +220,7 @@
   }
 
   function compact(value, limit) {
-    if (limit === undefined) limit = 6000;
+    if (limit === undefined) limit = 4000;
     return asString(value)
       .replace(/\n/g, " ")
       .replace(/\s+/g, " ")
@@ -250,7 +238,9 @@
     var cursor = root;
 
     for (var i = 0; i < parts.length; i += 1) {
-      if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
+      if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) {
+        return null;
+      }
       cursor = cursor[parts[i]];
     }
 
@@ -286,6 +276,26 @@
     }
 
     return fallback;
+  }
+
+  function methodKeys(value) {
+    if (!isObject(value)) return [];
+    return Object.keys(value).filter(function onlyFunctions(key) {
+      return isFunction(value[key]);
+    });
+  }
+
+  function defineCallable(target, key, value, enumerable) {
+    try {
+      Object.defineProperty(target, key, {
+        value: value,
+        enumerable: Boolean(enumerable),
+        configurable: true,
+        writable: true
+      });
+    } catch (_error) {
+      target[key] = value;
+    }
   }
 
   function getDocumentTitle(targetDoc) {
@@ -398,19 +408,11 @@
     addDocumentScope(scopes, seen, "top.document", topDoc, "TOP_DOCUMENT");
     addFrameScopes(scopes, seen, "top.document", topDoc);
 
-    var openerDoc = null;
-    try {
-      if (root.opener && root.opener !== root) openerDoc = safeWindowDocument(root.opener);
-    } catch (_error) {}
-    addDocumentScope(scopes, seen, "opener.document", openerDoc, "OPENER_DOCUMENT");
-    addFrameScopes(scopes, seen, "opener.document", openerDoc);
-
     return scopes;
   }
 
   function scriptElements(targetDoc) {
     if (!targetDoc || !isFunction(targetDoc.querySelectorAll)) return [];
-
     try {
       return Array.prototype.slice.call(targetDoc.querySelectorAll("script[src]"));
     } catch (_error) {
@@ -421,17 +423,20 @@
   function normalizeSrc(src) {
     var raw = asString(src);
     if (!raw) return "";
+
     try {
-      var url = new URL(raw, root.location && root.location.origin ? root.location.origin : undefined);
+      var origin = root.location && root.location.origin ? root.location.origin : undefined;
+      var url = new URL(raw, origin);
       return url.pathname;
     } catch (_error) {
-      return raw;
+      return raw.split("?")[0];
     }
   }
 
   function sourceMatch(path, scriptSrc) {
     var normalized = normalizeSrc(scriptSrc);
-    return normalized === path || normalized.indexOf(path) !== -1 || asString(scriptSrc).indexOf(path) !== -1;
+    var raw = asString(scriptSrc);
+    return normalized === path || normalized.indexOf(path) !== -1 || raw.indexOf(path) !== -1;
   }
 
   function inspectSourcePath(path, scopes) {
@@ -473,70 +478,54 @@
     Object.keys(PARTICIPANT_ALIAS_MAP).forEach(function inspectLabel(label) {
       var aliases = PARTICIPANT_ALIAS_MAP[label];
       var firstFound = null;
+      var probe = aliases.map(function inspectAlias(alias) {
+        var value = readPath(alias);
+        var found = value !== null && value !== undefined;
+        var type = found ? typeof value : "undefined";
+        var keys = found && isObject(value) ? methodKeys(value) : [];
+
+        if (found && !firstFound) {
+          firstFound = {
+            alias: alias,
+            valueType: type,
+            methodKeys: keys,
+            value: value
+          };
+        }
+
+        return {
+          alias: alias,
+          found: found,
+          valueType: type,
+          methodCount: keys.length,
+          methodKeys: keys.join(","),
+          contract: found && isObject(value)
+            ? asString(safeGetOwn(value, "CONTRACT", safeGetOwn(value, "contract", "UNKNOWN")))
+            : "UNKNOWN",
+          receipt: found && isObject(value)
+            ? asString(safeGetOwn(value, "RECEIPT", safeGetOwn(value, "receipt", "UNKNOWN")))
+            : "UNKNOWN",
+          internalRenewalContract: found && isObject(value)
+            ? asString(
+                safeGetOwn(
+                  value,
+                  "INTERNAL_RENEWAL_CONTRACT",
+                  safeGetOwn(value, "internalRenewalContract", "UNKNOWN")
+                )
+              )
+            : "UNKNOWN"
+        };
+      });
 
       out[label] = {
         label: label,
-        present: false,
-        authorityPath: "NONE",
-        valueType: "undefined",
-        aliases: aliases.map(function inspectAlias(alias) {
-          var value = readPath(alias);
-          var found = value !== null && value !== undefined;
-          var type = found ? typeof value : "undefined";
-
-          if (found && !firstFound) {
-            firstFound = {
-              alias: alias,
-              valueType: type,
-              value: value
-            };
-          }
-
-          return {
-            alias: alias,
-            found: found,
-            valueType: type,
-            contract:
-              found && isObject(value)
-                ? asString(
-                    safeGetOwn(value, "CONTRACT", safeGetOwn(value, "contract", "UNKNOWN"))
-                  )
-                : "UNKNOWN",
-            internalRenewalContract:
-              found && isObject(value)
-                ? asString(
-                    safeGetOwn(
-                      value,
-                      "INTERNAL_RENEWAL_CONTRACT",
-                      safeGetOwn(value, "internalRenewalContract", "UNKNOWN")
-                    )
-                  )
-                : "UNKNOWN",
-            receiptLightCallableBridgeActive:
-              found && isObject(value)
-                ? Boolean(
-                    safeGetOwn(
-                      value,
-                      "receiptLightCallableBridgeActive",
-                      safeGetOwn(value, "RECEIPT_LIGHT_CALLABLE_BRIDGE_ACTIVE", false)
-                    )
-                  )
-                : false,
-            methodCount:
-              found && isObject(value)
-                ? Object.keys(value).filter(function methodKey(key) {
-                    return isFunction(value[key]);
-                  }).length
-                : 0
-          };
-        })
+        present: Boolean(firstFound),
+        authorityPath: firstFound ? firstFound.alias : "NONE",
+        valueType: firstFound ? firstFound.valueType : "undefined",
+        methodCount: firstFound ? firstFound.methodKeys.length : 0,
+        methodKeys: firstFound ? firstFound.methodKeys.join(",") : "",
+        probe: probe
       };
-
-      if (firstFound) {
-        out[label].present = true;
-        out[label].authorityPath = firstFound.alias;
-        out[label].valueType = firstFound.valueType;
-      }
     });
 
     return out;
@@ -582,20 +571,15 @@
     var sourceEvidence = SOURCE_PATHS.map(function inspectOne(path) {
       return inspectSourcePath(path, scopes);
     });
-
-    var participantAliases = inspectParticipantAliases();
-    var targetAccess = inspectTargetAccess(scopes);
-
     var missingSources = sourceEvidence.filter(function missing(item) {
       return !item.scriptObserved;
     });
-
     var presentSources = sourceEvidence.filter(function present(item) {
       return item.scriptObserved;
     });
 
     return {
-      scopes: scopes.map(function compactScope(scope) {
+      documentScopes: scopes.map(function compactScope(scope) {
         return {
           label: scope.label,
           kind: scope.kind,
@@ -609,96 +593,108 @@
       missingSources: missingSources.map(function toPath(item) {
         return item.path;
       }),
-      participantAliases: participantAliases,
-      targetAccess: targetAccess
+      participantAliases: inspectParticipantAliases(),
+      targetAccess: inspectTargetAccess(scopes)
     };
   }
 
-  function canRunEast() {
-    return true;
+  function makeNoTouchBoundaryText() {
+    return "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE,TARGET_ROUTE_RENDERER";
+  }
+
+  function addNoTouch(packet) {
+    Object.keys(NO_TOUCH).forEach(function applyNoTouch(key) {
+      packet[key] = NO_TOUCH[key];
+    });
+    return packet;
   }
 
   function makePacket(mode) {
+    var generatedAt = nowIso();
     var inspected = inspectLoadedSources();
     var aliases = inspected.participantAliases;
-
-    var eastPresent = Boolean(aliases.EAST && aliases.EAST.present);
-    var northPresent = Boolean(aliases.NORTH && aliases.NORTH.present);
-    var surfaceTruthPresent = Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present);
-    var southPresent = Boolean(aliases.SOUTH && aliases.SOUTH.present);
-    var westPresent = Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present);
-    var labWestPresent = Boolean(aliases.LABWEST && aliases.LABWEST.present);
+    var eastProbe = aliases.EAST || {};
+    var target = inspected.targetAccess;
+    var directPacketKeys;
 
     var packet = {
-      PACKET: "HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_PACKET_v2_1",
-      PACKET_NAME: "HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_PACKET_v2_1",
+      PACKET: "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_PACKET_v3",
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_PACKET_v3",
       RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
+      AUDIT_SEQUENCE: "16",
+      AUDIT_LABEL: "East Direct",
       ROLE: ROLE,
       COMPONENT: COMPONENT,
       SCOPE: "ONE_COMPONENT_DIRECT_EXECUTION",
-      MODE: mode || "RUN_DIAGNOSTIC",
+      MODE: mode || "RUN_EAST_SOURCE_READ",
 
       CONTRACT: CONTRACT,
       RECEIPT: RECEIPT,
       INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-      RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT: RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT,
-      RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT: RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT,
-      RECEIPT_LIGHT_CALLABLE_BRIDGE_ACTIVE: true,
-      RECEIPT_LIGHT_CALLABLE_BRIDGE_STATUS: "PUBLISHED",
-      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
-      PREVIOUS_RECEIPT: PREVIOUS_RECEIPT,
+      PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      BASELINE_CONTRACT: BASELINE_CONTRACT,
+      BASELINE_RECEIPT: BASELINE_RECEIPT,
       VERSION: VERSION,
       FILE: FILE,
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-      GENERATED_AT: nowIso(),
-      UPDATED_AT: nowIso(),
+      GENERATED_AT: generatedAt,
+      UPDATED_AT: generatedAt,
 
-      RUN_STATE: "EAST_DIRECT_RUN_COMPLETE",
-      TRUST_STATE: "EAST_DIRECT_METHOD_SURFACE_TRUSTED",
+      RUN_STATE: "DIRECT_RUN_EXECUTED",
+      TRUST_STATE: "AUTHORITY_FOUND",
       BLOCKING: false,
+      RUN_EXECUTED: true,
+      READ_ONLY_DIRECT_RECEIPT: false,
 
-      DIRECT_AUTHORITY_PATH: AUTHORITY_PATH,
-      CANONICAL_DIRECT_AUTHORITY_PATH: CANONICAL_AUTHORITY_PATH,
-      DIRECT_METHOD_PUBLICATION_ACTIVE: true,
-      DIRECT_METHOD_PUBLICATION_STATUS: "DIRECT_METHODS_PUBLISHED_ON_EAST_AUTHORITY_AND_RECEIPT_LIGHT_SURFACE",
-      DIRECT_METHODS_PUBLISHED: DIRECT_METHODS_PUBLISHED,
+      DIRECT_PACKET_READY: true,
+      DIRECT_PACKET_RETURN_BRIDGE_ACTIVE: true,
+      DIRECT_PACKET_RETURN_BRIDGE_STATUS: "PLAIN_PACKET_RETURNED",
+      DIRECT_AUTHORITY_PATH: DIRECT_AUTHORITY_PATH,
+      LEGACY_AUTHORITY_PATH: LEGACY_AUTHORITY_PATH,
+      DIRECT_STATUS: "DIRECT_RUN_EXECUTED",
+      DIRECT_METHOD: DIRECT_METHOD,
+      DIRECT_ERROR: "NONE",
+      DIRECT_METHOD_SURFACE: PUBLIC_METHOD_KEYS,
+      AUTHORITY_METHOD_COUNT: 3,
+      AUTHORITY_METHOD_KEYS: PUBLIC_METHOD_KEYS,
 
-      EAST_AUTHORITY_PATH: AUTHORITY_PATH,
-      EAST_CANONICAL_AUTHORITY_PATH: CANONICAL_AUTHORITY_PATH,
-      EAST_PRESENT: eastPresent,
-      EAST_STATUS: eastPresent ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
-      EAST_RUN_EXECUTED: canRunEast(),
-      EAST_DIRECT_METHOD: "runEastSourceRead",
-      EAST_DIRECT_ERROR: "NONE",
+      EAST_PRESENT: Boolean(eastProbe.present),
+      EAST_STATUS: eastProbe.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
+      EAST_AUTHORITY_PATH: eastProbe.authorityPath || "NONE",
+      EAST_METHOD_COUNT: eastProbe.methodCount || 0,
+      EAST_METHOD_KEYS: eastProbe.methodKeys || "",
 
-      EAST_SOURCE_READ_ACTIVE: true,
-      EAST_SERVED_SOURCE_EVIDENCE_ACTIVE: true,
-      EAST_SOURCE_SCAN_STATUS: "SOURCE_SCAN_COMPLETE",
-      EAST_SOURCE_SCAN_SCOPE_COUNT: inspected.scopes.length,
-      EAST_PRESENT_SOURCE_COUNT: inspected.presentSourceCount,
-      EAST_MISSING_SOURCE_COUNT: inspected.missingSourceCount,
-      EAST_MISSING_SOURCES: inspected.missingSources.join(","),
+      TARGET_ROUTE_ACCESS: target.status,
+      TARGET_ACCESS_STATUS: target.status,
+      TARGET_ROUTE_CONFIRMED: target.routeConfirmed,
+      TARGET_FRAME_PRESENT: target.framePresent,
+      TARGET_FRAME_ACCESSIBLE: target.frameAccessible,
+      TARGET_SELECTED_SCOPE: target.selectedScope,
+      TARGET_SELECTED_PATH: target.selectedPath,
+      TARGET_SELECTED_TITLE: target.selectedTitle,
+      TARGET_ACCESS_ERROR: target.error,
 
-      TARGET_ACCESS_STATUS: inspected.targetAccess.status,
-      TARGET_ROUTE_CONFIRMED: inspected.targetAccess.routeConfirmed,
-      TARGET_FRAME_PRESENT: inspected.targetAccess.framePresent,
-      TARGET_FRAME_ACCESSIBLE: inspected.targetAccess.frameAccessible,
-      TARGET_SELECTED_SCOPE: inspected.targetAccess.selectedScope,
-      TARGET_SELECTED_PATH: inspected.targetAccess.selectedPath,
-      TARGET_SELECTED_TITLE: inspected.targetAccess.selectedTitle,
-      TARGET_ACCESS_ERROR: inspected.targetAccess.error,
+      SOURCE_CHAIN_STATUS: inspected.missingSourceCount === 0
+        ? "ALL_TRACKED_SOURCES_OBSERVED"
+        : "TRACKED_SOURCE_GAPS_REMAIN",
+      SOURCE_SCAN_STATUS: "SOURCE_SCAN_COMPLETE",
+      SOURCE_SCAN_SCOPE_COUNT: inspected.documentScopes.length,
+      PRESENT_SOURCE_COUNT: inspected.presentSourceCount,
+      MISSING_SOURCE_COUNT: inspected.missingSourceCount,
+      MISSING_SOURCES: inspected.missingSources.join(","),
 
-      NORTH_PRESENT: northPresent,
+      NORTH_PRESENT: Boolean(aliases.NORTH && aliases.NORTH.present),
       EAST_PROBE_PRESENT: Boolean(aliases.EAST_PROBE && aliases.EAST_PROBE.present),
-      SURFACE_TRUTH_PRESENT: surfaceTruthPresent,
-      SOUTH_PRESENT: southPresent,
+      SURFACE_TRUTH_PRESENT: Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present),
+      SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
       SOUTH_SURFACE_POINTER_PRESENT: Boolean(
         aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present
       ),
-      WEST_DIAGNOSTIC_PRESENT: westPresent,
-      LABWEST_PRESENT: labWestPresent,
+      WEST_DIAGNOSTIC_PRESENT: Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present),
+      LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
 
       NORTH_AUTHORITY_PATH: aliases.NORTH ? aliases.NORTH.authorityPath : "NONE",
       EAST_PROBE_AUTHORITY_PATH: aliases.EAST_PROBE ? aliases.EAST_PROBE.authorityPath : "NONE",
@@ -714,75 +710,155 @@
         : "NONE",
       LABWEST_AUTHORITY_PATH: aliases.LABWEST ? aliases.LABWEST.authorityPath : "NONE",
 
-      PARTICIPANT_ALIAS_EVIDENCE: aliases,
+      PARTICIPANT_ALIAS_SUMMARY: {
+        NORTH: aliases.NORTH,
+        EAST: aliases.EAST,
+        EAST_PROBE: aliases.EAST_PROBE,
+        SURFACE_TRUTH: aliases.SURFACE_TRUTH,
+        SOUTH: aliases.SOUTH,
+        SOUTH_SURFACE_POINTER: aliases.SOUTH_SURFACE_POINTER,
+        WEST_DIAGNOSTIC: aliases.WEST_DIAGNOSTIC,
+        LABWEST: aliases.LABWEST
+      },
       SOURCE_EVIDENCE: inspected.sourceEvidence,
-      DOCUMENT_SCOPE_EVIDENCE: inspected.scopes,
+      DOCUMENT_SCOPE_EVIDENCE: inspected.documentScopes,
 
-      PREVALENT_PROBLEM_CLASS: "DIRECT_METHOD_SURFACE_UNEVEN_ACROSS_DIAGNOSTIC_TRACK",
-      PREVALENT_PROBLEM_VALIDATED_BY_RECEIPTS:
-        "09_EAST_FOUND_NOT_RUN,10_SURFACE_TRUTH_FOUND_NOT_RUN,11_SOUTH_FOUND_NOT_RUN",
-      EAST_IS_INTAKE_VALVE: true,
-      EAST_SOURCE_READ_MUST_PRECEDE_SYNTHESIS: true,
-
-      RECOMMENDED_NEXT_RECEIPT: "09 · East",
-      RECOMMENDED_NEXT_FILE: surfaceTruthPresent
-        ? "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js"
-        : "/assets/hearth/hearth.diagnostic.probe.east.js",
-      RECOMMENDED_NEXT_ACTION: "RUN_09_EAST_DIRECT_CHECK",
-      NEXT_RECEIPT_RECOMMENDED: "09 · East",
-      NEXT_FILE: surfaceTruthPresent
-        ? "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js"
-        : "/assets/hearth/hearth.diagnostic.probe.east.js",
-      NEXT_ACTION: "RUN_09_EAST_DIRECT_CHECK",
-
-      DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
+      RECEIPT_STATUS: "EAST_DIRECT_PACKET_RETURNED",
+      RECEIPT_SUMMARY:
+        "East authority found. runEastSourceRead returned a plain structured packet for the workbench.",
+      GAP_CLOSED: "DIRECT_PACKET_EMPTY_TO_DIRECT_PACKET_STRUCTURED",
+      PREVIOUS_GAP: "DIRECT_PACKET_KEYS_UNKNOWN_DIRECT_PACKET_EMPTY",
+      NEXT_ACTION: "RERUN_16_EAST_DIRECT_THEN_RERUN_21_NEXT_MOVE",
+      RECOMMENDED_NEXT_AUDIT: "21 · Next Move",
+      DO_NOT_TOUCH: makeNoTouchBoundaryText(),
+      NO_TOUCH_BOUNDARY: makeNoTouchBoundaryText()
     };
 
-    Object.keys(NO_TOUCH).forEach(function applyNoTouch(key) {
-      packet[key] = NO_TOUCH[key];
+    addNoTouch(packet);
+
+    directPacketKeys = Object.keys(packet).filter(function omitEvidenceHeavyKeys(key) {
+      return key !== "SOURCE_EVIDENCE" &&
+        key !== "DOCUMENT_SCOPE_EVIDENCE" &&
+        key !== "PARTICIPANT_ALIAS_SUMMARY";
     });
 
-    return attachCallableBridge(packet);
+    packet.DIRECT_PACKET_KEYS = directPacketKeys.join(",");
+    packet.DIRECT_PACKET_KEY_COUNT = directPacketKeys.length;
+
+    state.lastRunAt = generatedAt;
+    state.runCount += 1;
+    state.lastPacket = packet;
+    state.lastError = "NONE";
+
+    return packet;
   }
 
-  function packetValue(value) {
-    if (value === undefined || value === null || value === "") return "UNKNOWN";
+  function makeState() {
+    var inspected = inspectLoadedSources();
+    var aliases = inspected.participantAliases;
+    var eastProbe = aliases.EAST || {};
+    var updatedAt = nowIso();
 
-    if (Array.isArray(value)) {
-      try {
-        return compact(JSON.stringify(value), 24000);
-      } catch (_error) {
-        return value.map(packetValue).join(" | ");
-      }
-    }
+    var statePacket = {
+      PACKET: "HEARTH_DIAGNOSTIC_RAIL_EAST_STATE_PACKET_v3",
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_RAIL_EAST_STATE_PACKET_v3",
+      RECEIPT_LEVEL: "2_STATE",
+      ROLE: ROLE,
+      COMPONENT: COMPONENT,
+      CONTRACT: CONTRACT,
+      RECEIPT: RECEIPT,
+      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
+      VERSION: VERSION,
+      FILE: FILE,
+      TARGET_ROUTE: TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+      UPDATED_AT: updatedAt,
+      LOADED_AT: state.loadedAt,
+      LAST_RUN_AT: state.lastRunAt,
+      RUN_COUNT: state.runCount,
+      LAST_ERROR: state.lastError,
+      TRUST_STATE: eastProbe.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
+      BLOCKING: false,
+      DIRECT_AUTHORITY_PATH: DIRECT_AUTHORITY_PATH,
+      LEGACY_AUTHORITY_PATH: LEGACY_AUTHORITY_PATH,
+      PUBLIC_METHOD_KEYS: PUBLIC_METHOD_KEYS,
+      EAST_PRESENT: Boolean(eastProbe.present),
+      EAST_AUTHORITY_PATH: eastProbe.authorityPath || "NONE",
+      TARGET_ACCESS_STATUS: inspected.targetAccess.status,
+      TARGET_ROUTE_CONFIRMED: inspected.targetAccess.routeConfirmed,
+      PRESENT_SOURCE_COUNT: inspected.presentSourceCount,
+      MISSING_SOURCE_COUNT: inspected.missingSourceCount,
+      NEXT_ACTION: "RUN_16_EAST_DIRECT",
+      DO_NOT_TOUCH: makeNoTouchBoundaryText(),
+      NO_TOUCH_BOUNDARY: makeNoTouchBoundaryText()
+    };
 
-    if (isObject(value)) {
-      var functionKeys = Object.keys(value).filter(function hasFunction(key) {
-        return isFunction(value[key]);
-      });
-
-      var dataOnly = {};
-      Object.keys(value).forEach(function copyData(key) {
-        if (!isFunction(value[key])) dataOnly[key] = value[key];
-      });
-
-      if (functionKeys.length) dataOnly.CALLABLE_METHOD_KEYS = functionKeys.join(",");
-
-      try {
-        return compact(JSON.stringify(dataOnly), 24000);
-      } catch (_error) {
-        return "[object]";
-      }
-    }
-
-    return compact(value);
+    addNoTouch(statePacket);
+    state.lastState = statePacket;
+    return statePacket;
   }
 
-  function toPacketText(packet) {
+  function runEastSourceRead() {
+    try {
+      return makePacket("RUN_EAST_SOURCE_READ");
+    } catch (error) {
+      var failedAt = nowIso();
+      var message = error && error.message ? error.message : asString(error, "UNKNOWN_ERROR");
+      state.lastError = message;
+
+      var packet = {
+        PACKET: "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_ERROR_PACKET_v3",
+        PACKET_NAME: "HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_ERROR_PACKET_v3",
+        RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
+        ROLE: ROLE,
+        COMPONENT: COMPONENT,
+        CONTRACT: CONTRACT,
+        RECEIPT: RECEIPT,
+        INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+        INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
+        VERSION: VERSION,
+        FILE: FILE,
+        UPDATED_AT: failedAt,
+        RUN_STATE: "DIRECT_RUN_ERROR",
+        TRUST_STATE: "AUTHORITY_FOUND_ERROR_DURING_READ",
+        BLOCKING: true,
+        RUN_EXECUTED: true,
+        DIRECT_PACKET_READY: true,
+        DIRECT_AUTHORITY_PATH: DIRECT_AUTHORITY_PATH,
+        DIRECT_STATUS: "DIRECT_RUN_ERROR",
+        DIRECT_METHOD: DIRECT_METHOD,
+        DIRECT_ERROR: message,
+        NEXT_ACTION: "INSPECT_EAST_DIRECT_PACKET_RETURN_ERROR",
+        DO_NOT_TOUCH: makeNoTouchBoundaryText(),
+        NO_TOUCH_BOUNDARY: makeNoTouchBoundaryText()
+      };
+
+      addNoTouch(packet);
+      packet.DIRECT_PACKET_KEYS = Object.keys(packet).join(",");
+      packet.DIRECT_PACKET_KEY_COUNT = Object.keys(packet).length;
+      state.lastPacket = packet;
+      return packet;
+    }
+  }
+
+  function getEastReceipt() {
+    if (state.lastPacket) return state.lastPacket;
+    return makePacket("GET_EAST_RECEIPT");
+  }
+
+  function getEastState() {
+    return makeState();
+  }
+
+  function getPacketText(packet) {
+    var source = packet || getEastReceipt();
     var priority = [
       "PACKET",
       "PACKET_NAME",
       "RECEIPT_LEVEL",
+      "AUDIT_SEQUENCE",
+      "AUDIT_LABEL",
       "ROLE",
       "COMPONENT",
       "SCOPE",
@@ -790,359 +866,162 @@
       "RECEIPT",
       "INTERNAL_RENEWAL_CONTRACT",
       "INTERNAL_RENEWAL_RECEIPT",
-      "RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT",
-      "RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT",
-      "RECEIPT_LIGHT_CALLABLE_BRIDGE_ACTIVE",
-      "RECEIPT_LIGHT_CALLABLE_BRIDGE_STATUS",
-      "PREVIOUS_CONTRACT",
+      "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
+      "BASELINE_CONTRACT",
+      "VERSION",
       "FILE",
       "TARGET_ROUTE",
       "DIAGNOSTIC_ROUTE",
-      "VERSION",
       "RUN_STATE",
       "TRUST_STATE",
       "BLOCKING",
+      "RUN_EXECUTED",
+      "DIRECT_PACKET_READY",
+      "DIRECT_PACKET_KEYS",
+      "DIRECT_PACKET_KEY_COUNT",
       "DIRECT_AUTHORITY_PATH",
-      "CANONICAL_DIRECT_AUTHORITY_PATH",
-      "DIRECT_METHOD_PUBLICATION_ACTIVE",
-      "DIRECT_METHOD_PUBLICATION_STATUS",
-      "DIRECT_METHODS_PUBLISHED",
-      "EAST_PRESENT",
-      "EAST_STATUS",
-      "EAST_RUN_EXECUTED",
-      "EAST_DIRECT_METHOD",
-      "EAST_DIRECT_ERROR",
-      "EAST_SOURCE_READ_ACTIVE",
-      "EAST_SOURCE_SCAN_STATUS",
-      "TARGET_ACCESS_STATUS",
+      "LEGACY_AUTHORITY_PATH",
+      "DIRECT_STATUS",
+      "DIRECT_METHOD",
+      "DIRECT_ERROR",
+      "AUTHORITY_METHOD_COUNT",
+      "AUTHORITY_METHOD_KEYS",
+      "TARGET_ROUTE_ACCESS",
       "TARGET_ROUTE_CONFIRMED",
-      "TARGET_FRAME_PRESENT",
-      "TARGET_FRAME_ACCESSIBLE",
+      "SOURCE_CHAIN_STATUS",
+      "SOURCE_SCAN_STATUS",
+      "PRESENT_SOURCE_COUNT",
+      "MISSING_SOURCE_COUNT",
       "NORTH_PRESENT",
+      "EAST_PRESENT",
       "EAST_PROBE_PRESENT",
       "SURFACE_TRUTH_PRESENT",
       "SOUTH_PRESENT",
       "SOUTH_SURFACE_POINTER_PRESENT",
       "WEST_DIAGNOSTIC_PRESENT",
       "LABWEST_PRESENT",
-      "PREVALENT_PROBLEM_CLASS",
-      "RECOMMENDED_NEXT_RECEIPT",
-      "RECOMMENDED_NEXT_FILE",
-      "RECOMMENDED_NEXT_ACTION",
+      "RECEIPT_STATUS",
+      "GAP_CLOSED",
+      "NEXT_ACTION",
       "DO_NOT_TOUCH",
+      "NO_TOUCH_BOUNDARY",
       "UPDATED_AT"
     ];
 
     var seen = {};
-    var keys = priority.concat(Object.keys(packet || {})).filter(function unique(key) {
+    var keys = priority.concat(Object.keys(source || {})).filter(function unique(key) {
       if (seen[key]) return false;
       seen[key] = true;
       return true;
     });
 
-    return keys.map(function makeLine(key) {
-      return key + "=" + packetValue(packet[key]);
+    return keys.map(function line(key) {
+      var value = source[key];
+      if (Array.isArray(value) || isObject(value)) {
+        try {
+          value = compact(JSON.stringify(value), 20000);
+        } catch (_error) {
+          value = "[object]";
+        }
+      }
+      if (value === undefined || value === null || value === "") value = "UNKNOWN";
+      return key + "=" + value;
     }).join("\n");
   }
 
-  function runEastSourceRead() {
-    return makePacket("RUN_EAST_SOURCE_READ");
-  }
+  function publishApi() {
+    ensureNamespace("HEARTH");
+    ensureNamespace("DEXTER_LAB");
 
-  function runDiagnostic() {
-    return runEastSourceRead();
-  }
-
-  function run() {
-    return runEastSourceRead();
-  }
-
-  function inspect() {
-    return makePacket("INSPECT");
-  }
-
-  function getReport() {
-    return makePacket("GET_REPORT");
-  }
-
-  function getReceipt() {
-    return makePacket("GET_RECEIPT");
-  }
-
-  function baseReceiptLight() {
-    var inspected = inspectLoadedSources();
-    var aliases = inspected.participantAliases;
-
-    return {
-      role: ROLE,
-      component: COMPONENT,
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-      receiptLightCallableBridgeContract: RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT,
-      receiptLightCallableBridgeReceipt: RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT,
-      receiptLightCallableBridgeActive: true,
-      receiptLightCallableBridgeStatus: "PUBLISHED",
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      file: FILE,
-      targetRoute: TARGET_ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-
-      directAuthorityPath: AUTHORITY_PATH,
-      canonicalDirectAuthorityPath: CANONICAL_AUTHORITY_PATH,
-      directMethodPublicationActive: true,
-      directMethodPublicationStatus: "DIRECT_METHODS_PUBLISHED_ON_EAST_AUTHORITY_AND_RECEIPT_LIGHT_SURFACE",
-      directMethodsPublished: DIRECT_METHODS_PUBLISHED,
-
-      runApiAvailable: true,
-      runDiagnosticApiAvailable: true,
-      runEastSourceReadApiAvailable: true,
-      inspectApiAvailable: true,
-      getReportApiAvailable: true,
-      getReceiptApiAvailable: true,
-      getReceiptLightApiAvailable: true,
-      getCallableReceiptLightApiAvailable: true,
-      getStatusApiAvailable: true,
-      getStateApiAvailable: true,
-      getPacketApiAvailable: true,
-      getPacketTextApiAvailable: true,
-      getSummaryApiAvailable: true,
-
-      eastSourceReadActive: true,
-      eastSourceScanStatus: "SOURCE_SCAN_COMPLETE",
-      presentSourceCount: inspected.presentSourceCount,
-      missingSourceCount: inspected.missingSourceCount,
-      targetAccessStatus: inspected.targetAccess.status,
-      targetRouteConfirmed: inspected.targetAccess.routeConfirmed,
-      targetFramePresent: inspected.targetAccess.framePresent,
-      targetFrameAccessible: inspected.targetAccess.frameAccessible,
-
-      northPresent: Boolean(aliases.NORTH && aliases.NORTH.present),
-      eastProbePresent: Boolean(aliases.EAST_PROBE && aliases.EAST_PROBE.present),
-      surfaceTruthPresent: Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present),
-      southPresent: Boolean(aliases.SOUTH && aliases.SOUTH.present),
-      southSurfacePointerPresent: Boolean(
-        aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present
-      ),
-      westDiagnosticPresent: Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present),
-      labWestPresent: Boolean(aliases.LABWEST && aliases.LABWEST.present),
-
+    var api = {
+      CONTRACT: CONTRACT,
+      RECEIPT: RECEIPT,
+      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
+      PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
+      BASELINE_CONTRACT: BASELINE_CONTRACT,
+      BASELINE_RECEIPT: BASELINE_RECEIPT,
+      VERSION: VERSION,
+      FILE: FILE,
+      TARGET_ROUTE: TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+      ROLE: ROLE,
+      COMPONENT: COMPONENT,
+      DIRECT_AUTHORITY_PATH: DIRECT_AUTHORITY_PATH,
+      LEGACY_AUTHORITY_PATH: LEGACY_AUTHORITY_PATH,
+      DIRECT_PACKET_RETURN_BRIDGE_ACTIVE: true,
+      DIRECT_PACKET_RETURN_BRIDGE_STATUS: "PUBLISHED",
+      DIRECT_METHOD_SURFACE: PUBLIC_METHOD_KEYS,
+      PUBLIC_METHOD_KEYS: PUBLIC_METHOD_KEYS,
       productionMutationAuthorized: false,
       canvasRepairAuthorized: false,
       canvasBuildAuthorized: false,
       canvasReleaseAuthorized: false,
       controlsRepairAuthorized: false,
       runtimeRestartAuthorized: false,
+      routeRepairAuthorized: false,
+      targetRouteRendererMutationAuthorized: false,
       visualPassClaimed: false,
-      updatedAt: nowIso()
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false
     };
-  }
 
-  function attachCallableBridge(target) {
-    if (!isObject(target)) return target;
+    defineCallable(api, "runEastSourceRead", runEastSourceRead, true);
+    defineCallable(api, "getEastReceipt", getEastReceipt, true);
+    defineCallable(api, "getEastState", getEastState, true);
 
-    target.run = run;
-    target.runDiagnostic = runDiagnostic;
-    target.runEastSourceRead = runEastSourceRead;
-    target.inspect = inspect;
-    target.getReport = getReport;
-    target.getReceipt = getReceipt;
-    target.getReceiptLight = getReceiptLight;
-    target.getCallableReceiptLight = getCallableReceiptLight;
-    target.getStatus = getStatus;
-    target.getState = getState;
-    target.getPacket = getPacket;
-    target.getPacketText = getPacketText;
-    target.getSummary = getSummary;
-    target.toPacketText = toPacketText;
-    target.inspectLoadedSources = inspectLoadedSources;
-    target.collectDocumentScopes = collectDocumentScopes;
-
-    target.receiptLightCallableBridgeActive = true;
-    target.receiptLightCallableBridgeStatus = "PUBLISHED";
-    target.receiptLightCallableBridgeContract = RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT;
-    target.receiptLightCallableBridgeReceipt = RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT;
-    target.RECEIPT_LIGHT_CALLABLE_BRIDGE_ACTIVE = true;
-    target.RECEIPT_LIGHT_CALLABLE_BRIDGE_STATUS = "PUBLISHED";
-    target.RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT = RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT;
-    target.RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT = RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT;
-
-    return target;
-  }
-
-  function getReceiptLight() {
-    return attachCallableBridge(baseReceiptLight());
-  }
-
-  function getCallableReceiptLight() {
-    return getReceiptLight();
-  }
-
-  function getStatus() {
-    var packet = makePacket("GET_STATUS");
-
-    return attachCallableBridge({
-      runState: packet.RUN_STATE,
-      trustState: packet.TRUST_STATE,
-      blocking: packet.BLOCKING,
-      directAuthorityPath: packet.DIRECT_AUTHORITY_PATH,
-      canonicalDirectAuthorityPath: packet.CANONICAL_DIRECT_AUTHORITY_PATH,
-      directMethodPublicationActive: packet.DIRECT_METHOD_PUBLICATION_ACTIVE,
-      directMethodPublicationStatus: packet.DIRECT_METHOD_PUBLICATION_STATUS,
-      directMethodsPublished: packet.DIRECT_METHODS_PUBLISHED,
-      receiptLightCallableBridgeContract: RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT,
-      receiptLightCallableBridgeReceipt: RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT,
-      receiptLightCallableBridgeActive: true,
-      receiptLightCallableBridgeStatus: "PUBLISHED",
-      eastPresent: packet.EAST_PRESENT,
-      eastStatus: packet.EAST_STATUS,
-      eastSourceReadActive: packet.EAST_SOURCE_READ_ACTIVE,
-      eastSourceScanStatus: packet.EAST_SOURCE_SCAN_STATUS,
-      targetAccessStatus: packet.TARGET_ACCESS_STATUS,
-      targetRouteConfirmed: packet.TARGET_ROUTE_CONFIRMED,
-      targetFramePresent: packet.TARGET_FRAME_PRESENT,
-      targetFrameAccessible: packet.TARGET_FRAME_ACCESSIBLE,
-      recommendedNextReceipt: packet.RECOMMENDED_NEXT_RECEIPT,
-      nextFile: packet.NEXT_FILE,
-      nextAction: packet.NEXT_ACTION,
-      updatedAt: packet.UPDATED_AT
-    });
-  }
-
-  function getState() {
-    return makePacket("GET_STATE");
-  }
-
-  function getPacket() {
-    return getReceipt();
-  }
-
-  function getPacketText() {
-    return toPacketText(makePacket("GET_PACKET_TEXT"));
-  }
-
-  function getSummary() {
-    return getStatus();
-  }
-
-  function publishApi(api) {
-    api.CONTRACT = CONTRACT;
-    api.RECEIPT = RECEIPT;
-    api.INTERNAL_RENEWAL_CONTRACT = INTERNAL_RENEWAL_CONTRACT;
-    api.INTERNAL_RENEWAL_RECEIPT = INTERNAL_RENEWAL_RECEIPT;
-    api.RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT = RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT;
-    api.RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT = RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT;
-    api.RECEIPT_LIGHT_CALLABLE_BRIDGE_ACTIVE = true;
-    api.RECEIPT_LIGHT_CALLABLE_BRIDGE_STATUS = "PUBLISHED";
-    api.PREVIOUS_CONTRACT = PREVIOUS_CONTRACT;
-    api.PREVIOUS_RECEIPT = PREVIOUS_RECEIPT;
-    api.VERSION = VERSION;
-    api.FILE = FILE;
-    api.TARGET_ROUTE = TARGET_ROUTE;
-    api.DIAGNOSTIC_ROUTE = DIAGNOSTIC_ROUTE;
-    api.ROLE = ROLE;
-    api.COMPONENT = COMPONENT;
-
-    api.contract = CONTRACT;
-    api.receipt = RECEIPT;
-    api.internalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
-    api.internalRenewalReceipt = INTERNAL_RENEWAL_RECEIPT;
-    api.receiptLightCallableBridgeContract = RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT;
-    api.receiptLightCallableBridgeReceipt = RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT;
-    api.receiptLightCallableBridgeActive = true;
-    api.receiptLightCallableBridgeStatus = "PUBLISHED";
-    api.previousContract = PREVIOUS_CONTRACT;
-    api.version = VERSION;
-    api.file = FILE;
-    api.targetRoute = TARGET_ROUTE;
-    api.diagnosticRoute = DIAGNOSTIC_ROUTE;
-    api.role = ROLE;
-    api.component = COMPONENT;
-
-    api.DIRECT_AUTHORITY_PATH = AUTHORITY_PATH;
-    api.CANONICAL_DIRECT_AUTHORITY_PATH = CANONICAL_AUTHORITY_PATH;
-    api.DIRECT_METHOD_PUBLICATION_ACTIVE = true;
-    api.DIRECT_METHOD_PUBLICATION_STATUS =
-      "DIRECT_METHODS_PUBLISHED_ON_EAST_AUTHORITY_AND_RECEIPT_LIGHT_SURFACE";
-    api.DIRECT_METHODS_PUBLISHED = DIRECT_METHODS_PUBLISHED;
-
-    api.directAuthorityPath = AUTHORITY_PATH;
-    api.canonicalDirectAuthorityPath = CANONICAL_AUTHORITY_PATH;
-    api.directMethodPublicationActive = true;
-    api.directMethodPublicationStatus =
-      "DIRECT_METHODS_PUBLISHED_ON_EAST_AUTHORITY_AND_RECEIPT_LIGHT_SURFACE";
-    api.directMethodsPublished = DIRECT_METHODS_PUBLISHED;
-
-    attachCallableBridge(api);
-
-    api.runApiAvailable = true;
-    api.runDiagnosticApiAvailable = true;
-    api.runEastSourceReadApiAvailable = true;
-    api.inspectApiAvailable = true;
-    api.getReportApiAvailable = true;
-    api.getReceiptApiAvailable = true;
-    api.getReceiptLightApiAvailable = true;
-    api.getCallableReceiptLightApiAvailable = true;
-    api.getStatusApiAvailable = true;
-    api.getStateApiAvailable = true;
-    api.getPacketApiAvailable = true;
-    api.getPacketTextApiAvailable = true;
-    api.getSummaryApiAvailable = true;
+    defineCallable(api, "run", runEastSourceRead, false);
+    defineCallable(api, "runDiagnostic", runEastSourceRead, false);
+    defineCallable(api, "inspect", getEastReceipt, false);
+    defineCallable(api, "getReport", getEastReceipt, false);
+    defineCallable(api, "getReceipt", getEastReceipt, false);
+    defineCallable(api, "getReceiptLight", getEastState, false);
+    defineCallable(api, "getState", getEastState, false);
+    defineCallable(api, "getPacket", getEastReceipt, false);
+    defineCallable(api, "getPacketText", getPacketText, false);
+    defineCallable(api, "inspectLoadedSources", inspectLoadedSources, false);
+    defineCallable(api, "collectDocumentScopes", collectDocumentScopes, false);
 
     Object.keys(NO_TOUCH).forEach(function applyNoTouch(key) {
       api[key] = NO_TOUCH[key];
     });
 
-    return api;
-  }
-
-  function publishAliases(api) {
-    ensureNamespace("HEARTH");
-    ensureNamespace("DEXTER_LAB");
-
     EAST_ALIAS_PATHS.forEach(function publish(path) {
       setPath(path, api);
     });
 
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_RUN = run;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_RUN_DIAGNOSTIC = runDiagnostic;
+    root.HEARTH_DIAGNOSTIC_RAIL_EAST_RUN = runEastSourceRead;
     root.HEARTH_DIAGNOSTIC_RAIL_EAST_RUN_SOURCE_READ = runEastSourceRead;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_INSPECT = inspect;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_RECEIPT = getReceipt;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_RECEIPT_LIGHT = getReceiptLight;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_CALLABLE_RECEIPT_LIGHT = getCallableReceiptLight;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_STATUS = getStatus;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_STATE = getState;
-    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_SUMMARY = getSummary;
+    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_RECEIPT = getEastReceipt;
+    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_STATE = getEastState;
+    root.HEARTH_DIAGNOSTIC_RAIL_EAST_GET_PACKET_TEXT = getPacketText;
 
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_LOADED__ = true;
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_CONTRACT__ = CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_INTERNAL_RENEWAL_CONTRACT__ =
-      INTERNAL_RENEWAL_CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT__ =
-      RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT__ =
-      RECEIPT_LIGHT_CALLABLE_BRIDGE_RECEIPT;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_ACTIVE__ = true;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_RECEIPT_LIGHT_CALLABLE_BRIDGE_STATUS__ =
-      "PUBLISHED";
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_INTERNAL_RENEWAL_RECEIPT__ = INTERNAL_RENEWAL_RECEIPT;
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_VERSION__ = VERSION;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_METHOD_PUBLICATION_ACTIVE__ = true;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_AUTHORITY_PATH__ = AUTHORITY_PATH;
-    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_CANONICAL_DIRECT_AUTHORITY_PATH__ =
-      CANONICAL_AUTHORITY_PATH;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_BRIDGE_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_PACKET_RETURN_BRIDGE_STATUS__ = "PUBLISHED";
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_DIRECT_AUTHORITY_PATH__ = DIRECT_AUTHORITY_PATH;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_LEGACY_AUTHORITY_PATH__ = LEGACY_AUTHORITY_PATH;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_PUBLIC_METHOD_KEYS__ = PUBLIC_METHOD_KEYS;
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_PRODUCTION_MUTATION_AUTHORIZED__ = false;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_CANVAS_REPAIR_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_CANVAS_BUILD_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_CANVAS_RELEASE_AUTHORIZED__ = false;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_CONTROLS_REPAIR_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_RAIL_EAST_RUNTIME_RESTART_AUTHORIZED__ = false;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_TARGET_ROUTE_RENDERER_MUTATION_AUTHORIZED__ = false;
+    root.__HEARTH_DIAGNOSTIC_RAIL_EAST_VISUAL_PASS_CLAIMED__ = false;
 
+    state.lastState = makeState();
     return api;
   }
 
-  var authority = publishApi({});
-  publishAliases(authority);
+  var authority = publishApi();
 
   if (typeof module !== "undefined" && module.exports) {
     module.exports = authority;

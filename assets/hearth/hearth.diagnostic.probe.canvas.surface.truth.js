@@ -1,44 +1,30 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_TNT_v3
-// Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_TNT_v4_3
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANONICAL_TWO_CHAPEL_CYCLE_REGISTRY_READER_TNT_v5_1
 // Full-file replacement.
-// SURFACE_TRUTH / Chapel context / iframe-window Bishop resolver only.
-// No production mutation. No canvas repair. No build. No release.
+// Diagnostic reader only.
+// Owns: canonical alias registry reading, two-chapel cycle inspection, mount/surface truth measurement,
+// lane classification, first-held-coordinate reporting.
+// Does not own: production mutation, canvas repair, canvas build, canvas release, controls,
+// runtime restart, route repair, final visual pass, generated image, GraphicBox, WebGL.
 
-(function hearthSurfaceTruthTargetIframeBishopResolver(global) {
+(function hearthCanvasSurfaceTruthCanonicalRegistryReader(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root.document || null;
 
-  var CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_TNT_v3";
-  var RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_RECEIPT_v3";
-  var INTERNAL_RENEWAL_CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_TNT_v4_3";
-  var INTERNAL_RENEWAL_RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_RECEIPT_v4_3";
-  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_TNT_v4_2";
+  var CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANONICAL_TWO_CHAPEL_CYCLE_REGISTRY_READER_TNT_v5_1";
+  var RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANONICAL_TWO_CHAPEL_CYCLE_REGISTRY_READER_RECEIPT_v5_1";
+  var PREVIOUS_CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_TNT_v4_3";
 
-  var VERSION = "2026-06-09.hearth-diagnostic-probe-canvas-surface-truth-target-iframe-bishop-resolver-v4-3";
+  var VERSION = "2026-06-09.hearth-canvas-surface-truth-canonical-two-chapel-cycle-registry-reader-v5-1";
   var FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-  var CANVAS_BISHOP_FILE = "/assets/hearth/hearth.canvas.js";
-  var HAND_GEOMETRY_FILE = "/assets/hearth/hearth.canvas.hand.geometry.js";
-  var HAND_CONTEXT_FILE = "/assets/hearth/hearth.canvas.hand.context.js";
-  var HAND_PAINT_FILE = "/assets/hearth/hearth.canvas.hand.paint.js";
-  var HAND_VIEW_FILE = "/assets/hearth/hearth.canvas.hand.view.js";
-  var HAND_INSPECT_FILE = "/assets/hearth/hearth.canvas.hand.inspect.js";
-  var HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
-  var HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-  var FINGER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
-  var FINGER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
-  var FINGER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
-  var FINGER_LIGHT_FILE = "/assets/hearth/hearth.canvas.finger.light.js";
-
-  var AUTHORITY_PATH = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH";
-  var ROLE = "SURFACE_TRUTH";
+  var ROLE = "CANVAS_TRUTH_PROBE";
   var COMPONENT = "SURFACE_TRUTH";
+  var AUTHORITY_PATH = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH";
 
   var NO_TOUCH = {
     productionMutationAuthorized: false,
@@ -64,6 +50,7 @@
     webGL: false,
     webgl: false,
     publicSuperiorityClaim: false,
+
     PRODUCTION_MUTATION_AUTHORIZED: false,
     CANVAS_REPAIR_AUTHORIZED: false,
     CANVAS_BUILD_AUTHORIZED: false,
@@ -77,6 +64,224 @@
     GENERATED_IMAGE: false,
     GRAPHIC_BOX: false,
     WEBGL: false
+  };
+
+  var REGISTRY = {
+    diagnosticUpline: {
+      file: FILE,
+      role: "Canvas Truth Probe / Registry Reader",
+      chapelMember: false,
+      primaryAlias: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      aliases: [
+        "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+        "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
+        "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
+        "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+        "HEARTH.canvasSurfaceTruthProbe",
+        "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
+        "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+        "DEXTER_LAB.canvasSurfaceTruthProbe",
+        "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
+      ]
+    },
+
+    chapelOneHead: {
+      file: "/assets/hearth/hearth.canvas.js",
+      role: "Chapel One Head / Canvas Bishop / Mount Platform Governor",
+      chapel: "CHAPEL_ONE",
+      chapelMember: true,
+      primaryAlias: "HEARTH_CANVAS_BISHOP",
+      aliases: [
+        "HEARTH_CANVAS_BISHOP",
+        "HEARTH_CANVAS",
+        "HEARTH_CANVAS_HUB",
+        "HEARTH_CANVAS_PARENT",
+        "HEARTH_CANVAS_AUTHORITY",
+        "HEARTH_CANVAS_CHAPEL_ONE_BISHOP",
+        "HEARTH.canvas",
+        "HEARTH.canvasHub",
+        "HEARTH.canvasParent",
+        "HEARTH.canvasAuthority",
+        "HEARTH.canvasBishop",
+        "HEARTH.chapelOneBishop",
+        "DEXTER_LAB.hearthCanvas",
+        "DEXTER_LAB.hearthCanvasHub",
+        "DEXTER_LAB.hearthCanvasBishop",
+        "DEXTER_LAB.hearthChapelOneBishop"
+      ],
+      readerMethods: ["measure", "run", "runDiagnostic", "inspect", "read", "getReceipt", "getReceiptLight", "getStatus", "getState"],
+      receiverMethods: ["receiveHandReceipt", "acceptBridgeReturnPacket", "receiveBridgeReturnPacket", "composePlatformPacket"]
+    },
+
+    chapelOnePriest: {
+      file: "/assets/hearth/hearth.canvas.hand.inspect.js",
+      role: "Chapel One Priest / Inspect Hand",
+      chapel: "CHAPEL_ONE",
+      chapelMember: true,
+      primaryAlias: "HEARTH_CANVAS_HAND_INSPECT",
+      aliases: ["HEARTH_CANVAS_HAND_INSPECT", "HEARTH.canvasHandInspect", "DEXTER_LAB.hearthCanvasHandInspect"]
+    },
+
+    chapelOneWorkers: [
+      {
+        key: "geometry",
+        file: "/assets/hearth/hearth.canvas.hand.geometry.js",
+        role: "Geometry Hand",
+        primaryAlias: "HEARTH_CANVAS_HAND_GEOMETRY",
+        aliases: ["HEARTH_CANVAS_HAND_GEOMETRY", "HEARTH.canvasHandGeometry", "DEXTER_LAB.hearthCanvasHandGeometry"]
+      },
+      {
+        key: "context",
+        file: "/assets/hearth/hearth.canvas.hand.context.js",
+        role: "Context Hand",
+        primaryAlias: "HEARTH_CANVAS_HAND_CONTEXT",
+        aliases: ["HEARTH_CANVAS_HAND_CONTEXT", "HEARTH.canvasHandContext", "DEXTER_LAB.hearthCanvasHandContext"]
+      },
+      {
+        key: "paint",
+        file: "/assets/hearth/hearth.canvas.hand.paint.js",
+        role: "Paint Hand",
+        primaryAlias: "HEARTH_CANVAS_HAND_PAINT",
+        aliases: ["HEARTH_CANVAS_HAND_PAINT", "HEARTH.canvasHandPaint", "DEXTER_LAB.hearthCanvasHandPaint"]
+      },
+      {
+        key: "view",
+        file: "/assets/hearth/hearth.canvas.hand.view.js",
+        role: "View Hand",
+        primaryAlias: "HEARTH_CANVAS_HAND_VIEW",
+        aliases: ["HEARTH_CANVAS_HAND_VIEW", "HEARTH.canvasHandView", "DEXTER_LAB.hearthCanvasHandView"]
+      }
+    ],
+
+    bridgeAuthority: {
+      file: "/assets/hearth/hearth.hex.four-pair.authority.js",
+      role: "3D Authority / Tuple Truth",
+      chapelMember: false,
+      primaryAlias: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+      aliases: [
+        "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+        "HEARTH.hexFourPair3dAuthority",
+        "HEARTH.hexFourPairAuthority",
+        "HEARTH.hexAuthority",
+        "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
+        "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
+        "DEXTER_LAB.hearthHexFourPair3dAuthority",
+        "DEXTER_LAB.hearthHexFourPairAuthority"
+      ]
+    },
+
+    activeCrossingBridge: {
+      file: "/assets/hearth/hearth.hex.surface.js",
+      role: "Active Chapel Bridge / Chapel One to Chapel Two Transmission",
+      chapelMember: false,
+      primaryAlias: "HEARTH_HEX_SURFACE_3D_CHAPEL_BRIDGE",
+      aliases: [
+        "HEARTH_HEX_SURFACE_3D_CHAPEL_BRIDGE",
+        "HEARTH.hexSurface3dChapelBridge",
+        "DEXTER_LAB.hearthHexSurface3dChapelBridge",
+        "HEARTH.hexSurface",
+        "HEARTH_HEX_SURFACE",
+        "HEARTH_HEX_SURFACE_RENDERER",
+        "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
+        "DEXTER_LAB.hearthHexSurface"
+      ],
+      receiverMethods: [
+        "receiveCanvasHexGatePacket",
+        "consumeCanvasHexGatePacket",
+        "acceptCanvasHexGatePacket",
+        "receiveCanvasViewPacket",
+        "receiveChapel1Packet",
+        "receive"
+      ]
+    },
+
+    bridgeReturn: {
+      file: "/assets/hearth/hearth.hex.bridge.return.js",
+      role: "Bridge Return / Chapel Two to Chapel One Return Authority",
+      chapelMember: false,
+      primaryAlias: "HEARTH_HEX_BRIDGE_RETURN",
+      aliases: [
+        "HEARTH_HEX_BRIDGE_RETURN",
+        "HEARTH.hexBridgeReturn",
+        "HEARTH.bridgeReturn",
+        "HEARTH_BRIDGE_RETURN",
+        "DEXTER_LAB.hearthHexBridgeReturn",
+        "DEXTER_LAB.hearthBridgeReturn"
+      ],
+      receiverMethods: [
+        "receiveChapelTwoPacket",
+        "receiveFingerSurfacePacket",
+        "receiveExpressionPacket",
+        "receive"
+      ]
+    },
+
+    chapelTwoHead: {
+      file: "/assets/hearth/hearth.canvas.finger.surface.js",
+      role: "Chapel Two Head / Surface Finger Bishop",
+      chapel: "CHAPEL_TWO",
+      chapelMember: true,
+      primaryAlias: "HEARTH_CANVAS_FINGER_SURFACE_3D_CHAPEL_2",
+      aliases: [
+        "HEARTH_CANVAS_FINGER_SURFACE_3D_CHAPEL_2",
+        "HEARTH.canvasFingerSurface3dChapel2",
+        "DEXTER_LAB.hearthCanvasFingerSurface3dChapel2",
+        "HEARTH.canvasFingerSurface",
+        "HEARTH.pointerFingerSurface",
+        "HEARTH_CANVAS_FINGER_SURFACE",
+        "HEARTH_POINTER_FINGER_SURFACE",
+        "DEXTER_LAB.hearthCanvasFingerSurface"
+      ],
+      receiverMethods: [
+        "receiveHexSurface3dTransmissionPacket",
+        "receiveChapelBridgePacket",
+        "receiveFingerSurfacePacket",
+        "receive"
+      ]
+    },
+
+    chapelTwoPriest: {
+      file: "/assets/hearth/hearth.canvas.finger.inspect.js",
+      role: "Chapel Two Priest / Inspect Finger",
+      chapel: "CHAPEL_TWO",
+      chapelMember: true,
+      primaryAlias: "HEARTH_CANVAS_FINGER_INSPECT",
+      aliases: [
+        "HEARTH_CANVAS_FINGER_INSPECT",
+        "HEARTH.canvasFingerInspect",
+        "HEARTH.pointerFingerInspect",
+        "HEARTH_POINTER_FINGER_INSPECT",
+        "DEXTER_LAB.hearthCanvasFingerInspect"
+      ]
+    },
+
+    chapelTwoWorkers: [
+      ["mass", "HEARTH_CANVAS_FINGER_MASS", "/assets/hearth/hearth.canvas.finger.mass.js"],
+      ["elevation", "HEARTH_CANVAS_FINGER_ELEVATION", "/assets/hearth/hearth.canvas.finger.elevation.js"],
+      ["landform", "HEARTH_CANVAS_FINGER_LANDFORM", "/assets/hearth/hearth.canvas.finger.landform.js"],
+      ["hydrology", "HEARTH_CANVAS_FINGER_HYDROLOGY", "/assets/hearth/hearth.canvas.finger.hydrology.js"],
+      ["material", "HEARTH_CANVAS_FINGER_MATERIAL", "/assets/hearth/hearth.canvas.finger.material.js"],
+      ["light", "HEARTH_CANVAS_FINGER_LIGHT", "/assets/hearth/hearth.canvas.finger.light.js"],
+      ["lighting", "HEARTH_CANVAS_FINGER_LIGHTING", "/assets/hearth/hearth.canvas.finger.lighting.js"],
+      ["atmosphere", "HEARTH_CANVAS_FINGER_ATMOSPHERE", "/assets/hearth/hearth.canvas.finger.atmosphere.js"],
+      ["composition", "HEARTH_CANVAS_FINGER_COMPOSITION", "/assets/hearth/hearth.canvas.finger.composition.js"],
+      ["boundary", "HEARTH_CANVAS_FINGER_BOUNDARY", "/assets/hearth/hearth.canvas.finger.boundary.js"]
+    ].map(function makeWorker(item) {
+      var key = item[0];
+      var upper = key.charAt(0).toUpperCase() + key.slice(1);
+      return {
+        key: key,
+        file: item[2],
+        role: upper + " Finger",
+        primaryAlias: item[1],
+        aliases: [
+          item[1],
+          "HEARTH.canvasFinger" + upper,
+          "HEARTH.pointerFinger" + upper,
+          "DEXTER_LAB.hearthCanvasFinger" + upper
+        ]
+      };
+    })
   };
 
   var MOUNT_SELECTORS = [
@@ -93,85 +298,14 @@
 
   var CANVAS_SELECTORS = [
     "#hearthVisibleCanvas",
+    "#hearthPlaceholderCanvas",
     "canvas[data-hearth-visible-canvas='true']",
+    "canvas[data-hearth-placeholder-canvas='true']",
     "canvas[data-hearth-canvas='true']",
     "canvas[data-planet='hearth']",
     "#hearthCanvas",
     "#hearth-canvas",
     "canvas"
-  ];
-
-  var ALIAS_PATHS = [
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-    "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
-    "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
-    "HEARTH.diagnosticProbeCanvasSurfaceTruth",
-    "HEARTH.canvasSurfaceTruthProbe",
-    "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
-    "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-    "DEXTER_LAB.canvasSurfaceTruthProbe",
-    "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
-  ];
-
-  var CANVAS_BISHOP_ALIASES = [
-    "HEARTH_CANVAS_BISHOP",
-    "HEARTH_CANVAS_CHAPEL_ONE_BISHOP",
-    "HEARTH_CANVAS",
-    "HEARTH_CANVAS_HUB",
-    "HEARTH_CANVAS_PARENT",
-    "HEARTH_CANVAS_AUTHORITY",
-    "HEARTH.canvasBishop",
-    "HEARTH.chapelOneBishop",
-    "HEARTH.canvas",
-    "HEARTH.canvasHub",
-    "HEARTH.canvasParent",
-    "HEARTH.canvasAuthority",
-    "DEXTER_LAB.hearthCanvasBishop",
-    "DEXTER_LAB.hearthChapelOneBishop",
-    "DEXTER_LAB.hearthCanvas",
-    "DEXTER_LAB.hearthCanvasHub"
-  ];
-
-  var HAND_ALIASES = {
-    geometry: ["HEARTH.canvasHandGeometry", "HEARTH_CANVAS_HAND_GEOMETRY", "DEXTER_LAB.hearthCanvasHandGeometry"],
-    context: ["HEARTH.canvasHandContext", "HEARTH_CANVAS_HAND_CONTEXT", "DEXTER_LAB.hearthCanvasHandContext"],
-    paint: ["HEARTH.canvasHandPaint", "HEARTH_CANVAS_HAND_PAINT", "DEXTER_LAB.hearthCanvasHandPaint"],
-    view: ["HEARTH.canvasHandView", "HEARTH_CANVAS_HAND_VIEW", "DEXTER_LAB.hearthCanvasHandView"],
-    inspect: ["HEARTH.canvasHandInspect", "HEARTH_CANVAS_HAND_INSPECT", "DEXTER_LAB.hearthCanvasHandInspect"]
-  };
-
-  var HEX_AUTHORITY_ALIASES = [
-    "HEARTH.hexFourPairAuthority",
-    "HEARTH.hexAuthority",
-    "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY",
-    "HEARTH_HEX_FOUR_PAIR_AUTHORITY",
-    "DEXTER_LAB.hearthHexFourPairAuthority"
-  ];
-
-  var HEX_SURFACE_ALIASES = [
-    "HEARTH.hexSurface",
-    "HEARTH_HEX_SURFACE",
-    "HEARTH_HEX_SURFACE_RENDERER",
-    "HEARTH_HEX_SURFACE_INTERACTIVE_SPHERE_PAIR_RENDERER",
-    "DEXTER_LAB.hearthHexSurface"
-  ];
-
-  var FINGER_ALIASES = {
-    surface: ["HEARTH.canvasFingerSurface", "HEARTH.pointerFingerSurface", "HEARTH_CANVAS_FINGER_SURFACE", "HEARTH_POINTER_FINGER_SURFACE", "DEXTER_LAB.hearthCanvasFingerSurface"],
-    boundary: ["HEARTH.canvasFingerBoundary", "HEARTH.pointerFingerBoundary", "HEARTH_CANVAS_FINGER_BOUNDARY", "HEARTH_POINTER_FINGER_BOUNDARY", "DEXTER_LAB.hearthCanvasFingerBoundary"],
-    inspect: ["HEARTH.canvasFingerInspect", "HEARTH.pointerFingerInspect", "HEARTH_CANVAS_FINGER_INSPECT", "HEARTH_POINTER_FINGER_INSPECT", "DEXTER_LAB.hearthCanvasFingerInspect"],
-    light: ["HEARTH.canvasFingerLight", "HEARTH.pointerFingerLight", "HEARTH_CANVAS_FINGER_LIGHT", "HEARTH_POINTER_FINGER_LIGHT", "DEXTER_LAB.hearthCanvasFingerLight"]
-  };
-
-  var DIRECT_METHOD_NAMES = [
-    "run","runDiagnostic","inspect","inspectSurfaceTruth","runSurfaceTruth",
-    "runSurfaceTruthDirectCheck","runSurfaceTruthProbe","runCanvasSurfaceTruthProbe",
-    "runProductionSurfaceLensAlignment","runTargetFrameDocumentScopeRenewal",
-    "runDirect","execute","diagnose","measure","measureSurfaceTruth",
-    "read","readSurfaceTruth","getReport","getReceipt","getReceiptLight",
-    "getStatus","getState","getPacket","getPacketText","getSummary",
-    "toPacketText","collectDocumentScopes","readChapelContext","readCanvasBishop",
-    "readChapelOneHands","readHexBridge","readChapelTwoFingers"
   ];
 
   function nowIso() {
@@ -197,8 +331,17 @@
   }
 
   function compact(value, limit) {
-    if (limit === undefined) limit = 6000;
+    if (limit === undefined) limit = 8000;
     return asString(value).replace(/\n/g, " ").replace(/\s+/g, " ").trim().slice(0, limit);
+  }
+
+  function clone(value) {
+    try { return JSON.parse(JSON.stringify(value)); }
+    catch (_error) {
+      if (Array.isArray(value)) return value.slice();
+      if (isObject(value)) return Object.assign({}, value);
+      return value;
+    }
   }
 
   function readPathFrom(base, path) {
@@ -235,21 +378,19 @@
     return true;
   }
 
-  function ensureNamespace(path) {
-    if (!root[path] || typeof root[path] !== "object") root[path] = {};
-    return root[path];
+  function ensureNamespace(name) {
+    if (!root[name] || typeof root[name] !== "object") root[name] = {};
+    return root[name];
   }
 
   function safeDocumentWindow(targetDoc) {
-    try {
-      if (targetDoc && targetDoc.defaultView) return targetDoc.defaultView;
-    } catch (_error) {}
-    return null;
+    try { return targetDoc && targetDoc.defaultView ? targetDoc.defaultView : null; }
+    catch (_error) { return null; }
   }
 
   function frameDocument(frame) {
     try { if (frame && frame.contentDocument) return frame.contentDocument; } catch (_error) {}
-    try { if (frame && frame.contentWindow && frame.contentWindow.document) return frame.contentWindow.document; } catch (_error) {}
+    try { if (frame && frame.contentWindow && frame.contentWindow.document) return frame.contentWindow.document; } catch (_error2) {}
     return null;
   }
 
@@ -267,75 +408,78 @@
     try { return targetDoc.title || "UNKNOWN"; } catch (_error) { return "UNREADABLE"; }
   }
 
-  function addScope(scopes, seen, label, targetDoc, sourceKind) {
-    if (!targetDoc) return;
-    for (var i = 0; i < seen.length; i += 1) if (seen[i] === targetDoc) return;
-
-    seen.push(targetDoc);
-    scopes.push({
-      label: label,
-      sourceKind: sourceKind || "DOCUMENT",
-      doc: targetDoc,
-      win: safeDocumentWindow(targetDoc),
-      path: documentPath(targetDoc),
-      href: documentHref(targetDoc),
-      title: documentTitle(targetDoc)
-    });
-  }
-
-  function addFrameScopes(scopes, seen, baseLabel, targetDoc) {
-    if (!targetDoc || !isFunction(targetDoc.querySelectorAll)) return;
-    var frames = [];
-
-    try { frames = Array.prototype.slice.call(targetDoc.querySelectorAll("iframe")); }
-    catch (_error) { frames = []; }
-
-    frames.forEach(function eachFrame(frame, index) {
-      addScope(scopes, seen, baseLabel + ".iframe[" + index + "]", frameDocument(frame), "IFRAME_DOCUMENT");
-    });
-  }
-
   function collectDocumentScopes() {
     var scopes = [];
-    var seen = [];
+    var seenDocs = [];
 
-    addScope(scopes, seen, "current.document", doc, "CURRENT_DOCUMENT");
-    addFrameScopes(scopes, seen, "current.document", doc);
+    function addScope(label, targetDoc, sourceKind) {
+      if (!targetDoc) return;
+      for (var i = 0; i < seenDocs.length; i += 1) if (seenDocs[i] === targetDoc) return;
+      seenDocs.push(targetDoc);
+      scopes.push({
+        label: label,
+        sourceKind: sourceKind,
+        doc: targetDoc,
+        win: safeDocumentWindow(targetDoc),
+        path: documentPath(targetDoc),
+        href: documentHref(targetDoc),
+        title: documentTitle(targetDoc)
+      });
+    }
+
+    function addFrames(baseLabel, targetDoc) {
+      if (!targetDoc || !isFunction(targetDoc.querySelectorAll)) return;
+      var frames = [];
+      try { frames = Array.prototype.slice.call(targetDoc.querySelectorAll("iframe")); }
+      catch (_error) { frames = []; }
+
+      frames.forEach(function eachFrame(frame, index) {
+        addScope(baseLabel + ".iframe[" + index + "]", frameDocument(frame), "IFRAME_DOCUMENT");
+      });
+    }
+
+    addScope("current.document", doc, "CURRENT_DOCUMENT");
+    addFrames("current.document", doc);
 
     try {
       if (root.parent && root.parent !== root && root.parent.document) {
-        addScope(scopes, seen, "parent.document", root.parent.document, "PARENT_DOCUMENT");
-        addFrameScopes(scopes, seen, "parent.document", root.parent.document);
+        addScope("parent.document", root.parent.document, "PARENT_DOCUMENT");
+        addFrames("parent.document", root.parent.document);
       }
-    } catch (_error) {}
+    } catch (_error2) {}
 
     try {
       if (root.top && root.top !== root && root.top.document) {
-        addScope(scopes, seen, "top.document", root.top.document, "TOP_DOCUMENT");
-        addFrameScopes(scopes, seen, "top.document", root.top.document);
+        addScope("top.document", root.top.document, "TOP_DOCUMENT");
+        addFrames("top.document", root.top.document);
       }
-    } catch (_error) {}
+    } catch (_error3) {}
 
     return scopes;
   }
 
-  function firstGlobalInWindows(paths) {
-    var scopes = collectDocumentScopes();
+  function collectWindows() {
     var windows = [];
     var seen = [];
 
-    function addWin(label, win) {
+    function add(label, win) {
       if (!win) return;
       for (var i = 0; i < seen.length; i += 1) if (seen[i] === win) return;
       seen.push(win);
       windows.push({ label: label, win: win });
     }
 
-    addWin("diagnostic.window", root);
+    add("diagnostic.window", root);
 
-    scopes.forEach(function addScopeWindow(scope) {
-      addWin(scope.label + ".window", scope.win);
+    collectDocumentScopes().forEach(function eachScope(scope) {
+      add(scope.label + ".window", scope.win);
     });
+
+    return windows;
+  }
+
+  function firstGlobal(paths) {
+    var windows = collectWindows();
 
     for (var w = 0; w < windows.length; w += 1) {
       for (var p = 0; p < paths.length; p += 1) {
@@ -354,16 +498,60 @@
     return { found: false, path: "NONE", windowLabel: "NONE", value: null };
   }
 
-  function firstGlobal(paths) {
-    return firstGlobalInWindows(paths);
+  function methodKeys(value) {
+    if (!value || (!isObject(value) && !isFunction(value))) return [];
+    try {
+      return Object.keys(value).filter(function filter(key) {
+        return isFunction(value[key]);
+      });
+    } catch (_error) {
+      return [];
+    }
   }
 
-  function getExistingAuthorityObject() {
-    for (var i = 0; i < ALIAS_PATHS.length; i += 1) {
-      var found = readPath(ALIAS_PATHS[i]);
-      if (isObject(found)) return found;
+  function readReceipt(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return {};
+
+    var methods = ["getReceiptLight", "getReceipt", "getStatus", "getState", "getReport", "inspect", "measure"];
+    for (var i = 0; i < methods.length; i += 1) {
+      var method = methods[i];
+      if (!isFunction(authority[method])) continue;
+      try {
+        var out = method === "getReceiptLight" ? authority[method](false) : authority[method]();
+        if (isObject(out)) return out;
+      } catch (_error) {}
     }
+
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (authority.contract || authority.CONTRACT || authority.receipt || authority.RECEIPT) return authority;
     return {};
+  }
+
+  function readNode(node) {
+    var found = firstGlobal(node.aliases || []);
+    var receipt = readReceipt(found.value);
+    var keys = methodKeys(found.value);
+
+    return {
+      file: node.file,
+      role: node.role,
+      chapel: node.chapel || "NONE",
+      chapelMember: Boolean(node.chapelMember),
+      primaryAlias: node.primaryAlias,
+      found: found.found,
+      aliasPath: found.path,
+      windowLabel: found.windowLabel,
+      valueType: found.found ? typeof found.value : "undefined",
+      methodCount: keys.length,
+      methodKeys: keys.join(","),
+      contract: asString(receipt.contract || receipt.CONTRACT || (found.value && found.value.contract) || "UNKNOWN"),
+      receipt: asString(receipt.receipt || receipt.RECEIPT || (found.value && found.value.receipt) || "UNKNOWN"),
+      componentStatus: asString(receipt.componentStatus || receipt.status || receipt.postgameStatus || (found.found ? "OBSERVED" : "NOT_OBSERVED")),
+      firstFailedCoordinate: asString(receipt.firstFailedCoordinate || receipt.FIRST_FAILED_COORDINATE || "UNKNOWN"),
+      recommendedNextFile: asString(receipt.recommendedNextFile || receipt.RECOMMENDED_NEXT_FILE || node.file),
+      recommendedNextAction: asString(receipt.recommendedNextAction || receipt.RECOMMENDED_NEXT_ACTION || "UNKNOWN"),
+      rawReceipt: receipt
+    };
   }
 
   function queryFirst(context, selectors) {
@@ -404,12 +592,12 @@
     var cls = "";
 
     try { tag = (element.tagName || "unknown").toLowerCase(); } catch (_error) {}
-    try { id = element.id ? "#" + element.id : ""; } catch (_error) {}
+    try { id = element.id ? "#" + element.id : ""; } catch (_error2) {}
     try {
       cls = typeof element.className === "string" && element.className
         ? "." + element.className.trim().replace(/\s+/g, ".")
         : "";
-    } catch (_error) {}
+    } catch (_error3) {}
 
     return compact(tag + id + cls, 400);
   }
@@ -431,13 +619,10 @@
       scope.path.indexOf("/diagnostic") !== -1 ||
       scope.href.indexOf(DIAGNOSTIC_ROUTE) !== -1;
 
-    var titleMatch = /hearth/i.test(scope.title || "");
-
     var score = 0;
-    if (routeMatch && !diagnosticMatch) score += 80;
-    if (titleMatch) score += 20;
-    if (mount) score += 45;
-    if (canvas) score += 25;
+    if (routeMatch && !diagnosticMatch) score += 100;
+    if (mount) score += 50;
+    if (canvas) score += 35;
     if (mountRect.width > 0 && mountRect.height > 0) score += 20;
     if (canvasRect.width > 0 && canvasRect.height > 0) score += 15;
     if (diagnosticMatch && !mount) score -= 10;
@@ -450,12 +635,13 @@
       title: scope.title,
       routeMatch: routeMatch,
       diagnosticMatch: diagnosticMatch,
-      titleMatch: titleMatch,
       score: score,
+
       canonicalMountFound: Boolean(mount),
       canonicalMountDescriptor: elementDescriptor(mount),
       canonicalMountRect: mountRect,
       canonicalMountRectNonZero: Boolean(mountRect.width > 0 && mountRect.height > 0),
+
       canonicalCanvasFound: Boolean(canvas),
       canonicalCanvasDescriptor: elementDescriptor(canvas),
       canonicalCanvasRect: canvasRect,
@@ -465,63 +651,136 @@
 
   function bestInspection(inspections) {
     if (!inspections.length) return null;
-    return inspections.slice().sort(function byScore(a, b) { return b.score - a.score; })[0];
+    return inspections.slice().sort(function sort(a, b) { return b.score - a.score; })[0];
   }
 
-  function classifySurface(best) {
-    if (!best) return {
-      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-      failureClass: "TARGET_DOCUMENT_SCOPE_UNREADABLE",
-      firstFailedCoordinate: "TARGET_DOCUMENT_SCOPE_READABLE",
-      acceptedAsEvidence: false
-    };
+  function readRegistry() {
+    var chapelOneHead = readNode(REGISTRY.chapelOneHead);
+    var chapelOnePriest = readNode(REGISTRY.chapelOnePriest);
+    var chapelOneWorkers = REGISTRY.chapelOneWorkers.map(readNode);
 
-    if (!best.canonicalMountFound) return {
-      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-      failureClass: "CANONICAL_MOUNT_MISSING",
-      firstFailedCoordinate: "CANONICAL_MOUNT_EXISTS",
-      acceptedAsEvidence: false
-    };
+    var bridgeAuthority = readNode(REGISTRY.bridgeAuthority);
+    var activeCrossingBridge = readNode(REGISTRY.activeCrossingBridge);
+    var bridgeReturn = readNode(REGISTRY.bridgeReturn);
 
-    if (!best.canonicalMountRectNonZero) return {
-      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-      failureClass: "CANONICAL_MOUNT_RECT_ZERO",
-      firstFailedCoordinate: "CANONICAL_MOUNT_RECT_NONZERO",
-      acceptedAsEvidence: false
-    };
-
-    if (!best.canonicalCanvasFound) return {
-      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-      failureClass: "CANONICAL_CANVAS_MISSING",
-      firstFailedCoordinate: "CANONICAL_CANVAS_EXISTS",
-      acceptedAsEvidence: false
-    };
-
-    if (!best.canonicalCanvasRectNonZero) return {
-      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-      failureClass: "CANONICAL_CANVAS_RECT_ZERO",
-      firstFailedCoordinate: "CANONICAL_CANVAS_RECT_NONZERO",
-      acceptedAsEvidence: false
-    };
+    var chapelTwoHead = readNode(REGISTRY.chapelTwoHead);
+    var chapelTwoPriest = readNode(REGISTRY.chapelTwoPriest);
+    var chapelTwoWorkers = REGISTRY.chapelTwoWorkers.map(readNode);
 
     return {
-      status: "SURFACE_CONTRACT_MEASUREMENT_PASSED",
-      failureClass: "NONE",
-      firstFailedCoordinate: "NONE",
-      acceptedAsEvidence: true
+      chapelOneHead: chapelOneHead,
+      chapelOnePriest: chapelOnePriest,
+      chapelOneWorkers: chapelOneWorkers,
+      bridgeAuthority: bridgeAuthority,
+      activeCrossingBridge: activeCrossingBridge,
+      bridgeReturn: bridgeReturn,
+      chapelTwoHead: chapelTwoHead,
+      chapelTwoPriest: chapelTwoPriest,
+      chapelTwoWorkers: chapelTwoWorkers
     };
   }
 
-  function inspectSurfaceTruthCore() {
+  function countFound(list) {
+    return list.filter(function found(item) { return item.found; }).length;
+  }
+
+  function classifyLane(registry) {
+    var headReceipt = registry.chapelOneHead.rawReceipt || {};
+    var returnReceipt = registry.bridgeReturn.rawReceipt || {};
+
+    var expressionAccepted =
+      asBool(headReceipt.expressionAccepted) ||
+      asBool(headReceipt.expressionAuthorized) ||
+      asBool(returnReceipt.expressionAuthorized) ||
+      asBool(returnReceipt.globeReleasePathComplete) ||
+      asBool(returnReceipt.GLOBE_RELEASE_PATH_COMPLETE);
+
+    if (expressionAccepted) {
+      return {
+        activeLane: "LANE_2_EXPRESSION_GLOBE",
+        activePlatformState: "EXPRESSION_GLOBE",
+        placeholderOnly: false,
+        expressionAccepted: true
+      };
+    }
+
+    return {
+      activeLane: "LANE_1_PLACEMENT_GLOBE",
+      activePlatformState: "PLACEMENT_GLOBE",
+      placeholderOnly: true,
+      expressionAccepted: false
+    };
+  }
+
+  function classifyCycle(registry, surface) {
+    var c1WorkersFound = countFound(registry.chapelOneWorkers);
+    var c2WorkersFound = countFound(registry.chapelTwoWorkers);
+
+    if (!surface || !surface.canonicalMountFound) {
+      return ["HELD_HTML_MOUNT", "HEARTH_HTML_MOUNT_PRESENT", "/showroom/globe/hearth/index.html", "RENEW_HEARTH_HTML_ROUTE_WITH_HEARTH_CANVAS_MOUNT"];
+    }
+
+    if (!surface.canonicalMountRectNonZero) {
+      return ["HELD_HTML_MOUNT_RECT_ZERO", "HEARTH_HTML_MOUNT_RECT_NONZERO", "/showroom/globe/hearth/index.html", "SETTLE_HEARTH_HTML_MOUNT_LAYOUT"];
+    }
+
+    if (!registry.chapelOneHead.found) {
+      return ["HELD_CHAPEL_ONE_HEAD", "CHAPEL_ONE_HEAD_PRESENT", REGISTRY.chapelOneHead.file, "LOAD_OR_RENEW_CHAPEL_ONE_HEAD_CANVAS_BISHOP"];
+    }
+
+    if (!surface.canonicalCanvasFound) {
+      return ["HELD_SHARED_CANVAS", "CHAPEL_ONE_SHARED_CANVAS_PRESENT", REGISTRY.chapelOneHead.file, "ALLOW_CHAPEL_ONE_HEAD_TO_ATTACH_SHARED_CANVAS"];
+    }
+
+    if (!surface.canonicalCanvasRectNonZero) {
+      return ["HELD_SHARED_CANVAS_RECT_ZERO", "CHAPEL_ONE_SHARED_CANVAS_RECT_NONZERO", REGISTRY.chapelOneHead.file, "SETTLE_SHARED_CANVAS_RECT"];
+    }
+
+    if (c1WorkersFound < registry.chapelOneWorkers.length) {
+      var missingC1 = registry.chapelOneWorkers.filter(function missing(item) { return !item.found; })[0];
+      return ["HELD_CHAPEL_ONE_WORKER", "CHAPEL_ONE_WORKER_PRESENT_" + missingC1.primaryAlias, missingC1.file, "LOAD_OR_RENEW_" + missingC1.primaryAlias];
+    }
+
+    if (!registry.chapelOnePriest.found) {
+      return ["HELD_CHAPEL_ONE_PRIEST", "CHAPEL_ONE_PRIEST_PRESENT", REGISTRY.chapelOnePriest.file, "LOAD_OR_RENEW_CHAPEL_ONE_PRIEST"];
+    }
+
+    if (!registry.bridgeAuthority.found) {
+      return ["HELD_BRIDGE_AUTHORITY", "BRIDGE_AUTHORITY_PRESENT", REGISTRY.bridgeAuthority.file, "LOAD_OR_RENEW_BRIDGE_AUTHORITY"];
+    }
+
+    if (!registry.activeCrossingBridge.found) {
+      return ["HELD_ACTIVE_CROSSING_BRIDGE", "ACTIVE_CROSSING_BRIDGE_PRESENT", REGISTRY.activeCrossingBridge.file, "LOAD_OR_RENEW_ACTIVE_CROSSING_BRIDGE"];
+    }
+
+    if (!registry.chapelTwoHead.found) {
+      return ["HELD_CHAPEL_TWO_HEAD", "CHAPEL_TWO_HEAD_PRESENT", REGISTRY.chapelTwoHead.file, "LOAD_OR_RENEW_CHAPEL_TWO_HEAD_SURFACE_FINGER_BISHOP"];
+    }
+
+    if (c2WorkersFound < registry.chapelTwoWorkers.length) {
+      var missingC2 = registry.chapelTwoWorkers.filter(function missing(item) { return !item.found; })[0];
+      return ["HELD_CHAPEL_TWO_WORKER", "CHAPEL_TWO_WORKER_PRESENT_" + missingC2.primaryAlias, missingC2.file, "LOAD_OR_RENEW_" + missingC2.primaryAlias];
+    }
+
+    if (!registry.chapelTwoPriest.found) {
+      return ["HELD_CHAPEL_TWO_PRIEST", "CHAPEL_TWO_PRIEST_PRESENT", REGISTRY.chapelTwoPriest.file, "LOAD_OR_RENEW_CHAPEL_TWO_PRIEST"];
+    }
+
+    if (!registry.bridgeReturn.found) {
+      return ["HELD_BRIDGE_RETURN", "BRIDGE_RETURN_PRESENT", REGISTRY.bridgeReturn.file, "LOAD_OR_RENEW_BRIDGE_RETURN"];
+    }
+
+    return ["CYCLE_READABLE", "NONE", REGISTRY.chapelOneHead.file, "ALLOW_CHAPEL_ONE_HEAD_TO_CLASSIFY_MOUNT_RELEASE_STATE"];
+  }
+
+  function inspectSurfaceTruth() {
     var scopes = collectDocumentScopes();
     var inspections = scopes.map(inspectScope);
     var best = bestInspection(inspections);
-    var result = classifySurface(best);
 
     return {
       scopes: inspections,
       selectedScope: best,
-      classification: result,
       targetFrameDocumentScopeStatus: best ? "TARGET_DOCUMENT_SCOPE_RESOLVED" : "TARGET_DOCUMENT_SCOPE_NOT_RESOLVED",
       targetAccessStatus: best && best.routeMatch
         ? "TARGET_HEARTH_ROUTE_DOCUMENT_READABLE"
@@ -531,185 +790,27 @@
     };
   }
 
-  function readReceipt(authority) {
-    if (!authority || (!isObject(authority) && !isFunction(authority))) return {};
-
-    var methods = ["getReceiptLight", "getReceipt", "getStatus", "getState", "getReport"];
-    for (var i = 0; i < methods.length; i += 1) {
-      var method = methods[i];
-      if (!isFunction(authority[method])) continue;
-      try {
-        var out = method === "getReceiptLight" ? authority[method](false) : authority[method]();
-        if (isObject(out)) return out;
-      } catch (_error) {}
-    }
-
-    if (isObject(authority.receipt)) return authority.receipt;
-    if (authority.contract || authority.receipt) return authority;
-    return {};
-  }
-
-  function readAuthority(paths, expectedFile) {
-    var found = firstGlobal(paths);
-    var receipt = readReceipt(found.value);
-
-    return {
-      found: found.found,
-      aliasPath: found.path,
-      windowLabel: found.windowLabel,
-      file: expectedFile,
-      contract: asString(receipt.contract || receipt.CONTRACT || (found.value && found.value.contract) || "UNKNOWN"),
-      receipt: asString(receipt.receipt || receipt.RECEIPT || (found.value && found.value.receipt) || "UNKNOWN"),
-      componentStatus: asString(receipt.componentStatus || receipt.status || (found.found ? "OBSERVED" : "NOT_OBSERVED")),
-      firstFailedCoordinate: asString(receipt.firstFailedCoordinate || "UNKNOWN"),
-      recommendedNextFile: asString(receipt.recommendedNextFile || expectedFile),
-      recommendedNextAction: asString(receipt.recommendedNextAction || "UNKNOWN"),
-      rawReceipt: receipt
-    };
-  }
-
-  function readCanvasBishop() {
-    var authority = readAuthority(CANVAS_BISHOP_ALIASES, CANVAS_BISHOP_FILE);
-    var raw = authority.rawReceipt || {};
-
-    return {
-      present: authority.found,
-      aliasPath: authority.aliasPath,
-      windowLabel: authority.windowLabel,
-      file: CANVAS_BISHOP_FILE,
-      contract: authority.contract,
-      receipt: authority.receipt,
-      chapelOneBishop: asBool(raw.chapelOneBishop) || asBool(raw.canvasBishopPresent),
-      chapelOneCongregation: asString(raw.chapelOneCongregation || "UNKNOWN"),
-      componentStatus: authority.componentStatus,
-      firstFailedCoordinate: authority.firstFailedCoordinate,
-      recommendedNextFile: authority.recommendedNextFile,
-      recommendedNextAction: authority.recommendedNextAction,
-      handGeometryObserved: asBool(raw.handGeometryObserved),
-      handContextObserved: asBool(raw.handContextObserved),
-      handPaintObserved: asBool(raw.handPaintObserved),
-      handViewObserved: asBool(raw.handViewObserved),
-      handInspectObserved: asBool(raw.handInspectObserved),
-      hexAuthorityBridgeObserved: asBool(raw.hexAuthorityBridgeObserved),
-      hexSurfaceBridgeObserved: asBool(raw.hexSurfaceBridgeObserved)
-    };
-  }
-
-  function readChapelOneHands() {
-    return {
-      congregation: "hands",
-      geometry: readAuthority(HAND_ALIASES.geometry, HAND_GEOMETRY_FILE),
-      context: readAuthority(HAND_ALIASES.context, HAND_CONTEXT_FILE),
-      paint: readAuthority(HAND_ALIASES.paint, HAND_PAINT_FILE),
-      view: readAuthority(HAND_ALIASES.view, HAND_VIEW_FILE),
-      inspect: readAuthority(HAND_ALIASES.inspect, HAND_INSPECT_FILE)
-    };
-  }
-
-  function readHexBridge() {
-    return {
-      congressionalBridge: readAuthority(HEX_AUTHORITY_ALIASES, HEX_AUTHORITY_FILE),
-      surfaceBridgeGate: readAuthority(HEX_SURFACE_ALIASES, HEX_SURFACE_FILE)
-    };
-  }
-
-  function readChapelTwoFingers() {
-    return {
-      congregation: "fingers",
-      surface: readAuthority(FINGER_ALIASES.surface, FINGER_SURFACE_FILE),
-      boundary: readAuthority(FINGER_ALIASES.boundary, FINGER_BOUNDARY_FILE),
-      inspect: readAuthority(FINGER_ALIASES.inspect, FINGER_INSPECT_FILE),
-      light: readAuthority(FINGER_ALIASES.light, FINGER_LIGHT_FILE)
-    };
-  }
-
-  function readChapelContext() {
-    var bishop = readCanvasBishop();
-    var hands = readChapelOneHands();
-    var bridge = readHexBridge();
-    var fingers = readChapelTwoFingers();
-
-    var handObservedCount = [
-      bishop.handGeometryObserved || hands.geometry.found,
-      bishop.handContextObserved || hands.context.found,
-      bishop.handPaintObserved || hands.paint.found,
-      bishop.handViewObserved || hands.view.found,
-      bishop.handInspectObserved || hands.inspect.found
-    ].filter(Boolean).length;
-
-    var fingerObservedCount = [
-      fingers.surface.found,
-      fingers.boundary.found,
-      fingers.inspect.found,
-      fingers.light.found
-    ].filter(Boolean).length;
-
-    var status = "CHAPEL_CONTEXT_READY";
-    var firstFailedCoordinate = "NONE";
-    var recommendedNextFile = HEX_SURFACE_FILE;
-    var recommendedNextAction = "RUN_CANVAS_BISHOP_TO_HEX_BRIDGE_MEASUREMENT";
-
-    if (!bishop.present) {
-      status = "HELD_CANVAS_BISHOP_NOT_OBSERVED";
-      firstFailedCoordinate = "CANVAS_BISHOP_PRESENT";
-      recommendedNextFile = CANVAS_BISHOP_FILE;
-      recommendedNextAction = "LOAD_OR_RENEW_CANVAS_BISHOP_STANDARD";
-    } else if (handObservedCount < 5) {
-      status = "HELD_CHAPEL_ONE_HAND_CONGREGATION_INCOMPLETE";
-      firstFailedCoordinate = "CHAPEL_ONE_HAND_CONGREGATION_COMPLETE";
-      recommendedNextFile = bishop.recommendedNextFile || HAND_GEOMETRY_FILE;
-      recommendedNextAction = bishop.recommendedNextAction || "CRAFT_NEXT_CHAPEL_ONE_HAND_FILE";
-    } else if (!bridge.congressionalBridge.found && !bishop.hexAuthorityBridgeObserved) {
-      status = "HELD_HEX_AUTHORITY_CONGRESSIONAL_BRIDGE_NOT_OBSERVED";
-      firstFailedCoordinate = "HEX_AUTHORITY_BRIDGE_PRESENT";
-      recommendedNextFile = HEX_AUTHORITY_FILE;
-      recommendedNextAction = "LOAD_OR_RENEW_HEX_AUTHORITY_CONGRESSIONAL_BRIDGE";
-    } else if (!bridge.surfaceBridgeGate.found && !bishop.hexSurfaceBridgeObserved) {
-      status = "HELD_HEX_SURFACE_BRIDGE_GATE_NOT_OBSERVED";
-      firstFailedCoordinate = "HEX_SURFACE_BRIDGE_GATE_PRESENT";
-      recommendedNextFile = HEX_SURFACE_FILE;
-      recommendedNextAction = "LOAD_OR_RENEW_HEX_SURFACE_BRIDGE_GATE";
-    } else if (fingerObservedCount === 0) {
-      status = "CHAPEL_ONE_READY_CHAPEL_TWO_FINGERS_NOT_OBSERVED";
-      firstFailedCoordinate = "CHAPEL_TWO_FINGER_CONGREGATION_PRESENT";
-      recommendedNextFile = FINGER_SURFACE_FILE;
-      recommendedNextAction = "MEASURE_OR_BUILD_CHAPEL_TWO_FINGER_CONGREGATION_AFTER_BRIDGE";
-    }
-
-    return {
-      status: status,
-      firstFailedCoordinate: firstFailedCoordinate,
-      recommendedNextFile: recommendedNextFile,
-      recommendedNextAction: recommendedNextAction,
-      canvasBishop: bishop,
-      chapelOneHands: hands,
-      hexBridge: bridge,
-      chapelTwoFingers: fingers,
-      handObservedCount: handObservedCount,
-      fingerObservedCount: fingerObservedCount
-    };
-  }
-
   function makePacket(mode) {
-    var inspected = inspectSurfaceTruthCore();
-    var best = inspected.selectedScope || {};
-    var result = inspected.classification;
-    var passed = result.status === "SURFACE_CONTRACT_MEASUREMENT_PASSED";
-    var chapel = readChapelContext();
+    var registry = readRegistry();
+    var surfaceTruth = inspectSurfaceTruth();
+    var surface = surfaceTruth.selectedScope || null;
+    var lane = classifyLane(registry);
+    var cycle = classifyCycle(registry, surface);
+
+    var chapelOneWorkerCount = countFound(registry.chapelOneWorkers);
+    var chapelTwoWorkerCount = countFound(registry.chapelTwoWorkers);
 
     var packet = {
-      PACKET: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_PACKET_v4_3",
-      PACKET_NAME: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_PACKET_v4_3",
+      PACKET: "HEARTH_CANVAS_SURFACE_TRUTH_CANONICAL_TWO_CHAPEL_CYCLE_REGISTRY_PACKET_v5_1",
+      PACKET_NAME: "HEARTH_CANVAS_SURFACE_TRUTH_CANONICAL_TWO_CHAPEL_CYCLE_REGISTRY_PACKET_v5_1",
       RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
+      MODE: mode || "RUN_DIAGNOSTIC",
       ROLE: ROLE,
       COMPONENT: COMPONENT,
-      MODE: mode || "RUN_DIAGNOSTIC",
 
       CONTRACT: CONTRACT,
       RECEIPT: RECEIPT,
-      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-      PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
       VERSION: VERSION,
       FILE: FILE,
       TARGET_ROUTE: TARGET_ROUTE,
@@ -717,124 +818,97 @@
       GENERATED_AT: nowIso(),
       UPDATED_AT: nowIso(),
 
-      DIRECT_METHOD_PUBLICATION_RENEWAL_ACTIVE: true,
-      DIRECT_METHOD_PUBLICATION_STATUS: "DIRECT_METHODS_PUBLISHED_ON_EXACT_AUTHORITY_PATH",
-      DIRECT_AUTHORITY_PATH: AUTHORITY_PATH,
-      DIRECT_METHODS_PUBLISHED: DIRECT_METHOD_NAMES.join(","),
+      SYSTEM_CANON: "HEARTH_TWO_CHAPEL_CYCLE_ALIAS_REGISTRY_CANONICAL_BINDING_v1",
+      SYSTEM_MODEL: "CYCLICAL_TWO_CHAPEL_SYSTEM",
+      LINEAR_CHAIN: false,
+      LAUNCH_LAYER_REMOVED: true,
+      REMOVED_FILE: "/assets/hearth/hearth.canvas.launch.js",
 
-      TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE: true,
-      CHAPEL_CONTEXT_READER_ACTIVE: true,
-      CHAPEL_CONTEXT_STATUS: chapel.status,
-      CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE: chapel.firstFailedCoordinate,
-      CHAPEL_CONTEXT_RECOMMENDED_NEXT_FILE: chapel.recommendedNextFile,
-      CHAPEL_CONTEXT_RECOMMENDED_NEXT_ACTION: chapel.recommendedNextAction,
+      GRID_16X16_PURPOSE: "STRUCTURAL_STATE_TRUTH_256_STATES",
+      GRID_19X19_PURPOSE: "CHRONOLOGY_AUDIT_MAP_361_COORDINATES",
 
-      CANVAS_BISHOP_PRESENT: chapel.canvasBishop.present,
-      CANVAS_BISHOP_ALIAS_PATH: chapel.canvasBishop.aliasPath,
-      CANVAS_BISHOP_WINDOW_LABEL: chapel.canvasBishop.windowLabel,
-      CANVAS_BISHOP_FILE: CANVAS_BISHOP_FILE,
-      CANVAS_BISHOP_CONTRACT: chapel.canvasBishop.contract,
-      CANVAS_BISHOP_RECEIPT: chapel.canvasBishop.receipt,
-      CANVAS_BISHOP_COMPONENT_STATUS: chapel.canvasBishop.componentStatus,
-      CANVAS_BISHOP_FIRST_FAILED_COORDINATE: chapel.canvasBishop.firstFailedCoordinate,
-      CANVAS_BISHOP_RECOMMENDED_NEXT_FILE: chapel.canvasBishop.recommendedNextFile,
-      CANVAS_BISHOP_RECOMMENDED_NEXT_ACTION: chapel.canvasBishop.recommendedNextAction,
+      CYCLE:
+        "HTML_MOUNT -> CHAPEL_ONE_HEAD -> CHAPEL_ONE_WORKERS -> CHAPEL_ONE_PRIEST -> BRIDGE_AUTHORITY -> ACTIVE_CROSSING_BRIDGE -> CHAPEL_TWO_HEAD -> CHAPEL_TWO_WORKERS -> CHAPEL_TWO_PRIEST -> BRIDGE_RETURN -> CHAPEL_ONE_HEAD -> HTML_MOUNT",
 
-      CHAPEL_ONE_BISHOP: chapel.canvasBishop.chapelOneBishop,
-      CHAPEL_ONE_CONGREGATION: "hands",
-      HAND_GEOMETRY_OBSERVED: chapel.canvasBishop.handGeometryObserved || chapel.chapelOneHands.geometry.found,
-      HAND_CONTEXT_OBSERVED: chapel.canvasBishop.handContextObserved || chapel.chapelOneHands.context.found,
-      HAND_PAINT_OBSERVED: chapel.canvasBishop.handPaintObserved || chapel.chapelOneHands.paint.found,
-      HAND_VIEW_OBSERVED: chapel.canvasBishop.handViewObserved || chapel.chapelOneHands.view.found,
-      HAND_INSPECT_OBSERVED: chapel.canvasBishop.handInspectObserved || chapel.chapelOneHands.inspect.found,
-      HAND_OBSERVED_COUNT: chapel.handObservedCount,
+      ACTIVE_LANE: lane.activeLane,
+      ACTIVE_PLATFORM_STATE: lane.activePlatformState,
+      PLACEHOLDER_ONLY: lane.placeholderOnly,
+      EXPRESSION_ACCEPTED: lane.expressionAccepted,
 
-      HEX_AUTHORITY_BRIDGE_OBSERVED:
-        chapel.canvasBishop.hexAuthorityBridgeObserved || chapel.hexBridge.congressionalBridge.found,
-      HEX_AUTHORITY_BRIDGE_FILE: HEX_AUTHORITY_FILE,
-      HEX_AUTHORITY_BRIDGE_CONTRACT: chapel.hexBridge.congressionalBridge.contract,
-
-      HEX_SURFACE_BRIDGE_OBSERVED:
-        chapel.canvasBishop.hexSurfaceBridgeObserved || chapel.hexBridge.surfaceBridgeGate.found,
-      HEX_SURFACE_BRIDGE_FILE: HEX_SURFACE_FILE,
-      HEX_SURFACE_BRIDGE_CONTRACT: chapel.hexBridge.surfaceBridgeGate.contract,
-
-      CHAPEL_TWO_CONGREGATION: "fingers",
-      FINGER_SURFACE_OBSERVED: chapel.chapelTwoFingers.surface.found,
-      FINGER_BOUNDARY_OBSERVED: chapel.chapelTwoFingers.boundary.found,
-      FINGER_INSPECT_OBSERVED: chapel.chapelTwoFingers.inspect.found,
-      FINGER_LIGHT_OBSERVED: chapel.chapelTwoFingers.light.found,
-      FINGER_OBSERVED_COUNT: chapel.fingerObservedCount,
-
-      RUN_STATE: "SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_DIRECT_RUN_COMPLETE",
-      TRUST_STATE: passed ? "SURFACE_TRUTH_MEASUREMENT_ACCEPTED" : "SURFACE_TRUTH_MEASUREMENT_RETURNED_WITH_HOLD",
+      RUN_STATE: "CANONICAL_TWO_CHAPEL_CYCLE_REGISTRY_READ_COMPLETE",
+      TRUST_STATE: cycle[0] === "CYCLE_READABLE" ? "CYCLE_READABLE" : "CYCLE_RETURNED_WITH_HOLD",
       BLOCKING: false,
 
-      TARGET_FRAME_DOCUMENT_SCOPE_RENEWAL_ACTIVE: true,
-      TARGET_FRAME_DOCUMENT_SCOPE_STATUS: inspected.targetFrameDocumentScopeStatus,
-      TARGET_ACCESS_STATUS: inspected.targetAccessStatus,
+      CYCLE_STATUS: cycle[0],
+      FIRST_HELD_COORDINATE: cycle[1],
+      FIRST_FAILED_COORDINATE: cycle[1],
+      RECOMMENDED_NEXT_FILE: cycle[2],
+      RECOMMENDED_NEXT_ACTION: cycle[3],
 
-      SURFACE_TRUTH_INSPECTED: true,
-      SURFACE_TRUTH_STATUS: result.status,
-      SURFACE_TRUTH_FAILURE_CLASS: result.failureClass,
-      SURFACE_TRUTH_FIRST_FAILED_COORDINATE: result.firstFailedCoordinate,
-      PRODUCTION_CANVAS_SURFACE_LENS_ACCEPTED_AS_EVIDENCE: result.acceptedAsEvidence,
+      TARGET_FRAME_DOCUMENT_SCOPE_STATUS: surfaceTruth.targetFrameDocumentScopeStatus,
+      TARGET_ACCESS_STATUS: surfaceTruth.targetAccessStatus,
 
-      SELECTED_DOCUMENT_SCOPE: best.label || "NONE",
-      SELECTED_DOCUMENT_KIND: best.sourceKind || "NONE",
-      SELECTED_DOCUMENT_PATH: best.path || "UNKNOWN",
-      SELECTED_DOCUMENT_TITLE: best.title || "UNKNOWN",
-      SELECTED_DOCUMENT_ROUTE_MATCH: Boolean(best.routeMatch),
-      SELECTED_DOCUMENT_DIAGNOSTIC_MATCH: Boolean(best.diagnosticMatch),
+      SELECTED_DOCUMENT_SCOPE: surface ? surface.label : "NONE",
+      SELECTED_DOCUMENT_PATH: surface ? surface.path : "UNKNOWN",
+      SELECTED_DOCUMENT_TITLE: surface ? surface.title : "UNKNOWN",
+      SELECTED_DOCUMENT_ROUTE_MATCH: surface ? surface.routeMatch : false,
+      SELECTED_DOCUMENT_DIAGNOSTIC_MATCH: surface ? surface.diagnosticMatch : false,
 
-      CANONICAL_MOUNT_EXISTS: Boolean(best.canonicalMountFound),
-      CANONICAL_MOUNT_DESCRIPTOR: best.canonicalMountDescriptor || "NONE",
-      CANONICAL_MOUNT_RECT: best.canonicalMountRect || rectOf(null),
-      CANONICAL_MOUNT_RECT_NONZERO: Boolean(best.canonicalMountRectNonZero),
+      CANONICAL_MOUNT_EXISTS: surface ? surface.canonicalMountFound : false,
+      CANONICAL_MOUNT_DESCRIPTOR: surface ? surface.canonicalMountDescriptor : "NONE",
+      CANONICAL_MOUNT_RECT: surface ? surface.canonicalMountRect : rectOf(null),
+      CANONICAL_MOUNT_RECT_NONZERO: surface ? surface.canonicalMountRectNonZero : false,
 
-      CANONICAL_CANVAS_EXISTS: Boolean(best.canonicalCanvasFound),
-      CANONICAL_CANVAS_DESCRIPTOR: best.canonicalCanvasDescriptor || "NONE",
-      CANONICAL_CANVAS_RECT: best.canonicalCanvasRect || rectOf(null),
-      CANONICAL_CANVAS_RECT_NONZERO: Boolean(best.canonicalCanvasRectNonZero),
+      CANONICAL_CANVAS_EXISTS: surface ? surface.canonicalCanvasFound : false,
+      CANONICAL_CANVAS_DESCRIPTOR: surface ? surface.canonicalCanvasDescriptor : "NONE",
+      CANONICAL_CANVAS_RECT: surface ? surface.canonicalCanvasRect : rectOf(null),
+      CANONICAL_CANVAS_RECT_NONZERO: surface ? surface.canonicalCanvasRectNonZero : false,
 
-      DOCUMENT_SCOPE_SCAN_COUNT: inspected.scopes.length,
-      DOCUMENT_SCOPE_SCAN: inspected.scopes.map(function scopeLine(scope) {
-        return {
-          label: scope.label,
-          sourceKind: scope.sourceKind,
-          path: scope.path,
-          title: scope.title,
-          routeMatch: scope.routeMatch,
-          diagnosticMatch: scope.diagnosticMatch,
-          canonicalMountFound: scope.canonicalMountFound,
-          canonicalMountRectNonZero: scope.canonicalMountRectNonZero,
-          canonicalCanvasFound: scope.canonicalCanvasFound,
-          canonicalCanvasRectNonZero: scope.canonicalCanvasRectNonZero,
-          score: scope.score
-        };
-      }),
+      CHAPEL_ONE_HEAD_PRESENT: registry.chapelOneHead.found,
+      CHAPEL_ONE_HEAD_ALIAS: registry.chapelOneHead.aliasPath,
+      CHAPEL_ONE_HEAD_STATUS: registry.chapelOneHead.componentStatus,
 
-      CHAPEL_CONTEXT_OBJECT: chapel,
-      CANVAS_BISHOP_OBJECT: chapel.canvasBishop,
-      CHAPEL_ONE_HANDS_OBJECT: chapel.chapelOneHands,
-      HEX_BRIDGE_OBJECT: chapel.hexBridge,
-      CHAPEL_TWO_FINGERS_OBJECT: chapel.chapelTwoFingers,
+      CHAPEL_ONE_PRIEST_PRESENT: registry.chapelOnePriest.found,
+      CHAPEL_ONE_PRIEST_ALIAS: registry.chapelOnePriest.aliasPath,
 
-      NORTH_DIAGNOSTIC_TRACK_MUST_CONSUME_SURFACE_TRUTH_AS_EVIDENCE: true,
-      SURFACE_TRUTH_PROBE_RENEWAL_IS_CONTRACT_ALIGNMENT_NOT_CANVAS_REPAIR: true,
-      CANVAS_PRODUCTION_REPAIR_AUTHORIZED: false,
-      CANVAS_BUILD_AUTHORIZED: false,
-      CANVAS_RELEASE_AUTHORIZED: false,
+      CHAPEL_ONE_WORKER_COUNT: chapelOneWorkerCount,
+      CHAPEL_ONE_WORKER_TOTAL: registry.chapelOneWorkers.length,
+      CHAPEL_ONE_COMPLETE: registry.chapelOneHead.found && registry.chapelOnePriest.found && chapelOneWorkerCount === registry.chapelOneWorkers.length,
 
-      RECOMMENDED_NEXT_FILE:
-        chapel.status !== "CHAPEL_CONTEXT_READY" ? chapel.recommendedNextFile : passed ? "/assets/hearth/hearth.diagnostic.rail.js" : FILE,
-      RECOMMENDED_NEXT_ACTION:
-        chapel.status !== "CHAPEL_CONTEXT_READY" ? chapel.recommendedNextAction : passed ? "RUN_08_NORTH_CONSUMPTION_OF_SURFACE_TRUTH_AND_CHAPEL_CONTEXT" : "RERUN_SURFACE_TRUTH_AFTER_SELECTOR_SCOPE_REVIEW",
-      NEXT_FILE_AUTHORIZATION_SCOPE: "DIAGNOSTIC_RENEWAL_ONLY",
-      DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
+      BRIDGE_AUTHORITY_PRESENT: registry.bridgeAuthority.found,
+      BRIDGE_AUTHORITY_ALIAS: registry.bridgeAuthority.aliasPath,
+
+      ACTIVE_CROSSING_BRIDGE_PRESENT: registry.activeCrossingBridge.found,
+      ACTIVE_CROSSING_BRIDGE_ALIAS: registry.activeCrossingBridge.aliasPath,
+      ACTIVE_CROSSING_BRIDGE_STATUS: registry.activeCrossingBridge.componentStatus,
+
+      CHAPEL_TWO_HEAD_PRESENT: registry.chapelTwoHead.found,
+      CHAPEL_TWO_HEAD_ALIAS: registry.chapelTwoHead.aliasPath,
+      CHAPEL_TWO_HEAD_STATUS: registry.chapelTwoHead.componentStatus,
+
+      CHAPEL_TWO_PRIEST_PRESENT: registry.chapelTwoPriest.found,
+      CHAPEL_TWO_PRIEST_ALIAS: registry.chapelTwoPriest.aliasPath,
+
+      CHAPEL_TWO_WORKER_COUNT: chapelTwoWorkerCount,
+      CHAPEL_TWO_WORKER_TOTAL: registry.chapelTwoWorkers.length,
+      CHAPEL_TWO_COMPLETE: registry.chapelTwoHead.found && registry.chapelTwoPriest.found && chapelTwoWorkerCount === registry.chapelTwoWorkers.length,
+
+      BRIDGE_RETURN_PRESENT: registry.bridgeReturn.found,
+      BRIDGE_RETURN_ALIAS: registry.bridgeReturn.aliasPath,
+      BRIDGE_RETURN_STATUS: registry.bridgeReturn.componentStatus,
+
+      REGISTRY_OBJECT: registry,
+      SURFACE_TRUTH_OBJECT: surfaceTruth,
+
+      NORTH_DIAGNOSTIC_TRACK_MUST_CONSUME_THIS_AS_EVIDENCE: true,
+      TRUTH_PROBE_IS_READER_ONLY: true,
+      CHAPEL_MEMBER: false,
+      MISSIONARY_SUPPORT_COUNTED_AS_CHAPEL_MEMBER: false,
+
+      DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE,ROUTE_RENDERER"
     };
 
-    Object.keys(NO_TOUCH).forEach(function applyNoTouch(key) {
+    Object.keys(NO_TOUCH).forEach(function addNoTouch(key) {
       packet[key] = NO_TOUCH[key];
     });
 
@@ -845,7 +919,7 @@
     if (value === undefined || value === null || value === "") return "UNKNOWN";
     if (Array.isArray(value)) return value.map(packetValue).join(" | ");
     if (isObject(value)) {
-      try { return compact(JSON.stringify(value), 24000); }
+      try { return compact(JSON.stringify(value), 28000); }
       catch (_error) { return "[object]"; }
     }
     return compact(value);
@@ -853,21 +927,16 @@
 
   function toPacketText(packet) {
     var priority = [
-      "PACKET","PACKET_NAME","RECEIPT_LEVEL","ROLE","COMPONENT","CONTRACT","RECEIPT",
-      "INTERNAL_RENEWAL_CONTRACT","PREVIOUS_INTERNAL_RENEWAL_CONTRACT","FILE","TARGET_ROUTE",
-      "DIAGNOSTIC_ROUTE","VERSION","RUN_STATE","TRUST_STATE","TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE",
-      "CHAPEL_CONTEXT_STATUS","CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE",
-      "CANVAS_BISHOP_PRESENT","CANVAS_BISHOP_ALIAS_PATH","CANVAS_BISHOP_WINDOW_LABEL",
-      "CANVAS_BISHOP_CONTRACT","CANVAS_BISHOP_COMPONENT_STATUS",
-      "CANVAS_BISHOP_FIRST_FAILED_COORDINATE","CHAPEL_ONE_CONGREGATION",
-      "HAND_GEOMETRY_OBSERVED","HAND_CONTEXT_OBSERVED","HAND_PAINT_OBSERVED",
-      "HAND_VIEW_OBSERVED","HAND_INSPECT_OBSERVED","HEX_AUTHORITY_BRIDGE_OBSERVED",
-      "HEX_SURFACE_BRIDGE_OBSERVED","CHAPEL_TWO_CONGREGATION","FINGER_SURFACE_OBSERVED",
-      "FINGER_BOUNDARY_OBSERVED","FINGER_INSPECT_OBSERVED","FINGER_LIGHT_OBSERVED",
-      "SURFACE_TRUTH_STATUS","SURFACE_TRUTH_FAILURE_CLASS","SURFACE_TRUTH_FIRST_FAILED_COORDINATE",
+      "PACKET","RECEIPT_LEVEL","ROLE","COMPONENT","CONTRACT","RECEIPT","PREVIOUS_CONTRACT",
+      "FILE","TARGET_ROUTE","DIAGNOSTIC_ROUTE","VERSION","SYSTEM_CANON","SYSTEM_MODEL",
+      "ACTIVE_LANE","ACTIVE_PLATFORM_STATE","RUN_STATE","TRUST_STATE","CYCLE_STATUS",
+      "FIRST_HELD_COORDINATE","RECOMMENDED_NEXT_FILE","RECOMMENDED_NEXT_ACTION",
       "CANONICAL_MOUNT_EXISTS","CANONICAL_MOUNT_RECT_NONZERO","CANONICAL_CANVAS_EXISTS",
-      "CANONICAL_CANVAS_RECT_NONZERO","SELECTED_DOCUMENT_SCOPE","SELECTED_DOCUMENT_PATH",
-      "RECOMMENDED_NEXT_FILE","RECOMMENDED_NEXT_ACTION","DO_NOT_TOUCH","UPDATED_AT"
+      "CANONICAL_CANVAS_RECT_NONZERO","CHAPEL_ONE_HEAD_PRESENT","CHAPEL_ONE_PRIEST_PRESENT",
+      "CHAPEL_ONE_WORKER_COUNT","CHAPEL_ONE_WORKER_TOTAL","BRIDGE_AUTHORITY_PRESENT",
+      "ACTIVE_CROSSING_BRIDGE_PRESENT","CHAPEL_TWO_HEAD_PRESENT","CHAPEL_TWO_PRIEST_PRESENT",
+      "CHAPEL_TWO_WORKER_COUNT","CHAPEL_TWO_WORKER_TOTAL","BRIDGE_RETURN_PRESENT",
+      "DO_NOT_TOUCH","UPDATED_AT"
     ];
 
     var seen = {};
@@ -885,51 +954,43 @@
   function runDiagnostic() { return makePacket("RUN_DIAGNOSTIC"); }
   function run() { return runDiagnostic(); }
   function inspect() { return makePacket("INSPECT"); }
-  function inspectSurfaceTruth() { return makePacket("INSPECT_SURFACE_TRUTH"); }
-  function runSurfaceTruth() { return runDiagnostic(); }
-  function runSurfaceTruthDirectCheck() { return runDiagnostic(); }
-  function runSurfaceTruthProbe() { return runDiagnostic(); }
-  function runCanvasSurfaceTruthProbe() { return runDiagnostic(); }
-  function runProductionSurfaceLensAlignment() { return runDiagnostic(); }
-  function runTargetFrameDocumentScopeRenewal() { return runDiagnostic(); }
-  function runDirect() { return runDiagnostic(); }
-  function execute() { return runDiagnostic(); }
-  function diagnose() { return runDiagnostic(); }
-  function measure() { return runDiagnostic(); }
-  function measureSurfaceTruth() { return runDiagnostic(); }
-  function read() { return runDiagnostic(); }
-  function readSurfaceTruth() { return runDiagnostic(); }
+  function measure() { return makePacket("MEASURE"); }
+  function read() { return makePacket("READ"); }
   function getReport() { return makePacket("GET_REPORT"); }
   function getReceipt() { return makePacket("GET_RECEIPT"); }
+  function getState() { return makePacket("GET_STATE"); }
   function getPacket() { return getReceipt(); }
-  function getPacketText() { return toPacketText(makePacket("GET_PACKET_TEXT")); }
+  function getPacketText() { return toPacketText(getReceipt()); }
 
   function getReceiptLight() {
     var packet = makePacket("GET_RECEIPT_LIGHT");
+
     return {
       role: ROLE,
       component: COMPONENT,
       contract: CONTRACT,
       receipt: RECEIPT,
-      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
-      targetIframeBishopResolverActive: true,
-      surfaceTruthStatus: packet.SURFACE_TRUTH_STATUS,
-      surfaceTruthFailureClass: packet.SURFACE_TRUTH_FAILURE_CLASS,
-      surfaceTruthFirstFailedCoordinate: packet.SURFACE_TRUTH_FIRST_FAILED_COORDINATE,
-      chapelContextStatus: packet.CHAPEL_CONTEXT_STATUS,
-      chapelContextFirstFailedCoordinate: packet.CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE,
-      canvasBishopPresent: packet.CANVAS_BISHOP_PRESENT,
-      canvasBishopAliasPath: packet.CANVAS_BISHOP_ALIAS_PATH,
-      canvasBishopWindowLabel: packet.CANVAS_BISHOP_WINDOW_LABEL,
-      canvasBishopContract: packet.CANVAS_BISHOP_CONTRACT,
-      canvasBishopComponentStatus: packet.CANVAS_BISHOP_COMPONENT_STATUS,
-      handObservedCount: packet.HAND_OBSERVED_COUNT,
-      fingerObservedCount: packet.FINGER_OBSERVED_COUNT,
+      systemCanon: packet.SYSTEM_CANON,
+      activeLane: packet.ACTIVE_LANE,
+      activePlatformState: packet.ACTIVE_PLATFORM_STATE,
+      cycleStatus: packet.CYCLE_STATUS,
+      firstHeldCoordinate: packet.FIRST_HELD_COORDINATE,
       recommendedNextFile: packet.RECOMMENDED_NEXT_FILE,
       recommendedNextAction: packet.RECOMMENDED_NEXT_ACTION,
+      canonicalMountExists: packet.CANONICAL_MOUNT_EXISTS,
+      canonicalMountRectNonzero: packet.CANONICAL_MOUNT_RECT_NONZERO,
+      canonicalCanvasExists: packet.CANONICAL_CANVAS_EXISTS,
+      canonicalCanvasRectNonzero: packet.CANONICAL_CANVAS_RECT_NONZERO,
+      chapelOneHeadPresent: packet.CHAPEL_ONE_HEAD_PRESENT,
+      chapelOneComplete: packet.CHAPEL_ONE_COMPLETE,
+      activeCrossingBridgePresent: packet.ACTIVE_CROSSING_BRIDGE_PRESENT,
+      chapelTwoHeadPresent: packet.CHAPEL_TWO_HEAD_PRESENT,
+      chapelTwoComplete: packet.CHAPEL_TWO_COMPLETE,
+      bridgeReturnPresent: packet.BRIDGE_RETURN_PRESENT,
+      truthProbeReaderOnly: true,
       productionMutationAuthorized: false,
       canvasBuildAuthorized: false,
       canvasReleaseAuthorized: false,
@@ -945,95 +1006,65 @@
       runState: packet.RUN_STATE,
       trustState: packet.TRUST_STATE,
       blocking: packet.BLOCKING,
-      targetIframeBishopResolverActive: true,
-      surfaceTruthStatus: packet.SURFACE_TRUTH_STATUS,
-      chapelContextStatus: packet.CHAPEL_CONTEXT_STATUS,
-      canvasBishopPresent: packet.CANVAS_BISHOP_PRESENT,
-      canvasBishopWindowLabel: packet.CANVAS_BISHOP_WINDOW_LABEL,
-      handObservedCount: packet.HAND_OBSERVED_COUNT,
-      fingerObservedCount: packet.FINGER_OBSERVED_COUNT,
+      cycleStatus: packet.CYCLE_STATUS,
+      firstHeldCoordinate: packet.FIRST_HELD_COORDINATE,
       nextFile: packet.RECOMMENDED_NEXT_FILE,
       nextAction: packet.RECOMMENDED_NEXT_ACTION,
+      activeLane: packet.ACTIVE_LANE,
+      activePlatformState: packet.ACTIVE_PLATFORM_STATE,
       updatedAt: packet.UPDATED_AT
     };
   }
 
-  function getState() { return makePacket("GET_STATE"); }
-  function getSummary() { return getStatus(); }
-
-  function publishCallableSurface(api) {
-    api.CONTRACT = CONTRACT;
-    api.RECEIPT = RECEIPT;
-    api.INTERNAL_RENEWAL_CONTRACT = INTERNAL_RENEWAL_CONTRACT;
-    api.INTERNAL_RENEWAL_RECEIPT = INTERNAL_RENEWAL_RECEIPT;
-    api.PREVIOUS_INTERNAL_RENEWAL_CONTRACT = PREVIOUS_INTERNAL_RENEWAL_CONTRACT;
-    api.VERSION = VERSION;
-    api.FILE = FILE;
-    api.TARGET_ROUTE = TARGET_ROUTE;
-    api.DIAGNOSTIC_ROUTE = DIAGNOSTIC_ROUTE;
-    api.ROLE = ROLE;
-    api.COMPONENT = COMPONENT;
-
-    api.contract = CONTRACT;
-    api.receipt = RECEIPT;
-    api.internalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
-    api.version = VERSION;
-    api.file = FILE;
-    api.targetRoute = TARGET_ROUTE;
-    api.diagnosticRoute = DIAGNOSTIC_ROUTE;
-    api.role = ROLE;
-    api.component = COMPONENT;
-
-    api.DIRECT_METHOD_PUBLICATION_RENEWAL_ACTIVE = true;
-    api.TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE = true;
-    api.DIRECT_AUTHORITY_PATH = AUTHORITY_PATH;
-    api.DIRECT_METHODS_PUBLISHED = DIRECT_METHOD_NAMES.join(",");
-
-    api.run = run;
-    api.runDiagnostic = runDiagnostic;
-    api.inspect = inspect;
-    api.inspectSurfaceTruth = inspectSurfaceTruth;
-    api.runSurfaceTruth = runSurfaceTruth;
-    api.runSurfaceTruthDirectCheck = runSurfaceTruthDirectCheck;
-    api.runSurfaceTruthProbe = runSurfaceTruthProbe;
-    api.runCanvasSurfaceTruthProbe = runCanvasSurfaceTruthProbe;
-    api.runProductionSurfaceLensAlignment = runProductionSurfaceLensAlignment;
-    api.runTargetFrameDocumentScopeRenewal = runTargetFrameDocumentScopeRenewal;
-    api.runDirect = runDirect;
-    api.execute = execute;
-    api.diagnose = diagnose;
-    api.measure = measure;
-    api.measureSurfaceTruth = measureSurfaceTruth;
-    api.read = read;
-    api.readSurfaceTruth = readSurfaceTruth;
-    api.getReport = getReport;
-    api.getReceipt = getReceipt;
-    api.getReceiptLight = getReceiptLight;
-    api.getStatus = getStatus;
-    api.getState = getState;
-    api.getPacket = getPacket;
-    api.getPacketText = getPacketText;
-    api.getSummary = getSummary;
-    api.toPacketText = toPacketText;
-    api.collectDocumentScopes = collectDocumentScopes;
-    api.readChapelContext = readChapelContext;
-    api.readCanvasBishop = readCanvasBishop;
-    api.readChapelOneHands = readChapelOneHands;
-    api.readHexBridge = readHexBridge;
-    api.readChapelTwoFingers = readChapelTwoFingers;
-
-    Object.keys(NO_TOUCH).forEach(function applyNoTouch(key) {
-      api[key] = NO_TOUCH[key];
-    });
-
-    return api;
-  }
-
-  function publishAliases(api) {
+  function publishApi() {
     ensureNamespace("HEARTH");
     ensureNamespace("DEXTER_LAB");
 
-    ALIAS_PATHS.forEach(function publish(path) {
+    var api = {
+      CONTRACT: CONTRACT,
+      RECEIPT: RECEIPT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+      VERSION: VERSION,
+      FILE: FILE,
+      TARGET_ROUTE: TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+      ROLE: ROLE,
+      COMPONENT: COMPONENT,
+
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      targetRoute: TARGET_ROUTE,
+      diagnosticRoute: DIAGNOSTIC_ROUTE,
+      role: ROLE,
+      component: COMPONENT,
+
+      registry: REGISTRY,
+
+      run: run,
+      runDiagnostic: runDiagnostic,
+      inspect: inspect,
+      measure: measure,
+      read: read,
+      getReport: getReport,
+      getReceipt: getReceipt,
+      getReceiptLight: getReceiptLight,
+      getStatus: getStatus,
+      getState: getState,
+      getPacket: getPacket,
+      getPacketText: getPacketText,
+      toPacketText: toPacketText,
+
+      readRegistry: readRegistry,
+      inspectSurfaceTruth: inspectSurfaceTruth,
+      collectDocumentScopes: collectDocumentScopes,
+
+      ...NO_TOUCH
+    };
+
+    REGISTRY.diagnosticUpline.aliases.forEach(function publish(path) {
       setPath(path, api);
     });
 
@@ -1041,20 +1072,20 @@
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RUN_DIAGNOSTIC = runDiagnostic;
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_GET_RECEIPT = getReceipt;
     root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_GET_RECEIPT_LIGHT = getReceiptLight;
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_STATUS = getStatus();
+    root.HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT = getReceiptLight();
 
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LOADED__ = true;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT__ = CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE__ = true;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_VERSION__ = VERSION;
+    root.__HEARTH_CANVAS_TWO_CHAPEL_CYCLE_REGISTRY_READER_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_MUTATION_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANVAS_BUILD_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANVAS_RELEASE_AUTHORIZED__ = false;
-    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_MUTATION_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RUNTIME_RESTART_AUTHORIZED__ = false;
 
     return api;
   }
 
-  var authority = publishCallableSurface(getExistingAuthorityObject());
-  publishAliases(authority);
+  publishApi();
 })(typeof window !== "undefined" ? window : globalThis);

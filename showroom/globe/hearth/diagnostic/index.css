@@ -1,7 +1,8 @@
 /* /showroom/globe/hearth/diagnostic/index.css */
-/* HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STYLE_TNT_v9_4_5 */
+/* HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STYLE_TNT_v9_4_6 */
 /* Full-file replacement. */
 /* CSS only. No diagnostic logic. No production/canvas/controls/runtime mutation. */
+/* Renewal: adds return-to-Hearth and production-manifest visibility styles. */
 /* Paired files:
    /showroom/globe/hearth/diagnostic/index.js
    /showroom/globe/hearth/diagnostic/index.html
@@ -58,7 +59,8 @@ body {
   overflow-x: hidden;
 }
 
-button {
+button,
+a.button-link {
   appearance: none;
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(38, 56, 91, .94), rgba(18, 29, 50, .94));
@@ -70,9 +72,14 @@ button {
   font: 850 12px/1 var(--sans);
   letter-spacing: .01em;
   box-shadow: 0 10px 26px rgba(0, 0, 0, .16);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-button:hover {
+button:hover,
+a.button-link:hover {
   border-color: var(--line2);
   transform: translateY(-1px);
 }
@@ -83,18 +90,29 @@ button:disabled {
   transform: none;
 }
 
-button:focus-visible {
+button:focus-visible,
+a.button-link:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 3px;
 }
 
-button.primary {
+button.primary,
+a.button-link.primary {
   border-color: rgba(143, 183, 255, .66);
   background: linear-gradient(180deg, rgba(74, 118, 198, .98), rgba(28, 55, 105, .98));
 }
 
-button.ghost {
+button.ghost,
+a.button-link.ghost {
   background: rgba(10, 16, 28, .74);
+}
+
+button.return,
+a.button-link.return {
+  border-color: rgba(127, 231, 255, .50);
+  background:
+    linear-gradient(180deg, rgba(28, 71, 92, .96), rgba(10, 24, 41, .96));
+  color: var(--cyan);
 }
 
 .shell {
@@ -165,7 +183,7 @@ h1 {
 
 .status-strip {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 7px;
   margin-bottom: 10px;
 }
@@ -225,13 +243,21 @@ h1 {
   color: var(--bad);
 }
 
-.workbench {
+.workbench,
+.target-panel,
+.manifest-panel {
   position: relative;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   background: var(--panel);
   box-shadow: var(--shadow);
   overflow: visible;
+}
+
+.target-panel,
+.manifest-panel {
+  margin-top: 10px;
+  overflow: hidden;
 }
 
 .workbench-head {
@@ -528,15 +554,6 @@ pre {
   font: 12px/1.48 var(--mono);
 }
 
-.target-panel {
-  margin-top: 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: var(--panel);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
 .target-frame-shell {
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -551,6 +568,62 @@ iframe {
   height: 380px;
   border: 0;
   background: #000;
+}
+
+.manifest-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.manifest-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(5, 8, 15, .58);
+  min-width: 0;
+}
+
+.manifest-card b {
+  display: block;
+  color: var(--muted);
+  font: 950 10px/1 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.manifest-card span {
+  display: block;
+  margin-top: 7px;
+  color: var(--text);
+  font: 900 12px/1.25 var(--mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manifest-card.good {
+  border-color: rgba(141, 243, 178, .38);
+}
+
+.manifest-card.good span {
+  color: var(--good);
+}
+
+.manifest-card.warn {
+  border-color: rgba(255, 208, 109, .40);
+}
+
+.manifest-card.warn span {
+  color: var(--warn);
+}
+
+.manifest-card.bad {
+  border-color: rgba(255, 143, 155, .42);
+}
+
+.manifest-card.bad span {
+  color: var(--bad);
 }
 
 .toast {
@@ -583,6 +656,14 @@ iframe {
 @media (max-width: 1080px) {
   .report-actions {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .status-strip {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .manifest-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -639,7 +720,9 @@ iframe {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .report-actions {
+  .report-actions,
+  .command-actions,
+  .manifest-grid {
     grid-template-columns: 1fr;
   }
 
@@ -657,7 +740,8 @@ iframe {
     animation: none !important;
   }
 
-  button:hover {
+  button:hover,
+  a.button-link:hover {
     transform: none;
   }
 }

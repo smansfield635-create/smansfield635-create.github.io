@@ -1,22 +1,21 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_5 -->
-<!-- Three-file split shell. -->
-<!-- Visual source: HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_HTML_SHELL_TNT_v9_4_4_2 -->
-<!-- CSS: /showroom/globe/hearth/diagnostic/index.css?v=9_4_5 -->
-<!-- JS:  /showroom/globe/hearth/diagnostic/index.js?v=9_4_5 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_6 -->
+<!-- Full-file replacement. -->
 <!-- Static shell only. No diagnostic logic. -->
-<!-- Design law: category bubble dropdown filters audit bubble dropdown; report/copy actions stay local. -->
+<!-- CSS: /showroom/globe/hearth/diagnostic/index.css?v=9_4_6 -->
+<!-- JS:  /showroom/globe/hearth/diagnostic/index.js?v=9_4_6 -->
+<!-- Renewal: return-to-Hearth control + production-manifest panel. -->
 <!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-html-shell="v9_4_5">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_6">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Hearth · Single Audit Workbench</title>
 
-  <link rel="stylesheet" href="/showroom/globe/hearth/diagnostic/index.css?v=9_4_5" />
-  <script src="/showroom/globe/hearth/diagnostic/index.js?v=9_4_5" defer></script>
+  <link rel="stylesheet" href="/showroom/globe/hearth/diagnostic/index.css?v=9_4_6" />
+  <script src="/showroom/globe/hearth/diagnostic/index.js?v=9_4_6" defer></script>
 </head>
 
 <body>
@@ -26,12 +25,14 @@
         <div class="mark" aria-hidden="true"></div>
         <div>
           <h1>Hearth Single Audit Workbench</h1>
-          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_5</p>
+          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6</p>
         </div>
       </div>
 
       <div class="command-actions" aria-label="Global shell controls">
+        <button class="return" id="returnToHearth" type="button">Return to Hearth</button>
         <button class="ghost" id="toggleTarget" type="button">Target</button>
+        <button class="ghost" id="toggleManifest" type="button">Manifest</button>
         <button class="ghost" id="reloadChamber" type="button">Reload</button>
       </div>
     </header>
@@ -136,6 +137,20 @@
         </div>
       </section>
     </main>
+
+    <section class="manifest-panel" id="manifestPanel" hidden>
+      <div class="workbench-head">
+        <div>
+          <strong>Production Manifest</strong>
+          <span>Read-only awareness of Hearth route, Chapel One hands, congressional hex bridge, and Chapel Two fingers.</span>
+        </div>
+        <button class="ghost" id="createManifestReport" type="button">Create Manifest Report</button>
+      </div>
+
+      <div class="report-output">
+        <div class="manifest-grid" id="manifestGrid" aria-label="Production manifest status"></div>
+      </div>
+    </section>
 
     <section class="target-panel" id="targetPanel" hidden>
       <div class="workbench-head">

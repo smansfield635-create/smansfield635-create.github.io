@@ -1,21 +1,15 @@
 /*
   /showroom/globe/hearth/index.js
-  HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_RENEWAL_TNT_v2
+  HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_SCROLL_RENEWAL_TNT_v2_1
   Full-file replacement.
   Scope: public route controller/content only.
   Purpose:
-  - Make every orbit button visibly functional.
-  - Render TED Talk-style presentation content into the reading chamber.
-  - Scroll to the selected content panel on mobile.
-  - Make Return to Orbit visibly reset the chamber.
+  - Make orbit buttons update the reading chamber.
+  - Force-scroll category selections down to the reading chamber.
+  - Force-scroll Return to Orbit back up to the category orbit.
   - Preserve Hearth = facility, Audralia = first planetary subject.
   - Preserve diagnostic bridge.
-  Does not own:
-  - canvas engine
-  - controls engine
-  - runtime loop
-  - diagnostic internals
-  - planet renderer
+  Does not own canvas, controls, runtime, diagnostics, or renderer internals.
 */
 
 (function hearthFacilityOrbitContentController() {
@@ -24,9 +18,9 @@
   var root = window;
   var doc = document;
 
-  var CONTRACT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_RENEWAL_TNT_v2";
-  var RECEIPT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_RENEWAL_RECEIPT_v2";
-  var VERSION = "2026-06-09.hearth-facility-orbit-content-controller-renewal-v2";
+  var CONTRACT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_SCROLL_RENEWAL_TNT_v2_1";
+  var RECEIPT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_SCROLL_RENEWAL_RECEIPT_v2_1";
+  var VERSION = "2026-06-09.hearth-facility-orbit-content-controller-scroll-renewal-v2-1";
 
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -37,12 +31,10 @@
     contract: CONTRACT,
     receipt: RECEIPT,
     version: VERSION,
-    targetRoute: TARGET_ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
-    initializedAt: "",
-    updatedAt: "",
     activeLens: "platform",
     activeOrbit: "orbit",
+    initializedAt: "",
+    updatedAt: "",
     mountExists: false,
     mountRectNonZero: false,
     canvasExists: false,
@@ -55,7 +47,6 @@
     runtimeRestartAuthorized: false,
     routeRepairAuthorized: false,
     targetRouteRendererMutationAuthorized: false,
-    readyTextClaimed: false,
     visualPassClaimed: false,
     webGL: false
   };
@@ -72,7 +63,7 @@
           "Hearth is not the planet. Hearth is the facility alias.",
           "Audralia is the first planetary production subject.",
           "The orbit lets visitors focus on one chamber lens at a time.",
-          "Return to Orbit resets the experience and brings the full map back."
+          "Return to Orbit resets the presentation and brings the full map back."
         ],
         quote: "The website is the window. Hearth is the chamber behind the window.",
         cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
@@ -349,6 +340,7 @@
 
   function captureElements() {
     els.body = doc.body;
+    els.siteRail = $(".site-rail");
     els.orbitSection = $("[data-orbit-section]") || $(".orbit-section");
     els.orbit = $(".facility-orbit");
     els.orbitNodes = $all("[data-orbit-node]");
@@ -362,6 +354,41 @@
     els.gaugeMotion = $('[data-gauge="motion"]');
     els.gaugeNarrative = $('[data-gauge="narrative"]');
     els.gaugeDiagnostic = $('[data-gauge="diagnostic"]');
+  }
+
+  function scrollOffset() {
+    var railHeight = 0;
+
+    if (els.siteRail && typeof els.siteRail.getBoundingClientRect === "function") {
+      railHeight = Math.ceil(els.siteRail.getBoundingClientRect().height || 0);
+    }
+
+    return railHeight + 18;
+  }
+
+  function forceScrollTo(node) {
+    if (!node || typeof node.getBoundingClientRect !== "function") return;
+
+    var y =
+      (root.pageYOffset || doc.documentElement.scrollTop || doc.body.scrollTop || 0) +
+      node.getBoundingClientRect().top -
+      scrollOffset();
+
+    y = Math.max(0, Math.round(y));
+
+    try {
+      root.scrollTo({ top: y, behavior: "smooth" });
+    } catch (error) {
+      root.scrollTo(0, y);
+    }
+  }
+
+  function delayedForceScrollTo(node) {
+    root.requestAnimationFrame(function firstFrame() {
+      root.requestAnimationFrame(function secondFrame() {
+        forceScrollTo(node);
+      });
+    });
   }
 
   function measureStage() {
@@ -471,6 +498,7 @@
 
     els.panel.dataset.activeOrbit = key;
     els.panel.dataset.activeLens = state.activeLens;
+    els.panel.setAttribute("tabindex", "-1");
   }
 
   function updateNodeState() {
@@ -497,31 +525,6 @@
     }
   }
 
-  function scrollToPanel() {
-    if (!els.panel) return;
-
-    setTimeout(function delayedScroll() {
-      try {
-        els.panel.scrollIntoView({ behavior: "smooth", block: "start" });
-      } catch (error) {
-        els.panel.scrollIntoView(true);
-      }
-    }, 40);
-  }
-
-  function scrollToOrbit() {
-    var target = els.orbitSection || els.orbit;
-    if (!target) return;
-
-    setTimeout(function delayedScroll() {
-      try {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      } catch (error) {
-        target.scrollIntoView(true);
-      }
-    }, 40);
-  }
-
   function setOrbit(key, options) {
     var opts = options || {};
     state.activeOrbit = slides[key] ? key : "orbit";
@@ -531,13 +534,13 @@
     renderPanel(state.activeOrbit);
 
     if (state.activeOrbit !== "orbit" && opts.scroll !== false) {
-      scrollToPanel();
+      delayedForceScrollTo(els.panel);
     }
   }
 
   function returnToOrbit() {
     setOrbit("orbit", { scroll: false });
-    scrollToOrbit();
+    delayedForceScrollTo(els.orbit || els.orbitSection);
   }
 
   function setLens(lens) {
@@ -546,6 +549,10 @@
 
     updateNodeState();
     renderPanel(state.activeOrbit || "orbit");
+
+    if (state.activeOrbit !== "orbit") {
+      delayedForceScrollTo(els.panel);
+    }
   }
 
   function bindControls() {
@@ -555,7 +562,8 @@
 
       node.addEventListener("click", function onClick(event) {
         event.preventDefault();
-        setOrbit(node.getAttribute("data-orbit-node"));
+        event.stopPropagation();
+        setOrbit(node.getAttribute("data-orbit-node"), { scroll: true });
       });
     });
 
@@ -564,6 +572,7 @@
 
       button.addEventListener("click", function onClick(event) {
         event.preventDefault();
+        event.stopPropagation();
         setLens(button.getAttribute("data-lens"));
       });
     });
@@ -572,26 +581,10 @@
       els.returnOrbit.setAttribute("type", "button");
       els.returnOrbit.addEventListener("click", function onReturn(event) {
         event.preventDefault();
+        event.stopPropagation();
         returnToOrbit();
       });
     }
-
-    doc.addEventListener("click", function delegatedClick(event) {
-      var orbitNode = event.target.closest && event.target.closest("[data-orbit-node]");
-      var lensNode = event.target.closest && event.target.closest("[data-lens]");
-      var returnNode = event.target.closest && event.target.closest("[data-return-orbit]");
-
-      if (orbitNode) {
-        event.preventDefault();
-        setOrbit(orbitNode.getAttribute("data-orbit-node"));
-      } else if (lensNode) {
-        event.preventDefault();
-        setLens(lensNode.getAttribute("data-lens"));
-      } else if (returnNode) {
-        event.preventDefault();
-        returnToOrbit();
-      }
-    });
 
     doc.addEventListener("keydown", function onKeydown(event) {
       if (event.key === "Escape") {
@@ -615,6 +608,12 @@
       setOrbit: setOrbit,
       returnToOrbit: returnToOrbit,
       setLens: setLens,
+      forceScrollToPanel: function forceScrollToPanel() {
+        delayedForceScrollTo(els.panel);
+      },
+      forceScrollToOrbit: function forceScrollToOrbit() {
+        delayedForceScrollTo(els.orbit || els.orbitSection);
+      },
       measureStage: function publicMeasureStage() {
         measureStage();
         return api.getReceiptLight();

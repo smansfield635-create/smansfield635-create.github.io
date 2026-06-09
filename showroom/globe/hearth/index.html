@@ -1,248 +1,207 @@
-<!-- TARGET FILE: /showroom/globe/hearth/index.html -->
-<!-- TNT FULL-FILE REPLACEMENT -->
-<!-- HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_STATIC_SHELL_TNT_v1 -->
-<!--
-  Hearth = facility alias. 
-  Location = unknown.
-  Mirrorland-adjacent public showroom shell.
-
-  Owns:
-  - Hearth public showroom page structure
-  - three-file route split
-  - globe stage and mount targets
-  - orbit/lens/category panels
-  - diagnostic readout slots
-  - 4x4 chamber matrix
-  - 16x16 / 256 spectrum mount
-  - return-to-orbit hooks
-
-  Does not own:
-  - canvas rendering truth
-  - F13 canvas evidence release
-  - F21 latch
-  - diagnostic campus mutation
-  - production mutation
-  - WebGL
-  - GraphicBox
-  - generated image
-  - final visual pass claim
--->
+<!-- /showroom/globe/hearth/index.html -->
+<!-- HEARTH_PUBLIC_ROUTE_3D_FRONT_STAGE_AND_DIAGNOSTIC_DOOR_HTML_TNT_v1 -->
+<!-- Full-file replacement. -->
+<!-- HTML shell only. CSS/JS external. No canvas release claim. -->
 
 <!doctype html>
-<html lang="en" data-hearth-route="showroom" data-hearth-location="unknown">
+<html lang="en" data-hearth-public-route="v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth Facility · Location Unknown</title>
-  <meta
-    name="description"
-    content="Hearth Facility is an unknown-location Mirrorland chamber: an eerie showroom receiver, orbit carrier, and diagnostic surface under inspection."
-  />
+  <title>Hearth · 3D Planet Front</title>
 
-  <link rel="stylesheet" href="/assets/site/site.css" />
-  <link rel="stylesheet" href="/showroom/globe/hearth/index.css" />
-
-  <script defer src="/showroom/globe/hearth/index.js"></script>
+  <link rel="stylesheet" href="/showroom/globe/hearth/index.css?v=1" />
+  <script src="/showroom/globe/hearth/index.js?v=1" defer></script>
 </head>
 
-<body
-  data-hearth-showroom-shell="HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_STATIC_SHELL_TNT_v1"
-  data-production-mutation-authorized="false"
-  data-canvas-release-authorized="false"
-  data-f13-claimed="false"
-  data-f21-claimed="false"
-  data-visual-pass-claimed="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-webgl="false"
->
-  <a class="skip" href="#hearth-main">Skip to Hearth Facility</a>
-
-  <main id="hearth-main" class="hearth-shell">
-    <header class="hearth-topbar" aria-label="Hearth facility header">
-      <a class="hearth-brand" href="/showroom/globe/" aria-label="Return to Atlas Study">
-        <span class="hearth-brand-mark" aria-hidden="true">H</span>
-        <span>
-          <small>Mirrorland Signal</small>
-          <strong>Hearth Facility</strong>
-        </span>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/showroom/globe/">
+        <div class="brand-mark" aria-hidden="true"><span>H</span></div>
+        <div class="brand-copy">
+          <b>Mirrorland · Planet Route</b>
+          <strong>Hearth</strong>
+        </div>
       </a>
 
-      <nav class="hearth-nav" aria-label="Hearth navigation">
-        <a href="/showroom/">Atrium</a>
-        <a href="/showroom/globe/">Atlas</a>
-        <a href="/showroom/globe/hearth/diagnostic/">Diagnostics</a>
-        <button type="button" data-hearth-return-to-orbit>Return to Orbit</button>
+      <nav class="nav" aria-label="Hearth navigation">
+        <a class="button" href="/showroom/globe/">Atlas</a>
+        <a class="button" href="/showroom/">Mirrorland</a>
+        <a class="button diagnostic-door" href="/showroom/globe/hearth/diagnostic/">Diagnostic Door</a>
       </nav>
     </header>
 
-    <section class="hearth-hero" data-hearth-focus-section="orbit">
-      <div class="hearth-hero-copy">
-        <p class="hearth-kicker">Facility alias confirmed · location unknown</p>
-        <h1>Hearth is awake, but it has not opened.</h1>
-        <p class="hearth-lead">
-          Mirrorland marks Hearth as a hidden facility, not a finished planet claim.
-          The surface below is a sealed receiver: part globe carrier, part chamber instrument,
-          part unknown-location signal.
-        </p>
+    <main>
+      <section class="hero" id="hearthOrbit">
+        <div class="hero-copy">
+          <div class="kicker">3D front stage · release-gated planet body</div>
 
-        <div class="hearth-actions" aria-label="Primary Hearth actions">
-          <button type="button" class="hearth-button gold" data-hearth-lens-button="orbit">Orbit View</button>
-          <button type="button" class="hearth-button" data-hearth-lens-button="lattice">Lattice View</button>
-          <button type="button" class="hearth-button" data-hearth-lens-button="chamber">Chamber View</button>
-          <button type="button" class="hearth-button" data-hearth-lens-button="diagnostic">Diagnostic View</button>
-        </div>
-      </div>
+          <h1>Hearth is being assembled in orbit.</h1>
 
-      <section class="hearth-orbit-card" id="hearthOrbit" aria-label="Interactive Hearth orbit">
-        <div
-          id="hearthGlobeStage"
-          class="hearth-globe-stage"
-          data-hearth-globe-stage
-          aria-label="Hearth interactive globe carrier"
-        >
-          <div id="hearthGlobeMount" class="hearth-globe-mount" data-hearth-globe-mount></div>
-          <div class="hearth-stage-veil" aria-hidden="true"></div>
-          <div class="hearth-stage-label" data-hearth-stage-label>
-            <strong>Orbit View</strong> → sealed carrier · receiver pending
+          <p>
+            This page is the public Hearth route shell: the front stage, the diagnostic doorway,
+            the future globe mount, and the release boundary for the canvas body being built by the
+            hand and finger files.
+          </p>
+
+          <div class="hero-actions">
+            <button class="gold" type="button" data-hearth-lens-button="overview">Overview</button>
+            <button type="button" data-hearth-lens-button="mount">Mount</button>
+            <button type="button" data-hearth-lens-button="diagnostics">Diagnostics</button>
+            <button type="button" data-hearth-lens-button="release">Release Gate</button>
+          </div>
+
+          <div class="status-ribbon" aria-label="Hearth public route status">
+            <div class="status-pill">
+              <b>Route</b>
+              <span data-hearth-status-route>public shell</span>
+            </div>
+            <div class="status-pill">
+              <b>Mount</b>
+              <span data-hearth-status-mount>reserved</span>
+            </div>
+            <div class="status-pill">
+              <b>Diagnostics</b>
+              <span data-hearth-status-diagnostics>linked</span>
+            </div>
+            <div class="status-pill">
+              <b>Release</b>
+              <span data-hearth-status-release>held</span>
+            </div>
           </div>
         </div>
 
-        <aside class="hearth-lens-copy" aria-live="polite">
-          <b data-hearth-lens-title>Orbit View</b>
-          <p data-hearth-lens-copy>
-            The facility presents a carrier, not a final planet claim. Drag the surface to test motion.
-          </p>
-        </aside>
+        <div class="hearth-stage" aria-label="Hearth orbital command stage">
+          <div class="hearth-core"><span>Hearth</span></div>
+
+          <button class="orbit-node" type="button" data-hearth-orbit-node="structure">
+            <b>Structure</b>
+            <strong>3D Shell</strong>
+            <span>Public route structure and narrative body.</span>
+          </button>
+
+          <button class="orbit-node" type="button" data-hearth-orbit-node="diagnostic">
+            <b>Door</b>
+            <strong>Diagnostics</strong>
+            <span>Direct path back to the audit workbench.</span>
+          </button>
+
+          <button class="orbit-node" type="button" data-hearth-orbit-node="mount">
+            <b>Mount</b>
+            <strong>Globe Seat</strong>
+            <span>Reserved canvas mount for the future body.</span>
+          </button>
+
+          <button class="orbit-node" type="button" data-hearth-orbit-node="release">
+            <b>Gate</b>
+            <strong>Release Held</strong>
+            <span>Canvas release only after threshold proof.</span>
+          </button>
+
+          <button class="orbit-node" type="button" data-hearth-orbit-node="globe">
+            <b>Body</b>
+            <strong>Planet Build</strong>
+            <span>Hands and fingers remain upstream.</span>
+          </button>
+        </div>
       </section>
-    </section>
 
-    <section class="hearth-panel" data-hearth-focus-section="categories">
-      <div class="hearth-section-head">
-        <p class="hearth-kicker">Facility categories</p>
-        <h2>The chamber answers by category, not by confession.</h2>
-        <p>
-          Each category resolves to one exact panel before the page may focus, mute, highlight,
-          or scroll. Hearth remains readable even when a signal is held.
-        </p>
-      </div>
+      <section class="panel" id="hearthControlDeck">
+        <div class="panel-inner">
+          <div class="lens-rail" aria-label="Hearth lens controls">
+            <button class="lens-button gold" type="button" data-hearth-lens-button="overview">Overview</button>
+            <button class="lens-button" type="button" data-hearth-lens-button="mount">Mount</button>
+            <button class="lens-button" type="button" data-hearth-lens-button="diagnostics">Diagnostics</button>
+            <button class="lens-button" type="button" data-hearth-lens-button="release">Release Gate</button>
+          </div>
 
-      <div class="hearth-category-rail" aria-label="Hearth category controls">
-        <button type="button" data-hearth-category-button="surface" data-active="true">Surface</button>
-        <button type="button" data-hearth-category-button="motion">Motion</button>
-        <button type="button" data-hearth-category-button="chamber">Chamber</button>
-        <button type="button" data-hearth-category-button="mirrorland">Mirrorland Signal</button>
-        <button type="button" data-hearth-category-button="diagnostics">Diagnostics</button>
-      </div>
+          <section class="lens-panel" data-hearth-lens-panel="overview" data-active="true">
+            <h2>Public route first. Planet body second.</h2>
+            <p>
+              Hearth now has a front-stage route that can carry narrative, navigation, diagnostic
+              continuity, and the future globe mount without pretending the released globe is already complete.
+            </p>
 
-      <div class="hearth-category-panels">
-        <article class="hearth-category-panel" data-hearth-category-panel="surface" data-active="true">
-          <b>Surface</b>
-          <h3>The visible body is a receiver.</h3>
-          <p>
-            Hearth’s surface is treated as a sealed carrier under inspection. It may show orbit,
-            lattice, and diagnostic evidence without claiming final visual pass.
-          </p>
-        </article>
+            <div class="grid-3">
+              <article class="card">
+                <b>Mirrorland</b>
+                <p>Hearth remains part of the world-facing Mirrorland estate.</p>
+              </article>
+              <article class="card">
+                <b>3D Stage</b>
+                <p>The shell is designed around depth, orbit, nodes, and release-gated planet assembly.</p>
+              </article>
+              <article class="card">
+                <b>Boundary</b>
+                <p>No visual pass, F13/F21 claim, WebGL claim, or canvas release is made here.</p>
+              </article>
+            </div>
+          </section>
 
-        <article class="hearth-category-panel" data-hearth-category-panel="motion" hidden>
-          <b>Motion</b>
-          <h3>Finger drag is allowed; release is not claimed.</h3>
-          <p>
-            The showroom may support pointer movement, inertial glide, and return-to-orbit behavior.
-            Motion does not authorize F13, F21, or production mutation.
-          </p>
-        </article>
+          <section class="lens-panel" data-hearth-lens-panel="mount">
+            <h2>Globe mount reserved.</h2>
+            <p>
+              This is the future canvas seat. The mount exists as a stable HTML responsibility before the
+              upstream canvas body is released into it.
+            </p>
 
-        <article class="hearth-category-panel" data-hearth-category-panel="chamber" hidden>
-          <b>Chamber</b>
-          <h3>The facility is a chamber before it is a world.</h3>
-          <p>
-            Hearth is framed as an unknown-location Mirrorland facility. Its page can host chapel,
-            bishop, priest, and finger-surface structures later, but this shell only prepares the room.
-          </p>
-        </article>
+            <div class="globe-mount-shell">
+              <div
+                id="hearthCanvasMount"
+                data-hearth-canvas-mount="true"
+                data-hearth-showroom-surface="true"
+                data-hearth-visible-surface="true"
+                aria-label="Reserved Hearth canvas mount"
+              ></div>
+            </div>
+          </section>
 
-        <article class="hearth-category-panel" data-hearth-category-panel="mirrorland" hidden>
-          <b>Mirrorland Signal</b>
-          <h3>The estate found the alias first.</h3>
-          <p>
-            Hearth belongs to the eerie side of the showroom: hidden, instrumented, partially awake,
-            and unwilling to reveal a location.
-          </p>
-        </article>
+          <section class="lens-panel" data-hearth-lens-panel="diagnostics">
+            <h2>Diagnostic continuity remains attached.</h2>
+            <p>
+              The Hearth public page keeps a direct door into the single-audit workbench so the route,
+              mount, canvas state, surface truth, and future release threshold can be inspected after each run.
+            </p>
 
-        <article class="hearth-category-panel" data-hearth-category-panel="diagnostics" hidden>
-          <b>Diagnostics</b>
-          <h3>Proof is visible only where proof exists.</h3>
-          <p>
-            The shell exposes readout slots for route, canvas, orbit, lattice, chamber, and boundary state.
-            It does not mutate the diagnostic campus.
-          </p>
-        </article>
-      </div>
-    </section>
+            <div class="actions">
+              <a class="button gold diagnostic-door" href="/showroom/globe/hearth/diagnostic/">Open Diagnostic Workbench</a>
+              <a class="button" href="/showroom/globe/">Return to Atlas</a>
+            </div>
+          </section>
 
-    <section class="hearth-panel" data-hearth-focus-section="diagnostics">
-      <div class="hearth-section-head">
-        <p class="hearth-kicker">Under the floor</p>
-        <h2>Hearth diagnostic readouts</h2>
-      </div>
+          <section class="lens-panel" data-hearth-lens-panel="release">
+            <h2>Release gate is held.</h2>
+            <div class="release-gate">
+              <p>
+                The globe body is not released by this file. The page only prepares the lawful destination:
+                a visible shell, stable mount, diagnostic doorway, and release boundary for the hands/fingers
+                canvas pipeline.
+              </p>
+            </div>
 
-      <div class="hearth-diagnostic-grid" aria-label="Hearth diagnostic readouts">
-        <div><b>Route</b><span data-hearth-diagnostic-route>pending</span></div>
-        <div><b>Stage</b><span data-hearth-diagnostic-stage>pending</span></div>
-        <div><b>Canvas</b><span data-hearth-diagnostic-canvas>pending</span></div>
-        <div><b>Lens</b><span data-hearth-diagnostic-lens>orbit</span></div>
-        <div><b>Motion</b><span data-hearth-diagnostic-motion>pending</span></div>
-        <div><b>Lattice</b><span data-hearth-diagnostic-lattice>256 held</span></div>
-        <div><b>Boundary</b><span data-hearth-diagnostic-boundary>held</span></div>
-        <div><b>Visual Pass</b><span data-hearth-diagnostic-visual>not claimed</span></div>
-      </div>
+            <div class="grid-3">
+              <article class="card">
+                <b>Canvas Build</b>
+                <p data-hearth-release-canvas>held upstream</p>
+              </article>
+              <article class="card">
+                <b>Runtime</b>
+                <p data-hearth-release-runtime>no restart claimed</p>
+              </article>
+              <article class="card">
+                <b>Visual Pass</b>
+                <p data-hearth-release-visual>false</p>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
 
-      <div class="hearth-matrix-wrap">
-        <section class="hearth-matrix" aria-label="Hearth 4 by 4 chamber matrix">
-          <button type="button" data-hearth-matrix-cell="north">North</button>
-          <button type="button" data-hearth-matrix-cell="east">East</button>
-          <button type="button" data-hearth-matrix-cell="west">West</button>
-          <button type="button" data-hearth-matrix-cell="south">South</button>
-          <button type="button" data-hearth-matrix-cell="surface">Surface</button>
-          <button type="button" data-hearth-matrix-cell="motion">Motion</button>
-          <button type="button" data-hearth-matrix-cell="chamber">Chamber</button>
-          <button type="button" data-hearth-matrix-cell="mirrorland">Signal</button>
-          <button type="button" data-hearth-matrix-cell="orbit">Orbit</button>
-          <button type="button" data-hearth-matrix-cell="lattice">Lattice</button>
-          <button type="button" data-hearth-matrix-cell="boundary">Boundary</button>
-          <button type="button" data-hearth-matrix-cell="return">Return</button>
-          <button type="button" data-hearth-matrix-cell="f3">F3</button>
-          <button type="button" data-hearth-matrix-cell="f5">F5</button>
-          <button type="button" data-hearth-matrix-cell="f8">F8</button>
-          <button type="button" data-hearth-matrix-cell="f13">F13 Held</button>
-        </section>
-
-        <section class="hearth-spectrum-card">
-          <b>256-state spectrum</b>
-          <p data-hearth-spectrum-readout>Selected state: none.</p>
-          <div class="hearth-spectrum" data-hearth-spectrum aria-label="Hearth 16 by 16 diagnostic spectrum"></div>
-        </section>
-      </div>
-    </section>
-
-    <section class="hearth-final-band" data-hearth-focus-section="return">
-      <p class="hearth-kicker">Return protocol</p>
-      <h2>When the chamber narrows, return to orbit.</h2>
-      <p>
-        Return-to-orbit clears focus, restores the carrier, releases muted panels,
-        and recenters the visitor without pretending Hearth is complete.
-      </p>
-      <button type="button" class="hearth-button gold" data-hearth-return-to-orbit>
-        Return to Orbit
-      </button>
-    </section>
-
-    <footer class="hearth-footer">
-      Hearth Facility · Location Unknown · Mirrorland-adjacent showroom route · final visual pass not claimed
+    <footer>
+      Hearth public route · diagnostic door active · release boundary held.
     </footer>
-  </main>
+  </div>
 </body>
 </html>

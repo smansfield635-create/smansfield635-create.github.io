@@ -1,7 +1,27 @@
 // /assets/hearth/hearth.hex.four-pair.authority.js
-// HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY_TNT_v2
+// HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_TNT_v2
 // Full-file replacement.
-// 3D Hex Four-Pair Authority / Chapel 1 ↔ Chapel 2 bridge foundation only.
+// Clean 3D Hex Four-Pair Authority only.
+//
+// Owns:
+// - 3D body-bound surface addressing
+// - canonical vector / lon-lat / UV tuple normalization
+// - 256-state diagnostic scope
+// - north / south / east / west four-pair handshakes
+// - clean authority receipt / status publication
+//
+// Does not own:
+// - Canvas
+// - Hex Surface bridge
+// - Finger Surface / Chapel 2
+// - route orchestration
+// - controls
+// - drawing
+// - land / water / hydrology / elevation / material truth
+// - final visual pass
+// - generated image
+// - GraphicBox
+// - WebGL
 
 (() => {
   "use strict";
@@ -9,30 +29,27 @@
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const CONTRACT = "HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY_TNT_v2";
-  const RECEIPT = "HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_TNT_v1";
+  const CONTRACT = "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_TNT_v2";
+  const RECEIPT = "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_RECEIPT_v2";
   const FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
   const ROUTE = "/showroom/globe/hearth/";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
-  const HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-  const VERSION = "2026-06-09.hearth-hex-four-pair-3d-body-gate-authority-v2";
+  const VERSION = "2026-06-09.hearth-hex-four-pair-clean-3d-authority-v2";
 
   const PLANET_ID = "hearth";
   const PLANET_LABEL = "Hearth";
-  const DEG = Math.PI / 180;
 
-  const BODY = Object.freeze({
-    coordinateModel: "RT3D-BODY-SPHERE",
-    mechanicalCoordinate: "RT3D-X16_Y16_Z256",
-    columns: 64,
-    rows: 32,
+  const RAD = Math.PI / 180;
+  const DEG = 180 / Math.PI;
+
+  const GRID = Object.freeze({
+    bands: 32,
+    sectors: 64,
     stateCount: 256,
-    chapelBridge: "CHAPEL_1_TO_CHAPEL_2",
-    gateRole: "3D_BODY_GATE_AUTHORITY"
+    mode: "clean-3d-spherical-four-pair-authority",
+    handshakes: Object.freeze(["north", "south", "east", "west"])
   });
 
-  const FINAL_FALSE = Object.freeze({
+  const NO_CLAIMS = Object.freeze({
     f13Claimed: false,
     f21EligibleForNorth: false,
     f21Claimed: false,
@@ -49,48 +66,47 @@
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     file: FILE,
     route: ROUTE,
 
     authorityLoaded: true,
-    body3dGateAuthority: true,
-    compatibility2dMode: false,
-    chapelBridgeActive: true,
+    clean3dAuthority: true,
+    legacyAliases: false,
+    twoDCompatibilityLayer: false,
 
     sampleCount: 0,
     readCount: 0,
-    gatePacketCount: 0,
+    cellReadCount: 0,
+    neighborReadCount: 0,
+    fourPairReadCount: 0,
     wideProbeCount: 0,
 
-    lastCellId: "NONE",
-    lastStateId: "NONE",
-    lastGatePacket: null,
-    lastWideProbe: null,
+    lastSampleAt: "",
+    lastWideProbeAt: "",
+    lastWideProbeTotal: 0,
+    lastWideProbeFailedCount: 0,
+    lastError: "",
+    updatedAt: nowIso(),
 
-    firstFailedCoordinate: "NONE",
-    recommendedNextFile: HEX_SURFACE_FILE,
-    recommendedNextAction: "SEND_3D_BODY_GATE_PACKET_TO_HEX_SURFACE",
-    postgameStatus: "HEARTH_3D_BODY_GATE_AUTHORITY_READY",
-
-    owns3dBodyAddressing: true,
-    ownsFourPairBodyHandshake: true,
+    owns3dAddressing: true,
+    ownsFourPairAuthority: true,
     owns256DiagnosticScope: true,
 
     ownsCanvas: false,
-    ownsCanvasDrawing: false,
+    ownsHexSurfaceBridge: false,
+    ownsFingerSurface: false,
+    ownsRouteOrchestration: false,
     ownsControls: false,
-    ownsHexSurface: false,
-    ownsTerrainTruth: false,
-    ownsHydrologyTruth: false,
-    ownsMaterialTruth: false,
+    ownsDrawing: false,
+    ownsLandTruth: false,
+    ownsWaterTruth: false,
+    ownsHydrology: false,
+    ownsElevation: false,
+    ownsMaterials: false,
     ownsFinalVisualPass: false,
 
-    createdAt: nowIso(),
-    updatedAt: nowIso(),
-
-    ...FINAL_FALSE
+    ...NO_CLAIMS
   };
 
   function nowIso() {
@@ -98,46 +114,44 @@
     catch (_error) { return String(Date.now()); }
   }
 
-  function n(value, fallback = 0) {
-    const out = Number(value);
-    return Number.isFinite(out) ? out : fallback;
+  function number(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
   }
 
   function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, n(value, min)));
+    return Math.max(min, Math.min(max, number(value, min)));
+  }
+
+  function wrap(value, size) {
+    const s = Math.max(1, Math.round(number(size, 1)));
+    const n = Math.round(number(value, 0));
+    return ((n % s) + s) % s;
   }
 
   function wrap01(value) {
-    const out = n(value, 0);
-    return ((out % 1) + 1) % 1;
-  }
-
-  function wrapDeg(value) {
-    const out = n(value, 0);
-    return ((((out + 180) % 360) + 360) % 360) - 180;
+    const n = number(value, 0);
+    return ((n % 1) + 1) % 1;
   }
 
   function pad(value, size) {
     return String(value).padStart(size, "0");
   }
 
-  function clone(value) {
-    try { return JSON.parse(JSON.stringify(value)); }
-    catch (_error) { return value; }
-  }
-
-  function normalize3(point) {
-    const x = n(point && point.x, 0);
-    const y = n(point && point.y, 0);
-    const z = n(point && point.z, 1);
+  function normalize3(input) {
+    const x = number(input && input.x, 0);
+    const y = number(input && input.y, 0);
+    const z = number(input && input.z, 1);
     const length = Math.hypot(x, y, z) || 1;
+
     return { x: x / length, y: y / length, z: z / length };
   }
 
   function lonLatToVector(lonDeg, latDeg) {
-    const lon = n(lonDeg, 0) * DEG;
-    const lat = clamp(latDeg, -90, 90) * DEG;
+    const lon = number(lonDeg, 0) * RAD;
+    const lat = clamp(latDeg, -90, 90) * RAD;
     const c = Math.cos(lat);
+
     return normalize3({
       x: Math.sin(lon) * c,
       y: Math.sin(lat),
@@ -145,40 +159,40 @@
     });
   }
 
-  function vectorToLonLat(point) {
-    const p = normalize3(point);
+  function vectorToLonLat(vector) {
+    const p = normalize3(vector);
     return {
-      lon: Math.atan2(p.x, p.z) / DEG,
-      lat: Math.asin(clamp(p.y, -1, 1)) / DEG
+      lon: Math.atan2(p.x, p.z) * DEG,
+      lat: Math.asin(clamp(p.y, -1, 1)) * DEG
     };
   }
 
   function lonToU(lon) {
-    return wrap01((wrapDeg(lon) + 180) / 360);
+    return wrap01((number(lon, 0) + 180) / 360);
   }
 
   function latToV(lat) {
-    return clamp((90 - clamp(lat, -90, 90)) / 180, 0, 1);
+    return clamp((90 - number(lat, 0)) / 180, 0, 1);
   }
 
   function uToLon(u) {
-    return wrapDeg(wrap01(u) * 360 - 180);
+    return wrap01(u) * 360 - 180;
   }
 
   function vToLat(v) {
-    return clamp(90 - clamp(v, 0, 1) * 180, -90, 90);
+    return 90 - clamp(v, 0, 1) * 180;
   }
 
-  function parseInput(input, y, z) {
-    if (Array.isArray(input) && input.length >= 3) {
-      return normalize3({ x: input[0], y: input[1], z: input[2] });
+  function parseInput() {
+    const args = Array.from(arguments);
+
+    if (args.length === 1 && Array.isArray(args[0]) && args[0].length >= 3) {
+      return normalize3({ x: args[0][0], y: args[0][1], z: args[0][2] });
     }
 
-    if (arguments.length >= 3) {
-      return normalize3({ x: input, y, z });
-    }
+    if (args.length === 1 && args[0] && typeof args[0] === "object") {
+      const input = args[0];
 
-    if (input && typeof input === "object") {
       if (Number.isFinite(Number(input.x)) && Number.isFinite(Number(input.y)) && Number.isFinite(Number(input.z))) {
         return normalize3(input);
       }
@@ -195,68 +209,59 @@
         return lonLatToVector(uToLon(input.u), vToLat(input.v));
       }
 
-      if (Number.isFinite(Number(input.row)) && Number.isFinite(Number(input.column))) {
-        return cellFromRowColumn(input.row, input.column).vector;
+      if (Number.isFinite(Number(input.band)) && Number.isFinite(Number(input.sector))) {
+        return cellFromBandSector(input.band, input.sector).vector;
       }
     }
+
+    if (args.length >= 3) return normalize3({ x: args[0], y: args[1], z: args[2] });
+    if (args.length >= 2) return lonLatToVector(args[0], args[1]);
 
     return lonLatToVector(0, 0);
   }
 
-  function rowColumnFromVector(vector) {
-    const ll = vectorToLonLat(vector);
-    const u = lonToU(ll.lon);
-    const v = latToV(ll.lat);
-
-    return {
-      row: clamp(Math.floor(v * BODY.rows), 0, BODY.rows - 1),
-      column: Math.floor(wrap01(u) * BODY.columns),
-      u,
-      v,
-      lon: ll.lon,
-      lat: ll.lat
-    };
+  function stateHash(band, sector) {
+    const b = wrap(band, GRID.bands);
+    const s = wrap(sector, GRID.sectors);
+    return wrap((b * 41) + (s * 17) + (b * s * 11) + 113, GRID.stateCount);
   }
 
-  function stateIdFor(row, column) {
-    const mixed =
-      row * 37 +
-      column * 19 +
-      row * column * 7 +
-      ((row ^ column) * 13) +
-      113;
-
-    return ((mixed % BODY.stateCount) + BODY.stateCount) % BODY.stateCount;
+  function cellId(band, sector) {
+    return `HEARTH_3D_B${pad(band, 2)}_S${pad(sector, 2)}`;
   }
 
-  function cellId(row, column) {
-    return `HEARTH_3D_BODY_R${pad(row, 2)}_C${pad(column, 2)}`;
+  function edgeRole(band) {
+    if (band <= 0) return "north-polar-cap";
+    if (band >= GRID.bands - 1) return "south-polar-cap";
+    if (band <= 2) return "north-high-latitude";
+    if (band >= GRID.bands - 3) return "south-high-latitude";
+    if (band >= 14 && band <= 17) return "equatorial-body-band";
+    return "mid-body";
   }
 
-  function cellFromRowColumn(row, column) {
-    const r = clamp(Math.round(row), 0, BODY.rows - 1);
-    const c = ((Math.round(column) % BODY.columns) + BODY.columns) % BODY.columns;
-    const u = wrap01((c + 0.5) / BODY.columns);
-    const v = clamp((r + 0.5) / BODY.rows, 0, 1);
+  function cellFromBandSector(band, sector) {
+    const b = clamp(Math.round(number(band, 0)), 0, GRID.bands - 1);
+    const s = wrap(sector, GRID.sectors);
+
+    const u = wrap01((s + 0.5) / GRID.sectors);
+    const v = clamp((b + 0.5) / GRID.bands, 0, 1);
     const lon = uToLon(u);
     const lat = vToLat(v);
     const vector = lonLatToVector(lon, lat);
-    const sid = stateIdFor(r, c);
+    const id = cellId(b, s);
+    const sid = stateHash(b, s);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      authority: "HEARTH_3D_BODY_GATE_AUTHORITY",
+      authority: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
       planetId: PLANET_ID,
       planetLabel: PLANET_LABEL,
-      coordinateModel: BODY.coordinateModel,
-      mechanicalCoordinate: BODY.mechanicalCoordinate,
-      cellId: cellId(r, c),
-      hexId: cellId(r, c),
-      row: r,
-      column: c,
-      stateId: sid,
-      stateClass: `state-${pad(sid, 3)}`,
+
+      cellId: id,
+      hexId: id,
+      band: b,
+      sector: s,
       u,
       v,
       lon,
@@ -265,86 +270,161 @@
       y: vector.y,
       z: vector.z,
       vector,
+
+      stateId: sid,
+      stateClass: `state-${pad(sid, 3)}`,
+      edgeRole: edgeRole(b),
+      gridBands: GRID.bands,
+      gridSectors: GRID.sectors,
+      gridMode: GRID.mode,
+
       bodyBound: true,
       surfaceBound: true,
       floatsAboveBody: false,
       allowedToFloat: false,
-      ...FINAL_FALSE
+
+      mayDefineLand: false,
+      mayDefineWater: false,
+      mayDefineHydrology: false,
+      mayDefineElevation: false,
+      mayDefineMaterials: false,
+
+      ownsCanvas: false,
+      ownsDrawing: false,
+      ownsRoute: false,
+      ownsControls: false,
+
+      ...NO_CLAIMS
     };
   }
 
   function cellFromVector(vector) {
-    const rc = rowColumnFromVector(vector);
-    const cell = cellFromRowColumn(rc.row, rc.column);
+    const p = normalize3(vector);
+    const ll = vectorToLonLat(p);
+    const u = lonToU(ll.lon);
+    const v = latToV(ll.lat);
+    const band = clamp(Math.floor(v * GRID.bands), 0, GRID.bands - 1);
+    const sector = wrap(Math.floor(u * GRID.sectors), GRID.sectors);
+    const cell = cellFromBandSector(band, sector);
 
     return {
       ...cell,
-      sourceU: rc.u,
-      sourceV: rc.v,
-      sourceLon: rc.lon,
-      sourceLat: rc.lat,
-      sourceX: vector.x,
-      sourceY: vector.y,
-      sourceZ: vector.z
+      sourceU: u,
+      sourceV: v,
+      sourceLon: ll.lon,
+      sourceLat: ll.lat,
+      sourceX: p.x,
+      sourceY: p.y,
+      sourceZ: p.z
     };
   }
 
-  function neighbor(cell, direction) {
-    let row = cell.row;
-    let column = cell.column;
-    let polarClamp = false;
+  function neighborCell(cell, direction) {
+    const band = clamp(Math.round(number(cell.band, 0)), 0, GRID.bands - 1);
+    const sector = wrap(cell.sector, GRID.sectors);
 
-    if (direction === "north") row -= 1;
-    if (direction === "south") row += 1;
-    if (direction === "east") column += 1;
-    if (direction === "west") column -= 1;
+    let nextBand = band;
+    let nextSector = sector;
+    let boundaryClamp = false;
 
-    if (row < 0) {
-      row = 0;
-      polarClamp = true;
+    if (direction === "north") {
+      nextBand = band - 1;
+      if (nextBand < 0) {
+        nextBand = 0;
+        boundaryClamp = true;
+      }
     }
 
-    if (row >= BODY.rows) {
-      row = BODY.rows - 1;
-      polarClamp = true;
+    if (direction === "south") {
+      nextBand = band + 1;
+      if (nextBand > GRID.bands - 1) {
+        nextBand = GRID.bands - 1;
+        boundaryClamp = true;
+      }
     }
 
-    const target = cellFromRowColumn(row, column);
+    if (direction === "east") nextSector = sector + 1;
+    if (direction === "west") nextSector = sector - 1;
 
     return {
-      direction,
-      reciprocalDirection: {
-        north: "south",
-        south: "north",
-        east: "west",
-        west: "east"
-      }[direction],
-      fromCellId: cell.cellId,
-      toCellId: target.cellId,
-      fromStateId: cell.stateId,
-      toStateId: target.stateId,
-      fromVector: { x: cell.x, y: cell.y, z: cell.z },
-      toVector: { x: target.x, y: target.y, z: target.z },
-      axis: direction === "north" || direction === "south" ? "north-south-body-axis" : "east-west-body-axis",
-      polarClamp,
-      bodyBound: true,
-      surfaceBound: true,
-      ...FINAL_FALSE
+      ...cellFromBandSector(nextBand, nextSector),
+      handshakeBoundaryClamp: boundaryClamp,
+      handshakeBoundaryRole: boundaryClamp ? "polar-band-clamp" : "normal-3d-adjacent-cell"
     };
   }
 
-  function fourPair(cell) {
-    const north = neighbor(cell, "north");
-    const south = neighbor(cell, "south");
-    const east = neighbor(cell, "east");
-    const west = neighbor(cell, "west");
+  function opposite(direction) {
+    return {
+      north: "south",
+      south: "north",
+      east: "west",
+      west: "east"
+    }[direction] || "unknown";
+  }
+
+  function axis(direction) {
+    if (direction === "north" || direction === "south") return "north-south";
+    if (direction === "east" || direction === "west") return "east-west";
+    return "unknown";
+  }
+
+  function makeHandshake(cell, direction) {
+    const to = neighborCell(cell, direction);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      setClass: "3d-body-four-pair-set",
+      authority: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+      direction,
+      reciprocalDirection: opposite(direction),
+      axis: axis(direction),
+      handshakeClass: "clean-3d-cardinal-four-pair-body-handshake",
+
+      fromCellId: cell.cellId,
+      toCellId: to.cellId,
+      fromBand: cell.band,
+      fromSector: cell.sector,
+      toBand: to.band,
+      toSector: to.sector,
+      fromStateId: cell.stateId,
+      toStateId: to.stateId,
+
+      boundaryClamp: Boolean(to.handshakeBoundaryClamp),
+      boundaryRole: to.handshakeBoundaryRole || "normal-3d-adjacent-cell",
+
+      valid: true,
+      bodyBound: true,
+      surfaceBound: true,
+      floatsAboveBody: false,
+      allowedToFloat: false,
+
+      ownsLandTruth: false,
+      ownsWaterTruth: false,
+      ownsHydrology: false,
+      ownsElevation: false,
+      ownsMaterials: false,
+      ownsCanvas: false,
+      ownsDrawing: false,
+
+      ...NO_CLAIMS
+    };
+  }
+
+  function buildFourPair(cell) {
+    const north = makeHandshake(cell, "north");
+    const south = makeHandshake(cell, "south");
+    const east = makeHandshake(cell, "east");
+    const west = makeHandshake(cell, "west");
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      authority: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+      setClass: "clean-3d-four-cardinal-pair-set",
       centerCellId: cell.cellId,
       centerStateId: cell.stateId,
+      directions: GRID.handshakes.slice(),
+
       north,
       south,
       east,
@@ -352,436 +432,469 @@
       northSouthPair: [north, south],
       eastWestPair: [east, west],
       fourPairSet: [north, south, east, west],
+
       everyPixelHasNorthSouthEastWest: true,
       everyPixelHasFourPairSet: true,
+      handshakePairsAreReciprocal: true,
+
       bodyBound: true,
       surfaceBound: true,
-      ...FINAL_FALSE
+      floatsAboveBody: false,
+      allowedToFloat: false,
+
+      ...NO_CLAIMS
     };
   }
 
-  function sample(input, y, z) {
+  function sample() {
     const vector = parseInput.apply(null, arguments);
     const cell = cellFromVector(vector);
-    const pair = fourPair(cell);
+    const fourPair = buildFourPair(cell);
 
     state.sampleCount += 1;
-    state.lastCellId = cell.cellId;
-    state.lastStateId = String(cell.stateId);
-    state.updatedAt = nowIso();
+    state.lastSampleAt = nowIso();
+    state.updatedAt = state.lastSampleAt;
 
     return {
       ...cell,
-      fourPair: pair,
-      fourPairSet: pair.fourPairSet,
-      north: pair.north,
-      south: pair.south,
-      east: pair.east,
-      west: pair.west,
-      northSouthPair: pair.northSouthPair,
-      eastWestPair: pair.eastWestPair,
-      gridColumns: BODY.columns,
-      gridRows: BODY.rows,
-      stateCount: BODY.stateCount,
-      gateRole: BODY.gateRole,
-      chapelBridge: BODY.chapelBridge,
-      owns3dBodyAddressing: true,
-      ownsCanvasDrawing: false,
-      ownsHexSurface: false,
-      ownsTerrainTruth: false,
-      ownsHydrologyTruth: false,
-      ownsMaterialTruth: false,
-      ...FINAL_FALSE
+      sourceX: cell.sourceX,
+      sourceY: cell.sourceY,
+      sourceZ: cell.sourceZ,
+      sourceU: cell.sourceU,
+      sourceV: cell.sourceV,
+      sourceLon: cell.sourceLon,
+      sourceLat: cell.sourceLat,
+
+      fourPair,
+      fourPairSet: fourPair.fourPairSet,
+      north: fourPair.north,
+      south: fourPair.south,
+      east: fourPair.east,
+      west: fourPair.west,
+      northSouthPair: fourPair.northSouthPair,
+      eastWestPair: fourPair.eastWestPair,
+
+      handshakeCount: 4,
+      cardinalHandshakeCount: 4,
+      everyPixelHasNorthSouthEastWest: true,
+      everyPixelHasFourPairSet: true,
+      fourPairSetIsBodyBound: true,
+      clean3dAuthority: true,
+      twoDCompatibilityLayer: false,
+      legacyAliases: false,
+
+      ...NO_CLAIMS
     };
   }
 
-  function composeGatePacket(input = {}, options = {}) {
-    const s = sample(input);
-
-    const packet = {
-      packetType: "HEARTH_3D_BODY_GATE_PACKET_v2",
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      sourceFile: FILE,
-      sourceAuthority: "HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY",
-      destinationFile: HEX_SURFACE_FILE,
-      handoffTo: "HEARTH_HEX_SURFACE",
-
-      route: ROUTE,
-      canvasFile: CANVAS_FILE,
-      hexSurfaceFile: HEX_SURFACE_FILE,
-
-      coordinateModel: BODY.coordinateModel,
-      mechanicalCoordinate: BODY.mechanicalCoordinate,
-      chapelBridge: BODY.chapelBridge,
-      gateRole: BODY.gateRole,
-
-      canonicalMapTuple: {
-        tupleType: "HEARTH_3D_BODY_CANONICAL_MAP_TUPLE_v2",
-        cellId: s.cellId,
-        hexId: s.hexId,
-        row: s.row,
-        column: s.column,
-        stateId: s.stateId,
-        stateClass: s.stateClass,
-        u: s.u,
-        v: s.v,
-        lon: s.lon,
-        lat: s.lat,
-        x: s.x,
-        y: s.y,
-        z: s.z,
-        bodyBound: true,
-        surfaceBound: true,
-        floatsAboveBody: false,
-        allowedToFloat: false,
-        ...FINAL_FALSE
-      },
-
-      coord: {
-        u: s.u,
-        v: s.v,
-        lon: s.lon,
-        lat: s.lat,
-        x: s.x,
-        y: s.y,
-        z: s.z
-      },
-
-      cellId: s.cellId,
-      hexId: s.hexId,
-      row: s.row,
-      column: s.column,
-      stateId: s.stateId,
-      stateClass: s.stateClass,
-
-      fourPair: clone(s.fourPair),
-      fourPairSet: clone(s.fourPairSet),
-      north: clone(s.north),
-      south: clone(s.south),
-      east: clone(s.east),
-      west: clone(s.west),
-      northSouthPair: clone(s.northSouthPair),
-      eastWestPair: clone(s.eastWestPair),
-
-      input: clone(input),
-      options: clone(options),
-
-      hexSurfaceGateAuthorized: true,
-      canvasLifecycleAuthorized: false,
-      canvasDrawingAuthorized: false,
-      terrainTruthAuthorized: false,
-      hydrologyTruthAuthorized: false,
-      materialTruthAuthorized: false,
-
-      composedAt: nowIso(),
-      ...FINAL_FALSE
-    };
-
-    state.gatePacketCount += 1;
-    state.lastGatePacket = clone(packet);
-    state.recommendedNextFile = HEX_SURFACE_FILE;
-    state.recommendedNextAction = "HEARTH_HEX_SURFACE_CONSUME_3D_BODY_GATE_PACKET";
-    state.postgameStatus = "3D_BODY_GATE_PACKET_COMPOSED_FOR_HEX_SURFACE";
+  function read() {
+    state.readCount += 1;
     state.updatedAt = nowIso();
 
-    publishGatePacket(packet);
-    publishGlobals();
+    const args = Array.from(arguments);
+    const first = args[0];
 
-    return packet;
+    if (first && typeof first === "object") {
+      if (first.mode === "cell") return getCell(first);
+      if (first.mode === "neighbors") return getNeighbors(first);
+      if (first.mode === "four-pair") return getFourPairSet(first);
+      if (first.mode === "wide-probe") return wideProbe(first);
+    }
+
+    return sample.apply(null, args);
+  }
+
+  function getCell() {
+    state.cellReadCount += 1;
+    state.updatedAt = nowIso();
+
+    const packet = sample.apply(null, arguments);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      authority: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+      planetId: PLANET_ID,
+      planetLabel: PLANET_LABEL,
+      cellId: packet.cellId,
+      hexId: packet.hexId,
+      band: packet.band,
+      sector: packet.sector,
+      u: packet.u,
+      v: packet.v,
+      lon: packet.lon,
+      lat: packet.lat,
+      x: packet.x,
+      y: packet.y,
+      z: packet.z,
+      stateId: packet.stateId,
+      stateClass: packet.stateClass,
+      edgeRole: packet.edgeRole,
+      bodyBound: true,
+      surfaceBound: true,
+      floatsAboveBody: false,
+      allowedToFloat: false,
+      ...NO_CLAIMS
+    };
+  }
+
+  function getNeighbors() {
+    state.neighborReadCount += 1;
+    state.updatedAt = nowIso();
+
+    const packet = sample.apply(null, arguments);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      authority: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+      centerCellId: packet.cellId,
+      centerStateId: packet.stateId,
+      cardinal: {
+        north: neighborCell(packet, "north"),
+        south: neighborCell(packet, "south"),
+        east: neighborCell(packet, "east"),
+        west: neighborCell(packet, "west")
+      },
+      fourPair: packet.fourPair,
+      bodyBound: true,
+      surfaceBound: true,
+      floatsAboveBody: false,
+      allowedToFloat: false,
+      ...NO_CLAIMS
+    };
+  }
+
+  function getFourPairSet() {
+    state.fourPairReadCount += 1;
+    state.updatedAt = nowIso();
+    return sample.apply(null, arguments).fourPair;
   }
 
   function wideProbe(options = {}) {
-    const rows = clamp(Math.round(n(options.rows, 6)), 2, 32);
-    const columns = clamp(Math.round(n(options.columns, 12)), 2, 64);
+    const bands = clamp(Math.round(number(options.bands, 7)), 2, GRID.bands);
+    const sectors = clamp(Math.round(number(options.sectors, 13)), 2, GRID.sectors);
     const points = [];
 
-    for (let r = 0; r < rows; r += 1) {
-      for (let c = 0; c < columns; c += 1) {
-        const u = (c + 0.5) / columns;
-        const v = (r + 0.5) / rows;
-        const s = sample({ u, v });
+    for (let b = 0; b < bands; b += 1) {
+      const v = (b + 0.5) / bands;
+
+      for (let s = 0; s < sectors; s += 1) {
+        const u = (s + 0.5) / sectors;
+        const value = sample({ u, v });
+
         points.push({
           index: points.length,
-          probeRow: r,
-          probeColumn: c,
-          cellId: s.cellId,
-          stateId: s.stateId,
-          row: s.row,
-          column: s.column,
-          u: s.u,
-          v: s.v,
-          lon: s.lon,
-          lat: s.lat,
-          x: s.x,
-          y: s.y,
-          z: s.z,
-          hasNorth: Boolean(s.north),
-          hasSouth: Boolean(s.south),
-          hasEast: Boolean(s.east),
-          hasWest: Boolean(s.west),
-          bodyBound: true,
-          surfaceBound: true,
+          probeBand: b,
+          probeSector: s,
+          u,
+          v,
+          lon: value.lon,
+          lat: value.lat,
+          x: value.x,
+          y: value.y,
+          z: value.z,
+          cellId: value.cellId,
+          band: value.band,
+          sector: value.sector,
+          stateId: value.stateId,
+          stateClass: value.stateClass,
+          edgeRole: value.edgeRole,
+          hasNorth: Boolean(value.north && value.north.direction === "north"),
+          hasSouth: Boolean(value.south && value.south.direction === "south"),
+          hasEast: Boolean(value.east && value.east.direction === "east"),
+          hasWest: Boolean(value.west && value.west.direction === "west"),
+          hasFourPairSet: Boolean(value.everyPixelHasFourPairSet),
+          cardinalHandshakeCount: value.cardinalHandshakeCount,
+          bodyBound: value.bodyBound,
+          surfaceBound: value.surfaceBound,
+          floatsAboveBody: value.floatsAboveBody,
+          allowedToFloat: value.allowedToFloat,
           visualPassClaimed: false
         });
       }
     }
 
-    const failed = points.filter((p) => !p.hasNorth || !p.hasSouth || !p.hasEast || !p.hasWest);
+    const failed = points.filter((point) => (
+      point.hasNorth !== true ||
+      point.hasSouth !== true ||
+      point.hasEast !== true ||
+      point.hasWest !== true ||
+      point.hasFourPairSet !== true ||
+      point.cardinalHandshakeCount !== 4 ||
+      point.bodyBound !== true ||
+      point.surfaceBound !== true ||
+      point.floatsAboveBody !== false ||
+      point.allowedToFloat !== false ||
+      point.visualPassClaimed !== false
+    ));
 
     const result = {
       contract: CONTRACT,
       receipt: RECEIPT,
-      mode: "3d-body-wide-probe",
-      rows,
-      columns,
+      authority: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+      file: FILE,
+      route: ROUTE,
+      mode: "wide-probe",
+      bands,
+      sectors,
       total: points.length,
+      minimumWideProbePoints: 25,
+      wideProbeReady: points.length >= 25,
       failedCount: failed.length,
-      passed: failed.length === 0,
+      passed: failed.length === 0 && points.length >= 25,
+      held: points.length < 25,
+      heldReason: points.length < 25 ? "INSUFFICIENT_WIDE_PROBE" : "",
       points,
       failed,
+
+      clean3dAuthority: true,
+      everyPixelHasNorthSouthEastWest: failed.length === 0,
+      everyPixelHasFourPairSet: failed.length === 0,
+      everyPixelBodyBound: failed.length === 0,
+      everyPixelSurfaceBound: failed.length === 0,
       bodyBound: true,
       surfaceBound: true,
-      everySampleHasFourPair: failed.length === 0,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      probedAt: nowIso()
+      floatsAboveBody: false,
+      allowedToFloat: false,
+
+      ...NO_CLAIMS
     };
 
     state.wideProbeCount += 1;
-    state.lastWideProbe = clone(result);
-    state.updatedAt = nowIso();
+    state.lastWideProbeAt = nowIso();
+    state.lastWideProbeTotal = result.total;
+    state.lastWideProbeFailedCount = result.failedCount;
+    state.updatedAt = state.lastWideProbeAt;
 
-    updateDataset();
+    updateDataset(result);
     publishGlobals();
 
     return result;
-  }
-
-  function read(input) {
-    state.readCount += 1;
-    if (input && input.mode === "wide-probe") return wideProbe(input);
-    if (input && input.mode === "gate-packet") return composeGatePacket(input);
-    return sample.apply(null, arguments);
-  }
-
-  function getCell(input) {
-    return sample(input);
-  }
-
-  function getNeighbors(input) {
-    const s = sample(input);
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      centerCellId: s.cellId,
-      centerStateId: s.stateId,
-      north: s.north,
-      south: s.south,
-      east: s.east,
-      west: s.west,
-      fourPair: s.fourPair,
-      ...FINAL_FALSE
-    };
-  }
-
-  function getFourPairSet(input) {
-    return sample(input).fourPair;
   }
 
   function getStatus() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       route: ROUTE,
+      role: "Clean 3D Hex Four-Pair Authority",
 
       authorityLoaded: true,
-      body3dGateAuthority: true,
-      compatibility2dMode: false,
-      chapelBridgeActive: true,
+      clean3dAuthority: true,
+      legacyAliases: false,
+      twoDCompatibilityLayer: false,
 
-      coordinateModel: BODY.coordinateModel,
-      mechanicalCoordinate: BODY.mechanicalCoordinate,
-      columns: BODY.columns,
-      rows: BODY.rows,
-      stateCount: BODY.stateCount,
+      gridBands: GRID.bands,
+      gridSectors: GRID.sectors,
+      stateCount: GRID.stateCount,
+      gridMode: GRID.mode,
+
+      supportsSample: true,
+      supportsRead: true,
+      supportsGetCell: true,
+      supportsGetNeighbors: true,
+      supportsGetFourPairSet: true,
+      supportsWideProbe: true,
+      supportsNorthHandshake: true,
+      supportsSouthHandshake: true,
+      supportsEastHandshake: true,
+      supportsWestHandshake: true,
+      supports256StateDiagnosticScope: true,
+
+      bodyBound: true,
+      surfaceBound: true,
+      floatsAboveBody: false,
+      allowedToFloat: false,
+      everyPixelHasNorthSouthEastWest: true,
+      everyPixelHasFourPairSet: true,
 
       sampleCount: state.sampleCount,
       readCount: state.readCount,
-      gatePacketCount: state.gatePacketCount,
+      cellReadCount: state.cellReadCount,
+      neighborReadCount: state.neighborReadCount,
+      fourPairReadCount: state.fourPairReadCount,
       wideProbeCount: state.wideProbeCount,
-      lastCellId: state.lastCellId,
-      lastStateId: state.lastStateId,
+      lastSampleAt: state.lastSampleAt,
+      lastWideProbeAt: state.lastWideProbeAt,
+      lastWideProbeTotal: state.lastWideProbeTotal,
+      lastWideProbeFailedCount: state.lastWideProbeFailedCount,
+      lastError: state.lastError,
+      updatedAt: state.updatedAt,
 
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextAction: state.recommendedNextAction,
-      postgameStatus: state.postgameStatus,
-
-      owns3dBodyAddressing: true,
-      ownsFourPairBodyHandshake: true,
+      owns3dAddressing: true,
+      ownsFourPairAuthority: true,
       owns256DiagnosticScope: true,
+
       ownsCanvas: false,
-      ownsCanvasDrawing: false,
+      ownsHexSurfaceBridge: false,
+      ownsFingerSurface: false,
+      ownsRouteOrchestration: false,
       ownsControls: false,
-      ownsHexSurface: false,
-      ownsTerrainTruth: false,
-      ownsHydrologyTruth: false,
-      ownsMaterialTruth: false,
+      ownsDrawing: false,
+      ownsLandTruth: false,
+      ownsWaterTruth: false,
+      ownsHydrology: false,
+      ownsElevation: false,
+      ownsMaterials: false,
       ownsFinalVisualPass: false,
 
-      updatedAt: state.updatedAt,
-      ...FINAL_FALSE
+      ...NO_CLAIMS
     };
   }
 
   function getReceipt() {
     return {
       ...getStatus(),
-      role: "3D Hex Four-Pair Body Gate Authority",
       purpose: [
-        "Upgrade Hearth hex authority from 2D grid compatibility to 3D body-bound gate authority.",
-        "Provide canonical 3D surface addressing for Chapel 1 to Chapel 2 transmission.",
-        "Assign north, south, east, and west handshakes on the body surface.",
-        "Compose lawful 3D body gate packets for Hex Surface.",
-        "Preserve 256-state diagnostic scope without drawing or final-visual claims."
+        "Provide clean 3D body-bound cell addressing for Hearth.",
+        "Resolve any valid vector / lon-lat / UV input to one canonical surface cell.",
+        "Assign each sampled cell north, south, east, and west handshakes.",
+        "Preserve 256-state diagnostic scope.",
+        "Expose authority packet for the Hex Surface bridge."
       ],
-      lastGatePacket: clone(state.lastGatePacket),
-      lastWideProbe: clone(state.lastWideProbe)
+      exposedMethods: [
+        "sample",
+        "read",
+        "getCell",
+        "getNeighbors",
+        "getFourPairSet",
+        "wideProbe",
+        "getStatus",
+        "getReceipt",
+        "getReceiptText"
+      ],
+      downstreamExpectedNextFile: "/assets/hearth/hearth.hex.surface.js",
+      downstreamRole: "Bridge between Chapel 1 and Chapel 2",
+      cleanAliasPolicy: {
+        legacyAliases: false,
+        publicAuthorityAlias: "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY",
+        nestedAuthorityAlias: "HEARTH.hexFourPair3dAuthority",
+        labAuthorityAlias: "DEXTER_LAB.hearthHexFourPair3dAuthority"
+      }
     };
   }
 
   function getReceiptText() {
     const r = getStatus();
+
     return [
-      "HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY_RECEIPT",
+      "HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
-      `previousContract=${r.previousContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
       `route=${r.route}`,
+      `role=${r.role}`,
       "",
-      `body3dGateAuthority=${r.body3dGateAuthority}`,
-      `compatibility2dMode=${r.compatibility2dMode}`,
-      `chapelBridgeActive=${r.chapelBridgeActive}`,
-      `coordinateModel=${r.coordinateModel}`,
-      `mechanicalCoordinate=${r.mechanicalCoordinate}`,
+      `authorityLoaded=${r.authorityLoaded}`,
+      `clean3dAuthority=${r.clean3dAuthority}`,
+      `legacyAliases=${r.legacyAliases}`,
+      `twoDCompatibilityLayer=${r.twoDCompatibilityLayer}`,
       "",
-      `columns=${r.columns}`,
-      `rows=${r.rows}`,
+      `gridBands=${r.gridBands}`,
+      `gridSectors=${r.gridSectors}`,
       `stateCount=${r.stateCount}`,
+      `gridMode=${r.gridMode}`,
+      "",
+      `supportsNorthHandshake=${r.supportsNorthHandshake}`,
+      `supportsSouthHandshake=${r.supportsSouthHandshake}`,
+      `supportsEastHandshake=${r.supportsEastHandshake}`,
+      `supportsWestHandshake=${r.supportsWestHandshake}`,
+      "",
+      `bodyBound=${r.bodyBound}`,
+      `surfaceBound=${r.surfaceBound}`,
+      `floatsAboveBody=${r.floatsAboveBody}`,
+      `allowedToFloat=${r.allowedToFloat}`,
+      `everyPixelHasNorthSouthEastWest=${r.everyPixelHasNorthSouthEastWest}`,
+      `everyPixelHasFourPairSet=${r.everyPixelHasFourPairSet}`,
+      "",
+      `owns3dAddressing=${r.owns3dAddressing}`,
+      `ownsFourPairAuthority=${r.ownsFourPairAuthority}`,
+      `ownsCanvas=${r.ownsCanvas}`,
+      `ownsHexSurfaceBridge=${r.ownsHexSurfaceBridge}`,
+      `ownsFingerSurface=${r.ownsFingerSurface}`,
+      `ownsDrawing=${r.ownsDrawing}`,
       "",
       `sampleCount=${r.sampleCount}`,
-      `readCount=${r.readCount}`,
-      `gatePacketCount=${r.gatePacketCount}`,
       `wideProbeCount=${r.wideProbeCount}`,
+      `lastWideProbeTotal=${r.lastWideProbeTotal}`,
+      `lastWideProbeFailedCount=${r.lastWideProbeFailedCount}`,
+      `lastError=${r.lastError}`,
       "",
-      `lastCellId=${r.lastCellId}`,
-      `lastStateId=${r.lastStateId}`,
-      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
-      `recommendedNextFile=${r.recommendedNextFile}`,
-      `recommendedNextAction=${r.recommendedNextAction}`,
-      `postgameStatus=${r.postgameStatus}`,
-      "",
-      `owns3dBodyAddressing=${r.owns3dBodyAddressing}`,
-      `ownsFourPairBodyHandshake=${r.ownsFourPairBodyHandshake}`,
-      `ownsCanvasDrawing=${r.ownsCanvasDrawing}`,
-      `ownsHexSurface=${r.ownsHexSurface}`,
-      `ownsTerrainTruth=${r.ownsTerrainTruth}`,
-      `ownsFinalVisualPass=${r.ownsFinalVisualPass}`,
-      "",
+      `visualPassClaimed=${r.visualPassClaimed}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
-      `visualPassClaimed=${r.visualPassClaimed}`,
       `updatedAt=${r.updatedAt}`
     ].join("\n");
   }
 
-  function updateDataset() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    const d = doc.documentElement.dataset;
+  function updateDataset(lastWideProbe = null) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return false;
 
-    d.hearthHexFourPairAuthorityLoaded = "true";
-    d.hearthHexFourPairAuthorityContract = CONTRACT;
-    d.hearthHexFourPairAuthorityReceipt = RECEIPT;
-    d.hearthHexFourPairAuthorityPreviousContract = PREVIOUS_CONTRACT;
-    d.hearthHexFourPairAuthorityVersion = VERSION;
-    d.hearthHexFourPairAuthorityFile = FILE;
+    const data = doc.documentElement.dataset;
 
-    d.hearthHexFourPair3dBodyGateAuthority = "true";
-    d.hearthHexFourPairCompatibility2dMode = "false";
-    d.hearthHexFourPairChapelBridgeActive = "true";
-    d.hearthHexFourPairCoordinateModel = BODY.coordinateModel;
-    d.hearthHexFourPairMechanicalCoordinate = BODY.mechanicalCoordinate;
+    data.hearthHexFourPair3dAuthorityLoaded = "true";
+    data.hearthHexFourPair3dAuthorityContract = CONTRACT;
+    data.hearthHexFourPair3dAuthorityReceipt = RECEIPT;
+    data.hearthHexFourPair3dAuthorityVersion = VERSION;
+    data.hearthHexFourPair3dAuthorityFile = FILE;
 
-    d.hearthHexFourPairGridColumns = String(BODY.columns);
-    d.hearthHexFourPairGridRows = String(BODY.rows);
-    d.hearthHexFourPairStateCount = String(BODY.stateCount);
+    data.hearthHexFourPair3dCleanAuthority = "true";
+    data.hearthHexFourPair3dLegacyAliases = "false";
+    data.hearthHexFourPair3dTwoDCompatibilityLayer = "false";
 
-    d.hearthHexFourPairSampleCount = String(state.sampleCount);
-    d.hearthHexFourPairGatePacketCount = String(state.gatePacketCount);
-    d.hearthHexFourPairWideProbeCount = String(state.wideProbeCount);
+    data.hearthHexFourPair3dGridBands = String(GRID.bands);
+    data.hearthHexFourPair3dGridSectors = String(GRID.sectors);
+    data.hearthHexFourPair3dStateCount = String(GRID.stateCount);
+    data.hearthHexFourPair3dGridMode = GRID.mode;
 
-    d.hearthHexFourPairRecommendedNextFile = state.recommendedNextFile;
-    d.hearthHexFourPairRecommendedNextAction = state.recommendedNextAction;
-    d.hearthHexFourPairPostgameStatus = state.postgameStatus;
+    data.hearthHexFourPair3dNorthHandshake = "true";
+    data.hearthHexFourPair3dSouthHandshake = "true";
+    data.hearthHexFourPair3dEastHandshake = "true";
+    data.hearthHexFourPair3dWestHandshake = "true";
+    data.hearthHexFourPair3dEveryPixelHasFourPairSet = "true";
+    data.hearthHexFourPair3dEveryPixelHasNorthSouthEastWest = "true";
 
-    d.hearthHexFourPairOwnsCanvasDrawing = "false";
-    d.hearthHexFourPairOwnsHexSurface = "false";
-    d.hearthHexFourPairOwnsTerrainTruth = "false";
-    d.hearthHexFourPairOwnsFinalVisualPass = "false";
+    data.hearthHexFourPair3dOwnsCanvas = "false";
+    data.hearthHexFourPair3dOwnsHexSurfaceBridge = "false";
+    data.hearthHexFourPair3dOwnsFingerSurface = "false";
+    data.hearthHexFourPair3dOwnsDrawing = "false";
+    data.hearthHexFourPair3dOwnsRouteOrchestration = "false";
 
-    d.generatedImage = "false";
-    d.graphicBox = "false";
-    d.webgl = "false";
-    d.visualPassClaimed = "false";
-  }
+    if (lastWideProbe) {
+      data.hearthHexFourPair3dWideProbeReady = String(Boolean(lastWideProbe.wideProbeReady));
+      data.hearthHexFourPair3dWideProbeTotal = String(lastWideProbe.total || 0);
+      data.hearthHexFourPair3dWideProbeFailedCount = String(lastWideProbe.failedCount || 0);
+      data.hearthHexFourPair3dWideProbePassed = String(Boolean(lastWideProbe.passed));
+    }
 
-  function publishGatePacket(packet) {
-    root.HEARTH = root.HEARTH || {};
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    data.generatedImage = "false";
+    data.graphicBox = "false";
+    data.webgl = "false";
+    data.visualPassClaimed = "false";
 
-    root.HEARTH_3D_BODY_GATE_PACKET = clone(packet);
-    root.HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_PACKET = clone(packet);
-    root.HEARTH.hexFourPair3dBodyGatePacket = clone(packet);
-    root.DEXTER_LAB.hearthHexFourPair3dBodyGatePacket = clone(packet);
+    return true;
   }
 
   function publishGlobals() {
     root.HEARTH = root.HEARTH || {};
     root.DEXTER_LAB = root.DEXTER_LAB || {};
 
-    root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY = api;
-    root.HEARTH_HEX_FOUR_PAIR_AUTHORITY = api;
-    root.HEARTH_HEX_PIXEL_HANDSHAKE_AUTHORITY = api;
-    root.HEARTH_HEX_HANDSHAKE_AUTHORITY = api;
-    root.HEARTH_HEXGRID_AUTHORITY = api;
-    root.HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY = api;
-    root.HEARTH_3D_BODY_GATE_AUTHORITY = api;
+    root.HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY = api;
+    root.HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_CONTRACT = CONTRACT;
+    root.HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_RECEIPT = getReceipt();
+    root.HEARTH_HEX_FOUR_PAIR_3D_AUTHORITY_STATUS = getStatus();
 
-    root.HEARTH.hexFourPairAuthority = api;
-    root.HEARTH.hexAuthority = api;
-    root.HEARTH.hexFourPair3dBodyGateAuthority = api;
-    root.HEARTH.body3dGateAuthority = api;
+    root.HEARTH.hexFourPair3dAuthority = api;
+    root.HEARTH.hexFourPair3dAuthorityReceipt = getReceipt();
 
-    root.DEXTER_LAB.hearthHexFourPairAuthority = api;
-    root.DEXTER_LAB.hearthHexAuthority = api;
-    root.DEXTER_LAB.hearthHexFourPair3dBodyGateAuthority = api;
-
-    root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_STATUS = getStatus();
-    root.HEARTH_HEX_FOUR_PAIR_PIXEL_HANDSHAKE_AUTHORITY_RECEIPT_OBJECT = getReceipt();
-    root.HEARTH_HEX_FOUR_PAIR_3D_BODY_GATE_AUTHORITY_RECEIPT_OBJECT = getReceipt();
-
-    root.HEARTH.hexFourPairAuthorityReceipt = getReceipt();
-    root.HEARTH.hexFourPair3dBodyGateAuthorityReceipt = getReceipt();
+    root.DEXTER_LAB.hearthHexFourPair3dAuthority = api;
+    root.DEXTER_LAB.hearthHexFourPair3dAuthorityReceipt = getReceipt();
 
     updateDataset();
     return api;
@@ -790,20 +903,19 @@
   const api = {
     CONTRACT,
     RECEIPT,
-    PREVIOUS_CONTRACT,
     FILE,
     ROUTE,
     VERSION,
-    BODY,
+    GRID,
     PLANET_ID,
     PLANET_LABEL,
 
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     file: FILE,
     route: ROUTE,
+    role: "Clean 3D Hex Four-Pair Authority",
 
     sample,
     read,
@@ -811,31 +923,34 @@
     getNeighbors,
     getFourPairSet,
     wideProbe,
-    composeGatePacket,
-
     getStatus,
     getReceipt,
     getReceiptText,
-    publishGlobals,
     updateDataset,
+    publishGlobals,
 
-    body3dGateAuthority: true,
-    compatibility2dMode: false,
-    chapelBridgeActive: true,
+    clean3dAuthority: true,
+    legacyAliases: false,
+    twoDCompatibilityLayer: false,
 
-    owns3dBodyAddressing: true,
-    ownsFourPairBodyHandshake: true,
+    owns3dAddressing: true,
+    ownsFourPairAuthority: true,
     owns256DiagnosticScope: true,
+
     ownsCanvas: false,
-    ownsCanvasDrawing: false,
+    ownsHexSurfaceBridge: false,
+    ownsFingerSurface: false,
+    ownsRouteOrchestration: false,
     ownsControls: false,
-    ownsHexSurface: false,
-    ownsTerrainTruth: false,
-    ownsHydrologyTruth: false,
-    ownsMaterialTruth: false,
+    ownsDrawing: false,
+    ownsLandTruth: false,
+    ownsWaterTruth: false,
+    ownsHydrology: false,
+    ownsElevation: false,
+    ownsMaterials: false,
     ownsFinalVisualPass: false,
 
-    ...FINAL_FALSE,
+    ...NO_CLAIMS,
 
     get state() {
       return state;
@@ -845,14 +960,16 @@
   try {
     updateDataset();
     publishGlobals();
-    wideProbe({ rows: 6, columns: 12 });
+    wideProbe({ bands: 7, sectors: 13 });
     publishGlobals();
   } catch (error) {
-    state.firstFailedCoordinate = "HEARTH_3D_BODY_GATE_AUTHORITY_BOOT_ERROR";
-    state.postgameStatus = error && error.message ? error.message : String(error);
+    state.lastError = error && error.message ? String(error.message) : String(error);
     state.updatedAt = nowIso();
-    updateDataset();
-    publishGlobals();
+
+    try {
+      updateDataset();
+      publishGlobals();
+    } catch (_fallbackError) {}
   }
 
   if (typeof module !== "undefined" && module.exports) {

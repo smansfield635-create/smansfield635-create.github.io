@@ -1,82 +1,67 @@
 // /assets/lab/product-engine.ue5-expression.js
-// LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_TNT_v1
+// LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_ENGINE_MECHANICS_SCENE_GRAPH_CONDUCTOR_TNT_v2
 // Full-file replacement.
-// Product Engine UE5-derived expression conductor.
+// Product Engine UE5 Expression F55 / scene-graph conductor / Expression Clerk.
 // Purpose:
-// - Consume Product Engine F34 release only.
-// - Stand up F55 expression conductorship as a scene-graph / product-expression planner.
-// - Translate product graph readiness into deterministic expression nodes.
-// - Provide UE5-derived scene organization without depending on Unreal Engine.
-// - Prepare F89 registry handoff after F55 expression receipt.
-// - Preserve NEWS alignment protocol and Fibonacci synchronization metric.
-// - Treat “surpass UE5 / market products” as an internal target metric, not a public superiority claim.
+// - Consume the F34 Product Engine release packet from /assets/lab/product-engine.js.
+// - Build deterministic UE5-derived expression records without requiring Unreal Engine.
+// - Convert product graph records into scene graph nodes, expression nodes, surface-carrier references, and registry-ready records.
+// - Bind directly to runtime-table v4 mechanics: RT3D-X10_Y19_Z55.
+// - Prepare F89 registry handoff packet for /assets/lab/product-engine.registry.js.
+// - Preserve F34 -> F55 -> F89 -> F144 -> F233 sequence.
+// - Avoid rendering, generated image claims, WebGL claims, GraphicBox claims, public superiority claims, and final visual pass claims.
 // Does not own:
+// - F34 Product Engine authority
+// - F89 Registry authority
+// - F144 Market authority
+// - F233 downstream return
 // - North F21 latch
-// - Product Engine F34 authority
 // - Canvas F13 evidence
+// - actual rendering
 // - route orchestration
 // - planet truth
-// - material truth
-// - elevation truth
-// - hydrology truth
-// - actual WebGL drawing
+// - material/elevation/hydrology truth
 // - generated image
 // - GraphicBox
+// - WebGL
+// - public superiority claim
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_TNT_v1";
-  const RECEIPT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "NONE_UE5_EXPRESSION_FIRST_PUBLIC_F55_CONDUCTOR";
-  const BASELINE_CONTRACT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_BASELINE_v1";
-  const VERSION = "2026-06-01.lab-product-engine-ue5-expression-f55-scene-graph-conductor-v1";
+  const CONTRACT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_ENGINE_MECHANICS_SCENE_GRAPH_CONDUCTOR_TNT_v2";
+  const RECEIPT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_ENGINE_MECHANICS_SCENE_GRAPH_CONDUCTOR_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_BASELINE_v1";
+  const VERSION = "2026-06-08.lab-product-engine-ue5-expression-f55-engine-mechanics-scene-graph-conductor-v2";
 
   const FILE = "/assets/lab/product-engine.ue5-expression.js";
-  const PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const REGISTRY_FILE = "/assets/lab/product-engine.registry.js";
-  const MARKET_FILE = "/assets/lab/product-engine.market.js";
+  const F34_PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
+  const F89_REGISTRY_FILE = "/assets/lab/product-engine.registry.js";
+  const F144_MARKET_FILE = "/assets/lab/product-engine.market.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const FIBONACCI = Object.freeze({
-    NORTH_ORIGIN: "F1",
-    EAST_FORMATION: "F3",
-    WEST_AUDIT: "F5",
-    SOUTH_RETURN: "F8",
-    CANVAS_EVIDENCE: "F13",
     NORTH_LATCH: "F21",
     PRODUCT_ENGINE: "F34",
     UE5_EXPRESSION: "F55",
     PROJECT_REGISTRY: "F89",
-    MARKET_READINESS: "F144"
+    MARKET_READINESS: "F144",
+    DOWNSTREAM_RETURN: "F233"
   });
 
   const NEWS_GATES = Object.freeze({
     NORTH: "NORTH",
-    CANVAS: "CANVAS",
     PRODUCT: "PRODUCT_ENGINE",
     EXPRESSION: "UE5_EXPRESSION",
     REGISTRY: "PROJECT_REGISTRY",
-    MARKET: "MARKET_READINESS"
-  });
-
-  const NODE_TYPES = Object.freeze({
-    IDENTITY: "identity",
-    GEOMETRY: "geometry",
-    MATERIAL: "material",
-    MOTION: "motion",
-    INTERACTION: "interaction",
-    CAMERA: "camera",
-    LIGHTING: "lighting",
-    AUDIO: "audio",
-    UI: "ui",
-    RECEIPT: "receipt",
-    OPTIMIZATION: "optimization",
-    EXPORT: "export"
+    MARKET: "MARKET_READINESS",
+    DOWNSTREAM: "DOWNSTREAM_RETURN"
   });
 
   const STATUS = Object.freeze({
@@ -84,7 +69,35 @@
     ACTIVE: "ACTIVE",
     READY: "READY",
     DEGRADED: "DEGRADED",
-    BLOCKED: "BLOCKED"
+    BLOCKED: "BLOCKED",
+    COMPLETE: "COMPLETE"
+  });
+
+  const NODE_TYPES = Object.freeze({
+    PRODUCT_NODE: "product-node",
+    SCENE_NODE: "scene-node",
+    EXPRESSION_NODE: "expression-node",
+    SURFACE_CARRIER_NODE: "surface-carrier-node",
+    REGISTRY_RECORD_NODE: "registry-record-node",
+    DIAGNOSTIC_EVIDENCE_NODE: "diagnostic-evidence-node"
+  });
+
+  const MECHANICAL_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X10_Y19_Z55",
+    enginePart: "GEARBOX",
+    enginePartIndex: 10,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.UE5_EXPRESSION,
+    fibonacciRank: 55,
+    fibonacciStation: "EXPRESSION_CLERK",
+    mechanicalRole: "EXPRESSION_SCENE_GRAPH_MANIFOLD",
+    clerkRole: "EXPRESSION_CLERK",
+    chessRole: "BISHOP_STYLE_TRANSLATOR",
+    mayJudge: false,
+    mayLatch: false,
+    mayRender: false,
+    mayClaimPublicSuperiority: false
   });
 
   const state = {
@@ -94,84 +107,84 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "product-engine-ue5-expression-f55-scene-graph-conductor",
 
-    f55ExpressionConductorActive: true,
-    f55Only: true,
-    productEngineF34Required: true,
-    productEngineF34Observed: false,
-    productEngineF34Accepted: false,
-    productEngineContract: "",
-    productEngineReceipt: "",
-    productEngineReleasePacket: null,
+    expressionEngineF55Active: true,
+    expressionEngineF55Only: true,
+    expressionClerkActive: true,
+    sceneGraphConductorActive: true,
 
-    northF21Acknowledged: false,
-    canvasF13EvidenceObserved: false,
-    canvasF13EvidenceComplete: false,
-    canvasF13EvidenceDegraded: false,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
+    mechanicalCoordinate: MECHANICAL_COORDINATE,
 
-    ue5DerivedExpressionActive: true,
-    unrealEngineDependency: false,
-    unrealEngineRuntimeRequired: false,
-    ue5ConceptualStandardConsumed: true,
-    publicSuperiorityClaim: false,
-    internalSurpassTargetMetricActive: true,
+    f34ProductEngineObserved: false,
+    f34ReleaseAccepted: false,
+    f34ReleasePacket: null,
+    f34Contract: "",
+    f34Receipt: "",
 
-    deterministicSceneGraphActive: true,
+    productGraphObserved: false,
+    productGraphStatus: STATUS.HELD,
+    productCount: 0,
+    productReadyCount: 0,
+    productDegradedCount: 0,
+    productBlockedCount: 0,
+
     sceneGraphBuilt: false,
     sceneGraphReady: false,
     sceneGraphStatus: STATUS.HELD,
-    sceneGraphNodeCount: 0,
-    sceneGraphEdgeCount: 0,
-    sceneGraphReadyNodeCount: 0,
-    sceneGraphDegradedNodeCount: 0,
-    sceneGraphBlockedNodeCount: 0,
+    sceneNodeCount: 0,
+    expressionNodeCount: 0,
+    registryRecordNodeCount: 0,
+    diagnosticEvidenceNodeCount: 0,
+
     sceneGraph: {
       nodes: {},
       edges: [],
       products: [],
+      expressionRecords: [],
+      registryRecords: [],
       buildId: "",
       builtAt: ""
     },
 
-    expressionNodeRegistryActive: true,
-    expressionNodes: {},
-    expressionPlans: {},
-
     expressionQualityMetricActive: true,
     expressionQualityScore: 0,
-    internalMarketSurpassTargetScore: 0,
-    lodBudgetMetricActive: true,
-    lodBudgetScore: 0,
-    determinismScore: 100,
-    receiptTraceScore: 0,
+    expressionCoverageScore: 0,
+    expressionTraceScore: 0,
+    expressionCoherenceScore: 0,
 
-    projectRegistryGateReady: false,
     f89RegistryReleaseAuthorized: false,
-    f89RegistryReceiptAccepted: false,
+    f55ReleasePacketReady: false,
+    f55ActivationStatus: STATUS.ACTIVE,
+    f55ActivationReason: "UE5_EXPRESSION_F55_ACTIVE_WAITING_F34_PRODUCT_GRAPH",
 
-    newsProtocolAligned: true,
-    fibonacciSynchronizationMetricActive: true,
-    fibonacciSynchronizationScore: 0,
+    f89RegistryReceiptAccepted: false,
+    f89RegistryReceiptPacket: null,
+    f89RegistryContract: "",
+    f89RegistryReceipt: "",
+
     activeFibonacci: FIBONACCI.UE5_EXPRESSION,
     activeFibonacciRank: 55,
     activeNewsGate: NEWS_GATES.EXPRESSION,
     sourceFibonacciGate: FIBONACCI.PRODUCT_ENGINE,
     futureFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
+    newsProtocolAligned: true,
+    fibonacciSynchronizationMetricActive: true,
+    fibonacciSynchronizationScore: 0,
     oneActiveGearAtATime: true,
 
-    f55ActivationStatus: STATUS.HELD,
-    f55ActivationReason: "WAITING_PRODUCT_ENGINE_F34_RELEASE",
-    f55ReceiptReady: true,
-    f55ReleasePacketReady: false,
-
-    firstFailedCoordinate: "WAITING_PRODUCT_ENGINE_F34_RELEASE",
-    recommendedNextFile: PRODUCT_ENGINE_FILE,
-    recommendedNextRenewalTarget: PRODUCT_ENGINE_FILE,
+    firstFailedCoordinate: "WAITING_F34_PRODUCT_GRAPH_RELEASE",
+    recommendedNextFile: F34_PRODUCT_ENGINE_FILE,
+    recommendedNextRenewalTarget: F34_PRODUCT_ENGINE_FILE,
 
     localEvents: [],
     errors: [],
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -220,7 +233,6 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -228,41 +240,24 @@
     }
   }
 
-  function trim(list, max = 140) {
+  function trim(list, max = 180) {
     if (Array.isArray(list) && list.length > max) {
       list.splice(0, list.length - max);
     }
   }
 
-  function recordLocal(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event: safeString(event, "LOCAL_EVENT"),
-      detail: clonePlain(detail)
-    };
-
-    state.localEvents.push(item);
-    trim(state.localEvents);
-    state.updatedAt = item.at;
-    updateDataset();
-
-    return item;
+  function makeId(value, fallback = "node") {
+    const raw = safeString(value || fallback, fallback)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return raw || fallback;
   }
 
-  function recordError(code, error, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code: safeString(code, "UE5_EXPRESSION_ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
-    };
-
-    state.errors.push(item);
-    trim(state.errors);
-    state.updatedAt = item.at;
-    updateDataset();
-
-    return item;
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
   function readPath(path) {
@@ -277,12 +272,26 @@
     return cursor || null;
   }
 
+  function setPath(path, value) {
+    const parts = String(path || "").split(".").filter(Boolean);
+    if (!parts.length) return false;
+
+    let cursor = root;
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const part = parts[index];
+      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
+      cursor = cursor[part];
+    }
+
+    cursor[parts[parts.length - 1]] = value;
+    return true;
+  }
+
   function firstGlobal(names) {
     for (const name of names || []) {
       const found = readPath(name);
       if (found) return found;
     }
-
     return null;
   }
 
@@ -310,9 +319,35 @@
     return {};
   }
 
-  function setDataset(key, value) {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  function recordLocal(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "LOCAL_EVENT"),
+      detail: clonePlain(detail)
+    };
+
+    state.localEvents.push(item);
+    trim(state.localEvents);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
+  }
+
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "UE5_EXPRESSION_F55_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trim(state.errors);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
   }
 
   function detectForbiddenClaim(packet = {}) {
@@ -329,168 +364,164 @@
       safeBool(packet.graphicBox, false) ||
       safeBool(packet.webGL, false) ||
       safeBool(packet.visualPassClaimed, false) ||
+      safeBool(packet.publicSuperiorityClaim, false) ||
+      safeBool(packet.publicComparisonClaimAllowed, false) ||
       text.includes('"generatedImage":true') ||
       text.includes('"graphicBox":true') ||
       text.includes('"webGL":true') ||
       text.includes('"visualPassClaimed":true') ||
+      text.includes('"publicSuperiorityClaim":true') ||
+      text.includes('"publicComparisonClaimAllowed":true') ||
       text.includes("visualPassClaimed=true")
     );
   }
 
-  function readProductEngineAuthority() {
+  function hasMeaningfulF34Release(packet = {}) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.contract ||
+      packet.receipt ||
+      packet.packetType === "PRODUCT_ENGINE_F34_RELEASE_PACKET" ||
+      safeBool(packet.productEngineF34Active, false) ||
+      safeBool(packet.productEngineF34Ready, false) ||
+      safeBool(packet.f34ReleasePacketReady, false) ||
+      safeBool(packet.productGraphBuilt, false) ||
+      Array.isArray(packet.products)
+    );
+  }
+
+  function readF34ProductEngineAuthority() {
     return firstGlobal([
       "LAB_PRODUCT_ENGINE",
       "LAB_PRODUCT_ENGINE_F34",
       "PRODUCT_ENGINE",
+      "PRODUCT_ENGINE_F34",
+      "PRODUCT_ENGINE_CLERK",
+      "PRODUCT_ENGINE_AUTHORITY_SLOT",
       "DEXTER_LAB.productEngine",
       "DEXTER_LAB.productEngineF34",
+      "DEXTER_LAB.productEngineClerk",
+      "DEXTER_LAB.productEngineAuthoritySlot",
       "HEARTH.productEngine",
-      "HEARTH.productEngineF34"
+      "HEARTH.productEngineF34",
+      "HEARTH.productEngineClerk",
+      "HEARTH.productEngineAuthoritySlot"
     ]);
   }
 
-  function readProductEngineReceipt() {
-    const authority = readProductEngineAuthority();
-    const receipt = readReceipt(authority);
+  function readF34ProductEngineRelease() {
+    const authority = readF34ProductEngineAuthority();
+    if (!authority) return {};
 
-    if (receipt && Object.keys(receipt).length) {
-      state.productEngineF34Observed = true;
-      state.productEngineContract = safeString(receipt.contract, "");
-      state.productEngineReceipt = safeString(receipt.receipt, "");
-      state.northF21Acknowledged = safeBool(receipt.northF21Acknowledged, state.northF21Acknowledged);
-      state.canvasF13EvidenceObserved = safeBool(receipt.canvasF13EvidenceObserved, state.canvasF13EvidenceObserved);
-      state.canvasF13EvidenceComplete = safeBool(receipt.canvasF13EvidenceComplete, state.canvasF13EvidenceComplete);
-      state.canvasF13EvidenceDegraded = safeBool(receipt.canvasF13EvidenceDegraded, state.canvasF13EvidenceDegraded);
+    try {
+      if (isFunction(authority.composeF34ReleasePacket)) {
+        const packet = authority.composeF34ReleasePacket();
+        if (isObject(packet)) return packet;
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt) && isObject(receipt.f34ReleasePacket)) return receipt.f34ReleasePacket;
+      }
+
+      return readReceipt(authority);
+    } catch (error) {
+      recordError("F34_PRODUCT_ENGINE_RELEASE_READ_FAILED", error);
+      return {};
     }
-
-    return receipt || {};
-  }
-
-  function productEngineGraphFromReceipt(receipt = {}) {
-    if (isObject(receipt.productGraph) && Array.isArray(receipt.productGraph.products)) {
-      return receipt.productGraph.products.slice();
-    }
-
-    if (Array.isArray(receipt.products)) return receipt.products.slice();
-
-    return [];
   }
 
   function validateF34Release(packet = {}) {
-    const input = isObject(packet) && Object.keys(packet).length ? packet : readProductEngineReceipt();
+    const input = isObject(packet) ? packet : {};
     const noForbiddenClaim = !detectForbiddenClaim(input);
+    const meaningful = hasMeaningfulF34Release(input);
 
-    const f34ReleasePacket = isObject(input.f34ReleasePacket) ? input.f34ReleasePacket : input;
-    const activeFibonacci = safeString(f34ReleasePacket.activeFibonacci || input.activeFibonacci, "");
-    const futureFibonacciGate = safeString(f34ReleasePacket.futureFibonacciGate || input.futureFibonacciGate, "");
-    const productEngineReady = safeBool(f34ReleasePacket.productEngineF34Ready, safeBool(input.productEngineF34Ready, false));
-    const productEngineActive = safeBool(f34ReleasePacket.productEngineF34Active, safeBool(input.productEngineActive, false));
-    const releaseAuthorized = safeBool(f34ReleasePacket.ue5ExpressionReleaseAuthorized, false);
-    const f34ReleasePacketReady = safeBool(input.f34ReleasePacketReady, safeBool(f34ReleasePacket.productEngineF34Active, false));
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || "");
+    const futureFibonacciGate = safeString(input.futureFibonacciGate || "");
 
-    const ok = Boolean(
-      noForbiddenClaim &&
-      (
-        productEngineReady ||
-        productEngineActive ||
-        releaseAuthorized ||
-        f34ReleasePacketReady
-      ) &&
-      (
-        activeFibonacci === FIBONACCI.PRODUCT_ENGINE ||
-        activeFibonacci === "F34" ||
-        safeBool(input.productEngineF34Only, false)
-      ) &&
-      (
-        futureFibonacciGate === FIBONACCI.UE5_EXPRESSION ||
-        futureFibonacciGate === "F55" ||
-        releaseAuthorized ||
-        f34ReleasePacketReady
-      )
+    const correctStage = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.PRODUCT_ENGINE ||
+      activeFibonacci === "F34"
     );
 
-    let reason = "NONE_PRODUCT_ENGINE_F34_ACCEPTED";
+    const correctFuture = Boolean(
+      !futureFibonacciGate ||
+      futureFibonacciGate === FIBONACCI.UE5_EXPRESSION ||
+      futureFibonacciGate === "F55"
+    );
 
-    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_PRODUCT_ENGINE_PACKET";
-    else if (!productEngineReady && !productEngineActive && !releaseAuthorized && !f34ReleasePacketReady) {
-      reason = "WAITING_PRODUCT_ENGINE_F34_RELEASE";
-    } else if (activeFibonacci && activeFibonacci !== FIBONACCI.PRODUCT_ENGINE && activeFibonacci !== "F34") {
-      reason = "PRODUCT_ENGINE_FIBONACCI_NOT_F34";
-    } else if (futureFibonacciGate && futureFibonacciGate !== FIBONACCI.UE5_EXPRESSION && futureFibonacciGate !== "F55") {
-      reason = "PRODUCT_ENGINE_FUTURE_GATE_NOT_F55";
-    }
+    const productGraphAcceptable = Boolean(
+      safeBool(input.productGraphBuilt, false) ||
+      Array.isArray(input.products) ||
+      isObject(input.productGraph)
+    );
+
+    const accepted = Boolean(
+      noForbiddenClaim &&
+      meaningful &&
+      correctStage &&
+      correctFuture &&
+      productGraphAcceptable
+    );
+
+    let reason = "F34_PRODUCT_ENGINE_RELEASE_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_F34_RELEASE";
+    else if (!meaningful) reason = "F34_RELEASE_NOT_MEANINGFUL";
+    else if (!correctStage) reason = "F34_RELEASE_WRONG_ACTIVE_FIBONACCI";
+    else if (!correctFuture) reason = "F34_RELEASE_WRONG_FUTURE_GATE";
+    else if (!productGraphAcceptable) reason = "F34_RELEASE_MISSING_PRODUCT_GRAPH";
 
     return {
-      ok,
+      accepted,
       reason,
-      input: clonePlain(input),
-      f34ReleasePacket: clonePlain(f34ReleasePacket),
-      products: productEngineGraphFromReceipt(input),
-      activeFibonacci,
-      futureFibonacciGate,
-      productEngineReady,
-      productEngineActive,
-      releaseAuthorized,
-      f34ReleasePacketReady,
-      noForbiddenClaim
+      noForbiddenClaim,
+      meaningful,
+      correctStage,
+      correctFuture,
+      productGraphAcceptable,
+      input: clonePlain(input)
     };
   }
 
   function acceptF34Release(packet = {}) {
     const validation = validateF34Release(packet);
 
-    state.productEngineF34Accepted = validation.ok;
-    state.productEngineReleasePacket = clonePlain(validation.f34ReleasePacket);
-    state.productEngineF34Observed = true;
+    if (validation.accepted) {
+      state.f34ProductEngineObserved = true;
+      state.f34ReleaseAccepted = true;
+      state.f34ReleasePacket = clonePlain(packet);
+      state.f34Contract = safeString(packet.contract, "");
+      state.f34Receipt = safeString(packet.receipt, "");
 
-    if (validation.input.contract) state.productEngineContract = safeString(validation.input.contract);
-    if (validation.input.receipt) state.productEngineReceipt = safeString(validation.input.receipt);
+      state.productGraphObserved = true;
+      state.productGraphStatus = safeString(packet.productGraphStatus || STATUS.READY, STATUS.READY);
+      state.productCount = safeNumber(packet.productCount || (Array.isArray(packet.products) ? packet.products.length : 0), 0);
+      state.productReadyCount = safeNumber(packet.productReadyCount, 0);
+      state.productDegradedCount = safeNumber(packet.productDegradedCount, 0);
+      state.productBlockedCount = safeNumber(packet.productBlockedCount, 0);
 
-    state.northF21Acknowledged = safeBool(validation.input.northF21Acknowledged, state.northF21Acknowledged);
-    state.canvasF13EvidenceObserved = safeBool(validation.input.canvasF13EvidenceObserved, state.canvasF13EvidenceObserved);
-    state.canvasF13EvidenceComplete = safeBool(validation.input.canvasF13EvidenceComplete, state.canvasF13EvidenceComplete);
-    state.canvasF13EvidenceDegraded = safeBool(validation.input.canvasF13EvidenceDegraded, state.canvasF13EvidenceDegraded);
-
-    if (validation.ok) {
-      state.f55ActivationStatus = STATUS.ACTIVE;
-      state.f55ActivationReason = "PRODUCT_ENGINE_F34_RELEASE_ACCEPTED_UE5_EXPRESSION_F55_ACTIVE";
-      state.firstFailedCoordinate = "NONE_UE5_EXPRESSION_F55_ACTIVE";
-      state.recommendedNextFile = REGISTRY_FILE;
-      state.recommendedNextRenewalTarget = REGISTRY_FILE;
-
-      validation.products.forEach((product) => registerProductExpression(product, { silent: true }));
-
-      recordLocal("PRODUCT_ENGINE_F34_RELEASE_ACCEPTED_BY_UE5_EXPRESSION", {
-        productCount: validation.products.length,
-        productEngineContract: state.productEngineContract,
-        f34ReleasePacketReady: validation.f34ReleasePacketReady
-      });
-    } else {
-      state.f55ActivationStatus = STATUS.HELD;
-      state.f55ActivationReason = validation.reason;
-      state.firstFailedCoordinate = validation.reason;
-      state.recommendedNextFile = PRODUCT_ENGINE_FILE;
-      state.recommendedNextRenewalTarget = PRODUCT_ENGINE_FILE;
-
-      recordLocal("PRODUCT_ENGINE_F34_RELEASE_HELD_BY_UE5_EXPRESSION", {
-        reason: validation.reason
-      });
+      buildSceneGraph(packet);
     }
 
-    buildSceneGraph({ silent: true });
+    recordLocal("F34_RELEASE_EVALUATED_BY_UE5_EXPRESSION_F55", {
+      accepted: validation.accepted,
+      reason: validation.reason,
+      productCount: state.productCount
+    });
+
     computeFibonacciSynchronizationMetric();
     publishGlobals();
-    updateDataset();
 
     return {
-      accepted: validation.ok,
-      ue5ExpressionF55Active: validation.ok,
+      accepted: validation.accepted,
+      expressionEngineF55ReceivedF34: true,
       reason: validation.reason,
-      productCountImported: validation.products.length,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      sceneGraphBuilt: state.sceneGraphBuilt,
+      sceneGraphReady: state.sceneGraphReady,
+      f89RegistryReleaseAuthorized: state.f89RegistryReleaseAuthorized,
+      recommendedNextFile: validation.accepted ? F89_REGISTRY_FILE : F34_PRODUCT_ENGINE_FILE,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -498,374 +529,366 @@
     };
   }
 
-  function makeId(value, fallback = "node") {
-    const raw = safeString(value || fallback, fallback)
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
-    return raw || fallback;
+  function receiveF34Release(packet = {}) {
+    return acceptF34Release(packet);
   }
 
-  function normalizeExpressionNode(definition = {}) {
-    const source = isObject(definition) ? definition : {};
-    const productId = makeId(source.productId || source.sourceProductId || source.product || "global", "global");
-    const type = safeString(source.type || source.nodeType || NODE_TYPES.IDENTITY, NODE_TYPES.IDENTITY);
-    const id = makeId(source.id || `${productId}-${type}-${Object.keys(state.expressionNodes).length + 1}`, `${productId}-${type}`);
+  function submitF34Release(packet = {}) {
+    return acceptF34Release(packet);
+  }
+
+  function normalizeProductFromF34(product = {}, index = 0) {
+    const source = isObject(product) ? product : {};
+    const id = makeId(source.id || source.productId || source.name || `f34-product-${index + 1}`, `f34-product-${index + 1}`);
 
     return {
       id,
-      type,
-      productId,
+      productId: safeString(source.productId || id),
+      type: safeString(source.type || source.productType || "product-framework"),
+      name: safeString(source.name || source.label || id),
       label: safeString(source.label || source.name || id),
-      role: safeString(source.role || type),
-      file: safeString(source.file || ""),
+      file: safeString(source.file || source.sourceFile || ""),
       route: safeString(source.route || ""),
-      contract: safeString(source.contract || ""),
-      receipt: safeString(source.receipt || ""),
+      contract: safeString(source.contract || source.sourceContract || ""),
+      receipt: safeString(source.receipt || source.sourceReceipt || ""),
+      readinessScore: clamp(source.readinessScore ?? source.productQualityScore ?? 0, 0, 100),
+      status: safeString(source.status || STATUS.DEGRADED, STATUS.DEGRADED),
       priority: clamp(source.priority ?? 50, 0, 100),
-      lodBand: clamp(source.lodBand ?? 2, 0, 5),
-      deterministicSeed: safeNumber(source.deterministicSeed ?? id.length * 233, 0),
-      geometryClass: safeString(source.geometryClass || "scene-graph-placeholder"),
-      materialClass: safeString(source.materialClass || "receipt-bound-material"),
-      motionClass: safeString(source.motionClass || "static-until-runtime-release"),
-      interactionClass: safeString(source.interactionClass || "inspection-ready"),
-      lightingClass: safeString(source.lightingClass || "neutral-expression-lighting"),
-      cameraClass: safeString(source.cameraClass || "bounded-inspection-camera"),
-      optimizationClass: safeString(source.optimizationClass || "lod-budgeted"),
+      tags: Array.isArray(source.tags) ? source.tags.slice() : [],
       dependencies: Array.isArray(source.dependencies) ? source.dependencies.slice() : [],
-      constraints: Array.isArray(source.constraints) ? source.constraints.slice() : [],
+      receiptReady: safeBool(source.receiptReady, Boolean(source.contract || source.receipt)),
       platformReady: safeBool(source.platformReady, false),
       engineeringReady: safeBool(source.engineeringReady, false),
+      productReady: safeBool(source.productReady, false),
       expressionReady: safeBool(source.expressionReady, false),
-      registryReady: safeBool(source.registryReady, false),
-      receiptReady: safeBool(source.receiptReady, Boolean(source.contract || source.receipt)),
-      ownsRendering: false,
-      ownsWebGL: false,
+      evidenceReady: safeBool(source.evidenceReady, false),
+
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-      createdAt: safeString(source.createdAt || nowIso()),
-      updatedAt: nowIso()
+      publicSuperiorityClaim: false
     };
   }
 
-  function evaluateExpressionNode(node = {}) {
-    const item = normalizeExpressionNode(node);
-    const missing = [];
+  function getF34Products(packet = state.f34ReleasePacket || {}) {
+    if (Array.isArray(packet.products)) {
+      return packet.products.map(normalizeProductFromF34);
+    }
 
-    if (!state.productEngineF34Accepted) missing.push("productEngineF34Accepted");
-    if (!item.id) missing.push("id");
-    if (!item.type) missing.push("type");
-    if (!item.productId) missing.push("productId");
-    if (!item.receiptReady) missing.push("receiptReady");
-    if (!item.platformReady) missing.push("platformReady");
-    if (!item.engineeringReady) missing.push("engineeringReady");
+    if (isObject(packet.productGraph) && Array.isArray(packet.productGraph.products)) {
+      return packet.productGraph.products.map(normalizeProductFromF34);
+    }
 
-    const readinessScore = clamp(
-      (state.productEngineF34Accepted ? 18 : 0) +
-      (item.id ? 8 : 0) +
-      (item.type ? 8 : 0) +
-      (item.productId ? 8 : 0) +
-      (item.receiptReady ? 12 : 0) +
-      (item.platformReady ? 14 : 0) +
-      (item.engineeringReady ? 14 : 0) +
-      (item.expressionReady ? 10 : 0) +
-      (item.dependencies.length >= 0 ? 4 : 0) +
-      (item.lodBand >= 0 ? 4 : 0),
+    return [];
+  }
+
+  function createSceneNode(product, index) {
+    const nodeId = makeId(`scene-${product.id}`, `scene-${index + 1}`);
+
+    return {
+      id: nodeId,
+      nodeType: NODE_TYPES.SCENE_NODE,
+      sourceProductId: product.id,
+      sourceProductType: product.type,
+      label: `${product.label || product.name} Scene Node`,
+      file: product.file,
+      route: product.route,
+      expressionClass: classifyExpressionClass(product),
+      transform: {
+        position: [index, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+      },
+      deterministic: true,
+      requiresUnrealRuntime: false,
+      rendersNow: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      createdAt: nowIso()
+    };
+  }
+
+  function createExpressionNode(product, sceneNode, index) {
+    const nodeId = makeId(`expression-${product.id}`, `expression-${index + 1}`);
+
+    return {
+      id: nodeId,
+      nodeType: NODE_TYPES.EXPRESSION_NODE,
+      sourceProductId: product.id,
+      sceneNodeId: sceneNode.id,
+      label: `${product.label || product.name} Expression Node`,
+      expressionMode: classifyExpressionMode(product),
+      expressionReadinessScore: expressionReadinessScore(product),
+      registryReady: product.receiptReady && product.readinessScore >= 62,
+      deterministic: true,
+      ownsRendering: false,
+      rendersNow: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      publicSuperiorityClaim: false,
+      createdAt: nowIso()
+    };
+  }
+
+  function createRegistryRecordNode(product, sceneNode, expressionNode, index) {
+    const nodeId = makeId(`registry-record-${product.id}`, `registry-record-${index + 1}`);
+
+    return {
+      id: nodeId,
+      nodeType: NODE_TYPES.REGISTRY_RECORD_NODE,
+      sourceProductId: product.id,
+      sceneNodeId: sceneNode.id,
+      expressionNodeId: expressionNode.id,
+      recordType: "F55_EXPRESSION_REGISTRY_RECORD",
+      file: product.file,
+      route: product.route,
+      contract: product.contract,
+      receipt: product.receipt,
+      traceReady: Boolean(product.file || product.route || product.contract || product.receipt),
+      registryReady: expressionNode.registryReady,
+      deterministic: true,
+      createdAt: nowIso()
+    };
+  }
+
+  function classifyExpressionClass(product) {
+    const text = `${product.type} ${product.name} ${product.tags.join(" ")}`.toLowerCase();
+
+    if (/runtime|engine/.test(text)) return "RUNTIME_ENGINE_EXPRESSION";
+    if (/support|f34|f55|f89|f144/.test(text)) return "SUPPORT_ENGINE_EXPRESSION";
+    if (/canvas|chapel|surface|visual/.test(text)) return "CANVAS_SURFACE_EXPRESSION";
+    if (/diagnostic|receipt|evidence/.test(text)) return "DIAGNOSTIC_EVIDENCE_EXPRESSION";
+    if (/market|license|demo|package/.test(text)) return "MARKET_PACKAGE_EXPRESSION";
+
+    return "PRODUCT_FRAMEWORK_EXPRESSION";
+  }
+
+  function classifyExpressionMode(product) {
+    const expressionClass = classifyExpressionClass(product);
+
+    if (expressionClass === "RUNTIME_ENGINE_EXPRESSION") return "MECHANICAL_COORDINATE_PRESENTATION";
+    if (expressionClass === "SUPPORT_ENGINE_EXPRESSION") return "SUPPORT_HANDOFF_PRESENTATION";
+    if (expressionClass === "CANVAS_SURFACE_EXPRESSION") return "VISIBLE_CARRIER_PRESENTATION";
+    if (expressionClass === "DIAGNOSTIC_EVIDENCE_EXPRESSION") return "RECEIPT_EVIDENCE_PRESENTATION";
+    if (expressionClass === "MARKET_PACKAGE_EXPRESSION") return "READINESS_PACKAGE_PRESENTATION";
+
+    return "PRODUCT_GRAPH_PRESENTATION";
+  }
+
+  function expressionReadinessScore(product) {
+    return clamp(
+      Math.round(
+        (product.readinessScore * 0.40) +
+        (product.receiptReady ? 18 : 0) +
+        (product.file || product.route ? 14 : 0) +
+        (product.engineeringReady ? 12 : 0) +
+        (product.productReady ? 10 : 0) +
+        (product.evidenceReady ? 6 : 0)
+      ),
       0,
       100
     );
-
-    const status =
-      missing.includes("productEngineF34Accepted")
-        ? STATUS.HELD
-        : missing.includes("receiptReady")
-          ? STATUS.BLOCKED
-          : readinessScore >= 86
-            ? STATUS.READY
-            : readinessScore >= 62
-              ? STATUS.DEGRADED
-              : STATUS.HELD;
-
-    return {
-      ...item,
-      readinessScore,
-      status,
-      missing,
-      f55ExpressionNodeEvaluated: true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      evaluatedAt: nowIso()
-    };
   }
 
-  function registerExpressionNode(definition = {}) {
-    const evaluated = evaluateExpressionNode(definition);
-    state.expressionNodes[evaluated.id] = evaluated;
+  function buildSceneGraph(packet = state.f34ReleasePacket || {}, options = {}) {
+    const products = getF34Products(packet);
 
-    recordLocal("EXPRESSION_NODE_REGISTERED", {
-      id: evaluated.id,
-      productId: evaluated.productId,
-      type: evaluated.type,
-      status: evaluated.status,
-      readinessScore: evaluated.readinessScore
-    });
-
-    buildSceneGraph({ silent: true });
-    computeFibonacciSynchronizationMetric();
-    publishGlobals();
-    updateDataset();
-
-    return evaluated;
-  }
-
-  function registerProductExpression(product = {}, options = {}) {
-    const p = isObject(product) ? product : {};
-    const productId = makeId(p.id || p.key || p.name || `product-${Object.keys(state.expressionNodes).length + 1}`, "product");
-    const name = safeString(p.name || p.label || productId);
-
-    const base = {
-      productId,
-      file: safeString(p.file || ""),
-      route: safeString(p.route || ""),
-      contract: safeString(p.contract || ""),
-      receipt: safeString(p.receipt || ""),
-      platformReady: safeBool(p.platformReady, false),
-      engineeringReady: safeBool(p.engineeringReady, false),
-      expressionReady: safeBool(p.expressionReady, false),
-      registryReady: safeBool(p.registryReady, false),
-      receiptReady: safeBool(p.receiptReady, Boolean(p.contract || p.receipt))
-    };
-
-    const nodes = [
-      registerExpressionNode({
-        ...base,
-        id: `${productId}-identity`,
-        label: `${name} Identity Node`,
-        type: NODE_TYPES.IDENTITY,
-        role: "product-identity-root",
-        priority: 92,
-        lodBand: 0
-      }),
-      registerExpressionNode({
-        ...base,
-        id: `${productId}-geometry`,
-        label: `${name} Geometry Node`,
-        type: NODE_TYPES.GEOMETRY,
-        role: "bounded-product-form",
-        priority: 84,
-        lodBand: 1,
-        dependencies: [`${productId}-identity`]
-      }),
-      registerExpressionNode({
-        ...base,
-        id: `${productId}-material`,
-        label: `${name} Material Node`,
-        type: NODE_TYPES.MATERIAL,
-        role: "receipt-bound-material-expression",
-        priority: 78,
-        lodBand: 2,
-        dependencies: [`${productId}-identity`, `${productId}-geometry`]
-      }),
-      registerExpressionNode({
-        ...base,
-        id: `${productId}-interaction`,
-        label: `${name} Interaction Node`,
-        type: NODE_TYPES.INTERACTION,
-        role: "inspection-interaction-contract",
-        priority: 72,
-        lodBand: 2,
-        dependencies: [`${productId}-identity`]
-      }),
-      registerExpressionNode({
-        ...base,
-        id: `${productId}-optimization`,
-        label: `${name} Optimization Node`,
-        type: NODE_TYPES.OPTIMIZATION,
-        role: "lod-budget-stability",
-        priority: 66,
-        lodBand: 3,
-        dependencies: [`${productId}-geometry`, `${productId}-material`]
-      }),
-      registerExpressionNode({
-        ...base,
-        id: `${productId}-receipt`,
-        label: `${name} Receipt Node`,
-        type: NODE_TYPES.RECEIPT,
-        role: "audit-trace-export",
-        priority: 60,
-        lodBand: 5,
-        dependencies: [`${productId}-identity`]
-      })
-    ];
-
-    if (options.silent !== true) {
-      recordLocal("PRODUCT_EXPRESSION_REGISTERED", {
-        productId,
-        nodeCount: nodes.length
-      });
-    }
-
-    return nodes;
-  }
-
-  function evaluateAllExpressionNodes() {
-    const evaluated = {};
-
-    Object.keys(state.expressionNodes).forEach((id) => {
-      evaluated[id] = evaluateExpressionNode(state.expressionNodes[id]);
-    });
-
-    state.expressionNodes = evaluated;
-
-    return Object.values(state.expressionNodes);
-  }
-
-  function buildSceneGraph(options = {}) {
-    const nodes = evaluateAllExpressionNodes();
+    const nodes = {};
     const edges = [];
+    const expressionRecords = [];
+    const registryRecords = [];
 
-    nodes.forEach((node) => {
-      node.dependencies.forEach((dependency) => {
-        edges.push({
-          from: dependency,
-          to: node.id,
-          type: "dependency",
-          productId: node.productId,
-          deterministic: true
-        });
+    products.forEach((product, index) => {
+      const productNodeId = makeId(`product-${product.id}`, `product-${index + 1}`);
+      const productNode = {
+        id: productNodeId,
+        nodeType: NODE_TYPES.PRODUCT_NODE,
+        sourceProductId: product.id,
+        label: product.label || product.name,
+        productType: product.type,
+        file: product.file,
+        route: product.route,
+        readinessScore: product.readinessScore,
+        status: product.status,
+        deterministic: true
+      };
+
+      const sceneNode = createSceneNode(product, index);
+      const expressionNode = createExpressionNode(product, sceneNode, index);
+      const registryRecordNode = createRegistryRecordNode(product, sceneNode, expressionNode, index);
+
+      nodes[productNode.id] = productNode;
+      nodes[sceneNode.id] = sceneNode;
+      nodes[expressionNode.id] = expressionNode;
+      nodes[registryRecordNode.id] = registryRecordNode;
+
+      edges.push({
+        from: productNode.id,
+        to: sceneNode.id,
+        type: "product-to-scene",
+        deterministic: true
+      });
+
+      edges.push({
+        from: sceneNode.id,
+        to: expressionNode.id,
+        type: "scene-to-expression",
+        deterministic: true
+      });
+
+      edges.push({
+        from: expressionNode.id,
+        to: registryRecordNode.id,
+        type: "expression-to-registry-record",
+        deterministic: true
+      });
+
+      expressionRecords.push({
+        expressionRecordId: expressionNode.id,
+        sourceProductId: product.id,
+        sceneNodeId: sceneNode.id,
+        expressionMode: expressionNode.expressionMode,
+        expressionClass: sceneNode.expressionClass,
+        expressionReadinessScore: expressionNode.expressionReadinessScore,
+        registryReady: expressionNode.registryReady,
+        deterministic: true,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      });
+
+      registryRecords.push({
+        registryRecordId: registryRecordNode.id,
+        sourceProductId: product.id,
+        file: product.file,
+        route: product.route,
+        contract: product.contract,
+        receipt: product.receipt,
+        traceReady: registryRecordNode.traceReady,
+        registryReady: registryRecordNode.registryReady,
+        deterministic: true
       });
     });
-
-    const sortedNodes = nodes.slice().sort((a, b) => {
-      if (b.priority !== a.priority) return b.priority - a.priority;
-      if (a.lodBand !== b.lodBand) return a.lodBand - b.lodBand;
-      return a.id.localeCompare(b.id);
-    });
-
-    const products = Array.from(new Set(sortedNodes.map((node) => node.productId))).sort();
 
     state.sceneGraph = {
-      nodes: sortedNodes.reduce((acc, node) => {
-        acc[node.id] = node;
-        return acc;
-      }, {}),
+      nodes,
       edges,
       products,
-      buildId: `f55-scene-graph-${products.length}-${sortedNodes.length}-${edges.length}`,
+      expressionRecords,
+      registryRecords,
+      buildId: `f55-scene-graph-${Object.keys(nodes).length}-${edges.length}`,
       builtAt: nowIso()
     };
 
     state.sceneGraphBuilt = true;
-    state.sceneGraphNodeCount = sortedNodes.length;
-    state.sceneGraphEdgeCount = edges.length;
-    state.sceneGraphReadyNodeCount = sortedNodes.filter((node) => node.status === STATUS.READY).length;
-    state.sceneGraphDegradedNodeCount = sortedNodes.filter((node) => node.status === STATUS.DEGRADED).length;
-    state.sceneGraphBlockedNodeCount = sortedNodes.filter((node) => node.status === STATUS.BLOCKED || node.status === STATUS.HELD).length;
+    state.sceneNodeCount = Object.values(nodes).filter((node) => node.nodeType === NODE_TYPES.SCENE_NODE).length;
+    state.expressionNodeCount = Object.values(nodes).filter((node) => node.nodeType === NODE_TYPES.EXPRESSION_NODE).length;
+    state.registryRecordNodeCount = registryRecords.length;
+    state.diagnosticEvidenceNodeCount = products.filter((product) => product.type === "diagnostic-evidence").length;
+
+    computeExpressionQualityMetric();
 
     state.sceneGraphReady = Boolean(
-      state.productEngineF34Accepted &&
-      state.sceneGraphNodeCount > 0 &&
-      state.sceneGraphBlockedNodeCount === 0
+      products.length > 0 &&
+      state.expressionQualityScore >= 80 &&
+      registryRecords.some((record) => record.registryReady)
     );
 
     if (state.sceneGraphReady) {
       state.sceneGraphStatus = STATUS.READY;
+      state.f89RegistryReleaseAuthorized = true;
+      state.f55ReleasePacketReady = true;
       state.f55ActivationStatus = STATUS.READY;
-      state.f55ActivationReason = "UE5_EXPRESSION_F55_SCENE_GRAPH_READY";
-      state.f55ReleasePacketReady = true;
-      state.f89RegistryReleaseAuthorized = true;
-      state.projectRegistryGateReady = true;
-      state.firstFailedCoordinate = "NONE_UE5_EXPRESSION_F55_SCENE_GRAPH_READY";
-      state.recommendedNextFile = REGISTRY_FILE;
-      state.recommendedNextRenewalTarget = REGISTRY_FILE;
-    } else if (state.productEngineF34Accepted && state.sceneGraphNodeCount > 0) {
+      state.f55ActivationReason = "UE5_EXPRESSION_F55_SCENE_GRAPH_READY_FOR_F89_REGISTRY";
+      state.firstFailedCoordinate = "NONE_UE5_EXPRESSION_F55_READY_F89_RELEASE_AUTHORIZED";
+      state.recommendedNextFile = F89_REGISTRY_FILE;
+      state.recommendedNextRenewalTarget = F89_REGISTRY_FILE;
+    } else if (products.length > 0 && state.expressionQualityScore >= 62) {
       state.sceneGraphStatus = STATUS.DEGRADED;
-      state.f55ActivationStatus = STATUS.DEGRADED;
-      state.f55ActivationReason = "UE5_EXPRESSION_F55_SCENE_GRAPH_DEGRADED";
-      state.f55ReleasePacketReady = true;
       state.f89RegistryReleaseAuthorized = true;
-      state.projectRegistryGateReady = true;
-      state.firstFailedCoordinate = "NONE_UE5_EXPRESSION_F55_DEGRADED_REGISTRY_RELEASE_AVAILABLE";
-      state.recommendedNextFile = REGISTRY_FILE;
-      state.recommendedNextRenewalTarget = REGISTRY_FILE;
+      state.f55ReleasePacketReady = true;
+      state.f55ActivationStatus = STATUS.DEGRADED;
+      state.f55ActivationReason = "UE5_EXPRESSION_F55_SCENE_GRAPH_DEGRADED_F89_RELEASE_AVAILABLE_WITH_BOUNDARIES";
+      state.firstFailedCoordinate = "NONE_UE5_EXPRESSION_F55_DEGRADED_F89_RELEASE_AVAILABLE";
+      state.recommendedNextFile = F89_REGISTRY_FILE;
+      state.recommendedNextRenewalTarget = F89_REGISTRY_FILE;
     } else {
       state.sceneGraphStatus = STATUS.HELD;
-      state.f55ActivationStatus = STATUS.HELD;
-      state.f55ActivationReason = state.productEngineF34Accepted ? "WAITING_EXPRESSION_NODES" : "WAITING_PRODUCT_ENGINE_F34_RELEASE";
-      state.f55ReleasePacketReady = false;
       state.f89RegistryReleaseAuthorized = false;
-      state.projectRegistryGateReady = false;
-      state.firstFailedCoordinate = state.f55ActivationReason;
-      state.recommendedNextFile = state.productEngineF34Accepted ? FILE : PRODUCT_ENGINE_FILE;
-      state.recommendedNextRenewalTarget = state.recommendedNextFile;
+      state.f55ReleasePacketReady = false;
+      state.f55ActivationStatus = STATUS.HELD;
+      state.f55ActivationReason = "WAITING_F34_PRODUCT_GRAPH_OR_EXPRESSION_QUALITY";
+      state.firstFailedCoordinate = "WAITING_F34_PRODUCT_GRAPH_OR_EXPRESSION_QUALITY";
+      state.recommendedNextFile = F34_PRODUCT_ENGINE_FILE;
+      state.recommendedNextRenewalTarget = F34_PRODUCT_ENGINE_FILE;
     }
 
-    computeExpressionQualityMetric();
     computeFibonacciSynchronizationMetric();
 
     if (options.silent !== true) {
-      recordLocal("F55_SCENE_GRAPH_BUILT", {
-        nodeCount: state.sceneGraphNodeCount,
-        edgeCount: state.sceneGraphEdgeCount,
-        ready: state.sceneGraphReady,
-        status: state.sceneGraphStatus
+      recordLocal("UE5_EXPRESSION_F55_SCENE_GRAPH_BUILT", {
+        productCount: products.length,
+        sceneNodeCount: state.sceneNodeCount,
+        expressionNodeCount: state.expressionNodeCount,
+        registryRecordNodeCount: state.registryRecordNodeCount,
+        sceneGraphStatus: state.sceneGraphStatus,
+        expressionQualityScore: state.expressionQualityScore
       });
     }
 
     updateDataset();
+
     return clonePlain(state.sceneGraph);
   }
 
   function computeExpressionQualityMetric() {
-    const nodeCount = Math.max(1, state.sceneGraphNodeCount);
-    const readyRatio = state.sceneGraphReadyNodeCount / nodeCount;
-    const degradedRatio = state.sceneGraphDegradedNodeCount / nodeCount;
-    const blockedRatio = state.sceneGraphBlockedNodeCount / nodeCount;
+    const products = state.sceneGraph.products || [];
+    const expressionRecords = state.sceneGraph.expressionRecords || [];
+    const registryRecords = state.sceneGraph.registryRecords || [];
 
-    state.lodBudgetScore = clamp(
-      62 +
-      Math.min(20, state.sceneGraphNodeCount * 1.6) +
-      Math.min(10, state.sceneGraphEdgeCount * 0.8) -
-      Math.min(24, state.sceneGraphBlockedNodeCount * 4),
+    const productCount = Math.max(1, products.length);
+    const expressionCount = expressionRecords.length;
+    const registryReadyCount = registryRecords.filter((record) => record.registryReady).length;
+    const traceReadyCount = registryRecords.filter((record) => record.traceReady).length;
+
+    state.expressionCoverageScore = clamp(
+      Math.round((expressionCount / productCount) * 100),
       0,
       100
     );
 
-    state.receiptTraceScore = clamp(
-      40 +
-      Math.min(40, Object.values(state.expressionNodes).filter((node) => node.receiptReady).length * 6) +
-      (state.productEngineF34Accepted ? 12 : 0) +
-      (state.f55ReceiptReady ? 8 : 0),
+    state.expressionTraceScore = clamp(
+      Math.round((traceReadyCount / productCount) * 100),
+      0,
+      100
+    );
+
+    const avgExpressionReadiness = expressionRecords.length
+      ? expressionRecords.reduce((sum, record) => sum + safeNumber(record.expressionReadinessScore, 0), 0) / expressionRecords.length
+      : 0;
+
+    state.expressionCoherenceScore = clamp(
+      Math.round(
+        (avgExpressionReadiness * 0.52) +
+        (state.expressionCoverageScore * 0.20) +
+        (state.expressionTraceScore * 0.18) +
+        ((registryReadyCount / productCount) * 10)
+      ),
       0,
       100
     );
 
     state.expressionQualityScore = clamp(
       Math.round(
-        (readyRatio * 54) +
-        (degradedRatio * 24) -
-        (blockedRatio * 36) +
-        (state.lodBudgetScore * 0.12) +
-        (state.determinismScore * 0.08) +
-        (state.receiptTraceScore * 0.10)
-      ),
-      0,
-      100
-    );
-
-    state.internalMarketSurpassTargetScore = clamp(
-      Math.round(
-        (state.expressionQualityScore * 0.34) +
-        (state.lodBudgetScore * 0.22) +
-        (state.determinismScore * 0.18) +
-        (state.receiptTraceScore * 0.16) +
-        (state.fibonacciSynchronizationScore * 0.10)
+        (state.expressionCoherenceScore * 0.44) +
+        (state.expressionCoverageScore * 0.28) +
+        (state.expressionTraceScore * 0.28)
       ),
       0,
       100
@@ -873,11 +896,13 @@
 
     return {
       expressionQualityScore: state.expressionQualityScore,
-      lodBudgetScore: state.lodBudgetScore,
-      determinismScore: state.determinismScore,
-      receiptTraceScore: state.receiptTraceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false
+      expressionCoverageScore: state.expressionCoverageScore,
+      expressionTraceScore: state.expressionTraceScore,
+      expressionCoherenceScore: state.expressionCoherenceScore,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
     };
   }
 
@@ -886,20 +911,20 @@
       state.newsProtocolAligned,
       state.oneActiveGearAtATime,
       state.activeFibonacci === FIBONACCI.UE5_EXPRESSION,
+      state.activeFibonacciRank === 55,
+      state.activeNewsGate === NEWS_GATES.EXPRESSION,
       state.sourceFibonacciGate === FIBONACCI.PRODUCT_ENGINE,
       state.futureFibonacciGate === FIBONACCI.PROJECT_REGISTRY,
-      state.activeNewsGate === NEWS_GATES.EXPRESSION,
-      state.productEngineF34Observed,
-      state.productEngineF34Accepted,
-      state.f55ExpressionConductorActive,
-      state.ue5DerivedExpressionActive,
+      state.expressionEngineF55Active,
+      state.expressionClerkActive,
+      state.sceneGraphConductorActive,
+      state.engineMechanicsPrimary,
+      state.mathPrimary,
+      state.mechanicalCoordinate.coordinateId === "RT3D-X10_Y19_Z55",
+      state.f34ReleaseAccepted || state.f34ProductEngineObserved,
       state.sceneGraphBuilt,
-      state.deterministicSceneGraphActive,
-      state.expressionQualityMetricActive,
-      state.lodBudgetMetricActive,
-      state.f55ReceiptReady,
-      !state.unrealEngineDependency,
       !state.publicSuperiorityClaim,
+      !state.publicComparisonClaimAllowed,
       !state.generatedImage,
       !state.graphicBox,
       !state.webGL,
@@ -919,59 +944,10 @@
       activeFibonacci: FIBONACCI.UE5_EXPRESSION,
       activeFibonacciRank: 55,
       activeNewsGate: NEWS_GATES.EXPRESSION,
-      futureFibonacciGate: FIBONACCI.PROJECT_REGISTRY
+      sourceFibonacciGate: FIBONACCI.PRODUCT_ENGINE,
+      futureFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
+      publicSuperiorityClaim: false
     };
-  }
-
-  function createExpressionPlan(input = {}) {
-    const source = isObject(input) ? input : {};
-    const graph = buildSceneGraph({ silent: true });
-
-    const plan = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      planContract: "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_PLAN_v1",
-      planReceipt: "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_PLAN_RECEIPT_v1",
-      sourceFile: FILE,
-      targetFile: REGISTRY_FILE,
-
-      productEngineF34Accepted: state.productEngineF34Accepted,
-      ue5ExpressionF55Current: state.sceneGraphBuilt,
-      sceneGraphReady: state.sceneGraphReady,
-      sceneGraphStatus: state.sceneGraphStatus,
-      buildId: graph.buildId,
-      nodeCount: state.sceneGraphNodeCount,
-      edgeCount: state.sceneGraphEdgeCount,
-      productCount: graph.products.length,
-
-      expressionQualityScore: state.expressionQualityScore,
-      lodBudgetScore: state.lodBudgetScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false,
-
-      executionMode: "plan-only-no-webgl-no-render-claim",
-      deterministicSceneGraphActive: true,
-      unrealEngineDependency: false,
-      ue5ConceptualStandardConsumed: true,
-
-      input: clonePlain(source),
-
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      createdAt: nowIso()
-    };
-
-    const id = safeString(source.id || source.planId || `expression-plan-${Object.keys(state.expressionPlans).length + 1}`);
-    state.expressionPlans[id] = plan;
-
-    updateDataset();
-    return clonePlain(plan);
   }
 
   function evaluateNewsAlignment() {
@@ -980,31 +956,31 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      newsAlignmentContract: "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_NEWS_ALIGNMENT_PROTOCOL_v1",
-      newsAlignmentReceipt: "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v1",
+      newsAlignmentContract: "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_NEWS_ALIGNMENT_PROTOCOL_v2",
+      newsAlignmentReceipt: "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v2",
       sequence: [
         {
           gate: NEWS_GATES.PRODUCT,
           fibonacci: FIBONACCI.PRODUCT_ENGINE,
-          file: PRODUCT_ENGINE_FILE,
-          ready: state.productEngineF34Accepted
+          file: F34_PRODUCT_ENGINE_FILE,
+          ready: state.f34ReleaseAccepted
         },
         {
           gate: NEWS_GATES.EXPRESSION,
           fibonacci: FIBONACCI.UE5_EXPRESSION,
           file: FILE,
-          ready: state.sceneGraphBuilt
+          ready: state.sceneGraphReady || state.sceneGraphStatus === STATUS.DEGRADED
         },
         {
           gate: NEWS_GATES.REGISTRY,
           fibonacci: FIBONACCI.PROJECT_REGISTRY,
-          file: REGISTRY_FILE,
+          file: F89_REGISTRY_FILE,
           ready: state.f89RegistryReleaseAuthorized
         },
         {
           gate: NEWS_GATES.MARKET,
           fibonacci: FIBONACCI.MARKET_READINESS,
-          file: MARKET_FILE,
+          file: F144_MARKET_FILE,
           ready: false
         }
       ],
@@ -1021,20 +997,32 @@
     };
   }
 
-  function composeF55Receipt() {
-    return getReceipt();
+  function readF89RegistryAuthority() {
+    return firstGlobal([
+      "LAB_PRODUCT_ENGINE_REGISTRY",
+      "LAB_PRODUCT_ENGINE_REGISTRY_F89",
+      "PRODUCT_ENGINE_REGISTRY",
+      "PROJECT_REGISTRY_CONDUCTOR",
+      "DEXTER_LAB.productEngineRegistry",
+      "DEXTER_LAB.productEngineRegistryF89",
+      "DEXTER_LAB.projectRegistryConductor",
+      "HEARTH.productEngineRegistry",
+      "HEARTH.productEngineRegistryF89",
+      "HEARTH.projectRegistryConductor"
+    ]);
   }
 
   function composeF55ReleasePacket(extra = {}) {
     const metric = computeFibonacciSynchronizationMetric();
+    const readyForF89 = Boolean(state.sceneGraphReady || state.sceneGraphStatus === STATUS.DEGRADED);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       packetType: "UE5_EXPRESSION_F55_RELEASE_PACKET",
       sourceFile: FILE,
-      targetFile: REGISTRY_FILE,
-      destinationFile: REGISTRY_FILE,
+      targetFile: F89_REGISTRY_FILE,
+      destinationFile: F89_REGISTRY_FILE,
 
       activeFibonacci: FIBONACCI.UE5_EXPRESSION,
       activeFibonacciRank: 55,
@@ -1043,21 +1031,40 @@
       futureFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
       futureFibonacciRank: 89,
 
-      productEngineF34Accepted: state.productEngineF34Accepted,
-      ue5ExpressionF55Current: state.sceneGraphBuilt,
-      expressionConductorReady: state.sceneGraphReady || state.sceneGraphStatus === STATUS.DEGRADED,
-      f55ExpressionReady: state.sceneGraphReady || state.sceneGraphStatus === STATUS.DEGRADED,
-      sceneGraphConductorReady: state.sceneGraphReady || state.sceneGraphStatus === STATUS.DEGRADED,
-      f89RegistryReleaseAuthorized: state.f89RegistryReleaseAuthorized,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+
+      expressionEngineF55Active: true,
+      expressionEngineF55Only: true,
+      expressionClerkActive: true,
+      sceneGraphConductorActive: true,
+      f34ReleaseAccepted: state.f34ReleaseAccepted,
+      f34Contract: state.f34Contract,
+      f34Receipt: state.f34Receipt,
 
       sceneGraphBuilt: state.sceneGraphBuilt,
       sceneGraphReady: state.sceneGraphReady,
       sceneGraphStatus: state.sceneGraphStatus,
-      sceneGraphNodeCount: state.sceneGraphNodeCount,
-      sceneGraphEdgeCount: state.sceneGraphEdgeCount,
+      sceneNodeCount: state.sceneNodeCount,
+      expressionNodeCount: state.expressionNodeCount,
+      registryRecordNodeCount: state.registryRecordNodeCount,
+      diagnosticEvidenceNodeCount: state.diagnosticEvidenceNodeCount,
+
       expressionQualityScore: state.expressionQualityScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false,
+      expressionCoverageScore: state.expressionCoverageScore,
+      expressionTraceScore: state.expressionTraceScore,
+      expressionCoherenceScore: state.expressionCoherenceScore,
+
+      sceneGraph: clonePlain(state.sceneGraph),
+      expressionRecords: clonePlain(state.sceneGraph.expressionRecords),
+      registryRecords: clonePlain(state.sceneGraph.registryRecords),
+
+      f89RegistryReleaseAuthorized: readyForF89,
+      f55ReleasePacketReady: readyForF89,
+      f55ActivationStatus: state.f55ActivationStatus,
+      f55ActivationReason: state.f55ActivationReason,
 
       newsProtocolAligned: true,
       fibonacciSynchronizationMetricActive: true,
@@ -1070,6 +1077,9 @@
 
       detail: clonePlain(extra),
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1078,14 +1088,18 @@
     };
   }
 
-  function submitF55ReceiptToProductEngine() {
-    const authority = readProductEngineAuthority();
+  function composeF55Receipt() {
+    return getReceipt();
+  }
 
-    if (!authority || !isFunction(authority.acceptUE5ExpressionF55Receipt)) {
+  function submitF55ReleaseToRegistry(extra = {}) {
+    const authority = readF89RegistryAuthority();
+
+    if (!authority || !isFunction(authority.acceptF55ExpressionRelease)) {
       return {
         submitted: false,
-        reason: "PRODUCT_ENGINE_ACCEPT_METHOD_UNAVAILABLE",
-        recommendedNextFile: PRODUCT_ENGINE_FILE,
+        reason: "F89_REGISTRY_ACCEPT_F55_METHOD_UNAVAILABLE",
+        recommendedNextFile: F89_REGISTRY_FILE,
         generatedImage: false,
         graphicBox: false,
         webGL: false,
@@ -1094,10 +1108,14 @@
     }
 
     try {
-      const response = authority.acceptUE5ExpressionF55Receipt(composeF55ReleasePacket());
-      recordLocal("F55_RECEIPT_SUBMITTED_TO_PRODUCT_ENGINE", {
-        submitted: true
+      const packet = composeF55ReleasePacket(extra);
+      const response = authority.acceptF55ExpressionRelease(packet);
+
+      recordLocal("F55_RELEASE_SUBMITTED_TO_F89_REGISTRY", {
+        submitted: true,
+        accepted: Boolean(response && response.accepted !== false)
       });
+
       return {
         submitted: true,
         response: clonePlain(response),
@@ -1107,16 +1125,177 @@
         visualPassClaimed: false
       };
     } catch (error) {
-      recordError("F55_SUBMISSION_TO_PRODUCT_ENGINE_FAILED", error);
+      recordError("F55_RELEASE_SUBMISSION_TO_F89_REGISTRY_FAILED", error);
+
       return {
         submitted: false,
-        reason: "F55_SUBMISSION_TO_PRODUCT_ENGINE_FAILED",
+        reason: "F55_RELEASE_SUBMISSION_TO_F89_REGISTRY_FAILED",
         generatedImage: false,
         graphicBox: false,
         webGL: false,
         visualPassClaimed: false
       };
     }
+  }
+
+  function submitF55PacketToNorth(extra = {}) {
+    const north = firstGlobal([
+      "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
+      "RUNTIME_TABLE",
+      "DEXTER_LAB.runtimeTable",
+      "HEARTH.northCommandRuntimeTable",
+      "HEARTH.runtimeTable"
+    ]);
+
+    if (!north) {
+      return {
+        submitted: false,
+        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE"
+      };
+    }
+
+    const packet = composeF55ReleasePacket(extra);
+
+    try {
+      if (isFunction(north.acceptF55ExpressionPacket)) {
+        return {
+          submitted: true,
+          response: clonePlain(north.acceptF55ExpressionPacket(packet))
+        };
+      }
+
+      if (isFunction(north.acceptSupportEnginePacket)) {
+        return {
+          submitted: true,
+          response: clonePlain(north.acceptSupportEnginePacket(packet))
+        };
+      }
+
+      if (isFunction(north.receiveSupportEnginePacket)) {
+        return {
+          submitted: true,
+          response: clonePlain(north.receiveSupportEnginePacket(packet))
+        };
+      }
+    } catch (error) {
+      recordError("F55_PACKET_SUBMISSION_TO_NORTH_FAILED", error);
+      return {
+        submitted: false,
+        reason: "F55_PACKET_SUBMISSION_TO_NORTH_FAILED"
+      };
+    }
+
+    return {
+      submitted: false,
+      reason: "NORTH_RUNTIME_TABLE_SUPPORT_ENGINE_INTAKE_UNAVAILABLE"
+    };
+  }
+
+  function validateF89RegistryReceipt(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+    const f89Recognized = Boolean(
+      safeBool(input.f89RegistryReady, false) ||
+      safeBool(input.registryGraphBuilt, false) ||
+      safeBool(input.projectRegistryConductorActive, false) ||
+      safeString(input.packetType, "").includes("F89") ||
+      safeString(input.activeFibonacci || "", "") === FIBONACCI.PROJECT_REGISTRY ||
+      safeString(input.activeFibonacci || "", "") === "F89"
+    );
+
+    const ok = Boolean(noForbiddenClaim && f89Recognized);
+
+    let reason = "F89_REGISTRY_RECEIPT_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_F89_RECEIPT";
+    else if (!f89Recognized) reason = "UNRECOGNIZED_F89_REGISTRY_RECEIPT";
+
+    return {
+      ok,
+      reason,
+      noForbiddenClaim,
+      f89Recognized,
+      input: clonePlain(input)
+    };
+  }
+
+  function acceptF89RegistryReceipt(packet = {}) {
+    const validation = validateF89RegistryReceipt(packet);
+
+    state.f89RegistryReceiptAccepted = validation.ok;
+    state.f89RegistryReceiptPacket = clonePlain(packet);
+
+    if (validation.input.contract) state.f89RegistryContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.f89RegistryReceipt = safeString(validation.input.receipt);
+
+    recordLocal("F89_REGISTRY_RECEIPT_RECEIVED_BY_UE5_EXPRESSION_F55", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      contract: state.f89RegistryContract
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: validation.ok,
+      ue5ExpressionF55ReceivedF89: true,
+      reason: validation.reason,
+      recommendedNextFile: validation.ok ? F144_MARKET_FILE : F89_REGISTRY_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function getMechanicalCoordinatePacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_0`,
+      enginePartDefinesFunction: true,
+      fibonacciDefinesSequence: true,
+      categoryDefinesScale: true,
+      numbersSupportFunction: true,
+      aliasesLocateOnly: true,
+      namesDescribeOnly: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function getSceneGraph() {
+    return clonePlain(state.sceneGraph);
+  }
+
+  function getSceneGraphSummary() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      sceneGraphBuilt: state.sceneGraphBuilt,
+      sceneGraphReady: state.sceneGraphReady,
+      sceneGraphStatus: state.sceneGraphStatus,
+      sceneNodeCount: state.sceneNodeCount,
+      expressionNodeCount: state.expressionNodeCount,
+      registryRecordNodeCount: state.registryRecordNodeCount,
+      diagnosticEvidenceNodeCount: state.diagnosticEvidenceNodeCount,
+      expressionQualityScore: state.expressionQualityScore,
+      expressionCoverageScore: state.expressionCoverageScore,
+      expressionTraceScore: state.expressionTraceScore,
+      expressionCoherenceScore: state.expressionCoherenceScore,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getExpressionRecords() {
+    return clonePlain(state.sceneGraph.expressionRecords || []);
+  }
+
+  function getRegistryRecords() {
+    return clonePlain(state.sceneGraph.registryRecords || []);
   }
 
   function getReceiptLight() {
@@ -1129,50 +1308,56 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
-      role: state.role,
 
-      f55ExpressionConductorActive: true,
-      f55Only: true,
-      productEngineF34Required: true,
-      productEngineF34Observed: state.productEngineF34Observed,
-      productEngineF34Accepted: state.productEngineF34Accepted,
-      productEngineContract: state.productEngineContract,
-      productEngineReceipt: state.productEngineReceipt,
+      expressionEngineF55Active: true,
+      expressionEngineF55Only: true,
+      expressionClerkActive: true,
+      sceneGraphConductorActive: true,
 
-      northF21Acknowledged: state.northF21Acknowledged,
-      canvasF13EvidenceObserved: state.canvasF13EvidenceObserved,
-      canvasF13EvidenceComplete: state.canvasF13EvidenceComplete,
-      canvasF13EvidenceDegraded: state.canvasF13EvidenceDegraded,
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+      mechanicalCoordinateId: MECHANICAL_COORDINATE.coordinateId,
+      enginePart: MECHANICAL_COORDINATE.enginePart,
+      systemCategory: MECHANICAL_COORDINATE.systemCategory,
+      fibonacciStation: MECHANICAL_COORDINATE.fibonacciStage,
+      mechanicalRole: MECHANICAL_COORDINATE.mechanicalRole,
+      chessRole: MECHANICAL_COORDINATE.chessRole,
 
-      ue5DerivedExpressionActive: true,
-      unrealEngineDependency: false,
-      unrealEngineRuntimeRequired: false,
-      ue5ConceptualStandardConsumed: true,
-      publicSuperiorityClaim: false,
-      internalSurpassTargetMetricActive: true,
+      f34ProductEngineObserved: state.f34ProductEngineObserved,
+      f34ReleaseAccepted: state.f34ReleaseAccepted,
+      f34Contract: state.f34Contract,
+      f34Receipt: state.f34Receipt,
 
-      deterministicSceneGraphActive: true,
-      expressionNodeRegistryActive: true,
+      productGraphObserved: state.productGraphObserved,
+      productGraphStatus: state.productGraphStatus,
+      productCount: state.productCount,
+      productReadyCount: state.productReadyCount,
+      productDegradedCount: state.productDegradedCount,
+      productBlockedCount: state.productBlockedCount,
+
       sceneGraphBuilt: state.sceneGraphBuilt,
       sceneGraphReady: state.sceneGraphReady,
       sceneGraphStatus: state.sceneGraphStatus,
-      sceneGraphNodeCount: state.sceneGraphNodeCount,
-      sceneGraphEdgeCount: state.sceneGraphEdgeCount,
-      sceneGraphReadyNodeCount: state.sceneGraphReadyNodeCount,
-      sceneGraphDegradedNodeCount: state.sceneGraphDegradedNodeCount,
-      sceneGraphBlockedNodeCount: state.sceneGraphBlockedNodeCount,
+      sceneNodeCount: state.sceneNodeCount,
+      expressionNodeCount: state.expressionNodeCount,
+      registryRecordNodeCount: state.registryRecordNodeCount,
+      diagnosticEvidenceNodeCount: state.diagnosticEvidenceNodeCount,
 
       expressionQualityMetricActive: true,
       expressionQualityScore: state.expressionQualityScore,
-      lodBudgetMetricActive: true,
-      lodBudgetScore: state.lodBudgetScore,
-      determinismScore: state.determinismScore,
-      receiptTraceScore: state.receiptTraceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
+      expressionCoverageScore: state.expressionCoverageScore,
+      expressionTraceScore: state.expressionTraceScore,
+      expressionCoherenceScore: state.expressionCoherenceScore,
 
-      projectRegistryGateReady: state.projectRegistryGateReady,
       f89RegistryReleaseAuthorized: state.f89RegistryReleaseAuthorized,
+      f55ReleasePacketReady: state.f55ReleasePacketReady,
+      f55ActivationStatus: state.f55ActivationStatus,
+      f55ActivationReason: state.f55ActivationReason,
+
       f89RegistryReceiptAccepted: state.f89RegistryReceiptAccepted,
+      f89RegistryContract: state.f89RegistryContract,
+      f89RegistryReceipt: state.f89RegistryReceipt,
 
       newsProtocolAligned: true,
       fibonacciSynchronizationMetricActive: true,
@@ -1184,19 +1369,18 @@
       futureFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
       oneActiveGearAtATime: true,
 
-      f55ActivationStatus: state.f55ActivationStatus,
-      f55ActivationReason: state.f55ActivationReason,
-      f55ReceiptReady: true,
-      f55ReleasePacketReady: state.f55ReleasePacketReady,
-
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
+
       createdAt: state.createdAt,
       updatedAt: state.updatedAt || nowIso()
     };
@@ -1208,53 +1392,69 @@
     return {
       ...light,
 
-      ue5ExpressionReceipt: true,
-      expressionConductorOwns: [
-        "F55 expression conductorship",
-        "deterministic scene graph",
-        "product-expression node registry",
-        "LOD budget metric",
-        "expression quality metric",
-        "internal market-surpass target metric",
-        "F89 registry handoff packet",
-        "NEWS/Fibonacci synchronization metric"
+      ue5ExpressionF55Receipt: true,
+      expressionClerkReceipt: true,
+
+      expressionEngineOwns: [
+        "F55 expression scene-graph manifold",
+        "F34 product graph consumption",
+        "deterministic scene graph records",
+        "expression-node records",
+        "registry-ready expression records",
+        "F89 registry handoff packet"
       ],
-      expressionConductorDoesNotOwn: [
+      expressionEngineDoesNotOwn: [
+        "F34 Product Engine authority",
+        "F89 Registry authority",
+        "F144 Market authority",
+        "F233 downstream return",
         "North F21 latch",
-        "Product Engine F34 authority",
         "Canvas F13 evidence",
+        "actual rendering",
         "route orchestration",
         "planet truth",
         "material truth",
         "elevation truth",
         "hydrology truth",
-        "actual WebGL drawing",
         "generated image",
         "GraphicBox",
+        "WebGL",
+        "public superiority claim",
         "final visual pass claim"
       ],
 
       gates: {
         north: NORTH_FILE,
-        productEngine: PRODUCT_ENGINE_FILE,
+        productEngine: F34_PRODUCT_ENGINE_FILE,
         ue5Expression: FILE,
-        registry: REGISTRY_FILE,
-        market: MARKET_FILE
+        registry: F89_REGISTRY_FILE,
+        market: F144_MARKET_FILE,
+        canvas: CANVAS_FILE
       },
 
       nodeTypes: clonePlain(NODE_TYPES),
       fibonacciMap: clonePlain(FIBONACCI),
       newsGates: clonePlain(NEWS_GATES),
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      mechanicalCoordinatePacket: getMechanicalCoordinatePacket(),
+
+      f34ReleasePacket: clonePlain(state.f34ReleasePacket),
       sceneGraph: clonePlain(state.sceneGraph),
-      expressionNodes: clonePlain(Object.values(state.expressionNodes)),
-      expressionPlans: clonePlain(Object.values(state.expressionPlans)),
+      sceneGraphSummary: getSceneGraphSummary(),
+      expressionRecords: getExpressionRecords(),
+      registryRecords: getRegistryRecords(),
+
+      expressionQuality: computeExpressionQualityMetric(),
       newsAlignment: evaluateNewsAlignment(),
       f55ReleasePacket: composeF55ReleasePacket(),
-      productEngineReleasePacket: clonePlain(state.productEngineReleasePacket),
+      f89RegistryReceiptPacket: clonePlain(state.f89RegistryReceiptPacket),
 
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1266,11 +1466,15 @@
   function getReceiptText() {
     const r = getReceipt();
 
-    const nodes = (r.expressionNodes || []).map((node) => (
-      `- ${node.id} :: product=${node.productId} :: type=${node.type} :: status=${node.status} :: score=${node.readinessScore}`
+    const records = (r.expressionRecords || []).map((record) => (
+      `- ${record.expressionRecordId} :: product=${record.sourceProductId} :: mode=${record.expressionMode} :: score=${record.expressionReadinessScore} :: registryReady=${record.registryReady}`
     )).join("\n") || "- none";
 
-    const events = (r.localEvents || []).slice(-40).map((item) => (
+    const registryRecords = (r.registryRecords || []).map((record) => (
+      `- ${record.registryRecordId} :: product=${record.sourceProductId} :: traceReady=${record.traceReady} :: registryReady=${record.registryReady}`
+    )).join("\n") || "- none";
+
+    const events = (r.localEvents || []).slice(-48).map((item) => (
       `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`
     )).join("\n") || "- none";
 
@@ -1279,7 +1483,7 @@
     )).join("\n") || "- none";
 
     return [
-      "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_RECEIPT",
+      "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_ENGINE_MECHANICS_SCENE_GRAPH_CONDUCTOR_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -1287,47 +1491,55 @@
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
-      `role=${r.role}`,
       "",
-      `f55ExpressionConductorActive=${r.f55ExpressionConductorActive}`,
-      `f55Only=${r.f55Only}`,
-      `productEngineF34Required=${r.productEngineF34Required}`,
-      `productEngineF34Observed=${r.productEngineF34Observed}`,
-      `productEngineF34Accepted=${r.productEngineF34Accepted}`,
-      `productEngineContract=${r.productEngineContract}`,
-      `productEngineReceipt=${r.productEngineReceipt}`,
+      `expressionEngineF55Active=${r.expressionEngineF55Active}`,
+      `expressionEngineF55Only=${r.expressionEngineF55Only}`,
+      `expressionClerkActive=${r.expressionClerkActive}`,
+      `sceneGraphConductorActive=${r.sceneGraphConductorActive}`,
       "",
-      `northF21Acknowledged=${r.northF21Acknowledged}`,
-      `canvasF13EvidenceObserved=${r.canvasF13EvidenceObserved}`,
-      `canvasF13EvidenceComplete=${r.canvasF13EvidenceComplete}`,
-      `canvasF13EvidenceDegraded=${r.canvasF13EvidenceDegraded}`,
+      `engineMechanicsPrimary=${r.engineMechanicsPrimary}`,
+      `mathPrimary=${r.mathPrimary}`,
+      `architectureLabelsSecondary=${r.architectureLabelsSecondary}`,
+      `mechanicalCoordinateId=${r.mechanicalCoordinateId}`,
+      `enginePart=${r.enginePart}`,
+      `systemCategory=${r.systemCategory}`,
+      `fibonacciStation=${r.fibonacciStation}`,
+      `mechanicalRole=${r.mechanicalRole}`,
+      `chessRole=${r.chessRole}`,
       "",
-      `ue5DerivedExpressionActive=${r.ue5DerivedExpressionActive}`,
-      `unrealEngineDependency=${r.unrealEngineDependency}`,
-      `unrealEngineRuntimeRequired=${r.unrealEngineRuntimeRequired}`,
-      `ue5ConceptualStandardConsumed=${r.ue5ConceptualStandardConsumed}`,
-      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
-      `internalSurpassTargetMetricActive=${r.internalSurpassTargetMetricActive}`,
+      `f34ProductEngineObserved=${r.f34ProductEngineObserved}`,
+      `f34ReleaseAccepted=${r.f34ReleaseAccepted}`,
+      `f34Contract=${r.f34Contract}`,
+      `f34Receipt=${r.f34Receipt}`,
       "",
-      `deterministicSceneGraphActive=${r.deterministicSceneGraphActive}`,
+      `productGraphObserved=${r.productGraphObserved}`,
+      `productGraphStatus=${r.productGraphStatus}`,
+      `productCount=${r.productCount}`,
+      `productReadyCount=${r.productReadyCount}`,
+      `productDegradedCount=${r.productDegradedCount}`,
+      `productBlockedCount=${r.productBlockedCount}`,
+      "",
       `sceneGraphBuilt=${r.sceneGraphBuilt}`,
       `sceneGraphReady=${r.sceneGraphReady}`,
       `sceneGraphStatus=${r.sceneGraphStatus}`,
-      `sceneGraphNodeCount=${r.sceneGraphNodeCount}`,
-      `sceneGraphEdgeCount=${r.sceneGraphEdgeCount}`,
-      `sceneGraphReadyNodeCount=${r.sceneGraphReadyNodeCount}`,
-      `sceneGraphDegradedNodeCount=${r.sceneGraphDegradedNodeCount}`,
-      `sceneGraphBlockedNodeCount=${r.sceneGraphBlockedNodeCount}`,
+      `sceneNodeCount=${r.sceneNodeCount}`,
+      `expressionNodeCount=${r.expressionNodeCount}`,
+      `registryRecordNodeCount=${r.registryRecordNodeCount}`,
+      `diagnosticEvidenceNodeCount=${r.diagnosticEvidenceNodeCount}`,
       "",
       `expressionQualityScore=${r.expressionQualityScore}`,
-      `lodBudgetScore=${r.lodBudgetScore}`,
-      `determinismScore=${r.determinismScore}`,
-      `receiptTraceScore=${r.receiptTraceScore}`,
-      `internalMarketSurpassTargetScore=${r.internalMarketSurpassTargetScore}`,
+      `expressionCoverageScore=${r.expressionCoverageScore}`,
+      `expressionTraceScore=${r.expressionTraceScore}`,
+      `expressionCoherenceScore=${r.expressionCoherenceScore}`,
       "",
-      `projectRegistryGateReady=${r.projectRegistryGateReady}`,
       `f89RegistryReleaseAuthorized=${r.f89RegistryReleaseAuthorized}`,
+      `f55ReleasePacketReady=${r.f55ReleasePacketReady}`,
+      `f55ActivationStatus=${r.f55ActivationStatus}`,
+      `f55ActivationReason=${r.f55ActivationReason}`,
+      "",
       `f89RegistryReceiptAccepted=${r.f89RegistryReceiptAccepted}`,
+      `f89RegistryContract=${r.f89RegistryContract}`,
+      `f89RegistryReceipt=${r.f89RegistryReceipt}`,
       "",
       `newsProtocolAligned=${r.newsProtocolAligned}`,
       `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
@@ -1339,17 +1551,15 @@
       `futureFibonacciGate=${r.futureFibonacciGate}`,
       `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
       "",
-      `f55ActivationStatus=${r.f55ActivationStatus}`,
-      `f55ActivationReason=${r.f55ActivationReason}`,
-      `f55ReceiptReady=${r.f55ReceiptReady}`,
-      `f55ReleasePacketReady=${r.f55ReleasePacketReady}`,
-      "",
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
       `recommendedNextFile=${r.recommendedNextFile}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
       "",
-      "EXPRESSION_NODES",
-      nodes,
+      "EXPRESSION_RECORDS",
+      records,
+      "",
+      "REGISTRY_RECORDS",
+      registryRecords,
       "",
       "LOCAL_EVENTS",
       events,
@@ -1357,6 +1567,9 @@
       "ERRORS",
       errors,
       "",
+      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `publicComparisonClaimAllowed=${r.publicComparisonClaimAllowed}`,
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
@@ -1372,30 +1585,43 @@
     setDataset("labProductEngineUE5ExpressionVersion", VERSION);
     setDataset("labProductEngineUE5ExpressionFile", FILE);
 
+    setDataset("ue5ExpressionF55Active", "true");
     setDataset("ue5ExpressionF55Only", "true");
-    setDataset("ue5ExpressionConductorActive", "true");
-    setDataset("ue5ExpressionProductEngineF34Required", "true");
-    setDataset("ue5ExpressionProductEngineF34Observed", state.productEngineF34Observed);
-    setDataset("ue5ExpressionProductEngineF34Accepted", state.productEngineF34Accepted);
+    setDataset("ue5ExpressionClerkActive", "true");
+    setDataset("ue5ExpressionSceneGraphConductorActive", "true");
 
-    setDataset("ue5ExpressionUnrealEngineDependency", "false");
-    setDataset("ue5ExpressionUnrealEngineRuntimeRequired", "false");
-    setDataset("ue5ExpressionConceptualStandardConsumed", "true");
-    setDataset("ue5ExpressionPublicSuperiorityClaim", "false");
-    setDataset("ue5ExpressionInternalSurpassTargetMetricActive", "true");
+    setDataset("ue5ExpressionEngineMechanicsPrimary", "true");
+    setDataset("ue5ExpressionMathPrimary", "true");
+    setDataset("ue5ExpressionArchitectureLabelsSecondary", "true");
+    setDataset("ue5ExpressionMechanicalCoordinateId", MECHANICAL_COORDINATE.coordinateId);
+    setDataset("ue5ExpressionEnginePart", MECHANICAL_COORDINATE.enginePart);
+    setDataset("ue5ExpressionSystemCategory", MECHANICAL_COORDINATE.systemCategory);
+    setDataset("ue5ExpressionFibonacciStation", MECHANICAL_COORDINATE.fibonacciStage);
+    setDataset("ue5ExpressionMechanicalRole", MECHANICAL_COORDINATE.mechanicalRole);
+    setDataset("ue5ExpressionChessRole", MECHANICAL_COORDINATE.chessRole);
+
+    setDataset("ue5ExpressionF34Observed", state.f34ProductEngineObserved);
+    setDataset("ue5ExpressionF34ReleaseAccepted", state.f34ReleaseAccepted);
+    setDataset("ue5ExpressionProductGraphObserved", state.productGraphObserved);
+    setDataset("ue5ExpressionProductGraphStatus", state.productGraphStatus);
+    setDataset("ue5ExpressionProductCount", state.productCount);
 
     setDataset("ue5ExpressionSceneGraphBuilt", state.sceneGraphBuilt);
     setDataset("ue5ExpressionSceneGraphReady", state.sceneGraphReady);
     setDataset("ue5ExpressionSceneGraphStatus", state.sceneGraphStatus);
-    setDataset("ue5ExpressionSceneGraphNodeCount", state.sceneGraphNodeCount);
-    setDataset("ue5ExpressionSceneGraphEdgeCount", state.sceneGraphEdgeCount);
+    setDataset("ue5ExpressionSceneNodeCount", state.sceneNodeCount);
+    setDataset("ue5ExpressionExpressionNodeCount", state.expressionNodeCount);
+    setDataset("ue5ExpressionRegistryRecordNodeCount", state.registryRecordNodeCount);
 
     setDataset("ue5ExpressionQualityScore", state.expressionQualityScore);
-    setDataset("ue5ExpressionLodBudgetScore", state.lodBudgetScore);
-    setDataset("ue5ExpressionInternalMarketSurpassTargetScore", state.internalMarketSurpassTargetScore);
+    setDataset("ue5ExpressionCoverageScore", state.expressionCoverageScore);
+    setDataset("ue5ExpressionTraceScore", state.expressionTraceScore);
+    setDataset("ue5ExpressionCoherenceScore", state.expressionCoherenceScore);
 
-    setDataset("ue5ExpressionProjectRegistryGateReady", state.projectRegistryGateReady);
     setDataset("ue5ExpressionF89RegistryReleaseAuthorized", state.f89RegistryReleaseAuthorized);
+    setDataset("ue5ExpressionF55ReleasePacketReady", state.f55ReleasePacketReady);
+    setDataset("ue5ExpressionF55ActivationStatus", state.f55ActivationStatus);
+    setDataset("ue5ExpressionF55ActivationReason", state.f55ActivationReason);
 
     setDataset("ue5ExpressionNewsProtocolAligned", "true");
     setDataset("ue5ExpressionFibonacciSynchronizationMetricActive", "true");
@@ -1406,14 +1632,13 @@
     setDataset("ue5ExpressionSourceFibonacciGate", FIBONACCI.PRODUCT_ENGINE);
     setDataset("ue5ExpressionFutureFibonacciGate", FIBONACCI.PROJECT_REGISTRY);
 
-    setDataset("ue5ExpressionF55ActivationStatus", state.f55ActivationStatus);
-    setDataset("ue5ExpressionF55ActivationReason", state.f55ActivationReason);
-    setDataset("ue5ExpressionF55ReleasePacketReady", state.f55ReleasePacketReady);
-
     setDataset("ue5ExpressionFirstFailedCoordinate", state.firstFailedCoordinate);
     setDataset("ue5ExpressionRecommendedNextFile", state.recommendedNextFile);
     setDataset("ue5ExpressionRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
 
+    setDataset("ue5ExpressionPublicSuperiorityClaim", "false");
+    setDataset("ue5ExpressionPublicComparisonClaimAllowed", "false");
+    setDataset("ue5ExpressionBenchmarkRequiredBeforePublicClaim", "true");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
@@ -1428,14 +1653,18 @@
     root.LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55 = api;
     root.PRODUCT_ENGINE_UE5_EXPRESSION = api;
     root.UE5_EXPRESSION_CONDUCTOR = api;
+    root.UE5_EXPRESSION_F55_CONDUCTOR = api;
+    root.EXPRESSION_CLERK = api;
 
     root.DEXTER_LAB.productEngineUE5Expression = api;
     root.DEXTER_LAB.productEngineUE5ExpressionF55 = api;
     root.DEXTER_LAB.ue5ExpressionConductor = api;
+    root.DEXTER_LAB.expressionClerk = api;
 
     root.HEARTH.productEngineUE5Expression = api;
     root.HEARTH.productEngineUE5ExpressionF55 = api;
     root.HEARTH.ue5ExpressionConductor = api;
+    root.HEARTH.expressionClerk = api;
 
     const light = getReceiptLight();
 
@@ -1443,6 +1672,7 @@
     root.LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_RECEIPT = light;
     root.PRODUCT_ENGINE_UE5_EXPRESSION_RECEIPT = light;
     root.UE5_EXPRESSION_CONDUCTOR_RECEIPT = light;
+    root.EXPRESSION_CLERK_RECEIPT = light;
 
     root.DEXTER_LAB.productEngineUE5ExpressionReceipt = light;
     root.HEARTH.productEngineUE5ExpressionReceipt = light;
@@ -1451,6 +1681,8 @@
     root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_CONTRACT__ = CONTRACT;
     root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_RECEIPT__ = RECEIPT;
     root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55_ONLY__ = true;
+    root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_MECHANICAL_COORDINATE__ = MECHANICAL_COORDINATE.coordinateId;
+    root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_PUBLIC_SUPERIORITY_CLAIM__ = false;
     root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_WEBGL__ = false;
     root.__LAB_PRODUCT_ENGINE_UE5_EXPRESSION_VISUAL_PASS_CLAIMED__ = false;
 
@@ -1467,29 +1699,45 @@
 
     FIBONACCI,
     NEWS_GATES,
-    NODE_TYPES,
     STATUS,
+    NODE_TYPES,
+    MECHANICAL_COORDINATE,
 
-    readProductEngineAuthority,
-    readProductEngineReceipt,
+    readF34ProductEngineAuthority,
+    readF34ProductEngineRelease,
     validateF34Release,
     acceptF34Release,
+    receiveF34Release,
+    submitF34Release,
 
-    normalizeExpressionNode,
-    evaluateExpressionNode,
-    registerExpressionNode,
-    registerProductExpression,
-    evaluateAllExpressionNodes,
+    normalizeProductFromF34,
+    getF34Products,
+    createSceneNode,
+    createExpressionNode,
+    createRegistryRecordNode,
+    classifyExpressionClass,
+    classifyExpressionMode,
+    expressionReadinessScore,
     buildSceneGraph,
 
     computeExpressionQualityMetric,
     computeFibonacciSynchronizationMetric,
     evaluateNewsAlignment,
 
-    createExpressionPlan,
-    composeF55Receipt,
+    readF89RegistryAuthority,
     composeF55ReleasePacket,
-    submitF55ReceiptToProductEngine,
+    composeF55Receipt,
+    submitF55ReleaseToRegistry,
+    submitF55PacketToNorth,
+
+    validateF89RegistryReceipt,
+    acceptF89RegistryReceipt,
+
+    getMechanicalCoordinatePacket,
+    getSceneGraph,
+    getSceneGraphSummary,
+    getExpressionRecords,
+    getRegistryRecords,
 
     getReceiptLight,
     getReceipt,
@@ -1497,36 +1745,43 @@
     publishGlobals,
     updateDataset,
 
-    f55ExpressionConductorActive: true,
-    f55Only: true,
-    productEngineF34Required: true,
-    ue5DerivedExpressionActive: true,
-    unrealEngineDependency: false,
-    unrealEngineRuntimeRequired: false,
-    publicSuperiorityClaim: false,
-    internalSurpassTargetMetricActive: true,
+    expressionEngineF55Active: true,
+    expressionEngineF55Only: true,
+    expressionClerkActive: true,
+    sceneGraphConductorActive: true,
 
-    ownsF55ExpressionConductorship: true,
-    ownsDeterministicSceneGraph: true,
-    ownsExpressionNodeRegistry: true,
-    ownsLodBudgetMetric: true,
-    ownsExpressionQualityMetric: true,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
+
+    ownsF55ExpressionSceneGraphManifold: true,
+    ownsF34ProductGraphConsumption: true,
+    ownsDeterministicSceneGraphRecords: true,
+    ownsExpressionNodeRecords: true,
+    ownsRegistryReadyExpressionRecords: true,
     ownsF89RegistryHandoffPacket: true,
-    ownsNewsFibonacciSynchronizationMetric: true,
 
+    ownsF34ProductEngineAuthority: false,
+    ownsF89RegistryAuthority: false,
+    ownsF144MarketAuthority: false,
+    ownsF233DownstreamReturn: false,
     ownsNorthF21Latch: false,
-    ownsProductEngineF34Authority: false,
     ownsCanvasF13Evidence: false,
+    ownsActualRendering: false,
     ownsRouteOrchestration: false,
     ownsPlanetTruth: false,
     ownsMaterialTruth: false,
     ownsElevationTruth: false,
     ownsHydrologyTruth: false,
-    ownsWebGL: false,
     ownsGeneratedImage: false,
     ownsGraphicBox: false,
+    ownsWebGL: false,
+    ownsPublicSuperiorityClaim: false,
     ownsFinalVisualPassClaim: false,
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1541,20 +1796,25 @@
   state.updatedAt = state.createdAt;
 
   try {
-    const receipt = readProductEngineReceipt();
-    acceptF34Release(receipt);
+    const f34Release = readF34ProductEngineRelease();
+    if (hasMeaningfulF34Release(f34Release)) {
+      acceptF34Release(f34Release);
+    }
   } catch (error) {
-    recordError("INITIAL_PRODUCT_ENGINE_F34_READ_FAILED", error);
-    computeFibonacciSynchronizationMetric();
+    recordError("INITIAL_F34_RELEASE_READ_FAILED", error);
   }
 
-  recordLocal("UE5_EXPRESSION_F55_SCENE_GRAPH_CONDUCTOR_LOADED", {
+  try {
+    computeFibonacciSynchronizationMetric();
+  } catch (error) {
+    recordError("INITIAL_F55_SYNC_METRIC_FAILED", error);
+  }
+
+  recordLocal("UE5_EXPRESSION_F55_ENGINE_MECHANICS_SCENE_GRAPH_CONDUCTOR_LOADED", {
     file: FILE,
     contract: CONTRACT,
-    productEngineFile: PRODUCT_ENGINE_FILE,
-    registryFile: REGISTRY_FILE,
-    f55Only: true,
-    unrealEngineDependency: false,
+    mechanicalCoordinate: MECHANICAL_COORDINATE.coordinateId,
+    targetFile: F89_REGISTRY_FILE,
     publicSuperiorityClaim: false
   });
 

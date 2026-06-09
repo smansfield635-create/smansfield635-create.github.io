@@ -1,940 +1,1147 @@
-// TARGET FILE: /showroom/globe/hearth/index.js
-// TNT FULL-FILE REPLACEMENT
-// HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_CONTROLLER_TNT_v1
-/*
-  Owns:
-  - Hearth page interaction controller
-  - lens/category switching
-  - one canvas mount enforcement
-  - pointer drag/inertial globe carrier shell
-  - local 16x16 diagnostic spectrum
-  - local 4x4 chamber matrix
-  - visible diagnostic slot writing
-  - status publication
+// /showroom/globe/hearth/diagnostic/index.js
+// HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6_FIX_1
+// Full-file replacement.
+// Restores full button/dropdown functionality.
+// Adds Return to Hearth + Manifest awareness.
+// No production/canvas/controls/runtime-route/target-renderer mutation.
 
-  Does not own:
-  - production canvas truth
-  - diagnostic mutation
-  - F13 release
-  - F21 latch
-  - controls repair
-  - runtime restart
-  - WebGL
-  - GraphicBox
-  - generated image
-*/
-
-(() => {
+(function hearthDiagnosticWorkbenchButtonController(global) {
   "use strict";
 
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+  var root = global || window;
+  var doc = root.document;
 
-  const CONTRACT = "HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_CONTROLLER_TNT_v1";
-  const CSS_CONTRACT = "HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_STYLE_TNT_v1";
-  const HTML_CONTRACT = "HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_SHELL_TNT_v1";
-  const ROUTE = "/showroom/globe/hearth/";
-  const TARGET_FILE = "/showroom/globe/hearth/index.js";
+  var CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
+  var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
 
-  const STATUS_GLOBAL = "HEARTH_SHOWROOM_FACILITY_STATUS";
-  const CONTROLLER_GLOBAL = "HEARTH_SHOWROOM_FACILITY_CONTROLLER";
+  var INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6_FIX_1";
+  var INTERNAL_RENEWAL_RECEIPT =
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_RECEIPT_v9_4_6_FIX_1";
 
-  const RADIAL_NODES = 16;
-  const FIBONACCI_BANDS = 16;
-  const LATTICE_STATES = 256;
-  const TAU = Math.PI * 2;
-  const HALF_PI = Math.PI / 2;
+  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_5";
 
-  const LENS_COPY = Object.freeze({
-    facility: {
-      title: "Facility Lens",
-      label: "<strong>Facility Lens</strong> → Hearth alias active · location unknown",
-      copy: "Hearth is treated as a facility alias inside Mirrorland. The planet carrier is not claimed as visually complete."
-    },
-    orbit: {
-      title: "Orbit Lens",
-      label: "<strong>Orbit Lens</strong> → return-to-orbit shell · carrier inspection",
-      copy: "Orbit Lens keeps the visitor above the unknown location and preserves a safe return path."
-    },
-    diagnostic: {
-      title: "Diagnostic Lens",
-      label: "<strong>Diagnostic Lens</strong> → local chamber spectrum · no mutation authorized",
-      copy: "Diagnostic Lens exposes readable chamber state without authorizing canvas repair, runtime restart, or visual pass."
-    }
-  });
+  var HTML_SHELL_CONTRACT =
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_6";
+  var CSS_CONTRACT =
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STYLE_TNT_v9_4_6";
 
-  const state = {
-    stage: null,
-    mount: null,
-    canvas: null,
-    ctx: null,
-    width: 0,
-    height: 0,
-    dpr: 1,
-    rect: null,
+  var VERSION = "2026-06-09.hearth-diagnostic-workbench-v9-4-6-fix-1";
 
-    activeLens: "facility",
-    activeCategory: "chamber",
-    activeMatrixCell: "",
-    activeSpectrumCell: "",
+  var TARGET_ROUTE = "/showroom/globe/hearth/";
+  var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-    seats: [],
-    ringLinks: [],
-    spineLinks: [],
-    fibonacciLinks: [],
-    geometryBuilt: false,
-
-    yaw: -0.48,
-    pitch: -0.14,
-    roll: 0,
-    velocityYaw: 0,
-    velocityPitch: 0,
-    pointerActive: false,
-    pointerId: null,
-    pointerX: 0,
-    pointerY: 0,
-    lastTap: 0,
-
-    raf: 0,
-    lastFrameTime: 0,
-    settleFrames: 0,
-    renderCount: 0,
-    stopped: false,
-
-    oneCanvas: false,
-    onePointerPath: false,
-    duplicateCanvasRemoved: 0,
-    diagnosticSlotsWritten: false,
-
-    status: "BOOT_PENDING",
-    failureCode: "BOOT_PENDING",
-    failureReason: "boot pending",
-    errors: []
+  var NO_CLAIMS = {
+    productionMutationAuthorized: false,
+    canvasRepairAuthorized: false,
+    canvasBuildAuthorized: false,
+    canvasReleaseAuthorized: false,
+    controlsRepairAuthorized: false,
+    runtimeRestartAuthorized: false,
+    routeRepairAuthorized: false,
+    targetRouteRendererMutationAuthorized: false,
+    readyTextClaimed: false,
+    f13Claimed: false,
+    f21Claimed: false,
+    visualPassClaimed: false,
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false
   };
 
-  const abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
-  const signal = abortController ? abortController.signal : undefined;
-  let resizeObserver = null;
+  var PARTICIPANTS = [
+    { group: "LAB_NORTH", role: "LAB_NORTH", path: "/assets/lab/runtime-table.js", required: true },
+    { group: "LAB_CARDINAL_BRANCHES", role: "LAB_EAST", path: "/assets/lab/runtime-table.east.js", required: true },
+    { group: "LAB_CARDINAL_BRANCHES", role: "LAB_SOUTH", path: "/assets/lab/runtime-table.south.js", required: true },
+    { group: "LAB_CARDINAL_BRANCHES", role: "LABWEST", path: "/assets/lab/runtime-table.west.js", required: true },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "NORTH", path: "/assets/hearth/hearth.diagnostic.rail.js", required: true },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "SURFACE_TRUTH", path: "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js", required: true },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "EAST", path: "/assets/hearth/hearth.diagnostic.east.js", required: true },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "EAST_PROBE", path: "/assets/hearth/hearth.diagnostic.probe.east.js", required: false },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "SOUTH", path: "/assets/hearth/hearth.diagnostic.south.js", required: true },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "SOUTH_SURFACE_POINTER", path: "/assets/hearth/hearth.diagnostic.south.surface.pointer.js", required: false },
+    { group: "HEARTH_DIAGNOSTIC_PARTICIPANTS", role: "WEST_DIAGNOSTIC", path: "/assets/hearth/hearth.diagnostic.west.js", required: true }
+  ];
 
-  function finite(value, fallback) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+  var ALIASES = {
+    NORTH: ["JUDGE_NORTH", "HEARTH_DIAGNOSTIC_RAIL", "HEARTH.diagnosticRail", "DEXTER_LAB.hearthDiagnosticRail"],
+    EAST: ["JUDGE_EAST", "HEARTH_DIAGNOSTIC_RAIL_EAST", "HEARTH.diagnosticEast", "DEXTER_LAB.hearthDiagnosticEast"],
+    SURFACE_TRUTH: [
+      "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
+      "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+      "HEARTH.canvasSurfaceTruthProbe",
+      "DEXTER_LAB.canvasSurfaceTruthProbe"
+    ],
+    SOUTH: ["JUDGE_SOUTH", "HEARTH_DIAGNOSTIC_RAIL_SOUTH", "HEARTH.diagnosticSouth", "DEXTER_LAB.hearthDiagnosticSouth"],
+    SOUTH_SURFACE_POINTER: ["HEARTH.diagnosticSouthSurfacePointer", "HEARTH.southSurfacePointerSidecar", "DEXTER_LAB.southSurfacePointerSidecar"],
+    LABWEST: ["LAB_RUNTIME_TABLE_WEST", "RUNTIME_TABLE_WEST", "DEXTER_LAB.runtimeTableWest", "HEARTH.runtimeTableWest"],
+    WEST_DIAGNOSTIC: ["HEARTH.diagnosticWest", "HEARTH_DIAGNOSTIC_WEST", "DEXTER_LAB.hearthDiagnosticWest"],
+    LAB_NORTH: ["LAB_RUNTIME_TABLE", "RUNTIME_TABLE", "DEXTER_LAB.runtimeTable", "HEARTH.runtimeTable"],
+    LAB_EAST: ["LAB_RUNTIME_TABLE_EAST", "RUNTIME_TABLE_EAST", "DEXTER_LAB.runtimeTableEast", "HEARTH.runtimeTableEast"],
+    LAB_SOUTH: ["LAB_RUNTIME_TABLE_SOUTH", "RUNTIME_TABLE_SOUTH", "DEXTER_LAB.runtimeTableSouth", "HEARTH.runtimeTableSouth"]
+  };
+
+  var PRODUCTION_MANIFEST = [
+    { key: "HTML_SHELL", path: "/showroom/globe/hearth/index.html", kind: "route-shell", required: true },
+    { key: "ROUTE_CONTROLLER", path: "/showroom/globe/hearth/index.js", kind: "route-controller", required: true },
+    { key: "CANVAS_BISHOP", path: "/assets/hearth/hearth.canvas.js", kind: "chapel-one-bishop", required: true },
+    { key: "HAND_GEOMETRY", path: "/assets/hearth/hearth.canvas.hand.geometry.js", kind: "chapel-one-hand", required: false },
+    { key: "HAND_CONTEXT", path: "/assets/hearth/hearth.canvas.hand.context.js", kind: "chapel-one-hand", required: false },
+    { key: "HAND_PAINT", path: "/assets/hearth/hearth.canvas.hand.paint.js", kind: "chapel-one-hand", required: false },
+    { key: "HAND_VIEW", path: "/assets/hearth/hearth.canvas.hand.view.js", kind: "chapel-one-hand", required: false },
+    { key: "HAND_INSPECT", path: "/assets/hearth/hearth.canvas.hand.inspect.js", kind: "chapel-one-hand", required: false },
+    { key: "HEX_AUTHORITY_BRIDGE", path: "/assets/hearth/hearth.hex.four-pair.authority.js", kind: "congressional-bridge", required: false },
+    { key: "HEX_SURFACE_BRIDGE", path: "/assets/hearth/hearth.hex.surface.js", kind: "congressional-bridge", required: false },
+    { key: "FINGER_SURFACE", path: "/assets/hearth/hearth.canvas.finger.surface.js", kind: "chapel-two-finger", required: false },
+    { key: "FINGER_BOUNDARY", path: "/assets/hearth/hearth.canvas.finger.boundary.js", kind: "chapel-two-finger", required: false },
+    { key: "FINGER_INSPECT", path: "/assets/hearth/hearth.canvas.finger.inspect.js", kind: "chapel-two-finger", required: false },
+    { key: "FINGER_LIGHT", path: "/assets/hearth/hearth.canvas.finger.light.js", kind: "chapel-two-finger", required: false }
+  ];
+
+  var SECTIONS = [
+    { id: "chamberReceiver", label: "Chamber / Receiver", hint: "Receiver and chamber condition", audits: ["chamberIndex", "receiverHealth", "targetAccess", "loadSequence", "aliasMap"] },
+    { id: "cardinalLab", label: "Cardinal / Lab", hint: "North, East, South, West calibration", audits: ["northSignal", "eastSource", "southLens", "southSurfacePointer", "labWestGate", "westDiagnostic"] },
+    { id: "sourceSurface", label: "Source / Surface", hint: "Source and surface access", audits: ["eastSourceDetail", "surfaceTruthDetail", "targetSurfaceAccess", "canvasBoundary"] },
+    { id: "directExecution", label: "Direct Execution", hint: "Explicit direct checks only", audits: ["northDirect", "eastDirect", "surfaceTruthDirect", "southDirect", "westDirect"] },
+    { id: "boundaryArchive", label: "Boundary / Archive", hint: "No-touch proof and archive", audits: ["noTouchBoundary", "nextMove", "productionManifest", "deepArchive"] }
+  ];
+
+  var AUDITS = {
+    chamberIndex: { seq: "00", section: "chamberReceiver", label: "Chamber Index", type: "safe", summary: "Creates a complete chamber index with current target, section, load, and audit availability." },
+    receiverHealth: { seq: "01", section: "chamberReceiver", label: "Receiver Health", type: "safe", summary: "Checks required participant loading, optional loading, receiver readiness, and chamber health." },
+    targetAccess: { seq: "02", section: "chamberReceiver", label: "Target Access", type: "safe", summary: "Checks diagnostic target-frame access without mutating the target." },
+    loadSequence: { seq: "03", section: "chamberReceiver", label: "Load Sequence", type: "safe", summary: "Reports participant script load order, status, required flags, and timing." },
+    aliasMap: { seq: "04", section: "chamberReceiver", label: "Alias Map", type: "safe", summary: "Reports authority aliases and receiver alignment." },
+
+    northSignal: { seq: "05", section: "cardinalLab", label: "North Signal", type: "safe", summary: "Reports North diagnostic authority presence." },
+    eastSource: { seq: "06", section: "cardinalLab", label: "East Source", type: "safe", summary: "Reports East source authority presence." },
+    southLens: { seq: "07", section: "cardinalLab", label: "South Lens", type: "safe", summary: "Reports South authority and proof-return status." },
+    southSurfacePointer: { seq: "08A", section: "cardinalLab", label: "South Surface Pointer", type: "safe", summary: "Reports South surface pointer sidecar presence." },
+    labWestGate: { seq: "09A", section: "cardinalLab", label: "LabWest Gate", type: "safe", summary: "Reports LabWest admissibility gate presence." },
+    westDiagnostic: { seq: "10A", section: "cardinalLab", label: "West Diagnostic", type: "safe", summary: "Reports West diagnostic participant presence." },
+
+    eastSourceDetail: { seq: "11", section: "sourceSurface", label: "East Source Detail", type: "safe", summary: "Creates a detailed East source report." },
+    surfaceTruthDetail: { seq: "12", section: "sourceSurface", label: "Surface Truth Detail", type: "safe", summary: "Creates a detailed Surface Truth report." },
+    targetSurfaceAccess: { seq: "13A", section: "sourceSurface", label: "Target Surface Access", type: "safe", summary: "Reports target iframe access and surface observation boundary." },
+    canvasBoundary: { seq: "14A", section: "sourceSurface", label: "Canvas Boundary", type: "safe", summary: "Reports no-touch canvas boundary." },
+
+    northDirect: { seq: "15", section: "directExecution", label: "North Direct", type: "direct", component: "NORTH", aliases: ALIASES.NORTH, summary: "Creates a direct-check preview for North." },
+    eastDirect: { seq: "16", section: "directExecution", label: "East Direct", type: "direct", component: "EAST", aliases: ALIASES.EAST, summary: "Creates a direct-check preview for East." },
+    surfaceTruthDirect: { seq: "17", section: "directExecution", label: "Surface Truth Direct", type: "direct", component: "SURFACE_TRUTH", aliases: ALIASES.SURFACE_TRUTH, summary: "Creates a direct-check preview for Surface Truth." },
+    southDirect: { seq: "18", section: "directExecution", label: "South Direct", type: "direct", component: "SOUTH", aliases: ALIASES.SOUTH, summary: "Creates a direct-check preview for South." },
+    westDirect: { seq: "19", section: "directExecution", label: "West Diagnostic Direct", type: "direct", component: "WEST_DIAGNOSTIC", aliases: ALIASES.WEST_DIAGNOSTIC, summary: "Creates a direct-check preview for West Diagnostic." },
+
+    noTouchBoundary: { seq: "20", section: "boundaryArchive", label: "No-Touch Boundary", type: "safe", summary: "Reports production/canvas/controls/runtime no-touch boundary." },
+    nextMove: { seq: "21", section: "boundaryArchive", label: "Next Move", type: "safe", summary: "Synthesizes the next lawful diagnostic move." },
+    productionManifest: { seq: "22", section: "boundaryArchive", label: "Production Manifest", type: "safe", summary: "Reports read-only awareness of Hearth production file surface." },
+    deepArchive: { seq: "99", section: "boundaryArchive", label: "Deep Archive", type: "safe", summary: "Creates the full diagnostic archive." }
+  };
+
+  var state = {
+    initializedAt: nowIso(),
+    updatedAt: nowIso(),
+    activeSection: readSession("activeSection", "chamberReceiver"),
+    activeAudit: readSession("activeAudit", "chamberIndex"),
+    targetVisible: readSession("targetVisible", "false") === "true",
+    manifestVisible: readSession("manifestVisible", "false") === "true",
+    participantLoad: [],
+    loadStarted: false,
+    loadComplete: false,
+    aliases: {},
+    directResults: {},
+    generatedText: "",
+    rawText: ""
+  };
+
+  function $(id) { return doc.getElementById(id); }
+
+  function nowIso() {
+    try { return new Date().toISOString(); } catch (_e) { return ""; }
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, finite(value, min)));
+  function safeString(value, fallback) {
+    if (fallback === undefined) fallback = "";
+    if (value === undefined || value === null) return fallback;
+    try { return String(value); } catch (_e) { return fallback; }
   }
 
-  function now() {
-    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+  function isObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
-  function one(selector, root = document) {
-    try { return root.querySelector(selector); } catch (_error) { return null; }
+  function isFunction(value) {
+    return typeof value === "function";
   }
 
-  function all(selector, root = document) {
-    try { return Array.from(root.querySelectorAll(selector)); } catch (_error) { return []; }
+  function readSession(key, fallback) {
+    try { return root.sessionStorage.getItem("hearthDiagnostic.v946." + key) || fallback; }
+    catch (_e) { return fallback; }
   }
 
-  function setText(selector, value) {
-    const node = one(selector);
-    if (!node) return false;
-    const text = String(value == null ? "" : value);
-    if (node.textContent !== text) node.textContent = text;
-    return true;
+  function writeSession(key, value) {
+    try { root.sessionStorage.setItem("hearthDiagnostic.v946." + key, safeString(value)); }
+    catch (_e) {}
   }
 
-  function setHtml(selector, value) {
-    const node = one(selector);
-    if (!node) return false;
-    const html = String(value == null ? "" : value);
-    if (node.innerHTML !== html) node.innerHTML = html;
-    return true;
+  function escapeHtml(value) {
+    return safeString(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
-  function setBool(node, name, value) {
-    if (node) node.setAttribute(name, value ? "true" : "false");
-  }
-
-  function setDataset(key, value) {
-    try {
-      document.documentElement.dataset[key] = String(value);
-      if (document.body) document.body.dataset[key] = String(value);
-    } catch (_error) {}
-  }
-
-  function recordError(scope, error) {
-    const message = error && error.message ? error.message : String(error || "unknown");
-    state.errors.push({ scope, message, at: new Date().toISOString() });
-    state.status = "ERROR";
-    state.failureCode = "ERROR";
-    state.failureReason = `${scope}: ${message}`;
-    publishStatus();
-  }
-
-  function makeSeat(band, radial) {
-    const v = (band + 0.5) / FIBONACCI_BANDS;
-    const lat = Math.asin(1 - 2 * v);
-    const lon = (radial / RADIAL_NODES) * TAU - Math.PI;
-    const clat = Math.cos(lat);
-
-    return {
-      index: band * RADIAL_NODES + radial,
-      band,
-      radial,
-      latitude: lat,
-      longitude: lon,
-      x: clat * Math.cos(lon),
-      y: Math.sin(lat),
-      z: clat * Math.sin(lon),
-      major: radial % 4 === 0 || band % 4 === 0,
-      secondary: radial % 2 === 0 || band % 2 === 0
-    };
-  }
-
-  function buildGeometry() {
-    const rings = [];
-
-    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
-      const ring = [];
-      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-        ring.push(makeSeat(band, radial));
-      }
-      rings.push(ring);
+  function readPath(path, win) {
+    var cursor = win || root;
+    var parts = safeString(path).replace(/^window\./, "").split(".").filter(Boolean);
+    for (var i = 0; i < parts.length; i += 1) {
+      if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
+      cursor = cursor[parts[i]];
     }
-
-    const seat = (band, radial) => rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
-    const link = (a, b, family, major) => ({ a, b, family, major: Boolean(major) });
-
-    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
-      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-        state.ringLinks.push(link(seat(band, radial), seat(band, radial + 1), "ring", band % 4 === 0 || radial % 4 === 0));
-      }
-    }
-
-    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-      for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-        state.spineLinks.push(link(seat(band, radial), seat(band + 1, radial), "spine", radial % 4 === 0));
-      }
-    }
-
-    const offsets = [1, 2, 3, 5, 8, 13];
-    for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
-      const offset = offsets[band % offsets.length];
-      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
-        state.fibonacciLinks.push(link(seat(band, radial), seat(band + 1, radial + offset), "fibonacci", radial % 4 === 0 || band % 4 === 0));
-      }
-    }
-
-    state.seats = rings.flat();
-    state.geometryBuilt = state.seats.length === LATTICE_STATES;
+    return cursor;
   }
 
-  function rotatePoint(point) {
-    let { x, y, z } = point;
-
-    const cy = Math.cos(state.yaw);
-    const sy = Math.sin(state.yaw);
-    const x1 = x * cy + z * sy;
-    const z1 = -x * sy + z * cy;
-    x = x1; z = z1;
-
-    const cp = Math.cos(state.pitch);
-    const sp = Math.sin(state.pitch);
-    const y1 = y * cp - z * sp;
-    const z2 = y * sp + z * cp;
-    y = y1; z = z2;
-
-    const cr = Math.cos(state.roll);
-    const sr = Math.sin(state.roll);
-
-    return {
-      x: x * cr - y * sr,
-      y: x * sr + y * cr,
-      z
-    };
+  function methodKeys(value) {
+    if (!isObject(value) && !isFunction(value)) return [];
+    try { return Object.keys(value).filter(function (key) { return isFunction(value[key]); }); }
+    catch (_e) { return []; }
   }
 
-  function metrics() {
-    const width = state.width || 640;
-    const height = state.height || 720;
-    const minSide = Math.min(width, height);
-
-    return {
-      centerX: width / 2,
-      centerY: height * 0.46,
-      radius: minSide * 0.34,
-      cameraDistance: 3.9
-    };
+  function sectionById(id) {
+    return SECTIONS.find(function (section) { return section.id === id; }) || SECTIONS[0];
   }
 
-  function projectPoint(point) {
-    const m = metrics();
-    const rotated = rotatePoint(point);
-    const perspective = m.cameraDistance / Math.max(0.72, m.cameraDistance - rotated.z);
-
-    return {
-      x: m.centerX + rotated.x * m.radius * perspective,
-      y: m.centerY - rotated.y * m.radius * perspective,
-      z: rotated.z,
-      perspective,
-      frontFacing: rotated.z >= -0.05
-    };
+  function auditById(id) {
+    return AUDITS[id] || AUDITS.chamberIndex;
   }
 
-  function clipSphere() {
-    const ctx = state.ctx;
-    const m = metrics();
-    ctx.beginPath();
-    ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
-    ctx.clip();
+  function firstAudit(sectionId) {
+    return sectionById(sectionId).audits[0] || "chamberIndex";
   }
 
-  function drawCarrier() {
-    const ctx = state.ctx;
-    const m = metrics();
-    const cx = m.centerX;
-    const cy = m.centerY;
-    const r = m.radius;
-
-    ctx.save();
-
-    const core = ctx.createRadialGradient(cx - r * .30, cy - r * .36, 0, cx, cy, r * 1.18);
-    core.addColorStop(0.00, "rgba(255,226,165,0.96)");
-    core.addColorStop(0.17, "rgba(255,143,78,0.72)");
-    core.addColorStop(0.40, "rgba(69,75,135,0.82)");
-    core.addColorStop(0.72, "rgba(12,26,74,0.97)");
-    core.addColorStop(1.00, "rgba(1,4,16,1)");
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fillStyle = core;
-    ctx.fill();
-
-    const shade = ctx.createRadialGradient(cx + r * .34, cy + r * .32, r * .10, cx, cy, r * 1.08);
-    shade.addColorStop(0.00, "rgba(0,0,0,0)");
-    shade.addColorStop(0.52, "rgba(0,0,0,0.10)");
-    shade.addColorStop(0.82, "rgba(0,0,0,0.38)");
-    shade.addColorStop(1.00, "rgba(0,0,0,0.70)");
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.fillStyle = shade;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.003, 0, TAU);
-    ctx.strokeStyle = "rgba(255,214,142,0.24)";
-    ctx.lineWidth = Math.max(.8, state.dpr * .8);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function drawReferenceLines() {
-    const ctx = state.ctx;
-    const equator = [];
-    const meridian = [];
-
-    for (let i = 0; i <= 96; i += 1) {
-      const lon = -Math.PI + (i / 96) * TAU;
-      equator.push({ x: Math.cos(lon), y: 0, z: Math.sin(lon) });
-    }
-
-    for (let i = 0; i <= 96; i += 1) {
-      const lat = -HALF_PI + (i / 96) * Math.PI;
-      meridian.push({ x: Math.cos(lat), y: Math.sin(lat), z: 0 });
-    }
-
-    function stroke(points, color, width) {
-      ctx.beginPath();
-      points.forEach((point, index) => {
-        const p = projectPoint(point);
-        if (index === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-      });
-      ctx.strokeStyle = color;
-      ctx.lineWidth = width;
-      ctx.stroke();
-    }
-
-    ctx.save();
-    clipSphere();
-    stroke(equator, "rgba(242,183,93,0.42)", Math.max(.8, state.dpr * .72));
-    stroke(meridian, "rgba(141,216,255,0.22)", Math.max(.65, state.dpr * .55));
-    ctx.restore();
-  }
-
-  function drawLinks(links, reduced) {
-    const ctx = state.ctx;
-
-    links.forEach((link) => {
-      if (reduced && !link.major && link.family === "fibonacci") return;
-
-      const a = projectPoint(link.a);
-      const b = projectPoint(link.b);
-      const front = a.frontFacing || b.frontFacing;
-      const z = (a.z + b.z) / 2;
-
-      const color = link.family === "fibonacci"
-        ? front ? `rgba(242,183,93,${clamp(.40 + z * .14, .20, .70).toFixed(3)})` : "rgba(242,183,93,0.08)"
-        : front ? `rgba(141,216,255,${clamp(.22 + z * .10, .10, .40).toFixed(3)})` : "rgba(141,216,255,0.055)";
-
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = link.major ? Math.max(.75, state.dpr * .76) : Math.max(.42, state.dpr * .46);
-      ctx.stroke();
-    });
-  }
-
-  function drawSeats(reduced) {
-    const ctx = state.ctx;
-
-    state.seats.forEach((seat) => {
-      if (reduced && !seat.major) return;
-
-      const p = projectPoint(seat);
-      const alpha = p.frontFacing ? (seat.major ? .84 : .56) : (seat.major ? .16 : .07);
-      const radius = seat.major ? 2.35 : seat.secondary ? 1.55 : 1.15;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, Math.max(1, radius * state.dpr * p.perspective), 0, TAU);
-      ctx.fillStyle = seat.major
-        ? `rgba(242,183,93,${alpha.toFixed(3)})`
-        : `rgba(141,216,255,${alpha.toFixed(3)})`;
-      ctx.fill();
-    });
-  }
-
-  function drawLattice(reduced) {
-    const ctx = state.ctx;
-    ctx.save();
-    clipSphere();
-    drawLinks(state.ringLinks, reduced);
-    drawLinks(state.spineLinks, reduced);
-    drawLinks(state.fibonacciLinks, reduced);
-    drawSeats(reduced);
-    ctx.restore();
-  }
-
-  function renderFrame(timestamp) {
-    if (state.stopped || !state.ctx || !state.geometryBuilt) return;
-
-    state.raf = 0;
-
-    const dt = state.lastFrameTime ? clamp((timestamp - state.lastFrameTime) / 1000, 0, .05) : 0;
-    state.lastFrameTime = timestamp;
-
-    if (!state.pointerActive) {
-      state.yaw += state.velocityYaw;
-      state.pitch += state.velocityPitch;
-
-      const damping = Math.pow(.938, dt * 60);
-      state.velocityYaw *= damping;
-      state.velocityPitch *= damping;
-
-      if (Math.abs(state.velocityYaw) < .00008) state.velocityYaw = 0;
-      if (Math.abs(state.velocityPitch) < .00008) state.velocityPitch = 0;
-    }
-
-    state.pitch = clamp(state.pitch, -1.16, 1.16);
-    state.roll = Math.sin(timestamp * .00018) * .010;
-
-    state.ctx.clearRect(0, 0, state.width, state.height);
-    drawCarrier();
-    drawReferenceLines();
-
-    if (state.activeLens === "diagnostic" || state.activeLens === "orbit") {
-      drawLattice(state.pointerActive);
-    } else {
-      state.ctx.save();
-      state.ctx.globalAlpha = .20;
-      drawLattice(true);
-      state.ctx.restore();
-    }
-
-    state.renderCount += 1;
-    if (state.settleFrames > 0) state.settleFrames -= 1;
-
-    writeDiagnosticSlots();
-    publishStatus();
-
-    if (
-      state.pointerActive ||
-      state.settleFrames > 0 ||
-      Math.abs(state.velocityYaw) > 0 ||
-      Math.abs(state.velocityPitch) > 0
-    ) {
-      state.raf = window.requestAnimationFrame(renderFrame);
+  function normalizeState() {
+    if (!sectionById(state.activeSection)) state.activeSection = "chamberReceiver";
+    if (!AUDITS[state.activeAudit] || AUDITS[state.activeAudit].section !== state.activeSection) {
+      state.activeAudit = firstAudit(state.activeSection);
     }
   }
 
-  function requestRender(settleFrames = 0) {
-    state.settleFrames = Math.max(state.settleFrames, settleFrames);
-    if (!state.raf && !state.stopped) state.raf = window.requestAnimationFrame(renderFrame);
+  function persistState() {
+    normalizeState();
+    writeSession("activeSection", state.activeSection);
+    writeSession("activeAudit", state.activeAudit);
+    writeSession("targetVisible", state.targetVisible ? "true" : "false");
+    writeSession("manifestVisible", state.manifestVisible ? "true" : "false");
   }
 
-  function enforceOneCanvas() {
-    if (!state.mount) return;
-
-    let canvases = all("canvas", state.mount);
-    let selected = state.canvas && state.mount.contains(state.canvas) ? state.canvas : canvases[0];
-
-    if (!selected) {
-      selected = document.createElement("canvas");
-      state.mount.appendChild(selected);
-    }
-
-    canvases = all("canvas", state.mount);
-    canvases.forEach((canvas) => {
-      if (canvas === selected) return;
-      try {
-        canvas.remove();
-        state.duplicateCanvasRemoved += 1;
-      } catch (_error) {}
-    });
-
-    state.canvas = selected;
-    state.canvas.setAttribute("data-hearth-facility-canvas", CONTRACT);
-    state.canvas.setAttribute("data-css-contract", CSS_CONTRACT);
-    state.canvas.setAttribute("data-html-contract", HTML_CONTRACT);
-    state.canvas.setAttribute("data-location", "unknown");
-    state.canvas.setAttribute("data-canvas-release-authorized", "false");
-
-    state.canvas.style.position = "absolute";
-    state.canvas.style.inset = "0";
-    state.canvas.style.width = "100%";
-    state.canvas.style.height = "100%";
-    state.canvas.style.display = "block";
-    state.canvas.style.background = "transparent";
-    state.canvas.style.pointerEvents = "none";
-
-    state.ctx = state.canvas.getContext("2d", { alpha: true });
-    state.oneCanvas = Boolean(state.ctx);
+  function setText(id, value) {
+    var node = $(id);
+    if (node) node.textContent = safeString(value);
   }
 
-  function updateDimensions(rect) {
-    if (!rect || !state.canvas || !state.ctx) return false;
-
-    const dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
-    const width = Math.max(320, Math.floor(rect.width * dpr));
-    const height = Math.max(460, Math.floor(rect.height * dpr));
-
-    state.rect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
-
-    if (state.width === width && state.height === height && state.dpr === dpr) return false;
-
-    state.width = width;
-    state.height = height;
-    state.dpr = dpr;
-    state.canvas.width = width;
-    state.canvas.height = height;
-    requestRender(8);
-    return true;
+  function normalizePath(src) {
+    try { return new URL(src, root.location.origin).pathname; }
+    catch (_e) { return safeString(src); }
   }
 
-  function measureStage() {
-    if (!state.stage) return false;
-    return updateDimensions(state.stage.getBoundingClientRect());
+  function findScript(path) {
+    var scripts = Array.prototype.slice.call(doc.querySelectorAll("script[src]"));
+    return scripts.find(function (script) {
+      var src = script.getAttribute("src") || script.src || "";
+      return normalizePath(src) === path || src.indexOf(path) !== -1;
+    }) || null;
   }
 
-  function setupResize() {
-    measureStage();
-
-    if (typeof ResizeObserver !== "undefined" && state.stage) {
-      resizeObserver = new ResizeObserver(() => measureStage());
-      try { resizeObserver.observe(state.stage); } catch (_error) {}
-    }
-
-    window.addEventListener("resize", () => {
-      measureStage();
-      requestRender(8);
-    }, signal ? { signal, passive: true } : { passive: true });
-  }
-
-  function pointerPoint(event) {
-    const rect = state.rect || state.stage.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
-  }
-
-  function resetCarrier() {
-    state.yaw = -0.48;
-    state.pitch = -0.14;
-    state.roll = 0;
-    state.velocityYaw = 0;
-    state.velocityPitch = 0;
-    requestRender(12);
-  }
-
-  function bindPointer() {
-    if (!state.stage) return;
-
-    state.stage.addEventListener("pointerdown", (event) => {
-      const t = now();
-      if (t - state.lastTap < 320) resetCarrier();
-      state.lastTap = t;
-
-      state.pointerActive = true;
-      state.pointerId = event.pointerId;
-
-      const p = pointerPoint(event);
-      state.pointerX = p.x;
-      state.pointerY = p.y;
-      state.velocityYaw = 0;
-      state.velocityPitch = 0;
-
-      try { state.stage.setPointerCapture(event.pointerId); } catch (_error) {}
-
-      requestRender(4);
-      event.preventDefault();
-    }, signal ? { signal, passive: false } : { passive: false });
-
-    state.stage.addEventListener("pointermove", (event) => {
-      if (!state.pointerActive) return;
-
-      const p = pointerPoint(event);
-      const dx = p.x - state.pointerX;
-      const dy = p.y - state.pointerY;
-
-      state.pointerX = p.x;
-      state.pointerY = p.y;
-
-      state.yaw += dx * .0082;
-      state.pitch = clamp(state.pitch + dy * .0054, -1.16, 1.16);
-      state.velocityYaw = clamp(dx * .0022, -.048, .048);
-      state.velocityPitch = clamp(dy * .0014, -.038, .038);
-
-      requestRender(2);
-      event.preventDefault();
-    }, signal ? { signal, passive: false } : { passive: false });
-
-    const release = (event) => {
-      if (!state.pointerActive) return;
-      state.pointerActive = false;
-
-      try {
-        if (state.pointerId !== null) state.stage.releasePointerCapture(state.pointerId);
-      } catch (_error) {}
-
-      state.pointerId = null;
-      requestRender(18);
-
-      try { event.preventDefault(); } catch (_error2) {}
-    };
-
-    state.stage.addEventListener("pointerup", release, signal ? { signal, passive: false } : { passive: false });
-    state.stage.addEventListener("pointercancel", release, signal ? { signal, passive: false } : { passive: false });
-    state.stage.addEventListener("lostpointercapture", release, signal ? { signal, passive: false } : { passive: false });
-
-    state.onePointerPath = true;
-  }
-
-  function setLens(lens) {
-    const clean = Object.prototype.hasOwnProperty.call(LENS_COPY, lens) ? lens : "facility";
-    state.activeLens = clean;
-
-    all("[data-hearth-lens-button]").forEach((button) => {
-      const active = button.getAttribute("data-hearth-lens-button") === clean;
-      button.setAttribute("aria-pressed", active ? "true" : "false");
-      setBool(button, "data-active", active);
-      setBool(button, "data-muted", !active);
-    });
-
-    setText("[data-hearth-lens-title]", LENS_COPY[clean].title);
-    setText("[data-hearth-lens-copy]", LENS_COPY[clean].copy);
-    setHtml("[data-hearth-stage-label]", LENS_COPY[clean].label);
-
-    writeDiagnosticSlots();
-    requestRender(clean === "facility" ? 8 : 14);
-    publishStatus();
-  }
-
-  function setCategory(category) {
-    const clean = String(category || "chamber").trim();
-
-    state.activeCategory = clean;
-
-    all("[data-hearth-category-button]").forEach((button) => {
-      const active = button.getAttribute("data-hearth-category-button") === clean;
-      setBool(button, "data-active", active);
-      setBool(button, "data-muted", !active);
-    });
-
-    all("[data-hearth-category-panel]").forEach((panel) => {
-      const active = panel.getAttribute("data-hearth-category-panel") === clean;
-      setBool(panel, "data-active", active);
-      panel.hidden = !active;
-    });
-
-    publishStatus();
-  }
-
-  function buildSpectrum() {
-    const spectrum = one("[data-hearth-spectrum]");
-    if (!spectrum) return;
-
-    spectrum.innerHTML = "";
-
-    for (let index = 1; index <= LATTICE_STATES; index += 1) {
-      const cell = document.createElement("button");
-      cell.type = "button";
-      cell.setAttribute("aria-label", `Hearth diagnostic state ${index}`);
-      cell.setAttribute("data-hearth-spectrum-cell", String(index));
-      spectrum.appendChild(cell);
-    }
-  }
-
-  function activateMatrixCell(cell) {
-    all("[data-hearth-matrix-cell]").forEach((node) => {
-      const active = node === cell;
-      setBool(node, "data-active", active);
-      setBool(node, "data-muted", !active);
-    });
-
-    state.activeMatrixCell = cell.getAttribute("data-hearth-matrix-cell") || cell.textContent.trim();
-    setText("[data-hearth-matrix-readout]", `Selected chamber: ${state.activeMatrixCell}`);
-    publishStatus();
-  }
-
-  function activateSpectrumCell(cell) {
-    all("[data-hearth-spectrum-cell]").forEach((node) => {
-      const active = node === cell;
-      setBool(node, "data-active", active);
-      setBool(node, "data-muted", false);
-    });
-
-    state.activeSpectrumCell = cell.getAttribute("data-hearth-spectrum-cell") || "";
-    setText("[data-hearth-spectrum-readout]", `Selected diagnostic state: ${state.activeSpectrumCell} of 256.`);
-    publishStatus();
-  }
-
-  function returnToOrbit() {
-    state.activeLens = "facility";
-    state.activeCategory = "chamber";
-    state.activeMatrixCell = "";
-    state.activeSpectrumCell = "";
-
-    all("[data-hearth-spectrum-cell], [data-hearth-matrix-cell]").forEach((node) => {
-      setBool(node, "data-active", false);
-      setBool(node, "data-muted", false);
-    });
-
-    setLens("facility");
-    setCategory("chamber");
-    resetCarrier();
-
-    const stage = one("#hearthGlobeStage");
-    if (stage) {
-      window.setTimeout(() => {
-        stage.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "center" });
-      }, 30);
-    }
-
-    publishStatus();
-  }
-
-  function prefersReducedMotion() {
-    return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }
-
-  function writeDiagnosticSlots() {
-    let written = true;
-
-    written = setText("[data-hearth-diagnostic-route]", "Hearth facility route · Mirrorland alias active") && written;
-    written = setText("[data-hearth-diagnostic-location]", "unknown") && written;
-    written = setText("[data-hearth-diagnostic-carrier]", state.oneCanvas ? "one canvas carrier mounted" : "canvas carrier pending") && written;
-    written = setText("[data-hearth-diagnostic-lens]", state.activeLens) && written;
-    written = setText("[data-hearth-diagnostic-category]", state.activeCategory) && written;
-    written = setText("[data-hearth-diagnostic-loop]", state.renderCount > 0 ? "RAF carrier loop active" : "loop pending") && written;
-    written = setText("[data-hearth-diagnostic-spectrum]", "16 × 16 / 256 local chamber spectrum") && written;
-    written = setText("[data-hearth-diagnostic-authority]", "mutation held · no F13/F21 claim") && written;
-
-    state.diagnosticSlotsWritten = written;
-
-    setDataset("hearthShowroomContract", CONTRACT);
-    setDataset("hearthShowroomCssContract", CSS_CONTRACT);
-    setDataset("hearthShowroomHtmlContract", HTML_CONTRACT);
-    setDataset("hearthFacilityAlias", "true");
-    setDataset("hearthFacilityLocation", "unknown");
-    setDataset("hearthActiveLens", state.activeLens);
-    setDataset("hearthActiveCategory", state.activeCategory);
-    setDataset("hearthOneCanvas", state.oneCanvas);
-    setDataset("hearthLatticeStates", LATTICE_STATES);
-    setDataset("hearthCanvasReleaseAuthorized", "false");
-    setDataset("hearthVisualPassClaimed", "false");
-  }
-
-  function publishStatus() {
-    const payload = {
-      contract: CONTRACT,
-      cssContract: CSS_CONTRACT,
-      htmlContract: HTML_CONTRACT,
-      route: ROUTE,
-      targetFile: TARGET_FILE,
-
-      hearthAliasForFacility: true,
-      locationKnown: false,
-      location: "unknown",
-      mirrorlandCollaborativeTheme: true,
-      eerieMysticalFacilityTheme: true,
-
-      activeLens: state.activeLens,
-      activeCategory: state.activeCategory,
-      activeMatrixCell: state.activeMatrixCell,
-      activeSpectrumCell: state.activeSpectrumCell,
-
-      oneCanvas: state.oneCanvas,
-      onePointerPath: state.onePointerPath,
-      geometryBuilt: state.geometryBuilt,
-      radialNodes: RADIAL_NODES,
-      fibonacciBands: FIBONACCI_BANDS,
-      latticeStates: LATTICE_STATES,
-
-      diagnosticSlotsWritten: state.diagnosticSlotsWritten,
-      renderCount: state.renderCount,
-      duplicateCanvasRemoved: state.duplicateCanvasRemoved,
-
-      productionMutationAuthorized: false,
-      canvasRepairAuthorized: false,
-      canvasBuildAuthorized: false,
-      canvasReleaseAuthorized: false,
-      controlsRepairAuthorized: false,
-      runtimeRestartAuthorized: false,
-      routeRepairAuthorized: false,
-      targetRouteRendererMutationAuthorized: false,
-      readyTextClaimed: false,
-      f13Claimed: false,
-      f21Claimed: false,
-      visualPassClaimed: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-
-      status: state.status,
-      failureCode: state.failureCode,
-      failureReason: state.failureReason,
-      errors: state.errors.slice(),
-      updatedAt: new Date().toISOString()
-    };
-
-    window[STATUS_GLOBAL] = payload;
-    window.HEARTH = window.HEARTH || {};
-    window.HEARTH.showroomFacilityStatus = payload;
-
-    return payload;
-  }
-
-  function stop() {
-    state.stopped = true;
-
-    if (state.raf) {
-      try { window.cancelAnimationFrame(state.raf); } catch (_error) {}
-    }
-
-    state.raf = 0;
-
-    if (resizeObserver) {
-      try { resizeObserver.disconnect(); } catch (_error2) {}
-    }
-
-    if (abortController) {
-      try { abortController.abort(); } catch (_error3) {}
-    }
-  }
-
-  function exposeApi() {
-    const api = {
-      contract: CONTRACT,
-      cssContract: CSS_CONTRACT,
-      htmlContract: HTML_CONTRACT,
-      route: ROUTE,
-      targetFile: TARGET_FILE,
-      state,
-      setLens,
-      setCategory,
-      resetCarrier,
-      returnToOrbit,
-      writeDiagnosticSlots,
-      publishStatus,
-      stop
-    };
-
-    window[CONTROLLER_GLOBAL] = api;
-    window.HEARTH = window.HEARTH || {};
-    window.HEARTH.showroomFacilityController = api;
-  }
-
-  function attachEvents() {
-    all("[data-hearth-lens-button]").forEach((button) => {
-      button.addEventListener("click", () => {
-        setLens(button.getAttribute("data-hearth-lens-button") || "facility");
-      }, signal ? { signal } : false);
-    });
-
-    all("[data-hearth-category-button]").forEach((button) => {
-      button.addEventListener("click", () => {
-        setCategory(button.getAttribute("data-hearth-category-button") || "chamber");
-      }, signal ? { signal } : false);
-    });
-
-    all("[data-hearth-matrix-cell]").forEach((cell) => {
-      cell.addEventListener("click", () => activateMatrixCell(cell), signal ? { signal } : false);
-    });
-
-    document.addEventListener("click", (event) => {
-      const returnTrigger = event.target.closest("[data-hearth-return-to-orbit]");
-      if (returnTrigger) {
-        event.preventDefault();
-        returnToOrbit();
+  function loadParticipant(entry) {
+    return new Promise(function (resolve) {
+      if (findScript(entry.path)) {
+        resolve(recordLoad(entry, "loaded", true));
         return;
       }
 
-      const spectrumCell = event.target.closest("[data-hearth-spectrum-cell]");
-      if (spectrumCell) activateSpectrumCell(spectrumCell);
-    }, signal ? { signal } : false);
+      var script = doc.createElement("script");
+      var done = false;
+
+      function finish(status) {
+        if (done) return;
+        done = true;
+        resolve(recordLoad(entry, status, false));
+      }
+
+      script.src = entry.path;
+      script.defer = true;
+      script.dataset.hearthDiagnosticParticipant = "true";
+      script.onload = function () { finish("loaded"); };
+      script.onerror = function () { finish(entry.required ? "error_required" : "error_optional"); };
+
+      root.setTimeout(function () {
+        finish(entry.required ? "timeout_required" : "timeout_optional");
+      }, 4500);
+
+      doc.head.appendChild(script);
+    });
   }
 
-  function init() {
-    const prior = window[CONTROLLER_GLOBAL];
-    if (prior && prior.contract !== CONTRACT && typeof prior.stop === "function") {
-      try { prior.stop(); } catch (_error) {}
+  function recordLoad(entry, status, reused) {
+    var result = {
+      group: entry.group,
+      role: entry.role,
+      path: entry.path,
+      required: Boolean(entry.required),
+      status: status,
+      reused: Boolean(reused),
+      settledAt: nowIso()
+    };
+
+    var existing = state.participantLoad.find(function (item) { return item.path === entry.path; });
+    if (existing) Object.assign(existing, result);
+    else state.participantLoad.push(result);
+
+    renderStatus();
+    return result;
+  }
+
+  function loadParticipants() {
+    state.loadStarted = true;
+    state.loadComplete = false;
+    renderStatus();
+
+    return PARTICIPANTS.reduce(function (chain, entry) {
+      return chain.then(function () { return loadParticipant(entry); });
+    }, Promise.resolve()).then(function () {
+      state.loadComplete = true;
+      probeAliases();
+      renderStatus();
+      publishApi();
+    });
+  }
+
+  function probeAlias(alias) {
+    var value = readPath(alias);
+    var methods = methodKeys(value);
+
+    return {
+      alias: alias,
+      found: Boolean(value),
+      valueType: value ? typeof value : "undefined",
+      methodCount: methods.length,
+      methodKeys: methods.join(","),
+      contract: value && isObject(value) ? safeString(value.CONTRACT || value.contract || "UNKNOWN") : "UNKNOWN",
+      receipt: value && isObject(value) ? safeString(value.RECEIPT || value.receipt || "UNKNOWN") : "UNKNOWN",
+      internalRenewalContract: value && isObject(value)
+        ? safeString(value.INTERNAL_RENEWAL_CONTRACT || value.internalRenewalContract || "UNKNOWN")
+        : "UNKNOWN"
+    };
+  }
+
+  function probeAliases() {
+    var output = {};
+    Object.keys(ALIASES).forEach(function (key) {
+      var probes = ALIASES[key].map(probeAlias);
+      var first = probes.find(function (item) { return item.found; });
+
+      output[key] = {
+        label: key,
+        present: Boolean(first),
+        authorityPath: first ? first.alias : "NONE",
+        valueType: first ? first.valueType : "undefined",
+        methodCount: first ? first.methodCount : 0,
+        methodKeys: first ? first.methodKeys : "",
+        probe: probes
+      };
+    });
+    state.aliases = output;
+    return output;
+  }
+
+  function loadSummary() {
+    var required = state.participantLoad.filter(function (item) { return item.required; });
+    var requiredBad = required.filter(function (item) { return item.status !== "loaded"; });
+    var optionalBad = state.participantLoad.filter(function (item) { return !item.required && item.status !== "loaded"; });
+
+    return {
+      requiredCount: required.length,
+      requiredBadCount: requiredBad.length,
+      optionalBadCount: optionalBad.length,
+      allRequiredLoaded: state.loadComplete && requiredBad.length === 0,
+      allLoaded: state.participantLoad.length > 0 && state.participantLoad.every(function (item) { return item.status === "loaded"; })
+    };
+  }
+
+  function getTargetAccess() {
+    var frame = $("hearthDiagnosticTargetFrame");
+    var frameDoc = null;
+    var path = "UNKNOWN";
+    var title = "UNKNOWN";
+    var error = "NONE";
+
+    try {
+      frameDoc = frame && (frame.contentDocument || (frame.contentWindow && frame.contentWindow.document));
+      if (frameDoc && frameDoc.location) path = frameDoc.location.pathname || "UNKNOWN";
+      if (frameDoc && frameDoc.title) title = frameDoc.title || "UNKNOWN";
+    } catch (caught) {
+      error = caught && caught.message ? caught.message : "TARGET_FRAME_ACCESS_ERROR";
     }
 
-    state.stage = one("#hearthGlobeStage");
-    state.mount = one("#hearthGlobeMount");
+    return {
+      status: frameDoc ? "TARGET_ACCESS_CONFIRMED" : "TARGET_ACCESS_NOT_CONFIRMED",
+      routeConfirmed: path === TARGET_ROUTE || path === TARGET_ROUTE.replace(/\/$/, ""),
+      framePresent: Boolean(frame),
+      frameAccessible: Boolean(frameDoc),
+      error: error,
+      targetPath: path,
+      targetTitle: title
+    };
+  }
 
-    if (!state.stage || !state.mount) {
-      recordError("init", "Missing #hearthGlobeStage or #hearthGlobeMount");
-      writeDiagnosticSlots();
-      exposeApi();
+  function readReceipt(value) {
+    if (!value || (!isObject(value) && !isFunction(value))) return {};
+    var methods = ["getReceiptLight", "getReceipt", "getStatus", "getState", "getReport"];
+    for (var i = 0; i < methods.length; i += 1) {
+      try {
+        if (isFunction(value[methods[i]])) {
+          var out = value[methods[i]]();
+          if (isObject(out)) return out;
+        }
+      } catch (_e) {}
+    }
+    return isObject(value) ? value : {};
+  }
+
+  function manifestAliases(key) {
+    var map = {
+      CANVAS_BISHOP: ["HEARTH_CANVAS_BISHOP", "HEARTH.canvasBishop", "HEARTH.canvas", "DEXTER_LAB.hearthCanvasBishop"],
+      HAND_GEOMETRY: ["HEARTH_CANVAS_HAND_GEOMETRY", "HEARTH.canvasHandGeometry", "DEXTER_LAB.hearthCanvasHandGeometry"],
+      HAND_CONTEXT: ["HEARTH_CANVAS_HAND_CONTEXT", "HEARTH.canvasHandContext", "DEXTER_LAB.hearthCanvasHandContext"],
+      HAND_PAINT: ["HEARTH_CANVAS_HAND_PAINT", "HEARTH.canvasHandPaint", "DEXTER_LAB.hearthCanvasHandPaint"],
+      HAND_VIEW: ["HEARTH_CANVAS_HAND_VIEW", "HEARTH.canvasHandView", "DEXTER_LAB.hearthCanvasHandView"],
+      HAND_INSPECT: ["HEARTH_CANVAS_HAND_INSPECT", "HEARTH.canvasHandInspect", "DEXTER_LAB.hearthCanvasHandInspect"],
+      HEX_AUTHORITY_BRIDGE: ["HEARTH_HEX_FOUR_PAIR_AUTHORITY", "HEARTH.hexFourPairAuthority", "HEARTH.hexAuthority"],
+      HEX_SURFACE_BRIDGE: ["HEARTH_HEX_SURFACE", "HEARTH.hexSurface", "HEARTH_HEX_SURFACE_RENDERER"],
+      FINGER_SURFACE: ["HEARTH_CANVAS_FINGER_SURFACE", "HEARTH.canvasFingerSurface"],
+      FINGER_BOUNDARY: ["HEARTH_CANVAS_FINGER_BOUNDARY", "HEARTH.canvasFingerBoundary"],
+      FINGER_INSPECT: ["HEARTH_CANVAS_FINGER_INSPECT", "HEARTH.canvasFingerInspect"],
+      FINGER_LIGHT: ["HEARTH_CANVAS_FINGER_LIGHT", "HEARTH.canvasFingerLight"]
+    };
+    return map[key] || [];
+  }
+
+  function inspectProductionManifest() {
+    var frame = $("hearthDiagnosticTargetFrame");
+    var frameDoc = null;
+    var frameWin = null;
+
+    try {
+      frameDoc = frame && (frame.contentDocument || (frame.contentWindow && frame.contentWindow.document));
+      frameWin = frame && frame.contentWindow ? frame.contentWindow : null;
+    } catch (_e) {}
+
+    return PRODUCTION_MANIFEST.map(function (item) {
+      var scriptInTarget = false;
+
+      if (frameDoc) {
+        try {
+          scriptInTarget = Boolean(Array.prototype.slice.call(frameDoc.querySelectorAll("script[src]")).find(function (script) {
+            var src = script.getAttribute("src") || script.src || "";
+            return normalizePath(src) === item.path || src.indexOf(item.path) !== -1;
+          }));
+        } catch (_e) {}
+      }
+
+      var observed = null;
+      var observedAlias = "NONE";
+      var aliases = manifestAliases(item.key);
+
+      for (var i = 0; i < aliases.length; i += 1) {
+        observed = readPath(aliases[i]) || (frameWin ? readPath(aliases[i], frameWin) : null);
+        if (observed) {
+          observedAlias = aliases[i];
+          break;
+        }
+      }
+
+      var receipt = readReceipt(observed);
+      var methods = methodKeys(observed);
+
+      return {
+        key: item.key,
+        path: item.path,
+        kind: item.kind,
+        required: item.required,
+        scriptInTarget: scriptInTarget,
+        authorityObserved: Boolean(observed),
+        authorityAlias: observedAlias,
+        methodCount: methods.length,
+        methodKeys: methods.join(","),
+        contract: safeString(receipt.CONTRACT || receipt.contract || "UNKNOWN"),
+        receipt: safeString(receipt.RECEIPT || receipt.receipt || "UNKNOWN"),
+        componentStatus: safeString(receipt.componentStatus || receipt.status || "UNKNOWN")
+      };
+    });
+  }
+
+  function basePacket(seq, label, component, extra) {
+    var audit = auditById(state.activeAudit);
+    var section = sectionById(state.activeSection);
+
+    var packet = {
+      PACKET: "HEARTH_DIAGNOSTIC_WORKBENCH_REPORT_" + safeString(seq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_6_FIX_1",
+      RECEIPT_LEVEL: "2_SINGLE_AUDIT_WORKBENCH_REPORT",
+      AUDIT_SEQUENCE: seq,
+      AUDIT_LABEL: label,
+      COMPONENT: component,
+
+      CONTRACT: CONTRACT,
+      RECEIPT: RECEIPT,
+      CSS_CONTRACT: CSS_CONTRACT,
+      HTML_SHELL_CONTRACT: HTML_SHELL_CONTRACT,
+      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+      INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
+      PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+
+      TARGET_ROUTE: TARGET_ROUTE,
+      DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+      WORKBENCH_MODEL: "CATEGORY_BUBBLE_FILTERS_AUDIT_BUBBLE_LOCAL_REPORT_ACTIONS_RETURN_AND_MANIFEST_AWARENESS",
+      REPORT_SOURCE_OF_TRUTH: "BUTTON_CONTROLLER_STATE",
+
+      SELECTED_CATEGORY_ID: state.activeSection,
+      SELECTED_CATEGORY_LABEL: section.label,
+      SELECTED_AUDIT_ID: state.activeAudit,
+      SELECTED_AUDIT_LABEL: audit.label,
+      SELECTED_AUDIT_SEQUENCE: audit.seq,
+      RESOLVED_FROM: "BUTTON_CONTROLLER_STATE",
+
+      BUTTON_CONTROLLER_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+      BUTTON_CONTROLLER_BOOTED: true,
+      DROPDOWN_BINDINGS_INSTALLED: true,
+      RETURN_TO_HEARTH_ACTIVE: true,
+      PRODUCTION_MANIFEST_AWARENESS_ACTIVE: true,
+
+      RUN_STATE: "REPORT_CREATED",
+      TRUST_STATE: "CURRENT",
+      BLOCKING: false,
+      UPDATED_AT: nowIso()
+    };
+
+    Object.assign(packet, extra || {});
+    Object.assign(packet, NO_CLAIMS);
+    return packet;
+  }
+
+  function lineValue(value) {
+    if (value === undefined || value === null || value === "") return "UNKNOWN";
+    if (Array.isArray(value) || isObject(value)) {
+      try { return JSON.stringify(value); } catch (_e) { return "[object]"; }
+    }
+    return safeString(value);
+  }
+
+  function packetText(packet) {
+    return Object.keys(packet || {}).map(function (key) {
+      return key + "=" + lineValue(packet[key]);
+    }).join("\n");
+  }
+
+  function rawJson(packet) {
+    try { return JSON.stringify(packet, null, 2); }
+    catch (_e) { return packetText(packet); }
+  }
+
+  function buildReport(auditId) {
+    var audit = auditById(auditId);
+    var aliases = probeAliases();
+    var summary = loadSummary();
+
+    if (audit.type === "direct") return directPreview(auditId);
+
+    if (auditId === "chamberIndex") {
+      return basePacket(audit.seq, audit.label, "CHAMBER", {
+        RECEIPT_LEVEL: "1_CHAMBER_INDEX",
+        VERSION: VERSION,
+        LOAD_STARTED: state.loadStarted,
+        LOAD_COMPLETE: state.loadComplete,
+        ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
+        PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
+        SECTION_COUNT: SECTIONS.length,
+        AUDIT_COUNT: Object.keys(AUDITS).length,
+        NEXT_ACTION: "CHOOSE_AUDIT_AND_CREATE_REPORT"
+      });
+    }
+
+    if (auditId === "receiverHealth") {
+      return basePacket(audit.seq, audit.label, "RECEIVER", {
+        LOAD_STARTED: state.loadStarted,
+        LOAD_COMPLETE: state.loadComplete,
+        REQUIRED_COUNT: summary.requiredCount,
+        REQUIRED_BAD_COUNT: summary.requiredBadCount,
+        OPTIONAL_BAD_COUNT: summary.optionalBadCount,
+        RECEIVER_STATUS: summary.allRequiredLoaded ? "RECEIVER_READY" : "RECEIVER_LOAD_INCOMPLETE"
+      });
+    }
+
+    if (auditId === "targetAccess") {
+      return basePacket(audit.seq, audit.label, "TARGET_ACCESS", getTargetAccess());
+    }
+
+    if (auditId === "loadSequence") {
+      return basePacket(audit.seq, audit.label, "PARTICIPANT_LOAD_SEQUENCE", {
+        PARTICIPANT_LOAD: state.participantLoad,
+        LOAD_SUMMARY: summary
+      });
+    }
+
+    if (auditId === "aliasMap") {
+      return basePacket(audit.seq, audit.label, "ALIAS_MAP", { ALIASES: aliases });
+    }
+
+    if (auditId === "productionManifest") {
+      var manifest = inspectProductionManifest();
+      return basePacket(audit.seq, audit.label, "PRODUCTION_MANIFEST", {
+        RECEIPT_LEVEL: "4_PRODUCTION_AWARENESS_REPORT",
+        PRODUCTION_MANIFEST_COUNT: manifest.length,
+        PRODUCTION_MANIFEST_OBSERVED_COUNT: manifest.filter(function (item) {
+          return item.scriptInTarget || item.authorityObserved;
+        }).length,
+        PRODUCTION_MANIFEST: manifest,
+        DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE,TARGET_RENDERER"
+      });
+    }
+
+    if (auditId === "deepArchive") {
+      return {
+        PACKET: "HEARTH_DIAGNOSTIC_WORKBENCH_DEEP_ARCHIVE_99_v9_4_6_FIX_1",
+        RECEIPT_LEVEL: "5_DEEP_ARCHIVE",
+        AUDIT_SEQUENCE: "99",
+        AUDIT_LABEL: "Deep Archive",
+        CONTRACT: CONTRACT,
+        RECEIPT: RECEIPT,
+        CSS_CONTRACT: CSS_CONTRACT,
+        HTML_SHELL_CONTRACT: HTML_SHELL_CONTRACT,
+        INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+        INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
+        TARGET_ROUTE: TARGET_ROUTE,
+        DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+        STATE: state,
+        ALIASES: aliases,
+        TARGET_ACCESS: getTargetAccess(),
+        PRODUCTION_MANIFEST: inspectProductionManifest(),
+        NO_CLAIMS: NO_CLAIMS,
+        UPDATED_AT: nowIso()
+      };
+    }
+
+    if (auditId === "nextMove") {
+      return basePacket(audit.seq, audit.label, "NEXT_LAWFUL_MOVE", {
+        RECEIPT_LEVEL: "4_SYNTHESIS",
+        FIRST_BLOCKING_COMPONENT: summary.allRequiredLoaded ? "NONE" : "REQUIRED_PARTICIPANT_LOAD",
+        NEXT_FILE: summary.allRequiredLoaded ? "/assets/hearth/hearth.canvas.js" : DIAGNOSTIC_ROUTE,
+        NEXT_ACTION: summary.allRequiredLoaded ? "MEASURE_CANVAS_BISHOP_AND_MANIFEST" : "INSPECT_LOAD_SEQUENCE"
+      });
+    }
+
+    if (auditId === "canvasBoundary" || auditId === "noTouchBoundary") {
+      return basePacket(audit.seq, audit.label, auditId === "canvasBoundary" ? "CANVAS_BOUNDARY" : "NO_TOUCH_BOUNDARY", {
+        PRODUCTION_MUTATION_AUTHORIZED: false,
+        CANVAS_REPAIR_AUTHORIZED: false,
+        CANVAS_BUILD_AUTHORIZED: false,
+        CANVAS_RELEASE_AUTHORIZED: false,
+        BOUNDARY_REASON: "DIAGNOSTIC_REPORT_ONLY_NO_PRODUCTION_ACTION_AUTHORIZED"
+      });
+    }
+
+    var componentMap = {
+      northSignal: ["NORTH_SIGNAL", ["NORTH", "LAB_NORTH"]],
+      eastSource: ["EAST_SOURCE", ["EAST", "LAB_EAST"]],
+      southLens: ["SOUTH_LENS", ["SOUTH", "LAB_SOUTH"]],
+      southSurfacePointer: ["SOUTH_SURFACE_POINTER", ["SOUTH_SURFACE_POINTER"]],
+      labWestGate: ["LABWEST_GATE", ["LABWEST"]],
+      westDiagnostic: ["WEST_DIAGNOSTIC", ["WEST_DIAGNOSTIC", "LABWEST"]],
+      eastSourceDetail: ["EAST_SOURCE_DETAIL", ["EAST", "LAB_EAST"]],
+      surfaceTruthDetail: ["SURFACE_TRUTH_DETAIL", ["SURFACE_TRUTH"]],
+      targetSurfaceAccess: ["TARGET_SURFACE_ACCESS", ["SURFACE_TRUTH"]]
+    };
+
+    if (componentMap[auditId]) {
+      var spec = componentMap[auditId];
+      var payload = { GROUPS_TESTED: spec[1].join(",") };
+      spec[1].forEach(function (key) {
+        var item = aliases[key] || {};
+        payload[key + "_PRESENT"] = Boolean(item.present);
+        payload[key + "_AUTHORITY_PATH"] = item.authorityPath || "NONE";
+        payload[key + "_METHOD_COUNT"] = item.methodCount || 0;
+        payload[key + "_METHOD_KEYS"] = item.methodKeys || "";
+        payload[key + "_PROBE"] = item.probe || [];
+      });
+      return basePacket(audit.seq, audit.label, spec[0], payload);
+    }
+
+    return basePacket(audit.seq, audit.label, "UNKNOWN", {
+      RUN_STATE: "AUDIT_BUILDER_NOT_DEFINED"
+    });
+  }
+
+  function resolveAuthority(audit) {
+    var aliases = audit.aliases || [];
+    var candidates = aliases.map(function (alias) {
+      var value = readPath(alias);
+      var methods = methodKeys(value);
+      return {
+        alias: alias,
+        value: value,
+        found: Boolean(value),
+        methodCount: methods.length,
+        methodKeys: methods.join(","),
+        score: Boolean(value) ? methods.length + 100 : 0
+      };
+    }).filter(function (item) { return item.found; });
+
+    candidates.sort(function (a, b) { return b.score - a.score; });
+    return candidates[0] || null;
+  }
+
+  function directPreview(auditId) {
+    var audit = auditById(auditId);
+    var resolved = resolveAuthority(audit);
+    var methods = resolved ? methodKeys(resolved.value) : [];
+
+    return basePacket(audit.seq, audit.label, audit.component || auditId, {
+      RECEIPT_LEVEL: "3_DIRECT_PREVIEW",
+      AUDIT_TYPE: "DIRECT_PREVIEW",
+      RUN_STATE: "DIRECT_PREVIEW_NOT_EXECUTED",
+      EXECUTION_REQUIRED: true,
+      RUN_EXECUTED: false,
+      DIRECT_AUTHORITY_PATH: resolved ? resolved.alias : "NONE",
+      AUTHORITY_METHOD_COUNT: methods.length,
+      AUTHORITY_METHOD_KEYS: methods.join(","),
+      NEXT_ACTION: "CLICK_RUN_DIRECT_CHECK_TO_EXECUTE"
+    });
+  }
+
+  function runDirectCheck(auditId) {
+    var audit = auditById(auditId);
+    var resolved = resolveAuthority(audit);
+    var packet = null;
+    var method = "NONE";
+    var error = "NONE";
+
+    if (resolved && resolved.value) {
+      var methods = ["run", "runDiagnostic", "inspect", "measure", "getReport", "getReceipt"];
+      for (var i = 0; i < methods.length; i += 1) {
+        if (isFunction(resolved.value[methods[i]])) {
+          try {
+            method = methods[i];
+            packet = resolved.value[methods[i]]();
+            break;
+          } catch (caught) {
+            error = caught && caught.message ? caught.message : String(caught);
+            break;
+          }
+        }
+      }
+    }
+
+    var out = basePacket(audit.seq, audit.label, audit.component || auditId, {
+      RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
+      AUDIT_TYPE: "DIRECT",
+      RUN_STATE: packet ? "DIRECT_RUN_EXECUTED" : resolved ? "AUTHORITY_FOUND_NOT_RUN" : "AUTHORITY_NOT_FOUND",
+      TRUST_STATE: resolved ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
+      RUN_EXECUTED: Boolean(packet),
+      DIRECT_AUTHORITY_PATH: resolved ? resolved.alias : "NONE",
+      DIRECT_METHOD: method,
+      DIRECT_ERROR: error,
+      DIRECT_PACKET_KEYS: packet && isObject(packet) ? Object.keys(packet).join(",") : "",
+      DIRECT_PACKET: packet && isObject(packet) ? packet : {},
+      NEXT_ACTION: packet ? "COPY_REPORT_OR_RUN_NEXT_AUDIT" : "INSPECT_AUTHORITY_AND_METHOD_SURFACE"
+    });
+
+    state.directResults[auditId] = out;
+    return out;
+  }
+
+  function renderDropdowns() {
+    normalizeState();
+
+    var section = sectionById(state.activeSection);
+    var audit = auditById(state.activeAudit);
+
+    setText("categoryDropdownLabel", section.label);
+    setText("categoryDropdownMeta", section.hint);
+    setText("auditDropdownLabel", audit.seq + " · " + audit.label);
+    setText("auditDropdownMeta", (audit.type === "direct" ? "Direct" : "Safe") + " · " + audit.summary);
+
+    setText("selectedAuditMeta", audit.seq + " · " + audit.type.toUpperCase());
+    setText("selectedSectionLabel", section.label);
+    setText("selectedAuditTitle", audit.label);
+    setText("selectedAuditSummary", audit.summary);
+
+    var runDirect = $("runDirectReport");
+    if (runDirect) {
+      runDirect.hidden = audit.type !== "direct";
+      runDirect.disabled = audit.type !== "direct";
+    }
+
+    renderCategoryMenu();
+    renderAuditMenu();
+  }
+
+  function renderCategoryMenu() {
+    var menu = $("categoryDropdownMenu");
+    if (!menu) return;
+
+    menu.innerHTML = SECTIONS.map(function (section) {
+      return '<button class="dropdown-option' +
+        (section.id === state.activeSection ? " is-active" : "") +
+        '" type="button" data-category-id="' + escapeHtml(section.id) + '">' +
+        '<span>' + escapeHtml(section.label) + '</span>' +
+        '<small>' + escapeHtml(section.hint) + '</small></button>';
+    }).join("");
+  }
+
+  function renderAuditMenu() {
+    var menu = $("auditDropdownMenu");
+    if (!menu) return;
+
+    var section = sectionById(state.activeSection);
+    menu.innerHTML = section.audits.map(function (auditId) {
+      var audit = auditById(auditId);
+      return '<button class="dropdown-option' +
+        (auditId === state.activeAudit ? " is-active" : "") +
+        '" type="button" data-audit-id="' + escapeHtml(auditId) + '">' +
+        '<span>' + escapeHtml(audit.seq + " · " + audit.label) + '</span>' +
+        '<small>' + escapeHtml((audit.type === "direct" ? "Direct" : "Safe") + " · " + audit.summary) + '</small></button>';
+    }).join("");
+  }
+
+  function closeAllMenus() {
+    ["categoryDropdownMenu", "auditDropdownMenu"].forEach(function (id) {
+      var menu = $(id);
+      if (menu) menu.classList.remove("is-open");
+    });
+    ["categoryDropdownButton", "auditDropdownButton"].forEach(function (id) {
+      var button = $(id);
+      if (button) button.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function toggleMenu(menuId, buttonId) {
+    var menu = $(menuId);
+    var button = $(buttonId);
+    if (!menu || !button) return;
+
+    var open = menu.classList.contains("is-open");
+    closeAllMenus();
+
+    if (!open) {
+      menu.classList.add("is-open");
+      button.setAttribute("aria-expanded", "true");
+    }
+  }
+
+  function createReport() {
+    var packet = buildReport(state.activeAudit);
+    renderReport(packet, auditById(state.activeAudit).type === "direct" ? "DIRECT_PREVIEW_CREATED" : "REPORT_CREATED");
+    showToast("Report created");
+    return packet;
+  }
+
+  function runSelectedDirectCheck() {
+    var audit = auditById(state.activeAudit);
+    if (audit.type !== "direct") {
+      showToast("Selected audit is not direct");
+      return null;
+    }
+    var packet = runDirectCheck(state.activeAudit);
+    renderReport(packet, "DIRECT_CHECK_EXECUTED");
+    showToast("Direct check complete");
+    return packet;
+  }
+
+  function renderReport(packet, meta) {
+    state.generatedText = packetText(packet);
+    state.rawText = rawJson(packet);
+
+    setText("reportTitle", packet.AUDIT_LABEL || "Report");
+    setText("reportMeta", meta || "REPORT_CREATED");
+    setText("generatedReport", state.generatedText);
+    setText("rawReport", state.rawText);
+
+    var output = $("reportOutput");
+    if (output) output.hidden = false;
+
+    ["copyReport", "copyRaw"].forEach(function (id) {
+      var button = $(id);
+      if (button) button.disabled = false;
+    });
+  }
+
+  function clearReport() {
+    state.generatedText = "";
+    state.rawText = "";
+    setText("reportTitle", "No Report Created");
+    setText("reportMeta", "WAITING");
+    setText("generatedReport", "Choose a category, choose an audit, then create a report.");
+    setText("rawReport", "");
+    ["copyReport", "copyRaw"].forEach(function (id) {
+      var button = $(id);
+      if (button) button.disabled = true;
+    });
+    showToast("Report reset");
+  }
+
+  function copyText(text, label) {
+    var value = safeString(text);
+    if (root.navigator && root.navigator.clipboard && root.navigator.clipboard.writeText) {
+      root.navigator.clipboard.writeText(value).then(function () { showToast(label || "Copied"); });
       return;
     }
-
-    buildSpectrum();
-    exposeApi();
-    enforceOneCanvas();
-    buildGeometry();
-    setupResize();
-    bindPointer();
-    attachEvents();
-
-    setLens("facility");
-    setCategory("chamber");
-
-    state.status = "ACTIVE";
-    state.failureCode = "NONE";
-    state.failureReason = "";
-
-    writeDiagnosticSlots();
-    publishStatus();
-    requestRender(12);
+    var area = doc.createElement("textarea");
+    area.value = value;
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    doc.body.appendChild(area);
+    area.select();
+    try { doc.execCommand("copy"); showToast(label || "Copied"); }
+    catch (_e) { showToast("Copy unavailable"); }
+    doc.body.removeChild(area);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, signal ? { signal, once: true } : { once: true });
+  function renderStatus() {
+    var holder = $("statusStrip");
+    if (!holder) return;
+
+    var aliases = state.aliases && Object.keys(state.aliases).length ? state.aliases : probeAliases();
+    var summary = loadSummary();
+    var target = getTargetAccess();
+    var manifestObserved = inspectProductionManifest().filter(function (item) {
+      return item.scriptInTarget || item.authorityObserved;
+    }).length;
+
+    var items = [
+      ["Load", summary.allRequiredLoaded],
+      ["Target", target.frameAccessible && target.routeConfirmed],
+      ["North", aliases.NORTH && aliases.NORTH.present],
+      ["East", aliases.EAST && aliases.EAST.present],
+      ["Surface", aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present],
+      ["South", aliases.SOUTH && aliases.SOUTH.present],
+      ["Pointer", aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present],
+      ["LabWest", aliases.LABWEST && aliases.LABWEST.present],
+      ["West", aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present],
+      ["Manifest", manifestObserved > 0]
+    ];
+
+    holder.innerHTML = items.map(function (item) {
+      var cls = item[1] ? "good" : "warn";
+      return '<div class="status-chip-mini ' + cls + '"><b>' +
+        escapeHtml(item[0]) + '</b><span>' + (item[1] ? "FOUND" : "HELD") + '</span></div>';
+    }).join("");
+  }
+
+  function renderManifestPanel() {
+    var grid = $("manifestGrid");
+    if (!grid) return;
+
+    var manifest = inspectProductionManifest();
+    grid.innerHTML = manifest.map(function (item) {
+      var found = item.scriptInTarget || item.authorityObserved;
+      var cls = found ? "good" : item.required ? "bad" : "warn";
+      return '<div class="manifest-card ' + cls + '">' +
+        '<b>' + escapeHtml(item.key) + '</b>' +
+        '<span>' + (found ? "OBSERVED" : "HELD") + '</span></div>';
+    }).join("");
+  }
+
+  function toggleTarget() {
+    state.targetVisible = !state.targetVisible;
+    persistState();
+    var panel = $("targetPanel");
+    if (panel) panel.hidden = !state.targetVisible;
+    renderStatus();
+  }
+
+  function toggleManifest() {
+    state.manifestVisible = !state.manifestVisible;
+    persistState();
+    var panel = $("manifestPanel");
+    if (panel) panel.hidden = !state.manifestVisible;
+    if (state.manifestVisible) renderManifestPanel();
+    renderStatus();
+  }
+
+  function toggleRaw() {
+    var raw = $("rawOutput");
+    if (raw) raw.hidden = !raw.hidden;
+  }
+
+  function showToast(message) {
+    var toast = $("toast");
+    if (!toast) return;
+    toast.textContent = safeString(message, "Done");
+    toast.classList.add("show");
+    root.setTimeout(function () { toast.classList.remove("show"); }, 1200);
+  }
+
+  function bind(id, eventName, handler) {
+    var node = $(id);
+    if (node) node.addEventListener(eventName, handler);
+  }
+
+  function installActions() {
+    bind("categoryDropdownButton", "click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMenu("categoryDropdownMenu", "categoryDropdownButton");
+    });
+
+    bind("auditDropdownButton", "click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleMenu("auditDropdownMenu", "auditDropdownButton");
+    });
+
+    bind("categoryDropdownMenu", "click", function (event) {
+      var button = event.target.closest("[data-category-id]");
+      if (!button) return;
+      state.activeSection = button.dataset.categoryId;
+      state.activeAudit = firstAudit(state.activeSection);
+      persistState();
+      closeAllMenus();
+      renderDropdowns();
+      clearReportSilent();
+    });
+
+    bind("auditDropdownMenu", "click", function (event) {
+      var button = event.target.closest("[data-audit-id]");
+      if (!button) return;
+      state.activeAudit = button.dataset.auditId;
+      state.activeSection = auditById(state.activeAudit).section;
+      persistState();
+      closeAllMenus();
+      renderDropdowns();
+      clearReportSilent();
+    });
+
+    doc.addEventListener("click", function (event) {
+      var category = $("categoryDropdown");
+      var audit = $("auditDropdown");
+      if (category && category.contains(event.target)) return;
+      if (audit && audit.contains(event.target)) return;
+      closeAllMenus();
+    });
+
+    bind("createReport", "click", createReport);
+    bind("runDirectReport", "click", runSelectedDirectCheck);
+    bind("copyReport", "click", function () { if (!state.generatedText) createReport(); copyText(state.generatedText, "Report copied"); });
+    bind("copyRaw", "click", function () { if (!state.rawText) createReport(); copyText(state.rawText, "Raw copied"); });
+    bind("copyArchive", "click", function () {
+      state.activeSection = "boundaryArchive";
+      state.activeAudit = "deepArchive";
+      persistState();
+      renderDropdowns();
+      var packet = buildReport("deepArchive");
+      renderReport(packet, "DEEP_ARCHIVE_CREATED");
+      copyText(rawJson(packet), "Deep archive copied");
+    });
+    bind("resetReport", "click", clearReport);
+    bind("toggleRaw", "click", toggleRaw);
+    bind("toggleTarget", "click", toggleTarget);
+    bind("toggleManifest", "click", toggleManifest);
+    bind("createManifestReport", "click", function () {
+      state.activeSection = "boundaryArchive";
+      state.activeAudit = "productionManifest";
+      persistState();
+      renderDropdowns();
+      renderReport(buildReport("productionManifest"), "MANIFEST_REPORT_CREATED");
+    });
+    bind("returnToHearth", "click", function () { root.location.href = TARGET_ROUTE; });
+    bind("reloadChamber", "click", function () { root.location.reload(); });
+    bind("hearthDiagnosticTargetFrame", "load", function () {
+      renderManifestPanel();
+      renderStatus();
+    });
+  }
+
+  function clearReportSilent() {
+    state.generatedText = "";
+    state.rawText = "";
+    setText("reportTitle", "No Report Created");
+    setText("reportMeta", "WAITING");
+    setText("generatedReport", "Choose a category, choose an audit, then create a report.");
+    setText("rawReport", "");
+    ["copyReport", "copyRaw"].forEach(function (id) {
+      var button = $(id);
+      if (button) button.disabled = true;
+    });
+  }
+
+  function publishApi() {
+    root.HEARTH = root.HEARTH || {};
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+
+    var api = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      version: VERSION,
+      state: state,
+      sections: SECTIONS,
+      audits: AUDITS,
+      productionManifest: PRODUCTION_MANIFEST,
+      createReport: createReport,
+      runSelectedDirectCheck: runSelectedDirectCheck,
+      buildReport: buildReport,
+      probeAliases: probeAliases,
+      getTargetAccess: getTargetAccess,
+      inspectProductionManifest: inspectProductionManifest,
+      loadParticipants: loadParticipants,
+      goToHearth: function () { root.location.href = TARGET_ROUTE; }
+    };
+
+    root.HEARTH_DIAGNOSTIC_CHAMBER = api;
+    root.HEARTH.diagnosticChamber = api;
+    root.DEXTER_LAB.hearthDiagnosticChamber = api;
+
+    root.__HEARTH_DIAGNOSTIC_CHAMBER_LOADED__ = true;
+    root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_RETURN_TO_HEARTH_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_PRODUCTION_MANIFEST_AWARENESS_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
+    root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
+    root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_RELEASE_AUTHORIZED__ = false;
+  }
+
+  function boot() {
+    normalizeState();
+    persistState();
+
+    setText("controllerContract", INTERNAL_RENEWAL_CONTRACT);
+
+    installActions();
+    renderDropdowns();
+    clearReportSilent();
+    renderStatus();
+    publishApi();
+
+    var targetPanel = $("targetPanel");
+    if (targetPanel) targetPanel.hidden = !state.targetVisible;
+
+    var manifestPanel = $("manifestPanel");
+    if (manifestPanel) manifestPanel.hidden = !state.manifestVisible;
+
+    if (state.manifestVisible) renderManifestPanel();
+
+    loadParticipants().then(function () {
+      renderStatus();
+      renderManifestPanel();
+      publishApi();
+    });
+  }
+
+  if (doc.readyState === "loading") {
+    doc.addEventListener("DOMContentLoaded", boot);
   } else {
-    init();
+    boot();
   }
-})();
+})(typeof window !== "undefined" ? window : globalThis);

@@ -1,56 +1,70 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_6 -->
-<!-- Full-file replacement. -->
-<!-- Static shell only. No diagnostic logic. -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_6 -->
+<!-- Full-file replacement. HTML shell only. -->
+<!-- Preserves existing JS/CSS IDs. Adds Mirrorland narrative, return-to-orbit path, category-gem framing. -->
 <!-- CSS: /showroom/globe/hearth/diagnostic/index.css?v=9_4_6 -->
 <!-- JS:  /showroom/globe/hearth/diagnostic/index.js?v=9_4_6 -->
-<!-- Renewal: return-to-Hearth control + production-manifest panel. -->
 <!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-html-shell="v9_4_6">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_6" data-mirrorland-orbit-shell="true">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth · Single Audit Workbench</title>
+  <title>Hearth · Mirrorland Diagnostic Orbit</title>
 
   <link rel="stylesheet" href="/showroom/globe/hearth/diagnostic/index.css?v=9_4_6" />
   <script src="/showroom/globe/hearth/diagnostic/index.js?v=9_4_6" defer></script>
 </head>
 
 <body>
+  <a class="skip" href="#workbench">Skip to diagnostic workbench</a>
+
   <div class="shell">
-    <header class="command">
+    <header class="command" id="diagnostic-orbit">
       <div class="identity">
         <div class="mark" aria-hidden="true"></div>
         <div>
-          <h1>Hearth Single Audit Workbench</h1>
+          <h1>Hearth Mirrorland Diagnostic Orbit</h1>
           <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6</p>
         </div>
       </div>
 
       <div class="command-actions" aria-label="Global shell controls">
-        <button class="return" id="returnToHearth" type="button">Return to Hearth</button>
+        <a class="button ghost return-to-orbit" href="/showroom/globe/hearth/" data-return-to-orbit="true">Return to Hearth Orbit</a>
         <button class="ghost" id="toggleTarget" type="button">Target</button>
-        <button class="ghost" id="toggleManifest" type="button">Manifest</button>
         <button class="ghost" id="reloadChamber" type="button">Reload</button>
       </div>
     </header>
 
+    <section class="selected-audit" aria-label="Mirrorland narrative">
+      <div class="meta">
+        <span>Mirrorland Layer</span>
+        <span>Read-only diagnostic chamber</span>
+      </div>
+
+      <h2>Measure the planet without touching the planet.</h2>
+      <p>
+        This chamber reads Hearth from orbit. The category gem selects the diagnostic field.
+        The audit gem selects the instrument. The report surface records evidence without
+        mutating production, canvas, controls, runtime, route, WebGL, or visual output.
+      </p>
+    </section>
+
     <section class="status-strip" id="statusStrip" aria-label="Compact diagnostic status"></section>
 
-    <main class="workbench">
+    <main class="workbench" id="workbench">
       <div class="workbench-head">
         <div>
-          <strong>Single Audit Workbench</strong>
-          <span>Choose a category, choose one filtered audit, then create and copy the report from this same local surface.</span>
+          <strong>Mirrorland Single Audit Workbench</strong>
+          <span>Choose one category, choose one filtered audit, then create or run the report from this local surface.</span>
         </div>
         <div class="pill">Source of truth: button controller state</div>
       </div>
 
       <section class="selector-zone" aria-label="Audit selection">
         <div class="field">
-          <div class="field-label">1 · Category</div>
+          <div class="field-label">1 · Category Gem</div>
 
           <div class="custom-dropdown is-top" id="categoryDropdown">
             <button
@@ -77,7 +91,7 @@
         </div>
 
         <div class="field">
-          <div class="field-label">2 · Audit</div>
+          <div class="field-label">2 · Audit Gem</div>
 
           <div class="custom-dropdown" id="auditDropdown">
             <button
@@ -138,27 +152,13 @@
       </section>
     </main>
 
-    <section class="manifest-panel" id="manifestPanel" hidden>
-      <div class="workbench-head">
-        <div>
-          <strong>Production Manifest</strong>
-          <span>Read-only awareness of Hearth route, Chapel One hands, congressional hex bridge, and Chapel Two fingers.</span>
-        </div>
-        <button class="ghost" id="createManifestReport" type="button">Create Manifest Report</button>
-      </div>
-
-      <div class="report-output">
-        <div class="manifest-grid" id="manifestGrid" aria-label="Production manifest status"></div>
-      </div>
-    </section>
-
     <section class="target-panel" id="targetPanel" hidden>
       <div class="workbench-head">
         <div>
-          <strong>Target Frame</strong>
+          <strong>Hearth Target Frame</strong>
           <span>/showroom/globe/hearth/</span>
         </div>
-        <div class="pill">Read-only diagnostic view</div>
+        <div class="pill">Read-only orbit view</div>
       </div>
 
       <div class="report-output">
@@ -167,6 +167,10 @@
         </div>
       </div>
     </section>
+
+    <footer>
+      Mirrorland diagnostic orbit · read-only chamber · no production mutation authorized.
+    </footer>
   </div>
 
   <div class="toast" id="toast">Done</div>

@@ -1,78 +1,66 @@
 // /assets/lab/product-engine.registry.js
-// LAB_PRODUCT_ENGINE_REGISTRY_F89_PROJECT_CONDUCTOR_TNT_v1
+// LAB_PRODUCT_ENGINE_REGISTRY_F89_ENGINE_MECHANICS_PROJECT_REGISTRY_CONDUCTOR_TNT_v2
 // Full-file replacement.
-// Product Engine F89 project registry conductor.
+// Product Engine Registry F89 / project registry conductor / Registry Clerk.
 // Purpose:
-// - Consume UE5 Expression F55 release.
-// - Build the F89 project registry as a deterministic conductor map for the whole project.
-// - Register engines, routes, products, expression nodes, files, evidence packets, and downstream market-readiness targets.
-// - Preserve Product Engine F34 -> UE5 Expression F55 -> Registry F89 -> Market F144 sequence.
-// - Preserve NEWS alignment protocol and Fibonacci synchronization metric.
-// - Prepare F144 Market Readiness handoff without claiming public superiority, final visual pass, generated image, WebGL, or GraphicBox.
+// - Consume F55 UE5 Expression release packet from /assets/lab/product-engine.ue5-expression.js.
+// - Build deterministic project registry records from product, scene, expression, registry-ready, file, route, contract, and receipt evidence.
+// - Bind directly to runtime-table v4 mechanics: RT3D-X14_Y19_Z89.
+// - Prepare F144 market-readiness handoff packet for /assets/lab/product-engine.market.js.
+// - Preserve F34 -> F55 -> F89 -> F144 -> F233 sequence.
+// - Avoid rendering, generated image claims, WebGL claims, GraphicBox claims, public superiority claims, and final visual pass claims.
 // Does not own:
+// - F34 Product Engine authority
+// - F55 Expression authority
+// - F144 Market authority
+// - F233 downstream return
 // - North F21 latch
-// - Product Engine F34 authority
-// - UE5 Expression F55 authority
 // - Canvas F13 evidence
+// - actual rendering
 // - route orchestration
 // - planet truth
-// - material truth
-// - elevation truth
-// - hydrology truth
-// - actual rendering
-// - public market claim
+// - material/elevation/hydrology truth
+// - generated image
+// - GraphicBox
+// - WebGL
+// - public superiority claim
 // - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_PRODUCT_ENGINE_REGISTRY_F89_PROJECT_CONDUCTOR_TNT_v1";
-  const RECEIPT = "LAB_PRODUCT_ENGINE_REGISTRY_F89_PROJECT_CONDUCTOR_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "NONE_PROJECT_REGISTRY_FIRST_PUBLIC_F89_CONDUCTOR";
-  const BASELINE_CONTRACT = "LAB_PRODUCT_ENGINE_REGISTRY_F89_PROJECT_CONDUCTOR_BASELINE_v1";
-  const VERSION = "2026-06-01.lab-product-engine-registry-f89-project-conductor-v1";
+  const CONTRACT = "LAB_PRODUCT_ENGINE_REGISTRY_F89_ENGINE_MECHANICS_PROJECT_REGISTRY_CONDUCTOR_TNT_v2";
+  const RECEIPT = "LAB_PRODUCT_ENGINE_REGISTRY_F89_ENGINE_MECHANICS_PROJECT_REGISTRY_CONDUCTOR_RECEIPT_v2";
+  const PREVIOUS_CONTRACT = "LAB_PRODUCT_ENGINE_REGISTRY_F89_PROJECT_CONDUCTOR_TNT_v1";
+  const BASELINE_CONTRACT = "LAB_PRODUCT_ENGINE_REGISTRY_BASELINE_v1";
+  const VERSION = "2026-06-08.lab-product-engine-registry-f89-engine-mechanics-project-registry-conductor-v2";
 
   const FILE = "/assets/lab/product-engine.registry.js";
   const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
-  const UE5_EXPRESSION_FILE = "/assets/lab/product-engine.ue5-expression.js";
-  const MARKET_FILE = "/assets/lab/product-engine.market.js";
+  const F34_PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
+  const F55_EXPRESSION_FILE = "/assets/lab/product-engine.ue5-expression.js";
+  const F144_MARKET_FILE = "/assets/lab/product-engine.market.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const FIBONACCI = Object.freeze({
-    NORTH_ORIGIN: "F1",
-    EAST_FORMATION: "F3",
-    WEST_AUDIT: "F5",
-    SOUTH_RETURN: "F8",
-    CANVAS_EVIDENCE: "F13",
     NORTH_LATCH: "F21",
     PRODUCT_ENGINE: "F34",
     UE5_EXPRESSION: "F55",
     PROJECT_REGISTRY: "F89",
-    MARKET_READINESS: "F144"
+    MARKET_READINESS: "F144",
+    DOWNSTREAM_RETURN: "F233"
   });
 
   const NEWS_GATES = Object.freeze({
     NORTH: "NORTH",
-    CANVAS: "CANVAS",
     PRODUCT: "PRODUCT_ENGINE",
     EXPRESSION: "UE5_EXPRESSION",
     REGISTRY: "PROJECT_REGISTRY",
-    MARKET: "MARKET_READINESS"
-  });
-
-  const ENTRY_TYPES = Object.freeze({
-    ENGINE: "engine",
-    ROUTE: "route",
-    FILE: "file",
-    PRODUCT: "product",
-    EXPRESSION_NODE: "expression-node",
-    RECEIPT: "receipt",
-    MARKET_TARGET: "market-target",
-    PROJECT: "project",
-    EVIDENCE: "evidence"
+    MARKET: "MARKET_READINESS",
+    DOWNSTREAM: "DOWNSTREAM_RETURN"
   });
 
   const STATUS = Object.freeze({
@@ -80,21 +68,39 @@
     ACTIVE: "ACTIVE",
     READY: "READY",
     DEGRADED: "DEGRADED",
-    BLOCKED: "BLOCKED"
+    BLOCKED: "BLOCKED",
+    COMPLETE: "COMPLETE"
   });
 
-  const CORE_PROJECT_FILES = Object.freeze([
-    NORTH_FILE,
-    PRODUCT_ENGINE_FILE,
-    UE5_EXPRESSION_FILE,
-    FILE,
-    MARKET_FILE,
-    "/showroom/globe/hearth/hearth.js",
-    "/assets/hearth/hearth.canvas.js",
-    "/assets/hearth/hearth.canvas.east.js",
-    "/assets/hearth/hearth.canvas.west.js",
-    "/assets/hearth/hearth.canvas.south.js"
-  ]);
+  const REGISTRY_RECORD_TYPES = Object.freeze({
+    PRODUCT_RECORD: "product-record",
+    SCENE_RECORD: "scene-record",
+    EXPRESSION_RECORD: "expression-record",
+    FILE_RECORD: "file-record",
+    ROUTE_RECORD: "route-record",
+    CONTRACT_RECORD: "contract-record",
+    RECEIPT_RECORD: "receipt-record",
+    DIAGNOSTIC_RECORD: "diagnostic-record",
+    MARKET_INPUT_RECORD: "market-input-record"
+  });
+
+  const MECHANICAL_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X14_Y19_Z89",
+    enginePart: "MANIFOLD",
+    enginePartIndex: 14,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.PROJECT_REGISTRY,
+    fibonacciRank: 89,
+    fibonacciStation: "REGISTRY_CLERK",
+    mechanicalRole: "PROJECT_REGISTRY_CONDUCTOR",
+    clerkRole: "REGISTRY_CLERK",
+    chessRole: "ROOK",
+    mayJudge: false,
+    mayLatch: false,
+    mayRender: false,
+    mayClaimPublicSuperiority: false
+  });
 
   const state = {
     contract: CONTRACT,
@@ -103,92 +109,100 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "product-engine-registry-f89-project-conductor",
 
-    f89RegistryConductorActive: true,
-    f89Only: true,
-    f55ExpressionRequired: true,
+    registryEngineF89Active: true,
+    registryEngineF89Only: true,
+    registryClerkActive: true,
+    projectRegistryConductorActive: true,
+
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
+    mechanicalCoordinate: MECHANICAL_COORDINATE,
+
     f55ExpressionObserved: false,
-    f55ExpressionAccepted: false,
-    f55ExpressionContract: "",
-    f55ExpressionReceipt: "",
-    f55ReleasePacket: null,
+    f55ExpressionReleaseAccepted: false,
+    f55ExpressionReleasePacket: null,
+    f55Contract: "",
+    f55Receipt: "",
 
-    productEngineF34Observed: false,
-    productEngineF34Accepted: false,
-    northF21Acknowledged: false,
-    canvasF13EvidenceObserved: false,
-    canvasF13EvidenceComplete: false,
-    canvasF13EvidenceDegraded: false,
+    sceneGraphObserved: false,
+    sceneGraphStatus: STATUS.HELD,
+    sceneNodeCount: 0,
+    expressionNodeCount: 0,
+    incomingRegistryRecordNodeCount: 0,
+    diagnosticEvidenceNodeCount: 0,
 
-    registryBuilt: false,
-    registryReady: false,
-    registryStatus: STATUS.HELD,
-    registryEntryCount: 0,
-    registryReadyEntryCount: 0,
-    registryDegradedEntryCount: 0,
-    registryBlockedEntryCount: 0,
-    registryProjectCount: 0,
-    registryProductCount: 0,
-    registryEngineCount: 0,
-    registryRouteCount: 0,
-    registryFileCount: 0,
-    registryExpressionNodeCount: 0,
-    registryEvidenceCount: 0,
+    registryGraphBuilt: false,
+    registryGraphReady: false,
+    registryGraphStatus: STATUS.HELD,
+    registryRecordCount: 0,
+    registryReadyRecordCount: 0,
+    registryDegradedRecordCount: 0,
+    registryBlockedRecordCount: 0,
+    fileRecordCount: 0,
+    routeRecordCount: 0,
+    contractRecordCount: 0,
+    receiptRecordCount: 0,
+    productRecordCount: 0,
+    expressionRecordCount: 0,
+    marketInputRecordCount: 0,
 
-    registry: {
-      entries: {},
-      projects: {},
-      products: {},
-      engines: {},
-      routes: {},
-      files: {},
-      expressionNodes: {},
-      evidence: {},
+    registryGraph: {
+      records: [],
+      recordsById: {},
+      indexes: {
+        byType: {},
+        byFile: {},
+        byRoute: {},
+        byContract: {},
+        byReceipt: {},
+        byProduct: {},
+        byStatus: {}
+      },
+      marketInputs: [],
       edges: [],
       buildId: "",
       builtAt: ""
     },
-
-    deterministicRegistryActive: true,
-    projectConductorMapActive: true,
-    registryIndexActive: true,
-    receiptTraceActive: true,
 
     registryQualityMetricActive: true,
     registryQualityScore: 0,
     registryCoverageScore: 0,
     registryTraceScore: 0,
     registryCoherenceScore: 0,
-    internalMarketSurpassTargetScore: 0,
-    publicSuperiorityClaim: false,
+    marketInputReadinessScore: 0,
 
-    f144MarketReadinessGateReady: false,
     f144MarketReleaseAuthorized: false,
-    f144MarketReceiptAccepted: false,
+    f89ReleasePacketReady: false,
+    f89ActivationStatus: STATUS.ACTIVE,
+    f89ActivationReason: "PROJECT_REGISTRY_F89_ACTIVE_WAITING_F55_EXPRESSION_RELEASE",
 
-    newsProtocolAligned: true,
-    fibonacciSynchronizationMetricActive: true,
-    fibonacciSynchronizationScore: 0,
+    f144MarketReceiptAccepted: false,
+    f144MarketReceiptPacket: null,
+    f144MarketContract: "",
+    f144MarketReceipt: "",
+
     activeFibonacci: FIBONACCI.PROJECT_REGISTRY,
     activeFibonacciRank: 89,
     activeNewsGate: NEWS_GATES.REGISTRY,
     sourceFibonacciGate: FIBONACCI.UE5_EXPRESSION,
     futureFibonacciGate: FIBONACCI.MARKET_READINESS,
+    newsProtocolAligned: true,
+    fibonacciSynchronizationMetricActive: true,
+    fibonacciSynchronizationScore: 0,
     oneActiveGearAtATime: true,
 
-    f89ActivationStatus: STATUS.HELD,
-    f89ActivationReason: "WAITING_UE5_EXPRESSION_F55_RELEASE",
-    f89ReceiptReady: true,
-    f89ReleasePacketReady: false,
-
-    firstFailedCoordinate: "WAITING_UE5_EXPRESSION_F55_RELEASE",
-    recommendedNextFile: UE5_EXPRESSION_FILE,
-    recommendedNextRenewalTarget: UE5_EXPRESSION_FILE,
+    firstFailedCoordinate: "WAITING_F55_EXPRESSION_RELEASE",
+    recommendedNextFile: F55_EXPRESSION_FILE,
+    recommendedNextRenewalTarget: F55_EXPRESSION_FILE,
 
     localEvents: [],
     errors: [],
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -237,7 +251,6 @@
 
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
@@ -245,51 +258,24 @@
     }
   }
 
-  function trim(list, max = 160) {
+  function trim(list, max = 180) {
     if (Array.isArray(list) && list.length > max) {
       list.splice(0, list.length - max);
     }
   }
 
-  function makeId(value, fallback = "entry") {
+  function makeId(value, fallback = "record") {
     const raw = safeString(value || fallback, fallback)
       .trim()
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-
     return raw || fallback;
   }
 
-  function recordLocal(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event: safeString(event, "LOCAL_EVENT"),
-      detail: clonePlain(detail)
-    };
-
-    state.localEvents.push(item);
-    trim(state.localEvents);
-    state.updatedAt = item.at;
-    updateDataset();
-
-    return item;
-  }
-
-  function recordError(code, error, detail = {}) {
-    const item = {
-      at: nowIso(),
-      code: safeString(code, "PROJECT_REGISTRY_ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
-    };
-
-    state.errors.push(item);
-    trim(state.errors);
-    state.updatedAt = item.at;
-    updateDataset();
-
-    return item;
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
   }
 
   function readPath(path) {
@@ -304,12 +290,26 @@
     return cursor || null;
   }
 
+  function setPath(path, value) {
+    const parts = String(path || "").split(".").filter(Boolean);
+    if (!parts.length) return false;
+
+    let cursor = root;
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const part = parts[index];
+      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
+      cursor = cursor[part];
+    }
+
+    cursor[parts[parts.length - 1]] = value;
+    return true;
+  }
+
   function firstGlobal(names) {
     for (const name of names || []) {
       const found = readPath(name);
       if (found) return found;
     }
-
     return null;
   }
 
@@ -337,9 +337,35 @@
     return {};
   }
 
-  function setDataset(key, value) {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
-    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  function recordLocal(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "LOCAL_EVENT"),
+      detail: clonePlain(detail)
+    };
+
+    state.localEvents.push(item);
+    trim(state.localEvents);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
+  }
+
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "PROJECT_REGISTRY_F89_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trim(state.errors);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
   }
 
   function detectForbiddenClaim(packet = {}) {
@@ -357,231 +383,163 @@
       safeBool(packet.webGL, false) ||
       safeBool(packet.visualPassClaimed, false) ||
       safeBool(packet.publicSuperiorityClaim, false) ||
+      safeBool(packet.publicComparisonClaimAllowed, false) ||
       text.includes('"generatedImage":true') ||
       text.includes('"graphicBox":true') ||
       text.includes('"webGL":true') ||
       text.includes('"visualPassClaimed":true') ||
       text.includes('"publicSuperiorityClaim":true') ||
+      text.includes('"publicComparisonClaimAllowed":true') ||
       text.includes("visualPassClaimed=true")
     );
   }
 
-  function readUE5ExpressionAuthority() {
+  function hasMeaningfulF55Release(packet = {}) {
+    if (!isObject(packet)) return false;
+
+    return Boolean(
+      packet.contract ||
+      packet.receipt ||
+      packet.packetType === "UE5_EXPRESSION_F55_RELEASE_PACKET" ||
+      safeBool(packet.expressionEngineF55Active, false) ||
+      safeBool(packet.f55ReleasePacketReady, false) ||
+      safeBool(packet.sceneGraphBuilt, false) ||
+      Array.isArray(packet.expressionRecords) ||
+      Array.isArray(packet.registryRecords)
+    );
+  }
+
+  function readF55ExpressionAuthority() {
     return firstGlobal([
       "LAB_PRODUCT_ENGINE_UE5_EXPRESSION",
       "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55",
       "PRODUCT_ENGINE_UE5_EXPRESSION",
       "UE5_EXPRESSION_CONDUCTOR",
+      "UE5_EXPRESSION_F55_CONDUCTOR",
+      "EXPRESSION_CLERK",
       "DEXTER_LAB.productEngineUE5Expression",
       "DEXTER_LAB.productEngineUE5ExpressionF55",
       "DEXTER_LAB.ue5ExpressionConductor",
+      "DEXTER_LAB.expressionClerk",
       "HEARTH.productEngineUE5Expression",
       "HEARTH.productEngineUE5ExpressionF55",
-      "HEARTH.ue5ExpressionConductor"
+      "HEARTH.ue5ExpressionConductor",
+      "HEARTH.expressionClerk"
     ]);
   }
 
-  function readUE5ExpressionReceipt() {
-    const authority = readUE5ExpressionAuthority();
-    const receipt = readReceipt(authority);
+  function readF55ExpressionRelease() {
+    const authority = readF55ExpressionAuthority();
+    if (!authority) return {};
 
-    if (receipt && Object.keys(receipt).length) {
-      state.f55ExpressionObserved = true;
-      state.f55ExpressionContract = safeString(receipt.contract, "");
-      state.f55ExpressionReceipt = safeString(receipt.receipt, "");
-      state.productEngineF34Observed = safeBool(receipt.productEngineF34Observed, state.productEngineF34Observed);
-      state.productEngineF34Accepted = safeBool(receipt.productEngineF34Accepted, state.productEngineF34Accepted);
-      state.northF21Acknowledged = safeBool(receipt.northF21Acknowledged, state.northF21Acknowledged);
-      state.canvasF13EvidenceObserved = safeBool(receipt.canvasF13EvidenceObserved, state.canvasF13EvidenceObserved);
-      state.canvasF13EvidenceComplete = safeBool(receipt.canvasF13EvidenceComplete, state.canvasF13EvidenceComplete);
-      state.canvasF13EvidenceDegraded = safeBool(receipt.canvasF13EvidenceDegraded, state.canvasF13EvidenceDegraded);
+    try {
+      if (isFunction(authority.composeF55ReleasePacket)) {
+        const packet = authority.composeF55ReleasePacket();
+        if (isObject(packet)) return packet;
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt) && isObject(receipt.f55ReleasePacket)) return receipt.f55ReleasePacket;
+      }
+
+      return readReceipt(authority);
+    } catch (error) {
+      recordError("F55_EXPRESSION_RELEASE_READ_FAILED", error);
+      return {};
     }
-
-    return receipt || {};
   }
 
-  function expressionNodesFromReceipt(receipt = {}) {
-    if (Array.isArray(receipt.expressionNodes)) return receipt.expressionNodes.slice();
-
-    if (isObject(receipt.sceneGraph) && isObject(receipt.sceneGraph.nodes)) {
-      return Object.values(receipt.sceneGraph.nodes);
-    }
-
-    return [];
-  }
-
-  function expressionProductsFromReceipt(receipt = {}) {
-    if (isObject(receipt.sceneGraph) && Array.isArray(receipt.sceneGraph.products)) {
-      return receipt.sceneGraph.products.map((id) => ({ id, name: id }));
-    }
-
-    const nodes = expressionNodesFromReceipt(receipt);
-    const ids = Array.from(new Set(nodes.map((node) => safeString(node.productId, "")).filter(Boolean)));
-
-    return ids.map((id) => ({ id, name: id }));
-  }
-
-  function validateF55Release(packet = {}) {
-    const input = isObject(packet) && Object.keys(packet).length ? packet : readUE5ExpressionReceipt();
-    const releasePacket = isObject(input.f55ReleasePacket) ? input.f55ReleasePacket : input;
-
+  function validateF55ExpressionRelease(packet = {}) {
+    const input = isObject(packet) ? packet : {};
     const noForbiddenClaim = !detectForbiddenClaim(input);
-    const activeFibonacci = safeString(releasePacket.activeFibonacci || input.activeFibonacci, "");
-    const futureFibonacciGate = safeString(releasePacket.futureFibonacciGate || input.futureFibonacciGate, "");
+    const meaningful = hasMeaningfulF55Release(input);
 
-    const f55Ready = Boolean(
-      safeBool(releasePacket.f55ExpressionReady, false) ||
-      safeBool(releasePacket.expressionConductorReady, false) ||
-      safeBool(releasePacket.sceneGraphConductorReady, false) ||
-      safeBool(input.sceneGraphReady, false) ||
-      safeBool(input.sceneGraphBuilt, false) ||
-      safeBool(input.f55ReleasePacketReady, false)
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || "");
+    const futureFibonacciGate = safeString(input.futureFibonacciGate || "");
+
+    const correctStage = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.UE5_EXPRESSION ||
+      activeFibonacci === "F55"
     );
 
-    const registryReleaseAuthorized = Boolean(
-      safeBool(releasePacket.f89RegistryReleaseAuthorized, false) ||
-      safeBool(input.f89RegistryReleaseAuthorized, false) ||
-      safeBool(input.projectRegistryGateReady, false)
+    const correctFuture = Boolean(
+      !futureFibonacciGate ||
+      futureFibonacciGate === FIBONACCI.PROJECT_REGISTRY ||
+      futureFibonacciGate === "F89"
     );
 
-    const ok = Boolean(
+    const registryRecordsAcceptable = Boolean(
+      Array.isArray(input.registryRecords) ||
+      Array.isArray(input.expressionRecords) ||
+      isObject(input.sceneGraph)
+    );
+
+    const accepted = Boolean(
       noForbiddenClaim &&
-      f55Ready &&
-      registryReleaseAuthorized &&
-      (
-        activeFibonacci === FIBONACCI.UE5_EXPRESSION ||
-        activeFibonacci === "F55" ||
-        safeBool(input.f55Only, false)
-      ) &&
-      (
-        futureFibonacciGate === FIBONACCI.PROJECT_REGISTRY ||
-        futureFibonacciGate === "F89" ||
-        registryReleaseAuthorized
-      )
+      meaningful &&
+      correctStage &&
+      correctFuture &&
+      registryRecordsAcceptable
     );
 
-    let reason = "NONE_UE5_EXPRESSION_F55_ACCEPTED";
-
-    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_F55_PACKET";
-    else if (!f55Ready) reason = "WAITING_UE5_EXPRESSION_F55_READY";
-    else if (!registryReleaseAuthorized) reason = "WAITING_F89_REGISTRY_RELEASE_AUTHORIZATION";
-    else if (activeFibonacci && activeFibonacci !== FIBONACCI.UE5_EXPRESSION && activeFibonacci !== "F55") {
-      reason = "UE5_EXPRESSION_FIBONACCI_NOT_F55";
-    } else if (futureFibonacciGate && futureFibonacciGate !== FIBONACCI.PROJECT_REGISTRY && futureFibonacciGate !== "F89") {
-      reason = "UE5_EXPRESSION_FUTURE_GATE_NOT_F89";
-    }
+    let reason = "F55_EXPRESSION_RELEASE_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_F55_RELEASE";
+    else if (!meaningful) reason = "F55_RELEASE_NOT_MEANINGFUL";
+    else if (!correctStage) reason = "F55_RELEASE_WRONG_ACTIVE_FIBONACCI";
+    else if (!correctFuture) reason = "F55_RELEASE_WRONG_FUTURE_GATE";
+    else if (!registryRecordsAcceptable) reason = "F55_RELEASE_MISSING_REGISTRY_RECORD_SOURCE";
 
     return {
-      ok,
+      accepted,
       reason,
-      input: clonePlain(input),
-      f55ReleasePacket: clonePlain(releasePacket),
-      expressionNodes: expressionNodesFromReceipt(input),
-      products: expressionProductsFromReceipt(input),
-      activeFibonacci,
-      futureFibonacciGate,
-      f55Ready,
-      registryReleaseAuthorized,
-      noForbiddenClaim
+      noForbiddenClaim,
+      meaningful,
+      correctStage,
+      correctFuture,
+      registryRecordsAcceptable,
+      input: clonePlain(input)
     };
   }
 
-  function acceptF55Release(packet = {}) {
-    const validation = validateF55Release(packet);
+  function acceptF55ExpressionRelease(packet = {}) {
+    const validation = validateF55ExpressionRelease(packet);
 
-    state.f55ExpressionAccepted = validation.ok;
-    state.f55ReleasePacket = clonePlain(validation.f55ReleasePacket);
-    state.f55ExpressionObserved = true;
+    if (validation.accepted) {
+      state.f55ExpressionObserved = true;
+      state.f55ExpressionReleaseAccepted = true;
+      state.f55ExpressionReleasePacket = clonePlain(packet);
+      state.f55Contract = safeString(packet.contract, "");
+      state.f55Receipt = safeString(packet.receipt, "");
 
-    if (validation.input.contract) state.f55ExpressionContract = safeString(validation.input.contract);
-    if (validation.input.receipt) state.f55ExpressionReceipt = safeString(validation.input.receipt);
+      state.sceneGraphObserved = true;
+      state.sceneGraphStatus = safeString(packet.sceneGraphStatus || STATUS.READY, STATUS.READY);
+      state.sceneNodeCount = safeNumber(packet.sceneNodeCount, 0);
+      state.expressionNodeCount = safeNumber(packet.expressionNodeCount, 0);
+      state.incomingRegistryRecordNodeCount = safeNumber(packet.registryRecordNodeCount, 0);
+      state.diagnosticEvidenceNodeCount = safeNumber(packet.diagnosticEvidenceNodeCount, 0);
 
-    state.productEngineF34Observed = safeBool(validation.input.productEngineF34Observed, state.productEngineF34Observed);
-    state.productEngineF34Accepted = safeBool(validation.input.productEngineF34Accepted, state.productEngineF34Accepted);
-    state.northF21Acknowledged = safeBool(validation.input.northF21Acknowledged, state.northF21Acknowledged);
-    state.canvasF13EvidenceObserved = safeBool(validation.input.canvasF13EvidenceObserved, state.canvasF13EvidenceObserved);
-    state.canvasF13EvidenceComplete = safeBool(validation.input.canvasF13EvidenceComplete, state.canvasF13EvidenceComplete);
-    state.canvasF13EvidenceDegraded = safeBool(validation.input.canvasF13EvidenceDegraded, state.canvasF13EvidenceDegraded);
-
-    if (validation.ok) {
-      state.f89ActivationStatus = STATUS.ACTIVE;
-      state.f89ActivationReason = "UE5_EXPRESSION_F55_RELEASE_ACCEPTED_PROJECT_REGISTRY_F89_ACTIVE";
-      state.firstFailedCoordinate = "NONE_PROJECT_REGISTRY_F89_ACTIVE";
-      state.recommendedNextFile = MARKET_FILE;
-      state.recommendedNextRenewalTarget = MARKET_FILE;
-
-      seedCoreRegistryEntries({ silent: true });
-
-      validation.products.forEach((product) => {
-        registerRegistryEntry({
-          type: ENTRY_TYPES.PRODUCT,
-          id: product.id || product.key || product.name,
-          label: product.name || product.label || product.id,
-          sourceFile: UE5_EXPRESSION_FILE,
-          sourceFibonacciGate: FIBONACCI.UE5_EXPRESSION,
-          activeFibonacci: FIBONACCI.PROJECT_REGISTRY,
-          receiptReady: true,
-          platformReady: true,
-          engineeringReady: true,
-          expressionReady: true,
-          registryReady: true,
-          marketReady: false
-        }, { silent: true });
-      });
-
-      validation.expressionNodes.forEach((node) => {
-        registerRegistryEntry({
-          type: ENTRY_TYPES.EXPRESSION_NODE,
-          id: node.id,
-          label: node.label || node.id,
-          productId: node.productId,
-          sourceFile: UE5_EXPRESSION_FILE,
-          sourceContract: node.contract || validation.input.contract || "",
-          sourceReceipt: node.receipt || validation.input.receipt || "",
-          sourceFibonacciGate: FIBONACCI.UE5_EXPRESSION,
-          activeFibonacci: FIBONACCI.PROJECT_REGISTRY,
-          receiptReady: true,
-          platformReady: safeBool(node.platformReady, true),
-          engineeringReady: safeBool(node.engineeringReady, true),
-          expressionReady: safeBool(node.expressionReady, true),
-          registryReady: true,
-          marketReady: false,
-          dependencies: Array.isArray(node.dependencies) ? node.dependencies.slice() : []
-        }, { silent: true });
-      });
-
-      recordLocal("UE5_EXPRESSION_F55_RELEASE_ACCEPTED_BY_PROJECT_REGISTRY", {
-        productCount: validation.products.length,
-        expressionNodeCount: validation.expressionNodes.length,
-        f55ExpressionContract: state.f55ExpressionContract
-      });
-    } else {
-      state.f89ActivationStatus = STATUS.HELD;
-      state.f89ActivationReason = validation.reason;
-      state.firstFailedCoordinate = validation.reason;
-      state.recommendedNextFile = UE5_EXPRESSION_FILE;
-      state.recommendedNextRenewalTarget = UE5_EXPRESSION_FILE;
-
-      recordLocal("UE5_EXPRESSION_F55_RELEASE_HELD_BY_PROJECT_REGISTRY", {
-        reason: validation.reason
-      });
+      buildRegistryGraph(packet);
     }
 
-    buildProjectRegistry({ silent: true });
+    recordLocal("F55_EXPRESSION_RELEASE_EVALUATED_BY_PROJECT_REGISTRY_F89", {
+      accepted: validation.accepted,
+      reason: validation.reason,
+      registryRecordSourcePresent: validation.registryRecordsAcceptable
+    });
+
     computeFibonacciSynchronizationMetric();
     publishGlobals();
-    updateDataset();
 
     return {
-      accepted: validation.ok,
-      projectRegistryF89Active: validation.ok,
+      accepted: validation.accepted,
+      registryEngineF89ReceivedF55: true,
       reason: validation.reason,
-      productsImported: validation.products.length,
-      expressionNodesImported: validation.expressionNodes.length,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      registryGraphBuilt: state.registryGraphBuilt,
+      registryGraphReady: state.registryGraphReady,
+      f144MarketReleaseAuthorized: state.f144MarketReleaseAuthorized,
+      recommendedNextFile: validation.accepted ? F144_MARKET_FILE : F55_EXPRESSION_FILE,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -589,384 +547,467 @@
     };
   }
 
-  function normalizeRegistryEntry(definition = {}) {
-    const source = isObject(definition) ? definition : {};
-    const type = safeString(source.type || source.entryType || ENTRY_TYPES.PROJECT, ENTRY_TYPES.PROJECT);
-    const id = makeId(source.id || source.key || source.name || `${type}-${Object.keys(state.registry.entries).length + 1}`, `${type}-entry`);
-    const sourceFile = safeString(source.sourceFile || source.file || "");
-
-    return {
-      id,
-      type,
-      label: safeString(source.label || source.name || id),
-      productId: makeId(source.productId || source.product || id, id),
-      projectId: makeId(source.projectId || source.project || "diamond-gate-bridge", "diamond-gate-bridge"),
-      route: safeString(source.route || ""),
-      file: sourceFile,
-      sourceFile,
-      targetFile: safeString(source.targetFile || ""),
-      sourceContract: safeString(source.sourceContract || source.contract || ""),
-      sourceReceipt: safeString(source.sourceReceipt || source.receipt || ""),
-      sourceFibonacciGate: safeString(source.sourceFibonacciGate || FIBONACCI.UE5_EXPRESSION),
-      activeFibonacci: safeString(source.activeFibonacci || FIBONACCI.PROJECT_REGISTRY),
-      futureFibonacciGate: safeString(source.futureFibonacciGate || FIBONACCI.MARKET_READINESS),
-      priority: clamp(source.priority ?? 50, 0, 100),
-      dependencies: Array.isArray(source.dependencies) ? source.dependencies.slice() : [],
-      tags: Array.isArray(source.tags) ? source.tags.slice() : [],
-      receiptReady: safeBool(source.receiptReady, Boolean(source.sourceContract || source.sourceReceipt || source.contract || source.receipt)),
-      platformReady: safeBool(source.platformReady, false),
-      engineeringReady: safeBool(source.engineeringReady, false),
-      expressionReady: safeBool(source.expressionReady, false),
-      registryReady: safeBool(source.registryReady, false),
-      marketReady: safeBool(source.marketReady, false),
-      publicReady: safeBool(source.publicReady, false),
-      internalOnly: safeBool(source.internalOnly, true),
-      ownsRendering: false,
-      ownsTruth: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      createdAt: safeString(source.createdAt || nowIso()),
-      updatedAt: nowIso()
-    };
+  function receiveF55ExpressionRelease(packet = {}) {
+    return acceptF55ExpressionRelease(packet);
   }
 
-  function evaluateRegistryEntry(entry = {}) {
-    const item = normalizeRegistryEntry(entry);
-    const missing = [];
+  function submitF55ExpressionRelease(packet = {}) {
+    return acceptF55ExpressionRelease(packet);
+  }
 
-    if (!state.f55ExpressionAccepted) missing.push("f55ExpressionAccepted");
-    if (!item.id) missing.push("id");
-    if (!item.type) missing.push("type");
-    if (!item.receiptReady) missing.push("receiptReady");
-    if (!item.platformReady) missing.push("platformReady");
-    if (!item.engineeringReady) missing.push("engineeringReady");
-    if (!item.registryReady) missing.push("registryReady");
+  function getF55SourceProducts(packet = state.f55ExpressionReleasePacket || {}) {
+    if (Array.isArray(packet.sceneGraph && packet.sceneGraph.products)) {
+      return packet.sceneGraph.products;
+    }
+
+    if (Array.isArray(packet.products)) {
+      return packet.products;
+    }
+
+    return [];
+  }
+
+  function getF55ExpressionRecords(packet = state.f55ExpressionReleasePacket || {}) {
+    if (Array.isArray(packet.expressionRecords)) {
+      return packet.expressionRecords;
+    }
+
+    if (isObject(packet.sceneGraph) && Array.isArray(packet.sceneGraph.expressionRecords)) {
+      return packet.sceneGraph.expressionRecords;
+    }
+
+    return [];
+  }
+
+  function getF55RegistryRecords(packet = state.f55ExpressionReleasePacket || {}) {
+    if (Array.isArray(packet.registryRecords)) {
+      return packet.registryRecords;
+    }
+
+    if (isObject(packet.sceneGraph) && Array.isArray(packet.sceneGraph.registryRecords)) {
+      return packet.sceneGraph.registryRecords;
+    }
+
+    return [];
+  }
+
+  function normalizeRegistryRecord(source = {}, fallbackType = REGISTRY_RECORD_TYPES.REGISTRY_RECORD, index = 0) {
+    const recordType = safeString(source.recordType || source.type || fallbackType, fallbackType);
+    const sourceProductId = safeString(source.sourceProductId || source.productId || source.id || `source-${index + 1}`);
+    const id = makeId(
+      source.registryRecordId ||
+      source.recordId ||
+      `${recordType}-${sourceProductId}-${index + 1}`,
+      `${recordType}-${index + 1}`
+    );
+
+    const file = safeString(source.file || source.sourceFile || "");
+    const route = safeString(source.route || "");
+    const contract = safeString(source.contract || source.sourceContract || "");
+    const receipt = safeString(source.receipt || source.sourceReceipt || "");
+
+    const traceReady = safeBool(
+      source.traceReady,
+      Boolean(file || route || contract || receipt)
+    );
+
+    const registryReady = safeBool(
+      source.registryReady,
+      traceReady
+    );
 
     const readinessScore = clamp(
-      (state.f55ExpressionAccepted ? 16 : 0) +
-      (item.id ? 8 : 0) +
-      (item.type ? 8 : 0) +
-      (item.file || item.route ? 8 : 0) +
-      (item.receiptReady ? 12 : 0) +
-      (item.platformReady ? 12 : 0) +
-      (item.engineeringReady ? 12 : 0) +
-      (item.expressionReady ? 10 : 0) +
-      (item.registryReady ? 12 : 0) +
-      (item.futureFibonacciGate === FIBONACCI.MARKET_READINESS ? 8 : 0),
+      safeNumber(source.readinessScore ?? source.expressionReadinessScore ?? source.registryReadinessScore, 0) ||
+      (
+        (traceReady ? 34 : 0) +
+        (registryReady ? 34 : 0) +
+        (file ? 8 : 0) +
+        (route ? 8 : 0) +
+        (contract ? 8 : 0) +
+        (receipt ? 8 : 0)
+      ),
       0,
       100
     );
 
     const status =
-      missing.includes("f55ExpressionAccepted")
-        ? STATUS.HELD
-        : missing.includes("receiptReady")
-          ? STATUS.BLOCKED
-          : readinessScore >= 88
-            ? STATUS.READY
-            : readinessScore >= 64
-              ? STATUS.DEGRADED
-              : STATUS.HELD;
+      registryReady && readinessScore >= 78
+        ? STATUS.READY
+        : traceReady && readinessScore >= 55
+          ? STATUS.DEGRADED
+          : STATUS.HELD;
 
     return {
-      ...item,
+      id,
+      recordId: id,
+      recordType,
+      sourceProductId,
+      sourceExpressionRecordId: safeString(source.expressionRecordId || source.expressionNodeId || ""),
+      sourceSceneNodeId: safeString(source.sceneNodeId || ""),
+      sourceFile: file,
+      file,
+      route,
+      contract,
+      receipt,
+      label: safeString(source.label || source.name || id),
+      traceReady,
+      registryReady,
       readinessScore,
       status,
-      missing,
-      f89RegistryEntryEvaluated: true,
+      tags: Array.isArray(source.tags) ? source.tags.slice() : [],
+      deterministic: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-      evaluatedAt: nowIso()
+      publicSuperiorityClaim: false,
+      createdAt: safeString(source.createdAt || nowIso()),
+      updatedAt: nowIso()
     };
   }
 
-  function registerRegistryEntry(definition = {}, options = {}) {
-    const evaluated = evaluateRegistryEntry(definition);
-    state.registry.entries[evaluated.id] = evaluated;
+  function createProductRecord(product = {}, index = 0) {
+    const id = makeId(product.id || product.productId || product.name || `product-${index + 1}`, `product-${index + 1}`);
 
-    if (evaluated.type === ENTRY_TYPES.PROJECT) state.registry.projects[evaluated.id] = evaluated;
-    if (evaluated.type === ENTRY_TYPES.PRODUCT) state.registry.products[evaluated.id] = evaluated;
-    if (evaluated.type === ENTRY_TYPES.ENGINE) state.registry.engines[evaluated.id] = evaluated;
-    if (evaluated.type === ENTRY_TYPES.ROUTE) state.registry.routes[evaluated.id] = evaluated;
-    if (evaluated.type === ENTRY_TYPES.FILE) state.registry.files[evaluated.id] = evaluated;
-    if (evaluated.type === ENTRY_TYPES.EXPRESSION_NODE) state.registry.expressionNodes[evaluated.id] = evaluated;
-    if (evaluated.type === ENTRY_TYPES.EVIDENCE || evaluated.type === ENTRY_TYPES.RECEIPT) {
-      state.registry.evidence[evaluated.id] = evaluated;
-    }
-
-    if (options.silent !== true) {
-      recordLocal("REGISTRY_ENTRY_REGISTERED", {
-        id: evaluated.id,
-        type: evaluated.type,
-        status: evaluated.status,
-        readinessScore: evaluated.readinessScore
-      });
-    }
-
-    buildProjectRegistry({ silent: true });
-    computeFibonacciSynchronizationMetric();
-    publishGlobals();
-    updateDataset();
-
-    return evaluated;
+    return normalizeRegistryRecord({
+      registryRecordId: `product-record-${id}`,
+      recordType: REGISTRY_RECORD_TYPES.PRODUCT_RECORD,
+      sourceProductId: id,
+      label: safeString(product.label || product.name || id),
+      file: safeString(product.file || ""),
+      route: safeString(product.route || ""),
+      contract: safeString(product.contract || ""),
+      receipt: safeString(product.receipt || ""),
+      readinessScore: clamp(product.readinessScore ?? 0, 0, 100),
+      traceReady: Boolean(product.file || product.route || product.contract || product.receipt),
+      registryReady: safeBool(product.receiptReady, Boolean(product.contract || product.receipt)),
+      tags: Array.isArray(product.tags) ? product.tags.slice() : []
+    }, REGISTRY_RECORD_TYPES.PRODUCT_RECORD, index);
   }
 
-  function seedCoreRegistryEntries(options = {}) {
-    registerRegistryEntry({
-      id: "diamond-gate-bridge-project",
-      type: ENTRY_TYPES.PROJECT,
-      label: "Diamond Gate Bridge Project",
-      sourceFile: FILE,
-      sourceContract: CONTRACT,
-      sourceReceipt: RECEIPT,
-      receiptReady: true,
-      platformReady: true,
-      engineeringReady: true,
-      expressionReady: true,
+  function createExpressionRecordRecord(expressionRecord = {}, index = 0) {
+    return normalizeRegistryRecord({
+      ...clonePlain(expressionRecord),
+      registryRecordId: `expression-record-${safeString(expressionRecord.expressionRecordId || expressionRecord.sourceProductId || index + 1)}`,
+      recordType: REGISTRY_RECORD_TYPES.EXPRESSION_RECORD,
+      sourceProductId: safeString(expressionRecord.sourceProductId || `expression-product-${index + 1}`),
+      readinessScore: safeNumber(expressionRecord.expressionReadinessScore, 0),
+      traceReady: true,
+      registryReady: safeBool(expressionRecord.registryReady, false)
+    }, REGISTRY_RECORD_TYPES.EXPRESSION_RECORD, index);
+  }
+
+  function createFileRecord(file, source = {}, index = 0) {
+    return normalizeRegistryRecord({
+      registryRecordId: `file-record-${file}`,
+      recordType: REGISTRY_RECORD_TYPES.FILE_RECORD,
+      sourceProductId: safeString(source.sourceProductId || source.id || `file-source-${index + 1}`),
+      file,
+      route: safeString(source.route || ""),
+      contract: safeString(source.contract || ""),
+      receipt: safeString(source.receipt || ""),
+      traceReady: true,
       registryReady: true,
-      marketReady: false,
-      priority: 100
-    }, { silent: true });
+      readinessScore: 88
+    }, REGISTRY_RECORD_TYPES.FILE_RECORD, index);
+  }
 
-    registerRegistryEntry({
-      id: "north-runtime-table-engine",
-      type: ENTRY_TYPES.ENGINE,
-      label: "North Runtime Table Engine",
-      sourceFile: NORTH_FILE,
-      sourceFibonacciGate: FIBONACCI.NORTH_LATCH,
-      receiptReady: true,
-      platformReady: true,
-      engineeringReady: true,
-      expressionReady: true,
+  function createRouteRecord(route, source = {}, index = 0) {
+    return normalizeRegistryRecord({
+      registryRecordId: `route-record-${route}`,
+      recordType: REGISTRY_RECORD_TYPES.ROUTE_RECORD,
+      sourceProductId: safeString(source.sourceProductId || source.id || `route-source-${index + 1}`),
+      file: safeString(source.file || ""),
+      route,
+      contract: safeString(source.contract || ""),
+      receipt: safeString(source.receipt || ""),
+      traceReady: true,
       registryReady: true,
-      marketReady: false,
-      priority: 96
-    }, { silent: true });
+      readinessScore: 84
+    }, REGISTRY_RECORD_TYPES.ROUTE_RECORD, index);
+  }
 
-    registerRegistryEntry({
-      id: "product-engine-f34",
-      type: ENTRY_TYPES.ENGINE,
-      label: "Product Engine F34",
-      sourceFile: PRODUCT_ENGINE_FILE,
-      sourceFibonacciGate: FIBONACCI.PRODUCT_ENGINE,
-      receiptReady: true,
-      platformReady: true,
-      engineeringReady: true,
-      expressionReady: true,
+  function createContractRecord(contract, source = {}, index = 0) {
+    return normalizeRegistryRecord({
+      registryRecordId: `contract-record-${contract}`,
+      recordType: REGISTRY_RECORD_TYPES.CONTRACT_RECORD,
+      sourceProductId: safeString(source.sourceProductId || source.id || `contract-source-${index + 1}`),
+      file: safeString(source.file || ""),
+      route: safeString(source.route || ""),
+      contract,
+      receipt: safeString(source.receipt || ""),
+      traceReady: true,
       registryReady: true,
-      marketReady: false,
-      priority: 94
-    }, { silent: true });
+      readinessScore: 90
+    }, REGISTRY_RECORD_TYPES.CONTRACT_RECORD, index);
+  }
 
-    registerRegistryEntry({
-      id: "ue5-expression-f55",
-      type: ENTRY_TYPES.ENGINE,
-      label: "UE5 Expression F55",
-      sourceFile: UE5_EXPRESSION_FILE,
-      sourceFibonacciGate: FIBONACCI.UE5_EXPRESSION,
-      sourceContract: state.f55ExpressionContract,
-      sourceReceipt: state.f55ExpressionReceipt,
-      receiptReady: true,
-      platformReady: true,
-      engineeringReady: true,
-      expressionReady: true,
+  function createReceiptRecord(receipt, source = {}, index = 0) {
+    return normalizeRegistryRecord({
+      registryRecordId: `receipt-record-${receipt}`,
+      recordType: REGISTRY_RECORD_TYPES.RECEIPT_RECORD,
+      sourceProductId: safeString(source.sourceProductId || source.id || `receipt-source-${index + 1}`),
+      file: safeString(source.file || ""),
+      route: safeString(source.route || ""),
+      contract: safeString(source.contract || ""),
+      receipt,
+      traceReady: true,
       registryReady: true,
-      marketReady: false,
-      priority: 92
-    }, { silent: true });
+      readinessScore: 90
+    }, REGISTRY_RECORD_TYPES.RECEIPT_RECORD, index);
+  }
 
-    CORE_PROJECT_FILES.forEach((file, index) => {
-      registerRegistryEntry({
-        id: `file-${makeId(file, `file-${index + 1}`)}`,
-        type: ENTRY_TYPES.FILE,
-        label: file,
-        sourceFile: file,
-        receiptReady: true,
-        platformReady: true,
-        engineeringReady: true,
-        expressionReady: file.includes("canvas") || file.includes("product") || file.includes("runtime"),
-        registryReady: true,
-        marketReady: false,
-        priority: 70 - index
-      }, { silent: true });
-    });
+  function createMarketInputRecord(record, index = 0) {
+    return normalizeRegistryRecord({
+      registryRecordId: `market-input-${record.id || index + 1}`,
+      recordType: REGISTRY_RECORD_TYPES.MARKET_INPUT_RECORD,
+      sourceProductId: safeString(record.sourceProductId || record.id || `market-input-${index + 1}`),
+      file: record.file,
+      route: record.route,
+      contract: record.contract,
+      receipt: record.receipt,
+      readinessScore: clamp(
+        (record.registryReady ? 36 : 0) +
+        (record.traceReady ? 24 : 0) +
+        (record.file || record.route ? 12 : 0) +
+        (record.contract ? 12 : 0) +
+        (record.receipt ? 12 : 0) +
+        (record.status === STATUS.READY ? 4 : 0),
+        0,
+        100
+      ),
+      traceReady: record.traceReady,
+      registryReady: record.registryReady,
+      tags: ["market-input", record.recordType]
+    }, REGISTRY_RECORD_TYPES.MARKET_INPUT_RECORD, index);
+  }
 
-    if (options.silent !== true) {
-      recordLocal("CORE_PROJECT_REGISTRY_ENTRIES_SEEDED", {
-        fileCount: CORE_PROJECT_FILES.length
-      });
+  function addRecordUnique(recordsById, record) {
+    if (!record || !record.id) return;
+    if (!recordsById[record.id]) {
+      recordsById[record.id] = record;
+      return;
+    }
+
+    const existing = recordsById[record.id];
+    if (safeNumber(record.readinessScore, 0) > safeNumber(existing.readinessScore, 0)) {
+      recordsById[record.id] = record;
     }
   }
 
-  function evaluateAllRegistryEntries() {
-    const current = Object.values(state.registry.entries);
-    const evaluated = {};
+  function indexRecord(indexes, record) {
+    if (!record || !record.id) return;
 
-    current.forEach((entry) => {
-      const next = evaluateRegistryEntry(entry);
-      evaluated[next.id] = next;
-    });
+    const add = (bucket, key, id) => {
+      if (!key) return;
+      const safeKey = safeString(key);
+      bucket[safeKey] = bucket[safeKey] || [];
+      if (!bucket[safeKey].includes(id)) bucket[safeKey].push(id);
+    };
 
-    state.registry.entries = evaluated;
-
-    state.registry.projects = {};
-    state.registry.products = {};
-    state.registry.engines = {};
-    state.registry.routes = {};
-    state.registry.files = {};
-    state.registry.expressionNodes = {};
-    state.registry.evidence = {};
-
-    Object.values(evaluated).forEach((entry) => {
-      if (entry.type === ENTRY_TYPES.PROJECT) state.registry.projects[entry.id] = entry;
-      if (entry.type === ENTRY_TYPES.PRODUCT) state.registry.products[entry.id] = entry;
-      if (entry.type === ENTRY_TYPES.ENGINE) state.registry.engines[entry.id] = entry;
-      if (entry.type === ENTRY_TYPES.ROUTE) state.registry.routes[entry.id] = entry;
-      if (entry.type === ENTRY_TYPES.FILE) state.registry.files[entry.id] = entry;
-      if (entry.type === ENTRY_TYPES.EXPRESSION_NODE) state.registry.expressionNodes[entry.id] = entry;
-      if (entry.type === ENTRY_TYPES.EVIDENCE || entry.type === ENTRY_TYPES.RECEIPT) {
-        state.registry.evidence[entry.id] = entry;
-      }
-    });
-
-    return Object.values(state.registry.entries);
+    add(indexes.byType, record.recordType, record.id);
+    add(indexes.byFile, record.file, record.id);
+    add(indexes.byRoute, record.route, record.id);
+    add(indexes.byContract, record.contract, record.id);
+    add(indexes.byReceipt, record.receipt, record.id);
+    add(indexes.byProduct, record.sourceProductId, record.id);
+    add(indexes.byStatus, record.status, record.id);
   }
 
-  function buildProjectRegistry(options = {}) {
-    const entries = evaluateAllRegistryEntries();
+  function buildRegistryGraph(packet = state.f55ExpressionReleasePacket || {}, options = {}) {
+    const products = getF55SourceProducts(packet);
+    const expressionRecords = getF55ExpressionRecords(packet);
+    const incomingRegistryRecords = getF55RegistryRecords(packet);
 
+    const recordsById = {};
     const edges = [];
 
-    entries.forEach((entry) => {
-      entry.dependencies.forEach((dependency) => {
+    products.forEach((product, index) => {
+      addRecordUnique(recordsById, createProductRecord(product, index));
+    });
+
+    expressionRecords.forEach((record, index) => {
+      addRecordUnique(recordsById, createExpressionRecordRecord(record, index));
+    });
+
+    incomingRegistryRecords.forEach((record, index) => {
+      addRecordUnique(recordsById, normalizeRegistryRecord(record, REGISTRY_RECORD_TYPES.REGISTRY_RECORD, index));
+    });
+
+    const sourceRecords = Object.values(recordsById);
+
+    sourceRecords.forEach((record, index) => {
+      if (record.file) addRecordUnique(recordsById, createFileRecord(record.file, record, index));
+      if (record.route) addRecordUnique(recordsById, createRouteRecord(record.route, record, index));
+      if (record.contract) addRecordUnique(recordsById, createContractRecord(record.contract, record, index));
+      if (record.receipt) addRecordUnique(recordsById, createReceiptRecord(record.receipt, record, index));
+    });
+
+    Object.values(recordsById).forEach((record) => {
+      if (record.sourceProductId && record.recordType !== REGISTRY_RECORD_TYPES.PRODUCT_RECORD) {
         edges.push({
-          from: dependency,
-          to: entry.id,
-          type: "dependency",
-          entryType: entry.type,
+          from: `product-record-${record.sourceProductId}`,
+          to: record.id,
+          type: "product-to-registry-record",
           deterministic: true
         });
-      });
+      }
 
-      if (entry.sourceFile) {
+      if (record.file) {
         edges.push({
-          from: makeId(entry.sourceFile, "source-file"),
-          to: entry.id,
-          type: "source-file",
+          from: record.id,
+          to: makeId(`file-record-${record.file}`),
+          type: "record-to-file",
+          deterministic: true
+        });
+      }
+
+      if (record.contract) {
+        edges.push({
+          from: record.id,
+          to: makeId(`contract-record-${record.contract}`),
+          type: "record-to-contract",
+          deterministic: true
+        });
+      }
+
+      if (record.receipt) {
+        edges.push({
+          from: record.id,
+          to: makeId(`receipt-record-${record.receipt}`),
+          type: "record-to-receipt",
           deterministic: true
         });
       }
     });
 
-    const sortedEntries = entries.slice().sort((a, b) => {
-      if (b.priority !== a.priority) return b.priority - a.priority;
-      if (a.type !== b.type) return a.type.localeCompare(b.type);
+    const records = Object.values(recordsById).sort((a, b) => {
+      if (a.recordType !== b.recordType) return a.recordType.localeCompare(b.recordType);
+      if (b.readinessScore !== a.readinessScore) return b.readinessScore - a.readinessScore;
       return a.id.localeCompare(b.id);
     });
 
-    state.registry.entries = sortedEntries.reduce((acc, entry) => {
-      acc[entry.id] = entry;
-      return acc;
-    }, {});
+    const marketInputs = records
+      .filter((record) => record.registryReady || record.traceReady)
+      .map((record, index) => createMarketInputRecord(record, index));
 
-    state.registry.edges = edges;
-    state.registry.buildId = `f89-project-registry-${sortedEntries.length}-${edges.length}`;
-    state.registry.builtAt = nowIso();
+    const indexes = {
+      byType: {},
+      byFile: {},
+      byRoute: {},
+      byContract: {},
+      byReceipt: {},
+      byProduct: {},
+      byStatus: {}
+    };
 
-    state.registryBuilt = true;
-    state.registryEntryCount = sortedEntries.length;
-    state.registryReadyEntryCount = sortedEntries.filter((entry) => entry.status === STATUS.READY).length;
-    state.registryDegradedEntryCount = sortedEntries.filter((entry) => entry.status === STATUS.DEGRADED).length;
-    state.registryBlockedEntryCount = sortedEntries.filter((entry) => entry.status === STATUS.BLOCKED || entry.status === STATUS.HELD).length;
+    records.forEach((record) => indexRecord(indexes, record));
+    marketInputs.forEach((record) => indexRecord(indexes, record));
 
-    state.registryProjectCount = Object.keys(state.registry.projects).length;
-    state.registryProductCount = Object.keys(state.registry.products).length;
-    state.registryEngineCount = Object.keys(state.registry.engines).length;
-    state.registryRouteCount = Object.keys(state.registry.routes).length;
-    state.registryFileCount = Object.keys(state.registry.files).length;
-    state.registryExpressionNodeCount = Object.keys(state.registry.expressionNodes).length;
-    state.registryEvidenceCount = Object.keys(state.registry.evidence).length;
+    state.registryGraph = {
+      records,
+      recordsById,
+      indexes,
+      marketInputs,
+      edges,
+      buildId: `f89-registry-graph-${records.length}-${marketInputs.length}-${edges.length}`,
+      builtAt: nowIso()
+    };
 
-    state.registryReady = Boolean(
-      state.f55ExpressionAccepted &&
-      state.registryEntryCount > 0 &&
-      state.registryBlockedEntryCount === 0
-    );
+    state.registryGraphBuilt = true;
+    state.registryRecordCount = records.length;
+    state.registryReadyRecordCount = records.filter((record) => record.status === STATUS.READY).length;
+    state.registryDegradedRecordCount = records.filter((record) => record.status === STATUS.DEGRADED).length;
+    state.registryBlockedRecordCount = records.filter((record) => record.status === STATUS.BLOCKED || record.status === STATUS.HELD).length;
 
-    if (state.registryReady) {
-      state.registryStatus = STATUS.READY;
-      state.f89ActivationStatus = STATUS.READY;
-      state.f89ActivationReason = "PROJECT_REGISTRY_F89_READY";
-      state.f89ReleasePacketReady = true;
-      state.f144MarketReadinessGateReady = true;
-      state.f144MarketReleaseAuthorized = true;
-      state.firstFailedCoordinate = "NONE_PROJECT_REGISTRY_F89_READY_MARKET_F144_RELEASE_AUTHORIZED";
-      state.recommendedNextFile = MARKET_FILE;
-      state.recommendedNextRenewalTarget = MARKET_FILE;
-    } else if (state.f55ExpressionAccepted && state.registryEntryCount > 0) {
-      state.registryStatus = STATUS.DEGRADED;
-      state.f89ActivationStatus = STATUS.DEGRADED;
-      state.f89ActivationReason = "PROJECT_REGISTRY_F89_DEGRADED_MARKET_F144_RELEASE_AVAILABLE";
-      state.f89ReleasePacketReady = true;
-      state.f144MarketReadinessGateReady = true;
-      state.f144MarketReleaseAuthorized = true;
-      state.firstFailedCoordinate = "NONE_PROJECT_REGISTRY_F89_DEGRADED_MARKET_F144_RELEASE_AVAILABLE";
-      state.recommendedNextFile = MARKET_FILE;
-      state.recommendedNextRenewalTarget = MARKET_FILE;
-    } else {
-      state.registryStatus = STATUS.HELD;
-      state.f89ActivationStatus = STATUS.HELD;
-      state.f89ActivationReason = state.f55ExpressionAccepted ? "WAITING_REGISTRY_ENTRIES" : "WAITING_UE5_EXPRESSION_F55_RELEASE";
-      state.f89ReleasePacketReady = false;
-      state.f144MarketReadinessGateReady = false;
-      state.f144MarketReleaseAuthorized = false;
-      state.firstFailedCoordinate = state.f89ActivationReason;
-      state.recommendedNextFile = state.f55ExpressionAccepted ? FILE : UE5_EXPRESSION_FILE;
-      state.recommendedNextRenewalTarget = state.recommendedNextFile;
-    }
+    state.fileRecordCount = records.filter((record) => record.recordType === REGISTRY_RECORD_TYPES.FILE_RECORD).length;
+    state.routeRecordCount = records.filter((record) => record.recordType === REGISTRY_RECORD_TYPES.ROUTE_RECORD).length;
+    state.contractRecordCount = records.filter((record) => record.recordType === REGISTRY_RECORD_TYPES.CONTRACT_RECORD).length;
+    state.receiptRecordCount = records.filter((record) => record.recordType === REGISTRY_RECORD_TYPES.RECEIPT_RECORD).length;
+    state.productRecordCount = records.filter((record) => record.recordType === REGISTRY_RECORD_TYPES.PRODUCT_RECORD).length;
+    state.expressionRecordCount = records.filter((record) => record.recordType === REGISTRY_RECORD_TYPES.EXPRESSION_RECORD).length;
+    state.marketInputRecordCount = marketInputs.length;
 
     computeRegistryQualityMetric();
+
+    state.registryGraphReady = Boolean(
+      records.length > 0 &&
+      state.registryQualityScore >= 80 &&
+      state.marketInputRecordCount > 0
+    );
+
+    if (state.registryGraphReady) {
+      state.registryGraphStatus = STATUS.READY;
+      state.f144MarketReleaseAuthorized = true;
+      state.f89ReleasePacketReady = true;
+      state.f89ActivationStatus = STATUS.READY;
+      state.f89ActivationReason = "PROJECT_REGISTRY_F89_READY_FOR_F144_MARKET";
+      state.firstFailedCoordinate = "NONE_PROJECT_REGISTRY_F89_READY_F144_RELEASE_AUTHORIZED";
+      state.recommendedNextFile = F144_MARKET_FILE;
+      state.recommendedNextRenewalTarget = F144_MARKET_FILE;
+    } else if (records.length > 0 && state.registryQualityScore >= 62) {
+      state.registryGraphStatus = STATUS.DEGRADED;
+      state.f144MarketReleaseAuthorized = true;
+      state.f89ReleasePacketReady = true;
+      state.f89ActivationStatus = STATUS.DEGRADED;
+      state.f89ActivationReason = "PROJECT_REGISTRY_F89_DEGRADED_F144_RELEASE_AVAILABLE_WITH_BOUNDARIES";
+      state.firstFailedCoordinate = "NONE_PROJECT_REGISTRY_F89_DEGRADED_F144_RELEASE_AVAILABLE";
+      state.recommendedNextFile = F144_MARKET_FILE;
+      state.recommendedNextRenewalTarget = F144_MARKET_FILE;
+    } else {
+      state.registryGraphStatus = STATUS.HELD;
+      state.f144MarketReleaseAuthorized = false;
+      state.f89ReleasePacketReady = false;
+      state.f89ActivationStatus = STATUS.HELD;
+      state.f89ActivationReason = "WAITING_F55_EXPRESSION_RELEASE_OR_REGISTRY_QUALITY";
+      state.firstFailedCoordinate = "WAITING_F55_EXPRESSION_RELEASE_OR_REGISTRY_QUALITY";
+      state.recommendedNextFile = F55_EXPRESSION_FILE;
+      state.recommendedNextRenewalTarget = F55_EXPRESSION_FILE;
+    }
+
     computeFibonacciSynchronizationMetric();
 
     if (options.silent !== true) {
-      recordLocal("PROJECT_REGISTRY_F89_BUILT", {
-        entryCount: state.registryEntryCount,
+      recordLocal("PROJECT_REGISTRY_F89_REGISTRY_GRAPH_BUILT", {
+        registryRecordCount: state.registryRecordCount,
+        marketInputRecordCount: state.marketInputRecordCount,
         edgeCount: edges.length,
-        ready: state.registryReady,
-        status: state.registryStatus
+        registryGraphStatus: state.registryGraphStatus,
+        registryQualityScore: state.registryQualityScore
       });
     }
 
     updateDataset();
-    return clonePlain(state.registry);
+
+    return clonePlain(state.registryGraph);
   }
 
   function computeRegistryQualityMetric() {
-    const entryCount = Math.max(1, state.registryEntryCount);
-    const readyRatio = state.registryReadyEntryCount / entryCount;
-    const degradedRatio = state.registryDegradedEntryCount / entryCount;
-    const blockedRatio = state.registryBlockedEntryCount / entryCount;
+    const records = state.registryGraph.records || [];
+    const marketInputs = state.registryGraph.marketInputs || [];
+    const recordCount = Math.max(1, records.length);
+    const marketInputCount = Math.max(1, marketInputs.length);
+
+    const readyRatio = records.filter((record) => record.status === STATUS.READY).length / recordCount;
+    const degradedRatio = records.filter((record) => record.status === STATUS.DEGRADED).length / recordCount;
+    const blockedRatio = records.filter((record) => record.status === STATUS.BLOCKED || record.status === STATUS.HELD).length / recordCount;
 
     const typeCoverage = [
-      state.registryProjectCount > 0,
-      state.registryProductCount > 0,
-      state.registryEngineCount > 0,
-      state.registryFileCount > 0,
-      state.registryExpressionNodeCount > 0
-    ].filter(Boolean).length / 5;
+      state.productRecordCount > 0,
+      state.expressionRecordCount > 0,
+      state.fileRecordCount > 0,
+      state.contractRecordCount > 0,
+      state.receiptRecordCount > 0,
+      state.marketInputRecordCount > 0
+    ].filter(Boolean).length / 6;
 
     state.registryCoverageScore = clamp(Math.round(typeCoverage * 100), 0, 100);
 
     state.registryTraceScore = clamp(
       Math.round(
-        35 +
-        Math.min(30, state.registryEntryCount * 1.8) +
-        Math.min(20, state.registry.edges.length * 0.8) +
-        (state.f55ExpressionAccepted ? 15 : 0)
+        (
+          records.filter((record) => record.traceReady).length / recordCount
+        ) * 100
       ),
       0,
       100
@@ -974,9 +1015,9 @@
 
     state.registryCoherenceScore = clamp(
       Math.round(
-        (readyRatio * 56) +
+        (readyRatio * 58) +
         (degradedRatio * 24) -
-        (blockedRatio * 42) +
+        (blockedRatio * 38) +
         (state.registryCoverageScore * 0.10) +
         (state.registryTraceScore * 0.10)
       ),
@@ -986,21 +1027,21 @@
 
     state.registryQualityScore = clamp(
       Math.round(
-        (state.registryCoherenceScore * 0.48) +
-        (state.registryCoverageScore * 0.26) +
-        (state.registryTraceScore * 0.26)
+        (state.registryCoherenceScore * 0.42) +
+        (state.registryCoverageScore * 0.30) +
+        (state.registryTraceScore * 0.28)
       ),
       0,
       100
     );
 
-    state.internalMarketSurpassTargetScore = clamp(
+    state.marketInputReadinessScore = clamp(
       Math.round(
-        (state.registryQualityScore * 0.36) +
-        (state.registryCoverageScore * 0.20) +
-        (state.registryTraceScore * 0.20) +
-        (state.registryCoherenceScore * 0.14) +
-        (state.fibonacciSynchronizationScore * 0.10)
+        (
+          marketInputs.reduce((sum, record) => sum + safeNumber(record.readinessScore, 0), 0) / marketInputCount
+        ) * 0.72 +
+        state.registryTraceScore * 0.14 +
+        state.registryCoverageScore * 0.14
       ),
       0,
       100
@@ -1011,8 +1052,9 @@
       registryCoverageScore: state.registryCoverageScore,
       registryTraceScore: state.registryTraceScore,
       registryCoherenceScore: state.registryCoherenceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false
+      marketInputReadinessScore: state.marketInputReadinessScore,
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false
     };
   }
 
@@ -1021,19 +1063,20 @@
       state.newsProtocolAligned,
       state.oneActiveGearAtATime,
       state.activeFibonacci === FIBONACCI.PROJECT_REGISTRY,
+      state.activeFibonacciRank === 89,
+      state.activeNewsGate === NEWS_GATES.REGISTRY,
       state.sourceFibonacciGate === FIBONACCI.UE5_EXPRESSION,
       state.futureFibonacciGate === FIBONACCI.MARKET_READINESS,
-      state.activeNewsGate === NEWS_GATES.REGISTRY,
-      state.f55ExpressionObserved,
-      state.f55ExpressionAccepted,
-      state.f89RegistryConductorActive,
-      state.deterministicRegistryActive,
-      state.projectConductorMapActive,
-      state.registryIndexActive,
-      state.receiptTraceActive,
-      state.registryBuilt,
-      state.f89ReceiptReady,
+      state.registryEngineF89Active,
+      state.registryClerkActive,
+      state.projectRegistryConductorActive,
+      state.engineMechanicsPrimary,
+      state.mathPrimary,
+      state.mechanicalCoordinate.coordinateId === "RT3D-X14_Y19_Z89",
+      state.f55ExpressionReleaseAccepted || state.f55ExpressionObserved,
+      state.registryGraphBuilt,
       !state.publicSuperiorityClaim,
+      !state.publicComparisonClaimAllowed,
       !state.generatedImage,
       !state.graphicBox,
       !state.webGL,
@@ -1053,7 +1096,9 @@
       activeFibonacci: FIBONACCI.PROJECT_REGISTRY,
       activeFibonacciRank: 89,
       activeNewsGate: NEWS_GATES.REGISTRY,
-      futureFibonacciGate: FIBONACCI.MARKET_READINESS
+      sourceFibonacciGate: FIBONACCI.UE5_EXPRESSION,
+      futureFibonacciGate: FIBONACCI.MARKET_READINESS,
+      publicSuperiorityClaim: false
     };
   }
 
@@ -1063,37 +1108,37 @@
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      newsAlignmentContract: "LAB_PRODUCT_ENGINE_REGISTRY_F89_NEWS_ALIGNMENT_PROTOCOL_v1",
-      newsAlignmentReceipt: "LAB_PRODUCT_ENGINE_REGISTRY_F89_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v1",
+      newsAlignmentContract: "LAB_PRODUCT_ENGINE_REGISTRY_F89_NEWS_ALIGNMENT_PROTOCOL_v2",
+      newsAlignmentReceipt: "LAB_PRODUCT_ENGINE_REGISTRY_F89_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v2",
       sequence: [
-        {
-          gate: NEWS_GATES.PRODUCT,
-          fibonacci: FIBONACCI.PRODUCT_ENGINE,
-          file: PRODUCT_ENGINE_FILE,
-          ready: state.productEngineF34Accepted
-        },
         {
           gate: NEWS_GATES.EXPRESSION,
           fibonacci: FIBONACCI.UE5_EXPRESSION,
-          file: UE5_EXPRESSION_FILE,
-          ready: state.f55ExpressionAccepted
+          file: F55_EXPRESSION_FILE,
+          ready: state.f55ExpressionReleaseAccepted
         },
         {
           gate: NEWS_GATES.REGISTRY,
           fibonacci: FIBONACCI.PROJECT_REGISTRY,
           file: FILE,
-          ready: state.registryBuilt
+          ready: state.registryGraphReady || state.registryGraphStatus === STATUS.DEGRADED
         },
         {
           gate: NEWS_GATES.MARKET,
           fibonacci: FIBONACCI.MARKET_READINESS,
-          file: MARKET_FILE,
+          file: F144_MARKET_FILE,
           ready: state.f144MarketReleaseAuthorized
+        },
+        {
+          gate: NEWS_GATES.DOWNSTREAM,
+          fibonacci: FIBONACCI.DOWNSTREAM_RETURN,
+          file: NORTH_FILE,
+          ready: false
         }
       ],
       fibonacciSynchronizationScore: metric.score,
       f89Status: state.f89ActivationStatus,
-      registryStatus: state.registryStatus,
+      registryGraphStatus: state.registryGraphStatus,
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       generatedImage: false,
@@ -1104,20 +1149,32 @@
     };
   }
 
-  function composeF89Receipt() {
-    return getReceipt();
+  function readF144MarketAuthority() {
+    return firstGlobal([
+      "LAB_PRODUCT_ENGINE_MARKET",
+      "LAB_PRODUCT_ENGINE_MARKET_F144",
+      "PRODUCT_ENGINE_MARKET",
+      "MARKET_F144_READINESS_CONDUCTOR",
+      "DEXTER_LAB.productEngineMarket",
+      "DEXTER_LAB.productEngineMarketF144",
+      "DEXTER_LAB.marketF144ReadinessConductor",
+      "HEARTH.productEngineMarket",
+      "HEARTH.productEngineMarketF144",
+      "HEARTH.marketF144ReadinessConductor"
+    ]);
   }
 
   function composeF89ReleasePacket(extra = {}) {
     const metric = computeFibonacciSynchronizationMetric();
+    const readyForF144 = Boolean(state.registryGraphReady || state.registryGraphStatus === STATUS.DEGRADED);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       packetType: "PROJECT_REGISTRY_F89_RELEASE_PACKET",
       sourceFile: FILE,
-      targetFile: MARKET_FILE,
-      destinationFile: MARKET_FILE,
+      targetFile: F144_MARKET_FILE,
+      destinationFile: F144_MARKET_FILE,
 
       activeFibonacci: FIBONACCI.PROJECT_REGISTRY,
       activeFibonacciRank: 89,
@@ -1126,28 +1183,57 @@
       futureFibonacciGate: FIBONACCI.MARKET_READINESS,
       futureFibonacciRank: 144,
 
-      f55ExpressionAccepted: state.f55ExpressionAccepted,
-      projectRegistryF89Current: state.registryBuilt,
-      projectRegistryReady: state.registryReady || state.registryStatus === STATUS.DEGRADED,
-      registryConductorReady: state.registryReady || state.registryStatus === STATUS.DEGRADED,
-      f144MarketReleaseAuthorized: state.f144MarketReleaseAuthorized,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
 
-      registryBuilt: state.registryBuilt,
-      registryReady: state.registryReady,
-      registryStatus: state.registryStatus,
-      registryEntryCount: state.registryEntryCount,
-      registryProjectCount: state.registryProjectCount,
-      registryProductCount: state.registryProductCount,
-      registryEngineCount: state.registryEngineCount,
-      registryFileCount: state.registryFileCount,
-      registryExpressionNodeCount: state.registryExpressionNodeCount,
+      registryEngineF89Active: true,
+      registryEngineF89Only: true,
+      registryClerkActive: true,
+      projectRegistryConductorActive: true,
+
+      f55ExpressionReleaseAccepted: state.f55ExpressionReleaseAccepted,
+      f55Contract: state.f55Contract,
+      f55Receipt: state.f55Receipt,
+
+      sceneGraphObserved: state.sceneGraphObserved,
+      sceneGraphStatus: state.sceneGraphStatus,
+      sceneNodeCount: state.sceneNodeCount,
+      expressionNodeCount: state.expressionNodeCount,
+      incomingRegistryRecordNodeCount: state.incomingRegistryRecordNodeCount,
+      diagnosticEvidenceNodeCount: state.diagnosticEvidenceNodeCount,
+
+      registryGraphBuilt: state.registryGraphBuilt,
+      registryGraphReady: state.registryGraphReady,
+      registryGraphStatus: state.registryGraphStatus,
+      registryRecordCount: state.registryRecordCount,
+      registryReadyRecordCount: state.registryReadyRecordCount,
+      registryDegradedRecordCount: state.registryDegradedRecordCount,
+      registryBlockedRecordCount: state.registryBlockedRecordCount,
+      fileRecordCount: state.fileRecordCount,
+      routeRecordCount: state.routeRecordCount,
+      contractRecordCount: state.contractRecordCount,
+      receiptRecordCount: state.receiptRecordCount,
+      productRecordCount: state.productRecordCount,
+      expressionRecordCount: state.expressionRecordCount,
+      marketInputRecordCount: state.marketInputRecordCount,
 
       registryQualityScore: state.registryQualityScore,
       registryCoverageScore: state.registryCoverageScore,
       registryTraceScore: state.registryTraceScore,
       registryCoherenceScore: state.registryCoherenceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false,
+      marketInputReadinessScore: state.marketInputReadinessScore,
+
+      registryGraph: clonePlain(state.registryGraph),
+      registryRecords: clonePlain(state.registryGraph.records),
+      marketInputs: clonePlain(state.registryGraph.marketInputs),
+      registryIndexes: clonePlain(state.registryGraph.indexes),
+
+      f144MarketReleaseAuthorized: readyForF144,
+      f89ReleasePacketReady: readyForF144,
+      f89ActivationStatus: state.f89ActivationStatus,
+      f89ActivationReason: state.f89ActivationReason,
 
       newsProtocolAligned: true,
       fibonacciSynchronizationMetricActive: true,
@@ -1158,9 +1244,11 @@
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
-      registry: clonePlain(state.registry),
       detail: clonePlain(extra),
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1169,14 +1257,18 @@
     };
   }
 
-  function submitF89ReceiptToUE5Expression() {
-    const authority = readUE5ExpressionAuthority();
+  function composeF89Receipt() {
+    return getReceipt();
+  }
 
-    if (!authority || !isFunction(authority.acceptProjectRegistryF89Receipt)) {
+  function submitF89ReleaseToMarket(extra = {}) {
+    const authority = readF144MarketAuthority();
+
+    if (!authority || !isFunction(authority.acceptF89RegistryRelease)) {
       return {
         submitted: false,
-        reason: "UE5_EXPRESSION_ACCEPT_METHOD_UNAVAILABLE",
-        recommendedNextFile: UE5_EXPRESSION_FILE,
+        reason: "F144_MARKET_ACCEPT_F89_METHOD_UNAVAILABLE",
+        recommendedNextFile: F144_MARKET_FILE,
         generatedImage: false,
         graphicBox: false,
         webGL: false,
@@ -1185,10 +1277,14 @@
     }
 
     try {
-      const response = authority.acceptProjectRegistryF89Receipt(composeF89ReleasePacket());
-      recordLocal("F89_RECEIPT_SUBMITTED_TO_UE5_EXPRESSION", {
-        submitted: true
+      const packet = composeF89ReleasePacket(extra);
+      const response = authority.acceptF89RegistryRelease(packet);
+
+      recordLocal("F89_RELEASE_SUBMITTED_TO_F144_MARKET", {
+        submitted: true,
+        accepted: Boolean(response && response.accepted !== false)
       });
+
       return {
         submitted: true,
         response: clonePlain(response),
@@ -1198,10 +1294,11 @@
         visualPassClaimed: false
       };
     } catch (error) {
-      recordError("F89_SUBMISSION_TO_UE5_EXPRESSION_FAILED", error);
+      recordError("F89_RELEASE_SUBMISSION_TO_F144_MARKET_FAILED", error);
+
       return {
         submitted: false,
-        reason: "F89_SUBMISSION_TO_UE5_EXPRESSION_FAILED",
+        reason: "F89_RELEASE_SUBMISSION_TO_F144_MARKET_FAILED",
         generatedImage: false,
         graphicBox: false,
         webGL: false,
@@ -1210,15 +1307,183 @@
     }
   }
 
-  function getRegistryEntry(id) {
-    const key = makeId(id, "");
-    return clonePlain(state.registry.entries[key] || null);
+  function submitF89PacketToNorth(extra = {}) {
+    const north = firstGlobal([
+      "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
+      "RUNTIME_TABLE",
+      "DEXTER_LAB.runtimeTable",
+      "HEARTH.northCommandRuntimeTable",
+      "HEARTH.runtimeTable"
+    ]);
+
+    if (!north) {
+      return {
+        submitted: false,
+        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE"
+      };
+    }
+
+    const packet = composeF89ReleasePacket(extra);
+
+    try {
+      if (isFunction(north.acceptF89RegistryPacket)) {
+        return {
+          submitted: true,
+          response: clonePlain(north.acceptF89RegistryPacket(packet))
+        };
+      }
+
+      if (isFunction(north.acceptSupportEnginePacket)) {
+        return {
+          submitted: true,
+          response: clonePlain(north.acceptSupportEnginePacket(packet))
+        };
+      }
+
+      if (isFunction(north.receiveSupportEnginePacket)) {
+        return {
+          submitted: true,
+          response: clonePlain(north.receiveSupportEnginePacket(packet))
+        };
+      }
+    } catch (error) {
+      recordError("F89_PACKET_SUBMISSION_TO_NORTH_FAILED", error);
+      return {
+        submitted: false,
+        reason: "F89_PACKET_SUBMISSION_TO_NORTH_FAILED"
+      };
+    }
+
+    return {
+      submitted: false,
+      reason: "NORTH_RUNTIME_TABLE_SUPPORT_ENGINE_INTAKE_UNAVAILABLE"
+    };
   }
 
-  function listRegistryEntries(type = "") {
-    const entries = Object.values(state.registry.entries);
-    if (!type) return clonePlain(entries);
-    return clonePlain(entries.filter((entry) => entry.type === type));
+  function validateF144MarketReceipt(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+    const f144Recognized = Boolean(
+      safeBool(input.f144MarketReady, false) ||
+      safeBool(input.marketReadinessBuilt, false) ||
+      safeBool(input.marketF144ReadinessConductorActive, false) ||
+      safeString(input.packetType, "").includes("F144") ||
+      safeString(input.activeFibonacci || "", "") === FIBONACCI.MARKET_READINESS ||
+      safeString(input.activeFibonacci || "", "") === "F144"
+    );
+
+    const ok = Boolean(noForbiddenClaim && f144Recognized);
+
+    let reason = "F144_MARKET_RECEIPT_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_F144_RECEIPT";
+    else if (!f144Recognized) reason = "UNRECOGNIZED_F144_MARKET_RECEIPT";
+
+    return {
+      ok,
+      reason,
+      noForbiddenClaim,
+      f144Recognized,
+      input: clonePlain(input)
+    };
+  }
+
+  function acceptF144MarketReceipt(packet = {}) {
+    const validation = validateF144MarketReceipt(packet);
+
+    state.f144MarketReceiptAccepted = validation.ok;
+    state.f144MarketReceiptPacket = clonePlain(packet);
+
+    if (validation.input.contract) state.f144MarketContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.f144MarketReceipt = safeString(validation.input.receipt);
+
+    recordLocal("F144_MARKET_RECEIPT_RECEIVED_BY_PROJECT_REGISTRY_F89", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      contract: state.f144MarketContract
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: validation.ok,
+      registryF89ReceivedF144: true,
+      reason: validation.reason,
+      recommendedNextFile: validation.ok ? NORTH_FILE : F144_MARKET_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function getMechanicalCoordinatePacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_0`,
+      enginePartDefinesFunction: true,
+      fibonacciDefinesSequence: true,
+      categoryDefinesScale: true,
+      numbersSupportFunction: true,
+      aliasesLocateOnly: true,
+      namesDescribeOnly: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function getRegistryGraph() {
+    return clonePlain(state.registryGraph);
+  }
+
+  function getRegistryGraphSummary() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      registryGraphBuilt: state.registryGraphBuilt,
+      registryGraphReady: state.registryGraphReady,
+      registryGraphStatus: state.registryGraphStatus,
+      registryRecordCount: state.registryRecordCount,
+      registryReadyRecordCount: state.registryReadyRecordCount,
+      registryDegradedRecordCount: state.registryDegradedRecordCount,
+      registryBlockedRecordCount: state.registryBlockedRecordCount,
+      fileRecordCount: state.fileRecordCount,
+      routeRecordCount: state.routeRecordCount,
+      contractRecordCount: state.contractRecordCount,
+      receiptRecordCount: state.receiptRecordCount,
+      productRecordCount: state.productRecordCount,
+      expressionRecordCount: state.expressionRecordCount,
+      marketInputRecordCount: state.marketInputRecordCount,
+      registryQualityScore: state.registryQualityScore,
+      registryCoverageScore: state.registryCoverageScore,
+      registryTraceScore: state.registryTraceScore,
+      registryCoherenceScore: state.registryCoherenceScore,
+      marketInputReadinessScore: state.marketInputReadinessScore,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getRegistryRecords(type = "") {
+    const records = state.registryGraph.records || [];
+    if (!type) return clonePlain(records);
+    return clonePlain(records.filter((record) => record.recordType === type));
+  }
+
+  function getMarketInputs() {
+    return clonePlain(state.registryGraph.marketInputs || []);
+  }
+
+  function getRegistryIndexes() {
+    return clonePlain(state.registryGraph.indexes || {});
+  }
+
+  function findRegistryRecord(id) {
+    const key = makeId(id, "");
+    return clonePlain((state.registryGraph.recordsById || {})[key] || null);
   }
 
   function getReceiptLight() {
@@ -1231,54 +1496,64 @@
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
-      role: state.role,
 
-      f89RegistryConductorActive: true,
-      f89Only: true,
-      f55ExpressionRequired: true,
+      registryEngineF89Active: true,
+      registryEngineF89Only: true,
+      registryClerkActive: true,
+      projectRegistryConductorActive: true,
+
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+      mechanicalCoordinateId: MECHANICAL_COORDINATE.coordinateId,
+      enginePart: MECHANICAL_COORDINATE.enginePart,
+      systemCategory: MECHANICAL_COORDINATE.systemCategory,
+      fibonacciStation: MECHANICAL_COORDINATE.fibonacciStage,
+      mechanicalRole: MECHANICAL_COORDINATE.mechanicalRole,
+      chessRole: MECHANICAL_COORDINATE.chessRole,
+
       f55ExpressionObserved: state.f55ExpressionObserved,
-      f55ExpressionAccepted: state.f55ExpressionAccepted,
-      f55ExpressionContract: state.f55ExpressionContract,
-      f55ExpressionReceipt: state.f55ExpressionReceipt,
+      f55ExpressionReleaseAccepted: state.f55ExpressionReleaseAccepted,
+      f55Contract: state.f55Contract,
+      f55Receipt: state.f55Receipt,
 
-      productEngineF34Observed: state.productEngineF34Observed,
-      productEngineF34Accepted: state.productEngineF34Accepted,
-      northF21Acknowledged: state.northF21Acknowledged,
-      canvasF13EvidenceObserved: state.canvasF13EvidenceObserved,
-      canvasF13EvidenceComplete: state.canvasF13EvidenceComplete,
-      canvasF13EvidenceDegraded: state.canvasF13EvidenceDegraded,
+      sceneGraphObserved: state.sceneGraphObserved,
+      sceneGraphStatus: state.sceneGraphStatus,
+      sceneNodeCount: state.sceneNodeCount,
+      expressionNodeCount: state.expressionNodeCount,
+      incomingRegistryRecordNodeCount: state.incomingRegistryRecordNodeCount,
+      diagnosticEvidenceNodeCount: state.diagnosticEvidenceNodeCount,
 
-      deterministicRegistryActive: true,
-      projectConductorMapActive: true,
-      registryIndexActive: true,
-      receiptTraceActive: true,
-      registryBuilt: state.registryBuilt,
-      registryReady: state.registryReady,
-      registryStatus: state.registryStatus,
-      registryEntryCount: state.registryEntryCount,
-      registryReadyEntryCount: state.registryReadyEntryCount,
-      registryDegradedEntryCount: state.registryDegradedEntryCount,
-      registryBlockedEntryCount: state.registryBlockedEntryCount,
-
-      registryProjectCount: state.registryProjectCount,
-      registryProductCount: state.registryProductCount,
-      registryEngineCount: state.registryEngineCount,
-      registryRouteCount: state.registryRouteCount,
-      registryFileCount: state.registryFileCount,
-      registryExpressionNodeCount: state.registryExpressionNodeCount,
-      registryEvidenceCount: state.registryEvidenceCount,
+      registryGraphBuilt: state.registryGraphBuilt,
+      registryGraphReady: state.registryGraphReady,
+      registryGraphStatus: state.registryGraphStatus,
+      registryRecordCount: state.registryRecordCount,
+      registryReadyRecordCount: state.registryReadyRecordCount,
+      registryDegradedRecordCount: state.registryDegradedRecordCount,
+      registryBlockedRecordCount: state.registryBlockedRecordCount,
+      fileRecordCount: state.fileRecordCount,
+      routeRecordCount: state.routeRecordCount,
+      contractRecordCount: state.contractRecordCount,
+      receiptRecordCount: state.receiptRecordCount,
+      productRecordCount: state.productRecordCount,
+      expressionRecordCount: state.expressionRecordCount,
+      marketInputRecordCount: state.marketInputRecordCount,
 
       registryQualityMetricActive: true,
       registryQualityScore: state.registryQualityScore,
       registryCoverageScore: state.registryCoverageScore,
       registryTraceScore: state.registryTraceScore,
       registryCoherenceScore: state.registryCoherenceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false,
+      marketInputReadinessScore: state.marketInputReadinessScore,
 
-      f144MarketReadinessGateReady: state.f144MarketReadinessGateReady,
       f144MarketReleaseAuthorized: state.f144MarketReleaseAuthorized,
+      f89ReleasePacketReady: state.f89ReleasePacketReady,
+      f89ActivationStatus: state.f89ActivationStatus,
+      f89ActivationReason: state.f89ActivationReason,
+
       f144MarketReceiptAccepted: state.f144MarketReceiptAccepted,
+      f144MarketContract: state.f144MarketContract,
+      f144MarketReceipt: state.f144MarketReceipt,
 
       newsProtocolAligned: true,
       fibonacciSynchronizationMetricActive: true,
@@ -1290,19 +1565,18 @@
       futureFibonacciGate: FIBONACCI.MARKET_READINESS,
       oneActiveGearAtATime: true,
 
-      f89ActivationStatus: state.f89ActivationStatus,
-      f89ActivationReason: state.f89ActivationReason,
-      f89ReceiptReady: true,
-      f89ReleasePacketReady: state.f89ReleasePacketReady,
-
       firstFailedCoordinate: state.firstFailedCoordinate,
       recommendedNextFile: state.recommendedNextFile,
       recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
+
       createdAt: state.createdAt,
       updatedAt: state.updatedAt || nowIso()
     };
@@ -1314,57 +1588,70 @@
     return {
       ...light,
 
-      projectRegistryReceipt: true,
-      registryConductorOwns: [
-        "F89 project registry conductorship",
-        "deterministic project registry",
-        "engine registry",
-        "route registry",
-        "file registry",
-        "product registry",
-        "expression-node registry",
-        "receipt trace index",
-        "F144 market-readiness handoff packet",
-        "NEWS/Fibonacci synchronization metric"
+      projectRegistryF89Receipt: true,
+      registryClerkReceipt: true,
+
+      registryEngineOwns: [
+        "F89 project registry manifold",
+        "F55 expression release consumption",
+        "deterministic project registry records",
+        "file / route / contract / receipt indexes",
+        "market-input record preparation",
+        "F144 market-readiness handoff packet"
       ],
-      registryConductorDoesNotOwn: [
+      registryEngineDoesNotOwn: [
+        "F34 Product Engine authority",
+        "F55 Expression authority",
+        "F144 Market authority",
+        "F233 downstream return",
         "North F21 latch",
-        "Product Engine F34 authority",
-        "UE5 Expression F55 authority",
         "Canvas F13 evidence",
+        "actual rendering",
         "route orchestration",
         "planet truth",
         "material truth",
         "elevation truth",
         "hydrology truth",
-        "actual rendering",
-        "public market claim",
         "generated image",
         "GraphicBox",
         "WebGL",
+        "public superiority claim",
         "final visual pass claim"
       ],
 
       gates: {
         north: NORTH_FILE,
-        productEngine: PRODUCT_ENGINE_FILE,
-        ue5Expression: UE5_EXPRESSION_FILE,
+        productEngine: F34_PRODUCT_ENGINE_FILE,
+        ue5Expression: F55_EXPRESSION_FILE,
         registry: FILE,
-        market: MARKET_FILE
+        market: F144_MARKET_FILE,
+        canvas: CANVAS_FILE
       },
 
-      entryTypes: clonePlain(ENTRY_TYPES),
+      registryRecordTypes: clonePlain(REGISTRY_RECORD_TYPES),
       fibonacciMap: clonePlain(FIBONACCI),
       newsGates: clonePlain(NEWS_GATES),
-      registry: clonePlain(state.registry),
-      registryEntries: clonePlain(Object.values(state.registry.entries)),
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      mechanicalCoordinatePacket: getMechanicalCoordinatePacket(),
+
+      f55ExpressionReleasePacket: clonePlain(state.f55ExpressionReleasePacket),
+      registryGraph: clonePlain(state.registryGraph),
+      registryGraphSummary: getRegistryGraphSummary(),
+      registryRecords: getRegistryRecords(),
+      marketInputs: getMarketInputs(),
+      registryIndexes: getRegistryIndexes(),
+
+      registryQuality: computeRegistryQualityMetric(),
       newsAlignment: evaluateNewsAlignment(),
       f89ReleasePacket: composeF89ReleasePacket(),
-      f55ReleasePacket: clonePlain(state.f55ReleasePacket),
+      f144MarketReceiptPacket: clonePlain(state.f144MarketReceiptPacket),
 
       localEvents: clonePlain(state.localEvents),
       errors: clonePlain(state.errors),
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1376,8 +1663,12 @@
   function getReceiptText() {
     const r = getReceipt();
 
-    const entries = (r.registryEntries || []).map((entry) => (
-      `- ${entry.id} :: type=${entry.type} :: status=${entry.status} :: score=${entry.readinessScore} :: file=${entry.file || entry.sourceFile || ""}`
+    const records = (r.registryRecords || []).map((record) => (
+      `- ${record.id} :: type=${record.recordType} :: product=${record.sourceProductId} :: status=${record.status} :: score=${record.readinessScore} :: file=${record.file || ""} :: route=${record.route || ""}`
+    )).join("\n") || "- none";
+
+    const marketInputs = (r.marketInputs || []).map((record) => (
+      `- ${record.id} :: product=${record.sourceProductId} :: status=${record.status} :: score=${record.readinessScore} :: traceReady=${record.traceReady} :: registryReady=${record.registryReady}`
     )).join("\n") || "- none";
 
     const events = (r.localEvents || []).slice(-48).map((item) => (
@@ -1389,7 +1680,7 @@
     )).join("\n") || "- none";
 
     return [
-      "LAB_PRODUCT_ENGINE_REGISTRY_F89_PROJECT_CONDUCTOR_RECEIPT",
+      "LAB_PRODUCT_ENGINE_REGISTRY_F89_ENGINE_MECHANICS_PROJECT_REGISTRY_CONDUCTOR_RECEIPT",
       "",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
@@ -1397,53 +1688,63 @@
       `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
-      `role=${r.role}`,
       "",
-      `f89RegistryConductorActive=${r.f89RegistryConductorActive}`,
-      `f89Only=${r.f89Only}`,
-      `f55ExpressionRequired=${r.f55ExpressionRequired}`,
+      `registryEngineF89Active=${r.registryEngineF89Active}`,
+      `registryEngineF89Only=${r.registryEngineF89Only}`,
+      `registryClerkActive=${r.registryClerkActive}`,
+      `projectRegistryConductorActive=${r.projectRegistryConductorActive}`,
+      "",
+      `engineMechanicsPrimary=${r.engineMechanicsPrimary}`,
+      `mathPrimary=${r.mathPrimary}`,
+      `architectureLabelsSecondary=${r.architectureLabelsSecondary}`,
+      `mechanicalCoordinateId=${r.mechanicalCoordinateId}`,
+      `enginePart=${r.enginePart}`,
+      `systemCategory=${r.systemCategory}`,
+      `fibonacciStation=${r.fibonacciStation}`,
+      `mechanicalRole=${r.mechanicalRole}`,
+      `chessRole=${r.chessRole}`,
+      "",
       `f55ExpressionObserved=${r.f55ExpressionObserved}`,
-      `f55ExpressionAccepted=${r.f55ExpressionAccepted}`,
-      `f55ExpressionContract=${r.f55ExpressionContract}`,
-      `f55ExpressionReceipt=${r.f55ExpressionReceipt}`,
+      `f55ExpressionReleaseAccepted=${r.f55ExpressionReleaseAccepted}`,
+      `f55Contract=${r.f55Contract}`,
+      `f55Receipt=${r.f55Receipt}`,
       "",
-      `productEngineF34Observed=${r.productEngineF34Observed}`,
-      `productEngineF34Accepted=${r.productEngineF34Accepted}`,
-      `northF21Acknowledged=${r.northF21Acknowledged}`,
-      `canvasF13EvidenceObserved=${r.canvasF13EvidenceObserved}`,
-      `canvasF13EvidenceComplete=${r.canvasF13EvidenceComplete}`,
-      `canvasF13EvidenceDegraded=${r.canvasF13EvidenceDegraded}`,
+      `sceneGraphObserved=${r.sceneGraphObserved}`,
+      `sceneGraphStatus=${r.sceneGraphStatus}`,
+      `sceneNodeCount=${r.sceneNodeCount}`,
+      `expressionNodeCount=${r.expressionNodeCount}`,
+      `incomingRegistryRecordNodeCount=${r.incomingRegistryRecordNodeCount}`,
+      `diagnosticEvidenceNodeCount=${r.diagnosticEvidenceNodeCount}`,
       "",
-      `deterministicRegistryActive=${r.deterministicRegistryActive}`,
-      `projectConductorMapActive=${r.projectConductorMapActive}`,
-      `registryIndexActive=${r.registryIndexActive}`,
-      `receiptTraceActive=${r.receiptTraceActive}`,
-      `registryBuilt=${r.registryBuilt}`,
-      `registryReady=${r.registryReady}`,
-      `registryStatus=${r.registryStatus}`,
-      `registryEntryCount=${r.registryEntryCount}`,
-      `registryReadyEntryCount=${r.registryReadyEntryCount}`,
-      `registryDegradedEntryCount=${r.registryDegradedEntryCount}`,
-      `registryBlockedEntryCount=${r.registryBlockedEntryCount}`,
-      "",
-      `registryProjectCount=${r.registryProjectCount}`,
-      `registryProductCount=${r.registryProductCount}`,
-      `registryEngineCount=${r.registryEngineCount}`,
-      `registryRouteCount=${r.registryRouteCount}`,
-      `registryFileCount=${r.registryFileCount}`,
-      `registryExpressionNodeCount=${r.registryExpressionNodeCount}`,
-      `registryEvidenceCount=${r.registryEvidenceCount}`,
+      `registryGraphBuilt=${r.registryGraphBuilt}`,
+      `registryGraphReady=${r.registryGraphReady}`,
+      `registryGraphStatus=${r.registryGraphStatus}`,
+      `registryRecordCount=${r.registryRecordCount}`,
+      `registryReadyRecordCount=${r.registryReadyRecordCount}`,
+      `registryDegradedRecordCount=${r.registryDegradedRecordCount}`,
+      `registryBlockedRecordCount=${r.registryBlockedRecordCount}`,
+      `fileRecordCount=${r.fileRecordCount}`,
+      `routeRecordCount=${r.routeRecordCount}`,
+      `contractRecordCount=${r.contractRecordCount}`,
+      `receiptRecordCount=${r.receiptRecordCount}`,
+      `productRecordCount=${r.productRecordCount}`,
+      `expressionRecordCount=${r.expressionRecordCount}`,
+      `marketInputRecordCount=${r.marketInputRecordCount}`,
       "",
       `registryQualityScore=${r.registryQualityScore}`,
       `registryCoverageScore=${r.registryCoverageScore}`,
       `registryTraceScore=${r.registryTraceScore}`,
       `registryCoherenceScore=${r.registryCoherenceScore}`,
-      `internalMarketSurpassTargetScore=${r.internalMarketSurpassTargetScore}`,
-      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `marketInputReadinessScore=${r.marketInputReadinessScore}`,
       "",
-      `f144MarketReadinessGateReady=${r.f144MarketReadinessGateReady}`,
       `f144MarketReleaseAuthorized=${r.f144MarketReleaseAuthorized}`,
+      `f89ReleasePacketReady=${r.f89ReleasePacketReady}`,
+      `f89ActivationStatus=${r.f89ActivationStatus}`,
+      `f89ActivationReason=${r.f89ActivationReason}`,
+      "",
       `f144MarketReceiptAccepted=${r.f144MarketReceiptAccepted}`,
+      `f144MarketContract=${r.f144MarketContract}`,
+      `f144MarketReceipt=${r.f144MarketReceipt}`,
       "",
       `newsProtocolAligned=${r.newsProtocolAligned}`,
       `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
@@ -1455,17 +1756,15 @@
       `futureFibonacciGate=${r.futureFibonacciGate}`,
       `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
       "",
-      `f89ActivationStatus=${r.f89ActivationStatus}`,
-      `f89ActivationReason=${r.f89ActivationReason}`,
-      `f89ReceiptReady=${r.f89ReceiptReady}`,
-      `f89ReleasePacketReady=${r.f89ReleasePacketReady}`,
-      "",
       `firstFailedCoordinate=${r.firstFailedCoordinate}`,
       `recommendedNextFile=${r.recommendedNextFile}`,
       `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
       "",
-      "REGISTRY_ENTRIES",
-      entries,
+      "REGISTRY_RECORDS",
+      records,
+      "",
+      "MARKET_INPUTS",
+      marketInputs,
       "",
       "LOCAL_EVENTS",
       events,
@@ -1473,6 +1772,9 @@
       "ERRORS",
       errors,
       "",
+      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `publicComparisonClaimAllowed=${r.publicComparisonClaimAllowed}`,
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
@@ -1488,50 +1790,66 @@
     setDataset("labProductEngineRegistryVersion", VERSION);
     setDataset("labProductEngineRegistryFile", FILE);
 
-    setDataset("productEngineRegistryF89Only", "true");
-    setDataset("productEngineRegistryConductorActive", "true");
-    setDataset("productEngineRegistryF55ExpressionRequired", "true");
-    setDataset("productEngineRegistryF55ExpressionObserved", state.f55ExpressionObserved);
-    setDataset("productEngineRegistryF55ExpressionAccepted", state.f55ExpressionAccepted);
+    setDataset("registryF89Active", "true");
+    setDataset("registryF89Only", "true");
+    setDataset("registryClerkActive", "true");
+    setDataset("projectRegistryConductorActive", "true");
 
-    setDataset("productEngineRegistryBuilt", state.registryBuilt);
-    setDataset("productEngineRegistryReady", state.registryReady);
-    setDataset("productEngineRegistryStatus", state.registryStatus);
-    setDataset("productEngineRegistryEntryCount", state.registryEntryCount);
-    setDataset("productEngineRegistryProjectCount", state.registryProjectCount);
-    setDataset("productEngineRegistryProductCount", state.registryProductCount);
-    setDataset("productEngineRegistryEngineCount", state.registryEngineCount);
-    setDataset("productEngineRegistryRouteCount", state.registryRouteCount);
-    setDataset("productEngineRegistryFileCount", state.registryFileCount);
-    setDataset("productEngineRegistryExpressionNodeCount", state.registryExpressionNodeCount);
+    setDataset("registryEngineMechanicsPrimary", "true");
+    setDataset("registryMathPrimary", "true");
+    setDataset("registryArchitectureLabelsSecondary", "true");
+    setDataset("registryMechanicalCoordinateId", MECHANICAL_COORDINATE.coordinateId);
+    setDataset("registryEnginePart", MECHANICAL_COORDINATE.enginePart);
+    setDataset("registrySystemCategory", MECHANICAL_COORDINATE.systemCategory);
+    setDataset("registryFibonacciStation", MECHANICAL_COORDINATE.fibonacciStage);
+    setDataset("registryMechanicalRole", MECHANICAL_COORDINATE.mechanicalRole);
+    setDataset("registryChessRole", MECHANICAL_COORDINATE.chessRole);
 
-    setDataset("productEngineRegistryQualityScore", state.registryQualityScore);
-    setDataset("productEngineRegistryCoverageScore", state.registryCoverageScore);
-    setDataset("productEngineRegistryTraceScore", state.registryTraceScore);
-    setDataset("productEngineRegistryCoherenceScore", state.registryCoherenceScore);
-    setDataset("productEngineRegistryInternalMarketSurpassTargetScore", state.internalMarketSurpassTargetScore);
-    setDataset("productEngineRegistryPublicSuperiorityClaim", "false");
+    setDataset("registryF55ExpressionObserved", state.f55ExpressionObserved);
+    setDataset("registryF55ExpressionReleaseAccepted", state.f55ExpressionReleaseAccepted);
+    setDataset("registrySceneGraphObserved", state.sceneGraphObserved);
+    setDataset("registrySceneGraphStatus", state.sceneGraphStatus);
 
-    setDataset("productEngineRegistryF144MarketGateReady", state.f144MarketReadinessGateReady);
-    setDataset("productEngineRegistryF144MarketReleaseAuthorized", state.f144MarketReleaseAuthorized);
+    setDataset("registryGraphBuilt", state.registryGraphBuilt);
+    setDataset("registryGraphReady", state.registryGraphReady);
+    setDataset("registryGraphStatus", state.registryGraphStatus);
+    setDataset("registryRecordCount", state.registryRecordCount);
+    setDataset("registryReadyRecordCount", state.registryReadyRecordCount);
+    setDataset("registryDegradedRecordCount", state.registryDegradedRecordCount);
+    setDataset("registryBlockedRecordCount", state.registryBlockedRecordCount);
+    setDataset("registryFileRecordCount", state.fileRecordCount);
+    setDataset("registryRouteRecordCount", state.routeRecordCount);
+    setDataset("registryContractRecordCount", state.contractRecordCount);
+    setDataset("registryReceiptRecordCount", state.receiptRecordCount);
+    setDataset("registryMarketInputRecordCount", state.marketInputRecordCount);
 
-    setDataset("productEngineRegistryNewsProtocolAligned", "true");
-    setDataset("productEngineRegistryFibonacciSynchronizationMetricActive", "true");
-    setDataset("productEngineRegistryFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
-    setDataset("productEngineRegistryActiveFibonacci", FIBONACCI.PROJECT_REGISTRY);
-    setDataset("productEngineRegistryActiveFibonacciRank", "89");
-    setDataset("productEngineRegistryActiveNewsGate", NEWS_GATES.REGISTRY);
-    setDataset("productEngineRegistrySourceFibonacciGate", FIBONACCI.UE5_EXPRESSION);
-    setDataset("productEngineRegistryFutureFibonacciGate", FIBONACCI.MARKET_READINESS);
+    setDataset("registryQualityScore", state.registryQualityScore);
+    setDataset("registryCoverageScore", state.registryCoverageScore);
+    setDataset("registryTraceScore", state.registryTraceScore);
+    setDataset("registryCoherenceScore", state.registryCoherenceScore);
+    setDataset("registryMarketInputReadinessScore", state.marketInputReadinessScore);
 
-    setDataset("productEngineRegistryF89ActivationStatus", state.f89ActivationStatus);
-    setDataset("productEngineRegistryF89ActivationReason", state.f89ActivationReason);
-    setDataset("productEngineRegistryF89ReleasePacketReady", state.f89ReleasePacketReady);
+    setDataset("registryF144MarketReleaseAuthorized", state.f144MarketReleaseAuthorized);
+    setDataset("registryF89ReleasePacketReady", state.f89ReleasePacketReady);
+    setDataset("registryF89ActivationStatus", state.f89ActivationStatus);
+    setDataset("registryF89ActivationReason", state.f89ActivationReason);
 
-    setDataset("productEngineRegistryFirstFailedCoordinate", state.firstFailedCoordinate);
-    setDataset("productEngineRegistryRecommendedNextFile", state.recommendedNextFile);
-    setDataset("productEngineRegistryRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+    setDataset("registryNewsProtocolAligned", "true");
+    setDataset("registryFibonacciSynchronizationMetricActive", "true");
+    setDataset("registryFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
+    setDataset("registryActiveFibonacci", FIBONACCI.PROJECT_REGISTRY);
+    setDataset("registryActiveFibonacciRank", "89");
+    setDataset("registryActiveNewsGate", NEWS_GATES.REGISTRY);
+    setDataset("registrySourceFibonacciGate", FIBONACCI.UE5_EXPRESSION);
+    setDataset("registryFutureFibonacciGate", FIBONACCI.MARKET_READINESS);
 
+    setDataset("registryFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("registryRecommendedNextFile", state.recommendedNextFile);
+    setDataset("registryRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+
+    setDataset("registryPublicSuperiorityClaim", "false");
+    setDataset("registryPublicComparisonClaimAllowed", "false");
+    setDataset("registryBenchmarkRequiredBeforePublicClaim", "true");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
@@ -1546,14 +1864,18 @@
     root.LAB_PRODUCT_ENGINE_REGISTRY_F89 = api;
     root.PRODUCT_ENGINE_REGISTRY = api;
     root.PROJECT_REGISTRY_CONDUCTOR = api;
+    root.PROJECT_REGISTRY_F89_CONDUCTOR = api;
+    root.REGISTRY_CLERK = api;
 
     root.DEXTER_LAB.productEngineRegistry = api;
     root.DEXTER_LAB.productEngineRegistryF89 = api;
     root.DEXTER_LAB.projectRegistryConductor = api;
+    root.DEXTER_LAB.registryClerk = api;
 
     root.HEARTH.productEngineRegistry = api;
     root.HEARTH.productEngineRegistryF89 = api;
     root.HEARTH.projectRegistryConductor = api;
+    root.HEARTH.registryClerk = api;
 
     const light = getReceiptLight();
 
@@ -1561,6 +1883,7 @@
     root.LAB_PRODUCT_ENGINE_REGISTRY_F89_RECEIPT = light;
     root.PRODUCT_ENGINE_REGISTRY_RECEIPT = light;
     root.PROJECT_REGISTRY_CONDUCTOR_RECEIPT = light;
+    root.REGISTRY_CLERK_RECEIPT = light;
 
     root.DEXTER_LAB.productEngineRegistryReceipt = light;
     root.HEARTH.productEngineRegistryReceipt = light;
@@ -1569,6 +1892,8 @@
     root.__LAB_PRODUCT_ENGINE_REGISTRY_CONTRACT__ = CONTRACT;
     root.__LAB_PRODUCT_ENGINE_REGISTRY_RECEIPT__ = RECEIPT;
     root.__LAB_PRODUCT_ENGINE_REGISTRY_F89_ONLY__ = true;
+    root.__LAB_PRODUCT_ENGINE_REGISTRY_MECHANICAL_COORDINATE__ = MECHANICAL_COORDINATE.coordinateId;
+    root.__LAB_PRODUCT_ENGINE_REGISTRY_PUBLIC_SUPERIORITY_CLAIM__ = false;
     root.__LAB_PRODUCT_ENGINE_REGISTRY_WEBGL__ = false;
     root.__LAB_PRODUCT_ENGINE_REGISTRY_VISUAL_PASS_CLAIMED__ = false;
 
@@ -1585,31 +1910,50 @@
 
     FIBONACCI,
     NEWS_GATES,
-    ENTRY_TYPES,
     STATUS,
+    REGISTRY_RECORD_TYPES,
+    MECHANICAL_COORDINATE,
 
-    readUE5ExpressionAuthority,
-    readUE5ExpressionReceipt,
-    validateF55Release,
-    acceptF55Release,
+    readF55ExpressionAuthority,
+    readF55ExpressionRelease,
+    validateF55ExpressionRelease,
+    acceptF55ExpressionRelease,
+    receiveF55ExpressionRelease,
+    submitF55ExpressionRelease,
 
-    normalizeRegistryEntry,
-    evaluateRegistryEntry,
-    registerRegistryEntry,
-    seedCoreRegistryEntries,
-    evaluateAllRegistryEntries,
-    buildProjectRegistry,
+    getF55SourceProducts,
+    getF55ExpressionRecords,
+    getF55RegistryRecords,
+    normalizeRegistryRecord,
+    createProductRecord,
+    createExpressionRecordRecord,
+    createFileRecord,
+    createRouteRecord,
+    createContractRecord,
+    createReceiptRecord,
+    createMarketInputRecord,
+    buildRegistryGraph,
 
     computeRegistryQualityMetric,
     computeFibonacciSynchronizationMetric,
     evaluateNewsAlignment,
 
-    composeF89Receipt,
+    readF144MarketAuthority,
     composeF89ReleasePacket,
-    submitF89ReceiptToUE5Expression,
+    composeF89Receipt,
+    submitF89ReleaseToMarket,
+    submitF89PacketToNorth,
 
-    getRegistryEntry,
-    listRegistryEntries,
+    validateF144MarketReceipt,
+    acceptF144MarketReceipt,
+
+    getMechanicalCoordinatePacket,
+    getRegistryGraph,
+    getRegistryGraphSummary,
+    getRegistryRecords,
+    getMarketInputs,
+    getRegistryIndexes,
+    findRegistryRecord,
 
     getReceiptLight,
     getReceipt,
@@ -1617,42 +1961,43 @@
     publishGlobals,
     updateDataset,
 
-    f89RegistryConductorActive: true,
-    f89Only: true,
-    f55ExpressionRequired: true,
-    deterministicRegistryActive: true,
-    projectConductorMapActive: true,
-    registryIndexActive: true,
-    receiptTraceActive: true,
-    publicSuperiorityClaim: false,
+    registryEngineF89Active: true,
+    registryEngineF89Only: true,
+    registryClerkActive: true,
+    projectRegistryConductorActive: true,
 
-    ownsF89ProjectRegistryConductorship: true,
-    ownsDeterministicProjectRegistry: true,
-    ownsEngineRegistry: true,
-    ownsRouteRegistry: true,
-    ownsFileRegistry: true,
-    ownsProductRegistry: true,
-    ownsExpressionNodeRegistry: true,
-    ownsReceiptTraceIndex: true,
-    ownsF144MarketHandoffPacket: true,
-    ownsNewsFibonacciSynchronizationMetric: true,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
 
+    ownsF89ProjectRegistryManifold: true,
+    ownsF55ExpressionReleaseConsumption: true,
+    ownsDeterministicProjectRegistryRecords: true,
+    ownsFileRouteContractReceiptIndexes: true,
+    ownsMarketInputRecordPreparation: true,
+    ownsF144MarketReadinessHandoffPacket: true,
+
+    ownsF34ProductEngineAuthority: false,
+    ownsF55ExpressionAuthority: false,
+    ownsF144MarketAuthority: false,
+    ownsF233DownstreamReturn: false,
     ownsNorthF21Latch: false,
-    ownsProductEngineF34Authority: false,
-    ownsUE5ExpressionF55Authority: false,
     ownsCanvasF13Evidence: false,
+    ownsActualRendering: false,
     ownsRouteOrchestration: false,
     ownsPlanetTruth: false,
     ownsMaterialTruth: false,
     ownsElevationTruth: false,
     ownsHydrologyTruth: false,
-    ownsRendering: false,
-    ownsPublicMarketClaim: false,
     ownsGeneratedImage: false,
     ownsGraphicBox: false,
     ownsWebGL: false,
+    ownsPublicSuperiorityClaim: false,
     ownsFinalVisualPassClaim: false,
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1667,19 +2012,25 @@
   state.updatedAt = state.createdAt;
 
   try {
-    const receipt = readUE5ExpressionReceipt();
-    acceptF55Release(receipt);
+    const f55Release = readF55ExpressionRelease();
+    if (hasMeaningfulF55Release(f55Release)) {
+      acceptF55ExpressionRelease(f55Release);
+    }
   } catch (error) {
-    recordError("INITIAL_UE5_EXPRESSION_F55_READ_FAILED", error);
-    computeFibonacciSynchronizationMetric();
+    recordError("INITIAL_F55_EXPRESSION_RELEASE_READ_FAILED", error);
   }
 
-  recordLocal("PROJECT_REGISTRY_F89_CONDUCTOR_LOADED", {
+  try {
+    computeFibonacciSynchronizationMetric();
+  } catch (error) {
+    recordError("INITIAL_F89_SYNC_METRIC_FAILED", error);
+  }
+
+  recordLocal("PROJECT_REGISTRY_F89_ENGINE_MECHANICS_CONDUCTOR_LOADED", {
     file: FILE,
     contract: CONTRACT,
-    ue5ExpressionFile: UE5_EXPRESSION_FILE,
-    marketFile: MARKET_FILE,
-    f89Only: true,
+    mechanicalCoordinate: MECHANICAL_COORDINATE.coordinateId,
+    targetFile: F144_MARKET_FILE,
     publicSuperiorityClaim: false
   });
 

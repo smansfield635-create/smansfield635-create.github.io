@@ -1,109 +1,153 @@
 // /assets/lab/runtime-table.south.js
-// LAB_RUNTIME_TABLE_SOUTH_PRIMARY_OUTPUT_PROOF_CYCLE_GATE_TNT_v1
+// LAB_RUNTIME_TABLE_SOUTH_F8_ENGINE_MECHANICS_PROOF_RETURN_TNT_v1
 // Full-file replacement.
-// South primary Runtime Table gate.
+// Runtime Table South / F8 proof return / South Supreme Judge / output exhaust branch.
 // Purpose:
-// - Renew South from visible-state composer into output/proof composer.
-// - Preserve baseline visible-state composer exports as compatibility services.
-// - Compose proof body, visible state, receipt state, Cycle 1 North-return packets, and Cycle 2 West-handoff packets.
-// - Cycle 1: NORTH -> EAST -> WEST -> SOUTH -> NORTH.
-// - Cycle 2: NORTH -> EAST -> SOUTH -> WEST -> CANVAS.
-// - Keep Canvas release false unless lawful North + West release evidence is supplied.
-// - Keep F21 latch North-owned.
-// - Keep final visual pass false.
+// - Stand up South as the F8 proof/output return channel for the runtime-table v4 engine system.
+// - Bind directly to runtime-table v4 mechanics: RT3D-X07_Y19_Z8.
+// - Consume West F5 pressure/admissibility packets.
+// - Convert admissible pressure records into proof records, output receipts, and North-return evidence.
+// - Prepare F8 proof packets toward North F21 eligibility and optional Canvas F13 evidence intake.
+// - Preserve the 3D engine lattice + 256 state binding model.
+// - Treat architecture labels as secondary and engine mechanics/math as primary.
+// - Avoid rendering, generated image claims, WebGL claims, GraphicBox claims, public superiority claims, and final visual pass claims.
+// Does not own:
+// - North F21 latch
+// - East F3 intake admission
+// - West F5 pressure/admissibility
+// - Canvas F13 evidence release
+// - F34/F55/F89/F144 support-engine internals
+// - F233 downstream return
+// - route orchestration
+// - planet truth
+// - material/elevation/hydrology truth
+// - actual rendering
+// - generated image
+// - GraphicBox
+// - WebGL
+// - public superiority claim
+// - final visual pass claim
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_OUTPUT_PROOF_CYCLE_GATE_TNT_v1";
-  const RECEIPT = "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_OUTPUT_PROOF_CYCLE_GATE_RECEIPT_v1";
-  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_SOUTH_TRANSMISSION_VISIBLE_STATE_COMPOSER_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_CARDINAL_SOUTH_TRANSMISSION_VISIBLE_STATE_COMPOSER_TNT_v1";
-  const VERSION = "2026-05-31.lab-runtime-table-south-primary-output-proof-cycle-gate-v1";
+  const CONTRACT = "LAB_RUNTIME_TABLE_SOUTH_F8_ENGINE_MECHANICS_PROOF_RETURN_TNT_v1";
+  const RECEIPT = "LAB_RUNTIME_TABLE_SOUTH_F8_ENGINE_MECHANICS_PROOF_RETURN_RECEIPT_v1";
+  const PREVIOUS_CONTRACT = "LAB_RUNTIME_TABLE_SOUTH_SOURCE_PENDING_RENEWAL";
+  const BASELINE_CONTRACT = "LAB_RUNTIME_TABLE_COUNTY_ENGINE_MECHANICS_3D_LATTICE_256_STATE_SUPPORT_ENGINE_TNT_v4";
+  const VERSION = "2026-06-08.lab-runtime-table-south-f8-engine-mechanics-proof-return-v1";
+
+  const FILE = "/assets/lab/runtime-table.south.js";
+  const NORTH_FILE = "/assets/lab/runtime-table.js";
+  const EAST_FILE = "/assets/lab/runtime-table.east.js";
+  const WEST_FILE = "/assets/lab/runtime-table.west.js";
+  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+
+  const F34_PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
+  const F55_EXPRESSION_FILE = "/assets/lab/product-engine.ue5-expression.js";
+  const F89_REGISTRY_FILE = "/assets/lab/product-engine.registry.js";
+  const F144_MARKET_FILE = "/assets/lab/product-engine.market.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
-  const FILE = "/assets/lab/runtime-table.south.js";
-
-  const FILE_GATES = Object.freeze({
-    north: "/assets/lab/runtime-table.js",
-    east: "/assets/lab/runtime-table.east.js",
-    west: "/assets/lab/runtime-table.west.js",
-    south: "/assets/lab/runtime-table.south.js",
-    hearthIndex: "/showroom/globe/hearth/index.js",
-    hearthRoute: "/showroom/globe/hearth/hearth.js",
-    canvas: "/assets/hearth/hearth.canvas.js",
-    canvasEast: "/assets/hearth/hearth.canvas.east.js",
-    canvasWest: "/assets/hearth/hearth.canvas.west.js",
-    canvasSouth: "/assets/hearth/hearth.canvas.south.js"
+  const FIBONACCI = Object.freeze({
+    NORTH_ORIGIN: "F1",
+    EAST_INTAKE: "F3",
+    WEST_PRESSURE: "F5",
+    SOUTH_PROOF: "F8",
+    CANVAS_EVIDENCE: "F13",
+    NORTH_LATCH: "F21",
+    PRODUCT_ENGINE: "F34",
+    UE5_EXPRESSION: "F55",
+    PROJECT_REGISTRY: "F89",
+    MARKET_READINESS: "F144",
+    DOWNSTREAM_RETURN: "F233"
   });
 
-  const CYCLE_ROUTES = Object.freeze({
-    CYCLE_1: "NORTH_EAST_WEST_SOUTH_NORTH",
-    CYCLE_2: "NORTH_EAST_SOUTH_WEST_CANVAS"
-  });
-
-  const CARDINAL = Object.freeze({
+  const NEWS_GATES = Object.freeze({
     NORTH: "NORTH",
     EAST: "EAST",
     WEST: "WEST",
     SOUTH: "SOUTH",
     CANVAS: "CANVAS",
-    UNKNOWN: "UNKNOWN"
+    PRODUCT: "PRODUCT_ENGINE",
+    EXPRESSION: "UE5_EXPRESSION",
+    REGISTRY: "PROJECT_REGISTRY",
+    MARKET: "MARKET_READINESS",
+    DOWNSTREAM: "DOWNSTREAM_RETURN"
   });
 
-  const FIBONACCI_RANK = Object.freeze({
-    F1: 1,
-    F1A: 1.01,
-    F1B: 1.02,
-    F2: 2,
-    F3: 3,
-    F5: 5,
-    F8: 8,
-    F13: 13,
-    F13A: 13.01,
-    F13B: 13.02,
-    F13C: 13.03,
-    F13D: 13.04,
-    F13E: 13.05,
-    F13F: 13.06,
-    F13G: 13.07,
-    F13H: 13.08,
-    F13I: 13.09,
-    F13J: 13.10,
-    F13K: 13.11,
-    F13L: 13.12,
-    F13M: 13.13,
-    F13N: 13.14,
-    F21: 21
+  const STATUS = Object.freeze({
+    HELD: "HELD",
+    ACTIVE: "ACTIVE",
+    READY: "READY",
+    DEGRADED: "DEGRADED",
+    BLOCKED: "BLOCKED",
+    COMPLETE: "COMPLETE",
+    REJECTED: "REJECTED"
   });
 
-  const GEAR_SEQUENCE = Object.freeze([
-    gear("F1A_HTML_SHELL_RENDERED", 1, "F1A", "HTML_SHELL_RENDERED", "Ignition shell"),
-    gear("F1B_LOAD_LEDGER_INITIALIZED", 2, "F1B", "LOAD_LEDGER_INITIALIZED", "Ledger oil pressure"),
-    gear("F2_FIRST_PAINT_COCKPIT_VISIBLE", 3, "F2", "FIRST_PAINT_COCKPIT_VISIBLE", "First visible cockpit"),
-    gear("F3_SCRIPT_ORDER_COMPLETE", 4, "F3", "SCRIPT_ORDER_COMPLETE", "Script timing order"),
-    gear("F5_AUTHORITY_AVAILABILITY_READY", 5, "F5", "AUTHORITY_AVAILABILITY_READY", "Authority availability"),
-    gear("F8_CONDUCTOR_HYDRATED", 6, "F8", "CONDUCTOR_HYDRATED", "Conductor hydration"),
-    gear("F13A_CANVAS_PARENT_READY", 7, "F13A", "CANVAS_PARENT_READY", "Canvas parent ready"),
-    gear("F13B_CANVAS_CHILDREN_READY", 8, "F13B", "CANVAS_CHILDREN_READY", "Canvas children ready"),
-    gear("F13C_TEXTURE_COMPOSE_COMPLETE", 9, "F13C", "TEXTURE_COMPOSE_COMPLETE", "Texture composition"),
-    gear("F13D_FIRST_FRAME_DETECTED", 10, "F13D", "FIRST_FRAME_DETECTED", "First frame detection"),
-    gear("F13E_VISIBLE_PROOF_READY", 11, "F13E", "VISIBLE_PROOF_READY", "Visible proof"),
-    gear("F13N_INSPECT_GATE_READY", 12, "F13N", "INSPECT_GATE_READY", "Inspect gate"),
-    gear("F21_COMPLETION_LATCH_ELIGIBLE", 13, "F21", "F21_COMPLETION_LATCH_ELIGIBLE", "North F21 eligibility")
-  ]);
+  const PROOF_CLASS = Object.freeze({
+    WEST_PRESSURE_PROOF: "WEST_PRESSURE_PROOF",
+    DIAGNOSTIC_PROOF: "DIAGNOSTIC_PROOF",
+    SUPPORT_ENGINE_PROOF: "SUPPORT_ENGINE_PROOF",
+    ROUTE_PROOF: "ROUTE_PROOF",
+    CANVAS_PROOF: "CANVAS_PROOF",
+    CONSTRAINT_PROOF: "CONSTRAINT_PROOF",
+    GENERIC_PROOF: "GENERIC_PROOF"
+  });
 
-  const GEAR_BY_ID = Object.freeze(GEAR_SEQUENCE.reduce((map, item) => {
-    map[item.id] = item;
-    return map;
-  }, {}));
+  const MECHANICAL_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X07_Y19_Z8",
+    enginePart: "EXHAUST",
+    enginePartIndex: 7,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.SOUTH_PROOF,
+    fibonacciRank: 8,
+    fibonacciStation: "SOUTH_PROOF_EXHAUST_RETURN",
+    mechanicalRole: "SOUTH_PROOF_RETURN",
+    judicialRole: "SOUTH_SUPREME_JUDGE",
+    authorityRole: "PROOF_RETURN_BRANCH",
+    mayJudgeProof: true,
+    mayLatchF21: false,
+    mayAdmitF3Intake: false,
+    mayAuditF5Pressure: false,
+    mayReleaseCanvasF13: false,
+    mayRender: false,
+    mayClaimPublicSuperiority: false
+  });
 
-  const GEAR_BY_FIBONACCI = Object.freeze(GEAR_SEQUENCE.reduce((map, item) => {
-    map[item.fibonacci] = item;
-    return map;
-  }, {}));
+  const NORTH_ELIGIBILITY_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X13_Y19_Z21",
+    enginePart: "GOVERNOR",
+    enginePartIndex: 13,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.NORTH_LATCH,
+    fibonacciRank: 21,
+    fibonacciStation: "NORTH_COMPLETION_LATCH",
+    mechanicalRole: "NORTH_F21_ELIGIBILITY_TARGET",
+    mayJudgeProof: false,
+    mayLatchF21: true,
+    mayRender: false
+  });
+
+  const CANVAS_EVIDENCE_COORDINATE = Object.freeze({
+    coordinateId: "RT3D-X18_Y19_Z13",
+    enginePart: "AXLE",
+    enginePartIndex: 18,
+    systemCategory: "NINETEEN_PART_SYSTEM",
+    systemCategoryIndex: 19,
+    fibonacciStage: FIBONACCI.CANVAS_EVIDENCE,
+    fibonacciRank: 13,
+    fibonacciStation: "CANVAS_EVIDENCE_RELEASE_CHAMBER",
+    mechanicalRole: "CANVAS_EVIDENCE_TARGET",
+    mayJudgeProof: false,
+    mayLatchF21: false,
+    mayRender: false
+  });
 
   const state = {
     contract: CONTRACT,
@@ -112,47 +156,114 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    role: "south-primary-output-proof-cycle-gate",
 
-    southPrimaryGateActive: true,
-    outputProofComposerActive: true,
-    cycleAwareRoutingActive: true,
-    visibleStateComposerPreserved: true,
+    southRuntimeTableActive: true,
+    southRuntimeTableF8Only: true,
+    southSupremeJudgeActive: true,
+    southProofReturnActive: true,
+    southOutputExhaustActive: true,
+    proofReturnOpen: true,
+    proofReturnStatus: STATUS.ACTIVE,
 
-    lastNormalizedInput: null,
-    lastCycleResolution: null,
-    lastProofBody: null,
-    lastPrimaryPacket: null,
-    lastNorthReturnPacket: null,
-    lastWestHandoffPacket: null,
-    lastVisibleState: null,
-    lastReceiptState: null,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
+    mechanicalCoordinate: MECHANICAL_COORDINATE,
+    northEligibilityCoordinate: NORTH_ELIGIBILITY_COORDINATE,
+    canvasEvidenceCoordinate: CANVAS_EVIDENCE_COORDINATE,
 
-    composeCount: 0,
-    fallbackCount: 0,
-    northReturnCount: 0,
-    westHandoffCount: 0,
+    westRuntimeObserved: false,
+    westRuntimeAccepted: false,
+    westRuntimeContract: "",
+    westRuntimeReceipt: "",
+    westF5PressureObserved: false,
+    westF5PressureAccepted: false,
 
-    createdAt: nowIso(),
-    updatedAt: nowIso(),
+    proofRecords: [],
+    proofQueue: [],
+    rejectedRecords: [],
+    proofRecordCount: 0,
+    returnedProofCount: 0,
+    rejectedRecordCount: 0,
+    diagnosticProofCount: 0,
+    supportEngineProofCount: 0,
+    routeProofCount: 0,
+    canvasProofCount: 0,
+    constraintProofCount: 0,
 
+    lastReturnedProof: null,
+    lastRejectedProof: null,
+
+    proofGraphBuilt: false,
+    proofGraphReady: false,
+    proofGraphStatus: STATUS.HELD,
+    proofGraph: {
+      records: [],
+      recordsById: {},
+      byClass: {},
+      byState: {},
+      byProofQuality: {},
+      edges: [],
+      buildId: "",
+      builtAt: ""
+    },
+
+    proofQualityMetricActive: true,
+    proofQualityScore: 0,
+    proofCoverageScore: 0,
+    proofTraceScore: 0,
+    proofCoherenceScore: 0,
+    outputReturnScore: 0,
+    evidenceScore: 0,
+    boundaryScore: 0,
+
+    northF21EligibilityPrepared: false,
+    canvasF13EvidencePrepared: false,
+    f8ProofPacketReady: false,
+    f8ActivationStatus: STATUS.ACTIVE,
+    f8ActivationReason: "SOUTH_F8_PROOF_RETURN_ACTIVE_WAITING_WEST_F5_PRESSURE",
+
+    northReceiptAccepted: false,
+    northReceiptPacket: null,
+    northRuntimeContract: "",
+    northRuntimeReceipt: "",
+    northF21EligibilityAccepted: false,
+    northF21Latched: false,
+
+    canvasReceiptAccepted: false,
+    canvasReceiptPacket: null,
+    canvasContract: "",
+    canvasReceipt: "",
+
+    activeFibonacci: FIBONACCI.SOUTH_PROOF,
+    activeFibonacciRank: 8,
+    activeNewsGate: NEWS_GATES.SOUTH,
+    sourceFibonacciGate: FIBONACCI.WEST_PRESSURE,
+    futureFibonacciGate: FIBONACCI.NORTH_LATCH,
+    secondaryFutureFibonacciGate: FIBONACCI.CANVAS_EVIDENCE,
+    newsProtocolAligned: true,
+    fibonacciSynchronizationMetricActive: true,
+    fibonacciSynchronizationScore: 0,
+    oneActiveGearAtATime: true,
+
+    firstFailedCoordinate: "WAITING_WEST_F5_PRESSURE_PACKET",
+    recommendedNextFile: NORTH_FILE,
+    recommendedNextRenewalTarget: NORTH_FILE,
+
+    localEvents: [],
+    errors: [],
+
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    visualPassClaimed: false
-  };
+    visualPassClaimed: false,
 
-  function gear(id, rank, fibonacci, event, label) {
-    return Object.freeze({
-      id,
-      rank,
-      fibonacci,
-      event,
-      label,
-      localProgressMin: 0,
-      localProgressMax: 100
-    });
-  }
+    createdAt: "",
+    updatedAt: ""
+  };
 
   function nowIso() {
     try {
@@ -176,14 +287,14 @@
   }
 
   function safeNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
   }
 
   function safeBool(value, fallback = false) {
     if (typeof value === "boolean") return value;
-    if (value === "true" || value === "1" || value === 1) return true;
-    if (value === "false" || value === "0" || value === 0) return false;
+    if (value === true || value === 1 || value === "1" || value === "true") return true;
+    if (value === false || value === 0 || value === "0" || value === "false") return false;
     return fallback;
   }
 
@@ -191,1315 +302,942 @@
     return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
-  function asArray(value) {
-    if (Array.isArray(value)) return value.slice();
-    if (value === undefined || value === null || value === "") return [];
-    if (typeof value === "string") {
-      return value
-        .split(/[>,|,]/)
-        .map((item) => item.trim())
-        .filter(Boolean);
-    }
-    return [value];
-  }
-
   function clonePlain(value) {
     if (!isObject(value) && !Array.isArray(value)) return value;
-
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      return { ...value };
+      return Array.isArray(value) ? value.slice() : { ...value };
     }
   }
 
-  function mergeSources(...sources) {
-    const output = {};
-
-    sources.forEach((source) => {
-      if (!isObject(source)) return;
-      Object.keys(source).forEach((key) => {
-        if (output[key] === undefined) output[key] = source[key];
-      });
-    });
-
-    return output;
+  function trim(list, max = 240) {
+    if (Array.isArray(list) && list.length > max) {
+      list.splice(0, list.length - max);
+    }
   }
 
-  function readPath(source, path) {
-    if (!source || !path) return undefined;
+  function makeId(value, fallback = "proof") {
+    const raw = safeString(value || fallback, fallback)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return raw || fallback;
+  }
 
-    const parts = String(path).split(".");
-    let cursor = source;
+  function stableStateIndex(value) {
+    let text = "";
+    try {
+      text = JSON.stringify(value || {});
+    } catch (_error) {
+      text = safeString(value, "");
+    }
+
+    let hash = 0;
+    for (let index = 0; index < text.length; index += 1) {
+      hash = ((hash << 5) - hash + text.charCodeAt(index)) | 0;
+    }
+
+    return Math.abs(hash) % 256;
+  }
+
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
+
+  function readPath(path) {
+    const parts = String(path || "").split(".");
+    let cursor = root;
 
     for (const part of parts) {
-      if (!cursor || cursor[part] === undefined || cursor[part] === null) return undefined;
+      if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
 
-    return cursor;
+    return cursor || null;
   }
 
-  function findNested(input, names) {
-    for (const name of names) {
-      const value = readPath(input, name);
-      if (isObject(value)) return value;
+  function setPath(path, value) {
+    const parts = String(path || "").split(".").filter(Boolean);
+    if (!parts.length) return false;
+
+    let cursor = root;
+    for (let index = 0; index < parts.length - 1; index += 1) {
+      const part = parts[index];
+      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
+      cursor = cursor[part];
     }
+
+    cursor[parts[parts.length - 1]] = value;
+    return true;
+  }
+
+  function firstGlobal(names) {
+    for (const name of names || []) {
+      const found = readPath(name);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function readReceipt(authority) {
+    if (!authority || !isObject(authority)) return {};
+
+    try {
+      if (isFunction(authority.getReceiptLight)) {
+        const receipt = authority.getReceiptLight();
+        if (isObject(receipt)) return receipt;
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt)) return receipt;
+      }
+    } catch (error) {
+      return { error: error && error.message ? error.message : String(error) };
+    }
+
+    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
+    if (isObject(authority.receipt)) return authority.receipt;
+    if (authority.contract || authority.receipt || authority.version) return authority;
+
     return {};
   }
 
-  function scanFieldDeep(input, fields, maxDepth = 7) {
-    const wanted = new Set(asArray(fields));
-    const seen = typeof WeakSet !== "undefined" ? new WeakSet() : null;
-    const queue = [{ value: input, depth: 0 }];
+  function recordLocal(event, detail = {}) {
+    const item = {
+      at: nowIso(),
+      event: safeString(event, "LOCAL_EVENT"),
+      detail: clonePlain(detail)
+    };
 
-    while (queue.length) {
-      const current = queue.shift();
-      const value = current.value;
+    state.localEvents.push(item);
+    trim(state.localEvents);
+    state.updatedAt = item.at;
+    updateDataset();
 
-      if (!value || typeof value !== "object" || current.depth > maxDepth) continue;
-      if (seen && seen.has(value)) continue;
-      if (seen) seen.add(value);
+    return item;
+  }
 
-      for (const key of Object.keys(value)) {
-        if (wanted.has(key)) return value[key];
+  function recordError(code, error, detail = {}) {
+    const item = {
+      at: nowIso(),
+      code: safeString(code, "RUNTIME_TABLE_SOUTH_F8_ERROR"),
+      message: error && error.message ? String(error.message) : safeString(error),
+      detail: clonePlain(detail)
+    };
+
+    state.errors.push(item);
+    trim(state.errors);
+    state.updatedAt = item.at;
+    updateDataset();
+
+    return item;
+  }
+
+  function detectForbiddenClaim(packet = {}) {
+    const text = (() => {
+      try {
+        return JSON.stringify(packet || {});
+      } catch (_error) {
+        return String(packet || "");
       }
-
-      for (const key of Object.keys(value)) {
-        const next = value[key];
-        if (next && typeof next === "object") {
-          queue.push({ value: next, depth: current.depth + 1 });
-        }
-      }
-    }
-
-    return undefined;
-  }
-
-  function getAnyString(input, fields, fallback = "") {
-    const value = scanFieldDeep(input, fields);
-    return value === undefined || value === null || value === "" ? fallback : String(value);
-  }
-
-  function getAnyNumber(input, fields, fallback = 0) {
-    const value = scanFieldDeep(input, fields);
-    return safeNumber(value, fallback);
-  }
-
-  function getAnyBool(input, fields, fallback = false) {
-    const value = scanFieldDeep(input, fields);
-    return safeBool(value, fallback);
-  }
-
-  function normalizeCardinal(value, fallback = CARDINAL.UNKNOWN) {
-    const text = safeString(value, "").trim().toUpperCase();
-
-    if (text.includes("NORTH")) return CARDINAL.NORTH;
-    if (text.includes("EAST")) return CARDINAL.EAST;
-    if (text.includes("WEST")) return CARDINAL.WEST;
-    if (text.includes("SOUTH")) return CARDINAL.SOUTH;
-    if (text.includes("CANVAS")) return CARDINAL.CANVAS;
-
-    return fallback;
-  }
-
-  function normalizeCycleRoute(value) {
-    const text = safeString(value, "").trim().toUpperCase().replace(/\s+/g, "_").replace(/->/g, "_");
-
-    if (text.includes("NORTH_EAST_WEST_SOUTH_NORTH")) return CYCLE_ROUTES.CYCLE_1;
-    if (text.includes("NORTH_EAST_SOUTH_WEST_CANVAS")) return CYCLE_ROUTES.CYCLE_2;
-
-    return "";
-  }
-
-  function deriveFibonacci(input = {}) {
-    const explicit = getAnyString(input, [
-      "activeFibonacci",
-      "activeFibonacciStage",
-      "fibonacci",
-      "activeGateFibonacci",
-      "checkpointFibonacci"
-    ], "");
-
-    if (explicit) return explicit.toUpperCase();
-
-    const text = [
-      getAnyString(input, ["activeStageId"], ""),
-      getAnyString(input, ["activeGearId"], ""),
-      getAnyString(input, ["activeGateId"], ""),
-      getAnyString(input, ["checkpointId"], ""),
-      getAnyString(input, ["event"], "")
-    ].join(" ").toUpperCase();
-
-    if (text.includes("F21") || text.includes("COMPLETION")) return "F21";
-    if (text.includes("F13N") || text.includes("INSPECT")) return "F13N";
-    if (text.includes("F13E") || text.includes("VISIBLE")) return "F13E";
-    if (text.includes("F13D") || text.includes("FRAME")) return "F13D";
-    if (text.includes("F13C") || text.includes("TEXTURE")) return "F13C";
-    if (text.includes("F13B") || text.includes("CHILD")) return "F13B";
-    if (text.includes("F13A") || text.includes("PARENT") || text.includes("CANVAS")) return "F13A";
-    if (text.includes("F13")) return "F13";
-    if (text.includes("F8") || text.includes("CONDUCTOR")) return "F8";
-    if (text.includes("F5") || text.includes("AUTHORITY")) return "F5";
-    if (text.includes("F3") || text.includes("SCRIPT")) return "F3";
-    if (text.includes("F2") || text.includes("PAINT")) return "F2";
-    if (text.includes("F1B") || text.includes("LEDGER")) return "F1B";
-    if (text.includes("F1") || text.includes("SHELL")) return "F1A";
-
-    return "F8";
-  }
-
-  function deriveGearFromFibonacci(fibonacci) {
-    if (GEAR_BY_FIBONACCI[fibonacci]) return GEAR_BY_FIBONACCI[fibonacci];
-    if (String(fibonacci).startsWith("F13")) return GEAR_BY_FIBONACCI.F13A;
-    return GEAR_BY_FIBONACCI.F8;
-  }
-
-  function hasNorthLatchEvidence(input = {}) {
-    const sourceFile = getAnyString(input, ["sourceFile", "file"], "");
-    const sourceAuthority = getAnyString(input, ["sourceAuthority", "authority", "cardinalRole"], "");
-    const northSource = sourceFile === FILE_GATES.north || normalizeCardinal(sourceAuthority, "") === CARDINAL.NORTH;
+    })();
 
     return Boolean(
-      getAnyBool(input, ["northCompletionLatched", "finalCompletionLatchedByNorth", "northF21Latched"], false) ||
-      (
-        northSource &&
-        (
-          getAnyBool(input, ["completionLatched", "finalCompletionLatched"], false) ||
-          ["FULL", "DEGRADED"].includes(getAnyString(input, ["f21LatchMode"], "").toUpperCase())
-        )
-      )
+      safeBool(packet.generatedImage, false) ||
+      safeBool(packet.graphicBox, false) ||
+      safeBool(packet.webGL, false) ||
+      safeBool(packet.visualPassClaimed, false) ||
+      safeBool(packet.publicSuperiorityClaim, false) ||
+      safeBool(packet.publicComparisonClaimAllowed, false) ||
+      text.includes('"generatedImage":true') ||
+      text.includes('"graphicBox":true') ||
+      text.includes('"webGL":true') ||
+      text.includes('"visualPassClaimed":true') ||
+      text.includes('"publicSuperiorityClaim":true') ||
+      text.includes('"publicComparisonClaimAllowed":true') ||
+      text.includes("visualPassClaimed=true")
     );
   }
 
-  function hasLawfulCanvasReleaseEvidence(input = {}) {
-    return Boolean(
-      getAnyBool(input, ["canvasReleaseAuthorized"], false) &&
-      (
-        getAnyBool(input, ["northCanvasReleaseAuthorized", "northReleaseAuthorized", "downstreamReleaseAuthorized"], false) ||
-        getAnyString(input, ["northReleaseEvidence"], "")
-      ) &&
-      (
-        getAnyBool(input, ["westCanvasReleaseAuthorized", "westReleaseAuthorized", "westAuditPassed"], false) ||
-        getAnyString(input, ["westReleaseEvidence"], "")
-      )
-    );
+  function readWestRuntimeAuthority() {
+    return firstGlobal([
+      "LAB_RUNTIME_TABLE_WEST",
+      "LAB_RUNTIME_TABLE_WEST_F5",
+      "RUNTIME_TABLE_WEST",
+      "WEST_PRESSURE_VALVE",
+      "WEST_PRESSURE_ADMISSIBILITY",
+      "WEST_SUPREME_JUDGE",
+      "WEST_ADMISSIBILITY_BRANCH",
+      "DEXTER_LAB.runtimeTableWest",
+      "DEXTER_LAB.runtimeTableWestF5",
+      "DEXTER_LAB.cardinalRuntimeTableWest",
+      "DEXTER_LAB.westPressureValve",
+      "HEARTH.runtimeTableWest",
+      "HEARTH.runtimeTableWestF5",
+      "HEARTH.westPressureValve"
+    ]);
   }
 
-  function routeConductorProof(input = {}) {
-    const markerPresent = Boolean(
-      getAnyBool(input, ["routeConductorMarkerPresent", "conductorMarkerPresent"], false) ||
-      root.__HEARTH_ROUTE_CONDUCTOR_MARKER__ === true
-    );
+  function readWestF5PressurePacket() {
+    const authority = readWestRuntimeAuthority();
+    if (!authority) return {};
 
-    const apiPresent = Boolean(
-      getAnyBool(input, ["routeConductorApiPresent", "routeConductorGlobalPresent"], false) ||
-      root.HEARTH_ROUTE_CONDUCTOR ||
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR ||
-      (root.HEARTH && root.HEARTH.southRouteConductor)
-    );
-
-    const receiptPresent = Boolean(
-      getAnyBool(input, ["routeConductorReceiptPresent"], false) ||
-      getAnyString(input, ["routeConductorReceipt", "routeConductorContract"], "") ||
-      root.HEARTH_ROUTE_CONDUCTOR_RECEIPT ||
-      root.HEARTH_SOUTH_ROUTE_CONDUCTOR_RECEIPT
-    );
-
-    const runtimeActive = Boolean(
-      getAnyBool(input, ["routeConductorRuntimeActive", "southRuntimeActive"], false) ||
-      apiPresent
-    );
-
-    const hydrated = Boolean(
-      getAnyBool(input, ["routeConductorHydrated"], false) ||
-      (markerPresent && apiPresent && receiptPresent && runtimeActive)
-    );
-
-    return {
-      routeConductorProofPresent: hydrated,
-      routeConductorMarkerPresent: markerPresent,
-      routeConductorApiPresent: apiPresent,
-      routeConductorReceiptPresent: receiptPresent,
-      routeConductorRuntimeActive: runtimeActive,
-      routeConductorHydrated: hydrated,
-      routeConductorStatus: hydrated ? "PRESENT" : markerPresent ? "MARKER_ONLY" : "PENDING",
-      f8SelfDutySatisfied: hydrated
-    };
-  }
-
-  function visibleProof(input = {}) {
-    const canvasPresent = getAnyBool(input, ["planetCanvasPresent", "canvasPresent", "canvasCarrierMounted"], false);
-    const canvasNonZeroSize = getAnyBool(input, ["planetCanvasNonZeroSize", "canvasNonZeroSize"], false);
-    const firstFrameDetected = getAnyBool(input, ["firstFrameDetected"], false);
-    const imageRendered = getAnyBool(input, ["imageRendered", "canvasImageRendered"], false);
-    const nonblankPlanetVisible = getAnyBool(input, ["nonblankPlanetVisible", "visiblePlanetAvailable"], false);
-    const hardFail = getAnyBool(input, ["visibleContentHardFail"], false);
-    const strictProof = getAnyBool(input, ["visibleContentStrictProof"], false);
-    const contentProof = getAnyBool(input, ["visibleContentProof", "canvasVisibleContentProof", "visiblePlanetProofValid"], false);
-    const softGap = getAnyBool(input, ["visibleContentSoftGap", "visibleForwardProgress", "visibleContentAdmissible"], false);
-
-    const sampleCount = getAnyNumber(input, ["visibleContentSampleCount"], 0);
-    const classCount = getAnyNumber(input, ["visibleContentClassCount"], 0);
-    const variance = getAnyNumber(input, ["visibleContentVarianceScore"], 0);
-    const land = getAnyNumber(input, ["visibleContentLandSampleCount"], 0);
-    const water = getAnyNumber(input, ["visibleContentWaterSampleCount"], 0);
-    const other = getAnyNumber(input, ["visibleContentOtherSampleCount"], 0);
-
-    const sampledSurfaceSignal = Boolean(
-      firstFrameDetected &&
-      imageRendered &&
-      (nonblankPlanetVisible || sampleCount > 0) &&
-      (classCount > 0 || variance > 0 || land > 0 || water > 0 || other > 0)
-    );
-
-    const present = Boolean(!hardFail && (strictProof || contentProof || sampledSurfaceSignal));
-    const degraded = Boolean(!present && !hardFail && softGap);
-
-    return {
-      visibleProofPresent: present,
-      visibleProofStrict: strictProof,
-      visibleProofDegraded: degraded,
-      visibleProofPending: !present && !degraded && !hardFail,
-      visibleProofAbsent: !present && !degraded,
-      visibleContentHardFail: hardFail,
-      visibleContentProof: contentProof,
-      visibleContentStrictProof: strictProof,
-      visibleContentSoftGap: softGap,
-      visiblePlanetProofValid: present || degraded,
-      planetCanvasPresent: canvasPresent,
-      planetCanvasNonZeroSize: canvasNonZeroSize,
-      firstFrameDetected,
-      imageRendered,
-      nonblankPlanetVisible,
-      visibleContentSampleCount: sampleCount,
-      visibleContentClassCount: classCount,
-      visibleContentVarianceScore: variance,
-      visibleContentLandSampleCount: land,
-      visibleContentWaterSampleCount: water,
-      visibleContentOtherSampleCount: other,
-      f13VisibleEvidenceAvailable: Boolean(present || degraded)
-    };
-  }
-
-  function inspectProof(input = {}) {
-    const inspectModeAvailable = getAnyBool(input, ["inspectModeAvailable"], false);
-    const inspectPlanetControlAvailable = getAnyBool(input, ["inspectPlanetControlAvailable"], false);
-    const diagnosticCanLeavePlanetFrame = getAnyBool(input, ["diagnosticCanLeavePlanetFrame"], false);
-    const diagnosticDockRestorable = getAnyBool(input, ["diagnosticDockRestorable"], true);
-    const copyDiagnosticPreserved = getAnyBool(input, ["copyDiagnosticPreserved"], true);
-    const receiptToggleReady = getAnyBool(input, ["receiptToggleReady"], true);
-    const buttonsReachable = getAnyBool(input, ["buttonsReachable"], false);
-    const receiptOverlayIndependent = getAnyBool(input, ["receiptOverlayIndependent"], true);
-
-    const present = Boolean(
-      inspectModeAvailable &&
-      inspectPlanetControlAvailable &&
-      diagnosticCanLeavePlanetFrame &&
-      diagnosticDockRestorable &&
-      copyDiagnosticPreserved &&
-      receiptToggleReady &&
-      buttonsReachable &&
-      receiptOverlayIndependent
-    );
-
-    const degraded = Boolean(
-      !present &&
-      diagnosticDockRestorable &&
-      copyDiagnosticPreserved &&
-      receiptToggleReady
-    );
-
-    return {
-      inspectProofPresent: present,
-      inspectProofDegraded: degraded,
-      inspectProofPending: !present && !degraded,
-      inspectProofAbsent: !present && !degraded,
-      inspectModeAvailable,
-      inspectPlanetControlAvailable,
-      diagnosticCanLeavePlanetFrame,
-      diagnosticDockRestorable,
-      copyDiagnosticPreserved,
-      receiptToggleReady,
-      buttonsReachable,
-      receiptOverlayIndependent,
-      f13InspectEvidenceAvailable: Boolean(present || degraded)
-    };
-  }
-
-  function canvasReadinessProof(input = {}) {
-    const canvasParentPresent = getAnyBool(input, ["canvasParentPresent"], false);
-    const canvasParentBootMethodAvailable = getAnyBool(input, ["canvasParentBootMethodAvailable"], false) || Boolean(getAnyString(input, ["canvasParentBootMethod"], ""));
-    const canvasEastReady = getAnyBool(input, ["canvasEastReady"], false);
-    const canvasWestReady = getAnyBool(input, ["canvasWestReady"], false);
-    const canvasSouthReady = getAnyBool(input, ["canvasSouthReady"], false);
-    const allCanvasChildrenReady = getAnyBool(input, ["allCanvasChildrenReady"], false) || Boolean(canvasEastReady && canvasWestReady && canvasSouthReady);
-    const atlasBuildComplete = getAnyBool(input, ["atlasBuildComplete"], false);
-    const textureComposeComplete = getAnyBool(input, ["textureComposeComplete"], false);
-    const firstFrameDetected = getAnyBool(input, ["firstFrameDetected"], false);
-    const imageRendered = getAnyBool(input, ["imageRendered"], false);
-    const canvasReady = getAnyBool(input, ["canvasReady"], false) || Boolean(canvasParentPresent && allCanvasChildrenReady && firstFrameDetected && imageRendered);
-
-    return {
-      canvasReadinessProofPresent: canvasReady,
-      canvasParentPresent,
-      canvasParentBootMethodAvailable,
-      canvasEastReady,
-      canvasWestReady,
-      canvasSouthReady,
-      allCanvasChildrenReady,
-      atlasBuildComplete,
-      textureComposeComplete,
-      firstFrameDetected,
-      imageRendered,
-      canvasReady,
-      f13CanvasEvidenceAvailable: Boolean(canvasReady || firstFrameDetected || imageRendered)
-    };
-  }
-
-  function receiptProof(input = {}) {
-    const receiptAvailable = Boolean(
-      getAnyBool(input, ["receiptAvailable", "partialReceiptAvailable", "finalReceiptAvailable"], false) ||
-      getAnyString(input, ["receipt", "receiptTarget", "southReceipt", "canvasReceipt", "routeConductorReceipt"], "") ||
-      isObject(input.receiptState) ||
-      isObject(input.receiptPacket)
-    );
-
-    const finalReceiptAvailable = getAnyBool(input, ["finalReceiptAvailable"], false);
-    const partialReceiptAvailable = getAnyBool(input, ["partialReceiptAvailable"], receiptAvailable);
-
-    return {
-      receiptProofPresent: receiptAvailable,
-      receiptAvailable,
-      finalReceiptAvailable,
-      partialReceiptAvailable,
-      receiptProofCanPreserveForwardMotion: receiptAvailable || partialReceiptAvailable
-    };
-  }
-
-  function newsProof(input = {}) {
-    const northGateReady = getAnyBool(input, ["northGateReady"], false);
-    const eastGateReady = getAnyBool(input, ["eastGateReady"], false);
-    const westGateReady = getAnyBool(input, ["westGateReady"], false);
-    const southGateReady = getAnyBool(input, ["southGateReady"], false);
-    const canvasGateReady = getAnyBool(input, ["canvasGateReady"], false);
-
-    const northGateDegradedReady = getAnyBool(input, ["northGateDegradedReady"], northGateReady);
-    const westGateDegradedReady = getAnyBool(input, ["westGateDegradedReady"], westGateReady);
-    const southGateDegradedReady = getAnyBool(input, ["southGateDegradedReady"], southGateReady);
-
-    const full = getAnyBool(
-      input,
-      ["newsGatePassedBeforeF21"],
-      Boolean(northGateReady && eastGateReady && westGateReady && southGateReady)
-    );
-
-    const degraded = getAnyBool(
-      input,
-      ["newsGateDegradedBeforeF21"],
-      Boolean(northGateDegradedReady && eastGateReady && westGateDegradedReady && southGateDegradedReady)
-    );
-
-    return {
-      southNewsObserved: true,
-      southNewsComposed: true,
-      southNewsReturnedToNorth: false,
-      southNewsSubmittedToWest: false,
-      northGateReady,
-      eastGateReady,
-      westGateReady,
-      southGateReady,
-      canvasGateReady,
-      northGateDegradedReady,
-      westGateDegradedReady,
-      southGateDegradedReady,
-      newsGatePassedBeforeF21: full,
-      newsGateDegradedBeforeF21: degraded,
-      newsProofPresent: Boolean(full || degraded || northGateReady || eastGateReady || westGateReady || southGateReady)
-    };
-  }
-
-  function fibonacciProof(input = {}) {
-    const activeFibonacci = deriveFibonacci(input);
-    const activeFibonacciRank = FIBONACCI_RANK[activeFibonacci] || FIBONACCI_RANK.F8;
-    const activeGear = deriveGearFromFibonacci(activeFibonacci);
-
-    return {
-      activeFibonacci,
-      activeFibonacciRank,
-      activeStageId: getAnyString(input, ["activeStageId"], activeGear.id),
-      activeGearId: getAnyString(input, ["activeGearId"], activeGear.id),
-      activeGearLabel: getAnyString(input, ["activeGearLabel"], activeGear.label),
-      activeGearRank: activeGear.rank,
-      fibonacciSynchronizationActive: true,
-      fibonacciProofPresent: true
-    };
-  }
-
-  function activeGapSummary(input = {}) {
-    return {
-      activeGapPresent: Boolean(
-        getAnyString(input, ["gapClass", "firstFailedCoordinate"], "") ||
-        isObject(input.latestGap) ||
-        isObject(input.gap)
-      ),
-      gapClass: getAnyString(input, ["gapClass"], ""),
-      gapSeverity: getAnyString(input, ["gapSeverity"], ""),
-      gapDecision: getAnyString(input, ["gapDecision", "decision"], ""),
-      hardBlock: getAnyBool(input, ["hardBlock", "hardBlocked"], false),
-      canDegradeForward: getAnyBool(input, ["canDegradeForward", "degradedForwardAvailable"], false),
-      firstFailedCoordinate: getAnyString(input, ["firstFailedCoordinate"], "WAITING_SOUTH_OUTPUT_PROOF_COMPOSITION"),
-      recommendedNextFile: getAnyString(input, ["recommendedNextFile"], FILE_GATES.south),
-      recommendedNextRenewalTarget: getAnyString(input, ["recommendedNextRenewalTarget"], FILE_GATES.south)
-    };
-  }
-
-  function normalizeSouthInput(input = {}) {
-    const source = isObject(input) ? input : {};
-
-    const north = findNested(source, ["north", "northReceipt", "northPacket", "northState"]);
-    const east = findNested(source, ["east", "eastReceipt", "eastPacket", "eastState"]);
-    const west = findNested(source, ["west", "westReceipt", "westPacket", "westState", "latestGap", "gap"]);
-    const south = findNested(source, ["south", "southReceipt", "southPacket", "southState"]);
-    const canvas = findNested(source, ["canvas", "canvasReceipt", "canvasState", "render", "renderMetadata"]);
-    const route = findNested(source, ["route", "routeReceipt", "routeConductor", "routeConductorReceipt", "hearth", "hearthReceipt"]);
-
-    const flat = mergeSources(source, north, east, west, south, canvas, route, source.snapshot || {}, source.detail || {});
-
-    const routeConductor = routeConductorProof(flat);
-    const visible = visibleProof(flat);
-    const inspect = inspectProof(flat);
-    const canvasReady = canvasReadinessProof(flat);
-    const receipt = receiptProof(flat);
-    const news = newsProof(flat);
-    const fibonacci = fibonacciProof(flat);
-    const gap = activeGapSummary(flat);
-
-    const receivedFrom = normalizeCardinal(
-      getAnyString(flat, ["receivedFrom", "sourceCardinal", "fromCardinal"], ""),
-      getAnyBool(flat, ["westAuditObserved", "westAuditPassed"], false) ? CARDINAL.WEST : CARDINAL.UNKNOWN
-    );
-
-    const suppliedRoute = normalizeCycleRoute(getAnyString(flat, ["cycleRoute", "activeCycleRoute"], ""));
-    const activeCycleNumber = getAnyNumber(flat, ["cycleNumber", "activeCycleNumber"], 0);
-
-    const westAuditObserved = Boolean(
-      getAnyBool(flat, ["westAuditObserved", "westAuditPassed", "auditPassed"], false) ||
-      receivedFrom === CARDINAL.WEST ||
-      isObject(west)
-    );
-
-    const westAuditRequired = getAnyBool(flat, ["westAuditRequired"], true);
-    const northReturnRequired = getAnyBool(flat, ["northReturnRequired"], false);
-
-    const proofBodyAvailable = Boolean(
-      routeConductor.routeConductorProofPresent ||
-      visible.visibleProofPresent ||
-      visible.visibleProofDegraded ||
-      inspect.inspectProofPresent ||
-      inspect.inspectProofDegraded ||
-      receipt.receiptProofPresent ||
-      canvasReady.canvasReadinessProofPresent ||
-      news.newsProofPresent
-    );
-
-    const outputSpreadAvailable = getAnyBool(
-      flat,
-      ["outputSpreadAvailable", "outputSpreadComposed"],
-      Boolean(proofBodyAvailable || visible.f13VisibleEvidenceAvailable || canvasReady.f13CanvasEvidenceAvailable)
-    );
-
-    const f8SelfDutySatisfied = routeConductor.f8SelfDutySatisfied;
-
-    const f13ProofBodyAvailable = Boolean(
-      proofBodyAvailable ||
-      visible.f13VisibleEvidenceAvailable ||
-      inspect.f13InspectEvidenceAvailable ||
-      canvasReady.f13CanvasEvidenceAvailable ||
-      receipt.receiptProofCanPreserveForwardMotion
-    );
-
-    const f13VisibleEvidenceAvailable = visible.f13VisibleEvidenceAvailable;
-    const f13InspectEvidenceAvailable = inspect.f13InspectEvidenceAvailable;
-
-    const f21EligibleForNorth = getAnyBool(
-      flat,
-      ["f21EligibleForNorth", "f21EligibilityReadyForNorth"],
-      Boolean(
-        f8SelfDutySatisfied &&
-        f13ProofBodyAvailable &&
-        (
-          f13VisibleEvidenceAvailable ||
-          f13InspectEvidenceAvailable ||
-          receipt.receiptProofCanPreserveForwardMotion
-        ) &&
-        (
-          news.newsGatePassedBeforeF21 ||
-          news.newsGateDegradedBeforeF21 ||
-          getAnyBool(flat, ["newsGatePassed", "newsGateDegraded"], false)
-        )
-      )
-    );
-
-    const f21SubmittedToNorth = getAnyBool(flat, ["f21SubmittedToNorth", "f21EligibilitySubmittedToNorth"], false);
-    const northLatched = hasNorthLatchEvidence(flat);
-    const canvasReleaseAuthorized = hasLawfulCanvasReleaseEvidence(flat);
-
-    const normalized = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      file: FILE,
-      role: "south-primary-output-proof-cycle-gate",
-
-      raw: clonePlain(source),
-      north: clonePlain(north),
-      east: clonePlain(east),
-      west: clonePlain(west),
-      south: clonePlain(south),
-      canvas: clonePlain(canvas),
-      route: clonePlain(route),
-      flat: clonePlain(flat),
-
-      sourceFile: getAnyString(flat, ["sourceFile", "file", "fromFile"], ""),
-      destinationFile: getAnyString(flat, ["destinationFile", "targetFile"], FILE),
-      activeCycleNumber,
-      activeCycleRoute: suppliedRoute,
-      cycleRoute: suppliedRoute,
-
-      activeCardinal: CARDINAL.SOUTH,
-      activeFileGate: getAnyString(flat, ["activeFileGate", "fileGate"], FILE_GATES.south),
-      activeFibonacci: fibonacci.activeFibonacci,
-      activeFibonacciRank: fibonacci.activeFibonacciRank,
-      activeStageId: fibonacci.activeStageId,
-      activeGearId: fibonacci.activeGearId,
-      activeGearLabel: fibonacci.activeGearLabel,
-      activeGearRank: fibonacci.activeGearRank,
-      activeNewsGate: getAnyString(flat, ["activeNewsGate", "newsGate"], "SOUTH"),
-
-      receivedFrom,
-      returnTo: normalizeCardinal(getAnyString(flat, ["returnTo"], ""), CARDINAL.UNKNOWN),
-      handoffTo: normalizeCardinal(getAnyString(flat, ["handoffTo"], ""), CARDINAL.UNKNOWN),
-
-      westAuditObserved,
-      westAuditRequired,
-      northReturnRequired,
-      canvasReleaseAuthorized,
-
-      proofBodyAvailable,
-      visibleStateAvailable: getAnyBool(flat, ["visibleStateAvailable"], proofBodyAvailable),
-      receiptAvailable: receipt.receiptAvailable,
-      outputSpreadAvailable,
-
-      ...routeConductor,
-      ...visible,
-      ...inspect,
-      ...canvasReady,
-      ...receipt,
-      ...news,
-      ...fibonacci,
-      ...gap,
-
-      f8SelfDutySatisfied,
-      f13ProofBodyAvailable,
-      f13VisibleEvidenceAvailable,
-      f13InspectEvidenceAvailable,
-      f21EligibleForNorth,
-      f21SubmittedToNorth,
-      f21LatchMode: northLatched ? getAnyString(flat, ["f21LatchMode"], "FULL") : "WAITING",
-      completionLatched: northLatched,
-      degradedCompletionLatched: Boolean(northLatched && getAnyBool(flat, ["degradedCompletionLatched"], false)),
-
-      recommendedNextFile: gap.recommendedNextFile || FILE_GATES.south,
-      recommendedNextRenewalTarget: gap.recommendedNextRenewalTarget || FILE_GATES.south,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      normalizedAt: nowIso()
-    };
-
-    state.lastNormalizedInput = clonePlain(normalized);
-    state.updatedAt = nowIso();
-
-    return normalized;
-  }
-
-  function normalizeVisibleInput(input = {}) {
-    return normalizeSouthInput(input);
-  }
-
-  function resolveSouthCycle(input = {}) {
-    const normalized = input && input.normalizedAt ? input : normalizeSouthInput(input);
-
-    let cycleNumber = normalized.activeCycleNumber;
-    let cycleRoute = normalized.activeCycleRoute;
-
-    const explicitCycle1 = Boolean(
-      cycleNumber === 1 ||
-      cycleRoute === CYCLE_ROUTES.CYCLE_1 ||
-      normalized.receivedFrom === CARDINAL.WEST ||
-      normalized.westAuditObserved ||
-      normalized.northReturnRequired
-    );
-
-    const explicitCycle2 = Boolean(
-      cycleNumber === 2 ||
-      cycleRoute === CYCLE_ROUTES.CYCLE_2 ||
-      (
-        [CARDINAL.EAST, CARDINAL.NORTH].includes(normalized.receivedFrom) &&
-        normalized.westAuditRequired
-      ) ||
-      getAnyBool(normalized.flat || {}, ["prepareOutputSpreadForWest", "outputSpreadForWest", "westHandoffRequired"], false)
-    );
-
-    if (explicitCycle1) {
-      cycleNumber = 1;
-      cycleRoute = CYCLE_ROUTES.CYCLE_1;
-    } else if (explicitCycle2) {
-      cycleNumber = 2;
-      cycleRoute = CYCLE_ROUTES.CYCLE_2;
-    } else {
-      cycleNumber = 1;
-      cycleRoute = CYCLE_ROUTES.CYCLE_1;
-    }
-
-    const resolved = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      cycleResolved: true,
-      cycleNumber,
-      cycleRoute,
-      activeCycleNumber: cycleNumber,
-      activeCycleRoute: cycleRoute,
-      receivedFrom: cycleNumber === 1 ? (normalized.receivedFrom === CARDINAL.UNKNOWN ? CARDINAL.WEST : normalized.receivedFrom) : (normalized.receivedFrom === CARDINAL.UNKNOWN ? CARDINAL.EAST : normalized.receivedFrom),
-      returnTo: cycleNumber === 1 ? CARDINAL.NORTH : "",
-      handoffTo: cycleNumber === 1 ? "" : CARDINAL.WEST,
-      northReturnRequired: cycleNumber === 1,
-      westAuditRequired: cycleNumber === 2,
-      canvasReleaseAuthorized: Boolean(normalized.canvasReleaseAuthorized && cycleNumber === 2),
-      fallbackCycleUsed: !(explicitCycle1 || explicitCycle2),
-      unknownCycleDefaultsToNorthReturn: !(explicitCycle1 || explicitCycle2),
-      canvasReceivesDirectlyFromSouth: false,
-      visualPassClaimed: false,
-      resolvedAt: nowIso()
-    };
-
-    state.lastCycleResolution = clonePlain(resolved);
-    state.updatedAt = nowIso();
-
-    return resolved;
-  }
-
-  function composeProofBody(input = {}) {
-    const normalized = input && input.normalizedAt ? input : normalizeSouthInput(input);
-
-    const channels = {
-      routeConductor: normalized.routeConductorProofPresent,
-      visible: Boolean(normalized.visibleProofPresent || normalized.visibleProofDegraded),
-      inspect: Boolean(normalized.inspectProofPresent || normalized.inspectProofDegraded),
-      receipt: normalized.receiptProofPresent,
-      canvasReadiness: normalized.canvasReadinessProofPresent,
-      news: normalized.newsProofPresent,
-      fibonacci: normalized.fibonacciProofPresent
-    };
-
-    const proofChannelCount = Object.keys(channels).filter((key) => channels[key]).length;
-    const proofBodyComposed = proofChannelCount > 0;
-
-    const body = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      proofBodyContract: "LAB_RUNTIME_TABLE_SOUTH_PROOF_BODY_v1",
-      proofBodyReceipt: "LAB_RUNTIME_TABLE_SOUTH_PROOF_BODY_RECEIPT_v1",
-      file: FILE,
-      proofBodyComposed,
-      proofChannelCount,
-      proofChannels: channels,
-
-      routeConductorProof: {
-        present: normalized.routeConductorProofPresent,
-        markerPresent: normalized.routeConductorMarkerPresent,
-        apiPresent: normalized.routeConductorApiPresent,
-        receiptPresent: normalized.routeConductorReceiptPresent,
-        runtimeActive: normalized.routeConductorRuntimeActive,
-        hydrated: normalized.routeConductorHydrated,
-        status: normalized.routeConductorStatus
-      },
-
-      visibleProof: {
-        status: normalized.visibleProofPresent ? "PRESENT" : normalized.visibleProofDegraded ? "DEGRADED" : normalized.visibleProofPending ? "PENDING" : "ABSENT",
-        present: normalized.visibleProofPresent,
-        degraded: normalized.visibleProofDegraded,
-        pending: normalized.visibleProofPending,
-        absent: normalized.visibleProofAbsent,
-        strict: normalized.visibleProofStrict,
-        valid: normalized.visiblePlanetProofValid,
-        hardFail: normalized.visibleContentHardFail,
-        firstFrameDetected: normalized.firstFrameDetected,
-        imageRendered: normalized.imageRendered,
-        nonblankPlanetVisible: normalized.nonblankPlanetVisible
-      },
-
-      inspectProof: {
-        status: normalized.inspectProofPresent ? "PRESENT" : normalized.inspectProofDegraded ? "DEGRADED" : normalized.inspectProofPending ? "PENDING" : "ABSENT",
-        present: normalized.inspectProofPresent,
-        degraded: normalized.inspectProofDegraded,
-        pending: normalized.inspectProofPending,
-        absent: normalized.inspectProofAbsent,
-        diagnosticCanLeavePlanetFrame: normalized.diagnosticCanLeavePlanetFrame,
-        buttonsReachable: normalized.buttonsReachable,
-        receiptToggleReady: normalized.receiptToggleReady
-      },
-
-      receiptProof: {
-        present: normalized.receiptProofPresent,
-        receiptAvailable: normalized.receiptAvailable,
-        partialReceiptAvailable: normalized.partialReceiptAvailable,
-        finalReceiptAvailable: normalized.finalReceiptAvailable,
-        preservesForwardMotion: normalized.receiptProofCanPreserveForwardMotion
-      },
-
-      canvasReadinessProof: {
-        present: normalized.canvasReadinessProofPresent,
-        parentPresent: normalized.canvasParentPresent,
-        parentBootMethodAvailable: normalized.canvasParentBootMethodAvailable,
-        allChildrenReady: normalized.allCanvasChildrenReady,
-        atlasBuildComplete: normalized.atlasBuildComplete,
-        textureComposeComplete: normalized.textureComposeComplete,
-        firstFrameDetected: normalized.firstFrameDetected,
-        imageRendered: normalized.imageRendered,
-        canvasReady: normalized.canvasReady
-      },
-
-      newsProof: {
-        present: normalized.newsProofPresent,
-        southNewsObserved: normalized.southNewsObserved,
-        southNewsComposed: true,
-        northGateReady: normalized.northGateReady,
-        eastGateReady: normalized.eastGateReady,
-        westGateReady: normalized.westGateReady,
-        southGateReady: normalized.southGateReady,
-        canvasGateReady: normalized.canvasGateReady,
-        newsGatePassedBeforeF21: normalized.newsGatePassedBeforeF21,
-        newsGateDegradedBeforeF21: normalized.newsGateDegradedBeforeF21
-      },
-
-      fibonacciProof: {
-        present: normalized.fibonacciProofPresent,
-        activeFibonacci: normalized.activeFibonacci,
-        activeFibonacciRank: normalized.activeFibonacciRank,
-        activeStageId: normalized.activeStageId,
-        activeGearId: normalized.activeGearId,
-        f8SelfDutySatisfied: normalized.f8SelfDutySatisfied,
-        f13ProofBodyAvailable: normalized.f13ProofBodyAvailable,
-        f13VisibleEvidenceAvailable: normalized.f13VisibleEvidenceAvailable,
-        f13InspectEvidenceAvailable: normalized.f13InspectEvidenceAvailable,
-        f21EligibleForNorth: normalized.f21EligibleForNorth,
-        f21SubmittedToNorth: normalized.f21SubmittedToNorth,
-        f21LatchMode: normalized.f21LatchMode
-      },
-
-      f13ProofSummary: {
-        f13ProofBodyAvailable: normalized.f13ProofBodyAvailable,
-        f13VisibleEvidenceAvailable: normalized.f13VisibleEvidenceAvailable,
-        f13InspectEvidenceAvailable: normalized.f13InspectEvidenceAvailable,
-        f13CanvasEvidenceAvailable: normalized.f13CanvasEvidenceAvailable
-      },
-
-      f21EligibilitySummary: {
-        f21EligibleForNorth: normalized.f21EligibleForNorth,
-        f21SubmittedToNorth: normalized.f21SubmittedToNorth,
-        completionLatched: normalized.completionLatched,
-        degradedCompletionLatched: normalized.degradedCompletionLatched,
-        f21LatchMode: normalized.f21LatchMode,
-        northLatchesF21: true
-      },
-
-      activeGapSummary: {
-        activeGapPresent: normalized.activeGapPresent,
-        gapClass: normalized.gapClass,
-        gapSeverity: normalized.gapSeverity,
-        gapDecision: normalized.gapDecision,
-        hardBlock: normalized.hardBlock,
-        canDegradeForward: normalized.canDegradeForward
-      },
-
-      firstFailedCoordinate: normalized.firstFailedCoordinate,
-      recommendedNextFile: normalized.recommendedNextFile,
-      recommendedNextRenewalTarget: normalized.recommendedNextRenewalTarget,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      composedAt: nowIso()
-    };
-
-    state.lastProofBody = clonePlain(body);
-    state.updatedAt = nowIso();
-
-    return body;
-  }
-
-  function composeNorthReturnPacket(input = {}) {
-    const normalized = input && input.normalizedAt ? input : normalizeSouthInput(input);
-    const cycle = resolveSouthCycle({
-      ...normalized,
-      cycleNumber: 1,
-      cycleRoute: CYCLE_ROUTES.CYCLE_1,
-      receivedFrom: CARDINAL.WEST,
-      northReturnRequired: true
-    });
-    const proofBody = composeProofBody(normalized);
-
-    const packet = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      packetContract: "LAB_RUNTIME_TABLE_SOUTH_CYCLE_1_NORTH_RETURN_PACKET_v1",
-      packetReceipt: "LAB_RUNTIME_TABLE_SOUTH_CYCLE_1_NORTH_RETURN_PACKET_RECEIPT_v1",
-      file: FILE,
-
-      cycleNumber: 1,
-      activeCycleNumber: 1,
-      cycleRoute: CYCLE_ROUTES.CYCLE_1,
-      activeCycleRoute: CYCLE_ROUTES.CYCLE_1,
-      receivedFrom: CARDINAL.WEST,
-      returnTo: CARDINAL.NORTH,
-      handoffTo: "",
-
-      canvasReleaseAuthorized: false,
-      northReturnRequired: true,
-      southReturnPacketReady: true,
-      westAuditObserved: normalized.westAuditObserved,
-      proofBodyComposed: proofBody.proofBodyComposed,
-      proofBody,
-      visibleStateComposed: true,
-      receiptComposed: true,
-
-      f21EligibleForNorth: normalized.f21EligibleForNorth,
-      f21SubmittedToNorth: Boolean(normalized.f21EligibleForNorth || normalized.f21SubmittedToNorth),
-      f21LatchMode: normalized.completionLatched ? normalized.f21LatchMode : "WAITING",
-      completionLatched: normalized.completionLatched,
-      degradedCompletionLatched: normalized.degradedCompletionLatched,
-
-      southNewsObserved: normalized.southNewsObserved,
-      southNewsComposed: true,
-      southNewsReturnedToNorth: true,
-      southNewsSubmittedToWest: false,
-
-      activeFibonacci: normalized.activeFibonacci,
-      activeFibonacciRank: normalized.activeFibonacciRank,
-      activeStageId: normalized.activeStageId,
-      activeGearId: normalized.activeGearId,
-
-      firstFailedCoordinate: normalized.firstFailedCoordinate,
-      recommendedNextFile: normalized.recommendedNextFile,
-      recommendedNextRenewalTarget: normalized.recommendedNextRenewalTarget,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      composedAt: nowIso()
-    };
-
-    state.northReturnCount += 1;
-    state.lastNorthReturnPacket = clonePlain(packet);
-    state.updatedAt = nowIso();
-
-    return packet;
-  }
-
-  function composeWestHandoffPacket(input = {}) {
-    const normalized = input && input.normalizedAt ? input : normalizeSouthInput(input);
-    const cycle = resolveSouthCycle({
-      ...normalized,
-      cycleNumber: 2,
-      cycleRoute: CYCLE_ROUTES.CYCLE_2,
-      westAuditRequired: true
-    });
-    const proofBody = composeProofBody(normalized);
-
-    const outputSpreadComposed = Boolean(normalized.outputSpreadAvailable || proofBody.proofBodyComposed);
-    const proofPacketReady = Boolean(proofBody.proofBodyComposed || normalized.receiptProofCanPreserveForwardMotion);
-
-    const packet = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      packetContract: "LAB_RUNTIME_TABLE_SOUTH_CYCLE_2_WEST_HANDOFF_PACKET_v1",
-      packetReceipt: "LAB_RUNTIME_TABLE_SOUTH_CYCLE_2_WEST_HANDOFF_PACKET_RECEIPT_v1",
-      file: FILE,
-
-      cycleNumber: 2,
-      activeCycleNumber: 2,
-      cycleRoute: CYCLE_ROUTES.CYCLE_2,
-      activeCycleRoute: CYCLE_ROUTES.CYCLE_2,
-      receivedFrom: [CARDINAL.EAST, CARDINAL.NORTH].includes(normalized.receivedFrom) ? normalized.receivedFrom : CARDINAL.EAST,
-      returnTo: "",
-      handoffTo: CARDINAL.WEST,
-
-      canvasReleaseAuthorized: false,
-      westAuditRequired: true,
-      outputSpreadComposed,
-      proofPacketReady,
-      proofBodyComposed: proofBody.proofBodyComposed,
-      proofBody,
-      visibleStateComposed: true,
-      receiptComposed: true,
-
-      f21EligibleForNorth: normalized.f21EligibleForNorth,
-      f21SubmittedToNorth: normalized.f21SubmittedToNorth,
-      f21LatchMode: normalized.completionLatched ? normalized.f21LatchMode : "WAITING",
-      completionLatched: normalized.completionLatched,
-      degradedCompletionLatched: normalized.degradedCompletionLatched,
-
-      southNewsObserved: normalized.southNewsObserved,
-      southNewsComposed: true,
-      southNewsReturnedToNorth: false,
-      southNewsSubmittedToWest: true,
-
-      activeFibonacci: normalized.activeFibonacci,
-      activeFibonacciRank: normalized.activeFibonacciRank,
-      activeStageId: normalized.activeStageId,
-      activeGearId: normalized.activeGearId,
-
-      firstFailedCoordinate: normalized.firstFailedCoordinate,
-      recommendedNextFile: normalized.recommendedNextFile,
-      recommendedNextRenewalTarget: normalized.recommendedNextRenewalTarget,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      composedAt: nowIso()
-    };
-
-    state.westHandoffCount += 1;
-    state.lastWestHandoffPacket = clonePlain(packet);
-    state.updatedAt = nowIso();
-
-    return packet;
-  }
-
-  function composeSouthPrimaryPacket(input = {}) {
     try {
-      const normalized = normalizeSouthInput(input);
-      const cycle = resolveSouthCycle(normalized);
-      const proofBody = composeProofBody(normalized);
+      if (isFunction(authority.composeF5PressurePacket)) {
+        const packet = authority.composeF5PressurePacket();
+        if (isObject(packet)) return packet;
+      }
 
-      const northReturnPacket = cycle.cycleNumber === 1 ? composeNorthReturnPacket(normalized) : null;
-      const westHandoffPacket = cycle.cycleNumber === 2 ? composeWestHandoffPacket(normalized) : null;
+      if (isFunction(authority.getReceipt)) {
+        const receipt = authority.getReceipt();
+        if (isObject(receipt) && isObject(receipt.f5PressurePacket)) return receipt.f5PressurePacket;
+      }
 
-      const outputSpreadComposed = Boolean(
-        cycle.cycleNumber === 2 &&
-        (normalized.outputSpreadAvailable || proofBody.proofBodyComposed)
-      );
-
-      const packet = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        previousContract: PREVIOUS_CONTRACT,
-        baselineContract: BASELINE_CONTRACT,
-        version: VERSION,
-        file: FILE,
-        role: "south-primary-output-proof-cycle-gate",
-
-        southPrimaryGateActive: true,
-        outputProofComposerActive: true,
-        cycleAwareRoutingActive: true,
-        visibleStateComposerPreserved: true,
-
-        cycleNumber: cycle.cycleNumber,
-        activeCycleNumber: cycle.cycleNumber,
-        cycleRoute: cycle.cycleRoute,
-        activeCycleRoute: cycle.cycleRoute,
-        receivedFrom: cycle.receivedFrom,
-        returnTo: cycle.returnTo,
-        handoffTo: cycle.handoffTo,
-
-        activeCardinal: CARDINAL.SOUTH,
-        activeFileGate: normalized.activeFileGate,
-        activeFibonacci: normalized.activeFibonacci,
-        activeFibonacciRank: normalized.activeFibonacciRank,
-        activeNewsGate: normalized.activeNewsGate,
-        activeStageId: normalized.activeStageId,
-        activeGearId: normalized.activeGearId,
-        activeGearLabel: normalized.activeGearLabel,
-        activeGearRank: normalized.activeGearRank,
-
-        westAuditObserved: normalized.westAuditObserved,
-        westAuditRequired: cycle.cycleNumber === 2,
-        northReturnRequired: cycle.cycleNumber === 1,
-        canvasReleaseAuthorized: Boolean(normalized.canvasReleaseAuthorized && cycle.cycleNumber === 2),
-
-        proofBodyComposed: proofBody.proofBodyComposed,
-        proofBody,
-        outputSpreadAvailable: normalized.outputSpreadAvailable,
-        outputSpreadComposed,
-        visibleStateComposed: true,
-        receiptComposed: true,
-
-        northReturnPacketReady: Boolean(northReturnPacket),
-        westHandoffPacketReady: Boolean(westHandoffPacket),
-        northReturnPacket,
-        westHandoffPacket,
-
-        southNewsObserved: normalized.southNewsObserved,
-        southNewsComposed: true,
-        southNewsReturnedToNorth: cycle.cycleNumber === 1,
-        southNewsSubmittedToWest: cycle.cycleNumber === 2,
-        northGateReady: normalized.northGateReady,
-        eastGateReady: normalized.eastGateReady,
-        westGateReady: normalized.westGateReady,
-        southGateReady: normalized.southGateReady,
-        canvasGateReady: normalized.canvasGateReady,
-        newsGatePassedBeforeF21: normalized.newsGatePassedBeforeF21,
-        newsGateDegradedBeforeF21: normalized.newsGateDegradedBeforeF21,
-
-        f8SelfDutySatisfied: normalized.f8SelfDutySatisfied,
-        f13ProofBodyAvailable: normalized.f13ProofBodyAvailable,
-        f13VisibleEvidenceAvailable: normalized.f13VisibleEvidenceAvailable,
-        f13InspectEvidenceAvailable: normalized.f13InspectEvidenceAvailable,
-        f21EligibleForNorth: normalized.f21EligibleForNorth,
-        f21SubmittedToNorth: cycle.cycleNumber === 1 ? Boolean(normalized.f21EligibleForNorth || normalized.f21SubmittedToNorth) : normalized.f21SubmittedToNorth,
-        f21LatchMode: normalized.completionLatched ? normalized.f21LatchMode : "WAITING",
-        completionLatched: normalized.completionLatched,
-        degradedCompletionLatched: normalized.degradedCompletionLatched,
-
-        firstFailedCoordinate: normalized.firstFailedCoordinate,
-        recommendedNextFile: normalized.recommendedNextFile,
-        recommendedNextRenewalTarget: normalized.recommendedNextRenewalTarget,
-
-        southCompositionOk: true,
-        southFallbackUsed: false,
-        visibleStateRecoverable: true,
-
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false,
-        updatedAt: nowIso()
-      };
-
-      state.composeCount += 1;
-      state.lastPrimaryPacket = clonePlain(packet);
-      state.updatedAt = packet.updatedAt;
-      publishDataset();
-
-      return packet;
+      return readReceipt(authority);
     } catch (error) {
-      return composeFallbackPrimaryPacket(input, error);
+      recordError("WEST_F5_PRESSURE_PACKET_READ_FAILED", error);
+      return {};
     }
   }
 
-  function composeFallbackPrimaryPacket(input = {}, error = null) {
-    const message = error && error.message ? error.message : safeString(error, "South output/proof composition fallback used.");
+  function hasMeaningfulWestF5Packet(packet = {}) {
+    if (!isObject(packet)) return false;
 
-    const packet = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      version: VERSION,
-      file: FILE,
-      role: "south-primary-output-proof-cycle-gate",
+    return Boolean(
+      packet.contract ||
+      packet.receipt ||
+      packet.packetType === "WEST_F5_PRESSURE_ADMISSIBILITY_PACKET" ||
+      safeBool(packet.westRuntimeTableActive, false) ||
+      safeBool(packet.westPressureValveActive, false) ||
+      safeBool(packet.f5PressurePacketReady, false) ||
+      safeBool(packet.pressureGraphBuilt, false) ||
+      Array.isArray(packet.pressureRecords)
+    );
+  }
 
-      southPrimaryGateActive: true,
-      outputProofComposerActive: true,
-      cycleAwareRoutingActive: true,
-      southFallbackUsed: true,
-      southCompositionOk: false,
-      southCompositionError: message,
-      visibleStateRecoverable: true,
+  function validateWestF5PressurePacket(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+    const meaningful = hasMeaningfulWestF5Packet(input);
 
-      cycleNumber: 1,
-      activeCycleNumber: 1,
-      cycleRoute: CYCLE_ROUTES.CYCLE_1,
-      activeCycleRoute: CYCLE_ROUTES.CYCLE_1,
-      receivedFrom: CARDINAL.UNKNOWN,
-      returnTo: CARDINAL.NORTH,
-      handoffTo: "",
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || input.activeStage || "");
+    const futureFibonacciGate = safeString(input.futureFibonacciGate || "");
 
-      activeCardinal: CARDINAL.SOUTH,
-      activeFileGate: FILE_GATES.south,
-      activeFibonacci: "F8",
-      activeFibonacciRank: 8,
-      activeNewsGate: "SOUTH",
-      activeStageId: "SOUTH_OUTPUT_PROOF_COMPOSITION_FALLBACK",
-      activeGearId: "SOUTH_OUTPUT_PROOF_COMPOSITION_FALLBACK",
-      activeGearLabel: "South output/proof fallback",
+    const correctStage = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.WEST_PRESSURE ||
+      activeFibonacci === "F5"
+    );
 
-      canvasReleaseAuthorized: false,
-      westAuditRequired: false,
-      northReturnRequired: true,
-      proofBodyComposed: false,
-      outputSpreadComposed: false,
-      visibleStateComposed: true,
-      receiptComposed: true,
-      northReturnPacketReady: true,
-      westHandoffPacketReady: false,
+    const correctFuture = Boolean(
+      !futureFibonacciGate ||
+      futureFibonacciGate === FIBONACCI.SOUTH_PROOF ||
+      futureFibonacciGate === "F8"
+    );
 
-      f21EligibleForNorth: false,
-      f21SubmittedToNorth: false,
-      f21LatchMode: "WAITING",
-      completionLatched: false,
-      degradedCompletionLatched: false,
+    const pressureRecordsAcceptable = Boolean(
+      Array.isArray(input.pressureRecords) ||
+      Array.isArray(input.pressureQueue) ||
+      isObject(input.pressureGraph)
+    );
 
-      firstFailedCoordinate: "WAITING_SOUTH_OUTPUT_PROOF_COMPOSITION",
-      recommendedNextFile: FILE_GATES.south,
-      recommendedNextRenewalTarget: FILE_GATES.south,
+    const accepted = Boolean(
+      noForbiddenClaim &&
+      meaningful &&
+      correctStage &&
+      correctFuture &&
+      pressureRecordsAcceptable
+    );
 
+    let reason = "WEST_F5_PRESSURE_PACKET_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_WEST_F5_PACKET";
+    else if (!meaningful) reason = "WEST_F5_PACKET_NOT_MEANINGFUL";
+    else if (!correctStage) reason = "WEST_F5_PACKET_WRONG_ACTIVE_FIBONACCI";
+    else if (!correctFuture) reason = "WEST_F5_PACKET_WRONG_FUTURE_GATE";
+    else if (!pressureRecordsAcceptable) reason = "WEST_F5_PACKET_MISSING_PRESSURE_RECORD_SOURCE";
+
+    return {
+      accepted,
+      reason,
+      noForbiddenClaim,
+      meaningful,
+      correctStage,
+      correctFuture,
+      pressureRecordsAcceptable,
+      input: clonePlain(input)
+    };
+  }
+
+  function acceptWestF5PressurePacket(packet = {}) {
+    const validation = validateWestF5PressurePacket(packet);
+
+    if (validation.accepted) {
+      state.westRuntimeObserved = true;
+      state.westRuntimeAccepted = true;
+      state.westRuntimeContract = safeString(packet.contract, "");
+      state.westRuntimeReceipt = safeString(packet.receipt, "");
+      state.westF5PressureObserved = true;
+      state.westF5PressureAccepted = true;
+
+      buildProofGraph(packet);
+    }
+
+    recordLocal("WEST_F5_PRESSURE_PACKET_EVALUATED_BY_SOUTH_F8", {
+      accepted: validation.accepted,
+      reason: validation.reason,
+      pressureRecordsPresent: validation.pressureRecordsAcceptable
+    });
+
+    computeFibonacciSynchronizationMetric();
+    publishGlobals();
+
+    return {
+      accepted: validation.accepted,
+      southF8ReceivedWest: true,
+      reason: validation.reason,
+      proofGraphBuilt: state.proofGraphBuilt,
+      proofGraphReady: state.proofGraphReady,
+      northF21EligibilityPrepared: state.northF21EligibilityPrepared,
+      canvasF13EvidencePrepared: state.canvasF13EvidencePrepared,
+      recommendedNextFile: validation.accepted ? NORTH_FILE : WEST_FILE,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      visualPassClaimed: false,
-      updatedAt: nowIso()
+      visualPassClaimed: false
     };
-
-    state.fallbackCount += 1;
-    state.lastPrimaryPacket = clonePlain(packet);
-    state.updatedAt = packet.updatedAt;
-    publishDataset();
-
-    return packet;
   }
 
-  function deriveLocalProgress(packet = {}) {
-    if (packet.completionLatched) return 100;
+  function receiveWestF5PressurePacket(packet = {}) {
+    return acceptWestF5PressurePacket(packet);
+  }
 
-    const explicit = getAnyNumber(packet, ["activeGearLocalProgress", "visibleProgress", "mainDisplayProgress"], NaN);
-    if (Number.isFinite(explicit)) return clamp(explicit, 0, 100);
+  function submitWestF5PressurePacket(packet = {}) {
+    return acceptWestF5PressurePacket(packet);
+  }
 
-    let score = 20;
-    if (packet.proofBodyComposed) score += 30;
-    if (packet.visibleStateComposed) score += 15;
-    if (packet.receiptComposed) score += 15;
-    if (packet.northReturnPacketReady || packet.westHandoffPacketReady) score += 20;
+  function acceptWestPrimary(packet = {}) {
+    return acceptWestF5PressurePacket(packet);
+  }
+
+  function receiveWestPrimary(packet = {}) {
+    return acceptWestPrimary(packet);
+  }
+
+  function acceptSouthPrimary(packet = {}) {
+    return acceptProofPacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "SOUTH_PRIMARY_PROOF_PACKET"),
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.SOUTH_PROOF)
+    });
+  }
+
+  function receiveSouthPrimary(packet = {}) {
+    return acceptSouthPrimary(packet);
+  }
+
+  function acceptSouthPrimaryGate(packet = {}) {
+    return acceptSouthPrimary(packet);
+  }
+
+  function acceptSouthSpread(packet = {}) {
+    return acceptProofPacket({
+      ...clonePlain(packet),
+      packetType: safeString(packet.packetType || "SOUTH_SPREAD_PROOF_PACKET"),
+      activeFibonacci: safeString(packet.activeFibonacci || FIBONACCI.SOUTH_PROOF)
+    });
+  }
+
+  function receiveCycleOneSouthReturn(packet = {}) {
+    return acceptSouthPrimary(packet);
+  }
+
+  function classifyProofPacket(packet = {}) {
+    const input = isObject(packet) ? packet : { value: packet };
+    const text = (() => {
+      try {
+        return JSON.stringify(input || {});
+      } catch (_error) {
+        return safeString(input, "");
+      }
+    })();
+
+    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || input.activeStage || "");
+    const packetType = safeString(input.packetType || input.type || input.event || "");
+
+    let proofClass = PROOF_CLASS.GENERIC_PROOF;
+
+    if (
+      activeFibonacci === FIBONACCI.WEST_PRESSURE ||
+      packetType.includes("WEST_F5") ||
+      safeBool(input.westRuntimeTableActive, false) ||
+      safeBool(input.westPressureValveActive, false)
+    ) {
+      proofClass = PROOF_CLASS.WEST_PRESSURE_PROOF;
+    } else if (
+      /DIAGNOSTIC|RECEIPT|EVIDENCE|PROBE|GAUGE/.test(text)
+    ) {
+      proofClass = PROOF_CLASS.DIAGNOSTIC_PROOF;
+    } else if (
+      /F34|F55|F89|F144|F233|PRODUCT_ENGINE|UE5_EXPRESSION|REGISTRY|MARKET/.test(text)
+    ) {
+      proofClass = PROOF_CLASS.SUPPORT_ENGINE_PROOF;
+    } else if (
+      /ROUTE|HEARTH|SHOWROOM|GLOBE/.test(text)
+    ) {
+      proofClass = PROOF_CLASS.ROUTE_PROOF;
+    } else if (
+      /CANVAS|F13|VISUAL|CHAPEL|FINGER/.test(text)
+    ) {
+      proofClass = PROOF_CLASS.CANVAS_PROOF;
+    } else if (
+      /CONSTRAINT|BOUNDARY|ADMISSIBLE|PRESSURE|FILTER|SHELL|BASIN|PROOF/.test(text)
+    ) {
+      proofClass = PROOF_CLASS.CONSTRAINT_PROOF;
+    }
+
+    const stateIndex = clamp(
+      input.stateIndex !== undefined ? input.stateIndex : stableStateIndex(input),
+      0,
+      255
+    );
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      proofClass,
+      packetType,
+      activeFibonacci,
+      stateIndex,
+      stateId: `ST_${stateIndex}`,
+      pressureShellId: `PS_${(stateIndex % 192) + 1}`,
+      filterId: `FL_${(stateIndex % 61) + 1}`,
+      basinAnchorId: `BA_${(stateIndex % 9) + 1}`,
+      forbiddenClaimDetected: detectForbiddenClaim(input),
+      packet: clonePlain(input),
+      classifiedAt: nowIso()
+    };
+  }
+
+  function proofScoreForClassification(classification = {}, packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    let score = 34;
+
+    if (classification.proofClass === PROOF_CLASS.WEST_PRESSURE_PROOF) score += 20;
+    if (classification.proofClass === PROOF_CLASS.DIAGNOSTIC_PROOF) score += 12;
+    if (classification.proofClass === PROOF_CLASS.SUPPORT_ENGINE_PROOF) score += 10;
+    if (classification.proofClass === PROOF_CLASS.ROUTE_PROOF) score += 8;
+    if (classification.proofClass === PROOF_CLASS.CANVAS_PROOF) score += 8;
+    if (classification.proofClass === PROOF_CLASS.CONSTRAINT_PROOF) score += 12;
+
+    if (input.contract) score += 8;
+    if (input.receipt) score += 8;
+    if (input.file || input.sourceFile) score += 6;
+    if (input.route) score += 6;
+    if (Array.isArray(input.pressureRecords) && input.pressureRecords.length) score += 10;
+    if (safeBool(input.f5PressurePacketReady, false)) score += 8;
+    if (safeBool(input.f8SouthHandoffAuthorized, false)) score += 6;
+    if (safeNumber(input.pressureQualityScore, 0) >= 62) score += 6;
 
     return clamp(score, 0, 100);
   }
 
-  function composeVisibleState(input = {}) {
-    try {
-      const packet = input && input.southPrimaryGateActive ? input : composeSouthPrimaryPacket(input);
-      const localProgress = deriveLocalProgress(packet);
+  function evaluateProofPacket(packet = {}) {
+    const classification = classifyProofPacket(packet);
+    const noForbiddenClaim = !classification.forbiddenClaimDetected;
 
-      const visible = {
-        contract: CONTRACT,
-        receipt: RECEIPT,
-        previousContract: PREVIOUS_CONTRACT,
-        baselineContract: BASELINE_CONTRACT,
-        version: VERSION,
-        file: FILE,
-        role: "south-primary-visible-state",
+    const activeFibonacci = safeString(
+      packet.activeFibonacci || packet.fibonacciStage || packet.activeStage || "",
+      ""
+    );
 
-        activeCycleNumber: packet.activeCycleNumber || packet.cycleNumber || 1,
-        activeCycleRoute: packet.activeCycleRoute || packet.cycleRoute || CYCLE_ROUTES.CYCLE_1,
-        activeFileGate: packet.activeFileGate || FILE_GATES.south,
-        activeCardinal: CARDINAL.SOUTH,
-        activeFibonacci: packet.activeFibonacci || "F8",
-        activeNewsGate: packet.activeNewsGate || "SOUTH",
-        activeGearId: packet.activeGearId || "SOUTH_OUTPUT_PROOF_COMPOSITION",
-        activeGearLabel: packet.activeGearLabel || "South output/proof composition",
-        activeGearLocalProgress: localProgress,
-        visibleProgress: localProgress,
+    const stageAllowed = Boolean(
+      !activeFibonacci ||
+      activeFibonacci === FIBONACCI.WEST_PRESSURE ||
+      activeFibonacci === FIBONACCI.SOUTH_PROOF ||
+      activeFibonacci === "F5" ||
+      activeFibonacci === "F8"
+    );
 
-        visibleStatusText: packet.completionLatched
-          ? "Ready"
-          : packet.proofBodyComposed
-            ? packet.activeCycleNumber === 2
-              ? "South proof spread composed; waiting for West audit"
-              : "South proof body composed; returning to North"
-            : "Composing South proof body",
+    const proofOpen = Boolean(state.proofReturnOpen && state.southProofReturnActive);
+    const proofScore = proofScoreForClassification(classification, packet);
+    const evidenceReady = proofScore >= 55;
+    const outputReturnReady = noForbiddenClaim && proofScore >= 55;
+    const boundaryPass = noForbiddenClaim;
 
-        postgameStatus: packet.completionLatched
-          ? packet.degradedCompletionLatched
-            ? "READY_DEGRADED_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
-            : "READY_PLANET_VISIBLE_DIAGNOSTIC_AVAILABLE"
-          : packet.southFallbackUsed
-            ? "SOUTH_VISIBLE_STATE_FALLBACK_ACTIVE"
-            : packet.activeCycleNumber === 2
-              ? "SOUTH_CYCLE_2_HANDOFF_TO_WEST_READY"
-              : "SOUTH_CYCLE_1_RETURN_TO_NORTH_READY",
+    const accepted = Boolean(
+      noForbiddenClaim &&
+      stageAllowed &&
+      proofOpen &&
+      evidenceReady &&
+      outputReturnReady &&
+      boundaryPass
+    );
 
-        firstFailedCoordinate: packet.firstFailedCoordinate,
-        recommendedNextFile: packet.recommendedNextFile,
-        recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
+    let reason = "SOUTH_F8_PROOF_RETURN_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_BY_SOUTH_F8_PROOF_RETURN";
+    else if (!stageAllowed) reason = "PROOF_STAGE_NOT_ADMISSIBLE_TO_SOUTH_F8";
+    else if (!proofOpen) reason = "SOUTH_F8_PROOF_RETURN_CLOSED";
+    else if (!evidenceReady) reason = "PROOF_EVIDENCE_BELOW_RETURN_THRESHOLD";
+    else if (!outputReturnReady) reason = "OUTPUT_RETURN_NOT_READY";
 
-        proofBodyComposed: packet.proofBodyComposed,
-        outputSpreadComposed: packet.outputSpreadComposed,
-        northReturnPacketReady: packet.northReturnPacketReady,
-        westHandoffPacketReady: packet.westHandoffPacketReady,
-        canvasReleaseAuthorized: packet.canvasReleaseAuthorized,
-        completionLatched: packet.completionLatched,
-        degradedCompletionLatched: packet.degradedCompletionLatched,
+    return {
+      accepted,
+      reason,
+      classification,
+      coordinate: clonePlain(MECHANICAL_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::${classification.stateId}`,
+      proofScore,
+      evidenceReady,
+      outputReturnReady,
+      boundaryPass,
+      proofState: accepted ? "PROOF_RETURNED" : "HELD_OR_REJECTED",
+      nextRecommendedCoordinate: accepted ? NORTH_ELIGIBILITY_COORDINATE.coordinateId : MECHANICAL_COORDINATE.coordinateId,
+      canvasEvidenceCoordinate: accepted ? CANVAS_EVIDENCE_COORDINATE.coordinateId : "",
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      evaluatedAt: nowIso()
+    };
+  }
 
-        visibleStateComposed: true,
-        receiptComposed: true,
-        southFallbackUsed: packet.southFallbackUsed === true,
-        visibleStateRecoverable: true,
+  function normalizeProofRecord(packet = {}, evaluation = null) {
+    const result = evaluation || evaluateProofPacket(packet);
+    const source = isObject(packet) ? packet : { value: packet };
 
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        visualPassClaimed: false,
-        updatedAt: nowIso()
-      };
+    const id = makeId(
+      source.id ||
+      source.packetId ||
+      source.receipt ||
+      source.contract ||
+      `${result.classification.proofClass}-${Date.now()}-${state.proofRecords.length + state.rejectedRecords.length + 1}`,
+      "south-proof"
+    );
 
-      state.lastVisibleState = clonePlain(visible);
-      state.updatedAt = visible.updatedAt;
-      publishDataset();
+    return {
+      id,
+      recordId: id,
+      proofClass: result.classification.proofClass,
+      packetType: result.classification.packetType,
+      sourceContract: safeString(source.contract || ""),
+      sourceReceipt: safeString(source.receipt || ""),
+      sourceFile: safeString(source.file || source.sourceFile || ""),
+      sourceRoute: safeString(source.route || ""),
+      activeFibonacci: safeString(source.activeFibonacci || source.fibonacciStage || source.activeStage || ""),
+      stateId: result.classification.stateId,
+      stateIndex: result.classification.stateIndex,
+      filterId: result.classification.filterId,
+      pressureShellId: result.classification.pressureShellId,
+      basinAnchorId: result.classification.basinAnchorId,
+      coordinateId: MECHANICAL_COORDINATE.coordinateId,
+      runtimeCondition: result.runtimeCondition,
+      proofScore: result.proofScore,
+      evidenceReady: result.evidenceReady,
+      outputReturnReady: result.outputReturnReady,
+      boundaryPass: result.boundaryPass,
+      accepted: result.accepted,
+      reason: result.reason,
+      northF21Eligible: result.accepted,
+      canvasF13EvidenceReady: result.accepted,
+      traceReady: Boolean(source.contract || source.receipt || source.file || source.route || source.sourceFile),
+      deterministic: true,
+      packet: clonePlain(source),
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      receivedAt: nowIso()
+    };
+  }
 
-      return visible;
-    } catch (error) {
-      return composeFallbackVisibleState(input, error);
+  function acceptProofPacket(packet = {}) {
+    const evaluation = evaluateProofPacket(packet);
+    const record = normalizeProofRecord(packet, evaluation);
+
+    if (evaluation.accepted) {
+      state.proofRecords.push(record);
+      state.proofQueue.push(record);
+      state.lastReturnedProof = clonePlain(record);
+    } else {
+      state.rejectedRecords.push(record);
+      state.lastRejectedProof = clonePlain(record);
     }
+
+    trim(state.proofRecords);
+    trim(state.proofQueue);
+    trim(state.rejectedRecords);
+
+    rebuildProofGraph({ silent: true });
+    computeFibonacciSynchronizationMetric();
+
+    recordLocal("SOUTH_F8_PROOF_PACKET_EVALUATED", {
+      accepted: evaluation.accepted,
+      reason: evaluation.reason,
+      proofClass: record.proofClass,
+      stateId: record.stateId,
+      proofScore: record.proofScore,
+      runtimeCondition: record.runtimeCondition
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: evaluation.accepted,
+      reason: evaluation.reason,
+      record: clonePlain(record),
+      proofClass: record.proofClass,
+      runtimeCondition: record.runtimeCondition,
+      northF21EligibilityPrepared: state.northF21EligibilityPrepared,
+      canvasF13EvidencePrepared: state.canvasF13EvidencePrepared,
+      recommendedNextFile: evaluation.accepted ? NORTH_FILE : FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
   }
 
-  function composeFallbackVisibleState(input = {}, error = null) {
-    const packet = composeFallbackPrimaryPacket(input, error);
+  function receiveProofPacket(packet = {}) {
+    return acceptProofPacket(packet);
+  }
+
+  function submitProofPacket(packet = {}) {
+    return acceptProofPacket(packet);
+  }
+
+  function buildProofGraph(packet = {}, options = {}) {
+    const records = [];
+
+    const pressureRecords = Array.isArray(packet.pressureRecords)
+      ? packet.pressureRecords
+      : Array.isArray(packet.pressureQueue)
+        ? packet.pressureQueue
+        : isObject(packet.pressureGraph) && Array.isArray(packet.pressureGraph.records)
+          ? packet.pressureGraph.records
+          : [];
+
+    if (pressureRecords.length) {
+      pressureRecords.forEach((item) => {
+        const evaluation = evaluateProofPacket({
+          ...clonePlain(item),
+          activeFibonacci: FIBONACCI.SOUTH_PROOF,
+          packetType: safeString(item.packetType || "WEST_PRESSURE_PROOF_SOURCE")
+        });
+        records.push(normalizeProofRecord(item, evaluation));
+      });
+    } else if (hasMeaningfulWestF5Packet(packet)) {
+      const evaluation = evaluateProofPacket(packet);
+      records.push(normalizeProofRecord(packet, evaluation));
+    }
+
+    records.forEach((record) => {
+      if (record.accepted) {
+        state.proofRecords.push(record);
+        state.proofQueue.push(record);
+        state.lastReturnedProof = clonePlain(record);
+      } else {
+        state.rejectedRecords.push(record);
+        state.lastRejectedProof = clonePlain(record);
+      }
+    });
+
+    trim(state.proofRecords);
+    trim(state.proofQueue);
+    trim(state.rejectedRecords);
+
+    return rebuildProofGraph(options);
+  }
+
+  function rebuildProofGraph(options = {}) {
+    const records = state.proofRecords.slice();
+    const recordsById = {};
+    const byClass = {};
+    const byState = {};
+    const byProofQuality = {};
+    const edges = [];
+
+    records.forEach((record) => {
+      recordsById[record.id] = record;
+
+      byClass[record.proofClass] = byClass[record.proofClass] || [];
+      byClass[record.proofClass].push(record.id);
+
+      byState[record.stateId] = byState[record.stateId] || [];
+      byState[record.stateId].push(record.id);
+
+      const qualityBucket = record.proofScore >= 80 ? "READY" : record.proofScore >= 62 ? "DEGRADED" : "HELD";
+      byProofQuality[qualityBucket] = byProofQuality[qualityBucket] || [];
+      byProofQuality[qualityBucket].push(record.id);
+
+      edges.push({
+        from: MECHANICAL_COORDINATE.coordinateId,
+        to: record.id,
+        type: "south-exhaust-proof-return-record",
+        deterministic: true
+      });
+
+      if (record.sourceContract) {
+        edges.push({
+          from: record.id,
+          to: makeId(`contract-${record.sourceContract}`),
+          type: "record-to-contract",
+          deterministic: true
+        });
+      }
+
+      if (record.sourceReceipt) {
+        edges.push({
+          from: record.id,
+          to: makeId(`receipt-${record.sourceReceipt}`),
+          type: "record-to-receipt",
+          deterministic: true
+        });
+      }
+
+      if (record.accepted) {
+        edges.push({
+          from: record.id,
+          to: NORTH_ELIGIBILITY_COORDINATE.coordinateId,
+          type: "proof-to-north-f21-eligibility",
+          deterministic: true
+        });
+
+        edges.push({
+          from: record.id,
+          to: CANVAS_EVIDENCE_COORDINATE.coordinateId,
+          type: "proof-to-canvas-f13-evidence-target",
+          deterministic: true
+        });
+      }
+    });
+
+    state.proofGraph = {
+      records,
+      recordsById,
+      byClass,
+      byState,
+      byProofQuality,
+      edges,
+      buildId: `south-f8-proof-graph-${records.length}-${edges.length}`,
+      builtAt: nowIso()
+    };
+
+    state.proofGraphBuilt = true;
+    state.proofRecordCount = records.length;
+    state.returnedProofCount = records.length;
+    state.rejectedRecordCount = state.rejectedRecords.length;
+    state.diagnosticProofCount = records.filter((record) => record.proofClass === PROOF_CLASS.DIAGNOSTIC_PROOF).length;
+    state.supportEngineProofCount = records.filter((record) => record.proofClass === PROOF_CLASS.SUPPORT_ENGINE_PROOF).length;
+    state.routeProofCount = records.filter((record) => record.proofClass === PROOF_CLASS.ROUTE_PROOF).length;
+    state.canvasProofCount = records.filter((record) => record.proofClass === PROOF_CLASS.CANVAS_PROOF).length;
+    state.constraintProofCount = records.filter((record) => record.proofClass === PROOF_CLASS.CONSTRAINT_PROOF).length;
+
+    computeProofQualityMetric();
+
+    state.proofGraphReady = Boolean(
+      state.proofRecordCount > 0 &&
+      state.proofQualityScore >= 62 &&
+      state.boundaryScore >= 80
+    );
+
+    if (state.proofGraphReady) {
+      state.proofGraphStatus = state.proofQualityScore >= 80 ? STATUS.READY : STATUS.DEGRADED;
+      state.northF21EligibilityPrepared = true;
+      state.canvasF13EvidencePrepared = true;
+      state.f8ProofPacketReady = true;
+      state.f8ActivationStatus = state.proofGraphStatus;
+      state.f8ActivationReason =
+        state.proofGraphStatus === STATUS.READY
+          ? "SOUTH_F8_PROOF_READY_FOR_NORTH_F21_AND_CANVAS_F13"
+          : "SOUTH_F8_PROOF_DEGRADED_NORTH_F21_AND_CANVAS_F13_AVAILABLE";
+      state.firstFailedCoordinate =
+        state.proofGraphStatus === STATUS.READY
+          ? "NONE_SOUTH_F8_READY_NORTH_F21_ELIGIBILITY_PREPARED"
+          : "NONE_SOUTH_F8_DEGRADED_NORTH_F21_ELIGIBILITY_AVAILABLE";
+      state.recommendedNextFile = NORTH_FILE;
+      state.recommendedNextRenewalTarget = NORTH_FILE;
+    } else {
+      state.proofGraphStatus = STATUS.HELD;
+      state.northF21EligibilityPrepared = false;
+      state.canvasF13EvidencePrepared = false;
+      state.f8ProofPacketReady = false;
+      state.f8ActivationStatus = STATUS.HELD;
+      state.f8ActivationReason = "WAITING_LAWFUL_SOUTH_F8_PROOF";
+      state.firstFailedCoordinate = "WAITING_LAWFUL_SOUTH_F8_PROOF";
+      state.recommendedNextFile = FILE;
+      state.recommendedNextRenewalTarget = FILE;
+    }
+
+    computeFibonacciSynchronizationMetric();
+
+    if (options.silent !== true) {
+      recordLocal("SOUTH_F8_PROOF_GRAPH_REBUILT", {
+        proofRecordCount: state.proofRecordCount,
+        rejectedRecordCount: state.rejectedRecordCount,
+        proofGraphStatus: state.proofGraphStatus,
+        proofQualityScore: state.proofQualityScore
+      });
+    }
+
+    updateDataset();
+
+    return clonePlain(state.proofGraph);
+  }
+
+  function computeProofQualityMetric() {
+    const records = state.proofRecords || [];
+    const count = Math.max(1, records.length);
+    const acceptedRatio = records.length / Math.max(1, records.length + state.rejectedRecords.length);
+    const traceRatio = records.filter((record) => record.traceReady).length / count;
+    const evidenceRatio = records.filter((record) => record.evidenceReady).length / count;
+    const outputReturnRatio = records.filter((record) => record.outputReturnReady).length / count;
+    const boundaryRatio = records.filter((record) => record.boundaryPass).length / count;
+
+    const classCoverage = [
+      records.some((record) => record.proofClass === PROOF_CLASS.WEST_PRESSURE_PROOF),
+      records.some((record) => record.proofClass === PROOF_CLASS.DIAGNOSTIC_PROOF),
+      records.some((record) => record.proofClass === PROOF_CLASS.SUPPORT_ENGINE_PROOF),
+      records.some((record) => record.proofClass === PROOF_CLASS.ROUTE_PROOF),
+      records.some((record) => record.proofClass === PROOF_CLASS.CANVAS_PROOF),
+      records.some((record) => record.proofClass === PROOF_CLASS.CONSTRAINT_PROOF)
+    ].filter(Boolean).length / 6;
+
+    state.proofCoverageScore = clamp(Math.round(classCoverage * 100), 0, 100);
+    state.proofTraceScore = clamp(Math.round(traceRatio * 100), 0, 100);
+    state.evidenceScore = clamp(Math.round(evidenceRatio * 100), 0, 100);
+    state.outputReturnScore = clamp(Math.round(outputReturnRatio * 100), 0, 100);
+    state.boundaryScore = clamp(Math.round(boundaryRatio * 100), 0, 100);
+
+    state.proofCoherenceScore = clamp(
+      Math.round(
+        (acceptedRatio * 26) +
+        (state.evidenceScore * 0.20) +
+        (state.outputReturnScore * 0.20) +
+        (state.proofTraceScore * 0.14) +
+        (state.proofCoverageScore * 0.12) +
+        (state.boundaryScore * 0.08)
+      ),
+      0,
+      100
+    );
+
+    state.proofQualityScore = clamp(
+      Math.round(
+        (state.proofCoherenceScore * 0.34) +
+        (state.evidenceScore * 0.22) +
+        (state.outputReturnScore * 0.20) +
+        (state.proofTraceScore * 0.12) +
+        (state.proofCoverageScore * 0.12)
+      ),
+      0,
+      100
+    );
+
+    return {
+      proofQualityScore: state.proofQualityScore,
+      proofCoverageScore: state.proofCoverageScore,
+      proofTraceScore: state.proofTraceScore,
+      proofCoherenceScore: state.proofCoherenceScore,
+      outputReturnScore: state.outputReturnScore,
+      evidenceScore: state.evidenceScore,
+      boundaryScore: state.boundaryScore,
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false
+    };
+  }
+
+  function computeFibonacciSynchronizationMetric() {
+    const checks = [
+      state.newsProtocolAligned,
+      state.oneActiveGearAtATime,
+      state.activeFibonacci === FIBONACCI.SOUTH_PROOF,
+      state.activeFibonacciRank === 8,
+      state.activeNewsGate === NEWS_GATES.SOUTH,
+      state.sourceFibonacciGate === FIBONACCI.WEST_PRESSURE,
+      state.futureFibonacciGate === FIBONACCI.NORTH_LATCH,
+      state.secondaryFutureFibonacciGate === FIBONACCI.CANVAS_EVIDENCE,
+      state.southRuntimeTableActive,
+      state.southSupremeJudgeActive,
+      state.southProofReturnActive,
+      state.southOutputExhaustActive,
+      state.proofReturnOpen,
+      state.engineMechanicsPrimary,
+      state.mathPrimary,
+      state.mechanicalCoordinate.coordinateId === "RT3D-X07_Y19_Z8",
+      state.proofGraphBuilt || state.westRuntimeObserved,
+      !state.publicSuperiorityClaim,
+      !state.publicComparisonClaimAllowed,
+      !state.generatedImage,
+      !state.graphicBox,
+      !state.webGL,
+      !state.visualPassClaimed
+    ];
+
+    const passed = checks.filter(Boolean).length;
+    state.fibonacciSynchronizationScore = Math.round((passed / checks.length) * 100);
+    state.updatedAt = nowIso();
+
+    computeProofQualityMetric();
+
+    return {
+      score: state.fibonacciSynchronizationScore,
+      passed,
+      total: checks.length,
+      activeFibonacci: FIBONACCI.SOUTH_PROOF,
+      activeFibonacciRank: 8,
+      activeNewsGate: NEWS_GATES.SOUTH,
+      sourceFibonacciGate: FIBONACCI.WEST_PRESSURE,
+      futureFibonacciGate: FIBONACCI.NORTH_LATCH,
+      secondaryFutureFibonacciGate: FIBONACCI.CANVAS_EVIDENCE,
+      publicSuperiorityClaim: false
+    };
+  }
+
+  function evaluateNewsAlignment() {
+    const metric = computeFibonacciSynchronizationMetric();
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      version: VERSION,
-      file: FILE,
-      role: "south-primary-visible-state-fallback",
-
-      activeCycleNumber: 1,
-      activeCycleRoute: CYCLE_ROUTES.CYCLE_1,
-      activeFileGate: FILE_GATES.south,
-      activeCardinal: CARDINAL.SOUTH,
-      activeFibonacci: "F8",
-      activeNewsGate: "SOUTH",
-      activeGearId: "SOUTH_OUTPUT_PROOF_COMPOSITION_FALLBACK",
-      activeGearLabel: "South output/proof fallback",
-      activeGearLocalProgress: 20,
-      visibleProgress: 20,
-      visibleStatusText: "South output/proof fallback active",
-      postgameStatus: "SOUTH_VISIBLE_STATE_FALLBACK_ACTIVE",
-
-      firstFailedCoordinate: packet.firstFailedCoordinate,
-      recommendedNextFile: packet.recommendedNextFile,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
-
-      proofBodyComposed: false,
-      outputSpreadComposed: false,
-      northReturnPacketReady: true,
-      westHandoffPacketReady: false,
-      canvasReleaseAuthorized: false,
-      completionLatched: false,
-      degradedCompletionLatched: false,
-
-      visibleStateComposed: true,
-      receiptComposed: true,
-      southFallbackUsed: true,
-      visibleStateRecoverable: true,
-
+      newsAlignmentContract: "LAB_RUNTIME_TABLE_SOUTH_F8_NEWS_ALIGNMENT_PROTOCOL_v1",
+      newsAlignmentReceipt: "LAB_RUNTIME_TABLE_SOUTH_F8_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v1",
+      sequence: [
+        {
+          gate: NEWS_GATES.WEST,
+          fibonacci: FIBONACCI.WEST_PRESSURE,
+          file: WEST_FILE,
+          ready: state.westRuntimeObserved || state.westF5PressureObserved
+        },
+        {
+          gate: NEWS_GATES.SOUTH,
+          fibonacci: FIBONACCI.SOUTH_PROOF,
+          file: FILE,
+          ready: state.proofGraphReady || state.f8ProofPacketReady
+        },
+        {
+          gate: NEWS_GATES.CANVAS,
+          fibonacci: FIBONACCI.CANVAS_EVIDENCE,
+          file: CANVAS_FILE,
+          ready: state.canvasF13EvidencePrepared
+        },
+        {
+          gate: NEWS_GATES.NORTH,
+          fibonacci: FIBONACCI.NORTH_LATCH,
+          file: NORTH_FILE,
+          ready: state.northF21EligibilityPrepared
+        }
+      ],
+      fibonacciSynchronizationScore: metric.score,
+      f8Status: state.f8ActivationStatus,
+      proofGraphStatus: state.proofGraphStatus,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
@@ -1508,333 +1246,1035 @@
     };
   }
 
-  function composeSouthReceiptState(input = {}) {
-    const packet = input && input.southPrimaryGateActive ? input : composeSouthPrimaryPacket(input);
+  function setProofReturnOpen(open, detail = {}) {
+    state.proofReturnOpen = safeBool(open, true);
+    state.proofReturnStatus = state.proofReturnOpen ? STATUS.ACTIVE : STATUS.HELD;
 
-    const receiptState = {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
-      version: VERSION,
-      file: FILE,
-      role: "south-primary-receipt-state",
+    recordLocal("SOUTH_F8_PROOF_RETURN_STATE_CHANGED", {
+      proofReturnOpen: state.proofReturnOpen,
+      detail: clonePlain(detail)
+    });
 
-      southPrimaryGateActive: true,
-      outputProofComposerActive: true,
-      cycleAwareRoutingActive: true,
-      cycleNumber: packet.cycleNumber,
-      cycleRoute: packet.cycleRoute,
-      receivedFrom: packet.receivedFrom,
-      returnTo: packet.returnTo,
-      handoffTo: packet.handoffTo,
+    computeFibonacciSynchronizationMetric();
+    publishGlobals();
 
-      canvasReleaseAuthorized: packet.canvasReleaseAuthorized,
-      westAuditRequired: packet.westAuditRequired,
-      northReturnRequired: packet.northReturnRequired,
-      proofBodyComposed: packet.proofBodyComposed,
-      outputSpreadComposed: packet.outputSpreadComposed,
-      visibleStateComposed: packet.visibleStateComposed,
-      receiptComposed: packet.receiptComposed,
-      northReturnPacketReady: packet.northReturnPacketReady,
-      westHandoffPacketReady: packet.westHandoffPacketReady,
-
-      f21EligibleForNorth: packet.f21EligibleForNorth,
-      f21SubmittedToNorth: packet.f21SubmittedToNorth,
-      completionLatched: packet.completionLatched,
-      degradedCompletionLatched: packet.degradedCompletionLatched,
-
-      southNewsObserved: packet.southNewsObserved,
-      southNewsComposed: packet.southNewsComposed,
-      southNewsReturnedToNorth: packet.southNewsReturnedToNorth,
-      southNewsSubmittedToWest: packet.southNewsSubmittedToWest,
-
-      activeFibonacci: packet.activeFibonacci,
-      activeFibonacciRank: packet.activeFibonacciRank,
-      activeStageId: packet.activeStageId,
-      activeGearId: packet.activeGearId,
-      f8SelfDutySatisfied: packet.f8SelfDutySatisfied,
-      f13ProofBodyAvailable: packet.f13ProofBodyAvailable,
-      f13VisibleEvidenceAvailable: packet.f13VisibleEvidenceAvailable,
-      f13InspectEvidenceAvailable: packet.f13InspectEvidenceAvailable,
-      f21LatchMode: packet.f21LatchMode,
-
-      firstFailedCoordinate: packet.firstFailedCoordinate,
-      recommendedNextFile: packet.recommendedNextFile,
-      recommendedNextRenewalTarget: packet.recommendedNextRenewalTarget,
-
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      updatedAt: nowIso()
+    return {
+      proofReturnOpen: state.proofReturnOpen,
+      proofReturnStatus: state.proofReturnStatus,
+      changedAt: nowIso()
     };
-
-    state.lastReceiptState = clonePlain(receiptState);
-    state.updatedAt = receiptState.updatedAt;
-    publishDataset();
-
-    return receiptState;
   }
 
-  function composeReceiptState(input = {}) {
-    return composeSouthReceiptState(input);
+  function openProofReturn(detail = {}) {
+    return setProofReturnOpen(true, detail);
   }
 
-  function compose(input = {}) {
-    return composeVisibleState(input);
+  function closeProofReturn(detail = {}) {
+    return setProofReturnOpen(false, detail);
   }
 
-  function composeState(input = {}) {
-    return composeVisibleState(input);
-  }
-
-  function composeCheckpointState(input = {}) {
-    return composeVisibleState(input);
-  }
-
-  function composePostgameState(input = {}) {
-    return composeVisibleState(input);
-  }
-
-  function composeTransmissionState(input = {}) {
-    return composeVisibleState(input);
-  }
-
-  function line(key, value) {
-    return `${key}=${value === undefined || value === null ? "" : String(value)}`;
-  }
-
-  function composeReceiptText(receiptInput = {}) {
-    const r = receiptInput && receiptInput.southPrimaryGateActive
-      ? composeSouthReceiptState(receiptInput)
-      : composeSouthReceiptState(receiptInput);
-
-    return [
-      "LAB_RUNTIME_TABLE_SOUTH_PRIMARY_OUTPUT_PROOF_CYCLE_GATE_RECEIPT",
-      "",
-      line("contract", r.contract),
-      line("receipt", r.receipt),
-      line("previousContract", r.previousContract),
-      line("baselineContract", r.baselineContract),
-      line("version", r.version),
-      line("file", r.file),
-      line("role", r.role),
-      "",
-      line("southPrimaryGateActive", r.southPrimaryGateActive),
-      line("outputProofComposerActive", r.outputProofComposerActive),
-      line("cycleAwareRoutingActive", r.cycleAwareRoutingActive),
-      line("cycleNumber", r.cycleNumber),
-      line("cycleRoute", r.cycleRoute),
-      line("receivedFrom", r.receivedFrom),
-      line("returnTo", r.returnTo),
-      line("handoffTo", r.handoffTo),
-      "",
-      line("canvasReleaseAuthorized", r.canvasReleaseAuthorized),
-      line("westAuditRequired", r.westAuditRequired),
-      line("northReturnRequired", r.northReturnRequired),
-      line("proofBodyComposed", r.proofBodyComposed),
-      line("outputSpreadComposed", r.outputSpreadComposed),
-      line("visibleStateComposed", r.visibleStateComposed),
-      line("receiptComposed", r.receiptComposed),
-      "",
-      line("f21EligibleForNorth", r.f21EligibleForNorth),
-      line("f21SubmittedToNorth", r.f21SubmittedToNorth),
-      line("completionLatched", r.completionLatched),
-      line("degradedCompletionLatched", r.degradedCompletionLatched),
-      "",
-      line("firstFailedCoordinate", r.firstFailedCoordinate),
-      line("recommendedNextFile", r.recommendedNextFile),
-      line("recommendedNextRenewalTarget", r.recommendedNextRenewalTarget),
-      "",
-      line("generatedImage", false),
-      line("graphicBox", false),
-      line("webGL", false),
-      line("visualPassClaimed", false),
-      line("updatedAt", nowIso())
-    ].join("\n");
-  }
-
-  function getSouthCycleReceipt(input = {}) {
-    const normalized = normalizeSouthInput(input);
-    const cycle = resolveSouthCycle(normalized);
+  function composeF8ProofPacket(extra = {}) {
+    const metric = computeFibonacciSynchronizationMetric();
+    const readyForNorth = Boolean(state.northF21EligibilityPrepared || state.proofGraphStatus === STATUS.DEGRADED);
 
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      file: FILE,
-      southCycleReceipt: "LAB_RUNTIME_TABLE_SOUTH_CYCLE_RECEIPT_v1",
-      cycleResolved: true,
-      cycleNumber: cycle.cycleNumber,
-      cycleRoute: cycle.cycleRoute,
-      receivedFrom: cycle.receivedFrom,
-      returnTo: cycle.returnTo,
-      handoffTo: cycle.handoffTo,
-      northReturnRequired: cycle.northReturnRequired,
-      westAuditRequired: cycle.westAuditRequired,
-      canvasReleaseAuthorized: cycle.canvasReleaseAuthorized,
-      fallbackCycleUsed: cycle.fallbackCycleUsed,
-      unknownCycleDefaultsToNorthReturn: cycle.unknownCycleDefaultsToNorthReturn,
+      packetType: "SOUTH_F8_PROOF_RETURN_PACKET",
+      sourceFile: FILE,
+      targetFile: NORTH_FILE,
+      destinationFile: NORTH_FILE,
+
+      activeFibonacci: FIBONACCI.SOUTH_PROOF,
+      activeFibonacciRank: 8,
+      activeNewsGate: NEWS_GATES.SOUTH,
+      sourceFibonacciGate: FIBONACCI.WEST_PRESSURE,
+      futureFibonacciGate: FIBONACCI.NORTH_LATCH,
+      futureFibonacciRank: 21,
+      secondaryFutureFibonacciGate: FIBONACCI.CANVAS_EVIDENCE,
+      secondaryFutureFibonacciRank: 13,
+
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      northEligibilityCoordinate: clonePlain(NORTH_ELIGIBILITY_COORDINATE),
+      canvasEvidenceCoordinate: clonePlain(CANVAS_EVIDENCE_COORDINATE),
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+
+      southRuntimeTableActive: true,
+      southRuntimeTableF8Only: true,
+      southSupremeJudgeActive: true,
+      southProofReturnActive: true,
+      southOutputExhaustActive: true,
+      proofReturnOpen: state.proofReturnOpen,
+      proofReturnStatus: state.proofReturnStatus,
+
+      westRuntimeObserved: state.westRuntimeObserved,
+      westRuntimeAccepted: state.westRuntimeAccepted,
+      westRuntimeContract: state.westRuntimeContract,
+      westRuntimeReceipt: state.westRuntimeReceipt,
+      westF5PressureObserved: state.westF5PressureObserved,
+      westF5PressureAccepted: state.westF5PressureAccepted,
+
+      proofGraphBuilt: state.proofGraphBuilt,
+      proofGraphReady: state.proofGraphReady,
+      proofGraphStatus: state.proofGraphStatus,
+      proofRecordCount: state.proofRecordCount,
+      returnedProofCount: state.returnedProofCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticProofCount: state.diagnosticProofCount,
+      supportEngineProofCount: state.supportEngineProofCount,
+      routeProofCount: state.routeProofCount,
+      canvasProofCount: state.canvasProofCount,
+      constraintProofCount: state.constraintProofCount,
+
+      proofQualityScore: state.proofQualityScore,
+      proofCoverageScore: state.proofCoverageScore,
+      proofTraceScore: state.proofTraceScore,
+      proofCoherenceScore: state.proofCoherenceScore,
+      outputReturnScore: state.outputReturnScore,
+      evidenceScore: state.evidenceScore,
+      boundaryScore: state.boundaryScore,
+
+      proofRecords: clonePlain(state.proofRecords),
+      proofQueue: clonePlain(state.proofQueue),
+      rejectedRecords: clonePlain(state.rejectedRecords),
+      proofGraph: clonePlain(state.proofGraph),
+
+      northF21EligibilityPrepared: readyForNorth,
+      canvasF13EvidencePrepared: state.canvasF13EvidencePrepared,
+      f8ProofPacketReady: readyForNorth,
+      f8ActivationStatus: state.f8ActivationStatus,
+      f8ActivationReason: state.f8ActivationReason,
+
+      f21Eligible: readyForNorth,
+      f21EligibleForNorth: readyForNorth,
+      southProofAccepted: readyForNorth,
+      canvasF13EvidenceReady: state.canvasF13EvidencePrepared,
+
+      newsProtocolAligned: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: metric.score,
+      oneActiveGearAtATime: true,
+
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
+
+      detail: clonePlain(extra),
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
       visualPassClaimed: false,
-      updatedAt: nowIso()
+      composedAt: nowIso()
     };
   }
 
-  function getSouthPrimaryGateReceipt() {
+  function composeCanvasF13EvidencePacket(extra = {}) {
+    const proofPacket = composeF8ProofPacket(extra);
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      packetType: "SOUTH_F8_TO_CANVAS_F13_EVIDENCE_PACKET",
+      sourceFile: FILE,
+      targetFile: CANVAS_FILE,
+      destinationFile: CANVAS_FILE,
+
+      activeFibonacci: FIBONACCI.CANVAS_EVIDENCE,
+      activeFibonacciRank: 13,
+      activeNewsGate: NEWS_GATES.CANVAS,
+      sourceFibonacciGate: FIBONACCI.SOUTH_PROOF,
+      futureFibonacciGate: FIBONACCI.NORTH_LATCH,
+
+      mechanicalCoordinate: clonePlain(CANVAS_EVIDENCE_COORDINATE),
+      sourceMechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+
+      southProofPacket: proofPacket,
+      canvasF13EvidenceReady: state.canvasF13EvidencePrepared,
+      canvasF13EvidenceComplete: state.canvasF13EvidencePrepared,
+      canvasF13EvidenceDegraded: state.proofGraphStatus === STATUS.DEGRADED,
+
+      ownsCanvasRelease: false,
+      requestsCanvasEvidenceIntakeOnly: true,
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
+      composedAt: nowIso()
+    };
+  }
+
+  function composeSouthReceipt() {
     return getReceipt();
   }
 
-  function getReceipt() {
+  function readNorthRuntimeAuthority() {
+    return firstGlobal([
+      "LAB_RUNTIME_TABLE",
+      "LAB_RUNTIME_TABLE_NORTH",
+      "RUNTIME_TABLE",
+      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
+      "LAB_CENTRAL_TRAIN_STATION",
+      "DEXTER_LAB.runtimeTable",
+      "DEXTER_LAB.cardinalRuntimeTableNorth",
+      "DEXTER_LAB.centralTrainStation",
+      "HEARTH.northCommandRuntimeTable",
+      "HEARTH.runtimeTable",
+      "HEARTH.centralTrainStation"
+    ]);
+  }
+
+  function submitF8ProofToNorth(extra = {}) {
+    const north = readNorthRuntimeAuthority();
+
+    if (!north) {
+      return {
+        submitted: false,
+        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE",
+        recommendedNextFile: NORTH_FILE,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      };
+    }
+
+    const packet = composeF8ProofPacket(extra);
+
+    try {
+      if (isFunction(north.acceptSouthPrimary)) {
+        return {
+          submitted: true,
+          method: "acceptSouthPrimary",
+          response: clonePlain(north.acceptSouthPrimary(packet))
+        };
+      }
+
+      if (isFunction(north.acceptSouthPrimaryGate)) {
+        return {
+          submitted: true,
+          method: "acceptSouthPrimaryGate",
+          response: clonePlain(north.acceptSouthPrimaryGate(packet))
+        };
+      }
+
+      if (isFunction(north.acceptSouthSpread)) {
+        return {
+          submitted: true,
+          method: "acceptSouthSpread",
+          response: clonePlain(north.acceptSouthSpread(packet))
+        };
+      }
+
+      if (isFunction(north.receiveCycleOneSouthReturn)) {
+        return {
+          submitted: true,
+          method: "receiveCycleOneSouthReturn",
+          response: clonePlain(north.receiveCycleOneSouthReturn(packet))
+        };
+      }
+
+      if (isFunction(north.acceptF21Eligibility)) {
+        return {
+          submitted: true,
+          method: "acceptF21Eligibility",
+          response: clonePlain(north.acceptF21Eligibility(packet))
+        };
+      }
+
+      if (isFunction(north.submitF21Eligibility)) {
+        return {
+          submitted: true,
+          method: "submitF21Eligibility",
+          response: clonePlain(north.submitF21Eligibility(packet))
+        };
+      }
+
+      if (isFunction(north.submitEvent)) {
+        return {
+          submitted: true,
+          method: "submitEvent",
+          response: clonePlain(north.submitEvent(packet))
+        };
+      }
+    } catch (error) {
+      recordError("SOUTH_F8_PROOF_SUBMISSION_TO_NORTH_FAILED", error);
+      return {
+        submitted: false,
+        reason: "SOUTH_F8_PROOF_SUBMISSION_TO_NORTH_FAILED"
+      };
+    }
+
+    return {
+      submitted: false,
+      reason: "NORTH_RUNTIME_TABLE_SOUTH_PROOF_METHOD_UNAVAILABLE",
+      recommendedNextFile: NORTH_FILE
+    };
+  }
+
+  function readCanvasAuthority() {
+    return firstGlobal([
+      "HEARTH.canvas",
+      "HEARTH.canvasAuthority",
+      "HEARTH_CANVAS",
+      "HEARTH_CANVAS_AUTHORITY",
+      "DEXTER_LAB.canvasAuthority"
+    ]);
+  }
+
+  function submitCanvasF13Evidence(extra = {}) {
+    const canvas = readCanvasAuthority();
+
+    if (!canvas) {
+      return {
+        submitted: false,
+        reason: "CANVAS_AUTHORITY_UNAVAILABLE",
+        recommendedNextFile: CANVAS_FILE,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      };
+    }
+
+    const packet = composeCanvasF13EvidencePacket(extra);
+
+    try {
+      if (isFunction(canvas.acceptSouthF8Evidence)) {
+        return {
+          submitted: true,
+          method: "acceptSouthF8Evidence",
+          response: clonePlain(canvas.acceptSouthF8Evidence(packet))
+        };
+      }
+
+      if (isFunction(canvas.acceptF13Evidence)) {
+        return {
+          submitted: true,
+          method: "acceptF13Evidence",
+          response: clonePlain(canvas.acceptF13Evidence(packet))
+        };
+      }
+
+      if (isFunction(canvas.receiveEvidence)) {
+        return {
+          submitted: true,
+          method: "receiveEvidence",
+          response: clonePlain(canvas.receiveEvidence(packet))
+        };
+      }
+    } catch (error) {
+      recordError("SOUTH_F8_CANVAS_F13_EVIDENCE_SUBMISSION_FAILED", error);
+      return {
+        submitted: false,
+        reason: "SOUTH_F8_CANVAS_F13_EVIDENCE_SUBMISSION_FAILED"
+      };
+    }
+
+    return {
+      submitted: false,
+      reason: "CANVAS_F13_EVIDENCE_METHOD_UNAVAILABLE",
+      recommendedNextFile: CANVAS_FILE
+    };
+  }
+
+  function validateNorthReceipt(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+
+    const northRecognized = Boolean(
+      safeBool(input.countyRuntimeEngineCenter, false) ||
+      safeBool(input.northTimingGovernor, false) ||
+      safeBool(input.f21Latched, false) ||
+      safeBool(input.f21EligibilityAccepted, false) ||
+      safeString(input.contract || "").includes("RUNTIME_TABLE") ||
+      safeString(input.receipt || "").includes("RUNTIME_TABLE")
+    );
+
+    const ok = Boolean(noForbiddenClaim && northRecognized);
+
+    let reason = "NORTH_F21_RECEIPT_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_NORTH_RECEIPT";
+    else if (!northRecognized) reason = "UNRECOGNIZED_NORTH_F21_RECEIPT";
+
+    return {
+      ok,
+      reason,
+      noForbiddenClaim,
+      northRecognized,
+      input: clonePlain(input)
+    };
+  }
+
+  function acceptNorthReceipt(packet = {}) {
+    const validation = validateNorthReceipt(packet);
+
+    state.northReceiptAccepted = validation.ok;
+    state.northReceiptPacket = clonePlain(packet);
+
+    if (validation.input.contract) state.northRuntimeContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.northRuntimeReceipt = safeString(validation.input.receipt);
+
+    state.northF21EligibilityAccepted =
+      safeBool(validation.input.f21EligibilityAccepted, state.northF21EligibilityAccepted) ||
+      safeBool(validation.input.f21Eligible, state.northF21EligibilityAccepted);
+
+    state.northF21Latched = safeBool(validation.input.f21Latched, state.northF21Latched);
+
+    recordLocal("NORTH_F21_RECEIPT_RECEIVED_BY_SOUTH_F8", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      contract: state.northRuntimeContract,
+      northF21EligibilityAccepted: state.northF21EligibilityAccepted,
+      northF21Latched: state.northF21Latched
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: validation.ok,
+      southF8ReceivedNorth: true,
+      reason: validation.reason,
+      recommendedNextFile: validation.ok ? CANVAS_FILE : NORTH_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function validateCanvasReceipt(packet = {}) {
+    const input = isObject(packet) ? packet : {};
+    const noForbiddenClaim = !detectForbiddenClaim(input);
+
+    const canvasRecognized = Boolean(
+      safeBool(input.canvasF13EvidenceAccepted, false) ||
+      safeBool(input.canvasF13EvidenceComplete, false) ||
+      safeBool(input.canvasAuthorityActive, false) ||
+      safeString(input.activeFibonacci || "") === FIBONACCI.CANVAS_EVIDENCE ||
+      safeString(input.contract || "").includes("CANVAS") ||
+      safeString(input.receipt || "").includes("CANVAS")
+    );
+
+    const ok = Boolean(noForbiddenClaim && canvasRecognized);
+
+    let reason = "CANVAS_F13_RECEIPT_ACCEPTED";
+    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_CANVAS_RECEIPT";
+    else if (!canvasRecognized) reason = "UNRECOGNIZED_CANVAS_F13_RECEIPT";
+
+    return {
+      ok,
+      reason,
+      noForbiddenClaim,
+      canvasRecognized,
+      input: clonePlain(input)
+    };
+  }
+
+  function acceptCanvasReceipt(packet = {}) {
+    const validation = validateCanvasReceipt(packet);
+
+    state.canvasReceiptAccepted = validation.ok;
+    state.canvasReceiptPacket = clonePlain(packet);
+
+    if (validation.input.contract) state.canvasContract = safeString(validation.input.contract);
+    if (validation.input.receipt) state.canvasReceipt = safeString(validation.input.receipt);
+
+    recordLocal("CANVAS_F13_RECEIPT_RECEIVED_BY_SOUTH_F8", {
+      accepted: validation.ok,
+      reason: validation.reason,
+      contract: state.canvasContract
+    });
+
+    publishGlobals();
+
+    return {
+      accepted: validation.ok,
+      southF8ReceivedCanvas: true,
+      reason: validation.reason,
+      recommendedNextFile: validation.ok ? NORTH_FILE : CANVAS_FILE,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function bindStateToMechanicalCoordinate(input = {}) {
+    const stateIndex = clamp(
+      input.stateIndex !== undefined ? input.stateIndex : stableStateIndex(input),
+      0,
+      255
+    );
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      bindingType: "SOUTH_F8_MECHANICAL_COORDINATE_PLUS_STATE_256",
+      coordinate: clonePlain(MECHANICAL_COORDINATE),
+      state256: {
+        stateId: `ST_${stateIndex}`,
+        stateIndex,
+        binary: stateIndex.toString(2).padStart(8, "0"),
+        field: "STATE_MOTION_CONSTRAINT_POSSIBILITY",
+        replacesMechanicalCoordinate: false
+      },
+      geometry: {
+        filterId: `FL_${(stateIndex % 61) + 1}`,
+        pressureShellId: `PS_${(stateIndex % 192) + 1}`,
+        basinAnchorId: `BA_${(stateIndex % 9) + 1}`,
+        geometryEnvelope: "GEOMETRY_TOTAL_451"
+      },
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_${stateIndex}`,
+      bound: true,
+      boundAt: nowIso()
+    };
+  }
+
+  function evaluateCoordinateState(input = {}) {
+    const binding = bindStateToMechanicalCoordinate(input);
+    const proofScore = proofScoreForClassification(classifyProofPacket(input), input);
+    const allowed = Boolean(
+      state.proofReturnOpen &&
+      state.southProofReturnActive &&
+      proofScore >= 55 &&
+      !detectForbiddenClaim(input)
+    );
+
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      coordinateId: MECHANICAL_COORDINATE.coordinateId,
+      stateId: binding.state256.stateId,
+      coordinateAllowed: true,
+      stateAdmissible: binding.state256.stateIndex >= 0 && binding.state256.stateIndex <= 255,
+      filterPassageAllowed: allowed,
+      pressureWithinShell: true,
+      proofScore,
+      basinAnchored: true,
+      envelopeContained: true,
+      runtimeExpressionAllowed: allowed,
+      exhaustState: allowed ? "PROOF_RETURNED" : "HELD_OR_REJECTED",
+      evaluatedAt: nowIso()
+    };
+  }
+
+  function getMechanicalCoordinatePacket() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      northEligibilityCoordinate: clonePlain(NORTH_ELIGIBILITY_COORDINATE),
+      canvasEvidenceCoordinate: clonePlain(CANVAS_EVIDENCE_COORDINATE),
+      runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_0`,
+      enginePartDefinesFunction: true,
+      fibonacciDefinesSequence: true,
+      categoryDefinesScale: true,
+      numbersSupportFunction: true,
+      aliasesLocateOnly: true,
+      namesDescribeOnly: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false
+    };
+  }
+
+  function getProofGraph() {
+    return clonePlain(state.proofGraph);
+  }
+
+  function getProofGraphSummary() {
+    return {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      proofGraphBuilt: state.proofGraphBuilt,
+      proofGraphReady: state.proofGraphReady,
+      proofGraphStatus: state.proofGraphStatus,
+      proofRecordCount: state.proofRecordCount,
+      returnedProofCount: state.returnedProofCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticProofCount: state.diagnosticProofCount,
+      supportEngineProofCount: state.supportEngineProofCount,
+      routeProofCount: state.routeProofCount,
+      canvasProofCount: state.canvasProofCount,
+      constraintProofCount: state.constraintProofCount,
+      proofQualityScore: state.proofQualityScore,
+      proofCoverageScore: state.proofCoverageScore,
+      proofTraceScore: state.proofTraceScore,
+      proofCoherenceScore: state.proofCoherenceScore,
+      outputReturnScore: state.outputReturnScore,
+      evidenceScore: state.evidenceScore,
+      boundaryScore: state.boundaryScore,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getProofRecords(proofClass = "") {
+    const records = state.proofRecords || [];
+    if (!proofClass) return clonePlain(records);
+    return clonePlain(records.filter((record) => record.proofClass === proofClass));
+  }
+
+  function getRejectedRecords() {
+    return clonePlain(state.rejectedRecords);
+  }
+
+  function findProofRecord(id) {
+    const key = makeId(id, "");
+    return clonePlain((state.proofGraph.recordsById || {})[key] || null);
+  }
+
+  function getReceiptLight() {
+    computeFibonacciSynchronizationMetric();
+
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
       baselineContract: BASELINE_CONTRACT,
       version: VERSION,
-      destinationFile: FILE,
       file: FILE,
-      status: "active",
-      role: "south-primary-output-proof-cycle-gate",
 
-      southAuthority: true,
-      southLoaded: true,
-      southPrimaryGateActive: true,
-      outputProofComposerActive: true,
-      cycleAwareRoutingActive: true,
-      visibleStateComposerPreserved: true,
-      southCycleOneReturnsToNorth: true,
-      southCycleTwoHandsToWest: true,
-      southCanvasReleaseRequiresWestAudit: true,
-      southCanvasReleaseAuthorized: false,
+      southRuntimeTableActive: true,
+      southRuntimeTableF8Only: true,
+      southSupremeJudgeActive: true,
+      southProofReturnActive: true,
+      southOutputExhaustActive: true,
+      proofReturnOpen: state.proofReturnOpen,
+      proofReturnStatus: state.proofReturnStatus,
 
-      normalizeSouthInputExported: true,
-      resolveSouthCycleExported: true,
-      composeProofBodyExported: true,
-      composeNorthReturnPacketExported: true,
-      composeWestHandoffPacketExported: true,
-      composeSouthPrimaryPacketExported: true,
-      composeSouthReceiptStateExported: true,
-      getSouthCycleReceiptExported: true,
-      getSouthPrimaryGateReceiptExported: true,
+      engineMechanicsPrimary: true,
+      mathPrimary: true,
+      architectureLabelsSecondary: true,
+      mechanicalCoordinateId: MECHANICAL_COORDINATE.coordinateId,
+      enginePart: MECHANICAL_COORDINATE.enginePart,
+      systemCategory: MECHANICAL_COORDINATE.systemCategory,
+      fibonacciStation: MECHANICAL_COORDINATE.fibonacciStage,
+      mechanicalRole: MECHANICAL_COORDINATE.mechanicalRole,
+      judicialRole: MECHANICAL_COORDINATE.judicialRole,
+      authorityRole: MECHANICAL_COORDINATE.authorityRole,
 
-      composeVisibleStateExported: true,
-      composeFallbackVisibleStateExported: true,
-      composeReceiptStateExported: true,
-      composeReceiptTextExported: true,
-      normalizeVisibleInputExported: true,
-      compatibilityAliasesExported: true,
-      nonThrowComposer: true,
+      westRuntimeObserved: state.westRuntimeObserved,
+      westRuntimeAccepted: state.westRuntimeAccepted,
+      westRuntimeContract: state.westRuntimeContract,
+      westRuntimeReceipt: state.westRuntimeReceipt,
+      westF5PressureObserved: state.westF5PressureObserved,
+      westF5PressureAccepted: state.westF5PressureAccepted,
 
-      newsAlignment: {
-        southNewsObserved: true,
-        southNewsComposed: true,
-        southDoesNotFinalizeNews: true
-      },
+      proofGraphBuilt: state.proofGraphBuilt,
+      proofGraphReady: state.proofGraphReady,
+      proofGraphStatus: state.proofGraphStatus,
+      proofRecordCount: state.proofRecordCount,
+      returnedProofCount: state.returnedProofCount,
+      rejectedRecordCount: state.rejectedRecordCount,
+      diagnosticProofCount: state.diagnosticProofCount,
+      supportEngineProofCount: state.supportEngineProofCount,
+      routeProofCount: state.routeProofCount,
+      canvasProofCount: state.canvasProofCount,
+      constraintProofCount: state.constraintProofCount,
 
-      fibonacciSynchronization: {
-        activeFibonacciPreserved: true,
-        activeFibonacciRankPreserved: true,
-        f8SelfDutyReported: true,
-        f13ProofBodyReported: true,
-        f21EligibilityMayBeSubmittedBySouth: true,
-        northLatchesF21: true
-      },
+      proofQualityMetricActive: true,
+      proofQualityScore: state.proofQualityScore,
+      proofCoverageScore: state.proofCoverageScore,
+      proofTraceScore: state.proofTraceScore,
+      proofCoherenceScore: state.proofCoherenceScore,
+      outputReturnScore: state.outputReturnScore,
+      evidenceScore: state.evidenceScore,
+      boundaryScore: state.boundaryScore,
 
-      exports: [
-        "normalizeSouthInput",
-        "resolveSouthCycle",
-        "composeProofBody",
-        "composeNorthReturnPacket",
-        "composeWestHandoffPacket",
-        "composeSouthPrimaryPacket",
-        "composeSouthReceiptState",
-        "getSouthCycleReceipt",
-        "getSouthPrimaryGateReceipt",
-        "composeVisibleState",
-        "composeFallbackVisibleState",
-        "composeReceiptState",
-        "composeReceiptText",
-        "normalizeVisibleInput",
-        "compose",
-        "composeState",
-        "composeCheckpointState",
-        "composePostgameState",
-        "composeTransmissionState",
-        "getReceipt"
-      ],
+      northF21EligibilityPrepared: state.northF21EligibilityPrepared,
+      canvasF13EvidencePrepared: state.canvasF13EvidencePrepared,
+      f8ProofPacketReady: state.f8ProofPacketReady,
+      f8ActivationStatus: state.f8ActivationStatus,
+      f8ActivationReason: state.f8ActivationReason,
 
-      owns: [
-        "south-output-composition",
-        "south-proof-body-composition",
-        "south-visible-state-composition",
-        "south-receipt-state-composition",
-        "cycle-1-north-return-packet",
-        "cycle-2-west-handoff-packet"
-      ],
+      northReceiptAccepted: state.northReceiptAccepted,
+      northRuntimeContract: state.northRuntimeContract,
+      northRuntimeReceipt: state.northRuntimeReceipt,
+      northF21EligibilityAccepted: state.northF21EligibilityAccepted,
+      northF21Latched: state.northF21Latched,
 
-      doesNotOwn: [
-        "north-f21-latch",
-        "west-admissibility-audit",
-        "canvas-drawing",
-        "canvas-direct-release-without-west",
-        "source-stack-truth",
-        "child-channel-truth",
-        "final-visual-pass-claim"
-      ],
+      canvasReceiptAccepted: state.canvasReceiptAccepted,
+      canvasContract: state.canvasContract,
+      canvasReceipt: state.canvasReceipt,
 
-      lastCycleResolution: clonePlain(state.lastCycleResolution),
-      lastProofBody: clonePlain(state.lastProofBody),
-      lastPrimaryPacket: clonePlain(state.lastPrimaryPacket),
-      lastNorthReturnPacket: clonePlain(state.lastNorthReturnPacket),
-      lastWestHandoffPacket: clonePlain(state.lastWestHandoffPacket),
-      lastVisibleState: clonePlain(state.lastVisibleState),
-      lastReceiptState: clonePlain(state.lastReceiptState),
+      newsProtocolAligned: true,
+      fibonacciSynchronizationMetricActive: true,
+      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      activeFibonacci: FIBONACCI.SOUTH_PROOF,
+      activeFibonacciRank: 8,
+      activeNewsGate: NEWS_GATES.SOUTH,
+      sourceFibonacciGate: FIBONACCI.WEST_PRESSURE,
+      futureFibonacciGate: FIBONACCI.NORTH_LATCH,
+      secondaryFutureFibonacciGate: FIBONACCI.CANVAS_EVIDENCE,
+      oneActiveGearAtATime: true,
 
-      composeCount: state.composeCount,
-      fallbackCount: state.fallbackCount,
-      northReturnCount: state.northReturnCount,
-      westHandoffCount: state.westHandoffCount,
+      firstFailedCoordinate: state.firstFailedCoordinate,
+      recommendedNextFile: state.recommendedNextFile,
+      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
 
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
+
       createdAt: state.createdAt,
+      updatedAt: state.updatedAt || nowIso()
+    };
+  }
+
+  function getReceipt() {
+    const light = getReceiptLight();
+
+    return {
+      ...light,
+
+      southF8Receipt: true,
+      southSupremeJudgeReceipt: true,
+      southProofReturnReceipt: true,
+
+      southRuntimeOwns: [
+        "F8 South proof return",
+        "proof packet evaluation",
+        "output/exhaust receipt preparation",
+        "North F21 eligibility packet preparation",
+        "Canvas F13 evidence packet preparation",
+        "256 state proof binding"
+      ],
+      southRuntimeDoesNotOwn: [
+        "North F21 latch",
+        "East F3 intake admission",
+        "West F5 pressure/admissibility",
+        "Canvas F13 evidence release",
+        "F34/F55/F89/F144 support-engine internals",
+        "F233 downstream return",
+        "route orchestration",
+        "planet truth",
+        "material truth",
+        "elevation truth",
+        "hydrology truth",
+        "actual rendering",
+        "generated image",
+        "GraphicBox",
+        "WebGL",
+        "public superiority claim",
+        "final visual pass claim"
+      ],
+
+      gates: {
+        north: NORTH_FILE,
+        east: EAST_FILE,
+        west: WEST_FILE,
+        south: FILE,
+        canvas: CANVAS_FILE,
+        productEngine: F34_PRODUCT_ENGINE_FILE,
+        ue5Expression: F55_EXPRESSION_FILE,
+        registry: F89_REGISTRY_FILE,
+        market: F144_MARKET_FILE
+      },
+
+      proofClasses: clonePlain(PROOF_CLASS),
+      fibonacciMap: clonePlain(FIBONACCI),
+      newsGates: clonePlain(NEWS_GATES),
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      northEligibilityCoordinate: clonePlain(NORTH_ELIGIBILITY_COORDINATE),
+      canvasEvidenceCoordinate: clonePlain(CANVAS_EVIDENCE_COORDINATE),
+      mechanicalCoordinatePacket: getMechanicalCoordinatePacket(),
+
+      proofGraph: getProofGraph(),
+      proofGraphSummary: getProofGraphSummary(),
+      proofRecords: getProofRecords(),
+      rejectedRecords: getRejectedRecords(),
+
+      proofQuality: computeProofQualityMetric(),
+      newsAlignment: evaluateNewsAlignment(),
+      f8ProofPacket: composeF8ProofPacket(),
+      canvasF13EvidencePacket: composeCanvasF13EvidencePacket(),
+      northReceiptPacket: clonePlain(state.northReceiptPacket),
+      canvasReceiptPacket: clonePlain(state.canvasReceiptPacket),
+
+      localEvents: clonePlain(state.localEvents),
+      errors: clonePlain(state.errors),
+
+      publicSuperiorityClaim: false,
+      publicComparisonClaimAllowed: false,
+      benchmarkRequiredBeforePublicClaim: true,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+      visualPassClaimed: false,
       updatedAt: nowIso()
     };
   }
 
-  function publishDataset() {
-    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+  function getReceiptText() {
+    const r = getReceipt();
 
-    const dataset = doc.documentElement.dataset;
+    const records = (r.proofRecords || []).map((record) => (
+      `- ${record.id} :: class=${record.proofClass} :: state=${record.stateId} :: score=${record.proofScore} :: accepted=${record.accepted} :: evidenceReady=${record.evidenceReady} :: outputReturnReady=${record.outputReturnReady} :: reason=${record.reason}`
+    )).join("\n") || "- none";
 
-    dataset.labRuntimeTableSouthLoaded = "true";
-    dataset.labRuntimeTableSouthContract = CONTRACT;
-    dataset.labRuntimeTableSouthReceipt = RECEIPT;
-    dataset.labRuntimeTableSouthAuthority = "true";
+    const rejected = (r.rejectedRecords || []).map((record) => (
+      `- ${record.id} :: class=${record.proofClass} :: state=${record.stateId} :: score=${record.proofScore} :: reason=${record.reason}`
+    )).join("\n") || "- none";
 
-    dataset.southPrimaryGateActive = "true";
-    dataset.southOutputProofComposerActive = "true";
-    dataset.southCycleAwareRoutingActive = "true";
-    dataset.southCycleOneReturnsToNorth = "true";
-    dataset.southCycleTwoHandsToWest = "true";
-    dataset.southCanvasReleaseRequiresWestAudit = "true";
-    dataset.southCanvasReleaseAuthorized = "false";
+    const events = (r.localEvents || []).slice(-48).map((item) => (
+      `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`
+    )).join("\n") || "- none";
 
-    dataset.southVisibleStateComposerLoaded = "true";
-    dataset.southComposeVisibleStateExported = "true";
-    dataset.southComposeReceiptTextExported = "true";
-    dataset.southNonThrowComposer = "true";
+    const errors = (r.errors || []).map((item) => (
+      `- ${item.at} :: ${item.code} :: ${item.message}`
+    )).join("\n") || "- none";
 
-    dataset.hearthRuntimeTableSouthLoaded = "true";
-    dataset.hearthRuntimeTableSouthContract = CONTRACT;
-    dataset.hearthRuntimeTableSouthReceipt = RECEIPT;
+    return [
+      "LAB_RUNTIME_TABLE_SOUTH_F8_ENGINE_MECHANICS_PROOF_RETURN_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `baselineContract=${r.baselineContract}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      "",
+      `southRuntimeTableActive=${r.southRuntimeTableActive}`,
+      `southRuntimeTableF8Only=${r.southRuntimeTableF8Only}`,
+      `southSupremeJudgeActive=${r.southSupremeJudgeActive}`,
+      `southProofReturnActive=${r.southProofReturnActive}`,
+      `southOutputExhaustActive=${r.southOutputExhaustActive}`,
+      `proofReturnOpen=${r.proofReturnOpen}`,
+      `proofReturnStatus=${r.proofReturnStatus}`,
+      "",
+      `engineMechanicsPrimary=${r.engineMechanicsPrimary}`,
+      `mathPrimary=${r.mathPrimary}`,
+      `architectureLabelsSecondary=${r.architectureLabelsSecondary}`,
+      `mechanicalCoordinateId=${r.mechanicalCoordinateId}`,
+      `enginePart=${r.enginePart}`,
+      `systemCategory=${r.systemCategory}`,
+      `fibonacciStation=${r.fibonacciStation}`,
+      `mechanicalRole=${r.mechanicalRole}`,
+      `judicialRole=${r.judicialRole}`,
+      `authorityRole=${r.authorityRole}`,
+      "",
+      `westRuntimeObserved=${r.westRuntimeObserved}`,
+      `westRuntimeAccepted=${r.westRuntimeAccepted}`,
+      `westRuntimeContract=${r.westRuntimeContract}`,
+      `westRuntimeReceipt=${r.westRuntimeReceipt}`,
+      `westF5PressureObserved=${r.westF5PressureObserved}`,
+      `westF5PressureAccepted=${r.westF5PressureAccepted}`,
+      "",
+      `proofGraphBuilt=${r.proofGraphBuilt}`,
+      `proofGraphReady=${r.proofGraphReady}`,
+      `proofGraphStatus=${r.proofGraphStatus}`,
+      `proofRecordCount=${r.proofRecordCount}`,
+      `returnedProofCount=${r.returnedProofCount}`,
+      `rejectedRecordCount=${r.rejectedRecordCount}`,
+      `diagnosticProofCount=${r.diagnosticProofCount}`,
+      `supportEngineProofCount=${r.supportEngineProofCount}`,
+      `routeProofCount=${r.routeProofCount}`,
+      `canvasProofCount=${r.canvasProofCount}`,
+      `constraintProofCount=${r.constraintProofCount}`,
+      "",
+      `proofQualityScore=${r.proofQualityScore}`,
+      `proofCoverageScore=${r.proofCoverageScore}`,
+      `proofTraceScore=${r.proofTraceScore}`,
+      `proofCoherenceScore=${r.proofCoherenceScore}`,
+      `outputReturnScore=${r.outputReturnScore}`,
+      `evidenceScore=${r.evidenceScore}`,
+      `boundaryScore=${r.boundaryScore}`,
+      "",
+      `northF21EligibilityPrepared=${r.northF21EligibilityPrepared}`,
+      `canvasF13EvidencePrepared=${r.canvasF13EvidencePrepared}`,
+      `f8ProofPacketReady=${r.f8ProofPacketReady}`,
+      `f8ActivationStatus=${r.f8ActivationStatus}`,
+      `f8ActivationReason=${r.f8ActivationReason}`,
+      "",
+      `northReceiptAccepted=${r.northReceiptAccepted}`,
+      `northRuntimeContract=${r.northRuntimeContract}`,
+      `northRuntimeReceipt=${r.northRuntimeReceipt}`,
+      `northF21EligibilityAccepted=${r.northF21EligibilityAccepted}`,
+      `northF21Latched=${r.northF21Latched}`,
+      "",
+      `canvasReceiptAccepted=${r.canvasReceiptAccepted}`,
+      `canvasContract=${r.canvasContract}`,
+      `canvasReceipt=${r.canvasReceipt}`,
+      "",
+      `newsProtocolAligned=${r.newsProtocolAligned}`,
+      `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
+      `fibonacciSynchronizationScore=${r.fibonacciSynchronizationScore}`,
+      `activeFibonacci=${r.activeFibonacci}`,
+      `activeFibonacciRank=${r.activeFibonacciRank}`,
+      `activeNewsGate=${r.activeNewsGate}`,
+      `sourceFibonacciGate=${r.sourceFibonacciGate}`,
+      `futureFibonacciGate=${r.futureFibonacciGate}`,
+      `secondaryFutureFibonacciGate=${r.secondaryFutureFibonacciGate}`,
+      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
+      "",
+      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
+      `recommendedNextFile=${r.recommendedNextFile}`,
+      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
+      "",
+      "PROOF_RECORDS",
+      records,
+      "",
+      "REJECTED_RECORDS",
+      rejected,
+      "",
+      "LOCAL_EVENTS",
+      events,
+      "",
+      "ERRORS",
+      errors,
+      "",
+      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `publicComparisonClaimAllowed=${r.publicComparisonClaimAllowed}`,
+      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
+  }
 
-    dataset.generatedImage = "false";
-    dataset.graphicBox = "false";
-    dataset.webgl = "false";
-    dataset.visualPassClaimed = "false";
+  function updateDataset() {
+    setDataset("labRuntimeTableSouthLoaded", "true");
+    setDataset("labRuntimeTableSouthContract", CONTRACT);
+    setDataset("labRuntimeTableSouthReceipt", RECEIPT);
+    setDataset("labRuntimeTableSouthVersion", VERSION);
+    setDataset("labRuntimeTableSouthFile", FILE);
+
+    setDataset("southRuntimeTableActive", "true");
+    setDataset("southRuntimeTableF8Only", "true");
+    setDataset("southSupremeJudgeActive", "true");
+    setDataset("southProofReturnActive", "true");
+    setDataset("southOutputExhaustActive", "true");
+    setDataset("southProofReturnOpen", state.proofReturnOpen);
+    setDataset("southProofReturnStatus", state.proofReturnStatus);
+
+    setDataset("southEngineMechanicsPrimary", "true");
+    setDataset("southMathPrimary", "true");
+    setDataset("southArchitectureLabelsSecondary", "true");
+    setDataset("southMechanicalCoordinateId", MECHANICAL_COORDINATE.coordinateId);
+    setDataset("southEnginePart", MECHANICAL_COORDINATE.enginePart);
+    setDataset("southSystemCategory", MECHANICAL_COORDINATE.systemCategory);
+    setDataset("southFibonacciStation", MECHANICAL_COORDINATE.fibonacciStage);
+    setDataset("southMechanicalRole", MECHANICAL_COORDINATE.mechanicalRole);
+    setDataset("southJudicialRole", MECHANICAL_COORDINATE.judicialRole);
+    setDataset("southAuthorityRole", MECHANICAL_COORDINATE.authorityRole);
+
+    setDataset("southWestRuntimeObserved", state.westRuntimeObserved);
+    setDataset("southWestRuntimeAccepted", state.westRuntimeAccepted);
+    setDataset("southWestF5PressureObserved", state.westF5PressureObserved);
+    setDataset("southWestF5PressureAccepted", state.westF5PressureAccepted);
+
+    setDataset("southProofGraphBuilt", state.proofGraphBuilt);
+    setDataset("southProofGraphReady", state.proofGraphReady);
+    setDataset("southProofGraphStatus", state.proofGraphStatus);
+    setDataset("southProofRecordCount", state.proofRecordCount);
+    setDataset("southReturnedProofCount", state.returnedProofCount);
+    setDataset("southRejectedRecordCount", state.rejectedRecordCount);
+    setDataset("southDiagnosticProofCount", state.diagnosticProofCount);
+    setDataset("southSupportEngineProofCount", state.supportEngineProofCount);
+    setDataset("southRouteProofCount", state.routeProofCount);
+    setDataset("southCanvasProofCount", state.canvasProofCount);
+    setDataset("southConstraintProofCount", state.constraintProofCount);
+
+    setDataset("southProofQualityScore", state.proofQualityScore);
+    setDataset("southProofCoverageScore", state.proofCoverageScore);
+    setDataset("southProofTraceScore", state.proofTraceScore);
+    setDataset("southProofCoherenceScore", state.proofCoherenceScore);
+    setDataset("southOutputReturnScore", state.outputReturnScore);
+    setDataset("southEvidenceScore", state.evidenceScore);
+    setDataset("southBoundaryScore", state.boundaryScore);
+
+    setDataset("southNorthF21EligibilityPrepared", state.northF21EligibilityPrepared);
+    setDataset("southCanvasF13EvidencePrepared", state.canvasF13EvidencePrepared);
+    setDataset("southF8ProofPacketReady", state.f8ProofPacketReady);
+    setDataset("southF8ActivationStatus", state.f8ActivationStatus);
+    setDataset("southF8ActivationReason", state.f8ActivationReason);
+
+    setDataset("southNewsProtocolAligned", "true");
+    setDataset("southFibonacciSynchronizationMetricActive", "true");
+    setDataset("southFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
+    setDataset("southActiveFibonacci", FIBONACCI.SOUTH_PROOF);
+    setDataset("southActiveFibonacciRank", "8");
+    setDataset("southActiveNewsGate", NEWS_GATES.SOUTH);
+    setDataset("southSourceFibonacciGate", FIBONACCI.WEST_PRESSURE);
+    setDataset("southFutureFibonacciGate", FIBONACCI.NORTH_LATCH);
+    setDataset("southSecondaryFutureFibonacciGate", FIBONACCI.CANVAS_EVIDENCE);
+
+    setDataset("southFirstFailedCoordinate", state.firstFailedCoordinate);
+    setDataset("southRecommendedNextFile", state.recommendedNextFile);
+    setDataset("southRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
+
+    setDataset("southPublicSuperiorityClaim", "false");
+    setDataset("southPublicComparisonClaimAllowed", "false");
+    setDataset("southBenchmarkRequiredBeforePublicClaim", "true");
+    setDataset("generatedImage", "false");
+    setDataset("graphicBox", "false");
+    setDataset("webgl", "false");
+    setDataset("visualPassClaimed", "false");
+  }
+
+  function publishGlobals() {
+    root.DEXTER_LAB = root.DEXTER_LAB || {};
+    root.HEARTH = root.HEARTH || {};
+
+    root.LAB_RUNTIME_TABLE_SOUTH = api;
+    root.LAB_RUNTIME_TABLE_SOUTH_F8 = api;
+    root.RUNTIME_TABLE_SOUTH = api;
+    root.SOUTH_PROOF_RETURN = api;
+    root.SOUTH_OUTPUT_EXHAUST = api;
+    root.SOUTH_SUPREME_JUDGE = api;
+    root.SOUTH_PROOF_BRANCH = api;
+
+    root.DEXTER_LAB.runtimeTableSouth = api;
+    root.DEXTER_LAB.runtimeTableSouthF8 = api;
+    root.DEXTER_LAB.cardinalRuntimeTableSouth = api;
+    root.DEXTER_LAB.southProofReturn = api;
+    root.DEXTER_LAB.southOutputExhaust = api;
+    root.DEXTER_LAB.southSupremeJudge = api;
+
+    root.HEARTH.runtimeTableSouth = api;
+    root.HEARTH.runtimeTableSouthF8 = api;
+    root.HEARTH.southProofReturn = api;
+    root.HEARTH.southOutputExhaust = api;
+    root.HEARTH.southSupremeJudge = api;
+
+    const light = getReceiptLight();
+
+    root.LAB_RUNTIME_TABLE_SOUTH_RECEIPT = light;
+    root.LAB_RUNTIME_TABLE_SOUTH_F8_RECEIPT = light;
+    root.RUNTIME_TABLE_SOUTH_RECEIPT = light;
+    root.SOUTH_PROOF_RETURN_RECEIPT = light;
+    root.SOUTH_SUPREME_JUDGE_RECEIPT = light;
+
+    root.DEXTER_LAB.runtimeTableSouthReceipt = light;
+    root.HEARTH.runtimeTableSouthReceipt = light;
+
+    root.__LAB_RUNTIME_TABLE_SOUTH_LOADED__ = true;
+    root.__LAB_RUNTIME_TABLE_SOUTH_CONTRACT__ = CONTRACT;
+    root.__LAB_RUNTIME_TABLE_SOUTH_RECEIPT__ = RECEIPT;
+    root.__LAB_RUNTIME_TABLE_SOUTH_F8_ONLY__ = true;
+    root.__LAB_RUNTIME_TABLE_SOUTH_MECHANICAL_COORDINATE__ = MECHANICAL_COORDINATE.coordinateId;
+    root.__LAB_RUNTIME_TABLE_SOUTH_PUBLIC_SUPERIORITY_CLAIM__ = false;
+    root.__LAB_RUNTIME_TABLE_SOUTH_WEBGL__ = false;
+    root.__LAB_RUNTIME_TABLE_SOUTH_VISUAL_PASS_CLAIMED__ = false;
+
+    updateDataset();
   }
 
   const api = {
@@ -1844,58 +2284,117 @@
     baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
-    destinationFile: FILE,
 
-    FILE_GATES,
-    CYCLE_ROUTES,
-    CARDINAL,
-    FIBONACCI_RANK,
-    GEAR_SEQUENCE,
-    gearSequence: GEAR_SEQUENCE,
+    FIBONACCI,
+    NEWS_GATES,
+    STATUS,
+    PROOF_CLASS,
+    MECHANICAL_COORDINATE,
+    NORTH_ELIGIBILITY_COORDINATE,
+    CANVAS_EVIDENCE_COORDINATE,
 
-    normalizeSouthInput,
-    resolveSouthCycle,
-    composeProofBody,
-    composeNorthReturnPacket,
-    composeWestHandoffPacket,
-    composeSouthPrimaryPacket,
-    composeSouthReceiptState,
-    getSouthCycleReceipt,
-    getSouthPrimaryGateReceipt,
+    readWestRuntimeAuthority,
+    readWestF5PressurePacket,
+    hasMeaningfulWestF5Packet,
+    validateWestF5PressurePacket,
+    acceptWestF5PressurePacket,
+    receiveWestF5PressurePacket,
+    submitWestF5PressurePacket,
+    acceptWestPrimary,
+    receiveWestPrimary,
 
-    composeVisibleState,
-    composeFallbackVisibleState,
-    composeReceiptState,
-    composeReceiptText,
-    normalizeVisibleInput,
+    acceptSouthPrimary,
+    receiveSouthPrimary,
+    acceptSouthPrimaryGate,
+    acceptSouthSpread,
+    receiveCycleOneSouthReturn,
 
-    compose,
-    composeState,
-    composeCheckpointState,
-    composePostgameState,
-    composeTransmissionState,
+    classifyProofPacket,
+    proofScoreForClassification,
+    evaluateProofPacket,
+    normalizeProofRecord,
+    acceptProofPacket,
+    receiveProofPacket,
+    submitProofPacket,
 
+    buildProofGraph,
+    rebuildProofGraph,
+    computeProofQualityMetric,
+    computeFibonacciSynchronizationMetric,
+    evaluateNewsAlignment,
+
+    setProofReturnOpen,
+    openProofReturn,
+    closeProofReturn,
+
+    composeF8ProofPacket,
+    composeCanvasF13EvidencePacket,
+    composeSouthReceipt,
+
+    readNorthRuntimeAuthority,
+    submitF8ProofToNorth,
+    readCanvasAuthority,
+    submitCanvasF13Evidence,
+
+    validateNorthReceipt,
+    acceptNorthReceipt,
+    validateCanvasReceipt,
+    acceptCanvasReceipt,
+
+    bindStateToMechanicalCoordinate,
+    evaluateCoordinateState,
+    getMechanicalCoordinatePacket,
+
+    getProofGraph,
+    getProofGraphSummary,
+    getProofRecords,
+    getRejectedRecords,
+    findProofRecord,
+
+    getReceiptLight,
     getReceipt,
+    getReceiptText,
+    publishGlobals,
+    updateDataset,
 
-    southAuthority: true,
-    southLoaded: true,
-    southPrimaryGateActive: true,
-    outputProofComposerActive: true,
-    cycleAwareRoutingActive: true,
-    visibleStateComposer: true,
-    visibleStateComposerPreserved: true,
-    nonThrowComposer: true,
+    southRuntimeTableActive: true,
+    southRuntimeTableF8Only: true,
+    southSupremeJudgeActive: true,
+    southProofReturnActive: true,
+    southOutputExhaustActive: true,
 
-    southCycleOneReturnsToNorth: true,
-    southCycleTwoHandsToWest: true,
-    southCanvasReleaseRequiresWestAudit: true,
-    southCanvasReleaseAuthorized: false,
+    engineMechanicsPrimary: true,
+    mathPrimary: true,
+    architectureLabelsSecondary: true,
 
-    southDoesNotLatchF21: true,
-    southDoesNotAuditWestAdmissibility: true,
-    southDoesNotDrawCanvas: true,
-    southDoesNotClaimFinalVisualPass: true,
+    ownsF8SouthProofReturn: true,
+    ownsProofPacketEvaluation: true,
+    ownsOutputExhaustReceiptPreparation: true,
+    ownsNorthF21EligibilityPacketPreparation: true,
+    ownsCanvasF13EvidencePacketPreparation: true,
+    ownsState256ProofBinding: true,
 
+    ownsNorthF21Latch: false,
+    ownsEastF3IntakeAdmission: false,
+    ownsWestF5PressureAdmissibility: false,
+    ownsCanvasF13EvidenceRelease: false,
+    ownsSupportEngineInternals: false,
+    ownsF233DownstreamReturn: false,
+    ownsRouteOrchestration: false,
+    ownsPlanetTruth: false,
+    ownsMaterialTruth: false,
+    ownsElevationTruth: false,
+    ownsHydrologyTruth: false,
+    ownsActualRendering: false,
+    ownsGeneratedImage: false,
+    ownsGraphicBox: false,
+    ownsWebGL: false,
+    ownsPublicSuperiorityClaim: false,
+    ownsFinalVisualPassClaim: false,
+
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -1906,51 +2405,33 @@
     }
   };
 
-  function publishGlobals() {
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-    root.HEARTH = root.HEARTH || {};
+  state.createdAt = nowIso();
+  state.updatedAt = state.createdAt;
 
-    root.HEARTH_RUNTIME_TABLE_SOUTH = api;
-    root.HEARTH_SOUTH = api;
-    root.HEARTH_VISIBLE_STATE_COMPOSER = api;
-
-    root.LAB_RUNTIME_TABLE_SOUTH = api;
-    root.RUNTIME_TABLE_SOUTH = api;
-    root.DEXTER_LAB_RUNTIME_TABLE_SOUTH = api;
-    root.LAB_CARDINAL_RUNTIME_TABLE_SOUTH = api;
-    root.LAB_VISIBLE_STATE_COMPOSER_SOUTH = api;
-    root.LAB_RUNTIME_TABLE_SOUTH_PRIMARY_GATE = api;
-
-    root.DEXTER_LAB.runtimeTableSouth = api;
-    root.DEXTER_LAB.cardinalRuntimeTableSouth = api;
-    root.DEXTER_LAB.south = api;
-    root.DEXTER_LAB.visibleStateComposer = api;
-    root.DEXTER_LAB.transmissionVisibleStateComposer = api;
-    root.DEXTER_LAB.southPrimaryGate = api;
-
-    root.HEARTH.runtimeTableSouth = api;
-    root.HEARTH.south = api;
-    root.HEARTH.visibleStateComposer = api;
-    root.HEARTH.southPrimaryGate = api;
-
-    if (root.DEXTER_LAB.runtimeTable && isObject(root.DEXTER_LAB.runtimeTable)) {
-      root.DEXTER_LAB.runtimeTable.south = api;
-      root.DEXTER_LAB.runtimeTable.runtimeTableSouth = api;
-      root.DEXTER_LAB.runtimeTable.cardinalRuntimeTableSouth = api;
-      root.DEXTER_LAB.runtimeTable.visibleStateComposerSouth = api;
-      root.DEXTER_LAB.runtimeTable.southPrimaryGate = api;
+  try {
+    const westPacket = readWestF5PressurePacket();
+    if (hasMeaningfulWestF5Packet(westPacket)) {
+      acceptWestF5PressurePacket(westPacket);
     }
-
-    if (root.LAB_RUNTIME_TABLE && isObject(root.LAB_RUNTIME_TABLE)) {
-      root.LAB_RUNTIME_TABLE.south = api;
-      root.LAB_RUNTIME_TABLE.runtimeTableSouth = api;
-      root.LAB_RUNTIME_TABLE.cardinalRuntimeTableSouth = api;
-      root.LAB_RUNTIME_TABLE.visibleStateComposerSouth = api;
-      root.LAB_RUNTIME_TABLE.southPrimaryGate = api;
-    }
-
-    publishDataset();
+  } catch (error) {
+    recordError("INITIAL_WEST_F5_PACKET_READ_FAILED", error);
   }
+
+  try {
+    computeFibonacciSynchronizationMetric();
+  } catch (error) {
+    recordError("INITIAL_SOUTH_F8_SYNC_METRIC_FAILED", error);
+  }
+
+  recordLocal("SOUTH_F8_ENGINE_MECHANICS_PROOF_RETURN_LOADED", {
+    file: FILE,
+    contract: CONTRACT,
+    mechanicalCoordinate: MECHANICAL_COORDINATE.coordinateId,
+    northEligibilityCoordinate: NORTH_ELIGIBILITY_COORDINATE.coordinateId,
+    canvasEvidenceCoordinate: CANVAS_EVIDENCE_COORDINATE.coordinateId,
+    targetFile: NORTH_FILE,
+    publicSuperiorityClaim: false
+  });
 
   publishGlobals();
 

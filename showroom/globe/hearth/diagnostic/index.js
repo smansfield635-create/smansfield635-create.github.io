@@ -1,13 +1,14 @@
 // /showroom/globe/hearth/diagnostic/index.js
-// HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6
+// HEARTH_DIAGNOSTIC_ROUTE_TWO_CHAPEL_CYCLE_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_7
 // Full-file replacement.
 // JS only.
 // Owns: dropdown behavior, audit state, reports, copy controls, participant loading,
-// alias probing, target access, direct checks, status strip, return-to-orbit shell action.
+// alias probing, target access, direct checks, status strip, return-to-orbit shell action,
+// canonical Truth Probe consumption, two-chapel cycle diagnostics.
 // No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox,
 // generated-image, or visual-pass authorization.
 
-(function hearthDiagnosticMirrorlandOrbitWorkbench(global) {
+(function hearthDiagnosticTwoChapelCycleWorkbench(global) {
   "use strict";
 
   var root = global || window;
@@ -18,9 +19,9 @@
   var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
 
   var INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6";
+    "HEARTH_DIAGNOSTIC_ROUTE_TWO_CHAPEL_CYCLE_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_7";
   var INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_BUTTON_CONTROLLER_RECEIPT_v9_4_6";
+    "HEARTH_DIAGNOSTIC_ROUTE_TWO_CHAPEL_CYCLE_WORKBENCH_BUTTON_CONTROLLER_RECEIPT_v9_4_7";
 
   var HTML_SHELL_CONTRACT =
     "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_6";
@@ -28,10 +29,10 @@
     "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_STYLE_TNT_v9_4_6";
 
   var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_5";
+    "HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_6";
 
   var VERSION =
-    "2026-06-09.hearth-diagnostic-route-mirrorland-orbit-workbench-button-controller-v9-4-6";
+    "2026-06-09.hearth-diagnostic-route-two-chapel-cycle-workbench-button-controller-v9-4-7";
 
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -73,10 +74,23 @@
     LAB_EAST: ["LAB_RUNTIME_TABLE_EAST", "LAB_RUNTIME_TABLE_EAST_F3", "RUNTIME_TABLE_EAST", "EAST_INTAKE_VALVE", "EAST_SUPREME_JUDGE", "DEXTER_LAB.runtimeTableEast", "HEARTH.runtimeTableEast"],
     LAB_SOUTH: ["LAB_RUNTIME_TABLE_SOUTH", "LAB_RUNTIME_TABLE_SOUTH_F8", "RUNTIME_TABLE_SOUTH", "SOUTH_PROOF_RETURN", "SOUTH_SUPREME_JUDGE", "DEXTER_LAB.runtimeTableSouth", "HEARTH.runtimeTableSouth"],
     LABWEST: ["LAB_RUNTIME_TABLE_WEST", "LAB_RUNTIME_TABLE_WEST_F5", "RUNTIME_TABLE_WEST", "WEST_PRESSURE_ADMISSIBILITY", "WEST_SUPREME_JUDGE", "DEXTER_LAB.runtimeTableWest", "HEARTH.runtimeTableWest"],
+
     NORTH: ["JUDGE_NORTH", "HEARTH_DIAGNOSTIC_RAIL_NORTH", "HEARTH_DIAGNOSTIC_RAIL", "HEARTH.diagnosticRail", "HEARTH.diagnosticNorth", "DEXTER_LAB.hearthDiagnosticRail"],
     EAST: ["JUDGE_EAST", "HEARTH_DIAGNOSTIC_RAIL_EAST", "HEARTH.diagnosticEast", "HEARTH.diagnosticRailEast", "DEXTER_LAB.hearthDiagnosticEast"],
     EAST_PROBE: ["HEARTH_DIAGNOSTIC_PROBE_EAST", "HEARTH.diagnosticProbeEast", "DEXTER_LAB.diagnosticProbeEast"],
-    SURFACE_TRUTH: ["HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH", "HEARTH_CANVAS_SURFACE_TRUTH_PROBE", "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE", "HEARTH.diagnosticProbeCanvasSurfaceTruth", "HEARTH.canvasSurfaceTruthProbe", "DEXTER_LAB.canvasSurfaceTruthProbe"],
+
+    SURFACE_TRUTH: [
+      "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
+      "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
+      "HEARTH.diagnosticProbeCanvasSurfaceTruth",
+      "HEARTH.canvasSurfaceTruthProbe",
+      "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
+      "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      "DEXTER_LAB.canvasSurfaceTruthProbe",
+      "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
+    ],
+
     SOUTH: ["JUDGE_SOUTH", "HEARTH_DIAGNOSTIC_RAIL_SOUTH", "HEARTH.diagnosticSouth", "HEARTH.diagnosticRailSouth", "DEXTER_LAB.hearthDiagnosticSouth"],
     SOUTH_SURFACE_POINTER: ["HEARTH.southSurfacePointerSidecar", "HEARTH.SOUTH_SURFACE_POINTER_SIDECAR", "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SIDECAR", "DEXTER_LAB.southSurfacePointerSidecar"],
     WEST_DIAGNOSTIC: ["HEARTH.diagnosticWest", "HEARTH.diagnosticRailWest", "DEXTER_LAB.hearthDiagnosticWest", "HEARTH_DIAGNOSTIC_WEST", "HEARTH_DIAGNOSTIC_RAIL_WEST"]
@@ -86,6 +100,7 @@
     { id: "chamberReceiver", label: "Chamber / Receiver", hint: "Receiver and chamber condition", audits: ["chamberIndex", "receiverHealth", "targetAccess", "loadSequence", "aliasMap"] },
     { id: "cardinalLab", label: "Cardinal / Lab", hint: "North, East, South, West calibration", audits: ["northSignal", "eastSource", "southLens", "southSurfacePointer", "labWestGate", "westDiagnostic"] },
     { id: "sourceSurface", label: "Source / Surface", hint: "Source and surface access", audits: ["eastSourceDetail", "surfaceTruthDetail", "targetSurfaceAccess", "canvasBoundary"] },
+    { id: "twoChapelCycle", label: "Two-Chapel Cycle", hint: "Canonical Hearth cycle, lane, chapel, bridge, and mount state", audits: ["cycleRegistry", "laneState", "chapelOneState", "bridgeState", "chapelTwoState", "bridgeReturnState", "mountReturnState"] },
     { id: "directExecution", label: "Direct Execution", hint: "Explicit direct checks only", audits: ["northDirect", "eastDirect", "surfaceTruthDirect", "southDirect", "westDirect"] },
     { id: "boundaryArchive", label: "Boundary / Archive", hint: "No-touch proof and archive", audits: ["noTouchBoundary", "nextMove", "deepArchive"] }
   ];
@@ -105,9 +120,17 @@
     westDiagnostic: { seq: "10A", section: "cardinalLab", label: "West Diagnostic", type: "safe", summary: "Reports West diagnostic participant presence." },
 
     eastSourceDetail: { seq: "11", section: "sourceSurface", label: "East Source Detail", type: "safe", summary: "Creates a detailed East source report." },
-    surfaceTruthDetail: { seq: "12", section: "sourceSurface", label: "Surface Truth Detail", type: "safe", summary: "Creates a detailed Surface Truth report without canvas mutation." },
+    surfaceTruthDetail: { seq: "12", section: "sourceSurface", label: "Surface Truth Detail", type: "safe", summary: "Consumes the renewed Surface Truth packet without canvas mutation." },
     targetSurfaceAccess: { seq: "13A", section: "sourceSurface", label: "Target Surface Access", type: "safe", summary: "Reports target iframe access and surface-observation boundary." },
     canvasBoundary: { seq: "14A", section: "sourceSurface", label: "Canvas Boundary", type: "safe", summary: "Reports the no-touch canvas boundary." },
+
+    cycleRegistry: { seq: "14B", section: "twoChapelCycle", label: "Cycle Registry", type: "safe", summary: "Reads the canonical two-chapel registry through Surface Truth." },
+    laneState: { seq: "14C", section: "twoChapelCycle", label: "Lane State", type: "safe", summary: "Reports Placement Globe versus Expression Globe lane state." },
+    chapelOneState: { seq: "14D", section: "twoChapelCycle", label: "Chapel One State", type: "safe", summary: "Reports Chapel One Head, Priest, workers, mount, and placement readiness." },
+    bridgeState: { seq: "14E", section: "twoChapelCycle", label: "Bridge State", type: "safe", summary: "Reports Bridge Authority and Active Crossing Bridge state." },
+    chapelTwoState: { seq: "14F", section: "twoChapelCycle", label: "Chapel Two State", type: "safe", summary: "Reports Chapel Two Head, Priest, workers, and expression readiness." },
+    bridgeReturnState: { seq: "14G", section: "twoChapelCycle", label: "Bridge Return State", type: "safe", summary: "Reports Bridge Return and replacement eligibility state." },
+    mountReturnState: { seq: "14H", section: "twoChapelCycle", label: "Mount Return State", type: "safe", summary: "Reports mount/canvas return condition and first hold." },
 
     northDirect: { seq: "15", section: "directExecution", label: "North Direct + Alias Probe", type: "direct", directKey: "northDirect", summary: "Creates a direct-check preview for North." },
     eastDirect: { seq: "16", section: "directExecution", label: "East Direct", type: "direct", directKey: "eastDirect", summary: "Creates a direct-check preview for East." },
@@ -116,16 +139,72 @@
     westDirect: { seq: "19", section: "directExecution", label: "West Diagnostic Direct", type: "direct", directKey: "westDirect", summary: "Creates a direct-check preview for West." },
 
     noTouchBoundary: { seq: "20", section: "boundaryArchive", label: "No-Touch Boundary", type: "safe", summary: "Reports the production, canvas, controls, runtime-route, and renderer no-touch boundary." },
-    nextMove: { seq: "21", section: "boundaryArchive", label: "Next Move", type: "safe", summary: "Creates the next lawful move synthesis." },
+    nextMove: { seq: "21", section: "boundaryArchive", label: "Next Move", type: "safe", summary: "Creates the next lawful move synthesis from Surface Truth first-held coordinate." },
     deepArchive: { seq: "99", section: "boundaryArchive", label: "Deep Archive", type: "safe", summary: "Creates the full diagnostic archive for copying and transfer." }
   };
 
   var DIRECT_CONFIG = {
-    northDirect: { directSeq: "08", role: "NORTH_DIRECT_CHECK_ALIAS_PROBE", component: "NORTH", authorityPath: "JUDGE_NORTH", aliases: ALIASES.NORTH, methods: ["run", "runDiagnostic", "runNorthDiagnostic", "inspect", "getReport", "getReceipt"] },
-    eastDirect: { directSeq: "09", role: "EAST_DIRECT_CHECK", component: "EAST", authorityPath: "JUDGE_EAST", aliases: ALIASES.EAST, methods: ["run", "runDiagnostic", "runEastSourceRead", "inspect", "getReport", "getReceipt"] },
-    surfaceTruthDirect: { directSeq: "10", role: "SURFACE_TRUTH_DIRECT_CHECK", component: "SURFACE_TRUTH", authorityPath: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH", aliases: ALIASES.SURFACE_TRUTH, methods: ["run", "runDiagnostic", "runSurfaceTruth", "runCanvasSurfaceTruth", "runProbe", "measure", "inspect", "getReport", "getReceipt"] },
-    southDirect: { directSeq: "11", role: "SOUTH_DIRECT_CHECK", component: "SOUTH", authorityPath: "HEARTH_DIAGNOSTIC_RAIL_SOUTH", aliases: ALIASES.SOUTH, methods: ["run", "runDiagnostic", "runSouth", "runSouthDiagnostic", "runPacketOutput", "inspect", "getReport", "getReceipt"] },
-    westDirect: { directSeq: "12", role: "WEST_DIAGNOSTIC_DIRECT_CHECK", component: "WEST_DIAGNOSTIC", authorityPath: "HEARTH.diagnosticWest", aliases: ALIASES.WEST_DIAGNOSTIC, methods: ["run", "runDiagnostic", "runWestDiagnostic", "inspect", "getReport", "getReceipt"] }
+    northDirect: {
+      directSeq: "08",
+      role: "NORTH_DIRECT_CHECK_ALIAS_PROBE",
+      component: "NORTH",
+      authorityPath: "JUDGE_NORTH",
+      aliases: ALIASES.NORTH,
+      methods: ["run", "runDiagnostic", "runNorthDiagnostic", "inspect", "getReport", "getReceipt"]
+    },
+
+    eastDirect: {
+      directSeq: "09",
+      role: "EAST_DIRECT_CHECK",
+      component: "EAST",
+      authorityPath: "JUDGE_EAST",
+      aliases: ALIASES.EAST,
+      methods: ["run", "runDiagnostic", "runEastSourceRead", "inspect", "getReport", "getReceipt"]
+    },
+
+    surfaceTruthDirect: {
+      directSeq: "10",
+      role: "SURFACE_TRUTH_DIRECT_CHECK",
+      component: "SURFACE_TRUTH",
+      authorityPath: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      aliases: ALIASES.SURFACE_TRUTH,
+      methods: [
+        "getPacket",
+        "run",
+        "runDiagnostic",
+        "runSurfaceTruth",
+        "runCanvasSurfaceTruth",
+        "runProbe",
+        "measure",
+        "inspect",
+        "getReport",
+        "getReceipt",
+        "getState",
+        "getStatus",
+        "getReceiptLight",
+        "readRegistry",
+        "inspectSurfaceTruth",
+        "getPacketText"
+      ]
+    },
+
+    southDirect: {
+      directSeq: "11",
+      role: "SOUTH_DIRECT_CHECK",
+      component: "SOUTH",
+      authorityPath: "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
+      aliases: ALIASES.SOUTH,
+      methods: ["run", "runDiagnostic", "runSouth", "runSouthDiagnostic", "runPacketOutput", "inspect", "getReport", "getReceipt"]
+    },
+
+    westDirect: {
+      directSeq: "12",
+      role: "WEST_DIAGNOSTIC_DIRECT_CHECK",
+      component: "WEST_DIAGNOSTIC",
+      authorityPath: "HEARTH.diagnosticWest",
+      aliases: ALIASES.WEST_DIAGNOSTIC,
+      methods: ["run", "runDiagnostic", "runWestDiagnostic", "inspect", "getReport", "getReceipt"]
+    }
   };
 
   var state = {
@@ -138,6 +217,7 @@
     loadComplete: false,
     aliases: {},
     directResults: {},
+    surfaceTruthSnapshot: null,
     generatedPacket: null,
     generatedText: "",
     rawText: "",
@@ -146,42 +226,83 @@
   };
 
   function $(id) { return doc.getElementById(id); }
-  function nowIso() { try { return new Date().toISOString(); } catch (_e) { return ""; } }
-  function isObject(v) { return Boolean(v && typeof v === "object" && !Array.isArray(v)); }
-  function isFunction(v) { return typeof v === "function"; }
-  function safeString(v, f) { if (f === undefined) f = ""; return v === undefined || v === null ? f : String(v); }
-  function compact(v, limit) { return safeString(v).replace(/\s+/g, " ").trim().slice(0, limit || 28000); }
+
+  function nowIso() {
+    try { return new Date().toISOString(); }
+    catch (_error) { return ""; }
+  }
+
+  function isObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
+  function safeString(value, fallback) {
+    if (fallback === undefined) fallback = "";
+    if (value === undefined || value === null) return fallback;
+    try { return String(value); }
+    catch (_error) { return fallback; }
+  }
+
+  function compact(value, limit) {
+    return safeString(value).replace(/\s+/g, " ").trim().slice(0, limit || 28000);
+  }
+
+  function truthValue(value) {
+    return value === true || value === "true" || value === "TRUE" || value === 1 || value === "1";
+  }
 
   function readSession(key, fallback) {
-    try { return root.sessionStorage.getItem("hearthDiagnostic.v946." + key) || fallback; }
-    catch (_e) { return fallback; }
+    try { return root.sessionStorage.getItem("hearthDiagnostic.v947." + key) || fallback; }
+    catch (_error) { return fallback; }
   }
 
   function writeSession(key, value) {
-    try { root.sessionStorage.setItem("hearthDiagnostic.v946." + key, safeString(value)); }
-    catch (_e) {}
+    try { root.sessionStorage.setItem("hearthDiagnostic.v947." + key, safeString(value)); }
+    catch (_error) {}
   }
 
   function readPath(path) {
     var parts = safeString(path).replace(/^window\./, "").split(".").filter(Boolean);
     var cursor = root;
+
     for (var i = 0; i < parts.length; i += 1) {
       if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
       cursor = cursor[parts[i]];
     }
+
     return cursor;
   }
 
   function methodKeys(value) {
     if (!isObject(value) && !isFunction(value)) return [];
-    try { return Object.keys(value).filter(function (key) { return isFunction(value[key]); }); }
-    catch (_e) { return []; }
+    try {
+      return Object.keys(value).filter(function filterMethod(key) {
+        return isFunction(value[key]);
+      });
+    } catch (_error) {
+      return [];
+    }
   }
 
-  function sectionExists(id) { return AUDIT_SECTIONS.some(function (s) { return s.id === id; }); }
-  function auditExists(id) { return Boolean(AUDITS[id]); }
-  function getSection(id) { return AUDIT_SECTIONS.find(function (s) { return s.id === id; }) || AUDIT_SECTIONS[0]; }
-  function firstAuditForSection(id) { return getSection(id).audits[0] || "chamberIndex"; }
+  function sectionExists(id) {
+    return AUDIT_SECTIONS.some(function check(section) { return section.id === id; });
+  }
+
+  function auditExists(id) {
+    return Boolean(AUDITS[id]);
+  }
+
+  function getSection(id) {
+    return AUDIT_SECTIONS.find(function find(section) { return section.id === id; }) || AUDIT_SECTIONS[0];
+  }
+
+  function firstAuditForSection(id) {
+    return getSection(id).audits[0] || "chamberIndex";
+  }
 
   function normalizeState() {
     if (!sectionExists(state.activeSection)) state.activeSection = "chamberReceiver";
@@ -214,6 +335,7 @@
     var value = readPath(alias);
     var found = value !== null && value !== undefined;
     var methods = methodKeys(value);
+
     return {
       alias: alias,
       found: found,
@@ -228,9 +350,11 @@
 
   function probeAliases() {
     var output = {};
-    Object.keys(ALIASES).forEach(function (group) {
+
+    Object.keys(ALIASES).forEach(function eachGroup(group) {
       var probes = ALIASES[group].map(probeAlias);
-      var first = probes.find(function (p) { return p.found; });
+      var first = probes.find(function found(probe) { return probe.found; });
+
       output[group] = {
         label: group,
         present: Boolean(first),
@@ -241,6 +365,7 @@
         probe: probes
       };
     });
+
     state.aliases = output;
     state.updatedAt = nowIso();
     return output;
@@ -248,23 +373,26 @@
 
   function findScript(path) {
     var scripts = Array.prototype.slice.call(doc.querySelectorAll("script[src]"));
-    return scripts.find(function (script) {
+    return scripts.find(function find(script) {
       var src = script.getAttribute("src") || script.src || "";
       return src.indexOf(path) !== -1;
     }) || null;
   }
 
   function recordParticipant(result) {
-    var existing = state.participantLoad.find(function (item) { return item.path === result.path; });
+    var existing = state.participantLoad.find(function find(item) { return item.path === result.path; });
+
     if (existing) Object.assign(existing, result);
     else state.participantLoad.push(result);
+
     state.updatedAt = nowIso();
     renderStatus();
   }
 
   function loadParticipant(entry) {
-    return new Promise(function (resolve) {
+    return new Promise(function promise(resolve) {
       var existing = findScript(entry.path);
+
       if (existing) {
         var reused = Object.assign({}, entry, {
           status: "loaded",
@@ -272,6 +400,7 @@
           reused: true,
           settledAt: nowIso()
         });
+
         recordParticipant(reused);
         resolve(reused);
         return;
@@ -283,12 +412,14 @@
       function finish(status) {
         if (finished) return;
         finished = true;
+
         var result = Object.assign({}, entry, {
           status: status,
           src: entry.path,
           reused: false,
           settledAt: nowIso()
         });
+
         recordParticipant(result);
         resolve(result);
       }
@@ -300,10 +431,10 @@
       script.dataset.hearthDiagnosticRequired = entry.required ? "true" : "false";
       script.dataset.hearthDiagnosticController = INTERNAL_RENEWAL_CONTRACT;
 
-      script.onload = function () { finish("loaded"); };
-      script.onerror = function () { finish(entry.required ? "error_required" : "error_optional"); };
+      script.onload = function onLoad() { finish("loaded"); };
+      script.onerror = function onError() { finish(entry.required ? "error_required" : "error_optional"); };
 
-      root.setTimeout(function () {
+      root.setTimeout(function timeout() {
         finish(entry.required ? "timeout_required" : "timeout_optional");
       }, 4500);
 
@@ -317,14 +448,16 @@
     renderStatus();
 
     var chain = Promise.resolve();
-    PARTICIPANTS.forEach(function (entry) {
-      chain = chain.then(function () { return loadParticipant(entry); });
+
+    PARTICIPANTS.forEach(function each(entry) {
+      chain = chain.then(function load() { return loadParticipant(entry); });
     });
 
-    return chain.then(function () {
+    return chain.then(function complete() {
       state.loadComplete = true;
       state.updatedAt = nowIso();
       probeAliases();
+      readSurfaceTruthSnapshot();
       renderStatus();
       publishApi();
       return state.participantLoad;
@@ -332,16 +465,16 @@
   }
 
   function loadSummary() {
-    var required = state.participantLoad.filter(function (p) { return p.required; });
-    var requiredBad = required.filter(function (p) { return p.status !== "loaded"; });
-    var optionalBad = state.participantLoad.filter(function (p) { return !p.required && p.status !== "loaded"; });
+    var required = state.participantLoad.filter(function filter(participant) { return participant.required; });
+    var requiredBad = required.filter(function filter(participant) { return participant.status !== "loaded"; });
+    var optionalBad = state.participantLoad.filter(function filter(participant) { return !participant.required && participant.status !== "loaded"; });
 
     return {
       requiredCount: required.length,
       requiredBadCount: requiredBad.length,
       optionalBadCount: optionalBad.length,
       allRequiredLoaded: state.loadComplete && requiredBad.length === 0,
-      allLoaded: state.participantLoad.length > 0 && state.participantLoad.every(function (p) { return p.status === "loaded"; })
+      allLoaded: state.participantLoad.length > 0 && state.participantLoad.every(function every(participant) { return participant.status === "loaded"; })
     };
   }
 
@@ -373,8 +506,10 @@
 
   function getSelectedContext() {
     normalizeState();
+
     var audit = AUDITS[state.activeAudit];
     var section = getSection(audit.section);
+
     return {
       ok: true,
       resolvedFrom: "BUTTON_CONTROLLER_STATE",
@@ -392,37 +527,46 @@
   function lineValue(value) {
     if (value === undefined || value === null || value === "") return "UNKNOWN";
     if (isFunction(value)) return "[function]";
+
     if (Array.isArray(value) || isObject(value)) {
-      try { return compact(JSON.stringify(value, function (_k, item) { return isFunction(item) ? "[function]" : item; })); }
-      catch (_e) { return "[object]"; }
+      try {
+        return compact(JSON.stringify(value, function replace(_key, item) {
+          return isFunction(item) ? "[function]" : item;
+        }));
+      } catch (_error) {
+        return "[object]";
+      }
     }
+
     return safeString(value);
   }
 
   function packetText(packet) {
-    return Object.keys(packet || {}).map(function (key) {
+    return Object.keys(packet || {}).map(function line(key) {
       return key + "=" + lineValue(packet[key]);
     }).join("\n");
   }
 
   function rawJson(packet) {
     try {
-      return JSON.stringify(packet, function (_key, value) {
+      return JSON.stringify(packet, function replace(_key, value) {
         return isFunction(value) ? "[function]" : value;
       }, 2);
-    } catch (_e) {
+    } catch (_error) {
       return packetText(packet);
     }
   }
 
   function basePacket(seq, label, component, extra) {
     var ctx = getSelectedContext();
+
     var packet = {
-      PACKET: "HEARTH_DIAGNOSTIC_WORKBENCH_REPORT_" + safeString(seq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_6",
+      PACKET: "HEARTH_DIAGNOSTIC_WORKBENCH_REPORT_" + safeString(seq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_7",
       RECEIPT_LEVEL: "2_SINGLE_AUDIT_WORKBENCH_REPORT",
       AUDIT_SEQUENCE: seq,
       AUDIT_LABEL: label,
       COMPONENT: component,
+
       CONTRACT: CONTRACT,
       RECEIPT: RECEIPT,
       CSS_CONTRACT: CSS_CONTRACT,
@@ -430,20 +574,24 @@
       INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-      WORKBENCH_MODEL: "MIRRORLAND_CATEGORY_GEM_AUDIT_GEM_LOCAL_REPORT_ACTIONS",
-      REPORT_SOURCE_OF_TRUTH: "BUTTON_CONTROLLER_STATE",
+      WORKBENCH_MODEL: "MIRRORLAND_TWO_CHAPEL_CYCLE_AUDIT_WORKBENCH",
+      REPORT_SOURCE_OF_TRUTH: "BUTTON_CONTROLLER_STATE_AND_CANONICAL_SURFACE_TRUTH",
       SELECTED_CATEGORY_ID: ctx.selectedSectionId,
       SELECTED_CATEGORY_LABEL: ctx.selectedSectionLabel,
       SELECTED_AUDIT_ID: ctx.selectedAuditId,
       SELECTED_AUDIT_LABEL: ctx.selectedAuditLabel,
       SELECTED_AUDIT_SEQUENCE: ctx.selectedAuditSequence,
       RESOLVED_FROM: ctx.resolvedFrom,
+
       BUTTON_CONTROLLER_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
       BUTTON_CONTROLLER_BOOTED: true,
       DROPDOWN_BINDINGS_INSTALLED: true,
       RETURN_TO_ORBIT_BINDING_INSTALLED: true,
+      TWO_CHAPEL_CYCLE_WORKBENCH_ACTIVE: true,
+
       RUN_STATE: "REPORT_CREATED",
       TRUST_STATE: "CURRENT",
       BLOCKING: false,
@@ -455,6 +603,186 @@
     return packet;
   }
 
+  function resolveAuthority(config) {
+    var candidates = [];
+
+    (config.aliases || []).forEach(function eachAlias(alias) {
+      var value = readPath(alias);
+      var probe = probeAlias(alias);
+
+      if (!probe.found) return;
+
+      var score = 0;
+
+      if (alias === config.authorityPath) score += 20;
+      if (isObject(value)) score += 10;
+      if (isFunction(value)) score += 5;
+      if (methodKeys(value).length) score += 30;
+
+      (config.methods || []).forEach(function eachMethod(method) {
+        if (value && isFunction(value[method])) score += 100;
+      });
+
+      candidates.push({
+        alias: alias,
+        value: value,
+        probe: probe,
+        score: score
+      });
+    });
+
+    candidates.sort(function sort(left, right) { return right.score - left.score; });
+
+    return {
+      authority: candidates[0] ? candidates[0].value : null,
+      authorityPath: candidates[0] ? candidates[0].alias : config.authorityPath,
+      present: Boolean(candidates[0]),
+      candidates: candidates.map(function map(candidate) {
+        return {
+          alias: candidate.alias,
+          score: candidate.score,
+          valueType: candidate.probe.valueType,
+          methodCount: candidate.probe.methodCount,
+          methodKeys: candidate.probe.methodKeys,
+          contract: candidate.probe.contract,
+          receipt: candidate.probe.receipt,
+          internalRenewalContract: candidate.probe.internalRenewalContract
+        };
+      }),
+      probes: (config.aliases || []).map(probeAlias)
+    };
+  }
+
+  function getReadableReceipt(authority) {
+    if (!authority || (!isObject(authority) && !isFunction(authority))) return {};
+
+    var methods = ["getPacket", "getReceipt", "runDiagnostic", "run", "inspect", "getReport", "getState", "getStatus", "getReceiptLight"];
+
+    for (var i = 0; i < methods.length; i += 1) {
+      if (!isFunction(authority[methods[i]])) continue;
+
+      try {
+        var out = authority[methods[i]]();
+        if (isObject(out)) return out;
+      } catch (_error) {}
+    }
+
+    return isObject(authority) ? authority : {};
+  }
+
+  function readSurfaceTruthSnapshot() {
+    var config = DIRECT_CONFIG.surfaceTruthDirect;
+    var resolved = resolveAuthority(config);
+    var authority = resolved.authority;
+    var packet = {};
+    var method = "NONE";
+    var error = "NONE";
+
+    if (authority) {
+      var methods = ["getPacket", "getReceipt", "runDiagnostic", "run", "measure", "inspect", "getReport", "getState", "getStatus", "getReceiptLight"];
+
+      for (var i = 0; i < methods.length; i += 1) {
+        if (!isFunction(authority[methods[i]])) continue;
+
+        try {
+          method = methods[i];
+          var out = authority[methods[i]]();
+          if (isObject(out)) {
+            packet = out;
+            break;
+          }
+        } catch (caught) {
+          error = caught && caught.message ? caught.message : safeString(caught);
+          break;
+        }
+      }
+    }
+
+    var snapshot = {
+      present: resolved.present,
+      authorityPath: resolved.authorityPath,
+      authorityMethodCount: methodKeys(authority).length,
+      authorityMethodKeys: methodKeys(authority).join(","),
+      method: method,
+      error: error,
+      packet: packet,
+      candidates: resolved.candidates,
+      probes: resolved.probes,
+      updatedAt: nowIso()
+    };
+
+    state.surfaceTruthSnapshot = snapshot;
+    return snapshot;
+  }
+
+  function stField(snapshot, key, fallback) {
+    var packet = snapshot && snapshot.packet ? snapshot.packet : {};
+    if (packet[key] !== undefined && packet[key] !== null && packet[key] !== "") return packet[key];
+    return fallback;
+  }
+
+  function makeSurfaceTruthPayload() {
+    var snapshot = readSurfaceTruthSnapshot();
+
+    return {
+      SURFACE_TRUTH_PRESENT: snapshot.present,
+      SURFACE_TRUTH_AUTHORITY_PATH: snapshot.authorityPath,
+      SURFACE_TRUTH_METHOD: snapshot.method,
+      SURFACE_TRUTH_ERROR: snapshot.error,
+      SURFACE_TRUTH_AUTHORITY_METHOD_COUNT: snapshot.authorityMethodCount,
+      SURFACE_TRUTH_AUTHORITY_METHOD_KEYS: snapshot.authorityMethodKeys,
+
+      SURFACE_TRUTH_CONTRACT: stField(snapshot, "CONTRACT", "UNKNOWN"),
+      SURFACE_TRUTH_RECEIPT: stField(snapshot, "RECEIPT", "UNKNOWN"),
+      SURFACE_TRUTH_SYSTEM_CANON: stField(snapshot, "SYSTEM_CANON", "UNKNOWN"),
+      SURFACE_TRUTH_SYSTEM_MODEL: stField(snapshot, "SYSTEM_MODEL", "UNKNOWN"),
+
+      ACTIVE_LANE: stField(snapshot, "ACTIVE_LANE", "UNKNOWN"),
+      ACTIVE_PLATFORM_STATE: stField(snapshot, "ACTIVE_PLATFORM_STATE", "UNKNOWN"),
+      PLACEHOLDER_ONLY: stField(snapshot, "PLACEHOLDER_ONLY", "UNKNOWN"),
+      EXPRESSION_ACCEPTED: stField(snapshot, "EXPRESSION_ACCEPTED", "UNKNOWN"),
+
+      CYCLE_STATUS: stField(snapshot, "CYCLE_STATUS", "UNKNOWN"),
+      FIRST_HELD_COORDINATE: stField(snapshot, "FIRST_HELD_COORDINATE", stField(snapshot, "FIRST_FAILED_COORDINATE", "UNKNOWN")),
+      RECOMMENDED_NEXT_FILE: stField(snapshot, "RECOMMENDED_NEXT_FILE", "UNKNOWN"),
+      RECOMMENDED_NEXT_ACTION: stField(snapshot, "RECOMMENDED_NEXT_ACTION", "UNKNOWN"),
+
+      CANONICAL_MOUNT_EXISTS: stField(snapshot, "CANONICAL_MOUNT_EXISTS", false),
+      CANONICAL_MOUNT_RECT_NONZERO: stField(snapshot, "CANONICAL_MOUNT_RECT_NONZERO", false),
+      CANONICAL_CANVAS_EXISTS: stField(snapshot, "CANONICAL_CANVAS_EXISTS", false),
+      CANONICAL_CANVAS_RECT_NONZERO: stField(snapshot, "CANONICAL_CANVAS_RECT_NONZERO", false),
+
+      CHAPEL_ONE_HEAD_PRESENT: stField(snapshot, "CHAPEL_ONE_HEAD_PRESENT", false),
+      CHAPEL_ONE_PRIEST_PRESENT: stField(snapshot, "CHAPEL_ONE_PRIEST_PRESENT", false),
+      CHAPEL_ONE_WORKER_COUNT: stField(snapshot, "CHAPEL_ONE_WORKER_COUNT", 0),
+      CHAPEL_ONE_WORKER_TOTAL: stField(snapshot, "CHAPEL_ONE_WORKER_TOTAL", 0),
+      CHAPEL_ONE_COMPLETE: stField(snapshot, "CHAPEL_ONE_COMPLETE", false),
+
+      BRIDGE_AUTHORITY_PRESENT: stField(snapshot, "BRIDGE_AUTHORITY_PRESENT", false),
+      ACTIVE_CROSSING_BRIDGE_PRESENT: stField(snapshot, "ACTIVE_CROSSING_BRIDGE_PRESENT", false),
+      ACTIVE_CROSSING_BRIDGE_STATUS: stField(snapshot, "ACTIVE_CROSSING_BRIDGE_STATUS", "UNKNOWN"),
+
+      CHAPEL_TWO_HEAD_PRESENT: stField(snapshot, "CHAPEL_TWO_HEAD_PRESENT", false),
+      CHAPEL_TWO_PRIEST_PRESENT: stField(snapshot, "CHAPEL_TWO_PRIEST_PRESENT", false),
+      CHAPEL_TWO_WORKER_COUNT: stField(snapshot, "CHAPEL_TWO_WORKER_COUNT", 0),
+      CHAPEL_TWO_WORKER_TOTAL: stField(snapshot, "CHAPEL_TWO_WORKER_TOTAL", 0),
+      CHAPEL_TWO_COMPLETE: stField(snapshot, "CHAPEL_TWO_COMPLETE", false),
+
+      BRIDGE_RETURN_PRESENT: stField(snapshot, "BRIDGE_RETURN_PRESENT", false),
+      BRIDGE_RETURN_STATUS: stField(snapshot, "BRIDGE_RETURN_STATUS", "UNKNOWN"),
+
+      SELECTED_DOCUMENT_SCOPE: stField(snapshot, "SELECTED_DOCUMENT_SCOPE", "UNKNOWN"),
+      SELECTED_DOCUMENT_PATH: stField(snapshot, "SELECTED_DOCUMENT_PATH", "UNKNOWN"),
+      SELECTED_DOCUMENT_TITLE: stField(snapshot, "SELECTED_DOCUMENT_TITLE", "UNKNOWN"),
+      SELECTED_DOCUMENT_ROUTE_MATCH: stField(snapshot, "SELECTED_DOCUMENT_ROUTE_MATCH", false),
+
+      SURFACE_TRUTH_PACKET_KEYS: Object.keys(snapshot.packet || {}).join(","),
+      SURFACE_TRUTH_PACKET: snapshot.packet || {},
+      SURFACE_TRUTH_RESOLVER_CANDIDATES: snapshot.candidates,
+      SURFACE_TRUTH_ALIAS_PROBE: snapshot.probes
+    };
+  }
+
   function aliasReport(audit, auditId, component, groups, extra) {
     var aliases = probeAliases();
     var payload = {
@@ -463,7 +791,7 @@
       GROUPS_TESTED: groups.join(",")
     };
 
-    groups.forEach(function (group) {
+    groups.forEach(function each(group) {
       var item = aliases[group] || {};
       payload[group + "_PRESENT"] = Boolean(item.present);
       payload[group + "_AUTHORITY_PATH"] = item.authorityPath || "NONE";
@@ -496,64 +824,36 @@
     });
   }
 
-  function resolveAuthority(config) {
-    var candidates = [];
-    (config.aliases || []).forEach(function (alias) {
-      var value = readPath(alias);
-      var probe = probeAlias(alias);
-      if (!probe.found) return;
+  function cycleReport(audit, auditId, component, scope) {
+    var truth = makeSurfaceTruthPayload();
 
-      var score = 0;
-      if (alias === config.authorityPath) score += 20;
-      if (isObject(value)) score += 10;
-      if (isFunction(value)) score += 5;
-      if (methodKeys(value).length) score += 30;
-      (config.methods || []).forEach(function (method) {
-        if (value && isFunction(value[method])) score += 100;
-      });
-
-      candidates.push({ alias: alias, value: value, probe: probe, score: score });
-    });
-
-    candidates.sort(function (a, b) { return b.score - a.score; });
-
-    return {
-      authority: candidates[0] ? candidates[0].value : null,
-      authorityPath: candidates[0] ? candidates[0].alias : config.authorityPath,
-      present: Boolean(candidates[0]),
-      candidates: candidates.map(function (c) {
-        return {
-          alias: c.alias,
-          score: c.score,
-          valueType: c.probe.valueType,
-          methodCount: c.probe.methodCount,
-          methodKeys: c.probe.methodKeys,
-          contract: c.probe.contract,
-          receipt: c.probe.receipt,
-          internalRenewalContract: c.probe.internalRenewalContract
-        };
-      }),
-      probes: (config.aliases || []).map(probeAlias)
+    var payload = {
+      AUDIT_ID: auditId,
+      COMPONENT_SCOPE: component,
+      CYCLE_AUDIT_SCOPE: scope,
+      RECEIPT_LEVEL: "3_CANONICAL_TWO_CHAPEL_CYCLE_AUDIT",
+      TWO_CHAPEL_CYCLE_CANONICAL: true,
+      TRUTH_PROBE_CONSUMED: truth.SURFACE_TRUTH_PRESENT,
+      CANVAS_MUTATION_AUTHORIZED: false,
+      CANVAS_BUILD_AUTHORIZED: false,
+      CANVAS_RELEASE_AUTHORIZED: false,
+      TARGET_RENDERER_MUTATION_AUTHORIZED: false
     };
-  }
 
-  function getReadableReceipt(authority) {
-    if (!authority || !isObject(authority)) return {};
-    var methods = ["getReceiptLight", "getCallableReceiptLight", "getReport", "getReceipt", "getStatus", "getState"];
-    for (var i = 0; i < methods.length; i += 1) {
-      if (!isFunction(authority[methods[i]])) continue;
-      try {
-        var out = authority[methods[i]]();
-        if (isObject(out)) return out;
-      } catch (_e) {}
-    }
-    return authority;
+    Object.assign(payload, truth);
+    return basePacket(audit.seq, audit.label, component, payload);
   }
 
   function runDirectCheck(key) {
     var config = DIRECT_CONFIG[key];
     var audit = AUDITS[key];
-    if (!config || !audit) return basePacket("ERR", "Direct Config Missing", "ERROR", { AUDIT_ID: key || "UNKNOWN", BLOCKING: true });
+
+    if (!config || !audit) {
+      return basePacket("ERR", "Direct Config Missing", "ERROR", {
+        AUDIT_ID: key || "UNKNOWN",
+        BLOCKING: true
+      });
+    }
 
     var resolved = resolveAuthority(config);
     var authority = resolved.authority;
@@ -565,6 +865,7 @@
     if (authority) {
       for (var i = 0; i < config.methods.length; i += 1) {
         var method = config.methods[i];
+
         if (isObject(authority) && isFunction(authority[method])) {
           try {
             directMethod = method;
@@ -578,6 +879,7 @@
           }
         }
       }
+
       if (!directPacket || !isObject(directPacket)) directPacket = getReadableReceipt(authority);
     }
 
@@ -604,6 +906,21 @@
       ALIAS_PROBE: resolved.probes,
       NEXT_ACTION: runExecuted ? "COPY_REPORT_OR_RUN_NEXT_AUDIT" : "INSPECT_AUTHORITY_AND_METHOD_SURFACE"
     });
+
+    if (key === "surfaceTruthDirect" && directPacket && isObject(directPacket)) {
+      state.surfaceTruthSnapshot = {
+        present: resolved.present,
+        authorityPath: resolved.authorityPath,
+        authorityMethodCount: methodKeys(authority).length,
+        authorityMethodKeys: methodKeys(authority).join(","),
+        method: directMethod,
+        error: directError,
+        packet: directPacket,
+        candidates: resolved.candidates,
+        probes: resolved.probes,
+        updatedAt: nowIso()
+      };
+    }
 
     state.directResults[key] = packet;
     return packet;
@@ -636,7 +953,13 @@
 
   function buildReport(auditId) {
     var audit = AUDITS[auditId];
-    if (!audit) return basePacket("ERR", "Invalid Audit", "ERROR", { AUDIT_ID: auditId, BLOCKING: true });
+
+    if (!audit) {
+      return basePacket("ERR", "Invalid Audit", "ERROR", {
+        AUDIT_ID: auditId,
+        BLOCKING: true
+      });
+    }
 
     if (audit.type === "direct") return directPreview(audit.directKey);
 
@@ -656,6 +979,7 @@
         PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
         SECTION_COUNT: AUDIT_SECTIONS.length,
         AUDIT_COUNT: Object.keys(AUDITS).length,
+        TWO_CHAPEL_CYCLE_SECTION_PRESENT: true,
         NEXT_ACTION: "CHOOSE_AUDIT_AND_CREATE_REPORT"
       });
     }
@@ -679,9 +1003,26 @@
       });
     }
 
-    if (auditId === "targetAccess") return basePacket(audit.seq, audit.label, "TARGET_ACCESS", Object.assign({ AUDIT_ID: auditId }, target));
-    if (auditId === "loadSequence") return basePacket(audit.seq, audit.label, "PARTICIPANT_LOAD_SEQUENCE", { AUDIT_ID: auditId, PARTICIPANT_LOAD: state.participantLoad, LOAD_SUMMARY: summary });
-    if (auditId === "aliasMap") return basePacket(audit.seq, audit.label, "ALIAS_MAP", { AUDIT_ID: auditId, ALIASES: aliases });
+    if (auditId === "targetAccess") {
+      return basePacket(audit.seq, audit.label, "TARGET_ACCESS", Object.assign({
+        AUDIT_ID: auditId
+      }, target));
+    }
+
+    if (auditId === "loadSequence") {
+      return basePacket(audit.seq, audit.label, "PARTICIPANT_LOAD_SEQUENCE", {
+        AUDIT_ID: auditId,
+        PARTICIPANT_LOAD: state.participantLoad,
+        LOAD_SUMMARY: summary
+      });
+    }
+
+    if (auditId === "aliasMap") {
+      return basePacket(audit.seq, audit.label, "ALIAS_MAP", {
+        AUDIT_ID: auditId,
+        ALIASES: aliases
+      });
+    }
 
     if (auditId === "northSignal") return aliasReport(audit, auditId, "NORTH_SIGNAL", ["NORTH", "LAB_NORTH"]);
     if (auditId === "eastSource") return aliasReport(audit, auditId, "EAST_SOURCE", ["EAST", "EAST_PROBE", "LAB_EAST"]);
@@ -691,42 +1032,75 @@
     if (auditId === "westDiagnostic") return aliasReport(audit, auditId, "WEST_DIAGNOSTIC", ["WEST_DIAGNOSTIC", "LABWEST"]);
 
     if (auditId === "eastSourceDetail") return aliasReport(audit, auditId, "EAST_SOURCE_DETAIL", ["EAST", "EAST_PROBE", "LAB_EAST"]);
-    if (auditId === "surfaceTruthDetail") return aliasReport(audit, auditId, "SURFACE_TRUTH_DETAIL", ["SURFACE_TRUTH"], { CANVAS_MUTATION_AUTHORIZED: false, VISUAL_PASS_CLAIMED: false });
-    if (auditId === "targetSurfaceAccess") return basePacket(audit.seq, audit.label, "TARGET_SURFACE_ACCESS", { AUDIT_ID: auditId, TARGET_ACCESS: target, SURFACE_TRUTH_PRESENT: aliases.SURFACE_TRUTH.present });
+
+    if (auditId === "surfaceTruthDetail") {
+      var truth = makeSurfaceTruthPayload();
+      return basePacket(audit.seq, audit.label, "SURFACE_TRUTH_DETAIL", Object.assign({
+        AUDIT_ID: auditId,
+        CANVAS_MUTATION_AUTHORIZED: false,
+        VISUAL_PASS_CLAIMED: false,
+        DIRECT_SURFACE_TRUTH_CONSUMPTION: true
+      }, truth));
+    }
+
+    if (auditId === "targetSurfaceAccess") {
+      return basePacket(audit.seq, audit.label, "TARGET_SURFACE_ACCESS", {
+        AUDIT_ID: auditId,
+        TARGET_ACCESS: target,
+        SURFACE_TRUTH_PRESENT: aliases.SURFACE_TRUTH.present
+      });
+    }
+
     if (auditId === "canvasBoundary") return boundaryReport(audit, auditId, "CANVAS_BOUNDARY");
+
+    if (auditId === "cycleRegistry") return cycleReport(audit, auditId, "TWO_CHAPEL_CYCLE_REGISTRY", "FULL_REGISTRY");
+    if (auditId === "laneState") return cycleReport(audit, auditId, "LANE_STATE", "PLACEMENT_OR_EXPRESSION");
+    if (auditId === "chapelOneState") return cycleReport(audit, auditId, "CHAPEL_ONE_STATE", "CHAPEL_ONE_HEAD_PRIEST_WORKERS_MOUNT");
+    if (auditId === "bridgeState") return cycleReport(audit, auditId, "BRIDGE_STATE", "AUTHORITY_AND_ACTIVE_CROSSING");
+    if (auditId === "chapelTwoState") return cycleReport(audit, auditId, "CHAPEL_TWO_STATE", "CHAPEL_TWO_HEAD_PRIEST_WORKERS");
+    if (auditId === "bridgeReturnState") return cycleReport(audit, auditId, "BRIDGE_RETURN_STATE", "RETURN_AUTHORITY_AND_REPLACEMENT_ELIGIBILITY");
+    if (auditId === "mountReturnState") return cycleReport(audit, auditId, "MOUNT_RETURN_STATE", "MOUNT_CANVAS_AND_FIRST_HOLD");
+
     if (auditId === "noTouchBoundary") return boundaryReport(audit, auditId, "NO_TOUCH_BOUNDARY");
 
     if (auditId === "nextMove") {
-      var directRun = Object.keys(state.directResults).filter(function (key) {
+      var truthPayload = makeSurfaceTruthPayload();
+      var directRun = Object.keys(state.directResults).filter(function filter(key) {
         return state.directResults[key] && state.directResults[key].RUN_EXECUTED;
       });
 
-      return basePacket(audit.seq, audit.label, "NEXT_LAWFUL_MOVE", {
+      return basePacket(audit.seq, audit.label, "NEXT_LAWFUL_MOVE", Object.assign({
         RECEIPT_LEVEL: "4_SYNTHESIS",
         AUDIT_ID: auditId,
         DIRECT_CHECKS_RUN: directRun.length ? directRun.join(",") : "NONE",
         TARGET_ROUTE_RENDERER_MUTATION_AUTHORIZED: false,
-        NEXT_FILE: "/showroom/globe/hearth/diagnostic/index.js",
-        NEXT_ACTION: "CONTINUE_DIAGNOSTIC_EVIDENCE_BRIDGING_WITHOUT_PRODUCTION_MUTATION"
-      });
+        NEXT_FILE: truthPayload.RECOMMENDED_NEXT_FILE || "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
+        NEXT_ACTION: truthPayload.RECOMMENDED_NEXT_ACTION || "CONTINUE_DIAGNOSTIC_EVIDENCE_BRIDGING_WITHOUT_PRODUCTION_MUTATION",
+        NEXT_MOVE_SOURCE: "SURFACE_TRUTH_FIRST_HELD_COORDINATE"
+      }, truthPayload));
     }
 
     if (auditId === "deepArchive") {
+      var archiveTruth = makeSurfaceTruthPayload();
+
       return {
-        PACKET: "HEARTH_DIAGNOSTIC_WORKBENCH_DEEP_ARCHIVE_99_v9_4_6",
+        PACKET: "HEARTH_DIAGNOSTIC_WORKBENCH_DEEP_ARCHIVE_99_v9_4_7",
         RECEIPT_LEVEL: "5_DEEP_ARCHIVE",
         AUDIT_SEQUENCE: audit.seq,
         AUDIT_LABEL: audit.label,
         AUDIT_ID: auditId,
+
         CONTRACT: CONTRACT,
         RECEIPT: RECEIPT,
         CSS_CONTRACT: CSS_CONTRACT,
         HTML_SHELL_CONTRACT: HTML_SHELL_CONTRACT,
         INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
         INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
+
         TARGET_ROUTE: TARGET_ROUTE,
         DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-        WORKBENCH_MODEL: "MIRRORLAND_CATEGORY_GEM_AUDIT_GEM_LOCAL_REPORT_ACTIONS",
+        WORKBENCH_MODEL: "MIRRORLAND_TWO_CHAPEL_CYCLE_AUDIT_WORKBENCH",
+
         STATE: {
           initializedAt: state.initializedAt,
           updatedAt: nowIso(),
@@ -736,16 +1110,20 @@
           loadSummary: loadSummary(),
           targetAccess: getTargetAccess(),
           aliases: aliases,
+          surfaceTruth: archiveTruth,
           directResults: state.directResults,
           auditSections: AUDIT_SECTIONS,
           audits: AUDITS
         },
+
         NO_CLAIMS: NO_CLAIMS,
         UPDATED_AT: nowIso()
       };
     }
 
-    return basePacket(audit.seq, audit.label, "UNKNOWN", { AUDIT_ID: auditId });
+    return basePacket(audit.seq, audit.label, "UNKNOWN", {
+      AUDIT_ID: auditId
+    });
   }
 
   function renderCategoryDropdown() {
@@ -763,7 +1141,7 @@
 
     if (menu) {
       menu.classList.remove("is-open");
-      menu.innerHTML = AUDIT_SECTIONS.map(function (item) {
+      menu.innerHTML = AUDIT_SECTIONS.map(function map(item) {
         return '<button class="dropdown-option' + (item.id === state.activeSection ? " is-active" : "") +
           '" type="button" data-category-id="' + escapeHtml(item.id) + '">' +
           '<span>' + escapeHtml(item.label) + '</span><small>' + escapeHtml(item.hint) + '</small></button>';
@@ -787,7 +1165,7 @@
 
     if (menu) {
       menu.classList.remove("is-open");
-      menu.innerHTML = section.audits.map(function (id) {
+      menu.innerHTML = section.audits.map(function map(id) {
         var item = AUDITS[id];
         return '<button class="dropdown-option' + (id === state.activeAudit ? " is-active" : "") +
           '" type="button" data-audit-id="' + escapeHtml(id) + '">' +
@@ -800,12 +1178,14 @@
 
   function renderSelectedAudit() {
     var ctx = getSelectedContext();
+
     setText("selectedAuditMeta", ctx.selectedAuditSequence + " · " + ctx.selectedAuditType.toUpperCase());
     setText("selectedSectionLabel", ctx.selectedSectionLabel);
     setText("selectedAuditTitle", ctx.selectedAuditLabel);
     setText("selectedAuditSummary", ctx.audit.summary);
 
     var runDirect = $("runDirectReport");
+
     if (runDirect) {
       runDirect.disabled = ctx.audit.type !== "direct";
       runDirect.hidden = ctx.audit.type !== "direct";
@@ -826,20 +1206,31 @@
     var aliases = state.aliases && Object.keys(state.aliases).length ? state.aliases : probeAliases();
     var summary = loadSummary();
     var target = getTargetAccess();
+    var surface = readSurfaceTruthSnapshot();
+    var packet = surface.packet || {};
+
+    var cycleFound = surface.present && safeString(packet.CYCLE_STATUS, "UNKNOWN") !== "UNKNOWN";
+    var laneFound = surface.present && safeString(packet.ACTIVE_LANE, "UNKNOWN") !== "UNKNOWN";
 
     var items = [
       ["Load", summary.allRequiredLoaded],
       ["Target", target.frameAccessible && target.routeConfirmed],
+      ["Surface", aliases.SURFACE_TRUTH.present],
+      ["Cycle", cycleFound],
+      ["Lane", laneFound],
+      ["Mount", truthValue(packet.CANONICAL_MOUNT_EXISTS) && truthValue(packet.CANONICAL_MOUNT_RECT_NONZERO)],
+      ["Canvas", truthValue(packet.CANONICAL_CANVAS_EXISTS)],
+      ["C1", truthValue(packet.CHAPEL_ONE_COMPLETE) || truthValue(packet.CHAPEL_ONE_HEAD_PRESENT)],
+      ["Bridge", truthValue(packet.ACTIVE_CROSSING_BRIDGE_PRESENT)],
+      ["C2", truthValue(packet.CHAPEL_TWO_COMPLETE) || truthValue(packet.CHAPEL_TWO_HEAD_PRESENT)],
+      ["Return", truthValue(packet.BRIDGE_RETURN_PRESENT)],
       ["North", aliases.NORTH.present],
       ["East", aliases.EAST.present],
-      ["Surface", aliases.SURFACE_TRUTH.present],
       ["South", aliases.SOUTH.present],
-      ["Pointer", aliases.SOUTH_SURFACE_POINTER.present],
-      ["LabWest", aliases.LABWEST.present],
       ["West", aliases.WEST_DIAGNOSTIC.present]
     ];
 
-    holder.innerHTML = items.map(function (item) {
+    holder.innerHTML = items.map(function map(item) {
       var cls = item[1] ? "good" : "warn";
       return '<div class="status-chip-mini ' + cls + '"><b>' + escapeHtml(item[0]) +
         '</b><span>' + (item[1] ? "FOUND" : "HELD") + '</span></div>';
@@ -847,20 +1238,23 @@
   }
 
   function closeAllMenus() {
-    ["categoryDropdownMenu", "auditDropdownMenu"].forEach(function (id) {
+    ["categoryDropdownMenu", "auditDropdownMenu"].forEach(function each(id) {
       var menu = $(id);
       if (menu) menu.classList.remove("is-open");
     });
-    ["categoryDropdownButton", "auditDropdownButton"].forEach(function (id) {
-      var btn = $(id);
-      if (btn) btn.setAttribute("aria-expanded", "false");
+
+    ["categoryDropdownButton", "auditDropdownButton"].forEach(function each(id) {
+      var button = $(id);
+      if (button) button.setAttribute("aria-expanded", "false");
     });
   }
 
   function toggleMenu(menuId, buttonId) {
     var menu = $(menuId);
     var open = menu && menu.classList.contains("is-open");
+
     closeAllMenus();
+
     if (!open && menu) {
       menu.classList.add("is-open");
       var button = $(buttonId);
@@ -873,20 +1267,24 @@
     state.generatedText = "";
     state.rawText = "";
     state.generatedAuditId = "";
+
     setText("reportTitle", "No Report Created");
     setText("reportMeta", "WAITING");
     setText("generatedReport", "Choose a category, choose an audit, then create a report.");
     setText("rawReport", "");
+
     var copyReport = $("copyReport");
     var copyRaw = $("copyRaw");
+    var rawOutput = $("rawOutput");
+
     if (copyReport) copyReport.disabled = true;
     if (copyRaw) copyRaw.disabled = true;
-    var rawOutput = $("rawOutput");
     if (rawOutput) rawOutput.hidden = true;
   }
 
   function renderReport(packet, mode, auditId) {
     var audit = AUDITS[auditId] || AUDITS[state.activeAudit];
+
     state.generatedPacket = packet;
     state.generatedAuditId = auditId || state.activeAudit;
     state.generatedText = packetText(packet);
@@ -901,6 +1299,7 @@
     var output = $("reportOutput");
     var copyReport = $("copyReport");
     var copyRaw = $("copyRaw");
+
     if (output) output.hidden = false;
     if (copyReport) copyReport.disabled = false;
     if (copyRaw) copyRaw.disabled = false;
@@ -909,28 +1308,39 @@
   function createReport() {
     var ctx = getSelectedContext();
     var packet = buildReport(ctx.selectedAuditId);
+
     renderReport(packet, ctx.audit.type === "direct" ? "DIRECT_PREVIEW_CREATED" : "REPORT_CREATED", ctx.selectedAuditId);
     showToast("Report created");
+
     return packet;
   }
 
   function runSelectedDirectCheck() {
     var ctx = getSelectedContext();
+
     if (ctx.audit.type !== "direct") {
       showToast("Selected audit is not direct");
       return null;
     }
+
     var packet = runDirectCheck(ctx.audit.directKey);
+
     renderReport(packet, "DIRECT_CHECK_EXECUTED", ctx.selectedAuditId);
+    renderStatus();
     showToast("Direct check complete");
+
     return packet;
   }
 
   function copyText(text, label) {
     var value = safeString(text);
+
     if (root.navigator && root.navigator.clipboard && root.navigator.clipboard.writeText) {
-      root.navigator.clipboard.writeText(value).then(function () { showToast(label || "Copied"); })
-        .catch(function () { fallbackCopy(value, label); });
+      root.navigator.clipboard.writeText(value).then(function copied() {
+        showToast(label || "Copied");
+      }).catch(function fail() {
+        fallbackCopy(value, label);
+      });
     } else {
       fallbackCopy(value, label);
     }
@@ -938,29 +1348,43 @@
 
   function fallbackCopy(text, label) {
     var area = doc.createElement("textarea");
+
     area.value = safeString(text);
     area.setAttribute("readonly", "readonly");
     area.style.position = "fixed";
     area.style.left = "-9999px";
+
     doc.body.appendChild(area);
     area.select();
-    try { doc.execCommand("copy"); showToast(label || "Copied"); }
-    catch (_e) { showToast("Copy unavailable"); }
+
+    try {
+      doc.execCommand("copy");
+      showToast(label || "Copied");
+    } catch (_error) {
+      showToast("Copy unavailable");
+    }
+
     doc.body.removeChild(area);
   }
 
   function showToast(message) {
     var toast = $("toast");
     if (!toast) return;
+
     toast.textContent = safeString(message, "Done");
     toast.classList.add("show");
-    root.setTimeout(function () { toast.classList.remove("show"); }, 1200);
+
+    root.setTimeout(function hide() {
+      toast.classList.remove("show");
+    }, 1200);
   }
 
   function selectCategory(id) {
     if (!sectionExists(id)) return;
+
     state.activeSection = id;
     state.activeAudit = firstAuditForSection(id);
+
     persistState();
     closeAllMenus();
     clearReport();
@@ -969,8 +1393,10 @@
 
   function selectAudit(id) {
     if (!auditExists(id)) return;
+
     state.activeAudit = id;
     state.activeSection = AUDITS[id].section;
+
     persistState();
     closeAllMenus();
     clearReport();
@@ -980,8 +1406,10 @@
   function toggleTarget() {
     state.targetVisible = !state.targetVisible;
     persistState();
+
     var panel = $("targetPanel");
     if (panel) panel.hidden = !state.targetVisible;
+
     renderStatus();
   }
 
@@ -996,63 +1424,82 @@
   }
 
   function installActions() {
-    bind("categoryDropdownButton", "click", function (event) {
+    bind("categoryDropdownButton", "click", function click(event) {
       event.preventDefault();
       event.stopPropagation();
       toggleMenu("categoryDropdownMenu", "categoryDropdownButton");
     });
 
-    bind("auditDropdownButton", "click", function (event) {
+    bind("auditDropdownButton", "click", function click(event) {
       event.preventDefault();
       event.stopPropagation();
       toggleMenu("auditDropdownMenu", "auditDropdownButton");
     });
 
-    bind("categoryDropdownMenu", "click", function (event) {
+    bind("categoryDropdownMenu", "click", function click(event) {
       var button = event.target.closest("[data-category-id]");
       if (button) selectCategory(button.dataset.categoryId);
     });
 
-    bind("auditDropdownMenu", "click", function (event) {
+    bind("auditDropdownMenu", "click", function click(event) {
       var button = event.target.closest("[data-audit-id]");
       if (button) selectAudit(button.dataset.auditId);
     });
 
     bind("createReport", "click", createReport);
     bind("runDirectReport", "click", runSelectedDirectCheck);
-    bind("copyReport", "click", function () { if (!state.generatedText) createReport(); copyText(state.generatedText, "Report copied"); });
-    bind("copyRaw", "click", function () { if (!state.rawText) createReport(); copyText(state.rawText, "Raw copied"); });
-    bind("copyArchive", "click", function () {
+
+    bind("copyReport", "click", function click() {
+      if (!state.generatedText) createReport();
+      copyText(state.generatedText, "Report copied");
+    });
+
+    bind("copyRaw", "click", function click() {
+      if (!state.rawText) createReport();
+      copyText(state.rawText, "Raw copied");
+    });
+
+    bind("copyArchive", "click", function click() {
       state.activeSection = "boundaryArchive";
       state.activeAudit = "deepArchive";
+
       persistState();
       renderDropdowns();
+
       var packet = buildReport("deepArchive");
       renderReport(packet, "DEEP_ARCHIVE_CREATED", "deepArchive");
       copyText(rawJson(packet), "Deep archive copied");
     });
-    bind("toggleRaw", "click", function () {
+
+    bind("toggleRaw", "click", function click() {
       if (!state.rawText) createReport();
       var raw = $("rawOutput");
       if (raw) raw.hidden = !raw.hidden;
     });
-    bind("resetReport", "click", function () { clearReport(); showToast("Report reset"); });
+
+    bind("resetReport", "click", function click() {
+      clearReport();
+      showToast("Report reset");
+    });
+
     bind("toggleTarget", "click", toggleTarget);
-    bind("reloadChamber", "click", function () { root.location.reload(); });
+    bind("reloadChamber", "click", function click() { root.location.reload(); });
     bind("hearthDiagnosticTargetFrame", "load", renderStatus);
 
-    doc.addEventListener("click", function (event) {
+    doc.addEventListener("click", function click(event) {
       var orbit = event.target.closest("[data-return-to-orbit]");
       if (orbit) returnToOrbit(event);
 
       var category = $("categoryDropdown");
       var audit = $("auditDropdown");
+
       if (category && category.contains(event.target)) return;
       if (audit && audit.contains(event.target)) return;
+
       closeAllMenus();
     });
 
-    doc.addEventListener("keydown", function (event) {
+    doc.addEventListener("keydown", function keydown(event) {
       if (event.key === "Escape") closeAllMenus();
     });
   }
@@ -1072,11 +1519,13 @@
       version: VERSION,
       targetRoute: TARGET_ROUTE,
       diagnosticRoute: DIAGNOSTIC_ROUTE,
+
       state: state,
       auditSections: AUDIT_SECTIONS,
       audits: AUDITS,
       aliases: ALIASES,
       directConfig: DIRECT_CONFIG,
+
       chooseSection: selectCategory,
       chooseAudit: selectAudit,
       createReport: createReport,
@@ -1086,7 +1535,9 @@
       probeAliases: probeAliases,
       getTargetAccess: getTargetAccess,
       loadParticipants: loadParticipants,
-      returnToOrbit: returnToOrbit
+      returnToOrbit: returnToOrbit,
+      readSurfaceTruthSnapshot: readSurfaceTruthSnapshot,
+      makeSurfaceTruthPayload: makeSurfaceTruthPayload
     };
 
     root.HEARTH_DIAGNOSTIC_CHAMBER = api;
@@ -1097,8 +1548,10 @@
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CONTRACT__ = CONTRACT;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_HTML_SHELL_CONTRACT__ = HTML_SHELL_CONTRACT;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_TWO_CHAPEL_CYCLE_WORKBENCH_ACTIVE__ = true;
     root.__HEARTH_DIAGNOSTIC_SINGLE_AUDIT_WORKBENCH_ACTIVE__ = true;
     root.__HEARTH_DIAGNOSTIC_RETURN_TO_ORBIT_ACTIVE__ = true;
+
     root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_RELEASE_AUTHORIZED__ = false;
@@ -1121,7 +1574,7 @@
     var targetPanel = $("targetPanel");
     if (targetPanel) targetPanel.hidden = !state.targetVisible;
 
-    loadParticipants().then(function () {
+    loadParticipants().then(function loaded() {
       renderStatus();
       publishApi();
     });

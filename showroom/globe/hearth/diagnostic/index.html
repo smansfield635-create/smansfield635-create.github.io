@@ -1,29 +1,29 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
 <!-- HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 -->
 <!-- Internal controlled renewal: -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_HTML_SHELL_TNT_v9_4_3 -->
+<!-- Pair controller: -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3 -->
 <!-- Full-file replacement. -->
-<!-- Category-tabbed adaptive diagnostic receipt console / NEWS internal architecture / view-run-copy separation. -->
-<!-- No production, canvas, controls, runtime-route, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
+<!-- HTML shell only. Diagnostic logic lives in /showroom/globe/hearth/diagnostic/index.js -->
+<!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-chamber="v9_4_2">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_3">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth · Diagnostic Receipt Console</title>
+  <title>Hearth · Audit Template Console</title>
 
   <style>
     :root {
       color-scheme: dark;
       --bg0: #03050a;
       --bg1: #070b13;
-      --bg2: #0b1220;
-      --panel: rgba(13, 22, 38, .80);
+      --panel: rgba(13, 22, 38, .82);
       --panel2: rgba(18, 30, 51, .84);
-      --panel3: rgba(25, 42, 70, .72);
-      --line: rgba(151, 182, 235, .20);
-      --line2: rgba(151, 182, 235, .44);
+      --line: rgba(151, 182, 235, .22);
+      --line2: rgba(151, 182, 235, .46);
       --text: #eaf1ff;
       --soft: #b2c2dc;
       --muted: #8092ad;
@@ -32,11 +32,9 @@
       --bad: #ff8f9b;
       --blue: #8fb7ff;
       --cyan: #7fe7ff;
-      --violet: #c9a7ff;
       --shadow: 0 22px 70px rgba(0, 0, 0, .42);
       --radius-xl: 28px;
       --radius-lg: 18px;
-      --radius-md: 13px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -50,9 +48,9 @@
       margin: 0;
       min-height: 100%;
       background:
-        radial-gradient(circle at 12% 8%, rgba(64, 117, 255, .22), transparent 34%),
-        radial-gradient(circle at 90% 6%, rgba(127, 231, 255, .13), transparent 30%),
-        radial-gradient(circle at 80% 88%, rgba(201, 167, 255, .13), transparent 36%),
+        radial-gradient(circle at 12% 8%, rgba(64, 117, 255, .20), transparent 34%),
+        radial-gradient(circle at 90% 6%, rgba(127, 231, 255, .12), transparent 30%),
+        radial-gradient(circle at 80% 88%, rgba(201, 167, 255, .12), transparent 36%),
         linear-gradient(180deg, var(--bg0), var(--bg1) 58%, #050813);
       color: var(--text);
       font-family: var(--sans);
@@ -63,21 +61,16 @@
       overflow-x: hidden;
     }
 
-    button,
-    input {
-      font: inherit;
-    }
-
     button {
       appearance: none;
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(38, 56, 91, .92), rgba(18, 29, 50, .92));
+      background: linear-gradient(180deg, rgba(38, 56, 91, .94), rgba(18, 29, 50, .94));
       color: var(--text);
       border-radius: 999px;
-      padding: 10px 13px;
-      min-height: 40px;
+      padding: 11px 14px;
+      min-height: 42px;
       cursor: pointer;
-      font: 800 12px/1 var(--sans);
+      font: 850 12px/1 var(--sans);
       letter-spacing: .01em;
       box-shadow: 0 10px 26px rgba(0, 0, 0, .16);
     }
@@ -87,67 +80,47 @@
       transform: translateY(-1px);
     }
 
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     button:focus-visible,
-    input:focus-visible,
-    summary:focus-visible {
+    .choice-card:focus-visible,
+    .audit-card:focus-visible {
       outline: 2px solid var(--blue);
       outline-offset: 3px;
     }
 
     button.primary {
-      border-color: rgba(143, 183, 255, .62);
+      border-color: rgba(143, 183, 255, .66);
       background: linear-gradient(180deg, rgba(74, 118, 198, .98), rgba(28, 55, 105, .98));
     }
 
     button.ghost {
-      background: rgba(10, 16, 28, .72);
-    }
-
-    button.mini {
-      min-height: 31px;
-      padding: 8px 10px;
-      font-size: 11px;
-    }
-
-    button.danger {
-      border-color: rgba(255, 143, 155, .40);
-      background: rgba(88, 27, 39, .78);
-    }
-
-    input {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(3, 5, 10, .56);
-      color: var(--text);
-      min-height: 40px;
-      padding: 0 14px;
-      font: 700 13px/1 var(--mono);
-    }
-
-    input::placeholder {
-      color: var(--muted);
+      background: rgba(10, 16, 28, .74);
     }
 
     .shell {
-      width: min(1520px, calc(100vw - 20px));
+      width: min(1240px, calc(100vw - 20px));
       margin: 0 auto;
-      padding: 10px 0 94px;
+      padding: 10px 0 28px;
     }
 
     .command {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 40;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
       margin-bottom: 10px;
-      padding: 11px;
+      padding: 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
-      background: rgba(5, 8, 15, .82);
+      background: rgba(5, 8, 15, .84);
       backdrop-filter: blur(18px);
       box-shadow: var(--shadow);
     }
@@ -160,10 +133,10 @@
     }
 
     .mark {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       flex: 0 0 auto;
-      border-radius: 16px;
+      border-radius: 17px;
       background:
         radial-gradient(circle at 33% 26%, rgba(255, 255, 255, .96), transparent 18%),
         linear-gradient(135deg, rgba(143, 183, 255, .98), rgba(127, 231, 255, .54)),
@@ -171,24 +144,23 @@
       box-shadow: 0 0 44px rgba(127, 231, 255, .22);
     }
 
-    .identity h1 {
+    h1 {
       margin: 0;
-      font-size: clamp(17px, 3.8vw, 25px);
-      line-height: 1.02;
-      letter-spacing: -.04em;
+      font-size: clamp(20px, 4vw, 30px);
+      line-height: 1;
+      letter-spacing: -.045em;
     }
 
     .identity p {
-      margin: 5px 0 0;
+      margin: 6px 0 0;
       color: var(--soft);
-      font: 650 11px/1.25 var(--mono);
+      font: 700 11px/1.25 var(--mono);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .command-actions,
-    .dock-actions {
+    .command-actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -196,15 +168,14 @@
       flex-wrap: wrap;
     }
 
-    .chip-strip {
-      container-type: inline-size;
+    .status-strip {
       display: grid;
-      grid-template-columns: repeat(10, minmax(0, 1fr));
+      grid-template-columns: repeat(9, minmax(0, 1fr));
       gap: 7px;
       margin-bottom: 10px;
     }
 
-    .chip {
+    .status-chip-mini {
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 8px 9px;
@@ -212,7 +183,7 @@
       min-width: 0;
     }
 
-    .chip b {
+    .status-chip-mini b {
       display: block;
       color: var(--muted);
       font: 900 9px/1 var(--mono);
@@ -223,45 +194,45 @@
       white-space: nowrap;
     }
 
-    .chip span {
+    .status-chip-mini span {
       display: block;
       margin-top: 4px;
-      font: 900 11px/1 var(--mono);
+      font: 900 10px/1 var(--mono);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .chip.good {
+    .status-chip-mini.good {
       border-color: rgba(141, 243, 178, .38);
       background: rgba(23, 72, 46, .34);
     }
 
-    .chip.good span {
+    .status-chip-mini.good span {
       color: var(--good);
     }
 
-    .chip.warn {
+    .status-chip-mini.warn {
       border-color: rgba(255, 208, 109, .40);
       background: rgba(86, 62, 18, .28);
     }
 
-    .chip.warn span {
+    .status-chip-mini.warn span {
       color: var(--warn);
     }
 
-    .chip.bad {
+    .status-chip-mini.bad {
       border-color: rgba(255, 143, 155, .42);
       background: rgba(91, 26, 38, .34);
     }
 
-    .chip.bad span {
+    .status-chip-mini.bad span {
       color: var(--bad);
     }
 
-    .surface {
+    .main-grid {
       display: grid;
-      grid-template-columns: 370px minmax(0, 1fr) 360px;
+      grid-template-columns: 360px minmax(0, 1fr);
       gap: 10px;
       align-items: start;
     }
@@ -277,14 +248,14 @@
 
     .panel-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 13px 14px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
       border-bottom: 1px solid var(--line);
       background:
         linear-gradient(135deg, rgba(143, 183, 255, .10), transparent 54%),
-        rgba(8, 13, 23, .55);
+        rgba(8, 13, 23, .58);
     }
 
     .panel-head strong {
@@ -296,398 +267,179 @@
     .panel-head span {
       color: var(--muted);
       font: 800 10px/1.25 var(--mono);
+      text-align: right;
     }
 
-    .finder {
-      max-height: calc(100vh - 166px);
-      overflow: auto;
-    }
-
-    .finder-body,
-    .proof-body {
+    .panel-body {
       padding: 12px;
       display: grid;
       gap: 12px;
     }
 
-    .category-tabs {
+    .choice-list,
+    .audit-list {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 7px;
+      gap: 8px;
     }
 
-    .tab {
-      min-height: 48px;
-      border-radius: 17px;
-      background: rgba(8, 13, 23, .58);
-      text-align: left;
-      padding: 10px 12px;
-    }
-
-    .tab strong {
-      display: block;
-      font-size: 12px;
-    }
-
-    .tab span {
-      display: block;
-      color: var(--muted);
-      font: 800 10px/1.2 var(--mono);
-      margin-top: 5px;
-    }
-
-    .tab.active {
-      border-color: rgba(127, 231, 255, .52);
-      background: linear-gradient(180deg, rgba(58, 91, 152, .36), rgba(8, 13, 23, .68));
-    }
-
-    .tab.active strong {
-      color: var(--cyan);
-    }
-
-    .receipt-list {
-      display: grid;
-      gap: 9px;
-    }
-
-    .category-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--muted);
-      font: 950 10px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      margin: 4px 2px 0;
-    }
-
-    .receipt-card {
-      display: grid;
-      gap: 9px;
-      border: 1px solid var(--line);
+    .choice-card,
+    .audit-card {
+      width: 100%;
       border-radius: 18px;
-      background: rgba(8, 13, 23, .64);
-      padding: 10px;
-      cursor: pointer;
+      text-align: left;
+      background: rgba(8, 13, 23, .66);
+      border: 1px solid var(--line);
+      padding: 12px;
+      min-height: 74px;
+      box-shadow: none;
     }
 
-    .receipt-card:hover {
-      border-color: var(--line2);
-      background: rgba(18, 30, 51, .82);
-    }
-
-    .receipt-card.active {
+    .choice-card.is-active,
+    .audit-card.is-active {
       border-color: rgba(143, 183, 255, .70);
       background: linear-gradient(180deg, rgba(55, 88, 150, .36), rgba(8, 13, 23, .72));
     }
 
-    .receipt-main {
+    .choice-card .choice-kicker {
+      display: block;
+      color: var(--cyan);
+      font: 950 9px/1 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      margin-bottom: 8px;
+    }
+
+    .choice-card strong,
+    .audit-card strong {
+      display: block;
+      color: var(--text);
+      font: 950 14px/1.1 var(--sans);
+    }
+
+    .choice-card small,
+    .audit-card small {
+      display: block;
+      color: var(--muted);
+      font: 750 11px/1.35 var(--mono);
+      margin-top: 7px;
+    }
+
+    .audit-card {
       display: grid;
-      grid-template-columns: 42px minmax(0, 1fr);
-      gap: 9px;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 10px;
       align-items: start;
     }
 
-    .receipt-num {
+    .audit-card > span {
       display: grid;
       place-items: center;
-      width: 42px;
-      height: 36px;
+      min-height: 38px;
       border-radius: 14px;
       color: var(--cyan);
       background: rgba(127, 231, 255, .08);
       border: 1px solid rgba(127, 231, 255, .22);
-      font: 950 12px/1 var(--mono);
+      font: 950 11px/1 var(--mono);
     }
 
-    .receipt-name {
-      font: 900 13px/1.1 var(--sans);
-      overflow-wrap: anywhere;
-    }
-
-    .receipt-desc {
-      color: var(--muted);
-      font: 750 10px/1.25 var(--mono);
-      margin-top: 5px;
-    }
-
-    .card-actions {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-    }
-
-    .card-actions button {
-      min-height: 30px;
-      padding: 7px 5px;
-      font-size: 10px;
-    }
-
-    .empty-state {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(8, 13, 23, .62);
-      padding: 14px;
+    .work {
       display: grid;
       gap: 10px;
     }
 
-    .empty-state strong {
-      font-size: 13px;
-    }
-
-    .empty-state p {
-      margin: 0;
-      color: var(--soft);
-      font: 700 12px/1.4 var(--sans);
-    }
-
-    .workspace {
-      min-width: 0;
-    }
-
-    .report-head {
-      padding: 16px;
-      border-bottom: 1px solid var(--line);
+    .selected-audit {
+      padding: 18px;
       background:
-        radial-gradient(circle at 10% 10%, rgba(143, 183, 255, .15), transparent 38%),
+        radial-gradient(circle at 10% 10%, rgba(143, 183, 255, .14), transparent 38%),
         linear-gradient(135deg, rgba(127, 231, 255, .06), transparent 55%),
         rgba(8, 13, 23, .62);
+      border-bottom: 1px solid var(--line);
     }
 
-    .report-title-row {
+    .selected-audit .meta {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 12px;
     }
 
-    .report-title-row h2 {
+    .selected-audit .meta span {
+      color: var(--cyan);
+      border: 1px solid rgba(127, 231, 255, .32);
+      background: rgba(127, 231, 255, .08);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font: 950 11px/1 var(--mono);
+    }
+
+    h2 {
       margin: 0;
-      font-size: clamp(22px, 4.4vw, 36px);
+      font-size: clamp(24px, 5vw, 40px);
       line-height: .98;
       letter-spacing: -.055em;
     }
 
-    .seq-badge {
-      flex: 0 0 auto;
-      color: var(--cyan);
-      border: 1px solid rgba(127, 231, 255, .34);
-      background: rgba(127, 231, 255, .08);
-      border-radius: 999px;
-      padding: 7px 10px;
-      font: 950 12px/1 var(--mono);
-    }
-
-    .verdict-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: end;
-    }
-
-    .verdict-grid p {
-      margin: 0;
+    .selected-audit p {
+      margin: 12px 0 0;
       color: var(--soft);
-      font: 650 13px/1.5 var(--sans);
+      font: 700 14px/1.5 var(--sans);
     }
 
-    .status-chip {
-      border-radius: 999px;
-      padding: 8px 11px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      font: 950 11px/1 var(--mono);
-      white-space: nowrap;
-    }
-
-    .status-chip.good {
-      color: var(--good);
-      border-color: rgba(141, 243, 178, .42);
-      background: rgba(141, 243, 178, .08);
-    }
-
-    .status-chip.warn {
-      color: var(--warn);
-      border-color: rgba(255, 208, 109, .42);
-      background: rgba(255, 208, 109, .08);
-    }
-
-    .status-chip.bad {
-      color: var(--bad);
-      border-color: rgba(255, 143, 155, .42);
-      background: rgba(255, 143, 155, .08);
-    }
-
-    .action-dock {
+    .report-actions {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
       padding: 12px;
       border-bottom: 1px solid var(--line);
       background: rgba(5, 8, 15, .46);
     }
 
-    .report-body {
+    .report-output {
       padding: 14px;
       display: grid;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .facts {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .fact {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(8, 13, 23, .62);
-      padding: 11px;
-      min-height: 74px;
-    }
-
-    .fact .k {
-      color: var(--muted);
-      font: 950 9px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .fact .v {
-      margin-top: 9px;
-      color: var(--text);
-      font: 800 13px/1.25 var(--sans);
-      overflow-wrap: anywhere;
-    }
-
-    .proof {
-      max-height: calc(100vh - 166px);
-      overflow: auto;
-    }
-
-    .proof-box {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(3, 5, 10, .72);
-    }
-
-    .proof-toolbar {
+    .report-output .report-title-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      padding: 10px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(17, 27, 45, .76);
+      gap: 12px;
+      align-items: center;
     }
 
-    .proof-toolbar strong {
-      color: var(--soft);
-      font: 950 10px/1 var(--mono);
+    .report-output .report-title-row strong {
+      font: 950 12px/1 var(--mono);
+      letter-spacing: .10em;
       text-transform: uppercase;
-      letter-spacing: .08em;
+    }
+
+    .report-output .report-title-row span {
+      color: var(--warn);
+      border: 1px solid rgba(255, 208, 109, .32);
+      background: rgba(255, 208, 109, .08);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font: 950 10px/1 var(--mono);
     }
 
     pre {
       margin: 0;
-      max-height: 50vh;
+      min-height: 320px;
+      max-height: 58vh;
       overflow: auto;
       white-space: pre-wrap;
       word-break: break-word;
-      padding: 13px;
+      padding: 14px;
       color: #dbe7ff;
       background: rgba(3, 5, 10, .92);
-      font: 12px/1.46 var(--mono);
-    }
-
-    details {
       border: 1px solid var(--line);
       border-radius: 18px;
-      overflow: hidden;
-      background: rgba(8, 13, 23, .56);
+      font: 12px/1.48 var(--mono);
     }
 
-    summary {
-      cursor: pointer;
-      padding: 12px;
-      color: var(--soft);
-      font: 950 11px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      list-style: none;
-    }
-
-    summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .detail-body {
-      border-top: 1px solid var(--line);
-      padding: 12px;
-    }
-
-    .topology-list {
-      display: grid;
-      gap: 8px;
-    }
-
-    .engine-node {
-      display: grid;
-      grid-template-columns: 42px 1fr auto;
-      gap: 9px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(3, 5, 10, .44);
-      padding: 9px;
-    }
-
-    .badge {
-      display: grid;
-      place-items: center;
-      height: 34px;
-      border-radius: 13px;
-      color: var(--blue);
-      background: rgba(143, 183, 255, .10);
-      font: 950 11px/1 var(--mono);
-    }
-
-    .engine-node b {
-      display: block;
-      font-size: 12px;
-    }
-
-    .engine-node span {
-      display: block;
-      color: var(--muted);
-      font: 750 10px/1.22 var(--mono);
-      margin-top: 3px;
-    }
-
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: var(--muted);
-    }
-
-    .dot.good {
-      background: var(--good);
-      box-shadow: 0 0 18px rgba(141, 243, 178, .42);
-    }
-
-    .dot.warn {
-      background: var(--warn);
-      box-shadow: 0 0 18px rgba(255, 208, 109, .42);
-    }
-
-    .dot.bad {
-      background: var(--bad);
-      box-shadow: 0 0 18px rgba(255, 143, 155, .42);
+    .target-panel {
+      margin-top: 10px;
     }
 
     .target-frame-shell {
@@ -706,34 +458,16 @@
       background: #000;
     }
 
-    .bottom-dock {
-      position: fixed;
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%);
-      z-index: 60;
-      width: min(720px, calc(100vw - 20px));
-      display: none;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      padding: 9px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(5, 8, 15, .86);
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-    }
-
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 80px;
+      bottom: 22px;
       transform: translateX(-50%);
       z-index: 99;
-      padding: 10px 13px;
+      padding: 11px 14px;
       border-radius: 999px;
       color: var(--text);
-      background: rgba(8, 13, 23, .94);
+      background: rgba(8, 13, 23, .96);
       border: 1px solid var(--line2);
       box-shadow: var(--shadow);
       font: 900 12px/1 var(--mono);
@@ -744,71 +478,22 @@
 
     .toast.show {
       opacity: 1;
-      bottom: 92px;
+      bottom: 34px;
     }
 
-    dialog {
-      width: min(960px, calc(100vw - 24px));
-      max-height: calc(100vh - 50px);
-      border: 1px solid var(--line2);
-      border-radius: var(--radius-xl);
-      background: rgba(5, 8, 15, .98);
-      color: var(--text);
-      box-shadow: var(--shadow);
-      padding: 0;
-    }
-
-    dialog::backdrop {
-      background: rgba(0, 0, 0, .64);
-      backdrop-filter: blur(5px);
-    }
-
-    .dialog-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      padding: 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .dialog-head strong {
-      font: 950 12px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: .09em;
-    }
-
-    .hidden {
+    [hidden] {
       display: none !important;
     }
 
-    @container (max-width: 760px) {
-      .chip-strip {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 1260px) {
-      .surface {
-        grid-template-columns: 340px minmax(0, 1fr);
-      }
-
-      .proof {
-        grid-column: 1 / -1;
-        max-height: none;
-      }
-    }
-
-    @media (max-width: 860px) {
+    @media (max-width: 980px) {
       .shell {
-        width: min(100vw - 12px, 860px);
+        width: min(100vw - 12px, 980px);
         padding-top: 6px;
       }
 
       .command {
         grid-template-columns: 1fr;
         border-radius: 20px;
-        padding: 10px;
       }
 
       .command-actions {
@@ -817,57 +502,30 @@
         width: 100%;
       }
 
-      .command-actions button {
-        width: 100%;
+      .status-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .chip-strip {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .surface {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .workspace {
-        order: 1;
-      }
-
-      .finder {
-        order: 2;
-        max-height: none;
-      }
-
-      .proof {
-        order: 3;
-        max-height: none;
-      }
-
-      .category-tabs {
-        grid-template-columns: 1fr;
-      }
-
-      .action-dock {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .facts {
-        grid-template-columns: 1fr;
-      }
-
-      .verdict-grid,
-      .report-title-row {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      .bottom-dock {
-        display: grid;
       }
 
       iframe {
         height: 340px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .status-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .report-actions {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -894,6 +552,8 @@
       }
     }
   </style>
+
+  <script src="/showroom/globe/hearth/diagnostic/index.js" defer></script>
 </head>
 
 <body>
@@ -902,2105 +562,94 @@
       <div class="identity">
         <div class="mark" aria-hidden="true"></div>
         <div>
-          <h1>Hearth Diagnostic Receipt Console</h1>
-          <p id="contractLine">HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2</p>
+          <h1>Hearth Audit Template Console</h1>
+          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3</p>
         </div>
       </div>
 
-      <div class="command-actions" aria-label="Global diagnostic actions">
-        <button class="primary" id="copyCurrent" type="button">Copy Current</button>
-        <button id="runSelected" type="button">Run Selected</button>
-        <button id="runRecommended" type="button">Run Recommended</button>
-        <button class="ghost" id="openArchive" type="button">Archive 99</button>
+      <div class="command-actions" aria-label="Global report controls">
+        <button class="primary" id="createReport" type="button">Create Report</button>
+        <button id="copyReport" type="button" disabled>Copy Report</button>
+        <button id="copyRaw" type="button" disabled>Copy Raw</button>
+        <button class="ghost" id="copyArchive" type="button">Copy Deep Archive</button>
         <button class="ghost" id="toggleTarget" type="button">Target</button>
         <button class="ghost" id="reloadChamber" type="button">Reload</button>
       </div>
     </header>
 
-    <section class="chip-strip" id="healthStrip" aria-label="Compact equipment health"></section>
+    <section class="status-strip" id="statusStrip" aria-label="Compact diagnostic status"></section>
 
-    <main class="surface">
-      <aside class="panel finder">
+    <main class="main-grid">
+      <aside class="panel">
         <div class="panel-head">
-          <strong>Receipt Categories</strong>
-          <span id="finderCount">0 receipts</span>
+          <strong>1 · Choose Audit Section</strong>
+          <span>Family first</span>
         </div>
 
-        <div class="finder-body">
-          <div class="category-tabs" id="categoryTabs" aria-label="Receipt category tabs"></div>
-
-          <input id="receiptSearch" type="search" placeholder="Search receipts by number, name, role..." autocomplete="off" />
-
-          <div id="receiptBoard" class="receipt-list"></div>
+        <div class="panel-body">
+          <div class="choice-list" id="auditSectionList"></div>
         </div>
       </aside>
 
-      <section class="panel workspace" id="workspace">
-        <div class="report-head">
-          <div class="report-title-row">
-            <h2 id="reportTitle">Overview</h2>
-            <span class="seq-badge" id="reportSeq">00</span>
+      <section class="work">
+        <section class="panel">
+          <div class="panel-head">
+            <strong>2 · Choose Audit</strong>
+            <span id="selectedSectionLabel">Chamber / Receiver</span>
           </div>
 
-          <div class="verdict-grid">
-            <p id="reportVerdict">Booting diagnostic equipment.</p>
-            <span class="status-chip warn" id="reportStatus">BOOTING</span>
+          <div class="panel-body">
+            <div class="audit-list" id="auditList"></div>
           </div>
-        </div>
+        </section>
 
-        <div class="action-dock" aria-label="Selected receipt actions">
-          <button class="primary" id="dockRun" type="button">Run This Receipt</button>
-          <button id="dockCopy" type="button">Copy Report</button>
-          <button id="dockCopyRaw" type="button">Copy Raw</button>
-          <button class="ghost" id="dockNext" type="button">Run Next</button>
-          <button class="ghost" id="dockArchive" type="button">Archive</button>
-        </div>
+        <section class="panel">
+          <div class="selected-audit">
+            <div class="meta">
+              <span id="selectedAuditMeta">00 · SAFE</span>
+            </div>
 
-        <div class="report-body">
-          <div class="facts" id="reportFacts"></div>
-        </div>
+            <h2 id="selectedAuditTitle">Chamber Index</h2>
+            <p id="selectedAuditSummary">Choose an audit section, choose an audit, then create a report.</p>
+          </div>
+
+          <div class="report-actions" aria-label="Selected audit controls">
+            <button class="primary" id="createReport" type="button">Create Report</button>
+            <button id="runDirectReport" type="button" hidden>Run Direct Check</button>
+            <button id="copyReport" type="button" disabled>Copy Report</button>
+            <button id="copyRaw" type="button" disabled>Copy Raw</button>
+            <button class="ghost" id="toggleRaw" type="button">Show / Hide Raw</button>
+            <button class="ghost" id="resetReport" type="button">Reset</button>
+          </div>
+
+          <div class="report-output" id="reportOutput">
+            <div class="report-title-row">
+              <strong id="reportTitle">No Report Created</strong>
+              <span id="reportMeta">WAITING</span>
+            </div>
+
+            <pre id="generatedReport">Choose an audit section, choose an audit, then create a report.</pre>
+
+            <pre id="rawReport" hidden></pre>
+          </div>
+        </section>
+
+        <section class="panel target-panel" id="targetPanel" hidden>
+          <div class="panel-head">
+            <strong>Target Frame</strong>
+            <span>/showroom/globe/hearth/</span>
+          </div>
+
+          <div class="panel-body">
+            <div class="target-frame-shell">
+              <iframe id="hearthDiagnosticTargetFrame" src="/showroom/globe/hearth/" title="Hearth target route"></iframe>
+            </div>
+          </div>
+        </section>
       </section>
-
-      <aside class="panel proof">
-        <div class="panel-head">
-          <strong>Proof Return</strong>
-          <span id="proofLine">RAW=CLOSED</span>
-        </div>
-
-        <div class="proof-body">
-          <div class="proof-box">
-            <div class="proof-toolbar">
-              <strong>Raw selected receipt</strong>
-              <div class="dock-actions">
-                <button class="mini ghost" id="toggleRaw" type="button">Show Raw</button>
-                <button class="mini ghost" id="copyRaw" type="button">Copy Raw</button>
-              </div>
-            </div>
-            <pre id="rawReceipt" class="hidden">BOOTING_DIAGNOSTIC_EQUIPMENT...</pre>
-          </div>
-
-          <details id="topologyDetails">
-            <summary>Engine topology detail</summary>
-            <div class="detail-body">
-              <div class="topology-list" id="engineTopology"></div>
-            </div>
-          </details>
-
-          <details id="targetDetails">
-            <summary>Target frame surface</summary>
-            <div class="detail-body">
-              <div class="target-frame-shell">
-                <iframe id="hearthDiagnosticTargetFrame" src="/showroom/globe/hearth/" title="Hearth target route"></iframe>
-              </div>
-            </div>
-          </details>
-
-          <details open>
-            <summary>Boundary proof</summary>
-            <div class="detail-body">
-              <div class="topology-list" id="boundaryList"></div>
-            </div>
-          </details>
-        </div>
-      </aside>
     </main>
   </div>
 
-  <nav class="bottom-dock" aria-label="Mobile selected receipt actions">
-    <button class="primary" id="bottomRun" type="button">Run</button>
-    <button id="bottomCopy" type="button">Copy</button>
-    <button id="bottomRaw" type="button">Raw</button>
-    <button class="ghost" id="bottomNext" type="button">Next</button>
-  </nav>
-
-  <dialog id="archiveDialog">
-    <div class="dialog-head">
-      <strong>Receipt 99 · Deep Archive</strong>
-      <div class="dock-actions">
-        <button class="mini" id="copyArchiveDialog" type="button">Copy Archive</button>
-        <button class="mini ghost" id="closeArchiveDialog" type="button">Close</button>
-      </div>
-    </div>
-    <pre id="archiveDialogText"></pre>
-  </dialog>
-
-  <div class="toast" id="toast">Copied</div>
-
-  <script>
-    (function hearthCategoryTabbedReceiptConsole(global) {
-      "use strict";
-
-      var root = global || window;
-      var doc = root.document;
-
-      var CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
-      var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
-      var INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2";
-      var INTERNAL_RENEWAL_RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_RECEIPT_v9_4_2";
-      var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_TNT_v9_4_1";
-      var BASELINE_INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_TNT_v9_1";
-      var VERSION =
-        "2026-06-09.hearth-diagnostic-route-category-tabbed-receipt-console-v9-4-2";
-
-      var TARGET_ROUTE = "/showroom/globe/hearth/";
-      var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-
-      var PARTICIPANT_GROUPS = [
-        {
-          group: "LAB_NORTH",
-          participants: [
-            { path: "/assets/lab/runtime-table.js", required: true, role: "LAB_NORTH" }
-          ]
-        },
-        {
-          group: "LAB_CARDINAL_BRANCHES",
-          participants: [
-            { path: "/assets/lab/runtime-table.east.js", required: true, role: "LAB_EAST" },
-            { path: "/assets/lab/runtime-table.south.js", required: true, role: "LAB_SOUTH" },
-            { path: "/assets/lab/runtime-table.west.js", required: true, role: "LABWEST" }
-          ]
-        },
-        {
-          group: "HEARTH_DIAGNOSTIC_PARTICIPANTS",
-          participants: [
-            { path: "/assets/hearth/hearth.diagnostic.rail.js", required: true, role: "NORTH" },
-            { path: "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js", required: true, role: "SURFACE_TRUTH" },
-            { path: "/assets/hearth/hearth.diagnostic.east.js", required: true, role: "EAST" },
-            { path: "/assets/hearth/hearth.diagnostic.probe.east.js", required: false, role: "EAST_PROBE" },
-            { path: "/assets/hearth/hearth.diagnostic.south.js", required: true, role: "SOUTH" },
-            { path: "/assets/hearth/hearth.diagnostic.south.surface.pointer.js", required: false, role: "SOUTH_SURFACE_POINTER" },
-            { path: "/assets/hearth/hearth.diagnostic.west.js", required: true, role: "WEST_DIAGNOSTIC" }
-          ]
-        }
-      ];
-
-      var CATEGORIES = [
-        { id: "baseline", label: "Baseline", hint: "00–03", receipts: ["00", "01", "02", "03"] },
-        { id: "engine", label: "Lab / Engine", hint: "04–07", receipts: ["04", "05", "06", "07"] },
-        { id: "direct", label: "Direct Execution", hint: "08–12", receipts: ["08", "09", "10", "11", "12"] },
-        { id: "archive", label: "Boundary / Archive", hint: "13,14,99", receipts: ["13", "14", "99"] },
-        { id: "all", label: "All", hint: "00–99", receipts: ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "99"] }
-      ];
-
-      var RECEIPTS = [
-        { seq: "00", name: "Overview", desc: "load + route state", category: "baseline", direct: false },
-        { seq: "01", name: "Participant Load", desc: "script registry", category: "baseline", direct: false },
-        { seq: "02", name: "Target Access", desc: "target frame proof", category: "baseline", direct: false },
-        { seq: "03", name: "Alias Map", desc: "authority aliases", category: "baseline", direct: false },
-
-        { seq: "04", name: "Lab Cardinal Branches", desc: "north east south west", category: "engine", direct: false },
-        { seq: "05", name: "Four Engine Mechanics", desc: "F1/F3/F5/F8", category: "engine", direct: false },
-        { seq: "06", name: "South Lens", desc: "sidecar visibility", category: "engine", direct: false },
-        { seq: "07", name: "LabWest Gate", desc: "west lab gate", category: "engine", direct: false },
-
-        { seq: "08", name: "North Direct", desc: "judge north", category: "direct", direct: true },
-        { seq: "09", name: "East Direct", desc: "east intake", category: "direct", direct: true },
-        { seq: "10", name: "Surface Truth", desc: "canvas surface proof", category: "direct", direct: true },
-        { seq: "11", name: "South Direct", desc: "proof return", category: "direct", direct: true },
-        { seq: "12", name: "West Direct", desc: "west diagnostic", category: "direct", direct: true },
-
-        { seq: "13", name: "Canvas Boundary", desc: "no-touch proof", category: "archive", direct: false },
-        { seq: "14", name: "Next Move", desc: "lawful action", category: "archive", direct: false },
-        { seq: "99", name: "Deep Archive", desc: "full evidence", category: "archive", direct: false }
-      ];
-
-      var VOLATILE_RECEIPTS = {
-        "00": true,
-        "01": true,
-        "02": true,
-        "03": true,
-        "04": true,
-        "05": true,
-        "06": true,
-        "07": true,
-        "13": true,
-        "14": true,
-        "99": true
-      };
-
-      var ALIASES = {
-        LAB_NORTH: [
-          "LAB_RUNTIME_TABLE",
-          "RUNTIME_TABLE",
-          "LAB_RUNTIME_TABLE_NORTH",
-          "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
-          "DEXTER_LAB.runtimeTable",
-          "DEXTER_LAB.cardinalRuntimeTableNorth",
-          "HEARTH.runtimeTable",
-          "HEARTH.northCommandRuntimeTable"
-        ],
-        LAB_EAST: [
-          "LAB_RUNTIME_TABLE_EAST",
-          "LAB_RUNTIME_TABLE_EAST_F3",
-          "RUNTIME_TABLE_EAST",
-          "EAST_INTAKE_VALVE",
-          "EAST_SUPREME_JUDGE",
-          "EAST_ADMISSION_BRANCH",
-          "DEXTER_LAB.runtimeTableEast",
-          "DEXTER_LAB.runtimeTableEastF3",
-          "DEXTER_LAB.cardinalRuntimeTableEast",
-          "DEXTER_LAB.eastIntakeValve",
-          "DEXTER_LAB.eastSupremeJudge",
-          "HEARTH.runtimeTableEast",
-          "HEARTH.runtimeTableEastF3",
-          "HEARTH.eastIntakeValve",
-          "HEARTH.eastSupremeJudge"
-        ],
-        LAB_SOUTH: [
-          "LAB_RUNTIME_TABLE_SOUTH",
-          "LAB_RUNTIME_TABLE_SOUTH_F8",
-          "RUNTIME_TABLE_SOUTH",
-          "SOUTH_PROOF_RETURN",
-          "SOUTH_SUPREME_JUDGE",
-          "DEXTER_LAB.runtimeTableSouth",
-          "DEXTER_LAB.runtimeTableSouthF8",
-          "DEXTER_LAB.cardinalRuntimeTableSouth",
-          "HEARTH.runtimeTableSouth",
-          "HEARTH.runtimeTableSouthF8"
-        ],
-        LABWEST: [
-          "LAB_RUNTIME_TABLE_WEST",
-          "LAB_RUNTIME_TABLE_WEST_F5",
-          "RUNTIME_TABLE_WEST",
-          "WEST_PRESSURE_ADMISSIBILITY",
-          "WEST_SUPREME_JUDGE",
-          "DEXTER_LAB.runtimeTableWest",
-          "DEXTER_LAB.cardinalRuntimeTableWest",
-          "HEARTH.runtimeTableWest"
-        ],
-        NORTH: [
-          "JUDGE_NORTH",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-          "HEARTH_DIAGNOSTIC_RAIL",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH_REANCHOR_DIAGNOSTIC_TRACK_RUNTIME_MAP_INTEGRITY",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH_LABWEST_CONSTRUCT_ANCHORED_SURFACE_TRUTH_CONSUMER",
-          "HEARTH.diagnosticRail",
-          "HEARTH.diagnosticNorth",
-          "HEARTH.diagnosticNorthRail",
-          "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
-          "DEXTER_LAB.hearthDiagnosticRail",
-          "DEXTER_LAB.hearthDiagnosticNorth",
-          "DEXTER_LAB.hearthDiagnosticNorthRail"
-        ],
-        EAST: [
-          "JUDGE_EAST",
-          "HEARTH_DIAGNOSTIC_RAIL_EAST",
-          "HEARTH.diagnosticEast",
-          "HEARTH.diagnosticRailEast",
-          "HEARTH.JUDGE_EAST_SOURCE_READ",
-          "DEXTER_LAB.hearthDiagnosticEast"
-        ],
-        EAST_PROBE: [
-          "HEARTH_DIAGNOSTIC_PROBE_EAST",
-          "HEARTH.diagnosticProbeEast",
-          "DEXTER_LAB.diagnosticProbeEast"
-        ],
-        SURFACE_TRUTH: [
-          "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-          "HEARTH_CANVAS_SURFACE_TRUTH_PROBE",
-          "HEARTH_DIAGNOSTIC_CANVAS_SURFACE_TRUTH_PROBE",
-          "HEARTH.diagnosticProbeCanvasSurfaceTruth",
-          "HEARTH.canvasSurfaceTruthProbe",
-          "HEARTH.CANVAS_SURFACE_TRUTH_PROBE",
-          "HEARTH.DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-          "DEXTER_LAB.canvasSurfaceTruthProbe",
-          "DEXTER_LAB.diagnosticProbeCanvasSurfaceTruth"
-        ],
-        SOUTH: [
-          "JUDGE_SOUTH",
-          "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-          "HEARTH.diagnosticSouth",
-          "HEARTH.diagnosticRailSouth",
-          "HEARTH.JUDGE_SOUTH_PACKET_OUTPUT",
-          "DEXTER_LAB.hearthDiagnosticSouth"
-        ],
-        SOUTH_SURFACE_POINTER: [
-          "HEARTH.southSurfacePointerSidecar",
-          "HEARTH.SOUTH_SURFACE_POINTER_SIDECAR",
-          "HEARTH.southCanvasSurfacePointerSidecar",
-          "HEARTH.diagnosticSouthSurfacePointer",
-          "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SIDECAR",
-          "HEARTH_SOUTH_SURFACE_POINTER_SIDECAR",
-          "DEXTER_LAB.southSurfacePointerSidecar",
-          "DEXTER_LAB.hearthSouthSurfacePointerSidecar"
-        ],
-        WEST_DIAGNOSTIC: [
-          "HEARTH.diagnosticWest",
-          "HEARTH.diagnosticRailWest",
-          "DEXTER_LAB.hearthDiagnosticWest",
-          "DEXTER_LAB.hearthDiagnosticRailWest",
-          "HEARTH_DIAGNOSTIC_WEST",
-          "HEARTH_DIAGNOSTIC_RAIL_WEST"
-        ]
-      };
-
-      var DIRECT_CONFIG = {
-        "08": {
-          role: "NORTH_DIRECT_CHECK_ALIAS_PROBE",
-          component: "NORTH",
-          authorityPath: "JUDGE_NORTH",
-          aliases: ALIASES.NORTH,
-          methods: ["run", "runDiagnostic", "runNorthDiagnostic", "inspect", "getReport", "getReceipt"],
-          fallbackGlobals: []
-        },
-        "09": {
-          role: "EAST_DIRECT_CHECK",
-          component: "EAST",
-          authorityPath: "JUDGE_EAST",
-          aliases: ALIASES.EAST,
-          methods: ["run", "runDiagnostic", "runEastSourceRead", "inspect", "getReport", "getReceipt"],
-          fallbackGlobals: [
-            "HEARTH_DIAGNOSTIC_RAIL_EAST_RUN",
-            "HEARTH_DIAGNOSTIC_RAIL_EAST_RUN_DIAGNOSTIC",
-            "HEARTH_DIAGNOSTIC_RAIL_EAST_RUN_SOURCE_READ"
-          ]
-        },
-        "10": {
-          role: "SURFACE_TRUTH_DIRECT_CHECK",
-          component: "SURFACE_TRUTH",
-          authorityPath: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
-          aliases: ALIASES.SURFACE_TRUTH,
-          methods: [
-            "run",
-            "runDiagnostic",
-            "runSurfaceTruth",
-            "runCanvasSurfaceTruth",
-            "runProbe",
-            "measure",
-            "inspect",
-            "getReport",
-            "getReceipt"
-          ],
-          fallbackGlobals: []
-        },
-        "11": {
-          role: "SOUTH_DIRECT_CHECK",
-          component: "SOUTH",
-          authorityPath: "HEARTH_DIAGNOSTIC_RAIL_SOUTH",
-          aliases: ALIASES.SOUTH,
-          methods: [
-            "run",
-            "runDiagnostic",
-            "runSouth",
-            "runSouthDiagnostic",
-            "runPacketOutput",
-            "inspect",
-            "getReport",
-            "getReceipt"
-          ],
-          fallbackGlobals: []
-        },
-        "12": {
-          role: "WEST_DIAGNOSTIC_DIRECT_CHECK",
-          component: "WEST_DIAGNOSTIC",
-          authorityPath: "HEARTH.diagnosticWest",
-          aliases: ALIASES.WEST_DIAGNOSTIC,
-          methods: ["run", "runDiagnostic", "runWestDiagnostic", "inspect", "getReport", "getReceipt"],
-          fallbackGlobals: []
-        }
-      };
-
-      var NO_CLAIMS = {
-        productionMutationAuthorized: false,
-        canvasRepairAuthorized: false,
-        canvasBuildAuthorized: false,
-        canvasReleaseAuthorized: false,
-        controlsRepairAuthorized: false,
-        runtimeRestartAuthorized: false,
-        routeRepairAuthorized: false,
-        readyTextClaimed: false,
-        f13Claimed: false,
-        f21Claimed: false,
-        visualPassClaimed: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false
-      };
-
-      var state = {
-        initializedAt: nowIso(),
-        updatedAt: nowIso(),
-        selectedReceipt: normalizeReceipt(readSession("selectedReceipt", "00")),
-        selectedReceiptMode: "preview",
-        activeCategory: normalizeCategory(readSession("activeCategory", "baseline")),
-        searchQuery: "",
-        rawVisible: readSession("rawVisible", "false") === "true",
-        targetVisible: readSession("targetVisible", "false") === "true",
-        loadStarted: false,
-        loadComplete: false,
-        participantLoad: [],
-        aliases: {},
-        direct: {},
-        archive: {},
-        lastBuiltPacketBySeq: {},
-        lastRawTextBySeq: {},
-        recommendedReceipt: normalizeReceipt(readSession("recommendedReceipt", "99"))
-      };
-
-      function nowIso() {
-        try { return new Date().toISOString(); } catch (_error) { return ""; }
-      }
-
-      function isObject(value) {
-        return Boolean(value && typeof value === "object" && !Array.isArray(value));
-      }
-
-      function isFunction(value) {
-        return typeof value === "function";
-      }
-
-      function safeString(value, fallback) {
-        if (fallback === undefined) fallback = "";
-        if (value === undefined || value === null) return fallback;
-        try { return String(value); } catch (_error) { return fallback; }
-      }
-
-      function escapeHtml(value) {
-        return safeString(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
-
-      function compact(value, limit) {
-        if (limit === undefined) limit = 16000;
-        return safeString(value).replace(/\s+/g, " ").trim().slice(0, limit);
-      }
-
-      function readSession(key, fallback) {
-        try {
-          return root.sessionStorage.getItem("hearthDiagnostic." + key) || fallback;
-        } catch (_error) {
-          return fallback;
-        }
-      }
-
-      function writeSession(key, value) {
-        try {
-          root.sessionStorage.setItem("hearthDiagnostic." + key, safeString(value));
-        } catch (_error) {}
-      }
-
-      function hasReceipt(seq) {
-        return RECEIPTS.some(function item(receipt) { return receipt.seq === seq; });
-      }
-
-      function hasCategory(id) {
-        return CATEGORIES.some(function item(category) { return category.id === id; });
-      }
-
-      function normalizeReceipt(seq) {
-        return hasReceipt(seq) ? seq : "00";
-      }
-
-      function normalizeCategory(id) {
-        return hasCategory(id) ? id : "baseline";
-      }
-
-      function persistNavigationState() {
-        state.selectedReceipt = normalizeReceipt(state.selectedReceipt);
-        state.activeCategory = normalizeCategory(state.activeCategory);
-        state.recommendedReceipt = normalizeReceipt(state.recommendedReceipt);
-
-        writeSession("selectedReceipt", state.selectedReceipt);
-        writeSession("activeCategory", state.activeCategory);
-        writeSession("rawVisible", state.rawVisible ? "true" : "false");
-        writeSession("targetVisible", state.targetVisible ? "true" : "false");
-        writeSession("recommendedReceipt", state.recommendedReceipt);
-      }
-
-      function readPath(path) {
-        var parts = safeString(path).replace(/^window\./, "").split(".").filter(Boolean);
-        var cursor = root;
-
-        for (var i = 0; i < parts.length; i += 1) {
-          if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
-          cursor = cursor[parts[i]];
-        }
-
-        return cursor;
-      }
-
-      function normalizePath(src) {
-        try {
-          return new URL(src, root.location.origin).pathname;
-        } catch (_error) {
-          return safeString(src);
-        }
-      }
-
-      function findScript(path) {
-        var scripts = Array.prototype.slice.call(doc.querySelectorAll("script[src]"));
-        for (var i = 0; i < scripts.length; i += 1) {
-          var src = scripts[i].getAttribute("src") || scripts[i].src || "";
-          if (normalizePath(src) === path || src === path || src.indexOf(path) !== -1) return scripts[i];
-        }
-        return null;
-      }
-
-      function getParticipantRecord(path) {
-        for (var i = 0; i < state.participantLoad.length; i += 1) {
-          if (state.participantLoad[i].path === path) return state.participantLoad[i];
-        }
-        return null;
-      }
-
-      function recordParticipant(result) {
-        var existing = getParticipantRecord(result.path);
-        if (existing) Object.assign(existing, result);
-        else state.participantLoad.push(result);
-
-        state.updatedAt = nowIso();
-        refreshChrome();
-      }
-
-      function loadParticipant(entry) {
-        return new Promise(function participantPromise(resolve) {
-          var existing = findScript(entry.path);
-
-          if (existing) {
-            var reused = {
-              group: entry.group || "",
-              role: entry.role || "",
-              path: entry.path,
-              required: Boolean(entry.required),
-              status: "loaded",
-              src: existing.getAttribute("src") || existing.src || entry.path,
-              reused: true,
-              settledAt: nowIso()
-            };
-
-            recordParticipant(reused);
-            resolve(reused);
-            return;
-          }
-
-          var script = doc.createElement("script");
-          var finished = false;
-
-          function finish(status) {
-            if (finished) return;
-            finished = true;
-
-            var result = {
-              group: entry.group || "",
-              role: entry.role || "",
-              path: entry.path,
-              required: Boolean(entry.required),
-              status: status,
-              src: entry.path,
-              reused: false,
-              settledAt: nowIso()
-            };
-
-            recordParticipant(result);
-            resolve(result);
-          }
-
-          script.src = entry.path;
-          script.defer = true;
-          script.dataset.hearthDiagnosticParticipant = "true";
-          script.dataset.hearthDiagnosticParticipantRole = entry.role || "";
-          script.dataset.hearthDiagnosticRequired = entry.required ? "true" : "false";
-          script.dataset.hearthDiagnosticContract = INTERNAL_RENEWAL_CONTRACT;
-
-          script.onload = function onload() { finish("loaded"); };
-          script.onerror = function onerror() { finish(entry.required ? "error_required" : "error_optional"); };
-
-          root.setTimeout(function timeout() {
-            finish(entry.required ? "timeout_required" : "timeout_optional");
-          }, 4500);
-
-          doc.head.appendChild(script);
-        });
-      }
-
-      function loadParticipants() {
-        state.loadStarted = true;
-        state.loadComplete = false;
-        refreshChrome();
-
-        var chain = Promise.resolve();
-
-        PARTICIPANT_GROUPS.forEach(function eachGroup(group) {
-          chain = chain.then(function loadGroup() {
-            var entries = group.participants.map(function attachGroup(item) {
-              return Object.assign({}, item, { group: group.group });
-            });
-
-            return Promise.all(entries.map(loadParticipant));
-          });
-        });
-
-        return chain.then(function done() {
-          state.loadComplete = true;
-          state.updatedAt = nowIso();
-          probeAliases();
-          publishChamberGlobals();
-          refreshChrome();
-          rebuildSelectedAfterLoad();
-          return state.participantLoad;
-        });
-      }
-
-      function getTargetAccess() {
-        var frame = doc.getElementById("hearthDiagnosticTargetFrame");
-        var frameDoc = null;
-        var path = "UNKNOWN";
-        var title = "UNKNOWN";
-        var error = "NONE";
-
-        try {
-          frameDoc = frame && (frame.contentDocument || (frame.contentWindow && frame.contentWindow.document));
-          if (frameDoc && frameDoc.location) path = frameDoc.location.pathname || "UNKNOWN";
-          if (frameDoc && frameDoc.title) title = frameDoc.title || "UNKNOWN";
-        } catch (caught) {
-          error = caught && caught.message ? caught.message : "TARGET_FRAME_ACCESS_ERROR";
-        }
-
-        return {
-          status: frameDoc ? "TARGET_ACCESS_CONFIRMED" : "TARGET_ACCESS_NOT_CONFIRMED",
-          routeConfirmed: path === TARGET_ROUTE || path === TARGET_ROUTE.replace(/\/$/, ""),
-          framePresent: Boolean(frame),
-          frameAccessible: Boolean(frameDoc),
-          error: error,
-          targetPath: path,
-          targetTitle: title
-        };
-      }
-
-      function methodKeys(value) {
-        if (!isObject(value) && !isFunction(value)) return [];
-        try {
-          return Object.keys(value).filter(function eachKey(key) {
-            return isFunction(value[key]);
-          });
-        } catch (_error) {
-          return [];
-        }
-      }
-
-      function probeAlias(alias) {
-        var value = readPath(alias);
-        var found = value !== null && value !== undefined;
-        var type = found ? typeof value : "undefined";
-        var methods = methodKeys(value);
-
-        return {
-          alias: alias,
-          found: found,
-          valueType: type,
-          contract: found && isObject(value) ? safeString(value.CONTRACT || value.contract || "UNKNOWN") : "UNKNOWN",
-          receipt: found && isObject(value) ? safeString(value.RECEIPT || value.receipt || "UNKNOWN") : "UNKNOWN",
-          internalRenewalContract: found && isObject(value)
-            ? safeString(
-                value.INTERNAL_RENEWAL_CONTRACT ||
-                value.internalRenewalContract ||
-                value.RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT ||
-                value.receiptLightCallableBridgeContract ||
-                "UNKNOWN"
-              )
-            : "UNKNOWN",
-          methodCount: methods.length,
-          methodKeys: methods.join(",")
-        };
-      }
-
-      function probeAliases() {
-        var out = {};
-
-        Object.keys(ALIASES).forEach(function eachAliasGroup(label) {
-          var probes = ALIASES[label].map(probeAlias);
-          var first = probes.find(function found(item) { return item.found; });
-
-          out[label] = {
-            label: label,
-            present: Boolean(first),
-            authorityPath: first ? first.alias : "NONE",
-            valueType: first ? first.valueType : "undefined",
-            methodCount: first ? first.methodCount : 0,
-            probe: probes
-          };
-        });
-
-        state.aliases = out;
-        state.updatedAt = nowIso();
-        return out;
-      }
-
-      function scoreCandidate(value, alias, config) {
-        var score = 0;
-        if (!value) return -9999;
-        if (alias === config.authorityPath) score += 20;
-        if (isObject(value)) score += 10;
-        if (isFunction(value)) score += 5;
-
-        var keys = methodKeys(value);
-        if (keys.length) score += 30;
-
-        for (var i = 0; i < config.methods.length; i += 1) {
-          if (value && isFunction(value[config.methods[i]])) score += 100;
-        }
-
-        return score;
-      }
-
-      function resolveAuthority(config) {
-        var candidates = [];
-
-        (config.aliases || []).forEach(function inspectAlias(alias) {
-          var value = readPath(alias);
-          var probe = probeAlias(alias);
-
-          if (probe.found) {
-            candidates.push({
-              alias: alias,
-              value: value,
-              probe: probe,
-              score: scoreCandidate(value, alias, config)
-            });
-          }
-        });
-
-        candidates.sort(function sortByScore(a, b) {
-          return b.score - a.score;
-        });
-
-        var best = candidates.length ? candidates[0] : null;
-
-        return {
-          authority: best ? best.value : null,
-          authorityPath: best ? best.alias : config.authorityPath,
-          present: Boolean(best),
-          valueType: best ? best.probe.valueType : "undefined",
-          candidates: candidates.map(function compactCandidate(candidate) {
-            return {
-              alias: candidate.alias,
-              score: candidate.score,
-              valueType: candidate.probe.valueType,
-              methodCount: candidate.probe.methodCount,
-              methodKeys: candidate.probe.methodKeys,
-              contract: candidate.probe.contract,
-              receipt: candidate.probe.receipt,
-              internalRenewalContract: candidate.probe.internalRenewalContract
-            };
-          }),
-          probes: (config.aliases || []).map(probeAlias)
-        };
-      }
-
-      function getReadableReceipt(authority) {
-        if (!authority || !isObject(authority)) return null;
-
-        try {
-          if (isFunction(authority.getReceiptLight)) {
-            var light = authority.getReceiptLight();
-            if (isObject(light)) return light;
-          }
-
-          if (isFunction(authority.getCallableReceiptLight)) {
-            var callable = authority.getCallableReceiptLight();
-            if (isObject(callable)) return callable;
-          }
-
-          if (isFunction(authority.getReport)) {
-            var report = authority.getReport();
-            if (isObject(report)) return report;
-          }
-
-          if (isFunction(authority.getReceipt)) {
-            var receipt = authority.getReceipt();
-            if (isObject(receipt)) return receipt;
-          }
-        } catch (_error) {}
-
-        return authority;
-      }
-
-      function runFallbackGlobal(config) {
-        var names = config.fallbackGlobals || [];
-
-        for (var i = 0; i < names.length; i += 1) {
-          var fn = readPath(names[i]);
-          if (isFunction(fn)) {
-            return {
-              called: true,
-              method: names[i],
-              packet: fn()
-            };
-          }
-        }
-
-        return { called: false };
-      }
-
-      function runDirectReceipt(seq) {
-        var config = DIRECT_CONFIG[seq];
-        var resolved = resolveAuthority(config);
-        var authority = resolved.authority;
-        var authorityMethodKeys = methodKeys(authority);
-
-        var runExecuted = false;
-        var readOnlyDirectReceipt = false;
-        var directMethod = "NONE";
-        var directError = "NONE";
-        var packet = null;
-
-        if (authority) {
-          for (var i = 0; i < config.methods.length; i += 1) {
-            var method = config.methods[i];
-
-            if (isObject(authority) && isFunction(authority[method])) {
-              try {
-                directMethod = method;
-                packet = authority[method]();
-                runExecuted = true;
-                break;
-              } catch (caught) {
-                directMethod = method;
-                directError = caught && caught.message ? caught.message : String(caught);
-                runExecuted = false;
-                break;
-              }
-            }
-          }
-
-          if (!runExecuted && directError === "NONE") {
-            try {
-              var fallback = runFallbackGlobal(config);
-              if (fallback.called) {
-                directMethod = fallback.method;
-                packet = fallback.packet;
-                runExecuted = true;
-              }
-            } catch (caughtFallback) {
-              directMethod = "GLOBAL_FALLBACK";
-              directError = caughtFallback && caughtFallback.message
-                ? caughtFallback.message
-                : String(caughtFallback);
-            }
-          }
-
-          if (!packet || !isObject(packet)) {
-            packet = getReadableReceipt(authority);
-            readOnlyDirectReceipt = Boolean(packet && isObject(packet));
-          }
-        }
-
-        var packetKeys = packet && isObject(packet) ? Object.keys(packet) : [];
-        var directContract = "UNKNOWN";
-        var directReceipt = "UNKNOWN";
-
-        if (packet && isObject(packet)) {
-          directContract = safeString(packet.CONTRACT || packet.contract || "UNKNOWN");
-          directReceipt = safeString(packet.RECEIPT || packet.receipt || "UNKNOWN");
-        } else if (authority && isObject(authority)) {
-          directContract = safeString(authority.CONTRACT || authority.contract || "UNKNOWN");
-          directReceipt = safeString(authority.RECEIPT || authority.receipt || "UNKNOWN");
-        }
-
-        var receipt = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_2",
-          RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
-          RECEIPT_SEQUENCE: seq,
-          ROLE: config.role,
-          SCOPE: "ONE_COMPONENT_DIRECT_EXECUTION",
-          COMPONENT: config.component,
-
-          CONTRACT: CONTRACT,
-          RECEIPT: RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
-
-          RUN_STATE: runExecuted
-            ? "DIRECT_RUN_EXECUTED"
-            : resolved.present
-              ? "AUTHORITY_FOUND_NOT_RUN"
-              : "AUTHORITY_NOT_FOUND",
-          TRUST_STATE: resolved.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
-          BLOCKING: false,
-          NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
-
-          RUN_EXECUTED: runExecuted,
-          READ_ONLY_DIRECT_RECEIPT: readOnlyDirectReceipt && !runExecuted,
-          DIRECT_AUTHORITY_PATH: resolved.authorityPath,
-          DIRECT_CONTRACT: directContract,
-          DIRECT_RECEIPT: directReceipt,
-          DIRECT_STATUS: runExecuted
-            ? "DIRECT_RUN_EXECUTED"
-            : resolved.present
-              ? "AUTHORITY_FOUND_NOT_RUN"
-              : "AUTHORITY_NOT_FOUND",
-          DIRECT_METHOD: directMethod,
-          DIRECT_ERROR: directError,
-          AUTHORITY_METHOD_COUNT: authorityMethodKeys.length,
-          AUTHORITY_METHOD_KEYS: authorityMethodKeys.join(","),
-          RESOLVER_CANDIDATES: resolved.candidates,
-          PACKET_KEYS: packetKeys.join(","),
-          DIRECT_PACKET: packet && isObject(packet) ? packet : {},
-          ALIAS_PROBE: resolved.probes,
-          NEXT_ACTION: runExecuted ? "DIRECT_RECEIPT_COMPLETE" : "RUN_" + seq + "_DIRECT_CHECK",
-          UPDATED_AT: nowIso()
-        };
-
-        Object.assign(receipt, NO_CLAIMS);
-
-        state.direct[seq] = receipt;
-        state.updatedAt = nowIso();
-        return receipt;
-      }
-
-      function compactForLine(value) {
-        if (value === undefined || value === null || value === "") return "UNKNOWN";
-        if (isFunction(value)) return "[function]";
-        if (Array.isArray(value) || isObject(value)) {
-          try {
-            return compact(JSON.stringify(value, function replacer(_key, item) {
-              return isFunction(item) ? "[function]" : item;
-            }), 26000);
-          } catch (_error) {
-            return "[object]";
-          }
-        }
-        return safeString(value);
-      }
-
-      function lines(packet) {
-        return Object.keys(packet).map(function line(key) {
-          return key + "=" + compactForLine(packet[key]);
-        }).join("\n");
-      }
-
-      function baseReceipt(seq, role, component, extra) {
-        var packet = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_2",
-          RECEIPT_LEVEL: "2_LIGHT_SCAN",
-          RECEIPT_SEQUENCE: seq,
-          ROLE: role,
-          COMPONENT: component,
-          CONTRACT: CONTRACT,
-          RECEIPT: RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
-          RUN_STATE: "LIGHT_SCAN",
-          TRUST_STATE: "CURRENT",
-          BLOCKING: false,
-          UPDATED_AT: nowIso()
-        };
-
-        Object.assign(packet, extra || {});
-        Object.assign(packet, NO_CLAIMS);
-        return packet;
-      }
-
-      function loadSummary() {
-        var required = state.participantLoad.filter(function item(entry) { return entry.required; });
-        var requiredBad = required.filter(function item(entry) { return entry.status !== "loaded"; });
-        var optionalBad = state.participantLoad.filter(function item(entry) {
-          return !entry.required && entry.status !== "loaded";
-        });
-
-        return {
-          requiredCount: required.length,
-          requiredBadCount: requiredBad.length,
-          optionalBadCount: optionalBad.length,
-          allRequiredLoaded: requiredBad.length === 0 && state.loadComplete,
-          allLoaded: state.participantLoad.length > 0 && state.participantLoad.every(function each(entry) {
-            return entry.status === "loaded";
-          })
-        };
-      }
-
-      function overviewReceipt() {
-        var aliases = probeAliases();
-        var summary = loadSummary();
-
-        return baseReceipt("00", "OVERVIEW", "CHAMBER", {
-          RECEIPT_LEVEL: "1_OVERVIEW",
-          VERSION: VERSION,
-          TARGET_ROUTE: TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-          LOAD_STARTED: state.loadStarted,
-          LOAD_COMPLETE: state.loadComplete,
-          ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
-          PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
-          CATEGORY_TABBED_RECEIPT_CONSOLE_ACTIVE: true,
-          VIEW_RUN_COPY_SEPARATION_ACTIVE: true,
-          LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_ACTIVE: true,
-          LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
-          LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
-          LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
-          LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
-          EAST_PRESENT: Boolean(aliases.EAST && aliases.EAST.present),
-          SURFACE_TRUTH_PRESENT: Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present),
-          SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
-          SOUTH_SURFACE_POINTER_PRESENT: Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present),
-          WEST_DIAGNOSTIC_PRESENT: Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present),
-          NEXT_RECEIPT_RECOMMENDED: "99 · Deep Archive"
-        });
-      }
-
-      function participantLoadReceipt() {
-        var summary = loadSummary();
-
-        return baseReceipt("01", "PARTICIPANT_LOAD", "CHAMBER", {
-          LOAD_STARTED: state.loadStarted,
-          LOAD_COMPLETE: state.loadComplete,
-          ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
-          ALL_PARTICIPANTS_LOADED: summary.allLoaded,
-          REQUIRED_COUNT: summary.requiredCount,
-          REQUIRED_BAD_COUNT: summary.requiredBadCount,
-          OPTIONAL_BAD_COUNT: summary.optionalBadCount,
-          PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
-          PARTICIPANT_LOAD_PATHS: state.participantLoad.map(function item(entry) {
-            return entry.path + ":" + entry.status;
-          }).join(","),
-          PARTICIPANT_LOAD: state.participantLoad
-        });
-      }
-
-      function targetAccessReceipt() {
-        return baseReceipt("02", "TARGET_ACCESS", "CHAMBER", getTargetAccess());
-      }
-
-      function aliasMapReceipt() {
-        var aliases = probeAliases();
-
-        return baseReceipt("03", "ALIAS_MAP", "CHAMBER", {
-          NORTH_PRESENT: Boolean(aliases.NORTH && aliases.NORTH.present),
-          LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
-          LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
-          LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
-          LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
-          EAST_PRESENT: Boolean(aliases.EAST && aliases.EAST.present),
-          EAST_PROBE_PRESENT: Boolean(aliases.EAST_PROBE && aliases.EAST_PROBE.present),
-          SURFACE_TRUTH_PRESENT: Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present),
-          SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
-          SOUTH_SURFACE_POINTER_PRESENT: Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present),
-          WEST_DIAGNOSTIC_PRESENT: Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present),
-          ALIASES: aliases
-        });
-      }
-
-      function labCardinalReceipt() {
-        var aliases = probeAliases();
-
-        return baseReceipt("04", "LAB_CARDINAL_BRANCHES", "LAB_CARDINAL_BRANCH_LOAD_REGISTRY", {
-          LAB_NORTH_FILE: "/assets/lab/runtime-table.js",
-          LAB_EAST_FILE: "/assets/lab/runtime-table.east.js",
-          LAB_SOUTH_FILE: "/assets/lab/runtime-table.south.js",
-          LABWEST_FILE: "/assets/lab/runtime-table.west.js",
-
-          LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
-          LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
-          LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
-          LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
-
-          LAB_NORTH_AUTHORITY_PATH: aliases.LAB_NORTH ? aliases.LAB_NORTH.authorityPath : "NONE",
-          LAB_EAST_AUTHORITY_PATH: aliases.LAB_EAST ? aliases.LAB_EAST.authorityPath : "NONE",
-          LAB_SOUTH_AUTHORITY_PATH: aliases.LAB_SOUTH ? aliases.LAB_SOUTH.authorityPath : "NONE",
-          LABWEST_AUTHORITY_PATH: aliases.LABWEST ? aliases.LABWEST.authorityPath : "NONE",
-
-          CALIBRATION_STATUS:
-            aliases.LAB_NORTH && aliases.LAB_NORTH.present &&
-            aliases.LAB_EAST && aliases.LAB_EAST.present &&
-            aliases.LAB_SOUTH && aliases.LAB_SOUTH.present &&
-            aliases.LABWEST && aliases.LABWEST.present
-              ? "LAB_CARDINAL_BRANCHES_REGISTERED"
-              : "LAB_CARDINAL_BRANCH_REGISTRATION_INCOMPLETE"
-        });
-      }
-
-      function fourEngineReceipt() {
-        var aliases = probeAliases();
-
-        return baseReceipt("05", "FOUR_ENGINE_MECHANICS", "LAB_ENGINE_CALIBRATION", {
-          NORTH_ENGINE_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
-          EAST_ENGINE_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
-          WEST_ENGINE_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
-          SOUTH_ENGINE_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
-
-          NORTH_FIBONACCI_EXPECTED: "F1/F21",
-          EAST_FIBONACCI_EXPECTED: "F3",
-          EAST_COORDINATE_EXPECTED: "RT3D-X04_Y19_Z3",
-          EAST_ENGINE_PART_EXPECTED: "VALVE",
-          WEST_FIBONACCI_EXPECTED: "F5",
-          SOUTH_FIBONACCI_EXPECTED: "F8",
-
-          FOUR_ENGINE_CALIBRATION:
-            aliases.LAB_NORTH && aliases.LAB_NORTH.present &&
-            aliases.LAB_EAST && aliases.LAB_EAST.present &&
-            aliases.LABWEST && aliases.LABWEST.present &&
-            aliases.LAB_SOUTH && aliases.LAB_SOUTH.present
-              ? "COMPLETE"
-              : "INCOMPLETE"
-        });
-      }
-
-      function southLensReceipt() {
-        var aliases = probeAliases();
-
-        return baseReceipt("06", "SOUTH_LENS", "SOUTH", {
-          SOUTH_AUTHORITY_PATH: aliases.SOUTH ? aliases.SOUTH.authorityPath : "NONE",
-          SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
-          SOUTH_SURFACE_POINTER_AUTHORITY_PATH: aliases.SOUTH_SURFACE_POINTER ? aliases.SOUTH_SURFACE_POINTER.authorityPath : "NONE",
-          SOUTH_SURFACE_POINTER_PRESENT: Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present),
-          SOUTH_SURFACE_POINTER_SIDECAR_LOAD_STATUS:
-            aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present
-              ? "LOADED_AND_AVAILABLE"
-              : "NOT_OBSERVED",
-          SOUTH_STATUS:
-            aliases.SOUTH && aliases.SOUTH.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
-          NEXT_ACTION:
-            aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present
-              ? "RUN_11_SOUTH_DIRECT_CHECK"
-              : "VERIFY_SOUTH_SURFACE_POINTER_SIDECAR"
-        });
-      }
-
-      function labWestReceipt() {
-        var aliases = probeAliases();
-
-        return baseReceipt("07", "LABWEST_GATE", "LABWEST", {
-          LABWEST_AUTHORITY_PATH: aliases.LABWEST ? aliases.LABWEST.authorityPath : "NONE",
-          LABWEST_STATUS: aliases.LABWEST && aliases.LABWEST.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
-          WEST_DIAGNOSTIC_AUTHORITY_PATH: aliases.WEST_DIAGNOSTIC ? aliases.WEST_DIAGNOSTIC.authorityPath : "NONE",
-          WEST_DIAGNOSTIC_IS_SEPARATE_FROM_LABWEST: true,
-          LABWEST_DECISION_VALUE: "UNKNOWN",
-          LABWEST_GAP_CLASS_VALUE: "UNKNOWN",
-          LABWEST_BLOCKING: false
-        });
-      }
-
-      function canvasBoundaryReceipt() {
-        return baseReceipt("13", "CANVAS_BOUNDARY", "CANVAS", {
-          RUN_STATE: "LIGHT_SCAN",
-          TRUST_STATE: "PROTECTED",
-          CANVAS_BUILD_AUTHORIZED: false,
-          CANVAS_RELEASE_AUTHORIZED: false,
-          CANVAS_REPAIR_AUTHORIZED: false,
-          RUNTIME_RESTART_AUTHORIZED: false,
-          PRODUCTION_MUTATION_AUTHORIZED: false,
-          F13_CLAIMED: false,
-          F21_CLAIMED: false,
-          VISUAL_PASS_CLAIMED: false,
-          BOUNDARY_REASON: "DIAGNOSTIC_RECEIPT_ONLY_NO_PRODUCTION_ACTION_AUTHORIZED"
-        });
-      }
-
-      function nextMoveReceipt() {
-        var aliases = probeAliases();
-        var summary = loadSummary();
-
-        var directAvailable = ["08", "09", "10", "11", "12"];
-        var directRun = Object.keys(state.direct).filter(function hasRun(seq) {
-          return state.direct[seq] && state.direct[seq].RUN_EXECUTED;
-        });
-
-        var firstBlocking = "NONE";
-        var nextFile = "NONE";
-        var nextAction = "DIRECT_TRACK_CALIBRATED";
-
-        if (!state.loadComplete) {
-          firstBlocking = "PARTICIPANT_LOAD";
-          nextFile = DIAGNOSTIC_ROUTE;
-          nextAction = "WAIT_FOR_PARTICIPANT_LOAD";
-        } else if (!summary.allRequiredLoaded) {
-          firstBlocking = "REQUIRED_PARTICIPANT_LOAD";
-          nextFile = DIAGNOSTIC_ROUTE;
-          nextAction = "INSPECT_01_PARTICIPANT_LOAD";
-        } else if (!(aliases.LAB_EAST && aliases.LAB_EAST.present)) {
-          firstBlocking = "LAB_EAST";
-          nextFile = "/assets/lab/runtime-table.east.js";
-          nextAction = "REGISTER_LAB_EAST_BRANCH";
-        } else if (!(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present)) {
-          firstBlocking = "LAB_SOUTH";
-          nextFile = "/assets/lab/runtime-table.south.js";
-          nextAction = "REGISTER_LAB_SOUTH_BRANCH";
-        } else if (!state.direct["09"] || !state.direct["09"].RUN_EXECUTED) {
-          firstBlocking = "EAST_DIRECT";
-          nextFile = "/assets/hearth/hearth.diagnostic.east.js";
-          nextAction = "RUN_09_EAST_DIRECT_CHECK";
-        } else if (!state.direct["10"] || !state.direct["10"].RUN_EXECUTED) {
-          firstBlocking = "SURFACE_TRUTH_DIRECT";
-          nextFile = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
-          nextAction = "RUN_10_SURFACE_TRUTH_DIRECT_CHECK";
-        } else if (!state.direct["11"] || !state.direct["11"].RUN_EXECUTED) {
-          firstBlocking = "SOUTH_DIRECT";
-          nextFile = "/assets/hearth/hearth.diagnostic.south.js";
-          nextAction = "RUN_11_SOUTH_DIRECT_CHECK";
-        } else if (!state.direct["12"] || !state.direct["12"].RUN_EXECUTED) {
-          firstBlocking = "WEST_DIRECT";
-          nextFile = "/assets/hearth/hearth.diagnostic.west.js";
-          nextAction = "RUN_12_WEST_DIRECT_CHECK";
-        } else if (!state.direct["08"] || !state.direct["08"].RUN_EXECUTED) {
-          firstBlocking = "NORTH_DIRECT";
-          nextFile = "/assets/hearth/hearth.diagnostic.rail.js";
-          nextAction = "RUN_08_NORTH_DIRECT_CHECK";
-        }
-
-        return baseReceipt("14", "NEXT_LAWFUL_MOVE", "CHAMBER", {
-          RECEIPT_LEVEL: "4_SYNTHESIS",
-          SCOPE: "FINAL_FOCUSED_SYNTHESIS",
-          TRUST_STATE: "CURRENT_SYNTHESIS",
-          FIRST_BLOCKING_COMPONENT: firstBlocking,
-          FIRST_BLOCKING_REASON: firstBlocking === "NONE" ? "NONE" : "CALIBRATION_REMAINING",
-          TRUSTED_RECEIPTS_USED: "00,01,02,03,04,05,06,07,13",
-          DIRECT_RECEIPTS_AVAILABLE: directAvailable.join(","),
-          DIRECT_RECEIPTS_RUN: directRun.length ? directRun.join(",") : "NONE",
-          QUARANTINED_RECEIPTS: "NONE",
-          HTML_RECEIVER_BLOCKING: false,
-          RAIL_COMPONENT_BLOCKING: firstBlocking,
-          NEXT_FILE: nextFile,
-          NEXT_ACTION: nextAction,
-          DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
-        });
-      }
-
-      function deepArchiveReceipt() {
-        var aliases = probeAliases();
-
-        var archive = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_99_v9_4_2",
-          CONTRACT: CONTRACT,
-          RECEIPT: RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
-          TARGET_ROUTE: TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-          state: {
-            initializedAt: state.initializedAt,
-            updatedAt: nowIso(),
-            selectedReceipt: state.selectedReceipt,
-            selectedReceiptMode: state.selectedReceiptMode,
-            recommendedReceipt: state.recommendedReceipt,
-            activeCategory: state.activeCategory,
-            loadStarted: state.loadStarted,
-            loadComplete: state.loadComplete,
-            participantLoad: state.participantLoad,
-            targetAccess: getTargetAccess(),
-            aliases: aliases,
-            direct: state.direct,
-            archive: {
-              participantLoad: state.participantLoad,
-              targetAccess: getTargetAccess(),
-              aliases: aliases,
-              categoryTabbedReceiptConsoleActive: true,
-              viewRunCopySeparationActive: true,
-              labCardinalBranchLoadAlignment: true,
-              labNorthBranchExpected: "/assets/lab/runtime-table.js",
-              labEastBranchExpected: "/assets/lab/runtime-table.east.js",
-              labSouthBranchExpected: "/assets/lab/runtime-table.south.js",
-              labWestBranchExpected: "/assets/lab/runtime-table.west.js",
-              recommendedReceipt: "14",
-              updatedAt: nowIso()
-            }
-          },
-          NO_CLAIMS: NO_CLAIMS
-        };
-
-        state.archive = archive;
-        return archive;
-      }
-
-      function previewDirectReceipt(seq) {
-        var config = DIRECT_CONFIG[seq];
-        var resolved = resolveAuthority(config);
-        var methods = methodKeys(resolved.authority);
-
-        var receipt = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_2_PREVIEW",
-          RECEIPT_LEVEL: "3_DIRECT_EXECUTION_PREVIEW",
-          RECEIPT_SEQUENCE: seq,
-          ROLE: config.role,
-          COMPONENT: config.component,
-          CONTRACT: CONTRACT,
-          RECEIPT: RECEIPT,
-          INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
-          INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
-          RUN_STATE: "PREVIEW_NOT_EXECUTED",
-          TRUST_STATE: resolved.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
-          BLOCKING: false,
-          EXECUTION_REQUIRED: true,
-          RUN_EXECUTED: false,
-          DIRECT_AUTHORITY_PATH: resolved.authorityPath,
-          AUTHORITY_METHOD_COUNT: methods.length,
-          AUTHORITY_METHOD_KEYS: methods.join(","),
-          RESOLVER_CANDIDATES: resolved.candidates,
-          NEXT_ACTION: "RUN_" + seq + "_DIRECT_CHECK",
-          UPDATED_AT: nowIso()
-        };
-
-        Object.assign(receipt, NO_CLAIMS);
-        return receipt;
-      }
-
-      function buildReceipt(seq, options) {
-        options = options || {};
-        seq = normalizeReceipt(seq);
-
-        if (DIRECT_CONFIG[seq] && !options.execute) return previewDirectReceipt(seq);
-        if (DIRECT_CONFIG[seq] && options.execute) return runDirectReceipt(seq);
-
-        if (seq === "00") return overviewReceipt();
-        if (seq === "01") return participantLoadReceipt();
-        if (seq === "02") return targetAccessReceipt();
-        if (seq === "03") return aliasMapReceipt();
-        if (seq === "04") return labCardinalReceipt();
-        if (seq === "05") return fourEngineReceipt();
-        if (seq === "06") return southLensReceipt();
-        if (seq === "07") return labWestReceipt();
-        if (seq === "13") return canvasBoundaryReceipt();
-        if (seq === "14") return nextMoveReceipt();
-        if (seq === "99") return deepArchiveReceipt();
-
-        return baseReceipt(seq, "UNKNOWN", "UNKNOWN", {
-          STATUS: "UNKNOWN_RECEIPT"
-        });
-      }
-
-      function rawText(packet, seq) {
-        if (seq === "99") {
-          return JSON.stringify(packet, function replacer(_key, value) {
-            return isFunction(value) ? "[function]" : value;
-          }, 2);
-        }
-
-        return lines(packet);
-      }
-
-      function cachePacket(seq, packet) {
-        seq = normalizeReceipt(seq);
-        state.lastBuiltPacketBySeq[seq] = packet;
-        state.lastRawTextBySeq[seq] = rawText(packet, seq);
-        state.recommendedReceipt = normalizeReceipt(extractRecommended(packet));
-        state.updatedAt = nowIso();
-        persistNavigationState();
-      }
-
-      function rebuildSelectedAfterLoad() {
-        var seq = normalizeReceipt(state.selectedReceipt);
-
-        if (DIRECT_CONFIG[seq] && state.lastBuiltPacketBySeq[seq] && state.lastBuiltPacketBySeq[seq].RUN_EXECUTED) {
-          selectReceipt(seq, { useCached: true, noScroll: true });
-          return;
-        }
-
-        if (VOLATILE_RECEIPTS[seq] || !DIRECT_CONFIG[seq]) {
-          var packet = buildReceipt(seq, { execute: false });
-          cachePacket(seq, packet);
-          renderWorkspace(packet);
-          renderReceiptBoard();
-          refreshChrome();
-          return;
-        }
-
-        selectReceipt(seq, { forcePreview: true, noScroll: true });
-      }
-
-      function selectReceipt(seq, options) {
-        options = options || {};
-        seq = normalizeReceipt(seq);
-        state.selectedReceipt = seq;
-        state.selectedReceiptMode = "preview";
-        persistNavigationState();
-
-        var packet;
-
-        if (options.useCached && state.lastBuiltPacketBySeq[seq] && !VOLATILE_RECEIPTS[seq]) {
-          packet = state.lastBuiltPacketBySeq[seq];
-          state.selectedReceiptMode = packet.RUN_EXECUTED ? "executed" : "preview";
-        } else if (DIRECT_CONFIG[seq] && state.lastBuiltPacketBySeq[seq] && !options.forcePreview) {
-          packet = state.lastBuiltPacketBySeq[seq];
-          state.selectedReceiptMode = packet.RUN_EXECUTED ? "executed" : "preview";
-        } else {
-          packet = buildReceipt(seq, { execute: false });
-          if (!DIRECT_CONFIG[seq] || VOLATILE_RECEIPTS[seq]) cachePacket(seq, packet);
-        }
-
-        renderWorkspace(packet);
-        renderReceiptBoard();
-        refreshChrome();
-
-        if (options.focusWorkspace && !options.noScroll) focusWorkspace();
-      }
-
-      function runReceipt(seq) {
-        seq = normalizeReceipt(seq || state.selectedReceipt);
-        state.selectedReceipt = seq;
-
-        var packet = buildReceipt(seq, { execute: true });
-        state.selectedReceiptMode = DIRECT_CONFIG[seq] ? "executed" : "preview";
-        cachePacket(seq, packet);
-        renderWorkspace(packet);
-        renderReceiptBoard();
-        refreshChrome();
-        return packet;
-      }
-
-      function getPacketForCopy(seq) {
-        seq = normalizeReceipt(seq || state.selectedReceipt);
-
-        if (state.lastBuiltPacketBySeq[seq] && !VOLATILE_RECEIPTS[seq]) return state.lastBuiltPacketBySeq[seq];
-
-        var packet = buildReceipt(seq, { execute: false });
-        if (!DIRECT_CONFIG[seq] || VOLATILE_RECEIPTS[seq]) cachePacket(seq, packet);
-        return packet;
-      }
-
-      function copyReceipt(seq) {
-        seq = normalizeReceipt(seq || state.selectedReceipt);
-        var packet = getPacketForCopy(seq);
-        copyText(rawText(packet, seq), "Receipt " + seq + " copied");
-      }
-
-      function copyRaw(seq) {
-        seq = normalizeReceipt(seq || state.selectedReceipt);
-        var packet = getPacketForCopy(seq);
-        copyText(rawText(packet, seq), "Raw " + seq + " copied");
-      }
-
-      function runRecommendedReceipt() {
-        runReceipt(state.recommendedReceipt || "99");
-        focusWorkspace();
-      }
-
-      function openArchiveDialog() {
-        var packet = buildReceipt("99", { execute: false });
-        cachePacket("99", packet);
-
-        var text = rawText(packet, "99");
-        doc.getElementById("archiveDialogText").textContent = text;
-        var dialog = doc.getElementById("archiveDialog");
-
-        if (dialog && isFunction(dialog.showModal)) dialog.showModal();
-        else {
-          state.rawVisible = true;
-          selectReceipt("99", { focusWorkspace: true });
-        }
-      }
-
-      function extractRecommended(packet) {
-        var raw = safeString(packet.NEXT_RECEIPT_RECOMMENDED || packet.RECOMMENDED_NEXT_RECEIPT || "");
-        var match = raw.match(/\b(00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|99)\b/);
-        if (match) return match[1];
-
-        var action = safeString(packet.NEXT_ACTION || "");
-        if (action.indexOf("RUN_08") !== -1) return "08";
-        if (action.indexOf("RUN_09") !== -1) return "09";
-        if (action.indexOf("RUN_10") !== -1) return "10";
-        if (action.indexOf("RUN_11") !== -1) return "11";
-        if (action.indexOf("RUN_12") !== -1) return "12";
-        if (action.indexOf("INSPECT_01") !== -1) return "01";
-
-        return state.recommendedReceipt || "99";
-      }
-
-      function receiptMeta(seq) {
-        seq = normalizeReceipt(seq);
-        for (var i = 0; i < RECEIPTS.length; i += 1) {
-          if (RECEIPTS[i].seq === seq) return RECEIPTS[i];
-        }
-        return RECEIPTS[0];
-      }
-
-      function categoryMeta(id) {
-        id = normalizeCategory(id);
-        for (var i = 0; i < CATEGORIES.length; i += 1) {
-          if (CATEGORIES[i].id === id) return CATEGORIES[i];
-        }
-        return CATEGORIES[0];
-      }
-
-      function statusClass(packet) {
-        if (!packet) return "warn";
-        if (packet.RUN_EXECUTED === true) return "good";
-        if (packet.BLOCKING === true) return "bad";
-        if (packet.RUN_STATE === "AUTHORITY_NOT_FOUND") return "bad";
-        if (packet.RUN_STATE === "AUTHORITY_FOUND_NOT_RUN") return "warn";
-        if (packet.RUN_STATE === "PREVIEW_NOT_EXECUTED") return "warn";
-        if (packet.FIRST_BLOCKING_COMPONENT && packet.FIRST_BLOCKING_COMPONENT !== "NONE") return "warn";
-        if (packet.ALL_REQUIRED_PARTICIPANTS_LOADED === false) return "bad";
-        return "good";
-      }
-
-      function verdictText(packet) {
-        if (!packet) return "No packet available.";
-
-        if (packet.RUN_STATE === "PREVIEW_NOT_EXECUTED") {
-          return "Receipt selected in preview mode. Use Run This Receipt to execute the check, or Copy Report to copy this preview.";
-        }
-
-        if (packet.RUN_EXECUTED === true) {
-          return "Direct execution completed. The selected authority was found and invoked through " + safeString(packet.DIRECT_METHOD, "UNKNOWN") + ".";
-        }
-
-        if (packet.RUN_STATE === "AUTHORITY_FOUND_NOT_RUN") {
-          return "Authority found, but direct execution did not run. Inspect DIRECT_METHOD, AUTHORITY_METHOD_KEYS, and RESOLVER_CANDIDATES.";
-        }
-
-        if (packet.RUN_STATE === "AUTHORITY_NOT_FOUND") {
-          return "Authority not found. Check alias registration and participant loading.";
-        }
-
-        if (packet.RECEIPT_SEQUENCE === "14") {
-          return "Synthesis receipt selected. Follow NEXT_ACTION and NEXT_FILE.";
-        }
-
-        if (packet.RECEIPT_SEQUENCE === "99") {
-          return "Deep archive selected. Full evidence is available in the proof/export surface.";
-        }
-
-        if (packet.ALL_REQUIRED_PARTICIPANTS_LOADED === false) {
-          return "Required diagnostic equipment has not fully loaded. Inspect participant load details.";
-        }
-
-        return "Receipt is available. Critical fields are shown below; raw proof remains available in the proof return surface.";
-      }
-
-      function importantFields(packet) {
-        var keys = [
-          "RUN_STATE",
-          "TRUST_STATE",
-          "LOAD_COMPLETE",
-          "ALL_REQUIRED_PARTICIPANTS_LOADED",
-          "PARTICIPANT_LOAD_COUNT",
-          "LAB_NORTH_PRESENT",
-          "LAB_EAST_PRESENT",
-          "LAB_SOUTH_PRESENT",
-          "LABWEST_PRESENT",
-          "EAST_PRESENT",
-          "SURFACE_TRUTH_PRESENT",
-          "SOUTH_PRESENT",
-          "SOUTH_SURFACE_POINTER_PRESENT",
-          "WEST_DIAGNOSTIC_PRESENT",
-          "FOUR_ENGINE_CALIBRATION",
-          "CALIBRATION_STATUS",
-          "EXECUTION_REQUIRED",
-          "RUN_EXECUTED",
-          "DIRECT_METHOD",
-          "DIRECT_ERROR",
-          "DIRECT_AUTHORITY_PATH",
-          "DIRECT_STATUS",
-          "AUTHORITY_METHOD_COUNT",
-          "NEXT_FILE",
-          "NEXT_ACTION",
-          "FIRST_BLOCKING_COMPONENT",
-          "DIRECT_RECEIPTS_RUN",
-          "targetPath",
-          "frameAccessible",
-          "DO_NOT_TOUCH",
-          "UPDATED_AT"
-        ];
-
-        var fields = [];
-        keys.forEach(function add(key) {
-          if (packet && Object.prototype.hasOwnProperty.call(packet, key)) fields.push([key, packet[key]]);
-        });
-
-        if (!fields.length && packet) {
-          Object.keys(packet).slice(0, 12).forEach(function fallback(key) {
-            fields.push([key, packet[key]]);
-          });
-        }
-
-        return fields;
-      }
-
-      function compactForDisplay(value) {
-        if (value === undefined || value === null || value === "") return "UNKNOWN";
-        if (isFunction(value)) return "[function]";
-        if (Array.isArray(value)) return "Array(" + value.length + ")";
-        if (isObject(value)) {
-          try {
-            return compact(JSON.stringify(value, function replacer(_key, item) {
-              return isFunction(item) ? "[function]" : item;
-            }), 260);
-          } catch (_error) {
-            return "[object]";
-          }
-        }
-        return safeString(value);
-      }
-
-      function renderWorkspace(packet) {
-        var meta = receiptMeta(state.selectedReceipt);
-        var cls = statusClass(packet);
-        var text = rawText(packet, state.selectedReceipt);
-
-        doc.getElementById("reportTitle").textContent = meta.name;
-        doc.getElementById("reportSeq").textContent = state.selectedReceipt;
-        doc.getElementById("reportVerdict").textContent = verdictText(packet);
-
-        var status = doc.getElementById("reportStatus");
-        status.textContent = cls.toUpperCase() + " · " + state.selectedReceiptMode.toUpperCase();
-        status.className = "status-chip " + cls;
-
-        doc.getElementById("reportFacts").innerHTML = importantFields(packet).map(function fact(pair) {
-          return '<div class="fact"><div class="k">' + escapeHtml(pair[0]) + '</div><div class="v">' +
-            escapeHtml(compactForDisplay(pair[1])) + '</div></div>';
-        }).join("");
-
-        var raw = doc.getElementById("rawReceipt");
-        raw.textContent = text;
-        raw.classList.toggle("hidden", !state.rawVisible);
-        doc.getElementById("toggleRaw").textContent = state.rawVisible ? "Hide Raw" : "Show Raw";
-        doc.getElementById("proofLine").textContent = state.rawVisible ? "RAW=OPEN" : "RAW=CLOSED";
-
-        persistNavigationState();
-      }
-
-      function renderCategories() {
-        state.activeCategory = normalizeCategory(state.activeCategory);
-
-        var holder = doc.getElementById("categoryTabs");
-        holder.innerHTML = CATEGORIES.map(function tab(category) {
-          return '<button class="tab ' + (state.activeCategory === category.id ? "active" : "") +
-            '" type="button" data-category="' + escapeHtml(category.id) + '">' +
-            '<strong>' + escapeHtml(category.label) + '</strong>' +
-            '<span>' + escapeHtml(category.hint) + '</span>' +
-            '</button>';
-        }).join("");
-      }
-
-      function filteredReceipts() {
-        state.activeCategory = normalizeCategory(state.activeCategory);
-
-        var category = categoryMeta(state.activeCategory);
-        var allowed = {};
-        category.receipts.forEach(function mark(seq) { allowed[seq] = true; });
-
-        var query = safeString(state.searchQuery).trim().toLowerCase();
-
-        return RECEIPTS.filter(function filterReceipt(item) {
-          var categoryOk = state.activeCategory === "all" || Boolean(allowed[item.seq]);
-          var haystack = [
-            item.seq,
-            item.name,
-            item.desc,
-            item.category,
-            item.direct ? "direct execution run" : "safe preview"
-          ].join(" ").toLowerCase();
-
-          return categoryOk && (!query || haystack.indexOf(query) !== -1);
-        });
-      }
-
-      function renderReceiptBoard() {
-        renderCategories();
-
-        var board = doc.getElementById("receiptBoard");
-        var list = filteredReceipts();
-        var category = categoryMeta(state.activeCategory);
-        doc.getElementById("finderCount").textContent = list.length + " receipts";
-
-        if (!list.length) {
-          board.innerHTML =
-            '<div class="empty-state">' +
-            '<strong>No receipts visible</strong>' +
-            '<p>Clear search or show all receipts. Category state has been guarded and can be reset here.</p>' +
-            '<div class="dock-actions">' +
-            '<button class="mini" type="button" data-empty-action="clear">Clear Search</button>' +
-            '<button class="mini ghost" type="button" data-empty-action="all">Show All</button>' +
-            '</div></div>';
-          return;
-        }
-
-        var html = '';
-        html += '<div class="category-label"><span>' + escapeHtml(category.label) + '</span><span>' + list.length + '</span></div>';
-
-        list.forEach(function receipt) {
-          var active = receipt.seq === state.selectedReceipt ? " active" : "";
-
-          html += '<div class="receipt-card' + active + '" tabindex="0" data-receipt="' + escapeHtml(receipt.seq) + '">';
-          html += '<div class="receipt-main">';
-          html += '<div class="receipt-num">' + escapeHtml(receipt.seq) + '</div>';
-          html += '<div><div class="receipt-name">' + escapeHtml(receipt.name) + '</div>';
-          html += '<div class="receipt-desc">' + escapeHtml(receipt.desc + " · " + receipt.category.toUpperCase()) + '</div></div>';
-          html += '</div>';
-          html += '<div class="card-actions">';
-          html += '<button class="mini ghost" type="button" data-card-action="view" data-receipt="' + escapeHtml(receipt.seq) + '">View</button>';
-          html += '<button class="mini" type="button" data-card-action="run" data-receipt="' + escapeHtml(receipt.seq) + '">Run</button>';
-          html += '<button class="mini" type="button" data-card-action="copy" data-receipt="' + escapeHtml(receipt.seq) + '">Copy</button>';
-          html += '<button class="mini ghost" type="button" data-card-action="raw" data-receipt="' + escapeHtml(receipt.seq) + '">Raw</button>';
-          html += '</div></div>';
-        });
-
-        board.innerHTML = html;
-      }
-
-      function refreshChrome() {
-        var aliases = state.aliases && Object.keys(state.aliases).length ? state.aliases : probeAliases();
-        var summary = loadSummary();
-        var access = getTargetAccess();
-
-        doc.getElementById("contractLine").textContent = INTERNAL_RENEWAL_CONTRACT;
-
-        doc.documentElement.dataset.hearthDiagnosticInlineHtmlRenewal = INTERNAL_RENEWAL_CONTRACT;
-        doc.documentElement.dataset.hearthDiagnosticLoadComplete = state.loadComplete ? "true" : "false";
-        doc.documentElement.dataset.hearthDiagnosticRecommendedReceipt = state.recommendedReceipt || "99";
-
-        renderHealthStrip(summary, aliases, access);
-        renderTopology(aliases);
-        renderBoundary();
-      }
-
-      function renderHealthStrip(summary, aliases, access) {
-        var items = [
-          ["Load", summary.allRequiredLoaded, state.loadComplete ? "required" : "loading"],
-          ["Target", access.frameAccessible && access.routeConfirmed, access.targetPath],
-          ["Lab North", Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present), aliases.LAB_NORTH ? aliases.LAB_NORTH.authorityPath : "NONE"],
-          ["Lab East", Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present), aliases.LAB_EAST ? aliases.LAB_EAST.authorityPath : "NONE"],
-          ["Lab South", Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present), aliases.LAB_SOUTH ? aliases.LAB_SOUTH.authorityPath : "NONE"],
-          ["LabWest", Boolean(aliases.LABWEST && aliases.LABWEST.present), aliases.LABWEST ? aliases.LABWEST.authorityPath : "NONE"],
-          ["East Rail", Boolean(aliases.EAST && aliases.EAST.present), aliases.EAST ? aliases.EAST.authorityPath : "NONE"],
-          ["Surface Truth", Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present), aliases.SURFACE_TRUTH ? aliases.SURFACE_TRUTH.authorityPath : "NONE"],
-          ["South Pointer", Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present), aliases.SOUTH_SURFACE_POINTER ? aliases.SOUTH_SURFACE_POINTER.authorityPath : "NONE"],
-          ["West", Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present), aliases.WEST_DIAGNOSTIC ? aliases.WEST_DIAGNOSTIC.authorityPath : "NONE"]
-        ];
-
-        doc.getElementById("healthStrip").innerHTML = items.map(function chip(item) {
-          var cls = item[1] ? "good" : "warn";
-          if ((item[0] === "Load" || item[0] === "Target" || item[0] === "Lab East" || item[0] === "Lab South" || item[0] === "East Rail") && !item[1]) cls = "bad";
-
-          return '<div class="chip ' + cls + '"><b>' + escapeHtml(item[0]) + '</b><span>' +
-            escapeHtml(item[1] ? "TRUE" : "FALSE") + '</span></div>';
-        }).join("");
-      }
-
-      function renderTopology(aliases) {
-        var nodes = [
-          ["F1/F21", "North", "Timing governor", Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present)],
-          ["F3", "East", "Valve / intake", Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present)],
-          ["F5", "West", "Compression / admissibility", Boolean(aliases.LABWEST && aliases.LABWEST.present)],
-          ["F8", "South", "Proof return", Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present)],
-          ["F13", "Canvas", "Boundary only", true]
-        ];
-
-        doc.getElementById("engineTopology").innerHTML = nodes.map(function node(item) {
-          var dot = item[3] ? "good" : "warn";
-          return '<div class="engine-node">' +
-            '<div class="badge">' + escapeHtml(item[0]) + '</div>' +
-            '<div><b>' + escapeHtml(item[1]) + '</b><span>' + escapeHtml(item[2]) + '</span></div>' +
-            '<div class="dot ' + dot + '"></div>' +
-          '</div>';
-        }).join("");
-      }
-
-      function renderBoundary() {
-        var rows = [
-          ["Production mutation", NO_CLAIMS.productionMutationAuthorized],
-          ["Canvas repair", NO_CLAIMS.canvasRepairAuthorized],
-          ["Canvas build", NO_CLAIMS.canvasBuildAuthorized],
-          ["Controls mutation", NO_CLAIMS.controlsRepairAuthorized],
-          ["Runtime restart", NO_CLAIMS.runtimeRestartAuthorized],
-          ["Visual pass claim", NO_CLAIMS.visualPassClaimed]
-        ];
-
-        doc.getElementById("boundaryList").innerHTML = rows.map(function row(item) {
-          return '<div class="engine-node"><div class="badge">NO</div><div><b>' +
-            escapeHtml(item[0]) + '</b><span>authorized=' + escapeHtml(item[1]) +
-            '</span></div><div class="dot good"></div></div>';
-        }).join("");
-      }
-
-      function focusWorkspace() {
-        var el = doc.getElementById("workspace");
-        if (!el) return;
-
-        if (doc.startViewTransition) {
-          doc.startViewTransition(function transition() {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-          });
-        } else {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }
-
-      function showToast(text) {
-        var toast = doc.getElementById("toast");
-        toast.textContent = text || "Copied";
-        toast.classList.add("show");
-        root.setTimeout(function hide() {
-          toast.classList.remove("show");
-        }, 1100);
-      }
-
-      function copyText(text, label) {
-        var value = safeString(text);
-
-        if (root.navigator && root.navigator.clipboard && root.navigator.clipboard.writeText) {
-          root.navigator.clipboard.writeText(value).then(function copied() {
-            showToast(label || "Copied");
-          }).catch(function fallback() {
-            fallbackCopy(value, label);
-          });
-        } else {
-          fallbackCopy(value, label);
-        }
-      }
-
-      function fallbackCopy(text, label) {
-        var area = doc.createElement("textarea");
-        area.value = text;
-        area.setAttribute("readonly", "readonly");
-        area.style.position = "fixed";
-        area.style.left = "-9999px";
-        doc.body.appendChild(area);
-        area.select();
-
-        try {
-          doc.execCommand("copy");
-          showToast(label || "Copied");
-        } catch (_error) {
-          showToast("Copy unavailable");
-        }
-
-        doc.body.removeChild(area);
-      }
-
-      function installActions() {
-        doc.getElementById("copyCurrent").addEventListener("click", function onCopyCurrent() {
-          copyReceipt(state.selectedReceipt);
-        });
-
-        doc.getElementById("runSelected").addEventListener("click", function onRunSelected() {
-          runReceipt(state.selectedReceipt);
-          focusWorkspace();
-        });
-
-        doc.getElementById("runRecommended").addEventListener("click", function onRunRecommended() {
-          runRecommendedReceipt();
-        });
-
-        doc.getElementById("openArchive").addEventListener("click", openArchiveDialog);
-
-        doc.getElementById("toggleTarget").addEventListener("click", function onToggleTarget() {
-          state.targetVisible = !state.targetVisible;
-          var targetDetails = doc.getElementById("targetDetails");
-          if (targetDetails) targetDetails.open = state.targetVisible;
-          persistNavigationState();
-          targetDetails.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-
-        doc.getElementById("reloadChamber").addEventListener("click", function onReload() {
-          root.location.reload();
-        });
-
-        doc.getElementById("dockRun").addEventListener("click", function onDockRun() {
-          runReceipt(state.selectedReceipt);
-        });
-
-        doc.getElementById("dockCopy").addEventListener("click", function onDockCopy() {
-          copyReceipt(state.selectedReceipt);
-        });
-
-        doc.getElementById("dockCopyRaw").addEventListener("click", function onDockCopyRaw() {
-          copyRaw(state.selectedReceipt);
-        });
-
-        doc.getElementById("dockNext").addEventListener("click", function onDockNext() {
-          runRecommendedReceipt();
-        });
-
-        doc.getElementById("dockArchive").addEventListener("click", openArchiveDialog);
-
-        doc.getElementById("toggleRaw").addEventListener("click", function onToggleRaw() {
-          state.rawVisible = !state.rawVisible;
-          persistNavigationState();
-          selectReceipt(state.selectedReceipt, { useCached: true, noScroll: true });
-        });
-
-        doc.getElementById("copyRaw").addEventListener("click", function onCopyRaw() {
-          copyRaw(state.selectedReceipt);
-        });
-
-        doc.getElementById("bottomRun").addEventListener("click", function onBottomRun() {
-          runReceipt(state.selectedReceipt);
-        });
-
-        doc.getElementById("bottomCopy").addEventListener("click", function onBottomCopy() {
-          copyReceipt(state.selectedReceipt);
-        });
-
-        doc.getElementById("bottomRaw").addEventListener("click", function onBottomRaw() {
-          state.rawVisible = !state.rawVisible;
-          persistNavigationState();
-          selectReceipt(state.selectedReceipt, { useCached: true, noScroll: true });
-        });
-
-        doc.getElementById("bottomNext").addEventListener("click", function onBottomNext() {
-          runRecommendedReceipt();
-        });
-
-        doc.getElementById("receiptSearch").addEventListener("input", function onSearch(event) {
-          state.searchQuery = event.target.value;
-          renderReceiptBoard();
-        });
-
-        doc.getElementById("categoryTabs").addEventListener("click", function onCategory(event) {
-          var button = event.target.closest("[data-category]");
-          if (!button) return;
-          state.activeCategory = normalizeCategory(button.dataset.category);
-          persistNavigationState();
-          renderReceiptBoard();
-        });
-
-        doc.getElementById("receiptBoard").addEventListener("click", function onBoardClick(event) {
-          var emptyButton = event.target.closest("[data-empty-action]");
-          if (emptyButton) {
-            var emptyAction = emptyButton.dataset.emptyAction;
-            if (emptyAction === "clear") {
-              state.searchQuery = "";
-              doc.getElementById("receiptSearch").value = "";
-            }
-            if (emptyAction === "all") {
-              state.searchQuery = "";
-              state.activeCategory = "all";
-              doc.getElementById("receiptSearch").value = "";
-            }
-            persistNavigationState();
-            renderReceiptBoard();
-            return;
-          }
-
-          var actionButton = event.target.closest("[data-card-action]");
-          if (actionButton) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            var action = actionButton.dataset.cardAction;
-            var seq = normalizeReceipt(actionButton.dataset.receipt);
-
-            if (action === "view") {
-              selectReceipt(seq, { focusWorkspace: true });
-            } else if (action === "run") {
-              runReceipt(seq);
-              focusWorkspace();
-            } else if (action === "copy") {
-              copyReceipt(seq);
-            } else if (action === "raw") {
-              state.rawVisible = true;
-              selectReceipt(seq, { useCached: true, noScroll: true });
-              doc.getElementById("rawReceipt").scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-
-            return;
-          }
-
-          var card = event.target.closest("[data-receipt]");
-          if (!card) return;
-          selectReceipt(card.dataset.receipt, { focusWorkspace: true });
-        });
-
-        doc.getElementById("receiptBoard").addEventListener("keydown", function onBoardKey(event) {
-          var card = event.target.closest("[data-receipt]");
-          if (!card) return;
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            selectReceipt(card.dataset.receipt, { focusWorkspace: true });
-          }
-        });
-
-        doc.getElementById("copyArchiveDialog").addEventListener("click", function onCopyArchive() {
-          copyText(doc.getElementById("archiveDialogText").textContent || "", "Archive copied");
-        });
-
-        doc.getElementById("closeArchiveDialog").addEventListener("click", function onCloseArchive() {
-          var dialog = doc.getElementById("archiveDialog");
-          if (dialog && isFunction(dialog.close)) dialog.close();
-        });
-
-        var frame = doc.getElementById("hearthDiagnosticTargetFrame");
-        if (frame) {
-          frame.addEventListener("load", function frameLoaded() {
-            refreshChrome();
-          });
-        }
-      }
-
-      function publishChamberGlobals() {
-        root.HEARTH = root.HEARTH || {};
-        root.DEXTER_LAB = root.DEXTER_LAB || {};
-
-        var api = {
-          contract: CONTRACT,
-          receipt: RECEIPT,
-          internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-          internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
-          previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          baselineInternalRenewalContract: BASELINE_INTERNAL_RENEWAL_CONTRACT,
-          version: VERSION,
-
-          participantLoad: state.participantLoad,
-          state: state,
-
-          selectReceipt: selectReceipt,
-          runReceipt: runReceipt,
-          runSelectedReceipt: function runSelectedReceipt() { return runReceipt(state.selectedReceipt); },
-          runRecommendedReceipt: runRecommendedReceipt,
-          copyReceipt: copyReceipt,
-          copyCurrentReport: function copyCurrentReport() { return copyReceipt(state.selectedReceipt); },
-          buildReceipt: buildReceipt,
-          runDirectReceipt: runDirectReceipt,
-          probeAliases: probeAliases,
-          getTargetAccess: getTargetAccess
-        };
-
-        root.HEARTH_DIAGNOSTIC_CHAMBER = api;
-        root.HEARTH.diagnosticChamber = api;
-        root.DEXTER_LAB.hearthDiagnosticChamber = api;
-
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_LOADED__ = true;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_CONTRACT__ = CONTRACT;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_CATEGORY_TABBED_CONSOLE_ACTIVE__ = true;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_VIEW_RUN_COPY_SEPARATION_ACTIVE__ = true;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT__ = true;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_RELEASE_AUTHORIZED__ = false;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_RUNTIME_RESTART_AUTHORIZED__ = false;
-      }
-
-      function boot() {
-        state.selectedReceipt = normalizeReceipt(state.selectedReceipt);
-        state.activeCategory = normalizeCategory(state.activeCategory);
-        state.recommendedReceipt = normalizeReceipt(state.recommendedReceipt);
-        persistNavigationState();
-
-        installActions();
-        renderCategories();
-        renderReceiptBoard();
-        probeAliases();
-        publishChamberGlobals();
-        refreshChrome();
-
-        selectReceipt(state.selectedReceipt || "00", { forcePreview: true, noScroll: true });
-
-        var targetDetails = doc.getElementById("targetDetails");
-        if (targetDetails) targetDetails.open = state.targetVisible;
-
-        loadParticipants().then(function afterLoad() {
-          publishChamberGlobals();
-          probeAliases();
-          refreshChrome();
-        });
-      }
-
-      boot();
-    })(typeof window !== "undefined" ? window : globalThis);
-  </script>
+  <div class="toast" id="toast">Done</div>
 </body>
 </html>

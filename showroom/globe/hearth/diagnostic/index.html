@@ -1,13 +1,13 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_HTML_SHELL_TNT_v9_4_4 -->
-<!-- Paired controller: HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_HTML_SHELL_TNT_v9_4_4_1 -->
+<!-- Paired controller: HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1 -->
 <!-- Full-file replacement. -->
 <!-- HTML shell only. Diagnostic logic lives in /showroom/globe/hearth/diagnostic/index.js -->
-<!-- Design law: one category selector, one audit selector, one local report action surface. -->
+<!-- Design law: visible category buttons, visible audit buttons, one local report action surface. -->
 <!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-html-shell="v9_4_4">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_4_1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -59,11 +59,6 @@
       overflow-x: hidden;
     }
 
-    button,
-    select {
-      font-family: var(--sans);
-    }
-
     button {
       appearance: none;
       border: 1px solid var(--line);
@@ -90,7 +85,8 @@
     }
 
     button:focus-visible,
-    select:focus-visible {
+    .category-choice:focus-visible,
+    .audit-choice:focus-visible {
       outline: 2px solid var(--blue);
       outline-offset: 3px;
     }
@@ -102,24 +98,6 @@
 
     button.ghost {
       background: rgba(10, 16, 28, .74);
-    }
-
-    select {
-      width: 100%;
-      min-height: 54px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      color: var(--text);
-      background:
-        linear-gradient(180deg, rgba(22, 35, 60, .95), rgba(8, 13, 23, .95));
-      padding: 0 15px;
-      font: 900 15px/1.2 var(--sans);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-    }
-
-    option {
-      color: #101827;
-      background: #eef4ff;
     }
 
     .shell {
@@ -295,26 +273,98 @@
       white-space: nowrap;
     }
 
-    .selector-grid {
+    .selector-zone {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 12px;
-      padding: 14px;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: 0;
       border-bottom: 1px solid var(--line);
       background: rgba(5, 8, 15, .28);
     }
 
-    .field {
+    .selector-column {
       min-width: 0;
+      padding: 14px;
       display: grid;
-      gap: 8px;
+      align-content: start;
+      gap: 10px;
     }
 
-    .field label {
+    .selector-column + .selector-column {
+      border-left: 1px solid var(--line);
+    }
+
+    .selector-label {
       color: var(--muted);
       font: 950 10px/1 var(--mono);
       letter-spacing: .09em;
       text-transform: uppercase;
+    }
+
+    .category-surface,
+    .audit-surface {
+      display: grid;
+      gap: 8px;
+    }
+
+    .category-choice,
+    .audit-choice {
+      width: 100%;
+      border-radius: 18px;
+      text-align: left;
+      background: rgba(8, 13, 23, .66);
+      border: 1px solid var(--line);
+      padding: 12px;
+      box-shadow: none;
+      min-height: 76px;
+    }
+
+    .category-choice.is-active,
+    .audit-choice.is-active {
+      border-color: rgba(143, 183, 255, .76);
+      background: linear-gradient(180deg, rgba(55, 88, 150, .42), rgba(8, 13, 23, .76));
+      box-shadow: 0 0 0 1px rgba(143, 183, 255, .12), 0 18px 44px rgba(42, 88, 173, .16);
+    }
+
+    .category-choice span {
+      display: block;
+      color: var(--cyan);
+      font: 950 9px/1 var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .10em;
+      margin-bottom: 8px;
+    }
+
+    .category-choice strong,
+    .audit-choice strong {
+      display: block;
+      color: var(--text);
+      font: 950 14px/1.1 var(--sans);
+    }
+
+    .category-choice small,
+    .audit-choice small {
+      display: block;
+      color: var(--muted);
+      font: 750 11px/1.35 var(--mono);
+      margin-top: 7px;
+    }
+
+    .audit-choice {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .audit-choice > span {
+      display: grid;
+      place-items: center;
+      min-height: 38px;
+      border-radius: 14px;
+      color: var(--cyan);
+      background: rgba(127, 231, 255, .08);
+      border: 1px solid rgba(127, 231, 255, .22);
+      font: 950 11px/1 var(--mono);
     }
 
     .selected-audit {
@@ -332,6 +382,7 @@
       gap: 12px;
       align-items: center;
       margin-bottom: 12px;
+      flex-wrap: wrap;
     }
 
     .selected-audit .meta span {
@@ -467,7 +518,7 @@
       }
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .shell {
         width: min(100vw - 12px, 980px);
         padding-top: 6px;
@@ -496,8 +547,13 @@
         width: max-content;
       }
 
-      .selector-grid {
+      .selector-zone {
         grid-template-columns: 1fr;
+      }
+
+      .selector-column + .selector-column {
+        border-left: 0;
+        border-top: 1px solid var(--line);
       }
 
       .report-actions {
@@ -553,7 +609,7 @@
         <div class="mark" aria-hidden="true"></div>
         <div>
           <h1>Hearth Single Audit Workbench</h1>
-          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4</p>
+          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1</p>
         </div>
       </div>
 
@@ -569,20 +625,20 @@
       <div class="workbench-head">
         <div>
           <strong>Single Audit Workbench</strong>
-          <span>Choose one category, choose one audit, create and copy the report from the same local surface.</span>
+          <span>Choose one visible category, choose one visible audit, then create and copy the report from this same local surface.</span>
         </div>
-        <div class="pill">Source of truth: auditSelect.value</div>
+        <div class="pill">Source of truth: visible audit button</div>
       </div>
 
-      <section class="selector-grid" aria-label="Audit selection">
-        <div class="field">
-          <label for="categorySelect">1 · Category</label>
-          <select id="categorySelect" aria-label="Choose audit category"></select>
+      <section class="selector-zone" aria-label="Audit selection">
+        <div class="selector-column">
+          <div class="selector-label">1 · Category</div>
+          <div class="category-surface" id="categorySelectorSurface" aria-label="Choose audit category"></div>
         </div>
 
-        <div class="field">
-          <label for="auditSelect">2 · Audit</label>
-          <select id="auditSelect" aria-label="Choose audit"></select>
+        <div class="selector-column">
+          <div class="selector-label">2 · Audit</div>
+          <div class="audit-surface" id="auditSelectorSurface" aria-label="Choose audit"></div>
         </div>
       </section>
 

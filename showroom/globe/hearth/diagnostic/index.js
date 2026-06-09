@@ -1,15 +1,13 @@
 // /showroom/globe/hearth/diagnostic/index.js
-// HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1
+// HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_CONTROLLER_TNT_v9_4_4_2
 // Full-file replacement.
 // Controller only.
-// Owns: visible selector-surface category selection, visible selector-surface audit selection,
-// report generation, copy, archive, participant loading, alias probing, direct checks,
-// target access, state validation.
-// Design law: state.activeAudit is set only by the visible audit selector surface.
-// Report proof: RESOLVED_FROM=VISIBLE_AUDIT_BUTTON_STATE.
+// Owns: custom category dropdown, filtered custom audit dropdown, report generation,
+// copy, archive, participant loading, alias probing, direct checks, target access, state validation.
+// Design law: selectedAuditId from the custom audit dropdown is the only report authority.
 // Does not own or mutate production, canvas, controls, runtime route, target renderer, or Hearth visual output.
 
-(function hearthSingleAuditWorkbenchSelectorSurfaceController(global) {
+(function hearthSingleAuditWorkbenchCustomDropdownController(global) {
   "use strict";
 
   var root = global || window;
@@ -19,21 +17,21 @@
   var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
 
   var INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_CONTROLLER_TNT_v9_4_4_2";
   var INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_RECEIPT_v9_4_4_1";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_CONTROLLER_RECEIPT_v9_4_4_2";
 
   var HTML_SHELL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_HTML_SHELL_TNT_v9_4_4_1";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_HTML_SHELL_TNT_v9_4_4_2";
 
   var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1";
 
   var BASELINE_INTERNAL_RENEWAL_CONTRACT =
     "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_TNT_v9_1";
 
   var VERSION =
-    "2026-06-09.hearth-diagnostic-route-single-audit-workbench-selector-surface-controller-v9-4-4-1";
+    "2026-06-09.hearth-diagnostic-route-single-audit-workbench-custom-dropdown-controller-v9-4-4-2";
 
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -483,6 +481,8 @@
     updatedAt: nowIso(),
     activeSection: normalizeSection(readSession("activeSection", "chamberReceiver")),
     activeAudit: "",
+    categoryMenuOpen: false,
+    auditMenuOpen: false,
     generatedPacket: null,
     generatedAuditId: "",
     generatedText: "",
@@ -505,11 +505,8 @@
   }
 
   function onReady(fn) {
-    if (doc.readyState === "loading") {
-      doc.addEventListener("DOMContentLoaded", fn);
-    } else {
-      fn();
-    }
+    if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", fn);
+    else fn();
   }
 
   function nowIso() {
@@ -553,7 +550,7 @@
 
   function readSession(key, fallback) {
     try {
-      return root.sessionStorage.getItem("hearthDiagnostic.selectorSurface." + key) || fallback;
+      return root.sessionStorage.getItem("hearthDiagnostic.customDropdown." + key) || fallback;
     } catch (_error) {
       return fallback;
     }
@@ -561,7 +558,7 @@
 
   function writeSession(key, value) {
     try {
-      root.sessionStorage.setItem("hearthDiagnostic.selectorSurface." + key, safeString(value));
+      root.sessionStorage.setItem("hearthDiagnostic.customDropdown." + key, safeString(value));
     } catch (_error) {}
   }
 
@@ -611,10 +608,10 @@
     if (!auditExists(state.activeAudit)) {
       return {
         ok: false,
-        reason: "NO_VALID_VISIBLE_AUDIT_BUTTON_STATE",
+        reason: "NO_VALID_CUSTOM_DROPDOWN_AUDIT_VALUE",
         selectedAuditId: state.activeAudit || "NONE",
         selectedSectionId: state.activeSection || "NONE",
-        resolvedFrom: "VISIBLE_AUDIT_BUTTON_STATE"
+        resolvedFrom: "CUSTOM_DROPDOWN_AUDIT_VALUE"
       };
     }
 
@@ -624,7 +621,7 @@
     return {
       ok: true,
       reason: "SELECTED_AUDIT_RESOLVED",
-      resolvedFrom: "VISIBLE_AUDIT_BUTTON_STATE",
+      resolvedFrom: "CUSTOM_DROPDOWN_AUDIT_VALUE",
       selectedAuditId: state.activeAudit,
       selectedAuditLabel: audit.label,
       selectedAuditSequence: audit.seq,
@@ -645,7 +642,7 @@
       SELECTED_AUDIT_ID: context.selectedAuditId || state.activeAudit,
       SELECTED_AUDIT_LABEL: context.selectedAuditLabel || "UNKNOWN",
       SELECTED_AUDIT_SEQUENCE: context.selectedAuditSequence || "UNKNOWN",
-      RESOLVED_FROM: context.resolvedFrom || "VISIBLE_AUDIT_BUTTON_STATE"
+      RESOLVED_FROM: context.resolvedFrom || "CUSTOM_DROPDOWN_AUDIT_VALUE"
     };
 
     Object.assign(payload, extra || {});
@@ -1188,8 +1185,8 @@
     var proof = selectionProof();
 
     var packet = {
-      PACKET: "HEARTH_DIAGNOSTIC_SELECTOR_SURFACE_REPORT_" + safeString(auditSeq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_4_1",
-      RECEIPT_LEVEL: "2_SELECTOR_SURFACE_AUDIT_REPORT",
+      PACKET: "HEARTH_DIAGNOSTIC_CUSTOM_DROPDOWN_REPORT_" + safeString(auditSeq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_4_2",
+      RECEIPT_LEVEL: "2_CUSTOM_DROPDOWN_AUDIT_REPORT",
       AUDIT_SEQUENCE: auditSeq,
       AUDIT_LABEL: auditLabel,
       COMPONENT: component,
@@ -1205,8 +1202,8 @@
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
 
-      WORKBENCH_MODEL: "VISIBLE_CATEGORY_BUTTONS_VISIBLE_AUDIT_BUTTONS_ONE_ACTION_SURFACE",
-      REPORT_SOURCE_OF_TRUTH: "state.activeAudit_from_visible_audit_button",
+      WORKBENCH_MODEL: "CUSTOM_CATEGORY_DROPDOWN_CUSTOM_AUDIT_DROPDOWN_ONE_ACTION_SURFACE",
+      REPORT_SOURCE_OF_TRUTH: "selectedAuditId_from_custom_audit_dropdown",
       SELECTED_CATEGORY_ID: proof.SELECTED_CATEGORY_ID,
       SELECTED_CATEGORY_LABEL: proof.SELECTED_CATEGORY_LABEL,
       SELECTED_AUDIT_ID: proof.SELECTED_AUDIT_ID,
@@ -1228,8 +1225,8 @@
 
   function errorPacket(reason, auditId) {
     return {
-      PACKET: "HEARTH_DIAGNOSTIC_SELECTOR_SURFACE_ERROR_v9_4_4_1",
-      RECEIPT_LEVEL: "0_SELECTOR_SURFACE_ERROR",
+      PACKET: "HEARTH_DIAGNOSTIC_CUSTOM_DROPDOWN_ERROR_v9_4_4_2",
+      RECEIPT_LEVEL: "0_CUSTOM_DROPDOWN_ERROR",
       CONTRACT: CONTRACT,
       INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
       RUN_STATE: "REPORT_NOT_CREATED",
@@ -1237,8 +1234,8 @@
       BLOCKING: true,
       ERROR_REASON: reason,
       SELECTED_AUDIT_ID: auditId || "UNKNOWN",
-      REPORT_SOURCE_OF_TRUTH: "state.activeAudit_from_visible_audit_button",
-      RESOLVED_FROM: "VISIBLE_AUDIT_BUTTON_STATE",
+      REPORT_SOURCE_OF_TRUTH: "selectedAuditId_from_custom_audit_dropdown",
+      RESOLVED_FROM: "CUSTOM_DROPDOWN_AUDIT_VALUE",
       UPDATED_AT: nowIso()
     };
   }
@@ -1259,7 +1256,7 @@
         RECEIPT_LEVEL: "1_CHAMBER_INDEX",
         AUDIT_ID: auditId,
         VERSION: VERSION,
-        USER_FLOW: "CHOOSE_VISIBLE_CATEGORY_CHOOSE_VISIBLE_AUDIT_CREATE_REPORT_COPY_REPORT",
+        USER_FLOW: "CHOOSE_CATEGORY_DROPDOWN_CHOOSE_FILTERED_AUDIT_DROPDOWN_CREATE_REPORT_COPY_REPORT",
         LOAD_STARTED: state.loadStarted,
         LOAD_COMPLETE: state.loadComplete,
         ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
@@ -1337,29 +1334,12 @@
       });
     }
 
-    if (auditId === "northSignal") {
-      return aliasReport(audit, auditId, "NORTH_SIGNAL", ["NORTH", "LAB_NORTH"]);
-    }
-
-    if (auditId === "eastSource") {
-      return aliasReport(audit, auditId, "EAST_SOURCE", ["EAST", "EAST_PROBE", "LAB_EAST"]);
-    }
-
-    if (auditId === "southLens") {
-      return aliasReport(audit, auditId, "SOUTH_LENS", ["SOUTH", "LAB_SOUTH"]);
-    }
-
-    if (auditId === "southSurfacePointer") {
-      return aliasReport(audit, auditId, "SOUTH_SURFACE_POINTER", ["SOUTH_SURFACE_POINTER"]);
-    }
-
-    if (auditId === "labWestGate") {
-      return aliasReport(audit, auditId, "LABWEST_GATE", ["LABWEST"]);
-    }
-
-    if (auditId === "westDiagnostic") {
-      return aliasReport(audit, auditId, "WEST_DIAGNOSTIC", ["WEST_DIAGNOSTIC", "LABWEST"]);
-    }
+    if (auditId === "northSignal") return aliasReport(audit, auditId, "NORTH_SIGNAL", ["NORTH", "LAB_NORTH"]);
+    if (auditId === "eastSource") return aliasReport(audit, auditId, "EAST_SOURCE", ["EAST", "EAST_PROBE", "LAB_EAST"]);
+    if (auditId === "southLens") return aliasReport(audit, auditId, "SOUTH_LENS", ["SOUTH", "LAB_SOUTH"]);
+    if (auditId === "southSurfacePointer") return aliasReport(audit, auditId, "SOUTH_SURFACE_POINTER", ["SOUTH_SURFACE_POINTER"]);
+    if (auditId === "labWestGate") return aliasReport(audit, auditId, "LABWEST_GATE", ["LABWEST"]);
+    if (auditId === "westDiagnostic") return aliasReport(audit, auditId, "WEST_DIAGNOSTIC", ["WEST_DIAGNOSTIC", "LABWEST"]);
 
     if (auditId === "eastSourceDetail") {
       return aliasReport(audit, auditId, "EAST_SOURCE_DETAIL", ["EAST", "EAST_PROBE", "LAB_EAST"], {
@@ -1387,21 +1367,10 @@
       });
     }
 
-    if (auditId === "canvasBoundary") {
-      return boundaryReport(audit, auditId, "CANVAS_BOUNDARY");
-    }
-
-    if (auditId === "noTouchBoundary") {
-      return boundaryReport(audit, auditId, "NO_TOUCH_BOUNDARY");
-    }
-
-    if (auditId === "nextMove") {
-      return nextMoveReport(audit);
-    }
-
-    if (auditId === "deepArchive") {
-      return deepArchiveReport(audit);
-    }
+    if (auditId === "canvasBoundary") return boundaryReport(audit, auditId, "CANVAS_BOUNDARY");
+    if (auditId === "noTouchBoundary") return boundaryReport(audit, auditId, "NO_TOUCH_BOUNDARY");
+    if (auditId === "nextMove") return nextMoveReport(audit);
+    if (auditId === "deepArchive") return deepArchiveReport(audit);
 
     return basePacket(audit.seq, audit.label, "UNKNOWN", {
       AUDIT_ID: auditId,
@@ -1518,12 +1487,11 @@
     var aliases = probeAliases();
 
     return {
-      PACKET: "HEARTH_DIAGNOSTIC_SELECTOR_SURFACE_DEEP_ARCHIVE_99_v9_4_4_1",
+      PACKET: "HEARTH_DIAGNOSTIC_CUSTOM_DROPDOWN_DEEP_ARCHIVE_99_v9_4_4_2",
       RECEIPT_LEVEL: "5_DEEP_ARCHIVE",
       AUDIT_SEQUENCE: audit.seq,
       AUDIT_LABEL: audit.label,
       AUDIT_ID: "deepArchive",
-
       CONTRACT: CONTRACT,
       RECEIPT: RECEIPT,
       HTML_SHELL_CONTRACT: HTML_SHELL_CONTRACT,
@@ -1533,10 +1501,8 @@
       BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-
-      WORKBENCH_MODEL: "VISIBLE_CATEGORY_BUTTONS_VISIBLE_AUDIT_BUTTONS_ONE_ACTION_SURFACE",
-      REPORT_SOURCE_OF_TRUTH: "state.activeAudit_from_visible_audit_button",
-
+      WORKBENCH_MODEL: "CUSTOM_CATEGORY_DROPDOWN_CUSTOM_AUDIT_DROPDOWN_ONE_ACTION_SURFACE",
+      REPORT_SOURCE_OF_TRUTH: "selectedAuditId_from_custom_audit_dropdown",
       STATE: {
         initializedAt: state.initializedAt,
         updatedAt: nowIso(),
@@ -1553,68 +1519,118 @@
         auditSections: AUDIT_SECTIONS,
         audits: AUDITS
       },
-
       NO_CLAIMS: NO_CLAIMS,
       UPDATED_AT: nowIso()
     };
   }
 
-  function renderCategorySurface() {
-    var holder = $("categorySelectorSurface");
-    if (!holder) return;
+  function renderCustomDropdowns() {
+    renderCategoryDropdown();
+    renderAuditDropdown();
+    renderSelectedAudit();
+  }
 
-    holder.innerHTML = AUDIT_SECTIONS.map(function categoryButton(section) {
-      var active = section.id === state.activeSection ? " is-active" : "";
+  function renderCategoryDropdown() {
+    var button = $("categoryDropdownButton");
+    var menu = $("categoryDropdownMenu");
+    var label = $("categoryDropdownLabel");
+    var meta = $("categoryDropdownMeta");
+    var section = getSection(state.activeSection);
+
+    setText("categoryDropdownLabel", section.label);
+    setText("categoryDropdownMeta", section.hint);
+
+    if (button) {
+      button.setAttribute("aria-expanded", state.categoryMenuOpen ? "true" : "false");
+      button.dataset.value = section.id;
+    }
+
+    if (!menu) return;
+
+    menu.hidden = !state.categoryMenuOpen;
+    menu.innerHTML = AUDIT_SECTIONS.map(function item(candidate) {
+      var active = candidate.id === state.activeSection ? " is-active" : "";
       return [
-        '<button class="category-choice',
+        '<button class="dropdown-option',
         active,
         '" type="button" data-category-id="',
-        escapeHtml(section.id),
-        '" aria-pressed="',
-        section.id === state.activeSection ? "true" : "false",
+        escapeHtml(candidate.id),
         '">',
-        '<span>Category</span>',
-        '<strong>',
-        escapeHtml(section.label),
-        '</strong>',
-        '<small>',
-        escapeHtml(section.hint),
-        '</small>',
-        '</button>'
+        '<span>',
+        escapeHtml(candidate.label),
+        '</span><small>',
+        escapeHtml(candidate.hint),
+        '</small></button>'
+      ].join("");
+    }).join("");
+
+    if (label) label.textContent = section.label;
+    if (meta) meta.textContent = section.hint;
+  }
+
+  function renderAuditDropdown() {
+    var button = $("auditDropdownButton");
+    var menu = $("auditDropdownMenu");
+    var label = $("auditDropdownLabel");
+    var meta = $("auditDropdownMeta");
+    var audit = AUDITS[state.activeAudit];
+    var section = getSection(state.activeSection);
+
+    if (!audit || audit.section !== section.id) {
+      state.activeAudit = firstAuditForSection(section.id);
+      audit = AUDITS[state.activeAudit];
+    }
+
+    if (label) label.textContent = audit.seq + " · " + audit.label;
+    if (meta) meta.textContent = (audit.type === "direct" ? "Direct" : "Safe") + " · " + audit.summary;
+
+    if (button) {
+      button.setAttribute("aria-expanded", state.auditMenuOpen ? "true" : "false");
+      button.dataset.value = state.activeAudit;
+    }
+
+    if (!menu) return;
+
+    menu.hidden = !state.auditMenuOpen;
+    menu.innerHTML = section.audits.map(function item(auditId) {
+      var candidate = AUDITS[auditId];
+      var active = auditId === state.activeAudit ? " is-active" : "";
+      var type = candidate.type === "direct" ? "Direct" : "Safe";
+
+      return [
+        '<button class="dropdown-option audit-option',
+        active,
+        '" type="button" data-audit-id="',
+        escapeHtml(auditId),
+        '">',
+        '<span>',
+        escapeHtml(candidate.seq + " · " + candidate.label),
+        '</span><small>',
+        escapeHtml(type + " · " + candidate.summary),
+        '</small></button>'
       ].join("");
     }).join("");
   }
 
-  function renderAuditSurface() {
-    var holder = $("auditSelectorSurface");
-    if (!holder) return;
+  function closeDropdowns() {
+    state.categoryMenuOpen = false;
+    state.auditMenuOpen = false;
+    renderCategoryDropdown();
+    renderAuditDropdown();
+  }
 
-    var section = getSection(state.activeSection);
+  function toggleCategoryDropdown() {
+    state.categoryMenuOpen = !state.categoryMenuOpen;
+    state.auditMenuOpen = false;
+    renderCategoryDropdown();
+    renderAuditDropdown();
+  }
 
-    holder.innerHTML = section.audits.map(function auditButton(auditId) {
-      var audit = AUDITS[auditId];
-      var active = auditId === state.activeAudit ? " is-active" : "";
-      var type = audit.type === "direct" ? "Direct" : "Safe";
-
-      return [
-        '<button class="audit-choice',
-        active,
-        '" type="button" data-audit-id="',
-        escapeHtml(auditId),
-        '" aria-pressed="',
-        auditId === state.activeAudit ? "true" : "false",
-        '">',
-        '<span>',
-        escapeHtml(audit.seq),
-        '</span>',
-        '<div><strong>',
-        escapeHtml(audit.label),
-        '</strong><small>',
-        escapeHtml(type + " · " + audit.summary),
-        '</small></div>',
-        '</button>'
-      ].join("");
-    }).join("");
+  function toggleAuditDropdown() {
+    state.auditMenuOpen = !state.auditMenuOpen;
+    state.categoryMenuOpen = false;
+    renderCategoryDropdown();
+    renderAuditDropdown();
   }
 
   function selectCategory(sectionId) {
@@ -1625,10 +1641,13 @@
 
     state.activeSection = sectionId;
     state.activeAudit = firstAuditForSection(sectionId);
-    persistState();
+    state.categoryMenuOpen = false;
+    state.auditMenuOpen = false;
 
+    persistState();
     clearReportForSelection();
-    renderWorkbench();
+    renderCustomDropdowns();
+    showToast("Category selected");
     return true;
   }
 
@@ -1640,10 +1659,13 @@
 
     state.activeAudit = auditId;
     state.activeSection = AUDITS[auditId].section;
-    persistState();
+    state.categoryMenuOpen = false;
+    state.auditMenuOpen = false;
 
+    persistState();
     clearReportForSelection();
-    renderWorkbench();
+    renderCustomDropdowns();
+    showToast("Audit selected");
     return true;
   }
 
@@ -1653,7 +1675,7 @@
     if (!context.ok) {
       setText("selectedSectionLabel", getSection(state.activeSection).label);
       setText("selectedAuditTitle", "Invalid audit selection");
-      setText("selectedAuditSummary", "Choose a valid audit from the visible audit selector.");
+      setText("selectedAuditSummary", "Choose a valid audit from the audit dropdown.");
       setText("selectedAuditMeta", "INVALID");
       setDirectButton(false);
       return;
@@ -1792,9 +1814,11 @@
   function copyDeepArchive() {
     state.activeSection = "boundaryArchive";
     state.activeAudit = "deepArchive";
-    persistState();
+    state.categoryMenuOpen = false;
+    state.auditMenuOpen = false;
 
-    renderWorkbench();
+    persistState();
+    renderCustomDropdowns();
 
     var packet = deepArchiveReport(AUDITS.deepArchive);
     var raw = rawJson(packet);
@@ -1923,16 +1947,39 @@
   }
 
   function installActions() {
-    bind("categorySelectorSurface", "click", function onCategorySurfaceClick(event) {
+    bind("categoryDropdownButton", "click", function onCategoryButtonClick(event) {
+      event.preventDefault();
+      toggleCategoryDropdown();
+    });
+
+    bind("auditDropdownButton", "click", function onAuditButtonClick(event) {
+      event.preventDefault();
+      toggleAuditDropdown();
+    });
+
+    bind("categoryDropdownMenu", "click", function onCategoryMenuClick(event) {
       var button = event.target.closest("[data-category-id]");
       if (!button) return;
       selectCategory(button.dataset.categoryId);
     });
 
-    bind("auditSelectorSurface", "click", function onAuditSurfaceClick(event) {
+    bind("auditDropdownMenu", "click", function onAuditMenuClick(event) {
       var button = event.target.closest("[data-audit-id]");
       if (!button) return;
       selectAudit(button.dataset.auditId);
+    });
+
+    doc.addEventListener("click", function closeOnOutside(event) {
+      var categoryBox = $("categoryDropdown");
+      var auditBox = $("auditDropdown");
+
+      if (categoryBox && !categoryBox.contains(event.target) && auditBox && !auditBox.contains(event.target)) {
+        if (state.categoryMenuOpen || state.auditMenuOpen) closeDropdowns();
+      }
+    });
+
+    doc.addEventListener("keydown", function closeOnEscape(event) {
+      if (event.key === "Escape" && (state.categoryMenuOpen || state.auditMenuOpen)) closeDropdowns();
     });
 
     bind("createReport", "click", createReport);
@@ -1957,9 +2004,7 @@
     state.activeSection = normalizeSection(state.activeSection);
     state.activeAudit = normalizeAudit(state.activeAudit, state.activeSection);
 
-    renderCategorySurface();
-    renderAuditSurface();
-    renderSelectedAudit();
+    renderCustomDropdowns();
     persistState();
   }
 
@@ -2008,8 +2053,8 @@
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CONTRACT__ = CONTRACT;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_HTML_SHELL_CONTRACT__ = HTML_SHELL_CONTRACT;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_ACTIVE__ = true;
-    root.__HEARTH_DIAGNOSTIC_REPORT_SOURCE_OF_TRUTH__ = "state.activeAudit_from_visible_audit_button";
+    root.__HEARTH_DIAGNOSTIC_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_REPORT_SOURCE_OF_TRUTH__ = "selectedAuditId_from_custom_audit_dropdown";
     root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_RELEASE_AUTHORIZED__ = false;
@@ -2019,6 +2064,8 @@
   function boot() {
     state.activeSection = normalizeSection(state.activeSection);
     state.activeAudit = normalizeAudit(state.activeAudit, state.activeSection);
+    state.categoryMenuOpen = false;
+    state.auditMenuOpen = false;
     persistState();
 
     setText("controllerContract", INTERNAL_RENEWAL_CONTRACT);

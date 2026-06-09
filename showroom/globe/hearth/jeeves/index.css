@@ -1,49 +1,54 @@
 /* /showroom/globe/hearth/jeeves/index.css */
-/* HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_CSS_TNT_v2 */
+/* HEARTH_JEEVES_GLOSS_SCROLL_REFINEMENT_CSS_TNT_v3 */
 /* Full-file replacement. */
-/* Owns: modern digital-organic Jeeves screen, centered chat-thread layout, option-type visual separation. */
-/* Does not own: conversation logic, route execution, Hearth globe chamber, Canvas Bishop, diagnostics authority, WebGL, final visual pass. */
+/* Owns: premium glossy Jeeves screen finish, stronger high-tech contrast, mobile-natural scroll behavior, option-type visual separation. */
+/* Does not own: conversation logic, route execution, Hearth globe chamber, Canvas Bishop, diagnostics authority, WebGL, runtime restart, final visual pass. */
 
 :root {
   color-scheme: dark;
 
-  --page-bg: #02030a;
+  --page-bg: #01030a;
   --page-bg-2: #050814;
   --page-ink: #fff2d0;
-  --page-muted: rgba(230, 239, 255, 0.68);
-  --page-soft: rgba(230, 239, 255, 0.48);
+  --page-muted: rgba(232, 239, 255, 0.7);
+  --page-soft: rgba(232, 239, 255, 0.48);
 
-  --gold: #f4c96f;
-  --gold-2: #ffe8a3;
-  --gold-dim: rgba(244, 201, 111, 0.24);
+  --gold: #f5c96c;
+  --gold-2: #ffe9a8;
+  --gold-3: #fff6d8;
+  --gold-dim: rgba(245, 201, 108, 0.24);
 
-  --screen-bg: #031018;
-  --screen-bg-2: #061f25;
-  --screen-ink: #dffcff;
-  --screen-muted: rgba(223, 252, 255, 0.72);
-  --screen-soft: rgba(223, 252, 255, 0.48);
+  --screen-black: #00060a;
+  --screen-black-2: #010b10;
+  --screen-deep: #02131a;
+  --screen-glass: rgba(6, 35, 44, 0.78);
+  --screen-glass-2: rgba(3, 17, 24, 0.94);
+  --screen-ink: #e8feff;
+  --screen-muted: rgba(232, 254, 255, 0.74);
+  --screen-soft: rgba(232, 254, 255, 0.5);
 
-  --cyan: #69f7ff;
-  --cyan-2: #9ffcff;
-  --cyan-dim: rgba(105, 247, 255, 0.22);
+  --cyan: #60f7ff;
+  --cyan-2: #a4fdff;
+  --cyan-3: #e5ffff;
+  --cyan-dim: rgba(96, 247, 255, 0.24);
 
-  --green: #8ff0c3;
-  --green-dim: rgba(143, 240, 195, 0.18);
+  --green: #8ff7c9;
+  --green-2: #c7ffe5;
+  --green-dim: rgba(143, 247, 201, 0.16);
 
-  --route-blue: #7da9ff;
-  --route-blue-2: #b7c9ff;
-  --route-blue-dim: rgba(125, 169, 255, 0.24);
+  --route-blue: #78a8ff;
+  --route-blue-2: #bfd2ff;
+  --route-blue-dim: rgba(120, 168, 255, 0.24);
 
   --control-amber: #ffbf73;
+  --control-amber-2: #ffe1ba;
   --control-amber-dim: rgba(255, 191, 115, 0.22);
 
-  --danger-soft: #ff8d8d;
-
-  --glass: rgba(255, 255, 255, 0.055);
-  --glass-2: rgba(255, 255, 255, 0.032);
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-2: rgba(255, 255, 255, 0.035);
   --line: rgba(184, 205, 255, 0.14);
-  --line-strong: rgba(105, 247, 255, 0.34);
-  --screen-line: rgba(105, 247, 255, 0.22);
+  --line-strong: rgba(96, 247, 255, 0.38);
+  --screen-line: rgba(96, 247, 255, 0.24);
 
   --max: 1240px;
   --screen-max: 980px;
@@ -52,11 +57,12 @@
   --radius-lg: 1.35rem;
   --radius-md: 0.95rem;
 
-  --shadow-page: 0 38px 120px rgba(0, 0, 0, 0.62);
+  --shadow-page: 0 38px 120px rgba(0, 0, 0, 0.66);
   --shadow-screen:
-    0 0 0 1px rgba(105, 247, 255, 0.12),
-    0 0 48px rgba(105, 247, 255, 0.10),
-    0 36px 110px rgba(0, 0, 0, 0.68);
+    0 0 0 1px rgba(96, 247, 255, 0.16),
+    0 0 22px rgba(96, 247, 255, 0.16),
+    0 0 72px rgba(96, 247, 255, 0.12),
+    0 38px 118px rgba(0, 0, 0, 0.76);
 
   --thread-height: clamp(25rem, 57vh, 41rem);
 }
@@ -94,11 +100,11 @@ body {
     sans-serif;
   line-height: 1.5;
   background:
-    radial-gradient(circle at 50% -14%, rgba(244, 201, 111, 0.16), transparent 34rem),
-    radial-gradient(circle at 18% 22%, rgba(105, 247, 255, 0.12), transparent 30rem),
-    radial-gradient(circle at 84% 20%, rgba(125, 169, 255, 0.10), transparent 30rem),
-    radial-gradient(circle at 50% 82%, rgba(143, 240, 195, 0.08), transparent 42rem),
-    linear-gradient(180deg, #07101c 0%, #020511 54%, #010207 100%);
+    radial-gradient(circle at 50% -18%, rgba(245, 201, 108, 0.18), transparent 35rem),
+    radial-gradient(circle at 18% 22%, rgba(96, 247, 255, 0.13), transparent 31rem),
+    radial-gradient(circle at 86% 16%, rgba(120, 168, 255, 0.13), transparent 34rem),
+    radial-gradient(circle at 50% 86%, rgba(143, 247, 201, 0.08), transparent 42rem),
+    linear-gradient(180deg, #07101d 0%, #020511 55%, #010207 100%);
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 }
@@ -110,12 +116,12 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(105, 247, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(105, 247, 255, 0.035) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.6px);
+    linear-gradient(rgba(96, 247, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 247, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.6px);
   background-size: 64px 64px, 64px 64px, 230px 280px;
-  opacity: 0.20;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.52) 64%, rgba(0, 0, 0, 0.16));
+  opacity: 0.21;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.52) 64%, rgba(0, 0, 0, 0.16));
 }
 
 body::after {
@@ -125,8 +131,8 @@ body::after {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 42%, transparent 0 18rem, rgba(0, 0, 0, 0.12) 31rem, rgba(0, 0, 0, 0.44) 100%),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.025));
+    radial-gradient(circle at 50% 42%, transparent 0 18rem, rgba(0, 0, 0, 0.14) 31rem, rgba(0, 0, 0, 0.46) 100%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.028));
 }
 
 a {
@@ -177,6 +183,8 @@ button:focus-visible {
   gap: 1rem;
 }
 
+/* HEADER */
+
 .jeeves-page-header {
   min-height: 4.75rem;
   display: grid;
@@ -201,20 +209,17 @@ button:focus-visible {
   display: grid;
   place-items: center;
   border-radius: 1.15rem;
-  border: 1px solid rgba(244, 201, 111, 0.44);
+  border: 1px solid rgba(245, 201, 108, 0.5);
   color: #050711;
   font-weight: 950;
-  transform: rotate(45deg);
   background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.44), transparent 42%),
-    linear-gradient(135deg, var(--gold-2), var(--gold));
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.68), transparent 38%),
+    linear-gradient(135deg, var(--gold-3) 0%, var(--gold-2) 42%, var(--gold) 100%);
   box-shadow:
-    0 0 1.8rem rgba(244, 201, 111, 0.18),
-    0 1rem 2.4rem rgba(0, 0, 0, 0.42);
-}
-
-.jeeves-brand-mark::first-letter {
-  transform: rotate(-45deg);
+    0 0 1.8rem rgba(245, 201, 108, 0.22),
+    0 1rem 2.4rem rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.66),
+    inset 0 -10px 18px rgba(120, 70, 0, 0.12);
 }
 
 .jeeves-brand-copy {
@@ -242,15 +247,20 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(244, 201, 111, 0.22);
+  border: 1px solid rgba(245, 201, 108, 0.24);
   border-radius: 999px;
   padding: 0.62rem 0.88rem;
-  color: rgba(255, 242, 208, 0.84);
-  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 242, 208, 0.86);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025)),
+    rgba(255, 255, 255, 0.035);
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0.75rem 2rem rgba(0, 0, 0, 0.24);
   transition:
     transform 0.18s ease,
     border-color 0.18s ease,
@@ -259,11 +269,13 @@ button:focus-visible {
 
 .jeeves-header-return:hover {
   transform: translateY(-1px);
-  border-color: rgba(244, 201, 111, 0.42);
-  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(245, 201, 108, 0.48);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
+    rgba(255, 255, 255, 0.055);
 }
 
-/* CENTER-POINT SCREEN */
+/* CENTER SCREEN */
 
 .jeeves-screen-shell {
   width: 100%;
@@ -280,16 +292,16 @@ button:focus-visible {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 0.85rem;
-  border: 1px solid rgba(105, 247, 255, 0.20);
+  border: 1px solid rgba(96, 247, 255, 0.26);
   border-radius: var(--radius-xl);
   padding: clamp(0.85rem, 2.2vw, 1.25rem);
   color: var(--screen-ink);
   background:
-    radial-gradient(circle at 18% 0%, rgba(105, 247, 255, 0.16), transparent 20rem),
-    radial-gradient(circle at 90% 18%, rgba(143, 240, 195, 0.10), transparent 22rem),
-    radial-gradient(circle at 50% 110%, rgba(244, 201, 111, 0.09), transparent 30rem),
-    linear-gradient(180deg, rgba(4, 27, 33, 0.94), rgba(1, 9, 15, 0.98)),
-    var(--screen-bg);
+    radial-gradient(circle at 17% -8%, rgba(96, 247, 255, 0.28), transparent 19rem),
+    radial-gradient(circle at 88% 12%, rgba(120, 168, 255, 0.18), transparent 24rem),
+    radial-gradient(circle at 50% 115%, rgba(245, 201, 108, 0.12), transparent 28rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.085), transparent 34%),
+    linear-gradient(180deg, var(--screen-glass) 0%, var(--screen-glass-2) 58%, var(--screen-black) 100%);
   box-shadow: var(--shadow-screen);
   overflow: hidden;
   isolation: isolate;
@@ -302,23 +314,31 @@ button:focus-visible {
   z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.12), transparent 18%, transparent 70%, rgba(255, 255, 255, 0.05)),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 5px);
+    linear-gradient(118deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.13) 10%, transparent 29%, transparent 68%, rgba(255, 255, 255, 0.055) 100%),
+    linear-gradient(62deg, transparent 0 56%, rgba(96, 247, 255, 0.10) 58%, transparent 74%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px);
   mix-blend-mode: screen;
-  opacity: 0.26;
+  opacity: 0.38;
 }
 
 .jeeves-screen-glass::after {
   content: "";
   position: absolute;
-  inset: 0.75rem;
+  inset: 0.72rem;
   z-index: -1;
   pointer-events: none;
-  border: 1px solid rgba(105, 247, 255, 0.09);
+  border: 1px solid rgba(96, 247, 255, 0.14);
   border-radius: calc(var(--radius-xl) - 0.55rem);
   box-shadow:
-    inset 0 0 3rem rgba(105, 247, 255, 0.055),
-    inset 0 0 8rem rgba(0, 0, 0, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    inset 0 0 3rem rgba(96, 247, 255, 0.075),
+    inset 0 0 8rem rgba(0, 0, 0, 0.34);
+}
+
+/* glossy screen shine overlay */
+.jeeves-screen-glass > * {
+  position: relative;
+  z-index: 2;
 }
 
 .jeeves-screen-topline {
@@ -327,13 +347,17 @@ button:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  border: 1px solid rgba(105, 247, 255, 0.12);
+  border: 1px solid rgba(96, 247, 255, 0.2);
   border-radius: calc(var(--radius-xl) - 0.95rem);
   padding: 0.76rem 0.9rem;
   background:
-    radial-gradient(circle at 18% 0%, rgba(105, 247, 255, 0.14), transparent 60%),
-    rgba(255, 255, 255, 0.038);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.035) 46%, rgba(0, 0, 0, 0.20)),
+    radial-gradient(circle at 20% 0%, rgba(96, 247, 255, 0.22), transparent 65%),
+    rgba(0, 14, 20, 0.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -18px 34px rgba(0, 0, 0, 0.16),
+    0 1rem 2.4rem rgba(0, 0, 0, 0.24);
 }
 
 .jeeves-identity {
@@ -352,13 +376,15 @@ button:focus-visible {
   border-radius: 1rem;
   color: #001116;
   background:
-    radial-gradient(circle at 33% 22%, rgba(255, 255, 255, 0.52), transparent 44%),
-    linear-gradient(135deg, var(--cyan-2), var(--cyan));
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.76), transparent 37%),
+    linear-gradient(135deg, var(--cyan-3) 0%, var(--cyan-2) 40%, var(--cyan) 100%);
   font-size: 1.12rem;
   font-weight: 950;
   box-shadow:
-    0 0 1.4rem rgba(105, 247, 255, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.48);
+    0 0 1.6rem rgba(96, 247, 255, 0.34),
+    0 0 3.2rem rgba(96, 247, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -14px 22px rgba(0, 118, 135, 0.12);
 }
 
 .jeeves-identity-copy {
@@ -386,24 +412,31 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.52rem;
-  border: 1px solid rgba(105, 247, 255, 0.16);
+  border: 1px solid rgba(96, 247, 255, 0.24);
   border-radius: 999px;
   padding: 0.5rem 0.7rem;
   color: var(--screen-muted);
-  background: rgba(0, 0, 0, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.018)),
+    rgba(0, 0, 0, 0.28);
   font-size: 0.68rem;
   font-weight: 950;
   letter-spacing: 0.11em;
   text-transform: uppercase;
   white-space: nowrap;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 0 1.4rem rgba(96, 247, 255, 0.08);
 }
 
 .jeeves-status-light {
   width: 0.62rem;
   height: 0.62rem;
   border-radius: 999px;
-  background: var(--green);
-  box-shadow: 0 0 1rem rgba(143, 240, 195, 0.52);
+  background: var(--green-2);
+  box-shadow:
+    0 0 0.8rem rgba(143, 247, 201, 0.74),
+    0 0 1.8rem rgba(143, 247, 201, 0.34);
 }
 
 /* THREAD */
@@ -413,15 +446,17 @@ button:focus-visible {
   min-height: var(--thread-height);
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
-  border: 1px solid rgba(105, 247, 255, 0.16);
+  border: 1px solid rgba(96, 247, 255, 0.22);
   border-radius: calc(var(--radius-xl) - 0.8rem);
   background:
-    radial-gradient(circle at 18% 0%, rgba(105, 247, 255, 0.08), transparent 22rem),
-    radial-gradient(circle at 86% 100%, rgba(244, 201, 111, 0.07), transparent 22rem),
-    linear-gradient(180deg, rgba(0, 10, 15, 0.72), rgba(0, 6, 11, 0.92));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 34%, rgba(0, 0, 0, 0.24)),
+    radial-gradient(circle at 18% -10%, rgba(96, 247, 255, 0.13), transparent 22rem),
+    radial-gradient(circle at 86% 110%, rgba(245, 201, 108, 0.09), transparent 22rem),
+    linear-gradient(180deg, rgba(0, 12, 18, 0.8), rgba(0, 5, 9, 0.96));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.055),
-    inset 0 0 3rem rgba(105, 247, 255, 0.035);
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 3rem rgba(96, 247, 255, 0.055),
+    0 1.2rem 3rem rgba(0, 0, 0, 0.22);
   overflow: hidden;
 }
 
@@ -431,9 +466,10 @@ button:focus-visible {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent 49.8%, rgba(105, 247, 255, 0.035) 50%, transparent 50.2%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 6px);
-  opacity: 0.45;
+    linear-gradient(106deg, rgba(255, 255, 255, 0.11) 0%, transparent 22%, transparent 76%, rgba(255, 255, 255, 0.045) 100%),
+    linear-gradient(90deg, transparent 49.8%, rgba(96, 247, 255, 0.04) 50%, transparent 50.2%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 6px);
+  opacity: 0.5;
 }
 
 .jeeves-thread {
@@ -445,9 +481,10 @@ button:focus-visible {
   gap: 0.7rem;
   padding: clamp(0.9rem, 2.5vw, 1.25rem);
   overflow-y: auto;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
+  touch-action: pan-y;
   scrollbar-width: thin;
-  scrollbar-color: rgba(105, 247, 255, 0.32) transparent;
+  scrollbar-color: rgba(96, 247, 255, 0.38) transparent;
 }
 
 .jeeves-thread::-webkit-scrollbar {
@@ -460,7 +497,7 @@ button:focus-visible {
 
 .jeeves-thread::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgba(105, 247, 255, 0.28);
+  background: rgba(96, 247, 255, 0.34);
 }
 
 .jeeves-message {
@@ -468,20 +505,33 @@ button:focus-visible {
   max-width: min(74%, 42rem);
   display: grid;
   gap: 0.26rem;
-  border: 1px solid rgba(105, 247, 255, 0.16);
+  border: 1px solid rgba(96, 247, 255, 0.2);
   border-radius: 1.15rem;
   padding: 0.78rem 0.9rem;
   background:
-    radial-gradient(circle at 12% 0%, rgba(105, 247, 255, 0.10), transparent 60%),
-    rgba(255, 255, 255, 0.04);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.028) 45%, rgba(0, 0, 0, 0.10)),
+    radial-gradient(circle at 12% 0%, rgba(96, 247, 255, 0.14), transparent 60%),
+    rgba(255, 255, 255, 0.045);
   box-shadow:
-    0 0.75rem 2rem rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    0 0.75rem 2rem rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -14px 24px rgba(0, 0, 0, 0.09);
   animation: messageIn 0.24s ease both;
 }
 
+.jeeves-message::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 42%;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), transparent);
+  opacity: 0.75;
+}
+
 .jeeves-message-name {
-  color: rgba(223, 252, 255, 0.52);
+  color: rgba(232, 254, 255, 0.54);
   font-size: 0.62rem;
   font-weight: 950;
   letter-spacing: 0.12em;
@@ -490,7 +540,7 @@ button:focus-visible {
 
 .jeeves-message p {
   margin: 0;
-  color: rgba(223, 252, 255, 0.93);
+  color: rgba(232, 254, 255, 0.95);
   font-size: clamp(0.94rem, 2.15vw, 1.04rem);
   line-height: 1.45;
 }
@@ -502,20 +552,21 @@ button:focus-visible {
 
 .jeeves-message[data-message-origin="visitor"] {
   align-self: flex-end;
-  border-color: rgba(244, 201, 111, 0.24);
+  border-color: rgba(245, 201, 108, 0.34);
   border-top-right-radius: 0.35rem;
   background:
-    radial-gradient(circle at 88% 0%, rgba(244, 201, 111, 0.16), transparent 62%),
-    rgba(244, 201, 111, 0.075);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.115), rgba(255, 255, 255, 0.03) 45%, rgba(0, 0, 0, 0.10)),
+    radial-gradient(circle at 88% 0%, rgba(245, 201, 108, 0.2), transparent 62%),
+    rgba(245, 201, 108, 0.085);
 }
 
 .jeeves-message[data-message-origin="visitor"] .jeeves-message-name {
-  color: rgba(255, 232, 163, 0.58);
+  color: rgba(255, 232, 163, 0.62);
   text-align: right;
 }
 
 .jeeves-message[data-message-origin="visitor"] p {
-  color: rgba(255, 242, 208, 0.95);
+  color: rgba(255, 242, 208, 0.97);
 }
 
 .jeeves-message-system,
@@ -523,15 +574,18 @@ button:focus-visible {
   max-width: min(82%, 46rem);
   align-self: center;
   text-align: center;
-  border-color: rgba(143, 240, 195, 0.18);
-  background: rgba(143, 240, 195, 0.055);
+  border-color: rgba(143, 247, 201, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.022)),
+    rgba(143, 247, 201, 0.06);
 }
 
 .jeeves-message[data-message-emphasis="true"] {
-  border-color: rgba(105, 247, 255, 0.32);
+  border-color: rgba(96, 247, 255, 0.42);
   background:
-    radial-gradient(circle at 12% 0%, rgba(105, 247, 255, 0.18), transparent 62%),
-    rgba(105, 247, 255, 0.055);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.115), rgba(255, 255, 255, 0.032)),
+    radial-gradient(circle at 12% 0%, rgba(96, 247, 255, 0.22), transparent 62%),
+    rgba(96, 247, 255, 0.06);
 }
 
 @keyframes messageIn {
@@ -556,10 +610,15 @@ button:focus-visible {
   margin: 0 0 1rem 1rem;
   align-items: center;
   gap: 0.28rem;
-  border: 1px solid rgba(105, 247, 255, 0.14);
+  border: 1px solid rgba(96, 247, 255, 0.18);
   border-radius: 999px;
   padding: 0.52rem 0.68rem;
-  background: rgba(255, 255, 255, 0.04);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.024)),
+    rgba(0, 0, 0, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 0 1.2rem rgba(96, 247, 255, 0.08);
 }
 
 .jeeves-typing[data-jeeves-typing="true"] {
@@ -570,8 +629,9 @@ button:focus-visible {
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 50%;
-  background: var(--cyan);
+  background: var(--cyan-2);
   opacity: 0.35;
+  box-shadow: 0 0 0.9rem rgba(96, 247, 255, 0.48);
   animation: typingPulse 1s ease-in-out infinite;
 }
 
@@ -602,13 +662,15 @@ button:focus-visible {
   position: relative;
   display: grid;
   gap: 0.55rem;
-  border: 1px solid rgba(105, 247, 255, 0.12);
+  border: 1px solid rgba(96, 247, 255, 0.16);
   border-radius: calc(var(--radius-xl) - 1rem);
   padding: 0.8rem;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
-    rgba(0, 0, 0, 0.16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025) 46%, rgba(0, 0, 0, 0.16)),
+    rgba(0, 0, 0, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 0.9rem 2.2rem rgba(0, 0, 0, 0.18);
 }
 
 .jeeves-handoff-dock[data-handoff-visible="false"] {
@@ -636,20 +698,22 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(244, 201, 111, 0.28);
+  border: 1px solid rgba(245, 201, 108, 0.34);
   border-radius: 999px;
   padding: 0.64rem 0.86rem;
-  color: rgba(255, 242, 208, 0.96);
+  color: rgba(255, 242, 208, 0.98);
   background:
-    radial-gradient(circle at 24% 0%, rgba(244, 201, 111, 0.18), transparent 62%),
-    rgba(244, 201, 111, 0.07);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.028)),
+    radial-gradient(circle at 24% 0%, rgba(245, 201, 108, 0.22), transparent 62%),
+    rgba(245, 201, 108, 0.08);
   font-size: 0.86rem;
   font-weight: 850;
   line-height: 1.12;
   cursor: pointer;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 1.2rem rgba(244, 201, 111, 0.055);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -12px 22px rgba(0, 0, 0, 0.08),
+    0 0 1.2rem rgba(245, 201, 108, 0.075);
   transition:
     transform 0.16s ease,
     border-color 0.16s ease,
@@ -659,10 +723,11 @@ button:focus-visible {
 
 .jeeves-option:hover {
   transform: translateY(-1px);
-  border-color: rgba(244, 201, 111, 0.52);
+  border-color: rgba(245, 201, 108, 0.58);
   background:
-    radial-gradient(circle at 24% 0%, rgba(244, 201, 111, 0.24), transparent 62%),
-    rgba(244, 201, 111, 0.10);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.038)),
+    radial-gradient(circle at 24% 0%, rgba(245, 201, 108, 0.28), transparent 62%),
+    rgba(245, 201, 108, 0.11);
 }
 
 .jeeves-option[data-option-type="conversation"],
@@ -670,40 +735,41 @@ button:focus-visible {
 .jeeves-option[data-option-type="calibration"],
 .jeeves-option[data-option-type="back"],
 .jeeves-option[data-option-type="restart"] {
-  border-color: rgba(244, 201, 111, 0.30);
+  border-color: rgba(245, 201, 108, 0.34);
   color: rgba(255, 242, 208, 0.98);
-  background:
-    radial-gradient(circle at 24% 0%, rgba(244, 201, 111, 0.18), transparent 62%),
-    rgba(244, 201, 111, 0.075);
 }
 
 .jeeves-option[data-option-type="route"],
 .jeeves-option-route {
-  border-color: rgba(125, 169, 255, 0.42);
-  color: rgba(229, 236, 255, 0.98);
+  border-color: rgba(120, 168, 255, 0.48);
+  color: rgba(230, 238, 255, 0.99);
   background:
-    radial-gradient(circle at 24% 0%, rgba(125, 169, 255, 0.22), transparent 62%),
-    rgba(125, 169, 255, 0.10);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.26), transparent 62%),
+    rgba(120, 168, 255, 0.12);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 0 1.4rem rgba(125, 169, 255, 0.08);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -12px 22px rgba(0, 0, 0, 0.08),
+    0 0 1.4rem rgba(120, 168, 255, 0.10);
 }
 
 .jeeves-option[data-option-type="route"]:hover,
 .jeeves-option-route:hover {
-  border-color: rgba(125, 169, 255, 0.68);
+  border-color: rgba(120, 168, 255, 0.74);
   background:
-    radial-gradient(circle at 24% 0%, rgba(125, 169, 255, 0.30), transparent 62%),
-    rgba(125, 169, 255, 0.14);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.038)),
+    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.34), transparent 62%),
+    rgba(120, 168, 255, 0.16);
 }
 
 .jeeves-option[data-option-type="control"],
 .jeeves-option[data-option-target="controlRoom"] {
-  border-color: rgba(255, 191, 115, 0.46);
-  color: rgba(255, 230, 204, 0.98);
+  border-color: rgba(255, 191, 115, 0.52);
+  color: rgba(255, 232, 204, 0.99);
   background:
-    radial-gradient(circle at 24% 0%, rgba(255, 191, 115, 0.25), transparent 62%),
-    rgba(255, 191, 115, 0.10);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+    radial-gradient(circle at 24% 0%, rgba(255, 191, 115, 0.30), transparent 62%),
+    rgba(255, 191, 115, 0.12);
 }
 
 .jeeves-option span {
@@ -726,13 +792,16 @@ button:focus-visible {
   display: grid;
   align-content: end;
   gap: 0.5rem;
-  border: 1px solid rgba(184, 205, 255, 0.12);
+  border: 1px solid rgba(184, 205, 255, 0.13);
   border-radius: var(--radius-lg);
   padding: 0.92rem;
   background:
-    radial-gradient(circle at 16% 0%, rgba(244, 201, 111, 0.10), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.02)),
+    radial-gradient(circle at 16% 0%, rgba(245, 201, 108, 0.12), transparent 62%),
     rgba(255, 255, 255, 0.03);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1rem 2.6rem rgba(0, 0, 0, 0.16);
 }
 
 .jeeves-context-card span {
@@ -759,12 +828,13 @@ button:focus-visible {
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 0.8rem;
-  border: 1px solid rgba(105, 247, 255, 0.22);
+  border: 1px solid rgba(96, 247, 255, 0.26);
   border-radius: var(--radius-xl);
   padding: 1rem;
   background:
-    radial-gradient(circle at 18% 0%, rgba(105, 247, 255, 0.12), transparent 22rem),
-    rgba(4, 20, 28, 0.9);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025)),
+    radial-gradient(circle at 18% 0%, rgba(96, 247, 255, 0.16), transparent 22rem),
+    rgba(4, 20, 28, 0.92);
   box-shadow: var(--shadow-screen);
 }
 
@@ -792,16 +862,21 @@ button:focus-visible {
 
 .jeeves-restore-button {
   min-height: 2.55rem;
-  border: 1px solid rgba(105, 247, 255, 0.32);
+  border: 1px solid rgba(96, 247, 255, 0.36);
   border-radius: 999px;
   padding: 0.65rem 0.9rem;
   color: #001116;
-  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.68), transparent 38%),
+    linear-gradient(135deg, var(--cyan-3), var(--cyan));
   font-size: 0.78rem;
   font-weight: 950;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 0 1.5rem rgba(96, 247, 255, 0.18);
 }
 
 /* RECEIPT / HIDDEN */
@@ -856,7 +931,17 @@ button:focus-visible {
 
 @media (max-width: 720px) {
   :root {
-    --thread-height: clamp(24rem, 54vh, 34rem);
+    --thread-height: auto;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body {
+    touch-action: pan-y;
   }
 
   .jeeves-page {
@@ -875,13 +960,15 @@ button:focus-visible {
 
   .jeeves-screen-shell {
     min-height: auto;
+    place-items: start center;
     padding: 0.35rem 0;
   }
 
   .jeeves-screen-glass {
-    min-height: 42rem;
+    min-height: auto;
     border-radius: 1.35rem;
     padding: 0.78rem;
+    overflow: visible;
   }
 
   .jeeves-screen-topline {
@@ -891,10 +978,18 @@ button:focus-visible {
   }
 
   .jeeves-thread-screen {
+    min-height: auto;
     border-radius: 1rem;
+    overflow: visible;
+    grid-template-rows: auto auto;
   }
 
   .jeeves-thread {
+    min-height: 24rem;
+    max-height: none;
+    overflow: visible;
+    overscroll-behavior: auto;
+    touch-action: pan-y;
     padding: 0.78rem;
   }
 
@@ -922,10 +1017,6 @@ button:focus-visible {
 }
 
 @media (max-width: 430px) {
-  :root {
-    --thread-height: 25rem;
-  }
-
   .jeeves-brand-mark {
     width: 3.25rem;
     height: 3.25rem;
@@ -933,10 +1024,6 @@ button:focus-visible {
 
   .jeeves-brand-copy strong {
     font-size: 1.22rem;
-  }
-
-  .jeeves-screen-glass {
-    min-height: 40rem;
   }
 
   .jeeves-avatar {
@@ -947,6 +1034,10 @@ button:focus-visible {
   .jeeves-status {
     width: 100%;
     justify-content: center;
+  }
+
+  .jeeves-thread {
+    min-height: 25rem;
   }
 
   .jeeves-message {

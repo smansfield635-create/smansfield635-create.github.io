@@ -1,1054 +1,248 @@
+<!--
+  /showroom/globe/hearth/index.html
+  HEARTH_FACILITY_AUDRALIA_PRODUCTION_CHAMBER_TED_ORBIT_STATIC_SHELL_TNT_v1
+  First-file replacement.
+  Scope: public route shell only.
+  Does not own: canvas engine, controls engine, runtime loop, diagnostic internals, planet renderer.
+  Required surface-truth IDs preserved:
+  - #hearthCanvasMount
+  - #hearthVisibleCanvas
+-->
+
 <!doctype html>
-<html lang="en" data-hearth-showroom-shell="true">
+<html lang="en" data-route="/showroom/globe/hearth/" data-page="hearth-facility-audralia-production-chamber">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hearth · Showroom Planet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!--
-    /showroom/globe/hearth/index.html
-    HEARTH_SHOWROOM_GLOBE_HTML_MODERN_NARRATIVE_MIRRORLAND_RESTORE_TNT_v1
+  <title>Hearth Facility · Audralia Production Chamber</title>
 
-    Full-file replacement.
-    Showroom Hearth HTML shell only.
+  <meta
+    name="description"
+    content="Enter Hearth Facility, a planetary production chamber in the Unknown where Audralia is being developed as the first frontier-science world inside Mirrorland."
+  />
 
-    Purpose:
-    - Restore the public Hearth showroom route after accidental overwrite.
-    - Keep access to /showroom/globe/hearth/diagnostic/.
-    - Provide a modern, futuristic, reader-friendly Hearth page.
-    - Preserve the canonical Hearth canvas mount with nonzero layout.
-    - Preserve production/canvas/control/runtime separation.
-    - Marry the Hearth narrative with Mirrorland without turning narrative into diagnostic proof.
-    - Load the existing Hearth route script: /showroom/globe/hearth/index.js.
-
-    Does not own:
-    - diagnostic chamber
-    - canvas drawing
-    - canvas release
-    - controls
-    - runtime restart
-    - planet data truth
-    - final visual pass
-  -->
-
-  <style>
-    :root {
-      --bg0: #050814;
-      --bg1: #071225;
-      --ink: #f6f8ff;
-      --soft: #c7d3e8;
-      --muted: #8899b6;
-      --line: rgba(255,255,255,.14);
-      --line-strong: rgba(255,255,255,.24);
-      --glass: rgba(255,255,255,.074);
-      --glass-strong: rgba(255,255,255,.118);
-
-      --north: #6ca9ff;
-      --east: #45dcc5;
-      --south: #ffd26c;
-      --west: #b793ff;
-      --mirror: #ff88c8;
-      --hearth: #ff9f6e;
-      --clear: #7ae7a5;
-      --hold: #ffd166;
-      --protected: #a8b4c8;
-
-      --radius-xl: 38px;
-      --radius-lg: 28px;
-      --radius-md: 20px;
-      --shadow: 0 36px 120px rgba(0,0,0,.48);
-      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      min-height: 100%;
-      background: var(--bg0);
-      color: var(--ink);
-      font-family: var(--sans);
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 15% 10%, rgba(108,169,255,.26), transparent 34rem),
-        radial-gradient(circle at 85% 9%, rgba(183,147,255,.22), transparent 34rem),
-        radial-gradient(circle at 50% 95%, rgba(255,159,110,.18), transparent 38rem),
-        linear-gradient(145deg, #050814 0%, #08142a 48%, #050814 100%);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: radial-gradient(circle at 50% 20%, black, transparent 74%);
-      opacity: .75;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .page {
-      width: min(1520px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 22px 0 72px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255,255,255,.062);
-      backdrop-filter: blur(22px);
-      box-shadow: 0 18px 70px rgba(0,0,0,.28);
-      margin-bottom: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      min-width: 0;
-      padding-left: 8px;
-    }
-
-    .brand-mark {
-      width: 36px;
-      height: 36px;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 35% 30%, #ffe0aa 0 7%, transparent 8%),
-        radial-gradient(circle at 62% 70%, rgba(255,255,255,.18) 0 0, transparent 58%),
-        linear-gradient(135deg, var(--hearth), var(--west));
-      box-shadow: 0 0 34px rgba(255,159,110,.34);
-      flex: 0 0 auto;
-    }
-
-    .brand-title {
-      display: block;
-      font-size: 14px;
-      font-weight: 850;
-      letter-spacing: -.01em;
-      white-space: nowrap;
-    }
-
-    .brand-sub {
-      display: block;
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-      white-space: nowrap;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .pill-link {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255,255,255,.068);
-      color: var(--soft);
-      padding: 10px 13px;
-      font-size: 13px;
-      font-weight: 760;
-      transition: transform .16s ease, border-color .16s ease, background .16s ease;
-    }
-
-    .pill-link:hover {
-      transform: translateY(-1px);
-      border-color: var(--line-strong);
-      background: rgba(255,255,255,.12);
-    }
-
-    .pill-link.primary {
-      color: var(--ink);
-      background: linear-gradient(135deg, rgba(255,159,110,.22), rgba(183,147,255,.16));
-      border-color: rgba(255,159,110,.34);
-    }
-
-    .hero {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      background: linear-gradient(135deg, rgba(255,255,255,.108), rgba(255,255,255,.052));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(26px);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto -20% -54% 34%;
-      height: 360px;
-      background: radial-gradient(circle, rgba(255,159,110,.22), transparent 66%);
-      pointer-events: none;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(440px, 600px);
-      gap: 26px;
-      padding: 30px;
-      position: relative;
-      z-index: 1;
-      align-items: stretch;
-    }
-
-    .copy {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 26px;
-      min-width: 0;
-    }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      color: #9edcff;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      font-weight: 850;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(44px, 8vw, 104px);
-      line-height: .88;
-      letter-spacing: -.075em;
-      max-width: 880px;
-    }
-
-    .hero-text {
-      margin: 20px 0 0;
-      color: var(--soft);
-      line-height: 1.68;
-      font-size: 17px;
-      max-width: 820px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .action-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 12px 16px;
-      font-weight: 820;
-      color: var(--ink);
-      background: rgba(255,255,255,.078);
-      transition: transform .16s ease, border-color .16s ease, background .16s ease;
-    }
-
-    .action-link:hover {
-      transform: translateY(-1px);
-      border-color: var(--line-strong);
-      background: rgba(255,255,255,.13);
-    }
-
-    .action-link.primary {
-      background: linear-gradient(135deg, rgba(255,159,110,.25), rgba(183,147,255,.18));
-      border-color: rgba(255,159,110,.36);
-    }
-
-    .status-row {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .status-card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(5,8,20,.34);
-      padding: 14px;
-      min-height: 102px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .status-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 5px;
-      background: var(--accent);
-    }
-
-    .status-card.north { --accent: var(--north); }
-    .status-card.east { --accent: var(--east); }
-    .status-card.west { --accent: var(--west); }
-    .status-card.south { --accent: var(--south); }
-
-    .status-kicker {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: .09em;
-      text-transform: uppercase;
-      font-weight: 850;
-      margin-bottom: 7px;
-    }
-
-    .status-title {
-      display: block;
-      color: var(--ink);
-      font-size: 14px;
-      font-weight: 840;
-      margin-bottom: 5px;
-    }
-
-    .status-copy {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.38;
-      overflow-wrap: anywhere;
-    }
-
-    .planet-stage-card {
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at 50% 46%, rgba(255,159,110,.20), transparent 32%),
-        linear-gradient(155deg, rgba(255,255,255,.13), rgba(255,255,255,.055));
-      min-height: 640px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 0 80px rgba(255,255,255,.045);
-    }
-
-    .planet-stage-card::before {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      border-radius: 26px;
-      border: 1px solid rgba(255,255,255,.095);
-      pointer-events: none;
-    }
-
-    .stage-topline {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      right: 18px;
-      z-index: 3;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      pointer-events: none;
-    }
-
-    .stage-badge {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(5,8,20,.42);
-      color: var(--soft);
-      padding: 9px 12px;
-      font-size: 12px;
-      font-weight: 790;
-      backdrop-filter: blur(12px);
-    }
-
-    .stage-status {
-      color: var(--hold);
-      max-width: 250px;
-      text-align: right;
-    }
-
-    .canvas-mount {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      min-height: 640px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(124,220,255,.08), transparent 36%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 48%);
-    }
-
-    .canvas-mount canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-width: 320px;
-      min-height: 420px;
-    }
-
-    .fallback-orb {
-      position: absolute;
-      width: min(76%, 460px);
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 36% 26%, rgba(255,240,210,.86) 0 2%, transparent 3%),
-        radial-gradient(circle at 34% 32%, rgba(255,206,139,.34), transparent 18%),
-        radial-gradient(circle at 60% 70%, rgba(92,57,48,.46), transparent 28%),
-        radial-gradient(circle at 42% 62%, rgba(74,110,93,.34), transparent 22%),
-        linear-gradient(135deg, #2e5167, #7b4a3e 46%, #16263b);
-      box-shadow:
-        inset -46px -44px 90px rgba(0,0,0,.54),
-        inset 36px 26px 90px rgba(255,255,255,.13),
-        0 0 120px rgba(255,159,110,.20);
-      opacity: .64;
-      pointer-events: none;
-      transition: opacity .35s ease;
-    }
-
-    .stage-ready .fallback-orb {
-      opacity: .18;
-    }
-
-    .section-grid {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      background: rgba(255,255,255,.066);
-      backdrop-filter: blur(22px);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: clamp(28px, 4vw, 52px);
-      line-height: .95;
-      letter-spacing: -.055em;
-    }
-
-    .panel p {
-      color: var(--soft);
-      line-height: 1.68;
-      font-size: 16px;
-      max-width: 900px;
-    }
-
-    .story-orbit {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .story-card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(5,8,20,.30);
-      padding: 16px;
-      min-height: 150px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .story-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 5px;
-      background: var(--accent);
-    }
-
-    .story-card.hearth { --accent: var(--hearth); }
-    .story-card.mirror { --accent: var(--mirror); }
-    .story-card.west { --accent: var(--west); }
-    .story-card.south { --accent: var(--south); }
-
-    .story-card strong {
-      display: block;
-      font-size: 17px;
-      margin-bottom: 8px;
-    }
-
-    .story-card span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.52;
-      font-size: 14px;
-    }
-
-    .mirror-panel {
-      background:
-        radial-gradient(circle at 80% 18%, rgba(255,136,200,.18), transparent 28rem),
-        rgba(255,255,255,.066);
-    }
-
-    .mirror-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .mirror-row {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 12px;
-      align-items: start;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(5,8,20,.28);
-      padding: 14px;
-    }
-
-    .mirror-num {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background: rgba(255,136,200,.14);
-      color: #ffd6ec;
-      font-weight: 880;
-      border: 1px solid rgba(255,136,200,.22);
-    }
-
-    .mirror-row strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .mirror-row span {
-      display: block;
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 14px;
-    }
-
-    .footer-panel {
-      margin-top: 16px;
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      background: rgba(255,255,255,.058);
-      padding: 18px;
-      display: flex;
-      gap: 12px;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-panel code {
-      color: var(--soft);
-      font-family: var(--mono);
-      font-size: 12px;
-    }
-
-    @media (max-width: 1180px) {
-      .hero-grid,
-      .section-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .planet-stage-card,
-      .canvas-mount {
-        min-height: 560px;
-      }
-
-      .status-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .page {
-        width: min(100% - 20px, 1520px);
-        padding-top: 10px;
-      }
-
-      .nav {
-        border-radius: 26px;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav-links {
-        justify-content: flex-start;
-      }
-
-      .hero-grid {
-        padding: 18px;
-      }
-
-      .hero {
-        border-radius: 28px;
-      }
-
-      .planet-stage-card,
-      .canvas-mount {
-        min-height: 500px;
-        border-radius: 26px;
-      }
-
-      .status-row,
-      .story-orbit {
-        grid-template-columns: 1fr;
-      }
-
-      .panel {
-        padding: 18px;
-        border-radius: 26px;
-      }
-    }
-  </style>
+  <link rel="canonical" href="/showroom/globe/hearth/" />
+  <link rel="stylesheet" href="/showroom/globe/hearth/index.css?v=2026-06-09-hearth-facility-audralia-production-chamber-ted-orbit-v1" />
+  <script src="/showroom/globe/hearth/index.js?v=2026-06-09-hearth-facility-audralia-production-chamber-ted-orbit-v1" defer></script>
 </head>
 
-<body
-  data-production-mutation-authorized="false"
-  data-canvas-build-authorized="false"
-  data-canvas-release-authorized="false"
-  data-runtime-restart-authorized="false"
->
-  <main class="page">
-    <nav class="nav" aria-label="Hearth navigation">
-      <a class="brand" href="/showroom/globe/hearth/" aria-label="Hearth showroom home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>
-          <span class="brand-title">Hearth</span>
-          <span class="brand-sub">Showroom Planet · Narrative Shell</span>
-        </span>
-      </a>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to Hearth Facility</a>
 
-      <div class="nav-links">
-        <a class="pill-link" href="/showroom/globe/">Planet showroom</a>
-        <a class="pill-link" href="#mirrorland">Mirrorland</a>
-        <a class="pill-link primary" href="/showroom/globe/hearth/diagnostic/">Diagnostic chamber</a>
-      </div>
-    </nav>
+  <div class="page-shell" data-hearth-page-shell>
+    <header class="site-rail" aria-label="Hearth route navigation">
+      <a class="rail-link" href="/showroom/globe/">Return to Globe Window</a>
+      <a class="rail-link" href="/explore/frontier/">Frontier</a>
+      <a class="rail-link" href="/showroom/globe/audralia/">Audralia</a>
+      <a class="rail-link rail-link-strong" href="/showroom/globe/hearth/diagnostic/">Diagnostic Panel</a>
+    </header>
 
-    <section class="hero" aria-label="Hearth showroom">
-      <div class="hero-grid">
-        <section class="copy">
-          <div>
-            <p class="eyebrow">Old Planet · New Interface · Mirrorland-Aware</p>
-            <h1>Hearth is not a globe. Hearth is an old world.</h1>
-            <p class="hero-text">
-              The showroom reads Hearth as an ancient planetary body: carved coasts, worn systems,
-              weathered boundaries, artificial-natural inlets, and memory held inside terrain.
-              Mirrorland is the reflective layer beside it: a narrative lens for seeing patterns without
-              confusing story with diagnostic proof.
+    <main id="mainContent" class="hearth-page" data-hearth-page>
+      <section class="hero keynote-panel" aria-labelledby="hearthTitle">
+        <p class="eyebrow">Mirrorland · The Unknown · Facility Access</p>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1 id="hearthTitle">Hearth Facility</h1>
+            <p class="hero-thesis">
+              A planetary production chamber in the Unknown, where Audralia becomes the first frontier-science world under active development.
+            </p>
+            <p class="hero-body">
+              Hearth is not the planet. Hearth is the facility. Audralia is the first living subject entering the chamber: a possibility world where characters, systems, and frontier sciences can begin building thresholds the visitor will eventually enter.
             </p>
 
-            <div class="hero-actions">
-              <a class="action-link primary" href="#planet-stage">View Hearth</a>
-              <a class="action-link" href="#narrative">Read the narrative</a>
-              <a class="action-link" href="/showroom/globe/hearth/diagnostic/">Open diagnostics</a>
+            <div class="hero-actions" aria-label="Primary actions">
+              <a class="primary-action" href="#facilityStage">View the Chamber</a>
+              <a class="secondary-action" href="/showroom/globe/hearth/diagnostic/">Open Diagnostic Panel</a>
             </div>
           </div>
 
-          <section class="status-row" aria-label="NEWS standards">
-            <article class="status-card north">
-              <span class="status-kicker">North</span>
-              <span class="status-title">Orientation</span>
-              <span class="status-copy">The public page introduces the world without making diagnostic claims.</span>
-            </article>
-            <article class="status-card east">
-              <span class="status-kicker">East</span>
-              <span class="status-title">Intake</span>
-              <span class="status-copy">The route shell loads the Hearth front-end script after the mount exists.</span>
-            </article>
-            <article class="status-card west">
-              <span class="status-kicker">West</span>
-              <span class="status-title">Boundary</span>
-              <span class="status-copy">Narrative, showroom, and diagnostic proof remain separate compartments.</span>
-            </article>
-            <article class="status-card south">
-              <span class="status-kicker">South</span>
-              <span class="status-title">Output</span>
-              <span class="status-copy" id="hearthRouteStatus">Route shell ready. Loading Hearth expression.</span>
-            </article>
-          </section>
-        </section>
+          <aside class="hero-card" aria-label="Facility identity">
+            <p class="card-kicker">Facility Alias</p>
+            <h2>Hearth</h2>
+            <p>Hidden production room in the Unknown.</p>
 
-        <section class="planet-stage-card" id="planet-stage" aria-label="Hearth planet stage">
-          <div class="stage-topline">
-            <span class="stage-badge">Hearth canvas mount</span>
-            <span class="stage-badge stage-status" id="hearthCanvasStatus">Waiting for route script</span>
+            <p class="card-kicker">First Subject</p>
+            <h2>Audralia</h2>
+            <p>Frontier playground for science, character interaction, and threshold-building.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="facilityStage" class="facility-stage-section" aria-labelledby="stageTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Production View</p>
+          <h2 id="stageTitle">Audralia in the Chamber</h2>
+          <p>
+            The visible field below is the public stage for the first planetary subject. As the engine develops, the chamber gauges and diagnostic receipts develop with it.
+          </p>
+        </div>
+
+        <div class="stage-frame" data-stage-frame>
+          <div class="stage-header" aria-label="Stage status">
+            <span>Hearth Facility Window</span>
+            <span data-stage-status>Production subject: Audralia</span>
           </div>
 
-          <div
-            id="hearthCanvasMount"
-            class="canvas-mount"
-            data-hearth-canvas-mount="true"
-            data-hearth-visible-surface="true"
-            data-hearth-showroom-surface="true"
-            data-production-mutation-authorized="false"
-            data-canvas-build-authorized="false"
-            data-canvas-release-authorized="false"
-          >
+          <div id="hearthCanvasMount" class="canvas-mount" data-canvas-mount>
             <canvas
               id="hearthVisibleCanvas"
-              data-hearth-visible-canvas="true"
-              data-hearth-canvas="true"
-              data-hearth-dom-surface="true"
-              aria-label="Hearth visible planet canvas"
+              class="visible-canvas"
+              width="1280"
+              height="720"
+              aria-label="Audralia planetary production viewport"
+              data-canvas="hearth-visible-canvas"
             ></canvas>
-            <div class="fallback-orb" aria-hidden="true"></div>
-          </div>
-        </section>
-      </div>
-    </section>
 
-    <section class="section-grid" id="narrative" aria-label="Hearth narrative and Mirrorland">
-      <article class="panel">
-        <p class="eyebrow">Narrative architecture</p>
-        <h2>Hearth carries evidence of age.</h2>
-        <p>
-          Its coastline is not treated as a simple edge. It can be read as old infrastructure:
-          carved shelf cuts, worn shore technology, ancient channels, weathered inlets, and
-          boundary systems that have survived long enough to look natural again.
-        </p>
-
-        <div class="story-orbit">
-          <article class="story-card hearth">
-            <strong>Ancient coast logic</strong>
-            <span>Visible coastal traces are preserved as old carved coast-boundaries, not dismissed as noise.</span>
-          </article>
-          <article class="story-card west">
-            <strong>Boundary clarity</strong>
-            <span>The showroom tells the story. The diagnostic chamber verifies the machinery. They do not collapse.</span>
-          </article>
-          <article class="story-card south">
-            <strong>World output</strong>
-            <span>The page gives visitors a stable doorway into Hearth before they enter deeper diagnostic proof.</span>
-          </article>
-          <article class="story-card mirror">
-            <strong>Mirrorland adjacency</strong>
-            <span>Mirrorland reflects patterns, symbols, and meaning without replacing the planet’s structure.</span>
-          </article>
-        </div>
-      </article>
-
-      <article class="panel mirror-panel" id="mirrorland">
-        <p class="eyebrow">Mirrorland</p>
-        <h2>The reflective layer stays adjacent.</h2>
-        <p>
-          Mirrorland belongs beside Hearth as a reader’s lens. It helps frame what is seen,
-          but it does not overwrite the world, the route, the canvas, or the diagnostics.
-        </p>
-
-        <div class="mirror-list">
-          <div class="mirror-row">
-            <span class="mirror-num">1</span>
-            <div>
-              <strong>Reflect</strong>
-              <span>Look for repeated forms, mirrored boundaries, and symbolic echoes.</span>
-            </div>
-          </div>
-          <div class="mirror-row">
-            <span class="mirror-num">2</span>
-            <div>
-              <strong>Separate</strong>
-              <span>Keep story, interface, and diagnostic proof in their own compartments.</span>
-            </div>
-          </div>
-          <div class="mirror-row">
-            <span class="mirror-num">3</span>
-            <div>
-              <strong>Return</strong>
-              <span>When proof is needed, return to the diagnostic chamber rather than forcing meaning into the canvas.</span>
+            <div class="canvas-fallback" data-canvas-fallback>
+              <p class="fallback-kicker">Awaiting visible expression</p>
+              <p>
+                The facility stage is prepared. The under-the-hood engines determine what becomes visible here.
+              </p>
             </div>
           </div>
         </div>
-      </article>
-    </section>
+      </section>
 
-    <footer class="footer-panel">
-      <span>
-        Showroom shell only. Diagnostic work remains in
-        <code>/showroom/globe/hearth/diagnostic/</code>.
-      </span>
-      <a class="pill-link primary" href="/showroom/globe/hearth/diagnostic/">Open diagnostic chamber</a>
-    </footer>
-  </main>
+      <section class="orbit-section" aria-labelledby="orbitTitle" data-orbit-section>
+        <div class="section-heading section-heading-centered">
+          <p class="eyebrow">TED-Style Facility Walkthrough</p>
+          <h2 id="orbitTitle">Choose a Facility Lens</h2>
+          <p>
+            Select one chamber lens at a time. Return to Orbit resets the presentation so the full facility map comes back into view.
+          </p>
+        </div>
 
-  <noscript>
-    <div style="padding:18px;color:#fff;background:#111827;">
-      Hearth requires JavaScript for the interactive planet expression. The diagnostic chamber remains available at /showroom/globe/hearth/diagnostic/.
-    </div>
-  </noscript>
+        <div class="lens-toggle" role="group" aria-label="Presentation lens">
+          <button type="button" class="lens-button is-active" data-lens="platform" aria-pressed="true">Platform</button>
+          <button type="button" class="lens-button" data-lens="engineering" aria-pressed="false">Engineering</button>
+        </div>
 
-  <script>
-    (() => {
-      "use strict";
+        <div class="facility-orbit" aria-label="Hearth facility orbit selector">
+          <button type="button" class="orbit-node" data-orbit-node="unknown">
+            <span>The Unknown</span>
+          </button>
 
-      const root = typeof window !== "undefined" ? window : globalThis;
-      const doc = root.document;
+          <button type="button" class="orbit-node" data-orbit-node="audralia">
+            <span>Audralia</span>
+          </button>
 
-      const CONTRACT =
-        "HEARTH_SHOWROOM_GLOBE_HTML_MODERN_NARRATIVE_MIRRORLAND_RESTORE_TNT_v1";
-      const RECEIPT =
-        "HEARTH_SHOWROOM_GLOBE_HTML_MODERN_NARRATIVE_MIRRORLAND_RESTORE_RECEIPT_v1";
-      const VERSION =
-        "2026-06-09.hearth-showroom-globe-html-modern-narrative-mirrorland-restore-v1";
-      const FILE = "/showroom/globe/hearth/index.html";
-      const ROUTE_SCRIPT = "/showroom/globe/hearth/index.js";
+          <button type="button" class="orbit-node" data-orbit-node="frontier">
+            <span>Frontier Sciences</span>
+          </button>
 
-      const NO_CLAIMS = Object.freeze({
-        productionMutationAuthorized: false,
-        hearthRepairAuthorized: false,
-        routeRepairAuthorized: false,
-        routeConductorMutationAuthorized: false,
-        controlMutationAuthorized: false,
-        controlsMutationAuthorized: false,
-        canvasDrawingAuthorized: false,
-        canvasCreationAuthorized: false,
-        canvasBuildAuthorized: false,
-        canvasRepairAuthorized: false,
-        canvasReleaseAuthorized: false,
-        runtimeRestartAuthorized: false,
-        f13Claimed: false,
-        f21Claimed: false,
-        f55Claimed: false,
-        readyTextClaimed: false,
-        visualPassClaimed: false,
-        finalVisualPassClaimed: false,
-        generatedImage: false,
-        graphicBox: false,
-        webGL: false,
-        publicSuperiorityClaim: false
-      });
+          <button type="button" class="orbit-node" data-orbit-node="characters">
+            <span>Character Builders</span>
+          </button>
 
-      const state = {
-        loaded: true,
-        routeScriptRequested: false,
-        routeScriptLoaded: false,
-        routeScriptError: false,
-        mountFound: false,
-        canvasFound: false,
-        mountRectNonZero: false,
-        updatedAt: ""
-      };
+          <button type="button" class="orbit-node" data-orbit-node="gauges">
+            <span>Facility Gauges</span>
+          </button>
 
-      function nowIso() {
-        try { return new Date().toISOString(); } catch (_error) { return ""; }
-      }
+          <button type="button" class="orbit-node" data-orbit-node="underhood">
+            <span>Under the Hood</span>
+          </button>
 
-      function ensureHearth() {
-        if (!root.HEARTH || typeof root.HEARTH !== "object") root.HEARTH = {};
-        if (!root.DEXTER_LAB || typeof root.DEXTER_LAB !== "object") root.DEXTER_LAB = {};
-      }
+          <button type="button" class="orbit-node orbit-node-diagnostic" data-orbit-node="diagnostic">
+            <span>Diagnostic Panel</span>
+          </button>
 
-      function updateText(id, text) {
-        const el = doc.getElementById(id);
-        if (el) el.textContent = text;
-      }
+          <button type="button" class="orbit-return" data-return-orbit>
+            Return to Orbit
+          </button>
+        </div>
 
-      function inspectShell() {
-        const mount = doc.getElementById("hearthCanvasMount");
-        const canvas =
-          doc.getElementById("hearthVisibleCanvas") ||
-          (mount && mount.querySelector("canvas"));
+        <article class="orbit-reading-panel" aria-live="polite" data-orbit-panel>
+          <p class="panel-kicker" data-panel-kicker>Facility Orbit</p>
+          <h3 data-panel-title>Hearth is the chamber. Audralia is the first subject.</h3>
+          <p data-panel-body>
+            Select a facility lens to focus the presentation. Each lens brings forward one part of the chamber while the rest of the orbit steps back.
+          </p>
 
-        let rect = { width: 0, height: 0 };
-        try {
-          rect = mount ? mount.getBoundingClientRect() : rect;
-        } catch (_error) {}
+          <div class="panel-actions" data-panel-actions>
+            <a class="panel-link" href="/showroom/globe/hearth/diagnostic/">Open Diagnostic Panel</a>
+          </div>
+        </article>
+      </section>
 
-        state.mountFound = Boolean(mount);
-        state.canvasFound = Boolean(canvas);
-        state.mountRectNonZero = Boolean(rect.width > 0 && rect.height > 0);
-        state.updatedAt = nowIso();
+      <section class="gauge-section" aria-labelledby="gaugeTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Facility Instruments</p>
+          <h2 id="gaugeTitle">People-Friendly Gauges</h2>
+          <p>
+            These gauges translate development state into readable signals. The receipts remain under the hood; the public page explains what they mean.
+          </p>
+        </div>
 
-        return {
-          mount,
-          canvas,
-          rect,
-          mountFound: state.mountFound,
-          canvasFound: state.canvasFound,
-          mountRectNonZero: state.mountRectNonZero
-        };
-      }
+        <div class="gauge-grid" data-gauge-grid>
+          <article class="gauge-card" data-gauge="visual">
+            <span class="gauge-label">Visual Surface</span>
+            <strong>Stage being renewed</strong>
+            <p>The chamber is preparing a larger, cleaner place for the planetary view to appear.</p>
+          </article>
 
-      function publishShell() {
-        ensureHearth();
+          <article class="gauge-card" data-gauge="motion">
+            <span class="gauge-label">Motion + Touch</span>
+            <strong>Instrument pending</strong>
+            <p>Movement and interaction are measured separately from the public stage.</p>
+          </article>
 
-        const api = {
-          contract: CONTRACT,
-          CONTRACT,
-          receipt: RECEIPT,
-          RECEIPT,
-          version: VERSION,
-          file: FILE,
-          routeScript: ROUTE_SCRIPT,
-          role: "HEARTH_SHOWROOM_HTML_SHELL",
-          narrativeLayer: "HEARTH_OLD_WORLD_AND_MIRRORLAND_ADJACENCY",
-          diagnosticRoute: "/showroom/globe/hearth/diagnostic/",
-          publicRoute: "/showroom/globe/hearth/",
-          inspectShell,
-          getReceiptLight() {
-            const shell = inspectShell();
-            return {
-              role: "HEARTH_SHOWROOM_HTML_SHELL",
-              contract: CONTRACT,
-              receipt: RECEIPT,
-              version: VERSION,
-              file: FILE,
-              routeScript: ROUTE_SCRIPT,
-              mountFound: shell.mountFound,
-              canvasFound: shell.canvasFound,
-              mountRectNonZero: shell.mountRectNonZero,
-              routeScriptRequested: state.routeScriptRequested,
-              routeScriptLoaded: state.routeScriptLoaded,
-              routeScriptError: state.routeScriptError,
-              mirrorlandNarrativePresent: true,
-              diagnosticChamberLinkPresent: true,
-              newsStandardPresent: true,
-              updatedAt: state.updatedAt || nowIso(),
-              ...NO_CLAIMS
-            };
-          },
-          getReceipt() {
-            return {
-              ...this.getReceiptLight(),
-              protectedSystems: {
-                production: false,
-                canvasBuild: false,
-                canvasRelease: false,
-                controlsMutation: false,
-                runtimeRestart: false
-              }
-            };
-          },
-          getState() {
-            return {
-              ...state,
-              ...NO_CLAIMS
-            };
-          },
-          ...NO_CLAIMS
-        };
+          <article class="gauge-card" data-gauge="narrative">
+            <span class="gauge-label">Narrative Layer</span>
+            <strong>Mirrorland aligned</strong>
+            <p>The facility now connects to Audralia, Frontier science, and character-built thresholds.</p>
+          </article>
 
-        root.HEARTH.showroomHearthShell = api;
-        root.HEARTH.hearthShowroomShell = api;
-        root.HEARTH_SHOWROOM_HEARTH_HTML_SHELL = api;
-        root.DEXTER_LAB.hearthShowroomShell = api;
+          <article class="gauge-card" data-gauge="diagnostic">
+            <span class="gauge-label">Under the Hood</span>
+            <strong>Diagnostic panel active</strong>
+            <p>The instrument room remains available for direct receipts and proof.</p>
+          </article>
+        </div>
+      </section>
 
-        root.__HEARTH_SHOWROOM_HEARTH_HTML_SHELL_LOADED__ = true;
-        root.__HEARTH_SHOWROOM_HEARTH_HTML_SHELL_CONTRACT__ = CONTRACT;
-        root.__HEARTH_SHOWROOM_HEARTH_HTML_SHELL_VERSION__ = VERSION;
-        root.__HEARTH_SHOWROOM_HEARTH_PRODUCTION_MUTATION_AUTHORIZED__ = false;
-        root.__HEARTH_SHOWROOM_HEARTH_CANVAS_BUILD_AUTHORIZED__ = false;
-        root.__HEARTH_SHOWROOM_HEARTH_CANVAS_RELEASE_AUTHORIZED__ = false;
-        root.__HEARTH_SHOWROOM_HEARTH_RUNTIME_RESTART_AUTHORIZED__ = false;
+      <section class="frontier-section" aria-labelledby="frontierTitle">
+        <div class="section-heading section-heading-centered">
+          <p class="eyebrow">First Planetary Subject</p>
+          <h2 id="frontierTitle">Audralia as a Frontier Playground</h2>
+          <p>
+            Audralia is the first world being developed through Hearth Facility. It is a playground for frontier science, future character interaction, and systems that can be explored as they mature.
+          </p>
+        </div>
 
-        return api;
-      }
+        <div class="threshold-grid">
+          <article class="threshold-card">
+            <h3>Science Thresholds</h3>
+            <p>Energy, water, waste, infrastructure, vision, urban systems, and closed-loop experiments become world-building lanes.</p>
+          </article>
 
-      function markStageReady() {
-        const stage = doc.getElementById("planet-stage");
-        if (stage) stage.classList.add("stage-ready");
-      }
+          <article class="threshold-card">
+            <h3>Character Builders</h3>
+            <p>The characters are not decoration. They become builders, guides, pressure points, and future interactive agents inside the frontier.</p>
+          </article>
 
-      function loadRouteScript() {
-        if (state.routeScriptRequested) return;
+          <article class="threshold-card">
+            <h3>Facility Proof</h3>
+            <p>The diagnostic panel remains the instrument room where the friendly page can be checked against the actual build state.</p>
+          </article>
+        </div>
+      </section>
 
-        state.routeScriptRequested = true;
-        updateText("hearthRouteStatus", "Route script requested.");
-        updateText("hearthCanvasStatus", "Loading Hearth expression");
+      <section class="diagnostic-bridge" aria-labelledby="diagnosticTitle">
+        <div>
+          <p class="eyebrow">Under the Hood</p>
+          <h2 id="diagnosticTitle">Open the Instrument Room</h2>
+          <p>
+            The showroom explains the chamber. The diagnostic panel proves what the chamber can currently see, measure, and return.
+          </p>
+        </div>
 
-        const existing = doc.querySelector('script[data-hearth-route-script="true"]');
-        if (existing) existing.remove();
-
-        const script = doc.createElement("script");
-        script.dataset.hearthRouteScript = "true";
-        script.async = false;
-        script.src = `${ROUTE_SCRIPT}?v=${encodeURIComponent(VERSION)}`;
-
-        script.onload = () => {
-          state.routeScriptLoaded = true;
-          state.routeScriptError = false;
-          state.updatedAt = nowIso();
-          markStageReady();
-          updateText("hearthRouteStatus", "Hearth route script loaded.");
-          updateText("hearthCanvasStatus", "Hearth expression loaded");
-          publishShell();
-        };
-
-        script.onerror = () => {
-          state.routeScriptLoaded = false;
-          state.routeScriptError = true;
-          state.updatedAt = nowIso();
-          updateText("hearthRouteStatus", "Route script did not load. The showroom shell remains intact.");
-          updateText("hearthCanvasStatus", "Route script unavailable");
-          publishShell();
-        };
-
-        doc.body.appendChild(script);
-      }
-
-      function init() {
-        ensureHearth();
-        inspectShell();
-        publishShell();
-
-        if (state.mountFound && state.canvasFound && state.mountRectNonZero) {
-          updateText("hearthRouteStatus", "Mount ready. Loading Hearth expression.");
-          updateText("hearthCanvasStatus", "Mount ready");
-        } else {
-          updateText("hearthRouteStatus", "Mount prepared. Layout still being measured.");
-          updateText("hearthCanvasStatus", "Mount measuring");
-        }
-
-        loadRouteScript();
-      }
-
-      if (doc.readyState === "loading") {
-        doc.addEventListener("DOMContentLoaded", init, { once: true });
-      } else {
-        init();
-      }
-    })();
-  </script>
+        <a class="diagnostic-button" href="/showroom/globe/hearth/diagnostic/">
+          Enter Diagnostic Panel
+        </a>
+      </section>
+    </main>
+  </div>
 </body>
 </html>

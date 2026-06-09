@@ -1,12 +1,13 @@
 // /showroom/globe/hearth/diagnostic/index.js
-// HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3
+// HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4
 // Full-file replacement.
 // Controller only.
-// Owns: audit section selection, audit selection, report generation, copy, archive,
-// participant loading, alias probing, direct checks, target access, state validation.
+// Owns: single audit workbench, category selector, audit selector, report generation,
+// copy, archive, participant loading, alias probing, direct checks, target access, state validation.
+// Design law: auditSelect.value is the only report authority when present.
 // Does not own or mutate production, canvas, controls, runtime route, target renderer, or Hearth visual output.
 
-(function hearthTwoStepAuditTemplateController(global) {
+(function hearthSingleAuditWorkbenchController(global) {
   "use strict";
 
   var root = global || window;
@@ -16,21 +17,21 @@
   var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
 
   var INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_TNT_v9_4_4";
   var INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_RECEIPT_v9_4_3";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CONTROLLER_RECEIPT_v9_4_4";
 
   var HTML_SHELL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_HTML_SHELL_TNT_v9_4_3";
+    "HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_HTML_SHELL_TNT_v9_4_4";
 
   var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2";
+    "HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3";
 
   var BASELINE_INTERNAL_RENEWAL_CONTRACT =
     "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_TNT_v9_1";
 
   var VERSION =
-    "2026-06-09.hearth-diagnostic-route-two-step-audit-template-controller-v9-4-3";
+    "2026-06-09.hearth-diagnostic-route-single-audit-workbench-controller-v9-4-4";
 
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -481,6 +482,7 @@
     activeSection: normalizeSection(readSession("activeSection", "chamberReceiver")),
     activeAudit: "",
     generatedPacket: null,
+    generatedAuditId: "",
     generatedText: "",
     rawText: "",
     participantLoad: [],
@@ -549,7 +551,7 @@
 
   function readSession(key, fallback) {
     try {
-      return root.sessionStorage.getItem("hearthDiagnostic.auditTemplate." + key) || fallback;
+      return root.sessionStorage.getItem("hearthDiagnostic.singleWorkbench." + key) || fallback;
     } catch (_error) {
       return fallback;
     }
@@ -557,16 +559,8 @@
 
   function writeSession(key, value) {
     try {
-      root.sessionStorage.setItem("hearthDiagnostic.auditTemplate." + key, safeString(value));
+      root.sessionStorage.setItem("hearthDiagnostic.singleWorkbench." + key, safeString(value));
     } catch (_error) {}
-  }
-
-  function persistState() {
-    state.activeSection = normalizeSection(state.activeSection);
-    state.activeAudit = normalizeAudit(state.activeAudit, state.activeSection);
-    writeSession("activeSection", state.activeSection);
-    writeSession("activeAudit", state.activeAudit);
-    writeSession("targetVisible", state.targetVisible ? "true" : "false");
   }
 
   function sectionExists(sectionId) {
@@ -587,6 +581,11 @@
     return AUDIT_SECTIONS[0];
   }
 
+  function getSectionByAudit(auditId) {
+    if (!auditExists(auditId)) return getSection("chamberReceiver");
+    return getSection(AUDITS[auditId].section);
+  }
+
   function normalizeSection(sectionId) {
     return sectionExists(sectionId) ? sectionId : "chamberReceiver";
   }
@@ -600,6 +599,123 @@
     var section = getSection(sectionId);
     if (auditExists(auditId) && AUDITS[auditId].section === section.id) return auditId;
     return firstAuditForSection(section.id);
+  }
+
+  function persistState() {
+    var categorySelect = $("categorySelect");
+    var auditSelect = $("auditSelect");
+
+    if (categorySelect && sectionExists(categorySelect.value)) {
+      state.activeSection = categorySelect.value;
+    } else {
+      state.activeSection = normalizeSection(state.activeSection);
+    }
+
+    if (auditSelect && auditExists(auditSelect.value)) {
+      state.activeAudit = auditSelect.value;
+      state.activeSection = AUDITS[state.activeAudit].section;
+    } else {
+      state.activeAudit = normalizeAudit(state.activeAudit, state.activeSection);
+    }
+
+    writeSession("activeSection", state.activeSection);
+    writeSession("activeAudit", state.activeAudit);
+    writeSession("targetVisible", state.targetVisible ? "true" : "false");
+  }
+
+  function getSelectedContext() {
+    var categorySelect = $("categorySelect");
+    var auditSelect = $("auditSelect");
+
+    var categoryValue = categorySelect ? categorySelect.value : "";
+    var auditValue = auditSelect ? auditSelect.value : "";
+
+    if (auditSelect) {
+      if (auditExists(auditValue)) {
+        return makeSelectedContext(auditValue, "AUDIT_SELECT_VALUE");
+      }
+
+      return {
+        ok: false,
+        reason: "INVALID_AUDIT_SELECT_VALUE",
+        resolvedFrom: "AUDIT_SELECT_VALUE",
+        selectedAuditId: auditValue || "EMPTY",
+        selectedSectionId: sectionExists(categoryValue) ? categoryValue : state.activeSection
+      };
+    }
+
+    if (auditExists(state.activeAudit)) {
+      return makeSelectedContext(state.activeAudit, "STATE_ACTIVE_AUDIT");
+    }
+
+    var activeCard = doc.querySelector(".audit-card.is-active[data-audit-id]");
+    if (activeCard && auditExists(activeCard.getAttribute("data-audit-id"))) {
+      return makeSelectedContext(activeCard.getAttribute("data-audit-id"), "DOM_ACTIVE_AUDIT_CARD");
+    }
+
+    return {
+      ok: false,
+      reason: "NO_VALID_SELECTED_AUDIT",
+      resolvedFrom: "NONE",
+      selectedAuditId: "NONE",
+      selectedSectionId: state.activeSection
+    };
+  }
+
+  function makeSelectedContext(auditId, resolvedFrom) {
+    var audit = AUDITS[auditId];
+    var section = getSection(audit.section);
+
+    return {
+      ok: true,
+      reason: "SELECTED_AUDIT_RESOLVED",
+      resolvedFrom: resolvedFrom,
+      selectedAuditId: auditId,
+      selectedAuditLabel: audit.label,
+      selectedAuditSequence: audit.seq,
+      selectedAuditType: audit.type,
+      selectedSectionId: section.id,
+      selectedSectionLabel: section.label,
+      audit: audit,
+      section: section
+    };
+  }
+
+  function syncStateFromContext(context) {
+    if (!context || !context.ok) return;
+
+    state.activeSection = context.selectedSectionId;
+    state.activeAudit = context.selectedAuditId;
+
+    var categorySelect = $("categorySelect");
+    if (categorySelect && categorySelect.value !== state.activeSection) {
+      categorySelect.value = state.activeSection;
+    }
+
+    populateAuditSelect();
+
+    var auditSelect = $("auditSelect");
+    if (auditSelect && auditSelect.value !== state.activeAudit) {
+      auditSelect.value = state.activeAudit;
+    }
+
+    writeSession("activeSection", state.activeSection);
+    writeSession("activeAudit", state.activeAudit);
+  }
+
+  function selectionProof(extra) {
+    var context = getSelectedContext();
+    var payload = {
+      SELECTED_CATEGORY_ID: context.selectedSectionId || state.activeSection,
+      SELECTED_CATEGORY_LABEL: context.selectedSectionLabel || getSection(state.activeSection).label,
+      SELECTED_AUDIT_ID: context.selectedAuditId || state.activeAudit,
+      SELECTED_AUDIT_LABEL: context.selectedAuditLabel || "UNKNOWN",
+      SELECTED_AUDIT_SEQUENCE: context.selectedAuditSequence || "UNKNOWN",
+      RESOLVED_FROM: context.resolvedFrom || "UNKNOWN"
+    };
+
+    Object.assign(payload, extra || {});
+    return payload;
   }
 
   function packetText(packet) {
@@ -959,11 +1075,7 @@
     var audit = AUDITS[directKey];
 
     if (!config || !audit) {
-      return basePacket("UNKNOWN_DIRECT", "UNKNOWN_DIRECT", "UNKNOWN", {
-        RUN_STATE: "DIRECT_CONFIG_NOT_FOUND",
-        TRUST_STATE: "FAILED",
-        DIRECT_KEY: directKey
-      });
+      return errorPacket("DIRECT_CONFIG_NOT_FOUND", directKey || "UNKNOWN_DIRECT");
     }
 
     var resolved = resolveAuthority(config);
@@ -1063,13 +1175,7 @@
     var config = DIRECT_CONFIG[directKey];
     var audit = AUDITS[directKey];
 
-    if (!config || !audit) {
-      return basePacket("UNKNOWN_DIRECT", "UNKNOWN_DIRECT", "UNKNOWN", {
-        RUN_STATE: "DIRECT_CONFIG_NOT_FOUND",
-        TRUST_STATE: "FAILED",
-        DIRECT_KEY: directKey
-      });
-    }
+    if (!config || !audit) return errorPacket("DIRECT_CONFIG_NOT_FOUND", directKey || "UNKNOWN_DIRECT");
 
     var resolved = resolveAuthority(config);
     var methods = methodKeys(resolved.authority);
@@ -1145,9 +1251,11 @@
   }
 
   function basePacket(auditSeq, auditLabel, component, extra) {
+    var proof = selectionProof();
+
     var packet = {
-      PACKET: "HEARTH_DIAGNOSTIC_AUDIT_TEMPLATE_REPORT_" + safeString(auditSeq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_3",
-      RECEIPT_LEVEL: "2_AUDIT_TEMPLATE_REPORT",
+      PACKET: "HEARTH_DIAGNOSTIC_AUDIT_WORKBENCH_REPORT_" + safeString(auditSeq).replace(/[^A-Z0-9]/gi, "_") + "_v9_4_4",
+      RECEIPT_LEVEL: "2_SINGLE_AUDIT_WORKBENCH_REPORT",
       AUDIT_SEQUENCE: auditSeq,
       AUDIT_LABEL: auditLabel,
       COMPONENT: component,
@@ -1163,6 +1271,15 @@
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
 
+      WORKBENCH_MODEL: "ONE_CATEGORY_SELECTOR_ONE_AUDIT_SELECTOR_ONE_ACTION_SURFACE",
+      REPORT_SOURCE_OF_TRUTH: "auditSelect.value",
+      SELECTED_CATEGORY_ID: proof.SELECTED_CATEGORY_ID,
+      SELECTED_CATEGORY_LABEL: proof.SELECTED_CATEGORY_LABEL,
+      SELECTED_AUDIT_ID: proof.SELECTED_AUDIT_ID,
+      SELECTED_AUDIT_LABEL: proof.SELECTED_AUDIT_LABEL,
+      SELECTED_AUDIT_SEQUENCE: proof.SELECTED_AUDIT_SEQUENCE,
+      RESOLVED_FROM: proof.RESOLVED_FROM,
+
       RUN_STATE: "REPORT_CREATED",
       TRUST_STATE: "CURRENT",
       BLOCKING: false,
@@ -1175,21 +1292,28 @@
     return packet;
   }
 
+  function errorPacket(reason, auditId) {
+    return {
+      PACKET: "HEARTH_DIAGNOSTIC_AUDIT_WORKBENCH_ERROR_v9_4_4",
+      RECEIPT_LEVEL: "0_WORKBENCH_ERROR",
+      CONTRACT: CONTRACT,
+      INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
+      RUN_STATE: "REPORT_NOT_CREATED",
+      TRUST_STATE: "FAILED",
+      BLOCKING: true,
+      ERROR_REASON: reason,
+      SELECTED_AUDIT_ID: auditId || "UNKNOWN",
+      REPORT_SOURCE_OF_TRUTH: "auditSelect.value",
+      UPDATED_AT: nowIso()
+    };
+  }
+
   function buildReport(auditId) {
-    auditId = normalizeAudit(auditId || state.activeAudit, state.activeSection);
+    if (!auditExists(auditId)) return errorPacket("INVALID_AUDIT_ID_NO_FALLBACK", auditId);
+
     var audit = AUDITS[auditId];
 
-    if (!audit) {
-      return basePacket("UNKNOWN", "UNKNOWN_AUDIT", "UNKNOWN", {
-        RUN_STATE: "UNKNOWN_AUDIT",
-        TRUST_STATE: "FAILED",
-        AUDIT_ID: auditId
-      });
-    }
-
-    if (audit.type === "direct") {
-      return directPreview(audit.directKey);
-    }
+    if (audit.type === "direct") return directPreview(audit.directKey);
 
     var aliases = probeAliases();
     var summary = loadSummary();
@@ -1200,7 +1324,7 @@
         RECEIPT_LEVEL: "1_CHAMBER_INDEX",
         AUDIT_ID: auditId,
         VERSION: VERSION,
-        USER_FLOW: "CHOOSE_SECTION_CHOOSE_AUDIT_CREATE_REPORT_COPY_REPORT",
+        USER_FLOW: "CHOOSE_CATEGORY_CHOOSE_AUDIT_CREATE_REPORT_COPY_REPORT",
         LOAD_STARTED: state.loadStarted,
         LOAD_COMPLETE: state.loadComplete,
         ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
@@ -1279,38 +1403,38 @@
     }
 
     if (auditId === "northSignal") {
-      return aliasReport(audit, "NORTH_SIGNAL", ["NORTH", "LAB_NORTH"]);
+      return aliasReport(audit, auditId, "NORTH_SIGNAL", ["NORTH", "LAB_NORTH"]);
     }
 
     if (auditId === "eastSource") {
-      return aliasReport(audit, "EAST_SOURCE", ["EAST", "EAST_PROBE", "LAB_EAST"]);
+      return aliasReport(audit, auditId, "EAST_SOURCE", ["EAST", "EAST_PROBE", "LAB_EAST"]);
     }
 
     if (auditId === "southLens") {
-      return aliasReport(audit, "SOUTH_LENS", ["SOUTH", "LAB_SOUTH"]);
+      return aliasReport(audit, auditId, "SOUTH_LENS", ["SOUTH", "LAB_SOUTH"]);
     }
 
     if (auditId === "southSurfacePointer") {
-      return aliasReport(audit, "SOUTH_SURFACE_POINTER", ["SOUTH_SURFACE_POINTER"]);
+      return aliasReport(audit, auditId, "SOUTH_SURFACE_POINTER", ["SOUTH_SURFACE_POINTER"]);
     }
 
     if (auditId === "labWestGate") {
-      return aliasReport(audit, "LABWEST_GATE", ["LABWEST"]);
+      return aliasReport(audit, auditId, "LABWEST_GATE", ["LABWEST"]);
     }
 
     if (auditId === "westDiagnostic") {
-      return aliasReport(audit, "WEST_DIAGNOSTIC", ["WEST_DIAGNOSTIC", "LABWEST"]);
+      return aliasReport(audit, auditId, "WEST_DIAGNOSTIC", ["WEST_DIAGNOSTIC", "LABWEST"]);
     }
 
     if (auditId === "eastSourceDetail") {
-      return aliasReport(audit, "EAST_SOURCE_DETAIL", ["EAST", "EAST_PROBE", "LAB_EAST"], {
+      return aliasReport(audit, auditId, "EAST_SOURCE_DETAIL", ["EAST", "EAST_PROBE", "LAB_EAST"], {
         EAST_EXPECTED_ROLE: "F3_INTAKE_VALVE",
         EAST_EXPECTED_COORDINATE: "RT3D-X04_Y19_Z3"
       });
     }
 
     if (auditId === "surfaceTruthDetail") {
-      return aliasReport(audit, "SURFACE_TRUTH_DETAIL", ["SURFACE_TRUTH"], {
+      return aliasReport(audit, auditId, "SURFACE_TRUTH_DETAIL", ["SURFACE_TRUTH"], {
         SURFACE_TRUTH_SCOPE: "CANVAS_SURFACE_TRUTH_PROBE_ONLY",
         CANVAS_MUTATION_AUTHORIZED: false,
         VISUAL_PASS_CLAIMED: false
@@ -1329,11 +1453,11 @@
     }
 
     if (auditId === "canvasBoundary") {
-      return boundaryReport(audit, "CANVAS_BOUNDARY");
+      return boundaryReport(audit, auditId, "CANVAS_BOUNDARY");
     }
 
     if (auditId === "noTouchBoundary") {
-      return boundaryReport(audit, "NO_TOUCH_BOUNDARY");
+      return boundaryReport(audit, auditId, "NO_TOUCH_BOUNDARY");
     }
 
     if (auditId === "nextMove") {
@@ -1351,10 +1475,10 @@
     });
   }
 
-  function aliasReport(audit, component, groupKeys, extra) {
+  function aliasReport(audit, auditId, component, groupKeys, extra) {
     var aliases = probeAliases();
     var payload = {
-      AUDIT_ID: findAuditIdBySeq(audit.seq) || audit.label,
+      AUDIT_ID: auditId,
       COMPONENT_SCOPE: component,
       GROUPS_TESTED: groupKeys.join(",")
     };
@@ -1373,9 +1497,9 @@
     return basePacket(audit.seq, audit.label, component, payload);
   }
 
-  function boundaryReport(audit, component) {
+  function boundaryReport(audit, auditId, component) {
     return basePacket(audit.seq, audit.label, component, {
-      AUDIT_ID: findAuditIdBySeq(audit.seq) || audit.label,
+      AUDIT_ID: auditId,
       PRODUCTION_MUTATION_AUTHORIZED: false,
       CANVAS_REPAIR_AUTHORIZED: false,
       CANVAS_BUILD_AUTHORIZED: false,
@@ -1459,7 +1583,7 @@
     var aliases = probeAliases();
 
     return {
-      PACKET: "HEARTH_DIAGNOSTIC_AUDIT_TEMPLATE_DEEP_ARCHIVE_99_v9_4_3",
+      PACKET: "HEARTH_DIAGNOSTIC_AUDIT_WORKBENCH_DEEP_ARCHIVE_99_v9_4_4",
       RECEIPT_LEVEL: "5_DEEP_ARCHIVE",
       AUDIT_SEQUENCE: audit.seq,
       AUDIT_LABEL: audit.label,
@@ -1475,11 +1599,15 @@
       TARGET_ROUTE: TARGET_ROUTE,
       DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
 
+      WORKBENCH_MODEL: "ONE_CATEGORY_SELECTOR_ONE_AUDIT_SELECTOR_ONE_ACTION_SURFACE",
+      REPORT_SOURCE_OF_TRUTH: "auditSelect.value",
+
       STATE: {
         initializedAt: state.initializedAt,
         updatedAt: nowIso(),
         activeSection: state.activeSection,
         activeAudit: state.activeAudit,
+        generatedAuditId: state.generatedAuditId,
         loadStarted: state.loadStarted,
         loadComplete: state.loadComplete,
         participantLoad: state.participantLoad,
@@ -1496,15 +1624,45 @@
     };
   }
 
-  function findAuditIdBySeq(seq) {
-    var keys = Object.keys(AUDITS);
-    for (var i = 0; i < keys.length; i += 1) {
-      if (AUDITS[keys[i]].seq === seq) return keys[i];
-    }
-    return "";
+  function populateCategorySelect() {
+    var select = $("categorySelect");
+    if (!select) return;
+
+    select.innerHTML = AUDIT_SECTIONS.map(function option(section) {
+      return [
+        '<option value="',
+        escapeHtml(section.id),
+        '">',
+        escapeHtml(section.label),
+        '</option>'
+      ].join("");
+    }).join("");
+
+    select.value = normalizeSection(state.activeSection);
   }
 
-  function renderSections() {
+  function populateAuditSelect() {
+    var select = $("auditSelect");
+    if (!select) return;
+
+    var section = getSection(state.activeSection);
+
+    select.innerHTML = section.audits.map(function option(auditId) {
+      var audit = AUDITS[auditId];
+      return [
+        '<option value="',
+        escapeHtml(auditId),
+        '">',
+        escapeHtml(audit.seq + " · " + audit.label),
+        '</option>'
+      ].join("");
+    }).join("");
+
+    state.activeAudit = normalizeAudit(state.activeAudit, section.id);
+    select.value = state.activeAudit;
+  }
+
+  function renderLegacySections() {
     var holder = $("auditSectionList");
     if (!holder) return;
 
@@ -1528,7 +1686,7 @@
     }).join("");
   }
 
-  function renderAudits() {
+  function renderLegacyAudits() {
     var holder = $("auditList");
     if (!holder) return;
 
@@ -1558,25 +1716,34 @@
   }
 
   function renderSelectedAudit() {
-    var audit = AUDITS[state.activeAudit];
+    var context = getSelectedContext();
 
-    if (!audit) {
-      state.activeAudit = firstAuditForSection(state.activeSection);
-      audit = AUDITS[state.activeAudit];
+    if (!context.ok) {
+      setText("selectedSectionLabel", getSection(state.activeSection).label);
+      setText("selectedAuditTitle", "Invalid audit selection");
+      setText("selectedAuditSummary", "Choose a valid audit from the audit selector.");
+      setText("selectedAuditMeta", "INVALID");
+      setDirectButton(false);
+      return;
     }
 
-    setText("selectedSectionLabel", getSection(state.activeSection).label);
-    setText("selectedAuditTitle", audit.label);
-    setText("selectedAuditSummary", audit.summary);
-    setText("selectedAuditMeta", audit.seq + " · " + audit.type.toUpperCase());
+    syncStateFromContext(context);
 
+    setText("selectedSectionLabel", context.selectedSectionLabel);
+    setText("selectedAuditTitle", context.selectedAuditLabel);
+    setText("selectedAuditSummary", context.audit.summary);
+    setText("selectedAuditMeta", context.selectedAuditSequence + " · " + context.selectedAuditType.toUpperCase());
+
+    setDirectButton(context.audit.type === "direct");
+    persistState();
+  }
+
+  function setDirectButton(isDirect) {
     var runDirect = $("runDirectReport");
     if (runDirect) {
-      runDirect.disabled = audit.type !== "direct";
-      runDirect.hidden = audit.type !== "direct";
+      runDirect.disabled = !isDirect;
+      runDirect.hidden = !isDirect;
     }
-
-    persistState();
   }
 
   function renderStatus() {
@@ -1614,12 +1781,13 @@
     }).join("");
   }
 
-  function renderReport(packet, mode) {
-    var audit = AUDITS[state.activeAudit] || AUDITS.chamberIndex;
+  function renderReport(packet, mode, auditId) {
+    var audit = AUDITS[auditId] || AUDITS[state.activeAudit] || AUDITS.chamberIndex;
     var text = packetText(packet);
     var raw = rawJson(packet);
 
     state.generatedPacket = packet;
+    state.generatedAuditId = auditId || state.activeAudit;
     state.generatedText = text;
     state.rawText = raw;
     state.updatedAt = nowIso();
@@ -1643,29 +1811,45 @@
   }
 
   function createReport() {
-    var audit = AUDITS[state.activeAudit];
+    var context = getSelectedContext();
 
-    if (!audit) {
-      state.activeAudit = firstAuditForSection(state.activeSection);
-      audit = AUDITS[state.activeAudit];
+    if (!context.ok) {
+      var error = errorPacket(context.reason, context.selectedAuditId);
+      renderReport(error, "REPORT_NOT_CREATED", "chamberIndex");
+      showToast("Invalid audit selection");
+      return error;
     }
 
-    var packet = buildReport(state.activeAudit);
-    renderReport(packet, audit.type === "direct" ? "DIRECT_PREVIEW_CREATED" : "REPORT_CREATED");
+    syncStateFromContext(context);
+
+    var packet = buildReport(context.selectedAuditId);
+    renderReport(
+      packet,
+      context.audit.type === "direct" ? "DIRECT_PREVIEW_CREATED" : "REPORT_CREATED",
+      context.selectedAuditId
+    );
+
     showToast("Report created");
     return packet;
   }
 
   function runSelectedDirectCheck() {
-    var audit = AUDITS[state.activeAudit];
+    var context = getSelectedContext();
 
-    if (!audit || audit.type !== "direct") {
+    if (!context.ok) {
+      showToast("Invalid audit selection");
+      return null;
+    }
+
+    syncStateFromContext(context);
+
+    if (context.audit.type !== "direct") {
       showToast("Selected audit is not direct");
       return null;
     }
 
-    var packet = runDirectCheck(audit.directKey);
-    renderReport(packet, "DIRECT_CHECK_EXECUTED");
+    var packet = runDirectCheck(context.audit.directKey);
+    renderReport(packet, "DIRECT_CHECK_EXECUTED", context.selectedAuditId);
     showToast("Direct check complete");
     return packet;
   }
@@ -1681,10 +1865,23 @@
   }
 
   function copyDeepArchive() {
+    state.activeSection = "boundaryArchive";
+    state.activeAudit = "deepArchive";
+
+    var categorySelect = $("categorySelect");
+    var auditSelect = $("auditSelect");
+
+    if (categorySelect) categorySelect.value = state.activeSection;
+    populateAuditSelect();
+    if (auditSelect) auditSelect.value = state.activeAudit;
+
+    renderSelectedAudit();
+
     var packet = deepArchiveReport(AUDITS.deepArchive);
     var raw = rawJson(packet);
 
     state.generatedPacket = packet;
+    state.generatedAuditId = "deepArchive";
     state.generatedText = packetText(packet);
     state.rawText = raw;
 
@@ -1696,17 +1893,24 @@
     var output = $("reportOutput");
     if (output) output.hidden = false;
 
+    var copyReport = $("copyReport");
+    if (copyReport) copyReport.disabled = false;
+
+    var copyRaw = $("copyRaw");
+    if (copyRaw) copyRaw.disabled = false;
+
     copyText(raw, "Deep archive copied");
   }
 
   function resetReport() {
     state.generatedPacket = null;
+    state.generatedAuditId = "";
     state.generatedText = "";
     state.rawText = "";
 
     setText("reportTitle", "No Report Created");
     setText("reportMeta", "WAITING");
-    setText("generatedReport", "Choose an audit section, choose an audit, then create a report.");
+    setText("generatedReport", "Choose a category, choose an audit, then create a report.");
     setText("rawReport", "");
 
     var copyReport = $("copyReport");
@@ -1794,25 +1998,54 @@
   }
 
   function installActions() {
-    bind("auditSectionList", "click", function onSectionClick(event) {
+    bind("categorySelect", "change", function onCategorySelectChange(event) {
+      state.activeSection = normalizeSection(event.target.value);
+      state.activeAudit = firstAuditForSection(state.activeSection);
+      populateAuditSelect();
+      renderSelectedAudit();
+      persistState();
+    });
+
+    bind("auditSelect", "change", function onAuditSelectChange(event) {
+      var auditId = event.target.value;
+      if (auditExists(auditId)) {
+        state.activeAudit = auditId;
+        state.activeSection = AUDITS[auditId].section;
+
+        var categorySelect = $("categorySelect");
+        if (categorySelect && categorySelect.value !== state.activeSection) {
+          categorySelect.value = state.activeSection;
+        }
+
+        renderSelectedAudit();
+        persistState();
+      }
+    });
+
+    bind("auditSectionList", "click", function onLegacySectionClick(event) {
       var button = event.target.closest("[data-section-id]");
       if (!button) return;
 
       state.activeSection = normalizeSection(button.dataset.sectionId);
       state.activeAudit = firstAuditForSection(state.activeSection);
       persistState();
-      renderSections();
-      renderAudits();
+      renderLegacySections();
+      renderLegacyAudits();
       renderSelectedAudit();
     });
 
-    bind("auditList", "click", function onAuditClick(event) {
+    bind("auditList", "click", function onLegacyAuditClick(event) {
       var button = event.target.closest("[data-audit-id]");
       if (!button) return;
 
-      state.activeAudit = normalizeAudit(button.dataset.auditId, state.activeSection);
+      var auditId = button.dataset.auditId;
+      if (!auditExists(auditId)) return;
+
+      state.activeAudit = auditId;
+      state.activeSection = AUDITS[auditId].section;
       persistState();
-      renderAudits();
+      renderLegacySections();
+      renderLegacyAudits();
       renderSelectedAudit();
     });
 
@@ -1832,6 +2065,14 @@
     bind("hearthDiagnosticTargetFrame", "load", function frameLoaded() {
       renderStatus();
     });
+  }
+
+  function renderWorkbench() {
+    populateCategorySelect();
+    populateAuditSelect();
+    renderLegacySections();
+    renderLegacyAudits();
+    renderSelectedAudit();
   }
 
   function publishApi() {
@@ -1858,18 +2099,19 @@
         state.activeSection = normalizeSection(sectionId);
         state.activeAudit = firstAuditForSection(state.activeSection);
         persistState();
-        renderSections();
-        renderAudits();
-        renderSelectedAudit();
+        renderWorkbench();
       },
 
       chooseAudit: function chooseAudit(auditId) {
-        state.activeAudit = normalizeAudit(auditId, state.activeSection);
+        if (!auditExists(auditId)) return false;
+        state.activeAudit = auditId;
+        state.activeSection = AUDITS[auditId].section;
         persistState();
-        renderAudits();
-        renderSelectedAudit();
+        renderWorkbench();
+        return true;
       },
 
+      getSelectedContext: getSelectedContext,
       createReport: createReport,
       runSelectedDirectCheck: runSelectedDirectCheck,
       copyCurrentReport: copyCurrentReport,
@@ -1891,7 +2133,8 @@
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CONTRACT__ = CONTRACT;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_HTML_SHELL_CONTRACT__ = HTML_SHELL_CONTRACT;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_TWO_STEP_AUDIT_TEMPLATE_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_SINGLE_AUDIT_WORKBENCH_ACTIVE__ = true;
+    root.__HEARTH_DIAGNOSTIC_REPORT_SOURCE_OF_TRUTH__ = "auditSelect.value";
     root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_RELEASE_AUTHORIZED__ = false;
@@ -1906,9 +2149,7 @@
     setText("controllerContract", INTERNAL_RENEWAL_CONTRACT);
 
     installActions();
-    renderSections();
-    renderAudits();
-    renderSelectedAudit();
+    renderWorkbench();
     renderStatus();
     resetReport();
     publishApi();

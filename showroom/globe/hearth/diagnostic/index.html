@@ -1,28 +1,38 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
 <!-- HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 -->
 <!-- Internal controlled renewal: -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_TNT_v9_2 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_DIAGNOSTIC_EQUIPMENT_RESTRUCTURE_TNT_v9_3 -->
 <!-- Full-file replacement. -->
-<!-- Diagnostic chamber / lab-cardinal branch load registration / four-engine alias calibration. -->
-<!-- Does not authorize production, canvas, controls, runtime route, or visual-pass mutation. -->
+<!-- Diagnostic equipment chamber / lab-cardinal registration / four-engine calibration / direct receipt runner. -->
+<!-- No production, canvas, controls, runtime-route, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-route="active">
+<html lang="en" data-hearth-diagnostic-chamber="v9_3">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hearth · Diagnostic Chamber</title>
+
   <style>
     :root {
       color-scheme: dark;
-      --bg: #090b10;
-      --panel: #111827;
-      --line: #263244;
+      --bg: #06080d;
+      --panel: #0d1320;
+      --panel2: #111a2b;
+      --panel3: #151f33;
+      --line: #29364d;
+      --line2: #40516f;
       --text: #dbe7ff;
-      --muted: #90a0b7;
-      --good: #9ee6b7;
-      --warn: #ffd27a;
-      --bad: #ff9b9b;
+      --muted: #8ea0bc;
+      --good: #93e7b2;
+      --warn: #ffd37c;
+      --bad: #ff9a9a;
+      --focus: #8fb7ff;
+      --code: #03050a;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     html,
@@ -34,121 +44,340 @@
       font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
-    main {
+    body {
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 58px;
       display: grid;
-      grid-template-columns: 320px 1fr;
-      min-height: 100vh;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 14px;
+      background: linear-gradient(180deg, #10182a, #0a0f1a);
+      border-bottom: 1px solid var(--line);
     }
 
-    aside {
-      border-right: 1px solid var(--line);
-      background: #0c111b;
-      padding: 16px;
+    .title {
+      min-width: 0;
     }
 
-    section {
-      padding: 16px;
+    .title strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: .02em;
     }
 
-    h1 {
-      font-size: 16px;
-      margin: 0 0 12px;
-      font-weight: 700;
-    }
-
-    .meta {
+    .title span {
       color: var(--muted);
-      margin-bottom: 14px;
-      white-space: pre-wrap;
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
-    .buttons {
-      display: grid;
-      gap: 6px;
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
 
     button {
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
       border: 1px solid var(--line);
+      background: var(--panel2);
       color: var(--text);
-      background: var(--panel);
+      border-radius: 9px;
       padding: 8px 10px;
-      border-radius: 8px;
+      cursor: pointer;
       font: inherit;
     }
 
-    button:hover,
-    button[aria-current="true"] {
-      border-color: #6f86ac;
-      background: #172235;
+    button:hover {
+      border-color: var(--focus);
+      background: var(--panel3);
     }
 
-    .status {
+    button[aria-current="true"] {
+      border-color: var(--focus);
+      background: #1a2a46;
+    }
+
+    button.small {
+      padding: 6px 8px;
+    }
+
+    .app {
+      height: calc(100vh - 58px);
       display: grid;
-      gap: 8px;
-      margin: 14px 0;
-      color: var(--muted);
+      grid-template-columns: 292px 1fr 380px;
+      overflow: hidden;
+    }
+
+    .rail,
+    .target,
+    .receipt {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .rail {
+      background: #090e18;
+      border-right: 1px solid var(--line);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .rail-head {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
     }
 
     .pill {
-      display: inline-block;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 2px 8px;
-      margin: 0 4px 4px 0;
+      padding: 2px 7px;
+      color: var(--muted);
+      background: #0b111e;
+      white-space: nowrap;
+    }
+
+    .pill.good {
+      color: var(--good);
+      border-color: rgba(147, 231, 178, .45);
+    }
+
+    .pill.warn {
+      color: var(--warn);
+      border-color: rgba(255, 211, 124, .45);
+    }
+
+    .pill.bad {
+      color: var(--bad);
+      border-color: rgba(255, 154, 154, .45);
+    }
+
+    .receipt-nav {
+      overflow: auto;
+      padding: 10px 10px 14px;
+    }
+
+    .group {
+      margin-bottom: 14px;
+    }
+
+    .group-title {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 8px 2px 6px;
+    }
+
+    .receipt-button {
+      width: 100%;
+      display: block;
+      margin: 5px 0;
+      text-align: left;
+    }
+
+    .rail-foot {
+      border-top: 1px solid var(--line);
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      background: #070b13;
+    }
+
+    .receipt {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: var(--bg);
+    }
+
+    .receipt-toolbar {
+      min-height: 44px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      background: #080d17;
+    }
+
+    .receipt-name {
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     pre {
       margin: 0;
-      min-height: calc(100vh - 32px);
+      height: 100%;
+      overflow: auto;
       white-space: pre-wrap;
       word-break: break-word;
-      background: #05070b;
-      border: 1px solid var(--line);
-      border-radius: 10px;
+      background: var(--code);
+      color: var(--text);
       padding: 14px;
-      overflow: auto;
+      border: 0;
+      font: inherit;
+      line-height: 1.45;
+    }
+
+    .target {
+      border-left: 1px solid var(--line);
+      background: #080d16;
+      display: grid;
+      grid-template-rows: auto minmax(220px, 38vh) 1fr;
+    }
+
+    .target-head {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      background: #0b111e;
+    }
+
+    .target-head strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .target-head span {
+      color: var(--muted);
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     iframe {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
+      width: 100%;
+      height: 100%;
       border: 0;
+      background: #000;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .snapshot {
+      min-height: 0;
+      overflow: auto;
+      padding: 10px;
+    }
+
+    .snapshot h2 {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 4px 8px;
+      margin-bottom: 5px;
+    }
+
+    .kv .k {
+      color: var(--muted);
+    }
+
+    .kv .v {
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 1100px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: calc(100vh - 58px);
+        grid-template-columns: 1fr;
+      }
+
+      .rail,
+      .target,
+      .receipt {
+        min-height: 360px;
+      }
+
+      .target {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
     }
   </style>
 </head>
+
 <body>
-  <main>
-    <aside>
-      <h1>HEARTH DIAGNOSTIC CHAMBER</h1>
-      <div class="meta" id="meta">
-CONTRACT=HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8
-INTERNAL_RENEWAL=HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_TNT_v9_2
-TARGET=/showroom/globe/hearth/
-      </div>
+  <header class="topbar">
+    <div class="title">
+      <strong>HEARTH DIAGNOSTIC EQUIPMENT CHAMBER</strong>
+      <span id="contractLine">HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_DIAGNOSTIC_EQUIPMENT_RESTRUCTURE_TNT_v9_3</span>
+    </div>
 
-      <div class="status" id="status">
+    <div class="top-actions">
+      <button class="small" id="copyReceipt" type="button">Copy receipt</button>
+      <button class="small" id="rerunReceipt" type="button">Rerun</button>
+      <button class="small" id="reloadChamber" type="button">Reload chamber</button>
+    </div>
+  </header>
+
+  <div class="app">
+    <aside class="rail">
+      <div class="rail-head">
         <div>LOAD_STATE=<span id="loadState">BOOTING</span></div>
-        <div>RECOMMENDED=<span id="recommendedReceipt">99</span></div>
+        <div>SELECTED=<span id="selectedReceiptLabel">00</span></div>
+        <div>RECOMMENDED=<span id="recommendedReceiptLabel">99</span></div>
+        <div class="pills" id="statusPills"></div>
       </div>
 
-      <div class="buttons" id="buttons"></div>
+      <nav class="receipt-nav" id="receiptNav" aria-label="Diagnostic receipts"></nav>
+
+      <div class="rail-foot">
+        DO_NOT_TOUCH=PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE
+      </div>
     </aside>
 
-    <section>
-      <pre id="receiptOutput">BOOTING_DIAGNOSTIC_CHAMBER...</pre>
-    </section>
-  </main>
+    <main class="receipt">
+      <div class="receipt-toolbar">
+        <div class="receipt-name" id="receiptName">00 · Overview</div>
+        <div class="receipt-name" id="updatedAt">UPDATED_AT=BOOT</div>
+      </div>
+      <pre id="receiptOutput">BOOTING_DIAGNOSTIC_EQUIPMENT...</pre>
+    </main>
 
-  <iframe id="hearthDiagnosticTargetFrame" src="/showroom/globe/hearth/" title="Hearth Target Frame"></iframe>
+    <aside class="target">
+      <div class="target-head">
+        <strong>Target Frame</strong>
+        <span id="targetStatus">TARGET=/showroom/globe/hearth/</span>
+      </div>
+
+      <iframe id="hearthDiagnosticTargetFrame" src="/showroom/globe/hearth/" title="Hearth target route"></iframe>
+
+      <div class="snapshot">
+        <h2>Equipment Snapshot</h2>
+        <div id="snapshot"></div>
+      </div>
+    </aside>
+  </div>
 
   <script>
-    (function hearthDiagnosticInlineHtmlLabCardinalBranchLoadAlignment(global) {
+    (function hearthDiagnosticEquipmentChamber(global) {
       "use strict";
 
       var root = global || window;
@@ -157,70 +386,93 @@ TARGET=/showroom/globe/hearth/
       var CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
       var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
       var INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_TNT_v9_2";
+        "HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_DIAGNOSTIC_EQUIPMENT_RESTRUCTURE_TNT_v9_3";
       var INTERNAL_RENEWAL_RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_RECEIPT_v9_2";
+        "HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_DIAGNOSTIC_EQUIPMENT_RESTRUCTURE_RECEIPT_v9_3";
       var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
+        "HEARTH_DIAGNOSTIC_ROUTE_INLINE_HTML_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_TNT_v9_2";
+      var BASELINE_INTERNAL_RENEWAL_CONTRACT =
         "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_TNT_v9_1";
       var VERSION =
-        "2026-06-09.hearth-diagnostic-inline-html-lab-cardinal-branch-load-alignment-v9-2";
+        "2026-06-09.hearth-diagnostic-inline-html-diagnostic-equipment-restructure-v9-3";
 
       var TARGET_ROUTE = "/showroom/globe/hearth/";
       var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
 
-      var PARTICIPANTS = [
-        "/assets/lab/runtime-table.js",
-        "/assets/lab/runtime-table.east.js",
-        "/assets/lab/runtime-table.south.js",
-        "/assets/lab/runtime-table.west.js",
-
-        "/assets/hearth/hearth.diagnostic.rail.js",
-        "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js",
-        "/assets/hearth/hearth.diagnostic.east.js",
-        "/assets/hearth/hearth.diagnostic.probe.east.js",
-        "/assets/hearth/hearth.diagnostic.south.js",
-        "/assets/hearth/hearth.diagnostic.south.surface.pointer.js",
-        "/assets/hearth/hearth.diagnostic.west.js"
+      var PARTICIPANT_GROUPS = [
+        {
+          group: "LAB_NORTH",
+          participants: [
+            { path: "/assets/lab/runtime-table.js", required: true, role: "LAB_NORTH" }
+          ]
+        },
+        {
+          group: "LAB_CARDINAL_BRANCHES",
+          participants: [
+            { path: "/assets/lab/runtime-table.east.js", required: true, role: "LAB_EAST" },
+            { path: "/assets/lab/runtime-table.south.js", required: false, role: "LAB_SOUTH" },
+            { path: "/assets/lab/runtime-table.west.js", required: true, role: "LABWEST" }
+          ]
+        },
+        {
+          group: "HEARTH_DIAGNOSTIC_PARTICIPANTS",
+          participants: [
+            { path: "/assets/hearth/hearth.diagnostic.rail.js", required: true, role: "NORTH" },
+            { path: "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js", required: true, role: "SURFACE_TRUTH" },
+            { path: "/assets/hearth/hearth.diagnostic.east.js", required: true, role: "EAST" },
+            { path: "/assets/hearth/hearth.diagnostic.probe.east.js", required: false, role: "EAST_PROBE" },
+            { path: "/assets/hearth/hearth.diagnostic.south.js", required: true, role: "SOUTH" },
+            { path: "/assets/hearth/hearth.diagnostic.south.surface.pointer.js", required: false, role: "SOUTH_SURFACE_POINTER" },
+            { path: "/assets/hearth/hearth.diagnostic.west.js", required: true, role: "WEST_DIAGNOSTIC" }
+          ]
+        }
       ];
 
-      var RECEIPTS = [
-        ["00", "00 · Overview"],
-        ["01", "01 · Participant Load"],
-        ["02", "02 · Target Access"],
-        ["03", "03 · Alias Map"],
-        ["04", "04 · Lab Cardinal Branches"],
-        ["05", "05 · Four Engine Mechanics"],
-        ["06", "06 · South Lens"],
-        ["07", "07 · LabWest Gate"],
-        ["08", "08 · North Direct"],
-        ["09", "09 · East Direct"],
-        ["10", "10 · Surface Truth Direct"],
-        ["11", "11 · South Direct"],
-        ["12", "12 · West Diagnostic Direct"],
-        ["13", "13 · Canvas Boundary"],
-        ["14", "14 · Next Move"],
-        ["99", "99 · Deep Archive"]
+      var RECEIPT_GROUPS = [
+        {
+          label: "baseline",
+          receipts: [
+            ["00", "00 · Overview"],
+            ["01", "01 · Participant Load"],
+            ["02", "02 · Target Access"],
+            ["03", "03 · Alias Map"],
+            ["04", "04 · Lab Cardinal Branches"],
+            ["05", "05 · Four Engine Mechanics"]
+          ]
+        },
+        {
+          label: "component lenses",
+          receipts: [
+            ["06", "06 · South Lens"],
+            ["07", "07 · LabWest Gate"]
+          ]
+        },
+        {
+          label: "direct execution",
+          receipts: [
+            ["08", "08 · North Direct"],
+            ["09", "09 · East Direct"],
+            ["10", "10 · Surface Truth Direct"],
+            ["11", "11 · South Direct"],
+            ["12", "12 · West Diagnostic Direct"]
+          ]
+        },
+        {
+          label: "boundary and archive",
+          receipts: [
+            ["13", "13 · Canvas Boundary"],
+            ["14", "14 · Next Move"],
+            ["99", "99 · Deep Archive"]
+          ]
+        }
       ];
 
       var ALIASES = {
-        NORTH: [
-          "JUDGE_NORTH",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH",
-          "HEARTH_DIAGNOSTIC_RAIL",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH_REANCHOR_DIAGNOSTIC_TRACK_RUNTIME_MAP_INTEGRITY",
-          "HEARTH_DIAGNOSTIC_RAIL_NORTH_LABWEST_CONSTRUCT_ANCHORED_SURFACE_TRUTH_CONSUMER",
-          "HEARTH.diagnosticRail",
-          "HEARTH.diagnosticNorth",
-          "HEARTH.diagnosticNorthRail",
-          "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
-          "DEXTER_LAB.hearthDiagnosticRail",
-          "DEXTER_LAB.hearthDiagnosticNorth",
-          "DEXTER_LAB.hearthDiagnosticNorthRail"
-        ],
         LAB_NORTH: [
           "LAB_RUNTIME_TABLE",
           "RUNTIME_TABLE",
           "LAB_RUNTIME_TABLE_NORTH",
+          "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
           "DEXTER_LAB.runtimeTable",
           "DEXTER_LAB.cardinalRuntimeTableNorth",
           "HEARTH.runtimeTable",
@@ -232,6 +484,7 @@ TARGET=/showroom/globe/hearth/
           "RUNTIME_TABLE_EAST",
           "EAST_INTAKE_VALVE",
           "EAST_SUPREME_JUDGE",
+          "EAST_ADMISSION_BRANCH",
           "DEXTER_LAB.runtimeTableEast",
           "DEXTER_LAB.runtimeTableEastF3",
           "DEXTER_LAB.cardinalRuntimeTableEast",
@@ -256,13 +509,27 @@ TARGET=/showroom/globe/hearth/
         ],
         LABWEST: [
           "LAB_RUNTIME_TABLE_WEST",
-          "RUNTIME_TABLE_WEST",
           "LAB_RUNTIME_TABLE_WEST_F5",
+          "RUNTIME_TABLE_WEST",
           "WEST_PRESSURE_ADMISSIBILITY",
           "WEST_SUPREME_JUDGE",
           "DEXTER_LAB.runtimeTableWest",
           "DEXTER_LAB.cardinalRuntimeTableWest",
           "HEARTH.runtimeTableWest"
+        ],
+        NORTH: [
+          "JUDGE_NORTH",
+          "HEARTH_DIAGNOSTIC_RAIL_NORTH",
+          "HEARTH_DIAGNOSTIC_RAIL",
+          "HEARTH_DIAGNOSTIC_RAIL_NORTH_REANCHOR_DIAGNOSTIC_TRACK_RUNTIME_MAP_INTEGRITY",
+          "HEARTH_DIAGNOSTIC_RAIL_NORTH_LABWEST_CONSTRUCT_ANCHORED_SURFACE_TRUTH_CONSUMER",
+          "HEARTH.diagnosticRail",
+          "HEARTH.diagnosticNorth",
+          "HEARTH.diagnosticNorthRail",
+          "HEARTH.JUDGE_NORTH_DIAGNOSTIC_RAIL",
+          "DEXTER_LAB.hearthDiagnosticRail",
+          "DEXTER_LAB.hearthDiagnosticNorth",
+          "DEXTER_LAB.hearthDiagnosticNorthRail"
         ],
         EAST: [
           "JUDGE_EAST",
@@ -322,14 +589,20 @@ TARGET=/showroom/globe/hearth/
           component: "NORTH",
           authorityPath: "JUDGE_NORTH",
           aliases: ALIASES.NORTH,
-          methods: ["run", "runDiagnostic", "runNorthDiagnostic", "inspect", "getReport", "getReceipt"]
+          methods: ["run", "runDiagnostic", "runNorthDiagnostic", "inspect", "getReport", "getReceipt"],
+          fallbackGlobals: []
         },
         "09": {
           role: "EAST_DIRECT_CHECK",
           component: "EAST",
           authorityPath: "JUDGE_EAST",
           aliases: ALIASES.EAST,
-          methods: ["run", "runDiagnostic", "runEastSourceRead", "inspect", "getReport", "getReceipt"]
+          methods: ["run", "runDiagnostic", "runEastSourceRead", "inspect", "getReport", "getReceipt"],
+          fallbackGlobals: [
+            "HEARTH_DIAGNOSTIC_RAIL_EAST_RUN",
+            "HEARTH_DIAGNOSTIC_RAIL_EAST_RUN_DIAGNOSTIC",
+            "HEARTH_DIAGNOSTIC_RAIL_EAST_RUN_SOURCE_READ"
+          ]
         },
         "10": {
           role: "SURFACE_TRUTH_DIRECT_CHECK",
@@ -346,7 +619,8 @@ TARGET=/showroom/globe/hearth/
             "inspect",
             "getReport",
             "getReceipt"
-          ]
+          ],
+          fallbackGlobals: []
         },
         "11": {
           role: "SOUTH_DIRECT_CHECK",
@@ -362,14 +636,16 @@ TARGET=/showroom/globe/hearth/
             "inspect",
             "getReport",
             "getReceipt"
-          ]
+          ],
+          fallbackGlobals: []
         },
         "12": {
           role: "WEST_DIAGNOSTIC_DIRECT_CHECK",
           component: "WEST_DIAGNOSTIC",
           authorityPath: "HEARTH.diagnosticWest",
           aliases: ALIASES.WEST_DIAGNOSTIC,
-          methods: ["run", "runDiagnostic", "runWestDiagnostic", "inspect", "getReport", "getReceipt"]
+          methods: ["run", "runDiagnostic", "runWestDiagnostic", "inspect", "getReport", "getReceipt"],
+          fallbackGlobals: []
         }
       };
 
@@ -380,6 +656,7 @@ TARGET=/showroom/globe/hearth/
         canvasReleaseAuthorized: false,
         controlsRepairAuthorized: false,
         runtimeRestartAuthorized: false,
+        routeRepairAuthorized: false,
         readyTextClaimed: false,
         f13Claimed: false,
         f21Claimed: false,
@@ -394,19 +671,17 @@ TARGET=/showroom/globe/hearth/
         updatedAt: nowIso(),
         selectedReceipt: "00",
         recommendedReceipt: "99",
+        loadStarted: false,
         loadComplete: false,
         participantLoad: [],
         aliases: {},
         direct: {},
-        archive: {}
+        archive: {},
+        lastPacket: null
       };
 
       function nowIso() {
-        try {
-          return new Date().toISOString();
-        } catch (_error) {
-          return "";
-        }
+        try { return new Date().toISOString(); } catch (_error) { return ""; }
       }
 
       function isObject(value) {
@@ -420,11 +695,12 @@ TARGET=/showroom/globe/hearth/
       function safeString(value, fallback) {
         if (fallback === undefined) fallback = "";
         if (value === undefined || value === null) return fallback;
-        try {
-          return String(value);
-        } catch (_error) {
-          return fallback;
-        }
+        try { return String(value); } catch (_error) { return fallback; }
+      }
+
+      function shortText(value, limit) {
+        if (limit === undefined) limit = 12000;
+        return safeString(value).replace(/\s+/g, " ").trim().slice(0, limit);
       }
 
       function readPath(path) {
@@ -436,7 +712,22 @@ TARGET=/showroom/globe/hearth/
           cursor = cursor[parts[i]];
         }
 
-        return cursor || null;
+        return cursor;
+      }
+
+      function setPath(path, value) {
+        var parts = safeString(path).replace(/^window\./, "").split(".").filter(Boolean);
+        var cursor = root;
+
+        if (!parts.length) return false;
+
+        for (var i = 0; i < parts.length - 1; i += 1) {
+          if (!cursor[parts[i]] || typeof cursor[parts[i]] !== "object") cursor[parts[i]] = {};
+          cursor = cursor[parts[i]];
+        }
+
+        cursor[parts[parts.length - 1]] = value;
+        return true;
       }
 
       function normalizePath(src) {
@@ -456,77 +747,109 @@ TARGET=/showroom/globe/hearth/
         return null;
       }
 
-      function loadParticipant(path) {
-        return new Promise(function resolveParticipant(resolve) {
-          var existing = findScript(path);
+      function getParticipantRecord(path) {
+        for (var i = 0; i < state.participantLoad.length; i += 1) {
+          if (state.participantLoad[i].path === path) return state.participantLoad[i];
+        }
+        return null;
+      }
+
+      function recordParticipant(result) {
+        var existing = getParticipantRecord(result.path);
+        if (existing) {
+          Object.assign(existing, result);
+        } else {
+          state.participantLoad.push(result);
+        }
+        state.updatedAt = nowIso();
+        updateStatus();
+        updateSnapshot();
+      }
+
+      function loadParticipant(entry) {
+        return new Promise(function participantPromise(resolve) {
+          var existing = findScript(entry.path);
+
           if (existing) {
-            resolve({
-              path: path,
+            var reused = {
+              group: entry.group || "",
+              role: entry.role || "",
+              path: entry.path,
+              required: Boolean(entry.required),
               status: "loaded",
-              src: existing.getAttribute("src") || existing.src || path,
-              reused: true
-            });
+              src: existing.getAttribute("src") || existing.src || entry.path,
+              reused: true,
+              settledAt: nowIso()
+            };
+            recordParticipant(reused);
+            resolve(reused);
             return;
           }
 
           var script = doc.createElement("script");
           var finished = false;
 
-          function finish(payload) {
+          function finish(status) {
             if (finished) return;
             finished = true;
-            resolve(payload);
+
+            var result = {
+              group: entry.group || "",
+              role: entry.role || "",
+              path: entry.path,
+              required: Boolean(entry.required),
+              status: status,
+              src: entry.path,
+              reused: false,
+              settledAt: nowIso()
+            };
+
+            recordParticipant(result);
+            resolve(result);
           }
 
-          script.src = path;
+          script.src = entry.path;
           script.defer = true;
           script.dataset.hearthDiagnosticParticipant = "true";
+          script.dataset.hearthDiagnosticParticipantRole = entry.role || "";
+          script.dataset.hearthDiagnosticRequired = entry.required ? "true" : "false";
           script.dataset.hearthDiagnosticContract = INTERNAL_RENEWAL_CONTRACT;
 
-          script.onload = function onload() {
-            finish({
-              path: path,
-              status: "loaded",
-              src: path,
-              reused: false
-            });
-          };
-
-          script.onerror = function onerror() {
-            finish({
-              path: path,
-              status: "error",
-              src: path,
-              reused: false
-            });
-          };
+          script.onload = function onload() { finish("loaded"); };
+          script.onerror = function onerror() { finish(entry.required ? "error_required" : "error_optional"); };
 
           root.setTimeout(function timeout() {
-            finish({
-              path: path,
-              status: "timeout",
-              src: path,
-              reused: false
-            });
-          }, 3500);
+            finish(entry.required ? "timeout_required" : "timeout_optional");
+          }, 3200);
 
           doc.head.appendChild(script);
         });
       }
 
       function loadParticipants() {
-        return PARTICIPANTS.reduce(function chain(promise, path) {
-          return promise.then(function next() {
-            return loadParticipant(path).then(function record(result) {
-              state.participantLoad.push(result);
-              state.updatedAt = nowIso();
-              updateStatus();
+        state.loadStarted = true;
+        state.loadComplete = false;
+        updateStatus();
+
+        var chain = Promise.resolve();
+
+        PARTICIPANT_GROUPS.forEach(function groupLoader(group) {
+          chain = chain.then(function loadGroup() {
+            var items = group.participants.map(function withGroup(item) {
+              return Object.assign({}, item, { group: group.group });
             });
+
+            return Promise.all(items.map(loadParticipant));
           });
-        }, Promise.resolve()).then(function done() {
+        });
+
+        return chain.then(function complete() {
           state.loadComplete = true;
           state.updatedAt = nowIso();
+          probeAliases();
+          publishChamberGlobals();
           updateStatus();
+          updateSnapshot();
           return state.participantLoad;
         });
       }
@@ -541,7 +864,7 @@ TARGET=/showroom/globe/hearth/
         try {
           frameDoc = frame && (frame.contentDocument || (frame.contentWindow && frame.contentWindow.document));
           if (frameDoc && frameDoc.location) path = frameDoc.location.pathname || "UNKNOWN";
-          if (frameDoc && frameDoc.title) title = frameDoc.title;
+          if (frameDoc && frameDoc.title) title = frameDoc.title || "UNKNOWN";
         } catch (caught) {
           error = caught && caught.message ? caught.message : "TARGET_FRAME_ACCESS_ERROR";
         }
@@ -557,44 +880,46 @@ TARGET=/showroom/globe/hearth/
         };
       }
 
+      function methodKeys(value) {
+        if (!isObject(value) && !isFunction(value)) return [];
+        try {
+          return Object.keys(value).filter(function eachKey(key) {
+            return isFunction(value[key]);
+          });
+        } catch (_error) {
+          return [];
+        }
+      }
+
       function probeAlias(alias) {
         var value = readPath(alias);
         var found = value !== null && value !== undefined;
         var type = found ? typeof value : "undefined";
-        var contract = "UNKNOWN";
-        var receipt = "UNKNOWN";
-        var internalRenewalContract = "UNKNOWN";
-        var methodKeys = [];
-
-        if (found && isObject(value)) {
-          contract = safeString(value.CONTRACT || value.contract || "UNKNOWN");
-          receipt = safeString(value.RECEIPT || value.receipt || "UNKNOWN");
-          internalRenewalContract = safeString(
-            value.INTERNAL_RENEWAL_CONTRACT ||
-            value.internalRenewalContract ||
-            value.RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT ||
-            value.receiptLightCallableBridgeContract ||
-            "UNKNOWN"
-          );
-
-          methodKeys = Object.keys(value).filter(function methodKey(key) {
-            return isFunction(value[key]);
-          });
-        }
+        var methods = methodKeys(value);
 
         return {
           alias: alias,
           found: found,
           valueType: type,
-          contract: contract,
-          receipt: receipt,
-          internalRenewalContract: internalRenewalContract,
-          methodKeys: methodKeys
+          contract: found && isObject(value) ? safeString(value.CONTRACT || value.contract || "UNKNOWN") : "UNKNOWN",
+          receipt: found && isObject(value) ? safeString(value.RECEIPT || value.receipt || "UNKNOWN") : "UNKNOWN",
+          internalRenewalContract: found && isObject(value)
+            ? safeString(
+                value.INTERNAL_RENEWAL_CONTRACT ||
+                value.internalRenewalContract ||
+                value.RECEIPT_LIGHT_CALLABLE_BRIDGE_CONTRACT ||
+                value.receiptLightCallableBridgeContract ||
+                "UNKNOWN"
+              )
+            : "UNKNOWN",
+          methodCount: methods.length,
+          methodKeys: methods.join(",")
         };
       }
 
       function probeAliases() {
         var out = {};
+
         Object.keys(ALIASES).forEach(function eachGroup(label) {
           var probes = ALIASES[label].map(probeAlias);
           var first = probes.find(function found(item) { return item.found; });
@@ -604,6 +929,7 @@ TARGET=/showroom/globe/hearth/
             present: Boolean(first),
             authorityPath: first ? first.alias : "NONE",
             valueType: first ? first.valueType : "undefined",
+            methodCount: first ? first.methodCount : 0,
             probe: probes
           };
         });
@@ -613,17 +939,65 @@ TARGET=/showroom/globe/hearth/
         return out;
       }
 
+      function scoreCandidate(value, alias, config) {
+        var score = 0;
+        if (!value) return -9999;
+
+        if (alias === config.authorityPath) score += 20;
+        if (isObject(value)) score += 10;
+        if (isFunction(value)) score += 5;
+
+        var keys = methodKeys(value);
+        if (keys.length) score += 30;
+
+        for (var i = 0; i < config.methods.length; i += 1) {
+          if (value && isFunction(value[config.methods[i]])) score += 100;
+        }
+
+        return score;
+      }
+
       function resolveAuthority(config) {
-        var probes = (config.aliases || []).map(probeAlias);
-        var first = probes.find(function found(item) { return item.found; });
-        var authority = first ? readPath(first.alias) : null;
+        var candidates = [];
+
+        (config.aliases || []).forEach(function inspectAlias(alias) {
+          var value = readPath(alias);
+          var probe = probeAlias(alias);
+
+          if (probe.found) {
+            candidates.push({
+              alias: alias,
+              value: value,
+              probe: probe,
+              score: scoreCandidate(value, alias, config)
+            });
+          }
+        });
+
+        candidates.sort(function sortByScore(a, b) {
+          return b.score - a.score;
+        });
+
+        var best = candidates.length ? candidates[0] : null;
 
         return {
-          authority: authority,
-          authorityPath: first ? first.alias : config.authorityPath,
-          present: Boolean(first),
-          valueType: first ? first.valueType : "undefined",
-          probes: probes
+          authority: best ? best.value : null,
+          authorityPath: best ? best.alias : config.authorityPath,
+          present: Boolean(best),
+          valueType: best ? best.probe.valueType : "undefined",
+          candidates: candidates.map(function compactCandidate(candidate) {
+            return {
+              alias: candidate.alias,
+              score: candidate.score,
+              valueType: candidate.probe.valueType,
+              methodCount: candidate.probe.methodCount,
+              methodKeys: candidate.probe.methodKeys,
+              contract: candidate.probe.contract,
+              receipt: candidate.probe.receipt,
+              internalRenewalContract: candidate.probe.internalRenewalContract
+            };
+          }),
+          probes: (config.aliases || []).map(probeAlias)
         };
       }
 
@@ -655,13 +1029,36 @@ TARGET=/showroom/globe/hearth/
         return authority;
       }
 
+      function runCallable(value, method) {
+        if (!value || !isFunction(value[method])) return { called: false };
+        return {
+          called: true,
+          packet: value[method]()
+        };
+      }
+
+      function runFallbackGlobal(config) {
+        var names = config.fallbackGlobals || [];
+
+        for (var i = 0; i < names.length; i += 1) {
+          var fn = readPath(names[i]);
+          if (isFunction(fn)) {
+            return {
+              called: true,
+              method: names[i],
+              packet: fn()
+            };
+          }
+        }
+
+        return { called: false };
+      }
+
       function runDirectReceipt(seq) {
         var config = DIRECT_CONFIG[seq];
         var resolved = resolveAuthority(config);
         var authority = resolved.authority;
-        var authorityMethodKeys = authority && isObject(authority)
-          ? Object.keys(authority).filter(function methodKey(key) { return isFunction(authority[key]); })
-          : [];
+        var authorityMethodKeys = methodKeys(authority);
 
         var runExecuted = false;
         var readOnlyDirectReceipt = false;
@@ -669,21 +1066,41 @@ TARGET=/showroom/globe/hearth/
         var directError = "NONE";
         var packet = null;
 
-        if (authority && isObject(authority)) {
+        if (authority) {
           for (var i = 0; i < config.methods.length; i += 1) {
             var method = config.methods[i];
-            if (isFunction(authority[method])) {
+
+            if (isObject(authority) && isFunction(authority[method])) {
               try {
-                directMethod = method;
-                packet = authority[method]();
-                runExecuted = true;
-                break;
+                var result = runCallable(authority, method);
+                if (result.called) {
+                  directMethod = method;
+                  packet = result.packet;
+                  runExecuted = true;
+                  break;
+                }
               } catch (caught) {
                 directMethod = method;
                 directError = caught && caught.message ? caught.message : String(caught);
                 runExecuted = false;
                 break;
               }
+            }
+          }
+
+          if (!runExecuted && directError === "NONE") {
+            try {
+              var fallback = runFallbackGlobal(config);
+              if (fallback.called) {
+                directMethod = fallback.method;
+                packet = fallback.packet;
+                runExecuted = true;
+              }
+            } catch (caughtFallback) {
+              directMethod = "GLOBAL_FALLBACK";
+              directError = caughtFallback && caughtFallback.message
+                ? caughtFallback.message
+                : String(caughtFallback);
             }
           }
 
@@ -694,20 +1111,37 @@ TARGET=/showroom/globe/hearth/
         }
 
         var packetKeys = packet && isObject(packet) ? Object.keys(packet) : [];
+        var directContract = "UNKNOWN";
+        var directReceipt = "UNKNOWN";
+
+        if (packet && isObject(packet)) {
+          directContract = safeString(packet.CONTRACT || packet.contract || "UNKNOWN");
+          directReceipt = safeString(packet.RECEIPT || packet.receipt || "UNKNOWN");
+        } else if (authority && isObject(authority)) {
+          directContract = safeString(authority.CONTRACT || authority.contract || "UNKNOWN");
+          directReceipt = safeString(authority.RECEIPT || authority.receipt || "UNKNOWN");
+        }
 
         var receipt = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_2",
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_3",
           RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
           RECEIPT_SEQUENCE: seq,
           ROLE: config.role,
           SCOPE: "ONE_COMPONENT_DIRECT_EXECUTION",
           COMPONENT: config.component,
+
           CONTRACT: CONTRACT,
           RECEIPT: RECEIPT,
           INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
           INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
           PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-          RUN_STATE: runExecuted ? "DIRECT_RUN_EXECUTED" : resolved.present ? "AUTHORITY_FOUND_NOT_RUN" : "AUTHORITY_NOT_FOUND",
+          BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
+
+          RUN_STATE: runExecuted
+            ? "DIRECT_RUN_EXECUTED"
+            : resolved.present
+              ? "AUTHORITY_FOUND_NOT_RUN"
+              : "AUTHORITY_NOT_FOUND",
           TRUST_STATE: resolved.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
           BLOCKING: false,
           NEXT_RECEIPT_RECOMMENDED: "14 · Next Move",
@@ -715,16 +1149,18 @@ TARGET=/showroom/globe/hearth/
           RUN_EXECUTED: runExecuted,
           READ_ONLY_DIRECT_RECEIPT: readOnlyDirectReceipt && !runExecuted,
           DIRECT_AUTHORITY_PATH: resolved.authorityPath,
-          DIRECT_CONTRACT: packet && isObject(packet)
-            ? safeString(packet.CONTRACT || packet.contract || "UNKNOWN")
-            : "UNKNOWN",
-          DIRECT_RECEIPT: packet && isObject(packet)
-            ? safeString(packet.RECEIPT || packet.receipt || "UNKNOWN")
-            : "UNKNOWN",
-          DIRECT_STATUS: runExecuted ? "DIRECT_RUN_EXECUTED" : resolved.present ? "AUTHORITY_FOUND_NOT_RUN" : "AUTHORITY_NOT_FOUND",
+          DIRECT_CONTRACT: directContract,
+          DIRECT_RECEIPT: directReceipt,
+          DIRECT_STATUS: runExecuted
+            ? "DIRECT_RUN_EXECUTED"
+            : resolved.present
+              ? "AUTHORITY_FOUND_NOT_RUN"
+              : "AUTHORITY_NOT_FOUND",
           DIRECT_METHOD: directMethod,
           DIRECT_ERROR: directError,
+          AUTHORITY_METHOD_COUNT: authorityMethodKeys.length,
           AUTHORITY_METHOD_KEYS: authorityMethodKeys.join(","),
+          RESOLVER_CANDIDATES: resolved.candidates,
           PACKET_KEYS: packetKeys.join(","),
           DIRECT_PACKET: packet && isObject(packet) ? packet : {},
           ALIAS_PROBE: resolved.probes,
@@ -739,14 +1175,14 @@ TARGET=/showroom/globe/hearth/
         return receipt;
       }
 
-      function lineValue(value) {
+      function compactForLine(value) {
         if (value === undefined || value === null || value === "") return "UNKNOWN";
         if (isFunction(value)) return "[function]";
         if (Array.isArray(value) || isObject(value)) {
           try {
-            return JSON.stringify(value, function replacer(_key, item) {
+            return shortText(JSON.stringify(value, function replacer(_key, item) {
               return isFunction(item) ? "[function]" : item;
-            });
+            }), 24000);
           } catch (_error) {
             return "[object]";
           }
@@ -756,13 +1192,13 @@ TARGET=/showroom/globe/hearth/
 
       function lines(packet) {
         return Object.keys(packet).map(function line(key) {
-          return key + "=" + lineValue(packet[key]);
+          return key + "=" + compactForLine(packet[key]);
         }).join("\n");
       }
 
-      function basicReceipt(seq, role, component, extra) {
-        var receipt = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_2",
+      function baseReceipt(seq, role, component, extra) {
+        var packet = {
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_3",
           RECEIPT_LEVEL: "2_LIGHT_SCAN",
           RECEIPT_SEQUENCE: seq,
           ROLE: role,
@@ -772,43 +1208,96 @@ TARGET=/showroom/globe/hearth/
           INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
           INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
           PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+          BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
           RUN_STATE: "LIGHT_SCAN",
           TRUST_STATE: "CURRENT",
           BLOCKING: false,
           UPDATED_AT: nowIso()
         };
 
-        Object.assign(receipt, extra || {});
-        Object.assign(receipt, NO_CLAIMS);
-        return receipt;
+        Object.assign(packet, extra || {});
+        Object.assign(packet, NO_CLAIMS);
+        return packet;
+      }
+
+      function loadSummary() {
+        var required = state.participantLoad.filter(function item(entry) { return entry.required; });
+        var requiredBad = required.filter(function item(entry) {
+          return entry.status !== "loaded";
+        });
+        var optionalBad = state.participantLoad.filter(function item(entry) {
+          return !entry.required && entry.status !== "loaded";
+        });
+
+        return {
+          requiredCount: required.length,
+          requiredBadCount: requiredBad.length,
+          optionalBadCount: optionalBad.length,
+          allRequiredLoaded: requiredBad.length === 0 && state.loadComplete,
+          allLoaded: state.participantLoad.length > 0 && state.participantLoad.every(function each(entry) {
+            return entry.status === "loaded";
+          })
+        };
+      }
+
+      function overviewReceipt() {
+        var aliases = probeAliases();
+        var summary = loadSummary();
+
+        return baseReceipt("00", "OVERVIEW", "CHAMBER", {
+          RECEIPT_LEVEL: "1_OVERVIEW",
+          VERSION: VERSION,
+          TARGET_ROUTE: TARGET_ROUTE,
+          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
+          LOAD_STARTED: state.loadStarted,
+          LOAD_COMPLETE: state.loadComplete,
+          ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
+          PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
+          LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_ACTIVE: true,
+          LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
+          LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
+          LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
+          LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
+          EAST_PRESENT: Boolean(aliases.EAST && aliases.EAST.present),
+          SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
+          SOUTH_SURFACE_POINTER_PRESENT: Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present),
+          NEXT_RECEIPT_RECOMMENDED: "99 · Deep Archive"
+        });
       }
 
       function participantLoadReceipt() {
-        var allLoaded = state.participantLoad.every(function item(entry) {
-          return entry.status === "loaded";
-        });
+        var summary = loadSummary();
 
-        return basicReceipt("01", "PARTICIPANT_LOAD", "CHAMBER", {
+        return baseReceipt("01", "PARTICIPANT_LOAD", "CHAMBER", {
+          LOAD_STARTED: state.loadStarted,
           LOAD_COMPLETE: state.loadComplete,
-          ALL_PARTICIPANTS_LOADED: allLoaded,
+          ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
+          ALL_PARTICIPANTS_LOADED: summary.allLoaded,
+          REQUIRED_BAD_COUNT: summary.requiredBadCount,
+          OPTIONAL_BAD_COUNT: summary.optionalBadCount,
           PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
-          PARTICIPANT_LOAD_PATHS: state.participantLoad.map(function p(entry) {
+          PARTICIPANT_LOAD_PATHS: state.participantLoad.map(function item(entry) {
             return entry.path + ":" + entry.status;
           }).join(","),
           PARTICIPANT_LOAD: state.participantLoad
         });
       }
 
+      function targetAccessReceipt() {
+        return baseReceipt("02", "TARGET_ACCESS", "CHAMBER", getTargetAccess());
+      }
+
       function aliasMapReceipt() {
         var aliases = probeAliases();
 
-        return basicReceipt("03", "ALIAS_MAP", "CHAMBER", {
+        return baseReceipt("03", "ALIAS_MAP", "CHAMBER", {
           NORTH_PRESENT: Boolean(aliases.NORTH && aliases.NORTH.present),
           LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
           LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
           LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
           LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
           EAST_PRESENT: Boolean(aliases.EAST && aliases.EAST.present),
+          EAST_PROBE_PRESENT: Boolean(aliases.EAST_PROBE && aliases.EAST_PROBE.present),
           SURFACE_TRUTH_PRESENT: Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present),
           SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
           SOUTH_SURFACE_POINTER_PRESENT: Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present),
@@ -820,38 +1309,49 @@ TARGET=/showroom/globe/hearth/
       function labCardinalReceipt() {
         var aliases = probeAliases();
 
-        return basicReceipt("04", "LAB_CARDINAL_BRANCHES", "LAB_CARDINAL_BRANCH_LOAD_REGISTRY", {
+        return baseReceipt("04", "LAB_CARDINAL_BRANCHES", "LAB_CARDINAL_BRANCH_LOAD_REGISTRY", {
           LAB_NORTH_FILE: "/assets/lab/runtime-table.js",
           LAB_EAST_FILE: "/assets/lab/runtime-table.east.js",
           LAB_SOUTH_FILE: "/assets/lab/runtime-table.south.js",
           LABWEST_FILE: "/assets/lab/runtime-table.west.js",
+
           LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
           LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
           LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
           LABWEST_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
+
+          LAB_NORTH_AUTHORITY_PATH: aliases.LAB_NORTH ? aliases.LAB_NORTH.authorityPath : "NONE",
           LAB_EAST_AUTHORITY_PATH: aliases.LAB_EAST ? aliases.LAB_EAST.authorityPath : "NONE",
           LAB_SOUTH_AUTHORITY_PATH: aliases.LAB_SOUTH ? aliases.LAB_SOUTH.authorityPath : "NONE",
+          LABWEST_AUTHORITY_PATH: aliases.LABWEST ? aliases.LABWEST.authorityPath : "NONE",
+
           CALIBRATION_STATUS:
-            aliases.LAB_EAST && aliases.LAB_EAST.present && aliases.LAB_SOUTH && aliases.LAB_SOUTH.present
-              ? "LAB_CARDINAL_BRANCHES_REGISTERED"
-              : "LAB_CARDINAL_BRANCH_REGISTRATION_INCOMPLETE"
+            aliases.LAB_NORTH && aliases.LAB_NORTH.present &&
+            aliases.LAB_EAST && aliases.LAB_EAST.present &&
+            aliases.LABWEST && aliases.LABWEST.present
+              ? "PRIMARY_LAB_CARDINAL_BRANCHES_REGISTERED"
+              : "LAB_CARDINAL_BRANCH_REGISTRATION_INCOMPLETE",
+
+          SOUTH_BRANCH_REQUIRED_FOR_FULL_FOUR_ENGINE_TRACK: true
         });
       }
 
       function fourEngineReceipt() {
         var aliases = probeAliases();
 
-        return basicReceipt("05", "FOUR_ENGINE_MECHANICS", "LAB_ENGINE_CALIBRATION", {
+        return baseReceipt("05", "FOUR_ENGINE_MECHANICS", "LAB_ENGINE_CALIBRATION", {
           NORTH_ENGINE_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
           EAST_ENGINE_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
           WEST_ENGINE_PRESENT: Boolean(aliases.LABWEST && aliases.LABWEST.present),
           SOUTH_ENGINE_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
+
+          NORTH_FIBONACCI_EXPECTED: "F1/F21",
+          EAST_FIBONACCI_EXPECTED: "F3",
           EAST_COORDINATE_EXPECTED: "RT3D-X04_Y19_Z3",
           EAST_ENGINE_PART_EXPECTED: "VALVE",
-          EAST_FIBONACCI_EXPECTED: "F3",
-          SOUTH_COORDINATE_EXPECTED: "F8",
           WEST_FIBONACCI_EXPECTED: "F5",
-          NORTH_FIBONACCI_EXPECTED: "F1/F21",
+          SOUTH_FIBONACCI_EXPECTED: "F8",
+
           FOUR_ENGINE_CALIBRATION:
             aliases.LAB_NORTH && aliases.LAB_NORTH.present &&
             aliases.LAB_EAST && aliases.LAB_EAST.present &&
@@ -865,7 +1365,7 @@ TARGET=/showroom/globe/hearth/
       function southLensReceipt() {
         var aliases = probeAliases();
 
-        return basicReceipt("06", "SOUTH_LENS", "SOUTH", {
+        return baseReceipt("06", "SOUTH_LENS", "SOUTH", {
           SOUTH_AUTHORITY_PATH: aliases.SOUTH ? aliases.SOUTH.authorityPath : "NONE",
           SOUTH_PRESENT: Boolean(aliases.SOUTH && aliases.SOUTH.present),
           SOUTH_SURFACE_POINTER_AUTHORITY_PATH: aliases.SOUTH_SURFACE_POINTER ? aliases.SOUTH_SURFACE_POINTER.authorityPath : "NONE",
@@ -878,15 +1378,15 @@ TARGET=/showroom/globe/hearth/
             aliases.SOUTH && aliases.SOUTH.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
           NEXT_ACTION:
             aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present
-              ? "RUN_SOUTH_DIRECT_CHECK"
-              : "LOAD_OR_VERIFY_SOUTH_SURFACE_POINTER_SIDECAR"
+              ? "RUN_11_SOUTH_DIRECT_CHECK"
+              : "VERIFY_SOUTH_SURFACE_POINTER_SIDECAR"
         });
       }
 
       function labWestReceipt() {
         var aliases = probeAliases();
 
-        return basicReceipt("07", "LABWEST_GATE", "LABWEST", {
+        return baseReceipt("07", "LABWEST_GATE", "LABWEST", {
           LABWEST_AUTHORITY_PATH: aliases.LABWEST ? aliases.LABWEST.authorityPath : "NONE",
           LABWEST_STATUS: aliases.LABWEST && aliases.LABWEST.present ? "AUTHORITY_FOUND" : "AUTHORITY_NOT_FOUND",
           WEST_DIAGNOSTIC_AUTHORITY_PATH: aliases.WEST_DIAGNOSTIC ? aliases.WEST_DIAGNOSTIC.authorityPath : "NONE",
@@ -898,7 +1398,7 @@ TARGET=/showroom/globe/hearth/
       }
 
       function canvasBoundaryReceipt() {
-        return basicReceipt("13", "CANVAS_BOUNDARY", "CANVAS", {
+        return baseReceipt("13", "CANVAS_BOUNDARY", "CANVAS", {
           RUN_STATE: "LIGHT_SCAN",
           TRUST_STATE: "PROTECTED",
           CANVAS_BUILD_AUTHORIZED: false,
@@ -915,6 +1415,8 @@ TARGET=/showroom/globe/hearth/
 
       function nextMoveReceipt() {
         var aliases = probeAliases();
+        var summary = loadSummary();
+
         var directAvailable = ["08", "09", "10", "11", "12"];
         var directRun = Object.keys(state.direct).filter(function hasRun(seq) {
           return state.direct[seq] && state.direct[seq].RUN_EXECUTED;
@@ -922,16 +1424,24 @@ TARGET=/showroom/globe/hearth/
 
         var firstBlocking = "NONE";
         var nextFile = "NONE";
-        var nextAction = "RUN_DIRECT_RECEIPTS";
+        var nextAction = "DIRECT_TRACK_CALIBRATED";
 
-        if (!(aliases.LAB_EAST && aliases.LAB_EAST.present)) {
+        if (!state.loadComplete) {
+          firstBlocking = "PARTICIPANT_LOAD";
+          nextFile = DIAGNOSTIC_ROUTE;
+          nextAction = "WAIT_FOR_PARTICIPANT_LOAD";
+        } else if (!summary.allRequiredLoaded) {
+          firstBlocking = "REQUIRED_PARTICIPANT_LOAD";
+          nextFile = DIAGNOSTIC_ROUTE;
+          nextAction = "INSPECT_01_PARTICIPANT_LOAD";
+        } else if (!(aliases.LAB_EAST && aliases.LAB_EAST.present)) {
           firstBlocking = "LAB_EAST";
           nextFile = "/assets/lab/runtime-table.east.js";
-          nextAction = "LOAD_LAB_EAST_BRANCH";
+          nextAction = "REGISTER_LAB_EAST_BRANCH";
         } else if (!(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present)) {
           firstBlocking = "LAB_SOUTH";
           nextFile = "/assets/lab/runtime-table.south.js";
-          nextAction = "LOAD_LAB_SOUTH_BRANCH";
+          nextAction = "REGISTER_OR_CREATE_LAB_SOUTH_BRANCH";
         } else if (!state.direct["09"] || !state.direct["09"].RUN_EXECUTED) {
           firstBlocking = "EAST_DIRECT";
           nextFile = "/assets/hearth/hearth.diagnostic.east.js";
@@ -944,12 +1454,17 @@ TARGET=/showroom/globe/hearth/
           firstBlocking = "SOUTH_DIRECT";
           nextFile = "/assets/hearth/hearth.diagnostic.south.js";
           nextAction = "RUN_11_SOUTH_DIRECT_CHECK";
-        } else {
-          nextFile = "NONE";
-          nextAction = "DIRECT_TRACK_CALIBRATED";
+        } else if (!state.direct["12"] || !state.direct["12"].RUN_EXECUTED) {
+          firstBlocking = "WEST_DIRECT";
+          nextFile = "/assets/hearth/hearth.diagnostic.west.js";
+          nextAction = "RUN_12_WEST_DIRECT_CHECK";
+        } else if (!state.direct["08"] || !state.direct["08"].RUN_EXECUTED) {
+          firstBlocking = "NORTH_DIRECT";
+          nextFile = "/assets/hearth/hearth.diagnostic.rail.js";
+          nextAction = "RUN_08_NORTH_DIRECT_CHECK";
         }
 
-        return basicReceipt("14", "NEXT_LAWFUL_MOVE", "CHAMBER", {
+        return baseReceipt("14", "NEXT_LAWFUL_MOVE", "CHAMBER", {
           RECEIPT_LEVEL: "4_SYNTHESIS",
           SCOPE: "FINAL_FOCUSED_SYNTHESIS",
           TRUST_STATE: "CURRENT_SYNTHESIS",
@@ -969,13 +1484,15 @@ TARGET=/showroom/globe/hearth/
 
       function deepArchiveReceipt() {
         var aliases = probeAliases();
+
         var archive = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_99_v9_2",
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_99_v9_3",
           CONTRACT: CONTRACT,
           RECEIPT: RECEIPT,
           INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
           INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
           PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+          BASELINE_INTERNAL_RENEWAL_CONTRACT: BASELINE_INTERNAL_RENEWAL_CONTRACT,
           TARGET_ROUTE: TARGET_ROUTE,
           DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
           state: {
@@ -983,6 +1500,7 @@ TARGET=/showroom/globe/hearth/
             updatedAt: nowIso(),
             selectedReceipt: state.selectedReceipt,
             recommendedReceipt: state.recommendedReceipt,
+            loadStarted: state.loadStarted,
             loadComplete: state.loadComplete,
             participantLoad: state.participantLoad,
             targetAccess: getTargetAccess(),
@@ -993,6 +1511,8 @@ TARGET=/showroom/globe/hearth/
               targetAccess: getTargetAccess(),
               aliases: aliases,
               labCardinalBranchLoadAlignment: true,
+              diagnosticEquipmentRestructureActive: true,
+              labNorthBranchExpected: "/assets/lab/runtime-table.js",
               labEastBranchExpected: "/assets/lab/runtime-table.east.js",
               labSouthBranchExpected: "/assets/lab/runtime-table.south.js",
               labWestBranchExpected: "/assets/lab/runtime-table.west.js",
@@ -1005,29 +1525,6 @@ TARGET=/showroom/globe/hearth/
 
         state.archive = archive;
         return archive;
-      }
-
-      function overviewReceipt() {
-        var aliases = probeAliases();
-
-        return basicReceipt("00", "OVERVIEW", "CHAMBER", {
-          RECEIPT_LEVEL: "1_OVERVIEW",
-          VERSION: VERSION,
-          TARGET_ROUTE: TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-          LOAD_COMPLETE: state.loadComplete,
-          PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
-          LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_ACTIVE: true,
-          LAB_EAST_EXPECTED: "/assets/lab/runtime-table.east.js",
-          LAB_SOUTH_EXPECTED: "/assets/lab/runtime-table.south.js",
-          LAB_EAST_PRESENT: Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present),
-          LAB_SOUTH_PRESENT: Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present),
-          NEXT_RECEIPT_RECOMMENDED: "99 · Deep Archive"
-        });
-      }
-
-      function targetAccessReceipt() {
-        return basicReceipt("02", "TARGET_ACCESS", "CHAMBER", getTargetAccess());
       }
 
       function buildReceipt(seq) {
@@ -1044,18 +1541,31 @@ TARGET=/showroom/globe/hearth/
         if (seq === "14") return nextMoveReceipt();
         if (seq === "99") return deepArchiveReceipt();
 
-        return basicReceipt(seq, "UNKNOWN", "UNKNOWN", {
+        return baseReceipt(seq, "UNKNOWN", "UNKNOWN", {
           STATUS: "UNKNOWN_RECEIPT"
         });
+      }
+
+      function receiptLabel(seq) {
+        for (var i = 0; i < RECEIPT_GROUPS.length; i += 1) {
+          var found = RECEIPT_GROUPS[i].receipts.find(function findPair(pair) {
+            return pair[0] === seq;
+          });
+          if (found) return found[1];
+        }
+        return seq;
       }
 
       function renderReceipt(seq) {
         state.selectedReceipt = seq;
         state.updatedAt = nowIso();
-        updateButtons();
 
         var packet = buildReceipt(seq);
+        state.lastPacket = packet;
+
         var output = doc.getElementById("receiptOutput");
+        var name = doc.getElementById("receiptName");
+        var updated = doc.getElementById("updatedAt");
 
         if (seq === "99") {
           output.textContent = JSON.stringify(packet, function replacer(_key, value) {
@@ -1065,47 +1575,124 @@ TARGET=/showroom/globe/hearth/
           output.textContent = lines(packet);
         }
 
+        name.textContent = receiptLabel(seq);
+        updated.textContent = "UPDATED_AT=" + nowIso();
+
+        updateButtons();
         updateStatus();
-      }
-
-      function updateStatus() {
-        var loadState = doc.getElementById("loadState");
-        var recommended = doc.getElementById("recommendedReceipt");
-
-        if (loadState) loadState.textContent = state.loadComplete ? "COMPLETE" : "LOADING";
-        if (recommended) recommended.textContent = state.recommendedReceipt || "99";
-
-        doc.documentElement.dataset.hearthDiagnosticInlineHtmlRenewal = INTERNAL_RENEWAL_CONTRACT;
-        doc.documentElement.dataset.hearthDiagnosticLoadComplete = state.loadComplete ? "true" : "false";
-        doc.documentElement.dataset.hearthDiagnosticRecommendedReceipt = state.recommendedReceipt || "99";
+        updateSnapshot();
       }
 
       function updateButtons() {
         var buttons = Array.prototype.slice.call(doc.querySelectorAll("button[data-receipt]"));
         buttons.forEach(function mark(button) {
-          button.setAttribute(
-            "aria-current",
-            button.dataset.receipt === state.selectedReceipt ? "true" : "false"
-          );
+          button.setAttribute("aria-current", button.dataset.receipt === state.selectedReceipt ? "true" : "false");
         });
       }
 
-      function installButtons() {
-        var holder = doc.getElementById("buttons");
-        holder.innerHTML = "";
+      function updateStatus() {
+        var summary = loadSummary();
+        var loadState = doc.getElementById("loadState");
+        var selected = doc.getElementById("selectedReceiptLabel");
+        var recommended = doc.getElementById("recommendedReceiptLabel");
+        var targetStatus = doc.getElementById("targetStatus");
+        var access = getTargetAccess();
 
-        RECEIPTS.forEach(function addButton(pair) {
-          var button = doc.createElement("button");
-          button.type = "button";
-          button.dataset.receipt = pair[0];
-          button.textContent = pair[1];
-          button.addEventListener("click", function onClick() {
-            renderReceipt(pair[0]);
+        if (loadState) {
+          loadState.textContent = state.loadComplete
+            ? summary.allRequiredLoaded ? "COMPLETE" : "DEGRADED"
+            : state.loadStarted ? "LOADING" : "BOOTING";
+        }
+
+        if (selected) selected.textContent = state.selectedReceipt;
+        if (recommended) recommended.textContent = state.recommendedReceipt;
+        if (targetStatus) {
+          targetStatus.textContent = "TARGET=" + access.targetPath + " · " + access.status + " · " + access.targetTitle;
+        }
+
+        doc.documentElement.dataset.hearthDiagnosticInlineHtmlRenewal = INTERNAL_RENEWAL_CONTRACT;
+        doc.documentElement.dataset.hearthDiagnosticLoadComplete = state.loadComplete ? "true" : "false";
+        doc.documentElement.dataset.hearthDiagnosticRecommendedReceipt = state.recommendedReceipt;
+      }
+
+      function updateSnapshot() {
+        var holder = doc.getElementById("snapshot");
+        var aliases = state.aliases && Object.keys(state.aliases).length ? state.aliases : probeAliases();
+        var summary = loadSummary();
+        var rows = [
+          ["requiredLoaded", summary.allRequiredLoaded],
+          ["participants", state.participantLoad.length],
+          ["LAB_NORTH", Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present)],
+          ["LAB_EAST", Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present)],
+          ["LAB_SOUTH", Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present)],
+          ["LABWEST", Boolean(aliases.LABWEST && aliases.LABWEST.present)],
+          ["EAST", Boolean(aliases.EAST && aliases.EAST.present)],
+          ["SURFACE_TRUTH", Boolean(aliases.SURFACE_TRUTH && aliases.SURFACE_TRUTH.present)],
+          ["SOUTH", Boolean(aliases.SOUTH && aliases.SOUTH.present)],
+          ["SOUTH_POINTER", Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present)],
+          ["WEST_DIAGNOSTIC", Boolean(aliases.WEST_DIAGNOSTIC && aliases.WEST_DIAGNOSTIC.present)]
+        ];
+
+        holder.innerHTML = rows.map(function row(pair) {
+          return '<div class="kv"><div class="k">' + pair[0] + '</div><div class="v">' + pair[1] + '</div></div>';
+        }).join("");
+
+        updatePills(summary, aliases);
+      }
+
+      function updatePills(summary, aliases) {
+        var holder = doc.getElementById("statusPills");
+        if (!holder) return;
+
+        var pills = [
+          ["required", summary.allRequiredLoaded, summary.allRequiredLoaded ? "good" : "bad"],
+          ["lab-east", Boolean(aliases.LAB_EAST && aliases.LAB_EAST.present), aliases.LAB_EAST && aliases.LAB_EAST.present ? "good" : "bad"],
+          ["lab-south", Boolean(aliases.LAB_SOUTH && aliases.LAB_SOUTH.present), aliases.LAB_SOUTH && aliases.LAB_SOUTH.present ? "good" : "warn"],
+          ["east", Boolean(aliases.EAST && aliases.EAST.present), aliases.EAST && aliases.EAST.present ? "good" : "bad"],
+          ["south-pointer", Boolean(aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present), aliases.SOUTH_SURFACE_POINTER && aliases.SOUTH_SURFACE_POINTER.present ? "good" : "warn"]
+        ];
+
+        holder.innerHTML = pills.map(function pill(item) {
+          return '<span class="pill ' + item[2] + '">' + item[0] + '=' + item[1] + '</span>';
+        }).join("");
+      }
+
+      function installButtons() {
+        var nav = doc.getElementById("receiptNav");
+        nav.innerHTML = "";
+
+        RECEIPT_GROUPS.forEach(function group(groupItem) {
+          var group = doc.createElement("div");
+          group.className = "group";
+
+          var title = doc.createElement("div");
+          title.className = "group-title";
+          title.textContent = groupItem.label;
+          group.appendChild(title);
+
+          groupItem.receipts.forEach(function pair() {
+            var button = doc.createElement("button");
+            button.type = "button";
+            button.className = "receipt-button";
+            button.dataset.receipt = arguments[0][0];
+            button.textContent = arguments[0][1];
+            button.addEventListener("click", function onClick() {
+              renderReceipt(button.dataset.receipt);
+            });
+            group.appendChild(button);
           });
-          holder.appendChild(button);
+
+          nav.appendChild(group);
         });
 
         updateButtons();
+      }
+
+      function copyReceipt() {
+        var text = doc.getElementById("receiptOutput").textContent || "";
+        if (root.navigator && root.navigator.clipboard && root.navigator.clipboard.writeText) {
+          root.navigator.clipboard.writeText(text);
+        }
       }
 
       function publishChamberGlobals() {
@@ -1118,6 +1705,7 @@ TARGET=/showroom/globe/hearth/
           internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
           internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
           previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
+          baselineInternalRenewalContract: BASELINE_INTERNAL_RENEWAL_CONTRACT,
           version: VERSION,
           participantLoad: state.participantLoad,
           renderReceipt: renderReceipt,
@@ -1135,6 +1723,7 @@ TARGET=/showroom/globe/hearth/
         root.__HEARTH_DIAGNOSTIC_CHAMBER_LOADED__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_CONTRACT__ = CONTRACT;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
+        root.__HEARTH_DIAGNOSTIC_CHAMBER_EQUIPMENT_RESTRUCTURE_ACTIVE__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_CANVAS_BUILD_AUTHORIZED__ = false;
@@ -1142,10 +1731,23 @@ TARGET=/showroom/globe/hearth/
         root.__HEARTH_DIAGNOSTIC_CHAMBER_RUNTIME_RESTART_AUTHORIZED__ = false;
       }
 
+      function installActions() {
+        doc.getElementById("copyReceipt").addEventListener("click", copyReceipt);
+        doc.getElementById("rerunReceipt").addEventListener("click", function rerun() {
+          renderReceipt(state.selectedReceipt);
+        });
+        doc.getElementById("reloadChamber").addEventListener("click", function reload() {
+          root.location.reload();
+        });
+      }
+
       function boot() {
         installButtons();
+        installActions();
         publishChamberGlobals();
         updateStatus();
+        updateSnapshot();
+        renderReceipt("00");
 
         loadParticipants().then(function afterLoad() {
           publishChamberGlobals();

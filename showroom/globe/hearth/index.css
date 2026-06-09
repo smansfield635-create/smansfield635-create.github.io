@@ -1,8 +1,8 @@
 /* /showroom/globe/hearth/index.css */
-/* HEARTH_PUBLIC_ROUTE_19X19_MISSIONARY_CSS_FACILITY_CHAMBER_DIMENSIONAL_TRUTH_TNT_v2 */
+/* HEARTH_PUBLIC_ROUTE_19X19_MISSIONARY_CSS_HARD_MOUNT_RECT_SETTLEMENT_TNT_v3 */
 /* Full-file replacement. */
-/* Owns: public facility atmosphere, chamber layout, nonzero mount dimensions, Jeeves entry styling. */
-/* Does not own: canvas drawing, Bishop authority, runtime restart, controls mutation, WebGL claim, visual pass claim. */
+/* Owns: Hearth public facility styling, hard parent-chain settlement, nonzero #hearthCanvasMount dimensions. */
+/* Does not own: canvas drawing, Canvas Bishop authority, runtime restart, controls mutation, WebGL, generated image, final visual pass. */
 
 :root {
   color-scheme: dark;
@@ -21,36 +21,44 @@
   --hearth-blue: #8dd8ff;
   --hearth-cyan: #7df0ff;
   --hearth-green: #8ff0c3;
-  --hearth-red: #ff8d8d;
 
-  --hearth-panel: rgba(9, 15, 31, 0.86);
-  --hearth-panel-2: rgba(12, 20, 41, 0.72);
+  --hearth-panel: rgba(9, 15, 31, 0.88);
+  --hearth-panel-2: rgba(12, 20, 41, 0.74);
   --hearth-line: rgba(184, 205, 255, 0.16);
-  --hearth-line-strong: rgba(243, 200, 111, 0.30);
+  --hearth-line-strong: rgba(243, 200, 111, 0.32);
 
   --hearth-shadow: 0 34px 110px rgba(0, 0, 0, 0.54);
   --hearth-radius-xl: clamp(1.4rem, 4vw, 2.4rem);
   --hearth-radius-lg: 1.3rem;
   --hearth-radius-md: 0.9rem;
   --hearth-max: 1220px;
+
+  --hearth-hard-min-page-height: 100vh;
+  --hearth-hard-live-chamber-min-height: 720px;
+  --hearth-hard-stage-min-height: 640px;
+  --hearth-hard-mount-size: clamp(360px, 52vw, 690px);
+  --hearth-hard-mount-min-size: 320px;
 }
 
-* {
-  box-sizing: border-box;
+/* HARD SETTLEMENT: prevent route-shell collapse. */
+html,
+body {
+  width: 100% !important;
+  min-width: 320px !important;
+  min-height: var(--hearth-hard-min-page-height) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
 }
 
 html {
-  min-width: 320px;
-  min-height: 100%;
-  background: var(--hearth-bg);
+  background: var(--hearth-bg) !important;
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  display: block !important;
+  position: relative !important;
   color: var(--hearth-ink);
   font-family:
     Inter,
@@ -61,7 +69,6 @@ body {
     "Segoe UI",
     sans-serif;
   line-height: 1.5;
-  overflow-x: hidden;
   background:
     radial-gradient(circle at 50% -12%, rgba(243, 200, 111, 0.18), transparent 31rem),
     radial-gradient(circle at 10% 16%, rgba(141, 216, 255, 0.16), transparent 27rem),
@@ -83,7 +90,7 @@ body::before {
     linear-gradient(rgba(141, 216, 255, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(141, 216, 255, 0.045) 1px, transparent 1px);
   background-size: 220px 260px, 56px 56px, 56px 56px;
-  opacity: 0.20;
+  opacity: 0.2;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.48) 68%, rgba(0, 0, 0, 0.16));
 }
 
@@ -96,6 +103,12 @@ body::after {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.025), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.025)),
     radial-gradient(circle at 50% 46%, transparent 0 18rem, rgba(0, 0, 0, 0.10) 28rem, rgba(0, 0, 0, 0.32) 100%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 a {
@@ -114,6 +127,30 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
+/* HARD SETTLEMENT: page and main cannot collapse. */
+.hearth-page {
+  position: relative !important;
+  z-index: 2 !important;
+  display: block !important;
+  width: min(var(--hearth-max), calc(100% - 28px)) !important;
+  min-width: 0 !important;
+  min-height: 100vh !important;
+  margin: 0 auto !important;
+  padding: max(22px, env(safe-area-inset-top)) 0 max(42px, env(safe-area-inset-bottom)) !important;
+  overflow: visible !important;
+}
+
+main,
+#hearth-main {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 1px !important;
+  overflow: visible !important;
+}
+
 .skip-link {
   position: absolute;
   left: -999px;
@@ -130,19 +167,13 @@ button:focus-visible {
   left: 0.75rem;
 }
 
-.hearth-page {
-  position: relative;
-  z-index: 2;
-  width: min(var(--hearth-max), calc(100% - 28px));
-  margin: 0 auto;
-  padding: max(22px, env(safe-area-inset-top)) 0 max(42px, env(safe-area-inset-bottom));
-}
-
 .hearth-topbar {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 1rem;
+  width: 100%;
+  min-height: 5.4rem;
   padding: 0.8rem 0 1.2rem;
 }
 
@@ -266,17 +297,15 @@ button:focus-visible {
   padding: 0.58rem 0.78rem;
 }
 
-main {
-  display: grid;
-  gap: 1rem;
-}
-
 .hearth-arrival,
 .hearth-live-chamber,
 .hearth-house-options,
 .character-operations,
 .frontier-paths,
 .hearth-control-room {
+  display: grid !important;
+  width: 100% !important;
+  min-width: 0 !important;
   border: 1px solid var(--hearth-line);
   border-radius: var(--hearth-radius-xl);
   background:
@@ -287,12 +316,11 @@ main {
   box-shadow:
     var(--hearth-shadow),
     inset 0 1px 0 rgba(255, 255, 255, 0.075);
-  overflow: hidden;
+  overflow: visible !important;
 }
 
 .hearth-arrival {
   min-height: clamp(31rem, 52vw, 41rem);
-  display: grid;
   grid-template-columns: minmax(0, 1.06fr) minmax(19rem, 0.66fr);
   gap: clamp(1rem, 3vw, 2rem);
   align-items: stretch;
@@ -420,33 +448,50 @@ p {
   font-size: clamp(1.55rem, 3.3vw, 2.25rem);
 }
 
-.hearth-live-chamber {
-  min-height: clamp(37rem, 72vw, 54rem);
-  display: grid;
-  grid-template-columns: minmax(16rem, 0.48fr) minmax(0, 1fr);
-  gap: clamp(1rem, 3vw, 1.6rem);
-  align-items: stretch;
-  padding: clamp(1rem, 3.5vw, 1.6rem);
+/* HARD SETTLEMENT: live chamber and parent stage cannot be zero. */
+.hearth-live-chamber,
+#hearth-window,
+[data-hearth-live-globe-chamber="true"] {
+  display: grid !important;
+  grid-template-columns: minmax(18rem, 0.46fr) minmax(420px, 1fr) !important;
+  gap: clamp(1rem, 3vw, 1.6rem) !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: var(--hearth-hard-live-chamber-min-height) !important;
+  height: auto !important;
+  padding: clamp(1rem, 3.5vw, 1.6rem) !important;
   scroll-margin-top: 5rem;
+  overflow: visible !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .hearth-window-copy {
   min-width: 0;
+  min-height: 18rem;
   display: grid;
   align-content: center;
   gap: 0.85rem;
   padding: clamp(0.4rem, 2vw, 0.9rem);
 }
 
-.hearth-planet-stage {
-  position: relative;
-  min-width: 0;
-  min-height: 31rem;
-  display: grid;
-  place-items: center;
+.hearth-planet-stage,
+[data-hearth-planet-stage="true"] {
+  position: relative !important;
+  z-index: 1 !important;
+  display: grid !important;
+  place-items: center !important;
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  width: 100% !important;
+  min-width: 420px !important;
+  min-height: var(--hearth-hard-stage-min-height) !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: clamp(0.75rem, 2.2vw, 1.15rem) !important;
   border: 1px solid rgba(184, 205, 255, 0.16);
   border-radius: calc(var(--hearth-radius-xl) - 0.35rem);
-  padding: clamp(0.75rem, 2.2vw, 1.15rem);
   background:
     radial-gradient(circle at 50% 48%, rgba(141, 216, 255, 0.12), transparent 18rem),
     radial-gradient(circle at 50% 58%, rgba(243, 200, 111, 0.08), transparent 24rem),
@@ -455,11 +500,16 @@ p {
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.035),
     inset 0 0 5rem rgba(141, 216, 255, 0.045);
-  overflow: hidden;
+  overflow: visible !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  contain: none !important;
 }
 
 .hearth-planet-stage::before,
-.hearth-planet-stage::after {
+.hearth-planet-stage::after,
+[data-hearth-planet-stage="true"]::before,
+[data-hearth-planet-stage="true"]::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -469,7 +519,8 @@ p {
   pointer-events: none;
 }
 
-.hearth-planet-stage::before {
+.hearth-planet-stage::before,
+[data-hearth-planet-stage="true"]::before {
   width: min(78%, 34rem);
   aspect-ratio: 1;
   border: 1px solid rgba(243, 200, 111, 0.12);
@@ -478,43 +529,69 @@ p {
     inset 0 0 2rem rgba(141, 216, 255, 0.045);
 }
 
-.hearth-planet-stage::after {
+.hearth-planet-stage::after,
+[data-hearth-planet-stage="true"]::after {
   width: min(58%, 24rem);
   aspect-ratio: 1;
   border: 1px solid rgba(141, 216, 255, 0.14);
   box-shadow: 0 0 2rem rgba(141, 216, 255, 0.08);
 }
 
+/* HARD SETTLEMENT: canonical mount must return a nonzero DOMRect. */
 #hearthCanvasMount,
 .hearth-canvas-mount,
-[data-hearth-canvas-mount="true"] {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 44rem);
-  min-width: 16rem;
-  min-height: clamp(24rem, 48vw, 42rem);
-  aspect-ratio: 1 / 1;
-  display: block;
-  border: 1px solid rgba(243, 200, 111, 0.26);
-  border-radius: 50%;
-  overflow: hidden;
+[data-hearth-canvas-mount="true"],
+[data-hearth-showroom-surface="true"],
+[data-hearth-visible-surface="true"],
+[data-hearth-dom-surface="true"],
+[data-hearth-canvas-stage="true"] {
+  position: relative !important;
+  z-index: 2 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  width: var(--hearth-hard-mount-size) !important;
+  height: var(--hearth-hard-mount-size) !important;
+  min-width: var(--hearth-hard-mount-min-size) !important;
+  min-height: var(--hearth-hard-mount-min-size) !important;
+  max-width: 100% !important;
+  max-height: calc(100vh - 180px) !important;
+
+  flex: 0 0 auto !important;
+  align-self: center !important;
+  justify-self: center !important;
+
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 1px solid rgba(243, 200, 111, 0.30) !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+
+  transform: none !important;
+  clip-path: none !important;
+  contain: none !important;
+  content-visibility: visible !important;
+
   background:
     radial-gradient(circle at 38% 24%, rgba(255, 255, 255, 0.16), transparent 15%),
     radial-gradient(circle at 50% 50%, rgba(141, 216, 255, 0.14), transparent 38%),
     radial-gradient(circle at 48% 64%, rgba(243, 200, 111, 0.08), transparent 54%),
-    linear-gradient(145deg, rgba(10, 26, 58, 0.82), rgba(1, 4, 14, 0.98));
+    linear-gradient(145deg, rgba(10, 26, 58, 0.82), rgba(1, 4, 14, 0.98)) !important;
   box-shadow:
     0 0 5.4rem rgba(141, 216, 255, 0.14),
     0 2.4rem 4.8rem rgba(0, 0, 0, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -2rem 4rem rgba(0, 0, 0, 0.38);
+    inset 0 -2rem 4rem rgba(0, 0, 0, 0.38) !important;
 }
 
 #hearthCanvasMount::before,
-.hearth-canvas-mount::before {
+.hearth-canvas-mount::before,
+[data-hearth-canvas-mount="true"]::before {
   content: "";
   position: absolute;
   inset: 8%;
+  z-index: 1;
   border-radius: 50%;
   pointer-events: none;
   border: 1px solid rgba(255, 244, 216, 0.09);
@@ -525,10 +602,12 @@ p {
 }
 
 #hearthCanvasMount::after,
-.hearth-canvas-mount::after {
+.hearth-canvas-mount::after,
+[data-hearth-canvas-mount="true"]::after {
   content: "";
   position: absolute;
   inset: -20%;
+  z-index: 1;
   border-radius: 50%;
   pointer-events: none;
   background:
@@ -540,24 +619,20 @@ p {
 #hearthCanvasMount canvas,
 .hearth-canvas-mount canvas,
 [data-hearth-canvas-mount="true"] canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-#hearthCanvasMount:has(canvas) .hearth-mount-placeholder,
-.hearth-canvas-mount:has(canvas) .hearth-mount-placeholder {
-  opacity: 0;
-  visibility: hidden;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 3 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
 }
 
 .hearth-mount-placeholder {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   place-content: center;
   gap: 0.35rem;
@@ -583,13 +658,20 @@ p {
   letter-spacing: -0.05em;
 }
 
+#hearthCanvasMount canvas + .hearth-mount-placeholder,
+.hearth-canvas-mount canvas + .hearth-mount-placeholder,
+[data-hearth-canvas-mount="true"] canvas + .hearth-mount-placeholder {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .hearth-house-options,
 .character-operations,
 .frontier-paths,
 .hearth-control-room {
   padding: clamp(1rem, 3vw, 1.55rem);
-  display: grid;
   gap: 1rem;
+  min-height: 12rem;
 }
 
 .section-heading {
@@ -697,6 +779,7 @@ p {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.6rem;
+  min-height: 3rem;
   padding: 1.25rem 0 0.4rem;
   color: var(--hearth-faint);
   font-size: 0.76rem;
@@ -717,6 +800,7 @@ p {
   color: rgba(243, 200, 111, 0.68);
 }
 
+/* HARD SETTLEMENT: old hidden diagnostic/receipt blocks stay invisible without touching the mount. */
 .route-receipt,
 [data-route-receipt],
 [data-contract-receipt],
@@ -740,22 +824,48 @@ p {
   white-space: nowrap !important;
 }
 
+/* HARD SETTLEMENT: no old lens-panel rule may hide the live mount. */
+[data-hearth-lens-panel],
+[data-hearth-lens-panel="mount"],
+[data-hearth-lens-panel][data-active="true"] {
+  visibility: visible;
+}
+
+#hearthCanvasMount,
+#hearthCanvasMount *,
+.hearth-planet-stage,
+.hearth-live-chamber {
+  box-sizing: border-box !important;
+}
+
+/* Iframe-safe fallback: when the diagnostic frame is narrow, keep a measurable square. */
 @media (max-width: 1120px) {
+  :root {
+    --hearth-hard-live-chamber-min-height: 1040px;
+    --hearth-hard-stage-min-height: 620px;
+    --hearth-hard-mount-size: clamp(330px, 78vw, 660px);
+  }
+
   .hearth-arrival,
-  .hearth-live-chamber {
-    grid-template-columns: 1fr;
+  .hearth-live-chamber,
+  #hearth-window,
+  [data-hearth-live-globe-chamber="true"] {
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .hearth-jeeves-preview {
     min-height: 18rem;
   }
 
-  .hearth-live-chamber {
-    min-height: auto;
-  }
-
   .hearth-window-copy {
     align-content: start;
+    min-height: 12rem;
+  }
+
+  .hearth-planet-stage,
+  [data-hearth-planet-stage="true"] {
+    min-width: 0 !important;
+    width: 100% !important;
   }
 
   .hearth-option-grid,
@@ -769,6 +879,12 @@ p {
 }
 
 @media (max-width: 900px) {
+  :root {
+    --hearth-hard-live-chamber-min-height: 980px;
+    --hearth-hard-stage-min-height: 580px;
+    --hearth-hard-mount-size: clamp(320px, 82vw, 620px);
+  }
+
   .hearth-topbar {
     grid-template-columns: 1fr;
     align-items: start;
@@ -789,8 +905,15 @@ p {
 }
 
 @media (max-width: 680px) {
+  :root {
+    --hearth-hard-live-chamber-min-height: 840px;
+    --hearth-hard-stage-min-height: 460px;
+    --hearth-hard-mount-size: clamp(280px, 84vw, 520px);
+    --hearth-hard-mount-min-size: 260px;
+  }
+
   .hearth-page {
-    width: min(100% - 20px, var(--hearth-max));
+    width: min(100% - 20px, var(--hearth-max)) !important;
   }
 
   .hearth-arrival,
@@ -828,21 +951,34 @@ p {
     grid-template-columns: 1fr;
   }
 
-  .hearth-planet-stage {
-    min-height: 25rem;
-    padding: 0.8rem;
+  .hearth-planet-stage,
+  [data-hearth-planet-stage="true"] {
+    min-height: var(--hearth-hard-stage-min-height) !important;
+    padding: 0.8rem !important;
   }
 
   #hearthCanvasMount,
   .hearth-canvas-mount,
-  [data-hearth-canvas-mount="true"] {
-    min-width: 0;
-    width: min(100%, 30rem);
-    min-height: clamp(19rem, 86vw, 30rem);
+  [data-hearth-canvas-mount="true"],
+  [data-hearth-showroom-surface="true"],
+  [data-hearth-visible-surface="true"],
+  [data-hearth-dom-surface="true"],
+  [data-hearth-canvas-stage="true"] {
+    width: var(--hearth-hard-mount-size) !important;
+    height: var(--hearth-hard-mount-size) !important;
+    min-width: var(--hearth-hard-mount-min-size) !important;
+    min-height: var(--hearth-hard-mount-min-size) !important;
   }
 }
 
 @media (max-width: 430px) {
+  :root {
+    --hearth-hard-live-chamber-min-height: 760px;
+    --hearth-hard-stage-min-height: 390px;
+    --hearth-hard-mount-size: clamp(250px, 82vw, 380px);
+    --hearth-hard-mount-min-size: 240px;
+  }
+
   .hearth-brand {
     min-width: 0;
   }
@@ -866,20 +1002,33 @@ p {
     letter-spacing: 0.10em;
   }
 
-  .hearth-planet-stage {
-    min-height: 22rem;
-  }
-
-  #hearthCanvasMount,
-  .hearth-canvas-mount,
-  [data-hearth-canvas-mount="true"] {
-    min-height: 18rem;
-  }
-
   .hearth-option-card,
   .operator-card,
   .frontier-card {
     min-height: 9.25rem;
+  }
+}
+
+/* Emergency condition: even without custom properties, mount must remain nonzero. */
+@supports not (width: clamp(1px, 2vw, 3px)) {
+  #hearthCanvasMount,
+  .hearth-canvas-mount,
+  [data-hearth-canvas-mount="true"] {
+    width: 520px !important;
+    height: 520px !important;
+    min-width: 320px !important;
+    min-height: 320px !important;
+  }
+
+  .hearth-live-chamber,
+  #hearth-window,
+  [data-hearth-live-globe-chamber="true"] {
+    min-height: 720px !important;
+  }
+
+  .hearth-planet-stage,
+  [data-hearth-planet-stage="true"] {
+    min-height: 640px !important;
   }
 }
 

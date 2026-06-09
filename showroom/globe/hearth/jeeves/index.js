@@ -1,19 +1,19 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_INTERACTIVE_MICRO_FORK_ENGINE_TNT_v3
+// HEARTH_JEEVES_INTERNAL_EXTERNAL_DIALECT_ENGINE_TNT_v4
 // Full-file replacement.
-// Owns: Jeeves deterministic conversation engine, interactive micro-forks, paced chat-thread delivery, visitor/Jeeves message flow, guided route handoffs.
+// Owns: Jeeves deterministic conversation engine, three-mode opening fork, internal/external dialect, intent-to-dialogue mapping, guided route handoffs.
 // Does not own: visual styling, Hearth globe chamber, Canvas Bishop, diagnostics authority, freeform AI, WebGL, runtime restart, final visual pass.
 
-(function hearthJeevesInteractiveMicroForkEngine(global) {
+(function hearthJeevesInternalExternalDialectEngine(global) {
   "use strict";
 
   var root = global || window;
   var doc = root.document || null;
 
-  var CONTRACT = "HEARTH_JEEVES_INTERACTIVE_MICRO_FORK_ENGINE_TNT_v3";
-  var RECEIPT = "HEARTH_JEEVES_INTERACTIVE_MICRO_FORK_ENGINE_RECEIPT_v3";
-  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_ENGINE_TNT_v2";
-  var VERSION = "2026-06-09.hearth-jeeves-interactive-micro-fork-engine-v3";
+  var CONTRACT = "HEARTH_JEEVES_INTERNAL_EXTERNAL_DIALECT_ENGINE_TNT_v4";
+  var RECEIPT = "HEARTH_JEEVES_INTERNAL_EXTERNAL_DIALECT_ENGINE_RECEIPT_v4";
+  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_INTERACTIVE_MICRO_FORK_ENGINE_TNT_v3";
+  var VERSION = "2026-06-09.hearth-jeeves-internal-external-dialect-engine-v4";
   var FILE = "/showroom/globe/hearth/jeeves/index.js";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
 
@@ -61,8 +61,10 @@
     previousNodes: [],
     speaking: false,
     minimized: false,
+    mode: "",
     directMode: false,
     journeyMode: false,
+    operationalMode: false,
     pendingRoute: null,
     profile: {
       openingPreference: "",
@@ -187,6 +189,7 @@
 
   function scrollThread() {
     if (!els.thread) return;
+
     try {
       var isMobile = root.matchMedia && root.matchMedia("(max-width: 720px)").matches;
 
@@ -204,9 +207,17 @@
     } catch (_error) {}
   }
 
+  function expressionLabel(origin, expression) {
+    if (origin === "system") return "House";
+    if (origin === "jeeves") return "Jeeves";
+    if (expression === "internal") return "Thought";
+    return "You";
+  }
+
   function createMessage(origin, text, options) {
     options = options || {};
 
+    var expression = options.expression || "external";
     var node = null;
     var p = null;
     var name = null;
@@ -224,20 +235,21 @@
     }
 
     node.setAttribute("data-message-origin", origin);
+    node.setAttribute("data-message-expression", expression);
 
     if (options.emphasis) {
       node.setAttribute("data-message-emphasis", "true");
+    }
+
+    if (options.intent) {
+      node.setAttribute("data-message-intent", options.intent);
     }
 
     name = node.querySelector(".jeeves-message-name");
     p = node.querySelector("p");
 
     if (name) {
-      name.textContent = origin === "visitor"
-        ? "You"
-        : origin === "system"
-          ? "House"
-          : "Jeeves";
+      name.textContent = expressionLabel(origin, expression);
     }
 
     if (p) {
@@ -250,6 +262,8 @@
   function addMessage(origin, text, options) {
     if (!els.thread) return null;
 
+    options = options || {};
+
     var node = createMessage(origin, text, options);
     els.thread.appendChild(node);
     scrollThread();
@@ -257,8 +271,10 @@
     state.transcript.push({
       at: nowIso(),
       origin: origin,
+      expression: options.expression || "external",
+      intent: options.intent || "",
       text: asString(text),
-      emphasis: Boolean(options && options.emphasis)
+      emphasis: Boolean(options.emphasis)
     });
 
     if (state.transcript.length > 500) {
@@ -310,8 +326,13 @@
     if (isRoute) node.href = resolveRoute(option.routeKey || option.route);
 
     node.setAttribute("data-option-type", option.type || "conversation");
+    node.setAttribute("data-option-expression", option.expression || "external");
     node.setAttribute("data-option-target", option.target || option.routeKey || option.route || option.action || "");
     node.setAttribute("data-jeeves-option", "true");
+
+    if (option.intent) {
+      node.setAttribute("data-option-intent", option.intent);
+    }
 
     labelNode = node.querySelector("span") || node;
     labelNode.textContent = option.label || "Continue";
@@ -365,13 +386,28 @@
     return true;
   }
 
+  function visitorTextFor(option) {
+    return option.userText || option.label || "Continue.";
+  }
+
+  function visitorExpressionFor(option) {
+    return option.expression || "external";
+  }
+
+  function addVisitorIntent(option) {
+    addMessage("visitor", visitorTextFor(option), {
+      expression: visitorExpressionFor(option),
+      intent: option.intent || option.target || option.action || option.routeKey || ""
+    });
+  }
+
   function routeAfterJeeves(option) {
     clearTimers();
     clearOptions();
     setStatus("routing", "Opening a guided door");
     setTyping(false);
 
-    addMessage("visitor", option.userText || option.label || "Take me there.");
+    addVisitorIntent(option);
 
     state.pendingRoute = option.routeKey || option.route || "";
     state.updatedAt = nowIso();
@@ -387,6 +423,17 @@
     }, 420));
   }
 
+  function handleMode(option) {
+    if (!option.mode) return;
+
+    state.mode = option.mode;
+    state.directMode = option.mode === "direct";
+    state.operationalMode = option.mode === "operational";
+    state.journeyMode = option.mode === "adaptive";
+
+    state.profile.openingPreference = option.mode;
+  }
+
   function handleOption(option) {
     if (!option || state.speaking) return;
 
@@ -396,7 +443,7 @@
     }
 
     if (option.action === "minimize") {
-      addMessage("visitor", option.userText || option.label || "Minimize.");
+      addVisitorIntent(option);
       minimize();
       return;
     }
@@ -407,29 +454,28 @@
     }
 
     if (option.action === "back") {
-      addMessage("visitor", option.userText || option.label || "Take me back.");
+      addVisitorIntent(option);
       goBack();
       return;
     }
 
     if (option.action === "restart") {
-      addMessage("visitor", option.userText || option.label || "Start again.");
+      addVisitorIntent(option);
       runNode("intro", { preserveHistory: false });
       return;
     }
 
+    handleMode(option);
+
     if (option.profileKey && option.profileValue) {
       state.profile[option.profileKey] = option.profileValue;
+      if (!state.mode) state.mode = "adaptive";
       state.journeyMode = true;
       state.directMode = false;
+      state.operationalMode = false;
     }
 
-    if (option.directMode) {
-      state.directMode = true;
-      state.journeyMode = false;
-    }
-
-    addMessage("visitor", option.userText || option.label || "Continue.");
+    addVisitorIntent(option);
     runNode(option.target || "directStart");
   }
 
@@ -504,7 +550,10 @@
       cumulative += beat.delay;
 
       timers.push(root.setTimeout(function onBeat() {
-        addMessage("jeeves", beat.text, { emphasis: beat.emphasis });
+        addMessage("jeeves", beat.text, {
+          expression: "external",
+          emphasis: beat.emphasis
+        });
 
         if (index === list.length - 1) {
           state.speaking = false;
@@ -589,7 +638,7 @@
 
   function getReceipt() {
     var receipt = {
-      PACKET: "HEARTH_JEEVES_INTERACTIVE_MICRO_FORK_ENGINE_PACKET_v3",
+      PACKET: "HEARTH_JEEVES_INTERNAL_EXTERNAL_DIALECT_ENGINE_PACKET_v4",
       CONTRACT: CONTRACT,
       RECEIPT: RECEIPT,
       PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
@@ -607,13 +656,16 @@
       FREEFORM_AI: false,
       CONVERSATION_FORK_MAP: true,
       EVERY_NODE_ENDS_IN_FORK: true,
-      MICRO_FORK_OPENING: true,
-      NO_TEXT_DUMP_OPENING: true,
+      THREE_MODE_OPENING_FORK: true,
+      INTENT_TO_DIALOGUE: true,
+      INTERNAL_EXTERNAL_DIALECT: true,
       GUIDED_HANDOFFS: true,
       ROUTE_HANDOFFS_COLOR_DISTINCT: true,
       CURRENT_NODE: state.currentNode,
+      MODE: state.mode,
       DIRECT_MODE: state.directMode,
       JOURNEY_MODE: state.journeyMode,
+      OPERATIONAL_MODE: state.operationalMode,
       PROFILE: clonePlain(state.profile),
       TRANSCRIPT_COUNT: state.transcript.length,
       NODE_VISITS: clonePlain(state.nodeVisits),
@@ -643,12 +695,14 @@
       TOP_ROUTE_BUBBLES: receipt.TOP_ROUTE_BUBBLES,
       DETERMINISTIC_CONVERSATION: receipt.DETERMINISTIC_CONVERSATION,
       FREEFORM_AI: receipt.FREEFORM_AI,
-      MICRO_FORK_OPENING: receipt.MICRO_FORK_OPENING,
-      NO_TEXT_DUMP_OPENING: receipt.NO_TEXT_DUMP_OPENING,
+      THREE_MODE_OPENING_FORK: receipt.THREE_MODE_OPENING_FORK,
+      INTENT_TO_DIALOGUE: receipt.INTENT_TO_DIALOGUE,
+      INTERNAL_EXTERNAL_DIALECT: receipt.INTERNAL_EXTERNAL_DIALECT,
       GUIDED_HANDOFFS: receipt.GUIDED_HANDOFFS,
       ROUTE_HANDOFFS_COLOR_DISTINCT: receipt.ROUTE_HANDOFFS_COLOR_DISTINCT,
       EVERY_NODE_ENDS_IN_FORK: receipt.EVERY_NODE_ENDS_IN_FORK,
       CURRENT_NODE: receipt.CURRENT_NODE,
+      MODE: receipt.MODE,
       visualPassClaimed: false,
       generatedImage: false,
       graphicBox: false,
@@ -697,8 +751,9 @@
       chatThreadInterface: true,
       topRouteBubbles: false,
       everyNodeEndsInFork: true,
-      microForkOpening: true,
-      noTextDumpOpening: true,
+      threeModeOpeningFork: true,
+      intentToDialogue: true,
+      internalExternalDialect: true,
       guidedHandoffs: true,
       routeHandoffsColorDistinct: true
     };
@@ -708,16 +763,16 @@
     root.HEARTH_JEEVES_HOUSE_INTERFACE = api;
     root.HEARTH_JEEVES_CHAT_THREAD_ENGINE = api;
     root.HEARTH_JEEVES_CENTER_SCREEN_ENGINE = api;
-    root.HEARTH_JEEVES_INTERACTIVE_MICRO_FORK_ENGINE = api;
+    root.HEARTH_JEEVES_INTERNAL_EXTERNAL_DIALECT_ENGINE = api;
 
     root.HEARTH.jeevesHouseInterface = api;
     root.HEARTH.talkToTheHouse = api;
     root.HEARTH.jeevesChatThreadEngine = api;
-    root.HEARTH.jeevesInteractiveMicroForkEngine = api;
+    root.HEARTH.jeevesInternalExternalDialectEngine = api;
 
     root.DEXTER_LAB.hearthJeevesHouseInterface = api;
     root.DEXTER_LAB.hearthJeevesChatThreadEngine = api;
-    root.DEXTER_LAB.hearthJeevesInteractiveMicroForkEngine = api;
+    root.DEXTER_LAB.hearthJeevesInternalExternalDialectEngine = api;
 
     root.__HEARTH_JEEVES_HOUSE_INTERFACE_LOADED__ = true;
     root.__HEARTH_JEEVES_HOUSE_INTERFACE_CONTRACT__ = CONTRACT;
@@ -726,8 +781,9 @@
     root.__HEARTH_JEEVES_CENTER_SCREEN_INTERFACE__ = true;
     root.__HEARTH_JEEVES_CHAT_THREAD_INTERFACE__ = true;
     root.__HEARTH_JEEVES_TOP_ROUTE_BUBBLES__ = false;
-    root.__HEARTH_JEEVES_MICRO_FORK_OPENING__ = true;
-    root.__HEARTH_JEEVES_NO_TEXT_DUMP_OPENING__ = true;
+    root.__HEARTH_JEEVES_THREE_MODE_OPENING_FORK__ = true;
+    root.__HEARTH_JEEVES_INTENT_TO_DIALOGUE__ = true;
+    root.__HEARTH_JEEVES_INTERNAL_EXTERNAL_DIALECT__ = true;
     root.__HEARTH_JEEVES_GUIDED_HANDOFFS__ = true;
     root.__HEARTH_JEEVES_ROUTE_HANDOFFS_COLOR_DISTINCT__ = true;
 
@@ -738,8 +794,10 @@
     {
       label: "Back to the beginning.",
       type: "restart",
+      expression: "external",
       action: "restart",
-      userText: "Take me back to the beginning."
+      intent: "restart",
+      userText: "Let’s start again from the beginning."
     }
   ];
 
@@ -749,119 +807,45 @@
 
   var NODES = {
     intro: {
-      optionLabel: "Answer Jeeves",
-      forkDelay: 420,
+      optionLabel: "Choose how Jeeves should guide you",
+      forkDelay: 460,
       beats: [
         { text: "Welcome to Hearth.", delay: 520, emphasis: true },
-        { text: "I am Jeeves.", delay: 980, emphasis: true },
-        { text: "I speak for the house here.", delay: 1080 },
-        { text: "Before I guide you, I should ask one thing.", delay: 1180, emphasis: true }
+        { text: "I am Jeeves.", delay: 960, emphasis: true },
+        { text: "I speak for the house here.", delay: 1060 },
+        { text: "Before I guide you, I can serve you three ways.", delay: 1160, emphasis: true },
+        { text: "I can ask one question and shape the conversation around your interests.", delay: 1260 },
+        { text: "I can keep the conversation simple and get straight to the point.", delay: 1160 },
+        { text: "Or I can skip the conversation and act as your tour guide.", delay: 1160 },
+        { text: "Which would you prefer?", delay: 920, emphasis: true }
       ],
       options: [
         {
-          label: "Let me explore.",
+          label: "Ask me and shape the conversation.",
           type: "conversation",
-          target: "openingExplore",
-          profileKey: "openingPreference",
-          profileValue: "explore",
-          userText: "Let me explore."
-        },
-        {
-          label: "Give me the direct version.",
-          type: "conversation",
-          target: "openingDirect",
-          profileKey: "openingPreference",
-          profileValue: "direct",
-          directMode: true,
-          userText: "Give me the direct version."
-        },
-        {
-          label: "I am not sure yet.",
-          type: "conversation",
-          target: "openingUnsure",
-          profileKey: "openingPreference",
-          profileValue: "unsure",
-          userText: "I am not sure yet."
-        }
-      ]
-    },
-
-    openingExplore: {
-      optionLabel: "Choose the next style",
-      beats: [
-        { text: "Good.", delay: 620, emphasis: true },
-        { text: "Then I will not rush the house past you.", delay: 1080 },
-        { text: "Some rooms are better understood when they are approached, not summarized.", delay: 1220 },
-        { text: "Would you like me to shape the path around you, or shall we begin with the house itself?", delay: 1260, emphasis: true }
-      ],
-      options: [
-        {
-          label: "Shape the path around me.",
-          type: "calibration",
+          expression: "external",
+          mode: "adaptive",
           target: "calibrateInterest",
-          userText: "Shape the path around me."
+          intent: "adaptiveConversation",
+          userText: "Ask me a question first, then shape the path around what I care about."
         },
         {
-          label: "Begin with the house.",
+          label: "Let’s get straight to the point.",
           type: "conversation",
-          target: "hearth",
-          userText: "Begin with the house."
-        },
-        {
-          label: "Cut the small talk.",
-          type: "conversation",
+          expression: "external",
+          mode: "direct",
           target: "directStart",
-          directMode: true,
-          userText: "Cut the small talk."
-        }
-      ]
-    },
-
-    openingDirect: {
-      optionLabel: "Choose the direct thread",
-      beats: [
-        { text: "Understood.", delay: 620, emphasis: true },
-        { text: "I will keep the thread clean.", delay: 1020 },
-        { text: "Hearth is the house interface. Audralia is the world beyond the window. Frontier is where the systems are tested.", delay: 1320 },
-        { text: "What do you want answered first?", delay: 1060, emphasis: true }
-      ],
-      options: function options() {
-        return withBack([
-          { label: "What is Hearth?", type: "conversation", target: "hearth", userText: "What is Hearth?" },
-          { label: "What is Audralia?", type: "conversation", target: "audralia", userText: "What is Audralia?" },
-          { label: "What is Frontier?", type: "conversation", target: "frontier", userText: "What is Frontier?" },
-          { label: "Where should I go first?", type: "conversation", target: "firstPath", userText: "Where should I go first?" }
-        ]);
-      }
-    },
-
-    openingUnsure: {
-      optionLabel: "Choose how to begin",
-      beats: [
-        { text: "That is acceptable.", delay: 620, emphasis: true },
-        { text: "Hearth is unusual at first contact.", delay: 1080 },
-        { text: "You do not need to know the route before the house has introduced itself.", delay: 1180 },
-        { text: "I can help you find the first door.", delay: 1080, emphasis: true }
-      ],
-      options: [
-        {
-          label: "Ask me one question first.",
-          type: "calibration",
-          target: "calibrateInterest",
-          userText: "Ask me one question first."
+          intent: "directConversation",
+          userText: "Let’s get straight to the point. Give me the clean version first."
         },
         {
-          label: "Show me where I am.",
+          label: "Use the simple tour guide.",
           type: "conversation",
-          target: "whereAmI",
-          userText: "Show me where I am."
-        },
-        {
-          label: "Give me the direct version.",
-          type: "conversation",
-          target: "directStart",
-          directMode: true,
-          userText: "Give me the direct version."
+          expression: "external",
+          mode: "operational",
+          target: "operationalTour",
+          intent: "simpleTourGuide",
+          userText: "Skip the conversation for now. Use the simple tour guide."
         }
       ]
     },
@@ -870,16 +854,70 @@
       optionLabel: "Tell Jeeves what catches you first",
       beats: [
         { text: "Very good.", delay: 620, emphasis: true },
-        { text: "One question at a time.", delay: 1060 },
+        { text: "One question at a time.", delay: 1040 },
         { text: "When you enter a place like this, what usually catches you first?", delay: 1180, emphasis: true }
       ],
       options: [
-        { label: "The story.", type: "calibration", target: "calibratePace", profileKey: "interest", profileValue: "story", userText: "The story catches me first." },
-        { label: "The world.", type: "calibration", target: "calibratePace", profileKey: "interest", profileValue: "world", userText: "The world catches me first." },
-        { label: "The people.", type: "calibration", target: "calibratePace", profileKey: "interest", profileValue: "people", userText: "The people catch me first." },
-        { label: "The science.", type: "calibration", target: "calibratePace", profileKey: "interest", profileValue: "science", userText: "The science catches me first." },
-        { label: "The hidden structure.", type: "calibration", target: "calibratePace", profileKey: "interest", profileValue: "hidden structure", userText: "The hidden structure catches me first." },
-        { label: "I am not sure yet.", type: "calibration", target: "calibratePace", profileKey: "interest", profileValue: "open exploration", userText: "I am not sure yet." }
+        {
+          label: "The story.",
+          type: "conversation",
+          expression: "external",
+          target: "calibratePace",
+          profileKey: "interest",
+          profileValue: "story",
+          intent: "interestStory",
+          userText: "The story catches me first."
+        },
+        {
+          label: "The world.",
+          type: "conversation",
+          expression: "external",
+          target: "calibratePace",
+          profileKey: "interest",
+          profileValue: "world",
+          intent: "interestWorld",
+          userText: "The world itself catches me first."
+        },
+        {
+          label: "The people.",
+          type: "conversation",
+          expression: "external",
+          target: "calibratePace",
+          profileKey: "interest",
+          profileValue: "people",
+          intent: "interestPeople",
+          userText: "The people and characters catch me first."
+        },
+        {
+          label: "The science.",
+          type: "conversation",
+          expression: "external",
+          target: "calibratePace",
+          profileKey: "interest",
+          profileValue: "science",
+          intent: "interestScience",
+          userText: "The science catches me first."
+        },
+        {
+          label: "The hidden structure.",
+          type: "conversation",
+          expression: "internal",
+          target: "calibratePace",
+          profileKey: "interest",
+          profileValue: "hidden structure",
+          intent: "interestHiddenStructure",
+          userText: "There is something beneath the surface here. I want to understand the structure behind it."
+        },
+        {
+          label: "I need to get my bearings.",
+          type: "conversation",
+          expression: "internal",
+          target: "calibratePace",
+          profileKey: "interest",
+          profileValue: "orientation",
+          intent: "needBearings",
+          userText: "I’m not lost, exactly. I just need to understand what kind of place this is."
+        }
       ]
     },
 
@@ -892,10 +930,46 @@
         { text: "How would you like me to move?", delay: 1080, emphasis: true }
       ],
       options: [
-        { label: "Slow and immersive.", type: "calibration", target: "calibrateDesire", profileKey: "pace", profileValue: "slow and immersive", userText: "Move slowly and make it immersive." },
-        { label: "Fast and direct.", type: "calibration", target: "calibrateDesire", profileKey: "pace", profileValue: "fast and direct", userText: "Move fast and direct." },
-        { label: "Explain the logic.", type: "calibration", target: "calibrateDesire", profileKey: "pace", profileValue: "logic-first", userText: "Explain the logic as we go." },
-        { label: "Show me the mystery first.", type: "calibration", target: "calibrateDesire", profileKey: "pace", profileValue: "mystery-first", userText: "Show me the mystery first." }
+        {
+          label: "Slow and immersive.",
+          type: "conversation",
+          expression: "external",
+          target: "calibrateDesire",
+          profileKey: "pace",
+          profileValue: "slow and immersive",
+          intent: "paceSlowImmersive",
+          userText: "Move slowly and let it feel immersive."
+        },
+        {
+          label: "Fast and direct.",
+          type: "conversation",
+          expression: "external",
+          target: "calibrateDesire",
+          profileKey: "pace",
+          profileValue: "fast and direct",
+          intent: "paceFastDirect",
+          userText: "Move fast and direct. Keep the thread clean."
+        },
+        {
+          label: "Explain the logic.",
+          type: "conversation",
+          expression: "external",
+          target: "calibrateDesire",
+          profileKey: "pace",
+          profileValue: "logic-first",
+          intent: "paceLogicFirst",
+          userText: "Explain the logic as we go."
+        },
+        {
+          label: "Show me the mystery first.",
+          type: "conversation",
+          expression: "internal",
+          target: "calibrateDesire",
+          profileKey: "pace",
+          profileValue: "mystery-first",
+          intent: "paceMysteryFirst",
+          userText: "I want to feel the mystery first before everything is explained."
+        }
       ]
     },
 
@@ -907,11 +981,56 @@
         { text: "What do you want this place to give you first?", delay: 1180, emphasis: true }
       ],
       options: [
-        { label: "Orientation.", type: "calibration", target: "calibrationReady", profileKey: "desire", profileValue: "orientation", userText: "I want orientation first." },
-        { label: "Meaning.", type: "calibration", target: "calibrationReady", profileKey: "desire", profileValue: "meaning", userText: "I want meaning first." },
-        { label: "Discovery.", type: "calibration", target: "calibrationReady", profileKey: "desire", profileValue: "discovery", userText: "I want discovery first." },
-        { label: "Proof.", type: "calibration", target: "calibrationReady", profileKey: "desire", profileValue: "proof", userText: "I want proof first." },
-        { label: "A path to follow.", type: "calibration", target: "calibrationReady", profileKey: "desire", profileValue: "a path to follow", userText: "I want a path to follow." }
+        {
+          label: "Orientation.",
+          type: "conversation",
+          expression: "external",
+          target: "calibrationReady",
+          profileKey: "desire",
+          profileValue: "orientation",
+          intent: "desireOrientation",
+          userText: "I want orientation first."
+        },
+        {
+          label: "Meaning.",
+          type: "conversation",
+          expression: "internal",
+          target: "calibrationReady",
+          profileKey: "desire",
+          profileValue: "meaning",
+          intent: "desireMeaning",
+          userText: "I want to understand why this place matters."
+        },
+        {
+          label: "Discovery.",
+          type: "conversation",
+          expression: "internal",
+          target: "calibrationReady",
+          profileKey: "desire",
+          profileValue: "discovery",
+          intent: "desireDiscovery",
+          userText: "I want to discover it without having everything flattened into explanation."
+        },
+        {
+          label: "Proof.",
+          type: "conversation",
+          expression: "external",
+          target: "calibrationReady",
+          profileKey: "desire",
+          profileValue: "proof",
+          intent: "desireProof",
+          userText: "I want proof first."
+        },
+        {
+          label: "A path to follow.",
+          type: "conversation",
+          expression: "external",
+          target: "calibrationReady",
+          profileKey: "desire",
+          profileValue: "a path to follow",
+          intent: "desirePath",
+          userText: "Give me a path to follow."
+        }
       ]
     },
 
@@ -927,32 +1046,168 @@
       },
       options: function options() {
         return withBack([
-          { label: "Show me where I am.", type: "conversation", target: "whereAmI", userText: "Show me where I am." },
-          { label: "Explain Hearth.", type: "conversation", target: "hearth", userText: "Explain Hearth." },
-          { label: "Explain Audralia.", type: "conversation", target: "audralia", userText: "Explain Audralia." },
-          { label: "Who is working here?", type: "conversation", target: "characters", userText: "Who is working here?" },
-          { label: "What should I see first?", type: "conversation", target: "firstPath", userText: "What should I see first?" }
+          {
+            label: "Show me where I am.",
+            type: "conversation",
+            expression: "external",
+            target: "whereAmI",
+            intent: "whereAmI",
+            userText: "Show me where I am."
+          },
+          {
+            label: "Explain Hearth.",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "explainHearth",
+            userText: "Explain Hearth."
+          },
+          {
+            label: "Explain Audralia.",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "explainAudralia",
+            userText: "Explain Audralia."
+          },
+          {
+            label: "Who is working here?",
+            type: "conversation",
+            expression: "external",
+            target: "characters",
+            intent: "characters",
+            userText: "Who is working here?"
+          },
+          {
+            label: "I think I’m ready to choose a door.",
+            type: "conversation",
+            expression: "internal",
+            target: "firstPath",
+            intent: "readyForDoor",
+            userText: "I think I’m ready to choose a door now."
+          }
         ]);
       }
     },
 
     directStart: {
-      optionLabel: "Choose what to ask",
+      optionLabel: "Choose the direct thread",
       beats: [
-        { text: "Very well.", delay: 620, emphasis: true },
-        { text: "No ceremony.", delay: 980 },
-        { text: "You are in Hearth.", delay: 1040, emphasis: true },
-        { text: "The website is the window. Audralia is the world beyond it. Hearth is the house helping you understand the crossing.", delay: 1320 },
-        { text: "Ask cleanly. I will answer cleanly.", delay: 1080 }
+        { text: "Understood.", delay: 620, emphasis: true },
+        { text: "I will keep the thread clean.", delay: 1020 },
+        { text: "Hearth is the house interface. Audralia is the world beyond the window. Frontier is where the systems are tested.", delay: 1320 },
+        { text: "What do you want answered first?", delay: 1060, emphasis: true }
       ],
       options: function options() {
         return withBack([
-          { label: "What is Hearth?", type: "conversation", target: "hearth", userText: "What is Hearth?" },
-          { label: "What is Audralia?", type: "conversation", target: "audralia", userText: "What is Audralia?" },
-          { label: "What is this website?", type: "conversation", target: "website", userText: "What is this website?" },
-          { label: "Where should I go first?", type: "conversation", target: "firstPath", userText: "Where should I go first?" },
-          { label: "Who are the characters?", type: "conversation", target: "characters", userText: "Who are the characters?" },
-          { label: "What is the control room?", type: "conversation", target: "controlRoom", userText: "What is the control room?" }
+          {
+            label: "What is Hearth?",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "whatIsHearth",
+            userText: "What is Hearth?"
+          },
+          {
+            label: "What is Audralia?",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "whatIsAudralia",
+            userText: "What is Audralia?"
+          },
+          {
+            label: "What is Frontier?",
+            type: "conversation",
+            expression: "external",
+            target: "frontier",
+            intent: "whatIsFrontier",
+            userText: "What is Frontier?"
+          },
+          {
+            label: "Where should I go first?",
+            type: "conversation",
+            expression: "external",
+            target: "firstPath",
+            intent: "whereFirst",
+            userText: "Where should I go first?"
+          },
+          {
+            label: "I still need the basic map.",
+            type: "conversation",
+            expression: "internal",
+            target: "whereAmI",
+            intent: "needBasicMap",
+            userText: "I still need the basic map before I choose anything."
+          }
+        ]);
+      }
+    },
+
+    operationalTour: {
+      optionLabel: "Choose a place to go",
+      beats: [
+        { text: "Very well.", delay: 620, emphasis: true },
+        { text: "I will act as your tour guide.", delay: 1040 },
+        { text: "No extended conversation. No long explanation.", delay: 1020 },
+        { text: "Choose the room or path you want first.", delay: 1060, emphasis: true }
+      ],
+      options: function options() {
+        return withBack([
+          {
+            label: "Hearth chamber.",
+            type: "route",
+            expression: "external",
+            routeKey: "hearth",
+            intent: "routeHearth",
+            userText: "Take me to the Hearth chamber.",
+            confirmation: "Hearth chamber first. Good. I will take you there."
+          },
+          {
+            label: "Audralia.",
+            type: "route",
+            expression: "external",
+            routeKey: "audralia",
+            intent: "routeAudralia",
+            userText: "Take me to Audralia.",
+            confirmation: "Audralia is the world beyond the window. I will open it now."
+          },
+          {
+            label: "Frontier.",
+            type: "route",
+            expression: "external",
+            routeKey: "frontier",
+            intent: "routeFrontier",
+            userText: "Take me to Frontier.",
+            confirmation: "Frontier is the systems field. I will take you there."
+          },
+          {
+            label: "Characters.",
+            type: "route",
+            expression: "external",
+            routeKey: "characters",
+            intent: "routeCharacters",
+            userText: "Take me to the characters.",
+            confirmation: "The character wing is the right place for people and motive. I will open it now."
+          },
+          {
+            label: "Globe Window.",
+            type: "route",
+            expression: "external",
+            routeKey: "globeWindow",
+            intent: "routeGlobeWindow",
+            userText: "Take me to the Globe Window.",
+            confirmation: "The Globe Window widens the frame. I will open it now."
+          },
+          {
+            label: "Control Room.",
+            type: "control",
+            expression: "external",
+            routeKey: "controlRoom",
+            intent: "routeControlRoom",
+            userText: "Open the Control Room.",
+            confirmation: "The Control Room is diagnostic. I will take you there."
+          }
         ]);
       }
     },
@@ -968,10 +1223,39 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Explain the house.", type: "conversation", target: "hearth", userText: "Explain the house." },
-          { label: "Explain the world beyond the window.", type: "conversation", target: "audralia", userText: "Explain the world beyond the window." },
-          { label: "What should I see first?", type: "conversation", target: "firstPath", userText: "What should I see first?" },
-          { label: "Show me the Hearth page.", type: "route", routeKey: "hearth", userText: "Show me the Hearth page.", confirmation: "Yes. Hearth is the proper first room. I will take you back to the chamber." }
+          {
+            label: "Explain the house.",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "explainHouse",
+            userText: "Explain the house."
+          },
+          {
+            label: "Explain the world beyond the window.",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "explainWorldBeyondWindow",
+            userText: "Explain the world beyond the window."
+          },
+          {
+            label: "I’m starting to see the frame.",
+            type: "conversation",
+            expression: "internal",
+            target: "firstPath",
+            intent: "seeingFrame",
+            userText: "I’m starting to see the frame. I may be ready for a path."
+          },
+          {
+            label: "Show me the Hearth page.",
+            type: "route",
+            expression: "external",
+            routeKey: "hearth",
+            intent: "routeHearth",
+            userText: "Show me the Hearth page.",
+            confirmation: "Yes. Hearth is the proper first room. I will take you back to the chamber."
+          }
         ]);
       }
     },
@@ -987,10 +1271,38 @@
       ],
       options: function options() {
         return withBack([
-          { label: "What is Mirrorland?", type: "conversation", target: "mirrorland", userText: "What is Mirrorland?" },
-          { label: "What is Hearth?", type: "conversation", target: "hearth", userText: "What is Hearth?" },
-          { label: "What is Audralia?", type: "conversation", target: "audralia", userText: "What is Audralia?" },
-          { label: "Where should I go first?", type: "conversation", target: "firstPath", userText: "Where should I go first?" }
+          {
+            label: "What is Mirrorland?",
+            type: "conversation",
+            expression: "external",
+            target: "mirrorland",
+            intent: "whatIsMirrorland",
+            userText: "What is Mirrorland?"
+          },
+          {
+            label: "What is Hearth?",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "whatIsHearth",
+            userText: "What is Hearth?"
+          },
+          {
+            label: "What is Audralia?",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "whatIsAudralia",
+            userText: "What is Audralia?"
+          },
+          {
+            label: "I need the next door.",
+            type: "conversation",
+            expression: "internal",
+            target: "firstPath",
+            intent: "needNextDoor",
+            userText: "I think I understand the website enough. I need the next door."
+          }
         ]);
       }
     },
@@ -1006,10 +1318,39 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Explain Hearth.", type: "conversation", target: "hearth", userText: "Explain Hearth." },
-          { label: "Explain Audralia.", type: "conversation", target: "audralia", userText: "Explain Audralia." },
-          { label: "What is the Globe Window?", type: "conversation", target: "globeWindow", userText: "What is the Globe Window?" },
-          { label: "Take me to the Globe Window.", type: "route", routeKey: "globeWindow", userText: "Take me to the Globe Window.", confirmation: "The Globe Window will show you the larger frame. I will open it now." }
+          {
+            label: "Explain Hearth.",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "explainHearth",
+            userText: "Explain Hearth."
+          },
+          {
+            label: "Explain Audralia.",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "explainAudralia",
+            userText: "Explain Audralia."
+          },
+          {
+            label: "What is the Globe Window?",
+            type: "conversation",
+            expression: "external",
+            target: "globeWindow",
+            intent: "whatIsGlobeWindow",
+            userText: "What is the Globe Window?"
+          },
+          {
+            label: "Take me to the Globe Window.",
+            type: "route",
+            expression: "external",
+            routeKey: "globeWindow",
+            intent: "routeGlobeWindow",
+            userText: "Take me to the Globe Window.",
+            confirmation: "The Globe Window will show you the larger frame. I will open it now."
+          }
         ]);
       }
     },
@@ -1026,10 +1367,47 @@
       ],
       options: function options() {
         return withBack([
-          { label: "What is Audralia?", type: "conversation", target: "audralia", userText: "What is Audralia?" },
-          { label: "Who is working here?", type: "conversation", target: "characters", userText: "Who is working here?" },
-          { label: "What is Frontier?", type: "conversation", target: "frontier", userText: "What is Frontier?" },
-          { label: "Show me the Hearth chamber.", type: "route", routeKey: "hearth", userText: "Show me the Hearth chamber.", confirmation: "Yes. The chamber is the proper place to see Hearth directly. I will return you there." }
+          {
+            label: "What is Audralia?",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "whatIsAudralia",
+            userText: "What is Audralia?"
+          },
+          {
+            label: "Who is working here?",
+            type: "conversation",
+            expression: "external",
+            target: "characters",
+            intent: "whoIsWorkingHere",
+            userText: "Who is working here?"
+          },
+          {
+            label: "What is Frontier?",
+            type: "conversation",
+            expression: "external",
+            target: "frontier",
+            intent: "whatIsFrontier",
+            userText: "What is Frontier?"
+          },
+          {
+            label: "The house feels like the real doorway.",
+            type: "conversation",
+            expression: "internal",
+            target: "firstPath",
+            intent: "houseAsDoorway",
+            userText: "The house feels like the real doorway. I need to know where to go next."
+          },
+          {
+            label: "Show me the Hearth chamber.",
+            type: "route",
+            expression: "external",
+            routeKey: "hearth",
+            intent: "routeHearth",
+            userText: "Show me the Hearth chamber.",
+            confirmation: "Yes. The chamber is the proper place to see Hearth directly. I will return you there."
+          }
         ]);
       }
     },
@@ -1045,10 +1423,39 @@
       ],
       options: function options() {
         return withBack([
-          { label: "How does Hearth connect to Audralia?", type: "conversation", target: "hearth", userText: "How does Hearth connect to Audralia?" },
-          { label: "What is Frontier?", type: "conversation", target: "frontier", userText: "What is Frontier?" },
-          { label: "Who is working on it?", type: "conversation", target: "characters", userText: "Who is working on it?" },
-          { label: "Take me to Audralia.", type: "route", routeKey: "audralia", userText: "Take me to Audralia.", confirmation: "You are ready to see the world beyond the window. I will take you to Audralia." }
+          {
+            label: "How does Hearth connect to Audralia?",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "hearthAudraliaConnection",
+            userText: "How does Hearth connect to Audralia?"
+          },
+          {
+            label: "What is Frontier?",
+            type: "conversation",
+            expression: "external",
+            target: "frontier",
+            intent: "whatIsFrontier",
+            userText: "What is Frontier?"
+          },
+          {
+            label: "Who is working on it?",
+            type: "conversation",
+            expression: "external",
+            target: "characters",
+            intent: "whoWorksOnAudralia",
+            userText: "Who is working on it?"
+          },
+          {
+            label: "I think I’m ready to see it.",
+            type: "route",
+            expression: "internal",
+            routeKey: "audralia",
+            intent: "readyToSeeAudralia",
+            userText: "I think I’m ready to see Audralia directly.",
+            confirmation: "You are ready to see the world beyond the window. I will take you to Audralia."
+          }
         ]);
       }
     },
@@ -1064,10 +1471,39 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Explain Audralia again.", type: "conversation", target: "audralia", userText: "Explain Audralia again." },
-          { label: "Who are the characters?", type: "conversation", target: "characters", userText: "Who are the characters?" },
-          { label: "What should I see first?", type: "conversation", target: "firstPath", userText: "What should I see first?" },
-          { label: "Show me Frontier.", type: "route", routeKey: "frontier", userText: "Show me Frontier.", confirmation: "Frontier is a systems door. I will open it, but keep the house in mind when you arrive." }
+          {
+            label: "Explain Audralia again.",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "explainAudraliaAgain",
+            userText: "Explain Audralia again."
+          },
+          {
+            label: "Who are the characters?",
+            type: "conversation",
+            expression: "external",
+            target: "characters",
+            intent: "whoAreCharacters",
+            userText: "Who are the characters?"
+          },
+          {
+            label: "What should I see first?",
+            type: "conversation",
+            expression: "external",
+            target: "firstPath",
+            intent: "whatFirst",
+            userText: "What should I see first?"
+          },
+          {
+            label: "Show me Frontier.",
+            type: "route",
+            expression: "external",
+            routeKey: "frontier",
+            intent: "routeFrontier",
+            userText: "Show me Frontier.",
+            confirmation: "Frontier is a systems door. I will open it, but keep the house in mind when you arrive."
+          }
         ]);
       }
     },
@@ -1084,10 +1520,47 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Who is Dextrion?", type: "conversation", target: "dextrion", userText: "Who is Dextrion?" },
-          { label: "Who is Alaric?", type: "conversation", target: "alaric", userText: "Who is Alaric?" },
-          { label: "Explain Jeeves.", type: "conversation", target: "jeevesSelf", userText: "Explain yourself, Jeeves." },
-          { label: "Take me to the characters.", type: "route", routeKey: "characters", userText: "Take me to the characters.", confirmation: "Yes. The character wing is where the house begins to feel populated. I will take you there." }
+          {
+            label: "Who is Dextrion?",
+            type: "conversation",
+            expression: "external",
+            target: "dextrion",
+            intent: "whoIsDextrion",
+            userText: "Who is Dextrion?"
+          },
+          {
+            label: "Who is Alaric?",
+            type: "conversation",
+            expression: "external",
+            target: "alaric",
+            intent: "whoIsAlaric",
+            userText: "Who is Alaric?"
+          },
+          {
+            label: "Explain Jeeves.",
+            type: "conversation",
+            expression: "external",
+            target: "jeevesSelf",
+            intent: "explainJeeves",
+            userText: "Explain yourself, Jeeves."
+          },
+          {
+            label: "The people make it feel alive.",
+            type: "conversation",
+            expression: "internal",
+            target: "firstPath",
+            intent: "peopleMakeAlive",
+            userText: "The people make this feel alive. I want to know where that leads."
+          },
+          {
+            label: "Take me to the characters.",
+            type: "route",
+            expression: "external",
+            routeKey: "characters",
+            intent: "routeCharacters",
+            userText: "Take me to the characters.",
+            confirmation: "Yes. The character wing is where the house begins to feel populated. I will take you there."
+          }
         ]);
       }
     },
@@ -1102,9 +1575,31 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Who is Alaric?", type: "conversation", target: "alaric", userText: "Who is Alaric?" },
-          { label: "What is Hearth?", type: "conversation", target: "hearth", userText: "What is Hearth?" },
-          { label: "Show me the characters.", type: "route", routeKey: "characters", userText: "Show me the characters.", confirmation: "I will take you to the character wing. Dextrion belongs in a larger company." }
+          {
+            label: "Who is Alaric?",
+            type: "conversation",
+            expression: "external",
+            target: "alaric",
+            intent: "whoIsAlaric",
+            userText: "Who is Alaric?"
+          },
+          {
+            label: "What is Hearth?",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "whatIsHearth",
+            userText: "What is Hearth?"
+          },
+          {
+            label: "Show me the characters.",
+            type: "route",
+            expression: "external",
+            routeKey: "characters",
+            intent: "routeCharacters",
+            userText: "Show me the characters.",
+            confirmation: "I will take you to the character wing. Dextrion belongs in a larger company."
+          }
         ]);
       }
     },
@@ -1119,9 +1614,31 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Who is Dextrion?", type: "conversation", target: "dextrion", userText: "Who is Dextrion?" },
-          { label: "What is Mirrorland?", type: "conversation", target: "mirrorland", userText: "What is Mirrorland?" },
-          { label: "Show me the characters.", type: "route", routeKey: "characters", userText: "Show me the characters.", confirmation: "Yes. Alaric is better understood among the others. I will take you there." }
+          {
+            label: "Who is Dextrion?",
+            type: "conversation",
+            expression: "external",
+            target: "dextrion",
+            intent: "whoIsDextrion",
+            userText: "Who is Dextrion?"
+          },
+          {
+            label: "What is Mirrorland?",
+            type: "conversation",
+            expression: "external",
+            target: "mirrorland",
+            intent: "whatIsMirrorland",
+            userText: "What is Mirrorland?"
+          },
+          {
+            label: "Show me the characters.",
+            type: "route",
+            expression: "external",
+            routeKey: "characters",
+            intent: "routeCharacters",
+            userText: "Show me the characters.",
+            confirmation: "Yes. Alaric is better understood among the others. I will take you there."
+          }
         ]);
       }
     },
@@ -1137,10 +1654,38 @@
       ],
       options: function options() {
         return withBack([
-          { label: "What is Hearth?", type: "conversation", target: "hearth", userText: "What is Hearth?" },
-          { label: "What is Audralia?", type: "conversation", target: "audralia", userText: "What is Audralia?" },
-          { label: "Let us keep going.", type: "conversation", target: "firstPath", userText: "Let us keep going." },
-          { label: "Minimize for now.", type: "conversation", action: "minimize", userText: "Minimize for now." }
+          {
+            label: "What is Hearth?",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "whatIsHearth",
+            userText: "What is Hearth?"
+          },
+          {
+            label: "What is Audralia?",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "whatIsAudralia",
+            userText: "What is Audralia?"
+          },
+          {
+            label: "Let us keep going.",
+            type: "conversation",
+            expression: "external",
+            target: "firstPath",
+            intent: "keepGoing",
+            userText: "Let us keep going."
+          },
+          {
+            label: "Minimize for now.",
+            type: "conversation",
+            expression: "external",
+            action: "minimize",
+            intent: "minimize",
+            userText: "Minimize for now."
+          }
         ]);
       }
     },
@@ -1157,12 +1702,57 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Explain Hearth first.", type: "conversation", target: "hearth", userText: "Explain Hearth first." },
-          { label: "Explain Audralia first.", type: "conversation", target: "audralia", userText: "Explain Audralia first." },
-          { label: "Explain Frontier first.", type: "conversation", target: "frontier", userText: "Explain Frontier first." },
-          { label: "Take me to Audralia.", type: "route", routeKey: "audralia", userText: "Take me to Audralia.", confirmation: "Audralia is the strongest first crossing after Hearth. I will open it now." },
-          { label: "Take me to Frontier.", type: "route", routeKey: "frontier", userText: "Take me to Frontier.", confirmation: "Frontier is the systems path. I will open that field now." },
-          { label: "Open the Control Room.", type: "control", routeKey: "controlRoom", userText: "Open the Control Room.", confirmation: "The Control Room is diagnostic. I will take you there, but remember: it inspects the house. It does not replace the house." }
+          {
+            label: "Explain Hearth first.",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "explainHearthFirst",
+            userText: "Explain Hearth first."
+          },
+          {
+            label: "Explain Audralia first.",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "explainAudraliaFirst",
+            userText: "Explain Audralia first."
+          },
+          {
+            label: "Explain Frontier first.",
+            type: "conversation",
+            expression: "external",
+            target: "frontier",
+            intent: "explainFrontierFirst",
+            userText: "Explain Frontier first."
+          },
+          {
+            label: "Take me to Audralia.",
+            type: "route",
+            expression: "external",
+            routeKey: "audralia",
+            intent: "routeAudralia",
+            userText: "Take me to Audralia.",
+            confirmation: "Audralia is the strongest first crossing after Hearth. I will open it now."
+          },
+          {
+            label: "Take me to Frontier.",
+            type: "route",
+            expression: "external",
+            routeKey: "frontier",
+            intent: "routeFrontier",
+            userText: "Take me to Frontier.",
+            confirmation: "Frontier is the systems path. I will open that field now."
+          },
+          {
+            label: "Open the Control Room.",
+            type: "control",
+            expression: "external",
+            routeKey: "controlRoom",
+            intent: "routeControlRoom",
+            userText: "Open the Control Room.",
+            confirmation: "The Control Room is diagnostic. I will take you there, but remember: it inspects the house. It does not replace the house."
+          }
         ]);
       }
     },
@@ -1177,9 +1767,31 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Explain Hearth.", type: "conversation", target: "hearth", userText: "Explain Hearth." },
-          { label: "Explain Audralia.", type: "conversation", target: "audralia", userText: "Explain Audralia." },
-          { label: "Take me to the Globe Window.", type: "route", routeKey: "globeWindow", userText: "Take me to the Globe Window.", confirmation: "The Globe Window will widen the frame. I will open it now." }
+          {
+            label: "Explain Hearth.",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "explainHearth",
+            userText: "Explain Hearth."
+          },
+          {
+            label: "Explain Audralia.",
+            type: "conversation",
+            expression: "external",
+            target: "audralia",
+            intent: "explainAudralia",
+            userText: "Explain Audralia."
+          },
+          {
+            label: "Take me to the Globe Window.",
+            type: "route",
+            expression: "external",
+            routeKey: "globeWindow",
+            intent: "routeGlobeWindow",
+            userText: "Take me to the Globe Window.",
+            confirmation: "The Globe Window will widen the frame. I will open it now."
+          }
         ]);
       }
     },
@@ -1195,10 +1807,40 @@
       ],
       options: function options() {
         return withBack([
-          { label: "Keep me oriented.", type: "conversation", target: "whereAmI", userText: "Keep me oriented." },
-          { label: "Explain Hearth instead.", type: "conversation", target: "hearth", userText: "Explain Hearth instead." },
-          { label: "Open the Control Room.", type: "control", routeKey: "controlRoom", userText: "Open the Control Room.", confirmation: "Very well. I will open the Control Room. The evidence will be waiting there." },
-          { label: "Return to Hearth.", type: "route", routeKey: "hearth", userText: "Return to Hearth.", confirmation: "Good. Hearth is the better room for orientation. I will take you back." }
+          {
+            label: "Keep me oriented.",
+            type: "conversation",
+            expression: "external",
+            target: "whereAmI",
+            intent: "keepOriented",
+            userText: "Keep me oriented."
+          },
+          {
+            label: "Explain Hearth instead.",
+            type: "conversation",
+            expression: "external",
+            target: "hearth",
+            intent: "explainHearthInstead",
+            userText: "Explain Hearth instead."
+          },
+          {
+            label: "Open the Control Room.",
+            type: "control",
+            expression: "external",
+            routeKey: "controlRoom",
+            intent: "routeControlRoom",
+            userText: "Open the Control Room.",
+            confirmation: "Very well. I will open the Control Room. The evidence will be waiting there."
+          },
+          {
+            label: "Return to Hearth.",
+            type: "route",
+            expression: "external",
+            routeKey: "hearth",
+            intent: "routeHearth",
+            userText: "Return to Hearth.",
+            confirmation: "Good. Hearth is the better room for orientation. I will take you back."
+          }
         ]);
       }
     }

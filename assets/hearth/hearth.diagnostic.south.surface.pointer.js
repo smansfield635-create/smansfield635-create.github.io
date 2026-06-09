@@ -2,6 +2,8 @@
 // HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_BISHOP_SIDECAR_READ_TNT_v1
 // Internal controlled renewal:
 // HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER_TNT_v4
+// Internal bridge renewal:
+// HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER_DIRECT_METHOD_BRIDGE_TNT_v4_1
 // Full-file replacement.
 // Diagnostic South Surface Pointer sidecar only.
 //
@@ -9,7 +11,8 @@
 // - Preserve the public v1 South Surface Pointer sidecar contract.
 // - Preserve v2 Canvas-feed classifier compatibility.
 // - Preserve v3 scope-lens classification over the diagnostic receipt field.
-// - Renew the active duty into a lawful Lab South + full engine-stack diagnostic adapter.
+// - Preserve v4 lawful Lab South + full engine-stack diagnostic adapter.
+// - Add v4_1 direct-method bridge without collapsing the existing adapter.
 // - Consume Lab South F8 proof output as diagnostic evidence only.
 // - Consume Lab North, Lab East, Lab West, Lab South, F34, F55, F89, F144, and F233 evidence as read-only receipts.
 // - Publish the North-rail-discoverable SOUTH_SURFACE_POINTER_SIDECAR aliases from the actual South pointer sidecar file.
@@ -59,6 +62,11 @@
   const INTERNAL_RENEWAL_RECEIPT =
     "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER_RECEIPT_v4";
 
+  const DIRECT_METHOD_BRIDGE_CONTRACT =
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER_DIRECT_METHOD_BRIDGE_TNT_v4_1";
+  const DIRECT_METHOD_BRIDGE_RECEIPT =
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER_DIRECT_METHOD_BRIDGE_RECEIPT_v4_1";
+
   const PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
     "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_SCOPE_LENS_CLASSIFIER_TNT_v3";
   const PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
@@ -70,7 +78,7 @@
     "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CANVAS_FEED_CLASSIFIER_RECEIPT_v2";
 
   const VERSION =
-    "2026-06-08.hearth-diagnostic-south-surface-pointer-lab-engine-stack-sidecar-adapter-v4";
+    "2026-06-09.hearth-diagnostic-south-surface-pointer-lab-engine-stack-sidecar-adapter-v4-1";
 
   const FILE = "/assets/hearth/hearth.diagnostic.south.surface.pointer.js";
   const TARGET_ROUTE = "/showroom/globe/hearth/";
@@ -104,7 +112,7 @@
   const CONTROLS_FILE = "/assets/hearth/hearth.controls.js";
 
   const PACKET_NAME =
-    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_PACKET_v4";
+    "HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_PACKET_v4_1";
 
   const NORTH_DISCOVERY_FIELD = "SOUTH_SURFACE_POINTER_SIDECAR";
   const NORTH_EXPECTED_LOAD_STATUS = "LOADED_AND_AVAILABLE";
@@ -141,6 +149,7 @@
     routeRepairAuthorized: false,
     routeConductorMutationAuthorized: false,
     controlMutationAuthorized: false,
+    controlsMutationAuthorized: false,
     canvasDrawingAuthorized: false,
     canvasCreationAuthorized: false,
     canvasRepairAuthorized: false,
@@ -172,6 +181,7 @@
     ROUTE_REPAIR_AUTHORIZED: false,
     ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
     CONTROL_MUTATION_AUTHORIZED: false,
+    CONTROLS_MUTATION_AUTHORIZED: false,
     CANVAS_DRAWING_AUTHORIZED: false,
     CANVAS_CREATION_AUTHORIZED: false,
     CANVAS_REPAIR_AUTHORIZED: false,
@@ -466,8 +476,8 @@
     "getReceipt",
     "getReport",
     "getStatus",
-    "getState",
     "getSummary",
+    "getState",
     "composeReceipt",
     "composeSouthReceipt"
   ]);
@@ -481,6 +491,7 @@
     "getReceiptLight",
     "getReport",
     "getStatus",
+    "getSummary",
     "getState"
   ]);
 
@@ -495,6 +506,7 @@
     "getReceiptLight",
     "getReport",
     "getStatus",
+    "getSummary",
     "getState"
   ]);
 
@@ -516,6 +528,10 @@
     receipt: RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+    directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+    directMethodBridgeActive: true,
+    directMethodBridgeStatus: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
     previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     earlierInternalRenewalContract: EARLIER_INTERNAL_RENEWAL_CONTRACT,
@@ -797,7 +813,7 @@
       return Object.keys(value)
         .filter((key) => isFunction(value[key]))
         .sort()
-        .slice(0, 120);
+        .slice(0, 160);
     } catch (_error) {
       return [];
     }
@@ -896,6 +912,8 @@
       getRaw(source, "publicContract", undefined),
       getRaw(source, "INTERNAL_RENEWAL_CONTRACT", undefined),
       getRaw(source, "internalRenewalContract", undefined),
+      getRaw(source, "DIRECT_METHOD_BRIDGE_CONTRACT", undefined),
+      getRaw(source, "directMethodBridgeContract", undefined),
       getRaw(source, "SOURCE_CONTRACT", undefined),
       getRaw(source, "sourceContract", undefined),
       "UNKNOWN"
@@ -912,6 +930,8 @@
       getRaw(source, "publicReceipt", undefined),
       getRaw(source, "INTERNAL_RENEWAL_RECEIPT", undefined),
       getRaw(source, "internalRenewalReceipt", undefined),
+      getRaw(source, "DIRECT_METHOD_BRIDGE_RECEIPT", undefined),
+      getRaw(source, "directMethodBridgeReceipt", undefined),
       getRaw(source, "SOURCE_RECEIPT", undefined),
       getRaw(source, "sourceReceipt", undefined),
       "UNKNOWN"
@@ -2047,7 +2067,7 @@
 
     if (ready && discoveryAliasesPublished) {
       status = "SOUTH_SURFACE_POINTER_SIDECAR_DISCOVERABLE";
-      reason = "NORTH_RAIL_DISCOVERY_ALIASES_ARE_PUBLISHED_BY_ACTUAL_SIDEcar_FILE";
+      reason = "NORTH_RAIL_DISCOVERY_ALIASES_ARE_PUBLISHED_BY_ACTUAL_SIDECAR_FILE";
     } else if (ready && !discoveryAliasesPublished) {
       status = "SOUTH_SURFACE_POINTER_SIDECAR_READY_TO_PUBLISH";
       reason = "SIDECAR_READY_BUT_ALIAS_PUBLICATION_HAS_NOT_RUN";
@@ -2101,7 +2121,7 @@
 
     if (labReady && sidecarReady && northReady && surfaceReady && probeLens.missingCount === 0) {
       status = "CONSTRUCTION_READINESS_SCOPED_PRECONDITIONS_PRESENT";
-      reason = "LAB_SOUTH_ENGINE_STACK_SIDEcar_NORTH_SURFACE_AND_PROBE_LENSES_PRESENT";
+      reason = "LAB_SOUTH_ENGINE_STACK_SIDECAR_NORTH_SURFACE_AND_PROBE_LENSES_PRESENT";
       recommendedFile = NORTH_RAIL_FILE;
       recommendedAction = "RUN_NORTH_RAIL_AND_CONFIRM_SOUTH_SURFACE_POINTER_SIDECAR_DISCOVERY";
     } else if (labReady && sidecarReady && !northReady) {
@@ -2214,6 +2234,12 @@
       RECEIPT,
       INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT,
+      DIRECT_METHOD_BRIDGE_CONTRACT,
+      DIRECT_METHOD_BRIDGE_RECEIPT,
+      DIRECT_METHOD_BRIDGE_ACTIVE: true,
+      DIRECT_METHOD_BRIDGE_STATUS: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
+      SOUTH_SURFACE_POINTER_DIRECT_METHODS_PUBLISHED:
+        "run,runDiagnostic,runScopeLens,runSouthSurfacePointer,runSouthSurfacePointerSidecar,runSidecar,runLens,inspect,probe,measure,getReport,getPacket,getPacketText,getCompactSummary,getScopeLenses,getState,getStatus,getSummary,getReceipt,getReceiptLight",
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       EARLIER_INTERNAL_RENEWAL_CONTRACT,
@@ -2328,6 +2354,7 @@
       ROUTE_REPAIR_AUTHORIZED: false,
       ROUTE_CONDUCTOR_MUTATION_AUTHORIZED: false,
       CONTROL_MUTATION_AUTHORIZED: false,
+      CONTROLS_MUTATION_AUTHORIZED: false,
       CANVAS_DRAWING_AUTHORIZED: false,
       CANVAS_CREATION_AUTHORIZED: false,
       CANVAS_REPAIR_AUTHORIZED: false,
@@ -2337,6 +2364,7 @@
 
       SECONDARY_EVIDENCE_NOTES: [
         "SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER_ACTIVE",
+        "DIRECT_METHOD_BRIDGE_ACTIVE_ON_EXISTING_V4_ADAPTER",
         "THIS_FILE_IS_THE_LAWFUL_SOUTH_POINTER_SIDECAR_ADAPTER",
         "LAB_SOUTH_REMAINS_PROOF_PRODUCER",
         "SOUTH_SURFACE_POINTER_CONSUMES_LAB_SOUTH_PROOF_AS_DIAGNOSTIC_EVIDENCE_ONLY",
@@ -2369,6 +2397,11 @@
       "RECEIPT",
       "INTERNAL_RENEWAL_CONTRACT",
       "INTERNAL_RENEWAL_RECEIPT",
+      "DIRECT_METHOD_BRIDGE_CONTRACT",
+      "DIRECT_METHOD_BRIDGE_RECEIPT",
+      "DIRECT_METHOD_BRIDGE_ACTIVE",
+      "DIRECT_METHOD_BRIDGE_STATUS",
+      "SOUTH_SURFACE_POINTER_DIRECT_METHODS_PUBLISHED",
       "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
       "PREVIOUS_INTERNAL_RENEWAL_RECEIPT",
       "EARLIER_INTERNAL_RENEWAL_CONTRACT",
@@ -2456,6 +2489,8 @@
     return [
       line("SOUTH_SURFACE_POINTER_CONTRACT", CONTRACT),
       line("SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_CONTRACT", INTERNAL_RENEWAL_CONTRACT),
+      line("SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_CONTRACT", DIRECT_METHOD_BRIDGE_CONTRACT),
+      line("DIRECT_METHOD_BRIDGE_ACTIVE", true),
       line("PRESENT_PROBLEM", report.PRESENT_PROBLEM),
       line("SCOPE_LENS_STATUS", report.SCOPE_LENS_STATUS),
       line("LAB_SOUTH_F8_PROOF_LENS_STATUS", report.LAB_SOUTH_F8_PROOF_LENS_STATUS),
@@ -2506,6 +2541,14 @@
         receipt: RECEIPT,
         internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
         internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+        directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+        directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+        directMethodBridgeActive: true,
+        directMethodBridgeStatus: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
+        DIRECT_METHOD_BRIDGE_CONTRACT,
+        DIRECT_METHOD_BRIDGE_RECEIPT,
+        DIRECT_METHOD_BRIDGE_ACTIVE: true,
+        DIRECT_METHOD_BRIDGE_STATUS: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
 
         SCOPE_LENS_STATUS: report.SCOPE_LENS_STATUS,
         LAB_SOUTH_F8_PROOF_LENS_STATUS: report.LAB_SOUTH_F8_PROOF_LENS_STATUS,
@@ -2546,6 +2589,10 @@
         RECEIPT,
         INTERNAL_RENEWAL_CONTRACT,
         INTERNAL_RENEWAL_RECEIPT,
+        DIRECT_METHOD_BRIDGE_CONTRACT,
+        DIRECT_METHOD_BRIDGE_RECEIPT,
+        DIRECT_METHOD_BRIDGE_ACTIVE: true,
+        DIRECT_METHOD_BRIDGE_STATUS: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
         VERSION,
         FILE,
         TARGET_ROUTE,
@@ -2564,6 +2611,9 @@
         ok: false,
         contract: CONTRACT,
         receipt: RECEIPT,
+        directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+        directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+        directMethodBridgeActive: true,
         error: fallback.ERROR_MESSAGE,
         report: fallback,
         REPORT_OBJECT: fallback,
@@ -2573,6 +2623,26 @@
         ...UPPER_NO_CLAIMS
       };
     }
+  }
+
+  function run(input = {}) {
+    return runScopeLens(input);
+  }
+
+  function runSouthSurfacePointer(input = {}) {
+    return runScopeLens(input);
+  }
+
+  function runSouthSurfacePointerSidecar(input = {}) {
+    return runScopeLens(input);
+  }
+
+  function runSidecar(input = {}) {
+    return runScopeLens(input);
+  }
+
+  function runLens(input = {}) {
+    return runScopeLens(input);
   }
 
   function runSouthSurfacePointerRead(input = {}) {
@@ -2694,6 +2764,10 @@
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+      directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+      directMethodBridgeActive: true,
+      directMethodBridgeStatus: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       earlierInternalRenewalContract: EARLIER_INTERNAL_RENEWAL_CONTRACT,
@@ -2759,6 +2833,54 @@
     };
   }
 
+  function getStatus(options = {}) {
+    const stateObject = getState();
+    const receipt = getReceiptLight();
+
+    return {
+      role: "SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER",
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
+      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+      directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+      directMethodBridgeActive: true,
+      directMethodBridgeStatus: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
+      directMethodsPublished:
+        "run,runDiagnostic,runScopeLens,runSouthSurfacePointer,runSouthSurfacePointerSidecar,runSidecar,runLens,inspect,probe,measure,getReport,getPacket,getPacketText,getCompactSummary,getScopeLenses,getState,getStatus,getSummary,getReceipt,getReceiptLight",
+      latestLensStatus: stateObject.latestLensStatus,
+      latestLabStackLens: stateObject.latestLabStackLens,
+      latestLabSouthProofLens: stateObject.latestLabSouthProofLens,
+      latestNorthTrackLens: stateObject.latestNorthTrackLens,
+      latestSurfaceScopeLens: stateObject.latestSurfaceScopeLens,
+      latestCanvasBlameLens: stateObject.latestCanvasBlameLens,
+      latestProbeNetworkLens: stateObject.latestProbeNetworkLens,
+      latestDutyLoadLens: stateObject.latestDutyLoadLens,
+      latestMalpracticeLens: stateObject.latestMalpracticeLens,
+      latestConstructionReadinessLens: stateObject.latestConstructionReadinessLens,
+      latestRecommendedFile: stateObject.latestRecommendedFile,
+      latestRecommendedAction: stateObject.latestRecommendedAction,
+      northDiscoveryField: receipt.northDiscoveryField,
+      northExpectedLoadStatus: receipt.northExpectedLoadStatus,
+      northDiscoverableSidecarPublished: receipt.northDiscoverableSidecarPublished,
+      northDiscoveryAliasCount: receipt.northDiscoveryAliasCount,
+      productionMutationAuthorized: false,
+      canvasRepairAuthorized: false,
+      canvasBuildAuthorized: false,
+      canvasReleaseAuthorized: false,
+      controlsMutationAuthorized: false,
+      runtimeRestartAuthorized: false,
+      visualPassClaimed: false,
+      finalVisualPassClaimed: false,
+      updatedAt: nowIso()
+    };
+  }
+
+  function getSummary(options = {}) {
+    return getStatus(options);
+  }
+
   function getReceiptLight() {
     return {
       role: "DIAGNOSTIC_SOUTH_SURFACE_POINTER_LAB_ENGINE_STACK_SIDECAR_ADAPTER",
@@ -2768,6 +2890,12 @@
       RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
       internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+      directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+      directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+      directMethodBridgeActive: true,
+      directMethodBridgeStatus: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
+      directMethodsPublished:
+        "run,runDiagnostic,runScopeLens,runSouthSurfacePointer,runSouthSurfacePointerSidecar,runSidecar,runLens,inspect,probe,measure,getReport,getPacket,getPacketText,getCompactSummary,getScopeLenses,getState,getStatus,getSummary,getReceipt,getReceiptLight",
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       earlierInternalRenewalContract: EARLIER_INTERNAL_RENEWAL_CONTRACT,
@@ -2813,7 +2941,12 @@
       schemaVocabularyIgnoredForMalpracticeDetection: true,
 
       primaryCallable: "runScopeLens",
+      runApiAvailable: true,
       runScopeLensApiAvailable: true,
+      runSouthSurfacePointerApiAvailable: true,
+      runSouthSurfacePointerSidecarApiAvailable: true,
+      runSidecarApiAvailable: true,
+      runLensApiAvailable: true,
       runSouthSurfacePointerReadApiAvailable: true,
       inspectSouthSurfacePointerApiAvailable: true,
       inspectSurfacePointerApiAvailable: true,
@@ -2832,6 +2965,8 @@
       getCompactSummaryApiAvailable: true,
       getScopeLensesApiAvailable: true,
       getStateApiAvailable: true,
+      getStatusApiAvailable: true,
+      getSummaryApiAvailable: true,
       getReceiptApiAvailable: true,
       getReceiptLightApiAvailable: true,
 
@@ -2871,6 +3006,15 @@
         INTERNAL_RENEWAL_CONTRACT,
       SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_RECEIPT:
         INTERNAL_RENEWAL_RECEIPT,
+      SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_CONTRACT:
+        DIRECT_METHOD_BRIDGE_CONTRACT,
+      SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_RECEIPT:
+        DIRECT_METHOD_BRIDGE_RECEIPT,
+      SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_ACTIVE: true,
+      SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_STATUS:
+        "PUBLISHED_ON_EXISTING_V4_ADAPTER",
+      SOUTH_SURFACE_POINTER_DIRECT_METHODS_PUBLISHED:
+        "run,runDiagnostic,runScopeLens,runSouthSurfacePointer,runSouthSurfacePointerSidecar,runSidecar,runLens,inspect,probe,measure,getReport,getPacket,getPacketText,getCompactSummary,getScopeLenses,getState,getStatus,getSummary,getReceipt,getReceiptLight",
       SOUTH_SURFACE_POINTER_FILE: FILE,
 
       LAB_NORTH_FILE,
@@ -2920,6 +3064,13 @@
         INTERNAL_RENEWAL_CONTRACT;
       ds.hearthDiagnosticSouthSurfacePointerInternalRenewalReceipt =
         INTERNAL_RENEWAL_RECEIPT;
+      ds.hearthDiagnosticSouthSurfacePointerDirectMethodBridgeContract =
+        DIRECT_METHOD_BRIDGE_CONTRACT;
+      ds.hearthDiagnosticSouthSurfacePointerDirectMethodBridgeReceipt =
+        DIRECT_METHOD_BRIDGE_RECEIPT;
+      ds.hearthDiagnosticSouthSurfacePointerDirectMethodBridgeActive = "true";
+      ds.hearthDiagnosticSouthSurfacePointerDirectMethodBridgeStatus =
+        "PUBLISHED_ON_EXISTING_V4_ADAPTER";
       ds.hearthDiagnosticSouthSurfacePointerFile = FILE;
 
       ds.hearthDiagnosticSouthSurfacePointerNorthDiscoveryField =
@@ -3025,6 +3176,14 @@
     root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RECEIPT__ = RECEIPT;
     root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_INTERNAL_RENEWAL_CONTRACT__ =
       INTERNAL_RENEWAL_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_CONTRACT__ =
+      DIRECT_METHOD_BRIDGE_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_RECEIPT__ =
+      DIRECT_METHOD_BRIDGE_RECEIPT;
+    root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_ACTIVE__ =
+      true;
+    root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_DIRECT_METHOD_BRIDGE_STATUS__ =
+      "PUBLISHED_ON_EXISTING_V4_ADAPTER";
     root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_NORTH_DISCOVERY_FIELD__ =
       NORTH_DISCOVERY_FIELD;
     root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_EXPECTED_LOAD_STATUS__ =
@@ -3035,6 +3194,14 @@
       false;
     root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_WEBGL__ = false;
     root.__HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_VISUAL_PASS_CLAIMED__ = false;
+
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RUN = run;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RUN_DIAGNOSTIC = runDiagnostic;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RUN_SCOPE_LENS = runScopeLens;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RUN_SIDECAR = runSidecar;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RUN_LENS = runLens;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_GET_STATUS = getStatus;
+    root.HEARTH_DIAGNOSTIC_SOUTH_SURFACE_POINTER_GET_SUMMARY = getSummary;
 
     state.aliasPublishCount += 1;
     updateDataset();
@@ -3048,6 +3215,10 @@
     RECEIPT,
     internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
     internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
+    directMethodBridgeContract: DIRECT_METHOD_BRIDGE_CONTRACT,
+    directMethodBridgeReceipt: DIRECT_METHOD_BRIDGE_RECEIPT,
+    directMethodBridgeActive: true,
+    directMethodBridgeStatus: "PUBLISHED_ON_EXISTING_V4_ADAPTER",
     previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
     previousInternalRenewalReceipt: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
     earlierInternalRenewalContract: EARLIER_INTERNAL_RENEWAL_CONTRACT,
@@ -3099,7 +3270,12 @@
     pointerSurfaceFile: POINTER_SURFACE_FILE,
     controlsFile: CONTROLS_FILE,
 
+    run,
     runScopeLens,
+    runSouthSurfacePointer,
+    runSouthSurfacePointerSidecar,
+    runSidecar,
+    runLens,
     runSouthSurfacePointerRead,
     inspectSouthSurfacePointer,
     inspectSurfacePointer,
@@ -3122,12 +3298,19 @@
     getCompactSummary,
     getScopeLenses,
     getState,
+    getStatus,
+    getSummary,
     getReceipt,
     getReceiptLight,
     publishAliases,
     updateDataset,
 
+    runApiAvailable: true,
     runScopeLensApiAvailable: true,
+    runSouthSurfacePointerApiAvailable: true,
+    runSouthSurfacePointerSidecarApiAvailable: true,
+    runSidecarApiAvailable: true,
+    runLensApiAvailable: true,
     runSouthSurfacePointerReadApiAvailable: true,
     inspectSouthSurfacePointerApiAvailable: true,
     inspectSurfacePointerApiAvailable: true,
@@ -3150,6 +3333,8 @@
     getCompactSummaryApiAvailable: true,
     getScopeLensesApiAvailable: true,
     getStateApiAvailable: true,
+    getStatusApiAvailable: true,
+    getSummaryApiAvailable: true,
     getReceiptApiAvailable: true,
     getReceiptLightApiAvailable: true,
 

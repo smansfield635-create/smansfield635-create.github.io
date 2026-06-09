@@ -1,35 +1,24 @@
 // /assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js
 // HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_TNT_v3
 // Internal controlled renewal:
-// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_TNT_v4_2
+// HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_TNT_v4_3
 // Full-file replacement.
-// SURFACE_TRUTH / Chapel context / Canvas Bishop / Bridge reader only.
+// SURFACE_TRUTH / Chapel context / iframe-window Bishop resolver only.
 // No production mutation. No canvas repair. No build. No release.
 
-(function hearthSurfaceTruthChapelContextBishopBridgeReader(global) {
+(function hearthSurfaceTruthTargetIframeBishopResolver(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root.document || null;
 
-  var CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_TNT_v3";
-  var RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_RECEIPT_v3";
+  var CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_TNT_v3";
+  var RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_SURFACE_LENS_ALIGNMENT_RECEIPT_v3";
+  var INTERNAL_RENEWAL_CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_TNT_v4_3";
+  var INTERNAL_RENEWAL_RECEIPT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_RECEIPT_v4_3";
+  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT = "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_TNT_v4_2";
 
-  var INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_TNT_v4_2";
-  var INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_RECEIPT_v4_2";
-
-  var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_DIRECT_METHOD_PUBLICATION_RENEWAL_TNT_v4_1";
-  var PREVIOUS_INTERNAL_RENEWAL_RECEIPT =
-    "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_DIRECT_METHOD_PUBLICATION_RENEWAL_RECEIPT_v4_1";
-
-  var VERSION =
-    "2026-06-09.hearth-diagnostic-probe-canvas-surface-truth-chapel-context-bishop-bridge-reader-v4-2";
-
+  var VERSION = "2026-06-09.hearth-diagnostic-probe-canvas-surface-truth-target-iframe-bishop-resolver-v4-3";
   var FILE = "/assets/hearth/hearth.diagnostic.probe.canvas.surface.truth.js";
   var TARGET_ROUTE = "/showroom/globe/hearth/";
   var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -40,10 +29,8 @@
   var HAND_PAINT_FILE = "/assets/hearth/hearth.canvas.hand.paint.js";
   var HAND_VIEW_FILE = "/assets/hearth/hearth.canvas.hand.view.js";
   var HAND_INSPECT_FILE = "/assets/hearth/hearth.canvas.hand.inspect.js";
-
   var HEX_AUTHORITY_FILE = "/assets/hearth/hearth.hex.four-pair.authority.js";
   var HEX_SURFACE_FILE = "/assets/hearth/hearth.hex.surface.js";
-
   var FINGER_SURFACE_FILE = "/assets/hearth/hearth.canvas.finger.surface.js";
   var FINGER_BOUNDARY_FILE = "/assets/hearth/hearth.canvas.finger.boundary.js";
   var FINGER_INSPECT_FILE = "/assets/hearth/hearth.canvas.finger.inspect.js";
@@ -127,50 +114,30 @@
   ];
 
   var CANVAS_BISHOP_ALIASES = [
+    "HEARTH_CANVAS_BISHOP",
+    "HEARTH_CANVAS_CHAPEL_ONE_BISHOP",
     "HEARTH_CANVAS",
     "HEARTH_CANVAS_HUB",
     "HEARTH_CANVAS_PARENT",
     "HEARTH_CANVAS_AUTHORITY",
-    "HEARTH_CANVAS_BISHOP",
-    "HEARTH_CANVAS_CHAPEL_ONE_BISHOP",
+    "HEARTH.canvasBishop",
+    "HEARTH.chapelOneBishop",
     "HEARTH.canvas",
     "HEARTH.canvasHub",
     "HEARTH.canvasParent",
     "HEARTH.canvasAuthority",
-    "HEARTH.canvasBishop",
-    "HEARTH.chapelOneBishop",
-    "DEXTER_LAB.hearthCanvas",
-    "DEXTER_LAB.hearthCanvasHub",
     "DEXTER_LAB.hearthCanvasBishop",
-    "DEXTER_LAB.hearthChapelOneBishop"
+    "DEXTER_LAB.hearthChapelOneBishop",
+    "DEXTER_LAB.hearthCanvas",
+    "DEXTER_LAB.hearthCanvasHub"
   ];
 
   var HAND_ALIASES = {
-    geometry: [
-      "HEARTH.canvasHandGeometry",
-      "HEARTH_CANVAS_HAND_GEOMETRY",
-      "DEXTER_LAB.hearthCanvasHandGeometry"
-    ],
-    context: [
-      "HEARTH.canvasHandContext",
-      "HEARTH_CANVAS_HAND_CONTEXT",
-      "DEXTER_LAB.hearthCanvasHandContext"
-    ],
-    paint: [
-      "HEARTH.canvasHandPaint",
-      "HEARTH_CANVAS_HAND_PAINT",
-      "DEXTER_LAB.hearthCanvasHandPaint"
-    ],
-    view: [
-      "HEARTH.canvasHandView",
-      "HEARTH_CANVAS_HAND_VIEW",
-      "DEXTER_LAB.hearthCanvasHandView"
-    ],
-    inspect: [
-      "HEARTH.canvasHandInspect",
-      "HEARTH_CANVAS_HAND_INSPECT",
-      "DEXTER_LAB.hearthCanvasHandInspect"
-    ]
+    geometry: ["HEARTH.canvasHandGeometry", "HEARTH_CANVAS_HAND_GEOMETRY", "DEXTER_LAB.hearthCanvasHandGeometry"],
+    context: ["HEARTH.canvasHandContext", "HEARTH_CANVAS_HAND_CONTEXT", "DEXTER_LAB.hearthCanvasHandContext"],
+    paint: ["HEARTH.canvasHandPaint", "HEARTH_CANVAS_HAND_PAINT", "DEXTER_LAB.hearthCanvasHandPaint"],
+    view: ["HEARTH.canvasHandView", "HEARTH_CANVAS_HAND_VIEW", "DEXTER_LAB.hearthCanvasHandView"],
+    inspect: ["HEARTH.canvasHandInspect", "HEARTH_CANVAS_HAND_INSPECT", "DEXTER_LAB.hearthCanvasHandInspect"]
   };
 
   var HEX_AUTHORITY_ALIASES = [
@@ -190,69 +157,21 @@
   ];
 
   var FINGER_ALIASES = {
-    surface: [
-      "HEARTH.canvasFingerSurface",
-      "HEARTH.pointerFingerSurface",
-      "HEARTH_CANVAS_FINGER_SURFACE",
-      "HEARTH_POINTER_FINGER_SURFACE",
-      "DEXTER_LAB.hearthCanvasFingerSurface"
-    ],
-    boundary: [
-      "HEARTH.canvasFingerBoundary",
-      "HEARTH.pointerFingerBoundary",
-      "HEARTH_CANVAS_FINGER_BOUNDARY",
-      "HEARTH_POINTER_FINGER_BOUNDARY",
-      "DEXTER_LAB.hearthCanvasFingerBoundary"
-    ],
-    inspect: [
-      "HEARTH.canvasFingerInspect",
-      "HEARTH.pointerFingerInspect",
-      "HEARTH_CANVAS_FINGER_INSPECT",
-      "HEARTH_POINTER_FINGER_INSPECT",
-      "DEXTER_LAB.hearthCanvasFingerInspect"
-    ],
-    light: [
-      "HEARTH.canvasFingerLight",
-      "HEARTH.pointerFingerLight",
-      "HEARTH_CANVAS_FINGER_LIGHT",
-      "HEARTH_POINTER_FINGER_LIGHT",
-      "DEXTER_LAB.hearthCanvasFingerLight"
-    ]
+    surface: ["HEARTH.canvasFingerSurface", "HEARTH.pointerFingerSurface", "HEARTH_CANVAS_FINGER_SURFACE", "HEARTH_POINTER_FINGER_SURFACE", "DEXTER_LAB.hearthCanvasFingerSurface"],
+    boundary: ["HEARTH.canvasFingerBoundary", "HEARTH.pointerFingerBoundary", "HEARTH_CANVAS_FINGER_BOUNDARY", "HEARTH_POINTER_FINGER_BOUNDARY", "DEXTER_LAB.hearthCanvasFingerBoundary"],
+    inspect: ["HEARTH.canvasFingerInspect", "HEARTH.pointerFingerInspect", "HEARTH_CANVAS_FINGER_INSPECT", "HEARTH_POINTER_FINGER_INSPECT", "DEXTER_LAB.hearthCanvasFingerInspect"],
+    light: ["HEARTH.canvasFingerLight", "HEARTH.pointerFingerLight", "HEARTH_CANVAS_FINGER_LIGHT", "HEARTH_POINTER_FINGER_LIGHT", "DEXTER_LAB.hearthCanvasFingerLight"]
   };
 
   var DIRECT_METHOD_NAMES = [
-    "run",
-    "runDiagnostic",
-    "inspect",
-    "inspectSurfaceTruth",
-    "runSurfaceTruth",
-    "runSurfaceTruthDirectCheck",
-    "runSurfaceTruthProbe",
-    "runCanvasSurfaceTruthProbe",
-    "runProductionSurfaceLensAlignment",
-    "runTargetFrameDocumentScopeRenewal",
-    "runDirect",
-    "execute",
-    "diagnose",
-    "measure",
-    "measureSurfaceTruth",
-    "read",
-    "readSurfaceTruth",
-    "getReport",
-    "getReceipt",
-    "getReceiptLight",
-    "getStatus",
-    "getState",
-    "getPacket",
-    "getPacketText",
-    "getSummary",
-    "toPacketText",
-    "collectDocumentScopes",
-    "readChapelContext",
-    "readCanvasBishop",
-    "readChapelOneHands",
-    "readHexBridge",
-    "readChapelTwoFingers"
+    "run","runDiagnostic","inspect","inspectSurfaceTruth","runSurfaceTruth",
+    "runSurfaceTruthDirectCheck","runSurfaceTruthProbe","runCanvasSurfaceTruthProbe",
+    "runProductionSurfaceLensAlignment","runTargetFrameDocumentScopeRenewal",
+    "runDirect","execute","diagnose","measure","measureSurfaceTruth",
+    "read","readSurfaceTruth","getReport","getReceipt","getReceiptLight",
+    "getStatus","getState","getPacket","getPacketText","getSummary",
+    "toPacketText","collectDocumentScopes","readChapelContext","readCanvasBishop",
+    "readChapelOneHands","readHexBridge","readChapelTwoFingers"
   ];
 
   function nowIso() {
@@ -282,17 +201,38 @@
     return asString(value).replace(/\n/g, " ").replace(/\s+/g, " ").trim().slice(0, limit);
   }
 
-  function clone(value) {
-    try { return JSON.parse(JSON.stringify(value)); }
-    catch (_error) {
-      if (Array.isArray(value)) return value.slice();
-      if (isObject(value)) {
-        var out = {};
-        Object.keys(value).forEach(function copy(key) { out[key] = value[key]; });
-        return out;
+  function readPathFrom(base, path) {
+    var parts = asString(path).replace(/^window\./, "").split(".").filter(Boolean);
+    var cursor = base;
+
+    for (var i = 0; i < parts.length; i += 1) {
+      try {
+        if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
+        cursor = cursor[parts[i]];
+      } catch (_error) {
+        return null;
       }
-      return value;
     }
+
+    return cursor || null;
+  }
+
+  function readPath(path) {
+    return readPathFrom(root, path);
+  }
+
+  function setPath(path, value) {
+    var parts = asString(path).replace(/^window\./, "").split(".").filter(Boolean);
+    if (!parts.length) return false;
+
+    var cursor = root;
+    for (var i = 0; i < parts.length - 1; i += 1) {
+      if (!cursor[parts[i]] || typeof cursor[parts[i]] !== "object") cursor[parts[i]] = {};
+      cursor = cursor[parts[i]];
+    }
+
+    cursor[parts[parts.length - 1]] = value;
+    return true;
   }
 
   function ensureNamespace(path) {
@@ -300,36 +240,122 @@
     return root[path];
   }
 
-  function readPath(path) {
-    var parts = asString(path).replace(/^window\./, "").split(".").filter(Boolean);
-    var cursor = root;
-    for (var i = 0; i < parts.length; i += 1) {
-      if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
-      cursor = cursor[parts[i]];
-    }
-    return cursor || null;
+  function safeDocumentWindow(targetDoc) {
+    try {
+      if (targetDoc && targetDoc.defaultView) return targetDoc.defaultView;
+    } catch (_error) {}
+    return null;
   }
 
-  function setPath(path, value) {
-    var parts = asString(path).replace(/^window\./, "").split(".").filter(Boolean);
-    if (!parts.length) return false;
-    var cursor = root;
-    for (var i = 0; i < parts.length - 1; i += 1) {
-      if (!cursor[parts[i]] || typeof cursor[parts[i]] !== "object") cursor[parts[i]] = {};
-      cursor = cursor[parts[i]];
+  function frameDocument(frame) {
+    try { if (frame && frame.contentDocument) return frame.contentDocument; } catch (_error) {}
+    try { if (frame && frame.contentWindow && frame.contentWindow.document) return frame.contentWindow.document; } catch (_error) {}
+    return null;
+  }
+
+  function documentPath(targetDoc) {
+    try { return targetDoc.location && targetDoc.location.pathname ? targetDoc.location.pathname : "UNKNOWN"; }
+    catch (_error) { return "UNREADABLE"; }
+  }
+
+  function documentHref(targetDoc) {
+    try { return targetDoc.location && targetDoc.location.href ? targetDoc.location.href : "UNKNOWN"; }
+    catch (_error) { return "UNREADABLE"; }
+  }
+
+  function documentTitle(targetDoc) {
+    try { return targetDoc.title || "UNKNOWN"; } catch (_error) { return "UNREADABLE"; }
+  }
+
+  function addScope(scopes, seen, label, targetDoc, sourceKind) {
+    if (!targetDoc) return;
+    for (var i = 0; i < seen.length; i += 1) if (seen[i] === targetDoc) return;
+
+    seen.push(targetDoc);
+    scopes.push({
+      label: label,
+      sourceKind: sourceKind || "DOCUMENT",
+      doc: targetDoc,
+      win: safeDocumentWindow(targetDoc),
+      path: documentPath(targetDoc),
+      href: documentHref(targetDoc),
+      title: documentTitle(targetDoc)
+    });
+  }
+
+  function addFrameScopes(scopes, seen, baseLabel, targetDoc) {
+    if (!targetDoc || !isFunction(targetDoc.querySelectorAll)) return;
+    var frames = [];
+
+    try { frames = Array.prototype.slice.call(targetDoc.querySelectorAll("iframe")); }
+    catch (_error) { frames = []; }
+
+    frames.forEach(function eachFrame(frame, index) {
+      addScope(scopes, seen, baseLabel + ".iframe[" + index + "]", frameDocument(frame), "IFRAME_DOCUMENT");
+    });
+  }
+
+  function collectDocumentScopes() {
+    var scopes = [];
+    var seen = [];
+
+    addScope(scopes, seen, "current.document", doc, "CURRENT_DOCUMENT");
+    addFrameScopes(scopes, seen, "current.document", doc);
+
+    try {
+      if (root.parent && root.parent !== root && root.parent.document) {
+        addScope(scopes, seen, "parent.document", root.parent.document, "PARENT_DOCUMENT");
+        addFrameScopes(scopes, seen, "parent.document", root.parent.document);
+      }
+    } catch (_error) {}
+
+    try {
+      if (root.top && root.top !== root && root.top.document) {
+        addScope(scopes, seen, "top.document", root.top.document, "TOP_DOCUMENT");
+        addFrameScopes(scopes, seen, "top.document", root.top.document);
+      }
+    } catch (_error) {}
+
+    return scopes;
+  }
+
+  function firstGlobalInWindows(paths) {
+    var scopes = collectDocumentScopes();
+    var windows = [];
+    var seen = [];
+
+    function addWin(label, win) {
+      if (!win) return;
+      for (var i = 0; i < seen.length; i += 1) if (seen[i] === win) return;
+      seen.push(win);
+      windows.push({ label: label, win: win });
     }
-    cursor[parts[parts.length - 1]] = value;
-    return true;
+
+    addWin("diagnostic.window", root);
+
+    scopes.forEach(function addScopeWindow(scope) {
+      addWin(scope.label + ".window", scope.win);
+    });
+
+    for (var w = 0; w < windows.length; w += 1) {
+      for (var p = 0; p < paths.length; p += 1) {
+        var value = readPathFrom(windows[w].win, paths[p]);
+        if (value && (isObject(value) || isFunction(value))) {
+          return {
+            found: true,
+            path: paths[p],
+            windowLabel: windows[w].label,
+            value: value
+          };
+        }
+      }
+    }
+
+    return { found: false, path: "NONE", windowLabel: "NONE", value: null };
   }
 
   function firstGlobal(paths) {
-    for (var i = 0; i < paths.length; i += 1) {
-      var value = readPath(paths[i]);
-      if (value && (isObject(value) || isFunction(value))) {
-        return { found: true, path: paths[i], value: value };
-      }
-    }
-    return { found: false, path: "NONE", value: null };
+    return firstGlobalInWindows(paths);
   }
 
   function getExistingAuthorityObject() {
@@ -355,6 +381,7 @@
     if (!element || !isFunction(element.getBoundingClientRect)) {
       return { width: 0, height: 0, left: 0, top: 0, right: 0, bottom: 0 };
     }
+
     try {
       var rect = element.getBoundingClientRect();
       return {
@@ -375,6 +402,7 @@
     var tag = "unknown";
     var id = "";
     var cls = "";
+
     try { tag = (element.tagName || "unknown").toLowerCase(); } catch (_error) {}
     try { id = element.id ? "#" + element.id : ""; } catch (_error) {}
     try {
@@ -382,80 +410,8 @@
         ? "." + element.className.trim().replace(/\s+/g, ".")
         : "";
     } catch (_error) {}
+
     return compact(tag + id + cls, 400);
-  }
-
-  function documentPath(targetDoc) {
-    try { return targetDoc.location && targetDoc.location.pathname ? targetDoc.location.pathname : "UNKNOWN"; }
-    catch (_error) { return "UNREADABLE"; }
-  }
-
-  function documentHref(targetDoc) {
-    try { return targetDoc.location && targetDoc.location.href ? targetDoc.location.href : "UNKNOWN"; }
-    catch (_error) { return "UNREADABLE"; }
-  }
-
-  function documentTitle(targetDoc) {
-    try { return targetDoc.title || "UNKNOWN"; } catch (_error) { return "UNREADABLE"; }
-  }
-
-  function safeWindowDocument(win) {
-    try { return win && win.document ? win.document : null; } catch (_error) { return null; }
-  }
-
-  function frameDocument(frame) {
-    try { if (frame && frame.contentDocument) return frame.contentDocument; } catch (_error) {}
-    try { if (frame && frame.contentWindow && frame.contentWindow.document) return frame.contentWindow.document; } catch (_error) {}
-    return null;
-  }
-
-  function addScope(scopes, seen, label, targetDoc, sourceKind) {
-    if (!targetDoc) return;
-    for (var i = 0; i < seen.length; i += 1) if (seen[i] === targetDoc) return;
-    seen.push(targetDoc);
-    scopes.push({
-      label: label,
-      sourceKind: sourceKind || "DOCUMENT",
-      doc: targetDoc,
-      path: documentPath(targetDoc),
-      href: documentHref(targetDoc),
-      title: documentTitle(targetDoc)
-    });
-  }
-
-  function addFrameScopes(scopes, seen, baseLabel, targetDoc) {
-    if (!targetDoc || !isFunction(targetDoc.querySelectorAll)) return;
-    var frames = [];
-    try { frames = Array.prototype.slice.call(targetDoc.querySelectorAll("iframe")); } catch (_error) { frames = []; }
-    frames.forEach(function eachFrame(frame, index) {
-      addScope(scopes, seen, baseLabel + ".iframe[" + index + "]", frameDocument(frame), "IFRAME_DOCUMENT");
-    });
-  }
-
-  function collectDocumentScopes() {
-    var scopes = [];
-    var seen = [];
-
-    addScope(scopes, seen, "current.document", doc, "CURRENT_DOCUMENT");
-    addFrameScopes(scopes, seen, "current.document", doc);
-
-    try {
-      if (root.parent && root.parent !== root) {
-        var parentDoc = safeWindowDocument(root.parent);
-        addScope(scopes, seen, "parent.document", parentDoc, "PARENT_DOCUMENT");
-        addFrameScopes(scopes, seen, "parent.document", parentDoc);
-      }
-    } catch (_error) {}
-
-    try {
-      if (root.top && root.top !== root) {
-        var topDoc = safeWindowDocument(root.top);
-        addScope(scopes, seen, "top.document", topDoc, "TOP_DOCUMENT");
-        addFrameScopes(scopes, seen, "top.document", topDoc);
-      }
-    } catch (_error) {}
-
-    return scopes;
   }
 
   function inspectScope(scope) {
@@ -470,9 +426,11 @@
       scope.path === TARGET_ROUTE ||
       scope.path === TARGET_ROUTE.replace(/\/$/, "") ||
       scope.href.indexOf(TARGET_ROUTE) !== -1;
+
     var diagnosticMatch =
       scope.path.indexOf("/diagnostic") !== -1 ||
       scope.href.indexOf(DIAGNOSTIC_ROUTE) !== -1;
+
     var titleMatch = /hearth/i.test(scope.title || "");
 
     var score = 0;
@@ -511,50 +469,40 @@
   }
 
   function classifySurface(best) {
-    if (!best) {
-      return {
-        status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-        failureClass: "TARGET_DOCUMENT_SCOPE_UNREADABLE",
-        firstFailedCoordinate: "TARGET_DOCUMENT_SCOPE_READABLE",
-        acceptedAsEvidence: false
-      };
-    }
+    if (!best) return {
+      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
+      failureClass: "TARGET_DOCUMENT_SCOPE_UNREADABLE",
+      firstFailedCoordinate: "TARGET_DOCUMENT_SCOPE_READABLE",
+      acceptedAsEvidence: false
+    };
 
-    if (!best.canonicalMountFound) {
-      return {
-        status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-        failureClass: "CANONICAL_MOUNT_MISSING",
-        firstFailedCoordinate: "CANONICAL_MOUNT_EXISTS",
-        acceptedAsEvidence: false
-      };
-    }
+    if (!best.canonicalMountFound) return {
+      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
+      failureClass: "CANONICAL_MOUNT_MISSING",
+      firstFailedCoordinate: "CANONICAL_MOUNT_EXISTS",
+      acceptedAsEvidence: false
+    };
 
-    if (!best.canonicalMountRectNonZero) {
-      return {
-        status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-        failureClass: "CANONICAL_MOUNT_RECT_ZERO",
-        firstFailedCoordinate: "CANONICAL_MOUNT_RECT_NONZERO",
-        acceptedAsEvidence: false
-      };
-    }
+    if (!best.canonicalMountRectNonZero) return {
+      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
+      failureClass: "CANONICAL_MOUNT_RECT_ZERO",
+      firstFailedCoordinate: "CANONICAL_MOUNT_RECT_NONZERO",
+      acceptedAsEvidence: false
+    };
 
-    if (!best.canonicalCanvasFound) {
-      return {
-        status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-        failureClass: "CANONICAL_CANVAS_MISSING",
-        firstFailedCoordinate: "CANONICAL_CANVAS_EXISTS",
-        acceptedAsEvidence: false
-      };
-    }
+    if (!best.canonicalCanvasFound) return {
+      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
+      failureClass: "CANONICAL_CANVAS_MISSING",
+      firstFailedCoordinate: "CANONICAL_CANVAS_EXISTS",
+      acceptedAsEvidence: false
+    };
 
-    if (!best.canonicalCanvasRectNonZero) {
-      return {
-        status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
-        failureClass: "CANONICAL_CANVAS_RECT_ZERO",
-        firstFailedCoordinate: "CANONICAL_CANVAS_RECT_NONZERO",
-        acceptedAsEvidence: false
-      };
-    }
+    if (!best.canonicalCanvasRectNonZero) return {
+      status: "SURFACE_CONTRACT_MEASUREMENT_FAILED",
+      failureClass: "CANONICAL_CANVAS_RECT_ZERO",
+      firstFailedCoordinate: "CANONICAL_CANVAS_RECT_NONZERO",
+      acceptedAsEvidence: false
+    };
 
     return {
       status: "SURFACE_CONTRACT_MEASUREMENT_PASSED",
@@ -585,6 +533,7 @@
 
   function readReceipt(authority) {
     if (!authority || (!isObject(authority) && !isFunction(authority))) return {};
+
     var methods = ["getReceiptLight", "getReceipt", "getStatus", "getState", "getReport"];
     for (var i = 0; i < methods.length; i += 1) {
       var method = methods[i];
@@ -594,19 +543,10 @@
         if (isObject(out)) return out;
       } catch (_error) {}
     }
+
     if (isObject(authority.receipt)) return authority.receipt;
     if (authority.contract || authority.receipt) return authority;
     return {};
-  }
-
-  function readDataset(key) {
-    try {
-      return doc && doc.documentElement && doc.documentElement.dataset
-        ? doc.documentElement.dataset[key]
-        : "";
-    } catch (_error) {
-      return "";
-    }
   }
 
   function readAuthority(paths, expectedFile) {
@@ -616,15 +556,11 @@
     return {
       found: found.found,
       aliasPath: found.path,
+      windowLabel: found.windowLabel,
       file: expectedFile,
       contract: asString(receipt.contract || receipt.CONTRACT || (found.value && found.value.contract) || "UNKNOWN"),
       receipt: asString(receipt.receipt || receipt.RECEIPT || (found.value && found.value.receipt) || "UNKNOWN"),
-      componentStatus: asString(
-        receipt.componentStatus ||
-        receipt.postgameStatus ||
-        receipt.status ||
-        (found.found ? "OBSERVED" : "NOT_OBSERVED")
-      ),
+      componentStatus: asString(receipt.componentStatus || receipt.status || (found.found ? "OBSERVED" : "NOT_OBSERVED")),
       firstFailedCoordinate: asString(receipt.firstFailedCoordinate || "UNKNOWN"),
       recommendedNextFile: asString(receipt.recommendedNextFile || expectedFile),
       recommendedNextAction: asString(receipt.recommendedNextAction || "UNKNOWN"),
@@ -636,31 +572,26 @@
     var authority = readAuthority(CANVAS_BISHOP_ALIASES, CANVAS_BISHOP_FILE);
     var raw = authority.rawReceipt || {};
 
-    var datasetContract = readDataset("hearthCanvasContract");
-    var datasetStatus = readDataset("hearthCanvasComponentStatus");
-    var datasetFailed = readDataset("hearthCanvasFirstFailedCoordinate");
-    var datasetNextFile = readDataset("hearthCanvasRecommendedNextFile");
-    var datasetNextAction = readDataset("hearthCanvasRecommendedNextAction");
-
     return {
-      present: authority.found || Boolean(datasetContract),
+      present: authority.found,
       aliasPath: authority.aliasPath,
+      windowLabel: authority.windowLabel,
       file: CANVAS_BISHOP_FILE,
-      contract: datasetContract || authority.contract,
+      contract: authority.contract,
       receipt: authority.receipt,
-      chapelOneBishop: asBool(raw.chapelOneBishop) || readDataset("hearthChapelOneBishop") === "true",
-      chapelOneCongregation: asString(raw.chapelOneCongregation || readDataset("hearthChapelOneCongregation") || "UNKNOWN"),
-      componentStatus: datasetStatus || authority.componentStatus,
-      firstFailedCoordinate: datasetFailed || authority.firstFailedCoordinate,
-      recommendedNextFile: datasetNextFile || authority.recommendedNextFile,
-      recommendedNextAction: datasetNextAction || authority.recommendedNextAction,
-      handGeometryObserved: asBool(raw.handGeometryObserved) || readDataset("hearthCanvasHandGeometryObserved") === "true",
-      handContextObserved: asBool(raw.handContextObserved) || readDataset("hearthCanvasHandContextObserved") === "true",
-      handPaintObserved: asBool(raw.handPaintObserved) || readDataset("hearthCanvasHandPaintObserved") === "true",
-      handViewObserved: asBool(raw.handViewObserved) || readDataset("hearthCanvasHandViewObserved") === "true",
-      handInspectObserved: asBool(raw.handInspectObserved) || readDataset("hearthCanvasHandInspectObserved") === "true",
-      hexAuthorityBridgeObserved: asBool(raw.hexAuthorityBridgeObserved) || readDataset("hearthCanvasHexAuthorityBridgeObserved") === "true",
-      hexSurfaceBridgeObserved: asBool(raw.hexSurfaceBridgeObserved) || readDataset("hearthCanvasHexSurfaceBridgeObserved") === "true"
+      chapelOneBishop: asBool(raw.chapelOneBishop) || asBool(raw.canvasBishopPresent),
+      chapelOneCongregation: asString(raw.chapelOneCongregation || "UNKNOWN"),
+      componentStatus: authority.componentStatus,
+      firstFailedCoordinate: authority.firstFailedCoordinate,
+      recommendedNextFile: authority.recommendedNextFile,
+      recommendedNextAction: authority.recommendedNextAction,
+      handGeometryObserved: asBool(raw.handGeometryObserved),
+      handContextObserved: asBool(raw.handContextObserved),
+      handPaintObserved: asBool(raw.handPaintObserved),
+      handViewObserved: asBool(raw.handViewObserved),
+      handInspectObserved: asBool(raw.handInspectObserved),
+      hexAuthorityBridgeObserved: asBool(raw.hexAuthorityBridgeObserved),
+      hexSurfaceBridgeObserved: asBool(raw.hexSurfaceBridgeObserved)
     };
   }
 
@@ -767,8 +698,8 @@
     var chapel = readChapelContext();
 
     var packet = {
-      PACKET: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_PACKET_v4_2",
-      PACKET_NAME: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_BISHOP_BRIDGE_READER_PACKET_v4_2",
+      PACKET: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_PACKET_v4_3",
+      PACKET_NAME: "HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_PACKET_v4_3",
       RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
       ROLE: ROLE,
       COMPONENT: COMPONENT,
@@ -779,7 +710,6 @@
       INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
       INTERNAL_RENEWAL_RECEIPT: INTERNAL_RENEWAL_RECEIPT,
       PREVIOUS_INTERNAL_RENEWAL_CONTRACT: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
-      PREVIOUS_INTERNAL_RENEWAL_RECEIPT: PREVIOUS_INTERNAL_RENEWAL_RECEIPT,
       VERSION: VERSION,
       FILE: FILE,
       TARGET_ROUTE: TARGET_ROUTE,
@@ -792,6 +722,7 @@
       DIRECT_AUTHORITY_PATH: AUTHORITY_PATH,
       DIRECT_METHODS_PUBLISHED: DIRECT_METHOD_NAMES.join(","),
 
+      TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE: true,
       CHAPEL_CONTEXT_READER_ACTIVE: true,
       CHAPEL_CONTEXT_STATUS: chapel.status,
       CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE: chapel.firstFailedCoordinate,
@@ -800,6 +731,7 @@
 
       CANVAS_BISHOP_PRESENT: chapel.canvasBishop.present,
       CANVAS_BISHOP_ALIAS_PATH: chapel.canvasBishop.aliasPath,
+      CANVAS_BISHOP_WINDOW_LABEL: chapel.canvasBishop.windowLabel,
       CANVAS_BISHOP_FILE: CANVAS_BISHOP_FILE,
       CANVAS_BISHOP_CONTRACT: chapel.canvasBishop.contract,
       CANVAS_BISHOP_RECEIPT: chapel.canvasBishop.receipt,
@@ -834,10 +766,8 @@
       FINGER_LIGHT_OBSERVED: chapel.chapelTwoFingers.light.found,
       FINGER_OBSERVED_COUNT: chapel.fingerObservedCount,
 
-      RUN_STATE: "SURFACE_TRUTH_CHAPEL_CONTEXT_DIRECT_RUN_COMPLETE",
-      TRUST_STATE: passed
-        ? "SURFACE_TRUTH_MEASUREMENT_ACCEPTED"
-        : "SURFACE_TRUTH_MEASUREMENT_RETURNED_WITH_HOLD",
+      RUN_STATE: "SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_DIRECT_RUN_COMPLETE",
+      TRUST_STATE: passed ? "SURFACE_TRUTH_MEASUREMENT_ACCEPTED" : "SURFACE_TRUTH_MEASUREMENT_RETURNED_WITH_HOLD",
       BLOCKING: false,
 
       TARGET_FRAME_DOCUMENT_SCOPE_RENEWAL_ACTIVE: true,
@@ -897,17 +827,9 @@
       CANVAS_RELEASE_AUTHORIZED: false,
 
       RECOMMENDED_NEXT_FILE:
-        chapel.status !== "CHAPEL_CONTEXT_READY"
-          ? chapel.recommendedNextFile
-          : passed
-            ? "/assets/hearth/hearth.diagnostic.rail.js"
-            : FILE,
+        chapel.status !== "CHAPEL_CONTEXT_READY" ? chapel.recommendedNextFile : passed ? "/assets/hearth/hearth.diagnostic.rail.js" : FILE,
       RECOMMENDED_NEXT_ACTION:
-        chapel.status !== "CHAPEL_CONTEXT_READY"
-          ? chapel.recommendedNextAction
-          : passed
-            ? "RUN_08_NORTH_CONSUMPTION_OF_SURFACE_TRUTH_AND_CHAPEL_CONTEXT"
-            : "RERUN_SURFACE_TRUTH_AFTER_SELECTOR_SCOPE_REVIEW",
+        chapel.status !== "CHAPEL_CONTEXT_READY" ? chapel.recommendedNextAction : passed ? "RUN_08_NORTH_CONSUMPTION_OF_SURFACE_TRUTH_AND_CHAPEL_CONTEXT" : "RERUN_SURFACE_TRUTH_AFTER_SELECTOR_SCOPE_REVIEW",
       NEXT_FILE_AUTHORIZATION_SCOPE: "DIAGNOSTIC_RENEWAL_ONLY",
       DO_NOT_TOUCH: "PRODUCTION,CANVAS,CONTROLS,RUNTIME_ROUTE"
     };
@@ -931,66 +853,21 @@
 
   function toPacketText(packet) {
     var priority = [
-      "PACKET",
-      "PACKET_NAME",
-      "RECEIPT_LEVEL",
-      "ROLE",
-      "COMPONENT",
-      "CONTRACT",
-      "RECEIPT",
-      "INTERNAL_RENEWAL_CONTRACT",
-      "INTERNAL_RENEWAL_RECEIPT",
-      "PREVIOUS_INTERNAL_RENEWAL_CONTRACT",
-      "FILE",
-      "TARGET_ROUTE",
-      "DIAGNOSTIC_ROUTE",
-      "VERSION",
-      "RUN_STATE",
-      "TRUST_STATE",
-      "BLOCKING",
-      "DIRECT_METHOD_PUBLICATION_RENEWAL_ACTIVE",
-      "DIRECT_METHOD_PUBLICATION_STATUS",
-      "CHAPEL_CONTEXT_READER_ACTIVE",
-      "CHAPEL_CONTEXT_STATUS",
-      "CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE",
-      "CHAPEL_CONTEXT_RECOMMENDED_NEXT_FILE",
-      "CHAPEL_CONTEXT_RECOMMENDED_NEXT_ACTION",
-      "CANVAS_BISHOP_PRESENT",
-      "CANVAS_BISHOP_CONTRACT",
-      "CANVAS_BISHOP_COMPONENT_STATUS",
-      "CANVAS_BISHOP_FIRST_FAILED_COORDINATE",
-      "CANVAS_BISHOP_RECOMMENDED_NEXT_FILE",
-      "CANVAS_BISHOP_RECOMMENDED_NEXT_ACTION",
-      "CHAPEL_ONE_CONGREGATION",
-      "HAND_GEOMETRY_OBSERVED",
-      "HAND_CONTEXT_OBSERVED",
-      "HAND_PAINT_OBSERVED",
-      "HAND_VIEW_OBSERVED",
-      "HAND_INSPECT_OBSERVED",
-      "HEX_AUTHORITY_BRIDGE_OBSERVED",
-      "HEX_SURFACE_BRIDGE_OBSERVED",
-      "CHAPEL_TWO_CONGREGATION",
-      "FINGER_SURFACE_OBSERVED",
-      "FINGER_BOUNDARY_OBSERVED",
-      "FINGER_INSPECT_OBSERVED",
-      "FINGER_LIGHT_OBSERVED",
-      "SURFACE_TRUTH_STATUS",
-      "SURFACE_TRUTH_FAILURE_CLASS",
-      "SURFACE_TRUTH_FIRST_FAILED_COORDINATE",
-      "CANONICAL_MOUNT_EXISTS",
-      "CANONICAL_MOUNT_RECT_NONZERO",
-      "CANONICAL_CANVAS_EXISTS",
-      "CANONICAL_CANVAS_RECT_NONZERO",
-      "TARGET_FRAME_DOCUMENT_SCOPE_STATUS",
-      "SELECTED_DOCUMENT_SCOPE",
-      "SELECTED_DOCUMENT_PATH",
-      "CANVAS_PRODUCTION_REPAIR_AUTHORIZED",
-      "CANVAS_BUILD_AUTHORIZED",
-      "CANVAS_RELEASE_AUTHORIZED",
-      "RECOMMENDED_NEXT_FILE",
-      "RECOMMENDED_NEXT_ACTION",
-      "DO_NOT_TOUCH",
-      "UPDATED_AT"
+      "PACKET","PACKET_NAME","RECEIPT_LEVEL","ROLE","COMPONENT","CONTRACT","RECEIPT",
+      "INTERNAL_RENEWAL_CONTRACT","PREVIOUS_INTERNAL_RENEWAL_CONTRACT","FILE","TARGET_ROUTE",
+      "DIAGNOSTIC_ROUTE","VERSION","RUN_STATE","TRUST_STATE","TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE",
+      "CHAPEL_CONTEXT_STATUS","CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE",
+      "CANVAS_BISHOP_PRESENT","CANVAS_BISHOP_ALIAS_PATH","CANVAS_BISHOP_WINDOW_LABEL",
+      "CANVAS_BISHOP_CONTRACT","CANVAS_BISHOP_COMPONENT_STATUS",
+      "CANVAS_BISHOP_FIRST_FAILED_COORDINATE","CHAPEL_ONE_CONGREGATION",
+      "HAND_GEOMETRY_OBSERVED","HAND_CONTEXT_OBSERVED","HAND_PAINT_OBSERVED",
+      "HAND_VIEW_OBSERVED","HAND_INSPECT_OBSERVED","HEX_AUTHORITY_BRIDGE_OBSERVED",
+      "HEX_SURFACE_BRIDGE_OBSERVED","CHAPEL_TWO_CONGREGATION","FINGER_SURFACE_OBSERVED",
+      "FINGER_BOUNDARY_OBSERVED","FINGER_INSPECT_OBSERVED","FINGER_LIGHT_OBSERVED",
+      "SURFACE_TRUTH_STATUS","SURFACE_TRUTH_FAILURE_CLASS","SURFACE_TRUTH_FIRST_FAILED_COORDINATE",
+      "CANONICAL_MOUNT_EXISTS","CANONICAL_MOUNT_RECT_NONZERO","CANONICAL_CANVAS_EXISTS",
+      "CANONICAL_CANVAS_RECT_NONZERO","SELECTED_DOCUMENT_SCOPE","SELECTED_DOCUMENT_PATH",
+      "RECOMMENDED_NEXT_FILE","RECOMMENDED_NEXT_ACTION","DO_NOT_TOUCH","UPDATED_AT"
     ];
 
     var seen = {};
@@ -1028,67 +905,31 @@
   function getPacketText() { return toPacketText(makePacket("GET_PACKET_TEXT")); }
 
   function getReceiptLight() {
-    var inspected = inspectSurfaceTruthCore();
-    var best = inspected.selectedScope || {};
-    var result = inspected.classification;
-    var chapel = readChapelContext();
-
+    var packet = makePacket("GET_RECEIPT_LIGHT");
     return {
       role: ROLE,
       component: COMPONENT,
       contract: CONTRACT,
       receipt: RECEIPT,
       internalRenewalContract: INTERNAL_RENEWAL_CONTRACT,
-      internalRenewalReceipt: INTERNAL_RENEWAL_RECEIPT,
       previousInternalRenewalContract: PREVIOUS_INTERNAL_RENEWAL_CONTRACT,
       version: VERSION,
       file: FILE,
-      targetRoute: TARGET_ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-
-      directMethodPublicationRenewalActive: true,
-      chapelContextReaderActive: true,
-
-      surfaceTruthStatus: result.status,
-      surfaceTruthFailureClass: result.failureClass,
-      surfaceTruthFirstFailedCoordinate: result.firstFailedCoordinate,
-      selectedDocumentScope: best.label || "NONE",
-      selectedDocumentPath: best.path || "UNKNOWN",
-      canonicalMountExists: Boolean(best.canonicalMountFound),
-      canonicalMountRectNonZero: Boolean(best.canonicalMountRectNonZero),
-      canonicalCanvasExists: Boolean(best.canonicalCanvasFound),
-      canonicalCanvasRectNonZero: Boolean(best.canonicalCanvasRectNonZero),
-
-      chapelContextStatus: chapel.status,
-      chapelContextFirstFailedCoordinate: chapel.firstFailedCoordinate,
-      chapelContextRecommendedNextFile: chapel.recommendedNextFile,
-      chapelContextRecommendedNextAction: chapel.recommendedNextAction,
-
-      canvasBishopPresent: chapel.canvasBishop.present,
-      canvasBishopContract: chapel.canvasBishop.contract,
-      canvasBishopComponentStatus: chapel.canvasBishop.componentStatus,
-      canvasBishopFirstFailedCoordinate: chapel.canvasBishop.firstFailedCoordinate,
-      canvasBishopRecommendedNextFile: chapel.canvasBishop.recommendedNextFile,
-      canvasBishopRecommendedNextAction: chapel.canvasBishop.recommendedNextAction,
-
-      chapelOneCongregation: "hands",
-      handGeometryObserved: chapel.canvasBishop.handGeometryObserved || chapel.chapelOneHands.geometry.found,
-      handContextObserved: chapel.canvasBishop.handContextObserved || chapel.chapelOneHands.context.found,
-      handPaintObserved: chapel.canvasBishop.handPaintObserved || chapel.chapelOneHands.paint.found,
-      handViewObserved: chapel.canvasBishop.handViewObserved || chapel.chapelOneHands.view.found,
-      handInspectObserved: chapel.canvasBishop.handInspectObserved || chapel.chapelOneHands.inspect.found,
-
-      hexAuthorityBridgeObserved:
-        chapel.canvasBishop.hexAuthorityBridgeObserved || chapel.hexBridge.congressionalBridge.found,
-      hexSurfaceBridgeObserved:
-        chapel.canvasBishop.hexSurfaceBridgeObserved || chapel.hexBridge.surfaceBridgeGate.found,
-
-      chapelTwoCongregation: "fingers",
-      fingerSurfaceObserved: chapel.chapelTwoFingers.surface.found,
-      fingerBoundaryObserved: chapel.chapelTwoFingers.boundary.found,
-      fingerInspectObserved: chapel.chapelTwoFingers.inspect.found,
-      fingerLightObserved: chapel.chapelTwoFingers.light.found,
-
+      targetIframeBishopResolverActive: true,
+      surfaceTruthStatus: packet.SURFACE_TRUTH_STATUS,
+      surfaceTruthFailureClass: packet.SURFACE_TRUTH_FAILURE_CLASS,
+      surfaceTruthFirstFailedCoordinate: packet.SURFACE_TRUTH_FIRST_FAILED_COORDINATE,
+      chapelContextStatus: packet.CHAPEL_CONTEXT_STATUS,
+      chapelContextFirstFailedCoordinate: packet.CHAPEL_CONTEXT_FIRST_FAILED_COORDINATE,
+      canvasBishopPresent: packet.CANVAS_BISHOP_PRESENT,
+      canvasBishopAliasPath: packet.CANVAS_BISHOP_ALIAS_PATH,
+      canvasBishopWindowLabel: packet.CANVAS_BISHOP_WINDOW_LABEL,
+      canvasBishopContract: packet.CANVAS_BISHOP_CONTRACT,
+      canvasBishopComponentStatus: packet.CANVAS_BISHOP_COMPONENT_STATUS,
+      handObservedCount: packet.HAND_OBSERVED_COUNT,
+      fingerObservedCount: packet.FINGER_OBSERVED_COUNT,
+      recommendedNextFile: packet.RECOMMENDED_NEXT_FILE,
+      recommendedNextAction: packet.RECOMMENDED_NEXT_ACTION,
       productionMutationAuthorized: false,
       canvasBuildAuthorized: false,
       canvasReleaseAuthorized: false,
@@ -1104,12 +945,11 @@
       runState: packet.RUN_STATE,
       trustState: packet.TRUST_STATE,
       blocking: packet.BLOCKING,
+      targetIframeBishopResolverActive: true,
       surfaceTruthStatus: packet.SURFACE_TRUTH_STATUS,
-      surfaceTruthFailureClass: packet.SURFACE_TRUTH_FAILURE_CLASS,
-      surfaceTruthFirstFailedCoordinate: packet.SURFACE_TRUTH_FIRST_FAILED_COORDINATE,
       chapelContextStatus: packet.CHAPEL_CONTEXT_STATUS,
       canvasBishopPresent: packet.CANVAS_BISHOP_PRESENT,
-      canvasBishopComponentStatus: packet.CANVAS_BISHOP_COMPONENT_STATUS,
+      canvasBishopWindowLabel: packet.CANVAS_BISHOP_WINDOW_LABEL,
       handObservedCount: packet.HAND_OBSERVED_COUNT,
       fingerObservedCount: packet.FINGER_OBSERVED_COUNT,
       nextFile: packet.RECOMMENDED_NEXT_FILE,
@@ -1127,7 +967,6 @@
     api.INTERNAL_RENEWAL_CONTRACT = INTERNAL_RENEWAL_CONTRACT;
     api.INTERNAL_RENEWAL_RECEIPT = INTERNAL_RENEWAL_RECEIPT;
     api.PREVIOUS_INTERNAL_RENEWAL_CONTRACT = PREVIOUS_INTERNAL_RENEWAL_CONTRACT;
-    api.PREVIOUS_INTERNAL_RENEWAL_RECEIPT = PREVIOUS_INTERNAL_RENEWAL_RECEIPT;
     api.VERSION = VERSION;
     api.FILE = FILE;
     api.TARGET_ROUTE = TARGET_ROUTE;
@@ -1138,7 +977,6 @@
     api.contract = CONTRACT;
     api.receipt = RECEIPT;
     api.internalRenewalContract = INTERNAL_RENEWAL_CONTRACT;
-    api.internalRenewalReceipt = INTERNAL_RENEWAL_RECEIPT;
     api.version = VERSION;
     api.file = FILE;
     api.targetRoute = TARGET_ROUTE;
@@ -1147,10 +985,9 @@
     api.component = COMPONENT;
 
     api.DIRECT_METHOD_PUBLICATION_RENEWAL_ACTIVE = true;
-    api.DIRECT_METHOD_PUBLICATION_STATUS = "DIRECT_METHODS_PUBLISHED_ON_EXACT_AUTHORITY_PATH";
+    api.TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE = true;
     api.DIRECT_AUTHORITY_PATH = AUTHORITY_PATH;
     api.DIRECT_METHODS_PUBLISHED = DIRECT_METHOD_NAMES.join(",");
-    api.CHAPEL_CONTEXT_READER_ACTIVE = true;
 
     api.run = run;
     api.runDiagnostic = runDiagnostic;
@@ -1179,7 +1016,6 @@
     api.getSummary = getSummary;
     api.toPacketText = toPacketText;
     api.collectDocumentScopes = collectDocumentScopes;
-
     api.readChapelContext = readChapelContext;
     api.readCanvasBishop = readCanvasBishop;
     api.readChapelOneHands = readChapelOneHands;
@@ -1208,10 +1044,9 @@
 
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LOADED__ = true;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CONTRACT__ = CONTRACT;
-    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_INTERNAL_RENEWAL_CONTRACT__ =
-      INTERNAL_RENEWAL_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
+    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_TARGET_IFRAME_BISHOP_RESOLVER_ACTIVE__ = true;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_VERSION__ = VERSION;
-    root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CHAPEL_CONTEXT_READER_ACTIVE__ = true;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANVAS_BUILD_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_CANVAS_RELEASE_AUTHORIZED__ = false;
     root.__HEARTH_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_PRODUCTION_MUTATION_AUTHORIZED__ = false;

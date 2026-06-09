@@ -1,17 +1,17 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
 <!-- HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 -->
 <!-- Internal controlled renewal: -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_TNT_v9_4_1 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2 -->
 <!-- Full-file replacement. -->
-<!-- Adaptive NEWS-layered receipt operating surface / engine-native diagnostic console / view-run-copy separation. -->
+<!-- Category-tabbed adaptive diagnostic receipt console / NEWS internal architecture / view-run-copy separation. -->
 <!-- No production, canvas, controls, runtime-route, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-chamber="v9_4_1">
+<html lang="en" data-hearth-diagnostic-chamber="v9_4_2">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hearth · Adaptive Diagnostic Console</title>
+  <title>Hearth · Diagnostic Receipt Console</title>
 
   <style>
     :root {
@@ -19,11 +19,11 @@
       --bg0: #03050a;
       --bg1: #070b13;
       --bg2: #0b1220;
-      --panel: rgba(13, 22, 38, .78);
-      --panel2: rgba(18, 30, 51, .82);
+      --panel: rgba(13, 22, 38, .80);
+      --panel2: rgba(18, 30, 51, .84);
       --panel3: rgba(25, 42, 70, .72);
       --line: rgba(151, 182, 235, .20);
-      --line2: rgba(151, 182, 235, .42);
+      --line2: rgba(151, 182, 235, .44);
       --text: #eaf1ff;
       --soft: #b2c2dc;
       --muted: #8092ad;
@@ -135,7 +135,7 @@
       padding: 10px 0 94px;
     }
 
-    .north-command {
+    .command {
       position: sticky;
       top: 0;
       z-index: 50;
@@ -147,7 +147,7 @@
       padding: 11px;
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
-      background: rgba(5, 8, 15, .80);
+      background: rgba(5, 8, 15, .82);
       backdrop-filter: blur(18px);
       box-shadow: var(--shadow);
     }
@@ -187,45 +187,13 @@
       text-overflow: ellipsis;
     }
 
-    .north-actions,
+    .command-actions,
     .dock-actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
       flex-wrap: wrap;
-    }
-
-    .layer-nav {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .layer-button {
-      border-radius: 18px;
-      background: rgba(10, 16, 28, .72);
-      text-align: left;
-      min-height: 54px;
-      padding: 10px 12px;
-    }
-
-    .layer-button strong {
-      display: block;
-      font-size: 12px;
-    }
-
-    .layer-button span {
-      display: block;
-      color: var(--muted);
-      font: 750 10px/1.2 var(--mono);
-      margin-top: 5px;
-    }
-
-    .layer-button.active {
-      border-color: rgba(143, 183, 255, .62);
-      background: linear-gradient(180deg, rgba(58, 91, 152, .40), rgba(10, 16, 28, .72));
     }
 
     .chip-strip {
@@ -293,7 +261,7 @@
 
     .surface {
       display: grid;
-      grid-template-columns: 360px minmax(0, 1fr) 360px;
+      grid-template-columns: 370px minmax(0, 1fr) 360px;
       gap: 10px;
       align-items: start;
     }
@@ -330,43 +298,59 @@
       font: 800 10px/1.25 var(--mono);
     }
 
-    .east-finder {
-      max-height: calc(100vh - 178px);
+    .finder {
+      max-height: calc(100vh - 166px);
       overflow: auto;
     }
 
     .finder-body,
-    .south-body {
+    .proof-body {
       padding: 12px;
       display: grid;
       gap: 12px;
     }
 
-    .tabs {
-      display: flex;
+    .category-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 7px;
-      overflow: auto;
-      padding-bottom: 2px;
     }
 
     .tab {
-      min-height: 34px;
-      padding: 8px 10px;
-      white-space: nowrap;
+      min-height: 48px;
+      border-radius: 17px;
       background: rgba(8, 13, 23, .58);
+      text-align: left;
+      padding: 10px 12px;
+    }
+
+    .tab strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .tab span {
+      display: block;
+      color: var(--muted);
+      font: 800 10px/1.2 var(--mono);
+      margin-top: 5px;
     }
 
     .tab.active {
-      border-color: rgba(127, 231, 255, .50);
+      border-color: rgba(127, 231, 255, .52);
+      background: linear-gradient(180deg, rgba(58, 91, 152, .36), rgba(8, 13, 23, .68));
+    }
+
+    .tab.active strong {
       color: var(--cyan);
     }
 
-    .receipt-group {
+    .receipt-list {
       display: grid;
-      gap: 8px;
+      gap: 9px;
     }
 
-    .group-label {
+    .category-label {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -439,7 +423,26 @@
       font-size: 10px;
     }
 
-    .west-workspace {
+    .empty-state {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(8, 13, 23, .62);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .empty-state strong {
+      font-size: 13px;
+    }
+
+    .empty-state p {
+      margin: 0;
+      color: var(--soft);
+      font: 700 12px/1.4 var(--sans);
+    }
+
+    .workspace {
       min-width: 0;
     }
 
@@ -560,8 +563,8 @@
       overflow-wrap: anywhere;
     }
 
-    .south-proof {
-      max-height: calc(100vh - 178px);
+    .proof {
+      max-height: calc(100vh - 166px);
       overflow: auto;
     }
 
@@ -787,10 +790,10 @@
 
     @media (max-width: 1260px) {
       .surface {
-        grid-template-columns: 330px minmax(0, 1fr);
+        grid-template-columns: 340px minmax(0, 1fr);
       }
 
-      .south-proof {
+      .proof {
         grid-column: 1 / -1;
         max-height: none;
       }
@@ -802,24 +805,20 @@
         padding-top: 6px;
       }
 
-      .north-command {
+      .command {
         grid-template-columns: 1fr;
         border-radius: 20px;
         padding: 10px;
       }
 
-      .north-actions {
+      .command-actions {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         width: 100%;
       }
 
-      .north-actions button {
+      .command-actions button {
         width: 100%;
-      }
-
-      .layer-nav {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .chip-strip {
@@ -831,18 +830,22 @@
         flex-direction: column;
       }
 
-      .west-workspace {
+      .workspace {
         order: 1;
       }
 
-      .east-finder {
+      .finder {
         order: 2;
         max-height: none;
       }
 
-      .south-proof {
+      .proof {
         order: 3;
         max-height: none;
+      }
+
+      .category-tabs {
+        grid-template-columns: 1fr;
       }
 
       .action-dock {
@@ -895,16 +898,16 @@
 
 <body>
   <div class="shell">
-    <header class="north-command" id="northLayer">
+    <header class="command">
       <div class="identity">
         <div class="mark" aria-hidden="true"></div>
         <div>
-          <h1>Hearth Adaptive Diagnostic Console</h1>
-          <p id="contractLine">HEARTH_DIAGNOSTIC_ROUTE_ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_TNT_v9_4_1</p>
+          <h1>Hearth Diagnostic Receipt Console</h1>
+          <p id="contractLine">HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2</p>
         </div>
       </div>
 
-      <div class="north-actions" aria-label="Global diagnostic actions">
+      <div class="command-actions" aria-label="Global diagnostic actions">
         <button class="primary" id="copyCurrent" type="button">Copy Current</button>
         <button id="runSelected" type="button">Run Selected</button>
         <button id="runRecommended" type="button">Run Recommended</button>
@@ -914,44 +917,25 @@
       </div>
     </header>
 
-    <nav class="layer-nav" aria-label="NEWS navigation">
-      <button class="layer-button active" type="button" data-layer-jump="north">
-        <strong>North</strong>
-        <span>Orientation + command</span>
-      </button>
-      <button class="layer-button" type="button" data-layer-jump="east">
-        <strong>East</strong>
-        <span>Receipt discovery</span>
-      </button>
-      <button class="layer-button" type="button" data-layer-jump="west">
-        <strong>West</strong>
-        <span>Selected workspace</span>
-      </button>
-      <button class="layer-button" type="button" data-layer-jump="south">
-        <strong>South</strong>
-        <span>Proof + export</span>
-      </button>
-    </nav>
-
     <section class="chip-strip" id="healthStrip" aria-label="Compact equipment health"></section>
 
     <main class="surface">
-      <aside class="panel east-finder" id="eastLayer">
+      <aside class="panel finder">
         <div class="panel-head">
-          <strong>East · Receipt Finder</strong>
+          <strong>Receipt Categories</strong>
           <span id="finderCount">0 receipts</span>
         </div>
 
         <div class="finder-body">
-          <input id="receiptSearch" type="search" placeholder="Search receipts by number, name, role, layer..." autocomplete="off" />
+          <div class="category-tabs" id="categoryTabs" aria-label="Receipt category tabs"></div>
 
-          <div class="tabs" id="categoryTabs" aria-label="Receipt categories"></div>
+          <input id="receiptSearch" type="search" placeholder="Search receipts by number, name, role..." autocomplete="off" />
 
-          <div id="receiptBoard"></div>
+          <div id="receiptBoard" class="receipt-list"></div>
         </div>
       </aside>
 
-      <section class="panel west-workspace" id="westLayer">
+      <section class="panel workspace" id="workspace">
         <div class="report-head">
           <div class="report-title-row">
             <h2 id="reportTitle">Overview</h2>
@@ -977,13 +961,13 @@
         </div>
       </section>
 
-      <aside class="panel south-proof" id="southLayer">
+      <aside class="panel proof">
         <div class="panel-head">
-          <strong>South · Proof Return</strong>
+          <strong>Proof Return</strong>
           <span id="proofLine">RAW=CLOSED</span>
         </div>
 
-        <div class="south-body">
+        <div class="proof-body">
           <div class="proof-box">
             <div class="proof-toolbar">
               <strong>Raw selected receipt</strong>
@@ -1043,7 +1027,7 @@
   <div class="toast" id="toast">Copied</div>
 
   <script>
-    (function hearthAdaptiveNewsReceiptOperatingSurface(global) {
+    (function hearthCategoryTabbedReceiptConsole(global) {
       "use strict";
 
       var root = global || window;
@@ -1052,15 +1036,15 @@
       var CONTRACT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8";
       var RECEIPT = "HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_RECEIPT_v8";
       var INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_TNT_v9_4_1";
+        "HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_TNT_v9_4_2";
       var INTERNAL_RENEWAL_RECEIPT =
-        "HEARTH_DIAGNOSTIC_ROUTE_ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_RECEIPT_v9_4_1";
+        "HEARTH_DIAGNOSTIC_ROUTE_CATEGORY_TABBED_RECEIPT_CONSOLE_RECEIPT_v9_4_2";
       var PREVIOUS_INTERNAL_RENEWAL_CONTRACT =
-        "HEARTH_DIAGNOSTIC_ROUTE_ENGINE_NATIVE_DIAGNOSTIC_CONSOLE_TNT_v9_4";
+        "HEARTH_DIAGNOSTIC_ROUTE_ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_TNT_v9_4_1";
       var BASELINE_INTERNAL_RENEWAL_CONTRACT =
         "HEARTH_DIAGNOSTIC_ROUTE_NORTH_ALIAS_RECOGNITION_AND_WEST_LABEL_SPLIT_TNT_v9_1";
       var VERSION =
-        "2026-06-09.hearth-diagnostic-route-adaptive-news-receipt-operating-surface-v9-4-1";
+        "2026-06-09.hearth-diagnostic-route-category-tabbed-receipt-console-v9-4-2";
 
       var TARGET_ROUTE = "/showroom/globe/hearth/";
       var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
@@ -1094,35 +1078,49 @@
         }
       ];
 
-      var RECEIPTS = [
-        { seq: "00", name: "Overview", desc: "load + route state", category: "baseline", layer: "north" },
-        { seq: "01", name: "Participant Load", desc: "script registry", category: "baseline", layer: "north" },
-        { seq: "02", name: "Target Access", desc: "target frame proof", category: "baseline", layer: "south" },
-        { seq: "03", name: "Alias Map", desc: "authority aliases", category: "baseline", layer: "east" },
-
-        { seq: "04", name: "Lab Cardinal Branches", desc: "north east south west", category: "engine", layer: "east" },
-        { seq: "05", name: "Four Engine Mechanics", desc: "F1/F3/F5/F8", category: "engine", layer: "west" },
-        { seq: "06", name: "South Lens", desc: "sidecar visibility", category: "engine", layer: "south" },
-        { seq: "07", name: "LabWest Gate", desc: "west lab gate", category: "engine", layer: "west" },
-
-        { seq: "08", name: "North Direct", desc: "judge north", category: "direct", layer: "north", direct: true },
-        { seq: "09", name: "East Direct", desc: "east intake", category: "direct", layer: "east", direct: true },
-        { seq: "10", name: "Surface Truth", desc: "canvas surface proof", category: "direct", layer: "west", direct: true },
-        { seq: "11", name: "South Direct", desc: "proof return", category: "direct", layer: "south", direct: true },
-        { seq: "12", name: "West Direct", desc: "west diagnostic", category: "direct", layer: "west", direct: true },
-
-        { seq: "13", name: "Canvas Boundary", desc: "no-touch proof", category: "archive", layer: "south" },
-        { seq: "14", name: "Next Move", desc: "lawful action", category: "archive", layer: "north" },
-        { seq: "99", name: "Deep Archive", desc: "full evidence", category: "archive", layer: "south" }
-      ];
-
       var CATEGORIES = [
-        ["all", "All"],
-        ["baseline", "Baseline"],
-        ["engine", "Lab / Engine"],
-        ["direct", "Direct"],
-        ["archive", "Boundary / Archive"]
+        { id: "baseline", label: "Baseline", hint: "00–03", receipts: ["00", "01", "02", "03"] },
+        { id: "engine", label: "Lab / Engine", hint: "04–07", receipts: ["04", "05", "06", "07"] },
+        { id: "direct", label: "Direct Execution", hint: "08–12", receipts: ["08", "09", "10", "11", "12"] },
+        { id: "archive", label: "Boundary / Archive", hint: "13,14,99", receipts: ["13", "14", "99"] },
+        { id: "all", label: "All", hint: "00–99", receipts: ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "99"] }
       ];
+
+      var RECEIPTS = [
+        { seq: "00", name: "Overview", desc: "load + route state", category: "baseline", direct: false },
+        { seq: "01", name: "Participant Load", desc: "script registry", category: "baseline", direct: false },
+        { seq: "02", name: "Target Access", desc: "target frame proof", category: "baseline", direct: false },
+        { seq: "03", name: "Alias Map", desc: "authority aliases", category: "baseline", direct: false },
+
+        { seq: "04", name: "Lab Cardinal Branches", desc: "north east south west", category: "engine", direct: false },
+        { seq: "05", name: "Four Engine Mechanics", desc: "F1/F3/F5/F8", category: "engine", direct: false },
+        { seq: "06", name: "South Lens", desc: "sidecar visibility", category: "engine", direct: false },
+        { seq: "07", name: "LabWest Gate", desc: "west lab gate", category: "engine", direct: false },
+
+        { seq: "08", name: "North Direct", desc: "judge north", category: "direct", direct: true },
+        { seq: "09", name: "East Direct", desc: "east intake", category: "direct", direct: true },
+        { seq: "10", name: "Surface Truth", desc: "canvas surface proof", category: "direct", direct: true },
+        { seq: "11", name: "South Direct", desc: "proof return", category: "direct", direct: true },
+        { seq: "12", name: "West Direct", desc: "west diagnostic", category: "direct", direct: true },
+
+        { seq: "13", name: "Canvas Boundary", desc: "no-touch proof", category: "archive", direct: false },
+        { seq: "14", name: "Next Move", desc: "lawful action", category: "archive", direct: false },
+        { seq: "99", name: "Deep Archive", desc: "full evidence", category: "archive", direct: false }
+      ];
+
+      var VOLATILE_RECEIPTS = {
+        "00": true,
+        "01": true,
+        "02": true,
+        "03": true,
+        "04": true,
+        "05": true,
+        "06": true,
+        "07": true,
+        "13": true,
+        "14": true,
+        "99": true
+      };
 
       var ALIASES = {
         LAB_NORTH: [
@@ -1326,10 +1324,9 @@
       var state = {
         initializedAt: nowIso(),
         updatedAt: nowIso(),
-        selectedReceipt: readSession("selectedReceipt", "00"),
+        selectedReceipt: normalizeReceipt(readSession("selectedReceipt", "00")),
         selectedReceiptMode: "preview",
-        activeCategory: readSession("activeCategory", "all"),
-        activeLayer: readSession("activeLayer", "north"),
+        activeCategory: normalizeCategory(readSession("activeCategory", "baseline")),
         searchQuery: "",
         rawVisible: readSession("rawVisible", "false") === "true",
         targetVisible: readSession("targetVisible", "false") === "true",
@@ -1341,7 +1338,7 @@
         archive: {},
         lastBuiltPacketBySeq: {},
         lastRawTextBySeq: {},
-        recommendedReceipt: readSession("recommendedReceipt", "99")
+        recommendedReceipt: normalizeReceipt(readSession("recommendedReceipt", "99"))
       };
 
       function nowIso() {
@@ -1389,10 +1386,29 @@
         } catch (_error) {}
       }
 
+      function hasReceipt(seq) {
+        return RECEIPTS.some(function item(receipt) { return receipt.seq === seq; });
+      }
+
+      function hasCategory(id) {
+        return CATEGORIES.some(function item(category) { return category.id === id; });
+      }
+
+      function normalizeReceipt(seq) {
+        return hasReceipt(seq) ? seq : "00";
+      }
+
+      function normalizeCategory(id) {
+        return hasCategory(id) ? id : "baseline";
+      }
+
       function persistNavigationState() {
+        state.selectedReceipt = normalizeReceipt(state.selectedReceipt);
+        state.activeCategory = normalizeCategory(state.activeCategory);
+        state.recommendedReceipt = normalizeReceipt(state.recommendedReceipt);
+
         writeSession("selectedReceipt", state.selectedReceipt);
         writeSession("activeCategory", state.activeCategory);
-        writeSession("activeLayer", state.activeLayer);
         writeSession("rawVisible", state.rawVisible ? "true" : "false");
         writeSession("targetVisible", state.targetVisible ? "true" : "false");
         writeSession("recommendedReceipt", state.recommendedReceipt);
@@ -1527,6 +1543,7 @@
           probeAliases();
           publishChamberGlobals();
           refreshChrome();
+          rebuildSelectedAfterLoad();
           return state.participantLoad;
         });
       }
@@ -1788,7 +1805,7 @@
         }
 
         var receipt = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_1",
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_2",
           RECEIPT_LEVEL: "3_DIRECT_EXECUTION",
           RECEIPT_SEQUENCE: seq,
           ROLE: config.role,
@@ -1863,7 +1880,7 @@
 
       function baseReceipt(seq, role, component, extra) {
         var packet = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_1",
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_2",
           RECEIPT_LEVEL: "2_LIGHT_SCAN",
           RECEIPT_SEQUENCE: seq,
           ROLE: role,
@@ -1916,7 +1933,7 @@
           LOAD_COMPLETE: state.loadComplete,
           ALL_REQUIRED_PARTICIPANTS_LOADED: summary.allRequiredLoaded,
           PARTICIPANT_LOAD_COUNT: state.participantLoad.length,
-          ADAPTIVE_NEWS_RECEIPT_OPERATING_SURFACE_ACTIVE: true,
+          CATEGORY_TABBED_RECEIPT_CONSOLE_ACTIVE: true,
           VIEW_RUN_COPY_SEPARATION_ACTIVE: true,
           LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT_ACTIVE: true,
           LAB_NORTH_PRESENT: Boolean(aliases.LAB_NORTH && aliases.LAB_NORTH.present),
@@ -2153,7 +2170,7 @@
         var aliases = probeAliases();
 
         var archive = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_99_v9_4_1",
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_99_v9_4_2",
           CONTRACT: CONTRACT,
           RECEIPT: RECEIPT,
           INTERNAL_RENEWAL_CONTRACT: INTERNAL_RENEWAL_CONTRACT,
@@ -2169,7 +2186,6 @@
             selectedReceiptMode: state.selectedReceiptMode,
             recommendedReceipt: state.recommendedReceipt,
             activeCategory: state.activeCategory,
-            activeLayer: state.activeLayer,
             loadStarted: state.loadStarted,
             loadComplete: state.loadComplete,
             participantLoad: state.participantLoad,
@@ -2180,7 +2196,7 @@
               participantLoad: state.participantLoad,
               targetAccess: getTargetAccess(),
               aliases: aliases,
-              adaptiveNewsReceiptOperatingSurfaceActive: true,
+              categoryTabbedReceiptConsoleActive: true,
               viewRunCopySeparationActive: true,
               labCardinalBranchLoadAlignment: true,
               labNorthBranchExpected: "/assets/lab/runtime-table.js",
@@ -2204,7 +2220,7 @@
         var methods = methodKeys(resolved.authority);
 
         var receipt = {
-          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_1_PREVIEW",
+          PACKET: "HEARTH_DIAGNOSTIC_RECEIPT_DECK_" + seq + "_v9_4_2_PREVIEW",
           RECEIPT_LEVEL: "3_DIRECT_EXECUTION_PREVIEW",
           RECEIPT_SEQUENCE: seq,
           ROLE: config.role,
@@ -2232,6 +2248,7 @@
 
       function buildReceipt(seq, options) {
         options = options || {};
+        seq = normalizeReceipt(seq);
 
         if (DIRECT_CONFIG[seq] && !options.execute) return previewDirectReceipt(seq);
         if (DIRECT_CONFIG[seq] && options.execute) return runDirectReceipt(seq);
@@ -2264,22 +2281,44 @@
       }
 
       function cachePacket(seq, packet) {
+        seq = normalizeReceipt(seq);
         state.lastBuiltPacketBySeq[seq] = packet;
         state.lastRawTextBySeq[seq] = rawText(packet, seq);
-        state.recommendedReceipt = extractRecommended(packet);
+        state.recommendedReceipt = normalizeReceipt(extractRecommended(packet));
         state.updatedAt = nowIso();
         persistNavigationState();
       }
 
+      function rebuildSelectedAfterLoad() {
+        var seq = normalizeReceipt(state.selectedReceipt);
+
+        if (DIRECT_CONFIG[seq] && state.lastBuiltPacketBySeq[seq] && state.lastBuiltPacketBySeq[seq].RUN_EXECUTED) {
+          selectReceipt(seq, { useCached: true, noScroll: true });
+          return;
+        }
+
+        if (VOLATILE_RECEIPTS[seq] || !DIRECT_CONFIG[seq]) {
+          var packet = buildReceipt(seq, { execute: false });
+          cachePacket(seq, packet);
+          renderWorkspace(packet);
+          renderReceiptBoard();
+          refreshChrome();
+          return;
+        }
+
+        selectReceipt(seq, { forcePreview: true, noScroll: true });
+      }
+
       function selectReceipt(seq, options) {
         options = options || {};
+        seq = normalizeReceipt(seq);
         state.selectedReceipt = seq;
         state.selectedReceiptMode = "preview";
         persistNavigationState();
 
         var packet;
 
-        if (options.useCached && state.lastBuiltPacketBySeq[seq]) {
+        if (options.useCached && state.lastBuiltPacketBySeq[seq] && !VOLATILE_RECEIPTS[seq]) {
           packet = state.lastBuiltPacketBySeq[seq];
           state.selectedReceiptMode = packet.RUN_EXECUTED ? "executed" : "preview";
         } else if (DIRECT_CONFIG[seq] && state.lastBuiltPacketBySeq[seq] && !options.forcePreview) {
@@ -2287,18 +2326,18 @@
           state.selectedReceiptMode = packet.RUN_EXECUTED ? "executed" : "preview";
         } else {
           packet = buildReceipt(seq, { execute: false });
-          if (!DIRECT_CONFIG[seq]) cachePacket(seq, packet);
+          if (!DIRECT_CONFIG[seq] || VOLATILE_RECEIPTS[seq]) cachePacket(seq, packet);
         }
 
         renderWorkspace(packet);
         renderReceiptBoard();
         refreshChrome();
 
-        if (options.focusWorkspace) focusLayer("west");
+        if (options.focusWorkspace && !options.noScroll) focusWorkspace();
       }
 
       function runReceipt(seq) {
-        seq = seq || state.selectedReceipt;
+        seq = normalizeReceipt(seq || state.selectedReceipt);
         state.selectedReceipt = seq;
 
         var packet = buildReceipt(seq, { execute: true });
@@ -2311,27 +2350,30 @@
       }
 
       function getPacketForCopy(seq) {
-        seq = seq || state.selectedReceipt;
-        if (state.lastBuiltPacketBySeq[seq]) return state.lastBuiltPacketBySeq[seq];
+        seq = normalizeReceipt(seq || state.selectedReceipt);
+
+        if (state.lastBuiltPacketBySeq[seq] && !VOLATILE_RECEIPTS[seq]) return state.lastBuiltPacketBySeq[seq];
 
         var packet = buildReceipt(seq, { execute: false });
-        if (!DIRECT_CONFIG[seq]) cachePacket(seq, packet);
+        if (!DIRECT_CONFIG[seq] || VOLATILE_RECEIPTS[seq]) cachePacket(seq, packet);
         return packet;
       }
 
       function copyReceipt(seq) {
-        var packet = getPacketForCopy(seq || state.selectedReceipt);
-        copyText(rawText(packet, seq || state.selectedReceipt), "Report copied");
+        seq = normalizeReceipt(seq || state.selectedReceipt);
+        var packet = getPacketForCopy(seq);
+        copyText(rawText(packet, seq), "Receipt " + seq + " copied");
       }
 
       function copyRaw(seq) {
-        seq = seq || state.selectedReceipt;
+        seq = normalizeReceipt(seq || state.selectedReceipt);
         var packet = getPacketForCopy(seq);
-        copyText(rawText(packet, seq), "Raw copied");
+        copyText(rawText(packet, seq), "Raw " + seq + " copied");
       }
 
       function runRecommendedReceipt() {
         runReceipt(state.recommendedReceipt || "99");
+        focusWorkspace();
       }
 
       function openArchiveDialog() {
@@ -2366,10 +2408,19 @@
       }
 
       function receiptMeta(seq) {
+        seq = normalizeReceipt(seq);
         for (var i = 0; i < RECEIPTS.length; i += 1) {
           if (RECEIPTS[i].seq === seq) return RECEIPTS[i];
         }
-        return { seq: seq, name: seq, desc: "", category: "all", layer: "north" };
+        return RECEIPTS[0];
+      }
+
+      function categoryMeta(id) {
+        id = normalizeCategory(id);
+        for (var i = 0; i < CATEGORIES.length; i += 1) {
+          if (CATEGORIES[i].id === id) return CATEGORIES[i];
+        }
+        return CATEGORIES[0];
       }
 
       function statusClass(packet) {
@@ -2388,7 +2439,7 @@
         if (!packet) return "No packet available.";
 
         if (packet.RUN_STATE === "PREVIEW_NOT_EXECUTED") {
-          return "Receipt selected in preview mode. Press Run This Receipt to execute the diagnostic check, or Copy Report to copy this preview.";
+          return "Receipt selected in preview mode. Use Run This Receipt to execute the check, or Copy Report to copy this preview.";
         }
 
         if (packet.RUN_EXECUTED === true) {
@@ -2415,7 +2466,7 @@
           return "Required diagnostic equipment has not fully loaded. Inspect participant load details.";
         }
 
-        return "Receipt is available. Critical fields are shown below; raw proof remains available in the South layer.";
+        return "Receipt is available. Critical fields are shown below; raw proof remains available in the proof return surface.";
       }
 
       function importantFields(packet) {
@@ -2511,25 +2562,34 @@
       }
 
       function renderCategories() {
+        state.activeCategory = normalizeCategory(state.activeCategory);
+
         var holder = doc.getElementById("categoryTabs");
-        holder.innerHTML = CATEGORIES.map(function tab(item) {
-          return '<button class="tab ' + (state.activeCategory === item[0] ? "active" : "") +
-            '" type="button" data-category="' + escapeHtml(item[0]) + '">' +
-            escapeHtml(item[1]) + '</button>';
+        holder.innerHTML = CATEGORIES.map(function tab(category) {
+          return '<button class="tab ' + (state.activeCategory === category.id ? "active" : "") +
+            '" type="button" data-category="' + escapeHtml(category.id) + '">' +
+            '<strong>' + escapeHtml(category.label) + '</strong>' +
+            '<span>' + escapeHtml(category.hint) + '</span>' +
+            '</button>';
         }).join("");
       }
 
       function filteredReceipts() {
+        state.activeCategory = normalizeCategory(state.activeCategory);
+
+        var category = categoryMeta(state.activeCategory);
+        var allowed = {};
+        category.receipts.forEach(function mark(seq) { allowed[seq] = true; });
+
         var query = safeString(state.searchQuery).trim().toLowerCase();
 
         return RECEIPTS.filter(function filterReceipt(item) {
-          var categoryOk = state.activeCategory === "all" || item.category === state.activeCategory;
+          var categoryOk = state.activeCategory === "all" || Boolean(allowed[item.seq]);
           var haystack = [
             item.seq,
             item.name,
             item.desc,
             item.category,
-            item.layer,
             item.direct ? "direct execution run" : "safe preview"
           ].join(" ").toLowerCase();
 
@@ -2542,42 +2602,39 @@
 
         var board = doc.getElementById("receiptBoard");
         var list = filteredReceipts();
+        var category = categoryMeta(state.activeCategory);
         doc.getElementById("finderCount").textContent = list.length + " receipts";
 
         if (!list.length) {
-          board.innerHTML = '<div class="receipt-card"><div class="receipt-name">No receipts found</div><div class="receipt-desc">Adjust search or category.</div></div>';
+          board.innerHTML =
+            '<div class="empty-state">' +
+            '<strong>No receipts visible</strong>' +
+            '<p>Clear search or show all receipts. Category state has been guarded and can be reset here.</p>' +
+            '<div class="dock-actions">' +
+            '<button class="mini" type="button" data-empty-action="clear">Clear Search</button>' +
+            '<button class="mini ghost" type="button" data-empty-action="all">Show All</button>' +
+            '</div></div>';
           return;
         }
 
-        var grouped = {};
-        list.forEach(function item(receipt) {
-          var key = receipt.category;
-          grouped[key] = grouped[key] || [];
-          grouped[key].push(receipt);
-        });
+        var html = '';
+        html += '<div class="category-label"><span>' + escapeHtml(category.label) + '</span><span>' + list.length + '</span></div>';
 
-        var html = "";
-        Object.keys(grouped).forEach(function groupKey() {
-          html += '<div class="receipt-group">';
-          html += '<div class="group-label"><span>' + escapeHtml(groupKey) + '</span><span>' + grouped[groupKey].length + '</span></div>';
+        list.forEach(function receipt) {
+          var active = receipt.seq === state.selectedReceipt ? " active" : "";
 
-          grouped[groupKey].forEach(function receipt) {
-            var active = receipt.seq === state.selectedReceipt ? " active" : "";
-            html += '<div class="receipt-card' + active + '" tabindex="0" data-receipt="' + escapeHtml(receipt.seq) + '">';
-            html += '<div class="receipt-main">';
-            html += '<div class="receipt-num">' + escapeHtml(receipt.seq) + '</div>';
-            html += '<div><div class="receipt-name">' + escapeHtml(receipt.name) + '</div>';
-            html += '<div class="receipt-desc">' + escapeHtml(receipt.desc + " · " + receipt.layer.toUpperCase()) + '</div></div>';
-            html += '</div>';
-            html += '<div class="card-actions">';
-            html += '<button class="mini ghost" type="button" data-card-action="view" data-receipt="' + escapeHtml(receipt.seq) + '">View</button>';
-            html += '<button class="mini" type="button" data-card-action="run" data-receipt="' + escapeHtml(receipt.seq) + '">Run</button>';
-            html += '<button class="mini" type="button" data-card-action="copy" data-receipt="' + escapeHtml(receipt.seq) + '">Copy</button>';
-            html += '<button class="mini ghost" type="button" data-card-action="raw" data-receipt="' + escapeHtml(receipt.seq) + '">Raw</button>';
-            html += '</div></div>';
-          });
-
+          html += '<div class="receipt-card' + active + '" tabindex="0" data-receipt="' + escapeHtml(receipt.seq) + '">';
+          html += '<div class="receipt-main">';
+          html += '<div class="receipt-num">' + escapeHtml(receipt.seq) + '</div>';
+          html += '<div><div class="receipt-name">' + escapeHtml(receipt.name) + '</div>';
+          html += '<div class="receipt-desc">' + escapeHtml(receipt.desc + " · " + receipt.category.toUpperCase()) + '</div></div>';
           html += '</div>';
+          html += '<div class="card-actions">';
+          html += '<button class="mini ghost" type="button" data-card-action="view" data-receipt="' + escapeHtml(receipt.seq) + '">View</button>';
+          html += '<button class="mini" type="button" data-card-action="run" data-receipt="' + escapeHtml(receipt.seq) + '">Run</button>';
+          html += '<button class="mini" type="button" data-card-action="copy" data-receipt="' + escapeHtml(receipt.seq) + '">Copy</button>';
+          html += '<button class="mini ghost" type="button" data-card-action="raw" data-receipt="' + escapeHtml(receipt.seq) + '">Raw</button>';
+          html += '</div></div>';
         });
 
         board.innerHTML = html;
@@ -2597,7 +2654,6 @@
         renderHealthStrip(summary, aliases, access);
         renderTopology(aliases);
         renderBoundary();
-        updateLayerButtons();
       }
 
       function renderHealthStrip(summary, aliases, access) {
@@ -2659,17 +2715,8 @@
         }).join("");
       }
 
-      function focusLayer(layer) {
-        state.activeLayer = layer;
-        persistNavigationState();
-        updateLayerButtons();
-
-        var id = layer === "north" ? "northLayer" :
-          layer === "east" ? "eastLayer" :
-          layer === "west" ? "westLayer" :
-          layer === "south" ? "southLayer" : "northLayer";
-
-        var el = doc.getElementById(id);
+      function focusWorkspace() {
+        var el = doc.getElementById("workspace");
         if (!el) return;
 
         if (doc.startViewTransition) {
@@ -2679,12 +2726,6 @@
         } else {
           el.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-      }
-
-      function updateLayerButtons() {
-        Array.prototype.slice.call(doc.querySelectorAll("[data-layer-jump]")).forEach(function mark(button) {
-          button.classList.toggle("active", button.dataset.layerJump === state.activeLayer);
-        });
       }
 
       function showToast(text) {
@@ -2736,12 +2777,11 @@
 
         doc.getElementById("runSelected").addEventListener("click", function onRunSelected() {
           runReceipt(state.selectedReceipt);
-          focusLayer("west");
+          focusWorkspace();
         });
 
         doc.getElementById("runRecommended").addEventListener("click", function onRunRecommended() {
           runRecommendedReceipt();
-          focusLayer("west");
         });
 
         doc.getElementById("openArchive").addEventListener("click", openArchiveDialog);
@@ -2751,7 +2791,7 @@
           var targetDetails = doc.getElementById("targetDetails");
           if (targetDetails) targetDetails.open = state.targetVisible;
           persistNavigationState();
-          focusLayer("south");
+          targetDetails.scrollIntoView({ behavior: "smooth", block: "start" });
         });
 
         doc.getElementById("reloadChamber").addEventListener("click", function onReload() {
@@ -2779,8 +2819,7 @@
         doc.getElementById("toggleRaw").addEventListener("click", function onToggleRaw() {
           state.rawVisible = !state.rawVisible;
           persistNavigationState();
-          selectReceipt(state.selectedReceipt, { useCached: true });
-          focusLayer("south");
+          selectReceipt(state.selectedReceipt, { useCached: true, noScroll: true });
         });
 
         doc.getElementById("copyRaw").addEventListener("click", function onCopyRaw() {
@@ -2798,8 +2837,7 @@
         doc.getElementById("bottomRaw").addEventListener("click", function onBottomRaw() {
           state.rawVisible = !state.rawVisible;
           persistNavigationState();
-          selectReceipt(state.selectedReceipt, { useCached: true });
-          focusLayer("south");
+          selectReceipt(state.selectedReceipt, { useCached: true, noScroll: true });
         });
 
         doc.getElementById("bottomNext").addEventListener("click", function onBottomNext() {
@@ -2814,31 +2852,48 @@
         doc.getElementById("categoryTabs").addEventListener("click", function onCategory(event) {
           var button = event.target.closest("[data-category]");
           if (!button) return;
-          state.activeCategory = button.dataset.category;
+          state.activeCategory = normalizeCategory(button.dataset.category);
           persistNavigationState();
           renderReceiptBoard();
         });
 
         doc.getElementById("receiptBoard").addEventListener("click", function onBoardClick(event) {
+          var emptyButton = event.target.closest("[data-empty-action]");
+          if (emptyButton) {
+            var emptyAction = emptyButton.dataset.emptyAction;
+            if (emptyAction === "clear") {
+              state.searchQuery = "";
+              doc.getElementById("receiptSearch").value = "";
+            }
+            if (emptyAction === "all") {
+              state.searchQuery = "";
+              state.activeCategory = "all";
+              doc.getElementById("receiptSearch").value = "";
+            }
+            persistNavigationState();
+            renderReceiptBoard();
+            return;
+          }
+
           var actionButton = event.target.closest("[data-card-action]");
           if (actionButton) {
             event.preventDefault();
             event.stopPropagation();
 
             var action = actionButton.dataset.cardAction;
-            var seq = actionButton.dataset.receipt;
+            var seq = normalizeReceipt(actionButton.dataset.receipt);
 
             if (action === "view") {
               selectReceipt(seq, { focusWorkspace: true });
             } else if (action === "run") {
               runReceipt(seq);
-              focusLayer("west");
+              focusWorkspace();
             } else if (action === "copy") {
               copyReceipt(seq);
             } else if (action === "raw") {
               state.rawVisible = true;
-              selectReceipt(seq, { useCached: true });
-              focusLayer("south");
+              selectReceipt(seq, { useCached: true, noScroll: true });
+              doc.getElementById("rawReceipt").scrollIntoView({ behavior: "smooth", block: "start" });
             }
 
             return;
@@ -2856,12 +2911,6 @@
             event.preventDefault();
             selectReceipt(card.dataset.receipt, { focusWorkspace: true });
           }
-        });
-
-        Array.prototype.slice.call(doc.querySelectorAll("[data-layer-jump]")).forEach(function bind(button) {
-          button.addEventListener("click", function onLayerJump() {
-            focusLayer(button.dataset.layerJump);
-          });
         });
 
         doc.getElementById("copyArchiveDialog").addEventListener("click", function onCopyArchive() {
@@ -2916,7 +2965,7 @@
         root.__HEARTH_DIAGNOSTIC_CHAMBER_LOADED__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_CONTRACT__ = CONTRACT;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_INTERNAL_RENEWAL_CONTRACT__ = INTERNAL_RENEWAL_CONTRACT;
-        root.__HEARTH_DIAGNOSTIC_CHAMBER_ADAPTIVE_NEWS_RECEIPT_SURFACE_ACTIVE__ = true;
+        root.__HEARTH_DIAGNOSTIC_CHAMBER_CATEGORY_TABBED_CONSOLE_ACTIVE__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_VIEW_RUN_COPY_SEPARATION_ACTIVE__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_LAB_CARDINAL_BRANCH_LOAD_ALIGNMENT__ = true;
         root.__HEARTH_DIAGNOSTIC_CHAMBER_PRODUCTION_MUTATION_AUTHORIZED__ = false;
@@ -2926,6 +2975,11 @@
       }
 
       function boot() {
+        state.selectedReceipt = normalizeReceipt(state.selectedReceipt);
+        state.activeCategory = normalizeCategory(state.activeCategory);
+        state.recommendedReceipt = normalizeReceipt(state.recommendedReceipt);
+        persistNavigationState();
+
         installActions();
         renderCategories();
         renderReceiptBoard();
@@ -2933,7 +2987,7 @@
         publishChamberGlobals();
         refreshChrome();
 
-        selectReceipt(state.selectedReceipt || "00", { forcePreview: true });
+        selectReceipt(state.selectedReceipt || "00", { forcePreview: true, noScroll: true });
 
         var targetDetails = doc.getElementById("targetDetails");
         if (targetDetails) targetDetails.open = state.targetVisible;
@@ -2942,7 +2996,6 @@
           publishChamberGlobals();
           probeAliases();
           refreshChrome();
-          selectReceipt(state.selectedReceipt || "00", { useCached: true });
         });
       }
 

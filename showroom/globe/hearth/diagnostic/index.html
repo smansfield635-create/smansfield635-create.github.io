@@ -1,15 +1,16 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
 <!-- HEARTH_DIAGNOSTIC_ROUTE_PLANET_PRODUCTION_FACILITY_INSTRUMENT_CHAMBER_TNT_v8 -->
 <!-- Internal controlled renewal: -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_HTML_SHELL_TNT_v9_4_3 -->
-<!-- Pair controller: -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_HTML_BINDING_REPAIR_TNT_v9_4_3_1 -->
+<!-- Paired controller retained: -->
 <!-- HEARTH_DIAGNOSTIC_ROUTE_TWO_STEP_AUDIT_TEMPLATE_CONTROLLER_TNT_v9_4_3 -->
 <!-- Full-file replacement. -->
-<!-- HTML shell only. Diagnostic logic lives in /showroom/globe/hearth/diagnostic/index.js -->
+<!-- HTML shell only. Diagnostic logic remains in /showroom/globe/hearth/diagnostic/index.js -->
+<!-- Repair scope: duplicate ID removal, single report-action binding surface, raw-output target correction. -->
 <!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-html-shell="v9_4_3">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_3_1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -388,7 +389,7 @@
 
     .report-actions {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
       padding: 12px;
       border-bottom: 1px solid var(--line);
@@ -567,11 +568,7 @@
         </div>
       </div>
 
-      <div class="command-actions" aria-label="Global report controls">
-        <button class="primary" id="createReport" type="button">Create Report</button>
-        <button id="copyReport" type="button" disabled>Copy Report</button>
-        <button id="copyRaw" type="button" disabled>Copy Raw</button>
-        <button class="ghost" id="copyArchive" type="button">Copy Deep Archive</button>
+      <div class="command-actions" aria-label="Global shell controls">
         <button class="ghost" id="toggleTarget" type="button">Target</button>
         <button class="ghost" id="reloadChamber" type="button">Reload</button>
       </div>
@@ -618,6 +615,7 @@
             <button id="runDirectReport" type="button" hidden>Run Direct Check</button>
             <button id="copyReport" type="button" disabled>Copy Report</button>
             <button id="copyRaw" type="button" disabled>Copy Raw</button>
+            <button class="ghost" id="copyArchive" type="button">Copy Deep Archive</button>
             <button class="ghost" id="toggleRaw" type="button">Show / Hide Raw</button>
             <button class="ghost" id="resetReport" type="button">Reset</button>
           </div>
@@ -630,7 +628,9 @@
 
             <pre id="generatedReport">Choose an audit section, choose an audit, then create a report.</pre>
 
-            <pre id="rawReport" hidden></pre>
+            <div id="rawOutput" hidden>
+              <pre id="rawReport"></pre>
+            </div>
           </div>
         </section>
 

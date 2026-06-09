@@ -1,13 +1,13 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_HTML_SHELL_TNT_v9_4_4_1 -->
-<!-- Paired controller: HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_HTML_SHELL_TNT_v9_4_4_2 -->
+<!-- Paired controller: HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_CONTROLLER_TNT_v9_4_4_2 -->
 <!-- Full-file replacement. -->
 <!-- HTML shell only. Diagnostic logic lives in /showroom/globe/hearth/diagnostic/index.js -->
-<!-- Design law: visible category buttons, visible audit buttons, one local report action surface. -->
+<!-- Design law: category bubble dropdown filters audit bubble dropdown; report/copy actions stay local. -->
 <!-- No production, canvas, controls, runtime-route, target-renderer, WebGL, GraphicBox, generated-image, or visual-pass authorization. -->
 
 <!doctype html>
-<html lang="en" data-hearth-diagnostic-html-shell="v9_4_4_1">
+<html lang="en" data-hearth-diagnostic-html-shell="v9_4_4_2">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -19,9 +19,9 @@
       --bg0: #03050a;
       --bg1: #070b13;
       --panel: rgba(13, 22, 38, .86);
-      --panel2: rgba(18, 30, 51, .86);
+      --panel2: rgba(18, 30, 51, .90);
       --line: rgba(151, 182, 235, .24);
-      --line2: rgba(151, 182, 235, .48);
+      --line2: rgba(151, 182, 235, .52);
       --text: #eaf1ff;
       --soft: #b2c2dc;
       --muted: #8092ad;
@@ -84,9 +84,7 @@
       transform: none;
     }
 
-    button:focus-visible,
-    .category-choice:focus-visible,
-    .audit-choice:focus-visible {
+    button:focus-visible {
       outline: 2px solid var(--blue);
       outline-offset: 3px;
     }
@@ -109,7 +107,7 @@
     .command {
       position: sticky;
       top: 0;
-      z-index: 40;
+      z-index: 50;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 14px;
@@ -233,7 +231,7 @@
       border-radius: var(--radius-xl);
       background: var(--panel);
       box-shadow: var(--shadow);
-      overflow: hidden;
+      overflow: visible;
     }
 
     .workbench-head {
@@ -246,6 +244,8 @@
       background:
         linear-gradient(135deg, rgba(143, 183, 255, .12), transparent 54%),
         rgba(8, 13, 23, .58);
+      border-top-left-radius: var(--radius-xl);
+      border-top-right-radius: var(--radius-xl);
     }
 
     .workbench-head strong {
@@ -275,96 +275,142 @@
 
     .selector-zone {
       display: grid;
-      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-      gap: 0;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      padding: 14px;
       border-bottom: 1px solid var(--line);
       background: rgba(5, 8, 15, .28);
+      position: relative;
+      z-index: 20;
     }
 
-    .selector-column {
-      min-width: 0;
-      padding: 14px;
+    .field {
       display: grid;
-      align-content: start;
-      gap: 10px;
+      gap: 8px;
+      min-width: 0;
+      position: relative;
     }
 
-    .selector-column + .selector-column {
-      border-left: 1px solid var(--line);
-    }
-
-    .selector-label {
+    .field-label {
       color: var(--muted);
       font: 950 10px/1 var(--mono);
       letter-spacing: .09em;
       text-transform: uppercase;
     }
 
-    .category-surface,
-    .audit-surface {
-      display: grid;
-      gap: 8px;
+    .custom-dropdown {
+      position: relative;
+      min-width: 0;
+      z-index: 25;
     }
 
-    .category-choice,
-    .audit-choice {
+    .custom-dropdown.is-top {
+      z-index: 35;
+    }
+
+    .dropdown-bubble {
       width: 100%;
-      border-radius: 18px;
+      min-height: 74px;
+      border-radius: 24px;
+      padding: 13px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
       text-align: left;
-      background: rgba(8, 13, 23, .66);
-      border: 1px solid var(--line);
-      padding: 12px;
-      box-shadow: none;
-      min-height: 76px;
+      background:
+        linear-gradient(180deg, rgba(25, 39, 68, .96), rgba(8, 13, 23, .96));
+      border: 1px solid rgba(151, 182, 235, .36);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.05),
+        0 16px 36px rgba(0,0,0,.22);
     }
 
-    .category-choice.is-active,
-    .audit-choice.is-active {
-      border-color: rgba(143, 183, 255, .76);
-      background: linear-gradient(180deg, rgba(55, 88, 150, .42), rgba(8, 13, 23, .76));
-      box-shadow: 0 0 0 1px rgba(143, 183, 255, .12), 0 18px 44px rgba(42, 88, 173, .16);
+    .dropdown-bubble:hover {
+      border-color: rgba(143, 183, 255, .72);
     }
 
-    .category-choice span {
-      display: block;
-      color: var(--cyan);
-      font: 950 9px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: .10em;
-      margin-bottom: 8px;
+    .dropdown-bubble-main {
+      min-width: 0;
     }
 
-    .category-choice strong,
-    .audit-choice strong {
+    .dropdown-bubble-main strong {
       display: block;
       color: var(--text);
-      font: 950 14px/1.1 var(--sans);
+      font: 950 16px/1.1 var(--sans);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .category-choice small,
-    .audit-choice small {
+    .dropdown-bubble-main small {
       display: block;
-      color: var(--muted);
-      font: 750 11px/1.35 var(--mono);
       margin-top: 7px;
+      color: var(--muted);
+      font: 800 11px/1.35 var(--mono);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .audit-choice {
-      display: grid;
-      grid-template-columns: 44px minmax(0, 1fr);
-      gap: 10px;
-      align-items: start;
-    }
-
-    .audit-choice > span {
+    .dropdown-chevron {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
       display: grid;
       place-items: center;
-      min-height: 38px;
-      border-radius: 14px;
       color: var(--cyan);
-      background: rgba(127, 231, 255, .08);
       border: 1px solid rgba(127, 231, 255, .22);
-      font: 950 11px/1 var(--mono);
+      background: rgba(127, 231, 255, .07);
+      font: 950 16px/1 var(--mono);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 8px);
+      display: grid;
+      gap: 7px;
+      padding: 8px;
+      max-height: min(440px, 52vh);
+      overflow: auto;
+      border: 1px solid rgba(151, 182, 235, .44);
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(17, 28, 49, .98), rgba(5, 8, 15, .98));
+      box-shadow: 0 28px 80px rgba(0,0,0,.52);
+      z-index: 80;
+    }
+
+    .dropdown-option {
+      width: 100%;
+      min-height: 62px;
+      border-radius: 18px;
+      display: block;
+      text-align: left;
+      padding: 12px;
+      background: rgba(8, 13, 23, .72);
+      border: 1px solid rgba(151, 182, 235, .18);
+      box-shadow: none;
+    }
+
+    .dropdown-option span {
+      display: block;
+      color: var(--text);
+      font: 950 14px/1.15 var(--sans);
+    }
+
+    .dropdown-option small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font: 750 11px/1.35 var(--mono);
+    }
+
+    .dropdown-option.is-active {
+      border-color: rgba(143, 183, 255, .76);
+      background: linear-gradient(180deg, rgba(55, 88, 150, .45), rgba(8, 13, 23, .84));
     }
 
     .selected-audit {
@@ -421,6 +467,9 @@
       padding: 14px;
       display: grid;
       gap: 10px;
+      border-bottom-left-radius: var(--radius-xl);
+      border-bottom-right-radius: var(--radius-xl);
+      overflow: hidden;
     }
 
     .report-output .report-title-row {
@@ -551,9 +600,8 @@
         grid-template-columns: 1fr;
       }
 
-      .selector-column + .selector-column {
-        border-left: 0;
-        border-top: 1px solid var(--line);
+      .dropdown-menu {
+        max-height: 48vh;
       }
 
       .report-actions {
@@ -572,6 +620,10 @@
 
       .report-actions {
         grid-template-columns: 1fr;
+      }
+
+      .dropdown-bubble-main strong {
+        font-size: 15px;
       }
     }
 
@@ -609,7 +661,7 @@
         <div class="mark" aria-hidden="true"></div>
         <div>
           <h1>Hearth Single Audit Workbench</h1>
-          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_SELECTOR_SURFACE_CONTROLLER_TNT_v9_4_4_1</p>
+          <p id="controllerContract">HEARTH_DIAGNOSTIC_ROUTE_SINGLE_AUDIT_WORKBENCH_CUSTOM_DROPDOWN_CONTROLLER_TNT_v9_4_4_2</p>
         </div>
       </div>
 
@@ -625,20 +677,66 @@
       <div class="workbench-head">
         <div>
           <strong>Single Audit Workbench</strong>
-          <span>Choose one visible category, choose one visible audit, then create and copy the report from this same local surface.</span>
+          <span>Choose a category, choose one filtered audit, then create and copy the report from this same local surface.</span>
         </div>
-        <div class="pill">Source of truth: visible audit button</div>
+        <div class="pill">Source of truth: custom audit dropdown</div>
       </div>
 
       <section class="selector-zone" aria-label="Audit selection">
-        <div class="selector-column">
-          <div class="selector-label">1 · Category</div>
-          <div class="category-surface" id="categorySelectorSurface" aria-label="Choose audit category"></div>
+        <div class="field">
+          <div class="field-label">1 · Category</div>
+
+          <div class="custom-dropdown is-top" id="categoryDropdown">
+            <button
+              class="dropdown-bubble"
+              id="categoryDropdownButton"
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              <span class="dropdown-bubble-main">
+                <strong id="categoryDropdownLabel">Chamber / Receiver</strong>
+                <small id="categoryDropdownMeta">Receiver and chamber condition</small>
+              </span>
+              <span class="dropdown-chevron" aria-hidden="true">⌄</span>
+            </button>
+
+            <div
+              class="dropdown-menu"
+              id="categoryDropdownMenu"
+              role="listbox"
+              aria-label="Choose audit category"
+              hidden
+            ></div>
+          </div>
         </div>
 
-        <div class="selector-column">
-          <div class="selector-label">2 · Audit</div>
-          <div class="audit-surface" id="auditSelectorSurface" aria-label="Choose audit"></div>
+        <div class="field">
+          <div class="field-label">2 · Audit</div>
+
+          <div class="custom-dropdown" id="auditDropdown">
+            <button
+              class="dropdown-bubble"
+              id="auditDropdownButton"
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
+              <span class="dropdown-bubble-main">
+                <strong id="auditDropdownLabel">00 · Chamber Index</strong>
+                <small id="auditDropdownMeta">Safe · Creates a complete chamber index with current target, section, load, and audit availability.</small>
+              </span>
+              <span class="dropdown-chevron" aria-hidden="true">⌄</span>
+            </button>
+
+            <div
+              class="dropdown-menu"
+              id="auditDropdownMenu"
+              role="listbox"
+              aria-label="Choose filtered audit"
+              hidden
+            ></div>
+          </div>
         </div>
       </section>
 

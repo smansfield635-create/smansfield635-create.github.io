@@ -6,7 +6,7 @@
 // No production/canvas/controls/runtime-route/target-renderer mutation.
 
 (function hearthDiagnosticWorkbenchButtonController(global) {
-  "use strict";
+  "use strict"; 
 
   var root = global || window;
   var doc = root.document;

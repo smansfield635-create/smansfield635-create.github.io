@@ -1,686 +1,939 @@
+// TARGET FILE: /showroom/globe/hearth/index.js
+// TNT FULL-FILE REPLACEMENT
+// HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_CONTROLLER_TNT_v1
 /*
-  /showroom/globe/hearth/index.js
-  HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_SCROLL_RENEWAL_TNT_v2_1
-  Full-file replacement.
-  Scope: public route controller/content only.
-  Purpose:
-  - Make orbit buttons update the reading chamber.
-  - Force-scroll category selections down to the reading chamber.
-  - Force-scroll Return to Orbit back up to the category orbit.
-  - Preserve Hearth = facility, Audralia = first planetary subject.
-  - Preserve diagnostic bridge.
-  Does not own canvas, controls, runtime, diagnostics, or renderer internals.
+  Owns:
+  - Hearth page interaction controller
+  - lens/category switching
+  - one canvas mount enforcement
+  - pointer drag/inertial globe carrier shell
+  - local 16x16 diagnostic spectrum
+  - local 4x4 chamber matrix
+  - visible diagnostic slot writing
+  - status publication
+
+  Does not own:
+  - production canvas truth
+  - diagnostic mutation
+  - F13 release
+  - F21 latch
+  - controls repair
+  - runtime restart
+  - WebGL
+  - GraphicBox
+  - generated image
 */
 
-(function hearthFacilityOrbitContentController() {
+(() => {
   "use strict";
 
-  var root = window;
-  var doc = document;
+  if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  var CONTRACT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_SCROLL_RENEWAL_TNT_v2_1";
-  var RECEIPT = "HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER_SCROLL_RENEWAL_RECEIPT_v2_1";
-  var VERSION = "2026-06-09.hearth-facility-orbit-content-controller-scroll-renewal-v2-1";
+  const CONTRACT = "HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_CONTROLLER_TNT_v1";
+  const CSS_CONTRACT = "HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_STYLE_TNT_v1";
+  const HTML_CONTRACT = "HEARTH_SHOWROOM_FACILITY_UNKNOWN_LOCATION_SHELL_TNT_v1";
+  const ROUTE = "/showroom/globe/hearth/";
+  const TARGET_FILE = "/showroom/globe/hearth/index.js";
 
-  var TARGET_ROUTE = "/showroom/globe/hearth/";
-  var DIAGNOSTIC_ROUTE = "/showroom/globe/hearth/diagnostic/";
-  var REQUIRED_MOUNT_ID = "hearthCanvasMount";
-  var REQUIRED_CANVAS_ID = "hearthVisibleCanvas";
+  const STATUS_GLOBAL = "HEARTH_SHOWROOM_FACILITY_STATUS";
+  const CONTROLLER_GLOBAL = "HEARTH_SHOWROOM_FACILITY_CONTROLLER";
 
-  var state = {
-    contract: CONTRACT,
-    receipt: RECEIPT,
-    version: VERSION,
-    activeLens: "platform",
-    activeOrbit: "orbit",
-    initializedAt: "",
-    updatedAt: "",
-    mountExists: false,
-    mountRectNonZero: false,
-    canvasExists: false,
-    canvasRectNonZero: false,
-    productionMutationAuthorized: false,
-    canvasRepairAuthorized: false,
-    canvasBuildAuthorized: false,
-    canvasReleaseAuthorized: false,
-    controlsRepairAuthorized: false,
-    runtimeRestartAuthorized: false,
-    routeRepairAuthorized: false,
-    targetRouteRendererMutationAuthorized: false,
-    visualPassClaimed: false,
-    webGL: false
-  };
+  const RADIAL_NODES = 16;
+  const FIBONACCI_BANDS = 16;
+  const LATTICE_STATES = 256;
+  const TAU = Math.PI * 2;
+  const HALF_PI = Math.PI / 2;
 
-  var els = {};
-
-  var slides = {
+  const LENS_COPY = Object.freeze({
+    facility: {
+      title: "Facility Lens",
+      label: "<strong>Facility Lens</strong> → Hearth alias active · location unknown",
+      copy: "Hearth is treated as a facility alias inside Mirrorland. The planet carrier is not claimed as visually complete."
+    },
     orbit: {
-      platform: {
-        kicker: "Facility Orbit",
-        title: "Hearth is the chamber. Audralia is the first subject.",
-        thesis: "This page is a public facility presentation. It introduces the Unknown, the first planetary subject, the frontier sciences, the character builders, the gauges, and the under-the-hood diagnostic panel.",
-        points: [
-          "Hearth is not the planet. Hearth is the facility alias.",
-          "Audralia is the first planetary production subject.",
-          "The orbit lets visitors focus on one chamber lens at a time.",
-          "Return to Orbit resets the presentation and brings the full map back."
-        ],
-        quote: "The website is the window. Hearth is the chamber behind the window.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      },
-      engineering: {
-        kicker: "Route Controller",
-        title: "Presentation shell, measurable stage, diagnostic bridge.",
-        thesis: "This route owns public layout and narrative interaction. It does not repair canvas internals, controls, runtime, or diagnostic files.",
-        points: [
-          "The route preserves #hearthCanvasMount and #hearthVisibleCanvas.",
-          "The controller measures whether those elements have nonzero layout.",
-          "The diagnostic panel remains the proof source.",
-          "No visual pass or production repair is claimed here."
-        ],
-        quote: "Public presentation and diagnostic proof stay separate.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      }
+      title: "Orbit Lens",
+      label: "<strong>Orbit Lens</strong> → return-to-orbit shell · carrier inspection",
+      copy: "Orbit Lens keeps the visitor above the unknown location and preserves a safe return path."
     },
-
-    unknown: {
-      platform: {
-        kicker: "The Unknown",
-        title: "Before the world appears, the visitor enters the facility.",
-        thesis: "The Unknown is the narrative place where Hearth exists. It should feel like a doorway into something larger than a globe demo: a hidden production room where worlds are measured before they are fully visible.",
-        points: [
-          "The visitor is entering an observation chamber.",
-          "The facility has instruments, gauges, and hidden machinery.",
-          "The visible planet is not the whole system; it is the subject in production.",
-          "The Unknown gives the page mystery without breaking the build logic."
-        ],
-        quote: "Hearth is the name on the door. The Unknown is where the door opens.",
-        cta: [
-          { label: "Return to Globe Window", href: "/showroom/globe/" },
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
-      },
-      engineering: {
-        kicker: "Location Logic",
-        title: "Hearth facility context separates location from subject.",
-        thesis: "This prevents the page from confusing facility identity with planet identity. The facility provides stage, gauges, route access, and diagnostic bridge. Audralia carries the world identity.",
-        points: [
-          "Facility identity: Hearth.",
-          "Narrative location: the Unknown.",
-          "First production subject: Audralia.",
-          "Proof room: the diagnostic panel."
-        ],
-        quote: "The route shell explains the chamber; the diagnostic panel proves what is measurable.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      }
-    },
-
-    audralia: {
-      platform: {
-        kicker: "Audralia",
-        title: "The first world in the chamber is a possibility planet.",
-        thesis: "Audralia is the frontier playground: a living possibility world where science, systems, characters, experiments, terrain, civilization, and future interaction can develop together.",
-        points: [
-          "Audralia is the first planetary subject under Hearth production.",
-          "It is not just a sphere to view; it is a world to build toward.",
-          "It gives the project a clean-slate frontier field.",
-          "It becomes the place where characters and sciences can eventually become interactive."
-        ],
-        quote: "Audralia is where possibility stops being abstract and starts becoming explorable.",
-        cta: [
-          { label: "Visit Audralia", href: "/showroom/globe/audralia/" },
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
-      },
-      engineering: {
-        kicker: "Planetary Subject",
-        title: "Audralia is the output; Hearth is the production context.",
-        thesis: "The page should keep the subject/facility split intact. Hearth prepares the stage and gathers proof. Audralia receives the frontier-science world identity.",
-        points: [
-          "Do not call Hearth the planet.",
-          "Do call Audralia the first planetary subject.",
-          "Use the stage to host the visible production viewport.",
-          "Use diagnostic receipts to determine what the stage can currently prove."
-        ],
-        quote: "Facility and subject must not collapse into the same label.",
-        cta: [{ label: "Visit Audralia", href: "/showroom/globe/audralia/" }]
-      }
-    },
-
-    frontier: {
-      platform: {
-        kicker: "Frontier Sciences",
-        title: "The science lanes become world-building thresholds.",
-        thesis: "Frontier gives Audralia its applied-science backbone. The lanes are not decorative categories. They are future systems that can become experiments, missions, tools, and interaction paths.",
-        points: [
-          "Closed Loop turns waste, output, and reuse into playable system logic.",
-          "Energy becomes infrastructure, power, storage, and frontier capability.",
-          "Water, Waste, Urban, Vision, Lattice, and Infrastructure become world-shaping disciplines.",
-          "The page should make these sciences readable before making them technical."
-        ],
-        quote: "Frontier is the map. Hearth is the chamber. Audralia is the field.",
-        cta: [
-          { label: "Open Frontier", href: "/explore/frontier/" },
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
-      },
-      engineering: {
-        kicker: "Applied Lanes",
-        title: "Use Frontier as a category system, not a directory dump.",
-        thesis: "Hearth should translate Frontier into chamber gauges and future production lenses. The visitor should understand the science lanes without leaving the facility story.",
-        points: [
-          "Keep the eleven-lane Frontier architecture as source logic.",
-          "Condense it into readable production categories.",
-          "Show how science lanes become thresholds on Audralia.",
-          "Keep engineering detail available through diagnostics, not public overload."
-        ],
-        quote: "The public page explains the system without exhausting the visitor.",
-        cta: [{ label: "Open Frontier", href: "/explore/frontier/" }]
-      }
-    },
-
-    characters: {
-      platform: {
-        kicker: "Character Builders",
-        title: "The characters are builders of the frontier thresholds.",
-        thesis: "The characters are not art assets. They are the narrative interface for future interaction. They can become guides, builders, pressure points, scientists, operators, and witnesses inside Audralia’s frontier development.",
-        points: [
-          "Characters give the science a human doorway.",
-          "They can carry missions, choices, conflict, and discovery.",
-          "They turn frontier systems into stories the visitor can follow.",
-          "Eventually, the visitor should interact with characters as the sciences mature."
-        ],
-        quote: "The characters do not stand beside the world. They build the thresholds into it.",
-        cta: [
-          { label: "Meet the Characters", href: "/characters/" },
-          { label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }
-        ]
-      },
-      engineering: {
-        kicker: "Interaction Layer",
-        title: "Character logic becomes future interface logic.",
-        thesis: "Characters can eventually bridge narrative state, world state, and scientific systems. That future layer should remain distinct from current diagnostic proof.",
-        points: [
-          "Narrative roles should map to frontier functions.",
-          "Interaction should grow after stable route, canvas, and controls evidence.",
-          "Characters should not fake system readiness.",
-          "The page can preview the future without claiming it is complete."
-        ],
-        quote: "Narrative promise must stay aligned with build evidence.",
-        cta: [{ label: "Meet the Characters", href: "/characters/" }]
-      }
-    },
-
-    gauges: {
-      platform: {
-        kicker: "Facility Gauges",
-        title: "The gauges translate build state into human language.",
-        thesis: "A visitor should not need to read raw diagnostic receipts to understand the facility. Gauges summarize the stage, motion, narrative, and proof layers in plain language.",
-        points: [
-          "Visual Surface tells whether the stage is ready to show the subject.",
-          "Motion + Touch separates interaction from visual readiness.",
-          "Narrative Layer tracks whether the page matches Mirrorland, Frontier, and Audralia.",
-          "Under the Hood points to diagnostic proof."
-        ],
-        quote: "Good gauges do not hide complexity. They make it readable.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      },
-      engineering: {
-        kicker: "Receipt Translation",
-        title: "Friendly gauges should summarize, not replace, receipts.",
-        thesis: "The gauges are public-facing interpretations. The diagnostic panel remains the authority for direct execution, target surface measurement, and next lawful moves.",
-        points: [
-          "Do not claim final visual pass from public gauges.",
-          "Do not claim canvas repair from layout readiness alone.",
-          "Use diagnostic receipts to validate stage measurements.",
-          "Keep people-friendly language tied to measurable state."
-        ],
-        quote: "A gauge is a translation layer, not a proof source.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      }
-    },
-
-    underhood: {
-      platform: {
-        kicker: "Under the Hood",
-        title: "The instrument room is available without taking over the presentation.",
-        thesis: "The public page should feel like a keynote: clear, visual, and readable. The under-the-hood panel should remain one click away for proof, inspection, direct checks, and next-move synthesis.",
-        points: [
-          "The showroom explains what the visitor is seeing.",
-          "The diagnostic panel proves what the system can currently measure.",
-          "The two experiences should support each other without merging.",
-          "A visitor can stay in the story, while a builder can enter the receipts."
-        ],
-        quote: "The public room inspires. The instrument room verifies.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      },
-      engineering: {
-        kicker: "No-Touch Boundary",
-        title: "This controller inspects layout and interaction only.",
-        thesis: "This file may update presentation state, scroll behavior, panel content, and public gauge text. It must not mutate canvas engines, controls, runtime, or diagnostic participants.",
-        points: [
-          "Allowed: orbit UI, panel rendering, gauge text, layout measurement.",
-          "Not allowed: canvas repair, controls repair, runtime restart, renderer mutation.",
-          "Diagnostic route remains the proof chamber.",
-          "Route shell work remains separate from engine authority."
-        ],
-        quote: "Do not confuse public interactivity with engine mutation.",
-        cta: [{ label: "Open Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      }
-    },
-
     diagnostic: {
-      platform: {
-        kicker: "Diagnostic Panel",
-        title: "The diagnostic panel is the under-the-hood proof room.",
-        thesis: "When the public presentation needs proof, the diagnostic panel provides direct receipts: source evidence, surface truth, no-touch boundaries, and next lawful move synthesis.",
-        points: [
-          "Open diagnostics to inspect what the target route can actually measure.",
-          "Use direct checks to verify individual authorities.",
-          "Use Next Move to avoid guessing the next owner.",
-          "Keep public claims aligned with receipts."
-        ],
-        quote: "The page can tell the story. The panel tells the truth of the build.",
-        cta: [{ label: "Enter Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      },
-      engineering: {
-        kicker: "Proof Room",
-        title: "Diagnostics remain the formal authority for build state.",
-        thesis: "The public route should never replace direct receipts. Use the panel to validate surface measurements, direct execution packets, and next-file ownership.",
-        points: [
-          "Run Surface Truth Direct to measure mount and canvas geometry.",
-          "Run Next Move to confirm the next lawful owner.",
-          "Do not repair engines from the showroom controller.",
-          "Do not claim visual pass without receipt support."
-        ],
-        quote: "Receipt before repair. Measurement before claim.",
-        cta: [{ label: "Enter Diagnostic Panel", href: DIAGNOSTIC_ROUTE }]
-      }
+      title: "Diagnostic Lens",
+      label: "<strong>Diagnostic Lens</strong> → local chamber spectrum · no mutation authorized",
+      copy: "Diagnostic Lens exposes readable chamber state without authorizing canvas repair, runtime restart, or visual pass."
     }
+  });
+
+  const state = {
+    stage: null,
+    mount: null,
+    canvas: null,
+    ctx: null,
+    width: 0,
+    height: 0,
+    dpr: 1,
+    rect: null,
+
+    activeLens: "facility",
+    activeCategory: "chamber",
+    activeMatrixCell: "",
+    activeSpectrumCell: "",
+
+    seats: [],
+    ringLinks: [],
+    spineLinks: [],
+    fibonacciLinks: [],
+    geometryBuilt: false,
+
+    yaw: -0.48,
+    pitch: -0.14,
+    roll: 0,
+    velocityYaw: 0,
+    velocityPitch: 0,
+    pointerActive: false,
+    pointerId: null,
+    pointerX: 0,
+    pointerY: 0,
+    lastTap: 0,
+
+    raf: 0,
+    lastFrameTime: 0,
+    settleFrames: 0,
+    renderCount: 0,
+    stopped: false,
+
+    oneCanvas: false,
+    onePointerPath: false,
+    duplicateCanvasRemoved: 0,
+    diagnosticSlotsWritten: false,
+
+    status: "BOOT_PENDING",
+    failureCode: "BOOT_PENDING",
+    failureReason: "boot pending",
+    errors: []
   };
+
+  const abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const signal = abortController ? abortController.signal : undefined;
+  let resizeObserver = null;
+
+  function finite(value, fallback) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, finite(value, min)));
+  }
 
   function now() {
-    return new Date().toISOString();
+    return typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
   }
 
-  function $(selector, scope) {
-    return (scope || doc).querySelector(selector);
+  function one(selector, root = document) {
+    try { return root.querySelector(selector); } catch (_error) { return null; }
   }
 
-  function $all(selector, scope) {
-    return Array.prototype.slice.call((scope || doc).querySelectorAll(selector));
+  function all(selector, root = document) {
+    try { return Array.from(root.querySelectorAll(selector)); } catch (_error) { return []; }
   }
 
-  function safeText(value) {
-    return String(value == null ? "" : value);
+  function setText(selector, value) {
+    const node = one(selector);
+    if (!node) return false;
+    const text = String(value == null ? "" : value);
+    if (node.textContent !== text) node.textContent = text;
+    return true;
   }
 
-  function getSlide(key) {
-    var activeKey = slides[key] ? key : "orbit";
-    var group = slides[activeKey];
-    return group[state.activeLens] || group.platform;
+  function setHtml(selector, value) {
+    const node = one(selector);
+    if (!node) return false;
+    const html = String(value == null ? "" : value);
+    if (node.innerHTML !== html) node.innerHTML = html;
+    return true;
   }
 
-  function rectState(node) {
-    if (!node || typeof node.getBoundingClientRect !== "function") {
-      return { exists: Boolean(node), width: 0, height: 0, nonzero: false };
-    }
+  function setBool(node, name, value) {
+    if (node) node.setAttribute(name, value ? "true" : "false");
+  }
 
-    var rect = node.getBoundingClientRect();
-    var width = Math.round(rect.width || 0);
-    var height = Math.round(rect.height || 0);
+  function setDataset(key, value) {
+    try {
+      document.documentElement.dataset[key] = String(value);
+      if (document.body) document.body.dataset[key] = String(value);
+    } catch (_error) {}
+  }
+
+  function recordError(scope, error) {
+    const message = error && error.message ? error.message : String(error || "unknown");
+    state.errors.push({ scope, message, at: new Date().toISOString() });
+    state.status = "ERROR";
+    state.failureCode = "ERROR";
+    state.failureReason = `${scope}: ${message}`;
+    publishStatus();
+  }
+
+  function makeSeat(band, radial) {
+    const v = (band + 0.5) / FIBONACCI_BANDS;
+    const lat = Math.asin(1 - 2 * v);
+    const lon = (radial / RADIAL_NODES) * TAU - Math.PI;
+    const clat = Math.cos(lat);
 
     return {
-      exists: true,
-      width: width,
-      height: height,
-      nonzero: width > 0 && height > 0
+      index: band * RADIAL_NODES + radial,
+      band,
+      radial,
+      latitude: lat,
+      longitude: lon,
+      x: clat * Math.cos(lon),
+      y: Math.sin(lat),
+      z: clat * Math.sin(lon),
+      major: radial % 4 === 0 || band % 4 === 0,
+      secondary: radial % 2 === 0 || band % 2 === 0
     };
   }
 
-  function captureElements() {
-    els.body = doc.body;
-    els.siteRail = $(".site-rail");
-    els.orbitSection = $("[data-orbit-section]") || $(".orbit-section");
-    els.orbit = $(".facility-orbit");
-    els.orbitNodes = $all("[data-orbit-node]");
-    els.returnOrbit = $("[data-return-orbit]");
-    els.lensButtons = $all("[data-lens]");
-    els.panel = $("[data-orbit-panel]");
-    els.mount = doc.getElementById(REQUIRED_MOUNT_ID);
-    els.canvas = doc.getElementById(REQUIRED_CANVAS_ID);
-    els.stageStatus = $("[data-stage-status]");
-    els.gaugeVisual = $('[data-gauge="visual"]');
-    els.gaugeMotion = $('[data-gauge="motion"]');
-    els.gaugeNarrative = $('[data-gauge="narrative"]');
-    els.gaugeDiagnostic = $('[data-gauge="diagnostic"]');
-  }
+  function buildGeometry() {
+    const rings = [];
 
-  function scrollOffset() {
-    var railHeight = 0;
-
-    if (els.siteRail && typeof els.siteRail.getBoundingClientRect === "function") {
-      railHeight = Math.ceil(els.siteRail.getBoundingClientRect().height || 0);
+    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+      const ring = [];
+      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+        ring.push(makeSeat(band, radial));
+      }
+      rings.push(ring);
     }
 
-    return railHeight + 18;
-  }
+    const seat = (band, radial) => rings[band][((radial % RADIAL_NODES) + RADIAL_NODES) % RADIAL_NODES];
+    const link = (a, b, family, major) => ({ a, b, family, major: Boolean(major) });
 
-  function forceScrollTo(node) {
-    if (!node || typeof node.getBoundingClientRect !== "function") return;
-
-    var y =
-      (root.pageYOffset || doc.documentElement.scrollTop || doc.body.scrollTop || 0) +
-      node.getBoundingClientRect().top -
-      scrollOffset();
-
-    y = Math.max(0, Math.round(y));
-
-    try {
-      root.scrollTo({ top: y, behavior: "smooth" });
-    } catch (error) {
-      root.scrollTo(0, y);
+    for (let band = 0; band < FIBONACCI_BANDS; band += 1) {
+      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+        state.ringLinks.push(link(seat(band, radial), seat(band, radial + 1), "ring", band % 4 === 0 || radial % 4 === 0));
+      }
     }
+
+    for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+      for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+        state.spineLinks.push(link(seat(band, radial), seat(band + 1, radial), "spine", radial % 4 === 0));
+      }
+    }
+
+    const offsets = [1, 2, 3, 5, 8, 13];
+    for (let band = 0; band < FIBONACCI_BANDS - 1; band += 1) {
+      const offset = offsets[band % offsets.length];
+      for (let radial = 0; radial < RADIAL_NODES; radial += 1) {
+        state.fibonacciLinks.push(link(seat(band, radial), seat(band + 1, radial + offset), "fibonacci", radial % 4 === 0 || band % 4 === 0));
+      }
+    }
+
+    state.seats = rings.flat();
+    state.geometryBuilt = state.seats.length === LATTICE_STATES;
   }
 
-  function delayedForceScrollTo(node) {
-    root.requestAnimationFrame(function firstFrame() {
-      root.requestAnimationFrame(function secondFrame() {
-        forceScrollTo(node);
+  function rotatePoint(point) {
+    let { x, y, z } = point;
+
+    const cy = Math.cos(state.yaw);
+    const sy = Math.sin(state.yaw);
+    const x1 = x * cy + z * sy;
+    const z1 = -x * sy + z * cy;
+    x = x1; z = z1;
+
+    const cp = Math.cos(state.pitch);
+    const sp = Math.sin(state.pitch);
+    const y1 = y * cp - z * sp;
+    const z2 = y * sp + z * cp;
+    y = y1; z = z2;
+
+    const cr = Math.cos(state.roll);
+    const sr = Math.sin(state.roll);
+
+    return {
+      x: x * cr - y * sr,
+      y: x * sr + y * cr,
+      z
+    };
+  }
+
+  function metrics() {
+    const width = state.width || 640;
+    const height = state.height || 720;
+    const minSide = Math.min(width, height);
+
+    return {
+      centerX: width / 2,
+      centerY: height * 0.46,
+      radius: minSide * 0.34,
+      cameraDistance: 3.9
+    };
+  }
+
+  function projectPoint(point) {
+    const m = metrics();
+    const rotated = rotatePoint(point);
+    const perspective = m.cameraDistance / Math.max(0.72, m.cameraDistance - rotated.z);
+
+    return {
+      x: m.centerX + rotated.x * m.radius * perspective,
+      y: m.centerY - rotated.y * m.radius * perspective,
+      z: rotated.z,
+      perspective,
+      frontFacing: rotated.z >= -0.05
+    };
+  }
+
+  function clipSphere() {
+    const ctx = state.ctx;
+    const m = metrics();
+    ctx.beginPath();
+    ctx.arc(m.centerX, m.centerY, m.radius * 1.003, 0, TAU);
+    ctx.clip();
+  }
+
+  function drawCarrier() {
+    const ctx = state.ctx;
+    const m = metrics();
+    const cx = m.centerX;
+    const cy = m.centerY;
+    const r = m.radius;
+
+    ctx.save();
+
+    const core = ctx.createRadialGradient(cx - r * .30, cy - r * .36, 0, cx, cy, r * 1.18);
+    core.addColorStop(0.00, "rgba(255,226,165,0.96)");
+    core.addColorStop(0.17, "rgba(255,143,78,0.72)");
+    core.addColorStop(0.40, "rgba(69,75,135,0.82)");
+    core.addColorStop(0.72, "rgba(12,26,74,0.97)");
+    core.addColorStop(1.00, "rgba(1,4,16,1)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = core;
+    ctx.fill();
+
+    const shade = ctx.createRadialGradient(cx + r * .34, cy + r * .32, r * .10, cx, cy, r * 1.08);
+    shade.addColorStop(0.00, "rgba(0,0,0,0)");
+    shade.addColorStop(0.52, "rgba(0,0,0,0.10)");
+    shade.addColorStop(0.82, "rgba(0,0,0,0.38)");
+    shade.addColorStop(1.00, "rgba(0,0,0,0.70)");
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, TAU);
+    ctx.fillStyle = shade;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.003, 0, TAU);
+    ctx.strokeStyle = "rgba(255,214,142,0.24)";
+    ctx.lineWidth = Math.max(.8, state.dpr * .8);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawReferenceLines() {
+    const ctx = state.ctx;
+    const equator = [];
+    const meridian = [];
+
+    for (let i = 0; i <= 96; i += 1) {
+      const lon = -Math.PI + (i / 96) * TAU;
+      equator.push({ x: Math.cos(lon), y: 0, z: Math.sin(lon) });
+    }
+
+    for (let i = 0; i <= 96; i += 1) {
+      const lat = -HALF_PI + (i / 96) * Math.PI;
+      meridian.push({ x: Math.cos(lat), y: Math.sin(lat), z: 0 });
+    }
+
+    function stroke(points, color, width) {
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const p = projectPoint(point);
+        if (index === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
       });
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    }
+
+    ctx.save();
+    clipSphere();
+    stroke(equator, "rgba(242,183,93,0.42)", Math.max(.8, state.dpr * .72));
+    stroke(meridian, "rgba(141,216,255,0.22)", Math.max(.65, state.dpr * .55));
+    ctx.restore();
+  }
+
+  function drawLinks(links, reduced) {
+    const ctx = state.ctx;
+
+    links.forEach((link) => {
+      if (reduced && !link.major && link.family === "fibonacci") return;
+
+      const a = projectPoint(link.a);
+      const b = projectPoint(link.b);
+      const front = a.frontFacing || b.frontFacing;
+      const z = (a.z + b.z) / 2;
+
+      const color = link.family === "fibonacci"
+        ? front ? `rgba(242,183,93,${clamp(.40 + z * .14, .20, .70).toFixed(3)})` : "rgba(242,183,93,0.08)"
+        : front ? `rgba(141,216,255,${clamp(.22 + z * .10, .10, .40).toFixed(3)})` : "rgba(141,216,255,0.055)";
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = link.major ? Math.max(.75, state.dpr * .76) : Math.max(.42, state.dpr * .46);
+      ctx.stroke();
     });
+  }
+
+  function drawSeats(reduced) {
+    const ctx = state.ctx;
+
+    state.seats.forEach((seat) => {
+      if (reduced && !seat.major) return;
+
+      const p = projectPoint(seat);
+      const alpha = p.frontFacing ? (seat.major ? .84 : .56) : (seat.major ? .16 : .07);
+      const radius = seat.major ? 2.35 : seat.secondary ? 1.55 : 1.15;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(1, radius * state.dpr * p.perspective), 0, TAU);
+      ctx.fillStyle = seat.major
+        ? `rgba(242,183,93,${alpha.toFixed(3)})`
+        : `rgba(141,216,255,${alpha.toFixed(3)})`;
+      ctx.fill();
+    });
+  }
+
+  function drawLattice(reduced) {
+    const ctx = state.ctx;
+    ctx.save();
+    clipSphere();
+    drawLinks(state.ringLinks, reduced);
+    drawLinks(state.spineLinks, reduced);
+    drawLinks(state.fibonacciLinks, reduced);
+    drawSeats(reduced);
+    ctx.restore();
+  }
+
+  function renderFrame(timestamp) {
+    if (state.stopped || !state.ctx || !state.geometryBuilt) return;
+
+    state.raf = 0;
+
+    const dt = state.lastFrameTime ? clamp((timestamp - state.lastFrameTime) / 1000, 0, .05) : 0;
+    state.lastFrameTime = timestamp;
+
+    if (!state.pointerActive) {
+      state.yaw += state.velocityYaw;
+      state.pitch += state.velocityPitch;
+
+      const damping = Math.pow(.938, dt * 60);
+      state.velocityYaw *= damping;
+      state.velocityPitch *= damping;
+
+      if (Math.abs(state.velocityYaw) < .00008) state.velocityYaw = 0;
+      if (Math.abs(state.velocityPitch) < .00008) state.velocityPitch = 0;
+    }
+
+    state.pitch = clamp(state.pitch, -1.16, 1.16);
+    state.roll = Math.sin(timestamp * .00018) * .010;
+
+    state.ctx.clearRect(0, 0, state.width, state.height);
+    drawCarrier();
+    drawReferenceLines();
+
+    if (state.activeLens === "diagnostic" || state.activeLens === "orbit") {
+      drawLattice(state.pointerActive);
+    } else {
+      state.ctx.save();
+      state.ctx.globalAlpha = .20;
+      drawLattice(true);
+      state.ctx.restore();
+    }
+
+    state.renderCount += 1;
+    if (state.settleFrames > 0) state.settleFrames -= 1;
+
+    writeDiagnosticSlots();
+    publishStatus();
+
+    if (
+      state.pointerActive ||
+      state.settleFrames > 0 ||
+      Math.abs(state.velocityYaw) > 0 ||
+      Math.abs(state.velocityPitch) > 0
+    ) {
+      state.raf = window.requestAnimationFrame(renderFrame);
+    }
+  }
+
+  function requestRender(settleFrames = 0) {
+    state.settleFrames = Math.max(state.settleFrames, settleFrames);
+    if (!state.raf && !state.stopped) state.raf = window.requestAnimationFrame(renderFrame);
+  }
+
+  function enforceOneCanvas() {
+    if (!state.mount) return;
+
+    let canvases = all("canvas", state.mount);
+    let selected = state.canvas && state.mount.contains(state.canvas) ? state.canvas : canvases[0];
+
+    if (!selected) {
+      selected = document.createElement("canvas");
+      state.mount.appendChild(selected);
+    }
+
+    canvases = all("canvas", state.mount);
+    canvases.forEach((canvas) => {
+      if (canvas === selected) return;
+      try {
+        canvas.remove();
+        state.duplicateCanvasRemoved += 1;
+      } catch (_error) {}
+    });
+
+    state.canvas = selected;
+    state.canvas.setAttribute("data-hearth-facility-canvas", CONTRACT);
+    state.canvas.setAttribute("data-css-contract", CSS_CONTRACT);
+    state.canvas.setAttribute("data-html-contract", HTML_CONTRACT);
+    state.canvas.setAttribute("data-location", "unknown");
+    state.canvas.setAttribute("data-canvas-release-authorized", "false");
+
+    state.canvas.style.position = "absolute";
+    state.canvas.style.inset = "0";
+    state.canvas.style.width = "100%";
+    state.canvas.style.height = "100%";
+    state.canvas.style.display = "block";
+    state.canvas.style.background = "transparent";
+    state.canvas.style.pointerEvents = "none";
+
+    state.ctx = state.canvas.getContext("2d", { alpha: true });
+    state.oneCanvas = Boolean(state.ctx);
+  }
+
+  function updateDimensions(rect) {
+    if (!rect || !state.canvas || !state.ctx) return false;
+
+    const dpr = Math.max(1, Math.min(1.85, window.devicePixelRatio || 1));
+    const width = Math.max(320, Math.floor(rect.width * dpr));
+    const height = Math.max(460, Math.floor(rect.height * dpr));
+
+    state.rect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+
+    if (state.width === width && state.height === height && state.dpr === dpr) return false;
+
+    state.width = width;
+    state.height = height;
+    state.dpr = dpr;
+    state.canvas.width = width;
+    state.canvas.height = height;
+    requestRender(8);
+    return true;
   }
 
   function measureStage() {
-    var mount = rectState(els.mount);
-    var canvas = rectState(els.canvas);
+    if (!state.stage) return false;
+    return updateDimensions(state.stage.getBoundingClientRect());
+  }
 
-    state.mountExists = mount.exists;
-    state.mountRectNonZero = mount.nonzero;
-    state.canvasExists = canvas.exists;
-    state.canvasRectNonZero = canvas.nonzero;
-    state.updatedAt = now();
+  function setupResize() {
+    measureStage();
 
-    if (els.mount) {
-      els.mount.dataset.mountRectNonZero = String(state.mountRectNonZero);
-      els.mount.dataset.canvasRectNonZero = String(state.canvasRectNonZero);
-      els.mount.dataset.measuredWidth = String(mount.width);
-      els.mount.dataset.measuredHeight = String(mount.height);
+    if (typeof ResizeObserver !== "undefined" && state.stage) {
+      resizeObserver = new ResizeObserver(() => measureStage());
+      try { resizeObserver.observe(state.stage); } catch (_error) {}
     }
 
-    if (els.canvas) {
-      els.canvas.dataset.canvasRectNonZero = String(state.canvasRectNonZero);
-      els.canvas.dataset.measuredWidth = String(canvas.width);
-      els.canvas.dataset.measuredHeight = String(canvas.height);
-    }
-
-    if (els.stageStatus) {
-      els.stageStatus.textContent =
-        state.mountRectNonZero && state.canvasRectNonZero
-          ? "Stage prepared · surface is measurable"
-          : "Stage preparing · surface measurement pending";
-    }
-
-    updateGauges();
+    window.addEventListener("resize", () => {
+      measureStage();
+      requestRender(8);
+    }, signal ? { signal, passive: true } : { passive: true });
   }
 
-  function updateGaugeCard(card, strongText, bodyText) {
-    if (!card) return;
-
-    var strong = $("strong", card);
-    var body = $("p", card);
-
-    if (strong) strong.textContent = strongText;
-    if (body) body.textContent = bodyText;
+  function pointerPoint(event) {
+    const rect = state.rect || state.stage.getBoundingClientRect();
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
   }
 
-  function updateGauges() {
-    updateGaugeCard(
-      els.gaugeVisual,
-      state.mountRectNonZero && state.canvasRectNonZero ? "Stage measurable" : "Stage being renewed",
-      state.mountRectNonZero && state.canvasRectNonZero
-        ? "The chamber now gives the production viewport physical space."
-        : "The chamber shell exists, but the measurable stage has not fully proved nonzero layout yet."
-    );
-
-    updateGaugeCard(
-      els.gaugeMotion,
-      "Awaiting interaction proof",
-      "Motion and touch should be proven separately from route-shell layout."
-    );
-
-    updateGaugeCard(
-      els.gaugeNarrative,
-      "Mirrorland aligned",
-      "Hearth now reads as a facility in the Unknown with Audralia as the first planetary subject."
-    );
-
-    updateGaugeCard(
-      els.gaugeDiagnostic,
-      "Diagnostic panel active",
-      "The instrument room remains the under-the-hood proof source."
-    );
+  function resetCarrier() {
+    state.yaw = -0.48;
+    state.pitch = -0.14;
+    state.roll = 0;
+    state.velocityYaw = 0;
+    state.velocityPitch = 0;
+    requestRender(12);
   }
 
-  function actionHTML(actions) {
-    return (actions || [])
-      .map(function mapAction(action) {
-        return (
-          '<a class="panel-link" href="' +
-          safeText(action.href) +
-          '">' +
-          safeText(action.label) +
-          "</a>"
-        );
-      })
-      .join("");
-  }
+  function bindPointer() {
+    if (!state.stage) return;
 
-  function renderPanel(key) {
-    if (!els.panel) return;
+    state.stage.addEventListener("pointerdown", (event) => {
+      const t = now();
+      if (t - state.lastTap < 320) resetCarrier();
+      state.lastTap = t;
 
-    var slide = getSlide(key);
-    var points = (slide.points || [])
-      .map(function mapPoint(point) {
-        return "<li>" + safeText(point) + "</li>";
-      })
-      .join("");
+      state.pointerActive = true;
+      state.pointerId = event.pointerId;
 
-    els.panel.innerHTML =
-      '<div class="panel-content">' +
-        '<p class="panel-kicker">' + safeText(slide.kicker) + "</p>" +
-        "<h3>" + safeText(slide.title) + "</h3>" +
-        '<p class="panel-thesis">' + safeText(slide.thesis) + "</p>" +
-        '<ul class="panel-points">' + points + "</ul>" +
-        '<blockquote class="panel-quote">' + safeText(slide.quote) + "</blockquote>" +
-        '<div class="panel-actions">' + actionHTML(slide.cta) + "</div>" +
-      "</div>";
+      const p = pointerPoint(event);
+      state.pointerX = p.x;
+      state.pointerY = p.y;
+      state.velocityYaw = 0;
+      state.velocityPitch = 0;
 
-    els.panel.dataset.activeOrbit = key;
-    els.panel.dataset.activeLens = state.activeLens;
-    els.panel.setAttribute("tabindex", "-1");
-  }
+      try { state.stage.setPointerCapture(event.pointerId); } catch (_error) {}
 
-  function updateNodeState() {
-    els.orbitNodes.forEach(function eachNode(node) {
-      var key = node.getAttribute("data-orbit-node");
-      var active = key === state.activeOrbit;
-      node.classList.toggle("is-active", active);
-      node.setAttribute("aria-pressed", active ? "true" : "false");
-    });
+      requestRender(4);
+      event.preventDefault();
+    }, signal ? { signal, passive: false } : { passive: false });
 
-    if (els.orbit) {
-      els.orbit.classList.toggle("has-active", state.activeOrbit !== "orbit");
-    }
+    state.stage.addEventListener("pointermove", (event) => {
+      if (!state.pointerActive) return;
 
-    els.lensButtons.forEach(function eachLens(button) {
-      var active = button.getAttribute("data-lens") === state.activeLens;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", active ? "true" : "false");
-    });
+      const p = pointerPoint(event);
+      const dx = p.x - state.pointerX;
+      const dy = p.y - state.pointerY;
 
-    if (els.body) {
-      els.body.dataset.hearthLens = state.activeLens;
-      els.body.dataset.hearthOrbit = state.activeOrbit;
-    }
-  }
+      state.pointerX = p.x;
+      state.pointerY = p.y;
 
-  function setOrbit(key, options) {
-    var opts = options || {};
-    state.activeOrbit = slides[key] ? key : "orbit";
-    state.updatedAt = now();
+      state.yaw += dx * .0082;
+      state.pitch = clamp(state.pitch + dy * .0054, -1.16, 1.16);
+      state.velocityYaw = clamp(dx * .0022, -.048, .048);
+      state.velocityPitch = clamp(dy * .0014, -.038, .038);
 
-    updateNodeState();
-    renderPanel(state.activeOrbit);
+      requestRender(2);
+      event.preventDefault();
+    }, signal ? { signal, passive: false } : { passive: false });
 
-    if (state.activeOrbit !== "orbit" && opts.scroll !== false) {
-      delayedForceScrollTo(els.panel);
-    }
-  }
+    const release = (event) => {
+      if (!state.pointerActive) return;
+      state.pointerActive = false;
 
-  function returnToOrbit() {
-    setOrbit("orbit", { scroll: false });
-    delayedForceScrollTo(els.orbit || els.orbitSection);
+      try {
+        if (state.pointerId !== null) state.stage.releasePointerCapture(state.pointerId);
+      } catch (_error) {}
+
+      state.pointerId = null;
+      requestRender(18);
+
+      try { event.preventDefault(); } catch (_error2) {}
+    };
+
+    state.stage.addEventListener("pointerup", release, signal ? { signal, passive: false } : { passive: false });
+    state.stage.addEventListener("pointercancel", release, signal ? { signal, passive: false } : { passive: false });
+    state.stage.addEventListener("lostpointercapture", release, signal ? { signal, passive: false } : { passive: false });
+
+    state.onePointerPath = true;
   }
 
   function setLens(lens) {
-    state.activeLens = lens === "engineering" ? "engineering" : "platform";
-    state.updatedAt = now();
+    const clean = Object.prototype.hasOwnProperty.call(LENS_COPY, lens) ? lens : "facility";
+    state.activeLens = clean;
 
-    updateNodeState();
-    renderPanel(state.activeOrbit || "orbit");
+    all("[data-hearth-lens-button]").forEach((button) => {
+      const active = button.getAttribute("data-hearth-lens-button") === clean;
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      setBool(button, "data-active", active);
+      setBool(button, "data-muted", !active);
+    });
 
-    if (state.activeOrbit !== "orbit") {
-      delayedForceScrollTo(els.panel);
+    setText("[data-hearth-lens-title]", LENS_COPY[clean].title);
+    setText("[data-hearth-lens-copy]", LENS_COPY[clean].copy);
+    setHtml("[data-hearth-stage-label]", LENS_COPY[clean].label);
+
+    writeDiagnosticSlots();
+    requestRender(clean === "facility" ? 8 : 14);
+    publishStatus();
+  }
+
+  function setCategory(category) {
+    const clean = String(category || "chamber").trim();
+
+    state.activeCategory = clean;
+
+    all("[data-hearth-category-button]").forEach((button) => {
+      const active = button.getAttribute("data-hearth-category-button") === clean;
+      setBool(button, "data-active", active);
+      setBool(button, "data-muted", !active);
+    });
+
+    all("[data-hearth-category-panel]").forEach((panel) => {
+      const active = panel.getAttribute("data-hearth-category-panel") === clean;
+      setBool(panel, "data-active", active);
+      panel.hidden = !active;
+    });
+
+    publishStatus();
+  }
+
+  function buildSpectrum() {
+    const spectrum = one("[data-hearth-spectrum]");
+    if (!spectrum) return;
+
+    spectrum.innerHTML = "";
+
+    for (let index = 1; index <= LATTICE_STATES; index += 1) {
+      const cell = document.createElement("button");
+      cell.type = "button";
+      cell.setAttribute("aria-label", `Hearth diagnostic state ${index}`);
+      cell.setAttribute("data-hearth-spectrum-cell", String(index));
+      spectrum.appendChild(cell);
     }
   }
 
-  function bindControls() {
-    els.orbitNodes.forEach(function bindOrbitNode(node) {
-      node.setAttribute("type", "button");
-      node.setAttribute("aria-pressed", "false");
-
-      node.addEventListener("click", function onClick(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        setOrbit(node.getAttribute("data-orbit-node"), { scroll: true });
-      });
+  function activateMatrixCell(cell) {
+    all("[data-hearth-matrix-cell]").forEach((node) => {
+      const active = node === cell;
+      setBool(node, "data-active", active);
+      setBool(node, "data-muted", !active);
     });
 
-    els.lensButtons.forEach(function bindLensButton(button) {
-      button.setAttribute("type", "button");
-
-      button.addEventListener("click", function onClick(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        setLens(button.getAttribute("data-lens"));
-      });
-    });
-
-    if (els.returnOrbit) {
-      els.returnOrbit.setAttribute("type", "button");
-      els.returnOrbit.addEventListener("click", function onReturn(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        returnToOrbit();
-      });
-    }
-
-    doc.addEventListener("keydown", function onKeydown(event) {
-      if (event.key === "Escape") {
-        returnToOrbit();
-      }
-    });
+    state.activeMatrixCell = cell.getAttribute("data-hearth-matrix-cell") || cell.textContent.trim();
+    setText("[data-hearth-matrix-readout]", `Selected chamber: ${state.activeMatrixCell}`);
+    publishStatus();
   }
 
-  function readHash() {
-    var key = (root.location.hash || "").replace("#", "").trim();
-    if (slides[key]) {
-      setOrbit(key, { scroll: false });
-    }
+  function activateSpectrumCell(cell) {
+    all("[data-hearth-spectrum-cell]").forEach((node) => {
+      const active = node === cell;
+      setBool(node, "data-active", active);
+      setBool(node, "data-muted", false);
+    });
+
+    state.activeSpectrumCell = cell.getAttribute("data-hearth-spectrum-cell") || "";
+    setText("[data-hearth-spectrum-readout]", `Selected diagnostic state: ${state.activeSpectrumCell} of 256.`);
+    publishStatus();
   }
 
-  function publishAPI() {
-    var api = {
+  function returnToOrbit() {
+    state.activeLens = "facility";
+    state.activeCategory = "chamber";
+    state.activeMatrixCell = "";
+    state.activeSpectrumCell = "";
+
+    all("[data-hearth-spectrum-cell], [data-hearth-matrix-cell]").forEach((node) => {
+      setBool(node, "data-active", false);
+      setBool(node, "data-muted", false);
+    });
+
+    setLens("facility");
+    setCategory("chamber");
+    resetCarrier();
+
+    const stage = one("#hearthGlobeStage");
+    if (stage) {
+      window.setTimeout(() => {
+        stage.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "center" });
+      }, 30);
+    }
+
+    publishStatus();
+  }
+
+  function prefersReducedMotion() {
+    return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function writeDiagnosticSlots() {
+    let written = true;
+
+    written = setText("[data-hearth-diagnostic-route]", "Hearth facility route · Mirrorland alias active") && written;
+    written = setText("[data-hearth-diagnostic-location]", "unknown") && written;
+    written = setText("[data-hearth-diagnostic-carrier]", state.oneCanvas ? "one canvas carrier mounted" : "canvas carrier pending") && written;
+    written = setText("[data-hearth-diagnostic-lens]", state.activeLens) && written;
+    written = setText("[data-hearth-diagnostic-category]", state.activeCategory) && written;
+    written = setText("[data-hearth-diagnostic-loop]", state.renderCount > 0 ? "RAF carrier loop active" : "loop pending") && written;
+    written = setText("[data-hearth-diagnostic-spectrum]", "16 × 16 / 256 local chamber spectrum") && written;
+    written = setText("[data-hearth-diagnostic-authority]", "mutation held · no F13/F21 claim") && written;
+
+    state.diagnosticSlotsWritten = written;
+
+    setDataset("hearthShowroomContract", CONTRACT);
+    setDataset("hearthShowroomCssContract", CSS_CONTRACT);
+    setDataset("hearthShowroomHtmlContract", HTML_CONTRACT);
+    setDataset("hearthFacilityAlias", "true");
+    setDataset("hearthFacilityLocation", "unknown");
+    setDataset("hearthActiveLens", state.activeLens);
+    setDataset("hearthActiveCategory", state.activeCategory);
+    setDataset("hearthOneCanvas", state.oneCanvas);
+    setDataset("hearthLatticeStates", LATTICE_STATES);
+    setDataset("hearthCanvasReleaseAuthorized", "false");
+    setDataset("hearthVisualPassClaimed", "false");
+  }
+
+  function publishStatus() {
+    const payload = {
       contract: CONTRACT,
-      receipt: RECEIPT,
-      version: VERSION,
-      setOrbit: setOrbit,
-      returnToOrbit: returnToOrbit,
-      setLens: setLens,
-      forceScrollToPanel: function forceScrollToPanel() {
-        delayedForceScrollTo(els.panel);
-      },
-      forceScrollToOrbit: function forceScrollToOrbit() {
-        delayedForceScrollTo(els.orbit || els.orbitSection);
-      },
-      measureStage: function publicMeasureStage() {
-        measureStage();
-        return api.getReceiptLight();
-      },
-      getState: function getState() {
-        measureStage();
-        return JSON.parse(JSON.stringify(state));
-      },
-      getReceiptLight: function getReceiptLight() {
-        measureStage();
-        return {
-          CONTRACT: CONTRACT,
-          RECEIPT: RECEIPT,
-          VERSION: VERSION,
-          TARGET_ROUTE: TARGET_ROUTE,
-          DIAGNOSTIC_ROUTE: DIAGNOSTIC_ROUTE,
-          ACTIVE_ORBIT: state.activeOrbit,
-          ACTIVE_LENS: state.activeLens,
-          MOUNT_EXISTS: state.mountExists,
-          MOUNT_RECT_NONZERO: state.mountRectNonZero,
-          CANVAS_EXISTS: state.canvasExists,
-          CANVAS_RECT_NONZERO: state.canvasRectNonZero,
-          PRODUCTION_MUTATION_AUTHORIZED: false,
-          CANVAS_REPAIR_AUTHORIZED: false,
-          CANVAS_BUILD_AUTHORIZED: false,
-          CANVAS_RELEASE_AUTHORIZED: false,
-          CONTROLS_REPAIR_AUTHORIZED: false,
-          RUNTIME_RESTART_AUTHORIZED: false,
-          VISUAL_PASS_CLAIMED: false,
-          WEBGL: false
-        };
-      }
+      cssContract: CSS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
+      route: ROUTE,
+      targetFile: TARGET_FILE,
+
+      hearthAliasForFacility: true,
+      locationKnown: false,
+      location: "unknown",
+      mirrorlandCollaborativeTheme: true,
+      eerieMysticalFacilityTheme: true,
+
+      activeLens: state.activeLens,
+      activeCategory: state.activeCategory,
+      activeMatrixCell: state.activeMatrixCell,
+      activeSpectrumCell: state.activeSpectrumCell,
+
+      oneCanvas: state.oneCanvas,
+      onePointerPath: state.onePointerPath,
+      geometryBuilt: state.geometryBuilt,
+      radialNodes: RADIAL_NODES,
+      fibonacciBands: FIBONACCI_BANDS,
+      latticeStates: LATTICE_STATES,
+
+      diagnosticSlotsWritten: state.diagnosticSlotsWritten,
+      renderCount: state.renderCount,
+      duplicateCanvasRemoved: state.duplicateCanvasRemoved,
+
+      productionMutationAuthorized: false,
+      canvasRepairAuthorized: false,
+      canvasBuildAuthorized: false,
+      canvasReleaseAuthorized: false,
+      controlsRepairAuthorized: false,
+      runtimeRestartAuthorized: false,
+      routeRepairAuthorized: false,
+      targetRouteRendererMutationAuthorized: false,
+      readyTextClaimed: false,
+      f13Claimed: false,
+      f21Claimed: false,
+      visualPassClaimed: false,
+      generatedImage: false,
+      graphicBox: false,
+      webGL: false,
+
+      status: state.status,
+      failureCode: state.failureCode,
+      failureReason: state.failureReason,
+      errors: state.errors.slice(),
+      updatedAt: new Date().toISOString()
     };
 
-    root.HEARTH_FACILITY_ORBIT_CONTENT_CONTROLLER = api;
+    window[STATUS_GLOBAL] = payload;
+    window.HEARTH = window.HEARTH || {};
+    window.HEARTH.showroomFacilityStatus = payload;
 
-    root.HEARTH = root.HEARTH || {};
-    root.HEARTH.facilityOrbitContentController = api;
+    return payload;
+  }
 
-    root.DEXTER_LAB = root.DEXTER_LAB || {};
-    root.DEXTER_LAB.hearthFacilityOrbitContentController = api;
+  function stop() {
+    state.stopped = true;
+
+    if (state.raf) {
+      try { window.cancelAnimationFrame(state.raf); } catch (_error) {}
+    }
+
+    state.raf = 0;
+
+    if (resizeObserver) {
+      try { resizeObserver.disconnect(); } catch (_error2) {}
+    }
+
+    if (abortController) {
+      try { abortController.abort(); } catch (_error3) {}
+    }
+  }
+
+  function exposeApi() {
+    const api = {
+      contract: CONTRACT,
+      cssContract: CSS_CONTRACT,
+      htmlContract: HTML_CONTRACT,
+      route: ROUTE,
+      targetFile: TARGET_FILE,
+      state,
+      setLens,
+      setCategory,
+      resetCarrier,
+      returnToOrbit,
+      writeDiagnosticSlots,
+      publishStatus,
+      stop
+    };
+
+    window[CONTROLLER_GLOBAL] = api;
+    window.HEARTH = window.HEARTH || {};
+    window.HEARTH.showroomFacilityController = api;
+  }
+
+  function attachEvents() {
+    all("[data-hearth-lens-button]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setLens(button.getAttribute("data-hearth-lens-button") || "facility");
+      }, signal ? { signal } : false);
+    });
+
+    all("[data-hearth-category-button]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setCategory(button.getAttribute("data-hearth-category-button") || "chamber");
+      }, signal ? { signal } : false);
+    });
+
+    all("[data-hearth-matrix-cell]").forEach((cell) => {
+      cell.addEventListener("click", () => activateMatrixCell(cell), signal ? { signal } : false);
+    });
+
+    document.addEventListener("click", (event) => {
+      const returnTrigger = event.target.closest("[data-hearth-return-to-orbit]");
+      if (returnTrigger) {
+        event.preventDefault();
+        returnToOrbit();
+        return;
+      }
+
+      const spectrumCell = event.target.closest("[data-hearth-spectrum-cell]");
+      if (spectrumCell) activateSpectrumCell(spectrumCell);
+    }, signal ? { signal } : false);
   }
 
   function init() {
-    state.initializedAt = now();
-    state.updatedAt = state.initializedAt;
-
-    captureElements();
-    bindControls();
-    publishAPI();
-
-    setLens("platform");
-    setOrbit("orbit", { scroll: false });
-    readHash();
-    measureStage();
-
-    root.addEventListener("resize", measureStage, { passive: true });
-
-    if ("ResizeObserver" in root && els.mount) {
-      var observer = new ResizeObserver(measureStage);
-      observer.observe(els.mount);
-      if (els.canvas) observer.observe(els.canvas);
+    const prior = window[CONTROLLER_GLOBAL];
+    if (prior && prior.contract !== CONTRACT && typeof prior.stop === "function") {
+      try { prior.stop(); } catch (_error) {}
     }
+
+    state.stage = one("#hearthGlobeStage");
+    state.mount = one("#hearthGlobeMount");
+
+    if (!state.stage || !state.mount) {
+      recordError("init", "Missing #hearthGlobeStage or #hearthGlobeMount");
+      writeDiagnosticSlots();
+      exposeApi();
+      return;
+    }
+
+    buildSpectrum();
+    exposeApi();
+    enforceOneCanvas();
+    buildGeometry();
+    setupResize();
+    bindPointer();
+    attachEvents();
+
+    setLens("facility");
+    setCategory("chamber");
+
+    state.status = "ACTIVE";
+    state.failureCode = "NONE";
+    state.failureReason = "";
+
+    writeDiagnosticSlots();
+    publishStatus();
+    requestRender(12);
   }
 
-  if (doc.readyState === "loading") {
-    doc.addEventListener("DOMContentLoaded", init, { once: true });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, signal ? { signal, once: true } : { once: true });
   } else {
     init();
   }

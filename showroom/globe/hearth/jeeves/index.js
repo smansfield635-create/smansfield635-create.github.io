@@ -1,14 +1,14 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_256_STATE_DEEP_CONTINUATION_CONVERSATION_ENGINE_TNT_v15
+// HEARTH_JEEVES_FUTURE_SHADOW_FRONTIER_SCIENCE_ESTATE_DEPTH_ENGINE_TNT_v16
 // Full-file replacement.
 // Preserves existing HTML/CSS contract.
-// Owns deterministic Jeeves interface control, deep continuation ladders, conversational option language, dual public/narrative registries, character relationship registry, tap-to-advance, guided route handoffs, and dormant backend bridge stub.
+// Owns deterministic Jeeves interface control, estate-language governor, future-shadow premise, frontier-science depth, deep continuation ladders, conversational option language, public/narrative registries, character relationship paths, tap-to-advance, guided route handoffs, and dormant backend bridge stub.
 // Does not own HTML, CSS, backend execution, server memory, API keys, persistent storage, or open freeform AI.
 
-(function hearthJeevesDeepContinuationConversationEngine(global) {
+(function hearthJeevesFutureShadowFrontierScienceEstateDepthEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_256_STATE_DEEP_CONTINUATION_CONVERSATION_ENGINE_TNT_v15";
+  var CONTRACT = "HEARTH_JEEVES_FUTURE_SHADOW_FRONTIER_SCIENCE_ESTATE_DEPTH_ENGINE_TNT_v16";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
   var FUTURE_BRAIN_ENDPOINT = "/api/jeeves.js";
 
@@ -122,7 +122,7 @@
   ];
 
   var FORBIDDEN_PUBLIC_LANGUAGE = [
-    { pattern: /\bconstruct\b/gi, replacement: "work" },
+    { pattern: /\bconstruct\b/gi, replacement: "estate" },
     { pattern: /\bscope lane\b/gi, replacement: "path" },
     { pattern: /\bregistry\b/gi, replacement: "guide" },
     { pattern: /\borgan\b/gi, replacement: "part" },
@@ -133,7 +133,10 @@
     { pattern: /\bprogression state\b/gi, replacement: "step" },
     { pattern: /\bbackend bridge\b/gi, replacement: "deeper answer path" },
     { pattern: /\bAPI\b/g, replacement: "answer path" },
-    { pattern: /\bpublic human-voice side\b/gi, replacement: "place where the voice becomes human" }
+    { pattern: /\bpublic human-voice side\b/gi, replacement: "place where the voice becomes human" },
+    { pattern: /\bSean's page\b/gi, replacement: "the chamber where the visitor meets Sean" },
+    { pattern: /\bthis page\b/gi, replacement: "this chamber" },
+    { pattern: /\bthat page\b/gi, replacement: "that chamber" }
   ];
 
   var state = {
@@ -228,7 +231,7 @@
   }
 
   var SPEECH_LABEL_FALLBACKS = {
-    websitePath: "Guide me through the public website.",
+    websitePath: "Guide me through the public estate.",
     skepticPlain: "Explain it plainly.",
     proofPath: "Tell me what proves it.",
     diagnosticPath: "Tell me about the Diagnostic.",
@@ -236,12 +239,12 @@
     worldGatePath: "Tell me about the Interactive Narrative.",
     charactersPath: "Who are the characters?",
     compassPath: "I need the Compass.",
-    siteGuidePath: "Tell me how the site is organized.",
+    siteGuidePath: "Tell me how the estate is organized.",
     lawsPath: "Explain the Laws.",
     gaugesPath: "Explain Gauges.",
     seanPath: "Tell me about Sean.",
     underdogPath: "Tell me about This Underdog.",
-    productsPath: "Tell me about Products.",
+    productsPath: "Tell me about the practical wing.",
     bookPath: "Tell me about the book path.",
     nineSummitsPath: "Tell me about Nine Summits.",
     hearthPath: "I want to understand Hearth.",
@@ -273,12 +276,12 @@
         {
           title: "what",
           beats: [
-            "Diamond Gate Bridge is the public work: the site, the proof path, the human voice, the diagnostic tools, the products, and the world doorway gathered under one roof.",
-            "The first move is not to understand everything. The first move is to find the door that matches why you arrived."
+            "Diamond Gate Bridge is the estate: the public proof wing, the human-development chambers, the practical wing, the world threshold, and the future-facing rooms gathered into one navigable place.",
+            "It matters because the future is not finished. What we build today casts a shadow forward, and the shape of that shadow depends on what we choose to design now."
           ],
           options: [
             say("Why does that matter?", "diamondGateBridgeWhy"),
-            say("Where does that lead?", "diamondGateBridgeLead"),
+            say("Where does the estate lead?", "diamondGateBridgeLead"),
             say("I need orientation.", "compassPath", { signal: "orientation" }),
             say("I want proof.", "proofPath", { signal: "skeptic" }),
             say("I want the world side.", "worldPath", { signal: "world" })
@@ -287,29 +290,30 @@
         {
           title: "why",
           beats: [
-            "It matters because the project is too large to be treated like a normal menu.",
-            "A normal site asks you to browse. This one has to read why you arrived, then bring you to the right kind of door: proof, reflection, usefulness, human voice, or world entry."
+            "It matters because frontier science, social imagination, economic design, and human development do not arrive from nowhere.",
+            "They are shaped by prototypes, symbols, rooms, systems, diagnostics, stories, and tools before they become ordinary reality.",
+            "Diamond Gate Bridge is one attempt to make that future-building visible, testable, usable, and human."
           ],
           options: [
-            say("Show me those doors.", "diamondGateBridgeLead"),
-            say("Tell me about proof.", "proofPath"),
-            say("Tell me about self-reflection.", "diagnosticPath"),
-            say("Tell me about the human voice.", "seanPath"),
-            say("Tell me about the world entry.", "worldPath")
+            say("Where does that future-building lead?", "diamondGateBridgeLead"),
+            say("How does proof fit into that?", "proofPath"),
+            say("How does the Diagnostic fit?", "diagnosticPath"),
+            say("How does Mirrorland fit?", "worldPath"),
+            say("How does Sean fit?", "seanPath")
           ]
         },
         {
           title: "lead",
           beats: [
-            "It leads in two directions at once.",
-            "On the public side, you can follow proof, products, diagnostics, laws, gauges, Sean, and the book path.",
-            "On the world side, the Showroom becomes the threshold, then the Interactive Narrative, Hearth, Audralia, Frontier, and the Characters begin to open."
+            "The estate leads in two directions at once.",
+            "On the public side, it leads toward proof, tools, diagnostics, products, Sean, This Underdog, and the book path.",
+            "On the world side, it leads toward Mirrorland: a future playground for frontier science, interactive narrative, speculative systems, character pressure, and social-economic possibility."
           ],
           options: [
             say("Keep me on the public side.", "websitePath"),
             say("Take me toward proof.", "proofPath"),
             say("Take me toward the Diagnostic.", "diagnosticPath"),
-            say("Take me toward the world side.", "worldPath"),
+            say("Take me toward Mirrorland.", "worldPath"),
             control("Which door fits this best?", "cleanDoor")
           ]
         }
@@ -326,8 +330,8 @@
         {
           title: "what",
           beats: [
-            "The Compass is the cleanest first route.",
-            "It helps you choose between proof, self-reflection, practical use, the human voice, and the world door without needing to hold the entire site in your head."
+            "The Compass is the first orientation room.",
+            "It helps the visitor choose between proof, self-reflection, practical use, the human designer behind the estate, and the world side without forcing the whole estate into one thought."
           ],
           options: [
             say("Why is the Compass first?", "compassWhy"),
@@ -341,11 +345,11 @@
           title: "why",
           beats: [
             "The Compass is first because orientation has to come before belief.",
-            "A visitor can reject the work too quickly if they meet the wrong door first. The Compass slows that down and gives the right kind of entry."
+            "A visitor can reject the estate too quickly if they meet the wrong door first. The Compass slows that down and gives the right kind of entry."
           ],
           options: [
             say("Show me the doors.", "compassLead"),
-            say("Tell me about the Site Guide.", "siteGuidePath"),
+            say("Tell me about the estate map.", "siteGuidePath"),
             say("Tell me about the Laws.", "lawsPath"),
             say("Tell me about the Diagnostic.", "diagnosticPath"),
             say("Tell me about the Showroom.", "worldPath")
@@ -355,13 +359,13 @@
           title: "lead",
           beats: [
             "The Compass points to five basic doors.",
-            "Proof belongs to Laws and Gauges. Self-reflection belongs to the Diagnostic. Practical use belongs to Products. Human voice belongs to Sean and This Underdog. The world side begins at the Showroom."
+            "Proof belongs to Laws and Gauges. Self-reflection belongs to the Diagnostic. Practical use belongs to Products. Human voice and authorship belong to Sean and This Underdog. The world side begins at the Showroom."
           ],
           options: [
             say("Explain proof.", "proofPath"),
             say("Explain self-reflection.", "diagnosticPath"),
-            say("Explain the human voice.", "seanPath"),
-            say("Explain the world side.", "worldPath"),
+            say("Explain Sean’s role.", "seanPath"),
+            say("Explain Mirrorland.", "worldPath"),
             control("Which door fits me best?", "cleanDoor")
           ]
         }
@@ -378,11 +382,11 @@
         {
           title: "what",
           beats: [
-            "The Site Guide is the public map.",
-            "It separates ordinary website rooms from the deeper rooms so a visitor can see what is public structure, what is proof, what is practical, and what begins pointing toward the world side."
+            "The Site Guide is the public map of the estate.",
+            "It separates ordinary public rooms from deeper estate rooms so a visitor can see what proves, what guides, what reflects, what can be used, and what begins crossing into Mirrorland."
           ],
           options: [
-            say("Why does the map need separation?", "siteGuideWhy"),
+            say("Why does the estate need separation?", "siteGuideWhy"),
             say("Where does the map lead?", "siteGuideLead"),
             say("Tell me about the Compass.", "compassPath"),
             say("Tell me about the Showroom.", "worldPath")
@@ -391,8 +395,8 @@
         {
           title: "why",
           beats: [
-            "The separation matters because the site has two kinds of rooms.",
-            "Some pages explain the work in ordinary public terms. Other doors begin crossing into Mirrorland, Hearth, Audralia, Characters, and the interactive world."
+            "The separation matters because the estate has two kinds of rooms.",
+            "Some rooms explain the work in public terms. Other doors begin crossing into Mirrorland, Hearth, Audralia, Frontier, Characters, and the future-facing playground behind the estate."
           ],
           options: [
             say("Show me the public side.", "websitePath"),
@@ -404,7 +408,7 @@
         {
           title: "lead",
           beats: [
-            "The public map leads to Compass, Laws, Governance, Gauges, Products, the Diagnostic, and the human voice.",
+            "The public map leads to Compass, Laws, Gauges, Products, the Diagnostic, Sean, This Underdog, and the book path.",
             "The deeper map leads toward the Showroom, the Interactive Narrative, Hearth, Audralia, Frontier, and the Characters."
           ],
           options: [
@@ -427,8 +431,8 @@
         {
           title: "what",
           beats: [
-            "The proof path is where the work stops asking for trust and starts making its structure testable.",
-            "If you are skeptical, this is the right path. Doubt should not be bypassed; it should be given something to examine."
+            "The proof wing is where the estate stops asking for trust and starts making its structure testable.",
+            "If you are skeptical, this is the right wing. Doubt should not be bypassed; it should be given something to examine."
           ],
           options: [
             say("What makes it testable?", "proofWhy"),
@@ -442,7 +446,8 @@
           title: "why",
           beats: [
             "It becomes testable when claims are separated from decoration.",
-            "The Laws show the governing claims. Gauges show whether routes and systems are holding. The Diagnostic lets a visitor test pressure and coherence through themselves."
+            "The Laws show the governing claims. Gauges show whether routes and systems are holding. The Diagnostic lets a visitor test pressure and coherence through themselves.",
+            "That matters because future-building without proof can turn into spectacle. Proof keeps the estate accountable."
           ],
           options: [
             say("Tell me about the Laws.", "lawsPath"),
@@ -455,14 +460,14 @@
           title: "lead",
           beats: [
             "If you want the claim layer, go to Laws.",
-            "If you want status and technical confidence, go to Gauges.",
+            "If you want visible status and technical confidence, go to Gauges.",
             "If you want to test the work through your own pressure, go to the Diagnostic."
           ],
           options: [
             say("The claim layer.", "lawsPath"),
             say("The status layer.", "gaugesPath"),
             say("The self-test layer.", "diagnosticPath"),
-            say("I want the person behind it.", "seanPath"),
+            say("I want the designer behind it.", "seanPath"),
             control("Which door fits this best?", "cleanDoor")
           ]
         }
@@ -479,8 +484,8 @@
         {
           title: "what",
           beats: [
-            "The Laws page is where the structure makes its claims testable.",
-            "It is for visitors who want proof before they give the world side any trust."
+            "The Laws are the proof wing’s governing chamber.",
+            "They are where the estate makes its claims testable before asking the visitor to enter the deeper world side."
           ],
           options: [
             say("Why do the Laws matter?", "lawsWhy"),
@@ -493,7 +498,8 @@
           title: "why",
           beats: [
             "The Laws matter because imagination without constraint collapses into decoration.",
-            "The Laws keep the work accountable. They say: this is not merely a mood, a menu, or a story. It has claims that can be checked."
+            "The Laws keep the estate accountable. They say: this is not merely mood, menu, or fantasy. It has claims that can be checked.",
+            "That is why the world side needs them. Mirrorland can be imaginative because the estate below it is trying to remain governed."
           ],
           options: [
             say("Show me what checks them.", "gaugesPath"),
@@ -511,7 +517,7 @@
           options: [
             say("Tell me about Gauges.", "gaugesPath"),
             say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about the world side.", "worldPath"),
+            say("Tell me about Mirrorland.", "worldPath"),
             control("Which proof door fits me?", "cleanDoor")
           ]
         }
@@ -528,8 +534,8 @@
         {
           title: "what",
           beats: [
-            "Gauges are the status route.",
-            "They are for visitors who want to see whether the site, worlds, routes, and systems are holding instead of only hearing what they are supposed to become."
+            "Gauges are the estate’s status instruments.",
+            "They are for visitors who want to see whether the rooms, routes, worlds, and systems are holding instead of only hearing what they are supposed to become."
           ],
           options: [
             say("Why do Gauges matter?", "gaugesWhy"),
@@ -541,25 +547,26 @@
         {
           title: "why",
           beats: [
-            "Gauges matter because a large work needs visible status.",
-            "They keep the visitor from confusing ambition with completion. A held route, a working gate, and a visible system are different from a promise."
+            "Gauges matter because a large estate needs visible status.",
+            "They keep the visitor from confusing ambition with completion. A held route, a working gate, and a visible system are different from a promise.",
+            "That distinction is part of the economic discipline of the estate: what can be shown, what can be used, what can be tested, and what is still forming."
           ],
           options: [
             say("Where do Gauges lead?", "gaugesLead"),
             say("Tell me about the Laws.", "lawsPath"),
             say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about the world side.", "worldPath")
+            say("Tell me about Mirrorland.", "worldPath")
           ]
         },
         {
           title: "lead",
           beats: [
             "Gauges lead back into trust.",
-            "If a route is visible, held, and tested, the visitor can move forward with more confidence. If it is not, the right move is to say so clearly."
+            "If a route is visible, held, and tested, the visitor can move forward with more confidence. If it is not, the estate should say so clearly."
           ],
           options: [
-            say("Take me to the proof layer.", "proofPath"),
-            say("Take me to the Diagnostic explanation.", "diagnosticPath"),
+            say("Take me to the proof wing.", "proofPath"),
+            say("Take me to the Diagnostic.", "diagnosticPath"),
             say("Take me toward the world threshold.", "worldPath"),
             control("Which door fits this best?", "cleanDoor")
           ]
@@ -577,7 +584,7 @@
         {
           title: "what",
           beats: [
-            "The Diagnostic is the public mirror path.",
+            "The Diagnostic is the estate’s public mirror chamber.",
             "It helps a visitor notice the difference between what they claim, what they choose, and what pressure reveals."
           ],
           options: [
@@ -591,7 +598,8 @@
           title: "why",
           beats: [
             "It matters because people often describe themselves from intention, but pressure reveals them through movement.",
-            "The Diagnostic does not need to flatter the visitor. It needs to help them see where claim, choice, and pressure do not match."
+            "The Diagnostic does not need to flatter the visitor. It needs to help them see where claim, choice, and pressure do not match.",
+            "That makes it social as well as personal. A person who can read pressure more clearly can make cleaner decisions, form better teams, build better systems, and stop carrying noise as identity."
           ],
           options: [
             say("Where does that lead?", "diagnosticLead"),
@@ -626,8 +634,8 @@
         {
           title: "what",
           beats: [
-            "Future Profile is the future-facing return path.",
-            "It points toward a version of the Diagnostic that could become more personal over time, but it should not be treated as fully live until that route is actually ready."
+            "Future Profile is the estate’s future-facing return chamber.",
+            "It points toward a version of the Diagnostic that could become more personal over time, but it should stay clearly marked as future-facing until that path is live."
           ],
           options: [
             say("Why does return matter?", "futureProfileWhy"),
@@ -640,7 +648,7 @@
           title: "why",
           beats: [
             "Return matters because one visit can show interest, but repeated visits can show pattern.",
-            "The future version of this path is not only what a visitor says once. It is what the visitor keeps becoming when pressure, choice, and memory begin to line up."
+            "The future version of this chamber is not only what a visitor says once. It is what the visitor keeps becoming when pressure, choice, and memory begin to line up."
           ],
           options: [
             say("Where does that lead?", "futureProfileLead"),
@@ -652,7 +660,7 @@
           title: "lead",
           beats: [
             "Future Profile leads toward continuity.",
-            "The public version belongs near the Diagnostic. The narrative version belongs near Mirror Me. Both should stay honest about what is live now and what is still future-facing."
+            "The public version belongs near the Diagnostic. The narrative version belongs near Mirror Me. Both should stay honest about what is live now and what is still forming."
           ],
           options: [
             say("Tell me about the Diagnostic.", "diagnosticPath"),
@@ -674,7 +682,7 @@
         {
           title: "what",
           beats: [
-            "Mirror Me is the narrative reflection path.",
+            "Mirror Me is the narrative reflection chamber.",
             "It should not replace the public Diagnostic. It begins where the mirror becomes part of the world."
           ],
           options: [
@@ -688,7 +696,8 @@
           title: "why",
           beats: [
             "The Diagnostic tests a visitor on the public side.",
-            "Mirror Me belongs to the world side. It asks a different question: what happens when the world begins reflecting the visitor back through rooms, characters, choices, and pressure?"
+            "Mirror Me belongs to the world side. It asks a different question: what happens when the world begins reflecting the visitor back through rooms, characters, choices, and pressure?",
+            "That is where the estate stops only describing the future and begins letting the visitor feel how a possible future might look back."
           ],
           options: [
             say("Where does that lead?", "mirrorMeLead"),
@@ -723,8 +732,8 @@
         {
           title: "what",
           beats: [
-            "Meet Sean is where the voice becomes a person.",
-            "That page connects the work to pressure, accountability, comedy, story, speaking, and the real human effort behind Diamond Gate Bridge."
+            "Meet Sean is the estate chamber where the visitor meets Sean Mansfield, the designer and developer of Diamond Gate Bridge.",
+            "Sean is not only the voice behind the estate. He is building the bridge, the rooms, the logic, the public doorway, and the future-facing world path."
           ],
           options: [
             say("Why does Sean matter here?", "seanWhy"),
@@ -736,26 +745,27 @@
         {
           title: "why",
           beats: [
-            "Sean matters here because a work this large needs a human pressure trail.",
-            "The site is not only a polished structure. It carries struggle, voice, comedy, risk, redirection, and the attempt to make pressure useful."
+            "Sean matters here because the estate is not detached from a human pressure trail.",
+            "The work carries design, development, pressure, accountability, comedy, story, risk, redirection, and the attempt to make pressure useful.",
+            "That matters socially and economically because new systems do not only need ideas. They need someone willing to build the interface, carry the pressure, and make the future legible to other people."
           ],
           options: [
             say("Where does that lead?", "seanLead"),
             say("Tell me about This Underdog.", "underdogPath"),
             say("Tell me about the book path.", "bookPath"),
-            say("Tell me about Products.", "productsPath")
+            say("Tell me about the practical wing.", "productsPath")
           ]
         },
         {
           title: "lead",
           beats: [
             "Sean’s path leads toward three public doors.",
-            "This Underdog explains the inner voice under pressure. The book path turns becoming into a longer journey. Products make the message usable."
+            "This Underdog explains the inner voice that belongs to the visitor too. The book path turns becoming into a longer journey. The practical wing makes the message usable."
           ],
           options: [
             say("Tell me about This Underdog.", "underdogPath"),
             say("Tell me about the book path.", "bookPath"),
-            say("Tell me about Products.", "productsPath"),
+            say("Tell me about the practical wing.", "productsPath"),
             control("Which door fits this best?", "cleanDoor")
           ]
         }
@@ -772,9 +782,9 @@
         {
           title: "what",
           beats: [
-            "This Underdog is not only a page about Sean.",
-            "It is the part of a person that has been carrying pressure before it has found language.",
-            "It is the inner voice that knows something is there, but has not yet learned how to stand up, speak clearly, or become useful."
+            "This Underdog is not Sean alone.",
+            "This Underdog is in you. It is in everybody.",
+            "It is the part of a person that has been carrying pressure before it has found language, direction, or use."
           ],
           options: [
             say("Why does that matter?", "underdogWhy"),
@@ -787,7 +797,8 @@
           title: "why",
           beats: [
             "It matters because many people do not lack potential. They lack a language strong enough to hold what pressure has been trying to teach them.",
-            "The Underdog is not weakness. It is the unorganized voice before it becomes direction."
+            "The Underdog is not weakness. It is the unorganized voice before it becomes direction.",
+            "Sean’s role is not to own that voice for himself. His role is to design an estate where the visitor can recognize it too."
           ],
           options: [
             say("Where does that voice lead?", "underdogLead"),
@@ -800,7 +811,7 @@
           title: "lead",
           beats: [
             "That voice can lead in several directions.",
-            "Toward Sean, it becomes the person behind the work. Toward the Diagnostic, it becomes a mirror. Toward the book path, it becomes a longer journey. Toward comedy, it becomes pressure learning how to speak without breaking."
+            "Toward Sean, it becomes design and development. Toward the Diagnostic, it becomes a mirror. Toward the book path, it becomes a longer human-development journey. Toward comedy, it becomes pressure learning how to speak without breaking."
           ],
           options: [
             say("How does pressure become language?", "underdogPressureLanguage"),
@@ -814,11 +825,13 @@
       continuations: {
         underdogPressureLanguage: [
           "Pressure becomes language when a person stops treating the pain as only damage and begins reading it as information.",
-          "That does not make the pressure good. It means the person finally starts extracting voice, boundary, judgment, and direction from it."
+          "That does not make the pressure good. It means the person finally starts extracting voice, boundary, judgment, and direction from it.",
+          "That is the social importance of This Underdog: people who can name their pressure can start turning it into decisions, craft, work, art, leadership, repair, and use."
         ],
         underdogComedy: [
           "Comedy matters because it lets pressure speak without pretending to be untouched by it.",
-          "The comic voice can carry pain, intelligence, embarrassment, timing, and defiance in the same breath. That is why This Underdog lives near comedy."
+          "The comic voice can carry pain, intelligence, embarrassment, timing, and defiance in the same breath.",
+          "That is why This Underdog lives near comedy. Comedy can turn the pressure that isolates a person into language other people can recognize."
         ]
       }
     },
@@ -833,21 +846,22 @@
         {
           title: "what",
           beats: [
-            "Products are where the message becomes usable.",
-            "They are for visitors who do not want only ideas. They want something they can use, wear, read, give, or return to."
+            "Products are the practical wing of the estate.",
+            "They are where the message becomes usable: something a visitor can carry, read, wear, give, return to, or use as a reminder."
           ],
           options: [
-            say("Why do Products matter?", "productsWhy"),
-            say("Where do Products lead?", "productsLead"),
-            say("How do Products connect to the book?", "bookPath"),
-            say("How do Products connect to the Diagnostic?", "diagnosticPath")
+            say("Why does the practical wing matter?", "productsWhy"),
+            say("Where does it lead?", "productsLead"),
+            say("How does this connect to the book?", "bookPath"),
+            say("How does this connect to the Diagnostic?", "diagnosticPath")
           ]
         },
         {
           title: "why",
           beats: [
-            "Products matter because a message that never becomes usable can stay trapped in admiration.",
-            "The practical wing lets the work become touchable. It turns concept into object, reminder, ritual, gift, or tool."
+            "The practical wing matters because a message that never becomes usable can stay trapped in admiration.",
+            "The estate needs objects, tools, and repeatable doors because social and economic impact require more than beautiful language.",
+            "A person should be able to take something from the estate and use it outside the estate."
           ],
           options: [
             say("Where does that lead?", "productsLead"),
@@ -859,8 +873,8 @@
         {
           title: "lead",
           beats: [
-            "Products lead toward practical entry.",
-            "A visitor may not be ready for the full structure, but they may be ready for a phrase, a symbol, a book, a diagnostic, or a piece of the work they can carry."
+            "The practical wing leads toward use.",
+            "A visitor may not be ready for the full estate, but they may be ready for a phrase, a symbol, a book, a diagnostic, or a piece of the work they can carry into daily life."
           ],
           options: [
             say("Tell me about the book.", "bookPath"),
@@ -882,12 +896,12 @@
         {
           title: "what",
           beats: [
-            "The Nine Summits of Love is the book path.",
-            "It takes the pressure, voice, coherence, and becoming questions and turns them into a human-development journey."
+            "The Nine Summits of Love is the book path inside the estate.",
+            "It takes pressure, voice, coherence, love, and becoming and turns them into a human-development journey."
           ],
           options: [
-            say("Why does the book matter?", "bookWhy"),
-            say("Where does the book lead?", "bookLead"),
+            say("Why does the book path matter?", "bookWhy"),
+            say("Where does the book path lead?", "bookLead"),
             say("How does Nine Summits connect?", "nineSummitsPath"),
             say("How does This Underdog connect?", "underdogPath")
           ]
@@ -895,11 +909,12 @@
         {
           title: "why",
           beats: [
-            "The book matters because the work needs a path a person can stay with.",
-            "A page can orient. A diagnostic can reflect. A product can remind. But a book can walk with the reader through pressure, love, voice, and becoming."
+            "The book path matters because the estate needs a route a person can stay with.",
+            "A room can orient. A diagnostic can reflect. A product can remind. But a book can walk with the reader through pressure, love, voice, and becoming.",
+            "That is part of the human side of future-building: people need language before they can carry a future well."
           ],
           options: [
-            say("Where does the book lead?", "bookLead"),
+            say("Where does the book path lead?", "bookLead"),
             say("Tell me about Nine Summits.", "nineSummitsPath"),
             say("Tell me about This Underdog.", "underdogPath"),
             say("Tell me about Sean.", "seanPath")
@@ -908,14 +923,14 @@
         {
           title: "lead",
           beats: [
-            "The book leads toward the broader Nine Summits path.",
-            "It also leads back to Sean’s voice and This Underdog, because the larger human-development path still begins with pressure learning how to speak."
+            "The book path leads toward the broader Nine Summits route.",
+            "It also leads back to Sean and This Underdog, because the larger human-development path still begins with pressure learning how to speak."
           ],
           options: [
             say("Tell me about Nine Summits.", "nineSummitsPath"),
             say("Tell me about Sean.", "seanPath"),
             say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about Products.", "productsPath"),
+            say("Tell me about the practical wing.", "productsPath"),
             control("Which door fits this best?", "cleanDoor")
           ]
         }
@@ -933,7 +948,7 @@
           title: "what",
           beats: [
             "Nine Summits is the wider human-development path.",
-            "It is less about browsing pages and more about what a person is becoming through pressure, love, voice, and coherence."
+            "It is less about browsing and more about what a person is becoming through pressure, love, voice, coherence, and repeated ascent."
           ],
           options: [
             say("Why do the Summits matter?", "nineSummitsWhy"),
@@ -946,7 +961,8 @@
           title: "why",
           beats: [
             "The Summits matter because human development cannot be reduced to motivation alone.",
-            "It needs pressure, love, boundary, voice, coherence, and repeated ascent. A summit is not only inspiration. It is a climb."
+            "It needs pressure, love, boundary, voice, coherence, and repeated ascent.",
+            "A summit is not only inspiration. It is a climb, and the climb is what makes the future human rather than merely technical."
           ],
           options: [
             say("Where does that lead?", "nineSummitsLead"),
@@ -958,14 +974,14 @@
         {
           title: "lead",
           beats: [
-            "Nine Summits leads toward a longer development path.",
-            "The book can introduce it. The Diagnostic can personalize it. Sean’s page can humanize it. Products can make pieces of it usable."
+            "Nine Summits leads toward a longer development route.",
+            "The book can introduce it. The Diagnostic can personalize it. Sean’s chamber can humanize it. The practical wing can make pieces of it usable."
           ],
           options: [
             say("Tell me about the book.", "bookPath"),
             say("Tell me about the Diagnostic.", "diagnosticPath"),
             say("Tell me about Sean.", "seanPath"),
-            say("Tell me about Products.", "productsPath"),
+            say("Tell me about the practical wing.", "productsPath"),
             control("Which door fits this best?", "cleanDoor")
           ]
         }
@@ -983,7 +999,8 @@
           title: "what",
           beats: [
             "The Showroom is the threshold.",
-            "The public map is still visible there, but the world side begins to press against it."
+            "The public map is still visible there, but the world side begins to press against it.",
+            "This is where the estate starts turning from explanation into future-facing space."
           ],
           options: [
             say("Why is the Showroom the threshold?", "showroomWhy"),
@@ -996,7 +1013,7 @@
           title: "why",
           beats: [
             "It is the threshold because the visitor is not fully inside the world yet.",
-            "The Showroom still lets you see the public site, but it also begins preparing you for rooms, characters, portals, and a world that behaves differently from an ordinary page."
+            "The Showroom still lets you see the public estate, but it also begins preparing you for rooms, characters, portals, and a future playground where frontier science and social imagination can be explored before the future hardens into reality."
           ],
           options: [
             say("Where does it lead?", "showroomLead"),
@@ -1009,7 +1026,8 @@
           title: "lead",
           beats: [
             "The threshold leads first into the Interactive Narrative.",
-            "From there, the world can move toward Hearth, Audralia, Frontier, Characters, and Mirror Me. The point is not to browse the world. The point is to cross it carefully."
+            "From there, the world can move toward Hearth, Audralia, Frontier, Characters, and Mirror Me.",
+            "The point is not to browse the world. The point is to cross it carefully, because what we imagine today can become part of what society builds tomorrow."
           ],
           options: [
             say("Tell me about the Interactive Narrative.", "worldGatePath"),
@@ -1033,7 +1051,7 @@
           title: "what",
           beats: [
             "The Interactive Narrative is the first active doorway into the world side.",
-            "It is where the visitor stops only reading and begins moving through the structure."
+            "It is where the visitor stops only reading the future from a distance and begins moving through a possible version of it."
           ],
           options: [
             say("Why does movement matter?", "interactiveNarrativeWhy"),
@@ -1047,7 +1065,8 @@
           title: "why",
           beats: [
             "Movement matters because Mirrorland should not remain a museum of ideas.",
-            "The visitor has to choose, cross, return, inspect, and feel the difference between reading the map and walking through the pressure of the world."
+            "The visitor has to choose, cross, return, inspect, and feel the difference between reading the map and walking through the pressure of the world.",
+            "That is what makes it useful as a future playground: it lets frontier science, story, social systems, and human pressure become explorable instead of abstract."
           ],
           options: [
             say("Where does that lead?", "interactiveNarrativeLead"),
@@ -1084,7 +1103,8 @@
           title: "what",
           beats: [
             "Hearth is the closest room to where I speak from.",
-            "If the world feels too wide, begin there."
+            "If the world feels too wide, begin there.",
+            "It is the first place where the estate begins to feel inhabited rather than only explained."
           ],
           options: [
             say("Why begin with Hearth?", "hearthWhy"),
@@ -1096,8 +1116,9 @@
         {
           title: "why",
           beats: [
-            "Hearth matters because every world needs a first room that can hold the visitor.",
-            "It is not the farthest edge. It is the point of contact. It gives the world a voice, a floor, and a place to begin."
+            "Hearth matters because every future-facing world needs a first room that can hold the visitor.",
+            "It is not the farthest edge. It is the point of contact. It gives the world a voice, a floor, and a place to begin.",
+            "A future playground still needs a hearth, because even frontier science needs a human threshold."
           ],
           options: [
             say("Where does Hearth lead?", "hearthLead"),
@@ -1110,7 +1131,8 @@
           title: "lead",
           beats: [
             "Hearth leads outward.",
-            "From Hearth, the visitor can move toward Audralia, the Characters, the world gate, and eventually the wider frontier. Hearth is not the whole world. It is the room that lets the world begin."
+            "From Hearth, the visitor can move toward Audralia, the Characters, the world gate, and eventually the wider Frontier.",
+            "Hearth is not the whole world. It is the room that lets the world begin."
           ],
           options: [
             say("Tell me about Audralia.", "audraliaPath"),
@@ -1134,7 +1156,8 @@
           title: "what",
           beats: [
             "Audralia is farther out.",
-            "It is where the world begins to widen beyond the first threshold."
+            "It is where the world begins to widen beyond the first threshold.",
+            "It gives the estate distance, terrain, scale, and the feeling that the future is not only a room. It is a landscape."
           ],
           options: [
             say("Why does Audralia matter?", "audraliaWhy"),
@@ -1148,7 +1171,8 @@
           title: "why",
           beats: [
             "Audralia matters because the world needs scale.",
-            "Hearth gives you a room. Audralia gives you distance, terrain, expansion, and the sense that the world continues beyond the first doorway."
+            "Hearth gives you a room. Audralia gives you distance, terrain, expansion, and the sense that the future continues beyond the first doorway.",
+            "That scale is part of the frontier-science premise. A future playground needs somewhere large enough for systems, consequences, settlements, experiments, and social imagination to move."
           ],
           options: [
             say("Where does Audralia lead?", "audraliaLead"),
@@ -1185,7 +1209,8 @@
           title: "what",
           beats: [
             "Frontier is the outward edge.",
-            "It is where the world starts pointing beyond its first rooms and toward discovery."
+            "It is where the world starts pointing beyond its first rooms and toward discovery.",
+            "This is the part of the estate that admits the future has not been fully determined."
           ],
           options: [
             say("Why does Frontier matter?", "frontierWhy"),
@@ -1198,7 +1223,8 @@
           title: "why",
           beats: [
             "Frontier matters because a world that never reaches an edge never creates real discovery.",
-            "The edge tells the visitor that the estate is not only contained rooms. It has unknown distance."
+            "The edge tells the visitor that the estate is not only contained rooms. It has unknown distance.",
+            "That is where frontier science belongs: not as finished certainty, but as disciplined play with what reality might become."
           ],
           options: [
             say("Where does Frontier lead?", "frontierLead"),
@@ -1211,7 +1237,8 @@
           title: "lead",
           beats: [
             "Frontier leads toward expansion and uncertainty.",
-            "It is the place where the world begins asking what else may exist beyond the rooms already named."
+            "It is the place where the estate begins asking what else may exist beyond the rooms already named.",
+            "That question is economic as well as narrative. New futures create new needs, new tools, new education, new markets, and new ways for people to imagine value."
           ],
           options: [
             say("Tell me about Audralia.", "audraliaPath"),
@@ -1233,8 +1260,9 @@
         {
           title: "what",
           beats: [
-            "The characters are where the world stops feeling empty.",
-            "They are not menu labels. They are the people who make pressure, consequence, choice, and story personal."
+            "The Characters are where the world stops feeling empty.",
+            "They are not menu labels. They are the people who make pressure, consequence, choice, and story personal.",
+            "A future playground needs people inside it, because systems do not matter socially until someone has to live inside their consequences."
           ],
           options: [
             say("Why do the characters matter?", "charactersWhy"),
@@ -1248,7 +1276,8 @@
           title: "why",
           beats: [
             "They matter because scenery can only carry so much pressure.",
-            "Once a person carries the pressure, the world becomes accountable. Choices have consequence. Memory has a face. Survival has a cost."
+            "Once a person carries the pressure, the world becomes accountable. Choices have consequence. Memory has a face. Survival has a cost.",
+            "That is why the Characters are part of the estate’s future logic. They let social consequence become visible."
           ],
           options: [
             say("Where do they lead?", "charactersLead"),
@@ -1260,7 +1289,7 @@
         {
           title: "lead",
           beats: [
-            "The characters lead into relationships, motives, tensions, factions, and story pressure.",
+            "The Characters lead into relationships, motives, tensions, factions, and story pressure.",
             "They also lead toward Mirror Me, because once the world has people inside it, the visitor can begin to feel what the world reflects back."
           ],
           options: [
@@ -1299,7 +1328,8 @@
           title: "why",
           beats: [
             "They matter because Mirrorland is not only a place. It is a pressure field.",
-            "Relationships show what the world costs. Alliance, warning, mirror, betrayal, memory, consequence, and unfinished crossing can all live between two characters."
+            "Relationships show what the world costs. Alliance, warning, mirror, betrayal, memory, consequence, and unfinished crossing can all live between two characters.",
+            "That is how the future becomes social. Not through scenery, but through pressure between people."
           ],
           options: [
             say("Where do those relationships lead?", "characterRelationshipsLead"),
@@ -1351,7 +1381,8 @@
           title: "why",
           beats: [
             "The conflict matters because it makes the world argue with itself.",
-            "A character may want repair while another protects denial. One may want survival while another demands consequence. That pressure is where story begins."
+            "A character may want repair while another protects denial. One may want survival while another demands consequence.",
+            "That pressure is where story begins, and it is also where future systems become morally visible."
           ],
           options: [
             say("Where does that conflict lead?", "characterTensionsLead"),
@@ -1400,7 +1431,8 @@
           title: "why",
           beats: [
             "Motives matter because biography is not enough.",
-            "What a character wants becomes meaningful only when the world refuses to make it easy. Pressure reveals whether the motive becomes courage, denial, control, or collapse."
+            "What a character wants becomes meaningful only when the world refuses to make it easy.",
+            "Pressure reveals whether the motive becomes courage, denial, control, repair, or collapse."
           ],
           options: [
             say("Where do those motives lead?", "characterMotivesLead"),
@@ -1499,7 +1531,8 @@
           title: "why",
           beats: [
             "It matters because pressure is how the world becomes honest.",
-            "When a person carries the cost, the world can no longer hide behind scenery. The story has to answer for itself."
+            "When a person carries the cost, the world can no longer hide behind scenery. The story has to answer for itself.",
+            "That is why Mirrorland can become more than fiction. It can become a controlled place to feel social, moral, and future pressure before the real future arrives."
           ],
           options: [
             say("Where does that lead?", "characterStoryPressureLead"),
@@ -1666,11 +1699,11 @@
       beats: [
         "Hello. I’m Jeeves.",
         "I help visitors find the right door inside Diamond Gate Bridge.",
-        "You do not need to understand the whole work at once.",
-        "I can guide you through the public website, take you toward the world side, or ask one question first."
+        "You do not need to understand the whole estate at once.",
+        "I can guide you through the public estate, take you toward the world side, or ask one question first."
       ],
       options: [
-        say("Guide me through the public website.", "websitePath", { signal: "orientation" }),
+        say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
         say("Take me toward the world side.", "worldPath", { signal: "world" }),
         say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
         say("Just tell me where to start.", "compassPath", { signal: "lost" }),
@@ -1686,14 +1719,14 @@
       voiceMode: MODE_OBJECTIVE,
       beats: [
         "Then I’ll ask plainly.",
-        "What brought you here first: orientation, skepticism, self-reflection, practical use, or the story?"
+        "What brought you here first: orientation, skepticism, self-reflection, practical use, or the future-facing world side?"
       ],
       options: [
         say("Orientation.", "websitePath", { signal: "orientation" }),
         say("Skepticism.", "skepticPlain", { signal: "skeptic" }),
         say("Self-reflection.", "diagnosticPath", { signal: "self" }),
         say("Practical use.", "productsPath", { signal: "practical" }),
-        say("The story.", "worldPath", { signal: "world" })
+        say("The world side.", "worldPath", { signal: "world" })
       ],
       handoffs: []
     },
@@ -1705,10 +1738,10 @@
       voiceMode: MODE_OBJECTIVE,
       beats: [
         "Then we return to the clean fork.",
-        "Public website, world side, proof, self-reflection, or practical use?"
+        "Public estate, world side, proof, self-reflection, or practical use?"
       ],
       options: [
-        say("Public website.", "websitePath", { signal: "orientation" }),
+        say("Public estate.", "websitePath", { signal: "orientation" }),
         say("World side.", "worldPath", { signal: "world" }),
         say("Proof.", "proofPath", { signal: "skeptic" }),
         say("Self-reflection.", "diagnosticPath", { signal: "self" }),
@@ -1728,7 +1761,7 @@
         "You are back at the doorway."
       ],
       options: [
-        say("Guide me through the public website.", "websitePath", { signal: "orientation" }),
+        say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
         say("Take me toward the world side.", "worldPath", { signal: "world" }),
         say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
         say("Ask me one question first.", "askFirst", { signal: "question" })
@@ -1758,25 +1791,6 @@
     cleanDoor: {
       dynamic: true
     }
-  };
-
-  var HandoffTargets = {
-    compass: "compassPath",
-    siteGuide: "siteGuidePath",
-    laws: "lawsPath",
-    gauges: "gaugesPath",
-    coherenceDiagnostic: "diagnosticPath",
-    meetSean: "seanPath",
-    aboutUnderdog: "underdogPath",
-    products: "productsPath",
-    book: "bookPath",
-    nineSummits: "nineSummitsPath",
-    showroom: "worldPath",
-    interactiveNarrative: "worldGatePath",
-    hearth: "hearthPath",
-    audralia: "audraliaPath",
-    frontier: "frontierPath",
-    characters: "charactersPath"
   };
 
   function query(selector, scope) {
@@ -1938,14 +1952,15 @@
 
   function inferItchFromChoice(choice, topic) {
     if (!choice) return state.visitor.lastItch || "choosing the next door";
-    if (choice.signal === "skeptic") return "testing whether the work deserves trust";
+    if (choice.signal === "skeptic") return "testing whether the estate deserves trust";
     if (choice.signal === "self") return "looking for a mirror";
-    if (choice.signal === "world") return "trying to cross into the world side";
+    if (choice.signal === "world") return "trying to cross into the future-facing world side";
     if (choice.signal === "practical") return "looking for something usable";
     if (choice.signal === "lost") return "trying to get re-centered";
     if (topic === "characters" || topic.indexOf("character") === 0) return "trying to understand who carries the world’s pressure";
-    if (topic === "underdog") return "trying to understand the voice beneath pressure";
+    if (topic === "underdog") return "trying to understand the underdog voice in the visitor";
     if (topic === "book" || topic === "nineSummits") return "trying to understand the larger development path";
+    if (topic === "frontier" || topic === "audralia") return "trying to understand how the world widens into the future";
     return "choosing the next door";
   }
 
@@ -2190,7 +2205,7 @@
       ];
       handoffs = ["characters", "interactiveNarrative"];
     } else if (scope === SCOPE_NARRATIVE) {
-      beats.push("Stay on the world side if you want threshold, rooms, people, and traversal. Return to the public side if you want proof or orientation first.");
+      beats.push("Stay on the world side if you want threshold, rooms, people, future science, and traversal. Return to the public side if you want proof or orientation first.");
       options = [
         say("Tell me about the Interactive Narrative.", "worldGatePath"),
         say("Tell me about Hearth.", "hearthPath"),
@@ -2200,7 +2215,7 @@
       ];
       handoffs = ["interactiveNarrative", "hearth", "audralia", "characters"];
     } else if (topic === "proof" || topic === "laws" || topic === "gauges") {
-      beats.push("Stay with proof if you want the work tested before you trust it.");
+      beats.push("Stay with proof if you want the estate tested before you trust it.");
       options = [
         say("Explain the Laws.", "lawsPath"),
         say("Explain Gauges.", "gaugesPath"),
@@ -2220,7 +2235,7 @@
       ];
       handoffs = ["coherenceDiagnostic", "interactiveNarrative"];
     } else {
-      beats.push("Stay public if you need orientation, proof, usefulness, or the human voice. Cross the threshold if you want the world side.");
+      beats.push("Stay public if you need orientation, proof, usefulness, or the designer behind the estate. Cross the threshold if you want Mirrorland.");
       options = [
         say("I need orientation.", "compassPath"),
         say("I want proof.", "proofPath"),
@@ -2731,6 +2746,8 @@
     if (
       value.indexOf("sean") !== -1 ||
       value.indexOf("founder") !== -1 ||
+      value.indexOf("designer") !== -1 ||
+      value.indexOf("developer") !== -1 ||
       value.indexOf("person") !== -1 ||
       value.indexOf("human") !== -1
     ) {
@@ -2744,7 +2761,9 @@
       value.indexOf("frontier") !== -1 ||
       value.indexOf("world") !== -1 ||
       value.indexOf("story") !== -1 ||
-      value.indexOf("showroom") !== -1
+      value.indexOf("showroom") !== -1 ||
+      value.indexOf("future") !== -1 ||
+      value.indexOf("science") !== -1
     ) {
       return { target: "worldPath", signal: "world" };
     }
@@ -2773,7 +2792,9 @@
       value.indexOf("product") !== -1 ||
       value.indexOf("tool") !== -1 ||
       value.indexOf("use") !== -1 ||
-      value.indexOf("practical") !== -1
+      value.indexOf("practical") !== -1 ||
+      value.indexOf("economic") !== -1 ||
+      value.indexOf("impact") !== -1
     ) {
       return { target: "productsPath", signal: "practical" };
     }

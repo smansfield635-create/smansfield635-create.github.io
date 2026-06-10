@@ -1,29 +1,26 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_SEMANTIC_SKELETON_SITE_CARTOGRAPHY_FRONTEND_ENGINE_TNT_v18
+// HEARTH_JEEVES_CONVERSATIONAL_ESTATE_CHARACTER_ARCHETYPE_CARTOGRAPHY_COMPLETION_TNT_v18_1
 // Full-file replacement.
 // Preserves existing HTML/CSS contract.
 // Purpose:
-// - Preserve working v17.2 conversation continuity.
-// - Add semantic skeleton and site cartography grounding.
-// - Restore Meet Sean as a first-class source path.
-// - Bind Nine Summits relational value logic.
-// - Bind Sean Mansfield value axioms as internal narrative guidance.
-// - Keep Jeeves philosophical, but route-grounded.
-// - Remove duplicate prompt title behavior.
-// - Prevent empty prompt dock visibility.
-// - Preserve paired-brain architecture with front-end final route authority.
+// - Preserve v18 semantic skeleton and v17.2 working prompt continuity.
+// - Shorten Jeeves' intro and make the first tone hosted, conversational, and estate-native.
+// - Replace generic world-path language with named Mirrorland / Atrium / Audralia / Hearth / Frontier language.
+// - Complete missing cartography joints.
+// - Upgrade Character Mirror language to Character Archetype Mirror.
+// - Add character-path social cue logic without blocking character questions.
+// - Guard source/value/character/Mirrorland/Hearth paths from older advisory override.
 // Does not own:
 // - server-side model execution
 // - API keys
 // - persistent memory
-// - moderation authority
 // - backend canon storage
 //
 
-(function hearthJeevesSemanticSkeletonSiteCartographyFrontendEngine(global) {
+(function hearthJeevesConversationalEstateCharacterArchetypeCartographyCompletion(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_SEMANTIC_SKELETON_SITE_CARTOGRAPHY_FRONTEND_ENGINE_TNT_v18";
+  var CONTRACT = "HEARTH_JEEVES_CONVERSATIONAL_ESTATE_CHARACTER_ARCHETYPE_CARTOGRAPHY_COMPLETION_TNT_v18_1";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
   var DEFAULT_BRAIN_ENDPOINT = "/api/jeeves.js";
 
@@ -33,21 +30,21 @@
   var MODE_OBJECTIVE = "objective";
   var MODE_THRESHOLD = "threshold";
   var MODE_IMMERSION = "immersion";
-  var MODE_CHARACTER_MIRROR = "characterMirror";
+  var MODE_CHARACTER_ARCHETYPE = "characterArchetype";
 
   var MAX_HISTORY = 80;
 
   var PACING = {
     firstMessageDelayMs: 950,
-    typingBaseMs: 1400,
-    typingWordMs: 120,
-    typingMinMs: 1450,
-    typingMaxMs: 5200,
-    readBaseMs: 1750,
-    readWordMs: 115,
-    readMinMs: 2100,
-    readMaxMs: 6800,
-    optionRevealDelayMs: 1200,
+    typingBaseMs: 1380,
+    typingWordMs: 112,
+    typingMinMs: 1320,
+    typingMaxMs: 5000,
+    readBaseMs: 1600,
+    readWordMs: 105,
+    readMinMs: 1850,
+    readMaxMs: 6400,
+    optionRevealDelayMs: 900,
     tapMaxDistancePx: 14,
     tapMaxDurationMs: 360
   };
@@ -61,7 +58,7 @@
     "sean",
     "products",
     "book",
-    "world",
+    "mirrorland",
     "hearth",
     "audralia",
     "frontier",
@@ -97,9 +94,9 @@
       governingPhrase: "Orientation gives direction.",
       estateFunction: "Give the visitor direction before depth.",
       visitorQuestion: "Where am I, what is this, and where do I go next?",
-      primaryRooms: ["compassDesk", "guideDesk", "mainHall"],
+      primaryRooms: ["jeevesInterface", "compassDesk", "guideDesk", "mainHall"],
       relatedPeople: ["Jeeves"],
-      practicalRule: "If the visitor is lost, return to Compass Desk or Guide Desk."
+      practicalRule: "If the visitor is lost, return to Jeeves, the Compass Desk, or the Guide Desk."
     },
     truth: {
       key: "truth",
@@ -109,7 +106,7 @@
       visitorQuestion: "What can I trust?",
       primaryRooms: ["lawLibrary", "scientificLaw", "theLab"],
       relatedPeople: ["Soren", "Jeeves"],
-      practicalRule: "If the visitor doubts, route to Scientific Law, Law Library, or The Lab."
+      practicalRule: "If the visitor doubts, route to Scientific Law, the Law Library, or The Lab."
     },
     future: {
       key: "future",
@@ -129,17 +126,17 @@
       visitorQuestion: "What does the future look like when it becomes lived?",
       primaryRooms: ["atrium", "atlasStudy", "audraliaConservatory", "mirrorland"],
       relatedPeople: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
-      practicalRule: "If the visitor wants to cross from ordinary web use into immersion, open the Atrium and world side."
+      practicalRule: "If the visitor wants the immersive window, name Mirrorland and open the Atrium."
     },
     depth: {
       key: "depth",
       name: "Depth",
       governingPhrase: "The Characters give depth.",
       estateFunction: "Make systems personal by giving pressure to people.",
-      visitorQuestion: "Who carries this pressure?",
-      primaryRooms: ["characters", "characterMirror"],
+      visitorQuestion: "Who carries this?",
+      primaryRooms: ["characters", "characterArchetypeMirror"],
       relatedPeople: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Jeeves", "Remote Team"],
-      practicalRule: "If the visitor wants the who, route to Characters or Character Mirror."
+      practicalRule: "If the visitor asks who carries the story, invite them to meet the Characters."
     },
     guide: {
       key: "guide",
@@ -154,12 +151,12 @@
     source: {
       key: "source",
       name: "Source",
-      governingPhrase: "Sean is the source.",
+      governingPhrase: "Meet Sean reveals the human source behind the estate.",
       estateFunction: "Show the person building the estate, not only the estate itself.",
       visitorQuestion: "Who built this and why?",
       primaryRooms: ["meetSean", "thisUnderdog"],
       relatedPeople: ["Sean Mansfield"],
-      practicalRule: "If the visitor asks who, creator, designer, developer, source, or why this exists, route to Meet Sean."
+      practicalRule: "If the visitor asks who built this, why it exists, or where the human source is, route to Meet Sean."
     },
     value: {
       key: "value",
@@ -175,11 +172,11 @@
       key: "innerEntry",
       name: "Inner Human Entry",
       governingPhrase: "This Underdog is the inner human entry point.",
-      estateFunction: "Let the visitor locate their own pressure inside the estate.",
+      estateFunction: "Let the visitor locate their own behavior under pressure inside the estate.",
       visitorQuestion: "Where do I personally enter this?",
-      primaryRooms: ["thisUnderdog", "diagnostic", "characterMirror"],
+      primaryRooms: ["thisUnderdog", "diagnostic", "characterArchetypeMirror"],
       relatedPeople: ["This Underdog", "Jeeves"],
-      practicalRule: "If the visitor asks about self, pressure, voice, or personal reflection, route to This Underdog, Diagnostic, or Character Mirror."
+      practicalRule: "If the visitor asks about self, behavior under pressure, voice, or reflection, route to This Underdog, Diagnostic, or Character Archetype Mirror."
     }
   };
 
@@ -191,7 +188,7 @@
       phrase: "When you learn to live a life without expectations, you experience a life without limitations.",
       functionName: "Release law",
       useCase: "Fear, control, disappointment, self-comparison, and the need to move without demanding the outcome first.",
-      routeTargets: ["nineSummitsPath", "underdogPath", "seanPath", "diagnosticPath", "characterMirrorPath"]
+      routeTargets: ["nineSummitsPath", "underdogPath", "seanPath", "diagnosticPath", "characterArchetypeMirrorPath"]
     },
     liveLoveLaughListen: {
       id: "liveLoveLaughListen",
@@ -209,7 +206,7 @@
       phrase: "Manipulation is when you use other people’s minds rather than your own.",
       functionName: "Agency law",
       useCase: "Ethics, influence, leadership, guidance, persuasion, coherence, and visitor agency.",
-      routeTargets: ["nineSummitsPath", "scientificLawPath", "seanPath", "diagnosticPath", "characterMirrorPath"]
+      routeTargets: ["nineSummitsPath", "scientificLawPath", "seanPath", "diagnosticPath", "characterArchetypeMirrorPath"]
     }
   };
 
@@ -231,6 +228,23 @@
   };
 
   var SITE_CARTOGRAPHY = {
+    jeevesInterface: {
+      roomId: "jeevesInterface",
+      publicName: "Jeeves",
+      estateLocation: "Front receiving chamber.",
+      whatItIs: "The estate intelligence that receives the visitor at the door.",
+      whyItMatters: "The visitor should feel hosted, not processed.",
+      whoIsConnected: ["Jeeves"],
+      visitorPressure: "I have arrived, but I do not know what I am standing inside.",
+      abstractFunction: "Jeeves is the guide.",
+      practicalAction: "Let Jeeves show you around, then choose a named door.",
+      routeId: "jeeves",
+      target: "intro",
+      nextRooms: ["compassDesk", "guideDesk", "meetSean", "atrium", "characters"],
+      proofBoundary: "Jeeves guides; the Laws still verify claims.",
+      localGuideBehavior: "Welcome first, then orient.",
+      returnToJeevesRule: "If the visitor is overwhelmed, return to Jeeves."
+    },
     compassDesk: {
       roomId: "compassDesk",
       publicName: "Compass Desk",
@@ -240,10 +254,10 @@
       whoIsConnected: ["Jeeves"],
       visitorPressure: "I do not know where to begin.",
       abstractFunction: "Orientation gives direction.",
-      practicalAction: "Choose proof, source, value, self-reflection, practical use, or world side.",
+      practicalAction: "Choose truth, source, value, self-reflection, practical use, or Mirrorland.",
       routeId: "compass",
       target: "compassPath",
-      nextRooms: ["guideDesk", "lawLibrary", "meetSean", "characterMirror", "atrium"],
+      nextRooms: ["guideDesk", "lawLibrary", "meetSean", "characterArchetypeMirror", "atrium"],
       proofBoundary: "Orientation is not proof; it only chooses the next room.",
       localGuideBehavior: "Explain the available doors without forcing the visitor.",
       returnToJeevesRule: "If the visitor asks for the whole estate, return to Jeeves."
@@ -274,11 +288,11 @@
       whoIsConnected: ["Jeeves", "Sean Mansfield"],
       visitorPressure: "I want the public version first.",
       abstractFunction: "Access becomes organized.",
-      practicalAction: "Choose proof, source, products, Diagnostic, or world threshold.",
+      practicalAction: "Choose proof, source, products, Diagnostic, or Mirrorland.",
       routeId: "home",
       target: "websitePath",
       nextRooms: ["compassDesk", "guideDesk", "lawLibrary", "meetSean", "productGallery", "atrium"],
-      proofBoundary: "The main hall introduces; it does not complete proof.",
+      proofBoundary: "The Main Hall introduces; it does not complete proof.",
       localGuideBehavior: "Keep the first explanation plain.",
       returnToJeevesRule: "Return to Jeeves when the visitor asks which path matters."
     },
@@ -286,35 +300,103 @@
       roomId: "atrium",
       publicName: "Atrium",
       estateLocation: "Threshold into Mirrorland.",
-      whatItIs: "The doorway where ordinary web use begins crossing into world-side experience.",
+      whatItIs: "The doorway where ordinary web use begins crossing into Mirrorland.",
       whyItMatters: "It turns reading and looking into participation.",
       whoIsConnected: ["Jeeves", "Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
-      visitorPressure: "I want to cross into the world side.",
+      visitorPressure: "I want to enter Mirrorland.",
       abstractFunction: "Mirrorland is the window.",
-      practicalAction: "Enter Mirrorland, open Atlas Study, meet Characters, or visit Hearth/Audralia/Frontier.",
+      practicalAction: "Enter Mirrorland, open Atlas Study, meet the Characters, or visit Hearth, Audralia, or Frontier.",
       routeId: "showroom",
-      target: "worldPath",
+      target: "mirrorlandPath",
       nextRooms: ["atlasStudy", "audraliaConservatory", "hearth", "frontierWorkshopYard", "characters"],
       proofBoundary: "The window reveals possibility; truth still answers to the Laws.",
-      localGuideBehavior: "Invite crossing, then ground with a room.",
+      localGuideBehavior: "Invite crossing, then ground with a named room.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs route sequence."
     },
     atlasStudy: {
       roomId: "atlasStudy",
       publicName: "Atlas Study",
       estateLocation: "World selection room.",
-      whatItIs: "The place where worlds and reference bodies become easier to choose.",
-      whyItMatters: "It prevents the world side from becoming one undifferentiated idea.",
+      whatItIs: "The place where Mirrorland’s worlds and reference bodies become easier to choose.",
+      whyItMatters: "It prevents the Mirrorland side from becoming one undifferentiated idea.",
       whoIsConnected: ["Jeeves"],
-      visitorPressure: "I want to understand which world I am looking at.",
+      visitorPressure: "I want to understand which place I am looking at.",
       abstractFunction: "The window gains coordinates.",
-      practicalAction: "Choose Earth reference, Audralia, Hearth, or other world-facing rooms.",
+      practicalAction: "Choose Earth reference, ZIONTS, Audralia, Hearth, or other world-facing rooms.",
       routeId: "globeWindow",
-      target: "worldPath",
-      nextRooms: ["audraliaConservatory", "hearth", "frontierWorkshopYard", "characters"],
+      target: "atlasPath",
+      nextRooms: ["ziontsRoom", "audraliaConservatory", "hearth", "frontierWorkshopYard", "characters"],
       proofBoundary: "World selection is orientation, not claim verification.",
-      localGuideBehavior: "Name the world and its role.",
+      localGuideBehavior: "Name the place and its role.",
       returnToJeevesRule: "Return to Jeeves if the visitor asks why the worlds matter."
+    },
+    ziontsRoom: {
+      roomId: "ziontsRoom",
+      publicName: "ZIONTS Room",
+      estateLocation: "Consequence world reference.",
+      whatItIs: "The room that carries the consequence side of the world logic.",
+      whyItMatters: "It reminds the visitor that the future has a cost when systems fail or truth is hidden.",
+      whoIsConnected: ["Soren", "Dextrion", "Jeeves"],
+      visitorPressure: "I want to understand consequence.",
+      abstractFunction: "ZIONTS is consequence.",
+      practicalAction: "Study consequence, then compare it with Audralia, Frontier, Hearth, and Scientific Law.",
+      routeId: "zionts",
+      target: "ziontsPath",
+      nextRooms: ["audraliaConservatory", "scientificLaw", "frontierWorkshopYard", "characters"],
+      proofBoundary: "Consequence language must not become unsupported certainty.",
+      localGuideBehavior: "Explain consequence without overstating lore.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs consequence placed in the full estate."
+    },
+    audraliaConservatory: {
+      roomId: "audraliaConservatory",
+      publicName: "Audralia Conservatory",
+      estateLocation: "Constructive future world.",
+      whatItIs: "The future world carried by the Mirrorland side.",
+      whyItMatters: "It gives the future terrain, scale, and consequence.",
+      whoIsConnected: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
+      visitorPressure: "What world carries the future?",
+      abstractFunction: "Audralia carries.",
+      practicalAction: "Visit Audralia, open the Audralia Worldroom, continue to Frontier, Hearth, or the Characters.",
+      routeId: "audralia",
+      target: "audraliaPath",
+      nextRooms: ["audraliaWorldroom", "controlCockpit", "frontierWorkshopYard", "hearth", "characters"],
+      proofBoundary: "The world can reveal possibility; claims still answer to law.",
+      localGuideBehavior: "Explain Audralia as a world, not decoration.",
+      returnToJeevesRule: "Return to Jeeves when the visitor asks how Audralia relates to the estate."
+    },
+    audraliaWorldroom: {
+      roomId: "audraliaWorldroom",
+      publicName: "Audralia Worldroom",
+      estateLocation: "Visible Audralia inspection chamber.",
+      whatItIs: "The place where Audralia becomes a visible world-body for inspection.",
+      whyItMatters: "It moves Audralia from idea into observable form.",
+      whoIsConnected: ["Jeeves", "Alaric", "Tarian", "Elara"],
+      visitorPressure: "I want to see the future world more directly.",
+      abstractFunction: "Audralia becomes visible.",
+      practicalAction: "Open the Worldroom, then continue to Control Cockpit, Frontier, Hearth, or Characters.",
+      routeId: "audraliaWorldroom",
+      target: "audraliaWorldroomPath",
+      nextRooms: ["controlCockpit", "frontierWorkshopYard", "hearth", "characters"],
+      proofBoundary: "Visual presence is not the same as full proof.",
+      localGuideBehavior: "Describe the visible world without claiming completion.",
+      returnToJeevesRule: "Return to Jeeves if the visitor needs the world-body placed in context."
+    },
+    controlCockpit: {
+      roomId: "controlCockpit",
+      publicName: "Control Cockpit",
+      estateLocation: "Audralia readout and disposition chamber.",
+      whatItIs: "The room where visible controls and world-readouts become understandable.",
+      whyItMatters: "It shows that a world needs readable state, not only visual surface.",
+      whoIsConnected: ["Jeeves", "Dextrion", "Alaric"],
+      visitorPressure: "I want to understand the controls and current state.",
+      abstractFunction: "State becomes readable.",
+      practicalAction: "Open the Control Cockpit, then return to Audralia, Frontier, or Hearth.",
+      routeId: "controlCockpit",
+      target: "controlCockpitPath",
+      nextRooms: ["audraliaWorldroom", "frontierWorkshopYard", "hearth", "theLab"],
+      proofBoundary: "Readouts guide interpretation; they do not replace testing.",
+      localGuideBehavior: "Explain what controls mean without overclaiming.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs the state interpreted."
     },
     lawLibrary: {
       roomId: "lawLibrary",
@@ -381,7 +463,7 @@
       target: "frontierPath",
       nextRooms: ["hearth", "audraliaConservatory", "scientificLaw", "characters"],
       proofBoundary: "Future systems must remain bounded by Scientific Law.",
-      localGuideBehavior: "Show the system, pressure, related character, and test boundary.",
+      localGuideBehavior: "Show the system, behavior under pressure, related character, and test boundary.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs to connect the system to the whole estate."
     },
     productGallery: {
@@ -409,11 +491,11 @@
       whyItMatters: "The estate needs a human source, not only rooms and systems.",
       whoIsConnected: ["Sean Mansfield", "This Underdog", "Jeeves"],
       visitorPressure: "Who built this and why?",
-      abstractFunction: "Sean is the source.",
-      practicalAction: "Meet Sean, continue to This Underdog, Nine Summits, Diagnostic, or Character Mirror.",
+      abstractFunction: "Meet Sean reveals the human source behind the estate.",
+      practicalAction: "Meet Sean, continue to This Underdog, Nine Summits, Diagnostic, or Character Archetype Mirror.",
       routeId: "meetSean",
       target: "seanPath",
-      nextRooms: ["thisUnderdog", "nineSummits", "diagnostic", "characterMirror", "mainHall"],
+      nextRooms: ["thisUnderdog", "nineSummits", "diagnostic", "characterArchetypeMirror", "mainHall"],
       proofBoundary: "The source explains origin; proof still answers to the Laws.",
       localGuideBehavior: "Explain Sean as source without turning the room into autobiography alone.",
       returnToJeevesRule: "Return to Jeeves when the visitor wants the source connected to the estate."
@@ -422,15 +504,15 @@
       roomId: "thisUnderdog",
       publicName: "This Underdog",
       estateLocation: "Inner human entry chamber.",
-      whatItIs: "The visitor’s inner pressure entry point.",
-      whyItMatters: "The estate becomes personal when the visitor recognizes their own pressure.",
+      whatItIs: "The visitor’s inner behavior-under-pressure entry point.",
+      whyItMatters: "The estate becomes personal when the visitor recognizes their own behavior under pressure.",
       whoIsConnected: ["Sean Mansfield", "This Underdog", "Jeeves"],
       visitorPressure: "Where do I fit inside this?",
       abstractFunction: "This Underdog is the inner human entry point.",
-      practicalAction: "Open This Underdog, Character Mirror, Diagnostic, Nine Summits, or Meet Sean.",
+      practicalAction: "Open This Underdog, Character Archetype Mirror, Diagnostic, Nine Summits, or Meet Sean.",
       routeId: "aboutUnderdog",
       target: "underdogPath",
-      nextRooms: ["characterMirror", "diagnostic", "nineSummits", "meetSean"],
+      nextRooms: ["characterArchetypeMirror", "diagnostic", "nineSummits", "meetSean"],
       proofBoundary: "This is reflection, not diagnosis.",
       localGuideBehavior: "Return the visitor to agency.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs a clean next door."
@@ -444,10 +526,10 @@
       whoIsConnected: ["Sean Mansfield", "This Underdog", "Jeeves"],
       visitorPressure: "What values guide this?",
       abstractFunction: "The Nine Summits provide value logic.",
-      practicalAction: "Open the book path, Meet Sean, This Underdog, or Character Mirror.",
+      practicalAction: "Open the book path, Meet Sean, This Underdog, or Character Archetype Mirror.",
       routeId: "nineSummits",
       target: "nineSummitsPath",
-      nextRooms: ["meetSean", "thisUnderdog", "characterMirror", "productGallery"],
+      nextRooms: ["meetSean", "thisUnderdog", "characterArchetypeMirror", "productGallery"],
       proofBoundary: "Value guidance is reflective, not coercive.",
       localGuideBehavior: "Show connected relativity, not isolated slogans.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs the value construct placed in the full estate."
@@ -461,7 +543,7 @@
       whoIsConnected: ["Jeeves", "Dextrion", "Soren", "Remote Team"],
       visitorPressure: "Where does world construction become operational?",
       abstractFunction: "Hearth constructs.",
-      practicalAction: "Open Hearth, connect to Frontier, Scientific Law, Audralia, or Characters.",
+      practicalAction: "Open Hearth, connect to Frontier, Scientific Law, Audralia, or the Characters.",
       routeId: "hearth",
       target: "hearthPath",
       nextRooms: ["frontierWorkshopYard", "scientificLaw", "audraliaConservatory", "characters"],
@@ -469,69 +551,52 @@
       localGuideBehavior: "Name Hearth as facility, not merely route or visual.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs Hearth placed in the whole world logic."
     },
-    audraliaConservatory: {
-      roomId: "audraliaConservatory",
-      publicName: "Audralia Conservatory",
-      estateLocation: "Constructive future world.",
-      whatItIs: "The future world carried by the Mirrorland side.",
-      whyItMatters: "It gives the future terrain, scale, and consequence.",
-      whoIsConnected: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
-      visitorPressure: "What world carries the future?",
-      abstractFunction: "Audralia carries.",
-      practicalAction: "Visit Audralia, Frontier, Hearth, or Characters.",
-      routeId: "audralia",
-      target: "audraliaPath",
-      nextRooms: ["frontierWorkshopYard", "hearth", "characters", "atlasStudy"],
-      proofBoundary: "The world can reveal possibility; claims still answer to law.",
-      localGuideBehavior: "Explain Audralia as world, not decoration.",
-      returnToJeevesRule: "Return to Jeeves when the visitor asks how Audralia relates to the estate."
-    },
     characters: {
       roomId: "characters",
       publicName: "Characters",
-      estateLocation: "Mirrorland depth chamber.",
-      whatItIs: "The place where systems become personal through people.",
-      whyItMatters: "Mirrorland gains depth when visitors can interact with pressure carriers.",
+      estateLocation: "Mirrorland character chamber.",
+      whatItIs: "The place where Mirrorland becomes personal through people.",
+      whyItMatters: "Visitors should meet them as characters, not as labels.",
       whoIsConnected: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Jeeves", "Remote Team"],
-      visitorPressure: "Who carries this?",
+      visitorPressure: "Who are they?",
       abstractFunction: "The Characters give depth.",
-      practicalAction: "Meet one character, see relationships, or enter Character Mirror.",
+      practicalAction: "Meet one character, see relationships, or use the Character Archetype Mirror.",
       routeId: "characters",
       target: "charactersPath",
-      nextRooms: ["characterMirror", "frontierWorkshopYard", "audraliaConservatory", "hearth"],
-      proofBoundary: "Character reflection is narrative, not identity assignment.",
-      localGuideBehavior: "Keep each character tied to pressure, relationship, and next door.",
+      nextRooms: ["characterArchetypeMirror", "mirrorland", "frontierWorkshopYard", "audraliaConservatory", "hearth"],
+      proofBoundary: "Character reflection is narrative and behavioral, not identity assignment.",
+      localGuideBehavior: "Let the character profile carry the depth.",
       returnToJeevesRule: "Return to Jeeves for the full estate map."
     },
-    characterMirror: {
-      roomId: "characterMirror",
-      publicName: "Character Mirror",
+    characterArchetypeMirror: {
+      roomId: "characterArchetypeMirror",
+      publicName: "Character Archetype Mirror",
       estateLocation: "Reflective bridge between visitor and Characters.",
-      whatItIs: "A guided reflection that compares current pressure pattern to character pressure.",
-      whyItMatters: "It lets the visitor enter Mirrorland through self-recognition.",
+      whatItIs: "A guided reflection that compares the visitor’s behavior under pressure to a character pattern.",
+      whyItMatters: "It lets the visitor enter Mirrorland through self-recognition without being labeled.",
       whoIsConnected: ["Jeeves", "Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
-      visitorPressure: "Which pressure pattern do I resemble right now?",
-      abstractFunction: "Depth becomes reflective.",
-      practicalAction: "Answer three questions, view a reflective match, then choose character, Diagnostic, or Nine Summits.",
+      visitorPressure: "Which pattern do I follow when pressure rises?",
+      abstractFunction: "Behavior under pressure becomes reflective.",
+      practicalAction: "Answer three questions, view a Character Archetype reflection, then choose a character, Diagnostic, or Nine Summits.",
       routeId: "coherenceDiagnostic",
-      target: "characterMirrorPath",
+      target: "characterArchetypeMirrorPath",
       nextRooms: ["characters", "diagnostic", "nineSummits", "thisUnderdog"],
-      proofBoundary: "Reflective match, not identity; current resemblance, not permanent label.",
+      proofBoundary: "Reflective pattern, not identity; current behavior under pressure, not permanent label.",
       localGuideBehavior: "Return the visitor to agency.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs broader direction."
     },
     mirrorland: {
       roomId: "mirrorland",
       publicName: "Mirrorland",
-      estateLocation: "Future-facing world window.",
-      whatItIs: "The window where truth and future become visible through story.",
+      estateLocation: "Future-facing window.",
+      whatItIs: "The named place where truth and future become visible through story.",
       whyItMatters: "It gives the website more than reading, looking, and exploring.",
       whoIsConnected: ["Jeeves", "Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
-      visitorPressure: "I want to see the future as a world.",
+      visitorPressure: "I want to enter the window.",
       abstractFunction: "Mirrorland is the window.",
-      practicalAction: "Enter the Atrium, open Atlas Study, visit Audralia, Frontier, Hearth, or Characters.",
+      practicalAction: "Enter the Atrium, open Atlas Study, visit Audralia, Frontier, Hearth, or meet the Characters.",
       routeId: "mirrorland",
-      target: "worldPath",
+      target: "mirrorlandPath",
       nextRooms: ["atrium", "atlasStudy", "audraliaConservatory", "frontierWorkshopYard", "characters"],
       proofBoundary: "The window reveals possibility; truth still answers to the Laws.",
       localGuideBehavior: "Reveal without floating.",
@@ -541,15 +606,15 @@
       roomId: "diagnostic",
       publicName: "Coherence Diagnostic",
       estateLocation: "Public self-reflection chamber.",
-      whatItIs: "The local-only self-check that reflects pressure and coherence patterns.",
+      whatItIs: "The local-only self-check that reflects behavior, coherence, and response patterns.",
       whyItMatters: "It gives the visitor a practical mirror before deeper interpretation.",
       whoIsConnected: ["Jeeves", "This Underdog"],
       visitorPressure: "I want to understand myself without being defined.",
-      abstractFunction: "Inner pressure becomes visible.",
-      practicalAction: "Take Diagnostic, use Character Mirror, or continue to This Underdog.",
+      abstractFunction: "Inner behavior becomes visible.",
+      practicalAction: "Take Diagnostic, use Character Archetype Mirror, or continue to This Underdog.",
       routeId: "coherenceDiagnostic",
       target: "diagnosticPath",
-      nextRooms: ["characterMirror", "thisUnderdog", "nineSummits", "scientificLaw"],
+      nextRooms: ["characterArchetypeMirror", "thisUnderdog", "nineSummits", "scientificLaw"],
       proofBoundary: "Not medical, legal, official IQ, official MBTI, or stored profile.",
       localGuideBehavior: "Reflect without diagnosis.",
       returnToJeevesRule: "Return to Jeeves when the visitor needs next direction."
@@ -557,6 +622,7 @@
   };
 
   var DEFAULT_ROUTES = {
+    jeeves: ROUTE,
     compass: "/",
     home: "/",
     siteGuide: "/site-guide/",
@@ -571,7 +637,10 @@
     globeWindow: "/showroom/globe/",
     interactiveNarrative: "/showroom/globe/",
     mirrorland: "/showroom/globe/",
+    zionts: "/showroom/globe/earth/",
     audralia: "/showroom/globe/audralia/",
+    audraliaWorldroom: "/showroom/globe/audralia/planet/",
+    controlCockpit: "/showroom/globe/audralia/disposition/",
     frontier: "/explore/frontier/",
     frontierEnergy: "/explore/frontier/energy/",
     frontierWater: "/explore/frontier/water/",
@@ -592,21 +661,25 @@
   };
 
   var ROUTE_LABELS = {
+    jeeves: "Return to Jeeves",
     compass: "Start at the Compass Desk",
     home: "Open the Main Hall",
     siteGuide: "Open the Guide Desk",
     coherenceDiagnostic: "Take the Coherence Diagnostic",
-    meetSean: "Meet Sean Mansfield",
+    meetSean: "Meet Sean",
     products: "Open the Product Gallery",
     laws: "Open the Law Library",
     scientificLaw: "Open Scientific Law",
     gauges: "Open The Lab",
-    showroom: "Open the Atrium",
+    showroom: "Enter the Atrium",
     hearth: "Open Hearth",
     globeWindow: "Open the Atlas Study",
     interactiveNarrative: "Enter Mirrorland",
     mirrorland: "Open Mirrorland",
+    zionts: "Open ZIONTS",
     audralia: "Visit Audralia",
+    audraliaWorldroom: "Open the Audralia Worldroom",
+    controlCockpit: "Open the Control Cockpit",
     frontier: "Explore Frontier",
     frontierEnergy: "Open Energy",
     frontierWater: "Open Water",
@@ -626,40 +699,7 @@
     aboutUnderdog: "About This Underdog"
   };
 
-  var APPROVED_ROUTE_IDS = [
-    "compass",
-    "home",
-    "siteGuide",
-    "coherenceDiagnostic",
-    "meetSean",
-    "products",
-    "laws",
-    "scientificLaw",
-    "gauges",
-    "showroom",
-    "hearth",
-    "globeWindow",
-    "interactiveNarrative",
-    "mirrorland",
-    "audralia",
-    "frontier",
-    "frontierEnergy",
-    "frontierWater",
-    "frontierWaste",
-    "frontierClosedLoop",
-    "frontierInfrastructure",
-    "frontierLattice",
-    "frontierUrban",
-    "frontierManual",
-    "frontierShimmer",
-    "frontierTrajectory",
-    "frontierVision",
-    "characters",
-    "controlRoom",
-    "book",
-    "nineSummits",
-    "aboutUnderdog"
-  ];
+  var APPROVED_ROUTE_IDS = Object.keys(DEFAULT_ROUTES);
 
   var APPROVED_TARGETS = [
     "intro",
@@ -668,8 +708,9 @@
     "skepticPlain",
     "proofPath",
     "diagnosticPath",
-    "worldPath",
-    "worldGatePath",
+    "mirrorlandPath",
+    "atriumPath",
+    "atlasPath",
     "charactersPath",
     "compassPath",
     "whereToStart",
@@ -694,7 +735,10 @@
     "hearthConstructPath",
     "hearthFrontierPath",
     "hearthLawPath",
+    "ziontsPath",
     "audraliaPath",
+    "audraliaWorldroomPath",
+    "controlCockpitPath",
     "frontierPath",
     "frontierSystemsPath",
     "frontierEnergyPath",
@@ -716,7 +760,6 @@
     "characterRelationshipsPath",
     "characterTensionsPath",
     "characterMotivesPath",
-    "characterFactionsPath",
     "characterStoryPressurePath",
     "characterFirstPath",
     "characterAurenValePath",
@@ -727,12 +770,12 @@
     "characterSorenPath",
     "characterJeevesPath",
     "characterRemoteTeamPath",
-    "characterMirrorPath",
+    "characterArchetypeMirrorPath",
     "selfLearningPath",
-    "characterMirrorQuestionOne",
-    "characterMirrorQuestionTwo",
-    "characterMirrorQuestionThree",
-    "characterMirrorResult",
+    "characterArchetypeQuestionOne",
+    "characterArchetypeQuestionTwo",
+    "characterArchetypeQuestionThree",
+    "characterArchetypeResult",
     "recenterNode",
     "loopRecovery",
     "cleanDoor",
@@ -742,15 +785,58 @@
     "restartFork"
   ];
 
-  var NARRATIVE_TARGETS = [
-    "worldPath",
-    "worldGatePath",
+  var LOCAL_FINAL_TARGETS = [
+    "intro",
+    "askFirst",
+    "websitePath",
+    "mirrorlandPath",
+    "atriumPath",
+    "atlasPath",
+    "seanPath",
+    "underdogPath",
+    "bookPath",
+    "nineSummitsPath",
     "hearthPath",
     "hearthFacilityPath",
     "hearthConstructPath",
     "hearthFrontierPath",
     "hearthLawPath",
+    "charactersPath",
+    "characterIdentityPath",
+    "characterRelationshipsPath",
+    "characterTensionsPath",
+    "characterMotivesPath",
+    "characterStoryPressurePath",
+    "characterFirstPath",
+    "characterAurenValePath",
+    "characterDextrionPath",
+    "characterAlaricPath",
+    "characterTarianPath",
+    "characterElaraPath",
+    "characterSorenPath",
+    "characterJeevesPath",
+    "characterRemoteTeamPath",
+    "characterArchetypeMirrorPath",
+    "selfLearningPath",
+    "characterArchetypeQuestionOne",
+    "characterArchetypeQuestionTwo",
+    "characterArchetypeQuestionThree",
+    "characterArchetypeResult"
+  ];
+
+  var NARRATIVE_TARGETS = [
+    "mirrorlandPath",
+    "atriumPath",
+    "atlasPath",
+    "hearthPath",
+    "hearthFacilityPath",
+    "hearthConstructPath",
+    "hearthFrontierPath",
+    "hearthLawPath",
+    "ziontsPath",
     "audraliaPath",
+    "audraliaWorldroomPath",
+    "controlCockpitPath",
     "frontierPath",
     "frontierSystemsPath",
     "frontierEnergyPath",
@@ -772,7 +858,6 @@
     "characterRelationshipsPath",
     "characterTensionsPath",
     "characterMotivesPath",
-    "characterFactionsPath",
     "characterStoryPressurePath",
     "characterFirstPath",
     "characterAurenValePath",
@@ -811,15 +896,19 @@
     productsPath: "productGallery",
     bookPath: "nineSummits",
     nineSummitsPath: "nineSummits",
-    worldPath: "atrium",
-    worldGatePath: "atrium",
+    mirrorlandPath: "mirrorland",
+    atriumPath: "atrium",
+    atlasPath: "atlasStudy",
     mirrorMePath: "mirrorland",
     hearthPath: "hearth",
     hearthFacilityPath: "hearth",
     hearthConstructPath: "hearth",
     hearthFrontierPath: "hearth",
     hearthLawPath: "hearth",
+    ziontsPath: "ziontsRoom",
     audraliaPath: "audraliaConservatory",
+    audraliaWorldroomPath: "audraliaWorldroom",
+    controlCockpitPath: "controlCockpit",
     frontierPath: "frontierWorkshopYard",
     frontierSystemsPath: "frontierWorkshopYard",
     frontierEnergyPath: "frontierWorkshopYard",
@@ -840,7 +929,6 @@
     characterRelationshipsPath: "characters",
     characterTensionsPath: "characters",
     characterMotivesPath: "characters",
-    characterFactionsPath: "characters",
     characterStoryPressurePath: "characters",
     characterFirstPath: "characters",
     characterAurenValePath: "characters",
@@ -851,12 +939,12 @@
     characterSorenPath: "characters",
     characterJeevesPath: "characters",
     characterRemoteTeamPath: "characters",
-    characterMirrorPath: "characterMirror",
-    selfLearningPath: "characterMirror",
-    characterMirrorQuestionOne: "characterMirror",
-    characterMirrorQuestionTwo: "characterMirror",
-    characterMirrorQuestionThree: "characterMirror",
-    characterMirrorResult: "characterMirror",
+    characterArchetypeMirrorPath: "characterArchetypeMirror",
+    selfLearningPath: "characterArchetypeMirror",
+    characterArchetypeQuestionOne: "characterArchetypeMirror",
+    characterArchetypeQuestionTwo: "characterArchetypeMirror",
+    characterArchetypeQuestionThree: "characterArchetypeMirror",
+    characterArchetypeResult: "characterArchetypeMirror",
     recenterNode: "compassDesk",
     loopRecovery: "compassDesk",
     cleanDoor: "compassDesk",
@@ -867,6 +955,8 @@
   };
 
   var TARGET_SKELETON_MAP = {
+    intro: "guide",
+    askFirst: "guide",
     websitePath: "orientation",
     compassPath: "orientation",
     whereToStart: "orientation",
@@ -898,9 +988,13 @@
     frontierVisionPath: "future",
     frontierLawPath: "future",
     frontierCharactersPath: "future",
-    worldPath: "window",
-    worldGatePath: "window",
+    mirrorlandPath: "window",
+    atriumPath: "window",
+    atlasPath: "window",
+    ziontsPath: "window",
     audraliaPath: "window",
+    audraliaWorldroomPath: "window",
+    controlCockpitPath: "window",
     mirrorMePath: "window",
     hearthPath: "future",
     hearthFacilityPath: "future",
@@ -912,7 +1006,6 @@
     characterRelationshipsPath: "depth",
     characterTensionsPath: "depth",
     characterMotivesPath: "depth",
-    characterFactionsPath: "depth",
     characterStoryPressurePath: "depth",
     characterFirstPath: "depth",
     characterAurenValePath: "depth",
@@ -923,12 +1016,12 @@
     characterSorenPath: "depth",
     characterJeevesPath: "depth",
     characterRemoteTeamPath: "depth",
-    characterMirrorPath: "depth",
+    characterArchetypeMirrorPath: "innerEntry",
     selfLearningPath: "innerEntry",
-    characterMirrorQuestionOne: "innerEntry",
-    characterMirrorQuestionTwo: "innerEntry",
-    characterMirrorQuestionThree: "innerEntry",
-    characterMirrorResult: "innerEntry",
+    characterArchetypeQuestionOne: "innerEntry",
+    characterArchetypeQuestionTwo: "innerEntry",
+    characterArchetypeQuestionThree: "innerEntry",
+    characterArchetypeResult: "innerEntry",
     seanPath: "source",
     underdogPath: "innerEntry",
     diagnosticPath: "innerEntry",
@@ -964,16 +1057,17 @@
   ];
 
   var SPEECH_LABEL_FALLBACKS = {
-    websitePath: "Guide me through the public estate.",
+    websitePath: "Show me around the estate.",
     skepticPlain: "Explain it plainly.",
-    proofPath: "Tell me what proves it.",
+    proofPath: "Show me the proof path.",
     diagnosticPath: "Tell me about the Diagnostic.",
-    worldPath: "Tell me about the world side.",
-    worldGatePath: "Tell me about the Interactive Narrative.",
-    charactersPath: "Who are the characters?",
+    mirrorlandPath: "Enter Mirrorland.",
+    atriumPath: "Take me to the Atrium.",
+    atlasPath: "Open the Atlas Study.",
+    charactersPath: "Meet the Characters.",
     compassPath: "I need the Compass Desk.",
-    siteGuidePath: "Tell me how the estate is organized.",
-    lawsPath: "Explain the Law Library.",
+    siteGuidePath: "Show me the Guide Desk.",
+    lawsPath: "Open the Law Library.",
     scientificLawPath: "Explain Scientific Law.",
     scientificLawTheoryPath: "Explain Theory.",
     scientificLawEvidencePath: "Explain Evidence.",
@@ -983,18 +1077,21 @@
     scientificLawLadderPath: "Show the claim testing ladder.",
     scientificLawTermsPath: "Explain the deeper terms.",
     gaugesPath: "Explain The Lab.",
-    seanPath: "Take me to Meet Sean.",
+    seanPath: "Meet Sean.",
     underdogPath: "Tell me about This Underdog.",
-    productsPath: "Tell me about the Product Gallery.",
+    productsPath: "Show me the Product Gallery.",
     bookPath: "Tell me about the book path.",
     nineSummitsPath: "Tell me about Nine Summits.",
-    hearthPath: "I want to understand Hearth.",
+    hearthPath: "Open Hearth.",
     hearthFacilityPath: "Explain Hearth as a facility.",
     hearthConstructPath: "Explain Hearth as a planetary construct engine.",
     hearthFrontierPath: "Connect Hearth to Frontier.",
     hearthLawPath: "Connect Hearth to Scientific Law.",
-    audraliaPath: "Tell me about Audralia.",
-    frontierPath: "What is Frontier?",
+    ziontsPath: "Tell me about ZIONTS.",
+    audraliaPath: "Show me Audralia.",
+    audraliaWorldroomPath: "Open the Audralia Worldroom.",
+    controlCockpitPath: "Open the Control Cockpit.",
+    frontierPath: "Open Frontier.",
     frontierSystemsPath: "Show the Frontier systems.",
     frontierEnergyPath: "Explain Energy.",
     frontierWaterPath: "Explain Water.",
@@ -1008,35 +1105,34 @@
     frontierTrajectoryPath: "Explain Trajectory.",
     frontierVisionPath: "Explain Vision.",
     frontierLawPath: "Connect Frontier to Scientific Law.",
-    frontierCharactersPath: "Connect Frontier to the characters.",
+    frontierCharactersPath: "Meet the Characters through Frontier.",
     futureProfilePath: "What is Future Profile?",
     mirrorMePath: "What is Mirror Me?",
-    characterIdentityPath: "Who are the characters?",
-    characterRelationshipsPath: "How do the characters relate?",
-    characterTensionsPath: "What conflict do they carry?",
+    characterIdentityPath: "Who are the Characters?",
+    characterRelationshipsPath: "Show how the Characters relate.",
+    characterTensionsPath: "Show what conflict they carry.",
     characterMotivesPath: "What motivates them?",
-    characterFactionsPath: "Are there sides or factions?",
-    characterStoryPressurePath: "Why should I care about the characters?",
+    characterStoryPressurePath: "Why should I care about the Characters?",
     characterFirstPath: "Who should I meet first?",
-    characterAurenValePath: "Tell me about Auren Vale.",
-    characterDextrionPath: "Tell me about Dextrion.",
-    characterAlaricPath: "Tell me about Alaric.",
-    characterTarianPath: "Tell me about Tarian.",
-    characterElaraPath: "Tell me about Elara.",
-    characterSorenPath: "Tell me about Soren.",
+    characterAurenValePath: "Meet Auren Vale.",
+    characterDextrionPath: "Meet Dextrion.",
+    characterAlaricPath: "Meet Alaric.",
+    characterTarianPath: "Meet Tarian.",
+    characterElaraPath: "Meet Elara.",
+    characterSorenPath: "Meet Soren.",
     characterJeevesPath: "Tell me about Jeeves.",
-    characterRemoteTeamPath: "Tell me about the Remote Team.",
-    characterMirrorPath: "Which character am I most like?",
-    selfLearningPath: "Help me learn about myself.",
-    characterMirrorQuestionOne: "Ask the first mirror question.",
-    characterMirrorQuestionTwo: "Ask the second mirror question.",
-    characterMirrorQuestionThree: "Ask the third mirror question.",
-    characterMirrorResult: "Show my reflective match.",
+    characterRemoteTeamPath: "Meet the Remote Team.",
+    characterArchetypeMirrorPath: "Which Character Archetype do I follow under pressure?",
+    selfLearningPath: "Show my behavior under pressure.",
+    characterArchetypeQuestionOne: "Ask the first archetype question.",
+    characterArchetypeQuestionTwo: "Ask the second archetype question.",
+    characterArchetypeQuestionThree: "Ask the third archetype question.",
+    characterArchetypeResult: "Show my Character Archetype.",
     cleanDoor: "Which door fits this best?",
     sharpQuestion: "Ask me a sharper question.",
     switchTopics: "Switch topics.",
     recenterNode: "Re-center me.",
-    returnFork: "I need the clean fork again.",
+    returnFork: "Show me the clean fork again.",
     restartFork: "Start this over."
   };
 
@@ -1048,7 +1144,7 @@
       title: "Sanctuary Builder",
       target: "characterAurenValePath",
       route: "characters",
-      oneLine: "He keeps the manor from becoming a beautiful cage.",
+      oneLine: "Auren Vale protects the manor, but every life he shelters makes the sanctuary harder to hide.",
       pressure: "Every protected life makes the manor harder to hide.",
       mirror: "Protection, custody, shelter, and fear of exposure.",
       estateFunction: "He makes protection personal.",
@@ -1056,7 +1152,7 @@
       frontierConnection: "Infrastructure and sanctuary load.",
       lawConnection: "Protection must not hide hidden cost.",
       hearthConnection: "Hearth gives sanctuary logic a world-condition problem.",
-      summary: "Auren Vale is the Sanctuary Builder. He keeps the manor from becoming a beautiful cage. His pressure is protection versus exposure."
+      compositionProfile: "Auren Vale is the Sanctuary Builder. He protects the manor, but every life he shelters makes the sanctuary harder to hide. He matters because protection becomes dangerous when it starts requiring concealment."
     },
     dextrion: {
       id: "dextrion",
@@ -1065,7 +1161,7 @@
       title: "Earth-Side Originator",
       target: "characterDextrionPath",
       route: "characters",
-      oneLine: "He opened the path and stayed behind.",
+      oneLine: "Dextrion opened the crossing from Earth and carries the burden of everyone who cannot return.",
       pressure: "Every one-way crossing remains on his hands.",
       mirror: "Repair, responsibility, guilt, and pressure to fix what broke.",
       estateFunction: "He makes repair personal.",
@@ -1073,7 +1169,7 @@
       frontierConnection: "Energy, repair readiness, and system responsibility.",
       lawConnection: "Repair must answer to evidence and downstream consequence.",
       hearthConnection: "Hearth turns repair into world-formation accountability.",
-      summary: "Dextrion is the Earth-Side Originator. He opened the path and stayed behind. His pressure is repair responsibility."
+      compositionProfile: "Dextrion is the Earth-Side Originator. He opened the crossing and stayed behind, carrying the burden of every one-way path. He matters because repair is never abstract when people are stranded inside the consequence."
     },
     alaric: {
       id: "alaric",
@@ -1082,7 +1178,7 @@
       title: "Field Navigator",
       target: "characterAlaricPath",
       route: "characters",
-      oneLine: "He reads danger before proof arrives.",
+      oneLine: "Alaric reads danger before proof arrives, which makes him necessary early and difficult to believe.",
       pressure: "Waiting for proof can close the only safe route.",
       mirror: "Early warning, danger-reading, orientation, and acting before others believe the proof.",
       estateFunction: "He makes warning personal.",
@@ -1090,7 +1186,7 @@
       frontierConnection: "Trajectory, drift detection, and early danger.",
       lawConnection: "Warning must eventually meet evidence.",
       hearthConnection: "Hearth gives route-reading planetary consequence.",
-      summary: "Alaric is the Field Navigator. He reads danger before proof arrives. His pressure is early warning versus trust."
+      compositionProfile: "Alaric is the Field Navigator. He reads danger before proof arrives, which makes him necessary early and difficult to believe. He matters because a late warning can be perfectly proven and still arrive too late."
     },
     tarian: {
       id: "tarian",
@@ -1099,7 +1195,7 @@
       title: "Water Anchor",
       target: "characterTarianPath",
       route: "characters",
-      oneLine: "He keeps the mission physically honest.",
+      oneLine: "Tarian keeps survival physical because no future matters if the body cannot continue.",
       pressure: "The future fails if the body cannot continue.",
       mirror: "Endurance, body-level survival, water, recovery, and carrying too much.",
       estateFunction: "He makes survival personal.",
@@ -1107,7 +1203,7 @@
       frontierConnection: "Water, continuity, and physical survival.",
       lawConnection: "Endurance must respect limits.",
       hearthConnection: "Hearth gives survival a planetary condition.",
-      summary: "Tarian is the Water Anchor. He keeps the mission physically honest. His pressure is human limit versus mission demand."
+      compositionProfile: "Tarian is the Water Anchor. He keeps survival physical because no future matters if the body cannot continue. He matters because endurance has limits, and a mission that ignores the body eventually fails."
     },
     elara: {
       id: "elara",
@@ -1116,7 +1212,7 @@
       title: "Signal Bearer",
       target: "characterElaraPath",
       route: "characters",
-      oneLine: "She makes the future visible before it disappears.",
+      oneLine: "Elara makes the future visible before it disappears, but visibility always risks exposure.",
       pressure: "The future has to be visible before anyone moves toward it.",
       mirror: "Signal, visibility, hope, public voice, and risk of being seen.",
       estateFunction: "She makes vision personal.",
@@ -1124,7 +1220,7 @@
       frontierConnection: "Shimmer, Vision, and public signal.",
       lawConnection: "Signal must not become false certainty.",
       hearthConnection: "Hearth gives visible future a construct condition.",
-      summary: "Elara is the Signal Bearer. She makes the future visible before it disappears. Her pressure is visibility versus exposure."
+      compositionProfile: "Elara is the Signal Bearer. She makes the future visible before it disappears, but visibility always risks exposure. She matters because people cannot move toward a future they cannot see."
     },
     soren: {
       id: "soren",
@@ -1133,7 +1229,7 @@
       title: "Boundary Keeper",
       target: "characterSorenPath",
       route: "characters",
-      oneLine: "He refuses fake restoration.",
+      oneLine: "Soren refuses fake restoration because hidden damage only creates another ZIONTS.",
       pressure: "Saving Mirrorland by hiding damage only creates another ZIONTS.",
       mirror: "Truth, hidden cost, contradiction, boundary, evidence, and refusal of fake restoration.",
       estateFunction: "He makes consequence personal.",
@@ -1141,7 +1237,7 @@
       frontierConnection: "Waste, Closed Loop, hidden cost, and boundary.",
       lawConnection: "Truth must expose concealed consequence.",
       hearthConnection: "Hearth cannot construct by hiding damage.",
-      summary: "Soren is the Boundary Keeper. He refuses fake restoration. His pressure is truth versus denial."
+      compositionProfile: "Soren is the Boundary Keeper. He refuses fake restoration because hidden damage only creates another ZIONTS. He matters because truth is not harshness when denial is what caused the wound."
     },
     jeeves: {
       id: "jeeves",
@@ -1150,7 +1246,7 @@
       title: "Manor Interface",
       target: "characterJeevesPath",
       route: "characters",
-      oneLine: "He decides how much truth the house can reveal.",
+      oneLine: "Jeeves sequences truth because the wrong amount of truth can send a visitor into the wrong room.",
       pressure: "Too much truth breaks people. Too little sends them into the wrong room.",
       mirror: "Sequence, restraint, truth timing, entry, and controlled revelation.",
       estateFunction: "He makes entry personal.",
@@ -1158,7 +1254,7 @@
       frontierConnection: "Manual, sequence, and safe operation.",
       lawConnection: "Truth timing must not manipulate the visitor.",
       hearthConnection: "Hearth requires guided entry because construct logic can overwhelm.",
-      summary: "Jeeves is the Manor Interface. He decides how much truth the house can reveal. His pressure is protection versus revelation."
+      compositionProfile: "Jeeves is the Manor Interface. He sequences truth because the wrong amount of truth can send a visitor into the wrong room. He matters because guidance is not control; it is timing, restraint, and a clean next door."
     },
     remoteTeam: {
       id: "remoteTeam",
@@ -1167,7 +1263,7 @@
       title: "Distributed Response Unit",
       target: "characterRemoteTeamPath",
       route: "characters",
-      oneLine: "They carry survival beyond the estate.",
+      oneLine: "The Remote Team carries survival beyond the manor, where protection has to become distributable.",
       pressure: "If survival cannot leave the manor, the manor is only a bunker.",
       mirror: "Distributed responsibility, field logistics, helping beyond the safe center, and public survival.",
       estateFunction: "They make distribution personal.",
@@ -1175,18 +1271,18 @@
       frontierConnection: "Urban, infrastructure, field distribution, and public survival.",
       lawConnection: "Distribution must survive reality, not only intention.",
       hearthConnection: "Hearth gives distribution a world-scale test.",
-      summary: "The Remote Team is the Distributed Response Unit. They carry survival beyond the estate. Their pressure is distribution versus collapse pressure."
+      compositionProfile: "The Remote Team is the Distributed Response Unit. They carry survival beyond the manor, where protection has to become distributable. They matter because a future that cannot leave the safe center is only a bunker."
     }
   };
 
-  var LOCAL_MIRROR_KEYWORDS = [
-    { id: "aurenVale", words: ["protect", "shelter", "safe", "hide", "custody", "exposure"] },
-    { id: "dextrion", words: ["fix", "repair", "responsible", "guilt", "broken", "system"] },
+  var LOCAL_ARCHETYPE_KEYWORDS = [
+    { id: "aurenVale", words: ["protect", "shelter", "safe", "hide", "custody", "exposure", "overprotect"] },
+    { id: "dextrion", words: ["fix", "repair", "responsible", "guilt", "broken", "system", "fast"] },
     { id: "alaric", words: ["danger", "warning", "route", "early", "before proof", "not believed"] },
-    { id: "tarian", words: ["tired", "body", "carry", "water", "survive", "endure"] },
+    { id: "tarian", words: ["tired", "body", "carry", "water", "survive", "endure", "sustain"] },
     { id: "elara", words: ["hope", "visible", "signal", "voice", "seen", "future"] },
     { id: "soren", words: ["truth", "evidence", "hidden cost", "contradiction", "boundary", "denial"] },
-    { id: "jeeves", words: ["sequence", "timing", "truth", "door", "entry", "reveal"] },
+    { id: "jeeves", words: ["sequence", "timing", "truth", "door", "entry", "reveal", "manage"] },
     { id: "remoteTeam", words: ["team", "community", "field", "distributed", "public", "beyond"] }
   ];
 
@@ -1329,7 +1425,12 @@
       needsRecenter: false,
       trail: [],
       cartographyTrail: [],
-      characterMirrorAnswers: [],
+      characterArchetypeAnswers: [],
+      characterProfileViews: [],
+      characterRelationshipViews: 0,
+      characterCompletionReadiness: 0,
+      characterCompletionPromptShown: false,
+      lastCharacterViewed: "",
       lastBrainIntent: "",
       lastBrainCanonStatus: "",
       lastBrainConclusiveState: ""
@@ -1418,11 +1519,9 @@
 
   function indexOfValue(list, value) {
     var i;
-
     for (i = 0; i < list.length; i += 1) {
       if (list[i] === value) return i;
     }
-
     return 0;
   }
 
@@ -1432,7 +1531,7 @@
 
   function getTypingDelay(text, index) {
     var delay = PACING.typingBaseMs + wordCount(text) * PACING.typingWordMs;
-    if (index === 0) delay += 220;
+    if (index === 0) delay += 160;
     return clamp(delay, PACING.typingMinMs, PACING.typingMaxMs);
   }
 
@@ -1464,34 +1563,12 @@
     return getSkeleton(TARGET_SKELETON_MAP[String(target || "")] || "guide");
   }
 
-  function getPracticalNextDoors(roomId) {
-    var room = getRoom(roomId);
-    if (!room || !Array.isArray(room.nextRooms)) return [];
-    return room.nextRooms.slice();
-  }
-
-  function composeGroundedMeaning(roomId) {
-    var room = getRoom(roomId);
-    if (!room) return "";
-
-    return room.publicName + " is where " + room.abstractFunction.toLowerCase() + " " + room.whatItIs.toLowerCase();
-  }
-
-  function composeWhoMap(roomId) {
-    var room = getRoom(roomId);
-    if (!room || !Array.isArray(room.whoIsConnected) || !room.whoIsConnected.length) {
-      return "Jeeves can help you place the people connected to this room.";
-    }
-
-    return "Who is connected here: " + room.whoIsConnected.join(", ") + ".";
-  }
-
   function composeValueAxiom(topic) {
     if (topic === "book" || topic === "nineSummits" || topic === "sean" || topic === "underdog") {
       return SEAN_VALUE_AXIOMS.liveLoveLaughListen.phrase;
     }
 
-    if (topic === "diagnostic" || topic === "characterMirror") {
+    if (topic === "diagnostic" || topic === "characterArchetype") {
       return SEAN_VALUE_AXIOMS.expectationLimitation.phrase;
     }
 
@@ -1541,7 +1618,11 @@
       clean = clean.replace(/\bengine\b/gi, "system");
     }
 
+    clean = clean.replace(/\bworld side\b/gi, "Mirrorland");
+    clean = clean.replace(/\bthe world side\b/gi, "Mirrorland");
+    clean = clean.replace(/\bChoose the world\b/gi, "Enter Mirrorland");
     clean = clean.replace(/\s{2,}/g, " ");
+
     return clean.trim();
   }
 
@@ -1549,8 +1630,8 @@
     var clean = String(label || "").trim();
     var actionStart = /^(open|visit|enter|explore|return to|go to|launch|take the|read the)\b/i;
 
-    if (actionStart.test(clean)) {
-      return SPEECH_LABEL_FALLBACKS[target] || "Tell me more about this.";
+    if (actionStart.test(clean) && SPEECH_LABEL_FALLBACKS[target]) {
+      return SPEECH_LABEL_FALLBACKS[target];
     }
 
     return sanitizePublicText(clean);
@@ -1613,11 +1694,17 @@
 
   function normalizeNode(id) {
     if (!id || id === "arrival") return "intro";
+    if (id === "worldPath" || id === "worldGatePath") return "mirrorlandPath";
+    if (id === "characterMirrorPath") return "characterArchetypeMirrorPath";
+    if (id === "characterMirrorQuestionOne") return "characterArchetypeQuestionOne";
+    if (id === "characterMirrorQuestionTwo") return "characterArchetypeQuestionTwo";
+    if (id === "characterMirrorQuestionThree") return "characterArchetypeQuestionThree";
+    if (id === "characterMirrorResult") return "characterArchetypeResult";
     return String(id);
   }
 
   function normalizeTarget(target) {
-    var value = String(target || "").trim();
+    var value = normalizeNode(String(target || "").trim());
     if (APPROVED_TARGETS.indexOf(value) === -1) return "recenterNode";
     return value;
   }
@@ -1656,7 +1743,12 @@
     state.visitor.needsRecenter = false;
     state.visitor.trail = [];
     state.visitor.cartographyTrail = [];
-    state.visitor.characterMirrorAnswers = [];
+    state.visitor.characterArchetypeAnswers = [];
+    state.visitor.characterProfileViews = [];
+    state.visitor.characterRelationshipViews = 0;
+    state.visitor.characterCompletionReadiness = 0;
+    state.visitor.characterCompletionPromptShown = false;
+    state.visitor.lastCharacterViewed = "";
     state.visitor.lastBrainIntent = "";
     state.visitor.lastBrainCanonStatus = "";
     state.visitor.lastBrainConclusiveState = "";
@@ -1666,14 +1758,14 @@
     if (!choice) return state.visitor.lastItch || "choosing the next door";
     if (choice.signal === "skeptic") return "testing whether the estate deserves trust";
     if (choice.signal === "self") return "looking for a mirror";
-    if (choice.signal === "world") return "trying to cross into the future-facing world side";
+    if (choice.signal === "mirrorland") return "trying to enter Mirrorland";
     if (choice.signal === "practical") return "looking for something usable";
     if (choice.signal === "lost") return "trying to get re-centered";
-    if (choice.signal === "mirror") return "trying to learn about yourself through a character mirror";
+    if (choice.signal === "archetype") return "trying to understand behavior under pressure";
     if (choice.signal === "source") return "trying to find the human source behind the estate";
     if (choice.signal === "value") return "trying to understand the values underneath the journey";
-    if (topic === "characterMirror") return "trying to learn which pressure pattern you currently resemble";
-    if (topic === "characters" || topic.indexOf("character") === 0) return "trying to understand who carries the world’s pressure";
+    if (topic === "characterArchetype") return "trying to understand behavior under pressure";
+    if (topic === "characters" || topic.indexOf("character") === 0) return "trying to understand who the Characters are";
     if (topic === "scientificLaw") return "trying to test a claim before trusting it";
     if (topic === "frontier") return "trying to understand how future systems are tested";
     if (topic === "hearth") return "trying to understand where world-formation becomes operational";
@@ -1683,22 +1775,69 @@
     return "choosing the next door";
   }
 
-  function updateMirrorAnswers(choice, sourceNode) {
+  function targetToCharacter(target) {
+    var map = {
+      characterAurenValePath: "aurenVale",
+      characterDextrionPath: "dextrion",
+      characterAlaricPath: "alaric",
+      characterTarianPath: "tarian",
+      characterElaraPath: "elara",
+      characterSorenPath: "soren",
+      characterJeevesPath: "jeeves",
+      characterRemoteTeamPath: "remoteTeam"
+    };
+
+    return map[target] || "";
+  }
+
+  function updateArchetypeAnswers(choice, sourceNode) {
     var fromNode = sourceNode || state.previousNode || state.currentNode;
 
     if (!choice || !choice.label) return;
 
     if (
-      fromNode === "characterMirrorQuestionOne" ||
-      fromNode === "characterMirrorQuestionTwo" ||
-      fromNode === "characterMirrorQuestionThree"
+      fromNode === "characterArchetypeQuestionOne" ||
+      fromNode === "characterArchetypeQuestionTwo" ||
+      fromNode === "characterArchetypeQuestionThree"
     ) {
-      state.visitor.characterMirrorAnswers.push(choice.label);
+      state.visitor.characterArchetypeAnswers.push(choice.label);
 
-      while (state.visitor.characterMirrorAnswers.length > 8) {
-        state.visitor.characterMirrorAnswers.shift();
+      while (state.visitor.characterArchetypeAnswers.length > 8) {
+        state.visitor.characterArchetypeAnswers.shift();
       }
     }
+  }
+
+  function uniquePush(list, value) {
+    if (!value) return;
+    if (list.indexOf(value) === -1) list.push(value);
+  }
+
+  function updateCharacterSocialCues(node) {
+    var characterId = targetToCharacter(node.node);
+
+    if (characterId) {
+      uniquePush(state.visitor.characterProfileViews, characterId);
+      state.visitor.lastCharacterViewed = characterId;
+    }
+
+    if (
+      node.node === "characterRelationshipsPath" ||
+      node.node === "characterTensionsPath" ||
+      node.node === "characterMotivesPath" ||
+      node.node === "characterStoryPressurePath"
+    ) {
+      state.visitor.characterRelationshipViews += 1;
+    }
+
+    state.visitor.characterCompletionReadiness =
+      state.visitor.characterProfileViews.length +
+      state.visitor.characterRelationshipViews +
+      (state.currentTopic === "characters" && state.visitor.loopCount > 1 ? 1 : 0);
+  }
+
+  function isCharacterCompletionReady() {
+    return state.visitor.characterCompletionReadiness >= 3 || state.visitor.characterProfileViews.length >= 3;
   }
 
   function updateVisitor(choice, node, sourceNode) {
@@ -1707,7 +1846,7 @@
     var scopeChanged = state.visitor.lastScopeLane !== node.scopeLane;
     var cartography = resolveCartographyFromTarget(node.node || state.currentNode);
 
-    updateMirrorAnswers(choice, sourceNode);
+    updateArchetypeAnswers(choice, sourceNode);
 
     if (sameTopic) {
       state.visitor.progressCount += 1;
@@ -1720,7 +1859,7 @@
       state.visitor.digressionCount += 1;
     }
 
-    if (sameTopic && node.depth >= 3) {
+    if (sameTopic && node.depth >= 2) {
       state.visitor.loopCount += 1;
     }
 
@@ -1754,7 +1893,9 @@
       state.visitor.cartographyTrail.shift();
     }
 
-    if (state.visitor.digressionCount >= 4 || state.visitor.loopCount >= 3) {
+    updateCharacterSocialCues(node);
+
+    if (state.visitor.digressionCount >= 4 || state.visitor.loopCount >= 4) {
       state.visitor.needsRecenter = true;
     }
   }
@@ -1783,7 +1924,7 @@
     document.documentElement.dataset.jeevesVoiceMode = state.currentVoiceMode;
     document.documentElement.dataset.jeevesRoomId = state.currentRoomId;
     document.documentElement.dataset.jeevesSkeleton = state.currentSkeletonKey;
-    document.documentElement.dataset.jeevesCharacterMirror = "active";
+    document.documentElement.dataset.jeevesCharacterArchetype = "active";
     document.documentElement.dataset.jeevesFinalRouteAuthority = "front-end";
 
     if (els.status) {
@@ -2353,9 +2494,10 @@
     if (id === "underdogPath") return makeUnderdogNode();
     if (id === "productsPath") return makeProductsNode();
     if (id === "bookPath" || id === "nineSummitsPath") return makeBookNode(id);
-    if (id === "worldPath" || id === "worldGatePath" || id === "mirrorland" || id === "mirrorMePath") return makeWorldNode();
+    if (id === "mirrorlandPath" || id === "atriumPath" || id === "atlasPath" || id === "mirrorMePath") return makeMirrorlandNode(id);
     if (id === "hearthPath" || id === "hearthFacilityPath" || id === "hearthConstructPath" || id === "hearthFrontierPath" || id === "hearthLawPath") return makeHearthNode(id);
-    if (id === "audraliaPath") return makeAudraliaNode();
+    if (id === "ziontsPath") return makeZiontsNode();
+    if (id === "audraliaPath" || id === "audraliaWorldroomPath" || id === "controlCockpitPath") return makeAudraliaNode(id);
     if (id === "scientificLawPath" || id.indexOf("scientificLaw") === 0) return makeScientificLawNode(id);
 
     if (
@@ -2378,7 +2520,6 @@
       id === "characterRelationshipsPath" ||
       id === "characterTensionsPath" ||
       id === "characterMotivesPath" ||
-      id === "characterFactionsPath" ||
       id === "characterStoryPressurePath" ||
       id === "characterFirstPath"
     ) {
@@ -2386,14 +2527,14 @@
     }
 
     if (
-      id === "characterMirrorPath" ||
+      id === "characterArchetypeMirrorPath" ||
       id === "selfLearningPath" ||
-      id === "characterMirrorQuestionOne" ||
-      id === "characterMirrorQuestionTwo" ||
-      id === "characterMirrorQuestionThree" ||
-      id === "characterMirrorResult"
+      id === "characterArchetypeQuestionOne" ||
+      id === "characterArchetypeQuestionTwo" ||
+      id === "characterArchetypeQuestionThree" ||
+      id === "characterArchetypeResult"
     ) {
-      return makeCharacterMirrorNode(id);
+      return makeCharacterArchetypeNode(id);
     }
 
     return makeRecenterNode();
@@ -2409,18 +2550,17 @@
       MODE_OBJECTIVE,
       0,
       [
-        "Hello. I’m Jeeves.",
-        "I help visitors find the right door inside Diamond Gate Bridge.",
+        "Welcome to the estate. Let me show you around.",
+        "I’m Jeeves, and I help visitors find the right door inside Diamond Gate Bridge.",
         "You do not need to understand the whole estate at once.",
-        "Orientation gives direction. The Laws provide truth. The Frontier provides the future. Mirrorland is the window. The Characters give it depth.",
-        "If you want the human source behind the estate, I can also take you to Meet Sean."
+        "Orientation gives direction, the Laws provide truth, the Frontier provides the future, Mirrorland is the window, the Characters give it depth, and Meet Sean reveals the human source behind the estate."
       ],
       [
-        say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
-        say("Take me toward the world side.", "worldPath", { signal: "world" }),
-        say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
+        say("Show me around the estate.", "websitePath", { signal: "orientation" }),
+        say("Enter Mirrorland.", "mirrorlandPath", { signal: "mirrorland" }),
+        say("Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
         say("Meet Sean.", "seanPath", { signal: "source" }),
-        say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
+        say("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath", { signal: "archetype" }),
         say("Ask me one question first.", "askFirst", { signal: "question" })
       ],
       []
@@ -2437,17 +2577,17 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Then I’ll ask plainly.",
-        "What brought you here first: orientation, skepticism, self-reflection, the human source, practical use, the world side, or the character mirror?"
+        "Then I’ll ask simply.",
+        "What brought you to the estate first: direction, proof, self-reflection, Meet Sean, practical use, Mirrorland, or the Character Archetype Mirror?"
       ],
       [
-        say("Orientation.", "websitePath", { signal: "orientation" }),
-        say("Skepticism.", "skepticPlain", { signal: "skeptic" }),
+        say("Direction.", "websitePath", { signal: "orientation" }),
+        say("Proof.", "skepticPlain", { signal: "skeptic" }),
         say("Self-reflection.", "diagnosticPath", { signal: "self" }),
-        say("The human source.", "seanPath", { signal: "source" }),
+        say("Meet Sean.", "seanPath", { signal: "source" }),
         say("Practical use.", "productsPath", { signal: "practical" }),
-        say("The world side.", "worldPath", { signal: "world" }),
-        say("The character mirror.", "characterMirrorPath", { signal: "mirror" })
+        say("Mirrorland.", "mirrorlandPath", { signal: "mirrorland" }),
+        say("Character Archetype Mirror.", "characterArchetypeMirrorPath", { signal: "archetype" })
       ],
       []
     );
@@ -2463,16 +2603,16 @@
       MODE_OBJECTIVE,
       0,
       [
-        "Then we return to the clean fork.",
-        "Every meaning needs a name and a place. Choose the place that matches your pressure now."
+        "Let’s return to the clean fork.",
+        "Every meaning needs a name and a place. Choose the place that fits what you want next."
       ],
       [
-        say("Orientation.", "websitePath", { signal: "orientation" }),
-        say("Proof.", "proofPath", { signal: "skeptic" }),
+        say("Show me around the estate.", "websitePath", { signal: "orientation" }),
+        say("Show me the proof path.", "proofPath", { signal: "skeptic" }),
         say("Meet Sean.", "seanPath", { signal: "source" }),
         say("This Underdog.", "underdogPath", { signal: "self" }),
-        say("World side.", "worldPath", { signal: "world" }),
-        say("Character mirror.", "characterMirrorPath", { signal: "mirror" })
+        say("Enter Mirrorland.", "mirrorlandPath", { signal: "mirrorland" }),
+        say("Character Archetype Mirror.", "characterArchetypeMirrorPath", { signal: "archetype" })
       ],
       []
     );
@@ -2488,17 +2628,16 @@
       MODE_OBJECTIVE,
       0,
       [
-        "I may have taken you too deep too quickly.",
-        "Let me put the meaning back into place.",
-        "Orientation lives at the Compass Desk. Truth lives in the Law Library. The future lives in Frontier. The window is Mirrorland. The depth lives with the Characters. The source is Meet Sean."
+        "Let me bring you back to the estate floor.",
+        "Direction begins at the Compass Desk. Truth is kept in the Law Library. The future is tested in Frontier. Mirrorland is the window. The Characters are the people inside it. Meet Sean is the human source."
       ],
       [
-        say("I need orientation.", "compassPath", { signal: "orientation" }),
-        say("I want truth.", "proofPath", { signal: "skeptic" }),
-        say("I want the future.", "frontierPath", { signal: "world" }),
-        say("I want the window.", "worldPath", { signal: "world" }),
-        say("I want the source.", "seanPath", { signal: "source" }),
-        say("I want the character mirror.", "characterMirrorPath", { signal: "mirror" })
+        say("Compass Desk.", "compassPath", { signal: "orientation" }),
+        say("Law Library.", "proofPath", { signal: "skeptic" }),
+        say("Frontier.", "frontierPath", { signal: "mirrorland" }),
+        say("Mirrorland.", "mirrorlandPath", { signal: "mirrorland" }),
+        say("Meet Sean.", "seanPath", { signal: "source" }),
+        say("Character Archetype Mirror.", "characterArchetypeMirrorPath", { signal: "archetype" })
       ],
       ["compass", "laws", "frontier", "interactiveNarrative", "meetSean"]
     );
@@ -2514,15 +2653,15 @@
       MODE_OBJECTIVE,
       0,
       [
-        "Then switch chambers.",
-        "Do not stay in a loop. Choose a named place: Compass Desk, Law Library, Frontier Workshop Yard, Mirrorland, Characters, Meet Sean, or Nine Summits."
+        "Of course. We can change rooms.",
+        "Choose a named door, and I’ll take you there without dragging the last room behind us."
       ],
       [
         say("Compass Desk.", "compassPath"),
         say("Law Library.", "scientificLawPath"),
-        say("Frontier Workshop Yard.", "frontierPath"),
-        say("Mirrorland.", "worldPath"),
-        say("Characters.", "charactersPath"),
+        say("Frontier.", "frontierPath"),
+        say("Mirrorland.", "mirrorlandPath"),
+        say("Meet the Characters.", "charactersPath"),
         say("Meet Sean.", "seanPath"),
         say("Nine Summits.", "nineSummitsPath")
       ],
@@ -2533,25 +2672,24 @@
   function makeSharpQuestionNode() {
     var topic = state.currentTopic;
 
-    if (topic === "characterMirror") {
+    if (topic === "characterArchetype") {
       return makeNode(
         "sharpQuestion",
-        "characterMirror",
+        "characterArchetype",
         "diagnostic",
         "clarify",
         SCOPE_OBJECTIVE,
-        MODE_CHARACTER_MIRROR,
+        MODE_CHARACTER_ARCHETYPE,
         1,
         [
-          "Then I’ll ask sharply.",
-          "Are you trying to find the character you resemble under pressure, the pattern you overuse, the value that corrects you, or the room that can teach you next?"
+          "Then I’ll ask it cleanly.",
+          "Do you want to know which Character Archetype you follow under pressure, what behavior shows up first, or which room should teach you next?"
         ],
         [
-          say("Character resemblance.", "characterMirrorQuestionOne", { signal: "mirror" }),
-          say("Pattern I overuse.", "diagnosticPath", { signal: "self" }),
-          say("Value that corrects me.", "nineSummitsPath", { signal: "value" }),
-          say("Room that teaches me next.", "cleanDoor", { signal: "route" }),
-          say("Show all characters first.", "charactersPath")
+          say("Which Character Archetype do I follow under pressure?", "characterArchetypeQuestionOne", { signal: "archetype" }),
+          say("What behavior shows up first?", "characterArchetypeQuestionOne", { signal: "archetype" }),
+          say("Which room should teach me next?", "cleanDoor", { signal: "route" }),
+          say("Meet the Characters first.", "charactersPath")
         ],
         ["coherenceDiagnostic", "characters", "nineSummits"]
       );
@@ -2567,7 +2705,7 @@
         MODE_OBJECTIVE,
         1,
         [
-          "Then I’ll ask sharply.",
+          "Then the sharper question is this:",
           "Are you testing theory, evidence, measurement, limits, or whether the claim is mature enough to trust?"
         ],
         [
@@ -2591,14 +2729,14 @@
         MODE_THRESHOLD,
         1,
         [
-          "Then I’ll ask sharply.",
-          "Are you trying to understand Frontier as the future, one system inside it, its Scientific Law boundary, or the characters who carry its pressure?"
+          "Then let’s narrow Frontier.",
+          "Do you want the whole yard, one system, the Scientific Law boundary, or the Characters who carry the system pressure?"
         ],
         [
-          say("Frontier as the future.", "frontierPath"),
-          say("One system.", "frontierSystemsPath"),
-          say("Scientific Law boundary.", "frontierLawPath"),
-          say("Character pressure.", "frontierCharactersPath")
+          say("Show me Frontier.", "frontierPath"),
+          say("Show one system.", "frontierSystemsPath"),
+          say("Show the Scientific Law boundary.", "frontierLawPath"),
+          say("Meet the Characters through Frontier.", "frontierCharactersPath")
         ],
         ["frontier"]
       );
@@ -2614,11 +2752,11 @@
         MODE_THRESHOLD,
         1,
         [
-          "Then I’ll ask sharply.",
-          "Are you trying to understand Hearth as a place, a planetary construct engine, a bridge to Frontier, or a claim that must answer to Scientific Law?"
+          "Then let’s place Hearth precisely.",
+          "Do you want Hearth as a hidden facility, a planetary construct engine, a bridge to Frontier, or a claim that must answer to Scientific Law?"
         ],
         [
-          say("Hearth as a place.", "hearthFacilityPath"),
+          say("Hearth as a facility.", "hearthFacilityPath"),
           say("Planetary construct engine.", "hearthConstructPath"),
           say("Bridge to Frontier.", "hearthFrontierPath"),
           say("Scientific Law boundary.", "hearthLawPath")
@@ -2637,15 +2775,15 @@
         MODE_OBJECTIVE,
         1,
         [
-          "Then I’ll ask sharply.",
-          "Are you trying to understand Sean as the source, This Underdog as the inner entry point, Nine Summits as value logic, or the quote that belongs under the moment?"
+          "Then we’ll keep the source path clean.",
+          "Do you want Meet Sean, This Underdog, Nine Summits, or the value line that belongs under the moment?"
         ],
         [
-          say("Sean as source.", "seanPath"),
+          say("Meet Sean.", "seanPath"),
           say("This Underdog.", "underdogPath"),
           say("Nine Summits.", "nineSummitsPath"),
           say("Which value fits this moment?", "nineSummitsPath"),
-          say("Character Mirror.", "characterMirrorPath")
+          say("Character Archetype Mirror.", "characterArchetypeMirrorPath")
         ],
         ["meetSean", "aboutUnderdog", "nineSummits"]
       );
@@ -2660,18 +2798,18 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Then I’ll ask sharply.",
-        "Are you trying to understand the estate by direction, truth, future, window, depth, source, value, or inner pressure?"
+        "Then I’ll ask it plainly.",
+        "Do you want direction, truth, future systems, Mirrorland, the Characters, Meet Sean, Nine Summits, or your behavior under pressure?"
       ],
       [
         say("Direction.", "compassPath"),
         say("Truth.", "scientificLawPath"),
-        say("Future.", "frontierPath"),
-        say("Window.", "worldPath"),
-        say("Depth.", "charactersPath"),
-        say("Source.", "seanPath"),
-        say("Value.", "nineSummitsPath"),
-        say("Inner pressure.", "underdogPath")
+        say("Future systems.", "frontierPath"),
+        say("Mirrorland.", "mirrorlandPath"),
+        say("Meet the Characters.", "charactersPath"),
+        say("Meet Sean.", "seanPath"),
+        say("Nine Summits.", "nineSummitsPath"),
+        say("Behavior under pressure.", "characterArchetypeMirrorPath")
       ],
       []
     );
@@ -2685,7 +2823,7 @@
 
     if (topic === "hearth") handoffs = ["hearth", "frontier", "scientificLaw"];
     if (topic === "frontier") handoffs = ["frontier", "audralia", "hearth"];
-    if (topic === "characters" || topic === "characterMirror") handoffs = ["characters", "coherenceDiagnostic", "nineSummits"];
+    if (topic === "characters" || topic === "characterArchetype") handoffs = ["characters", "mirrorland", "coherenceDiagnostic"];
     if (topic === "scientificLaw") handoffs = ["scientificLaw", "laws", "gauges"];
     if (topic === "sean" || topic === "underdog" || topic === "book" || topic === "nineSummits") handoffs = ["meetSean", "aboutUnderdog", "nineSummits"];
 
@@ -2698,18 +2836,18 @@
       state.currentVoiceMode,
       3,
       [
-        "The cleanest next door depends on why you are still here.",
+        "The cleanest next door depends on what you want to do now.",
         skeleton ? skeleton.governingPhrase : "Jeeves is the guide.",
         room ? room.publicName + " is the current place. " + room.practicalAction : "The Compass Desk can return you to direction.",
         "Right now, you seem to be " + state.visitor.lastItch + "."
       ],
       [
-        say("I need orientation.", "compassPath"),
+        say("I need direction.", "compassPath"),
         say("I want truth.", "scientificLawPath"),
-        say("I want the future.", "frontierPath"),
-        say("I want the window.", "worldPath"),
-        say("I want the source.", "seanPath"),
-        say("I want the character mirror.", "characterMirrorPath")
+        say("I want Frontier.", "frontierPath"),
+        say("I want Mirrorland.", "mirrorlandPath"),
+        say("I want Meet Sean.", "seanPath"),
+        say("I want the Character Archetype Mirror.", "characterArchetypeMirrorPath")
       ],
       handoffs
     );
@@ -2725,18 +2863,17 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Diamond Gate Bridge has a public estate and a world side.",
-        "The public website gives visitors what they already know how to ask for: reading, looking, exploring, products, proof, orientation, and visible routes.",
-        "Mirrorland gives more than that. It is the window where truth and future become story, pressure, consequence, and choice.",
-        "Start practically: orientation at the Compass Desk, truth in the Law Library, the human source in Meet Sean, or the world side through the Atrium."
+        "The estate has a public side and a Mirrorland side.",
+        "The public side gives visitors what they already know how to ask for: direction, proof, products, source, and self-reflection.",
+        "Mirrorland is different. That is where the future becomes a window, the Characters become active, and the estate starts feeling less like a site and more like a place."
       ],
       [
-        say("I need the Compass Desk.", "compassPath"),
-        say("I want the Site Guide.", "siteGuidePath"),
-        say("I want truth.", "scientificLawPath"),
-        say("I want Meet Sean.", "seanPath"),
-        say("I want This Underdog.", "underdogPath"),
-        say("I want the world side.", "worldPath"),
+        say("Compass Desk.", "compassPath"),
+        say("Guide Desk.", "siteGuidePath"),
+        say("Law Library.", "scientificLawPath"),
+        say("Meet Sean.", "seanPath"),
+        say("This Underdog.", "underdogPath"),
+        say("Enter Mirrorland.", "mirrorlandPath"),
         control("Which door fits this best?", "cleanDoor")
       ],
       ["compass", "siteGuide", "laws", "meetSean"]
@@ -2753,18 +2890,17 @@
       MODE_OBJECTIVE,
       1,
       [
-        "The Compass Desk is the first orientation room.",
-        "Its work is simple: name the pressure, place it in the estate, and choose the next door.",
-        "If the question is direction, stay here. If the question is truth, go to the Law Library. If the question is who built this, go to Meet Sean. If the question is future, go to Frontier. If the question is immersion, open Mirrorland."
+        "The Compass Desk is where I slow the estate down for you.",
+        "If you want direction, stay here. If you want truth, I’ll take you to the Law Library. If you want the human source, Meet Sean. If you want the window, enter Mirrorland."
       ],
       [
         say("Guide Desk.", "siteGuidePath"),
         say("Truth first.", "scientificLawPath"),
         say("Meet Sean.", "seanPath"),
         say("This Underdog.", "underdogPath"),
-        say("Future.", "frontierPath"),
-        say("Mirrorland.", "worldPath"),
-        say("Character Mirror.", "characterMirrorPath")
+        say("Frontier.", "frontierPath"),
+        say("Mirrorland.", "mirrorlandPath"),
+        say("Character Archetype Mirror.", "characterArchetypeMirrorPath")
       ],
       ["compass", "siteGuide", "meetSean"]
     );
@@ -2780,18 +2916,17 @@
       MODE_OBJECTIVE,
       1,
       [
-        "The Guide Desk is the public map of the estate.",
-        "It gives each idea a name and a place: Compass Desk for direction, Law Library for truth, The Lab for status, Frontier Workshop Yard for the future, Atrium for the world-side threshold, Meet Sean for the human source, and Characters for depth.",
-        "The map does not replace the journey. It keeps the journey from floating."
+        "The Guide Desk is the estate map.",
+        "Compass gives direction. The Law Library tests truth. The Lab shows status. Frontier tests future systems. The Atrium opens Mirrorland. Meet Sean reveals the human source. The Characters make Mirrorland personal."
       ],
       [
         say("Compass Desk.", "compassPath"),
         say("Law Library.", "scientificLawPath"),
         say("The Lab.", "gaugesPath"),
         say("Meet Sean.", "seanPath"),
-        say("Frontier Workshop Yard.", "frontierPath"),
-        say("Atrium into Mirrorland.", "worldPath"),
-        say("Characters.", "charactersPath")
+        say("Frontier.", "frontierPath"),
+        say("Atrium into Mirrorland.", "atriumPath"),
+        say("Meet the Characters.", "charactersPath")
       ],
       ["siteGuide", "compass", "showroom"]
     );
@@ -2807,17 +2942,17 @@
       MODE_OBJECTIVE,
       1,
       [
-        "The Laws provide truth.",
-        "The Law Library is where the estate stops asking for trust and starts giving claims a boundary.",
-        "Scientific Law is the sharpest chamber here. It asks whether a claim can be defined, tested, corrected, limited, and checked again."
+        "If you are skeptical, good. The estate has a room for that.",
+        "The Laws provide truth. The Law Library keeps claims from outrunning evidence.",
+        "Scientific Law is the sharper chamber. It asks whether a claim can be defined, tested, corrected, limited, and checked again."
       ],
       [
-        say("Explain Scientific Law.", "scientificLawPath"),
-        say("Explain Theory.", "scientificLawTheoryPath"),
-        say("Explain Evidence.", "scientificLawEvidencePath"),
-        say("Explain Measure.", "scientificLawMeasurePath"),
-        say("Explain Limits.", "scientificLawLimitsPath"),
-        say("Explain The Lab.", "gaugesPath")
+        say("Scientific Law.", "scientificLawPath"),
+        say("Theory.", "scientificLawTheoryPath"),
+        say("Evidence.", "scientificLawEvidencePath"),
+        say("Measure.", "scientificLawMeasurePath"),
+        say("Limits.", "scientificLawLimitsPath"),
+        say("The Lab.", "gaugesPath")
       ],
       ["scientificLaw", "laws", "gauges", "coherenceDiagnostic"]
     );
@@ -2834,14 +2969,14 @@
       1,
       [
         "The Lab is the status room.",
-        "It helps the visitor distinguish ambition from visible status: what is held, what is working, what is still forming, and what should not be overclaimed.",
+        "It helps separate what is working, what is held, what is forming, and what should not be overclaimed.",
         "Truth needs instruments as well as language."
       ],
       [
-        say("Explain Scientific Law.", "scientificLawPath"),
-        say("Explain the Law Library.", "lawsPath"),
-        say("Explain the Diagnostic.", "diagnosticPath"),
-        say("Take me toward the world side.", "worldPath")
+        say("Scientific Law.", "scientificLawPath"),
+        say("Law Library.", "lawsPath"),
+        say("Diagnostic.", "diagnosticPath"),
+        say("Enter Mirrorland.", "mirrorlandPath")
       ],
       ["gauges", "laws", "scientificLaw"]
     );
@@ -2852,7 +2987,7 @@
     var beats = [
       SCIENTIFIC_LAW.summary,
       SCIENTIFIC_LAW.core,
-      "The four main doors are Theory, Evidence, Measure, and Limits."
+      "The four doors are Theory, Evidence, Measure, and Limits."
     ];
 
     if (target === "scientificLawTheoryPath") {
@@ -2894,8 +3029,7 @@
     } else if (target === "scientificLawTermsPath") {
       beats = [
         "The deeper terms are repeatability, falsifiability, calibration, uncertainty, causality, and model scope.",
-        "They protect the estate from technical-sounding language that cannot survive reality.",
-        "Use them when a claim sounds impressive but has not carried its boundary."
+        "They protect the estate from technical-sounding language that cannot survive reality."
       ];
     }
 
@@ -2914,7 +3048,7 @@
         say("Measure.", "scientificLawMeasurePath"),
         say("Limits.", "scientificLawLimitsPath"),
         say("Claim testing ladder.", "scientificLawLadderPath"),
-        say("Connect this to Frontier.", "frontierLawPath")
+        say("Frontier boundary.", "frontierLawPath")
       ],
       ["scientificLaw", "laws", "gauges"]
     );
@@ -2931,17 +3065,17 @@
       1,
       [
         "The Diagnostic is the estate’s public mirror chamber.",
-        "It helps a visitor notice the difference between what they claim, what they choose, and what pressure reveals.",
+        "It helps a visitor notice the difference between what they claim, what they choose, and what their behavior under pressure reveals.",
         "In the current version, it is local-only. It does not store, email, archive, or save the result.",
-        "If you want the reflection to become narrative, the Character Mirror gives that pressure a person."
+        "If you want that reflection to become narrative, use the Character Archetype Mirror."
       ],
       [
-        say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
-        say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
-        say("Show the characters first.", "charactersPath"),
-        say("Tell me about This Underdog.", "underdogPath"),
-        say("Tell me about Nine Summits.", "nineSummitsPath"),
-        say("Explain Scientific Law.", "scientificLawPath")
+        say("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath", { signal: "archetype" }),
+        say("Show my behavior under pressure.", "selfLearningPath", { signal: "archetype" }),
+        say("Meet the Characters first.", "charactersPath"),
+        say("This Underdog.", "underdogPath"),
+        say("Nine Summits.", "nineSummitsPath"),
+        say("Scientific Law.", "scientificLawPath")
       ],
       ["coherenceDiagnostic", "characters", "aboutUnderdog"]
     );
@@ -2957,17 +3091,17 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Meet Sean is the human source chamber.",
-        "This is where the estate stops being only rooms, routes, and world logic, and shows the person building it.",
+        "Then you should Meet Sean.",
+        "The estate has rooms, laws, worlds, and characters, but Sean is where the human pressure behind all of it becomes visible.",
         "Sean Mansfield is the writer, designer, and developer behind Diamond Gate Bridge.",
         "One of Sean’s governing lines is: “When you learn to live a life without expectations, you experience a life without limitations.”"
       ],
       [
-        say("Tell me about This Underdog.", "underdogPath"),
-        say("Tell me about Nine Summits.", "nineSummitsPath"),
-        say("Tell me the value logic.", "bookPath"),
-        say("Tell me about the Diagnostic.", "diagnosticPath"),
-        say("Tell me about the character mirror.", "characterMirrorPath")
+        say("This Underdog.", "underdogPath"),
+        say("Nine Summits.", "nineSummitsPath"),
+        say("The value logic.", "bookPath"),
+        say("Diagnostic.", "diagnosticPath"),
+        say("Character Archetype Mirror.", "characterArchetypeMirrorPath")
       ],
       ["meetSean", "aboutUnderdog", "book"]
     );
@@ -2984,16 +3118,15 @@
       1,
       [
         "This Underdog is not Sean alone.",
-        "This Underdog is in the visitor too. It is the part of a person that has carried pressure before it found language, direction, or use.",
-        "The point is not to admire pressure. The point is to learn what pressure has been trying to teach.",
-        "That is why This Underdog belongs near Meet Sean, the Diagnostic, Character Mirror, and Nine Summits."
+        "This Underdog is in the visitor too. It is the part of a person that carried pressure before it found language, direction, or use.",
+        "The point is not to admire pressure. The point is to learn what your behavior under pressure has been trying to teach."
       ],
       [
-        say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
-        say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
-        say("Tell me about the Diagnostic.", "diagnosticPath"),
-        say("Tell me about Sean.", "seanPath"),
-        say("Tell me about Nine Summits.", "nineSummitsPath")
+        say("Show my behavior under pressure.", "selfLearningPath", { signal: "archetype" }),
+        say("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath", { signal: "archetype" }),
+        say("Diagnostic.", "diagnosticPath"),
+        say("Meet Sean.", "seanPath"),
+        say("Nine Summits.", "nineSummitsPath")
       ],
       ["aboutUnderdog", "coherenceDiagnostic", "nineSummits"]
     );
@@ -3014,12 +3147,12 @@
         "The estate should not only mean something. It should give the visitor a way to use what they found."
       ],
       [
-        say("Tell me about the book path.", "bookPath"),
-        say("Tell me about Nine Summits.", "nineSummitsPath"),
-        say("Tell me about This Underdog.", "underdogPath"),
-        say("Tell me about Sean.", "seanPath"),
-        say("Tell me about the Diagnostic.", "diagnosticPath"),
-        say("Take me to the world side.", "worldPath")
+        say("Book path.", "bookPath"),
+        say("Nine Summits.", "nineSummitsPath"),
+        say("This Underdog.", "underdogPath"),
+        say("Meet Sean.", "seanPath"),
+        say("Diagnostic.", "diagnosticPath"),
+        say("Enter Mirrorland.", "mirrorlandPath")
       ],
       ["products", "book", "coherenceDiagnostic"]
     );
@@ -3039,8 +3172,7 @@
       beats = [
         "The Nine Summits of Love is the book path inside the estate.",
         "It turns pressure, voice, coherence, love, and becoming into a human-development journey.",
-        "A room can orient. A diagnostic can reflect. A book can walk with the reader.",
-        "The larger construct is relational: release expectation, enter relationship, keep your own mind, and choose without coercion."
+        "A room can orient. A diagnostic can reflect. A book can walk with the reader."
       ];
     }
 
@@ -3054,40 +3186,63 @@
       1,
       beats,
       [
-        say("Connect this to Sean.", "seanPath"),
-        say("Connect this to This Underdog.", "underdogPath"),
-        say("Use this for self-reflection.", "characterMirrorPath", { signal: "mirror" }),
-        say("Tell me the Diagnostic path.", "diagnosticPath"),
-        say("Show the practical wing.", "productsPath")
+        say("Meet Sean.", "seanPath"),
+        say("This Underdog.", "underdogPath"),
+        say("Character Archetype Mirror.", "characterArchetypeMirrorPath", { signal: "archetype" }),
+        say("Diagnostic.", "diagnosticPath"),
+        say("Product Gallery.", "productsPath")
       ],
       ["book", "nineSummits", "meetSean"]
     );
   }
 
-  function makeWorldNode() {
+  function makeMirrorlandNode(id) {
+    var beats;
+
+    if (id === "atriumPath") {
+      beats = [
+        "The Atrium is the threshold into Mirrorland.",
+        "This is where the estate begins to feel less like a site and more like a place.",
+        "From here, I can take you to Audralia, Hearth, Frontier, or the Characters."
+      ];
+    } else if (id === "atlasPath") {
+      beats = [
+        "The Atlas Study is where Mirrorland gains coordinates.",
+        "It helps you choose what you are looking at: consequence, possibility, construction, systems, or people.",
+        "If you want the future world, look toward Audralia. If you want the construction chamber, open Hearth."
+      ];
+    } else if (id === "mirrorMePath") {
+      beats = [
+        "Mirror Me is the reflective side of Mirrorland.",
+        "The Diagnostic reflects how you answer. The Character Archetype Mirror reflects how you behave under pressure.",
+        "Mirror Me belongs where reflection starts becoming story."
+      ];
+    } else {
+      beats = [
+        "Mirrorland is the window.",
+        "The public estate lets a visitor read, look, and explore. Mirrorland lets the visitor step closer to the future as a lived place.",
+        "The Characters are the people inside it. As the digital agents come online, the visitor will be able to communicate with them directly inside Mirrorland."
+      ];
+    }
+
     return makeNode(
-      "worldPath",
+      id || "mirrorlandPath",
       "mirrorland",
-      "world",
+      "mirrorland",
       "fork",
       SCOPE_NARRATIVE,
       MODE_THRESHOLD,
       1,
+      beats,
       [
-        "Mirrorland is the window.",
-        "The website lets a visitor read, look, and explore. Mirrorland lets the visitor see what truth and future become when they turn into story, pressure, consequence, and choice.",
-        "Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. Characters give depth.",
-        "If you want to cross, start through the Atrium. If you want to feel the world, meet the Characters."
+        say("Take me to the Atrium.", "atriumPath"),
+        say("Open the Atlas Study.", "atlasPath"),
+        say("Show me Audralia.", "audraliaPath"),
+        say("Open Hearth.", "hearthPath"),
+        say("Open Frontier.", "frontierPath"),
+        say("Meet the Characters.", "charactersPath")
       ],
-      [
-        say("Tell me about Hearth.", "hearthPath"),
-        say("Tell me about Audralia.", "audraliaPath"),
-        say("Tell me about Frontier.", "frontierPath"),
-        say("Who are the characters?", "charactersPath"),
-        say("What is Mirror Me?", "mirrorMePath"),
-        say("Take me back to orientation.", "compassPath")
-      ],
-      ["interactiveNarrative", "hearth", "audralia", "frontier", "characters"]
+      ["interactiveNarrative", "audralia", "hearth", "frontier", "characters"]
     );
   }
 
@@ -3095,8 +3250,7 @@
     var beats = [
       "Hearth is the planetary construct facility where world-formation logic becomes operational.",
       "It is not merely a globe route.",
-      "Hearth is the unknown-location facility tied to Mirrorland’s planetary construction logic.",
-      "Mirrorland reveals. Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. Characters carry the pressure."
+      "Mirrorland reveals. Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. The Characters carry the human cost."
     ];
 
     if (id === "hearthFacilityPath") {
@@ -3136,91 +3290,81 @@
       beats,
       [
         say("Hearth as facility.", "hearthFacilityPath"),
-        say("Hearth as construct engine.", "hearthConstructPath"),
-        say("Connect Hearth to Frontier.", "hearthFrontierPath"),
-        say("Connect Hearth to Scientific Law.", "hearthLawPath"),
-        say("Tell me about Audralia.", "audraliaPath"),
-        say("Tell me about the characters.", "charactersPath")
+        say("Planetary construct engine.", "hearthConstructPath"),
+        say("Hearth and Frontier.", "hearthFrontierPath"),
+        say("Hearth and Scientific Law.", "hearthLawPath"),
+        say("Audralia.", "audraliaPath"),
+        say("Meet the Characters.", "charactersPath")
       ],
       ["hearth", "frontier", "scientificLaw"]
     );
   }
 
-  function makeAudraliaNode() {
+  function makeZiontsNode() {
     return makeNode(
-      "audraliaPath",
+      "ziontsPath",
+      "zionts",
+      "mirrorland",
+      "reveal",
+      SCOPE_NARRATIVE,
+      MODE_THRESHOLD,
+      2,
+      [
+        "ZIONTS is the consequence room.",
+        "It exists so the future cannot be treated as only possibility.",
+        "Audralia shows constructive future. ZIONTS reminds the visitor what happens when truth, systems, and responsibility fail."
+      ],
+      [
+        say("Show me Audralia.", "audraliaPath"),
+        say("Scientific Law.", "scientificLawPath"),
+        say("Frontier.", "frontierPath"),
+        say("Meet Soren.", "characterSorenPath")
+      ],
+      ["zionts", "audralia", "scientificLaw"]
+    );
+  }
+
+  function makeAudraliaNode(id) {
+    var beats;
+
+    if (id === "audraliaWorldroomPath") {
+      beats = [
+        "The Audralia Worldroom is where Audralia becomes visible enough to inspect.",
+        "It is not merely a picture of a world. It is the place where a future-world body starts to become legible.",
+        "From there, the Control Cockpit can help you read the state."
+      ];
+    } else if (id === "controlCockpitPath") {
+      beats = [
+        "The Control Cockpit is where Audralia becomes readable as state.",
+        "A world needs visible controls, readouts, and disposition before the visitor can understand what is changing.",
+        "It is the difference between looking at a world and learning how to read it."
+      ];
+    } else {
+      beats = [
+        "Audralia is the constructive future world.",
+        "It gives Mirrorland terrain, scale, and consequence.",
+        "Hearth is where construction logic becomes operational. Frontier tests the systems Audralia may need. The Characters make those systems personal."
+      ];
+    }
+
+    return makeNode(
+      id || "audraliaPath",
       "audralia",
       "audralia",
       "deepen",
       SCOPE_NARRATIVE,
       MODE_IMMERSION,
       2,
-      [
-        "Audralia is the constructive future world.",
-        "It gives the estate distance, terrain, scale, and the feeling that the future is not only a room.",
-        "Hearth is where construction logic becomes operational. Frontier tests the systems Audralia may need. Characters make those systems personal."
-      ],
-      [
-        say("Tell me about Frontier.", "frontierPath"),
-        say("Tell me about Hearth.", "hearthPath"),
-        say("Tell me about the characters.", "charactersPath"),
-        say("Connect Audralia to Scientific Law.", "scientificLawPath")
-      ],
-      ["audralia", "frontier", "hearth"]
-    );
-  }
-
-  function makeFrontierNode(id, systemKey) {
-    var system = systemKey ? FRONTIER_SYSTEMS[systemKey] : null;
-    var beats;
-
-    if (id === "frontierLawPath") {
-      beats = [
-        "Scientific Law keeps Frontier from becoming fantasy language.",
-        "Frontier can imagine future systems, but Scientific Law asks whether each claim is defined, evidenced, measured, compared, revised, and limited.",
-        "That is why Energy cannot pretend fusion is solved, Waste cannot hide downstream cost, and Closed Loop cannot claim closure without audit return."
-      ];
-    } else if (id === "frontierCharactersPath") {
-      beats = [
-        "The Frontier systems become human through the characters.",
-        "Tarian belongs naturally to Water. Soren belongs to Waste and Boundary. Alaric belongs to Trajectory. Elara belongs to Shimmer and Vision. Dextrion belongs to Energy and repair readiness.",
-        "Frontier tests systems. Characters carry the cost of living inside them."
-      ];
-    } else if (system) {
-      beats = [
-        system.name + " — " + system.status + ".",
-        system.text,
-        system.character + " is the character pressure closest to this system.",
-        "This is a Frontier pressure test, not a claim that the future system is finished."
-      ];
-    } else {
-      beats = [
-        "The Frontier provides the future.",
-        "Frontier is Audralia’s applied-science playground.",
-        "It tests power, water, waste, feedback, support, growth, city pressure, operating rules, signal, direction, and horizon aim.",
-        "If Mirrorland is the window, Frontier is where the future starts becoming testable."
-      ];
-    }
-
-    return makeNode(
-      id || "frontierPath",
-      "frontier",
-      "frontier",
-      "deepen",
-      SCOPE_NARRATIVE,
-      MODE_THRESHOLD,
-      system ? 2 : 1,
       beats,
       [
-        say("Show Frontier systems.", "frontierSystemsPath"),
-        say("Energy.", "frontierEnergyPath"),
-        say("Water.", "frontierWaterPath"),
-        say("Waste.", "frontierWastePath"),
-        say("Connect Frontier to Scientific Law.", "frontierLawPath"),
-        say("Connect Frontier to Hearth.", "hearthFrontierPath"),
-        say("Connect Frontier to characters.", "frontierCharactersPath")
+        say("Open the Audralia Worldroom.", "audraliaWorldroomPath"),
+        say("Open the Control Cockpit.", "controlCockpitPath"),
+        say("Frontier.", "frontierPath"),
+        say("Hearth.", "hearthPath"),
+        say("Meet the Characters.", "charactersPath"),
+        say("Scientific Law.", "scientificLawPath")
       ],
-      system ? [system.route, "frontier"] : ["frontier", "audralia", "hearth"]
+      ["audralia", "audraliaWorldroom", "controlCockpit", "frontier", "hearth"]
     );
   }
 
@@ -3242,7 +3386,85 @@
     return map[target] || "";
   }
 
+  function makeFrontierNode(id, systemKey) {
+    var system = systemKey ? FRONTIER_SYSTEMS[systemKey] : null;
+    var beats;
+
+    if (id === "frontierLawPath") {
+      beats = [
+        "Scientific Law keeps Frontier from becoming fantasy language.",
+        "Frontier can imagine future systems, but Scientific Law asks whether each claim is defined, evidenced, measured, compared, revised, and limited.",
+        "That is why Energy cannot pretend fusion is solved, Waste cannot hide downstream cost, and Closed Loop cannot claim closure without audit return."
+      ];
+    } else if (id === "frontierCharactersPath") {
+      beats = [
+        "Frontier becomes more readable when you meet the Characters.",
+        "Tarian belongs naturally to Water. Soren belongs to Waste and Boundary. Alaric belongs to Trajectory. Elara belongs to Shimmer and Vision. Dextrion belongs to Energy and repair readiness.",
+        "Frontier tests systems. The Characters show how people behave under the pressure those systems create."
+      ];
+    } else if (system) {
+      beats = [
+        system.name + " — " + system.status + ".",
+        system.text,
+        system.character + " is the character closest to this system.",
+        "This is a Frontier pressure test, not a claim that the future system is finished."
+      ];
+    } else {
+      beats = [
+        "Frontier is where the future becomes testable.",
+        "It is Audralia’s applied-science yard: energy, water, waste, feedback, infrastructure, lattice, urban pressure, manuals, signals, trajectory, and vision.",
+        "If Mirrorland is the window, Frontier is where the future starts answering practical questions."
+      ];
+    }
+
+    return makeNode(
+      id || "frontierPath",
+      "frontier",
+      "frontier",
+      "deepen",
+      SCOPE_NARRATIVE,
+      MODE_THRESHOLD,
+      system ? 2 : 1,
+      beats,
+      [
+        say("Show Frontier systems.", "frontierSystemsPath"),
+        say("Energy.", "frontierEnergyPath"),
+        say("Water.", "frontierWaterPath"),
+        say("Waste.", "frontierWastePath"),
+        say("Scientific Law boundary.", "frontierLawPath"),
+        say("Hearth and Frontier.", "hearthFrontierPath"),
+        say("Meet the Characters through Frontier.", "frontierCharactersPath")
+      ],
+      system ? [system.route, "frontier"] : ["frontier", "audralia", "hearth"]
+    );
+  }
+
+  function makeCharacterCompletionCueBeats() {
+    if (!isCharacterCompletionReady()) return [];
+
+    state.visitor.characterCompletionPromptShown = true;
+
+    return [
+      "You can keep asking me about them here.",
+      "But if you are ready, Mirrorland is where this changes from explanation into encounter. As the digital agents come online, you will be able to communicate with the Characters directly inside Mirrorland."
+    ];
+  }
+
+  function makeCharacterCompletionOptions() {
+    if (!isCharacterCompletionReady()) return [];
+
+    return [
+      say("Enter Mirrorland.", "mirrorlandPath", { signal: "mirrorland" }),
+      say("Keep asking about the Characters.", "charactersPath", { signal: "characters" }),
+      say("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath", { signal: "archetype" }),
+      say("Return to the estate.", "compassPath", { signal: "orientation" })
+    ];
+  }
+
   function makeCharactersNode(id) {
+    var completionBeats = state.visitor.characterCompletionPromptShown ? [] : makeCharacterCompletionCueBeats();
+    var completionOptions = makeCharacterCompletionOptions();
+
     if (id === "characterRelationshipsPath") {
       return makeNode(
         id,
@@ -3253,20 +3475,19 @@
         MODE_IMMERSION,
         2,
         [
-          "Character relationships are pressure lines.",
-          "Auren and Jeeves connect through protection and entry. Alaric and Tarian connect through route and endurance. Elara and Soren connect through possibility and hidden cost. Dextrion and Soren connect through repair and proof.",
-          "These are pressure relationships, not invented biography."
-        ],
+          "The relationships are not decorative. They are pressure lines.",
+          "Auren and Jeeves meet where protection needs permission. Alaric and Tarian meet where warning has to survive the body. Elara and Soren meet where possibility has to answer hidden cost. Dextrion and Soren meet where repair has to face proof."
+        ].concat(completionBeats),
         [
-          say("Auren Vale.", "characterAurenValePath"),
-          say("Dextrion.", "characterDextrionPath"),
-          say("Alaric.", "characterAlaricPath"),
-          say("Tarian.", "characterTarianPath"),
-          say("Elara.", "characterElaraPath"),
-          say("Soren.", "characterSorenPath"),
-          say("Which character am I most like?", "characterMirrorPath")
-        ],
-        ["characters"]
+          say("Meet Auren Vale.", "characterAurenValePath"),
+          say("Meet Dextrion.", "characterDextrionPath"),
+          say("Meet Alaric.", "characterAlaricPath"),
+          say("Meet Tarian.", "characterTarianPath"),
+          say("Meet Elara.", "characterElaraPath"),
+          say("Meet Soren.", "characterSorenPath"),
+          say("Character Archetype Mirror.", "characterArchetypeMirrorPath")
+        ].concat(completionOptions),
+        ["characters", "mirrorland"]
       );
     }
 
@@ -3280,17 +3501,17 @@
         MODE_IMMERSION,
         2,
         [
-          "The conflict is not only good against evil.",
+          "Their conflict is not only good against evil.",
           "It is memory against denial, survival against consequence, voice against silence, and choice against pressure.",
-          "The characters matter because they turn future systems into lived cost."
-        ],
+          "The Characters matter because they turn future systems into lived cost."
+        ].concat(completionBeats),
         [
           say("Show relationships.", "characterRelationshipsPath"),
-          say("Show motives.", "characterMotivesPath"),
-          say("Which character am I most like?", "characterMirrorPath"),
-          say("Who should I meet first?", "characterFirstPath")
+          say("Who should I meet first?", "characterFirstPath"),
+          say("Character Archetype Mirror.", "characterArchetypeMirrorPath"),
+          say("Enter Mirrorland.", "mirrorlandPath")
         ],
-        ["characters"]
+        ["characters", "mirrorland"]
       );
     }
 
@@ -3304,20 +3525,20 @@
         MODE_IMMERSION,
         2,
         [
-          "Start with the character who matches the pressure you want to understand.",
-          "Protection begins with Auren. Repair begins with Dextrion. Early warning begins with Alaric. Endurance begins with Tarian. Signal begins with Elara. Hidden cost begins with Soren. Truth sequence begins with Jeeves. Distributed survival begins with the Remote Team."
-        ],
+          "Start with the behavior you want to understand.",
+          "If you want protection, meet Auren. If you want repair, meet Dextrion. If you want warning, meet Alaric. If you want endurance, meet Tarian. If you want signal, meet Elara. If you want truth and boundary, meet Soren. If you want guided sequence, stay with Jeeves. If you want survival beyond the safe center, meet the Remote Team."
+        ].concat(completionBeats),
         [
-          say("Auren Vale.", "characterAurenValePath"),
-          say("Dextrion.", "characterDextrionPath"),
-          say("Alaric.", "characterAlaricPath"),
-          say("Tarian.", "characterTarianPath"),
-          say("Elara.", "characterElaraPath"),
-          say("Soren.", "characterSorenPath"),
-          say("Jeeves.", "characterJeevesPath"),
-          say("Remote Team.", "characterRemoteTeamPath")
-        ],
-        ["characters"]
+          say("Meet Auren Vale.", "characterAurenValePath"),
+          say("Meet Dextrion.", "characterDextrionPath"),
+          say("Meet Alaric.", "characterAlaricPath"),
+          say("Meet Tarian.", "characterTarianPath"),
+          say("Meet Elara.", "characterElaraPath"),
+          say("Meet Soren.", "characterSorenPath"),
+          say("Tell me about Jeeves.", "characterJeevesPath"),
+          say("Meet the Remote Team.", "characterRemoteTeamPath")
+        ].concat(completionOptions),
+        ["characters", "mirrorland"]
       );
     }
 
@@ -3330,43 +3551,31 @@
       MODE_IMMERSION,
       1,
       [
-        "The Characters are where Mirrorland gains depth.",
-        "Auren protects. Dextrion repairs. Alaric reads danger. Tarian keeps survival physical. Elara makes the future visible. Soren refuses fake restoration. Jeeves sequences truth. The Remote Team distributes survival.",
-        "They are not labels. They are pressure carriers.",
-        "If the window is Mirrorland, the Characters are what make the window inhabitable."
-      ],
+        "The Characters are where Mirrorland starts breathing.",
+        CHARACTER_REGISTRY.aurenVale.oneLine,
+        CHARACTER_REGISTRY.dextrion.oneLine,
+        CHARACTER_REGISTRY.alaric.oneLine,
+        CHARACTER_REGISTRY.tarian.oneLine,
+        "I can introduce them properly, or we can use the Character Archetype Mirror to see which pattern you follow when pressure rises."
+      ].concat(completionBeats),
       [
-        say("Auren Vale.", "characterAurenValePath"),
-        say("Dextrion.", "characterDextrionPath"),
-        say("Alaric.", "characterAlaricPath"),
-        say("Tarian.", "characterTarianPath"),
-        say("Elara.", "characterElaraPath"),
-        say("Soren.", "characterSorenPath"),
-        say("Jeeves.", "characterJeevesPath"),
-        say("Remote Team.", "characterRemoteTeamPath"),
-        say("Which character am I most like?", "characterMirrorPath")
-      ],
-      ["characters"]
+        say("Who are the Characters?", "characterIdentityPath"),
+        say("Meet Auren Vale.", "characterAurenValePath"),
+        say("Meet Dextrion.", "characterDextrionPath"),
+        say("Meet Alaric.", "characterAlaricPath"),
+        say("Meet Tarian.", "characterTarianPath"),
+        say("Meet Elara.", "characterElaraPath"),
+        say("Meet Soren.", "characterSorenPath"),
+        say("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath")
+      ].concat(completionOptions),
+      ["characters", "mirrorland"]
     );
-  }
-
-  function targetToCharacter(target) {
-    var map = {
-      characterAurenValePath: "aurenVale",
-      characterDextrionPath: "dextrion",
-      characterAlaricPath: "alaric",
-      characterTarianPath: "tarian",
-      characterElaraPath: "elara",
-      characterSorenPath: "soren",
-      characterJeevesPath: "jeeves",
-      characterRemoteTeamPath: "remoteTeam"
-    };
-
-    return map[target] || "";
   }
 
   function makeCharacterNode(characterId) {
     var character = CHARACTER_REGISTRY[characterId];
+    var completionBeats = state.visitor.characterCompletionPromptShown ? [] : makeCharacterCompletionCueBeats();
+    var completionOptions = makeCharacterCompletionOptions();
 
     if (!character) return makeCharactersNode("charactersPath");
 
@@ -3379,106 +3588,104 @@
       MODE_IMMERSION,
       2,
       [
-        character.name + " is the " + character.title + ".",
-        character.oneLine,
-        character.pressure,
-        "Reflective pattern: " + character.mirror,
+        character.compositionProfile,
+        "Behavior under pressure: " + character.mirror,
         character.estateFunction + " " + character.frontierConnection
-      ],
+      ].concat(completionBeats),
       [
-        say("Show character relationships.", "characterRelationshipsPath"),
-        say("Show character conflict.", "characterTensionsPath"),
-        say("Which character am I most like?", "characterMirrorPath"),
-        say("Show all characters.", "charactersPath"),
-        say("Choose the next door.", "cleanDoor")
-      ],
-      ["characters"]
+        say("Show how the Characters relate.", "characterRelationshipsPath"),
+        say("Show what conflict they carry.", "characterTensionsPath"),
+        say("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        say("Meet another Character.", "charactersPath"),
+        say("Enter Mirrorland.", "mirrorlandPath"),
+        control("Choose the next door.", "cleanDoor")
+      ].concat(completionOptions),
+      ["characters", "mirrorland"]
     );
   }
 
-  function makeCharacterMirrorNode(id) {
-    if (id === "characterMirrorQuestionOne" || id === "selfLearningPath" || id === "characterMirrorPath") {
+  function makeCharacterArchetypeNode(id) {
+    if (id === "characterArchetypeQuestionOne" || id === "selfLearningPath" || id === "characterArchetypeMirrorPath") {
       return makeNode(
-        "characterMirrorQuestionOne",
-        "characterMirror",
+        "characterArchetypeQuestionOne",
+        "characterArchetype",
         "diagnostic",
         "personalize",
         SCOPE_OBJECTIVE,
-        MODE_CHARACTER_MIRROR,
+        MODE_CHARACTER_ARCHETYPE,
         1,
         [
-          "We can use the Character Mirror.",
-          "This will not define you. It will compare your current pressure pattern to the characters.",
-          "The mirror keeps your mind yours. As Sean says, manipulation is when you use other people’s minds rather than your own.",
-          "First question: under pressure, what do you usually notice first?"
+          "We can use the Character Archetype Mirror.",
+          "It does not tell you who you are. It looks at how you tend to behave under pressure, then shows which character pattern you are currently following.",
+          "First question: when pressure rises, what do you usually notice first?"
         ],
         [
-          say("Who needs protection?", "characterMirrorQuestionTwo", { signal: "mirror" }),
-          say("What is broken and needs repair?", "characterMirrorQuestionTwo", { signal: "mirror" }),
-          say("Where danger is forming early.", "characterMirrorQuestionTwo", { signal: "mirror" }),
-          say("What the body or situation can actually endure.", "characterMirrorQuestionTwo", { signal: "mirror" }),
-          say("What truth or hidden cost is being avoided.", "characterMirrorQuestionTwo", { signal: "mirror" }),
-          say("What signal of hope needs to become visible.", "characterMirrorQuestionTwo", { signal: "mirror" })
+          say("Who needs protection?", "characterArchetypeQuestionTwo", { signal: "archetype" }),
+          say("What is broken and needs repair?", "characterArchetypeQuestionTwo", { signal: "archetype" }),
+          say("Where danger is forming early.", "characterArchetypeQuestionTwo", { signal: "archetype" }),
+          say("What the body or situation can actually endure.", "characterArchetypeQuestionTwo", { signal: "archetype" }),
+          say("What truth or hidden cost is being avoided.", "characterArchetypeQuestionTwo", { signal: "archetype" }),
+          say("What signal of hope needs to become visible.", "characterArchetypeQuestionTwo", { signal: "archetype" })
         ],
         ["coherenceDiagnostic", "characters", "nineSummits"]
       );
     }
 
-    if (id === "characterMirrorQuestionTwo") {
+    if (id === "characterArchetypeQuestionTwo") {
       return makeNode(
-        "characterMirrorQuestionTwo",
-        "characterMirror",
+        "characterArchetypeQuestionTwo",
+        "characterArchetype",
         "diagnostic",
         "personalize",
         SCOPE_OBJECTIVE,
-        MODE_CHARACTER_MIRROR,
+        MODE_CHARACTER_ARCHETYPE,
         2,
         [
           "Second question.",
-          "When the pressure increases, what do you tend to rely on next?"
+          "When the pressure increases, what do you rely on next?"
         ],
         [
-          say("A clear sequence and controlled timing.", "characterMirrorQuestionThree", { signal: "mirror" }),
-          say("Visible action or repair.", "characterMirrorQuestionThree", { signal: "mirror" }),
-          say("Stability, continuity, and keeping people from breaking.", "characterMirrorQuestionThree", { signal: "mirror" }),
-          say("Evidence, contradiction, and proof.", "characterMirrorQuestionThree", { signal: "mirror" }),
-          say("A public signal that gives people hope.", "characterMirrorQuestionThree", { signal: "mirror" }),
-          say("A team or field response beyond one safe center.", "characterMirrorQuestionThree", { signal: "mirror" })
+          say("A clear sequence and controlled timing.", "characterArchetypeQuestionThree", { signal: "archetype" }),
+          say("Visible action or repair.", "characterArchetypeQuestionThree", { signal: "archetype" }),
+          say("Stability, continuity, and keeping people from breaking.", "characterArchetypeQuestionThree", { signal: "archetype" }),
+          say("Evidence, contradiction, and proof.", "characterArchetypeQuestionThree", { signal: "archetype" }),
+          say("A public signal that gives people hope.", "characterArchetypeQuestionThree", { signal: "archetype" }),
+          say("A team or field response beyond one safe center.", "characterArchetypeQuestionThree", { signal: "archetype" })
         ],
         ["coherenceDiagnostic", "characters"]
       );
     }
 
-    if (id === "characterMirrorQuestionThree") {
+    if (id === "characterArchetypeQuestionThree") {
       return makeNode(
-        "characterMirrorQuestionThree",
-        "characterMirror",
+        "characterArchetypeQuestionThree",
+        "characterArchetype",
         "diagnostic",
         "personalize",
         SCOPE_OBJECTIVE,
-        MODE_CHARACTER_MIRROR,
+        MODE_CHARACTER_ARCHETYPE,
         3,
         [
           "Third question.",
-          "What usually becomes your risk when you are under too much pressure?"
+          "What usually becomes your risk when the pressure gets too high?"
         ],
         [
-          say("I overprotect or hide too much.", "characterMirrorResult", { signal: "mirror" }),
-          say("I try to fix everything too fast.", "characterMirrorResult", { signal: "mirror" }),
-          say("I see danger before people believe me.", "characterMirrorResult", { signal: "mirror" }),
-          say("I keep carrying more than my body can sustain.", "characterMirrorResult", { signal: "mirror" }),
-          say("I need the truth named before I can move.", "characterMirrorResult", { signal: "mirror" }),
-          say("I manage how much truth people can receive.", "characterMirrorResult", { signal: "mirror" })
+          say("I overprotect or hide too much.", "characterArchetypeResult", { signal: "archetype" }),
+          say("I try to fix everything too fast.", "characterArchetypeResult", { signal: "archetype" }),
+          say("I see danger before people believe me.", "characterArchetypeResult", { signal: "archetype" }),
+          say("I keep carrying more than I can sustain.", "characterArchetypeResult", { signal: "archetype" }),
+          say("I need the truth named before I can move.", "characterArchetypeResult", { signal: "archetype" }),
+          say("I manage how much truth people can receive.", "characterArchetypeResult", { signal: "archetype" })
         ],
         ["coherenceDiagnostic", "characters"]
       );
     }
 
-    return makeCharacterMirrorResultNode();
+    return makeCharacterArchetypeResultNode();
   }
 
-  function makeCharacterMirrorResultNode() {
-    var mirror = computeLocalCharacterMirror();
+  function makeCharacterArchetypeResultNode() {
+    var mirror = computeLocalCharacterArchetype();
     var top = mirror[0];
     var second = mirror[1];
     var third = mirror[2];
@@ -3486,22 +3693,22 @@
 
     if (!top) {
       return makeNode(
-        "characterMirrorResult",
-        "characterMirror",
+        "characterArchetypeResult",
+        "characterArchetype",
         "diagnostic",
         "personalize",
         SCOPE_OBJECTIVE,
-        MODE_CHARACTER_MIRROR,
+        MODE_CHARACTER_ARCHETYPE,
         3,
         [
-          "I do not have enough pressure signal to name a clean match yet.",
+          "I do not have enough signal to name a clean Character Archetype yet.",
           "That is not a failure. It means the mirror needs clearer answers.",
           "Take the Coherence Diagnostic if you want a stronger read."
         ],
         [
-          say("Ask the first mirror question again.", "characterMirrorQuestionOne", { signal: "mirror" }),
+          say("Ask the first archetype question again.", "characterArchetypeQuestionOne", { signal: "archetype" }),
           say("Take the Coherence Diagnostic.", "diagnosticPath"),
-          say("Show the characters first.", "charactersPath"),
+          say("Meet the Characters first.", "charactersPath"),
           control("Re-center me.", "recenterNode")
         ],
         ["coherenceDiagnostic", "characters"]
@@ -3511,41 +3718,41 @@
     topCharacter = CHARACTER_REGISTRY[top.id];
 
     return makeNode(
-      "characterMirrorResult",
-      "characterMirror",
+      "characterArchetypeResult",
+      "characterArchetype",
       "diagnostic",
       "close",
       SCOPE_OBJECTIVE,
-      MODE_CHARACTER_MIRROR,
+      MODE_CHARACTER_ARCHETYPE,
       3,
       [
-        "Reflective match, not identity: your answers currently resemble " + topCharacter.name + "’s pressure pattern most strongly.",
-        topCharacter.name + " carries this pressure: " + topCharacter.pressure,
-        second ? "Your secondary pressure reads closest to " + CHARACTER_REGISTRY[second.id].name + ": " + CHARACTER_REGISTRY[second.id].mirror : "The secondary pressure is not strong enough to name cleanly yet.",
-        third ? "Your tension match is " + CHARACTER_REGISTRY[third.id].name + ": the pattern that may appear when pressure rises." : "This is enough to begin, but not enough to make a final label.",
-        "The next step is not to become the character. The next step is to choose what this reflection helps you notice."
+        "Your current Character Archetype under pressure is closest to " + topCharacter.name + ".",
+        "That does not mean you are " + topCharacter.name + ". It means your answers follow a similar behavior pattern when pressure rises.",
+        topCharacter.compositionProfile,
+        second ? "Your secondary pattern is closest to " + CHARACTER_REGISTRY[second.id].name + "." : "The secondary pattern is not strong enough to name cleanly yet.",
+        third ? "Your tension pattern is closest to " + CHARACTER_REGISTRY[third.id].name + ": the behavior that may appear when pressure gets too high." : "This is enough to begin, not enough to make a final label."
       ],
       [
-        say("Show why this match appeared.", topCharacter.target),
-        second ? say("Show the secondary pressure.", CHARACTER_REGISTRY[second.id].target) : say("Ask another mirror question.", "characterMirrorQuestionOne", { signal: "mirror" }),
+        say("Show why this archetype appeared.", topCharacter.target),
+        second ? say("Show the secondary pattern.", CHARACTER_REGISTRY[second.id].target) : say("Ask another archetype question.", "characterArchetypeQuestionOne", { signal: "archetype" }),
         say("Take the full Diagnostic.", "diagnosticPath"),
         say("Connect this to Nine Summits.", "nineSummitsPath"),
-        say("Show all characters.", "charactersPath"),
-        control("Choose the next door.", "cleanDoor")
+        say("Meet all the Characters.", "charactersPath"),
+        say("Enter Mirrorland.", "mirrorlandPath")
       ],
-      ["characters", "coherenceDiagnostic", "nineSummits"]
+      ["characters", "coherenceDiagnostic", "nineSummits", "mirrorland"]
     );
   }
 
-  function computeLocalCharacterMirror() {
+  function computeLocalCharacterArchetype() {
     var scores = {};
-    var answers = state.visitor.characterMirrorAnswers.join(" ").toLowerCase();
+    var answers = state.visitor.characterArchetypeAnswers.join(" ").toLowerCase();
 
     Object.keys(CHARACTER_REGISTRY).forEach(function initScore(id) {
       scores[id] = 0;
     });
 
-    LOCAL_MIRROR_KEYWORDS.forEach(function eachEntry(entry) {
+    LOCAL_ARCHETYPE_KEYWORDS.forEach(function eachEntry(entry) {
       entry.words.forEach(function eachWord(word) {
         if (answers.indexOf(word.toLowerCase()) !== -1) {
           scores[entry.id] += 2;
@@ -3556,7 +3763,7 @@
     if (answers.indexOf("protection") !== -1 || answers.indexOf("protect") !== -1) scores.aurenVale += 3;
     if (answers.indexOf("repair") !== -1 || answers.indexOf("fix") !== -1) scores.dextrion += 3;
     if (answers.indexOf("danger") !== -1 || answers.indexOf("early") !== -1) scores.alaric += 3;
-    if (answers.indexOf("endure") !== -1 || answers.indexOf("body") !== -1) scores.tarian += 3;
+    if (answers.indexOf("endure") !== -1 || answers.indexOf("body") !== -1 || answers.indexOf("sustain") !== -1) scores.tarian += 3;
     if (answers.indexOf("hope") !== -1 || answers.indexOf("visible") !== -1) scores.elara += 3;
     if (answers.indexOf("truth") !== -1 || answers.indexOf("hidden cost") !== -1) scores.soren += 3;
     if (answers.indexOf("sequence") !== -1 || answers.indexOf("timing") !== -1) scores.jeeves += 3;
@@ -3597,13 +3804,15 @@
     var characterId = targetToCharacterFromText(value);
 
     if (
-      value.indexOf("which character am i") !== -1 ||
-      value.indexOf("what character am i") !== -1 ||
-      value.indexOf("most like") !== -1 ||
+      value.indexOf("character archetype") !== -1 ||
+      value.indexOf("archetype") !== -1 ||
+      value.indexOf("under pressure") !== -1 ||
+      value.indexOf("behavior under pressure") !== -1 ||
+      value.indexOf("how do i respond") !== -1 ||
       value.indexOf("learn about myself") !== -1 ||
       value.indexOf("self learning") !== -1
     ) {
-      return { target: "characterMirrorPath", signal: "mirror" };
+      return { target: "characterArchetypeMirrorPath", signal: "archetype" };
     }
 
     if (characterId) {
@@ -3683,7 +3892,7 @@
       value.indexOf("vision") !== -1 ||
       value.indexOf("future") !== -1
     ) {
-      return { target: "frontierPath", signal: "world" };
+      return { target: "frontierPath", signal: "mirrorland" };
     }
 
     if (
@@ -3692,14 +3901,13 @@
       value.indexOf("construct facility") !== -1 ||
       value.indexOf("construct engine") !== -1
     ) {
-      return { target: "hearthPath", signal: "world" };
+      return { target: "hearthPath", signal: "mirrorland" };
     }
 
     if (
       value.indexOf("character") !== -1 ||
       value.indexOf("people") !== -1 ||
-      value.indexOf("who lives") !== -1 ||
-      value.indexOf("who") !== -1
+      value.indexOf("who lives") !== -1
     ) {
       return { target: "charactersPath", signal: "characters" };
     }
@@ -3707,12 +3915,12 @@
     if (
       value.indexOf("mirrorland") !== -1 ||
       value.indexOf("audralia") !== -1 ||
-      value.indexOf("world") !== -1 ||
       value.indexOf("story") !== -1 ||
       value.indexOf("showroom") !== -1 ||
-      value.indexOf("window") !== -1
+      value.indexOf("window") !== -1 ||
+      value.indexOf("atrium") !== -1
     ) {
-      return { target: "worldPath", signal: "world" };
+      return { target: "mirrorlandPath", signal: "mirrorland" };
     }
 
     if (
@@ -3761,29 +3969,20 @@
   function isBackendEligible(target, settings) {
     if (!state.brain.enabled) return false;
     if (settings && settings.noBrain) return false;
-    if (target === "intro" || target === "askFirst" || target === "returnFork" || target === "restartFork") return false;
+    if (LOCAL_FINAL_TARGETS.indexOf(normalizeNode(target)) !== -1) return false;
     return true;
   }
 
   function shouldAskBrainBeforeLocal(target) {
     return [
-      "characterMirrorPath",
-      "selfLearningPath",
-      "characterMirrorResult",
       "scientificLawPath",
       "scientificLawTheoryPath",
       "scientificLawEvidencePath",
       "scientificLawMeasurePath",
       "scientificLawLimitsPath",
       "frontierPath",
-      "frontierSystemsPath",
-      "hearthPath",
-      "hearthConstructPath",
-      "hearthFacilityPath",
-      "charactersPath",
-      "seanPath",
-      "nineSummitsPath"
-    ].indexOf(target) !== -1;
+      "frontierSystemsPath"
+    ].indexOf(normalizeNode(target)) !== -1;
   }
 
   function buildBrainPayload(target, choice) {
@@ -3812,7 +4011,7 @@
       }),
       cartographyTrail: state.visitor.cartographyTrail.slice(),
       requestedMode: state.currentVoiceMode,
-      characterMirrorAnswers: state.visitor.characterMirrorAnswers.slice(),
+      characterArchetypeAnswers: state.visitor.characterArchetypeAnswers.slice(),
       registryContext: {
         id: state.currentTopic,
         summary: state.visitor.lastItch,
@@ -4157,11 +4356,20 @@
         return safeClone(getNode(id, null));
       },
       getState256: getState256,
-      getCharacterMirrorAnswers: function getCharacterMirrorAnswers() {
-        return state.visitor.characterMirrorAnswers.slice();
+      getCharacterArchetypeAnswers: function getCharacterArchetypeAnswers() {
+        return state.visitor.characterArchetypeAnswers.slice();
       },
-      resetCharacterMirror: function resetCharacterMirror() {
-        state.visitor.characterMirrorAnswers = [];
+      resetCharacterArchetype: function resetCharacterArchetype() {
+        state.visitor.characterArchetypeAnswers = [];
+      },
+      getCharacterCompletionState: function getCharacterCompletionState() {
+        return {
+          views: state.visitor.characterProfileViews.slice(),
+          relationshipViews: state.visitor.characterRelationshipViews,
+          readiness: state.visitor.characterCompletionReadiness,
+          promptShown: state.visitor.characterCompletionPromptShown,
+          lastCharacterViewed: state.visitor.lastCharacterViewed
+        };
       }
     };
 

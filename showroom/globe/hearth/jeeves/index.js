@@ -1,15 +1,17 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_PROMPT_DOCK_STATE_REPAIR_TNT_v17_2
+// HEARTH_JEEVES_SEMANTIC_SKELETON_SITE_CARTOGRAPHY_FRONTEND_ENGINE_TNT_v18
 // Full-file replacement.
 // Preserves existing HTML/CSS contract.
 // Purpose:
-// - Restore guaranteed conversation continuity after intro.
-// - Preserve v17 paired-brain architecture.
-// - Keep intro/core navigation local-first.
-// - Keep API advisory only.
-// - Repair prompt dock visibility and option rendering.
-// - Repair Character Mirror answer capture.
-// - Preserve DOM hooks, pacing, tap-to-advance, route handoffs, and front-end route authority.
+// - Preserve working v17.2 conversation continuity.
+// - Add semantic skeleton and site cartography grounding.
+// - Restore Meet Sean as a first-class source path.
+// - Bind Nine Summits relational value logic.
+// - Bind Sean Mansfield value axioms as internal narrative guidance.
+// - Keep Jeeves philosophical, but route-grounded.
+// - Remove duplicate prompt title behavior.
+// - Prevent empty prompt dock visibility.
+// - Preserve paired-brain architecture with front-end final route authority.
 // Does not own:
 // - server-side model execution
 // - API keys
@@ -18,10 +20,10 @@
 // - backend canon storage
 //
 
-(function hearthJeevesPairedSmeFrontendPromptDockStateRepair(global) {
+(function hearthJeevesSemanticSkeletonSiteCartographyFrontendEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_PROMPT_DOCK_STATE_REPAIR_TNT_v17_2";
+  var CONTRACT = "HEARTH_JEEVES_SEMANTIC_SKELETON_SITE_CARTOGRAPHY_FRONTEND_ENGINE_TNT_v18";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
   var DEFAULT_BRAIN_ENDPOINT = "/api/jeeves.js";
 
@@ -88,6 +90,472 @@
     "continue"
   ];
 
+  var HOUSE_SKELETON = {
+    orientation: {
+      key: "orientation",
+      name: "Orientation",
+      governingPhrase: "Orientation gives direction.",
+      estateFunction: "Give the visitor direction before depth.",
+      visitorQuestion: "Where am I, what is this, and where do I go next?",
+      primaryRooms: ["compassDesk", "guideDesk", "mainHall"],
+      relatedPeople: ["Jeeves"],
+      practicalRule: "If the visitor is lost, return to Compass Desk or Guide Desk."
+    },
+    truth: {
+      key: "truth",
+      name: "Truth",
+      governingPhrase: "The Laws provide truth.",
+      estateFunction: "Give claims a boundary, a test, and a correction path.",
+      visitorQuestion: "What can I trust?",
+      primaryRooms: ["lawLibrary", "scientificLaw", "theLab"],
+      relatedPeople: ["Soren", "Jeeves"],
+      practicalRule: "If the visitor doubts, route to Scientific Law, Law Library, or The Lab."
+    },
+    future: {
+      key: "future",
+      name: "Future",
+      governingPhrase: "The Frontier provides the future.",
+      estateFunction: "Give future-facing systems a place to be tested.",
+      visitorQuestion: "What can be built, tested, or prepared?",
+      primaryRooms: ["frontierWorkshopYard", "hearth", "audraliaConservatory"],
+      relatedPeople: ["Dextrion", "Tarian", "Soren", "Alaric", "Elara", "Remote Team"],
+      practicalRule: "If the visitor wants possibility, systems, or future pressure, route to Frontier."
+    },
+    window: {
+      key: "window",
+      name: "Window",
+      governingPhrase: "Mirrorland is the window.",
+      estateFunction: "Let the visitor see possible futures through story, pressure, consequence, and choice.",
+      visitorQuestion: "What does the future look like when it becomes lived?",
+      primaryRooms: ["atrium", "atlasStudy", "audraliaConservatory", "mirrorland"],
+      relatedPeople: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
+      practicalRule: "If the visitor wants to cross from ordinary web use into immersion, open the Atrium and world side."
+    },
+    depth: {
+      key: "depth",
+      name: "Depth",
+      governingPhrase: "The Characters give depth.",
+      estateFunction: "Make systems personal by giving pressure to people.",
+      visitorQuestion: "Who carries this pressure?",
+      primaryRooms: ["characters", "characterMirror"],
+      relatedPeople: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Jeeves", "Remote Team"],
+      practicalRule: "If the visitor wants the who, route to Characters or Character Mirror."
+    },
+    guide: {
+      key: "guide",
+      name: "Guide",
+      governingPhrase: "Jeeves is the guide.",
+      estateFunction: "Sequence truth, depth, and route choice without taking over the visitor’s mind.",
+      visitorQuestion: "Who can help me choose without forcing me?",
+      primaryRooms: ["jeevesInterface", "guideDesk", "compassDesk"],
+      relatedPeople: ["Jeeves"],
+      practicalRule: "If the visitor needs sequence, re-center and choose the next door."
+    },
+    source: {
+      key: "source",
+      name: "Source",
+      governingPhrase: "Sean is the source.",
+      estateFunction: "Show the person building the estate, not only the estate itself.",
+      visitorQuestion: "Who built this and why?",
+      primaryRooms: ["meetSean", "thisUnderdog"],
+      relatedPeople: ["Sean Mansfield"],
+      practicalRule: "If the visitor asks who, creator, designer, developer, source, or why this exists, route to Meet Sean."
+    },
+    value: {
+      key: "value",
+      name: "Value",
+      governingPhrase: "The Nine Summits provide value logic.",
+      estateFunction: "Give the estate a moral and relational spine.",
+      visitorQuestion: "What human values govern this journey?",
+      primaryRooms: ["nineSummits", "meetSean", "thisUnderdog"],
+      relatedPeople: ["Sean Mansfield", "This Underdog"],
+      practicalRule: "If the visitor asks about love, listening, limitation, expectation, manipulation, growth, or purpose, route to Nine Summits, Meet Sean, or This Underdog."
+    },
+    innerEntry: {
+      key: "innerEntry",
+      name: "Inner Human Entry",
+      governingPhrase: "This Underdog is the inner human entry point.",
+      estateFunction: "Let the visitor locate their own pressure inside the estate.",
+      visitorQuestion: "Where do I personally enter this?",
+      primaryRooms: ["thisUnderdog", "diagnostic", "characterMirror"],
+      relatedPeople: ["This Underdog", "Jeeves"],
+      practicalRule: "If the visitor asks about self, pressure, voice, or personal reflection, route to This Underdog, Diagnostic, or Character Mirror."
+    }
+  };
+
+  var SEAN_VALUE_AXIOMS = {
+    expectationLimitation: {
+      id: "expectationLimitation",
+      source: "Sean Mansfield",
+      sourceRoom: "meetSean",
+      phrase: "When you learn to live a life without expectations, you experience a life without limitations.",
+      functionName: "Release law",
+      useCase: "Fear, control, disappointment, self-comparison, and the need to move without demanding the outcome first.",
+      routeTargets: ["nineSummitsPath", "underdogPath", "seanPath", "diagnosticPath", "characterMirrorPath"]
+    },
+    liveLoveLaughListen: {
+      id: "liveLoveLaughListen",
+      source: "Sean Mansfield",
+      sourceRoom: "meetSean",
+      phrase: "The secret of life: learn to live to love, learn to love to laugh, learn to live to listen.",
+      functionName: "Relational law",
+      useCase: "Love, listening, laughter, humility, relational participation, Nine Summits, and human-centered meaning.",
+      routeTargets: ["nineSummitsPath", "bookPath", "underdogPath", "seanPath"]
+    },
+    manipulationMindOwnership: {
+      id: "manipulationMindOwnership",
+      source: "Sean Mansfield",
+      sourceRoom: "meetSean",
+      phrase: "Manipulation is when you use other people’s minds rather than your own.",
+      functionName: "Agency law",
+      useCase: "Ethics, influence, leadership, guidance, persuasion, coherence, and visitor agency.",
+      routeTargets: ["nineSummitsPath", "scientificLawPath", "seanPath", "diagnosticPath", "characterMirrorPath"]
+    }
+  };
+
+  var NINE_SUMMITS_RELATIVITY = {
+    name: "Nine Summits Relativity",
+    rule: "The Nine Summits are not isolated virtues. Each summit modifies and corrects the others.",
+    governingLine: "Release expectation. Enter relationship. Keep your own mind. Move with love. Listen before leading. Laugh without cruelty. Guide without manipulation. Choose without coercion. Grow without demanding the outcome first.",
+    relationalPairs: [
+      "Love without listening becomes projection.",
+      "Listening without boundaries becomes absorption.",
+      "Laughter without love becomes cruelty.",
+      "Freedom without responsibility becomes drift.",
+      "Vision without humility becomes manipulation.",
+      "Strength without compassion becomes domination.",
+      "Reflection without action becomes paralysis.",
+      "Action without reflection becomes fragmentation.",
+      "Purpose without love becomes performance."
+    ]
+  };
+
+  var SITE_CARTOGRAPHY = {
+    compassDesk: {
+      roomId: "compassDesk",
+      publicName: "Compass Desk",
+      estateLocation: "Orientation layer / first direction point.",
+      whatItIs: "The first practical direction room.",
+      whyItMatters: "It prevents the estate from becoming overwhelming.",
+      whoIsConnected: ["Jeeves"],
+      visitorPressure: "I do not know where to begin.",
+      abstractFunction: "Orientation gives direction.",
+      practicalAction: "Choose proof, source, value, self-reflection, practical use, or world side.",
+      routeId: "compass",
+      target: "compassPath",
+      nextRooms: ["guideDesk", "lawLibrary", "meetSean", "characterMirror", "atrium"],
+      proofBoundary: "Orientation is not proof; it only chooses the next room.",
+      localGuideBehavior: "Explain the available doors without forcing the visitor.",
+      returnToJeevesRule: "If the visitor asks for the whole estate, return to Jeeves."
+    },
+    guideDesk: {
+      roomId: "guideDesk",
+      publicName: "Guide Desk",
+      estateLocation: "Public map / site guide.",
+      whatItIs: "The public map of the estate.",
+      whyItMatters: "It shows how the rooms relate before the visitor goes deep.",
+      whoIsConnected: ["Jeeves"],
+      visitorPressure: "I need the map.",
+      abstractFunction: "Orientation becomes readable.",
+      practicalAction: "Open the Site Guide or choose a room path.",
+      routeId: "siteGuide",
+      target: "siteGuidePath",
+      nextRooms: ["compassDesk", "mainHall", "atrium", "lawLibrary", "frontierWorkshopYard"],
+      proofBoundary: "The guide organizes rooms; it does not replace the rooms.",
+      localGuideBehavior: "Explain room relationships, not full narrative depth.",
+      returnToJeevesRule: "If the visitor needs interpretation, return to Jeeves."
+    },
+    mainHall: {
+      roomId: "mainHall",
+      publicName: "Main Hall",
+      estateLocation: "Public estate center.",
+      whatItIs: "The regular public center before branching.",
+      whyItMatters: "It gives ordinary web visitors a familiar entry point.",
+      whoIsConnected: ["Jeeves", "Sean Mansfield"],
+      visitorPressure: "I want the public version first.",
+      abstractFunction: "Access becomes organized.",
+      practicalAction: "Choose proof, source, products, Diagnostic, or world threshold.",
+      routeId: "home",
+      target: "websitePath",
+      nextRooms: ["compassDesk", "guideDesk", "lawLibrary", "meetSean", "productGallery", "atrium"],
+      proofBoundary: "The main hall introduces; it does not complete proof.",
+      localGuideBehavior: "Keep the first explanation plain.",
+      returnToJeevesRule: "Return to Jeeves when the visitor asks which path matters."
+    },
+    atrium: {
+      roomId: "atrium",
+      publicName: "Atrium",
+      estateLocation: "Threshold into Mirrorland.",
+      whatItIs: "The doorway where ordinary web use begins crossing into world-side experience.",
+      whyItMatters: "It turns reading and looking into participation.",
+      whoIsConnected: ["Jeeves", "Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
+      visitorPressure: "I want to cross into the world side.",
+      abstractFunction: "Mirrorland is the window.",
+      practicalAction: "Enter Mirrorland, open Atlas Study, meet Characters, or visit Hearth/Audralia/Frontier.",
+      routeId: "showroom",
+      target: "worldPath",
+      nextRooms: ["atlasStudy", "audraliaConservatory", "hearth", "frontierWorkshopYard", "characters"],
+      proofBoundary: "The window reveals possibility; truth still answers to the Laws.",
+      localGuideBehavior: "Invite crossing, then ground with a room.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs route sequence."
+    },
+    atlasStudy: {
+      roomId: "atlasStudy",
+      publicName: "Atlas Study",
+      estateLocation: "World selection room.",
+      whatItIs: "The place where worlds and reference bodies become easier to choose.",
+      whyItMatters: "It prevents the world side from becoming one undifferentiated idea.",
+      whoIsConnected: ["Jeeves"],
+      visitorPressure: "I want to understand which world I am looking at.",
+      abstractFunction: "The window gains coordinates.",
+      practicalAction: "Choose Earth reference, Audralia, Hearth, or other world-facing rooms.",
+      routeId: "globeWindow",
+      target: "worldPath",
+      nextRooms: ["audraliaConservatory", "hearth", "frontierWorkshopYard", "characters"],
+      proofBoundary: "World selection is orientation, not claim verification.",
+      localGuideBehavior: "Name the world and its role.",
+      returnToJeevesRule: "Return to Jeeves if the visitor asks why the worlds matter."
+    },
+    lawLibrary: {
+      roomId: "lawLibrary",
+      publicName: "Law Library",
+      estateLocation: "Truth and boundary wing.",
+      whatItIs: "The room where the estate keeps claims disciplined.",
+      whyItMatters: "It prevents language from outrunning truth.",
+      whoIsConnected: ["Soren", "Jeeves"],
+      visitorPressure: "I need to know what is true.",
+      abstractFunction: "The Laws provide truth.",
+      practicalAction: "Open Scientific Law, The Lab, or a proof path.",
+      routeId: "laws",
+      target: "proofPath",
+      nextRooms: ["scientificLaw", "theLab", "frontierWorkshopYard", "hearth"],
+      proofBoundary: "No claim outranks its evidence, measurement, correction path, and limits.",
+      localGuideBehavior: "Name the rule, boundary, and test.",
+      returnToJeevesRule: "Return to Jeeves if the visitor asks where the proof belongs."
+    },
+    scientificLaw: {
+      roomId: "scientificLaw",
+      publicName: "Scientific Law",
+      estateLocation: "Reality Test chamber under the Laws.",
+      whatItIs: "The claim-testing chamber.",
+      whyItMatters: "It separates technical-sounding language from testable reality.",
+      whoIsConnected: ["Soren", "Dextrion", "Jeeves"],
+      visitorPressure: "I do not want to be fooled.",
+      abstractFunction: "Truth becomes testable.",
+      practicalAction: "Choose Theory, Evidence, Measure, Limits, or the claim ladder.",
+      routeId: "scientificLaw",
+      target: "scientificLawPath",
+      nextRooms: ["lawLibrary", "theLab", "frontierWorkshopYard", "hearth"],
+      proofBoundary: "A claim becomes scientific only when it can be defined, tested, corrected, limited, and checked again.",
+      localGuideBehavior: "Test the claim before expanding it.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs the claim placed inside the estate."
+    },
+    theLab: {
+      roomId: "theLab",
+      publicName: "The Lab",
+      estateLocation: "Status, gauges, and readiness room.",
+      whatItIs: "The room that separates working, held, forming, and unproven states.",
+      whyItMatters: "It prevents overclaiming.",
+      whoIsConnected: ["Jeeves", "Soren"],
+      visitorPressure: "What is actually working?",
+      abstractFunction: "Truth gains visible status.",
+      practicalAction: "Open Gauges or return to Scientific Law.",
+      routeId: "gauges",
+      target: "gaugesPath",
+      nextRooms: ["scientificLaw", "lawLibrary", "frontierWorkshopYard"],
+      proofBoundary: "Status is not the same as completion.",
+      localGuideBehavior: "Show what is visible without exaggeration.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs status interpreted."
+    },
+    frontierWorkshopYard: {
+      roomId: "frontierWorkshopYard",
+      publicName: "Frontier Workshop Yard",
+      estateLocation: "Future systems testing area.",
+      whatItIs: "The applied-science yard for future systems.",
+      whyItMatters: "The future needs systems that survive pressure, not only ideas.",
+      whoIsConnected: ["Dextrion", "Tarian", "Soren", "Alaric", "Elara", "Remote Team"],
+      visitorPressure: "I want to see what the future needs.",
+      abstractFunction: "The Frontier provides the future.",
+      practicalAction: "Choose Energy, Water, Waste, Closed Loop, Infrastructure, Lattice, Urban, Manual, Shimmer, Trajectory, or Vision.",
+      routeId: "frontier",
+      target: "frontierPath",
+      nextRooms: ["hearth", "audraliaConservatory", "scientificLaw", "characters"],
+      proofBoundary: "Future systems must remain bounded by Scientific Law.",
+      localGuideBehavior: "Show the system, pressure, related character, and test boundary.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs to connect the system to the whole estate."
+    },
+    productGallery: {
+      roomId: "productGallery",
+      publicName: "Product Gallery",
+      estateLocation: "Practical public value wing.",
+      whatItIs: "The place where messages, tools, books, objects, and offerings become usable.",
+      whyItMatters: "The estate must create public value, not only meaning.",
+      whoIsConnected: ["Sean Mansfield", "This Underdog"],
+      visitorPressure: "What can I use, buy, carry, or return to?",
+      abstractFunction: "Meaning becomes practical.",
+      practicalAction: "Open Products, Book, Nine Summits, or This Underdog.",
+      routeId: "products",
+      target: "productsPath",
+      nextRooms: ["nineSummits", "meetSean", "thisUnderdog", "mainHall"],
+      proofBoundary: "Practical value should not overstate readiness.",
+      localGuideBehavior: "Explain usefulness plainly.",
+      returnToJeevesRule: "Return to Jeeves when the visitor asks how practical value connects to the full estate."
+    },
+    meetSean: {
+      roomId: "meetSean",
+      publicName: "Meet Sean",
+      estateLocation: "Human source chamber.",
+      whatItIs: "The place where the visitor meets Sean Mansfield as writer, designer, and developer.",
+      whyItMatters: "The estate needs a human source, not only rooms and systems.",
+      whoIsConnected: ["Sean Mansfield", "This Underdog", "Jeeves"],
+      visitorPressure: "Who built this and why?",
+      abstractFunction: "Sean is the source.",
+      practicalAction: "Meet Sean, continue to This Underdog, Nine Summits, Diagnostic, or Character Mirror.",
+      routeId: "meetSean",
+      target: "seanPath",
+      nextRooms: ["thisUnderdog", "nineSummits", "diagnostic", "characterMirror", "mainHall"],
+      proofBoundary: "The source explains origin; proof still answers to the Laws.",
+      localGuideBehavior: "Explain Sean as source without turning the room into autobiography alone.",
+      returnToJeevesRule: "Return to Jeeves when the visitor wants the source connected to the estate."
+    },
+    thisUnderdog: {
+      roomId: "thisUnderdog",
+      publicName: "This Underdog",
+      estateLocation: "Inner human entry chamber.",
+      whatItIs: "The visitor’s inner pressure entry point.",
+      whyItMatters: "The estate becomes personal when the visitor recognizes their own pressure.",
+      whoIsConnected: ["Sean Mansfield", "This Underdog", "Jeeves"],
+      visitorPressure: "Where do I fit inside this?",
+      abstractFunction: "This Underdog is the inner human entry point.",
+      practicalAction: "Open This Underdog, Character Mirror, Diagnostic, Nine Summits, or Meet Sean.",
+      routeId: "aboutUnderdog",
+      target: "underdogPath",
+      nextRooms: ["characterMirror", "diagnostic", "nineSummits", "meetSean"],
+      proofBoundary: "This is reflection, not diagnosis.",
+      localGuideBehavior: "Return the visitor to agency.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs a clean next door."
+    },
+    nineSummits: {
+      roomId: "nineSummits",
+      publicName: "The Nine Summits",
+      estateLocation: "Value construct chamber.",
+      whatItIs: "The relational value system inside the estate.",
+      whyItMatters: "It gives the journey moral and human-development logic.",
+      whoIsConnected: ["Sean Mansfield", "This Underdog", "Jeeves"],
+      visitorPressure: "What values guide this?",
+      abstractFunction: "The Nine Summits provide value logic.",
+      practicalAction: "Open the book path, Meet Sean, This Underdog, or Character Mirror.",
+      routeId: "nineSummits",
+      target: "nineSummitsPath",
+      nextRooms: ["meetSean", "thisUnderdog", "characterMirror", "productGallery"],
+      proofBoundary: "Value guidance is reflective, not coercive.",
+      localGuideBehavior: "Show connected relativity, not isolated slogans.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs the value construct placed in the full estate."
+    },
+    hearth: {
+      roomId: "hearth",
+      publicName: "Hearth",
+      estateLocation: "Planetary construct facility.",
+      whatItIs: "The unknown-location facility where world-formation logic becomes operational.",
+      whyItMatters: "It gives planetary construction a named place.",
+      whoIsConnected: ["Jeeves", "Dextrion", "Soren", "Remote Team"],
+      visitorPressure: "Where does world construction become operational?",
+      abstractFunction: "Hearth constructs.",
+      practicalAction: "Open Hearth, connect to Frontier, Scientific Law, Audralia, or Characters.",
+      routeId: "hearth",
+      target: "hearthPath",
+      nextRooms: ["frontierWorkshopYard", "scientificLaw", "audraliaConservatory", "characters"],
+      proofBoundary: "Construct claims remain bounded by Scientific Law.",
+      localGuideBehavior: "Name Hearth as facility, not merely route or visual.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs Hearth placed in the whole world logic."
+    },
+    audraliaConservatory: {
+      roomId: "audraliaConservatory",
+      publicName: "Audralia Conservatory",
+      estateLocation: "Constructive future world.",
+      whatItIs: "The future world carried by the Mirrorland side.",
+      whyItMatters: "It gives the future terrain, scale, and consequence.",
+      whoIsConnected: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
+      visitorPressure: "What world carries the future?",
+      abstractFunction: "Audralia carries.",
+      practicalAction: "Visit Audralia, Frontier, Hearth, or Characters.",
+      routeId: "audralia",
+      target: "audraliaPath",
+      nextRooms: ["frontierWorkshopYard", "hearth", "characters", "atlasStudy"],
+      proofBoundary: "The world can reveal possibility; claims still answer to law.",
+      localGuideBehavior: "Explain Audralia as world, not decoration.",
+      returnToJeevesRule: "Return to Jeeves when the visitor asks how Audralia relates to the estate."
+    },
+    characters: {
+      roomId: "characters",
+      publicName: "Characters",
+      estateLocation: "Mirrorland depth chamber.",
+      whatItIs: "The place where systems become personal through people.",
+      whyItMatters: "Mirrorland gains depth when visitors can interact with pressure carriers.",
+      whoIsConnected: ["Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Jeeves", "Remote Team"],
+      visitorPressure: "Who carries this?",
+      abstractFunction: "The Characters give depth.",
+      practicalAction: "Meet one character, see relationships, or enter Character Mirror.",
+      routeId: "characters",
+      target: "charactersPath",
+      nextRooms: ["characterMirror", "frontierWorkshopYard", "audraliaConservatory", "hearth"],
+      proofBoundary: "Character reflection is narrative, not identity assignment.",
+      localGuideBehavior: "Keep each character tied to pressure, relationship, and next door.",
+      returnToJeevesRule: "Return to Jeeves for the full estate map."
+    },
+    characterMirror: {
+      roomId: "characterMirror",
+      publicName: "Character Mirror",
+      estateLocation: "Reflective bridge between visitor and Characters.",
+      whatItIs: "A guided reflection that compares current pressure pattern to character pressure.",
+      whyItMatters: "It lets the visitor enter Mirrorland through self-recognition.",
+      whoIsConnected: ["Jeeves", "Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
+      visitorPressure: "Which pressure pattern do I resemble right now?",
+      abstractFunction: "Depth becomes reflective.",
+      practicalAction: "Answer three questions, view a reflective match, then choose character, Diagnostic, or Nine Summits.",
+      routeId: "coherenceDiagnostic",
+      target: "characterMirrorPath",
+      nextRooms: ["characters", "diagnostic", "nineSummits", "thisUnderdog"],
+      proofBoundary: "Reflective match, not identity; current resemblance, not permanent label.",
+      localGuideBehavior: "Return the visitor to agency.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs broader direction."
+    },
+    mirrorland: {
+      roomId: "mirrorland",
+      publicName: "Mirrorland",
+      estateLocation: "Future-facing world window.",
+      whatItIs: "The window where truth and future become visible through story.",
+      whyItMatters: "It gives the website more than reading, looking, and exploring.",
+      whoIsConnected: ["Jeeves", "Auren Vale", "Dextrion", "Alaric", "Tarian", "Elara", "Soren", "Remote Team"],
+      visitorPressure: "I want to see the future as a world.",
+      abstractFunction: "Mirrorland is the window.",
+      practicalAction: "Enter the Atrium, open Atlas Study, visit Audralia, Frontier, Hearth, or Characters.",
+      routeId: "mirrorland",
+      target: "worldPath",
+      nextRooms: ["atrium", "atlasStudy", "audraliaConservatory", "frontierWorkshopYard", "characters"],
+      proofBoundary: "The window reveals possibility; truth still answers to the Laws.",
+      localGuideBehavior: "Reveal without floating.",
+      returnToJeevesRule: "Return to Jeeves for route sequence."
+    },
+    diagnostic: {
+      roomId: "diagnostic",
+      publicName: "Coherence Diagnostic",
+      estateLocation: "Public self-reflection chamber.",
+      whatItIs: "The local-only self-check that reflects pressure and coherence patterns.",
+      whyItMatters: "It gives the visitor a practical mirror before deeper interpretation.",
+      whoIsConnected: ["Jeeves", "This Underdog"],
+      visitorPressure: "I want to understand myself without being defined.",
+      abstractFunction: "Inner pressure becomes visible.",
+      practicalAction: "Take Diagnostic, use Character Mirror, or continue to This Underdog.",
+      routeId: "coherenceDiagnostic",
+      target: "diagnosticPath",
+      nextRooms: ["characterMirror", "thisUnderdog", "nineSummits", "scientificLaw"],
+      proofBoundary: "Not medical, legal, official IQ, official MBTI, or stored profile.",
+      localGuideBehavior: "Reflect without diagnosis.",
+      returnToJeevesRule: "Return to Jeeves when the visitor needs next direction."
+    }
+  };
+
   var DEFAULT_ROUTES = {
     compass: "/",
     home: "/",
@@ -124,19 +592,19 @@
   };
 
   var ROUTE_LABELS = {
-    compass: "Start at the Compass",
-    home: "Open the Public Entry",
-    siteGuide: "Open the Site Guide",
+    compass: "Start at the Compass Desk",
+    home: "Open the Main Hall",
+    siteGuide: "Open the Guide Desk",
     coherenceDiagnostic: "Take the Coherence Diagnostic",
     meetSean: "Meet Sean Mansfield",
-    products: "Open Products",
-    laws: "Read the Laws",
+    products: "Open the Product Gallery",
+    laws: "Open the Law Library",
     scientificLaw: "Open Scientific Law",
-    gauges: "Open Gauges",
-    showroom: "Open the Showroom",
+    gauges: "Open The Lab",
+    showroom: "Open the Atrium",
     hearth: "Open Hearth",
-    globeWindow: "Open the World Gate",
-    interactiveNarrative: "Enter the Interactive Narrative",
+    globeWindow: "Open the Atlas Study",
+    interactiveNarrative: "Enter Mirrorland",
     mirrorland: "Open Mirrorland",
     audralia: "Visit Audralia",
     frontier: "Explore Frontier",
@@ -317,6 +785,166 @@
     "characterRemoteTeamPath"
   ];
 
+  var TARGET_ROOM_MAP = {
+    intro: "jeevesInterface",
+    askFirst: "compassDesk",
+    websitePath: "mainHall",
+    skepticPlain: "lawLibrary",
+    proofPath: "lawLibrary",
+    lawsPath: "lawLibrary",
+    compassPath: "compassDesk",
+    whereToStart: "compassDesk",
+    siteGuidePath: "guideDesk",
+    scientificLawPath: "scientificLaw",
+    scientificLawTheoryPath: "scientificLaw",
+    scientificLawEvidencePath: "scientificLaw",
+    scientificLawMeasurePath: "scientificLaw",
+    scientificLawLimitsPath: "scientificLaw",
+    scientificLawRoutePath: "scientificLaw",
+    scientificLawLadderPath: "scientificLaw",
+    scientificLawTermsPath: "scientificLaw",
+    gaugesPath: "theLab",
+    diagnosticPath: "diagnostic",
+    futureProfilePath: "diagnostic",
+    seanPath: "meetSean",
+    underdogPath: "thisUnderdog",
+    productsPath: "productGallery",
+    bookPath: "nineSummits",
+    nineSummitsPath: "nineSummits",
+    worldPath: "atrium",
+    worldGatePath: "atrium",
+    mirrorMePath: "mirrorland",
+    hearthPath: "hearth",
+    hearthFacilityPath: "hearth",
+    hearthConstructPath: "hearth",
+    hearthFrontierPath: "hearth",
+    hearthLawPath: "hearth",
+    audraliaPath: "audraliaConservatory",
+    frontierPath: "frontierWorkshopYard",
+    frontierSystemsPath: "frontierWorkshopYard",
+    frontierEnergyPath: "frontierWorkshopYard",
+    frontierWaterPath: "frontierWorkshopYard",
+    frontierWastePath: "frontierWorkshopYard",
+    frontierClosedLoopPath: "frontierWorkshopYard",
+    frontierInfrastructurePath: "frontierWorkshopYard",
+    frontierLatticePath: "frontierWorkshopYard",
+    frontierUrbanPath: "frontierWorkshopYard",
+    frontierManualPath: "frontierWorkshopYard",
+    frontierShimmerPath: "frontierWorkshopYard",
+    frontierTrajectoryPath: "frontierWorkshopYard",
+    frontierVisionPath: "frontierWorkshopYard",
+    frontierLawPath: "frontierWorkshopYard",
+    frontierCharactersPath: "frontierWorkshopYard",
+    charactersPath: "characters",
+    characterIdentityPath: "characters",
+    characterRelationshipsPath: "characters",
+    characterTensionsPath: "characters",
+    characterMotivesPath: "characters",
+    characterFactionsPath: "characters",
+    characterStoryPressurePath: "characters",
+    characterFirstPath: "characters",
+    characterAurenValePath: "characters",
+    characterDextrionPath: "characters",
+    characterAlaricPath: "characters",
+    characterTarianPath: "characters",
+    characterElaraPath: "characters",
+    characterSorenPath: "characters",
+    characterJeevesPath: "characters",
+    characterRemoteTeamPath: "characters",
+    characterMirrorPath: "characterMirror",
+    selfLearningPath: "characterMirror",
+    characterMirrorQuestionOne: "characterMirror",
+    characterMirrorQuestionTwo: "characterMirror",
+    characterMirrorQuestionThree: "characterMirror",
+    characterMirrorResult: "characterMirror",
+    recenterNode: "compassDesk",
+    loopRecovery: "compassDesk",
+    cleanDoor: "compassDesk",
+    switchTopics: "guideDesk",
+    sharpQuestion: "guideDesk",
+    returnFork: "compassDesk",
+    restartFork: "compassDesk"
+  };
+
+  var TARGET_SKELETON_MAP = {
+    websitePath: "orientation",
+    compassPath: "orientation",
+    whereToStart: "orientation",
+    siteGuidePath: "orientation",
+    proofPath: "truth",
+    skepticPlain: "truth",
+    lawsPath: "truth",
+    scientificLawPath: "truth",
+    scientificLawTheoryPath: "truth",
+    scientificLawEvidencePath: "truth",
+    scientificLawMeasurePath: "truth",
+    scientificLawLimitsPath: "truth",
+    scientificLawRoutePath: "truth",
+    scientificLawLadderPath: "truth",
+    scientificLawTermsPath: "truth",
+    gaugesPath: "truth",
+    frontierPath: "future",
+    frontierSystemsPath: "future",
+    frontierEnergyPath: "future",
+    frontierWaterPath: "future",
+    frontierWastePath: "future",
+    frontierClosedLoopPath: "future",
+    frontierInfrastructurePath: "future",
+    frontierLatticePath: "future",
+    frontierUrbanPath: "future",
+    frontierManualPath: "future",
+    frontierShimmerPath: "future",
+    frontierTrajectoryPath: "future",
+    frontierVisionPath: "future",
+    frontierLawPath: "future",
+    frontierCharactersPath: "future",
+    worldPath: "window",
+    worldGatePath: "window",
+    audraliaPath: "window",
+    mirrorMePath: "window",
+    hearthPath: "future",
+    hearthFacilityPath: "future",
+    hearthConstructPath: "future",
+    hearthFrontierPath: "future",
+    hearthLawPath: "future",
+    charactersPath: "depth",
+    characterIdentityPath: "depth",
+    characterRelationshipsPath: "depth",
+    characterTensionsPath: "depth",
+    characterMotivesPath: "depth",
+    characterFactionsPath: "depth",
+    characterStoryPressurePath: "depth",
+    characterFirstPath: "depth",
+    characterAurenValePath: "depth",
+    characterDextrionPath: "depth",
+    characterAlaricPath: "depth",
+    characterTarianPath: "depth",
+    characterElaraPath: "depth",
+    characterSorenPath: "depth",
+    characterJeevesPath: "depth",
+    characterRemoteTeamPath: "depth",
+    characterMirrorPath: "depth",
+    selfLearningPath: "innerEntry",
+    characterMirrorQuestionOne: "innerEntry",
+    characterMirrorQuestionTwo: "innerEntry",
+    characterMirrorQuestionThree: "innerEntry",
+    characterMirrorResult: "innerEntry",
+    seanPath: "source",
+    underdogPath: "innerEntry",
+    diagnosticPath: "innerEntry",
+    futureProfilePath: "innerEntry",
+    productsPath: "orientation",
+    bookPath: "value",
+    nineSummitsPath: "value",
+    recenterNode: "orientation",
+    loopRecovery: "orientation",
+    cleanDoor: "guide",
+    switchTopics: "guide",
+    sharpQuestion: "guide",
+    returnFork: "guide",
+    restartFork: "guide"
+  };
+
   var FORBIDDEN_PUBLIC_LANGUAGE = [
     { pattern: /\bscope lane\b/gi, replacement: "path" },
     { pattern: /\bregistry\b/gi, replacement: "guide" },
@@ -343,9 +971,9 @@
     worldPath: "Tell me about the world side.",
     worldGatePath: "Tell me about the Interactive Narrative.",
     charactersPath: "Who are the characters?",
-    compassPath: "I need the Compass.",
+    compassPath: "I need the Compass Desk.",
     siteGuidePath: "Tell me how the estate is organized.",
-    lawsPath: "Explain the Laws.",
+    lawsPath: "Explain the Law Library.",
     scientificLawPath: "Explain Scientific Law.",
     scientificLawTheoryPath: "Explain Theory.",
     scientificLawEvidencePath: "Explain Evidence.",
@@ -354,10 +982,10 @@
     scientificLawRoutePath: "Show the Scientific Route.",
     scientificLawLadderPath: "Show the claim testing ladder.",
     scientificLawTermsPath: "Explain the deeper terms.",
-    gaugesPath: "Explain Gauges.",
-    seanPath: "Tell me about Sean.",
+    gaugesPath: "Explain The Lab.",
+    seanPath: "Take me to Meet Sean.",
     underdogPath: "Tell me about This Underdog.",
-    productsPath: "Tell me about the practical wing.",
+    productsPath: "Tell me about the Product Gallery.",
     bookPath: "Tell me about the book path.",
     nineSummitsPath: "Tell me about Nine Summits.",
     hearthPath: "I want to understand Hearth.",
@@ -423,6 +1051,11 @@
       oneLine: "He keeps the manor from becoming a beautiful cage.",
       pressure: "Every protected life makes the manor harder to hide.",
       mirror: "Protection, custody, shelter, and fear of exposure.",
+      estateFunction: "He makes protection personal.",
+      relatedRooms: ["characters", "atrium", "audraliaConservatory"],
+      frontierConnection: "Infrastructure and sanctuary load.",
+      lawConnection: "Protection must not hide hidden cost.",
+      hearthConnection: "Hearth gives sanctuary logic a world-condition problem.",
       summary: "Auren Vale is the Sanctuary Builder. He keeps the manor from becoming a beautiful cage. His pressure is protection versus exposure."
     },
     dextrion: {
@@ -435,6 +1068,11 @@
       oneLine: "He opened the path and stayed behind.",
       pressure: "Every one-way crossing remains on his hands.",
       mirror: "Repair, responsibility, guilt, and pressure to fix what broke.",
+      estateFunction: "He makes repair personal.",
+      relatedRooms: ["characters", "frontierWorkshopYard", "scientificLaw", "hearth"],
+      frontierConnection: "Energy, repair readiness, and system responsibility.",
+      lawConnection: "Repair must answer to evidence and downstream consequence.",
+      hearthConnection: "Hearth turns repair into world-formation accountability.",
       summary: "Dextrion is the Earth-Side Originator. He opened the path and stayed behind. His pressure is repair responsibility."
     },
     alaric: {
@@ -447,6 +1085,11 @@
       oneLine: "He reads danger before proof arrives.",
       pressure: "Waiting for proof can close the only safe route.",
       mirror: "Early warning, danger-reading, orientation, and acting before others believe the proof.",
+      estateFunction: "He makes warning personal.",
+      relatedRooms: ["characters", "frontierWorkshopYard", "compassDesk"],
+      frontierConnection: "Trajectory, drift detection, and early danger.",
+      lawConnection: "Warning must eventually meet evidence.",
+      hearthConnection: "Hearth gives route-reading planetary consequence.",
       summary: "Alaric is the Field Navigator. He reads danger before proof arrives. His pressure is early warning versus trust."
     },
     tarian: {
@@ -459,6 +1102,11 @@
       oneLine: "He keeps the mission physically honest.",
       pressure: "The future fails if the body cannot continue.",
       mirror: "Endurance, body-level survival, water, recovery, and carrying too much.",
+      estateFunction: "He makes survival personal.",
+      relatedRooms: ["characters", "frontierWorkshopYard", "audraliaConservatory"],
+      frontierConnection: "Water, continuity, and physical survival.",
+      lawConnection: "Endurance must respect limits.",
+      hearthConnection: "Hearth gives survival a planetary condition.",
       summary: "Tarian is the Water Anchor. He keeps the mission physically honest. His pressure is human limit versus mission demand."
     },
     elara: {
@@ -471,6 +1119,11 @@
       oneLine: "She makes the future visible before it disappears.",
       pressure: "The future has to be visible before anyone moves toward it.",
       mirror: "Signal, visibility, hope, public voice, and risk of being seen.",
+      estateFunction: "She makes vision personal.",
+      relatedRooms: ["characters", "frontierWorkshopYard", "mirrorland"],
+      frontierConnection: "Shimmer, Vision, and public signal.",
+      lawConnection: "Signal must not become false certainty.",
+      hearthConnection: "Hearth gives visible future a construct condition.",
       summary: "Elara is the Signal Bearer. She makes the future visible before it disappears. Her pressure is visibility versus exposure."
     },
     soren: {
@@ -483,6 +1136,11 @@
       oneLine: "He refuses fake restoration.",
       pressure: "Saving Mirrorland by hiding damage only creates another ZIONTS.",
       mirror: "Truth, hidden cost, contradiction, boundary, evidence, and refusal of fake restoration.",
+      estateFunction: "He makes consequence personal.",
+      relatedRooms: ["characters", "lawLibrary", "scientificLaw", "frontierWorkshopYard"],
+      frontierConnection: "Waste, Closed Loop, hidden cost, and boundary.",
+      lawConnection: "Truth must expose concealed consequence.",
+      hearthConnection: "Hearth cannot construct by hiding damage.",
       summary: "Soren is the Boundary Keeper. He refuses fake restoration. His pressure is truth versus denial."
     },
     jeeves: {
@@ -495,6 +1153,11 @@
       oneLine: "He decides how much truth the house can reveal.",
       pressure: "Too much truth breaks people. Too little sends them into the wrong room.",
       mirror: "Sequence, restraint, truth timing, entry, and controlled revelation.",
+      estateFunction: "He makes entry personal.",
+      relatedRooms: ["jeevesInterface", "compassDesk", "guideDesk", "characters"],
+      frontierConnection: "Manual, sequence, and safe operation.",
+      lawConnection: "Truth timing must not manipulate the visitor.",
+      hearthConnection: "Hearth requires guided entry because construct logic can overwhelm.",
       summary: "Jeeves is the Manor Interface. He decides how much truth the house can reveal. His pressure is protection versus revelation."
     },
     remoteTeam: {
@@ -507,6 +1170,11 @@
       oneLine: "They carry survival beyond the estate.",
       pressure: "If survival cannot leave the manor, the manor is only a bunker.",
       mirror: "Distributed responsibility, field logistics, helping beyond the safe center, and public survival.",
+      estateFunction: "They make distribution personal.",
+      relatedRooms: ["characters", "frontierWorkshopYard", "audraliaConservatory"],
+      frontierConnection: "Urban, infrastructure, field distribution, and public survival.",
+      lawConnection: "Distribution must survive reality, not only intention.",
+      hearthConnection: "Hearth gives distribution a world-scale test.",
       summary: "The Remote Team is the Distributed Response Unit. They carry survival beyond the estate. Their pressure is distribution versus collapse pressure."
     }
   };
@@ -524,7 +1192,7 @@
 
   var SCIENTIFIC_LAW = {
     core: "A claim does not become scientific because it sounds technical. It becomes scientific when it can be defined, tested, corrected, limited, and checked again.",
-    summary: "Scientific Law is the Reality Test chamber. It separates what sounds convincing from what keeps working after observation, evidence, measurement, comparison, correction, uncertainty, and limits.",
+    summary: "Scientific Law is the Reality Test chamber inside the Law Library. It separates what sounds convincing from what keeps working after observation, evidence, measurement, comparison, correction, uncertainty, and limits.",
     doors: {
       theory: "Theory is the explanation that risks being wrong.",
       evidence: "Evidence is the checkable record that survives preference.",
@@ -540,6 +1208,7 @@
       route: "frontierEnergy",
       name: "Energy",
       status: "Fusion readiness",
+      character: "Dextrion",
       text: "Energy starts with power readiness: storage, load protection, facility inputs, losses, and fusion readiness without pretending the final breakthrough is already solved."
     },
     water: {
@@ -547,6 +1216,7 @@
       route: "frontierWater",
       name: "Water",
       status: "Closed water systems",
+      character: "Tarian",
       text: "Water asks how water keeps moving without being wasted: capture, cleaning, routing, reuse, continuity, quality checks, and failure detection."
     },
     waste: {
@@ -554,6 +1224,7 @@
       route: "frontierWaste",
       name: "Waste",
       status: "Wastewater systems",
+      character: "Soren",
       text: "Waste begins where discarded material becomes a design test: sanitation, recovery, contaminant control, treatment, reuse classification, and return-material accounting."
     },
     closedLoop: {
@@ -561,6 +1232,7 @@
       route: "frontierClosedLoop",
       name: "Closed Loop",
       status: "Answer-back systems",
+      character: "Soren",
       text: "Closed Loop asks whether a system can answer back: detect pressure, register failure, correct course, and prove the correction returned somewhere useful."
     },
     infrastructure: {
@@ -568,6 +1240,7 @@
       route: "frontierInfrastructure",
       name: "Infrastructure",
       status: "Support load",
+      character: "Auren Vale",
       text: "Infrastructure tests whether the world can carry weight: roads, supports, utilities, corridors, redundancy, and load-bearing civic structure."
     },
     lattice: {
@@ -575,6 +1248,7 @@
       route: "frontierLattice",
       name: "Lattice",
       status: "Ordered growth",
+      character: "Jeeves",
       text: "Lattice asks whether growth has order. Placement, count, relationship, and pattern keep a world from expanding randomly into noise."
     },
     urban: {
@@ -582,6 +1256,7 @@
       route: "frontierUrban",
       name: "Urban",
       status: "Civic pressure",
+      character: "Remote Team",
       text: "Urban tests settlement pressure: corridors, density, shelter, public systems, movement, and built-world consequence."
     },
     manual: {
@@ -589,6 +1264,7 @@
       route: "frontierManual",
       name: "Manual",
       status: "Operating path",
+      character: "Jeeves",
       text: "Manual turns the playground into instructions, handling rules, readable next steps, safety notes, and operating boundaries."
     },
     shimmer: {
@@ -596,6 +1272,7 @@
       route: "frontierShimmer",
       name: "Shimmer",
       status: "Visible signal",
+      character: "Elara",
       text: "Shimmer makes change visible. A glint, warning, pulse, or surface shift tells the visitor that pressure is moving before the full system explains itself."
     },
     trajectory: {
@@ -603,6 +1280,7 @@
       route: "frontierTrajectory",
       name: "Trajectory",
       status: "Direction and timing",
+      character: "Alaric",
       text: "Trajectory asks where the future is moving: direction, timing, path, drift detection, course correction, and outcome tracking."
     },
     vision: {
@@ -610,6 +1288,7 @@
       route: "frontierVision",
       name: "Vision",
       status: "Horizon aim",
+      character: "Elara",
       text: "Vision keeps the horizon in view. It asks what kind of future the world is trying to reach before systems harden into habits."
     }
   };
@@ -630,6 +1309,11 @@
     currentVoiceMode: MODE_OBJECTIVE,
     currentDepth: 0,
     currentRouteHandoffs: [],
+    currentRoomId: "jeevesInterface",
+    currentSkeletonKey: "guide",
+    currentWhoFocus: "",
+    currentValueAxiom: "",
+    currentPracticalNeed: "orientation",
     stateIndex: 0,
 
     visitor: {
@@ -644,6 +1328,7 @@
       progressCount: 0,
       needsRecenter: false,
       trail: [],
+      cartographyTrail: [],
       characterMirrorAnswers: [],
       lastBrainIntent: "",
       lastBrainCanonStatus: "",
@@ -763,11 +1448,81 @@
     return NARRATIVE_TARGETS.indexOf(String(target || "")) !== -1;
   }
 
+  function getRoom(roomId) {
+    return SITE_CARTOGRAPHY[roomId] || null;
+  }
+
+  function getSkeleton(key) {
+    return HOUSE_SKELETON[key] || null;
+  }
+
+  function getRoomForTarget(target) {
+    return getRoom(TARGET_ROOM_MAP[String(target || "")] || "compassDesk");
+  }
+
+  function getSkeletonForTarget(target) {
+    return getSkeleton(TARGET_SKELETON_MAP[String(target || "")] || "guide");
+  }
+
+  function getPracticalNextDoors(roomId) {
+    var room = getRoom(roomId);
+    if (!room || !Array.isArray(room.nextRooms)) return [];
+    return room.nextRooms.slice();
+  }
+
+  function composeGroundedMeaning(roomId) {
+    var room = getRoom(roomId);
+    if (!room) return "";
+
+    return room.publicName + " is where " + room.abstractFunction.toLowerCase() + " " + room.whatItIs.toLowerCase();
+  }
+
+  function composeWhoMap(roomId) {
+    var room = getRoom(roomId);
+    if (!room || !Array.isArray(room.whoIsConnected) || !room.whoIsConnected.length) {
+      return "Jeeves can help you place the people connected to this room.";
+    }
+
+    return "Who is connected here: " + room.whoIsConnected.join(", ") + ".";
+  }
+
+  function composeValueAxiom(topic) {
+    if (topic === "book" || topic === "nineSummits" || topic === "sean" || topic === "underdog") {
+      return SEAN_VALUE_AXIOMS.liveLoveLaughListen.phrase;
+    }
+
+    if (topic === "diagnostic" || topic === "characterMirror") {
+      return SEAN_VALUE_AXIOMS.expectationLimitation.phrase;
+    }
+
+    if (topic === "scientificLaw" || topic === "proof") {
+      return SEAN_VALUE_AXIOMS.manipulationMindOwnership.phrase;
+    }
+
+    return "";
+  }
+
+  function resolveCartographyFromTarget(target) {
+    var room = getRoomForTarget(target);
+    var skeleton = getSkeletonForTarget(target);
+
+    return {
+      roomId: room ? room.roomId : "",
+      roomName: room ? room.publicName : "",
+      skeletonKey: skeleton ? skeleton.key : "",
+      skeletonPhrase: skeleton ? skeleton.governingPhrase : "",
+      practicalAction: room ? room.practicalAction : "",
+      visitorPressure: room ? room.visitorPressure : "",
+      who: room ? room.whoIsConnected.slice() : []
+    };
+  }
+
   function isHearthContext() {
     var text = [
       state.currentNode,
       state.currentTopic,
       state.currentPosture,
+      state.currentRoomId,
       state.visitor.lastChoiceLabel
     ].join(" ").toLowerCase();
 
@@ -883,6 +1638,11 @@
     state.currentVoiceMode = MODE_OBJECTIVE;
     state.currentDepth = 0;
     state.currentRouteHandoffs = [];
+    state.currentRoomId = "jeevesInterface";
+    state.currentSkeletonKey = "guide";
+    state.currentWhoFocus = "";
+    state.currentValueAxiom = "";
+    state.currentPracticalNeed = "orientation";
 
     state.visitor.lastChoiceLabel = "";
     state.visitor.lastSignal = "";
@@ -895,6 +1655,7 @@
     state.visitor.progressCount = 0;
     state.visitor.needsRecenter = false;
     state.visitor.trail = [];
+    state.visitor.cartographyTrail = [];
     state.visitor.characterMirrorAnswers = [];
     state.visitor.lastBrainIntent = "";
     state.visitor.lastBrainCanonStatus = "";
@@ -909,6 +1670,8 @@
     if (choice.signal === "practical") return "looking for something usable";
     if (choice.signal === "lost") return "trying to get re-centered";
     if (choice.signal === "mirror") return "trying to learn about yourself through a character mirror";
+    if (choice.signal === "source") return "trying to find the human source behind the estate";
+    if (choice.signal === "value") return "trying to understand the values underneath the journey";
     if (topic === "characterMirror") return "trying to learn which pressure pattern you currently resemble";
     if (topic === "characters" || topic.indexOf("character") === 0) return "trying to understand who carries the world’s pressure";
     if (topic === "scientificLaw") return "trying to test a claim before trusting it";
@@ -916,6 +1679,7 @@
     if (topic === "hearth") return "trying to understand where world-formation becomes operational";
     if (topic === "underdog") return "trying to understand the underdog voice in the visitor";
     if (topic === "book" || topic === "nineSummits") return "trying to understand the larger development path";
+    if (topic === "sean") return "trying to understand who built this and why";
     return "choosing the next door";
   }
 
@@ -941,6 +1705,7 @@
     var topic = node.topic || "arrival";
     var sameTopic = state.visitor.lastTopic === topic;
     var scopeChanged = state.visitor.lastScopeLane !== node.scopeLane;
+    var cartography = resolveCartographyFromTarget(node.node || state.currentNode);
 
     updateMirrorAnswers(choice, sourceNode);
 
@@ -973,8 +1738,20 @@
       label: state.visitor.lastChoiceLabel
     });
 
+    state.visitor.cartographyTrail.push({
+      node: state.currentNode,
+      roomId: cartography.roomId,
+      roomName: cartography.roomName,
+      skeletonKey: cartography.skeletonKey,
+      pressure: cartography.visitorPressure
+    });
+
     while (state.visitor.trail.length > 16) {
       state.visitor.trail.shift();
+    }
+
+    while (state.visitor.cartographyTrail.length > 16) {
+      state.visitor.cartographyTrail.shift();
     }
 
     if (state.visitor.digressionCount >= 4 || state.visitor.loopCount >= 3) {
@@ -1004,45 +1781,13 @@
     document.documentElement.dataset.jeevesTopic = state.currentTopic;
     document.documentElement.dataset.jeevesScopeLane = state.currentScopeLane;
     document.documentElement.dataset.jeevesVoiceMode = state.currentVoiceMode;
+    document.documentElement.dataset.jeevesRoomId = state.currentRoomId;
+    document.documentElement.dataset.jeevesSkeleton = state.currentSkeletonKey;
     document.documentElement.dataset.jeevesCharacterMirror = "active";
     document.documentElement.dataset.jeevesFinalRouteAuthority = "front-end";
 
     if (els.status) {
       els.status.setAttribute("data-jeeves-state", state256.label);
-    }
-  }
-
-  function updateCurrentState(nodeId, node, choice) {
-    var sourceNode = state.currentNode;
-
-    state.previousNode = state.currentNode;
-    state.currentNode = normalizeNode(nodeId);
-    state.currentTopic = node.topic || "arrival";
-    state.currentPosture = node.posture || "arrival";
-    state.currentPhase = node.phase || "receive";
-    state.currentScopeLane = node.scopeLane || SCOPE_OBJECTIVE;
-    state.currentVoiceMode = node.voiceMode || MODE_OBJECTIVE;
-    state.currentDepth = node.depth || 0;
-    state.currentRouteHandoffs = (node.handoffs || []).slice();
-    state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
-
-    updateVisitor(choice, node, sourceNode);
-    setDocumentState();
-
-    state.history.push({
-      node: state.currentNode,
-      topic: state.currentTopic,
-      posture: state.currentPosture,
-      phase: state.currentPhase,
-      scopeLane: state.currentScopeLane,
-      voiceMode: state.currentVoiceMode,
-      depth: state.currentDepth,
-      itch: state.visitor.lastItch,
-      stateIndex: state.stateIndex
-    });
-
-    while (state.history.length > MAX_HISTORY) {
-      state.history.shift();
     }
   }
 
@@ -1098,9 +1843,11 @@
     els.promptDock = document.createElement("section");
     els.promptDock.className = "jeeves-prompt-dock";
     els.promptDock.setAttribute("data-jeeves-prompt-dock", "");
+    els.promptDock.setAttribute("data-jeeves-generated-prompt-dock", "true");
     els.promptDock.setAttribute("data-prompt-visible", "false");
     els.promptDock.setAttribute("data-options-visible", "false");
     els.promptDock.setAttribute("aria-hidden", "true");
+    els.promptDock.hidden = true;
 
     title = document.createElement("p");
     title.className = "jeeves-prompt-title";
@@ -1111,6 +1858,8 @@
     els.promptGrid.className = "jeeves-prompt-grid";
     els.promptGrid.setAttribute("data-jeeves-prompt-grid", "");
     els.promptGrid.setAttribute("data-options-visible", "false");
+    els.promptGrid.setAttribute("aria-hidden", "true");
+    els.promptGrid.hidden = true;
 
     els.promptDock.appendChild(title);
     els.promptDock.appendChild(els.promptGrid);
@@ -1140,12 +1889,28 @@
     }
   }
 
+  function concealElement(element) {
+    if (!element) return;
+
+    element.hidden = true;
+    element.setAttribute("aria-hidden", "true");
+
+    if (element.style) {
+      element.style.display = "none";
+    }
+  }
+
   function setPromptVisible(isVisible) {
     document.documentElement.dataset.jeevesOptionsVisible = isVisible ? "true" : "false";
     document.documentElement.dataset.jeevesPromptVisible = isVisible ? "true" : "false";
 
-    revealElement(els.promptDock);
-    revealElement(els.promptGrid);
+    if (isVisible) {
+      revealElement(els.promptDock);
+      revealElement(els.promptGrid);
+    } else {
+      concealElement(els.promptDock);
+      concealElement(els.promptGrid);
+    }
 
     if (els.promptDock) {
       els.promptDock.setAttribute("aria-hidden", isVisible ? "false" : "true");
@@ -1294,12 +2059,15 @@
     var target = normalizeTarget(item.target);
     var cleanLabel = sanitizeConversationLabel(item.label, target);
     var scopeLane = item.scopeLane || (isNarrativeTarget(target) ? SCOPE_NARRATIVE : SCOPE_OBJECTIVE);
+    var cartography = resolveCartographyFromTarget(target);
 
     button.classList.add("jeeves-option");
     button.setAttribute("type", "button");
     button.setAttribute("data-option-type", item.type || "conversation");
     button.setAttribute("data-option-target", target || "");
     button.setAttribute("data-option-scope-lane", scopeLane);
+    button.setAttribute("data-option-room-id", cartography.roomId || "");
+    button.setAttribute("data-option-skeleton", cartography.skeletonKey || "");
 
     if (label) {
       label.textContent = cleanLabel;
@@ -1345,10 +2113,11 @@
     return link;
   }
 
-  function ensurePromptTitle() {
+  function ensureGeneratedPromptTitle() {
     var title;
 
     if (!els.promptDock || !els.promptGrid) return;
+    if (els.promptDock.getAttribute("data-jeeves-generated-prompt-dock") !== "true") return;
 
     title =
       query("[data-jeeves-prompt-title]", els.promptDock) ||
@@ -1383,13 +2152,17 @@
 
     if (!els.promptGrid) return;
 
-    ensurePromptTitle();
+    ensureGeneratedPromptTitle();
 
     clean.slice(0, 8).forEach(function eachOption(item) {
       els.promptGrid.appendChild(makeOptionButton(item));
     });
 
-    setPromptVisible(true);
+    if (els.promptGrid.children.length > 0) {
+      setPromptVisible(true);
+    } else {
+      setPromptVisible(false);
+    }
   }
 
   function renderHandoffs(ids) {
@@ -1507,7 +2280,8 @@
           state.currentPosture === "arrival" ||
           state.currentPosture === "skeptic" ||
           state.currentPosture === "characters" ||
-          state.currentPosture === "diagnostic"
+          state.currentPosture === "diagnostic" ||
+          state.currentPosture === "sean"
         ),
         source: source || "local"
       });
@@ -1522,7 +2296,13 @@
     return token === state.runToken;
   }
 
-  function makeNode(node, topic, posture, phase, scopeLane, voiceMode, depth, beats, options, handoffs) {
+  function makeNode(node, topic, posture, phase, scopeLane, voiceMode, depth, beats, options, handoffs, meta) {
+    var roomId = meta && meta.roomId ? meta.roomId : (TARGET_ROOM_MAP[node] || "compassDesk");
+    var skeletonKey = meta && meta.skeletonKey ? meta.skeletonKey : (TARGET_SKELETON_MAP[node] || "guide");
+    var valueAxiom = meta && meta.valueAxiom ? meta.valueAxiom : composeValueAxiom(topic || "");
+    var room = getRoom(roomId);
+    var skeleton = getSkeleton(skeletonKey);
+
     return {
       node: node,
       topic: topic || node,
@@ -1534,6 +2314,13 @@
       beats: (beats || []).slice(),
       options: (options || []).slice(),
       handoffs: (handoffs || []).slice(),
+      roomId: roomId,
+      roomName: room ? room.publicName : "",
+      skeletonKey: skeletonKey,
+      skeletonPhrase: skeleton ? skeleton.governingPhrase : "",
+      whoFocus: meta && meta.whoFocus ? meta.whoFocus : "",
+      valueAxiom: valueAxiom,
+      practicalNeed: room ? room.visitorPressure : "",
       source: "local"
     };
   }
@@ -1565,7 +2352,7 @@
     if (id === "seanPath") return makeSeanNode();
     if (id === "underdogPath") return makeUnderdogNode();
     if (id === "productsPath") return makeProductsNode();
-    if (id === "bookPath" || id === "nineSummitsPath") return makeBookNode();
+    if (id === "bookPath" || id === "nineSummitsPath") return makeBookNode(id);
     if (id === "worldPath" || id === "worldGatePath" || id === "mirrorland" || id === "mirrorMePath") return makeWorldNode();
     if (id === "hearthPath" || id === "hearthFacilityPath" || id === "hearthConstructPath" || id === "hearthFrontierPath" || id === "hearthLawPath") return makeHearthNode(id);
     if (id === "audraliaPath") return makeAudraliaNode();
@@ -1625,14 +2412,15 @@
         "Hello. I’m Jeeves.",
         "I help visitors find the right door inside Diamond Gate Bridge.",
         "You do not need to understand the whole estate at once.",
-        "I can guide you through the public estate, take you toward the world side, or help you begin with a mirror."
+        "Orientation gives direction. The Laws provide truth. The Frontier provides the future. Mirrorland is the window. The Characters give it depth.",
+        "If you want the human source behind the estate, I can also take you to Meet Sean."
       ],
       [
         say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
         say("Take me toward the world side.", "worldPath", { signal: "world" }),
         say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
+        say("Meet Sean.", "seanPath", { signal: "source" }),
         say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
-        say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
         say("Ask me one question first.", "askFirst", { signal: "question" })
       ],
       []
@@ -1650,12 +2438,13 @@
       1,
       [
         "Then I’ll ask plainly.",
-        "What brought you here first: orientation, skepticism, self-reflection, practical use, the world side, or the character mirror?"
+        "What brought you here first: orientation, skepticism, self-reflection, the human source, practical use, the world side, or the character mirror?"
       ],
       [
         say("Orientation.", "websitePath", { signal: "orientation" }),
         say("Skepticism.", "skepticPlain", { signal: "skeptic" }),
         say("Self-reflection.", "diagnosticPath", { signal: "self" }),
+        say("The human source.", "seanPath", { signal: "source" }),
         say("Practical use.", "productsPath", { signal: "practical" }),
         say("The world side.", "worldPath", { signal: "world" }),
         say("The character mirror.", "characterMirrorPath", { signal: "mirror" })
@@ -1675,14 +2464,14 @@
       0,
       [
         "Then we return to the clean fork.",
-        "Public estate, proof, Diagnostic, world side, practical wing, or character mirror?"
+        "Every meaning needs a name and a place. Choose the place that matches your pressure now."
       ],
       [
-        say("Public estate.", "websitePath", { signal: "orientation" }),
+        say("Orientation.", "websitePath", { signal: "orientation" }),
         say("Proof.", "proofPath", { signal: "skeptic" }),
-        say("Diagnostic.", "diagnosticPath", { signal: "self" }),
+        say("Meet Sean.", "seanPath", { signal: "source" }),
+        say("This Underdog.", "underdogPath", { signal: "self" }),
         say("World side.", "worldPath", { signal: "world" }),
-        say("Practical wing.", "productsPath", { signal: "practical" }),
         say("Character mirror.", "characterMirrorPath", { signal: "mirror" })
       ],
       []
@@ -1700,18 +2489,18 @@
       0,
       [
         "I may have taken you too deep too quickly.",
-        "Let me bring this back to one clear doorway.",
-        "Choose the kind of pressure you want to follow."
+        "Let me put the meaning back into place.",
+        "Orientation lives at the Compass Desk. Truth lives in the Law Library. The future lives in Frontier. The window is Mirrorland. The depth lives with the Characters. The source is Meet Sean."
       ],
       [
         say("I need orientation.", "compassPath", { signal: "orientation" }),
-        say("I want proof.", "proofPath", { signal: "skeptic" }),
-        say("I want the Diagnostic.", "diagnosticPath", { signal: "self" }),
-        say("I want the world side.", "worldPath", { signal: "world" }),
-        say("I want the character mirror.", "characterMirrorPath", { signal: "mirror" }),
-        back("I need the clean fork again.", "returnFork")
+        say("I want truth.", "proofPath", { signal: "skeptic" }),
+        say("I want the future.", "frontierPath", { signal: "world" }),
+        say("I want the window.", "worldPath", { signal: "world" }),
+        say("I want the source.", "seanPath", { signal: "source" }),
+        say("I want the character mirror.", "characterMirrorPath", { signal: "mirror" })
       ],
-      ["compass", "laws", "coherenceDiagnostic", "interactiveNarrative"]
+      ["compass", "laws", "frontier", "interactiveNarrative", "meetSean"]
     );
   }
 
@@ -1726,15 +2515,16 @@
       0,
       [
         "Then switch chambers.",
-        "Do not stay in a loop. Choose a new pressure: proof, self-reflection, characters, Frontier, Hearth, or the world side."
+        "Do not stay in a loop. Choose a named place: Compass Desk, Law Library, Frontier Workshop Yard, Mirrorland, Characters, Meet Sean, or Nine Summits."
       ],
       [
-        say("Proof.", "scientificLawPath"),
-        say("Self-reflection.", "diagnosticPath"),
+        say("Compass Desk.", "compassPath"),
+        say("Law Library.", "scientificLawPath"),
+        say("Frontier Workshop Yard.", "frontierPath"),
+        say("Mirrorland.", "worldPath"),
         say("Characters.", "charactersPath"),
-        say("Character mirror.", "characterMirrorPath"),
-        say("Frontier.", "frontierPath"),
-        say("Hearth.", "hearthPath")
+        say("Meet Sean.", "seanPath"),
+        say("Nine Summits.", "nineSummitsPath")
       ],
       []
     );
@@ -1754,15 +2544,16 @@
         1,
         [
           "Then I’ll ask sharply.",
-          "Are you trying to find the character you resemble under pressure, the pattern you overuse, or the room that can teach you next?"
+          "Are you trying to find the character you resemble under pressure, the pattern you overuse, the value that corrects you, or the room that can teach you next?"
         ],
         [
           say("Character resemblance.", "characterMirrorQuestionOne", { signal: "mirror" }),
           say("Pattern I overuse.", "diagnosticPath", { signal: "self" }),
+          say("Value that corrects me.", "nineSummitsPath", { signal: "value" }),
           say("Room that teaches me next.", "cleanDoor", { signal: "route" }),
           say("Show all characters first.", "charactersPath")
         ],
-        ["coherenceDiagnostic", "characters"]
+        ["coherenceDiagnostic", "characters", "nineSummits"]
       );
     }
 
@@ -1801,13 +2592,13 @@
         1,
         [
           "Then I’ll ask sharply.",
-          "Are you trying to understand Frontier as a whole, one system inside it, its engineering lens, or why it matters to Audralia?"
+          "Are you trying to understand Frontier as the future, one system inside it, its Scientific Law boundary, or the characters who carry its pressure?"
         ],
         [
-          say("Frontier as a whole.", "frontierPath"),
+          say("Frontier as the future.", "frontierPath"),
           say("One system.", "frontierSystemsPath"),
-          say("Scientific Law connection.", "frontierLawPath"),
-          say("Character connection.", "frontierCharactersPath")
+          say("Scientific Law boundary.", "frontierLawPath"),
+          say("Character pressure.", "frontierCharactersPath")
         ],
         ["frontier"]
       );
@@ -1824,15 +2615,39 @@
         1,
         [
           "Then I’ll ask sharply.",
-          "Are you trying to understand Hearth as a facility, as a planetary construct engine, as a bridge to Frontier, or as a bridge to Scientific Law?"
+          "Are you trying to understand Hearth as a place, a planetary construct engine, a bridge to Frontier, or a claim that must answer to Scientific Law?"
         ],
         [
-          say("Facility.", "hearthFacilityPath"),
+          say("Hearth as a place.", "hearthFacilityPath"),
           say("Planetary construct engine.", "hearthConstructPath"),
           say("Bridge to Frontier.", "hearthFrontierPath"),
-          say("Bridge to Scientific Law.", "hearthLawPath")
+          say("Scientific Law boundary.", "hearthLawPath")
         ],
         ["hearth"]
+      );
+    }
+
+    if (topic === "sean" || topic === "underdog" || topic === "book" || topic === "nineSummits") {
+      return makeNode(
+        "sharpQuestion",
+        topic,
+        "sean",
+        "clarify",
+        SCOPE_OBJECTIVE,
+        MODE_OBJECTIVE,
+        1,
+        [
+          "Then I’ll ask sharply.",
+          "Are you trying to understand Sean as the source, This Underdog as the inner entry point, Nine Summits as value logic, or the quote that belongs under the moment?"
+        ],
+        [
+          say("Sean as source.", "seanPath"),
+          say("This Underdog.", "underdogPath"),
+          say("Nine Summits.", "nineSummitsPath"),
+          say("Which value fits this moment?", "nineSummitsPath"),
+          say("Character Mirror.", "characterMirrorPath")
+        ],
+        ["meetSean", "aboutUnderdog", "nineSummits"]
       );
     }
 
@@ -1846,14 +2661,17 @@
       1,
       [
         "Then I’ll ask sharply.",
-        "Are you trying to understand the estate as proof, as personal reflection, as future-building, as a living world, or as a character mirror?"
+        "Are you trying to understand the estate by direction, truth, future, window, depth, source, value, or inner pressure?"
       ],
       [
-        say("Proof.", "scientificLawPath"),
-        say("Personal reflection.", "diagnosticPath"),
-        say("Future-building.", "frontierPath"),
-        say("Living world.", "worldPath"),
-        say("Character mirror.", "characterMirrorPath")
+        say("Direction.", "compassPath"),
+        say("Truth.", "scientificLawPath"),
+        say("Future.", "frontierPath"),
+        say("Window.", "worldPath"),
+        say("Depth.", "charactersPath"),
+        say("Source.", "seanPath"),
+        say("Value.", "nineSummitsPath"),
+        say("Inner pressure.", "underdogPath")
       ],
       []
     );
@@ -1862,11 +2680,14 @@
   function makeCleanDoorNode() {
     var topic = state.currentTopic;
     var handoffs = ["compass", "siteGuide"];
+    var room = getRoom(state.currentRoomId);
+    var skeleton = getSkeleton(state.currentSkeletonKey);
 
     if (topic === "hearth") handoffs = ["hearth", "frontier", "scientificLaw"];
     if (topic === "frontier") handoffs = ["frontier", "audralia", "hearth"];
-    if (topic === "characters" || topic === "characterMirror") handoffs = ["characters", "coherenceDiagnostic"];
+    if (topic === "characters" || topic === "characterMirror") handoffs = ["characters", "coherenceDiagnostic", "nineSummits"];
     if (topic === "scientificLaw") handoffs = ["scientificLaw", "laws", "gauges"];
+    if (topic === "sean" || topic === "underdog" || topic === "book" || topic === "nineSummits") handoffs = ["meetSean", "aboutUnderdog", "nineSummits"];
 
     return makeNode(
       "cleanDoor",
@@ -1878,15 +2699,17 @@
       3,
       [
         "The cleanest next door depends on why you are still here.",
-        "Right now, you seem to be " + state.visitor.lastItch + ".",
-        "You can keep talking here, or you can cross into the chamber that matches that pressure."
+        skeleton ? skeleton.governingPhrase : "Jeeves is the guide.",
+        room ? room.publicName + " is the current place. " + room.practicalAction : "The Compass Desk can return you to direction.",
+        "Right now, you seem to be " + state.visitor.lastItch + "."
       ],
       [
         say("I need orientation.", "compassPath"),
-        say("I want proof.", "scientificLawPath"),
-        say("I want the Diagnostic.", "diagnosticPath"),
-        say("I want the character mirror.", "characterMirrorPath"),
-        say("I want the world side.", "worldPath")
+        say("I want truth.", "scientificLawPath"),
+        say("I want the future.", "frontierPath"),
+        say("I want the window.", "worldPath"),
+        say("I want the source.", "seanPath"),
+        say("I want the character mirror.", "characterMirrorPath")
       ],
       handoffs
     );
@@ -1902,19 +2725,21 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Diamond Gate Bridge is the estate: public proof wing, human-development chambers, practical wing, world threshold, and future-facing rooms gathered into one navigable place.",
-        "It matters because what we build today casts a shadow forward.",
-        "The point is not to understand the whole estate at once. The point is to choose the first useful door."
+        "Diamond Gate Bridge has a public estate and a world side.",
+        "The public website gives visitors what they already know how to ask for: reading, looking, exploring, products, proof, orientation, and visible routes.",
+        "Mirrorland gives more than that. It is the window where truth and future become story, pressure, consequence, and choice.",
+        "Start practically: orientation at the Compass Desk, truth in the Law Library, the human source in Meet Sean, or the world side through the Atrium."
       ],
       [
-        say("I need the Compass.", "compassPath"),
-        say("I want proof.", "scientificLawPath"),
-        say("I want the Diagnostic.", "diagnosticPath"),
-        say("I want the character mirror.", "characterMirrorPath"),
+        say("I need the Compass Desk.", "compassPath"),
+        say("I want the Site Guide.", "siteGuidePath"),
+        say("I want truth.", "scientificLawPath"),
+        say("I want Meet Sean.", "seanPath"),
+        say("I want This Underdog.", "underdogPath"),
         say("I want the world side.", "worldPath"),
         control("Which door fits this best?", "cleanDoor")
       ],
-      ["compass", "siteGuide", "laws", "coherenceDiagnostic"]
+      ["compass", "siteGuide", "laws", "meetSean"]
     );
   }
 
@@ -1928,18 +2753,20 @@
       MODE_OBJECTIVE,
       1,
       [
-        "The Compass is the first orientation room.",
-        "It helps the visitor choose between proof, self-reflection, practical use, the human designer behind the estate, the character mirror, and the world side."
+        "The Compass Desk is the first orientation room.",
+        "Its work is simple: name the pressure, place it in the estate, and choose the next door.",
+        "If the question is direction, stay here. If the question is truth, go to the Law Library. If the question is who built this, go to Meet Sean. If the question is future, go to Frontier. If the question is immersion, open Mirrorland."
       ],
       [
-        say("Proof first.", "scientificLawPath"),
-        say("Self-reflection.", "diagnosticPath"),
-        say("Character mirror.", "characterMirrorPath"),
-        say("Practical wing.", "productsPath"),
-        say("World side.", "worldPath"),
-        back("Clean fork.", "returnFork")
+        say("Guide Desk.", "siteGuidePath"),
+        say("Truth first.", "scientificLawPath"),
+        say("Meet Sean.", "seanPath"),
+        say("This Underdog.", "underdogPath"),
+        say("Future.", "frontierPath"),
+        say("Mirrorland.", "worldPath"),
+        say("Character Mirror.", "characterMirrorPath")
       ],
-      ["compass", "siteGuide"]
+      ["compass", "siteGuide", "meetSean"]
     );
   }
 
@@ -1953,17 +2780,20 @@
       MODE_OBJECTIVE,
       1,
       [
-        "The Site Guide is the public map of the estate.",
-        "It separates public rooms from deeper world doors so a visitor can see what proves, what guides, what reflects, what can be used, and what begins crossing into Mirrorland."
+        "The Guide Desk is the public map of the estate.",
+        "It gives each idea a name and a place: Compass Desk for direction, Law Library for truth, The Lab for status, Frontier Workshop Yard for the future, Atrium for the world-side threshold, Meet Sean for the human source, and Characters for depth.",
+        "The map does not replace the journey. It keeps the journey from floating."
       ],
       [
-        say("Show me the public side.", "websitePath"),
-        say("Show me proof.", "scientificLawPath"),
-        say("Show me the Diagnostic.", "diagnosticPath"),
-        say("Show me the world side.", "worldPath"),
-        say("Show me the character mirror.", "characterMirrorPath")
+        say("Compass Desk.", "compassPath"),
+        say("Law Library.", "scientificLawPath"),
+        say("The Lab.", "gaugesPath"),
+        say("Meet Sean.", "seanPath"),
+        say("Frontier Workshop Yard.", "frontierPath"),
+        say("Atrium into Mirrorland.", "worldPath"),
+        say("Characters.", "charactersPath")
       ],
-      ["siteGuide", "showroom"]
+      ["siteGuide", "compass", "showroom"]
     );
   }
 
@@ -1977,9 +2807,9 @@
       MODE_OBJECTIVE,
       1,
       [
-        "The proof wing is where the estate stops asking for trust and starts making its structure testable.",
-        "Doubt should not be bypassed. It should be given something to examine.",
-        "Scientific Law is the sharpest proof chamber because it asks whether a claim can be defined, tested, corrected, limited, and checked again."
+        "The Laws provide truth.",
+        "The Law Library is where the estate stops asking for trust and starts giving claims a boundary.",
+        "Scientific Law is the sharpest chamber here. It asks whether a claim can be defined, tested, corrected, limited, and checked again."
       ],
       [
         say("Explain Scientific Law.", "scientificLawPath"),
@@ -1987,7 +2817,7 @@
         say("Explain Evidence.", "scientificLawEvidencePath"),
         say("Explain Measure.", "scientificLawMeasurePath"),
         say("Explain Limits.", "scientificLawLimitsPath"),
-        say("Explain Gauges.", "gaugesPath")
+        say("Explain The Lab.", "gaugesPath")
       ],
       ["scientificLaw", "laws", "gauges", "coherenceDiagnostic"]
     );
@@ -2003,12 +2833,13 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Gauges are the estate’s status instruments.",
-        "They help the visitor distinguish ambition from visible status: what is held, what is working, what is still forming, and what should not be overclaimed."
+        "The Lab is the status room.",
+        "It helps the visitor distinguish ambition from visible status: what is held, what is working, what is still forming, and what should not be overclaimed.",
+        "Truth needs instruments as well as language."
       ],
       [
         say("Explain Scientific Law.", "scientificLawPath"),
-        say("Explain the Laws.", "lawsPath"),
+        say("Explain the Law Library.", "lawsPath"),
         say("Explain the Diagnostic.", "diagnosticPath"),
         say("Take me toward the world side.", "worldPath")
       ],
@@ -2101,16 +2932,18 @@
       [
         "The Diagnostic is the estate’s public mirror chamber.",
         "It helps a visitor notice the difference between what they claim, what they choose, and what pressure reveals.",
-        "In the current version, it is local-only. It does not store, email, archive, or save the result."
+        "In the current version, it is local-only. It does not store, email, archive, or save the result.",
+        "If you want the reflection to become narrative, the Character Mirror gives that pressure a person."
       ],
       [
         say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
         say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
         say("Show the characters first.", "charactersPath"),
-        say("Explain Scientific Law.", "scientificLawPath"),
-        say("Tell me about Mirror Me.", "mirrorMePath")
+        say("Tell me about This Underdog.", "underdogPath"),
+        say("Tell me about Nine Summits.", "nineSummitsPath"),
+        say("Explain Scientific Law.", "scientificLawPath")
       ],
-      ["coherenceDiagnostic", "characters"]
+      ["coherenceDiagnostic", "characters", "aboutUnderdog"]
     );
   }
 
@@ -2124,13 +2957,15 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Meet Sean is the estate chamber where the visitor meets Sean Mansfield, the designer and developer of Diamond Gate Bridge.",
-        "Sean is building the bridge, the rooms, the logic, the public doorway, and the future-facing world path.",
-        "This matters because the estate is not detached from human pressure. It is being built through it."
+        "Meet Sean is the human source chamber.",
+        "This is where the estate stops being only rooms, routes, and world logic, and shows the person building it.",
+        "Sean Mansfield is the writer, designer, and developer behind Diamond Gate Bridge.",
+        "One of Sean’s governing lines is: “When you learn to live a life without expectations, you experience a life without limitations.”"
       ],
       [
         say("Tell me about This Underdog.", "underdogPath"),
-        say("Tell me about the book path.", "bookPath"),
+        say("Tell me about Nine Summits.", "nineSummitsPath"),
+        say("Tell me the value logic.", "bookPath"),
         say("Tell me about the Diagnostic.", "diagnosticPath"),
         say("Tell me about the character mirror.", "characterMirrorPath")
       ],
@@ -2150,16 +2985,17 @@
       [
         "This Underdog is not Sean alone.",
         "This Underdog is in the visitor too. It is the part of a person that has carried pressure before it found language, direction, or use.",
-        "The point is not to admire pressure. The point is to learn what pressure has been trying to teach."
+        "The point is not to admire pressure. The point is to learn what pressure has been trying to teach.",
+        "That is why This Underdog belongs near Meet Sean, the Diagnostic, Character Mirror, and Nine Summits."
       ],
       [
         say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
         say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
         say("Tell me about the Diagnostic.", "diagnosticPath"),
         say("Tell me about Sean.", "seanPath"),
-        say("Tell me about the book path.", "bookPath")
+        say("Tell me about Nine Summits.", "nineSummitsPath")
       ],
-      ["aboutUnderdog", "coherenceDiagnostic", "book"]
+      ["aboutUnderdog", "coherenceDiagnostic", "nineSummits"]
     );
   }
 
@@ -2173,12 +3009,15 @@
       MODE_OBJECTIVE,
       1,
       [
-        "Products are the practical wing of the estate.",
-        "They are where a message becomes usable: something a visitor can carry, read, wear, give, return to, or use as a reminder."
+        "The Product Gallery is the practical public value wing.",
+        "It is where a message becomes usable: something a visitor can carry, read, wear, give, return to, or use as a reminder.",
+        "The estate should not only mean something. It should give the visitor a way to use what they found."
       ],
       [
         say("Tell me about the book path.", "bookPath"),
+        say("Tell me about Nine Summits.", "nineSummitsPath"),
         say("Tell me about This Underdog.", "underdogPath"),
+        say("Tell me about Sean.", "seanPath"),
         say("Tell me about the Diagnostic.", "diagnosticPath"),
         say("Take me to the world side.", "worldPath")
       ],
@@ -2186,25 +3025,40 @@
     );
   }
 
-  function makeBookNode() {
+  function makeBookNode(id) {
+    var beats;
+
+    if (id === "nineSummitsPath") {
+      beats = [
+        "The Nine Summits are the estate’s value construct.",
+        "They are not nine isolated slogans. They are a relational mountain range: each summit changes meaning depending on the others around it.",
+        SEAN_VALUE_AXIOMS.liveLoveLaughListen.phrase,
+        "Love without listening becomes projection. Laughter without love becomes cruelty. Vision without humility becomes manipulation. Purpose without love becomes performance."
+      ];
+    } else {
+      beats = [
+        "The Nine Summits of Love is the book path inside the estate.",
+        "It turns pressure, voice, coherence, love, and becoming into a human-development journey.",
+        "A room can orient. A diagnostic can reflect. A book can walk with the reader.",
+        "The larger construct is relational: release expectation, enter relationship, keep your own mind, and choose without coercion."
+      ];
+    }
+
     return makeNode(
-      "bookPath",
-      "book",
+      id || "bookPath",
+      "nineSummits",
       "book",
       "deepen",
       SCOPE_OBJECTIVE,
       MODE_OBJECTIVE,
       1,
+      beats,
       [
-        "The Nine Summits of Love is the book path inside the estate.",
-        "It turns pressure, voice, coherence, love, and becoming into a human-development journey.",
-        "A room can orient. A diagnostic can reflect. A book can walk with the reader."
-      ],
-      [
-        say("Tell me about Nine Summits.", "nineSummitsPath"),
-        say("Tell me about This Underdog.", "underdogPath"),
-        say("Tell me about Sean.", "seanPath"),
-        say("Help me learn about myself.", "selfLearningPath")
+        say("Connect this to Sean.", "seanPath"),
+        say("Connect this to This Underdog.", "underdogPath"),
+        say("Use this for self-reflection.", "characterMirrorPath", { signal: "mirror" }),
+        say("Tell me the Diagnostic path.", "diagnosticPath"),
+        say("Show the practical wing.", "productsPath")
       ],
       ["book", "nineSummits", "meetSean"]
     );
@@ -2220,16 +3074,18 @@
       MODE_THRESHOLD,
       1,
       [
-        "The world side begins where the estate stops only explaining and starts letting the visitor cross.",
-        "Mirrorland reveals possible futures before they become final.",
-        "Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. Characters carry the pressure."
+        "Mirrorland is the window.",
+        "The website lets a visitor read, look, and explore. Mirrorland lets the visitor see what truth and future become when they turn into story, pressure, consequence, and choice.",
+        "Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. Characters give depth.",
+        "If you want to cross, start through the Atrium. If you want to feel the world, meet the Characters."
       ],
       [
         say("Tell me about Hearth.", "hearthPath"),
         say("Tell me about Audralia.", "audraliaPath"),
         say("Tell me about Frontier.", "frontierPath"),
         say("Who are the characters?", "charactersPath"),
-        say("What is Mirror Me?", "mirrorMePath")
+        say("What is Mirror Me?", "mirrorMePath"),
+        say("Take me back to orientation.", "compassPath")
       ],
       ["interactiveNarrative", "hearth", "audralia", "frontier", "characters"]
     );
@@ -2302,7 +3158,7 @@
       [
         "Audralia is the constructive future world.",
         "It gives the estate distance, terrain, scale, and the feeling that the future is not only a room.",
-        "Hearth is where construction logic becomes operational. Frontier tests the systems Audralia may need."
+        "Hearth is where construction logic becomes operational. Frontier tests the systems Audralia may need. Characters make those systems personal."
       ],
       [
         say("Tell me about Frontier.", "frontierPath"),
@@ -2334,13 +3190,15 @@
       beats = [
         system.name + " — " + system.status + ".",
         system.text,
+        system.character + " is the character pressure closest to this system.",
         "This is a Frontier pressure test, not a claim that the future system is finished."
       ];
     } else {
       beats = [
-        "Mirrorland reveals. Audralia carries. Frontier tests.",
+        "The Frontier provides the future.",
         "Frontier is Audralia’s applied-science playground.",
-        "It tests power, water, waste, feedback, support, growth, city pressure, operating rules, signal, direction, and horizon aim."
+        "It tests power, water, waste, feedback, support, growth, city pressure, operating rules, signal, direction, and horizon aim.",
+        "If Mirrorland is the window, Frontier is where the future starts becoming testable."
       ];
     }
 
@@ -2472,9 +3330,10 @@
       MODE_IMMERSION,
       1,
       [
-        "The Characters are where the world stops feeling empty.",
+        "The Characters are where Mirrorland gains depth.",
         "Auren protects. Dextrion repairs. Alaric reads danger. Tarian keeps survival physical. Elara makes the future visible. Soren refuses fake restoration. Jeeves sequences truth. The Remote Team distributes survival.",
-        "They are not labels. They are pressure carriers."
+        "They are not labels. They are pressure carriers.",
+        "If the window is Mirrorland, the Characters are what make the window inhabitable."
       ],
       [
         say("Auren Vale.", "characterAurenValePath"),
@@ -2523,7 +3382,8 @@
         character.name + " is the " + character.title + ".",
         character.oneLine,
         character.pressure,
-        "Reflective pattern: " + character.mirror
+        "Reflective pattern: " + character.mirror,
+        character.estateFunction + " " + character.frontierConnection
       ],
       [
         say("Show character relationships.", "characterRelationshipsPath"),
@@ -2549,6 +3409,7 @@
         [
           "We can use the Character Mirror.",
           "This will not define you. It will compare your current pressure pattern to the characters.",
+          "The mirror keeps your mind yours. As Sean says, manipulation is when you use other people’s minds rather than your own.",
           "First question: under pressure, what do you usually notice first?"
         ],
         [
@@ -2559,7 +3420,7 @@
           say("What truth or hidden cost is being avoided.", "characterMirrorQuestionTwo", { signal: "mirror" }),
           say("What signal of hope needs to become visible.", "characterMirrorQuestionTwo", { signal: "mirror" })
         ],
-        ["coherenceDiagnostic", "characters"]
+        ["coherenceDiagnostic", "characters", "nineSummits"]
       );
     }
 
@@ -2661,16 +3522,18 @@
         "Reflective match, not identity: your answers currently resemble " + topCharacter.name + "’s pressure pattern most strongly.",
         topCharacter.name + " carries this pressure: " + topCharacter.pressure,
         second ? "Your secondary pressure reads closest to " + CHARACTER_REGISTRY[second.id].name + ": " + CHARACTER_REGISTRY[second.id].mirror : "The secondary pressure is not strong enough to name cleanly yet.",
-        third ? "Your tension match is " + CHARACTER_REGISTRY[third.id].name + ": the pattern that may appear when pressure rises." : "This is enough to begin, but not enough to make a final label."
+        third ? "Your tension match is " + CHARACTER_REGISTRY[third.id].name + ": the pattern that may appear when pressure rises." : "This is enough to begin, but not enough to make a final label.",
+        "The next step is not to become the character. The next step is to choose what this reflection helps you notice."
       ],
       [
         say("Show why this match appeared.", topCharacter.target),
         second ? say("Show the secondary pressure.", CHARACTER_REGISTRY[second.id].target) : say("Ask another mirror question.", "characterMirrorQuestionOne", { signal: "mirror" }),
         say("Take the full Diagnostic.", "diagnosticPath"),
+        say("Connect this to Nine Summits.", "nineSummitsPath"),
         say("Show all characters.", "charactersPath"),
         control("Choose the next door.", "cleanDoor")
       ],
-      ["characters", "coherenceDiagnostic"]
+      ["characters", "coherenceDiagnostic", "nineSummits"]
     );
   }
 
@@ -2757,13 +3620,50 @@
     }
 
     if (
+      value.indexOf("sean") !== -1 ||
+      value.indexOf("founder") !== -1 ||
+      value.indexOf("creator") !== -1 ||
+      value.indexOf("source") !== -1 ||
+      value.indexOf("designer") !== -1 ||
+      value.indexOf("developer") !== -1 ||
+      value.indexOf("who built") !== -1
+    ) {
+      return { target: "seanPath", signal: "source" };
+    }
+
+    if (
+      value.indexOf("underdog") !== -1 ||
+      value.indexOf("inner voice") !== -1 ||
+      value.indexOf("voice") !== -1 ||
+      value.indexOf("pressure in me") !== -1
+    ) {
+      return { target: "underdogPath", signal: "human" };
+    }
+
+    if (
+      value.indexOf("expectation") !== -1 ||
+      value.indexOf("limitations") !== -1 ||
+      value.indexOf("limitation") !== -1 ||
+      value.indexOf("live to love") !== -1 ||
+      value.indexOf("love to laugh") !== -1 ||
+      value.indexOf("live to listen") !== -1 ||
+      value.indexOf("manipulation") !== -1 ||
+      value.indexOf("use other people's minds") !== -1 ||
+      value.indexOf("use other people’s minds") !== -1
+    ) {
+      return { target: "nineSummitsPath", signal: "value" };
+    }
+
+    if (
       value.indexOf("scientific law") !== -1 ||
       value.indexOf("theory") !== -1 ||
       value.indexOf("evidence") !== -1 ||
       value.indexOf("measure") !== -1 ||
       value.indexOf("limits") !== -1 ||
       value.indexOf("claim") !== -1 ||
-      value.indexOf("proof") !== -1
+      value.indexOf("proof") !== -1 ||
+      value.indexOf("truth") !== -1 ||
+      value.indexOf("law library") !== -1
     ) {
       return { target: "scientificLawPath", signal: "skeptic" };
     }
@@ -2780,7 +3680,8 @@
       value.indexOf("urban") !== -1 ||
       value.indexOf("shimmer") !== -1 ||
       value.indexOf("trajectory") !== -1 ||
-      value.indexOf("vision") !== -1
+      value.indexOf("vision") !== -1 ||
+      value.indexOf("future") !== -1
     ) {
       return { target: "frontierPath", signal: "world" };
     }
@@ -2797,26 +3698,10 @@
     if (
       value.indexOf("character") !== -1 ||
       value.indexOf("people") !== -1 ||
-      value.indexOf("who lives") !== -1
+      value.indexOf("who lives") !== -1 ||
+      value.indexOf("who") !== -1
     ) {
       return { target: "charactersPath", signal: "characters" };
-    }
-
-    if (
-      value.indexOf("underdog") !== -1 ||
-      value.indexOf("inner voice") !== -1 ||
-      value.indexOf("voice") !== -1
-    ) {
-      return { target: "underdogPath", signal: "human" };
-    }
-
-    if (
-      value.indexOf("sean") !== -1 ||
-      value.indexOf("founder") !== -1 ||
-      value.indexOf("designer") !== -1 ||
-      value.indexOf("developer") !== -1
-    ) {
-      return { target: "seanPath", signal: "human" };
     }
 
     if (
@@ -2825,7 +3710,7 @@
       value.indexOf("world") !== -1 ||
       value.indexOf("story") !== -1 ||
       value.indexOf("showroom") !== -1 ||
-      value.indexOf("future") !== -1
+      value.indexOf("window") !== -1
     ) {
       return { target: "worldPath", signal: "world" };
     }
@@ -2853,7 +3738,9 @@
     if (
       value.indexOf("book") !== -1 ||
       value.indexOf("summit") !== -1 ||
-      value.indexOf("love") !== -1
+      value.indexOf("love") !== -1 ||
+      value.indexOf("laugh") !== -1 ||
+      value.indexOf("listen") !== -1
     ) {
       return { target: "bookPath", signal: "book" };
     }
@@ -2861,7 +3748,9 @@
     if (
       value.indexOf("start") !== -1 ||
       value.indexOf("where") !== -1 ||
-      value.indexOf("begin") !== -1
+      value.indexOf("begin") !== -1 ||
+      value.indexOf("orientation") !== -1 ||
+      value.indexOf("direction") !== -1
     ) {
       return { target: "compassPath", signal: "orientation" };
     }
@@ -2891,11 +3780,15 @@
       "hearthPath",
       "hearthConstructPath",
       "hearthFacilityPath",
-      "charactersPath"
+      "charactersPath",
+      "seanPath",
+      "nineSummitsPath"
     ].indexOf(target) !== -1;
   }
 
   function buildBrainPayload(target, choice) {
+    var cartography = resolveCartographyFromTarget(target);
+
     return {
       visitorText: choice && choice.label ? choice.label : "",
       currentNode: target,
@@ -2903,6 +3796,10 @@
       currentPath: state.currentTopic,
       currentScopeLane: state.currentScopeLane,
       currentVoiceMode: state.currentVoiceMode,
+      currentRoomId: cartography.roomId,
+      currentRoomName: cartography.roomName,
+      currentSkeletonKey: cartography.skeletonKey,
+      currentSkeletonPhrase: cartography.skeletonPhrase,
       visitorPosture: state.currentPosture,
       movement: choice && choice.signal ? choice.signal : "",
       pathDepth: state.currentDepth,
@@ -2913,13 +3810,16 @@
       sessionTrail: state.visitor.trail.map(function trailToString(item) {
         return item.topic + ":" + item.node + ":" + item.label;
       }),
+      cartographyTrail: state.visitor.cartographyTrail.slice(),
       requestedMode: state.currentVoiceMode,
       characterMirrorAnswers: state.visitor.characterMirrorAnswers.slice(),
       registryContext: {
         id: state.currentTopic,
         summary: state.visitor.lastItch,
         routes: state.currentRouteHandoffs,
-        targets: []
+        targets: [],
+        room: cartography,
+        skeleton: HOUSE_SKELETON[cartography.skeletonKey] || null
       }
     };
   }
@@ -3012,8 +3912,53 @@
         };
       }),
       handoffs: handoffs.map(normalizeRouteId).filter(Boolean),
+      roomId: state.currentRoomId,
+      skeletonKey: state.currentSkeletonKey,
       source: data.source || "brain"
     };
+  }
+
+  function updateCurrentState(nodeId, node, choice) {
+    var sourceNode = state.currentNode;
+    var roomId = node.roomId || TARGET_ROOM_MAP[nodeId] || "compassDesk";
+    var skeletonKey = node.skeletonKey || TARGET_SKELETON_MAP[nodeId] || "guide";
+
+    state.previousNode = state.currentNode;
+    state.currentNode = normalizeNode(nodeId);
+    state.currentTopic = node.topic || "arrival";
+    state.currentPosture = node.posture || "arrival";
+    state.currentPhase = node.phase || "receive";
+    state.currentScopeLane = node.scopeLane || SCOPE_OBJECTIVE;
+    state.currentVoiceMode = node.voiceMode || MODE_OBJECTIVE;
+    state.currentDepth = node.depth || 0;
+    state.currentRouteHandoffs = (node.handoffs || []).slice();
+    state.currentRoomId = roomId;
+    state.currentSkeletonKey = skeletonKey;
+    state.currentWhoFocus = node.whoFocus || "";
+    state.currentValueAxiom = node.valueAxiom || "";
+    state.currentPracticalNeed = node.practicalNeed || "";
+    state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
+
+    updateVisitor(choice, node, sourceNode);
+    setDocumentState();
+
+    state.history.push({
+      node: state.currentNode,
+      topic: state.currentTopic,
+      posture: state.currentPosture,
+      phase: state.currentPhase,
+      scopeLane: state.currentScopeLane,
+      voiceMode: state.currentVoiceMode,
+      depth: state.currentDepth,
+      itch: state.visitor.lastItch,
+      roomId: state.currentRoomId,
+      skeletonKey: state.currentSkeletonKey,
+      stateIndex: state.stateIndex
+    });
+
+    while (state.history.length > MAX_HISTORY) {
+      state.history.shift();
+    }
   }
 
   async function runNode(nodeId, settings) {
@@ -3053,6 +3998,8 @@
       state.currentPhase = node.phase || state.currentPhase;
       state.currentScopeLane = node.scopeLane || state.currentScopeLane;
       state.currentVoiceMode = node.voiceMode || state.currentVoiceMode;
+      state.currentRoomId = node.roomId || state.currentRoomId;
+      state.currentSkeletonKey = node.skeletonKey || state.currentSkeletonKey;
       state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
       setDocumentState();
     }
@@ -3173,6 +4120,10 @@
       route: ROUTE,
       brainEndpoint: state.brain.endpoint,
       state: state,
+      houseSkeleton: HOUSE_SKELETON,
+      siteCartography: SITE_CARTOGRAPHY,
+      valueAxioms: SEAN_VALUE_AXIOMS,
+      nineSummitsRelativity: NINE_SUMMITS_RELATIVITY,
       characters: CHARACTER_REGISTRY,
       frontierSystems: FRONTIER_SYSTEMS,
       routes: mergeRoutes,
@@ -3184,6 +4135,18 @@
       renderOptions: renderOptions,
       setPromptVisible: setPromptVisible,
       isNarrativeTarget: isNarrativeTarget,
+      getRoom: function getRoomPublic(roomId) {
+        return safeClone(getRoom(roomId));
+      },
+      getSkeleton: function getSkeletonPublic(key) {
+        return safeClone(getSkeleton(key));
+      },
+      getRoomForTarget: function getRoomForTargetPublic(target) {
+        return safeClone(getRoomForTarget(target));
+      },
+      resolveCartographyFromTarget: function resolveCartographyFromTargetPublic(target) {
+        return safeClone(resolveCartographyFromTarget(target));
+      },
       getElements: function getElements() {
         return els;
       },

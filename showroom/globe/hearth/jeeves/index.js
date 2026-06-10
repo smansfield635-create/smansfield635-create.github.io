@@ -1,16 +1,19 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FUTURE_SHADOW_FRONTIER_SCIENCE_ESTATE_DEPTH_ENGINE_TNT_v16
+// HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_TNT_v17
 // Full-file replacement.
 // Preserves existing HTML/CSS contract.
-// Owns deterministic Jeeves interface control, estate-language governor, future-shadow premise, frontier-science depth, deep continuation ladders, conversational option language, public/narrative registries, character relationship paths, tap-to-advance, guided route handoffs, and dormant backend bridge stub.
-// Does not own HTML, CSS, backend execution, server memory, API keys, persistent storage, or open freeform AI.
+// Owns front-end DOM control, visual pacing, tap-to-advance, seed clearing, route rendering,
+// v16-compatible deterministic fallback, paired back-brain request handling, visible options,
+// route handoff filtering, and final route authority.
+// Does not own server-side model execution, API keys, persistent memory, moderation authority,
+// or backend canon storage.
 
-(function hearthJeevesFutureShadowFrontierScienceEstateDepthEngine(global) {
+(function hearthJeevesPairedSmeFrontendEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_FUTURE_SHADOW_FRONTIER_SCIENCE_ESTATE_DEPTH_ENGINE_TNT_v16";
+  var CONTRACT = "HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_TNT_v17";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
-  var FUTURE_BRAIN_ENDPOINT = "/api/jeeves.js";
+  var JEEVES_BRAIN_ENDPOINT = "/api/jeeves.js";
 
   var SCOPE_OBJECTIVE = "objective";
   var SCOPE_NARRATIVE = "narrative";
@@ -18,6 +21,7 @@
   var MODE_OBJECTIVE = "objective";
   var MODE_THRESHOLD = "threshold";
   var MODE_IMMERSION = "immersion";
+  var MODE_CHARACTER_MIRROR = "characterMirror";
 
   var MAX_HISTORY = 80;
   var MAX_TOPIC_DEPTH = 3;
@@ -45,6 +49,7 @@
     meetSean: "/meet-sean-mansfield/",
     products: "/products/",
     laws: "/laws/",
+    scientificLaw: "/laws/scientific-law/",
     gauges: "/gauges/",
     showroom: "/showroom/",
     hearth: "/showroom/globe/hearth/",
@@ -53,6 +58,17 @@
     mirrorland: "/showroom/globe/",
     audralia: "/showroom/globe/audralia/",
     frontier: "/explore/frontier/",
+    frontierEnergy: "/explore/frontier/energy/",
+    frontierWater: "/explore/frontier/water/",
+    frontierWaste: "/explore/frontier/waste/",
+    frontierClosedLoop: "/explore/frontier/closed-loop/",
+    frontierInfrastructure: "/explore/frontier/infrastructure/",
+    frontierLattice: "/explore/frontier/lattice/",
+    frontierUrban: "/explore/frontier/urban/",
+    frontierManual: "/explore/frontier/manual/",
+    frontierShimmer: "/explore/frontier/shimmer/",
+    frontierTrajectory: "/explore/frontier/trajectory/",
+    frontierVision: "/explore/frontier/vision/",
     characters: "/characters/",
     controlRoom: "/showroom/globe/hearth/diagnostic/",
     book: "/nine-summits-of-love/",
@@ -68,14 +84,26 @@
     meetSean: "Meet Sean Mansfield",
     products: "Open Products",
     laws: "Read the Laws",
+    scientificLaw: "Open Scientific Law",
     gauges: "Open Gauges",
     showroom: "Open the Showroom",
-    hearth: "Return to Hearth",
+    hearth: "Open Hearth",
     globeWindow: "Open the World Gate",
     interactiveNarrative: "Enter the Interactive Narrative",
     mirrorland: "Open Mirrorland",
     audralia: "Visit Audralia",
     frontier: "Explore Frontier",
+    frontierEnergy: "Open Energy",
+    frontierWater: "Open Water",
+    frontierWaste: "Open Waste",
+    frontierClosedLoop: "Open Closed Loop",
+    frontierInfrastructure: "Open Infrastructure",
+    frontierLattice: "Open Lattice",
+    frontierUrban: "Open Urban",
+    frontierManual: "Open Manual",
+    frontierShimmer: "Open Shimmer",
+    frontierTrajectory: "Open Trajectory",
+    frontierVision: "Open Vision",
     characters: "Meet the Characters",
     controlRoom: "Open the Control Room",
     book: "Open The Nine Summits of Love",
@@ -121,12 +149,126 @@
     "continue"
   ];
 
+  var APPROVED_ROUTE_IDS = [
+    "compass",
+    "home",
+    "siteGuide",
+    "coherenceDiagnostic",
+    "meetSean",
+    "products",
+    "laws",
+    "scientificLaw",
+    "gauges",
+    "showroom",
+    "hearth",
+    "globeWindow",
+    "interactiveNarrative",
+    "mirrorland",
+    "audralia",
+    "frontier",
+    "frontierEnergy",
+    "frontierWater",
+    "frontierWaste",
+    "frontierClosedLoop",
+    "frontierInfrastructure",
+    "frontierLattice",
+    "frontierUrban",
+    "frontierManual",
+    "frontierShimmer",
+    "frontierTrajectory",
+    "frontierVision",
+    "characters",
+    "controlRoom",
+    "book",
+    "nineSummits",
+    "aboutUnderdog"
+  ];
+
+  var APPROVED_TARGETS = [
+    "intro",
+    "askFirst",
+    "websitePath",
+    "skepticPlain",
+    "proofPath",
+    "diagnosticPath",
+    "worldPath",
+    "worldGatePath",
+    "charactersPath",
+    "compassPath",
+    "whereToStart",
+    "siteGuidePath",
+    "lawsPath",
+    "scientificLawPath",
+    "scientificLawTheoryPath",
+    "scientificLawEvidencePath",
+    "scientificLawMeasurePath",
+    "scientificLawLimitsPath",
+    "scientificLawRoutePath",
+    "scientificLawLadderPath",
+    "scientificLawTermsPath",
+    "gaugesPath",
+    "seanPath",
+    "underdogPath",
+    "productsPath",
+    "bookPath",
+    "nineSummitsPath",
+    "hearthPath",
+    "hearthFacilityPath",
+    "hearthConstructPath",
+    "hearthFrontierPath",
+    "hearthLawPath",
+    "audraliaPath",
+    "frontierPath",
+    "frontierSystemsPath",
+    "frontierEnergyPath",
+    "frontierWaterPath",
+    "frontierWastePath",
+    "frontierClosedLoopPath",
+    "frontierInfrastructurePath",
+    "frontierLatticePath",
+    "frontierUrbanPath",
+    "frontierManualPath",
+    "frontierShimmerPath",
+    "frontierTrajectoryPath",
+    "frontierVisionPath",
+    "frontierLawPath",
+    "frontierCharactersPath",
+    "futureProfilePath",
+    "mirrorMePath",
+    "characterIdentityPath",
+    "characterRelationshipsPath",
+    "characterTensionsPath",
+    "characterMotivesPath",
+    "characterFactionsPath",
+    "characterStoryPressurePath",
+    "characterFirstPath",
+    "characterAurenValePath",
+    "characterDextrionPath",
+    "characterAlaricPath",
+    "characterTarianPath",
+    "characterElaraPath",
+    "characterSorenPath",
+    "characterJeevesPath",
+    "characterRemoteTeamPath",
+    "characterMirrorPath",
+    "selfLearningPath",
+    "characterMirrorQuestionOne",
+    "characterMirrorQuestionTwo",
+    "characterMirrorQuestionThree",
+    "characterMirrorResult",
+    "recenterNode",
+    "loopRecovery",
+    "cleanDoor",
+    "switchTopics",
+    "sharpQuestion",
+    "returnFork",
+    "restartFork"
+  ];
+
   var FORBIDDEN_PUBLIC_LANGUAGE = [
-    { pattern: /\bconstruct\b/gi, replacement: "estate" },
     { pattern: /\bscope lane\b/gi, replacement: "path" },
     { pattern: /\bregistry\b/gi, replacement: "guide" },
     { pattern: /\borgan\b/gi, replacement: "part" },
-    { pattern: /\bengine\b/gi, replacement: "system" },
     { pattern: /\broute lane\b/gi, replacement: "path" },
     { pattern: /\barchitecture layer\b/gi, replacement: "structure" },
     { pattern: /\bexpression payload\b/gi, replacement: "answer" },
@@ -134,10 +276,299 @@
     { pattern: /\bbackend bridge\b/gi, replacement: "deeper answer path" },
     { pattern: /\bAPI\b/g, replacement: "answer path" },
     { pattern: /\bpublic human-voice side\b/gi, replacement: "place where the voice becomes human" },
-    { pattern: /\bSean's page\b/gi, replacement: "the chamber where the visitor meets Sean" },
-    { pattern: /\bthis page\b/gi, replacement: "this chamber" },
-    { pattern: /\bthat page\b/gi, replacement: "that chamber" }
+    { pattern: /\bDOM\b/g, replacement: "visible interface" },
+    { pattern: /\bserver[-\s]?side\b/gi, replacement: "deeper house layer" },
+    { pattern: /\bback[-\s]?end\b/gi, replacement: "deeper side" },
+    { pattern: /\bfront[-\s]?end\b/gi, replacement: "visible side" },
+    { pattern: /\bcontract\b/gi, replacement: "governing mark" },
+    { pattern: /\bTNT\b/g, replacement: "" }
   ];
+
+  var SPEECH_LABEL_FALLBACKS = {
+    websitePath: "Guide me through the public estate.",
+    skepticPlain: "Explain it plainly.",
+    proofPath: "Tell me what proves it.",
+    diagnosticPath: "Tell me about the Diagnostic.",
+    worldPath: "Tell me about the world side.",
+    worldGatePath: "Tell me about the Interactive Narrative.",
+    charactersPath: "Who are the characters?",
+    compassPath: "I need the Compass.",
+    siteGuidePath: "Tell me how the estate is organized.",
+    lawsPath: "Explain the Laws.",
+    scientificLawPath: "Explain Scientific Law.",
+    scientificLawTheoryPath: "Explain Theory.",
+    scientificLawEvidencePath: "Explain Evidence.",
+    scientificLawMeasurePath: "Explain Measure.",
+    scientificLawLimitsPath: "Explain Limits.",
+    scientificLawRoutePath: "Show the Scientific Route.",
+    scientificLawLadderPath: "Show the claim testing ladder.",
+    scientificLawTermsPath: "Explain the deeper terms.",
+    gaugesPath: "Explain Gauges.",
+    seanPath: "Tell me about Sean.",
+    underdogPath: "Tell me about This Underdog.",
+    productsPath: "Tell me about the practical wing.",
+    bookPath: "Tell me about the book path.",
+    nineSummitsPath: "Tell me about Nine Summits.",
+    hearthPath: "I want to understand Hearth.",
+    hearthFacilityPath: "Explain Hearth as a facility.",
+    hearthConstructPath: "Explain Hearth as a planetary construct engine.",
+    hearthFrontierPath: "Connect Hearth to Frontier.",
+    hearthLawPath: "Connect Hearth to Scientific Law.",
+    audraliaPath: "Tell me about Audralia.",
+    frontierPath: "What is Frontier?",
+    frontierSystemsPath: "Show the Frontier systems.",
+    frontierEnergyPath: "Explain Energy.",
+    frontierWaterPath: "Explain Water.",
+    frontierWastePath: "Explain Waste.",
+    frontierClosedLoopPath: "Explain Closed Loop.",
+    frontierInfrastructurePath: "Explain Infrastructure.",
+    frontierLatticePath: "Explain Lattice.",
+    frontierUrbanPath: "Explain Urban.",
+    frontierManualPath: "Explain Manual.",
+    frontierShimmerPath: "Explain Shimmer.",
+    frontierTrajectoryPath: "Explain Trajectory.",
+    frontierVisionPath: "Explain Vision.",
+    frontierLawPath: "Connect Frontier to Scientific Law.",
+    frontierCharactersPath: "Connect Frontier to the characters.",
+    futureProfilePath: "What is Future Profile?",
+    mirrorMePath: "What is Mirror Me?",
+    characterIdentityPath: "Who are the characters?",
+    characterRelationshipsPath: "How do the characters relate?",
+    characterTensionsPath: "What conflict do they carry?",
+    characterMotivesPath: "What motivates them?",
+    characterFactionsPath: "Are there sides or factions?",
+    characterStoryPressurePath: "Why should I care about the characters?",
+    characterFirstPath: "Who should I meet first?",
+    characterAurenValePath: "Tell me about Auren Vale.",
+    characterDextrionPath: "Tell me about Dextrion.",
+    characterAlaricPath: "Tell me about Alaric.",
+    characterTarianPath: "Tell me about Tarian.",
+    characterElaraPath: "Tell me about Elara.",
+    characterSorenPath: "Tell me about Soren.",
+    characterJeevesPath: "Tell me about Jeeves.",
+    characterRemoteTeamPath: "Tell me about the Remote Team.",
+    characterMirrorPath: "Which character am I most like?",
+    selfLearningPath: "Help me learn about myself.",
+    characterMirrorQuestionOne: "Ask the first mirror question.",
+    characterMirrorQuestionTwo: "Ask the second mirror question.",
+    characterMirrorQuestionThree: "Ask the third mirror question.",
+    characterMirrorResult: "Show my reflective match.",
+    cleanDoor: "Which door fits this best?",
+    sharpQuestion: "Ask me a sharper question.",
+    switchTopics: "Switch topics.",
+    recenterNode: "Re-center me.",
+    returnFork: "I need the clean fork again.",
+    restartFork: "Start this over."
+  };
+
+  var CHARACTER_REGISTRY = {
+    aurenVale: {
+      id: "aurenVale",
+      name: "Auren Vale",
+      shortName: "Auren",
+      title: "Sanctuary Builder",
+      target: "characterAurenValePath",
+      route: "characters",
+      oneLine: "He keeps the manor from becoming a beautiful cage.",
+      pressure: "Every protected life makes the manor harder to hide.",
+      mirror: "Protection, custody, shelter, and fear of exposure.",
+      summary: "Auren Vale is the Sanctuary Builder. He keeps the manor from becoming a beautiful cage. His pressure is protection versus exposure."
+    },
+    dextrion: {
+      id: "dextrion",
+      name: "Dextrion",
+      shortName: "Dextrion",
+      title: "Earth-Side Originator",
+      target: "characterDextrionPath",
+      route: "characters",
+      oneLine: "He opened the path and stayed behind.",
+      pressure: "Every one-way crossing remains on his hands.",
+      mirror: "Repair, responsibility, guilt, and pressure to fix what broke.",
+      summary: "Dextrion is the Earth-Side Originator. He opened the path and stayed behind. His pressure is repair responsibility."
+    },
+    alaric: {
+      id: "alaric",
+      name: "Alaric",
+      shortName: "Alaric",
+      title: "Field Navigator",
+      target: "characterAlaricPath",
+      route: "characters",
+      oneLine: "He reads danger before proof arrives.",
+      pressure: "Waiting for proof can close the only safe route.",
+      mirror: "Early warning, danger-reading, orientation, and acting before others believe the proof.",
+      summary: "Alaric is the Field Navigator. He reads danger before proof arrives. His pressure is early warning versus trust."
+    },
+    tarian: {
+      id: "tarian",
+      name: "Tarian",
+      shortName: "Tarian",
+      title: "Water Anchor",
+      target: "characterTarianPath",
+      route: "characters",
+      oneLine: "He keeps the mission physically honest.",
+      pressure: "The future fails if the body cannot continue.",
+      mirror: "Endurance, body-level survival, water, recovery, and carrying too much.",
+      summary: "Tarian is the Water Anchor. He keeps the mission physically honest. His pressure is human limit versus mission demand."
+    },
+    elara: {
+      id: "elara",
+      name: "Elara",
+      shortName: "Elara",
+      title: "Signal Bearer",
+      target: "characterElaraPath",
+      route: "characters",
+      oneLine: "She makes the future visible before it disappears.",
+      pressure: "The future has to be visible before anyone moves toward it.",
+      mirror: "Signal, visibility, hope, public voice, and risk of being seen.",
+      summary: "Elara is the Signal Bearer. She makes the future visible before it disappears. Her pressure is visibility versus exposure."
+    },
+    soren: {
+      id: "soren",
+      name: "Soren",
+      shortName: "Soren",
+      title: "Boundary Keeper",
+      target: "characterSorenPath",
+      route: "characters",
+      oneLine: "He refuses fake restoration.",
+      pressure: "Saving Mirrorland by hiding damage only creates another ZIONTS.",
+      mirror: "Truth, hidden cost, contradiction, boundary, evidence, and refusal of fake restoration.",
+      summary: "Soren is the Boundary Keeper. He refuses fake restoration. His pressure is truth versus denial."
+    },
+    jeeves: {
+      id: "jeeves",
+      name: "Jeeves",
+      shortName: "Jeeves",
+      title: "Manor Interface",
+      target: "characterJeevesPath",
+      route: "characters",
+      oneLine: "He decides how much truth the house can reveal.",
+      pressure: "Too much truth breaks people. Too little sends them into the wrong room.",
+      mirror: "Sequence, restraint, truth timing, entry, and controlled revelation.",
+      summary: "Jeeves is the Manor Interface. He decides how much truth the house can reveal. His pressure is protection versus revelation."
+    },
+    remoteTeam: {
+      id: "remoteTeam",
+      name: "Remote Team",
+      shortName: "Remote Team",
+      title: "Distributed Response Unit",
+      target: "characterRemoteTeamPath",
+      route: "characters",
+      oneLine: "They carry survival beyond the estate.",
+      pressure: "If survival cannot leave the manor, the manor is only a bunker.",
+      mirror: "Distributed responsibility, field logistics, helping beyond the safe center, and public survival.",
+      summary: "The Remote Team is the Distributed Response Unit. They carry survival beyond the estate. Their pressure is distribution versus collapse pressure."
+    }
+  };
+
+  var ARCHETYPE_CHARACTER_MAP = {
+    Strategist: ["jeeves", "aurenVale", "alaric"],
+    Builder: ["dextrion", "remoteTeam", "tarian"],
+    Mitigator: ["tarian", "aurenVale", "remoteTeam"],
+    Auditor: ["soren", "dextrion", "jeeves"]
+  };
+
+  var LOCAL_MIRROR_KEYWORDS = [
+    { id: "aurenVale", words: ["protect", "shelter", "safe", "hide", "custody", "exposure"] },
+    { id: "dextrion", words: ["fix", "repair", "responsible", "guilt", "broken", "system"] },
+    { id: "alaric", words: ["danger", "warning", "route", "early", "before proof", "not believed"] },
+    { id: "tarian", words: ["tired", "body", "carry", "water", "survive", "endure"] },
+    { id: "elara", words: ["hope", "visible", "signal", "voice", "seen", "future"] },
+    { id: "soren", words: ["truth", "evidence", "hidden cost", "contradiction", "boundary", "denial"] },
+    { id: "jeeves", words: ["sequence", "timing", "truth", "door", "entry", "reveal"] },
+    { id: "remoteTeam", words: ["team", "community", "field", "distributed", "public", "beyond"] }
+  ];
+
+  var SCIENTIFIC_LAW = {
+    core: "A claim does not become scientific because it sounds technical. It becomes scientific when it can be defined, tested, corrected, limited, and checked again.",
+    summary: "Scientific Law is the Reality Test chamber. It separates what sounds convincing from what keeps working after observation, evidence, measurement, comparison, correction, uncertainty, and limits.",
+    doors: {
+      theory: "Theory is the explanation that risks being wrong.",
+      evidence: "Evidence is the checkable record that survives preference.",
+      measure: "Measure is the coordinate system attached to a claim.",
+      limits: "Limits are the boundary that protects truth from overclaiming."
+    },
+    ladder: "Impression → Observation → Evidence → Measurement → Repeatability → Model → Limitation → Scientific Claim."
+  };
+
+  var FRONTIER_SYSTEMS = {
+    energy: {
+      target: "frontierEnergyPath",
+      route: "frontierEnergy",
+      name: "Energy",
+      status: "Fusion readiness",
+      text: "Energy starts with power readiness: storage, load protection, facility inputs, losses, and fusion readiness without pretending the final breakthrough is already solved."
+    },
+    water: {
+      target: "frontierWaterPath",
+      route: "frontierWater",
+      name: "Water",
+      status: "Closed water systems",
+      text: "Water asks how water keeps moving without being wasted: capture, cleaning, routing, reuse, continuity, quality checks, and failure detection."
+    },
+    waste: {
+      target: "frontierWastePath",
+      route: "frontierWaste",
+      name: "Waste",
+      status: "Wastewater systems",
+      text: "Waste begins where discarded material becomes a design test: sanitation, recovery, contaminant control, treatment, reuse classification, and return-material accounting."
+    },
+    closedLoop: {
+      target: "frontierClosedLoopPath",
+      route: "frontierClosedLoop",
+      name: "Closed Loop",
+      status: "Answer-back systems",
+      text: "Closed Loop asks whether a system can answer back: detect pressure, register failure, correct course, and prove the correction returned somewhere useful."
+    },
+    infrastructure: {
+      target: "frontierInfrastructurePath",
+      route: "frontierInfrastructure",
+      name: "Infrastructure",
+      status: "Support load",
+      text: "Infrastructure tests whether the world can carry weight: roads, supports, utilities, corridors, redundancy, and load-bearing civic structure."
+    },
+    lattice: {
+      target: "frontierLatticePath",
+      route: "frontierLattice",
+      name: "Lattice",
+      status: "Ordered growth",
+      text: "Lattice asks whether growth has order. Placement, count, relationship, and pattern keep a world from expanding randomly into noise."
+    },
+    urban: {
+      target: "frontierUrbanPath",
+      route: "frontierUrban",
+      name: "Urban",
+      status: "Civic pressure",
+      text: "Urban tests settlement pressure: corridors, density, shelter, public systems, movement, and built-world consequence."
+    },
+    manual: {
+      target: "frontierManualPath",
+      route: "frontierManual",
+      name: "Manual",
+      status: "Operating path",
+      text: "Manual turns the playground into instructions, handling rules, readable next steps, safety notes, and operating boundaries."
+    },
+    shimmer: {
+      target: "frontierShimmerPath",
+      route: "frontierShimmer",
+      name: "Shimmer",
+      status: "Visible signal",
+      text: "Shimmer makes change visible. A glint, warning, pulse, or surface shift tells the visitor that pressure is moving before the full system explains itself."
+    },
+    trajectory: {
+      target: "frontierTrajectoryPath",
+      route: "frontierTrajectory",
+      name: "Trajectory",
+      status: "Direction and timing",
+      text: "Trajectory asks where the future is moving: direction, timing, path, drift detection, course correction, and outcome tracking."
+    },
+    vision: {
+      target: "frontierVisionPath",
+      route: "frontierVision",
+      name: "Vision",
+      status: "Horizon aim",
+      text: "Vision keeps the horizon in view. It asks what kind of future the world is trying to reach before systems harden into habits."
+    }
+  };
 
   var state = {
     contract: CONTRACT,
@@ -170,7 +601,11 @@
       digressionCount: 0,
       progressCount: 0,
       needsRecenter: false,
-      trail: []
+      trail: [],
+      characterMirrorAnswers: [],
+      lastBrainIntent: "",
+      lastBrainCanonStatus: "",
+      lastBrainConclusiveState: ""
     },
 
     tapAdvance: {
@@ -185,12 +620,13 @@
       phase: ""
     },
 
-    backendBridge: {
-      endpoint: FUTURE_BRAIN_ENDPOINT,
-      enabled: false,
+    brain: {
+      endpoint: JEEVES_BRAIN_ENDPOINT,
+      enabled: true,
       lastRequest: null,
       lastResponse: null,
-      lastStatus: "dormant"
+      lastStatus: "ready",
+      timeoutMs: 9000
     },
 
     history: []
@@ -230,1568 +666,9 @@
     return item;
   }
 
-  var SPEECH_LABEL_FALLBACKS = {
-    websitePath: "Guide me through the public estate.",
-    skepticPlain: "Explain it plainly.",
-    proofPath: "Tell me what proves it.",
-    diagnosticPath: "Tell me about the Diagnostic.",
-    worldPath: "Tell me about the world side.",
-    worldGatePath: "Tell me about the Interactive Narrative.",
-    charactersPath: "Who are the characters?",
-    compassPath: "I need the Compass.",
-    siteGuidePath: "Tell me how the estate is organized.",
-    lawsPath: "Explain the Laws.",
-    gaugesPath: "Explain Gauges.",
-    seanPath: "Tell me about Sean.",
-    underdogPath: "Tell me about This Underdog.",
-    productsPath: "Tell me about the practical wing.",
-    bookPath: "Tell me about the book path.",
-    nineSummitsPath: "Tell me about Nine Summits.",
-    hearthPath: "I want to understand Hearth.",
-    audraliaPath: "Tell me about Audralia.",
-    frontierPath: "What is Frontier?",
-    futureProfilePath: "What is Future Profile?",
-    mirrorMePath: "What is Mirror Me?",
-    characterIdentityPath: "Who are the characters?",
-    characterRelationshipsPath: "How do the characters relate?",
-    characterTensionsPath: "What conflict do they carry?",
-    characterMotivesPath: "What motivates them?",
-    characterFactionsPath: "Are there sides or factions?",
-    characterStoryPressurePath: "Why should I care about the characters?",
-    characterFirstPath: "Who should I meet first?",
-    cleanDoor: "Which door fits this best?",
-    recenterNode: "Re-center me.",
-    returnFork: "I need the clean fork again.",
-    restartFork: "Start this over."
-  };
-
-  var TOPICS = {
-    diamondGateBridge: {
-      posture: "orientation",
-      phase: "ground",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["compass", "siteGuide", "laws", "coherenceDiagnostic"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Diamond Gate Bridge is the estate: the public proof wing, the human-development chambers, the practical wing, the world threshold, and the future-facing rooms gathered into one navigable place.",
-            "It matters because the future is not finished. What we build today casts a shadow forward, and the shape of that shadow depends on what we choose to design now."
-          ],
-          options: [
-            say("Why does that matter?", "diamondGateBridgeWhy"),
-            say("Where does the estate lead?", "diamondGateBridgeLead"),
-            say("I need orientation.", "compassPath", { signal: "orientation" }),
-            say("I want proof.", "proofPath", { signal: "skeptic" }),
-            say("I want the world side.", "worldPath", { signal: "world" })
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "It matters because frontier science, social imagination, economic design, and human development do not arrive from nowhere.",
-            "They are shaped by prototypes, symbols, rooms, systems, diagnostics, stories, and tools before they become ordinary reality.",
-            "Diamond Gate Bridge is one attempt to make that future-building visible, testable, usable, and human."
-          ],
-          options: [
-            say("Where does that future-building lead?", "diamondGateBridgeLead"),
-            say("How does proof fit into that?", "proofPath"),
-            say("How does the Diagnostic fit?", "diagnosticPath"),
-            say("How does Mirrorland fit?", "worldPath"),
-            say("How does Sean fit?", "seanPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The estate leads in two directions at once.",
-            "On the public side, it leads toward proof, tools, diagnostics, products, Sean, This Underdog, and the book path.",
-            "On the world side, it leads toward Mirrorland: a future playground for frontier science, interactive narrative, speculative systems, character pressure, and social-economic possibility."
-          ],
-          options: [
-            say("Keep me on the public side.", "websitePath"),
-            say("Take me toward proof.", "proofPath"),
-            say("Take me toward the Diagnostic.", "diagnosticPath"),
-            say("Take me toward Mirrorland.", "worldPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    compass: {
-      posture: "orientation",
-      phase: "ground",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["compass", "siteGuide"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Compass is the first orientation room.",
-            "It helps the visitor choose between proof, self-reflection, practical use, the human designer behind the estate, and the world side without forcing the whole estate into one thought."
-          ],
-          options: [
-            say("Why is the Compass first?", "compassWhy"),
-            say("What doors does it point to?", "compassLead"),
-            say("I want proof first.", "proofPath"),
-            say("I want self-reflection.", "diagnosticPath"),
-            say("I want the world side.", "worldPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The Compass is first because orientation has to come before belief.",
-            "A visitor can reject the estate too quickly if they meet the wrong door first. The Compass slows that down and gives the right kind of entry."
-          ],
-          options: [
-            say("Show me the doors.", "compassLead"),
-            say("Tell me about the estate map.", "siteGuidePath"),
-            say("Tell me about the Laws.", "lawsPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about the Showroom.", "worldPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The Compass points to five basic doors.",
-            "Proof belongs to Laws and Gauges. Self-reflection belongs to the Diagnostic. Practical use belongs to Products. Human voice and authorship belong to Sean and This Underdog. The world side begins at the Showroom."
-          ],
-          options: [
-            say("Explain proof.", "proofPath"),
-            say("Explain self-reflection.", "diagnosticPath"),
-            say("Explain Sean’s role.", "seanPath"),
-            say("Explain Mirrorland.", "worldPath"),
-            control("Which door fits me best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    siteGuide: {
-      posture: "orientation",
-      phase: "ground",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["siteGuide", "compass", "showroom"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Site Guide is the public map of the estate.",
-            "It separates ordinary public rooms from deeper estate rooms so a visitor can see what proves, what guides, what reflects, what can be used, and what begins crossing into Mirrorland."
-          ],
-          options: [
-            say("Why does the estate need separation?", "siteGuideWhy"),
-            say("Where does the map lead?", "siteGuideLead"),
-            say("Tell me about the Compass.", "compassPath"),
-            say("Tell me about the Showroom.", "worldPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The separation matters because the estate has two kinds of rooms.",
-            "Some rooms explain the work in public terms. Other doors begin crossing into Mirrorland, Hearth, Audralia, Frontier, Characters, and the future-facing playground behind the estate."
-          ],
-          options: [
-            say("Show me the public side.", "websitePath"),
-            say("Show me the world side.", "worldPath"),
-            say("Tell me about the threshold.", "showroomWhy"),
-            say("Tell me about characters.", "charactersPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The public map leads to Compass, Laws, Gauges, Products, the Diagnostic, Sean, This Underdog, and the book path.",
-            "The deeper map leads toward the Showroom, the Interactive Narrative, Hearth, Audralia, Frontier, and the Characters."
-          ],
-          options: [
-            say("Keep me public.", "compassPath"),
-            say("Take me toward proof.", "proofPath"),
-            say("Take me toward the world threshold.", "worldPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    proof: {
-      posture: "proof",
-      phase: "prove",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["laws", "gauges", "coherenceDiagnostic"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The proof wing is where the estate stops asking for trust and starts making its structure testable.",
-            "If you are skeptical, this is the right wing. Doubt should not be bypassed; it should be given something to examine."
-          ],
-          options: [
-            say("What makes it testable?", "proofWhy"),
-            say("Where should I test it first?", "proofLead"),
-            say("Explain the Laws.", "lawsPath"),
-            say("Explain Gauges.", "gaugesPath"),
-            say("Explain the Diagnostic.", "diagnosticPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "It becomes testable when claims are separated from decoration.",
-            "The Laws show the governing claims. Gauges show whether routes and systems are holding. The Diagnostic lets a visitor test pressure and coherence through themselves.",
-            "That matters because future-building without proof can turn into spectacle. Proof keeps the estate accountable."
-          ],
-          options: [
-            say("Tell me about the Laws.", "lawsPath"),
-            say("Tell me about Gauges.", "gaugesPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Where does proof lead?", "proofLead")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "If you want the claim layer, go to Laws.",
-            "If you want visible status and technical confidence, go to Gauges.",
-            "If you want to test the work through your own pressure, go to the Diagnostic."
-          ],
-          options: [
-            say("The claim layer.", "lawsPath"),
-            say("The status layer.", "gaugesPath"),
-            say("The self-test layer.", "diagnosticPath"),
-            say("I want the designer behind it.", "seanPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    laws: {
-      posture: "proof",
-      phase: "prove",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["laws", "gauges", "coherenceDiagnostic"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Laws are the proof wing’s governing chamber.",
-            "They are where the estate makes its claims testable before asking the visitor to enter the deeper world side."
-          ],
-          options: [
-            say("Why do the Laws matter?", "lawsWhy"),
-            say("Where do the Laws lead?", "lawsLead"),
-            say("How do Gauges relate?", "gaugesPath"),
-            say("How does the Diagnostic relate?", "diagnosticPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The Laws matter because imagination without constraint collapses into decoration.",
-            "The Laws keep the estate accountable. They say: this is not merely mood, menu, or fantasy. It has claims that can be checked.",
-            "That is why the world side needs them. Mirrorland can be imaginative because the estate below it is trying to remain governed."
-          ],
-          options: [
-            say("Show me what checks them.", "gaugesPath"),
-            say("Show me how they apply to me.", "diagnosticPath"),
-            say("Where do they lead?", "lawsLead"),
-            say("I want the world side anyway.", "worldPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The Laws lead either to Gauges, where the structure is checked, or to the Diagnostic, where pressure becomes personal.",
-            "They also protect the world side from becoming vague fantasy. The deeper doors need rules beneath them."
-          ],
-          options: [
-            say("Tell me about Gauges.", "gaugesPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about Mirrorland.", "worldPath"),
-            control("Which proof door fits me?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    gauges: {
-      posture: "proof",
-      phase: "prove",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["gauges", "laws"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Gauges are the estate’s status instruments.",
-            "They are for visitors who want to see whether the rooms, routes, worlds, and systems are holding instead of only hearing what they are supposed to become."
-          ],
-          options: [
-            say("Why do Gauges matter?", "gaugesWhy"),
-            say("Where do Gauges lead?", "gaugesLead"),
-            say("How do the Laws relate?", "lawsPath"),
-            say("How does the Diagnostic relate?", "diagnosticPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Gauges matter because a large estate needs visible status.",
-            "They keep the visitor from confusing ambition with completion. A held route, a working gate, and a visible system are different from a promise.",
-            "That distinction is part of the economic discipline of the estate: what can be shown, what can be used, what can be tested, and what is still forming."
-          ],
-          options: [
-            say("Where do Gauges lead?", "gaugesLead"),
-            say("Tell me about the Laws.", "lawsPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about Mirrorland.", "worldPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Gauges lead back into trust.",
-            "If a route is visible, held, and tested, the visitor can move forward with more confidence. If it is not, the estate should say so clearly."
-          ],
-          options: [
-            say("Take me to the proof wing.", "proofPath"),
-            say("Take me to the Diagnostic.", "diagnosticPath"),
-            say("Take me toward the world threshold.", "worldPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    diagnostic: {
-      posture: "diagnostic",
-      phase: "personalize",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["coherenceDiagnostic", "laws"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Diagnostic is the estate’s public mirror chamber.",
-            "It helps a visitor notice the difference between what they claim, what they choose, and what pressure reveals."
-          ],
-          options: [
-            say("Why does that matter?", "diagnosticWhy"),
-            say("Where does it lead?", "diagnosticLead"),
-            say("How is this different from Mirror Me?", "mirrorMePath"),
-            say("How do the Laws relate?", "lawsPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "It matters because people often describe themselves from intention, but pressure reveals them through movement.",
-            "The Diagnostic does not need to flatter the visitor. It needs to help them see where claim, choice, and pressure do not match.",
-            "That makes it social as well as personal. A person who can read pressure more clearly can make cleaner decisions, form better teams, build better systems, and stop carrying noise as identity."
-          ],
-          options: [
-            say("Where does that lead?", "diagnosticLead"),
-            say("Tell me about Future Profile.", "futureProfilePath"),
-            say("Tell me about Mirror Me.", "mirrorMePath"),
-            say("Tell me about This Underdog.", "underdogPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The Diagnostic leads toward a cleaner self-check.",
-            "Future Profile points toward continuity over time. Mirror Me points toward the narrative reflection side. This Underdog points toward the voice that pressure has not yet taught how to speak."
-          ],
-          options: [
-            say("What is Future Profile?", "futureProfilePath"),
-            say("What is Mirror Me?", "mirrorMePath"),
-            say("What is This Underdog?", "underdogPath"),
-            control("Which mirror path fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    futureProfile: {
-      posture: "futureProfile",
-      phase: "reveal",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["coherenceDiagnostic", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Future Profile is the estate’s future-facing return chamber.",
-            "It points toward a version of the Diagnostic that could become more personal over time, but it should stay clearly marked as future-facing until that path is live."
-          ],
-          options: [
-            say("Why does return matter?", "futureProfileWhy"),
-            say("Where does this lead?", "futureProfileLead"),
-            say("How is this different from Mirror Me?", "mirrorMePath"),
-            say("Tell me about the Diagnostic first.", "diagnosticPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Return matters because one visit can show interest, but repeated visits can show pattern.",
-            "The future version of this chamber is not only what a visitor says once. It is what the visitor keeps becoming when pressure, choice, and memory begin to line up."
-          ],
-          options: [
-            say("Where does that lead?", "futureProfileLead"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about Mirror Me.", "mirrorMePath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Future Profile leads toward continuity.",
-            "The public version belongs near the Diagnostic. The narrative version belongs near Mirror Me. Both should stay honest about what is live now and what is still forming."
-          ],
-          options: [
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about Mirror Me.", "mirrorMePath"),
-            say("Tell me about the world side.", "worldPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    mirrorMe: {
-      posture: "mirrorMe",
-      phase: "reveal",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_THRESHOLD,
-      handoffs: ["coherenceDiagnostic", "interactiveNarrative", "characters"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Mirror Me is the narrative reflection chamber.",
-            "It should not replace the public Diagnostic. It begins where the mirror becomes part of the world."
-          ],
-          options: [
-            say("Why is Mirror Me different?", "mirrorMeWhy"),
-            say("Where does Mirror Me lead?", "mirrorMeLead"),
-            say("How does the Diagnostic differ?", "diagnosticPath"),
-            say("How do the characters connect?", "charactersPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The Diagnostic tests a visitor on the public side.",
-            "Mirror Me belongs to the world side. It asks a different question: what happens when the world begins reflecting the visitor back through rooms, characters, choices, and pressure?",
-            "That is where the estate stops only describing the future and begins letting the visitor feel how a possible future might look back."
-          ],
-          options: [
-            say("Where does that lead?", "mirrorMeLead"),
-            say("Tell me about the characters.", "charactersPath"),
-            say("Tell me about the Interactive Narrative.", "worldGatePath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Mirror Me leads toward playable reflection.",
-            "The visitor is no longer only reading a description of pressure. The visitor begins meeting pressure through the world itself."
-          ],
-          options: [
-            say("Tell me about the characters.", "charactersPath"),
-            say("Tell me about character relationships.", "characterRelationshipsPath"),
-            say("Tell me about the Interactive Narrative.", "worldGatePath"),
-            control("Which mirror door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    sean: {
-      posture: "sean",
-      phase: "reflect",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["meetSean", "aboutUnderdog", "book", "nineSummits"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Meet Sean is the estate chamber where the visitor meets Sean Mansfield, the designer and developer of Diamond Gate Bridge.",
-            "Sean is not only the voice behind the estate. He is building the bridge, the rooms, the logic, the public doorway, and the future-facing world path."
-          ],
-          options: [
-            say("Why does Sean matter here?", "seanWhy"),
-            say("Where does Sean’s path lead?", "seanLead"),
-            say("How does This Underdog connect?", "underdogPath"),
-            say("How does the book path connect?", "bookPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Sean matters here because the estate is not detached from a human pressure trail.",
-            "The work carries design, development, pressure, accountability, comedy, story, risk, redirection, and the attempt to make pressure useful.",
-            "That matters socially and economically because new systems do not only need ideas. They need someone willing to build the interface, carry the pressure, and make the future legible to other people."
-          ],
-          options: [
-            say("Where does that lead?", "seanLead"),
-            say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about the book path.", "bookPath"),
-            say("Tell me about the practical wing.", "productsPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Sean’s path leads toward three public doors.",
-            "This Underdog explains the inner voice that belongs to the visitor too. The book path turns becoming into a longer journey. The practical wing makes the message usable."
-          ],
-          options: [
-            say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about the book path.", "bookPath"),
-            say("Tell me about the practical wing.", "productsPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    underdog: {
-      posture: "sean",
-      phase: "deepen",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["aboutUnderdog", "meetSean", "coherenceDiagnostic", "book"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "This Underdog is not Sean alone.",
-            "This Underdog is in you. It is in everybody.",
-            "It is the part of a person that has been carrying pressure before it has found language, direction, or use."
-          ],
-          options: [
-            say("Why does that matter?", "underdogWhy"),
-            say("Where does that voice lead?", "underdogLead"),
-            say("How does this connect to Sean?", "seanPath"),
-            say("How does this connect to the Diagnostic?", "diagnosticPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "It matters because many people do not lack potential. They lack a language strong enough to hold what pressure has been trying to teach them.",
-            "The Underdog is not weakness. It is the unorganized voice before it becomes direction.",
-            "Sean’s role is not to own that voice for himself. His role is to design an estate where the visitor can recognize it too."
-          ],
-          options: [
-            say("Where does that voice lead?", "underdogLead"),
-            say("How does pressure become language?", "underdogPressureLanguage"),
-            say("How does this connect to comedy?", "underdogComedy"),
-            say("How does this connect to the book?", "bookPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "That voice can lead in several directions.",
-            "Toward Sean, it becomes design and development. Toward the Diagnostic, it becomes a mirror. Toward the book path, it becomes a longer human-development journey. Toward comedy, it becomes pressure learning how to speak without breaking."
-          ],
-          options: [
-            say("How does pressure become language?", "underdogPressureLanguage"),
-            say("How does this connect to comedy?", "underdogComedy"),
-            say("Tell me about the book path.", "bookPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ],
-      continuations: {
-        underdogPressureLanguage: [
-          "Pressure becomes language when a person stops treating the pain as only damage and begins reading it as information.",
-          "That does not make the pressure good. It means the person finally starts extracting voice, boundary, judgment, and direction from it.",
-          "That is the social importance of This Underdog: people who can name their pressure can start turning it into decisions, craft, work, art, leadership, repair, and use."
-        ],
-        underdogComedy: [
-          "Comedy matters because it lets pressure speak without pretending to be untouched by it.",
-          "The comic voice can carry pain, intelligence, embarrassment, timing, and defiance in the same breath.",
-          "That is why This Underdog lives near comedy. Comedy can turn the pressure that isolates a person into language other people can recognize."
-        ]
-      }
-    },
-
-    products: {
-      posture: "products",
-      phase: "route",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["products", "book", "coherenceDiagnostic"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Products are the practical wing of the estate.",
-            "They are where the message becomes usable: something a visitor can carry, read, wear, give, return to, or use as a reminder."
-          ],
-          options: [
-            say("Why does the practical wing matter?", "productsWhy"),
-            say("Where does it lead?", "productsLead"),
-            say("How does this connect to the book?", "bookPath"),
-            say("How does this connect to the Diagnostic?", "diagnosticPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The practical wing matters because a message that never becomes usable can stay trapped in admiration.",
-            "The estate needs objects, tools, and repeatable doors because social and economic impact require more than beautiful language.",
-            "A person should be able to take something from the estate and use it outside the estate."
-          ],
-          options: [
-            say("Where does that lead?", "productsLead"),
-            say("Tell me about the book path.", "bookPath"),
-            say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The practical wing leads toward use.",
-            "A visitor may not be ready for the full estate, but they may be ready for a phrase, a symbol, a book, a diagnostic, or a piece of the work they can carry into daily life."
-          ],
-          options: [
-            say("Tell me about the book.", "bookPath"),
-            say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    book: {
-      posture: "book",
-      phase: "deepen",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["book", "nineSummits", "meetSean"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Nine Summits of Love is the book path inside the estate.",
-            "It takes pressure, voice, coherence, love, and becoming and turns them into a human-development journey."
-          ],
-          options: [
-            say("Why does the book path matter?", "bookWhy"),
-            say("Where does the book path lead?", "bookLead"),
-            say("How does Nine Summits connect?", "nineSummitsPath"),
-            say("How does This Underdog connect?", "underdogPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The book path matters because the estate needs a route a person can stay with.",
-            "A room can orient. A diagnostic can reflect. A product can remind. But a book can walk with the reader through pressure, love, voice, and becoming.",
-            "That is part of the human side of future-building: people need language before they can carry a future well."
-          ],
-          options: [
-            say("Where does the book path lead?", "bookLead"),
-            say("Tell me about Nine Summits.", "nineSummitsPath"),
-            say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about Sean.", "seanPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The book path leads toward the broader Nine Summits route.",
-            "It also leads back to Sean and This Underdog, because the larger human-development path still begins with pressure learning how to speak."
-          ],
-          options: [
-            say("Tell me about Nine Summits.", "nineSummitsPath"),
-            say("Tell me about Sean.", "seanPath"),
-            say("Tell me about This Underdog.", "underdogPath"),
-            say("Tell me about the practical wing.", "productsPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    nineSummits: {
-      posture: "book",
-      phase: "deepen",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      handoffs: ["nineSummits", "book", "meetSean"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Nine Summits is the wider human-development path.",
-            "It is less about browsing and more about what a person is becoming through pressure, love, voice, coherence, and repeated ascent."
-          ],
-          options: [
-            say("Why do the Summits matter?", "nineSummitsWhy"),
-            say("Where do the Summits lead?", "nineSummitsLead"),
-            say("How does the book connect?", "bookPath"),
-            say("How does Sean connect?", "seanPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The Summits matter because human development cannot be reduced to motivation alone.",
-            "It needs pressure, love, boundary, voice, coherence, and repeated ascent.",
-            "A summit is not only inspiration. It is a climb, and the climb is what makes the future human rather than merely technical."
-          ],
-          options: [
-            say("Where does that lead?", "nineSummitsLead"),
-            say("Tell me about the book.", "bookPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about This Underdog.", "underdogPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Nine Summits leads toward a longer development route.",
-            "The book can introduce it. The Diagnostic can personalize it. Sean’s chamber can humanize it. The practical wing can make pieces of it usable."
-          ],
-          options: [
-            say("Tell me about the book.", "bookPath"),
-            say("Tell me about the Diagnostic.", "diagnosticPath"),
-            say("Tell me about Sean.", "seanPath"),
-            say("Tell me about the practical wing.", "productsPath"),
-            control("Which door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    showroom: {
-      posture: "world",
-      phase: "fork",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_THRESHOLD,
-      handoffs: ["showroom", "interactiveNarrative", "siteGuide"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Showroom is the threshold.",
-            "The public map is still visible there, but the world side begins to press against it.",
-            "This is where the estate starts turning from explanation into future-facing space."
-          ],
-          options: [
-            say("Why is the Showroom the threshold?", "showroomWhy"),
-            say("Where does the threshold lead?", "showroomLead"),
-            say("What happens inside the Interactive Narrative?", "worldGatePath"),
-            say("I want to understand Hearth.", "hearthPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "It is the threshold because the visitor is not fully inside the world yet.",
-            "The Showroom still lets you see the public estate, but it also begins preparing you for rooms, characters, portals, and a future playground where frontier science and social imagination can be explored before the future hardens into reality."
-          ],
-          options: [
-            say("Where does it lead?", "showroomLead"),
-            say("Tell me about the Interactive Narrative.", "worldGatePath"),
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about the Characters.", "charactersPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The threshold leads first into the Interactive Narrative.",
-            "From there, the world can move toward Hearth, Audralia, Frontier, Characters, and Mirror Me.",
-            "The point is not to browse the world. The point is to cross it carefully, because what we imagine today can become part of what society builds tomorrow."
-          ],
-          options: [
-            say("Tell me about the Interactive Narrative.", "worldGatePath"),
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("Who are the characters?", "charactersPath"),
-            control("Which world door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    interactiveNarrative: {
-      posture: "world",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_THRESHOLD,
-      handoffs: ["interactiveNarrative", "showroom", "hearth", "characters"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Interactive Narrative is the first active doorway into the world side.",
-            "It is where the visitor stops only reading the future from a distance and begins moving through a possible version of it."
-          ],
-          options: [
-            say("Why does movement matter?", "interactiveNarrativeWhy"),
-            say("Where does the narrative lead?", "interactiveNarrativeLead"),
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("Who are the characters?", "charactersPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Movement matters because Mirrorland should not remain a museum of ideas.",
-            "The visitor has to choose, cross, return, inspect, and feel the difference between reading the map and walking through the pressure of the world.",
-            "That is what makes it useful as a future playground: it lets frontier science, story, social systems, and human pressure become explorable instead of abstract."
-          ],
-          options: [
-            say("Where does that lead?", "interactiveNarrativeLead"),
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about Characters.", "charactersPath"),
-            say("Tell me about Mirror Me.", "mirrorMePath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The Interactive Narrative leads into rooms and people.",
-            "Hearth is the closest room. Audralia is farther out. Frontier is the outer edge. Characters make the world inhabited. Mirror Me lets the world reflect the visitor back."
-          ],
-          options: [
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("What is Frontier?", "frontierPath"),
-            say("Who are the characters?", "charactersPath"),
-            say("What is Mirror Me?", "mirrorMePath")
-          ]
-        }
-      ]
-    },
-
-    hearth: {
-      posture: "hearth",
-      phase: "ground",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["hearth", "interactiveNarrative", "audralia"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Hearth is the closest room to where I speak from.",
-            "If the world feels too wide, begin there.",
-            "It is the first place where the estate begins to feel inhabited rather than only explained."
-          ],
-          options: [
-            say("Why begin with Hearth?", "hearthWhy"),
-            say("Where does Hearth lead?", "hearthLead"),
-            say("How does Hearth relate to Audralia?", "audraliaPath"),
-            say("How do the characters connect?", "charactersPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Hearth matters because every future-facing world needs a first room that can hold the visitor.",
-            "It is not the farthest edge. It is the point of contact. It gives the world a voice, a floor, and a place to begin.",
-            "A future playground still needs a hearth, because even frontier science needs a human threshold."
-          ],
-          options: [
-            say("Where does Hearth lead?", "hearthLead"),
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("Tell me about Characters.", "charactersPath"),
-            say("Tell me about the Interactive Narrative.", "worldGatePath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Hearth leads outward.",
-            "From Hearth, the visitor can move toward Audralia, the Characters, the world gate, and eventually the wider Frontier.",
-            "Hearth is not the whole world. It is the room that lets the world begin."
-          ],
-          options: [
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("Who are the characters?", "charactersPath"),
-            say("What is Frontier?", "frontierPath"),
-            say("What is Mirror Me?", "mirrorMePath"),
-            control("Which world door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    audralia: {
-      posture: "audralia",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["audralia", "frontier", "hearth"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Audralia is farther out.",
-            "It is where the world begins to widen beyond the first threshold.",
-            "It gives the estate distance, terrain, scale, and the feeling that the future is not only a room. It is a landscape."
-          ],
-          options: [
-            say("Why does Audralia matter?", "audraliaWhy"),
-            say("Where does Audralia lead?", "audraliaLead"),
-            say("How does Hearth relate?", "hearthPath"),
-            say("What is Frontier?", "frontierPath"),
-            say("Who are the characters there?", "charactersPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Audralia matters because the world needs scale.",
-            "Hearth gives you a room. Audralia gives you distance, terrain, expansion, and the sense that the future continues beyond the first doorway.",
-            "That scale is part of the frontier-science premise. A future playground needs somewhere large enough for systems, consequences, settlements, experiments, and social imagination to move."
-          ],
-          options: [
-            say("Where does Audralia lead?", "audraliaLead"),
-            say("Tell me about Frontier.", "frontierPath"),
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about the Characters.", "charactersPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Audralia leads toward the outward world.",
-            "It points back to Hearth as the first room, forward to Frontier as the edge, and sideways into Characters because a widened world needs people, motives, conflict, and consequence."
-          ],
-          options: [
-            say("What is Frontier?", "frontierPath"),
-            say("How do the Characters relate?", "characterRelationshipsPath"),
-            say("Tell me about Hearth.", "hearthPath"),
-            say("Tell me about Mirror Me.", "mirrorMePath"),
-            control("Which world door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    frontier: {
-      posture: "frontier",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["frontier", "audralia", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Frontier is the outward edge.",
-            "It is where the world starts pointing beyond its first rooms and toward discovery.",
-            "This is the part of the estate that admits the future has not been fully determined."
-          ],
-          options: [
-            say("Why does Frontier matter?", "frontierWhy"),
-            say("Where does Frontier lead?", "frontierLead"),
-            say("How does Audralia connect?", "audraliaPath"),
-            say("How do the Characters connect?", "charactersPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Frontier matters because a world that never reaches an edge never creates real discovery.",
-            "The edge tells the visitor that the estate is not only contained rooms. It has unknown distance.",
-            "That is where frontier science belongs: not as finished certainty, but as disciplined play with what reality might become."
-          ],
-          options: [
-            say("Where does Frontier lead?", "frontierLead"),
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("Tell me about the Characters.", "charactersPath"),
-            say("Bring me back toward the threshold.", "worldPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Frontier leads toward expansion and uncertainty.",
-            "It is the place where the estate begins asking what else may exist beyond the rooms already named.",
-            "That question is economic as well as narrative. New futures create new needs, new tools, new education, new markets, and new ways for people to imagine value."
-          ],
-          options: [
-            say("Tell me about Audralia.", "audraliaPath"),
-            say("Tell me about the Interactive Narrative.", "worldGatePath"),
-            say("Tell me about the Characters.", "charactersPath"),
-            control("Which world door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characters: {
-      posture: "characters",
-      phase: "personalize",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative", "mirrorland"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The Characters are where the world stops feeling empty.",
-            "They are not menu labels. They are the people who make pressure, consequence, choice, and story personal.",
-            "A future playground needs people inside it, because systems do not matter socially until someone has to live inside their consequences."
-          ],
-          options: [
-            say("Why do the characters matter?", "charactersWhy"),
-            say("Where do the characters lead?", "charactersLead"),
-            say("How do the characters relate?", "characterRelationshipsPath"),
-            say("What conflict do they carry?", "characterTensionsPath"),
-            say("Who should I meet first?", "characterFirstPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "They matter because scenery can only carry so much pressure.",
-            "Once a person carries the pressure, the world becomes accountable. Choices have consequence. Memory has a face. Survival has a cost.",
-            "That is why the Characters are part of the estate’s future logic. They let social consequence become visible."
-          ],
-          options: [
-            say("Where do they lead?", "charactersLead"),
-            say("How do they relate?", "characterRelationshipsPath"),
-            say("What motivates them?", "characterMotivesPath"),
-            say("Are there sides or factions?", "characterFactionsPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The Characters lead into relationships, motives, tensions, factions, and story pressure.",
-            "They also lead toward Mirror Me, because once the world has people inside it, the visitor can begin to feel what the world reflects back."
-          ],
-          options: [
-            say("How do the characters relate?", "characterRelationshipsPath"),
-            say("What motivates them?", "characterMotivesPath"),
-            say("What conflict do they carry?", "characterTensionsPath"),
-            say("What is Mirror Me?", "mirrorMePath"),
-            control("Which character door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characterRelationships: {
-      posture: "characters",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Character relationships are pressure lines.",
-            "One character can reveal what another refuses to face. One can carry the memory another tries to bury. One can become the consequence of a choice someone else made too late."
-          ],
-          options: [
-            say("Why do those relationships matter?", "characterRelationshipsWhy"),
-            say("Where do they lead?", "characterRelationshipsLead"),
-            say("What motivates them?", "characterMotivesPath"),
-            say("What conflict do they carry?", "characterTensionsPath"),
-            say("Are there sides or factions?", "characterFactionsPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "They matter because Mirrorland is not only a place. It is a pressure field.",
-            "Relationships show what the world costs. Alliance, warning, mirror, betrayal, memory, consequence, and unfinished crossing can all live between two characters.",
-            "That is how the future becomes social. Not through scenery, but through pressure between people."
-          ],
-          options: [
-            say("Where do those relationships lead?", "characterRelationshipsLead"),
-            say("Explain motives.", "characterMotivesPath"),
-            say("Explain conflict.", "characterTensionsPath"),
-            say("Explain factions.", "characterFactionsPath"),
-            say("Who should I meet first?", "characterFirstPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The relationships lead toward story pressure.",
-            "Once you understand who reflects whom, who owes whom, who fears whom, and who remembers what the others deny, the world begins to feel inhabited instead of arranged."
-          ],
-          options: [
-            say("Explain story pressure.", "characterStoryPressurePath"),
-            say("Explain motives.", "characterMotivesPath"),
-            say("Explain conflict.", "characterTensionsPath"),
-            say("Who should I meet first?", "characterFirstPath"),
-            control("Which character door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characterTensions: {
-      posture: "characters",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "The conflict is not only good against evil.",
-            "It is memory against denial, survival against consequence, voice against silence, and choice against the pressure that shaped it."
-          ],
-          options: [
-            say("Why does that conflict matter?", "characterTensionsWhy"),
-            say("Where does that conflict lead?", "characterTensionsLead"),
-            say("What motivates them?", "characterMotivesPath"),
-            say("How do they relate?", "characterRelationshipsPath"),
-            say("Are there sides or factions?", "characterFactionsPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "The conflict matters because it makes the world argue with itself.",
-            "A character may want repair while another protects denial. One may want survival while another demands consequence.",
-            "That pressure is where story begins, and it is also where future systems become morally visible."
-          ],
-          options: [
-            say("Where does that conflict lead?", "characterTensionsLead"),
-            say("Explain relationships.", "characterRelationshipsPath"),
-            say("Explain motives.", "characterMotivesPath"),
-            say("Explain story pressure.", "characterStoryPressurePath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "The conflict leads toward choice.",
-            "The question is not only who wins. The deeper question is whether a person can cross pressure, consequence, and memory without losing the self."
-          ],
-          options: [
-            say("Explain story pressure.", "characterStoryPressurePath"),
-            say("Explain Mirror Me.", "mirrorMePath"),
-            say("Who should I meet first?", "characterFirstPath"),
-            control("Which character door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characterMotives: {
-      posture: "characters",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Character motives should be read through pressure.",
-            "A character may want safety, recognition, escape, control, repair, truth, or a second chance."
-          ],
-          options: [
-            say("Why do motives matter?", "characterMotivesWhy"),
-            say("Where do motives lead?", "characterMotivesLead"),
-            say("How do relationships shape them?", "characterRelationshipsPath"),
-            say("What conflict do they create?", "characterTensionsPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Motives matter because biography is not enough.",
-            "What a character wants becomes meaningful only when the world refuses to make it easy.",
-            "Pressure reveals whether the motive becomes courage, denial, control, repair, or collapse."
-          ],
-          options: [
-            say("Where do those motives lead?", "characterMotivesLead"),
-            say("Explain relationships.", "characterRelationshipsPath"),
-            say("Explain conflict.", "characterTensionsPath"),
-            say("Explain factions.", "characterFactionsPath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Motives lead to movement.",
-            "Once you know what each character wants, you can see why they cross, refuse, betray, protect, hide, confess, return, or run."
-          ],
-          options: [
-            say("Explain relationships.", "characterRelationshipsPath"),
-            say("Explain conflict.", "characterTensionsPath"),
-            say("Explain story pressure.", "characterStoryPressurePath"),
-            say("Who should I meet first?", "characterFirstPath"),
-            control("Which character door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characterFactions: {
-      posture: "characters",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "There can be sides, but the important division is deeper than teams.",
-            "Some forces preserve memory. Some protect denial. Some chase survival. Some want control over the crossing itself."
-          ],
-          options: [
-            say("Why do factions matter?", "characterFactionsWhy"),
-            say("Where do factions lead?", "characterFactionsLead"),
-            say("How do relationships shape them?", "characterRelationshipsPath"),
-            say("What conflict do they create?", "characterTensionsPath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "Factions matter when they become pressure patterns.",
-            "A side is not just a group. It is a way of answering the world: remember it, deny it, survive it, control it, repair it, or cross it."
-          ],
-          options: [
-            say("Where do factions lead?", "characterFactionsLead"),
-            say("Explain relationships.", "characterRelationshipsPath"),
-            say("Explain motives.", "characterMotivesPath"),
-            say("Explain story pressure.", "characterStoryPressurePath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Factions lead toward alignment.",
-            "Once the visitor sees what each side protects, the conflict becomes more than plot. It becomes a map of what the world believes is worth saving."
-          ],
-          options: [
-            say("Explain story pressure.", "characterStoryPressurePath"),
-            say("Explain conflict.", "characterTensionsPath"),
-            say("Who should I meet first?", "characterFirstPath"),
-            control("Which character door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characterStoryPressure: {
-      posture: "characters",
-      phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Story pressure is what happens when the world makes a character pay for what they believe, avoid, remember, or choose.",
-            "A landscape can be beautiful and still empty. A character brings consequence."
-          ],
-          options: [
-            say("Why does story pressure matter?", "characterStoryPressureWhy"),
-            say("Where does story pressure lead?", "characterStoryPressureLead"),
-            say("How do relationships carry it?", "characterRelationshipsPath"),
-            say("How does Mirror Me connect?", "mirrorMePath")
-          ]
-        },
-        {
-          title: "why",
-          beats: [
-            "It matters because pressure is how the world becomes honest.",
-            "When a person carries the cost, the world can no longer hide behind scenery. The story has to answer for itself.",
-            "That is why Mirrorland can become more than fiction. It can become a controlled place to feel social, moral, and future pressure before the real future arrives."
-          ],
-          options: [
-            say("Where does that lead?", "characterStoryPressureLead"),
-            say("Explain relationships.", "characterRelationshipsPath"),
-            say("Explain conflict.", "characterTensionsPath"),
-            say("Explain Mirror Me.", "mirrorMePath")
-          ]
-        },
-        {
-          title: "lead",
-          beats: [
-            "Story pressure leads toward choice and reflection.",
-            "That is where the Characters path begins touching Mirror Me: the visitor starts seeing not only what the characters carry, but what kind of pressure the visitor recognizes."
-          ],
-          options: [
-            say("Tell me about Mirror Me.", "mirrorMePath"),
-            say("Tell me about character relationships.", "characterRelationshipsPath"),
-            say("Who should I meet first?", "characterFirstPath"),
-            control("Which character door fits this best?", "cleanDoor")
-          ]
-        }
-      ]
-    },
-
-    characterFirst: {
-      posture: "characters",
-      phase: "route",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      handoffs: ["characters", "interactiveNarrative"],
-      stages: [
-        {
-          title: "what",
-          beats: [
-            "Start with the character who best matches the pressure you want to understand.",
-            "If you want memory, follow the one who cannot forget. If you want consequence, follow the one who arrived too late. If you want survival, follow the one who keeps moving. If you want voice, follow the one who has not learned how to speak yet."
-          ],
-          options: [
-            say("I want memory.", "characterRelationshipsPath"),
-            say("I want consequence.", "characterTensionsPath"),
-            say("I want survival.", "characterMotivesPath"),
-            say("I want voice.", "underdogPath"),
-            say("I want the world gate first.", "worldGatePath")
-          ]
-        }
-      ]
-    }
-  };
-
-  var TARGETS = {
-    websitePath: { topic: "diamondGateBridge", level: 1 },
-    diamondGateBridgeWhy: { topic: "diamondGateBridge", level: 2 },
-    diamondGateBridgeLead: { topic: "diamondGateBridge", level: 3 },
-
-    compassPath: { topic: "compass", level: 1 },
-    compassWhy: { topic: "compass", level: 2 },
-    compassLead: { topic: "compass", level: 3 },
-
-    siteGuidePath: { topic: "siteGuide", level: 1 },
-    siteGuideWhy: { topic: "siteGuide", level: 2 },
-    siteGuideLead: { topic: "siteGuide", level: 3 },
-
-    proofPath: { topic: "proof", level: 1 },
-    skepticPlain: { topic: "proof", level: 1 },
-    proofWhy: { topic: "proof", level: 2 },
-    proofLead: { topic: "proof", level: 3 },
-
-    lawsPath: { topic: "laws", level: 1 },
-    lawsWhy: { topic: "laws", level: 2 },
-    lawsLead: { topic: "laws", level: 3 },
-
-    gaugesPath: { topic: "gauges", level: 1 },
-    gaugesWhy: { topic: "gauges", level: 2 },
-    gaugesLead: { topic: "gauges", level: 3 },
-
-    diagnosticPath: { topic: "diagnostic", level: 1 },
-    diagnosticWhy: { topic: "diagnostic", level: 2 },
-    diagnosticLead: { topic: "diagnostic", level: 3 },
-
-    futureProfilePath: { topic: "futureProfile", level: 1 },
-    futureProfileWhy: { topic: "futureProfile", level: 2 },
-    futureProfileLead: { topic: "futureProfile", level: 3 },
-
-    mirrorMePath: { topic: "mirrorMe", level: 1 },
-    mirrorMeWhy: { topic: "mirrorMe", level: 2 },
-    mirrorMeLead: { topic: "mirrorMe", level: 3 },
-
-    seanPath: { topic: "sean", level: 1 },
-    seanWhy: { topic: "sean", level: 2 },
-    seanLead: { topic: "sean", level: 3 },
-
-    underdogPath: { topic: "underdog", level: 1 },
-    underdogWhy: { topic: "underdog", level: 2 },
-    underdogLead: { topic: "underdog", level: 3 },
-    underdogPressureLanguage: { topic: "underdog", continuation: "underdogPressureLanguage" },
-    underdogComedy: { topic: "underdog", continuation: "underdogComedy" },
-
-    productsPath: { topic: "products", level: 1 },
-    productsWhy: { topic: "products", level: 2 },
-    productsLead: { topic: "products", level: 3 },
-
-    bookPath: { topic: "book", level: 1 },
-    bookWhy: { topic: "book", level: 2 },
-    bookLead: { topic: "book", level: 3 },
-
-    nineSummitsPath: { topic: "nineSummits", level: 1 },
-    nineSummitsWhy: { topic: "nineSummits", level: 2 },
-    nineSummitsLead: { topic: "nineSummits", level: 3 },
-
-    worldPath: { topic: "showroom", level: 1 },
-    showroomWhy: { topic: "showroom", level: 2 },
-    showroomLead: { topic: "showroom", level: 3 },
-
-    worldGatePath: { topic: "interactiveNarrative", level: 1 },
-    interactiveNarrativeWhy: { topic: "interactiveNarrative", level: 2 },
-    interactiveNarrativeLead: { topic: "interactiveNarrative", level: 3 },
-
-    hearthPath: { topic: "hearth", level: 1 },
-    hearthWhy: { topic: "hearth", level: 2 },
-    hearthLead: { topic: "hearth", level: 3 },
-
-    audraliaPath: { topic: "audralia", level: 1 },
-    audraliaWhy: { topic: "audralia", level: 2 },
-    audraliaLead: { topic: "audralia", level: 3 },
-
-    frontierPath: { topic: "frontier", level: 1 },
-    frontierWhy: { topic: "frontier", level: 2 },
-    frontierLead: { topic: "frontier", level: 3 },
-
-    charactersPath: { topic: "characters", level: 1 },
-    characterIdentityPath: { topic: "characters", level: 1 },
-    charactersWhy: { topic: "characters", level: 2 },
-    charactersLead: { topic: "characters", level: 3 },
-
-    characterRelationshipsPath: { topic: "characterRelationships", level: 1 },
-    characterRelationshipsWhy: { topic: "characterRelationships", level: 2 },
-    characterRelationshipsLead: { topic: "characterRelationships", level: 3 },
-
-    characterTensionsPath: { topic: "characterTensions", level: 1 },
-    characterTensionsWhy: { topic: "characterTensions", level: 2 },
-    characterTensionsLead: { topic: "characterTensions", level: 3 },
-
-    characterMotivesPath: { topic: "characterMotives", level: 1 },
-    characterMotivesWhy: { topic: "characterMotives", level: 2 },
-    characterMotivesLead: { topic: "characterMotives", level: 3 },
-
-    characterFactionsPath: { topic: "characterFactions", level: 1 },
-    characterFactionsWhy: { topic: "characterFactions", level: 2 },
-    characterFactionsLead: { topic: "characterFactions", level: 3 },
-
-    characterStoryPressurePath: { topic: "characterStoryPressure", level: 1 },
-    characterStoryPressureWhy: { topic: "characterStoryPressure", level: 2 },
-    characterStoryPressureLead: { topic: "characterStoryPressure", level: 3 },
-
-    characterFirstPath: { topic: "characterFirst", level: 1 }
-  };
-
-  var SPECIAL_NODES = {
-    intro: {
-      posture: "arrival",
-      phase: "receive",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "Hello. I’m Jeeves.",
-        "I help visitors find the right door inside Diamond Gate Bridge.",
-        "You do not need to understand the whole estate at once.",
-        "I can guide you through the public estate, take you toward the world side, or ask one question first."
-      ],
-      options: [
-        say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
-        say("Take me toward the world side.", "worldPath", { signal: "world" }),
-        say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
-        say("Just tell me where to start.", "compassPath", { signal: "lost" }),
-        say("Ask me one question first.", "askFirst", { signal: "question" })
-      ],
-      handoffs: []
-    },
-
-    askFirst: {
-      posture: "arrival",
-      phase: "invite",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "Then I’ll ask plainly.",
-        "What brought you here first: orientation, skepticism, self-reflection, practical use, or the future-facing world side?"
-      ],
-      options: [
-        say("Orientation.", "websitePath", { signal: "orientation" }),
-        say("Skepticism.", "skepticPlain", { signal: "skeptic" }),
-        say("Self-reflection.", "diagnosticPath", { signal: "self" }),
-        say("Practical use.", "productsPath", { signal: "practical" }),
-        say("The world side.", "worldPath", { signal: "world" })
-      ],
-      handoffs: []
-    },
-
-    returnFork: {
-      posture: "arrival",
-      phase: "return",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "Then we return to the clean fork.",
-        "Public estate, world side, proof, self-reflection, or practical use?"
-      ],
-      options: [
-        say("Public estate.", "websitePath", { signal: "orientation" }),
-        say("World side.", "worldPath", { signal: "world" }),
-        say("Proof.", "proofPath", { signal: "skeptic" }),
-        say("Self-reflection.", "diagnosticPath", { signal: "self" }),
-        say("Practical use.", "productsPath", { signal: "practical" })
-      ],
-      handoffs: []
-    },
-
-    restartFork: {
-      reset: true,
-      posture: "arrival",
-      phase: "reset",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "Clean reset.",
-        "You are back at the doorway."
-      ],
-      options: [
-        say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
-        say("Take me toward the world side.", "worldPath", { signal: "world" }),
-        say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
-        say("Ask me one question first.", "askFirst", { signal: "question" })
-      ],
-      handoffs: []
-    },
-
-    recenterNode: {
-      posture: "orientation",
-      phase: "return",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "I may have taken you too deep too quickly.",
-        "Let me bring this back to one clear doorway."
-      ],
-      options: [
-        say("I need orientation.", "compassPath", { signal: "orientation" }),
-        say("I want proof.", "proofPath", { signal: "skeptic" }),
-        say("I want the Diagnostic.", "diagnosticPath", { signal: "self" }),
-        say("I want the world side.", "worldPath", { signal: "world" }),
-        back("I need the clean fork again.", "returnFork")
-      ],
-      handoffs: ["compass", "laws", "coherenceDiagnostic", "interactiveNarrative"]
-    },
-
-    cleanDoor: {
-      dynamic: true
-    }
-  };
+  function route(id) {
+    return getHandoff(id);
+  }
 
   function query(selector, scope) {
     return (scope || document).querySelector(selector);
@@ -1844,6 +721,17 @@
     );
   }
 
+  function isHearthContext() {
+    var text = [
+      state.currentNode,
+      state.currentTopic,
+      state.currentPosture,
+      state.visitor.lastChoiceLabel
+    ].join(" ").toLowerCase();
+
+    return text.indexOf("hearth") !== -1 || text.indexOf("construct") !== -1;
+  }
+
   function sanitizePublicText(text) {
     var clean = String(text || "");
 
@@ -1851,7 +739,13 @@
       clean = clean.replace(rule.pattern, rule.replacement);
     });
 
-    return clean;
+    if (!isHearthContext()) {
+      clean = clean.replace(/\bconstruct\b/gi, "work");
+      clean = clean.replace(/\bengine\b/gi, "system");
+    }
+
+    clean = clean.replace(/\s{2,}/g, " ");
+    return clean.trim();
   }
 
   function sanitizeConversationLabel(label, target) {
@@ -1862,7 +756,7 @@
       return SPEECH_LABEL_FALLBACKS[target] || "Tell me more about this.";
     }
 
-    return clean;
+    return sanitizePublicText(clean);
   }
 
   function readConfig() {
@@ -1948,6 +842,10 @@
     state.visitor.progressCount = 0;
     state.visitor.needsRecenter = false;
     state.visitor.trail = [];
+    state.visitor.characterMirrorAnswers = [];
+    state.visitor.lastBrainIntent = "";
+    state.visitor.lastBrainCanonStatus = "";
+    state.visitor.lastBrainConclusiveState = "";
   }
 
   function inferItchFromChoice(choice, topic) {
@@ -1957,17 +855,39 @@
     if (choice.signal === "world") return "trying to cross into the future-facing world side";
     if (choice.signal === "practical") return "looking for something usable";
     if (choice.signal === "lost") return "trying to get re-centered";
+    if (choice.signal === "mirror") return "trying to learn about yourself through a character mirror";
+    if (topic === "characterMirror") return "trying to learn which pressure pattern you currently resemble";
     if (topic === "characters" || topic.indexOf("character") === 0) return "trying to understand who carries the world’s pressure";
+    if (topic === "scientificLaw") return "trying to test a claim before trusting it";
+    if (topic === "frontier") return "trying to understand how future systems are tested";
+    if (topic === "hearth") return "trying to understand where world-formation becomes operational";
     if (topic === "underdog") return "trying to understand the underdog voice in the visitor";
     if (topic === "book" || topic === "nineSummits") return "trying to understand the larger development path";
-    if (topic === "frontier" || topic === "audralia") return "trying to understand how the world widens into the future";
     return "choosing the next door";
+  }
+
+  function updateMirrorAnswers(choice) {
+    if (!choice || !choice.label) return;
+
+    if (
+      state.currentNode === "characterMirrorQuestionOne" ||
+      state.currentNode === "characterMirrorQuestionTwo" ||
+      state.currentNode === "characterMirrorQuestionThree"
+    ) {
+      state.visitor.characterMirrorAnswers.push(choice.label);
+
+      while (state.visitor.characterMirrorAnswers.length > 8) {
+        state.visitor.characterMirrorAnswers.shift();
+      }
+    }
   }
 
   function updateVisitor(choice, node) {
     var topic = node.topic || "arrival";
     var sameTopic = state.visitor.lastTopic === topic;
     var scopeChanged = state.visitor.lastScopeLane !== node.scopeLane;
+
+    updateMirrorAnswers(choice);
 
     if (sameTopic) {
       state.visitor.progressCount += 1;
@@ -2007,292 +927,25 @@
     }
   }
 
-  function getTopicStage(topicId, level) {
-    var topic = TOPICS[topicId];
-    var stageIndex;
+  function setDocumentState() {
+    var state256 = getState256();
 
-    if (!topic) return null;
+    document.documentElement.dataset.jeevesEngineContract = CONTRACT;
+    document.documentElement.dataset.jeevesRuntimeReady = "true";
+    document.documentElement.dataset.jeevesPairedBrain = "true";
+    document.documentElement.dataset.jeevesBackBrainEndpoint = state.brain.endpoint;
+    document.documentElement.dataset.jeevesState = state256.label;
+    document.documentElement.dataset.jeevesPosture = state.currentPosture;
+    document.documentElement.dataset.jeevesPhase = state.currentPhase;
+    document.documentElement.dataset.jeevesTopic = state.currentTopic;
+    document.documentElement.dataset.jeevesScopeLane = state.currentScopeLane;
+    document.documentElement.dataset.jeevesVoiceMode = state.currentVoiceMode;
+    document.documentElement.dataset.jeevesCharacterMirror = "active";
+    document.documentElement.dataset.jeevesFinalRouteAuthority = "front-end";
 
-    stageIndex = clamp((level || 1) - 1, 0, topic.stages.length - 1);
-    return topic.stages[stageIndex] || null;
-  }
-
-  function makeTopicNode(nodeId, info) {
-    var topic = TOPICS[info.topic];
-    var stage;
-    var level;
-    var continuationText;
-
-    if (!topic) return SPECIAL_NODES.intro;
-
-    if (info.continuation && topic.continuations && topic.continuations[info.continuation]) {
-      continuationText = topic.continuations[info.continuation];
-      level = 3;
-      stage = {
-        title: "continuation",
-        beats: continuationText,
-        options: [
-          say("Take that deeper.", topicIdToLeadTarget(info.topic)),
-          say("Show me where it connects.", topicIdToWhyTarget(info.topic)),
-          control("Which door fits this best?", "cleanDoor"),
-          back("I need the clean fork again.", "returnFork")
-        ]
-      };
-    } else {
-      level = clamp(info.level || 1, 1, MAX_TOPIC_DEPTH);
-      stage = getTopicStage(info.topic, level);
+    if (els.status) {
+      els.status.setAttribute("data-jeeves-state", state256.label);
     }
-
-    state.topicDepth[info.topic] = Math.max(state.topicDepth[info.topic] || 0, level);
-
-    return {
-      node: nodeId,
-      topic: info.topic,
-      posture: topic.posture,
-      phase: level >= 3 ? "continue" : topic.phase,
-      scopeLane: topic.scopeLane,
-      voiceMode: topic.voiceMode,
-      depth: level,
-      beats: (stage && stage.beats ? stage.beats : []).slice(),
-      options: buildContinuationOptions(info.topic, level, stage),
-      handoffs: (topic.handoffs || []).slice()
-    };
-  }
-
-  function topicIdToWhyTarget(topicId) {
-    var map = {
-      diamondGateBridge: "diamondGateBridgeWhy",
-      compass: "compassWhy",
-      siteGuide: "siteGuideWhy",
-      proof: "proofWhy",
-      laws: "lawsWhy",
-      gauges: "gaugesWhy",
-      diagnostic: "diagnosticWhy",
-      futureProfile: "futureProfileWhy",
-      mirrorMe: "mirrorMeWhy",
-      sean: "seanWhy",
-      underdog: "underdogWhy",
-      products: "productsWhy",
-      book: "bookWhy",
-      nineSummits: "nineSummitsWhy",
-      showroom: "showroomWhy",
-      interactiveNarrative: "interactiveNarrativeWhy",
-      hearth: "hearthWhy",
-      audralia: "audraliaWhy",
-      frontier: "frontierWhy",
-      characters: "charactersWhy",
-      characterRelationships: "characterRelationshipsWhy",
-      characterTensions: "characterTensionsWhy",
-      characterMotives: "characterMotivesWhy",
-      characterFactions: "characterFactionsWhy",
-      characterStoryPressure: "characterStoryPressureWhy"
-    };
-
-    return map[topicId] || "cleanDoor";
-  }
-
-  function topicIdToLeadTarget(topicId) {
-    var map = {
-      diamondGateBridge: "diamondGateBridgeLead",
-      compass: "compassLead",
-      siteGuide: "siteGuideLead",
-      proof: "proofLead",
-      laws: "lawsLead",
-      gauges: "gaugesLead",
-      diagnostic: "diagnosticLead",
-      futureProfile: "futureProfileLead",
-      mirrorMe: "mirrorMeLead",
-      sean: "seanLead",
-      underdog: "underdogLead",
-      products: "productsLead",
-      book: "bookLead",
-      nineSummits: "nineSummitsLead",
-      showroom: "showroomLead",
-      interactiveNarrative: "interactiveNarrativeLead",
-      hearth: "hearthLead",
-      audralia: "audraliaLead",
-      frontier: "frontierLead",
-      characters: "charactersLead",
-      characterRelationships: "characterRelationshipsLead",
-      characterTensions: "characterTensionsLead",
-      characterMotives: "characterMotivesLead",
-      characterFactions: "characterFactionsLead",
-      characterStoryPressure: "characterStoryPressureLead"
-    };
-
-    return map[topicId] || "cleanDoor";
-  }
-
-  function buildContinuationOptions(topicId, level, stage) {
-    var options = stage && stage.options ? stage.options.slice() : [];
-
-    if (level === 1) {
-      if (!hasTarget(options, topicIdToWhyTarget(topicId))) {
-        options.push(say("Why does this matter?", topicIdToWhyTarget(topicId)));
-      }
-      if (!hasTarget(options, topicIdToLeadTarget(topicId))) {
-        options.push(say("Where does this lead?", topicIdToLeadTarget(topicId)));
-      }
-    }
-
-    if (level === 2 && !hasTarget(options, topicIdToLeadTarget(topicId))) {
-      options.push(say("Where does this lead?", topicIdToLeadTarget(topicId)));
-    }
-
-    if (level >= 2 && !hasTarget(options, "cleanDoor")) {
-      options.push(control("Which door fits this best?", "cleanDoor"));
-    }
-
-    if (state.visitor.needsRecenter && !hasTarget(options, "recenterNode")) {
-      options.push(control("Re-center me.", "recenterNode"));
-    }
-
-    if (!hasTarget(options, "returnFork") && level >= 3) {
-      options.push(back("I need the clean fork again.", "returnFork"));
-    }
-
-    return dedupeOptions(options).slice(0, 6);
-  }
-
-  function hasTarget(options, target) {
-    return (options || []).some(function someOption(item) {
-      return item && item.target === target;
-    });
-  }
-
-  function dedupeOptions(options) {
-    var seen = {};
-    var clean = [];
-
-    (options || []).forEach(function eachOption(item) {
-      var key;
-
-      if (!item || !item.label || !item.target) return;
-
-      key = item.label + "::" + item.target;
-      if (seen[key]) return;
-
-      seen[key] = true;
-      clean.push(item);
-    });
-
-    return clean;
-  }
-
-  function buildCleanDoorNode() {
-    var topic = state.currentTopic;
-    var current = TOPICS[topic];
-    var scope = state.currentScopeLane;
-    var beats = [];
-    var options = [];
-    var handoffs = [];
-
-    if (!current) {
-      return SPECIAL_NODES.recenterNode;
-    }
-
-    beats.push("The cleanest next door depends on why you are still here.");
-    beats.push("Right now, you seem to be " + state.visitor.lastItch + ".");
-
-    if (topic.indexOf("character") === 0 || topic === "characters") {
-      beats.push("Stay with the Characters if you want pressure to become personal. Move to the Interactive Narrative if you want the world path around them.");
-      options = [
-        say("Keep explaining the characters.", "charactersLead"),
-        say("Explain their relationships.", "characterRelationshipsPath"),
-        say("Explain their conflict.", "characterTensionsPath"),
-        say("Tell me about Mirror Me.", "mirrorMePath"),
-        back("I need the clean fork again.", "returnFork")
-      ];
-      handoffs = ["characters", "interactiveNarrative"];
-    } else if (scope === SCOPE_NARRATIVE) {
-      beats.push("Stay on the world side if you want threshold, rooms, people, future science, and traversal. Return to the public side if you want proof or orientation first.");
-      options = [
-        say("Tell me about the Interactive Narrative.", "worldGatePath"),
-        say("Tell me about Hearth.", "hearthPath"),
-        say("Tell me about Audralia.", "audraliaPath"),
-        say("Who are the characters?", "charactersPath"),
-        back("I need the public fork again.", "returnFork")
-      ];
-      handoffs = ["interactiveNarrative", "hearth", "audralia", "characters"];
-    } else if (topic === "proof" || topic === "laws" || topic === "gauges") {
-      beats.push("Stay with proof if you want the estate tested before you trust it.");
-      options = [
-        say("Explain the Laws.", "lawsPath"),
-        say("Explain Gauges.", "gaugesPath"),
-        say("Explain the Diagnostic.", "diagnosticPath"),
-        say("Tell me about Sean.", "seanPath"),
-        back("I need the clean fork again.", "returnFork")
-      ];
-      handoffs = ["laws", "gauges", "coherenceDiagnostic"];
-    } else if (topic === "diagnostic" || topic === "futureProfile" || topic === "mirrorMe") {
-      beats.push("Stay with the mirror path if you want pressure, choice, and self-recognition to become visible.");
-      options = [
-        say("Tell me about the Diagnostic.", "diagnosticPath"),
-        say("Tell me about Future Profile.", "futureProfilePath"),
-        say("Tell me about Mirror Me.", "mirrorMePath"),
-        say("Tell me about This Underdog.", "underdogPath"),
-        back("I need the clean fork again.", "returnFork")
-      ];
-      handoffs = ["coherenceDiagnostic", "interactiveNarrative"];
-    } else {
-      beats.push("Stay public if you need orientation, proof, usefulness, or the designer behind the estate. Cross the threshold if you want Mirrorland.");
-      options = [
-        say("I need orientation.", "compassPath"),
-        say("I want proof.", "proofPath"),
-        say("I want self-reflection.", "diagnosticPath"),
-        say("I want the world side.", "worldPath"),
-        back("I need the clean fork again.", "returnFork")
-      ];
-      handoffs = ["compass", "siteGuide", "laws", "coherenceDiagnostic"];
-    }
-
-    return {
-      node: "cleanDoor",
-      topic: topic,
-      posture: scope === SCOPE_NARRATIVE ? "world" : "orientation",
-      phase: "route",
-      scopeLane: scope,
-      voiceMode: scope === SCOPE_NARRATIVE ? MODE_THRESHOLD : MODE_OBJECTIVE,
-      depth: 3,
-      beats: beats,
-      options: options,
-      handoffs: handoffs
-    };
-  }
-
-  function getNode(nodeId, choice) {
-    var id = normalizeNode(nodeId);
-    var special = SPECIAL_NODES[id];
-    var info = TARGETS[id];
-
-    if (special && special.reset) {
-      resetState();
-    }
-
-    if (id === "cleanDoor") {
-      return buildCleanDoorNode();
-    }
-
-    if (special) {
-      return {
-        node: id,
-        topic: id,
-        posture: special.posture || "arrival",
-        phase: special.phase || "receive",
-        scopeLane: special.scopeLane || SCOPE_OBJECTIVE,
-        voiceMode: special.voiceMode || MODE_OBJECTIVE,
-        depth: 0,
-        beats: (special.beats || []).slice(),
-        options: (special.options || []).slice(),
-        handoffs: (special.handoffs || []).slice()
-      };
-    }
-
-    if (info) {
-      return makeTopicNode(id, info, choice);
-    }
-
-    return getNode("intro", choice);
   }
 
   function updateCurrentState(nodeId, node, choice) {
@@ -2308,6 +961,7 @@
     state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
 
     updateVisitor(choice, node);
+    setDocumentState();
 
     state.history.push({
       node: state.currentNode,
@@ -2324,6 +978,15 @@
     while (state.history.length > MAX_HISTORY) {
       state.history.shift();
     }
+  }
+
+  function getState256() {
+    return {
+      posture: state.currentPosture,
+      phase: state.currentPhase,
+      index: state.stateIndex,
+      label: "ST-" + String(state.stateIndex + 1).padStart(3, "0") + "-OF-256"
+    };
   }
 
   function collectElements() {
@@ -2421,6 +1084,10 @@
       message.setAttribute("data-message-emphasis", "true");
     }
 
+    if (settings && settings.source) {
+      message.setAttribute("data-message-source", settings.source);
+    }
+
     if (name) {
       if (origin === "visitor") {
         name.textContent = "Visitor";
@@ -2446,12 +1113,14 @@
   function makeOptionButton(item) {
     var button = cloneTemplate(els.optionTemplate, "button");
     var label = query("span", button);
-    var cleanLabel = sanitizeConversationLabel(item.label, item.target);
+    var target = normalizeTarget(item.target);
+    var cleanLabel = sanitizeConversationLabel(item.label, target);
 
     button.classList.add("jeeves-option");
     button.setAttribute("type", "button");
     button.setAttribute("data-option-type", item.type || "conversation");
-    button.setAttribute("data-option-target", item.target || "");
+    button.setAttribute("data-option-target", target || "");
+    button.setAttribute("data-option-scope-lane", item.scopeLane || (isNarrativeTarget(target) ? SCOPE_NARRATIVE : SCOPE_OBJECTIVE));
 
     if (label) {
       label.textContent = cleanLabel;
@@ -2462,7 +1131,7 @@
     button.addEventListener("click", function onOptionClick() {
       handleOption({
         label: cleanLabel,
-        target: item.target,
+        target: target,
         type: item.type || "conversation",
         signal: item.signal || "",
         scopeLane: item.scopeLane || null
@@ -2491,12 +1160,37 @@
     return link;
   }
 
+  function normalizeTarget(target) {
+    var value = String(target || "").trim();
+    if (APPROVED_TARGETS.indexOf(value) === -1) return "recenterNode";
+    return value;
+  }
+
+  function normalizeRouteId(id) {
+    var value = String(id || "").trim();
+    if (APPROVED_ROUTE_IDS.indexOf(value) === -1) return "";
+    return value;
+  }
+
   function renderOptions(options) {
+    var clean = dedupeOptions(options || []).filter(function filterOption(item) {
+      return item && item.label && item.target;
+    });
+
+    if (!clean.length) {
+      clean = [
+        control("Ask me a sharper question.", "sharpQuestion"),
+        control("Switch topics.", "switchTopics"),
+        control("Re-center me.", "recenterNode"),
+        control("Choose the next door.", "cleanDoor")
+      ];
+    }
+
     clearElement(els.promptGrid);
 
     if (!els.promptGrid) return;
 
-    (options || []).forEach(function eachOption(item) {
+    clean.slice(0, 8).forEach(function eachOption(item) {
       els.promptGrid.appendChild(makeOptionButton(item));
     });
   }
@@ -2507,7 +1201,8 @@
     clearElement(els.handoffGrid);
 
     (ids || []).forEach(function eachId(id) {
-      var item = typeof id === "string" ? getHandoff(id) : id;
+      var routeId = typeof id === "string" ? normalizeRouteId(id) : normalizeRouteId(id.id);
+      var item = routeId ? getHandoff(routeId) : null;
 
       if (item && item.href && item.href !== "#") {
         handoffs.push(item);
@@ -2523,9 +1218,28 @@
 
     els.handoffDock.setAttribute("data-handoff-visible", "true");
 
-    handoffs.forEach(function eachHandoff(item) {
+    handoffs.slice(0, 6).forEach(function eachHandoff(item) {
       els.handoffGrid.appendChild(makeRouteLink(item));
     });
+  }
+
+  function dedupeOptions(options) {
+    var seen = {};
+    var clean = [];
+
+    (options || []).forEach(function eachOption(item) {
+      var key;
+
+      if (!item || !item.label || !item.target) return;
+
+      key = item.label + "::" + item.target;
+      if (seen[key]) return;
+
+      seen[key] = true;
+      clean.push(item);
+    });
+
+    return clean;
   }
 
   function clearTapAdvance() {
@@ -2573,7 +1287,7 @@
     });
   }
 
-  async function playBeats(beats, token) {
+  async function playBeats(beats, token, source) {
     var i;
     var beat;
 
@@ -2593,8 +1307,10 @@
         emphasis: i === 0 && (
           state.currentPosture === "arrival" ||
           state.currentPosture === "skeptic" ||
-          state.currentPosture === "characters"
-        )
+          state.currentPosture === "characters" ||
+          state.currentPosture === "diagnostic"
+        ),
+        source: source || "local"
       });
 
       await waitSkippable(getReadDelay(beat), "reading");
@@ -2607,84 +1323,1233 @@
     return token === state.runToken;
   }
 
-  async function requestJeevesBrain(payload) {
-    state.backendBridge.lastRequest = safeClone(payload);
-    state.backendBridge.lastStatus = "dormant";
-
+  function makeNode(node, topic, posture, phase, scopeLane, voiceMode, depth, beats, options, handoffs) {
     return {
-      enabled: false,
-      status: "dormant",
-      bubbles: [],
-      options: [],
-      handoffs: [],
-      reason: "Backend brain endpoint is assigned but not connected in this front-end pass."
+      node: node,
+      topic: topic || node,
+      posture: posture || "orientation",
+      phase: phase || "ground",
+      scopeLane: scopeLane || SCOPE_OBJECTIVE,
+      voiceMode: voiceMode || MODE_OBJECTIVE,
+      depth: depth || 0,
+      beats: (beats || []).slice(),
+      options: (options || []).slice(),
+      handoffs: (handoffs || []).slice(),
+      source: "local"
     };
   }
 
-  async function maybeUseGenerativeResponse(_node, _choice) {
-    return null;
+  function conclusiveOptions() {
+    return [
+      control("Ask me a sharper question.", "sharpQuestion"),
+      control("Switch topics.", "switchTopics"),
+      control("Choose the next door.", "cleanDoor"),
+      back("I need the clean fork again.", "returnFork")
+    ];
   }
 
-  async function runNode(nodeId, settings) {
-    var token;
-    var node;
-    var choice;
-    var completed;
-    var generated;
+  function getNode(nodeId, choice) {
+    var id = normalizeNode(nodeId);
+    var character;
+    var frontierKey;
 
-    if (state.busy) return;
-
-    state.busy = true;
-    state.runToken += 1;
-    token = state.runToken;
-
-    choice = settings && settings.choice ? settings.choice : null;
-    node = getNode(nodeId, choice);
-
-    updateCurrentState(nodeId, node, choice);
-    hideOptions();
-
-    generated = await maybeUseGenerativeResponse(node, choice);
-
-    if (generated && generated.bubbles && generated.bubbles.length) {
-      node.beats = generated.bubbles;
-      if (generated.options) node.options = generated.options;
-      if (generated.handoffs) node.handoffs = generated.handoffs;
+    if (id === "restartFork") {
+      resetState();
+      return getNode("intro", choice);
     }
 
-    await waitFixed(settings && settings.fast ? PACING.firstMessageDelayMs : 420);
+    if (id === "intro") return makeIntroNode();
+    if (id === "askFirst") return makeAskFirstNode();
+    if (id === "returnFork") return makeReturnForkNode();
+    if (id === "recenterNode" || id === "loopRecovery") return makeRecenterNode();
+    if (id === "switchTopics") return makeSwitchTopicsNode();
+    if (id === "sharpQuestion") return makeSharpQuestionNode();
+    if (id === "cleanDoor") return makeCleanDoorNode();
 
-    if (token !== state.runToken) {
-      state.busy = false;
-      clearTapAdvance();
-      return;
+    if (id === "websitePath") return makeWebsiteNode();
+    if (id === "compassPath" || id === "whereToStart") return makeCompassNode();
+    if (id === "siteGuidePath") return makeSiteGuideNode();
+    if (id === "proofPath" || id === "skepticPlain" || id === "lawsPath") return makeProofNode();
+    if (id === "gaugesPath") return makeGaugesNode();
+    if (id === "diagnosticPath" || id === "futureProfilePath") return makeDiagnosticNode();
+    if (id === "seanPath") return makeSeanNode();
+    if (id === "underdogPath") return makeUnderdogNode();
+    if (id === "productsPath") return makeProductsNode();
+    if (id === "bookPath" || id === "nineSummitsPath") return makeBookNode();
+    if (id === "worldPath" || id === "worldGatePath" || id === "mirrorland" || id === "mirrorMePath") return makeWorldNode();
+    if (id === "hearthPath" || id === "hearthFacilityPath" || id === "hearthConstructPath" || id === "hearthFrontierPath" || id === "hearthLawPath") return makeHearthNode(id);
+    if (id === "audraliaPath") return makeAudraliaNode();
+    if (id === "scientificLawPath" || id.indexOf("scientificLaw") === 0) return makeScientificLawNode(id);
+    if (id === "frontierPath" || id === "frontierSystemsPath" || id === "frontierLawPath" || id === "frontierCharactersPath" || id.indexOf("frontier") === 0) {
+      frontierKey = targetToFrontierKey(id);
+      return makeFrontierNode(id, frontierKey);
     }
 
-    completed = await playBeats(node.beats || [], token);
+    character = targetToCharacter(id);
+    if (character) return makeCharacterNode(character);
 
-    if (!completed || token !== state.runToken) {
-      state.busy = false;
-      clearTapAdvance();
-      return;
+    if (
+      id === "charactersPath" ||
+      id === "characterIdentityPath" ||
+      id === "characterRelationshipsPath" ||
+      id === "characterTensionsPath" ||
+      id === "characterMotivesPath" ||
+      id === "characterFactionsPath" ||
+      id === "characterStoryPressurePath" ||
+      id === "characterFirstPath"
+    ) {
+      return makeCharactersNode(id);
     }
 
-    renderOptions(node.options || []);
-    renderHandoffs(node.handoffs || []);
+    if (
+      id === "characterMirrorPath" ||
+      id === "selfLearningPath" ||
+      id === "characterMirrorQuestionOne" ||
+      id === "characterMirrorQuestionTwo" ||
+      id === "characterMirrorQuestionThree" ||
+      id === "characterMirrorResult"
+    ) {
+      return makeCharacterMirrorNode(id);
+    }
 
-    state.busy = false;
-    clearTapAdvance();
-    scrollThread();
+    return makeRecenterNode();
   }
 
-  function handleOption(item) {
-    if (!item || !item.target || state.busy) return;
+  function makeIntroNode() {
+    return makeNode(
+      "intro",
+      "arrival",
+      "arrival",
+      "receive",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      0,
+      [
+        "Hello. I’m Jeeves.",
+        "I help visitors find the right door inside Diamond Gate Bridge.",
+        "You do not need to understand the whole estate at once.",
+        "I can guide you through the public estate, take you toward the world side, or help you begin with a mirror."
+      ],
+      [
+        say("Guide me through the public estate.", "websitePath", { signal: "orientation" }),
+        say("Take me toward the world side.", "worldPath", { signal: "world" }),
+        say("I’m skeptical. Explain it plainly.", "skepticPlain", { signal: "skeptic" }),
+        say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
+        say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
+        say("Ask me one question first.", "askFirst", { signal: "question" })
+      ],
+      []
+    );
+  }
 
-    addMessage("visitor", item.label);
-    runNode(item.target, { choice: item });
+  function makeAskFirstNode() {
+    return makeNode(
+      "askFirst",
+      "arrival",
+      "arrival",
+      "invite",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "Then I’ll ask plainly.",
+        "What brought you here first: orientation, skepticism, self-reflection, practical use, the world side, or the character mirror?"
+      ],
+      [
+        say("Orientation.", "websitePath", { signal: "orientation" }),
+        say("Skepticism.", "skepticPlain", { signal: "skeptic" }),
+        say("Self-reflection.", "diagnosticPath", { signal: "self" }),
+        say("Practical use.", "productsPath", { signal: "practical" }),
+        say("The world side.", "worldPath", { signal: "world" }),
+        say("The character mirror.", "characterMirrorPath", { signal: "mirror" })
+      ],
+      []
+    );
+  }
+
+  function makeReturnForkNode() {
+    return makeNode(
+      "returnFork",
+      "arrival",
+      "arrival",
+      "return",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      0,
+      [
+        "Then we return to the clean fork.",
+        "Public estate, proof, Diagnostic, world side, practical wing, or character mirror?"
+      ],
+      [
+        say("Public estate.", "websitePath", { signal: "orientation" }),
+        say("Proof.", "proofPath", { signal: "skeptic" }),
+        say("Diagnostic.", "diagnosticPath", { signal: "self" }),
+        say("World side.", "worldPath", { signal: "world" }),
+        say("Practical wing.", "productsPath", { signal: "practical" }),
+        say("Character mirror.", "characterMirrorPath", { signal: "mirror" })
+      ],
+      []
+    );
+  }
+
+  function makeRecenterNode() {
+    return makeNode(
+      "recenterNode",
+      "recenter",
+      "orientation",
+      "return",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      0,
+      [
+        "I may have taken you too deep too quickly.",
+        "Let me bring this back to one clear doorway.",
+        "Choose the kind of pressure you want to follow."
+      ],
+      [
+        say("I need orientation.", "compassPath", { signal: "orientation" }),
+        say("I want proof.", "proofPath", { signal: "skeptic" }),
+        say("I want the Diagnostic.", "diagnosticPath", { signal: "self" }),
+        say("I want the world side.", "worldPath", { signal: "world" }),
+        say("I want the character mirror.", "characterMirrorPath", { signal: "mirror" }),
+        back("I need the clean fork again.", "returnFork")
+      ],
+      ["compass", "laws", "coherenceDiagnostic", "interactiveNarrative"]
+    );
+  }
+
+  function makeSwitchTopicsNode() {
+    return makeNode(
+      "switchTopics",
+      "switchTopics",
+      "orientation",
+      "fork",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      0,
+      [
+        "Then switch chambers.",
+        "Do not stay in a loop. Choose a new pressure: proof, self-reflection, characters, Frontier, Hearth, or the world side."
+      ],
+      [
+        say("Proof.", "scientificLawPath"),
+        say("Self-reflection.", "diagnosticPath"),
+        say("Characters.", "charactersPath"),
+        say("Character mirror.", "characterMirrorPath"),
+        say("Frontier.", "frontierPath"),
+        say("Hearth.", "hearthPath")
+      ],
+      []
+    );
+  }
+
+  function makeSharpQuestionNode() {
+    var topic = state.currentTopic;
+
+    if (topic === "characterMirror") {
+      return makeNode(
+        "sharpQuestion",
+        "characterMirror",
+        "diagnostic",
+        "clarify",
+        SCOPE_OBJECTIVE,
+        MODE_CHARACTER_MIRROR,
+        1,
+        [
+          "Then I’ll ask sharply.",
+          "Are you trying to find the character you resemble under pressure, the pattern you overuse, or the room that can teach you next?"
+        ],
+        [
+          say("Character resemblance.", "characterMirrorQuestionOne", { signal: "mirror" }),
+          say("Pattern I overuse.", "diagnosticPath", { signal: "self" }),
+          say("Room that teaches me next.", "cleanDoor", { signal: "route" }),
+          say("Show all characters first.", "charactersPath")
+        ],
+        ["coherenceDiagnostic", "characters"]
+      );
+    }
+
+    if (topic === "scientificLaw" || topic === "proof") {
+      return makeNode(
+        "sharpQuestion",
+        "scientificLaw",
+        "proof",
+        "clarify",
+        SCOPE_OBJECTIVE,
+        MODE_OBJECTIVE,
+        1,
+        [
+          "Then I’ll ask sharply.",
+          "Are you testing theory, evidence, measurement, limits, or whether the claim is mature enough to trust?"
+        ],
+        [
+          say("Theory.", "scientificLawTheoryPath"),
+          say("Evidence.", "scientificLawEvidencePath"),
+          say("Measure.", "scientificLawMeasurePath"),
+          say("Limits.", "scientificLawLimitsPath"),
+          say("Claim maturity.", "scientificLawLadderPath")
+        ],
+        ["scientificLaw"]
+      );
+    }
+
+    if (topic === "frontier") {
+      return makeNode(
+        "sharpQuestion",
+        "frontier",
+        "frontier",
+        "clarify",
+        SCOPE_NARRATIVE,
+        MODE_THRESHOLD,
+        1,
+        [
+          "Then I’ll ask sharply.",
+          "Are you trying to understand Frontier as a whole, one system inside it, its engineering lens, or why it matters to Audralia?"
+        ],
+        [
+          say("Frontier as a whole.", "frontierPath"),
+          say("One system.", "frontierSystemsPath"),
+          say("Scientific Law connection.", "frontierLawPath"),
+          say("Character connection.", "frontierCharactersPath")
+        ],
+        ["frontier"]
+      );
+    }
+
+    if (topic === "hearth") {
+      return makeNode(
+        "sharpQuestion",
+        "hearth",
+        "hearth",
+        "clarify",
+        SCOPE_NARRATIVE,
+        MODE_THRESHOLD,
+        1,
+        [
+          "Then I’ll ask sharply.",
+          "Are you trying to understand Hearth as a facility, as a planetary construct engine, as a bridge to Frontier, or as a bridge to Scientific Law?"
+        ],
+        [
+          say("Facility.", "hearthFacilityPath"),
+          say("Planetary construct engine.", "hearthConstructPath"),
+          say("Bridge to Frontier.", "hearthFrontierPath"),
+          say("Bridge to Scientific Law.", "hearthLawPath")
+        ],
+        ["hearth"]
+      );
+    }
+
+    return makeNode(
+      "sharpQuestion",
+      "orientation",
+      "orientation",
+      "clarify",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "Then I’ll ask sharply.",
+        "Are you trying to understand the estate as proof, as personal reflection, as future-building, as a living world, or as a character mirror?"
+      ],
+      [
+        say("Proof.", "scientificLawPath"),
+        say("Personal reflection.", "diagnosticPath"),
+        say("Future-building.", "frontierPath"),
+        say("Living world.", "worldPath"),
+        say("Character mirror.", "characterMirrorPath")
+      ],
+      []
+    );
+  }
+
+  function makeCleanDoorNode() {
+    var topic = state.currentTopic;
+    var handoffs = ["compass", "siteGuide"];
+    var options = [
+      say("I need orientation.", "compassPath"),
+      say("I want proof.", "scientificLawPath"),
+      say("I want the Diagnostic.", "diagnosticPath"),
+      say("I want the character mirror.", "characterMirrorPath"),
+      say("I want the world side.", "worldPath")
+    ];
+
+    if (topic === "hearth") handoffs = ["hearth", "frontier", "scientificLaw"];
+    if (topic === "frontier") handoffs = ["frontier", "audralia", "hearth"];
+    if (topic === "characters" || topic === "characterMirror") handoffs = ["characters", "coherenceDiagnostic"];
+    if (topic === "scientificLaw") handoffs = ["scientificLaw", "laws", "gauges"];
+
+    return makeNode(
+      "cleanDoor",
+      topic,
+      "handoff",
+      "route",
+      state.currentScopeLane,
+      state.currentVoiceMode,
+      3,
+      [
+        "The cleanest next door depends on why you are still here.",
+        "Right now, you seem to be " + state.visitor.lastItch + ".",
+        "You can keep talking here, or you can cross into the chamber that matches that pressure."
+      ],
+      options,
+      handoffs
+    );
+  }
+
+  function makeWebsiteNode() {
+    return makeNode(
+      "websitePath",
+      "diamondGateBridge",
+      "orientation",
+      "ground",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "Diamond Gate Bridge is the estate: public proof wing, human-development chambers, practical wing, world threshold, and future-facing rooms gathered into one navigable place.",
+        "It matters because what we build today casts a shadow forward.",
+        "The point is not to understand the whole estate at once. The point is to choose the first useful door."
+      ],
+      [
+        say("I need the Compass.", "compassPath"),
+        say("I want proof.", "scientificLawPath"),
+        say("I want the Diagnostic.", "diagnosticPath"),
+        say("I want the character mirror.", "characterMirrorPath"),
+        say("I want the world side.", "worldPath"),
+        control("Which door fits this best?", "cleanDoor")
+      ],
+      ["compass", "siteGuide", "laws", "coherenceDiagnostic"]
+    );
+  }
+
+  function makeCompassNode() {
+    return makeNode(
+      "compassPath",
+      "compass",
+      "orientation",
+      "ground",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "The Compass is the first orientation room.",
+        "It helps the visitor choose between proof, self-reflection, practical use, the human designer behind the estate, the character mirror, and the world side."
+      ],
+      [
+        say("Proof first.", "scientificLawPath"),
+        say("Self-reflection.", "diagnosticPath"),
+        say("Character mirror.", "characterMirrorPath"),
+        say("Practical wing.", "productsPath"),
+        say("World side.", "worldPath"),
+        back("Clean fork.", "returnFork")
+      ],
+      ["compass", "siteGuide"]
+    );
+  }
+
+  function makeSiteGuideNode() {
+    return makeNode(
+      "siteGuidePath",
+      "siteGuide",
+      "orientation",
+      "ground",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "The Site Guide is the public map of the estate.",
+        "It separates public rooms from deeper world doors so a visitor can see what proves, what guides, what reflects, what can be used, and what begins crossing into Mirrorland."
+      ],
+      [
+        say("Show me the public side.", "websitePath"),
+        say("Show me proof.", "scientificLawPath"),
+        say("Show me the Diagnostic.", "diagnosticPath"),
+        say("Show me the world side.", "worldPath"),
+        say("Show me the character mirror.", "characterMirrorPath")
+      ],
+      ["siteGuide", "showroom"]
+    );
+  }
+
+  function makeProofNode() {
+    return makeNode(
+      "proofPath",
+      "proof",
+      "proof",
+      "prove",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "The proof wing is where the estate stops asking for trust and starts making its structure testable.",
+        "Doubt should not be bypassed. It should be given something to examine.",
+        "Scientific Law is the sharpest proof chamber because it asks whether a claim can be defined, tested, corrected, limited, and checked again."
+      ],
+      [
+        say("Explain Scientific Law.", "scientificLawPath"),
+        say("Explain Theory.", "scientificLawTheoryPath"),
+        say("Explain Evidence.", "scientificLawEvidencePath"),
+        say("Explain Measure.", "scientificLawMeasurePath"),
+        say("Explain Limits.", "scientificLawLimitsPath"),
+        say("Explain Gauges.", "gaugesPath")
+      ],
+      ["scientificLaw", "laws", "gauges", "coherenceDiagnostic"]
+    );
+  }
+
+  function makeGaugesNode() {
+    return makeNode(
+      "gaugesPath",
+      "gauges",
+      "proof",
+      "prove",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "Gauges are the estate’s status instruments.",
+        "They help the visitor distinguish ambition from visible status: what is held, what is working, what is still forming, and what should not be overclaimed."
+      ],
+      [
+        say("Explain Scientific Law.", "scientificLawPath"),
+        say("Explain the Laws.", "lawsPath"),
+        say("Explain the Diagnostic.", "diagnosticPath"),
+        say("Take me toward the world side.", "worldPath")
+      ],
+      ["gauges", "laws", "scientificLaw"]
+    );
+  }
+
+  function makeScientificLawNode(id) {
+    var target = id || "scientificLawPath";
+    var beats = [
+      SCIENTIFIC_LAW.summary,
+      SCIENTIFIC_LAW.core,
+      "The four main doors are Theory, Evidence, Measure, and Limits."
+    ];
+
+    if (target === "scientificLawTheoryPath") {
+      beats = [
+        SCIENTIFIC_LAW.doors.theory,
+        "It organizes observations into a possible explanation, creates expectations, exposes assumptions, and must be able to lose.",
+        "Audit question: what would force this theory to be revised, narrowed, or rejected?"
+      ];
+    } else if (target === "scientificLawEvidencePath") {
+      beats = [
+        SCIENTIFIC_LAW.doors.evidence,
+        "Evidence must be inspectable, traceable, relevant, and separate from interpretation.",
+        "Audit question: can this evidence be matched to the exact claim it is being used to support?"
+      ];
+    } else if (target === "scientificLawMeasurePath") {
+      beats = [
+        SCIENTIFIC_LAW.doors.measure,
+        "Measurement needs object, variable, unit, method, instrument or observer, calibration, and uncertainty.",
+        "Without measurement, people often argue from different maps."
+      ];
+    } else if (target === "scientificLawLimitsPath") {
+      beats = [
+        SCIENTIFIC_LAW.doors.limits,
+        "Limits are not weakness. They protect truth from overclaiming.",
+        "A strong claim says what it can say, what it cannot say, where it applies, and what would change the conclusion."
+      ];
+    } else if (target === "scientificLawRoutePath") {
+      beats = [
+        "The Scientific Route keeps a claim from jumping straight from impression to authority.",
+        "Observe → Define → Measure → Compare → Revise → Limit.",
+        "That route is how confidence learns to answer to reality."
+      ];
+    } else if (target === "scientificLawLadderPath") {
+      beats = [
+        "The claim testing ladder shows maturity.",
+        SCIENTIFIC_LAW.ladder,
+        "The final step is not certainty. It is a bounded, testable, correctable claim."
+      ];
+    } else if (target === "scientificLawTermsPath") {
+      beats = [
+        "The deeper terms are repeatability, falsifiability, calibration, uncertainty, causality, and model scope.",
+        "They protect the estate from technical-sounding language that cannot survive reality.",
+        "Use them when a claim sounds impressive but has not carried its boundary."
+      ];
+    }
+
+    return makeNode(
+      target,
+      "scientificLaw",
+      "proof",
+      "prove",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      target === "scientificLawPath" ? 1 : 2,
+      beats,
+      [
+        say("Theory.", "scientificLawTheoryPath"),
+        say("Evidence.", "scientificLawEvidencePath"),
+        say("Measure.", "scientificLawMeasurePath"),
+        say("Limits.", "scientificLawLimitsPath"),
+        say("Claim testing ladder.", "scientificLawLadderPath"),
+        say("Connect this to Frontier.", "frontierLawPath")
+      ],
+      ["scientificLaw", "laws", "gauges"]
+    );
+  }
+
+  function makeDiagnosticNode() {
+    return makeNode(
+      "diagnosticPath",
+      "diagnostic",
+      "diagnostic",
+      "personalize",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "The Diagnostic is the estate’s public mirror chamber.",
+        "It helps a visitor notice the difference between what they claim, what they choose, and what pressure reveals.",
+        "In the current version, it is local-only. It does not store, email, archive, or save the result."
+      ],
+      [
+        say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
+        say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
+        say("Show the characters first.", "charactersPath"),
+        say("Explain Scientific Law.", "scientificLawPath"),
+        say("Tell me about Mirror Me.", "mirrorMePath")
+      ],
+      ["coherenceDiagnostic", "characters"]
+    );
+  }
+
+  function makeSeanNode() {
+    return makeNode(
+      "seanPath",
+      "sean",
+      "sean",
+      "reflect",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "Meet Sean is the estate chamber where the visitor meets Sean Mansfield, the designer and developer of Diamond Gate Bridge.",
+        "Sean is building the bridge, the rooms, the logic, the public doorway, and the future-facing world path.",
+        "This matters because the estate is not detached from human pressure. It is being built through it."
+      ],
+      [
+        say("Tell me about This Underdog.", "underdogPath"),
+        say("Tell me about the book path.", "bookPath"),
+        say("Tell me about the Diagnostic.", "diagnosticPath"),
+        say("Tell me about the character mirror.", "characterMirrorPath")
+      ],
+      ["meetSean", "aboutUnderdog", "book"]
+    );
+  }
+
+  function makeUnderdogNode() {
+    return makeNode(
+      "underdogPath",
+      "underdog",
+      "sean",
+      "deepen",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "This Underdog is not Sean alone.",
+        "This Underdog is in the visitor too. It is the part of a person that has carried pressure before it found language, direction, or use.",
+        "The point is not to admire pressure. The point is to learn what pressure has been trying to teach."
+      ],
+      [
+        say("Help me learn about myself.", "selfLearningPath", { signal: "mirror" }),
+        say("Which character am I most like?", "characterMirrorPath", { signal: "mirror" }),
+        say("Tell me about the Diagnostic.", "diagnosticPath"),
+        say("Tell me about Sean.", "seanPath"),
+        say("Tell me about the book path.", "bookPath")
+      ],
+      ["aboutUnderdog", "coherenceDiagnostic", "book"]
+    );
+  }
+
+  function makeProductsNode() {
+    return makeNode(
+      "productsPath",
+      "products",
+      "products",
+      "route",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "Products are the practical wing of the estate.",
+        "They are where a message becomes usable: something a visitor can carry, read, wear, give, return to, or use as a reminder."
+      ],
+      [
+        say("Tell me about the book path.", "bookPath"),
+        say("Tell me about This Underdog.", "underdogPath"),
+        say("Tell me about the Diagnostic.", "diagnosticPath"),
+        say("Take me to the world side.", "worldPath")
+      ],
+      ["products", "book", "coherenceDiagnostic"]
+    );
+  }
+
+  function makeBookNode() {
+    return makeNode(
+      "bookPath",
+      "book",
+      "book",
+      "deepen",
+      SCOPE_OBJECTIVE,
+      MODE_OBJECTIVE,
+      1,
+      [
+        "The Nine Summits of Love is the book path inside the estate.",
+        "It turns pressure, voice, coherence, love, and becoming into a human-development journey.",
+        "A room can orient. A diagnostic can reflect. A book can walk with the reader."
+      ],
+      [
+        say("Tell me about Nine Summits.", "nineSummitsPath"),
+        say("Tell me about This Underdog.", "underdogPath"),
+        say("Tell me about Sean.", "seanPath"),
+        say("Help me learn about myself.", "selfLearningPath")
+      ],
+      ["book", "nineSummits", "meetSean"]
+    );
+  }
+
+  function makeWorldNode() {
+    return makeNode(
+      "worldPath",
+      "mirrorland",
+      "world",
+      "fork",
+      SCOPE_NARRATIVE,
+      MODE_THRESHOLD,
+      1,
+      [
+        "The world side begins where the estate stops only explaining and starts letting the visitor cross.",
+        "Mirrorland reveals possible futures before they become final.",
+        "Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. Characters carry the pressure."
+      ],
+      [
+        say("Tell me about Hearth.", "hearthPath"),
+        say("Tell me about Audralia.", "audraliaPath"),
+        say("Tell me about Frontier.", "frontierPath"),
+        say("Who are the characters?", "charactersPath"),
+        say("What is Mirror Me?", "mirrorMePath")
+      ],
+      ["interactiveNarrative", "hearth", "audralia", "frontier", "characters"]
+    );
+  }
+
+  function makeHearthNode(id) {
+    var beats = [
+      "Hearth is the planetary construct facility where world-formation logic becomes operational.",
+      "It is not merely a globe route.",
+      "Hearth is the unknown-location facility tied to Mirrorland’s planetary construction logic.",
+      "Mirrorland reveals. Audralia carries. Frontier tests. Hearth constructs. Scientific Law verifies. Characters carry the pressure."
+    ];
+
+    if (id === "hearthFacilityPath") {
+      beats = [
+        "Hearth is the unknown-location facility.",
+        "That matters because it prevents Hearth from being reduced to a simple public globe.",
+        "It is the chamber where planetary construction logic is organized before the visitor fully understands where that chamber is."
+      ];
+    } else if (id === "hearthConstructPath") {
+      beats = [
+        "Hearth is the planetary construct engine in the estate’s public canon.",
+        "It is where world-formation logic becomes operational: structure, terrain, hydrology, surface behavior, motion, and the conditions that let a planet read as a constructed world.",
+        "Hearth constructs. That is its governing verb."
+      ];
+    } else if (id === "hearthFrontierPath") {
+      beats = [
+        "Hearth and Frontier are paired, but not identical.",
+        "Frontier tests systems: energy, water, waste, infrastructure, signal, direction, and civic pressure.",
+        "Hearth constructs the planetary condition those systems must eventually live inside."
+      ];
+    } else if (id === "hearthLawPath") {
+      beats = [
+        "Hearth still answers to Scientific Law.",
+        "A planetary construct can be imaginative, but the claims around it need theory, evidence, measurement, and limits.",
+        "That is how Hearth stays disciplined instead of becoming only a visual idea."
+      ];
+    }
+
+    return makeNode(
+      id || "hearthPath",
+      "hearth",
+      "hearth",
+      "reveal",
+      SCOPE_NARRATIVE,
+      MODE_THRESHOLD,
+      2,
+      beats,
+      [
+        say("Hearth as facility.", "hearthFacilityPath"),
+        say("Hearth as construct engine.", "hearthConstructPath"),
+        say("Connect Hearth to Frontier.", "hearthFrontierPath"),
+        say("Connect Hearth to Scientific Law.", "hearthLawPath"),
+        say("Tell me about Audralia.", "audraliaPath"),
+        say("Tell me about the characters.", "charactersPath")
+      ],
+      ["hearth", "frontier", "scientificLaw"]
+    );
+  }
+
+  function makeAudraliaNode() {
+    return makeNode(
+      "audraliaPath",
+      "audralia",
+      "audralia",
+      "deepen",
+      SCOPE_NARRATIVE,
+      MODE_IMMERSION,
+      2,
+      [
+        "Audralia is the constructive future world.",
+        "It gives the estate distance, terrain, scale, and the feeling that the future is not only a room.",
+        "Hearth is where construction logic becomes operational. Frontier tests the systems Audralia may need."
+      ],
+      [
+        say("Tell me about Frontier.", "frontierPath"),
+        say("Tell me about Hearth.", "hearthPath"),
+        say("Tell me about the characters.", "charactersPath"),
+        say("Connect Audralia to Scientific Law.", "scientificLawPath")
+      ],
+      ["audralia", "frontier", "hearth"]
+    );
+  }
+
+  function makeFrontierNode(id, systemKey) {
+    var system = systemKey ? FRONTIER_SYSTEMS[systemKey] : null;
+    var beats;
+
+    if (id === "frontierLawPath") {
+      beats = [
+        "Scientific Law keeps Frontier from becoming fantasy language.",
+        "Frontier can imagine future systems, but Scientific Law asks whether each claim is defined, evidenced, measured, compared, revised, and limited.",
+        "That is why Energy cannot pretend fusion is solved, Waste cannot hide downstream cost, and Closed Loop cannot claim closure without audit return."
+      ];
+    } else if (id === "frontierCharactersPath") {
+      beats = [
+        "The Frontier systems become human through the characters.",
+        "Tarian belongs naturally to Water. Soren belongs to Waste and Boundary. Alaric belongs to Trajectory. Elara belongs to Shimmer and Vision. Dextrion belongs to Energy and repair readiness.",
+        "Frontier tests systems. Characters carry the cost of living inside them."
+      ];
+    } else if (system) {
+      beats = [
+        system.name + " — " + system.status + ".",
+        system.text,
+        "This is a Frontier pressure test, not a claim that the future system is finished."
+      ];
+    } else {
+      beats = [
+        "Mirrorland reveals. Audralia carries. Frontier tests.",
+        "Frontier is Audralia’s applied-science playground.",
+        "It tests power, water, waste, feedback, support, growth, city pressure, operating rules, signal, direction, and horizon aim."
+      ];
+    }
+
+    return makeNode(
+      id || "frontierPath",
+      "frontier",
+      "frontier",
+      "deepen",
+      SCOPE_NARRATIVE,
+      MODE_THRESHOLD,
+      system ? 2 : 1,
+      beats,
+      [
+        say("Show Frontier systems.", "frontierSystemsPath"),
+        say("Energy.", "frontierEnergyPath"),
+        say("Water.", "frontierWaterPath"),
+        say("Waste.", "frontierWastePath"),
+        say("Connect Frontier to Scientific Law.", "frontierLawPath"),
+        say("Connect Frontier to Hearth.", "hearthFrontierPath"),
+        say("Connect Frontier to characters.", "frontierCharactersPath")
+      ],
+      system ? [system.route, "frontier"] : ["frontier", "audralia", "hearth"]
+    );
+  }
+
+  function targetToFrontierKey(target) {
+    var map = {
+      frontierEnergyPath: "energy",
+      frontierWaterPath: "water",
+      frontierWastePath: "waste",
+      frontierClosedLoopPath: "closedLoop",
+      frontierInfrastructurePath: "infrastructure",
+      frontierLatticePath: "lattice",
+      frontierUrbanPath: "urban",
+      frontierManualPath: "manual",
+      frontierShimmerPath: "shimmer",
+      frontierTrajectoryPath: "trajectory",
+      frontierVisionPath: "vision"
+    };
+
+    return map[target] || "";
+  }
+
+  function makeCharactersNode(id) {
+    if (id === "characterRelationshipsPath") {
+      return makeNode(
+        id,
+        "characters",
+        "characters",
+        "deepen",
+        SCOPE_NARRATIVE,
+        MODE_IMMERSION,
+        2,
+        [
+          "Character relationships are pressure lines.",
+          "Auren and Jeeves connect through protection and entry. Alaric and Tarian connect through route and endurance. Elara and Soren connect through possibility and hidden cost. Dextrion and Soren connect through repair and proof.",
+          "These are pressure relationships, not invented biography."
+        ],
+        [
+          say("Auren Vale.", "characterAurenValePath"),
+          say("Dextrion.", "characterDextrionPath"),
+          say("Alaric.", "characterAlaricPath"),
+          say("Tarian.", "characterTarianPath"),
+          say("Elara.", "characterElaraPath"),
+          say("Soren.", "characterSorenPath"),
+          say("Which character am I most like?", "characterMirrorPath")
+        ],
+        ["characters"]
+      );
+    }
+
+    if (id === "characterTensionsPath") {
+      return makeNode(
+        id,
+        "characters",
+        "characters",
+        "deepen",
+        SCOPE_NARRATIVE,
+        MODE_IMMERSION,
+        2,
+        [
+          "The conflict is not only good against evil.",
+          "It is memory against denial, survival against consequence, voice against silence, and choice against pressure.",
+          "The characters matter because they turn future systems into lived cost."
+        ],
+        [
+          say("Show relationships.", "characterRelationshipsPath"),
+          say("Show motives.", "characterMotivesPath"),
+          say("Which character am I most like?", "characterMirrorPath"),
+          say("Who should I meet first?", "characterFirstPath")
+        ],
+        ["characters"]
+      );
+    }
+
+    if (id === "characterFirstPath") {
+      return makeNode(
+        id,
+        "characters",
+        "characters",
+        "route",
+        SCOPE_NARRATIVE,
+        MODE_IMMERSION,
+        2,
+        [
+          "Start with the character who matches the pressure you want to understand.",
+          "Protection begins with Auren. Repair begins with Dextrion. Early warning begins with Alaric. Endurance begins with Tarian. Signal begins with Elara. Hidden cost begins with Soren. Truth sequence begins with Jeeves. Distributed survival begins with the Remote Team."
+        ],
+        [
+          say("Auren Vale.", "characterAurenValePath"),
+          say("Dextrion.", "characterDextrionPath"),
+          say("Alaric.", "characterAlaricPath"),
+          say("Tarian.", "characterTarianPath"),
+          say("Elara.", "characterElaraPath"),
+          say("Soren.", "characterSorenPath"),
+          say("Jeeves.", "characterJeevesPath"),
+          say("Remote Team.", "characterRemoteTeamPath")
+        ],
+        ["characters"]
+      );
+    }
+
+    return makeNode(
+      "charactersPath",
+      "characters",
+      "characters",
+      "personalize",
+      SCOPE_NARRATIVE,
+      MODE_IMMERSION,
+      1,
+      [
+        "The Characters are where the world stops feeling empty.",
+        "Auren protects. Dextrion repairs. Alaric reads danger. Tarian keeps survival physical. Elara makes the future visible. Soren refuses fake restoration. Jeeves sequences truth. The Remote Team distributes survival.",
+        "They are not labels. They are pressure carriers."
+      ],
+      [
+        say("Auren Vale.", "characterAurenValePath"),
+        say("Dextrion.", "characterDextrionPath"),
+        say("Alaric.", "characterAlaricPath"),
+        say("Tarian.", "characterTarianPath"),
+        say("Elara.", "characterElaraPath"),
+        say("Soren.", "characterSorenPath"),
+        say("Jeeves.", "characterJeevesPath"),
+        say("Remote Team.", "characterRemoteTeamPath"),
+        say("Which character am I most like?", "characterMirrorPath")
+      ],
+      ["characters"]
+    );
+  }
+
+  function targetToCharacter(target) {
+    var map = {
+      characterAurenValePath: "aurenVale",
+      characterDextrionPath: "dextrion",
+      characterAlaricPath: "alaric",
+      characterTarianPath: "tarian",
+      characterElaraPath: "elara",
+      characterSorenPath: "soren",
+      characterJeevesPath: "jeeves",
+      characterRemoteTeamPath: "remoteTeam"
+    };
+
+    return map[target] || "";
+  }
+
+  function makeCharacterNode(characterId) {
+    var character = CHARACTER_REGISTRY[characterId];
+
+    if (!character) return makeCharactersNode("charactersPath");
+
+    return makeNode(
+      character.target,
+      "characters",
+      "characters",
+      "deepen",
+      SCOPE_NARRATIVE,
+      MODE_IMMERSION,
+      2,
+      [
+        character.name + " is the " + character.title + ".",
+        character.oneLine,
+        character.pressure,
+        "Reflective pattern: " + character.mirror
+      ],
+      [
+        say("Show character relationships.", "characterRelationshipsPath"),
+        say("Show character conflict.", "characterTensionsPath"),
+        say("Which character am I most like?", "characterMirrorPath"),
+        say("Show all characters.", "charactersPath"),
+        say("Choose the next door.", "cleanDoor")
+      ],
+      ["characters"]
+    );
+  }
+
+  function makeCharacterMirrorNode(id) {
+    if (id === "characterMirrorQuestionOne" || id === "selfLearningPath" || id === "characterMirrorPath") {
+      return makeNode(
+        "characterMirrorQuestionOne",
+        "characterMirror",
+        "diagnostic",
+        "personalize",
+        SCOPE_OBJECTIVE,
+        MODE_CHARACTER_MIRROR,
+        1,
+        [
+          "We can use the Character Mirror.",
+          "This will not define you. It will compare your current pressure pattern to the characters.",
+          "First question: under pressure, what do you usually notice first?"
+        ],
+        [
+          say("Who needs protection?", "characterMirrorQuestionTwo", { signal: "mirror" }),
+          say("What is broken and needs repair?", "characterMirrorQuestionTwo", { signal: "mirror" }),
+          say("Where danger is forming early.", "characterMirrorQuestionTwo", { signal: "mirror" }),
+          say("What the body or situation can actually endure.", "characterMirrorQuestionTwo", { signal: "mirror" }),
+          say("What truth or hidden cost is being avoided.", "characterMirrorQuestionTwo", { signal: "mirror" }),
+          say("What signal of hope needs to become visible.", "characterMirrorQuestionTwo", { signal: "mirror" })
+        ],
+        ["coherenceDiagnostic", "characters"]
+      );
+    }
+
+    if (id === "characterMirrorQuestionTwo") {
+      return makeNode(
+        "characterMirrorQuestionTwo",
+        "characterMirror",
+        "diagnostic",
+        "personalize",
+        SCOPE_OBJECTIVE,
+        MODE_CHARACTER_MIRROR,
+        2,
+        [
+          "Second question.",
+          "When the pressure increases, what do you tend to rely on next?"
+        ],
+        [
+          say("A clear sequence and controlled timing.", "characterMirrorQuestionThree", { signal: "mirror" }),
+          say("Visible action or repair.", "characterMirrorQuestionThree", { signal: "mirror" }),
+          say("Stability, continuity, and keeping people from breaking.", "characterMirrorQuestionThree", { signal: "mirror" }),
+          say("Evidence, contradiction, and proof.", "characterMirrorQuestionThree", { signal: "mirror" }),
+          say("A public signal that gives people hope.", "characterMirrorQuestionThree", { signal: "mirror" }),
+          say("A team or field response beyond one safe center.", "characterMirrorQuestionThree", { signal: "mirror" })
+        ],
+        ["coherenceDiagnostic", "characters"]
+      );
+    }
+
+    if (id === "characterMirrorQuestionThree") {
+      return makeNode(
+        "characterMirrorQuestionThree",
+        "characterMirror",
+        "diagnostic",
+        "personalize",
+        SCOPE_OBJECTIVE,
+        MODE_CHARACTER_MIRROR,
+        3,
+        [
+          "Third question.",
+          "What usually becomes your risk when you are under too much pressure?"
+        ],
+        [
+          say("I overprotect or hide too much.", "characterMirrorResult", { signal: "mirror" }),
+          say("I try to fix everything too fast.", "characterMirrorResult", { signal: "mirror" }),
+          say("I see danger before people believe me.", "characterMirrorResult", { signal: "mirror" }),
+          say("I keep carrying more than my body can sustain.", "characterMirrorResult", { signal: "mirror" }),
+          say("I need the truth named before I can move.", "characterMirrorResult", { signal: "mirror" }),
+          say("I manage how much truth people can receive.", "characterMirrorResult", { signal: "mirror" })
+        ],
+        ["coherenceDiagnostic", "characters"]
+      );
+    }
+
+    return makeCharacterMirrorResultNode();
+  }
+
+  function makeCharacterMirrorResultNode() {
+    var mirror = computeLocalCharacterMirror();
+    var top = mirror[0];
+    var second = mirror[1];
+    var third = mirror[2];
+    var topCharacter;
+
+    if (!top) {
+      return makeNode(
+        "characterMirrorResult",
+        "characterMirror",
+        "diagnostic",
+        "personalize",
+        SCOPE_OBJECTIVE,
+        MODE_CHARACTER_MIRROR,
+        3,
+        [
+          "I do not have enough pressure signal to name a clean match yet.",
+          "That is not a failure. It means the mirror needs clearer answers.",
+          "Take the Coherence Diagnostic if you want a stronger read."
+        ],
+        [
+          say("Ask the first mirror question again.", "characterMirrorQuestionOne", { signal: "mirror" }),
+          say("Take the Coherence Diagnostic.", "diagnosticPath"),
+          say("Show the characters first.", "charactersPath"),
+          control("Re-center me.", "recenterNode")
+        ],
+        ["coherenceDiagnostic", "characters"]
+      );
+    }
+
+    topCharacter = CHARACTER_REGISTRY[top.id];
+
+    return makeNode(
+      "characterMirrorResult",
+      "characterMirror",
+      "diagnostic",
+      "close",
+      SCOPE_OBJECTIVE,
+      MODE_CHARACTER_MIRROR,
+      3,
+      [
+        "Reflective match, not identity: your answers currently resemble " + topCharacter.name + "’s pressure pattern most strongly.",
+        topCharacter.name + " carries this pressure: " + topCharacter.pressure,
+        second ? "Your secondary pressure reads closest to " + CHARACTER_REGISTRY[second.id].name + ": " + CHARACTER_REGISTRY[second.id].mirror : "The secondary pressure is not strong enough to name cleanly yet.",
+        third ? "Your tension match is " + CHARACTER_REGISTRY[third.id].name + ": the pattern that may appear when pressure rises." : "This is enough to begin, but not enough to make a final label."
+      ],
+      [
+        say("Show why this match appeared.", topCharacter.target),
+        second ? say("Show the secondary pressure.", CHARACTER_REGISTRY[second.id].target) : say("Ask another mirror question.", "characterMirrorQuestionOne", { signal: "mirror" }),
+        say("Take the full Diagnostic.", "diagnosticPath"),
+        say("Show all characters.", "charactersPath"),
+        control("Choose the next door.", "cleanDoor")
+      ],
+      ["characters", "coherenceDiagnostic"]
+    );
+  }
+
+  function computeLocalCharacterMirror() {
+    var scores = {};
+    var answers = state.visitor.characterMirrorAnswers.join(" ").toLowerCase();
+
+    Object.keys(CHARACTER_REGISTRY).forEach(function initScore(id) {
+      scores[id] = 0;
+    });
+
+    LOCAL_MIRROR_KEYWORDS.forEach(function eachEntry(entry) {
+      entry.words.forEach(function eachWord(word) {
+        if (answers.indexOf(word.toLowerCase()) !== -1) {
+          scores[entry.id] += 2;
+        }
+      });
+    });
+
+    if (answers.indexOf("protection") !== -1 || answers.indexOf("protect") !== -1) scores.aurenVale += 3;
+    if (answers.indexOf("repair") !== -1 || answers.indexOf("fix") !== -1) scores.dextrion += 3;
+    if (answers.indexOf("danger") !== -1 || answers.indexOf("early") !== -1) scores.alaric += 3;
+    if (answers.indexOf("endure") !== -1 || answers.indexOf("body") !== -1) scores.tarian += 3;
+    if (answers.indexOf("hope") !== -1 || answers.indexOf("visible") !== -1) scores.elara += 3;
+    if (answers.indexOf("truth") !== -1 || answers.indexOf("hidden cost") !== -1) scores.soren += 3;
+    if (answers.indexOf("sequence") !== -1 || answers.indexOf("timing") !== -1) scores.jeeves += 3;
+    if (answers.indexOf("team") !== -1 || answers.indexOf("field") !== -1) scores.remoteTeam += 3;
+
+    return Object.keys(scores)
+      .map(function toRow(id) {
+        return {
+          id: id,
+          score: scores[id]
+        };
+      })
+      .filter(function hasScore(row) {
+        return row.score > 0;
+      })
+      .sort(function sortScore(a, b) {
+        return b.score - a.score || CHARACTER_REGISTRY[a.id].name.localeCompare(CHARACTER_REGISTRY[b.id].name);
+      })
+      .slice(0, 3);
+  }
+
+  function targetToCharacterFromText(text) {
+    var normalized = String(text || "").toLowerCase();
+    var id;
+
+    for (id in CHARACTER_REGISTRY) {
+      if (Object.prototype.hasOwnProperty.call(CHARACTER_REGISTRY, id)) {
+        if (normalized.indexOf(CHARACTER_REGISTRY[id].name.toLowerCase()) !== -1) return id;
+        if (normalized.indexOf(CHARACTER_REGISTRY[id].shortName.toLowerCase()) !== -1) return id;
+      }
+    }
+
+    return "";
   }
 
   function classifyText(text) {
     var value = String(text || "").toLowerCase();
+    var characterId = targetToCharacterFromText(value);
+
+    if (
+      value.indexOf("which character am i") !== -1 ||
+      value.indexOf("what character am i") !== -1 ||
+      value.indexOf("most like") !== -1 ||
+      value.indexOf("learn about myself") !== -1 ||
+      value.indexOf("self learning") !== -1
+    ) {
+      return { target: "characterMirrorPath", signal: "mirror" };
+    }
+
+    if (characterId) {
+      return { target: CHARACTER_REGISTRY[characterId].target, signal: "characters" };
+    }
 
     if (
       value.indexOf("lost") !== -1 ||
@@ -2696,35 +2561,41 @@
     }
 
     if (
-      value.indexOf("relationship") !== -1 ||
-      value.indexOf("relate") !== -1 ||
-      value.indexOf("between characters") !== -1
+      value.indexOf("scientific law") !== -1 ||
+      value.indexOf("theory") !== -1 ||
+      value.indexOf("evidence") !== -1 ||
+      value.indexOf("measure") !== -1 ||
+      value.indexOf("limits") !== -1 ||
+      value.indexOf("claim") !== -1 ||
+      value.indexOf("proof") !== -1
     ) {
-      return { target: "characterRelationshipsPath", signal: "characters" };
+      return { target: "scientificLawPath", signal: "skeptic" };
     }
 
     if (
-      value.indexOf("conflict") !== -1 ||
-      value.indexOf("tension") !== -1 ||
-      value.indexOf("pressure") !== -1
+      value.indexOf("frontier") !== -1 ||
+      value.indexOf("energy") !== -1 ||
+      value.indexOf("fusion") !== -1 ||
+      value.indexOf("water") !== -1 ||
+      value.indexOf("waste") !== -1 ||
+      value.indexOf("closed loop") !== -1 ||
+      value.indexOf("infrastructure") !== -1 ||
+      value.indexOf("lattice") !== -1 ||
+      value.indexOf("urban") !== -1 ||
+      value.indexOf("shimmer") !== -1 ||
+      value.indexOf("trajectory") !== -1 ||
+      value.indexOf("vision") !== -1
     ) {
-      return { target: "characterTensionsPath", signal: "characters" };
+      return { target: "frontierPath", signal: "world" };
     }
 
     if (
-      value.indexOf("motive") !== -1 ||
-      value.indexOf("want") !== -1 ||
-      value.indexOf("why do") !== -1
+      value.indexOf("hearth") !== -1 ||
+      value.indexOf("planetary construct") !== -1 ||
+      value.indexOf("construct facility") !== -1 ||
+      value.indexOf("construct engine") !== -1
     ) {
-      return { target: "characterMotivesPath", signal: "characters" };
-    }
-
-    if (
-      value.indexOf("faction") !== -1 ||
-      value.indexOf("side") !== -1 ||
-      value.indexOf("alliance") !== -1
-    ) {
-      return { target: "characterFactionsPath", signal: "characters" };
+      return { target: "hearthPath", signal: "world" };
     }
 
     if (
@@ -2747,36 +2618,20 @@
       value.indexOf("sean") !== -1 ||
       value.indexOf("founder") !== -1 ||
       value.indexOf("designer") !== -1 ||
-      value.indexOf("developer") !== -1 ||
-      value.indexOf("person") !== -1 ||
-      value.indexOf("human") !== -1
+      value.indexOf("developer") !== -1
     ) {
       return { target: "seanPath", signal: "human" };
     }
 
     if (
       value.indexOf("mirrorland") !== -1 ||
-      value.indexOf("hearth") !== -1 ||
       value.indexOf("audralia") !== -1 ||
-      value.indexOf("frontier") !== -1 ||
       value.indexOf("world") !== -1 ||
       value.indexOf("story") !== -1 ||
       value.indexOf("showroom") !== -1 ||
-      value.indexOf("future") !== -1 ||
-      value.indexOf("science") !== -1
+      value.indexOf("future") !== -1
     ) {
       return { target: "worldPath", signal: "world" };
-    }
-
-    if (
-      value.indexOf("proof") !== -1 ||
-      value.indexOf("law") !== -1 ||
-      value.indexOf("real") !== -1 ||
-      value.indexOf("evidence") !== -1 ||
-      value.indexOf("test") !== -1 ||
-      value.indexOf("skeptic") !== -1
-    ) {
-      return { target: "proofPath", signal: "skeptic" };
     }
 
     if (
@@ -2816,6 +2671,223 @@
     }
 
     return { target: "askFirst", signal: "question" };
+  }
+
+  function isBackendEligible(target, settings) {
+    if (!state.brain.enabled) return false;
+    if (settings && settings.noBrain) return false;
+    if (target === "intro" || target === "askFirst" || target === "returnFork" || target === "restartFork") return false;
+    return true;
+  }
+
+  function buildBrainPayload(target, choice) {
+    return {
+      visitorText: choice && choice.label ? choice.label : "",
+      currentNode: target,
+      currentEntry: state.currentTopic,
+      currentPath: state.currentTopic,
+      currentScopeLane: state.currentScopeLane,
+      currentVoiceMode: state.currentVoiceMode,
+      visitorPosture: state.currentPosture,
+      movement: choice && choice.signal ? choice.signal : "",
+      pathDepth: state.currentDepth,
+      topicDepth: state.topicDepth[state.currentTopic] || 0,
+      loopCount: state.visitor.loopCount,
+      routeReadiness: state.visitor.routeReadiness,
+      allowedTargets: APPROVED_TARGETS.slice(),
+      allowedRoutes: APPROVED_ROUTE_IDS.slice(),
+      sessionTrail: state.visitor.trail.map(function trailToString(item) {
+        return item.topic + ":" + item.node + ":" + item.label;
+      }),
+      requestedMode: state.currentVoiceMode,
+      characterMirrorAnswers: state.visitor.characterMirrorAnswers.slice(),
+      registryContext: {
+        id: state.currentTopic,
+        summary: state.visitor.lastItch,
+        routes: state.currentRouteHandoffs,
+        targets: []
+      }
+    };
+  }
+
+  async function requestJeevesBrain(target, choice) {
+    var controller;
+    var timeout;
+    var payload;
+
+    if (!state.brain.endpoint) return null;
+
+    payload = buildBrainPayload(target, choice);
+    state.brain.lastRequest = safeClone(payload);
+    state.brain.lastStatus = "pending";
+
+    controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+
+    if (controller) {
+      timeout = window.setTimeout(function abortBrain() {
+        try {
+          controller.abort();
+        } catch (_error) {}
+      }, state.brain.timeoutMs);
+    }
+
+    try {
+      var response = await fetch(state.brain.endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
+        signal: controller ? controller.signal : undefined
+      });
+
+      if (timeout) window.clearTimeout(timeout);
+
+      if (!response.ok) {
+        state.brain.lastStatus = "http_" + response.status;
+        return null;
+      }
+
+      var data = await response.json();
+
+      state.brain.lastResponse = safeClone(data);
+      state.brain.lastStatus = data && data.ok ? "ok" : "fallback";
+
+      return normalizeBrainResponse(data);
+    } catch (_error) {
+      if (timeout) window.clearTimeout(timeout);
+      state.brain.lastStatus = "unavailable";
+      return null;
+    }
+  }
+
+  function normalizeBrainResponse(data) {
+    var options;
+    var handoffs;
+
+    if (!data || !Array.isArray(data.bubbles) || !data.bubbles.length) {
+      return null;
+    }
+
+    options = Array.isArray(data.options) ? data.options : [];
+    handoffs = Array.isArray(data.handoffs) ? data.handoffs : [];
+
+    state.visitor.lastBrainIntent = data.intent || "";
+    state.visitor.lastBrainCanonStatus = data.canonStatus || "";
+    state.visitor.lastBrainConclusiveState = data.conclusiveState || "";
+
+    return {
+      node: state.currentNode,
+      topic: data.nextTopic || state.currentTopic,
+      posture: state.currentPosture,
+      phase: data.conclusiveState === "complete" ? "close" : state.currentPhase,
+      scopeLane: data.suggestedMode === "immersion" || data.suggestedMode === "threshold" ? SCOPE_NARRATIVE : state.currentScopeLane,
+      voiceMode: data.suggestedMode || state.currentVoiceMode,
+      depth: state.currentDepth,
+      beats: data.bubbles.slice(0, 4),
+      options: options.map(function normalizeOption(item) {
+        return {
+          label: item.label,
+          target: normalizeTarget(item.target),
+          type: item.type || "conversation",
+          scopeLane: item.scopeLane || null,
+          signal: data.intent || ""
+        };
+      }),
+      handoffs: handoffs.map(normalizeRouteId).filter(Boolean),
+      source: data.source || "brain"
+    };
+  }
+
+  function shouldAskBrainBeforeLocal(target) {
+    return [
+      "characterMirrorPath",
+      "selfLearningPath",
+      "characterMirrorResult",
+      "scientificLawPath",
+      "scientificLawTheoryPath",
+      "scientificLawEvidencePath",
+      "scientificLawMeasurePath",
+      "scientificLawLimitsPath",
+      "frontierPath",
+      "frontierSystemsPath",
+      "hearthPath",
+      "hearthConstructPath",
+      "hearthFacilityPath",
+      "charactersPath"
+    ].indexOf(target) !== -1;
+  }
+
+  async function runNode(nodeId, settings) {
+    var token;
+    var node;
+    var localNode;
+    var brainNode;
+    var choice;
+    var completed;
+
+    if (state.busy) return;
+
+    state.busy = true;
+    state.runToken += 1;
+    token = state.runToken;
+
+    choice = settings && settings.choice ? settings.choice : null;
+    nodeId = normalizeNode(nodeId);
+    localNode = getNode(nodeId, choice);
+
+    updateCurrentState(nodeId, localNode, choice);
+    hideOptions();
+
+    if (isBackendEligible(nodeId, settings) && shouldAskBrainBeforeLocal(nodeId)) {
+      brainNode = await requestJeevesBrain(nodeId, choice);
+      if (brainNode && brainNode.beats && brainNode.beats.length) {
+        node = brainNode;
+      } else {
+        node = localNode;
+      }
+    } else {
+      node = localNode;
+    }
+
+    if (node !== localNode) {
+      state.currentTopic = node.topic || state.currentTopic;
+      state.currentPhase = node.phase || state.currentPhase;
+      state.currentScopeLane = node.scopeLane || state.currentScopeLane;
+      state.currentVoiceMode = node.voiceMode || state.currentVoiceMode;
+      state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
+      setDocumentState();
+    }
+
+    await waitFixed(settings && settings.fast ? PACING.firstMessageDelayMs : 420);
+
+    if (token !== state.runToken) {
+      state.busy = false;
+      clearTapAdvance();
+      return;
+    }
+
+    completed = await playBeats(node.beats || [], token, node.source || "local");
+
+    if (!completed || token !== state.runToken) {
+      state.busy = false;
+      clearTapAdvance();
+      return;
+    }
+
+    renderOptions(node.options || []);
+    renderHandoffs(node.handoffs || []);
+
+    state.busy = false;
+    clearTapAdvance();
+    scrollThread();
+  }
+
+  function handleOption(item) {
+    if (!item || !item.target || state.busy) return;
+
+    addMessage("visitor", item.label);
+    runNode(item.target, { choice: item });
   }
 
   function ask(text) {
@@ -2901,33 +2973,28 @@
     global.HEARTH.JEEVES.engine = {
       contract: CONTRACT,
       route: ROUTE,
-      futureBrainEndpoint: FUTURE_BRAIN_ENDPOINT,
+      brainEndpoint: JEEVES_BRAIN_ENDPOINT,
       state: state,
-      topics: TOPICS,
-      targets: TARGETS,
+      characters: CHARACTER_REGISTRY,
+      frontierSystems: FRONTIER_SYSTEMS,
       routes: mergeRoutes,
       runNode: runNode,
       ask: ask,
       classifyText: classifyText,
       requestJeevesBrain: requestJeevesBrain,
-      maybeUseGenerativeResponse: maybeUseGenerativeResponse,
       tapAdvance: requestTapAdvance,
       getState: function getState() {
         return safeClone(state);
       },
-      getTopic: function getTopic(id) {
-        return safeClone(TOPICS[id]);
-      },
       getNode: function getNodePublic(id) {
         return safeClone(getNode(id, null));
       },
-      getState256: function getState256() {
-        return {
-          posture: state.currentPosture,
-          phase: state.currentPhase,
-          index: state.stateIndex,
-          label: "ST-" + String(state.stateIndex + 1).padStart(3, "0") + "-OF-256"
-        };
+      getState256: getState256,
+      getCharacterMirrorAnswers: function getCharacterMirrorAnswers() {
+        return state.visitor.characterMirrorAnswers.slice();
+      },
+      resetCharacterMirror: function resetCharacterMirror() {
+        state.visitor.characterMirrorAnswers = [];
       }
     };
 
@@ -2949,6 +3016,10 @@
       return;
     }
 
+    if (config && config.brainEndpoint) {
+      state.brain.endpoint = String(config.brainEndpoint);
+    }
+
     clearSeedMessage();
     bindRestore();
     bindTapAdvance();
@@ -2957,7 +3028,7 @@
     state.initialized = true;
 
     initialNode = normalizeNode(config.initialNode || "intro");
-    runNode(initialNode, { fast: true });
+    runNode(initialNode, { fast: true, noBrain: true });
   }
 
   if (document.readyState === "loading") {

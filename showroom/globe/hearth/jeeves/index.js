@@ -1,23 +1,29 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_256_STATE_NATURAL_TEXT_CADENCE_ENGINE_TNT_v7
+// HEARTH_JEEVES_256_STATE_READER_CADENCE_ENGINE_TNT_v8
 // Full-file replacement.
-// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal conversational organs, natural text-message cadence, guided route handoffs, current-session memory.
+// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal conversational organs, reader-paced text cadence, guided route handoffs, current-session memory.
 // Does not own: HTML shell, CSS styling, backend, persistent storage, login, freeform AI, WebGL, Hearth globe chamber, diagnostics authority, final visual pass.
 
-(function hearthJeeves256StateNaturalTextCadenceEngine(global) {
+(function hearthJeeves256StateReaderCadenceEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_256_STATE_NATURAL_TEXT_CADENCE_ENGINE_TNT_v7";
+  var CONTRACT = "HEARTH_JEEVES_256_STATE_READER_CADENCE_ENGINE_TNT_v8";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
 
   var PACING = {
     firstMessageDelayMs: 900,
-    typingBaseMs: 850,
-    typingWordMs: 58,
-    typingMinMs: 900,
-    typingMaxMs: 2600,
-    afterMessageGapMs: 850,
-    optionRevealDelayMs: 700
+
+    typingBaseMs: 1100,
+    typingWordMs: 95,
+    typingMinMs: 1200,
+    typingMaxMs: 4300,
+
+    readBaseMs: 1250,
+    readWordMs: 85,
+    readMinMs: 1600,
+    readMaxMs: 5200,
+
+    optionRevealDelayMs: 1000
   };
 
   var MAX_HISTORY = 32;
@@ -196,6 +202,10 @@
     return postureIndex * 16 + phaseIndex;
   }
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
   function wordCount(text) {
     return String(text || "")
       .trim()
@@ -203,19 +213,22 @@
       .filter(Boolean).length;
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
   function getTypingDelay(text, index) {
     var words = wordCount(text);
-    var base = PACING.typingBaseMs + words * PACING.typingWordMs;
+    var delay = PACING.typingBaseMs + words * PACING.typingWordMs;
 
     if (index === 0) {
-      base += 180;
+      delay += 180;
     }
 
-    return clamp(base, PACING.typingMinMs, PACING.typingMaxMs);
+    return clamp(delay, PACING.typingMinMs, PACING.typingMaxMs);
+  }
+
+  function getReadDelay(text) {
+    var words = wordCount(text);
+    var delay = PACING.readBaseMs + words * PACING.readWordMs;
+
+    return clamp(delay, PACING.readMinMs, PACING.readMaxMs);
   }
 
   function readConfig() {
@@ -992,6 +1005,15 @@
     }
   }
 
+  function hideOptions() {
+    clearElement(els.promptGrid);
+    clearElement(els.handoffGrid);
+
+    if (els.handoffDock) {
+      els.handoffDock.setAttribute("data-handoff-visible", "false");
+    }
+  }
+
   function scrollThread() {
     if (!els.thread) return;
 
@@ -1215,7 +1237,7 @@
         )
       });
 
-      await wait(PACING.afterMessageGapMs);
+      await wait(getReadDelay(beat));
     }
 
     if (token !== state.runToken) return false;
@@ -1230,6 +1252,7 @@
     var beats;
     var token;
     var initialDelay;
+    var completed;
 
     if (state.busy) return;
 
@@ -1240,19 +1263,24 @@
     node = getNode(nodeId);
     updateState(nodeId, node);
 
-    renderOptions([], state.currentNode);
-    renderHandoffs([]);
+    hideOptions();
 
     beats = compileBeats(node);
-    initialDelay = settings && settings.fast ? PACING.firstMessageDelayMs : 260;
+    initialDelay = settings && settings.fast ? PACING.firstMessageDelayMs : 420;
 
     await wait(initialDelay);
 
-    if (token !== state.runToken) return;
+    if (token !== state.runToken) {
+      state.busy = false;
+      return;
+    }
 
-    await playBeats(beats, token);
+    completed = await playBeats(beats, token);
 
-    if (token !== state.runToken) return;
+    if (!completed || token !== state.runToken) {
+      state.busy = false;
+      return;
+    }
 
     renderOptions(node.options || [], state.currentNode);
     renderHandoffs(node.handoffs || []);
@@ -1403,7 +1431,10 @@
       classifyText: classifyText,
       setPacing: function setPacing(nextPacing) {
         Object.keys(nextPacing || {}).forEach(function eachKey(key) {
-          if (typeof nextPacing[key] === "number" && Object.prototype.hasOwnProperty.call(PACING, key)) {
+          if (
+            typeof nextPacing[key] === "number" &&
+            Object.prototype.hasOwnProperty.call(PACING, key)
+          ) {
             PACING[key] = nextPacing[key];
           }
         });

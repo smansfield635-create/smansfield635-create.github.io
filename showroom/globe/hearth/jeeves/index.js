@@ -1,339 +1,423 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE_TNT_v7
+// HEARTH_JEEVES_AAI_F89_TOOL_REGISTRY_CONVERSATIONAL_CYCLE_ENGINE_TNT_v8
 // Full-file replacement.
-// Owns: Jeeves deterministic narrative interface, layered archetype questions, answer-length/expression-depth throttle, posture/desire inference, character relationship guide logic, contextual jump pads, no-typing path traversal.
-// Does not own: visual styling, Hearth globe chamber, Canvas Bishop, diagnostics authority, freeform AI, WebGL, runtime restart, final visual pass, generated images.
+// Jeeves / Talk to the House.
+// Class: Artificial Agent Intelligence.
+// Purpose:
+// - Provide the public-facing Hearth / Diamond Gate Bridge orientation intelligence.
+// - Integrate the six live anchors plus development arc and meaning layer.
+// - Use F89-style registry mechanics to conduct anchor selection, tool status, route readiness, and jump-pad handoff.
+// - Use the Fibonacci Conversational Cycle of Progression to prevent flat chatbot exchange.
+// - Keep the visitor-facing conversation natural, concrete, and useful.
+// - Distinguish live features from held/future roadmap features.
+// - Route visitors through Compass, Coherence Diagnostic, Laws/Gauges, Products, Meet Sean, and Mirrorland.
+// - Explain future Character Profile, saved diagnostic, login, NPC, and Mirror-Me mechanics only as future roadmap.
+// Does not own:
+// - backend persistence
+// - user login
+// - saved profile state
+// - saved diagnostic state
+// - NPC runtime
+// - Mirror-Me runtime
+// - route orchestration
+// - rendering
+// - WebGL
+// - generated images
+// - GraphicBox
+// - planet truth
+// - public superiority claims
+// - final visual pass claims
 
-(function hearthJeevesLayeredExpressionJumpPadEngine(global) {
+(() => {
   "use strict";
 
-  var root = global || window;
-  var doc = root.document || null;
+  const CONTRACT = "HEARTH_JEEVES_AAI_F89_TOOL_REGISTRY_CONVERSATIONAL_CYCLE_ENGINE_TNT_v8";
+  const RECEIPT = "HEARTH_JEEVES_AAI_F89_TOOL_REGISTRY_CONVERSATIONAL_CYCLE_ENGINE_RECEIPT_v8";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE_TNT_v7";
+  const VERSION = "2026-06-09.hearth-jeeves-aai-f89-tool-registry-conversational-cycle-v8";
+  const FILE = "/showroom/globe/hearth/jeeves/index.js";
 
-  var CONTRACT = "HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE_TNT_v7";
-  var RECEIPT = "HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE_RECEIPT_v7";
-  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_ARCHETYPE_OPTION_SIGNAL_ENGINE_TNT_v6";
-  var VERSION = "2026-06-09.hearth-jeeves-layered-expression-jump-pad-engine-v7";
-  var FILE = "/showroom/globe/hearth/jeeves/index.js";
-  var ROUTE = "/showroom/globe/hearth/jeeves/";
+  const root = typeof window !== "undefined" ? window : globalThis;
+  const doc = root.document || null;
 
-  var DEFAULT_ROUTES = {
-    compass: "/",
-    door: "/door/",
-    home: "/home/",
-    hearth: "/showroom/globe/hearth/",
-    jeeves: "/showroom/globe/hearth/jeeves/",
-    globeWindow: "/showroom/globe/",
-    audralia: "/showroom/globe/audralia/",
-    hEarth: "/showroom/globe/h-earth/",
-    explore: "/explore/",
-    frontier: "/frontier/",
-    characters: "/characters/",
-    laws: "/laws/",
-    products: "/products/",
-    gauges: "/gauges/",
-    controlRoom: "/showroom/globe/hearth/diagnostic/"
-  };
+  const FIBONACCI = Object.freeze({
+    NORTH_LATCH: "F21",
+    PRODUCT_ENGINE: "F34",
+    EXPRESSION: "F55",
+    PROJECT_REGISTRY: "F89",
+    MARKET_READINESS: "F144",
+    DOWNSTREAM_RETURN: "F233"
+  });
 
-  var NO_CLAIMS = {
-    freeformAi: false,
-    productionMutationAuthorized: false,
-    canvasRepairAuthorized: false,
-    canvasBuildAuthorized: false,
-    canvasReleaseAuthorized: false,
-    controlsRepairAuthorized: false,
-    runtimeRestartAuthorized: false,
-    routeRepairAuthorized: false,
-    targetRouteRendererMutationAuthorized: false,
-    readyTextClaimed: false,
-    f13Claimed: false,
-    f21Claimed: false,
-    visualPassClaimed: false,
-    finalVisualPassClaimed: false,
+  const CYCLE_STAGES = Object.freeze({
+    CONTACT: "contact",
+    RECOGNITION: "recognition",
+    FORK: "fork",
+    KNOWLEDGE_HIT: "knowledge-hit",
+    ANCHOR_EXPANSION: "anchor-expansion",
+    CURIOSITY_RISE: "curiosity-rise",
+    JUMP_PRESSURE: "jump-pressure",
+    RETURN_LOOP: "return-loop"
+  });
+
+  const TOOL_STATUS = Object.freeze({
+    LIVE: "LIVE",
+    HELD: "HELD",
+    FUTURE: "FUTURE",
+    INTERNAL: "INTERNAL",
+    PUBLIC: "PUBLIC"
+  });
+
+  const INTENT = Object.freeze({
+    OPENING: "opening",
+    WEBSITE: "website",
+    WORLD: "world",
+    SKEPTIC: "skeptic",
+    SIMPLE_START: "simple-start",
+    COMPASS: "compass",
+    DIAGNOSTIC: "diagnostic",
+    LAWS: "laws",
+    GAUGES: "gauges",
+    PRODUCTS: "products",
+    SEAN: "sean",
+    MIRRORLAND: "mirrorland",
+    CHARACTERS: "characters",
+    DEVELOPMENT: "development",
+    MEANING: "meaning",
+    STORY: "story",
+    FUTURE_PROFILE: "future-profile",
+    NPCS: "npcs",
+    MIRROR_ME: "mirror-me",
+    COCKPIT: "cockpit",
+    FREE_ACCESS: "free-access",
+    UNKNOWN: "unknown"
+  });
+
+  const MECHANICAL_COORDINATE = Object.freeze({
+    coordinateId: "JEEVES-AAI-F89-CYCLE",
+    alignedRegistryCoordinate: "RT3D-X14_Y19_Z89",
+    class: "ARTIFICIAL_AGENT_INTELLIGENCE",
+    role: "ESTATE_ORIENTATION_CONDUCTOR",
+    registryRole: "ANCHOR_REGISTRY_CONDUCTOR",
+    mayRender: false,
+    mayStoreProfile: false,
+    mayClaimSavedDiagnostic: false,
+    mayClaimNpcRuntime: false,
+    mayClaimMirrorMeRuntime: false,
+    mayClaimPublicSuperiority: false
+  });
+
+  const CYCLE_TO_FIBONACCI = Object.freeze({
+    [CYCLE_STAGES.CONTACT]: FIBONACCI.NORTH_LATCH,
+    [CYCLE_STAGES.RECOGNITION]: FIBONACCI.NORTH_LATCH,
+    [CYCLE_STAGES.FORK]: FIBONACCI.PROJECT_REGISTRY,
+    [CYCLE_STAGES.KNOWLEDGE_HIT]: FIBONACCI.EXPRESSION,
+    [CYCLE_STAGES.ANCHOR_EXPANSION]: FIBONACCI.PROJECT_REGISTRY,
+    [CYCLE_STAGES.CURIOSITY_RISE]: FIBONACCI.EXPRESSION,
+    [CYCLE_STAGES.JUMP_PRESSURE]: FIBONACCI.MARKET_READINESS,
+    [CYCLE_STAGES.RETURN_LOOP]: FIBONACCI.DOWNSTREAM_RETURN
+  });
+
+  const TOOL_REGISTRY = Object.freeze({
+    f89Registry: {
+      id: "f89-registry",
+      label: "F89 Registry",
+      status: [TOOL_STATUS.INTERNAL, TOOL_STATUS.HELD],
+      route: "",
+      file: "/assets/lab/product-engine.registry.js",
+      contract: "LAB_PRODUCT_ENGINE_REGISTRY_F89_ENGINE_MECHANICS_PROJECT_REGISTRY_CONDUCTOR_TNT_v2",
+      purpose: "Anchor and readiness conductor. Keeps Jeeves grounded and prevents false claims.",
+      publicSafe: false
+    },
+    cockpit: {
+      id: "cockpit",
+      label: "Control Cockpit",
+      status: [TOOL_STATUS.INTERNAL, TOOL_STATUS.PUBLIC],
+      route: "/showroom/globe/audralia/disposition/",
+      purpose: "Operator and systems-status layer. Public explanation must stay high level.",
+      publicSafe: true
+    },
+    compass: {
+      id: "compass",
+      label: "Compass",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/",
+      purpose: "Primary estate map and visitor orientation gate.",
+      publicSafe: true
+    },
+    siteGuide: {
+      id: "site-guide",
+      label: "Website Guide",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/site-guide/",
+      purpose: "Plain instruction map for using the website.",
+      publicSafe: true
+    },
+    diagnostic: {
+      id: "coherence-diagnostic",
+      label: "Coherence Diagnostic",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/coherence-diagnostic/",
+      contract: "COHERENCE_DIAGNOSTIC_LINEAR_ONE_SCENARIO_SUBMIT_FLOW_TNT_v9",
+      purpose: "Local-only self-pattern intake and coherence assessment.",
+      publicSafe: true
+    },
+    laws: {
+      id: "laws",
+      label: "Laws",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/laws/",
+      purpose: "Proof, boundary, claim law, route law, and return logic.",
+      publicSafe: true
+    },
+    gauges: {
+      id: "gauges",
+      label: "Gauges",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/gauges/",
+      purpose: "Technical/status proof surface.",
+      publicSafe: true
+    },
+    products: {
+      id: "products",
+      label: "Products",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/products/",
+      purpose: "Usable public application wing.",
+      publicSafe: true
+    },
+    meetSean: {
+      id: "meet-sean",
+      label: "Meet Sean",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/meet-sean-mansfield/",
+      purpose: "Human voice and origin profile behind Diamond Gate Bridge.",
+      publicSafe: true
+    },
+    mirrorland: {
+      id: "mirrorland",
+      label: "Mirrorland",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/showroom/globe/",
+      purpose: "World-behind-the-website entry path.",
+      publicSafe: true
+    },
+    showroom: {
+      id: "showroom",
+      label: "Showroom",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/showroom/",
+      purpose: "Visible estate/world atrium.",
+      publicSafe: true
+    },
+    audralia: {
+      id: "audralia",
+      label: "Audralia",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/showroom/globe/audralia/",
+      purpose: "Audralia world route.",
+      publicSafe: true
+    },
+    frontier: {
+      id: "frontier",
+      label: "Frontier",
+      status: [TOOL_STATUS.LIVE, TOOL_STATUS.PUBLIC],
+      route: "/explore/frontier/",
+      purpose: "Applied field / support / outside-world bridge.",
+      publicSafe: true
+    },
+    characterProfile: {
+      id: "character-profile",
+      label: "Character Profile",
+      status: [TOOL_STATUS.FUTURE, TOOL_STATUS.HELD],
+      route: "",
+      purpose: "Future saved visitor identity layer.",
+      publicSafe: true
+    },
+    savedDiagnostic: {
+      id: "saved-diagnostic",
+      label: "Saved Diagnostic Result",
+      status: [TOOL_STATUS.FUTURE, TOOL_STATUS.HELD],
+      route: "",
+      purpose: "Future saved diagnostic attached to character profile.",
+      publicSafe: true
+    },
+    login: {
+      id: "login",
+      label: "Login",
+      status: [TOOL_STATUS.FUTURE, TOOL_STATUS.HELD],
+      route: "",
+      purpose: "Future return access to saved profile.",
+      publicSafe: true
+    },
+    npcInteraction: {
+      id: "npc-interaction",
+      label: "NPC Interaction",
+      status: [TOOL_STATUS.FUTURE, TOOL_STATUS.HELD],
+      route: "",
+      purpose: "Future Mirrorland interaction layer.",
+      publicSafe: true
+    },
+    mirrorMe: {
+      id: "mirror-me",
+      label: "Mirror-Me Challenge",
+      status: [TOOL_STATUS.FUTURE, TOOL_STATUS.HELD],
+      route: "",
+      purpose: "Future higher-self discovery challenge.",
+      publicSafe: true
+    }
+  });
+
+  const ANCHORS = Object.freeze({
+    compass: {
+      id: "compass",
+      label: "Compass",
+      intent: INTENT.COMPASS,
+      owningTool: "compass",
+      question: "Where do I start?",
+      plain: "The Compass is the map. It helps you choose the first doorway instead of trying to understand the whole estate at once."
+    },
+    diagnostic: {
+      id: "diagnostic",
+      label: "Coherence Diagnostic",
+      intent: INTENT.DIAGNOSTIC,
+      owningTool: "diagnostic",
+      question: "How am I entering this?",
+      plain: "The Diagnostic helps you see how you make decisions under pressure before you explore the rest of the site."
+    },
+    laws: {
+      id: "laws",
+      label: "Laws",
+      intent: INTENT.LAWS,
+      owningTool: "laws",
+      question: "How do I know this holds together?",
+      plain: "The Laws explain what the site is allowed to claim, what must be checked, and how a visitor gets back after moving deeper."
+    },
+    products: {
+      id: "products",
+      label: "Products",
+      intent: INTENT.PRODUCTS,
+      owningTool: "products",
+      question: "How do I use this?",
+      plain: "Products is the practical wing. It is where the message becomes tools, games, support, learning, routine, and public paths."
+    },
+    sean: {
+      id: "sean",
+      label: "Meet Sean",
+      intent: INTENT.SEAN,
+      owningTool: "meetSean",
+      question: "Who is behind the voice?",
+      plain: "Sean is the human voice behind this side of the bridge. He turns pressure into language, and language into rooms other people can walk through."
+    },
+    mirrorland: {
+      id: "mirrorland",
+      label: "Mirrorland",
+      intent: INTENT.MIRRORLAND,
+      owningTool: "mirrorland",
+      question: "What is the world behind the website?",
+      plain: "Mirrorland is the world behind the public site. It gives the system people, place, story, and memory."
+    },
+    development: {
+      id: "development",
+      label: "Development Arc",
+      intent: INTENT.DEVELOPMENT,
+      owningTool: "cockpit",
+      question: "How did this develop, where is it now, and where is it going?",
+      plain: "The site is being built in stages: public anchors first, then deeper profile, NPC, saved-pattern, and Mirror-Me systems later."
+    },
+    meaning: {
+      id: "meaning",
+      label: "Meaning",
+      intent: INTENT.MEANING,
+      owningTool: "compass",
+      question: "Why does this matter?",
+      plain: "It matters because people need better ways to turn pressure, truth, story, and tools into usable direction."
+    }
+  });
+
+  const CHARACTER_REGISTRY = Object.freeze({
+    auren: {
+      name: "Auren Vale",
+      label: "Sanctuary Builder",
+      route: "/showroom/",
+      line: "Auren is trying to make the manor safe without turning it into a cage.",
+      bestFor: "protection, trust, shelter, and moral pressure"
+    },
+    dextrion: {
+      name: "Dextrion",
+      label: "Earth-Side Originator",
+      route: "/showroom/globe/",
+      line: "Dextrion opened the crossing and had to stay with the consequences.",
+      bestFor: "origin, systems, repair, anomaly, and technical consequences"
+    },
+    alaric: {
+      name: "Alaric",
+      label: "Field Navigator",
+      route: "/explore/frontier/",
+      line: "Alaric notices danger before everyone else is ready to believe him.",
+      bestFor: "routes, risk, terrain, warning, and field sense"
+    },
+    tarian: {
+      name: "Tarian",
+      label: "Water Anchor",
+      route: "/explore/frontier/",
+      line: "Tarian keeps every plan honest by asking whether the body can survive it.",
+      bestFor: "water, endurance, survival, fatigue, and practical reality"
+    },
+    elara: {
+      name: "Elara",
+      label: "Signal Bearer",
+      route: "/showroom/",
+      line: "Elara makes the future visible without pretending it is safe.",
+      bestFor: "hope, public signal, morale, and visibility"
+    },
+    soren: {
+      name: "Soren",
+      label: "Boundary Keeper",
+      route: "/laws/",
+      line: "Soren asks where the damage went before he accepts the word progress.",
+      bestFor: "proof, consequence, contamination, boundary, and hidden cost"
+    }
+  });
+
+  const state = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    version: VERSION,
+    file: FILE,
+    mounted: false,
+    mount: null,
+    turn: 0,
+    history: [],
+    currentIntent: INTENT.OPENING,
+    currentAnchor: "compass",
+    currentPole: "entry",
+    lastVisitorText: "",
+    immersionScore: 0,
+    progressionScore: 0,
+    jumpReadinessScore: 0,
+    cycleStage: CYCLE_STAGES.CONTACT,
+    currentVsFutureBoundaryActive: true,
+    naturalSurfaceLanguageActive: true,
+    chatbotClassificationForbidden: true,
+    artificialAgentIntelligenceActive: true,
+    toolRegistryActive: true,
+    anchorRegistryActive: true,
+    fibonacciCycleActive: true,
+    f89RegistryAlignmentActive: true,
+    localOnlySession: true,
+    storage: false,
+    localStorage: false,
+    cookies: false,
+    apiCall: false,
+    backend: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webgl: false
-  };
-
-  var ARCHETYPES = {
-    narrativeSeeker: {
-      label: "narrative seeker",
-      tone: "meaning",
-      routeBias: ["characters", "audralia", "explore", "hearth"],
-      guideBias: ["elara", "auren", "jeeves"]
-    },
-    explorer: {
-      label: "explorer",
-      tone: "discovery",
-      routeBias: ["audralia", "globeWindow", "explore", "frontier"],
-      guideBias: ["alaric", "elara", "remoteTeam"]
-    },
-    characterWitness: {
-      label: "character witness",
-      tone: "relational",
-      routeBias: ["characters", "hearth", "audralia", "explore"],
-      guideBias: ["auren", "elara", "jeeves"]
-    },
-    systemsAnalyst: {
-      label: "systems analyst",
-      tone: "proof",
-      routeBias: ["frontier", "gauges", "controlRoom", "hEarth"],
-      guideBias: ["dextrion", "soren", "remoteTeam"]
-    },
-    architect: {
-      label: "architect",
-      tone: "structure",
-      routeBias: ["hearth", "controlRoom", "laws", "explore"],
-      guideBias: ["jeeves", "auren", "soren"]
-    },
-    guidedNavigator: {
-      label: "guided navigator",
-      tone: "orientation",
-      routeBias: ["hearth", "globeWindow", "characters", "explore"],
-      guideBias: ["alaric", "jeeves", "tarian"]
-    }
-  };
-
-  var CHARACTER_DOSSIERS = {
-    auren: {
-      key: "auren",
-      name: "Auren Vale",
-      role: "Sanctuary Builder",
-      coreClass: "Sanctuary Builder",
-      primaryTrait: "Custody",
-      routePath: ["Mirror Manor", "Explore", "Audralia"],
-      routeBias: ["characters", "explore", "audralia", "hearth"],
-      archetypeFit: ["characterWitness", "narrativeSeeker", "architect"],
-      desireFit: ["meaning", "protection", "sanctuary", "people"],
-      postureFit: ["hesitant", "careful", "curious", "protective"],
-      toneBias: "protective",
-      guideFunction: "protection, shelter, sanctuary, admission, moral pressure",
-      pressure: "Every protected life makes the manor harder to hide.",
-      relationshipVoice: {
-        knowsLine: "Auren is usually near the rooms that should not have to exist.",
-        respectLine: "He calls it shelter, but I have watched shelter become a burden in his hands.",
-        warningLine: "If you follow Auren, remember that protection can become control if it stops listening.",
-        routeLine: "If you need sanctuary before spectacle, Auren is the one the house remembers first."
-      }
-    },
-    dextrion: {
-      key: "dextrion",
-      name: "Dextrion",
-      role: "Earth-Side Originator",
-      coreClass: "Earth-Side Originator",
-      primaryTrait: "Repair",
-      routePath: ["Earth Lab", "Anomaly", "H-Earth"],
-      routeBias: ["frontier", "hEarth", "gauges", "controlRoom"],
-      archetypeFit: ["systemsAnalyst", "architect", "explorer"],
-      desireFit: ["proof", "origin", "repair", "technology"],
-      postureFit: ["direct", "skeptical", "urgent", "proofSeeking"],
-      toneBias: "technical",
-      guideFunction: "origin, anomaly, repair, systems, hard evidence",
-      pressure: "Every one-way crossing remains on his hands.",
-      relationshipVoice: {
-        knowsLine: "Dextrion opened the path and stayed behind.",
-        respectLine: "He does not build to impress anyone. He builds because the break will not wait.",
-        warningLine: "If you follow Dextrion, you will not be allowed to confuse discovery with safety.",
-        routeLine: "If you want the origin of the crossing, Dextrion is where the house begins to point."
-      }
-    },
-    alaric: {
-      key: "alaric",
-      name: "Alaric",
-      role: "Field Navigator",
-      coreClass: "Field Navigator",
-      primaryTrait: "Orientation",
-      routePath: ["Explore", "Frontier", "Remote Field"],
-      routeBias: ["explore", "frontier", "hearth", "globeWindow"],
-      archetypeFit: ["guidedNavigator", "explorer", "systemsAnalyst"],
-      desireFit: ["route", "orientation", "danger", "movement"],
-      postureFit: ["cautious", "hesitant", "practical", "alert"],
-      toneBias: "directional",
-      guideFunction: "routes, danger, early warning, moving before proof arrives",
-      pressure: "Waiting for proof can close the only safe route.",
-      relationshipVoice: {
-        knowsLine: "Alaric moves before the room agrees with him.",
-        respectLine: "That makes people uncomfortable until the danger arrives.",
-        warningLine: "If you follow Alaric, the route may change before the explanation is complete.",
-        routeLine: "If you want the safe path before the obvious path, Alaric is the better instinct."
-      }
-    },
-    tarian: {
-      key: "tarian",
-      name: "Tarian",
-      role: "Water Anchor",
-      coreClass: "Water Anchor",
-      primaryTrait: "Continuity",
-      routePath: ["H-Earth", "Frontier", "Water Lane"],
-      routeBias: ["hEarth", "frontier", "products", "gauges"],
-      archetypeFit: ["guidedNavigator", "systemsAnalyst", "characterWitness"],
-      desireFit: ["survival", "water", "body", "continuity"],
-      postureFit: ["practical", "careful", "tired", "grounded"],
-      toneBias: "practical",
-      guideFunction: "body, water, endurance, survival condition, physical honesty",
-      pressure: "The future fails if the body cannot continue.",
-      relationshipVoice: {
-        knowsLine: "Tarian asks what happens to the body after the plan is finished speaking.",
-        respectLine: "He keeps the mission physically honest.",
-        warningLine: "If you follow Tarian, the house will not let survival stay abstract.",
-        routeLine: "If you want the practical condition of survival, Tarian is the one to follow."
-      }
-    },
-    elara: {
-      key: "elara",
-      name: "Elara",
-      role: "Signal Bearer",
-      coreClass: "Signal Bearer",
-      primaryTrait: "Vision",
-      routePath: ["Audralia", "Showroom", "Public Signal"],
-      routeBias: ["audralia", "globeWindow", "characters", "explore"],
-      archetypeFit: ["narrativeSeeker", "explorer", "characterWitness"],
-      desireFit: ["meaning", "vision", "hope", "visibility"],
-      postureFit: ["curious", "immersive", "eager", "uncertain"],
-      toneBias: "visionary",
-      guideFunction: "hope, signal, visibility, public-facing courage, future shape",
-      pressure: "The future has to be visible before anyone moves toward it.",
-      relationshipVoice: {
-        knowsLine: "Elara knows that a signal can save someone and expose someone at the same time.",
-        respectLine: "She makes possibility visible without pretending danger has left the room.",
-        warningLine: "If you follow Elara, you will learn that hope is useful only when it knows who it endangers.",
-        routeLine: "If you need the future to become visible, Elara is the thread to follow."
-      }
-    },
-    soren: {
-      key: "soren",
-      name: "Soren",
-      role: "Boundary Keeper",
-      coreClass: "Boundary Keeper",
-      primaryTrait: "Consequence",
-      routePath: ["ZIONTS", "Gauges", "Boundary"],
-      routeBias: ["gauges", "laws", "frontier", "controlRoom"],
-      archetypeFit: ["systemsAnalyst", "architect", "narrativeSeeker"],
-      desireFit: ["proof", "truth", "evidence", "consequence"],
-      postureFit: ["skeptical", "direct", "careful", "proofSeeking"],
-      toneBias: "severe",
-      guideFunction: "truth, contamination, hidden cost, boundary, consequence",
-      pressure: "Saving Mirrorland by hiding damage only creates another ZIONTS.",
-      relationshipVoice: {
-        knowsLine: "Soren is the one who asks where the damage went.",
-        respectLine: "He refuses clean language when the system is not clean.",
-        warningLine: "If you follow Soren, hope will be made honest before it is allowed to call itself restoration.",
-        routeLine: "If you want proof that progress is not hidden harm, Soren is the necessary door."
-      }
-    },
-    jeeves: {
-      key: "jeeves",
-      name: "Jeeves",
-      role: "Manor Interface",
-      coreClass: "Manor Interface",
-      primaryTrait: "Entry",
-      routePath: ["Mirror Manor", "Door", "Explore"],
-      routeBias: ["hearth", "explore", "door", "characters"],
-      archetypeFit: ["guidedNavigator", "architect", "characterWitness"],
-      desireFit: ["entry", "sequence", "orientation", "safeReveal"],
-      postureFit: ["hesitant", "curious", "passive", "careful"],
-      toneBias: "formal",
-      guideFunction: "safe revelation, sequence, entry, no-typing guidance, house intelligence",
-      pressure: "Too much truth breaks people. Too little sends them into the wrong room.",
-      relationshipVoice: {
-        knowsLine: "I am not outside this house explaining it. I am the house making entry survivable.",
-        respectLine: "Courtesy is one of my locks.",
-        warningLine: "I will not open every door simply because it can be opened.",
-        routeLine: "If you need the house sequenced, stay with me a little longer."
-      }
-    },
-    remoteTeam: {
-      key: "remoteTeam",
-      name: "Remote Team",
-      role: "Distributed Response Unit",
-      coreClass: "Distributed Response Unit",
-      primaryTrait: "Adaptation",
-      routePath: ["Frontier", "City", "Climate Field"],
-      routeBias: ["frontier", "explore", "products", "gauges"],
-      archetypeFit: ["explorer", "systemsAnalyst", "characterWitness"],
-      desireFit: ["community", "logistics", "field", "distribution"],
-      postureFit: ["practical", "eager", "direct", "public"],
-      toneBias: "field",
-      guideFunction: "public systems, field logistics, community survival, distributed response",
-      pressure: "If survival cannot leave the manor, the manor is only a bunker.",
-      relationshipVoice: {
-        knowsLine: "The Remote Team carries survival where the manor cannot stand over everyone.",
-        respectLine: "They make the future communal instead of private.",
-        warningLine: "If you follow them, the protected room will stop being enough.",
-        routeLine: "If you want the mission outside the estate, follow the Remote Team."
-      }
-    }
-  };
-
-  var els = {};
-  var templates = {};
-  var config = {};
-  var timers = [];
-
-  var state = {
-    booted: false,
-    initializedAt: "",
-    updatedAt: "",
-    currentNode: "",
-    previousNodes: [],
-    speaking: false,
-    minimized: false,
-    mode: "",
-    pendingRoute: null,
-
-    profile: {
-      openingPreference: "",
-      interest: "",
-      pace: "",
-      desire: "",
-      posture: "",
-      confidence: "unknown",
-      routeReadiness: "warming",
-      answerLengthPreference: "medium",
-      expressionDepth: "guided",
-      engagementLevel: "balanced",
-      interfaceZone: "guided",
-      archetypeSignal: "",
-      archetypeLabel: "",
-      archetypeConfidence: 0,
-      characterGuide: "",
-      characterGuideLabel: "",
-      characterConfidence: 0,
-
-      archetypeScores: {
-        narrativeSeeker: 0,
-        explorer: 0,
-        characterWitness: 0,
-        systemsAnalyst: 0,
-        architect: 0,
-        guidedNavigator: 0
-      },
-
-      desireScores: {},
-      postureScores: {},
-      routeBiasScores: {},
-      characterScores: {
-        auren: 0,
-        dextrion: 0,
-        alaric: 0,
-        tarian: 0,
-        elara: 0,
-        soren: 0,
-        jeeves: 0,
-        remoteTeam: 0
-      },
-
-      archetypeEvidence: [],
-      characterEvidence: [],
-      pathEvidence: []
-    },
-
-    memory: [],
-    transcript: [],
-    nodeVisits: {},
-    lastOption: null,
-    lastReceipt: null
+    visualPassClaimed: false,
+    publicSuperiorityClaim: false,
+    createdAt: "",
+    updatedAt: ""
   };
 
   function nowIso() {
@@ -344,2565 +428,1547 @@
     }
   }
 
-  function asString(value, fallback) {
-    if (fallback === undefined) fallback = "";
+  function safeString(value, fallback = "") {
     if (value === undefined || value === null) return fallback;
-    try {
-      return String(value);
-    } catch (_error) {
-      return fallback;
-    }
+    return String(value);
   }
 
-  function isObject(value) {
-    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  function escapeHtml(value) {
+    return safeString(value).replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#039;"
+    })[char]);
+  }
+
+  function normalize(value) {
+    return safeString(value)
+      .toLowerCase()
+      .replace(/[^\w\s/-]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function includesAny(text, terms) {
+    const n = normalize(text);
+    return terms.some((term) => n.includes(normalize(term)));
+  }
+
+  function scoreTerms(text, terms) {
+    const n = normalize(text);
+    return terms.reduce((score, term) => score + (n.includes(normalize(term)) ? 1 : 0), 0);
   }
 
   function clonePlain(value) {
     try {
       return JSON.parse(JSON.stringify(value));
     } catch (_error) {
+      if (Array.isArray(value)) return value.slice();
+      if (value && typeof value === "object") return { ...value };
       return value;
     }
   }
 
-  function $(selector) {
-    if (!doc) return null;
-    try {
-      return doc.querySelector(selector);
-    } catch (_error) {
-      return null;
+  function isLivePublicTool(toolId) {
+    const tool = TOOL_REGISTRY[toolId];
+    return Boolean(
+      tool &&
+      tool.publicSafe &&
+      tool.route &&
+      tool.status.includes(TOOL_STATUS.LIVE) &&
+      tool.status.includes(TOOL_STATUS.PUBLIC)
+    );
+  }
+
+  function getJump(label, href, toolId = "") {
+    return {
+      label,
+      href,
+      toolId,
+      live: toolId ? isLivePublicTool(toolId) : Boolean(href)
+    };
+  }
+
+  function jumpsForAnchor(anchorId) {
+    switch (anchorId) {
+      case "compass":
+        return [
+          getJump("Jump to Compass", "/", "compass"),
+          getJump("Open Website Guide", "/site-guide/", "siteGuide"),
+          getJump("Take Coherence Diagnostic", "/coherence-diagnostic/", "diagnostic")
+        ];
+      case "diagnostic":
+        return [
+          getJump("Jump to Coherence Diagnostic", "/coherence-diagnostic/", "diagnostic"),
+          getJump("Return to Compass", "/", "compass")
+        ];
+      case "laws":
+        return [
+          getJump("Jump to Laws", "/laws/", "laws"),
+          getJump("Open Gauges", "/gauges/", "gauges"),
+          getJump("Return to Compass", "/", "compass")
+        ];
+      case "products":
+        return [
+          getJump("Jump to Products", "/products/", "products"),
+          getJump("Meet Sean", "/meet-sean-mansfield/", "meetSean"),
+          getJump("Return to Compass", "/", "compass")
+        ];
+      case "sean":
+        return [
+          getJump("Jump to Meet Sean", "/meet-sean-mansfield/", "meetSean"),
+          getJump("Open Products", "/products/", "products"),
+          getJump("Return to Compass", "/", "compass")
+        ];
+      case "mirrorland":
+        return [
+          getJump("Enter Mirrorland", "/showroom/globe/", "mirrorland"),
+          getJump("Open Showroom", "/showroom/", "showroom"),
+          getJump("Open Audralia", "/showroom/globe/audralia/", "audralia"),
+          getJump("Open Frontier", "/explore/frontier/", "frontier")
+        ];
+      case "development":
+        return [
+          getJump("Return to Compass", "/", "compass"),
+          getJump("Open Gauges", "/gauges/", "gauges"),
+          getJump("Open Control Cockpit", "/showroom/globe/audralia/disposition/", "cockpit")
+        ];
+      case "meaning":
+        return [
+          getJump("Start at Compass", "/", "compass"),
+          getJump("Take Diagnostic", "/coherence-diagnostic/", "diagnostic"),
+          getJump("Enter Mirrorland", "/showroom/globe/", "mirrorland")
+        ];
+      default:
+        return [getJump("Start at Compass", "/", "compass")];
     }
   }
 
-  function $all(selector) {
-    if (!doc) return [];
-    try {
-      return Array.prototype.slice.call(doc.querySelectorAll(selector));
-    } catch (_error) {
-      return [];
+  function option(label, intent, value = "") {
+    return {
+      label,
+      intent,
+      value: value || label
+    };
+  }
+
+  function classifyVisitorIntent(input) {
+    const text = normalize(input);
+
+    if (!text) return INTENT.OPENING;
+
+    const scores = [
+      [INTENT.DIAGNOSTIC, scoreTerms(text, ["diagnostic", "assessment", "coherence", "archetype", "self check", "pressure", "mbti", "iq", "test", "profile"])],
+      [INTENT.LAWS, scoreTerms(text, ["proof", "prove", "holds", "law", "laws", "evidence", "claim", "claims", "boundary", "verify", "receipts"])],
+      [INTENT.GAUGES, scoreTerms(text, ["gauge", "gauges", "status", "technical", "audit", "checks", "pass", "fail"])],
+      [INTENT.PRODUCTS, scoreTerms(text, ["product", "products", "use", "useful", "tool", "tools", "game", "support", "education", "nutrition", "book", "archcoin"])],
+      [INTENT.SEAN, scoreTerms(text, ["sean", "built", "builder", "behind", "voice", "person", "human", "comedy", "seminar", "speaker"])],
+      [INTENT.MIRRORLAND, scoreTerms(text, ["mirrorland", "world", "hearth", "audralia", "story", "characters", "planet", "frontier", "showroom"])],
+      [INTENT.CHARACTERS, scoreTerms(text, ["character", "characters", "auren", "dextrion", "alaric", "tarian", "elara", "soren", "people"])],
+      [INTENT.DEVELOPMENT, scoreTerms(text, ["developed", "development", "roadmap", "where is it going", "where it is going", "future", "current", "where is the site", "where the site", "built in stages"])],
+      [INTENT.MEANING, scoreTerms(text, ["why matter", "why matters", "important", "world", "value", "why care", "what it means", "meaning"])],
+      [INTENT.STORY, scoreTerms(text, ["why story", "story makes", "telling a story", "narrative", "better as a story"])],
+      [INTENT.FUTURE_PROFILE, scoreTerms(text, ["character profile", "saved profile", "saved diagnostic", "login", "account", "save result"])],
+      [INTENT.NPCS, scoreTerms(text, ["npc", "npcs", "non player", "agents in the world"])],
+      [INTENT.MIRROR_ME, scoreTerms(text, ["mirror me", "higher self", "higher-self", "my mirror", "find myself"])],
+      [INTENT.COCKPIT, scoreTerms(text, ["cockpit", "control room", "operator", "registry", "f89", "engine mechanics"])],
+      [INTENT.FREE_ACCESS, scoreTerms(text, ["free", "cost", "pay", "price", "account free"])],
+      [INTENT.SIMPLE_START, scoreTerms(text, ["where start", "start", "simple", "just tell me", "first", "begin"])],
+      [INTENT.WEBSITE, scoreTerms(text, ["website", "site", "map", "guide", "page", "pages", "navigation"])],
+      [INTENT.SKEPTIC, scoreTerms(text, ["skeptical", "confused", "plainly", "what is this", "what am i looking at", "is this real"])]
+    ];
+
+    scores.sort((a, b) => b[1] - a[1]);
+
+    if (scores[0][1] > 0) return scores[0][0];
+
+    if (includesAny(text, ["what is this", "explain"])) return INTENT.SKEPTIC;
+
+    return INTENT.UNKNOWN;
+  }
+
+  function anchorForIntent(intent) {
+    switch (intent) {
+      case INTENT.WEBSITE:
+      case INTENT.COMPASS:
+      case INTENT.SIMPLE_START:
+      case INTENT.OPENING:
+      case INTENT.UNKNOWN:
+        return "compass";
+      case INTENT.DIAGNOSTIC:
+        return "diagnostic";
+      case INTENT.LAWS:
+      case INTENT.GAUGES:
+      case INTENT.SKEPTIC:
+        return "laws";
+      case INTENT.PRODUCTS:
+        return "products";
+      case INTENT.SEAN:
+        return "sean";
+      case INTENT.WORLD:
+      case INTENT.MIRRORLAND:
+      case INTENT.CHARACTERS:
+      case INTENT.NPCS:
+      case INTENT.MIRROR_ME:
+      case INTENT.FUTURE_PROFILE:
+        return "mirrorland";
+      case INTENT.DEVELOPMENT:
+      case INTENT.COCKPIT:
+        return "development";
+      case INTENT.MEANING:
+      case INTENT.STORY:
+      case INTENT.FREE_ACCESS:
+        return "meaning";
+      default:
+        return "compass";
     }
   }
 
-  function readConfig() {
-    var node = $("#jeevesConversationConfig");
-    var parsed = {};
+  function updateMotion(intent, anchorId) {
+    state.turn += 1;
+    state.currentIntent = intent;
+    state.currentAnchor = anchorId;
+    state.cycleStage = CYCLE_STAGES.JUMP_PRESSURE;
+    state.progressionScore = Math.min(233, state.progressionScore + 13);
+    state.jumpReadinessScore = Math.min(144, state.jumpReadinessScore + (anchorId ? 21 : 5));
 
-    if (node && node.textContent) {
-      try {
-        parsed = JSON.parse(node.textContent);
-      } catch (_error) {
-        parsed = {};
-      }
-    }
-
-    if (!isObject(parsed.routes)) parsed.routes = {};
-    parsed.routes = Object.assign({}, DEFAULT_ROUTES, parsed.routes);
-
-    return parsed;
-  }
-
-  function cacheElements() {
-    els.page = $("[data-jeeves-page='true']");
-    els.screenShell = $("[data-jeeves-screen-shell='true']");
-    els.screenGlass = $("[data-jeeves-screen-glass='true']");
-    els.thread = $("[data-jeeves-thread='true']");
-    els.promptGrid = $("[data-jeeves-prompt-grid='true']");
-    els.promptLabel = $("[data-jeeves-prompt-label]");
-    els.typing = $("[data-jeeves-typing]");
-    els.handoffDock = $("[data-jeeves-handoff-dock='true']");
-    els.handoffGrid = $("[data-jeeves-handoff-grid='true']");
-    els.status = $("[data-jeeves-status]");
-    els.statusText = $("[data-jeeves-status-text]");
-    els.minimized = $("[data-jeeves-minimized]");
-    els.contextRail = $("[data-jeeves-context-rail='true']");
-
-    templates.message = $("#jeevesMessageTemplate");
-    templates.option = $("#jeevesOptionTemplate");
-    templates.routeOption = $("#jeevesRouteOptionTemplate");
-  }
-
-  function clearTimers() {
-    timers.forEach(function clear(timer) {
-      root.clearTimeout(timer);
-    });
-    timers = [];
-    state.speaking = false;
-  }
-
-  function setStatus(status, label) {
-    if (els.status) {
-      els.status.setAttribute("data-jeeves-status", status || "listening");
-    }
-
-    if (els.statusText) {
-      els.statusText.textContent = label || "House listening";
-    }
-  }
-
-  function setTyping(active) {
-    if (!els.typing) return;
-    els.typing.setAttribute("data-jeeves-typing", active ? "true" : "false");
-  }
-
-  function scrollThread() {
-    if (!els.thread) return;
-
-    try {
-      var isMobile = root.matchMedia && root.matchMedia("(max-width: 720px)").matches;
-
-      if (isMobile) {
-        root.requestAnimationFrame(function scrollPage() {
-          var message = els.thread.lastElementChild;
-          if (message && message.scrollIntoView) {
-            message.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          }
-        });
-        return;
-      }
-
-      els.thread.scrollTop = els.thread.scrollHeight;
-    } catch (_error) {}
-  }
-
-  function expressionLabel(origin, expression) {
-    if (origin === "system") return "House";
-    if (origin === "jeeves") return "Jeeves";
-    if (expression === "internal") return "Thought";
-    return "You";
-  }
-
-  function createMessage(origin, text, options) {
-    options = options || {};
-
-    var expression = options.expression || "external";
-    var node = null;
-    var p = null;
-    var name = null;
-
-    if (templates.message && templates.message.content) {
-      node = templates.message.content.firstElementChild.cloneNode(true);
-    } else {
-      node = doc.createElement("article");
-      node.className = "jeeves-message";
-      name = doc.createElement("div");
-      name.className = "jeeves-message-name";
-      p = doc.createElement("p");
-      node.appendChild(name);
-      node.appendChild(p);
-    }
-
-    node.setAttribute("data-message-origin", origin);
-    node.setAttribute("data-message-expression", expression);
-
-    if (options.emphasis) {
-      node.setAttribute("data-message-emphasis", "true");
-    }
-
-    if (options.intent) {
-      node.setAttribute("data-message-intent", options.intent);
-    }
-
-    if (options.archetypeSignal) {
-      node.setAttribute("data-message-archetype-signal", options.archetypeSignal);
-    }
-
-    if (options.characterGuide) {
-      node.setAttribute("data-message-character-guide", options.characterGuide);
-    }
-
-    name = node.querySelector(".jeeves-message-name");
-    p = node.querySelector("p");
-
-    if (name) {
-      name.textContent = expressionLabel(origin, expression);
-    }
-
-    if (p) {
-      p.textContent = asString(text);
-    }
-
-    return node;
-  }
-
-  function addMessage(origin, text, options) {
-    if (!els.thread) return null;
-
-    options = options || {};
-
-    var node = createMessage(origin, text, options);
-    els.thread.appendChild(node);
-    scrollThread();
-
-    state.transcript.push({
-      at: nowIso(),
-      origin: origin,
-      expression: options.expression || "external",
-      intent: options.intent || "",
-      archetypeSignal: options.archetypeSignal || "",
-      characterGuide: options.characterGuide || "",
-      text: asString(text),
-      emphasis: Boolean(options.emphasis)
-    });
-
-    if (state.transcript.length > 500) {
-      state.transcript.splice(0, state.transcript.length - 500);
+    if ([INTENT.WORLD, INTENT.MIRRORLAND, INTENT.CHARACTERS, INTENT.NPCS, INTENT.MIRROR_ME].includes(intent)) {
+      state.immersionScore = Math.min(100, state.immersionScore + 13);
+    } else if ([INTENT.WEBSITE, INTENT.COMPASS, INTENT.SIMPLE_START, INTENT.SKEPTIC].includes(intent)) {
+      state.immersionScore = Math.max(0, state.immersionScore - 3);
     }
 
     state.updatedAt = nowIso();
-    return node;
   }
 
-  function clearInitialSeed() {
-    if (!els.thread) return;
-    var seed = els.thread.querySelector("[data-seed-message='true']");
-    if (seed) {
-      seed.remove();
-    }
+  function paragraphJoin(parts) {
+    return parts.filter(Boolean).join("\n\n");
   }
 
-  function clearOptions() {
-    if (els.promptGrid) els.promptGrid.innerHTML = "";
-    if (els.handoffGrid) els.handoffGrid.innerHTML = "";
-    if (els.handoffDock) {
-      els.handoffDock.setAttribute("data-handoff-visible", "false");
-      els.handoffDock.setAttribute("data-jeeves-jump-pads-active", "false");
-    }
+  function openingResponse() {
+    return {
+      intent: INTENT.OPENING,
+      anchorId: "compass",
+      cycle: cyclePacket(INTENT.OPENING, "compass"),
+      text: paragraphJoin([
+        "Welcome to Diamond Gate Bridge.",
+        "Most visitors arrive here asking the same thing: “What exactly am I looking at?”",
+        "I can answer that from the website side, or I can take you toward the world behind it. If you are skeptical, I can start there too."
+      ]),
+      options: [
+        option("Explain the website first.", INTENT.WEBSITE),
+        option("Take me toward the world behind it.", INTENT.WORLD),
+        option("I’m skeptical — explain this plainly.", INTENT.SKEPTIC),
+        option("Start with the Coherence Diagnostic.", INTENT.DIAGNOSTIC),
+        option("Just tell me where to start.", INTENT.SIMPLE_START)
+      ],
+      jumpPads: jumpsForAnchor("compass")
+    };
   }
 
-  function resolveRoute(routeKeyOrPath) {
-    var key = asString(routeKeyOrPath);
-    if (!key) return "#";
-    return config.routes[key] || DEFAULT_ROUTES[key] || key;
+  function websiteResponse() {
+    return {
+      intent: INTENT.WEBSITE,
+      anchorId: "compass",
+      cycle: cyclePacket(INTENT.WEBSITE, "compass"),
+      text: paragraphJoin([
+        "The website side is the map.",
+        "Start with the Compass when you want orientation. Use the Coherence Diagnostic when you want to understand how you are entering. Use Laws and Gauges when you want proof. Use Products when you want the practical tools. Use Meet Sean when you want the human voice behind it.",
+        "The site is built so you do not have to understand everything at once. You choose the doorway that matches your question."
+      ]),
+      options: [
+        option("Show me the simplest starting path.", INTENT.SIMPLE_START),
+        option("Explain the Diagnostic.", INTENT.DIAGNOSTIC),
+        option("Show me the proof path.", INTENT.LAWS),
+        option("Show me the practical tools.", INTENT.PRODUCTS),
+        option("Now take me toward the world.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("compass")
+    };
   }
 
-  function isRouteOption(option) {
-    return Boolean(option && (option.type === "route" || option.type === "control" || option.type === "jumpPad" || option.jumpPad));
+  function worldResponse() {
+    return {
+      intent: INTENT.WORLD,
+      anchorId: "mirrorland",
+      cycle: cyclePacket(INTENT.WORLD, "mirrorland"),
+      text: paragraphJoin([
+        "The world side is Mirrorland.",
+        "That is where the website stops being only a map and starts becoming a place. Hearth, Audralia, Frontier, and the characters give the system a human shape.",
+        "You can treat it as story, but the story is not decoration. It gives pressure, proof, tools, and self-understanding somewhere to live."
+      ]),
+      options: [
+        option("Introduce me to the people.", INTENT.CHARACTERS),
+        option("Explain why the story matters.", INTENT.STORY),
+        option("What is coming later?", INTENT.FUTURE_PROFILE),
+        option("Show me the proof before the story.", INTENT.LAWS)
+      ],
+      jumpPads: jumpsForAnchor("mirrorland")
+    };
   }
 
-  function optionElement(option) {
-    var isRoute = isRouteOption(option);
-    var node = null;
-    var labelNode = null;
-
-    if (isRoute && templates.routeOption && templates.routeOption.content) {
-      node = templates.routeOption.content.firstElementChild.cloneNode(true);
-    } else if (templates.option && templates.option.content) {
-      node = templates.option.content.firstElementChild.cloneNode(true);
-    } else {
-      node = isRoute ? doc.createElement("a") : doc.createElement("button");
-      node.className = isRoute ? "jeeves-option jeeves-option-route" : "jeeves-option";
-      if (!isRoute) node.type = "button";
-      labelNode = doc.createElement("span");
-      node.appendChild(labelNode);
-    }
-
-    if (!isRoute) {
-      node.type = "button";
-    } else {
-      node.href = resolveRoute(option.routeKey || option.route);
-      node.setAttribute("data-jeeves-jump-pad", option.jumpPad ? "true" : "false");
-    }
-
-    node.setAttribute("data-jeeves-option", "true");
-    node.setAttribute("data-option-type", option.jumpPad ? "jumpPad" : (option.type || "conversation"));
-    node.setAttribute("data-option-expression", option.expression || "external");
-    node.setAttribute("data-option-target", option.target || option.routeKey || option.route || option.action || "");
-
-    if (option.intent) node.setAttribute("data-option-intent", option.intent);
-    if (option.archetypeSignal) node.setAttribute("data-option-archetype-signal", option.archetypeSignal);
-    if (option.desireSignal) node.setAttribute("data-option-desire-signal", option.desireSignal);
-    if (option.postureSignal) node.setAttribute("data-option-posture-signal", option.postureSignal);
-    if (option.characterGuide) node.setAttribute("data-option-character-guide", option.characterGuide);
-    if (option.answerLength) node.setAttribute("data-option-answer-length", option.answerLength);
-    if (option.expressionDepth) node.setAttribute("data-option-expression-depth", option.expressionDepth);
-    if (option.toneBias) node.setAttribute("data-option-tone-bias", option.toneBias);
-
-    labelNode = node.querySelector("span") || node;
-    labelNode.textContent = option.label || "Continue";
-
-    node.addEventListener("click", function onOption(event) {
-      event.preventDefault();
-      handleOption(option);
-    });
-
-    return node;
+  function skepticResponse() {
+    return {
+      intent: INTENT.SKEPTIC,
+      anchorId: "laws",
+      cycle: cyclePacket(INTENT.SKEPTIC, "laws"),
+      text: paragraphJoin([
+        "That is a fair way to enter.",
+        "The plain version is this: Diamond Gate Bridge is a staged website and world system. It has public anchors you can inspect now, and future layers that are clearly marked as coming.",
+        "If you want to test whether it holds together, start with Laws and Gauges. Laws explain what the site is allowed to claim. Gauges show the technical/status side. The Diagnostic lets you test your own pressure pattern without asking you to believe the whole world first."
+      ]),
+      options: [
+        option("Show me the Laws.", INTENT.LAWS),
+        option("Show me the Gauges.", INTENT.GAUGES),
+        option("Explain the Diagnostic.", INTENT.DIAGNOSTIC),
+        option("Explain where the site is going.", INTENT.DEVELOPMENT)
+      ],
+      jumpPads: jumpsForAnchor("laws")
+    };
   }
 
-  function optionTargetKey(option) {
-    return option.routeKey || option.route || option.target || option.intent || "";
+  function simpleStartResponse() {
+    return {
+      intent: INTENT.SIMPLE_START,
+      anchorId: "compass",
+      cycle: cyclePacket(INTENT.SIMPLE_START, "compass"),
+      text: paragraphJoin([
+        "Then keep it simple.",
+        "Start at the Compass. If you want to understand yourself first, take the Coherence Diagnostic. If you want proof, open Laws. If you want tools, open Products. If you want the world, enter Mirrorland.",
+        "That is the cleanest first path."
+      ]),
+      options: [
+        option("Start with myself.", INTENT.DIAGNOSTIC),
+        option("Start with proof.", INTENT.LAWS),
+        option("Start with tools.", INTENT.PRODUCTS),
+        option("Start with the world.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("compass")
+    };
   }
 
-  function scoreOptionForProfile(option) {
-    var score = 0;
-    var archetype = ARCHETYPES[state.profile.archetypeSignal];
-    var target = optionTargetKey(option);
-
-    if (!option) return score;
-
-    if (state.profile.archetypeSignal && option.archetypeSignal === state.profile.archetypeSignal) score += 4;
-    if (state.profile.characterGuide && option.characterGuide === state.profile.characterGuide) score += 3;
-
-    if (archetype && archetype.routeBias.indexOf(target) >= 0) score += 2;
-    if (state.profile.routeBiasScores[target]) score += state.profile.routeBiasScores[target];
-
-    if (state.profile.interfaceZone === "simple" && option.answerLength === "short") score += 3;
-    if (state.profile.interfaceZone === "guided" && option.answerLength === "medium") score += 2;
-    if (state.profile.interfaceZone === "immersive" && option.answerLength === "long") score += 3;
-
-    if (state.profile.expressionDepth === option.expressionDepth) score += 2;
-    if (state.profile.desire && option.desireSignal === state.profile.desire) score += 2;
-    if (state.profile.posture && option.postureSignal === state.profile.posture) score += 2;
-
-    return score;
+  function diagnosticResponse() {
+    return {
+      intent: INTENT.DIAGNOSTIC,
+      anchorId: "diagnostic",
+      cycle: cyclePacket(INTENT.DIAGNOSTIC, "diagnostic"),
+      text: paragraphJoin([
+        "The Coherence Diagnostic is the self-check before entry.",
+        "It asks how coherent you believe yourself to be, which archetype you think you lead with, and then tests that claim through real-world pressure scenarios.",
+        "Right now it runs locally in your browser. No account, no upload, no email required, no backend, no storage, no cookies, and no API call. It is not medical, legal, employment screening, an IQ test, or official MBTI.",
+        "Later, the diagnostic can become part of a saved character profile. That future layer is not active until profile and login systems exist."
+      ]),
+      options: [
+        option("What are the archetypes?", INTENT.CHARACTERS),
+        option("How will it connect to my future profile?", INTENT.FUTURE_PROFILE),
+        option("Why does this matter?", INTENT.MEANING),
+        option("Show me the proof path instead.", INTENT.LAWS)
+      ],
+      jumpPads: jumpsForAnchor("diagnostic")
+    };
   }
 
-  function customizeOptions(options, lockOrder) {
-    if (!options || !options.length) return [];
-    if (lockOrder) return options;
-
-    return options.slice().sort(function sort(a, b) {
-      var aScore = scoreOptionForProfile(a);
-      var bScore = scoreOptionForProfile(b);
-
-      if (bScore !== aScore) return bScore - aScore;
-      return 0;
-    });
+  function lawsResponse() {
+    return {
+      intent: INTENT.LAWS,
+      anchorId: "laws",
+      cycle: cyclePacket(INTENT.LAWS, "laws"),
+      text: paragraphJoin([
+        "The Laws chamber is where the bridge proves it is not just decoration.",
+        "Proof outranks confidence here. If a page claims something, the house needs a way to check it. If a route opens, the house needs a way back. If something looks impressive, the house still has to know whether it is proof, decoration, or a doorway.",
+        "That is why Laws and Gauges matter. Laws define the claim boundaries. Gauges expose status and technical evidence."
+      ]),
+      options: [
+        option("Open the technical side.", INTENT.GAUGES),
+        option("Explain this in plain language.", INTENT.SKEPTIC),
+        option("Show me the Diagnostic.", INTENT.DIAGNOSTIC),
+        option("Take me toward the world.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("laws")
+    };
   }
 
-  function renderOptions(options, jumpPads, label, lockOrder) {
-    clearOptions();
-
-    if (els.promptLabel) {
-      els.promptLabel.textContent = label || "Choose what to say";
-    }
-
-    var ordered = customizeOptions(options || [], lockOrder);
-    var conversationOptions = [];
-    var routeOptions = [];
-
-    ordered.forEach(function split(option) {
-      if (isRouteOption(option)) {
-        routeOptions.push(option);
-      } else {
-        conversationOptions.push(option);
-      }
-    });
-
-    (jumpPads || []).forEach(function addPad(pad) {
-      routeOptions.push(pad);
-    });
-
-    conversationOptions.forEach(function appendConversation(option) {
-      if (!els.promptGrid) return;
-      els.promptGrid.appendChild(optionElement(option));
-    });
-
-    routeOptions.forEach(function appendRoute(option) {
-      if (!els.handoffGrid) return;
-      els.handoffGrid.appendChild(optionElement(option));
-    });
-
-    if (els.handoffDock) {
-      els.handoffDock.setAttribute("data-handoff-visible", routeOptions.length ? "true" : "false");
-      els.handoffDock.setAttribute("data-jeeves-jump-pads-active", routeOptions.length ? "true" : "false");
-    }
+  function gaugesResponse() {
+    return {
+      intent: INTENT.GAUGES,
+      anchorId: "laws",
+      cycle: cyclePacket(INTENT.GAUGES, "laws"),
+      text: paragraphJoin([
+        "Gauges are the technical proof surface.",
+        "They are not the story. They are the check layer. They help show what is active, what is held, what is passing, and what still needs work.",
+        "Use Gauges when you want the site to answer with status instead of atmosphere."
+      ]),
+      options: [
+        option("Show me the Laws too.", INTENT.LAWS),
+        option("Where is the site right now?", INTENT.DEVELOPMENT),
+        option("Now show me the world side.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("laws")
+    };
   }
 
-  function routeTo(routeKeyOrPath) {
-    var route = resolveRoute(routeKeyOrPath);
-    if (!route || route === "#") return false;
-
-    root.location.href = route;
-    return true;
+  function productsResponse() {
+    return {
+      intent: INTENT.PRODUCTS,
+      anchorId: "products",
+      cycle: cyclePacket(INTENT.PRODUCTS, "products"),
+      text: paragraphJoin([
+        "Products is the practical wing.",
+        "It is where the message becomes usable: support, games, learning, nutrition, public paths, Sean’s work, and the book routes.",
+        "If you want to use the project instead of only understand it, Products is the right doorway."
+      ]),
+      options: [
+        option("Why are products part of the story?", INTENT.STORY),
+        option("Who is behind this?", INTENT.SEAN),
+        option("What makes it useful?", INTENT.MEANING),
+        option("Take me back to the map.", INTENT.COMPASS)
+      ],
+      jumpPads: jumpsForAnchor("products")
+    };
   }
 
-  function visitorTextFor(option) {
-    return option.userText || option.label || "Continue.";
+  function seanResponse() {
+    return {
+      intent: INTENT.SEAN,
+      anchorId: "sean",
+      cycle: cyclePacket(INTENT.SEAN, "sean"),
+      text: paragraphJoin([
+        "Sean is the human voice behind this side of the bridge.",
+        "His work begins with pressure, but it does not stay there. It moves through accountability, redirection, comedy, story, speaking, seminars, and usable language.",
+        "That matters because the estate is not only technical. It has a human origin: pressure turned into a map other people can use."
+      ]),
+      options: [
+        option("How did the site develop from that?", INTENT.DEVELOPMENT),
+        option("Why does the story matter?", INTENT.STORY),
+        option("Show me the practical side.", INTENT.PRODUCTS),
+        option("Take me toward Mirrorland.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("sean")
+    };
   }
 
-  function visitorExpressionFor(option) {
-    return option.expression || "external";
+  function mirrorlandResponse() {
+    return {
+      intent: INTENT.MIRRORLAND,
+      anchorId: "mirrorland",
+      cycle: cyclePacket(INTENT.MIRRORLAND, "mirrorland"),
+      text: paragraphJoin([
+        "Mirrorland is the world behind the website.",
+        "It gives the estate people, places, stakes, and memory. That is where characters matter. They are not labels in a database; they are the people through whom the world becomes understandable.",
+        "You can enter through Hearth, the Showroom, Audralia, or Frontier depending on whether you want the house, the world, or the field beyond it."
+      ]),
+      options: [
+        option("Introduce me to the characters.", INTENT.CHARACTERS),
+        option("What is Mirror-Me?", INTENT.MIRROR_ME),
+        option("How will NPCs work later?", INTENT.NPCS),
+        option("Start with proof instead.", INTENT.LAWS)
+      ],
+      jumpPads: jumpsForAnchor("mirrorland")
+    };
   }
 
-  function normalizeArray(value) {
-    if (!value) return [];
-    return Array.isArray(value) ? value : [value];
-  }
-
-  function remember(option) {
-    if (!option || !option.memory) return;
-
-    normalizeArray(option.memory).forEach(function add(item) {
-      var value = asString(item);
-      if (!value) return;
-      if (state.memory.indexOf(value) === -1) {
-        state.memory.push(value);
-      }
-    });
-
-    if (state.memory.length > 100) {
-      state.memory.splice(0, state.memory.length - 100);
-    }
-  }
-
-  function addScore(map, key, amount) {
-    if (!key) return;
-    map[key] = (map[key] || 0) + Number(amount || 1);
-  }
-
-  function applyRouteBias(option) {
-    normalizeArray(option.routeBias).forEach(function each(route) {
-      addScore(state.profile.routeBiasScores, route, 1);
-    });
-  }
-
-  function updateArchetype(option) {
-    var weight = Number(option.signalWeight || 1);
-
-    normalizeArray(option.archetypeSignal || option.archetypeSignals).forEach(function eachSignal(signal) {
-      if (!ARCHETYPES[signal]) return;
-
-      addScore(state.profile.archetypeScores, signal, weight);
-
-      state.profile.archetypeEvidence.push({
-        at: nowIso(),
-        node: state.currentNode,
-        intent: option.intent || "",
-        label: option.label || "",
-        signal: signal,
-        weight: weight,
-        expression: option.expression || "external"
-      });
-    });
-
-    if (state.profile.archetypeEvidence.length > 100) {
-      state.profile.archetypeEvidence.splice(0, state.profile.archetypeEvidence.length - 100);
-    }
-
-    inferArchetype();
-  }
-
-  function inferArchetype() {
-    var scores = state.profile.archetypeScores || {};
-    var best = "";
-    var bestScore = 0;
-    var secondScore = 0;
-
-    Object.keys(scores).forEach(function each(key) {
-      var value = Number(scores[key] || 0);
-
-      if (value > bestScore) {
-        secondScore = bestScore;
-        bestScore = value;
-        best = key;
-      } else if (value > secondScore) {
-        secondScore = value;
-      }
-    });
-
-    if (!best) {
-      state.profile.archetypeSignal = "";
-      state.profile.archetypeLabel = "";
-      state.profile.archetypeConfidence = 0;
-      return;
-    }
-
-    state.profile.archetypeSignal = best;
-    state.profile.archetypeLabel = ARCHETYPES[best].label;
-
-    var margin = Math.max(0, bestScore - secondScore);
-    state.profile.archetypeConfidence = Math.min(10, Math.round(bestScore + margin));
-  }
-
-  function updatePathSignals(option) {
-    var weight = Number(option.signalWeight || 1);
-
-    if (option.desireSignal) {
-      state.profile.desire = option.desireSignal;
-      addScore(state.profile.desireScores, option.desireSignal, weight);
-    }
-
-    if (option.postureSignal) {
-      state.profile.posture = option.postureSignal;
-      addScore(state.profile.postureScores, option.postureSignal, weight);
-    }
-
-    if (option.paceSignal) {
-      state.profile.pace = option.paceSignal;
-    }
-
-    if (option.confidenceSignal) {
-      state.profile.confidence = option.confidenceSignal;
-    }
-
-    if (option.routeReadiness) {
-      state.profile.routeReadiness = option.routeReadiness;
-    }
-
-    state.profile.pathEvidence.push({
-      at: nowIso(),
-      node: state.currentNode,
-      intent: option.intent || "",
-      desireSignal: option.desireSignal || "",
-      postureSignal: option.postureSignal || "",
-      paceSignal: option.paceSignal || "",
-      confidenceSignal: option.confidenceSignal || "",
-      answerLength: option.answerLength || "",
-      expressionDepth: option.expressionDepth || "",
-      engagementSignal: option.engagementSignal || ""
-    });
-
-    if (state.profile.pathEvidence.length > 120) {
-      state.profile.pathEvidence.splice(0, state.profile.pathEvidence.length - 120);
-    }
-  }
-
-  function updateExpressionProfile(option) {
-    if (option.answerLength) state.profile.answerLengthPreference = option.answerLength;
-    if (option.expressionDepth) state.profile.expressionDepth = option.expressionDepth;
-    if (option.engagementSignal) state.profile.engagementLevel = option.engagementSignal;
-
-    var simple = 0;
-    var guided = 0;
-    var immersive = 0;
-
-    if (option.answerLength === "short") simple += 2;
-    if (option.answerLength === "medium") guided += 2;
-    if (option.answerLength === "long") immersive += 2;
-
-    if (option.expressionDepth === "plain") simple += 2;
-    if (option.expressionDepth === "guided") guided += 2;
-    if (option.expressionDepth === "immersive") immersive += 2;
-
-    if (option.engagementSignal === "skim") simple += 2;
-    if (option.engagementSignal === "balanced") guided += 2;
-    if (option.engagementSignal === "deep") immersive += 2;
-
-    if (option.postureSignal === "direct" || option.postureSignal === "passive") simple += 1;
-    if (option.postureSignal === "curious" || option.postureSignal === "careful") guided += 1;
-    if (option.postureSignal === "immersive" || option.postureSignal === "expressive") immersive += 2;
-
-    if (immersive > guided && immersive > simple) {
-      state.profile.interfaceZone = "immersive";
-    } else if (simple > guided && simple >= immersive) {
-      state.profile.interfaceZone = "simple";
-    } else {
-      state.profile.interfaceZone = "guided";
-    }
-  }
-
-  function updateCharacterGuide(option) {
-    var weight = Number(option.signalWeight || 1);
-
-    normalizeArray(option.characterGuide || option.characterGuides).forEach(function eachGuide(key) {
-      if (!CHARACTER_DOSSIERS[key]) return;
-
-      addScore(state.profile.characterScores, key, weight + 1);
-
-      state.profile.characterEvidence.push({
-        at: nowIso(),
-        node: state.currentNode,
-        intent: option.intent || "",
-        label: option.label || "",
-        characterGuide: key,
-        weight: weight + 1
-      });
-    });
-
-    normalizeArray(option.archetypeSignal || option.archetypeSignals).forEach(function eachArchetype(signal) {
-      Object.keys(CHARACTER_DOSSIERS).forEach(function eachCharacter(key) {
-        var dossier = CHARACTER_DOSSIERS[key];
-        if (dossier.archetypeFit.indexOf(signal) >= 0) {
-          addScore(state.profile.characterScores, key, 0.5);
-        }
-      });
-    });
-
-    normalizeArray(option.desireSignal).forEach(function eachDesire(signal) {
-      Object.keys(CHARACTER_DOSSIERS).forEach(function eachCharacter(key) {
-        var dossier = CHARACTER_DOSSIERS[key];
-        if (dossier.desireFit.indexOf(signal) >= 0) {
-          addScore(state.profile.characterScores, key, 0.5);
-        }
-      });
-    });
-
-    normalizeArray(option.postureSignal).forEach(function eachPosture(signal) {
-      Object.keys(CHARACTER_DOSSIERS).forEach(function eachCharacter(key) {
-        var dossier = CHARACTER_DOSSIERS[key];
-        if (dossier.postureFit.indexOf(signal) >= 0) {
-          addScore(state.profile.characterScores, key, 0.5);
-        }
-      });
-    });
-
-    if (state.profile.characterEvidence.length > 100) {
-      state.profile.characterEvidence.splice(0, state.profile.characterEvidence.length - 100);
-    }
-
-    inferCharacterGuide();
-  }
-
-  function inferCharacterGuide() {
-    var scores = state.profile.characterScores || {};
-    var best = "";
-    var bestScore = 0;
-    var secondScore = 0;
-
-    Object.keys(scores).forEach(function each(key) {
-      var value = Number(scores[key] || 0);
-
-      if (value > bestScore) {
-        secondScore = bestScore;
-        bestScore = value;
-        best = key;
-      } else if (value > secondScore) {
-        secondScore = value;
-      }
-    });
-
-    if (!best || !CHARACTER_DOSSIERS[best]) {
-      state.profile.characterGuide = "";
-      state.profile.characterGuideLabel = "";
-      state.profile.characterConfidence = 0;
-      return;
-    }
-
-    state.profile.characterGuide = best;
-    state.profile.characterGuideLabel = CHARACTER_DOSSIERS[best].name;
-
-    var margin = Math.max(0, bestScore - secondScore);
-    state.profile.characterConfidence = Math.min(10, Math.round(bestScore + margin));
-  }
-
-  function updateProfileFromOption(option) {
-    if (!option) return;
-
-    if (option.profileKey && option.profileValue) {
-      state.profile[option.profileKey] = option.profileValue;
-    }
-
-    if (option.mode) {
-      state.mode = option.mode;
-      state.profile.openingPreference = option.mode;
-    }
-
-    updateArchetype(option);
-    updatePathSignals(option);
-    updateExpressionProfile(option);
-    updateCharacterGuide(option);
-    applyRouteBias(option);
-    remember(option);
-  }
-
-  function addVisitorIntent(option) {
-    updateProfileFromOption(option);
-
-    addMessage("visitor", visitorTextFor(option), {
-      expression: visitorExpressionFor(option),
-      intent: option.intent || option.target || option.action || option.routeKey || "",
-      archetypeSignal: option.archetypeSignal || "",
-      characterGuide: option.characterGuide || ""
-    });
-
-    state.lastOption = clonePlain(option);
-  }
-
-  function zone() {
-    return state.profile.interfaceZone || "guided";
-  }
-
-  function lineByZone(simple, guided, immersive) {
-    if (zone() === "simple") return simple;
-    if (zone() === "immersive") return immersive;
-    return guided;
-  }
-
-  function currentCharacter() {
-    return CHARACTER_DOSSIERS[state.profile.characterGuide] || null;
-  }
-
-  function relationshipLine(kind, fallback) {
-    var guide = currentCharacter();
-    if (!guide || !guide.relationshipVoice) return fallback || "";
-    return guide.relationshipVoice[kind] || fallback || "";
-  }
-
-  function characterGuideLine() {
-    var guide = currentCharacter();
-
-    if (!guide || state.profile.characterConfidence < 3) {
-      return "";
-    }
-
-    if (zone() === "simple") {
-      return guide.relationshipVoice.routeLine || "";
-    }
-
-    if (zone() === "immersive") {
-      return guide.relationshipVoice.knowsLine + " " + guide.relationshipVoice.respectLine;
-    }
-
-    return guide.relationshipVoice.routeLine || guide.relationshipVoice.knowsLine || "";
-  }
-
-  function routeAfterJeeves(option) {
-    clearTimers();
-    clearOptions();
-    setStatus("routing", "Opening jump pad");
-    setTyping(false);
-
-    addVisitorIntent(option);
-
-    state.pendingRoute = option.routeKey || option.route || "";
-    state.updatedAt = nowIso();
-
-    var line = option.confirmation ||
-      lineByZone(
-        "Opening it now.",
-        "I will open that door for you now.",
-        "Very well. I will open that door, but keep the thread you chose in mind when you arrive."
-      );
-
-    timers.push(root.setTimeout(function speakRoute() {
-      addMessage("jeeves", line, { emphasis: true, characterGuide: option.characterGuide || state.profile.characterGuide || "" });
-      timers.push(root.setTimeout(function navigate() {
-        routeTo(option.routeKey || option.route);
-      }, Number(option.routeDelay || 850)));
-    }, 320));
-  }
-
-  function handleOption(option) {
-    if (!option || state.speaking) return;
-
-    if (isRouteOption(option)) {
-      routeAfterJeeves(option);
-      return;
-    }
-
-    if (option.action === "minimize") {
-      addVisitorIntent(option);
-      minimize();
-      return;
-    }
-
-    if (option.action === "restore") {
-      restore();
-      return;
-    }
-
-    if (option.action === "back") {
-      addVisitorIntent(option);
-      goBack();
-      return;
-    }
-
-    if (option.action === "restart") {
-      addVisitorIntent(option);
-      runNode("intro", { preserveHistory: false });
-      return;
-    }
-
-    addVisitorIntent(option);
-    runNode(option.target || "pathHub");
-  }
-
-  function normalizeBeat(beat) {
-    if (typeof beat === "string") {
-      return { text: beat, delay: 800, emphasis: false };
-    }
+  function charactersResponse() {
+    const characterLines = Object.values(CHARACTER_REGISTRY)
+      .map((item) => `${item.name}: ${item.line}`)
+      .join("\n");
 
     return {
-      text: asString(beat.text),
-      delay: Number(beat.delay || 800),
-      emphasis: Boolean(beat.emphasis),
-      characterGuide: beat.characterGuide || ""
+      intent: INTENT.CHARACTERS,
+      anchorId: "mirrorland",
+      cycle: cyclePacket(INTENT.CHARACTERS, "mirrorland"),
+      text: paragraphJoin([
+        "The people help you understand the world without turning it into a wall of information.",
+        characterLines,
+        "Choose the person whose problem you want to understand first. Protection, proof, origin, warning, survival, and hope each open a different way into the estate."
+      ]),
+      options: [
+        option("Start with protection.", INTENT.MIRRORLAND, "Auren"),
+        option("Start with origin and systems.", INTENT.COCKPIT, "Dextrion"),
+        option("Start with proof and consequence.", INTENT.LAWS, "Soren"),
+        option("Start with hope and signal.", INTENT.STORY, "Elara"),
+        option("Explain the future profile layer.", INTENT.FUTURE_PROFILE)
+      ],
+      jumpPads: jumpsForAnchor("mirrorland")
     };
   }
 
-  function node(id) {
-    return NODES[id] || NODES.pathHub || NODES.intro;
+  function developmentResponse() {
+    return {
+      intent: INTENT.DEVELOPMENT,
+      anchorId: "development",
+      cycle: cyclePacket(INTENT.DEVELOPMENT, "development"),
+      text: paragraphJoin([
+        "Diamond Gate Bridge is being built in stages.",
+        "The current public estate has anchors: Compass, Coherence Diagnostic, Laws, Gauges, Products, Meet Sean, and the first visible paths toward Mirrorland.",
+        "The next stage is more personal: character profiles, saved diagnostic patterns, login, NPC interaction, and the Mirror-Me challenge. Those future systems are not active until they are actually built.",
+        "The important point is that the site is not only explaining a world. It is becoming a way for the visitor to enter one."
+      ]),
+      options: [
+        option("What is live right now?", INTENT.WEBSITE),
+        option("What is coming later?", INTENT.FUTURE_PROFILE),
+        option("Why does it matter?", INTENT.MEANING),
+        option("Show me the technical proof side.", INTENT.GAUGES)
+      ],
+      jumpPads: jumpsForAnchor("development")
+    };
   }
 
-  function nodeOptions(n) {
-    if (!n) return [];
-    return typeof n.options === "function" ? n.options(state) : (n.options || []);
+  function meaningResponse() {
+    return {
+      intent: INTENT.MEANING,
+      anchorId: "meaning",
+      cycle: cyclePacket(INTENT.MEANING, "meaning"),
+      text: paragraphJoin([
+        "To the visitor, this matters because it gives confusion a doorway.",
+        "You do not have to understand the whole system at once. You can start with yourself, with proof, with tools, with Sean, or with the world behind the site.",
+        "To the world, it matters because people need better ways to organize pressure, truth, story, usefulness, and self-understanding without turning everything into cold data or empty entertainment."
+      ]),
+      options: [
+        option("Why does story make it better?", INTENT.STORY),
+        option("Start with myself.", INTENT.DIAGNOSTIC),
+        option("Start with proof.", INTENT.LAWS),
+        option("Start with the world.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("meaning")
+    };
   }
 
-  function nodeJumpPads(n) {
-    if (!n) return [];
-    return typeof n.jumpPads === "function" ? n.jumpPads(state) : (n.jumpPads || []);
+  function storyResponse() {
+    return {
+      intent: INTENT.STORY,
+      anchorId: "meaning",
+      cycle: cyclePacket(INTENT.STORY, "meaning"),
+      text: paragraphJoin([
+        "Story matters because people do not usually change through information alone.",
+        "A normal website can tell you what something is. A story can help you feel why it matters, remember where you are, and choose who or what you want to follow next.",
+        "That is why Mirrorland matters. It gives the system a human shape."
+      ]),
+      options: [
+        option("Take me into Mirrorland.", INTENT.WORLD),
+        option("Introduce the characters.", INTENT.CHARACTERS),
+        option("Explain the future Mirror-Me challenge.", INTENT.MIRROR_ME),
+        option("Show me the practical tools.", INTENT.PRODUCTS)
+      ],
+      jumpPads: jumpsForAnchor("meaning")
+    };
   }
 
-  function nodeBeats(n) {
-    if (!n) return [];
-    return typeof n.beats === "function" ? n.beats(state) : (n.beats || []);
+  function futureProfileResponse() {
+    return {
+      intent: INTENT.FUTURE_PROFILE,
+      anchorId: "mirrorland",
+      cycle: cyclePacket(INTENT.FUTURE_PROFILE, "mirrorland"),
+      text: paragraphJoin([
+        "The future profile layer is the personal estate layer.",
+        "The plan is that your Coherence Diagnostic pattern can eventually attach to a character profile. That profile can travel with you through the estate, so future systems can respond to how you enter, how you choose, and what kind of pressure you carry.",
+        "That is not active yet. Right now the Diagnostic is local-only and does not save your result. Saved profiles, login, NPC interaction, and saved diagnostic patterns belong to the future roadmap."
+      ]),
+      options: [
+        option("Explain NPCs.", INTENT.NPCS),
+        option("Explain Mirror-Me.", INTENT.MIRROR_ME),
+        option("Start with the live Diagnostic.", INTENT.DIAGNOSTIC),
+        option("Where is the site now?", INTENT.DEVELOPMENT)
+      ],
+      jumpPads: jumpsForAnchor("diagnostic")
+    };
   }
 
-  function runNode(id, options) {
-    options = options || {};
+  function npcsResponse() {
+    return {
+      intent: INTENT.NPCS,
+      anchorId: "mirrorland",
+      cycle: cyclePacket(INTENT.NPCS, "mirrorland"),
+      text: paragraphJoin([
+        "NPCs are part of the future Mirrorland layer.",
+        "The idea is that characters in the world will eventually respond to your profile, choices, and coherence pattern. That would make the world feel less like a page and more like a place that remembers how you entered.",
+        "That system is not live yet. For now, Jeeves can explain the direction and guide you through the current public routes."
+      ]),
+      options: [
+        option("What is Mirror-Me?", INTENT.MIRROR_ME),
+        option("How does the Diagnostic connect?", INTENT.DIAGNOSTIC),
+        option("Introduce the current characters.", INTENT.CHARACTERS),
+        option("Show me what is live now.", INTENT.WEBSITE)
+      ],
+      jumpPads: jumpsForAnchor("mirrorland")
+    };
+  }
 
-    var n = node(id);
-    var previous = state.currentNode;
+  function mirrorMeResponse() {
+    return {
+      intent: INTENT.MIRROR_ME,
+      anchorId: "mirrorland",
+      cycle: cyclePacket(INTENT.MIRROR_ME, "mirrorland"),
+      text: paragraphJoin([
+        "Mirror-Me is a future higher-self discovery challenge.",
+        "It is not a clone and not a diagnosis. It is the idea that the world can reflect a stronger version of you back through choices, characters, and pressure situations.",
+        "The Coherence Diagnostic is the first practical step toward that future, because it reads how you move under pressure. Later, that pattern can help shape the profile that moves through the world."
+      ]),
+      options: [
+        option("Take the Diagnostic first.", INTENT.DIAGNOSTIC),
+        option("Explain the character profile.", INTENT.FUTURE_PROFILE),
+        option("Why does this matter?", INTENT.MEANING),
+        option("Take me into Mirrorland.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("diagnostic")
+    };
+  }
 
-    clearTimers();
-    clearInitialSeed();
-    clearOptions();
-    setTyping(true);
-    setStatus("speaking", "Jeeves is speaking");
+  function cockpitResponse() {
+    return {
+      intent: INTENT.COCKPIT,
+      anchorId: "development",
+      cycle: cyclePacket(INTENT.COCKPIT, "development"),
+      text: paragraphJoin([
+        "The cockpit is the control and status side.",
+        "For a visitor, the important idea is simple: the estate needs a way to know what is live, what is held, what is ready, and what should not be claimed yet.",
+        "That helps Jeeves avoid pretending future systems are already active. It also supports the development arc: where the site is, what is working, and what comes next."
+      ]),
+      options: [
+        option("Where is the site now?", INTENT.DEVELOPMENT),
+        option("Show me the proof layer.", INTENT.GAUGES),
+        option("Explain the registry mechanics plainly.", INTENT.SKEPTIC),
+        option("Return to the main map.", INTENT.COMPASS)
+      ],
+      jumpPads: jumpsForAnchor("development")
+    };
+  }
 
-    if (!options.preserveHistory && id === "intro") {
-      state.previousNodes = [];
-    } else if (previous && previous !== id) {
-      state.previousNodes.push(previous);
-      if (state.previousNodes.length > 50) {
-        state.previousNodes.splice(0, state.previousNodes.length - 50);
+  function freeAccessResponse() {
+    return {
+      intent: INTENT.FREE_ACCESS,
+      anchorId: "meaning",
+      cycle: cyclePacket(INTENT.FREE_ACCESS, "meaning"),
+      text: paragraphJoin([
+        "The public participation principle is free access.",
+        "The point is not to lock the visitor out of self-understanding, story, or the first estate paths. Future profile and login systems should support return access, not turn the doorway into a wall.",
+        "If a feature is not live yet, I will say so. If it is free and available, I can route you to it."
+      ]),
+      options: [
+        option("What can I use now?", INTENT.PRODUCTS),
+        option("Start with the free Diagnostic.", INTENT.DIAGNOSTIC),
+        option("What is coming later?", INTENT.FUTURE_PROFILE),
+        option("Why does this matter?", INTENT.MEANING)
+      ],
+      jumpPads: jumpsForAnchor("meaning")
+    };
+  }
+
+  function unknownResponse(text) {
+    return {
+      intent: INTENT.UNKNOWN,
+      anchorId: "compass",
+      cycle: cyclePacket(INTENT.UNKNOWN, "compass"),
+      text: paragraphJoin([
+        "I can help with that, but I should anchor it first.",
+        "Do you want the website map, the proof path, the practical tools, the human origin, or the world behind the site?"
+      ]),
+      options: [
+        option("Website map.", INTENT.WEBSITE),
+        option("Proof path.", INTENT.LAWS),
+        option("Practical tools.", INTENT.PRODUCTS),
+        option("Who built this?", INTENT.SEAN),
+        option("World behind it.", INTENT.WORLD)
+      ],
+      jumpPads: jumpsForAnchor("compass"),
+      originalText: text
+    };
+  }
+
+  function cyclePacket(intent, anchorId) {
+    return {
+      contract: "JEEVES_CONVERSATIONAL_CYCLE_OF_PROGRESSION_v1",
+      intent,
+      anchorId,
+      fibonacciRhythm: ["1", "1", "2", "3", "5", "8", "13"],
+      stages: [
+        CYCLE_STAGES.CONTACT,
+        CYCLE_STAGES.RECOGNITION,
+        CYCLE_STAGES.FORK,
+        CYCLE_STAGES.KNOWLEDGE_HIT,
+        CYCLE_STAGES.ANCHOR_EXPANSION,
+        CYCLE_STAGES.CURIOSITY_RISE,
+        CYCLE_STAGES.JUMP_PRESSURE,
+        CYCLE_STAGES.RETURN_LOOP
+      ],
+      mechanicalMap: clonePlain(CYCLE_TO_FIBONACCI),
+      activeStage: CYCLE_STAGES.JUMP_PRESSURE,
+      createsClarity: true,
+      createsCuriosity: true,
+      createsMotion: true
+    };
+  }
+
+  function composeResponse(input = {}) {
+    const rawText = safeString(input.text || input.value || "");
+    const intent = input.intent || classifyVisitorIntent(rawText);
+    const anchorId = anchorForIntent(intent);
+
+    updateMotion(intent, anchorId);
+
+    switch (intent) {
+      case INTENT.OPENING:
+        return openingResponse();
+      case INTENT.WEBSITE:
+      case INTENT.COMPASS:
+        return websiteResponse();
+      case INTENT.WORLD:
+        return worldResponse();
+      case INTENT.SKEPTIC:
+        return skepticResponse();
+      case INTENT.SIMPLE_START:
+        return simpleStartResponse();
+      case INTENT.DIAGNOSTIC:
+        return diagnosticResponse();
+      case INTENT.LAWS:
+        return lawsResponse();
+      case INTENT.GAUGES:
+        return gaugesResponse();
+      case INTENT.PRODUCTS:
+        return productsResponse();
+      case INTENT.SEAN:
+        return seanResponse();
+      case INTENT.MIRRORLAND:
+        return mirrorlandResponse();
+      case INTENT.CHARACTERS:
+        return charactersResponse();
+      case INTENT.DEVELOPMENT:
+        return developmentResponse();
+      case INTENT.MEANING:
+        return meaningResponse();
+      case INTENT.STORY:
+        return storyResponse();
+      case INTENT.FUTURE_PROFILE:
+        return futureProfileResponse();
+      case INTENT.NPCS:
+        return npcsResponse();
+      case INTENT.MIRROR_ME:
+        return mirrorMeResponse();
+      case INTENT.COCKPIT:
+        return cockpitResponse();
+      case INTENT.FREE_ACCESS:
+        return freeAccessResponse();
+      default:
+        return unknownResponse(rawText);
+    }
+  }
+
+  function pushMessage(role, text, detail = {}) {
+    const message = {
+      id: `jeeves-message-${state.history.length + 1}`,
+      role,
+      text: safeString(text),
+      detail: clonePlain(detail),
+      at: nowIso()
+    };
+
+    state.history.push(message);
+    state.updatedAt = message.at;
+
+    if (state.history.length > 80) {
+      state.history.splice(0, state.history.length - 80);
+    }
+
+    return message;
+  }
+
+  function injectStyle() {
+    if (!doc || doc.getElementById("hearth-jeeves-aai-style-v8")) return;
+
+    const style = doc.createElement("style");
+    style.id = "hearth-jeeves-aai-style-v8";
+    style.textContent = `
+      :root{
+        --jeeves-bg:rgba(2,8,18,.86);
+        --jeeves-panel:rgba(6,16,34,.86);
+        --jeeves-line:rgba(255,255,255,.13);
+        --jeeves-text:rgba(239,247,255,.96);
+        --jeeves-muted:rgba(239,247,255,.70);
+        --jeeves-faint:rgba(239,247,255,.52);
+        --jeeves-gold:#f4cf83;
+        --jeeves-gold2:#ffe8a3;
+        --jeeves-blue:#8dd8ff;
+        --jeeves-mint:#a7f3c6;
+        --jeeves-shadow:0 28px 90px rgba(0,0,0,.42);
       }
-    }
 
-    state.currentNode = id;
-    state.nodeVisits[id] = (state.nodeVisits[id] || 0) + 1;
-    state.speaking = true;
-    state.updatedAt = nowIso();
+      .hearth-jeeves-aai{
+        position:relative;
+        display:grid;
+        gap:14px;
+        width:min(100%,960px);
+        margin:0 auto;
+        color:var(--jeeves-text);
+        font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+        letter-spacing:-.015em;
+      }
 
-    var beats = nodeBeats(n);
-    var cumulative = Number(n.startDelay || 200);
+      .hearth-jeeves-aai *{box-sizing:border-box}
 
-    if (!beats || !beats.length) {
-      beats = [{ text: "Choose the next door.", emphasis: true }];
-    }
+      .hearth-jeeves-card{
+        border:1px solid var(--jeeves-line);
+        border-radius:28px;
+        background:
+          radial-gradient(circle at 10% 0%,rgba(244,207,131,.09),transparent 18rem),
+          radial-gradient(circle at 90% 20%,rgba(141,216,255,.10),transparent 20rem),
+          linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.016)),
+          var(--jeeves-bg);
+        box-shadow:var(--jeeves-shadow),inset 0 1px 0 rgba(255,255,255,.08);
+        overflow:hidden;
+      }
 
-    beats.map(normalizeBeat).forEach(function deliver(beat, index, list) {
-      cumulative += beat.delay;
+      .hearth-jeeves-head{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:12px;
+        align-items:center;
+        padding:18px 20px;
+        border-bottom:1px solid rgba(244,207,131,.16);
+        background:rgba(255,255,255,.025);
+      }
 
-      timers.push(root.setTimeout(function onBeat() {
-        addMessage("jeeves", beat.text, {
-          expression: "external",
-          emphasis: beat.emphasis,
-          characterGuide: beat.characterGuide || state.profile.characterGuide || ""
-        });
+      .hearth-jeeves-title{
+        display:grid;
+        gap:4px;
+        min-width:0;
+      }
 
-        if (index === list.length - 1) {
-          state.speaking = false;
-          setTyping(false);
-          setStatus("listening", "House listening");
+      .hearth-jeeves-title b{
+        color:var(--jeeves-gold);
+        font-size:.72rem;
+        letter-spacing:.16em;
+        text-transform:uppercase;
+      }
 
-          timers.push(root.setTimeout(function showFork() {
-            renderOptions(
-              nodeOptions(n),
-              nodeJumpPads(n),
-              n.optionLabel || "Choose what to say",
-              Boolean(n.lockOrder)
-            );
-          }, Number(n.forkDelay || 420)));
+      .hearth-jeeves-title strong{
+        color:rgba(255,244,216,.96);
+        font-size:clamp(1.18rem,2.6vw,1.72rem);
+        line-height:1;
+        letter-spacing:-.05em;
+      }
+
+      .hearth-jeeves-status{
+        display:inline-flex;
+        min-height:32px;
+        align-items:center;
+        justify-content:center;
+        border:1px solid rgba(167,243,198,.22);
+        border-radius:999px;
+        padding:0 10px;
+        color:rgba(167,243,198,.94);
+        background:rgba(167,243,198,.055);
+        font-size:.65rem;
+        font-weight:900;
+        letter-spacing:.12em;
+        text-transform:uppercase;
+        white-space:nowrap;
+      }
+
+      .hearth-jeeves-log{
+        display:grid;
+        gap:12px;
+        padding:16px;
+      }
+
+      .hearth-jeeves-message{
+        display:grid;
+        gap:8px;
+        max-width:820px;
+        border:1px solid rgba(255,255,255,.09);
+        border-radius:22px;
+        padding:14px 15px;
+        background:
+          linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.010)),
+          rgba(0,0,0,.16);
+      }
+
+      .hearth-jeeves-message[data-role="visitor"]{
+        justify-self:end;
+        border-color:rgba(141,216,255,.20);
+        background:
+          radial-gradient(circle at 100% 0%,rgba(141,216,255,.11),transparent 13rem),
+          rgba(255,255,255,.025);
+      }
+
+      .hearth-jeeves-message[data-role="jeeves"]{
+        justify-self:start;
+        border-color:rgba(244,207,131,.18);
+      }
+
+      .hearth-jeeves-message b{
+        color:var(--jeeves-gold);
+        font-size:.66rem;
+        letter-spacing:.14em;
+        text-transform:uppercase;
+      }
+
+      .hearth-jeeves-message[data-role="visitor"] b{
+        color:var(--jeeves-blue);
+      }
+
+      .hearth-jeeves-message p{
+        margin:0;
+        color:var(--jeeves-muted);
+        font-size:.98rem;
+        line-height:1.55;
+      }
+
+      .hearth-jeeves-options,
+      .hearth-jeeves-jumps{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        padding:0 16px 16px;
+      }
+
+      .hearth-jeeves-options{
+        border-top:1px solid rgba(255,255,255,.06);
+        padding-top:14px;
+      }
+
+      .hearth-jeeves-option,
+      .hearth-jeeves-jump,
+      .hearth-jeeves-submit{
+        min-height:40px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        border:1px solid rgba(255,255,255,.12);
+        border-radius:999px;
+        padding:0 13px;
+        color:rgba(239,247,255,.84);
+        background:rgba(255,255,255,.038);
+        font:900 .76rem/1 Inter,ui-sans-serif,system-ui,sans-serif;
+        letter-spacing:.045em;
+        text-transform:uppercase;
+        text-decoration:none;
+        cursor:pointer;
+      }
+
+      .hearth-jeeves-option:hover,
+      .hearth-jeeves-submit:hover{
+        color:#06101c;
+        background:linear-gradient(135deg,#fff0b8,var(--jeeves-gold));
+        border-color:rgba(244,207,131,.55);
+      }
+
+      .hearth-jeeves-jumps{
+        padding-top:0;
+      }
+
+      .hearth-jeeves-jump{
+        color:#06101c;
+        border-color:rgba(244,207,131,.55);
+        background:linear-gradient(135deg,#fff0b8,var(--jeeves-gold));
+      }
+
+      .hearth-jeeves-jump[data-held="true"]{
+        color:rgba(239,247,255,.48);
+        background:rgba(255,255,255,.032);
+        border-color:rgba(255,255,255,.09);
+        pointer-events:none;
+      }
+
+      .hearth-jeeves-form{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:10px;
+        padding:16px;
+        border-top:1px solid rgba(255,255,255,.08);
+        background:rgba(0,0,0,.16);
+      }
+
+      .hearth-jeeves-input{
+        width:100%;
+        min-height:44px;
+        border:1px solid rgba(255,255,255,.13);
+        border-radius:18px;
+        padding:0 14px;
+        color:var(--jeeves-text);
+        background:rgba(255,255,255,.045);
+        font:760 .96rem/1.3 Inter,ui-sans-serif,system-ui,sans-serif;
+      }
+
+      .hearth-jeeves-input::placeholder{
+        color:rgba(239,247,255,.45);
+      }
+
+      .hearth-jeeves-meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        padding:0 16px 16px;
+      }
+
+      .hearth-jeeves-pill{
+        min-height:28px;
+        display:inline-flex;
+        align-items:center;
+        border:1px solid rgba(255,255,255,.10);
+        border-radius:999px;
+        padding:0 9px;
+        color:var(--jeeves-faint);
+        background:rgba(255,255,255,.025);
+        font-size:.63rem;
+        font-weight:900;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+      }
+
+      @media (max-width:640px){
+        .hearth-jeeves-head,
+        .hearth-jeeves-form{
+          grid-template-columns:1fr;
         }
-      }, cumulative));
+
+        .hearth-jeeves-status{
+          width:fit-content;
+        }
+
+        .hearth-jeeves-option,
+        .hearth-jeeves-jump,
+        .hearth-jeeves-submit{
+          width:100%;
+        }
+      }
+    `;
+
+    doc.head.appendChild(style);
+  }
+
+  function findMount() {
+    if (!doc) return null;
+
+    return (
+      doc.querySelector("[data-jeeves-mount]") ||
+      doc.querySelector("[data-hearth-jeeves-mount]") ||
+      doc.getElementById("hearthJeevesMount") ||
+      doc.getElementById("jeevesMount") ||
+      doc.getElementById("talkToHouseMount")
+    );
+  }
+
+  function createMount() {
+    if (!doc || !doc.body) return null;
+
+    const existing = findMount();
+    if (existing) return existing;
+
+    const mount = doc.createElement("section");
+    mount.id = "hearthJeevesMount";
+    mount.setAttribute("data-jeeves-mount", "true");
+    mount.setAttribute("aria-label", "Talk to the House");
+    doc.body.appendChild(mount);
+    return mount;
+  }
+
+  function renderText(text) {
+    return safeString(text)
+      .split(/\n{2,}/)
+      .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`)
+      .join("");
+  }
+
+  function renderOptions(latest) {
+    const options = latest && latest.detail && Array.isArray(latest.detail.options)
+      ? latest.detail.options
+      : [];
+
+    if (!options.length) return "";
+
+    return `
+      <div class="hearth-jeeves-options" aria-label="Conversation options">
+        ${options.map((item) => `
+          <button class="hearth-jeeves-option" type="button" data-jeeves-intent="${escapeHtml(item.intent)}" data-jeeves-value="${escapeHtml(item.value || item.label)}">
+            ${escapeHtml(item.label)}
+          </button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderJumpPads(latest) {
+    const jumpPads = latest && latest.detail && Array.isArray(latest.detail.jumpPads)
+      ? latest.detail.jumpPads
+      : [];
+
+    const valid = jumpPads.filter((jump) => jump && jump.href);
+
+    if (!valid.length) return "";
+
+    return `
+      <div class="hearth-jeeves-jumps" aria-label="Jump pads">
+        ${valid.map((jump) => `
+          <a class="hearth-jeeves-jump" href="${escapeHtml(jump.href)}" data-tool-id="${escapeHtml(jump.toolId || "")}" data-held="${jump.live ? "false" : "true"}">
+            ${escapeHtml(jump.label)}
+          </a>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderMeta() {
+    return `
+      <div class="hearth-jeeves-meta" aria-label="Jeeves status">
+        <span class="hearth-jeeves-pill">AAI</span>
+        <span class="hearth-jeeves-pill">F89 Registry</span>
+        <span class="hearth-jeeves-pill">Cycle ${escapeHtml(state.cycleStage)}</span>
+        <span class="hearth-jeeves-pill">Anchor ${escapeHtml(state.currentAnchor)}</span>
+        <span class="hearth-jeeves-pill">No Storage</span>
+      </div>
+    `;
+  }
+
+  function render() {
+    if (!state.mount) return;
+
+    const latest = [...state.history].reverse().find((item) => item.role === "jeeves");
+
+    state.mount.innerHTML = `
+      <div class="hearth-jeeves-aai" data-contract="${escapeHtml(CONTRACT)}" data-class="artificial-agent-intelligence">
+        <div class="hearth-jeeves-card">
+          <header class="hearth-jeeves-head">
+            <div class="hearth-jeeves-title">
+              <b>Talk to the House</b>
+              <strong>Jeeves</strong>
+            </div>
+            <span class="hearth-jeeves-status">Artificial Agent Intelligence</span>
+          </header>
+
+          <div class="hearth-jeeves-log" aria-live="polite">
+            ${state.history.map((message) => `
+              <article class="hearth-jeeves-message" data-role="${escapeHtml(message.role)}">
+                <b>${message.role === "visitor" ? "Visitor" : "Jeeves"}</b>
+                ${renderText(message.text)}
+              </article>
+            `).join("")}
+          </div>
+
+          ${renderOptions(latest)}
+          ${renderJumpPads(latest)}
+          ${renderMeta()}
+
+          <form class="hearth-jeeves-form" data-jeeves-form>
+            <input
+              class="hearth-jeeves-input"
+              name="jeevesPrompt"
+              type="text"
+              autocomplete="off"
+              placeholder="Ask what this is, where to start, why it matters, or what is coming next."
+              aria-label="Ask Jeeves"
+            >
+            <button class="hearth-jeeves-submit" type="submit">Ask</button>
+          </form>
+        </div>
+      </div>
+    `;
+
+    bindRenderedEvents();
+  }
+
+  function bindRenderedEvents() {
+    if (!state.mount) return;
+
+    state.mount.querySelectorAll("[data-jeeves-intent]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const intent = button.getAttribute("data-jeeves-intent") || INTENT.UNKNOWN;
+        const value = button.getAttribute("data-jeeves-value") || button.textContent || "";
+        handleVisitorChoice(intent, value);
+      });
     });
-  }
 
-  function goBack() {
-    var previous = state.previousNodes.pop();
-
-    if (!previous) {
-      runNode("intro", { preserveHistory: false });
-      return;
-    }
-
-    runNode(previous, { fromBack: true });
-  }
-
-  function minimize() {
-    state.minimized = true;
-
-    if (els.screenShell) {
-      els.screenShell.hidden = true;
-      els.screenShell.setAttribute("aria-hidden", "true");
-    }
-
-    if (els.contextRail) {
-      els.contextRail.hidden = true;
-      els.contextRail.setAttribute("aria-hidden", "true");
-    }
-
-    if (els.minimized) {
-      els.minimized.setAttribute("data-jeeves-minimized", "true");
-      els.minimized.hidden = false;
-    }
-
-    setStatus("minimized", "House minimized");
-  }
-
-  function restore() {
-    state.minimized = false;
-
-    if (els.screenShell) {
-      els.screenShell.hidden = false;
-      els.screenShell.setAttribute("aria-hidden", "false");
-    }
-
-    if (els.contextRail) {
-      els.contextRail.hidden = false;
-      els.contextRail.setAttribute("aria-hidden", "false");
-    }
-
-    if (els.minimized) {
-      els.minimized.setAttribute("data-jeeves-minimized", "false");
-    }
-
-    setStatus("listening", "House listening");
-    addMessage("jeeves", "I am here. The house did not lose the thread.", { emphasis: true });
-    renderOptions(nodeOptions(node(state.currentNode || "intro")), nodeJumpPads(node(state.currentNode || "intro")), "Choose what to say");
-  }
-
-  function bindStaticActions() {
-    $all("[data-jeeves-action]").forEach(function bind(nodeEl) {
-      if (nodeEl.dataset.jeevesActionBound === "true") return;
-      nodeEl.dataset.jeevesActionBound = "true";
-
-      nodeEl.addEventListener("click", function click(event) {
+    const form = state.mount.querySelector("[data-jeeves-form]");
+    if (form) {
+      form.addEventListener("submit", (event) => {
         event.preventDefault();
-
-        var action = nodeEl.getAttribute("data-jeeves-action");
-        if (action === "restore") restore();
-        if (action === "minimize") minimize();
+        const input = form.elements.jeevesPrompt;
+        const text = input ? input.value.trim() : "";
+        if (!text) return;
+        if (input) input.value = "";
+        handleVisitorText(text);
       });
-    });
-  }
-
-  function opt(label, props) {
-    return Object.assign({
-      label: label,
-      type: "conversation",
-      expression: "external",
-      target: "pathHub",
-      intent: "",
-      userText: label,
-      archetypeSignal: "guidedNavigator",
-      desireSignal: "orientation",
-      postureSignal: "curious",
-      paceSignal: "guided",
-      answerLength: "medium",
-      expressionDepth: "guided",
-      engagementSignal: "balanced",
-      signalWeight: 1,
-      routeBias: ["hearth"],
-      characterGuide: "jeeves",
-      toneBias: "guided"
-    }, props || {});
-  }
-
-  function jump(label, routeKey, props) {
-    return Object.assign({
-      label: label,
-      type: "jumpPad",
-      jumpPad: true,
-      expression: "external",
-      routeKey: routeKey,
-      intent: "jump-" + routeKey,
-      userText: label,
-      archetypeSignal: "guidedNavigator",
-      desireSignal: "route",
-      postureSignal: "direct",
-      paceSignal: "fast",
-      answerLength: "short",
-      expressionDepth: "plain",
-      engagementSignal: "skim",
-      signalWeight: 1,
-      routeBias: [routeKey],
-      characterGuide: "jeeves",
-      toneBias: "route",
-      confirmation: "Opening " + label.replace(/^Jump to /, "").replace(/^Open /, "") + "."
-    }, props || {});
-  }
-
-  function restartOption() {
-    return opt("Back to the beginning.", {
-      action: "restart",
-      target: "",
-      intent: "restart",
-      userText: "Let’s start again from the beginning.",
-      archetypeSignal: "guidedNavigator",
-      desireSignal: "orientation",
-      postureSignal: "careful",
-      answerLength: "short",
-      expressionDepth: "plain",
-      engagementSignal: "skim",
-      routeBias: ["hearth"],
-      characterGuide: "jeeves"
-    });
-  }
-
-  function withRestart(options) {
-    return (options || []).concat([restartOption()]);
-  }
-
-  function characterChoice(key, label, target) {
-    var dossier = CHARACTER_DOSSIERS[key];
-
-    return opt(label || dossier.name, {
-      target: target || "character_" + key,
-      intent: "choose-character-" + key,
-      userText: "I want to follow " + dossier.name + ".",
-      archetypeSignal: dossier.archetypeFit[0] || "characterWitness",
-      desireSignal: dossier.desireFit[0] || "meaning",
-      postureSignal: dossier.postureFit[0] || "curious",
-      answerLength: "medium",
-      expressionDepth: "guided",
-      engagementSignal: "balanced",
-      routeBias: dossier.routeBias,
-      characterGuide: key,
-      toneBias: dossier.toneBias
-    });
-  }
-
-  function characterNodeBeats(key) {
-    var dossier = CHARACTER_DOSSIERS[key];
-
-    return function beats() {
-      if (zone() === "simple") {
-        return [
-          { text: dossier.relationshipVoice.routeLine, delay: 650, emphasis: true },
-          { text: "Choose whether to keep speaking or jump to the Portrait Hall.", delay: 760 }
-        ];
-      }
-
-      if (zone() === "immersive") {
-        return [
-          { text: dossier.relationshipVoice.knowsLine, delay: 700, emphasis: true },
-          { text: dossier.relationshipVoice.respectLine, delay: 980 },
-          { text: dossier.relationshipVoice.warningLine, delay: 1040 },
-          { text: "Choose how close you want to stand to that thread.", delay: 860, emphasis: true }
-        ];
-      }
-
-      return [
-        { text: dossier.relationshipVoice.knowsLine, delay: 700, emphasis: true },
-        { text: dossier.relationshipVoice.routeLine, delay: 900 },
-        { text: "Choose the next step.", delay: 760, emphasis: true }
-      ];
-    };
-  }
-
-  function characterNodeOptions(key) {
-    var dossier = CHARACTER_DOSSIERS[key];
-
-    return function options() {
-      return withRestart([
-        opt("Give me the clean path.", {
-          target: "jumpDecision",
-          intent: "clean-character-path-" + key,
-          userText: "Give me the clean path from here.",
-          archetypeSignal: dossier.archetypeFit[0],
-          desireSignal: "route",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: dossier.routeBias,
-          characterGuide: key,
-          toneBias: "route"
-        }),
-        opt("Tell me why this character matters.", {
-          target: "characterMeaning_" + key,
-          intent: "character-meaning-" + key,
-          userText: "Tell me why this character matters.",
-          archetypeSignal: dossier.archetypeFit[1] || dossier.archetypeFit[0],
-          desireSignal: "meaning",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: dossier.routeBias,
-          characterGuide: key,
-          toneBias: dossier.toneBias
-        }),
-        opt("Let me go deeper.", {
-          target: "characterDeep_" + key,
-          intent: "character-deep-" + key,
-          userText: "Let me go deeper into this thread.",
-          archetypeSignal: dossier.archetypeFit[2] || dossier.archetypeFit[0],
-          desireSignal: "immersion",
-          postureSignal: "immersive",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeBias: dossier.routeBias,
-          characterGuide: key,
-          toneBias: dossier.toneBias
-        }),
-        opt("Show me the wider map.", {
-          target: "pathHub",
-          intent: "wider-map-from-" + key,
-          userText: "Show me the wider map from here.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "orientation",
-          postureSignal: "careful",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["hearth", "characters", "globeWindow"],
-          characterGuide: "jeeves",
-          toneBias: "orientation"
-        })
-      ]);
-    };
-  }
-
-  function characterMeaningBeats(key) {
-    var dossier = CHARACTER_DOSSIERS[key];
-
-    return function beats() {
-      if (zone() === "simple") {
-        return [
-          { text: dossier.name + " matters because " + dossier.guideFunction + ".", delay: 760, emphasis: true },
-          { text: "Choose the next door.", delay: 640 }
-        ];
-      }
-
-      if (zone() === "immersive") {
-        return [
-          { text: dossier.relationshipVoice.knowsLine, delay: 700, emphasis: true },
-          { text: dossier.pressure, delay: 980 },
-          { text: "That is why the house does not treat " + dossier.name + " as a profile. The pressure is active here.", delay: 1100 },
-          { text: "Choose where that pressure should take you.", delay: 820, emphasis: true }
-        ];
-      }
-
-      return [
-        { text: dossier.name + " matters because " + dossier.pressure.charAt(0).toLowerCase() + dossier.pressure.slice(1), delay: 860, emphasis: true },
-        { text: dossier.relationshipVoice.routeLine, delay: 900 },
-        { text: "Choose where to go next.", delay: 720, emphasis: true }
-      ];
-    };
-  }
-
-  function characterDeepBeats(key) {
-    var dossier = CHARACTER_DOSSIERS[key];
-
-    return function beats() {
-      return [
-        { text: dossier.relationshipVoice.knowsLine, delay: 700, emphasis: true },
-        { text: dossier.relationshipVoice.respectLine, delay: 980 },
-        { text: dossier.relationshipVoice.warningLine, delay: 1040 },
-        { text: "That is the living thread. Not the summary. The cost.", delay: 840, emphasis: true },
-        { text: "Choose the door that can carry it.", delay: 760 }
-      ];
-    };
-  }
-
-  function characterJumpPads(key) {
-    var dossier = CHARACTER_DOSSIERS[key];
-
-    return function pads() {
-      var pads = [
-        jump("Jump to Characters", "characters", {
-          characterGuide: key,
-          archetypeSignal: dossier.archetypeFit[0],
-          desireSignal: "route",
-          routeBias: ["characters"],
-          confirmation: "Opening the Portrait Hall."
-        })
-      ];
-
-      dossier.routeBias.slice(0, 3).forEach(function each(routeKey) {
-        if (routeKey === "characters") return;
-
-        var labelMap = {
-          hearth: "Jump to Hearth",
-          audralia: "Jump to Audralia",
-          explore: "Jump to Explore",
-          frontier: "Jump to Frontier",
-          gauges: "Jump to Gauges",
-          laws: "Jump to Laws",
-          products: "Jump to Products",
-          hEarth: "Jump to H-Earth",
-          globeWindow: "Open Globe Window",
-          controlRoom: "Open Control Room"
-        };
-
-        if (!labelMap[routeKey]) return;
-
-        pads.push(jump(labelMap[routeKey], routeKey, {
-          characterGuide: key,
-          archetypeSignal: dossier.archetypeFit[0],
-          desireSignal: "route",
-          routeBias: [routeKey],
-          confirmation: "Opening that route."
-        }));
-      });
-
-      return pads;
-    };
-  }
-
-  var NODES = {
-    intro: {
-      optionLabel: "Choose how Jeeves should guide you",
-      lockOrder: true,
-      beats: [
-        { text: "Welcome to Hearth.", delay: 520, emphasis: true },
-        { text: "I am Jeeves.", delay: 840, emphasis: true },
-        { text: "I speak for the house here.", delay: 900 },
-        { text: "Before we begin, choose how you want me to guide you.", delay: 940, emphasis: true }
-      ],
-      options: [
-        opt("Okay, ask.", {
-          mode: "adaptive",
-          target: "entryArchetype",
-          intent: "adaptive-entry",
-          userText: "Okay. Ask me the question.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "orientation",
-          postureSignal: "open",
-          paceSignal: "guided",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["hearth"],
-          characterGuide: "jeeves"
-        }),
-        opt("Let’s get straight to the point.", {
-          mode: "direct",
-          target: "directPath",
-          intent: "direct-entry",
-          userText: "Let’s get straight to the point. Give me the clean version first.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "clarity",
-          postureSignal: "direct",
-          paceSignal: "fast",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["hearth", "frontier", "gauges"],
-          characterGuide: "dextrion"
-        }),
-        opt("Use the simple tour guide.", {
-          mode: "tour",
-          target: "tourGuide",
-          intent: "tour-guide-entry",
-          userText: "Skip the conversation for now. Use the simple tour guide.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "route",
-          postureSignal: "passive",
-          paceSignal: "fast",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeReadiness: "ready",
-          routeBias: ["hearth", "audralia", "characters"],
-          characterGuide: "jeeves"
-        })
-      ],
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Jump to Characters", "characters"),
-        jump("Open Globe Window", "globeWindow")
-      ]
-    },
-
-    entryArchetype: {
-      optionLabel: "Choose the instinct that catches first",
-      beats: [
-        { text: "Good.", delay: 560, emphasis: true },
-        { text: "When you enter a place like this, what catches first?", delay: 860, emphasis: true }
-      ],
-      options: [
-        opt("The story.", {
-          target: "pathPosture",
-          intent: "entry-story",
-          userText: "The story catches me first.",
-          archetypeSignal: "narrativeSeeker",
-          desireSignal: "meaning",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["characters", "explore", "audralia"],
-          characterGuide: "elara"
-        }),
-        opt("The world.", {
-          target: "pathPosture",
-          intent: "entry-world",
-          userText: "The world catches me first.",
-          archetypeSignal: "explorer",
-          desireSignal: "discovery",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["audralia", "globeWindow", "explore"],
-          characterGuide: "alaric"
-        }),
-        opt("The people.", {
-          target: "pathPosture",
-          intent: "entry-people",
-          userText: "The people and characters catch me first.",
-          archetypeSignal: "characterWitness",
-          desireSignal: "people",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["characters", "hearth", "audralia"],
-          characterGuide: "auren"
-        }),
-        opt("The systems.", {
-          target: "pathPosture",
-          intent: "entry-systems",
-          userText: "The systems catch me first.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "proofSeeking",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier", "gauges", "controlRoom"],
-          characterGuide: "dextrion"
-        }),
-        opt("The hidden structure.", {
-          target: "pathPosture",
-          intent: "entry-structure",
-          expression: "internal",
-          userText: "There is something beneath the surface here. I want to understand the structure behind it.",
-          archetypeSignal: "architect",
-          desireSignal: "structure",
-          postureSignal: "careful",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeBias: ["hearth", "laws", "controlRoom"],
-          characterGuide: "jeeves"
-        }),
-        opt("I need my bearings.", {
-          target: "pathPosture",
-          intent: "entry-bearings",
-          expression: "internal",
-          userText: "I need to get my bearings before I choose a door.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "orientation",
-          postureSignal: "hesitant",
-          confidenceSignal: "low",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["hearth", "globeWindow", "characters"],
-          characterGuide: "alaric"
-        })
-      ],
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Jump to Characters", "characters")
-      ]
-    },
-
-    pathPosture: {
-      optionLabel: "Choose how the path should move",
-      beats: function beats() {
-        var guideLine = characterGuideLine();
-
-        if (zone() === "simple") {
-          return [
-            { text: "Then we will keep this clean.", delay: 620, emphasis: true },
-            { text: "Choose how you want to move.", delay: 680 }
-          ];
-        }
-
-        if (zone() === "immersive") {
-          return [
-            { text: guideLine || "The house has enough of your signal now to choose a better question.", delay: 780, emphasis: true },
-            { text: "Do you want the path to stay practical, or do you want the house to let the story breathe?", delay: 1000 }
-          ];
-        }
-
-        return [
-          { text: guideLine || "I have enough to shape the next path.", delay: 720, emphasis: true },
-          { text: "Choose how you want to move.", delay: 780 }
-        ];
-      },
-      options: [
-        opt("Fast. Show me the door.", {
-          target: "jumpDecision",
-          intent: "move-fast-door",
-          userText: "Fast. Show me the door.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "route",
-          postureSignal: "direct",
-          paceSignal: "fast",
-          confidenceSignal: "medium",
-          routeReadiness: "ready",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["hearth", "audralia", "characters"],
-          characterGuide: "alaric"
-        }),
-        opt("Guide me, but do not over-explain.", {
-          target: "pathHub",
-          intent: "move-balanced",
-          userText: "Guide me, but do not over-explain.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "orientation",
-          postureSignal: "careful",
-          paceSignal: "guided",
-          confidenceSignal: "medium",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["hearth", "characters", "globeWindow"],
-          characterGuide: "jeeves"
-        }),
-        opt("Let the place speak a little.", {
-          target: "immersiveThreshold",
-          intent: "move-immersive",
-          expression: "internal",
-          userText: "Let the place speak a little before I choose the next door.",
-          archetypeSignal: "narrativeSeeker",
-          desireSignal: "immersion",
-          postureSignal: "immersive",
-          paceSignal: "slow",
-          confidenceSignal: "medium",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeBias: ["characters", "explore", "audralia"],
-          characterGuide: state.profile.characterGuide || "elara"
-        }),
-        opt("I want proof before I move.", {
-          target: "proofPath",
-          intent: "move-proof",
-          userText: "I want proof before I move.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "skeptical",
-          paceSignal: "measured",
-          confidenceSignal: "low",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["gauges", "frontier", "controlRoom"],
-          characterGuide: "soren"
-        })
-      ],
-      jumpPads: function pads() {
-        return [
-          jump("Jump to Hearth", "hearth"),
-          jump("Jump to Characters", "characters"),
-          jump("Jump to Frontier", "frontier")
-        ];
-      }
-    },
-
-    directPath: {
-      optionLabel: "Choose the clean frame",
-      beats: [
-        { text: "Clean frame: Hearth is the receiving facility. Audralia is the world beyond the window. Frontier is where the systems are tested.", delay: 980, emphasis: true },
-        { text: "Choose the door.", delay: 620 }
-      ],
-      options: withRestart([
-        opt("Room: Hearth.", {
-          target: "hearthPath",
-          intent: "direct-hearth",
-          userText: "Start with Hearth.",
-          archetypeSignal: "architect",
-          desireSignal: "orientation",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["hearth"],
-          characterGuide: "jeeves"
-        }),
-        opt("World: Audralia.", {
-          target: "audraliaPath",
-          intent: "direct-audralia",
-          userText: "Start with Audralia.",
-          archetypeSignal: "explorer",
-          desireSignal: "discovery",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["audralia"],
-          characterGuide: "elara"
-        }),
-        opt("People: Characters.", {
-          target: "charactersPath",
-          intent: "direct-characters",
-          userText: "Start with the characters.",
-          archetypeSignal: "characterWitness",
-          desireSignal: "people",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["characters"],
-          characterGuide: "auren"
-        }),
-        opt("Systems: Frontier.", {
-          target: "frontierPath",
-          intent: "direct-frontier",
-          userText: "Start with Frontier.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["frontier", "gauges"],
-          characterGuide: "dextrion"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Jump to Audralia", "audralia"),
-        jump("Jump to Characters", "characters"),
-        jump("Jump to Frontier", "frontier")
-      ]
-    },
-
-    tourGuide: {
-      optionLabel: "Choose a jump or a guided door",
-      beats: [
-        { text: "Tour guide mode.", delay: 560, emphasis: true },
-        { text: "Choose the room, world, people, system, or map.", delay: 700 }
-      ],
-      options: withRestart([
-        opt("Give me a one-line orientation.", {
-          target: "pathHub",
-          intent: "tour-orientation",
-          userText: "Give me a one-line orientation.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "orientation",
-          postureSignal: "passive",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["hearth"],
-          characterGuide: "jeeves"
-        }),
-        opt("Recommend the first stop.", {
-          target: "jumpDecision",
-          intent: "tour-recommend-first",
-          userText: "Recommend the first stop.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "route",
-          postureSignal: "passive",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeReadiness: "ready",
-          routeBias: ["hearth", "audralia"],
-          characterGuide: "alaric"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Jump to Audralia", "audralia"),
-        jump("Jump to Characters", "characters"),
-        jump("Open Globe Window", "globeWindow"),
-        jump("Jump to Frontier", "frontier"),
-        jump("Jump to Explore", "explore"),
-        jump("Jump to Gauges", "gauges")
-      ]
-    },
-
-    pathHub: {
-      optionLabel: "Choose the next path",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "You are in Hearth. Choose the next door.", delay: 620, emphasis: true }
-          ];
-        }
-
-        if (zone() === "immersive") {
-          return [
-            { text: "You are standing in Hearth, not outside it.", delay: 720, emphasis: true },
-            { text: relationshipLine("routeLine", "The house can route you, answer you, or let you follow a person who already carries part of the pressure."), delay: 980 },
-            { text: "Choose the path that feels closest.", delay: 760 }
-          ];
-        }
-
-        return [
-          { text: "You are in Hearth. The house can answer, route, or introduce you to the thread behind the door.", delay: 760, emphasis: true },
-          { text: "Choose the next path.", delay: 640 }
-        ];
-      },
-      options: function options() {
-        return withRestart([
-          opt("Show me where I am.", {
-            target: "whereAmI",
-            intent: "hub-where-am-i",
-            userText: "Show me where I am.",
-            archetypeSignal: "guidedNavigator",
-            desireSignal: "orientation",
-            postureSignal: "careful",
-            answerLength: "short",
-            expressionDepth: "plain",
-            engagementSignal: "skim",
-            routeBias: ["hearth"],
-            characterGuide: "jeeves"
-          }),
-          opt("Take me through the people.", {
-            target: "charactersPath",
-            intent: "hub-people",
-            userText: "Take me through the people.",
-            archetypeSignal: "characterWitness",
-            desireSignal: "people",
-            postureSignal: "curious",
-            answerLength: "medium",
-            expressionDepth: "guided",
-            engagementSignal: "balanced",
-            routeBias: ["characters"],
-            characterGuide: "auren"
-          }),
-          opt("Take me through the world.", {
-            target: "audraliaPath",
-            intent: "hub-world",
-            userText: "Take me through the world.",
-            archetypeSignal: "explorer",
-            desireSignal: "discovery",
-            postureSignal: "curious",
-            answerLength: "medium",
-            expressionDepth: "guided",
-            engagementSignal: "balanced",
-            routeBias: ["audralia", "globeWindow"],
-            characterGuide: "elara"
-          }),
-          opt("Take me through the systems.", {
-            target: "frontierPath",
-            intent: "hub-systems",
-            userText: "Take me through the systems.",
-            archetypeSignal: "systemsAnalyst",
-            desireSignal: "proof",
-            postureSignal: "proofSeeking",
-            answerLength: "medium",
-            expressionDepth: "guided",
-            engagementSignal: "balanced",
-            routeBias: ["frontier", "gauges"],
-            characterGuide: "dextrion"
-          }),
-          opt("Let me follow the character thread.", {
-            target: "characterResonance",
-            intent: "hub-character-thread",
-            expression: "internal",
-            userText: "I want to follow the person the house thinks fits this path.",
-            archetypeSignal: "characterWitness",
-            desireSignal: "immersion",
-            postureSignal: "immersive",
-            answerLength: "long",
-            expressionDepth: "immersive",
-            engagementSignal: "deep",
-            routeBias: ["characters", "explore"],
-            characterGuide: state.profile.characterGuide || "jeeves"
-          })
-        ]);
-      },
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Jump to Characters", "characters"),
-        jump("Open Globe Window", "globeWindow"),
-        jump("Jump to Audralia", "audralia")
-      ]
-    },
-
-    whereAmI: {
-      optionLabel: "Choose what needs focus",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "You are at Hearth: the receiving room, facility interface, and window toward Audralia.", delay: 760, emphasis: true }
-          ];
-        }
-
-        return [
-          { text: "You are at the threshold of Hearth.", delay: 660, emphasis: true },
-          { text: "This is the receiving room: page, facility, and window meeting in one place.", delay: 920 },
-          { text: "Choose what needs focus.", delay: 620 }
-        ];
-      },
-      options: withRestart([
-        opt("The house.", {
-          target: "hearthPath",
-          intent: "focus-house",
-          userText: "Focus on the house.",
-          archetypeSignal: "architect",
-          desireSignal: "structure",
-          postureSignal: "careful",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["hearth"],
-          characterGuide: "jeeves"
-        }),
-        opt("The window beyond it.", {
-          target: "audraliaPath",
-          intent: "focus-window",
-          userText: "Focus on the world beyond the window.",
-          archetypeSignal: "explorer",
-          desireSignal: "discovery",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["audralia", "globeWindow"],
-          characterGuide: "elara"
-        }),
-        opt("The people inside the pressure.", {
-          target: "charactersPath",
-          intent: "focus-people",
-          userText: "Focus on the people inside the pressure.",
-          archetypeSignal: "characterWitness",
-          desireSignal: "people",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["characters"],
-          characterGuide: "auren"
-        }),
-        opt("The evidence layer.", {
-          target: "proofPath",
-          intent: "focus-evidence",
-          userText: "Focus on the evidence layer.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "skeptical",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["gauges", "frontier"],
-          characterGuide: "soren"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Open Globe Window", "globeWindow"),
-        jump("Jump to Characters", "characters")
-      ]
-    },
-
-    immersiveThreshold: {
-      optionLabel: "Choose the living thread",
-      beats: function beats() {
-        var guide = currentCharacter();
-
-        if (!guide) {
-          return [
-            { text: "Then we will let the house speak through the people who carry it.", delay: 720, emphasis: true },
-            { text: "Choose the instinct you want to follow.", delay: 760 }
-          ];
-        }
-
-        return [
-          { text: guide.relationshipVoice.knowsLine, delay: 720, emphasis: true },
-          { text: guide.relationshipVoice.respectLine, delay: 980 },
-          { text: "You can treat that as a dossier, or you can follow it as a path.", delay: 900 }
-        ];
-      },
-      options: function options() {
-        return withRestart([
-          characterChoice("auren", "Auren: protection first."),
-          characterChoice("dextrion", "Dextrion: the break first."),
-          characterChoice("alaric", "Alaric: the route first."),
-          characterChoice("elara", "Elara: the signal first."),
-          characterChoice("soren", "Soren: the cost first."),
-          opt("No, keep me with the house.", {
-            target: "hearthPath",
-            intent: "stay-with-house",
-            userText: "No, keep me with the house.",
-            archetypeSignal: "architect",
-            desireSignal: "structure",
-            postureSignal: "careful",
-            answerLength: "medium",
-            expressionDepth: "guided",
-            engagementSignal: "balanced",
-            routeBias: ["hearth"],
-            characterGuide: "jeeves"
-          })
-        ]);
-      },
-      jumpPads: [
-        jump("Jump to Characters", "characters"),
-        jump("Jump to Explore", "explore"),
-        jump("Jump to Hearth", "hearth")
-      ]
-    },
-
-    characterResonance: {
-      optionLabel: "Choose whose instinct fits",
-      beats: [
-        { text: "Then do not choose a page first. Choose an instinct.", delay: 720, emphasis: true },
-        { text: "The house can route you through the person whose pressure matches the way you are entering.", delay: 980 }
-      ],
-      options: function options() {
-        return withRestart([
-          characterChoice("auren", "Protection first."),
-          characterChoice("dextrion", "The break first."),
-          characterChoice("alaric", "The route first."),
-          characterChoice("tarian", "Survival first."),
-          characterChoice("elara", "The signal first."),
-          characterChoice("soren", "The cost first."),
-          characterChoice("remoteTeam", "The public field first."),
-          characterChoice("jeeves", "The house itself first.")
-        ]);
-      },
-      jumpPads: [
-        jump("Jump to Characters", "characters"),
-        jump("Jump to Explore", "explore")
-      ]
-    },
-
-    hearthPath: {
-      optionLabel: "Choose the Hearth path",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "Hearth is the facility interface and first room.", delay: 650, emphasis: true },
-            { text: "Choose the next door.", delay: 580 }
-          ];
-        }
-
-        if (zone() === "immersive") {
-          return [
-            { text: "Hearth is not merely the page you are on.", delay: 720, emphasis: true },
-            { text: "It is the room designed to receive you before the world becomes too large.", delay: 980 },
-            { text: "I do not open the whole house at once. That would be poor care.", delay: 900 }
-          ];
-        }
-
-        return [
-          { text: "Hearth is the facility interface: the first room, the house voice, and the window toward Audralia.", delay: 860, emphasis: true },
-          { text: "Choose what Hearth should open.", delay: 660 }
-        ];
-      },
-      options: withRestart([
-        opt("Open Audralia.", {
-          target: "audraliaPath",
-          intent: "hearth-to-audralia",
-          userText: "Open Audralia.",
-          archetypeSignal: "explorer",
-          desireSignal: "discovery",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["audralia"],
-          characterGuide: "elara"
-        }),
-        opt("Introduce the people.", {
-          target: "charactersPath",
-          intent: "hearth-to-characters",
-          userText: "Introduce the people here.",
-          archetypeSignal: "characterWitness",
-          desireSignal: "people",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["characters"],
-          characterGuide: "auren"
-        }),
-        opt("Show the systems beneath it.", {
-          target: "frontierPath",
-          intent: "hearth-to-systems",
-          userText: "Show me the systems beneath it.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "proofSeeking",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier", "gauges"],
-          characterGuide: "dextrion"
-        }),
-        opt("Keep speaking as the house.", {
-          target: "character_jeeves",
-          intent: "hearth-to-jeeves",
-          expression: "internal",
-          userText: "Keep speaking as the house. I want to understand the interface itself.",
-          archetypeSignal: "architect",
-          desireSignal: "entry",
-          postureSignal: "immersive",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeBias: ["hearth", "explore"],
-          characterGuide: "jeeves"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Hearth", "hearth"),
-        jump("Jump to Audralia", "audralia"),
-        jump("Jump to Characters", "characters"),
-        jump("Jump to Frontier", "frontier")
-      ]
-    },
-
-    audraliaPath: {
-      optionLabel: "Choose how to approach Audralia",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "Audralia is the possibility world beyond the window.", delay: 660, emphasis: true },
-            { text: "Choose conversation or jump.", delay: 580 }
-          ];
-        }
-
-        if (zone() === "immersive") {
-          return [
-            { text: "Audralia is beyond this house’s window.", delay: 680, emphasis: true },
-            { text: "You are not there yet, but you are already standing in the place built to reach it.", delay: 1080 },
-            { text: relationshipLine("routeLine", "If you need the future to become visible, Elara is the thread to follow."), delay: 920 }
-          ];
-        }
-
-        return [
-          { text: "Audralia is the world beyond the window: possibility under pressure, not escape from consequence.", delay: 860, emphasis: true },
-          { text: "Choose how to approach it.", delay: 660 }
-        ];
-      },
-      options: withRestart([
-        opt("Take me there.", {
-          target: "jumpDecision",
-          intent: "audralia-take-me",
-          userText: "Take me there.",
-          archetypeSignal: "explorer",
-          desireSignal: "route",
-          postureSignal: "direct",
-          routeReadiness: "ready",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["audralia"],
-          characterGuide: "elara"
-        }),
-        opt("Explain why it matters.", {
-          target: "audraliaMeaning",
-          intent: "audralia-meaning",
-          userText: "Explain why Audralia matters.",
-          archetypeSignal: "narrativeSeeker",
-          desireSignal: "meaning",
-          postureSignal: "curious",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["audralia", "characters"],
-          characterGuide: "elara"
-        }),
-        opt("Connect it to the systems.", {
-          target: "frontierPath",
-          intent: "audralia-systems",
-          userText: "Connect Audralia to the systems.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "proofSeeking",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier", "gauges"],
-          characterGuide: "dextrion"
-        }),
-        opt("Who carries this thread?", {
-          target: "character_elara",
-          intent: "audralia-character",
-          expression: "internal",
-          userText: "Who carries the Audralia thread from inside the story?",
-          archetypeSignal: "characterWitness",
-          desireSignal: "people",
-          postureSignal: "immersive",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeBias: ["characters", "audralia"],
-          characterGuide: "elara"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Audralia", "audralia"),
-        jump("Open Globe Window", "globeWindow"),
-        jump("Jump to Frontier", "frontier"),
-        jump("Jump to Characters", "characters")
-      ]
-    },
-
-    audraliaMeaning: {
-      optionLabel: "Choose the Audralia continuation",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "Audralia matters because it is possibility before consequence becomes final.", delay: 780, emphasis: true }
-          ];
-        }
-
-        return [
-          { text: "Audralia matters because it is not a fantasy exit.", delay: 760, emphasis: true },
-          { text: "It is the preparation field: a living future where the mission can become physical before Earth runs out of room to pretend.", delay: 1120 },
-          { text: "Choose whether to enter, inspect, or follow the people carrying it.", delay: 760 }
-        ];
-      },
-      options: withRestart([
-        opt("Enter Audralia.", {
-          target: "jumpDecision",
-          intent: "enter-audralia",
-          userText: "Enter Audralia.",
-          archetypeSignal: "explorer",
-          desireSignal: "route",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeReadiness: "ready",
-          routeBias: ["audralia"],
-          characterGuide: "elara"
-        }),
-        opt("Inspect the systems.", {
-          target: "frontierPath",
-          intent: "audralia-inspect-systems",
-          userText: "Inspect the systems behind it.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "skeptical",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier", "gauges"],
-          characterGuide: "soren"
-        }),
-        opt("Follow Elara.", {
-          target: "character_elara",
-          intent: "audralia-follow-elara",
-          userText: "Follow Elara.",
-          archetypeSignal: "narrativeSeeker",
-          desireSignal: "vision",
-          postureSignal: "immersive",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeBias: ["characters", "audralia"],
-          characterGuide: "elara"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Audralia", "audralia"),
-        jump("Jump to Characters", "characters")
-      ]
-    },
-
-    charactersPath: {
-      optionLabel: "Choose who the house should remember first",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "The characters are the people carrying the pressure.", delay: 680, emphasis: true },
-            { text: "Choose one.", delay: 520 }
-          ];
-        }
-
-        if (zone() === "immersive") {
-          return [
-            { text: "The characters are not decoration.", delay: 680, emphasis: true },
-            { text: "I know them by the pressure they leave in the house.", delay: 920 },
-            { text: "Choose who the house should remember first.", delay: 740 }
-          ];
-        }
-
-        return [
-          { text: "The characters make the world answer back.", delay: 720, emphasis: true },
-          { text: "Choose the pressure you want to follow.", delay: 660 }
-        ];
-      },
-      options: function options() {
-        return withRestart([
-          characterChoice("auren", "Auren: sanctuary and protection."),
-          characterChoice("dextrion", "Dextrion: origin and repair."),
-          characterChoice("alaric", "Alaric: route and danger."),
-          characterChoice("tarian", "Tarian: body and survival."),
-          characterChoice("elara", "Elara: signal and hope."),
-          characterChoice("soren", "Soren: cost and consequence."),
-          characterChoice("remoteTeam", "Remote Team: field and community."),
-          characterChoice("jeeves", "Jeeves: the house itself.")
-        ]);
-      },
-      jumpPads: [
-        jump("Jump to Characters", "characters"),
-        jump("Jump to Explore", "explore"),
-        jump("Jump to Audralia", "audralia")
-      ]
-    },
-
-    frontierPath: {
-      optionLabel: "Choose the systems path",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "Frontier is the systems field.", delay: 620, emphasis: true },
-            { text: "Choose test, proof, or jump.", delay: 580 }
-          ];
-        }
-
-        return [
-          { text: "Frontier is where the mission stops being a story and starts meeting consequence.", delay: 820, emphasis: true },
-          { text: relationshipLine("routeLine", "If you want the origin of the crossing, Dextrion is where the house begins to point."), delay: 900 },
-          { text: "Choose the system thread.", delay: 640 }
-        ];
-      },
-      options: withRestart([
-        opt("Show the proof layer.", {
-          target: "proofPath",
-          intent: "frontier-proof",
-          userText: "Show the proof layer.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "proofSeeking",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeBias: ["gauges", "frontier"],
-          characterGuide: "soren"
-        }),
-        opt("Follow Dextrion.", {
-          target: "character_dextrion",
-          intent: "frontier-dextrion",
-          userText: "Follow Dextrion.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "origin",
-          postureSignal: "direct",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier", "hEarth"],
-          characterGuide: "dextrion"
-        }),
-        opt("Follow Soren.", {
-          target: "character_soren",
-          intent: "frontier-soren",
-          userText: "Follow Soren.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "truth",
-          postureSignal: "skeptical",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["gauges", "laws"],
-          characterGuide: "soren"
-        }),
-        opt("Follow the Remote Team.", {
-          target: "character_remoteTeam",
-          intent: "frontier-remote-team",
-          userText: "Follow the Remote Team.",
-          archetypeSignal: "explorer",
-          desireSignal: "community",
-          postureSignal: "practical",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier", "products"],
-          characterGuide: "remoteTeam"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Frontier", "frontier"),
-        jump("Jump to Gauges", "gauges"),
-        jump("Jump to Laws", "laws"),
-        jump("Jump to H-Earth", "hEarth")
-      ]
-    },
-
-    proofPath: {
-      optionLabel: "Choose the evidence path",
-      beats: function beats() {
-        if (zone() === "simple") {
-          return [
-            { text: "Proof path. Use Gauges for evidence, Frontier for systems, Laws for rules.", delay: 760, emphasis: true }
-          ];
-        }
-
-        return [
-          { text: "Proof is not the enemy of the house.", delay: 660, emphasis: true },
-          { text: "Soren would say the clean name means nothing if the hidden cost is still moving.", delay: 960 },
-          { text: "Choose what kind of proof you want.", delay: 640 }
-        ];
-      },
-      options: withRestart([
-        opt("Metrics and gauges.", {
-          target: "jumpDecision",
-          intent: "proof-gauges",
-          userText: "Metrics and gauges.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "proof",
-          postureSignal: "direct",
-          answerLength: "short",
-          expressionDepth: "plain",
-          engagementSignal: "skim",
-          routeReadiness: "ready",
-          routeBias: ["gauges"],
-          characterGuide: "soren"
-        }),
-        opt("System field.", {
-          target: "frontierPath",
-          intent: "proof-frontier",
-          userText: "System field.",
-          archetypeSignal: "systemsAnalyst",
-          desireSignal: "systems",
-          postureSignal: "proofSeeking",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["frontier"],
-          characterGuide: "dextrion"
-        }),
-        opt("Rules and consequence.", {
-          target: "character_soren",
-          intent: "proof-soren",
-          userText: "Rules and consequence.",
-          archetypeSignal: "architect",
-          desireSignal: "truth",
-          postureSignal: "skeptical",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeBias: ["laws", "gauges"],
-          characterGuide: "soren"
-        })
-      ]),
-      jumpPads: [
-        jump("Jump to Gauges", "gauges"),
-        jump("Jump to Frontier", "frontier"),
-        jump("Jump to Laws", "laws")
-      ]
-    },
-
-    jumpDecision: {
-      optionLabel: "Choose the jump",
-      beats: function beats() {
-        var guideLine = characterGuideLine();
-
-        if (zone() === "simple") {
-          return [
-            { text: "Choose the jump pad.", delay: 560, emphasis: true }
-          ];
-        }
-
-        return [
-          { text: guideLine || "The route is ready.", delay: 680, emphasis: true },
-          { text: "Choose the jump pad, or keep speaking with me.", delay: 740 }
-        ];
-      },
-      options: withRestart([
-        opt("Keep speaking first.", {
-          target: "pathHub",
-          intent: "jump-keep-speaking",
-          userText: "Keep speaking first.",
-          archetypeSignal: "guidedNavigator",
-          desireSignal: "orientation",
-          postureSignal: "careful",
-          answerLength: "medium",
-          expressionDepth: "guided",
-          engagementSignal: "balanced",
-          routeReadiness: "warming",
-          routeBias: ["hearth"],
-          characterGuide: "jeeves"
-        }),
-        opt("Give me the immersive route instead.", {
-          target: "immersiveThreshold",
-          intent: "jump-immersive-instead",
-          expression: "internal",
-          userText: "Give me the immersive route instead.",
-          archetypeSignal: "narrativeSeeker",
-          desireSignal: "immersion",
-          postureSignal: "immersive",
-          answerLength: "long",
-          expressionDepth: "immersive",
-          engagementSignal: "deep",
-          routeReadiness: "warming",
-          routeBias: ["characters", "explore"],
-          characterGuide: state.profile.characterGuide || "jeeves"
-        })
-      ]),
-      jumpPads: function pads() {
-        var routeScores = state.profile.routeBiasScores || {};
-        var sorted = Object.keys(routeScores).sort(function sort(a, b) {
-          return Number(routeScores[b] || 0) - Number(routeScores[a] || 0);
-        });
-
-        var base = [];
-
-        sorted.slice(0, 4).forEach(function each(routeKey) {
-          var labels = {
-            hearth: "Jump to Hearth",
-            audralia: "Jump to Audralia",
-            characters: "Jump to Characters",
-            frontier: "Jump to Frontier",
-            gauges: "Jump to Gauges",
-            laws: "Jump to Laws",
-            products: "Jump to Products",
-            explore: "Jump to Explore",
-            globeWindow: "Open Globe Window",
-            hEarth: "Jump to H-Earth",
-            controlRoom: "Open Control Room"
-          };
-
-          if (labels[routeKey]) {
-            base.push(jump(labels[routeKey], routeKey, {
-              characterGuide: state.profile.characterGuide || "jeeves",
-              archetypeSignal: state.profile.archetypeSignal || "guidedNavigator",
-              routeBias: [routeKey]
-            }));
-          }
-        });
-
-        if (!base.length) {
-          base = [
-            jump("Jump to Hearth", "hearth"),
-            jump("Jump to Audralia", "audralia"),
-            jump("Jump to Characters", "characters"),
-            jump("Jump to Frontier", "frontier")
-          ];
-        }
-
-        return base;
-      }
     }
-  };
+  }
 
-  Object.keys(CHARACTER_DOSSIERS).forEach(function addCharacterNodes(key) {
-    NODES["character_" + key] = {
-      optionLabel: "Choose the character path",
-      beats: characterNodeBeats(key),
-      options: characterNodeOptions(key),
-      jumpPads: characterJumpPads(key)
-    };
+  function handleVisitorChoice(intent, value) {
+    pushMessage("visitor", value || intent, { intent });
+    const response = composeResponse({ intent, value });
+    pushMessage("jeeves", response.text, response);
+    render();
+  }
 
-    NODES["characterMeaning_" + key] = {
-      optionLabel: "Choose the next character step",
-      beats: characterMeaningBeats(key),
-      options: characterNodeOptions(key),
-      jumpPads: characterJumpPads(key)
-    };
+  function handleVisitorText(text) {
+    state.lastVisitorText = text;
+    pushMessage("visitor", text, { freeText: true });
+    const response = composeResponse({ text });
+    pushMessage("jeeves", response.text, response);
+    render();
+  }
 
-    NODES["characterDeep_" + key] = {
-      optionLabel: "Choose the deeper path",
-      beats: characterDeepBeats(key),
-      options: characterNodeOptions(key),
-      jumpPads: characterJumpPads(key)
-    };
-  });
+  function setDataset(key, value) {
+    if (!doc || !doc.documentElement || !doc.documentElement.dataset) return;
+    doc.documentElement.dataset[key] = value === undefined || value === null ? "" : String(value);
+  }
 
-  function getReceipt() {
-    var receipt = {
-      PACKET: "HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE_PACKET_v7",
-      CONTRACT: CONTRACT,
-      RECEIPT: RECEIPT,
-      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
-      VERSION: VERSION,
-      FILE: FILE,
-      ROUTE: ROUTE,
-      REGISTRY_PLANE: "19x19",
-      HOUSE_INTERFACE: "Jeeves",
-      TALK_TO_THE_HOUSE: true,
-      CENTER_SCREEN_INTERFACE: true,
-      CHAT_THREAD_INTERFACE: true,
-      TOP_ROUTE_BUBBLES: false,
-      DETERMINISTIC_CONVERSATION: true,
-      FREEFORM_AI: false,
-      NO_TYPING_REQUIRED: true,
-      CONVERSATION_AS_FIRST_GAME_LAYER: true,
-      NARRATIVE_INTERFACE_CONVERGENCE: true,
-      LAYERED_ARCHETYPE_QUESTIONS: true,
-      EVERY_OPTION_ARCHETYPE_BEARING: true,
-      ANSWER_LENGTH_THROTTLE: true,
-      EXPRESSION_DEPTH_THROTTLE: true,
-      THREE_ZONE_ADAPTIVE_INTERFACE: true,
-      SILENT_INFERENCE_DEFAULT: true,
-      REDUNDANT_MIRROR_BUBBLES_REMOVED: true,
-      CHARACTER_DOSSIERS_INTEGRATED: true,
-      RELATIONAL_CHARACTER_VOICE: true,
-      CONTEXTUAL_JUMP_PADS: true,
-      JUMP_PADS_SEPARATE_FROM_CONVERSATION_OPTIONS: true,
-      GUIDED_HANDOFFS: true,
-      EVERY_INTERACTION_IS_A_PATH: true,
-      CURRENT_NODE: state.currentNode,
-      MODE: state.mode,
-      PROFILE: clonePlain(state.profile),
-      MEMORY: clonePlain(state.memory),
-      TRANSCRIPT_COUNT: state.transcript.length,
-      NODE_VISITS: clonePlain(state.nodeVisits),
-      MINIMIZED: state.minimized,
-      SPEAKING: state.speaking,
-      INITIALIZED_AT: state.initializedAt,
-      UPDATED_AT: nowIso()
-    };
-
-    Object.assign(receipt, NO_CLAIMS);
-
-    state.lastReceipt = clonePlain(receipt);
-    return receipt;
+  function updateDataset() {
+    setDataset("hearthJeevesLoaded", "true");
+    setDataset("hearthJeevesContract", CONTRACT);
+    setDataset("hearthJeevesReceipt", RECEIPT);
+    setDataset("hearthJeevesVersion", VERSION);
+    setDataset("hearthJeevesClass", "artificial-agent-intelligence");
+    setDataset("hearthJeevesChatbotClassificationForbidden", "true");
+    setDataset("hearthJeevesToolRegistryActive", "true");
+    setDataset("hearthJeevesAnchorRegistryActive", "true");
+    setDataset("hearthJeevesFibonacciCycleActive", "true");
+    setDataset("hearthJeevesCurrentAnchor", state.currentAnchor);
+    setDataset("hearthJeevesCurrentIntent", state.currentIntent);
+    setDataset("hearthJeevesProgressionScore", state.progressionScore);
+    setDataset("hearthJeevesJumpReadinessScore", state.jumpReadinessScore);
+    setDataset("hearthJeevesImmersionScore", state.immersionScore);
+    setDataset("hearthJeevesGeneratedImage", "false");
+    setDataset("hearthJeevesGraphicBox", "false");
+    setDataset("hearthJeevesWebGL", "false");
+    setDataset("hearthJeevesVisualPassClaimed", "false");
+    setDataset("hearthJeevesPublicSuperiorityClaim", "false");
+    setDataset("hearthJeevesStorage", "false");
+    setDataset("hearthJeevesLocalStorage", "false");
+    setDataset("hearthJeevesCookies", "false");
+    setDataset("hearthJeevesApiCall", "false");
   }
 
   function getReceiptLight() {
-    var receipt = getReceipt();
-
     return {
-      CONTRACT: receipt.CONTRACT,
-      RECEIPT: receipt.RECEIPT,
-      VERSION: receipt.VERSION,
-      FILE: receipt.FILE,
-      ROUTE: receipt.ROUTE,
-      DETERMINISTIC_CONVERSATION: receipt.DETERMINISTIC_CONVERSATION,
-      FREEFORM_AI: receipt.FREEFORM_AI,
-      NO_TYPING_REQUIRED: receipt.NO_TYPING_REQUIRED,
-      NARRATIVE_INTERFACE_CONVERGENCE: receipt.NARRATIVE_INTERFACE_CONVERGENCE,
-      LAYERED_ARCHETYPE_QUESTIONS: receipt.LAYERED_ARCHETYPE_QUESTIONS,
-      EVERY_OPTION_ARCHETYPE_BEARING: receipt.EVERY_OPTION_ARCHETYPE_BEARING,
-      ANSWER_LENGTH_THROTTLE: receipt.ANSWER_LENGTH_THROTTLE,
-      EXPRESSION_DEPTH_THROTTLE: receipt.EXPRESSION_DEPTH_THROTTLE,
-      THREE_ZONE_ADAPTIVE_INTERFACE: receipt.THREE_ZONE_ADAPTIVE_INTERFACE,
-      SILENT_INFERENCE_DEFAULT: receipt.SILENT_INFERENCE_DEFAULT,
-      REDUNDANT_MIRROR_BUBBLES_REMOVED: receipt.REDUNDANT_MIRROR_BUBBLES_REMOVED,
-      CHARACTER_DOSSIERS_INTEGRATED: receipt.CHARACTER_DOSSIERS_INTEGRATED,
-      RELATIONAL_CHARACTER_VOICE: receipt.RELATIONAL_CHARACTER_VOICE,
-      CONTEXTUAL_JUMP_PADS: receipt.CONTEXTUAL_JUMP_PADS,
-      JUMP_PADS_SEPARATE_FROM_CONVERSATION_OPTIONS: receipt.JUMP_PADS_SEPARATE_FROM_CONVERSATION_OPTIONS,
-      CURRENT_NODE: receipt.CURRENT_NODE,
-      MODE: receipt.MODE,
-      INTERFACE_ZONE: receipt.PROFILE.interfaceZone,
-      ARCHETYPE_SIGNAL: receipt.PROFILE.archetypeSignal,
-      ARCHETYPE_CONFIDENCE: receipt.PROFILE.archetypeConfidence,
-      CHARACTER_GUIDE: receipt.PROFILE.characterGuide,
-      CHARACTER_CONFIDENCE: receipt.PROFILE.characterConfidence,
-      visualPassClaimed: false,
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      class: "Artificial Agent Intelligence",
+      chatbotClassificationForbidden: true,
+      talkToTheHouseActive: true,
+      jeevesActive: true,
+
+      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
+      alignedRegistryCoordinate: MECHANICAL_COORDINATE.alignedRegistryCoordinate,
+
+      toolRegistryActive: true,
+      anchorRegistryActive: true,
+      fibonacciCycleActive: true,
+      conversationalCycleOfProgression: true,
+      f89RegistryAlignmentActive: true,
+
+      currentIntent: state.currentIntent,
+      currentAnchor: state.currentAnchor,
+      cycleStage: state.cycleStage,
+      progressionScore: state.progressionScore,
+      jumpReadinessScore: state.jumpReadinessScore,
+      immersionScore: state.immersionScore,
+
+      livePublicAnchors: [
+        "Compass",
+        "Coherence Diagnostic",
+        "Laws",
+        "Gauges",
+        "Products",
+        "Meet Sean",
+        "Mirrorland",
+        "Showroom",
+        "Audralia",
+        "Frontier"
+      ],
+      futureHeldTools: [
+        "Character Profile",
+        "Saved Diagnostic",
+        "Login",
+        "NPC Interaction",
+        "Mirror-Me Challenge"
+      ],
+
+      currentVsFutureBoundaryActive: true,
+      naturalSurfaceLanguageActive: true,
+      noAbstractVisitorSurface: true,
+      optionsAreSteeringWheel: true,
+      jumpPadsSeparateFromConversationOptions: true,
+
+      storage: false,
+      localStorage: false,
+      cookies: false,
+      apiCall: false,
+      backend: false,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      UPDATED_AT: receipt.UPDATED_AT
+      visualPassClaimed: false,
+      publicSuperiorityClaim: false,
+
+      createdAt: state.createdAt,
+      updatedAt: state.updatedAt || nowIso()
     };
   }
 
-  function publishApi() {
+  function getReceipt() {
+    return {
+      ...getReceiptLight(),
+      toolRegistry: clonePlain(TOOL_REGISTRY),
+      anchorRegistry: clonePlain(ANCHORS),
+      characterRegistry: clonePlain(CHARACTER_REGISTRY),
+      fibonacci: clonePlain(FIBONACCI),
+      cycleStages: clonePlain(CYCLE_STAGES),
+      cycleToFibonacci: clonePlain(CYCLE_TO_FIBONACCI),
+      history: clonePlain(state.history),
+      state: {
+        turn: state.turn,
+        currentIntent: state.currentIntent,
+        currentAnchor: state.currentAnchor,
+        currentPole: state.currentPole,
+        immersionScore: state.immersionScore,
+        progressionScore: state.progressionScore,
+        jumpReadinessScore: state.jumpReadinessScore
+      },
+      owns: [
+        "visitor orientation",
+        "natural dialogue surface",
+        "anchor selection",
+        "tool-status explanation",
+        "current-vs-future distinction",
+        "jump-pad readiness",
+        "Fibonacci conversational cycle",
+        "public-safe roadmap explanation"
+      ],
+      doesNotOwn: [
+        "backend persistence",
+        "user login",
+        "saved character profile",
+        "saved diagnostic result",
+        "NPC runtime",
+        "Mirror-Me runtime",
+        "route orchestration",
+        "rendering",
+        "WebGL",
+        "generated images",
+        "GraphicBox",
+        "planet truth",
+        "public superiority claim",
+        "final visual pass claim"
+      ]
+    };
+  }
+
+  function getReceiptText() {
+    const r = getReceiptLight();
+
+    return [
+      "HEARTH_JEEVES_AAI_F89_TOOL_REGISTRY_CONVERSATIONAL_CYCLE_ENGINE_RECEIPT",
+      "",
+      `contract=${r.contract}`,
+      `receipt=${r.receipt}`,
+      `previousContract=${r.previousContract}`,
+      `version=${r.version}`,
+      `file=${r.file}`,
+      "",
+      `class=${r.class}`,
+      `chatbotClassificationForbidden=${r.chatbotClassificationForbidden}`,
+      `talkToTheHouseActive=${r.talkToTheHouseActive}`,
+      `jeevesActive=${r.jeevesActive}`,
+      "",
+      `toolRegistryActive=${r.toolRegistryActive}`,
+      `anchorRegistryActive=${r.anchorRegistryActive}`,
+      `fibonacciCycleActive=${r.fibonacciCycleActive}`,
+      `conversationalCycleOfProgression=${r.conversationalCycleOfProgression}`,
+      `f89RegistryAlignmentActive=${r.f89RegistryAlignmentActive}`,
+      "",
+      `currentIntent=${r.currentIntent}`,
+      `currentAnchor=${r.currentAnchor}`,
+      `cycleStage=${r.cycleStage}`,
+      `progressionScore=${r.progressionScore}`,
+      `jumpReadinessScore=${r.jumpReadinessScore}`,
+      `immersionScore=${r.immersionScore}`,
+      "",
+      `currentVsFutureBoundaryActive=${r.currentVsFutureBoundaryActive}`,
+      `naturalSurfaceLanguageActive=${r.naturalSurfaceLanguageActive}`,
+      `noAbstractVisitorSurface=${r.noAbstractVisitorSurface}`,
+      `optionsAreSteeringWheel=${r.optionsAreSteeringWheel}`,
+      `jumpPadsSeparateFromConversationOptions=${r.jumpPadsSeparateFromConversationOptions}`,
+      "",
+      `storage=${r.storage}`,
+      `localStorage=${r.localStorage}`,
+      `cookies=${r.cookies}`,
+      `apiCall=${r.apiCall}`,
+      `backend=${r.backend}`,
+      `generatedImage=${r.generatedImage}`,
+      `graphicBox=${r.graphicBox}`,
+      `webGL=${r.webGL}`,
+      `visualPassClaimed=${r.visualPassClaimed}`,
+      `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
+      `updatedAt=${r.updatedAt}`
+    ].join("\n");
+  }
+
+  function publishGlobals() {
     root.HEARTH = root.HEARTH || {};
     root.DEXTER_LAB = root.DEXTER_LAB || {};
 
-    var api = {
-      CONTRACT: CONTRACT,
-      RECEIPT: RECEIPT,
-      VERSION: VERSION,
-      FILE: FILE,
-      ROUTE: ROUTE,
+    root.HEARTH_JEEVES_AAI = api;
+    root.HEARTH_JEEVES = api;
+    root.TALK_TO_THE_HOUSE = api;
+    root.JEEVES = api;
 
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      version: VERSION,
-      file: FILE,
-      route: ROUTE,
-
-      speak: runNode,
-      runNode: runNode,
-      goBack: goBack,
-      minimize: minimize,
-      restore: restore,
-
-      getState: function getState() {
-        return clonePlain(state);
-      },
-      getReceipt: getReceipt,
-      getReceiptLight: getReceiptLight,
-      getTranscript: function getTranscript() {
-        return clonePlain(state.transcript);
-      },
-      getConversationMap: function getConversationMap() {
-        return Object.keys(NODES);
-      },
-      getCharacterDossiers: function getCharacterDossiers() {
-        return clonePlain(CHARACTER_DOSSIERS);
-      },
-
-      deterministicConversation: true,
-      freeformAi: false,
-      noTypingRequired: true,
-      centerScreenInterface: true,
-      chatThreadInterface: true,
-      topRouteBubbles: false,
-      narrativeInterfaceConvergence: true,
-      layeredArchetypeQuestions: true,
-      everyOptionArchetypeBearing: true,
-      answerLengthThrottle: true,
-      expressionDepthThrottle: true,
-      threeZoneAdaptiveInterface: true,
-      silentInferenceDefault: true,
-      redundantMirrorBubblesRemoved: true,
-      characterDossiersIntegrated: true,
-      relationalCharacterVoice: true,
-      contextualJumpPads: true,
-      jumpPadsSeparateFromConversationOptions: true,
-      everyInteractionIsAPath: true
-    };
-
-    Object.assign(api, NO_CLAIMS);
-
-    root.HEARTH_JEEVES_HOUSE_INTERFACE = api;
-    root.HEARTH_JEEVES_CHAT_THREAD_ENGINE = api;
-    root.HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE = api;
-
-    root.HEARTH.jeevesHouseInterface = api;
+    root.HEARTH.jeeves = api;
     root.HEARTH.talkToTheHouse = api;
-    root.HEARTH.jeevesChatThreadEngine = api;
-    root.HEARTH.jeevesLayeredExpressionJumpPadEngine = api;
+    root.HEARTH.jeevesAAI = api;
 
-    root.DEXTER_LAB.hearthJeevesHouseInterface = api;
-    root.DEXTER_LAB.hearthJeevesChatThreadEngine = api;
-    root.DEXTER_LAB.hearthJeevesLayeredExpressionJumpPadEngine = api;
+    root.DEXTER_LAB.jeevesAAI = api;
+    root.DEXTER_LAB.talkToTheHouse = api;
 
-    root.__HEARTH_JEEVES_HOUSE_INTERFACE_LOADED__ = true;
-    root.__HEARTH_JEEVES_HOUSE_INTERFACE_CONTRACT__ = CONTRACT;
-    root.__HEARTH_JEEVES_HOUSE_INTERFACE_ROUTE__ = ROUTE;
-    root.__HEARTH_JEEVES_HOUSE_INTERFACE_FREEFORM_AI__ = false;
-    root.__HEARTH_JEEVES_CENTER_SCREEN_INTERFACE__ = true;
-    root.__HEARTH_JEEVES_CHAT_THREAD_INTERFACE__ = true;
-    root.__HEARTH_JEEVES_LAYERED_EXPRESSION_JUMP_PAD_ENGINE__ = true;
-    root.__HEARTH_JEEVES_NARRATIVE_INTERFACE_CONVERGENCE__ = true;
-    root.__HEARTH_JEEVES_CONTEXTUAL_JUMP_PADS__ = true;
-    root.__HEARTH_JEEVES_RELATIONAL_CHARACTER_VOICE__ = true;
+    root.HEARTH_JEEVES_RECEIPT = getReceiptLight();
+    root.TALK_TO_THE_HOUSE_RECEIPT = getReceiptLight();
 
-    return api;
+    root.__HEARTH_JEEVES_LOADED__ = true;
+    root.__HEARTH_JEEVES_CONTRACT__ = CONTRACT;
+    root.__HEARTH_JEEVES_CLASS__ = "ARTIFICIAL_AGENT_INTELLIGENCE";
+    root.__HEARTH_JEEVES_CHATBOT_CLASSIFICATION_FORBIDDEN__ = true;
+    root.__HEARTH_JEEVES_STORAGE__ = false;
+    root.__HEARTH_JEEVES_WEBGL__ = false;
+    root.__HEARTH_JEEVES_GRAPHIC_BOX__ = false;
+    root.__HEARTH_JEEVES_GENERATED_IMAGE__ = false;
+    root.__HEARTH_JEEVES_PUBLIC_SUPERIORITY_CLAIM__ = false;
+
+    updateDataset();
+
+    try {
+      root.dispatchEvent(new CustomEvent("hearth:jeeves-aai-ready", {
+        detail: getReceiptLight()
+      }));
+    } catch (_error) {
+      /* no-op */
+    }
+  }
+
+  function mount() {
+    if (!doc) return false;
+
+    injectStyle();
+
+    state.mount = createMount();
+    if (!state.mount) return false;
+
+    if (!state.history.length) {
+      const opening = openingResponse();
+      pushMessage("jeeves", opening.text, opening);
+    }
+
+    state.mounted = true;
+    state.updatedAt = nowIso();
+
+    render();
+    publishGlobals();
+
+    return true;
   }
 
   function boot() {
-    if (!doc || state.booted) return;
+    state.createdAt = nowIso();
+    state.updatedAt = state.createdAt;
 
-    state.booted = true;
-    state.initializedAt = nowIso();
-    state.updatedAt = state.initializedAt;
+    publishGlobals();
 
-    config = readConfig();
-    cacheElements();
-    bindStaticActions();
-    publishApi();
+    if (!doc) return;
 
-    if (els.minimized) {
-      els.minimized.setAttribute("data-jeeves-minimized", "false");
+    if (doc.readyState === "loading") {
+      doc.addEventListener("DOMContentLoaded", mount, { once: true });
+    } else {
+      mount();
     }
-
-    runNode("intro", { preserveHistory: false });
   }
 
-  if (!doc) {
-    publishApi();
-    return;
-  }
+  const api = {
+    contract: CONTRACT,
+    receipt: RECEIPT,
+    previousContract: PREVIOUS_CONTRACT,
+    version: VERSION,
+    file: FILE,
 
-  if (doc.readyState === "loading") {
-    doc.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+    FIBONACCI,
+    CYCLE_STAGES,
+    TOOL_STATUS,
+    INTENT,
+    TOOL_REGISTRY,
+    ANCHORS,
+    CHARACTER_REGISTRY,
+    MECHANICAL_COORDINATE,
+
+    classifyVisitorIntent,
+    anchorForIntent,
+    composeResponse,
+    handleVisitorText,
+    handleVisitorChoice,
+
+    isLivePublicTool,
+    jumpsForAnchor,
+    getJump,
+
+    mount,
+    render,
+    publishGlobals,
+    updateDataset,
+
+    getReceiptLight,
+    getReceipt,
+    getReceiptText,
+
+    artificialAgentIntelligenceActive: true,
+    chatbotClassificationForbidden: true,
+    talkToTheHouseActive: true,
+    jeevesActive: true,
+    toolRegistryActive: true,
+    anchorRegistryActive: true,
+    fibonacciCycleActive: true,
+    conversationalCycleOfProgression: true,
+    f89RegistryAlignmentActive: true,
+    naturalSurfaceLanguageActive: true,
+    currentVsFutureBoundaryActive: true,
+
+    ownsVisitorOrientation: true,
+    ownsAnchorSelection: true,
+    ownsNaturalDialogueSurface: true,
+    ownsJumpPadReadiness: true,
+    ownsToolStatusExplanation: true,
+    ownsFutureRoadmapBoundary: true,
+
+    ownsBackendPersistence: false,
+    ownsLogin: false,
+    ownsSavedProfile: false,
+    ownsSavedDiagnostic: false,
+    ownsNpcRuntime: false,
+    ownsMirrorMeRuntime: false,
+    ownsRendering: false,
+    ownsWebGL: false,
+    ownsGeneratedImage: false,
+    ownsGraphicBox: false,
+    ownsPlanetTruth: false,
+    ownsPublicSuperiorityClaim: false,
+    ownsFinalVisualPassClaim: false,
+
+    generatedImage: false,
+    graphicBox: false,
+    webGL: false,
+    visualPassClaimed: false,
+    publicSuperiorityClaim: false,
+    storage: false,
+    localStorage: false,
+    cookies: false,
+    apiCall: false,
+    backend: false,
+
+    get state() {
+      return state;
+    }
+  };
+
+  boot();
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = {
-      CONTRACT: CONTRACT,
-      RECEIPT: RECEIPT,
-      VERSION: VERSION
-    };
+    module.exports = api;
   }
-})(typeof window !== "undefined" ? window : globalThis);
+})();

@@ -1,32 +1,33 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_256_STATE_READER_CADENCE_ENGINE_TNT_v8
+// HEARTH_JEEVES_256_STATE_4X4_CURIOSITY_CHAMBER_ENGINE_TNT_v9
 // Full-file replacement.
-// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal conversational organs, reader-paced text cadence, guided route handoffs, current-session memory.
+// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal conversational organs, 4x4 curiosity chamber, progressive disclosure, reader-paced cadence, guided route handoffs, current-session memory.
 // Does not own: HTML shell, CSS styling, backend, persistent storage, login, freeform AI, WebGL, Hearth globe chamber, diagnostics authority, final visual pass.
 
-(function hearthJeeves256StateReaderCadenceEngine(global) {
+(function hearthJeeves256State4x4CuriosityChamberEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_256_STATE_READER_CADENCE_ENGINE_TNT_v8";
+  var CONTRACT = "HEARTH_JEEVES_256_STATE_4X4_CURIOSITY_CHAMBER_ENGINE_TNT_v9";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
 
   var PACING = {
-    firstMessageDelayMs: 900,
+    firstMessageDelayMs: 950,
 
-    typingBaseMs: 1100,
-    typingWordMs: 95,
-    typingMinMs: 1200,
-    typingMaxMs: 4300,
+    typingBaseMs: 1400,
+    typingWordMs: 120,
+    typingMinMs: 1450,
+    typingMaxMs: 5200,
 
-    readBaseMs: 1250,
-    readWordMs: 85,
-    readMinMs: 1600,
-    readMaxMs: 5200,
+    readBaseMs: 1750,
+    readWordMs: 115,
+    readMinMs: 2100,
+    readMaxMs: 6800,
 
-    optionRevealDelayMs: 1000
+    optionRevealDelayMs: 1200
   };
 
-  var MAX_HISTORY = 32;
+  var MAX_HISTORY = 36;
+  var MAX_PATH_DEPTH = 4;
 
   var DEFAULT_ROUTES = {
     compass: "/",
@@ -131,22 +132,36 @@
     "restart"
   ];
 
+  var PATHS = ["website", "skeptic", "diagnostic", "world"];
+
   var state = {
     contract: CONTRACT,
     route: ROUTE,
     initialized: false,
     busy: false,
     runToken: 0,
+
     currentNode: "intro",
     previousNode: null,
     currentOrgan: "arrival",
     currentPosture: "arrival",
     currentPhase: "receive",
+    currentPath: null,
+    currentPathDepth: 0,
+
     stateIndex: 0,
     cycleStep: 0,
     curiosityLevel: 1,
     skepticismLevel: 0,
     routePressure: 0,
+
+    pathDepth: {
+      website: 0,
+      skeptic: 0,
+      diagnostic: 0,
+      world: 0
+    },
+
     lastSuggestedRoutes: [],
     acceptedRoute: null,
     history: []
@@ -218,7 +233,7 @@
     var delay = PACING.typingBaseMs + words * PACING.typingWordMs;
 
     if (index === 0) {
-      delay += 180;
+      delay += 220;
     }
 
     return clamp(delay, PACING.typingMinMs, PACING.typingMaxMs);
@@ -286,6 +301,246 @@
     };
   }
 
+  var CHAMBER = {
+    website: [
+      {
+        phase: "ground",
+        beats: [
+          "The website is the public side of the estate.",
+          "It is where the house gives you doors before it gives you depth."
+        ],
+        options: [
+          option("Orient me first.", "compassPath", "topic"),
+          option("Show me proof.", "proofPath", "topic"),
+          option("Show me practical use.", "productsPath", "topic"),
+          option("Who is behind this?", "seanPath", "topic")
+        ],
+        handoffs: ["compass", "siteGuide"]
+      },
+      {
+        phase: "reflect",
+        beats: [
+          "You do not need the whole map yet.",
+          "You need the door that matches why you arrived."
+        ],
+        options: [
+          option("I’m here to understand the layout.", "compassPath", "topic"),
+          option("I’m here to test the claims.", "proofPath", "topic"),
+          option("I’m here for something useful.", "productsPath", "topic"),
+          option("I’m here for the world behind it.", "worldPath", "conversation")
+        ],
+        handoffs: ["compass", "coherenceDiagnostic", "products"]
+      },
+      {
+        phase: "reveal",
+        beats: [
+          "The public estate divides into five useful doors.",
+          "Compass orients you. Laws test the structure. Products make it usable. The Diagnostic reflects the visitor. Meet Sean anchors the human voice."
+        ],
+        options: [
+          routeOption("Start at the Compass.", "handoffCompass"),
+          routeOption("Read the Laws.", "handoffLaws"),
+          routeOption("Open Products.", "handoffProducts"),
+          routeOption("Take the Diagnostic.", "handoffDiagnostic")
+        ],
+        handoffs: ["compass", "laws", "products", "coherenceDiagnostic", "meetSean"]
+      },
+      {
+        phase: "route",
+        beats: [
+          "You have stayed with the website path long enough.",
+          "Choose your first public door now: orientation, proof, practical use, self-reflection, or the human voice."
+        ],
+        options: [
+          routeOption("Orientation: Compass.", "handoffCompass"),
+          routeOption("Proof: Laws.", "handoffLaws"),
+          routeOption("Use: Products.", "handoffProducts"),
+          routeOption("Self: Diagnostic.", "handoffDiagnostic"),
+          routeOption("Human voice: Meet Sean.", "handoffSean")
+        ],
+        handoffs: ["compass", "laws", "products", "coherenceDiagnostic", "meetSean"]
+      }
+    ],
+
+    skeptic: [
+      {
+        phase: "clarify",
+        beats: [
+          "Good. Skepticism belongs at the front door.",
+          "This house should not be trusted just because it sounds interesting."
+        ],
+        options: [
+          option("Then show me what holds it up.", "proofPath", "topic"),
+          option("Show me the Diagnostic.", "diagnosticPath", "topic"),
+          option("Show me practical use.", "productsPath", "topic"),
+          option("I’ll try the world side anyway.", "worldPath", "conversation")
+        ],
+        handoffs: ["laws", "coherenceDiagnostic"]
+      },
+      {
+        phase: "reflect",
+        beats: [
+          "You are right to test it before buying into the language.",
+          "If the story side has no floor, it should not be allowed to carry weight."
+        ],
+        options: [
+          option("Where is the floor?", "proofPath", "topic"),
+          routeOption("Read the Laws.", "handoffLaws"),
+          routeOption("Open Gauges.", "handoffGauges"),
+          option("Test me instead.", "diagnosticPath", "topic")
+        ],
+        handoffs: ["laws", "gauges", "coherenceDiagnostic"]
+      },
+      {
+        phase: "prove",
+        beats: [
+          "The proof path has three different doors.",
+          "Laws show what can be claimed. Gauges point toward whether the structure is holding. The Diagnostic tests the visitor’s own entry posture."
+        ],
+        options: [
+          routeOption("Public proof: Laws.", "handoffLaws"),
+          routeOption("Technical status: Gauges.", "handoffGauges"),
+          routeOption("Personal test: Diagnostic.", "handoffDiagnostic"),
+          option("Now show me the world side.", "worldPath", "conversation")
+        ],
+        handoffs: ["laws", "gauges", "coherenceDiagnostic"]
+      },
+      {
+        phase: "route",
+        beats: [
+          "You have stayed in the proof path.",
+          "Choose the kind of proof you want before I take you any farther."
+        ],
+        options: [
+          routeOption("Read the Laws.", "handoffLaws"),
+          routeOption("Open Gauges.", "handoffGauges"),
+          routeOption("Take the Diagnostic.", "handoffDiagnostic"),
+          option("Return to the first fork.", "returnFork", "back")
+        ],
+        handoffs: ["laws", "gauges", "coherenceDiagnostic"]
+      }
+    ],
+
+    diagnostic: [
+      {
+        phase: "personalize",
+        beats: [
+          "The Diagnostic is the mirror path.",
+          "It does not begin by labeling you."
+        ],
+        options: [
+          option("Then what does it do?", "diagnosticPath", "topic"),
+          routeOption("Take the Diagnostic.", "handoffDiagnostic"),
+          option("Show me proof instead.", "proofPath", "topic"),
+          option("Back to the first fork.", "returnFork", "back")
+        ],
+        handoffs: ["coherenceDiagnostic"]
+      },
+      {
+        phase: "reflect",
+        beats: [
+          "It starts with how you think you move under pressure.",
+          "That claim matters because pressure usually reveals the truth faster than preference does."
+        ],
+        options: [
+          option("Go deeper.", "diagnosticPath", "topic"),
+          routeOption("Take the Diagnostic.", "handoffDiagnostic"),
+          option("What happens later with profiles?", "futureProfilePath", "topic"),
+          option("Show me Laws instead.", "proofPath", "topic")
+        ],
+        handoffs: ["coherenceDiagnostic", "laws"]
+      },
+      {
+        phase: "reveal",
+        beats: [
+          "The Diagnostic compares claimed coherence against scenario choices.",
+          "That reveals the gap between who you think you are under pressure and what you actually choose first."
+        ],
+        options: [
+          routeOption("Take the Diagnostic.", "handoffDiagnostic"),
+          option("Explain the future profile.", "futureProfilePath", "topic"),
+          option("Explain Mirror Me.", "mirrorMePath", "topic"),
+          routeOption("Read the Laws first.", "handoffLaws")
+        ],
+        handoffs: ["coherenceDiagnostic", "laws"]
+      },
+      {
+        phase: "route",
+        beats: [
+          "You have stayed with the mirror path long enough.",
+          "Choose whether you want to test yourself now, learn why the profile matters, or return to proof."
+        ],
+        options: [
+          routeOption("Test myself: Diagnostic.", "handoffDiagnostic"),
+          option("Profile path: future profile.", "futureProfilePath", "topic"),
+          option("Reflection path: Mirror Me.", "mirrorMePath", "topic"),
+          routeOption("Proof path: Laws.", "handoffLaws")
+        ],
+        handoffs: ["coherenceDiagnostic", "laws", "interactiveNarrative"]
+      }
+    ],
+
+    world: [
+      {
+        phase: "reveal",
+        beats: [
+          "The world side is where the estate stops being a map.",
+          "It begins behaving like a place."
+        ],
+        options: [
+          routeOption("Enter the Interactive Narrative.", "handoffWorld"),
+          option("Tell me about Hearth.", "hearthPath", "topic"),
+          option("Tell me about the characters.", "charactersPath", "topic"),
+          option("Explain Mirror Me.", "mirrorMePath", "topic")
+        ],
+        handoffs: ["interactiveNarrative", "hearth"]
+      },
+      {
+        phase: "reflect",
+        beats: [
+          "You are not entering lore.",
+          "You are entering a place that needs people, doors, pressure, and memory to feel alive."
+        ],
+        options: [
+          option("Show me the people.", "charactersPath", "topic"),
+          option("Show me the house-side world.", "hearthPath", "topic"),
+          option("Show me the outward world.", "audraliaPath", "topic"),
+          routeOption("Open the world gate.", "handoffWorld")
+        ],
+        handoffs: ["characters", "hearth", "audralia", "interactiveNarrative"]
+      },
+      {
+        phase: "deepen",
+        beats: [
+          "Hearth is the house-side chamber. Audralia is an outward world lane.",
+          "Characters make the world personal. Mirror Me is the future reflection challenge."
+        ],
+        options: [
+          routeOption("World gate: Interactive Narrative.", "handoffWorld"),
+          routeOption("House chamber: Hearth.", "handoffHearth"),
+          routeOption("World lane: Audralia.", "handoffAudralia"),
+          routeOption("People: Characters.", "handoffCharacters")
+        ],
+        handoffs: ["interactiveNarrative", "hearth", "audralia", "characters"]
+      },
+      {
+        phase: "route",
+        beats: [
+          "You have stayed with the world path.",
+          "Choose how you want to enter it: gate, house, outward world, characters, or future reflection."
+        ],
+        options: [
+          routeOption("Gate: Interactive Narrative.", "handoffWorld"),
+          routeOption("House: Hearth.", "handoffHearth"),
+          routeOption("Outward world: Audralia.", "handoffAudralia"),
+          routeOption("People: Characters.", "handoffCharacters"),
+          option("Reflection: Mirror Me.", "mirrorMePath", "topic")
+        ],
+        handoffs: ["interactiveNarrative", "hearth", "audralia", "characters"]
+      }
+    ]
+  };
+
   var NODE = {
     intro: {
       organ: "arrival",
@@ -330,73 +585,51 @@
       organ: "firstFork",
       posture: "orientation",
       phase: "fork",
-      beats: [
-        "Then we use the public estate.",
-        "That means proof, products, Sean, self-reflection, and the first story doors.",
-        "The right path depends on what you need first."
-      ],
-      options: [
-        option("I need proof before imagination.", "proofPath", "topic"),
-        option("I want practical use.", "productsPath", "topic"),
-        option("I want to know who Sean is.", "seanPath", "topic"),
-        option("I want the world side instead.", "worldPath")
-      ],
-      handoffs: ["compass", "siteGuide", "coherenceDiagnostic"]
-    },
-
-    worldPath: {
-      organ: "worldGate",
-      posture: "world",
-      phase: "fork",
-      beats: [
-        "Then we move toward the world behind the website.",
-        "That is where the estate stops acting like a list of pages.",
-        "It starts becoming a place."
-      ],
-      options: [
-        routeOption("Open the world gate.", "worldGatePath"),
-        option("Tell me about Hearth.", "hearthPath", "topic"),
-        option("Tell me about the characters.", "charactersPath", "topic"),
-        option("Explain Mirror Me.", "mirrorMePath", "topic")
-      ],
-      handoffs: ["interactiveNarrative", "hearth", "audralia"]
+      pathKey: "website"
     },
 
     skepticPlain: {
       organ: "skeptic",
       posture: "skeptic",
       phase: "clarify",
-      skepticism: 2,
-      beats: [
-        "Plainly: this is a guided estate.",
-        "It uses story, diagnostics, proof, products, and world-building to make a large system enterable.",
-        "If you want to test structure first, start with Laws or the Diagnostic."
-      ],
-      options: [
-        option("Show me the Laws.", "proofPath", "topic"),
-        option("Show me the Diagnostic.", "diagnosticPath", "topic"),
-        option("Show me practical use.", "productsPath", "topic"),
-        option("Now I’ll try the world side.", "worldPath")
-      ],
-      handoffs: ["laws", "coherenceDiagnostic", "compass"]
+      pathKey: "skeptic",
+      skepticism: 2
     },
 
-    whereToStart: {
-      organ: "orientation",
-      posture: "orientation",
-      phase: "ground",
-      beats: [
-        "Start with the pressure you brought in.",
-        "Confused visitors should use the Compass.",
-        "Skeptical visitors should use Laws. Reflective visitors should use the Diagnostic. Practical visitors should use Products."
-      ],
-      options: [
-        option("I want orientation.", "compassPath", "topic"),
-        option("I want proof.", "proofPath", "topic"),
-        option("I want self-reflection.", "diagnosticPath", "topic"),
-        option("I want practical use.", "productsPath", "topic")
-      ],
-      handoffs: ["compass", "laws", "coherenceDiagnostic", "products"]
+    proofPath: {
+      organ: "proof",
+      posture: "proof",
+      phase: "prove",
+      pathKey: "skeptic",
+      skepticism: 1
+    },
+
+    diagnosticPath: {
+      organ: "diagnostic",
+      posture: "diagnostic",
+      phase: "personalize",
+      pathKey: "diagnostic"
+    },
+
+    worldPath: {
+      organ: "worldGate",
+      posture: "world",
+      phase: "fork",
+      pathKey: "world"
+    },
+
+    worldGatePath: {
+      organ: "worldGate",
+      posture: "world",
+      phase: "route",
+      pathKey: "world"
+    },
+
+    charactersPath: {
+      organ: "characters",
+      posture: "characters",
+      phase: "personalize",
+      pathKey: "world"
     },
 
     compassPath: {
@@ -417,45 +650,23 @@
       handoffs: ["compass"]
     },
 
-    proofPath: {
-      organ: "proof",
-      posture: "proof",
-      phase: "prove",
-      skepticism: 1,
+    whereToStart: {
+      organ: "orientation",
+      posture: "orientation",
+      phase: "ground",
       beats: [
-        "The proof path begins with the Laws.",
-        "That is where the estate says what can be claimed and what must be checked.",
-        "Proof outranks confidence there."
+        "Start with the pressure you brought in.",
+        "If you are confused, choose orientation. If you are skeptical, choose proof.",
+        "If you want the mirror, choose the Diagnostic. If you want application, choose Products."
       ],
       options: [
-        routeOption("Read the Laws.", "handoffLaws"),
-        routeOption("Open Gauges.", "handoffGauges"),
-        option("Show me the Diagnostic.", "diagnosticPath", "topic"),
-        option("I’m ready for the world side.", "worldPath")
+        option("Orientation.", "websitePath", "topic"),
+        option("Proof.", "proofPath", "topic"),
+        option("Self-reflection.", "diagnosticPath", "topic"),
+        option("Practical use.", "productsPath", "topic"),
+        option("The world behind it.", "worldPath", "conversation")
       ],
-      handoffs: ["laws", "gauges", "coherenceDiagnostic"]
-    },
-
-    diagnosticPath: {
-      organ: "diagnostic",
-      posture: "diagnostic",
-      phase: "personalize",
-      beats: [
-        "The Coherence Diagnostic is the personal mirror.",
-        "It asks how coherent you believe yourself to be.",
-        "Then it compares that claim against pressure scenarios."
-      ],
-      after: [
-        "It is local-only and reflective.",
-        "It is not medical, legal, employment screening, an IQ test, or official MBTI."
-      ],
-      options: [
-        routeOption("Take me to the Diagnostic.", "handoffDiagnostic"),
-        option("How does this become a profile later?", "futureProfilePath", "topic"),
-        option("Show me proof instead.", "proofPath", "topic"),
-        option("Back to the first fork.", "returnFork", "back")
-      ],
-      handoffs: ["coherenceDiagnostic"]
+      handoffs: ["compass", "laws", "coherenceDiagnostic", "products"]
     },
 
     seanPath: {
@@ -530,24 +741,6 @@
       handoffs: ["book", "nineSummits"]
     },
 
-    worldGatePath: {
-      organ: "worldGate",
-      posture: "world",
-      phase: "route",
-      beats: [
-        "The world gate is where explanation gives way to entry.",
-        "The estate should stop acting like a brochure there.",
-        "It should start opening."
-      ],
-      options: [
-        routeOption("Enter the Interactive Narrative.", "handoffWorld"),
-        option("Visit Hearth first.", "hearthPath", "topic"),
-        option("Visit Audralia.", "audraliaPath", "topic"),
-        option("Back to the first fork.", "returnFork", "back")
-      ],
-      handoffs: ["interactiveNarrative", "hearth", "audralia", "frontier"]
-    },
-
     hearthPath: {
       organ: "hearth",
       posture: "hearth",
@@ -572,8 +765,8 @@
       phase: "deepen",
       beats: [
         "Audralia is one of the visible world lanes beyond Hearth.",
-        "It is not the first explanation door.",
-        "It is a wider crossing once the visitor understands this is a world path."
+        "It is a wider crossing once the visitor understands this is a world path.",
+        "Use it when you want the estate to expand outward."
       ],
       options: [
         routeOption("Visit Audralia.", "handoffAudralia"),
@@ -602,28 +795,6 @@
       handoffs: ["frontier", "audralia", "interactiveNarrative"]
     },
 
-    charactersPath: {
-      organ: "characters",
-      posture: "characters",
-      phase: "personalize",
-      beats: [
-        "The characters are not menu labels.",
-        "They are people inside the world path.",
-        "Their job is to make the estate feel inhabited."
-      ],
-      after: [
-        "You do not need to memorize them at the doorway.",
-        "You only need to decide whether you want the world to become personal."
-      ],
-      options: [
-        routeOption("Meet the Characters.", "handoffCharacters"),
-        option("Explain Mirror Me.", "mirrorMePath", "topic"),
-        option("Enter the Interactive Narrative.", "worldGatePath", "route"),
-        option("Back to world path.", "worldPath", "back")
-      ],
-      handoffs: ["characters", "interactiveNarrative"]
-    },
-
     futureProfilePath: {
       organ: "futureProfile",
       posture: "futureProfile",
@@ -646,22 +817,7 @@
       organ: "mirrorMe",
       posture: "mirrorMe",
       phase: "reveal",
-      beats: [
-        "Mirror Me is the higher-self challenge path.",
-        "Not a clone. Not a gimmick.",
-        "A reflected version of what the visitor could become when the world begins answering them back."
-      ],
-      after: [
-        "That is future-facing.",
-        "So I will not pretend it is fully live today."
-      ],
-      options: [
-        option("Start with the Diagnostic.", "diagnosticPath", "topic"),
-        option("Meet the Characters.", "charactersPath", "topic"),
-        option("Enter the world gate.", "worldGatePath", "route"),
-        option("Back to future profile.", "futureProfilePath", "back")
-      ],
-      handoffs: ["coherenceDiagnostic", "characters", "interactiveNarrative"]
+      pathKey: "world"
     },
 
     returnFork: {
@@ -687,6 +843,7 @@
       organ: "restart",
       posture: "arrival",
       phase: "reset",
+      resetDepth: true,
       beats: [
         "Clean reset.",
         "You are back at the doorway.",
@@ -709,8 +866,7 @@
       targetRoute: "compass",
       beats: [
         "Open the Compass.",
-        "It is the cleanest orientation point.",
-        "Use it when you want the estate to stop feeling like a maze."
+        "That is the cleanest orientation point."
       ],
       options: [
         option("Show me another website path.", "websitePath", "back"),
@@ -723,8 +879,7 @@
       targetRoute: "coherenceDiagnostic",
       beats: [
         "Open the Diagnostic.",
-        "It is the cleanest mirror path.",
-        "That is where the estate starts with the visitor instead of the map."
+        "That is the cleanest mirror path."
       ],
       options: [
         option("Show me proof instead.", "proofPath", "back"),
@@ -737,8 +892,7 @@
       targetRoute: "laws",
       beats: [
         "Open the Laws.",
-        "That is where the estate makes its proof posture visible.",
-        "If you need structure before story, that is the correct door."
+        "That is where the estate makes its proof posture visible."
       ],
       options: [
         routeOption("Open Gauges too.", "handoffGauges"),
@@ -752,8 +906,7 @@
       targetRoute: "gauges",
       beats: [
         "Open Gauges.",
-        "Laws explain the standard.",
-        "Gauges point toward whether the estate is holding that standard."
+        "That is the more technical status path."
       ],
       options: [
         routeOption("Read the Laws too.", "handoffLaws"),
@@ -767,8 +920,7 @@
       targetRoute: "products",
       beats: [
         "Open Products.",
-        "That is where the estate becomes usable.",
-        "Use that door when you want application before explanation."
+        "That is where the estate becomes usable."
       ],
       options: [
         option("Show me the book path.", "bookPath", "topic"),
@@ -782,8 +934,7 @@
       targetRoute: "meetSean",
       beats: [
         "Open Meet Sean.",
-        "That is the cleanest path to the human voice behind the house.",
-        "If the estate feels unusual, that door explains the person behind the pressure and language."
+        "That is the cleanest path to the human voice behind the house."
       ],
       options: [
         option("Show me This Underdog too.", "underdogPath", "topic"),
@@ -797,8 +948,7 @@
       targetRoute: "aboutUnderdog",
       beats: [
         "Open About This Underdog.",
-        "That path carries the comedy, pressure, and human voice side of the estate.",
-        "It keeps the system from becoming only architecture."
+        "That path carries the comedy, pressure, and voice side of the estate."
       ],
       options: [
         option("Meet Sean instead.", "seanPath", "topic"),
@@ -812,8 +962,7 @@
       targetRoute: "book",
       beats: [
         "Open The Nine Summits of Love.",
-        "That is the book path.",
-        "Use it when you want the message carried as human development rather than site navigation."
+        "That is the book path."
       ],
       options: [
         routeOption("Open Nine Summits too.", "handoffNineSummits"),
@@ -827,8 +976,7 @@
       targetRoute: "nineSummits",
       beats: [
         "Open Nine Summits.",
-        "That is the wider development path around the book and seminar system.",
-        "It is a better door for the framework than for the world-lore path."
+        "That is the wider development path around the book and seminar system."
       ],
       options: [
         routeOption("Open the book too.", "handoffBook"),
@@ -842,8 +990,7 @@
       targetRoute: "characters",
       beats: [
         "Open Characters.",
-        "That is where the world becomes populated instead of merely explained.",
-        "Use that door if you want people, not just architecture."
+        "That is where the world becomes populated instead of merely explained."
       ],
       options: [
         routeOption("Enter the Interactive Narrative too.", "handoffWorld"),
@@ -857,8 +1004,7 @@
       targetRoute: "interactiveNarrative",
       beats: [
         "Enter the Interactive Narrative.",
-        "That is the right next door if you want the world behind the website.",
-        "At that point, the estate should stop explaining itself and start opening."
+        "That is the right next door if you want the world behind the website."
       ],
       options: [
         option("Visit Hearth first.", "hearthPath", "topic"),
@@ -872,8 +1018,7 @@
       targetRoute: "hearth",
       beats: [
         "Return to Hearth.",
-        "That is the house-side world before the outward lanes.",
-        "It is the proper place to re-enter close to the home chamber."
+        "That is the house-side world before the outward lanes."
       ],
       options: [
         option("Enter the Interactive Narrative.", "worldGatePath", "route"),
@@ -887,8 +1032,7 @@
       targetRoute: "audralia",
       beats: [
         "Visit Audralia.",
-        "That is one of the visible world lanes beyond Hearth.",
-        "Use it when you want the estate to expand outward."
+        "That is one of the visible world lanes beyond Hearth."
       ],
       options: [
         option("Explore Frontier.", "frontierPath", "topic"),
@@ -902,8 +1046,7 @@
       targetRoute: "frontier",
       beats: [
         "Explore Frontier.",
-        "That is the outward-facing discovery path.",
-        "It is best used after you know you are leaving the lobby."
+        "That is the outward-facing discovery path."
       ],
       options: [
         option("Visit Audralia.", "audraliaPath", "topic"),
@@ -931,10 +1074,85 @@
     return id || "intro";
   }
 
-  function getNode(id) {
-    var nodeId = normalizeNode(id);
+  function getPathDepth(pathKey) {
+    if (!pathKey || PATHS.indexOf(pathKey) === -1) return 0;
+    return state.pathDepth[pathKey] || 0;
+  }
 
-    if (NODE[nodeId]) return NODE[nodeId];
+  function advancePathDepth(pathKey) {
+    if (!pathKey || PATHS.indexOf(pathKey) === -1) return 0;
+
+    state.pathDepth[pathKey] = clamp(
+      (state.pathDepth[pathKey] || 0) + 1,
+      1,
+      MAX_PATH_DEPTH
+    );
+
+    return state.pathDepth[pathKey];
+  }
+
+  function resetPathDepth() {
+    PATHS.forEach(function eachPath(path) {
+      state.pathDepth[path] = 0;
+    });
+  }
+
+  function getChamberExpression(pathKey, depth) {
+    var expressions = CHAMBER[pathKey] || [];
+    var index = clamp((depth || 1) - 1, 0, expressions.length - 1);
+
+    return expressions[index] || null;
+  }
+
+  function mergeNode(base, expression, pathKey, depth) {
+    var merged = {};
+    var key;
+
+    for (key in base) {
+      if (Object.prototype.hasOwnProperty.call(base, key)) {
+        merged[key] = base[key];
+      }
+    }
+
+    if (expression) {
+      for (key in expression) {
+        if (Object.prototype.hasOwnProperty.call(expression, key)) {
+          merged[key] = expression[key];
+        }
+      }
+    }
+
+    merged.pathKey = pathKey || base.pathKey || null;
+    merged.pathDepth = depth || 0;
+
+    return merged;
+  }
+
+  function getNode(id, shouldAdvanceDepth) {
+    var nodeId = normalizeNode(id);
+    var base;
+    var depth;
+    var expression;
+
+    if (NODE[nodeId]) {
+      base = NODE[nodeId];
+
+      if (base.resetDepth) {
+        resetPathDepth();
+      }
+
+      if (base.pathKey) {
+        depth = shouldAdvanceDepth === false
+          ? Math.max(getPathDepth(base.pathKey), 1)
+          : advancePathDepth(base.pathKey);
+
+        expression = getChamberExpression(base.pathKey, depth);
+
+        return mergeNode(base, expression, base.pathKey, depth);
+      }
+
+      return base;
+    }
 
     if (HANDOFF_NODE[nodeId]) {
       return {
@@ -943,7 +1161,9 @@
         phase: "handoff",
         beats: HANDOFF_NODE[nodeId].beats,
         options: HANDOFF_NODE[nodeId].options,
-        handoffs: [HANDOFF_NODE[nodeId].targetRoute]
+        handoffs: [HANDOFF_NODE[nodeId].targetRoute],
+        pathKey: null,
+        pathDepth: 0
       };
     }
 
@@ -1166,6 +1386,8 @@
     state.currentOrgan = node.organ || "arrival";
     state.currentPosture = node.posture || "arrival";
     state.currentPhase = node.phase || "receive";
+    state.currentPath = node.pathKey || null;
+    state.currentPathDepth = node.pathDepth || 0;
     state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
     state.cycleStep = (state.cycleStep + 1) % 16;
 
@@ -1181,7 +1403,11 @@
       state.curiosityLevel = Math.max(state.curiosityLevel, 2);
     }
 
-    if (state.currentPhase === "handoff" || state.currentPhase === "route") {
+    if (
+      state.currentPhase === "handoff" ||
+      state.currentPhase === "route" ||
+      state.currentPathDepth === 4
+    ) {
       state.routePressure = Math.min(10, state.routePressure + 1);
     }
 
@@ -1190,6 +1416,8 @@
       organ: state.currentOrgan,
       posture: state.currentPosture,
       phase: state.currentPhase,
+      path: state.currentPath,
+      pathDepth: state.currentPathDepth,
       stateIndex: state.stateIndex
     });
 
@@ -1260,7 +1488,7 @@
     state.runToken += 1;
     token = state.runToken;
 
-    node = getNode(nodeId);
+    node = getNode(nodeId, true);
     updateState(nodeId, node);
 
     hideOptions();
@@ -1317,7 +1545,10 @@
       value.indexOf("law") !== -1 ||
       value.indexOf("real") !== -1 ||
       value.indexOf("evidence") !== -1 ||
-      value.indexOf("test") !== -1
+      value.indexOf("test") !== -1 ||
+      value.indexOf("skeptic") !== -1 ||
+      value.indexOf("plain") !== -1 ||
+      value.indexOf("explain") !== -1
     ) {
       return "proofPath";
     }
@@ -1327,7 +1558,8 @@
       value.indexOf("coherence") !== -1 ||
       value.indexOf("fit") !== -1 ||
       value.indexOf("archetype") !== -1 ||
-      value.indexOf("self") !== -1
+      value.indexOf("self") !== -1 ||
+      value.indexOf("reflect") !== -1
     ) {
       return "diagnosticPath";
     }
@@ -1383,15 +1615,6 @@
       return "whereToStart";
     }
 
-    if (
-      value.indexOf("skeptic") !== -1 ||
-      value.indexOf("confused") !== -1 ||
-      value.indexOf("plain") !== -1 ||
-      value.indexOf("explain") !== -1
-    ) {
-      return "skepticPlain";
-    }
-
     return "askFirst";
   }
 
@@ -1425,6 +1648,7 @@
       organs: ORGANS.slice(),
       postures: POSTURES.slice(),
       phases: PHASES.slice(),
+      paths: PATHS.slice(),
       routes: mergeRoutes,
       runNode: runNode,
       ask: ask,
@@ -1446,7 +1670,7 @@
         return safeClone(state);
       },
       getNode: function getNodePublic(id) {
-        return safeClone(getNode(id));
+        return safeClone(getNode(id, false));
       },
       getState256: function getState256() {
         return {

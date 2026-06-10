@@ -1,19 +1,29 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_TNT_v17
+// HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_PROMPT_DOCK_STATE_REPAIR_TNT_v17_2
 // Full-file replacement.
 // Preserves existing HTML/CSS contract.
-// Owns front-end DOM control, visual pacing, tap-to-advance, seed clearing, route rendering,
-// v16-compatible deterministic fallback, paired back-brain request handling, visible options,
-// route handoff filtering, and final route authority.
-// Does not own server-side model execution, API keys, persistent memory, moderation authority,
-// or backend canon storage.
+// Purpose:
+// - Restore guaranteed conversation continuity after intro.
+// - Preserve v17 paired-brain architecture.
+// - Keep intro/core navigation local-first.
+// - Keep API advisory only.
+// - Repair prompt dock visibility and option rendering.
+// - Repair Character Mirror answer capture.
+// - Preserve DOM hooks, pacing, tap-to-advance, route handoffs, and front-end route authority.
+// Does not own:
+// - server-side model execution
+// - API keys
+// - persistent memory
+// - moderation authority
+// - backend canon storage
+//
 
-(function hearthJeevesPairedSmeFrontendEngine(global) {
+(function hearthJeevesPairedSmeFrontendPromptDockStateRepair(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_TNT_v17";
+  var CONTRACT = "HEARTH_JEEVES_PAIRED_SME_FRONTEND_ENGINE_PROMPT_DOCK_STATE_REPAIR_TNT_v17_2";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
-  var JEEVES_BRAIN_ENDPOINT = "/api/jeeves.js";
+  var DEFAULT_BRAIN_ENDPOINT = "/api/jeeves.js";
 
   var SCOPE_OBJECTIVE = "objective";
   var SCOPE_NARRATIVE = "narrative";
@@ -24,7 +34,6 @@
   var MODE_CHARACTER_MIRROR = "characterMirror";
 
   var MAX_HISTORY = 80;
-  var MAX_TOPIC_DEPTH = 3;
 
   var PACING = {
     firstMessageDelayMs: 950,
@@ -40,6 +49,44 @@
     tapMaxDistancePx: 14,
     tapMaxDurationMs: 360
   };
+
+  var POSTURES = [
+    "arrival",
+    "skeptic",
+    "orientation",
+    "proof",
+    "diagnostic",
+    "sean",
+    "products",
+    "book",
+    "world",
+    "hearth",
+    "audralia",
+    "frontier",
+    "characters",
+    "futureProfile",
+    "mirrorMe",
+    "handoff"
+  ];
+
+  var PHASES = [
+    "receive",
+    "ground",
+    "fork",
+    "clarify",
+    "reflect",
+    "reveal",
+    "prove",
+    "personalize",
+    "invite",
+    "deepen",
+    "route",
+    "handoff",
+    "return",
+    "reset",
+    "close",
+    "continue"
+  ];
 
   var DEFAULT_ROUTES = {
     compass: "/",
@@ -110,44 +157,6 @@
     nineSummits: "Open Nine Summits",
     aboutUnderdog: "About This Underdog"
   };
-
-  var POSTURES = [
-    "arrival",
-    "skeptic",
-    "orientation",
-    "proof",
-    "diagnostic",
-    "sean",
-    "products",
-    "book",
-    "world",
-    "hearth",
-    "audralia",
-    "frontier",
-    "characters",
-    "futureProfile",
-    "mirrorMe",
-    "handoff"
-  ];
-
-  var PHASES = [
-    "receive",
-    "ground",
-    "fork",
-    "clarify",
-    "reflect",
-    "reveal",
-    "prove",
-    "personalize",
-    "invite",
-    "deepen",
-    "route",
-    "handoff",
-    "return",
-    "reset",
-    "close",
-    "continue"
-  ];
 
   var APPROVED_ROUTE_IDS = [
     "compass",
@@ -265,6 +274,49 @@
     "restartFork"
   ];
 
+  var NARRATIVE_TARGETS = [
+    "worldPath",
+    "worldGatePath",
+    "hearthPath",
+    "hearthFacilityPath",
+    "hearthConstructPath",
+    "hearthFrontierPath",
+    "hearthLawPath",
+    "audraliaPath",
+    "frontierPath",
+    "frontierSystemsPath",
+    "frontierEnergyPath",
+    "frontierWaterPath",
+    "frontierWastePath",
+    "frontierClosedLoopPath",
+    "frontierInfrastructurePath",
+    "frontierLatticePath",
+    "frontierUrbanPath",
+    "frontierManualPath",
+    "frontierShimmerPath",
+    "frontierTrajectoryPath",
+    "frontierVisionPath",
+    "frontierLawPath",
+    "frontierCharactersPath",
+    "mirrorMePath",
+    "charactersPath",
+    "characterIdentityPath",
+    "characterRelationshipsPath",
+    "characterTensionsPath",
+    "characterMotivesPath",
+    "characterFactionsPath",
+    "characterStoryPressurePath",
+    "characterFirstPath",
+    "characterAurenValePath",
+    "characterDextrionPath",
+    "characterAlaricPath",
+    "characterTarianPath",
+    "characterElaraPath",
+    "characterSorenPath",
+    "characterJeevesPath",
+    "characterRemoteTeamPath"
+  ];
+
   var FORBIDDEN_PUBLIC_LANGUAGE = [
     { pattern: /\bscope lane\b/gi, replacement: "path" },
     { pattern: /\bregistry\b/gi, replacement: "guide" },
@@ -275,7 +327,6 @@
     { pattern: /\bprogression state\b/gi, replacement: "step" },
     { pattern: /\bbackend bridge\b/gi, replacement: "deeper answer path" },
     { pattern: /\bAPI\b/g, replacement: "answer path" },
-    { pattern: /\bpublic human-voice side\b/gi, replacement: "place where the voice becomes human" },
     { pattern: /\bDOM\b/g, replacement: "visible interface" },
     { pattern: /\bserver[-\s]?side\b/gi, replacement: "deeper house layer" },
     { pattern: /\bback[-\s]?end\b/gi, replacement: "deeper side" },
@@ -460,13 +511,6 @@
     }
   };
 
-  var ARCHETYPE_CHARACTER_MAP = {
-    Strategist: ["jeeves", "aurenVale", "alaric"],
-    Builder: ["dextrion", "remoteTeam", "tarian"],
-    Mitigator: ["tarian", "aurenVale", "remoteTeam"],
-    Auditor: ["soren", "dextrion", "jeeves"]
-  };
-
   var LOCAL_MIRROR_KEYWORDS = [
     { id: "aurenVale", words: ["protect", "shelter", "safe", "hide", "custody", "exposure"] },
     { id: "dextrion", words: ["fix", "repair", "responsible", "guilt", "broken", "system"] },
@@ -588,8 +632,6 @@
     currentRouteHandoffs: [],
     stateIndex: 0,
 
-    topicDepth: {},
-
     visitor: {
       lastChoiceLabel: "",
       lastSignal: "",
@@ -621,7 +663,7 @@
     },
 
     brain: {
-      endpoint: JEEVES_BRAIN_ENDPOINT,
+      endpoint: DEFAULT_BRAIN_ENDPOINT,
       enabled: true,
       lastRequest: null,
       lastResponse: null,
@@ -664,10 +706,6 @@
     var item = say(label, target, meta);
     item.type = "back";
     return item;
-  }
-
-  function route(id) {
-    return getHandoff(id);
   }
 
   function query(selector, scope) {
@@ -719,6 +757,10 @@
       PACING.readMinMs,
       PACING.readMaxMs
     );
+  }
+
+  function isNarrativeTarget(target) {
+    return NARRATIVE_TARGETS.indexOf(String(target || "")) !== -1;
   }
 
   function isHearthContext() {
@@ -819,6 +861,18 @@
     return String(id);
   }
 
+  function normalizeTarget(target) {
+    var value = String(target || "").trim();
+    if (APPROVED_TARGETS.indexOf(value) === -1) return "recenterNode";
+    return value;
+  }
+
+  function normalizeRouteId(id) {
+    var value = String(id || "").trim();
+    if (APPROVED_ROUTE_IDS.indexOf(value) === -1) return "";
+    return value;
+  }
+
   function resetState() {
     state.currentNode = "intro";
     state.previousNode = null;
@@ -829,7 +883,6 @@
     state.currentVoiceMode = MODE_OBJECTIVE;
     state.currentDepth = 0;
     state.currentRouteHandoffs = [];
-    state.topicDepth = {};
 
     state.visitor.lastChoiceLabel = "";
     state.visitor.lastSignal = "";
@@ -866,13 +919,15 @@
     return "choosing the next door";
   }
 
-  function updateMirrorAnswers(choice) {
+  function updateMirrorAnswers(choice, sourceNode) {
+    var fromNode = sourceNode || state.previousNode || state.currentNode;
+
     if (!choice || !choice.label) return;
 
     if (
-      state.currentNode === "characterMirrorQuestionOne" ||
-      state.currentNode === "characterMirrorQuestionTwo" ||
-      state.currentNode === "characterMirrorQuestionThree"
+      fromNode === "characterMirrorQuestionOne" ||
+      fromNode === "characterMirrorQuestionTwo" ||
+      fromNode === "characterMirrorQuestionThree"
     ) {
       state.visitor.characterMirrorAnswers.push(choice.label);
 
@@ -882,12 +937,12 @@
     }
   }
 
-  function updateVisitor(choice, node) {
+  function updateVisitor(choice, node, sourceNode) {
     var topic = node.topic || "arrival";
     var sameTopic = state.visitor.lastTopic === topic;
     var scopeChanged = state.visitor.lastScopeLane !== node.scopeLane;
 
-    updateMirrorAnswers(choice);
+    updateMirrorAnswers(choice, sourceNode);
 
     if (sameTopic) {
       state.visitor.progressCount += 1;
@@ -927,6 +982,15 @@
     }
   }
 
+  function getState256() {
+    return {
+      posture: state.currentPosture,
+      phase: state.currentPhase,
+      index: state.stateIndex,
+      label: "ST-" + String(state.stateIndex + 1).padStart(3, "0") + "-OF-256"
+    };
+  }
+
   function setDocumentState() {
     var state256 = getState256();
 
@@ -949,6 +1013,8 @@
   }
 
   function updateCurrentState(nodeId, node, choice) {
+    var sourceNode = state.currentNode;
+
     state.previousNode = state.currentNode;
     state.currentNode = normalizeNode(nodeId);
     state.currentTopic = node.topic || "arrival";
@@ -960,7 +1026,7 @@
     state.currentRouteHandoffs = (node.handoffs || []).slice();
     state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
 
-    updateVisitor(choice, node);
+    updateVisitor(choice, node, sourceNode);
     setDocumentState();
 
     state.history.push({
@@ -980,19 +1046,27 @@
     }
   }
 
-  function getState256() {
-    return {
-      posture: state.currentPosture,
-      phase: state.currentPhase,
-      index: state.stateIndex,
-      label: "ST-" + String(state.stateIndex + 1).padStart(3, "0") + "-OF-256"
-    };
-  }
-
   function collectElements() {
     els.thread = query("#jeevesThread");
     els.typing = query("[data-jeeves-typing]");
-    els.promptGrid = query("[data-jeeves-prompt-grid]");
+    els.promptGrid =
+      query("[data-jeeves-prompt-grid]") ||
+      query("[data-jeeves-options-grid]") ||
+      query(".jeeves-prompt-grid") ||
+      query(".jeeves-options-grid");
+
+    els.promptDock =
+      query("[data-jeeves-prompt-dock]") ||
+      query("[data-jeeves-options-dock]") ||
+      query("[data-jeeves-prompt-panel]") ||
+      query("[data-jeeves-response-panel]") ||
+      query(".jeeves-prompt-dock") ||
+      query(".jeeves-options-dock") ||
+      query(".jeeves-prompt-panel") ||
+      query(".jeeves-response-panel") ||
+      (els.promptGrid ? els.promptGrid.closest("[data-jeeves-prompt-dock],[data-jeeves-options-dock],[data-jeeves-prompt-panel],[data-jeeves-response-panel],.jeeves-prompt-dock,.jeeves-options-dock,.jeeves-prompt-panel,.jeeves-response-panel") : null) ||
+      (els.promptGrid ? els.promptGrid.parentElement : null);
+
     els.handoffDock = query("[data-jeeves-handoff-dock]");
     els.handoffGrid = query("[data-jeeves-handoff-grid]");
     els.status = query("[data-jeeves-status]");
@@ -1002,6 +1076,89 @@
     els.routeOptionTemplate = query("#jeevesRouteOptionTemplate");
     els.restoreButton = query("[data-jeeves-action='restore']");
     els.minimized = query("[data-jeeves-minimized]");
+
+    ensurePromptDock();
+  }
+
+  function ensurePromptDock() {
+    var parent;
+    var title;
+
+    if (els.promptGrid) {
+      if (!els.promptDock) {
+        els.promptDock = els.promptGrid.parentElement;
+      }
+      return;
+    }
+
+    if (!els.thread || !els.thread.parentElement) return;
+
+    parent = els.thread.parentElement;
+
+    els.promptDock = document.createElement("section");
+    els.promptDock.className = "jeeves-prompt-dock";
+    els.promptDock.setAttribute("data-jeeves-prompt-dock", "");
+    els.promptDock.setAttribute("data-prompt-visible", "false");
+    els.promptDock.setAttribute("data-options-visible", "false");
+    els.promptDock.setAttribute("aria-hidden", "true");
+
+    title = document.createElement("p");
+    title.className = "jeeves-prompt-title";
+    title.textContent = "Choose what to say";
+    title.setAttribute("data-jeeves-prompt-title", "");
+
+    els.promptGrid = document.createElement("div");
+    els.promptGrid.className = "jeeves-prompt-grid";
+    els.promptGrid.setAttribute("data-jeeves-prompt-grid", "");
+    els.promptGrid.setAttribute("data-options-visible", "false");
+
+    els.promptDock.appendChild(title);
+    els.promptDock.appendChild(els.promptGrid);
+
+    if (els.thread.nextSibling) {
+      parent.insertBefore(els.promptDock, els.thread.nextSibling);
+    } else {
+      parent.appendChild(els.promptDock);
+    }
+  }
+
+  function revealElement(element) {
+    if (!element) return;
+
+    element.hidden = false;
+    element.removeAttribute("hidden");
+    element.removeAttribute("inert");
+    element.removeAttribute("aria-disabled");
+
+    if (element.style) {
+      element.style.removeProperty("display");
+      element.style.removeProperty("visibility");
+      element.style.removeProperty("opacity");
+      element.style.removeProperty("pointer-events");
+      element.style.removeProperty("height");
+      element.style.removeProperty("max-height");
+    }
+  }
+
+  function setPromptVisible(isVisible) {
+    document.documentElement.dataset.jeevesOptionsVisible = isVisible ? "true" : "false";
+    document.documentElement.dataset.jeevesPromptVisible = isVisible ? "true" : "false";
+
+    revealElement(els.promptDock);
+    revealElement(els.promptGrid);
+
+    if (els.promptDock) {
+      els.promptDock.setAttribute("aria-hidden", isVisible ? "false" : "true");
+      els.promptDock.setAttribute("data-prompt-visible", isVisible ? "true" : "false");
+      els.promptDock.setAttribute("data-options-visible", isVisible ? "true" : "false");
+      els.promptDock.setAttribute("data-jeeves-options-visible", isVisible ? "true" : "false");
+    }
+
+    if (els.promptGrid) {
+      els.promptGrid.setAttribute("aria-hidden", isVisible ? "false" : "true");
+      els.promptGrid.setAttribute("data-options-visible", isVisible ? "true" : "false");
+      els.promptGrid.setAttribute("data-jeeves-options-visible", isVisible ? "true" : "false");
+    }
   }
 
   function setStatus(value, text) {
@@ -1041,6 +1198,7 @@
   function hideOptions() {
     clearElement(els.promptGrid);
     clearElement(els.handoffGrid);
+    setPromptVisible(false);
 
     if (els.handoffDock) {
       els.handoffDock.setAttribute("data-handoff-visible", "false");
@@ -1053,7 +1211,7 @@
     try {
       els.thread.scrollTop = els.thread.scrollHeight;
     } catch (_error) {
-      /* non-critical */
+      /* Non-critical. */
     }
   }
 
@@ -1110,17 +1268,38 @@
     return message;
   }
 
+  function normalizeButtonElement(element) {
+    var button = element;
+    var replacement;
+
+    if (!button || button.nodeType !== 1) {
+      button = document.createElement("button");
+    }
+
+    if (button.tagName && button.tagName.toLowerCase() !== "button") {
+      replacement = document.createElement("button");
+      replacement.className = button.className || "";
+      while (button.firstChild) {
+        replacement.appendChild(button.firstChild);
+      }
+      button = replacement;
+    }
+
+    return button;
+  }
+
   function makeOptionButton(item) {
-    var button = cloneTemplate(els.optionTemplate, "button");
+    var button = normalizeButtonElement(cloneTemplate(els.optionTemplate, "button"));
     var label = query("span", button);
     var target = normalizeTarget(item.target);
     var cleanLabel = sanitizeConversationLabel(item.label, target);
+    var scopeLane = item.scopeLane || (isNarrativeTarget(target) ? SCOPE_NARRATIVE : SCOPE_OBJECTIVE);
 
     button.classList.add("jeeves-option");
     button.setAttribute("type", "button");
     button.setAttribute("data-option-type", item.type || "conversation");
     button.setAttribute("data-option-target", target || "");
-    button.setAttribute("data-option-scope-lane", item.scopeLane || (isNarrativeTarget(target) ? SCOPE_NARRATIVE : SCOPE_OBJECTIVE));
+    button.setAttribute("data-option-scope-lane", scopeLane);
 
     if (label) {
       label.textContent = cleanLabel;
@@ -1134,7 +1313,7 @@
         target: target,
         type: item.type || "conversation",
         signal: item.signal || "",
-        scopeLane: item.scopeLane || null
+        scopeLane: scopeLane
       });
     });
 
@@ -1143,7 +1322,13 @@
 
   function makeRouteLink(item) {
     var link = cloneTemplate(els.routeOptionTemplate, "a");
-    var label = query("span", link);
+    var label;
+
+    if (!link || !link.tagName || link.tagName.toLowerCase() !== "a") {
+      link = document.createElement("a");
+    }
+
+    label = query("span", link);
 
     link.classList.add("jeeves-option");
     link.classList.add("jeeves-option-route");
@@ -1160,16 +1345,23 @@
     return link;
   }
 
-  function normalizeTarget(target) {
-    var value = String(target || "").trim();
-    if (APPROVED_TARGETS.indexOf(value) === -1) return "recenterNode";
-    return value;
-  }
+  function ensurePromptTitle() {
+    var title;
 
-  function normalizeRouteId(id) {
-    var value = String(id || "").trim();
-    if (APPROVED_ROUTE_IDS.indexOf(value) === -1) return "";
-    return value;
+    if (!els.promptDock || !els.promptGrid) return;
+
+    title =
+      query("[data-jeeves-prompt-title]", els.promptDock) ||
+      query(".jeeves-prompt-title", els.promptDock);
+
+    if (title) return;
+
+    title = document.createElement("p");
+    title.className = "jeeves-prompt-title";
+    title.textContent = "Choose what to say";
+    title.setAttribute("data-jeeves-prompt-title", "");
+
+    els.promptDock.insertBefore(title, els.promptGrid);
   }
 
   function renderOptions(options) {
@@ -1186,13 +1378,18 @@
       ];
     }
 
+    ensurePromptDock();
     clearElement(els.promptGrid);
 
     if (!els.promptGrid) return;
 
+    ensurePromptTitle();
+
     clean.slice(0, 8).forEach(function eachOption(item) {
       els.promptGrid.appendChild(makeOptionButton(item));
     });
+
+    setPromptVisible(true);
   }
 
   function renderHandoffs(ids) {
@@ -1216,6 +1413,8 @@
       return;
     }
 
+    revealElement(els.handoffDock);
+    revealElement(els.handoffGrid);
     els.handoffDock.setAttribute("data-handoff-visible", "true");
 
     handoffs.slice(0, 6).forEach(function eachHandoff(item) {
@@ -1339,15 +1538,6 @@
     };
   }
 
-  function conclusiveOptions() {
-    return [
-      control("Ask me a sharper question.", "sharpQuestion"),
-      control("Switch topics.", "switchTopics"),
-      control("Choose the next door.", "cleanDoor"),
-      back("I need the clean fork again.", "returnFork")
-    ];
-  }
-
   function getNode(nodeId, choice) {
     var id = normalizeNode(nodeId);
     var character;
@@ -1380,7 +1570,14 @@
     if (id === "hearthPath" || id === "hearthFacilityPath" || id === "hearthConstructPath" || id === "hearthFrontierPath" || id === "hearthLawPath") return makeHearthNode(id);
     if (id === "audraliaPath") return makeAudraliaNode();
     if (id === "scientificLawPath" || id.indexOf("scientificLaw") === 0) return makeScientificLawNode(id);
-    if (id === "frontierPath" || id === "frontierSystemsPath" || id === "frontierLawPath" || id === "frontierCharactersPath" || id.indexOf("frontier") === 0) {
+
+    if (
+      id === "frontierPath" ||
+      id === "frontierSystemsPath" ||
+      id === "frontierLawPath" ||
+      id === "frontierCharactersPath" ||
+      id.indexOf("frontier") === 0
+    ) {
       frontierKey = targetToFrontierKey(id);
       return makeFrontierNode(id, frontierKey);
     }
@@ -1665,13 +1862,6 @@
   function makeCleanDoorNode() {
     var topic = state.currentTopic;
     var handoffs = ["compass", "siteGuide"];
-    var options = [
-      say("I need orientation.", "compassPath"),
-      say("I want proof.", "scientificLawPath"),
-      say("I want the Diagnostic.", "diagnosticPath"),
-      say("I want the character mirror.", "characterMirrorPath"),
-      say("I want the world side.", "worldPath")
-    ];
 
     if (topic === "hearth") handoffs = ["hearth", "frontier", "scientificLaw"];
     if (topic === "frontier") handoffs = ["frontier", "audralia", "hearth"];
@@ -1691,7 +1881,13 @@
         "Right now, you seem to be " + state.visitor.lastItch + ".",
         "You can keep talking here, or you can cross into the chamber that matches that pressure."
       ],
-      options,
+      [
+        say("I need orientation.", "compassPath"),
+        say("I want proof.", "scientificLawPath"),
+        say("I want the Diagnostic.", "diagnosticPath"),
+        say("I want the character mirror.", "characterMirrorPath"),
+        say("I want the world side.", "worldPath")
+      ],
       handoffs
     );
   }
@@ -2680,6 +2876,25 @@
     return true;
   }
 
+  function shouldAskBrainBeforeLocal(target) {
+    return [
+      "characterMirrorPath",
+      "selfLearningPath",
+      "characterMirrorResult",
+      "scientificLawPath",
+      "scientificLawTheoryPath",
+      "scientificLawEvidencePath",
+      "scientificLawMeasurePath",
+      "scientificLawLimitsPath",
+      "frontierPath",
+      "frontierSystemsPath",
+      "hearthPath",
+      "hearthConstructPath",
+      "hearthFacilityPath",
+      "charactersPath"
+    ].indexOf(target) !== -1;
+  }
+
   function buildBrainPayload(target, choice) {
     return {
       visitorText: choice && choice.label ? choice.label : "",
@@ -2691,7 +2906,6 @@
       visitorPosture: state.currentPosture,
       movement: choice && choice.signal ? choice.signal : "",
       pathDepth: state.currentDepth,
-      topicDepth: state.topicDepth[state.currentTopic] || 0,
       loopCount: state.visitor.loopCount,
       routeReadiness: state.visitor.routeReadiness,
       allowedTargets: APPROVED_TARGETS.slice(),
@@ -2714,6 +2928,8 @@
     var controller;
     var timeout;
     var payload;
+    var response;
+    var data;
 
     if (!state.brain.endpoint) return null;
 
@@ -2727,12 +2943,14 @@
       timeout = window.setTimeout(function abortBrain() {
         try {
           controller.abort();
-        } catch (_error) {}
+        } catch (_error) {
+          /* Non-critical. */
+        }
       }, state.brain.timeoutMs);
     }
 
     try {
-      var response = await fetch(state.brain.endpoint, {
+      response = await fetch(state.brain.endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -2748,7 +2966,7 @@
         return null;
       }
 
-      var data = await response.json();
+      data = await response.json();
 
       state.brain.lastResponse = safeClone(data);
       state.brain.lastStatus = data && data.ok ? "ok" : "fallback";
@@ -2777,7 +2995,6 @@
     state.visitor.lastBrainConclusiveState = data.conclusiveState || "";
 
     return {
-      node: state.currentNode,
       topic: data.nextTopic || state.currentTopic,
       posture: state.currentPosture,
       phase: data.conclusiveState === "complete" ? "close" : state.currentPhase,
@@ -2797,25 +3014,6 @@
       handoffs: handoffs.map(normalizeRouteId).filter(Boolean),
       source: data.source || "brain"
     };
-  }
-
-  function shouldAskBrainBeforeLocal(target) {
-    return [
-      "characterMirrorPath",
-      "selfLearningPath",
-      "characterMirrorResult",
-      "scientificLawPath",
-      "scientificLawTheoryPath",
-      "scientificLawEvidencePath",
-      "scientificLawMeasurePath",
-      "scientificLawLimitsPath",
-      "frontierPath",
-      "frontierSystemsPath",
-      "hearthPath",
-      "hearthConstructPath",
-      "hearthFacilityPath",
-      "charactersPath"
-    ].indexOf(target) !== -1;
   }
 
   async function runNode(nodeId, settings) {
@@ -2973,7 +3171,7 @@
     global.HEARTH.JEEVES.engine = {
       contract: CONTRACT,
       route: ROUTE,
-      brainEndpoint: JEEVES_BRAIN_ENDPOINT,
+      brainEndpoint: state.brain.endpoint,
       state: state,
       characters: CHARACTER_REGISTRY,
       frontierSystems: FRONTIER_SYSTEMS,
@@ -2983,6 +3181,12 @@
       classifyText: classifyText,
       requestJeevesBrain: requestJeevesBrain,
       tapAdvance: requestTapAdvance,
+      renderOptions: renderOptions,
+      setPromptVisible: setPromptVisible,
+      isNarrativeTarget: isNarrativeTarget,
+      getElements: function getElements() {
+        return els;
+      },
       getState: function getState() {
         return safeClone(state);
       },
@@ -3012,8 +3216,20 @@
     config = readConfig();
     collectElements();
 
-    if (!els.thread || !els.promptGrid || !els.handoffGrid) {
+    if (!els.thread) {
       return;
+    }
+
+    ensurePromptDock();
+
+    if (!els.promptGrid) {
+      return;
+    }
+
+    if (!els.handoffGrid) {
+      els.handoffGrid = document.createElement("div");
+      els.handoffGrid.setAttribute("data-jeeves-handoff-grid", "");
+      if (els.handoffDock) els.handoffDock.appendChild(els.handoffGrid);
     }
 
     if (config && config.brainEndpoint) {

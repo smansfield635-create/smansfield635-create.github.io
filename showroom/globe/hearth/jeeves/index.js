@@ -1,17 +1,19 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_256_STATE_CONVERSATIONAL_FUNNEL_ENGINE_TNT_v5
+// HEARTH_JEEVES_256_STATE_TEXT_CONVERSATION_PACING_ENGINE_TNT_v6
 // Full-file replacement.
-// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal organs, visitor posture, route handoffs, current-session memory.
+// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal conversational organs, text-message pacing, guided route handoffs, current-session memory.
 // Does not own: HTML shell, CSS styling, backend, persistent storage, login, freeform AI, WebGL, Hearth globe chamber, diagnostics authority, final visual pass.
 
-(function hearthJeeves256StateConversationalFunnel(global) {
+(function hearthJeeves256StateTextConversationPacingEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_256_STATE_CONVERSATIONAL_FUNNEL_ENGINE_TNT_v5";
+  var CONTRACT = "HEARTH_JEEVES_256_STATE_TEXT_CONVERSATION_PACING_ENGINE_TNT_v6";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
 
-  var BEAT_DELAY_MS = 95;
-  var THINK_DELAY_MS = 80;
+  var THINK_DELAY_MS = 650;
+  var BEAT_DELAY_MS = 900;
+  var FIRST_MESSAGE_DELAY_MS = 500;
+  var OPTION_REVEAL_DELAY_MS = 350;
   var MAX_HISTORY = 32;
 
   var DEFAULT_ROUTES = {
@@ -122,7 +124,7 @@
     route: ROUTE,
     initialized: false,
     busy: false,
-    currentNode: "arrival",
+    currentNode: "intro",
     previousNode: null,
     currentOrgan: "arrival",
     currentPosture: "arrival",
@@ -186,7 +188,7 @@
 
     if (!script) {
       return {
-        initialNode: "arrival",
+        initialNode: "intro",
         routes: {}
       };
     }
@@ -195,7 +197,7 @@
       return JSON.parse(script.textContent || "{}");
     } catch (_error) {
       return {
-        initialNode: "arrival",
+        initialNode: "intro",
         routes: {}
       };
     }
@@ -237,20 +239,41 @@
   }
 
   var NODE = {
-    arrival: {
+    intro: {
       organ: "arrival",
       posture: "arrival",
       phase: "receive",
       beats: [
-        "Welcome to Diamond Gate Bridge.",
-        "You do not need the whole house at once.",
-        "Tell me whether you want the website first, or the world behind it."
+        "Good evening. I’m Jeeves.",
+        "I help visitors find the right door inside Diamond Gate Bridge.",
+        "You do not need to understand the whole estate at once.",
+        "I can guide you through the website, take you toward the world behind it, or ask you one question first."
       ],
       options: [
         option("Guide me through the website.", "websitePath"),
         option("Take me toward the world behind it.", "worldPath"),
         option("I’m skeptical. Explain it plainly.", "skepticPlain", "calibration"),
-        option("Just tell me where to start.", "whereToStart")
+        option("Just tell me where to start.", "whereToStart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
+      ],
+      handoffs: []
+    },
+
+    askFirst: {
+      organ: "firstFork",
+      posture: "arrival",
+      phase: "invite",
+      beats: [
+        "Then I’ll ask plainly.",
+        "What brought you here first?",
+        "Curiosity, skepticism, self-reflection, practical use, or the story?"
+      ],
+      options: [
+        option("Curiosity.", "worldPath", "conversation"),
+        option("Skepticism.", "skepticPlain", "calibration"),
+        option("Self-reflection.", "diagnosticPath", "topic"),
+        option("Practical use.", "productsPath", "topic"),
+        option("The story.", "worldPath", "conversation")
       ],
       handoffs: []
     },
@@ -268,7 +291,8 @@
         option("I need proof before imagination.", "proofPath", "topic"),
         option("I want practical use.", "productsPath", "topic"),
         option("I want to know who Sean is.", "seanPath", "topic"),
-        option("I want the world side instead.", "worldPath")
+        option("I want the world side instead.", "worldPath"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["compass", "siteGuide", "coherenceDiagnostic"]
     },
@@ -286,7 +310,8 @@
         routeOption("Open the world gate.", "worldGatePath"),
         option("Tell me about Hearth.", "hearthPath", "topic"),
         option("Tell me about the characters.", "charactersPath", "topic"),
-        option("Explain Mirror Me.", "mirrorMePath", "topic")
+        option("Explain Mirror Me.", "mirrorMePath", "topic"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["interactiveNarrative", "hearth", "audralia"]
     },
@@ -305,7 +330,8 @@
         option("Show me the Laws.", "proofPath", "topic"),
         option("Show me the Diagnostic.", "diagnosticPath", "topic"),
         option("Show me practical use.", "productsPath", "topic"),
-        option("Now I’ll try the world side.", "worldPath")
+        option("Now I’ll try the world side.", "worldPath"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["laws", "coherenceDiagnostic", "compass"]
     },
@@ -323,7 +349,8 @@
         option("I want orientation.", "compassPath", "topic"),
         option("I want proof.", "proofPath", "topic"),
         option("I want self-reflection.", "diagnosticPath", "topic"),
-        option("I want practical use.", "productsPath", "topic")
+        option("I want practical use.", "productsPath", "topic"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["compass", "laws", "coherenceDiagnostic", "products"]
     },
@@ -341,7 +368,8 @@
         routeOption("Take me to the Compass.", "handoffCompass"),
         option("Explain the Diagnostic first.", "diagnosticPath", "topic"),
         option("Explain proof first.", "proofPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["compass"]
     },
@@ -360,7 +388,8 @@
         routeOption("Read the Laws.", "handoffLaws"),
         routeOption("Open Gauges.", "handoffGauges"),
         option("Show me the Diagnostic.", "diagnosticPath", "topic"),
-        option("I’m ready for the world side.", "worldPath")
+        option("I’m ready for the world side.", "worldPath"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["laws", "gauges", "coherenceDiagnostic"]
     },
@@ -382,7 +411,8 @@
         routeOption("Take me to the Diagnostic.", "handoffDiagnostic"),
         option("How does this become a profile later?", "futureProfilePath", "topic"),
         option("Show me proof instead.", "proofPath", "topic"),
-        option("Back to the first fork.", "returnFork", "back")
+        option("Back to the first fork.", "returnFork", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["coherenceDiagnostic"]
     },
@@ -400,7 +430,8 @@
         routeOption("Meet Sean.", "handoffSean"),
         option("What is This Underdog?", "underdogPath", "topic"),
         option("Show me the practical doors.", "productsPath", "topic"),
-        option("Back to website path.", "websitePath", "back")
+        option("Back to website path.", "websitePath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["meetSean", "aboutUnderdog"]
     },
@@ -418,7 +449,8 @@
         routeOption("Open About This Underdog.", "handoffUnderdog"),
         option("Meet Sean instead.", "seanPath", "topic"),
         option("Show me the book path.", "bookPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["aboutUnderdog", "meetSean"]
     },
@@ -436,7 +468,8 @@
         routeOption("Open Products.", "handoffProducts"),
         option("Show me the book path.", "bookPath", "topic"),
         option("Tell me who Sean is.", "seanPath", "topic"),
-        option("Back to website guide.", "websitePath", "back")
+        option("Back to website guide.", "websitePath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["products", "book", "nineSummits"]
     },
@@ -454,7 +487,8 @@
         routeOption("Open the book.", "handoffBook"),
         routeOption("Open Nine Summits.", "handoffNineSummits"),
         option("Tell me about Sean.", "seanPath", "topic"),
-        option("Back to Products.", "productsPath", "back")
+        option("Back to Products.", "productsPath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["book", "nineSummits"]
     },
@@ -472,7 +506,8 @@
         routeOption("Enter the Interactive Narrative.", "handoffWorld"),
         option("Visit Hearth first.", "hearthPath", "topic"),
         option("Visit Audralia.", "audraliaPath", "topic"),
-        option("Back to the first fork.", "returnFork", "back")
+        option("Back to the first fork.", "returnFork", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["interactiveNarrative", "hearth", "audralia", "frontier"]
     },
@@ -490,7 +525,8 @@
         routeOption("Return to Hearth.", "handoffHearth"),
         option("Enter the world gate.", "worldGatePath", "route"),
         option("Visit Audralia.", "audraliaPath", "topic"),
-        option("Meet the Characters.", "charactersPath", "topic")
+        option("Meet the Characters.", "charactersPath", "topic"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["hearth", "interactiveNarrative", "audralia"]
     },
@@ -508,7 +544,8 @@
         routeOption("Visit Audralia.", "handoffAudralia"),
         option("Explore Frontier.", "frontierPath", "topic"),
         option("Return to Hearth.", "hearthPath", "back"),
-        option("Back to world gate.", "worldGatePath", "back")
+        option("Back to world gate.", "worldGatePath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["audralia", "frontier", "hearth"]
     },
@@ -526,7 +563,8 @@
         routeOption("Explore Frontier.", "handoffFrontier"),
         option("Visit Audralia.", "audraliaPath", "topic"),
         option("Return to the world gate.", "worldGatePath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["frontier", "audralia", "interactiveNarrative"]
     },
@@ -548,7 +586,8 @@
         routeOption("Meet the Characters.", "handoffCharacters"),
         option("Explain Mirror Me.", "mirrorMePath", "topic"),
         option("Enter the Interactive Narrative.", "worldGatePath", "route"),
-        option("Back to world path.", "worldPath", "back")
+        option("Back to world path.", "worldPath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["characters", "interactiveNarrative"]
     },
@@ -566,7 +605,8 @@
         option("Start with the Diagnostic.", "diagnosticPath", "topic"),
         option("Explain Mirror Me.", "mirrorMePath", "topic"),
         option("Enter the world path.", "worldGatePath", "route"),
-        option("Back to the first fork.", "returnFork", "back")
+        option("Back to the first fork.", "returnFork", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["coherenceDiagnostic", "interactiveNarrative"]
     },
@@ -588,7 +628,8 @@
         option("Start with the Diagnostic.", "diagnosticPath", "topic"),
         option("Meet the Characters.", "charactersPath", "topic"),
         option("Enter the world gate.", "worldGatePath", "route"),
-        option("Back to future profile.", "futureProfilePath", "back")
+        option("Back to future profile.", "futureProfilePath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: ["coherenceDiagnostic", "characters", "interactiveNarrative"]
     },
@@ -606,7 +647,8 @@
         option("Guide me through the website.", "websitePath"),
         option("Take me toward the world behind it.", "worldPath"),
         option("I’m skeptical. Explain it plainly.", "skepticPlain", "calibration"),
-        option("Just tell me where to start.", "whereToStart")
+        option("Just tell me where to start.", "whereToStart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: []
     },
@@ -624,7 +666,8 @@
         option("Guide me through the website.", "websitePath"),
         option("Take me toward the world behind it.", "worldPath"),
         option("I’m skeptical. Explain it plainly.", "skepticPlain", "calibration"),
-        option("Just tell me where to start.", "whereToStart")
+        option("Just tell me where to start.", "whereToStart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ],
       handoffs: []
     }
@@ -641,9 +684,11 @@
       ],
       options: [
         option("Show me another website path.", "websitePath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffDiagnostic: {
       posture: "handoff",
       targetRoute: "coherenceDiagnostic",
@@ -654,9 +699,11 @@
       ],
       options: [
         option("Show me proof instead.", "proofPath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffLaws: {
       posture: "handoff",
       targetRoute: "laws",
@@ -668,9 +715,11 @@
       options: [
         routeOption("Open Gauges too.", "handoffGauges"),
         option("Show me the Diagnostic.", "diagnosticPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffGauges: {
       posture: "handoff",
       targetRoute: "gauges",
@@ -682,9 +731,11 @@
       options: [
         routeOption("Read the Laws too.", "handoffLaws"),
         option("Back to proof path.", "proofPath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffProducts: {
       posture: "handoff",
       targetRoute: "products",
@@ -696,9 +747,11 @@
       options: [
         option("Show me the book path.", "bookPath", "topic"),
         option("Tell me who Sean is.", "seanPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffSean: {
       posture: "handoff",
       targetRoute: "meetSean",
@@ -710,9 +763,11 @@
       options: [
         option("Show me This Underdog too.", "underdogPath", "topic"),
         option("Show me Products.", "productsPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffUnderdog: {
       posture: "handoff",
       targetRoute: "aboutUnderdog",
@@ -724,9 +779,11 @@
       options: [
         option("Meet Sean instead.", "seanPath", "topic"),
         option("Show me the book path.", "bookPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffBook: {
       posture: "handoff",
       targetRoute: "book",
@@ -738,9 +795,11 @@
       options: [
         routeOption("Open Nine Summits too.", "handoffNineSummits"),
         option("Back to Products.", "productsPath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffNineSummits: {
       posture: "handoff",
       targetRoute: "nineSummits",
@@ -752,9 +811,11 @@
       options: [
         routeOption("Open the book too.", "handoffBook"),
         option("Back to Products.", "productsPath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffCharacters: {
       posture: "handoff",
       targetRoute: "characters",
@@ -766,9 +827,11 @@
       options: [
         routeOption("Enter the Interactive Narrative too.", "handoffWorld"),
         option("Explain Mirror Me.", "mirrorMePath", "topic"),
-        option("Back to world path.", "worldPath", "back")
+        option("Back to world path.", "worldPath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffWorld: {
       posture: "handoff",
       targetRoute: "interactiveNarrative",
@@ -780,9 +843,11 @@
       options: [
         option("Visit Hearth first.", "hearthPath", "topic"),
         option("Visit Audralia.", "audraliaPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffHearth: {
       posture: "handoff",
       targetRoute: "hearth",
@@ -794,9 +859,11 @@
       options: [
         option("Enter the Interactive Narrative.", "worldGatePath", "route"),
         option("Visit Audralia.", "audraliaPath", "topic"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffAudralia: {
       posture: "handoff",
       targetRoute: "audralia",
@@ -808,9 +875,11 @@
       options: [
         option("Explore Frontier.", "frontierPath", "topic"),
         option("Return to Hearth.", "hearthPath", "back"),
-        option("Back to the world gate.", "worldGatePath", "back")
+        option("Back to the world gate.", "worldGatePath", "back"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     },
+
     handoffFrontier: {
       posture: "handoff",
       targetRoute: "frontier",
@@ -822,14 +891,15 @@
       options: [
         option("Visit Audralia.", "audraliaPath", "topic"),
         option("Back to the world gate.", "worldGatePath", "back"),
-        option("Restart the first fork.", "restartFork", "restart")
+        option("Restart the first fork.", "restartFork", "restart"),
+        option("Go ahead and ask.", "askFirst", "conversation")
       ]
     }
   };
 
   function normalizeNode(id) {
-    if (id === "intro") return "arrival";
-    return id || "arrival";
+    if (id === "arrival") return "intro";
+    return id || "intro";
   }
 
   function getNode(id) {
@@ -848,7 +918,7 @@
       };
     }
 
-    return NODE.arrival;
+    return NODE.intro;
   }
 
   function collectElements() {
@@ -884,7 +954,7 @@
 
     setStatus(
       isTyping ? "thinking" : "listening",
-      isTyping ? "Jeeves considering" : "House listening"
+      isTyping ? "Jeeves is typing" : "House listening"
     );
   }
 
@@ -1063,7 +1133,11 @@
       state.skepticismLevel = Math.max(state.skepticismLevel, node.skepticism);
     }
 
-    if (state.currentPosture === "world" || state.currentPosture === "characters" || state.currentPosture === "mirrorMe") {
+    if (
+      state.currentPosture === "world" ||
+      state.currentPosture === "characters" ||
+      state.currentPosture === "mirrorMe"
+    ) {
       state.curiosityLevel = Math.max(state.curiosityLevel, 2);
     }
 
@@ -1103,7 +1177,9 @@
   function playBeats(beats, index, done) {
     if (index >= beats.length) {
       setTyping(false);
-      if (typeof done === "function") done();
+      window.setTimeout(function revealAfterConversationPause() {
+        if (typeof done === "function") done();
+      }, OPTION_REVEAL_DELAY_MS);
       return;
     }
 
@@ -1113,7 +1189,10 @@
       setTyping(false);
 
       addMessage("jeeves", beats[index], {
-        emphasis: index === 0 && (state.currentPosture === "arrival" || state.currentPosture === "skeptic")
+        emphasis: index === 0 && (
+          state.currentPosture === "arrival" ||
+          state.currentPosture === "skeptic"
+        )
       });
 
       window.setTimeout(function nextBeat() {
@@ -1136,16 +1215,18 @@
 
     beats = compileBeats(node);
 
-    playBeats(beats, 0, function afterBeats() {
-      renderOptions(node.options || []);
-      renderHandoffs(node.handoffs || []);
-      state.busy = false;
-      scrollThread();
+    window.setTimeout(function startConversation() {
+      playBeats(beats, 0, function afterBeats() {
+        renderOptions(node.options || []);
+        renderHandoffs(node.handoffs || []);
+        state.busy = false;
+        scrollThread();
 
-      if (settings && settings.done && typeof settings.done === "function") {
-        settings.done();
-      }
-    });
+        if (settings && settings.done && typeof settings.done === "function") {
+          settings.done();
+        }
+      });
+    }, settings && settings.fast ? FIRST_MESSAGE_DELAY_MS : 0);
   }
 
   function handleOption(item) {
@@ -1158,47 +1239,96 @@
   function classifyText(text) {
     var value = String(text || "").toLowerCase();
 
-    if (value.indexOf("sean") !== -1 || value.indexOf("founder") !== -1 || value.indexOf("person") !== -1) {
+    if (
+      value.indexOf("sean") !== -1 ||
+      value.indexOf("founder") !== -1 ||
+      value.indexOf("person") !== -1 ||
+      value.indexOf("human") !== -1
+    ) {
       return "seanPath";
     }
 
-    if (value.indexOf("proof") !== -1 || value.indexOf("law") !== -1 || value.indexOf("real") !== -1 || value.indexOf("evidence") !== -1) {
+    if (
+      value.indexOf("proof") !== -1 ||
+      value.indexOf("law") !== -1 ||
+      value.indexOf("real") !== -1 ||
+      value.indexOf("evidence") !== -1 ||
+      value.indexOf("test") !== -1
+    ) {
       return "proofPath";
     }
 
-    if (value.indexOf("diagnostic") !== -1 || value.indexOf("coherence") !== -1 || value.indexOf("fit") !== -1 || value.indexOf("archetype") !== -1) {
+    if (
+      value.indexOf("diagnostic") !== -1 ||
+      value.indexOf("coherence") !== -1 ||
+      value.indexOf("fit") !== -1 ||
+      value.indexOf("archetype") !== -1 ||
+      value.indexOf("self") !== -1
+    ) {
       return "diagnosticPath";
     }
 
-    if (value.indexOf("product") !== -1 || value.indexOf("tool") !== -1 || value.indexOf("use") !== -1) {
+    if (
+      value.indexOf("product") !== -1 ||
+      value.indexOf("tool") !== -1 ||
+      value.indexOf("use") !== -1 ||
+      value.indexOf("practical") !== -1
+    ) {
       return "productsPath";
     }
 
-    if (value.indexOf("book") !== -1 || value.indexOf("summit") !== -1 || value.indexOf("love") !== -1) {
+    if (
+      value.indexOf("book") !== -1 ||
+      value.indexOf("summit") !== -1 ||
+      value.indexOf("love") !== -1
+    ) {
       return "bookPath";
     }
 
-    if (value.indexOf("world") !== -1 || value.indexOf("mirrorland") !== -1 || value.indexOf("story") !== -1) {
+    if (
+      value.indexOf("world") !== -1 ||
+      value.indexOf("mirrorland") !== -1 ||
+      value.indexOf("story") !== -1 ||
+      value.indexOf("curious") !== -1
+    ) {
       return "worldPath";
     }
 
-    if (value.indexOf("character") !== -1 || value.indexOf("npc") !== -1) {
+    if (
+      value.indexOf("character") !== -1 ||
+      value.indexOf("npc") !== -1 ||
+      value.indexOf("people") !== -1
+    ) {
       return "charactersPath";
     }
 
-    if (value.indexOf("mirror me") !== -1 || value.indexOf("profile") !== -1 || value.indexOf("future") !== -1) {
+    if (
+      value.indexOf("mirror me") !== -1 ||
+      value.indexOf("profile") !== -1 ||
+      value.indexOf("future") !== -1
+    ) {
       return "mirrorMePath";
     }
 
-    if (value.indexOf("start") !== -1 || value.indexOf("where") !== -1 || value.indexOf("lost") !== -1) {
+    if (
+      value.indexOf("start") !== -1 ||
+      value.indexOf("where") !== -1 ||
+      value.indexOf("lost") !== -1 ||
+      value.indexOf("begin") !== -1
+    ) {
       return "whereToStart";
     }
 
-    if (value.indexOf("skeptic") !== -1 || value.indexOf("confused") !== -1 || value.indexOf("plain") !== -1) {
+    if (
+      value.indexOf("skeptic") !== -1 ||
+      value.indexOf("confused") !== -1 ||
+      value.indexOf("plain") !== -1 ||
+      value.indexOf("explain") !== -1
+    ) {
       return "skepticPlain";
     }
 
-    return "whereToStart";
+    return "askFirst";
   }
 
   function ask(text) {
@@ -1275,7 +1405,7 @@
 
     state.initialized = true;
 
-    initialNode = normalizeNode(config.initialNode || "arrival");
+    initialNode = normalizeNode(config.initialNode || "intro");
     runNode(initialNode, { fast: true });
   }
 

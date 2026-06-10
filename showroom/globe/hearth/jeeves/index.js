@@ -1,14 +1,26 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_256_STATE_4X4X2_SCOPE_GOVERNED_PROGRESSION_ENGINE_TNT_v12
+// HEARTH_JEEVES_256_STATE_DUAL_REGISTRY_VOICE_GOVERNOR_TAP_ADVANCE_ENGINE_TNT_v13
 // Full-file replacement.
-// Owns: collapsed Jeeves house intelligence, deterministic 256-state conversation scope, 20 internal conversational organs, 4x4x2 scope-governed expression chamber, individual progression engine, figure-eight traversal, reader-paced cadence, guided route handoffs, current-session memory.
-// Does not own: HTML shell, CSS styling, backend, persistent storage, login, freeform AI, WebGL, Hearth globe chamber, diagnostics authority, final visual pass.
+// Canvas/HTML/CSS remain external authority.
+// Public Jeeves dialogue is governed by dual visitor-facing expression maps.
+// Deterministic, button-led, no freeform AI, no fourth file.
 
-(function hearthJeeves4x4x2ScopeGovernedProgressionEngine(global) {
+(function hearthJeevesDualRegistryVoiceGovernorTapAdvanceEngine(global) {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_256_STATE_4X4X2_SCOPE_GOVERNED_PROGRESSION_ENGINE_TNT_v12";
+  var CONTRACT = "HEARTH_JEEVES_256_STATE_DUAL_REGISTRY_VOICE_GOVERNOR_TAP_ADVANCE_ENGINE_TNT_v13";
   var ROUTE = "/showroom/globe/hearth/jeeves/";
+
+  var SCOPE_OBJECTIVE = "objective";
+  var SCOPE_NARRATIVE = "narrative";
+
+  var MODE_OBJECTIVE = "objective";
+  var MODE_THRESHOLD = "threshold";
+  var MODE_IMMERSION = "immersion";
+
+  var MAX_HISTORY = 48;
+  var MAX_PATH_DEPTH = 4;
+  var MAX_TRAIL = 10;
 
   var PACING = {
     firstMessageDelayMs: 950,
@@ -23,22 +35,15 @@
     readMinMs: 2100,
     readMaxMs: 6800,
 
-    optionRevealDelayMs: 1200
+    optionRevealDelayMs: 1200,
+
+    tapMaxDistancePx: 14,
+    tapMaxDurationMs: 360
   };
-
-  var MAX_HISTORY = 42;
-  var MAX_PATH_DEPTH = 4;
-  var MAX_TRAIL = 8;
-
-  var SCOPE_OBJECTIVE = "objective";
-  var SCOPE_NARRATIVE = "narrative";
-
-  var MODE_OBJECTIVE = "objective";
-  var MODE_THRESHOLD = "threshold";
-  var MODE_IMMERSION = "immersion";
 
   var DEFAULT_ROUTES = {
     compass: "/",
+    home: "/",
     siteGuide: "/site-guide/",
     coherenceDiagnostic: "/coherence-diagnostic/",
     meetSean: "/meet-sean-mansfield/",
@@ -49,6 +54,7 @@
     hearth: "/showroom/globe/hearth/",
     globeWindow: "/showroom/globe/",
     interactiveNarrative: "/showroom/globe/",
+    mirrorland: "/showroom/globe/",
     audralia: "/showroom/globe/audralia/",
     frontier: "/explore/frontier/",
     characters: "/characters/",
@@ -60,6 +66,7 @@
 
   var ROUTE_LABELS = {
     compass: "Start at the Compass",
+    home: "Open the Public Entry",
     siteGuide: "Open the Site Guide",
     coherenceDiagnostic: "Take the Coherence Diagnostic",
     meetSean: "Meet Sean Mansfield",
@@ -70,6 +77,7 @@
     hearth: "Return to Hearth",
     globeWindow: "Open the World Gate",
     interactiveNarrative: "Enter the Interactive Narrative",
+    mirrorland: "Open Mirrorland",
     audralia: "Visit Audralia",
     frontier: "Explore Frontier",
     characters: "Meet the Characters",
@@ -142,6 +150,19 @@
 
   var PATHS = ["website", "skeptic", "diagnostic", "world"];
 
+  var FORBIDDEN_PUBLIC_LANGUAGE = [
+    { pattern: /\bconstruct\b/gi, replacement: "work" },
+    { pattern: /\bscope lane\b/gi, replacement: "path" },
+    { pattern: /\bregistry\b/gi, replacement: "guide" },
+    { pattern: /\borgan\b/gi, replacement: "part" },
+    { pattern: /\bengine\b/gi, replacement: "system" },
+    { pattern: /\broute lane\b/gi, replacement: "path" },
+    { pattern: /\barchitecture layer\b/gi, replacement: "structure" },
+    { pattern: /\bexpression payload\b/gi, replacement: "answer" },
+    { pattern: /\bprogression state\b/gi, replacement: "step" },
+    { pattern: /\bpublic human-voice side\b/gi, replacement: "place where the voice becomes human" }
+  ];
+
   var state = {
     contract: CONTRACT,
     route: ROUTE,
@@ -158,6 +179,7 @@
     currentPathDepth: 0,
     currentScopeLane: SCOPE_OBJECTIVE,
     currentVoiceMode: MODE_OBJECTIVE,
+    currentEntry: null,
 
     stateIndex: 0,
     cycleStep: 0,
@@ -196,9 +218,23 @@
       lastScopeLane: SCOPE_OBJECTIVE,
       lastTarget: null,
       lastVisitorLabel: "",
+      lastEntry: null,
+
       pathTrail: [],
       scopeTrail: [],
       conclusionTrail: []
+    },
+
+    tapAdvance: {
+      bound: false,
+      active: false,
+      resolver: null,
+      timer: null,
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      startTime: 0,
+      phase: ""
     },
 
     lastSuggestedRoutes: [],
@@ -232,645 +268,618 @@
     return option(label, target, "route", meta);
   }
 
-  function query(selector, scope) {
-    return (scope || document).querySelector(selector);
-  }
+  var OBJECTIVE_REALITY_REGISTRY = {
+    diamondGateBridge: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Name the real public work.",
+      itch: "What is this place, really?",
+      answer: [
+        "Diamond Gate Bridge is the public work: the site, the proof path, the human voice, the diagnostic tools, the products, and the world doorway all gathered under one roof.",
+        "The right first move is not to understand everything. The right first move is to find the door that matches why you arrived."
+      ],
+      question: "Did you come here for orientation, proof, usefulness, self-reflection, or the world behind it?",
+      questionOptions: [
+        option("Orientation.", "websitePath", "topic", { signal: "orientation", scopeLane: SCOPE_OBJECTIVE }),
+        option("Proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
+        option("Usefulness.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
+        option("Self-reflection.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
+        option("The world behind it.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["compass", "siteGuide", "laws", "coherenceDiagnostic", "products"]
+    },
 
-  function wait(ms) {
-    return new Promise(function resolveWait(resolve) {
-      window.setTimeout(resolve, ms);
-    });
-  }
+    home: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Return to the public entry.",
+      itch: "I need a clean starting point.",
+      answer: [
+        "The public entry is the clean reset point.",
+        "Start there when the project feels too wide and you need the first door instead of the whole map."
+      ],
+      routes: ["home", "compass", "siteGuide"]
+    },
 
-  function safeClone(value) {
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return value;
+    compass: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Orient the visitor.",
+      itch: "Where do I start?",
+      answer: [
+        "The Compass is the cleanest first route.",
+        "It helps you choose between proof, self-reflection, practical use, the human voice, and the world door without needing to hold the entire site in your head."
+      ],
+      routes: ["compass", "siteGuide"]
+    },
+
+    siteGuide: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Explain the site map.",
+      itch: "Show me how the site is organized.",
+      answer: [
+        "The Site Guide is the public map.",
+        "It separates ordinary website pages from the deeper doors so a visitor can see what is public structure, what is proof, what is practical, and what begins pointing toward the world side."
+      ],
+      question: "Do you want the public map first, or the threshold into the world side?",
+      questionOptions: [
+        routeOption("Public map: Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["siteGuide", "showroom"]
+    },
+
+    laws: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Make claims testable.",
+      itch: "Is this real, or is it just language?",
+      answer: [
+        "The Laws page is where Diamond Gate Bridge makes its claims testable.",
+        "It is for visitors who want proof before they give the world side any trust."
+      ],
+      question: "What are you testing first: the claims, the structure, or the person behind it?",
+      questionOptions: [
+        routeOption("Claims: Laws.", "handoffLaws", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Structure: Gauges.", "handoffGauges", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Person: Meet Sean.", "handoffSean", { signal: "human", scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["laws", "gauges", "coherenceDiagnostic", "meetSean"]
+    },
+
+    gauges: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Show status and technical proof.",
+      itch: "What is working, and what is still being tested?",
+      answer: [
+        "Gauges are the status route.",
+        "They are for visitors who want to see whether the site, worlds, routes, and systems are holding instead of only hearing what they are supposed to become."
+      ],
+      routes: ["gauges", "laws"]
+    },
+
+    diagnostic: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Turn reflection into a usable self-check.",
+      itch: "What does this say about me?",
+      answer: [
+        "The Diagnostic is the mirror side of the public website.",
+        "It helps a visitor notice the difference between what they claim, what they choose, and what pressure reveals."
+      ],
+      question: "Do you want to test what you claim, what you choose, or the gap between them?",
+      questionOptions: [
+        option("What I claim.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
+        option("What I choose.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
+        option("The gap.", "futureProfilePath", "topic", { signal: "profile", scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["coherenceDiagnostic", "laws"]
+    },
+
+    meetSean: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Introduce the person behind the voice.",
+      itch: "Who made this, and why should I trust that there is a real person behind it?",
+      answer: [
+        "Meet Sean is where the voice becomes a person.",
+        "That page connects the work to pressure, accountability, comedy, story, speaking, and the real human effort behind Diamond Gate Bridge."
+      ],
+      question: "Do you want the person, the pressure, or the larger work?",
+      questionOptions: [
+        routeOption("The person: Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE }),
+        option("The pressure: This Underdog.", "underdogPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+        option("The larger work: Nine Summits.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["meetSean", "aboutUnderdog", "book", "nineSummits"]
+    },
+
+    thisUnderdog: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Name the inner voice before it has language.",
+      itch: "What does This Underdog actually mean?",
+      answer: [
+        "This Underdog is not only a page about Sean.",
+        "It is the part of a person that has been carrying pressure before it has found language.",
+        "It is the inner voice that knows something is there, but has not yet learned how to stand up, speak clearly, or become useful.",
+        "That is why it lives near comedy, pressure, story, voice, and becoming."
+      ],
+      question: "Do you want to follow that voice toward Sean, toward the Diagnostic, or toward the book path?",
+      questionOptions: [
+        routeOption("Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+        option("Book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["aboutUnderdog", "meetSean", "coherenceDiagnostic", "book"]
+    },
+
+    products: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Make the work usable.",
+      itch: "Is there something practical here?",
+      answer: [
+        "Products are for visitors who do not want only ideas.",
+        "They are for people who want something they can use, wear, read, give, or return to."
+      ],
+      question: "Do you want something practical, personal, or book-shaped?",
+      questionOptions: [
+        routeOption("Practical: Products.", "handoffProducts", { scopeLane: SCOPE_OBJECTIVE }),
+        option("Personal: Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+        option("Book-shaped: Nine Summits.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["products", "book", "coherenceDiagnostic"]
+    },
+
+    book: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Carry the book path.",
+      itch: "Where does this become a written path?",
+      answer: [
+        "The Nine Summits of Love is the book path.",
+        "It takes the pressure, voice, coherence, and becoming questions and turns them into a human-development journey."
+      ],
+      routes: ["book", "nineSummits", "meetSean"]
+    },
+
+    nineSummits: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Carry the larger human-development system.",
+      itch: "Where does this become a larger framework?",
+      answer: [
+        "Nine Summits is where the work becomes a broader path for human potential.",
+        "It is less about browsing pages and more about what a person is becoming through pressure, love, voice, and coherence."
+      ],
+      question: "Do you want the book, the wider summit path, or the person behind it?",
+      questionOptions: [
+        routeOption("Book.", "handoffBook", { scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Nine Summits.", "handoffNineSummits", { scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["book", "nineSummits", "meetSean"]
+    },
+
+    futureProfile: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_OBJECTIVE,
+      purpose: "Describe future returning-visitor continuity carefully.",
+      itch: "Can this remember or develop with me later?",
+      answer: [
+        "Future Profile is the future-facing return path.",
+        "It points toward a version of the Diagnostic that could become more personal over time, but it should not be treated as fully live until the route is actually ready."
+      ],
+      routes: ["coherenceDiagnostic", "interactiveNarrative"]
+    },
+
+    showroomPublicThreshold: {
+      scopeLane: SCOPE_OBJECTIVE,
+      voiceMode: MODE_THRESHOLD,
+      purpose: "Explain the crossing from the public side.",
+      itch: "Where does the website become the world?",
+      answer: [
+        "The Showroom is the threshold.",
+        "On one side, the site explains itself. On the other, the world begins to open."
+      ],
+      question: "Do you want the public map first, or the first threshold into the world side?",
+      questionOptions: [
+        routeOption("Public map: Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["siteGuide", "showroom", "interactiveNarrative"]
     }
-  }
+  };
 
-  function indexOfValue(list, value) {
-    var i;
+  var NARRATIVE_IMMERSION_REGISTRY = {
+    showroomThreshold: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_THRESHOLD,
+      purpose: "Mark the crossing.",
+      itch: "Where does the website become the world?",
+      answer: [
+        "The Showroom is the threshold.",
+        "The public map is still visible there, but the world side begins to press against it."
+      ],
+      question: "Do you want to inspect the threshold, enter the world gate, or return to the public map?",
+      questionOptions: [
+        routeOption("Inspect the threshold.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
+        routeOption("Enter the world gate.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+        routeOption("Return to the public map.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["showroom", "interactiveNarrative", "siteGuide"]
+    },
 
-    for (i = 0; i < list.length; i += 1) {
-      if (list[i] === value) return i;
+    interactiveNarrative: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_THRESHOLD,
+      purpose: "Begin world traversal.",
+      itch: "How do I enter the story?",
+      answer: [
+        "The Interactive Narrative is the first active doorway into the world side.",
+        "It is where the visitor stops only reading and begins moving through the structure."
+      ],
+      question: "Do you want the threshold, the closest room, the people, or the distance beyond it?",
+      questionOptions: [
+        routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
+        option("Closest room: Hearth.", "hearthPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+        option("People: Characters.", "charactersPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+        option("Distance: Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["interactiveNarrative", "showroom", "hearth", "characters", "audralia"]
+    },
+
+    mirrorland: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_THRESHOLD,
+      purpose: "Name the world side without overacting.",
+      itch: "What is Mirrorland?",
+      answer: [
+        "Mirrorland is the world side of Diamond Gate Bridge.",
+        "It is where pressure, reflection, characters, rooms, and choices begin to behave like a place instead of only a page."
+      ],
+      routes: ["interactiveNarrative", "characters", "hearth"]
+    },
+
+    hearth: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_IMMERSION,
+      purpose: "Start inside the closest room.",
+      itch: "Where should I begin inside the world?",
+      answer: [
+        "Hearth is the closest room to where I speak from.",
+        "If the world feels too wide, begin there."
+      ],
+      question: "Do you want the room, the gate, or the world beyond the room?",
+      questionOptions: [
+        routeOption("The room: Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
+        routeOption("The gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+        option("The world beyond it: Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["hearth", "interactiveNarrative", "audralia"]
+    },
+
+    audralia: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_IMMERSION,
+      purpose: "Open outward world expansion.",
+      itch: "What is beyond the first room?",
+      answer: [
+        "Audralia is farther out.",
+        "It is where the world begins to widen beyond the first threshold."
+      ],
+      question: "Do you want to stay near Hearth, move through Audralia, or push toward Frontier?",
+      questionOptions: [
+        option("Stay near Hearth.", "hearthPath", "back", { scopeLane: SCOPE_NARRATIVE }),
+        routeOption("Move through Audralia.", "handoffAudralia", { scopeLane: SCOPE_NARRATIVE }),
+        option("Push toward Frontier.", "frontierPath", "topic", { scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["audralia", "frontier", "hearth"]
+    },
+
+    frontier: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_IMMERSION,
+      purpose: "Carry the outward edge.",
+      itch: "What is at the edge of the world?",
+      answer: [
+        "Frontier is the outward edge.",
+        "It is where the world starts pointing beyond its first rooms and toward discovery."
+      ],
+      routes: ["frontier", "audralia", "interactiveNarrative"]
+    },
+
+    characters: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_IMMERSION,
+      purpose: "Make the world inhabited.",
+      itch: "Who lives in this world?",
+      answer: [
+        "The characters are where the world stops feeling empty.",
+        "They are not menu labels. They are the people who make pressure, consequence, choice, and story personal."
+      ],
+      question: "Do you want to meet them as people, follow them into the story, or keep them in the distance for now?",
+      questionOptions: [
+        routeOption("Meet them.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
+        routeOption("Follow them into the story.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+        option("Keep distance for now.", "worldGatePath", "back", { scopeLane: SCOPE_NARRATIVE })
+      ],
+      routes: ["characters", "interactiveNarrative", "mirrorland"]
+    },
+
+    mirrorMe: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_IMMERSION,
+      purpose: "Separate narrative reflection from the public Diagnostic.",
+      itch: "Where does the world look back at me?",
+      answer: [
+        "Mirror Me is the narrative reflection path.",
+        "It should not replace the public Diagnostic. It begins where the mirror becomes part of the world."
+      ],
+      question: "Do you want the public test, the story reflection, or the future profile path?",
+      questionOptions: [
+        routeOption("Public test: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+        option("Story reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+        option("Future profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+      ],
+      routes: ["coherenceDiagnostic", "interactiveNarrative", "characters"]
+    },
+
+    futureProfileNarrative: {
+      scopeLane: SCOPE_NARRATIVE,
+      voiceMode: MODE_THRESHOLD,
+      purpose: "Treat future identity continuity as a threshold idea.",
+      itch: "Can the world remember who I am becoming?",
+      answer: [
+        "Future Profile points toward return.",
+        "It is the idea that a visitor may eventually come back with more than a single session behind them, but it should stay clearly marked as future-facing unless the route is live."
+      ],
+      routes: ["coherenceDiagnostic", "interactiveNarrative"]
     }
+  };
 
-    return 0;
-  }
+  var ENTRY_ALIASES = {
+    compass: "objective.compass",
+    siteGuide: "objective.siteGuide",
+    laws: "objective.laws",
+    gauges: "objective.gauges",
+    diagnostic: "objective.diagnostic",
+    meetSean: "objective.meetSean",
+    thisUnderdog: "objective.thisUnderdog",
+    products: "objective.products",
+    book: "objective.book",
+    nineSummits: "objective.nineSummits",
+    futureProfile: "objective.futureProfile",
+    showroomPublicThreshold: "objective.showroomPublicThreshold",
 
-  function computeStateIndex(posture, phase) {
-    var postureIndex = indexOfValue(POSTURES, posture);
-    var phaseIndex = indexOfValue(PHASES, phase);
-
-    return postureIndex * 16 + phaseIndex;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function wordCount(text) {
-    return String(text || "")
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean).length;
-  }
-
-  function trimTrail(list) {
-    while (list.length > MAX_TRAIL) {
-      list.shift();
-    }
-  }
-
-  function getTypingDelay(text, index) {
-    var words = wordCount(text);
-    var delay = PACING.typingBaseMs + words * PACING.typingWordMs;
-
-    if (index === 0) {
-      delay += 220;
-    }
-
-    return clamp(delay, PACING.typingMinMs, PACING.typingMaxMs);
-  }
-
-  function getReadDelay(text) {
-    var words = wordCount(text);
-    var delay = PACING.readBaseMs + words * PACING.readWordMs;
-
-    return clamp(delay, PACING.readMinMs, PACING.readMaxMs);
-  }
-
-  function readConfig() {
-    var script = query("#jeevesConversationConfig");
-
-    if (!script) {
-      return {
-        initialNode: "intro",
-        routes: {}
-      };
-    }
-
-    try {
-      return JSON.parse(script.textContent || "{}");
-    } catch (_error) {
-      return {
-        initialNode: "intro",
-        routes: {}
-      };
-    }
-  }
-
-  function mergeRoutes() {
-    var merged = {};
-    var key;
-
-    for (key in DEFAULT_ROUTES) {
-      if (Object.prototype.hasOwnProperty.call(DEFAULT_ROUTES, key)) {
-        merged[key] = DEFAULT_ROUTES[key];
-      }
-    }
-
-    if (config.routes) {
-      for (key in config.routes) {
-        if (Object.prototype.hasOwnProperty.call(config.routes, key)) {
-          merged[key] = config.routes[key];
-        }
-      }
-    }
-
-    return merged;
-  }
-
-  function getRouteLabel(id) {
-    return ROUTE_LABELS[id] || "Open Path";
-  }
-
-  function getHandoff(id) {
-    var routes = mergeRoutes();
-
-    return {
-      id: id,
-      label: getRouteLabel(id),
-      href: routes[id] || "#"
-    };
-  }
+    showroomThreshold: "narrative.showroomThreshold",
+    interactiveNarrative: "narrative.interactiveNarrative",
+    mirrorland: "narrative.mirrorland",
+    hearth: "narrative.hearth",
+    audralia: "narrative.audralia",
+    frontier: "narrative.frontier",
+    characters: "narrative.characters",
+    mirrorMe: "narrative.mirrorMe",
+    futureProfileNarrative: "narrative.futureProfileNarrative"
+  };
 
   var CHAMBER = {
     website: {
       objective: [
-        {
-          phase: "ground",
-          beats: [
-            "The website is the public side of Diamond Gate Bridge.",
-            "It gives you routes before it gives you depth."
-          ],
-          options: [
-            option("Orient me first.", "compassPath", "topic", { signal: "lost", scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me practical use.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
-            option("Who is behind this?", "seanPath", "topic", { signal: "human", scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["compass", "siteGuide"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "You do not need the full structure yet.",
-            "You need the route that matches why you arrived."
-          ],
-          question: "What brought you to the public side first: orientation, proof, use, or the person behind it?",
-          questionOptions: [
-            option("Orientation.", "compassPath", "topic", { signal: "lost", scopeLane: SCOPE_OBJECTIVE }),
-            option("Proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            option("Use.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
-            option("The person behind it.", "seanPath", "topic", { signal: "human", scopeLane: SCOPE_OBJECTIVE })
-          ],
-          options: [
-            option("Keep guiding me through the website.", "websitePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me the narrative side instead.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Take me to the Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["compass", "coherenceDiagnostic", "products"]
-        },
-        {
-          phase: "reveal",
-          beats: [
-            "The public structure has five useful lanes.",
-            "Compass orients. Laws test claims. Products make the message usable. The Diagnostic reflects the visitor. Meet Sean anchors the human source."
-          ],
-          options: [
-            routeOption("Orientation: Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Proof: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Use: Products.", "handoffProducts", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Self: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Human source: Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["compass", "laws", "products", "coherenceDiagnostic", "meetSean"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "You have stayed with the public structure long enough.",
-            "Choose the route now: orientation, proof, use, self-reflection, or the person behind it."
-          ],
-          options: [
-            routeOption("Orientation: Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Proof: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Use: Products.", "handoffProducts", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Self: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Person: Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["compass", "laws", "products", "coherenceDiagnostic", "meetSean"]
-        }
+        { entry: "diamondGateBridge" },
+        { entry: "siteGuide" },
+        { entry: "compass" },
+        { entry: "diamondGateBridge", forceRoute: true }
       ],
-
       narrative: [
-        {
-          phase: "ground",
-          beats: [
-            "You are still on the public side.",
-            "The narrative rooms are nearby, but this route has not crossed the threshold yet."
-          ],
-          options: [
-            option("Stay with the website.", "websitePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Take me to the threshold.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Open the Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["siteGuide", "showroom"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "This is the place where the site can still explain itself plainly.",
-            "If you cross from here, the language changes because the function changes."
-          ],
-          question: "Do you want the public map, or do you want the door that leads past the map?",
-          questionOptions: [
-            option("Public map.", "websitePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Door past the map.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          options: [
-            routeOption("Open the Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Open the Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            option("Re-center me.", "recenterNode", "control", { signal: "lost" })
-          ],
-          handoffs: ["siteGuide", "showroom"]
-        },
-        {
-          phase: "reveal",
-          beats: [
-            "The public rooms and Mirrorland doors are not the same kind of thing.",
-            "One explains the structure. The other begins the narrative construct."
-          ],
-          options: [
-            routeOption("Public map: Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("World gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["siteGuide", "showroom", "interactiveNarrative"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "Now choose the scope.",
-            "Stay with the public structure, or cross toward the narrative world."
-          ],
-          options: [
-            routeOption("Stay public: Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Cross threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Enter narrative: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["siteGuide", "showroom", "interactiveNarrative"]
-        }
+        { entry: "showroomPublicThreshold" },
+        { entry: "showroomPublicThreshold" },
+        { entry: "siteGuide" },
+        { entry: "showroomPublicThreshold", forceRoute: true }
       ]
     },
 
     skeptic: {
       objective: [
-        {
-          phase: "clarify",
-          beats: [
-            "Good. Skepticism belongs on the public side first.",
-            "Diamond Gate Bridge should not be trusted because it sounds interesting."
-          ],
-          options: [
-            option("Then show me what holds it up.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me the Diagnostic.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me practical use.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
-            option("I’ll look at the narrative side anyway.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["laws", "coherenceDiagnostic"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "You are right to test it before entering deeper.",
-            "If the structure cannot hold plainly, the narrative side has no business carrying weight."
-          ],
-          question: "What are you testing first: the claims, the system, or the person behind it?",
-          questionOptions: [
-            routeOption("Claims: Laws.", "handoffLaws", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("System: Gauges.", "handoffGauges", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Person: Meet Sean.", "handoffSean", { signal: "human", scopeLane: SCOPE_OBJECTIVE })
-          ],
-          options: [
-            option("Keep me in proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            option("Test me instead.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-            option("Re-center me.", "recenterNode", "control", { signal: "lost" })
-          ],
-          handoffs: ["laws", "gauges", "coherenceDiagnostic"]
-        },
-        {
-          phase: "prove",
-          beats: [
-            "The proof lane has three public doors.",
-            "Laws define what can be claimed. Gauges point toward structural status. The Diagnostic tests the visitor’s own posture."
-          ],
-          options: [
-            routeOption("Public proof: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Technical status: Gauges.", "handoffGauges", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Personal test: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Now show me the narrative side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["laws", "gauges", "coherenceDiagnostic"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "You have stayed in the proof lane.",
-            "Choose the test now before the conversation drifts."
-          ],
-          options: [
-            routeOption("Read the Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Open Gauges.", "handoffGauges", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Return to the doorway.", "returnFork", "back")
-          ],
-          handoffs: ["laws", "gauges", "coherenceDiagnostic"]
-        }
+        { entry: "laws" },
+        { entry: "laws" },
+        { entry: "gauges" },
+        { entry: "laws", forceRoute: true }
       ],
-
       narrative: [
-        {
-          phase: "clarify",
-          beats: [
-            "If you are skeptical of the narrative side, stay near the threshold.",
-            "Do not let the world language outrun the public structure."
-          ],
-          options: [
-            routeOption("Test claims first: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("See the threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            option("Take me to the world gate.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["laws", "showroom"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "The narrative construct is not supposed to erase the real site.",
-            "It should become visible only after the public structure is clear enough to support it."
-          ],
-          question: "Do you want to test the foundation, or inspect the threshold?",
-          questionOptions: [
-            routeOption("Foundation: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          options: [
-            option("Keep me in proof.", "proofPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Move toward the world.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["laws", "showroom"]
-        },
-        {
-          phase: "prove",
-          beats: [
-            "There are two tests here.",
-            "One tests the public claim. The other tests whether the crossing into Mirrorland is earned."
-          ],
-          options: [
-            routeOption("Test the claim: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Check status: Gauges.", "handoffGauges", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Inspect threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["laws", "gauges", "showroom"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "Choose the scope of your skepticism.",
-            "Public proof belongs in Laws and Gauges. Narrative threshold belongs at the Showroom."
-          ],
-          options: [
-            routeOption("Public proof: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Technical status: Gauges.", "handoffGauges", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Narrative threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["laws", "gauges", "showroom"]
-        }
+        { entry: "showroomPublicThreshold" },
+        { entry: "laws" },
+        { entry: "showroomThreshold" },
+        { entry: "showroomThreshold", forceRoute: true }
       ]
     },
 
     diagnostic: {
       objective: [
-        {
-          phase: "personalize",
-          beats: [
-            "The Diagnostic is the self-reflection lane.",
-            "It is not here to decorate the website with a label."
-          ],
-          options: [
-            option("Then what does it do?", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me proof instead.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-            option("Back to the doorway.", "returnFork", "back")
-          ],
-          handoffs: ["coherenceDiagnostic"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "It starts with how you think you move under pressure.",
-            "Pressure usually reveals the first truth before preference does."
-          ],
-          question: "Do you want to test what you claim, what you choose, or the gap between them?",
-          questionOptions: [
-            option("What I claim.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-            option("What I choose.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-            option("The gap.", "futureProfilePath", "topic", { signal: "profile", scopeLane: SCOPE_OBJECTIVE })
-          ],
-          options: [
-            routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me the future profile path.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Show me Laws instead.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "laws"]
-        },
-        {
-          phase: "reveal",
-          beats: [
-            "The Diagnostic compares claimed coherence against scenario choices.",
-            "That is where the visitor begins to see the distance between identity and behavior."
-          ],
-          options: [
-            routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Explain the future profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Explain Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Read the Laws first.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "laws"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "You have stayed with the mirror lane long enough.",
-            "Choose whether to test yourself now, follow the future profile path, or return to public proof."
-          ],
-          options: [
-            routeOption("Test myself: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Profile path: Future Profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Narrative reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Proof path: Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "laws"]
-        }
+        { entry: "diagnostic" },
+        { entry: "diagnostic" },
+        { entry: "futureProfile" },
+        { entry: "diagnostic", forceRoute: true }
       ],
-
       narrative: [
-        {
-          phase: "personalize",
-          beats: [
-            "The mirror has a public side and a narrative side.",
-            "On the public side, it tests response. On the narrative side, it begins to look back."
-          ],
-          options: [
-            routeOption("Public test: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Narrative reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-            option("Show me the world gate.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "interactiveNarrative"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "Mirror Me should not appear before the visitor understands the public mirror.",
-            "Otherwise reflection becomes theater instead of consequence."
-          ],
-          question: "Do you want the public test first, or the narrative reflection?",
-          questionOptions: [
-            routeOption("Public test: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Narrative reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          options: [
-            option("Keep me in the Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Move toward Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "interactiveNarrative"]
-        },
-        {
-          phase: "reveal",
-          beats: [
-            "The objective lane asks what you choose under pressure.",
-            "The narrative lane asks what kind of room could answer that choice back."
-          ],
-          options: [
-            routeOption("Objective: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Narrative: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("World gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "interactiveNarrative"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "Choose the mirror lane now.",
-            "Public test, future profile, or narrative reflection."
-          ],
-          options: [
-            routeOption("Public test: Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Future profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-            option("Narrative reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["coherenceDiagnostic", "interactiveNarrative"]
-        }
+        { entry: "diagnostic" },
+        { entry: "mirrorMe" },
+        { entry: "futureProfileNarrative" },
+        { entry: "mirrorMe", forceRoute: true }
       ]
     },
 
     world: {
       objective: [
-        {
-          phase: "reveal",
-          beats: [
-            "The narrative side includes Mirrorland, Hearth, Audralia, characters, and interactive entry points.",
-            "That is different from the public website structure."
-          ],
-          options: [
-            routeOption("Showroom threshold.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            option("Explain Hearth.", "hearthPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-            option("Stay objective.", "websitePath", "topic", { scopeLane: SCOPE_OBJECTIVE })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "hearth"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "You are near the crossing now.",
-            "I can describe the narrative construct objectively, or I can let the route become more immersive after you choose it."
-          ],
-          question: "Do you want the map of the narrative side, or the first threshold into it?",
-          questionOptions: [
-            option("Map it objectively.", "worldPath", "conversation", { scopeLane: SCOPE_OBJECTIVE }),
-            routeOption("Take me to the threshold.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          options: [
-            routeOption("Open the Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            option("Re-center me.", "recenterNode", "control", { signal: "lost" })
-          ],
-          handoffs: ["showroom", "interactiveNarrative"]
-        },
-        {
-          phase: "deepen",
-          beats: [
-            "Objectively, the narrative lane has a threshold, a world gate, house-side rooms, outward world lanes, characters, and future reflection paths.",
-            "The right choice depends on whether you want entry, place, people, or reflection."
-          ],
-          options: [
-            routeOption("Entry: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("World gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Place: Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("People: Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
-            option("Reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "hearth", "characters"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "Choose the narrative route now.",
-            "Threshold, world gate, place, people, or reflection."
-          ],
-          options: [
-            routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Place: Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("People: Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
-            option("Reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "hearth", "characters"]
-        }
+        { entry: "mirrorland" },
+        { entry: "interactiveNarrative" },
+        { entry: "characters" },
+        { entry: "interactiveNarrative", forceRoute: true }
       ],
-
       narrative: [
-        {
-          phase: "reveal",
-          beats: [
-            "You are near the world door.",
-            "I will not make the room theatrical before you cross it."
-          ],
-          options: [
-            routeOption("Open the threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            option("Take me to Hearth.", "hearthPath", "topic", { signal: "house", scopeLane: SCOPE_NARRATIVE }),
-            option("Let me meet the people.", "charactersPath", "topic", { signal: "characters", scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "hearth"]
-        },
-        {
-          phase: "reflect",
-          beats: [
-            "Now the site becomes a threshold.",
-            "Beyond this point, I speak less like a map and more like part of the place."
-          ],
-          question: "Do you want the threshold, the room closest to me, the people, or the distance beyond it?",
-          questionOptions: [
-            routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            option("Closest room: Hearth.", "hearthPath", "topic", { signal: "house", scopeLane: SCOPE_NARRATIVE }),
-            option("People: Characters.", "charactersPath", "topic", { signal: "characters", scopeLane: SCOPE_NARRATIVE }),
-            option("Distance: Audralia.", "audraliaPath", "topic", { signal: "world", scopeLane: SCOPE_NARRATIVE })
-          ],
-          options: [
-            routeOption("Open the world gate.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            option("Show me Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-            option("Re-center me.", "recenterNode", "control", { signal: "lost" })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "characters", "hearth", "audralia"]
-        },
-        {
-          phase: "deepen",
-          beats: [
-            "Hearth is closest to where I speak from. Audralia is farther out.",
-            "The characters make the world occupied. Mirror Me is the room that looks back."
-          ],
-          options: [
-            routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("House-side: Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Outward world: Audralia.", "handoffAudralia", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("People: Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "hearth", "audralia", "characters"]
-        },
-        {
-          phase: "route",
-          beats: [
-            "You have stayed with the narrative side long enough.",
-            "Choose how it opens: threshold, gate, room, distance, people, or reflection."
-          ],
-          options: [
-            routeOption("Threshold: Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Room: Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("Distance: Audralia.", "handoffAudralia", { scopeLane: SCOPE_NARRATIVE }),
-            routeOption("People: Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
-            option("Reflection: Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
-          ],
-          handoffs: ["showroom", "interactiveNarrative", "hearth", "audralia", "characters"]
-        }
+        { entry: "showroomThreshold" },
+        { entry: "interactiveNarrative" },
+        { entry: "hearth" },
+        { entry: "interactiveNarrative", forceRoute: true }
       ]
     }
+  };
+
+  var ENTRY_OPTIONS = {
+    diamondGateBridge: [
+      option("Orient me first.", "compassPath", "topic", { signal: "lost", scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me practical use.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
+      option("Take me toward the world side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    compass: [
+      routeOption("Take me to the Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Open the Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me proof first.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me the world side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    siteGuide: [
+      routeOption("Open the Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me products.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me the threshold.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    laws: [
+      routeOption("Read the Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Open Gauges.", "handoffGauges", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    gauges: [
+      routeOption("Open Gauges.", "handoffGauges", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Read the Laws.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me the Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Return to the doorway.", "returnFork", "back")
+    ],
+
+    diagnostic: [
+      routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me Future Profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Read the Laws first.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    meetSean: [
+      routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Tell me about This Underdog.", "underdogPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me the book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me products.", "productsPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    thisUnderdog: [
+      routeOption("Open About This Underdog.", "handoffUnderdog", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me the book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    products: [
+      routeOption("Open Products.", "handoffProducts", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Show me the book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    book: [
+      routeOption("Open the book.", "handoffBook", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Open Nine Summits.", "handoffNineSummits", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Tell me about This Underdog.", "underdogPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    nineSummits: [
+      routeOption("Open Nine Summits.", "handoffNineSummits", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Open the book.", "handoffBook", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    futureProfile: [
+      routeOption("Start with the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Explain Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      option("Return to the public map.", "websitePath", "back", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    showroomPublicThreshold: [
+      routeOption("Open the Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Open the Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Return to the doorway.", "returnFork", "back")
+    ],
+
+    showroomThreshold: [
+      routeOption("Open the Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Return to the public map.", "websitePath", "back", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Visit Hearth.", "hearthPath", "topic", { scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    interactiveNarrative: [
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Return to Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Meet the Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
+      option("Visit Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    mirrorland: [
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Visit Hearth.", "hearthPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      option("Meet the Characters.", "charactersPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      option("Explain the threshold.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    hearth: [
+      routeOption("Return to Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Visit Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      option("Meet the Characters.", "charactersPath", "topic", { scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    audralia: [
+      routeOption("Visit Audralia.", "handoffAudralia", { scopeLane: SCOPE_NARRATIVE }),
+      option("Explore Frontier.", "frontierPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      option("Return to Hearth.", "hearthPath", "back", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    frontier: [
+      routeOption("Explore Frontier.", "handoffFrontier", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Visit Audralia.", "handoffAudralia", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Return to the doorway.", "returnFork", "back")
+    ],
+
+    characters: [
+      routeOption("Meet the Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Explain Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      option("Back to the world path.", "worldPath", "back", { scopeLane: SCOPE_NARRATIVE })
+    ],
+
+    mirrorMe: [
+      option("Start with the Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
+      option("Meet the Characters.", "charactersPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Show Future Profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE })
+    ],
+
+    futureProfileNarrative: [
+      routeOption("Start with the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
+      routeOption("Enter the Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
+      option("Explain Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE })
+    ]
   };
 
   var NODE = {
@@ -880,15 +889,16 @@
       phase: "receive",
       scopeLane: SCOPE_OBJECTIVE,
       voiceMode: MODE_OBJECTIVE,
+      entry: "diamondGateBridge",
       beats: [
         "Hello. I’m Jeeves.",
         "I help visitors find the right door inside Diamond Gate Bridge.",
-        "You do not need to understand the whole structure at once.",
-        "I can guide you through the public website, take you toward the narrative world, or ask one question first."
+        "You do not need to understand the whole work at once.",
+        "I can guide you through the public website, take you toward the world side, or ask one question first."
       ],
       options: [
         option("Guide me through the public website.", "websitePath", "conversation", { signal: "orientation", scopeLane: SCOPE_OBJECTIVE }),
-        option("Take me toward the narrative world.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
+        option("Take me toward the world side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
         option("I’m skeptical. Explain it plainly.", "skepticPlain", "calibration", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
         option("Just tell me where to start.", "whereToStart", "conversation", { signal: "lost", scopeLane: SCOPE_OBJECTIVE }),
         option("Ask me one question first.", "askFirst", "conversation", { signal: "question", scopeLane: SCOPE_OBJECTIVE })
@@ -912,7 +922,7 @@
         option("Skepticism.", "skepticPlain", "calibration", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
         option("Self-reflection.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
         option("Practical use.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
-        option("The narrative world.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+        option("The world side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
       ],
       handoffs: []
     },
@@ -971,29 +981,16 @@
       organ: "compass",
       posture: "orientation",
       phase: "route",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "The Compass is the cleanest first route.",
-        "It brings the public structure back into order."
-      ],
-      options: [
-        routeOption("Take me to the Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Explain the Diagnostic first.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-        option("Explain proof first.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
-        option("Return to the doorway.", "returnFork", "back")
-      ],
-      handoffs: ["compass"]
+      entry: "compass"
     },
 
     whereToStart: {
       organ: "orientation",
       posture: "orientation",
       phase: "ground",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
+      entry: "compass",
       beats: [
-        "Then I’ll re-center the public doorway.",
+        "Then I’ll re-center the doorway.",
         "Confusion wants the Compass. Doubt wants Laws. Self-reflection wants the Diagnostic. Usefulness wants Products."
       ],
       options: [
@@ -1001,229 +998,107 @@
         option("Proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
         option("Self-reflection.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
         option("Practical use.", "productsPath", "topic", { signal: "practical", scopeLane: SCOPE_OBJECTIVE }),
-        option("Narrative world.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+        option("World side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
       ],
       handoffs: ["compass", "laws", "coherenceDiagnostic", "products"]
+    },
+
+    siteGuidePath: {
+      organ: "orientation",
+      posture: "orientation",
+      phase: "ground",
+      entry: "siteGuide"
+    },
+
+    lawsPath: {
+      organ: "proof",
+      posture: "proof",
+      phase: "prove",
+      entry: "laws"
+    },
+
+    gaugesPath: {
+      organ: "proof",
+      posture: "proof",
+      phase: "prove",
+      entry: "gauges"
     },
 
     seanPath: {
       organ: "sean",
       posture: "sean",
       phase: "reflect",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "Meet Sean is the public route to the person behind the voice.",
-        "That page keeps the work connected to pressure, accountability, comedy, story, speaking, and the human side of the construct."
-      ],
-      question: "Do you want the person, the pressure, or the public voice?",
-      questionOptions: [
-        routeOption("The person: Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE }),
-        option("The pressure: This Underdog.", "underdogPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("The public voice: Book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      options: [
-        routeOption("Meet Sean.", "handoffSean", { scopeLane: SCOPE_OBJECTIVE }),
-        option("What is This Underdog?", "underdogPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Show me the practical routes.", "productsPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Back to website path.", "websitePath", "back", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      handoffs: ["meetSean", "aboutUnderdog"]
+      entry: "meetSean"
     },
 
     underdogPath: {
       organ: "sean",
       posture: "sean",
       phase: "deepen",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "This Underdog belongs to the public human-voice side.",
-        "It carries comedy, pressure, and language without turning the project into only architecture."
-      ],
-      options: [
-        routeOption("Open About This Underdog.", "handoffUnderdog", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Meet Sean instead.", "seanPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Show me the book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Return to the doorway.", "returnFork", "back")
-      ],
-      handoffs: ["aboutUnderdog", "meetSean"]
+      entry: "thisUnderdog"
     },
 
     productsPath: {
       organ: "products",
       posture: "products",
       phase: "route",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "Products are where the message becomes usable.",
-        "That route should stay practical."
-      ],
-      question: "Do you want something practical, personal, or book-shaped?",
-      questionOptions: [
-        routeOption("Practical: Products.", "handoffProducts", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Personal: Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Book-shaped: Nine Summits.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      options: [
-        routeOption("Open Products.", "handoffProducts", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Show me the book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Tell me who Sean is.", "seanPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Back to website guide.", "websitePath", "back", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      handoffs: ["products", "book", "nineSummits"]
+      entry: "products"
     },
 
     bookPath: {
       organ: "book",
       posture: "book",
       phase: "deepen",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "The Nine Summits route carries the human-development side of the work.",
-        "That is public structure, not Mirrorland immersion."
-      ],
-      options: [
-        routeOption("Open the book.", "handoffBook", { scopeLane: SCOPE_OBJECTIVE }),
-        routeOption("Open Nine Summits.", "handoffNineSummits", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Tell me about Sean.", "seanPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Back to Products.", "productsPath", "back", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      handoffs: ["book", "nineSummits"]
+      entry: "book"
+    },
+
+    nineSummitsPath: {
+      organ: "book",
+      posture: "book",
+      phase: "deepen",
+      entry: "nineSummits"
     },
 
     hearthPath: {
       organ: "hearth",
       posture: "hearth",
       phase: "ground",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      beats: [
-        "Hearth is the room closest to where I speak from.",
-        "If the narrative side feels too wide, start here."
-      ],
-      question: "Do you want the room, the gate, or the world beyond the room?",
-      questionOptions: [
-        routeOption("The room: Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
-        routeOption("The gate: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-        option("The world beyond it: Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE })
-      ],
-      options: [
-        routeOption("Return to Hearth.", "handoffHearth", { scopeLane: SCOPE_NARRATIVE }),
-        option("Enter the world gate.", "worldGatePath", "route", { scopeLane: SCOPE_NARRATIVE }),
-        option("Visit Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-        option("Meet the Characters.", "charactersPath", "topic", { scopeLane: SCOPE_NARRATIVE })
-      ],
-      handoffs: ["hearth", "interactiveNarrative", "audralia"]
+      entry: "hearth"
     },
 
     audraliaPath: {
       organ: "audralia",
       posture: "audralia",
       phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      beats: [
-        "Audralia is farther out.",
-        "You feel the narrative construct widen there."
-      ],
-      options: [
-        routeOption("Visit Audralia.", "handoffAudralia", { scopeLane: SCOPE_NARRATIVE }),
-        option("Explore Frontier.", "frontierPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-        option("Return to Hearth.", "hearthPath", "back", { scopeLane: SCOPE_NARRATIVE }),
-        option("Back to the world gate.", "worldGatePath", "back", { scopeLane: SCOPE_NARRATIVE })
-      ],
-      handoffs: ["audralia", "frontier", "hearth"]
+      entry: "audralia"
     },
 
     frontierPath: {
       organ: "frontier",
       posture: "frontier",
       phase: "deepen",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      beats: [
-        "Frontier is the outward edge of the narrative construct.",
-        "It is not where the public site begins. It is where the world starts pointing beyond itself."
-      ],
-      options: [
-        routeOption("Explore Frontier.", "handoffFrontier", { scopeLane: SCOPE_NARRATIVE }),
-        option("Visit Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-        option("Return to the world gate.", "worldGatePath", "back", { scopeLane: SCOPE_NARRATIVE }),
-        option("Return to the doorway.", "returnFork", "back")
-      ],
-      handoffs: ["frontier", "audralia", "interactiveNarrative"]
+      entry: "frontier"
     },
 
     charactersPath: {
       organ: "characters",
       posture: "characters",
       phase: "personalize",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      beats: [
-        "The characters belong beyond the public map.",
-        "Some of them are already moving behind the narrative doors."
-      ],
-      question: "Do you want to meet them as people, follow them into the story, or keep them in the distance for now?",
-      questionOptions: [
-        routeOption("Meet them: Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
-        routeOption("Follow them: Interactive Narrative.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-        option("Keep distance: World gate.", "worldGatePath", "back", { scopeLane: SCOPE_NARRATIVE })
-      ],
-      options: [
-        routeOption("Meet the Characters.", "handoffCharacters", { scopeLane: SCOPE_NARRATIVE }),
-        option("Explain Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-        option("Enter the Interactive Narrative.", "worldGatePath", "route", { scopeLane: SCOPE_NARRATIVE }),
-        option("Back to world path.", "worldPath", "back", { scopeLane: SCOPE_NARRATIVE })
-      ],
-      handoffs: ["characters", "interactiveNarrative"]
+      entry: "characters"
     },
 
     futureProfilePath: {
       organ: "futureProfile",
       posture: "futureProfile",
       phase: "reveal",
-      scopeLane: SCOPE_OBJECTIVE,
-      voiceMode: MODE_OBJECTIVE,
-      beats: [
-        "The future profile belongs to the real progression layer.",
-        "It is where the Diagnostic could eventually become a returning visitor path."
-      ],
-      options: [
-        option("Start with the Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Explain Mirror Me.", "mirrorMePath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-        option("Enter the narrative path.", "worldGatePath", "route", { scopeLane: SCOPE_NARRATIVE }),
-        option("Back to the doorway.", "returnFork", "back")
-      ],
-      handoffs: ["coherenceDiagnostic", "interactiveNarrative"]
+      entry: "futureProfile"
     },
 
     mirrorMePath: {
       organ: "mirrorMe",
       posture: "mirrorMe",
       phase: "reveal",
-      scopeLane: SCOPE_NARRATIVE,
-      voiceMode: MODE_IMMERSION,
-      beats: [
-        "Mirror Me belongs to the narrative reflection side.",
-        "It should not replace the public Diagnostic. It answers after the mirror has become a room."
-      ],
-      question: "Do you want the mirror as a public test, a story device, or a future profile?",
-      questionOptions: [
-        option("Public test.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        routeOption("Story device.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
-        option("Future profile.", "futureProfilePath", "topic", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      options: [
-        option("Start with the Diagnostic.", "diagnosticPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Meet the Characters.", "charactersPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
-        option("Enter the world gate.", "worldGatePath", "route", { scopeLane: SCOPE_NARRATIVE }),
-        option("Back to future profile.", "futureProfilePath", "back", { scopeLane: SCOPE_OBJECTIVE })
-      ],
-      handoffs: ["coherenceDiagnostic", "characters", "interactiveNarrative"]
+      entry: "mirrorMe"
     },
 
     recenterNode: {
@@ -1235,13 +1110,13 @@
       recenterBrain: true,
       beats: [
         "I may have taken you too deep.",
-        "Let me bring this back to one public doorway."
+        "Let me bring this back to one clear doorway."
       ],
       options: [
         routeOption("Give me the Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE }),
         option("Show me proof.", "proofPath", "topic", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
         option("Show me the Diagnostic.", "diagnosticPath", "topic", { signal: "self", scopeLane: SCOPE_OBJECTIVE }),
-        option("Show me the narrative side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
+        option("Show me the world side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE })
       ],
       handoffs: ["compass", "laws", "coherenceDiagnostic", "interactiveNarrative"]
     },
@@ -1254,12 +1129,12 @@
       voiceMode: MODE_OBJECTIVE,
       beats: [
         "You keep circling this route.",
-        "That usually means you are not looking for more explanation. You are deciding which scope to trust."
+        "That usually means you are not looking for more explanation. You are deciding which door deserves trust."
       ],
       options: [
-        routeOption("Test the public claims.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
+        routeOption("Test the claims.", "handoffLaws", { scopeLane: SCOPE_OBJECTIVE }),
         routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-        routeOption("Cross to the narrative world.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
+        routeOption("Cross to the Showroom.", "handoffShowroom", { scopeLane: SCOPE_NARRATIVE }),
         option("Re-center me.", "recenterNode", "control", { signal: "lost" })
       ],
       handoffs: ["laws", "coherenceDiagnostic", "showroom"]
@@ -1277,11 +1152,11 @@
       voiceMode: MODE_OBJECTIVE,
       beats: [
         "Then we return to the clean fork.",
-        "Public website, or narrative world?"
+        "Public website, or world side?"
       ],
       options: [
         option("Public website.", "websitePath", "conversation", { signal: "orientation", scopeLane: SCOPE_OBJECTIVE }),
-        option("Narrative world.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
+        option("World side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
         option("I’m skeptical.", "skepticPlain", "calibration", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
         option("Just tell me where to start.", "whereToStart", "conversation", { signal: "lost", scopeLane: SCOPE_OBJECTIVE }),
         option("Ask me one question first.", "askFirst", "conversation", { signal: "question", scopeLane: SCOPE_OBJECTIVE })
@@ -1299,11 +1174,11 @@
       beats: [
         "Clean reset.",
         "You are back at the doorway.",
-        "Public website, or narrative world?"
+        "Public website, or world side?"
       ],
       options: [
         option("Public website.", "websitePath", "conversation", { signal: "orientation", scopeLane: SCOPE_OBJECTIVE }),
-        option("Narrative world.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
+        option("World side.", "worldPath", "conversation", { signal: "curious", scopeLane: SCOPE_NARRATIVE }),
         option("I’m skeptical.", "skepticPlain", "calibration", { signal: "skeptic", scopeLane: SCOPE_OBJECTIVE }),
         option("Just tell me where to start.", "whereToStart", "conversation", { signal: "lost", scopeLane: SCOPE_OBJECTIVE }),
         option("Ask me one question first.", "askFirst", "conversation", { signal: "question", scopeLane: SCOPE_OBJECTIVE })
@@ -1317,6 +1192,7 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "compass",
+      entry: "compass",
       beats: [
         "Open the Compass.",
         "That is the cleanest public orientation point."
@@ -1331,13 +1207,14 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "siteGuide",
+      entry: "siteGuide",
       beats: [
         "Open the Site Guide.",
-        "That is the public map of the rooms and doors."
+        "That is the public map of the pages and deeper doors."
       ],
       options: [
         option("Show me proof.", "proofPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Show me the narrative threshold.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE }),
+        option("Show me the threshold.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE }),
         option("Return to the doorway.", "returnFork", "back")
       ]
     },
@@ -1346,6 +1223,7 @@
       posture: "handoff",
       scopeLane: SCOPE_NARRATIVE,
       targetRoute: "showroom",
+      entry: "showroomThreshold",
       beats: [
         "Open the Showroom.",
         "That is the threshold where the public site begins pointing toward Mirrorland."
@@ -1361,6 +1239,7 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "coherenceDiagnostic",
+      entry: "diagnostic",
       beats: [
         "Open the Diagnostic.",
         "That is the cleanest public mirror path."
@@ -1375,6 +1254,7 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "laws",
+      entry: "laws",
       beats: [
         "Open the Laws.",
         "That is where the public structure makes its claims testable."
@@ -1390,6 +1270,7 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "gauges",
+      entry: "gauges",
       beats: [
         "Open Gauges.",
         "That is the technical status route."
@@ -1405,9 +1286,10 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "products",
+      entry: "products",
       beats: [
         "Open Products.",
-        "That is where the public message becomes usable."
+        "That is where the message becomes usable."
       ],
       options: [
         option("Show me the book path.", "bookPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
@@ -1420,9 +1302,10 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "meetSean",
+      entry: "meetSean",
       beats: [
         "Open Meet Sean.",
-        "That is the public route to the person behind the voice."
+        "That is where the voice becomes a person."
       ],
       options: [
         option("Show me This Underdog too.", "underdogPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
@@ -1435,9 +1318,10 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "aboutUnderdog",
+      entry: "thisUnderdog",
       beats: [
         "Open About This Underdog.",
-        "That route carries comedy, pressure, and the public human voice."
+        "That is where the inner voice without language comes forward."
       ],
       options: [
         option("Meet Sean instead.", "seanPath", "topic", { scopeLane: SCOPE_OBJECTIVE }),
@@ -1450,9 +1334,10 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "book",
+      entry: "book",
       beats: [
         "Open The Nine Summits of Love.",
-        "That is the book route."
+        "That is the book path."
       ],
       options: [
         routeOption("Open Nine Summits too.", "handoffNineSummits", { scopeLane: SCOPE_OBJECTIVE }),
@@ -1465,9 +1350,10 @@
       posture: "handoff",
       scopeLane: SCOPE_OBJECTIVE,
       targetRoute: "nineSummits",
+      entry: "nineSummits",
       beats: [
         "Open Nine Summits.",
-        "That is the wider development route around the book and seminar system."
+        "That is the wider human-development path."
       ],
       options: [
         routeOption("Open the book too.", "handoffBook", { scopeLane: SCOPE_OBJECTIVE }),
@@ -1480,9 +1366,10 @@
       posture: "handoff",
       scopeLane: SCOPE_NARRATIVE,
       targetRoute: "characters",
+      entry: "characters",
       beats: [
         "Open Characters.",
-        "That is where the narrative construct becomes inhabited."
+        "That is where the world stops feeling empty."
       ],
       options: [
         routeOption("Enter the Interactive Narrative too.", "handoffWorld", { scopeLane: SCOPE_NARRATIVE }),
@@ -1495,9 +1382,10 @@
       posture: "handoff",
       scopeLane: SCOPE_NARRATIVE,
       targetRoute: "interactiveNarrative",
+      entry: "interactiveNarrative",
       beats: [
         "Enter the Interactive Narrative.",
-        "That is the route where the narrative side begins to open."
+        "That is the route where the world side begins to open."
       ],
       options: [
         option("Visit Hearth first.", "hearthPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
@@ -1510,9 +1398,10 @@
       posture: "handoff",
       scopeLane: SCOPE_NARRATIVE,
       targetRoute: "hearth",
+      entry: "hearth",
       beats: [
         "Return to Hearth.",
-        "That is the narrative room closest to where I speak from."
+        "That is the room closest to where I speak from."
       ],
       options: [
         option("Enter the Interactive Narrative.", "worldGatePath", "route", { scopeLane: SCOPE_NARRATIVE }),
@@ -1525,9 +1414,10 @@
       posture: "handoff",
       scopeLane: SCOPE_NARRATIVE,
       targetRoute: "audralia",
+      entry: "audralia",
       beats: [
         "Visit Audralia.",
-        "That is where the narrative world begins widening outward."
+        "That is where the world begins widening outward."
       ],
       options: [
         option("Explore Frontier.", "frontierPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
@@ -1540,9 +1430,10 @@
       posture: "handoff",
       scopeLane: SCOPE_NARRATIVE,
       targetRoute: "frontier",
+      entry: "frontier",
       beats: [
         "Explore Frontier.",
-        "That is the outward-facing narrative discovery route."
+        "That is the outward-facing discovery route."
       ],
       options: [
         option("Visit Audralia.", "audraliaPath", "topic", { scopeLane: SCOPE_NARRATIVE }),
@@ -1552,10 +1443,173 @@
     }
   };
 
+  function query(selector, scope) {
+    return (scope || document).querySelector(selector);
+  }
+
+  function safeClone(value) {
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_error) {
+      return value;
+    }
+  }
+
+  function indexOfValue(list, value) {
+    var i;
+
+    for (i = 0; i < list.length; i += 1) {
+      if (list[i] === value) return i;
+    }
+
+    return 0;
+  }
+
+  function computeStateIndex(posture, phase) {
+    return indexOfValue(POSTURES, posture) * 16 + indexOfValue(PHASES, phase);
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function wordCount(text) {
+    return String(text || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length;
+  }
+
+  function trimTrail(list) {
+    while (list.length > MAX_TRAIL) {
+      list.shift();
+    }
+  }
+
+  function getTypingDelay(text, index) {
+    var words = wordCount(text);
+    var delay = PACING.typingBaseMs + words * PACING.typingWordMs;
+
+    if (index === 0) {
+      delay += 220;
+    }
+
+    return clamp(delay, PACING.typingMinMs, PACING.typingMaxMs);
+  }
+
+  function getReadDelay(text) {
+    var words = wordCount(text);
+    var delay = PACING.readBaseMs + words * PACING.readWordMs;
+
+    return clamp(delay, PACING.readMinMs, PACING.readMaxMs);
+  }
+
+  function sanitizePublicText(text) {
+    var clean = String(text || "");
+
+    FORBIDDEN_PUBLIC_LANGUAGE.forEach(function eachRule(rule) {
+      clean = clean.replace(rule.pattern, rule.replacement);
+    });
+
+    return clean;
+  }
+
+  function readConfig() {
+    var script = query("#jeevesConversationConfig");
+
+    if (!script) {
+      return {
+        initialNode: "intro",
+        routes: {}
+      };
+    }
+
+    try {
+      return JSON.parse(script.textContent || "{}");
+    } catch (_error) {
+      return {
+        initialNode: "intro",
+        routes: {}
+      };
+    }
+  }
+
+  function mergeRoutes() {
+    var merged = {};
+    var key;
+
+    for (key in DEFAULT_ROUTES) {
+      if (Object.prototype.hasOwnProperty.call(DEFAULT_ROUTES, key)) {
+        merged[key] = DEFAULT_ROUTES[key];
+      }
+    }
+
+    if (config.routes) {
+      for (key in config.routes) {
+        if (Object.prototype.hasOwnProperty.call(config.routes, key)) {
+          merged[key] = config.routes[key];
+        }
+      }
+    }
+
+    return merged;
+  }
+
+  function getRouteLabel(id) {
+    return ROUTE_LABELS[id] || "Open Path";
+  }
+
+  function getHandoff(id) {
+    var routes = mergeRoutes();
+
+    return {
+      id: id,
+      label: getRouteLabel(id),
+      href: routes[id] || "#"
+    };
+  }
+
+  function normalizeNode(id) {
+    if (id === "arrival") return "intro";
+    return id || "intro";
+  }
+
+  function getRegistryEntry(entryId) {
+    var alias = ENTRY_ALIASES[entryId] || entryId;
+    var parts = String(alias || "").split(".");
+    var scope = parts[0];
+    var key = parts[1];
+
+    if (scope === "objective") {
+      return OBJECTIVE_REALITY_REGISTRY[key] || null;
+    }
+
+    if (scope === "narrative") {
+      return NARRATIVE_IMMERSION_REGISTRY[key] || null;
+    }
+
+    return OBJECTIVE_REALITY_REGISTRY[entryId] ||
+      NARRATIVE_IMMERSION_REGISTRY[entryId] ||
+      null;
+  }
+
+  function getEntryOptions(entryId) {
+    return (ENTRY_OPTIONS[entryId] || []).slice();
+  }
+
+  function getEntryHandoffs(entry) {
+    if (!entry || !entry.routes) return [];
+    return entry.routes.slice();
+  }
+
   function resetAllState() {
     PATHS.forEach(function eachPath(path) {
       state.pathDepth[path] = 0;
     });
+
+    state.currentScopeLane = SCOPE_OBJECTIVE;
+    state.currentVoiceMode = MODE_OBJECTIVE;
+    state.currentEntry = null;
 
     state.brain.visitorPosture = "arrival";
     state.brain.movement = "start";
@@ -1580,20 +1634,14 @@
     state.brain.lastScopeLane = SCOPE_OBJECTIVE;
     state.brain.lastTarget = null;
     state.brain.lastVisitorLabel = "";
+    state.brain.lastEntry = null;
     state.brain.pathTrail = [];
     state.brain.scopeTrail = [];
     state.brain.conclusionTrail = [];
 
-    state.currentScopeLane = SCOPE_OBJECTIVE;
-    state.currentVoiceMode = MODE_OBJECTIVE;
     state.curiosityLevel = 1;
     state.skepticismLevel = 0;
     state.routePressure = 0;
-  }
-
-  function normalizeNode(id) {
-    if (id === "arrival") return "intro";
-    return id || "intro";
   }
 
   function getPathDepth(pathKey) {
@@ -1630,42 +1678,19 @@
   }
 
   function chooseScopeLane(base, choice) {
-    if (choice && choice.scopeLane) {
-      return choice.scopeLane;
-    }
-
-    if (base && base.scopeLane) {
-      return base.scopeLane;
-    }
-
-    if (base && base.defaultScopeLane) {
-      return base.defaultScopeLane;
-    }
-
-    if (choice && isNarrativeTarget(choice.target)) {
-      return SCOPE_NARRATIVE;
-    }
-
-    if (base && base.pathKey === "world") {
-      return SCOPE_NARRATIVE;
-    }
-
+    if (choice && choice.scopeLane) return choice.scopeLane;
+    if (base && base.scopeLane) return base.scopeLane;
+    if (base && base.defaultScopeLane) return base.defaultScopeLane;
+    if (choice && isNarrativeTarget(choice.target)) return SCOPE_NARRATIVE;
+    if (base && base.pathKey === "world") return SCOPE_NARRATIVE;
     return SCOPE_OBJECTIVE;
   }
 
-  function determineVoiceMode(pathKey, depth, scopeLane, base) {
-    if (base && base.voiceMode) {
-      return base.voiceMode;
-    }
-
-    if (scopeLane === SCOPE_OBJECTIVE) {
-      return MODE_OBJECTIVE;
-    }
-
-    if (pathKey === "world" && depth <= 2) {
-      return MODE_THRESHOLD;
-    }
-
+  function determineVoiceMode(pathKey, depth, scopeLane, base, entry) {
+    if (base && base.voiceMode) return base.voiceMode;
+    if (entry && entry.voiceMode) return entry.voiceMode;
+    if (scopeLane === SCOPE_OBJECTIVE) return MODE_OBJECTIVE;
+    if (pathKey === "world" && depth <= 2) return MODE_THRESHOLD;
     return MODE_IMMERSION;
   }
 
@@ -1677,7 +1702,7 @@
     return lane[index] || null;
   }
 
-  function mergeNode(base, expression, pathKey, depth, scopeLane, voiceMode) {
+  function mergeNode(base, extra) {
     var merged = {};
     var key;
 
@@ -1687,20 +1712,38 @@
       }
     }
 
-    if (expression) {
-      for (key in expression) {
-        if (Object.prototype.hasOwnProperty.call(expression, key)) {
-          merged[key] = expression[key];
-        }
+    for (key in extra) {
+      if (Object.prototype.hasOwnProperty.call(extra, key)) {
+        merged[key] = extra[key];
       }
     }
 
-    merged.pathKey = pathKey || base.pathKey || null;
-    merged.pathDepth = depth || 0;
-    merged.scopeLane = scopeLane || base.scopeLane || SCOPE_OBJECTIVE;
-    merged.voiceMode = voiceMode || base.voiceMode || MODE_OBJECTIVE;
-
     return merged;
+  }
+
+  function buildNodeFromEntry(base, entryId, depth, scopeLane, voiceMode) {
+    var entry = getRegistryEntry(entryId);
+    var beats = [];
+    var entryOptions = getEntryOptions(entryId);
+    var handoffs = [];
+
+    if (entry) {
+      beats = (entry.answer || []).slice();
+      handoffs = getEntryHandoffs(entry);
+    }
+
+    return mergeNode(base, {
+      entry: entryId,
+      entryData: entry,
+      beats: base.beats || beats,
+      options: base.options || entryOptions,
+      question: base.question || (entry ? entry.question : ""),
+      questionOptions: base.questionOptions || (entry ? entry.questionOptions : []),
+      handoffs: base.handoffs || handoffs,
+      pathDepth: depth || base.pathDepth || 0,
+      scopeLane: scopeLane || base.scopeLane || (entry ? entry.scopeLane : SCOPE_OBJECTIVE),
+      voiceMode: voiceMode || base.voiceMode || (entry ? entry.voiceMode : MODE_OBJECTIVE)
+    });
   }
 
   function getCleanDoorNode() {
@@ -1715,8 +1758,9 @@
         phase: "route",
         scopeLane: SCOPE_NARRATIVE,
         voiceMode: MODE_THRESHOLD,
+        entry: "showroomThreshold",
         beats: [
-          "The cleanest narrative route is the threshold.",
+          "The cleanest world-side route is the threshold.",
           "It sounds like you are " + conclusion + "."
         ],
         options: [
@@ -1736,6 +1780,7 @@
         phase: "route",
         scopeLane: SCOPE_OBJECTIVE,
         voiceMode: MODE_OBJECTIVE,
+        entry: "laws",
         beats: [
           "The cleanest public route is proof.",
           "It sounds like you are " + conclusion + "."
@@ -1757,6 +1802,7 @@
         phase: "route",
         scopeLane: SCOPE_OBJECTIVE,
         voiceMode: MODE_OBJECTIVE,
+        entry: "diagnostic",
         beats: [
           "The cleanest public route is the Diagnostic.",
           "It sounds like you are " + conclusion + "."
@@ -1777,6 +1823,7 @@
       phase: "route",
       scopeLane: SCOPE_OBJECTIVE,
       voiceMode: MODE_OBJECTIVE,
+      entry: "compass",
       beats: [
         "The cleanest public route is orientation.",
         "Diamond Gate Bridge should not make you chase the structure."
@@ -1785,7 +1832,7 @@
         routeOption("Start at the Compass.", "handoffCompass", { scopeLane: SCOPE_OBJECTIVE }),
         routeOption("Open the Site Guide.", "handoffSiteGuide", { scopeLane: SCOPE_OBJECTIVE }),
         routeOption("Take the Diagnostic.", "handoffDiagnostic", { scopeLane: SCOPE_OBJECTIVE }),
-        option("Show me the narrative threshold.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
+        option("Show me the world threshold.", "worldPath", "conversation", { scopeLane: SCOPE_NARRATIVE })
       ],
       handoffs: ["compass", "siteGuide", "coherenceDiagnostic"]
     };
@@ -1798,17 +1845,15 @@
     var expression;
     var scopeLane;
     var voiceMode;
+    var entry;
+    var entryId;
 
-    if (nodeId === "cleanDoor") {
-      return getCleanDoorNode();
-    }
+    if (nodeId === "cleanDoor") return getCleanDoorNode();
 
     if (NODE[nodeId]) {
       base = NODE[nodeId];
 
-      if (base.resetAll) {
-        resetAllState();
-      }
+      if (base.resetAll) resetAllState();
 
       if (base.recenterBrain) {
         state.brain.lostSignal = false;
@@ -1824,49 +1869,67 @@
           : advancePathDepth(base.pathKey);
 
         scopeLane = chooseScopeLane(base, choice);
-        voiceMode = determineVoiceMode(base.pathKey, depth, scopeLane, base);
         expression = getChamberExpression(base.pathKey, depth, scopeLane);
+        entryId = expression && expression.entry ? expression.entry : base.entry;
+        entry = getRegistryEntry(entryId);
+        voiceMode = determineVoiceMode(base.pathKey, depth, scopeLane, base, entry);
 
-        return mergeNode(base, expression, base.pathKey, depth, scopeLane, voiceMode);
+        return buildNodeFromEntry(
+          mergeNode(base, {
+            phase: expression && expression.forceRoute ? "route" : base.phase
+          }),
+          entryId,
+          depth,
+          scopeLane,
+          voiceMode
+        );
       }
 
+      entryId = base.entry;
+      entry = getRegistryEntry(entryId);
       scopeLane = chooseScopeLane(base, choice);
-      voiceMode = determineVoiceMode(base.pathKey, base.pathDepth || 0, scopeLane, base);
-      return mergeNode(base, null, base.pathKey || null, base.pathDepth || 0, scopeLane, voiceMode);
+      voiceMode = determineVoiceMode(null, base.pathDepth || 0, scopeLane, base, entry);
+
+      if (entryId) {
+        return buildNodeFromEntry(base, entryId, base.pathDepth || 0, scopeLane, voiceMode);
+      }
+
+      return mergeNode(base, {
+        scopeLane: scopeLane,
+        voiceMode: voiceMode,
+        pathDepth: base.pathDepth || 0
+      });
     }
 
     if (HANDOFF_NODE[nodeId]) {
       base = HANDOFF_NODE[nodeId];
+      entry = getRegistryEntry(base.entry);
       scopeLane = chooseScopeLane(base, choice);
-      voiceMode = determineVoiceMode(null, 0, scopeLane, base);
+      voiceMode = determineVoiceMode(null, 0, scopeLane, base, entry);
 
-      return {
+      return mergeNode(base, {
         organ: "routeHandoff",
-        posture: base.posture || "handoff",
         phase: "handoff",
+        pathKey: null,
+        pathDepth: 0,
         scopeLane: scopeLane,
         voiceMode: voiceMode,
-        beats: base.beats,
-        options: base.options,
-        handoffs: [base.targetRoute],
-        pathKey: null,
-        pathDepth: 0
-      };
+        entryData: entry,
+        handoffs: [base.targetRoute]
+      });
     }
 
     return NODE.intro;
   }
 
   function inferConclusion(path, depth, movement, signal, scopeLane) {
-    if (signal === "lost") {
-      return "trying to get re-centered";
-    }
+    if (signal === "lost") return "trying to get re-centered";
 
     if (scopeLane === SCOPE_NARRATIVE) {
-      if (path === "world" && depth >= 4) return "ready to choose a narrative route";
+      if (path === "world" && depth >= 4) return "ready to choose a world-side route";
       if (path === "world" && depth >= 3) return "distinguishing threshold, place, people, and reflection";
-      if (movement === "digress") return "testing the boundary between public site and narrative world";
-      return "moving toward the narrative threshold";
+      if (movement === "digress") return "testing the boundary between public site and world side";
+      return "moving toward the world threshold";
     }
 
     if (path === "skeptic") {
@@ -1884,7 +1947,7 @@
 
     if (path === "website") {
       if (depth >= 4) return "ready to choose a public route";
-      if (depth >= 3) return "sorting the public structure into useful lanes";
+      if (depth >= 3) return "sorting the public structure into useful paths";
       return "trying to orient inside the public website";
     }
 
@@ -1900,7 +1963,7 @@
     if (signal === "lost") return "lost";
     if (signal === "skeptic" || path === "skeptic") return "skeptical";
     if (signal === "self" || path === "diagnostic") return "self-reflective";
-    if (scopeLane === SCOPE_NARRATIVE || signal === "curious" || path === "world") return "narrative-curious";
+    if (scopeLane === SCOPE_NARRATIVE || signal === "curious" || path === "world") return "world-curious";
     if (signal === "practical") return "practical";
     if (signal === "human") return "human-context";
     if (movement === "digress") return "digressing";
@@ -1961,9 +2024,7 @@
       movement = "recenter";
     }
 
-    if (scopeLane !== brain.lastScopeLane) {
-      brain.scopeShiftCount += 1;
-    }
+    if (scopeLane !== brain.lastScopeLane) brain.scopeShiftCount += 1;
 
     brain.scopeTrail.push(scopeLane);
     trimTrail(brain.scopeTrail);
@@ -1998,6 +2059,7 @@
     brain.lastScopeLane = scopeLane;
     brain.lastTarget = state.currentNode;
     brain.lastVisitorLabel = choice && choice.label ? choice.label : brain.lastVisitorLabel;
+    brain.lastEntry = node.entry || null;
     brain.questionReadiness = computeQuestionReadiness(node, movement, signal);
     brain.conclusionTrail.push(conclusion);
     trimTrail(brain.conclusionTrail);
@@ -2019,13 +2081,8 @@
   }
 
   function setStatus(value, text) {
-    if (els.status) {
-      els.status.setAttribute("data-jeeves-status", value);
-    }
-
-    if (els.statusText) {
-      els.statusText.textContent = text || "";
-    }
+    if (els.status) els.status.setAttribute("data-jeeves-status", value);
+    if (els.statusText) els.statusText.textContent = text || "";
   }
 
   function setTyping(isTyping) {
@@ -2041,13 +2098,13 @@
   }
 
   function clearSeedMessage() {
+    var seed;
+
     if (!els.thread) return;
 
-    var seed = query("[data-seed-message='true']", els.thread);
+    seed = query("[data-seed-message='true']", els.thread);
 
-    if (seed) {
-      seed.remove();
-    }
+    if (seed) seed.remove();
   }
 
   function clearElement(element) {
@@ -2089,8 +2146,9 @@
     var message;
     var name;
     var paragraph;
+    var cleanText = origin === "jeeves" ? sanitizePublicText(text) : String(text || "");
 
-    if (!els.thread || !text) return null;
+    if (!els.thread || !cleanText) return null;
 
     message = cloneTemplate(els.messageTemplate, "article");
     name = query(".jeeves-message-name", message);
@@ -2114,9 +2172,9 @@
     }
 
     if (paragraph) {
-      paragraph.textContent = text;
+      paragraph.textContent = cleanText;
     } else {
-      message.textContent = text;
+      message.textContent = cleanText;
     }
 
     els.thread.appendChild(message);
@@ -2201,6 +2259,7 @@
     key = state.currentNode + "::" +
       (node.pathKey || "node") + "::" +
       (node.scopeLane || SCOPE_OBJECTIVE) + "::" +
+      (node.entry || "entry") + "::" +
       (node.pathDepth || 0);
 
     if (state.brain.lastQuestionKey === key) return false;
@@ -2313,6 +2372,7 @@
     state.currentPathDepth = node.pathDepth || 0;
     state.currentScopeLane = node.scopeLane || SCOPE_OBJECTIVE;
     state.currentVoiceMode = node.voiceMode || MODE_OBJECTIVE;
+    state.currentEntry = node.entry || null;
     state.stateIndex = computeStateIndex(state.currentPosture, state.currentPhase);
     state.cycleStep = (state.cycleStep + 1) % 16;
 
@@ -2346,6 +2406,7 @@
       pathDepth: state.currentPathDepth,
       scopeLane: state.currentScopeLane,
       voiceMode: state.currentVoiceMode,
+      entry: state.currentEntry,
       brain: {
         visitorPosture: state.brain.visitorPosture,
         movement: state.brain.movement,
@@ -2368,9 +2429,9 @@
       beats.push(beat);
     });
 
-    if (node.after && state.curiosityLevel >= 2) {
-      node.after.forEach(function eachAfter(beat) {
-        beats.push(beat);
+    if (beats.length < 2 && node.entryData && node.entryData.answer) {
+      node.entryData.answer.forEach(function eachAnswer(beat) {
+        if (beats.indexOf(beat) === -1) beats.push(beat);
       });
     }
 
@@ -2379,6 +2440,51 @@
     }
 
     return beats;
+  }
+
+  function clearTapAdvance() {
+    if (state.tapAdvance.timer) {
+      window.clearTimeout(state.tapAdvance.timer);
+    }
+
+    state.tapAdvance.active = false;
+    state.tapAdvance.resolver = null;
+    state.tapAdvance.timer = null;
+    state.tapAdvance.phase = "";
+  }
+
+  function requestTapAdvance() {
+    var resolver = state.tapAdvance.resolver;
+
+    if (!state.tapAdvance.active || typeof resolver !== "function") return;
+
+    clearTapAdvance();
+    resolver("tap");
+  }
+
+  function waitSkippable(ms, phase) {
+    return new Promise(function waitSkippablePromise(resolve) {
+      if (!ms || ms <= 0) {
+        resolve("instant");
+        return;
+      }
+
+      clearTapAdvance();
+
+      state.tapAdvance.active = true;
+      state.tapAdvance.phase = phase || "wait";
+      state.tapAdvance.resolver = resolve;
+      state.tapAdvance.timer = window.setTimeout(function finishTimer() {
+        clearTapAdvance();
+        resolve("timer");
+      }, ms);
+    });
+  }
+
+  function waitFixed(ms) {
+    return new Promise(function waitFixedPromise(resolve) {
+      window.setTimeout(resolve, ms);
+    });
   }
 
   async function playBeats(beats, token) {
@@ -2391,7 +2497,7 @@
       beat = beats[i];
 
       setTyping(true);
-      await wait(getTypingDelay(beat, i));
+      await waitSkippable(getTypingDelay(beat, i), "typing");
 
       if (token !== state.runToken) return false;
 
@@ -2404,12 +2510,12 @@
         )
       });
 
-      await wait(getReadDelay(beat));
+      await waitSkippable(getReadDelay(beat), "reading");
     }
 
     if (token !== state.runToken) return false;
 
-    await wait(PACING.optionRevealDelayMs);
+    await waitSkippable(PACING.optionRevealDelayMs, "options");
 
     return token === state.runToken;
   }
@@ -2422,6 +2528,7 @@
     var completed;
     var questionAsked;
     var finalOptions;
+    var choice = settings && settings.choice ? settings.choice : null;
 
     if (state.busy) return;
 
@@ -2429,15 +2536,9 @@
     state.runToken += 1;
     token = state.runToken;
 
-    node = getNode(nodeId, true, settings && settings.choice ? settings.choice : null);
+    node = getNode(nodeId, true, choice);
     updateState(nodeId, node);
-
-    if (settings && settings.choice) {
-      updateBrain(settings.choice, node);
-    } else {
-      updateBrain(null, node);
-    }
-
+    updateBrain(choice, node);
     hideOptions();
 
     questionAsked = shouldAskQuestion(node);
@@ -2445,10 +2546,11 @@
     finalOptions = addAdaptiveOptions(node.options || [], node, questionAsked);
     initialDelay = settings && settings.fast ? PACING.firstMessageDelayMs : 420;
 
-    await wait(initialDelay);
+    await waitFixed(initialDelay);
 
     if (token !== state.runToken) {
       state.busy = false;
+      clearTapAdvance();
       return;
     }
 
@@ -2456,6 +2558,7 @@
 
     if (!completed || token !== state.runToken) {
       state.busy = false;
+      clearTapAdvance();
       return;
     }
 
@@ -2463,6 +2566,7 @@
     renderHandoffs(node.handoffs || []);
 
     state.busy = false;
+    clearTapAdvance();
     scrollThread();
 
     if (settings && settings.done && typeof settings.done === "function") {
@@ -2486,11 +2590,15 @@
       value.indexOf("recenter") !== -1 ||
       value.indexOf("center") !== -1
     ) {
-      return {
-        target: "recenterNode",
-        signal: "lost",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "recenterNode", signal: "lost", scopeLane: SCOPE_OBJECTIVE };
+    }
+
+    if (
+      value.indexOf("underdog") !== -1 ||
+      value.indexOf("inner voice") !== -1 ||
+      value.indexOf("voice") !== -1
+    ) {
+      return { target: "underdogPath", signal: "human", scopeLane: SCOPE_OBJECTIVE };
     }
 
     if (
@@ -2501,14 +2609,9 @@
       value.indexOf("world") !== -1 ||
       value.indexOf("story") !== -1 ||
       value.indexOf("character") !== -1 ||
-      value.indexOf("npc") !== -1 ||
       value.indexOf("people") !== -1
     ) {
-      return {
-        target: "worldPath",
-        signal: "curious",
-        scopeLane: SCOPE_NARRATIVE
-      };
+      return { target: "worldPath", signal: "curious", scopeLane: SCOPE_NARRATIVE };
     }
 
     if (
@@ -2517,11 +2620,7 @@
       value.indexOf("person") !== -1 ||
       value.indexOf("human") !== -1
     ) {
-      return {
-        target: "seanPath",
-        signal: "human",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "seanPath", signal: "human", scopeLane: SCOPE_OBJECTIVE };
     }
 
     if (
@@ -2534,11 +2633,7 @@
       value.indexOf("plain") !== -1 ||
       value.indexOf("explain") !== -1
     ) {
-      return {
-        target: "proofPath",
-        signal: "skeptic",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "proofPath", signal: "skeptic", scopeLane: SCOPE_OBJECTIVE };
     }
 
     if (
@@ -2549,11 +2644,7 @@
       value.indexOf("self") !== -1 ||
       value.indexOf("reflect") !== -1
     ) {
-      return {
-        target: "diagnosticPath",
-        signal: "self",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "diagnosticPath", signal: "self", scopeLane: SCOPE_OBJECTIVE };
     }
 
     if (
@@ -2562,11 +2653,7 @@
       value.indexOf("use") !== -1 ||
       value.indexOf("practical") !== -1
     ) {
-      return {
-        target: "productsPath",
-        signal: "practical",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "productsPath", signal: "practical", scopeLane: SCOPE_OBJECTIVE };
     }
 
     if (
@@ -2574,11 +2661,7 @@
       value.indexOf("summit") !== -1 ||
       value.indexOf("love") !== -1
     ) {
-      return {
-        target: "bookPath",
-        signal: "book",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "bookPath", signal: "book", scopeLane: SCOPE_OBJECTIVE };
     }
 
     if (
@@ -2586,18 +2669,10 @@
       value.indexOf("where") !== -1 ||
       value.indexOf("begin") !== -1
     ) {
-      return {
-        target: "whereToStart",
-        signal: "lost",
-        scopeLane: SCOPE_OBJECTIVE
-      };
+      return { target: "whereToStart", signal: "lost", scopeLane: SCOPE_OBJECTIVE };
     }
 
-    return {
-      target: "askFirst",
-      signal: "question",
-      scopeLane: SCOPE_OBJECTIVE
-    };
+    return { target: "askFirst", signal: "question", scopeLane: SCOPE_OBJECTIVE };
   }
 
   function ask(text) {
@@ -2614,6 +2689,57 @@
         scopeLane: result.scopeLane
       }
     });
+  }
+
+  function isInteractiveTarget(target) {
+    if (!target || !target.closest) return false;
+
+    return Boolean(target.closest(
+      "button,a,input,textarea,select,[role='button'],.jeeves-option,[data-no-tap-advance='true']"
+    ));
+  }
+
+  function bindTapAdvance() {
+    if (state.tapAdvance.bound) return;
+
+    state.tapAdvance.bound = true;
+
+    document.addEventListener("pointerdown", function onPointerDown(event) {
+      if (isInteractiveTarget(event.target)) return;
+
+      state.tapAdvance.pointerId = event.pointerId;
+      state.tapAdvance.startX = event.clientX;
+      state.tapAdvance.startY = event.clientY;
+      state.tapAdvance.startTime = Date.now();
+    }, { passive: true });
+
+    document.addEventListener("pointerup", function onPointerUp(event) {
+      var dx;
+      var dy;
+      var distance;
+      var duration;
+
+      if (isInteractiveTarget(event.target)) return;
+      if (state.tapAdvance.pointerId !== event.pointerId) return;
+
+      dx = event.clientX - state.tapAdvance.startX;
+      dy = event.clientY - state.tapAdvance.startY;
+      distance = Math.sqrt(dx * dx + dy * dy);
+      duration = Date.now() - state.tapAdvance.startTime;
+
+      state.tapAdvance.pointerId = null;
+
+      if (
+        distance <= PACING.tapMaxDistancePx &&
+        duration <= PACING.tapMaxDurationMs
+      ) {
+        requestTapAdvance();
+      }
+    }, { passive: true });
+
+    document.addEventListener("pointercancel", function onPointerCancel() {
+      state.tapAdvance.pointerId = null;
+    }, { passive: true });
   }
 
   function bindRestore() {
@@ -2640,10 +2766,13 @@
       paths: PATHS.slice(),
       scopes: [SCOPE_OBJECTIVE, SCOPE_NARRATIVE],
       modes: [MODE_OBJECTIVE, MODE_THRESHOLD, MODE_IMMERSION],
+      objectiveRegistry: OBJECTIVE_REALITY_REGISTRY,
+      narrativeRegistry: NARRATIVE_IMMERSION_REGISTRY,
       routes: mergeRoutes,
       runNode: runNode,
       ask: ask,
       classifyText: classifyText,
+      tapAdvance: requestTapAdvance,
       setPacing: function setPacing(nextPacing) {
         Object.keys(nextPacing || {}).forEach(function eachKey(key) {
           if (
@@ -2665,6 +2794,9 @@
       },
       getNode: function getNodePublic(id) {
         return safeClone(getNode(id, false, null));
+      },
+      getRegistryEntry: function getRegistryEntryPublic(id) {
+        return safeClone(getRegistryEntry(id));
       },
       getState256: function getState256() {
         return {
@@ -2696,6 +2828,7 @@
 
     clearSeedMessage();
     bindRestore();
+    bindTapAdvance();
     exposeApi();
 
     state.initialized = true;

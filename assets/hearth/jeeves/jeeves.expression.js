@@ -1,22 +1,19 @@
 // /assets/hearth/jeeves/jeeves.expression.js
-// HEARTH_JEEVES_EXPRESSION_ENTRY_STACK_BASE_POOL_ILLUMINATION_TNT_v5_4
+// HEARTH_JEEVES_EXPRESSION_COORDINATE_LANGUAGE_SHAPER_TNT_v5_5
 // Full-file replacement.
 // Client-side expression authority only.
 // Purpose:
-// - Preserve v5.3 split-interface public language, reading-rhythm compatibility,
-//   protected house-state language, guided entrance, bridgeContext shaping,
-//   mission language, Mirrorland / Hearth / Frontier / Character language,
-//   and diagnostic boundary.
-// - Formalize the entry stack:
-//   orientation -> base pool -> intrigue bridge -> choice closure.
-// - Define base explanation pools for broad entry paths.
-// - Shape shallow path samples without replacing the page.
-// - Offer controlled choice closure:
-//   dig deeper with Jeeves, open prepared door, or return / re-center.
-// - Preserve frontbrain/backbrain separation:
-//   frontbrain connects visible targets,
-//   backbrain/North owns meaning and deep expansion,
-//   Expression surfaces public language.
+// - Preserve v5.4 split-interface public language, protected house-state language,
+//   guided entrance, bridgeContext shaping, mission language, Mirrorland / Hearth /
+//   Frontier / Character language, base pools, choice closure, and diagnostic boundary.
+// - Add first-class coordinate-language shaping for API/North v5.4 and Frontbrain v25.6.
+// - Obey conversationCoordinate before target / intent / basePool inference.
+// - Prevent base-pool overwrite when noRepeat is true.
+// - Shape language by gate:
+//   arrival, intention, base_pool, intrigue_bridge, dig_deeper,
+//   prepared_door, return_fork, cross_path_bridge, diagnostic_boundary.
+// - Preserve API/North bubbles for deeper answers.
+// - Use base-pool copy only when coordinate says base_pool, arrival, or intention.
 // - Humanize API/North output without owning meaning, route authority,
 //   DOM, CSS, shell boot, timing, transcript storage, or state.
 // Does not own:
@@ -35,10 +32,10 @@
 "use strict";
 
 (function attachHearthJeevesExpression(global) {
-  const CONTRACT = "HEARTH_JEEVES_EXPRESSION_ENTRY_STACK_BASE_POOL_ILLUMINATION_TNT_v5_4";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_EXPRESSION_SPLIT_INTERFACE_PUBLIC_LANGUAGE_GUIDED_ENTRANCE_TNT_v5_3";
+  const CONTRACT = "HEARTH_JEEVES_EXPRESSION_COORDINATE_LANGUAGE_SHAPER_TNT_v5_5";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_EXPRESSION_ENTRY_STACK_BASE_POOL_ILLUMINATION_TNT_v5_4";
 
-  const VERSION = "5.4.0";
+  const VERSION = "5.5.0";
 
   const TARGETS = Object.freeze({
     DIAMOND_GATE_OVERVIEW: "diamondGateOverviewPath",
@@ -157,8 +154,22 @@
     DIAGNOSTIC_BOUNDARY: "diagnosticBoundary"
   });
 
+  const COORDINATE_GATES = Object.freeze({
+    ARRIVAL: "arrival",
+    SPLIT: "split",
+    INTENTION: "intention",
+    BASE_POOL: "base_pool",
+    INTRIGUE_BRIDGE: "intrigue_bridge",
+    DIG_DEEPER: "dig_deeper",
+    PREPARED_DOOR: "prepared_door",
+    RETURN_FORK: "return_fork",
+    CROSS_PATH_BRIDGE: "cross_path_bridge",
+    DIAGNOSTIC_BOUNDARY: "diagnostic_boundary"
+  });
+
   const CHOICE_CLOSURE_DEFAULT = Object.freeze({
     preparedDoorAvailable: true,
+    preparedDoorSuggested: false,
     digDeeperAvailable: true,
     returnForkAvailable: true,
     finalChatThreshold: false
@@ -183,10 +194,10 @@
 
   const SPLIT_INTERFACE_COPY = Object.freeze({
     entrance: [
-      "DiamondGateBridge.com has two ways in.",
-      "One side is the traditional website: the public pages, Compass, Products, Laws, and the creator path.",
-      "The other side is the narrative path: I can guide you through rooms, worlds, Characters, proof, and future-facing systems.",
-      "You can choose either side, and I can bridge you from one into the other when the time is right."
+      "Welcome. I’m Jeeves.",
+      "I’m here to guide the house and open the right doors.",
+      "DiamondGateBridge has a public side and a narrative side. You do not need to understand the whole estate before choosing a path.",
+      "Tell me what you are looking for, and I’ll place you at the cleanest doorway."
     ],
     overview: [
       "DiamondGateBridge.com is an estate-style website with two coordinated entrances.",
@@ -336,6 +347,8 @@
       "This is the path for testing whether the work can stay honest under pressure.",
     diagnosticBoundary:
       "This is the boundary: I can explain the mirror, but the read itself belongs in the Diagnostic.",
+    characterMirror:
+      "This is the mirror boundary: Characters can clarify the story, but the personal read belongs in the Diagnostic.",
     mirrorland:
       "This is the story window. You can look through it first, or step into the page when you are ready.",
     hearth:
@@ -344,6 +357,10 @@
       "This is where future-facing ideas have to become testable systems.",
     characters:
       "This is where abstract pressure becomes human shape.",
+    creator:
+      "This path gives the human source before the estate becomes too large.",
+    underdog:
+      "This path gives pressure a voice before it becomes a system.",
     return:
       "The return fork is not failure. It is how the estate prevents drift."
   });
@@ -466,16 +483,25 @@
     const ctx = normalizeContext({
       ...(context && typeof context === "object" ? context : {}),
       bridgeContext: (context && context.bridgeContext) || source.bridgeContext || null,
+      conversationCoordinate: source.conversationCoordinate || (context && context.conversationCoordinate) || null,
+      gateType: source.gateType || (context && context.gateType) || "",
+      pathFamily: source.pathFamily || (context && context.pathFamily) || "",
+      dialectMode: source.dialectMode || (context && context.dialectMode) || "",
+      contextExpectation: source.contextExpectation || (context && context.contextExpectation) || "",
+      noRepeat: typeof source.noRepeat === "boolean" ? source.noRepeat : context && typeof context.noRepeat === "boolean" ? context.noRepeat : false,
       illuminationMode: source.illuminationMode || (context && context.illuminationMode) || "",
       basePoolMode: source.basePoolMode || (context && context.basePoolMode) || "",
       entryStackMode: source.entryStackMode || (context && context.entryStackMode) || ""
     });
 
-    const target = normalizeTarget(source.selectedTarget || ctx.selectedTarget || "");
+    const coordinate = ctx.conversationCoordinate || buildFallbackCoordinate(source, ctx);
+    const target = normalizeTarget(source.selectedTarget || coordinate.target || ctx.selectedTarget || "");
     const intent = normalizeIntent(source.intent || ctx.intent || "");
-    const basePoolMode = inferBasePoolMode(target, intent, ctx);
-    const illuminationMode = inferIlluminationMode(target, intent, ctx, basePoolMode);
-    const entryStackMode = inferEntryStackMode(target, intent, ctx, basePoolMode);
+    const basePoolMode = coordinate.mode || inferBasePoolMode(target, intent, ctx);
+    const illuminationMode = source.illuminationMode || ctx.illuminationMode || inferIlluminationMode(target, intent, ctx, basePoolMode);
+    const entryStackMode = source.entryStackMode || ctx.entryStackMode || inferEntryStackMode(target, intent, ctx, basePoolMode);
+    const gate = coordinate.gate || ctx.gateType || inferGateFromContext(target, intent, ctx, entryStackMode, basePoolMode);
+    const noRepeat = Boolean(coordinate.noRepeat || ctx.noRepeat || isNoRepeatGate(gate));
     const bubbles = normalizeBubbleList(source.bubbles || source.beats || []);
 
     const shaped = {
@@ -484,28 +510,271 @@
       previousContract: PREVIOUS_CONTRACT,
       expressionContract: CONTRACT,
       expressionVersion: VERSION,
+
+      conversationCoordinate: coordinate,
+      gateType: gate,
+      pathFamily: coordinate.path || ctx.pathFamily || inferPathFamily(target, intent, basePoolMode),
+      dialectMode: coordinate.dialect || ctx.dialectMode || inferDialectMode(target, intent, basePoolMode, illuminationMode),
+      contextExpectation: coordinate.expectation || ctx.contextExpectation || inferExpectation(gate),
+      noRepeat,
+
       basePoolMode,
       illuminationMode,
       entryStackMode,
-      choiceClosure: buildChoiceClosure(target, intent, ctx, basePoolMode)
+      choiceClosure: source.choiceClosure || ctx.choiceClosure || buildChoiceClosure(target, intent, ctx, basePoolMode, coordinate)
     };
 
-    const pool = shapeBasePool(target, intent, ctx, basePoolMode);
-
-    if (pool.length) {
-      shaped.bubbles = withBridgeLead(pool, ctx);
-      shaped.beats = shaped.bubbles;
-      shaped.options = shapeChoiceClosureOptions(shaped.options || [], target, intent, ctx, basePoolMode);
-      return finalizeFrame(shaped, ctx);
-    }
-
-    shaped.bubbles = bubbles.length
-      ? withBridgeLead(bubbles.map((item) => sanitizePublicText(item, ctx, "bubble")), ctx)
-      : bubbles;
+    shaped.bubbles = shapeBubblesByCoordinate({
+      sourceBubbles: bubbles,
+      target,
+      intent,
+      ctx,
+      coordinate,
+      gate,
+      basePoolMode,
+      noRepeat
+    });
     shaped.beats = shaped.bubbles;
-    shaped.options = shapeChoiceClosureOptions(shaped.options || [], target, intent, ctx, basePoolMode);
+
+    shaped.options = shapeChoiceClosureOptions(
+      source.options || [],
+      target,
+      intent,
+      {
+        ...ctx,
+        conversationCoordinate: coordinate,
+        gateType: gate,
+        noRepeat
+      },
+      basePoolMode
+    );
 
     return finalizeFrame(shaped, ctx);
+  }
+
+  function shapeBubblesByCoordinate(args) {
+    const sourceBubbles = Array.isArray(args.sourceBubbles) ? args.sourceBubbles : [];
+    const target = normalizeTarget(args.target || "");
+    const intent = normalizeIntent(args.intent || "");
+    const ctx = normalizeContext(args.ctx || {});
+    const coordinate = args.coordinate || null;
+    const gate = safeText(args.gate || (coordinate && coordinate.gate) || "");
+    const basePoolMode = args.basePoolMode || inferBasePoolMode(target, intent, ctx);
+    const noRepeat = Boolean(args.noRepeat);
+
+    if (gate === COORDINATE_GATES.ARRIVAL) {
+      return withBridgeLead(SPLIT_INTERFACE_COPY.entrance.slice(), ctx);
+    }
+
+    if (gate === COORDINATE_GATES.SPLIT || gate === COORDINATE_GATES.INTENTION) {
+      return withBridgeLead(SPLIT_INTERFACE_COPY.guidedChooser.slice(), ctx);
+    }
+
+    if (gate === COORDINATE_GATES.BASE_POOL && !noRepeat) {
+      const pool = shapeBasePool(target, intent, ctx, basePoolMode);
+      if (pool.length) return withBridgeLead(pool, ctx);
+    }
+
+    if (gate === COORDINATE_GATES.INTRIGUE_BRIDGE) {
+      const intrigue = shapeIntrigueBridge(target, intent, ctx, basePoolMode);
+      if (intrigue.length) return withBridgeLead(intrigue, ctx);
+    }
+
+    if (gate === COORDINATE_GATES.DIG_DEEPER) {
+      return shapeDigDeeperBubbles(sourceBubbles, target, intent, ctx, basePoolMode);
+    }
+
+    if (gate === COORDINATE_GATES.PREPARED_DOOR) {
+      return shapePreparedDoorBubbles(sourceBubbles, target, intent, ctx, basePoolMode);
+    }
+
+    if (gate === COORDINATE_GATES.RETURN_FORK) {
+      const returnPool = BASE_POOL_COPY.return.slice();
+      return withBridgeLead(sourceBubbles.length ? sanitizeBubbleList(sourceBubbles, ctx) : returnPool, ctx);
+    }
+
+    if (gate === COORDINATE_GATES.CROSS_PATH_BRIDGE) {
+      return shapeCrossPathBridgeBubbles(sourceBubbles, target, intent, ctx);
+    }
+
+    if (gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY) {
+      return shapeDiagnosticBoundaryBubbles(sourceBubbles, target, intent, ctx, basePoolMode);
+    }
+
+    if (sourceBubbles.length) {
+      return withBridgeLead(sanitizeBubbleList(sourceBubbles, ctx), ctx);
+    }
+
+    const fallbackPool = shapeBasePool(target, intent, ctx, basePoolMode);
+    return withBridgeLead(fallbackPool.length ? fallbackPool : SPLIT_INTERFACE_COPY.overview.slice(), ctx);
+  }
+
+  function shapeDigDeeperBubbles(sourceBubbles, target, intent, context, basePoolMode) {
+    const ctx = normalizeContext(context);
+
+    if (Array.isArray(sourceBubbles) && sourceBubbles.length) {
+      return withBridgeLead(sanitizeBubbleList(sourceBubbles, ctx), ctx);
+    }
+
+    const mode = basePoolMode || inferBasePoolMode(target, intent, ctx);
+    const lead = "As I mentioned, this path has a clear surface layer.";
+
+    if (mode === BASE_POOL_MODES.PUBLIC_MAP) {
+      return [
+        "As I mentioned, the public map gives the clear structure first.",
+        "The deeper layer is that the public side prevents the estate from becoming only mystery. It gives the visitor a place to stand before crossing into story, proof, products, or creator context.",
+        "That is why it belongs beside the narrative path instead of beneath it."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.NARRATIVE_PATH) {
+      return [
+        "As I mentioned, the narrative path is the guided walk through the estate.",
+        "The deeper layer is that every room changes the visitor’s relationship to the same structure: map, mirror, mission, proof, and application.",
+        "That is why Mirrorland, Hearth, Characters, Scientific Law, and Frontier can stay connected without becoming the same room."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.MISSION) {
+      return [
+        "As I mentioned, the mission begins with clarity, integrity, collaboration, and shared direction.",
+        "The deeper layer is that the mission has to move inward, outward, and then into construction.",
+        "It has to help the person, protect the community, and prove itself through useful systems."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.PRACTICAL) {
+      return [
+        "As I mentioned, the practical path asks what the work can actually do.",
+        "The deeper layer is that practical value has to survive pressure: products, systems, Frontier, proof, and real-world constraints.",
+        "That is where the estate stops being only expressive and starts becoming testable."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.PROOF) {
+      return [
+        "As I mentioned, the proof path asks whether a claim can be tested.",
+        "The deeper layer is that evidence, measurement, limits, and correction are not decorations.",
+        "They are what keep a convincing idea from becoming an unchecked claim."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.FRONTIER) {
+      return [
+        "As I mentioned, Frontier is where future-facing ideas become system pressure.",
+        "The deeper layer is that each system must answer a different kind of survival question: power, water, waste, infrastructure, feedback, city pressure, and direction.",
+        "Frontier is not the claim. It is where claims go to be strained."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.HEARTH) {
+      return [
+        "As I mentioned, Hearth is Mission Control — the window within the window.",
+        "The deeper layer is that Hearth coordinates what the visitor can see before it becomes route, test, consequence, or world movement.",
+        "It is not the whole future. It is the control view into future potential."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.CHARACTERS) {
+      return [
+        "As I mentioned, the Characters make the estate personal.",
+        "The deeper layer is that each Character carries a pressure function: shelter, repair, warning, survival, signal, boundary, sequence, or distributed help.",
+        "They turn structure into encounter."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.MIRRORLAND) {
+      return [
+        "As I mentioned, Mirrorland is where possible futures become visible before they become final.",
+        "The deeper layer is that possibility, survival, and consequence separate into different world pressures.",
+        "ZIONTS, H-Earth, and Audralia are not scenery. They are future outcomes under pressure."
+      ];
+    }
+
+    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || mode === BASE_POOL_MODES.CHARACTER_MIRROR) {
+      return [
+        DIAGNOSTIC_BOUNDARY_COPY.boundary,
+        "The deeper layer is that the Character Mirror can clarify story pressure, while the Diagnostic handles the actual alignment read.",
+        "That separation protects the visitor and keeps Jeeves in the guide role."
+      ];
+    }
+
+    return [
+      lead,
+      "The deeper move is to choose whether this should become proof, practical use, narrative depth, or a clean door."
+    ];
+  }
+
+  function shapePreparedDoorBubbles(sourceBubbles, target, intent, context, basePoolMode) {
+    const ctx = normalizeContext(context);
+
+    if (Array.isArray(sourceBubbles) && sourceBubbles.length) {
+      return sanitizeBubbleList(sourceBubbles, ctx).slice(0, 2);
+    }
+
+    return [
+      "That door is ready.",
+      "I do not need to re-explain the path. The clean move is to open it."
+    ];
+  }
+
+  function shapeCrossPathBridgeBubbles(sourceBubbles, target, intent, context) {
+    const ctx = normalizeContext(context);
+
+    if (Array.isArray(sourceBubbles) && sourceBubbles.length) {
+      return withBridgeLead(sanitizeBubbleList(sourceBubbles, ctx), ctx);
+    }
+
+    const bridge = shapeBridgeContextLine(ctx);
+    if (bridge) {
+      return [
+        bridge,
+        "The point is not to collapse the two paths into one. It is to show why the next door is adjacent."
+      ];
+    }
+
+    return [
+      "This is a bridge path.",
+      "The next room is related, but it should remain distinct so the estate stays readable."
+    ];
+  }
+
+  function shapeDiagnosticBoundaryBubbles(sourceBubbles, target, intent, context, basePoolMode) {
+    const ctx = normalizeContext(context);
+
+    if (Array.isArray(sourceBubbles) && sourceBubbles.length) {
+      return sanitizeBubbleList(sourceBubbles, ctx).map(softenDiagnosticAssessmentLanguage).slice(0, 4);
+    }
+
+    if (basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR || target === TARGETS.CHARACTER_MIRROR) {
+      return [
+        DIAGNOSTIC_BOUNDARY_COPY.characterMirror,
+        "I can introduce the Characters and explain what they carry, or I can take you to the proper Diagnostic path."
+      ];
+    }
+
+    return [
+      DIAGNOSTIC_BOUNDARY_COPY.referral,
+      "Jeeves can explain and guide, but the assessment belongs in the Diagnostic itself."
+    ];
+  }
+
+  function shapeIntrigueBridge(target, intent, context, basePoolMode) {
+    const ctx = normalizeContext(context);
+    const mode = basePoolMode || inferBasePoolMode(target, intent, ctx);
+    const line = INTRIGUE_COPY[mode] || INTRIGUE_COPY[normalizeBasePoolKey(mode)] || "";
+
+    if (line) {
+      return [
+        line,
+        "From here, the next clean move is to go deeper, open the prepared door, or return to the fork."
+      ];
+    }
+
+    return [
+      "This path opens into a nearby room.",
+      "You can go deeper, open the door, or return to the fork."
+    ];
   }
 
   function shapeBasePool(target, intent, context, basePoolMode) {
@@ -558,11 +827,13 @@
   function finalizeFrame(frame, context) {
     const shaped = frame && typeof frame === "object" ? frame : {};
     const ctx = normalizeContext(context);
-    const target = normalizeTarget(shaped.selectedTarget || ctx.selectedTarget || "");
+    const coordinate = shaped.conversationCoordinate || ctx.conversationCoordinate || buildFallbackCoordinate(shaped, ctx);
+    const target = normalizeTarget(shaped.selectedTarget || coordinate.target || ctx.selectedTarget || "");
     const intent = normalizeIntent(shaped.intent || ctx.intent || "");
-    const basePoolMode = shaped.basePoolMode || inferBasePoolMode(target, intent, ctx);
+    const basePoolMode = shaped.basePoolMode || coordinate.mode || inferBasePoolMode(target, intent, ctx);
     const illuminationMode = shaped.illuminationMode || inferIlluminationMode(target, intent, ctx, basePoolMode);
     const entryStackMode = shaped.entryStackMode || inferEntryStackMode(target, intent, ctx, basePoolMode);
+    const gate = shaped.gateType || coordinate.gate || inferGateFromContext(target, intent, ctx, entryStackMode, basePoolMode);
 
     shaped.bubbles = normalizeBubbleList(shaped.bubbles || shaped.beats || [])
       .map((bubble) => sanitizePublicText(bubble, ctx, "bubble"));
@@ -574,7 +845,10 @@
       intent,
       basePoolMode,
       illuminationMode,
-      entryStackMode
+      entryStackMode,
+      conversationCoordinate: coordinate,
+      gateType: gate,
+      noRepeat: shaped.noRepeat
     });
 
     shaped.handoffLabels = shapeHandoffLabels(shaped.handoffLabels || {}, shaped.handoffs || []);
@@ -584,17 +858,25 @@
     shaped.guidedEntranceCompatible = true;
     shaped.readingRhythmCompatible = true;
     shaped.bridgeContextCompatible = true;
+    shaped.coordinateLanguageCompatible = true;
+    shaped.noRepeatCompatible = true;
+
+    shaped.conversationCoordinate = coordinate;
+    shaped.gateType = gate;
+    shaped.pathFamily = shaped.pathFamily || coordinate.path || inferPathFamily(target, intent, basePoolMode);
+    shaped.dialectMode = shaped.dialectMode || coordinate.dialect || inferDialectMode(target, intent, basePoolMode, illuminationMode);
+    shaped.contextExpectation = shaped.contextExpectation || coordinate.expectation || inferExpectation(gate);
+    shaped.noRepeat = typeof shaped.noRepeat === "boolean" ? shaped.noRepeat : Boolean(coordinate.noRepeat || isNoRepeatGate(gate));
 
     shaped.entryStackMode = entryStackMode;
     shaped.basePoolMode = basePoolMode;
     shaped.illuminationMode = illuminationMode;
-    shaped.choiceClosure = shaped.choiceClosure || buildChoiceClosure(target, intent, ctx, basePoolMode);
+    shaped.choiceClosure = shaped.choiceClosure || buildChoiceClosure(target, intent, ctx, basePoolMode, coordinate);
 
-    shaped.entryStackAuthority = "expression_orients_samples_intrigues_and_closes_choices";
-    shaped.basePoolAuthority = "expression_surfaces_bounded_path_sample_without_replacing_page";
-    shaped.digDeeperAuthority = "north_supplies_deeper_logic_expression_shapes_public_language";
-    shaped.preparedDoorAuthority = "frontbrain_executes_route_expression_shapes_label";
-    shaped.diagnosticBoundary = "jeeves_explains_and_routes_but_does_not_assess";
+    shaped.debug = shaped.debug || {};
+    shaped.debug.expressionAuthority = "expression_shapes_public_language_only";
+    shaped.debug.coordinateAuthority = "api_north_final_coordinate_frontbrain_carries_expression_shapes";
+    shaped.debug.diagnosticBoundary = "jeeves_explains_and_routes_but_does_not_assess";
 
     return shaped;
   }
@@ -631,7 +913,12 @@
         optionKind: "conversation_prompt",
         archetypeAlignment: "personal_entry",
         bridgeMoment: "before_knowledge",
-        movementIntent: "ask_jeeves"
+        movementIntent: "ask_jeeves",
+        gateType: COORDINATE_GATES.DIAGNOSTIC_BOUNDARY,
+        pathFamily: "diagnostic",
+        dialectMode: "diagnostic_boundary_guide",
+        contextExpectation: "diagnostic_referral",
+        noRepeat: true
       };
     }
 
@@ -725,28 +1012,50 @@
     if (!shaped.type) shaped.type = shaped.optionKind === "control" ? "control" : "conversation";
     if (!shaped.scopeLane) shaped.scopeLane = inferScopeLaneFromTarget(target);
 
+    const optionCoordinate = normalizeCoordinate(shaped.conversationCoordinate || null) ||
+      buildOptionCoordinate(shaped, ctx);
+
+    shaped.conversationCoordinate = optionCoordinate;
+    shaped.gateType = shaped.gateType || optionCoordinate.gate;
+    shaped.pathFamily = shaped.pathFamily || optionCoordinate.path;
+    shaped.dialectMode = shaped.dialectMode || optionCoordinate.dialect;
+    shaped.contextExpectation = shaped.contextExpectation || optionCoordinate.expectation;
+    shaped.noRepeat = typeof shaped.noRepeat === "boolean" ? shaped.noRepeat : Boolean(optionCoordinate.noRepeat);
+
     return shaped;
   }
 
   function shapeChoiceClosureOptions(options, target, intent, context, basePoolMode) {
     const ctx = normalizeContext(context);
+    const coordinate = ctx.conversationCoordinate || null;
+    const gate = ctx.gateType || (coordinate && coordinate.gate) || "";
     const sourceOptions = Array.isArray(options) ? options.slice() : [];
     const cleanTarget = normalizeTarget(target || ctx.selectedTarget || "");
     const cleanIntent = normalizeIntent(intent || ctx.intent || "");
     const mode = basePoolMode || inferBasePoolMode(cleanTarget, cleanIntent, ctx);
-    const closure = buildChoiceClosure(cleanTarget, cleanIntent, ctx, mode);
+    const closure = buildChoiceClosure(cleanTarget, cleanIntent, ctx, mode, coordinate);
+    const next = coordinate && Array.isArray(coordinate.next) ? coordinate.next : [];
 
-    const shaped = sourceOptions.slice();
-
-    if (isGuidedChooserRequest(cleanTarget, cleanIntent, ctx)) {
+    if (isGuidedChooserRequest(cleanTarget, cleanIntent, ctx) || gate === COORDINATE_GATES.INTENTION) {
       return DIRECTIONAL_CHOOSER_OPTIONS.slice();
     }
 
-    if (closure.digDeeperAvailable) {
+    const shaped = sourceOptions.slice();
+
+    if (
+      closure.digDeeperAvailable &&
+      !isNoRepeatGate(gate) &&
+      gate !== COORDINATE_GATES.DIG_DEEPER &&
+      (next.length === 0 || next.includes("dig_deeper"))
+    ) {
       shaped.push(makeDigDeeperOption(cleanTarget, cleanIntent, mode));
     }
 
-    if (closure.returnForkAvailable) {
+    if (
+      closure.returnForkAvailable &&
+      gate !== COORDINATE_GATES.RETURN_FORK &&
+      (next.length === 0 || next.includes("return") || next.includes("guided_chooser"))
+    ) {
       shaped.push(makeReturnForkOption(mode));
     }
 
@@ -756,26 +1065,41 @@
   function makeDigDeeperOption(target, intent, basePoolMode) {
     const mode = basePoolMode || BASE_POOL_MODES.NONE;
     const label = inferDigDeeperLabel(target, intent, mode);
+    const cleanTarget = normalizeTarget(target) || TARGETS.SPLIT_INTERFACE;
 
-    return {
+    const option = {
       label,
-      target: normalizeTarget(target) || TARGETS.SPLIT_INTERFACE,
+      target: cleanTarget,
       type: "conversation",
-      scopeLane: inferScopeLaneFromTarget(target),
+      scopeLane: inferScopeLaneFromTarget(cleanTarget),
       promptMode: inferPromptModeFromPool(mode),
       optionKind: "forward",
       archetypeAlignment: inferAlignmentFromPool(mode),
       bridgeMoment: "after_knowledge",
       movementIntent: "continue_current_path",
       entryStackMode: ENTRY_STACK_MODES.DIG_DEEPER,
-      basePoolMode: mode
+      basePoolMode: mode,
+      gateType: COORDINATE_GATES.DIG_DEEPER,
+      noRepeat: true
     };
+
+    option.conversationCoordinate = buildOptionCoordinate(option, {
+      selectedTarget: cleanTarget,
+      basePoolMode: mode,
+      gateType: COORDINATE_GATES.DIG_DEEPER,
+      noRepeat: true
+    });
+    option.pathFamily = option.conversationCoordinate.path;
+    option.dialectMode = option.conversationCoordinate.dialect;
+    option.contextExpectation = option.conversationCoordinate.expectation;
+
+    return option;
   }
 
   function makeReturnForkOption(basePoolMode) {
     const mode = basePoolMode || BASE_POOL_MODES.NONE;
 
-    return {
+    const option = {
       label: mode === BASE_POOL_MODES.RETURN ? "Can you help me choose where to start?" : "Can we return to the guided chooser?",
       target: TARGETS.SPLIT_INTERFACE,
       type: "control",
@@ -786,8 +1110,22 @@
       bridgeMoment: "recenter_fork",
       movementIntent: "recenter",
       entryStackMode: ENTRY_STACK_MODES.RETURN,
-      basePoolMode: BASE_POOL_MODES.RETURN
+      basePoolMode: BASE_POOL_MODES.RETURN,
+      gateType: COORDINATE_GATES.RETURN_FORK,
+      noRepeat: true
     };
+
+    option.conversationCoordinate = buildOptionCoordinate(option, {
+      selectedTarget: TARGETS.SPLIT_INTERFACE,
+      basePoolMode: BASE_POOL_MODES.RETURN,
+      gateType: COORDINATE_GATES.RETURN_FORK,
+      noRepeat: true
+    });
+    option.pathFamily = option.conversationCoordinate.path;
+    option.dialectMode = option.conversationCoordinate.dialect;
+    option.contextExpectation = option.conversationCoordinate.expectation;
+
+    return option;
   }
 
   function inferDigDeeperLabel(target, intent, basePoolMode) {
@@ -814,16 +1152,30 @@
     return "Can you give me one deeper layer?";
   }
 
-  function buildChoiceClosure(target, intent, context, basePoolMode) {
+  function buildChoiceClosure(target, intent, context, basePoolMode, coordinateArg) {
     const ctx = normalizeContext(context);
+    const coordinate = coordinateArg || ctx.conversationCoordinate || null;
+    const gate = ctx.gateType || (coordinate && coordinate.gate) || "";
     const cleanTarget = normalizeTarget(target || ctx.selectedTarget || "");
     const cleanIntent = normalizeIntent(intent || ctx.intent || "");
     const mode = basePoolMode || inferBasePoolMode(cleanTarget, cleanIntent, ctx);
+    const next = coordinate && Array.isArray(coordinate.next) ? coordinate.next : [];
 
     const closure = {
       ...CHOICE_CLOSURE_DEFAULT,
       mode
     };
+
+    if (coordinate) {
+      closure.preparedDoorAvailable = next.includes("open_page") || gate === COORDINATE_GATES.PREPARED_DOOR;
+      closure.preparedDoorSuggested = gate === COORDINATE_GATES.PREPARED_DOOR;
+      closure.digDeeperAvailable =
+        (next.includes("dig_deeper") || gate === COORDINATE_GATES.BASE_POOL || gate === COORDINATE_GATES.INTRIGUE_BRIDGE) &&
+        !isNoRepeatGate(gate);
+      closure.returnForkAvailable = next.includes("return") || next.includes("guided_chooser") || gate !== COORDINATE_GATES.ARRIVAL;
+      closure.finalChatThreshold = gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY || gate === COORDINATE_GATES.PREPARED_DOOR;
+      return closure;
+    }
 
     if (mode === BASE_POOL_MODES.GUIDED_CHOOSER || cleanTarget === TARGETS.SPLIT_INTERFACE) {
       closure.preparedDoorAvailable = false;
@@ -849,6 +1201,9 @@
 
   function inferBasePoolMode(target, intent, context) {
     const ctx = normalizeContext(context);
+    if (ctx.conversationCoordinate && ctx.conversationCoordinate.mode) return ctx.conversationCoordinate.mode;
+    if (ctx.basePoolMode) return ctx.basePoolMode;
+
     const cleanTarget = normalizeTarget(target || ctx.selectedTarget || "");
     const cleanIntent = normalizeIntent(intent || ctx.intent || "");
 
@@ -886,6 +1241,17 @@
 
   function inferIlluminationMode(target, intent, context, basePoolMode) {
     const ctx = normalizeContext(context);
+    if (ctx.illuminationMode) return ctx.illuminationMode;
+
+    const coordinate = ctx.conversationCoordinate;
+    if (coordinate) {
+      if (coordinate.path === "proof") return ILLUMINATION_MODES.PROOF;
+      if (coordinate.path === "practical" || coordinate.path === "frontier") return ILLUMINATION_MODES.PRACTICAL;
+      if (coordinate.path === "return") return ILLUMINATION_MODES.RETURN;
+      if (coordinate.path === "diagnostic" || coordinate.gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY) return ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY;
+      if (["narrative", "mission", "character", "hearth", "mirrorland", "creator"].includes(coordinate.path)) return ILLUMINATION_MODES.NARRATIVE;
+    }
+
     const cleanTarget = normalizeTarget(target || ctx.selectedTarget || "");
     const cleanIntent = normalizeIntent(intent || ctx.intent || "");
     const mode = basePoolMode || inferBasePoolMode(cleanTarget, cleanIntent, ctx);
@@ -912,6 +1278,18 @@
 
   function inferEntryStackMode(target, intent, context, basePoolMode) {
     const ctx = normalizeContext(context);
+    if (ctx.entryStackMode) return ctx.entryStackMode;
+
+    const coordinate = ctx.conversationCoordinate;
+    if (coordinate) {
+      if (coordinate.gate === COORDINATE_GATES.ARRIVAL) return ENTRY_STACK_MODES.ENTRANCE;
+      if (coordinate.gate === COORDINATE_GATES.INTENTION || coordinate.gate === COORDINATE_GATES.SPLIT) return ENTRY_STACK_MODES.GUIDED_CHOOSER;
+      if (coordinate.gate === COORDINATE_GATES.DIG_DEEPER) return ENTRY_STACK_MODES.DIG_DEEPER;
+      if (coordinate.gate === COORDINATE_GATES.PREPARED_DOOR) return ENTRY_STACK_MODES.PREPARED_DOOR;
+      if (coordinate.gate === COORDINATE_GATES.RETURN_FORK) return ENTRY_STACK_MODES.RETURN;
+      if (coordinate.gate === COORDINATE_GATES.CROSS_PATH_BRIDGE || coordinate.gate === COORDINATE_GATES.INTRIGUE_BRIDGE) return ENTRY_STACK_MODES.PATH_SAMPLE;
+    }
+
     const cleanTarget = normalizeTarget(target || ctx.selectedTarget || "");
     const cleanIntent = normalizeIntent(intent || ctx.intent || "");
     const mode = basePoolMode || inferBasePoolMode(cleanTarget, cleanIntent, ctx);
@@ -920,6 +1298,7 @@
     if (mode === BASE_POOL_MODES.RETURN || cleanIntent === "recenter") return ENTRY_STACK_MODES.RETURN;
     if (ctx.movementIntent === "continue_current_path" || ctx.optionKind === "forward") return ENTRY_STACK_MODES.DIG_DEEPER;
     if (ctx.movementIntent === "open_prepared_door" || ctx.optionKind === "route") return ENTRY_STACK_MODES.PREPARED_DOOR;
+    if (ctx.movementIntent === "cross_to_related_room" || ctx.optionKind === "parallel") return ENTRY_STACK_MODES.PATH_SAMPLE;
     if (mode !== BASE_POOL_MODES.NONE) return ENTRY_STACK_MODES.BASE_POOL;
 
     return ENTRY_STACK_MODES.PATH_SAMPLE;
@@ -1153,7 +1532,7 @@
       });
     }
 
-    if (ctx && ctx.intent === "diagnosticReferral" && /\bI can assess\b/i.test(clean)) {
+    if ((ctx.intent === "diagnosticReferral" || ctx.gateType === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY) && /\bI can assess\b/i.test(clean)) {
       clean = clean.replace(/\bI can assess\b/gi, "I can explain");
     }
 
@@ -1238,7 +1617,7 @@
   }
 
   function makeStaticOption(label, target, promptMode, archetypeAlignment, bridgeMoment, movementIntent, scopeLane) {
-    return {
+    const option = {
       label,
       target,
       type: "conversation",
@@ -1249,6 +1628,15 @@
       bridgeMoment,
       movementIntent
     };
+
+    option.conversationCoordinate = buildOptionCoordinate(option, {});
+    option.gateType = option.conversationCoordinate.gate;
+    option.pathFamily = option.conversationCoordinate.path;
+    option.dialectMode = option.conversationCoordinate.dialect;
+    option.contextExpectation = option.conversationCoordinate.expectation;
+    option.noRepeat = option.conversationCoordinate.noRepeat;
+
+    return option;
   }
 
   function inferBridgeMomentFromContext(context) {
@@ -1300,12 +1688,16 @@
     const selectedLabel = safeText(ctx.selectedLabel).toLowerCase();
     const cleanTarget = normalizeTarget(target);
     const cleanIntent = normalizeIntent(intent);
+    const gate = ctx.gateType || (ctx.conversationCoordinate && ctx.conversationCoordinate.gate) || "";
 
-    return cleanTarget === TARGETS.SPLIT_INTERFACE &&
+    return gate === COORDINATE_GATES.INTENTION ||
       (
-        cleanIntent === "splitInterface" ||
-        isGuidedLabel(selectedLabel) ||
-        ctx.currentConversationStage === "split_interface_gate"
+        cleanTarget === TARGETS.SPLIT_INTERFACE &&
+        (
+          cleanIntent === "splitInterface" ||
+          isGuidedLabel(selectedLabel) ||
+          ctx.currentConversationStage === "split_interface_gate"
+        )
       );
   }
 
@@ -1344,6 +1736,10 @@
   function normalizeBubbleList(value) {
     if (!Array.isArray(value)) return [];
     return value.map((item) => safeText(item)).filter(Boolean).slice(0, 4);
+  }
+
+  function sanitizeBubbleList(value, context) {
+    return normalizeBubbleList(value).map((item) => sanitizePublicText(item, context, "bubble"));
   }
 
   function normalizeTarget(target) {
@@ -1394,6 +1790,7 @@
 
   function normalizeContext(context) {
     const source = context && typeof context === "object" ? context : {};
+    const coordinate = normalizeCoordinate(source.conversationCoordinate || null);
 
     return {
       intent: normalizeIntent(source.intent || ""),
@@ -1408,11 +1805,37 @@
       optionKind: safeText(source.optionKind || ""),
       bridgeMoment: safeText(source.bridgeMoment || ""),
       movementIntent: safeText(source.movementIntent || ""),
+
+      conversationCoordinate: coordinate,
+      gateType: safeText(source.gateType || (coordinate && coordinate.gate) || ""),
+      pathFamily: safeText(source.pathFamily || (coordinate && coordinate.path) || ""),
+      dialectMode: safeText(source.dialectMode || (coordinate && coordinate.dialect) || ""),
+      contextExpectation: safeText(source.contextExpectation || (coordinate && coordinate.expectation) || ""),
+      noRepeat: typeof source.noRepeat === "boolean" ? source.noRepeat : Boolean(coordinate && coordinate.noRepeat),
+
       entryStackMode: safeText(source.entryStackMode || ""),
-      basePoolMode: safeText(source.basePoolMode || ""),
+      basePoolMode: safeText(source.basePoolMode || (coordinate && coordinate.mode) || ""),
       illuminationMode: safeText(source.illuminationMode || ""),
       choiceClosure: source.choiceClosure && typeof source.choiceClosure === "object" ? source.choiceClosure : null,
       bridgeContext: normalizeBridgeContext(source.bridgeContext || null)
+    };
+  }
+
+  function normalizeCoordinate(value) {
+    if (!value || typeof value !== "object") return null;
+
+    return {
+      step: safeNumber(value.step, 5),
+      priorStep: safeNumber(value.priorStep, 0),
+      gate: safeText(value.gate || ""),
+      path: safeText(value.path || ""),
+      mode: safeText(value.mode || ""),
+      dialect: safeText(value.dialect || ""),
+      expectation: safeText(value.expectation || ""),
+      target: normalizeTarget(value.target || ""),
+      destination: safeText(value.destination || ""),
+      next: Array.isArray(value.next) ? value.next.map(safeText).filter(Boolean).slice(0, 10) : [],
+      noRepeat: Boolean(value.noRepeat)
     };
   }
 
@@ -1439,6 +1862,225 @@
     };
   }
 
+  function buildFallbackCoordinate(source, context) {
+    const ctx = normalizeContext(context);
+    const target = normalizeTarget(source.selectedTarget || ctx.selectedTarget || "");
+    const intent = normalizeIntent(source.intent || ctx.intent || "");
+    const basePoolMode = source.basePoolMode || ctx.basePoolMode || inferBasePoolMode(target, intent, ctx);
+    const entryStackMode = source.entryStackMode || ctx.entryStackMode || inferEntryStackMode(target, intent, ctx, basePoolMode);
+    const gate = source.gateType || ctx.gateType || inferGateFromContext(target, intent, ctx, entryStackMode, basePoolMode);
+    const path = source.pathFamily || ctx.pathFamily || inferPathFamily(target, intent, basePoolMode);
+    const dialect = source.dialectMode || ctx.dialectMode || inferDialectMode(target, intent, basePoolMode, source.illuminationMode || ctx.illuminationMode);
+    const expectation = source.contextExpectation || ctx.contextExpectation || inferExpectation(gate);
+
+    return {
+      step: stepForGate(gate),
+      priorStep: priorStepForGate(gate),
+      gate,
+      path,
+      mode: basePoolMode,
+      dialect,
+      expectation,
+      target,
+      destination: "",
+      next: nextForGate(gate, path),
+      noRepeat: Boolean(source.noRepeat || ctx.noRepeat || isNoRepeatGate(gate))
+    };
+  }
+
+  function buildOptionCoordinate(option, context) {
+    const ctx = normalizeContext(context);
+    const target = normalizeTarget(option.target || ctx.selectedTarget || "");
+    const intent = normalizeIntent(ctx.intent || "");
+    const basePoolMode = option.basePoolMode || ctx.basePoolMode || inferBasePoolMode(target, intent, ctx);
+    const gate = option.gateType || ctx.gateType || inferGateFromOption(option, target, basePoolMode);
+    const path = option.pathFamily || inferPathFamily(target, intent, basePoolMode);
+    const dialect = option.dialectMode || inferDialectMode(target, intent, basePoolMode, ctx.illuminationMode);
+    const expectation = option.contextExpectation || inferExpectation(gate);
+
+    return {
+      step: stepForGate(gate),
+      priorStep: priorStepForGate(gate),
+      gate,
+      path,
+      mode: basePoolMode,
+      dialect,
+      expectation,
+      target,
+      destination: "",
+      next: nextForGate(gate, path),
+      noRepeat: Boolean(option.noRepeat || isNoRepeatGate(gate))
+    };
+  }
+
+  function inferGateFromContext(target, intent, context, entryStackMode, basePoolMode) {
+    const ctx = normalizeContext(context);
+
+    if (ctx.gateType) return ctx.gateType;
+    if (ctx.conversationCoordinate && ctx.conversationCoordinate.gate) return ctx.conversationCoordinate.gate;
+
+    if (entryStackMode === ENTRY_STACK_MODES.ENTRANCE) return COORDINATE_GATES.ARRIVAL;
+    if (entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) return COORDINATE_GATES.INTENTION;
+    if (entryStackMode === ENTRY_STACK_MODES.DIG_DEEPER) return COORDINATE_GATES.DIG_DEEPER;
+    if (entryStackMode === ENTRY_STACK_MODES.PREPARED_DOOR) return COORDINATE_GATES.PREPARED_DOOR;
+    if (entryStackMode === ENTRY_STACK_MODES.RETURN) return COORDINATE_GATES.RETURN_FORK;
+    if (entryStackMode === ENTRY_STACK_MODES.PATH_SAMPLE) return COORDINATE_GATES.INTRIGUE_BRIDGE;
+
+    if (ctx.movementIntent === "continue_current_path" || ctx.optionKind === "forward") return COORDINATE_GATES.DIG_DEEPER;
+    if (ctx.movementIntent === "open_prepared_door" || ctx.optionKind === "route") return COORDINATE_GATES.PREPARED_DOOR;
+    if (ctx.movementIntent === "recenter" || ctx.optionKind === "control") return COORDINATE_GATES.RETURN_FORK;
+    if (ctx.movementIntent === "cross_to_related_room" || ctx.optionKind === "parallel") return COORDINATE_GATES.CROSS_PATH_BRIDGE;
+
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return COORDINATE_GATES.DIAGNOSTIC_BOUNDARY;
+    if (target === TARGETS.DIAMOND_GATE_OVERVIEW || intent === "diamondGate") return COORDINATE_GATES.ARRIVAL;
+    if (target === TARGETS.SPLIT_INTERFACE || intent === "splitInterface") return COORDINATE_GATES.INTENTION;
+
+    return COORDINATE_GATES.BASE_POOL;
+  }
+
+  function inferGateFromOption(option, target, basePoolMode) {
+    if (option.gateType) return option.gateType;
+    if (option.optionKind === "forward" || option.movementIntent === "continue_current_path") return COORDINATE_GATES.DIG_DEEPER;
+    if (option.optionKind === "route" || option.movementIntent === "open_prepared_door") return COORDINATE_GATES.PREPARED_DOOR;
+    if (option.optionKind === "control" || option.movementIntent === "recenter") return COORDINATE_GATES.RETURN_FORK;
+    if (option.optionKind === "parallel" || option.movementIntent === "cross_to_related_room") return COORDINATE_GATES.CROSS_PATH_BRIDGE;
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return COORDINATE_GATES.DIAGNOSTIC_BOUNDARY;
+    if (target === TARGETS.SPLIT_INTERFACE) return COORDINATE_GATES.INTENTION;
+    return COORDINATE_GATES.BASE_POOL;
+  }
+
+  function inferPathFamily(target, intent, basePoolMode) {
+    if (basePoolMode === BASE_POOL_MODES.RETURN) return "return";
+    if (basePoolMode === BASE_POOL_MODES.PUBLIC_MAP) return "public";
+    if (basePoolMode === BASE_POOL_MODES.NARRATIVE_PATH) return "narrative";
+    if (basePoolMode === BASE_POOL_MODES.MISSION || basePoolMode === BASE_POOL_MODES.INNER_MISSION || basePoolMode === BASE_POOL_MODES.COMMUNITY_MISSION || basePoolMode === BASE_POOL_MODES.COLLABORATION_MISSION) return "mission";
+    if (basePoolMode === BASE_POOL_MODES.PRACTICAL) return "practical";
+    if (basePoolMode === BASE_POOL_MODES.PROOF) return "proof";
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return "diagnostic";
+    if (basePoolMode === BASE_POOL_MODES.CHARACTERS) return "character";
+    if (basePoolMode === BASE_POOL_MODES.FRONTIER) return "frontier";
+    if (basePoolMode === BASE_POOL_MODES.HEARTH) return "hearth";
+    if (basePoolMode === BASE_POOL_MODES.MIRRORLAND) return "mirrorland";
+    if (basePoolMode === BASE_POOL_MODES.CREATOR || basePoolMode === BASE_POOL_MODES.UNDERDOG) return "creator";
+
+    const clean = normalizeTarget(target);
+    const cleanIntent = normalizeIntent(intent);
+
+    if (clean === TARGETS.TRADITIONAL_WEBSITE || clean === TARGETS.TRADITIONAL_COMPASS || clean === TARGETS.PRODUCTS || clean === TARGETS.LAWS || cleanIntent === "traditionalWebsite") return "public";
+    if (clean === TARGETS.NARRATIVE_PATH || cleanIntent === "narrativePath") return "narrative";
+    if (clean === TARGETS.MISSION_OVERVIEW || cleanIntent === "mission") return "mission";
+    if (clean === TARGETS.PRACTICAL_RELEVANCE || cleanIntent === "practicalRelevance") return "practical";
+    if (clean === TARGETS.SCIENTIFIC_LAW || cleanIntent === "scientificLaw" || cleanIntent === "proof") return "proof";
+    if (clean === TARGETS.FRONTIER || cleanIntent === "frontier") return "frontier";
+    if (clean === TARGETS.HEARTH || cleanIntent === "hearth") return "hearth";
+    if (clean === TARGETS.MIRRORLAND || cleanIntent === "mirrorland") return "mirrorland";
+    if (clean === TARGETS.CHARACTERS || cleanIntent === "characters") return "character";
+    if (clean === TARGETS.SEAN || clean === TARGETS.UNDERDOG || cleanIntent === "sean" || cleanIntent === "underdog") return "creator";
+    if (clean === TARGETS.RECENTER || cleanIntent === "recenter") return "return";
+
+    return "center";
+  }
+
+  function inferDialectMode(target, intent, basePoolMode, illuminationMode) {
+    const path = inferPathFamily(target, intent, basePoolMode);
+
+    if (path === "return") return "return_guide";
+    if (path === "diagnostic") return "diagnostic_boundary_guide";
+    if (path === "public") return "public_guide";
+    if (path === "narrative") return "narrative_guide";
+    if (path === "mission") return "mission_guide";
+    if (path === "practical") return "practical_guide";
+    if (path === "proof") return "proof_guide";
+    if (path === "character") return "character_guide";
+    if (path === "creator") return "creator_guide";
+    if (path === "frontier") return "frontier_guide";
+    if (path === "hearth") return "hearth_guide";
+    if (path === "mirrorland") return "mirrorland_guide";
+
+    if (illuminationMode === ILLUMINATION_MODES.PROOF) return "proof_guide";
+    if (illuminationMode === ILLUMINATION_MODES.PRACTICAL) return "practical_guide";
+    if (illuminationMode === ILLUMINATION_MODES.NARRATIVE) return "narrative_guide";
+
+    return "estate_host";
+  }
+
+  function inferExpectation(gate) {
+    if (gate === COORDINATE_GATES.ARRIVAL) return "universal_entry";
+    if (gate === COORDINATE_GATES.SPLIT) return "two_path_orientation";
+    if (gate === COORDINATE_GATES.INTENTION) return "choice_help";
+    if (gate === COORDINATE_GATES.BASE_POOL) return "orientation_before_entry";
+    if (gate === COORDINATE_GATES.INTRIGUE_BRIDGE) return "intrigue_before_entry";
+    if (gate === COORDINATE_GATES.DIG_DEEPER) return "deeper_context";
+    if (gate === COORDINATE_GATES.PREPARED_DOOR) return "page_visit";
+    if (gate === COORDINATE_GATES.RETURN_FORK) return "safe_recenter";
+    if (gate === COORDINATE_GATES.CROSS_PATH_BRIDGE) return "bridge_context";
+    if (gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY) return "diagnostic_referral";
+    return "orientation_before_entry";
+  }
+
+  function stepForGate(gate) {
+    if (gate === COORDINATE_GATES.ARRIVAL) return 1;
+    if (gate === COORDINATE_GATES.SPLIT) return 2;
+    if (gate === COORDINATE_GATES.INTENTION) return 3;
+    if (gate === COORDINATE_GATES.BASE_POOL) return 5;
+    if (gate === COORDINATE_GATES.INTRIGUE_BRIDGE) return 8;
+    if (gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY) return 8;
+    if (gate === COORDINATE_GATES.DIG_DEEPER) return 13;
+    if (gate === COORDINATE_GATES.PREPARED_DOOR) return 21;
+    if (gate === COORDINATE_GATES.RETURN_FORK) return 34;
+    if (gate === COORDINATE_GATES.CROSS_PATH_BRIDGE) return 55;
+    return 5;
+  }
+
+  function priorStepForGate(gate) {
+    const step = stepForGate(gate);
+    if (step >= 55) return 5;
+    if (step >= 34) return 5;
+    if (step >= 21) return 5;
+    if (step >= 13) return 5;
+    if (step >= 8) return 5;
+    if (step >= 5) return 3;
+    if (step >= 3) return 2;
+    if (step >= 2) return 1;
+    return 0;
+  }
+
+  function nextForGate(gate, path) {
+    if (gate === COORDINATE_GATES.ARRIVAL) return ["choose_start", "public_map", "practical", "narrative_path", "mission", "proof"];
+    if (gate === COORDINATE_GATES.INTENTION) return ["public_map", "practical", "narrative_path", "mission", "proof"];
+    if (gate === COORDINATE_GATES.PREPARED_DOOR) return ["return"];
+    if (gate === COORDINATE_GATES.RETURN_FORK) return ["guided_chooser", "public_map", "practical", "narrative_path", "mission", "proof"];
+    if (gate === COORDINATE_GATES.CROSS_PATH_BRIDGE) return ["base_pool", "dig_deeper", "open_page", "return"];
+    if (gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY) return ["open_diagnostic", "character_mirror", "narrative_bridge", "return"];
+
+    if (path === "public") return ["dig_deeper", "open_page", "cross_path_bridge", "return"];
+    if (path === "narrative") return ["dig_deeper", "open_page", "mirrorland_bridge", "character_bridge", "return"];
+    if (path === "mission") return ["inner_mission", "community_mission", "collaboration_mission", "practical_bridge", "return"];
+    if (path === "practical") return ["dig_deeper", "open_page", "proof_bridge", "frontier_bridge", "return"];
+    if (path === "proof") return ["dig_deeper", "evidence", "measure", "limits", "open_page", "return"];
+    if (path === "frontier") return ["energy", "water", "waste", "closed_loop", "infrastructure", "proof_bridge", "return"];
+    if (path === "hearth") return ["hearth_construct", "hearth_frontier", "hearth_law", "open_page", "return"];
+    if (path === "mirrorland") return ["dig_deeper", "hearth", "characters", "audralia", "h_earth", "zionts", "return"];
+    if (path === "character") return ["character_first", "relationships", "story_pressure", "character_mirror", "return"];
+    if (path === "creator") return ["underdog", "nine_summits", "products", "public_map", "return"];
+
+    return ["dig_deeper", "open_page", "return"];
+  }
+
+  function isNoRepeatGate(gate) {
+    return gate === COORDINATE_GATES.DIG_DEEPER ||
+      gate === COORDINATE_GATES.PREPARED_DOOR ||
+      gate === COORDINATE_GATES.RETURN_FORK ||
+      gate === COORDINATE_GATES.CROSS_PATH_BRIDGE ||
+      gate === COORDINATE_GATES.DIAGNOSTIC_BOUNDARY;
+  }
+
+  function normalizeBasePoolKey(mode) {
+    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY) return "diagnosticBoundary";
+    if (mode === BASE_POOL_MODES.CHARACTER_MIRROR) return "characterMirror";
+    return mode;
+  }
+
   function dedupeOptions(options) {
     const seen = new Set();
     const result = [];
@@ -1452,6 +2094,11 @@
     });
 
     return result;
+  }
+
+  function safeNumber(value, fallback) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
   }
 
   function safeText(value) {
@@ -1471,6 +2118,7 @@
     entryStackModes: ENTRY_STACK_MODES,
     basePoolModes: BASE_POOL_MODES,
     illuminationModes: ILLUMINATION_MODES,
+    coordinateGates: COORDINATE_GATES,
 
     splitInterfaceCopy: SPLIT_INTERFACE_COPY,
     basePoolCopy: BASE_POOL_COPY,
@@ -1502,6 +2150,10 @@
     inferEntryStackMode,
     buildChoiceClosure,
 
+    normalizeCoordinate,
+    buildFallbackCoordinate,
+    buildOptionCoordinate,
+
     sanitizePublicText,
     rewritePromptLabel,
     shouldUseTrainingWheels,
@@ -1524,7 +2176,9 @@
         entryStackCompatible: true,
         basePoolCompatible: true,
         illuminationCompatible: true,
-        choiceClosureCompatible: true
+        choiceClosureCompatible: true,
+        coordinateLanguageCompatible: true,
+        noRepeatCompatible: true
       }
     }));
   }

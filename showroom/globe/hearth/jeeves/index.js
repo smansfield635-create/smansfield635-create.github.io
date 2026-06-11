@@ -1,18 +1,19 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_EXPRESSION_FRAME_HOST_SCOPE_TRACK_TNT_v22
+// HEARTH_JEEVES_FRONTBRAIN_TRANSITORY_ENTRY_GATE_API_ANCHOR_TIMING_PRESERVED_PUBLIC_LANGUAGE_TNT_v23
 // Full-file replacement.
 // Browser-side only.
 // Center / Frontbrain runtime.
 // Owns visible Jeeves state, button behavior, house-listening state, tap-to-rush,
-// slow reveal pacing, API enrichment calls, local fallback, route handoff rendering,
-// Expression frame-hosting, and final route authority.
-// Does not own secure model bridge, deep canon storage, moderation, or final public voice canon.
+// slow reveal pacing, API enrichment calls, local fallback, prepared-door rendering,
+// transitory entry-gate hosting, fresh-start orientation, and final route authority.
+// Does not own secure model bridge, deep canon storage, moderation, Brain depth,
+// or permanent public voice canon.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_EXPRESSION_FRAME_HOST_SCOPE_TRACK_TNT_v22";
-  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21";
+  var CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_TRANSITORY_ENTRY_GATE_API_ANCHOR_TIMING_PRESERVED_PUBLIC_LANGUAGE_TNT_v23";
+  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_EXPRESSION_FRAME_HOST_SCOPE_TRACK_TNT_v22";
 
   var ROUTE = "/showroom/globe/hearth/jeeves/";
   var DEFAULT_BRAIN_ENDPOINT = "/api/jeeves.js";
@@ -59,10 +60,58 @@
     "Launch"
   ];
 
+  var ENTRY_GATE_TARGETS = {
+    intro: true,
+    askFirst: true,
+    whereToStart: true,
+    recenterNode: true,
+    loopRecovery: true,
+    cleanDoor: true,
+    switchTopics: true,
+    sharpQuestion: true,
+    returnFork: true,
+    restartFork: true,
+    priorTopicReturnPath: true,
+    originReturnPath: true
+  };
+
+  var PUBLIC_LANGUAGE_REPLACEMENTS = [
+    { pattern: /\bGuided House Handoffs\b/gi, value: "Prepared Doors" },
+    { pattern: /\bHandoffs\b/g, value: "Prepared Doors" },
+    { pattern: /\bhandoffs\b/g, value: "prepared doors" },
+    { pattern: /\bHandoff\b/g, value: "Prepared Door" },
+    { pattern: /\bhandoff\b/g, value: "prepared door" },
+    { pattern: /\bscope\b/gi, value: "frame" },
+    { pattern: /\broute movement\b/gi, value: "guided movement" },
+    { pattern: /\bsystem lanes\b/gi, value: "system paths" },
+    { pattern: /\blanes\b/gi, value: "paths" },
+    { pattern: /\blane\b/gi, value: "path" },
+    { pattern: /\bmenu\b/gi, value: "flat list" },
+    { pattern: /\bvisitor\b/gi, value: "you" },
+    { pattern: /\bpage\b/gi, value: "chamber" },
+    { pattern: /\blocal\b/gi, value: "close at hand" },
+    { pattern: /\bAPI\b/g, value: "deeper answer path" },
+    { pattern: /\bDOM\b/g, value: "visible interface" },
+    { pattern: /\bbrowser\b/gi, value: "visible side" },
+    { pattern: /\bserver\b/gi, value: "deeper side" },
+    { pattern: /\bserver-side\b/gi, value: "deeper house layer" },
+    { pattern: /\bfrontbrain\b/gi, value: "visible side" },
+    { pattern: /\bbackbrain\b/gi, value: "deeper side" },
+    { pattern: /\bbackend\b/gi, value: "deeper side" },
+    { pattern: /\bfrontend\b/gi, value: "visible side" },
+    { pattern: /\bpayload\b/gi, value: "answer" },
+    { pattern: /\bcontract\b/gi, value: "governing mark" },
+    { pattern: /\bexpression engine\b/gi, value: "entry voice" },
+    { pattern: /\bexpression payload\b/gi, value: "entry answer" },
+    { pattern: /\broute lane\b/gi, value: "path" },
+    { pattern: /\bscope lane\b/gi, value: "path" },
+    { pattern: /\bregistry\b/gi, value: "guide" }
+  ];
+
   var META_LANGUAGE_REPLACEMENTS = [
     {
       pattern: /I know the estate by its blueprint\.\s*I do not pretend to be stationed inside every page at once\.\s*For now, this is my live room\./gi,
-      value: "From Hearth Mission Control, I can help you define the next question, complete the scope in front of you, or prepare the right handoff."
+      value: "From Hearth Mission Control, I can help you define the next question, complete the part of the picture in front of you, or prepare the right door."
     },
     {
       pattern: /I do not pretend to be stationed inside every page at once\./gi,
@@ -86,7 +135,15 @@
     },
     {
       pattern: /without pretending the visitor has already crossed into that deeper place/gi,
-      value: "without forcing the visitor across the threshold too early"
+      value: "without forcing you across the threshold too early"
+    },
+    {
+      pattern: /mounted inside every page/gi,
+      value: "stationed beyond this chamber"
+    },
+    {
+      pattern: /live room/gi,
+      value: "present chamber"
     }
   ];
 
@@ -152,7 +209,7 @@
     frontierShimmer: "Open Shimmer",
     frontierTrajectory: "Open Trajectory",
     frontierVision: "Open Vision",
-    characters: "Open the Characters Page",
+    characters: "Open the Characters Hall",
     controlRoom: "Open the Control Room",
     nineSummits: "Open Nine Summits",
     aboutUnderdog: "Open This Underdog"
@@ -167,8 +224,7 @@
     atriumPath: "Frame the South Gate threshold.",
     atlasPath: "Reveal the Mirrorland map logic.",
     charactersPath: "Begin the Character path.",
-    characterIdentityPath: "Frame the Character system.",
-    characterRolesPath: "Reveal the Character role map.",
+    characterIdentityPath: "Reveal the Character role map.",
     compassPath: "Orient the first path.",
     whereToStart: "Orient the first path.",
     siteGuidePath: "Frame how the rooms relate.",
@@ -299,7 +355,7 @@
       roleName: "Manor Interface",
       pressureName: "sequence",
       pressure: "Jeeves carries the pressure of sequence: too much truth breaks the path, and too little sends the visitor into the wrong room.",
-      oneLine: "Jeeves sequences truth so the visitor can move without losing the estate’s logic."
+      oneLine: "Jeeves sequences truth so you can move without losing the estate’s logic."
     },
     characterRemoteTeamPath: {
       name: "Remote Team",
@@ -311,17 +367,6 @@
     }
   };
 
-  var CHARACTER_ROLE_ORDER = [
-    "Sanctuary Builder",
-    "Earth-Side Originator",
-    "Field Navigator",
-    "Water Anchor",
-    "Signal Bearer",
-    "Boundary Keeper",
-    "Manor Interface",
-    "Distributed Response Unit"
-  ];
-
   var LOCAL_NODES = {
     intro: {
       roomId: "hearthMissionControl",
@@ -329,7 +374,7 @@
         "Welcome. I’m Jeeves.",
         "I am stationed in Hearth Mission Control — the window within the window.",
         "Hearth gives us the control view into the larger estate path.",
-        "From here, I can help you define the next question, complete the scope in front of you, or prepare the right handoff."
+        "From here, I can help you define the next question, complete the part of the picture in front of you, or prepare the right door."
       ],
       options: [
         convo("Frame Hearth Mission Control.", "hearthPath"),
@@ -358,12 +403,12 @@
     hearthPath: {
       beats: [
         "Hearth is Mission Control — the window within the window.",
-        "Mirrorland is the larger future-facing field. Hearth is the inner control view where the estate path can be oriented before a visitor moves deeper.",
-        "Its role is coordination: define the question, complete the current scope, and prepare the right handoff when the next door is earned."
+        "Mirrorland is the larger future-facing field. Hearth is the inner control view where the estate path can be oriented before you move deeper.",
+        "Its role is coordination: define the question, complete the current frame, and prepare the right door when the next door is earned."
       ],
       options: [
         convo("Explain the window within the window.", "hearthConstructPath"),
-        convo("Show what Hearth coordinates.", "hearthFacilityPath"),
+        convo("Clarify Hearth as Mission Control.", "hearthFacilityPath"),
         convo("Show why Hearth is near Frontier.", "hearthFrontierPath"),
         convo("Show why Hearth answers to proof.", "hearthLawPath")
       ],
@@ -372,8 +417,8 @@
     hearthFacilityPath: {
       beats: [
         "Hearth coordinates the estate’s working view.",
-        "It does not flatten the house into one menu. It keeps the visitor’s current scope, the next question, and the next possible handoff in order.",
-        "That is why Hearth sits between world, proof, systems, and route movement."
+        "It does not flatten the house into one flat list. It keeps the current question, the next question, and the next possible door in order.",
+        "That is why Hearth sits between world, proof, systems, and guided movement."
       ],
       options: [
         convo("Explain the window within the window.", "hearthConstructPath"),
@@ -385,8 +430,8 @@
     },
     hearthConstructPath: {
       beats: [
-        "The window within the window means the page is local, but the view is larger than the page.",
-        "Hearth is the control chamber inside the estate. It looks through portal logic toward future potential without forcing the visitor across the threshold too early.",
+        "The window within the window means this chamber is close at hand, but the view is larger than the chamber.",
+        "Hearth is the control chamber inside the estate. It looks through portal logic toward future potential without forcing you across the threshold too early.",
         "That lets Jeeves sequence the room before opening the next door."
       ],
       options: [
@@ -400,7 +445,7 @@
       beats: [
         "Mirrorland is the larger future-facing window.",
         "It is where possible futures become visible before they become final.",
-        "The first scope is the world pressure: consequence, survival, and possibility.",
+        "The first frame is the world pressure: consequence, survival, and possibility.",
         "ZIONTS is consequence. H-Earth is survival. Audralia is possibility."
       ],
       options: [
@@ -414,8 +459,8 @@
     atlasPath: {
       beats: [
         "Atlas Study is the map room for the world-facing side of the estate.",
-        "It organizes the visitor’s first scope before deeper movement begins.",
-        "The map does not ask for a page first. It clarifies whether the visitor is looking at consequence, survival, possibility, or coordination."
+        "It organizes the first frame before deeper movement begins.",
+        "The map does not ask you to choose a door first. It clarifies whether you are looking at consequence, survival, possibility, or coordination."
       ],
       options: [
         convo("Frame the consequence road.", "ziontsPath"),
@@ -432,7 +477,7 @@
         "Once those roles are visible, the named Characters can step into frame."
       ],
       options: [
-        convo("Reveal the Character role map.", "characterRolesPath"),
+        convo("Reveal the Character role map.", "characterIdentityPath"),
         convo("Show why the Characters matter.", "characterStoryPressurePath"),
         convo("Begin the first Character path.", "characterFirstPath"),
         convo("Prepare the Character Archetype Mirror.", "characterArchetypeMirrorPath")
@@ -440,19 +485,6 @@
       handoffs: ["characters", "mirrorland"]
     },
     characterIdentityPath: {
-      beats: [
-        "The Characters are not introduced first as names.",
-        "They are introduced first as functions in the story: each one carries a role that answers a specific force acting on Mirrorland.",
-        "The name becomes meaningful only after the role has shape."
-      ],
-      options: [
-        convo("Reveal the Character role map.", "characterRolesPath"),
-        convo("Show why the Characters matter.", "characterStoryPressurePath"),
-        convo("Begin the first Character path.", "characterFirstPath")
-      ],
-      handoffs: ["characters"]
-    },
-    characterRolesPath: {
       beats: [
         "The role map comes first.",
         "A Sanctuary Builder protects shelter. An Earth-Side Originator carries the cost of the crossing. A Field Navigator reads danger before consensus forms.",
@@ -483,7 +515,7 @@
       beats: [
         "The Characters connect through the forces their roles answer.",
         "Protection needs origin to explain how the danger began. Origin needs route to decide where movement is still possible. Route needs survival to keep the body in the story.",
-        "Signal makes the future visible. Boundary prevents false restoration. Sequence keeps the visitor from entering the wrong door. Distribution carries help beyond the manor."
+        "Signal makes the future visible. Boundary prevents false restoration. Sequence keeps you from entering the wrong door. Distribution carries help beyond the manor."
       ],
       options: [
         convo("Reveal the conflict layer.", "characterTensionsPath"),
@@ -497,7 +529,7 @@
       beats: [
         "The conflict layer is not simple opposition.",
         "It is protection against exposure, origin against consequence, route against uncertainty, survival against exhaustion, signal against invisibility, boundary against false repair, and sequence against confusion.",
-        "That gives the Characters narrative purpose before the visitor meets them one by one."
+        "That gives the Characters narrative purpose before you meet them one by one."
       ],
       options: [
         convo("Reveal the Character relationship layer.", "characterRelationshipsPath"),
@@ -522,11 +554,11 @@
     characterStoryPressurePath: {
       beats: [
         "The Characters matter because world logic alone is too distant.",
-        "A future can be mapped, tested, and measured, but the visitor needs role functions to understand who carries what consequence.",
+        "A future can be mapped, tested, and measured, but you need role functions to understand who carries what consequence.",
         "That is why the role map appears before the named profiles."
       ],
       options: [
-        convo("Reveal the Character role map.", "characterRolesPath"),
+        convo("Reveal the Character role map.", "characterIdentityPath"),
         convo("Begin the first Character path.", "characterFirstPath"),
         convo("Prepare the Character Archetype Mirror.", "characterArchetypeMirrorPath")
       ],
@@ -535,12 +567,12 @@
     characterArchetypeMirrorPath: {
       beats: [
         "The Character Archetype Mirror is a reflection layer.",
-        "It should appear after the visitor understands that the Characters are role functions, not just names.",
+        "It should appear after you understand that the Characters are role functions, not just names.",
         "When it is earned, it asks which Character Archetype your behavior follows under pressure."
       ],
       options: [
         convo("Start the first mirror question.", "characterArchetypeQuestionOne"),
-        convo("Reveal the Character role map.", "characterRolesPath"),
+        convo("Reveal the Character role map.", "characterIdentityPath"),
         convo("Frame the self-reflection room.", "diagnosticPath")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
@@ -566,7 +598,7 @@
       options: [
         convo("Continue to the third mirror question.", "characterArchetypeQuestionThree"),
         convo("Frame the self-reflection room.", "diagnosticPath"),
-        convo("Reveal the Character role map.", "characterRolesPath")
+        convo("Reveal the Character role map.", "characterIdentityPath")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
     },
@@ -578,7 +610,7 @@
       options: [
         convo("Reveal the reflective match.", "characterArchetypeResult"),
         convo("Frame the self-reflection room.", "diagnosticPath"),
-        convo("Reveal the Character role map.", "characterRolesPath")
+        convo("Reveal the Character role map.", "characterIdentityPath")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
     },
@@ -590,7 +622,7 @@
       ],
       options: [
         convo("Frame the self-reflection room.", "diagnosticPath"),
-        convo("Reveal the Character role map.", "characterRolesPath"),
+        convo("Reveal the Character role map.", "characterIdentityPath"),
         convo("Re-center me.", "recenterNode", "control")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
@@ -640,7 +672,7 @@
       beats: [
         "Frontier begins with system demand.",
         "The future needs power, water, waste recovery, closed-loop feedback, infrastructure, lattice structure, urban response, manuals, shimmer logic, trajectory, and vision.",
-        "The system lanes appear before the visitor chooses a specific test yard."
+        "The system paths appear before you choose a specific test yard."
       ],
       options: [
         convo("Reveal the future systems.", "frontierSystemsPath"),
@@ -681,7 +713,7 @@
     underdogPath: {
       beats: [
         "This Underdog is not Sean alone.",
-        "It is the inner voice in the visitor that carried pressure before it had language, direction, or use.",
+        "It is the inner voice in you that carried pressure before it had language, direction, or use.",
         "The underdog path turns survival into orientation, pressure into voice, and struggle into growth."
       ],
       options: [
@@ -734,7 +766,7 @@
     returnFork: {
       beats: [
         "We are back at the First Fork.",
-        "Choose the next scope: proof, story, systems, self-reflection, or source."
+        "Choose the next frame: proof, story, systems, self-reflection, or source."
       ],
       options: [
         convo("Frame the proof path.", "lawsPath"),
@@ -924,9 +956,9 @@
     els.root.setAttribute("data-current-scope-stage", state.currentScopeStage);
     els.root.setAttribute("data-jeeves-typing", state.isTyping ? "true" : "false");
     els.root.setAttribute("data-conversation-route-separation", "active");
-    els.root.setAttribute("data-language-separation", "conversation-vs-handoff");
+    els.root.setAttribute("data-language-separation", "conversation-vs-door");
     els.root.setAttribute("data-api-enrichment", "available");
-    els.root.setAttribute("data-expression-frame-host", "active");
+    els.root.setAttribute("data-expression-entry-gate", "training-wheels-only");
   }
 
   function bindEvents() {
@@ -1115,12 +1147,12 @@
       body: JSON.stringify(payload)
     }).then(function (response) {
       if (!response.ok) {
-        throw new Error("Jeeves backbrain returned " + response.status);
+        throw new Error("Jeeves deeper answer path returned " + response.status);
       }
       return response.json();
     }).then(function (data) {
       if (!data || typeof data !== "object") {
-        throw new Error("Jeeves backbrain returned no object.");
+        throw new Error("Jeeves deeper answer path returned no object.");
       }
 
       state.apiReady = true;
@@ -1133,7 +1165,7 @@
     return {
       message: partial.visitorText || "",
       visitorText: partial.visitorText || "",
-      selectedTarget: partial.selectedTarget || "",
+      selectedTarget: normalizeTarget(partial.selectedTarget || ""),
       selectedLabel: partial.selectedLabel || "",
       requestMode: partial.requestMode || "freeform",
 
@@ -1292,7 +1324,7 @@
     state.currentScopeStage = inferScopeStage(clean);
 
     if (clean === "charactersPath") state.characterOverviewDone = true;
-    if (clean === "characterRolesPath") state.characterRolesRevealed = true;
+    if (clean === "characterIdentityPath") state.characterRolesRevealed = true;
     if (CHARACTER_TARGETS[clean]) {
       state.characterProfileViews[clean] = true;
       state.characterProfileViewCount = Object.keys(state.characterProfileViews).length;
@@ -1390,6 +1422,14 @@
     var expression = getExpression();
     var fallbackFrame = normalizeConversationFrame(frame);
 
+    if (isBrainLedFrame(fallbackFrame)) {
+      return finalizeBrainFrame(fallbackFrame);
+    }
+
+    if (!shouldUseExpressionGate(fallbackFrame)) {
+      return finalizeNonGateFrame(fallbackFrame);
+    }
+
     if (!expression || typeof expression.shapeConversationFrame !== "function") {
       return fallbackScopeFrame(fallbackFrame);
     }
@@ -1406,15 +1446,82 @@
     }
   }
 
+  function isBrainLedFrame(frame) {
+    var clean = normalizeConversationFrame(frame);
+    return clean.requestMode === "node_enrichment" &&
+      !!clean.selectedTarget &&
+      !isEntryGateTarget(clean.selectedTarget);
+  }
+
+  function shouldUseExpressionGate(frame) {
+    var clean = normalizeConversationFrame(frame);
+    var target = normalizeTarget(clean.selectedTarget || clean.currentNode || "");
+
+    if (isEntryGateTarget(target)) return true;
+
+    if (clean.response && clean.response.needsRecenter) return true;
+
+    if (clean.requestMode === "freeform" && !clean.selectedTarget) {
+      return clean.currentTopic === "orientation" ||
+        clean.currentScopeStage === "orientation" ||
+        clean.currentNode === "intro";
+    }
+
+    if (clean.source === "local" && clean.currentScopeStage === "orientation") {
+      return true;
+    }
+
+    return false;
+  }
+
+  function shouldUseExpressionTextSanitizer() {
+    return isEntryGateTarget(state.currentNode) ||
+      state.currentScopeStage === "orientation" ||
+      state.currentTopic === "orientation";
+  }
+
+  function shouldUseExpressionOptionGate() {
+    return isEntryGateTarget(state.currentNode) ||
+      state.currentScopeStage === "orientation";
+  }
+
+  function shouldUseExpressionHandoffGate() {
+    return isEntryGateTarget(state.currentNode) ||
+      state.currentScopeStage === "orientation";
+  }
+
+  function isEntryGateTarget(target) {
+    return !!ENTRY_GATE_TARGETS[normalizeTarget(target)];
+  }
+
   function fallbackScopeFrame(frame) {
     var cleanFrame = normalizeConversationFrame(frame);
 
-    if (cleanFrame.currentTopic === "characters") {
+    if (shouldApplyLocalEntryStaging(cleanFrame) && cleanFrame.currentTopic === "characters") {
       cleanFrame.options = stageCharacterOptions(cleanFrame.options, cleanFrame);
     }
 
     cleanFrame.options = compressOptions(cleanFrame.options, MAX_VISIBLE_OPTIONS);
     return cleanFrame;
+  }
+
+  function finalizeBrainFrame(frame) {
+    var cleanFrame = normalizeConversationFrame(frame);
+    cleanFrame.options = compressOptions(cleanFrame.options, MAX_VISIBLE_OPTIONS);
+    return cleanFrame;
+  }
+
+  function finalizeNonGateFrame(frame) {
+    var cleanFrame = normalizeConversationFrame(frame);
+    cleanFrame.options = compressOptions(cleanFrame.options, MAX_VISIBLE_OPTIONS);
+    return cleanFrame;
+  }
+
+  function shouldApplyLocalEntryStaging(frame) {
+    var clean = normalizeConversationFrame(frame);
+    if (clean.source !== "local" && clean.requestMode !== "local_fallback") return false;
+    if (isEntryGateTarget(clean.selectedTarget || clean.currentNode)) return false;
+    return true;
   }
 
   function normalizeConversationFrame(frame) {
@@ -1473,7 +1580,7 @@
 
   function buildExpressionContext(frame) {
     return {
-      panel: "frame",
+      panel: "entry_gate",
       contract: CONTRACT,
       currentNode: frame.currentNode,
       currentTopic: frame.currentTopic,
@@ -1495,7 +1602,8 @@
       fibonacciStage: frame.fibonacciStage,
       narrativeFrame: frame.narrativeFrame,
       characterState: frame.characterState,
-      source: frame.source
+      source: frame.source,
+      expressionMode: "training_wheels_only"
     };
   }
 
@@ -1514,24 +1622,24 @@
           character.oneLine,
           character.pressure,
           hasDiscussed
-            ? "The next scope is connection: how this role changes the rest of the Character field."
-            : "The first scope is the role. The deeper scope is how this role connects to the others."
+            ? "The next frame is connection: how this role changes the rest of the Character field."
+            : "The first frame is the role. The deeper frame is how this role connects to the others."
         ],
         options: [
           convo("Reveal the Character relationship layer.", "characterRelationshipsPath"),
           convo("Prepare the Character Archetype Mirror.", "characterArchetypeMirrorPath"),
-          convo("Reveal the Character role map.", "characterRolesPath")
+          convo("Reveal the Character role map.", "characterIdentityPath")
         ],
         handoffs: ["characters", "mirrorland"]
       };
     }
 
-    if (target.indexOf("frontier") === 0) {
+    if (clean.indexOf("frontier") === 0) {
       return {
         beats: [
-          "This is one of the Frontier system lanes.",
+          "This is one of the Frontier system paths.",
           "Frontier tests future-facing systems without treating speculation as proof.",
-          "The next scope is function first, then test, then proof."
+          "The next frame is function first, then test, then proof."
         ],
         options: [
           convo("Reveal the future systems.", "frontierSystemsPath"),
@@ -1542,7 +1650,7 @@
       };
     }
 
-    if (target.indexOf("scientificLaw") === 0) {
+    if (clean.indexOf("scientificLaw") === 0) {
       return LOCAL_NODES.scientificLawPath;
     }
 
@@ -1672,7 +1780,7 @@
 
     var title = document.createElement("div");
     title.className = "jeeves-panel-title";
-    title.textContent = "Guided House Handoffs";
+    title.textContent = "Prepared Doors";
     els.handoffPanel.appendChild(title);
 
     normalized.forEach(function (handoff, index) {
@@ -1767,11 +1875,13 @@
 
   function shapeConversationOptions(options) {
     var expression = getExpression();
+
+    if (!shouldUseExpressionOptionGate()) return options;
     if (!expression || typeof expression.shapeOptions !== "function") return options;
 
     try {
       var shaped = expression.shapeOptions(options.slice(), {
-        panel: "conversation",
+        panel: "entry_gate_options",
         contract: CONTRACT,
         currentNode: state.currentNode,
         currentTopic: state.currentTopic,
@@ -1789,6 +1899,7 @@
         fibonacciDepth: state.lastFibonacciDepth,
         fibonacciStage: state.lastFibonacciStage,
         narrativeFrame: state.lastBackbrainFrame,
+        expressionMode: "training_wheels_only",
         characterState: {
           overviewDone: state.characterOverviewDone,
           rolesRevealed: state.characterRolesRevealed,
@@ -1823,16 +1934,17 @@
     return handoffs.map(function (handoff) {
       var label = handoffLabels[handoff.routeId] || handoff.label || LOCAL_HANDOFF_LABELS[handoff.routeId] || handoff.routeId;
 
-      if (expression && typeof expression.shapeRouteLabel === "function") {
+      if (shouldUseExpressionHandoffGate() && expression && typeof expression.shapeRouteLabel === "function") {
         try {
           label = expression.shapeRouteLabel(label, {
             routeId: handoff.routeId,
             href: handoff.href,
-            panel: "handoff",
+            panel: "entry_gate_door",
             contract: CONTRACT,
             currentNode: state.currentNode,
             currentTopic: state.currentTopic,
-            currentScopeStage: state.currentScopeStage
+            currentScopeStage: state.currentScopeStage,
+            expressionMode: "training_wheels_only"
           }) || label;
         } catch (_error) {
           label = handoff.label;
@@ -1851,13 +1963,13 @@
 
   function stageCharacterOptions(options, frame) {
     var cleanOptions = normalizeConversationOptions(options);
-    var target = frame.selectedTarget || frame.currentNode || "";
+    var target = normalizeTarget(frame.selectedTarget || frame.currentNode || "");
     var profileCount = frame.characterState && Number(frame.characterState.profileViewCount || 0);
     var rolesRevealed = !!(frame.characterState && frame.characterState.rolesRevealed);
 
     if (target === "charactersPath" || frame.currentNode === "charactersPath") {
       return [
-        convo("Reveal the Character role map.", "characterRolesPath"),
+        convo("Reveal the Character role map.", "characterIdentityPath"),
         convo("Show why the Characters matter.", "characterStoryPressurePath"),
         convo("Begin the first Character path.", "characterFirstPath")
       ];
@@ -1865,12 +1977,12 @@
 
     if (!rolesRevealed && frame.currentTopic === "characters") {
       return [
-        convo("Reveal the Character role map.", "characterRolesPath"),
+        convo("Reveal the Character role map.", "characterIdentityPath"),
         convo("Show why the Characters matter.", "characterStoryPressurePath")
       ];
     }
 
-    if (target === "characterRolesPath" || frame.currentNode === "characterRolesPath") {
+    if (target === "characterIdentityPath" || frame.currentNode === "characterIdentityPath") {
       return [
         convo("Begin the first Character path.", "characterFirstPath"),
         convo("Reveal the Character relationship layer.", "characterRelationshipsPath"),
@@ -1973,8 +2085,9 @@
       characterMirrorQuestionThree: "characterArchetypeQuestionThree",
       characterMirrorResult: "characterArchetypeResult",
       characterFactionsPath: "characterRelationshipsPath",
-      characterRolePath: "characterRolesPath",
-      characterRoleMapPath: "characterRolesPath",
+      characterRolePath: "characterIdentityPath",
+      characterRoleMapPath: "characterIdentityPath",
+      characterRolesPath: "characterIdentityPath",
       bookPath: "nineSummitsBookPath",
       missionControlPath: "hearthPath",
       hearthMissionControlPath: "hearthPath",
@@ -2023,7 +2136,6 @@
       "atlasPath",
       "charactersPath",
       "characterIdentityPath",
-      "characterRolesPath",
       "hearthPath",
       "hearthFacilityPath",
       "hearthConstructPath",
@@ -2080,7 +2192,7 @@
     var clean = normalizeTarget(target);
 
     if (clean === "intro" || clean === "whereToStart" || clean === "returnFork" || clean === "recenterNode") return "orientation";
-    if (/RolesPath$/.test(clean) || clean === "characterIdentityPath" || clean === "frontierSystemsPath" || clean === "atlasPath") return "structure";
+    if (clean === "characterIdentityPath" || clean === "frontierSystemsPath" || clean === "atlasPath") return "structure";
     if (clean === "characterFirstPath" || clean === "cleanDoor") return "entry";
     if (CHARACTER_TARGETS[clean] || /EnergyPath$|WaterPath$|WastePath$|TheoryPath$|EvidencePath$|MeasurePath$|LimitsPath$/.test(clean)) return "profile";
     if (/RelationshipsPath$|TensionsPath$|MotivesPath$|StoryPressurePath$/.test(clean)) return "relationship";
@@ -2113,7 +2225,7 @@
     state.currentScopeStage = inferScopeStage(target);
 
     if (target === "charactersPath") state.characterOverviewDone = true;
-    if (target === "characterRolesPath") state.characterRolesRevealed = true;
+    if (target === "characterIdentityPath") state.characterRolesRevealed = true;
     if (target === "characterRelationshipsPath") state.characterRelationshipViews += 1;
     if (CHARACTER_TARGETS[target]) {
       state.characterProfileViews[target] = true;
@@ -2147,10 +2259,12 @@
     });
 
     state.selectedTargets.forEach(function (target) {
-      set[target] = true;
+      set[normalizeTarget(target)] = true;
     });
 
-    return Object.keys(set);
+    return Object.keys(set).map(normalizeTarget).filter(function (target, index, list) {
+      return target && list.indexOf(target) === index;
+    });
   }
 
   function collectAllowedRoutes() {
@@ -2249,10 +2363,14 @@
       value = value.replace(entry.pattern, entry.value);
     });
 
+    PUBLIC_LANGUAGE_REPLACEMENTS.forEach(function (entry) {
+      value = value.replace(entry.pattern, entry.value);
+    });
+
     value = value.replace(/\s+/g, " ").trim();
 
     var expression = getExpression();
-    if (expression && typeof expression.sanitizePublicText === "function") {
+    if (shouldUseExpressionTextSanitizer() && expression && typeof expression.sanitizePublicText === "function") {
       try {
         value = expression.sanitizePublicText(value, {
           contract: CONTRACT,
@@ -2262,7 +2380,8 @@
           currentRoomContext: CURRENT_ROOM_CONTEXT,
           currentRoomRole: CURRENT_ROOM_ROLE,
           currentRoomPremise: CURRENT_ROOM_PREMISE,
-          routeAuthority: ROUTE_AUTHORITY
+          routeAuthority: ROUTE_AUTHORITY,
+          expressionMode: "training_wheels_only"
         }) || value;
       } catch (_error) {}
     }
@@ -2315,12 +2434,13 @@
         });
       },
       enrich: function (target, label) {
+        var cleanTarget = normalizeTarget(target);
         return runEnrichedConversation({
-          target: target,
-          label: label || CONVERSATION_LABELS[target] || "Tell me more.",
+          target: cleanTarget,
+          label: label || CONVERSATION_LABELS[cleanTarget] || "Tell me more.",
           type: "conversation",
-          scopeLane: isNarrativeTarget(target) ? "narrative" : "objective",
-          scopeStage: inferScopeStage(target)
+          scopeLane: isNarrativeTarget(cleanTarget) ? "narrative" : "objective",
+          scopeStage: inferScopeStage(cleanTarget)
         });
       },
       recenter: function () {

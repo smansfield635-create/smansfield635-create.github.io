@@ -1,29 +1,38 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_HTML_TNT_v2 -->
+<!-- HEARTH_JEEVES_V21_MOUNT_COMPATIBLE_CENTER_SCREEN_SHELL_HTML_TNT_v3 -->
 <!-- Full-file replacement. -->
-<!-- Structure only. CSS and JS external. -->
-<!-- Owns: centered Jeeves screen shell, chat-thread DOM, visitor prompt area, guided handoff containers. -->
-<!-- Does not own: visual styling, conversation engine logic, Hearth globe chamber, Canvas Bishop, diagnostics authority, runtime restart, WebGL, final visual pass. -->
+<!-- Structure only. CSS, Expression, and Frontbrain JS external. -->
+<!-- Owns: v21-compatible visible Jeeves root, center-screen chat shell, transcript mount, conversation dock mount, route handoff dock mount, status mount, config contract, and asset loading order. -->
+<!-- Does not own: visual styling, conversation engine logic, API/backbrain logic, final Expression voice canon, Hearth globe chamber, Canvas Bishop, diagnostics authority, runtime restart, WebGL, or final visual pass. -->
 
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/hearth/jeeves/"
   data-page="hearth-jeeves-house-interface"
-  data-contract="HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_HTML_TNT_v2"
-  data-previous-contract="HEARTH_JEEVES_HOUSE_INTERFACE_FAQ_PATH_HTML_TNT_v1"
+  data-contract="HEARTH_JEEVES_V21_MOUNT_COMPATIBLE_CENTER_SCREEN_SHELL_HTML_TNT_v3"
+  data-previous-contract="HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_HTML_TNT_v2"
   data-registry-plane="19x19"
   data-extension-path="true"
   data-house-interface="jeeves"
   data-talk-to-the-house="true"
   data-center-screen-interface="true"
   data-chat-thread-interface="true"
+  data-hearth-mission-control="true"
+  data-window-within-window="true"
+  data-api-enriched-conversation="true"
+  data-backbrain-bridge="true"
+  data-expression-bridge="true"
+  data-frontbrain-v21="true"
+  data-css-v4="true"
   data-top-route-bubbles="false"
   data-route-handoffs-guided="true"
   data-conversation-fork-map="true"
   data-option-type-colors="true"
-  data-freeform-ai="false"
-  data-deterministic-conversation="true"
+  data-conversation-route-separation="true"
+  data-language-separation="conversation-vs-handoff"
+  data-freeform-ai="api-assisted"
+  data-deterministic-conversation="fallback-only"
   data-generated-image="false"
   data-graphic-box="false"
   data-webgl-claim="false"
@@ -33,24 +42,32 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Jeeves · Talk to the House</title>
+  <title>Jeeves · Hearth Mission Control</title>
   <meta
     name="description"
-    content="Speak with Jeeves, the Hearth house interface. Jeeves guides visitors through Hearth, Mirrorland, Audralia, Frontier, Characters, and the control room through a conversational forked path."
+    content="Speak with Jeeves from Hearth Mission Control, the window within the window. Jeeves guides visitors through Hearth, Mirrorland, Audralia, Frontier, Scientific Law, Characters, and guided house handoffs through a conversational path."
   >
 
   <link
     rel="stylesheet"
-    href="/showroom/globe/hearth/jeeves/index.css?v=HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_CSS_TNT_v2"
+    href="/showroom/globe/hearth/jeeves/index.css?v=HEARTH_JEEVES_FRONTBRAIN_V21_COMPATIBLE_VISIBLE_DOCKS_CSS_TNT_v4"
     data-jeeves-css="true"
-    data-jeeves-css-contract="HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_CSS_TNT_v2"
+    data-jeeves-css-contract="HEARTH_JEEVES_FRONTBRAIN_V21_COMPATIBLE_VISIBLE_DOCKS_CSS_TNT_v4"
   >
 
   <script
-    src="/showroom/globe/hearth/jeeves/index.js?v=HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_ENGINE_TNT_v2"
+    src="/assets/hearth/jeeves/jeeves.expression.js?v=HEARTH_JEEVES_EXPRESSION_NARRATIVE_BLUEPRINT_ORIENTATION_TNT_v2"
+    defer
+    data-jeeves-expression="true"
+    data-jeeves-expression-contract="HEARTH_JEEVES_EXPRESSION_NARRATIVE_BLUEPRINT_ORIENTATION_TNT_v2"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/jeeves/index.js?v=HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21"
     defer
     data-jeeves-js="true"
-    data-jeeves-js-contract="HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_ENGINE_TNT_v2"
+    data-jeeves-js-contract="HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21"
+    data-jeeves-api="/api/jeeves.js"
   ></script>
 </head>
 
@@ -58,17 +75,32 @@
   <a class="skip-link" href="#jeevesScreen">Skip to Jeeves</a>
 
   <main
-    id="jeevesMain"
-    class="jeeves-page"
+    id="hearthJeeves"
+    class="jeeves-page hearth-jeeves"
+    data-jeeves-root
     data-jeeves-page="true"
     data-jeeves-centered-page="true"
+    data-jeeves-host-page="hearthJeeves"
+    data-current-room-context="hearth"
+    data-current-room-role="mission_control"
+    data-current-room-premise="window_within_the_window"
+    data-jeeves-live-access="hearthJeeves"
+    data-jeeves-planned-live-access="compass"
+    data-jeeves-estate-knowledge="blueprint_reference"
+    data-route-authority="frontbrain_remains_final_authority"
+    data-house-listening="true"
+    data-jeeves-typing="false"
+    data-room-state="shell-ready"
+    data-frontbrain-contract="HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21"
+    data-css-contract="HEARTH_JEEVES_FRONTBRAIN_V21_COMPATIBLE_VISIBLE_DOCKS_CSS_TNT_v4"
+    data-api-contract="HEARTH_JEEVES_BACKBRAIN_NORTH_BUTTON_ENRICHMENT_MISSION_CONTROL_ROUTE_SEPARATION_TNT_v4"
     aria-label="Jeeves house interface"
   >
     <header class="jeeves-page-header" aria-label="Jeeves route header">
       <a class="jeeves-brand" href="/showroom/globe/hearth/" aria-label="Return to Hearth">
         <span class="jeeves-brand-mark" aria-hidden="true">J</span>
         <span class="jeeves-brand-copy">
-          <span>Hearth House Interface</span>
+          <span>Hearth Mission Control</span>
           <strong>Jeeves</strong>
         </span>
       </a>
@@ -84,7 +116,12 @@
       data-jeeves-screen-shell="true"
       aria-labelledby="jeevesTitle"
     >
-      <div class="jeeves-screen-glass" data-jeeves-screen-glass="true">
+      <div
+        id="jeevesRoot"
+        class="jeeves-screen-glass"
+        data-jeeves-screen-glass="true"
+        data-jeeves-screen-root="true"
+      >
         <div class="jeeves-screen-topline" aria-label="Jeeves screen status">
           <div class="jeeves-identity">
             <span class="jeeves-avatar" aria-hidden="true">J</span>
@@ -94,9 +131,14 @@
             </span>
           </div>
 
-          <div class="jeeves-status" data-jeeves-status="listening">
-            <span class="jeeves-status-light" aria-hidden="true"></span>
-            <span data-jeeves-status-text>House listening</span>
+          <div
+            class="jeeves-status"
+            data-jeeves-status
+            data-state="listening"
+            role="status"
+            aria-live="polite"
+          >
+            House listening
           </div>
         </div>
 
@@ -107,8 +149,9 @@
         >
           <div
             id="jeevesThread"
-            class="jeeves-thread"
+            class="jeeves-thread jeeves-transcript"
             data-jeeves-thread="true"
+            data-jeeves-transcript
             role="log"
             aria-live="polite"
             aria-relevant="additions"
@@ -119,9 +162,7 @@
               data-message-origin="system"
               data-seed-message="true"
             >
-              <p>
-                Jeeves is preparing the house interface.
-              </p>
+              <p>Jeeves is preparing Hearth Mission Control.</p>
             </article>
           </div>
 
@@ -137,36 +178,32 @@
         </section>
 
         <section
-          class="jeeves-prompt-dock"
+          id="jeevesConversationDock"
+          class="jeeves-prompt-dock jeeves-options"
           data-jeeves-prompt-dock="true"
+          data-jeeves-options
+          data-panel-kind="conversation"
+          data-option-zone="conversation"
           aria-label="Things to say to Jeeves"
         >
-          <div class="jeeves-prompt-dock-label">
-            <span data-jeeves-prompt-label>Choose what to say</span>
+          <div class="jeeves-panel-title">
+            Choose What To Say
           </div>
-
-          <div
-            class="jeeves-prompt-grid"
-            data-jeeves-prompt-grid="true"
-            data-option-zone="conversation"
-          ></div>
         </section>
 
         <section
-          class="jeeves-handoff-dock"
+          id="jeevesHandoffDock"
+          class="jeeves-handoff-dock jeeves-handoffs"
           data-jeeves-handoff-dock="true"
-          data-handoff-visible="false"
+          data-jeeves-handoffs
+          data-panel-kind="handoff"
+          data-option-zone="route"
           aria-label="Guided page handoffs from Jeeves"
+          hidden
         >
-          <div class="jeeves-handoff-dock-label">
-            <span>Guided house handoffs</span>
+          <div class="jeeves-panel-title">
+            Guided House Handoffs
           </div>
-
-          <div
-            class="jeeves-handoff-grid"
-            data-jeeves-handoff-grid="true"
-            data-option-zone="route"
-          ></div>
         </section>
       </div>
     </section>
@@ -186,14 +223,14 @@
       <article class="jeeves-context-card" data-jeeves-context-card="forks">
         <span>Conversation Rule</span>
         <p>
-          Every thread leads somewhere: deeper into the topic, back to a prior question, or toward a guided page handoff.
+          Conversation choices continue the thread. Guided handoffs move you to another page.
         </p>
       </article>
 
       <article class="jeeves-context-card" data-jeeves-context-card="colors">
-        <span>Option Colors</span>
+        <span>Language Rule</span>
         <p>
-          Conversation choices stay visually distinct from page handoffs, so the visitor knows whether they are continuing the thread or leaving it.
+          Conversation choices ask Jeeves to explain. Handoffs use directive language when they open a route.
         </p>
       </article>
     </section>
@@ -219,27 +256,51 @@
 
     <script type="application/json" id="jeevesConversationConfig">
       {
-        "contract": "HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_HTML_TNT_v2",
-        "engineContract": "HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_ENGINE_TNT_v2",
-        "styleContract": "HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_CSS_TNT_v2",
+        "contract": "HEARTH_JEEVES_V21_MOUNT_COMPATIBLE_CENTER_SCREEN_SHELL_HTML_TNT_v3",
+        "previousContract": "HEARTH_JEEVES_CENTER_SCREEN_CHAT_THREAD_HTML_TNT_v2",
+        "engineContract": "HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21",
+        "styleContract": "HEARTH_JEEVES_FRONTBRAIN_V21_COMPATIBLE_VISIBLE_DOCKS_CSS_TNT_v4",
+        "apiContract": "HEARTH_JEEVES_BACKBRAIN_NORTH_BUTTON_ENRICHMENT_MISSION_CONTROL_ROUTE_SEPARATION_TNT_v4",
+        "expressionContract": "HEARTH_JEEVES_EXPRESSION_NARRATIVE_BLUEPRINT_ORIENTATION_TNT_v2",
         "route": "/showroom/globe/hearth/jeeves/",
         "hearthRoute": "/showroom/globe/hearth/",
-        "freeformAi": false,
-        "deterministicConversation": true,
+        "apiEndpoint": "/api/jeeves.js",
+        "activeHostPage": "hearthJeeves",
+        "currentRoomContext": "hearth",
+        "currentRoomRole": "mission_control",
+        "currentRoomPremise": "window_within_the_window",
+        "estateKnowledgeMode": "blueprint_reference",
+        "portalLogic": "estate_window_to_unknown_future_potential",
+        "routeAuthority": "frontbrain_remains_final_authority",
+        "livePageAccess": ["hearthJeeves"],
+        "plannedLivePageAccess": ["compass"],
+        "freeformAi": "api-assisted",
+        "deterministicConversation": "fallback-only",
+        "apiEnrichedConversation": true,
         "centerScreenInterface": true,
         "chatThreadInterface": true,
         "topRouteBubbles": false,
         "guidedHandoffs": true,
+        "conversationRouteSeparation": true,
+        "languageSeparation": "conversation-vs-handoff",
         "optionTypeColors": true,
         "initialNode": "intro",
         "routes": {
           "hearth": "/showroom/globe/hearth/",
+          "mirrorland": "/showroom/globe/",
           "globeWindow": "/showroom/globe/",
           "audralia": "/showroom/globe/audralia/",
+          "hEarth": "/showroom/globe/h-earth/",
+          "zionts": "/showroom/globe/earth/",
           "frontier": "/explore/frontier/",
           "characters": "/characters/",
+          "scientificLaw": "/laws/scientific-law/",
+          "laws": "/laws/",
+          "gauges": "/gauges/",
           "controlRoom": "/showroom/globe/hearth/diagnostic/",
-          "compass": "/"
+          "meetSean": "/meet-sean-mansfield/",
+          "compass": "/",
+          "siteGuide": "/site-guide/"
         }
       }
     </script>
@@ -252,13 +313,13 @@
     </template>
 
     <template id="jeevesOptionTemplate">
-      <button class="jeeves-option" type="button" data-option-type="" data-option-target="">
+      <button class="jeeves-option" type="button" data-jeeves-option data-type="conversation" data-target="">
         <span></span>
       </button>
     </template>
 
     <template id="jeevesRouteOptionTemplate">
-      <a class="jeeves-option jeeves-option-route" href="#" data-option-type="route" data-option-target="">
+      <a class="jeeves-route-option" href="#" data-jeeves-route-option data-route-id="" data-href="">
         <span></span>
       </a>
     </template>

@@ -1,19 +1,25 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_TRANSITORY_ENTRY_GATE_API_ANCHOR_TIMING_PRESERVED_PUBLIC_LANGUAGE_TNT_v23
+// HEARTH_JEEVES_FRONTBRAIN_FORK_BRIDGE_RENDERER_API_NORTH_COMPATIBLE_TNT_v24
 // Full-file replacement.
 // Browser-side only.
 // Center / Frontbrain runtime.
 // Owns visible Jeeves state, button behavior, house-listening state, tap-to-rush,
 // slow reveal pacing, API enrichment calls, local fallback, prepared-door rendering,
-// transitory entry-gate hosting, fresh-start orientation, and final route authority.
+// fork-bridge rendering, traversal-control rendering, and final route authority.
 // Does not own secure model bridge, deep canon storage, moderation, Brain depth,
-// or permanent public voice canon.
+// permanent public voice canon, or final Expression bridge language.
+// Strategy:
+// - API / North owns depth and knowledge.
+// - Expression owns entrance forks, intermittent forks, threshold language,
+//   transition bridges, forward/return/parallel bridge phrasing.
+// - JS renders the bridge, preserves timing, carries the click, calls API,
+//   and executes final route movement.
 
 (function () {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_TRANSITORY_ENTRY_GATE_API_ANCHOR_TIMING_PRESERVED_PUBLIC_LANGUAGE_TNT_v23";
-  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_EXPRESSION_FRAME_HOST_SCOPE_TRACK_TNT_v22";
+  var CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_FORK_BRIDGE_RENDERER_API_NORTH_COMPATIBLE_TNT_v24";
+  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_TRANSITORY_ENTRY_GATE_API_ANCHOR_TIMING_PRESERVED_PUBLIC_LANGUAGE_TNT_v23";
 
   var ROUTE = "/showroom/globe/hearth/jeeves/";
   var DEFAULT_BRAIN_ENDPOINT = "/api/jeeves.js";
@@ -30,7 +36,29 @@
 
   var MAX_TRAIL = 32;
   var MAX_VISIBLE_OPTIONS = 5;
+  var MAX_VISIBLE_ARCHETYPE_OPTIONS = 4;
+  var MAX_VISIBLE_TRAVERSAL_CONTROLS = 3;
   var MAX_VISIBLE_HANDOFFS = 8;
+
+  var OPTION_KIND = {
+    ARCHETYPE: "archetype_answer",
+    CONVERSATION: "conversation",
+    FORWARD: "forward",
+    RETURN: "return",
+    PARALLEL: "parallel",
+    CONTROL: "control",
+    ROUTE: "route"
+  };
+
+  var BRIDGE_MOMENT = {
+    ENTRANCE: "entrance_fork",
+    BEFORE_KNOWLEDGE: "before_knowledge",
+    AFTER_KNOWLEDGE: "after_knowledge",
+    RECENTER: "recenter_fork",
+    RETURN: "return_fork",
+    PARALLEL: "parallel_crossing",
+    PREPARED_DOOR: "prepared_door"
+  };
 
   var CONVERSATION_LANGUAGE_PREFIXES = [
     "Tell me about",
@@ -49,7 +77,14 @@
     "Start",
     "Trace",
     "Orient",
-    "Introduce"
+    "Introduce",
+    "Stay with",
+    "Return",
+    "Cross",
+    "Enter",
+    "Open beside",
+    "Move toward",
+    "Let me"
   ];
 
   var ROUTE_LANGUAGE_PREFIXES = [
@@ -73,6 +108,20 @@
     restartFork: true,
     priorTopicReturnPath: true,
     originReturnPath: true
+  };
+
+  var FORK_TARGETS = {
+    intro: true,
+    whereToStart: true,
+    recenterNode: true,
+    returnFork: true,
+    restartFork: true,
+    priorTopicReturnPath: true,
+    originReturnPath: true,
+    cleanDoor: true,
+    loopRecovery: true,
+    switchTopics: true,
+    sharpQuestion: true
   };
 
   var PUBLIC_LANGUAGE_REPLACEMENTS = [
@@ -101,8 +150,8 @@
     { pattern: /\bfrontend\b/gi, value: "visible side" },
     { pattern: /\bpayload\b/gi, value: "answer" },
     { pattern: /\bcontract\b/gi, value: "governing mark" },
-    { pattern: /\bexpression engine\b/gi, value: "entry voice" },
-    { pattern: /\bexpression payload\b/gi, value: "entry answer" },
+    { pattern: /\bexpression engine\b/gi, value: "fork voice" },
+    { pattern: /\bexpression payload\b/gi, value: "fork answer" },
     { pattern: /\broute lane\b/gi, value: "path" },
     { pattern: /\bscope lane\b/gi, value: "path" },
     { pattern: /\bregistry\b/gi, value: "guide" }
@@ -113,22 +162,10 @@
       pattern: /I know the estate by its blueprint\.\s*I do not pretend to be stationed inside every page at once\.\s*For now, this is my live room\./gi,
       value: "From Hearth Mission Control, I can help you define the next question, complete the part of the picture in front of you, or prepare the right door."
     },
-    {
-      pattern: /I do not pretend to be stationed inside every page at once\./gi,
-      value: ""
-    },
-    {
-      pattern: /I am aware enough to know that I'?m not in all (?:of )?the rooms at once\.?/gi,
-      value: ""
-    },
-    {
-      pattern: /I only know this by blueprint\.?/gi,
-      value: ""
-    },
-    {
-      pattern: /For now, this is my live room\.?/gi,
-      value: ""
-    },
+    { pattern: /I do not pretend to be stationed inside every page at once\./gi, value: "" },
+    { pattern: /I am aware enough to know that I'?m not in all (?:of )?the rooms at once\.?/gi, value: "" },
+    { pattern: /I only know this by blueprint\.?/gi, value: "" },
+    { pattern: /For now, this is my live room\.?/gi, value: "" },
     {
       pattern: /without claiming to be mounted inside every page at once/gi,
       value: "while keeping the next door properly sequenced"
@@ -137,14 +174,8 @@
       pattern: /without pretending the visitor has already crossed into that deeper place/gi,
       value: "without forcing you across the threshold too early"
     },
-    {
-      pattern: /mounted inside every page/gi,
-      value: "stationed beyond this chamber"
-    },
-    {
-      pattern: /live room/gi,
-      value: "present chamber"
-    }
+    { pattern: /mounted inside every page/gi, value: "stationed beyond this chamber" },
+    { pattern: /live room/gi, value: "present chamber" }
   ];
 
   var LOCAL_ROUTE_HINTS = {
@@ -298,6 +329,104 @@
     restartFork: "Start over.",
     priorTopicReturnPath: "Return to the prior topic.",
     originReturnPath: "Return to the origin conversation."
+  };
+
+  var ADJACENT_ROOM_FALLBACKS = {
+    seanPath: {
+      target: "underdogPath",
+      label: "Cross into This Underdog.",
+      reason: "Sean’s creator path touches the inner underdog voice that formed through transition."
+    },
+    underdogPath: {
+      target: "seanPath",
+      label: "Cross back to Sean.",
+      reason: "This Underdog connects back to the human builder behind the estate."
+    },
+    charactersPath: {
+      target: "mirrorlandPath",
+      label: "Cross into Mirrorland.",
+      reason: "The Characters carry Mirrorland pressure in personal form."
+    },
+    characterIdentityPath: {
+      target: "mirrorlandPath",
+      label: "Cross into Mirrorland.",
+      reason: "The role map belongs to the larger world pressure."
+    },
+    characterStoryPressurePath: {
+      target: "mirrorlandPath",
+      label: "Cross into Mirrorland.",
+      reason: "The Character pressure comes from the world that made those roles necessary."
+    },
+    mirrorlandPath: {
+      target: "charactersPath",
+      label: "Cross into the Characters Hall.",
+      reason: "Mirrorland becomes readable when its pressure becomes personal."
+    },
+    atlasPath: {
+      target: "charactersPath",
+      label: "Cross into the Characters Hall.",
+      reason: "The map touches the people who carry its consequences."
+    },
+    lawsPath: {
+      target: "scientificLawPath",
+      label: "Cross into Scientific Law.",
+      reason: "The Law Library opens into the chamber where claims become testable."
+    },
+    scientificLawPath: {
+      target: "frontierPath",
+      label: "Cross into Frontier.",
+      reason: "Testable claims need a future-facing yard where they can be applied."
+    },
+    gaugesPath: {
+      target: "scientificLawPath",
+      label: "Cross into Scientific Law.",
+      reason: "Readiness gauges require a proof path behind them."
+    },
+    frontierPath: {
+      target: "scientificLawPath",
+      label: "Cross into Scientific Law.",
+      reason: "Frontier can build only what proof can keep honest."
+    },
+    frontierSystemsPath: {
+      target: "scientificLawPath",
+      label: "Cross into Scientific Law.",
+      reason: "Future systems need a testing chamber before they can be trusted."
+    },
+    hearthPath: {
+      target: "frontierPath",
+      label: "Cross into Frontier.",
+      reason: "Hearth Mission Control sits near the yard where future systems are tested."
+    },
+    hearthConstructPath: {
+      target: "mirrorlandPath",
+      label: "Cross into Mirrorland.",
+      reason: "The window within the window looks toward the larger future-facing field."
+    },
+    ziontsPath: {
+      target: "characterSorenPath",
+      label: "Cross toward the Boundary Keeper.",
+      reason: "Consequence requires a boundary keeper who refuses false restoration."
+    },
+    audraliaPath: {
+      target: "frontierPath",
+      label: "Cross into Frontier.",
+      reason: "Audralia’s possibility touches the system yard where future infrastructure is tested."
+    },
+    hEarthPath: {
+      target: "frontierPath",
+      label: "Cross into Frontier.",
+      reason: "Survival becomes systems work when the future has to hold."
+    },
+    nineSummitsPath: {
+      target: "underdogPath",
+      label: "Cross into This Underdog.",
+      reason: "The value road touches the inner voice that learned to climb."
+    },
+    diagnosticPath: {
+      target: "characterArchetypeMirrorPath",
+      label: "Cross into the Character Archetype Mirror.",
+      reason: "Self-reflection becomes clearer when pressure behavior has a story mirror."
+    }
   };
 
   var CHARACTER_TARGETS = {
@@ -583,10 +712,10 @@
         "When pressure rises, do you first protect shelter, explain origin, find the route, stabilize survival, reveal the signal, hold the boundary, sequence the room, or carry help outward?"
       ],
       options: [
-        convo("I protect shelter.", "characterArchetypeQuestionTwo"),
-        convo("I explain origin.", "characterArchetypeQuestionTwo"),
-        convo("I find the route.", "characterArchetypeQuestionTwo"),
-        convo("I hold the boundary.", "characterArchetypeQuestionTwo")
+        archetype("I protect shelter.", "characterArchetypeQuestionTwo"),
+        archetype("I explain origin.", "characterArchetypeQuestionTwo"),
+        archetype("I find the route.", "characterArchetypeQuestionTwo"),
+        archetype("I hold the boundary.", "characterArchetypeQuestionTwo")
       ],
       handoffs: ["coherenceDiagnostic"]
     },
@@ -596,9 +725,10 @@
         "When people misunderstand the situation, do you clarify the role, act before consensus, hold the line, or wait until the proof catches up?"
       ],
       options: [
-        convo("Continue to the third mirror question.", "characterArchetypeQuestionThree"),
-        convo("Frame the self-reflection room.", "diagnosticPath"),
-        convo("Reveal the Character role map.", "characterIdentityPath")
+        archetype("I clarify the role.", "characterArchetypeQuestionThree"),
+        archetype("I act before consensus.", "characterArchetypeQuestionThree"),
+        archetype("I hold the line.", "characterArchetypeQuestionThree"),
+        archetype("I wait for proof.", "characterArchetypeQuestionThree")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
     },
@@ -608,9 +738,10 @@
         "What do you protect first: the person, the system, the truth, the route, the signal, or the future?"
       ],
       options: [
-        convo("Reveal the reflective match.", "characterArchetypeResult"),
-        convo("Frame the self-reflection room.", "diagnosticPath"),
-        convo("Reveal the Character role map.", "characterIdentityPath")
+        archetype("I protect the person.", "characterArchetypeResult"),
+        archetype("I protect the system.", "characterArchetypeResult"),
+        archetype("I protect the truth.", "characterArchetypeResult"),
+        archetype("I protect the future.", "characterArchetypeResult")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
     },
@@ -623,7 +754,7 @@
       options: [
         convo("Frame the self-reflection room.", "diagnosticPath"),
         convo("Reveal the Character role map.", "characterIdentityPath"),
-        convo("Re-center me.", "recenterNode", "control")
+        control("Re-center me.", "recenterNode")
       ],
       handoffs: ["coherenceDiagnostic", "characters"]
     },
@@ -700,8 +831,8 @@
     seanPath: {
       beats: [
         "The creator path begins with source pressure, not biography.",
-        "Sean Mansfield built the estate, rooms, laws, worlds, characters, and conversation structure as a way to turn struggle, preservation, growth, and creative integrity into usable form.",
-        "The name matters after the role is clear: creator, builder, organizer, and pressure translator."
+        "Sean Mansfield’s life has been shaped by transitions: ups, downs, reversals, recoveries, and turns of every size.",
+        "Those crossings molded the person behind the estate, and they gave the work its central instinct: every path has a next door, and every pressure can become a passage."
       ],
       options: [
         convo("Frame This Underdog.", "underdogPath"),
@@ -803,6 +934,7 @@
     roomTrail: [],
     returnStack: [],
     branchStack: [],
+    transitionTrail: [],
     lastBackbrainFrame: null,
     lastFibonacciDepth: 0,
     lastFibonacciStage: "",
@@ -815,6 +947,10 @@
     lastSelectedTarget: "",
     lastSelectedLabel: "",
     lastRequestMode: "",
+    lastOptionKind: "",
+    lastBridgeMoment: "",
+    lastBridgeTarget: "",
+    lastParallelTarget: "",
     apiReady: false,
     apiFailureCount: 0,
     houseListening: true,
@@ -958,7 +1094,16 @@
     els.root.setAttribute("data-conversation-route-separation", "active");
     els.root.setAttribute("data-language-separation", "conversation-vs-door");
     els.root.setAttribute("data-api-enrichment", "available");
-    els.root.setAttribute("data-expression-entry-gate", "training-wheels-only");
+    els.root.setAttribute("data-expression-fork-bridge", "ready");
+    els.root.setAttribute("data-expression-bridge-mode", "entrance-and-intermittent-forks");
+    els.root.setAttribute("data-traversal-kinds", [
+      OPTION_KIND.ARCHETYPE,
+      OPTION_KIND.FORWARD,
+      OPTION_KIND.RETURN,
+      OPTION_KIND.PARALLEL,
+      OPTION_KIND.CONVERSATION,
+      OPTION_KIND.ROUTE
+    ].join(","));
   }
 
   function bindEvents() {
@@ -1008,12 +1153,15 @@
     var target = button.getAttribute("data-target") || button.getAttribute("data-option-target") || "";
     var label = button.textContent || "";
     var type = button.getAttribute("data-type") || button.getAttribute("data-option-type") || "conversation";
+    var optionKind = button.getAttribute("data-option-kind") || OPTION_KIND.CONVERSATION;
+
     var option = {
       label: label,
       target: target,
       type: type,
       scopeLane: button.getAttribute("data-scope-lane") || "objective",
-      optionKind: button.getAttribute("data-option-kind") || "conversation"
+      scopeStage: button.getAttribute("data-scope-stage") || inferScopeStage(target),
+      optionKind: optionKind
     };
 
     if (!target) return;
@@ -1021,7 +1169,7 @@
     addVisitorBubble(label);
     hideInteractivePanels();
 
-    if (isControlTarget(target) || type === "control") {
+    if (isControlTarget(target) || type === "control" || optionKind === OPTION_KIND.RETURN || optionKind === OPTION_KIND.CONTROL) {
       runControlTarget(target, option);
       return;
     }
@@ -1060,7 +1208,9 @@
       visitorText: text,
       selectedTarget: "",
       selectedLabel: "",
-      requestMode: "freeform"
+      requestMode: "freeform",
+      optionKind: OPTION_KIND.CONVERSATION,
+      bridgeMoment: BRIDGE_MOMENT.ENTRANCE
     }).then(function (response) {
       renderBackbrainResponse(response, null, {
         fallbackTarget: "sharpQuestion",
@@ -1078,6 +1228,7 @@
     if (clean === "restartFork") {
       state.returnStack = [];
       state.branchStack = [];
+      state.transitionTrail = [];
       renderLocalNode("intro", { silentVisitor: true, replace: false });
       return;
     }
@@ -1105,7 +1256,17 @@
           convo("Frame Mirrorland.", "mirrorlandPath"),
           convo("Frame the proof path.", "lawsPath"),
           convo("Begin the Character path.", "charactersPath")
-        ]);
+        ], buildDefaultTraversalControls(buildConversationFrame({
+          source: "local",
+          beats: [],
+          options: [],
+          handoffs: [],
+          routeHints: {},
+          handoffLabels: {},
+          requestMode: "local_fallback",
+          selectedTarget: "sharpQuestion",
+          selectedLabel: "Ask me a sharper question."
+        })));
         renderHandoffs(["compass", "siteGuide"], {}, {});
       });
       return;
@@ -1117,14 +1278,32 @@
   function runEnrichedConversation(option) {
     var target = normalizeTarget(option.target);
     var fallbackTarget = target;
+    var optionKind = normalizeOptionKind(option.optionKind || OPTION_KIND.CONVERSATION);
 
-    updateStateForSelection(option);
+    updateStateForSelection(Object.assign({}, option, {
+      target: target,
+      optionKind: optionKind
+    }));
 
-    askBackbrain({
-      visitorText: option.label,
+    var preBridge = buildPreKnowledgeBridge(option, {
+      bridgeMoment: optionKind === OPTION_KIND.PARALLEL ? BRIDGE_MOMENT.PARALLEL : BRIDGE_MOMENT.BEFORE_KNOWLEDGE,
       selectedTarget: target,
       selectedLabel: option.label,
-      requestMode: "node_enrichment"
+      optionKind: optionKind
+    });
+
+    var preBridgeBeats = preBridge && Array.isArray(preBridge.beats) ? preBridge.beats.map(cleanPublicText).filter(Boolean) : [];
+    var ready = preBridgeBeats.length ? revealBeats(preBridgeBeats) : Promise.resolve();
+
+    ready.then(function () {
+      return askBackbrain({
+        visitorText: option.label,
+        selectedTarget: target,
+        selectedLabel: option.label,
+        requestMode: "node_enrichment",
+        optionKind: optionKind,
+        bridgeMoment: optionKind === OPTION_KIND.PARALLEL ? BRIDGE_MOMENT.PARALLEL : BRIDGE_MOMENT.BEFORE_KNOWLEDGE
+      });
     }).then(function (response) {
       renderBackbrainResponse(response, option, {
         fallbackTarget: fallbackTarget,
@@ -1162,12 +1341,19 @@
   }
 
   function buildBackbrainPayload(partial) {
+    var selectedTarget = normalizeTarget(partial.selectedTarget || "");
+    var optionKind = normalizeOptionKind(partial.optionKind || state.lastOptionKind || OPTION_KIND.CONVERSATION);
+    var bridgeMoment = partial.bridgeMoment || state.lastBridgeMoment || "";
+
     return {
       message: partial.visitorText || "",
       visitorText: partial.visitorText || "",
-      selectedTarget: normalizeTarget(partial.selectedTarget || ""),
+      selectedTarget: selectedTarget,
       selectedLabel: partial.selectedLabel || "",
       requestMode: partial.requestMode || "freeform",
+      optionKind: optionKind,
+      bridgeMoment: bridgeMoment,
+      movementIntent: inferMovementIntent(optionKind, selectedTarget),
 
       route: ROUTE,
       activeHostPage: ACTIVE_HOST_PAGE,
@@ -1194,7 +1380,7 @@
       currentVoiceMode: state.currentVoiceMode,
 
       visitorPosture: "",
-      movement: "",
+      movement: inferMovementIntent(optionKind, selectedTarget),
       pathDepth: state.visitedNodes.length,
       routeReadiness: state.lastRouteHints && Object.keys(state.lastRouteHints).length ? 2 : 0,
       loopCount: countRecentTarget(partial.selectedTarget || state.currentNode),
@@ -1209,6 +1395,14 @@
       allowedTargets: collectAllowedTargets(),
       allowedRoutes: collectAllowedRoutes(),
 
+      bridgeContext: buildForkBridgeContext({
+        selectedTarget: selectedTarget,
+        selectedLabel: partial.selectedLabel || "",
+        requestMode: partial.requestMode || "freeform",
+        optionKind: optionKind,
+        bridgeMoment: bridgeMoment
+      }),
+
       sessionTrail: state.visitorTrail.slice(-MAX_TRAIL),
       visitedNodes: state.visitedNodes.slice(-MAX_TRAIL),
       selectedNodes: state.selectedTargets.slice(-MAX_TRAIL),
@@ -1217,6 +1411,7 @@
       returnStack: state.returnStack.slice(-MAX_TRAIL),
       branchStack: state.branchStack.slice(-MAX_TRAIL),
       roomTrail: state.roomTrail.slice(-MAX_TRAIL),
+      transitionTrail: state.transitionTrail.slice(-MAX_TRAIL),
 
       requestedMode: partial.requestMode || "",
       registryContext: null,
@@ -1251,9 +1446,11 @@
       expressionAuthority: response.expressionAuthority || "",
       blueprintAuthority: response.blueprintAuthority || ""
     };
-    state.lastSelectedTarget = response.selectedTarget || (sourceOption ? sourceOption.target : "");
+    state.lastSelectedTarget = normalizeTarget(response.selectedTarget || (sourceOption ? sourceOption.target : ""));
     state.lastSelectedLabel = response.selectedLabel || (sourceOption ? sourceOption.label : "");
     state.lastRequestMode = response.requestMode || (sourceOption ? "node_enrichment" : "freeform");
+    state.lastOptionKind = normalizeOptionKind((sourceOption && sourceOption.optionKind) || response.optionKind || state.lastOptionKind || OPTION_KIND.CONVERSATION);
+    state.lastBridgeMoment = response.bridgeMoment || BRIDGE_MOMENT.AFTER_KNOWLEDGE;
 
     if (response.contract) {
       els.root.setAttribute("data-api-contract", response.contract);
@@ -1267,6 +1464,7 @@
       source: response.source || "backbrain",
       beats: normalized.beats,
       options: normalized.options,
+      traversalControls: normalized.traversalControls,
       handoffs: normalized.handoffs,
       routeHints: response.routeHints || {},
       handoffLabels: response.handoffLabels || {},
@@ -1275,6 +1473,8 @@
       requestMode: state.lastRequestMode,
       selectedTarget: state.lastSelectedTarget,
       selectedLabel: state.lastSelectedLabel,
+      optionKind: state.lastOptionKind,
+      bridgeMoment: BRIDGE_MOMENT.AFTER_KNOWLEDGE,
       depthMode: response.depthMode || "",
       fibonacciDepth: Number(response.fibonacciDepth || 0),
       fibonacciStage: String(response.fibonacciStage || ""),
@@ -1298,12 +1498,18 @@
     var options = Array.isArray(response.options) ? response.options : [];
     var normalizedOptions = normalizeConversationOptions(options);
 
+    var controls = [];
+    if (Array.isArray(response.traversalControls)) controls = response.traversalControls;
+    else if (Array.isArray(response.controls)) controls = response.controls;
+    var normalizedControls = normalizeConversationOptions(controls);
+
     var handoffs = Array.isArray(response.handoffs) ? response.handoffs : [];
     var normalizedHandoffs = normalizeHandoffs(handoffs, response.routeHints || {});
 
     return {
       beats: beats,
       options: normalizedOptions,
+      traversalControls: normalizedControls,
       handoffs: normalizedHandoffs
     };
   }
@@ -1322,6 +1528,8 @@
     state.currentPath = clean;
     state.currentTopic = inferTopicFromTarget(clean);
     state.currentScopeStage = inferScopeStage(clean);
+    state.lastOptionKind = isForkTarget(clean) ? OPTION_KIND.CONTROL : state.lastOptionKind;
+    state.lastBridgeMoment = isForkTarget(clean) ? BRIDGE_MOMENT.RECENTER : state.lastBridgeMoment;
 
     if (clean === "charactersPath") state.characterOverviewDone = true;
     if (clean === "characterIdentityPath") state.characterRolesRevealed = true;
@@ -1341,6 +1549,7 @@
       source: "local",
       beats: (node.beats || []).map(cleanPublicText).filter(Boolean),
       options: node.options || [],
+      traversalControls: node.traversalControls || [],
       handoffs: node.handoffs || [],
       routeHints: {},
       handoffLabels: {},
@@ -1349,6 +1558,8 @@
       requestMode: "local_fallback",
       selectedTarget: clean,
       selectedLabel: CONVERSATION_LABELS[clean] || clean,
+      optionKind: isForkTarget(clean) ? OPTION_KIND.CONTROL : OPTION_KIND.CONVERSATION,
+      bridgeMoment: clean === "intro" ? BRIDGE_MOMENT.ENTRANCE : BRIDGE_MOMENT.RECENTER,
       depthMode: "",
       fibonacciDepth: state.lastFibonacciDepth || 0,
       fibonacciStage: state.lastFibonacciStage || "",
@@ -1365,6 +1576,7 @@
       source: parts.source || "local",
       beats: Array.isArray(parts.beats) ? parts.beats.slice() : [],
       options: Array.isArray(parts.options) ? parts.options.slice() : [],
+      traversalControls: Array.isArray(parts.traversalControls) ? parts.traversalControls.slice() : [],
       handoffs: Array.isArray(parts.handoffs) ? parts.handoffs.slice() : [],
       routeHints: parts.routeHints || {},
       handoffLabels: parts.handoffLabels || {},
@@ -1374,11 +1586,14 @@
       selectedTarget: normalizeTarget(parts.selectedTarget || state.lastSelectedTarget || ""),
       selectedLabel: parts.selectedLabel || state.lastSelectedLabel || "",
       requestMode: parts.requestMode || state.lastRequestMode || "",
+      optionKind: normalizeOptionKind(parts.optionKind || state.lastOptionKind || OPTION_KIND.CONVERSATION),
+      bridgeMoment: parts.bridgeMoment || state.lastBridgeMoment || "",
       visitorTrail: state.visitorTrail.slice(-MAX_TRAIL),
       visitedNodes: state.visitedNodes.slice(-MAX_TRAIL),
       selectedTargets: state.selectedTargets.slice(-MAX_TRAIL),
       returnStack: state.returnStack.slice(-MAX_TRAIL),
       branchStack: state.branchStack.slice(-MAX_TRAIL),
+      transitionTrail: state.transitionTrail.slice(-MAX_TRAIL),
       currentRoomContext: CURRENT_ROOM_CONTEXT,
       currentRoomRole: CURRENT_ROOM_ROLE,
       currentRoomPremise: CURRENT_ROOM_PREMISE,
@@ -1405,59 +1620,211 @@
   }
 
   function renderConversationFrame(frame) {
-    var shapedFrame = shapeConversationFrame(frame);
-    var finalFrame = normalizeConversationFrame(shapedFrame);
+    var finalFrame = prepareFrameForRender(frame);
 
     state.currentScopeStage = finalFrame.currentScopeStage || state.currentScopeStage;
     stampRoot();
 
     revealBeats(finalFrame.beats).then(function () {
-      renderConversationOptions(finalFrame.options);
+      renderConversationOptions(finalFrame.options, finalFrame.traversalControls);
       renderHandoffs(finalFrame.handoffs, finalFrame.handoffLabels || {}, finalFrame.routeHints || {});
       setHouseListening(true);
     });
   }
 
-  function shapeConversationFrame(frame) {
+  function prepareFrameForRender(frame) {
+    var cleanFrame = normalizeConversationFrame(frame);
+    var withExpressionBridge = applyExpressionForkBridge(cleanFrame, {
+      bridgeMoment: cleanFrame.bridgeMoment || inferBridgeMoment(cleanFrame),
+      selectedTarget: cleanFrame.selectedTarget,
+      selectedLabel: cleanFrame.selectedLabel,
+      optionKind: cleanFrame.optionKind
+    });
+
+    var staged = normalizeConversationFrame(withExpressionBridge);
+
+    if (shouldApplyLocalEntryStaging(staged) && staged.currentTopic === "characters") {
+      staged.options = stageCharacterOptions(staged.options, staged);
+    }
+
+    staged.traversalControls = normalizeConversationOptions(
+      staged.traversalControls.concat(buildDefaultTraversalControls(staged))
+    );
+
+    staged.options = limitPrimaryOptions(staged.options);
+    staged.traversalControls = limitTraversalControls(staged.traversalControls);
+
+    return staged;
+  }
+
+  function applyExpressionForkBridge(frame, overrides) {
     var expression = getExpression();
-    var fallbackFrame = normalizeConversationFrame(frame);
+    var clean = normalizeConversationFrame(frame);
+    var context = buildForkBridgeContext(Object.assign({}, clean, overrides || {}));
+    var bridge = null;
 
-    if (isBrainLedFrame(fallbackFrame)) {
-      return finalizeBrainFrame(fallbackFrame);
-    }
-
-    if (!shouldUseExpressionGate(fallbackFrame)) {
-      return finalizeNonGateFrame(fallbackFrame);
-    }
-
-    if (!expression || typeof expression.shapeConversationFrame !== "function") {
-      return fallbackScopeFrame(fallbackFrame);
+    if (!expression) {
+      return clean;
     }
 
     try {
-      var shaped = expression.shapeConversationFrame(cloneFrame(fallbackFrame), buildExpressionContext(fallbackFrame));
-      if (!shaped || typeof shaped !== "object") {
-        return fallbackScopeFrame(fallbackFrame);
+      if (typeof expression.shapeForkBridge === "function") {
+        bridge = expression.shapeForkBridge(cloneFrame(clean), context);
+      } else if (typeof expression.shapeTransitionBridge === "function") {
+        bridge = expression.shapeTransitionBridge(cloneFrame(clean), context);
+      } else if (shouldUseLegacyExpressionGate(clean) && typeof expression.shapeConversationFrame === "function") {
+        bridge = expression.shapeConversationFrame(cloneFrame(clean), buildExpressionContext(clean));
+      }
+    } catch (_error) {
+      bridge = null;
+    }
+
+    if (!bridge || typeof bridge !== "object") {
+      return clean;
+    }
+
+    return mergeBridgeIntoFrame(clean, normalizeBridgeResponse(bridge), context);
+  }
+
+  function buildPreKnowledgeBridge(option, overrides) {
+    var expression = getExpression();
+    if (!expression) return null;
+
+    var target = normalizeTarget(option.target || "");
+    var context = buildForkBridgeContext({
+      selectedTarget: target,
+      selectedLabel: option.label || "",
+      optionKind: normalizeOptionKind(option.optionKind || OPTION_KIND.CONVERSATION),
+      bridgeMoment: overrides && overrides.bridgeMoment ? overrides.bridgeMoment : BRIDGE_MOMENT.BEFORE_KNOWLEDGE,
+      requestMode: "node_enrichment",
+      currentNode: state.currentNode,
+      currentTopic: state.currentTopic,
+      currentScopeStage: state.currentScopeStage
+    });
+
+    try {
+      if (typeof expression.shapePreKnowledgeBridge === "function") {
+        return normalizeBridgeResponse(expression.shapePreKnowledgeBridge({
+          selectedTarget: target,
+          selectedLabel: option.label || "",
+          optionKind: option.optionKind || OPTION_KIND.CONVERSATION
+        }, context));
       }
 
-      return fallbackScopeFrame(Object.assign({}, fallbackFrame, shaped));
+      if (typeof expression.shapeTransitionBridge === "function") {
+        return normalizeBridgeResponse(expression.shapeTransitionBridge({
+          selectedTarget: target,
+          selectedLabel: option.label || "",
+          optionKind: option.optionKind || OPTION_KIND.CONVERSATION,
+          bridgeMoment: context.bridgeMoment
+        }, context));
+      }
     } catch (_error) {
-      return fallbackScopeFrame(fallbackFrame);
+      return null;
     }
+
+    return null;
+  }
+
+  function normalizeBridgeResponse(bridge) {
+    var clean = bridge || {};
+
+    var beats = [];
+    if (Array.isArray(clean.beats)) beats = clean.beats;
+    else if (Array.isArray(clean.bridgeBeats)) beats = clean.bridgeBeats;
+    else if (typeof clean.beat === "string") beats = [clean.beat];
+
+    var beatsBefore = [];
+    if (Array.isArray(clean.beatsBefore)) beatsBefore = clean.beatsBefore;
+    else if (Array.isArray(clean.bridgeBeatsBefore)) beatsBefore = clean.bridgeBeatsBefore;
+
+    var beatsAfter = [];
+    if (Array.isArray(clean.beatsAfter)) beatsAfter = clean.beatsAfter;
+    else if (Array.isArray(clean.bridgeBeatsAfter)) beatsAfter = clean.bridgeBeatsAfter;
+
+    var options = [];
+    if (Array.isArray(clean.options)) options = clean.options;
+    else if (Array.isArray(clean.archetypeOptions)) options = clean.archetypeOptions;
+
+    var traversalControls = [];
+    if (Array.isArray(clean.traversalControls)) traversalControls = clean.traversalControls;
+    else if (Array.isArray(clean.controls)) traversalControls = clean.controls;
+    else if (Array.isArray(clean.movementControls)) traversalControls = clean.movementControls;
+
+    var handoffs = [];
+    if (Array.isArray(clean.handoffs)) handoffs = clean.handoffs;
+    else if (Array.isArray(clean.preparedDoors)) handoffs = clean.preparedDoors;
+
+    return {
+      replaceBeats: !!clean.replaceBeats,
+      beats: beats.map(cleanPublicText).filter(Boolean),
+      beatsBefore: beatsBefore.map(cleanPublicText).filter(Boolean),
+      beatsAfter: beatsAfter.map(cleanPublicText).filter(Boolean),
+      options: normalizeConversationOptions(options),
+      traversalControls: normalizeConversationOptions(traversalControls),
+      handoffs: handoffs,
+      handoffLabels: clean.handoffLabels || {},
+      routeHints: clean.routeHints || {},
+      bridgeMoment: clean.bridgeMoment || "",
+      bridgeTarget: normalizeTarget(clean.bridgeTarget || "")
+    };
+  }
+
+  function mergeBridgeIntoFrame(frame, bridge, context) {
+    var result = normalizeConversationFrame(frame);
+    var brainLed = isBrainLedFrame(result);
+
+    if (bridge.replaceBeats && !brainLed && bridge.beats.length) {
+      result.beats = bridge.beats;
+    } else {
+      if (bridge.beatsBefore.length) {
+        result.beats = bridge.beatsBefore.concat(result.beats);
+      }
+
+      if (bridge.beats.length && !brainLed) {
+        result.beats = bridge.beats;
+      } else if (bridge.beats.length && context.bridgeMoment !== BRIDGE_MOMENT.BEFORE_KNOWLEDGE) {
+        result.beats = result.beats.concat(bridge.beats);
+      }
+
+      if (bridge.beatsAfter.length) {
+        result.beats = result.beats.concat(bridge.beatsAfter);
+      }
+    }
+
+    if (bridge.options.length) {
+      result.options = bridge.options;
+    }
+
+    if (bridge.traversalControls.length) {
+      result.traversalControls = bridge.traversalControls;
+    }
+
+    if (bridge.handoffs.length) {
+      result.handoffs = normalizeHandoffs(bridge.handoffs, Object.assign({}, result.routeHints, bridge.routeHints));
+    }
+
+    result.handoffLabels = Object.assign({}, result.handoffLabels || {}, bridge.handoffLabels || {});
+    result.routeHints = Object.assign({}, result.routeHints || {}, bridge.routeHints || {});
+
+    if (bridge.bridgeMoment) result.bridgeMoment = bridge.bridgeMoment;
+    if (bridge.bridgeTarget) state.lastBridgeTarget = bridge.bridgeTarget;
+
+    return normalizeConversationFrame(result);
   }
 
   function isBrainLedFrame(frame) {
     var clean = normalizeConversationFrame(frame);
     return clean.requestMode === "node_enrichment" &&
       !!clean.selectedTarget &&
-      !isEntryGateTarget(clean.selectedTarget);
+      !isForkTarget(clean.selectedTarget);
   }
 
-  function shouldUseExpressionGate(frame) {
+  function shouldUseLegacyExpressionGate(frame) {
     var clean = normalizeConversationFrame(frame);
     var target = normalizeTarget(clean.selectedTarget || clean.currentNode || "");
 
-    if (isEntryGateTarget(target)) return true;
+    if (isForkTarget(target)) return true;
 
     if (clean.response && clean.response.needsRecenter) return true;
 
@@ -1475,53 +1842,80 @@
   }
 
   function shouldUseExpressionTextSanitizer() {
-    return isEntryGateTarget(state.currentNode) ||
+    if (isActiveBrainLedState()) return false;
+
+    return isForkTarget(state.currentNode) ||
       state.currentScopeStage === "orientation" ||
       state.currentTopic === "orientation";
   }
 
-  function shouldUseExpressionOptionGate() {
-    return isEntryGateTarget(state.currentNode) ||
-      state.currentScopeStage === "orientation";
-  }
-
   function shouldUseExpressionHandoffGate() {
-    return isEntryGateTarget(state.currentNode) ||
+    if (isActiveBrainLedState()) return false;
+
+    return isForkTarget(state.currentNode) ||
       state.currentScopeStage === "orientation";
   }
 
-  function isEntryGateTarget(target) {
-    return !!ENTRY_GATE_TARGETS[normalizeTarget(target)];
+  function isActiveBrainLedState() {
+    return state.lastRequestMode === "node_enrichment" &&
+      !!state.lastSelectedTarget &&
+      !isForkTarget(state.lastSelectedTarget);
   }
 
-  function fallbackScopeFrame(frame) {
-    var cleanFrame = normalizeConversationFrame(frame);
-
-    if (shouldApplyLocalEntryStaging(cleanFrame) && cleanFrame.currentTopic === "characters") {
-      cleanFrame.options = stageCharacterOptions(cleanFrame.options, cleanFrame);
-    }
-
-    cleanFrame.options = compressOptions(cleanFrame.options, MAX_VISIBLE_OPTIONS);
-    return cleanFrame;
-  }
-
-  function finalizeBrainFrame(frame) {
-    var cleanFrame = normalizeConversationFrame(frame);
-    cleanFrame.options = compressOptions(cleanFrame.options, MAX_VISIBLE_OPTIONS);
-    return cleanFrame;
-  }
-
-  function finalizeNonGateFrame(frame) {
-    var cleanFrame = normalizeConversationFrame(frame);
-    cleanFrame.options = compressOptions(cleanFrame.options, MAX_VISIBLE_OPTIONS);
-    return cleanFrame;
+  function isForkTarget(target) {
+    return !!FORK_TARGETS[normalizeTarget(target)] || !!ENTRY_GATE_TARGETS[normalizeTarget(target)];
   }
 
   function shouldApplyLocalEntryStaging(frame) {
     var clean = normalizeConversationFrame(frame);
     if (clean.source !== "local" && clean.requestMode !== "local_fallback") return false;
-    if (isEntryGateTarget(clean.selectedTarget || clean.currentNode)) return false;
+    if (isForkTarget(clean.selectedTarget || clean.currentNode)) return false;
     return true;
+  }
+
+  function buildDefaultTraversalControls(frame) {
+    var clean = normalizeConversationFrame(frame);
+    var controls = [];
+    var adjacent = getFallbackAdjacentDoor(clean);
+
+    if (state.returnStack.length && clean.currentNode !== "intro") {
+      controls.push(traversal("Step back one threshold.", "priorTopicReturnPath", OPTION_KIND.RETURN, "control"));
+    }
+
+    if (adjacent && adjacent.target && adjacent.target !== clean.currentNode) {
+      controls.push(traversal(adjacent.label, adjacent.target, OPTION_KIND.PARALLEL, "conversation", adjacent.reason));
+    }
+
+    if (!hasOptionTarget(clean.options, "returnFork") && clean.currentNode !== "intro") {
+      controls.push(traversal("Return to the First Fork.", "returnFork", OPTION_KIND.RETURN, "control"));
+    }
+
+    return controls;
+  }
+
+  function getFallbackAdjacentDoor(frame) {
+    var clean = normalizeConversationFrame(frame);
+    var keys = [
+      clean.selectedTarget,
+      clean.currentNode,
+      state.lastSelectedTarget,
+      state.currentNode
+    ].map(normalizeTarget).filter(Boolean);
+
+    for (var i = 0; i < keys.length; i += 1) {
+      if (ADJACENT_ROOM_FALLBACKS[keys[i]]) {
+        return Object.assign({}, ADJACENT_ROOM_FALLBACKS[keys[i]]);
+      }
+    }
+
+    if (clean.currentTopic === "characters") return Object.assign({}, ADJACENT_ROOM_FALLBACKS.charactersPath);
+    if (clean.currentTopic === "frontier") return Object.assign({}, ADJACENT_ROOM_FALLBACKS.frontierPath);
+    if (clean.currentTopic === "proof") return Object.assign({}, ADJACENT_ROOM_FALLBACKS.scientificLawPath);
+    if (clean.currentTopic === "mirrorland") return Object.assign({}, ADJACENT_ROOM_FALLBACKS.mirrorlandPath);
+    if (clean.currentTopic === "sean") return Object.assign({}, ADJACENT_ROOM_FALLBACKS.seanPath);
+    if (clean.currentTopic === "underdog") return Object.assign({}, ADJACENT_ROOM_FALLBACKS.underdogPath);
+
+    return null;
   }
 
   function normalizeConversationFrame(frame) {
@@ -1533,6 +1927,7 @@
       source: clean.source || "local",
       beats: (Array.isArray(clean.beats) ? clean.beats : []).map(cleanPublicText).filter(Boolean),
       options: normalizeConversationOptions(Array.isArray(clean.options) ? clean.options : []),
+      traversalControls: normalizeConversationOptions(Array.isArray(clean.traversalControls) ? clean.traversalControls : []),
       handoffs: normalizeHandoffs(Array.isArray(clean.handoffs) ? clean.handoffs : [], clean.routeHints || {}),
       routeHints: clean.routeHints || {},
       handoffLabels: clean.handoffLabels || {},
@@ -1542,11 +1937,14 @@
       selectedTarget: normalizeTarget(clean.selectedTarget || ""),
       selectedLabel: clean.selectedLabel || "",
       requestMode: clean.requestMode || "",
+      optionKind: normalizeOptionKind(clean.optionKind || OPTION_KIND.CONVERSATION),
+      bridgeMoment: clean.bridgeMoment || "",
       visitorTrail: Array.isArray(clean.visitorTrail) ? clean.visitorTrail.slice(-MAX_TRAIL) : [],
       visitedNodes: Array.isArray(clean.visitedNodes) ? clean.visitedNodes.slice(-MAX_TRAIL) : [],
       selectedTargets: Array.isArray(clean.selectedTargets) ? clean.selectedTargets.slice(-MAX_TRAIL) : [],
       returnStack: Array.isArray(clean.returnStack) ? clean.returnStack.slice(-MAX_TRAIL) : [],
       branchStack: Array.isArray(clean.branchStack) ? clean.branchStack.slice(-MAX_TRAIL) : [],
+      transitionTrail: Array.isArray(clean.transitionTrail) ? clean.transitionTrail.slice(-MAX_TRAIL) : [],
       currentRoomContext: clean.currentRoomContext || CURRENT_ROOM_CONTEXT,
       currentRoomRole: clean.currentRoomRole || CURRENT_ROOM_ROLE,
       currentRoomPremise: clean.currentRoomPremise || CURRENT_ROOM_PREMISE,
@@ -1580,7 +1978,7 @@
 
   function buildExpressionContext(frame) {
     return {
-      panel: "entry_gate",
+      panel: "fork_bridge",
       contract: CONTRACT,
       currentNode: frame.currentNode,
       currentTopic: frame.currentTopic,
@@ -1588,9 +1986,14 @@
       selectedTarget: frame.selectedTarget,
       selectedLabel: frame.selectedLabel,
       requestMode: frame.requestMode,
+      optionKind: frame.optionKind,
+      bridgeMoment: frame.bridgeMoment,
       visitorTrail: frame.visitorTrail,
       visitedNodes: frame.visitedNodes,
       selectedTargets: frame.selectedTargets,
+      returnStack: frame.returnStack,
+      branchStack: frame.branchStack,
+      transitionTrail: frame.transitionTrail,
       currentRoomContext: CURRENT_ROOM_CONTEXT,
       currentRoomRole: CURRENT_ROOM_ROLE,
       currentRoomPremise: CURRENT_ROOM_PREMISE,
@@ -1603,8 +2006,111 @@
       narrativeFrame: frame.narrativeFrame,
       characterState: frame.characterState,
       source: frame.source,
-      expressionMode: "training_wheels_only"
+      expressionMode: "narrative_fork_bridge"
     };
+  }
+
+  function buildForkBridgeContext(input) {
+    var selectedTarget = normalizeTarget(input.selectedTarget || state.lastSelectedTarget || state.currentNode || "");
+    var adjacent = getFallbackAdjacentDoor({
+      currentNode: input.currentNode || state.currentNode,
+      selectedTarget: selectedTarget,
+      currentTopic: input.currentTopic || state.currentTopic,
+      currentScopeStage: input.currentScopeStage || state.currentScopeStage,
+      options: []
+    });
+
+    return {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      bridgeMoment: input.bridgeMoment || inferBridgeMoment(input),
+      movementIntent: inferMovementIntent(input.optionKind || state.lastOptionKind, selectedTarget),
+      optionKind: normalizeOptionKind(input.optionKind || state.lastOptionKind || OPTION_KIND.CONVERSATION),
+
+      currentNode: input.currentNode || state.currentNode,
+      priorNode: state.returnStack.length ? state.returnStack[state.returnStack.length - 1] : "",
+      selectedTarget: selectedTarget,
+      selectedLabel: input.selectedLabel || state.lastSelectedLabel || "",
+      requestMode: input.requestMode || state.lastRequestMode || "",
+
+      currentTopic: input.currentTopic || state.currentTopic,
+      currentScopeStage: input.currentScopeStage || state.currentScopeStage,
+      currentRoomId: state.currentRoomId,
+      currentRoomName: state.currentRoomName,
+      currentCardinal: state.currentCardinal,
+      currentCoordinateName: state.currentCoordinateName,
+      currentPlaceType: state.currentPlaceType,
+
+      currentRoomContext: CURRENT_ROOM_CONTEXT,
+      currentRoomRole: CURRENT_ROOM_ROLE,
+      currentRoomPremise: CURRENT_ROOM_PREMISE,
+      estateKnowledgeMode: ESTATE_KNOWLEDGE_MODE,
+      portalLogic: PORTAL_LOGIC,
+      routeAuthority: ROUTE_AUTHORITY,
+
+      adjacentTarget: adjacent ? adjacent.target : "",
+      adjacentLabel: adjacent ? adjacent.label : "",
+      adjacentReason: adjacent ? adjacent.reason : "",
+
+      visitorTrail: state.visitorTrail.slice(-MAX_TRAIL),
+      visitedNodes: state.visitedNodes.slice(-MAX_TRAIL),
+      selectedTargets: state.selectedTargets.slice(-MAX_TRAIL),
+      selectedOptionKeys: state.selectedOptionKeys.slice(-MAX_TRAIL),
+      returnStack: state.returnStack.slice(-MAX_TRAIL),
+      branchStack: state.branchStack.slice(-MAX_TRAIL),
+      transitionTrail: state.transitionTrail.slice(-MAX_TRAIL),
+
+      routeHints: Object.assign({}, state.lastRouteHints),
+      handoffLabels: Object.assign({}, state.lastHandoffLabels),
+      characterState: {
+        overviewDone: state.characterOverviewDone,
+        rolesRevealed: state.characterRolesRevealed,
+        profileViewCount: state.characterProfileViewCount,
+        relationshipViews: state.characterRelationshipViews,
+        profileViews: Object.assign({}, state.characterProfileViews)
+      },
+
+      authorities: Object.assign({}, state.lastBackbrainAuthorities),
+      depthMode: state.lastApiDepthMode,
+      fibonacciDepth: state.lastFibonacciDepth,
+      fibonacciStage: state.lastFibonacciStage,
+      narrativeFrame: state.lastBackbrainFrame,
+
+      expects: {
+        mayReturnBeatsBefore: true,
+        mayReturnBeatsAfter: true,
+        mayReturnArchetypeOptions: true,
+        mayReturnTraversalControls: true,
+        mayReturnPreparedDoors: true,
+        mustNotOwnBrainDepth: true,
+        mustNotExecuteRoute: true
+      }
+    };
+  }
+
+  function inferBridgeMoment(input) {
+    var target = normalizeTarget((input && input.selectedTarget) || state.lastSelectedTarget || state.currentNode);
+    var optionKind = normalizeOptionKind((input && input.optionKind) || state.lastOptionKind || OPTION_KIND.CONVERSATION);
+
+    if (target === "intro" || target === "whereToStart") return BRIDGE_MOMENT.ENTRANCE;
+    if (target === "recenterNode" || target === "loopRecovery" || target === "cleanDoor" || target === "switchTopics" || target === "sharpQuestion") return BRIDGE_MOMENT.RECENTER;
+    if (target === "returnFork" || target === "priorTopicReturnPath" || target === "originReturnPath") return BRIDGE_MOMENT.RETURN;
+    if (optionKind === OPTION_KIND.PARALLEL) return BRIDGE_MOMENT.PARALLEL;
+    if ((input && input.requestMode) === "node_enrichment") return BRIDGE_MOMENT.AFTER_KNOWLEDGE;
+
+    return BRIDGE_MOMENT.ENTRANCE;
+  }
+
+  function inferMovementIntent(optionKind, target) {
+    var kind = normalizeOptionKind(optionKind);
+    var clean = normalizeTarget(target || "");
+
+    if (kind === OPTION_KIND.PARALLEL) return "parallel_crossing";
+    if (kind === OPTION_KIND.RETURN || clean === "returnFork" || clean === "priorTopicReturnPath" || clean === "originReturnPath") return "return";
+    if (kind === OPTION_KIND.FORWARD) return "forward";
+    if (kind === OPTION_KIND.ARCHETYPE) return "archetypal_engagement";
+    if (isControlTarget(clean)) return "control";
+    return "conversation";
   }
 
   function getLocalNode(target) {
@@ -1728,27 +2234,66 @@
     }
   }
 
-  function renderConversationOptions(options) {
+  function renderConversationOptions(options, traversalControls) {
     clearElement(els.optionsPanel);
 
-    var normalized = normalizeConversationOptions(options).slice(0, MAX_VISIBLE_OPTIONS);
-    normalized = shapeConversationOptions(normalized);
-    normalized = compressOptions(normalized, MAX_VISIBLE_OPTIONS);
+    var normalizedOptions = normalizeConversationOptions(options);
+    var normalizedControls = normalizeConversationOptions(traversalControls || []);
 
-    if (!normalized.length) {
+    var archetypeOptions = normalizedOptions.filter(function (item) {
+      return item.optionKind === OPTION_KIND.ARCHETYPE;
+    }).slice(0, MAX_VISIBLE_ARCHETYPE_OPTIONS);
+
+    var conversationOptions = normalizedOptions.filter(function (item) {
+      return item.optionKind !== OPTION_KIND.ARCHETYPE &&
+        item.optionKind !== OPTION_KIND.RETURN &&
+        item.optionKind !== OPTION_KIND.PARALLEL &&
+        item.optionKind !== OPTION_KIND.FORWARD &&
+        item.optionKind !== OPTION_KIND.CONTROL;
+    }).slice(0, MAX_VISIBLE_OPTIONS);
+
+    var movementControls = normalizedOptions.concat(normalizedControls).filter(function (item) {
+      return item.optionKind === OPTION_KIND.FORWARD ||
+        item.optionKind === OPTION_KIND.RETURN ||
+        item.optionKind === OPTION_KIND.PARALLEL ||
+        item.optionKind === OPTION_KIND.CONTROL;
+    });
+
+    movementControls = uniqueOptions(movementControls).slice(0, MAX_VISIBLE_TRAVERSAL_CONTROLS);
+
+    if (!archetypeOptions.length && !conversationOptions.length && !movementControls.length) {
       els.optionsPanel.setAttribute("hidden", "");
       return;
     }
 
     els.optionsPanel.removeAttribute("hidden");
-    els.optionsPanel.setAttribute("data-panel-kind", "conversation");
+    els.optionsPanel.setAttribute("data-panel-kind", "fork-bridge");
+    els.optionsPanel.setAttribute("data-fork-bridge-renderer", "active");
+
+    if (archetypeOptions.length) {
+      appendOptionGroup("Choose How To Engage", archetypeOptions, "archetype");
+    }
+
+    if (conversationOptions.length) {
+      appendOptionGroup(archetypeOptions.length ? "Stay With This Room" : "Choose What To Say", conversationOptions, "conversation");
+    }
+
+    if (movementControls.length) {
+      appendOptionGroup("Choose How To Move", movementControls, "traversal");
+    }
+  }
+
+  function appendOptionGroup(titleText, options, groupKind) {
+    var group = document.createElement("section");
+    group.className = "jeeves-option-group";
+    group.setAttribute("data-jeeves-option-group", groupKind);
 
     var title = document.createElement("div");
     title.className = "jeeves-panel-title";
-    title.textContent = "Choose What To Say";
-    els.optionsPanel.appendChild(title);
+    title.textContent = titleText;
+    group.appendChild(title);
 
-    normalized.forEach(function (option, index) {
+    options.forEach(function (option, index) {
       var button = document.createElement("button");
       button.type = "button";
       button.className = "jeeves-option";
@@ -1757,11 +2302,15 @@
       button.setAttribute("data-type", option.type || "conversation");
       button.setAttribute("data-scope-lane", option.scopeLane || "objective");
       button.setAttribute("data-scope-stage", option.scopeStage || inferScopeStage(option.target));
-      button.setAttribute("data-option-kind", "conversation");
+      button.setAttribute("data-option-kind", normalizeOptionKind(option.optionKind || OPTION_KIND.CONVERSATION));
+      button.setAttribute("data-option-group", groupKind);
       button.setAttribute("data-option-index", String(index));
-      button.textContent = enforceConversationLanguage(option.label, option.target);
-      els.optionsPanel.appendChild(button);
+      if (option.bridgeReason) button.setAttribute("data-bridge-reason", option.bridgeReason);
+      button.textContent = enforceConversationLanguage(option.label, option.target, option.optionKind);
+      group.appendChild(button);
     });
+
+    els.optionsPanel.appendChild(group);
   }
 
   function renderHandoffs(handoffs, handoffLabels, routeHints) {
@@ -1792,6 +2341,7 @@
       link.setAttribute("data-route-id", handoff.routeId);
       link.setAttribute("data-href", handoff.href);
       link.setAttribute("data-route-index", String(index));
+      link.setAttribute("data-option-kind", OPTION_KIND.ROUTE);
       link.href = handoff.href;
       link.textContent = enforceRouteLanguage(handoff.label, handoff.routeId);
       els.handoffPanel.appendChild(link);
@@ -1818,16 +2368,21 @@
       var type = item.type || "conversation";
       if (type === "route" || type === "handoff") return;
 
+      var optionKind = normalizeOptionKind(item.optionKind || item.kind || "");
+      if (!optionKind) optionKind = deriveOptionKind(item, target, type);
+
       var label = item.label || CONVERSATION_LABELS[target] || "Tell me more.";
       var normalized = {
-        label: enforceConversationLanguage(label, target),
+        label: enforceConversationLanguage(label, target, optionKind),
         target: target,
         type: isControlTarget(target) ? "control" : normalizeOptionType(type),
         scopeLane: item.scopeLane || (isNarrativeTarget(target) ? "narrative" : "objective"),
-        scopeStage: item.scopeStage || inferScopeStage(target)
+        scopeStage: item.scopeStage || inferScopeStage(target),
+        optionKind: optionKind,
+        bridgeReason: item.bridgeReason || item.reason || ""
       };
 
-      var key = normalized.target + "::" + normalized.label;
+      var key = normalized.target + "::" + normalized.label + "::" + normalized.optionKind;
       if (seen[key]) return;
       seen[key] = true;
       result.push(normalized);
@@ -1866,66 +2421,12 @@
       result.push({
         routeId: route,
         href: href,
-        label: enforceRouteLanguage(label, route)
+        label: enforceRouteLanguage(label, route),
+        optionKind: OPTION_KIND.ROUTE
       });
     });
 
     return result;
-  }
-
-  function shapeConversationOptions(options) {
-    var expression = getExpression();
-
-    if (!shouldUseExpressionOptionGate()) return options;
-    if (!expression || typeof expression.shapeOptions !== "function") return options;
-
-    try {
-      var shaped = expression.shapeOptions(options.slice(), {
-        panel: "entry_gate_options",
-        contract: CONTRACT,
-        currentNode: state.currentNode,
-        currentTopic: state.currentTopic,
-        currentScopeStage: state.currentScopeStage,
-        selectedTarget: state.lastSelectedTarget,
-        selectedLabel: state.lastSelectedLabel,
-        requestMode: state.lastRequestMode,
-        visitorTrail: state.visitorTrail.slice(-MAX_TRAIL),
-        visitedNodes: state.visitedNodes.slice(-MAX_TRAIL),
-        selectedTargets: state.selectedTargets.slice(-MAX_TRAIL),
-        currentRoomContext: CURRENT_ROOM_CONTEXT,
-        currentRoomRole: CURRENT_ROOM_ROLE,
-        currentRoomPremise: CURRENT_ROOM_PREMISE,
-        depthMode: state.lastApiDepthMode,
-        fibonacciDepth: state.lastFibonacciDepth,
-        fibonacciStage: state.lastFibonacciStage,
-        narrativeFrame: state.lastBackbrainFrame,
-        expressionMode: "training_wheels_only",
-        characterState: {
-          overviewDone: state.characterOverviewDone,
-          rolesRevealed: state.characterRolesRevealed,
-          profileViewCount: state.characterProfileViewCount,
-          relationshipViews: state.characterRelationshipViews,
-          profileViews: Object.assign({}, state.characterProfileViews)
-        }
-      });
-
-      if (!Array.isArray(shaped)) return options;
-
-      return shaped.map(function (item, index) {
-        var base = options[index] || {};
-        return {
-          label: item.label || base.label,
-          target: normalizeTarget(item.target || base.target),
-          type: item.type || base.type || "conversation",
-          scopeLane: item.scopeLane || base.scopeLane || "objective",
-          scopeStage: item.scopeStage || base.scopeStage || inferScopeStage(item.target || base.target)
-        };
-      }).filter(function (item) {
-        return item.target && !looksLikeRouteTarget(item.target);
-      });
-    } catch (_error) {
-      return options;
-    }
   }
 
   function shapeHandoffs(handoffs, handoffLabels, routeHints) {
@@ -1939,12 +2440,13 @@
           label = expression.shapeRouteLabel(label, {
             routeId: handoff.routeId,
             href: handoff.href,
-            panel: "entry_gate_door",
+            panel: "prepared_door",
             contract: CONTRACT,
             currentNode: state.currentNode,
             currentTopic: state.currentTopic,
             currentScopeStage: state.currentScopeStage,
-            expressionMode: "training_wheels_only"
+            bridgeMoment: BRIDGE_MOMENT.PREPARED_DOOR,
+            expressionMode: "narrative_fork_bridge"
           }) || label;
         } catch (_error) {
           label = handoff.label;
@@ -1954,7 +2456,8 @@
       return {
         routeId: handoff.routeId,
         href: (routeHints && routeHints[handoff.routeId]) || handoff.href,
-        label: enforceRouteLanguage(label, handoff.routeId)
+        label: enforceRouteLanguage(label, handoff.routeId),
+        optionKind: OPTION_KIND.ROUTE
       };
     }).filter(function (handoff) {
       return handoff.routeId && handoff.href;
@@ -2000,23 +2503,73 @@
     return cleanOptions;
   }
 
-  function compressOptions(options, maxCount) {
-    var cleanOptions = normalizeConversationOptions(options);
-    var limit = maxCount || MAX_VISIBLE_OPTIONS;
-    return cleanOptions.slice(0, limit);
+  function limitPrimaryOptions(options) {
+    var cleanOptions = uniqueOptions(normalizeConversationOptions(options));
+    var archetypes = cleanOptions.filter(function (item) {
+      return item.optionKind === OPTION_KIND.ARCHETYPE;
+    }).slice(0, MAX_VISIBLE_ARCHETYPE_OPTIONS);
+
+    var others = cleanOptions.filter(function (item) {
+      return item.optionKind !== OPTION_KIND.ARCHETYPE;
+    }).slice(0, MAX_VISIBLE_OPTIONS);
+
+    return archetypes.concat(others);
   }
 
-  function enforceConversationLanguage(label, target) {
+  function limitTraversalControls(controls) {
+    return uniqueOptions(normalizeConversationOptions(controls)).slice(0, MAX_VISIBLE_TRAVERSAL_CONTROLS);
+  }
+
+  function uniqueOptions(options) {
+    var seen = {};
+    var result = [];
+
+    normalizeConversationOptions(options).forEach(function (option) {
+      var key = option.target + "::" + option.optionKind + "::" + option.label;
+      if (seen[key]) return;
+      seen[key] = true;
+      result.push(option);
+    });
+
+    return result;
+  }
+
+  function hasOptionTarget(options, target) {
+    var clean = normalizeTarget(target);
+    return normalizeConversationOptions(options).some(function (option) {
+      return normalizeTarget(option.target) === clean;
+    });
+  }
+
+  function enforceConversationLanguage(label, target, optionKind) {
     var clean = cleanPublicText(label || "");
     var fallback = CONVERSATION_LABELS[target] || "";
+    var kind = normalizeOptionKind(optionKind || OPTION_KIND.CONVERSATION);
 
     if (!clean) clean = fallback || "Tell me more.";
 
-    if (/^(open|visit|enter|explore|launch|go to)\b/i.test(clean)) {
+    if (kind === OPTION_KIND.RETURN && !/^(return|step back|go back|re-center|start over)/i.test(clean)) {
+      clean = fallback || "Step back one threshold.";
+    }
+
+    if (kind === OPTION_KIND.PARALLEL && !/^(cross|open beside|move toward|show the nearby|enter|follow)/i.test(clean)) {
+      clean = fallback || "Cross into the nearby room.";
+    }
+
+    if (kind === OPTION_KIND.FORWARD && !/^(continue|stay with|go deeper|move forward|follow)/i.test(clean)) {
+      clean = fallback || "Continue on this path.";
+    }
+
+    if (/^(open|visit|explore|launch|go to)\b/i.test(clean) && kind !== OPTION_KIND.PARALLEL) {
       clean = fallback || makeTellMeLabel(target);
     }
 
-    if (!hasAnyPrefix(clean, CONVERSATION_LANGUAGE_PREFIXES) && !/^(who|what|why|which|how|where|when)\b/i.test(clean) && !/^(ask|re-center|return|start|give me|let’s change|change)\b/i.test(clean)) {
+    if (
+      kind === OPTION_KIND.CONVERSATION &&
+      !hasAnyPrefix(clean, CONVERSATION_LANGUAGE_PREFIXES) &&
+      !/^(who|what|why|which|how|where|when)\b/i.test(clean) &&
+      !/^(ask|re-center|return|start|give me|let’s change|change)\b/i.test(clean)
+    ) {
       clean = fallback || makeTellMeLabel(target);
     }
 
@@ -2062,6 +2615,57 @@
   function normalizeOptionType(type) {
     if (type === "topic" || type === "calibration" || type === "back" || type === "control") return type;
     return "conversation";
+  }
+
+  function normalizeOptionKind(kind) {
+    var clean = String(kind || "").trim();
+
+    if (clean === "archetype" || clean === "archetypeAnswer") return OPTION_KIND.ARCHETYPE;
+    if (clean === "back") return OPTION_KIND.RETURN;
+    if (clean === "adjacent" || clean === "sideways" || clean === "crossing") return OPTION_KIND.PARALLEL;
+    if (clean === "continue" || clean === "depth") return OPTION_KIND.FORWARD;
+
+    if (clean === OPTION_KIND.ARCHETYPE ||
+      clean === OPTION_KIND.CONVERSATION ||
+      clean === OPTION_KIND.FORWARD ||
+      clean === OPTION_KIND.RETURN ||
+      clean === OPTION_KIND.PARALLEL ||
+      clean === OPTION_KIND.CONTROL ||
+      clean === OPTION_KIND.ROUTE) {
+      return clean;
+    }
+
+    return "";
+  }
+
+  function deriveOptionKind(item, target, type) {
+    var cleanTarget = normalizeTarget(target);
+    var label = String(item && item.label || "").toLowerCase();
+
+    if (isControlTarget(cleanTarget) || type === "control") {
+      if (cleanTarget === "priorTopicReturnPath" || cleanTarget === "originReturnPath" || cleanTarget === "returnFork" || cleanTarget === "restartFork") {
+        return OPTION_KIND.RETURN;
+      }
+      return OPTION_KIND.CONTROL;
+    }
+
+    if (/^(i |let me|my |i’m |i am )/i.test(item && item.label || "")) {
+      return OPTION_KIND.ARCHETYPE;
+    }
+
+    if (/^(cross|open beside|move toward|nearby|adjacent)/i.test(item && item.label || "")) {
+      return OPTION_KIND.PARALLEL;
+    }
+
+    if (/^(continue|stay with|go deeper|move forward|follow)/i.test(item && item.label || "")) {
+      return OPTION_KIND.FORWARD;
+    }
+
+    if (label.indexOf("return") === 0 || label.indexOf("step back") === 0 || label.indexOf("start over") === 0) {
+      return OPTION_KIND.RETURN;
+    }
+
+    return OPTION_KIND.CONVERSATION;
   }
 
   function normalizeRouteId(routeId) {
@@ -2116,7 +2720,7 @@
     ].indexOf(normalizeTarget(target)) !== -1;
   }
 
-  function convo(label, target, type) {
+  function convo(label, target, type, optionKind) {
     var cleanTarget = normalizeTarget(target);
     return {
       label: label || CONVERSATION_LABELS[cleanTarget] || "Tell me more.",
@@ -2124,8 +2728,22 @@
       type: type || "conversation",
       scopeLane: isNarrativeTarget(cleanTarget) ? "narrative" : "objective",
       scopeStage: inferScopeStage(cleanTarget),
-      optionKind: "conversation"
+      optionKind: normalizeOptionKind(optionKind || OPTION_KIND.CONVERSATION) || OPTION_KIND.CONVERSATION
     };
+  }
+
+  function archetype(label, target) {
+    return convo(label, target, "conversation", OPTION_KIND.ARCHETYPE);
+  }
+
+  function traversal(label, target, optionKind, type, reason) {
+    var option = convo(label, target, type || "conversation", optionKind || OPTION_KIND.FORWARD);
+    option.bridgeReason = reason || "";
+    return option;
+  }
+
+  function control(label, target) {
+    return convo(label, target, "control", OPTION_KIND.CONTROL);
   }
 
   function isNarrativeTarget(target) {
@@ -2203,13 +2821,39 @@
 
   function updateStateForSelection(option) {
     var target = normalizeTarget(option.target);
+    var optionKind = normalizeOptionKind(option.optionKind || OPTION_KIND.CONVERSATION) || OPTION_KIND.CONVERSATION;
+
     state.returnStack.push(state.currentNode);
     state.returnStack = state.returnStack.slice(-MAX_TRAIL);
+
+    if (optionKind === OPTION_KIND.PARALLEL) {
+      state.branchStack.push({
+        from: state.currentNode,
+        to: target,
+        at: new Date().toISOString()
+      });
+      state.branchStack = state.branchStack.slice(-MAX_TRAIL);
+      state.lastParallelTarget = target;
+    }
+
+    if (optionKind === OPTION_KIND.ARCHETYPE) {
+      state.characterArchetypeAnswers.push(cleanPublicText(option.label));
+      state.characterArchetypeAnswers = state.characterArchetypeAnswers.slice(-12);
+    }
+
+    state.transitionTrail.push({
+      from: state.currentNode,
+      to: target,
+      optionKind: optionKind,
+      label: cleanPublicText(option.label),
+      at: new Date().toISOString()
+    });
+    state.transitionTrail = state.transitionTrail.slice(-MAX_TRAIL);
 
     state.selectedTargets.push(target);
     state.selectedTargets = state.selectedTargets.slice(-MAX_TRAIL);
 
-    state.selectedOptionKeys.push(target + "::" + cleanPublicText(option.label));
+    state.selectedOptionKeys.push(target + "::" + optionKind + "::" + cleanPublicText(option.label));
     state.selectedOptionKeys = state.selectedOptionKeys.slice(-MAX_TRAIL);
 
     state.visitedNodes.push(target);
@@ -2223,6 +2867,7 @@
     state.currentPath = target;
     state.currentTopic = inferTopicFromTarget(target);
     state.currentScopeStage = inferScopeStage(target);
+    state.lastOptionKind = optionKind;
 
     if (target === "charactersPath") state.characterOverviewDone = true;
     if (target === "characterIdentityPath") state.characterRolesRevealed = true;
@@ -2256,6 +2901,13 @@
 
     Object.keys(CHARACTER_TARGETS).forEach(function (target) {
       set[target] = true;
+    });
+
+    Object.keys(ADJACENT_ROOM_FALLBACKS).forEach(function (target) {
+      set[target] = true;
+      if (ADJACENT_ROOM_FALLBACKS[target] && ADJACENT_ROOM_FALLBACKS[target].target) {
+        set[ADJACENT_ROOM_FALLBACKS[target].target] = true;
+      }
     });
 
     state.selectedTargets.forEach(function (target) {
@@ -2381,7 +3033,7 @@
           currentRoomRole: CURRENT_ROOM_ROLE,
           currentRoomPremise: CURRENT_ROOM_PREMISE,
           routeAuthority: ROUTE_AUTHORITY,
-          expressionMode: "training_wheels_only"
+          expressionMode: "narrative_fork_bridge"
         }) || value;
       } catch (_error) {}
     }
@@ -2424,7 +3076,9 @@
           visitorText: text,
           selectedTarget: "",
           selectedLabel: "",
-          requestMode: "freeform"
+          requestMode: "freeform",
+          optionKind: OPTION_KIND.CONVERSATION,
+          bridgeMoment: BRIDGE_MOMENT.ENTRANCE
         }).then(function (response) {
           renderBackbrainResponse(response, null, {
             fallbackTarget: "sharpQuestion",
@@ -2433,14 +3087,15 @@
           return response;
         });
       },
-      enrich: function (target, label) {
+      enrich: function (target, label, optionKind) {
         var cleanTarget = normalizeTarget(target);
         return runEnrichedConversation({
           target: cleanTarget,
           label: label || CONVERSATION_LABELS[cleanTarget] || "Tell me more.",
           type: "conversation",
           scopeLane: isNarrativeTarget(cleanTarget) ? "narrative" : "objective",
-          scopeStage: inferScopeStage(cleanTarget)
+          scopeStage: inferScopeStage(cleanTarget),
+          optionKind: normalizeOptionKind(optionKind || OPTION_KIND.CONVERSATION) || OPTION_KIND.CONVERSATION
         });
       },
       recenter: function () {
@@ -2449,7 +3104,8 @@
       rush: rushReveal,
       setBrainEndpoint: function (endpoint) {
         if (endpoint) state.brainEndpoint = endpoint;
-      }
+      },
+      buildForkBridgeContext: buildForkBridgeContext
     };
 
     window.HEARTH.JEEVES.frontbrain = api;

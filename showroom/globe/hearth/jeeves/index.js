@@ -1,19 +1,23 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_GUIDED_ENTRANCE_EXPRESSION_CONNECTOR_TNT_v25_4
+// HEARTH_JEEVES_FRONTBRAIN_ENTRY_STACK_CONNECTOR_READING_RHYTHM_TNT_v25_5
 // Full-file replacement.
 // Client-side frontbrain / visible conversation carrier only.
 // Purpose:
-// - Preserve v25.3 reading rhythm, house-state toggles, tap-to-speed, endpoint fallback, and bridgeContext.
-// - Align frontbrain connector to Expression v5.3 guided-entrance contract.
-// - Use one guided chooser, two traditional/public paths, and two narrative/deeper paths.
-// - Route typed guidance requests to the split-interface chooser, not directly to Compass.
-// - Pass bridgeContext into Expression shaping.
-// - Prefer actual clicked labels over stale target-default labels.
-// - Reflect the active Expression contract/version in payload voice mode.
-// - Include Frontier subroutes in allowed route contract.
+// - Preserve v25.4 guided entrance, reading rhythm, tap-to-speed,
+//   endpoint fallback, bridgeContext, clicked-label priority,
+//   Expression shaping, option rendering, route handoff rendering,
+//   and route execution.
+// - Align with Expression v5.4 entry-stack / base-pool / illumination contract.
+// - Carry entryStackMode, basePoolMode, illuminationMode, and choiceClosure
+//   from visible option -> frontbrain payload -> API/North.
+// - Add broad route-family permissions without mirroring the full backbrain registry.
+// - Preserve existing API contract fields so API v5.3 remains compatible.
+// - Prepare API v5.4 to consume strategic fields later.
 // Does not own:
 // - API/North canon
-// - Expression wording authority
+// - deep meaning
+// - deep route expansion
+// - Expression public wording authority
 // - CSS layout
 // - HTML shell authority
 // - final server meaning
@@ -21,126 +25,67 @@
 
 "use strict";
 
-(function mountHearthJeevesFrontbrain(global) {
-  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_ENTRANCE_EXPRESSION_CONNECTOR_TNT_v25_4";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_READING_RHYTHM_ALIGNMENT_TNT_v25_3";
+(function attachHearthJeevesFrontbrain(global) {
+  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_ENTRY_STACK_CONNECTOR_READING_RHYTHM_TNT_v25_5";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_ENTRANCE_EXPRESSION_CONNECTOR_TNT_v25_4";
+  const EXPRESSION_CONTRACT_TARGET = "HEARTH_JEEVES_EXPRESSION_ENTRY_STACK_BASE_POOL_ILLUMINATION_TNT_v5_4";
+  const API_CONTRACT_TARGET = "HEARTH_JEEVES_BACKBRAIN_NORTH_CONVERSATIONAL_ENGINE_ROUTE_ACCEPTANCE_TNT_v5_3";
+  const API_CONTRACT_NEXT = "HEARTH_JEEVES_BACKBRAIN_ENTRY_STACK_DEEP_EXPANSION_TNT_v5_4";
+
+  const VERSION = "25.5.0";
+  const ROOT_ID = "hearthJeevesMount";
 
   const API_ENDPOINTS = Object.freeze([
     "/api/jeeves",
     "/api/jeeves.js"
   ]);
 
-  const ROOT_ID = "hearthJeevesMount";
-
-  const MAX_THREAD_BUBBLES = 80;
-  const MAX_TRAIL_ITEMS = 24;
-
   const READ_BASE_MS = 650;
   const READ_PER_CHAR_MS = 20;
   const READ_MAX_MS = 3600;
 
-  const PROMPT_MODES = Object.freeze({
-    STORY: "story_prompt",
-    SKEPTIC: "skeptic_prompt",
-    PRACTICAL: "practical_prompt",
-    PERSONAL: "personal_prompt",
-    PROGRESSION: "progression_prompt",
-    RECENTER: "recenter_prompt",
-    UNKNOWN: "unknown_prompt"
-  });
-
-  const OPTION_KINDS = Object.freeze({
-    CONVERSATION: "conversation_prompt",
-    FORWARD: "forward",
-    RETURN: "return",
-    PARALLEL: "parallel",
-    ROUTE: "route",
-    CONTROL: "control"
-  });
-
-  const ARCHETYPE_ALIGNMENTS = Object.freeze({
-    STORY: "story_entry",
-    PROOF: "proof_entry",
-    PRACTICAL: "practical_entry",
-    PERSONAL: "personal_entry",
-    SOURCE: "source_entry",
-    BOUNDARY: "boundary_entry",
-    SYSTEMS: "systems_entry",
-    UNKNOWN: "unknown_entry"
-  });
-
-  const BRIDGE_MOMENTS = Object.freeze({
-    ENTRANCE: "entrance_fork",
-    BEFORE: "before_knowledge",
-    AFTER: "after_knowledge",
-    RETURN: "return_fork",
-    PARALLEL: "parallel_crossing",
-    RECENTER: "recenter_fork",
-    PREPARED_DOOR: "prepared_door",
-    NONE: "none"
-  });
-
-  const MOVEMENT_INTENTS = Object.freeze({
-    ASK: "ask_jeeves",
-    CONTINUE: "continue_current_path",
-    RETURN: "return_one_threshold",
-    CROSS: "cross_to_related_room",
-    OPEN_DOOR: "open_prepared_door",
-    RECENTER: "recenter",
-    UNKNOWN: "unknown"
-  });
-
-  const STAGES = Object.freeze({
-    BOOT: "boot",
-    ENTRANCE_OVERVIEW: "entrance_overview",
-    SPLIT_INTERFACE_GATE: "split_interface_gate",
-    TRADITIONAL_WEBSITE_LANE: "traditional_website_lane",
-    NARRATIVE_PATH_LANE: "narrative_path_lane",
-    MISSION_LANE: "mission_lane",
-    BRIDGE_LANE: "bridge_lane",
-    DIAGNOSTIC_REFERRAL: "diagnostic_referral",
-    OPEN_CONVERSATION: "open_conversation"
-  });
-
-  const LANES = Object.freeze({
-    UNKNOWN: "",
-    TRADITIONAL: "traditional",
-    NARRATIVE: "narrative",
-    BRIDGE: "bridge",
-    DIAGNOSTIC: "diagnostic"
-  });
-
   const TARGETS = Object.freeze({
     DIAMOND_GATE_OVERVIEW: "diamondGateOverviewPath",
     SPLIT_INTERFACE: "splitInterfaceBridgePath",
+
     TRADITIONAL_WEBSITE: "traditionalWebsiteOverviewPath",
     NARRATIVE_PATH: "narrativePathOverview",
+
     MISSION_OVERVIEW: "missionOverviewPath",
     MISSION_INNER: "missionInnerPath",
     MISSION_COMMUNITY: "missionCommunityPath",
     MISSION_COLLABORATION: "missionCollaborationPath",
+
     PRACTICAL_RELEVANCE: "practicalRelevancePath",
+
     DIAGNOSTIC_REFERRAL: "diagnosticReferralPath",
     DIAGNOSTIC: "diagnosticPath",
     CHARACTER_MIRROR: "characterMirrorPath",
+
     MIRRORLAND: "mirrorlandPath",
-    COMPASS: "compassPath",
+    HEARTH: "hearthPath",
+    FRONTIER: "frontierPath",
+    SCIENTIFIC_LAW: "scientificLawPath",
+
+    TRADITIONAL_COMPASS: "compassPath",
     PRODUCTS: "productsPath",
     LAWS: "lawsPath",
     SEAN: "seanPath",
     UNDERDOG: "underdogPath",
-    HEARTH: "hearthPath",
-    FRONTIER: "frontierPath",
-    SCIENTIFIC_LAW: "scientificLawPath",
     CHARACTERS: "charactersPath",
+
     RECENTER: "recenterNode",
-    CLEAN_DOOR: "cleanDoor"
+    CLEAN_DOOR: "cleanDoor",
+    RETURN_FORK: "returnFork",
+    RESTART_FORK: "restartFork",
+    SHARP_QUESTION: "sharpQuestion"
   });
 
   const ROUTES = Object.freeze({
-    COMPASS: "compass",
     HOME: "home",
+    COMPASS: "compass",
     SITE_GUIDE: "siteGuide",
+
     COHERENCE_DIAGNOSTIC: "coherenceDiagnostic",
     MEET_SEAN: "meetSean",
     PRODUCTS: "products",
@@ -148,12 +93,11 @@
     SCIENTIFIC_LAW: "scientificLaw",
     GAUGES: "gauges",
     SHOWROOM: "showroom",
+
     HEARTH: "hearth",
     MIRRORLAND: "mirrorland",
-    ZIONTS: "zionts",
-    AUDRALIA: "audralia",
-    H_EARTH: "hEarth",
     FRONTIER: "frontier",
+
     FRONTIER_ENERGY: "frontierEnergy",
     FRONTIER_WATER: "frontierWater",
     FRONTIER_WASTE: "frontierWaste",
@@ -165,48 +109,54 @@
     FRONTIER_SHIMMER: "frontierShimmer",
     FRONTIER_TRAJECTORY: "frontierTrajectory",
     FRONTIER_VISION: "frontierVision",
+
     CHARACTERS: "characters",
+    CONTROL_ROOM: "controlRoom",
     NINE_SUMMITS: "nineSummits",
-    UNDERDOG: "aboutUnderdog"
+    UNDERDOG: "aboutUnderdog",
+
+    AUDRALIA: "audralia",
+    H_EARTH: "hEarth",
+    ZIONTS: "zionts"
   });
 
-  const ROUTE_HINTS = Object.freeze({
-    compass: "/",
+  const ROUTE_HREFS = Object.freeze({
     home: "/",
+    compass: "/compass/",
     siteGuide: "/site-guide/",
     coherenceDiagnostic: "/coherence-diagnostic/",
-    meetSean: "/meet-sean-mansfield/",
+    meetSean: "/meet-sean/",
     products: "/products/",
     laws: "/laws/",
-    scientificLaw: "/laws/scientific-law/",
+    scientificLaw: "/scientific-law/",
     gauges: "/gauges/",
     showroom: "/showroom/",
     hearth: "/showroom/globe/hearth/",
-    mirrorland: "/showroom/globe/",
-    zionts: "/showroom/globe/earth/",
+    mirrorland: "/mirrorland/",
+    zionts: "/showroom/globe/zionts/",
     audralia: "/showroom/globe/audralia/",
     hEarth: "/showroom/globe/h-earth/",
-    frontier: "/explore/frontier/",
-    frontierEnergy: "/explore/frontier/energy/",
-    frontierWater: "/explore/frontier/water/",
-    frontierWaste: "/explore/frontier/waste/",
-    frontierClosedLoop: "/explore/frontier/closed-loop/",
-    frontierInfrastructure: "/explore/frontier/infrastructure/",
-    frontierLattice: "/explore/frontier/lattice/",
-    frontierUrban: "/explore/frontier/urban/",
-    frontierManual: "/explore/frontier/manual/",
-    frontierShimmer: "/explore/frontier/shimmer/",
-    frontierTrajectory: "/explore/frontier/trajectory/",
-    frontierVision: "/explore/frontier/vision/",
+    frontier: "/frontier/",
+    frontierEnergy: "/frontier/energy/",
+    frontierWater: "/frontier/water/",
+    frontierWaste: "/frontier/waste/",
+    frontierClosedLoop: "/frontier/closed-loop/",
+    frontierInfrastructure: "/frontier/infrastructure/",
+    frontierLattice: "/frontier/lattice/",
+    frontierUrban: "/frontier/urban/",
+    frontierManual: "/frontier/manual/",
+    frontierShimmer: "/frontier/shimmer/",
+    frontierTrajectory: "/frontier/trajectory/",
+    frontierVision: "/frontier/vision/",
     characters: "/characters/",
-    controlRoom: "/showroom/globe/hearth/diagnostic/",
+    controlRoom: "/control-room/",
     nineSummits: "/nine-summits/",
-    aboutUnderdog: "/about-this-underdog/"
+    aboutUnderdog: "/this-underdog/"
   });
 
-  const HANDOFF_LABELS = Object.freeze({
-    compass: "Open the Compass",
+  const ROUTE_LABELS = Object.freeze({
     home: "Open the Public Entry",
+    compass: "Open the Compass",
     siteGuide: "Open the Traditional Website",
     coherenceDiagnostic: "Open the Coherence Diagnostic",
     meetSean: "Meet Sean",
@@ -233,38 +183,208 @@
     frontierTrajectory: "Open Frontier Trajectory",
     frontierVision: "Open Frontier Vision",
     characters: "Open the Characters Hall",
+    controlRoom: "Open the Control Room",
     nineSummits: "Open Nine Summits",
     aboutUnderdog: "Open This Underdog"
   });
 
-  const TARGET_LABELS = Object.freeze({
-    diamondGateOverviewPath: "What is DiamondGateBridge.com?",
-    splitInterfaceBridgePath: "Can you help me choose where to start?",
-    traditionalWebsiteOverviewPath: "What is the traditional website for?",
-    narrativePathOverview: "What is the narrative path?",
-    missionOverviewPath: "What is the mission behind this?",
-    missionInnerPath: "What is the inner mission?",
-    missionCommunityPath: "What is the community mission?",
-    missionCollaborationPath: "How does the mission become practical?",
-    practicalRelevancePath: "What can I actually do here?",
-    diagnosticReferralPath: "Where can I take the alignment diagnostic?",
-    diagnosticPath: "What is the Coherence Diagnostic?",
-    characterMirrorPath: "What does the Character Mirror show?",
-    mirrorlandPath: "What is Mirrorland?",
-    compassPath: "How does the Compass help me start?",
-    productsPath: "What can I actually do here?",
-    lawsPath: "What keeps this honest?",
-    seanPath: "Who is Sean Mansfield?",
-    underdogPath: "What is This Underdog?",
-    hearthPath: "What is Hearth?",
-    frontierPath: "What is the Frontier Playground?",
-    scientificLawPath: "What makes this trustworthy?",
-    charactersPath: "Who are the Characters?",
-    recenterNode: "Can you re-center me?",
-    cleanDoor: "What is the cleanest next door?"
+  const ENTRY_STACK_MODES = Object.freeze({
+    ENTRANCE: "entrance",
+    GUIDED_CHOOSER: "guidedChooser",
+    PATH_SAMPLE: "pathSample",
+    BASE_POOL: "basePool",
+    DIG_DEEPER: "digDeeper",
+    PREPARED_DOOR: "preparedDoor",
+    RETURN: "return"
   });
 
-  const BOOT_BUBBLES = Object.freeze([
+  const BASE_POOL_MODES = Object.freeze({
+    NONE: "none",
+    ESTATE_OVERVIEW: "estateOverview",
+    GUIDED_CHOOSER: "guidedChooser",
+    PUBLIC_MAP: "publicMap",
+    NARRATIVE_PATH: "narrativePath",
+    MISSION: "mission",
+    INNER_MISSION: "innerMission",
+    COMMUNITY_MISSION: "communityMission",
+    COLLABORATION_MISSION: "collaborationMission",
+    PRACTICAL: "practical",
+    PROOF: "proof",
+    DIAGNOSTIC_BOUNDARY: "diagnosticBoundary",
+    CHARACTER_MIRROR: "characterMirror",
+    MIRRORLAND: "mirrorland",
+    HEARTH: "hearth",
+    FRONTIER: "frontier",
+    CHARACTERS: "characters",
+    CREATOR: "creator",
+    UNDERDOG: "underdog",
+    RETURN: "return"
+  });
+
+  const ILLUMINATION_MODES = Object.freeze({
+    PUBLIC: "public",
+    THRESHOLD: "threshold",
+    NARRATIVE: "narrative",
+    PROOF: "proof",
+    PRACTICAL: "practical",
+    RETURN: "return",
+    DIAGNOSTIC_BOUNDARY: "diagnosticBoundary"
+  });
+
+  const REQUEST_MODES = Object.freeze({
+    FREEFORM: "freeform",
+    NODE_ENRICHMENT: "node_enrichment",
+    ROUTE_EXPLANATION: "route_explanation",
+    CHARACTER_ARCHETYPE: "character_archetype",
+    RECENTER: "recenter"
+  });
+
+  const PROMPT_MODES = Object.freeze({
+    STORY: "story_prompt",
+    SKEPTIC: "skeptic_prompt",
+    PRACTICAL: "practical_prompt",
+    PERSONAL: "personal_prompt",
+    PROGRESSION: "progression_prompt",
+    RECENTER: "recenter_prompt",
+    UNKNOWN: "unknown_prompt"
+  });
+
+  const OPTION_KINDS = Object.freeze({
+    CONVERSATION_PROMPT: "conversation_prompt",
+    FORWARD: "forward",
+    RETURN: "return",
+    PARALLEL: "parallel",
+    ROUTE: "route",
+    CONTROL: "control"
+  });
+
+  const MOVEMENT_INTENTS = Object.freeze({
+    ASK_JEEVES: "ask_jeeves",
+    CONTINUE_CURRENT_PATH: "continue_current_path",
+    RETURN_ONE_THRESHOLD: "return_one_threshold",
+    CROSS_TO_RELATED_ROOM: "cross_to_related_room",
+    OPEN_PREPARED_DOOR: "open_prepared_door",
+    RECENTER: "recenter",
+    UNKNOWN: "unknown"
+  });
+
+  const ROUTE_FAMILIES = Object.freeze({
+    traditionalWebsiteOverviewPath: Object.freeze([
+      "siteGuide",
+      "compass",
+      "products",
+      "laws",
+      "meetSean"
+    ]),
+    narrativePathOverview: Object.freeze([
+      "mirrorland",
+      "hearth",
+      "characters",
+      "frontier",
+      "audralia",
+      "hEarth",
+      "zionts"
+    ]),
+    missionOverviewPath: Object.freeze([
+      "mirrorland",
+      "frontier",
+      "coherenceDiagnostic",
+      "nineSummits",
+      "aboutUnderdog"
+    ]),
+    practicalRelevancePath: Object.freeze([
+      "products",
+      "frontier",
+      "frontierEnergy",
+      "frontierWater",
+      "frontierWaste",
+      "frontierClosedLoop",
+      "frontierInfrastructure",
+      "scientificLaw",
+      "gauges"
+    ]),
+    scientificLawPath: Object.freeze([
+      "scientificLaw",
+      "laws",
+      "gauges"
+    ]),
+    frontierPath: Object.freeze([
+      "frontier",
+      "frontierEnergy",
+      "frontierWater",
+      "frontierWaste",
+      "frontierClosedLoop",
+      "frontierInfrastructure",
+      "frontierLattice",
+      "frontierUrban",
+      "frontierManual",
+      "frontierShimmer",
+      "frontierTrajectory",
+      "frontierVision"
+    ]),
+    charactersPath: Object.freeze([
+      "characters",
+      "coherenceDiagnostic",
+      "mirrorland"
+    ]),
+    diagnosticReferralPath: Object.freeze([
+      "coherenceDiagnostic",
+      "characters",
+      "scientificLaw"
+    ]),
+    mirrorlandPath: Object.freeze([
+      "mirrorland",
+      "characters",
+      "hearth",
+      "siteGuide"
+    ]),
+    hearthPath: Object.freeze([
+      "hearth",
+      "mirrorland",
+      "frontier",
+      "scientificLaw",
+      "showroom"
+    ]),
+    seanPath: Object.freeze([
+      "meetSean",
+      "aboutUnderdog",
+      "nineSummits",
+      "siteGuide"
+    ]),
+    underdogPath: Object.freeze([
+      "aboutUnderdog",
+      "meetSean",
+      "nineSummits",
+      "mirrorland"
+    ])
+  });
+
+  const TARGET_ROUTE_HINTS = Object.freeze({
+    diamondGateOverviewPath: ["siteGuide", "compass", "mirrorland"],
+    splitInterfaceBridgePath: ["siteGuide", "mirrorland", "compass"],
+    traditionalWebsiteOverviewPath: ["siteGuide", "compass", "products", "laws", "meetSean"],
+    narrativePathOverview: ["mirrorland", "hearth", "characters", "frontier"],
+    missionOverviewPath: ["mirrorland", "frontier", "nineSummits"],
+    missionInnerPath: ["mirrorland", "nineSummits"],
+    missionCommunityPath: ["nineSummits", "aboutUnderdog"],
+    missionCollaborationPath: ["frontier", "products", "scientificLaw"],
+    practicalRelevancePath: ["products", "frontier", "scientificLaw"],
+    diagnosticReferralPath: ["coherenceDiagnostic", "characters"],
+    diagnosticPath: ["coherenceDiagnostic"],
+    characterMirrorPath: ["characters", "coherenceDiagnostic", "mirrorland"],
+    mirrorlandPath: ["mirrorland", "characters"],
+    hearthPath: ["hearth", "mirrorland", "frontier"],
+    frontierPath: ["frontier", "frontierEnergy", "frontierWater", "frontierWaste"],
+    scientificLawPath: ["scientificLaw", "laws", "gauges"],
+    compassPath: ["compass", "siteGuide"],
+    productsPath: ["products", "frontier"],
+    lawsPath: ["laws", "scientificLaw"],
+    seanPath: ["meetSean", "aboutUnderdog"],
+    underdogPath: ["aboutUnderdog", "meetSean"],
+    charactersPath: ["characters", "mirrorland", "coherenceDiagnostic"]
+  });
+
+  const START_BUBBLES = Object.freeze([
     "Welcome. I’m Jeeves.",
     "DiamondGateBridge.com has two ways in.",
     "One side is the traditional website: the public pages, Compass, Products, Laws, and the creator path.",
@@ -272,78 +392,47 @@
   ]);
 
   const START_OPTIONS = Object.freeze([
-    makeConversationOption(
-      "Can you help me choose where to start?",
-      TARGETS.SPLIT_INTERFACE,
-      PROMPT_MODES.STORY,
-      ARCHETYPE_ALIGNMENTS.STORY,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "objective"
-    ),
-    makeConversationOption(
-      "What is the traditional website for?",
-      TARGETS.TRADITIONAL_WEBSITE,
-      PROMPT_MODES.STORY,
-      ARCHETYPE_ALIGNMENTS.STORY,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "objective"
-    ),
-    makeConversationOption(
-      "What can I actually do here?",
-      TARGETS.PRACTICAL_RELEVANCE,
-      PROMPT_MODES.PRACTICAL,
-      ARCHETYPE_ALIGNMENTS.PRACTICAL,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "objective"
-    ),
-    makeConversationOption(
-      "What is the narrative path?",
-      TARGETS.NARRATIVE_PATH,
-      PROMPT_MODES.STORY,
-      ARCHETYPE_ALIGNMENTS.STORY,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "narrative"
-    ),
-    makeConversationOption(
-      "What is the mission behind this?",
-      TARGETS.MISSION_OVERVIEW,
-      PROMPT_MODES.PERSONAL,
-      ARCHETYPE_ALIGNMENTS.PERSONAL,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "narrative"
-    )
+    makeOption("Can you help me choose where to start?", TARGETS.SPLIT_INTERFACE, PROMPT_MODES.STORY, "story_entry", "entrance_fork", MOVEMENT_INTENTS.ASK_JEEVES, "objective", ENTRY_STACK_MODES.GUIDED_CHOOSER, BASE_POOL_MODES.GUIDED_CHOOSER, ILLUMINATION_MODES.THRESHOLD),
+    makeOption("What is the traditional website for?", TARGETS.TRADITIONAL_WEBSITE, PROMPT_MODES.STORY, "story_entry", "entrance_fork", MOVEMENT_INTENTS.ASK_JEEVES, "objective", ENTRY_STACK_MODES.BASE_POOL, BASE_POOL_MODES.PUBLIC_MAP, ILLUMINATION_MODES.PUBLIC),
+    makeOption("What can I actually do here?", TARGETS.PRACTICAL_RELEVANCE, PROMPT_MODES.PRACTICAL, "practical_entry", "entrance_fork", MOVEMENT_INTENTS.ASK_JEEVES, "objective", ENTRY_STACK_MODES.BASE_POOL, BASE_POOL_MODES.PRACTICAL, ILLUMINATION_MODES.PRACTICAL),
+    makeOption("What is the narrative path?", TARGETS.NARRATIVE_PATH, PROMPT_MODES.STORY, "story_entry", "entrance_fork", MOVEMENT_INTENTS.ASK_JEEVES, "narrative", ENTRY_STACK_MODES.BASE_POOL, BASE_POOL_MODES.NARRATIVE_PATH, ILLUMINATION_MODES.NARRATIVE),
+    makeOption("What is the mission behind this?", TARGETS.MISSION_OVERVIEW, PROMPT_MODES.PERSONAL, "personal_entry", "entrance_fork", MOVEMENT_INTENTS.ASK_JEEVES, "narrative", ENTRY_STACK_MODES.BASE_POOL, BASE_POOL_MODES.MISSION, ILLUMINATION_MODES.NARRATIVE)
   ]);
 
   const START_HANDOFFS = Object.freeze([
-    ROUTES.MIRRORLAND,
-    ROUTES.SITE_GUIDE,
-    ROUTES.COMPASS,
-    ROUTES.MEET_SEAN
+    "siteGuide",
+    "compass",
+    "mirrorland",
+    "meetSean"
   ]);
 
   const state = {
-    ready: false,
-    busy: false,
-    booted: false,
-    userInteracted: false,
-
     root: null,
-    shell: null,
+    transcriptEl: null,
+    optionsEl: null,
+    handoffsEl: null,
+    inputEl: null,
+    formEl: null,
+    statusEl: null,
 
-    currentConversationStage: STAGES.BOOT,
-    currentEntryLane: LANES.UNKNOWN,
-    lastLane: LANES.UNKNOWN,
+    mounted: false,
+    busy: false,
+    initialized: false,
+
+    currentConversationStage: "entrance_overview",
+    currentEntryLane: "entrance",
+    lastLane: "",
     bridgeOffered: false,
 
     currentNode: TARGETS.DIAMOND_GATE_OVERVIEW,
     currentPath: TARGETS.DIAMOND_GATE_OVERVIEW,
-    currentTopic: "diamondGate",
+    currentTopic: "entrance",
     currentScopeLane: "objective",
+
+    entryStackMode: ENTRY_STACK_MODES.ENTRANCE,
+    basePoolMode: BASE_POOL_MODES.ESTATE_OVERVIEW,
+    illuminationMode: ILLUMINATION_MODES.THRESHOLD,
+    choiceClosure: null,
 
     selectedTargets: [],
     selectedOptionKeys: [],
@@ -361,389 +450,457 @@
     revealActive: false,
     revealToken: 0,
     revealSkipResolver: null,
-    expressionReadyPending: false
+    revealTimer: null,
+
+    expressionReadyPending: true
   };
 
-  global.HEARTH_JEEVES_READY = false;
-  global.mountHearthJeeves = safeMountJeeves;
-  global.mountJeeves = safeMountJeeves;
+  function mountHearthJeeves(rootOrSelector) {
+    const root = resolveRoot(rootOrSelector);
+    if (!root) return null;
 
-  global.HEARTH_JEEVES_FRONTBRAIN = {
-    contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    version: "25.4.0",
-    mount: safeMountJeeves,
-    getState: () => cloneState(),
-    send: (text) => submitVisitorText(text),
-    reset: () => resetConversation(),
-    speed: () => advanceReveal()
-  };
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", safeMountJeeves, { once: true });
-  } else {
-    safeMountJeeves();
-  }
-
-  global.addEventListener("hearth:jeeves-expression-ready", handleExpressionReady);
-
-  function safeMountJeeves() {
-    try {
-      mountJeeves();
-    } catch (error) {
-      visibleBootFailure(error);
-    }
-  }
-
-  function mountJeeves() {
-    if (state.booted) return;
-
-    const root = findOrCreateRoot();
     state.root = root;
+    state.mounted = true;
 
-    bindRootToShellContract(root);
-    state.shell = ensureShell(root);
-    bindEvents(state.shell);
+    ensureShell();
+    bindEvents();
 
-    state.booted = true;
-    state.currentConversationStage = STAGES.ENTRANCE_OVERVIEW;
-    state.currentNode = TARGETS.DIAMOND_GATE_OVERVIEW;
-    state.currentPath = TARGETS.DIAMOND_GATE_OVERVIEW;
-    state.currentTopic = "diamondGate";
-
-    clearShell(state.shell);
-    releaseReadyState();
-    renderBootEntrance();
-  }
-
-  function findOrCreateRoot() {
-    let root = document.getElementById(ROOT_ID);
-
-    if (!root) {
-      root = document.querySelector("[data-jeeves-root]") || document.querySelector(".hearth-jeeves");
+    if (!state.initialized) {
+      state.initialized = true;
+      bootConversation();
     }
 
-    if (!root) {
-      root = document.createElement("section");
-      root.id = ROOT_ID;
-      document.body.appendChild(root);
+    dispatchReady();
+
+    return api;
+  }
+
+  function resolveRoot(rootOrSelector) {
+    if (rootOrSelector && typeof rootOrSelector === "object" && rootOrSelector.nodeType === 1) {
+      return rootOrSelector;
     }
 
-    return root;
-  }
-
-  function bindRootToShellContract(root) {
-    root.classList.add("hearth-jeeves");
-    root.classList.add("hearth-jeeves-v25");
-    root.classList.add("hearth-jeeves-v25-4");
-    root.classList.add("jeeves-screen-glass");
-
-    root.setAttribute("data-jeeves-root", "true");
-    root.setAttribute("data-jeeves-contract", CONTRACT);
-    root.setAttribute("data-jeeves-previous-contract", PREVIOUS_CONTRACT);
-    root.setAttribute("data-jeeves-ready", "false");
-    root.setAttribute("data-house-listening", "false");
-    root.setAttribute("data-jeeves-typing", "false");
-    root.setAttribute("data-jeeves-stage", state.currentConversationStage);
-    root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
-  }
-
-  function ensureShell(root) {
-    const shell = {};
-
-    shell.topline = ensureChild(root, ".jeeves-screen-topline", "div", [
-      "jeeves-screen-topline"
-    ]);
-
-    shell.status = ensureChild(root, ".jeeves-status", "div", [
-      "jeeves-status"
-    ]);
-
-    shell.threadScreen = ensureChild(root, ".jeeves-thread-screen", "div", [
-      "jeeves-thread-screen"
-    ]);
-
-    shell.thread = shell.threadScreen.querySelector(".jeeves-thread.jeeves-transcript.jeeves-log") ||
-      shell.threadScreen.querySelector(".jeeves-thread") ||
-      document.createElement("div");
-
-    shell.thread.classList.add("jeeves-thread");
-    shell.thread.classList.add("jeeves-transcript");
-    shell.thread.classList.add("jeeves-log");
-    shell.thread.setAttribute("data-jeeves-thread", "true");
-
-    if (!shell.thread.parentNode) {
-      shell.threadScreen.appendChild(shell.thread);
+    if (typeof rootOrSelector === "string" && rootOrSelector.trim()) {
+      const found = global.document && global.document.querySelector(rootOrSelector);
+      if (found) return found;
     }
 
-    shell.typing = ensureChild(root, ".jeeves-typing", "div", [
-      "jeeves-typing"
-    ]);
-    shell.typing.setAttribute("data-jeeves-typing-indicator", "true");
-
-    shell.options = ensureChild(root, ".jeeves-options.jeeves-prompt-dock", "div", [
-      "jeeves-options",
-      "jeeves-prompt-dock"
-    ]);
-    shell.options.setAttribute("data-jeeves-options", "true");
-    shell.options.setAttribute("aria-label", "Text Jeeves");
-
-    shell.handoffs = ensureChild(root, ".jeeves-handoffs.jeeves-doors.jeeves-handoff-dock", "div", [
-      "jeeves-handoffs",
-      "jeeves-doors",
-      "jeeves-handoff-dock"
-    ]);
-    shell.handoffs.setAttribute("data-jeeves-handoffs", "true");
-    shell.handoffs.setAttribute("data-jeeves-doors", "true");
-    shell.handoffs.setAttribute("aria-label", "Prepared Doors");
-
-    shell.form = root.querySelector("[data-jeeves-form]") ||
-      root.querySelector(".jeeves-input-form") ||
-      root.querySelector("form.jeeves-form") ||
-      null;
-
-    shell.input = root.querySelector("[data-jeeves-input]") ||
-      root.querySelector(".jeeves-input") ||
-      root.querySelector("textarea[name='jeeves']") ||
-      root.querySelector("input[name='jeeves']") ||
-      null;
-
-    shell.submit = root.querySelector("[data-jeeves-submit]") ||
-      root.querySelector(".jeeves-submit") ||
-      null;
-
-    ensureDockLabel(shell.options, "Text Jeeves");
-    ensureDockLabel(shell.handoffs, "Prepared Doors");
-
-    return shell;
-  }
-
-  function ensureChild(parent, selector, tagName, classNames) {
-    let child = parent.querySelector(selector);
-
-    if (!child) {
-      child = document.createElement(tagName);
-      parent.appendChild(child);
+    if (global.document) {
+      return global.document.getElementById(ROOT_ID) ||
+        global.document.querySelector("[data-hearth-jeeves-mount]") ||
+        global.document.querySelector(".hearth-jeeves");
     }
 
-    classNames.forEach((name) => child.classList.add(name));
-
-    return child;
+    return null;
   }
 
-  function ensureDockLabel(dock, label) {
-    let title = dock.querySelector(".jeeves-dock-label");
+  function ensureShell() {
+    if (!state.root) return;
 
-    if (!title) {
-      title = document.createElement("div");
-      title.className = "jeeves-dock-label";
-      dock.insertBefore(title, dock.firstChild);
-    }
+    state.root.setAttribute("data-jeeves-frontbrain", CONTRACT);
+    state.root.setAttribute("data-jeeves-version", VERSION);
+    state.root.setAttribute("data-jeeves-reading-rhythm", "frontbrain");
+    state.root.setAttribute("data-jeeves-expression-target", EXPRESSION_CONTRACT_TARGET);
+    state.root.setAttribute("data-jeeves-api-target", API_CONTRACT_TARGET);
 
-    title.textContent = label;
+    state.root.innerHTML = [
+      '<section class="hearth-jeeves__panel" data-jeeves-panel>',
+      '  <div class="hearth-jeeves__status" data-jeeves-status>The house is listening.</div>',
+      '  <div class="hearth-jeeves__transcript" data-jeeves-transcript aria-live="polite"></div>',
+      '  <div class="hearth-jeeves__options" data-jeeves-options></div>',
+      '  <div class="hearth-jeeves__handoffs" data-jeeves-handoffs></div>',
+      '  <form class="hearth-jeeves__form" data-jeeves-form autocomplete="off">',
+      '    <label class="hearth-jeeves__input-label">',
+      '      <span class="hearth-jeeves__input-label-text">Ask Jeeves</span>',
+      '      <input class="hearth-jeeves__input" data-jeeves-input type="text" placeholder="Ask where to begin..." />',
+      '    </label>',
+      '    <button class="hearth-jeeves__submit" data-jeeves-submit type="submit">Send</button>',
+      '  </form>',
+      '</section>'
+    ].join("");
+
+    state.statusEl = state.root.querySelector("[data-jeeves-status]");
+    state.transcriptEl = state.root.querySelector("[data-jeeves-transcript]");
+    state.optionsEl = state.root.querySelector("[data-jeeves-options]");
+    state.handoffsEl = state.root.querySelector("[data-jeeves-handoffs]");
+    state.formEl = state.root.querySelector("[data-jeeves-form]");
+    state.inputEl = state.root.querySelector("[data-jeeves-input]");
   }
 
-  function bindEvents(shell) {
-    shell.options.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-jeeves-option]");
-      if (!button || state.busy || state.revealActive) return;
+  function bindEvents() {
+    if (!state.root || state.root.__hearthJeevesBound) return;
 
-      const option = readOptionFromButton(button);
-      handleConversationOption(option);
-    });
+    state.root.__hearthJeevesBound = true;
 
-    shell.handoffs.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-jeeves-route-option]");
-      if (!button || state.busy || state.revealActive) return;
+    state.root.addEventListener("click", function onRootClick(event) {
+      const optionButton = event.target.closest("[data-jeeves-option]");
+      if (optionButton) {
+        event.preventDefault();
+        if (state.busy) return;
+        handleConversationOption(readOptionFromButton(optionButton));
+        return;
+      }
 
-      const routeId = button.getAttribute("data-jeeves-route-option") || "";
-      const href = button.getAttribute("data-jeeves-handoff-route") || ROUTE_HINTS[routeId] || "";
+      const routeButton = event.target.closest("[data-jeeves-route-option]");
+      if (routeButton) {
+        event.preventDefault();
+        if (state.busy) return;
+        handleRouteHandoff(readRouteFromButton(routeButton));
+        return;
+      }
 
-      handlePreparedDoor(routeId, href);
-    });
-
-    state.root.addEventListener("click", (event) => {
       if (!state.revealActive) return;
-      if (event.target.closest("[data-jeeves-option]")) return;
-      if (event.target.closest("[data-jeeves-route-option]")) return;
       if (event.target.closest("[data-jeeves-input]")) return;
       if (event.target.closest("input, textarea, button, a")) return;
 
       advanceReveal();
     });
 
-    if (shell.threadScreen) {
-      shell.threadScreen.addEventListener("click", () => {
-        if (state.revealActive) advanceReveal();
-      });
-    }
-
-    if (shell.form) {
-      shell.form.addEventListener("submit", (event) => {
+    if (state.formEl) {
+      state.formEl.addEventListener("submit", function onSubmit(event) {
         event.preventDefault();
-        submitInputValue();
+        if (state.busy) return;
+
+        const text = safeText(state.inputEl && state.inputEl.value);
+        if (!text) return;
+
+        if (state.inputEl) state.inputEl.value = "";
+        handleFreeform(text);
       });
     }
 
-    if (shell.input) {
-      shell.input.addEventListener("keydown", (event) => {
-        if (event.key !== "Enter") return;
-        if (event.shiftKey) return;
-        if (shell.input.tagName === "TEXTAREA") {
-          event.preventDefault();
-        }
-        submitInputValue();
-      });
-    }
-
-    if (shell.submit) {
-      shell.submit.addEventListener("click", (event) => {
-        event.preventDefault();
-        submitInputValue();
+    if (typeof global.addEventListener === "function") {
+      global.addEventListener("hearth:jeeves-expression-ready", function onExpressionReady() {
+        state.expressionReadyPending = false;
       });
     }
   }
 
-  function clearShell(shell) {
-    shell.thread.innerHTML = "";
-    shell.options.innerHTML = "";
-    shell.handoffs.innerHTML = "";
-    ensureDockLabel(shell.options, "Text Jeeves");
-    ensureDockLabel(shell.handoffs, "Prepared Doors");
-    shell.typing.textContent = "";
-  }
+  function bootConversation() {
+    setHouseListening(false);
+    renderSystemStatus("Jeeves is reading the path.");
+    clearOptions();
+    clearHandoffs();
 
-  function renderBootEntrance() {
-    const expression = getExpression();
-    const entranceOptions = expression && typeof expression.shapeEntranceOptions === "function"
-      ? expression.shapeEntranceOptions()
-      : START_OPTIONS.slice();
-
-    const bubbles = BOOT_BUBBLES.map((bubble) => shapeText(bubble, {
-      intent: "diamondGate",
+    const startFrame = shapeFrameThroughExpression({
+      bubbles: START_BUBBLES.slice(),
+      options: START_OPTIONS.slice(),
+      handoffs: START_HANDOFFS.slice(),
       selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
-      currentConversationStage: STAGES.ENTRANCE_OVERVIEW,
-      bridgeContext: state.lastBridgeContext
-    }));
+      intent: "diamondGate",
+      entryStackMode: ENTRY_STACK_MODES.ENTRANCE,
+      basePoolMode: BASE_POOL_MODES.ESTATE_OVERVIEW,
+      illuminationMode: ILLUMINATION_MODES.THRESHOLD,
+      choiceClosure: {
+        preparedDoorAvailable: true,
+        digDeeperAvailable: true,
+        returnForkAvailable: false,
+        finalChatThreshold: false
+      }
+    }, {
+      selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+      intent: "diamondGate",
+      currentConversationStage: state.currentConversationStage,
+      currentEntryLane: state.currentEntryLane,
+      entryStackMode: ENTRY_STACK_MODES.ENTRANCE,
+      basePoolMode: BASE_POOL_MODES.ESTATE_OVERVIEW,
+      illuminationMode: ILLUMINATION_MODES.THRESHOLD
+    });
 
-    renderAssistantSequence(bubbles, () => {
-      renderOptions(entranceOptions);
-      renderHandoffs(START_HANDOFFS, HANDOFF_LABELS);
+    applyFrameModes(startFrame);
+
+    renderAssistantSequence(startFrame.bubbles || START_BUBBLES.slice(), function afterBoot() {
+      renderOptions(startFrame.options || START_OPTIONS.slice());
+      renderHandoffs(startFrame.handoffs || START_HANDOFFS.slice(), startFrame.handoffLabels || {});
+      setHouseListening(true);
       renderSystemStatus("The house is listening.");
     });
   }
 
-  function releaseReadyState() {
-    state.ready = true;
-    global.HEARTH_JEEVES_READY = true;
+  function handleConversationOption(option) {
+    const safeOption = normalizeOption(option);
+    if (!safeOption || !safeOption.target) return;
 
-    if (state.root) {
-      state.root.setAttribute("data-jeeves-ready", "true");
-      state.root.setAttribute("data-house-listening", "false");
-      state.root.setAttribute("data-jeeves-typing", "false");
-      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
-      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
-    }
+    const previousNode = state.currentNode;
+    const previousLane = state.currentEntryLane;
 
-    dispatch("hearth:jeeves-ready", {
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT
+    const target = normalizeTarget(safeOption.target);
+    const lane = safeOption.scopeLane || inferLaneFromTarget(target);
+    const stage = inferStageFromTarget(target, safeOption);
+    const entryStackMode = safeOption.entryStackMode || inferEntryStackModeForPayload(target, safeOption);
+    const basePoolMode = safeOption.basePoolMode || inferBasePoolModeForPayload(target, safeOption);
+    const illuminationMode = safeOption.illuminationMode || inferIlluminationModeForPayload(target, safeOption);
+    const choiceClosure = safeOption.choiceClosure || buildChoiceClosureForTarget(target, safeOption, basePoolMode);
+
+    const bridgeContext = buildBridgeContext({
+      priorNode: previousNode,
+      priorLane: previousLane,
+      selectedTarget: target,
+      selectedLabel: safeOption.label,
+      promptMode: safeOption.promptMode,
+      optionKind: safeOption.optionKind,
+      archetypeAlignment: safeOption.archetypeAlignment,
+      bridgeMoment: safeOption.bridgeMoment,
+      movementIntent: safeOption.movementIntent,
+      currentTopic: state.currentTopic,
+      adjacentTarget: inferAdjacentTarget(target),
+      adjacentLabel: "",
+      adjacentReason: inferBridgeReason(previousNode, target, safeOption)
+    });
+
+    state.lastLane = previousLane;
+    state.currentEntryLane = lane;
+    state.currentConversationStage = stage;
+    state.currentNode = target;
+    state.currentPath = target;
+    state.currentScopeLane = lane;
+    state.entryStackMode = entryStackMode;
+    state.basePoolMode = basePoolMode;
+    state.illuminationMode = illuminationMode;
+    state.choiceClosure = choiceClosure;
+    state.lastBridgeContext = bridgeContext;
+
+    pushUnique(state.selectedTargets, target, 32);
+    pushUnique(state.selectedOptionKeys, target + "::" + safeOption.label, 64);
+    pushUnique(state.visitedNodes, target, 64);
+    state.sessionTrail.push({
+      target,
+      label: safeOption.label,
+      timestamp: Date.now(),
+      entryStackMode,
+      basePoolMode,
+      illuminationMode
+    });
+    trimArray(state.sessionTrail, 80);
+
+    submitToApi({
+      visitorText: safeOption.label,
+      selectedTarget: target,
+      selectedLabel: safeOption.label,
+      requestMode: safeOption.requestMode || REQUEST_MODES.NODE_ENRICHMENT,
+      promptMode: safeOption.promptMode,
+      optionKind: safeOption.optionKind,
+      archetypeAlignment: safeOption.archetypeAlignment,
+      bridgeMoment: safeOption.bridgeMoment,
+      movementIntent: safeOption.movementIntent,
+      currentScopeLane: lane,
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      choiceClosure,
+      digDeeperRequested: isDigDeeperOption(safeOption),
+      returnForkRequested: isReturnForkOption(safeOption),
+      preparedDoorSuggested: isPreparedDoorOption(safeOption),
+      bridgeContext
     });
   }
 
-  function handleExpressionReady() {
-    if (!state.booted) return;
-    if (state.userInteracted) return;
+  function handleFreeform(text) {
+    const target = inferTargetFromText(text) || state.currentNode || TARGETS.SPLIT_INTERFACE;
+    const requestMode = inferRequestModeFromText(text);
+    const promptMode = inferPromptModeFromText(text, target);
+    const movementIntent = inferMovementIntentFromText(text);
+    const optionKind = movementIntent === MOVEMENT_INTENTS.RECENTER ? OPTION_KINDS.CONTROL : OPTION_KINDS.CONVERSATION_PROMPT;
+    const entryStackMode = inferEntryStackModeForPayload(target, { movementIntent, optionKind, label: text });
+    const basePoolMode = inferBasePoolModeForPayload(target, { movementIntent, optionKind, label: text });
+    const illuminationMode = inferIlluminationModeForPayload(target, { movementIntent, optionKind, label: text });
+    const lane = inferLaneFromTarget(target);
 
-    if (state.revealActive) {
-      state.expressionReadyPending = true;
-      return;
+    const bridgeContext = buildBridgeContext({
+      priorNode: state.currentNode,
+      priorLane: state.currentEntryLane,
+      selectedTarget: target,
+      selectedLabel: text,
+      promptMode,
+      optionKind,
+      archetypeAlignment: inferArchetypeAlignment(promptMode, target),
+      bridgeMoment: movementIntent === MOVEMENT_INTENTS.RECENTER ? "recenter_fork" : "before_knowledge",
+      movementIntent,
+      currentTopic: state.currentTopic,
+      adjacentTarget: inferAdjacentTarget(target),
+      adjacentLabel: "",
+      adjacentReason: inferBridgeReason(state.currentNode, target, { movementIntent, optionKind })
+    });
+
+    state.lastLane = state.currentEntryLane;
+    state.currentEntryLane = lane;
+    state.currentConversationStage = inferStageFromTarget(target, { movementIntent, optionKind });
+    state.currentNode = target;
+    state.currentPath = target;
+    state.currentScopeLane = lane;
+    state.entryStackMode = entryStackMode;
+    state.basePoolMode = basePoolMode;
+    state.illuminationMode = illuminationMode;
+    state.choiceClosure = buildChoiceClosureForTarget(target, { movementIntent, optionKind }, basePoolMode);
+    state.lastBridgeContext = bridgeContext;
+
+    submitToApi({
+      visitorText: text,
+      selectedTarget: target,
+      selectedLabel: text,
+      requestMode,
+      promptMode,
+      optionKind,
+      archetypeAlignment: inferArchetypeAlignment(promptMode, target),
+      bridgeMoment: movementIntent === MOVEMENT_INTENTS.RECENTER ? "recenter_fork" : "before_knowledge",
+      movementIntent,
+      currentScopeLane: lane,
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      choiceClosure: state.choiceClosure,
+      digDeeperRequested: isDigDeeperText(text),
+      returnForkRequested: movementIntent === MOVEMENT_INTENTS.RECENTER,
+      preparedDoorSuggested: false,
+      bridgeContext
+    });
+  }
+
+  function submitToApi(payload) {
+    const apiPayload = buildApiPayload(payload);
+
+    state.busy = true;
+    clearOptions();
+    clearHandoffs();
+    setHouseListening(false);
+    setTyping(true, "The house is typing. Tap to speed the process.");
+    renderSystemStatus("The house is typing. Tap to speed the process.");
+
+    callApiWithFallback(apiPayload)
+      .then(function onApiFrame(frame) {
+        const shaped = shapeFrameThroughExpression(frame, buildExpressionContext(apiPayload, frame));
+        state.lastResponse = shaped;
+        applyFrameModes(shaped);
+
+        renderAssistantSequence(shaped.bubbles || shaped.beats || [], function afterSequence() {
+          renderOptions(shaped.options || []);
+          renderHandoffs(shaped.handoffs || [], shaped.handoffLabels || {});
+          setHouseListening(true);
+          setTyping(false);
+          renderSystemStatus("The house is listening.");
+        });
+      })
+      .catch(function onApiError(error) {
+        state.lastError = error;
+        const fallback = renderApiFailure(apiPayload, error);
+        const shaped = shapeFrameThroughExpression(fallback, buildExpressionContext(apiPayload, fallback));
+        state.lastResponse = shaped;
+        applyFrameModes(shaped);
+
+        renderAssistantSequence(shaped.bubbles || shaped.beats || [], function afterFallback() {
+          renderOptions(shaped.options || []);
+          renderHandoffs(shaped.handoffs || [], shaped.handoffLabels || {});
+          setHouseListening(true);
+          setTyping(false);
+          renderSystemStatus("The house is listening.");
+        });
+      });
+  }
+
+  function buildApiPayload(payload) {
+    const source = payload && typeof payload === "object" ? payload : {};
+    const selectedTarget = normalizeTarget(source.selectedTarget || state.currentNode || TARGETS.SPLIT_INTERFACE);
+    const selectedLabel = safeText(source.selectedLabel || source.visitorText || "");
+    const promptMode = safeText(source.promptMode || inferPromptModeFromTarget(selectedTarget));
+    const optionKind = safeText(source.optionKind || OPTION_KINDS.CONVERSATION_PROMPT);
+    const movementIntent = safeText(source.movementIntent || MOVEMENT_INTENTS.ASK_JEEVES);
+    const entryStackMode = safeText(source.entryStackMode || inferEntryStackModeForPayload(selectedTarget, source));
+    const basePoolMode = safeText(source.basePoolMode || inferBasePoolModeForPayload(selectedTarget, source));
+    const illuminationMode = safeText(source.illuminationMode || inferIlluminationModeForPayload(selectedTarget, source));
+    const allowedRouteFamilies = buildAllowedRouteFamilies(selectedTarget);
+    const allowedRoutes = buildAllowedRoutes(selectedTarget, allowedRouteFamilies);
+    const allowedTargets = buildAllowedTargets(selectedTarget);
+
+    return {
+      // Existing API v5.3-compatible fields. Do not rename.
+      visitorText: safeText(source.visitorText || selectedLabel),
+      selectedTarget,
+      selectedLabel,
+      requestMode: safeText(source.requestMode || REQUEST_MODES.NODE_ENRICHMENT),
+      promptMode,
+      optionKind,
+      archetypeAlignment: safeText(source.archetypeAlignment || inferArchetypeAlignment(promptMode, selectedTarget)),
+      bridgeMoment: safeText(source.bridgeMoment || "before_knowledge"),
+      movementIntent,
+      currentScopeLane: safeText(source.currentScopeLane || state.currentScopeLane || inferLaneFromTarget(selectedTarget)),
+      bridgeContext: source.bridgeContext || state.lastBridgeContext || null,
+
+      conversationHistory: getConversationHistory(),
+      currentNode: state.currentNode,
+      currentPath: state.currentPath,
+      currentTopic: state.currentTopic,
+      currentConversationStage: state.currentConversationStage,
+      currentEntryLane: state.currentEntryLane,
+      lastLane: state.lastLane,
+
+      allowedTargets,
+      allowedRoutes,
+      routeHints: TARGET_ROUTE_HINTS[selectedTarget] || allowedRoutes,
+
+      expressionContractTarget: EXPRESSION_CONTRACT_TARGET,
+      frontbrainContract: CONTRACT,
+      previousFrontbrainContract: PREVIOUS_CONTRACT,
+      apiContractTarget: API_CONTRACT_TARGET,
+
+      // v25.5 bridge fields for API v5.4, safely additive for API v5.3.
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      routeExpansionMode: "broad_entry_to_deep_brain",
+      allowedRouteFamilies,
+      choiceClosure: source.choiceClosure || buildChoiceClosureForTarget(selectedTarget, source, basePoolMode),
+      digDeeperRequested: Boolean(source.digDeeperRequested || isDigDeeperOption(source) || isDigDeeperText(source.visitorText || selectedLabel)),
+      returnForkRequested: Boolean(source.returnForkRequested || isReturnForkOption(source)),
+      preparedDoorSuggested: Boolean(source.preparedDoorSuggested || isPreparedDoorOption(source)),
+
+      readingRhythmAuthority: "frontbrain",
+      protectedCopyAuthority: "expression",
+      routeExecutionAuthority: "frontbrain",
+      deepExpansionAuthority: "north"
+    };
+  }
+
+  function callApiWithFallback(payload) {
+    const endpoints = state.lastSuccessfulEndpoint
+      ? [state.lastSuccessfulEndpoint].concat(API_ENDPOINTS.filter((item) => item !== state.lastSuccessfulEndpoint))
+      : API_ENDPOINTS.slice();
+
+    let index = 0;
+
+    function tryNext() {
+      const endpoint = endpoints[index++];
+      if (!endpoint) {
+        return Promise.reject(new Error("No Jeeves endpoint responded."));
+      }
+
+      return fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(function onResponse(response) {
+          if (!response.ok) {
+            const error = new Error("Jeeves endpoint returned " + response.status);
+            error.status = response.status;
+            throw error;
+          }
+          state.lastSuccessfulEndpoint = endpoint;
+          return response.json();
+        })
+        .catch(function onFailure(error) {
+          if (index < endpoints.length) return tryNext();
+          throw error;
+        });
     }
 
-    resetConversation();
+    return tryNext();
   }
 
-  function visibleBootFailure(error) {
-    state.lastError = error;
-
-    try {
-      const root = findOrCreateRoot();
-      bindRootToShellContract(root);
-      const shell = ensureShell(root);
-
-      root.setAttribute("data-jeeves-ready", "false");
-      root.setAttribute("data-jeeves-error", "true");
-      root.setAttribute("data-house-listening", "false");
-      root.setAttribute("data-jeeves-typing", "false");
-
-      shell.status.textContent = "Jeeves could not finish preparing.";
-      shell.thread.innerHTML = "";
-
-      renderBubbleInto(shell.thread, "system", "Jeeves hit a visible boot error instead of silently freezing.");
-      renderBubbleInto(shell.thread, "system", safeErrorMessage(error));
-    } catch (_innerError) {
-      console.error("[Jeeves boot failure]", error);
-    }
-  }
-
-  function renderSystemStatus(text) {
-    if (!state.shell || !state.shell.status) return;
-    state.shell.status.textContent = safeText(text);
-  }
-
-  function setHouseListening(isListening) {
-    if (!state.root) return;
-    state.root.setAttribute("data-house-listening", isListening ? "true" : "false");
-  }
-
-  function setTyping(isTyping, message) {
-    if (!state.root || !state.shell) return;
-
-    state.root.setAttribute("data-jeeves-typing", isTyping ? "true" : "false");
-    state.shell.typing.textContent = isTyping ? (message || "The house is typing. Tap to speed the process.") : "";
-  }
-
-  function renderBubble(speaker, text) {
-    if (!state.shell || !state.shell.thread) return;
-    renderBubbleInto(state.shell.thread, speaker, text);
-    trimThread();
-    scrollThreadToBottom();
-  }
-
-  function renderBubbleInto(thread, speaker, text) {
-    const bubble = document.createElement("div");
-    const safeSpeaker = speaker === "user" ? "user" : speaker === "system" ? "system" : "assistant";
-
-    bubble.classList.add("jeeves-bubble");
-
-    if (safeSpeaker === "assistant") {
-      bubble.classList.add("jeeves-bubble-assistant");
-      bubble.classList.add("jeeves-bubble-jeeves");
-      bubble.setAttribute("data-jeeves-bubble", "assistant");
-      bubble.setAttribute("data-jeeves-speaker", "assistant");
-    } else if (safeSpeaker === "user") {
-      bubble.classList.add("jeeves-bubble-user");
-      bubble.classList.add("jeeves-bubble-visitor");
-      bubble.setAttribute("data-jeeves-bubble", "user");
-      bubble.setAttribute("data-jeeves-speaker", "user");
-    } else {
-      bubble.classList.add("jeeves-bubble-system");
-      bubble.setAttribute("data-jeeves-bubble", "system");
-      bubble.setAttribute("data-jeeves-speaker", "system");
-    }
-
-    bubble.textContent = safeText(text);
-    thread.appendChild(bubble);
-  }
-
-  async function renderAssistantSequence(bubbles, done) {
+  function renderAssistantSequence(bubbles, done) {
     const cleanBubbles = normalizeBubbles(bubbles);
     const token = ++state.revealToken;
-
-    if (!cleanBubbles.length) {
-      if (typeof done === "function") done();
-      return;
-    }
 
     state.revealActive = true;
     state.busy = true;
@@ -752,56 +909,55 @@
     setTyping(true, "The house is typing. Tap to speed the process.");
     renderSystemStatus("The house is typing. Tap to speed the process.");
 
-    try {
-      for (const bubble of cleanBubbles) {
-        if (token !== state.revealToken) return;
-        renderBubble("assistant", bubble);
-        await waitForReading(bubble, token);
-      }
-    } finally {
-      if (token === state.revealToken) {
+    let index = 0;
+
+    function next() {
+      if (token !== state.revealToken) return;
+
+      if (index >= cleanBubbles.length) {
         state.revealActive = false;
         state.busy = false;
         state.revealSkipResolver = null;
-
-        setTyping(false);
-        setHouseListening(true);
-
+        clearRevealTimer();
         if (typeof done === "function") done();
-
-        if (state.expressionReadyPending && !state.userInteracted) {
-          state.expressionReadyPending = false;
-          resetConversation();
-        }
+        return;
       }
+
+      const text = cleanBubbles[index++];
+      appendBubble("assistant", text);
+
+      waitForReading(text, token).then(next);
     }
+
+    if (!cleanBubbles.length) {
+      state.revealActive = false;
+      state.busy = false;
+      if (typeof done === "function") done();
+      return;
+    }
+
+    next();
   }
 
   function waitForReading(text, token) {
     const delay = Math.min(READ_MAX_MS, READ_BASE_MS + safeText(text).length * READ_PER_CHAR_MS);
 
-    return new Promise((resolve) => {
-      if (token !== state.revealToken) {
-        resolve();
-        return;
-      }
+    return new Promise(function wait(resolve) {
+      let settled = false;
 
-      const timer = global.setTimeout(() => {
-        if (state.revealSkipResolver === skip) {
-          state.revealSkipResolver = null;
-        }
-        resolve();
-      }, delay);
-
-      function skip() {
-        global.clearTimeout(timer);
-        if (state.revealSkipResolver === skip) {
+      function finish() {
+        if (settled) return;
+        settled = true;
+        if (token === state.revealToken) {
+          clearRevealTimer();
           state.revealSkipResolver = null;
         }
         resolve();
       }
 
-      state.revealSkipResolver = skip;
+      state.revealSkipResolver = finish;
+      clearRevealTimer();
+      state.revealTimer = global.setTimeout(finish, delay);
     });
   }
 
@@ -811,704 +967,161 @@
     }
   }
 
-  function trimThread() {
-    const bubbles = Array.from(state.shell.thread.querySelectorAll(".jeeves-bubble"));
-    const excess = bubbles.length - MAX_THREAD_BUBBLES;
-
-    if (excess > 0) {
-      bubbles.slice(0, excess).forEach((node) => node.remove());
+  function clearRevealTimer() {
+    if (state.revealTimer) {
+      global.clearTimeout(state.revealTimer);
+      state.revealTimer = null;
     }
   }
 
-  function scrollThreadToBottom() {
-    if (!state.shell || !state.shell.threadScreen) return;
-    state.shell.threadScreen.scrollTop = state.shell.threadScreen.scrollHeight;
+  function appendBubble(role, text) {
+    if (!state.transcriptEl) return;
+
+    const bubble = global.document.createElement("div");
+    bubble.className = "hearth-jeeves__bubble hearth-jeeves__bubble--" + role;
+    bubble.setAttribute("data-jeeves-bubble", role);
+    bubble.textContent = safeText(text);
+
+    state.transcriptEl.appendChild(bubble);
+    state.transcriptEl.scrollTop = state.transcriptEl.scrollHeight;
   }
 
   function renderOptions(options) {
-    if (!state.shell || !state.shell.options) return;
+    clearOptions();
 
-    const expression = getExpression();
-    const shapedOptions = expression && typeof expression.shapeOptions === "function"
-      ? expression.shapeOptions(options || [], buildExpressionContext())
-      : options || [];
+    if (!state.optionsEl || !Array.isArray(options) || !options.length) return;
 
-    clearDockButtons(state.shell.options, "Text Jeeves");
+    const shaped = normalizeOptions(options).slice(0, 6);
 
-    shapedOptions.slice(0, 6).forEach((option, index) => {
+    shaped.forEach(function renderOption(option, index) {
       const normalizedOption = normalizeOption(option);
-      const button = document.createElement("button");
+      if (!normalizedOption) return;
 
+      const button = global.document.createElement("button");
       button.type = "button";
-      button.classList.add("jeeves-option");
-      button.classList.add("jeeves-option-button");
+      button.className = "hearth-jeeves__option";
+      button.textContent = normalizedOption.label;
 
-      button.textContent = normalizedOption.label || "Can you tell me more?";
-
-      button.setAttribute("data-jeeves-option", normalizedOption.target || "");
+      button.setAttribute("data-jeeves-option", normalizedOption.target);
       button.setAttribute("data-jeeves-option-index", String(index));
-      button.setAttribute("data-option-kind", normalizedOption.optionKind || OPTION_KINDS.CONVERSATION);
-      button.setAttribute("data-prompt-mode", normalizedOption.promptMode || PROMPT_MODES.UNKNOWN);
-      button.setAttribute("data-archetype-alignment", normalizedOption.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN);
-      button.setAttribute("data-bridge-moment", normalizedOption.bridgeMoment || BRIDGE_MOMENTS.NONE);
-      button.setAttribute("data-movement-intent", normalizedOption.movementIntent || MOVEMENT_INTENTS.ASK);
-      button.setAttribute("data-scope-lane", normalizedOption.scopeLane || inferScopeLane(normalizedOption.target));
-      button.setAttribute("data-option-type", normalizedOption.type || "conversation");
+      button.setAttribute("data-option-kind", normalizedOption.optionKind || "");
+      button.setAttribute("data-prompt-mode", normalizedOption.promptMode || "");
+      button.setAttribute("data-archetype-alignment", normalizedOption.archetypeAlignment || "");
+      button.setAttribute("data-bridge-moment", normalizedOption.bridgeMoment || "");
+      button.setAttribute("data-movement-intent", normalizedOption.movementIntent || "");
+      button.setAttribute("data-scope-lane", normalizedOption.scopeLane || "");
+      button.setAttribute("data-option-type", normalizedOption.type || "");
       button.setAttribute("data-option-label", normalizedOption.label || "");
 
-      state.shell.options.appendChild(button);
+      button.setAttribute("data-entry-stack-mode", normalizedOption.entryStackMode || "");
+      button.setAttribute("data-base-pool-mode", normalizedOption.basePoolMode || "");
+      button.setAttribute("data-illumination-mode", normalizedOption.illuminationMode || "");
+
+      button.__jeevesOption = normalizedOption;
+
+      state.optionsEl.appendChild(button);
     });
   }
 
-  function renderHandoffs(handoffs, handoffLabels, routeHints) {
-    if (!state.shell || !state.shell.handoffs) return;
+  function renderHandoffs(handoffs, handoffLabels) {
+    clearHandoffs();
 
-    const routes = Array.isArray(handoffs) ? handoffs : [];
-    const expression = getExpression();
-    const labels = expression && typeof expression.shapeHandoffLabels === "function"
-      ? expression.shapeHandoffLabels(handoffLabels || {}, routes)
-      : handoffLabels || {};
+    if (!state.handoffsEl || !Array.isArray(handoffs) || !handoffs.length) return;
 
-    clearDockButtons(state.shell.handoffs, "Prepared Doors");
+    const labels = handoffLabels && typeof handoffLabels === "object" ? handoffLabels : {};
+    const unique = dedupeStrings(handoffs).slice(0, 6);
 
-    routes.slice(0, 6).forEach((routeId, index) => {
-      const route = normalizeRoute(routeId);
-      const href = (routeHints && routeHints[route]) || ROUTE_HINTS[route] || "";
-      const label = labels[route] || HANDOFF_LABELS[route] || route;
+    unique.forEach(function renderRoute(routeId) {
+      const route = safeText(routeId);
+      const href = ROUTE_HREFS[route];
+      if (!route || !href) return;
 
-      const button = document.createElement("button");
+      const button = global.document.createElement("button");
       button.type = "button";
-      button.classList.add("jeeves-route-option");
-      button.classList.add("jeeves-door-button");
-
-      button.textContent = label;
+      button.className = "hearth-jeeves__handoff";
+      button.textContent = labels[route] || ROUTE_LABELS[route] || "Open Door";
 
       button.setAttribute("data-jeeves-route-option", route);
-      button.setAttribute("data-jeeves-route-option-index", String(index));
-      button.setAttribute("data-jeeves-handoff-route", href);
+      button.setAttribute("data-route-href", href);
       button.setAttribute("data-option-kind", OPTION_KINDS.ROUTE);
-      button.setAttribute("data-bridge-moment", BRIDGE_MOMENTS.PREPARED_DOOR);
-      button.setAttribute("data-movement-intent", MOVEMENT_INTENTS.OPEN_DOOR);
+      button.setAttribute("data-movement-intent", MOVEMENT_INTENTS.OPEN_PREPARED_DOOR);
+      button.setAttribute("data-entry-stack-mode", ENTRY_STACK_MODES.PREPARED_DOOR);
+      button.setAttribute("data-illumination-mode", state.illuminationMode || ILLUMINATION_MODES.PUBLIC);
 
-      state.shell.handoffs.appendChild(button);
+      state.handoffsEl.appendChild(button);
     });
   }
 
-  function clearDockButtons(dock, title) {
-    dock.innerHTML = "";
-    ensureDockLabel(dock, title);
+  function handleRouteHandoff(route) {
+    const routeId = safeText(route && route.routeId);
+    const href = safeText(route && route.href) || ROUTE_HREFS[routeId];
+
+    if (!routeId || !href) return;
+
+    dispatchPreparedDoor(routeId, href);
+
+    if (global.location && typeof global.location.assign === "function") {
+      global.location.assign(href);
+    } else if (global.location) {
+      global.location.href = href;
+    }
   }
 
   function readOptionFromButton(button) {
+    if (!button) return null;
+    if (button.__jeevesOption) return button.__jeevesOption;
+
     return {
       label: button.getAttribute("data-option-label") || button.textContent || "",
-      target: normalizeTarget(button.getAttribute("data-jeeves-option") || ""),
+      target: button.getAttribute("data-jeeves-option") || "",
       type: button.getAttribute("data-option-type") || "conversation",
-      scopeLane: button.getAttribute("data-scope-lane") || "objective",
-      promptMode: button.getAttribute("data-prompt-mode") || PROMPT_MODES.UNKNOWN,
-      optionKind: button.getAttribute("data-option-kind") || OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: button.getAttribute("data-archetype-alignment") || ARCHETYPE_ALIGNMENTS.UNKNOWN,
-      bridgeMoment: button.getAttribute("data-bridge-moment") || BRIDGE_MOMENTS.NONE,
-      movementIntent: button.getAttribute("data-movement-intent") || MOVEMENT_INTENTS.ASK
+      scopeLane: button.getAttribute("data-scope-lane") || "",
+      promptMode: button.getAttribute("data-prompt-mode") || "",
+      optionKind: button.getAttribute("data-option-kind") || "",
+      archetypeAlignment: button.getAttribute("data-archetype-alignment") || "",
+      bridgeMoment: button.getAttribute("data-bridge-moment") || "",
+      movementIntent: button.getAttribute("data-movement-intent") || "",
+      entryStackMode: button.getAttribute("data-entry-stack-mode") || "",
+      basePoolMode: button.getAttribute("data-base-pool-mode") || "",
+      illuminationMode: button.getAttribute("data-illumination-mode") || ""
     };
   }
 
-  function handleConversationOption(option) {
-    const safeOption = normalizeOption(option);
-    const priorNode = state.currentNode;
-    const priorLane = state.currentEntryLane;
-    const priorTopic = state.currentTopic;
-
-    state.userInteracted = true;
-
-    const bridgeContext = buildBridgeContext({
-      priorNode,
-      priorLane,
-      priorTopic,
-      option: safeOption
-    });
-
-    updateStateForOption(safeOption, bridgeContext);
-    renderBubble("user", safeOption.label);
-
-    submitToApi({
-      visitorText: safeOption.label,
-      selectedTarget: safeOption.target,
-      selectedLabel: safeOption.label,
-      requestMode: "node_enrichment",
-      promptMode: safeOption.promptMode,
-      optionKind: safeOption.optionKind,
-      archetypeAlignment: safeOption.archetypeAlignment,
-      bridgeMoment: safeOption.bridgeMoment,
-      movementIntent: safeOption.movementIntent,
-      currentScopeLane: safeOption.scopeLane,
-      bridgeContext
-    });
-  }
-
-  function handlePreparedDoor(routeId, href) {
-    const route = normalizeRoute(routeId);
-    const targetHref = href || ROUTE_HINTS[route];
-
-    state.userInteracted = true;
-
-    pushTrail({
-      type: "handoff",
-      route,
-      href: targetHref,
-      from: state.currentNode,
-      at: new Date().toISOString()
-    });
-
-    dispatch("hearth:jeeves-prepared-door", {
-      contract: CONTRACT,
-      route,
-      href: targetHref,
-      from: state.currentNode
-    });
-
-    if (!targetHref) {
-      renderBubble("system", "That door is listed, but it does not have a visible route yet.");
-      return;
-    }
-
-    global.location.href = targetHref;
-  }
-
-  function submitInputValue() {
-    if (!state.shell || !state.shell.input || state.busy || state.revealActive) return;
-
-    const value = safeText(state.shell.input.value);
-    if (!value) return;
-
-    state.shell.input.value = "";
-    submitVisitorText(value);
-  }
-
-  function submitVisitorText(text) {
-    const visitorText = safeText(text);
-    if (!visitorText || state.busy || state.revealActive) return;
-
-    const target = inferTargetFromText(visitorText);
-    const option = {
-      label: visitorText,
-      target,
-      type: "conversation",
-      scopeLane: inferScopeLane(target),
-      promptMode: inferPromptModeFromText(visitorText),
-      optionKind: OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: inferAlignmentFromTarget(target),
-      bridgeMoment: BRIDGE_MOMENTS.BEFORE,
-      movementIntent: MOVEMENT_INTENTS.ASK
-    };
-
-    handleConversationOption(option);
-  }
-
-  async function submitToApi(partialPayload) {
-    if (state.busy && !state.revealActive) return;
-
-    state.busy = true;
-    setHouseListening(false);
-    setTyping(true, "Jeeves is reading the path.");
-    renderSystemStatus("Jeeves is reading the path.");
-
-    try {
-      const payload = buildApiPayload(partialPayload);
-      const result = await postToFirstAvailableApi(payload);
-      const shaped = shapeApiFrame(result.data, payload.bridgeContext);
-
-      state.lastSuccessfulEndpoint = result.endpoint;
-      state.lastResponse = shaped;
-
-      applyApiState(shaped);
-      renderApiFrame(shaped);
-    } catch (error) {
-      state.lastError = error;
-      renderApiFailure(error);
-    }
-  }
-
-  async function postToFirstAvailableApi(payload) {
-    let lastError = null;
-
-    for (let i = 0; i < API_ENDPOINTS.length; i += 1) {
-      const endpoint = API_ENDPOINTS[i];
-
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          return {
-            endpoint,
-            data: await response.json()
-          };
-        }
-
-        const status = response.status;
-        const bodyText = await safeReadResponseText(response);
-
-        lastError = new Error("Jeeves API returned " + status + " at " + endpoint);
-
-        if ((status === 404 || status === 405) && i < API_ENDPOINTS.length - 1) {
-          continue;
-        }
-
-        if (bodyText) {
-          lastError.message = lastError.message + ": " + bodyText.slice(0, 240);
-        }
-
-        throw lastError;
-      } catch (error) {
-        lastError = error;
-
-        if (i < API_ENDPOINTS.length - 1) {
-          continue;
-        }
-      }
-    }
-
-    throw lastError || new Error("Jeeves API did not respond.");
-  }
-
-  function buildApiPayload(partialPayload) {
-    const payload = partialPayload && typeof partialPayload === "object" ? partialPayload : {};
-    const selectedTarget = normalizeTarget(payload.selectedTarget || state.currentNode || TARGETS.DIAMOND_GATE_OVERVIEW);
-    const currentLane = payload.currentScopeLane || inferScopeLane(selectedTarget);
-    const bridgeContext = sanitizeBridgeContext(payload.bridgeContext || state.lastBridgeContext || null);
+  function readRouteFromButton(button) {
+    if (!button) return null;
 
     return {
-      visitorText: safeText(payload.visitorText || ""),
-      selectedTarget,
-      selectedLabel: safeText(payload.selectedLabel || ""),
-      requestMode: payload.requestMode || "node_enrichment",
-
-      promptMode: payload.promptMode || PROMPT_MODES.UNKNOWN,
-      optionKind: payload.optionKind || OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: payload.archetypeAlignment || inferAlignmentFromTarget(selectedTarget),
-      bridgeMoment: payload.bridgeMoment || BRIDGE_MOMENTS.BEFORE,
-      movementIntent: payload.movementIntent || MOVEMENT_INTENTS.ASK,
-      bridgeContext,
-
-      currentConversationStage: state.currentConversationStage,
-      currentEntryLane: state.currentEntryLane,
-      lastLane: state.lastLane,
-      bridgeOffered: state.bridgeOffered,
-
-      activeHostPage: "hearth-jeeves",
-      currentRoomContext: "hearth",
-      currentRoomRole: "mission_control",
-      currentRoomPremise: "window_within_the_window",
-      estateKnowledgeMode: "split_interface_guided_path",
-      portalLogic: "hearth_is_window_within_the_window",
-      routeAuthority: "frontbrain_final_route_execution",
-
-      currentNode: state.currentNode,
-      currentEntry: state.currentPath,
-      currentPath: state.currentPath,
-      currentTopic: state.currentTopic,
-      currentRoomId: "hearthJeeves",
-      currentRoomName: "Hearth Jeeves",
-      currentCoordinateName: "Hearth Mission Control",
-      currentCardinal: inferCardinalForTarget(selectedTarget),
-      currentPlaceType: currentLane === "narrative" ? "narrative_path" : "traditional_website",
-      currentScopeLane: currentLane,
-      currentVoiceMode: getCurrentVoiceMode(),
-
-      visitorPosture: "guided",
-      movement: payload.movementIntent || MOVEMENT_INTENTS.ASK,
-
-      pathDepth: state.visitedNodes.length,
-      routeReadiness: state.bridgeOffered ? 2 : 1,
-      loopCount: inferLoopCount(selectedTarget),
-      topicDepth: inferTopicDepth(selectedTarget),
-      revealDepth: state.transitionTrail.length,
-
-      allowedTargets: buildAllowedTargets(),
-      allowedRoutes: buildAllowedRoutes(),
-
-      sessionTrail: state.sessionTrail.slice(-MAX_TRAIL_ITEMS),
-      visitedNodes: state.visitedNodes.slice(-MAX_TRAIL_ITEMS),
-      selectedTargets: state.selectedTargets.slice(-MAX_TRAIL_ITEMS),
-      selectedOptionKeys: state.selectedOptionKeys.slice(-MAX_TRAIL_ITEMS),
-      returnStack: state.returnStack.slice(-MAX_TRAIL_ITEMS),
-      transitionTrail: state.transitionTrail.slice(-MAX_TRAIL_ITEMS),
-      branchStack: state.branchStack.slice(-MAX_TRAIL_ITEMS),
-
-      expressionContract: getExpressionContract(),
-      frontbrainContract: CONTRACT
+      routeId: button.getAttribute("data-jeeves-route-option") || "",
+      href: button.getAttribute("data-route-href") || "",
+      label: button.textContent || "",
+      entryStackMode: button.getAttribute("data-entry-stack-mode") || ENTRY_STACK_MODES.PREPARED_DOOR,
+      movementIntent: button.getAttribute("data-movement-intent") || MOVEMENT_INTENTS.OPEN_PREPARED_DOOR
     };
   }
 
-  function buildBridgeContext(input) {
-    const option = normalizeOption(input.option || {});
-    const priorNode = normalizeTarget(input.priorNode || state.currentNode || "");
-    const selectedTarget = normalizeTarget(option.target || "");
-    const currentScopeStage = state.currentConversationStage;
-
-    const bridgeContext = {
-      currentNode: state.currentNode,
-      priorNode,
-      priorLane: safeText(input.priorLane || state.currentEntryLane || ""),
-      priorTopic: safeText(input.priorTopic || state.currentTopic || ""),
-      selectedTarget,
-      selectedLabel: option.label,
-      promptMode: option.promptMode,
-      optionKind: option.optionKind,
-      archetypeAlignment: option.archetypeAlignment,
-      bridgeMoment: option.bridgeMoment,
-      movementIntent: option.movementIntent,
-      currentTopic: state.currentTopic,
-      currentScopeStage,
-      adjacentTarget: selectedTarget,
-      adjacentLabel: option.label || TARGET_LABELS[selectedTarget] || "",
-      adjacentReason: inferBridgeReason(priorNode, selectedTarget, option)
-    };
-
-    state.lastBridgeContext = bridgeContext;
-
-    return bridgeContext;
-  }
-
-  function sanitizeBridgeContext(context) {
-    if (!context || typeof context !== "object") return null;
-
-    return {
-      currentNode: normalizeTarget(context.currentNode || ""),
-      priorNode: normalizeTarget(context.priorNode || ""),
-      priorLane: safeText(context.priorLane || ""),
-      priorTopic: safeText(context.priorTopic || ""),
-      selectedTarget: normalizeTarget(context.selectedTarget || ""),
-      selectedLabel: safeText(context.selectedLabel || ""),
-      promptMode: safeText(context.promptMode || PROMPT_MODES.UNKNOWN),
-      optionKind: safeText(context.optionKind || OPTION_KINDS.CONVERSATION),
-      archetypeAlignment: safeText(context.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN),
-      bridgeMoment: safeText(context.bridgeMoment || BRIDGE_MOMENTS.NONE),
-      movementIntent: safeText(context.movementIntent || MOVEMENT_INTENTS.ASK),
-      currentTopic: safeText(context.currentTopic || ""),
-      currentScopeStage: safeText(context.currentScopeStage || ""),
-      adjacentTarget: normalizeTarget(context.adjacentTarget || ""),
-      adjacentLabel: safeText(context.adjacentLabel || ""),
-      adjacentReason: safeText(context.adjacentReason || "")
-    };
-  }
-
-  function inferBridgeReason(priorTarget, selectedTarget, option) {
-    const from = normalizeTarget(priorTarget);
-    const to = normalizeTarget(selectedTarget);
-
-    if (to === TARGETS.SPLIT_INTERFACE) {
-      return "The visitor is asking for help choosing the right starting doorway.";
-    }
-
-    if (from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.NARRATIVE_PATH) {
-      return "The visitor is moving from public website structure into the narrative path.";
-    }
-
-    if (from === TARGETS.NARRATIVE_PATH && to === TARGETS.TRADITIONAL_WEBSITE) {
-      return "The visitor is moving from narrative path back to public website structure.";
-    }
-
-    if (to === TARGETS.MISSION_OVERVIEW) {
-      return "The visitor is entering the mission lane.";
-    }
-
-    if (to === TARGETS.PRACTICAL_RELEVANCE || to === TARGETS.FRONTIER || to === TARGETS.PRODUCTS) {
-      return "The visitor is asking how the estate becomes practical.";
-    }
-
-    if (to === TARGETS.DIAGNOSTIC_REFERRAL || to === TARGETS.DIAGNOSTIC || to === TARGETS.CHARACTER_MIRROR) {
-      return "The visitor is near the diagnostic boundary; Jeeves should explain or route, not assess.";
-    }
-
-    if (option.bridgeMoment === BRIDGE_MOMENTS.PARALLEL) {
-      return "The visitor is crossing to a related room.";
-    }
-
-    return "The visitor selected a conversational path from Jeeves.";
-  }
-
-  function shapeApiFrame(data, bridgeContext) {
+  function shapeFrameThroughExpression(frame, context) {
     const expression = getExpression();
-    const source = data && typeof data === "object" ? data : {};
+    const source = frame && typeof frame === "object" ? frame : {};
 
     if (expression && typeof expression.shapeConversationFrame === "function") {
-      return expression.shapeConversationFrame(source, buildExpressionContext({
-        ...source,
-        bridgeContext: bridgeContext || source.bridgeContext || state.lastBridgeContext || null
-      }));
+      try {
+        return expression.shapeConversationFrame(source, context || {});
+      } catch (error) {
+        state.lastError = error;
+      }
     }
 
     return source;
   }
 
-  function renderApiFrame(frame) {
-    const bubbles = normalizeBubbles(frame.bubbles || frame.beats || []);
-    const options = Array.isArray(frame.options) ? frame.options : [];
-    const handoffs = Array.isArray(frame.handoffs) ? frame.handoffs : [];
-
-    renderAssistantSequence(bubbles, () => {
-      renderOptions(options);
-      renderHandoffs(handoffs, frame.handoffLabels || {}, frame.routeHints || {});
-      renderSystemStatus("The house is listening.");
-    });
-  }
-
-  function renderApiFailure(error) {
-    state.busy = false;
-    state.revealActive = false;
-    state.revealSkipResolver = null;
-
-    setTyping(false);
-    setHouseListening(true);
-
-    renderBubble("system", "Jeeves could not reach the deeper answer path cleanly.");
-    renderBubble("system", safeErrorMessage(error));
-
-    renderOptions([
-      makeConversationOption(
-        "Can you help me choose where to start?",
-        TARGETS.SPLIT_INTERFACE,
-        PROMPT_MODES.STORY,
-        ARCHETYPE_ALIGNMENTS.STORY,
-        BRIDGE_MOMENTS.ENTRANCE,
-        MOVEMENT_INTENTS.ASK,
-        "objective"
-      ),
-      makeConversationOption(
-        "Can you re-center me?",
-        TARGETS.RECENTER,
-        PROMPT_MODES.RECENTER,
-        ARCHETYPE_ALIGNMENTS.UNKNOWN,
-        BRIDGE_MOMENTS.RECENTER,
-        MOVEMENT_INTENTS.RECENTER,
-        "objective",
-        OPTION_KINDS.CONTROL,
-        "control"
-      )
-    ]);
-
-    renderHandoffs([ROUTES.COMPASS, ROUTES.SITE_GUIDE], HANDOFF_LABELS);
-    renderSystemStatus("The house is listening.");
-  }
-
-  function applyApiState(frame) {
-    const target = normalizeTarget(frame.selectedTarget || state.currentNode || TARGETS.DIAMOND_GATE_OVERVIEW);
-    const intent = safeText(frame.intent || inferIntentFromTarget(target));
-
-    state.currentNode = target;
-    state.currentPath = target;
-    state.currentTopic = intent;
-    state.currentScopeLane = inferScopeLane(target);
-
-    const nextLane = inferLaneFromTarget(target, intent);
-
-    if (nextLane && nextLane !== state.currentEntryLane) {
-      state.lastLane = state.currentEntryLane || LANES.UNKNOWN;
-      state.currentEntryLane = nextLane;
-    }
-
-    state.currentConversationStage = inferStageFromTarget(target, intent);
-
-    if (
-      state.currentConversationStage === STAGES.BRIDGE_LANE ||
-      target === TARGETS.SPLIT_INTERFACE ||
-      safeText(frame.bridgeMoment) === BRIDGE_MOMENTS.PARALLEL
-    ) {
-      state.bridgeOffered = true;
-    }
-
-    syncRootState();
-  }
-
-  function updateStateForOption(option, bridgeContext) {
-    const target = normalizeTarget(option.target || "");
-    const label = safeText(option.label || "");
-    const nextLane = inferLaneFromTarget(target, inferIntentFromTarget(target));
-    const priorTarget = normalizeTarget(bridgeContext && bridgeContext.priorNode ? bridgeContext.priorNode : state.currentNode);
-
-    state.selectedTargets.push(target);
-    state.selectedOptionKeys.push(makeOptionKey(option));
-    state.visitedNodes.push(target);
-
-    if (priorTarget) {
-      state.returnStack.push(priorTarget);
-    }
-
-    pushTrail({
-      type: "conversation_option",
-      label,
-      target,
-      from: priorTarget,
-      to: target,
-      promptMode: option.promptMode,
-      optionKind: option.optionKind,
-      bridgeMoment: option.bridgeMoment,
-      movementIntent: option.movementIntent,
-      bridgeContext: sanitizeBridgeContext(bridgeContext),
-      at: new Date().toISOString()
-    });
-
-    state.transitionTrail.push({
-      from: priorTarget,
-      to: target,
-      label,
-      optionKind: option.optionKind,
-      promptMode: option.promptMode,
-      bridgeMoment: option.bridgeMoment,
-      at: new Date().toISOString()
-    });
-
-    if (
-      option.bridgeMoment === BRIDGE_MOMENTS.PARALLEL ||
-      target === TARGETS.SPLIT_INTERFACE ||
-      nextLane === LANES.BRIDGE
-    ) {
-      state.bridgeOffered = true;
-    }
-
-    if (nextLane && nextLane !== state.currentEntryLane) {
-      state.lastLane = state.currentEntryLane || LANES.UNKNOWN;
-      state.currentEntryLane = nextLane;
-    }
-
-    state.currentNode = target;
-    state.currentPath = target;
-    state.currentTopic = inferIntentFromTarget(target);
-    state.currentConversationStage = inferStageFromTarget(target, state.currentTopic);
-
-    trimStateArrays();
-    syncRootState();
-  }
-
-  function pushTrail(item) {
-    state.sessionTrail.push(JSON.stringify(item));
-    trimStateArrays();
-  }
-
-  function trimStateArrays() {
-    [
-      "selectedTargets",
-      "selectedOptionKeys",
-      "visitedNodes",
-      "sessionTrail",
-      "transitionTrail",
-      "branchStack",
-      "returnStack"
-    ].forEach((key) => {
-      if (state[key].length > MAX_TRAIL_ITEMS) {
-        state[key] = state[key].slice(-MAX_TRAIL_ITEMS);
-      }
-    });
-  }
-
-  function resetConversation() {
-    if (!state.shell) return;
-
-    state.busy = false;
-    state.revealActive = false;
-    state.revealToken += 1;
-    state.revealSkipResolver = null;
-
-    state.currentConversationStage = STAGES.ENTRANCE_OVERVIEW;
-    state.currentEntryLane = LANES.UNKNOWN;
-    state.lastLane = LANES.UNKNOWN;
-    state.bridgeOffered = false;
-    state.currentNode = TARGETS.DIAMOND_GATE_OVERVIEW;
-    state.currentPath = TARGETS.DIAMOND_GATE_OVERVIEW;
-    state.currentTopic = "diamondGate";
-    state.currentScopeLane = "objective";
-    state.selectedTargets = [];
-    state.selectedOptionKeys = [];
-    state.visitedNodes = [];
-    state.sessionTrail = [];
-    state.transitionTrail = [];
-    state.branchStack = [];
-    state.returnStack = [];
-    state.lastBridgeContext = null;
-
-    clearShell(state.shell);
-    syncRootState();
-    renderBootEntrance();
-  }
-
-  function buildAllowedTargets() {
-    return [
-      TARGETS.DIAMOND_GATE_OVERVIEW,
-      TARGETS.SPLIT_INTERFACE,
-      TARGETS.TRADITIONAL_WEBSITE,
-      TARGETS.NARRATIVE_PATH,
-      TARGETS.MISSION_OVERVIEW,
-      TARGETS.MISSION_INNER,
-      TARGETS.MISSION_COMMUNITY,
-      TARGETS.MISSION_COLLABORATION,
-      TARGETS.PRACTICAL_RELEVANCE,
-      TARGETS.DIAGNOSTIC_REFERRAL,
-      TARGETS.DIAGNOSTIC,
-      TARGETS.CHARACTER_MIRROR,
-      TARGETS.MIRRORLAND,
-      TARGETS.HEARTH,
-      TARGETS.FRONTIER,
-      TARGETS.SCIENTIFIC_LAW,
-      TARGETS.COMPASS,
-      TARGETS.PRODUCTS,
-      TARGETS.LAWS,
-      TARGETS.SEAN,
-      TARGETS.UNDERDOG,
-      TARGETS.CHARACTERS,
-      TARGETS.RECENTER,
-      TARGETS.CLEAN_DOOR
-    ];
-  }
-
-  function buildAllowedRoutes() {
-    return [
-      ROUTES.COMPASS,
-      ROUTES.HOME,
-      ROUTES.SITE_GUIDE,
-      ROUTES.COHERENCE_DIAGNOSTIC,
-      ROUTES.MEET_SEAN,
-      ROUTES.PRODUCTS,
-      ROUTES.LAWS,
-      ROUTES.SCIENTIFIC_LAW,
-      ROUTES.GAUGES,
-      ROUTES.SHOWROOM,
-      ROUTES.HEARTH,
-      ROUTES.MIRRORLAND,
-      ROUTES.ZIONTS,
-      ROUTES.AUDRALIA,
-      ROUTES.H_EARTH,
-      ROUTES.FRONTIER,
-      ROUTES.FRONTIER_ENERGY,
-      ROUTES.FRONTIER_WATER,
-      ROUTES.FRONTIER_WASTE,
-      ROUTES.FRONTIER_CLOSED_LOOP,
-      ROUTES.FRONTIER_INFRASTRUCTURE,
-      ROUTES.FRONTIER_LATTICE,
-      ROUTES.FRONTIER_URBAN,
-      ROUTES.FRONTIER_MANUAL,
-      ROUTES.FRONTIER_SHIMMER,
-      ROUTES.FRONTIER_TRAJECTORY,
-      ROUTES.FRONTIER_VISION,
-      ROUTES.CHARACTERS,
-      ROUTES.NINE_SUMMITS,
-      ROUTES.UNDERDOG
-    ];
-  }
-
-  function buildExpressionContext(extra) {
-    const source = extra && typeof extra === "object" ? extra : {};
+  function buildExpressionContext(payload, frame) {
+    const source = payload && typeof payload === "object" ? payload : {};
+    const response = frame && typeof frame === "object" ? frame : {};
 
     return {
-      intent: source.intent || state.currentTopic,
-      selectedTarget: source.selectedTarget || state.currentNode,
-      selectedLabel: source.selectedLabel || "",
+      intent: response.intent || source.intent || "",
+      selectedTarget: response.selectedTarget || source.selectedTarget || state.currentNode,
+      selectedLabel: source.selectedLabel || source.visitorText || "",
       currentNode: state.currentNode,
       currentPath: state.currentPath,
       currentEntryLane: state.currentEntryLane,
@@ -1518,7 +1131,11 @@
       optionKind: source.optionKind || "",
       bridgeMoment: source.bridgeMoment || "",
       movementIntent: source.movementIntent || "",
-      bridgeContext: source.bridgeContext || state.lastBridgeContext || null
+      entryStackMode: response.entryStackMode || source.entryStackMode || state.entryStackMode,
+      basePoolMode: response.basePoolMode || source.basePoolMode || state.basePoolMode,
+      illuminationMode: response.illuminationMode || source.illuminationMode || state.illuminationMode,
+      choiceClosure: response.choiceClosure || source.choiceClosure || state.choiceClosure,
+      bridgeContext: source.bridgeContext || response.bridgeContext || state.lastBridgeContext
     };
   }
 
@@ -1529,201 +1146,266 @@
       null;
   }
 
-  function getExpressionContract() {
-    const expression = getExpression();
-    return expression && expression.contract ? expression.contract : "";
+  function applyFrameModes(frame) {
+    if (!frame || typeof frame !== "object") return;
+
+    if (frame.entryStackMode) state.entryStackMode = safeText(frame.entryStackMode);
+    if (frame.basePoolMode) state.basePoolMode = safeText(frame.basePoolMode);
+    if (frame.illuminationMode) state.illuminationMode = safeText(frame.illuminationMode);
+    if (frame.choiceClosure && typeof frame.choiceClosure === "object") state.choiceClosure = frame.choiceClosure;
+
+    if (frame.nextTopic) state.currentTopic = safeText(frame.nextTopic);
+    if (frame.selectedTarget) {
+      state.currentNode = normalizeTarget(frame.selectedTarget);
+      state.currentPath = normalizeTarget(frame.selectedTarget);
+    }
   }
 
-  function getCurrentVoiceMode() {
-    const expression = getExpression();
-    if (expression && expression.version) {
-      return "jeeves_expression_v" + safeText(expression.version).replace(/\./g, "_");
-    }
-
-    const contract = getExpressionContract();
-    if (contract) {
-      return contract;
-    }
-
-    return "jeeves_expression_unavailable";
-  }
-
-  function shapeText(text, context) {
-    const expression = getExpression();
-    if (expression && typeof expression.sanitizePublicText === "function") {
-      return expression.sanitizePublicText(text, context || buildExpressionContext());
-    }
-    return safeText(text);
-  }
-
-  function makeConversationOption(
-    label,
-    target,
-    promptMode,
-    archetypeAlignment,
-    bridgeMoment,
-    movementIntent,
-    scopeLane,
-    optionKind,
-    type
-  ) {
-    const normalizedTarget = normalizeTarget(target);
-
+  function renderApiFailure(payload, error) {
     return {
-      label: safeText(label),
-      target: normalizedTarget,
-      type: type || "conversation",
-      scopeLane: scopeLane || inferScopeLane(normalizedTarget),
-      promptMode: promptMode || PROMPT_MODES.UNKNOWN,
-      optionKind: optionKind || OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: archetypeAlignment || inferAlignmentFromTarget(normalizedTarget),
-      bridgeMoment: bridgeMoment || BRIDGE_MOMENTS.BEFORE,
-      movementIntent: movementIntent || MOVEMENT_INTENTS.ASK
+      bubbles: [
+        "I can still keep the entrance stable.",
+        "The deeper answer path did not respond cleanly, so I will return you to the guided chooser instead of leaving you in a broken room.",
+        "Choose the public map, the narrative path, something practical, the mission, or the proof-facing path."
+      ],
+      options: START_OPTIONS.slice(),
+      handoffs: START_HANDOFFS.slice(),
+      selectedTarget: TARGETS.SPLIT_INTERFACE,
+      intent: "splitInterface",
+      confidence: 0.42,
+      needsRecenter: true,
+      nextTopic: "guided chooser",
+      entryStackMode: ENTRY_STACK_MODES.RETURN,
+      basePoolMode: BASE_POOL_MODES.RETURN,
+      illuminationMode: ILLUMINATION_MODES.RETURN,
+      choiceClosure: {
+        preparedDoorAvailable: false,
+        digDeeperAvailable: false,
+        returnForkAvailable: true,
+        finalChatThreshold: false
+      },
+      errorMessage: error && error.message ? error.message : ""
     };
   }
 
-  function normalizeOption(option) {
-    const source = option && typeof option === "object" ? option : {};
-    const target = normalizeTarget(source.target || "");
+  function clearOptions() {
+    if (state.optionsEl) state.optionsEl.innerHTML = "";
+  }
 
-    return {
-      label: safeText(source.label || TARGET_LABELS[target] || ""),
-      target,
-      type: source.type || "conversation",
-      scopeLane: source.scopeLane || inferScopeLane(target),
-      promptMode: source.promptMode || PROMPT_MODES.UNKNOWN,
-      optionKind: source.optionKind || OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: source.archetypeAlignment || inferAlignmentFromTarget(target),
-      bridgeMoment: source.bridgeMoment || BRIDGE_MOMENTS.BEFORE,
-      movementIntent: source.movementIntent || MOVEMENT_INTENTS.ASK
-    };
+  function clearHandoffs() {
+    if (state.handoffsEl) state.handoffsEl.innerHTML = "";
+  }
+
+  function setHouseListening(isListening) {
+    if (!state.root) return;
+    state.root.setAttribute("data-house-listening", isListening ? "true" : "false");
+  }
+
+  function setTyping(isTyping, label) {
+    if (!state.root) return;
+    state.root.setAttribute("data-house-typing", isTyping ? "true" : "false");
+    if (label) state.root.setAttribute("data-house-typing-label", label);
+  }
+
+  function renderSystemStatus(text) {
+    if (!state.statusEl) return;
+
+    const expression = getExpression();
+    let value = safeText(text);
+
+    if (expression && typeof expression.shapeInterfaceState === "function") {
+      if (/listening/i.test(value)) value = expression.shapeInterfaceState("listening") || value;
+      if (/typing/i.test(value)) value = expression.shapeInterfaceState("typing") || value;
+      if (/reading/i.test(value)) value = expression.shapeInterfaceState("reading") || value;
+      if (/ready/i.test(value)) value = expression.shapeInterfaceState("ready") || value;
+    }
+
+    state.statusEl.textContent = value;
   }
 
   function normalizeBubbles(value) {
     if (!Array.isArray(value)) return [];
-    return value.map((item) => safeText(item)).filter(Boolean).slice(0, 4);
+    return value.map(safeText).filter(Boolean).slice(0, 6);
+  }
+
+  function normalizeOptions(value) {
+    if (!Array.isArray(value)) return [];
+    return value.map(normalizeOption).filter(Boolean);
+  }
+
+  function normalizeOption(option) {
+    if (!option || typeof option !== "object") return null;
+
+    const target = normalizeTarget(option.target || "");
+    const label = safeText(option.label || inferLabelFromTarget(target));
+    if (!target || !label) return null;
+
+    const basePoolMode = safeText(option.basePoolMode || inferBasePoolModeForPayload(target, option));
+    const entryStackMode = safeText(option.entryStackMode || inferEntryStackModeForPayload(target, option));
+    const illuminationMode = safeText(option.illuminationMode || inferIlluminationModeForPayload(target, option));
+
+    return {
+      label,
+      target,
+      type: safeText(option.type || "conversation"),
+      scopeLane: safeText(option.scopeLane || inferLaneFromTarget(target)),
+      promptMode: safeText(option.promptMode || inferPromptModeFromTarget(target)),
+      optionKind: safeText(option.optionKind || OPTION_KINDS.CONVERSATION_PROMPT),
+      archetypeAlignment: safeText(option.archetypeAlignment || inferArchetypeAlignment(option.promptMode, target)),
+      bridgeMoment: safeText(option.bridgeMoment || "before_knowledge"),
+      movementIntent: safeText(option.movementIntent || MOVEMENT_INTENTS.ASK_JEEVES),
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      choiceClosure: option.choiceClosure && typeof option.choiceClosure === "object" ? option.choiceClosure : null,
+      requestMode: safeText(option.requestMode || REQUEST_MODES.NODE_ENRICHMENT)
+    };
   }
 
   function normalizeTarget(target) {
     const clean = safeText(target);
 
     const aliases = {
-      websitePath: TARGETS.DIAMOND_GATE_OVERVIEW,
-      siteOverviewPath: TARGETS.DIAMOND_GATE_OVERVIEW,
-      traditionalPath: TARGETS.TRADITIONAL_WEBSITE,
-      narrativeOverviewPath: TARGETS.NARRATIVE_PATH,
-      missionPath: TARGETS.MISSION_OVERVIEW,
-      whereToStart: TARGETS.SPLIT_INTERFACE,
-      guidedChooserPath: TARGETS.SPLIT_INTERFACE,
-      startGuidePath: TARGETS.SPLIT_INTERFACE,
       characterArchetypeMirrorPath: TARGETS.CHARACTER_MIRROR,
       characterMirrorPath: TARGETS.CHARACTER_MIRROR,
+      selfLearningPath: TARGETS.DIAGNOSTIC_REFERRAL,
+      mirrorMePath: TARGETS.DIAGNOSTIC_REFERRAL,
       characterArchetypeQuestionOne: TARGETS.DIAGNOSTIC_REFERRAL,
       characterArchetypeQuestionTwo: TARGETS.DIAGNOSTIC_REFERRAL,
       characterArchetypeQuestionThree: TARGETS.DIAGNOSTIC_REFERRAL,
       characterArchetypeResult: TARGETS.DIAGNOSTIC_REFERRAL,
-      mirrorMePath: TARGETS.DIAGNOSTIC_REFERRAL,
-      selfLearningPath: TARGETS.DIAGNOSTIC_REFERRAL
+      characterMirrorQuestionOne: TARGETS.DIAGNOSTIC_REFERRAL,
+      characterMirrorQuestionTwo: TARGETS.DIAGNOSTIC_REFERRAL,
+      characterMirrorQuestionThree: TARGETS.DIAGNOSTIC_REFERRAL,
+      characterMirrorResult: TARGETS.DIAGNOSTIC_REFERRAL,
+      missionPath: TARGETS.MISSION_OVERVIEW,
+      websitePath: TARGETS.DIAMOND_GATE_OVERVIEW,
+      siteOverviewPath: TARGETS.DIAMOND_GATE_OVERVIEW,
+      traditionalPath: TARGETS.TRADITIONAL_WEBSITE,
+      narrativeOverviewPath: TARGETS.NARRATIVE_PATH,
+      whereToStart: TARGETS.SPLIT_INTERFACE,
+      guidedChooserPath: TARGETS.SPLIT_INTERFACE,
+      startGuidePath: TARGETS.SPLIT_INTERFACE,
+      returnForkPath: TARGETS.RETURN_FORK,
+      restartForkPath: TARGETS.RESTART_FORK
     };
 
     return aliases[clean] || clean;
   }
 
-  function normalizeRoute(route) {
-    const clean = safeText(route);
+  function inferLabelFromTarget(target) {
+    const clean = normalizeTarget(target);
 
-    const aliases = {
-      traditionalWebsite: ROUTES.SITE_GUIDE,
-      narrativePath: ROUTES.MIRRORLAND,
-      frontierPlayground: ROUTES.FRONTIER,
-      worldGate: ROUTES.MIRRORLAND,
-      globeWindow: ROUTES.MIRRORLAND
+    const labels = {
+      diamondGateOverviewPath: "What is DiamondGateBridge.com?",
+      splitInterfaceBridgePath: "Can you help me choose where to start?",
+      traditionalWebsiteOverviewPath: "What is the traditional website for?",
+      narrativePathOverview: "What is the narrative path?",
+      missionOverviewPath: "What is the mission behind this?",
+      missionInnerPath: "What is the inner mission?",
+      missionCommunityPath: "What is the community mission?",
+      missionCollaborationPath: "How does the mission become practical?",
+      practicalRelevancePath: "What can I actually do here?",
+      diagnosticReferralPath: "Where can I take the alignment diagnostic?",
+      diagnosticPath: "What is the Coherence Diagnostic?",
+      characterMirrorPath: "What does the Character Mirror show?",
+      mirrorlandPath: "What is Mirrorland?",
+      hearthPath: "What is Hearth?",
+      frontierPath: "What is the Frontier Playground?",
+      scientificLawPath: "What makes this trustworthy?",
+      compassPath: "How does the Compass help me start?",
+      productsPath: "What can I actually do here?",
+      lawsPath: "What keeps this honest?",
+      seanPath: "Who is Sean Mansfield?",
+      underdogPath: "What is This Underdog?",
+      charactersPath: "Who are the Characters?",
+      recenterNode: "Can you re-center me?",
+      cleanDoor: "What is the cleanest next door?",
+      returnFork: "Can we return to the first fork?",
+      restartFork: "Can we start over?",
+      sharpQuestion: "Can you ask me a sharper question?"
     };
 
-    return aliases[clean] || clean;
+    return labels[clean] || "Can you tell me more?";
   }
 
   function inferTargetFromText(text) {
     const value = safeText(text).toLowerCase();
 
-    if (/\bhelp me choose|choose where to start|where should i start|need guidance|guide me|not sure where to start|where do i begin\b/.test(value)) return TARGETS.SPLIT_INTERFACE;
-    if (/\bwhat is diamondgatebridge|what is diamond gate bridge|what is this place|what is this site\b/.test(value)) return TARGETS.DIAMOND_GATE_OVERVIEW;
-    if (/\bnarrative path|story path|narrative side\b/.test(value)) return TARGETS.NARRATIVE_PATH;
-    if (/\btraditional website|public website|website for|public pages|site guide\b/.test(value)) return TARGETS.TRADITIONAL_WEBSITE;
-    if (/\bmission|inner mission|community mission|protect children|protect animals|bullying|collaboration\b/.test(value)) return TARGETS.MISSION_OVERVIEW;
-    if (/\breal world|practical|what can i do|what can i actually do|why does this matter|why this matters\b/.test(value)) return TARGETS.PRACTICAL_RELEVANCE;
-    if (/\bwhich archetype|what archetype|which character am i|what character am i|assess me|score me|diagnose me|alignment read|mirror question\b/.test(value)) return TARGETS.DIAGNOSTIC_REFERRAL;
-    if (/\bcoherence diagnostic|diagnostic\b/.test(value)) return TARGETS.DIAGNOSTIC;
-    if (/\bcharacter mirror\b/.test(value)) return TARGETS.CHARACTER_MIRROR;
-    if (/\bmirrorland|world window|south gate\b/.test(value)) return TARGETS.MIRRORLAND;
-    if (/\bhearth|mission control|window within the window\b/.test(value)) return TARGETS.HEARTH;
-    if (/\bfrontier|playground|energy|water|waste|infrastructure\b/.test(value)) return TARGETS.FRONTIER;
-    if (/\bscientific law|proof|evidence|test|trustworthy|trust\b/.test(value)) return TARGETS.SCIENTIFIC_LAW;
-    if (/\bcompass|start\b/.test(value)) return TARGETS.COMPASS;
+    if (/\b(where should i start|help me choose|guide me|not sure where|where do i begin)\b/.test(value)) return TARGETS.SPLIT_INTERFACE;
+    if (/\btraditional|website|site guide|public map|compass\b/.test(value)) return TARGETS.TRADITIONAL_WEBSITE;
+    if (/\bnarrative|story|world|mirrorland|walk\b/.test(value)) return TARGETS.NARRATIVE_PATH;
+    if (/\bmission|meaning|purpose|why\b/.test(value)) return TARGETS.MISSION_OVERVIEW;
+    if (/\bpractical|use|products|real world|value\b/.test(value)) return TARGETS.PRACTICAL_RELEVANCE;
+    if (/\btrust|proof|scientific|law|evidence|measurement\b/.test(value)) return TARGETS.SCIENTIFIC_LAW;
+    if (/\bdiagnostic|assess|score|type me|archetype|which character\b/.test(value)) return TARGETS.DIAGNOSTIC_REFERRAL;
+    if (/\bcharacter mirror|characters\b/.test(value)) return TARGETS.CHARACTER_MIRROR;
+    if (/\bhearth\b/.test(value)) return TARGETS.HEARTH;
+    if (/\bfrontier|energy|water|waste|infrastructure|closed loop\b/.test(value)) return TARGETS.FRONTIER;
+    if (/\bsean|creator\b/.test(value)) return TARGETS.SEAN;
+    if (/\bunderdog\b/.test(value)) return TARGETS.UNDERDOG;
+    if (/\brecenter|start over|beginning|return\b/.test(value)) return TARGETS.RECENTER;
 
-    return TARGETS.DIAMOND_GATE_OVERVIEW;
+    return state.currentNode || TARGETS.SPLIT_INTERFACE;
   }
 
-  function inferPromptModeFromText(text) {
+  function inferRequestModeFromText(text) {
     const value = safeText(text).toLowerCase();
 
-    if (/\btrust|proof|evidence|test|wrong|matter|important|trustworthy\b/.test(value)) return PROMPT_MODES.SKEPTIC;
-    if (/\breal world|practical|work|system|use|frontier|product|energy|water|waste|what can i do\b/.test(value)) return PROMPT_MODES.PRACTICAL;
-    if (/\bmission|inner|community|myself|diagnostic|alignment|underdog|pressure|noise\b/.test(value)) return PROMPT_MODES.PERSONAL;
-    if (/\bnext|continue|go deeper|show me more\b/.test(value)) return PROMPT_MODES.PROGRESSION;
-    if (/\brecenter|lost|start over|return\b/.test(value)) return PROMPT_MODES.RECENTER;
+    if (/\brecenter|start over|beginning|return\b/.test(value)) return REQUEST_MODES.RECENTER;
+    if (/\bopen|go to|take me to|launch|enter\b/.test(value)) return REQUEST_MODES.ROUTE_EXPLANATION;
+    if (/\barchetype|character|diagnostic|type me|score me|assess me\b/.test(value)) return REQUEST_MODES.CHARACTER_ARCHETYPE;
+
+    return REQUEST_MODES.FREEFORM;
+  }
+
+  function inferPromptModeFromText(text, target) {
+    const value = safeText(text).toLowerCase();
+
+    if (/\btrust|proof|scientific|evidence|measurement|law\b/.test(value)) return PROMPT_MODES.SKEPTIC;
+    if (/\bpractical|use|real world|product|system|frontier\b/.test(value)) return PROMPT_MODES.PRACTICAL;
+    if (/\bself|me|mission|meaning|diagnostic|archetype|character\b/.test(value)) return PROMPT_MODES.PERSONAL;
+    if (/\brecenter|start over|return\b/.test(value)) return PROMPT_MODES.RECENTER;
+
+    return inferPromptModeFromTarget(target);
+  }
+
+  function inferPromptModeFromTarget(target) {
+    const clean = normalizeTarget(target);
+
+    if (clean === TARGETS.SCIENTIFIC_LAW || clean === TARGETS.LAWS) return PROMPT_MODES.SKEPTIC;
+    if (clean === TARGETS.PRACTICAL_RELEVANCE || clean === TARGETS.PRODUCTS || clean === TARGETS.FRONTIER) return PROMPT_MODES.PRACTICAL;
+    if (clean === TARGETS.MISSION_OVERVIEW || clean === TARGETS.MISSION_INNER || clean === TARGETS.MISSION_COMMUNITY || clean === TARGETS.DIAGNOSTIC_REFERRAL || clean === TARGETS.DIAGNOSTIC || clean === TARGETS.UNDERDOG) return PROMPT_MODES.PERSONAL;
+    if (clean === TARGETS.RECENTER || clean === TARGETS.CLEAN_DOOR || clean === TARGETS.RETURN_FORK || clean === TARGETS.RESTART_FORK) return PROMPT_MODES.RECENTER;
 
     return PROMPT_MODES.STORY;
   }
 
-  function inferAlignmentFromTarget(target) {
-    const clean = normalizeTarget(target);
+  function inferMovementIntentFromText(text) {
+    const value = safeText(text).toLowerCase();
 
-    if ([TARGETS.SCIENTIFIC_LAW, TARGETS.LAWS].includes(clean)) return ARCHETYPE_ALIGNMENTS.PROOF;
-    if ([TARGETS.FRONTIER, TARGETS.PRACTICAL_RELEVANCE, TARGETS.PRODUCTS, TARGETS.MISSION_COLLABORATION].includes(clean)) return ARCHETYPE_ALIGNMENTS.PRACTICAL;
-    if ([TARGETS.MISSION_OVERVIEW, TARGETS.MISSION_INNER, TARGETS.MISSION_COMMUNITY, TARGETS.DIAGNOSTIC_REFERRAL, TARGETS.DIAGNOSTIC, TARGETS.UNDERDOG].includes(clean)) return ARCHETYPE_ALIGNMENTS.PERSONAL;
-    if ([TARGETS.SEAN].includes(clean)) return ARCHETYPE_ALIGNMENTS.SOURCE;
-    if ([TARGETS.NARRATIVE_PATH, TARGETS.MIRRORLAND, TARGETS.HEARTH, TARGETS.CHARACTERS, TARGETS.CHARACTER_MIRROR].includes(clean)) return ARCHETYPE_ALIGNMENTS.STORY;
+    if (/\brecenter|start over|beginning|return\b/.test(value)) return MOVEMENT_INTENTS.RECENTER;
+    if (/\bdeeper|dig deeper|more detail|one layer deeper\b/.test(value)) return MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH;
+    if (/\bopen|go to|take me to|launch|enter\b/.test(value)) return MOVEMENT_INTENTS.OPEN_PREPARED_DOOR;
 
-    return ARCHETYPE_ALIGNMENTS.UNKNOWN;
+    return MOVEMENT_INTENTS.ASK_JEEVES;
   }
 
-  function inferScopeLane(target) {
+  function inferArchetypeAlignment(promptMode, target) {
+    const mode = safeText(promptMode);
     const clean = normalizeTarget(target);
 
-    if ([
-      TARGETS.NARRATIVE_PATH,
-      TARGETS.MISSION_OVERVIEW,
-      TARGETS.MISSION_INNER,
-      TARGETS.MISSION_COMMUNITY,
-      TARGETS.MISSION_COLLABORATION,
-      TARGETS.MIRRORLAND,
-      TARGETS.HEARTH,
-      TARGETS.FRONTIER,
-      TARGETS.CHARACTERS,
-      TARGETS.CHARACTER_MIRROR
-    ].includes(clean)) return "narrative";
+    if (mode === PROMPT_MODES.SKEPTIC || clean === TARGETS.SCIENTIFIC_LAW || clean === TARGETS.LAWS) return "proof_entry";
+    if (mode === PROMPT_MODES.PRACTICAL || clean === TARGETS.PRACTICAL_RELEVANCE || clean === TARGETS.FRONTIER || clean === TARGETS.PRODUCTS) return "practical_entry";
+    if (mode === PROMPT_MODES.PERSONAL || clean === TARGETS.MISSION_OVERVIEW || clean === TARGETS.DIAGNOSTIC_REFERRAL || clean === TARGETS.UNDERDOG) return "personal_entry";
+    if (clean === TARGETS.SEAN) return "source_entry";
+    if (clean === TARGETS.RECENTER) return "unknown_entry";
 
-    return "objective";
+    return "story_entry";
   }
 
-  function inferLaneFromTarget(target, intent) {
+  function inferLaneFromTarget(target) {
     const clean = normalizeTarget(target);
-    const safeIntent = safeText(intent);
-
-    if (clean === TARGETS.SPLIT_INTERFACE || safeIntent === "splitInterface") return LANES.BRIDGE;
-    if (clean === TARGETS.DIAGNOSTIC_REFERRAL || safeIntent === "diagnosticReferral") return LANES.DIAGNOSTIC;
-
-    if ([
-      TARGETS.TRADITIONAL_WEBSITE,
-      TARGETS.COMPASS,
-      TARGETS.PRODUCTS,
-      TARGETS.LAWS,
-      TARGETS.SEAN,
-      TARGETS.DIAGNOSTIC,
-      TARGETS.SCIENTIFIC_LAW,
-      TARGETS.PRACTICAL_RELEVANCE
-    ].includes(clean)) return LANES.TRADITIONAL;
 
     if ([
       TARGETS.NARRATIVE_PATH,
@@ -1737,138 +1419,369 @@
       TARGETS.CHARACTERS,
       TARGETS.CHARACTER_MIRROR,
       TARGETS.UNDERDOG
-    ].includes(clean)) return LANES.NARRATIVE;
+    ].includes(clean)) return "narrative";
 
-    return state.currentEntryLane || LANES.UNKNOWN;
+    if (clean === TARGETS.TRADITIONAL_WEBSITE || clean === TARGETS.TRADITIONAL_COMPASS || clean === TARGETS.PRODUCTS || clean === TARGETS.LAWS || clean === TARGETS.SCIENTIFIC_LAW || clean === TARGETS.SEAN) return "traditional";
+
+    return "objective";
   }
 
-  function inferStageFromTarget(target, intent) {
+  function inferStageFromTarget(target, option) {
     const clean = normalizeTarget(target);
-    const safeIntent = safeText(intent);
+    const movement = safeText(option && option.movementIntent);
+    const entryStackMode = safeText(option && option.entryStackMode);
 
-    if (clean === TARGETS.DIAMOND_GATE_OVERVIEW || safeIntent === "diamondGate") return STAGES.SPLIT_INTERFACE_GATE;
-    if (clean === TARGETS.TRADITIONAL_WEBSITE || safeIntent === "traditionalWebsite") return STAGES.TRADITIONAL_WEBSITE_LANE;
-    if (clean === TARGETS.NARRATIVE_PATH || safeIntent === "narrativePath") return STAGES.NARRATIVE_PATH_LANE;
-    if (clean === TARGETS.MISSION_OVERVIEW || clean === TARGETS.MISSION_INNER || clean === TARGETS.MISSION_COMMUNITY || clean === TARGETS.MISSION_COLLABORATION || safeIntent === "mission") return STAGES.MISSION_LANE;
-    if (clean === TARGETS.SPLIT_INTERFACE || safeIntent === "splitInterface") return STAGES.BRIDGE_LANE;
-    if (clean === TARGETS.DIAGNOSTIC_REFERRAL || safeIntent === "diagnosticReferral") return STAGES.DIAGNOSTIC_REFERRAL;
+    if (clean === TARGETS.SPLIT_INTERFACE) return "split_interface_gate";
+    if (movement === MOVEMENT_INTENTS.RECENTER || entryStackMode === ENTRY_STACK_MODES.RETURN) return "return_fork";
+    if (movement === MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH || entryStackMode === ENTRY_STACK_MODES.DIG_DEEPER) return "dig_deeper_threshold";
+    if (clean === TARGETS.DIAGNOSTIC_REFERRAL || clean === TARGETS.DIAGNOSTIC || clean === TARGETS.CHARACTER_MIRROR) return "diagnostic_boundary";
+    if (clean === TARGETS.DIAMOND_GATE_OVERVIEW) return "entrance_overview";
 
-    return STAGES.OPEN_CONVERSATION;
+    return "base_pool";
   }
 
-  function inferIntentFromTarget(target) {
+  function inferEntryStackModeForPayload(target, payload) {
     const clean = normalizeTarget(target);
+    const source = payload && typeof payload === "object" ? payload : {};
+    const movement = safeText(source.movementIntent);
+    const kind = safeText(source.optionKind);
 
-    const map = {
-      diamondGateOverviewPath: "diamondGate",
-      splitInterfaceBridgePath: "splitInterface",
-      traditionalWebsiteOverviewPath: "traditionalWebsite",
-      narrativePathOverview: "narrativePath",
-      missionOverviewPath: "mission",
-      missionInnerPath: "mission",
-      missionCommunityPath: "mission",
-      missionCollaborationPath: "mission",
-      practicalRelevancePath: "practicalRelevance",
-      diagnosticReferralPath: "diagnosticReferral",
-      diagnosticPath: "diagnostic",
-      characterMirrorPath: "characterMirror",
-      mirrorlandPath: "mirrorland",
-      hearthPath: "hearth",
-      frontierPath: "frontier",
-      scientificLawPath: "scientificLaw",
-      compassPath: "orientation",
-      productsPath: "traditionalWebsite",
-      lawsPath: "laws",
-      seanPath: "sean",
-      underdogPath: "underdog",
-      charactersPath: "characters",
-      recenterNode: "recenter",
-      cleanDoor: "recenter"
+    if (source.entryStackMode) return safeText(source.entryStackMode);
+    if (clean === TARGETS.SPLIT_INTERFACE) return ENTRY_STACK_MODES.GUIDED_CHOOSER;
+    if (movement === MOVEMENT_INTENTS.RECENTER || kind === OPTION_KINDS.CONTROL || clean === TARGETS.RECENTER) return ENTRY_STACK_MODES.RETURN;
+    if (movement === MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH || kind === OPTION_KINDS.FORWARD) return ENTRY_STACK_MODES.DIG_DEEPER;
+    if (movement === MOVEMENT_INTENTS.OPEN_PREPARED_DOOR || kind === OPTION_KINDS.ROUTE) return ENTRY_STACK_MODES.PREPARED_DOOR;
+
+    return ENTRY_STACK_MODES.BASE_POOL;
+  }
+
+  function inferBasePoolModeForPayload(target, payload) {
+    const clean = normalizeTarget(target);
+    const source = payload && typeof payload === "object" ? payload : {};
+
+    if (source.basePoolMode) return safeText(source.basePoolMode);
+
+    if (clean === TARGETS.DIAMOND_GATE_OVERVIEW) return BASE_POOL_MODES.ESTATE_OVERVIEW;
+    if (clean === TARGETS.SPLIT_INTERFACE) return BASE_POOL_MODES.GUIDED_CHOOSER;
+    if (clean === TARGETS.TRADITIONAL_WEBSITE || clean === TARGETS.TRADITIONAL_COMPASS) return BASE_POOL_MODES.PUBLIC_MAP;
+    if (clean === TARGETS.NARRATIVE_PATH) return BASE_POOL_MODES.NARRATIVE_PATH;
+    if (clean === TARGETS.MISSION_OVERVIEW) return BASE_POOL_MODES.MISSION;
+    if (clean === TARGETS.MISSION_INNER) return BASE_POOL_MODES.INNER_MISSION;
+    if (clean === TARGETS.MISSION_COMMUNITY) return BASE_POOL_MODES.COMMUNITY_MISSION;
+    if (clean === TARGETS.MISSION_COLLABORATION) return BASE_POOL_MODES.COLLABORATION_MISSION;
+    if (clean === TARGETS.PRACTICAL_RELEVANCE || clean === TARGETS.PRODUCTS) return BASE_POOL_MODES.PRACTICAL;
+    if (clean === TARGETS.SCIENTIFIC_LAW || clean === TARGETS.LAWS) return BASE_POOL_MODES.PROOF;
+    if (clean === TARGETS.DIAGNOSTIC_REFERRAL || clean === TARGETS.DIAGNOSTIC) return BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY;
+    if (clean === TARGETS.CHARACTER_MIRROR) return BASE_POOL_MODES.CHARACTER_MIRROR;
+    if (clean === TARGETS.MIRRORLAND) return BASE_POOL_MODES.MIRRORLAND;
+    if (clean === TARGETS.HEARTH) return BASE_POOL_MODES.HEARTH;
+    if (clean === TARGETS.FRONTIER) return BASE_POOL_MODES.FRONTIER;
+    if (clean === TARGETS.CHARACTERS) return BASE_POOL_MODES.CHARACTERS;
+    if (clean === TARGETS.SEAN) return BASE_POOL_MODES.CREATOR;
+    if (clean === TARGETS.UNDERDOG) return BASE_POOL_MODES.UNDERDOG;
+    if (clean === TARGETS.RECENTER || clean === TARGETS.CLEAN_DOOR || clean === TARGETS.RETURN_FORK || clean === TARGETS.RESTART_FORK) return BASE_POOL_MODES.RETURN;
+
+    return BASE_POOL_MODES.NONE;
+  }
+
+  function inferIlluminationModeForPayload(target, payload) {
+    const source = payload && typeof payload === "object" ? payload : {};
+    if (source.illuminationMode) return safeText(source.illuminationMode);
+
+    const basePoolMode = source.basePoolMode || inferBasePoolModeForPayload(target, source);
+
+    if (basePoolMode === BASE_POOL_MODES.RETURN) return ILLUMINATION_MODES.RETURN;
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY;
+    if (basePoolMode === BASE_POOL_MODES.PROOF) return ILLUMINATION_MODES.PROOF;
+    if (basePoolMode === BASE_POOL_MODES.PRACTICAL || basePoolMode === BASE_POOL_MODES.FRONTIER || basePoolMode === BASE_POOL_MODES.COLLABORATION_MISSION) return ILLUMINATION_MODES.PRACTICAL;
+    if (basePoolMode === BASE_POOL_MODES.GUIDED_CHOOSER) return ILLUMINATION_MODES.THRESHOLD;
+
+    if ([
+      BASE_POOL_MODES.NARRATIVE_PATH,
+      BASE_POOL_MODES.MISSION,
+      BASE_POOL_MODES.INNER_MISSION,
+      BASE_POOL_MODES.COMMUNITY_MISSION,
+      BASE_POOL_MODES.MIRRORLAND,
+      BASE_POOL_MODES.HEARTH,
+      BASE_POOL_MODES.CHARACTERS,
+      BASE_POOL_MODES.UNDERDOG
+    ].includes(basePoolMode)) return ILLUMINATION_MODES.NARRATIVE;
+
+    return ILLUMINATION_MODES.PUBLIC;
+  }
+
+  function buildChoiceClosureForTarget(target, payload, basePoolMode) {
+    const clean = normalizeTarget(target);
+    const mode = basePoolMode || inferBasePoolModeForPayload(clean, payload);
+    const closure = {
+      preparedDoorAvailable: true,
+      digDeeperAvailable: true,
+      returnForkAvailable: true,
+      finalChatThreshold: false,
+      mode
     };
 
-    return map[clean] || "diamondGate";
+    if (clean === TARGETS.SPLIT_INTERFACE || mode === BASE_POOL_MODES.GUIDED_CHOOSER) {
+      closure.preparedDoorAvailable = false;
+      closure.digDeeperAvailable = false;
+      closure.returnForkAvailable = false;
+    }
+
+    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || clean === TARGETS.DIAGNOSTIC_REFERRAL) {
+      closure.finalChatThreshold = true;
+    }
+
+    if (mode === BASE_POOL_MODES.RETURN) {
+      closure.preparedDoorAvailable = false;
+      closure.digDeeperAvailable = false;
+      closure.returnForkAvailable = true;
+    }
+
+    return closure;
   }
 
-  function inferCardinalForTarget(target) {
-    const clean = normalizeTarget(target);
+  function buildAllowedRouteFamilies(selectedTarget) {
+    const target = normalizeTarget(selectedTarget);
+    const families = {};
 
-    if ([TARGETS.SCIENTIFIC_LAW, TARGETS.LAWS, TARGETS.DIAGNOSTIC, TARGETS.DIAGNOSTIC_REFERRAL].includes(clean)) return "W";
-    if ([TARGETS.FRONTIER, TARGETS.HEARTH, TARGETS.MISSION_COLLABORATION, TARGETS.PRACTICAL_RELEVANCE].includes(clean)) return "E";
-    if ([TARGETS.MIRRORLAND, TARGETS.NARRATIVE_PATH, TARGETS.CHARACTERS, TARGETS.CHARACTER_MIRROR].includes(clean)) return "S";
-    if ([TARGETS.COMPASS, TARGETS.SEAN, TARGETS.UNDERDOG, TARGETS.TRADITIONAL_WEBSITE].includes(clean)) return "N";
+    Object.keys(ROUTE_FAMILIES).forEach(function eachFamily(key) {
+      if (
+        key === target ||
+        target === TARGETS.SPLIT_INTERFACE ||
+        target === TARGETS.DIAMOND_GATE_OVERVIEW
+      ) {
+        families[key] = ROUTE_FAMILIES[key].slice();
+      }
+    });
 
-    return "C";
+    if (!Object.keys(families).length && ROUTE_FAMILIES[target]) {
+      families[target] = ROUTE_FAMILIES[target].slice();
+    }
+
+    return families;
   }
 
-  function inferLoopCount(target) {
-    const clean = normalizeTarget(target);
-    return state.selectedTargets.filter((item) => item === clean).length;
+  function buildAllowedRoutes(selectedTarget, allowedRouteFamilies) {
+    const target = normalizeTarget(selectedTarget);
+    const routes = [];
+    const families = allowedRouteFamilies && typeof allowedRouteFamilies === "object"
+      ? allowedRouteFamilies
+      : buildAllowedRouteFamilies(target);
+
+    Object.keys(families).forEach(function eachFamily(key) {
+      families[key].forEach(function addRoute(route) {
+        if (ROUTE_HREFS[route]) routes.push(route);
+      });
+    });
+
+    if (TARGET_ROUTE_HINTS[target]) {
+      TARGET_ROUTE_HINTS[target].forEach(function addHint(route) {
+        if (ROUTE_HREFS[route]) routes.push(route);
+      });
+    }
+
+    return dedupeStrings(routes).slice(0, 16);
   }
 
-  function inferTopicDepth(target) {
-    const intent = inferIntentFromTarget(target);
-    return state.transitionTrail.filter((item) => inferIntentFromTarget(item.to) === intent).length;
+  function buildAllowedTargets(selectedTarget) {
+    const target = normalizeTarget(selectedTarget);
+    const targets = [
+      TARGETS.SPLIT_INTERFACE,
+      TARGETS.TRADITIONAL_WEBSITE,
+      TARGETS.PRACTICAL_RELEVANCE,
+      TARGETS.NARRATIVE_PATH,
+      TARGETS.MISSION_OVERVIEW,
+      TARGETS.SCIENTIFIC_LAW,
+      target
+    ];
+
+    if (target === TARGETS.MISSION_OVERVIEW) {
+      targets.push(TARGETS.MISSION_INNER, TARGETS.MISSION_COMMUNITY, TARGETS.MISSION_COLLABORATION);
+    }
+
+    if (target === TARGETS.DIAGNOSTIC_REFERRAL || target === TARGETS.CHARACTER_MIRROR) {
+      targets.push(TARGETS.DIAGNOSTIC, TARGETS.CHARACTER_MIRROR, TARGETS.DIAGNOSTIC_REFERRAL);
+    }
+
+    return dedupeStrings(targets).filter(Boolean);
   }
 
-  function makeOptionKey(option) {
-    return [
-      option.target || "",
-      option.label || "",
-      option.promptMode || "",
-      option.optionKind || ""
-    ].join("::");
-  }
+  function buildBridgeContext(input) {
+    const source = input && typeof input === "object" ? input : {};
 
-  function syncRootState() {
-    if (!state.root) return;
-
-    state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
-    state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
-    state.root.setAttribute("data-jeeves-current-target", state.currentNode || "");
-    state.root.setAttribute("data-jeeves-current-topic", state.currentTopic || "");
-    state.root.setAttribute("data-jeeves-bridge-offered", state.bridgeOffered ? "true" : "false");
-  }
-
-  function cloneState() {
     return {
-      ready: state.ready,
-      busy: state.busy,
-      booted: state.booted,
-      revealActive: state.revealActive,
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      currentConversationStage: state.currentConversationStage,
-      currentEntryLane: state.currentEntryLane,
-      lastLane: state.lastLane,
-      bridgeOffered: state.bridgeOffered,
       currentNode: state.currentNode,
-      currentPath: state.currentPath,
-      currentTopic: state.currentTopic,
-      currentScopeLane: state.currentScopeLane,
-      lastSuccessfulEndpoint: state.lastSuccessfulEndpoint,
-      selectedTargets: state.selectedTargets.slice(),
-      selectedOptionKeys: state.selectedOptionKeys.slice(),
-      visitedNodes: state.visitedNodes.slice(),
-      sessionTrail: state.sessionTrail.slice(),
-      transitionTrail: state.transitionTrail.slice(),
-      branchStack: state.branchStack.slice(),
-      returnStack: state.returnStack.slice(),
-      lastBridgeContext: state.lastBridgeContext,
-      lastError: state.lastError ? safeErrorMessage(state.lastError) : ""
+      priorNode: normalizeTarget(source.priorNode || state.currentNode || ""),
+      priorLane: safeText(source.priorLane || state.currentEntryLane || ""),
+      priorTopic: safeText(state.currentTopic || ""),
+      selectedTarget: normalizeTarget(source.selectedTarget || ""),
+      selectedLabel: safeText(source.selectedLabel || ""),
+      promptMode: safeText(source.promptMode || ""),
+      optionKind: safeText(source.optionKind || ""),
+      archetypeAlignment: safeText(source.archetypeAlignment || ""),
+      bridgeMoment: safeText(source.bridgeMoment || ""),
+      movementIntent: safeText(source.movementIntent || ""),
+      currentTopic: safeText(source.currentTopic || state.currentTopic || ""),
+      currentScopeStage: safeText(state.currentConversationStage || ""),
+      adjacentTarget: normalizeTarget(source.adjacentTarget || ""),
+      adjacentLabel: safeText(source.adjacentLabel || ""),
+      adjacentReason: safeText(source.adjacentReason || "")
     };
   }
 
-  async function safeReadResponseText(response) {
-    try {
-      return await response.text();
-    } catch (_error) {
-      return "";
+  function inferAdjacentTarget(target) {
+    const clean = normalizeTarget(target);
+
+    if (clean === TARGETS.TRADITIONAL_WEBSITE) return TARGETS.NARRATIVE_PATH;
+    if (clean === TARGETS.NARRATIVE_PATH) return TARGETS.TRADITIONAL_WEBSITE;
+    if (clean === TARGETS.PRODUCTS) return TARGETS.FRONTIER;
+    if (clean === TARGETS.FRONTIER) return TARGETS.PRODUCTS;
+    if (clean === TARGETS.LAWS) return TARGETS.SCIENTIFIC_LAW;
+    if (clean === TARGETS.SCIENTIFIC_LAW) return TARGETS.LAWS;
+    if (clean === TARGETS.SEAN) return TARGETS.UNDERDOG;
+    if (clean === TARGETS.UNDERDOG) return TARGETS.SEAN;
+    if (clean === TARGETS.CHARACTER_MIRROR) return TARGETS.DIAGNOSTIC_REFERRAL;
+    if (clean === TARGETS.DIAGNOSTIC_REFERRAL) return TARGETS.CHARACTER_MIRROR;
+    if (clean === TARGETS.MIRRORLAND) return TARGETS.TRADITIONAL_WEBSITE;
+
+    return "";
+  }
+
+  function inferBridgeReason(fromTarget, toTarget, option) {
+    const from = normalizeTarget(fromTarget);
+    const to = normalizeTarget(toTarget);
+    const movement = safeText(option && option.movementIntent);
+
+    if (from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.NARRATIVE_PATH) return "public website structure into the narrative path";
+    if (from === TARGETS.NARRATIVE_PATH && to === TARGETS.TRADITIONAL_WEBSITE) return "narrative path back to public website structure";
+    if (to === TARGETS.MISSION_OVERVIEW || /^mission/.test(to)) return "mission lane";
+    if (to === TARGETS.PRACTICAL_RELEVANCE || to === TARGETS.FRONTIER || to === TARGETS.PRODUCTS) return "practical";
+    if (to === TARGETS.DIAGNOSTIC_REFERRAL || to === TARGETS.DIAGNOSTIC || to === TARGETS.CHARACTER_MIRROR) return "diagnostic boundary";
+    if (movement === MOVEMENT_INTENTS.CROSS_TO_RELATED_ROOM) return "parallel bridge";
+    return "";
+  }
+
+  function getConversationHistory() {
+    if (!state.transcriptEl) return [];
+
+    const bubbles = Array.prototype.slice.call(state.transcriptEl.querySelectorAll("[data-jeeves-bubble]"));
+    return bubbles.slice(-12).map(function mapBubble(node) {
+      return {
+        role: node.getAttribute("data-jeeves-bubble") || "assistant",
+        text: safeText(node.textContent || "")
+      };
+    });
+  }
+
+  function isDigDeeperOption(option) {
+    const source = option && typeof option === "object" ? option : {};
+    const label = safeText(source.label || source.visitorText || "").toLowerCase();
+
+    return source.entryStackMode === ENTRY_STACK_MODES.DIG_DEEPER ||
+      source.movementIntent === MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH ||
+      source.optionKind === OPTION_KINDS.FORWARD ||
+      /\b(deeper|dig deeper|one layer deeper|more detail)\b/.test(label);
+  }
+
+  function isDigDeeperText(text) {
+    return /\b(deeper|dig deeper|one layer deeper|more detail|go further)\b/i.test(safeText(text));
+  }
+
+  function isReturnForkOption(option) {
+    const source = option && typeof option === "object" ? option : {};
+    const label = safeText(source.label || source.visitorText || "").toLowerCase();
+
+    return source.entryStackMode === ENTRY_STACK_MODES.RETURN ||
+      source.movementIntent === MOVEMENT_INTENTS.RECENTER ||
+      source.optionKind === OPTION_KINDS.CONTROL ||
+      /\b(return|recenter|start over|guided chooser|beginning)\b/.test(label);
+  }
+
+  function isPreparedDoorOption(option) {
+    const source = option && typeof option === "object" ? option : {};
+    const label = safeText(source.label || source.visitorText || "").toLowerCase();
+
+    return source.entryStackMode === ENTRY_STACK_MODES.PREPARED_DOOR ||
+      source.movementIntent === MOVEMENT_INTENTS.OPEN_PREPARED_DOOR ||
+      source.optionKind === OPTION_KINDS.ROUTE ||
+      /\b(open|go to|take me to|launch|enter)\b/.test(label);
+  }
+
+  function makeOption(label, target, promptMode, archetypeAlignment, bridgeMoment, movementIntent, scopeLane, entryStackMode, basePoolMode, illuminationMode) {
+    return {
+      label,
+      target,
+      type: "conversation",
+      scopeLane,
+      promptMode,
+      optionKind: OPTION_KINDS.CONVERSATION_PROMPT,
+      archetypeAlignment,
+      bridgeMoment,
+      movementIntent,
+      entryStackMode,
+      basePoolMode,
+      illuminationMode
+    };
+  }
+
+  function dispatchReady() {
+    if (typeof global.dispatchEvent === "function" && typeof global.CustomEvent === "function") {
+      global.dispatchEvent(new global.CustomEvent("hearth:jeeves-ready", {
+        detail: {
+          contract: CONTRACT,
+          previousContract: PREVIOUS_CONTRACT,
+          version: VERSION,
+          expressionContractTarget: EXPRESSION_CONTRACT_TARGET,
+          apiContractTarget: API_CONTRACT_TARGET,
+          entryStackCompatible: true,
+          basePoolCompatible: true,
+          illuminationCompatible: true,
+          readingRhythmAuthority: "frontbrain"
+        }
+      }));
     }
   }
 
-  function dispatch(name, detail) {
-    if (typeof global.dispatchEvent !== "function" || typeof global.CustomEvent !== "function") return;
-    global.dispatchEvent(new global.CustomEvent(name, { detail }));
+  function dispatchPreparedDoor(routeId, href) {
+    if (typeof global.dispatchEvent === "function" && typeof global.CustomEvent === "function") {
+      global.dispatchEvent(new global.CustomEvent("hearth:jeeves-prepared-door", {
+        detail: {
+          contract: CONTRACT,
+          routeId,
+          href,
+          entryStackMode: ENTRY_STACK_MODES.PREPARED_DOOR,
+          movementIntent: MOVEMENT_INTENTS.OPEN_PREPARED_DOOR
+        }
+      }));
+    }
+  }
+
+  function pushUnique(list, value, max) {
+    const clean = safeText(value);
+    if (!clean || !Array.isArray(list)) return;
+    const index = list.indexOf(clean);
+    if (index >= 0) list.splice(index, 1);
+    list.push(clean);
+    trimArray(list, max || 32);
+  }
+
+  function trimArray(list, max) {
+    if (!Array.isArray(list)) return;
+    while (list.length > max) list.shift();
+  }
+
+  function dedupeStrings(values) {
+    const seen = new Set();
+    const result = [];
+
+    (Array.isArray(values) ? values : []).forEach(function each(value) {
+      const clean = safeText(value);
+      if (!clean || seen.has(clean)) return;
+      seen.add(clean);
+      result.push(clean);
+    });
+
+    return result;
   }
 
   function safeText(value) {
@@ -1877,7 +1790,113 @@
       .trim();
   }
 
-  function safeErrorMessage(error) {
-    return safeText(error && error.message ? error.message : "Unknown Jeeves frontbrain error.").slice(0, 500);
+  const api = Object.freeze({
+    contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    version: VERSION,
+
+    expressionContractTarget: EXPRESSION_CONTRACT_TARGET,
+    apiContractTarget: API_CONTRACT_TARGET,
+    apiContractNext: API_CONTRACT_NEXT,
+
+    targets: TARGETS,
+    routes: ROUTES,
+    routeHrefs: ROUTE_HREFS,
+    routeFamilies: ROUTE_FAMILIES,
+
+    entryStackModes: ENTRY_STACK_MODES,
+    basePoolModes: BASE_POOL_MODES,
+    illuminationModes: ILLUMINATION_MODES,
+
+    readingRhythm: Object.freeze({
+      authority: "frontbrain",
+      baseMs: READ_BASE_MS,
+      perCharMs: READ_PER_CHAR_MS,
+      maxMs: READ_MAX_MS,
+      tapToSpeed: true,
+      listeningState: "frontbrain",
+      typingState: "frontbrain",
+      protectedCopyAuthority: "expression"
+    }),
+
+    mount: mountHearthJeeves,
+    send: handleFreeform,
+    reset: function reset() {
+      if (!state.root) return;
+      state.initialized = false;
+      state.currentConversationStage = "entrance_overview";
+      state.currentEntryLane = "entrance";
+      state.lastLane = "";
+      state.currentNode = TARGETS.DIAMOND_GATE_OVERVIEW;
+      state.currentPath = TARGETS.DIAMOND_GATE_OVERVIEW;
+      state.currentTopic = "entrance";
+      state.currentScopeLane = "objective";
+      state.entryStackMode = ENTRY_STACK_MODES.ENTRANCE;
+      state.basePoolMode = BASE_POOL_MODES.ESTATE_OVERVIEW;
+      state.illuminationMode = ILLUMINATION_MODES.THRESHOLD;
+      state.choiceClosure = null;
+      state.selectedTargets = [];
+      state.selectedOptionKeys = [];
+      state.visitedNodes = [];
+      state.sessionTrail = [];
+      state.transitionTrail = [];
+      state.branchStack = [];
+      state.returnStack = [];
+      state.lastBridgeContext = null;
+      state.lastResponse = null;
+      state.lastError = null;
+      clearRevealTimer();
+      ensureShell();
+      bindEvents();
+      bootConversation();
+    },
+    speed: advanceReveal,
+    getState: function getState() {
+      return {
+        contract: CONTRACT,
+        version: VERSION,
+        mounted: state.mounted,
+        busy: state.busy,
+        currentConversationStage: state.currentConversationStage,
+        currentEntryLane: state.currentEntryLane,
+        lastLane: state.lastLane,
+        currentNode: state.currentNode,
+        currentPath: state.currentPath,
+        currentTopic: state.currentTopic,
+        currentScopeLane: state.currentScopeLane,
+        entryStackMode: state.entryStackMode,
+        basePoolMode: state.basePoolMode,
+        illuminationMode: state.illuminationMode,
+        choiceClosure: state.choiceClosure,
+        lastBridgeContext: state.lastBridgeContext,
+        lastResponse: state.lastResponse,
+        lastError: state.lastError ? String(state.lastError.message || state.lastError) : "",
+        lastSuccessfulEndpoint: state.lastSuccessfulEndpoint,
+        readingRhythmAuthority: "frontbrain"
+      };
+    },
+
+    buildApiPayload,
+    buildAllowedRouteFamilies,
+    buildAllowedRoutes,
+    buildBridgeContext,
+    inferEntryStackModeForPayload,
+    inferBasePoolModeForPayload,
+    inferIlluminationModeForPayload
+  });
+
+  global.mountHearthJeeves = mountHearthJeeves;
+  global.mountJeeves = mountHearthJeeves;
+  global.HEARTH_JEEVES_FRONTBRAIN = api;
+
+  global.HEARTH = global.HEARTH || {};
+  global.HEARTH.jeevesFrontbrain = api;
+
+  if (global.document && global.document.readyState === "loading") {
+    global.document.addEventListener("DOMContentLoaded", function onReady() {
+      mountHearthJeeves();
+    });
+  } else {
+    mountHearthJeeves();
   }
 })(typeof window !== "undefined" ? window : globalThis);

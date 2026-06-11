@@ -1,16 +1,16 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_READING_RHYTHM_ALIGNMENT_TNT_v25_3
+// HEARTH_JEEVES_FRONTBRAIN_GUIDED_ENTRANCE_EXPRESSION_CONNECTOR_TNT_v25_4
 // Full-file replacement.
 // Client-side frontbrain / visible conversation carrier only.
 // Purpose:
-// - Preserve v25.1 shell boot repair.
-// - Preserve the v25.2 split-interface Jeeves construct.
-// - Close loose front-end alignment against API/North v5.1 and Expression v5.1.
-// - Restore reading rhythm: Jeeves reveals messages one at a time.
-// - Toggle house state between listening and typing.
-// - Let screen taps speed the current Jeeves reveal.
-// - Add API endpoint fallback without changing the meaning contract.
-// - Send explicit bridgeContext to API/North.
+// - Preserve v25.3 reading rhythm, house-state toggles, tap-to-speed, endpoint fallback, and bridgeContext.
+// - Align frontbrain connector to Expression v5.3 guided-entrance contract.
+// - Use one guided chooser, two traditional/public paths, and two narrative/deeper paths.
+// - Route typed guidance requests to the split-interface chooser, not directly to Compass.
+// - Pass bridgeContext into Expression shaping.
+// - Prefer actual clicked labels over stale target-default labels.
+// - Reflect the active Expression contract/version in payload voice mode.
+// - Include Frontier subroutes in allowed route contract.
 // Does not own:
 // - API/North canon
 // - Expression wording authority
@@ -22,8 +22,8 @@
 "use strict";
 
 (function mountHearthJeevesFrontbrain(global) {
-  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_READING_RHYTHM_ALIGNMENT_TNT_v25_3";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_RHYTHM_SHELL_BOUND_TNT_v25_2";
+  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_ENTRANCE_EXPRESSION_CONNECTOR_TNT_v25_4";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_READING_RHYTHM_ALIGNMENT_TNT_v25_3";
 
   const API_ENDPOINTS = Object.freeze([
     "/api/jeeves",
@@ -154,6 +154,17 @@
     AUDRALIA: "audralia",
     H_EARTH: "hEarth",
     FRONTIER: "frontier",
+    FRONTIER_ENERGY: "frontierEnergy",
+    FRONTIER_WATER: "frontierWater",
+    FRONTIER_WASTE: "frontierWaste",
+    FRONTIER_CLOSED_LOOP: "frontierClosedLoop",
+    FRONTIER_INFRASTRUCTURE: "frontierInfrastructure",
+    FRONTIER_LATTICE: "frontierLattice",
+    FRONTIER_URBAN: "frontierUrban",
+    FRONTIER_MANUAL: "frontierManual",
+    FRONTIER_SHIMMER: "frontierShimmer",
+    FRONTIER_TRAJECTORY: "frontierTrajectory",
+    FRONTIER_VISION: "frontierVision",
     CHARACTERS: "characters",
     NINE_SUMMITS: "nineSummits",
     UNDERDOG: "aboutUnderdog"
@@ -210,6 +221,17 @@
     audralia: "Open Audralia",
     hEarth: "Open H-Earth",
     frontier: "Open the Frontier Playground",
+    frontierEnergy: "Open Frontier Energy",
+    frontierWater: "Open Frontier Water",
+    frontierWaste: "Open Frontier Waste",
+    frontierClosedLoop: "Open Closed Loop Systems",
+    frontierInfrastructure: "Open Frontier Infrastructure",
+    frontierLattice: "Open Frontier Lattice",
+    frontierUrban: "Open Frontier Urban",
+    frontierManual: "Open the Frontier Manual",
+    frontierShimmer: "Open Frontier Shimmer",
+    frontierTrajectory: "Open Frontier Trajectory",
+    frontierVision: "Open Frontier Vision",
     characters: "Open the Characters Hall",
     nineSummits: "Open Nine Summits",
     aboutUnderdog: "Open This Underdog"
@@ -217,14 +239,14 @@
 
   const TARGET_LABELS = Object.freeze({
     diamondGateOverviewPath: "What is DiamondGateBridge.com?",
-    splitInterfaceBridgePath: "How do the two sides connect?",
+    splitInterfaceBridgePath: "Can you help me choose where to start?",
     traditionalWebsiteOverviewPath: "What is the traditional website for?",
     narrativePathOverview: "What is the narrative path?",
     missionOverviewPath: "What is the mission behind this?",
     missionInnerPath: "What is the inner mission?",
     missionCommunityPath: "What is the community mission?",
     missionCollaborationPath: "How does the mission become practical?",
-    practicalRelevancePath: "Why does this matter in the real world?",
+    practicalRelevancePath: "What can I actually do here?",
     diagnosticReferralPath: "Where can I take the alignment diagnostic?",
     diagnosticPath: "What is the Coherence Diagnostic?",
     characterMirrorPath: "What does the Character Mirror show?",
@@ -236,7 +258,7 @@
     underdogPath: "What is This Underdog?",
     hearthPath: "What is Hearth?",
     frontierPath: "What is the Frontier Playground?",
-    scientificLawPath: "What needs to be tested?",
+    scientificLawPath: "What makes this trustworthy?",
     charactersPath: "Who are the Characters?",
     recenterNode: "Can you re-center me?",
     cleanDoor: "What is the cleanest next door?"
@@ -251,10 +273,28 @@
 
   const START_OPTIONS = Object.freeze([
     makeConversationOption(
-      "What is DiamondGateBridge.com?",
-      TARGETS.DIAMOND_GATE_OVERVIEW,
+      "Can you help me choose where to start?",
+      TARGETS.SPLIT_INTERFACE,
       PROMPT_MODES.STORY,
       ARCHETYPE_ALIGNMENTS.STORY,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "objective"
+    ),
+    makeConversationOption(
+      "What is the traditional website for?",
+      TARGETS.TRADITIONAL_WEBSITE,
+      PROMPT_MODES.STORY,
+      ARCHETYPE_ALIGNMENTS.STORY,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "objective"
+    ),
+    makeConversationOption(
+      "What can I actually do here?",
+      TARGETS.PRACTICAL_RELEVANCE,
+      PROMPT_MODES.PRACTICAL,
+      ARCHETYPE_ALIGNMENTS.PRACTICAL,
       BRIDGE_MOMENTS.ENTRANCE,
       MOVEMENT_INTENTS.ASK,
       "objective"
@@ -269,15 +309,6 @@
       "narrative"
     ),
     makeConversationOption(
-      "What is the traditional website for?",
-      TARGETS.TRADITIONAL_WEBSITE,
-      PROMPT_MODES.STORY,
-      ARCHETYPE_ALIGNMENTS.STORY,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "objective"
-    ),
-    makeConversationOption(
       "What is the mission behind this?",
       TARGETS.MISSION_OVERVIEW,
       PROMPT_MODES.PERSONAL,
@@ -285,15 +316,6 @@
       BRIDGE_MOMENTS.ENTRANCE,
       MOVEMENT_INTENTS.ASK,
       "narrative"
-    ),
-    makeConversationOption(
-      "Why does this matter in the real world?",
-      TARGETS.PRACTICAL_RELEVANCE,
-      PROMPT_MODES.PRACTICAL,
-      ARCHETYPE_ALIGNMENTS.PRACTICAL,
-      BRIDGE_MOMENTS.ENTRANCE,
-      MOVEMENT_INTENTS.ASK,
-      "objective"
     )
   ]);
 
@@ -349,7 +371,7 @@
   global.HEARTH_JEEVES_FRONTBRAIN = {
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
-    version: "25.3.0",
+    version: "25.4.0",
     mount: safeMountJeeves,
     getState: () => cloneState(),
     send: (text) => submitVisitorText(text),
@@ -413,7 +435,7 @@
   function bindRootToShellContract(root) {
     root.classList.add("hearth-jeeves");
     root.classList.add("hearth-jeeves-v25");
-    root.classList.add("hearth-jeeves-v25-3");
+    root.classList.add("hearth-jeeves-v25-4");
     root.classList.add("jeeves-screen-glass");
 
     root.setAttribute("data-jeeves-root", "true");
@@ -600,7 +622,8 @@
     const bubbles = BOOT_BUBBLES.map((bubble) => shapeText(bubble, {
       intent: "diamondGate",
       selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
-      currentConversationStage: STAGES.ENTRANCE_OVERVIEW
+      currentConversationStage: STAGES.ENTRANCE_OVERVIEW,
+      bridgeContext: state.lastBridgeContext
     }));
 
     renderAssistantSequence(bubbles, () => {
@@ -993,7 +1016,7 @@
     try {
       const payload = buildApiPayload(partialPayload);
       const result = await postToFirstAvailableApi(payload);
-      const shaped = shapeApiFrame(result.data);
+      const shaped = shapeApiFrame(result.data, payload.bridgeContext);
 
       state.lastSuccessfulEndpoint = result.endpoint;
       state.lastResponse = shaped;
@@ -1096,7 +1119,7 @@
       currentCardinal: inferCardinalForTarget(selectedTarget),
       currentPlaceType: currentLane === "narrative" ? "narrative_path" : "traditional_website",
       currentScopeLane: currentLane,
-      currentVoiceMode: "jeeves_expression_v5_1",
+      currentVoiceMode: getCurrentVoiceMode(),
 
       visitorPosture: "guided",
       movement: payload.movementIntent || MOVEMENT_INTENTS.ASK,
@@ -1144,7 +1167,7 @@
       currentTopic: state.currentTopic,
       currentScopeStage,
       adjacentTarget: selectedTarget,
-      adjacentLabel: TARGET_LABELS[selectedTarget] || option.label,
+      adjacentLabel: option.label || TARGET_LABELS[selectedTarget] || "",
       adjacentReason: inferBridgeReason(priorNode, selectedTarget, option)
     };
 
@@ -1180,6 +1203,10 @@
     const from = normalizeTarget(priorTarget);
     const to = normalizeTarget(selectedTarget);
 
+    if (to === TARGETS.SPLIT_INTERFACE) {
+      return "The visitor is asking for help choosing the right starting doorway.";
+    }
+
     if (from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.NARRATIVE_PATH) {
       return "The visitor is moving from public website structure into the narrative path.";
     }
@@ -1207,12 +1234,15 @@
     return "The visitor selected a conversational path from Jeeves.";
   }
 
-  function shapeApiFrame(data) {
+  function shapeApiFrame(data, bridgeContext) {
     const expression = getExpression();
     const source = data && typeof data === "object" ? data : {};
 
     if (expression && typeof expression.shapeConversationFrame === "function") {
-      return expression.shapeConversationFrame(source, buildExpressionContext(source));
+      return expression.shapeConversationFrame(source, buildExpressionContext({
+        ...source,
+        bridgeContext: bridgeContext || source.bridgeContext || state.lastBridgeContext || null
+      }));
     }
 
     return source;
@@ -1243,10 +1273,13 @@
 
     renderOptions([
       makeConversationOption(
-        "What is DiamondGateBridge.com?",
-        TARGETS.DIAMOND_GATE_OVERVIEW,
+        "Can you help me choose where to start?",
+        TARGETS.SPLIT_INTERFACE,
         PROMPT_MODES.STORY,
-        ARCHETYPE_ALIGNMENTS.STORY
+        ARCHETYPE_ALIGNMENTS.STORY,
+        BRIDGE_MOMENTS.ENTRANCE,
+        MOVEMENT_INTENTS.ASK,
+        "objective"
       ),
       makeConversationOption(
         "Can you re-center me?",
@@ -1452,6 +1485,17 @@
       ROUTES.AUDRALIA,
       ROUTES.H_EARTH,
       ROUTES.FRONTIER,
+      ROUTES.FRONTIER_ENERGY,
+      ROUTES.FRONTIER_WATER,
+      ROUTES.FRONTIER_WASTE,
+      ROUTES.FRONTIER_CLOSED_LOOP,
+      ROUTES.FRONTIER_INFRASTRUCTURE,
+      ROUTES.FRONTIER_LATTICE,
+      ROUTES.FRONTIER_URBAN,
+      ROUTES.FRONTIER_MANUAL,
+      ROUTES.FRONTIER_SHIMMER,
+      ROUTES.FRONTIER_TRAJECTORY,
+      ROUTES.FRONTIER_VISION,
       ROUTES.CHARACTERS,
       ROUTES.NINE_SUMMITS,
       ROUTES.UNDERDOG
@@ -1473,7 +1517,8 @@
       promptMode: source.promptMode || "",
       optionKind: source.optionKind || "",
       bridgeMoment: source.bridgeMoment || "",
-      movementIntent: source.movementIntent || ""
+      movementIntent: source.movementIntent || "",
+      bridgeContext: source.bridgeContext || state.lastBridgeContext || null
     };
   }
 
@@ -1487,6 +1532,20 @@
   function getExpressionContract() {
     const expression = getExpression();
     return expression && expression.contract ? expression.contract : "";
+  }
+
+  function getCurrentVoiceMode() {
+    const expression = getExpression();
+    if (expression && expression.version) {
+      return "jeeves_expression_v" + safeText(expression.version).replace(/\./g, "_");
+    }
+
+    const contract = getExpressionContract();
+    if (contract) {
+      return contract;
+    }
+
+    return "jeeves_expression_unavailable";
   }
 
   function shapeText(text, context) {
@@ -1554,6 +1613,9 @@
       traditionalPath: TARGETS.TRADITIONAL_WEBSITE,
       narrativeOverviewPath: TARGETS.NARRATIVE_PATH,
       missionPath: TARGETS.MISSION_OVERVIEW,
+      whereToStart: TARGETS.SPLIT_INTERFACE,
+      guidedChooserPath: TARGETS.SPLIT_INTERFACE,
+      startGuidePath: TARGETS.SPLIT_INTERFACE,
       characterArchetypeMirrorPath: TARGETS.CHARACTER_MIRROR,
       characterMirrorPath: TARGETS.CHARACTER_MIRROR,
       characterArchetypeQuestionOne: TARGETS.DIAGNOSTIC_REFERRAL,
@@ -1584,19 +1646,20 @@
   function inferTargetFromText(text) {
     const value = safeText(text).toLowerCase();
 
+    if (/\bhelp me choose|choose where to start|where should i start|need guidance|guide me|not sure where to start|where do i begin\b/.test(value)) return TARGETS.SPLIT_INTERFACE;
     if (/\bwhat is diamondgatebridge|what is diamond gate bridge|what is this place|what is this site\b/.test(value)) return TARGETS.DIAMOND_GATE_OVERVIEW;
     if (/\bnarrative path|story path|narrative side\b/.test(value)) return TARGETS.NARRATIVE_PATH;
     if (/\btraditional website|public website|website for|public pages|site guide\b/.test(value)) return TARGETS.TRADITIONAL_WEBSITE;
     if (/\bmission|inner mission|community mission|protect children|protect animals|bullying|collaboration\b/.test(value)) return TARGETS.MISSION_OVERVIEW;
-    if (/\breal world|practical|why does this matter|why this matters\b/.test(value)) return TARGETS.PRACTICAL_RELEVANCE;
+    if (/\breal world|practical|what can i do|what can i actually do|why does this matter|why this matters\b/.test(value)) return TARGETS.PRACTICAL_RELEVANCE;
     if (/\bwhich archetype|what archetype|which character am i|what character am i|assess me|score me|diagnose me|alignment read|mirror question\b/.test(value)) return TARGETS.DIAGNOSTIC_REFERRAL;
     if (/\bcoherence diagnostic|diagnostic\b/.test(value)) return TARGETS.DIAGNOSTIC;
     if (/\bcharacter mirror\b/.test(value)) return TARGETS.CHARACTER_MIRROR;
     if (/\bmirrorland|world window|south gate\b/.test(value)) return TARGETS.MIRRORLAND;
     if (/\bhearth|mission control|window within the window\b/.test(value)) return TARGETS.HEARTH;
     if (/\bfrontier|playground|energy|water|waste|infrastructure\b/.test(value)) return TARGETS.FRONTIER;
-    if (/\bscientific law|proof|evidence|test\b/.test(value)) return TARGETS.SCIENTIFIC_LAW;
-    if (/\bcompass|where should i start|start\b/.test(value)) return TARGETS.COMPASS;
+    if (/\bscientific law|proof|evidence|test|trustworthy|trust\b/.test(value)) return TARGETS.SCIENTIFIC_LAW;
+    if (/\bcompass|start\b/.test(value)) return TARGETS.COMPASS;
 
     return TARGETS.DIAMOND_GATE_OVERVIEW;
   }
@@ -1604,8 +1667,8 @@
   function inferPromptModeFromText(text) {
     const value = safeText(text).toLowerCase();
 
-    if (/\btrust|proof|evidence|test|wrong|matter|important\b/.test(value)) return PROMPT_MODES.SKEPTIC;
-    if (/\breal world|practical|work|system|use|frontier|product|energy|water|waste\b/.test(value)) return PROMPT_MODES.PRACTICAL;
+    if (/\btrust|proof|evidence|test|wrong|matter|important|trustworthy\b/.test(value)) return PROMPT_MODES.SKEPTIC;
+    if (/\breal world|practical|work|system|use|frontier|product|energy|water|waste|what can i do\b/.test(value)) return PROMPT_MODES.PRACTICAL;
     if (/\bmission|inner|community|myself|diagnostic|alignment|underdog|pressure|noise\b/.test(value)) return PROMPT_MODES.PERSONAL;
     if (/\bnext|continue|go deeper|show me more\b/.test(value)) return PROMPT_MODES.PROGRESSION;
     if (/\brecenter|lost|start over|return\b/.test(value)) return PROMPT_MODES.RECENTER;

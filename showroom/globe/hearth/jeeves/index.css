@@ -1,8 +1,8 @@
 /* /showroom/globe/hearth/jeeves/index.css */
-/* HEARTH_JEEVES_GLOSS_SCROLL_REFINEMENT_CSS_TNT_v3 */
+/* HEARTH_JEEVES_FRONTBRAIN_V21_COMPATIBLE_VISIBLE_DOCKS_CSS_TNT_v4 */
 /* Full-file replacement. */
-/* Owns: premium glossy Jeeves screen finish, stronger high-tech contrast, mobile-natural scroll behavior, option-type visual separation. */
-/* Does not own: conversation logic, route execution, Hearth globe chamber, Canvas Bishop, diagnostics authority, WebGL, runtime restart, final visual pass. */
+/* Owns: premium glossy Jeeves screen finish, CSS compatibility bridge for Frontbrain v21, visible transcript/bubble docks, conversation-vs-handoff visual separation, typing/listening states, mobile-natural scroll behavior. */
+/* Does not own: conversation logic, API calls, route execution, Hearth globe chamber, Canvas Bishop, diagnostics authority, WebGL, runtime restart, or final voice canon. */
 
 :root {
   color-scheme: dark;
@@ -38,6 +38,7 @@
 
   --route-blue: #78a8ff;
   --route-blue-2: #bfd2ff;
+  --route-blue-3: #eef4ff;
   --route-blue-dim: rgba(120, 168, 255, 0.24);
 
   --control-amber: #ffbf73;
@@ -150,10 +151,18 @@ button {
 }
 
 a:focus-visible,
-button:focus-visible {
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 4px;
 }
+
+[hidden] {
+  display: none !important;
+}
+
+/* PAGE FRAME */
 
 .skip-link {
   position: absolute;
@@ -285,7 +294,8 @@ button:focus-visible {
   padding: clamp(0.6rem, 2vw, 1.4rem) 0;
 }
 
-.jeeves-screen-glass {
+.jeeves-screen-glass,
+[data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page) {
   position: relative;
   width: min(var(--screen-max), 100%);
   min-height: clamp(44rem, 78vh, 60rem);
@@ -307,11 +317,12 @@ button:focus-visible {
   isolation: isolate;
 }
 
-.jeeves-screen-glass::before {
+.jeeves-screen-glass::before,
+[data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page)::before {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   background:
     linear-gradient(118deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.13) 10%, transparent 29%, transparent 68%, rgba(255, 255, 255, 0.055) 100%),
@@ -321,11 +332,12 @@ button:focus-visible {
   opacity: 0.38;
 }
 
-.jeeves-screen-glass::after {
+.jeeves-screen-glass::after,
+[data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page)::after {
   content: "";
   position: absolute;
   inset: 0.72rem;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   border: 1px solid rgba(96, 247, 255, 0.14);
   border-radius: calc(var(--radius-xl) - 0.55rem);
@@ -335,8 +347,8 @@ button:focus-visible {
     inset 0 0 8rem rgba(0, 0, 0, 0.34);
 }
 
-/* glossy screen shine overlay */
-.jeeves-screen-glass > * {
+.jeeves-screen-glass > *,
+[data-jeeves-root] > * {
   position: relative;
   z-index: 2;
 }
@@ -407,10 +419,14 @@ button:focus-visible {
   letter-spacing: -0.04em;
 }
 
-.jeeves-status {
+/* STATUS / STATE */
+
+.jeeves-status,
+[data-jeeves-status] {
   min-height: 2.2rem;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.52rem;
   border: 1px solid rgba(96, 247, 255, 0.24);
   border-radius: 999px;
@@ -429,6 +445,57 @@ button:focus-visible {
     0 0 1.4rem rgba(96, 247, 255, 0.08);
 }
 
+.jeeves-status::before,
+[data-jeeves-status]::before {
+  content: "";
+  width: 0.62rem;
+  height: 0.62rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--green-2);
+  box-shadow:
+    0 0 0.8rem rgba(143, 247, 201, 0.74),
+    0 0 1.8rem rgba(143, 247, 201, 0.34);
+}
+
+[data-jeeves-root][data-jeeves-typing="true"] .jeeves-status,
+[data-jeeves-root][data-jeeves-typing="true"] [data-jeeves-status],
+[data-state="typing"].jeeves-status {
+  border-color: rgba(96, 247, 255, 0.42);
+  color: rgba(229, 255, 255, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 1.7rem rgba(96, 247, 255, 0.18);
+}
+
+[data-jeeves-root][data-jeeves-typing="true"] .jeeves-status::before,
+[data-jeeves-root][data-jeeves-typing="true"] [data-jeeves-status]::before,
+[data-state="typing"].jeeves-status::before {
+  background: var(--cyan-2);
+  box-shadow:
+    0 0 0.85rem rgba(96, 247, 255, 0.88),
+    0 0 2rem rgba(96, 247, 255, 0.44);
+  animation: statePulse 1.05s ease-in-out infinite;
+}
+
+[data-jeeves-root][data-house-listening="true"] .jeeves-status::before,
+[data-jeeves-root][data-house-listening="true"] [data-jeeves-status]::before,
+[data-state="listening"].jeeves-status::before {
+  background: var(--green-2);
+}
+
+@keyframes statePulse {
+  0%, 100% {
+    opacity: 0.48;
+    transform: scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
 .jeeves-status-light {
   width: 0.62rem;
   height: 0.62rem;
@@ -439,7 +506,7 @@ button:focus-visible {
     0 0 1.8rem rgba(143, 247, 201, 0.34);
 }
 
-/* THREAD */
+/* THREAD SHELL */
 
 .jeeves-thread-screen {
   position: relative;
@@ -472,7 +539,13 @@ button:focus-visible {
   opacity: 0.5;
 }
 
-.jeeves-thread {
+/* TRANSCRIPT / FRONTBRAIN v21 COMPATIBILITY */
+
+.jeeves-thread,
+.jeeves-transcript,
+.jeeves-log,
+[data-jeeves-transcript],
+[data-jeeves-log] {
   position: relative;
   z-index: 2;
   min-height: 0;
@@ -487,20 +560,47 @@ button:focus-visible {
   scrollbar-color: rgba(96, 247, 255, 0.38) transparent;
 }
 
-.jeeves-thread::-webkit-scrollbar {
+.jeeves-thread,
+.jeeves-transcript,
+.jeeves-log {
+  min-height: var(--thread-height);
+}
+
+[data-jeeves-transcript],
+[data-jeeves-log] {
+  min-height: clamp(18rem, 42vh, 32rem);
+}
+
+.jeeves-thread::-webkit-scrollbar,
+.jeeves-transcript::-webkit-scrollbar,
+.jeeves-log::-webkit-scrollbar,
+[data-jeeves-transcript]::-webkit-scrollbar,
+[data-jeeves-log]::-webkit-scrollbar {
   width: 8px;
 }
 
-.jeeves-thread::-webkit-scrollbar-track {
+.jeeves-thread::-webkit-scrollbar-track,
+.jeeves-transcript::-webkit-scrollbar-track,
+.jeeves-log::-webkit-scrollbar-track,
+[data-jeeves-transcript]::-webkit-scrollbar-track,
+[data-jeeves-log]::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.jeeves-thread::-webkit-scrollbar-thumb {
+.jeeves-thread::-webkit-scrollbar-thumb,
+.jeeves-transcript::-webkit-scrollbar-thumb,
+.jeeves-log::-webkit-scrollbar-thumb,
+[data-jeeves-transcript]::-webkit-scrollbar-thumb,
+[data-jeeves-log]::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(96, 247, 255, 0.34);
 }
 
-.jeeves-message {
+/* MESSAGE / BUBBLE ALIASES */
+
+.jeeves-message,
+.jeeves-bubble,
+[data-jeeves-bubble] {
   position: relative;
   max-width: min(74%, 42rem);
   display: grid;
@@ -517,9 +617,14 @@ button:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 -14px 24px rgba(0, 0, 0, 0.09);
   animation: messageIn 0.24s ease both;
+  color: rgba(232, 254, 255, 0.95);
+  font-size: clamp(0.94rem, 2.15vw, 1.04rem);
+  line-height: 1.45;
 }
 
-.jeeves-message::before {
+.jeeves-message::before,
+.jeeves-bubble::before,
+[data-jeeves-bubble]::before {
   content: "";
   position: absolute;
   inset: 1px 1px auto 1px;
@@ -545,15 +650,20 @@ button:focus-visible {
   line-height: 1.45;
 }
 
-.jeeves-message[data-message-origin="jeeves"] {
+.jeeves-message[data-message-origin="jeeves"],
+.jeeves-bubble-assistant,
+[data-jeeves-bubble="assistant"] {
   align-self: flex-start;
   border-top-left-radius: 0.35rem;
 }
 
-.jeeves-message[data-message-origin="visitor"] {
+.jeeves-message[data-message-origin="visitor"],
+.jeeves-bubble-user,
+[data-jeeves-bubble="user"] {
   align-self: flex-end;
   border-color: rgba(245, 201, 108, 0.34);
   border-top-right-radius: 0.35rem;
+  color: rgba(255, 242, 208, 0.97);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.115), rgba(255, 255, 255, 0.03) 45%, rgba(0, 0, 0, 0.10)),
     radial-gradient(circle at 88% 0%, rgba(245, 201, 108, 0.2), transparent 62%),
@@ -570,11 +680,14 @@ button:focus-visible {
 }
 
 .jeeves-message-system,
-.jeeves-message[data-message-origin="system"] {
+.jeeves-message[data-message-origin="system"],
+.jeeves-bubble-system,
+[data-jeeves-bubble="system"] {
   max-width: min(82%, 46rem);
   align-self: center;
   text-align: center;
   border-color: rgba(143, 247, 201, 0.22);
+  color: rgba(232, 254, 255, 0.82);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.022)),
     rgba(143, 247, 201, 0.06);
@@ -621,7 +734,8 @@ button:focus-visible {
     0 0 1.2rem rgba(96, 247, 255, 0.08);
 }
 
-.jeeves-typing[data-jeeves-typing="true"] {
+.jeeves-typing[data-jeeves-typing="true"],
+[data-jeeves-root][data-jeeves-typing="true"] .jeeves-typing {
   display: inline-flex;
 }
 
@@ -655,10 +769,14 @@ button:focus-visible {
   }
 }
 
-/* PROMPT DOCK */
+/* DOCKS: OLD + FRONTBRAIN v21 */
 
 .jeeves-prompt-dock,
-.jeeves-handoff-dock {
+.jeeves-handoff-dock,
+.jeeves-options,
+.jeeves-handoffs,
+[data-jeeves-options],
+[data-jeeves-handoffs] {
   position: relative;
   display: grid;
   gap: 0.55rem;
@@ -673,17 +791,45 @@ button:focus-visible {
     0 0.9rem 2.2rem rgba(0, 0, 0, 0.18);
 }
 
+.jeeves-options,
+[data-jeeves-options] {
+  border-color: rgba(245, 201, 108, 0.18);
+}
+
+.jeeves-handoffs,
+[data-jeeves-handoffs],
+.jeeves-handoff-dock {
+  border-color: rgba(120, 168, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02) 46%, rgba(0, 0, 0, 0.18)),
+    radial-gradient(circle at 14% 0%, rgba(120, 168, 255, 0.12), transparent 70%),
+    rgba(0, 0, 0, 0.16);
+}
+
 .jeeves-handoff-dock[data-handoff-visible="false"] {
   display: none;
 }
 
 .jeeves-prompt-dock-label,
-.jeeves-handoff-dock-label {
+.jeeves-handoff-dock-label,
+.jeeves-panel-title {
   color: var(--screen-soft);
   font-size: 0.64rem;
   font-weight: 950;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.jeeves-options .jeeves-panel-title,
+[data-panel-kind="conversation"] .jeeves-panel-title,
+[data-jeeves-options] .jeeves-panel-title {
+  color: rgba(255, 232, 163, 0.72);
+}
+
+.jeeves-handoffs .jeeves-panel-title,
+[data-panel-kind="handoff"] .jeeves-panel-title,
+[data-jeeves-handoffs] .jeeves-panel-title {
+  color: rgba(191, 210, 255, 0.78);
 }
 
 .jeeves-prompt-grid,
@@ -693,7 +839,24 @@ button:focus-visible {
   gap: 0.52rem;
 }
 
-.jeeves-option {
+.jeeves-options,
+.jeeves-handoffs,
+[data-jeeves-options],
+[data-jeeves-handoffs] {
+  grid-template-columns: 1fr;
+}
+
+.jeeves-options button,
+.jeeves-handoffs a,
+[data-jeeves-options] button,
+[data-jeeves-handoffs] a {
+  margin: 0;
+}
+
+/* CONVERSATION BUTTONS */
+
+.jeeves-option,
+[data-jeeves-option] {
   min-height: 2.55rem;
   display: inline-flex;
   align-items: center;
@@ -721,7 +884,8 @@ button:focus-visible {
     box-shadow 0.16s ease;
 }
 
-.jeeves-option:hover {
+.jeeves-option:hover,
+[data-jeeves-option]:hover {
   transform: translateY(-1px);
   border-color: rgba(245, 201, 108, 0.58);
   background:
@@ -733,37 +897,25 @@ button:focus-visible {
 .jeeves-option[data-option-type="conversation"],
 .jeeves-option[data-option-type="topic"],
 .jeeves-option[data-option-type="calibration"],
-.jeeves-option[data-option-type="back"],
-.jeeves-option[data-option-type="restart"] {
+.jeeves-option[data-type="conversation"],
+.jeeves-option[data-type="topic"],
+.jeeves-option[data-type="calibration"],
+.jeeves-option[data-option-kind="conversation"],
+[data-jeeves-option][data-type="conversation"],
+[data-jeeves-option][data-type="topic"],
+[data-jeeves-option][data-type="calibration"],
+[data-jeeves-option][data-option-kind="conversation"] {
   border-color: rgba(245, 201, 108, 0.34);
   color: rgba(255, 242, 208, 0.98);
 }
 
-.jeeves-option[data-option-type="route"],
-.jeeves-option-route {
-  border-color: rgba(120, 168, 255, 0.48);
-  color: rgba(230, 238, 255, 0.99);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
-    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.26), transparent 62%),
-    rgba(120, 168, 255, 0.12);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -12px 22px rgba(0, 0, 0, 0.08),
-    0 0 1.4rem rgba(120, 168, 255, 0.10);
-}
-
-.jeeves-option[data-option-type="route"]:hover,
-.jeeves-option-route:hover {
-  border-color: rgba(120, 168, 255, 0.74);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.038)),
-    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.34), transparent 62%),
-    rgba(120, 168, 255, 0.16);
-}
-
 .jeeves-option[data-option-type="control"],
-.jeeves-option[data-option-target="controlRoom"] {
+.jeeves-option[data-type="control"],
+.jeeves-option[data-option-target="controlRoom"],
+[data-jeeves-option][data-type="control"],
+[data-jeeves-option][data-target="recenterNode"],
+[data-jeeves-option][data-target="returnFork"],
+[data-jeeves-option][data-target="restartFork"] {
   border-color: rgba(255, 191, 115, 0.52);
   color: rgba(255, 232, 204, 0.99);
   background:
@@ -774,6 +926,102 @@ button:focus-visible {
 
 .jeeves-option span {
   display: inline-block;
+}
+
+/* ROUTE HANDOFFS: SEPARATE LANGUAGE + SEPARATE VISUAL LANE */
+
+.jeeves-option[data-option-type="route"],
+.jeeves-option-route,
+.jeeves-route-option,
+[data-jeeves-route-option] {
+  min-height: 2.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(120, 168, 255, 0.48);
+  border-radius: 999px;
+  padding: 0.64rem 0.86rem;
+  color: rgba(230, 238, 255, 0.99);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.26), transparent 62%),
+    rgba(120, 168, 255, 0.12);
+  font-size: 0.84rem;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -12px 22px rgba(0, 0, 0, 0.08),
+    0 0 1.4rem rgba(120, 168, 255, 0.10);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.jeeves-option[data-option-type="route"]:hover,
+.jeeves-option-route:hover,
+.jeeves-route-option:hover,
+[data-jeeves-route-option]:hover {
+  transform: translateY(-1px);
+  border-color: rgba(120, 168, 255, 0.74);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.038)),
+    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.34), transparent 62%),
+    rgba(120, 168, 255, 0.16);
+}
+
+[data-panel-kind="conversation"] [data-jeeves-route-option],
+[data-panel-kind="conversation"] .jeeves-route-option {
+  display: none !important;
+}
+
+[data-panel-kind="handoff"] [data-jeeves-option],
+[data-panel-kind="handoff"] .jeeves-option:not(.jeeves-route-option) {
+  display: none !important;
+}
+
+/* INPUT FALLBACK */
+
+[data-jeeves-input],
+.jeeves-input,
+.jeeves-input textarea,
+.jeeves-input input,
+.jeeves-text-input,
+.jeeves-question {
+  width: 100%;
+  min-height: 2.85rem;
+  border: 1px solid rgba(96, 247, 255, 0.20);
+  border-radius: 1rem;
+  padding: 0.78rem 0.92rem;
+  color: var(--screen-ink);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.22);
+  font: inherit;
+}
+
+[data-jeeves-send],
+.jeeves-send {
+  min-height: 2.55rem;
+  border: 1px solid rgba(96, 247, 255, 0.36);
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  color: #001116;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.68), transparent 38%),
+    linear-gradient(135deg, var(--cyan-3), var(--cyan));
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 0 1.5rem rgba(96, 247, 255, 0.18);
 }
 
 /* CONTEXT RAIL */
@@ -879,7 +1127,7 @@ button:focus-visible {
     0 0 1.5rem rgba(96, 247, 255, 0.18);
 }
 
-/* RECEIPT / HIDDEN */
+/* CONTRACT / RECEIPT HIDDEN */
 
 .route-receipt,
 [data-route-receipt],
@@ -916,7 +1164,8 @@ button:focus-visible {
     width: min(100% - 22px, var(--max));
   }
 
-  .jeeves-screen-glass {
+  .jeeves-screen-glass,
+  [data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page) {
     min-height: clamp(42rem, 78vh, 56rem);
   }
 
@@ -964,7 +1213,8 @@ button:focus-visible {
     padding: 0.35rem 0;
   }
 
-  .jeeves-screen-glass {
+  .jeeves-screen-glass,
+  [data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page) {
     min-height: auto;
     border-radius: 1.35rem;
     padding: 0.78rem;
@@ -984,7 +1234,11 @@ button:focus-visible {
     grid-template-rows: auto auto;
   }
 
-  .jeeves-thread {
+  .jeeves-thread,
+  .jeeves-transcript,
+  .jeeves-log,
+  [data-jeeves-transcript],
+  [data-jeeves-log] {
     min-height: 24rem;
     max-height: none;
     overflow: visible;
@@ -993,18 +1247,28 @@ button:focus-visible {
     padding: 0.78rem;
   }
 
-  .jeeves-message {
+  .jeeves-message,
+  .jeeves-bubble,
+  [data-jeeves-bubble] {
     max-width: 88%;
     padding: 0.7rem 0.78rem;
   }
 
   .jeeves-prompt-grid,
-  .jeeves-handoff-grid {
+  .jeeves-handoff-grid,
+  .jeeves-options,
+  .jeeves-handoffs,
+  [data-jeeves-options],
+  [data-jeeves-handoffs] {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .jeeves-option {
+  .jeeves-option,
+  [data-jeeves-option],
+  .jeeves-route-option,
+  [data-jeeves-route-option],
+  .jeeves-option-route {
     width: 100%;
     justify-content: flex-start;
     border-radius: 1rem;
@@ -1031,20 +1295,34 @@ button:focus-visible {
     height: 2.85rem;
   }
 
-  .jeeves-status {
+  .jeeves-status,
+  [data-jeeves-status] {
     width: 100%;
     justify-content: center;
+    white-space: normal;
+    text-align: center;
   }
 
-  .jeeves-thread {
+  .jeeves-thread,
+  .jeeves-transcript,
+  .jeeves-log,
+  [data-jeeves-transcript],
+  [data-jeeves-log] {
     min-height: 25rem;
   }
 
-  .jeeves-message {
+  .jeeves-message,
+  .jeeves-bubble,
+  [data-jeeves-bubble] {
     max-width: 94%;
   }
 
   .jeeves-message p {
+    font-size: 0.93rem;
+  }
+
+  .jeeves-bubble,
+  [data-jeeves-bubble] {
     font-size: 0.93rem;
   }
 }

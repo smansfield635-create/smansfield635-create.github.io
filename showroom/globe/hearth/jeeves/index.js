@@ -1,16 +1,16 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_RHYTHM_SHELL_BOUND_TNT_v25_2
+// HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_READING_RHYTHM_ALIGNMENT_TNT_v25_3
 // Full-file replacement.
 // Client-side frontbrain / visible conversation carrier only.
 // Purpose:
 // - Preserve v25.1 shell boot repair.
-// - Close the gap between API/North v5.1 and Expression v5.1.
-// - Render the new DiamondGateBridge split-interface entrance rhythm.
-// - Keep Text Jeeves options conversational.
-// - Keep Prepared Doors as route actions.
-// - Pass lane/stage/bridge context downstream to API/North.
-// - Use Expression as public-language governor when available.
-// - Prevent Jeeves from becoming an in-chat assessment engine.
+// - Preserve the v25.2 split-interface Jeeves construct.
+// - Close loose front-end alignment against API/North v5.1 and Expression v5.1.
+// - Restore reading rhythm: Jeeves reveals messages one at a time.
+// - Toggle house state between listening and typing.
+// - Let screen taps speed the current Jeeves reveal.
+// - Add API endpoint fallback without changing the meaning contract.
+// - Send explicit bridgeContext to API/North.
 // Does not own:
 // - API/North canon
 // - Expression wording authority
@@ -22,15 +22,22 @@
 "use strict";
 
 (function mountHearthJeevesFrontbrain(global) {
-  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_RHYTHM_SHELL_BOUND_TNT_v25_2";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_SHELL_BOOT_BINDING_CONVERSATION_GRAMMAR_TNT_v25_1";
+  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_READING_RHYTHM_ALIGNMENT_TNT_v25_3";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_RHYTHM_SHELL_BOUND_TNT_v25_2";
 
-  const API_ENDPOINT = "/api/jeeves";
+  const API_ENDPOINTS = Object.freeze([
+    "/api/jeeves",
+    "/api/jeeves.js"
+  ]);
 
   const ROOT_ID = "hearthJeevesMount";
 
   const MAX_THREAD_BUBBLES = 80;
   const MAX_TRAIL_ITEMS = 24;
+
+  const READ_BASE_MS = 650;
+  const READ_PER_CHAR_MS = 20;
+  const READ_MAX_MS = 3600;
 
   const PROMPT_MODES = Object.freeze({
     STORY: "story_prompt",
@@ -121,6 +128,7 @@
     PRODUCTS: "productsPath",
     LAWS: "lawsPath",
     SEAN: "seanPath",
+    UNDERDOG: "underdogPath",
     HEARTH: "hearthPath",
     FRONTIER: "frontierPath",
     SCIENTIFIC_LAW: "scientificLawPath",
@@ -207,6 +215,33 @@
     aboutUnderdog: "Open This Underdog"
   });
 
+  const TARGET_LABELS = Object.freeze({
+    diamondGateOverviewPath: "What is DiamondGateBridge.com?",
+    splitInterfaceBridgePath: "How do the two sides connect?",
+    traditionalWebsiteOverviewPath: "What is the traditional website for?",
+    narrativePathOverview: "What is the narrative path?",
+    missionOverviewPath: "What is the mission behind this?",
+    missionInnerPath: "What is the inner mission?",
+    missionCommunityPath: "What is the community mission?",
+    missionCollaborationPath: "How does the mission become practical?",
+    practicalRelevancePath: "Why does this matter in the real world?",
+    diagnosticReferralPath: "Where can I take the alignment diagnostic?",
+    diagnosticPath: "What is the Coherence Diagnostic?",
+    characterMirrorPath: "What does the Character Mirror show?",
+    mirrorlandPath: "What is Mirrorland?",
+    compassPath: "How does the Compass help me start?",
+    productsPath: "What can I actually do here?",
+    lawsPath: "What keeps this honest?",
+    seanPath: "Who is Sean Mansfield?",
+    underdogPath: "What is This Underdog?",
+    hearthPath: "What is Hearth?",
+    frontierPath: "What is the Frontier Playground?",
+    scientificLawPath: "What needs to be tested?",
+    charactersPath: "Who are the Characters?",
+    recenterNode: "Can you re-center me?",
+    cleanDoor: "What is the cleanest next door?"
+  });
+
   const BOOT_BUBBLES = Object.freeze([
     "Welcome. I’m Jeeves.",
     "DiamondGateBridge.com has two ways in.",
@@ -273,6 +308,8 @@
     ready: false,
     busy: false,
     booted: false,
+    userInteracted: false,
+
     root: null,
     shell: null,
 
@@ -294,8 +331,15 @@
     branchStack: [],
     returnStack: [],
 
+    lastBridgeContext: null,
     lastResponse: null,
-    lastError: null
+    lastError: null,
+    lastSuccessfulEndpoint: "",
+
+    revealActive: false,
+    revealToken: 0,
+    revealSkipResolver: null,
+    expressionReadyPending: false
   };
 
   global.HEARTH_JEEVES_READY = false;
@@ -305,11 +349,12 @@
   global.HEARTH_JEEVES_FRONTBRAIN = {
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
-    version: "25.2.0",
+    version: "25.3.0",
     mount: safeMountJeeves,
     getState: () => cloneState(),
     send: (text) => submitVisitorText(text),
-    reset: () => resetConversation()
+    reset: () => resetConversation(),
+    speed: () => advanceReveal()
   };
 
   if (document.readyState === "loading") {
@@ -317,6 +362,8 @@
   } else {
     safeMountJeeves();
   }
+
+  global.addEventListener("hearth:jeeves-expression-ready", handleExpressionReady);
 
   function safeMountJeeves() {
     try {
@@ -343,10 +390,8 @@
     state.currentTopic = "diamondGate";
 
     clearShell(state.shell);
-    renderSystemStatus("Jeeves is ready.");
-    renderBootEntrance();
-
     releaseReadyState();
+    renderBootEntrance();
   }
 
   function findOrCreateRoot() {
@@ -368,7 +413,7 @@
   function bindRootToShellContract(root) {
     root.classList.add("hearth-jeeves");
     root.classList.add("hearth-jeeves-v25");
-    root.classList.add("hearth-jeeves-v25-2");
+    root.classList.add("hearth-jeeves-v25-3");
     root.classList.add("jeeves-screen-glass");
 
     root.setAttribute("data-jeeves-root", "true");
@@ -430,6 +475,21 @@
     shell.handoffs.setAttribute("data-jeeves-doors", "true");
     shell.handoffs.setAttribute("aria-label", "Prepared Doors");
 
+    shell.form = root.querySelector("[data-jeeves-form]") ||
+      root.querySelector(".jeeves-input-form") ||
+      root.querySelector("form.jeeves-form") ||
+      null;
+
+    shell.input = root.querySelector("[data-jeeves-input]") ||
+      root.querySelector(".jeeves-input") ||
+      root.querySelector("textarea[name='jeeves']") ||
+      root.querySelector("input[name='jeeves']") ||
+      null;
+
+    shell.submit = root.querySelector("[data-jeeves-submit]") ||
+      root.querySelector(".jeeves-submit") ||
+      null;
+
     ensureDockLabel(shell.options, "Text Jeeves");
     ensureDockLabel(shell.handoffs, "Prepared Doors");
 
@@ -464,7 +524,7 @@
   function bindEvents(shell) {
     shell.options.addEventListener("click", (event) => {
       const button = event.target.closest("[data-jeeves-option]");
-      if (!button || state.busy) return;
+      if (!button || state.busy || state.revealActive) return;
 
       const option = readOptionFromButton(button);
       handleConversationOption(option);
@@ -472,13 +532,54 @@
 
     shell.handoffs.addEventListener("click", (event) => {
       const button = event.target.closest("[data-jeeves-route-option]");
-      if (!button || state.busy) return;
+      if (!button || state.busy || state.revealActive) return;
 
       const routeId = button.getAttribute("data-jeeves-route-option") || "";
       const href = button.getAttribute("data-jeeves-handoff-route") || ROUTE_HINTS[routeId] || "";
 
       handlePreparedDoor(routeId, href);
     });
+
+    state.root.addEventListener("click", (event) => {
+      if (!state.revealActive) return;
+      if (event.target.closest("[data-jeeves-option]")) return;
+      if (event.target.closest("[data-jeeves-route-option]")) return;
+      if (event.target.closest("[data-jeeves-input]")) return;
+      if (event.target.closest("input, textarea, button, a")) return;
+
+      advanceReveal();
+    });
+
+    if (shell.threadScreen) {
+      shell.threadScreen.addEventListener("click", () => {
+        if (state.revealActive) advanceReveal();
+      });
+    }
+
+    if (shell.form) {
+      shell.form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        submitInputValue();
+      });
+    }
+
+    if (shell.input) {
+      shell.input.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        if (event.shiftKey) return;
+        if (shell.input.tagName === "TEXTAREA") {
+          event.preventDefault();
+        }
+        submitInputValue();
+      });
+    }
+
+    if (shell.submit) {
+      shell.submit.addEventListener("click", (event) => {
+        event.preventDefault();
+        submitInputValue();
+      });
+    }
   }
 
   function clearShell(shell) {
@@ -496,14 +597,17 @@
       ? expression.shapeEntranceOptions()
       : START_OPTIONS.slice();
 
-    BOOT_BUBBLES.forEach((bubble) => renderBubble("assistant", shapeText(bubble, {
+    const bubbles = BOOT_BUBBLES.map((bubble) => shapeText(bubble, {
       intent: "diamondGate",
       selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
       currentConversationStage: STAGES.ENTRANCE_OVERVIEW
-    })));
+    }));
 
-    renderOptions(entranceOptions);
-    renderHandoffs(START_HANDOFFS, HANDOFF_LABELS);
+    renderAssistantSequence(bubbles, () => {
+      renderOptions(entranceOptions);
+      renderHandoffs(START_HANDOFFS, HANDOFF_LABELS);
+      renderSystemStatus("The house is listening.");
+    });
   }
 
   function releaseReadyState() {
@@ -512,7 +616,8 @@
 
     if (state.root) {
       state.root.setAttribute("data-jeeves-ready", "true");
-      state.root.setAttribute("data-house-listening", "true");
+      state.root.setAttribute("data-house-listening", "false");
+      state.root.setAttribute("data-jeeves-typing", "false");
       state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
       state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
     }
@@ -521,6 +626,18 @@
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT
     });
+  }
+
+  function handleExpressionReady() {
+    if (!state.booted) return;
+    if (state.userInteracted) return;
+
+    if (state.revealActive) {
+      state.expressionReadyPending = true;
+      return;
+    }
+
+    resetConversation();
   }
 
   function visibleBootFailure(error) {
@@ -533,6 +650,8 @@
 
       root.setAttribute("data-jeeves-ready", "false");
       root.setAttribute("data-jeeves-error", "true");
+      root.setAttribute("data-house-listening", "false");
+      root.setAttribute("data-jeeves-typing", "false");
 
       shell.status.textContent = "Jeeves could not finish preparing.";
       shell.thread.innerHTML = "";
@@ -546,7 +665,19 @@
 
   function renderSystemStatus(text) {
     if (!state.shell || !state.shell.status) return;
-    state.shell.status.textContent = text;
+    state.shell.status.textContent = safeText(text);
+  }
+
+  function setHouseListening(isListening) {
+    if (!state.root) return;
+    state.root.setAttribute("data-house-listening", isListening ? "true" : "false");
+  }
+
+  function setTyping(isTyping, message) {
+    if (!state.root || !state.shell) return;
+
+    state.root.setAttribute("data-jeeves-typing", isTyping ? "true" : "false");
+    state.shell.typing.textContent = isTyping ? (message || "The house is typing. Tap to speed the process.") : "";
   }
 
   function renderBubble(speaker, text) {
@@ -582,6 +713,81 @@
     thread.appendChild(bubble);
   }
 
+  async function renderAssistantSequence(bubbles, done) {
+    const cleanBubbles = normalizeBubbles(bubbles);
+    const token = ++state.revealToken;
+
+    if (!cleanBubbles.length) {
+      if (typeof done === "function") done();
+      return;
+    }
+
+    state.revealActive = true;
+    state.busy = true;
+
+    setHouseListening(false);
+    setTyping(true, "The house is typing. Tap to speed the process.");
+    renderSystemStatus("The house is typing. Tap to speed the process.");
+
+    try {
+      for (const bubble of cleanBubbles) {
+        if (token !== state.revealToken) return;
+        renderBubble("assistant", bubble);
+        await waitForReading(bubble, token);
+      }
+    } finally {
+      if (token === state.revealToken) {
+        state.revealActive = false;
+        state.busy = false;
+        state.revealSkipResolver = null;
+
+        setTyping(false);
+        setHouseListening(true);
+
+        if (typeof done === "function") done();
+
+        if (state.expressionReadyPending && !state.userInteracted) {
+          state.expressionReadyPending = false;
+          resetConversation();
+        }
+      }
+    }
+  }
+
+  function waitForReading(text, token) {
+    const delay = Math.min(READ_MAX_MS, READ_BASE_MS + safeText(text).length * READ_PER_CHAR_MS);
+
+    return new Promise((resolve) => {
+      if (token !== state.revealToken) {
+        resolve();
+        return;
+      }
+
+      const timer = global.setTimeout(() => {
+        if (state.revealSkipResolver === skip) {
+          state.revealSkipResolver = null;
+        }
+        resolve();
+      }, delay);
+
+      function skip() {
+        global.clearTimeout(timer);
+        if (state.revealSkipResolver === skip) {
+          state.revealSkipResolver = null;
+        }
+        resolve();
+      }
+
+      state.revealSkipResolver = skip;
+    });
+  }
+
+  function advanceReveal() {
+    if (typeof state.revealSkipResolver === "function") {
+      state.revealSkipResolver();
+    }
+  }
+
   function trimThread() {
     const bubbles = Array.from(state.shell.thread.querySelectorAll(".jeeves-bubble"));
     const excess = bubbles.length - MAX_THREAD_BUBBLES;
@@ -607,23 +813,25 @@
     clearDockButtons(state.shell.options, "Text Jeeves");
 
     shapedOptions.slice(0, 6).forEach((option, index) => {
+      const normalizedOption = normalizeOption(option);
       const button = document.createElement("button");
+
       button.type = "button";
       button.classList.add("jeeves-option");
       button.classList.add("jeeves-option-button");
 
-      button.textContent = option.label || "Can you tell me more?";
+      button.textContent = normalizedOption.label || "Can you tell me more?";
 
-      button.setAttribute("data-jeeves-option", option.target || "");
+      button.setAttribute("data-jeeves-option", normalizedOption.target || "");
       button.setAttribute("data-jeeves-option-index", String(index));
-      button.setAttribute("data-option-kind", option.optionKind || OPTION_KINDS.CONVERSATION);
-      button.setAttribute("data-prompt-mode", option.promptMode || PROMPT_MODES.UNKNOWN);
-      button.setAttribute("data-archetype-alignment", option.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN);
-      button.setAttribute("data-bridge-moment", option.bridgeMoment || BRIDGE_MOMENTS.NONE);
-      button.setAttribute("data-movement-intent", option.movementIntent || MOVEMENT_INTENTS.ASK);
-      button.setAttribute("data-scope-lane", option.scopeLane || inferScopeLane(option.target));
-      button.setAttribute("data-option-type", option.type || "conversation");
-      button.setAttribute("data-option-label", option.label || "");
+      button.setAttribute("data-option-kind", normalizedOption.optionKind || OPTION_KINDS.CONVERSATION);
+      button.setAttribute("data-prompt-mode", normalizedOption.promptMode || PROMPT_MODES.UNKNOWN);
+      button.setAttribute("data-archetype-alignment", normalizedOption.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN);
+      button.setAttribute("data-bridge-moment", normalizedOption.bridgeMoment || BRIDGE_MOMENTS.NONE);
+      button.setAttribute("data-movement-intent", normalizedOption.movementIntent || MOVEMENT_INTENTS.ASK);
+      button.setAttribute("data-scope-lane", normalizedOption.scopeLane || inferScopeLane(normalizedOption.target));
+      button.setAttribute("data-option-type", normalizedOption.type || "conversation");
+      button.setAttribute("data-option-label", normalizedOption.label || "");
 
       state.shell.options.appendChild(button);
     });
@@ -684,9 +892,20 @@
 
   function handleConversationOption(option) {
     const safeOption = normalizeOption(option);
+    const priorNode = state.currentNode;
+    const priorLane = state.currentEntryLane;
+    const priorTopic = state.currentTopic;
 
-    updateStateForOption(safeOption);
+    state.userInteracted = true;
 
+    const bridgeContext = buildBridgeContext({
+      priorNode,
+      priorLane,
+      priorTopic,
+      option: safeOption
+    });
+
+    updateStateForOption(safeOption, bridgeContext);
     renderBubble("user", safeOption.label);
 
     submitToApi({
@@ -699,7 +918,8 @@
       archetypeAlignment: safeOption.archetypeAlignment,
       bridgeMoment: safeOption.bridgeMoment,
       movementIntent: safeOption.movementIntent,
-      currentScopeLane: safeOption.scopeLane
+      currentScopeLane: safeOption.scopeLane,
+      bridgeContext
     });
   }
 
@@ -707,11 +927,21 @@
     const route = normalizeRoute(routeId);
     const targetHref = href || ROUTE_HINTS[route];
 
+    state.userInteracted = true;
+
     pushTrail({
       type: "handoff",
       route,
       href: targetHref,
+      from: state.currentNode,
       at: new Date().toISOString()
+    });
+
+    dispatch("hearth:jeeves-prepared-door", {
+      contract: CONTRACT,
+      route,
+      href: targetHref,
+      from: state.currentNode
     });
 
     if (!targetHref) {
@@ -722,15 +952,22 @@
     global.location.href = targetHref;
   }
 
+  function submitInputValue() {
+    if (!state.shell || !state.shell.input || state.busy || state.revealActive) return;
+
+    const value = safeText(state.shell.input.value);
+    if (!value) return;
+
+    state.shell.input.value = "";
+    submitVisitorText(value);
+  }
+
   function submitVisitorText(text) {
     const visitorText = safeText(text);
-    if (!visitorText || state.busy) return;
-
-    renderBubble("user", visitorText);
+    if (!visitorText || state.busy || state.revealActive) return;
 
     const target = inferTargetFromText(visitorText);
-
-    updateStateForOption({
+    const option = {
       label: visitorText,
       target,
       type: "conversation",
@@ -740,46 +977,25 @@
       archetypeAlignment: inferAlignmentFromTarget(target),
       bridgeMoment: BRIDGE_MOMENTS.BEFORE,
       movementIntent: MOVEMENT_INTENTS.ASK
-    });
+    };
 
-    submitToApi({
-      visitorText,
-      selectedTarget: target,
-      selectedLabel: visitorText,
-      requestMode: target ? "node_enrichment" : "freeform",
-      promptMode: inferPromptModeFromText(visitorText),
-      optionKind: OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: inferAlignmentFromTarget(target),
-      bridgeMoment: BRIDGE_MOMENTS.BEFORE,
-      movementIntent: MOVEMENT_INTENTS.ASK,
-      currentScopeLane: inferScopeLane(target)
-    });
+    handleConversationOption(option);
   }
 
   async function submitToApi(partialPayload) {
-    if (state.busy) return;
+    if (state.busy && !state.revealActive) return;
 
     state.busy = true;
-    setTyping(true);
+    setHouseListening(false);
+    setTyping(true, "Jeeves is reading the path.");
     renderSystemStatus("Jeeves is reading the path.");
 
     try {
       const payload = buildApiPayload(partialPayload);
-      const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
+      const result = await postToFirstAvailableApi(payload);
+      const shaped = shapeApiFrame(result.data);
 
-      if (!response.ok) {
-        throw new Error("Jeeves API returned " + response.status);
-      }
-
-      const data = await response.json();
-      const shaped = shapeApiFrame(data);
-
+      state.lastSuccessfulEndpoint = result.endpoint;
       state.lastResponse = shaped;
 
       applyApiState(shaped);
@@ -787,17 +1003,62 @@
     } catch (error) {
       state.lastError = error;
       renderApiFailure(error);
-    } finally {
-      state.busy = false;
-      setTyping(false);
-      renderSystemStatus("Jeeves is ready.");
     }
+  }
+
+  async function postToFirstAvailableApi(payload) {
+    let lastError = null;
+
+    for (let i = 0; i < API_ENDPOINTS.length; i += 1) {
+      const endpoint = API_ENDPOINTS[i];
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          return {
+            endpoint,
+            data: await response.json()
+          };
+        }
+
+        const status = response.status;
+        const bodyText = await safeReadResponseText(response);
+
+        lastError = new Error("Jeeves API returned " + status + " at " + endpoint);
+
+        if ((status === 404 || status === 405) && i < API_ENDPOINTS.length - 1) {
+          continue;
+        }
+
+        if (bodyText) {
+          lastError.message = lastError.message + ": " + bodyText.slice(0, 240);
+        }
+
+        throw lastError;
+      } catch (error) {
+        lastError = error;
+
+        if (i < API_ENDPOINTS.length - 1) {
+          continue;
+        }
+      }
+    }
+
+    throw lastError || new Error("Jeeves API did not respond.");
   }
 
   function buildApiPayload(partialPayload) {
     const payload = partialPayload && typeof partialPayload === "object" ? partialPayload : {};
     const selectedTarget = normalizeTarget(payload.selectedTarget || state.currentNode || TARGETS.DIAMOND_GATE_OVERVIEW);
     const currentLane = payload.currentScopeLane || inferScopeLane(selectedTarget);
+    const bridgeContext = sanitizeBridgeContext(payload.bridgeContext || state.lastBridgeContext || null);
 
     return {
       visitorText: safeText(payload.visitorText || ""),
@@ -810,6 +1071,7 @@
       archetypeAlignment: payload.archetypeAlignment || inferAlignmentFromTarget(selectedTarget),
       bridgeMoment: payload.bridgeMoment || BRIDGE_MOMENTS.BEFORE,
       movementIntent: payload.movementIntent || MOVEMENT_INTENTS.ASK,
+      bridgeContext,
 
       currentConversationStage: state.currentConversationStage,
       currentEntryLane: state.currentEntryLane,
@@ -861,6 +1123,90 @@
     };
   }
 
+  function buildBridgeContext(input) {
+    const option = normalizeOption(input.option || {});
+    const priorNode = normalizeTarget(input.priorNode || state.currentNode || "");
+    const selectedTarget = normalizeTarget(option.target || "");
+    const currentScopeStage = state.currentConversationStage;
+
+    const bridgeContext = {
+      currentNode: state.currentNode,
+      priorNode,
+      priorLane: safeText(input.priorLane || state.currentEntryLane || ""),
+      priorTopic: safeText(input.priorTopic || state.currentTopic || ""),
+      selectedTarget,
+      selectedLabel: option.label,
+      promptMode: option.promptMode,
+      optionKind: option.optionKind,
+      archetypeAlignment: option.archetypeAlignment,
+      bridgeMoment: option.bridgeMoment,
+      movementIntent: option.movementIntent,
+      currentTopic: state.currentTopic,
+      currentScopeStage,
+      adjacentTarget: selectedTarget,
+      adjacentLabel: TARGET_LABELS[selectedTarget] || option.label,
+      adjacentReason: inferBridgeReason(priorNode, selectedTarget, option)
+    };
+
+    state.lastBridgeContext = bridgeContext;
+
+    return bridgeContext;
+  }
+
+  function sanitizeBridgeContext(context) {
+    if (!context || typeof context !== "object") return null;
+
+    return {
+      currentNode: normalizeTarget(context.currentNode || ""),
+      priorNode: normalizeTarget(context.priorNode || ""),
+      priorLane: safeText(context.priorLane || ""),
+      priorTopic: safeText(context.priorTopic || ""),
+      selectedTarget: normalizeTarget(context.selectedTarget || ""),
+      selectedLabel: safeText(context.selectedLabel || ""),
+      promptMode: safeText(context.promptMode || PROMPT_MODES.UNKNOWN),
+      optionKind: safeText(context.optionKind || OPTION_KINDS.CONVERSATION),
+      archetypeAlignment: safeText(context.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN),
+      bridgeMoment: safeText(context.bridgeMoment || BRIDGE_MOMENTS.NONE),
+      movementIntent: safeText(context.movementIntent || MOVEMENT_INTENTS.ASK),
+      currentTopic: safeText(context.currentTopic || ""),
+      currentScopeStage: safeText(context.currentScopeStage || ""),
+      adjacentTarget: normalizeTarget(context.adjacentTarget || ""),
+      adjacentLabel: safeText(context.adjacentLabel || ""),
+      adjacentReason: safeText(context.adjacentReason || "")
+    };
+  }
+
+  function inferBridgeReason(priorTarget, selectedTarget, option) {
+    const from = normalizeTarget(priorTarget);
+    const to = normalizeTarget(selectedTarget);
+
+    if (from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.NARRATIVE_PATH) {
+      return "The visitor is moving from public website structure into the narrative path.";
+    }
+
+    if (from === TARGETS.NARRATIVE_PATH && to === TARGETS.TRADITIONAL_WEBSITE) {
+      return "The visitor is moving from narrative path back to public website structure.";
+    }
+
+    if (to === TARGETS.MISSION_OVERVIEW) {
+      return "The visitor is entering the mission lane.";
+    }
+
+    if (to === TARGETS.PRACTICAL_RELEVANCE || to === TARGETS.FRONTIER || to === TARGETS.PRODUCTS) {
+      return "The visitor is asking how the estate becomes practical.";
+    }
+
+    if (to === TARGETS.DIAGNOSTIC_REFERRAL || to === TARGETS.DIAGNOSTIC || to === TARGETS.CHARACTER_MIRROR) {
+      return "The visitor is near the diagnostic boundary; Jeeves should explain or route, not assess.";
+    }
+
+    if (option.bridgeMoment === BRIDGE_MOMENTS.PARALLEL) {
+      return "The visitor is crossing to a related room.";
+    }
+
+    return "The visitor selected a conversational path from Jeeves.";
+  }
+
   function shapeApiFrame(data) {
     const expression = getExpression();
     const source = data && typeof data === "object" ? data : {};
@@ -877,13 +1223,21 @@
     const options = Array.isArray(frame.options) ? frame.options : [];
     const handoffs = Array.isArray(frame.handoffs) ? frame.handoffs : [];
 
-    bubbles.forEach((bubble) => renderBubble("assistant", bubble));
-
-    renderOptions(options);
-    renderHandoffs(handoffs, frame.handoffLabels || {}, frame.routeHints || {});
+    renderAssistantSequence(bubbles, () => {
+      renderOptions(options);
+      renderHandoffs(handoffs, frame.handoffLabels || {}, frame.routeHints || {});
+      renderSystemStatus("The house is listening.");
+    });
   }
 
   function renderApiFailure(error) {
+    state.busy = false;
+    state.revealActive = false;
+    state.revealSkipResolver = null;
+
+    setTyping(false);
+    setHouseListening(true);
+
     renderBubble("system", "Jeeves could not reach the deeper answer path cleanly.");
     renderBubble("system", safeErrorMessage(error));
 
@@ -908,6 +1262,7 @@
     ]);
 
     renderHandoffs([ROUTES.COMPASS, ROUTES.SITE_GUIDE], HANDOFF_LABELS);
+    renderSystemStatus("The house is listening.");
   }
 
   function applyApiState(frame) {
@@ -936,19 +1291,14 @@
       state.bridgeOffered = true;
     }
 
-    if (state.root) {
-      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
-      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
-      state.root.setAttribute("data-jeeves-current-target", state.currentNode || "");
-      state.root.setAttribute("data-jeeves-current-topic", state.currentTopic || "");
-    }
+    syncRootState();
   }
 
-  function updateStateForOption(option) {
+  function updateStateForOption(option, bridgeContext) {
     const target = normalizeTarget(option.target || "");
     const label = safeText(option.label || "");
     const nextLane = inferLaneFromTarget(target, inferIntentFromTarget(target));
-    const priorTarget = state.currentNode;
+    const priorTarget = normalizeTarget(bridgeContext && bridgeContext.priorNode ? bridgeContext.priorNode : state.currentNode);
 
     state.selectedTargets.push(target);
     state.selectedOptionKeys.push(makeOptionKey(option));
@@ -968,6 +1318,7 @@
       optionKind: option.optionKind,
       bridgeMoment: option.bridgeMoment,
       movementIntent: option.movementIntent,
+      bridgeContext: sanitizeBridgeContext(bridgeContext),
       at: new Date().toISOString()
     });
 
@@ -1000,12 +1351,7 @@
     state.currentConversationStage = inferStageFromTarget(target, state.currentTopic);
 
     trimStateArrays();
-
-    if (state.root) {
-      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
-      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
-      state.root.setAttribute("data-jeeves-current-target", state.currentNode || "");
-    }
+    syncRootState();
   }
 
   function pushTrail(item) {
@@ -1033,6 +1379,10 @@
     if (!state.shell) return;
 
     state.busy = false;
+    state.revealActive = false;
+    state.revealToken += 1;
+    state.revealSkipResolver = null;
+
     state.currentConversationStage = STAGES.ENTRANCE_OVERVIEW;
     state.currentEntryLane = LANES.UNKNOWN;
     state.lastLane = LANES.UNKNOWN;
@@ -1048,22 +1398,11 @@
     state.transitionTrail = [];
     state.branchStack = [];
     state.returnStack = [];
+    state.lastBridgeContext = null;
 
     clearShell(state.shell);
-    renderSystemStatus("Jeeves is ready.");
+    syncRootState();
     renderBootEntrance();
-
-    if (state.root) {
-      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
-      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
-    }
-  }
-
-  function setTyping(isTyping) {
-    if (!state.root || !state.shell) return;
-
-    state.root.setAttribute("data-jeeves-typing", isTyping ? "true" : "false");
-    state.shell.typing.textContent = isTyping ? "Jeeves is preparing the next answer..." : "";
   }
 
   function buildAllowedTargets() {
@@ -1186,15 +1525,16 @@
 
   function normalizeOption(option) {
     const source = option && typeof option === "object" ? option : {};
+    const target = normalizeTarget(source.target || "");
 
     return {
-      label: safeText(source.label || ""),
-      target: normalizeTarget(source.target || ""),
+      label: safeText(source.label || TARGET_LABELS[target] || ""),
+      target,
       type: source.type || "conversation",
-      scopeLane: source.scopeLane || inferScopeLane(source.target),
+      scopeLane: source.scopeLane || inferScopeLane(target),
       promptMode: source.promptMode || PROMPT_MODES.UNKNOWN,
       optionKind: source.optionKind || OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: source.archetypeAlignment || inferAlignmentFromTarget(source.target),
+      archetypeAlignment: source.archetypeAlignment || inferAlignmentFromTarget(target),
       bridgeMoment: source.bridgeMoment || BRIDGE_MOMENTS.BEFORE,
       movementIntent: source.movementIntent || MOVEMENT_INTENTS.ASK
     };
@@ -1244,57 +1584,19 @@
   function inferTargetFromText(text) {
     const value = safeText(text).toLowerCase();
 
-    if (/\bwhat is diamondgatebridge|what is diamond gate bridge|what is this place|what is this site\b/.test(value)) {
-      return TARGETS.DIAMOND_GATE_OVERVIEW;
-    }
-
-    if (/\bnarrative path|story path|narrative side\b/.test(value)) {
-      return TARGETS.NARRATIVE_PATH;
-    }
-
-    if (/\btraditional website|public website|website for|public pages|site guide\b/.test(value)) {
-      return TARGETS.TRADITIONAL_WEBSITE;
-    }
-
-    if (/\bmission|inner mission|community mission|protect children|protect animals|bullying|collaboration\b/.test(value)) {
-      return TARGETS.MISSION_OVERVIEW;
-    }
-
-    if (/\breal world|practical|why does this matter|why this matters\b/.test(value)) {
-      return TARGETS.PRACTICAL_RELEVANCE;
-    }
-
-    if (/\bwhich archetype|what archetype|which character am i|what character am i|assess me|score me|diagnose me|alignment read|mirror question\b/.test(value)) {
-      return TARGETS.DIAGNOSTIC_REFERRAL;
-    }
-
-    if (/\bcoherence diagnostic|diagnostic\b/.test(value)) {
-      return TARGETS.DIAGNOSTIC;
-    }
-
-    if (/\bcharacter mirror\b/.test(value)) {
-      return TARGETS.CHARACTER_MIRROR;
-    }
-
-    if (/\bmirrorland|world window|south gate\b/.test(value)) {
-      return TARGETS.MIRRORLAND;
-    }
-
-    if (/\bhearth|mission control|window within the window\b/.test(value)) {
-      return TARGETS.HEARTH;
-    }
-
-    if (/\bfrontier|playground|energy|water|waste|infrastructure\b/.test(value)) {
-      return TARGETS.FRONTIER;
-    }
-
-    if (/\bscientific law|proof|evidence|test\b/.test(value)) {
-      return TARGETS.SCIENTIFIC_LAW;
-    }
-
-    if (/\bcompass|where should i start|start\b/.test(value)) {
-      return TARGETS.COMPASS;
-    }
+    if (/\bwhat is diamondgatebridge|what is diamond gate bridge|what is this place|what is this site\b/.test(value)) return TARGETS.DIAMOND_GATE_OVERVIEW;
+    if (/\bnarrative path|story path|narrative side\b/.test(value)) return TARGETS.NARRATIVE_PATH;
+    if (/\btraditional website|public website|website for|public pages|site guide\b/.test(value)) return TARGETS.TRADITIONAL_WEBSITE;
+    if (/\bmission|inner mission|community mission|protect children|protect animals|bullying|collaboration\b/.test(value)) return TARGETS.MISSION_OVERVIEW;
+    if (/\breal world|practical|why does this matter|why this matters\b/.test(value)) return TARGETS.PRACTICAL_RELEVANCE;
+    if (/\bwhich archetype|what archetype|which character am i|what character am i|assess me|score me|diagnose me|alignment read|mirror question\b/.test(value)) return TARGETS.DIAGNOSTIC_REFERRAL;
+    if (/\bcoherence diagnostic|diagnostic\b/.test(value)) return TARGETS.DIAGNOSTIC;
+    if (/\bcharacter mirror\b/.test(value)) return TARGETS.CHARACTER_MIRROR;
+    if (/\bmirrorland|world window|south gate\b/.test(value)) return TARGETS.MIRRORLAND;
+    if (/\bhearth|mission control|window within the window\b/.test(value)) return TARGETS.HEARTH;
+    if (/\bfrontier|playground|energy|water|waste|infrastructure\b/.test(value)) return TARGETS.FRONTIER;
+    if (/\bscientific law|proof|evidence|test\b/.test(value)) return TARGETS.SCIENTIFIC_LAW;
+    if (/\bcompass|where should i start|start\b/.test(value)) return TARGETS.COMPASS;
 
     return TARGETS.DIAMOND_GATE_OVERVIEW;
   }
@@ -1314,38 +1616,11 @@
   function inferAlignmentFromTarget(target) {
     const clean = normalizeTarget(target);
 
-    if ([
-      TARGETS.SCIENTIFIC_LAW,
-      TARGETS.LAWS
-    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.PROOF;
-
-    if ([
-      TARGETS.FRONTIER,
-      TARGETS.PRACTICAL_RELEVANCE,
-      TARGETS.PRODUCTS,
-      TARGETS.MISSION_COLLABORATION
-    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.PRACTICAL;
-
-    if ([
-      TARGETS.MISSION_OVERVIEW,
-      TARGETS.MISSION_INNER,
-      TARGETS.MISSION_COMMUNITY,
-      TARGETS.DIAGNOSTIC_REFERRAL,
-      TARGETS.DIAGNOSTIC,
-      TARGETS.UNDERDOG
-    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.PERSONAL;
-
-    if ([
-      TARGETS.SEAN
-    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.SOURCE;
-
-    if ([
-      TARGETS.NARRATIVE_PATH,
-      TARGETS.MIRRORLAND,
-      TARGETS.HEARTH,
-      TARGETS.CHARACTERS,
-      TARGETS.CHARACTER_MIRROR
-    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.STORY;
+    if ([TARGETS.SCIENTIFIC_LAW, TARGETS.LAWS].includes(clean)) return ARCHETYPE_ALIGNMENTS.PROOF;
+    if ([TARGETS.FRONTIER, TARGETS.PRACTICAL_RELEVANCE, TARGETS.PRODUCTS, TARGETS.MISSION_COLLABORATION].includes(clean)) return ARCHETYPE_ALIGNMENTS.PRACTICAL;
+    if ([TARGETS.MISSION_OVERVIEW, TARGETS.MISSION_INNER, TARGETS.MISSION_COMMUNITY, TARGETS.DIAGNOSTIC_REFERRAL, TARGETS.DIAGNOSTIC, TARGETS.UNDERDOG].includes(clean)) return ARCHETYPE_ALIGNMENTS.PERSONAL;
+    if ([TARGETS.SEAN].includes(clean)) return ARCHETYPE_ALIGNMENTS.SOURCE;
+    if ([TARGETS.NARRATIVE_PATH, TARGETS.MIRRORLAND, TARGETS.HEARTH, TARGETS.CHARACTERS, TARGETS.CHARACTER_MIRROR].includes(clean)) return ARCHETYPE_ALIGNMENTS.STORY;
 
     return ARCHETYPE_ALIGNMENTS.UNKNOWN;
   }
@@ -1454,33 +1729,10 @@
   function inferCardinalForTarget(target) {
     const clean = normalizeTarget(target);
 
-    if ([
-      TARGETS.SCIENTIFIC_LAW,
-      TARGETS.LAWS,
-      TARGETS.DIAGNOSTIC,
-      TARGETS.DIAGNOSTIC_REFERRAL
-    ].includes(clean)) return "W";
-
-    if ([
-      TARGETS.FRONTIER,
-      TARGETS.HEARTH,
-      TARGETS.MISSION_COLLABORATION,
-      TARGETS.PRACTICAL_RELEVANCE
-    ].includes(clean)) return "E";
-
-    if ([
-      TARGETS.MIRRORLAND,
-      TARGETS.NARRATIVE_PATH,
-      TARGETS.CHARACTERS,
-      TARGETS.CHARACTER_MIRROR
-    ].includes(clean)) return "S";
-
-    if ([
-      TARGETS.COMPASS,
-      TARGETS.SEAN,
-      TARGETS.UNDERDOG,
-      TARGETS.TRADITIONAL_WEBSITE
-    ].includes(clean)) return "N";
+    if ([TARGETS.SCIENTIFIC_LAW, TARGETS.LAWS, TARGETS.DIAGNOSTIC, TARGETS.DIAGNOSTIC_REFERRAL].includes(clean)) return "W";
+    if ([TARGETS.FRONTIER, TARGETS.HEARTH, TARGETS.MISSION_COLLABORATION, TARGETS.PRACTICAL_RELEVANCE].includes(clean)) return "E";
+    if ([TARGETS.MIRRORLAND, TARGETS.NARRATIVE_PATH, TARGETS.CHARACTERS, TARGETS.CHARACTER_MIRROR].includes(clean)) return "S";
+    if ([TARGETS.COMPASS, TARGETS.SEAN, TARGETS.UNDERDOG, TARGETS.TRADITIONAL_WEBSITE].includes(clean)) return "N";
 
     return "C";
   }
@@ -1504,11 +1756,22 @@
     ].join("::");
   }
 
+  function syncRootState() {
+    if (!state.root) return;
+
+    state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
+    state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
+    state.root.setAttribute("data-jeeves-current-target", state.currentNode || "");
+    state.root.setAttribute("data-jeeves-current-topic", state.currentTopic || "");
+    state.root.setAttribute("data-jeeves-bridge-offered", state.bridgeOffered ? "true" : "false");
+  }
+
   function cloneState() {
     return {
       ready: state.ready,
       busy: state.busy,
       booted: state.booted,
+      revealActive: state.revealActive,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       currentConversationStage: state.currentConversationStage,
@@ -1519,6 +1782,7 @@
       currentPath: state.currentPath,
       currentTopic: state.currentTopic,
       currentScopeLane: state.currentScopeLane,
+      lastSuccessfulEndpoint: state.lastSuccessfulEndpoint,
       selectedTargets: state.selectedTargets.slice(),
       selectedOptionKeys: state.selectedOptionKeys.slice(),
       visitedNodes: state.visitedNodes.slice(),
@@ -1526,8 +1790,17 @@
       transitionTrail: state.transitionTrail.slice(),
       branchStack: state.branchStack.slice(),
       returnStack: state.returnStack.slice(),
+      lastBridgeContext: state.lastBridgeContext,
       lastError: state.lastError ? safeErrorMessage(state.lastError) : ""
     };
+  }
+
+  async function safeReadResponseText(response) {
+    try {
+      return await response.text();
+    } catch (_error) {
+      return "";
+    }
   }
 
   function dispatch(name, detail) {

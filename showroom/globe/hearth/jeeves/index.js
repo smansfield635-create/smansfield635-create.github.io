@@ -1,29 +1,21 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_HEARTH_MISSION_CONTROL_WINDOW_WITHIN_WINDOW_API_V3_TNT_v20
+// HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21
 // Full-file replacement.
-// Browser frontbrain authority.
-// Owns: visible Jeeves runtime, Hearth Mission Control location frame,
-// DOM hooks, message rendering, prompt rendering, house-listening state,
-// Jeeves-typing state, tap-to-rush beat pacing, room state, option progression,
-// visited-option memory, Character sequence gating, character-profile routing,
-// return-stack cleanup, origin/prior-topic return behavior, route handoff rendering,
-// API v3 guard, API v3 response-field preservation, and final visible route authority.
-// Consumes: /assets/hearth/jeeves/jeeves.expression.js
-// Consumes: /api/jeeves.js
-// Assumes: Expression contract will be renewed next and will preserve cooperative
-// option metadata while owning final public voice.
-// Does not own: CSS, server-side model execution, API keys, persistent memory,
-// server-side moderation, final backbrain canon storage, or final public voice.
-//
+// Browser-side only.
+// Center / Frontbrain runtime.
+// Owns visible Jeeves state, button behavior, house-listening state, tap-to-rush,
+// slow reveal pacing, API enrichment calls, local fallback, route handoff rendering,
+// and final route authority.
+// Does not own secure model bridge, deep canon storage, moderation, or final public voice canon.
 
-(function hearthJeevesFrontbrainHearthMissionControlWindowWithinWindowApiV3(global) {
+(function () {
   "use strict";
 
-  var CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_HEARTH_MISSION_CONTROL_WINDOW_WITHIN_WINDOW_API_V3_TNT_v20";
+  var CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_BACKBRAIN_ENRICHMENT_ROUTE_SEPARATION_SLOW_REVEAL_TNT_v21";
+  var PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_HEARTH_MISSION_CONTROL_WINDOW_WITHIN_WINDOW_API_V3_TNT_v20";
+
   var ROUTE = "/showroom/globe/hearth/jeeves/";
   var DEFAULT_BRAIN_ENDPOINT = "/api/jeeves.js";
-  var DEFAULT_START_NODE = "intro";
-  var DEFAULT_ROOM_ID = "hearthMissionControl";
 
   var ACTIVE_HOST_PAGE = "hearthJeeves";
   var CURRENT_ROOM_CONTEXT = "hearth";
@@ -35,72 +27,28 @@
   var LIVE_PAGE_ACCESS = ["hearthJeeves"];
   var PLANNED_LIVE_PAGE_ACCESS = ["compass"];
 
-  var CHARACTER_TARGETS = {
-    characterAurenValePath: "aurenVale",
-    characterDextrionPath: "dextrion",
-    characterAlaricPath: "alaric",
-    characterTarianPath: "tarian",
-    characterElaraPath: "elara",
-    characterSorenPath: "soren",
-    characterJeevesPath: "jeeves",
-    characterRemoteTeamPath: "remoteTeam"
-  };
+  var MAX_TRAIL = 32;
+  var MAX_VISIBLE_OPTIONS = 8;
+  var MAX_VISIBLE_HANDOFFS = 8;
 
-  var CHARACTER_NAMES = {
-    aurenVale: "Auren Vale",
-    dextrion: "Dextrion",
-    alaric: "Alaric",
-    tarian: "Tarian",
-    elara: "Elara",
-    soren: "Soren",
-    jeeves: "Jeeves",
-    remoteTeam: "Remote Team"
-  };
+  var CONVERSATION_LANGUAGE_PREFIXES = [
+    "Tell me about",
+    "Explain",
+    "Show me why",
+    "Help me understand",
+    "Show me how",
+    "Which Character Archetype"
+  ];
 
-  var CHARACTER_RESULTS = {
-    protect: {
-      characterId: "aurenVale",
-      title: "Auren Vale — Sanctuary Builder",
-      line: "You tend to protect first. Under pressure, you look for who needs shelter, what must be guarded, and what cannot be exposed too early."
-    },
-    repair: {
-      characterId: "dextrion",
-      title: "Dextrion — Earth-Side Originator",
-      line: "You tend to repair first. Under pressure, you look for the break, the responsibility, and the fastest way to make the system whole again."
-    },
-    warn: {
-      characterId: "alaric",
-      title: "Alaric — Field Navigator",
-      line: "You tend to read danger first. Under pressure, you notice what is forming before everyone else has enough proof to believe it."
-    },
-    endure: {
-      characterId: "tarian",
-      title: "Tarian — Water Anchor",
-      line: "You tend to endure first. Under pressure, you carry the physical reality of the situation and try to keep the body, the field, or the people moving."
-    },
-    signal: {
-      characterId: "elara",
-      title: "Elara — Signal Bearer",
-      line: "You tend to signal first. Under pressure, you try to make the future visible enough that people can move toward it."
-    },
-    boundary: {
-      characterId: "soren",
-      title: "Soren — Boundary Keeper",
-      line: "You tend to name the hidden cost first. Under pressure, you look for the contradiction, the boundary, and the damage people are trying not to see."
-    },
-    sequence: {
-      characterId: "jeeves",
-      title: "Jeeves — Manor Interface",
-      line: "You tend to sequence first. Under pressure, you look for the right order, the clean next door, and the amount of truth the moment can hold."
-    },
-    distribute: {
-      characterId: "remoteTeam",
-      title: "Remote Team — Distributed Response Unit",
-      line: "You tend to distribute responsibility first. Under pressure, you think about who needs help beyond the safe center and how survival reaches them."
-    }
-  };
+  var ROUTE_LANGUAGE_PREFIXES = [
+    "Open",
+    "Go to",
+    "Visit",
+    "Enter",
+    "Launch"
+  ];
 
-  var ROUTE_HREFS = {
+  var LOCAL_ROUTE_HINTS = {
     compass: "/",
     home: "/",
     siteGuide: "/site-guide/",
@@ -115,2419 +63,945 @@
     mirrorland: "/showroom/globe/",
     zionts: "/showroom/globe/earth/",
     audralia: "/showroom/globe/audralia/",
+    hEarth: "/showroom/globe/h-earth/",
     frontier: "/explore/frontier/",
+    frontierEnergy: "/explore/frontier/energy/",
+    frontierWater: "/explore/frontier/water/",
+    frontierWaste: "/explore/frontier/waste/",
+    frontierClosedLoop: "/explore/frontier/closed-loop/",
+    frontierInfrastructure: "/explore/frontier/infrastructure/",
+    frontierLattice: "/explore/frontier/lattice/",
+    frontierUrban: "/explore/frontier/urban/",
+    frontierManual: "/explore/frontier/manual/",
+    frontierShimmer: "/explore/frontier/shimmer/",
+    frontierTrajectory: "/explore/frontier/trajectory/",
+    frontierVision: "/explore/frontier/vision/",
     characters: "/characters/",
-    book: "/nine-summits-of-love/",
+    controlRoom: "/showroom/globe/hearth/diagnostic/",
     nineSummits: "/nine-summits/",
     aboutUnderdog: "/about-this-underdog/"
   };
 
-  var LOCAL_TARGET_ALIASES = {
-    worldPath: "mirrorlandPath",
-    worldGatePath: "atriumPath",
-    characterMirrorPath: "characterArchetypeMirrorPath",
-    characterMirrorQuestionOne: "characterArchetypeQuestionOne",
-    characterMirrorQuestionTwo: "characterArchetypeQuestionTwo",
-    characterMirrorQuestionThree: "characterArchetypeQuestionThree",
-    characterMirrorResult: "characterArchetypeResult",
-    characterFactionsPath: "characterRelationshipsPath",
-    humanSourcePath: "seanPath",
-    creatorPath: "seanPath",
-    creatorSourcePath: "seanPath",
-    missionControlPath: "hearthPath",
-    hearthMissionControlPath: "hearthPath"
+  var LOCAL_HANDOFF_LABELS = {
+    compass: "Open the Compass",
+    home: "Open the Public Entry",
+    siteGuide: "Open the Guide Desk",
+    coherenceDiagnostic: "Open the Diagnostic",
+    meetSean: "Open Meet Sean",
+    products: "Open Products",
+    laws: "Open the Law Library",
+    scientificLaw: "Open Scientific Law",
+    gauges: "Open Triple G",
+    showroom: "Open the Atrium",
+    hearth: "Open Hearth",
+    mirrorland: "Open Mirrorland",
+    zionts: "Open ZIONTS",
+    audralia: "Open Audralia",
+    hEarth: "Open H-Earth",
+    frontier: "Open Frontier",
+    frontierEnergy: "Open Energy",
+    frontierWater: "Open Water",
+    frontierWaste: "Open Waste",
+    frontierClosedLoop: "Open Closed Loop",
+    frontierInfrastructure: "Open Infrastructure",
+    frontierLattice: "Open Lattice",
+    frontierUrban: "Open Urban",
+    frontierManual: "Open Manual",
+    frontierShimmer: "Open Shimmer",
+    frontierTrajectory: "Open Trajectory",
+    frontierVision: "Open Vision",
+    characters: "Open the Characters Page",
+    controlRoom: "Open the Control Room",
+    nineSummits: "Open Nine Summits",
+    aboutUnderdog: "Open This Underdog"
   };
 
-  var REPEATABLE_TARGETS = {
-    cleanDoor: true,
-    sharpQuestion: true,
-    switchTopics: true,
-    recenterNode: true,
-    returnFork: true,
-    restartFork: true,
-    priorTopicReturn: true,
-    priorTopicReturnPath: true,
-    originReturn: true,
-    originReturnPath: true,
-    mirrorlandPath: true,
-    atriumPath: true,
-    characterArchetypeMirrorPath: true,
-    selfLearningPath: true,
-    diagnosticPath: true,
-    compassPath: true,
-    siteGuidePath: true,
-    websitePath: true,
-    charactersPath: true,
-    hearthPath: true
+  var CONVERSATION_LABELS = {
+    websitePath: "Tell me how the estate is built.",
+    skepticPlain: "Explain it plainly first.",
+    proofPath: "Tell me what makes this trustworthy.",
+    diagnosticPath: "Tell me about the self-reflection room.",
+    mirrorlandPath: "Tell me what Mirrorland is before I enter.",
+    atriumPath: "Tell me about the South Gate threshold.",
+    atlasPath: "Tell me how the Mirrorland map works.",
+    charactersPath: "Introduce the Characters.",
+    compassPath: "Orient me first.",
+    whereToStart: "Help me choose where to start.",
+    siteGuidePath: "Tell me how the rooms relate.",
+    lawsPath: "Tell me about the proof side of the estate.",
+    scientificLawPath: "Tell me how claims are tested.",
+    scientificLawTheoryPath: "Tell me about Theory.",
+    scientificLawEvidencePath: "Tell me about Evidence.",
+    scientificLawMeasurePath: "Tell me about Measure.",
+    scientificLawLimitsPath: "Tell me about Limits.",
+    scientificLawRoutePath: "Show me the testing route.",
+    scientificLawLadderPath: "Show me the claim ladder.",
+    scientificLawTermsPath: "Explain the deeper proof terms.",
+    gaugesPath: "Tell me about the status room.",
+    seanPath: "Tell me about the creator behind all of this.",
+    underdogPath: "Tell me about This Underdog.",
+    productsPath: "Tell me what can be used or carried.",
+    nineSummitsPath: "Tell me about the value road.",
+    nineSummitsBookPath: "Tell me about The Nine Summits of Love.",
+    hearthPath: "Tell me about Hearth Mission Control.",
+    hearthFacilityPath: "Explain Hearth as Mission Control.",
+    hearthConstructPath: "Explain the window within the window.",
+    hearthFrontierPath: "Tell me why Hearth is near Frontier.",
+    hearthLawPath: "Tell me why Hearth must answer to proof.",
+    hEarthPath: "Tell me about the survival path.",
+    ziontsPath: "Tell me about the consequence road.",
+    audraliaPath: "Tell me about Audralia.",
+    audraliaWorldroomPath: "Tell me about Audralia’s visible worldroom.",
+    controlCockpitPath: "Tell me how Audralia becomes readable.",
+    frontierPath: "Tell me what Frontier tests.",
+    frontierSystemsPath: "Tell me about the future systems.",
+    frontierEnergyPath: "Tell me about Energy.",
+    frontierWaterPath: "Tell me about Water.",
+    frontierWastePath: "Tell me about Waste.",
+    frontierClosedLoopPath: "Tell me about Closed Loop.",
+    frontierInfrastructurePath: "Tell me about Infrastructure.",
+    frontierLatticePath: "Tell me about Lattice.",
+    frontierUrbanPath: "Tell me about Urban.",
+    frontierManualPath: "Tell me about Manual.",
+    frontierShimmerPath: "Tell me about Shimmer.",
+    frontierTrajectoryPath: "Tell me about Trajectory.",
+    frontierVisionPath: "Tell me about Vision.",
+    frontierLawPath: "Tell me why Frontier needs proof.",
+    frontierCharactersPath: "Tell me who carries Frontier pressure.",
+    futureProfilePath: "Tell me about the future profile.",
+    mirrorMePath: "Tell me about the mirror path.",
+    characterIdentityPath: "Who are the Characters?",
+    characterRelationshipsPath: "Tell me how the Characters relate.",
+    characterTensionsPath: "Tell me what conflict they carry.",
+    characterMotivesPath: "Tell me what motivates them.",
+    characterStoryPressurePath: "Tell me why the Characters matter.",
+    characterFirstPath: "Tell me who I should meet first.",
+    characterAurenValePath: "Tell me about Auren Vale.",
+    characterDextrionPath: "Tell me about Dextrion.",
+    characterAlaricPath: "Tell me about Alaric.",
+    characterTarianPath: "Tell me about Tarian.",
+    characterElaraPath: "Tell me about Elara.",
+    characterSorenPath: "Tell me about Soren.",
+    characterJeevesPath: "Tell me about Jeeves.",
+    characterRemoteTeamPath: "Tell me about the Remote Team.",
+    characterArchetypeMirrorPath: "Which Character Archetype do I follow under pressure?",
+    selfLearningPath: "Show my behavior under pressure.",
+    characterArchetypeQuestionOne: "Ask the first mirror question.",
+    characterArchetypeQuestionTwo: "Ask the second mirror question.",
+    characterArchetypeQuestionThree: "Ask the third mirror question.",
+    characterArchetypeResult: "Show my reflective match.",
+    recenterNode: "Re-center me.",
+    loopRecovery: "I keep circling this room.",
+    cleanDoor: "Give me the cleanest next door.",
+    switchTopics: "Let’s change rooms.",
+    sharpQuestion: "Ask me a sharper question.",
+    returnFork: "Return to the First Fork.",
+    restartFork: "Start over.",
+    priorTopicReturnPath: "Return to prior topic.",
+    originReturnPath: "Return to origin conversation."
   };
 
-  var CONTROL_TARGETS = {
-    cleanDoor: true,
-    sharpQuestion: true,
-    switchTopics: true,
-    recenterNode: true,
-    returnFork: true,
-    restartFork: true,
-    priorTopicReturn: true,
-    priorTopicReturnPath: true,
-    originReturn: true,
-    originReturnPath: true
+  var CHARACTER_TARGETS = {
+    characterAurenValePath: {
+      name: "Auren Vale",
+      title: "Sanctuary Builder",
+      pressure: "Every protected life makes the manor harder to hide.",
+      oneLine: "Auren Vale protects the manor, but every life he shelters makes the sanctuary harder to hide."
+    },
+    characterDextrionPath: {
+      name: "Dextrion",
+      title: "Earth-Side Originator",
+      pressure: "Every one-way crossing remains on his hands.",
+      oneLine: "Dextrion opened the crossing from Earth and carries the burden of everyone who cannot return."
+    },
+    characterAlaricPath: {
+      name: "Alaric",
+      title: "Field Navigator",
+      pressure: "Waiting for proof can close the only safe route.",
+      oneLine: "Alaric reads danger before proof arrives, which makes him necessary early and difficult to believe."
+    },
+    characterTarianPath: {
+      name: "Tarian",
+      title: "Water Anchor",
+      pressure: "The future fails if the body cannot continue.",
+      oneLine: "Tarian keeps survival physical because no future matters if the body cannot continue."
+    },
+    characterElaraPath: {
+      name: "Elara",
+      title: "Signal Bearer",
+      pressure: "The future has to be visible before anyone moves toward it.",
+      oneLine: "Elara makes the future visible before it disappears, but visibility always risks exposure."
+    },
+    characterSorenPath: {
+      name: "Soren",
+      title: "Boundary Keeper",
+      pressure: "Saving Mirrorland by hiding damage only creates another ZIONTS.",
+      oneLine: "Soren refuses fake restoration because hidden damage only creates another ZIONTS."
+    },
+    characterJeevesPath: {
+      name: "Jeeves",
+      title: "Manor Interface",
+      pressure: "Too much truth breaks people. Too little sends them into the wrong room.",
+      oneLine: "Jeeves sequences truth because the wrong amount of truth can send a visitor into the wrong room."
+    },
+    characterRemoteTeamPath: {
+      name: "Remote Team",
+      title: "Distributed Response Unit",
+      pressure: "If survival cannot leave the manor, the manor is only a bunker.",
+      oneLine: "The Remote Team carries survival beyond the manor, where protection has to become distributable."
+    }
   };
 
-  var NO_STACK_TARGETS = {
-    cleanDoor: true,
-    sharpQuestion: true,
-    switchTopics: true,
-    recenterNode: true,
-    returnFork: true,
-    restartFork: true,
-    priorTopicReturn: true,
-    priorTopicReturnPath: true,
-    originReturn: true,
-    originReturnPath: true
+  var LOCAL_NODES = {
+    intro: {
+      roomId: "hearthMissionControl",
+      beats: [
+        "Welcome. I’m Jeeves.",
+        "I’m currently stationed in Hearth Mission Control — the window within the window.",
+        "Mirrorland opens the larger future-facing field. Hearth gives us the inner control view, where we can observe, coordinate, and route unknown future potential through the estate’s portal logic.",
+        "I know the estate by its blueprint. I do not pretend to be stationed inside every page at once. For now, this is my live room."
+      ],
+      options: [
+        convo("Tell me about Hearth Mission Control.", "hearthPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath"),
+        convo("Introduce the Characters.", "charactersPath"),
+        convo("Tell me about the proof side of the estate.", "lawsPath"),
+        convo("Tell me about the creator behind all of this.", "seanPath"),
+        convo("Help me choose where to start.", "whereToStart")
+      ],
+      handoffs: ["hearth", "mirrorland", "frontier"]
+    },
+    whereToStart: {
+      beats: [
+        "There are three clean ways to begin.",
+        "If you want proof, start west with Law Library and Scientific Law.",
+        "If you want story, start south with Mirrorland and the Characters.",
+        "If you want systems, start east with Frontier and Hearth."
+      ],
+      options: [
+        convo("Tell me about the proof side of the estate.", "lawsPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath"),
+        convo("Tell me what Frontier tests.", "frontierPath"),
+        convo("Tell me about Hearth Mission Control.", "hearthPath")
+      ],
+      handoffs: ["laws", "scientificLaw", "mirrorland", "frontier"]
+    },
+    hearthPath: {
+      beats: [
+        "Hearth is Mission Control — the window within the window.",
+        "Mirrorland is the larger future-facing field. Hearth is the inner estate control view where Jeeves can coordinate what the visitor is seeing.",
+        "That means Hearth is not merely a globe route. It is where future potential, world logic, proof boundaries, and route decisions come into view together."
+      ],
+      options: [
+        convo("Explain the window within the window.", "hearthConstructPath"),
+        convo("Tell me why Hearth is near Frontier.", "hearthFrontierPath"),
+        convo("Tell me why Hearth must answer to proof.", "hearthLawPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath")
+      ],
+      handoffs: ["hearth", "frontier", "scientificLaw", "mirrorland"]
+    },
+    hearthConstructPath: {
+      beats: [
+        "The window within the window means the page is local, but the view is larger than the page.",
+        "Hearth is the control chamber inside the estate. It looks toward unknown future potential through portal logic without pretending the visitor has already crossed into that deeper place.",
+        "That is why Jeeves can speak from Hearth without claiming to be mounted inside every page at once."
+      ],
+      options: [
+        convo("Tell me about Hearth Mission Control.", "hearthPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath"),
+        convo("Tell me why Hearth must answer to proof.", "hearthLawPath")
+      ],
+      handoffs: ["hearth", "mirrorland", "scientificLaw"]
+    },
+    mirrorlandPath: {
+      beats: [
+        "Mirrorland is the larger future-facing window.",
+        "It is where possible futures become visible before they become final.",
+        "ZIONTS is consequence. H-Earth is survival. Audralia is possibility.",
+        "Hearth does not replace Mirrorland. Hearth coordinates the inner view into it."
+      ],
+      options: [
+        convo("Tell me how the Mirrorland map works.", "atlasPath"),
+        convo("Introduce the Characters.", "charactersPath"),
+        convo("Tell me about Audralia.", "audraliaPath"),
+        convo("Tell me about Hearth Mission Control.", "hearthPath")
+      ],
+      handoffs: ["mirrorland", "audralia", "characters", "hearth"]
+    },
+    atlasPath: {
+      beats: [
+        "Atlas Study is the map room for the world-facing side of the estate.",
+        "It helps the visitor choose between consequence, survival, possibility, and construction before entering deeper rooms.",
+        "That keeps Mirrorland from feeling like a random world menu."
+      ],
+      options: [
+        convo("Tell me about the consequence road.", "ziontsPath"),
+        convo("Tell me about the survival path.", "hEarthPath"),
+        convo("Tell me about Audralia.", "audraliaPath"),
+        convo("Tell me about Hearth Mission Control.", "hearthPath")
+      ],
+      handoffs: ["mirrorland", "zionts", "hEarth", "audralia", "hearth"]
+    },
+    charactersPath: {
+      beats: [
+        "The Characters are where Mirrorland becomes personal.",
+        "They are not decorations. They are pressure carriers.",
+        "Each one carries a different form of responsibility, survival, proof, signal, shelter, field reading, or public action."
+      ],
+      options: [
+        convo("Tell me who I should meet first.", "characterFirstPath"),
+        convo("Tell me about Auren Vale.", "characterAurenValePath"),
+        convo("Tell me how the Characters relate.", "characterRelationshipsPath"),
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath")
+      ],
+      handoffs: ["characters", "mirrorland"]
+    },
+    characterFirstPath: {
+      beats: [
+        "Start with Auren Vale if you want shelter and protection.",
+        "Start with Dextrion if you want origin, repair, and responsibility.",
+        "Start with Soren if you want proof, hidden cost, and boundary.",
+        "Start with Jeeves if you want the rule of sequence itself."
+      ],
+      options: [
+        convo("Tell me about Auren Vale.", "characterAurenValePath"),
+        convo("Tell me about Dextrion.", "characterDextrionPath"),
+        convo("Tell me about Soren.", "characterSorenPath"),
+        convo("Tell me about Jeeves.", "characterJeevesPath")
+      ],
+      handoffs: ["characters"]
+    },
+    characterRelationshipsPath: {
+      beats: [
+        "The Characters relate through pressure, not biography alone.",
+        "Auren protects the sanctuary. Dextrion carries the origin burden. Alaric reads danger before others believe it. Tarian keeps survival physical.",
+        "Elara makes the future visible. Soren refuses hidden cost. Jeeves sequences truth. The Remote Team carries survival beyond the manor."
+      ],
+      options: [
+        convo("Tell me what conflict they carry.", "characterTensionsPath"),
+        convo("Tell me what motivates them.", "characterMotivesPath"),
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        convo("Tell me about Auren Vale.", "characterAurenValePath")
+      ],
+      handoffs: ["characters", "mirrorland"]
+    },
+    characterTensionsPath: {
+      beats: [
+        "Their conflict is not simple good versus evil.",
+        "It is protection versus exposure, repair versus guilt, warning versus disbelief, survival versus exhaustion, visibility versus risk, and truth versus false restoration.",
+        "That is why Mirrorland needs Characters: the world pressure has to become human pressure."
+      ],
+      options: [
+        convo("Tell me how the Characters relate.", "characterRelationshipsPath"),
+        convo("Tell me why the Characters matter.", "characterStoryPressurePath"),
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath")
+      ],
+      handoffs: ["characters", "mirrorland"]
+    },
+    characterMotivesPath: {
+      beats: [
+        "The Characters are motivated by what they cannot safely ignore.",
+        "Some protect. Some repair. Some warn. Some endure. Some reveal. Some audit. Some sequence. Some carry help into the field.",
+        "That gives each one a different kind of pressure."
+      ],
+      options: [
+        convo("Tell me how the Characters relate.", "characterRelationshipsPath"),
+        convo("Tell me what conflict they carry.", "characterTensionsPath"),
+        convo("Tell me who I should meet first.", "characterFirstPath")
+      ],
+      handoffs: ["characters"]
+    },
+    characterStoryPressurePath: {
+      beats: [
+        "The Characters matter because world logic alone is too abstract.",
+        "A future can be mapped, tested, and measured, but someone still has to carry the pressure of what it means.",
+        "That is where the Characters enter."
+      ],
+      options: [
+        convo("Tell me how the Characters relate.", "characterRelationshipsPath"),
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath")
+      ],
+      handoffs: ["characters", "mirrorland"]
+    },
+    characterArchetypeMirrorPath: {
+      beats: [
+        "The Character Archetype Mirror is reflective, not diagnostic.",
+        "It does not tell you who you are. It asks which Character Archetype your behavior follows under pressure.",
+        "The stronger version belongs with the Diagnostic. Here, we can begin with the mirror path."
+      ],
+      options: [
+        convo("Ask the first mirror question.", "characterArchetypeQuestionOne"),
+        convo("Tell me about the self-reflection room.", "diagnosticPath"),
+        convo("Introduce the Characters.", "charactersPath"),
+        convo("Show my behavior under pressure.", "selfLearningPath")
+      ],
+      handoffs: ["coherenceDiagnostic", "characters"]
+    },
+    characterArchetypeQuestionOne: {
+      beats: [
+        "First mirror question:",
+        "When pressure rises, do you usually try to structure the field, build a solution, stabilize the damage, or audit the truth?"
+      ],
+      options: [
+        convo("I try to structure the field.", "characterArchetypeQuestionTwo"),
+        convo("I try to build a solution.", "characterArchetypeQuestionTwo"),
+        convo("I try to stabilize the damage.", "characterArchetypeQuestionTwo"),
+        convo("I try to audit the truth.", "characterArchetypeQuestionTwo")
+      ],
+      handoffs: ["coherenceDiagnostic"]
+    },
+    characterArchetypeQuestionTwo: {
+      beats: [
+        "Second mirror question:",
+        "When people misunderstand the pressure, do you explain, act, hold the line, or withdraw until the proof catches up?"
+      ],
+      options: [
+        convo("Ask the third mirror question.", "characterArchetypeQuestionThree"),
+        convo("Tell me about the self-reflection room.", "diagnosticPath"),
+        convo("Introduce the Characters.", "charactersPath")
+      ],
+      handoffs: ["coherenceDiagnostic", "characters"]
+    },
+    characterArchetypeQuestionThree: {
+      beats: [
+        "Third mirror question:",
+        "What do you protect first: the person, the system, the truth, the route, the signal, or the future?"
+      ],
+      options: [
+        convo("Show my reflective match.", "characterArchetypeResult"),
+        convo("Take me to the stronger Diagnostic path.", "diagnosticPath"),
+        convo("Introduce the Characters again.", "charactersPath")
+      ],
+      handoffs: ["coherenceDiagnostic", "characters"]
+    },
+    characterArchetypeResult: {
+      beats: [
+        "A clean reflective match needs more than one answer.",
+        "From here, the better route is the Diagnostic, because it gives your pressure behavior more structure before Jeeves reflects it against the Characters.",
+        "This path remains a mirror, not a label."
+      ],
+      options: [
+        convo("Tell me about the self-reflection room.", "diagnosticPath"),
+        convo("Introduce the Characters.", "charactersPath"),
+        convo("Re-center me.", "recenterNode", "control")
+      ],
+      handoffs: ["coherenceDiagnostic", "characters"]
+    },
+    lawsPath: {
+      beats: [
+        "Law Library is the proof side of the estate.",
+        "It keeps the work from expanding without discipline.",
+        "If Law Library sets the boundary, Scientific Law tests the claim, and The Lab reads readiness."
+      ],
+      options: [
+        convo("Tell me how claims are tested.", "scientificLawPath"),
+        convo("Tell me about the status room.", "gaugesPath"),
+        convo("Tell me why Frontier needs proof.", "frontierLawPath"),
+        convo("Tell me why Hearth must answer to proof.", "hearthLawPath")
+      ],
+      handoffs: ["laws", "scientificLaw", "gauges"]
+    },
+    scientificLawPath: {
+      beats: [
+        "A claim does not become scientific because it sounds technical.",
+        "It becomes scientific when it can be defined, tested, corrected, limited, and checked again.",
+        "Scientific Law is the Reality Test chamber."
+      ],
+      options: [
+        convo("Tell me about Theory.", "scientificLawTheoryPath"),
+        convo("Tell me about Evidence.", "scientificLawEvidencePath"),
+        convo("Tell me about Measure.", "scientificLawMeasurePath"),
+        convo("Tell me about Limits.", "scientificLawLimitsPath")
+      ],
+      handoffs: ["scientificLaw", "laws", "gauges"]
+    },
+    gaugesPath: {
+      beats: [
+        "Triple G reads Goals, Gauges, and Gaps.",
+        "Goals name what the room is trying to become. Gauges show what can be checked. Gaps show what remains unresolved.",
+        "That makes The Lab a readiness room, not just a status display."
+      ],
+      options: [
+        convo("Tell me about the proof side of the estate.", "lawsPath"),
+        convo("Tell me how claims are tested.", "scientificLawPath"),
+        convo("Tell me why Frontier needs proof.", "frontierLawPath")
+      ],
+      handoffs: ["gauges", "laws", "scientificLaw"]
+    },
+    frontierPath: {
+      beats: [
+        "Frontier tests what the future needs.",
+        "It is Audralia’s applied-science yard: energy, water, waste, feedback, infrastructure, lattice, urban pressure, manuals, shimmer, trajectory, and vision.",
+        "Frontier stays near Hearth because tested systems still need coordination."
+      ],
+      options: [
+        convo("Tell me about the future systems.", "frontierSystemsPath"),
+        convo("Tell me about Energy.", "frontierEnergyPath"),
+        convo("Tell me about Water.", "frontierWaterPath"),
+        convo("Tell me why Frontier needs proof.", "frontierLawPath"),
+        convo("Tell me about Hearth Mission Control.", "hearthPath")
+      ],
+      handoffs: ["frontier", "hearth", "audralia", "scientificLaw"]
+    },
+    frontierSystemsPath: {
+      beats: [
+        "Frontier is not one system. It is a yard of future-system tests.",
+        "Energy asks how power survives. Water asks how flow returns. Waste asks what can be recovered. Closed Loop asks whether the system can answer back.",
+        "Infrastructure, Lattice, Urban, Manual, Shimmer, Trajectory, and Vision keep the future from becoming vague."
+      ],
+      options: [
+        convo("Tell me about Energy.", "frontierEnergyPath"),
+        convo("Tell me about Water.", "frontierWaterPath"),
+        convo("Tell me about Closed Loop.", "frontierClosedLoopPath"),
+        convo("Tell me why Hearth is near Frontier.", "hearthFrontierPath")
+      ],
+      handoffs: ["frontier", "hearth"]
+    },
+    seanPath: {
+      beats: [
+        "Sean Mansfield is the creator behind Diamond Gate Bridge: the estate, rooms, laws, worlds, characters, and conversation structure that holds them together.",
+        "The work comes from struggle, creative integrity, artistic integrity, love for nature, preservation, growth, and societal understanding.",
+        "That is why this path sits near This Underdog and Nine Summits."
+      ],
+      options: [
+        convo("Tell me about This Underdog.", "underdogPath"),
+        convo("Tell me about the value road.", "nineSummitsPath"),
+        convo("Tell me how the estate is built.", "websitePath")
+      ],
+      handoffs: ["meetSean", "aboutUnderdog", "nineSummits"]
+    },
+    underdogPath: {
+      beats: [
+        "This Underdog is not Sean alone.",
+        "It is the inner voice in the visitor that has carried pressure before it found language, direction, or use.",
+        "The underdog path turns pain into orientation, pressure into voice, and survival into growth."
+      ],
+      options: [
+        convo("Tell me about the creator behind all of this.", "seanPath"),
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        convo("Tell me about the value road.", "nineSummitsPath")
+      ],
+      handoffs: ["aboutUnderdog", "meetSean", "nineSummits"]
+    },
+    nineSummitsPath: {
+      beats: [
+        "Nine Summits is the value road.",
+        "It is where the human climb becomes larger than a single page or product.",
+        "The path moves through Character, Structure, Balance, Stability, Peace, Joy, Dignity, Free Will, and Love."
+      ],
+      options: [
+        convo("Tell me about The Nine Summits of Love.", "nineSummitsBookPath"),
+        convo("Tell me about This Underdog.", "underdogPath"),
+        convo("Tell me about the creator behind all of this.", "seanPath")
+      ],
+      handoffs: ["nineSummits", "aboutUnderdog", "meetSean"]
+    },
+    diagnosticPath: {
+      beats: [
+        "The Diagnostic is a self-reflection and pattern-assessment room.",
+        "It is not medical, mental-health, legal, employment, IQ, or MBTI diagnosis.",
+        "It helps separate claimed pressure behavior from revealed pressure behavior."
+      ],
+      options: [
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        convo("Show my behavior under pressure.", "selfLearningPath"),
+        convo("Tell me about the proof side of the estate.", "lawsPath")
+      ],
+      handoffs: ["coherenceDiagnostic", "characters"]
+    },
+    recenterNode: {
+      beats: [
+        "We can re-center.",
+        "From Hearth Mission Control, the clean doors are proof, Mirrorland, Characters, Frontier, or the creator path."
+      ],
+      options: [
+        convo("Tell me about the proof side of the estate.", "lawsPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath"),
+        convo("Introduce the Characters.", "charactersPath"),
+        convo("Tell me what Frontier tests.", "frontierPath"),
+        convo("Tell me about the creator behind all of this.", "seanPath")
+      ],
+      handoffs: ["compass", "siteGuide", "laws", "mirrorland", "frontier"]
+    },
+    returnFork: {
+      beats: [
+        "We are back at the First Fork.",
+        "Choose proof, story, systems, self-reflection, or source."
+      ],
+      options: [
+        convo("Tell me about the proof side of the estate.", "lawsPath"),
+        convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath"),
+        convo("Tell me what Frontier tests.", "frontierPath"),
+        convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+        convo("Tell me about the creator behind all of this.", "seanPath")
+      ],
+      handoffs: ["compass", "siteGuide"]
+    }
   };
-
-  var CRITICAL_OPTION_FIELDS = [
-    "target",
-    "type",
-    "value",
-    "signal",
-    "scopeLane",
-    "cardinal",
-    "coordinateName",
-    "placeType",
-    "roomId",
-    "route",
-    "href",
-    "skipReturnPush",
-    "restoreRoomId",
-    "optionKind",
-    "disabled",
-    "visited",
-    "handoff",
-    "routeId"
-  ];
 
   var state = {
     contract: CONTRACT,
     route: ROUTE,
-    activeHostPage: ACTIVE_HOST_PAGE,
-    currentRoomContext: CURRENT_ROOM_CONTEXT,
-    currentRoomRole: CURRENT_ROOM_ROLE,
-    currentRoomPremise: CURRENT_ROOM_PREMISE,
-    estateKnowledgeMode: ESTATE_KNOWLEDGE_MODE,
-    portalLogic: PORTAL_LOGIC,
-    routeAuthority: ROUTE_AUTHORITY,
-    livePageAccess: LIVE_PAGE_ACCESS.slice(),
-    plannedLivePageAccess: PLANNED_LIVE_PAGE_ACCESS.slice(),
-
-    initialized: false,
-    currentNode: DEFAULT_START_NODE,
-    currentRoomId: DEFAULT_ROOM_ID,
+    brainEndpoint: DEFAULT_BRAIN_ENDPOINT,
+    mounted: false,
+    currentNode: "intro",
+    currentTopic: "hearth",
+    currentRoomId: "hearthMissionControl",
     currentRoomName: "Hearth Mission Control",
-    currentCoordinateName: "Window Within the Window",
     currentCardinal: "E",
-    currentPlaceType: "mission-control",
-    currentTopic: "origin",
-
-    originNode: DEFAULT_START_NODE,
-    originConversation: "First Fork",
-    originAnchor: "firstFork",
-    priorNode: "",
-    priorTopic: "",
-    priorTopicName: "",
-    lastStableNode: DEFAULT_START_NODE,
-
-    returnStack: [],
-    branchStack: [],
-    topicStack: [],
+    currentCoordinateName: "East Mission Control",
+    currentPlaceType: "mission-control chamber",
+    currentScopeLane: "narrative",
+    currentVoiceMode: "jeeves",
+    currentEntry: "intro",
+    currentPath: "intro",
+    selectedTargets: [],
+    selectedOptionKeys: [],
+    visitedNodes: [],
     visitorTrail: [],
     roomTrail: [],
-
-    visitedNodes: Object.create(null),
-    selectedOptionKeys: Object.create(null),
-    selectedTargets: Object.create(null),
-    selectedTargetsByRoom: Object.create(null),
-    selectedLabelsByRoom: Object.create(null),
-
+    returnStack: [],
+    branchStack: [],
+    lastBackbrainFrame: null,
+    lastFibonacciDepth: 0,
+    lastFibonacciStage: "",
+    lastRouteHints: {},
+    lastHandoffLabels: {},
+    lastApiDepthMode: "",
+    lastApiContract: "",
+    lastApiResponseAt: "",
+    lastBackbrainAuthorities: {},
+    lastSelectedTarget: "",
+    lastSelectedLabel: "",
+    lastRequestMode: "",
+    apiReady: false,
+    apiFailureCount: 0,
+    houseListening: true,
+    isTyping: false,
+    rushActive: false,
+    currentDelayResolve: null,
     characterOverviewDone: false,
-    characterProfileViews: Object.create(null),
+    characterProfileViews: {},
     characterProfileViewCount: 0,
     characterRelationshipViews: 0,
-    characterLoopCount: 0,
-    characterCompletionReady: false,
-    characterCompletionPromptShown: false,
-    characterArchetypeAnswers: [],
-
-    pendingPriorReturn: null,
-    pendingOriginReturn: false,
-
-    isRendering: false,
-    isTyping: false,
-    houseListening: false,
-    rushActive: false,
-    rushRequestedAt: 0,
-    beatQueue: [],
-    currentBeatIndex: -1,
-    typingTimer: null,
-    typingResolve: null,
-    lastInteractionAt: 0,
-
-    optionSerial: 0,
-    currentOptions: [],
-    currentHandoffs: [],
-
-    lastBackbrainFrame: null,
-    lastFibonacciDepth: "",
-    lastFibonacciStage: null,
-    lastRouteHints: null,
-    lastBackbrainAuthorities: null,
-    lastApiContract: "",
-    lastApiDepthMode: "",
-    lastApiResponseAt: 0
+    characterArchetypeAnswers: []
   };
 
   var els = {
     root: null,
-    thread: null,
-    typing: null,
-    promptDock: null,
-    promptGrid: null,
-    handoffDock: null,
-    handoffGrid: null,
+    transcript: null,
+    optionsPanel: null,
+    handoffPanel: null,
     status: null,
-    statusText: null,
     input: null,
-    form: null,
-    send: null,
-    messageTemplate: null,
-    optionTemplate: null,
-    routeOptionTemplate: null
+    send: null
   };
 
-  function getExpression() {
-    return (
-      global.HEARTH &&
-      (
-        global.HEARTH.JEEVES_EXPRESSION ||
-        (global.HEARTH.JEEVES && global.HEARTH.JEEVES.expression)
-      )
-    ) || global.JEEVES_EXPRESSION || null;
+  function boot() {
+    ensureNamespace();
+    resolveElements();
+    stampRoot();
+    bindEvents();
+    exposeApi();
+    renderLocalNode("intro", { silentVisitor: true, replace: true });
   }
 
-  function normalizeTarget(target) {
-    var clean = String(target || "").trim();
-    var expr = getExpression();
-
-    if (expr && typeof expr.normalizeTarget === "function") {
-      return expr.normalizeTarget(clean);
-    }
-
-    return LOCAL_TARGET_ALIASES[clean] || clean;
+  function ensureNamespace() {
+    window.HEARTH = window.HEARTH || {};
+    window.HEARTH.JEEVES = window.HEARTH.JEEVES || {};
   }
 
-  function sanitize(text, context) {
-    var expr = getExpression();
-    var clean = String(text || "");
+  function resolveElements() {
+    els.root =
+      document.querySelector("[data-jeeves-root]") ||
+      document.querySelector("#jeevesRoot") ||
+      document.querySelector("#hearthJeeves") ||
+      document.querySelector(".jeeves-root") ||
+      document.querySelector(".hearth-jeeves") ||
+      createRoot();
 
-    if (expr && typeof expr.sanitizePublicText === "function") {
-      return expr.sanitizePublicText(clean, context || createContext());
-    }
+    els.transcript =
+      els.root.querySelector("[data-jeeves-transcript]") ||
+      els.root.querySelector("[data-jeeves-log]") ||
+      els.root.querySelector(".jeeves-transcript") ||
+      els.root.querySelector(".jeeves-log") ||
+      createSection("jeeves-transcript", "data-jeeves-transcript");
 
-    clean = clean.replace(/\bthe world side\b/gi, "Mirrorland");
-    clean = clean.replace(/\bworld side\b/gi, "Mirrorland");
-    clean = clean.replace(/\bworld gate\b/gi, "South Gate");
-    clean = clean.replace(/\bCharacter Mirror\b/g, "Character Archetype Mirror");
-    clean = clean.replace(/\bcharacter mirror\b/g, "Character Archetype Mirror");
-    clean = clean.replace(/\bwhich character am I most like\b/gi, "which Character Archetype do I follow under pressure");
-    clean = clean.replace(/\bwhich character fits my pressure\b/gi, "which Character Archetype do I follow under pressure");
-    clean = clean.replace(/\bpressure pattern\b/gi, "behavior under pressure");
-    clean = clean.replace(/\bthe Mirrorland\b/gi, "Mirrorland");
-    clean = clean.replace(/\bIntroduce me to the human source\b/g, "Meet the creator behind all of this");
-    clean = clean.replace(/\bhuman source\b/gi, "creator behind the estate");
-    clean = clean.replace(/\s{2,}/g, " ");
+    els.optionsPanel =
+      els.root.querySelector("[data-jeeves-options]") ||
+      els.root.querySelector("[data-jeeves-prompts]") ||
+      els.root.querySelector(".jeeves-options") ||
+      createSection("jeeves-options", "data-jeeves-options");
 
-    return clean.trim();
+    els.handoffPanel =
+      els.root.querySelector("[data-jeeves-handoffs]") ||
+      els.root.querySelector(".jeeves-handoffs") ||
+      createSection("jeeves-handoffs", "data-jeeves-handoffs");
+
+    els.status =
+      els.root.querySelector("[data-jeeves-status]") ||
+      els.root.querySelector(".jeeves-status") ||
+      createSection("jeeves-status", "data-jeeves-status");
+
+    els.input =
+      els.root.querySelector("[data-jeeves-input]") ||
+      els.root.querySelector("textarea") ||
+      els.root.querySelector("input[type='text']");
+
+    els.send =
+      els.root.querySelector("[data-jeeves-send]") ||
+      els.root.querySelector(".jeeves-send") ||
+      els.root.querySelector("button[type='submit']");
   }
 
-  function clone(value) {
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return value;
-    }
+  function createRoot() {
+    var root = document.createElement("section");
+    root.className = "hearth-jeeves";
+    root.setAttribute("data-jeeves-root", "");
+    document.body.appendChild(root);
+    return root;
   }
 
-  function keysOf(map) {
-    if (!map) return [];
-    return Object.keys(map).filter(function keepKey(key) {
-      return !!key;
-    });
+  function createSection(className, dataName) {
+    var section = document.createElement("section");
+    section.className = className;
+    section.setAttribute(dataName, "");
+    els.root.appendChild(section);
+    return section;
   }
 
-  function byId(id) {
-    return document.getElementById(id);
-  }
-
-  function qs(selector, root) {
-    return (root || document).querySelector(selector);
-  }
-
-  function ready(fn) {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", fn, { once: true });
-    } else {
-      fn();
-    }
-  }
-
-  function ensureDom() {
-    els.root = qs("[data-jeeves-root]") || qs(".jeeves-root") || document.body;
+  function stampRoot() {
+    if (!els.root) return;
 
     els.root.setAttribute("data-frontbrain-contract", CONTRACT);
+    els.root.setAttribute("data-frontbrain-previous-contract", PREVIOUS_CONTRACT);
     els.root.setAttribute("data-jeeves-host-page", ACTIVE_HOST_PAGE);
     els.root.setAttribute("data-current-room-context", CURRENT_ROOM_CONTEXT);
     els.root.setAttribute("data-current-room-role", CURRENT_ROOM_ROLE);
     els.root.setAttribute("data-current-room-premise", CURRENT_ROOM_PREMISE);
-    els.root.setAttribute("data-jeeves-live-access", LIVE_PAGE_ACCESS.join(" "));
+    els.root.setAttribute("data-jeeves-live-access", LIVE_PAGE_ACCESS.join(","));
+    els.root.setAttribute("data-jeeves-planned-live-access", PLANNED_LIVE_PAGE_ACCESS.join(","));
     els.root.setAttribute("data-jeeves-estate-knowledge", ESTATE_KNOWLEDGE_MODE);
     els.root.setAttribute("data-route-authority", ROUTE_AUTHORITY);
-
-    els.thread =
-      byId("jeevesThread") ||
-      qs("[data-jeeves-thread]") ||
-      qs(".jeeves-thread");
-
-    if (!els.thread) {
-      els.thread = document.createElement("div");
-      els.thread.id = "jeevesThread";
-      els.thread.className = "jeeves-thread";
-      els.thread.setAttribute("data-jeeves-thread", "true");
-      els.root.appendChild(els.thread);
-    }
-
-    els.thread.setAttribute("data-tap-to-rush", "true");
-
-    els.typing =
-      qs("[data-jeeves-typing]") ||
-      qs(".jeeves-typing");
-
-    if (!els.typing) {
-      els.typing = document.createElement("div");
-      els.typing.className = "jeeves-typing";
-      els.typing.setAttribute("data-jeeves-typing", "false");
-      els.typing.textContent = "The house is listening.";
-      els.root.appendChild(els.typing);
-    }
-
-    els.promptDock =
-      qs(".jeeves-prompt-dock") ||
-      qs("[data-jeeves-prompt-dock]");
-
-    if (!els.promptDock) {
-      els.promptDock = document.createElement("section");
-      els.promptDock.className = "jeeves-prompt-dock";
-      els.promptDock.setAttribute("data-jeeves-prompt-dock", "true");
-      els.root.appendChild(els.promptDock);
-    }
-
-    els.promptGrid =
-      qs(".jeeves-prompt-grid", els.promptDock) ||
-      qs("[data-jeeves-prompt-grid]", els.promptDock);
-
-    if (!els.promptGrid) {
-      els.promptGrid = document.createElement("div");
-      els.promptGrid.className = "jeeves-prompt-grid";
-      els.promptGrid.setAttribute("data-jeeves-prompt-grid", "true");
-      els.promptDock.appendChild(els.promptGrid);
-    }
-
-    els.handoffDock =
-      qs(".jeeves-handoff-dock") ||
-      qs("[data-jeeves-handoff-dock]");
-
-    if (!els.handoffDock) {
-      els.handoffDock = document.createElement("section");
-      els.handoffDock.className = "jeeves-handoff-dock";
-      els.handoffDock.setAttribute("data-handoff-visible", "false");
-      els.handoffDock.setAttribute("data-jeeves-handoff-dock", "true");
-      els.root.appendChild(els.handoffDock);
-    }
-
-    els.handoffGrid =
-      qs(".jeeves-handoff-grid", els.handoffDock) ||
-      qs("[data-jeeves-handoff-grid]", els.handoffDock);
-
-    if (!els.handoffGrid) {
-      els.handoffGrid = document.createElement("div");
-      els.handoffGrid.className = "jeeves-handoff-grid";
-      els.handoffGrid.setAttribute("data-jeeves-handoff-grid", "true");
-      els.handoffDock.appendChild(els.handoffGrid);
-    }
-
-    els.status = qs("[data-jeeves-status]");
-    els.statusText = qs("[data-jeeves-status-text]");
-
-    els.form =
-      qs("[data-jeeves-form]") ||
-      byId("jeevesForm") ||
-      qs(".jeeves-form");
-
-    els.input =
-      qs("[data-jeeves-input]") ||
-      byId("jeevesInput") ||
-      qs(".jeeves-input") ||
-      qs("textarea[name='jeeves']") ||
-      qs("input[name='jeeves']");
-
-    els.send =
-      qs("[data-jeeves-send]") ||
-      byId("jeevesSend") ||
-      qs(".jeeves-send");
-
-    els.messageTemplate = byId("jeevesMessageTemplate");
-    els.optionTemplate = byId("jeevesOptionTemplate");
-    els.routeOptionTemplate = byId("jeevesRouteOptionTemplate");
+    els.root.setAttribute("data-house-listening", state.houseListening ? "true" : "false");
+    els.root.setAttribute("data-room-state", state.currentNode);
+    els.root.setAttribute("data-jeeves-typing", state.isTyping ? "true" : "false");
+    els.root.setAttribute("data-conversation-route-separation", "active");
+    els.root.setAttribute("data-language-separation", "conversation-vs-handoff");
+    els.root.setAttribute("data-api-enrichment", "available");
   }
 
-  function setStatus(text) {
-    var value = sanitize(text || "", createContext());
+  function bindEvents() {
+    els.root.addEventListener("click", function (event) {
+      var optionButton = event.target.closest("[data-jeeves-option]");
+      var routeButton = event.target.closest("[data-jeeves-route-option]");
 
-    if (els.status) {
-      els.status.setAttribute("data-jeeves-status", value || "ready");
-    }
+      if (optionButton) {
+        event.preventDefault();
+        handleConversationButton(optionButton);
+        return;
+      }
 
-    if (els.statusText) {
-      els.statusText.textContent = value || "Ready";
-    }
-  }
+      if (routeButton) {
+        handleRouteHandoff(routeButton, event);
+        return;
+      }
 
-  function setHouseListening(isListening) {
-    state.houseListening = !!isListening;
+      if (state.isTyping && !event.target.closest("button, a, input, textarea, select, [data-jeeves-option], [data-jeeves-route-option]")) {
+        rushReveal();
+      }
+    });
 
-    if (els.root) {
-      els.root.setAttribute("data-house-listening", state.houseListening ? "true" : "false");
-      els.root.setAttribute("data-room-state", state.houseListening ? "listening" : state.isTyping ? "typing" : "ready");
-    }
-
-    if (els.typing && state.houseListening && !state.isTyping) {
-      els.typing.textContent = "The house is listening.";
-      els.typing.setAttribute("data-house-listening", "true");
-    }
-
-    if (state.houseListening) {
-      setStatus("The house is listening.");
-    }
-  }
-
-  function setTyping(isTyping) {
-    state.isTyping = !!isTyping;
-
-    if (els.typing) {
-      els.typing.setAttribute("data-jeeves-typing", state.isTyping ? "true" : "false");
-      els.typing.setAttribute("data-house-listening", state.houseListening ? "true" : "false");
-      els.typing.textContent = state.isTyping ? "Jeeves is typing." : "The house is listening.";
-    }
-
-    if (els.root) {
-      els.root.setAttribute("data-jeeves-typing", state.isTyping ? "true" : "false");
-      els.root.setAttribute("data-house-listening", state.houseListening ? "true" : "false");
-      els.root.setAttribute("data-room-state", state.isTyping ? "typing" : state.houseListening ? "listening" : "ready");
-    }
-
-    if (state.isTyping) {
-      setStatus("Jeeves is typing.");
-    }
-  }
-
-  function clearTypingTimer() {
-    if (state.typingTimer) {
-      global.clearTimeout(state.typingTimer);
-      state.typingTimer = null;
-    }
-  }
-
-  function requestRush() {
-    if (!state.isRendering && !state.isTyping) return false;
-
-    state.rushActive = true;
-    state.rushRequestedAt = Date.now();
-
-    clearTypingTimer();
-
-    if (typeof state.typingResolve === "function") {
-      var resolve = state.typingResolve;
-      state.typingResolve = null;
-      resolve(true);
-    }
-
-    return true;
-  }
-
-  function createContext(extra) {
-    var expr = getExpression();
-    var room = null;
-    var ctx = extra || {};
-
-    if (expr && typeof expr.getCurrentRoom === "function") {
-      room = expr.getCurrentRoom({
-        currentRoomId: state.currentRoomId,
-        currentNode: state.currentNode,
-        target: ctx.target || state.currentNode
+    if (els.send && els.input) {
+      els.send.addEventListener("click", function (event) {
+        event.preventDefault();
+        submitFreeform();
       });
     }
 
-    room = room || {
-      id: state.currentRoomId,
-      canonicalName: state.currentRoomName,
-      coordinateName: state.currentCoordinateName,
-      cardinal: state.currentCardinal,
-      placeType: state.currentPlaceType
-    };
-
-    return {
-      contract: CONTRACT,
-      frontbrainContract: CONTRACT,
-      expressionContract: expr ? expr.contract : "",
-      cssContract: global.__HEARTH_JEEVES_CSS_CONTRACT__ || "",
-      apiContract: state.lastApiContract || "",
-      route: ROUTE,
-
-      activeHostPage: ACTIVE_HOST_PAGE,
-      currentRoomContext: CURRENT_ROOM_CONTEXT,
-      currentRoomRole: CURRENT_ROOM_ROLE,
-      currentRoomPremise: CURRENT_ROOM_PREMISE,
-      estateKnowledgeMode: ESTATE_KNOWLEDGE_MODE,
-      portalLogic: PORTAL_LOGIC,
-      routeAuthority: ROUTE_AUTHORITY,
-      livePageAccess: LIVE_PAGE_ACCESS.slice(),
-      plannedLivePageAccess: PLANNED_LIVE_PAGE_ACCESS.slice(),
-
-      currentNode: state.currentNode,
-      currentRoomId: state.currentRoomId,
-      currentRoomName: room.canonicalName || state.currentRoomName,
-      currentCoordinateName: room.coordinateName || state.currentCoordinateName,
-      currentCardinal: room.cardinal || state.currentCardinal,
-      currentPlaceType: room.placeType || state.currentPlaceType,
-      currentTopic: state.currentTopic,
-
-      target: ctx.target || "",
-      label: ctx.label || "",
-      priorNode: state.priorNode,
-      priorTopic: state.priorTopic,
-      priorTopicName: state.priorTopicName,
-      originNode: state.originNode,
-      originConversation: state.originConversation,
-      originAnchor: state.originAnchor,
-
-      returnStackLength: state.returnStack.length,
-      branchStack: clone(state.branchStack),
-      returnStack: clone(state.returnStack),
-
-      characterOverviewDone: state.characterOverviewDone,
-      hasSeenCharacterOverview: state.characterOverviewDone,
-      characterProfileViews: clone(state.characterProfileViews),
-      characterProfileViewCount: state.characterProfileViewCount,
-      characterRelationshipViews: state.characterRelationshipViews,
-      characterLoopCount: state.characterLoopCount,
-      characterCompletionReady: state.characterCompletionReady,
-      characterCompletionPromptShown: state.characterCompletionPromptShown,
-      characterArchetypeAnswers: clone(state.characterArchetypeAnswers),
-
-      lastBackbrainFrame: clone(state.lastBackbrainFrame),
-      lastFibonacciDepth: state.lastFibonacciDepth,
-      lastFibonacciStage: clone(state.lastFibonacciStage),
-      lastRouteHints: clone(state.lastRouteHints)
-    };
+    if (els.input) {
+      els.input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          submitFreeform();
+        }
+      });
+    }
   }
 
-  function getTargetRoom(target) {
-    var expr = getExpression();
-    var normalized = normalizeTarget(target);
-
-    if (expr && typeof expr.getRoomForTarget === "function") {
-      return expr.getRoomForTarget(normalized);
+  function handleConversationButton(button) {
+    if (state.isTyping) {
+      rushReveal();
+      return;
     }
 
-    return null;
-  }
-
-  function updateRoomFromTarget(target) {
-    var room = getTargetRoom(target);
-
-    if (!room) return;
-
-    state.currentRoomId = room.id || state.currentRoomId;
-    state.currentRoomName = room.canonicalName || room.name || state.currentRoomName;
-    state.currentCoordinateName = room.coordinateName || state.currentCoordinateName;
-    state.currentCardinal = room.cardinal || state.currentCardinal;
-    state.currentPlaceType = room.placeType || state.currentPlaceType;
-  }
-
-  function topicFromTarget(target) {
-    var normalized = normalizeTarget(target);
-
-    if (normalized.indexOf("characterArchetype") === 0 || normalized === "selfLearningPath") return "characterArchetype";
-    if (normalized.indexOf("character") === 0 || normalized === "charactersPath") return "characters";
-    if (normalized.indexOf("scientificLaw") === 0 || normalized === "lawsPath" || normalized === "proofPath") return "proof";
-    if (normalized.indexOf("frontier") === 0 || normalized === "hearthPath" || normalized === "audraliaPath") return "future";
-    if (normalized === "mirrorlandPath" || normalized === "atriumPath" || normalized === "atlasPath" || normalized === "ziontsPath") return "mirrorland";
-    if (normalized === "seanPath" || normalized === "underdogPath" || normalized === "nineSummitsPath") return "source";
-    if (CONTROL_TARGETS[normalized]) return state.currentTopic || "origin";
-    return "orientation";
-  }
-
-  function optionKey(option) {
-    var roomId = option.roomId || state.currentRoomId || "firstFork";
-    var target = normalizeTarget(option.target || "");
-    var label = sanitize(option.label || "", createContext({ target: target }));
-
-    return roomId + "::" + target + "::" + label;
-  }
-
-  function markOptionSelected(option) {
-    var target = normalizeTarget(option.target || "");
-    var roomId = option.roomId || state.currentRoomId || "firstFork";
-    var label = sanitize(option.label || "", createContext({ target: target }));
+    var target = button.getAttribute("data-target") || "";
+    var label = button.textContent || "";
+    var type = button.getAttribute("data-type") || "conversation";
+    var option = {
+      label: label,
+      target: target,
+      type: type,
+      scopeLane: button.getAttribute("data-scope-lane") || "objective",
+      optionKind: button.getAttribute("data-option-kind") || "conversation"
+    };
 
     if (!target) return;
 
-    state.selectedOptionKeys[optionKey(option)] = true;
-    state.selectedTargets[target] = true;
-    state.selectedTargetsByRoom[roomId] = state.selectedTargetsByRoom[roomId] || Object.create(null);
-    state.selectedLabelsByRoom[roomId] = state.selectedLabelsByRoom[roomId] || Object.create(null);
-    state.selectedTargetsByRoom[roomId][target] = true;
-    state.selectedLabelsByRoom[roomId][label] = true;
-  }
+    addVisitorBubble(label);
+    hideInteractivePanels();
 
-  function hasOptionBeenSelected(option) {
-    var target = normalizeTarget(option.target || "");
-    var roomId = option.roomId || state.currentRoomId || "firstFork";
-    var label = sanitize(option.label || "", createContext({ target: target }));
-
-    if (state.selectedOptionKeys[optionKey(option)]) return true;
-    if (CHARACTER_TARGETS[target] && state.characterProfileViews[CHARACTER_TARGETS[target]]) return true;
-    if (target === "characterIdentityPath" && state.characterOverviewDone) return true;
-    if (state.selectedTargetsByRoom[roomId] && state.selectedTargetsByRoom[roomId][target]) return true;
-    if (state.selectedLabelsByRoom[roomId] && state.selectedLabelsByRoom[roomId][label]) return true;
-
-    return false;
-  }
-
-  function isRepeatableOption(option) {
-    var target = normalizeTarget(option.target || "");
-
-    if (!target) return true;
-    if (REPEATABLE_TARGETS[target]) return true;
-    if (CONTROL_TARGETS[target]) return true;
-    if (option.type === "control") return true;
-
-    return false;
-  }
-
-  function shouldDisableOption(option) {
-    return hasOptionBeenSelected(option) && !isRepeatableOption(option);
-  }
-
-  function inferOptionKind(option) {
-    var target = normalizeTarget(option && option.target || "");
-    var type = option && option.type || "";
-
-    if (type === "control" || CONTROL_TARGETS[target]) return "return";
-    if (CHARACTER_TARGETS[target] || target === "charactersPath" || target === "characterIdentityPath" || target === "characterRelationshipsPath") return "character";
-    if (target.indexOf("characterArchetype") === 0 || target === "selfLearningPath") return "character";
-    if (target.indexOf("scientificLaw") === 0 || target === "lawsPath" || target === "proofPath" || target === "gaugesPath" || target === "diagnosticPath") return "proof";
-    if (target === "mirrorlandPath" || target === "atriumPath" || target === "atlasPath" || target === "ziontsPath") return "mirror";
-    if (target.indexOf("frontier") === 0 || target.indexOf("hearth") === 0 || target.indexOf("audralia") === 0) return "future";
-    if (target === "seanPath") return "source";
-    if (target === "underdogPath") return "underdog";
-    if (target === "nineSummitsPath" || target === "bookPath") return "summit";
-    if (target === "compassPath" || target === "siteGuidePath" || target === "websitePath") return "room";
-    if (option && option.route) return "route";
-
-    return "conversation";
-  }
-
-  function clearNodeChildren(node) {
-    if (!node) return;
-
-    while (node.firstChild) {
-      node.removeChild(node.firstChild);
-    }
-  }
-
-  function hideInteractiveDocks() {
-    if (els.promptDock) {
-      els.promptDock.setAttribute("data-options-visible", "false");
-    }
-
-    if (els.handoffDock) {
-      els.handoffDock.setAttribute("data-handoff-visible", "false");
-    }
-  }
-
-  function appendMessage(origin, text, meta) {
-    var message;
-    var body;
-    var safe = sanitize(text, createContext(meta || {}));
-
-    if (!safe) return null;
-
-    if (els.messageTemplate && els.messageTemplate.content) {
-      message = els.messageTemplate.content.firstElementChild.cloneNode(true);
-      body =
-        qs("[data-jeeves-message-body]", message) ||
-        qs("[data-message-body]", message) ||
-        qs(".jeeves-message-body", message) ||
-        qs(".jeeves-message-text", message) ||
-        message;
-      body.textContent = safe;
-    } else {
-      message = document.createElement("article");
-      message.className = "jeeves-message";
-      body = document.createElement("p");
-      body.className = "jeeves-message-body";
-      body.textContent = safe;
-      message.appendChild(body);
-    }
-
-    message.classList.add("jeeves-message");
-    message.setAttribute("data-message-origin", origin || "jeeves");
-    message.setAttribute("data-jeeves-message", "true");
-
-    if (meta && meta.roomId) {
-      message.setAttribute("data-message-room", meta.roomId);
-    }
-
-    if (meta && meta.coordinateName) {
-      message.setAttribute("data-message-coordinate", meta.coordinateName);
-    }
-
-    els.thread.appendChild(message);
-    els.thread.scrollTop = els.thread.scrollHeight;
-
-    return message;
-  }
-
-  function appendVisitorMessage(text) {
-    return appendMessage("visitor", text, createContext());
-  }
-
-  function appendSystemMessage(text) {
-    return appendMessage("system", text, createContext());
-  }
-
-  function makeButtonFromTemplate(option) {
-    var node;
-    var labelNode;
-
-    if (els.optionTemplate && els.optionTemplate.content) {
-      node = els.optionTemplate.content.firstElementChild.cloneNode(true);
-    } else {
-      node = document.createElement("button");
-      node.type = "button";
-      node.className = "jeeves-option";
-    }
-
-    node.classList.add("jeeves-option");
-
-    labelNode =
-      qs("[data-jeeves-option-label]", node) ||
-      qs("[data-option-label]", node) ||
-      qs(".jeeves-option-label", node) ||
-      node;
-
-    labelNode.textContent = option.label;
-
-    return node;
-  }
-
-  function preserveCriticalOptionFields(original, shaped) {
-    var source = original || {};
-    var next = shaped || {};
-
-    CRITICAL_OPTION_FIELDS.forEach(function preserveField(field) {
-      if (source[field] !== undefined && next[field] === undefined) {
-        next[field] = source[field];
-      }
-    });
-
-    next.target = normalizeTarget(next.target || source.target || "");
-    next.type = next.type || source.type || "conversation";
-    next.scopeLane = next.scopeLane || source.scopeLane || "objective";
-    next.signal = next.signal || source.signal || "";
-    next.cardinal = next.cardinal || source.cardinal || "";
-    next.coordinateName = next.coordinateName || source.coordinateName || "";
-    next.placeType = next.placeType || source.placeType || "";
-    next.roomId = next.roomId || source.roomId || "";
-    next.optionKind = next.optionKind || inferOptionKind(next);
-    next.label = sanitize(next.label || source.label || "Continue.", createContext({ target: next.target }));
-
-    return next;
-  }
-
-  function shapeOptions(options, meta) {
-    var expr = getExpression();
-    var original = (options || []).map(function cloneOption(option) {
-      var next = clone(option || {});
-      next.target = normalizeTarget(next.target || "");
-      next.optionKind = next.optionKind || inferOptionKind(next);
-      return next;
-    });
-    var shaped;
-    var ctx = createContext(meta || {});
-
-    if (expr && typeof expr.shapeOptions === "function") {
-      shaped = expr.shapeOptions(original, ctx) || [];
-    } else {
-      shaped = original.map(function fallbackOption(option) {
-        return {
-          label: sanitize(option.label || "Continue.", ctx),
-          target: normalizeTarget(option.target || ""),
-          type: option.type || "conversation",
-          scopeLane: option.scopeLane || "objective",
-          signal: option.signal || "",
-          cardinal: option.cardinal || "",
-          coordinateName: option.coordinateName || "",
-          placeType: option.placeType || "",
-          roomId: option.roomId || "",
-          optionKind: option.optionKind || inferOptionKind(option)
-        };
-      });
-    }
-
-    return shaped.map(function mergeShapedOption(option, index) {
-      return preserveCriticalOptionFields(original[index], clone(option || {}));
-    });
-  }
-
-  function renderOptions(options, meta) {
-    var shaped = shapeOptions(options || [], meta || {});
-    var visible = [];
-
-    state.currentOptions = [];
-    clearNodeChildren(els.promptGrid);
-
-    shaped.forEach(function eachOption(option) {
-      var normalized = normalizeTarget(option.target || "");
-
-      if (!normalized) return;
-      if (normalized === "characterIdentityPath" && state.characterOverviewDone) return;
-      if (option.label === "Who are the Characters?" && state.characterOverviewDone) return;
-
-      visible.push(option);
-    });
-
-    visible.forEach(function drawOption(option) {
-      var button = makeButtonFromTemplate(option);
-      var target = normalizeTarget(option.target || "");
-      var visited = option.visited !== undefined ? !!option.visited : hasOptionBeenSelected(option);
-      var disabled = option.disabled !== undefined ? !!option.disabled : shouldDisableOption(option);
-      var serial = "jeeves-option-" + (++state.optionSerial);
-      var kind = option.optionKind || inferOptionKind(option);
-
-      option.target = target;
-      option.optionKind = kind;
-      option.__serial = serial;
-      option.__visited = visited;
-      option.__disabled = disabled;
-
-      button.setAttribute("data-jeeves-option", "true");
-      button.setAttribute("data-option-id", serial);
-      button.setAttribute("data-option-target", target);
-      button.setAttribute("data-option-type", option.type || "conversation");
-      button.setAttribute("data-option-kind", kind);
-      button.setAttribute("data-option-signal", option.signal || "");
-      button.setAttribute("data-option-scope-lane", option.scopeLane || "objective");
-      button.setAttribute("data-option-cardinal", option.cardinal || "");
-      button.setAttribute("data-option-coordinate", option.coordinateName || "");
-      button.setAttribute("data-option-place-type", option.placeType || "");
-      button.setAttribute("data-option-room-id", option.roomId || "");
-      button.setAttribute("data-option-visited", visited ? "true" : "false");
-      button.setAttribute("data-option-disabled", disabled ? "true" : "false");
-      button.setAttribute("data-option-active", "false");
-      button.setAttribute("aria-disabled", disabled ? "true" : "false");
-
-      if (disabled) {
-        button.disabled = true;
-        button.setAttribute("tabindex", "-1");
-        button.title = "Already visited";
-      } else {
-        button.addEventListener("click", function onOptionClick(event) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (state.isRendering || state.isTyping) {
-            requestRush();
-            return;
-          }
-
-          button.setAttribute("data-option-active", "true");
-          handleOption(option);
-        });
-      }
-
-      state.currentOptions.push(option);
-      els.promptGrid.appendChild(button);
-    });
-
-    els.promptDock.setAttribute("data-options-visible", visible.length ? "true" : "false");
-
-    return visible;
-  }
-
-  function resolveRouteHref(routeId) {
-    var route = String(routeId || "").trim();
-
-    if (state.lastRouteHints && state.lastRouteHints[route]) {
-      return state.lastRouteHints[route];
-    }
-
-    return ROUTE_HREFS[route] || "#";
-  }
-
-  function makeRouteButton(routeId, label) {
-    var route = String(routeId || "").trim();
-    var href = resolveRouteHref(route);
-    var expr = getExpression();
-    var safeLabel = label || route;
-    var link;
-
-    if (expr && typeof expr.shapeRouteLabel === "function") {
-      safeLabel = expr.shapeRouteLabel(route, safeLabel);
-    }
-
-    if (els.routeOptionTemplate && els.routeOptionTemplate.content) {
-      link = els.routeOptionTemplate.content.firstElementChild.cloneNode(true);
-      var labelNode =
-        qs("[data-jeeves-route-label]", link) ||
-        qs("[data-route-label]", link) ||
-        qs(".jeeves-route-label", link) ||
-        link;
-      labelNode.textContent = sanitize(safeLabel, createContext());
-    } else {
-      link = document.createElement("a");
-      link.className = "jeeves-route-option";
-      link.textContent = sanitize(safeLabel, createContext());
-    }
-
-    link.setAttribute("href", href);
-    link.setAttribute("data-route-id", route);
-    link.setAttribute("data-jeeves-route-option", "true");
-    link.setAttribute("data-option-kind", "route");
-
-    return link;
-  }
-
-  function renderHandoffs(handoffs, labels) {
-    var list = (handoffs || []).filter(Boolean);
-
-    state.currentHandoffs = list.slice();
-    clearNodeChildren(els.handoffGrid);
-
-    if (!list.length) {
-      els.handoffDock.setAttribute("data-handoff-visible", "false");
+    if (isControlTarget(target) || type === "control") {
+      runControlTarget(target, option);
       return;
     }
 
-    list.forEach(function eachRoute(routeId) {
-      els.handoffGrid.appendChild(makeRouteButton(routeId, labels && labels[routeId]));
-    });
-
-    els.handoffDock.setAttribute("data-handoff-visible", "true");
+    runEnrichedConversation(option);
   }
 
-  function applyExpression(node, meta) {
-    var expr = getExpression();
-    var next = clone(node || {});
-    var originalOptions = clone(next.options || []);
-    var ctx = createContext(meta || {});
-
-    if (expr && typeof expr.applyToNode === "function") {
-      next = expr.applyToNode(next, ctx) || next;
-      if (next.options && originalOptions && originalOptions.length) {
-        next.options = (next.options || []).map(function mergeNodeOptions(option, index) {
-          return preserveCriticalOptionFields(originalOptions[index], clone(option || {}));
-        });
-      }
-    } else {
-      next.beats = (next.beats || []).map(function cleanBeat(beat) {
-        return sanitize(beat, ctx);
-      });
-      next.options = shapeOptions(next.options || [], ctx);
-    }
-
-    return next;
-  }
-
-  function buildOriginNode() {
-    var expr = getExpression();
-    var origin;
-
-    if (expr && typeof expr.makeOriginIntro === "function") {
-      origin = expr.makeOriginIntro(createContext({ target: "intro" }));
-      return {
-        id: "intro",
-        roomId: "firstFork",
-        topic: "origin",
-        beats: origin.beats,
-        options: origin.options,
-        handoffs: [],
-        markStable: true
-      };
-    }
-
-    return {
-      id: "intro",
-      roomId: "firstFork",
-      topic: "origin",
-      beats: [
-        "Welcome. I’m Jeeves.",
-        "I’m currently stationed in Hearth Mission Control — the window within the window.",
-        "Mirrorland opens the future-facing field. Hearth gives us the inner control view, where we can observe, coordinate, and route unknown future potential through the estate’s portal logic.",
-        "I know the estate by its blueprint. I do not pretend to be stationed inside every page at once. For now, this is my live room."
-      ],
-      options: [
-        { label: "Show me the blueprint.", target: "siteGuidePath", optionKind: "room" },
-        { label: "Start with the proof side.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Meet the creator behind all of this.", target: "seanPath", optionKind: "source" },
-        { label: "Help me choose where to begin.", target: "cleanDoor", type: "control", optionKind: "return" }
-      ],
-      handoffs: [],
-      markStable: true
-    };
-  }
-
-  function buildOrientationNode() {
-    return {
-      id: "compassPath",
-      roomId: "compassDesk",
-      topic: "orientation",
-      beats: [
-        "The Compass is the estate’s orientation room.",
-        "It belongs north because this is where the visitor learns how the estate is organized before choosing a deeper road.",
-        "From Hearth Mission Control, I can point toward the proof side, the future-facing rooms, Mirrorland, or the creator path without confusing the map for the whole estate."
-      ],
-      options: [
-        { label: "Show me how the rooms relate.", target: "siteGuidePath", optionKind: "room" },
-        { label: "Start with the proof side.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Show me the future-facing rooms.", target: "frontierPath", optionKind: "future" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Meet the creator behind all of this.", target: "seanPath", optionKind: "source" },
-        { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["compass"],
-      markStable: true
-    };
-  }
-
-  function buildSiteGuideNode() {
-    return {
-      id: "siteGuidePath",
-      roomId: "guideDesk",
-      topic: "orientation",
-      beats: [
-        "The Guide Desk is the estate’s map hall.",
-        "It does not only list rooms. It explains why certain rooms sit close together.",
-        "Proof rooms gather on the western side. Future systems gather on the eastern side. Mirrorland, Characters, Audralia, and ZIONTS gather toward the southern world-window. Hearth Mission Control coordinates the inner view from this live chamber."
-      ],
-      options: [
-        { label: "Show me the proof side of the estate.", target: "lawsPath", optionKind: "proof" },
-        { label: "Show me the future-facing rooms.", target: "frontierPath", optionKind: "future" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["siteGuide"],
-      markStable: true
-    };
-  }
-
-  function buildScientificLawNode(target) {
-    var id = normalizeTarget(target || "scientificLawPath");
-
-    if (id === "scientificLawTheoryPath") {
-      return simpleSubNode(id, "scientificLaw", "proof", [
-        "Theory is the room where a claim becomes organized enough to test.",
-        "It is not proof by itself. It is the shape of the question before evidence enters."
-      ], [
-        { label: "Tell me about Evidence.", target: "scientificLawEvidencePath", optionKind: "proof" },
-        { label: "Tell me about Measure.", target: "scientificLawMeasurePath", optionKind: "proof" },
-        { label: "Tell me about Limits.", target: "scientificLawLimitsPath", optionKind: "proof" },
-        { label: "Return to Scientific Law.", target: "scientificLawPath", optionKind: "proof" }
-      ]);
-    }
-
-    if (id === "scientificLawEvidencePath") {
-      return simpleSubNode(id, "scientificLaw", "proof", [
-        "Evidence is the room where the claim meets something outside the claim.",
-        "A claim cannot become scientific only by sounding technical. It needs contact with observable reality."
-      ], [
-        { label: "Tell me about Theory.", target: "scientificLawTheoryPath", optionKind: "proof" },
-        { label: "Tell me about Measure.", target: "scientificLawMeasurePath", optionKind: "proof" },
-        { label: "Tell me about Limits.", target: "scientificLawLimitsPath", optionKind: "proof" },
-        { label: "Return to Scientific Law.", target: "scientificLawPath", optionKind: "proof" }
-      ]);
-    }
-
-    if (id === "scientificLawMeasurePath") {
-      return simpleSubNode(id, "scientificLaw", "proof", [
-        "Measure is where the claim becomes accountable.",
-        "If nothing can be measured, compared, calibrated, or checked, then the claim may still be interesting, but it is not yet standing in the proof chamber."
-      ], [
-        { label: "Tell me about Theory.", target: "scientificLawTheoryPath", optionKind: "proof" },
-        { label: "Tell me about Evidence.", target: "scientificLawEvidencePath", optionKind: "proof" },
-        { label: "Tell me about Limits.", target: "scientificLawLimitsPath", optionKind: "proof" },
-        { label: "Return to Scientific Law.", target: "scientificLawPath", optionKind: "proof" }
-      ]);
-    }
-
-    if (id === "scientificLawLimitsPath") {
-      return simpleSubNode(id, "scientificLaw", "proof", [
-        "Limits keep the claim honest.",
-        "A serious claim says where it applies, where it may fail, what it does not explain, and what would force it to change."
-      ], [
-        { label: "Tell me about Theory.", target: "scientificLawTheoryPath", optionKind: "proof" },
-        { label: "Tell me about Evidence.", target: "scientificLawEvidencePath", optionKind: "proof" },
-        { label: "Tell me about Measure.", target: "scientificLawMeasurePath", optionKind: "proof" },
-        { label: "Return to Scientific Law.", target: "scientificLawPath", optionKind: "proof" }
-      ]);
-    }
-
-    return {
-      id: "scientificLawPath",
-      roomId: "scientificLaw",
-      topic: "proof",
-      beats: [
-        "Scientific Law is the estate’s Reality Test.",
-        "It belongs to the western proof side because every future-facing claim has to survive definition, evidence, measurement, correction, and limits before it can be trusted.",
-        "That matters inside Hearth Mission Control because a window into future potential still needs proof boundaries. Seeing possibility is not the same as proving it."
-      ],
-      options: [
-        { label: "Tell me about Theory.", target: "scientificLawTheoryPath", optionKind: "proof" },
-        { label: "Tell me about Evidence.", target: "scientificLawEvidencePath", optionKind: "proof" },
-        { label: "Tell me about Measure.", target: "scientificLawMeasurePath", optionKind: "proof" },
-        { label: "Tell me about Limits.", target: "scientificLawLimitsPath", optionKind: "proof" },
-        { label: "Show me the status room.", target: "gaugesPath", optionKind: "proof" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["scientificLaw", "laws", "gauges"],
-      markStable: true
-    };
-  }
-
-  function buildFrontierNode(target) {
-    var id = normalizeTarget(target || "frontierPath");
-    var labelMap = {
-      frontierEnergyPath: ["Energy", "Energy tests how a future system can hold, convert, distribute, and protect power without pretending that impossible shortcuts are already solved."],
-      frontierWaterPath: ["Water", "Water tests survival at the body, city, and world level. It belongs near Tarian’s pressure because no future matters if life cannot continue physically."],
-      frontierWastePath: ["Waste", "Waste tests whether hidden cost is being pushed out of view. It belongs near Soren’s pressure because denied damage becomes consequence."],
-      frontierClosedLoopPath: ["Closed Loop", "Closed Loop tests whether a system can reduce loss, reuse what it can, and stop exporting its damage into another room."],
-      frontierInfrastructurePath: ["Infrastructure", "Infrastructure tests whether the future can be carried by roads, buildings, logistics, energy, water, and people at scale."],
-      frontierLatticePath: ["Lattice", "Lattice tests how many small structured parts can become a coherent operating field."],
-      frontierUrbanPath: ["Urban", "Urban tests how future systems become livable inside public space, not only inside a lab."],
-      frontierManualPath: ["Manual", "Manual tests whether the system can be taught, repeated, operated, and corrected by real people."],
-      frontierShimmerPath: ["Shimmer", "Shimmer tests visibility, signal, perception, and the way a future appears before everyone understands it."],
-      frontierTrajectoryPath: ["Trajectory", "Trajectory tests direction over time: what happens if this path continues, bends, or fails to correct itself."],
-      frontierVisionPath: ["Vision", "Vision tests what kind of future is being made visible and whether it can survive contact with proof."]
-    };
-
-    if (labelMap[id]) {
-      return simpleSubNode(id, "frontier", "future", [
-        labelMap[id][0] + " is one of Frontier’s future-system rooms.",
-        labelMap[id][1]
-      ], [
-        { label: "Show me the future systems.", target: "frontierSystemsPath", optionKind: "future" },
-        { label: "Show why Frontier needs proof.", target: "frontierLawPath", optionKind: "proof" },
-        { label: "Show who carries Frontier pressure.", target: "frontierCharactersPath", optionKind: "character" },
-        { label: "Return to Frontier.", target: "frontierPath", optionKind: "future" }
-      ], ["frontier"]);
-    }
-
-    if (id === "frontierSystemsPath") {
-      return {
-        id: id,
-        roomId: "frontier",
-        topic: "future",
-        beats: [
-          "Frontier’s systems are the future-facing test rooms.",
-          "Energy, Water, Waste, Closed Loop, Infrastructure, Lattice, Urban, Manual, Shimmer, Trajectory, and Vision are not decorations. They are the practical questions a future world would have to answer."
-        ],
-        options: [
-          { label: "Tell me about Energy.", target: "frontierEnergyPath", optionKind: "future" },
-          { label: "Tell me about Water.", target: "frontierWaterPath", optionKind: "future" },
-          { label: "Tell me about Waste.", target: "frontierWastePath", optionKind: "future" },
-          { label: "Tell me about Closed Loop.", target: "frontierClosedLoopPath", optionKind: "future" },
-          { label: "Tell me about Infrastructure.", target: "frontierInfrastructurePath", optionKind: "future" },
-          { label: "Tell me about Lattice.", target: "frontierLatticePath", optionKind: "future" },
-          { label: "Tell me about Urban.", target: "frontierUrbanPath", optionKind: "future" },
-          { label: "Tell me about Manual.", target: "frontierManualPath", optionKind: "future" },
-          { label: "Tell me about Shimmer.", target: "frontierShimmerPath", optionKind: "future" },
-          { label: "Tell me about Trajectory.", target: "frontierTrajectoryPath", optionKind: "future" },
-          { label: "Tell me about Vision.", target: "frontierVisionPath", optionKind: "future" }
-        ],
-        handoffs: ["frontier"],
-        markStable: true
-      };
-    }
-
-    if (id === "frontierLawPath") {
-      return simpleSubNode(id, "frontier", "future", [
-        "Frontier sits near the proof rooms because future systems can become dangerous if they are only imagined and never tested.",
-        "Scientific Law keeps Frontier from becoming fantasy without correction."
-      ], [
-        { label: "Show me how claims are tested.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Return to Frontier.", target: "frontierPath", optionKind: "future" }
-      ], ["frontier", "scientificLaw"]);
-    }
-
-    if (id === "frontierCharactersPath") {
-      return simpleSubNode(id, "frontier", "future", [
-        "The Characters carry Frontier pressure because systems become human when someone must survive inside them.",
-        "Dextrion carries repair. Tarian carries water and endurance. Soren carries hidden cost. Alaric carries trajectory and warning. Elara carries signal and visibility."
-      ], [
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-        { label: "Return to Frontier.", target: "frontierPath", optionKind: "future" }
-      ], ["frontier", "characters"]);
-    }
-
-    return {
-      id: "frontierPath",
-      roomId: "frontier",
-      topic: "future",
-      beats: [
-        "Frontier is the estate’s eastern testing yard.",
-        "It belongs to the future-facing side because this is where future systems are tested before they are treated as real.",
-        "From Hearth Mission Control, Frontier is not just a page. It is the test range for the potential seen through the window within the window."
-      ],
-      options: [
-        { label: "Show me the future systems.", target: "frontierSystemsPath", optionKind: "future" },
-        { label: "Show why Frontier needs proof.", target: "frontierLawPath", optionKind: "proof" },
-        { label: "Show who carries Frontier pressure.", target: "frontierCharactersPath", optionKind: "character" },
-        { label: "Show me Hearth Mission Control.", target: "hearthPath", optionKind: "future" },
-        { label: "Show me Audralia.", target: "audraliaPath", optionKind: "future" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["frontier"],
-      markStable: true
-    };
-  }
-
-  function buildMirrorlandNode(target) {
-    var id = normalizeTarget(target || "mirrorlandPath");
-
-    if (id === "atriumPath") {
-      return simpleSubNode(id, "atrium", "mirrorland", [
-        "The Atrium is the southern threshold.",
-        "It exists because Mirrorland should not be entered like a flat page. The visitor crosses into a world-window."
-      ], [
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Show me the Mirrorland map.", target: "atlasPath", optionKind: "mirror" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Return to the First Fork.", target: "returnFork", type: "control", optionKind: "return" }
-      ], ["showroom", "mirrorland"]);
-    }
-
-    if (id === "atlasPath") {
-      return simpleSubNode(id, "atlasStudy", "mirrorland", [
-        "The Atlas Study is the map hall for Mirrorland.",
-        "It sits near Audralia and ZIONTS because the future window contains both possibility and consequence."
-      ], [
-        { label: "Show me Audralia.", target: "audraliaPath", optionKind: "future" },
-        { label: "Show me the consequence road.", target: "ziontsPath", optionKind: "mirror" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" }
-      ], ["mirrorland", "audralia"]);
-    }
-
-    if (id === "ziontsPath") {
-      return simpleSubNode(id, "zionts", "mirrorland", [
-        "ZIONTS is the consequence road.",
-        "It belongs southwest because consequence stays close to Mirrorland but carries warning, hidden cost, and the price of ignored damage."
-      ], [
-        { label: "Show me Audralia.", target: "audraliaPath", optionKind: "future" },
-        { label: "Show me how claims are tested.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Return to the Mirrorland map.", target: "atlasPath", optionKind: "mirror" }
-      ], ["mirrorland"]);
-    }
-
-    return {
-      id: "mirrorlandPath",
-      roomId: "mirrorland",
-      topic: "mirrorland",
-      beats: [
-        "Mirrorland is the estate’s larger future-facing window.",
-        "Hearth Mission Control is the window within that window: the inner control view where the future can be observed, routed, and coordinated before it becomes world, system, or consequence.",
-        "The Characters are nearby because they are what make the window feel alive."
-      ],
-      options: [
-        { label: "Take me through the threshold.", target: "atriumPath", optionKind: "mirror" },
-        { label: "Show me the Mirrorland map.", target: "atlasPath", optionKind: "mirror" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Show me Audralia.", target: "audraliaPath", optionKind: "future" },
-        { label: "Show me the consequence road.", target: "ziontsPath", optionKind: "mirror" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["mirrorland"],
-      markStable: true
-    };
-  }
-
-  function buildHearthNode(target) {
-    var id = normalizeTarget(target || "hearthPath");
-
-    if (id === "hearthFacilityPath") {
-      return simpleSubNode(id, "hearth", "future", [
-        "Hearth is Mission Control inside the estate.",
-        "The unknown construct location is reached through the estate’s portal logic. Hearth does not claim to be that entire location; it gives the visitor and Jeeves the control window into it."
-      ], [
-        { label: "Explain Hearth as the window within the window.", target: "hearthConstructPath", optionKind: "future" },
-        { label: "Show why Hearth is near Frontier.", target: "hearthFrontierPath", optionKind: "future" },
-        { label: "Show why Hearth must answer to proof.", target: "hearthLawPath", optionKind: "proof" },
-        { label: "Return to Hearth Mission Control.", target: "hearthPath", optionKind: "future" }
-      ], ["hearth"]);
-    }
-
-    if (id === "hearthConstructPath") {
-      return simpleSubNode(id, "hearth", "future", [
-        "Hearth is the window within the window.",
-        "Mirrorland reveals the future-facing field. Hearth gives the inner control view, where unknown future potential can be watched, coordinated, and routed before it becomes world, system, or consequence."
-      ], [
-        { label: "Show why Hearth is near Frontier.", target: "hearthFrontierPath", optionKind: "future" },
-        { label: "Show why Hearth must answer to proof.", target: "hearthLawPath", optionKind: "proof" },
-        { label: "Return to Hearth Mission Control.", target: "hearthPath", optionKind: "future" }
-      ], ["hearth"]);
-    }
-
-    if (id === "hearthFrontierPath") {
-      return simpleSubNode(id, "hearth", "future", [
-        "Hearth sits near Frontier because a control window needs a test range.",
-        "Frontier tests what future worlds need. Hearth coordinates the view of that potential from inside the estate."
-      ], [
-        { label: "Show me Frontier.", target: "frontierPath", optionKind: "future" },
-        { label: "Show me Audralia.", target: "audraliaPath", optionKind: "future" },
-        { label: "Return to Hearth Mission Control.", target: "hearthPath", optionKind: "future" }
-      ], ["hearth", "frontier"]);
-    }
-
-    if (id === "hearthLawPath") {
-      return simpleSubNode(id, "hearth", "future", [
-        "Hearth must sit within reach of the proof rooms.",
-        "A window into unknown future potential can reveal possibility, but it still needs definition, measurement, and limits before the estate treats it as trustworthy."
-      ], [
-        { label: "Show me how claims are tested.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Show me the status room.", target: "gaugesPath", optionKind: "proof" },
-        { label: "Return to Hearth Mission Control.", target: "hearthPath", optionKind: "future" }
-      ], ["hearth", "scientificLaw"]);
-    }
-
-    return {
-      id: "hearthPath",
-      roomId: "hearth",
-      topic: "future",
-      beats: [
-        "Hearth is Mission Control.",
-        "It is the window within the window: the inner estate control view into unknown future potential.",
-        "From here, Jeeves can help observe, coordinate, and route what the future may become without pretending to be mounted in every room at once."
-      ],
-      options: [
-        { label: "Explain Hearth as Mission Control.", target: "hearthFacilityPath", optionKind: "future" },
-        { label: "Explain Hearth as the window within the window.", target: "hearthConstructPath", optionKind: "future" },
-        { label: "Show why Hearth is near Frontier.", target: "hearthFrontierPath", optionKind: "future" },
-        { label: "Show why Hearth must answer to proof.", target: "hearthLawPath", optionKind: "proof" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["hearth"],
-      markStable: true
-    };
-  }
-
-  function buildAudraliaNode(target) {
-    var id = normalizeTarget(target || "audraliaPath");
-
-    if (id === "audraliaWorldroomPath") {
-      return simpleSubNode(id, "audraliaWorldroom", "future", [
-        "The Audralia Worldroom is where the future world becomes visible enough to inspect.",
-        "It sits close to Hearth Mission Control because seeing a possible world and coordinating its state belong together."
-      ], [
-        { label: "Show me how Audralia becomes readable.", target: "controlCockpitPath", optionKind: "future" },
-        { label: "Show me Hearth Mission Control.", target: "hearthPath", optionKind: "future" },
-        { label: "Return to Audralia.", target: "audraliaPath", optionKind: "future" }
-      ], ["audralia"]);
-    }
-
-    if (id === "controlCockpitPath") {
-      return simpleSubNode(id, "controlCockpit", "future", [
-        "The Control Deck is where a future world becomes readable.",
-        "A surface is not enough. The estate needs state, motion, controls, and proof of what the visitor is seeing."
-      ], [
-        { label: "Show me Audralia’s visible worldroom.", target: "audraliaWorldroomPath", optionKind: "future" },
-        { label: "Show me the status room.", target: "gaugesPath", optionKind: "proof" },
-        { label: "Return to Audralia.", target: "audraliaPath", optionKind: "future" }
-      ], ["audralia", "gauges"]);
-    }
-
-    return {
-      id: "audraliaPath",
-      roomId: "audralia",
-      topic: "future",
-      beats: [
-        "Audralia is the future world of constructive possibility.",
-        "It belongs southeast because possibility has to move out of pure idea and become terrain.",
-        "From Hearth Mission Control, Audralia reads as potential terrain inside the larger future-facing window."
-      ],
-      options: [
-        { label: "Show me Audralia’s visible worldroom.", target: "audraliaWorldroomPath", optionKind: "future" },
-        { label: "Show me how Audralia becomes readable.", target: "controlCockpitPath", optionKind: "future" },
-        { label: "Show me Hearth Mission Control.", target: "hearthPath", optionKind: "future" },
-        { label: "Show me Frontier.", target: "frontierPath", optionKind: "future" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" }
-      ],
-      handoffs: ["audralia"],
-      markStable: true
-    };
-  }
-
-  function buildSourceNode(target) {
-    var id = normalizeTarget(target || "seanPath");
-
-    if (id === "underdogPath") {
-      return simpleSubNode(id, "thisUnderdog", "source", [
-        "This Underdog is the inner lane.",
-        "It is not Sean alone. It is the pressure-carrier inside the visitor before pressure becomes language, direction, or use."
-      ], [
-        { label: "Meet the creator behind all of this.", target: "seanPath", optionKind: "source" },
-        { label: "Show me the value road.", target: "nineSummitsPath", optionKind: "summit" },
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ], ["aboutUnderdog"]);
-    }
-
-    if (id === "nineSummitsPath" || id === "bookPath") {
-      return simpleSubNode(id, "nineSummits", "source", [
-        "Nine Summits is the value road.",
-        "It runs between personal depth and human source because values turn inner pressure back into relationship, listening, laughter, love, and responsibility."
-      ], [
-        { label: "Meet the creator behind all of this.", target: "seanPath", optionKind: "source" },
-        { label: "Show me This Underdog.", target: "underdogPath", optionKind: "underdog" },
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ], ["book", "nineSummits"]);
-    }
-
-    return {
-      id: "seanPath",
-      roomId: "meetSean",
-      topic: "source",
-      beats: [
-        "Meet Sean is the source hall.",
-        "It belongs north because the human origin, motive, and voice behind the estate need to be visible before the visitor mistakes the estate for only a map of pages.",
-        "The rooms, laws, worlds, characters, and products all trace back to a human pressure: how to turn experience into usable structure."
-      ],
-      options: [
-        { label: "Show me This Underdog.", target: "underdogPath", optionKind: "underdog" },
-        { label: "Show me the value road.", target: "nineSummitsPath", optionKind: "summit" },
-        { label: "Show me what can be used or carried.", target: "productsPath", optionKind: "source" },
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["meetSean", "aboutUnderdog", "book"],
-      markStable: true
-    };
-  }
-
-  function buildProductsNode() {
-    return {
-      id: "productsPath",
-      roomId: "productGallery",
-      topic: "source",
-      beats: [
-        "The Product Gallery is where value becomes usable.",
-        "It sits northeast because source and practical use meet here: something can be read, carried, given, returned to, or placed in public view."
-      ],
-      options: [
-        { label: "Meet the creator behind all of this.", target: "seanPath", optionKind: "source" },
-        { label: "Show me the value road.", target: "nineSummitsPath", optionKind: "summit" },
-        { label: "Show me how the rooms relate.", target: "siteGuidePath", optionKind: "room" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["products"],
-      markStable: true
-    };
-  }
-
-  function buildCharactersNode(target) {
-    var id = normalizeTarget(target || "charactersPath");
-    var expr = getExpression();
-    var node;
-
-    if (id === "characterRelationshipsPath") {
-      return {
-        id: id,
-        roomId: "characters",
-        topic: "characters",
-        beats: [
-          "The Characters relate by pressure, not by decoration.",
-          "Auren protects. Dextrion repairs. Alaric warns. Tarian endures. Elara signals. Soren keeps boundaries. Jeeves sequences. The Remote Team distributes response.",
-          "They sit close to Mirrorland because their pressure is what turns the window into encounter."
-        ],
-        options: characterFollowupOptions(true),
-        handoffs: ["characters", "mirrorland"],
-        markStable: true,
-        markCharacterRelationshipViewedAfterDisplay: true,
-        maybeCharacterCompletionCue: true
-      };
-    }
-
-    if (id === "characterTensionsPath" || id === "characterMotivesPath" || id === "characterStoryPressurePath") {
-      return {
-        id: id,
-        roomId: "characters",
-        topic: "characters",
-        beats: [
-          "The Characters matter because each one carries a different behavior under pressure.",
-          "They are not just names on the estate. They are the human cost of the world logic becoming personal."
-        ],
-        options: characterFollowupOptions(true),
-        handoffs: ["characters"],
-        markStable: true,
-        maybeCharacterCompletionCue: true
-      };
-    }
-
-    if (id === "characterFirstPath") {
-      return {
-        id: id,
-        roomId: "characters",
-        topic: "characters",
-        beats: [
-          "If you want the safest first meeting, begin with Auren Vale because he explains sanctuary.",
-          "If you want the crossing that started the pressure, begin with Dextrion.",
-          "If you want the future-warning side, begin with Alaric or Elara."
-        ],
-        options: characterRosterOptions(),
-        handoffs: ["characters"],
-        markStable: true
-      };
-    }
-
-    if (id === "characterIdentityPath" || id === "charactersPath") {
-      if (expr && typeof expr.makeCharacterOverview === "function") {
-        node = expr.makeCharacterOverview(createContext({
-          target: id,
-          characterOverviewDone: state.characterOverviewDone,
-          hasSeenCharacterOverview: state.characterOverviewDone
-        }));
-      }
-
-      if (!node) {
-        node = {
-          beats: [
-            state.characterOverviewDone ? "Now that you know who the Characters are, choose one to meet." : "The Characters are where Mirrorland becomes personal.",
-            state.characterOverviewDone ? "We can move into an individual profile or cross into the Character Archetype Mirror." : "They are pressure carriers: protection, repair, warning, endurance, signal, boundary, guided entry, and distributed response."
-          ],
-          options: characterRosterOptions()
-        };
-      }
-
-      return {
-        id: id,
-        roomId: "characters",
-        topic: "characters",
-        beats: node.beats,
-        options: node.options && node.options.length ? node.options : characterRosterOptions(),
-        handoffs: ["characters", "mirrorland"],
-        markStable: true,
-        markCharacterOverviewDoneAfterDisplay: true
-      };
-    }
-
-    return {
-      id: "charactersPath",
-      roomId: "characters",
-      topic: "characters",
-      beats: [
-        "The Character Lane is open.",
-        "Choose who you want to meet, or cross to the Character Archetype Mirror."
-      ],
-      options: characterRosterOptions(),
-      handoffs: ["characters"],
-      markStable: true
-    };
-  }
-
-  function characterRosterOptions() {
-    return [
-      { label: "Meet Auren Vale.", target: "characterAurenValePath", optionKind: "character" },
-      { label: "Meet Dextrion.", target: "characterDextrionPath", optionKind: "character" },
-      { label: "Meet Alaric.", target: "characterAlaricPath", optionKind: "character" },
-      { label: "Meet Tarian.", target: "characterTarianPath", optionKind: "character" },
-      { label: "Meet Elara.", target: "characterElaraPath", optionKind: "character" },
-      { label: "Meet Soren.", target: "characterSorenPath", optionKind: "character" },
-      { label: "Tell me about Jeeves.", target: "characterJeevesPath", optionKind: "character" },
-      { label: "Meet the Remote Team.", target: "characterRemoteTeamPath", optionKind: "character" },
-      { label: "Show how the Characters relate.", target: "characterRelationshipsPath", optionKind: "character" },
-      { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-      { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" }
-    ];
-  }
-
-  function characterFollowupOptions(includeRoster) {
-    var options = [];
-
-    if (includeRoster) {
-      options.push({ label: "Meet another Character.", target: "charactersPath", optionKind: "character" });
-    }
-
-    options.push(
-      { label: "Show how the Characters relate.", target: "characterRelationshipsPath", optionKind: "character" },
-      { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-      { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-      { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-    );
-
-    return options;
-  }
-
-  function buildCharacterProfileNode(target) {
-    var normalized = normalizeTarget(target);
-    var characterId = CHARACTER_TARGETS[normalized];
-    var expr = getExpression();
-    var node;
-
-    if (!characterId) return buildCharactersNode("charactersPath");
-
-    if (expr && typeof expr.makeCharacterProfile === "function") {
-      node = expr.makeCharacterProfile(characterId, createContext({ target: normalized }));
-    }
-
-    if (!node) {
-      node = {
-        beats: [
-          CHARACTER_NAMES[characterId] + " is one of the Mirrorland Characters.",
-          "This profile shows what pressure that character carries and why the character belongs near Mirrorland."
-        ],
-        options: characterFollowupOptions(true)
-      };
-    }
-
-    return {
-      id: normalized,
-      roomId: "characterDetails",
-      topic: "characters",
-      beats: node.beats,
-      options: node.options && node.options.length ? node.options : characterFollowupOptions(true),
-      handoffs: ["characters", "mirrorland"],
-      markStable: true,
-      markCharacterProfileViewedAfterDisplay: characterId,
-      maybeCharacterCompletionCue: true
-    };
-  }
-
-  function buildCharacterArchetypeNode(target) {
-    var id = normalizeTarget(target || "characterArchetypeMirrorPath");
-    var expr = getExpression();
-    var node;
-
-    if (id === "selfLearningPath") id = "characterArchetypeMirrorPath";
-
-    if (id === "characterArchetypeQuestionOne") {
-      if (expr && typeof expr.makeCharacterArchetypeQuestion === "function") {
-        node = expr.makeCharacterArchetypeQuestion(1, createContext({ target: id }));
-      }
-
-      return withAnswerOptions({
-        id: id,
-        roomId: "characterArchetypeMirror",
-        topic: "characterArchetype",
-        beats: node && node.beats || [
-          "First question.",
-          "When pressure rises, what do you usually notice first?"
-        ],
-        options: node && node.options || [
-          { label: "Who needs protection?", target: "characterArchetypeQuestionTwo", value: "protect", optionKind: "character" },
-          { label: "What is broken and needs repair?", target: "characterArchetypeQuestionTwo", value: "repair", optionKind: "character" },
-          { label: "Where danger is forming early.", target: "characterArchetypeQuestionTwo", value: "warn", optionKind: "character" },
-          { label: "What the body or situation can actually endure.", target: "characterArchetypeQuestionTwo", value: "endure", optionKind: "character" },
-          { label: "What truth or hidden cost is being avoided.", target: "characterArchetypeQuestionTwo", value: "boundary", optionKind: "character" }
-        ],
-        handoffs: ["coherenceDiagnostic"],
-        markStable: true
-      }, ["protect", "repair", "warn", "endure", "boundary"]);
-    }
-
-    if (id === "characterArchetypeQuestionTwo") {
-      if (expr && typeof expr.makeCharacterArchetypeQuestion === "function") {
-        node = expr.makeCharacterArchetypeQuestion(2, createContext({ target: id }));
-      }
-
-      return withAnswerOptions({
-        id: id,
-        roomId: "characterArchetypeMirror",
-        topic: "characterArchetype",
-        beats: node && node.beats || [
-          "Second question.",
-          "When pressure rises, what do you rely on next?"
-        ],
-        options: node && node.options || [
-          { label: "A clear sequence and controlled timing.", target: "characterArchetypeQuestionThree", value: "sequence", optionKind: "character" },
-          { label: "Visible action or repair.", target: "characterArchetypeQuestionThree", value: "repair", optionKind: "character" },
-          { label: "Stability and continuity.", target: "characterArchetypeQuestionThree", value: "endure", optionKind: "character" },
-          { label: "Evidence, contradiction, and proof.", target: "characterArchetypeQuestionThree", value: "boundary", optionKind: "character" },
-          { label: "A signal that gives people hope.", target: "characterArchetypeQuestionThree", value: "signal", optionKind: "character" }
-        ],
-        handoffs: ["coherenceDiagnostic"],
-        markStable: true
-      }, ["sequence", "repair", "endure", "boundary", "signal"]);
-    }
-
-    if (id === "characterArchetypeQuestionThree") {
-      if (expr && typeof expr.makeCharacterArchetypeQuestion === "function") {
-        node = expr.makeCharacterArchetypeQuestion(3, createContext({ target: id }));
-      }
-
-      return withAnswerOptions({
-        id: id,
-        roomId: "characterArchetypeMirror",
-        topic: "characterArchetype",
-        beats: node && node.beats || [
-          "Third question.",
-          "What usually becomes your risk when the pressure gets too high?"
-        ],
-        options: node && node.options || [
-          { label: "I overprotect or hide too much.", target: "characterArchetypeResult", value: "protect", optionKind: "character" },
-          { label: "I try to fix everything too fast.", target: "characterArchetypeResult", value: "repair", optionKind: "character" },
-          { label: "I see danger before people believe me.", target: "characterArchetypeResult", value: "warn", optionKind: "character" },
-          { label: "I keep carrying more than I can sustain.", target: "characterArchetypeResult", value: "endure", optionKind: "character" },
-          { label: "I need the truth named before I can move.", target: "characterArchetypeResult", value: "boundary", optionKind: "character" }
-        ],
-        handoffs: ["coherenceDiagnostic"],
-        markStable: true
-      }, ["protect", "repair", "warn", "endure", "boundary"]);
-    }
-
-    if (id === "characterArchetypeResult") {
-      return buildCharacterArchetypeResultNode();
-    }
-
-    if (expr && typeof expr.makeCharacterArchetypeIntro === "function") {
-      node = expr.makeCharacterArchetypeIntro(createContext({ target: id }));
-    }
-
-    return {
-      id: "characterArchetypeMirrorPath",
-      roomId: "characterArchetypeMirror",
-      topic: "characterArchetype",
-      beats: node && node.beats || [
-        "We can use the Character Archetype Mirror.",
-        "It does not tell you who you are. It looks at how you tend to behave under pressure, then shows which character pattern you are currently following."
-      ],
-      options: node && node.options || [
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeQuestionOne", optionKind: "character" },
-        { label: "Introduce the Characters first.", target: "charactersPath", optionKind: "character" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" },
-        { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["coherenceDiagnostic", "characters"],
-      markStable: true
-    };
-  }
-
-  function withAnswerOptions(node, values) {
-    var next = clone(node);
-    var list = next.options || [];
-
-    next.options = list.map(function addValues(option, index) {
-      var copy = clone(option);
-      if (!copy.value && values[index]) copy.value = values[index];
-      copy.optionKind = copy.optionKind || "character";
-      return copy;
-    });
-
-    return next;
-  }
-
-  function buildCharacterArchetypeResultNode() {
-    var resultKey = calculateCharacterArchetypeResult();
-    var result = CHARACTER_RESULTS[resultKey] || CHARACTER_RESULTS.sequence;
-
-    return {
-      id: "characterArchetypeResult",
-      roomId: "characterArchetypeMirror",
-      topic: "characterArchetype",
-      beats: [
-        "The Character Archetype Mirror is not naming your identity. It is showing the pattern you most often follow under pressure.",
-        result.title + ".",
-        result.line,
-        "You can meet that Character, keep exploring the roster, or enter Mirrorland where these patterns become encounter."
-      ],
-      options: [
-        { label: "Meet " + CHARACTER_NAMES[result.characterId] + ".", target: characterTargetFromId(result.characterId), optionKind: "character" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Restart the Character Archetype Mirror.", target: "characterArchetypeQuestionOne", optionKind: "character" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["coherenceDiagnostic", "characters", "mirrorland"],
-      markStable: true
-    };
-  }
-
-  function characterTargetFromId(characterId) {
-    var found = "charactersPath";
-
-    Object.keys(CHARACTER_TARGETS).forEach(function eachTarget(target) {
-      if (CHARACTER_TARGETS[target] === characterId) found = target;
-    });
-
-    return found;
-  }
-
-  function calculateCharacterArchetypeResult() {
-    var counts = Object.create(null);
-    var answers = state.characterArchetypeAnswers.slice();
-
-    if (!answers.length) return "sequence";
-
-    answers.forEach(function countAnswer(answer) {
-      var key = String(answer || "").trim();
-      if (!key) return;
-      counts[key] = (counts[key] || 0) + 1;
-    });
-
-    return Object.keys(counts).sort(function sortCounts(a, b) {
-      return counts[b] - counts[a];
-    })[0] || "sequence";
-  }
-
-  function peekReturnPoint() {
-    var i;
-
-    for (i = state.returnStack.length - 1; i >= 0; i -= 1) {
-      var point = state.returnStack[i];
-      if (!point) continue;
-      if (point.node === state.currentNode) continue;
-      if (NO_STACK_TARGETS[point.node]) continue;
-      return clone(point);
-    }
-
-    return null;
-  }
-
-  function popReturnPoint() {
-    while (state.returnStack.length) {
-      var point = state.returnStack.pop();
-      if (!point) continue;
-      if (point.node === state.currentNode) continue;
-      if (NO_STACK_TARGETS[point.node]) continue;
-      return point;
-    }
-
-    return null;
-  }
-
-  function buildReturnNode(target, meta) {
-    var id = normalizeTarget(target);
-    var expr = getExpression();
-    var node;
-    var preview = meta && meta.preview;
-    var returnPoint;
-
-    if (id === "priorTopicReturn" || id === "priorTopicReturnPath") {
-      returnPoint = preview ? peekReturnPoint() : popReturnPoint();
-      if (!preview) state.pendingPriorReturn = returnPoint;
-
-      if (!returnPoint) {
-        return {
-          id: id,
-          roomId: state.currentRoomId,
-          topic: state.currentTopic,
-          beats: [
-            "There is no prior topic in this visible thread yet.",
-            "We can return to the First Fork and choose a clean door."
-          ],
-          options: [
-            { label: "Return to the First Fork.", target: "returnFork", type: "control", optionKind: "return" },
-            { label: "Help me choose the next door.", target: "cleanDoor", type: "control", optionKind: "return" }
-          ],
-          handoffs: [],
-          skipStateUpdate: true
-        };
-      }
-
-      if (expr && typeof expr.makeReturnExpression === "function") {
-        node = expr.makeReturnExpression("prior", createContext({
-          target: id,
-          priorNode: returnPoint.node,
-          priorTopic: returnPoint.topic,
-          priorTopicName: returnPoint.label
-        }));
-      }
-
-      return {
-        id: id,
-        roomId: state.currentRoomId,
-        topic: state.currentTopic,
-        beats: node && node.beats || [
-          "We can return to " + (returnPoint.label || "the prior topic") + ".",
-          "Nothing is lost. We are only stepping off this path and returning to the last thread."
-        ],
-        options: [
-          {
-            label: "Return to " + (returnPoint.label || "prior topic") + ".",
-            target: returnPoint.node,
-            type: "control",
-            skipReturnPush: true,
-            restoreRoomId: returnPoint.roomId,
-            optionKind: "return"
-          },
-          { label: "Return to origin conversation.", target: "originReturnPath", type: "control", skipReturnPush: true, optionKind: "return" },
-          { label: "Stay with this room.", target: state.currentNode || "cleanDoor", type: "control", skipReturnPush: true, optionKind: "return" },
-          { label: "Help me choose the next door.", target: "cleanDoor", type: "control", skipReturnPush: true, optionKind: "return" }
-        ],
-        handoffs: [],
-        skipStateUpdate: true,
-        skipReturnPush: true
-      };
-    }
-
-    if (id === "originReturn" || id === "originReturnPath" || id === "returnFork" || id === "restartFork") {
-      if (expr && typeof expr.makeReturnExpression === "function") {
-        node = expr.makeReturnExpression("origin", createContext({ target: id }));
-      }
-
-      return {
-        id: id,
-        roomId: "firstFork",
-        topic: "origin",
-        beats: node && node.beats || [
-          "We are back at the origin conversation.",
-          "This is the First Fork. From here, the estate becomes readable again."
-        ],
-        options: node && node.options || buildOriginNode().options,
-        handoffs: [],
-        skipReturnPush: true,
-        markStable: true
-      };
-    }
-
-    return buildOriginNode();
-  }
-
-  function buildCleanDoorNode() {
-    return {
-      id: "cleanDoor",
-      roomId: state.currentRoomId,
-      topic: state.currentTopic,
-      beats: [
-        "We can choose the next door by meaning rather than by menu.",
-        "If you want source, I’ll take you toward the creator. If you want proof, we should go toward Scientific Law. If you want future systems, Frontier is nearby. If you want encounter, Mirrorland is the right threshold."
-      ],
-      options: [
-        { label: "Meet the creator behind all of this.", target: "seanPath", optionKind: "source" },
-        { label: "Start with the proof side.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Show me the future-facing rooms.", target: "frontierPath", optionKind: "future" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" },
-        { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: [],
-      skipReturnPush: true
-    };
-  }
-
-  function simpleSubNode(id, roomId, topic, beats, options, handoffs) {
-    return {
-      id: id,
-      roomId: roomId,
-      topic: topic,
-      beats: beats,
-      options: options,
-      handoffs: handoffs || [],
-      markStable: true
-    };
-  }
-
-  function buildGaugesNode() {
-    return {
-      id: "gaugesPath",
-      roomId: "theLab",
-      topic: "proof",
-      beats: [
-        "The Lab is the western gauge room.",
-        "It belongs near Scientific Law because proof needs visible status, not only explanation."
-      ],
-      options: [
-        { label: "Show me how claims are tested.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Show me the proof side of the estate.", target: "lawsPath", optionKind: "proof" },
-        { label: "Show me the future-facing rooms.", target: "frontierPath", optionKind: "future" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["gauges", "scientificLaw"],
-      markStable: true
-    };
-  }
-
-  function buildDiagnosticNode() {
-    return {
-      id: "diagnosticPath",
-      roomId: "diagnostic",
-      topic: "proof",
-      beats: [
-        "The Coherence Diagnostic is the western mirror desk.",
-        "It belongs near the proof rooms because self-reflection should stay honest, limited, and useful.",
-        "It sits close to the Character Archetype Mirror because measured self-reflection can become a story pattern under pressure."
-      ],
-      options: [
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-        { label: "Show me how claims are tested.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Introduce the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: ["coherenceDiagnostic"],
-      markStable: true
-    };
-  }
-
-  function getNode(target, meta) {
-    var id = normalizeTarget(target || DEFAULT_START_NODE);
-    var data = meta || {};
-
-    if (id === "intro" || id === "askFirst") return buildOriginNode();
-    if (id === "compassPath" || id === "whereToStart") return buildOrientationNode();
-    if (id === "siteGuidePath") return buildSiteGuideNode();
-
-    if (id === "websitePath") {
-      return simpleSubNode(id, "mainHall", "orientation", [
-        "The public entry is the Center Hall.",
-        "It keeps the estate familiar before the visitor chooses source, proof, future systems, or Mirrorland."
-      ], [
-        { label: "Begin with orientation.", target: "compassPath", optionKind: "room" },
-        { label: "Show me how the rooms relate.", target: "siteGuidePath", optionKind: "room" },
-        { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-      ], ["home"]);
-    }
-
-    if (id === "lawsPath" || id === "proofPath" || id.indexOf("scientificLaw") === 0 || id === "skepticPlain") return buildScientificLawNode(id);
-    if (id.indexOf("frontier") === 0) return buildFrontierNode(id);
-    if (id === "hearthPath" || id.indexOf("hearth") === 0) return buildHearthNode(id);
-    if (id === "audraliaPath" || id === "audraliaWorldroomPath" || id === "controlCockpitPath") return buildAudraliaNode(id);
-    if (id === "mirrorlandPath" || id === "atriumPath" || id === "atlasPath" || id === "ziontsPath" || id === "mirrorMePath") return buildMirrorlandNode(id);
-    if (id === "seanPath" || id === "underdogPath" || id === "nineSummitsPath" || id === "bookPath") return buildSourceNode(id);
-    if (id === "productsPath") return buildProductsNode();
-    if (id === "gaugesPath") return buildGaugesNode();
-    if (id === "diagnosticPath" || id === "futureProfilePath") return buildDiagnosticNode();
-
-    if (id === "charactersPath" || id === "characterIdentityPath" || id === "characterRelationshipsPath" || id === "characterTensionsPath" || id === "characterMotivesPath" || id === "characterStoryPressurePath" || id === "characterFirstPath") {
-      return buildCharactersNode(id, data);
-    }
-
-    if (CHARACTER_TARGETS[id]) return buildCharacterProfileNode(id);
-
-    if (id === "characterArchetypeMirrorPath" || id === "selfLearningPath" || id.indexOf("characterArchetype") === 0) {
-      return buildCharacterArchetypeNode(id);
-    }
-
-    if (id === "priorTopicReturn" || id === "priorTopicReturnPath" || id === "originReturn" || id === "originReturnPath" || id === "returnFork" || id === "restartFork") {
-      return buildReturnNode(id, data);
-    }
-
-    if (id === "cleanDoor" || id === "switchTopics" || id === "sharpQuestion" || id === "recenterNode") return buildCleanDoorNode();
-
-    return simpleSubNode(id, state.currentRoomId, state.currentTopic, [
-      "I can help with that, but this path is not fully mapped in the visible estate yet.",
-      "Let me bring you to a clean door so the conversation does not loop."
-    ], [
-      { label: "Help me choose the next door.", target: "cleanDoor", type: "control", optionKind: "return" },
-      { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" },
-      { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-    ]);
-  }
-
-  function pushReturnPoint(nextTarget, option) {
-    var normalized = normalizeTarget(nextTarget);
-    var current = state.currentNode;
-
-    if (!current || current === normalized) return;
-    if (NO_STACK_TARGETS[normalized]) return;
-    if (option && option.skipReturnPush) return;
-
-    var label = state.currentRoomName || state.currentTopic || current;
-
-    if (state.returnStack.length) {
-      var last = state.returnStack[state.returnStack.length - 1];
-      if (last && last.node === current) return;
-    }
-
-    state.returnStack.push({
-      node: current,
-      roomId: state.currentRoomId,
-      roomName: state.currentRoomName,
-      coordinateName: state.currentCoordinateName,
-      topic: state.currentTopic,
-      label: label
-    });
-
-    if (state.returnStack.length > 12) {
-      state.returnStack.shift();
-    }
-  }
-
-  function updateVisitorForTarget(target, option) {
-    var normalized = normalizeTarget(target);
-    var topic = topicFromTarget(normalized);
-
-    state.visitedNodes[normalized] = true;
-    state.currentTopic = topic;
-
-    state.visitorTrail.push({
-      target: normalized,
-      label: option && option.label || "",
-      roomId: state.currentRoomId,
-      topic: topic,
-      timestamp: Date.now()
-    });
-
-    if (state.visitorTrail.length > 80) {
-      state.visitorTrail.shift();
-    }
-
-    state.roomTrail.push({
-      roomId: state.currentRoomId,
-      roomName: state.currentRoomName,
-      coordinateName: state.currentCoordinateName,
-      target: normalized,
-      timestamp: Date.now()
-    });
-
-    if (state.roomTrail.length > 80) {
-      state.roomTrail.shift();
-    }
-
-    if (topic === "characters" && normalized === "charactersPath" && state.characterOverviewDone) {
-      state.characterLoopCount += 1;
-    }
-  }
-
-  function updateStateAfterDisplay(node, target, option) {
-    var normalized = normalizeTarget(target);
-    var priorNode = state.currentNode;
-    var priorTopic = state.currentTopic;
-    var priorTopicName = state.currentRoomName;
-
-    if (node.skipStateUpdate) return;
-
-    state.priorNode = priorNode;
-    state.priorTopic = priorTopic;
-    state.priorTopicName = priorTopicName;
-
-    state.currentNode = node.id || normalized;
-    state.currentRoomId = node.roomId || state.currentRoomId;
-    updateRoomFromTarget(normalized);
-    state.currentTopic = node.topic || topicFromTarget(normalized);
-
-    if (node.markStable) {
-      state.lastStableNode = state.currentNode;
-    }
-
-    if (node.markCharacterOverviewDoneAfterDisplay) {
-      state.characterOverviewDone = true;
-    }
-
-    if (node.markCharacterProfileViewedAfterDisplay) {
-      var characterId = node.markCharacterProfileViewedAfterDisplay;
-      if (!state.characterProfileViews[characterId]) {
-        state.characterProfileViews[characterId] = 1;
-        state.characterProfileViewCount += 1;
-      } else {
-        state.characterProfileViews[characterId] += 1;
-      }
-    }
-
-    if (node.markCharacterRelationshipViewedAfterDisplay) {
-      state.characterRelationshipViews += 1;
-    }
-
-    if (node.markCharacterCompletionShownAfterDisplay) {
-      state.characterCompletionPromptShown = true;
-    }
-
-    updateVisitorForTarget(normalized, option);
-  }
-
-  function maybeAddCharacterCompletionCue(node) {
-    var expr = getExpression();
-    var cue;
-    var shouldShow =
-      node &&
-      node.maybeCharacterCompletionCue &&
-      !state.characterCompletionPromptShown &&
-      (
-        state.characterCompletionReady ||
-        state.characterProfileViewCount >= 3 ||
-        state.characterProfileViewCount + state.characterRelationshipViews + state.characterLoopCount >= 3
-      );
-
-    if (!shouldShow) return node;
-
-    if (expr && typeof expr.makeCharacterCompletionCue === "function") {
-      cue = expr.makeCharacterCompletionCue(createContext({ target: node.id }));
-    }
-
-    cue = cue || {
-      beats: [
-        "You can keep asking me about them here.",
-        "But if you are ready, Mirrorland is where this changes from explanation into encounter."
-      ],
-      options: [
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Keep asking about the Characters.", target: "charactersPath", optionKind: "character" },
-        { label: "Which Character Archetype do I follow under pressure?", target: "characterArchetypeMirrorPath", optionKind: "character" },
-        { label: "Return to the First Fork.", target: "returnFork", type: "control", optionKind: "return" }
-      ]
-    };
-
-    if (cue.beats && cue.beats.length) {
-      node.beats = (node.beats || []).concat(cue.beats);
-    }
-
-    if (cue.options && cue.options.length) {
-      node.options = cue.options;
-    }
-
-    node.markCharacterCompletionShownAfterDisplay = true;
-    return node;
-  }
-
-  function captureAnswerFromOption(option) {
-    var target = normalizeTarget(option && option.target);
-
-    if (
-      target === "characterArchetypeQuestionTwo" ||
-      target === "characterArchetypeQuestionThree" ||
-      target === "characterArchetypeResult"
-    ) {
-      if (option.value) {
-        state.characterArchetypeAnswers.push(option.value);
-      } else if (option.label) {
-        state.characterArchetypeAnswers.push(inferAnswerValue(option.label));
-      }
-
-      if (state.characterArchetypeAnswers.length > 3) {
-        state.characterArchetypeAnswers = state.characterArchetypeAnswers.slice(-3);
-      }
-    }
-
-    if (target === "characterArchetypeQuestionOne") {
-      state.characterArchetypeAnswers = [];
-    }
-  }
-
-  function inferAnswerValue(label) {
-    var text = String(label || "").toLowerCase();
-
-    if (text.indexOf("protect") !== -1 || text.indexOf("shelter") !== -1 || text.indexOf("hide") !== -1) return "protect";
-    if (text.indexOf("repair") !== -1 || text.indexOf("broken") !== -1 || text.indexOf("fix") !== -1) return "repair";
-    if (text.indexOf("danger") !== -1 || text.indexOf("warning") !== -1 || text.indexOf("believe") !== -1) return "warn";
-    if (text.indexOf("endure") !== -1 || text.indexOf("body") !== -1 || text.indexOf("sustain") !== -1 || text.indexOf("stability") !== -1) return "endure";
-    if (text.indexOf("signal") !== -1 || text.indexOf("hope") !== -1 || text.indexOf("visible") !== -1) return "signal";
-    if (text.indexOf("truth") !== -1 || text.indexOf("hidden") !== -1 || text.indexOf("evidence") !== -1 || text.indexOf("proof") !== -1) return "boundary";
-    if (text.indexOf("sequence") !== -1 || text.indexOf("timing") !== -1 || text.indexOf("controlled") !== -1) return "sequence";
-
-    return "sequence";
-  }
-
-  function delayForBeat(beat, index, total) {
-    if (state.rushActive) return 16;
-
-    var text = String(beat || "");
-    var base = index === 0 ? 220 : 340;
-    var byLength = Math.min(1100, Math.max(220, text.length * 10));
-    var byPosition = total > 1 && index === total - 1 ? 360 : 0;
-
-    return base + byLength + byPosition;
-  }
-
-  function waitBeforeBeat(ms) {
-    clearTypingTimer();
-
-    if (state.rushActive) {
-      return Promise.resolve(true);
-    }
-
-    return new Promise(function wait(resolve) {
-      state.typingResolve = resolve;
-      state.typingTimer = global.setTimeout(function doneWaiting() {
-        state.typingTimer = null;
-        state.typingResolve = null;
-        resolve(false);
-      }, ms);
-    });
-  }
-
-  function playBeats(beats, meta) {
-    var list = (beats || []).filter(Boolean);
-    var index = 0;
-
-    state.beatQueue = list.slice();
-    state.currentBeatIndex = -1;
-    state.rushActive = false;
-
-    return new Promise(function resolveBeats(resolve) {
-      function next() {
-        if (index >= list.length) {
-          state.currentBeatIndex = -1;
-          state.beatQueue = [];
-          resolve();
-          return;
-        }
-
-        state.currentBeatIndex = index;
-
-        waitBeforeBeat(delayForBeat(list[index], index, list.length)).then(function afterBeatDelay() {
-          appendMessage("jeeves", list[index], meta);
-          index += 1;
-          next();
-        });
-      }
-
-      next();
-    });
-  }
-
-  function renderNode(node, target, option) {
-    var prepared = applyExpression(maybeAddCharacterCompletionCue(node), {
-      target: target,
-      label: option && option.label || ""
-    });
-    var roomIdForMessage = prepared.roomId || state.currentRoomId;
-
-    state.isRendering = true;
-    state.rushActive = false;
-
-    hideInteractiveDocks();
-    setHouseListening(false);
-    setTyping(true);
-
-    return playBeats(prepared.beats || [], {
-      target: target,
-      roomId: roomIdForMessage,
-      coordinateName: state.currentCoordinateName
-    }).then(function afterBeats() {
-      updateStateAfterDisplay(prepared, target, option);
-      renderOptions(prepared.options || [], {
-        target: target,
-        label: option && option.label || "",
-        roomId: prepared.roomId || state.currentRoomId
-      });
-      renderHandoffs(prepared.handoffs || [], prepared.handoffLabels || {});
-      state.isRendering = false;
-      state.rushActive = false;
-      setTyping(false);
-      setHouseListening(true);
-    }).catch(function onRenderError(error) {
-      state.isRendering = false;
-      state.rushActive = false;
-      setTyping(false);
-      setHouseListening(true);
-      appendSystemMessage("Jeeves could not open that room cleanly. Returning to the First Fork.");
-      runNode("returnFork", { skipReturnPush: true });
-      if (global.console && console.error) console.error(error);
-    });
-  }
-
-  function runNode(target, option) {
-    var normalized = normalizeTarget(target || DEFAULT_START_NODE);
-
-    if (state.isRendering || state.isTyping) {
-      requestRush();
-      return Promise.resolve(false);
-    }
-
-    captureAnswerFromOption(option || { target: normalized });
-
-    if (option) {
-      markOptionSelected(option);
-    }
-
-    pushReturnPoint(normalized, option);
-
-    if (option && option.restoreRoomId) {
-      state.currentRoomId = option.restoreRoomId;
-    }
-
-    return renderNode(getNode(normalized, option), normalized, option);
-  }
-
-  function handleOption(option) {
-    if (!option || shouldDisableOption(option)) return;
-
-    appendVisitorMessage(option.label);
-    runNode(option.target, option);
-  }
-
-  function classifyVisitorText(text) {
-    var clean = String(text || "").toLowerCase().trim();
-
-    if (!clean) return "";
-    if (clean.indexOf("return to prior") !== -1 || clean.indexOf("last topic") !== -1 || clean.indexOf("previous topic") !== -1) return "priorTopicReturnPath";
-    if (clean.indexOf("return to origin") !== -1 || clean.indexOf("start over") !== -1 || clean.indexOf("first fork") !== -1) return "originReturnPath";
-    if (clean.indexOf("mission control") !== -1 || clean.indexOf("window within the window") !== -1) return "hearthPath";
-    if (clean.indexOf("who are the characters") !== -1 || clean.indexOf("meet the characters") !== -1 || clean === "characters") return "charactersPath";
-    if (clean.indexOf("auren") !== -1) return "characterAurenValePath";
-    if (clean.indexOf("dextrion") !== -1) return "characterDextrionPath";
-    if (clean.indexOf("alaric") !== -1) return "characterAlaricPath";
-    if (clean.indexOf("tarian") !== -1) return "characterTarianPath";
-    if (clean.indexOf("elara") !== -1) return "characterElaraPath";
-    if (clean.indexOf("soren") !== -1) return "characterSorenPath";
-    if (clean.indexOf("remote team") !== -1) return "characterRemoteTeamPath";
-    if (clean.indexOf("which character") !== -1 || clean.indexOf("archetype") !== -1 || clean.indexOf("under pressure") !== -1) return "characterArchetypeMirrorPath";
-    if (clean.indexOf("scientific law") !== -1 || clean.indexOf("proof") !== -1 || clean.indexOf("trustworthy") !== -1 || clean.indexOf("tested") !== -1) return "scientificLawPath";
-    if (clean.indexOf("frontier") !== -1 || clean.indexOf("future system") !== -1) return "frontierPath";
-    if (clean.indexOf("hearth") !== -1) return "hearthPath";
-    if (clean.indexOf("audralia") !== -1) return "audraliaPath";
-    if (clean.indexOf("mirrorland") !== -1 || clean.indexOf("world side") !== -1) return "mirrorlandPath";
-    if (clean.indexOf("sean") !== -1 || clean.indexOf("creator") !== -1 || clean.indexOf("source") !== -1) return "seanPath";
-    if (clean.indexOf("underdog") !== -1) return "underdogPath";
-    if (clean.indexOf("summit") !== -1 || clean.indexOf("love") !== -1) return "nineSummitsPath";
-    if (clean.indexOf("map") !== -1 || clean.indexOf("site guide") !== -1 || clean.indexOf("guide desk") !== -1 || clean.indexOf("rooms relate") !== -1 || clean.indexOf("blueprint") !== -1) return "siteGuidePath";
-    if (clean.indexOf("compass") !== -1 || clean.indexOf("orientation") !== -1) return "compassPath";
-
-    return "";
-  }
-
-  function submitVisitorText(text) {
-    var clean = String(text || "").trim();
-    var target;
-
-    if (!clean) return;
-
-    if (state.isRendering || state.isTyping) {
-      requestRush();
+  function handleRouteHandoff(button, event) {
+    var href = button.getAttribute("href") || button.getAttribute("data-href") || "";
+    var routeId = button.getAttribute("data-route-id") || "";
+
+    if (!routeId || !href || href === "#") {
+      event.preventDefault();
+      addAssistantSystemBubble("That door is not ready yet. I will hold it rather than send you to a broken path.");
       return;
     }
 
-    appendVisitorMessage(clean);
-    target = classifyVisitorText(clean);
+    state.houseListening = false;
+    stampRoot();
+  }
 
-    if (target) {
-      runNode(target, { label: clean, target: target, type: "conversation", optionKind: inferOptionKind({ target: target }) });
+  function submitFreeform() {
+    if (!els.input || state.isTyping) {
+      if (state.isTyping) rushReveal();
       return;
     }
 
-    askBackbrain(clean);
-  }
+    var text = String(els.input.value || "").trim();
+    if (!text) return;
 
-  function buildBackbrainPayload(text) {
-    return {
-      message: text,
+    els.input.value = "";
+    addVisitorBubble(text);
+    hideInteractivePanels();
+
+    askBackbrain({
       visitorText: text,
-      route: ROUTE,
+      selectedTarget: "",
+      selectedLabel: "",
+      requestMode: "freeform"
+    }).then(function (response) {
+      renderBackbrainResponse(response, null, {
+        fallbackTarget: "sharpQuestion",
+        fallbackLabel: text
+      });
+    }).catch(function () {
+      state.apiFailureCount += 1;
+      renderLocalNode("sharpQuestion", { silentVisitor: true });
+    });
+  }
 
+  function runControlTarget(target) {
+    var clean = normalizeTarget(target);
+
+    if (clean === "restartFork") {
+      state.returnStack = [];
+      state.branchStack = [];
+      renderLocalNode("intro", { silentVisitor: true, replace: false });
+      return;
+    }
+
+    if (clean === "returnFork") {
+      renderLocalNode("returnFork", { silentVisitor: true });
+      return;
+    }
+
+    if (clean === "priorTopicReturnPath" || clean === "originReturnPath") {
+      var prior = state.returnStack.pop() || "intro";
+      renderLocalNode(prior, { silentVisitor: true });
+      return;
+    }
+
+    if (clean === "switchTopics" || clean === "cleanDoor" || clean === "loopRecovery" || clean === "recenterNode") {
+      renderLocalNode("recenterNode", { silentVisitor: true });
+      return;
+    }
+
+    if (clean === "sharpQuestion") {
+      revealBeats(["Ask me a little more directly what you want to understand, and I will keep the answer inside the right room."]).then(function () {
+        renderConversationOptions([
+          convo("Tell me about Hearth Mission Control.", "hearthPath"),
+          convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath"),
+          convo("Tell me about the proof side of the estate.", "lawsPath"),
+          convo("Introduce the Characters.", "charactersPath")
+        ]);
+        renderHandoffs(["compass", "siteGuide"], {}, {});
+      });
+      return;
+    }
+
+    renderLocalNode("recenterNode", { silentVisitor: true });
+  }
+
+  function runEnrichedConversation(option) {
+    var target = normalizeTarget(option.target);
+    var fallbackTarget = target;
+
+    updateStateForSelection(option);
+
+    askBackbrain({
+      visitorText: option.label,
+      selectedTarget: target,
+      selectedLabel: option.label,
+      requestMode: "node_enrichment"
+    }).then(function (response) {
+      renderBackbrainResponse(response, option, {
+        fallbackTarget: fallbackTarget,
+        fallbackLabel: option.label
+      });
+    }).catch(function () {
+      state.apiFailureCount += 1;
+      renderLocalNode(fallbackTarget, { silentVisitor: true });
+    });
+  }
+
+  function askBackbrain(partialPayload) {
+    var payload = buildBackbrainPayload(partialPayload || {});
+
+    return fetch(state.brainEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error("Jeeves backbrain returned " + response.status);
+      }
+      return response.json();
+    }).then(function (data) {
+      if (!data || typeof data !== "object") {
+        throw new Error("Jeeves backbrain returned no object.");
+      }
+
+      state.apiReady = true;
+      state.lastApiResponseAt = new Date().toISOString();
+      return data;
+    });
+  }
+
+  function buildBackbrainPayload(partial) {
+    return {
+      message: partial.visitorText || "",
+      visitorText: partial.visitorText || "",
+      selectedTarget: partial.selectedTarget || "",
+      selectedLabel: partial.selectedLabel || "",
+      requestMode: partial.requestMode || "freeform",
+
+      route: ROUTE,
       activeHostPage: ACTIVE_HOST_PAGE,
       currentRoomContext: CURRENT_ROOM_CONTEXT,
       currentRoomRole: CURRENT_ROOM_ROLE,
@@ -2539,332 +1013,882 @@
       plannedLivePageAccess: PLANNED_LIVE_PAGE_ACCESS.slice(),
 
       currentNode: state.currentNode,
-      currentEntry: state.currentNode,
-      currentPath: ROUTE,
+      currentEntry: state.currentEntry,
+      currentPath: state.currentPath,
       currentTopic: state.currentTopic,
       currentRoomId: state.currentRoomId,
       currentRoomName: state.currentRoomName,
       currentCoordinateName: state.currentCoordinateName,
       currentCardinal: state.currentCardinal,
       currentPlaceType: state.currentPlaceType,
+      currentScopeLane: state.currentScopeLane,
+      currentVoiceMode: state.currentVoiceMode,
 
-      originConversation: state.originConversation,
-      originAnchor: state.originAnchor,
-      priorTopic: state.priorTopic,
-      priorNode: state.priorNode,
+      visitorPosture: "",
+      movement: "",
+      pathDepth: state.visitedNodes.length,
+      routeReadiness: state.lastRouteHints && Object.keys(state.lastRouteHints).length ? 2 : 0,
+      loopCount: countRecentTarget(partial.selectedTarget || state.currentNode),
+      topicDepth: state.visitorTrail.length,
+      revealDepth: state.lastFibonacciDepth || 0,
+      depthMode: state.lastApiDepthMode || "",
 
-      returnStack: clone(state.returnStack),
-      branchStack: clone(state.branchStack),
-      visitorTrail: clone(state.visitorTrail.slice(-12)),
-      roomTrail: clone(state.roomTrail.slice(-12)),
+      expressionContract: getExpressionContract(),
+      frontbrainContract: CONTRACT,
+      cssContract: getCssContract(),
 
-      visitedNodes: keysOf(state.visitedNodes),
-      selectedTargets: keysOf(state.selectedTargets),
-      selectedOptionKeys: keysOf(state.selectedOptionKeys),
+      allowedTargets: collectAllowedTargets(),
+      allowedRoutes: collectAllowedRoutes(),
 
+      sessionTrail: state.visitorTrail.slice(-MAX_TRAIL),
+      visitedNodes: state.visitedNodes.slice(-MAX_TRAIL),
+      selectedNodes: state.selectedTargets.slice(-MAX_TRAIL),
+      selectedTargets: state.selectedTargets.slice(-MAX_TRAIL),
+      selectedOptionKeys: state.selectedOptionKeys.slice(-MAX_TRAIL),
+      returnStack: state.returnStack.slice(-MAX_TRAIL),
+      branchStack: state.branchStack.slice(-MAX_TRAIL),
+      roomTrail: state.roomTrail.slice(-MAX_TRAIL),
+
+      requestedMode: partial.requestMode || "",
+      registryContext: null,
+      diagnosticResult: null,
+
+      characterArchetypeAnswers: state.characterArchetypeAnswers.slice(-12),
       characterOverviewDone: state.characterOverviewDone,
-      characterProfileViews: clone(state.characterProfileViews),
       characterProfileViewCount: state.characterProfileViewCount,
       characterRelationshipViews: state.characterRelationshipViews,
-      characterArchetypeAnswers: clone(state.characterArchetypeAnswers),
-
-      expressionContract: getExpression() ? getExpression().contract : "",
-      frontbrainContract: CONTRACT,
-      cssContract: global.__HEARTH_JEEVES_CSS_CONTRACT__ || "",
-      revealDepth: state.lastFibonacciDepth || "intro",
-      fibonacciDepth: state.lastFibonacciDepth || "intro",
-      lastFibonacciStage: clone(state.lastFibonacciStage),
-      lastBackbrainFrame: clone(state.lastBackbrainFrame)
+      characterCompletionReady: state.characterOverviewDone && state.characterProfileViewCount >= 2
     };
   }
 
-  function preserveBackbrainMeta(data) {
-    var authorities = {};
+  function renderBackbrainResponse(response, sourceOption, fallback) {
+    var normalized = normalizeBackbrainResponse(response);
 
-    if (!data) return;
-
-    state.lastBackbrainFrame = data.narrativeFrame || data.frame || null;
-    state.lastFibonacciDepth = data.fibonacciDepth || data.revealDepth || state.lastFibonacciDepth || "";
-    state.lastFibonacciStage = data.fibonacciStage || null;
-    state.lastRouteHints = data.routeHints || state.lastRouteHints || null;
-    state.lastApiDepthMode = data.depthMode || state.lastApiDepthMode || "";
-    state.lastApiContract = data.contract || data.apiContract || state.lastApiContract || "";
-    state.lastApiResponseAt = Date.now();
-
-    authorities.routeAuthority = data.routeAuthority || "";
-    authorities.expressionAuthority = data.expressionAuthority || "";
-    authorities.blueprintAuthority = data.blueprintAuthority || "";
-    state.lastBackbrainAuthorities = authorities;
-
-    if (els.root && state.lastApiContract) {
-      els.root.setAttribute("data-api-contract", state.lastApiContract);
-    }
-  }
-
-  function normalizeBackbrainNode(data, text) {
-    var beats = [];
-
-    if (data.beats && data.beats.length) {
-      beats = data.beats.slice();
-    } else if (data.bubbles && data.bubbles.length) {
-      beats = data.bubbles.slice();
-    } else if (data.messages && data.messages.length) {
-      beats = data.messages.slice();
-    } else if (data.answer || data.text) {
-      beats = [data.answer || data.text];
-    } else {
-      beats = ["I can help, but I should bring this back into the estate structure first."];
-    }
-
-    return {
-      id: "backbrainResponse",
-      roomId: state.currentRoomId,
-      topic: state.currentTopic,
-      beats: beats,
-      options: data.options || [
-        { label: "Help me choose the next door.", target: "cleanDoor", type: "control", optionKind: "return" },
-        { label: "Return to prior topic.", target: "priorTopicReturnPath", type: "control", optionKind: "return" },
-        { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-      ],
-      handoffs: data.handoffs || [],
-      handoffLabels: data.handoffLabels || {},
-      routeHints: data.routeHints || null,
-      skipReturnPush: true
-    };
-  }
-
-  function askBackbrain(text) {
-    var payload = buildBackbrainPayload(text);
-
-    if (state.isRendering || state.isTyping) {
-      requestRush();
-      return Promise.resolve(false);
-    }
-
-    hideInteractiveDocks();
-    setHouseListening(false);
-    setTyping(true);
-
-    return fetch(DEFAULT_BRAIN_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    }).then(function parseResponse(response) {
-      if (!response.ok) throw new Error("Jeeves backbrain response was not OK.");
-      return response.json();
-    }).then(function renderBackbrain(data) {
-      var node;
-
-      if (!data || data.ok === false) {
-        throw new Error(data && data.error || "Jeeves backbrain returned no usable answer.");
-      }
-
-      preserveBackbrainMeta(data);
-      node = normalizeBackbrainNode(data, text);
-
-      return renderNode(node, "backbrainResponse", {
-        label: text,
-        target: "backbrainResponse",
-        skipReturnPush: true
-      });
-    }).catch(function backbrainFallback(error) {
-      setTyping(false);
-      setHouseListening(true);
-      appendMessage("jeeves", "I can answer that better if we place it inside the estate first. Let me give you a clean door.", createContext());
-      renderOptions([
-        { label: "Begin with orientation.", target: "compassPath", optionKind: "room" },
-        { label: "Start with the proof side.", target: "scientificLawPath", optionKind: "proof" },
-        { label: "Show me the future-facing rooms.", target: "frontierPath", optionKind: "future" },
-        { label: "Open Mirrorland.", target: "mirrorlandPath", optionKind: "mirror" },
-        { label: "Return to origin conversation.", target: "originReturnPath", type: "control", optionKind: "return" }
-      ]);
-      if (global.console && console.warn) console.warn(error);
-      return false;
-    });
-  }
-
-  function bindInput() {
-    if (els.form) {
-      els.form.addEventListener("submit", function onSubmit(event) {
-        event.preventDefault();
-
-        if (state.isRendering || state.isTyping) {
-          requestRush();
-          return;
-        }
-
-        if (!els.input) return;
-        var value = els.input.value;
-        els.input.value = "";
-        submitVisitorText(value);
-      });
+    if (!normalized.beats.length) {
+      renderLocalNode(fallback && fallback.fallbackTarget ? fallback.fallbackTarget : "recenterNode", { silentVisitor: true });
       return;
     }
 
-    if (els.send && els.input) {
-      els.send.addEventListener("click", function onSend(event) {
-        event.preventDefault();
+    state.lastBackbrainFrame = response.narrativeFrame || null;
+    state.lastFibonacciDepth = Number(response.fibonacciDepth || 0);
+    state.lastFibonacciStage = String(response.fibonacciStage || "");
+    state.lastRouteHints = response.routeHints || {};
+    state.lastHandoffLabels = response.handoffLabels || {};
+    state.lastApiDepthMode = response.depthMode || "";
+    state.lastApiContract = response.contract || "";
+    state.lastBackbrainAuthorities = {
+      routeAuthority: response.routeAuthority || "",
+      expressionAuthority: response.expressionAuthority || "",
+      blueprintAuthority: response.blueprintAuthority || ""
+    };
+    state.lastSelectedTarget = response.selectedTarget || (sourceOption ? sourceOption.target : "");
+    state.lastSelectedLabel = response.selectedLabel || (sourceOption ? sourceOption.label : "");
+    state.lastRequestMode = response.requestMode || (sourceOption ? "node_enrichment" : "freeform");
 
-        if (state.isRendering || state.isTyping) {
-          requestRush();
+    if (response.contract) {
+      els.root.setAttribute("data-api-contract", response.contract);
+    }
+
+    if (response.source) {
+      els.root.setAttribute("data-api-source", response.source);
+    }
+
+    revealBeats(normalized.beats).then(function () {
+      renderConversationOptions(normalized.options);
+      renderHandoffs(normalized.handoffs, response.handoffLabels || {}, response.routeHints || {});
+      setHouseListening(true);
+    });
+  }
+
+  function normalizeBackbrainResponse(response) {
+    var rawBeats = [];
+
+    if (Array.isArray(response.beats)) rawBeats = response.beats;
+    else if (Array.isArray(response.bubbles)) rawBeats = response.bubbles;
+    else if (Array.isArray(response.messages)) rawBeats = response.messages;
+    else if (typeof response.answer === "string") rawBeats = [response.answer];
+    else if (typeof response.text === "string") rawBeats = [response.text];
+
+    var beats = rawBeats.map(cleanPublicText).filter(Boolean);
+
+    var options = Array.isArray(response.options) ? response.options : [];
+    var normalizedOptions = normalizeConversationOptions(options);
+
+    var handoffs = Array.isArray(response.handoffs) ? response.handoffs : [];
+    var normalizedHandoffs = normalizeHandoffs(handoffs, response.routeHints || {});
+
+    return {
+      beats: beats,
+      options: normalizedOptions,
+      handoffs: normalizedHandoffs
+    };
+  }
+
+  function renderLocalNode(target, options) {
+    var clean = normalizeTarget(target || "intro");
+    var opts = options || {};
+    var node = getLocalNode(clean);
+
+    if (!node) {
+      node = getLocalNode("recenterNode");
+    }
+
+    state.currentNode = clean;
+    state.currentEntry = clean;
+    state.currentPath = clean;
+    state.currentTopic = inferTopicFromTarget(clean);
+
+    if (clean === "charactersPath") state.characterOverviewDone = true;
+    if (CHARACTER_TARGETS[clean]) {
+      state.characterProfileViews[clean] = true;
+      state.characterProfileViewCount = Object.keys(state.characterProfileViews).length;
+    }
+    if (clean === "characterRelationshipsPath") state.characterRelationshipViews += 1;
+
+    if (opts.replace) {
+      clearTranscript();
+    }
+
+    stampRoot();
+
+    revealBeats((node.beats || []).map(cleanPublicText).filter(Boolean)).then(function () {
+      renderConversationOptions(node.options || []);
+      renderHandoffs(node.handoffs || [], {}, {});
+      setHouseListening(true);
+    });
+  }
+
+  function getLocalNode(target) {
+    var clean = normalizeTarget(target);
+
+    if (LOCAL_NODES[clean]) return LOCAL_NODES[clean];
+
+    if (CHARACTER_TARGETS[clean]) {
+      var character = CHARACTER_TARGETS[clean];
+      return {
+        beats: [
+          character.name + " is the " + character.title + ".",
+          character.oneLine,
+          character.pressure,
+          "I can keep this at the character level, show how the Characters relate, or move toward the Character Archetype Mirror."
+        ],
+        options: [
+          convo("Tell me how the Characters relate.", "characterRelationshipsPath"),
+          convo("Which Character Archetype do I follow under pressure?", "characterArchetypeMirrorPath"),
+          convo("Tell me who I should meet first.", "characterFirstPath"),
+          convo("Tell me what Mirrorland is before I enter.", "mirrorlandPath")
+        ],
+        handoffs: ["characters", "mirrorland"]
+      };
+    }
+
+    if (target.indexOf("frontier") === 0) {
+      return {
+        beats: [
+          "This is one of the Frontier system paths.",
+          "Frontier tests future-facing systems without pretending every future claim is already solved.",
+          "The clean rule is that Frontier can imagine and prototype, but Scientific Law and The Lab still have to test and measure."
+        ],
+        options: [
+          convo("Tell me about the future systems.", "frontierSystemsPath"),
+          convo("Tell me why Frontier needs proof.", "frontierLawPath"),
+          convo("Tell me about Hearth Mission Control.", "hearthPath")
+        ],
+        handoffs: ["frontier", "scientificLaw", "gauges"]
+      };
+    }
+
+    if (target.indexOf("scientificLaw") === 0) {
+      return LOCAL_NODES.scientificLawPath;
+    }
+
+    return null;
+  }
+
+  function revealBeats(beats) {
+    var queue = Array.isArray(beats) ? beats.slice() : [];
+    setTyping(true);
+    setHouseListening(false);
+
+    return new Promise(function (resolve) {
+      var index = 0;
+
+      function next() {
+        if (index >= queue.length) {
+          setTyping(false);
+          state.rushActive = false;
+          state.currentDelayResolve = null;
+          resolve();
           return;
         }
 
-        var value = els.input.value;
-        els.input.value = "";
-        submitVisitorText(value);
-      });
-    }
-
-    if (els.input) {
-      els.input.addEventListener("keydown", function onKeydown(event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-          event.preventDefault();
-
-          if (state.isRendering || state.isTyping) {
-            requestRush();
-            return;
-          }
-
-          var value = els.input.value;
-          els.input.value = "";
-          submitVisitorText(value);
+        var beat = cleanPublicText(queue[index]);
+        if (beat) {
+          addAssistantBubble(beat);
         }
-      });
+
+        var delay = delayForBeat(beat, index, queue.length);
+        index += 1;
+
+        wait(delay).then(next);
+      }
+
+      next();
+    });
+  }
+
+  function wait(ms) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var timer = setTimeout(finish, ms);
+
+      function finish() {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        if (state.currentDelayResolve === finish) {
+          state.currentDelayResolve = null;
+        }
+        resolve();
+      }
+
+      state.currentDelayResolve = finish;
+    });
+  }
+
+  function delayForBeat(beat, index, total) {
+    if (state.rushActive) return 16;
+
+    var text = String(beat || "");
+    var wordCount = text.split(/\s+/).filter(Boolean).length;
+
+    var base = index === 0 ? 900 : 1200;
+    var byLength = Math.min(4200, Math.max(1400, wordCount * 260));
+    var byPosition = total > 1 && index === total - 1 ? 900 : 0;
+
+    return base + byLength + byPosition;
+  }
+
+  function rushReveal() {
+    state.rushActive = true;
+    if (typeof state.currentDelayResolve === "function") {
+      state.currentDelayResolve();
     }
   }
 
-  function bindTapToRush() {
-    if (!els.root) return;
+  function renderConversationOptions(options) {
+    clearElement(els.optionsPanel);
 
-    els.root.addEventListener("pointerdown", function onPointerDown(event) {
-      state.lastInteractionAt = Date.now();
+    var normalized = normalizeConversationOptions(options).slice(0, MAX_VISIBLE_OPTIONS);
+    normalized = shapeConversationOptions(normalized);
 
-      if (!(state.isRendering || state.isTyping)) return;
-
-      var interactive = event.target && event.target.closest && event.target.closest("button, a, input, textarea, select, [data-jeeves-option], [data-jeeves-route-option]");
-      if (interactive) return;
-
-      event.preventDefault();
-      requestRush();
-    }, { passive: false });
-  }
-
-  function boot() {
-    if (state.initialized) return;
-
-    ensureDom();
-    bindInput();
-    bindTapToRush();
-
-    state.initialized = true;
-
-    global.HEARTH = global.HEARTH || {};
-    global.HEARTH.JEEVES = global.HEARTH.JEEVES || {};
-    global.HEARTH.JEEVES.frontbrain = api;
-    global.HEARTH.JEEVES.engine = api;
-    global.JEEVES_ENGINE = api;
-    global.__HEARTH_JEEVES_FRONTBRAIN_LOADED__ = true;
-    global.__HEARTH_JEEVES_ENGINE_LOADED__ = true;
-    global.__HEARTH_JEEVES_ENGINE_ROUTE__ = ROUTE;
-    global.__HEARTH_JEEVES_ENGINE_CONTRACT__ = CONTRACT;
-    global.__HEARTH_JEEVES_FRONTBRAIN_CONTRACT__ = CONTRACT;
-
-    setHouseListening(false);
-    setTyping(false);
-    runNode(DEFAULT_START_NODE, { target: DEFAULT_START_NODE, label: "Start", skipReturnPush: true });
-  }
-
-  var api = {
-    contract: CONTRACT,
-    route: ROUTE,
-    activeHostPage: ACTIVE_HOST_PAGE,
-    currentRoomContext: CURRENT_ROOM_CONTEXT,
-    currentRoomRole: CURRENT_ROOM_ROLE,
-    currentRoomPremise: CURRENT_ROOM_PREMISE,
-    estateKnowledgeMode: ESTATE_KNOWLEDGE_MODE,
-    portalLogic: PORTAL_LOGIC,
-    routeAuthority: ROUTE_AUTHORITY,
-    livePageAccess: LIVE_PAGE_ACCESS.slice(),
-    plannedLivePageAccess: PLANNED_LIVE_PAGE_ACCESS.slice(),
-    state: state,
-
-    boot: boot,
-    runNode: runNode,
-    requestRush: requestRush,
-
-    getNode: function getNodePublic(target) {
-      return clone(getNode(target || state.currentNode, { preview: true }));
-    },
-
-    getState: function getStatePublic() {
-      return clone(state);
-    },
-
-    getExpression: getExpression,
-    createContext: createContext,
-    classifyVisitorText: classifyVisitorText,
-    submitVisitorText: submitVisitorText,
-    askBackbrain: askBackbrain,
-
-    returnToPriorTopic: function returnToPriorTopic() {
-      return runNode("priorTopicReturnPath", {
-        target: "priorTopicReturnPath",
-        label: "Return to prior topic.",
-        type: "control",
-        skipReturnPush: true,
-        optionKind: "return"
-      });
-    },
-
-    returnToOriginConversation: function returnToOriginConversation() {
-      return runNode("originReturnPath", {
-        target: "originReturnPath",
-        label: "Return to origin conversation.",
-        type: "control",
-        skipReturnPush: true,
-        optionKind: "return"
-      });
-    },
-
-    markOptionSelected: markOptionSelected,
-    hasOptionBeenSelected: hasOptionBeenSelected,
-    shouldDisableOption: shouldDisableOption,
-
-    getCharacterArchetypeAnswers: function getCharacterArchetypeAnswers() {
-      return state.characterArchetypeAnswers.slice();
-    },
-
-    resetCharacterArchetype: function resetCharacterArchetype() {
-      state.characterArchetypeAnswers = [];
-      return state.characterArchetypeAnswers.slice();
-    },
-
-    getCharacterMirrorAnswers: function getCharacterMirrorAnswers() {
-      return state.characterArchetypeAnswers.slice();
-    },
-
-    resetCharacterMirror: function resetCharacterMirror() {
-      state.characterArchetypeAnswers = [];
-      return state.characterArchetypeAnswers.slice();
-    },
-
-    resetVisitedOptions: function resetVisitedOptions() {
-      state.selectedOptionKeys = Object.create(null);
-      state.selectedTargets = Object.create(null);
-      state.selectedTargetsByRoom = Object.create(null);
-      state.selectedLabelsByRoom = Object.create(null);
-      state.characterProfileViews = Object.create(null);
-      state.characterProfileViewCount = 0;
-      state.characterRelationshipViews = 0;
-      state.characterLoopCount = 0;
-      state.characterCompletionReady = false;
-      state.characterCompletionPromptShown = false;
-      return true;
+    if (!normalized.length) {
+      els.optionsPanel.setAttribute("hidden", "");
+      return;
     }
-  };
 
-  ready(boot);
-})(typeof window !== "undefined" ? window : globalThis);
+    els.optionsPanel.removeAttribute("hidden");
+    els.optionsPanel.setAttribute("data-panel-kind", "conversation");
+
+    var title = document.createElement("div");
+    title.className = "jeeves-panel-title";
+    title.textContent = "Choose What To Say";
+    els.optionsPanel.appendChild(title);
+
+    normalized.forEach(function (option, index) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "jeeves-option";
+      button.setAttribute("data-jeeves-option", "");
+      button.setAttribute("data-target", option.target);
+      button.setAttribute("data-type", option.type || "conversation");
+      button.setAttribute("data-scope-lane", option.scopeLane || "objective");
+      button.setAttribute("data-option-kind", "conversation");
+      button.setAttribute("data-option-index", String(index));
+      button.textContent = enforceConversationLanguage(option.label, option.target);
+      els.optionsPanel.appendChild(button);
+    });
+  }
+
+  function renderHandoffs(handoffs, handoffLabels, routeHints) {
+    clearElement(els.handoffPanel);
+
+    var normalized = normalizeHandoffs(handoffs, routeHints || {}).slice(0, MAX_VISIBLE_HANDOFFS);
+    normalized = shapeHandoffs(normalized, handoffLabels || {}, routeHints || {});
+
+    if (!normalized.length) {
+      els.handoffPanel.setAttribute("hidden", "");
+      return;
+    }
+
+    els.handoffPanel.removeAttribute("hidden");
+    els.handoffPanel.setAttribute("data-panel-kind", "handoff");
+
+    var title = document.createElement("div");
+    title.className = "jeeves-panel-title";
+    title.textContent = "Guided House Handoffs";
+    els.handoffPanel.appendChild(title);
+
+    normalized.forEach(function (handoff, index) {
+      if (!handoff.href || handoff.href === "#") return;
+
+      var link = document.createElement("a");
+      link.className = "jeeves-route-option";
+      link.setAttribute("data-jeeves-route-option", "");
+      link.setAttribute("data-route-id", handoff.routeId);
+      link.setAttribute("data-href", handoff.href);
+      link.setAttribute("data-route-index", String(index));
+      link.href = handoff.href;
+      link.textContent = enforceRouteLanguage(handoff.label, handoff.routeId);
+      els.handoffPanel.appendChild(link);
+    });
+
+    if (!els.handoffPanel.querySelector("[data-jeeves-route-option]")) {
+      els.handoffPanel.setAttribute("hidden", "");
+    }
+  }
+
+  function normalizeConversationOptions(options) {
+    if (!Array.isArray(options)) return [];
+
+    var seen = {};
+    var result = [];
+
+    options.forEach(function (item) {
+      if (!item || typeof item !== "object") return;
+
+      var target = normalizeTarget(item.target || "");
+      if (!target) return;
+      if (looksLikeRouteTarget(target)) return;
+
+      var type = item.type || "conversation";
+      if (type === "route" || type === "handoff") return;
+
+      var label = item.label || CONVERSATION_LABELS[target] || "Tell me more.";
+      var normalized = {
+        label: enforceConversationLanguage(label, target),
+        target: target,
+        type: isControlTarget(target) ? "control" : normalizeOptionType(type),
+        scopeLane: item.scopeLane || (isNarrativeTarget(target) ? "narrative" : "objective")
+      };
+
+      var key = normalized.target + "::" + normalized.label;
+      if (seen[key]) return;
+      seen[key] = true;
+      result.push(normalized);
+    });
+
+    return result;
+  }
+
+  function normalizeHandoffs(handoffs, routeHints) {
+    if (!Array.isArray(handoffs)) return [];
+
+    var seen = {};
+    var result = [];
+
+    handoffs.forEach(function (routeId) {
+      var route = normalizeRouteId(routeId);
+      if (!route) return;
+
+      var href = (routeHints && routeHints[route]) || LOCAL_ROUTE_HINTS[route] || "";
+      if (!href) return;
+
+      var label = LOCAL_HANDOFF_LABELS[route] || route;
+      var key = route + "::" + href;
+      if (seen[key]) return;
+      seen[key] = true;
+
+      result.push({
+        routeId: route,
+        href: href,
+        label: enforceRouteLanguage(label, route)
+      });
+    });
+
+    return result;
+  }
+
+  function shapeConversationOptions(options) {
+    var expression = getExpression();
+    if (!expression || typeof expression.shapeOptions !== "function") return options;
+
+    try {
+      var shaped = expression.shapeOptions(options.slice(), {
+        panel: "conversation",
+        contract: CONTRACT,
+        currentRoomContext: CURRENT_ROOM_CONTEXT,
+        currentRoomRole: CURRENT_ROOM_ROLE,
+        currentRoomPremise: CURRENT_ROOM_PREMISE
+      });
+
+      if (!Array.isArray(shaped)) return options;
+
+      return shaped.map(function (item, index) {
+        var base = options[index] || {};
+        return {
+          label: item.label || base.label,
+          target: normalizeTarget(item.target || base.target),
+          type: item.type || base.type || "conversation",
+          scopeLane: item.scopeLane || base.scopeLane || "objective"
+        };
+      }).filter(function (item) {
+        return item.target && !looksLikeRouteTarget(item.target);
+      });
+    } catch (_error) {
+      return options;
+    }
+  }
+
+  function shapeHandoffs(handoffs, handoffLabels, routeHints) {
+    var expression = getExpression();
+
+    return handoffs.map(function (handoff) {
+      var label = handoffLabels[handoff.routeId] || handoff.label || LOCAL_HANDOFF_LABELS[handoff.routeId] || handoff.routeId;
+
+      if (expression && typeof expression.shapeRouteLabel === "function") {
+        try {
+          label = expression.shapeRouteLabel(label, {
+            routeId: handoff.routeId,
+            href: handoff.href,
+            panel: "handoff",
+            contract: CONTRACT
+          }) || label;
+        } catch (_error) {
+          label = handoff.label;
+        }
+      }
+
+      return {
+        routeId: handoff.routeId,
+        href: (routeHints && routeHints[handoff.routeId]) || handoff.href,
+        label: enforceRouteLanguage(label, handoff.routeId)
+      };
+    }).filter(function (handoff) {
+      return handoff.routeId && handoff.href;
+    });
+  }
+
+  function enforceConversationLanguage(label, target) {
+    var clean = cleanPublicText(label || "");
+    var fallback = CONVERSATION_LABELS[target] || "";
+
+    if (!clean) clean = fallback || "Tell me more.";
+
+    if (/^(open|visit|enter|explore|launch|go to)\b/i.test(clean)) {
+      clean = fallback || makeTellMeLabel(target);
+    }
+
+    if (!hasAnyPrefix(clean, CONVERSATION_LANGUAGE_PREFIXES) && !/^(who|what|why|which|how|where|when)\b/i.test(clean) && !/^(ask|re-center|return|start|give me|let’s change)\b/i.test(clean)) {
+      clean = fallback || makeTellMeLabel(target);
+    }
+
+    return cleanPublicText(clean);
+  }
+
+  function enforceRouteLanguage(label, routeId) {
+    var clean = cleanPublicText(label || "");
+    var fallback = LOCAL_HANDOFF_LABELS[routeId] || "";
+
+    if (!clean) clean = fallback || "Open " + titleFromKey(routeId);
+
+    if (!hasAnyPrefix(clean, ROUTE_LANGUAGE_PREFIXES)) {
+      clean = fallback || "Open " + titleFromKey(routeId);
+    }
+
+    return cleanPublicText(clean);
+  }
+
+  function hasAnyPrefix(text, prefixes) {
+    var value = String(text || "").toLowerCase();
+    return prefixes.some(function (prefix) {
+      return value.indexOf(prefix.toLowerCase()) === 0;
+    });
+  }
+
+  function makeTellMeLabel(target) {
+    return "Tell me about " + titleFromKey(target) + ".";
+  }
+
+  function titleFromKey(key) {
+    return String(key || "")
+      .replace(/Path$/g, "")
+      .replace(/([A-Z])/g, " $1")
+      .replace(/[-_]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/^./, function (char) {
+        return char.toUpperCase();
+      });
+  }
+
+  function normalizeOptionType(type) {
+    if (type === "topic" || type === "calibration" || type === "back" || type === "control") return type;
+    return "conversation";
+  }
+
+  function normalizeRouteId(routeId) {
+    var clean = String(routeId || "").trim();
+    if (!clean) return "";
+    if (clean === "worldGate" || clean === "globeWindow" || clean === "interactiveNarrative") return "mirrorland";
+    if (clean === "book") return "nineSummits";
+    return clean;
+  }
+
+  function normalizeTarget(target) {
+    var clean = String(target || "").trim();
+
+    var aliases = {
+      worldPath: "mirrorlandPath",
+      worldGatePath: "atriumPath",
+      globeWindowPath: "mirrorlandPath",
+      characterMirrorPath: "characterArchetypeMirrorPath",
+      characterMirrorQuestionOne: "characterArchetypeQuestionOne",
+      characterMirrorQuestionTwo: "characterArchetypeQuestionTwo",
+      characterMirrorQuestionThree: "characterArchetypeQuestionThree",
+      characterMirrorResult: "characterArchetypeResult",
+      characterFactionsPath: "characterRelationshipsPath",
+      bookPath: "nineSummitsBookPath",
+      missionControlPath: "hearthPath",
+      hearthMissionControlPath: "hearthPath",
+      windowWithinWindowPath: "hearthPath",
+      hearthWindowPath: "hearthPath"
+    };
+
+    return aliases[clean] || clean;
+  }
+
+  function looksLikeRouteTarget(target) {
+    return !!LOCAL_ROUTE_HINTS[target] && target.indexOf("Path") === -1;
+  }
+
+  function isControlTarget(target) {
+    return [
+      "recenterNode",
+      "loopRecovery",
+      "cleanDoor",
+      "switchTopics",
+      "sharpQuestion",
+      "returnFork",
+      "restartFork",
+      "priorTopicReturnPath",
+      "originReturnPath"
+    ].indexOf(normalizeTarget(target)) !== -1;
+  }
+
+  function convo(label, target, type) {
+    return {
+      label: label || CONVERSATION_LABELS[target] || "Tell me more.",
+      target: normalizeTarget(target),
+      type: type || "conversation",
+      scopeLane: isNarrativeTarget(target) ? "narrative" : "objective",
+      optionKind: "conversation"
+    };
+  }
+
+  function isNarrativeTarget(target) {
+    var clean = normalizeTarget(target);
+    return [
+      "mirrorlandPath",
+      "atriumPath",
+      "atlasPath",
+      "charactersPath",
+      "hearthPath",
+      "hearthFacilityPath",
+      "hearthConstructPath",
+      "hearthFrontierPath",
+      "audraliaPath",
+      "audraliaWorldroomPath",
+      "hEarthPath",
+      "ziontsPath",
+      "frontierPath",
+      "frontierSystemsPath",
+      "frontierEnergyPath",
+      "frontierWaterPath",
+      "frontierWastePath",
+      "frontierClosedLoopPath",
+      "frontierInfrastructurePath",
+      "frontierLatticePath",
+      "frontierUrbanPath",
+      "frontierManualPath",
+      "frontierShimmerPath",
+      "frontierTrajectoryPath",
+      "frontierVisionPath",
+      "mirrorMePath",
+      "characterIdentityPath",
+      "characterRelationshipsPath",
+      "characterTensionsPath",
+      "characterMotivesPath",
+      "characterStoryPressurePath",
+      "characterFirstPath",
+      "characterAurenValePath",
+      "characterDextrionPath",
+      "characterAlaricPath",
+      "characterTarianPath",
+      "characterElaraPath",
+      "characterSorenPath",
+      "characterJeevesPath",
+      "characterRemoteTeamPath"
+    ].indexOf(clean) !== -1;
+  }
+
+  function inferTopicFromTarget(target) {
+    var clean = normalizeTarget(target);
+    if (clean.indexOf("character") === 0 || clean === "charactersPath") return "characters";
+    if (clean.indexOf("scientificLaw") === 0 || clean === "lawsPath") return "proof";
+    if (clean.indexOf("frontier") === 0) return "frontier";
+    if (clean.indexOf("hearth") === 0) return "hearth";
+    if (clean === "mirrorlandPath" || clean === "atriumPath" || clean === "atlasPath" || clean === "audraliaPath" || clean === "ziontsPath" || clean === "hEarthPath") return "mirrorland";
+    if (clean === "seanPath") return "sean";
+    if (clean === "underdogPath") return "underdog";
+    if (clean.indexOf("nineSummits") === 0) return "summits";
+    if (clean === "diagnosticPath") return "diagnostic";
+    return "orientation";
+  }
+
+  function updateStateForSelection(option) {
+    var target = normalizeTarget(option.target);
+    state.returnStack.push(state.currentNode);
+    state.returnStack = state.returnStack.slice(-MAX_TRAIL);
+
+    state.selectedTargets.push(target);
+    state.selectedTargets = state.selectedTargets.slice(-MAX_TRAIL);
+
+    state.selectedOptionKeys.push(target + "::" + cleanPublicText(option.label));
+    state.selectedOptionKeys = state.selectedOptionKeys.slice(-MAX_TRAIL);
+
+    state.visitedNodes.push(target);
+    state.visitedNodes = state.visitedNodes.slice(-MAX_TRAIL);
+
+    state.visitorTrail.push(cleanPublicText(option.label));
+    state.visitorTrail = state.visitorTrail.slice(-MAX_TRAIL);
+
+    state.currentNode = target;
+    state.currentEntry = target;
+    state.currentPath = target;
+    state.currentTopic = inferTopicFromTarget(target);
+
+    if (target === "charactersPath") state.characterOverviewDone = true;
+    if (target === "characterRelationshipsPath") state.characterRelationshipViews += 1;
+    if (CHARACTER_TARGETS[target]) {
+      state.characterProfileViews[target] = true;
+      state.characterProfileViewCount = Object.keys(state.characterProfileViews).length;
+    }
+
+    stampRoot();
+  }
+
+  function countRecentTarget(target) {
+    if (!target) return 0;
+    var clean = normalizeTarget(target);
+    return state.selectedTargets.filter(function (item) {
+      return item === clean;
+    }).length;
+  }
+
+  function collectAllowedTargets() {
+    var set = {};
+
+    Object.keys(CONVERSATION_LABELS).forEach(function (target) {
+      set[target] = true;
+    });
+
+    Object.keys(LOCAL_NODES).forEach(function (target) {
+      set[target] = true;
+    });
+
+    Object.keys(CHARACTER_TARGETS).forEach(function (target) {
+      set[target] = true;
+    });
+
+    state.selectedTargets.forEach(function (target) {
+      set[target] = true;
+    });
+
+    return Object.keys(set);
+  }
+
+  function collectAllowedRoutes() {
+    return Object.keys(LOCAL_ROUTE_HINTS);
+  }
+
+  function clearTranscript() {
+    clearElement(els.transcript);
+  }
+
+  function clearElement(element) {
+    if (!element) return;
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  }
+
+  function hideInteractivePanels() {
+    clearElement(els.optionsPanel);
+    clearElement(els.handoffPanel);
+    els.optionsPanel.setAttribute("hidden", "");
+    els.handoffPanel.setAttribute("hidden", "");
+  }
+
+  function addVisitorBubble(text) {
+    var bubble = document.createElement("div");
+    bubble.className = "jeeves-bubble jeeves-bubble-user";
+    bubble.setAttribute("data-jeeves-bubble", "user");
+    bubble.textContent = cleanPublicText(text);
+    els.transcript.appendChild(bubble);
+    scrollTranscript();
+  }
+
+  function addAssistantBubble(text) {
+    var bubble = document.createElement("div");
+    bubble.className = "jeeves-bubble jeeves-bubble-assistant";
+    bubble.setAttribute("data-jeeves-bubble", "assistant");
+    bubble.textContent = cleanPublicText(text);
+    els.transcript.appendChild(bubble);
+    scrollTranscript();
+  }
+
+  function addAssistantSystemBubble(text) {
+    var bubble = document.createElement("div");
+    bubble.className = "jeeves-bubble jeeves-bubble-system";
+    bubble.setAttribute("data-jeeves-bubble", "system");
+    bubble.textContent = cleanPublicText(text);
+    els.transcript.appendChild(bubble);
+    scrollTranscript();
+  }
+
+  function scrollTranscript() {
+    try {
+      els.transcript.scrollTop = els.transcript.scrollHeight;
+    } catch (_error) {}
+  }
+
+  function setTyping(value) {
+    state.isTyping = Boolean(value);
+    if (els.root) els.root.setAttribute("data-jeeves-typing", state.isTyping ? "true" : "false");
+    updateStatus();
+  }
+
+  function setHouseListening(value) {
+    state.houseListening = Boolean(value);
+    if (els.root) els.root.setAttribute("data-house-listening", state.houseListening ? "true" : "false");
+    updateStatus();
+  }
+
+  function updateStatus() {
+    if (!els.status) return;
+
+    if (state.isTyping) {
+      els.status.textContent = "Jeeves is speaking. Tap the chamber to hurry him.";
+      els.status.setAttribute("data-state", "typing");
+      return;
+    }
+
+    if (state.houseListening) {
+      els.status.textContent = "The house is listening.";
+      els.status.setAttribute("data-state", "listening");
+      return;
+    }
+
+    els.status.textContent = "The house is holding.";
+    els.status.setAttribute("data-state", "holding");
+  }
+
+  function cleanPublicText(text) {
+    var value = String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/```/g, "")
+      .trim();
+
+    var expression = getExpression();
+    if (expression && typeof expression.sanitizePublicText === "function") {
+      try {
+        value = expression.sanitizePublicText(value, {
+          contract: CONTRACT,
+          currentRoomContext: CURRENT_ROOM_CONTEXT,
+          currentRoomRole: CURRENT_ROOM_ROLE,
+          currentRoomPremise: CURRENT_ROOM_PREMISE
+        }) || value;
+      } catch (_error) {}
+    }
+
+    return value;
+  }
+
+  function getExpression() {
+    return (
+      window.HEARTH &&
+      window.HEARTH.JEEVES &&
+      (window.HEARTH.JEEVES.expression || window.HEARTH.JEEVES_EXPRESSION)
+    ) || window.JEEVES_EXPRESSION || null;
+  }
+
+  function getExpressionContract() {
+    var expression = getExpression();
+    if (!expression) return "";
+    return expression.contract || expression.CONTRACT || "";
+  }
+
+  function getCssContract() {
+    var node = document.querySelector("[data-jeeves-css-contract]");
+    return node ? node.getAttribute("data-jeeves-css-contract") || "" : "";
+  }
+
+  function exposeApi() {
+    var api = {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      route: ROUTE,
+      state: state,
+      runNode: function (target) {
+        renderLocalNode(target, { silentVisitor: true });
+      },
+      ask: function (text) {
+        addVisitorBubble(text);
+        hideInteractivePanels();
+        return askBackbrain({
+          visitorText: text,
+          selectedTarget: "",
+          selectedLabel: "",
+          requestMode: "freeform"
+        }).then(function (response) {
+          renderBackbrainResponse(response, null, {
+            fallbackTarget: "sharpQuestion",
+            fallbackLabel: text
+          });
+          return response;
+        });
+      },
+      enrich: function (target, label) {
+        return runEnrichedConversation({
+          target: target,
+          label: label || CONVERSATION_LABELS[target] || "Tell me more.",
+          type: "conversation",
+          scopeLane: isNarrativeTarget(target) ? "narrative" : "objective"
+        });
+      },
+      recenter: function () {
+        renderLocalNode("recenterNode", { silentVisitor: true });
+      },
+      rush: rushReveal,
+      setBrainEndpoint: function (endpoint) {
+        if (endpoint) state.brainEndpoint = endpoint;
+      }
+    };
+
+    window.HEARTH.JEEVES.frontbrain = api;
+    window.HEARTH.JEEVES.engine = api;
+    window.JEEVES_ENGINE = api;
+    window.__HEARTH_JEEVES_FRONTBRAIN_LOADED__ = true;
+    window.__HEARTH_JEEVES_ENGINE_LOADED__ = true;
+    window.__HEARTH_JEEVES_ENGINE_ROUTE__ = ROUTE;
+    window.__HEARTH_JEEVES_ENGINE_CONTRACT__ = CONTRACT;
+    window.__HEARTH_JEEVES_FRONTBRAIN_CONTRACT__ = CONTRACT;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();

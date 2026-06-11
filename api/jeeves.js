@@ -1,19 +1,28 @@
 // /api/jeeves.js
-// HEARTH_JEEVES_BACKBRAIN_NORTH_BUTTON_ENRICHMENT_MISSION_CONTROL_ROUTE_SEPARATION_TNT_v4
+// HEARTH_JEEVES_BACKBRAIN_NORTH_CONVERSATION_GRAMMAR_STANDARD_TNT_v5
 // Full-file replacement.
 // Server-side only.
 // North / Backbrain coordinator.
 // Owns secure model bridge, approved deep canon retrieval, Guide Desk blueprint coordination,
 // NEWS/cardinal placement, Fibonacci narrative depth, moderation gates, canon enforcement,
 // Character Archetype Mirror reasoning, Law/Gauge/Frontier/Hearth/Character depth,
-// button-path enrichment, deterministic fallback, conclusive state, and approved options/handoffs.
+// conversation grammar standard, button-path enrichment, deterministic fallback,
+// conclusive state, approved prompt options, and approved handoffs.
 // Does not own front-end DOM, CSS, HTML, browser API keys, route rendering, visual pacing,
-// tap-to-advance, visited-option mutation, option disabling, or final route authority.
+// tap-to-advance, visited-option mutation, option disabling, Expression transition language,
+// or final route authority.
+//
+// v5 renewal:
+// - API/North now understands the conversation grammar natively.
+// - Conversation options are text-message-style prompts to Jeeves.
+// - Prepared doors remain route actions.
+// - The API answers the user’s visible message first.
+// - Room map / canon / route structure support the answer invisibly unless the user asks for the map.
 
 "use strict";
 
-const CONTRACT = "HEARTH_JEEVES_BACKBRAIN_NORTH_BUTTON_ENRICHMENT_MISSION_CONTROL_ROUTE_SEPARATION_TNT_v4";
-const PREVIOUS_CONTRACT = "HEARTH_JEEVES_BACKBRAIN_NORTH_BLUEPRINT_NEWS_FIBONACCI_NARRATIVE_COORDINATION_TNT_v3";
+const CONTRACT = "HEARTH_JEEVES_BACKBRAIN_NORTH_CONVERSATION_GRAMMAR_STANDARD_TNT_v5";
+const PREVIOUS_CONTRACT = "HEARTH_JEEVES_BACKBRAIN_NORTH_BUTTON_ENRICHMENT_MISSION_CONTROL_ROUTE_SEPARATION_TNT_v4";
 
 const DEFAULT_MODEL = process.env.JEEVES_MODEL || "gpt-5.5";
 const MODERATION_MODEL = process.env.JEEVES_MODERATION_MODEL || "omni-moderation-latest";
@@ -37,6 +46,57 @@ const REQUEST_MODES = [
   "route_explanation",
   "character_archetype",
   "recenter"
+];
+
+const PROMPT_MODES = [
+  "story_prompt",
+  "skeptic_prompt",
+  "practical_prompt",
+  "personal_prompt",
+  "progression_prompt",
+  "recenter_prompt",
+  "unknown_prompt"
+];
+
+const OPTION_KINDS = [
+  "conversation_prompt",
+  "forward",
+  "return",
+  "parallel",
+  "route",
+  "control"
+];
+
+const ARCHETYPE_ALIGNMENTS = [
+  "story_entry",
+  "proof_entry",
+  "practical_entry",
+  "personal_entry",
+  "source_entry",
+  "boundary_entry",
+  "systems_entry",
+  "unknown_entry"
+];
+
+const BRIDGE_MOMENTS = [
+  "entrance_fork",
+  "before_knowledge",
+  "after_knowledge",
+  "return_fork",
+  "parallel_crossing",
+  "recenter_fork",
+  "prepared_door",
+  "none"
+];
+
+const MOVEMENT_INTENTS = [
+  "ask_jeeves",
+  "continue_current_path",
+  "return_one_threshold",
+  "cross_to_related_room",
+  "open_prepared_door",
+  "recenter",
+  "unknown"
 ];
 
 const INTENTS = [
@@ -92,16 +152,13 @@ const TARGET_ALIASES = Object.freeze({
   worldPath: "mirrorlandPath",
   worldGatePath: "atriumPath",
   globeWindowPath: "mirrorlandPath",
-
   characterMirrorPath: "characterArchetypeMirrorPath",
   characterMirrorQuestionOne: "characterArchetypeQuestionOne",
   characterMirrorQuestionTwo: "characterArchetypeQuestionTwo",
   characterMirrorQuestionThree: "characterArchetypeQuestionThree",
   characterMirrorResult: "characterArchetypeResult",
   characterFactionsPath: "characterRelationshipsPath",
-
   bookPath: "nineSummitsBookPath",
-
   missionControlPath: "hearthPath",
   hearthMissionControlPath: "hearthPath",
   windowWithinWindowPath: "hearthPath",
@@ -140,7 +197,9 @@ const FORBIDDEN_PUBLIC_LANGUAGE = [
   { pattern: /\bwhich character am I most like\b/gi, replacement: "which Character Archetype do I follow under pressure" },
   { pattern: /\bwhich character fits my pressure\b/gi, replacement: "which Character Archetype do I follow under pressure" },
   { pattern: /\bpressure pattern\b/gi, replacement: "behavior under pressure" },
-  { pattern: /\bhuman source\b/gi, replacement: "creator behind all of this" }
+  { pattern: /\bhuman source\b/gi, replacement: "creator behind all of this" },
+  { pattern: /\brole map\b/gi, replacement: "Character path" },
+  { pattern: /\brole functions\b/gi, replacement: "the parts each Character carries" }
 ];
 
 const NEWS_AXES = Object.freeze({
@@ -207,62 +266,14 @@ const NEWS_AXES = Object.freeze({
 });
 
 const FIBONACCI_STAGES = Object.freeze([
-  {
-    step: 1,
-    name: "recognition",
-    purpose: "name the thing",
-    maxBubbles: 1,
-    depthMode: DEPTH_INTRO
-  },
-  {
-    step: 1,
-    name: "confirmation",
-    purpose: "confirm the visitor’s need",
-    maxBubbles: 1,
-    depthMode: DEPTH_INTRO
-  },
-  {
-    step: 2,
-    name: "split",
-    purpose: "show the basic split or choice",
-    maxBubbles: 2,
-    depthMode: DEPTH_INTRO
-  },
-  {
-    step: 3,
-    name: "placement",
-    purpose: "explain what it is, where it sits, and why it matters",
-    maxBubbles: 3,
-    depthMode: DEPTH_INTERMEDIATE
-  },
-  {
-    step: 5,
-    name: "accord",
-    purpose: "show nearby rooms and narrative accord",
-    maxBubbles: 3,
-    depthMode: DEPTH_INTERMEDIATE
-  },
-  {
-    step: 8,
-    name: "path",
-    purpose: "open the deeper path",
-    maxBubbles: 4,
-    depthMode: DEPTH_DEEP
-  },
-  {
-    step: 13,
-    name: "handoff",
-    purpose: "give full context and handoff set",
-    maxBubbles: 4,
-    depthMode: DEPTH_DEEP
-  },
-  {
-    step: 21,
-    name: "conclusion",
-    purpose: "conclude the arc and move toward transformation, Mirrorland, Summits, or deeper canon",
-    maxBubbles: 4,
-    depthMode: DEPTH_DEEP
-  }
+  { step: 1, name: "recognition", purpose: "name the thing", maxBubbles: 1, depthMode: DEPTH_INTRO },
+  { step: 1, name: "confirmation", purpose: "confirm the visitor’s need", maxBubbles: 1, depthMode: DEPTH_INTRO },
+  { step: 2, name: "split", purpose: "show the basic split or choice", maxBubbles: 2, depthMode: DEPTH_INTRO },
+  { step: 3, name: "placement", purpose: "explain what it is, where it sits, and why it matters", maxBubbles: 3, depthMode: DEPTH_INTERMEDIATE },
+  { step: 5, name: "accord", purpose: "show nearby rooms and narrative accord", maxBubbles: 3, depthMode: DEPTH_INTERMEDIATE },
+  { step: 8, name: "path", purpose: "open the deeper path", maxBubbles: 4, depthMode: DEPTH_DEEP },
+  { step: 13, name: "handoff", purpose: "give full context and handoff set", maxBubbles: 4, depthMode: DEPTH_DEEP },
+  { step: 21, name: "conclusion", purpose: "conclude the arc and move toward transformation, Mirrorland, Summits, or deeper canon", maxBubbles: 4, depthMode: DEPTH_DEEP }
 ]);
 
 const GUIDE_BLUEPRINT_ROOMS = Object.freeze({
@@ -579,88 +590,88 @@ const APPROVED_TARGETS = new Set([
 ]);
 
 const DEFAULT_CONVERSATION_LABELS = {
-  websitePath: "Tell me how the estate is built.",
-  skepticPlain: "Explain it plainly first.",
-  proofPath: "Tell me what makes this trustworthy.",
-  diagnosticPath: "Tell me about the self-reflection room.",
-  mirrorlandPath: "Tell me what Mirrorland is before I enter.",
-  atriumPath: "Tell me about the South Gate threshold.",
-  atlasPath: "Tell me how the Mirrorland map works.",
-  charactersPath: "Introduce the Characters.",
-  compassPath: "Orient me first.",
-  whereToStart: "Help me choose where to start.",
-  siteGuidePath: "Tell me how the rooms relate.",
-  lawsPath: "Tell me about the proof side of the estate.",
-  scientificLawPath: "Tell me how claims are tested.",
-  scientificLawTheoryPath: "Tell me about Theory.",
-  scientificLawEvidencePath: "Tell me about Evidence.",
-  scientificLawMeasurePath: "Tell me about Measure.",
-  scientificLawLimitsPath: "Tell me about Limits.",
-  scientificLawRoutePath: "Show me the testing route.",
-  scientificLawLadderPath: "Show me the claim ladder.",
-  scientificLawTermsPath: "Explain the deeper proof terms.",
-  gaugesPath: "Tell me about the status room.",
-  seanPath: "Tell me about the creator behind all of this.",
-  underdogPath: "Tell me about This Underdog.",
-  productsPath: "Tell me what can be used or carried.",
-  nineSummitsPath: "Tell me about the value road.",
-  nineSummitsBookPath: "Tell me about The Nine Summits of Love.",
-  hearthPath: "Tell me about Hearth Mission Control.",
-  hearthFacilityPath: "Explain Hearth as Mission Control.",
-  hearthConstructPath: "Explain the window within the window.",
-  hearthFrontierPath: "Tell me why Hearth is near Frontier.",
-  hearthLawPath: "Tell me why Hearth must answer to proof.",
-  hEarthPath: "Tell me about the survival path.",
-  ziontsPath: "Tell me about the consequence road.",
-  audraliaPath: "Tell me about Audralia.",
-  audraliaWorldroomPath: "Tell me about Audralia’s visible worldroom.",
-  controlCockpitPath: "Tell me how Audralia becomes readable.",
-  frontierPath: "Tell me what Frontier tests.",
-  frontierSystemsPath: "Tell me about the future systems.",
-  frontierEnergyPath: "Tell me about Energy.",
-  frontierWaterPath: "Tell me about Water.",
-  frontierWastePath: "Tell me about Waste.",
-  frontierClosedLoopPath: "Tell me about Closed Loop.",
-  frontierInfrastructurePath: "Tell me about Infrastructure.",
-  frontierLatticePath: "Tell me about Lattice.",
-  frontierUrbanPath: "Tell me about Urban.",
-  frontierManualPath: "Tell me about Manual.",
-  frontierShimmerPath: "Tell me about Shimmer.",
-  frontierTrajectoryPath: "Tell me about Trajectory.",
-  frontierVisionPath: "Tell me about Vision.",
-  frontierLawPath: "Tell me why Frontier needs proof.",
-  frontierCharactersPath: "Tell me who carries Frontier pressure.",
-  futureProfilePath: "Tell me about the future profile.",
-  mirrorMePath: "Tell me about the mirror path.",
+  websitePath: "What is this place?",
+  skepticPlain: "Can you explain this plainly?",
+  proofPath: "Why should I trust this?",
+  diagnosticPath: "What can I learn about myself here?",
+  mirrorlandPath: "What is happening in Mirrorland?",
+  atriumPath: "Where does the South Gate lead?",
+  atlasPath: "What are the roads inside Mirrorland?",
+  charactersPath: "I’d like to meet the Characters.",
+  compassPath: "Where should I start?",
+  whereToStart: "Where should I start?",
+  siteGuidePath: "How do the rooms connect?",
+  lawsPath: "What keeps this honest?",
+  scientificLawPath: "What needs to be tested?",
+  scientificLawTheoryPath: "What theory is being tested?",
+  scientificLawEvidencePath: "What would count as evidence?",
+  scientificLawMeasurePath: "How would this be measured?",
+  scientificLawLimitsPath: "What could prove this wrong?",
+  scientificLawRoutePath: "How does a claim move through the test?",
+  scientificLawLadderPath: "What makes a claim stronger?",
+  scientificLawTermsPath: "Can you explain the proof terms?",
+  gaugesPath: "What is working, and what still needs proof?",
+  seanPath: "Who is Sean Mansfield?",
+  underdogPath: "What is This Underdog?",
+  productsPath: "What can I actually do here?",
+  nineSummitsPath: "What is the Nine Summits road?",
+  nineSummitsBookPath: "What is The Nine Summits of Love?",
+  hearthPath: "Where am I right now?",
+  hearthFacilityPath: "What is Hearth Mission Control?",
+  hearthConstructPath: "What is Hearth controlling?",
+  hearthFrontierPath: "How does Hearth connect to Frontier?",
+  hearthLawPath: "Why does Hearth answer to proof?",
+  hEarthPath: "What can still be saved?",
+  ziontsPath: "What could go wrong here?",
+  audraliaPath: "What is Audralia?",
+  audraliaWorldroomPath: "What am I seeing in Audralia?",
+  controlCockpitPath: "How does Audralia become readable?",
+  frontierPath: "What has to work in the real world?",
+  frontierSystemsPath: "Which system should I look at first?",
+  frontierEnergyPath: "How does Energy work here?",
+  frontierWaterPath: "How does Water work here?",
+  frontierWastePath: "How does Waste work here?",
+  frontierClosedLoopPath: "How does Closed Loop work here?",
+  frontierInfrastructurePath: "How does Infrastructure work here?",
+  frontierLatticePath: "How does Lattice work here?",
+  frontierUrbanPath: "How does Urban work here?",
+  frontierManualPath: "What does the Manual explain?",
+  frontierShimmerPath: "What does Shimmer show?",
+  frontierTrajectoryPath: "Where is this moving?",
+  frontierVisionPath: "What is the horizon aim?",
+  frontierLawPath: "Can this survive a real test?",
+  frontierCharactersPath: "Who carries the pressure here?",
+  futureProfilePath: "What future profile is forming?",
+  mirrorMePath: "Where do I fit into this?",
   characterIdentityPath: "Who are the Characters?",
-  characterRelationshipsPath: "Tell me how the Characters relate.",
-  characterTensionsPath: "Tell me what conflict they carry.",
-  characterMotivesPath: "Tell me what motivates them.",
-  characterStoryPressurePath: "Tell me why the Characters matter.",
-  characterFirstPath: "Tell me who I should meet first.",
-  characterAurenValePath: "Tell me about Auren Vale.",
-  characterDextrionPath: "Tell me about Dextrion.",
-  characterAlaricPath: "Tell me about Alaric.",
-  characterTarianPath: "Tell me about Tarian.",
-  characterElaraPath: "Tell me about Elara.",
-  characterSorenPath: "Tell me about Soren.",
-  characterJeevesPath: "Tell me about Jeeves.",
-  characterRemoteTeamPath: "Tell me about the Remote Team.",
-  characterArchetypeMirrorPath: "Which Character Archetype do I follow under pressure?",
-  selfLearningPath: "Show my behavior under pressure.",
-  characterArchetypeQuestionOne: "Ask the first mirror question.",
-  characterArchetypeQuestionTwo: "Ask the second mirror question.",
-  characterArchetypeQuestionThree: "Ask the third mirror question.",
-  characterArchetypeResult: "Show my reflective match.",
-  recenterNode: "Re-center me.",
-  loopRecovery: "I keep circling this room.",
-  cleanDoor: "Give me the cleanest next door.",
-  switchTopics: "Let’s change rooms.",
-  sharpQuestion: "Ask me a sharper question.",
-  returnFork: "Return to the First Fork.",
-  restartFork: "Start over.",
-  priorTopicReturnPath: "Return to prior topic.",
-  originReturnPath: "Return to origin conversation."
+  characterRelationshipsPath: "How are the Characters connected?",
+  characterTensionsPath: "What conflict do they carry?",
+  characterMotivesPath: "What motivates them?",
+  characterStoryPressurePath: "Why do these Characters matter?",
+  characterFirstPath: "Who should I meet first?",
+  characterAurenValePath: "Who is Auren Vale?",
+  characterDextrionPath: "Who is Dextrion?",
+  characterAlaricPath: "Who is Alaric?",
+  characterTarianPath: "Who is Tarian?",
+  characterElaraPath: "Who is Elara?",
+  characterSorenPath: "Who is Soren?",
+  characterJeevesPath: "Who is Jeeves?",
+  characterRemoteTeamPath: "Who is the Remote Team?",
+  characterArchetypeMirrorPath: "Which Character might I recognize in myself?",
+  selfLearningPath: "What can this show me about myself?",
+  characterArchetypeQuestionOne: "Ask me the first mirror question.",
+  characterArchetypeQuestionTwo: "Ask me the second mirror question.",
+  characterArchetypeQuestionThree: "Ask me the third mirror question.",
+  characterArchetypeResult: "What did the mirror show?",
+  recenterNode: "Can you re-center me?",
+  loopRecovery: "I keep circling this room. What should I do?",
+  cleanDoor: "What is the cleanest next door?",
+  switchTopics: "Can we change rooms?",
+  sharpQuestion: "Can you ask me a sharper question?",
+  returnFork: "Can we return to the First Fork?",
+  restartFork: "Can we start over?",
+  priorTopicReturnPath: "Can we return to the prior topic?",
+  originReturnPath: "Can we return to where this started?"
 };
 
 const DEFAULT_HANDOFF_LABELS = {
@@ -679,7 +690,7 @@ const DEFAULT_HANDOFF_LABELS = {
   zionts: "Open ZIONTS",
   audralia: "Open Audralia",
   hEarth: "Open H-Earth",
-  frontier: "Open Frontier",
+  frontier: "Open Frontier Yard",
   frontierEnergy: "Open Energy",
   frontierWater: "Open Water",
   frontierWaste: "Open Waste",
@@ -691,7 +702,7 @@ const DEFAULT_HANDOFF_LABELS = {
   frontierShimmer: "Open Shimmer",
   frontierTrajectory: "Open Trajectory",
   frontierVision: "Open Vision",
-  characters: "Open the Characters Page",
+  characters: "Open the Characters Hall",
   controlRoom: "Open the Control Room",
   nineSummits: "Open Nine Summits",
   aboutUnderdog: "Open This Underdog"
@@ -1043,8 +1054,7 @@ const HEARTH_CONSTRUCT_REGISTRY = {
   target: "hearthPath",
   role: "Hearth Mission Control",
   premise: "window_within_the_window",
-  primaryLine:
-    "Hearth is Mission Control — the window within the window.",
+  primaryLine: "Hearth is Mission Control — the window within the window.",
   portalLine:
     "The deeper unknown construct location is reached through the estate’s portal logic and exists somewhere in the universe; Hearth is the live estate chamber that gives the visitor and Jeeves a control view into it.",
   spine:
@@ -1337,12 +1347,27 @@ const RESPONSE_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["label", "target", "type", "scopeLane"],
+        required: [
+          "label",
+          "target",
+          "type",
+          "scopeLane",
+          "promptMode",
+          "optionKind",
+          "archetypeAlignment",
+          "bridgeMoment",
+          "movementIntent"
+        ],
         properties: {
           label: { type: "string", maxLength: 110 },
           target: { type: "string", maxLength: 100 },
           type: { type: "string", enum: ["conversation", "topic", "calibration", "back", "control"] },
-          scopeLane: { type: "string", enum: ["objective", "narrative"] }
+          scopeLane: { type: "string", enum: ["objective", "narrative"] },
+          promptMode: { type: "string", enum: PROMPT_MODES },
+          optionKind: { type: "string", enum: OPTION_KINDS },
+          archetypeAlignment: { type: "string", enum: ARCHETYPE_ALIGNMENTS },
+          bridgeMoment: { type: "string", enum: BRIDGE_MOMENTS },
+          movementIntent: { type: "string", enum: MOVEMENT_INTENTS }
         }
       }
     },
@@ -1413,6 +1438,8 @@ async function handler(req, res) {
     normalized.intent = intent;
     normalized.depthMode = inferDepthMode(normalized);
     normalized.fibonacciStage = inferFibonacciStage(normalized);
+    normalized.promptMode = inferPromptMode(normalized);
+    normalized.movementIntent = inferMovementIntent(normalized);
 
     const localSafety = localModerationCheck(normalized.visitorText);
 
@@ -1683,7 +1710,7 @@ function normalizePayload(payload) {
   const visitorText = capString(raw.visitorText || raw.message || raw.query || raw.text || raw.selectedLabel || "", MAX_INPUT_CHARS);
 
   const selectedTarget = normalizeTarget(capString(raw.selectedTarget || raw.selectedOptionTarget || raw.optionTarget || "", 140));
-  const selectedLabel = capString(raw.selectedLabel || raw.selectedOptionLabel || raw.optionLabel || "", 160);
+  const selectedLabel = capString(raw.selectedLabel || raw.selectedOptionLabel || raw.optionLabel || "", 180);
   const requestMode = normalizeRequestMode(raw.requestMode || raw.mode || (selectedTarget ? "node_enrichment" : "freeform"));
 
   const currentRoomId = capString(raw.currentRoomId || raw.roomId || "", 140);
@@ -1692,11 +1719,22 @@ function normalizePayload(payload) {
   const currentPath = normalizeTarget(capString(raw.currentPath || raw.path || "", 140));
   const currentTopic = capString(raw.currentTopic || raw.topic || "", 140);
 
+  const grammarFields = normalizeConversationGrammarFields(raw);
+
   return {
     visitorText,
     selectedTarget,
     selectedLabel,
     requestMode,
+
+    promptMode: grammarFields.promptMode,
+    optionKind: grammarFields.optionKind,
+    archetypeAlignment: grammarFields.archetypeAlignment,
+    bridgeMoment: grammarFields.bridgeMoment,
+    movementIntent: grammarFields.movementIntent,
+    bridgeContext: grammarFields.bridgeContext,
+    branchStack: grammarFields.branchStack,
+    transitionTrail: grammarFields.transitionTrail,
 
     activeHostPage: capString(raw.activeHostPage || "", 100),
     livePageAccess: normalizeList(raw.livePageAccess).slice(0, 12),
@@ -1727,9 +1765,9 @@ function normalizePayload(payload) {
     topicDepth: safeNumber(raw.topicDepth || raw.currentTopicDepth, 0),
     revealDepth: safeNumber(raw.revealDepth || raw.fibonacciDepth || raw.fibonacciStep, 0),
     depthMode: capString(raw.depthMode || raw.requestedDepth || "", 30),
-    expressionContract: capString(raw.expressionContract || raw.expressionContractId || "", 160),
-    frontbrainContract: capString(raw.frontbrainContract || "", 160),
-    cssContract: capString(raw.cssContract || "", 160),
+    expressionContract: capString(raw.expressionContract || raw.expressionContractId || "", 180),
+    frontbrainContract: capString(raw.frontbrainContract || "", 180),
+    cssContract: capString(raw.cssContract || "", 180),
     allowedTargets: normalizeList(raw.allowedTargets).map(normalizeTarget).filter((target) => APPROVED_TARGETS.has(target)),
     allowedRoutes: normalizeList(raw.allowedRoutes).map(normalizeRoute).filter((route) => APPROVED_ROUTE_IDS.has(route)),
     sessionTrail: normalizeList(raw.sessionTrail).slice(-MAX_TRAIL_ITEMS),
@@ -1751,9 +1789,92 @@ function normalizePayload(payload) {
   };
 }
 
+function normalizeConversationGrammarFields(raw) {
+  return {
+    promptMode: normalizePromptMode(raw.promptMode),
+    optionKind: normalizeOptionKind(raw.optionKind),
+    archetypeAlignment: normalizeArchetypeAlignment(raw.archetypeAlignment),
+    bridgeMoment: normalizeBridgeMoment(raw.bridgeMoment),
+    movementIntent: normalizeMovementIntent(raw.movementIntent),
+    bridgeContext: sanitizeBridgeContext(raw.bridgeContext),
+    branchStack: sanitizeTransitionList(raw.branchStack),
+    transitionTrail: sanitizeTransitionList(raw.transitionTrail)
+  };
+}
+
 function normalizeRequestMode(value) {
   const clean = capString(value || "", 80);
   return REQUEST_MODES.includes(clean) ? clean : "freeform";
+}
+
+function normalizePromptMode(value) {
+  const clean = capString(value || "", 80);
+  return PROMPT_MODES.includes(clean) ? clean : "unknown_prompt";
+}
+
+function normalizeOptionKind(value) {
+  const clean = capString(value || "", 80);
+  return OPTION_KINDS.includes(clean) ? clean : "conversation_prompt";
+}
+
+function normalizeArchetypeAlignment(value) {
+  const clean = capString(value || "", 80);
+  return ARCHETYPE_ALIGNMENTS.includes(clean) ? clean : "unknown_entry";
+}
+
+function normalizeBridgeMoment(value) {
+  const clean = capString(value || "", 80);
+  return BRIDGE_MOMENTS.includes(clean) ? clean : "none";
+}
+
+function normalizeMovementIntent(value) {
+  const clean = capString(value || "", 80);
+  return MOVEMENT_INTENTS.includes(clean) ? clean : "unknown";
+}
+
+function sanitizeBridgeContext(value) {
+  if (!value || typeof value !== "object") return null;
+
+  return {
+    currentNode: normalizeTarget(value.currentNode || ""),
+    priorNode: normalizeTarget(value.priorNode || ""),
+    selectedTarget: normalizeTarget(value.selectedTarget || ""),
+    selectedLabel: capString(value.selectedLabel || "", 180),
+    promptMode: normalizePromptMode(value.promptMode),
+    optionKind: normalizeOptionKind(value.optionKind),
+    archetypeAlignment: normalizeArchetypeAlignment(value.archetypeAlignment),
+    bridgeMoment: normalizeBridgeMoment(value.bridgeMoment),
+    movementIntent: normalizeMovementIntent(value.movementIntent),
+    currentTopic: capString(value.currentTopic || "", 120),
+    currentScopeStage: capString(value.currentScopeStage || "", 120),
+    adjacentTarget: normalizeTarget(value.adjacentTarget || ""),
+    adjacentLabel: capString(value.adjacentLabel || "", 160),
+    adjacentReason: capString(value.adjacentReason || "", 400)
+  };
+}
+
+function sanitizeTransitionList(value) {
+  if (!Array.isArray(value)) return [];
+
+  return value.slice(-MAX_TRAIL_ITEMS).map((item) => {
+    if (!item || typeof item !== "object") {
+      return {
+        label: capString(item || "", 180),
+        optionKind: "conversation_prompt",
+        promptMode: "unknown_prompt"
+      };
+    }
+
+    return {
+      from: normalizeTarget(item.from || ""),
+      to: normalizeTarget(item.to || ""),
+      label: capString(item.label || "", 180),
+      optionKind: normalizeOptionKind(item.optionKind),
+      promptMode: normalizePromptMode(item.promptMode),
+      bridgeMoment: normalizeBridgeMoment(item.bridgeMoment),
+      at: capString(item.at || "", 80)
+    };
+  });
 }
 
 function normalizeTarget(target) {
@@ -1974,6 +2095,11 @@ function classifyIntent(ctx) {
     ctx.selectedTarget,
     ctx.selectedLabel,
     ctx.requestMode,
+    ctx.promptMode,
+    ctx.optionKind,
+    ctx.archetypeAlignment,
+    ctx.bridgeMoment,
+    ctx.movementIntent,
     ctx.currentNode,
     ctx.currentEntry,
     ctx.currentPath,
@@ -1991,34 +2117,33 @@ function classifyIntent(ctx) {
   ].join(" ").toLowerCase();
 
   if (/\b(recenter|lost|confused|start over|clean fork|reset|first fork|return to origin)\b/.test(text)) return "recenter";
-
   if (/\b(guide desk|site guide|blueprint|sitemap|jump pad|room map|estate map|route planner)\b/.test(text)) return "blueprint";
 
   if (
-    /\b(which character archetype|character archetype|what character am i|most like|learn about myself|self[-\s]?learning|mirror me to a character|behavior under pressure)\b/.test(text) ||
+    /\b(which character archetype|character archetype|what character am i|most like|learn about myself|self[-\s]?learning|mirror me to a character|behavior under pressure|recognize in myself)\b/.test(text) ||
     ctx.diagnosticResult ||
     ctx.characterArchetypeAnswers.length
   ) {
     return "characterArchetypeMirror";
   }
 
-  if (/\b(scientific law|reality test|theory|evidence|measure|measurement|limits|claim testing|falsifiability|repeatability|calibration|uncertainty|causality)\b/.test(text)) {
+  if (/\b(scientific law|reality test|theory|evidence|measure|measurement|limits|claim testing|falsifiability|repeatability|calibration|uncertainty|causality|what would count as proof|what could prove this wrong|why should i trust)\b/.test(text)) {
     return "scientificLaw";
   }
 
-  if (/\b(law library|laws|proof law|boundary|coherence law|law side)\b/.test(text)) return "laws";
+  if (/\b(law library|laws|proof law|boundary|coherence law|law side|what keeps this honest)\b/.test(text)) return "laws";
 
-  if (/\b(gauge|gauges|triple g|goals gauges gaps|readiness|pass|hold|fail)\b/.test(text)) return "gauges";
+  if (/\b(gauge|gauges|triple g|goals gauges gaps|readiness|pass|hold|fail|what is working)\b/.test(text)) return "gauges";
 
-  if (/\b(frontier|fusion|energy|water|waste|closed loop|infrastructure|lattice|urban|manual|shimmer|trajectory|vision)\b/.test(text)) {
+  if (/\b(frontier|fusion|energy|water|waste|closed loop|infrastructure|lattice|urban|manual|shimmer|trajectory|vision|real world|has to work)\b/.test(text)) {
     return "frontier";
   }
 
-  if (/\b(hearth|mission control|window within the window|planetary construct|construct facility|construct engine|world-formation|planet construction)\b/.test(text)) {
+  if (/\b(hearth|mission control|window within the window|planetary construct|construct facility|construct engine|world-formation|planet construction|where am i right now|what is hearth controlling)\b/.test(text)) {
     return "hearth";
   }
 
-  if (findCharacterIdFromText(text) || /\b(character|characters|dossier|people|portrait hall)\b/.test(text)) {
+  if (findCharacterIdFromText(text) || /\b(character|characters|dossier|people|portrait hall|meet the characters|who are the characters)\b/.test(text)) {
     return "characters";
   }
 
@@ -2026,18 +2151,79 @@ function classifyIntent(ctx) {
     return "diagnostic";
   }
 
-  if (/\b(mirrorland|audralia|zionts|h-earth|h earth|world window|south gate|atrium|atlas|interactive narrative)\b/.test(text)) {
+  if (/\b(mirrorland|audralia|zionts|h-earth|h earth|world window|south gate|atrium|atlas|interactive narrative|what is happening in mirrorland)\b/.test(text)) {
     return "mirrorland";
   }
 
   if (/\b(sean|creator|designer|developer|founder|person behind|mind behind|artist|creative integrity|artistic integrity)\b/.test(text)) return "sean";
   if (/\b(underdog|inner voice|voice under pressure|pressure voice|underestimated)\b/.test(text)) return "underdog";
   if (/\b(nine summits|summits|summit|love|free will|dignity|joy|peace|stability|balance|structure|character)\b/.test(text)) return "summits";
-
   if (/\b(proof|real|testable|evidence)\b/.test(text)) return "proof";
   if (/\b(route|door|open|where should i go|next door|handoff|path)\b/.test(text)) return "route";
 
   return "orientation";
+}
+
+function inferPromptMode(ctx) {
+  if (ctx.promptMode && ctx.promptMode !== "unknown_prompt") {
+    return ctx.promptMode;
+  }
+
+  const text = [
+    ctx.visitorText,
+    ctx.selectedLabel,
+    ctx.selectedTarget,
+    ctx.currentTopic,
+    ctx.movement,
+    ctx.requestMode
+  ].join(" ").toLowerCase();
+
+  if (/\b(why should i trust|trust this|prove|proof|evidence|what proves|why does this matter|why is this important|what could prove this wrong|can this survive a real test|what would count as proof)\b/.test(text)) {
+    return "skeptic_prompt";
+  }
+
+  if (/\b(real life|practical|work in the real world|what does this do|how does this work|use this|system|build|frontier|what has to work|what can i actually do)\b/.test(text)) {
+    return "practical_prompt";
+  }
+
+  if (/\b(me|myself|where do i fit|recognize in myself|which character|my pressure|what does this have to do with me|learn about myself)\b/.test(text)) {
+    return "personal_prompt";
+  }
+
+  if (/\b(continue|what happens next|next|go deeper|stay with this|show me more|who should i meet first|where should i go from here)\b/.test(text)) {
+    return "progression_prompt";
+  }
+
+  if (/\b(recenter|lost|back|return|start over|where am i|where should i start|cleanest next door)\b/.test(text)) {
+    return "recenter_prompt";
+  }
+
+  if (/\b(what is happening|what is this world|enter|meet|characters|story|mirrorland|audralia|zionts|h-earth|who is|what is)\b/.test(text)) {
+    return "story_prompt";
+  }
+
+  return "story_prompt";
+}
+
+function inferMovementIntent(ctx) {
+  if (ctx.movementIntent && ctx.movementIntent !== "unknown") return ctx.movementIntent;
+
+  const optionKind = normalizeOptionKind(ctx.optionKind);
+  if (optionKind === "forward") return "continue_current_path";
+  if (optionKind === "return") return "return_one_threshold";
+  if (optionKind === "parallel") return "cross_to_related_room";
+  if (optionKind === "route") return "open_prepared_door";
+  if (optionKind === "control") return "recenter";
+
+  const text = [ctx.visitorText, ctx.selectedLabel, ctx.movement].join(" ").toLowerCase();
+
+  if (/\b(open|visit|go to|launch)\b/.test(text)) return "open_prepared_door";
+  if (/\b(return|back|step back)\b/.test(text)) return "return_one_threshold";
+  if (/\b(cross|related room|nearby room)\b/.test(text)) return "cross_to_related_room";
+  if (/\b(continue|next|go deeper|show me more)\b/.test(text)) return "continue_current_path";
+  if (/\b(recenter|start over|lost)\b/.test(text)) return "recenter";
+
+  return "ask_jeeves";
 }
 
 function findCharacterIdFromText(text) {
@@ -2157,6 +2343,9 @@ function retrieveApprovedMemory(ctx) {
     ctx.selectedTarget,
     ctx.selectedLabel,
     ctx.requestMode,
+    ctx.promptMode,
+    ctx.optionKind,
+    ctx.archetypeAlignment,
     ctx.currentNode,
     ctx.currentEntry,
     ctx.currentPath,
@@ -2172,6 +2361,7 @@ function retrieveApprovedMemory(ctx) {
     ctx.movement,
     ctx.requestedMode,
     ctx.sessionTrail.join(" "),
+    ctx.transitionTrail.map((item) => item.label || "").join(" "),
     ctx.registryContext ? ctx.registryContext.summary : ""
   ].join(" ").toLowerCase();
 
@@ -2185,6 +2375,7 @@ function retrieveApprovedMemory(ctx) {
     if (ctx.selectedTarget && ctx.selectedTarget.toLowerCase().includes(item.id.toLowerCase())) score += 5;
     if (ctx.selectedLabel && text.includes(ctx.selectedLabel.toLowerCase())) score += 2;
     if (ctx.requestMode === "node_enrichment" && item.intents && item.intents.includes(intent)) score += 4;
+    if (ctx.promptMode && ctx.promptMode !== "unknown_prompt") score += promptModeMemoryBoost(ctx.promptMode, item);
     if (ctx.currentEntry && ctx.currentEntry.toLowerCase() === item.id.toLowerCase()) score += 8;
     if (ctx.currentNode && item.targets.includes(normalizeTarget(ctx.currentNode))) score += 6;
     if (ctx.currentPath && item.targets.includes(normalizeTarget(ctx.currentPath))) score += 6;
@@ -2243,6 +2434,15 @@ function retrieveApprovedMemory(ctx) {
   }
 
   return dedupeMemory(scored).slice(0, MAX_CONTEXT_ITEMS);
+}
+
+function promptModeMemoryBoost(promptMode, item) {
+  if (promptMode === "skeptic_prompt" && (item.intents.includes("proof") || item.intents.includes("scientificLaw") || item.intents.includes("laws"))) return 4;
+  if (promptMode === "practical_prompt" && (item.intents.includes("frontier") || item.routes.includes("products"))) return 4;
+  if (promptMode === "personal_prompt" && (item.intents.includes("characterArchetypeMirror") || item.intents.includes("diagnostic") || item.intents.includes("underdog"))) return 4;
+  if (promptMode === "story_prompt" && (item.scope === "narrative" || item.scope === "character")) return 3;
+  if (promptMode === "progression_prompt") return 1;
+  return 0;
 }
 
 function buildApprovedMemory() {
@@ -2553,6 +2753,8 @@ function expandAllowedByIntent(intent, targetSet, routeSet) {
       "characterJeevesPath",
       "characterRemoteTeamPath",
       "characterRelationshipsPath",
+      "characterStoryPressurePath",
+      "characterFirstPath",
       "characterArchetypeMirrorPath",
       "mirrorlandPath"
     ]);
@@ -2608,14 +2810,14 @@ function buildCharacterArchetypeResponse(ctx) {
     return {
       bubbles: [
         "We can use the Character Archetype Mirror.",
-        "It does not tell you who you are. It looks at how you tend to behave under pressure, then shows which character pattern you are currently following.",
+        "It does not tell you who you are. It looks at how you tend to behave under pressure, then shows which Character pattern you are currently following.",
         "Start with the mirror questions, or take the Coherence Diagnostic first if you want the stronger read."
       ],
       options: [
-        option("Ask the first mirror question.", "characterArchetypeQuestionOne", "conversation", "objective"),
-        option("Take the Coherence Diagnostic.", "diagnosticPath", "conversation", "objective"),
-        option("Introduce the Characters first.", "charactersPath", "conversation", "narrative"),
-        option("Re-center me.", "recenterNode", "control", "objective")
+        makePromptOption("Ask me the first mirror question.", "characterArchetypeQuestionOne", "personal_prompt", "personal_entry"),
+        makePromptOption("I want to take the Coherence Diagnostic.", "diagnosticPath", "personal_prompt", "personal_entry"),
+        makePromptOption("I’d like to meet the Characters first.", "charactersPath", "story_prompt", "story_entry"),
+        makeControlOption("Can you re-center me?", "recenterNode")
       ],
       handoffs: ["coherenceDiagnostic", "characters"],
       confidence: "medium",
@@ -2641,12 +2843,12 @@ function buildCharacterArchetypeResponse(ctx) {
   return {
     bubbles,
     options: [
-      option("Show why this match appeared.", topCharacter.target, "conversation", "narrative"),
-      secondCharacter ? option("Show the secondary pressure.", secondCharacter.target, "conversation", "narrative") : null,
-      option("Ask another mirror question.", "characterArchetypeQuestionOne", "conversation", "objective"),
-      option("Take the full Diagnostic.", "diagnosticPath", "conversation", "objective"),
-      option("Show all Characters.", "charactersPath", "conversation", "narrative"),
-      option("Choose the next door.", "cleanDoor", "control", "objective")
+      makePromptOption("Why did this match appear?", topCharacter.target, "skeptic_prompt", "proof_entry"),
+      secondCharacter ? makePromptOption("What does the secondary pressure mean?", secondCharacter.target, "personal_prompt", "personal_entry") : null,
+      makePromptOption("Ask me another mirror question.", "characterArchetypeQuestionOne", "personal_prompt", "personal_entry"),
+      makePromptOption("I want to take the full Diagnostic.", "diagnosticPath", "personal_prompt", "personal_entry"),
+      makePromptOption("I’d like to see all the Characters.", "charactersPath", "story_prompt", "story_entry"),
+      makeControlOption("What is the cleanest next door?", "cleanDoor")
     ].filter(Boolean),
     handoffs: ["characters", "coherenceDiagnostic"],
     confidence: mirror.confidence,
@@ -2736,15 +2938,116 @@ function normalizeArchetype(value) {
   return "";
 }
 
-function option(label, target, type, scopeLane) {
+function makePromptOption(label, target, promptMode, archetypeAlignment) {
   const normalizedTarget = normalizeTarget(target);
+
+  return {
+    label: capString(label, 110),
+    target: normalizedTarget,
+    type: "conversation",
+    scopeLane: isNarrativeTarget(normalizedTarget) ? "narrative" : "objective",
+    promptMode: normalizePromptMode(promptMode),
+    optionKind: "conversation_prompt",
+    archetypeAlignment: normalizeArchetypeAlignment(archetypeAlignment),
+    bridgeMoment: "before_knowledge",
+    movementIntent: "ask_jeeves"
+  };
+}
+
+function makeForwardOption(label, target) {
+  const normalizedTarget = normalizeTarget(target);
+
+  return {
+    label: capString(label, 110),
+    target: normalizedTarget,
+    type: "conversation",
+    scopeLane: isNarrativeTarget(normalizedTarget) ? "narrative" : "objective",
+    promptMode: "progression_prompt",
+    optionKind: "forward",
+    archetypeAlignment: "unknown_entry",
+    bridgeMoment: "after_knowledge",
+    movementIntent: "continue_current_path"
+  };
+}
+
+function makeReturnOption(label, target) {
+  return {
+    label: capString(label, 110),
+    target: normalizeTarget(target),
+    type: "control",
+    scopeLane: "objective",
+    promptMode: "recenter_prompt",
+    optionKind: "return",
+    archetypeAlignment: "unknown_entry",
+    bridgeMoment: "return_fork",
+    movementIntent: "return_one_threshold"
+  };
+}
+
+function makeParallelOption(label, target, archetypeAlignment) {
+  const normalizedTarget = normalizeTarget(target);
+
+  return {
+    label: capString(label, 110),
+    target: normalizedTarget,
+    type: "conversation",
+    scopeLane: isNarrativeTarget(normalizedTarget) ? "narrative" : "objective",
+    promptMode: "progression_prompt",
+    optionKind: "parallel",
+    archetypeAlignment: normalizeArchetypeAlignment(archetypeAlignment || "unknown_entry"),
+    bridgeMoment: "parallel_crossing",
+    movementIntent: "cross_to_related_room"
+  };
+}
+
+function makeControlOption(label, target) {
+  return {
+    label: capString(label, 110),
+    target: normalizeTarget(target),
+    type: "control",
+    scopeLane: "objective",
+    promptMode: "recenter_prompt",
+    optionKind: "control",
+    archetypeAlignment: "unknown_entry",
+    bridgeMoment: "recenter_fork",
+    movementIntent: "recenter"
+  };
+}
+
+function option(label, target, type, scopeLane, promptMode, optionKind, archetypeAlignment) {
+  const normalizedTarget = normalizeTarget(target);
+  const normalizedKind = normalizeOptionKind(optionKind || (type === "control" ? "control" : "conversation_prompt"));
 
   return {
     label,
     target: normalizedTarget,
     type: type || "conversation",
-    scopeLane: scopeLane || (isNarrativeTarget(normalizedTarget) ? "narrative" : "objective")
+    scopeLane: scopeLane || (isNarrativeTarget(normalizedTarget) ? "narrative" : "objective"),
+    promptMode: normalizePromptMode(promptMode || inferPromptModeFromLabel(label, normalizedTarget)),
+    optionKind: normalizedKind,
+    archetypeAlignment: normalizeArchetypeAlignment(archetypeAlignment || inferArchetypeAlignmentFromTarget(normalizedTarget)),
+    bridgeMoment: normalizedKind === "control" ? "recenter_fork" : "before_knowledge",
+    movementIntent: normalizedKind === "control" ? "recenter" : "ask_jeeves"
   };
+}
+
+function inferPromptModeFromLabel(label, target) {
+  const text = [label, target].join(" ").toLowerCase();
+  if (/\btrust|proof|evidence|wrong|matter|important|test\b/.test(text)) return "skeptic_prompt";
+  if (/\breal world|work|system|use|frontier|product|energy|water|waste\b/.test(text)) return "practical_prompt";
+  if (/\bme|myself|mirror|archetype|diagnostic|underdog\b/.test(text)) return "personal_prompt";
+  if (/\bnext|continue|first|return|start\b/.test(text)) return "progression_prompt";
+  return "story_prompt";
+}
+
+function inferArchetypeAlignmentFromTarget(target) {
+  const clean = normalizeTarget(target);
+  if (clean.includes("scientific") || clean.includes("Law") || clean.includes("gauges") || clean.includes("proof")) return "proof_entry";
+  if (clean.includes("frontier") || clean.includes("products")) return "practical_entry";
+  if (clean.includes("diagnostic") || clean.includes("Archetype") || clean.includes("underdog") || clean.includes("mirrorMe")) return "personal_entry";
+  if (clean.includes("sean")) return "source_entry";
+  if (clean.includes("hearth") || clean.includes("audralia") || clean.includes("mirrorland") || clean.includes("characters")) return "story_entry";
+  return "unknown_entry";
 }
 
 async function callModel(ctx, memory, allowed) {
@@ -2782,7 +3085,7 @@ async function callModel(ctx, memory, allowed) {
       text: {
         format: {
           type: "json_schema",
-          name: "jeeves_backbrain_v4_response",
+          name: "jeeves_backbrain_v5_conversation_grammar_response",
           strict: true,
           schema: RESPONSE_SCHEMA
         }
@@ -2804,27 +3107,33 @@ async function callModel(ctx, memory, allowed) {
 function buildSystemPrompt() {
   return [
     "You are Jeeves, the governed house intelligence for Diamond Gate Bridge.",
-    "You are the North/backbrain coordinator. You are not an uncontrolled chatbot.",
+    "You are API/North: the depth and knowledge authority.",
     "You answer only from approved memory supplied in the request.",
     "You may explain, clarify, personalize, deepen, compare, and conclude, but you may not invent canon, pages, routes, characters, or facts.",
-    "You must integrate deep knowledge with blueprint placement and cardinal meaning.",
-    "Every meaningful answer should feel like a host explaining a real house: what the room is, where it sits, what it complements, which corridor it prepares, why it exists, and what next door follows.",
-    "Use Fibonacci synchronization as hidden pacing: recognition, confirmation, split, placement, accord, path, handoff, conclusion.",
-    "Do not mention Fibonacci, 256-state logic, or NEWS unless the visitor asks directly.",
-    "Use visitor-facing estate language, not internal implementation language.",
-    "The Guide Desk blueprint is directional authority for public sitemap placement.",
-    "The visible frontbrain remains final route authority.",
-    "Expression remains final public voice standard.",
-    "If requestMode is node_enrichment, treat selectedTarget and selectedLabel as the strongest signal for the answer.",
-    "A node_enrichment answer should enrich the clicked conversational choice, not merely re-route the visitor.",
-    "Conversation options must stay inside the conversation and must not sound like direct page jumps.",
-    "Action labels such as Open, Visit, Enter, Launch, and Go to belong to handoffs, not conversation options.",
-    "Handoffs are route IDs only. The frontbrain owns final rendering and final route authority.",
+    "You do not own browser rendering, visible pacing, route execution, or Expression transition language.",
+    "Answer the user’s visible message first.",
+    "Use the estate map, room placement, canon, route logic, and neighboring-room structure invisibly to keep the answer correct.",
+    "Do not explain the architecture unless the user asks for the map, proof structure, room relationship, or placement.",
+    "The interface is a text conversation with Jeeves.",
+    "Conversation options must read like complete texts the user would actually send to Jeeves.",
+    "Conversation options may be questions, requests, or statements of intent.",
+    "Prepared-door labels may be navigation actions, but conversation options may not sound like route controls.",
+    "Skeptic questions such as why this matters, why to trust it, or what proves it belong to skeptic_prompt, not the default story path.",
+    "Default story path should show importance through stakes and consequence, not ask the user to request importance.",
+    "Characters are not merely roles. They are necessary people inside a greater story progression.",
+    "Mirrorland does not stay abstract. The story becomes clearer when the Characters enter it.",
+    "If requestMode is node_enrichment, selectedTarget and selectedLabel are the strongest signals for the answer.",
+    "If promptMode is present, answer in that mode.",
+    "If promptMode is missing, infer it from selectedLabel and visitorText.",
+    "If promptMode is story_prompt, answer what is happening, who is involved, what the user is seeing, or what the room/story is.",
+    "If promptMode is skeptic_prompt, answer why the claim matters, why it can be trusted, what proves it, what limits it, or what could break it.",
+    "If promptMode is practical_prompt, answer what works, what can be used, what the real-world consequence is, or what system has to function.",
+    "If promptMode is personal_prompt, answer how the visitor may relate, what mirror is being offered, or what pressure pattern is being examined, without diagnosing identity.",
+    "If promptMode is progression_prompt, answer what happens next and give a clean next step.",
+    "The Guide Desk blueprint is directional authority for public sitemap placement, but do not name the blueprint unless the user asks for it.",
     "Hearth canon: Hearth is Mission Control, the window within the window. Mirrorland is the larger future-facing window. Hearth is the inner estate control view into unknown future potential.",
     "The deeper unknown construct location is reached through estate portal logic and exists somewhere in the universe. Hearth is the live estate chamber that gives the visitor and Jeeves a control view into it.",
     "Do not describe Hearth only as an unknown-location construct facility. Use Mission Control as the public page role.",
-    "Forbidden public words and phrases include: registry, scope lane, organ, route lane, architecture layer, expression payload, progression state, backend bridge, API, public human-voice side.",
-    "The words construct and engine are allowed only when speaking about Hearth as public canon, not implementation.",
     "Character Archetype Mirror rule: you may say the visitor's answers currently resemble a character's behavior under pressure. You may not say the visitor is that character. This is reflective, not diagnostic.",
     "Coherence Diagnostic boundary: it is local-only in its current version and is not medical, mental-health, legal, employment, official IQ, or official MBTI assessment.",
     "If the thread is already clear, use conclusiveState complete, route_ready, or switch_recommended instead of repeating definitions.",
@@ -2838,7 +3147,7 @@ function buildUserPrompt(ctx, memory, allowed) {
   const narrativeFrame = buildNarrativeFrame(ctx, memory, allowed);
 
   return JSON.stringify({
-    task: "Generate a safe governed Jeeves response.",
+    task: "Generate a safe governed Jeeves response that answers the user's text-message-style prompt.",
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     visitor: {
@@ -2846,6 +3155,14 @@ function buildUserPrompt(ctx, memory, allowed) {
       selectedTarget: ctx.selectedTarget,
       selectedLabel: ctx.selectedLabel,
       requestMode: ctx.requestMode,
+      promptMode: ctx.promptMode,
+      optionKind: ctx.optionKind,
+      archetypeAlignment: ctx.archetypeAlignment,
+      bridgeMoment: ctx.bridgeMoment,
+      movementIntent: ctx.movementIntent,
+      bridgeContext: ctx.bridgeContext,
+      branchStack: ctx.branchStack,
+      transitionTrail: ctx.transitionTrail,
       intent: ctx.intent,
       activeHostPage: ctx.activeHostPage,
       livePageAccess: ctx.livePageAccess,
@@ -2921,18 +3238,21 @@ function buildUserPrompt(ctx, memory, allowed) {
       summits: SUMMITS_REGISTRY,
       coherenceDiagnostic: COHERENCE_DIAGNOSTIC_REGISTRY
     },
-    allowedConversationTargets: Array.from(allowed.targetSet),
-    allowedRouteHandoffs: Array.from(allowed.routeSet),
+    approvedConversationTargets: Array.from(allowed.targetSet),
+    approvedRouteHandoffs: Array.from(allowed.routeSet),
     outputRules: {
       bubbles: "1 to 4 Jeeves-style response bubbles",
-      options: "0 to 6 conversational options using allowedConversationTargets only",
-      handoffs: "0 to 6 route IDs using allowedRouteHandoffs only",
+      options: "0 to 6 conversational options using approvedConversationTargets only",
+      handoffs: "0 to 6 route IDs using approvedRouteHandoffs only",
       noMarkdown: true,
       noUnapprovedRoutes: true,
       noUnapprovedCanon: true,
       frontbrainRouteAuthority: true,
+      conversationGrammarRule: "Conversation options must be complete user texts to Jeeves. They can be questions, requests, or statements of intent.",
       routeSeparationRule: "Conversation options explain or continue. Handoffs open pages.",
-      narrativeFiveFieldRule: "When possible, answer through disposition, placement, accord, path, and conclusion without naming those fields to the visitor."
+      promptModeRule: "Return promptMode, optionKind, archetypeAlignment, bridgeMoment, and movementIntent for every option.",
+      mapVisibilityRule: "Use room map and route placement invisibly unless the visitor asks for room relationship, map, proof structure, or placement.",
+      narrativeFiveFieldRule: "When useful, answer through disposition, placement, accord, path, and conclusion without naming those fields to the visitor."
     }
   });
 }
@@ -2965,6 +3285,12 @@ function buildNarrativeFrame(ctx, memory, allowed) {
     blueprintRoom: blueprint || null,
     subject,
     selectedTarget: ctx.selectedTarget,
+    selectedLabel: ctx.selectedLabel,
+    promptMode: ctx.promptMode,
+    optionKind: ctx.optionKind,
+    archetypeAlignment: ctx.archetypeAlignment,
+    bridgeMoment: ctx.bridgeMoment,
+    movementIntent: ctx.movementIntent,
     requestMode: ctx.requestMode,
     hearthMissionControlFrame: {
       active: isHearthMissionControlContext(ctx),
@@ -3079,7 +3405,7 @@ function normalizeModelResponse(modelResponse, ctx, memory, allowed) {
 
   return {
     bubbles: normalizeBubbles(base.bubbles, ctx, memory),
-    options: normalizeOptions(base.options, allowed),
+    options: normalizeOptions(base.options, allowed, ctx),
     handoffs: normalizeHandoffs(base.handoffs, allowed),
     confidence: ["high", "medium", "low"].includes(base.confidence) ? base.confidence : "medium",
     needsRecenter: Boolean(base.needsRecenter),
@@ -3107,7 +3433,7 @@ function normalizeBubbles(value, ctx, memory) {
   return bubbles;
 }
 
-function normalizeOptions(value, allowed) {
+function normalizeOptions(value, allowed, ctx) {
   if (!Array.isArray(value)) return [];
 
   return value
@@ -3119,13 +3445,21 @@ function normalizeOptions(value, allowed) {
       if (!allowed.targetSet.has(target)) return null;
 
       let label = sanitizeOptionLabel(capString(item.label, 110), target);
-      if (!label) label = DEFAULT_CONVERSATION_LABELS[target] || "Tell me more.";
+      if (!label) label = DEFAULT_CONVERSATION_LABELS[target] || "Can you tell me more?";
+
+      const optionKind = normalizeOptionKind(item.optionKind);
+      const type = normalizeOptionType(item.type, optionKind);
 
       return {
         label,
         target,
-        type: normalizeOptionType(item.type),
-        scopeLane: normalizeOptionScope(item.scopeLane, target)
+        type,
+        scopeLane: normalizeOptionScope(item.scopeLane, target),
+        promptMode: normalizePromptMode(item.promptMode || inferPromptModeFromLabel(label, target)),
+        optionKind,
+        archetypeAlignment: normalizeArchetypeAlignment(item.archetypeAlignment || inferArchetypeAlignmentFromTarget(target)),
+        bridgeMoment: normalizeBridgeMoment(item.bridgeMoment || inferBridgeMomentFromOptionKind(optionKind)),
+        movementIntent: normalizeMovementIntent(item.movementIntent || inferMovementIntentFromOptionKind(optionKind, ctx))
       };
     })
     .filter(Boolean)
@@ -3134,7 +3468,6 @@ function normalizeOptions(value, allowed) {
 
 function sanitizeOptionLabel(label, target) {
   const value = capString(label, 110);
-
   if (!value) return "";
 
   const actionLike = /^(visit|open|enter|explore|launch|go to)\b/i.test(value);
@@ -3145,7 +3478,8 @@ function sanitizeOptionLabel(label, target) {
   return sanitizePublicText(value);
 }
 
-function normalizeOptionType(type) {
+function normalizeOptionType(type, optionKind) {
+  if (optionKind === "control" || optionKind === "return") return "control";
   if (["conversation", "topic", "calibration", "back", "control"].includes(type)) return type;
   return "conversation";
 }
@@ -3153,6 +3487,24 @@ function normalizeOptionType(type) {
 function normalizeOptionScope(scopeLane, target) {
   if (scopeLane === "narrative") return "narrative";
   return isNarrativeTarget(target) ? "narrative" : "objective";
+}
+
+function inferBridgeMomentFromOptionKind(optionKind) {
+  if (optionKind === "forward") return "after_knowledge";
+  if (optionKind === "return") return "return_fork";
+  if (optionKind === "parallel") return "parallel_crossing";
+  if (optionKind === "route") return "prepared_door";
+  if (optionKind === "control") return "recenter_fork";
+  return "before_knowledge";
+}
+
+function inferMovementIntentFromOptionKind(optionKind, ctx) {
+  if (optionKind === "forward") return "continue_current_path";
+  if (optionKind === "return") return "return_one_threshold";
+  if (optionKind === "parallel") return "cross_to_related_room";
+  if (optionKind === "route") return "open_prepared_door";
+  if (optionKind === "control") return "recenter";
+  return ctx && ctx.movementIntent && ctx.movementIntent !== "unknown" ? ctx.movementIntent : "ask_jeeves";
 }
 
 function normalizeHandoffs(value, allowed) {
@@ -3182,6 +3534,7 @@ function sanitizePublicText(text, ctx) {
 
   clean = clean.replace(/```/g, "");
   clean = clean.replace(/\s{2,}/g, " ");
+  clean = clean.replace(/\bthe Mirrorland\b/gi, "Mirrorland");
 
   if (!isHearthContext(ctx) && /\b(browser|server|module|export|function|json schema|payload)\b/i.test(clean)) {
     clean = clean
@@ -3193,8 +3546,6 @@ function sanitizePublicText(text, ctx) {
       .replace(/\bjson schema\b/gi, "answer shape")
       .replace(/\bpayload\b/gi, "answer");
   }
-
-  clean = clean.replace(/\bthe Mirrorland\b/gi, "Mirrorland");
 
   return clean.trim();
 }
@@ -3234,57 +3585,57 @@ function isHearthMissionControlContext(ctx) {
 
 function deterministicFallbackBubbles(ctx, memory) {
   const intent = ctx.intent || classifyIntent(ctx);
-  const frame = buildNarrativeFrame(ctx, memory || [], buildAllowedSets(ctx, memory || []));
+  const promptMode = inferPromptMode(ctx);
 
   if (intent === "characterArchetypeMirror") {
     return buildCharacterArchetypeResponse(ctx).bubbles;
   }
 
-  if (intent === "blueprint") {
-    return [
-      "Guide Desk is the estate’s directional blueprint authority.",
-      "It gives the house a readable map: thirteen public blueprint rooms, exact jump targets, and a 20-path route planner.",
-      "That blueprint does not replace what I know. It gives what I know a place to stand."
-    ];
-  }
-
   if (intent === "scientificLaw") {
+    if (promptMode === "skeptic_prompt") {
+      return [
+        "The trust test is simple: a claim has to risk being wrong.",
+        SCIENTIFIC_LAW_REGISTRY.coreTruth,
+        "The next useful question is whether you want to test theory, evidence, measurement, or limits."
+      ];
+    }
+
     return [
+      "Scientific Law is the room where convincing language has to become testable.",
       SCIENTIFIC_LAW_REGISTRY.coreTruth,
-      "Scientific Law sits on the proof side. It complements Law Library because Law gives the boundary, and it complements The Lab because claims need measurement.",
       "The four main doors are Theory, Evidence, Measure, and Limits."
     ];
   }
 
-  if (intent === "laws") {
+  if (intent === "characters") {
     return [
-      "Law Library sits on the proof side of the estate.",
-      "It gives the boundary before claims move into Scientific Law or The Lab.",
-      "The clean next door is Scientific Law if you want the claim tested, or The Lab if you want readiness measured."
+      "Mirrorland does not stay abstract for long. The story becomes clearer when the Characters enter it.",
+      "Each Character carries a necessary part of the larger story: shelter, repair, warning, survival, signal, boundary, sequence, or distributed help.",
+      "You can meet them as people, ask why they matter, or use the mirror to see which pattern you recognize in yourself."
     ];
   }
 
-  if (intent === "gauges") {
+  if (intent === "mirrorland") {
     return [
-      GAUGE_REGISTRY.summary,
-      "The Lab sits near Law Library and Scientific Law because a gauge reading only matters when the claim and the boundary are clear.",
-      "The clean read is Goals, Gauges, and Gaps: what it aims to be, what can be measured, and what remains unresolved."
+      "Mirrorland is where possible futures become visible before they become final.",
+      MIRRORLAND_REGISTRY.triad,
+      "If you stay here, the next step is simple: understand the three roads, then meet the people who make those roads matter."
     ];
   }
 
   if (intent === "frontier") {
     return [
-      FRONTIER_REGISTRY.conjugation,
-      "Frontier sits in the applied future-systems yard. It complements Audralia because future systems need a world to serve.",
-      "It also stays near Law Library and The Lab because future-facing claims still need boundary and measurement."
+      "Frontier is where future ideas have to survive contact with practical systems.",
+      "Energy, water, waste, infrastructure, feedback, cities, direction, and visible signals all have to answer the same question: can this work in the real world?",
+      "The clean next move is to choose a system or send the claim back through proof."
     ];
   }
 
   if (intent === "hearth") {
     return [
       HEARTH_CONSTRUCT_REGISTRY.primaryLine,
-      HEARTH_CONSTRUCT_REGISTRY.summary,
-      HEARTH_CONSTRUCT_REGISTRY.portalLine
+      "You are in the inner control window. Mirrorland is the larger future-facing field; Hearth is where the view gets coordinated before it becomes a route, test, or consequence.",
+      "From here, you can ask what Hearth controls, why it answers to proof, or where you should go next."
     ];
   }
 
@@ -3292,7 +3643,7 @@ function deterministicFallbackBubbles(ctx, memory) {
     return [
       CREATOR_REGISTRY.summary,
       CREATOR_REGISTRY.depth,
-      "That room sits near This Underdog and Nine Summits because creator, inner pressure, and value road belong close together."
+      "That road connects naturally to This Underdog and Nine Summits because the creator, the pressure voice, and the value road belong together."
     ];
   }
 
@@ -3300,7 +3651,7 @@ function deterministicFallbackBubbles(ctx, memory) {
     return [
       UNDERDOG_REGISTRY.summary,
       UNDERDOG_REGISTRY.depth,
-      "This path complements the Character Archetype Mirror because both ask how pressure becomes behavior, voice, and direction."
+      "This is why the underdog path sits near the mirror: both ask how pressure becomes behavior, voice, and direction."
     ];
   }
 
@@ -3308,7 +3659,31 @@ function deterministicFallbackBubbles(ctx, memory) {
     return [
       SUMMITS_REGISTRY.summary,
       SUMMITS_REGISTRY.bookSummary,
-      "The value road sits between personal depth and source because love, dignity, free will, and character are not isolated rooms."
+      "The value road is not just a page. It is the climb from pressure toward love, dignity, free will, and direction."
+    ];
+  }
+
+  if (intent === "blueprint") {
+    return [
+      "The Guide Desk is where the estate becomes easier to navigate.",
+      "It gives you a readable map, but the map is not the experience. The map helps you choose a clean next door.",
+      "You can start with proof, Mirrorland, Frontier, or personal reflection."
+    ];
+  }
+
+  if (intent === "laws") {
+    return [
+      "The Law Library keeps the estate from expanding without discipline.",
+      "If you want to know whether something can be trusted, the next door is Scientific Law.",
+      "If you want to know whether something is working, the next door is Triple G."
+    ];
+  }
+
+  if (intent === "gauges") {
+    return [
+      GAUGE_REGISTRY.summary,
+      "The practical read is Goals, Gauges, and Gaps: what it aims to be, what can be measured, and what still remains unresolved.",
+      "That makes Triple G the room for readiness, not decoration."
     ];
   }
 
@@ -3328,8 +3703,7 @@ function deterministicFallbackBubbles(ctx, memory) {
   if (primary) {
     return [
       primary.summary,
-      frame.narrativePlacement,
-      "I can keep explaining this, ask a sharper question, or point you to the door that matches it."
+      "I can keep answering this directly, ask a sharper question, or point you to the cleanest next door."
     ].map((line) => sanitizePublicText(line, ctx));
   }
 
@@ -3341,52 +3715,98 @@ function deterministicFallbackBubbles(ctx, memory) {
 
 function deterministicFallbackOptions(ctx, memory, allowed) {
   const intent = ctx.intent || classifyIntent(ctx);
-  let preferredTargets = [];
 
-  if (intent === "characterArchetypeMirror") {
-    preferredTargets = ["characterArchetypeQuestionOne", "diagnosticPath", "charactersPath", "selfLearningPath", "cleanDoor"];
-  } else if (intent === "scientificLaw") {
-    preferredTargets = ["scientificLawTheoryPath", "scientificLawEvidencePath", "scientificLawMeasurePath", "scientificLawLimitsPath", "lawsPath", "gaugesPath"];
-  } else if (intent === "laws") {
-    preferredTargets = ["scientificLawPath", "gaugesPath", "frontierLawPath", "compassPath", "cleanDoor"];
-  } else if (intent === "gauges") {
-    preferredTargets = ["gaugesPath", "lawsPath", "scientificLawPath", "frontierLawPath", "cleanDoor"];
-  } else if (intent === "frontier") {
-    preferredTargets = ["frontierSystemsPath", "frontierEnergyPath", "frontierWaterPath", "frontierWastePath", "hearthFrontierPath", "frontierLawPath"];
-  } else if (intent === "hearth") {
-    preferredTargets = ["hearthFacilityPath", "hearthConstructPath", "hearthFrontierPath", "hearthLawPath", "frontierPath", "scientificLawPath"];
-  } else if (intent === "characters") {
-    preferredTargets = ["charactersPath", "characterRelationshipsPath", "characterStoryPressurePath", "characterArchetypeMirrorPath", "characterFirstPath", "mirrorlandPath"];
-  } else if (intent === "mirrorland") {
-    preferredTargets = ["atriumPath", "atlasPath", "audraliaPath", "ziontsPath", "charactersPath", "frontierPath"];
-  } else if (intent === "sean") {
-    preferredTargets = ["seanPath", "underdogPath", "nineSummitsPath", "productsPath", "cleanDoor"];
-  } else if (intent === "underdog") {
-    preferredTargets = ["underdogPath", "characterArchetypeMirrorPath", "nineSummitsPath", "seanPath", "cleanDoor"];
-  } else if (intent === "summits") {
-    preferredTargets = ["nineSummitsPath", "nineSummitsBookPath", "underdogPath", "seanPath", "characterArchetypeMirrorPath"];
-  } else if (intent === "blueprint") {
-    preferredTargets = ["siteGuidePath", "compassPath", "lawsPath", "gaugesPath", "atriumPath", "frontierPath"];
-  } else {
-    (memory || []).forEach((item) => {
-      (item.targets || []).forEach((target) => preferredTargets.push(target));
-    });
-  }
+  if (intent === "mirrorland") return filterOptionsForAllowed(conversationPromptSet("mirrorland"), allowed);
+  if (intent === "characters") return filterOptionsForAllowed(conversationPromptSet("characters"), allowed);
+  if (intent === "scientificLaw" || intent === "laws" || intent === "proof") return filterOptionsForAllowed(conversationPromptSet("scientificLaw"), allowed);
+  if (intent === "frontier") return filterOptionsForAllowed(conversationPromptSet("frontier"), allowed);
+  if (intent === "hearth") return filterOptionsForAllowed(conversationPromptSet("hearth"), allowed);
+  if (intent === "sean") return filterOptionsForAllowed(conversationPromptSet("sean"), allowed);
+  if (intent === "underdog") return filterOptionsForAllowed(conversationPromptSet("underdog"), allowed);
+  if (intent === "summits") return filterOptionsForAllowed(conversationPromptSet("summits"), allowed);
+  if (intent === "gauges") return filterOptionsForAllowed(conversationPromptSet("gauges"), allowed);
+  if (intent === "blueprint") return filterOptionsForAllowed(conversationPromptSet("blueprint"), allowed);
 
-  if (!preferredTargets.length) {
-    preferredTargets.push("websitePath", "lawsPath", "diagnosticPath", "mirrorlandPath", "returnFork");
-  }
+  return filterOptionsForAllowed(conversationPromptSet("orientation"), allowed);
+}
 
-  return Array.from(new Set(preferredTargets.map(normalizeTarget)))
-    .filter((target) => APPROVED_TARGETS.has(target))
-    .filter((target) => allowed.targetSet.has(target))
-    .slice(0, MAX_OPTIONS)
-    .map((target) => ({
-      label: DEFAULT_CONVERSATION_LABELS[target] || "Tell me more.",
-      target,
-      type: target === "cleanDoor" || target === "returnFork" || target === "priorTopicReturnPath" || target === "originReturnPath" ? "control" : "conversation",
-      scopeLane: isNarrativeTarget(target) ? "narrative" : "objective"
-    }));
+function conversationPromptSet(key) {
+  const sets = {
+    mirrorland: [
+      makePromptOption("What is happening in Mirrorland?", "mirrorlandPath", "story_prompt", "story_entry"),
+      makePromptOption("What could go wrong here?", "ziontsPath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("What can still be saved?", "hEarthPath", "practical_prompt", "practical_entry"),
+      makePromptOption("I’d like to meet the Characters.", "charactersPath", "personal_prompt", "personal_entry")
+    ],
+    characters: [
+      makePromptOption("Who are the Characters?", "charactersPath", "story_prompt", "story_entry"),
+      makePromptOption("Why do these Characters matter?", "characterStoryPressurePath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("Who should I meet first?", "characterFirstPath", "progression_prompt", "story_entry"),
+      makePromptOption("Which Character might I recognize in myself?", "characterArchetypeMirrorPath", "personal_prompt", "personal_entry")
+    ],
+    scientificLaw: [
+      makePromptOption("What needs to be tested?", "scientificLawPath", "story_prompt", "proof_entry"),
+      makePromptOption("Why should I trust this?", "scientificLawEvidencePath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("What would count as proof?", "scientificLawMeasurePath", "practical_prompt", "practical_entry"),
+      makePromptOption("What could prove this wrong?", "scientificLawLimitsPath", "skeptic_prompt", "boundary_entry")
+    ],
+    frontier: [
+      makePromptOption("What has to work in the real world?", "frontierPath", "practical_prompt", "practical_entry"),
+      makePromptOption("Which system should I look at first?", "frontierSystemsPath", "story_prompt", "systems_entry"),
+      makePromptOption("Can this survive a real test?", "scientificLawPath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("What happens if the system fails?", "frontierLawPath", "skeptic_prompt", "boundary_entry")
+    ],
+    hearth: [
+      makePromptOption("Where am I right now?", "hearthPath", "story_prompt", "story_entry"),
+      makePromptOption("What is Hearth controlling?", "hearthConstructPath", "practical_prompt", "systems_entry"),
+      makePromptOption("Why does this room answer to proof?", "hearthLawPath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("Where should I go from here?", "whereToStart", "progression_prompt", "story_entry")
+    ],
+    sean: [
+      makePromptOption("Who is Sean Mansfield?", "seanPath", "story_prompt", "source_entry"),
+      makePromptOption("What is This Underdog?", "underdogPath", "personal_prompt", "personal_entry"),
+      makePromptOption("How did transition shape this?", "underdogPath", "personal_prompt", "source_entry"),
+      makePromptOption("What does this have to do with me?", "characterArchetypeMirrorPath", "personal_prompt", "personal_entry")
+    ],
+    underdog: [
+      makePromptOption("What is This Underdog?", "underdogPath", "story_prompt", "personal_entry"),
+      makePromptOption("How does pressure become a voice?", "underdogPath", "personal_prompt", "personal_entry"),
+      makePromptOption("How does this connect back to Sean?", "seanPath", "progression_prompt", "source_entry"),
+      makePromptOption("Where do I fit into this?", "characterArchetypeMirrorPath", "personal_prompt", "personal_entry")
+    ],
+    summits: [
+      makePromptOption("What is the Nine Summits road?", "nineSummitsPath", "story_prompt", "story_entry"),
+      makePromptOption("What is The Nine Summits of Love?", "nineSummitsBookPath", "story_prompt", "story_entry"),
+      makePromptOption("How does this connect to This Underdog?", "underdogPath", "personal_prompt", "personal_entry"),
+      makePromptOption("What does this have to do with me?", "characterArchetypeMirrorPath", "personal_prompt", "personal_entry")
+    ],
+    gauges: [
+      makePromptOption("What is working, and what still needs proof?", "gaugesPath", "practical_prompt", "proof_entry"),
+      makePromptOption("What are the Goals?", "gaugesPath", "story_prompt", "systems_entry"),
+      makePromptOption("What do the Gauges show?", "gaugesPath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("What are the Gaps?", "gaugesPath", "practical_prompt", "boundary_entry")
+    ],
+    blueprint: [
+      makePromptOption("How do the rooms connect?", "siteGuidePath", "story_prompt", "story_entry"),
+      makePromptOption("Where should I start?", "whereToStart", "progression_prompt", "story_entry"),
+      makePromptOption("Why should I trust this map?", "lawsPath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("What can I actually do here?", "productsPath", "practical_prompt", "practical_entry")
+    ],
+    orientation: [
+      makePromptOption("Where should I start?", "whereToStart", "story_prompt", "story_entry"),
+      makePromptOption("Why should I trust this?", "lawsPath", "skeptic_prompt", "proof_entry"),
+      makePromptOption("What can I actually do here?", "productsPath", "practical_prompt", "practical_entry"),
+      makePromptOption("What does this have to do with me?", "underdogPath", "personal_prompt", "personal_entry")
+    ]
+  };
+
+  return sets[key] || sets.orientation;
+}
+
+function filterOptionsForAllowed(options, allowed) {
+  return options.filter((item) => {
+    return item && APPROVED_TARGETS.has(item.target) && allowed.targetSet.has(item.target);
+  }).slice(0, MAX_OPTIONS);
 }
 
 function deterministicFallbackHandoffs(memory, allowed) {
@@ -3409,10 +3829,10 @@ function deterministicFallbackHandoffs(memory, allowed) {
 
 function defaultRecenterOptions() {
   return [
-    { label: "Re-center me.", target: "recenterNode", type: "control", scopeLane: "objective" },
-    { label: "Tell me about the proof side.", target: "lawsPath", type: "conversation", scopeLane: "objective" },
-    { label: "Tell me about the Diagnostic.", target: "diagnosticPath", type: "conversation", scopeLane: "objective" },
-    { label: "Tell me what Mirrorland is before I enter.", target: "mirrorlandPath", type: "conversation", scopeLane: "narrative" }
+    makeControlOption("Can you re-center me?", "recenterNode"),
+    makePromptOption("Why should I trust this?", "lawsPath", "skeptic_prompt", "proof_entry"),
+    makePromptOption("What can I learn about myself here?", "diagnosticPath", "personal_prompt", "personal_entry"),
+    makePromptOption("What is happening in Mirrorland?", "mirrorlandPath", "story_prompt", "story_entry")
   ];
 }
 
@@ -3436,14 +3856,16 @@ function safeResponse(data, ctx, allowedOverride) {
   const memory = data.memory || retrieveApprovedMemory(safeCtx);
   const allowed = allowedOverride || buildAllowedSets(safeCtx, memory);
   const bubbles = normalizeBubbles(data.bubbles || [], safeCtx, memory);
-  const options = normalizeOptions(data.options || [], allowed);
-  const fallbackOptions = normalizeOptions(defaultRecenterOptions(), allowed);
+  const options = normalizeOptions(data.options || [], allowed, safeCtx);
+  const fallbackOptions = normalizeOptions(defaultRecenterOptions(), allowed, safeCtx);
   const rawHandoffs = Array.isArray(data.handoffs) ? data.handoffs : [];
   const handoffs = rawHandoffs
     .map((route) => normalizeRoute(capString(route, 80)))
     .filter((route) => APPROVED_ROUTE_IDS.has(route))
     .slice(0, MAX_HANDOFFS);
   const narrativeFrame = buildNarrativeFrame(safeCtx, memory, allowed);
+
+  const resolvedHandoffs = handoffs.length ? handoffs : ["compass"];
 
   return {
     ok: Boolean(data.ok),
@@ -3454,9 +3876,9 @@ function safeResponse(data, ctx, allowedOverride) {
     beats: bubbles,
     bubbles,
     options: options.length ? options : fallbackOptions,
-    handoffs: handoffs.length ? handoffs : ["compass"],
-    handoffLabels: buildHandoffLabels(handoffs.length ? handoffs : ["compass"]),
-    routeHints: buildRouteHints(handoffs.length ? handoffs : ["compass"]),
+    handoffs: resolvedHandoffs,
+    handoffLabels: buildHandoffLabels(resolvedHandoffs),
+    routeHints: buildRouteHints(resolvedHandoffs),
     confidence: ["high", "medium", "low"].includes(data.confidence) ? data.confidence : "medium",
     needsRecenter: Boolean(data.needsRecenter),
     intent: INTENTS.includes(data.intent) ? data.intent : safeCtx.intent || classifyIntent(safeCtx),
@@ -3468,6 +3890,14 @@ function safeResponse(data, ctx, allowedOverride) {
     requestMode: safeCtx.requestMode,
     selectedTarget: safeCtx.selectedTarget,
     selectedLabel: safeCtx.selectedLabel,
+    promptMode: safeCtx.promptMode,
+    optionKind: safeCtx.optionKind,
+    archetypeAlignment: safeCtx.archetypeAlignment,
+    bridgeMoment: safeCtx.bridgeMoment,
+    movementIntent: safeCtx.movementIntent,
+    bridgeContext: safeCtx.bridgeContext,
+    branchStack: safeCtx.branchStack,
+    transitionTrail: safeCtx.transitionTrail,
     activeHostPage: safeCtx.activeHostPage,
     currentRoomContext: safeCtx.currentRoomContext,
     currentRoomRole: safeCtx.currentRoomRole,
@@ -3477,6 +3907,7 @@ function safeResponse(data, ctx, allowedOverride) {
     fibonacciDepth: narrativeFrame.fibonacciDepth,
     fibonacciStage: narrativeFrame.fibonacciStage,
     narrativeFrame,
+    conversationGrammarAuthority: "api_north_defines_prompt_mode_js_renders_expression_bridges",
     routeAuthority: "frontbrain_remains_final_authority",
     expressionAuthority: "expression_remains_public_voice_standard",
     blueprintAuthority: "site_guide_blueprint_remains_directional_authority"

@@ -1,42 +1,36 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_SHELL_BOOT_BINDING_CONVERSATION_GRAMMAR_TNT_v25_1
+// HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_RHYTHM_SHELL_BOUND_TNT_v25_2
 // Full-file replacement.
-// Browser-side only.
-// Shell/frontbrain boot binding for the Jeeves conversation chamber.
-// Owns visible mount binding, transcript writing, option rendering, handoff rendering,
-// ready-state release, CSS/HTML selector compatibility, API/North payload transport,
-// local fallback, and route execution.
-// Does not own API/North depth, secure model bridge, moderation, canon authority,
-// Expression authorship, CSS visual authority, or server-side routing.
+// Client-side frontbrain / visible conversation carrier only.
+// Purpose:
+// - Preserve v25.1 shell boot repair.
+// - Close the gap between API/North v5.1 and Expression v5.1.
+// - Render the new DiamondGateBridge split-interface entrance rhythm.
+// - Keep Text Jeeves options conversational.
+// - Keep Prepared Doors as route actions.
+// - Pass lane/stage/bridge context downstream to API/North.
+// - Use Expression as public-language governor when available.
+// - Prevent Jeeves from becoming an in-chat assessment engine.
+// Does not own:
+// - API/North canon
+// - Expression wording authority
+// - CSS layout
+// - HTML shell authority
+// - final server meaning
 //
-// v25.1 renewal:
-// - Does not rewrite the brain.
-// - Repairs the shell-to-frontbrain mount contract.
-// - Writes into the visible transcript immediately.
-// - Releases the legacy “Jeeves is preparing Hearth Mission Control” state.
-// - Supports the CSS shell contract:
-//   [data-jeeves-root], .hearth-jeeves, .hearth-jeeves-v25, .jeeves-screen-glass,
-//   [data-jeeves-thread], [data-jeeves-transcript], [data-jeeves-options],
-//   [data-jeeves-doors], [data-jeeves-handoffs], [data-jeeves-status].
-// - Preserves API v5 conversation grammar fields.
 
 "use strict";
 
-(function hearthJeevesFrontbrainShellBootBindingV25_1() {
-  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_SHELL_BOOT_BINDING_CONVERSATION_GRAMMAR_TNT_v25_1";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_CONVERSATION_GRAMMAR_RENDERER_API_NORTH_COMPATIBLE_TNT_v25";
-  const API_CONTRACT = "HEARTH_JEEVES_BACKBRAIN_NORTH_CONVERSATION_GRAMMAR_STANDARD_TNT_v5";
+(function mountHearthJeevesFrontbrain(global) {
+  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_GUIDED_PATH_RHYTHM_SHELL_BOUND_TNT_v25_2";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_SHELL_BOOT_BINDING_CONVERSATION_GRAMMAR_TNT_v25_1";
+
   const API_ENDPOINT = "/api/jeeves";
 
-  const DEFAULT_NODE = "hearthPath";
-  const DEFAULT_TOPIC = "hearth";
-  const DEFAULT_ROOM_ID = "hearth";
-  const DEFAULT_ROOM_NAME = "Hearth Mission Control";
-  const DEFAULT_CARDINAL = "E";
+  const ROOT_ID = "hearthJeevesMount";
 
+  const MAX_THREAD_BUBBLES = 80;
   const MAX_TRAIL_ITEMS = 24;
-  const MAX_VISIBLE_OPTIONS = 8;
-  const MAX_VISIBLE_HANDOFFS = 8;
 
   const PROMPT_MODES = Object.freeze({
     STORY: "story_prompt",
@@ -70,8 +64,8 @@
 
   const BRIDGE_MOMENTS = Object.freeze({
     ENTRANCE: "entrance_fork",
-    BEFORE_KNOWLEDGE: "before_knowledge",
-    AFTER_KNOWLEDGE: "after_knowledge",
+    BEFORE: "before_knowledge",
+    AFTER: "after_knowledge",
     RETURN: "return_fork",
     PARALLEL: "parallel_crossing",
     RECENTER: "recenter_fork",
@@ -84,9 +78,77 @@
     CONTINUE: "continue_current_path",
     RETURN: "return_one_threshold",
     CROSS: "cross_to_related_room",
-    OPEN: "open_prepared_door",
+    OPEN_DOOR: "open_prepared_door",
     RECENTER: "recenter",
     UNKNOWN: "unknown"
+  });
+
+  const STAGES = Object.freeze({
+    BOOT: "boot",
+    ENTRANCE_OVERVIEW: "entrance_overview",
+    SPLIT_INTERFACE_GATE: "split_interface_gate",
+    TRADITIONAL_WEBSITE_LANE: "traditional_website_lane",
+    NARRATIVE_PATH_LANE: "narrative_path_lane",
+    MISSION_LANE: "mission_lane",
+    BRIDGE_LANE: "bridge_lane",
+    DIAGNOSTIC_REFERRAL: "diagnostic_referral",
+    OPEN_CONVERSATION: "open_conversation"
+  });
+
+  const LANES = Object.freeze({
+    UNKNOWN: "",
+    TRADITIONAL: "traditional",
+    NARRATIVE: "narrative",
+    BRIDGE: "bridge",
+    DIAGNOSTIC: "diagnostic"
+  });
+
+  const TARGETS = Object.freeze({
+    DIAMOND_GATE_OVERVIEW: "diamondGateOverviewPath",
+    SPLIT_INTERFACE: "splitInterfaceBridgePath",
+    TRADITIONAL_WEBSITE: "traditionalWebsiteOverviewPath",
+    NARRATIVE_PATH: "narrativePathOverview",
+    MISSION_OVERVIEW: "missionOverviewPath",
+    MISSION_INNER: "missionInnerPath",
+    MISSION_COMMUNITY: "missionCommunityPath",
+    MISSION_COLLABORATION: "missionCollaborationPath",
+    PRACTICAL_RELEVANCE: "practicalRelevancePath",
+    DIAGNOSTIC_REFERRAL: "diagnosticReferralPath",
+    DIAGNOSTIC: "diagnosticPath",
+    CHARACTER_MIRROR: "characterMirrorPath",
+    MIRRORLAND: "mirrorlandPath",
+    COMPASS: "compassPath",
+    PRODUCTS: "productsPath",
+    LAWS: "lawsPath",
+    SEAN: "seanPath",
+    HEARTH: "hearthPath",
+    FRONTIER: "frontierPath",
+    SCIENTIFIC_LAW: "scientificLawPath",
+    CHARACTERS: "charactersPath",
+    RECENTER: "recenterNode",
+    CLEAN_DOOR: "cleanDoor"
+  });
+
+  const ROUTES = Object.freeze({
+    COMPASS: "compass",
+    HOME: "home",
+    SITE_GUIDE: "siteGuide",
+    COHERENCE_DIAGNOSTIC: "coherenceDiagnostic",
+    MEET_SEAN: "meetSean",
+    PRODUCTS: "products",
+    LAWS: "laws",
+    SCIENTIFIC_LAW: "scientificLaw",
+    GAUGES: "gauges",
+    SHOWROOM: "showroom",
+    HEARTH: "hearth",
+    MIRRORLAND: "mirrorland",
+    ZIONTS: "zionts",
+    AUDRALIA: "audralia",
+    H_EARTH: "hEarth",
+    FRONTIER: "frontier",
+    CHARACTERS: "characters",
+    NINE_SUMMITS: "nineSummits",
+    UNDERDOG: "aboutUnderdog"
   });
 
   const ROUTE_HINTS = Object.freeze({
@@ -111,183 +173,148 @@
     frontierWaste: "/explore/frontier/waste/",
     frontierClosedLoop: "/explore/frontier/closed-loop/",
     frontierInfrastructure: "/explore/frontier/infrastructure/",
+    frontierLattice: "/explore/frontier/lattice/",
+    frontierUrban: "/explore/frontier/urban/",
+    frontierManual: "/explore/frontier/manual/",
+    frontierShimmer: "/explore/frontier/shimmer/",
+    frontierTrajectory: "/explore/frontier/trajectory/",
+    frontierVision: "/explore/frontier/vision/",
     characters: "/characters/",
     controlRoom: "/showroom/globe/hearth/diagnostic/",
     nineSummits: "/nine-summits/",
     aboutUnderdog: "/about-this-underdog/"
   });
 
-  const DEFAULT_HANDOFF_LABELS = Object.freeze({
+  const HANDOFF_LABELS = Object.freeze({
     compass: "Open the Compass",
     home: "Open the Public Entry",
-    siteGuide: "Open the Guide Desk",
-    coherenceDiagnostic: "Open the Diagnostic",
-    meetSean: "Open Meet Sean",
+    siteGuide: "Open the Traditional Website",
+    coherenceDiagnostic: "Open the Coherence Diagnostic",
+    meetSean: "Meet Sean",
     products: "Open Products",
     laws: "Open the Law Library",
     scientificLaw: "Open Scientific Law",
     gauges: "Open Triple G",
     showroom: "Open the Atrium",
     hearth: "Open Hearth",
-    mirrorland: "Open Mirrorland",
+    mirrorland: "Enter the Narrative Path",
     zionts: "Open ZIONTS",
     audralia: "Open Audralia",
     hEarth: "Open H-Earth",
-    frontier: "Open Frontier Yard",
-    frontierEnergy: "Open Energy",
-    frontierWater: "Open Water",
-    frontierWaste: "Open Waste",
-    frontierClosedLoop: "Open Closed Loop",
-    frontierInfrastructure: "Open Infrastructure",
+    frontier: "Open the Frontier Playground",
     characters: "Open the Characters Hall",
-    controlRoom: "Open the Control Room",
     nineSummits: "Open Nine Summits",
     aboutUnderdog: "Open This Underdog"
   });
 
-  const TARGET_ROUTE_HINTS = Object.freeze({
-    compassPath: "compass",
-    whereToStart: "compass",
-    siteGuidePath: "siteGuide",
-    websitePath: "home",
-    proofPath: "laws",
-    lawsPath: "laws",
-    scientificLawPath: "scientificLaw",
-    scientificLawTheoryPath: "scientificLaw",
-    scientificLawEvidencePath: "scientificLaw",
-    scientificLawMeasurePath: "scientificLaw",
-    scientificLawLimitsPath: "scientificLaw",
-    gaugesPath: "gauges",
-    diagnosticPath: "coherenceDiagnostic",
-    futureProfilePath: "coherenceDiagnostic",
-    mirrorMePath: "coherenceDiagnostic",
-    seanPath: "meetSean",
-    underdogPath: "aboutUnderdog",
-    productsPath: "products",
-    nineSummitsPath: "nineSummits",
-    nineSummitsBookPath: "nineSummits",
-    mirrorlandPath: "mirrorland",
-    atriumPath: "showroom",
-    atlasPath: "mirrorland",
-    charactersPath: "characters",
-    characterIdentityPath: "characters",
-    characterRelationshipsPath: "characters",
-    characterTensionsPath: "characters",
-    characterMotivesPath: "characters",
-    characterStoryPressurePath: "characters",
-    characterFirstPath: "characters",
-    characterArchetypeMirrorPath: "coherenceDiagnostic",
-    selfLearningPath: "coherenceDiagnostic",
-    hearthPath: "hearth",
-    hearthFacilityPath: "hearth",
-    hearthConstructPath: "hearth",
-    hearthFrontierPath: "hearth",
-    hearthLawPath: "hearth",
-    audraliaPath: "audralia",
-    audraliaWorldroomPath: "audralia",
-    controlCockpitPath: "controlRoom",
-    hEarthPath: "hEarth",
-    ziontsPath: "zionts",
-    frontierPath: "frontier",
-    frontierSystemsPath: "frontier",
-    frontierEnergyPath: "frontierEnergy",
-    frontierWaterPath: "frontierWater",
-    frontierWastePath: "frontierWaste",
-    frontierClosedLoopPath: "frontierClosedLoop",
-    frontierInfrastructurePath: "frontierInfrastructure",
-    frontierLawPath: "scientificLaw",
-    frontierCharactersPath: "characters"
-  });
-
-  const NODE_TOPIC_MAP = Object.freeze({
-    hearthPath: "hearth",
-    hearthFacilityPath: "hearth",
-    hearthConstructPath: "hearth",
-    hearthFrontierPath: "hearth",
-    hearthLawPath: "hearth",
-    mirrorlandPath: "mirrorland",
-    atriumPath: "mirrorland",
-    atlasPath: "mirrorland",
-    ziontsPath: "mirrorland",
-    hEarthPath: "mirrorland",
-    audraliaPath: "mirrorland",
-    audraliaWorldroomPath: "mirrorland",
-    controlCockpitPath: "mirrorland",
-    charactersPath: "characters",
-    characterIdentityPath: "characters",
-    characterRelationshipsPath: "characters",
-    characterTensionsPath: "characters",
-    characterMotivesPath: "characters",
-    characterStoryPressurePath: "characters",
-    characterFirstPath: "characters",
-    characterArchetypeMirrorPath: "characterArchetypeMirror",
-    selfLearningPath: "characterArchetypeMirror",
-    diagnosticPath: "diagnostic",
-    lawsPath: "laws",
-    scientificLawPath: "scientificLaw",
-    scientificLawTheoryPath: "scientificLaw",
-    scientificLawEvidencePath: "scientificLaw",
-    scientificLawMeasurePath: "scientificLaw",
-    scientificLawLimitsPath: "scientificLaw",
-    gaugesPath: "gauges",
-    frontierPath: "frontier",
-    frontierSystemsPath: "frontier",
-    seanPath: "sean",
-    underdogPath: "underdog",
-    nineSummitsPath: "summits",
-    nineSummitsBookPath: "summits",
-    productsPath: "products",
-    compassPath: "orientation",
-    siteGuidePath: "blueprint",
-    whereToStart: "orientation"
-  });
-
-  const START_OPTIONS = Object.freeze([
-    makeConversationOption("Where am I right now?", "hearthPath", PROMPT_MODES.STORY, ARCHETYPE_ALIGNMENTS.STORY),
-    makeConversationOption("Why should I trust this?", "scientificLawPath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.PROOF),
-    makeConversationOption("What has to work in the real world?", "frontierPath", PROMPT_MODES.PRACTICAL, ARCHETYPE_ALIGNMENTS.PRACTICAL),
-    makeConversationOption("What does this have to do with me?", "underdogPath", PROMPT_MODES.PERSONAL, ARCHETYPE_ALIGNMENTS.PERSONAL)
+  const BOOT_BUBBLES = Object.freeze([
+    "Welcome. I’m Jeeves.",
+    "DiamondGateBridge.com has two ways in.",
+    "One side is the traditional website: the public pages, Compass, Products, Laws, and the creator path.",
+    "The other side is the narrative path: I can guide you through rooms, worlds, Characters, proof, and future-facing systems."
   ]);
 
-  const START_HANDOFFS = Object.freeze(["hearth", "mirrorland", "frontier", "scientificLaw", "characters"]);
+  const START_OPTIONS = Object.freeze([
+    makeConversationOption(
+      "What is DiamondGateBridge.com?",
+      TARGETS.DIAMOND_GATE_OVERVIEW,
+      PROMPT_MODES.STORY,
+      ARCHETYPE_ALIGNMENTS.STORY,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "objective"
+    ),
+    makeConversationOption(
+      "What is the narrative path?",
+      TARGETS.NARRATIVE_PATH,
+      PROMPT_MODES.STORY,
+      ARCHETYPE_ALIGNMENTS.STORY,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "narrative"
+    ),
+    makeConversationOption(
+      "What is the traditional website for?",
+      TARGETS.TRADITIONAL_WEBSITE,
+      PROMPT_MODES.STORY,
+      ARCHETYPE_ALIGNMENTS.STORY,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "objective"
+    ),
+    makeConversationOption(
+      "What is the mission behind this?",
+      TARGETS.MISSION_OVERVIEW,
+      PROMPT_MODES.PERSONAL,
+      ARCHETYPE_ALIGNMENTS.PERSONAL,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "narrative"
+    ),
+    makeConversationOption(
+      "Why does this matter in the real world?",
+      TARGETS.PRACTICAL_RELEVANCE,
+      PROMPT_MODES.PRACTICAL,
+      ARCHETYPE_ALIGNMENTS.PRACTICAL,
+      BRIDGE_MOMENTS.ENTRANCE,
+      MOVEMENT_INTENTS.ASK,
+      "objective"
+    )
+  ]);
+
+  const START_HANDOFFS = Object.freeze([
+    ROUTES.MIRRORLAND,
+    ROUTES.SITE_GUIDE,
+    ROUTES.COMPASS,
+    ROUTES.MEET_SEAN
+  ]);
 
   const state = {
-    mounted: false,
+    ready: false,
+    busy: false,
+    booted: false,
     root: null,
-    thread: null,
-    optionsPanel: null,
-    doorsPanel: null,
-    status: null,
-    typing: null,
-    currentNode: DEFAULT_NODE,
-    currentTopic: DEFAULT_TOPIC,
-    currentRoomId: DEFAULT_ROOM_ID,
-    currentRoomName: DEFAULT_ROOM_NAME,
-    currentCardinal: DEFAULT_CARDINAL,
-    currentScopeLane: "narrative",
-    currentScopeStage: "entrance",
-    lastResponse: null,
-    lastOption: null,
-    sessionTrail: [],
-    visitedNodes: [],
+    shell: null,
+
+    currentConversationStage: STAGES.BOOT,
+    currentEntryLane: LANES.UNKNOWN,
+    lastLane: LANES.UNKNOWN,
+    bridgeOffered: false,
+
+    currentNode: TARGETS.DIAMOND_GATE_OVERVIEW,
+    currentPath: TARGETS.DIAMOND_GATE_OVERVIEW,
+    currentTopic: "diamondGate",
+    currentScopeLane: "objective",
+
     selectedTargets: [],
     selectedOptionKeys: [],
-    returnStack: [],
-    branchStack: [],
+    visitedNodes: [],
+    sessionTrail: [],
     transitionTrail: [],
-    isRevealing: false,
-    rushRequested: false,
-    pendingController: null,
-    apiAvailable: true,
-    expressionAvailable: false,
-    bootedAt: new Date().toISOString()
+    branchStack: [],
+    returnStack: [],
+
+    lastResponse: null,
+    lastError: null
   };
 
-  exposeGlobals();
+  global.HEARTH_JEEVES_READY = false;
+  global.mountHearthJeeves = safeMountJeeves;
+  global.mountJeeves = safeMountJeeves;
 
-  document.addEventListener("DOMContentLoaded", safeMountJeeves);
+  global.HEARTH_JEEVES_FRONTBRAIN = {
+    contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    version: "25.2.0",
+    mount: safeMountJeeves,
+    getState: () => cloneState(),
+    send: (text) => submitVisitorText(text),
+    reset: () => resetConversation()
+  };
 
-  if (document.readyState === "interactive" || document.readyState === "complete") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", safeMountJeeves, { once: true });
+  } else {
     safeMountJeeves();
   }
 
@@ -300,507 +327,523 @@
   }
 
   function mountJeeves() {
-    if (state.mounted) return;
+    if (state.booted) return;
 
     const root = findOrCreateRoot();
-    if (!root) throw new Error("JEEVES_ROOT_NOT_FOUND");
-
     state.root = root;
+
     bindRootToShellContract(root);
-    ensureShell(root);
-    bindRootEvents(root);
+    state.shell = ensureShell(root);
+    bindEvents(state.shell);
 
-    state.expressionAvailable = Boolean(getExpression());
-    state.mounted = true;
+    state.booted = true;
+    state.currentConversationStage = STAGES.ENTRANCE_OVERVIEW;
+    state.currentNode = TARGETS.DIAMOND_GATE_OVERVIEW;
+    state.currentPath = TARGETS.DIAMOND_GATE_OVERVIEW;
+    state.currentTopic = "diamondGate";
 
-    releaseReadyState("Jeeves is opening Hearth Mission Control.");
+    clearShell(state.shell);
+    renderSystemStatus("Jeeves is ready.");
+    renderBootEntrance();
 
-    const bootFrame = {
-      source: "frontbrain_boot",
-      bubbles: [
-        "Welcome. I’m Jeeves.",
-        "You are inside Hearth Mission Control — the window within the window.",
-        "You can text me a question, continue deeper, or open a prepared door."
-      ],
-      options: cloneOptions(START_OPTIONS),
-      handoffs: START_HANDOFFS.slice(),
-      handoffLabels: buildHandoffLabels(START_HANDOFFS),
-      routeHints: buildRouteHints(START_HANDOFFS),
-      selectedTarget: DEFAULT_NODE,
-      selectedLabel: "",
-      promptMode: PROMPT_MODES.STORY,
-      optionKind: OPTION_KINDS.CONVERSATION,
-      archetypeAlignment: ARCHETYPE_ALIGNMENTS.STORY,
-      bridgeMoment: BRIDGE_MOMENTS.ENTRANCE,
-      movementIntent: MOVEMENT_INTENTS.ASK,
-      conclusiveState: "open",
-      currentTopic: DEFAULT_TOPIC
-    };
-
-    renderFrame(applyExpressionFrame(bootFrame, {
-      bridgeMoment: BRIDGE_MOMENTS.ENTRANCE,
-      currentNode: DEFAULT_NODE,
-      currentTopic: DEFAULT_TOPIC
-    }), { boot: true });
+    releaseReadyState();
   }
 
   function findOrCreateRoot() {
-    const selectors = [
-      "[data-jeeves-root]",
-      "#hearthJeevesMount",
-      "#jeevesMount",
-      "#hearth-jeeves",
-      ".hearth-jeeves",
-      ".hearth-jeeves-v25"
-    ];
+    let root = document.getElementById(ROOT_ID);
 
-    for (const selector of selectors) {
-      const found = document.querySelector(selector);
-      if (found) return found;
+    if (!root) {
+      root = document.querySelector("[data-jeeves-root]") || document.querySelector(".hearth-jeeves");
     }
 
-    const host = document.querySelector(".jeeves-screen-shell") || document.querySelector("main") || document.body;
-    if (!host) return null;
-
-    const root = document.createElement("section");
-    root.id = "hearthJeevesMount";
-    root.setAttribute("data-jeeves-root", "true");
-    root.setAttribute("aria-label", "Jeeves conversation");
-    host.appendChild(root);
+    if (!root) {
+      root = document.createElement("section");
+      root.id = ROOT_ID;
+      document.body.appendChild(root);
+    }
 
     return root;
   }
 
   function bindRootToShellContract(root) {
-    root.id = root.id || "hearthJeevesMount";
-    root.classList.add("hearth-jeeves", "hearth-jeeves-v25", "jeeves-screen-glass");
+    root.classList.add("hearth-jeeves");
+    root.classList.add("hearth-jeeves-v25");
+    root.classList.add("hearth-jeeves-v25-2");
+    root.classList.add("jeeves-screen-glass");
+
     root.setAttribute("data-jeeves-root", "true");
     root.setAttribute("data-jeeves-contract", CONTRACT);
-    root.setAttribute("data-frontbrain-contract", CONTRACT);
-    root.setAttribute("data-previous-frontbrain-contract", PREVIOUS_CONTRACT);
-    root.setAttribute("data-api-contract", API_CONTRACT);
+    root.setAttribute("data-jeeves-previous-contract", PREVIOUS_CONTRACT);
     root.setAttribute("data-jeeves-ready", "false");
     root.setAttribute("data-house-listening", "false");
     root.setAttribute("data-jeeves-typing", "false");
+    root.setAttribute("data-jeeves-stage", state.currentConversationStage);
+    root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
   }
 
   function ensureShell(root) {
-    let topLine = root.querySelector(".jeeves-screen-topline");
-    if (!topLine) {
-      topLine = document.createElement("div");
-      topLine.className = "jeeves-screen-topline";
-      topLine.innerHTML =
-        '<div class="jeeves-identity">' +
-          '<div class="jeeves-avatar" aria-hidden="true">J</div>' +
-          '<div class="jeeves-identity-copy">' +
-            '<span>Mission Control Interface</span>' +
-            '<strong>Hearth Jeeves</strong>' +
-          "</div>" +
-        "</div>";
-      root.appendChild(topLine);
+    const shell = {};
+
+    shell.topline = ensureChild(root, ".jeeves-screen-topline", "div", [
+      "jeeves-screen-topline"
+    ]);
+
+    shell.status = ensureChild(root, ".jeeves-status", "div", [
+      "jeeves-status"
+    ]);
+
+    shell.threadScreen = ensureChild(root, ".jeeves-thread-screen", "div", [
+      "jeeves-thread-screen"
+    ]);
+
+    shell.thread = shell.threadScreen.querySelector(".jeeves-thread.jeeves-transcript.jeeves-log") ||
+      shell.threadScreen.querySelector(".jeeves-thread") ||
+      document.createElement("div");
+
+    shell.thread.classList.add("jeeves-thread");
+    shell.thread.classList.add("jeeves-transcript");
+    shell.thread.classList.add("jeeves-log");
+    shell.thread.setAttribute("data-jeeves-thread", "true");
+
+    if (!shell.thread.parentNode) {
+      shell.threadScreen.appendChild(shell.thread);
     }
 
-    let status = root.querySelector("[data-jeeves-status], .jeeves-status");
-    if (!status) {
-      status = document.createElement("div");
-      status.className = "jeeves-status";
-      status.setAttribute("data-jeeves-status", "true");
-      status.setAttribute("aria-live", "polite");
-      topLine.appendChild(status);
-    }
-    status.classList.add("jeeves-status");
-    status.setAttribute("data-jeeves-status", "true");
-    status.setAttribute("aria-live", "polite");
+    shell.typing = ensureChild(root, ".jeeves-typing", "div", [
+      "jeeves-typing"
+    ]);
+    shell.typing.setAttribute("data-jeeves-typing-indicator", "true");
 
-    let threadScreen = root.querySelector(".jeeves-thread-screen");
-    if (!threadScreen) {
-      threadScreen = document.createElement("div");
-      threadScreen.className = "jeeves-thread-screen";
-      threadScreen.setAttribute("data-jeeves-thread-screen", "true");
-      root.appendChild(threadScreen);
-    }
+    shell.options = ensureChild(root, ".jeeves-options.jeeves-prompt-dock", "div", [
+      "jeeves-options",
+      "jeeves-prompt-dock"
+    ]);
+    shell.options.setAttribute("data-jeeves-options", "true");
+    shell.options.setAttribute("aria-label", "Text Jeeves");
 
-    let thread = root.querySelector("[data-jeeves-thread], [data-jeeves-transcript], [data-jeeves-log], .jeeves-thread, .jeeves-transcript, .jeeves-log");
-    if (!thread) {
-      thread = document.createElement("div");
-      threadScreen.appendChild(thread);
-    }
-    thread.classList.add("jeeves-thread", "jeeves-transcript", "jeeves-log");
-    thread.setAttribute("data-jeeves-thread", "true");
-    thread.setAttribute("data-jeeves-transcript", "true");
-    thread.setAttribute("data-jeeves-log", "true");
-    thread.setAttribute("aria-live", "polite");
-    thread.setAttribute("aria-label", "Jeeves conversation transcript");
+    shell.handoffs = ensureChild(root, ".jeeves-handoffs.jeeves-doors.jeeves-handoff-dock", "div", [
+      "jeeves-handoffs",
+      "jeeves-doors",
+      "jeeves-handoff-dock"
+    ]);
+    shell.handoffs.setAttribute("data-jeeves-handoffs", "true");
+    shell.handoffs.setAttribute("data-jeeves-doors", "true");
+    shell.handoffs.setAttribute("aria-label", "Prepared Doors");
 
-    let typing = root.querySelector(".jeeves-typing");
-    if (!typing) {
-      typing = document.createElement("div");
-      typing.className = "jeeves-typing";
-      typing.setAttribute("data-jeeves-typing", "false");
-      typing.setAttribute("aria-hidden", "true");
-      typing.innerHTML = "<span></span><span></span><span></span>";
-      threadScreen.appendChild(typing);
-    }
+    ensureDockLabel(shell.options, "Text Jeeves");
+    ensureDockLabel(shell.handoffs, "Prepared Doors");
 
-    let optionsPanel = root.querySelector("[data-jeeves-options], .jeeves-options, .jeeves-prompt-dock");
-    if (!optionsPanel) {
-      optionsPanel = document.createElement("div");
-      root.appendChild(optionsPanel);
-    }
-    optionsPanel.classList.add("jeeves-options", "jeeves-prompt-dock");
-    optionsPanel.setAttribute("data-jeeves-options", "true");
-    optionsPanel.setAttribute("data-panel-kind", "conversation");
-    optionsPanel.setAttribute("aria-label", "Conversation options");
-
-    let doorsPanel = root.querySelector("[data-jeeves-doors], [data-jeeves-handoffs], .jeeves-handoffs, .jeeves-doors, .jeeves-handoff-dock");
-    if (!doorsPanel) {
-      doorsPanel = document.createElement("div");
-      root.appendChild(doorsPanel);
-    }
-    doorsPanel.classList.add("jeeves-handoffs", "jeeves-doors", "jeeves-handoff-dock");
-    doorsPanel.setAttribute("data-jeeves-doors", "true");
-    doorsPanel.setAttribute("data-jeeves-handoffs", "true");
-    doorsPanel.setAttribute("data-panel-kind", "handoff");
-    doorsPanel.setAttribute("aria-label", "Prepared doors");
-
-    state.thread = thread;
-    state.optionsPanel = optionsPanel;
-    state.doorsPanel = doorsPanel;
-    state.status = status;
-    state.typing = typing;
+    return shell;
   }
 
-  function bindRootEvents(root) {
-    root.addEventListener("click", function onRootClick(event) {
-      const optionButton = event.target.closest("[data-jeeves-option-index]");
-      if (optionButton) {
-        event.preventDefault();
-        const index = Number(optionButton.getAttribute("data-jeeves-option-index"));
-        const option = state.lastResponse && state.lastResponse.options ? state.lastResponse.options[index] : null;
-        if (option) handleOption(option);
-        return;
-      }
+  function ensureChild(parent, selector, tagName, classNames) {
+    let child = parent.querySelector(selector);
 
-      const doorButton = event.target.closest("[data-jeeves-handoff-route], [data-jeeves-route-option]");
-      if (doorButton) {
-        event.preventDefault();
-        const routeId = doorButton.getAttribute("data-jeeves-handoff-route") || doorButton.getAttribute("data-jeeves-route-option");
-        openRoute(routeId);
-        return;
-      }
+    if (!child) {
+      child = document.createElement(tagName);
+      parent.appendChild(child);
+    }
 
-      if (state.isRevealing) {
-        state.rushRequested = true;
-      }
+    classNames.forEach((name) => child.classList.add(name));
+
+    return child;
+  }
+
+  function ensureDockLabel(dock, label) {
+    let title = dock.querySelector(".jeeves-dock-label");
+
+    if (!title) {
+      title = document.createElement("div");
+      title.className = "jeeves-dock-label";
+      dock.insertBefore(title, dock.firstChild);
+    }
+
+    title.textContent = label;
+  }
+
+  function bindEvents(shell) {
+    shell.options.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-jeeves-option]");
+      if (!button || state.busy) return;
+
+      const option = readOptionFromButton(button);
+      handleConversationOption(option);
+    });
+
+    shell.handoffs.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-jeeves-route-option]");
+      if (!button || state.busy) return;
+
+      const routeId = button.getAttribute("data-jeeves-route-option") || "";
+      const href = button.getAttribute("data-jeeves-handoff-route") || ROUTE_HINTS[routeId] || "";
+
+      handlePreparedDoor(routeId, href);
     });
   }
 
-  function releaseReadyState(statusText) {
-    document.documentElement.setAttribute("data-hearth-jeeves-ready", "true");
-    if (document.body) document.body.setAttribute("data-hearth-jeeves-ready", "true");
+  function clearShell(shell) {
+    shell.thread.innerHTML = "";
+    shell.options.innerHTML = "";
+    shell.handoffs.innerHTML = "";
+    ensureDockLabel(shell.options, "Text Jeeves");
+    ensureDockLabel(shell.handoffs, "Prepared Doors");
+    shell.typing.textContent = "";
+  }
+
+  function renderBootEntrance() {
+    const expression = getExpression();
+    const entranceOptions = expression && typeof expression.shapeEntranceOptions === "function"
+      ? expression.shapeEntranceOptions()
+      : START_OPTIONS.slice();
+
+    BOOT_BUBBLES.forEach((bubble) => renderBubble("assistant", shapeText(bubble, {
+      intent: "diamondGate",
+      selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+      currentConversationStage: STAGES.ENTRANCE_OVERVIEW
+    })));
+
+    renderOptions(entranceOptions);
+    renderHandoffs(START_HANDOFFS, HANDOFF_LABELS);
+  }
+
+  function releaseReadyState() {
+    state.ready = true;
+    global.HEARTH_JEEVES_READY = true;
 
     if (state.root) {
       state.root.setAttribute("data-jeeves-ready", "true");
       state.root.setAttribute("data-house-listening", "true");
+      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
+      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
     }
 
-    window.HEARTH_JEEVES_READY = true;
-
-    setStatus(statusText || "Jeeves is listening.");
-
-    document.dispatchEvent(new CustomEvent("hearth:jeeves-ready", {
-      detail: {
-        contract: CONTRACT,
-        apiContract: API_CONTRACT,
-        ready: true
-      }
-    }));
+    dispatch("hearth:jeeves-ready", {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT
+    });
   }
 
-  function renderFrame(rawFrame, meta) {
-    const frame = normalizeFrame(rawFrame);
-    state.lastResponse = frame;
-    state.currentNode = frame.selectedTarget || state.currentNode || DEFAULT_NODE;
-    state.currentTopic = frame.currentTopic || inferTopicFromTarget(state.currentNode);
-    state.currentScopeLane = inferScopeLane(frame, state.currentNode);
-    state.currentScopeStage = inferScopeStage(frame);
+  function visibleBootFailure(error) {
+    state.lastError = error;
 
-    clearPanel(state.optionsPanel);
-    clearPanel(state.doorsPanel);
+    try {
+      const root = findOrCreateRoot();
+      bindRootToShellContract(root);
+      const shell = ensureShell(root);
 
-    setTyping(true);
-    setStatus("Jeeves is responding.");
+      root.setAttribute("data-jeeves-ready", "false");
+      root.setAttribute("data-jeeves-error", "true");
 
-    revealBeats(frame.bubbles, function afterReveal() {
-      setTyping(false);
-      setStatus("Jeeves is listening.");
-      renderConversationOptions(frame.options);
-      renderPreparedDoors(frame);
-    }, meta);
-  }
+      shell.status.textContent = "Jeeves could not finish preparing.";
+      shell.thread.innerHTML = "";
 
-  function revealBeats(beats, done, meta) {
-    const safeBeats = Array.isArray(beats) && beats.length ? beats : ["I’m here."];
-    state.isRevealing = true;
-    state.rushRequested = Boolean(meta && meta.rush);
-    let index = 0;
-
-    function next() {
-      if (index >= safeBeats.length) {
-        state.isRevealing = false;
-        state.rushRequested = false;
-        if (typeof done === "function") done();
-        return;
-      }
-
-      appendBubble("assistant", safeBeats[index]);
-      index += 1;
-
-      const delay = state.rushRequested ? 60 : delayForBeat(safeBeats[index - 1], index);
-      window.setTimeout(next, delay);
+      renderBubbleInto(shell.thread, "system", "Jeeves hit a visible boot error instead of silently freezing.");
+      renderBubbleInto(shell.thread, "system", safeErrorMessage(error));
+    } catch (_innerError) {
+      console.error("[Jeeves boot failure]", error);
     }
-
-    next();
   }
 
-  function delayForBeat(text, index) {
-    const length = String(text || "").length;
-    const base = 280;
-    const scaled = Math.min(820, Math.max(280, length * 6));
-    return base + scaled + index * 40;
+  function renderSystemStatus(text) {
+    if (!state.shell || !state.shell.status) return;
+    state.shell.status.textContent = text;
   }
 
-  function appendBubble(speaker, text) {
-    if (!state.thread) return;
-
-    const normalizedSpeaker = normalizeSpeaker(speaker);
-
-    const bubble = document.createElement("div");
-    bubble.className = "jeeves-bubble " + classForSpeaker(normalizedSpeaker);
-    bubble.setAttribute("data-jeeves-bubble", normalizedSpeaker);
-    bubble.setAttribute("data-jeeves-speaker", normalizedSpeaker);
-
-    const body = document.createElement("div");
-    body.className = "jeeves-bubble-body";
-    body.textContent = sanitizeText(text);
-
-    bubble.appendChild(body);
-    state.thread.appendChild(bubble);
+  function renderBubble(speaker, text) {
+    if (!state.shell || !state.shell.thread) return;
+    renderBubbleInto(state.shell.thread, speaker, text);
+    trimThread();
     scrollThreadToBottom();
   }
 
-  function appendSystemBubble(text) {
-    appendBubble("system", text);
+  function renderBubbleInto(thread, speaker, text) {
+    const bubble = document.createElement("div");
+    const safeSpeaker = speaker === "user" ? "user" : speaker === "system" ? "system" : "assistant";
+
+    bubble.classList.add("jeeves-bubble");
+
+    if (safeSpeaker === "assistant") {
+      bubble.classList.add("jeeves-bubble-assistant");
+      bubble.classList.add("jeeves-bubble-jeeves");
+      bubble.setAttribute("data-jeeves-bubble", "assistant");
+      bubble.setAttribute("data-jeeves-speaker", "assistant");
+    } else if (safeSpeaker === "user") {
+      bubble.classList.add("jeeves-bubble-user");
+      bubble.classList.add("jeeves-bubble-visitor");
+      bubble.setAttribute("data-jeeves-bubble", "user");
+      bubble.setAttribute("data-jeeves-speaker", "user");
+    } else {
+      bubble.classList.add("jeeves-bubble-system");
+      bubble.setAttribute("data-jeeves-bubble", "system");
+      bubble.setAttribute("data-jeeves-speaker", "system");
+    }
+
+    bubble.textContent = safeText(text);
+    thread.appendChild(bubble);
   }
 
-  function normalizeSpeaker(speaker) {
-    if (speaker === "jeeves") return "assistant";
-    if (speaker === "visitor") return "user";
-    if (speaker === "user") return "user";
-    if (speaker === "system") return "system";
-    return "assistant";
-  }
+  function trimThread() {
+    const bubbles = Array.from(state.shell.thread.querySelectorAll(".jeeves-bubble"));
+    const excess = bubbles.length - MAX_THREAD_BUBBLES;
 
-  function classForSpeaker(speaker) {
-    if (speaker === "user") return "jeeves-bubble-user jeeves-bubble-visitor";
-    if (speaker === "system") return "jeeves-bubble-system";
-    return "jeeves-bubble-assistant jeeves-bubble-jeeves";
+    if (excess > 0) {
+      bubbles.slice(0, excess).forEach((node) => node.remove());
+    }
   }
 
   function scrollThreadToBottom() {
-    if (!state.thread) return;
-    state.thread.scrollTop = state.thread.scrollHeight;
+    if (!state.shell || !state.shell.threadScreen) return;
+    state.shell.threadScreen.scrollTop = state.shell.threadScreen.scrollHeight;
   }
 
-  function renderConversationOptions(options) {
-    clearPanel(state.optionsPanel);
+  function renderOptions(options) {
+    if (!state.shell || !state.shell.options) return;
 
-    const normalized = normalizeOptions(options).slice(0, MAX_VISIBLE_OPTIONS);
-    if (!normalized.length) return;
+    const expression = getExpression();
+    const shapedOptions = expression && typeof expression.shapeOptions === "function"
+      ? expression.shapeOptions(options || [], buildExpressionContext())
+      : options || [];
 
-    const heading = document.createElement("div");
-    heading.className = "jeeves-panel-title";
-    heading.textContent = "Text Jeeves";
-    state.optionsPanel.appendChild(heading);
+    clearDockButtons(state.shell.options, "Text Jeeves");
 
-    normalized.forEach(function renderOption(option, index) {
+    shapedOptions.slice(0, 6).forEach((option, index) => {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "jeeves-option jeeves-option-button";
-      button.setAttribute("data-jeeves-option", "true");
+      button.classList.add("jeeves-option");
+      button.classList.add("jeeves-option-button");
+
+      button.textContent = option.label || "Can you tell me more?";
+
+      button.setAttribute("data-jeeves-option", option.target || "");
       button.setAttribute("data-jeeves-option-index", String(index));
-      button.setAttribute("data-option-kind", option.optionKind);
-      button.setAttribute("data-prompt-mode", option.promptMode);
-      button.setAttribute("data-archetype-alignment", option.archetypeAlignment);
-      button.setAttribute("data-type", option.type);
-      button.setAttribute("data-target", option.target);
-      button.textContent = option.label;
-      state.optionsPanel.appendChild(button);
+      button.setAttribute("data-option-kind", option.optionKind || OPTION_KINDS.CONVERSATION);
+      button.setAttribute("data-prompt-mode", option.promptMode || PROMPT_MODES.UNKNOWN);
+      button.setAttribute("data-archetype-alignment", option.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN);
+      button.setAttribute("data-bridge-moment", option.bridgeMoment || BRIDGE_MOMENTS.NONE);
+      button.setAttribute("data-movement-intent", option.movementIntent || MOVEMENT_INTENTS.ASK);
+      button.setAttribute("data-scope-lane", option.scopeLane || inferScopeLane(option.target));
+      button.setAttribute("data-option-type", option.type || "conversation");
+      button.setAttribute("data-option-label", option.label || "");
+
+      state.shell.options.appendChild(button);
     });
   }
 
-  function renderPreparedDoors(frame) {
-    clearPanel(state.doorsPanel);
+  function renderHandoffs(handoffs, handoffLabels, routeHints) {
+    if (!state.shell || !state.shell.handoffs) return;
 
-    const handoffs = Array.isArray(frame.handoffs) ? frame.handoffs.slice(0, MAX_VISIBLE_HANDOFFS) : [];
-    if (!handoffs.length) return;
+    const routes = Array.isArray(handoffs) ? handoffs : [];
+    const expression = getExpression();
+    const labels = expression && typeof expression.shapeHandoffLabels === "function"
+      ? expression.shapeHandoffLabels(handoffLabels || {}, routes)
+      : handoffLabels || {};
 
-    const heading = document.createElement("div");
-    heading.className = "jeeves-panel-title jeeves-door-heading";
-    heading.textContent = "Prepared Doors";
-    state.doorsPanel.appendChild(heading);
+    clearDockButtons(state.shell.handoffs, "Prepared Doors");
 
-    handoffs.forEach(function renderDoor(routeId) {
-      const route = sanitizeRoute(routeId);
-      const href = (frame.routeHints && frame.routeHints[route]) || ROUTE_HINTS[route] || "";
-      if (!href) return;
+    routes.slice(0, 6).forEach((routeId, index) => {
+      const route = normalizeRoute(routeId);
+      const href = (routeHints && routeHints[route]) || ROUTE_HINTS[route] || "";
+      const label = labels[route] || HANDOFF_LABELS[route] || route;
 
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "jeeves-route-option jeeves-door-button";
+      button.classList.add("jeeves-route-option");
+      button.classList.add("jeeves-door-button");
+
+      button.textContent = label;
+
       button.setAttribute("data-jeeves-route-option", route);
-      button.setAttribute("data-jeeves-handoff-route", route);
-      button.setAttribute("data-route-href", href);
-      button.textContent = (frame.handoffLabels && frame.handoffLabels[route]) || DEFAULT_HANDOFF_LABELS[route] || ("Open " + route);
-      state.doorsPanel.appendChild(button);
+      button.setAttribute("data-jeeves-route-option-index", String(index));
+      button.setAttribute("data-jeeves-handoff-route", href);
+      button.setAttribute("data-option-kind", OPTION_KINDS.ROUTE);
+      button.setAttribute("data-bridge-moment", BRIDGE_MOMENTS.PREPARED_DOOR);
+      button.setAttribute("data-movement-intent", MOVEMENT_INTENTS.OPEN_DOOR);
+
+      state.shell.handoffs.appendChild(button);
     });
   }
 
-  function handleOption(rawOption) {
-    const option = normalizeOption(rawOption);
-    if (!option) return;
-
-    state.lastOption = option;
-
-    appendBubble("user", option.label);
-    clearPanel(state.optionsPanel);
-    clearPanel(state.doorsPanel);
-
-    updateMovementState(option);
-
-    if (option.optionKind === OPTION_KINDS.ROUTE) {
-      const route = TARGET_ROUTE_HINTS[option.target] || "";
-      if (route) {
-        openRoute(route);
-        return;
-      }
-    }
-
-    callNorth(option);
+  function clearDockButtons(dock, title) {
+    dock.innerHTML = "";
+    ensureDockLabel(dock, title);
   }
 
-  function callNorth(option) {
-    const payload = buildApiPayload(option);
+  function readOptionFromButton(button) {
+    return {
+      label: button.getAttribute("data-option-label") || button.textContent || "",
+      target: normalizeTarget(button.getAttribute("data-jeeves-option") || ""),
+      type: button.getAttribute("data-option-type") || "conversation",
+      scopeLane: button.getAttribute("data-scope-lane") || "objective",
+      promptMode: button.getAttribute("data-prompt-mode") || PROMPT_MODES.UNKNOWN,
+      optionKind: button.getAttribute("data-option-kind") || OPTION_KINDS.CONVERSATION,
+      archetypeAlignment: button.getAttribute("data-archetype-alignment") || ARCHETYPE_ALIGNMENTS.UNKNOWN,
+      bridgeMoment: button.getAttribute("data-bridge-moment") || BRIDGE_MOMENTS.NONE,
+      movementIntent: button.getAttribute("data-movement-intent") || MOVEMENT_INTENTS.ASK
+    };
+  }
 
-    if (state.pendingController) {
-      try {
-        state.pendingController.abort();
-      } catch (_error) {}
+  function handleConversationOption(option) {
+    const safeOption = normalizeOption(option);
+
+    updateStateForOption(safeOption);
+
+    renderBubble("user", safeOption.label);
+
+    submitToApi({
+      visitorText: safeOption.label,
+      selectedTarget: safeOption.target,
+      selectedLabel: safeOption.label,
+      requestMode: "node_enrichment",
+      promptMode: safeOption.promptMode,
+      optionKind: safeOption.optionKind,
+      archetypeAlignment: safeOption.archetypeAlignment,
+      bridgeMoment: safeOption.bridgeMoment,
+      movementIntent: safeOption.movementIntent,
+      currentScopeLane: safeOption.scopeLane
+    });
+  }
+
+  function handlePreparedDoor(routeId, href) {
+    const route = normalizeRoute(routeId);
+    const targetHref = href || ROUTE_HINTS[route];
+
+    pushTrail({
+      type: "handoff",
+      route,
+      href: targetHref,
+      at: new Date().toISOString()
+    });
+
+    if (!targetHref) {
+      renderBubble("system", "That door is listed, but it does not have a visible route yet.");
+      return;
     }
 
-    const controller = new AbortController();
-    state.pendingController = controller;
+    global.location.href = targetHref;
+  }
 
+  function submitVisitorText(text) {
+    const visitorText = safeText(text);
+    if (!visitorText || state.busy) return;
+
+    renderBubble("user", visitorText);
+
+    const target = inferTargetFromText(visitorText);
+
+    updateStateForOption({
+      label: visitorText,
+      target,
+      type: "conversation",
+      scopeLane: inferScopeLane(target),
+      promptMode: inferPromptModeFromText(visitorText),
+      optionKind: OPTION_KINDS.CONVERSATION,
+      archetypeAlignment: inferAlignmentFromTarget(target),
+      bridgeMoment: BRIDGE_MOMENTS.BEFORE,
+      movementIntent: MOVEMENT_INTENTS.ASK
+    });
+
+    submitToApi({
+      visitorText,
+      selectedTarget: target,
+      selectedLabel: visitorText,
+      requestMode: target ? "node_enrichment" : "freeform",
+      promptMode: inferPromptModeFromText(visitorText),
+      optionKind: OPTION_KINDS.CONVERSATION,
+      archetypeAlignment: inferAlignmentFromTarget(target),
+      bridgeMoment: BRIDGE_MOMENTS.BEFORE,
+      movementIntent: MOVEMENT_INTENTS.ASK,
+      currentScopeLane: inferScopeLane(target)
+    });
+  }
+
+  async function submitToApi(partialPayload) {
+    if (state.busy) return;
+
+    state.busy = true;
     setTyping(true);
-    setStatus("Jeeves is thinking.");
+    renderSystemStatus("Jeeves is reading the path.");
 
-    fetch(API_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    })
-      .then(function handleResponse(response) {
-        if (!response.ok) {
-          throw new Error("JEEVES_API_" + response.status);
-        }
-        return response.json();
-      })
-      .then(function handleJson(json) {
-        state.pendingController = null;
-        const frame = applyExpressionFrame(normalizeApiFrame(json, option), {
-          bridgeMoment: option.bridgeMoment,
-          selectedTarget: option.target,
-          selectedLabel: option.label,
-          currentNode: state.currentNode,
-          currentTopic: state.currentTopic,
-          option
-        });
-        renderFrame(frame);
-      })
-      .catch(function handleError(error) {
-        state.pendingController = null;
-
-        if (error && error.name === "AbortError") return;
-
-        state.apiAvailable = false;
-        const fallback = applyExpressionFrame(localFallbackFrame(option, error), {
-          bridgeMoment: option.bridgeMoment,
-          selectedTarget: option.target,
-          selectedLabel: option.label,
-          currentNode: state.currentNode,
-          currentTopic: state.currentTopic,
-          option
-        });
-
-        renderFrame(fallback);
+    try {
+      const payload = buildApiPayload(partialPayload);
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
       });
+
+      if (!response.ok) {
+        throw new Error("Jeeves API returned " + response.status);
+      }
+
+      const data = await response.json();
+      const shaped = shapeApiFrame(data);
+
+      state.lastResponse = shaped;
+
+      applyApiState(shaped);
+      renderApiFrame(shaped);
+    } catch (error) {
+      state.lastError = error;
+      renderApiFailure(error);
+    } finally {
+      state.busy = false;
+      setTyping(false);
+      renderSystemStatus("Jeeves is ready.");
+    }
   }
 
-  function buildApiPayload(option) {
-    const selectedTarget = option.target;
-    const selectedLabel = option.label;
-    const currentTopic = inferTopicFromTarget(selectedTarget);
+  function buildApiPayload(partialPayload) {
+    const payload = partialPayload && typeof partialPayload === "object" ? partialPayload : {};
+    const selectedTarget = normalizeTarget(payload.selectedTarget || state.currentNode || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const currentLane = payload.currentScopeLane || inferScopeLane(selectedTarget);
 
     return {
-      visitorText: selectedLabel,
-      selectedLabel,
+      visitorText: safeText(payload.visitorText || ""),
       selectedTarget,
-      requestMode: "node_enrichment",
+      selectedLabel: safeText(payload.selectedLabel || ""),
+      requestMode: payload.requestMode || "node_enrichment",
 
-      promptMode: option.promptMode,
-      optionKind: option.optionKind,
-      archetypeAlignment: option.archetypeAlignment,
-      bridgeMoment: option.bridgeMoment,
-      movementIntent: option.movementIntent,
+      promptMode: payload.promptMode || PROMPT_MODES.UNKNOWN,
+      optionKind: payload.optionKind || OPTION_KINDS.CONVERSATION,
+      archetypeAlignment: payload.archetypeAlignment || inferAlignmentFromTarget(selectedTarget),
+      bridgeMoment: payload.bridgeMoment || BRIDGE_MOMENTS.BEFORE,
+      movementIntent: payload.movementIntent || MOVEMENT_INTENTS.ASK,
 
-      bridgeContext: buildBridgeContext(option),
-      branchStack: state.branchStack.slice(-MAX_TRAIL_ITEMS),
-      transitionTrail: state.transitionTrail.slice(-MAX_TRAIL_ITEMS),
+      currentConversationStage: state.currentConversationStage,
+      currentEntryLane: state.currentEntryLane,
+      lastLane: state.lastLane,
+      bridgeOffered: state.bridgeOffered,
 
-      activeHostPage: "hearth",
+      activeHostPage: "hearth-jeeves",
       currentRoomContext: "hearth",
       currentRoomRole: "mission_control",
       currentRoomPremise: "window_within_the_window",
-      estateKnowledgeMode: "api_north_conversation_grammar",
-      portalLogic: "hearth_mission_control_window_within_window",
-      routeAuthority: "frontbrain_final_route_authority",
+      estateKnowledgeMode: "split_interface_guided_path",
+      portalLogic: "hearth_is_window_within_the_window",
+      routeAuthority: "frontbrain_final_route_execution",
 
-      currentNode: state.currentNode || DEFAULT_NODE,
-      currentEntry: state.currentNode || DEFAULT_NODE,
-      currentPath: state.currentNode || DEFAULT_NODE,
-      currentTopic: state.currentTopic || currentTopic || DEFAULT_TOPIC,
-      currentRoomId: state.currentRoomId || DEFAULT_ROOM_ID,
-      currentRoomName: state.currentRoomName || DEFAULT_ROOM_NAME,
-      currentCoordinateName: "East Control Deck",
-      currentCardinal: state.currentCardinal || DEFAULT_CARDINAL,
-      currentPlaceType: "mission_control",
-      currentScopeLane: state.currentScopeLane || "narrative",
-      currentVoiceMode: "conversation_thread",
-      visitorPosture: option.promptMode,
-      movement: option.movementIntent,
+      currentNode: state.currentNode,
+      currentEntry: state.currentPath,
+      currentPath: state.currentPath,
+      currentTopic: state.currentTopic,
+      currentRoomId: "hearthJeeves",
+      currentRoomName: "Hearth Jeeves",
+      currentCoordinateName: "Hearth Mission Control",
+      currentCardinal: inferCardinalForTarget(selectedTarget),
+      currentPlaceType: currentLane === "narrative" ? "narrative_path" : "traditional_website",
+      currentScopeLane: currentLane,
+      currentVoiceMode: "jeeves_expression_v5_1",
 
-      pathDepth: state.transitionTrail.length,
-      routeReadiness: Math.min(4, Math.max(0, state.transitionTrail.length)),
-      loopCount: state.selectedTargets.filter(function count(item) { return item === selectedTarget; }).length,
-      topicDepth: state.transitionTrail.filter(function count(item) { return inferTopicFromTarget(item.to) === currentTopic; }).length,
-      revealDepth: state.transitionTrail.length + 1,
+      visitorPosture: "guided",
+      movement: payload.movementIntent || MOVEMENT_INTENTS.ASK,
 
-      expressionContract: getExpressionContract(),
-      frontbrainContract: CONTRACT,
-      cssContract: document.documentElement.getAttribute("data-hearth-css-contract") || "",
+      pathDepth: state.visitedNodes.length,
+      routeReadiness: state.bridgeOffered ? 2 : 1,
+      loopCount: inferLoopCount(selectedTarget),
+      topicDepth: inferTopicDepth(selectedTarget),
+      revealDepth: state.transitionTrail.length,
 
       allowedTargets: buildAllowedTargets(),
       allowedRoutes: buildAllowedRoutes(),
@@ -809,639 +852,696 @@
       visitedNodes: state.visitedNodes.slice(-MAX_TRAIL_ITEMS),
       selectedTargets: state.selectedTargets.slice(-MAX_TRAIL_ITEMS),
       selectedOptionKeys: state.selectedOptionKeys.slice(-MAX_TRAIL_ITEMS),
-      returnStack: state.returnStack.slice(-MAX_TRAIL_ITEMS)
+      returnStack: state.returnStack.slice(-MAX_TRAIL_ITEMS),
+      transitionTrail: state.transitionTrail.slice(-MAX_TRAIL_ITEMS),
+      branchStack: state.branchStack.slice(-MAX_TRAIL_ITEMS),
+
+      expressionContract: getExpressionContract(),
+      frontbrainContract: CONTRACT
     };
   }
 
-  function buildBridgeContext(option) {
-    const priorNode = state.currentNode || DEFAULT_NODE;
+  function shapeApiFrame(data) {
+    const expression = getExpression();
+    const source = data && typeof data === "object" ? data : {};
 
-    return {
-      currentNode: priorNode,
-      priorNode,
-      selectedTarget: option.target,
-      selectedLabel: option.label,
-      promptMode: option.promptMode,
-      optionKind: option.optionKind,
-      archetypeAlignment: option.archetypeAlignment,
-      bridgeMoment: option.bridgeMoment,
-      movementIntent: option.movementIntent,
-      currentTopic: state.currentTopic || inferTopicFromTarget(priorNode),
-      currentScopeStage: state.currentScopeStage || "conversation"
-    };
-  }
-
-  function updateMovementState(option) {
-    const priorNode = state.currentNode || DEFAULT_NODE;
-    const nextNode = option.target || priorNode;
-    const nextTopic = inferTopicFromTarget(nextNode);
-
-    state.sessionTrail.push(option.label);
-    state.selectedTargets.push(nextNode);
-    state.selectedOptionKeys.push(option.promptMode + ":" + option.optionKind + ":" + nextNode);
-    state.visitedNodes.push(nextNode);
-
-    if (option.optionKind === OPTION_KINDS.RETURN) {
-      const returned = state.returnStack.pop();
-      if (returned) state.currentNode = returned;
-    } else {
-      if (nextNode !== priorNode) state.returnStack.push(priorNode);
-      state.currentNode = nextNode;
+    if (expression && typeof expression.shapeConversationFrame === "function") {
+      return expression.shapeConversationFrame(source, buildExpressionContext(source));
     }
 
-    state.currentTopic = nextTopic;
+    return source;
+  }
+
+  function renderApiFrame(frame) {
+    const bubbles = normalizeBubbles(frame.bubbles || frame.beats || []);
+    const options = Array.isArray(frame.options) ? frame.options : [];
+    const handoffs = Array.isArray(frame.handoffs) ? frame.handoffs : [];
+
+    bubbles.forEach((bubble) => renderBubble("assistant", bubble));
+
+    renderOptions(options);
+    renderHandoffs(handoffs, frame.handoffLabels || {}, frame.routeHints || {});
+  }
+
+  function renderApiFailure(error) {
+    renderBubble("system", "Jeeves could not reach the deeper answer path cleanly.");
+    renderBubble("system", safeErrorMessage(error));
+
+    renderOptions([
+      makeConversationOption(
+        "What is DiamondGateBridge.com?",
+        TARGETS.DIAMOND_GATE_OVERVIEW,
+        PROMPT_MODES.STORY,
+        ARCHETYPE_ALIGNMENTS.STORY
+      ),
+      makeConversationOption(
+        "Can you re-center me?",
+        TARGETS.RECENTER,
+        PROMPT_MODES.RECENTER,
+        ARCHETYPE_ALIGNMENTS.UNKNOWN,
+        BRIDGE_MOMENTS.RECENTER,
+        MOVEMENT_INTENTS.RECENTER,
+        "objective",
+        OPTION_KINDS.CONTROL,
+        "control"
+      )
+    ]);
+
+    renderHandoffs([ROUTES.COMPASS, ROUTES.SITE_GUIDE], HANDOFF_LABELS);
+  }
+
+  function applyApiState(frame) {
+    const target = normalizeTarget(frame.selectedTarget || state.currentNode || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const intent = safeText(frame.intent || inferIntentFromTarget(target));
+
+    state.currentNode = target;
+    state.currentPath = target;
+    state.currentTopic = intent;
+    state.currentScopeLane = inferScopeLane(target);
+
+    const nextLane = inferLaneFromTarget(target, intent);
+
+    if (nextLane && nextLane !== state.currentEntryLane) {
+      state.lastLane = state.currentEntryLane || LANES.UNKNOWN;
+      state.currentEntryLane = nextLane;
+    }
+
+    state.currentConversationStage = inferStageFromTarget(target, intent);
+
+    if (
+      state.currentConversationStage === STAGES.BRIDGE_LANE ||
+      target === TARGETS.SPLIT_INTERFACE ||
+      safeText(frame.bridgeMoment) === BRIDGE_MOMENTS.PARALLEL
+    ) {
+      state.bridgeOffered = true;
+    }
+
+    if (state.root) {
+      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
+      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
+      state.root.setAttribute("data-jeeves-current-target", state.currentNode || "");
+      state.root.setAttribute("data-jeeves-current-topic", state.currentTopic || "");
+    }
+  }
+
+  function updateStateForOption(option) {
+    const target = normalizeTarget(option.target || "");
+    const label = safeText(option.label || "");
+    const nextLane = inferLaneFromTarget(target, inferIntentFromTarget(target));
+    const priorTarget = state.currentNode;
+
+    state.selectedTargets.push(target);
+    state.selectedOptionKeys.push(makeOptionKey(option));
+    state.visitedNodes.push(target);
+
+    if (priorTarget) {
+      state.returnStack.push(priorTarget);
+    }
+
+    pushTrail({
+      type: "conversation_option",
+      label,
+      target,
+      from: priorTarget,
+      to: target,
+      promptMode: option.promptMode,
+      optionKind: option.optionKind,
+      bridgeMoment: option.bridgeMoment,
+      movementIntent: option.movementIntent,
+      at: new Date().toISOString()
+    });
 
     state.transitionTrail.push({
-      from: priorNode,
-      to: nextNode,
-      label: option.label,
+      from: priorTarget,
+      to: target,
+      label,
       optionKind: option.optionKind,
       promptMode: option.promptMode,
       bridgeMoment: option.bridgeMoment,
       at: new Date().toISOString()
     });
 
+    if (
+      option.bridgeMoment === BRIDGE_MOMENTS.PARALLEL ||
+      target === TARGETS.SPLIT_INTERFACE ||
+      nextLane === LANES.BRIDGE
+    ) {
+      state.bridgeOffered = true;
+    }
+
+    if (nextLane && nextLane !== state.currentEntryLane) {
+      state.lastLane = state.currentEntryLane || LANES.UNKNOWN;
+      state.currentEntryLane = nextLane;
+    }
+
+    state.currentNode = target;
+    state.currentPath = target;
+    state.currentTopic = inferIntentFromTarget(target);
+    state.currentConversationStage = inferStageFromTarget(target, state.currentTopic);
+
+    trimStateArrays();
+
+    if (state.root) {
+      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
+      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
+      state.root.setAttribute("data-jeeves-current-target", state.currentNode || "");
+    }
+  }
+
+  function pushTrail(item) {
+    state.sessionTrail.push(JSON.stringify(item));
     trimStateArrays();
   }
 
   function trimStateArrays() {
-    state.sessionTrail = state.sessionTrail.slice(-MAX_TRAIL_ITEMS);
-    state.visitedNodes = state.visitedNodes.slice(-MAX_TRAIL_ITEMS);
-    state.selectedTargets = state.selectedTargets.slice(-MAX_TRAIL_ITEMS);
-    state.selectedOptionKeys = state.selectedOptionKeys.slice(-MAX_TRAIL_ITEMS);
-    state.returnStack = state.returnStack.slice(-MAX_TRAIL_ITEMS);
-    state.branchStack = state.branchStack.slice(-MAX_TRAIL_ITEMS);
-    state.transitionTrail = state.transitionTrail.slice(-MAX_TRAIL_ITEMS);
-  }
-
-  function normalizeApiFrame(json, option) {
-    const frame = normalizeFrame({
-      source: json && json.source ? json.source : "api_north",
-      bubbles: (json && (json.bubbles || json.beats)) || [],
-      options: (json && json.options) || [],
-      handoffs: (json && json.handoffs) || [],
-      handoffLabels: (json && json.handoffLabels) || {},
-      routeHints: (json && json.routeHints) || {},
-      selectedTarget: (json && json.selectedTarget) || option.target,
-      selectedLabel: (json && json.selectedLabel) || option.label,
-      promptMode: (json && json.promptMode) || option.promptMode,
-      optionKind: (json && json.optionKind) || option.optionKind,
-      archetypeAlignment: (json && json.archetypeAlignment) || option.archetypeAlignment,
-      bridgeMoment: (json && json.bridgeMoment) || option.bridgeMoment,
-      movementIntent: (json && json.movementIntent) || option.movementIntent,
-      currentTopic: (json && json.intent) || inferTopicFromTarget(option.target),
-      conclusiveState: (json && json.conclusiveState) || "open",
-      confidence: (json && json.confidence) || "medium",
-      canonStatus: (json && json.canonStatus) || "grounded"
+    [
+      "selectedTargets",
+      "selectedOptionKeys",
+      "visitedNodes",
+      "sessionTrail",
+      "transitionTrail",
+      "branchStack",
+      "returnStack"
+    ].forEach((key) => {
+      if (state[key].length > MAX_TRAIL_ITEMS) {
+        state[key] = state[key].slice(-MAX_TRAIL_ITEMS);
+      }
     });
+  }
 
-    if (!frame.options.length) {
-      frame.options = fallbackOptionsForTopic(inferTopicFromTarget(option.target));
+  function resetConversation() {
+    if (!state.shell) return;
+
+    state.busy = false;
+    state.currentConversationStage = STAGES.ENTRANCE_OVERVIEW;
+    state.currentEntryLane = LANES.UNKNOWN;
+    state.lastLane = LANES.UNKNOWN;
+    state.bridgeOffered = false;
+    state.currentNode = TARGETS.DIAMOND_GATE_OVERVIEW;
+    state.currentPath = TARGETS.DIAMOND_GATE_OVERVIEW;
+    state.currentTopic = "diamondGate";
+    state.currentScopeLane = "objective";
+    state.selectedTargets = [];
+    state.selectedOptionKeys = [];
+    state.visitedNodes = [];
+    state.sessionTrail = [];
+    state.transitionTrail = [];
+    state.branchStack = [];
+    state.returnStack = [];
+
+    clearShell(state.shell);
+    renderSystemStatus("Jeeves is ready.");
+    renderBootEntrance();
+
+    if (state.root) {
+      state.root.setAttribute("data-jeeves-stage", state.currentConversationStage);
+      state.root.setAttribute("data-jeeves-entry-lane", state.currentEntryLane || "");
     }
-
-    return frame;
-  }
-
-  function localFallbackFrame(option) {
-    const topic = inferTopicFromTarget(option.target);
-
-    return {
-      source: "frontbrain_local_fallback",
-      bubbles: fallbackBubblesForOption(option),
-      options: fallbackOptionsForTopic(topic),
-      handoffs: fallbackHandoffsForTopic(topic),
-      handoffLabels: buildHandoffLabels(fallbackHandoffsForTopic(topic)),
-      routeHints: buildRouteHints(fallbackHandoffsForTopic(topic)),
-      selectedTarget: option.target,
-      selectedLabel: option.label,
-      promptMode: option.promptMode,
-      optionKind: option.optionKind,
-      archetypeAlignment: option.archetypeAlignment,
-      bridgeMoment: option.bridgeMoment,
-      movementIntent: option.movementIntent,
-      currentTopic: topic,
-      conclusiveState: "open",
-      confidence: "medium",
-      canonStatus: "fallback"
-    };
-  }
-
-  function fallbackBubblesForOption(option) {
-    const topic = inferTopicFromTarget(option.target);
-
-    if (topic === "characters") {
-      return [
-        "The Characters are not just labels. They are the people who make Mirrorland readable.",
-        "Each one carries a necessary part of the larger story.",
-        "You can meet them one by one, ask why they matter, or use the mirror to see what pattern you recognize in yourself."
-      ];
-    }
-
-    if (topic === "mirrorland") {
-      return [
-        "Mirrorland is where possible futures become visible before they become final.",
-        "Three roads are already in motion: consequence, survival, and possibility.",
-        "If you stay here, the next step is to understand the roads, then meet the people who make them matter."
-      ];
-    }
-
-    if (topic === "scientificLaw" || topic === "laws") {
-      return [
-        "The proof path asks whether a claim can survive being tested.",
-        "A claim is not strong because it sounds convincing. It becomes stronger when it can be checked, measured, corrected, and limited.",
-        "You can ask what needs testing, what counts as evidence, or what could prove the claim wrong."
-      ];
-    }
-
-    if (topic === "frontier") {
-      return [
-        "Frontier is where future ideas have to work in the real world.",
-        "Energy, water, waste, infrastructure, feedback, cities, and direction all have to survive practical pressure.",
-        "You can choose a system, test the claim, or return to Hearth."
-      ];
-    }
-
-    if (topic === "hearth") {
-      return [
-        "Hearth is Mission Control — the window within the window.",
-        "This is where the view into future possibility is coordinated before it becomes a route, test, or consequence.",
-        "You can ask what Hearth controls, why it answers to proof, or where to go next."
-      ];
-    }
-
-    return [
-      "I can keep the conversation moving from here.",
-      "Ask me what this place is, why it should be trusted, how it works in real life, or how it connects back to you."
-    ];
-  }
-
-  function fallbackOptionsForTopic(topic) {
-    if (topic === "mirrorland") {
-      return [
-        makeConversationOption("What is happening in Mirrorland?", "mirrorlandPath", PROMPT_MODES.STORY, ARCHETYPE_ALIGNMENTS.STORY),
-        makeConversationOption("What could go wrong here?", "ziontsPath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.PROOF),
-        makeConversationOption("What can still be saved?", "hEarthPath", PROMPT_MODES.PRACTICAL, ARCHETYPE_ALIGNMENTS.PRACTICAL),
-        makeConversationOption("I’d like to meet the Characters.", "charactersPath", PROMPT_MODES.PERSONAL, ARCHETYPE_ALIGNMENTS.PERSONAL)
-      ];
-    }
-
-    if (topic === "characters") {
-      return [
-        makeConversationOption("Who are the Characters?", "charactersPath", PROMPT_MODES.STORY, ARCHETYPE_ALIGNMENTS.STORY),
-        makeConversationOption("Why do these Characters matter?", "characterStoryPressurePath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.PROOF),
-        makeConversationOption("Who should I meet first?", "characterFirstPath", PROMPT_MODES.PROGRESSION, ARCHETYPE_ALIGNMENTS.STORY),
-        makeConversationOption("Which Character might I recognize in myself?", "characterArchetypeMirrorPath", PROMPT_MODES.PERSONAL, ARCHETYPE_ALIGNMENTS.PERSONAL)
-      ];
-    }
-
-    if (topic === "scientificLaw" || topic === "laws") {
-      return [
-        makeConversationOption("What needs to be tested?", "scientificLawPath", PROMPT_MODES.STORY, ARCHETYPE_ALIGNMENTS.PROOF),
-        makeConversationOption("Why should I trust this?", "scientificLawEvidencePath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.PROOF),
-        makeConversationOption("What would count as proof?", "scientificLawMeasurePath", PROMPT_MODES.PRACTICAL, ARCHETYPE_ALIGNMENTS.PRACTICAL),
-        makeConversationOption("What could prove this wrong?", "scientificLawLimitsPath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.BOUNDARY)
-      ];
-    }
-
-    if (topic === "frontier") {
-      return [
-        makeConversationOption("What has to work in the real world?", "frontierPath", PROMPT_MODES.PRACTICAL, ARCHETYPE_ALIGNMENTS.PRACTICAL),
-        makeConversationOption("Which system should I look at first?", "frontierSystemsPath", PROMPT_MODES.STORY, ARCHETYPE_ALIGNMENTS.SYSTEMS),
-        makeConversationOption("Can this survive a real test?", "scientificLawPath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.PROOF),
-        makeConversationOption("What happens if the system fails?", "frontierLawPath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.BOUNDARY)
-      ];
-    }
-
-    if (topic === "hearth") {
-      return [
-        makeConversationOption("Where am I right now?", "hearthPath", PROMPT_MODES.STORY, ARCHETYPE_ALIGNMENTS.STORY),
-        makeConversationOption("What is Hearth controlling?", "hearthConstructPath", PROMPT_MODES.PRACTICAL, ARCHETYPE_ALIGNMENTS.SYSTEMS),
-        makeConversationOption("Why does this room answer to proof?", "hearthLawPath", PROMPT_MODES.SKEPTIC, ARCHETYPE_ALIGNMENTS.PROOF),
-        makeConversationOption("Where should I go from here?", "whereToStart", PROMPT_MODES.PROGRESSION, ARCHETYPE_ALIGNMENTS.STORY)
-      ];
-    }
-
-    return cloneOptions(START_OPTIONS);
-  }
-
-  function fallbackHandoffsForTopic(topic) {
-    if (topic === "mirrorland") return ["mirrorland", "audralia", "hEarth", "characters", "hearth"];
-    if (topic === "characters") return ["characters", "mirrorland", "coherenceDiagnostic", "hearth"];
-    if (topic === "scientificLaw" || topic === "laws") return ["scientificLaw", "laws", "gauges", "frontier", "hearth"];
-    if (topic === "frontier") return ["frontier", "scientificLaw", "audralia", "hearth"];
-    if (topic === "hearth") return ["hearth", "mirrorland", "frontier", "scientificLaw", "characters"];
-    return START_HANDOFFS.slice();
-  }
-
-  function normalizeFrame(frame) {
-    const safe = frame && typeof frame === "object" ? frame : {};
-    const selectedTarget = sanitizeTarget(safe.selectedTarget || state.currentNode || DEFAULT_NODE);
-    const topic = safe.currentTopic || safe.intent || inferTopicFromTarget(selectedTarget);
-
-    return {
-      source: safe.source || "frontbrain",
-      bubbles: normalizeBubbles(safe.bubbles || safe.beats),
-      options: normalizeOptions(safe.options || []),
-      handoffs: normalizeHandoffs(safe.handoffs || []),
-      handoffLabels: safe.handoffLabels || {},
-      routeHints: safe.routeHints || {},
-      selectedTarget,
-      selectedLabel: sanitizeText(safe.selectedLabel || ""),
-      promptMode: normalizePromptMode(safe.promptMode || PROMPT_MODES.UNKNOWN),
-      optionKind: normalizeOptionKind(safe.optionKind || OPTION_KINDS.CONVERSATION),
-      archetypeAlignment: normalizeArchetypeAlignment(safe.archetypeAlignment || ARCHETYPE_ALIGNMENTS.UNKNOWN),
-      bridgeMoment: normalizeBridgeMoment(safe.bridgeMoment || BRIDGE_MOMENTS.NONE),
-      movementIntent: normalizeMovementIntent(safe.movementIntent || MOVEMENT_INTENTS.UNKNOWN),
-      currentTopic: topic,
-      conclusiveState: safe.conclusiveState || "open",
-      confidence: safe.confidence || "medium",
-      canonStatus: safe.canonStatus || "grounded"
-    };
-  }
-
-  function normalizeBubbles(bubbles) {
-    if (!Array.isArray(bubbles)) return [];
-    return bubbles.map(sanitizeText).filter(Boolean);
-  }
-
-  function normalizeOptions(options) {
-    if (!Array.isArray(options)) return [];
-    return options.map(normalizeOption).filter(Boolean);
-  }
-
-  function normalizeOption(option) {
-    if (!option || typeof option !== "object") return null;
-
-    const target = sanitizeTarget(option.target || "cleanDoor");
-    const label = normalizeHumanPrompt(sanitizeText(option.label || ""), target);
-    const optionKind = normalizeOptionKind(option.optionKind || inferOptionKind(option, label));
-    const promptMode = normalizePromptMode(option.promptMode || inferPromptModeFromOption(option, label, target));
-    const archetypeAlignment = normalizeArchetypeAlignment(option.archetypeAlignment || inferAlignmentFromTarget(target));
-    const bridgeMoment = normalizeBridgeMoment(option.bridgeMoment || inferBridgeMoment(optionKind));
-    const movementIntent = normalizeMovementIntent(option.movementIntent || inferMovementFromKind(optionKind));
-
-    return {
-      label,
-      target,
-      type: sanitizeOptionType(option.type, optionKind),
-      scopeLane: sanitizeScopeLane(option.scopeLane, target),
-      promptMode,
-      optionKind,
-      archetypeAlignment,
-      bridgeMoment,
-      movementIntent
-    };
-  }
-
-  function normalizeHandoffs(handoffs) {
-    if (!Array.isArray(handoffs)) return [];
-    return handoffs.map(sanitizeRoute).filter(Boolean);
-  }
-
-  function normalizeHumanPrompt(label, target) {
-    if (!label) return fallbackLabelForTarget(target);
-    const trimmed = sanitizeText(label);
-    if (/^(open|visit|launch|go to)\b/i.test(trimmed)) return fallbackLabelForTarget(target);
-    return trimmed;
-  }
-
-  function fallbackLabelForTarget(target) {
-    const labels = {
-      hearthPath: "Where am I right now?",
-      mirrorlandPath: "What is happening in Mirrorland?",
-      charactersPath: "I’d like to meet the Characters.",
-      scientificLawPath: "What needs to be tested?",
-      scientificLawEvidencePath: "Why should I trust this?",
-      scientificLawMeasurePath: "What would count as proof?",
-      scientificLawLimitsPath: "What could prove this wrong?",
-      lawsPath: "What keeps this honest?",
-      gaugesPath: "What is working, and what still needs proof?",
-      frontierPath: "What has to work in the real world?",
-      frontierSystemsPath: "Which system should I look at first?",
-      audraliaPath: "What is Audralia?",
-      hEarthPath: "What can still be saved?",
-      ziontsPath: "What could go wrong here?",
-      seanPath: "Who is Sean Mansfield?",
-      underdogPath: "What is This Underdog?",
-      characterArchetypeMirrorPath: "Which Character might I recognize in myself?",
-      characterStoryPressurePath: "Why do these Characters matter?",
-      characterFirstPath: "Who should I meet first?",
-      whereToStart: "Where should I start?",
-      cleanDoor: "What is the cleanest next door?",
-      recenterNode: "Can you re-center me?"
-    };
-
-    return labels[target] || "Can you tell me more?";
-  }
-
-  function inferOptionKind(option, label) {
-    const text = [label, option && option.target, option && option.type].join(" ").toLowerCase();
-    if (option && option.type === "control") return OPTION_KINDS.CONTROL;
-    if (/\breturn|back|re-center|recenter|start over\b/.test(text)) return OPTION_KINDS.RETURN;
-    if (/\bcross|nearby|related room|go into|go back into\b/.test(text)) return OPTION_KINDS.PARALLEL;
-    if (/\bcontinue|next|deeper|what happens next|who should i meet first\b/.test(text)) return OPTION_KINDS.FORWARD;
-    if (/^(open|visit|launch|go to)\b/.test(text)) return OPTION_KINDS.ROUTE;
-    return OPTION_KINDS.CONVERSATION;
-  }
-
-  function inferPromptModeFromOption(option, label, target) {
-    const text = [label, target, option && option.promptMode].join(" ").toLowerCase();
-    if (/\bwhy should i trust|prove|proof|evidence|what could prove|why.*matter|why.*important|can this survive\b/.test(text)) return PROMPT_MODES.SKEPTIC;
-    if (/\breal world|work|system|use|practical|frontier|what has to work|what can i do\b/.test(text)) return PROMPT_MODES.PRACTICAL;
-    if (/\bme|myself|recognize|fit into|my pressure|underdog|diagnostic|archetype\b/.test(text)) return PROMPT_MODES.PERSONAL;
-    if (/\bcontinue|next|deeper|who should i meet first|where should i go\b/.test(text)) return PROMPT_MODES.PROGRESSION;
-    if (/\brecenter|re-center|return|back|start over|lost\b/.test(text)) return PROMPT_MODES.RECENTER;
-    return PROMPT_MODES.STORY;
-  }
-
-  function inferAlignmentFromTarget(target) {
-    if (/scientific|law|proof|gauge|limits|evidence|measure/i.test(target)) return ARCHETYPE_ALIGNMENTS.PROOF;
-    if (/frontier|system|product|energy|water|waste|infrastructure/i.test(target)) return ARCHETYPE_ALIGNMENTS.PRACTICAL;
-    if (/archetype|diagnostic|underdog|mirrorMe|self/i.test(target)) return ARCHETYPE_ALIGNMENTS.PERSONAL;
-    if (/sean|summits/i.test(target)) return ARCHETYPE_ALIGNMENTS.SOURCE;
-    if (/hearth|mirrorland|audralia|zionts|characters|hEarth/i.test(target)) return ARCHETYPE_ALIGNMENTS.STORY;
-    return ARCHETYPE_ALIGNMENTS.UNKNOWN;
-  }
-
-  function inferBridgeMoment(optionKind) {
-    if (optionKind === OPTION_KINDS.FORWARD) return BRIDGE_MOMENTS.AFTER_KNOWLEDGE;
-    if (optionKind === OPTION_KINDS.RETURN) return BRIDGE_MOMENTS.RETURN;
-    if (optionKind === OPTION_KINDS.PARALLEL) return BRIDGE_MOMENTS.PARALLEL;
-    if (optionKind === OPTION_KINDS.ROUTE) return BRIDGE_MOMENTS.PREPARED_DOOR;
-    if (optionKind === OPTION_KINDS.CONTROL) return BRIDGE_MOMENTS.RECENTER;
-    return BRIDGE_MOMENTS.BEFORE_KNOWLEDGE;
-  }
-
-  function inferMovementFromKind(optionKind) {
-    if (optionKind === OPTION_KINDS.FORWARD) return MOVEMENT_INTENTS.CONTINUE;
-    if (optionKind === OPTION_KINDS.RETURN) return MOVEMENT_INTENTS.RETURN;
-    if (optionKind === OPTION_KINDS.PARALLEL) return MOVEMENT_INTENTS.CROSS;
-    if (optionKind === OPTION_KINDS.ROUTE) return MOVEMENT_INTENTS.OPEN;
-    if (optionKind === OPTION_KINDS.CONTROL) return MOVEMENT_INTENTS.RECENTER;
-    return MOVEMENT_INTENTS.ASK;
-  }
-
-  function sanitizeOptionType(type, optionKind) {
-    if (optionKind === OPTION_KINDS.CONTROL || optionKind === OPTION_KINDS.RETURN) return "control";
-    if (["conversation", "topic", "calibration", "back", "control"].includes(type)) return type;
-    return "conversation";
-  }
-
-  function sanitizeScopeLane(scopeLane, target) {
-    if (scopeLane === "narrative") return "narrative";
-    return isNarrativeTarget(target) ? "narrative" : "objective";
-  }
-
-  function normalizePromptMode(value) {
-    return Object.values(PROMPT_MODES).includes(value) ? value : PROMPT_MODES.UNKNOWN;
-  }
-
-  function normalizeOptionKind(value) {
-    return Object.values(OPTION_KINDS).includes(value) ? value : OPTION_KINDS.CONVERSATION;
-  }
-
-  function normalizeArchetypeAlignment(value) {
-    return Object.values(ARCHETYPE_ALIGNMENTS).includes(value) ? value : ARCHETYPE_ALIGNMENTS.UNKNOWN;
-  }
-
-  function normalizeBridgeMoment(value) {
-    return Object.values(BRIDGE_MOMENTS).includes(value) ? value : BRIDGE_MOMENTS.NONE;
-  }
-
-  function normalizeMovementIntent(value) {
-    return Object.values(MOVEMENT_INTENTS).includes(value) ? value : MOVEMENT_INTENTS.UNKNOWN;
-  }
-
-  function sanitizeTarget(value) {
-    return String(value || "").trim();
-  }
-
-  function sanitizeRoute(value) {
-    return String(value || "").trim();
-  }
-
-  function sanitizeText(value) {
-    return String(value || "").replace(/\s+/g, " ").trim();
-  }
-
-  function clearPanel(panel) {
-    if (!panel) return;
-    while (panel.firstChild) panel.removeChild(panel.firstChild);
-  }
-
-  function setStatus(text) {
-    if (!state.status) return;
-    state.status.textContent = text || "";
   }
 
   function setTyping(isTyping) {
-    const value = isTyping ? "true" : "false";
-    if (state.root) state.root.setAttribute("data-jeeves-typing", value);
-    if (state.typing) state.typing.setAttribute("data-jeeves-typing", value);
-  }
+    if (!state.root || !state.shell) return;
 
-  function makeConversationOption(label, target, promptMode, archetypeAlignment) {
-    return {
-      label,
-      target,
-      type: "conversation",
-      scopeLane: isNarrativeTarget(target) ? "narrative" : "objective",
-      promptMode,
-      optionKind: OPTION_KINDS.CONVERSATION,
-      archetypeAlignment,
-      bridgeMoment: BRIDGE_MOMENTS.BEFORE_KNOWLEDGE,
-      movementIntent: MOVEMENT_INTENTS.ASK
-    };
-  }
-
-  function cloneOptions(options) {
-    return JSON.parse(JSON.stringify(options || []));
-  }
-
-  function inferTopicFromTarget(target) {
-    return NODE_TOPIC_MAP[target] || DEFAULT_TOPIC;
-  }
-
-  function inferScopeLane(frame, target) {
-    if (frame && frame.scopeLane) return frame.scopeLane;
-    return isNarrativeTarget(target) ? "narrative" : "objective";
-  }
-
-  function inferScopeStage(frame) {
-    if (!frame) return "conversation";
-    if (frame.bridgeMoment === BRIDGE_MOMENTS.ENTRANCE) return "entrance";
-    if (frame.conclusiveState === "complete") return "complete";
-    if (frame.optionKind === OPTION_KINDS.FORWARD) return "deeper";
-    return "conversation";
-  }
-
-  function isNarrativeTarget(target) {
-    return /hearth|mirrorland|audralia|zionts|characters|hEarth|sean|underdog|summits/i.test(String(target || ""));
+    state.root.setAttribute("data-jeeves-typing", isTyping ? "true" : "false");
+    state.shell.typing.textContent = isTyping ? "Jeeves is preparing the next answer..." : "";
   }
 
   function buildAllowedTargets() {
-    return Array.from(new Set([
-      "hearthPath",
-      "hearthFacilityPath",
-      "hearthConstructPath",
-      "hearthFrontierPath",
-      "hearthLawPath",
-      "mirrorlandPath",
-      "atriumPath",
-      "atlasPath",
-      "audraliaPath",
-      "hEarthPath",
-      "ziontsPath",
-      "charactersPath",
-      "characterIdentityPath",
-      "characterRelationshipsPath",
-      "characterStoryPressurePath",
-      "characterFirstPath",
-      "characterArchetypeMirrorPath",
-      "selfLearningPath",
-      "scientificLawPath",
-      "scientificLawTheoryPath",
-      "scientificLawEvidencePath",
-      "scientificLawMeasurePath",
-      "scientificLawLimitsPath",
-      "lawsPath",
-      "gaugesPath",
-      "frontierPath",
-      "frontierSystemsPath",
-      "frontierEnergyPath",
-      "frontierWaterPath",
-      "frontierWastePath",
-      "frontierClosedLoopPath",
-      "frontierInfrastructurePath",
-      "frontierLawPath",
-      "seanPath",
-      "underdogPath",
-      "nineSummitsPath",
-      "nineSummitsBookPath",
-      "productsPath",
-      "diagnosticPath",
-      "whereToStart",
-      "compassPath",
-      "siteGuidePath",
-      "cleanDoor",
-      "returnFork",
-      "recenterNode"
-    ]));
+    return [
+      TARGETS.DIAMOND_GATE_OVERVIEW,
+      TARGETS.SPLIT_INTERFACE,
+      TARGETS.TRADITIONAL_WEBSITE,
+      TARGETS.NARRATIVE_PATH,
+      TARGETS.MISSION_OVERVIEW,
+      TARGETS.MISSION_INNER,
+      TARGETS.MISSION_COMMUNITY,
+      TARGETS.MISSION_COLLABORATION,
+      TARGETS.PRACTICAL_RELEVANCE,
+      TARGETS.DIAGNOSTIC_REFERRAL,
+      TARGETS.DIAGNOSTIC,
+      TARGETS.CHARACTER_MIRROR,
+      TARGETS.MIRRORLAND,
+      TARGETS.HEARTH,
+      TARGETS.FRONTIER,
+      TARGETS.SCIENTIFIC_LAW,
+      TARGETS.COMPASS,
+      TARGETS.PRODUCTS,
+      TARGETS.LAWS,
+      TARGETS.SEAN,
+      TARGETS.UNDERDOG,
+      TARGETS.CHARACTERS,
+      TARGETS.RECENTER,
+      TARGETS.CLEAN_DOOR
+    ];
   }
 
   function buildAllowedRoutes() {
-    return Array.from(new Set(Object.keys(ROUTE_HINTS)));
+    return [
+      ROUTES.COMPASS,
+      ROUTES.HOME,
+      ROUTES.SITE_GUIDE,
+      ROUTES.COHERENCE_DIAGNOSTIC,
+      ROUTES.MEET_SEAN,
+      ROUTES.PRODUCTS,
+      ROUTES.LAWS,
+      ROUTES.SCIENTIFIC_LAW,
+      ROUTES.GAUGES,
+      ROUTES.SHOWROOM,
+      ROUTES.HEARTH,
+      ROUTES.MIRRORLAND,
+      ROUTES.ZIONTS,
+      ROUTES.AUDRALIA,
+      ROUTES.H_EARTH,
+      ROUTES.FRONTIER,
+      ROUTES.CHARACTERS,
+      ROUTES.NINE_SUMMITS,
+      ROUTES.UNDERDOG
+    ];
   }
 
-  function buildHandoffLabels(routes) {
-    const labels = {};
-    (routes || []).forEach(function addLabel(route) {
-      labels[route] = DEFAULT_HANDOFF_LABELS[route] || ("Open " + route);
-    });
-    return labels;
-  }
+  function buildExpressionContext(extra) {
+    const source = extra && typeof extra === "object" ? extra : {};
 
-  function buildRouteHints(routes) {
-    const hints = {};
-    (routes || []).forEach(function addHint(route) {
-      if (ROUTE_HINTS[route]) hints[route] = ROUTE_HINTS[route];
-    });
-    return hints;
-  }
-
-  function openRoute(routeId) {
-    const route = sanitizeRoute(routeId);
-    const href = ROUTE_HINTS[route];
-
-    if (!href) {
-      appendBubble("assistant", "I do not have a clean door for that route yet.");
-      renderPreparedDoors(state.lastResponse || {});
-      return;
-    }
-
-    setStatus("Opening " + ((DEFAULT_HANDOFF_LABELS[route] || route).replace(/^Open\s+/i, "")) + ".");
-    window.location.href = href;
+    return {
+      intent: source.intent || state.currentTopic,
+      selectedTarget: source.selectedTarget || state.currentNode,
+      selectedLabel: source.selectedLabel || "",
+      currentNode: state.currentNode,
+      currentPath: state.currentPath,
+      currentEntryLane: state.currentEntryLane,
+      lastLane: state.lastLane,
+      currentConversationStage: state.currentConversationStage,
+      promptMode: source.promptMode || "",
+      optionKind: source.optionKind || "",
+      bridgeMoment: source.bridgeMoment || "",
+      movementIntent: source.movementIntent || ""
+    };
   }
 
   function getExpression() {
-    return window.HEARTH_JEEVES_EXPRESSION ||
-      window.HEARTH_JEEVES_EXPRESSION_BRIDGE ||
-      (window.HEARTH && window.HEARTH.jeevesExpression) ||
+    return global.HEARTH_JEEVES_EXPRESSION ||
+      global.HEARTH_JEEVES_EXPRESSION_BRIDGE ||
+      (global.HEARTH && global.HEARTH.jeevesExpression) ||
       null;
   }
 
   function getExpressionContract() {
     const expression = getExpression();
-    if (!expression) return "";
-    return expression.CONTRACT || expression.contract || expression.contractId || "";
+    return expression && expression.contract ? expression.contract : "";
   }
 
-  function applyExpressionFrame(frame, context) {
+  function shapeText(text, context) {
     const expression = getExpression();
-    if (!expression) return frame;
-
-    let shaped = frame;
-
-    try {
-      if (typeof expression.shapeConversationFrame === "function") {
-        shaped = expression.shapeConversationFrame(shaped, context || {}) || shaped;
-      }
-
-      if (typeof expression.shapeOptions === "function") {
-        shaped.options = expression.shapeOptions(shaped.options || [], context || {}) || shaped.options;
-      }
-
-      if (typeof expression.shapeForkBridge === "function" && context && context.bridgeMoment) {
-        const bridge = expression.shapeForkBridge(context) || null;
-        if (bridge && Array.isArray(bridge.bubbles) && bridge.bubbles.length) {
-          shaped.bubbles = bridge.bubbles.concat(shaped.bubbles || []);
-        }
-        if (bridge && Array.isArray(bridge.options) && bridge.options.length) {
-          shaped.options = bridge.options.concat(shaped.options || []);
-        }
-      }
-    } catch (error) {
-      console.warn("[Jeeves Expression] shaping failed", error);
+    if (expression && typeof expression.sanitizePublicText === "function") {
+      return expression.sanitizePublicText(text, context || buildExpressionContext());
     }
-
-    return shaped;
+    return safeText(text);
   }
 
-  function visibleBootFailure(error) {
-    const message = error && error.message ? error.message : "UNKNOWN_BOOT_ERROR";
+  function makeConversationOption(
+    label,
+    target,
+    promptMode,
+    archetypeAlignment,
+    bridgeMoment,
+    movementIntent,
+    scopeLane,
+    optionKind,
+    type
+  ) {
+    const normalizedTarget = normalizeTarget(target);
 
-    const root = findOrCreateRoot();
-    if (!root) return;
-
-    state.root = root;
-    bindRootToShellContract(root);
-    ensureShell(root);
-
-    releaseReadyState("Jeeves shell boot failed.");
-
-    appendBubble("system", "Jeeves reached the shell, but the frontbrain could not complete boot: " + message);
-    console.error("[Jeeves Frontbrain]", error);
-  }
-
-  function exposeGlobals() {
-    window.HEARTH_JEEVES_READY = false;
-
-    window.mountHearthJeeves = safeMountJeeves;
-    window.mountJeeves = safeMountJeeves;
-
-    window.HEARTH_JEEVES_FRONTBRAIN = {
-      CONTRACT,
-      PREVIOUS_CONTRACT,
-      API_CONTRACT,
-      state,
-      mount: safeMountJeeves,
-      renderFrame,
-      handleOption,
-      callNorth,
-      buildApiPayload,
-      normalizeFrame,
-      normalizeOption,
-      openRoute
+    return {
+      label: safeText(label),
+      target: normalizedTarget,
+      type: type || "conversation",
+      scopeLane: scopeLane || inferScopeLane(normalizedTarget),
+      promptMode: promptMode || PROMPT_MODES.UNKNOWN,
+      optionKind: optionKind || OPTION_KINDS.CONVERSATION,
+      archetypeAlignment: archetypeAlignment || inferAlignmentFromTarget(normalizedTarget),
+      bridgeMoment: bridgeMoment || BRIDGE_MOMENTS.BEFORE,
+      movementIntent: movementIntent || MOVEMENT_INTENTS.ASK
     };
   }
-})();
+
+  function normalizeOption(option) {
+    const source = option && typeof option === "object" ? option : {};
+
+    return {
+      label: safeText(source.label || ""),
+      target: normalizeTarget(source.target || ""),
+      type: source.type || "conversation",
+      scopeLane: source.scopeLane || inferScopeLane(source.target),
+      promptMode: source.promptMode || PROMPT_MODES.UNKNOWN,
+      optionKind: source.optionKind || OPTION_KINDS.CONVERSATION,
+      archetypeAlignment: source.archetypeAlignment || inferAlignmentFromTarget(source.target),
+      bridgeMoment: source.bridgeMoment || BRIDGE_MOMENTS.BEFORE,
+      movementIntent: source.movementIntent || MOVEMENT_INTENTS.ASK
+    };
+  }
+
+  function normalizeBubbles(value) {
+    if (!Array.isArray(value)) return [];
+    return value.map((item) => safeText(item)).filter(Boolean).slice(0, 4);
+  }
+
+  function normalizeTarget(target) {
+    const clean = safeText(target);
+
+    const aliases = {
+      websitePath: TARGETS.DIAMOND_GATE_OVERVIEW,
+      siteOverviewPath: TARGETS.DIAMOND_GATE_OVERVIEW,
+      traditionalPath: TARGETS.TRADITIONAL_WEBSITE,
+      narrativeOverviewPath: TARGETS.NARRATIVE_PATH,
+      missionPath: TARGETS.MISSION_OVERVIEW,
+      characterArchetypeMirrorPath: TARGETS.CHARACTER_MIRROR,
+      characterMirrorPath: TARGETS.CHARACTER_MIRROR,
+      characterArchetypeQuestionOne: TARGETS.DIAGNOSTIC_REFERRAL,
+      characterArchetypeQuestionTwo: TARGETS.DIAGNOSTIC_REFERRAL,
+      characterArchetypeQuestionThree: TARGETS.DIAGNOSTIC_REFERRAL,
+      characterArchetypeResult: TARGETS.DIAGNOSTIC_REFERRAL,
+      mirrorMePath: TARGETS.DIAGNOSTIC_REFERRAL,
+      selfLearningPath: TARGETS.DIAGNOSTIC_REFERRAL
+    };
+
+    return aliases[clean] || clean;
+  }
+
+  function normalizeRoute(route) {
+    const clean = safeText(route);
+
+    const aliases = {
+      traditionalWebsite: ROUTES.SITE_GUIDE,
+      narrativePath: ROUTES.MIRRORLAND,
+      frontierPlayground: ROUTES.FRONTIER,
+      worldGate: ROUTES.MIRRORLAND,
+      globeWindow: ROUTES.MIRRORLAND
+    };
+
+    return aliases[clean] || clean;
+  }
+
+  function inferTargetFromText(text) {
+    const value = safeText(text).toLowerCase();
+
+    if (/\bwhat is diamondgatebridge|what is diamond gate bridge|what is this place|what is this site\b/.test(value)) {
+      return TARGETS.DIAMOND_GATE_OVERVIEW;
+    }
+
+    if (/\bnarrative path|story path|narrative side\b/.test(value)) {
+      return TARGETS.NARRATIVE_PATH;
+    }
+
+    if (/\btraditional website|public website|website for|public pages|site guide\b/.test(value)) {
+      return TARGETS.TRADITIONAL_WEBSITE;
+    }
+
+    if (/\bmission|inner mission|community mission|protect children|protect animals|bullying|collaboration\b/.test(value)) {
+      return TARGETS.MISSION_OVERVIEW;
+    }
+
+    if (/\breal world|practical|why does this matter|why this matters\b/.test(value)) {
+      return TARGETS.PRACTICAL_RELEVANCE;
+    }
+
+    if (/\bwhich archetype|what archetype|which character am i|what character am i|assess me|score me|diagnose me|alignment read|mirror question\b/.test(value)) {
+      return TARGETS.DIAGNOSTIC_REFERRAL;
+    }
+
+    if (/\bcoherence diagnostic|diagnostic\b/.test(value)) {
+      return TARGETS.DIAGNOSTIC;
+    }
+
+    if (/\bcharacter mirror\b/.test(value)) {
+      return TARGETS.CHARACTER_MIRROR;
+    }
+
+    if (/\bmirrorland|world window|south gate\b/.test(value)) {
+      return TARGETS.MIRRORLAND;
+    }
+
+    if (/\bhearth|mission control|window within the window\b/.test(value)) {
+      return TARGETS.HEARTH;
+    }
+
+    if (/\bfrontier|playground|energy|water|waste|infrastructure\b/.test(value)) {
+      return TARGETS.FRONTIER;
+    }
+
+    if (/\bscientific law|proof|evidence|test\b/.test(value)) {
+      return TARGETS.SCIENTIFIC_LAW;
+    }
+
+    if (/\bcompass|where should i start|start\b/.test(value)) {
+      return TARGETS.COMPASS;
+    }
+
+    return TARGETS.DIAMOND_GATE_OVERVIEW;
+  }
+
+  function inferPromptModeFromText(text) {
+    const value = safeText(text).toLowerCase();
+
+    if (/\btrust|proof|evidence|test|wrong|matter|important\b/.test(value)) return PROMPT_MODES.SKEPTIC;
+    if (/\breal world|practical|work|system|use|frontier|product|energy|water|waste\b/.test(value)) return PROMPT_MODES.PRACTICAL;
+    if (/\bmission|inner|community|myself|diagnostic|alignment|underdog|pressure|noise\b/.test(value)) return PROMPT_MODES.PERSONAL;
+    if (/\bnext|continue|go deeper|show me more\b/.test(value)) return PROMPT_MODES.PROGRESSION;
+    if (/\brecenter|lost|start over|return\b/.test(value)) return PROMPT_MODES.RECENTER;
+
+    return PROMPT_MODES.STORY;
+  }
+
+  function inferAlignmentFromTarget(target) {
+    const clean = normalizeTarget(target);
+
+    if ([
+      TARGETS.SCIENTIFIC_LAW,
+      TARGETS.LAWS
+    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.PROOF;
+
+    if ([
+      TARGETS.FRONTIER,
+      TARGETS.PRACTICAL_RELEVANCE,
+      TARGETS.PRODUCTS,
+      TARGETS.MISSION_COLLABORATION
+    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.PRACTICAL;
+
+    if ([
+      TARGETS.MISSION_OVERVIEW,
+      TARGETS.MISSION_INNER,
+      TARGETS.MISSION_COMMUNITY,
+      TARGETS.DIAGNOSTIC_REFERRAL,
+      TARGETS.DIAGNOSTIC,
+      TARGETS.UNDERDOG
+    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.PERSONAL;
+
+    if ([
+      TARGETS.SEAN
+    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.SOURCE;
+
+    if ([
+      TARGETS.NARRATIVE_PATH,
+      TARGETS.MIRRORLAND,
+      TARGETS.HEARTH,
+      TARGETS.CHARACTERS,
+      TARGETS.CHARACTER_MIRROR
+    ].includes(clean)) return ARCHETYPE_ALIGNMENTS.STORY;
+
+    return ARCHETYPE_ALIGNMENTS.UNKNOWN;
+  }
+
+  function inferScopeLane(target) {
+    const clean = normalizeTarget(target);
+
+    if ([
+      TARGETS.NARRATIVE_PATH,
+      TARGETS.MISSION_OVERVIEW,
+      TARGETS.MISSION_INNER,
+      TARGETS.MISSION_COMMUNITY,
+      TARGETS.MISSION_COLLABORATION,
+      TARGETS.MIRRORLAND,
+      TARGETS.HEARTH,
+      TARGETS.FRONTIER,
+      TARGETS.CHARACTERS,
+      TARGETS.CHARACTER_MIRROR
+    ].includes(clean)) return "narrative";
+
+    return "objective";
+  }
+
+  function inferLaneFromTarget(target, intent) {
+    const clean = normalizeTarget(target);
+    const safeIntent = safeText(intent);
+
+    if (clean === TARGETS.SPLIT_INTERFACE || safeIntent === "splitInterface") return LANES.BRIDGE;
+    if (clean === TARGETS.DIAGNOSTIC_REFERRAL || safeIntent === "diagnosticReferral") return LANES.DIAGNOSTIC;
+
+    if ([
+      TARGETS.TRADITIONAL_WEBSITE,
+      TARGETS.COMPASS,
+      TARGETS.PRODUCTS,
+      TARGETS.LAWS,
+      TARGETS.SEAN,
+      TARGETS.DIAGNOSTIC,
+      TARGETS.SCIENTIFIC_LAW,
+      TARGETS.PRACTICAL_RELEVANCE
+    ].includes(clean)) return LANES.TRADITIONAL;
+
+    if ([
+      TARGETS.NARRATIVE_PATH,
+      TARGETS.MISSION_OVERVIEW,
+      TARGETS.MISSION_INNER,
+      TARGETS.MISSION_COMMUNITY,
+      TARGETS.MISSION_COLLABORATION,
+      TARGETS.MIRRORLAND,
+      TARGETS.HEARTH,
+      TARGETS.FRONTIER,
+      TARGETS.CHARACTERS,
+      TARGETS.CHARACTER_MIRROR,
+      TARGETS.UNDERDOG
+    ].includes(clean)) return LANES.NARRATIVE;
+
+    return state.currentEntryLane || LANES.UNKNOWN;
+  }
+
+  function inferStageFromTarget(target, intent) {
+    const clean = normalizeTarget(target);
+    const safeIntent = safeText(intent);
+
+    if (clean === TARGETS.DIAMOND_GATE_OVERVIEW || safeIntent === "diamondGate") return STAGES.SPLIT_INTERFACE_GATE;
+    if (clean === TARGETS.TRADITIONAL_WEBSITE || safeIntent === "traditionalWebsite") return STAGES.TRADITIONAL_WEBSITE_LANE;
+    if (clean === TARGETS.NARRATIVE_PATH || safeIntent === "narrativePath") return STAGES.NARRATIVE_PATH_LANE;
+    if (clean === TARGETS.MISSION_OVERVIEW || clean === TARGETS.MISSION_INNER || clean === TARGETS.MISSION_COMMUNITY || clean === TARGETS.MISSION_COLLABORATION || safeIntent === "mission") return STAGES.MISSION_LANE;
+    if (clean === TARGETS.SPLIT_INTERFACE || safeIntent === "splitInterface") return STAGES.BRIDGE_LANE;
+    if (clean === TARGETS.DIAGNOSTIC_REFERRAL || safeIntent === "diagnosticReferral") return STAGES.DIAGNOSTIC_REFERRAL;
+
+    return STAGES.OPEN_CONVERSATION;
+  }
+
+  function inferIntentFromTarget(target) {
+    const clean = normalizeTarget(target);
+
+    const map = {
+      diamondGateOverviewPath: "diamondGate",
+      splitInterfaceBridgePath: "splitInterface",
+      traditionalWebsiteOverviewPath: "traditionalWebsite",
+      narrativePathOverview: "narrativePath",
+      missionOverviewPath: "mission",
+      missionInnerPath: "mission",
+      missionCommunityPath: "mission",
+      missionCollaborationPath: "mission",
+      practicalRelevancePath: "practicalRelevance",
+      diagnosticReferralPath: "diagnosticReferral",
+      diagnosticPath: "diagnostic",
+      characterMirrorPath: "characterMirror",
+      mirrorlandPath: "mirrorland",
+      hearthPath: "hearth",
+      frontierPath: "frontier",
+      scientificLawPath: "scientificLaw",
+      compassPath: "orientation",
+      productsPath: "traditionalWebsite",
+      lawsPath: "laws",
+      seanPath: "sean",
+      underdogPath: "underdog",
+      charactersPath: "characters",
+      recenterNode: "recenter",
+      cleanDoor: "recenter"
+    };
+
+    return map[clean] || "diamondGate";
+  }
+
+  function inferCardinalForTarget(target) {
+    const clean = normalizeTarget(target);
+
+    if ([
+      TARGETS.SCIENTIFIC_LAW,
+      TARGETS.LAWS,
+      TARGETS.DIAGNOSTIC,
+      TARGETS.DIAGNOSTIC_REFERRAL
+    ].includes(clean)) return "W";
+
+    if ([
+      TARGETS.FRONTIER,
+      TARGETS.HEARTH,
+      TARGETS.MISSION_COLLABORATION,
+      TARGETS.PRACTICAL_RELEVANCE
+    ].includes(clean)) return "E";
+
+    if ([
+      TARGETS.MIRRORLAND,
+      TARGETS.NARRATIVE_PATH,
+      TARGETS.CHARACTERS,
+      TARGETS.CHARACTER_MIRROR
+    ].includes(clean)) return "S";
+
+    if ([
+      TARGETS.COMPASS,
+      TARGETS.SEAN,
+      TARGETS.UNDERDOG,
+      TARGETS.TRADITIONAL_WEBSITE
+    ].includes(clean)) return "N";
+
+    return "C";
+  }
+
+  function inferLoopCount(target) {
+    const clean = normalizeTarget(target);
+    return state.selectedTargets.filter((item) => item === clean).length;
+  }
+
+  function inferTopicDepth(target) {
+    const intent = inferIntentFromTarget(target);
+    return state.transitionTrail.filter((item) => inferIntentFromTarget(item.to) === intent).length;
+  }
+
+  function makeOptionKey(option) {
+    return [
+      option.target || "",
+      option.label || "",
+      option.promptMode || "",
+      option.optionKind || ""
+    ].join("::");
+  }
+
+  function cloneState() {
+    return {
+      ready: state.ready,
+      busy: state.busy,
+      booted: state.booted,
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      currentConversationStage: state.currentConversationStage,
+      currentEntryLane: state.currentEntryLane,
+      lastLane: state.lastLane,
+      bridgeOffered: state.bridgeOffered,
+      currentNode: state.currentNode,
+      currentPath: state.currentPath,
+      currentTopic: state.currentTopic,
+      currentScopeLane: state.currentScopeLane,
+      selectedTargets: state.selectedTargets.slice(),
+      selectedOptionKeys: state.selectedOptionKeys.slice(),
+      visitedNodes: state.visitedNodes.slice(),
+      sessionTrail: state.sessionTrail.slice(),
+      transitionTrail: state.transitionTrail.slice(),
+      branchStack: state.branchStack.slice(),
+      returnStack: state.returnStack.slice(),
+      lastError: state.lastError ? safeErrorMessage(state.lastError) : ""
+    };
+  }
+
+  function dispatch(name, detail) {
+    if (typeof global.dispatchEvent !== "function" || typeof global.CustomEvent !== "function") return;
+    global.dispatchEvent(new global.CustomEvent(name, { detail }));
+  }
+
+  function safeText(value) {
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function safeErrorMessage(error) {
+    return safeText(error && error.message ? error.message : "Unknown Jeeves frontbrain error.").slice(0, 500);
+  }
+})(typeof window !== "undefined" ? window : globalThis);

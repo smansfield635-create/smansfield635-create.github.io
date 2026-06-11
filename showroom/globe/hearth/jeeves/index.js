@@ -1,19 +1,28 @@
 // /showroom/globe/hearth/jeeves/index.js
-// HEARTH_JEEVES_FRONTBRAIN_COORDINATE_CARRIER_TURN_RHYTHM_TNT_v25_6
+// HEARTH_JEEVES_FRONTBRAIN_SOURCE_IDENTITY_MOTOR_CARRIER_TNT_v25_6_1
 // Full-file replacement.
 // Client-side frontbrain / visible conversation carrier only.
+// Distributed brain pair member:
+// - Frontbrain lobe 1: sensory / source identity.
+// - Frontbrain lobe 2: motor / carrier.
+// Pair target:
+// - /api/jeeves.js
+// - HEARTH_JEEVES_BACKBRAIN_SOURCE_STABILITY_EXECUTIVE_COORDINATE_TNT_v5_4_1
 // Purpose:
-// - Preserve v25.5 guided entrance, reading rhythm, tap-to-speed,
+// - Preserve v25.6 guided entrance, reading rhythm, tap-to-speed,
 //   endpoint fallback, bridgeContext, clicked-label priority,
 //   Expression shaping, option rendering, route handoff rendering,
 //   and route execution.
-// - Align with API/North v5.4 coordinate dialogue synchronization.
-// - Treat API/North coordinate as primary after response.
-// - Carry conversationCoordinate, gateType, pathFamily, dialectMode,
-//   contextExpectation, noRepeat, entryStackMode, basePoolMode,
-//   illuminationMode, and choiceClosure into Expression.
+// - Add first-class sourceTarget and activeTarget carriage.
+// - Treat clicked option identity as the strongest outbound source signal.
+// - Prevent stale guidedChooser frame state from overpowering a non-split clicked source.
+// - Align with the API/North source-stability coordinate authority.
+// - Carry selectedTarget, sourceTarget, activeTarget, conversationCoordinate,
+//   gateType, pathFamily, dialectMode, contextExpectation, noRepeat,
+//   entryStackMode, basePoolMode, illuminationMode, and choiceClosure
+//   into API/North and Expression.
 // - Render visible user turns for clicked options and freeform input.
-// - Keep frontbrain as carrier only: pre-request inference is allowed;
+// - Keep frontbrain as carrier only: it captures identity and carries packets;
 //   post-response meaning belongs to API/North and Expression.
 // Does not own:
 // - API/North canon
@@ -28,13 +37,15 @@
 "use strict";
 
 (function attachHearthJeevesFrontbrain(global) {
-  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_COORDINATE_CARRIER_TURN_RHYTHM_TNT_v25_6";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_ENTRY_STACK_CONNECTOR_READING_RHYTHM_TNT_v25_5";
-  const EXPRESSION_CONTRACT_TARGET = "HEARTH_JEEVES_EXPRESSION_ENTRY_STACK_BASE_POOL_ILLUMINATION_TNT_v5_4";
-  const API_CONTRACT_TARGET = "HEARTH_JEEVES_BACKBRAIN_FIBONACCI_COORDINATE_DIALOGUE_SYNCHRONIZATION_TNT_v5_4";
-  const API_CONTRACT_PREVIOUS = "HEARTH_JEEVES_BACKBRAIN_NORTH_CONVERSATIONAL_ENGINE_ROUTE_ACCEPTANCE_TNT_v5_3";
+  const CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_SOURCE_IDENTITY_MOTOR_CARRIER_TNT_v25_6_1";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_COORDINATE_CARRIER_TURN_RHYTHM_TNT_v25_6";
+  const ROOT_FRONTBRAIN_CONTRACT = "HEARTH_JEEVES_FRONTBRAIN_ENTRY_STACK_CONNECTOR_READING_RHYTHM_TNT_v25_5";
+  const EXPRESSION_CONTRACT_TARGET = "HEARTH_JEEVES_EXPRESSION_GATEWAY_AUTHORITY_ENTRY_STACK_TNT_v5_4_1";
+  const EXPRESSION_CONTRACT_NEXT = "HEARTH_JEEVES_EXPRESSION_SOURCE_STABILITY_GATEWAY_AUTHORITY_TNT_v5_4_2";
+  const API_CONTRACT_TARGET = "HEARTH_JEEVES_BACKBRAIN_SOURCE_STABILITY_EXECUTIVE_COORDINATE_TNT_v5_4_1";
+  const API_CONTRACT_PREVIOUS = "HEARTH_JEEVES_BACKBRAIN_FIBONACCI_COORDINATE_DIALOGUE_SYNCHRONIZATION_TNT_v5_4";
 
-  const VERSION = "25.6.0";
+  const VERSION = "25.6.1";
   const ROOT_ID = "hearthJeevesMount";
 
   const API_ENDPOINTS = Object.freeze([
@@ -270,6 +281,18 @@
     UNKNOWN: "unknown"
   });
 
+  const SOURCE_STABILITY_LAW = Object.freeze({
+    active: true,
+    sourceTargetRequired: true,
+    activeTargetRequired: true,
+    depthDoesNotChangeSource: true,
+    gateDoesNotReplaceSource: true,
+    modeDoesNotReplaceSource: true,
+    guidedChooserRequiresSplitInterfaceSource: true,
+    clickedOptionIdentityOverridesPriorFrame: true,
+    expressionReceivesSourceButDoesNotCreateIt: true
+  });
+
   const ROUTE_FAMILIES = Object.freeze({
     traditionalWebsiteOverviewPath: Object.freeze([
       "siteGuide",
@@ -367,7 +390,7 @@
     traditionalWebsiteOverviewPath: ["siteGuide", "compass", "products", "laws", "meetSean"],
     narrativePathOverview: ["mirrorland", "hearth", "characters", "frontier"],
     missionOverviewPath: ["mirrorland", "frontier", "nineSummits"],
-    missionInnerPath: ["mirrorland", "nineSummits"],
+    missionInnerPath: ["nineSummits", "mirrorland"],
     missionCommunityPath: ["nineSummits", "aboutUnderdog"],
     missionCollaborationPath: ["frontier", "products", "scientificLaw"],
     practicalRelevancePath: ["products", "frontier", "scientificLaw"],
@@ -394,6 +417,8 @@
     mode: "estateOverview",
     dialect: "estate_host",
     expectation: "universal_entry",
+    sourceTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+    activeTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
     target: TARGETS.DIAMOND_GATE_OVERVIEW,
     destination: "",
     next: Object.freeze(["choose_start", "public_map", "practical", "narrative_path", "mission", "proof"]),
@@ -444,6 +469,10 @@
     currentPath: TARGETS.DIAMOND_GATE_OVERVIEW,
     currentTopic: "entrance",
     currentScopeLane: "objective",
+
+    selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+    sourceTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+    activeTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
 
     entryStackMode: ENTRY_STACK_MODES.ENTRANCE,
     basePoolMode: BASE_POOL_MODES.ESTATE_OVERVIEW,
@@ -524,8 +553,10 @@
     state.root.setAttribute("data-jeeves-version", VERSION);
     state.root.setAttribute("data-jeeves-reading-rhythm", "frontbrain");
     state.root.setAttribute("data-jeeves-expression-target", EXPRESSION_CONTRACT_TARGET);
+    state.root.setAttribute("data-jeeves-expression-next", EXPRESSION_CONTRACT_NEXT);
     state.root.setAttribute("data-jeeves-api-target", API_CONTRACT_TARGET);
     state.root.setAttribute("data-jeeves-coordinate-carrier", "true");
+    state.root.setAttribute("data-jeeves-source-identity-carrier", "true");
 
     state.root.innerHTML = [
       '<section class="hearth-jeeves__panel" data-jeeves-panel>',
@@ -613,9 +644,12 @@
       options: START_OPTIONS.slice(),
       handoffs: START_HANDOFFS.slice(),
       selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+      sourceTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+      activeTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
       intent: "diamondGate",
 
       conversationCoordinate: cloneCoordinate(START_COORDINATE),
+      sourceStabilityLaw: SOURCE_STABILITY_LAW,
       gateType: "arrival",
       pathFamily: "center",
       dialectMode: "estate_host",
@@ -634,11 +668,14 @@
       }
     }, {
       selectedTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+      sourceTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
+      activeTarget: TARGETS.DIAMOND_GATE_OVERVIEW,
       intent: "diamondGate",
       currentConversationStage: state.currentConversationStage,
       currentEntryLane: state.currentEntryLane,
 
       conversationCoordinate: cloneCoordinate(START_COORDINATE),
+      sourceStabilityLaw: SOURCE_STABILITY_LAW,
       gateType: "arrival",
       pathFamily: "center",
       dialectMode: "estate_host",
@@ -670,22 +707,54 @@
     const previousLane = state.currentEntryLane;
 
     const target = normalizeTarget(safeOption.target);
-    const lane = safeOption.scopeLane || inferLaneFromTarget(target);
-    const stage = inferStageFromTarget(target, safeOption);
-    const entryStackMode = safeOption.entryStackMode || inferEntryStackModeForPayload(target, safeOption);
-    const basePoolMode = safeOption.basePoolMode || inferBasePoolModeForPayload(target, safeOption);
-    const illuminationMode = safeOption.illuminationMode || inferIlluminationModeForPayload(target, safeOption);
-    const choiceClosure = safeOption.choiceClosure || buildChoiceClosureForTarget(target, safeOption, basePoolMode);
-    const provisionalCoordinate = safeOption.conversationCoordinate || buildProvisionalCoordinate(target, safeOption, {
-      entryStackMode,
-      basePoolMode,
-      illuminationMode
+    const sourcePacket = resolveOptionSourcePacket(safeOption, {
+      selectedTarget: target,
+      sourceTarget: state.sourceTarget,
+      activeTarget: state.activeTarget
     });
+
+    const selectedTarget = sourcePacket.selectedTarget;
+    const sourceTarget = sourcePacket.sourceTarget;
+    const activeTarget = sourcePacket.activeTarget;
+
+    const lane = safeOption.scopeLane || inferLaneFromTarget(sourceTarget);
+    const stage = inferStageFromTarget(sourceTarget, safeOption);
+
+    const sanitizedModes = sanitizeModesForSource(sourceTarget, {
+      entryStackMode: safeOption.entryStackMode || inferEntryStackModeForPayload(sourceTarget, safeOption),
+      basePoolMode: safeOption.basePoolMode || inferBasePoolModeForPayload(sourceTarget, safeOption),
+      illuminationMode: safeOption.illuminationMode || inferIlluminationModeForPayload(sourceTarget, safeOption)
+    }, safeOption);
+
+    const entryStackMode = sanitizedModes.entryStackMode;
+    const basePoolMode = sanitizedModes.basePoolMode;
+    const illuminationMode = sanitizedModes.illuminationMode;
+    const choiceClosure = safeOption.choiceClosure || buildChoiceClosureForTarget(sourceTarget, safeOption, basePoolMode);
+    const provisionalCoordinate = ensureCoordinateSourceIdentity(
+      safeOption.conversationCoordinate || buildProvisionalCoordinate(sourceTarget, safeOption, {
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        sourceTarget,
+        activeTarget
+      }),
+      {
+        selectedTarget,
+        sourceTarget,
+        activeTarget,
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        payload: safeOption
+      }
+    );
 
     const bridgeContext = buildBridgeContext({
       priorNode: previousNode,
       priorLane: previousLane,
-      selectedTarget: target,
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel: safeOption.label,
       promptMode: safeOption.promptMode,
       optionKind: safeOption.optionKind,
@@ -693,17 +762,20 @@
       bridgeMoment: safeOption.bridgeMoment,
       movementIntent: safeOption.movementIntent,
       currentTopic: state.currentTopic,
-      adjacentTarget: inferAdjacentTarget(target),
+      adjacentTarget: inferAdjacentTarget(sourceTarget),
       adjacentLabel: "",
-      adjacentReason: inferBridgeReason(previousNode, target, safeOption)
+      adjacentReason: inferBridgeReason(previousNode, sourceTarget, safeOption)
     });
 
     state.lastLane = previousLane;
     state.currentEntryLane = lane;
     state.currentConversationStage = stage;
-    state.currentNode = target;
-    state.currentPath = target;
+    state.currentNode = selectedTarget;
+    state.currentPath = sourceTarget;
     state.currentScopeLane = lane;
+    state.selectedTarget = selectedTarget;
+    state.sourceTarget = sourceTarget;
+    state.activeTarget = activeTarget;
     state.entryStackMode = entryStackMode;
     state.basePoolMode = basePoolMode;
     state.illuminationMode = illuminationMode;
@@ -718,11 +790,14 @@
 
     syncRootCoordinateAttrs();
 
-    pushUnique(state.selectedTargets, target, 32);
-    pushUnique(state.selectedOptionKeys, target + "::" + safeOption.label, 64);
-    pushUnique(state.visitedNodes, target, 64);
+    pushUnique(state.selectedTargets, selectedTarget, 32);
+    pushUnique(state.selectedOptionKeys, selectedTarget + "::" + safeOption.label, 64);
+    pushUnique(state.visitedNodes, sourceTarget, 64);
     state.sessionTrail.push({
-      target,
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
+      target: selectedTarget,
       label: safeOption.label,
       timestamp: Date.now(),
       entryStackMode,
@@ -734,7 +809,9 @@
 
     submitToApi({
       visitorText: safeOption.label,
-      selectedTarget: target,
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel: safeOption.label,
       requestMode: safeOption.requestMode || REQUEST_MODES.NODE_ENRICHMENT,
       promptMode: safeOption.promptMode,
@@ -748,6 +825,7 @@
       illuminationMode,
       choiceClosure,
       conversationCoordinate: provisionalCoordinate,
+      sourceStabilityLaw: SOURCE_STABILITY_LAW,
       gateType: provisionalCoordinate.gate,
       pathFamily: provisionalCoordinate.path,
       dialectMode: provisionalCoordinate.dialect,
@@ -763,53 +841,86 @@
   function handleFreeform(text) {
     appendBubble("user", text);
 
-    const target = inferTargetFromText(text) || state.currentNode || TARGETS.SPLIT_INTERFACE;
+    const inferredTarget = inferTargetFromText(text) || state.currentNode || TARGETS.SPLIT_INTERFACE;
     const requestMode = inferRequestModeFromText(text);
-    const promptMode = inferPromptModeFromText(text, target);
+    const promptMode = inferPromptModeFromText(text, inferredTarget);
     const movementIntent = inferMovementIntentFromText(text);
     const optionKind = movementIntent === MOVEMENT_INTENTS.RECENTER ? OPTION_KINDS.CONTROL : OPTION_KINDS.CONVERSATION_PROMPT;
-    const entryStackMode = inferEntryStackModeForPayload(target, { movementIntent, optionKind, label: text });
-    const basePoolMode = inferBasePoolModeForPayload(target, { movementIntent, optionKind, label: text });
-    const illuminationMode = inferIlluminationModeForPayload(target, { movementIntent, optionKind, label: text });
-    const lane = inferLaneFromTarget(target);
-    const provisionalCoordinate = buildProvisionalCoordinate(target, {
-      label: text,
-      promptMode,
-      optionKind,
-      movementIntent,
-      bridgeMoment: movementIntent === MOVEMENT_INTENTS.RECENTER ? "recenter_fork" : "before_knowledge"
-    }, {
-      entryStackMode,
-      basePoolMode,
-      illuminationMode
-    });
+
+    const sourcePacket = resolveFreeformSourcePacket(text, inferredTarget, movementIntent);
+    const selectedTarget = sourcePacket.selectedTarget;
+    const sourceTarget = sourcePacket.sourceTarget;
+    const activeTarget = sourcePacket.activeTarget;
+
+    const rawModes = {
+      entryStackMode: inferEntryStackModeForPayload(sourceTarget, { movementIntent, optionKind, label: text }),
+      basePoolMode: inferBasePoolModeForPayload(sourceTarget, { movementIntent, optionKind, label: text }),
+      illuminationMode: inferIlluminationModeForPayload(sourceTarget, { movementIntent, optionKind, label: text })
+    };
+    const sanitizedModes = sanitizeModesForSource(sourceTarget, rawModes, { movementIntent, optionKind, label: text });
+
+    const entryStackMode = sanitizedModes.entryStackMode;
+    const basePoolMode = sanitizedModes.basePoolMode;
+    const illuminationMode = sanitizedModes.illuminationMode;
+    const lane = inferLaneFromTarget(sourceTarget);
+    const provisionalCoordinate = ensureCoordinateSourceIdentity(
+      buildProvisionalCoordinate(sourceTarget, {
+        label: text,
+        promptMode,
+        optionKind,
+        movementIntent,
+        bridgeMoment: movementIntent === MOVEMENT_INTENTS.RECENTER ? "recenter_fork" : "before_knowledge",
+        sourceTarget,
+        activeTarget
+      }, {
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        sourceTarget,
+        activeTarget
+      }),
+      {
+        selectedTarget,
+        sourceTarget,
+        activeTarget,
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        payload: { label: text, promptMode, optionKind, movementIntent }
+      }
+    );
 
     const bridgeContext = buildBridgeContext({
       priorNode: state.currentNode,
       priorLane: state.currentEntryLane,
-      selectedTarget: target,
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel: text,
       promptMode,
       optionKind,
-      archetypeAlignment: inferArchetypeAlignment(promptMode, target),
+      archetypeAlignment: inferArchetypeAlignment(promptMode, sourceTarget),
       bridgeMoment: movementIntent === MOVEMENT_INTENTS.RECENTER ? "recenter_fork" : "before_knowledge",
       movementIntent,
       currentTopic: state.currentTopic,
-      adjacentTarget: inferAdjacentTarget(target),
+      adjacentTarget: inferAdjacentTarget(sourceTarget),
       adjacentLabel: "",
-      adjacentReason: inferBridgeReason(state.currentNode, target, { movementIntent, optionKind })
+      adjacentReason: inferBridgeReason(state.currentNode, sourceTarget, { movementIntent, optionKind })
     });
 
     state.lastLane = state.currentEntryLane;
     state.currentEntryLane = lane;
-    state.currentConversationStage = inferStageFromTarget(target, { movementIntent, optionKind });
-    state.currentNode = target;
-    state.currentPath = target;
+    state.currentConversationStage = inferStageFromTarget(sourceTarget, { movementIntent, optionKind });
+    state.currentNode = selectedTarget;
+    state.currentPath = sourceTarget;
     state.currentScopeLane = lane;
+    state.selectedTarget = selectedTarget;
+    state.sourceTarget = sourceTarget;
+    state.activeTarget = activeTarget;
     state.entryStackMode = entryStackMode;
     state.basePoolMode = basePoolMode;
     state.illuminationMode = illuminationMode;
-    state.choiceClosure = buildChoiceClosureForTarget(target, { movementIntent, optionKind }, basePoolMode);
+    state.choiceClosure = buildChoiceClosureForTarget(sourceTarget, { movementIntent, optionKind }, basePoolMode);
     state.conversationCoordinate = provisionalCoordinate;
     state.gateType = provisionalCoordinate.gate || "";
     state.pathFamily = provisionalCoordinate.path || "";
@@ -822,12 +933,14 @@
 
     submitToApi({
       visitorText: text,
-      selectedTarget: target,
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel: text,
       requestMode,
       promptMode,
       optionKind,
-      archetypeAlignment: inferArchetypeAlignment(promptMode, target),
+      archetypeAlignment: inferArchetypeAlignment(promptMode, sourceTarget),
       bridgeMoment: movementIntent === MOVEMENT_INTENTS.RECENTER ? "recenter_fork" : "before_knowledge",
       movementIntent,
       currentScopeLane: lane,
@@ -836,6 +949,7 @@
       illuminationMode,
       choiceClosure: state.choiceClosure,
       conversationCoordinate: provisionalCoordinate,
+      sourceStabilityLaw: SOURCE_STABILITY_LAW,
       gateType: provisionalCoordinate.gate,
       pathFamily: provisionalCoordinate.path,
       dialectMode: provisionalCoordinate.dialect,
@@ -895,39 +1009,65 @@
 
   function buildApiPayload(payload) {
     const source = payload && typeof payload === "object" ? payload : {};
-    const selectedTarget = normalizeTarget(source.selectedTarget || state.currentNode || TARGETS.SPLIT_INTERFACE);
+    const selectedTarget = normalizeTarget(source.selectedTarget || state.selectedTarget || state.currentNode || TARGETS.SPLIT_INTERFACE);
+    const sourceTarget = normalizeTarget(source.sourceTarget || selectedTarget || state.sourceTarget || TARGETS.SPLIT_INTERFACE);
+    const activeTarget = normalizeTarget(source.activeTarget || selectedTarget || sourceTarget || state.activeTarget || "");
     const selectedLabel = safeText(source.selectedLabel || source.visitorText || "");
-    const promptMode = safeText(source.promptMode || inferPromptModeFromTarget(selectedTarget));
+    const promptMode = safeText(source.promptMode || inferPromptModeFromTarget(sourceTarget));
     const optionKind = safeText(source.optionKind || OPTION_KINDS.CONVERSATION_PROMPT);
     const movementIntent = safeText(source.movementIntent || MOVEMENT_INTENTS.ASK_JEEVES);
-    const entryStackMode = safeText(source.entryStackMode || inferEntryStackModeForPayload(selectedTarget, source));
-    const basePoolMode = safeText(source.basePoolMode || inferBasePoolModeForPayload(selectedTarget, source));
-    const illuminationMode = safeText(source.illuminationMode || inferIlluminationModeForPayload(selectedTarget, source));
-    const conversationCoordinate = normalizeCoordinate(source.conversationCoordinate || state.conversationCoordinate || buildProvisionalCoordinate(selectedTarget, source, {
-      entryStackMode,
-      basePoolMode,
-      illuminationMode
-    }));
+
+    const sanitizedModes = sanitizeModesForSource(sourceTarget, {
+      entryStackMode: source.entryStackMode || inferEntryStackModeForPayload(sourceTarget, source),
+      basePoolMode: source.basePoolMode || inferBasePoolModeForPayload(sourceTarget, source),
+      illuminationMode: source.illuminationMode || inferIlluminationModeForPayload(sourceTarget, source)
+    }, source);
+
+    const entryStackMode = sanitizedModes.entryStackMode;
+    const basePoolMode = sanitizedModes.basePoolMode;
+    const illuminationMode = sanitizedModes.illuminationMode;
+
+    const conversationCoordinate = ensureCoordinateSourceIdentity(
+      source.conversationCoordinate || state.conversationCoordinate || buildProvisionalCoordinate(sourceTarget, source, {
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        sourceTarget,
+        activeTarget
+      }),
+      {
+        selectedTarget,
+        sourceTarget,
+        activeTarget,
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        payload: source
+      }
+    );
+
     const gateType = safeText(source.gateType || conversationCoordinate.gate || state.gateType);
     const pathFamily = safeText(source.pathFamily || conversationCoordinate.path || state.pathFamily);
     const dialectMode = safeText(source.dialectMode || conversationCoordinate.dialect || state.dialectMode);
     const contextExpectation = safeText(source.contextExpectation || conversationCoordinate.expectation || state.contextExpectation);
     const noRepeat = typeof source.noRepeat === "boolean" ? source.noRepeat : Boolean(conversationCoordinate.noRepeat || state.noRepeat);
-    const allowedRouteFamilies = buildAllowedRouteFamilies(selectedTarget);
-    const allowedRoutes = buildAllowedRoutes(selectedTarget, allowedRouteFamilies);
-    const allowedTargets = buildAllowedTargets(selectedTarget);
+    const allowedRouteFamilies = buildAllowedRouteFamilies(sourceTarget);
+    const allowedRoutes = buildAllowedRoutes(sourceTarget, allowedRouteFamilies);
+    const allowedTargets = buildAllowedTargets(sourceTarget);
 
     return {
       visitorText: safeText(source.visitorText || selectedLabel),
       selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel,
       requestMode: safeText(source.requestMode || REQUEST_MODES.NODE_ENRICHMENT),
       promptMode,
       optionKind,
-      archetypeAlignment: safeText(source.archetypeAlignment || inferArchetypeAlignment(promptMode, selectedTarget)),
+      archetypeAlignment: safeText(source.archetypeAlignment || inferArchetypeAlignment(promptMode, sourceTarget)),
       bridgeMoment: safeText(source.bridgeMoment || "before_knowledge"),
       movementIntent,
-      currentScopeLane: safeText(source.currentScopeLane || state.currentScopeLane || inferLaneFromTarget(selectedTarget)),
+      currentScopeLane: safeText(source.currentScopeLane || state.currentScopeLane || inferLaneFromTarget(sourceTarget)),
       bridgeContext: source.bridgeContext || state.lastBridgeContext || null,
 
       conversationHistory: getConversationHistory(),
@@ -940,22 +1080,25 @@
 
       allowedTargets,
       allowedRoutes,
-      routeHints: TARGET_ROUTE_HINTS[selectedTarget] || allowedRoutes,
+      routeHints: TARGET_ROUTE_HINTS[sourceTarget] || allowedRoutes,
 
       expressionContractTarget: EXPRESSION_CONTRACT_TARGET,
+      expressionContractNext: EXPRESSION_CONTRACT_NEXT,
       frontbrainContract: CONTRACT,
       previousFrontbrainContract: PREVIOUS_CONTRACT,
+      rootFrontbrainContract: ROOT_FRONTBRAIN_CONTRACT,
       apiContractTarget: API_CONTRACT_TARGET,
       previousApiContractTarget: API_CONTRACT_PREVIOUS,
 
       entryStackMode,
       basePoolMode,
       illuminationMode,
-      routeExpansionMode: "broad_entry_to_coordinate_north",
+      routeExpansionMode: "source_stable_distributed_brain_pair",
       allowedRouteFamilies,
-      choiceClosure: source.choiceClosure || buildChoiceClosureForTarget(selectedTarget, source, basePoolMode),
+      choiceClosure: source.choiceClosure || buildChoiceClosureForTarget(sourceTarget, source, basePoolMode),
 
       conversationCoordinate,
+      sourceStabilityLaw: SOURCE_STABILITY_LAW,
       gateType,
       pathFamily,
       dialectMode,
@@ -967,9 +1110,11 @@
       preparedDoorSuggested: Boolean(source.preparedDoorSuggested || isPreparedDoorOption(source)),
 
       readingRhythmAuthority: "frontbrain",
+      sourceIdentityAuthority: "frontbrain",
       coordinateCarrierAuthority: "frontbrain",
       protectedCopyAuthority: "expression",
       routeExecutionAuthority: "frontbrain",
+      sourceValidationAuthority: "north",
       deepExpansionAuthority: "north"
     };
   }
@@ -1118,6 +1263,8 @@
 
       button.setAttribute("data-jeeves-option", normalizedOption.target);
       button.setAttribute("data-jeeves-option-index", String(index));
+      button.setAttribute("data-source-target", normalizedOption.sourceTarget || normalizedOption.target || "");
+      button.setAttribute("data-active-target", normalizedOption.activeTarget || normalizedOption.target || "");
       button.setAttribute("data-option-kind", normalizedOption.optionKind || "");
       button.setAttribute("data-prompt-mode", normalizedOption.promptMode || "");
       button.setAttribute("data-archetype-alignment", normalizedOption.archetypeAlignment || "");
@@ -1165,6 +1312,8 @@
       button.setAttribute("data-route-href", href);
       button.setAttribute("data-option-kind", OPTION_KINDS.ROUTE);
       button.setAttribute("data-movement-intent", MOVEMENT_INTENTS.OPEN_PREPARED_DOOR);
+      button.setAttribute("data-source-target", state.sourceTarget || state.currentPath || "");
+      button.setAttribute("data-active-target", route);
       button.setAttribute("data-entry-stack-mode", ENTRY_STACK_MODES.PREPARED_DOOR);
       button.setAttribute("data-base-pool-mode", state.basePoolMode || "");
       button.setAttribute("data-illumination-mode", state.illuminationMode || ILLUMINATION_MODES.PUBLIC);
@@ -1197,9 +1346,13 @@
     if (!button) return null;
     if (button.__jeevesOption) return button.__jeevesOption;
 
+    const target = button.getAttribute("data-jeeves-option") || "";
+
     return {
       label: button.getAttribute("data-option-label") || button.textContent || "",
-      target: button.getAttribute("data-jeeves-option") || "",
+      target,
+      sourceTarget: button.getAttribute("data-source-target") || target,
+      activeTarget: button.getAttribute("data-active-target") || target,
       type: button.getAttribute("data-option-type") || "conversation",
       scopeLane: button.getAttribute("data-scope-lane") || "",
       promptMode: button.getAttribute("data-prompt-mode") || "",
@@ -1225,6 +1378,8 @@
       routeId: button.getAttribute("data-jeeves-route-option") || "",
       href: button.getAttribute("data-route-href") || "",
       label: button.textContent || "",
+      sourceTarget: button.getAttribute("data-source-target") || state.sourceTarget || "",
+      activeTarget: button.getAttribute("data-active-target") || button.getAttribute("data-jeeves-route-option") || "",
       entryStackMode: button.getAttribute("data-entry-stack-mode") || ENTRY_STACK_MODES.PREPARED_DOOR,
       movementIntent: button.getAttribute("data-movement-intent") || MOVEMENT_INTENTS.OPEN_PREPARED_DOOR,
       gateType: button.getAttribute("data-gate-type") || "prepared_door",
@@ -1255,9 +1410,15 @@
     const responseNoRepeat = typeof response.noRepeat === "boolean" ? response.noRepeat : null;
     const sourceNoRepeat = typeof source.noRepeat === "boolean" ? source.noRepeat : null;
 
+    const selectedTarget = normalizeTarget(response.selectedTarget || source.selectedTarget || state.selectedTarget || state.currentNode);
+    const sourceTarget = normalizeTarget(response.sourceTarget || source.sourceTarget || (response.conversationCoordinate && response.conversationCoordinate.sourceTarget) || state.sourceTarget || selectedTarget);
+    const activeTarget = normalizeTarget(response.activeTarget || source.activeTarget || (response.conversationCoordinate && response.conversationCoordinate.activeTarget) || state.activeTarget || selectedTarget);
+
     return {
       intent: response.intent || source.intent || "",
-      selectedTarget: response.selectedTarget || source.selectedTarget || state.currentNode,
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel: source.selectedLabel || source.visitorText || "",
       currentNode: state.currentNode,
       currentPath: state.currentPath,
@@ -1270,6 +1431,7 @@
       movementIntent: source.movementIntent || "",
 
       conversationCoordinate: response.conversationCoordinate || source.conversationCoordinate || state.conversationCoordinate,
+      sourceStabilityLaw: response.sourceStabilityLaw || source.sourceStabilityLaw || SOURCE_STABILITY_LAW,
       gateType: response.gateType || source.gateType || state.gateType,
       pathFamily: response.pathFamily || source.pathFamily || state.pathFamily,
       dialectMode: response.dialectMode || source.dialectMode || state.dialectMode,
@@ -1295,8 +1457,23 @@
     if (!frame || typeof frame !== "object") return;
 
     const coordinate = frame.conversationCoordinate && typeof frame.conversationCoordinate === "object"
-      ? normalizeCoordinate(frame.conversationCoordinate)
+      ? ensureCoordinateSourceIdentity(frame.conversationCoordinate, {
+        selectedTarget: frame.selectedTarget || state.selectedTarget,
+        sourceTarget: frame.sourceTarget || state.sourceTarget,
+        activeTarget: frame.activeTarget || state.activeTarget,
+        entryStackMode: frame.entryStackMode || state.entryStackMode,
+        basePoolMode: frame.basePoolMode || state.basePoolMode,
+        illuminationMode: frame.illuminationMode || state.illuminationMode,
+        payload: frame
+      })
       : null;
+
+    if (frame.selectedTarget) state.selectedTarget = normalizeTarget(frame.selectedTarget);
+    if (frame.sourceTarget) state.sourceTarget = normalizeTarget(frame.sourceTarget);
+    else if (coordinate && coordinate.sourceTarget) state.sourceTarget = normalizeTarget(coordinate.sourceTarget);
+
+    if (frame.activeTarget) state.activeTarget = normalizeTarget(frame.activeTarget);
+    else if (coordinate && coordinate.activeTarget) state.activeTarget = normalizeTarget(coordinate.activeTarget);
 
     if (coordinate) state.conversationCoordinate = coordinate;
 
@@ -1328,8 +1505,16 @@
     else if (coordinate) state.choiceClosure = buildChoiceClosureFromCoordinate(coordinate);
 
     if (frame.nextTopic) state.currentTopic = safeText(frame.nextTopic);
+
     if (frame.selectedTarget) {
       state.currentNode = normalizeTarget(frame.selectedTarget);
+    }
+
+    if (frame.sourceTarget) {
+      state.currentPath = normalizeTarget(frame.sourceTarget);
+    } else if (coordinate && coordinate.sourceTarget) {
+      state.currentPath = normalizeTarget(coordinate.sourceTarget);
+    } else if (frame.selectedTarget) {
       state.currentPath = normalizeTarget(frame.selectedTarget);
     }
 
@@ -1337,6 +1522,11 @@
   }
 
   function renderApiFailure(payload, error) {
+    const source = payload && typeof payload === "object" ? payload : {};
+    const selectedTarget = normalizeTarget(source.selectedTarget || state.selectedTarget || TARGETS.SPLIT_INTERFACE);
+    const sourceTarget = normalizeTarget(source.sourceTarget || state.sourceTarget || selectedTarget);
+    const activeTarget = normalizeTarget(source.activeTarget || state.activeTarget || selectedTarget);
+
     const coordinate = {
       step: 34,
       priorStep: 5,
@@ -1345,7 +1535,9 @@
       mode: "return",
       dialect: "return_guide",
       expectation: "safe_recenter",
-      target: TARGETS.SPLIT_INTERFACE,
+      sourceTarget,
+      activeTarget,
+      target: selectedTarget,
       destination: "",
       next: ["guided_chooser", "public_map", "practical", "narrative_path", "mission", "proof"],
       noRepeat: true
@@ -1360,12 +1552,15 @@
       options: START_OPTIONS.slice(),
       handoffs: START_HANDOFFS.slice(),
       selectedTarget: TARGETS.SPLIT_INTERFACE,
+      sourceTarget,
+      activeTarget,
       intent: "splitInterface",
       confidence: 0.42,
       needsRecenter: true,
       nextTopic: "guided chooser",
 
       conversationCoordinate: coordinate,
+      sourceStabilityLaw: SOURCE_STABILITY_LAW,
       gateType: coordinate.gate,
       pathFamily: coordinate.path,
       dialectMode: coordinate.dialect,
@@ -1438,23 +1633,45 @@
     const label = safeText(option.label || inferLabelFromTarget(target));
     if (!target || !label) return null;
 
-    const basePoolMode = safeText(option.basePoolMode || inferBasePoolModeForPayload(target, option));
-    const entryStackMode = safeText(option.entryStackMode || inferEntryStackModeForPayload(target, option));
-    const illuminationMode = safeText(option.illuminationMode || inferIlluminationModeForPayload(target, option));
-    const coordinate = normalizeCoordinate(option.conversationCoordinate || buildProvisionalCoordinate(target, option, {
+    const sourceTarget = normalizeTarget(option.sourceTarget || target);
+    const activeTarget = normalizeTarget(option.activeTarget || target);
+
+    const rawModes = {
+      entryStackMode: option.entryStackMode || inferEntryStackModeForPayload(sourceTarget, option),
+      basePoolMode: option.basePoolMode || inferBasePoolModeForPayload(sourceTarget, option),
+      illuminationMode: option.illuminationMode || inferIlluminationModeForPayload(sourceTarget, option)
+    };
+    const modes = sanitizeModesForSource(sourceTarget, rawModes, option);
+    const entryStackMode = safeText(modes.entryStackMode);
+    const basePoolMode = safeText(modes.basePoolMode);
+    const illuminationMode = safeText(modes.illuminationMode);
+
+    const coordinate = ensureCoordinateSourceIdentity(option.conversationCoordinate || buildProvisionalCoordinate(sourceTarget, option, {
       entryStackMode,
       basePoolMode,
-      illuminationMode
-    }));
+      illuminationMode,
+      sourceTarget,
+      activeTarget
+    }), {
+      selectedTarget: target,
+      sourceTarget,
+      activeTarget,
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      payload: option
+    });
 
     return {
       label,
       target,
+      sourceTarget,
+      activeTarget,
       type: safeText(option.type || "conversation"),
-      scopeLane: safeText(option.scopeLane || inferLaneFromTarget(target)),
-      promptMode: safeText(option.promptMode || inferPromptModeFromTarget(target)),
+      scopeLane: safeText(option.scopeLane || inferLaneFromTarget(sourceTarget)),
+      promptMode: safeText(option.promptMode || inferPromptModeFromTarget(sourceTarget)),
       optionKind: safeText(option.optionKind || OPTION_KINDS.CONVERSATION_PROMPT),
-      archetypeAlignment: safeText(option.archetypeAlignment || inferArchetypeAlignment(option.promptMode, target)),
+      archetypeAlignment: safeText(option.archetypeAlignment || inferArchetypeAlignment(option.promptMode, sourceTarget)),
       bridgeMoment: safeText(option.bridgeMoment || "before_knowledge"),
       movementIntent: safeText(option.movementIntent || MOVEMENT_INTENTS.ASK_JEEVES),
       entryStackMode,
@@ -1475,6 +1692,10 @@
   function normalizeCoordinate(value) {
     if (!value || typeof value !== "object") return null;
 
+    const target = normalizeTarget(value.target || "");
+    const sourceTarget = normalizeTarget(value.sourceTarget || target || "");
+    const activeTarget = normalizeTarget(value.activeTarget || target || sourceTarget || "");
+
     return {
       step: safeNumber(value.step, 5),
       priorStep: safeNumber(value.priorStep, 0),
@@ -1483,7 +1704,9 @@
       mode: safeText(value.mode || BASE_POOL_MODES.ESTATE_OVERVIEW),
       dialect: safeText(value.dialect || "estate_host"),
       expectation: safeText(value.expectation || "orientation_before_entry"),
-      target: normalizeTarget(value.target || ""),
+      sourceTarget,
+      activeTarget,
+      target,
       destination: safeText(value.destination || ""),
       next: Array.isArray(value.next) ? value.next.map(safeText).filter(Boolean).slice(0, 10) : [],
       noRepeat: Boolean(value.noRepeat)
@@ -1501,6 +1724,8 @@
       mode: coordinate.mode,
       dialect: coordinate.dialect,
       expectation: coordinate.expectation,
+      sourceTarget: coordinate.sourceTarget,
+      activeTarget: coordinate.activeTarget,
       target: coordinate.target,
       destination: coordinate.destination,
       next: coordinate.next.slice(),
@@ -1512,13 +1737,21 @@
     const clean = normalizeTarget(target);
     const source = payload && typeof payload === "object" ? payload : {};
     const modeBundle = modes && typeof modes === "object" ? modes : {};
-    const entryStackMode = safeText(modeBundle.entryStackMode || source.entryStackMode || inferEntryStackModeForPayload(clean, source));
-    const basePoolMode = safeText(modeBundle.basePoolMode || source.basePoolMode || inferBasePoolModeForPayload(clean, source));
-    const illuminationMode = safeText(modeBundle.illuminationMode || source.illuminationMode || inferIlluminationModeForPayload(clean, source));
+    const sourceTarget = normalizeTarget(modeBundle.sourceTarget || source.sourceTarget || clean);
+    const activeTarget = normalizeTarget(modeBundle.activeTarget || source.activeTarget || clean);
+    const rawModes = {
+      entryStackMode: modeBundle.entryStackMode || source.entryStackMode || inferEntryStackModeForPayload(sourceTarget, source),
+      basePoolMode: modeBundle.basePoolMode || source.basePoolMode || inferBasePoolModeForPayload(sourceTarget, source),
+      illuminationMode: modeBundle.illuminationMode || source.illuminationMode || inferIlluminationModeForPayload(sourceTarget, source)
+    };
+    const sanitizedModes = sanitizeModesForSource(sourceTarget, rawModes, source);
+    const entryStackMode = safeText(sanitizedModes.entryStackMode);
+    const basePoolMode = safeText(sanitizedModes.basePoolMode);
+    const illuminationMode = safeText(sanitizedModes.illuminationMode);
     const movementIntent = safeText(source.movementIntent || MOVEMENT_INTENTS.ASK_JEEVES);
     const optionKind = safeText(source.optionKind || OPTION_KINDS.CONVERSATION_PROMPT);
 
-    const gate = inferGateForCoordinate(clean, {
+    const gate = inferGateForCoordinate(sourceTarget, {
       entryStackMode,
       movementIntent,
       optionKind,
@@ -1526,7 +1759,7 @@
       basePoolMode
     });
     const step = stepForGate(gate);
-    const path = pathForCoordinate(clean, basePoolMode);
+    const path = pathForCoordinate(sourceTarget, basePoolMode);
     const dialect = dialectForCoordinate(path, gate, basePoolMode, illuminationMode);
     const expectation = expectationForGate(gate, path, basePoolMode);
     const noRepeat = gate === "dig_deeper" ||
@@ -1543,10 +1776,165 @@
       mode: basePoolMode || BASE_POOL_MODES.ESTATE_OVERVIEW,
       dialect,
       expectation,
+      sourceTarget,
+      activeTarget,
       target: clean,
       destination: "",
       next: nextForCoordinate(gate, path),
       noRepeat
+    };
+  }
+
+  function ensureCoordinateSourceIdentity(coordinateInput, data) {
+    const source = data && typeof data === "object" ? data : {};
+    const selectedTarget = normalizeTarget(source.selectedTarget || "");
+    const sourceTarget = normalizeTarget(source.sourceTarget || selectedTarget || "");
+    const activeTarget = normalizeTarget(source.activeTarget || selectedTarget || sourceTarget || "");
+    const entryStackMode = safeText(source.entryStackMode || "");
+    const basePoolMode = safeText(source.basePoolMode || "");
+    const illuminationMode = safeText(source.illuminationMode || "");
+    let coordinate = normalizeCoordinate(coordinateInput);
+
+    const needsRebuild =
+      !coordinate ||
+      !coordinate.sourceTarget ||
+      (sourceTarget && coordinate.sourceTarget !== sourceTarget) ||
+      shouldRebuildCoordinateForSource(sourceTarget, coordinate, entryStackMode, basePoolMode);
+
+    if (needsRebuild) {
+      coordinate = buildProvisionalCoordinate(sourceTarget || selectedTarget, source.payload || {}, {
+        entryStackMode,
+        basePoolMode,
+        illuminationMode,
+        sourceTarget,
+        activeTarget
+      });
+    }
+
+    coordinate.sourceTarget = sourceTarget || coordinate.sourceTarget || coordinate.target;
+    coordinate.activeTarget = activeTarget || coordinate.activeTarget || coordinate.target;
+    coordinate.target = selectedTarget || coordinate.target || coordinate.sourceTarget;
+
+    if (coordinate.sourceTarget !== TARGETS.SPLIT_INTERFACE && coordinate.gate === "intention") {
+      coordinate.gate = "base_pool";
+      coordinate.step = 5;
+      coordinate.priorStep = 3;
+      coordinate.path = pathForCoordinate(coordinate.sourceTarget, basePoolMode || coordinate.mode);
+      coordinate.mode = basePoolMode && basePoolMode !== BASE_POOL_MODES.GUIDED_CHOOSER
+        ? basePoolMode
+        : inferBasePoolModeForPayload(coordinate.sourceTarget, {});
+      coordinate.dialect = dialectForCoordinate(coordinate.path, coordinate.gate, coordinate.mode, illuminationMode);
+      coordinate.expectation = expectationForGate(coordinate.gate, coordinate.path, coordinate.mode);
+      coordinate.next = nextForCoordinate(coordinate.gate, coordinate.path);
+      coordinate.noRepeat = Boolean(coordinate.noRepeat && coordinate.gate !== "base_pool");
+    }
+
+    if (coordinate.sourceTarget !== TARGETS.SPLIT_INTERFACE && coordinate.mode === BASE_POOL_MODES.GUIDED_CHOOSER) {
+      coordinate.mode = inferBasePoolModeForPayload(coordinate.sourceTarget, {});
+      coordinate.path = pathForCoordinate(coordinate.sourceTarget, coordinate.mode);
+      coordinate.dialect = dialectForCoordinate(coordinate.path, coordinate.gate, coordinate.mode, illuminationMode);
+      coordinate.expectation = expectationForGate(coordinate.gate, coordinate.path, coordinate.mode);
+    }
+
+    return coordinate;
+  }
+
+  function shouldRebuildCoordinateForSource(sourceTarget, coordinate, entryStackMode, basePoolMode) {
+    if (!coordinate) return true;
+    if (!sourceTarget) return false;
+    if (sourceTarget === TARGETS.SPLIT_INTERFACE) return false;
+    if (coordinate.gate === "intention") return true;
+    if (coordinate.mode === BASE_POOL_MODES.GUIDED_CHOOSER) return true;
+    if (entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) return true;
+    if (basePoolMode === BASE_POOL_MODES.GUIDED_CHOOSER) return true;
+    return false;
+  }
+
+  function sanitizeModesForSource(sourceTarget, modes, payload) {
+    const clean = normalizeTarget(sourceTarget);
+    const source = payload && typeof payload === "object" ? payload : {};
+    let entryStackMode = safeText(modes && modes.entryStackMode);
+    let basePoolMode = safeText(modes && modes.basePoolMode);
+    let illuminationMode = safeText(modes && modes.illuminationMode);
+
+    if (!entryStackMode) entryStackMode = inferEntryStackModeForPayload(clean, source);
+    if (!basePoolMode) basePoolMode = inferBasePoolModeForPayload(clean, source);
+    if (!illuminationMode) illuminationMode = inferIlluminationModeForPayload(clean, source);
+
+    if (clean !== TARGETS.SPLIT_INTERFACE) {
+      if (entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) {
+        entryStackMode = inferEntryStackModeForPayload(clean, Object.assign({}, source, {
+          entryStackMode: "",
+          basePoolMode: ""
+        }));
+        if (entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) entryStackMode = ENTRY_STACK_MODES.BASE_POOL;
+      }
+
+      if (basePoolMode === BASE_POOL_MODES.GUIDED_CHOOSER) {
+        basePoolMode = inferBasePoolModeForPayload(clean, Object.assign({}, source, {
+          basePoolMode: "",
+          entryStackMode: ""
+        }));
+        if (basePoolMode === BASE_POOL_MODES.GUIDED_CHOOSER) basePoolMode = BASE_POOL_MODES.NONE;
+      }
+
+      if (illuminationMode === ILLUMINATION_MODES.THRESHOLD && basePoolMode !== BASE_POOL_MODES.ESTATE_OVERVIEW) {
+        illuminationMode = inferIlluminationModeForPayload(clean, {
+          basePoolMode,
+          illuminationMode: ""
+        });
+      }
+    }
+
+    return {
+      entryStackMode,
+      basePoolMode,
+      illuminationMode
+    };
+  }
+
+  function resolveOptionSourcePacket(option, fallback) {
+    const source = option && typeof option === "object" ? option : {};
+    const back = fallback && typeof fallback === "object" ? fallback : {};
+    const selectedTarget = normalizeTarget(source.target || source.selectedTarget || back.selectedTarget || "");
+    const sourceTarget = normalizeTarget(source.sourceTarget || selectedTarget || back.sourceTarget || "");
+    const activeTarget = normalizeTarget(source.activeTarget || selectedTarget || sourceTarget || back.activeTarget || "");
+
+    return {
+      selectedTarget,
+      sourceTarget,
+      activeTarget
+    };
+  }
+
+  function resolveFreeformSourcePacket(text, inferredTarget, movementIntent) {
+    const target = normalizeTarget(inferredTarget);
+    const movement = safeText(movementIntent);
+
+    if (
+      movement === MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH ||
+      movement === MOVEMENT_INTENTS.CROSS_TO_RELATED_ROOM ||
+      movement === MOVEMENT_INTENTS.OPEN_PREPARED_DOOR
+    ) {
+      return {
+        selectedTarget: target || state.selectedTarget || state.currentNode,
+        sourceTarget: state.sourceTarget || state.currentPath || target || state.currentNode,
+        activeTarget: target || state.activeTarget || state.sourceTarget || state.currentNode
+      };
+    }
+
+    if (movement === MOVEMENT_INTENTS.RECENTER) {
+      return {
+        selectedTarget: target || TARGETS.RECENTER,
+        sourceTarget: target || TARGETS.RECENTER,
+        activeTarget: target || TARGETS.RECENTER
+      };
+    }
+
+    return {
+      selectedTarget: target,
+      sourceTarget: target,
+      activeTarget: target
     };
   }
 
@@ -1562,7 +1950,7 @@
     if (entryStackMode === ENTRY_STACK_MODES.DIG_DEEPER || movementIntent === MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH || optionKind === OPTION_KINDS.FORWARD) return "dig_deeper";
     if (entryStackMode === ENTRY_STACK_MODES.PATH_SAMPLE || movementIntent === MOVEMENT_INTENTS.CROSS_TO_RELATED_ROOM || optionKind === OPTION_KINDS.PARALLEL || bridgeMoment === "parallel_crossing") return "cross_path_bridge";
     if (target === TARGETS.DIAGNOSTIC_REFERRAL || target === TARGETS.DIAGNOSTIC || target === TARGETS.CHARACTER_MIRROR) return "diagnostic_boundary";
-    if (target === TARGETS.SPLIT_INTERFACE || entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) return "intention";
+    if (target === TARGETS.SPLIT_INTERFACE) return "intention";
     if (target === TARGETS.DIAMOND_GATE_OVERVIEW || entryStackMode === ENTRY_STACK_MODES.ENTRANCE) return "arrival";
 
     return "base_pool";
@@ -1793,7 +2181,7 @@
     if (/\bunderdog\b/.test(value)) return TARGETS.UNDERDOG;
     if (/\brecenter|start over|beginning|return\b/.test(value)) return TARGETS.RECENTER;
 
-    return state.currentNode || TARGETS.SPLIT_INTERFACE;
+    return state.sourceTarget || state.currentNode || TARGETS.SPLIT_INTERFACE;
   }
 
   function inferRequestModeFromText(text) {
@@ -1897,7 +2285,7 @@
     const movement = safeText(source.movementIntent);
     const kind = safeText(source.optionKind);
 
-    if (source.entryStackMode) return safeText(source.entryStackMode);
+    if (source.entryStackMode && !(clean !== TARGETS.SPLIT_INTERFACE && source.entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER)) return safeText(source.entryStackMode);
     if (clean === TARGETS.SPLIT_INTERFACE) return ENTRY_STACK_MODES.GUIDED_CHOOSER;
     if (movement === MOVEMENT_INTENTS.RECENTER || kind === OPTION_KINDS.CONTROL || clean === TARGETS.RECENTER) return ENTRY_STACK_MODES.RETURN;
     if (movement === MOVEMENT_INTENTS.CONTINUE_CURRENT_PATH || kind === OPTION_KINDS.FORWARD) return ENTRY_STACK_MODES.DIG_DEEPER;
@@ -1911,7 +2299,7 @@
     const clean = normalizeTarget(target);
     const source = payload && typeof payload === "object" ? payload : {};
 
-    if (source.basePoolMode) return safeText(source.basePoolMode);
+    if (source.basePoolMode && !(clean !== TARGETS.SPLIT_INTERFACE && source.basePoolMode === BASE_POOL_MODES.GUIDED_CHOOSER)) return safeText(source.basePoolMode);
 
     if (clean === TARGETS.DIAMOND_GATE_OVERVIEW) return BASE_POOL_MODES.ESTATE_OVERVIEW;
     if (clean === TARGETS.SPLIT_INTERFACE) return BASE_POOL_MODES.GUIDED_CHOOSER;
@@ -2065,13 +2453,18 @@
 
   function buildBridgeContext(input) {
     const source = input && typeof input === "object" ? input : {};
+    const selectedTarget = normalizeTarget(source.selectedTarget || "");
+    const sourceTarget = normalizeTarget(source.sourceTarget || selectedTarget || "");
+    const activeTarget = normalizeTarget(source.activeTarget || selectedTarget || sourceTarget || "");
 
     return {
       currentNode: state.currentNode,
       priorNode: normalizeTarget(source.priorNode || state.currentNode || ""),
       priorLane: safeText(source.priorLane || state.currentEntryLane || ""),
       priorTopic: safeText(state.currentTopic || ""),
-      selectedTarget: normalizeTarget(source.selectedTarget || ""),
+      selectedTarget,
+      sourceTarget,
+      activeTarget,
       selectedLabel: safeText(source.selectedLabel || ""),
       promptMode: safeText(source.promptMode || ""),
       optionKind: safeText(source.optionKind || ""),
@@ -2168,22 +2561,44 @@
   }
 
   function makeOption(label, target, promptMode, archetypeAlignment, bridgeMoment, movementIntent, scopeLane, entryStackMode, basePoolMode, illuminationMode) {
-    const coordinate = buildProvisionalCoordinate(target, {
+    const normalizedTarget = normalizeTarget(target);
+    const sourceTarget = normalizedTarget;
+    const activeTarget = normalizedTarget;
+    const sanitizedModes = sanitizeModesForSource(sourceTarget, {
+      entryStackMode,
+      basePoolMode,
+      illuminationMode
+    }, {
       label,
       promptMode,
       archetypeAlignment,
       bridgeMoment,
       movementIntent,
       optionKind: OPTION_KINDS.CONVERSATION_PROMPT
+    });
+
+    const coordinate = buildProvisionalCoordinate(sourceTarget, {
+      label,
+      promptMode,
+      archetypeAlignment,
+      bridgeMoment,
+      movementIntent,
+      optionKind: OPTION_KINDS.CONVERSATION_PROMPT,
+      sourceTarget,
+      activeTarget
     }, {
-      entryStackMode,
-      basePoolMode,
-      illuminationMode
+      entryStackMode: sanitizedModes.entryStackMode,
+      basePoolMode: sanitizedModes.basePoolMode,
+      illuminationMode: sanitizedModes.illuminationMode,
+      sourceTarget,
+      activeTarget
     });
 
     return {
       label,
-      target,
+      target: normalizedTarget,
+      sourceTarget,
+      activeTarget,
       type: "conversation",
       scopeLane,
       promptMode,
@@ -2191,9 +2606,9 @@
       archetypeAlignment,
       bridgeMoment,
       movementIntent,
-      entryStackMode,
-      basePoolMode,
-      illuminationMode,
+      entryStackMode: sanitizedModes.entryStackMode,
+      basePoolMode: sanitizedModes.basePoolMode,
+      illuminationMode: sanitizedModes.illuminationMode,
       conversationCoordinate: coordinate,
       gateType: coordinate.gate,
       pathFamily: coordinate.path,
@@ -2205,6 +2620,11 @@
 
   function syncRootCoordinateAttrs() {
     if (!state.root) return;
+
+    state.root.setAttribute("data-selected-target", state.selectedTarget || "");
+    state.root.setAttribute("data-source-target", state.sourceTarget || "");
+    state.root.setAttribute("data-active-target", state.activeTarget || "");
+    state.root.setAttribute("data-source-stability-active", "true");
 
     state.root.setAttribute("data-entry-stack-mode", state.entryStackMode || "");
     state.root.setAttribute("data-base-pool-mode", state.basePoolMode || "");
@@ -2220,6 +2640,9 @@
       state.root.setAttribute("data-coordinate-gate", state.conversationCoordinate.gate || "");
       state.root.setAttribute("data-coordinate-path", state.conversationCoordinate.path || "");
       state.root.setAttribute("data-coordinate-mode", state.conversationCoordinate.mode || "");
+      state.root.setAttribute("data-coordinate-source-target", state.conversationCoordinate.sourceTarget || "");
+      state.root.setAttribute("data-coordinate-active-target", state.conversationCoordinate.activeTarget || "");
+      state.root.setAttribute("data-coordinate-target", state.conversationCoordinate.target || "");
     }
   }
 
@@ -2229,16 +2652,21 @@
         detail: {
           contract: CONTRACT,
           previousContract: PREVIOUS_CONTRACT,
+          rootFrontbrainContract: ROOT_FRONTBRAIN_CONTRACT,
           version: VERSION,
           expressionContractTarget: EXPRESSION_CONTRACT_TARGET,
+          expressionContractNext: EXPRESSION_CONTRACT_NEXT,
           apiContractTarget: API_CONTRACT_TARGET,
           previousApiContractTarget: API_CONTRACT_PREVIOUS,
           entryStackCompatible: true,
           basePoolCompatible: true,
           illuminationCompatible: true,
           coordinateCarrierCompatible: true,
+          sourceIdentityCarrierCompatible: true,
+          sourceStabilityLaw: SOURCE_STABILITY_LAW,
           userTurnRendering: true,
-          readingRhythmAuthority: "frontbrain"
+          readingRhythmAuthority: "frontbrain",
+          sourceIdentityAuthority: "frontbrain"
         }
       }));
     }
@@ -2251,12 +2679,16 @@
           contract: CONTRACT,
           routeId,
           href,
+          selectedTarget: state.selectedTarget || "",
+          sourceTarget: state.sourceTarget || "",
+          activeTarget: routeId,
           entryStackMode: ENTRY_STACK_MODES.PREPARED_DOOR,
           movementIntent: MOVEMENT_INTENTS.OPEN_PREPARED_DOOR,
           gateType: "prepared_door",
           pathFamily: state.pathFamily || "",
           contextExpectation: "page_visit",
           noRepeat: true,
+          sourceStabilityLaw: SOURCE_STABILITY_LAW,
           conversationCoordinate: {
             step: 21,
             priorStep: state.conversationCoordinate ? state.conversationCoordinate.step || 5 : 5,
@@ -2265,7 +2697,9 @@
             mode: state.basePoolMode || "",
             dialect: state.dialectMode || "",
             expectation: "page_visit",
-            target: state.currentNode || "",
+            sourceTarget: state.sourceTarget || "",
+            activeTarget: routeId,
+            target: state.selectedTarget || state.currentNode || "",
             destination: routeId,
             next: ["return"],
             noRepeat: true
@@ -2317,12 +2751,15 @@
   const api = Object.freeze({
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
+    rootFrontbrainContract: ROOT_FRONTBRAIN_CONTRACT,
     version: VERSION,
 
     expressionContractTarget: EXPRESSION_CONTRACT_TARGET,
+    expressionContractNext: EXPRESSION_CONTRACT_NEXT,
     apiContractTarget: API_CONTRACT_TARGET,
     previousApiContractTarget: API_CONTRACT_PREVIOUS,
 
+    sourceStabilityLaw: SOURCE_STABILITY_LAW,
     targets: TARGETS,
     routes: ROUTES,
     routeHrefs: ROUTE_HREFS,
@@ -2340,7 +2777,8 @@
       tapToSpeed: true,
       listeningState: "frontbrain",
       typingState: "frontbrain",
-      protectedCopyAuthority: "expression"
+      protectedCopyAuthority: "expression",
+      sourceIdentityAuthority: "frontbrain"
     }),
 
     mount: mountHearthJeeves,
@@ -2355,6 +2793,9 @@
       state.currentPath = TARGETS.DIAMOND_GATE_OVERVIEW;
       state.currentTopic = "entrance";
       state.currentScopeLane = "objective";
+      state.selectedTarget = TARGETS.DIAMOND_GATE_OVERVIEW;
+      state.sourceTarget = TARGETS.DIAMOND_GATE_OVERVIEW;
+      state.activeTarget = TARGETS.DIAMOND_GATE_OVERVIEW;
       state.entryStackMode = ENTRY_STACK_MODES.ENTRANCE;
       state.basePoolMode = BASE_POOL_MODES.ESTATE_OVERVIEW;
       state.illuminationMode = ILLUMINATION_MODES.THRESHOLD;
@@ -2394,6 +2835,9 @@
         currentPath: state.currentPath,
         currentTopic: state.currentTopic,
         currentScopeLane: state.currentScopeLane,
+        selectedTarget: state.selectedTarget,
+        sourceTarget: state.sourceTarget,
+        activeTarget: state.activeTarget,
         entryStackMode: state.entryStackMode,
         basePoolMode: state.basePoolMode,
         illuminationMode: state.illuminationMode,
@@ -2404,11 +2848,13 @@
         dialectMode: state.dialectMode,
         contextExpectation: state.contextExpectation,
         noRepeat: state.noRepeat,
+        sourceStabilityLaw: SOURCE_STABILITY_LAW,
         lastBridgeContext: state.lastBridgeContext,
         lastResponse: state.lastResponse,
         lastError: state.lastError ? String(state.lastError.message || state.lastError) : "",
         lastSuccessfulEndpoint: state.lastSuccessfulEndpoint,
         readingRhythmAuthority: "frontbrain",
+        sourceIdentityAuthority: "frontbrain",
         coordinateCarrierAuthority: "frontbrain"
       };
     },
@@ -2420,7 +2866,13 @@
     buildProvisionalCoordinate,
     inferEntryStackModeForPayload,
     inferBasePoolModeForPayload,
-    inferIlluminationModeForPayload
+    inferIlluminationModeForPayload,
+    normalizeOption,
+    normalizeCoordinate,
+    resolveOptionSourcePacket,
+    resolveFreeformSourcePacket,
+    sanitizeModesForSource,
+    ensureCoordinateSourceIdentity
   });
 
   global.mountHearthJeeves = mountHearthJeeves;

@@ -1,8 +1,9 @@
 /* /showroom/globe/hearth/jeeves/index.css */
-/* HEARTH_JEEVES_FRONTBRAIN_V21_COMPATIBLE_VISIBLE_DOCKS_CSS_TNT_v4 */
+/* HEARTH_JEEVES_FRONTBRAIN_VISIBLE_DOCKS_CSS_CONVERSATION_SHELL_COMPAT_TNT_v5 */
 /* Full-file replacement. */
-/* Owns: premium glossy Jeeves screen finish, CSS compatibility bridge for Frontbrain v21, visible transcript/bubble docks, conversation-vs-handoff visual separation, typing/listening states, mobile-natural scroll behavior. */
+/* Owns: premium glossy Jeeves screen finish, visible shell compatibility, transcript/bubble docks, conversation-vs-handoff separation, typing/listening states, mobile-natural scroll behavior, legacy shell release selectors. */
 /* Does not own: conversation logic, API calls, route execution, Hearth globe chamber, Canvas Bishop, diagnostics authority, WebGL, runtime restart, or final voice canon. */
+/* Built to support: API v5, JS/frontbrain v25, Expression v5, and v21/v24 legacy shell selectors. */
 
 :root {
   color-scheme: dark;
@@ -162,6 +163,46 @@ textarea:focus-visible {
   display: none !important;
 }
 
+/* LEGACY PREPARING / READY RELEASE */
+
+[data-hearth-jeeves-ready="true"] [data-jeeves-preparing],
+[data-hearth-jeeves-ready="true"] .jeeves-preparing,
+[data-hearth-jeeves-ready="true"] .jeeves-loading,
+[data-hearth-jeeves-ready="true"] [data-jeeves-loading],
+body[data-hearth-jeeves-ready="true"] [data-jeeves-preparing],
+body[data-hearth-jeeves-ready="true"] .jeeves-preparing,
+body[data-hearth-jeeves-ready="true"] .jeeves-loading,
+body[data-hearth-jeeves-ready="true"] [data-jeeves-loading],
+html[data-hearth-jeeves-ready="true"] [data-jeeves-preparing],
+html[data-hearth-jeeves-ready="true"] .jeeves-preparing,
+html[data-hearth-jeeves-ready="true"] .jeeves-loading,
+html[data-hearth-jeeves-ready="true"] [data-jeeves-loading],
+[data-jeeves-root][data-jeeves-ready="true"] [data-jeeves-preparing],
+[data-jeeves-root][data-jeeves-ready="true"] .jeeves-preparing,
+[data-jeeves-root][data-jeeves-ready="true"] .jeeves-loading,
+[data-jeeves-root][data-jeeves-ready="true"] [data-jeeves-loading] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+[data-jeeves-root],
+.hearth-jeeves,
+.hearth-jeeves-v25,
+.jeeves-screen-glass {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-jeeves-root][data-jeeves-ready="true"],
+.hearth-jeeves[data-jeeves-ready="true"],
+.hearth-jeeves-v25[data-jeeves-ready="true"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 /* PAGE FRAME */
 
 .skip-link {
@@ -295,7 +336,10 @@ textarea:focus-visible {
 }
 
 .jeeves-screen-glass,
-[data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page) {
+[data-jeeves-root].hearth-jeeves,
+[data-jeeves-root].hearth-jeeves-v25,
+[data-jeeves-root].hearth-jeeves:not(.jeeves-page),
+[data-jeeves-root].hearth-jeeves-v25:not(.jeeves-page) {
   position: relative;
   width: min(var(--screen-max), 100%);
   min-height: clamp(44rem, 78vh, 60rem);
@@ -318,7 +362,8 @@ textarea:focus-visible {
 }
 
 .jeeves-screen-glass::before,
-[data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page)::before {
+[data-jeeves-root].hearth-jeeves::before,
+[data-jeeves-root].hearth-jeeves-v25::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -333,7 +378,8 @@ textarea:focus-visible {
 }
 
 .jeeves-screen-glass::after,
-[data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page)::after {
+[data-jeeves-root].hearth-jeeves::after,
+[data-jeeves-root].hearth-jeeves-v25::after {
   content: "";
   position: absolute;
   inset: 0.72rem;
@@ -445,6 +491,16 @@ textarea:focus-visible {
     0 0 1.4rem rgba(96, 247, 255, 0.08);
 }
 
+.jeeves-status:empty,
+[data-jeeves-status]:empty {
+  min-height: 0;
+  height: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
 .jeeves-status::before,
 [data-jeeves-status]::before {
   content: "";
@@ -456,6 +512,13 @@ textarea:focus-visible {
   box-shadow:
     0 0 0.8rem rgba(143, 247, 201, 0.74),
     0 0 1.8rem rgba(143, 247, 201, 0.34);
+}
+
+[data-jeeves-root][data-jeeves-ready="true"] .jeeves-status::before,
+[data-jeeves-root][data-jeeves-ready="true"] [data-jeeves-status]::before,
+[data-hearth-jeeves-ready="true"] .jeeves-status::before,
+[data-hearth-jeeves-ready="true"] [data-jeeves-status]::before {
+  background: var(--green-2);
 }
 
 [data-jeeves-root][data-jeeves-typing="true"] .jeeves-status,
@@ -539,11 +602,12 @@ textarea:focus-visible {
   opacity: 0.5;
 }
 
-/* TRANSCRIPT / FRONTBRAIN v21 COMPATIBILITY */
+/* TRANSCRIPT / FRONTBRAIN COMPATIBILITY */
 
 .jeeves-thread,
 .jeeves-transcript,
 .jeeves-log,
+[data-jeeves-thread],
 [data-jeeves-transcript],
 [data-jeeves-log] {
   position: relative;
@@ -562,7 +626,8 @@ textarea:focus-visible {
 
 .jeeves-thread,
 .jeeves-transcript,
-.jeeves-log {
+.jeeves-log,
+[data-jeeves-thread] {
   min-height: var(--thread-height);
 }
 
@@ -574,6 +639,7 @@ textarea:focus-visible {
 .jeeves-thread::-webkit-scrollbar,
 .jeeves-transcript::-webkit-scrollbar,
 .jeeves-log::-webkit-scrollbar,
+[data-jeeves-thread]::-webkit-scrollbar,
 [data-jeeves-transcript]::-webkit-scrollbar,
 [data-jeeves-log]::-webkit-scrollbar {
   width: 8px;
@@ -582,6 +648,7 @@ textarea:focus-visible {
 .jeeves-thread::-webkit-scrollbar-track,
 .jeeves-transcript::-webkit-scrollbar-track,
 .jeeves-log::-webkit-scrollbar-track,
+[data-jeeves-thread]::-webkit-scrollbar-track,
 [data-jeeves-transcript]::-webkit-scrollbar-track,
 [data-jeeves-log]::-webkit-scrollbar-track {
   background: transparent;
@@ -590,6 +657,7 @@ textarea:focus-visible {
 .jeeves-thread::-webkit-scrollbar-thumb,
 .jeeves-transcript::-webkit-scrollbar-thumb,
 .jeeves-log::-webkit-scrollbar-thumb,
+[data-jeeves-thread]::-webkit-scrollbar-thumb,
 [data-jeeves-transcript]::-webkit-scrollbar-thumb,
 [data-jeeves-log]::-webkit-scrollbar-thumb {
   border-radius: 999px;
@@ -600,7 +668,8 @@ textarea:focus-visible {
 
 .jeeves-message,
 .jeeves-bubble,
-[data-jeeves-bubble] {
+[data-jeeves-bubble],
+[data-jeeves-speaker] {
   position: relative;
   max-width: min(74%, 42rem);
   display: grid;
@@ -624,7 +693,8 @@ textarea:focus-visible {
 
 .jeeves-message::before,
 .jeeves-bubble::before,
-[data-jeeves-bubble]::before {
+[data-jeeves-bubble]::before,
+[data-jeeves-speaker]::before {
   content: "";
   position: absolute;
   inset: 1px 1px auto 1px;
@@ -633,6 +703,11 @@ textarea:focus-visible {
   pointer-events: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), transparent);
   opacity: 0.75;
+}
+
+.jeeves-bubble-body {
+  position: relative;
+  z-index: 2;
 }
 
 .jeeves-message-name {
@@ -651,15 +726,24 @@ textarea:focus-visible {
 }
 
 .jeeves-message[data-message-origin="jeeves"],
+.jeeves-message[data-message-origin="assistant"],
+.jeeves-bubble-jeeves,
 .jeeves-bubble-assistant,
-[data-jeeves-bubble="assistant"] {
+[data-jeeves-bubble="assistant"],
+[data-jeeves-speaker="jeeves"],
+[data-jeeves-speaker="assistant"] {
   align-self: flex-start;
   border-top-left-radius: 0.35rem;
 }
 
 .jeeves-message[data-message-origin="visitor"],
+.jeeves-message[data-message-origin="user"],
 .jeeves-bubble-user,
-[data-jeeves-bubble="user"] {
+.jeeves-bubble-visitor,
+[data-jeeves-bubble="user"],
+[data-jeeves-bubble="visitor"],
+[data-jeeves-speaker="user"],
+[data-jeeves-speaker="visitor"] {
   align-self: flex-end;
   border-color: rgba(245, 201, 108, 0.34);
   border-top-right-radius: 0.35rem;
@@ -670,19 +754,22 @@ textarea:focus-visible {
     rgba(245, 201, 108, 0.085);
 }
 
-.jeeves-message[data-message-origin="visitor"] .jeeves-message-name {
+.jeeves-message[data-message-origin="visitor"] .jeeves-message-name,
+.jeeves-message[data-message-origin="user"] .jeeves-message-name {
   color: rgba(255, 232, 163, 0.62);
   text-align: right;
 }
 
-.jeeves-message[data-message-origin="visitor"] p {
+.jeeves-message[data-message-origin="visitor"] p,
+.jeeves-message[data-message-origin="user"] p {
   color: rgba(255, 242, 208, 0.97);
 }
 
 .jeeves-message-system,
 .jeeves-message[data-message-origin="system"],
 .jeeves-bubble-system,
-[data-jeeves-bubble="system"] {
+[data-jeeves-bubble="system"],
+[data-jeeves-speaker="system"] {
   max-width: min(82%, 46rem);
   align-self: center;
   text-align: center;
@@ -769,14 +856,16 @@ textarea:focus-visible {
   }
 }
 
-/* DOCKS: OLD + FRONTBRAIN v21 */
+/* DOCKS: LEGACY + CURRENT */
 
 .jeeves-prompt-dock,
 .jeeves-handoff-dock,
 .jeeves-options,
 .jeeves-handoffs,
+.jeeves-doors,
 [data-jeeves-options],
-[data-jeeves-handoffs] {
+[data-jeeves-handoffs],
+[data-jeeves-doors] {
   position: relative;
   display: grid;
   gap: 0.55rem;
@@ -797,7 +886,9 @@ textarea:focus-visible {
 }
 
 .jeeves-handoffs,
+.jeeves-doors,
 [data-jeeves-handoffs],
+[data-jeeves-doors],
 .jeeves-handoff-dock {
   border-color: rgba(120, 168, 255, 0.24);
   background:
@@ -810,6 +901,14 @@ textarea:focus-visible {
   display: none;
 }
 
+.jeeves-option-group,
+.jeeves-door-group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.jeeves-option-heading,
+.jeeves-door-heading,
 .jeeves-prompt-dock-label,
 .jeeves-handoff-dock-label,
 .jeeves-panel-title {
@@ -821,14 +920,20 @@ textarea:focus-visible {
 }
 
 .jeeves-options .jeeves-panel-title,
+.jeeves-options .jeeves-option-heading,
 [data-panel-kind="conversation"] .jeeves-panel-title,
+[data-panel-kind="conversation"] .jeeves-option-heading,
 [data-jeeves-options] .jeeves-panel-title {
   color: rgba(255, 232, 163, 0.72);
 }
 
 .jeeves-handoffs .jeeves-panel-title,
+.jeeves-handoffs .jeeves-door-heading,
+.jeeves-doors .jeeves-door-heading,
 [data-panel-kind="handoff"] .jeeves-panel-title,
-[data-jeeves-handoffs] .jeeves-panel-title {
+[data-panel-kind="handoff"] .jeeves-door-heading,
+[data-jeeves-handoffs] .jeeves-panel-title,
+[data-jeeves-doors] .jeeves-door-heading {
   color: rgba(191, 210, 255, 0.78);
 }
 
@@ -841,22 +946,19 @@ textarea:focus-visible {
 
 .jeeves-options,
 .jeeves-handoffs,
+.jeeves-doors,
 [data-jeeves-options],
-[data-jeeves-handoffs] {
+[data-jeeves-handoffs],
+[data-jeeves-doors] {
   grid-template-columns: 1fr;
-}
-
-.jeeves-options button,
-.jeeves-handoffs a,
-[data-jeeves-options] button,
-[data-jeeves-handoffs] a {
-  margin: 0;
 }
 
 /* CONVERSATION BUTTONS */
 
 .jeeves-option,
-[data-jeeves-option] {
+.jeeves-option-button,
+[data-jeeves-option],
+[data-jeeves-option-index] {
   min-height: 2.55rem;
   display: inline-flex;
   align-items: center;
@@ -885,7 +987,9 @@ textarea:focus-visible {
 }
 
 .jeeves-option:hover,
-[data-jeeves-option]:hover {
+.jeeves-option-button:hover,
+[data-jeeves-option]:hover,
+[data-jeeves-option-index]:hover {
   transform: translateY(-1px);
   border-color: rgba(245, 201, 108, 0.58);
   background:
@@ -901,18 +1005,55 @@ textarea:focus-visible {
 .jeeves-option[data-type="topic"],
 .jeeves-option[data-type="calibration"],
 .jeeves-option[data-option-kind="conversation"],
+.jeeves-option[data-option-kind="conversation_prompt"],
+.jeeves-option-button[data-option-kind="conversation_prompt"],
+.jeeves-option-button[data-prompt-mode],
 [data-jeeves-option][data-type="conversation"],
 [data-jeeves-option][data-type="topic"],
 [data-jeeves-option][data-type="calibration"],
-[data-jeeves-option][data-option-kind="conversation"] {
+[data-jeeves-option][data-option-kind="conversation"],
+[data-jeeves-option][data-option-kind="conversation_prompt"],
+[data-jeeves-option-index][data-option-kind="conversation_prompt"] {
   border-color: rgba(245, 201, 108, 0.34);
   color: rgba(255, 242, 208, 0.98);
 }
 
+.jeeves-option[data-option-kind="forward"],
+.jeeves-option-button[data-option-kind="forward"],
+[data-jeeves-option][data-option-kind="forward"],
+[data-jeeves-option-index][data-option-kind="forward"] {
+  border-color: rgba(143, 247, 201, 0.38);
+  color: rgba(232, 255, 244, 0.98);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.028)),
+    radial-gradient(circle at 24% 0%, rgba(143, 247, 201, 0.18), transparent 62%),
+    rgba(143, 247, 201, 0.08);
+}
+
+.jeeves-option[data-option-kind="parallel"],
+.jeeves-option-button[data-option-kind="parallel"],
+[data-jeeves-option][data-option-kind="parallel"],
+[data-jeeves-option-index][data-option-kind="parallel"] {
+  border-color: rgba(120, 168, 255, 0.38);
+  color: rgba(230, 238, 255, 0.98);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.028)),
+    radial-gradient(circle at 24% 0%, rgba(120, 168, 255, 0.22), transparent 62%),
+    rgba(120, 168, 255, 0.08);
+}
+
 .jeeves-option[data-option-type="control"],
 .jeeves-option[data-type="control"],
+.jeeves-option[data-option-kind="control"],
+.jeeves-option[data-option-kind="return"],
+.jeeves-option-button[data-option-kind="control"],
+.jeeves-option-button[data-option-kind="return"],
 .jeeves-option[data-option-target="controlRoom"],
 [data-jeeves-option][data-type="control"],
+[data-jeeves-option][data-option-kind="control"],
+[data-jeeves-option][data-option-kind="return"],
+[data-jeeves-option-index][data-option-kind="control"],
+[data-jeeves-option-index][data-option-kind="return"],
 [data-jeeves-option][data-target="recenterNode"],
 [data-jeeves-option][data-target="returnFork"],
 [data-jeeves-option][data-target="restartFork"] {
@@ -924,16 +1065,20 @@ textarea:focus-visible {
     rgba(255, 191, 115, 0.12);
 }
 
-.jeeves-option span {
+.jeeves-option span,
+.jeeves-option-button span {
   display: inline-block;
 }
 
 /* ROUTE HANDOFFS: SEPARATE LANGUAGE + SEPARATE VISUAL LANE */
 
 .jeeves-option[data-option-type="route"],
+.jeeves-option[data-option-kind="route"],
 .jeeves-option-route,
 .jeeves-route-option,
-[data-jeeves-route-option] {
+.jeeves-door-button,
+[data-jeeves-route-option],
+[data-jeeves-handoff-route] {
   min-height: 2.55rem;
   display: inline-flex;
   align-items: center;
@@ -963,9 +1108,12 @@ textarea:focus-visible {
 }
 
 .jeeves-option[data-option-type="route"]:hover,
+.jeeves-option[data-option-kind="route"]:hover,
 .jeeves-option-route:hover,
 .jeeves-route-option:hover,
-[data-jeeves-route-option]:hover {
+.jeeves-door-button:hover,
+[data-jeeves-route-option]:hover,
+[data-jeeves-handoff-route]:hover {
   transform: translateY(-1px);
   border-color: rgba(120, 168, 255, 0.74);
   background:
@@ -975,12 +1123,15 @@ textarea:focus-visible {
 }
 
 [data-panel-kind="conversation"] [data-jeeves-route-option],
-[data-panel-kind="conversation"] .jeeves-route-option {
+[data-panel-kind="conversation"] .jeeves-route-option,
+[data-panel-kind="conversation"] .jeeves-door-button,
+[data-panel-kind="conversation"] [data-jeeves-handoff-route] {
   display: none !important;
 }
 
 [data-panel-kind="handoff"] [data-jeeves-option],
-[data-panel-kind="handoff"] .jeeves-option:not(.jeeves-route-option) {
+[data-panel-kind="handoff"] .jeeves-option:not(.jeeves-route-option),
+[data-panel-kind="handoff"] .jeeves-option-button {
   display: none !important;
 }
 
@@ -1165,7 +1316,8 @@ textarea:focus-visible {
   }
 
   .jeeves-screen-glass,
-  [data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page) {
+  [data-jeeves-root].hearth-jeeves,
+  [data-jeeves-root].hearth-jeeves-v25 {
     min-height: clamp(42rem, 78vh, 56rem);
   }
 
@@ -1214,7 +1366,8 @@ textarea:focus-visible {
   }
 
   .jeeves-screen-glass,
-  [data-jeeves-root].hearth-jeeves:not(.jeeves-screen-glass):not(.jeeves-page) {
+  [data-jeeves-root].hearth-jeeves,
+  [data-jeeves-root].hearth-jeeves-v25 {
     min-height: auto;
     border-radius: 1.35rem;
     padding: 0.78rem;
@@ -1237,6 +1390,7 @@ textarea:focus-visible {
   .jeeves-thread,
   .jeeves-transcript,
   .jeeves-log,
+  [data-jeeves-thread],
   [data-jeeves-transcript],
   [data-jeeves-log] {
     min-height: 24rem;
@@ -1249,7 +1403,8 @@ textarea:focus-visible {
 
   .jeeves-message,
   .jeeves-bubble,
-  [data-jeeves-bubble] {
+  [data-jeeves-bubble],
+  [data-jeeves-speaker] {
     max-width: 88%;
     padding: 0.7rem 0.78rem;
   }
@@ -1258,17 +1413,23 @@ textarea:focus-visible {
   .jeeves-handoff-grid,
   .jeeves-options,
   .jeeves-handoffs,
+  .jeeves-doors,
   [data-jeeves-options],
-  [data-jeeves-handoffs] {
+  [data-jeeves-handoffs],
+  [data-jeeves-doors] {
     display: grid;
     grid-template-columns: 1fr;
   }
 
   .jeeves-option,
+  .jeeves-option-button,
   [data-jeeves-option],
+  [data-jeeves-option-index],
   .jeeves-route-option,
   [data-jeeves-route-option],
-  .jeeves-option-route {
+  .jeeves-option-route,
+  .jeeves-door-button,
+  [data-jeeves-handoff-route] {
     width: 100%;
     justify-content: flex-start;
     border-radius: 1rem;
@@ -1303,9 +1464,15 @@ textarea:focus-visible {
     text-align: center;
   }
 
+  .jeeves-status:empty,
+  [data-jeeves-status]:empty {
+    width: 0;
+  }
+
   .jeeves-thread,
   .jeeves-transcript,
   .jeeves-log,
+  [data-jeeves-thread],
   [data-jeeves-transcript],
   [data-jeeves-log] {
     min-height: 25rem;
@@ -1313,7 +1480,8 @@ textarea:focus-visible {
 
   .jeeves-message,
   .jeeves-bubble,
-  [data-jeeves-bubble] {
+  [data-jeeves-bubble],
+  [data-jeeves-speaker] {
     max-width: 94%;
   }
 
@@ -1322,7 +1490,8 @@ textarea:focus-visible {
   }
 
   .jeeves-bubble,
-  [data-jeeves-bubble] {
+  [data-jeeves-bubble],
+  [data-jeeves-speaker] {
     font-size: 0.93rem;
   }
 }

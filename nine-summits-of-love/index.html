@@ -3,9 +3,9 @@
   lang="en"
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
-  data-version="G1-V2"
-  data-contract="NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1"
+  data-version="G1-V3"
+  data-contract="NINE_SUMMITS_OF_LOVE_DIAMOND_HEART_HOUSE_CONTROLLER_HERO_HTML_TNT_v2"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1"
   data-status="active"
   data-parent="/nine-summits/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -20,40 +20,69 @@
   data-visual-pass-claimed="false"
   data-house-room="book-chamber"
   data-house-control-pad-mounted="true"
+  data-house-controller-form="diamond-heart-3d"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
 
   <title>The Nine Summits of Love · Diamond Gate Bridge</title>
+
   <meta
     name="description"
     content="The Nine Summits of Love is the book and seminar lane inside Diamond Gate Bridge: a human-first climb through character, structure, balance, stability, peace, joy, dignity, free will, and love."
   >
 
-  <link rel="stylesheet" href="/assets/house-control-pad/house.control-pad.css">
+  <link
+    rel="stylesheet"
+    href="/assets/house-control-pad/house.control-pad.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/assets/house-control-pad/house.avatars.css"
+  >
 
   <style>
     :root{
       color-scheme:dark;
+
       --bg:#02040b;
       --ink:#fff4d8;
       --muted:rgba(230,238,255,.78);
       --soft:rgba(230,238,255,.58);
       --faint:rgba(230,238,255,.42);
+
       --gold:#f3c86f;
       --gold2:#ffe8a3;
       --green:#8ff0c6;
       --blue:#8dd8ff;
       --purple:#8f65ff;
+      --rose:#ffafd6;
+
       --panel:rgba(9,15,31,.84);
       --line:rgba(184,205,255,.18);
       --line2:rgba(243,200,111,.34);
-      --shadow:0 32px 110px rgba(0,0,0,.46);
+
+      --shadow:
+        0 32px 110px rgba(0,0,0,.46);
+
       --max:1180px;
+
+      --heart-width:1000;
+      --heart-height:900;
+      --heart-depth:320;
+      --heart-origin-x:500;
+      --heart-origin-y:430;
+      --heart-origin-z:0;
     }
 
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+    }
 
     html{
       min-height:100%;
@@ -64,116 +93,187 @@
     body{
       margin:0;
       min-height:100vh;
+
       color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
       line-height:1.5;
+
       background:
-        radial-gradient(circle at 50% -8%,rgba(243,200,111,.22),transparent 28rem),
-        radial-gradient(circle at 10% 18%,rgba(143,101,255,.20),transparent 28rem),
-        radial-gradient(circle at 92% 30%,rgba(141,216,255,.14),transparent 28rem),
-        radial-gradient(circle at 50% 78%,rgba(143,101,255,.12),transparent 34rem),
-        linear-gradient(180deg,#080c17 0%,#030713 58%,#010207 100%);
+        radial-gradient(
+          circle at 50% -8%,
+          rgba(243,200,111,.22),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 10% 18%,
+          rgba(143,101,255,.20),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 92% 30%,
+          rgba(141,216,255,.14),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 50% 78%,
+          rgba(143,101,255,.12),
+          transparent 34rem
+        ),
+        linear-gradient(
+          180deg,
+          #080c17 0%,
+          #030713 58%,
+          #010207 100%
+        );
+
       overflow-x:hidden;
+
       -webkit-font-smoothing:antialiased;
       text-rendering:geometricPrecision;
     }
 
     body::before{
       content:"";
+
       position:fixed;
       inset:0;
+      z-index:0;
+
       pointer-events:none;
+
       background-image:
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.5px),
-        linear-gradient(rgba(141,216,255,.045) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(141,216,255,.045) 1px,transparent 1px);
-      background-size:220px 260px,54px 54px,54px 54px;
+        radial-gradient(
+          circle,
+          rgba(255,255,255,.18) 0 1px,
+          transparent 1.5px
+        ),
+        linear-gradient(
+          rgba(141,216,255,.045) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(141,216,255,.045) 1px,
+          transparent 1px
+        );
+
+      background-size:
+        220px 260px,
+        54px 54px,
+        54px 54px;
+
       opacity:.24;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.52) 64%,rgba(0,0,0,.24));
+
+      mask-image:
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,.92),
+          rgba(0,0,0,.52) 64%,
+          rgba(0,0,0,.24)
+        );
     }
 
     body::after{
       content:"";
+
       position:fixed;
       inset:-20%;
+      z-index:0;
+
       pointer-events:none;
+
       background:
-        conic-gradient(from 90deg at 50% 50%,
+        conic-gradient(
+          from 90deg at 50% 50%,
           transparent 0deg,
           rgba(143,101,255,.08) 52deg,
           transparent 108deg,
           rgba(243,200,111,.06) 172deg,
           transparent 224deg,
           rgba(141,216,255,.07) 292deg,
-          transparent 360deg);
+          transparent 360deg
+        );
+
       filter:blur(42px);
       opacity:.58;
-      animation:auroraDrift 28s linear infinite;
+
+      animation:
+        auroraDrift 28s linear infinite;
     }
 
-    a{color:inherit;text-decoration:none}
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    button{
+      font:inherit;
+    }
 
     .skip{
       position:absolute;
       left:-999px;
       top:8px;
-      z-index:50;
+      z-index:10000;
+
       padding:.75rem 1rem;
+
       border-radius:999px;
+
       color:#05070d;
       background:var(--gold);
+
       font-weight:950;
     }
 
-    .skip:focus{left:8px}
+    .skip:focus{
+      left:8px;
+    }
 
     .shell{
       position:relative;
       z-index:2;
-      width:min(var(--max),calc(100% - 28px));
+
+      width:min(
+        var(--max),
+        calc(100% - 28px)
+      );
+
       margin:0 auto;
-      padding:max(22px,env(safe-area-inset-top)) 0 max(46px,env(safe-area-inset-bottom));
+
+      padding:
+        max(22px,env(safe-area-inset-top))
+        0
+        max(46px,env(safe-area-inset-bottom));
     }
+
+    /* =====================================================
+       PRESERVED TOP NAVIGATION
+       ===================================================== */
 
     .topbar{
       display:grid;
-      grid-template-columns:auto 1fr;
+      grid-template-columns:minmax(0,1fr) auto;
       align-items:center;
       gap:18px;
+
       padding:12px 0 18px;
     }
 
     .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      align-items:center;
-      gap:.9rem;
-      min-width:260px;
-    }
+      min-width:0;
 
-    .brand-mark{
-      width:4.2rem;
-      height:4.2rem;
       display:grid;
-      place-items:center;
-      border:1px solid rgba(243,200,111,.44);
-      border-radius:1.15rem;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 48% 22%,rgba(255,255,255,.24),transparent 42%),
-        radial-gradient(circle at 64% 76%,rgba(143,101,255,.42),transparent 58%),
-        linear-gradient(145deg,rgba(43,32,82,.95),rgba(5,8,20,.98));
-      box-shadow:
-        0 0 2rem rgba(143,101,255,.28),
-        0 1.2rem 2.8rem rgba(0,0,0,.46),
-        inset 0 1px 0 rgba(255,255,255,.16);
-    }
-
-    .brand-mark span{
-      transform:rotate(-45deg);
-      font-weight:950;
-      letter-spacing:.04em;
-      color:rgba(255,244,216,.98);
+      gap:.18rem;
     }
 
     .brand-copy{
@@ -182,245 +282,855 @@
     }
 
     .brand-copy strong{
-      font-size:clamp(1.08rem,3vw,1.7rem);
+      color:var(--ink);
+
+      font-size:
+        clamp(1.08rem,3vw,1.7rem);
+
       line-height:1;
       letter-spacing:-.045em;
     }
 
     .brand-copy span{
       color:var(--muted);
+
       font-size:.74rem;
       font-weight:950;
+
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
     .nav{
       position:relative;
+      z-index:20;
+
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      align-items:flex-start;
+      align-items:center;
       gap:.58rem;
-      z-index:20;
     }
 
-    .nav a,
-    .team-control-pad-open{
+    .nav a{
       min-height:2.35rem;
+
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
+
       padding:.54rem .82rem;
+
+      border:
+        1px solid rgba(255,255,255,.13);
+
+      border-radius:999px;
+
       color:rgba(241,246,255,.86);
       background:rgba(255,255,255,.04);
-      font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+      font:
+        950 .68rem/1
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
       letter-spacing:.055em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-      cursor:pointer;
-      user-select:none;
+
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06);
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
     }
 
     .nav a:hover,
-    .nav a:focus-visible,
-    .team-control-pad-open:hover,
-    .team-control-pad-open:focus-visible{
+    .nav a:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.46);
+
+      border-color:
+        rgba(243,200,111,.46);
+
       outline:none;
     }
 
     .nav a.primary-return{
-      border-color:rgba(243,200,111,.62);
+      border-color:
+        rgba(243,200,111,.62);
+
       color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff2a8,
+          #f3c86f
+        );
     }
 
-    .team-control-pad-open{
-      border-color:rgba(141,216,255,.38);
-      background:rgba(141,216,255,.065);
-    }
-
-    .team-control-pad-open::before{
-      content:"";
-      width:.58rem;
-      height:.58rem;
-      margin-right:.48rem;
-      border-radius:.16rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--blue));
-      box-shadow:0 0 .9rem rgba(141,216,255,.36);
-    }
+    /* =====================================================
+       SHARED PANELS
+       ===================================================== */
 
     .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.35rem,5vw,2.35rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(141,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 86% 18%,rgba(143,101,255,.14),transparent 28rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
-        var(--panel);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
       overflow:hidden;
+
+      border:
+        1px solid var(--line);
+
+      border-radius:
+        clamp(1.35rem,5vw,2.35rem);
+
+      background:
+        radial-gradient(
+          circle at 14% 0%,
+          rgba(141,216,255,.10),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 86% 18%,
+          rgba(143,101,255,.14),
+          transparent 28rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.07),
+          rgba(255,255,255,.022)
+        ),
+        var(--panel);
+
+      box-shadow:
+        var(--shadow),
+        inset 0 1px 0 rgba(255,255,255,.08);
     }
+
+    /* =====================================================
+       DIAMOND HEART HERO
+       ===================================================== */
 
     .hero{
       position:relative;
-      min-height:clamp(25rem,48vw,36rem);
+
+      min-height:
+        clamp(48rem,92vw,72rem);
+
       display:grid;
-      align-content:center;
-      gap:1rem;
-      padding:clamp(1.45rem,5vw,3.4rem);
+      justify-items:center;
+      align-content:start;
+      gap:1.2rem;
+
       margin-top:.6rem;
+
+      padding:
+        clamp(1.4rem,4vw,3rem)
+        clamp(1rem,4vw,3rem)
+        clamp(1.8rem,5vw,3.5rem);
+
       isolation:isolate;
     }
 
-    .hero::before{
-      content:"";
-      position:absolute;
-      right:clamp(1rem,6vw,5.5rem);
-      top:50%;
-      z-index:0;
-      width:clamp(10rem,27vw,20rem);
-      height:clamp(10rem,27vw,20rem);
-      border:1px solid rgba(243,200,111,.20);
-      border-radius:2.9rem;
-      transform:translateY(-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 42%,rgba(255,232,163,.12),transparent 48%),
-        radial-gradient(circle at 50% 72%,rgba(143,101,255,.16),transparent 62%),
-        linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
-      animation:heroDiamond 8s ease-in-out infinite;
-      pointer-events:none;
-      opacity:.52;
+    .hero-copy{
+      position:relative;
+      z-index:5;
+
+      width:min(960px,100%);
+
+      display:grid;
+      justify-items:center;
+      gap:.85rem;
+
+      text-align:center;
     }
 
     .kicker{
+      position:relative;
+      z-index:2;
+
       width:fit-content;
+
       display:inline-flex;
       align-items:center;
       gap:.58rem;
+
       padding:.58rem .95rem;
-      border:1px solid rgba(255,255,255,.14);
+
+      border:
+        1px solid rgba(255,255,255,.14);
+
       border-radius:999px;
+
       color:rgba(230,238,255,.86);
       background:rgba(255,255,255,.04);
+
       font-size:.72rem;
       font-weight:950;
+
       letter-spacing:.14em;
       text-transform:uppercase;
-      position:relative;
-      z-index:2;
     }
 
     .kicker::before{
       content:"";
+
       width:.72rem;
       height:.72rem;
+
       border-radius:.18rem;
+
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 1.1rem rgba(243,200,111,.46);
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold2),
+          var(--gold)
+        );
+
+      box-shadow:
+        0 0 1.1rem rgba(243,200,111,.46);
     }
 
     h1{
+      position:relative;
+      z-index:2;
+
       margin:0;
-      max-width:940px;
-      font-size:clamp(3.05rem,9.8vw,7rem);
+
+      max-width:980px;
+
+      font-size:
+        clamp(3rem,9.8vw,7rem);
+
       line-height:.84;
       letter-spacing:-.105em;
       text-wrap:balance;
-      position:relative;
-      z-index:2;
     }
 
     h2{
+      position:relative;
+      z-index:2;
+
       margin:0;
+
       color:var(--gold);
-      font-size:clamp(1.45rem,4.7vw,2.85rem);
+
+      font-size:
+        clamp(1.45rem,4.7vw,2.85rem);
+
       line-height:.98;
       letter-spacing:-.07em;
       text-wrap:balance;
-      position:relative;
-      z-index:2;
     }
 
     h3{
       margin:0;
+
       color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.34rem);
+
+      font-size:
+        clamp(1.05rem,3vw,1.34rem);
+
       line-height:1.08;
       letter-spacing:-.035em;
     }
 
     p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.98rem,2.7vw,1.16rem);
-      line-height:1.55;
       position:relative;
       z-index:2;
+
+      margin:0;
+
+      color:var(--muted);
+
+      font-size:
+        clamp(.98rem,2.7vw,1.16rem);
+
+      line-height:1.55;
     }
 
-    .hero p{
+    .hero-copy p{
       max-width:850px;
     }
 
+    /* =====================================================
+       HEART CONTROLLER MOUNT
+       ===================================================== */
+
+    .heart-controller-shell{
+      position:relative;
+      z-index:4;
+
+      width:min(920px,100%);
+      aspect-ratio:1000 / 900;
+
+      display:grid;
+      place-items:center;
+
+      perspective:1400px;
+      perspective-origin:50% 42%;
+
+      margin-top:.5rem;
+    }
+
+    .heart-controller-shell::before{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      bottom:3%;
+
+      width:70%;
+      height:12%;
+
+      transform:
+        translateX(-50%)
+        translateZ(-100px);
+
+      border-radius:50%;
+
+      background:
+        radial-gradient(
+          ellipse,
+          rgba(0,0,0,.72),
+          transparent 70%
+        );
+
+      filter:blur(18px);
+
+      pointer-events:none;
+    }
+
+    .heart-controller-shell::after{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      top:47%;
+
+      width:60%;
+      height:58%;
+
+      transform:
+        translate(-50%,-50%)
+        translateZ(-90px);
+
+      border-radius:50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(243,200,111,.18),
+          rgba(143,101,255,.08) 40%,
+          transparent 72%
+        );
+
+      filter:blur(36px);
+
+      pointer-events:none;
+    }
+
+    .heart-controller-open{
+      position:relative;
+      z-index:4;
+
+      width:100%;
+      height:100%;
+
+      display:grid;
+      place-items:center;
+
+      padding:0;
+
+      border:0;
+
+      color:inherit;
+      background:transparent;
+
+      cursor:pointer;
+
+      transform-style:preserve-3d;
+
+      transform:
+        rotateX(8deg)
+        rotateY(0deg)
+        translateZ(0);
+
+      transition:
+        transform .48s cubic-bezier(.2,.8,.2,1),
+        filter .28s ease;
+    }
+
+    .heart-controller-open:hover,
+    .heart-controller-open:focus-visible{
+      transform:
+        rotateX(5deg)
+        rotateY(-2deg)
+        translateZ(26px)
+        scale(1.018);
+
+      filter:
+        drop-shadow(
+          0 0 2rem rgba(243,200,111,.24)
+        );
+
+      outline:none;
+    }
+
+    .heart-controller-open:focus-visible
+      .heart-focus-ring{
+      opacity:1;
+    }
+
+    .heart-svg{
+      width:100%;
+      height:100%;
+
+      display:block;
+
+      overflow:visible;
+
+      transform-style:preserve-3d;
+    }
+
+    .heart-rear-shell{
+      fill:
+        rgba(8,12,28,.96);
+
+      stroke:
+        rgba(141,216,255,.14);
+
+      stroke-width:6;
+
+      transform:
+        translateY(20px)
+        scale(.985);
+
+      transform-origin:500px 430px;
+
+      filter:
+        url("#heartRearShadow");
+    }
+
+    .heart-main-shell{
+      fill:
+        url("#heartMainGradient");
+
+      stroke:
+        rgba(255,225,148,.72);
+
+      stroke-width:7;
+
+      filter:
+        url("#heartOuterGlow");
+    }
+
+    .heart-inner-surface{
+      fill:
+        url("#heartInteriorGradient");
+
+      stroke:
+        rgba(255,255,255,.16);
+
+      stroke-width:2;
+    }
+
+    .heart-facet{
+      stroke:
+        rgba(255,235,184,.34);
+
+      stroke-width:3;
+
+      vector-effect:
+        non-scaling-stroke;
+
+      transition:
+        opacity .22s ease,
+        filter .22s ease,
+        stroke .22s ease;
+    }
+
+    .heart-facet-gold{
+      fill:url("#facetGold");
+    }
+
+    .heart-facet-violet{
+      fill:url("#facetViolet");
+    }
+
+    .heart-facet-blue{
+      fill:url("#facetBlue");
+    }
+
+    .heart-facet-rose{
+      fill:url("#facetRose");
+    }
+
+    .heart-facet-green{
+      fill:url("#facetGreen");
+    }
+
+    .heart-facet-dark{
+      fill:url("#facetDark");
+    }
+
+    .heart-controller-open:hover
+      .heart-facet,
+    .heart-controller-open:focus-visible
+      .heart-facet{
+      stroke:
+        rgba(255,239,194,.58);
+    }
+
+    .heart-ridge{
+      fill:none;
+
+      stroke:
+        rgba(255,245,214,.42);
+
+      stroke-width:3;
+
+      vector-effect:
+        non-scaling-stroke;
+    }
+
+    .heart-ridge-soft{
+      stroke:
+        rgba(141,216,255,.22);
+    }
+
+    .heart-corridor{
+      fill:none;
+
+      stroke:
+        rgba(255,224,147,.24);
+
+      stroke-width:4;
+
+      stroke-linecap:round;
+      stroke-linejoin:round;
+
+      vector-effect:
+        non-scaling-stroke;
+    }
+
+    .heart-core-ring{
+      fill:
+        rgba(9,9,19,.7);
+
+      stroke:
+        rgba(255,232,163,.76);
+
+      stroke-width:5;
+
+      filter:
+        url("#heartCoreGlow");
+    }
+
+    .heart-core-light{
+      fill:
+        url("#heartCoreGradient");
+
+      filter:
+        url("#heartCoreGlow");
+    }
+
+    .heart-core-mark{
+      fill:none;
+
+      stroke:
+        rgba(255,250,224,.82);
+
+      stroke-width:4;
+
+      vector-effect:
+        non-scaling-stroke;
+    }
+
+    .heart-room-node{
+      fill:
+        rgba(255,255,255,.015);
+
+      stroke:
+        rgba(255,255,255,.14);
+
+      stroke-width:2;
+
+      vector-effect:
+        non-scaling-stroke;
+    }
+
+    .heart-room-label{
+      fill:
+        rgba(255,247,223,.9);
+
+      font:
+        950 18px/1
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        sans-serif;
+
+      letter-spacing:1.6px;
+
+      text-anchor:middle;
+
+      pointer-events:none;
+
+      paint-order:stroke;
+      stroke:
+        rgba(2,4,11,.8);
+
+      stroke-width:5px;
+      stroke-linejoin:round;
+    }
+
+    .heart-room-label-small{
+      font-size:14px;
+      letter-spacing:1px;
+    }
+
+    .heart-core-label{
+      fill:
+        rgba(255,247,223,.96);
+
+      font:
+        950 22px/1
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        sans-serif;
+
+      letter-spacing:2px;
+
+      text-anchor:middle;
+
+      paint-order:stroke;
+      stroke:
+        rgba(2,4,11,.86);
+
+      stroke-width:6px;
+    }
+
+    .heart-focus-ring{
+      fill:none;
+
+      stroke:
+        rgba(141,216,255,.88);
+
+      stroke-width:8;
+
+      opacity:0;
+
+      transition:opacity .18s ease;
+
+      filter:
+        url("#heartCoreGlow");
+    }
+
+    .heart-enter-label{
+      position:absolute;
+      left:50%;
+      bottom:9%;
+      z-index:8;
+
+      min-height:2.65rem;
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.55rem;
+
+      padding:.65rem 1rem;
+
+      border:
+        1px solid rgba(243,200,111,.62);
+
+      border-radius:999px;
+
+      transform:
+        translateX(-50%)
+        translateZ(160px);
+
+      color:#060811;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff2a8,
+          #f3c86f
+        );
+
+      box-shadow:
+        0 .8rem 1.8rem rgba(243,200,111,.16),
+        0 0 2rem rgba(243,200,111,.12);
+
+      font-size:.76rem;
+      font-weight:950;
+
+      letter-spacing:.07em;
+      text-transform:uppercase;
+
+      pointer-events:none;
+    }
+
+    .heart-enter-label::before{
+      content:"";
+
+      width:.62rem;
+      height:.62rem;
+
+      border-radius:.15rem;
+
+      transform:rotate(45deg);
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff8d9,
+          var(--blue)
+        );
+
+      box-shadow:
+        0 0 .8rem rgba(141,216,255,.46);
+    }
+
+    .heart-controller-help{
+      position:absolute;
+      left:50%;
+      bottom:2%;
+      z-index:7;
+
+      transform:
+        translateX(-50%)
+        translateZ(120px);
+
+      color:rgba(230,238,255,.68);
+
+      font-size:.68rem;
+      font-weight:850;
+
+      letter-spacing:.12em;
+      text-transform:uppercase;
+
+      white-space:nowrap;
+
+      pointer-events:none;
+    }
+
+    .heart-controller-root{
+      position:absolute;
+
+      width:1px;
+      height:1px;
+
+      overflow:hidden;
+      clip-path:inset(50%);
+
+      white-space:nowrap;
+    }
+
+    /* =====================================================
+       HERO ACTIONS
+       ===================================================== */
+
     .actions{
+      position:relative;
+      z-index:6;
+
       display:flex;
       flex-wrap:wrap;
+      justify-content:center;
       gap:.62rem;
+
       margin-top:.2rem;
-      position:relative;
-      z-index:3;
     }
 
     .button{
       min-height:2.65rem;
+
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
+
       padding:.65rem 1rem;
-      background:rgba(255,255,255,.045);
+
+      border:
+        1px solid rgba(255,255,255,.15);
+
+      border-radius:999px;
+
       color:rgba(241,246,255,.88);
+      background:rgba(255,255,255,.045);
+
       font-size:.76rem;
       font-weight:950;
+
       letter-spacing:.055em;
       text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.07);
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
     }
 
     .button:hover,
     .button:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(243,200,111,.62);
+
+      border-color:
+        rgba(243,200,111,.62);
+
       outline:none;
     }
 
     .button.gold{
-      border-color:rgba(243,200,111,.9);
+      border-color:
+        rgba(243,200,111,.9);
+
       color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-      box-shadow:0 .8rem 1.8rem rgba(243,200,111,.13);
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff2a8,
+          #f3c86f
+        );
+
+      box-shadow:
+        0 .8rem 1.8rem rgba(243,200,111,.13);
     }
+
+    /* =====================================================
+       PRESERVED DOWNSTREAM PAGE STYLES
+       ===================================================== */
 
     .section{
       margin-top:1.15rem;
-      padding:clamp(1rem,4vw,1.65rem);
+
+      padding:
+        clamp(1rem,4vw,1.65rem);
+
       display:grid;
       gap:1rem;
     }
 
     .cover-split{
       display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(260px,.58fr);
+      grid-template-columns:
+        minmax(0,.82fr)
+        minmax(260px,.58fr);
+
       gap:1rem;
       align-items:stretch;
     }
@@ -429,136 +1139,228 @@
       display:grid;
       align-content:start;
       gap:.8rem;
+
       padding:1.05rem;
-      border:1px solid rgba(255,255,255,.10);
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
       border-radius:1.2rem;
-      background:rgba(255,255,255,.028);
+
+      background:
+        rgba(255,255,255,.028);
     }
 
     .cover-frame{
       position:relative;
-      min-height:clamp(19rem,36vw,31rem);
+
+      min-height:
+        clamp(19rem,36vw,31rem);
+
       overflow:hidden;
-      border:1px solid rgba(243,200,111,.24);
+
+      border:
+        1px solid rgba(243,200,111,.24);
+
       border-radius:1.45rem;
+
       background:
-        radial-gradient(circle at 50% 20%,rgba(243,200,111,.12),transparent 38%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1.2rem 3.2rem rgba(0,0,0,.28);
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(243,200,111,.12),
+          transparent 38%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.06),
+          rgba(255,255,255,.02)
+        );
+
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 1.2rem 3.2rem rgba(0,0,0,.28);
     }
 
     .cover-frame img{
       width:100%;
       height:100%;
       min-height:inherit;
+
       display:block;
+
       object-fit:cover;
     }
 
     .cover-frame::after{
       content:"";
+
       position:absolute;
       inset:0;
+
       pointer-events:none;
+
       background:
-        linear-gradient(180deg,transparent 46%,rgba(2,4,11,.56)),
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.12),transparent 26%);
+        linear-gradient(
+          180deg,
+          transparent 46%,
+          rgba(2,4,11,.56)
+        ),
+        radial-gradient(
+          circle at 50% 16%,
+          rgba(255,255,255,.12),
+          transparent 26%
+        );
     }
 
     .short-grid,
     .route-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
       gap:.75rem;
     }
 
     .short-card,
     .route-card{
       position:relative;
+
       min-height:10rem;
+
       display:grid;
       align-content:start;
       gap:.55rem;
+
       padding:.95rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1.05rem;
-      background:
-        radial-gradient(circle at 90% 0%,rgba(243,200,111,.07),transparent 48%),
-        rgba(255,255,255,.026);
+
       overflow:hidden;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
+      border-radius:1.05rem;
+
+      background:
+        radial-gradient(
+          circle at 90% 0%,
+          rgba(243,200,111,.07),
+          transparent 48%
+        ),
+        rgba(255,255,255,.026);
+
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
     }
 
     .route-card:hover,
     .route-card:focus-visible{
       transform:translateY(-3px);
-      border-color:rgba(243,200,111,.36);
-      background:rgba(255,255,255,.043);
+
+      border-color:
+        rgba(243,200,111,.36);
+
+      background:
+        rgba(255,255,255,.043);
+
       outline:none;
     }
 
     .short-card::after,
     .route-card::after{
       content:"";
+
       position:absolute;
       right:-1.2rem;
       bottom:-1.2rem;
+
       width:5.2rem;
       height:5.2rem;
-      border:1px solid rgba(243,200,111,.16);
+
+      border:
+        1px solid rgba(243,200,111,.16);
+
       border-radius:1rem;
+
       transform:rotate(45deg);
+
       opacity:.6;
+
       pointer-events:none;
     }
 
     .short-card b,
     .route-card b{
-      color:var(--gold);
-      font-size:.66rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
       position:relative;
       z-index:2;
+
+      color:var(--gold);
+
+      font-size:.66rem;
+
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .short-card strong,
     .route-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.05rem,3vw,1.35rem);
-      line-height:1.05;
-      letter-spacing:-.045em;
       position:relative;
       z-index:2;
+
+      color:
+        rgba(255,244,216,.98);
+
+      font-size:
+        clamp(1.05rem,3vw,1.35rem);
+
+      line-height:1.05;
+      letter-spacing:-.045em;
     }
 
     .short-card span,
     .route-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.42;
       position:relative;
       z-index:2;
+
+      color:var(--muted);
+
+      font-size:.92rem;
+      line-height:1.42;
     }
 
     .summit-strip{
       display:grid;
-      grid-template-columns:repeat(9,minmax(0,1fr));
+      grid-template-columns:
+        repeat(9,minmax(0,1fr));
+
       gap:.45rem;
     }
 
     .summit-pill{
       min-height:5.4rem;
+
       display:grid;
       place-items:center;
-      text-align:center;
+
       padding:.62rem .45rem;
-      border:1px solid rgba(255,255,255,.10);
+
+      border:
+        1px solid rgba(255,255,255,.10);
+
       border-radius:1rem;
-      background:rgba(255,255,255,.026);
-      color:rgba(255,244,216,.92);
+
+      color:
+        rgba(255,244,216,.92);
+
+      background:
+        rgba(255,255,255,.026);
+
+      text-align:center;
+
       font-size:.68rem;
       font-weight:950;
+
       letter-spacing:.06em;
       text-transform:uppercase;
     }
@@ -569,42 +1371,63 @@
     }
 
     details{
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:1.1rem;
-      background:rgba(255,255,255,.026);
       overflow:hidden;
+
+      border:
+        1px solid rgba(255,255,255,.11);
+
+      border-radius:1.1rem;
+
+      background:
+        rgba(255,255,255,.026);
     }
 
     details[open]{
-      border-color:rgba(243,200,111,.25);
-      background:rgba(243,200,111,.045);
+      border-color:
+        rgba(243,200,111,.25);
+
+      background:
+        rgba(243,200,111,.045);
     }
 
     details summary{
       min-height:4rem;
+
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:1rem;
+
       padding:.9rem 1rem;
+
       cursor:pointer;
       list-style:none;
     }
 
-    details summary::-webkit-details-marker{display:none}
+    details summary::-webkit-details-marker{
+      display:none;
+    }
 
     details summary::after{
       content:"+";
+
       width:2rem;
       height:2rem;
+
       display:grid;
       place-items:center;
+
       flex:0 0 auto;
-      border:1px solid rgba(255,255,255,.13);
+
+      border:
+        1px solid rgba(255,255,255,.13);
+
       border-radius:999px;
+
       color:var(--gold);
-      font-weight:950;
       background:rgba(255,255,255,.04);
+
+      font-weight:950;
     }
 
     details[open] summary::after{
@@ -618,21 +1441,27 @@
 
     .summary-text b{
       color:var(--gold);
+
       font-size:.65rem;
+
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .summary-text span{
-      color:rgba(255,244,216,.94);
+      color:
+        rgba(255,244,216,.94);
+
       font-size:1.02rem;
       font-weight:950;
+
       letter-spacing:-.02em;
     }
 
     .doll-body{
       display:grid;
       gap:.85rem;
+
       padding:0 1rem 1rem;
     }
 
@@ -643,16 +1472,26 @@
 
     .summit-row{
       display:grid;
-      grid-template-columns:minmax(150px,.32fr) 1fr;
+      grid-template-columns:
+        minmax(150px,.32fr)
+        1fr;
+
       gap:.65rem;
+
       padding:.7rem;
-      border:1px solid rgba(255,255,255,.08);
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
       border-radius:.9rem;
-      background:rgba(255,255,255,.022);
+
+      background:
+        rgba(255,255,255,.022);
     }
 
     .summit-row strong{
-      color:rgba(255,244,216,.96);
+      color:
+        rgba(255,244,216,.96);
     }
 
     .summit-row span{
@@ -661,79 +1500,102 @@
 
     .final-band{
       margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.35rem);
+
+      padding:
+        clamp(1rem,3vw,1.35rem);
+
       display:grid;
       gap:.9rem;
-      border:1px solid rgba(243,200,111,.28);
-      border-radius:clamp(1.25rem,5vw,2rem);
+
+      border:
+        1px solid rgba(243,200,111,.28);
+
+      border-radius:
+        clamp(1.25rem,5vw,2rem);
+
       background:
-        radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
+        radial-gradient(
+          circle at 16% 0%,
+          rgba(243,200,111,.10),
+          transparent 36%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.06),
+          rgba(255,255,255,.024)
+        );
+
+      box-shadow:
+        0 1.5rem 4rem rgba(0,0,0,.24),
+        inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .final-band strong{
-      color:rgba(255,244,216,.98);
-      font-size:clamp(1.2rem,3vw,1.55rem);
+      color:
+        rgba(255,244,216,.98);
+
+      font-size:
+        clamp(1.2rem,3vw,1.55rem);
+
       line-height:1.05;
       letter-spacing:-.04em;
     }
 
-    .receipt{
-      margin-top:1.15rem;
-      display:none;
-    }
-
-    .receipt summary{
-      min-height:unset;
-      display:inline-flex;
-      border-radius:999px;
-    }
-
-    .receipt pre{
-      margin:0;
-      white-space:pre-wrap;
-      color:rgba(230,238,255,.7);
-      font-size:.76rem;
-      line-height:1.35;
-    }
-
     footer{
       padding:1.35rem 0 .5rem;
+
       color:var(--faint);
+
       text-align:center;
       font-size:.76rem;
     }
 
+    /* =====================================================
+       MOTION
+       ===================================================== */
+
     @keyframes auroraDrift{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1)}
-    }
-
-    @keyframes heroDiamond{
-      0%,100%{opacity:.36;transform:translateY(-50%) rotate(45deg) scale(1)}
-      50%{opacity:.62;transform:translateY(-50%) rotate(45deg) scale(1.045)}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
+      from{
+        transform:
+          rotate(0deg)
+          scale(1);
       }
 
-      body::after,
-      .hero::before{
-        animation:none!important;
+      to{
+        transform:
+          rotate(360deg)
+          scale(1);
       }
     }
+
+    @keyframes heartCoreBreath{
+      0%,
+      100%{
+        opacity:.82;
+        transform-origin:500px 430px;
+        transform:scale(1);
+      }
+
+      50%{
+        opacity:1;
+        transform-origin:500px 430px;
+        transform:scale(1.05);
+      }
+    }
+
+    .heart-core-light{
+      animation:
+        heartCoreBreath 5.8s ease-in-out infinite;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
 
     @media (max-width:1080px){
       .summit-strip{
-        grid-template-columns:repeat(3,minmax(0,1fr));
+        grid-template-columns:
+          repeat(3,minmax(0,1fr));
       }
     }
 
@@ -743,29 +1605,88 @@
         align-items:start;
       }
 
-      .nav{justify-content:flex-start}
+      .nav{
+        justify-content:flex-start;
+      }
 
       .short-grid,
       .route-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
       }
 
       .cover-split{
         grid-template-columns:1fr;
       }
+
+      .hero{
+        min-height:
+          clamp(44rem,110vw,62rem);
+      }
+
+      .heart-controller-shell{
+        width:min(820px,100%);
+      }
     }
 
     @media (max-width:720px){
-      .shell{width:min(100% - 22px,var(--max))}
-
-      h1{font-size:clamp(3rem,17vw,5.2rem)}
+      .shell{
+        width:min(
+          calc(100% - 22px),
+          var(--max)
+        );
+      }
 
       .hero{
+        min-height:43rem;
         padding:1rem;
       }
 
+      h1{
+        font-size:
+          clamp(3rem,17vw,5.2rem);
+      }
+
+      .heart-controller-shell{
+        width:112%;
+        margin-left:-6%;
+      }
+
+      .heart-room-label{
+        font-size:14px;
+        stroke-width:4px;
+      }
+
+      .heart-room-label-small{
+        font-size:11px;
+      }
+
+      .heart-core-label{
+        font-size:17px;
+        stroke-width:5px;
+      }
+
+      .heart-enter-label{
+        bottom:7%;
+
+        min-height:2.4rem;
+
+        padding:.58rem .8rem;
+
+        font-size:.66rem;
+      }
+
+      .heart-controller-help{
+        bottom:0;
+
+        font-size:.57rem;
+      }
+
       .actions{
+        width:100%;
+
         display:grid;
+        grid-template-columns:1fr;
       }
 
       .button{
@@ -778,70 +1699,1184 @@
       }
 
       .summit-strip{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
       }
 
       .summit-row{
         grid-template-columns:1fr;
       }
     }
+
+    @media (max-width:520px){
+      .hero{
+        min-height:39rem;
+      }
+
+      .heart-controller-shell{
+        width:126%;
+        margin-left:-13%;
+      }
+
+      .heart-room-label{
+        display:none;
+      }
+
+      .heart-core-label{
+        display:block;
+      }
+
+      .heart-enter-label{
+        bottom:5%;
+
+        font-size:.6rem;
+      }
+
+      .heart-controller-help{
+        display:none;
+      }
+    }
+
+    /* =====================================================
+       REDUCED MOTION
+       ===================================================== */
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+
+        transition-duration:.01ms!important;
+      }
+
+      body::after,
+      .heart-core-light{
+        animation:none!important;
+      }
+
+      .heart-controller-open,
+      .heart-controller-open:hover,
+      .heart-controller-open:focus-visible{
+        transform:
+          rotateX(0deg)
+          rotateY(0deg)
+          translateZ(0)
+          scale(1);
+      }
+    }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#summits-love-main">Skip to The Nine Summits of Love</a>
+  <a
+    class="skip"
+    href="#summits-love-main"
+  >
+    Skip to The Nine Summits of Love
+  </a>
 
   <div class="shell">
-    <header class="topbar" aria-label="The Nine Summits of Love header">
-      <a class="brand" href="/">
-        <span class="brand-mark"><span>NS</span></span>
+    <header
+      class="topbar"
+      aria-label="The Nine Summits of Love header"
+    >
+      <a
+        class="brand"
+        href="/"
+      >
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
           <strong>The Nine Summits of Love</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a class="primary-return" href="/">Return to Compass</a>
-
-        <button
-          class="team-control-pad-open"
-          type="button"
-          data-house-control-pad-open
-          data-house-room="book-chamber"
-          aria-label="Open the House Control Pad for the Book Chamber"
+      <nav
+        class="nav"
+        aria-label="Primary navigation"
+      >
+        <a
+          class="primary-return"
+          href="/"
         >
-          Open House Controller
-        </button>
-
-        <div
-          data-house-control-pad-root
-          data-house-room="book-chamber"
-          aria-hidden="true"
-        ></div>
+          Return to Compass
+        </a>
       </nav>
     </header>
 
     <main id="summits-love-main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">The Nine Summits of Love · 256 Carats</div>
-        <h1 id="page-title">A book path for the locked heart.</h1>
-        <h2>256 Carats of Human Potential.</h2>
-        <p>
-          The Nine Summits of Love is the human-first book and seminar lane. It begins with the diamond heart under pressure, the visible lock, the chain, the key, and the climb toward love through nine summits.
-        </p>
+      <section
+        class="panel hero"
+        aria-labelledby="page-title"
+        data-nine-summits-heart-hero
+      >
+        <div class="hero-copy">
+          <div class="kicker">
+            The Nine Summits of Love · 256 Carats
+          </div>
+
+          <h1 id="page-title">
+            A book path for the locked heart.
+          </h1>
+
+          <h2>
+            256 Carats of Human Potential.
+          </h2>
+
+          <p>
+            The Nine Summits of Love is the human-first book and seminar lane. It begins with the diamond heart under pressure, the visible lock, the chain, the key, and the climb toward love through nine summits.
+          </p>
+        </div>
+
+        <div
+          class="heart-controller-shell"
+          data-house-heart-shell
+          data-heart-width="1000"
+          data-heart-height="900"
+          data-heart-depth="320"
+          data-heart-origin-x="500"
+          data-heart-origin-y="430"
+          data-heart-origin-z="0"
+        >
+          <button
+            class="heart-controller-open"
+            type="button"
+            data-house-control-pad-open
+            data-house-room="book-chamber"
+            data-house-heart-controller-open
+            aria-label="Open the interactive House estate shaped as the Nine Summits diamond heart"
+          >
+            <svg
+              class="heart-svg"
+              viewBox="0 0 1000 900"
+              role="img"
+              aria-labelledby="heart-controller-title heart-controller-description"
+              data-house-heart-svg
+            >
+              <title id="heart-controller-title">
+                The Nine Summits Diamond Heart House
+              </title>
+
+              <desc id="heart-controller-description">
+                A three-dimensional faceted diamond heart containing the rooms of the House. Activate the heart to open the House Controller.
+              </desc>
+
+              <defs>
+                <linearGradient
+                  id="heartMainGradient"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#9e5d75"
+                  />
+                  <stop
+                    offset="28%"
+                    stop-color="#5e396e"
+                  />
+                  <stop
+                    offset="58%"
+                    stop-color="#311f51"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#11162f"
+                  />
+                </linearGradient>
+
+                <radialGradient
+                  id="heartInteriorGradient"
+                  cx="50%"
+                  cy="44%"
+                  r="66%"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#523269"
+                  />
+                  <stop
+                    offset="40%"
+                    stop-color="#211a41"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#090d20"
+                  />
+                </radialGradient>
+
+                <linearGradient
+                  id="facetGold"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#fff0a9"
+                    stop-opacity=".72"
+                  />
+                  <stop
+                    offset="55%"
+                    stop-color="#d89656"
+                    stop-opacity=".42"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#6b3452"
+                    stop-opacity=".26"
+                  />
+                </linearGradient>
+
+                <linearGradient
+                  id="facetViolet"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#a884ff"
+                    stop-opacity=".58"
+                  />
+                  <stop
+                    offset="50%"
+                    stop-color="#5d3c88"
+                    stop-opacity=".5"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#171730"
+                    stop-opacity=".74"
+                  />
+                </linearGradient>
+
+                <linearGradient
+                  id="facetBlue"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#a8e7ff"
+                    stop-opacity=".58"
+                  />
+                  <stop
+                    offset="52%"
+                    stop-color="#3f6086"
+                    stop-opacity=".45"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#12182d"
+                    stop-opacity=".72"
+                  />
+                </linearGradient>
+
+                <linearGradient
+                  id="facetRose"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#ffb8d8"
+                    stop-opacity=".58"
+                  />
+                  <stop
+                    offset="50%"
+                    stop-color="#7b405f"
+                    stop-opacity=".45"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#21142d"
+                    stop-opacity=".72"
+                  />
+                </linearGradient>
+
+                <linearGradient
+                  id="facetGreen"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#9df2c8"
+                    stop-opacity=".5"
+                  />
+                  <stop
+                    offset="50%"
+                    stop-color="#3f675b"
+                    stop-opacity=".4"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#101c22"
+                    stop-opacity=".72"
+                  />
+                </linearGradient>
+
+                <linearGradient
+                  id="facetDark"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#3a315c"
+                    stop-opacity=".55"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#080d1c"
+                    stop-opacity=".8"
+                  />
+                </linearGradient>
+
+                <radialGradient
+                  id="heartCoreGradient"
+                  cx="50%"
+                  cy="45%"
+                  r="58%"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#fffbe6"
+                  />
+                  <stop
+                    offset="22%"
+                    stop-color="#ffe89f"
+                  />
+                  <stop
+                    offset="50%"
+                    stop-color="#f3b95d"
+                  />
+                  <stop
+                    offset="78%"
+                    stop-color="#8f4f61"
+                    stop-opacity=".72"
+                  />
+                  <stop
+                    offset="100%"
+                    stop-color="#34204a"
+                    stop-opacity=".2"
+                  />
+                </radialGradient>
+
+                <filter
+                  id="heartOuterGlow"
+                  x="-30%"
+                  y="-30%"
+                  width="160%"
+                  height="170%"
+                >
+                  <feDropShadow
+                    dx="0"
+                    dy="18"
+                    stdDeviation="18"
+                    flood-color="#000000"
+                    flood-opacity=".65"
+                  />
+
+                  <feDropShadow
+                    dx="0"
+                    dy="0"
+                    stdDeviation="10"
+                    flood-color="#f3c86f"
+                    flood-opacity=".28"
+                  />
+                </filter>
+
+                <filter
+                  id="heartRearShadow"
+                  x="-30%"
+                  y="-30%"
+                  width="160%"
+                  height="170%"
+                >
+                  <feGaussianBlur
+                    stdDeviation="4"
+                  />
+                </filter>
+
+                <filter
+                  id="heartCoreGlow"
+                  x="-80%"
+                  y="-80%"
+                  width="260%"
+                  height="260%"
+                >
+                  <feDropShadow
+                    dx="0"
+                    dy="0"
+                    stdDeviation="10"
+                    flood-color="#ffe89f"
+                    flood-opacity=".85"
+                  />
+
+                  <feDropShadow
+                    dx="0"
+                    dy="0"
+                    stdDeviation="22"
+                    flood-color="#f3a95c"
+                    flood-opacity=".4"
+                  />
+                </filter>
+
+                <clipPath id="heartClip">
+                  <path
+                    d="
+                      M 500 865
+                      C 444 805 350 734 255 645
+                      C 153 550 94 440 100 330
+                      C 106 215 166 119 270 101
+                      C 361 85 433 133 500 238
+                      C 567 133 639 85 730 101
+                      C 834 119 894 215 900 330
+                      C 906 440 847 550 745 645
+                      C 650 734 556 805 500 865
+                      Z
+                    "
+                  />
+                </clipPath>
+              </defs>
+
+              <path
+                class="heart-rear-shell"
+                d="
+                  M 500 865
+                  C 444 805 350 734 255 645
+                  C 153 550 94 440 100 330
+                  C 106 215 166 119 270 101
+                  C 361 85 433 133 500 238
+                  C 567 133 639 85 730 101
+                  C 834 119 894 215 900 330
+                  C 906 440 847 550 745 645
+                  C 650 734 556 805 500 865
+                  Z
+                "
+              />
+
+              <path
+                class="heart-main-shell"
+                d="
+                  M 500 865
+                  C 444 805 350 734 255 645
+                  C 153 550 94 440 100 330
+                  C 106 215 166 119 270 101
+                  C 361 85 433 133 500 238
+                  C 567 133 639 85 730 101
+                  C 834 119 894 215 900 330
+                  C 906 440 847 550 745 645
+                  C 650 734 556 805 500 865
+                  Z
+                "
+              />
+
+              <g clip-path="url(#heartClip)">
+                <path
+                  class="heart-inner-surface"
+                  d="
+                    M 500 827
+                    C 430 759 342 691 270 623
+                    C 183 540 131 443 137 338
+                    C 143 244 193 163 277 149
+                    C 357 135 425 180 500 286
+                    C 575 180 643 135 723 149
+                    C 807 163 857 244 863 338
+                    C 869 443 817 540 730 623
+                    C 658 691 570 759 500 827
+                    Z
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-rose"
+                  points="
+                    100,330
+                    125,190
+                    270,101
+                    355,115
+                    310,300
+                    205,420
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-gold"
+                  points="
+                    355,115
+                    500,238
+                    430,190
+                    310,300
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-violet"
+                  points="
+                    500,238
+                    645,115
+                    690,300
+                    570,190
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-blue"
+                  points="
+                    645,115
+                    730,101
+                    875,190
+                    900,330
+                    795,420
+                    690,300
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-dark"
+                  points="
+                    100,330
+                    205,420
+                    330,430
+                    255,645
+                    145,500
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-rose"
+                  points="
+                    310,300
+                    430,190
+                    500,238
+                    500,430
+                    330,430
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-blue"
+                  points="
+                    500,238
+                    570,190
+                    690,300
+                    670,430
+                    500,430
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-violet"
+                  points="
+                    690,300
+                    795,420
+                    900,330
+                    855,500
+                    745,645
+                    670,430
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-green"
+                  points="
+                    205,420
+                    330,430
+                    390,545
+                    290,545
+                    255,645
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-gold"
+                  points="
+                    330,430
+                    500,430
+                    500,555
+                    390,545
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-dark"
+                  points="
+                    500,430
+                    670,430
+                    610,545
+                    500,555
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-blue"
+                  points="
+                    670,430
+                    795,420
+                    745,645
+                    710,545
+                    610,545
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-violet"
+                  points="
+                    255,645
+                    290,545
+                    390,545
+                    390,650
+                    500,750
+                    390,755
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-gold"
+                  points="
+                    390,545
+                    500,555
+                    500,750
+                    390,650
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-rose"
+                  points="
+                    500,555
+                    610,545
+                    610,650
+                    500,750
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-green"
+                  points="
+                    610,545
+                    710,545
+                    745,645
+                    610,755
+                    500,750
+                    610,650
+                  "
+                />
+
+                <polygon
+                  class="heart-facet heart-facet-dark"
+                  points="
+                    390,755
+                    500,750
+                    610,755
+                    500,865
+                  "
+                />
+
+                <path
+                  class="heart-ridge"
+                  d="
+                    M 500 238
+                    L 500 865
+                  "
+                />
+
+                <path
+                  class="heart-ridge heart-ridge-soft"
+                  d="
+                    M 100 330
+                    L 500 430
+                    L 900 330
+                  "
+                />
+
+                <path
+                  class="heart-ridge heart-ridge-soft"
+                  d="
+                    M 255 645
+                    L 500 555
+                    L 745 645
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 430 190
+                    L 410 275
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 570 190
+                    L 590 275
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 270 215
+                    L 330 430
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 730 215
+                    L 670 430
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 215 415
+                    L 330 430
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 785 415
+                    L 670 430
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 290 545
+                    L 390 545
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 710 545
+                    L 610 545
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 390 650
+                    L 500 555
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 610 650
+                    L 500 555
+                    L 500 430
+                  "
+                />
+
+                <path
+                  class="heart-corridor"
+                  d="
+                    M 500 750
+                    L 500 625
+                    L 500 430
+                  "
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="430"
+                  cy="190"
+                  r="34"
+                  data-house-heart-room="guide-foyer"
+                  data-heart-x="430"
+                  data-heart-y="190"
+                  data-heart-z="42"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="570"
+                  cy="190"
+                  r="34"
+                  data-house-heart-room="book-chamber"
+                  data-heart-x="570"
+                  data-heart-y="190"
+                  data-heart-z="42"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="270"
+                  cy="215"
+                  r="40"
+                  data-house-heart-room="human-threshold"
+                  data-heart-x="270"
+                  data-heart-y="215"
+                  data-heart-z="28"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="730"
+                  cy="215"
+                  r="40"
+                  data-house-heart-room="product-gallery"
+                  data-heart-x="730"
+                  data-heart-y="215"
+                  data-heart-z="28"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="355"
+                  cy="335"
+                  r="31"
+                  data-house-heart-room="law-library"
+                  data-heart-x="355"
+                  data-heart-y="335"
+                  data-heart-z="24"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="645"
+                  cy="335"
+                  r="31"
+                  data-house-heart-room="diagnostic-room"
+                  data-heart-x="645"
+                  data-heart-y="335"
+                  data-heart-z="24"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="215"
+                  cy="415"
+                  r="34"
+                  data-house-heart-room="showroom"
+                  data-heart-x="215"
+                  data-heart-y="415"
+                  data-heart-z="12"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="785"
+                  cy="415"
+                  r="34"
+                  data-house-heart-room="lab"
+                  data-heart-x="785"
+                  data-heart-y="415"
+                  data-heart-z="12"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="290"
+                  cy="545"
+                  r="31"
+                  data-house-heart-room="education-room"
+                  data-heart-x="290"
+                  data-heart-y="545"
+                  data-heart-z="8"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="500"
+                  cy="555"
+                  r="35"
+                  data-house-heart-room="portrait-hall"
+                  data-heart-x="500"
+                  data-heart-y="555"
+                  data-heart-z="18"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="390"
+                  cy="650"
+                  r="30"
+                  data-house-heart-room="atlas-study"
+                  data-heart-x="390"
+                  data-heart-y="650"
+                  data-heart-z="4"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="610"
+                  cy="650"
+                  r="30"
+                  data-house-heart-room="frontier-workshop"
+                  data-heart-x="610"
+                  data-heart-y="650"
+                  data-heart-z="4"
+                />
+
+                <circle
+                  class="heart-room-node"
+                  cx="500"
+                  cy="750"
+                  r="34"
+                  data-house-heart-room="hearth-room"
+                  data-heart-x="500"
+                  data-heart-y="750"
+                  data-heart-z="16"
+                />
+
+                <circle
+                  class="heart-core-ring"
+                  cx="500"
+                  cy="430"
+                  r="96"
+                  data-house-heart-room="house-core"
+                  data-heart-x="500"
+                  data-heart-y="430"
+                  data-heart-z="65"
+                />
+
+                <circle
+                  class="heart-core-light"
+                  cx="500"
+                  cy="430"
+                  r="64"
+                />
+
+                <path
+                  class="heart-core-mark"
+                  d="
+                    M 500 384
+                    L 546 430
+                    L 500 476
+                    L 454 430
+                    Z
+                  "
+                />
+
+                <text
+                  class="heart-room-label"
+                  x="270"
+                  y="220"
+                >
+                  HUMAN
+                </text>
+
+                <text
+                  class="heart-room-label"
+                  x="430"
+                  y="194"
+                >
+                  FOYER
+                </text>
+
+                <text
+                  class="heart-room-label"
+                  x="570"
+                  y="194"
+                >
+                  BOOK
+                </text>
+
+                <text
+                  class="heart-room-label"
+                  x="730"
+                  y="220"
+                >
+                  PRODUCTS
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="355"
+                  y="340"
+                >
+                  LAW
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="645"
+                  y="340"
+                >
+                  DIAGNOSTIC
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="215"
+                  y="420"
+                >
+                  SHOWROOM
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="785"
+                  y="420"
+                >
+                  LAB
+                </text>
+
+                <text
+                  class="heart-core-label"
+                  x="500"
+                  y="437"
+                >
+                  HOUSE CORE
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="290"
+                  y="550"
+                >
+                  EDUCATION
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="500"
+                  y="560"
+                >
+                  PORTRAITS
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="390"
+                  y="655"
+                >
+                  ATLAS
+                </text>
+
+                <text
+                  class="heart-room-label heart-room-label-small"
+                  x="610"
+                  y="655"
+                >
+                  FRONTIER
+                </text>
+
+                <text
+                  class="heart-room-label"
+                  x="500"
+                  y="757"
+                >
+                  HEARTH
+                </text>
+
+                <path
+                  class="heart-focus-ring"
+                  d="
+                    M 500 865
+                    C 444 805 350 734 255 645
+                    C 153 550 94 440 100 330
+                    C 106 215 166 119 270 101
+                    C 361 85 433 133 500 238
+                    C 567 133 639 85 730 101
+                    C 834 119 894 215 900 330
+                    C 906 440 847 550 745 645
+                    C 650 734 556 805 500 865
+                    Z
+                  "
+                />
+              </g>
+            </svg>
+
+            <span class="heart-enter-label">
+              Enter the House
+            </span>
+
+            <span class="heart-controller-help">
+              Choose the heart to open the interactive estate
+            </span>
+          </button>
+
+          <div
+            class="heart-controller-root"
+            data-house-control-pad-root
+            data-house-room="book-chamber"
+            aria-hidden="true"
+          ></div>
+        </div>
 
         <div class="actions">
-          <a class="button gold" href="/nine-summits/">Open Nine Summits Hub</a>
-          <a class="button" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="button" href="/about-this-underdog/">About This Underdog</a>
-          <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
+          <a
+            class="button gold"
+            href="/nine-summits/"
+          >
+            Open Nine Summits Hub
+          </a>
+
+          <a
+            class="button"
+            href="/nine-summits/universe/"
+          >
+            Enter the Universe
+          </a>
+
+          <a
+            class="button"
+            href="/about-this-underdog/"
+          >
+            About This Underdog
+          </a>
+
+          <a
+            class="button"
+            href="/meet-sean-mansfield/"
+          >
+            Meet Sean
+          </a>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="origin-cover-title">
-        <div class="kicker">Original book cover</div>
-        <h2 id="origin-cover-title">The locked heart remains the beginning.</h2>
+      <section
+        class="panel section"
+        aria-labelledby="origin-cover-title"
+      >
+        <div class="kicker">
+          Original book cover
+        </div>
+
+        <h2 id="origin-cover-title">
+          The locked heart remains the beginning.
+        </h2>
 
         <div class="cover-split">
           <div class="cover-frame">
@@ -850,29 +2885,55 @@
               alt="The Nine Summits of Love preface cover showing a locked diamond heart, chain, key, and mountain ascent."
               loading="eager"
               decoding="sync"
-              fetchpriority="high">
+              fetchpriority="high"
+            >
           </div>
 
           <article class="cover-card">
-            <h3>The symbol is already right.</h3>
+            <h3>
+              The symbol is already right.
+            </h3>
+
             <p>
               The first cover is not discarded. It anchors the human path: value under pressure, love not yet unlocked, the mountain waiting beyond the first recognition.
             </p>
 
             <div class="short-grid">
-              <div class="short-card"><b>Heart</b><span>Value is still present.</span></div>
-              <div class="short-card"><b>Lock</b><span>Love is not yet accessed cleanly.</span></div>
-              <div class="short-card"><b>Key</b><span>The path exists, but must be recognized and used.</span></div>
+              <div class="short-card">
+                <b>Heart</b>
+                <span>Value is still present.</span>
+              </div>
+
+              <div class="short-card">
+                <b>Lock</b>
+                <span>Love is not yet accessed cleanly.</span>
+              </div>
+
+              <div class="short-card">
+                <b>Key</b>
+                <span>The path exists, but must be recognized and used.</span>
+              </div>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="summits-title">
-        <div class="kicker">Nine Summits</div>
-        <h2 id="summits-title">The climb names the human formation.</h2>
+      <section
+        class="panel section"
+        aria-labelledby="summits-title"
+      >
+        <div class="kicker">
+          Nine Summits
+        </div>
 
-        <div class="summit-strip" aria-label="The Nine Summits">
+        <h2 id="summits-title">
+          The climb names the human formation.
+        </h2>
+
+        <div
+          class="summit-strip"
+          aria-label="The Nine Summits"
+        >
           <div class="summit-pill">Character</div>
           <div class="summit-pill">Structure</div>
           <div class="summit-pill">Balance</div>
@@ -889,9 +2950,17 @@
         </p>
       </section>
 
-      <section class="panel section" aria-labelledby="doll-title">
-        <div class="kicker">Russian-doll book path</div>
-        <h2 id="doll-title">Open the layer needed.</h2>
+      <section
+        class="panel section"
+        aria-labelledby="doll-title"
+      >
+        <div class="kicker">
+          Russian-doll book path
+        </div>
+
+        <h2 id="doll-title">
+          Open the layer needed.
+        </h2>
 
         <div class="doll">
           <details open>
@@ -919,15 +2988,50 @@
 
             <div class="doll-body">
               <div class="summit-list">
-                <div class="summit-row"><strong>1 · Character</strong><span>Becoming someone love can trust without pretending pressure never happened.</span></div>
-                <div class="summit-row"><strong>2 · Structure</strong><span>Building a life strong enough to carry feeling, responsibility, pressure, and future.</span></div>
-                <div class="summit-row"><strong>3 · Balance</strong><span>Holding difference without collapsing into chaos, avoidance, or control.</span></div>
-                <div class="summit-row"><strong>4 · Stability</strong><span>Repeatable support: the person becomes more reliable to themselves and others.</span></div>
-                <div class="summit-row"><strong>5 · Peace</strong><span>Reducing unnecessary war inside the self, the home, the relationship field, and the future.</span></div>
-                <div class="summit-row"><strong>6 · Joy</strong><span>The person becomes capable of brightness again, not only endurance.</span></div>
-                <div class="summit-row"><strong>7 · Dignity</strong><span>The human being stops begging for permission to have value.</span></div>
-                <div class="summit-row"><strong>8 · Free Will</strong><span>Choosing with awareness instead of repeating inherited pressure blindly.</span></div>
-                <div class="summit-row"><strong>9 · Love</strong><span>Love becomes disciplined, embodied, and able to hold truth without destroying the person.</span></div>
+                <div class="summit-row">
+                  <strong>1 · Character</strong>
+                  <span>Becoming someone love can trust without pretending pressure never happened.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>2 · Structure</strong>
+                  <span>Building a life strong enough to carry feeling, responsibility, pressure, and future.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>3 · Balance</strong>
+                  <span>Holding difference without collapsing into chaos, avoidance, or control.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>4 · Stability</strong>
+                  <span>Repeatable support: the person becomes more reliable to themselves and others.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>5 · Peace</strong>
+                  <span>Reducing unnecessary war inside the self, the home, the relationship field, and the future.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>6 · Joy</strong>
+                  <span>The person becomes capable of brightness again, not only endurance.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>7 · Dignity</strong>
+                  <span>The human being stops begging for permission to have value.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>8 · Free Will</strong>
+                  <span>Choosing with awareness instead of repeating inherited pressure blindly.</span>
+                </div>
+
+                <div class="summit-row">
+                  <strong>9 · Love</strong>
+                  <span>Love becomes disciplined, embodied, and able to hold truth without destroying the person.</span>
+                </div>
               </div>
             </div>
           </details>
@@ -961,8 +3065,19 @@
               </p>
 
               <div class="actions">
-                <a class="button gold" href="/about-this-underdog/">About This Underdog</a>
-                <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
+                <a
+                  class="button gold"
+                  href="/about-this-underdog/"
+                >
+                  About This Underdog
+                </a>
+
+                <a
+                  class="button"
+                  href="/meet-sean-mansfield/"
+                >
+                  Meet Sean
+                </a>
               </div>
             </div>
           </details>
@@ -981,29 +3096,62 @@
               </p>
 
               <div class="short-grid">
-                <div class="short-card"><b>Products</b><span>Ideas become tools.</span></div>
-                <div class="short-card"><b>Showroom</b><span>The build becomes visible.</span></div>
-                <div class="short-card"><b>Gauges</b><span>The route truth gets measured.</span></div>
+                <div class="short-card">
+                  <b>Products</b>
+                  <span>Ideas become tools.</span>
+                </div>
+
+                <div class="short-card">
+                  <b>Showroom</b>
+                  <span>The build becomes visible.</span>
+                </div>
+
+                <div class="short-card">
+                  <b>Gauges</b>
+                  <span>The route truth gets measured.</span>
+                </div>
               </div>
             </div>
           </details>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="universe-cover-title">
-        <div class="kicker">Universe cover</div>
-        <h2 id="universe-cover-title">The diamond heart becomes world-bearing.</h2>
+      <section
+        class="panel section"
+        aria-labelledby="universe-cover-title"
+      >
+        <div class="kicker">
+          Universe cover
+        </div>
+
+        <h2 id="universe-cover-title">
+          The diamond heart becomes world-bearing.
+        </h2>
 
         <div class="cover-split">
           <article class="cover-card">
-            <h3>The path becomes place.</h3>
+            <h3>
+              The path becomes place.
+            </h3>
+
             <p>
               The second image carries the expansion field. The book remains the human path while the Universe becomes the wider environment where the summits can become places, lessons, events, products, and proof.
             </p>
 
             <div class="actions">
-              <a class="button gold" href="/nine-summits/universe/">Enter the Universe</a>
-              <a class="button" href="/showroom/">Open Showroom</a>
+              <a
+                class="button gold"
+                href="/nine-summits/universe/"
+              >
+                Enter the Universe
+              </a>
+
+              <a
+                class="button"
+                href="/showroom/"
+              >
+                Open Showroom
+              </a>
             </div>
           </article>
 
@@ -1013,59 +3161,95 @@
               alt="The Nine Summits of Love universe cover with radiant diamond heart and mountain landscape."
               loading="eager"
               decoding="sync"
-              fetchpriority="high">
+              fetchpriority="high"
+            >
           </div>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="route-title">
-        <div class="kicker">Clean route split</div>
-        <h2 id="route-title">The pages do not compete.</h2>
+      <section
+        class="panel section"
+        aria-labelledby="route-title"
+      >
+        <div class="kicker">
+          Clean route split
+        </div>
 
-        <div class="route-grid" aria-label="Nine Summits route cards">
-          <a class="route-card" href="/nine-summits/">
+        <h2 id="route-title">
+          The pages do not compete.
+        </h2>
+
+        <div
+          class="route-grid"
+          aria-label="Nine Summits route cards"
+        >
+          <a
+            class="route-card"
+            href="/nine-summits/"
+          >
             <b>Hub</b>
             <strong>Nine Summits</strong>
             <span>The public gate that keeps the book, Universe, voice, products, and proof lanes clean.</span>
           </a>
 
-          <a class="route-card" href="/nine-summits/universe/">
+          <a
+            class="route-card"
+            href="/nine-summits/universe/"
+          >
             <b>World lane</b>
             <strong>Nine Summits Universe</strong>
             <span>The larger world around the book: terrain, rooms, experiences, stories, and platform expansion.</span>
           </a>
 
-          <a class="route-card" href="/about-this-underdog/">
+          <a
+            class="route-card"
+            href="/about-this-underdog/"
+          >
             <b>Universal voice</b>
             <strong>About This Underdog</strong>
             <span>The underdog concept for everybody: pressure, survival, voice, accountability, and return.</span>
           </a>
 
-          <a class="route-card" href="/meet-sean-mansfield/">
+          <a
+            class="route-card"
+            href="/meet-sean-mansfield/"
+          >
             <b>Personal profile</b>
             <strong>Meet Sean Mansfield</strong>
             <span>The person behind the voice, introduced without forcing the whole system to explain itself at once.</span>
           </a>
 
-          <a class="route-card" href="/products/">
+          <a
+            class="route-card"
+            href="/products/"
+          >
             <b>Use</b>
             <strong>Products</strong>
             <span>Where ideas become tools, games, learning systems, and support surfaces.</span>
           </a>
 
-          <a class="route-card" href="/showroom/">
+          <a
+            class="route-card"
+            href="/showroom/"
+          >
             <b>Proof surface</b>
             <strong>Showroom</strong>
             <span>Where public-facing demonstrations make the build visible.</span>
           </a>
 
-          <a class="route-card" href="/gauges/">
+          <a
+            class="route-card"
+            href="/gauges/"
+          >
             <b>Measurement</b>
             <strong>Gauges</strong>
             <span>Where the served route truth is checked.</span>
           </a>
 
-          <a class="route-card" href="/">
+          <a
+            class="route-card"
+            href="/"
+          >
             <b>Return</b>
             <strong>Compass</strong>
             <span>Return to the estate command surface.</span>
@@ -1073,71 +3257,79 @@
         </div>
       </section>
 
-      <section class="final-band" aria-labelledby="final-title">
-        <div class="kicker">Final direction</div>
-        <strong id="final-title">Start with the locked heart.</strong>
+      <section
+        class="final-band"
+        aria-labelledby="final-title"
+      >
+        <div class="kicker">
+          Final direction
+        </div>
+
+        <strong id="final-title">
+          Start with the locked heart.
+        </strong>
+
         <p>
           The locked heart is not proof that love failed. It is proof that value is still present under pressure. Follow the climb first. Enter the world when the human path is clear.
         </p>
 
         <div class="actions">
-          <a class="button gold" href="/nine-summits/">Open Nine Summits</a>
-          <a class="button" href="/nine-summits/universe/">Enter the Universe</a>
-          <a class="button" href="/about-this-underdog/">About This Underdog</a>
-          <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
-          <a class="button" href="/gauges/">Read Gauges</a>
+          <a
+            class="button gold"
+            href="/nine-summits/"
+          >
+            Open Nine Summits
+          </a>
+
+          <a
+            class="button"
+            href="/nine-summits/universe/"
+          >
+            Enter the Universe
+          </a>
+
+          <a
+            class="button"
+            href="/about-this-underdog/"
+          >
+            About This Underdog
+          </a>
+
+          <a
+            class="button"
+            href="/meet-sean-mansfield/"
+          >
+            Meet Sean
+          </a>
+
+          <a
+            class="button"
+            href="/gauges/"
+          >
+            Read Gauges
+          </a>
         </div>
       </section>
-
-      <details class="receipt">
-        <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1
-previous=NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1
-route=/nine-summits-of-love/
-page=nine_summits_of_love
-role=book_and_seminar_lane
-contract=house_control_pad_mount
-source_preserving_images=true
-preface_cover=/assets/nine-summits-love-preface-cover.png
-universe_cover=/assets/nine-summits-love-hero.png
-image_paths_changed=false
-image_placement_changed=false
-house_control_pad_css=/assets/house-control-pad/house.control-pad.css
-house_control_pad_js=/assets/house-control-pad/house.control-pad.js
-house_room=book-chamber
-team_dropdown_removed=true
-universal_controller_mounted=true
-origin_cover_position=front_preserved
-universe_cover_position=universe_extension_preserved
-book_lane=human_first
-universe_lane=/nine-summits/universe/
-universe_role=world_around_book_not_replacement
-russian_doll_layers=book,nine_summits,universe_extension,voice_connection,proof_and_usefulness
-summits=character,structure,balance,stability,peace,joy,dignity,free_will,love
-route_split=nine_summits_hub,nine_summits_universe,about_this_underdog,meet_sean,products,showroom,gauges,compass
-about_this_underdog=/about-this-underdog/
-about_this_underdog_role=universal_underdog_concept_for_everybody
-meet_sean_mansfield=/meet-sean-mansfield/
-meet_sean_mansfield_role=personal_profile_for_sean_mansfield
-removed=stale_this_underdog_route,long_repeated_sections,visible_route_confusion,demo_universe_language,earth_g1_language,planet_1_book_frame
-preserved=locked_heart,key,chain,diamond_heart,mountain_climb,256_carats,book_human_first
-route_owns=book_path,seminar_path,human_climb,russian_doll_book_structure,image_sections
-route_does_not_own=universal_underdog_identity,personal_profile_identity,planet_surface,moon_surface,sun_surface,instrument_state,gauges_logic
-heavy_runtime_loaded=false
-render_files_touched=false
-instrument_touched=false
-gauges_logic_touched=false
-generated_image=false
-graphic_box=false
-streaming=false
-visual_pass_claimed=false</pre>
-      </details>
     </main>
 
     <footer>
-      NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1 · Book and Seminar Lane · House Control Pad Mount.
+      The Nine Summits of Love · Book and Seminar Lane · Diamond Heart House Controller.
     </footer>
   </div>
-  <script src="/assets/house-control-pad/house.control-pad.js" defer></script>
+
+  <script
+    src="/assets/house-control-pad/house.control-pad.data.js"
+    defer
+  ></script>
+
+  <script
+    src="/assets/house-control-pad/house.control-pad.js"
+    defer
+  ></script>
+
+  <script
+    src="/assets/house-control-pad/house.avatar-life.js"
+    defer
+  ></script>
 </body>
 </html>

@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_WHY_IT_MATTERS_EXPRESSION_HTML_TNT_v8 -->
+<!-- HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, why-it-matters response bank, single prompt dock, slower bubble timing, tap-to-rush. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, context-first cinematic response bank, single prompt dock, slower bubble timing, tap-to-rush. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: make each prompt answer why the selected piece matters before naming the responsible room/agent and offering the jump. -->
+<!-- Purpose: concrete orientation first, cinematic atmosphere second, responsible authority third, door last. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_WHY_IT_MATTERS_EXPRESSION_HTML_TNT_v8"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9"
   data-hearth-jeeves-ready="false"
   data-hearth-jeeves-home="inside-mirrorland"
   data-compass-entry="talk-to-the-house"
@@ -16,7 +16,8 @@
   data-index-js-retired="true"
   data-api-js-retired="true"
   data-single-prompt-dock="true"
-  data-why-it-matters-expression="true"
+  data-context-first-expression="true"
+  data-cinematic-expression="true"
   data-rushable-timing="true"
 >
   <head>
@@ -63,7 +64,7 @@
           data-jeeves-typing="false"
           data-hearth-jeeves-home="inside-mirrorland"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_WHY_IT_MATTERS_EXPRESSION_HTML_TNT_v8"
+          data-mount-contract="HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9"
           data-expression-contract="HEARTH_JEEVES_HOME_INSIDE_MIRRORLAND_EXPRESSION_TNT_v7_1_0"
         >
           <div class="jeeves-screen-topline">
@@ -179,7 +180,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_WHY_IT_MATTERS_EXPRESSION_HTML_TNT_v8";
+        var CONTRACT = "HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9";
 
         var ROUTES = {
           compass: "/",
@@ -202,25 +203,25 @@
         };
 
         var TIMING = {
-          entranceDelay: 520,
-          firstBubbleDelay: 640,
-          shortBubbleDelay: 1420,
-          mediumBubbleDelay: 2050,
-          longBubbleDelay: 2850,
-          extraLongBubbleDelay: 3400,
-          betweenBubbleDelay: 520,
-          rushBubbleDelay: 300,
-          rushBetweenDelay: 110,
+          entranceDelay: 720,
+          firstBubbleDelay: 900,
+          shortBubbleDelay: 2150,
+          mediumBubbleDelay: 3050,
+          longBubbleDelay: 4050,
+          extraLongBubbleDelay: 4800,
+          betweenBubbleDelay: 820,
+          rushBubbleDelay: 320,
+          rushBetweenDelay: 120,
           flushBubbleDelay: 38,
           flushBetweenDelay: 24,
-          maxNaturalJitter: 210
+          maxNaturalJitter: 260
         };
 
         var OPENING_SEQUENCE = [
           "Welcome inside the House.",
           "You found me through the Compass.",
-          "This is Hearth. My room, for now.",
-          "Ask what matters. I will give you the surface, the reason, and the proper door.",
+          "This is Hearth — my room inside the House.",
+          "I can explain the surface, name what stands behind it, and give you the proper door.",
           "No more than that unless you press."
         ];
 
@@ -238,9 +239,9 @@
             label: "Meet Elara",
             routeUrl: ROUTES.sean,
             bubbles: [
-              "Elara matters because a visitor needs a human-facing threshold before the House becomes too interior.",
-              "Her surface is mission: Sean, the Nine Summits, and the public invitation.",
-              "She carries the border between platform and story.",
+              "Elara is the public-facing signal bearer.",
+              "She helps carry Sean, the Nine Summits, and the mission-facing invitation into view.",
+              "That matters because some visitors need the human threshold before the House turns inward.",
               "Origin belongs with her."
             ]
           },
@@ -248,9 +249,9 @@
             label: "Open the Coherence Diagnostic",
             routeUrl: ROUTES.diagnostic,
             bubbles: [
-              "Soren matters because some claims need measurement before they deserve interpretation.",
-              "His surface is diagnostic order: proof, boundary, admissibility, and coherence.",
-              "He stands behind the room where guessing stops.",
+              "Soren is the boundary keeper.",
+              "He owns diagnostic threshold, proof, admissibility, and measurement.",
+              "That matters because not every impression deserves to be treated as a reading.",
               "Where I orient, he verifies."
             ]
           },
@@ -258,9 +259,9 @@
             label: "Open Products",
             routeUrl: ROUTES.products,
             bubbles: [
-              "Auren matters because value becomes unstable when no one guards its custody.",
-              "His surface is exchange: products, Arc Coin, protection, and what may safely leave the House.",
-              "He stands behind the threshold where meaning becomes an object.",
+              "Auren is the keeper of value and custody.",
+              "He belongs near products, Arc Coin, protection, and exchange.",
+              "That matters because value becomes unstable when nothing guards how it leaves the House.",
               "Nothing valuable should travel unguarded."
             ]
           },
@@ -268,9 +269,9 @@
             label: "Open H-Earth",
             routeUrl: ROUTES.hEarth,
             bubbles: [
-              "Dextrion matters because some rooms must be built before they can be explained.",
-              "His surface is technical pressure: H-Earth, anomaly, repair, and lab work.",
-              "He stands behind the practical crossing.",
+              "Dextrion is the technical repair threshold.",
+              "He belongs near H-Earth, anomaly, lab pressure, and practical repair.",
+              "That matters because some rooms must be built before they can be explained.",
               "Less ceremony there. More tools."
             ]
           },
@@ -278,9 +279,9 @@
             label: "Open the Frontier",
             routeUrl: ROUTES.frontier,
             bubbles: [
-              "Alaric matters when the road is not yet settled.",
-              "His surface is movement under uncertainty: frontier, route choice, and field navigation.",
-              "He stands behind the path before it becomes obvious.",
+              "Alaric is the field navigator.",
+              "He belongs near frontier movement, uncertainty, and route choice.",
+              "That matters when the road is not settled yet.",
               "Useful, if you do not need the road paved first."
             ]
           },
@@ -288,9 +289,9 @@
             label: "Open the Water Path",
             routeUrl: ROUTES.water,
             bubbles: [
-              "Tarian matters because continuity is usually hidden until it fails.",
-              "His surface is water: infrastructure, survival, pressure, and flow beneath the visible layer.",
-              "He stands behind what keeps systems alive.",
+              "Tarian is the water anchor.",
+              "He belongs near infrastructure, continuity, pressure, flow, and survival beneath the visible layer.",
+              "That matters because systems often reveal their truth through what keeps them alive.",
               "Flow reveals what the surface hides."
             ]
           },
@@ -298,10 +299,10 @@
             label: "Open the Remote Field Path",
             routeUrl: ROUTES.remote,
             bubbles: [
-              "The Remote Team matters because not every response can belong to one room.",
-              "Its surface is distributed work: field, city, climate, logistics, and deployment.",
-              "It stands behind action at distance.",
-              "Some work must move without gathering in one place."
+              "The Remote Team is the distributed field path.",
+              "It belongs near city, climate, logistics, deployment, and action at distance.",
+              "That matters because some work cannot belong to one person or one room.",
+              "Some responses must move without gathering first."
             ]
           }
         };
@@ -494,8 +495,8 @@
             delay = TIMING.extraLongBubbleDelay;
           }
 
-          delay += sentenceCount * 130;
-          delay += commaCount * 70;
+          delay += sentenceCount * 160;
+          delay += commaCount * 90;
           delay += naturalJitter(value, index);
 
           return Math.round(delay);
@@ -647,12 +648,12 @@
 
         function intentFromSignal(signal) {
           if (/elara|sean|summit|book|mission|origin|border/.test(signal)) return "elara";
-          if (/soren|diagnostic|coherence|score|assess|test|proof|boundary|admissibility|measure|classify|archetype/.test(signal)) return "soren";
-          if (/auren|aurin|product|arc coin|archcoin|coin|value|custody|protect|exchange/.test(signal)) return "auren";
+          if (/soren|boundary keeper|proof keeper|admissibility keeper/.test(signal)) return "soren";
+          if (/auren|aurin|product keeper|arc coin|archcoin|coin|value|custody|protect|exchange/.test(signal)) return "auren";
           if (/dextrion|dexter|h-earth|h earth|lab|anomaly|repair|technical/.test(signal)) return "dextrion";
           if (/alaric|frontier|uncertainty|route|field|trajectory/.test(signal)) return "alaric";
-          if (/tarian|water|continuity|survival|infrastructure/.test(signal)) return "tarian";
-          if (/remote|distributed|city|climate|deployment|vision/.test(signal)) return "remote";
+          if (/tarian|water anchor|continuity keeper|infrastructure keeper/.test(signal)) return "tarian";
+          if (/remote team|distributed|city|climate|deployment|vision/.test(signal)) return "remote";
           return "";
         }
 
@@ -680,7 +681,7 @@
               bubbles: [
                 "Good.",
                 "Ask plainly.",
-                "I will give you the reason before the door."
+                "I will give you the surface before the door."
               ]
             };
           }
@@ -692,17 +693,13 @@
             };
           }
 
-          var characterIntent = responseForCharacterIntent(intentFromSignal(signal));
-          if (characterIntent && !/where|map|guide|atrium|compass|return/.test(signal)) {
-            return characterIntent;
-          }
-
           if (/where|hearth|room/.test(signal)) {
             return {
               bubbles: [
-                "Hearth matters because the Compass should not carry the whole conversation.",
-                "The Compass brought you here from the public side. Hearth lets me answer from inside the House.",
-                "You are not deep in yet. You are at the first interior fire."
+                "Hearth is Jeeves’ room inside the House.",
+                "The Compass brought you here from the public side. Hearth lets me answer without crowding the Compass itself.",
+                "You are not deep in the House yet. You are at the first interior room.",
+                "From here, you can return outward, read the clean map, or press farther in."
               ],
               routeChoices: [
                 { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide },
@@ -714,10 +711,10 @@
           if (/map|guide|site/.test(signal)) {
             return {
               bubbles: [
-                "The Guide matters because mystery becomes tiring when there is no map.",
-                "It gives the platform a plain structure before the rooms begin speaking.",
+                "The Website Guide is the plain map of the public platform.",
+                "It explains the main routes, rooms, and entry points without asking you to discover every connection through story.",
                 "The Compass points. The Guide orients.",
-                "Use it when you want the House made legible."
+                "Use it when you want structure before mystery."
               ],
               routeChoices: [
                 { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
@@ -728,11 +725,11 @@
           if (/diagnostic|coherence|score|assess|test|classify|archetype/.test(signal)) {
             return {
               bubbles: [
-                "Coherence matters because not everything that feels meaningful is actually aligned.",
-                "The Diagnostic gives that question a measured path: person, project, claim, or system.",
-                "It helps decide whether something holds together well enough to be read responsibly.",
-                "Soren owns it because measurement needs boundary, proof, and admissibility.",
-                "I can take you there. I will not turn a threshold into a guess."
+                "The Coherence Diagnostic is an interactive assessment path.",
+                "It helps examine whether a person, project, claim, or system is internally aligned enough to be read responsibly.",
+                "That matters because meaning is not the same as coherence.",
+                "Soren guards that room: proof, boundary, admissibility, measurement.",
+                "I can take you there. I will not perform it here."
               ],
               routeChoices: [
                 { label: "Open the Coherence Diagnostic", routeUrl: ROUTES.diagnostic }
@@ -743,11 +740,10 @@
           if (/character|portrait|roster/.test(signal)) {
             return {
               bubbles: [
-                "The Characters matter because one voice cannot honestly carry the whole House.",
-                "They divide responsibility: mission, proof, value, repair, movement, continuity.",
-                "The Portrait Hall shows the keepers.",
-                "The Atrium shows the arrangement behind them.",
-                "Names are easier to trust when duties are clear."
+                "The Portrait Hall is the roster of the Characters.",
+                "It shows who they are and what responsibility each one carries inside the House.",
+                "That matters because mission, proof, value, repair, movement, and continuity should not all speak through one voice.",
+                "The Portrait Hall shows the keepers. The Atrium shows the arrangement behind them."
               ],
               routeChoices: [
                 { label: "Open the Portrait Hall", routeUrl: ROUTES.characters },
@@ -759,10 +755,11 @@
           if (/atrium|deeper|longer|prying|persistent/.test(signal)) {
             return {
               bubbles: [
-                "The Atrium matters because pages are not the same thing as architecture.",
-                "It is where the rooms begin to connect as a House.",
+                "The Atrium is the first architectural room of the House.",
+                "It is where separate pages begin to connect into one structure.",
+                "That matters because a visitor can know the doors and still not understand the House.",
                 "No roster there. No public map. The arrangement itself.",
-                "Enter when you want the structure behind the doors."
+                "Enter when you want the structure behind the rooms."
               ],
               routeChoices: [
                 { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
@@ -773,8 +770,8 @@
           if (/compass|return|back/.test(signal)) {
             return {
               bubbles: [
-                "The Compass matters because the visitor needs a clean way back to the public side.",
-                "It is the page that brought you here.",
+                "The Compass is the public page that brought you here.",
+                "It exists so the visitor can return to the main bridges without carrying the whole interior.",
                 "A proper House never hides the exit."
               ],
               routeChoices: [
@@ -783,10 +780,15 @@
             };
           }
 
+          var characterIntent = responseForCharacterIntent(intentFromSignal(signal));
+          if (characterIntent) {
+            return characterIntent;
+          }
+
           return {
             bubbles: [
               "I can help, but I need to place the question.",
-              "Structure belongs to the Guide. Proof belongs to Soren. People belong to the Portrait Hall.",
+              "If you are asking about structure, begin with the Website Guide. If you are asking about proof, Soren is likely involved. If you are asking about people, use the Portrait Hall.",
               "Give the question a room, and I can give you the door."
             ],
             routeChoices: [
@@ -835,7 +837,8 @@
                 indexJsRetired: true,
                 apiJsRetired: true,
                 singlePromptDock: true,
-                whyItMattersExpression: true,
+                contextFirstExpression: true,
+                cinematicExpression: true,
                 rushableTiming: true,
                 mountNode: "#hearthJeevesMount"
               }

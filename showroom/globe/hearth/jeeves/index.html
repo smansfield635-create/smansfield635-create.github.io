@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10 -->
+<!-- HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1 -->
 <!-- Full-file replacement. -->
 <!-- Owns: HTML shell, local mount adapter, stable mount node, context-first response bank, Mirrorland pry path, single prompt dock, slower bubble timing, one-tap-one-line behavior. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: correct Hearth/Atrium/Mirrorland story logic and make each tap advance only the currently pending message. -->
+<!-- Purpose: correct Hearth/Atrium/Mirrorland story logic and repair step-tap so each tap advances only the currently pending message. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1"
   data-hearth-jeeves-ready="false"
   data-hearth-role="hidden-control-room"
   data-atrium-role="first-room-of-house"
@@ -66,7 +66,7 @@
           data-hearth-role="hidden-control-room"
           data-atrium-role="first-room-of-house"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10"
+          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1"
           data-expression-contract="LOCAL_CONTEXT_FIRST_RESPONSE_BANK"
         >
           <div class="jeeves-screen-topline">
@@ -182,7 +182,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10";
+        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1";
 
         var ROUTES = {
           compass: "/",
@@ -212,7 +212,6 @@
           longBubbleDelay: 4200,
           extraLongBubbleDelay: 5000,
           betweenBubbleDelay: 850,
-          stepBubbleDelay: 0,
           maxNaturalJitter: 220
         };
 
@@ -440,27 +439,25 @@
         }
 
         function clearCurrentTimer(state) {
-          if (!state || !state.currentTimer) return;
-          window.clearTimeout(state.currentTimer);
-          state.currentTimer = null;
+          if (!state) return;
+
+          if (state.currentTimer) {
+            window.clearTimeout(state.currentTimer);
+            state.currentTimer = null;
+          }
         }
 
         function setStepTimer(state, fn, delay) {
           clearCurrentTimer(state);
 
-          state.pendingStepFn = function () {
-            clearCurrentTimer(state);
-            var pending = state.pendingStepFn;
-            state.pendingStepFn = null;
-            if (typeof pending === "function") {
-              fn();
-            }
-          };
+          state.pendingStepFn = fn;
 
           state.currentTimer = window.setTimeout(function () {
             var pending = state.pendingStepFn;
+
             state.currentTimer = null;
             state.pendingStepFn = null;
+
             if (typeof pending === "function") pending();
           }, delay);
         }
@@ -500,11 +497,13 @@
           if (!state || !state.sequenceActive || !state.pendingStepFn) return;
 
           var pending = state.pendingStepFn;
+
           clearCurrentTimer(state);
           state.pendingStepFn = null;
 
           setStatus(state, "Jeeves advanced one line.");
-          pending();
+
+          if (typeof pending === "function") pending();
         }
 
         function installStepListeners(state) {
@@ -544,11 +543,11 @@
             if (typeof done === "function") done();
           }
 
-          function scheduleNextBubble(delay) {
-            setStepTimer(state, next, delay);
+          function scheduleStep(fn, delay) {
+            setStepTimer(state, fn, delay);
           }
 
-          function next() {
+          function showBubbleAndScheduleNext() {
             if (i >= list.length) {
               finish();
               return;
@@ -563,11 +562,11 @@
             i += 1;
 
             if (i >= list.length) {
-              scheduleNextBubble(TIMING.betweenBubbleDelay);
+              scheduleStep(finish, TIMING.betweenBubbleDelay);
               return;
             }
 
-            scheduleNextBubble(TIMING.betweenBubbleDelay + normalBubbleDelay(list[i], i));
+            scheduleStep(showBubbleAndScheduleNext, TIMING.betweenBubbleDelay + normalBubbleDelay(list[i], i));
           }
 
           if (!list.length) {
@@ -575,7 +574,7 @@
             return;
           }
 
-          scheduleNextBubble(TIMING.entranceDelay);
+          scheduleStep(showBubbleAndScheduleNext, TIMING.entranceDelay);
         }
 
         function renderOptions(options, state) {
@@ -810,6 +809,7 @@
                 singlePromptDock: true,
                 mirrorlandPryPath: true,
                 stepTap: true,
+                stepTapMode: "one-tap-one-line",
                 hearthRole: "hidden-control-room",
                 atriumRole: "first-room-of-house",
                 mountNode: "#hearthJeevesMount"

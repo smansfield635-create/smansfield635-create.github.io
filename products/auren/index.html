@@ -1,17 +1,17 @@
 <!-- /products/auren/index.html -->
-<!-- AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2 -->
+<!-- AUREN_PRODUCTS_WORK_FLOOR_NUTS_AND_BOLTS_HTML_TNT_v3 -->
 <!-- Full-file replacement. -->
-<!-- Owns: Auren product-floor chat shell, local response bank, product calibration flow, four-question product branches, internal product routing, Elara/Soren/Jeeves handoffs, short opening sequence, one-tap-one-line pacing. -->
-<!-- Does not own: /products/index.html, product child pages, Elara page, Soren diagnostic page, Jeeves page, external CSS visual authority, backend/API, product runtime, gauges. -->
-<!-- Purpose: shorten Auren's first-contact opening while preserving the full product-floor calibration engine. -->
+<!-- Owns: Auren product-floor chat shell, short opening, product nuts-and-bolts response bank, conversational product depth, return navigation after every product answer, internal product routing, Elara/Soren/Jeeves handoffs, one-tap-one-line pacing. -->
+<!-- Does not own: /products/index.html, /products/auren/index.css, product child pages, official product descriptions, Elara page, Soren diagnostic page, Jeeves page, backend/API, gauges. -->
+<!-- Purpose: replace shallow checklist responses with shorter, more useful, conversational product explanations while preserving the working Auren route. -->
 
 <!doctype html>
 <html
   lang="en"
   data-route="/products/auren/"
   data-page="auren-products-work-floor"
-  data-contract="AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2"
-  data-previous-contract="AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1"
+  data-contract="AUREN_PRODUCTS_WORK_FLOOR_NUTS_AND_BOLTS_HTML_TNT_v3"
+  data-previous-contract="AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2"
   data-role="product-floor-agent"
   data-character="auren"
   data-character-age="13"
@@ -23,8 +23,9 @@
   data-single-prompt-dock="true"
   data-one-tap-one-line="true"
   data-product-calibration="true"
-  data-four-question-product-branches="true"
-  data-short-opening-sequence="true"
+  data-nuts-and-bolts-mode="true"
+  data-conversational-depth="true"
+  data-return-navigation-after-every-answer="true"
   data-default-routing-system="products"
   data-external-handoffs="elara,soren,jeeves"
 >
@@ -37,7 +38,7 @@
 
   <meta
     name="description"
-    content="Speak to Auren on the product floor before opening a product. Auren gives his opinionated product calibration first."
+    content="Speak to Auren on the product floor before opening a product. Auren gives the useful version first."
   >
 
   <link rel="stylesheet" href="/products/auren/index.css">
@@ -74,7 +75,7 @@
         data-auren-root="true"
         data-auren-ready="false"
         data-auren-speaking="false"
-        data-contract="AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2"
+        data-contract="AUREN_PRODUCTS_WORK_FLOOR_NUTS_AND_BOLTS_HTML_TNT_v3"
       >
         <div class="auren-console-topline">
           <div class="auren-identity">
@@ -136,19 +137,19 @@
       </article>
 
       <article class="auren-context-card">
-        <span>Product Calibration</span>
-        <p>Auren gives his view first. The official product page comes after the visitor is oriented.</p>
+        <span>Useful Version</span>
+        <p>Auren gives the nuts and bolts first. The official product page comes after the visitor is oriented.</p>
       </article>
 
       <article class="auren-context-card">
-        <span>Two Exits</span>
-        <p>Leaving the product system usually means Elara for the human mission layer, Soren for the Diagnostic, or Jeeves for broader House context.</p>
+        <span>Clean Returns</span>
+        <p>After each answer, the visitor can return to the product, return to Products, open the product, or ask Jeeves.</p>
       </article>
     </section>
 
     <template id="auren-route-receipt" data-route-receipt>
-AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2
-previous=AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1
+AUREN_PRODUCTS_WORK_FLOOR_NUTS_AND_BOLTS_HTML_TNT_v3
+previous=AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2
 route=/products/auren/
 page=auren_products_work_floor
 character=auren
@@ -163,17 +164,18 @@ api_dependency=false
 single_prompt_dock=true
 one_tap_one_line=true
 short_opening_sequence=true
-opening_sequence_reduced=true
+nuts_and_bolts_mode=true
+conversational_depth=true
 product_calibration=true
-four_question_product_branches=true
+return_navigation_after_every_answer=true
 default_routing=inside_products
 external_handoffs=elara,soren,jeeves
 elara_route=/meet-sean-mansfield/
 soren_route=/coherence-diagnostic/
 jeeves_route=/showroom/globe/hearth/jeeves/
 products_route=/products/
-route_owns=auren_chat_shell,local_response_bank,short_opening_sequence,product_prefaces,four_question_answers,product_routes,handoffs,one_tap_one_line
-route_does_not_own=products_index,product_child_pages,official_product_descriptions,elara_page,soren_page,jeeves_page,css_visual_authority,api,gauges
+route_owns=auren_chat_shell,local_response_bank,short_opening_sequence,nuts_and_bolts_product_overviews,product_followups,product_routes,handoffs,return_navigation,one_tap_one_line
+route_does_not_own=products_index,products_auren_css,product_child_pages,official_product_descriptions,elara_page,soren_page,jeeves_page,api,gauges
     </template>
   </main>
 
@@ -213,7 +215,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
     (function mountAurenProductFloor() {
       "use strict";
 
-      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2";
+      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_NUTS_AND_BOLTS_HTML_TNT_v3";
 
       var ROUTES = {
         products: "/products/",
@@ -234,14 +236,14 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
       };
 
       var TIMING = {
-        entranceDelay: 520,
-        firstBubbleDelay: 520,
-        shortBubbleDelay: 1000,
-        mediumBubbleDelay: 1450,
-        longBubbleDelay: 1900,
-        extraLongBubbleDelay: 2300,
-        betweenBubbleDelay: 360,
-        maxNaturalJitter: 80
+        entranceDelay: 420,
+        firstBubbleDelay: 440,
+        shortBubbleDelay: 820,
+        mediumBubbleDelay: 1200,
+        longBubbleDelay: 1550,
+        extraLongBubbleDelay: 1850,
+        betweenBubbleDelay: 300,
+        maxNaturalJitter: 70
       };
 
       var PRODUCT_ORDER = [
@@ -258,51 +260,34 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           name: "On Your Side AI",
           route: ROUTES.onYourSideAI,
           openLabel: "Open On Your Side AI",
-          promptLabel: "What is On Your Side AI?",
-          preface: [
-            "Fine. We can talk about On Your Side AI.",
-            "Do not open the product yet.",
-            "If you go in cold, you will probably think it is just another chatbot.",
-            "It is not.",
-            "It is the demo version of the assistant team we are building across the website.",
-            "Jeeves is one expression of it.",
-            "He handles threshold, orientation, rooms, and proper handoffs.",
-            "The larger product is a configured team of assistants, each attached to the part of the House where they are actually useful.",
-            "Four questions first. Then you can open it."
+          promptLabel: "On Your Side AI",
+          overview: [
+            "On Your Side AI is the assistant-team layer.",
+            "The nuts and bolts are simple: instead of dropping people onto a page and hoping they understand it, the site gives them the right guide for the right room.",
+            "Jeeves is one example. He handles orientation. I handle products. Soren handles the Diagnostic. Elara handles the human-facing mission layer."
           ],
-          answers: {
-            what: [
-              "On Your Side AI is the assistant-team layer of the platform.",
-              "It turns the website from static pages into guided conversations.",
-              "The demo version is what you are already seeing with Jeeves.",
-              "Each assistant can be configured with a role, tone, boundary, routing logic, and specific product or mission responsibility.",
-              "So no, it is not just a chat box.",
-              "It is a guided intelligence layer."
+          followups: {
+            nuts: [
+              "On Your Side AI is not one chatbot trying to do everything.",
+              "It is a team of assistants with different jobs.",
+              "One assistant can explain a product. Another can help someone understand a diagnostic. Another can guide a visitor through the House.",
+              "That is the point: the assistant should know where it is, what it owns, and what it should hand off."
             ],
-            problem: [
-              "It solves the problem of people getting dropped into too much information with no guide.",
-              "Most websites throw pages at the visitor.",
-              "Most AI bots answer without knowing where the answer belongs.",
-              "On Your Side AI is designed to route the person through the right layer: product, mission, diagnostic, story, guide, or next action.",
-              "That means less confusion, less wandering, and fewer wasted clicks."
+            matter: [
+              "It matters because most websites are piles of disconnected pages.",
+              "People click around, miss the point, and leave before they understand what they are looking at.",
+              "A guided assistant layer turns the site into a conversation instead of a maze.",
+              "That is useful."
             ],
             audience: [
-              "It is for people, teams, platforms, and communities that need guided digital help instead of a pile of disconnected pages.",
-              "It can serve visitors, customers, students, patients, donors, product users, or internal teams.",
-              "The important part is configuration.",
-              "An assistant should not sound the same in every room.",
-              "Jeeves should not talk like me.",
-              "I should not talk like Elara.",
-              "Soren should not talk like Jeeves.",
-              "That is the whole point."
+              "It is for any platform, project, business, school, nonprofit, or community that has too much information and not enough guidance.",
+              "Visitors need help finding the right door.",
+              "Teams need assistants that know their role instead of pretending to be everything."
             ],
             status: [
-              "Demo-ready.",
-              "Not finished.",
-              "The Jeeves build proves the model: local mount, prompt dock, step-by-step pacing, response bank, branch routing, and character-specific handoffs.",
-              "The larger On Your Side AI system still needs more agents, more product branches, more route testing, and better persistence.",
-              "But the architecture is no longer imaginary.",
-              "It works."
+              "It is demo-ready, not finished.",
+              "Jeeves proves the basic system works: local chat, prompt dock, response branches, route handoffs, and character-specific guidance.",
+              "The larger product still needs more assistants, more testing, and cleaner persistence."
             ]
           }
         },
@@ -311,42 +296,32 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           name: "Community Systems",
           route: ROUTES.communitySystems,
           openLabel: "Open Products",
-          promptLabel: "What are community systems?",
-          preface: [
-            "Community systems are where products stop being decorative.",
-            "This is the layer where tools, value, exchange, repair, and usefulness have to survive contact with real people.",
-            "I care about this floor because a mission that cannot become useful eventually becomes noise.",
-            "And I hate noise.",
-            "Four questions. Then decide whether you still want the product floor."
+          promptLabel: "Community Systems",
+          overview: [
+            "Community Systems are the practical-use layer.",
+            "That means tools, services, routines, value paths, and structures that people can actually use.",
+            "A mission is easy to say. A system has to survive real people, real needs, and real pressure."
           ],
-          answers: {
-            what: [
-              "Community systems are the practical-use layer of the House.",
-              "They include tools, services, product paths, value structures, and systems meant to help people organize, protect, exchange, learn, repair, or build.",
-              "It is not just a store.",
-              "It is where mission-facing ideas are tested for real utility."
+          followups: {
+            nuts: [
+              "The nuts and bolts are: take an idea and turn it into something usable.",
+              "That could be a service, a product path, a support process, a learning tool, or a value exchange.",
+              "If it helps people do something instead of just admire the idea, it belongs in this lane."
             ],
-            problem: [
-              "It solves the problem of good ideas staying trapped as slogans.",
-              "If something cannot become usable, teachable, exchangeable, or protective, then it cannot help very many people.",
-              "Community systems ask what the idea does once it leaves the page."
+            matter: [
+              "It matters because good ideas die when they never become usable.",
+              "People do not only need inspiration.",
+              "They need ways to organize, learn, repair, exchange, build, and return when things get messy."
             ],
             audience: [
-              "People who need tools, not just inspiration.",
-              "Builders.",
-              "Families.",
-              "Communities.",
-              "Small teams.",
-              "People trying to turn pressure into structure.",
-              "And anyone who needs something practical enough to use without reading an entire philosophy first."
+              "This is for communities, families, builders, small teams, local programs, and people trying to turn pressure into structure.",
+              "Basically: people who need tools more than slogans."
             ],
             status: [
-              "Mixed.",
-              "Some parts can be public-facing now.",
-              "Some are still in testing.",
-              "Some are only frameworks until they are turned into a usable product.",
-              "That is why I am here.",
-              "Someone has to tell the difference."
+              "Mixed readiness.",
+              "Some pieces can already be public-facing.",
+              "Some are still being tested.",
+              "Some are frameworks waiting to become real products."
             ]
           }
         },
@@ -355,33 +330,34 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           name: "ARCHCOIN",
           route: ROUTES.archcoin,
           openLabel: "Open ARCHCOIN",
-          promptLabel: "What is ARCHCOIN?",
-          preface: [
-            "ARCHCOIN is a value and custody system.",
-            "So no, I am not explaining it like a shiny coin with a logo.",
-            "If it does not protect value, structure exchange, or make custody clearer, it does not deserve the name.",
-            "Ask the four questions."
+          promptLabel: "ARCHCOIN",
+          overview: [
+            "ARCHCOIN is about value memory.",
+            "Not just money. Not just points. Not just a coin with a logo.",
+            "The idea is this: if someone contributes something useful, the system should remember what happened, who added value, why it mattered, and how that value stays connected later."
           ],
-          answers: {
-            what: [
-              "ARCHCOIN is a value-system concept connected to custody, exchange, and protected utility inside the broader product architecture.",
-              "It belongs near the question of how value moves without becoming careless."
+          followups: {
+            nuts: [
+              "The nuts and bolts are contribution, custody, and traceability.",
+              "Contribution means someone added value.",
+              "Custody means the value stays connected to responsibility instead of floating around loose.",
+              "Traceability means the system can remember where the value came from and what it connects to."
             ],
-            problem: [
-              "It addresses the problem of value becoming vague, scattered, or disconnected from responsibility.",
-              "A useful value system should clarify what is being exchanged, why it matters, and what protects it from becoming cheap or meaningless."
+            matter: [
+              "It matters because communities lose value all the time.",
+              "People help, teach, build, repair, organize, and create — then the system forgets.",
+              "ARCHCOIN is trying to solve that forgetting problem.",
+              "If value matters, the system should not lose track of it."
             ],
             audience: [
-              "People or communities that need value logic tied to custody, utility, and protected exchange.",
-              "Not speculators first.",
-              "Users first.",
-              "That difference matters."
+              "It is for systems where contribution matters.",
+              "Communities, builders, creators, organizers, and people who need value to stay attached to responsibility could use it.",
+              "Not speculators first. Users first."
             ],
             status: [
               "Still being built.",
-              "The concept has value, but the rules, use cases, protections, and public explanation need to be tightened before it should be treated as ready.",
-              "That is not a weakness.",
-              "That is basic responsibility."
+              "The concept is strong, but the public rules, use cases, protections, and explanation need to be tightened before it should be treated as finished.",
+              "That is not bad. That is basic custody."
             ]
           }
         },
@@ -390,32 +366,30 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           name: "Five Flags",
           route: ROUTES.fiveFlags,
           openLabel: "Open Five Flags",
-          promptLabel: "What is Five Flags?",
-          preface: [
-            "Five Flags is easier to misunderstand than people think.",
-            "It sounds symbolic, which means people will try to make it vague.",
-            "I am not letting that happen.",
-            "If it is going to be a product, it needs a use.",
-            "Four questions."
+          promptLabel: "Five Flags",
+          overview: [
+            "Five Flags is a signal system.",
+            "The simple version: it helps people recognize role, direction, belonging, or alignment without forcing everything into one flat label.",
+            "A flag is not the whole person. It is a signal that helps the room understand what kind of movement is happening."
           ],
-          answers: {
-            what: [
-              "Five Flags is a structured identity, orientation, or signal system within the product wing.",
-              "It can hold symbolic value, but it needs to remain practical enough to guide use, belonging, sorting, or action."
+          followups: {
+            nuts: [
+              "The nuts and bolts are five readable signals.",
+              "Each signal should help the user understand direction, role, or context.",
+              "If the flag does not help someone make sense of the scene, then it is decoration. I do not care about decoration."
             ],
-            problem: [
-              "It helps organize identity and direction without forcing everything into one flat label.",
-              "People, teams, products, or missions often need clearer signals.",
-              "Five Flags can become one way to carry those signals."
+            matter: [
+              "It matters because people get misread constantly.",
+              "Teams get misread too.",
+              "A clean signal system can help people orient without overexplaining themselves every time."
             ],
             audience: [
-              "Users who need a structured way to recognize alignment, role, belonging, or direction.",
-              "That could become personal, team-based, community-based, or product-based depending on how the system is finished."
+              "It is for users, teams, games, communities, or learning systems that need fast orientation.",
+              "It could be playful, serious, or both, depending on where it is used."
             ],
             status: [
               "Still being shaped.",
-              "The concept is strong enough to keep on the floor.",
-              "But it needs sharper use cases before it should be treated as a finished product."
+              "The symbolic layer is useful, but it needs sharper use cases and cleaner public explanation before it becomes fully ready."
             ]
           }
         },
@@ -424,30 +398,31 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           name: "Education",
           route: ROUTES.education,
           openLabel: "Open Education",
-          promptLabel: "What is Education?",
-          preface: [
-            "Education belongs on this floor because learning is not just content.",
-            "Content is cheap.",
-            "Understanding is harder.",
-            "If the education product does not help someone learn, remember, apply, or move, then it is just decoration with homework stapled to it.",
-            "Four questions."
+          promptLabel: "Education",
+          overview: [
+            "Education is the structured-learning lane.",
+            "The useful version is simple: take scattered information and turn it into a path someone can understand, remember, and use.",
+            "Content is everywhere. Structure is the product."
           ],
-          answers: {
-            what: [
-              "The Education product path is the learning and curriculum layer.",
-              "It can hold guides, lessons, interactive material, structured explanations, and training systems connected to the House."
+          followups: {
+            nuts: [
+              "The nuts and bolts are sequence, explanation, practice, and application.",
+              "A learner needs to know where to start, what comes next, why it matters, and how to use it.",
+              "If the material cannot help someone move, it is just a pile of words."
             ],
-            problem: [
-              "It solves the problem of knowledge being present but not usable.",
-              "People do not need more information thrown at them.",
-              "They need structure, sequence, examples, and ways to apply what they are learning."
+            matter: [
+              "It matters because people do not fail only because they lack information.",
+              "They fail because information arrives out of order, without context, without practice, and without a clean next step.",
+              "Education should fix that."
             ],
             audience: [
-              "Students, families, teachers, self-learners, community programs, and anyone who needs guided learning instead of scattered content."
+              "Students, families, teachers, self-learners, training programs, and community learning systems.",
+              "Anyone who needs a path instead of a dump of information."
             ],
             status: [
               "Partly ready, partly building.",
-              "The education lane can start with structured guides and expand into courses, interactive lessons, and agent-supported learning."
+              "Guides can start now.",
+              "Courses, interactive lessons, and assistant-supported learning need more structure."
             ]
           }
         },
@@ -456,32 +431,31 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           name: "Nutrition",
           route: ROUTES.nutrition,
           openLabel: "Open Nutrition",
-          promptLabel: "What is Nutrition?",
-          preface: [
-            "Nutrition is not a vibes product.",
-            "It has to be practical.",
-            "What does someone take? Why? What problem does it solve? What should they avoid assuming?",
-            "If this lane is going to exist, it has to be careful.",
-            "Four questions."
+          promptLabel: "Nutrition",
+          overview: [
+            "Nutrition is the practical wellness lane.",
+            "Not hype. Not miracle claims. Not ten thousand supplements in a trench coat.",
+            "The useful version is helping people understand basics, routines, and safer choices without making the product careless."
           ],
-          answers: {
-            what: [
-              "The Nutrition product path is the health-support and daily-use wellness layer.",
-              "It should organize practical nutritional support, education, routines, and product logic."
+          followups: {
+            nuts: [
+              "The nuts and bolts are food, water, routine, education, and product logic.",
+              "What does someone need? Why would they use it? What should they avoid assuming?",
+              "A nutrition product has to be practical and careful at the same time."
             ],
-            problem: [
-              "It helps solve the problem of people wanting better health support but getting lost in claims, supplements, trends, and scattered advice.",
-              "A useful nutrition product should make the basics clearer and safer."
+            matter: [
+              "It matters because people get buried under claims.",
+              "Trends make everything sound urgent.",
+              "A useful nutrition lane should make the basics clearer, safer, and easier to return to."
             ],
             audience: [
-              "People who want practical nutrition support, daily routines, clearer education, or a simpler way to understand what they are using.",
-              "It should be especially careful with claims.",
-              "That matters."
+              "People who want practical support, clearer routines, better education, and less confusion around wellness choices.",
+              "It should serve normal people first, not just experts."
             ],
             status: [
               "Still building.",
-              "This lane needs careful wording, clear boundaries, and responsible product logic before it should be pushed too hard.",
-              "I would rather be slow than careless."
+              "This needs responsible language, clear limits, and careful product logic before it should be pushed hard.",
+              "Slow is better than reckless here."
             ]
           }
         }
@@ -490,24 +464,28 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
       var OPENING_SEQUENCE = [
         "You are on the products floor.",
         "I’m Auren.",
-        "Pick a product. I’ll tell you what it is, what problem it solves, who it is for, and whether it is ready.",
-        "Not the brochure version. The useful version."
+        "Pick a product.",
+        "I’ll give you the useful version first."
       ];
 
       var MAIN_PROMPTS = [
         { label: "Show me the products.", action: "products_menu" },
-        { label: "What is On Your Side AI?", action: "product", productId: "on_your_side_ai" },
-        { label: "What are community systems?", action: "product", productId: "community_systems" },
-        { label: "What is the Coherence Diagnostic?", action: "diagnostic_handoff" },
+        { label: "On Your Side AI", action: "product", productId: "on_your_side_ai" },
+        { label: "Community Systems", action: "product", productId: "community_systems" },
+        { label: "ARCHCOIN", action: "product", productId: "archcoin" },
+        { label: "Five Flags", action: "product", productId: "five_flags" },
+        { label: "Education", action: "product", productId: "education" },
+        { label: "Nutrition", action: "product", productId: "nutrition" },
+        { label: "Coherence Diagnostic", action: "diagnostic_handoff" },
         { label: "Ask Jeeves first.", action: "jeeves_handoff" },
         { label: "Return to Products", action: "route", routeUrl: ROUTES.products }
       ];
 
-      var PRODUCT_QUESTION_PROMPTS = [
-        { label: "What is this?", action: "product_answer", question: "what" },
-        { label: "What problem does it solve?", action: "product_answer", question: "problem" },
-        { label: "Who is it for?", action: "product_answer", question: "audience" },
-        { label: "Is it ready, testing, or still being built?", action: "product_answer", question: "status" }
+      var PRODUCT_FOLLOWUP_PROMPTS = [
+        { label: "Explain the nuts and bolts.", action: "product_followup", followup: "nuts" },
+        { label: "Why does this matter?", action: "product_followup", followup: "matter" },
+        { label: "Who is this for?", action: "product_followup", followup: "audience" },
+        { label: "Is this ready?", action: "product_followup", followup: "status" }
       ];
 
       function onReady(fn) {
@@ -540,11 +518,15 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         return { label: "Back to Products.", action: "products_menu" };
       }
 
+      function makeReturnToProductsAction() {
+        return { label: "Return to Products", action: "route", routeUrl: ROUTES.products };
+      }
+
       function makeBackToCurrentProductAction(state) {
         if (!state || !state.currentProductId || !PRODUCT_DATA[state.currentProductId]) return null;
         return {
           label: "Back to " + PRODUCT_DATA[state.currentProductId].name + ".",
-          action: "product_questions",
+          action: "product_menu",
           productId: state.currentProductId
         };
       }
@@ -557,13 +539,53 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
             productId: productId
           };
         }).concat([
-          { label: "What is the Coherence Diagnostic?", action: "diagnostic_handoff" },
-          { label: "Meet Sean.", action: "elara_handoff", handoffType: "meet_sean" },
-          { label: "The Nine Summits.", action: "elara_handoff", handoffType: "nine_summits" },
-          { label: "The Book.", action: "elara_handoff", handoffType: "book" },
+          { label: "Coherence Diagnostic", action: "diagnostic_handoff" },
+          { label: "Meet Sean", action: "elara_handoff", handoffType: "meet_sean" },
+          { label: "Nine Summits", action: "elara_handoff", handoffType: "nine_summits" },
+          { label: "Book", action: "elara_handoff", handoffType: "book" },
           { label: "Ask Jeeves first.", action: "jeeves_handoff" },
-          { label: "Return to Products", action: "route", routeUrl: ROUTES.products }
+          makeReturnToProductsAction()
         ]);
+      }
+
+      function productOptions(productId, state) {
+        var product = PRODUCT_DATA[productId];
+        if (!product) return productMenuPrompts();
+
+        var options = PRODUCT_FOLLOWUP_PROMPTS.map(function (item) {
+          return {
+            label: item.label,
+            action: item.action,
+            productId: productId,
+            followup: item.followup
+          };
+        });
+
+        options.push(makeRouteAction(product.openLabel, product.route));
+        options.push(makeBackToProductsAction());
+        options.push(makeReturnToProductsAction());
+        options.push({ label: "Ask Jeeves first.", action: "jeeves_handoff" });
+
+        return options;
+      }
+
+      function afterAnswerOptions(productId, state) {
+        var product = PRODUCT_DATA[productId];
+        var options = [];
+        var backToCurrent = makeBackToCurrentProductAction(state);
+
+        if (backToCurrent) options.push(backToCurrent);
+
+        options.push(makeBackToProductsAction());
+        options.push(makeReturnToProductsAction());
+
+        if (product) {
+          options.push(makeRouteAction(product.openLabel, product.route));
+        }
+
+        options.push({ label: "Ask Jeeves first.", action: "jeeves_handoff" });
+
+        return options;
       }
 
       function normalizeOption(option) {
@@ -576,7 +598,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           action: text(option.action || ""),
           routeUrl: text(option.routeUrl || ""),
           productId: text(option.productId || ""),
-          question: text(option.question || ""),
+          followup: text(option.followup || ""),
           handoffType: text(option.handoffType || "")
         };
       }
@@ -687,8 +709,8 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           delay = TIMING.extraLongBubbleDelay;
         }
 
-        delay += sentenceCount * 80;
-        delay += commaCount * 45;
+        delay += sentenceCount * 70;
+        delay += commaCount * 35;
         delay += naturalJitter(value, index);
 
         return Math.round(delay);
@@ -797,8 +819,9 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         renderOptions(productMenuPrompts(), state);
       }
 
-      function renderProductQuestions(state, productId) {
+      function renderProductMenu(state, productId) {
         var product = PRODUCT_DATA[productId];
+
         if (!product) {
           renderProductsMenu(state);
           return;
@@ -807,46 +830,17 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         state.currentProductId = productId;
         state.mode = "product:" + productId;
 
-        var options = PRODUCT_QUESTION_PROMPTS.map(function (item) {
-          return {
-            label: item.label,
-            action: item.action,
-            productId: productId,
-            question: item.question
-          };
-        });
-
-        options.push(makeRouteAction(product.openLabel, product.route));
-        options.push(makeBackToProductsAction());
-        options.push({ label: "Ask Jeeves first.", action: "jeeves_handoff" });
-        options.push(makeRouteAction("Return to Products", ROUTES.products));
-
-        renderOptions(options, state);
+        renderOptions(productOptions(productId, state), state);
       }
 
-      function renderAfterProductAnswer(state, product) {
-        var options = [];
-
-        var backToCurrent = makeBackToCurrentProductAction(state);
-        if (backToCurrent) options.push(backToCurrent);
-
-        options.push(makeBackToProductsAction());
-        options.push(makeRouteAction(product.openLabel, product.route));
-        options.push({ label: "Ask Jeeves first.", action: "jeeves_handoff" });
-        options.push(makeRouteAction("Return to Products", ROUTES.products));
-
-        renderOptions(options, state);
-      }
-
-      function responseForProductPreface(option, state) {
+      function responseForProduct(option, state) {
         var product = PRODUCT_DATA[option.productId];
 
         if (!product) {
           return {
             bubbles: [
               "That is not on my current product list.",
-              "Back to the floor.",
-              "Pick a product that actually exists here."
+              "Back to Products."
             ],
             after: "products_menu"
           };
@@ -855,13 +849,13 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         state.currentProductId = option.productId;
 
         return {
-          bubbles: product.preface.slice(),
-          after: "product_questions",
+          bubbles: product.overview.slice(),
+          after: "product_menu",
           productId: option.productId
         };
       }
 
-      function responseForProductAnswer(option, state) {
+      function responseForProductFollowup(option, state) {
         var productId = option.productId || state.currentProductId;
         var product = PRODUCT_DATA[productId];
 
@@ -869,20 +863,18 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           return {
             bubbles: [
               "You lost the product context.",
-              "Which is exactly why I make people stay organized.",
               "Back to Products."
             ],
             after: "products_menu"
           };
         }
 
-        var question = option.question;
-        var bubbles = product.answers[question];
+        var followup = option.followup || "nuts";
+        var bubbles = product.followups[followup];
 
         if (!Array.isArray(bubbles)) {
           bubbles = [
-            "That is not one of the four questions.",
-            "I made this simple on purpose.",
+            "That branch is not ready.",
             "Back to the product."
           ];
         }
@@ -902,16 +894,15 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         if (type === "nine_summits") {
           return {
             bubbles: [
-              "The Nine Summits is not a normal product.",
-              "It is part of the climb, the invitation, and the human-facing mission layer.",
-              "That belongs closer to Elara.",
-              "I can send you to her, or Jeeves can orient you before you go."
+              "Nine Summits is not just another product card.",
+              "It belongs to the climb and the human-facing mission layer.",
+              "That is closer to Elara. Ask Jeeves first if you need the House context."
             ],
             options: [
               makeRouteAction("Go to Elara", ROUTES.elara),
               { label: "Ask Jeeves first.", action: "jeeves_handoff" },
               makeBackToProductsAction(),
-              makeRouteAction("Return to Products", ROUTES.products)
+              makeReturnToProductsAction()
             ]
           };
         }
@@ -919,32 +910,30 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         if (type === "book") {
           return {
             bubbles: [
-              "The book belongs near Elara too.",
-              "It is not my main floor unless we are talking about format, readiness, packaging, or product utility.",
+              "The book is the long-form path.",
               "If you want the human threshold, go to Elara.",
-              "If you want the House context, ask Jeeves."
+              "If you want the map first, ask Jeeves."
             ],
             options: [
               makeRouteAction("Go to Elara", ROUTES.elara),
               { label: "Ask Jeeves first.", action: "jeeves_handoff" },
               makeBackToProductsAction(),
-              makeRouteAction("Return to Products", ROUTES.products)
+              makeReturnToProductsAction()
             ]
           };
         }
 
         return {
           bubbles: [
-            "That is not my floor.",
-            "Meet Sean belongs closer to Elara.",
-            "She handles the human-facing threshold.",
-            "I can send you straight to her, or you can ask Jeeves for broader House context first."
+            "Meet Sean is not my floor.",
+            "That belongs closer to Elara, because it is the human-facing threshold.",
+            "I can send you there, or you can ask Jeeves for context first."
           ],
           options: [
             makeRouteAction("Go to Elara", ROUTES.elara),
             { label: "Ask Jeeves first.", action: "jeeves_handoff" },
             makeBackToProductsAction(),
-            makeRouteAction("Return to Products", ROUTES.products)
+            makeReturnToProductsAction()
           ]
         };
       }
@@ -953,19 +942,14 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         return {
           bubbles: [
             "The Diagnostic is not mine.",
-            "I can tell you it exists.",
-            "I can tell you why it matters.",
-            "But I am not doing personal readings from the product floor.",
-            "That is Soren’s room.",
-            "Soren handles boundary, reading, and diagnostic structure.",
-            "If you want the tool, go to Soren.",
-            "If you need to understand where it fits in the House first, ask Jeeves."
+            "The useful version: it helps a person understand orientation, friction, and coherence before they mistake confusion for identity.",
+            "Soren owns that boundary. I can send you there, or Jeeves can explain where it fits in the House."
           ],
           options: [
             makeRouteAction("Go to Soren", ROUTES.soren),
             { label: "Ask Jeeves first.", action: "jeeves_handoff" },
             makeBackToProductsAction(),
-            makeRouteAction("Return to Products", ROUTES.products)
+            makeReturnToProductsAction()
           ]
         };
       }
@@ -973,14 +957,14 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
       function responseForJeevesHandoff() {
         return {
           bubbles: [
-            "If you need the whole House explained, go ask Jeeves.",
-            "That is his job.",
-            "Mine is making sure products do not leave this floor pretending to be more useful than they are."
+            "Jeeves handles the whole House.",
+            "If you need the map, the threshold, or the bigger context, ask him.",
+            "I handle products."
           ],
           options: [
             makeRouteAction("Ask Jeeves", ROUTES.jeeves),
             makeBackToProductsAction(),
-            makeRouteAction("Return to Products", ROUTES.products)
+            makeReturnToProductsAction()
           ]
         };
       }
@@ -995,45 +979,34 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           };
         }
 
-        if (action === "reset") {
-          state.currentProductId = "";
-          return {
-            bubbles: [
-              "Fine. New product.",
-              "Try to pick one you actually want explained."
-            ],
-            after: "main"
-          };
-        }
-
         if (action === "products_menu") {
           state.currentProductId = "";
           return {
             bubbles: [
-              "Back to the floor.",
-              "Pick something useful."
+              "Back to Products.",
+              "Pick the one you actually want explained."
             ],
             after: "products_menu"
           };
         }
 
         if (action === "product") {
-          return responseForProductPreface(option, state);
+          return responseForProduct(option, state);
         }
 
-        if (action === "product_questions") {
+        if (action === "product_menu") {
           return {
             bubbles: [
               "Back to " + (PRODUCT_DATA[option.productId] ? PRODUCT_DATA[option.productId].name : "the product") + ".",
-              "Four questions."
+              "Pick what you need next."
             ],
-            after: "product_questions",
+            after: "product_menu",
             productId: option.productId
           };
         }
 
-        if (action === "product_answer") {
-          return responseForProductAnswer(option, state);
+        if (action === "product_followup") {
+          return responseForProductFollowup(option, state);
         }
 
         if (action === "elara_handoff") {
@@ -1051,7 +1024,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         return {
           bubbles: [
             "That does not belong anywhere useful yet.",
-            "Back to the product floor."
+            "Back to Products."
           ],
           after: "products_menu"
         };
@@ -1084,19 +1057,13 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
             return;
           }
 
-          if (response.after === "product_questions") {
-            renderProductQuestions(state, response.productId || state.currentProductId);
+          if (response.after === "product_menu") {
+            renderProductMenu(state, response.productId || state.currentProductId);
             return;
           }
 
           if (response.after === "product_answer") {
-            var product = PRODUCT_DATA[response.productId || state.currentProductId];
-            if (product) {
-              renderAfterProductAnswer(state, product);
-              return;
-            }
-
-            renderProductsMenu(state);
+            renderOptions(afterAnswerOptions(response.productId || state.currentProductId, state), state);
             return;
           }
 
@@ -1122,7 +1089,9 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
               apiDependency: false,
               singlePromptDock: true,
               oneTapOneLine: true,
-              shortOpeningSequence: true,
+              nutsAndBoltsMode: true,
+              conversationalDepth: true,
+              returnNavigationAfterEveryAnswer: true,
               productCalibration: true,
               route: "/products/auren/",
               mountNode: "#aurenProductFloorMount"

@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11 -->
+<!-- HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, context-first response bank, question prompt dock, Mirrorland branch reveal, repaired one-tap-one-line behavior. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, Website Guide path, visitor-facing Diagnostic explanation, Mission branch, Mirrorland branch reveal, repaired one-tap-one-line behavior. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: preserve working mount while making Mirrorland a pry path, making prompts question-led, and routing deeper Mirrorland interest to the Portrait Hall. -->
+<!-- Purpose: preserve working mount while removing redundant Where Am I prompt, separating map/diagnostic/mission logic, and expanding mission through Sean / Nine Summits / book branches. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12"
   data-hearth-jeeves-ready="false"
   data-hearth-role="hidden-control-room"
   data-atrium-role="first-room-of-house"
@@ -19,6 +19,8 @@
   data-single-prompt-dock="true"
   data-question-prompt-dock="true"
   data-context-first-expression="true"
+  data-website-guide-path="true"
+  data-mission-branch-path="true"
   data-mirrorland-branch-reveal="true"
   data-step-tap="true"
 >
@@ -67,7 +69,7 @@
           data-hearth-role="hidden-control-room"
           data-atrium-role="first-room-of-house"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11"
+          data-mount-contract="HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12"
           data-expression-contract="LOCAL_CONTEXT_FIRST_RESPONSE_BANK"
         >
           <div class="jeeves-screen-topline">
@@ -183,7 +185,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11";
+        var CONTRACT = "HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12";
 
         var ROUTES = {
           compass: "/",
@@ -196,6 +198,7 @@
           mission: "/meet-sean-mansfield/",
           nineSummits: "/nine-summits/",
           nineSummitsOfLove: "/nine-summits-of-love/",
+          book: "/nine-summits-of-love/",
           products: "/products/",
           archcoin: "/products/archcoin/",
           laws: "/laws/",
@@ -228,7 +231,6 @@
         ];
 
         var MAIN_PROMPTS = [
-          { label: "Where am I?", action: "where" },
           { label: "Where is the map?", action: "map" },
           { label: "What is the Diagnostic?", action: "diagnostic" },
           { label: "What is Mirrorland?", action: "mirrorland" },
@@ -683,6 +685,50 @@
           };
         }
 
+        function missionSean() {
+          return {
+            bubbles: [
+              "Sean is the human origin point of the House.",
+              "Not because the House ends with him, but because the work began with a person trying to turn pressure, pattern, failure, faith, imagination, and frontier thinking into something useful for others.",
+              "Some visitors need the human threshold before they step into the larger structure.",
+              "If you want that threshold, it begins with Sean."
+            ],
+            routeChoices: [
+              { label: "Meet Sean", routeUrl: ROUTES.sean }
+            ]
+          };
+        }
+
+        function missionNineSummits() {
+          return {
+            bubbles: [
+              "The Nine Summits is the map.",
+              "It gives the journey a structure: the stages, thresholds, and climbs a person may face while growing into clearer strength, love, discipline, and purpose.",
+              "It does not read you by itself.",
+              "It shows the terrain.",
+              "Some pages show doors. The Nine Summits shows the climb."
+            ],
+            routeChoices: [
+              { label: "Open The Nine Summits", routeUrl: ROUTES.nineSummits }
+            ]
+          };
+        }
+
+        function missionBook() {
+          return {
+            bubbles: [
+              "The book is the compass.",
+              "Where The Nine Summits shows the terrain, the book helps you keep direction while moving through it.",
+              "It gives the journey language, reflection, and rhythm a person can carry outside the website.",
+              "It is not the Coherence Diagnostic. That tool lives elsewhere.",
+              "The map shows the climb. The compass helps you keep direction. The tool helps you read where you are."
+            ],
+            routeChoices: [
+              { label: "Open the Book", routeUrl: ROUTES.book }
+            ]
+          };
+        }
+
         function responseFor(option) {
           var label = text(option.label).toLowerCase();
           var action = text(option.action).toLowerCase();
@@ -714,27 +760,25 @@
             return mirrorlandRevealFromPortraitHall();
           }
 
-          if (/where|hearth|room/.test(signal)) {
-            return {
-              bubbles: [
-                "Hearth is a hidden control room inside the House.",
-                "The Compass brought you here by a side door. This is where I can speak without crowding the public page.",
-                "Research, development, routing, and unfinished machinery live closer to this room.",
-                "The Atrium is the first room of the House. Hearth is where one checks the pressure behind the walls."
-              ],
-              routeChoices: [
-                { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
-              ]
-            };
+          if (action === "mission_sean") {
+            return missionSean();
+          }
+
+          if (action === "mission_nine_summits") {
+            return missionNineSummits();
+          }
+
+          if (action === "mission_book") {
+            return missionBook();
           }
 
           if (/map|guide|site/.test(signal)) {
             return {
               bubbles: [
-                "The Website Guide is the plain map of the public platform.",
-                "It shows the main routes, rooms, and entry points without making you discover every connection through story.",
-                "The Compass points. The Guide orients.",
-                "Use it when you want structure before mystery."
+                "The map is the Website Guide.",
+                "It is the plain guide to the public platform: the main rooms, routes, doors, and entry points.",
+                "Use it when you want the structure without having to uncover it through story.",
+                "The Compass brought you in. The Website Guide shows you where the doors are."
               ],
               routeChoices: [
                 { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
@@ -746,8 +790,9 @@
             return {
               bubbles: [
                 "The Coherence Diagnostic is the website’s self-orientation tool.",
-                "It helps you see whether your strengths, choices, and direction are working together.",
-                "It can also show where you may be getting stuck, scattered, or pulled off course.",
+                "It helps you notice what is actually leading you: your strengths, your habits, your instincts, and the places where your own signal may be getting hard to hear.",
+                "It is for the visitor who wants more than inspiration.",
+                "It gives shape to the question: what is going on with me, and where do I move next?",
                 "Soren guards that room because a personal reading needs boundaries, not guesses.",
                 "I can take you there. I will not read you from here."
               ],
@@ -776,40 +821,16 @@
           if (/mission|purpose|why/.test(signal)) {
             return {
               bubbles: [
-                "Our mission is to help people find a clearer path when life, work, or purpose starts pulling in too many directions.",
-                "The House is built around a simple idea: when your strengths, choices, and direction begin working together, you can move with less confusion and more force.",
-                "The Guide gives structure. The Diagnostic helps you understand yourself. Mirrorland carries the story underneath it.",
-                "If you want the public mission before the deeper rooms, I can show you that path."
+                "Our mission is larger than any one tool.",
+                "The world is full of urgent problems, but most people meet them through overload, distraction, outrage, or systems too large to touch.",
+                "The House exists to turn frontier science, story, technology, and community action into a digital gateway toward possible futures.",
+                "Some doors begin with the person. Some open toward water, energy, health, education, cities, repair, and the work communities still need done.",
+                "Choose the part you want me to explain first."
               ],
-              routeChoices: [
-                { label: "Open Our Mission", routeUrl: ROUTES.mission }
-              ]
-            };
-          }
-
-          if (/atrium/.test(signal)) {
-            return {
-              bubbles: [
-                "The Atrium is the first room of the House.",
-                "It is where separate pages begin to connect into one structure.",
-                "A visitor can know the doors and still not understand the House.",
-                "The Atrium shows the arrangement."
-              ],
-              routeChoices: [
-                { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
-              ]
-            };
-          }
-
-          if (/portrait hall|characters|character/.test(signal)) {
-            return {
-              bubbles: [
-                "The Portrait Hall is where the Characters are gathered.",
-                "It is not merely a roster. It is where responsibility begins to take shape.",
-                "If you are asking for the Characters plainly, I can take you there."
-              ],
-              routeChoices: [
-                { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
+              followups: [
+                { label: "Who is Sean?", action: "mission_sean" },
+                { label: "What is The Nine Summits?", action: "mission_nine_summits" },
+                { label: "What is the book about?", action: "mission_book" }
               ]
             };
           }
@@ -885,6 +906,8 @@
                 apiJsRetired: true,
                 singlePromptDock: true,
                 questionPromptDock: true,
+                websiteGuidePath: true,
+                missionBranchPath: true,
                 mirrorlandBranchReveal: true,
                 stepTap: true,
                 stepTapMode: "one-tap-one-line",

@@ -1,12 +1,14 @@
 // /assets/house-control-pad/house.control-pad.js
-// HOUSE_CONTROL_PAD_UNIVERSAL_CONTROLLER_JS_TNT_v1
+// HOUSE_CONTROL_PAD_CIRCULAR_BLUEPRINT_AVATAR_FACES_JS_TNT_v2
 // Full-file replacement.
 //
 // Purpose:
 // - Provide a reusable universal House controller.
 // - Room-first routing: user chooses or enters a room; controller determines authority.
-// - Animate the authorized teammate/avatar from home room to target room.
-// - Open guide/conversation/room action after arrival.
+// - Circular compass blueprint layout: center, north, northeast, east, southeast, south, southwest, west, northwest.
+// - Avatar faces live in home rooms.
+// - Authorized avatar travels from home room to target room.
+// - Arrival action opens the correct guide or room.
 // - Avoid separate per-door portals.
 // - Character-first routing remains future Portrait Hall scope.
 //
@@ -24,9 +26,6 @@
 //   data-house-room="book-chamber"
 // ></div>
 //
-// Optional global fallback:
-// If no root exists, this file creates one automatically at document.body.
-//
 // Public API:
 // window.HOUSE_CONTROL_PAD.open({ room: "book-chamber" })
 // window.HOUSE_CONTROL_PAD.close()
@@ -34,10 +33,10 @@
 // window.HOUSE_CONTROL_PAD.registerRoom({...})
 // window.HOUSE_CONTROL_PAD.registerAgent({...})
 
-(function houseControlPadUniversalController() {
+(function houseControlPadCircularBlueprintAvatarFaces() {
   "use strict";
 
-  var CONTRACT = "HOUSE_CONTROL_PAD_UNIVERSAL_CONTROLLER_JS_TNT_v1";
+  var CONTRACT = "HOUSE_CONTROL_PAD_CIRCULAR_BLUEPRINT_AVATAR_FACES_JS_TNT_v2";
 
   var DEFAULT_ROOM_ID = "house-core";
 
@@ -56,10 +55,41 @@
     status: null,
     arrivalPanel: null,
     previousFocus: null,
-    pendingRoute: null,
-    focusableBefore: null,
-    focusableAfter: null,
-    animationTimer: null
+    animationTimer: null,
+    pendingRoute: null
+  };
+
+  var GEOMETRY = {
+    center: { x: 50, y: 50 },
+    rings: {
+      center: 0,
+      inner: 22,
+      middle: 32,
+      outer: 42
+    },
+    angles: {
+      north: -90,
+      northeast: -45,
+      east: 0,
+      southeast: 45,
+      south: 90,
+      southwest: 135,
+      west: 180,
+      northwest: -135
+    },
+    offsets: {
+      none: { x: 0, y: 0 },
+      inward: { x: 0, y: 0 },
+      outward: { x: 0, y: 0 },
+      left: { x: -6, y: 0 },
+      right: { x: 6, y: 0 },
+      upper: { x: 0, y: -5 },
+      lower: { x: 0, y: 5 },
+      upperLeft: { x: -5, y: -4 },
+      upperRight: { x: 5, y: -4 },
+      lowerLeft: { x: -5, y: 4 },
+      lowerRight: { x: 5, y: 4 }
+    }
   };
 
   var ROOMS = {
@@ -70,9 +100,9 @@
       type: "orientation",
       route: "/",
       authority: "jeeves",
-      x: 50,
-      y: 50,
-      zone: "center",
+      ring: "center",
+      direction: "center",
+      offset: "none",
       description: "The central compass of the House. Use this when the visitor needs whole-House orientation."
     },
 
@@ -83,49 +113,36 @@
       type: "orientation",
       route: "/site-guide/",
       authority: "jeeves",
-      x: 50,
-      y: 22,
-      zone: "north",
+      ring: "outer",
+      direction: "north",
+      offset: "none",
       description: "The practical site guide and orientation desk."
     },
 
-    "showroom": {
-      id: "showroom",
-      label: "Showroom / Atrium",
-      shortLabel: "Showroom",
-      type: "showroom",
-      route: "/showroom/",
-      authority: "jeeves",
-      x: 24,
-      y: 42,
-      zone: "west",
-      description: "The public showroom and visible proof-object entry."
+    "book-chamber": {
+      id: "book-chamber",
+      label: "Book Chamber",
+      shortLabel: "Book",
+      type: "book",
+      route: "/nine-summits-of-love/",
+      authority: "elara",
+      ring: "outer",
+      direction: "northeast",
+      offset: "upperLeft",
+      description: "The Nine Summits of Love, 256 Carats of Human Potential, and the climb toward Love."
     },
 
-    "atlas-study": {
-      id: "atlas-study",
-      label: "Atlas Study",
-      shortLabel: "Atlas",
-      type: "world",
-      route: "/showroom/globe/",
+    "law-library": {
+      id: "law-library",
+      label: "Law Library",
+      shortLabel: "Laws",
+      type: "law",
+      route: "/laws/",
       authority: "jeeves",
-      x: 18,
-      y: 65,
-      zone: "southwest",
-      description: "World, globe, planet, and atlas study."
-    },
-
-    "hearth-room": {
-      id: "hearth-room",
-      label: "Hearth Room",
-      shortLabel: "Hearth",
-      type: "world",
-      route: "/showroom/globe/hearth/",
-      authority: "jeeves",
-      x: 30,
-      y: 78,
-      zone: "southwest",
-      description: "Hearth world room and planetary lane."
+      ring: "outer",
+      direction: "northeast",
+      offset: "lowerRight",
+      description: "Laws, governance, and proof language."
     },
 
     "product-gallery": {
@@ -135,9 +152,9 @@
       type: "product",
       route: "/products/",
       authority: "auren",
-      x: 76,
-      y: 42,
-      zone: "east",
+      ring: "outer",
+      direction: "east",
+      offset: "upper",
       description: "The practical product floor and public value gallery."
     },
 
@@ -148,9 +165,9 @@
       type: "product",
       route: "/products/education/",
       authority: "auren",
-      x: 82,
-      y: 62,
-      zone: "southeast",
+      ring: "outer",
+      direction: "east",
+      offset: "lower",
       description: "Education systems, 1,001 Traversal, and practical learning tools."
     },
 
@@ -161,75 +178,10 @@
       type: "diagnostic",
       route: "/coherence-diagnostic/",
       authority: "soren",
-      x: 70,
-      y: 78,
-      zone: "southeast",
+      ring: "outer",
+      direction: "southeast",
+      offset: "upperLeft",
       description: "Coherence diagnostic boundary, assessment, and orientation logic."
-    },
-
-    "human-threshold": {
-      id: "human-threshold",
-      label: "Human Threshold",
-      shortLabel: "Sean",
-      type: "human",
-      route: "/meet-sean-mansfield/",
-      authority: "elara",
-      x: 28,
-      y: 25,
-      zone: "northwest",
-      description: "Meet Sean and the human voice behind the House."
-    },
-
-    "book-chamber": {
-      id: "book-chamber",
-      label: "Book Chamber",
-      shortLabel: "Book",
-      type: "book",
-      route: "/nine-summits-of-love/",
-      authority: "elara",
-      x: 70,
-      y: 24,
-      zone: "northeast",
-      description: "The Nine Summits of Love, 256 Carats of Human Potential, and the climb toward Love."
-    },
-
-    "portrait-hall": {
-      id: "portrait-hall",
-      label: "Portrait Hall",
-      shortLabel: "Portraits",
-      type: "future-character",
-      route: "/characters/",
-      authority: "jeeves",
-      x: 50,
-      y: 82,
-      zone: "south",
-      description: "Future character-first routing. For now, Jeeves orients the hall."
-    },
-
-    "lab": {
-      id: "lab",
-      label: "The Lab",
-      shortLabel: "Lab",
-      type: "proof",
-      route: "/gauges/",
-      authority: "jeeves",
-      x: 15,
-      y: 24,
-      zone: "northwest",
-      description: "Gauges, proof surfaces, and instrumentation."
-    },
-
-    "law-library": {
-      id: "law-library",
-      label: "Law Library",
-      shortLabel: "Laws",
-      type: "law",
-      route: "/laws/",
-      authority: "jeeves",
-      x: 85,
-      y: 24,
-      zone: "northeast",
-      description: "Laws, governance, and proof language."
     },
 
     "frontier-workshop": {
@@ -239,10 +191,88 @@
       type: "frontier",
       route: "/explore/frontier/",
       authority: "auren",
-      x: 88,
-      y: 82,
-      zone: "southeast",
+      ring: "outer",
+      direction: "southeast",
+      offset: "lowerRight",
       description: "Frontier systems and experimental applied lanes."
+    },
+
+    "portrait-hall": {
+      id: "portrait-hall",
+      label: "Portrait Hall",
+      shortLabel: "Portraits",
+      type: "future-character",
+      route: "/characters/",
+      authority: "jeeves",
+      ring: "outer",
+      direction: "south",
+      offset: "none",
+      description: "Future character-first routing. For now, Jeeves orients the hall."
+    },
+
+    "atlas-study": {
+      id: "atlas-study",
+      label: "Atlas Study",
+      shortLabel: "Atlas",
+      type: "world",
+      route: "/showroom/globe/",
+      authority: "jeeves",
+      ring: "outer",
+      direction: "southwest",
+      offset: "upperRight",
+      description: "World, globe, planet, and atlas study."
+    },
+
+    "hearth-room": {
+      id: "hearth-room",
+      label: "Hearth Room",
+      shortLabel: "Hearth",
+      type: "world",
+      route: "/showroom/globe/hearth/",
+      authority: "jeeves",
+      ring: "outer",
+      direction: "southwest",
+      offset: "lowerLeft",
+      description: "Hearth world room and planetary lane."
+    },
+
+    "showroom": {
+      id: "showroom",
+      label: "Showroom / Atrium",
+      shortLabel: "Showroom",
+      type: "showroom",
+      route: "/showroom/",
+      authority: "jeeves",
+      ring: "outer",
+      direction: "west",
+      offset: "none",
+      description: "The public showroom and visible proof-object entry."
+    },
+
+    "human-threshold": {
+      id: "human-threshold",
+      label: "Human Threshold",
+      shortLabel: "Sean",
+      type: "human",
+      route: "/meet-sean-mansfield/",
+      authority: "elara",
+      ring: "outer",
+      direction: "northwest",
+      offset: "upperRight",
+      description: "Meet Sean and the human voice behind the House."
+    },
+
+    "lab": {
+      id: "lab",
+      label: "The Lab",
+      shortLabel: "Lab",
+      type: "proof",
+      route: "/gauges/",
+      authority: "jeeves",
+      ring: "outer",
+      direction: "northwest",
+      offset: "lowerLeft",
+      description: "Gauges, proof surfaces, and instrumentation."
     }
   };
 
@@ -250,11 +280,11 @@
     jeeves: {
       id: "jeeves",
       label: "Jeeves",
-      initials: "J",
       title: "House Guide",
       homeRoom: "house-core",
       route: "/showroom/globe/hearth/jeeves/",
       palette: "jeeves",
+      face: "butler",
       authorityLine: "Jeeves has authority for whole-House orientation, the Showroom, the Atlas, and rooms where the visitor needs the map.",
       actionLabel: "Ask Jeeves",
       description: "Whole House map, orientation, and where every door belongs."
@@ -263,11 +293,11 @@
     auren: {
       id: "auren",
       label: "Auren",
-      initials: "A",
       title: "Product Guide",
       homeRoom: "product-gallery",
       route: "/products/auren/",
       palette: "auren",
+      face: "maker",
       authorityLine: "Auren has authority for products, practical tools, Education, 1,001 Traversal, and applied systems.",
       actionLabel: "Talk to Auren",
       description: "Product floor, tools, practical systems, and Education."
@@ -276,11 +306,11 @@
     soren: {
       id: "soren",
       label: "Soren",
-      initials: "S",
       title: "Diagnostic Guide",
       homeRoom: "diagnostic-room",
       route: "/coherence-diagnostic/",
       palette: "soren",
+      face: "lens",
       authorityLine: "Soren has authority for diagnostic boundaries, coherence orientation, and assessment logic.",
       actionLabel: "Talk to Soren",
       description: "Diagnostic room, coherence boundary, and assessment orientation."
@@ -289,11 +319,11 @@
     elara: {
       id: "elara",
       label: "Elara",
-      initials: "E",
       title: "Signal Bearer",
       homeRoom: "human-threshold",
       route: "/elara/",
       palette: "elara",
+      face: "signal",
       authorityLine: "Elara has authority for the human threshold, Sean, the Book Chamber, and Mirrorland’s climate.",
       actionLabel: "Talk to Elara",
       description: "Human threshold, The Nine Summits of Love, and Mirrorland’s climate."
@@ -319,10 +349,6 @@
     return String(value).replace(/\s+/g, " ").trim();
   }
 
-  function byId(id) {
-    return document.getElementById(id);
-  }
-
   function q(selector, root) {
     return (root || document).querySelector(selector);
   }
@@ -346,7 +372,7 @@
           Object.keys(attrs[key]).forEach(function (dataKey) {
             node.dataset[dataKey] = attrs[key][dataKey];
           });
-        } else if (key === "aria") {
+        } else if (key === "aria" && attrs[key]) {
           Object.keys(attrs[key]).forEach(function (ariaKey) {
             node.setAttribute("aria-" + ariaKey, attrs[key][ariaKey]);
           });
@@ -362,6 +388,15 @@
   function empty(node) {
     if (!node) return;
     while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function escapeHTML(value) {
+    return normalize(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   function roomExists(roomId) {
@@ -384,14 +419,51 @@
 
   function resolveAuthority(room) {
     if (!room) return "jeeves";
-
     if (agentExists(room.authority)) return room.authority;
+    if (room.type && AUTHORITY_FALLBACK[room.type]) return AUTHORITY_FALLBACK[room.type];
+    return "jeeves";
+  }
 
-    if (room.type && AUTHORITY_FALLBACK[room.type]) {
-      return AUTHORITY_FALLBACK[room.type];
+  function angleToRadians(angle) {
+    return angle * Math.PI / 180;
+  }
+
+  function computeRoomPosition(room) {
+    var center = GEOMETRY.center;
+    var ringName = room.ring || "outer";
+
+    if (ringName === "center" || room.direction === "center") {
+      return {
+        x: center.x,
+        y: center.y
+      };
     }
 
-    return "jeeves";
+    var radius = GEOMETRY.rings[ringName] || GEOMETRY.rings.outer;
+    var angle = typeof room.angle === "number"
+      ? room.angle
+      : GEOMETRY.angles[room.direction] || 0;
+
+    var offset = GEOMETRY.offsets[room.offset || "none"] || GEOMETRY.offsets.none;
+    var radians = angleToRadians(angle);
+
+    return {
+      x: center.x + Math.cos(radians) * radius + offset.x,
+      y: center.y + Math.sin(radians) * radius + offset.y
+    };
+  }
+
+  function applyRoomPosition(room) {
+    var position = computeRoomPosition(room);
+    room.x = position.x;
+    room.y = position.y;
+    return room;
+  }
+
+  function computeAllRoomPositions() {
+    Object.keys(ROOMS).forEach(function (roomId) {
+      applyRoomPosition(ROOMS[roomId]);
+    });
   }
 
   function getCurrentRoomFromDOM() {
@@ -416,6 +488,7 @@
 
     if (route.indexOf("/meet-sean-mansfield/") === 0) return "human-threshold";
     if (route.indexOf("/nine-summits-of-love/") === 0) return "book-chamber";
+    if (route.indexOf("/elara/") === 0) return "human-threshold";
     if (route.indexOf("/products/auren/") === 0) return "product-gallery";
     if (route.indexOf("/products/education/") === 0) return "education-room";
     if (route.indexOf("/products/") === 0) return "product-gallery";
@@ -441,6 +514,7 @@
         "data-house-control-pad-root": "true",
         "data-house-room": getCurrentRoomFromDOM()
       });
+
       document.body.appendChild(root);
     }
 
@@ -506,9 +580,20 @@
     trapFocus(event);
   }
 
+  function clearAnimationTimer() {
+    if (STATE.animationTimer) {
+      window.clearTimeout(STATE.animationTimer);
+      STATE.animationTimer = null;
+    }
+  }
+
+  function clearTravelLine() {
+    var line = q("[data-house-control-pad-travel-line]", STATE.panel);
+    if (line) line.remove();
+  }
+
   function drawTravelLine(fromRoom, toRoom) {
-    var existing = q("[data-house-control-pad-travel-line]", STATE.panel);
-    if (existing) existing.remove();
+    clearTravelLine();
 
     if (!STATE.map || !fromRoom || !toRoom) return null;
 
@@ -529,11 +614,6 @@
     STATE.map.appendChild(line);
 
     return line;
-  }
-
-  function clearTravelLine() {
-    var line = q("[data-house-control-pad-travel-line]", STATE.panel);
-    if (line) line.remove();
   }
 
   function clearActiveStates() {
@@ -600,7 +680,7 @@
     var kicker = create("div", "hcp-kicker", { text: "Universal House Controller" });
     var title = create("h2", "hcp-title", { text: "Choose the room. The House summons the right guide." });
     var subtitle = create("p", "hcp-subtitle", {
-      text: "Room-first routing: you do not need to know which teammate belongs where."
+      text: "Rooms follow the compass blueprint. Authority comes from the room."
     });
 
     titleWrap.appendChild(kicker);
@@ -622,15 +702,36 @@
     return header;
   }
 
+  function buildCompassLabels() {
+    var wrap = create("div", "hcp-compass-labels", { "aria-hidden": "true" });
+
+    [
+      ["N", 50, 7],
+      ["E", 93, 50],
+      ["S", 50, 93],
+      ["W", 7, 50]
+    ].forEach(function (item) {
+      var node = create("span", "hcp-compass-label", { text: item[0] });
+      node.style.left = item[1] + "%";
+      node.style.top = item[2] + "%";
+      wrap.appendChild(node);
+    });
+
+    return wrap;
+  }
+
   function buildRoomNode(room) {
+    var authority = getAgent(resolveAuthority(room));
+
     var node = create("button", "hcp-room-node hcp-room-" + room.type, {
       type: "button",
       "data-house-room-node": room.id,
       "data-house-room-type": room.type,
+      "data-house-room-direction": room.direction,
       "data-selected": "false",
       "data-current": "false",
       "data-arrival": "false",
-      "aria-label": room.label + ". " + room.description
+      "aria-label": room.label + ". " + room.description + " Authority: " + authority.label + "."
     });
 
     node.style.left = room.x + "%";
@@ -638,13 +739,11 @@
 
     var dot = create("span", "hcp-room-dot", { "aria-hidden": "true" });
     var label = create("span", "hcp-room-label", { text: room.shortLabel || room.label });
-    var authority = create("span", "hcp-room-authority", {
-      text: getAgent(resolveAuthority(room)).label
-    });
+    var authorityNode = create("span", "hcp-room-authority", { text: authority.label });
 
     node.appendChild(dot);
     node.appendChild(label);
-    node.appendChild(authority);
+    node.appendChild(authorityNode);
 
     node.addEventListener("click", function () {
       travelToRoom(room.id, { source: "room-click" });
@@ -653,10 +752,36 @@
     return node;
   }
 
+  function buildAvatarFace(agent) {
+    var face = create("span", "hcp-avatar-face hcp-face-" + agent.face, {
+      "aria-hidden": "true"
+    });
+
+    var hair = create("span", "hcp-face-hair");
+    var head = create("span", "hcp-face-head");
+    var eyes = create("span", "hcp-face-eyes");
+    var nose = create("span", "hcp-face-nose");
+    var mouth = create("span", "hcp-face-mouth");
+    var cue = create("span", "hcp-face-cue");
+    var badge = create("span", "hcp-face-badge", { text: agent.label.charAt(0) });
+
+    head.appendChild(eyes);
+    head.appendChild(nose);
+    head.appendChild(mouth);
+
+    face.appendChild(hair);
+    face.appendChild(head);
+    face.appendChild(cue);
+    face.appendChild(badge);
+
+    return face;
+  }
+
   function buildAvatar(agent) {
     var avatar = create("button", "hcp-avatar hcp-avatar-" + agent.palette, {
       type: "button",
       "data-house-avatar": agent.id,
+      "data-house-avatar-face": agent.face,
       "data-selected": "false",
       "data-traveling": "false",
       "data-arrived": "false",
@@ -664,13 +789,7 @@
       "aria-label": agent.label + ". " + agent.description
     });
 
-    var face = create("span", "hcp-avatar-face", { "aria-hidden": "true" });
-    var initials = create("span", "hcp-avatar-initials", { text: agent.initials });
-    var shine = create("span", "hcp-avatar-shine", { "aria-hidden": "true" });
-
-    face.appendChild(initials);
-    face.appendChild(shine);
-
+    var face = buildAvatarFace(agent);
     var label = create("span", "hcp-avatar-label", { text: agent.label });
 
     avatar.appendChild(face);
@@ -685,20 +804,32 @@
 
   function buildMap() {
     var mapWrap = create("section", "hcp-map-wrap", {
-      "aria-label": "Animated House blueprint"
+      "aria-label": "Circular House blueprint"
     });
 
     var map = create("div", "hcp-map", {
-      "data-house-control-pad-map": "true"
+      "data-house-control-pad-map": "true",
+      "data-blueprint-layout": "circular-compass"
     });
 
     var blueprint = create("div", "hcp-blueprint-lines", { "aria-hidden": "true" });
+
+    var innerRing = create("div", "hcp-ring hcp-ring-inner", { "aria-hidden": "true" });
+    var middleRing = create("div", "hcp-ring hcp-ring-middle", { "aria-hidden": "true" });
+    var outerRing = create("div", "hcp-ring hcp-ring-outer", { "aria-hidden": "true" });
+
+    var cardinalCross = create("div", "hcp-cardinal-cross", { "aria-hidden": "true" });
 
     var core = create("div", "hcp-house-core-ring", { "aria-hidden": "true" });
     core.style.left = ROOMS["house-core"].x + "%";
     core.style.top = ROOMS["house-core"].y + "%";
 
     map.appendChild(blueprint);
+    map.appendChild(innerRing);
+    map.appendChild(middleRing);
+    map.appendChild(outerRing);
+    map.appendChild(cardinalCross);
+    map.appendChild(buildCompassLabels());
     map.appendChild(core);
 
     Object.keys(ROOMS).forEach(function (roomId) {
@@ -715,7 +846,6 @@
     });
 
     map.appendChild(avatarLayer);
-
     mapWrap.appendChild(map);
 
     STATE.map = map;
@@ -729,7 +859,7 @@
       "aria-label": "House rooms"
     });
 
-    var heading = create("h3", "hcp-section-title", { text: "Rooms" });
+    var heading = create("h3", "hcp-section-title", { text: "Rooms by authority" });
     list.appendChild(heading);
 
     Object.keys(ROOMS).forEach(function (roomId) {
@@ -770,6 +900,7 @@
       "data-hcp-arrival-title": "true",
       text: "Choose a room."
     });
+
     var body = create("p", "hcp-arrival-body", {
       "data-hcp-arrival-body": "true",
       text: "The House will summon the right guide."
@@ -794,17 +925,9 @@
       text: "Cancel"
     });
 
-    talk.addEventListener("click", function () {
-      openSelectedAgent();
-    });
-
-    openRoom.addEventListener("click", function () {
-      openSelectedRoom();
-    });
-
-    cancel.addEventListener("click", function () {
-      hideArrivalPanel();
-    });
+    talk.addEventListener("click", openSelectedAgent);
+    openRoom.addEventListener("click", openSelectedRoom);
+    cancel.addEventListener("click", hideArrivalPanel);
 
     actions.appendChild(talk);
     actions.appendChild(openRoom);
@@ -876,7 +999,6 @@
     var body = create("div", "hcp-body");
 
     panel.appendChild(buildHeader());
-
     body.appendChild(buildMap());
     body.appendChild(buildRoomList());
 
@@ -897,6 +1019,7 @@
   }
 
   function render() {
+    computeAllRoomPositions();
     ensureRoot();
 
     if (STATE.overlay && STATE.overlay.parentNode) {
@@ -904,7 +1027,6 @@
     }
 
     var overlay = buildPanel();
-
     document.body.appendChild(overlay);
 
     resetAvatarHomePositions();
@@ -912,13 +1034,17 @@
     STATE.initialized = true;
 
     document.documentElement.setAttribute("data-house-control-pad-ready", "true");
+    document.documentElement.setAttribute("data-house-control-pad-layout", "circular-compass");
     document.body.setAttribute("data-house-control-pad-ready", "true");
+    document.body.setAttribute("data-house-control-pad-layout", "circular-compass");
 
     window.dispatchEvent(new CustomEvent("house-control-pad:ready", {
       detail: {
         contract: CONTRACT,
         currentRoom: STATE.currentRoom,
+        layout: "circular-compass",
         roomFirst: true,
+        avatarFaces: true,
         characterFirstDeferredToPortraitHall: true
       }
     }));
@@ -970,7 +1096,8 @@
     window.dispatchEvent(new CustomEvent("house-control-pad:open", {
       detail: {
         contract: CONTRACT,
-        currentRoom: room.id
+        currentRoom: room.id,
+        layout: "circular-compass"
       }
     }));
   }
@@ -998,13 +1125,6 @@
         contract: CONTRACT
       }
     }));
-  }
-
-  function clearAnimationTimer() {
-    if (STATE.animationTimer) {
-      window.clearTimeout(STATE.animationTimer);
-      STATE.animationTimer = null;
-    }
   }
 
   function hideArrivalPanel() {
@@ -1055,6 +1175,7 @@
 
   function openSelectedAgent() {
     var agent = getAgent(STATE.selectedAgent);
+
     if (agent && agent.route) {
       window.location.href = agent.route;
     }
@@ -1062,6 +1183,7 @@
 
   function openSelectedRoom() {
     var room = getRoom(STATE.selectedRoom);
+
     if (room && room.route) {
       window.location.href = room.route;
     }
@@ -1138,18 +1260,10 @@
         room: targetRoom.id,
         agent: agent.id,
         from: homeRoom.id,
-        to: targetRoom.id
+        to: targetRoom.id,
+        layout: "circular-compass"
       }
     }));
-  }
-
-  function escapeHTML(value) {
-    return normalize(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
   }
 
   function registerRoom(room) {
@@ -1162,11 +1276,15 @@
       type: normalize(room.type || "orientation"),
       route: normalize(room.route || "/"),
       authority: normalize(room.authority || "jeeves"),
-      x: typeof room.x === "number" ? room.x : 50,
-      y: typeof room.y === "number" ? room.y : 50,
-      zone: normalize(room.zone || "center"),
+      ring: normalize(room.ring || "outer"),
+      direction: normalize(room.direction || "north"),
+      offset: normalize(room.offset || "none"),
+      angle: typeof room.angle === "number" ? room.angle : undefined,
+      zone: normalize(room.zone || room.direction || "center"),
       description: normalize(room.description || "")
     };
+
+    applyRoomPosition(ROOMS[room.id]);
 
     if (STATE.initialized) render();
 
@@ -1179,11 +1297,11 @@
     AGENTS[agent.id] = {
       id: normalize(agent.id),
       label: normalize(agent.label || agent.id),
-      initials: normalize(agent.initials || agent.label || agent.id).charAt(0).toUpperCase(),
       title: normalize(agent.title || "Guide"),
       homeRoom: roomExists(agent.homeRoom) ? agent.homeRoom : DEFAULT_ROOM_ID,
       route: normalize(agent.route || "/"),
       palette: normalize(agent.palette || agent.id),
+      face: normalize(agent.face || "guide"),
       authorityLine: normalize(agent.authorityLine || ""),
       actionLabel: normalize(agent.actionLabel || "Talk to Guide"),
       description: normalize(agent.description || "")
@@ -1213,6 +1331,8 @@
   }
 
   function boot() {
+    computeAllRoomPositions();
+
     STATE.currentRoom = getCurrentRoomFromDOM();
 
     ensureRoot();
@@ -1228,6 +1348,7 @@
       registerAgent: registerAgent,
       rooms: ROOMS,
       agents: AGENTS,
+      geometry: GEOMETRY,
       getState: function () {
         return {
           initialized: STATE.initialized,
@@ -1235,7 +1356,9 @@
           isAnimating: STATE.isAnimating,
           currentRoom: STATE.currentRoom,
           selectedRoom: STATE.selectedRoom,
-          selectedAgent: STATE.selectedAgent
+          selectedAgent: STATE.selectedAgent,
+          layout: "circular-compass",
+          avatarFaces: true
         };
       }
     };

@@ -1,16 +1,17 @@
 <!-- /products/auren/index.html -->
-<!-- AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1 -->
+<!-- AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2 -->
 <!-- Full-file replacement. -->
-<!-- Owns: Auren product-floor chat shell, local response bank, product calibration flow, four-question product branches, internal product routing, Elara/Soren/Jeeves handoffs, one-tap-one-line pacing. -->
+<!-- Owns: Auren product-floor chat shell, local response bank, product calibration flow, four-question product branches, internal product routing, Elara/Soren/Jeeves handoffs, short opening sequence, one-tap-one-line pacing. -->
 <!-- Does not own: /products/index.html, product child pages, Elara page, Soren diagnostic page, Jeeves page, external CSS visual authority, backend/API, product runtime, gauges. -->
-<!-- Purpose: create Auren's products-floor work station. This is not Auren's home page. It is his product calibration floor. -->
+<!-- Purpose: shorten Auren's first-contact opening while preserving the full product-floor calibration engine. -->
 
 <!doctype html>
 <html
   lang="en"
   data-route="/products/auren/"
   data-page="auren-products-work-floor"
-  data-contract="AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1"
+  data-contract="AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2"
+  data-previous-contract="AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1"
   data-role="product-floor-agent"
   data-character="auren"
   data-character-age="13"
@@ -23,6 +24,7 @@
   data-one-tap-one-line="true"
   data-product-calibration="true"
   data-four-question-product-branches="true"
+  data-short-opening-sequence="true"
   data-default-routing-system="products"
   data-external-handoffs="elara,soren,jeeves"
 >
@@ -72,7 +74,7 @@
         data-auren-root="true"
         data-auren-ready="false"
         data-auren-speaking="false"
-        data-contract="AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1"
+        data-contract="AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2"
       >
         <div class="auren-console-topline">
           <div class="auren-identity">
@@ -145,7 +147,8 @@
     </section>
 
     <template id="auren-route-receipt" data-route-receipt>
-AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1
+AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2
+previous=AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1
 route=/products/auren/
 page=auren_products_work_floor
 character=auren
@@ -159,6 +162,8 @@ local_chat=true
 api_dependency=false
 single_prompt_dock=true
 one_tap_one_line=true
+short_opening_sequence=true
+opening_sequence_reduced=true
 product_calibration=true
 four_question_product_branches=true
 default_routing=inside_products
@@ -167,7 +172,7 @@ elara_route=/meet-sean-mansfield/
 soren_route=/coherence-diagnostic/
 jeeves_route=/showroom/globe/hearth/jeeves/
 products_route=/products/
-route_owns=auren_chat_shell,local_response_bank,product_prefaces,four_question_answers,product_routes,handoffs,one_tap_one_line
+route_owns=auren_chat_shell,local_response_bank,short_opening_sequence,product_prefaces,four_question_answers,product_routes,handoffs,one_tap_one_line
 route_does_not_own=products_index,product_child_pages,official_product_descriptions,elara_page,soren_page,jeeves_page,css_visual_authority,api,gauges
     </template>
   </main>
@@ -208,7 +213,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
     (function mountAurenProductFloor() {
       "use strict";
 
-      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1";
+      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_SHORT_OPENING_HTML_TNT_v2";
 
       var ROUTES = {
         products: "/products/",
@@ -229,14 +234,14 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
       };
 
       var TIMING = {
-        entranceDelay: 780,
-        firstBubbleDelay: 900,
-        shortBubbleDelay: 1900,
-        mediumBubbleDelay: 2800,
-        longBubbleDelay: 3800,
-        extraLongBubbleDelay: 4700,
-        betweenBubbleDelay: 720,
-        maxNaturalJitter: 180
+        entranceDelay: 520,
+        firstBubbleDelay: 520,
+        shortBubbleDelay: 1000,
+        mediumBubbleDelay: 1450,
+        longBubbleDelay: 1900,
+        extraLongBubbleDelay: 2300,
+        betweenBubbleDelay: 360,
+        maxNaturalJitter: 80
       };
 
       var PRODUCT_ORDER = [
@@ -484,22 +489,9 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
 
       var OPENING_SEQUENCE = [
         "You are on the products floor.",
-        "No, this is not my room.",
-        "This is where I spend most of the day because apparently somebody has to keep track of what is actually useful.",
-        "A product is not useful because it has a good name.",
-        "A product is useful when it solves a real problem, survives testing, and still makes sense after it leaves the page.",
-        "That is the part people love skipping.",
-        "I do not.",
-        "So here is how this works.",
-        "You pick a product.",
-        "I give you my view of it.",
-        "Not the brochure version. The useful version.",
-        "Then I answer the four questions that matter before you waste your time opening the actual thing.",
-        "If you are calibrated after that, I send you into the product system.",
-        "If you are asking about the mission or the human-facing threshold, that belongs to Elara.",
-        "If you are asking about the Diagnostic, that belongs to Soren.",
-        "If you are lost, ask Jeeves.",
-        "If you are here for products, stay here and try to keep up."
+        "I’m Auren.",
+        "Pick a product. I’ll tell you what it is, what problem it solves, who it is for, and whether it is ready.",
+        "Not the brochure version. The useful version."
       ];
 
       var MAIN_PROMPTS = [
@@ -542,10 +534,6 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
 
       function makeRouteAction(label, routeUrl) {
         return { label: label, action: "route", routeUrl: routeUrl };
-      }
-
-      function makeResetAction() {
-        return { label: "Ask about something else.", action: "reset" };
       }
 
       function makeBackToProductsAction() {
@@ -699,8 +687,8 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           delay = TIMING.extraLongBubbleDelay;
         }
 
-        delay += sentenceCount * 130;
-        delay += commaCount * 75;
+        delay += sentenceCount * 80;
+        delay += commaCount * 45;
         delay += naturalJitter(value, index);
 
         return Math.round(delay);
@@ -1023,8 +1011,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           return {
             bubbles: [
               "Back to the floor.",
-              "Do not wander.",
-              "There are still products to sort."
+              "Pick something useful."
             ],
             after: "products_menu"
           };
@@ -1038,8 +1025,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
           return {
             bubbles: [
               "Back to " + (PRODUCT_DATA[option.productId] ? PRODUCT_DATA[option.productId].name : "the product") + ".",
-              "Four questions.",
-              "Try not to make it complicated."
+              "Four questions."
             ],
             after: "product_questions",
             productId: option.productId
@@ -1065,8 +1051,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
         return {
           bubbles: [
             "That does not belong anywhere useful yet.",
-            "Back to the product floor.",
-            "Pick a product, ask Jeeves, or leave."
+            "Back to the product floor."
           ],
           after: "products_menu"
         };
@@ -1137,6 +1122,7 @@ route_does_not_own=products_index,product_child_pages,official_product_descripti
               apiDependency: false,
               singlePromptDock: true,
               oneTapOneLine: true,
+              shortOpeningSequence: true,
               productCalibration: true,
               route: "/products/auren/",
               mountNode: "#aurenProductFloorMount"

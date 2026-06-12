@@ -1,0 +1,1058 @@
+/* /assets/house-control-pad/house.control-pad.css */
+/* HOUSE_CONTROL_PAD_UNIVERSAL_CONTROLLER_CSS_TNT_v1 */
+/* Full-file replacement. */
+/*
+  Owns:
+  - Universal House Control Pad overlay
+  - Animated blueprint map styling
+  - Room-first authority routing visuals
+  - Avatar medallion faces
+  - Avatar travel animation surface
+  - Arrival panel
+  - Mobile-centered controller layout
+
+  Does not own:
+  - Door page layout
+  - Door page nav structure
+  - Elara page
+  - Auren page
+  - Jeeves page
+  - Soren page
+  - Portrait Hall character-first routing
+*/
+
+:root{
+  --hcp-bg:#02040b;
+  --hcp-panel:#071023;
+  --hcp-panel-2:#0b1530;
+  --hcp-ink:#fff4d8;
+  --hcp-text:#eef5ff;
+  --hcp-muted:rgba(230,238,255,.74);
+  --hcp-soft:rgba(230,238,255,.56);
+  --hcp-faint:rgba(230,238,255,.34);
+
+  --hcp-gold:#f3c86f;
+  --hcp-gold-2:#ffe8a3;
+  --hcp-blue:#8dd8ff;
+  --hcp-green:#8ff0c3;
+  --hcp-rose:#ffb8da;
+  --hcp-violet:#8f65ff;
+  --hcp-silver:#d8e6ff;
+
+  --hcp-line:rgba(255,255,255,.12);
+  --hcp-line-soft:rgba(255,255,255,.08);
+  --hcp-line-gold:rgba(243,200,111,.34);
+  --hcp-line-blue:rgba(141,216,255,.28);
+  --hcp-line-rose:rgba(255,184,218,.30);
+
+  --hcp-shadow:0 32px 120px rgba(0,0,0,.58);
+  --hcp-shadow-soft:0 18px 54px rgba(0,0,0,.38);
+
+  --hcp-radius:1.35rem;
+  --hcp-radius-lg:2rem;
+  --hcp-gem:polygon(50% 0%,78% 9%,100% 35%,90% 75%,50% 100%,10% 75%,0% 35%,22% 9%);
+
+  --hcp-z:9999;
+}
+
+/* Open-state page safety */
+
+html[data-house-control-pad-open="true"],
+body[data-house-control-pad-open="true"]{
+  overflow:hidden!important;
+}
+
+/* Overlay */
+
+.hcp-overlay{
+  position:fixed;
+  inset:0;
+  z-index:var(--hcp-z);
+  display:grid;
+  place-items:center;
+  padding:max(1rem,env(safe-area-inset-top)) 1rem max(1rem,env(safe-area-inset-bottom));
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 8%,rgba(243,200,111,.15),transparent 30rem),
+    radial-gradient(circle at 18% 24%,rgba(143,101,255,.20),transparent 32rem),
+    radial-gradient(circle at 84% 32%,rgba(141,216,255,.14),transparent 30rem),
+    rgba(0,0,0,.70);
+  backdrop-filter:blur(14px);
+  transition:opacity .22s ease, visibility .22s ease;
+}
+
+.hcp-overlay[data-open="true"]{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+.hcp-panel{
+  position:relative;
+  width:min(1120px,calc(100vw - 28px));
+  max-height:calc(100vh - 28px);
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto auto;
+  overflow:hidden;
+  border:1px solid rgba(243,200,111,.24);
+  border-radius:var(--hcp-radius-lg);
+  color:var(--hcp-text);
+  background:
+    radial-gradient(circle at 14% 0%,rgba(243,200,111,.13),transparent 28rem),
+    radial-gradient(circle at 92% 18%,rgba(141,216,255,.12),transparent 28rem),
+    radial-gradient(circle at 58% 78%,rgba(143,101,255,.12),transparent 32rem),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),
+    rgba(5,10,23,.97);
+  box-shadow:var(--hcp-shadow),inset 0 1px 0 rgba(255,255,255,.09);
+  transform:translateY(12px) scale(.985);
+  transition:transform .22s ease;
+}
+
+.hcp-overlay[data-open="true"] .hcp-panel{
+  transform:translateY(0) scale(1);
+}
+
+/* Header */
+
+.hcp-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:start;
+  gap:1rem;
+  padding:1rem 1rem .85rem;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.hcp-title-wrap{
+  display:grid;
+  gap:.35rem;
+  min-width:0;
+}
+
+.hcp-kicker{
+  width:fit-content;
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.48rem .78rem;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  color:rgba(230,238,255,.86);
+  background:rgba(255,255,255,.04);
+  font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.hcp-kicker::before{
+  content:"";
+  width:.66rem;
+  height:.66rem;
+  border-radius:.18rem;
+  transform:rotate(45deg);
+  background:linear-gradient(135deg,var(--hcp-gold-2),var(--hcp-gold));
+  box-shadow:0 0 1rem rgba(243,200,111,.42);
+}
+
+.hcp-title{
+  margin:0;
+  max-width:780px;
+  color:var(--hcp-ink);
+  font:950 clamp(1.5rem,4vw,2.55rem)/.96 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.065em;
+  text-wrap:balance;
+}
+
+.hcp-subtitle{
+  margin:0;
+  max-width:780px;
+  color:var(--hcp-muted);
+  font:500 .96rem/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.hcp-close{
+  width:2.85rem;
+  height:2.85rem;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  color:var(--hcp-ink);
+  background:rgba(255,255,255,.055);
+  font:950 1.4rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+
+.hcp-close:hover,
+.hcp-close:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(243,200,111,.54);
+  background:rgba(243,200,111,.08);
+  outline:none;
+}
+
+/* Body layout */
+
+.hcp-body{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(240px,320px);
+  gap:1rem;
+  padding:1rem;
+  overflow:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(243,200,111,.36) rgba(255,255,255,.05);
+}
+
+.hcp-body::-webkit-scrollbar{
+  width:.65rem;
+}
+
+.hcp-body::-webkit-scrollbar-track{
+  background:rgba(255,255,255,.04);
+}
+
+.hcp-body::-webkit-scrollbar-thumb{
+  border-radius:999px;
+  background:rgba(243,200,111,.34);
+}
+
+/* Map */
+
+.hcp-map-wrap{
+  min-height:0;
+  display:grid;
+}
+
+.hcp-map{
+  position:relative;
+  min-height:560px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:1.45rem;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(243,200,111,.10),transparent 9rem),
+    radial-gradient(circle at 18% 22%,rgba(141,216,255,.12),transparent 13rem),
+    radial-gradient(circle at 82% 78%,rgba(143,101,255,.12),transparent 15rem),
+    linear-gradient(rgba(141,216,255,.048) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(141,216,255,.048) 1px,transparent 1px),
+    rgba(0,0,0,.20);
+  background-size:auto,auto,auto,42px 42px,42px 42px,auto;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 80px rgba(0,0,0,.28);
+}
+
+.hcp-blueprint-lines{
+  position:absolute;
+  inset:7%;
+  pointer-events:none;
+  border:1px solid rgba(243,200,111,.20);
+  border-radius:2rem;
+}
+
+.hcp-blueprint-lines::before,
+.hcp-blueprint-lines::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.hcp-blueprint-lines::before{
+  background:
+    linear-gradient(90deg,transparent 0 24%,rgba(243,200,111,.18) 24% 24.3%,transparent 24.3% 49.8%,rgba(243,200,111,.18) 49.8% 50.2%,transparent 50.2% 75.7%,rgba(243,200,111,.18) 75.7% 76%,transparent 76%),
+    linear-gradient(180deg,transparent 0 23.8%,rgba(141,216,255,.16) 23.8% 24.1%,transparent 24.1% 49.8%,rgba(141,216,255,.16) 49.8% 50.2%,transparent 50.2% 75.9%,rgba(141,216,255,.16) 75.9% 76.2%,transparent 76.2%);
+}
+
+.hcp-blueprint-lines::after{
+  inset:17%;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:1.35rem;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.035),
+    inset 0 0 0 1px rgba(255,255,255,.035);
+}
+
+.hcp-house-core-ring{
+  position:absolute;
+  width:8.5rem;
+  height:8.5rem;
+  border:1px solid rgba(243,200,111,.30);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  background:
+    radial-gradient(circle,rgba(243,200,111,.12),transparent 58%),
+    conic-gradient(from 0deg,transparent,rgba(243,200,111,.14),transparent,rgba(141,216,255,.12),transparent);
+  box-shadow:0 0 2rem rgba(243,200,111,.12);
+}
+
+.hcp-house-core-ring::before,
+.hcp-house-core-ring::after{
+  content:"";
+  position:absolute;
+  inset:18%;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:50%;
+}
+
+.hcp-house-core-ring::after{
+  inset:37%;
+  background:rgba(243,200,111,.18);
+  box-shadow:0 0 1.2rem rgba(243,200,111,.28);
+}
+
+/* Room nodes */
+
+.hcp-room-node{
+  position:absolute;
+  z-index:3;
+  min-width:5.5rem;
+  max-width:7.4rem;
+  min-height:3.1rem;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-areas:
+    "dot label"
+    "dot auth";
+  column-gap:.42rem;
+  align-items:center;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:.95rem;
+  padding:.48rem .58rem;
+  color:var(--hcp-text);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(255,255,255,.08),transparent 55%),
+    rgba(5,10,23,.84);
+  box-shadow:0 .8rem 1.8rem rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.07);
+  cursor:pointer;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.hcp-room-node:hover,
+.hcp-room-node:focus-visible{
+  transform:translate(-50%,-50%) scale(1.045);
+  border-color:rgba(243,200,111,.52);
+  background:rgba(10,18,40,.94);
+  outline:none;
+}
+
+.hcp-room-node[data-current="true"]{
+  border-color:rgba(141,216,255,.52);
+  box-shadow:
+    0 .8rem 1.8rem rgba(0,0,0,.30),
+    0 0 0 2px rgba(141,216,255,.12),
+    0 0 1.4rem rgba(141,216,255,.18),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.hcp-room-node[data-selected="true"]{
+  border-color:rgba(243,200,111,.58);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(243,200,111,.14),transparent 55%),
+    rgba(12,16,32,.95);
+}
+
+.hcp-room-node[data-arrival="true"]{
+  animation:hcpRoomArrival .78s ease both;
+}
+
+.hcp-room-dot{
+  grid-area:dot;
+  width:.82rem;
+  height:.82rem;
+  border-radius:.22rem;
+  transform:rotate(45deg);
+  background:var(--hcp-gold);
+  box-shadow:0 0 1rem rgba(243,200,111,.35);
+}
+
+.hcp-room-label{
+  grid-area:label;
+  min-width:0;
+  color:var(--hcp-ink);
+  font:950 .74rem/1.05 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.025em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.hcp-room-authority{
+  grid-area:auth;
+  color:var(--hcp-soft);
+  font:850 .58rem/1.05 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.hcp-room-orientation .hcp-room-dot,
+.hcp-room-showroom .hcp-room-dot,
+.hcp-room-world .hcp-room-dot,
+.hcp-room-proof .hcp-room-dot,
+.hcp-room-law .hcp-room-dot,
+.hcp-room-future-character .hcp-room-dot{
+  background:linear-gradient(135deg,var(--hcp-blue),var(--hcp-gold));
+}
+
+.hcp-room-product .hcp-room-dot,
+.hcp-room-frontier .hcp-room-dot{
+  background:linear-gradient(135deg,var(--hcp-green),var(--hcp-gold));
+}
+
+.hcp-room-diagnostic .hcp-room-dot{
+  background:linear-gradient(135deg,var(--hcp-silver),var(--hcp-blue));
+}
+
+.hcp-room-human .hcp-room-dot,
+.hcp-room-book .hcp-room-dot{
+  background:linear-gradient(135deg,var(--hcp-rose),var(--hcp-violet),var(--hcp-gold));
+}
+
+/* Travel line */
+
+.hcp-travel-line{
+  position:absolute;
+  z-index:4;
+  height:2px;
+  pointer-events:none;
+  transform-origin:0 50%;
+  background:
+    linear-gradient(90deg,
+      rgba(243,200,111,.0),
+      rgba(243,200,111,.88),
+      rgba(141,216,255,.72),
+      rgba(255,184,218,.0));
+  box-shadow:0 0 1rem rgba(243,200,111,.38);
+  animation:hcpTravelLine .92s ease both;
+}
+
+/* Avatars */
+
+.hcp-avatar-layer{
+  position:absolute;
+  inset:0;
+  z-index:6;
+  pointer-events:none;
+}
+
+.hcp-avatar{
+  position:absolute;
+  width:4.25rem;
+  min-height:5.15rem;
+  display:grid;
+  justify-items:center;
+  gap:.24rem;
+  transform:translate(-50%,-50%);
+  border:0;
+  padding:0;
+  color:var(--hcp-ink);
+  background:transparent;
+  cursor:pointer;
+  pointer-events:auto;
+  transition:left .98s cubic-bezier(.2,.9,.2,1),top .98s cubic-bezier(.2,.9,.2,1),filter .2s ease,transform .18s ease;
+}
+
+.hcp-avatar:hover,
+.hcp-avatar:focus-visible{
+  transform:translate(-50%,-50%) scale(1.055);
+  outline:none;
+}
+
+.hcp-avatar[data-selected="true"]{
+  filter:drop-shadow(0 0 1rem rgba(243,200,111,.32));
+}
+
+.hcp-avatar[data-traveling="true"]{
+  z-index:12;
+  filter:drop-shadow(0 0 1.2rem rgba(243,200,111,.55));
+}
+
+.hcp-avatar[data-arrived="true"]{
+  animation:hcpAvatarArrive .72s ease both;
+}
+
+.hcp-avatar-face{
+  position:relative;
+  width:3.25rem;
+  height:3.25rem;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:1.05rem;
+  background:
+    radial-gradient(circle at 35% 20%,rgba(255,255,255,.30),transparent 36%),
+    linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.025));
+  box-shadow:
+    0 .85rem 1.7rem rgba(0,0,0,.36),
+    inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+.hcp-avatar-face::before{
+  content:"";
+  position:absolute;
+  width:1.4rem;
+  height:.75rem;
+  top:.82rem;
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:999px 999px 45% 45%;
+  background:rgba(255,255,255,.18);
+  opacity:.46;
+}
+
+.hcp-avatar-face::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:56%;
+  width:1.2rem;
+  height:.34rem;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  background:rgba(0,0,0,.25);
+  box-shadow:
+    -.46rem -.56rem 0 -.08rem rgba(0,0,0,.36),
+    .46rem -.56rem 0 -.08rem rgba(0,0,0,.36);
+  opacity:.72;
+}
+
+.hcp-avatar-initials{
+  position:relative;
+  z-index:2;
+  margin-top:.18rem;
+  color:rgba(255,244,216,.96);
+  font:950 1.2rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  text-shadow:0 .2rem .6rem rgba(0,0,0,.40);
+}
+
+.hcp-avatar-shine{
+  position:absolute;
+  inset:-35%;
+  z-index:1;
+  background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.20) 48%,transparent 56%);
+  transform:translateX(-55%) rotate(8deg);
+  animation:hcpAvatarShine 4.8s ease-in-out infinite;
+}
+
+.hcp-avatar-label{
+  max-width:5.2rem;
+  padding:.18rem .36rem;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  color:rgba(241,246,255,.88);
+  background:rgba(0,0,0,.32);
+  font:950 .56rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Avatar palettes */
+
+.hcp-avatar-jeeves .hcp-avatar-face{
+  border-color:rgba(141,216,255,.30);
+  background:
+    radial-gradient(circle at 34% 18%,rgba(255,255,255,.28),transparent 36%),
+    radial-gradient(circle at 70% 76%,rgba(243,200,111,.16),transparent 54%),
+    linear-gradient(135deg,rgba(141,216,255,.30),rgba(6,18,44,.92));
+}
+
+.hcp-avatar-auren .hcp-avatar-face{
+  border-color:rgba(143,240,195,.30);
+  background:
+    radial-gradient(circle at 34% 18%,rgba(255,255,255,.28),transparent 36%),
+    radial-gradient(circle at 70% 76%,rgba(143,240,195,.22),transparent 54%),
+    linear-gradient(135deg,rgba(243,200,111,.28),rgba(8,42,32,.92));
+}
+
+.hcp-avatar-soren .hcp-avatar-face{
+  border-color:rgba(216,230,255,.32);
+  background:
+    radial-gradient(circle at 34% 18%,rgba(255,255,255,.30),transparent 36%),
+    radial-gradient(circle at 70% 76%,rgba(141,216,255,.22),transparent 54%),
+    linear-gradient(135deg,rgba(216,230,255,.24),rgba(7,14,34,.94));
+}
+
+.hcp-avatar-elara .hcp-avatar-face{
+  border-color:rgba(255,184,218,.34);
+  background:
+    radial-gradient(circle at 34% 18%,rgba(255,255,255,.30),transparent 36%),
+    radial-gradient(circle at 70% 76%,rgba(255,184,218,.26),transparent 54%),
+    linear-gradient(135deg,rgba(255,184,218,.24),rgba(143,101,255,.30),rgba(8,8,30,.94));
+}
+
+/* Room list */
+
+.hcp-room-list{
+  min-height:0;
+  display:grid;
+  align-content:start;
+  gap:.58rem;
+  padding:.78rem;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:1.35rem;
+  background:rgba(0,0,0,.18);
+  overflow:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(141,216,255,.30) rgba(255,255,255,.05);
+}
+
+.hcp-section-title{
+  margin:.05rem 0 .3rem;
+  color:var(--hcp-gold);
+  font:950 .72rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.hcp-room-card{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:.55rem;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:.95rem;
+  padding:.7rem .72rem;
+  color:var(--hcp-text);
+  background:rgba(255,255,255,.035);
+  cursor:pointer;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+
+.hcp-room-card:hover,
+.hcp-room-card:focus-visible{
+  transform:translateX(2px);
+  border-color:rgba(243,200,111,.38);
+  background:rgba(255,255,255,.055);
+  outline:none;
+}
+
+.hcp-room-card-main{
+  min-width:0;
+  display:grid;
+  gap:.22rem;
+  text-align:left;
+}
+
+.hcp-room-card-main b{
+  color:var(--hcp-ink);
+  font:950 .86rem/1.05 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.025em;
+}
+
+.hcp-room-card-main small{
+  color:var(--hcp-soft);
+  font:500 .72rem/1.25 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.hcp-room-card-guide{
+  flex:0 0 auto;
+  padding:.32rem .48rem;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  color:var(--hcp-gold);
+  background:rgba(243,200,111,.055);
+  font:950 .58rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* Arrival panel */
+
+.hcp-arrival-panel{
+  display:none;
+  gap:.45rem;
+  margin:0 1rem 1rem;
+  padding:1rem;
+  border:1px solid rgba(243,200,111,.28);
+  border-radius:1.25rem;
+  background:
+    radial-gradient(circle at 0% 0%,rgba(243,200,111,.10),transparent 42%),
+    radial-gradient(circle at 100% 0%,rgba(141,216,255,.08),transparent 42%),
+    rgba(255,255,255,.035);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.hcp-arrival-panel[data-visible="true"]{
+  display:grid;
+  animation:hcpArrivalPanel .22s ease both;
+}
+
+.hcp-arrival-eyebrow{
+  color:var(--hcp-gold);
+  font:950 .66rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.hcp-arrival-title{
+  margin:0;
+  color:var(--hcp-ink);
+  font:950 clamp(1.1rem,2.8vw,1.5rem)/1.05 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.045em;
+}
+
+.hcp-arrival-body{
+  margin:0;
+  max-width:780px;
+  color:var(--hcp-muted);
+  font:500 .94rem/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.hcp-arrival-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+  margin-top:.35rem;
+}
+
+.hcp-arrival-action,
+.hcp-footer-button{
+  min-height:2.35rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  padding:.55rem .82rem;
+  color:rgba(241,246,255,.88);
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+  font:950 .7rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease,color .18s ease;
+}
+
+.hcp-arrival-action:hover,
+.hcp-arrival-action:focus-visible,
+.hcp-footer-button:hover,
+.hcp-footer-button:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(243,200,111,.50);
+  background:rgba(243,200,111,.07);
+  outline:none;
+}
+
+.hcp-arrival-primary{
+  border-color:rgba(243,200,111,.78);
+  color:#060811;
+  background:linear-gradient(135deg,#fff2a8,#f3c86f);
+}
+
+.hcp-arrival-primary:hover,
+.hcp-arrival-primary:focus-visible{
+  background:linear-gradient(135deg,#fff7bd,#f6d47d);
+}
+
+.hcp-arrival-muted{
+  color:var(--hcp-soft);
+}
+
+/* Footer */
+
+.hcp-footer{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:.7rem;
+  padding:.85rem 1rem 1rem;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.hcp-status{
+  color:var(--hcp-soft);
+  font:800 .75rem/1.35 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.hcp-footer-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+
+/* Animations */
+
+@keyframes hcpTravelLine{
+  0%{
+    opacity:0;
+    clip-path:inset(0 100% 0 0);
+  }
+  20%{
+    opacity:1;
+  }
+  100%{
+    opacity:.9;
+    clip-path:inset(0 0 0 0);
+  }
+}
+
+@keyframes hcpAvatarShine{
+  0%,72%,100%{
+    transform:translateX(-70%) rotate(8deg);
+    opacity:0;
+  }
+  84%{
+    transform:translateX(70%) rotate(8deg);
+    opacity:1;
+  }
+}
+
+@keyframes hcpAvatarArrive{
+  0%{
+    transform:translate(-50%,-50%) scale(1);
+  }
+  35%{
+    transform:translate(-50%,-50%) scale(1.14);
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1);
+  }
+}
+
+@keyframes hcpRoomArrival{
+  0%{
+    box-shadow:
+      0 .8rem 1.8rem rgba(0,0,0,.30),
+      0 0 0 0 rgba(243,200,111,.0),
+      inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  45%{
+    box-shadow:
+      0 .8rem 1.8rem rgba(0,0,0,.30),
+      0 0 0 8px rgba(243,200,111,.14),
+      0 0 1.6rem rgba(243,200,111,.30),
+      inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  100%{
+    box-shadow:
+      0 .8rem 1.8rem rgba(0,0,0,.30),
+      0 0 0 2px rgba(243,200,111,.10),
+      inset 0 1px 0 rgba(255,255,255,.07);
+  }
+}
+
+@keyframes hcpArrivalPanel{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* Accessibility motion */
+
+@media (prefers-reduced-motion:reduce){
+  .hcp-overlay,
+  .hcp-panel,
+  .hcp-room-node,
+  .hcp-avatar,
+  .hcp-arrival-panel,
+  .hcp-arrival-action,
+  .hcp-footer-button,
+  .hcp-close,
+  .hcp-room-card{
+    transition:none!important;
+  }
+
+  .hcp-avatar,
+  .hcp-avatar[data-arrived="true"],
+  .hcp-room-node[data-arrival="true"],
+  .hcp-travel-line,
+  .hcp-avatar-shine{
+    animation:none!important;
+  }
+
+  .hcp-travel-line{
+    opacity:.55;
+    clip-path:none;
+  }
+}
+
+/* Responsive */
+
+@media (max-width:1040px){
+  .hcp-body{
+    grid-template-columns:1fr;
+  }
+
+  .hcp-room-list{
+    max-height:16rem;
+  }
+
+  .hcp-map{
+    min-height:540px;
+  }
+}
+
+@media (max-width:760px){
+  .hcp-overlay{
+    align-items:start;
+    padding:max(.7rem,env(safe-area-inset-top)) .65rem max(.7rem,env(safe-area-inset-bottom));
+  }
+
+  .hcp-panel{
+    width:calc(100vw - 1.3rem);
+    max-height:calc(100vh - 1.4rem);
+    border-radius:1.35rem;
+  }
+
+  .hcp-header{
+    padding:.85rem;
+  }
+
+  .hcp-title{
+    font-size:clamp(1.35rem,7vw,2rem);
+  }
+
+  .hcp-subtitle{
+    font-size:.9rem;
+  }
+
+  .hcp-close{
+    width:2.55rem;
+    height:2.55rem;
+  }
+
+  .hcp-body{
+    padding:.75rem;
+    gap:.75rem;
+  }
+
+  .hcp-map{
+    min-height:510px;
+    border-radius:1.15rem;
+  }
+
+  .hcp-room-node{
+    min-width:4.7rem;
+    max-width:5.9rem;
+    min-height:2.7rem;
+    padding:.42rem .46rem;
+    border-radius:.8rem;
+  }
+
+  .hcp-room-dot{
+    width:.62rem;
+    height:.62rem;
+  }
+
+  .hcp-room-label{
+    font-size:.64rem;
+  }
+
+  .hcp-room-authority{
+    font-size:.5rem;
+  }
+
+  .hcp-avatar{
+    width:3.45rem;
+    min-height:4.55rem;
+  }
+
+  .hcp-avatar-face{
+    width:2.65rem;
+    height:2.65rem;
+    border-radius:.88rem;
+  }
+
+  .hcp-avatar-initials{
+    font-size:1rem;
+  }
+
+  .hcp-avatar-label{
+    font-size:.48rem;
+  }
+
+  .hcp-arrival-panel{
+    margin:0 .75rem .75rem;
+    padding:.82rem;
+  }
+
+  .hcp-arrival-actions,
+  .hcp-footer,
+  .hcp-footer-actions{
+    display:grid;
+    width:100%;
+  }
+
+  .hcp-arrival-action,
+  .hcp-footer-button{
+    width:100%;
+  }
+
+  .hcp-footer{
+    align-items:stretch;
+    padding:.75rem;
+  }
+}
+
+@media (max-width:520px){
+  .hcp-map{
+    min-height:470px;
+  }
+
+  .hcp-blueprint-lines{
+    inset:5%;
+    border-radius:1.35rem;
+  }
+
+  .hcp-house-core-ring{
+    width:6.5rem;
+    height:6.5rem;
+  }
+
+  .hcp-room-node{
+    min-width:4.2rem;
+    max-width:5.2rem;
+    min-height:2.55rem;
+    column-gap:.32rem;
+  }
+
+  .hcp-room-label{
+    font-size:.58rem;
+  }
+
+  .hcp-room-authority{
+    display:none;
+  }
+
+  .hcp-avatar{
+    width:3rem;
+    min-height:4rem;
+  }
+
+  .hcp-avatar-face{
+    width:2.35rem;
+    height:2.35rem;
+  }
+
+  .hcp-avatar-label{
+    max-width:3.6rem;
+  }
+
+  .hcp-room-list{
+    max-height:13rem;
+  }
+}

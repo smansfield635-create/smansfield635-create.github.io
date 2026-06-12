@@ -1,18 +1,18 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_MOUNT_CONTRACT_RENEWAL_TNT_v1 -->
+<!-- HEARTH_JEEVES_HOME_DELEGATED_MOUNT_HTML_TNT_v2 -->
 <!-- Full-file replacement. -->
-<!-- Owns: Jeeves HTML route shell, stable mount node, mount adapter, fallback release, expression-to-visible-interface handoff. -->
-<!-- Does not own: Compass page, Jeeves expression authority, deep route meaning, diagnostics, CSS visual authority, API/backbrain/frontbrain, or sitewide Character registry. -->
-<!-- Purpose: renew the mount contract only. The expression file remains the delegated language authority. -->
+<!-- Owns: visible Jeeves HTML shell, CSS contract binding, stable mount structure, docks, transcript body, status body, and script order. -->
+<!-- Does not own: Compass root page, CSS visual authority, Expression language shaping, route execution, motion/render rhythm, diagnostics, API/backbrain/frontbrain meaning, or sitewide Character registry. -->
+<!-- Purpose: restore delegated mount responsibility to index.js while preserving Hearth as Jeeves' home page inside the House / Mirrorland. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_MOUNT_CONTRACT_RENEWAL_TNT_v1"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_HOME_DELEGATED_MOUNT_HTML_TNT_v2"
   data-hearth-jeeves-ready="false"
   data-hearth-jeeves-home="inside-mirrorland"
   data-compass-entry="talk-to-the-house"
-  data-mount-contract="stable-local-mount-adapter"
+  data-mount-model="delegated-to-index-js"
 >
   <head>
     <meta charset="utf-8" />
@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="/showroom/globe/hearth/jeeves/index.css" />
 
     <script src="/assets/hearth/jeeves/jeeves.expression.js" defer></script>
+    <script src="/showroom/globe/hearth/jeeves/index.js" defer></script>
   </head>
 
   <body data-hearth-jeeves-ready="false">
@@ -50,15 +51,18 @@
 
       <section class="jeeves-screen-shell" aria-label="Jeeves conversation shell">
         <section
-          id="hearthJeevesApp"
+          id="hearthJeevesMount"
           class="hearth-jeeves hearth-jeeves-v25 jeeves-screen-glass"
           data-jeeves-root="true"
-          data-jeeves-self-mount="true"
           data-jeeves-ready="false"
           data-house-listening="false"
           data-jeeves-typing="false"
+          data-hearth-jeeves-home="inside-mirrorland"
+          data-compass-entry="talk-to-the-house"
+          data-mount-contract="HEARTH_JEEVES_HOME_DELEGATED_MOUNT_HTML_TNT_v2"
           data-expression-contract="HEARTH_JEEVES_HOME_INSIDE_MIRRORLAND_EXPRESSION_TNT_v7_1_0"
-          data-mount-contract="HEARTH_JEEVES_MOUNT_CONTRACT_RENEWAL_TNT_v1"
+          data-frontbrain-contract="HEARTH_JEEVES_FRONTBRAIN_SOURCE_IDENTITY_MOTOR_CARRIER_TNT_v25_6_1"
+          data-api-contract="retired-for-local-expression-if-not-present"
         >
           <div class="jeeves-screen-topline">
             <div class="jeeves-identity">
@@ -86,13 +90,7 @@
               data-jeeves-log="true"
               aria-live="polite"
               aria-label="Jeeves conversation transcript"
-            >
-              <div class="jeeves-bubble jeeves-bubble-system" data-jeeves-bubble="system">
-                <div class="jeeves-bubble-body">
-                  Jeeves is preparing the room. If this message remains, check the JavaScript mount contract.
-                </div>
-              </div>
-            </div>
+            ></div>
 
             <div
               class="jeeves-typing"
@@ -189,405 +187,16 @@
     </noscript>
 
     <script>
-      (function mountHearthJeeves() {
-        "use strict";
+      document.addEventListener("hearth:jeeves-ready", function () {
+        document.documentElement.setAttribute("data-hearth-jeeves-ready", "true");
+        document.body.setAttribute("data-hearth-jeeves-ready", "true");
 
-        var MOUNT_CONTRACT = "HEARTH_JEEVES_MOUNT_CONTRACT_RENEWAL_TNT_v1";
-
-        var ROUTE_URLS = {
-          compass: "/",
-          siteGuide: "/site-guide/",
-          diagnostic: "/coherence-diagnostic/",
-          atrium: "/showroom/",
-          characters: "/characters/",
-          sean: "/meet-sean-mansfield/",
-          products: "/products/",
-          archcoin: "/products/archcoin/",
-          laws: "/laws/",
-          gauges: "/gauges/",
-          hearth: "/showroom/globe/hearth/",
-          hEarth: "/showroom/globe/h-earth/",
-          frontier: "/explore/frontier/",
-          water: "/explore/frontier/water/",
-          remote: "/explore/frontier/vision-remote/"
-        };
-
-        function ready(fn) {
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", fn, { once: true });
-          } else {
-            fn();
-          }
+        var mount = document.querySelector("[data-jeeves-root]");
+        if (mount) {
+          mount.setAttribute("data-jeeves-ready", "true");
+          mount.setAttribute("data-house-listening", "true");
         }
-
-        function $(selector, root) {
-          return (root || document).querySelector(selector);
-        }
-
-        function clear(node) {
-          while (node && node.firstChild) node.removeChild(node.firstChild);
-        }
-
-        function text(value) {
-          if (value === null || typeof value === "undefined") return "";
-          return String(value).replace(/\s+/g, " ").trim();
-        }
-
-        function getExpression() {
-          return (
-            window.HEARTH_JEEVES_EXPRESSION ||
-            window.HEARTH_JEEVES_EXPRESSION_BRIDGE ||
-            (window.HEARTH && window.HEARTH.jeevesExpression) ||
-            null
-          );
-        }
-
-        function getOpeningSequence(expression) {
-          if (expression && Array.isArray(expression.openingSequence) && expression.openingSequence.length) {
-            return expression.openingSequence.slice(0, 6);
-          }
-
-          return [
-            "Welcome inside the House.",
-            "You found me through the Compass. That means you did not wander here by accident.",
-            "This is Hearth. For our purposes, it is my room inside Mirrorland.",
-            "You do not have to stay here. I can guide you from here.",
-            "Ask plainly. I will not give you the whole House at once; I will give you the next door."
-          ];
-        }
-
-        function getEntranceOptions(expression) {
-          if (expression && typeof expression.shapeEntranceOptions === "function") {
-            try {
-              var shaped = expression.shapeEntranceOptions();
-              if (Array.isArray(shaped) && shaped.length) return shaped;
-            } catch (error) {
-              console.warn("[Jeeves mount] shapeEntranceOptions failed:", error);
-            }
-          }
-
-          return [
-            {
-              label: "Where am I?",
-              action: "where",
-              routeUrl: ""
-            },
-            {
-              label: "Show me the map",
-              action: "map",
-              routeUrl: ROUTE_URLS.siteGuide
-            },
-            {
-              label: "Take me to the Diagnostic",
-              action: "diagnostic",
-              routeUrl: ROUTE_URLS.diagnostic
-            },
-            {
-              label: "Meet the Characters",
-              action: "characters",
-              routeUrl: ROUTE_URLS.characters
-            },
-            {
-              label: "Enter the Atrium",
-              action: "atrium",
-              routeUrl: ROUTE_URLS.atrium
-            },
-            {
-              label: "Return to the Compass",
-              action: "compass",
-              routeUrl: ROUTE_URLS.compass
-            }
-          ];
-        }
-
-        function makeBubble(message, kind) {
-          var bubble = document.createElement("div");
-          bubble.className = "jeeves-bubble";
-          bubble.setAttribute("data-jeeves-bubble", kind || "jeeves");
-
-          if (kind === "user") bubble.classList.add("jeeves-bubble-user");
-          else if (kind === "system") bubble.classList.add("jeeves-bubble-system");
-          else bubble.classList.add("jeeves-bubble-jeeves");
-
-          var body = document.createElement("div");
-          body.className = "jeeves-bubble-body";
-          body.textContent = text(message);
-
-          bubble.appendChild(body);
-          return bubble;
-        }
-
-        function makeRouteButton(label, href) {
-          var a = document.createElement("a");
-          a.className = "jeeves-route-option";
-          a.href = href || "/";
-          a.textContent = label;
-          return a;
-        }
-
-        function makeOptionButton(option, mountState) {
-          var label = text(option && option.label) || "Continue";
-          var routeUrl = text(option && option.routeUrl);
-          var action = text(option && option.action);
-
-          var button = document.createElement("button");
-          button.className = "jeeves-option";
-          button.type = "button";
-          button.textContent = label;
-
-          button.addEventListener("click", function () {
-            handleOption({
-              label: label,
-              routeUrl: routeUrl,
-              action: action,
-              raw: option
-            }, mountState);
-          });
-
-          return button;
-        }
-
-        function setStatus(statusNode, message) {
-          if (statusNode) statusNode.textContent = message;
-        }
-
-        function setReady(mount, statusNode) {
-          document.documentElement.setAttribute("data-hearth-jeeves-ready", "true");
-          document.body.setAttribute("data-hearth-jeeves-ready", "true");
-
-          if (mount) {
-            mount.setAttribute("data-jeeves-ready", "true");
-            mount.setAttribute("data-house-listening", "true");
-            mount.setAttribute("data-jeeves-typing", "false");
-          }
-
-          setStatus(statusNode, "Jeeves is ready.");
-        }
-
-        function setTyping(mount, typingNode, active) {
-          if (mount) mount.setAttribute("data-jeeves-typing", active ? "true" : "false");
-          if (typingNode) {
-            typingNode.setAttribute("data-jeeves-typing", active ? "true" : "false");
-            typingNode.setAttribute("aria-hidden", active ? "false" : "true");
-          }
-        }
-
-        function scrollThread(thread) {
-          if (!thread) return;
-          thread.scrollTop = thread.scrollHeight;
-        }
-
-        function renderSequence(sequence, mountState, done) {
-          var list = Array.isArray(sequence) ? sequence.slice() : [];
-          var index = 0;
-
-          function next() {
-            if (index >= list.length) {
-              setTyping(mountState.mount, mountState.typingNode, false);
-              if (typeof done === "function") done();
-              return;
-            }
-
-            setTyping(mountState.mount, mountState.typingNode, true);
-
-            window.setTimeout(function () {
-              mountState.thread.appendChild(makeBubble(list[index], "jeeves"));
-              scrollThread(mountState.thread);
-              index += 1;
-              window.setTimeout(next, 260);
-            }, index === 0 ? 180 : 520);
-          }
-
-          next();
-        }
-
-        function renderOptions(options, mountState) {
-          clear(mountState.optionsNode);
-
-          options.forEach(function (option) {
-            mountState.optionsNode.appendChild(makeOptionButton(option, mountState));
-          });
-        }
-
-        function renderHandoffs(mountState) {
-          clear(mountState.handoffsNode);
-
-          mountState.handoffsNode.appendChild(makeRouteButton("Compass", ROUTE_URLS.compass));
-          mountState.handoffsNode.appendChild(makeRouteButton("Website Guide", ROUTE_URLS.siteGuide));
-          mountState.handoffsNode.appendChild(makeRouteButton("Atrium", ROUTE_URLS.atrium));
-          mountState.handoffsNode.appendChild(makeRouteButton("Characters", ROUTE_URLS.characters));
-        }
-
-        function handleOption(option, mountState) {
-          mountState.thread.appendChild(makeBubble(option.label, "user"));
-          scrollThread(mountState.thread);
-
-          var response = responseForOption(option, mountState.expression);
-
-          renderSequence(response.bubbles, mountState, function () {
-            if (response.routeUrl) {
-              clear(mountState.handoffsNode);
-              mountState.handoffsNode.appendChild(makeRouteButton(response.routeLabel || "Open Door", response.routeUrl));
-              mountState.handoffsNode.appendChild(makeRouteButton("Return to Compass", ROUTE_URLS.compass));
-            }
-
-            if (Array.isArray(response.options) && response.options.length) {
-              renderOptions(response.options, mountState);
-            }
-          });
-        }
-
-        function responseForOption(option, expression) {
-          var label = text(option.label).toLowerCase();
-          var routeUrl = text(option.routeUrl);
-
-          if (/where/.test(label)) {
-            return {
-              bubbles: [
-                "You are inside the House, at Hearth.",
-                "This is part of Mirrorland’s interior path.",
-                "The Compass brought you to the door; this room lets me speak with you without crowding the Compass page itself."
-              ],
-              options: getEntranceOptions(expression)
-            };
-          }
-
-          if (/map|guide/.test(label)) {
-            return {
-              bubbles: [
-                "The Website Guide is the clean map.",
-                "Use it when you want the blueprint before the rooms begin speaking."
-              ],
-              routeUrl: ROUTE_URLS.siteGuide,
-              routeLabel: "Open the Website Guide",
-              options: getEntranceOptions(expression)
-            };
-          }
-
-          if (/diagnostic/.test(label)) {
-            return {
-              bubbles: [
-                "I can show you the diagnostic door.",
-                "I will not diagnose you from the hallway.",
-                "Soren guards that threshold more properly than I do."
-              ],
-              routeUrl: ROUTE_URLS.diagnostic,
-              routeLabel: "Open the Coherence Diagnostic",
-              options: getEntranceOptions(expression)
-            };
-          }
-
-          if (/character|portrait/.test(label)) {
-            return {
-              bubbles: [
-                "The Characters are organized separately from the Atrium.",
-                "Use the Portrait Hall when you want the roster.",
-                "Use the Atrium when you are asking for the longer map behind the rooms."
-              ],
-              routeUrl: ROUTE_URLS.characters,
-              routeLabel: "Open the Portrait Hall",
-              options: getEntranceOptions(expression)
-            };
-          }
-
-          if (/atrium|deeper|longer/.test(label)) {
-            return {
-              bubbles: [
-                "Persistent. Good. Most visitors take the first door.",
-                "You are still prying beyond the rooms I have offered.",
-                "Very well. Meet me in the Atrium, and I will show you the longer map."
-              ],
-              routeUrl: ROUTE_URLS.atrium,
-              routeLabel: "Enter the Atrium",
-              options: getEntranceOptions(expression)
-            };
-          }
-
-          if (/compass|return/.test(label)) {
-            return {
-              bubbles: [
-                "Then we return to the Compass.",
-                "A proper House never hides the exit."
-              ],
-              routeUrl: ROUTE_URLS.compass,
-              routeLabel: "Return to the Compass",
-              options: getEntranceOptions(expression)
-            };
-          }
-
-          return {
-            bubbles: [
-              "I can help with that, but I need to place it first.",
-              "Are you asking about the website, Mirrorland, the diagnostic, Sean, products, the lab, or the frontier?"
-            ],
-            options: getEntranceOptions(expression)
-          };
-        }
-
-        function dispatchReady() {
-          if (typeof window.dispatchEvent === "function" && typeof window.CustomEvent === "function") {
-            window.dispatchEvent(new CustomEvent("hearth:jeeves-ready", {
-              detail: {
-                contract: MOUNT_CONTRACT,
-                mountReady: true,
-                expressionPresent: Boolean(getExpression()),
-                mountNode: "#hearthJeevesApp"
-              }
-            }));
-          }
-        }
-
-        function mount() {
-          var mountNode = $("#hearthJeevesApp");
-          if (!mountNode) return;
-
-          var thread = $("[data-jeeves-thread]", mountNode);
-          var optionsNode = $("[data-jeeves-options]", mountNode);
-          var handoffsNode = $("[data-jeeves-handoffs]", mountNode);
-          var statusNode = $("[data-jeeves-status]", mountNode);
-          var typingNode = $(".jeeves-typing", mountNode);
-          var expression = getExpression();
-
-          if (!thread || !optionsNode || !handoffsNode) {
-            mountNode.setAttribute("data-jeeves-ready", "false");
-            setStatus(statusNode, "Jeeves mount contract is incomplete.");
-            return;
-          }
-
-          var mountState = {
-            mount: mountNode,
-            thread: thread,
-            optionsNode: optionsNode,
-            handoffsNode: handoffsNode,
-            statusNode: statusNode,
-            typingNode: typingNode,
-            expression: expression
-          };
-
-          clear(thread);
-          clear(optionsNode);
-          clear(handoffsNode);
-
-          setStatus(statusNode, "Jeeves is opening the House.");
-
-          renderHandoffs(mountState);
-
-          renderSequence(getOpeningSequence(expression), mountState, function () {
-            renderOptions(getEntranceOptions(expression), mountState);
-            setReady(mountNode, statusNode);
-            dispatchReady();
-          });
-        }
-
-        ready(function () {
-          window.setTimeout(mount, 80);
-        });
-
-        window.addEventListener("hearth:jeeves-expression-ready", function () {
-          var currentReady = document.body.getAttribute("data-hearth-jeeves-ready") === "true";
-          if (!currentReady) window.setTimeout(mount, 40);
-        });
-      })();
+      });
     </script>
   </body>
 </html>

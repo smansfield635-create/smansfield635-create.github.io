@@ -1,584 +1,674 @@
 /* /showroom/globe/hearth/jeeves/index.css */
-/* HEARTH_JEEVES_SINGLE_FILE_STAGE_CSS_TNT_v2_0_0 */
+/* HEARTH_JEEVES_HOME_WARM_HOUSE_VISUAL_CSS_TNT_v2 */
 /* Full-file replacement. */
-/* One Jeeves shell. One script. No frontbrain CSS dependency. No backbrain UI residue. */
-/*
-  Purpose:
-  - Style the self-mounting Jeeves v7 expression engine.
-  - Support the renewed single-script HTML shell.
-  - Support message bubbles, typing dots, options, route handoffs, preload state, mobile layout, and context rail.
-  - Preserve Hearth as staging chamber while keeping Jeeves visually ready for Compass migration.
-*/
+/* Owns: Hearth/Jeeves visual authority, warm House presentation, readable conversation shell, buttons, handoff docks, mobile layout, and compatibility styling for delegated index.js output. */
+/* Does not own: HTML route shell, mount timing, bubble sequencing, expression language, route execution, diagnostics, Compass page, or sitewide Character registry. */
+/* Purpose: remove CRT / terminal styling while preserving delegated motion/render ownership in index.js. */
 
 :root {
   color-scheme: dark;
 
-  --jeeves-bg-0: #05070b;
-  --jeeves-bg-1: #08111c;
-  --jeeves-bg-2: #0d1b2a;
-  --jeeves-glass: rgba(12, 23, 37, 0.76);
-  --jeeves-glass-strong: rgba(9, 18, 30, 0.92);
-  --jeeves-line: rgba(196, 220, 255, 0.17);
-  --jeeves-line-strong: rgba(196, 220, 255, 0.32);
+  --page-bg: #03040a;
+  --page-bg-2: #090713;
+  --page-bg-3: #130d12;
 
-  --jeeves-text: #eef6ff;
-  --jeeves-muted: rgba(238, 246, 255, 0.68);
-  --jeeves-soft: rgba(238, 246, 255, 0.46);
+  --ink: #fff1d1;
+  --ink-strong: #fff8e6;
+  --muted: rgba(235, 240, 255, 0.74);
+  --soft: rgba(235, 240, 255, 0.52);
+  --faint: rgba(235, 240, 255, 0.34);
 
-  --jeeves-gold: #d9b66f;
-  --jeeves-gold-soft: rgba(217, 182, 111, 0.22);
-  --jeeves-blue: #75b8ff;
-  --jeeves-blue-soft: rgba(117, 184, 255, 0.2);
-  --jeeves-green: #9be6c1;
-  --jeeves-shadow: rgba(0, 0, 0, 0.46);
+  --gold: #f3c86f;
+  --gold-2: #ffe8a3;
+  --gold-3: #fff4d2;
+  --gold-dim: rgba(243, 200, 111, 0.18);
 
-  --jeeves-radius-lg: 28px;
-  --jeeves-radius-md: 20px;
-  --jeeves-radius-sm: 14px;
+  --ember: #d88a48;
+  --ember-2: #ffb86c;
+  --ember-dim: rgba(216, 138, 72, 0.18);
 
-  --jeeves-max: 1040px;
-  --jeeves-thread-max: 760px;
+  --blue: #8dd8ff;
+  --blue-2: #c8ecff;
+  --blue-dim: rgba(141, 216, 255, 0.16);
 
-  --jeeves-font:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  --jeeves-serif:
-    Georgia, Cambria, "Times New Roman", Times, serif;
+  --green: #8ff0c3;
+  --green-2: #c7ffe5;
+  --green-dim: rgba(143, 240, 195, 0.14);
+
+  --violet: #9d86ff;
+  --violet-dim: rgba(157, 134, 255, 0.13);
+
+  --panel: rgba(13, 14, 25, 0.82);
+  --panel-2: rgba(20, 18, 31, 0.88);
+  --panel-3: rgba(30, 23, 31, 0.78);
+
+  --glass: rgba(255, 255, 255, 0.055);
+  --glass-2: rgba(255, 255, 255, 0.035);
+  --line: rgba(255, 232, 163, 0.16);
+  --line-2: rgba(141, 216, 255, 0.15);
+  --line-strong: rgba(243, 200, 111, 0.42);
+
+  --shadow-page: 0 34px 110px rgba(0, 0, 0, 0.56);
+  --shadow-panel:
+    0 0 0 1px rgba(255, 232, 163, 0.08),
+    0 26px 90px rgba(0, 0, 0, 0.50),
+    0 0 58px rgba(243, 200, 111, 0.06);
+
+  --max: 1200px;
+  --conversation-max: 980px;
+  --radius-xl: clamp(1.45rem, 4vw, 2.5rem);
+  --radius-lg: 1.25rem;
+  --radius-md: 0.9rem;
+
+  --thread-height: clamp(22rem, 52vh, 36rem);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html {
+html,
+body {
+  width: 100%;
+  min-width: 320px;
   min-height: 100%;
-  background:
-    radial-gradient(circle at 18% 12%, rgba(117, 184, 255, 0.18), transparent 30rem),
-    radial-gradient(circle at 82% 20%, rgba(217, 182, 111, 0.18), transparent 28rem),
-    radial-gradient(circle at 50% 110%, rgba(80, 120, 190, 0.18), transparent 32rem),
-    linear-gradient(160deg, var(--jeeves-bg-0), var(--jeeves-bg-1) 48%, #030508);
+  margin: 0;
+  padding: 0;
+  background: var(--page-bg);
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  min-height: 100vh;
-  margin: 0;
-  color: var(--jeeves-text);
-  font-family: var(--jeeves-font);
+  color: var(--ink);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
-  background-size: 42px 42px;
-  overflow-x: hidden;
+    radial-gradient(circle at 50% -10%, rgba(243, 200, 111, 0.22), transparent 32rem),
+    radial-gradient(circle at 18% 18%, rgba(216, 138, 72, 0.16), transparent 30rem),
+    radial-gradient(circle at 88% 12%, rgba(141, 216, 255, 0.12), transparent 34rem),
+    radial-gradient(circle at 50% 92%, rgba(157, 134, 255, 0.10), transparent 40rem),
+    linear-gradient(180deg, #0c0d17 0%, #050611 58%, #02030a 100%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 body::before {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 34rem),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent 35%);
-  opacity: 0.78;
-  z-index: -1;
+    radial-gradient(circle at 50% 18%, rgba(255, 244, 216, 0.13), transparent 28rem),
+    radial-gradient(circle at 22% 80%, rgba(243, 200, 111, 0.06), transparent 28rem),
+    radial-gradient(circle at 82% 72%, rgba(141, 216, 255, 0.05), transparent 32rem);
+  opacity: 0.95;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025), transparent 20%, transparent 80%, rgba(255, 255, 255, 0.025)),
+    radial-gradient(circle at 50% 50%, transparent 0 22rem, rgba(0, 0, 0, 0.18) 42rem, rgba(0, 0, 0, 0.52) 100%);
 }
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 button,
-input,
-textarea,
-select {
+input {
   font: inherit;
 }
 
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* READY / FALLBACK RELEASE */
+
+[data-hearth-jeeves-ready="true"] [data-jeeves-preparing],
+[data-hearth-jeeves-ready="true"] .jeeves-preparing,
+[data-hearth-jeeves-ready="true"] .jeeves-loading,
+[data-hearth-jeeves-ready="true"] [data-jeeves-loading],
+body[data-hearth-jeeves-ready="true"] [data-jeeves-preparing],
+body[data-hearth-jeeves-ready="true"] .jeeves-preparing,
+body[data-hearth-jeeves-ready="true"] .jeeves-loading,
+body[data-hearth-jeeves-ready="true"] [data-jeeves-loading],
+html[data-hearth-jeeves-ready="true"] [data-jeeves-preparing],
+html[data-hearth-jeeves-ready="true"] .jeeves-preparing,
+html[data-hearth-jeeves-ready="true"] .jeeves-loading,
+html[data-hearth-jeeves-ready="true"] [data-jeeves-loading],
+[data-jeeves-root][data-jeeves-ready="true"] [data-jeeves-preparing],
+[data-jeeves-root][data-jeeves-ready="true"] .jeeves-preparing,
+[data-jeeves-root][data-jeeves-ready="true"] .jeeves-loading,
+[data-jeeves-root][data-jeeves-ready="true"] [data-jeeves-loading] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+[data-jeeves-root],
+.hearth-jeeves,
+.hearth-jeeves-v25,
+.jeeves-screen-glass {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* PAGE FRAME */
+
 .skip-link {
-  position: fixed;
-  left: 16px;
-  top: 16px;
-  z-index: 1000;
-  transform: translateY(-160%);
-  padding: 10px 14px;
-  border: 1px solid var(--jeeves-line-strong);
+  position: absolute;
+  left: -999px;
+  top: 0.75rem;
+  z-index: 80;
+  padding: 0.72rem 1rem;
   border-radius: 999px;
-  background: var(--jeeves-glass-strong);
-  color: var(--jeeves-text);
-  text-decoration: none;
-  transition: transform 160ms ease;
+  color: #07050a;
+  background: var(--gold-2);
+  font-weight: 950;
 }
 
 .skip-link:focus {
-  transform: translateY(0);
+  left: 0.75rem;
 }
 
 .jeeves-page {
-  width: min(var(--jeeves-max), calc(100vw - 32px));
+  position: relative;
+  z-index: 2;
+  width: min(var(--max), calc(100% - 28px));
   min-height: 100vh;
   margin: 0 auto;
-  padding: 22px 0 42px;
+  padding: max(22px, env(safe-area-inset-top)) 0 max(42px, env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: 1rem;
 }
 
+/* HEADER */
+
 .jeeves-page-header {
-  display: flex;
+  min-height: 4.75rem;
+  display: grid;
+  grid-template-columns: auto auto;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 10px 0 26px;
+  gap: 1rem;
+  padding: 0.6rem 0 0.35rem;
 }
 
 .jeeves-brand {
-  display: inline-flex;
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
+  gap: 0.85rem;
+  min-width: 0;
 }
 
 .jeeves-brand-mark {
+  width: 3.65rem;
+  height: 3.65rem;
   display: grid;
-  width: 44px;
-  height: 44px;
   place-items: center;
-  border: 1px solid var(--jeeves-line-strong);
-  border-radius: 16px;
+  border: 1px solid rgba(243, 200, 111, 0.42);
+  border-radius: 1.05rem;
+  color: rgba(255, 248, 230, 0.98);
   background:
-    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.2), transparent 40%),
-    linear-gradient(145deg, rgba(217, 182, 111, 0.22), rgba(117, 184, 255, 0.13));
-  color: var(--jeeves-gold);
-  font-family: var(--jeeves-serif);
-  font-size: 1.25rem;
-  font-weight: 700;
-  box-shadow: 0 14px 34px var(--jeeves-shadow);
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.26), transparent 38%),
+    linear-gradient(135deg, rgba(243, 200, 111, 0.90), rgba(216, 138, 72, 0.60) 42%, rgba(28, 20, 30, 0.95));
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  box-shadow:
+    0 0 1.4rem rgba(243, 200, 111, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .jeeves-brand-copy {
   display: grid;
-  line-height: 1.05;
+  min-width: 0;
 }
 
 .jeeves-brand-copy span {
-  color: var(--jeeves-muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.jeeves-brand-copy strong {
-  color: var(--jeeves-text);
-  font-size: 1.12rem;
-  letter-spacing: 0.04em;
-}
-
-.jeeves-header-nav {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.jeeves-header-return {
-  display: inline-flex;
-  align-items: center;
-  min-height: 38px;
-  padding: 9px 14px;
-  border: 1px solid var(--jeeves-line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-  color: var(--jeeves-muted);
-  font-size: 0.86rem;
-  text-decoration: none;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
-}
-
-.jeeves-header-return:hover,
-.jeeves-header-return:focus-visible {
-  border-color: var(--jeeves-line-strong);
-  background: rgba(255, 255, 255, 0.075);
-  color: var(--jeeves-text);
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.jeeves-screen-shell {
-  position: relative;
-  display: grid;
-  min-height: 620px;
-  padding: 1px;
-  border: 1px solid var(--jeeves-line);
-  border-radius: calc(var(--jeeves-radius-lg) + 2px);
-  background:
-    linear-gradient(135deg, rgba(217, 182, 111, 0.32), transparent 26%),
-    linear-gradient(315deg, rgba(117, 184, 255, 0.28), transparent 28%),
-    rgba(255, 255, 255, 0.035);
-  box-shadow:
-    0 26px 80px rgba(0, 0, 0, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.jeeves-screen-shell::before {
-  content: "";
-  position: absolute;
-  inset: -35%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(117, 184, 255, 0.13), transparent 18rem),
-    radial-gradient(circle at 66% 38%, rgba(217, 182, 111, 0.1), transparent 16rem);
-  filter: blur(2px);
-  animation: jeeves-atmosphere-drift 18s linear infinite alternate;
-}
-
-.jeeves-screen-glass,
-.hearth-jeeves {
-  position: relative;
-  z-index: 1;
-  min-height: 620px;
-  border-radius: var(--jeeves-radius-lg);
-  background:
-    linear-gradient(180deg, rgba(7, 14, 24, 0.82), rgba(6, 11, 19, 0.92)),
-    var(--jeeves-glass);
-  backdrop-filter: blur(18px);
-  overflow: hidden;
-}
-
-.jeeves-preload-card {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  width: min(620px, calc(100% - 32px));
-  margin: 18vh auto 0;
-  padding: 22px;
-  border: 1px solid var(--jeeves-line);
-  border-radius: var(--jeeves-radius-md);
-  background: rgba(255, 255, 255, 0.045);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
-}
-
-.jeeves-preload-mark {
-  display: grid;
-  flex: 0 0 auto;
-  width: 58px;
-  height: 58px;
-  place-items: center;
-  border: 1px solid var(--jeeves-line-strong);
-  border-radius: 19px;
-  background:
-    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.24), transparent 40%),
-    rgba(217, 182, 111, 0.14);
-  color: var(--jeeves-gold);
-  font-family: var(--jeeves-serif);
-  font-size: 1.55rem;
-  font-weight: 700;
-}
-
-.jeeves-preload-copy {
-  display: grid;
-  gap: 5px;
-}
-
-.jeeves-preload-copy span {
-  color: var(--jeeves-gold);
-  font-size: 0.76rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 950;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.jeeves-preload-copy strong {
-  color: var(--jeeves-text);
-  font-size: 1.05rem;
+.jeeves-brand-copy strong {
+  color: var(--ink-strong);
+  font-size: clamp(1.3rem, 3.4vw, 1.85rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 
-.jeeves-preload-copy p {
-  margin: 0;
-  color: var(--jeeves-muted);
-  line-height: 1.55;
-}
-
-.jeeves-v7-shell {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 620px;
-  padding: clamp(18px, 3vw, 34px);
-}
-
-.jeeves-v7-orb {
-  position: absolute;
-  top: 28px;
-  right: 28px;
-  width: 116px;
-  height: 116px;
-  pointer-events: none;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 36% 30%, rgba(255, 255, 255, 0.45), transparent 18%),
-    radial-gradient(circle at 50% 50%, rgba(217, 182, 111, 0.28), transparent 43%),
-    radial-gradient(circle at 58% 60%, rgba(117, 184, 255, 0.2), transparent 62%);
-  opacity: 0.88;
-  filter: drop-shadow(0 18px 38px rgba(0, 0, 0, 0.28));
-}
-
-.jeeves-v7-orb-core {
-  position: absolute;
-  inset: 23px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: inherit;
-  background: rgba(255, 255, 255, 0.035);
-  animation: jeeves-orb-pulse 4.8s ease-in-out infinite;
-}
-
-.jeeves-v7-header {
-  max-width: 720px;
-  padding: 6px 128px 24px 0;
-}
-
-.jeeves-v7-kicker {
-  margin: 0 0 10px;
-  color: var(--jeeves-gold);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.jeeves-v7-header h1 {
-  margin: 0;
-  color: var(--jeeves-text);
-  font-family: var(--jeeves-serif);
-  font-size: clamp(2.8rem, 7vw, 5.8rem);
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  line-height: 0.9;
-}
-
-.jeeves-v7-subtitle {
-  max-width: 620px;
-  margin: 16px 0 0;
-  color: var(--jeeves-muted);
-  font-size: clamp(0.98rem, 2vw, 1.12rem);
-  line-height: 1.65;
-}
-
-.jeeves-v7-panel {
-  align-self: end;
-  display: grid;
-  grid-template-rows: minmax(260px, 1fr) auto auto;
-  gap: 14px;
-  width: min(var(--jeeves-thread-max), 100%);
-  min-height: 410px;
-}
-
-.jeeves-v7-thread {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: 410px;
-  min-height: 260px;
-  padding: 6px 8px 10px 2px;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(217, 182, 111, 0.45) rgba(255, 255, 255, 0.06);
-}
-
-.jeeves-v7-thread::-webkit-scrollbar {
-  width: 8px;
-}
-
-.jeeves-v7-thread::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.045);
-  border-radius: 999px;
-}
-
-.jeeves-v7-thread::-webkit-scrollbar-thumb {
-  background: rgba(217, 182, 111, 0.45);
-  border-radius: 999px;
-}
-
-.jeeves-v7-bubble {
-  width: fit-content;
-  max-width: min(92%, 650px);
-  padding: 14px 16px;
-  border: 1px solid var(--jeeves-line);
-  border-radius: 20px;
-  color: var(--jeeves-text);
-  font-size: 0.98rem;
-  line-height: 1.58;
-  letter-spacing: 0.005em;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
-  animation: jeeves-bubble-in 220ms ease both;
-}
-
-.jeeves-v7-bubble.is-jeeves {
-  align-self: flex-start;
-  border-top-left-radius: 8px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.078), rgba(255, 255, 255, 0.035)),
-    rgba(12, 23, 37, 0.82);
-}
-
-.jeeves-v7-bubble.is-jeeves::selection {
-  background: rgba(217, 182, 111, 0.28);
-}
-
-.jeeves-v7-bubble.is-visitor {
-  align-self: flex-end;
-  border-color: rgba(117, 184, 255, 0.28);
-  border-top-right-radius: 8px;
-  background:
-    linear-gradient(145deg, rgba(117, 184, 255, 0.16), rgba(255, 255, 255, 0.045)),
-    rgba(13, 27, 42, 0.74);
-}
-
-.jeeves-v7-typing {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  width: fit-content;
-  min-height: 38px;
-  padding: 10px 14px;
-  border: 1px solid var(--jeeves-line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-}
-
-.jeeves-v7-typing[hidden] {
-  display: none;
-}
-
-.jeeves-v7-typing span {
-  display: block;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--jeeves-gold);
-  opacity: 0.4;
-  animation: jeeves-typing-dot 1.1s ease-in-out infinite;
-}
-
-.jeeves-v7-typing span:nth-child(2) {
-  animation-delay: 0.16s;
-}
-
-.jeeves-v7-typing span:nth-child(3) {
-  animation-delay: 0.32s;
-}
-
-.jeeves-v7-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-top: 4px;
-}
-
-.jeeves-v7-option,
-.jeeves-route-option {
+.jeeves-header-return {
+  min-height: 2.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 11px 15px;
-  border: 1px solid var(--jeeves-line);
+  border: 1px solid rgba(243, 200, 111, 0.28);
   border-radius: 999px;
+  padding: 0.62rem 0.9rem;
+  color: rgba(255, 244, 216, 0.92);
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035)),
-    rgba(255, 255, 255, 0.035);
-  color: var(--jeeves-text);
-  font-size: 0.9rem;
-  font-weight: 650;
-  letter-spacing: 0.01em;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.jeeves-v7-option:hover,
-.jeeves-v7-option:focus-visible,
-.jeeves-route-option:hover,
-.jeeves-route-option:focus-visible {
-  border-color: rgba(217, 182, 111, 0.62);
-  background:
-    linear-gradient(145deg, rgba(217, 182, 111, 0.16), rgba(117, 184, 255, 0.09)),
-    rgba(255, 255, 255, 0.055);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-  transform: translateY(-1px);
-  outline: none;
-}
-
-.jeeves-v7-option:active,
-.jeeves-route-option:active {
-  transform: translateY(0);
-}
-
-.jeeves-v7-footer {
-  display: flex;
-  justify-content: flex-start;
-  padding-top: 18px;
-  color: var(--jeeves-soft);
-  font-size: 0.78rem;
+    radial-gradient(circle at 50% 0%, rgba(243, 200, 111, 0.12), transparent 70%),
+    rgba(255, 255, 255, 0.04);
+  font-size: 0.72rem;
+  font-weight: 950;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 1rem rgba(243, 200, 111, 0.05);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
 }
 
-.jeeves-context-rail {
+.jeeves-header-return:hover,
+.jeeves-header-return:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(243, 200, 111, 0.56);
+}
+
+/* MAIN SHELL */
+
+.jeeves-screen-shell {
+  width: 100%;
+  min-height: calc(100vh - 12rem);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  padding: 18px 0 0;
+  place-items: center;
+  padding: clamp(0.6rem, 2vw, 1.4rem) 0;
 }
 
-.jeeves-context-card {
-  min-height: 126px;
-  padding: 18px;
-  border: 1px solid var(--jeeves-line);
-  border-radius: var(--jeeves-radius-md);
-  background: rgba(255, 255, 255, 0.045);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+.jeeves-screen-glass,
+[data-jeeves-root].hearth-jeeves,
+[data-jeeves-root].hearth-jeeves-v25,
+[data-jeeves-root].hearth-jeeves:not(.jeeves-page),
+[data-jeeves-root].hearth-jeeves-v25:not(.jeeves-page) {
+  position: relative;
+  width: min(var(--conversation-max), 100%);
+  min-height: clamp(40rem, 74vh, 56rem);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 0.85rem;
+  border: 1px solid rgba(243, 200, 111, 0.22);
+  border-radius: var(--radius-xl);
+  padding: clamp(0.85rem, 2.2vw, 1.25rem);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 18% -8%, rgba(243, 200, 111, 0.18), transparent 20rem),
+    radial-gradient(circle at 90% 8%, rgba(141, 216, 255, 0.12), transparent 24rem),
+    radial-gradient(circle at 50% 120%, rgba(216, 138, 72, 0.16), transparent 28rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.075), transparent 36%),
+    linear-gradient(180deg, rgba(24, 20, 29, 0.90), rgba(10, 10, 18, 0.94) 54%, rgba(5, 5, 12, 0.98));
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.jeeves-context-card span {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--jeeves-gold);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
+.jeeves-screen-glass::before,
+[data-jeeves-root].hearth-jeeves::before,
+[data-jeeves-root].hearth-jeeves-v25::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.075) 12%, transparent 31%, transparent 72%, rgba(255, 255, 255, 0.04) 100%),
+    radial-gradient(circle at 50% 0%, rgba(255, 232, 163, 0.09), transparent 58%);
+  opacity: 0.75;
+}
+
+.jeeves-screen-glass::after,
+[data-jeeves-root].hearth-jeeves::after,
+[data-jeeves-root].hearth-jeeves-v25::after {
+  content: "";
+  position: absolute;
+  inset: 0.72rem;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 232, 163, 0.10);
+  border-radius: calc(var(--radius-xl) - 0.55rem);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 0 4rem rgba(243, 200, 111, 0.045),
+    inset 0 0 8rem rgba(0, 0, 0, 0.24);
+}
+
+.jeeves-screen-glass > *,
+[data-jeeves-root] > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* delegated index.js root output */
+
+.hearth-jeeves__panel {
+  min-height: inherit;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  gap: 0.85rem;
+}
+
+.jeeves-screen-topline,
+.hearth-jeeves__status {
+  min-height: 4.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+  border-radius: calc(var(--radius-xl) - 0.95rem);
+  padding: 0.76rem 0.9rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.030) 50%, rgba(0, 0, 0, 0.14)),
+    radial-gradient(circle at 20% 0%, rgba(243, 200, 111, 0.15), transparent 65%),
+    rgba(255, 255, 255, 0.025);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    0 1rem 2.4rem rgba(0, 0, 0, 0.18);
+}
+
+.hearth-jeeves__status {
+  min-height: 2.5rem;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.jeeves-context-card p {
-  margin: 0;
-  color: var(--jeeves-muted);
-  font-size: 0.92rem;
-  line-height: 1.58;
+.hearth-jeeves__status::before,
+.jeeves-status::before,
+[data-jeeves-status]::before {
+  content: "";
+  width: 0.62rem;
+  height: 0.62rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--green-2);
+  box-shadow:
+    0 0 0.75rem rgba(143, 240, 195, 0.72),
+    0 0 1.7rem rgba(143, 240, 195, 0.28);
 }
 
-.jeeves-noscript-actions {
+.jeeves-identity {
+  min-width: 0;
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.72rem;
+}
+
+.jeeves-avatar {
+  width: 3.1rem;
+  height: 3.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 1rem;
+  color: #100908;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.56), transparent 37%),
+    linear-gradient(135deg, var(--gold-3), var(--gold-2) 44%, var(--ember-2));
+  font-size: 1.12rem;
+  font-weight: 950;
+  box-shadow:
+    0 0 1.5rem rgba(243, 200, 111, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
+
+.jeeves-identity-copy {
+  display: grid;
+  min-width: 0;
+}
+
+.jeeves-identity-copy span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.jeeves-identity-copy strong {
+  color: var(--ink-strong);
+  font-size: clamp(1.18rem, 3vw, 1.64rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.jeeves-status,
+[data-jeeves-status] {
+  min-height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.52rem;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+  border-radius: 999px;
+  padding: 0.5rem 0.7rem;
+  color: var(--muted);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.070), rgba(255, 255, 255, 0.018)),
+    rgba(0, 0, 0, 0.18);
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* THREAD */
+
+.jeeves-thread-screen,
+.hearth-jeeves__transcript {
+  position: relative;
+  min-height: var(--thread-height);
+  border: 1px solid rgba(255, 232, 163, 0.14);
+  border-radius: calc(var(--radius-xl) - 0.8rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.050), rgba(255, 255, 255, 0.016) 36%, rgba(0, 0, 0, 0.16)),
+    radial-gradient(circle at 18% -10%, rgba(243, 200, 111, 0.085), transparent 22rem),
+    radial-gradient(circle at 86% 110%, rgba(141, 216, 255, 0.055), transparent 24rem),
+    rgba(7, 8, 15, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 3rem rgba(243, 200, 111, 0.030),
+    0 1.2rem 3rem rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+}
+
+.jeeves-thread-screen {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.jeeves-thread,
+.jeeves-transcript,
+.jeeves-log,
+.hearth-jeeves__transcript,
+[data-jeeves-thread],
+[data-jeeves-transcript],
+[data-jeeves-log] {
+  position: relative;
+  z-index: 2;
+  min-height: var(--thread-height);
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: min(620px, calc(100% - 32px));
-  margin: 18px auto 0;
+  flex-direction: column;
+  gap: 0.72rem;
+  padding: clamp(0.9rem, 2.5vw, 1.25rem);
+  overflow-y: auto;
+  overscroll-behavior: auto;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(243, 200, 111, 0.34) transparent;
 }
 
-[data-hearth-jeeves-ready="true"] .jeeves-preload-card {
-  display: none;
+.jeeves-thread::-webkit-scrollbar,
+.jeeves-transcript::-webkit-scrollbar,
+.jeeves-log::-webkit-scrollbar,
+.hearth-jeeves__transcript::-webkit-scrollbar,
+[data-jeeves-thread]::-webkit-scrollbar,
+[data-jeeves-transcript]::-webkit-scrollbar,
+[data-jeeves-log]::-webkit-scrollbar {
+  width: 8px;
 }
 
-@keyframes jeeves-bubble-in {
+.jeeves-thread::-webkit-scrollbar-track,
+.jeeves-transcript::-webkit-scrollbar-track,
+.jeeves-log::-webkit-scrollbar-track,
+.hearth-jeeves__transcript::-webkit-scrollbar-track,
+[data-jeeves-thread]::-webkit-scrollbar-track,
+[data-jeeves-transcript]::-webkit-scrollbar-track,
+[data-jeeves-log]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jeeves-thread::-webkit-scrollbar-thumb,
+.jeeves-transcript::-webkit-scrollbar-thumb,
+.jeeves-log::-webkit-scrollbar-thumb,
+.hearth-jeeves__transcript::-webkit-scrollbar-thumb,
+[data-jeeves-thread]::-webkit-scrollbar-thumb,
+[data-jeeves-transcript]::-webkit-scrollbar-thumb,
+[data-jeeves-log]::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(243, 200, 111, 0.34);
+}
+
+/* BUBBLES */
+
+.jeeves-message,
+.jeeves-bubble,
+.hearth-jeeves__bubble,
+[data-jeeves-bubble],
+[data-jeeves-speaker] {
+  position: relative;
+  max-width: min(76%, 43rem);
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid rgba(255, 232, 163, 0.16);
+  border-radius: 1.14rem;
+  padding: 0.78rem 0.9rem;
+  color: rgba(255, 248, 230, 0.94);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.028) 48%, rgba(0, 0, 0, 0.10)),
+    radial-gradient(circle at 14% 0%, rgba(243, 200, 111, 0.10), transparent 70%),
+    rgba(255, 255, 255, 0.030);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 0.85rem 1.8rem rgba(0, 0, 0, 0.14);
+  animation: messageIn 0.26s ease both;
+  font-size: clamp(0.96rem, 2.15vw, 1.06rem);
+  line-height: 1.46;
+}
+
+.jeeves-bubble-body,
+.hearth-jeeves__bubble > *,
+.jeeves-message p {
+  margin: 0;
+}
+
+.jeeves-message-name {
+  color: var(--soft);
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.jeeves-message[data-message-origin="jeeves"],
+.jeeves-message[data-message-origin="assistant"],
+.jeeves-bubble-jeeves,
+.jeeves-bubble-assistant,
+.hearth-jeeves__bubble--assistant,
+.hearth-jeeves__bubble--jeeves,
+[data-jeeves-bubble="assistant"],
+[data-jeeves-bubble="jeeves"],
+[data-jeeves-speaker="jeeves"],
+[data-jeeves-speaker="assistant"] {
+  align-self: flex-start;
+  border-top-left-radius: 0.36rem;
+}
+
+.jeeves-message[data-message-origin="visitor"],
+.jeeves-message[data-message-origin="user"],
+.jeeves-bubble-user,
+.jeeves-bubble-visitor,
+.hearth-jeeves__bubble--user,
+.hearth-jeeves__bubble--visitor,
+[data-jeeves-bubble="user"],
+[data-jeeves-bubble="visitor"],
+[data-jeeves-speaker="user"],
+[data-jeeves-speaker="visitor"] {
+  align-self: flex-end;
+  border-color: rgba(141, 216, 255, 0.26);
+  border-top-right-radius: 0.36rem;
+  color: rgba(235, 247, 255, 0.96);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.090), rgba(255, 255, 255, 0.028) 48%, rgba(0, 0, 0, 0.08)),
+    radial-gradient(circle at 88% 0%, rgba(141, 216, 255, 0.13), transparent 70%),
+    rgba(141, 216, 255, 0.045);
+}
+
+.jeeves-message-system,
+.jeeves-message[data-message-origin="system"],
+.jeeves-bubble-system,
+.hearth-jeeves__bubble--system,
+[data-jeeves-bubble="system"],
+[data-jeeves-speaker="system"] {
+  max-width: min(82%, 46rem);
+  align-self: center;
+  text-align: center;
+  border-color: rgba(143, 240, 195, 0.18);
+  color: rgba(235, 240, 255, 0.80);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.070), rgba(255, 255, 255, 0.020)),
+    rgba(143, 240, 195, 0.045);
+}
+
+@keyframes messageIn {
   from {
     opacity: 0;
-    transform: translateY(7px) scale(0.985);
+    transform: translateY(0.34rem) scale(0.985);
   }
 
   to {
@@ -587,180 +677,431 @@ select {
   }
 }
 
-@keyframes jeeves-typing-dot {
+/* TYPING */
+
+.jeeves-typing {
+  position: relative;
+  z-index: 3;
+  display: none;
+  width: fit-content;
+  margin: 0 0 1rem 1rem;
+  align-items: center;
+  gap: 0.28rem;
+  border: 1px solid rgba(243, 200, 111, 0.18);
+  border-radius: 999px;
+  padding: 0.52rem 0.68rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.022)),
+    rgba(0, 0, 0, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 1.2rem rgba(243, 200, 111, 0.06);
+}
+
+.jeeves-typing[data-jeeves-typing="true"],
+[data-jeeves-root][data-jeeves-typing="true"] .jeeves-typing {
+  display: inline-flex;
+}
+
+.jeeves-typing span {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--gold-2);
+  opacity: 0.35;
+  box-shadow: 0 0 0.9rem rgba(243, 200, 111, 0.40);
+  animation: typingPulse 1s ease-in-out infinite;
+}
+
+.jeeves-typing span:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.jeeves-typing span:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes typingPulse {
   0%,
   100% {
-    opacity: 0.32;
+    opacity: 0.22;
     transform: translateY(0);
   }
 
-  45% {
-    opacity: 1;
-    transform: translateY(-3px);
-  }
-}
-
-@keyframes jeeves-orb-pulse {
-  0%,
-  100% {
-    opacity: 0.62;
-    transform: scale(0.96);
-  }
-
   50% {
-    opacity: 1;
-    transform: scale(1.04);
+    opacity: 0.92;
+    transform: translateY(-0.18rem);
   }
 }
 
-@keyframes jeeves-atmosphere-drift {
-  from {
-    transform: translate3d(-1.5%, -1%, 0) rotate(0deg);
-  }
+/* DOCKS */
 
-  to {
-    transform: translate3d(1.5%, 1%, 0) rotate(3deg);
-  }
+.jeeves-prompt-dock,
+.jeeves-handoff-dock,
+.jeeves-options,
+.jeeves-handoffs,
+.jeeves-doors,
+.hearth-jeeves__options,
+.hearth-jeeves__handoffs,
+[data-jeeves-options],
+[data-jeeves-handoffs],
+[data-jeeves-doors] {
+  position: relative;
+  display: grid;
+  gap: 0.55rem;
+  border: 1px solid rgba(255, 232, 163, 0.13);
+  border-radius: calc(var(--radius-xl) - 1rem);
+  padding: 0.8rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.070), rgba(255, 255, 255, 0.020) 52%, rgba(0, 0, 0, 0.10)),
+    rgba(255, 255, 255, 0.020);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0.9rem 2.2rem rgba(0, 0, 0, 0.14);
 }
 
-@media (max-width: 820px) {
+.jeeves-handoffs,
+.jeeves-doors,
+.hearth-jeeves__handoffs,
+[data-jeeves-handoffs],
+[data-jeeves-doors],
+.jeeves-handoff-dock {
+  border-color: rgba(141, 216, 255, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.018) 52%, rgba(0, 0, 0, 0.11)),
+    radial-gradient(circle at 14% 0%, rgba(141, 216, 255, 0.065), transparent 70%),
+    rgba(255, 255, 255, 0.018);
+}
+
+.jeeves-handoff-dock[data-handoff-visible="false"] {
+  display: none;
+}
+
+.jeeves-option-group,
+.jeeves-door-group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.jeeves-prompt-grid,
+.jeeves-handoff-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.52rem;
+}
+
+/* BUTTONS */
+
+.jeeves-option,
+.jeeves-option-button,
+.hearth-jeeves__option,
+[data-jeeves-option],
+[data-jeeves-option-index] {
+  min-height: 2.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(243, 200, 111, 0.32);
+  border-radius: 999px;
+  padding: 0.64rem 0.86rem;
+  color: rgba(255, 244, 216, 0.98);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.026)),
+    radial-gradient(circle at 24% 0%, rgba(243, 200, 111, 0.18), transparent 64%),
+    rgba(243, 200, 111, 0.060);
+  font-size: 0.86rem;
+  font-weight: 850;
+  line-height: 1.12;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 1.1rem rgba(243, 200, 111, 0.055);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.jeeves-option:hover,
+.jeeves-option-button:hover,
+.hearth-jeeves__option:hover,
+[data-jeeves-option]:hover,
+[data-jeeves-option-index]:hover {
+  transform: translateY(-1px);
+  border-color: rgba(243, 200, 111, 0.58);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.034)),
+    radial-gradient(circle at 24% 0%, rgba(243, 200, 111, 0.26), transparent 64%),
+    rgba(243, 200, 111, 0.082);
+}
+
+.jeeves-route-option,
+.jeeves-door,
+.jeeves-handoff,
+.hearth-jeeves__handoff,
+[data-jeeves-route-option] {
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(141, 216, 255, 0.26);
+  border-radius: 999px;
+  padding: 0.62rem 0.84rem;
+  color: rgba(232, 244, 255, 0.95);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.024)),
+    radial-gradient(circle at 24% 0%, rgba(141, 216, 255, 0.12), transparent 64%),
+    rgba(141, 216, 255, 0.050);
+  font-size: 0.82rem;
+  font-weight: 850;
+  line-height: 1.12;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 0 1.1rem rgba(141, 216, 255, 0.045);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.jeeves-route-option:hover,
+.jeeves-door:hover,
+.jeeves-handoff:hover,
+.hearth-jeeves__handoff:hover,
+[data-jeeves-route-option]:hover {
+  transform: translateY(-1px);
+  border-color: rgba(141, 216, 255, 0.52);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.115), rgba(255, 255, 255, 0.030)),
+    radial-gradient(circle at 24% 0%, rgba(141, 216, 255, 0.18), transparent 64%),
+    rgba(141, 216, 255, 0.070);
+}
+
+/* FORM FROM DELEGATED INDEX.JS */
+
+.hearth-jeeves__form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  border: 1px solid rgba(255, 232, 163, 0.12);
+  border-radius: calc(var(--radius-xl) - 1rem);
+  padding: 0.8rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.062), rgba(255, 255, 255, 0.018)),
+    rgba(255, 255, 255, 0.018);
+}
+
+.hearth-jeeves__input {
+  min-width: 0;
+  min-height: 2.6rem;
+  border: 1px solid rgba(255, 232, 163, 0.14);
+  border-radius: 999px;
+  padding: 0.62rem 0.9rem;
+  color: var(--ink-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.060), rgba(255, 255, 255, 0.020)),
+    rgba(0, 0, 0, 0.16);
+}
+
+.hearth-jeeves__input::placeholder {
+  color: var(--faint);
+}
+
+.hearth-jeeves__submit {
+  min-height: 2.6rem;
+  border: 1px solid rgba(243, 200, 111, 0.36);
+  border-radius: 999px;
+  padding: 0.62rem 1rem;
+  color: #120a05;
+  background: linear-gradient(135deg, var(--gold-3), var(--gold));
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow:
+    0 0 1.1rem rgba(243, 200, 111, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+/* CONTEXT RAIL */
+
+.jeeves-context-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.jeeves-context-card {
+  border: 1px solid rgba(255, 232, 163, 0.12);
+  border-radius: 1.1rem;
+  padding: 0.9rem;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(243, 200, 111, 0.08), transparent 70%),
+    rgba(255, 255, 255, 0.030);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.jeeves-context-card span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--gold);
+  font-size: 0.64rem;
+  font-weight: 950;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.jeeves-context-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.42;
+}
+
+/* MINIMIZED */
+
+.jeeves-minimized {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(243, 200, 111, 0.14);
+  border-radius: 1.1rem;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.jeeves-minimized[data-jeeves-minimized="true"] {
+  display: flex;
+}
+
+.jeeves-minimized-copy {
+  display: grid;
+}
+
+.jeeves-minimized-copy span {
+  color: var(--soft);
+  font-size: 0.64rem;
+  font-weight: 950;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.jeeves-minimized-copy strong {
+  color: var(--ink-strong);
+}
+
+.jeeves-restore-button {
+  min-height: 2.4rem;
+  border: 1px solid rgba(243, 200, 111, 0.30);
+  border-radius: 999px;
+  padding: 0.58rem 0.82rem;
+  color: var(--ink-strong);
+  background: rgba(255, 255, 255, 0.045);
+  font-weight: 850;
+  cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 860px) {
+  :root {
+    --thread-height: clamp(20rem, 54vh, 32rem);
+  }
+
   .jeeves-page {
-    width: min(100vw - 20px, var(--jeeves-max));
-    padding-top: 12px;
+    width: min(var(--max), calc(100% - 20px));
   }
 
   .jeeves-page-header {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .jeeves-header-return {
+    width: 100%;
+  }
+
+  .jeeves-screen-glass,
+  [data-jeeves-root].hearth-jeeves,
+  [data-jeeves-root].hearth-jeeves-v25 {
+    min-height: auto;
+    border-radius: 1.35rem;
+    padding: 0.75rem;
+  }
+
+  .jeeves-screen-topline {
     align-items: flex-start;
     flex-direction: column;
-    padding-bottom: 16px;
   }
 
-  .jeeves-header-nav {
-    justify-content: flex-start;
-  }
-
-  .jeeves-screen-shell,
-  .jeeves-screen-glass,
-  .hearth-jeeves,
-  .jeeves-v7-shell {
-    min-height: calc(100vh - 184px);
-  }
-
-  .jeeves-v7-shell {
-    padding: 18px;
-  }
-
-  .jeeves-v7-orb {
-    top: 18px;
-    right: 18px;
-    width: 76px;
-    height: 76px;
-    opacity: 0.64;
-  }
-
-  .jeeves-v7-orb-core {
-    inset: 17px;
-  }
-
-  .jeeves-v7-header {
-    padding-right: 86px;
-    padding-bottom: 18px;
-  }
-
-  .jeeves-v7-header h1 {
-    font-size: clamp(2.35rem, 15vw, 4.2rem);
-  }
-
-  .jeeves-v7-subtitle {
-    font-size: 0.96rem;
-  }
-
-  .jeeves-v7-panel {
-    min-height: 390px;
-  }
-
-  .jeeves-v7-thread {
-    max-height: 48vh;
-  }
-
-  .jeeves-v7-bubble {
-    max-width: 96%;
-    padding: 13px 14px;
-    font-size: 0.94rem;
-  }
-
-  .jeeves-v7-options {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .jeeves-v7-option,
-  .jeeves-route-option {
+  .jeeves-status,
+  [data-jeeves-status] {
     width: 100%;
-    justify-content: center;
+  }
+
+  .jeeves-message,
+  .jeeves-bubble,
+  .hearth-jeeves__bubble,
+  [data-jeeves-bubble],
+  [data-jeeves-speaker] {
+    max-width: 92%;
   }
 
   .jeeves-context-rail {
     grid-template-columns: 1fr;
   }
 
-  .jeeves-preload-card {
-    align-items: flex-start;
-    flex-direction: column;
-    margin-top: 12vh;
+  .hearth-jeeves__form {
+    grid-template-columns: 1fr;
+  }
+
+  .hearth-jeeves__submit {
+    width: 100%;
   }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 480px) {
   .jeeves-page {
-    width: min(100vw - 14px, var(--jeeves-max));
-    padding-bottom: 20px;
+    width: min(var(--max), calc(100% - 16px));
+    gap: 0.75rem;
   }
 
   .jeeves-brand-mark {
-    width: 40px;
-    height: 40px;
-    border-radius: 14px;
+    width: 3.1rem;
+    height: 3.1rem;
   }
 
-  .jeeves-header-return {
+  .jeeves-thread,
+  .jeeves-transcript,
+  .jeeves-log,
+  .hearth-jeeves__transcript,
+  [data-jeeves-thread],
+  [data-jeeves-transcript],
+  [data-jeeves-log] {
+    padding: 0.78rem;
+  }
+
+  .jeeves-message,
+  .jeeves-bubble,
+  .hearth-jeeves__bubble,
+  [data-jeeves-bubble],
+  [data-jeeves-speaker] {
+    max-width: 96%;
+    font-size: 0.95rem;
+  }
+
+  .jeeves-option,
+  .jeeves-option-button,
+  .hearth-jeeves__option,
+  [data-jeeves-option],
+  [data-jeeves-option-index],
+  .jeeves-route-option,
+  .jeeves-door,
+  .jeeves-handoff,
+  .hearth-jeeves__handoff,
+  [data-jeeves-route-option] {
     width: 100%;
-    justify-content: center;
-  }
-
-  .jeeves-header-nav {
-    width: 100%;
-  }
-
-  .jeeves-screen-shell {
-    border-radius: 22px;
-  }
-
-  .jeeves-screen-glass,
-  .hearth-jeeves {
-    border-radius: 20px;
-  }
-
-  .jeeves-v7-shell {
-    padding: 15px;
-  }
-
-  .jeeves-v7-header {
-    padding-right: 0;
-    padding-top: 78px;
-  }
-
-  .jeeves-v7-orb {
-    left: 15px;
-    right: auto;
-  }
-
-  .jeeves-v7-thread {
-    max-height: 44vh;
-  }
-
-  .jeeves-context-card {
-    padding: 15px;
   }
 }
 
@@ -769,8 +1110,8 @@ select {
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    animation-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

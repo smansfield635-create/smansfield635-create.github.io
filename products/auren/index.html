@@ -1,17 +1,19 @@
 <!-- /products/auren/index.html -->
-<!-- AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5 -->
+<!-- AUREN_PRODUCTS_WORK_FLOOR_TECHNICAL_PACING_AND_SILENT_RETURNS_HTML_TNT_v6 -->
 <!-- Full-file replacement. -->
-<!-- Owns: Auren product-floor chat shell, short opening, focused product menus, contrast-based product dialogue, active product set, handoff knowledge, product routing, Soren/Jeeves/Elara handoffs, one-tap-one-line pacing. -->
+<!-- Technical renewal only. -->
+<!-- Content accepted from v5. -->
+<!-- Owns: Auren product-floor chat shell, pacing behavior, silent return navigation, focused product menus, contrast-based product dialogue, active product set, handoff knowledge, product routing, Soren/Jeeves/Elara handoffs, one-tap-one-line pacing. -->
 <!-- Does not own: /products/index.html, /products/auren/index.css, product child pages, official product descriptions, Elara page, Soren diagnostic page, Jeeves page, backend/API, gauges. -->
-<!-- Purpose: bind the full Auren product-floor expression model: practical, contrast-based, House-invested, short, useful, and route-aware. -->
+<!-- Purpose: preserve accepted content while slowing typing cadence and making return actions silent/no-repeat. -->
 
 <!doctype html>
 <html
   lang="en"
   data-route="/products/auren/"
   data-page="auren-products-work-floor"
-  data-contract="AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5"
-  data-previous-contract="AUREN_PRODUCTS_WORK_FLOOR_QUESTION_MENU_REDUCTION_PERSONALITY_HTML_TNT_v4"
+  data-contract="AUREN_PRODUCTS_WORK_FLOOR_TECHNICAL_PACING_AND_SILENT_RETURNS_HTML_TNT_v6"
+  data-previous-contract="AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5"
   data-role="product-floor-agent"
   data-character="auren"
   data-character-name-lock="Auren"
@@ -29,6 +31,8 @@
   data-house-invested-expression="true"
   data-community-systems-category-not-product="true"
   data-active-product-count="5"
+  data-slower-pacing="true"
+  data-silent-return-navigation="true"
   data-default-routing-system="products"
   data-external-handoffs="soren,elara,jeeves"
 >
@@ -78,7 +82,7 @@
         data-auren-root="true"
         data-auren-ready="false"
         data-auren-speaking="false"
-        data-contract="AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5"
+        data-contract="AUREN_PRODUCTS_WORK_FLOOR_TECHNICAL_PACING_AND_SILENT_RETURNS_HTML_TNT_v6"
       >
         <div class="auren-console-topline">
           <div class="auren-identity">
@@ -151,8 +155,8 @@
     </section>
 
     <template id="auren-route-receipt" data-route-receipt>
-AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5
-previous=AUREN_PRODUCTS_WORK_FLOOR_QUESTION_MENU_REDUCTION_PERSONALITY_HTML_TNT_v4
+AUREN_PRODUCTS_WORK_FLOOR_TECHNICAL_PACING_AND_SILENT_RETURNS_HTML_TNT_v6
+previous=AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5
 route=/products/auren/
 page=auren_products_work_floor
 character=auren
@@ -171,6 +175,8 @@ short_opening_sequence=true
 contrast_expression_engine=true
 house_invested_expression=true
 product_menu_focused=true
+slower_pacing=true
+silent_return_navigation=true
 active_products=on_your_side_ai,archcoin,five_flags,education,baseline_nutrition_systems
 community_systems=category_logic_not_product_lane
 handoff_knowledge=coherence_diagnostic,sean,nine_summits,book,jeeves
@@ -179,7 +185,7 @@ soren_route=/coherence-diagnostic/
 elara_route=/meet-sean-mansfield/
 jeeves_route=/showroom/globe/hearth/jeeves/
 products_route=/products/
-route_owns=auren_chat_shell,local_response_bank,short_opening_sequence,focused_product_menus,contrast_product_answers,handoff_knowledge,return_navigation,one_tap_one_line
+route_owns=auren_chat_shell,local_response_bank,short_opening_sequence,focused_product_menus,contrast_product_answers,handoff_knowledge,return_navigation,one_tap_one_line,slower_pacing,silent_returns
 route_does_not_own=products_index,products_auren_css,product_child_pages,official_product_descriptions,elara_page,soren_page,jeeves_page,api,gauges
     </template>
   </main>
@@ -220,7 +226,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
     (function mountAurenProductFloor() {
       "use strict";
 
-      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_FULL_DIALOGUE_BINDING_HTML_TNT_v5";
+      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_TECHNICAL_PACING_AND_SILENT_RETURNS_HTML_TNT_v6";
 
       var ROUTES = {
         products: "/products/",
@@ -238,14 +244,15 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
       };
 
       var TIMING = {
-        entranceDelay: 340,
-        firstBubbleDelay: 400,
-        shortBubbleDelay: 720,
-        mediumBubbleDelay: 1020,
-        longBubbleDelay: 1320,
-        extraLongBubbleDelay: 1600,
-        betweenBubbleDelay: 260,
-        maxNaturalJitter: 55
+        entranceDelay: 420,
+        firstBubbleDelay: 700,
+        shortBubbleDelay: 1350,
+        mediumBubbleDelay: 1850,
+        longBubbleDelay: 2450,
+        extraLongBubbleDelay: 3150,
+        betweenBubbleDelay: 560,
+        afterManualTapDelay: 1900,
+        maxNaturalJitter: 120
       };
 
       var PRODUCT_ORDER = [
@@ -591,7 +598,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
             { label: "Who is Sean?", action: "handoff_answer", handoffId: "sean" },
             { label: "What are the Nine Summits?", action: "handoff_answer", handoffId: "nine_summits" },
             { label: "What is the Book?", action: "handoff_answer", handoffId: "book" },
-            { label: "Back to product questions.", action: "products_menu" },
+            { label: "Back to product questions.", action: "products_menu", silent: true },
             { label: "Ask Jeeves first.", action: "jeeves_handoff" }
           ]
         },
@@ -697,7 +704,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
       }
 
       function makeBackToProductsAction() {
-        return { label: "Back to Products.", action: "products_menu" };
+        return { label: "Back to Products.", action: "products_menu", silent: true };
       }
 
       function makeBackToProductAction(productId) {
@@ -707,7 +714,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
           label: "Back to " + product.name + " questions.",
           action: "product_menu",
           productId: productId,
-          silent: false
+          silent: true
         };
       }
 
@@ -715,7 +722,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
         return {
           label: "Back to outside-product questions.",
           action: "outside_products_menu",
-          silent: false
+          silent: true
         };
       }
 
@@ -865,7 +872,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
           state.currentTimer = null;
           state.pendingStepFn = null;
 
-          if (typeof pending === "function") pending();
+          if (typeof pending === "function") pending(false);
         }, delay);
       }
 
@@ -910,7 +917,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
 
         setStatus(state, "Auren advanced one line.");
 
-        if (typeof pending === "function") pending();
+        if (typeof pending === "function") pending(true);
       }
 
       function installStepListeners(state) {
@@ -954,7 +961,7 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
           setStepTimer(state, fn, delay);
         }
 
-        function showBubbleAndScheduleNext() {
+        function showBubbleAndScheduleNext(wasManualTap) {
           if (i >= list.length) {
             finish();
             return;
@@ -969,11 +976,17 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
           i += 1;
 
           if (i >= list.length) {
-            scheduleStep(finish, TIMING.betweenBubbleDelay);
+            scheduleStep(finish, TIMING.betweenBubbleDelay + (wasManualTap ? TIMING.afterManualTapDelay : 0));
             return;
           }
 
-          scheduleStep(showBubbleAndScheduleNext, TIMING.betweenBubbleDelay + normalBubbleDelay(list[i], i));
+          var nextDelay = TIMING.betweenBubbleDelay + normalBubbleDelay(list[i], i);
+
+          if (wasManualTap) {
+            nextDelay += TIMING.afterManualTapDelay;
+          }
+
+          scheduleStep(showBubbleAndScheduleNext, nextDelay);
         }
 
         if (!list.length) {
@@ -1146,11 +1159,23 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
 
         if (action === "products_menu") {
           return {
-            bubbles: [
-              "Back to Products.",
-              "Ask a product question."
-            ],
-            after: "main"
+            silentReturn: true,
+            target: "main"
+          };
+        }
+
+        if (action === "product_menu" && option.silent) {
+          return {
+            silentReturn: true,
+            target: "product_menu",
+            productId: option.productId
+          };
+        }
+
+        if (action === "outside_products_menu" && option.silent) {
+          return {
+            silentReturn: true,
+            target: "outside_products"
           };
         }
 
@@ -1183,11 +1208,37 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
         };
       }
 
+      function performSilentReturn(response, state) {
+        clearCurrentTimer(state);
+        state.pendingStepFn = null;
+        setTyping(state, false);
+
+        if (response.target === "product_menu") {
+          renderProductMenu(state, response.productId || state.currentProductId);
+          setStatus(state, "Auren is waiting.");
+          return;
+        }
+
+        if (response.target === "outside_products") {
+          renderOutsideProductsMenu(state);
+          setStatus(state, "Auren is waiting.");
+          return;
+        }
+
+        renderMainPrompts(state);
+        setStatus(state, "Auren is waiting.");
+      }
+
       function respondToOption(option, state) {
         var response = responseFor(option, state);
 
         if (response.immediateRoute && response.routeUrl) {
           window.location.href = response.routeUrl;
+          return;
+        }
+
+        if (response.silentReturn) {
+          performSilentReturn(response, state);
           return;
         }
 
@@ -1249,6 +1300,8 @@ route_does_not_own=products_index,products_auren_css,product_child_pages,officia
               oneTapOneLine: true,
               contrastExpressionEngine: true,
               houseInvestedExpression: true,
+              slowerPacing: true,
+              silentReturnNavigation: true,
               activeProducts: PRODUCT_ORDER.slice(),
               communitySystemsCategoryNotProduct: true,
               route: "/products/auren/",

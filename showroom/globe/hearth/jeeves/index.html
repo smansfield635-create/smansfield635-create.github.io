@@ -1,24 +1,25 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9 -->
+<!-- HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, context-first cinematic response bank, single prompt dock, slower bubble timing, tap-to-rush. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, context-first response bank, Mirrorland pry path, single prompt dock, slower bubble timing, one-tap-one-line behavior. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: concrete orientation first, cinematic atmosphere second, responsible authority third, door last. -->
+<!-- Purpose: correct Hearth/Atrium/Mirrorland story logic and make each tap advance only the currently pending message. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10"
   data-hearth-jeeves-ready="false"
-  data-hearth-jeeves-home="inside-mirrorland"
+  data-hearth-role="hidden-control-room"
+  data-atrium-role="first-room-of-house"
   data-compass-entry="talk-to-the-house"
   data-mount-model="local-html-adapter"
   data-index-js-retired="true"
   data-api-js-retired="true"
   data-single-prompt-dock="true"
   data-context-first-expression="true"
-  data-cinematic-expression="true"
-  data-rushable-timing="true"
+  data-mirrorland-pry-path="true"
+  data-step-tap="true"
 >
   <head>
     <meta charset="utf-8" />
@@ -28,7 +29,7 @@
     <title>Jeeves · Hearth · Talk to the House</title>
     <meta
       name="description"
-      content="Talk to the House through Jeeves from Hearth, his room inside Mirrorland."
+      content="Talk to the House through Jeeves from Hearth, a hidden control room inside the House."
     />
 
     <link rel="stylesheet" href="/showroom/globe/hearth/jeeves/index.css" />
@@ -62,16 +63,17 @@
           data-jeeves-ready="false"
           data-house-listening="false"
           data-jeeves-typing="false"
-          data-hearth-jeeves-home="inside-mirrorland"
+          data-hearth-role="hidden-control-room"
+          data-atrium-role="first-room-of-house"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9"
-          data-expression-contract="HEARTH_JEEVES_HOME_INSIDE_MIRRORLAND_EXPRESSION_TNT_v7_1_0"
+          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10"
+          data-expression-contract="LOCAL_CONTEXT_FIRST_RESPONSE_BANK"
         >
           <div class="jeeves-screen-topline">
             <div class="jeeves-identity">
               <div class="jeeves-avatar" aria-hidden="true">J</div>
               <div class="jeeves-identity-copy">
-                <span>Hearth · Inside Mirrorland</span>
+                <span>Hearth · Hidden Control Room</span>
                 <strong>Jeeves</strong>
               </div>
             </div>
@@ -128,18 +130,18 @@
 
       <section class="jeeves-context-rail" aria-label="Hearth context">
         <article class="jeeves-context-card">
-          <span>Room</span>
-          <p>Hearth is Jeeves’ room inside the House.</p>
+          <span>Hearth</span>
+          <p>A hidden control room where research, development, and routing sit closer to the machinery.</p>
         </article>
 
         <article class="jeeves-context-card">
           <span>Entry</span>
-          <p>You found him from the Compass by choosing Talk to the House.</p>
+          <p>You found this room from the Compass by choosing Talk to the House.</p>
         </article>
 
         <article class="jeeves-context-card">
-          <span>Direction</span>
-          <p>Jeeves can return you outward, send you inward, or point you across the Estate.</p>
+          <span>Atrium</span>
+          <p>The first room of the House. Hearth is not the front room; it is a side access point.</p>
         </article>
       </section>
     </main>
@@ -180,7 +182,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_CONTEXT_FIRST_CINEMATIC_EXPRESSION_HTML_TNT_v9";
+        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10";
 
         var ROUTES = {
           compass: "/",
@@ -203,33 +205,32 @@
         };
 
         var TIMING = {
-          entranceDelay: 720,
-          firstBubbleDelay: 900,
-          shortBubbleDelay: 2150,
-          mediumBubbleDelay: 3050,
-          longBubbleDelay: 4050,
-          extraLongBubbleDelay: 4800,
-          betweenBubbleDelay: 820,
-          rushBubbleDelay: 320,
-          rushBetweenDelay: 120,
-          flushBubbleDelay: 38,
-          flushBetweenDelay: 24,
-          maxNaturalJitter: 260
+          entranceDelay: 900,
+          firstBubbleDelay: 1050,
+          shortBubbleDelay: 2200,
+          mediumBubbleDelay: 3200,
+          longBubbleDelay: 4200,
+          extraLongBubbleDelay: 5000,
+          betweenBubbleDelay: 850,
+          stepBubbleDelay: 0,
+          maxNaturalJitter: 220
         };
 
         var OPENING_SEQUENCE = [
           "Welcome inside the House.",
           "You found me through the Compass.",
-          "This is Hearth — my room inside the House.",
-          "I can explain the surface, name what stands behind it, and give you the proper door.",
-          "No more than that unless you press."
+          "This is Hearth — not the first room, and not my main room.",
+          "Hearth is a hidden control room. Research, development, and routing happen closer to the machinery here.",
+          "I check in from time to time.",
+          "If you want the first room of the House, that is the Atrium.",
+          "Ask plainly. I will give you the surface, then the proper door."
         ];
 
         var MAIN_PROMPTS = [
           { label: "Where am I?", action: "where" },
           { label: "Show me the map", action: "map" },
           { label: "Take me to the Diagnostic", action: "diagnostic" },
-          { label: "Meet the Characters", action: "characters" },
+          { label: "What is Mirrorland?", action: "mirrorland" },
           { label: "Enter the Atrium", action: "atrium" },
           { label: "Return to the Compass", action: "compass", routeUrl: ROUTES.compass }
         ];
@@ -241,7 +242,7 @@
             bubbles: [
               "Elara is the public-facing signal bearer.",
               "She helps carry Sean, the Nine Summits, and the mission-facing invitation into view.",
-              "That matters because some visitors need the human threshold before the House turns inward.",
+              "She stands near the border before the House turns inward.",
               "Origin belongs with her."
             ]
           },
@@ -251,7 +252,7 @@
             bubbles: [
               "Soren is the boundary keeper.",
               "He owns diagnostic threshold, proof, admissibility, and measurement.",
-              "That matters because not every impression deserves to be treated as a reading.",
+              "He stands where guessing stops.",
               "Where I orient, he verifies."
             ]
           },
@@ -261,7 +262,7 @@
             bubbles: [
               "Auren is the keeper of value and custody.",
               "He belongs near products, Arc Coin, protection, and exchange.",
-              "That matters because value becomes unstable when nothing guards how it leaves the House.",
+              "Value becomes unstable when nothing guards how it leaves the House.",
               "Nothing valuable should travel unguarded."
             ]
           },
@@ -271,7 +272,7 @@
             bubbles: [
               "Dextrion is the technical repair threshold.",
               "He belongs near H-Earth, anomaly, lab pressure, and practical repair.",
-              "That matters because some rooms must be built before they can be explained.",
+              "Some rooms must be built before they can be explained.",
               "Less ceremony there. More tools."
             ]
           },
@@ -281,8 +282,8 @@
             bubbles: [
               "Alaric is the field navigator.",
               "He belongs near frontier movement, uncertainty, and route choice.",
-              "That matters when the road is not settled yet.",
-              "Useful, if you do not need the road paved first."
+              "He is useful before the road is settled.",
+              "Not every path arrives paved."
             ]
           },
           tarian: {
@@ -291,7 +292,7 @@
             bubbles: [
               "Tarian is the water anchor.",
               "He belongs near infrastructure, continuity, pressure, flow, and survival beneath the visible layer.",
-              "That matters because systems often reveal their truth through what keeps them alive.",
+              "Systems often reveal their truth through what keeps them alive.",
               "Flow reveals what the surface hides."
             ]
           },
@@ -301,7 +302,7 @@
             bubbles: [
               "The Remote Team is the distributed field path.",
               "It belongs near city, climate, logistics, deployment, and action at distance.",
-              "That matters because some work cannot belong to one person or one room.",
+              "Some work cannot belong to one person or one room.",
               "Some responses must move without gathering first."
             ]
           }
@@ -339,16 +340,6 @@
         }
 
         function openingSequence() {
-          var exp = expression();
-
-          if (exp && Array.isArray(exp.openingSequence) && exp.openingSequence.length) {
-            var shaped = exp.openingSequence.slice(0, 5).map(text).filter(Boolean);
-
-            if (shaped.length >= 3 && !/staging chamber|you are at the compass/i.test(shaped.join(" "))) {
-              return shaped;
-            }
-          }
-
           return OPENING_SEQUENCE.slice();
         }
 
@@ -448,27 +439,30 @@
           if (state.thread) state.thread.scrollTop = state.thread.scrollHeight;
         }
 
-        function clearSequenceTimers(state) {
-          if (!state || !Array.isArray(state.sequenceTimers)) return;
-
-          state.sequenceTimers.forEach(function (timerId) {
-            window.clearTimeout(timerId);
-          });
-
-          state.sequenceTimers = [];
+        function clearCurrentTimer(state) {
+          if (!state || !state.currentTimer) return;
+          window.clearTimeout(state.currentTimer);
+          state.currentTimer = null;
         }
 
-        function setSequenceTimer(state, fn, delay) {
-          var timerId = window.setTimeout(function () {
-            state.sequenceTimers = state.sequenceTimers.filter(function (id) {
-              return id !== timerId;
-            });
+        function setStepTimer(state, fn, delay) {
+          clearCurrentTimer(state);
 
-            fn();
+          state.pendingStepFn = function () {
+            clearCurrentTimer(state);
+            var pending = state.pendingStepFn;
+            state.pendingStepFn = null;
+            if (typeof pending === "function") {
+              fn();
+            }
+          };
+
+          state.currentTimer = window.setTimeout(function () {
+            var pending = state.pendingStepFn;
+            state.currentTimer = null;
+            state.pendingStepFn = null;
+            if (typeof pending === "function") pending();
           }, delay);
-
-          state.sequenceTimers.push(timerId);
-          return timerId;
         }
 
         function naturalJitter(seedText, index) {
@@ -502,90 +496,56 @@
           return Math.round(delay);
         }
 
-        function nextBubbleDelay(message, index, state) {
-          if (state.flush) return TIMING.flushBubbleDelay;
-          if (state.rush) return TIMING.rushBubbleDelay;
-          return normalBubbleDelay(message, index);
+        function requestStep(state) {
+          if (!state || !state.sequenceActive || !state.pendingStepFn) return;
+
+          var pending = state.pendingStepFn;
+          clearCurrentTimer(state);
+          state.pendingStepFn = null;
+
+          setStatus(state, "Jeeves advanced one line.");
+          pending();
         }
 
-        function betweenBubbleDelay(state) {
-          if (state.flush) return TIMING.flushBetweenDelay;
-          if (state.rush) return TIMING.rushBetweenDelay;
-          return TIMING.betweenBubbleDelay;
-        }
+        function installStepListeners(state) {
+          if (!state || !state.mount || state.stepListenersInstalled) return;
 
-        function requestRush(state) {
-          if (!state || !state.sequenceActive) return;
+          state.stepListenersInstalled = true;
 
-          if (!state.rush) {
-            state.rush = true;
-            state.mount.setAttribute("data-jeeves-rush", "true");
-            setStatus(state, "Jeeves is speaking faster.");
-            return;
-          }
-
-          state.flush = true;
-          state.mount.setAttribute("data-jeeves-flush", "true");
-          setStatus(state, "Jeeves is opening the next door quickly.");
-        }
-
-        function installRushListeners(state) {
-          if (!state || !state.mount || state.rushListenersInstalled) return;
-
-          state.rushListenersInstalled = true;
-
-          state.mount.addEventListener("click", function (event) {
+          state.mount.addEventListener("pointerdown", function (event) {
             var target = event.target;
 
             if (target && target.closest && target.closest("[data-jeeves-option]")) {
               return;
             }
 
-            requestRush(state);
+            requestStep(state);
           });
-
-          state.mount.addEventListener("touchstart", function (event) {
-            var target = event.target;
-
-            if (target && target.closest && target.closest("[data-jeeves-option]")) {
-              return;
-            }
-
-            requestRush(state);
-          }, { passive: true });
         }
 
         function renderSequence(messages, state, done) {
           var list = Array.isArray(messages) ? messages.map(text).filter(Boolean) : [];
           var i = 0;
 
-          clearSequenceTimers(state);
+          clearCurrentTimer(state);
 
-          state.rush = false;
-          state.flush = false;
+          state.pendingStepFn = null;
           state.sequenceActive = true;
 
-          if (state.mount) {
-            state.mount.setAttribute("data-jeeves-rush", "false");
-            state.mount.setAttribute("data-jeeves-flush", "false");
-          }
-
           function finish() {
-            clearSequenceTimers(state);
+            clearCurrentTimer(state);
+            state.pendingStepFn = null;
+
             setTyping(state, false);
-
-            state.rush = false;
-            state.flush = false;
             state.sequenceActive = false;
-
-            if (state.mount) {
-              state.mount.setAttribute("data-jeeves-rush", "false");
-              state.mount.setAttribute("data-jeeves-flush", "false");
-            }
 
             setStatus(state, "Jeeves is ready.");
 
             if (typeof done === "function") done();
+          }
+
+          function scheduleNextBubble(delay) {
+            setStepTimer(state, next, delay);
           }
 
           function next() {
@@ -595,18 +555,27 @@
             }
 
             setTyping(state, true);
+            setStatus(state, "Jeeves is speaking.");
 
-            setSequenceTimer(state, function () {
-              state.thread.appendChild(bubble(list[i], "jeeves"));
-              scrollThread(state);
+            state.thread.appendChild(bubble(list[i], "jeeves"));
+            scrollThread(state);
 
-              i += 1;
+            i += 1;
 
-              setSequenceTimer(state, next, betweenBubbleDelay(state));
-            }, i === 0 && !state.rush && !state.flush ? TIMING.entranceDelay : nextBubbleDelay(list[i], i, state));
+            if (i >= list.length) {
+              scheduleNextBubble(TIMING.betweenBubbleDelay);
+              return;
+            }
+
+            scheduleNextBubble(TIMING.betweenBubbleDelay + normalBubbleDelay(list[i], i));
           }
 
-          next();
+          if (!list.length) {
+            finish();
+            return;
+          }
+
+          scheduleNextBubble(TIMING.entranceDelay);
         }
 
         function renderOptions(options, state) {
@@ -696,10 +665,10 @@
           if (/where|hearth|room/.test(signal)) {
             return {
               bubbles: [
-                "Hearth is Jeeves’ room inside the House.",
-                "The Compass brought you here from the public side. Hearth lets me answer without crowding the Compass itself.",
-                "You are not deep in the House yet. You are at the first interior room.",
-                "From here, you can return outward, read the clean map, or press farther in."
+                "Hearth is a hidden control room inside the House.",
+                "The Compass brought you here by a side door. This is where I can speak without crowding the public page.",
+                "Research, development, routing, and unfinished machinery live closer to this room.",
+                "The Atrium is the first room of the House. Hearth is where one checks the pressure behind the walls."
               ],
               routeChoices: [
                 { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide },
@@ -727,7 +696,7 @@
               bubbles: [
                 "The Coherence Diagnostic is an interactive assessment path.",
                 "It helps examine whether a person, project, claim, or system is internally aligned enough to be read responsibly.",
-                "That matters because meaning is not the same as coherence.",
+                "Meaning is easy to feel. Coherence has to survive the reading.",
                 "Soren guards that room: proof, boundary, admissibility, measurement.",
                 "I can take you there. I will not perform it here."
               ],
@@ -737,16 +706,18 @@
             };
           }
 
-          if (/character|portrait|roster/.test(signal)) {
+          if (/mirrorland|story|behind the house|behind the platform|characters/.test(signal)) {
             return {
               bubbles: [
-                "The Portrait Hall is the roster of the Characters.",
-                "It shows who they are and what responsibility each one carries inside the House.",
-                "That matters because mission, proof, value, repair, movement, and continuity should not all speak through one voice.",
-                "The Portrait Hall shows the keepers. The Atrium shows the arrangement behind them."
+                "Mirrorland is the story-world behind the public platform.",
+                "It is where the House, the Characters, the rooms, and the deeper logic begin to connect.",
+                "Most visitors do not need that door first.",
+                "But you are prying.",
+                "Persistent. Good.",
+                "If you want to talk more about Mirrorland, the story, and the Characters, I can show you where that conversation belongs."
               ],
               routeChoices: [
-                { label: "Open the Portrait Hall", routeUrl: ROUTES.characters },
+                { label: "Enter Mirrorland", routeUrl: ROUTES.characters },
                 { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
               ]
             };
@@ -755,11 +726,11 @@
           if (/atrium|deeper|longer|prying|persistent/.test(signal)) {
             return {
               bubbles: [
-                "The Atrium is the first architectural room of the House.",
+                "The Atrium is the first room of the House.",
                 "It is where separate pages begin to connect into one structure.",
-                "That matters because a visitor can know the doors and still not understand the House.",
-                "No roster there. No public map. The arrangement itself.",
-                "Enter when you want the structure behind the rooms."
+                "A visitor can know the doors and still not understand the House.",
+                "The Atrium shows the arrangement.",
+                "Enter there if you want the structure behind the rooms."
               ],
               routeChoices: [
                 { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
@@ -771,7 +742,7 @@
             return {
               bubbles: [
                 "The Compass is the public page that brought you here.",
-                "It exists so the visitor can return to the main bridges without carrying the whole interior.",
+                "It lets the visitor return to the main bridges without carrying the whole interior.",
                 "A proper House never hides the exit."
               ],
               routeChoices: [
@@ -788,7 +759,7 @@
           return {
             bubbles: [
               "I can help, but I need to place the question.",
-              "If you are asking about structure, begin with the Website Guide. If you are asking about proof, Soren is likely involved. If you are asking about people, use the Portrait Hall.",
+              "If you are asking about structure, begin with the Website Guide. If you are asking about proof, Soren is likely involved. If you are asking about story, ask about Mirrorland.",
               "Give the question a room, and I can give you the door."
             ],
             routeChoices: [
@@ -837,9 +808,10 @@
                 indexJsRetired: true,
                 apiJsRetired: true,
                 singlePromptDock: true,
-                contextFirstExpression: true,
-                cinematicExpression: true,
-                rushableTiming: true,
+                mirrorlandPryPath: true,
+                stepTap: true,
+                hearthRole: "hidden-control-room",
+                atriumRole: "first-room-of-house",
                 mountNode: "#hearthJeevesMount"
               }
             }));
@@ -857,11 +829,10 @@
             status: query("[data-jeeves-status]", mountNode),
             typing: query(".jeeves-typing", mountNode),
             mode: "opening",
-            rush: false,
-            flush: false,
             sequenceActive: false,
-            rushListenersInstalled: false,
-            sequenceTimers: []
+            stepListenersInstalled: false,
+            currentTimer: null,
+            pendingStepFn: null
           };
 
           if (!state.thread || !state.options) {
@@ -869,7 +840,7 @@
             return;
           }
 
-          installRushListeners(state);
+          installStepListeners(state);
 
           empty(state.thread);
           empty(state.options);

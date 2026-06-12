@@ -4,8 +4,8 @@
   lang="en"  
   data-route="/products/"  
   data-page="products"  
-  data-contract="PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7"  
-  data-previous-contract="PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6"  
+  data-contract="PRODUCTS_AUREN_TOP_DOOR_SVG_ORBIT_TNT_v8"  
+  data-previous-contract="PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7"  
   data-role="product-wing"  
   data-public-frame="svg-organic-digital-gem-product-orbit"  
   data-runtime-public-message="false"  
@@ -403,6 +403,94 @@
       color:var(--green);  
       background:rgba(143,240,195,.07);  
     }  
+
+
+    /* AUREN_PRODUCTS_TOP_DOOR_TNT_v1 */
+    /* Non-disruptive top-door insertion. Does not alter product orbit/runtime. */
+
+    .auren-door {
+      position:relative;
+      margin-top:1.15rem;
+      padding:clamp(1.05rem,3vw,1.55rem);
+      display:grid;
+      gap:1rem;
+      isolation:isolate;
+    }
+
+    .auren-door::before {
+      content:"";
+      position:absolute;
+      right:clamp(1rem,5vw,3.5rem);
+      top:50%;
+      z-index:0;
+      width:clamp(5.8rem,16vw,10rem);
+      height:clamp(5.8rem,16vw,10rem);
+      border:1px solid rgba(243,200,111,.18);
+      border-radius:1.9rem;
+      transform:translateY(-50%) rotate(45deg);
+      background:
+        radial-gradient(circle at 50% 36%,rgba(255,232,163,.15),transparent 48%),
+        radial-gradient(circle at 50% 72%,rgba(141,216,255,.14),transparent 62%),
+        linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+      pointer-events:none;
+      opacity:.54;
+    }
+
+    .auren-door-grid {
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:minmax(0,1.35fr) minmax(15rem,.65fr);
+      gap:clamp(1rem,3vw,1.55rem);
+      align-items:center;
+    }
+
+    .auren-door-copy {
+      display:grid;
+      gap:.72rem;
+    }
+
+    .auren-door-copy h2 {
+      max-width:780px;
+    }
+
+    .auren-door-copy p {
+      max-width:840px;
+    }
+
+    .auren-door-note {
+      max-width:820px;
+      padding:.95rem 1rem;
+      border:1px solid rgba(243,200,111,.22);
+      border-radius:1.15rem;
+      color:rgba(255,244,216,.92);
+      background:rgba(243,200,111,.055);
+      font-weight:850;
+    }
+
+    .auren-door-card {
+      display:grid;
+      gap:.7rem;
+      padding:1rem;
+      border:1px solid rgba(143,240,195,.22);
+      border-radius:1.25rem;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(143,240,195,.10),transparent 16rem),
+        rgba(255,255,255,.04);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .auren-door-card strong {
+      color:var(--gold);
+      font-size:1rem;
+      letter-spacing:-.025em;
+    }
+
+    .auren-door-card span {
+      color:rgba(230,238,255,.72);
+      font-size:.86rem;
+      line-height:1.45;
+    }
   
     .section {  
       margin-top:1.15rem;  
@@ -763,6 +851,17 @@
         min-height:30rem;  
         padding:1rem;  
       }  
+
+      .auren-door-grid {
+        grid-template-columns:1fr;
+      }
+
+      .auren-door::before {
+        opacity:.28;
+        right:1rem;
+        top:1rem;
+        transform:rotate(45deg);
+      }
   
       .actions {  
         display:grid;  
@@ -1093,6 +1192,42 @@
     </div>  
   </section>  
 
+  <!-- AUREN_PRODUCTS_TOP_DOOR_TNT_v1 -->
+  <section
+    class="panel auren-door"
+    aria-labelledby="auren-door-title"
+    data-auren-door="true"
+    data-auren-work-floor-door="true"
+  >
+    <div class="kicker">Auren · Product Floor</div>
+
+    <div class="auren-door-grid">
+      <div class="auren-door-copy">
+        <h2 id="auren-door-title">Talk to Auren before opening a product.</h2>
+
+        <p>
+          Auren works this floor. He knows what each product is supposed to do, what problem it claims to solve, who it serves, and whether it is ready, testing, or still being built.
+        </p>
+
+        <div class="auren-door-note">
+          He will not give you the brochure version. He will give you his version first.
+        </div>
+
+        <div class="actions">
+          <a class="button gold" href="/products/auren/">Talk to Auren</a>
+          <a class="button" href="#product-orbit" data-open-product-orbit>Skip to Products</a>
+        </div>
+      </div>
+
+      <aside class="auren-door-card" aria-label="Auren product-floor role">
+        <strong>Product calibration first.</strong>
+        <span>
+          Pick a product. Auren gives his view, answers the four useful questions, then sends you into the product system when you are calibrated.
+        </span>
+      </aside>
+    </div>
+  </section>
+
   <section class="panel section" aria-labelledby="orbit-title">  
     <div class="kicker">Product Orbit</div>  
     <h2 id="orbit-title">Eight organic digital gems keep the usable paths readable.</h2>  
@@ -1295,8 +1430,8 @@
 
   <template id="route-receipt" data-route-receipt>
 
-PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7
-previous=PRODUCTS_ORGANIC_GEM_ORBIT_RUNTIME_MOUNT_SEPARATION_TNT_v6
+PRODUCTS_AUREN_TOP_DOOR_SVG_ORBIT_TNT_v8
+previous=PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7
 route=/products/
 page=products
 role=product_wing
@@ -1327,8 +1462,8 @@ visible_cache_keys=false
 visible_script_failure_text=false
 products_index_js_role=quiet_bridge_hidden_status_only
 products_runtime_js_role=enhancement_only_hidden_mount_only
-route_owns=products_public_page,svg_organic_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
-route_does_not_own=runtime_as_public_message,gauges_logic,showroom_runtime,product_child_pages,heavy_runtime
+route_owns=products_public_page,auren_top_door,svg_organic_digital_gem_product_orbit,eight_doors,chamber_cards,public_copy,hidden_receipt
+route_does_not_own=runtime_as_public_message,gauges_logic,showroom_runtime,product_child_pages,auren_chat_page,heavy_runtime
 generated_image=false
 graphic_box=false
 streaming=false
@@ -1337,10 +1472,10 @@ visual_pass_claimed=false
 </main>
 
 <footer>  
-  PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7 · Products · SVG Organic Digital Gem Orbit · Eight Doors.  
+  PRODUCTS_AUREN_TOP_DOOR_SVG_ORBIT_TNT_v8 · Products · Auren Top Door · SVG Organic Digital Gem Orbit · Eight Doors.  
 </footer>
 
   </div>    <script>  
-    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_SVG_ORGANIC_DIGITAL_GEM_ORBIT_TNT_v7";  
+    window.DGB_PRODUCTS_PUBLIC_ORBIT_KEY = "PRODUCTS_AUREN_TOP_DOOR_SVG_ORBIT_TNT_v8";  
   </script>    <script type="module" src="/products/index.js?v=PRODUCTS_PUBLIC_ORBIT_RUNTIME_DEMOTION_BRIDGE_TNT_v2"></script>  </body>  
 </html>

@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5 -->
+<!-- HEARTH_JEEVES_PREFACE_LAYER_RUSHABLE_TIMING_HTML_TNT_v6 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, expression handoff, organic response bank, single prompt dock behavior. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, organic response bank, preface layer, single prompt dock, slower bubble timing, tap-to-rush. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: keep one prompt dock only and optimize Jeeves’ expression without losing derivatives. -->
+<!-- Purpose: make Jeeves more explanatory and conversational before routing, while preserving one prompt dock and visitor escape paths. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_PREFACE_LAYER_RUSHABLE_TIMING_HTML_TNT_v6"
   data-hearth-jeeves-ready="false"
   data-hearth-jeeves-home="inside-mirrorland"
   data-compass-entry="talk-to-the-house"
@@ -17,6 +17,8 @@
   data-api-js-retired="true"
   data-single-prompt-dock="true"
   data-organic-expression="true"
+  data-preface-layer="true"
+  data-rushable-timing="true"
 >
   <head>
     <meta charset="utf-8" />
@@ -62,7 +64,7 @@
           data-jeeves-typing="false"
           data-hearth-jeeves-home="inside-mirrorland"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5"
+          data-mount-contract="HEARTH_JEEVES_PREFACE_LAYER_RUSHABLE_TIMING_HTML_TNT_v6"
           data-expression-contract="HEARTH_JEEVES_HOME_INSIDE_MIRRORLAND_EXPRESSION_TNT_v7_1_0"
         >
           <div class="jeeves-screen-topline">
@@ -178,7 +180,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5";
+        var CONTRACT = "HEARTH_JEEVES_PREFACE_LAYER_RUSHABLE_TIMING_HTML_TNT_v6";
 
         var ROUTES = {
           compass: "/",
@@ -198,6 +200,21 @@
           frontier: "/explore/frontier/",
           water: "/explore/frontier/water/",
           remote: "/explore/frontier/vision-remote/"
+        };
+
+        var TIMING = {
+          entranceDelay: 620,
+          firstBubbleDelay: 720,
+          shortBubbleDelay: 1550,
+          mediumBubbleDelay: 2250,
+          longBubbleDelay: 3150,
+          extraLongBubbleDelay: 3850,
+          betweenBubbleDelay: 620,
+          rushBubbleDelay: 330,
+          rushBetweenDelay: 120,
+          flushBubbleDelay: 38,
+          flushBetweenDelay: 24,
+          maxNaturalJitter: 260
         };
 
         var OPENING_SEQUENCE = [
@@ -224,8 +241,9 @@
             routeUrl: ROUTES.sean,
             bubbles: [
               "That belongs with Elara.",
-              "She stands near the border where Sean, the Nine Summits, and the public mission begin turning into story.",
-              "If you want origin, voice, and the first crossing from platform into Mirrorland, that is her threshold."
+              "Elara stands near the border where Sean, the Nine Summits, and the public mission begin turning into story.",
+              "Her threshold is useful when the visitor is asking about origin, voice, invitation, and why the House was opened in the first place.",
+              "If you want the public mission before the deeper rooms, she is the cleaner guide."
             ]
           },
           soren: {
@@ -233,8 +251,9 @@
             routeUrl: ROUTES.diagnostic,
             bubbles: [
               "That belongs with Soren.",
-              "He is the authority on diagnostic threshold, proof, boundary, admissibility, and measurement.",
-              "I can take you there, but I will not dress a guess as a measurement."
+              "Soren is the authority on diagnostic threshold, proof, boundary, admissibility, and measurement.",
+              "He exists because not every question should be answered by charm, instinct, or resemblance.",
+              "Where I guide, Soren verifies. That distinction matters."
             ]
           },
           auren: {
@@ -242,8 +261,9 @@
             routeUrl: ROUTES.products,
             bubbles: [
               "That belongs with Auren.",
-              "He watches value, custody, products, Arc Coin, and what must be protected before it is exchanged.",
-              "That room should not be treated as a simple shop window."
+              "Auren watches value, custody, products, Arc Coin, and what must be protected before it is exchanged.",
+              "The product path is not merely a shelf. It is where the House begins asking what can safely carry value outside itself.",
+              "That is why his threshold is slower than a shop window."
             ]
           },
           dextrion: {
@@ -251,8 +271,9 @@
             routeUrl: ROUTES.hEarth,
             bubbles: [
               "That belongs with Dextrion.",
-              "Expect tools, anomaly, repair, H-Earth, and laboratory pressure rather than ceremony.",
-              "His corridor is technical because the crossing itself is technical."
+              "Dextrion is useful when the question is technical enough that ceremony would only get in the way.",
+              "His corridor carries anomaly, repair, H-Earth, lab pressure, and the practical problem of making the crossing work.",
+              "Expect tools there. Expect friction. Expect evidence that something had to be built, not merely described."
             ]
           },
           alaric: {
@@ -260,8 +281,9 @@
             routeUrl: ROUTES.frontier,
             bubbles: [
               "That belongs with Alaric.",
-              "He is useful when the road is not yet paved and the route must be chosen under uncertainty.",
-              "The Frontier is not a settled room. It is where the path is still being made."
+              "Alaric is useful when the road is not yet paved and the route must be chosen under uncertainty.",
+              "The Frontier is not a settled room. It is the part of the Estate where movement still has to earn its map.",
+              "If you are asking where to go before the road is obvious, he is the better guide."
             ]
           },
           tarian: {
@@ -269,8 +291,9 @@
             routeUrl: ROUTES.water,
             bubbles: [
               "That belongs with Tarian.",
-              "Water is never only water here; it is continuity, infrastructure, and survival beneath the surface.",
-              "If the question is about what keeps systems alive, he is the better guide."
+              "Water is never only water here.",
+              "It is continuity, infrastructure, survival, and the quiet question of what keeps a system alive beneath the surface.",
+              "If your question is about flow, pressure, contamination, endurance, or repair below the visible layer, Tarian is the proper threshold."
             ]
           },
           remote: {
@@ -278,8 +301,9 @@
             routeUrl: ROUTES.remote,
             bubbles: [
               "That belongs with the Remote Team.",
-              "Some rooms are not held by one person; they are distributed across field, city, climate, and deployment.",
-              "That path is built for response across distance."
+              "Some rooms are not held by one person.",
+              "They are distributed across field, city, climate, logistics, and deployment.",
+              "That path is for response across distance, where the House has to act without standing in only one room."
             ]
           }
         };
@@ -413,6 +437,8 @@
             state.typing.setAttribute("data-jeeves-typing", active ? "true" : "false");
             state.typing.setAttribute("aria-hidden", active ? "false" : "true");
           }
+
+          state.sequenceActive = Boolean(active);
         }
 
         function setStatus(state, message) {
@@ -423,25 +449,162 @@
           if (state.thread) state.thread.scrollTop = state.thread.scrollHeight;
         }
 
+        function clearSequenceTimers(state) {
+          if (!state || !Array.isArray(state.sequenceTimers)) return;
+
+          state.sequenceTimers.forEach(function (timerId) {
+            window.clearTimeout(timerId);
+          });
+
+          state.sequenceTimers = [];
+        }
+
+        function setSequenceTimer(state, fn, delay) {
+          var timerId = window.setTimeout(function () {
+            state.sequenceTimers = state.sequenceTimers.filter(function (id) {
+              return id !== timerId;
+            });
+
+            fn();
+          }, delay);
+
+          state.sequenceTimers.push(timerId);
+          return timerId;
+        }
+
+        function naturalJitter(seedText, index) {
+          var seed = String(seedText || "").length + index * 17;
+          return Math.abs(Math.sin(seed) * TIMING.maxNaturalJitter);
+        }
+
+        function normalBubbleDelay(message, index) {
+          var value = text(message);
+          var length = value.length;
+          var sentenceCount = Math.max(1, (value.match(/[.!?;:—]/g) || []).length);
+          var commaCount = (value.match(/[,]/g) || []).length;
+          var delay;
+
+          if (index === 0) {
+            delay = TIMING.firstBubbleDelay;
+          } else if (length < 55) {
+            delay = TIMING.shortBubbleDelay;
+          } else if (length < 115) {
+            delay = TIMING.mediumBubbleDelay;
+          } else if (length < 190) {
+            delay = TIMING.longBubbleDelay;
+          } else {
+            delay = TIMING.extraLongBubbleDelay;
+          }
+
+          delay += sentenceCount * 170;
+          delay += commaCount * 85;
+          delay += naturalJitter(value, index);
+
+          return Math.round(delay);
+        }
+
+        function nextBubbleDelay(message, index, state) {
+          if (state.flush) return TIMING.flushBubbleDelay;
+          if (state.rush) return TIMING.rushBubbleDelay;
+          return normalBubbleDelay(message, index);
+        }
+
+        function betweenBubbleDelay(state) {
+          if (state.flush) return TIMING.flushBetweenDelay;
+          if (state.rush) return TIMING.rushBetweenDelay;
+          return TIMING.betweenBubbleDelay;
+        }
+
+        function requestRush(state) {
+          if (!state || !state.sequenceActive) return;
+
+          if (!state.rush) {
+            state.rush = true;
+            state.mount.setAttribute("data-jeeves-rush", "true");
+            setStatus(state, "Jeeves is speaking faster.");
+            return;
+          }
+
+          state.flush = true;
+          state.mount.setAttribute("data-jeeves-flush", "true");
+          setStatus(state, "Jeeves is opening the next door quickly.");
+        }
+
+        function installRushListeners(state) {
+          if (!state || !state.mount || state.rushListenersInstalled) return;
+
+          state.rushListenersInstalled = true;
+
+          state.mount.addEventListener("click", function (event) {
+            var target = event.target;
+
+            if (target && target.closest && target.closest("[data-jeeves-option]")) {
+              return;
+            }
+
+            requestRush(state);
+          });
+
+          state.mount.addEventListener("touchstart", function (event) {
+            var target = event.target;
+
+            if (target && target.closest && target.closest("[data-jeeves-option]")) {
+              return;
+            }
+
+            requestRush(state);
+          }, { passive: true });
+        }
+
         function renderSequence(messages, state, done) {
           var list = Array.isArray(messages) ? messages.map(text).filter(Boolean) : [];
           var i = 0;
 
+          clearSequenceTimers(state);
+
+          state.rush = false;
+          state.flush = false;
+          state.sequenceActive = true;
+
+          if (state.mount) {
+            state.mount.setAttribute("data-jeeves-rush", "false");
+            state.mount.setAttribute("data-jeeves-flush", "false");
+          }
+
+          function finish() {
+            clearSequenceTimers(state);
+            setTyping(state, false);
+
+            state.rush = false;
+            state.flush = false;
+            state.sequenceActive = false;
+
+            if (state.mount) {
+              state.mount.setAttribute("data-jeeves-rush", "false");
+              state.mount.setAttribute("data-jeeves-flush", "false");
+            }
+
+            setStatus(state, "Jeeves is ready.");
+
+            if (typeof done === "function") done();
+          }
+
           function next() {
             if (i >= list.length) {
-              setTyping(state, false);
-              if (typeof done === "function") done();
+              finish();
               return;
             }
 
             setTyping(state, true);
 
-            window.setTimeout(function () {
+            setSequenceTimer(state, function () {
               state.thread.appendChild(bubble(list[i], "jeeves"));
               scrollThread(state);
+
               i += 1;
-              window.setTimeout(next, 240);
-            }, i === 0 ? 180 : Math.min(1450, 460 + list[i].length * 13));
+
+              setSequenceTimer(state, next, betweenBubbleDelay(state));
+            }, i === 0 && !state.rush && !state.flush ? TIMING.entranceDelay : nextBubbleDelay(list[i], i, state));
           }
 
           next();
@@ -540,9 +703,10 @@
             return {
               bubbles: [
                 "You are inside the House, at Hearth.",
-                "The Compass brought you to the door. This room lets the House answer without crowding the Compass page itself.",
-                "You are near the edge of Mirrorland — close enough to return outward, but far enough inside that the rooms can begin to speak.",
-                "Hearth is a good first room. A visitor needs fire before architecture."
+                "That matters because this is not the Compass anymore. The Compass brought you to the door; Hearth is where the House is allowed to answer.",
+                "Hearth is Jeeves’ room inside Mirrorland. It is close enough to the outside that you can leave, but far enough inside that the rooms can begin to speak.",
+                "Think of it as the first fire before the architecture. You do not need the entire Estate at once. You need enough light to choose the next threshold.",
+                "From here, I can return you to the Compass, give you the clean map, or let you press farther inward."
               ],
               routeChoices: [
                 { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide },
@@ -554,9 +718,10 @@
           if (/map|guide|site/.test(signal)) {
             return {
               bubbles: [
-                "The Website Guide is the clean map.",
-                "Use it when you want the blueprint before the rooms begin speaking.",
-                "The Compass shows the main bridges. The Guide explains how to move through them.",
+                "The Website Guide is the plain version of the architecture.",
+                "It exists for visitors who want structure before mystery. Not everyone should be asked to wander first.",
+                "The Compass shows the main bridges. The Guide explains what those bridges are doing, where they lead, and how the public platform is arranged.",
+                "That is the difference between a signpost and a map. The Compass points. The Guide explains.",
                 "If you want the House to remain strange, enter through the rooms. If you want the House to become legible, begin with the Guide."
               ],
               routeChoices: [
@@ -568,10 +733,11 @@
           if (/diagnostic|coherence|score|assess|test|classify|archetype/.test(signal)) {
             return {
               bubbles: [
-                "I can show you the diagnostic door.",
-                "That room is not mine to perform from here. A diagnostic has to be measured, not guessed at the threshold.",
-                "Soren is the authority there.",
-                "He handles proof, boundary, admissibility, and the difference between curiosity and classification.",
+                "The Coherence Diagnostic is not a personality quiz.",
+                "It is a threshold instrument. It asks whether a person, project, claim, or system is moving with enough internal alignment to be read responsibly.",
+                "That matters because resemblance is cheap. Measurement is not. The House should not confuse curiosity with classification.",
+                "This is why Soren owns the door.",
+                "Soren handles proof, boundary, admissibility, and the difference between a useful reading and a hallway guess.",
                 "I can take you to the diagnostic. I will not pretend to diagnose you myself."
               ],
               routeChoices: [
@@ -584,9 +750,11 @@
             return {
               bubbles: [
                 "The Characters are not decoration.",
-                "They are how the House distributes responsibility.",
-                "Use the Portrait Hall when you want the roster — who they are, where they stand, and what each one carries.",
-                "Use the Atrium when you are no longer asking who is here, but how the House itself is arranged."
+                "They are how the House distributes responsibility so that one guide does not have to pretend to be every room.",
+                "Some carry mission. Some carry proof. Some carry value. Some carry field movement. Some carry repair. Some carry continuity beneath the visible surface.",
+                "The Portrait Hall is the roster. It tells you who they are, where they stand, and what each one carries.",
+                "The Atrium is different. The Atrium is for the architecture behind the rooms.",
+                "So if you are asking who is here, use the Portrait Hall. If you are asking how the House is arranged, enter the Atrium."
               ],
               routeChoices: [
                 { label: "Open the Portrait Hall", routeUrl: ROUTES.characters },
@@ -599,10 +767,11 @@
             return {
               bubbles: [
                 "Persistent. Good.",
-                "Most visitors take the first door.",
-                "You are still prying beyond the rooms I have offered.",
-                "That means you are not merely looking for a doorway. You are asking for the architecture behind the doors.",
-                "Very well. Meet me in the Atrium, and I will show you the longer map."
+                "The Atrium is not the character roster. It is the architectural threshold.",
+                "Most visitors take the first door. They ask what page to open and leave with a useful answer.",
+                "You are asking a different question. You are asking how the House itself is arranged behind the doors.",
+                "That is why the Atrium exists. It is the longer map after the first rooms have done their work.",
+                "Very well. Meet me in the Atrium, and I will show you the architecture behind the first thresholds."
               ],
               routeChoices: [
                 { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
@@ -614,8 +783,9 @@
             return {
               bubbles: [
                 "Then we return to the Compass.",
-                "A proper House never hides the exit.",
-                "The Compass is where you found the door. You may begin again from there."
+                "That is the page that brought you here, and a proper House never hides the exit.",
+                "The Compass is useful when you want to begin again without carrying the whole interior with you.",
+                "You may return outward, choose another bridge, and enter again when the question is ready."
               ],
               routeChoices: [
                 { label: "Return to Compass", routeUrl: ROUTES.compass }
@@ -626,8 +796,9 @@
           return {
             bubbles: [
               "I can help with that, but I need to place it first.",
-              "Are you asking about the website, Mirrorland, the diagnostic, Sean, products, the lab, or the frontier?",
-              "The House becomes easier when the question is given a room."
+              "The House becomes easier when the question is given a room.",
+              "If you are asking about structure, begin with the Website Guide. If you are asking about proof, Soren is likely involved. If you are asking about people, the Portrait Hall will help.",
+              "Give the question a threshold, and I can give you the next door."
             ],
             routeChoices: [
               { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
@@ -676,6 +847,8 @@
                 apiJsRetired: true,
                 singlePromptDock: true,
                 organicExpression: true,
+                prefaceLayer: true,
+                rushableTiming: true,
                 mountNode: "#hearthJeevesMount"
               }
             }));
@@ -692,13 +865,20 @@
             options: query("[data-jeeves-options]", mountNode),
             status: query("[data-jeeves-status]", mountNode),
             typing: query(".jeeves-typing", mountNode),
-            mode: "opening"
+            mode: "opening",
+            rush: false,
+            flush: false,
+            sequenceActive: false,
+            rushListenersInstalled: false,
+            sequenceTimers: []
           };
 
           if (!state.thread || !state.options) {
             mountNode.setAttribute("data-jeeves-ready", "false");
             return;
           }
+
+          installRushListeners(state);
 
           empty(state.thread);
           empty(state.options);

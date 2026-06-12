@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12 -->
+<!-- HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, Website Guide path, visitor-facing Diagnostic explanation, Mission branch, Mirrorland branch reveal, repaired one-tap-one-line behavior. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, Website Guide path, visitor-facing Diagnostic explanation, Mission loop, Underdog branch, Community Systems branch, Mirrorland branch reveal, repaired one-tap-one-line behavior. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: preserve working mount while removing redundant Where Am I prompt, separating map/diagnostic/mission logic, and expanding mission through Sean / Nine Summits / book branches. -->
+<!-- Purpose: preserve working v12 mount while adding Back-to-Mission loop behavior, This Underdog, and Community Systems/Auren mission branch. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2"
   data-hearth-jeeves-ready="false"
   data-hearth-role="hidden-control-room"
   data-atrium-role="first-room-of-house"
@@ -21,6 +21,9 @@
   data-context-first-expression="true"
   data-website-guide-path="true"
   data-mission-branch-path="true"
+  data-mission-loop-path="true"
+  data-underdog-branch-path="true"
+  data-community-systems-branch-path="true"
   data-mirrorland-branch-reveal="true"
   data-step-tap="true"
 >
@@ -69,7 +72,7 @@
           data-hearth-role="hidden-control-room"
           data-atrium-role="first-room-of-house"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12"
+          data-mount-contract="HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2"
           data-expression-contract="LOCAL_CONTEXT_FIRST_RESPONSE_BANK"
         >
           <div class="jeeves-screen-topline">
@@ -185,7 +188,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_MAP_MISSION_BRANCH_REFINEMENT_HTML_TNT_v12";
+        var CONTRACT = "HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2";
 
         var ROUTES = {
           compass: "/",
@@ -200,6 +203,7 @@
           nineSummitsOfLove: "/nine-summits-of-love/",
           book: "/nine-summits-of-love/",
           products: "/products/",
+          communitySystems: "/products/",
           archcoin: "/products/archcoin/",
           laws: "/laws/",
           gauges: "/gauges/",
@@ -238,6 +242,14 @@
           { label: "Return to the Compass", action: "compass", routeUrl: ROUTES.compass }
         ];
 
+        var MISSION_MENU_PROMPTS = [
+          { label: "Who is Sean?", action: "mission_sean" },
+          { label: "What is This Underdog?", action: "mission_underdog" },
+          { label: "What is The Nine Summits?", action: "mission_nine_summits" },
+          { label: "What is the book about?", action: "mission_book" },
+          { label: "What are community systems?", action: "mission_community_systems" }
+        ];
+
         var CHARACTER_HANDOFFS = {
           elara: {
             label: "Meet Elara",
@@ -264,9 +276,9 @@
             routeUrl: ROUTES.products,
             bubbles: [
               "Auren is the keeper of value and custody.",
-              "He belongs near products, Arc Coin, protection, and exchange.",
-              "Value becomes unstable when nothing guards how it leaves the House.",
-              "Nothing valuable should travel unguarded."
+              "He belongs near products, tools, protection, and exchange.",
+              "Ideas become fragile when nothing guards how they leave the House.",
+              "Auren watches the layer where meaning has to survive real use."
             ]
           },
           dextrion: {
@@ -350,6 +362,10 @@
           return MAIN_PROMPTS.slice();
         }
 
+        function missionMenuPrompts() {
+          return MISSION_MENU_PROMPTS.slice();
+        }
+
         function makeRouteAction(label, routeUrl) {
           return {
             label: label,
@@ -370,6 +386,13 @@
             label: "Return to Compass",
             action: "route",
             routeUrl: ROUTES.compass
+          };
+        }
+
+        function makeMissionBackAction() {
+          return {
+            label: "Back to the Mission",
+            action: "mission_menu"
           };
         }
 
@@ -595,6 +618,16 @@
           renderOptions(mainPrompts(), state);
         }
 
+        function renderMissionMenu(state) {
+          var options = missionMenuPrompts();
+
+          options.push(makeResetAction());
+          options.push(makeCompassAction());
+
+          state.mode = "mission";
+          renderOptions(options, state);
+        }
+
         function renderNarrowedPrompts(state, response) {
           var next = [];
 
@@ -620,6 +653,10 @@
             next.push(makeRouteAction(response.routeLabel, response.routeUrl));
           }
 
+          if (response.missionBack === true) {
+            next.push(makeMissionBackAction());
+          }
+
           next.push(makeResetAction());
 
           if (!next.some(function (item) { return item.routeUrl === ROUTES.compass; })) {
@@ -631,9 +668,9 @@
         }
 
         function intentFromSignal(signal) {
-          if (/elara|sean|summit|book|mission|origin|border/.test(signal)) return "elara";
+          if (/elara|summit|book|origin|border/.test(signal)) return "elara";
           if (/soren|boundary keeper|proof keeper|admissibility keeper/.test(signal)) return "soren";
-          if (/auren|aurin|product keeper|arc coin|archcoin|coin|value|custody|protect|exchange/.test(signal)) return "auren";
+          if (/auren|aurin|aaron|product keeper|arc coin|archcoin|coin|value|custody|protect|exchange|money/.test(signal)) return "auren";
           if (/dextrion|dexter|h-earth|h earth|lab|anomaly|repair|technical/.test(signal)) return "dextrion";
           if (/alaric|frontier|uncertainty|route|field|trajectory/.test(signal)) return "alaric";
           if (/tarian|water anchor|continuity keeper|infrastructure keeper/.test(signal)) return "tarian";
@@ -685,17 +722,53 @@
           };
         }
 
+        function missionOverview() {
+          return {
+            bubbles: [
+              "Our mission is larger than any one tool.",
+              "The world is full of urgent problems, but most people meet them through overload, distraction, outrage, or systems too large to touch.",
+              "The House exists to turn frontier science, story, technology, and community action into a digital gateway toward possible futures.",
+              "Some doors begin with the person.",
+              "Others open toward water, energy, health, education, cities, and repair.",
+              "The point is not to escape the real world. The point is to build better ways back into it.",
+              "Choose the part you want me to explain first."
+            ],
+            missionMenu: true
+          };
+        }
+
         function missionSean() {
           return {
             bubbles: [
-              "Sean is the human origin point of the House.",
-              "Not because the House ends with him, but because the work began with a person trying to turn pressure, pattern, failure, faith, imagination, and frontier thinking into something useful for others.",
-              "Some visitors need the human threshold before they step into the larger structure.",
-              "If you want that threshold, it begins with Sean."
+              "Sean is the developer and mind behind this work.",
+              "He is building the platform, shaping the story, and carrying the pressure behind the mission into form.",
+              "He is also the voice behind This Underdog.",
+              "Like anyone, he has met challenge, delay, loss, pressure, and the kind of life experience that either hardens a person or gives them something useful to offer.",
+              "This work comes from that second path.",
+              "Not perfection. Not distance.",
+              "A person still building — and trying to make the build useful for others."
             ],
             routeChoices: [
               { label: "Meet Sean", routeUrl: ROUTES.sean }
-            ]
+            ],
+            missionBack: true
+          };
+        }
+
+        function missionUnderdog() {
+          return {
+            bubbles: [
+              "This Underdog is the voice of the mission when it speaks from the ground up.",
+              "It belongs to the person who has been counted out, misunderstood, delayed, or forced to build without permission.",
+              "Not a mascot. Not a costume.",
+              "A posture.",
+              "It says the overlooked person may still carry the pressure, pattern, and imagination needed to move something real.",
+              "That path begins near Sean, but it deserves its own explanation."
+            ],
+            routeChoices: [
+              { label: "Meet Sean", routeUrl: ROUTES.sean }
+            ],
+            missionBack: true
           };
         }
 
@@ -703,14 +776,15 @@
           return {
             bubbles: [
               "The Nine Summits is the map.",
-              "It gives the journey a structure: the stages, thresholds, and climbs a person may face while growing into clearer strength, love, discipline, and purpose.",
-              "It does not read you by itself.",
-              "It shows the terrain.",
-              "Some pages show doors. The Nine Summits shows the climb."
+              "It gives the journey a structure: the stages, thresholds, and climbs a person may face while growing in strength, love, discipline, and purpose.",
+              "It shows the terrain before the traveler starts naming where they stand.",
+              "Some pages show doors.",
+              "The Nine Summits shows the climb."
             ],
             routeChoices: [
               { label: "Open The Nine Summits", routeUrl: ROUTES.nineSummits }
-            ]
+            ],
+            missionBack: true
           };
         }
 
@@ -721,11 +795,29 @@
               "Where The Nine Summits shows the terrain, the book helps you keep direction while moving through it.",
               "It gives the journey language, reflection, and rhythm a person can carry outside the website.",
               "It is not the Coherence Diagnostic. That tool lives elsewhere.",
-              "The map shows the climb. The compass helps you keep direction. The tool helps you read where you are."
+              "The book is for the person who wants to keep walking after the page ends."
             ],
             routeChoices: [
               { label: "Open the Book", routeUrl: ROUTES.book }
-            ]
+            ],
+            missionBack: true
+          };
+        }
+
+        function missionCommunitySystems() {
+          return {
+            bubbles: [
+              "Community systems are where the mission turns outward.",
+              "Some parts of the House help a person understand themselves.",
+              "This path asks what can be built, protected, exchanged, or repaired for others.",
+              "Products, tools, services, and value systems belong near this layer because ideas eventually have to survive real custody, real cost, and real use.",
+              "Auren guards that layer.",
+              "He is interested in value because value determines whether something can live beyond the page."
+            ],
+            routeChoices: [
+              { label: "Open Community Systems", routeUrl: ROUTES.communitySystems }
+            ],
+            missionBack: true
           };
         }
 
@@ -742,6 +834,12 @@
                 "Ask plainly.",
                 "I will give you the surface before the door."
               ]
+            };
+          }
+
+          if (action === "mission_menu") {
+            return {
+              menuOnly: "mission"
             };
           }
 
@@ -764,12 +862,20 @@
             return missionSean();
           }
 
+          if (action === "mission_underdog") {
+            return missionUnderdog();
+          }
+
           if (action === "mission_nine_summits") {
             return missionNineSummits();
           }
 
           if (action === "mission_book") {
             return missionBook();
+          }
+
+          if (action === "mission_community_systems") {
+            return missionCommunitySystems();
           }
 
           if (/map|guide|site/.test(signal)) {
@@ -819,20 +925,7 @@
           }
 
           if (/mission|purpose|why/.test(signal)) {
-            return {
-              bubbles: [
-                "Our mission is larger than any one tool.",
-                "The world is full of urgent problems, but most people meet them through overload, distraction, outrage, or systems too large to touch.",
-                "The House exists to turn frontier science, story, technology, and community action into a digital gateway toward possible futures.",
-                "Some doors begin with the person. Some open toward water, energy, health, education, cities, repair, and the work communities still need done.",
-                "Choose the part you want me to explain first."
-              ],
-              followups: [
-                { label: "Who is Sean?", action: "mission_sean" },
-                { label: "What is The Nine Summits?", action: "mission_nine_summits" },
-                { label: "What is the book about?", action: "mission_book" }
-              ]
-            };
+            return missionOverview();
           }
 
           if (/compass|return|back/.test(signal)) {
@@ -873,12 +966,22 @@
             return;
           }
 
+          if (response.menuOnly === "mission") {
+            renderMissionMenu(state);
+            return;
+          }
+
           state.thread.appendChild(bubble(option.label, "user"));
           scrollThread(state);
 
           renderSequence(response.bubbles, state, function () {
             if (response.reset) {
               renderMainPrompts(state);
+              return;
+            }
+
+            if (response.missionMenu === true) {
+              renderMissionMenu(state);
               return;
             }
 
@@ -908,6 +1011,9 @@
                 questionPromptDock: true,
                 websiteGuidePath: true,
                 missionBranchPath: true,
+                missionLoopPath: true,
+                underdogBranchPath: true,
+                communitySystemsBranchPath: true,
                 mirrorlandBranchReveal: true,
                 stepTap: true,
                 stepTapMode: "one-tap-one-line",

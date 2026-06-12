@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2 -->
+<!-- HEARTH_JEEVES_MIRRORLAND_LOOP_EXPANSION_HTML_TNT_v12_3 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, Website Guide path, visitor-facing Diagnostic explanation, Mission loop, Underdog branch, Community Systems branch, Mirrorland branch reveal, repaired one-tap-one-line behavior. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, Website Guide path, visitor-facing Diagnostic explanation, Mission loop, Underdog branch, Community Systems branch, Mirrorland room loop, Mirrorland trust reveal, repaired one-tap-one-line behavior. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: preserve working v12 mount while adding Back-to-Mission loop behavior, This Underdog, and Community Systems/Auren mission branch. -->
+<!-- Purpose: preserve working v12.2 mount while expanding Mirrorland into a loopable four-room branch with Deeper into Mirrorland and delayed trust reveal. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_LOOP_EXPANSION_HTML_TNT_v12_3"
   data-hearth-jeeves-ready="false"
   data-hearth-role="hidden-control-room"
   data-atrium-role="first-room-of-house"
@@ -25,6 +25,7 @@
   data-underdog-branch-path="true"
   data-community-systems-branch-path="true"
   data-mirrorland-branch-reveal="true"
+  data-mirrorland-loop-path="true"
   data-step-tap="true"
 >
   <head>
@@ -72,7 +73,7 @@
           data-hearth-role="hidden-control-room"
           data-atrium-role="first-room-of-house"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2"
+          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_LOOP_EXPANSION_HTML_TNT_v12_3"
           data-expression-contract="LOCAL_CONTEXT_FIRST_RESPONSE_BANK"
         >
           <div class="jeeves-screen-topline">
@@ -188,7 +189,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_MISSION_LOOP_UNDERDOG_COMMUNITY_SYSTEMS_HTML_TNT_v12_2";
+        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_LOOP_EXPANSION_HTML_TNT_v12_3";
 
         var ROUTES = {
           compass: "/",
@@ -248,6 +249,13 @@
           { label: "What is The Nine Summits?", action: "mission_nine_summits" },
           { label: "What is the book about?", action: "mission_book" },
           { label: "What are community systems?", action: "mission_community_systems" }
+        ];
+
+        var MIRRORLAND_MENU_PROMPTS = [
+          { label: "What is the Atrium?", action: "mirrorland_atrium" },
+          { label: "What is the Portrait Hall?", action: "mirrorland_portrait_hall" },
+          { label: "What about the border?", action: "mirrorland_border" },
+          { label: "What is the Archive?", action: "mirrorland_archive" }
         ];
 
         var CHARACTER_HANDOFFS = {
@@ -366,6 +374,10 @@
           return MISSION_MENU_PROMPTS.slice();
         }
 
+        function mirrorlandMenuPrompts() {
+          return MIRRORLAND_MENU_PROMPTS.slice();
+        }
+
         function makeRouteAction(label, routeUrl) {
           return {
             label: label,
@@ -393,6 +405,13 @@
           return {
             label: "Back to the Mission",
             action: "mission_menu"
+          };
+        }
+
+        function makeMirrorlandDeepAction() {
+          return {
+            label: "Deeper into Mirrorland",
+            action: "mirrorland_menu"
           };
         }
 
@@ -628,6 +647,16 @@
           renderOptions(options, state);
         }
 
+        function renderMirrorlandMenu(state) {
+          var options = mirrorlandMenuPrompts();
+
+          options.push(makeResetAction());
+          options.push(makeCompassAction());
+
+          state.mode = "mirrorland";
+          renderOptions(options, state);
+        }
+
         function renderNarrowedPrompts(state, response) {
           var next = [];
 
@@ -651,6 +680,10 @@
             });
           } else if (response.routeUrl && response.routeLabel) {
             next.push(makeRouteAction(response.routeLabel, response.routeUrl));
+          }
+
+          if (response.mirrorlandDeep === true) {
+            next.push(makeMirrorlandDeepAction());
           }
 
           if (response.missionBack === true) {
@@ -691,34 +724,99 @@
           };
         }
 
-        function mirrorlandRevealFromAtrium() {
+        function noteMirrorlandRoomVisit(state) {
+          if (!state) return;
+          state.mirrorlandRoomVisits = (state.mirrorlandRoomVisits || 0) + 1;
+        }
+
+        function mirrorlandAtrium(state) {
+          noteMirrorlandRoomVisit(state);
+
           return {
             bubbles: [
               "The Atrium is the first room of the House.",
               "It is where the separate doors begin to connect into one architecture.",
               "The Atrium shows arrangement: how the rooms relate, why the paths branch, and how the House becomes more than a set of pages.",
-              "You are not asking about navigation anymore. You are asking about Mirrorland.",
-              "I do not usually indulge that here.",
-              "Since you have continued to press, meet me in the Portrait Hall."
+              "It is not the whole of Mirrorland.",
+              "It is where the inside first becomes visible."
             ],
             routeChoices: [
-              { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
-            ]
+              { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
+            ],
+            mirrorlandDeep: true
           };
         }
 
-        function mirrorlandRevealFromPortraitHall() {
+        function mirrorlandPortraitHall(state) {
+          noteMirrorlandRoomVisit(state);
+
           return {
             bubbles: [
               "The Portrait Hall is where the Characters become visible.",
               "Not as mascots. As keepers of responsibility: mission, proof, value, repair, movement, continuity, and story.",
               "It is where Mirrorland begins to speak through people instead of pages.",
-              "That is not a conversation I usually hold in this room.",
-              "Since you have intrigued me, meet me in the Portrait Hall."
+              "Some visitors see a roster.",
+              "Others begin to notice the House has voices."
             ],
             routeChoices: [
               { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
-            ]
+            ],
+            mirrorlandDeep: true
+          };
+        }
+
+        function mirrorlandBorder(state) {
+          noteMirrorlandRoomVisit(state);
+
+          return {
+            bubbles: [
+              "The border is where the public site begins to change.",
+              "On one side, you are looking at pages, paths, and doors.",
+              "On the other, the House starts behaving like Mirrorland — a place with memory, roles, pressure, and consequence.",
+              "It is not one doorway.",
+              "It is the moment you realize the website is looking back with structure."
+            ],
+            routeChoices: [
+              { label: "Approach the Border", routeUrl: ROUTES.portraitHall }
+            ],
+            mirrorlandDeep: true
+          };
+        }
+
+        function mirrorlandArchive(state) {
+          noteMirrorlandRoomVisit(state);
+
+          return {
+            bubbles: [
+              "The Archive is where older layers, fragments, records, and unfinished signals are kept from disappearing.",
+              "Not everything in the House belongs on the surface.",
+              "Some things are preserved because they explain how the House became what it is.",
+              "The Archive remembers what the public page cannot carry.",
+              "That is why it sits close to Mirrorland."
+            ],
+            routeChoices: [
+              { label: "Open the Archive", routeUrl: ROUTES.portraitHall }
+            ],
+            mirrorlandDeep: true
+          };
+        }
+
+        function mirrorlandTrustReveal(state) {
+          if (state) state.mirrorlandTrustRevealed = true;
+
+          return {
+            bubbles: [
+              "You are persistent.",
+              "Good.",
+              "I usually do not continue this conversation here.",
+              "Mirrorland is not only a set of rooms.",
+              "It is the layer where the House begins to remember, speak, and choose its keepers.",
+              "If you want to continue with that layer, meet me in the Portrait Hall."
+            ],
+            routeChoices: [
+              { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
+            ],
+            mirrorlandDeep: true
           };
         }
 
@@ -746,7 +844,7 @@
               "Like anyone, he has met challenge, delay, loss, pressure, and the kind of life experience that either hardens a person or gives them something useful to offer.",
               "This work comes from that second path.",
               "Not perfection. Not distance.",
-              "A person still building — and trying to make the build useful for others."
+              "A person still building — and trying to make what he builds useful for others."
             ],
             routeChoices: [
               { label: "Meet Sean", routeUrl: ROUTES.sean }
@@ -763,7 +861,7 @@
               "Not a mascot. Not a costume.",
               "A posture.",
               "It says the overlooked person may still carry the pressure, pattern, and imagination needed to move something real.",
-              "That path begins near Sean, but it deserves its own explanation."
+              "That voice begins near Sean, but it is meant for anyone still trying to rise with something useful in their hands."
             ],
             routeChoices: [
               { label: "Meet Sean", routeUrl: ROUTES.sean }
@@ -792,7 +890,7 @@
           return {
             bubbles: [
               "The book is the compass.",
-              "Where The Nine Summits shows the terrain, the book helps you keep direction while moving through it.",
+              "Where The Nine Summits shows the terrain, the book helps you keep your direction while you move.",
               "It gives the journey language, reflection, and rhythm a person can carry outside the website.",
               "It is not the Coherence Diagnostic. That tool lives elsewhere.",
               "The book is for the person who wants to keep walking after the page ends."
@@ -821,7 +919,7 @@
           };
         }
 
-        function responseFor(option) {
+        function responseFor(option, state) {
           var label = text(option.label).toLowerCase();
           var action = text(option.action).toLowerCase();
           var signal = label + " " + action;
@@ -843,6 +941,20 @@
             };
           }
 
+          if (action === "mirrorland_menu") {
+            if (
+              state &&
+              state.mirrorlandRoomVisits >= 2 &&
+              state.mirrorlandTrustRevealed !== true
+            ) {
+              return mirrorlandTrustReveal(state);
+            }
+
+            return {
+              menuOnly: "mirrorland"
+            };
+          }
+
           if (action === "route" && option.routeUrl) {
             return {
               immediateRoute: true,
@@ -851,11 +963,19 @@
           }
 
           if (action === "mirrorland_atrium") {
-            return mirrorlandRevealFromAtrium();
+            return mirrorlandAtrium(state);
           }
 
           if (action === "mirrorland_portrait_hall") {
-            return mirrorlandRevealFromPortraitHall();
+            return mirrorlandPortraitHall(state);
+          }
+
+          if (action === "mirrorland_border") {
+            return mirrorlandBorder(state);
+          }
+
+          if (action === "mirrorland_archive") {
+            return mirrorlandArchive(state);
           }
 
           if (action === "mission_sean") {
@@ -917,10 +1037,7 @@
                 "Most visitors only need the surface.",
                 "Mirrorland is for visitors who keep asking what is behind it."
               ],
-              followups: [
-                { label: "What is the Atrium?", action: "mirrorland_atrium" },
-                { label: "What is the Portrait Hall?", action: "mirrorland_portrait_hall" }
-              ]
+              mirrorlandMenu: true
             };
           }
 
@@ -959,7 +1076,7 @@
         }
 
         function respondToOption(option, state) {
-          var response = responseFor(option);
+          var response = responseFor(option, state);
 
           if (response.immediateRoute && response.routeUrl) {
             window.location.href = response.routeUrl;
@@ -968,6 +1085,11 @@
 
           if (response.menuOnly === "mission") {
             renderMissionMenu(state);
+            return;
+          }
+
+          if (response.menuOnly === "mirrorland") {
+            renderMirrorlandMenu(state);
             return;
           }
 
@@ -982,6 +1104,11 @@
 
             if (response.missionMenu === true) {
               renderMissionMenu(state);
+              return;
+            }
+
+            if (response.mirrorlandMenu === true) {
+              renderMirrorlandMenu(state);
               return;
             }
 
@@ -1015,6 +1142,7 @@
                 underdogBranchPath: true,
                 communitySystemsBranchPath: true,
                 mirrorlandBranchReveal: true,
+                mirrorlandLoopPath: true,
                 stepTap: true,
                 stepTapMode: "one-tap-one-line",
                 hearthRole: "hidden-control-room",
@@ -1039,7 +1167,9 @@
             sequenceActive: false,
             stepListenersInstalled: false,
             currentTimer: null,
-            pendingStepFn: null
+            pendingStepFn: null,
+            mirrorlandRoomVisits: 0,
+            mirrorlandTrustRevealed: false
           };
 
           if (!state.thread || !state.options) {

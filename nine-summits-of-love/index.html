@@ -4,7 +4,8 @@
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
   data-version="G1-V2"
-  data-contract="NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2"
+  data-contract="NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2"
   data-status="active"
   data-parent="/nine-summits/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -191,33 +192,159 @@
     }
 
     .nav{
+      position:relative;
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.48rem;
+      align-items:flex-start;
+      gap:.58rem;
+      z-index:20;
     }
 
-    .nav a{
-      min-height:2.25rem;
+    .nav a,
+    .team-menu summary{
+      min-height:2.35rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
+      padding:.54rem .82rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.04);
       font-size:.68rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      cursor:pointer;
+      user-select:none;
+      list-style:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
+    .nav a:hover,
+    .nav a:focus-visible,
+    .team-menu summary:hover,
+    .team-menu summary:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(243,200,111,.46);
+      outline:none;
+    }
+
+    .nav a.primary-return{
+      border-color:rgba(243,200,111,.62);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .team-menu{
+      position:relative;
+      display:inline-block;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      overflow:visible;
+    }
+
+    .team-menu summary{
+      padding:.54rem .88rem;
+    }
+
+    .team-menu summary::-webkit-details-marker{display:none}
+
+    .team-menu summary::after{
+      content:"▾";
+      display:inline-block;
+      margin-left:.52rem;
+      color:var(--gold);
+      font-size:.76rem;
+      line-height:1;
+      transition:transform .18s ease;
+    }
+
+    .team-menu[open] summary{
+      border-color:rgba(141,216,255,.42);
+      background:rgba(141,216,255,.075);
+    }
+
+    .team-menu[open] summary::after{
+      transform:rotate(180deg);
+    }
+
+    .team-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .7rem);
+      width:min(21rem,calc(100vw - 28px));
+      display:grid;
+      gap:.7rem;
+      padding:.82rem;
+      border:1px solid rgba(243,200,111,.26);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.12),transparent 60%),
+        radial-gradient(circle at 100% 20%,rgba(141,216,255,.10),transparent 48%),
+        rgba(5,9,20,.97);
+      box-shadow:0 1.4rem 3.2rem rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.08);
+      z-index:40;
+    }
+
+    .team-intro{
+      display:block;
+      padding:.15rem .18rem .1rem;
+      color:var(--soft);
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .team-member{
+      display:grid;
+      gap:.34rem;
+      padding:.62rem;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:.92rem;
+      background:rgba(255,255,255,.028);
+    }
+
+    .team-member b{
+      color:rgba(255,244,216,.96);
+      font-size:.78rem;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .team-member span{
+      color:var(--soft);
+      font-size:.78rem;
+      line-height:1.3;
+    }
+
+    .team-links{
+      display:grid;
+      gap:.34rem;
+      margin-top:.18rem;
+    }
+
+    .team-panel .team-links a{
+      width:100%;
+      min-height:2.15rem;
+      justify-content:flex-start;
+      border-radius:.78rem;
+      padding:.48rem .62rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      letter-spacing:.045em;
+      text-transform:none;
+    }
+
+    .team-panel .team-links a:hover,
+    .team-panel .team-links a:focus-visible{
+      transform:translateX(2px);
+      border-color:rgba(243,200,111,.48);
     }
 
     .panel{
@@ -739,6 +866,11 @@
 
       .nav{justify-content:flex-start}
 
+      .team-panel{
+        left:0;
+        right:auto;
+      }
+
       .short-grid,
       .route-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -799,18 +931,49 @@
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/explore/">Manor</a>
-        <a href="/nine-summits/">Nine Summits</a>
-        <a href="/nine-summits-of-love/" aria-current="page">Book</a>
-        <a href="/nine-summits/universe/">Universe</a>
-        <a href="/about-this-underdog/">Underdog</a>
-        <a href="/meet-sean-mansfield/">Meet Sean</a>
-        <a href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
+        <a class="primary-return" href="/">Return to Compass</a>
+
+        <details class="team-menu">
+          <summary>Talk to the Team</summary>
+
+          <div class="team-panel" role="group" aria-label="Choose an AI team member">
+            <span class="team-intro">Choose your guide</span>
+
+            <div class="team-member">
+              <b>Jeeves</b>
+              <span>House guide · orientation · whole map</span>
+              <div class="team-links">
+                <a href="/showroom/globe/hearth/jeeves/">Ask Jeeves for the whole House</a>
+                <a href="/showroom/">Ask Jeeves in the Showroom</a>
+              </div>
+            </div>
+
+            <div class="team-member">
+              <b>Auren</b>
+              <span>Product guide · tools · practical systems</span>
+              <div class="team-links">
+                <a href="/products/auren/">Talk to Auren on the Product Floor</a>
+              </div>
+            </div>
+
+            <div class="team-member">
+              <b>Soren</b>
+              <span>Diagnostic guide · coherence boundary</span>
+              <div class="team-links">
+                <a href="/coherence-diagnostic/">Talk to Soren at the Diagnostic</a>
+              </div>
+            </div>
+
+            <div class="team-member">
+              <b>Elara</b>
+              <span>Human threshold · Sean · Book threshold</span>
+              <div class="team-links">
+                <a href="/meet-sean-mansfield/">Meet Elara on Sean’s Page</a>
+                <a href="/nine-summits-of-love/" aria-current="page">Meet Elara at The Nine Summits of Love</a>
+              </div>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 
@@ -1096,7 +1259,8 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2
+        <pre>NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1
+previous=NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2
 route=/nine-summits-of-love/
 page=nine_summits_of_love
 role=book_and_seminar_lane
@@ -1134,7 +1298,7 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2 · Book and Seminar Lane · Source-Preserving Image Renewal.
+      NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1 · Book and Seminar Lane · Team Dropdown Nav Only.
     </footer>
   </div>
 </body>

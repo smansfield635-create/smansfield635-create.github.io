@@ -1,37 +1,64 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_HTML_VISIBLE_SHELL_CSS_CONTRACT_BINDING_TNT_v1 -->
+<!-- HEARTH_JEEVES_SINGLE_SCRIPT_HTML_SHELL_TNT_v2_0_0 -->
 <!-- Full-file replacement. -->
-<!-- Owns: visible Jeeves HTML shell, CSS contract binding, mount structure, docks, transcript body, status body, script order. -->
-<!-- Does not own: API/North logic, conversation reasoning, Expression language shaping, route execution, CSS visual authority, or Hearth globe runtime. -->
-<!-- Built around: /showroom/globe/hearth/jeeves/index.css v5, /assets/hearth/jeeves/jeeves.expression.js v5, /showroom/globe/hearth/jeeves/index.js v25. -->
+<!-- One Jeeves shell. One script. No frontbrain. No backbrain. No API dependency. -->
+<!--
+  Purpose:
+  - Provide a clean HTML shell for the self-mounting Jeeves expression engine.
+  - Load only /assets/hearth/jeeves/jeeves.expression.js.
+  - Stop executing /showroom/globe/hearth/jeeves/index.js.
+  - Preserve CSS loading through /showroom/globe/hearth/jeeves/index.css.
+  - Keep Hearth as staging chamber while Jeeves prepares for Compass placement.
+  - Provide a stable mount node for the one-file Jeeves engine.
+
+  Retired from this page:
+  - /showroom/globe/hearth/jeeves/index.js
+  - /api/jeeves.js dependency path
+-->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_HTML_VISIBLE_SHELL_CSS_CONTRACT_BINDING_TNT_v1"
-  data-hearth-jeeves-ready="false"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_SINGLE_SCRIPT_HTML_SHELL_TNT_v2_0_0"
+  data-hearth-jeeves-mode="self-mounted-expression"
+  data-frontbrain-retired="true"
+  data-backbrain-retired="true"
 >
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
 
-    <title>Jeeves · Hearth Mission Control</title>
+    <title>Jeeves · Hearth Staging Chamber</title>
     <meta
       name="description"
-      content="Jeeves conversation chamber for Hearth Mission Control, the window within the window."
+      content="Hearth staging chamber for Jeeves, the Compass guide and Manor interface."
     />
 
     <link rel="stylesheet" href="/showroom/globe/hearth/jeeves/index.css" />
 
+    <!--
+      One Jeeves file.
+      This file self-mounts the conversation interface and owns Jeeves' local spine,
+      expression, timing, bubbles, options, and handoff behavior.
+    -->
     <script src="/assets/hearth/jeeves/jeeves.expression.js" defer></script>
-    <script src="/showroom/globe/hearth/jeeves/index.js" defer></script>
   </head>
 
-  <body data-hearth-jeeves-ready="false">
+  <body
+    data-hearth-jeeves-ready="false"
+    data-jeeves-single-file="true"
+    data-jeeves-frontbrain="retired"
+    data-jeeves-backbrain="retired"
+  >
     <a class="skip-link" href="#jeeves-main">Skip to Jeeves</a>
 
-    <main id="jeeves-main" class="jeeves-page" data-jeeves-page="true">
+    <main
+      id="jeeves-main"
+      class="jeeves-page jeeves-single-file-page"
+      data-jeeves-page="true"
+      data-jeeves-page-contract="HEARTH_JEEVES_SINGLE_SCRIPT_HTML_SHELL_TNT_v2_0_0"
+    >
       <header class="jeeves-page-header" aria-label="Jeeves page header">
         <a class="jeeves-brand" href="/showroom/globe/hearth/" aria-label="Return to Hearth">
           <span class="jeeves-brand-mark" aria-hidden="true">H</span>
@@ -41,138 +68,97 @@
           </span>
         </a>
 
-        <a class="jeeves-header-return" href="/showroom/globe/hearth/">
-          Return to Hearth
-        </a>
+        <nav class="jeeves-header-nav" aria-label="Jeeves route links">
+          <a class="jeeves-header-return" href="/showroom/globe/hearth/">
+            Return to Hearth
+          </a>
+          <a class="jeeves-header-return" href="/characters/">
+            Character Atrium
+          </a>
+        </nav>
       </header>
 
-      <section class="jeeves-screen-shell" aria-label="Jeeves conversation shell">
+      <section class="jeeves-screen-shell" aria-label="Jeeves staging shell">
+        <!--
+          Stable mount point for:
+          /assets/hearth/jeeves/jeeves.expression.js
+
+          The self-mounting engine will clear and rebuild this node.
+          No legacy frontbrain DOM is required.
+        -->
         <section
-          id="hearthJeevesMount"
-          class="hearth-jeeves hearth-jeeves-v25 jeeves-screen-glass"
+          id="hearthJeevesApp"
+          class="hearth-jeeves hearth-jeeves-v7 jeeves-screen-glass"
           data-jeeves-root="true"
-          data-jeeves-ready="false"
-          data-house-listening="false"
-          data-jeeves-typing="false"
-          data-api-contract="HEARTH_JEEVES_BACKBRAIN_NORTH_CONVERSATION_GRAMMAR_STANDARD_TNT_v5"
-          data-frontbrain-contract="HEARTH_JEEVES_FRONTBRAIN_CONVERSATION_GRAMMAR_RENDERER_API_NORTH_COMPATIBLE_TNT_v25"
-          data-expression-contract="HEARTH_JEEVES_EXPRESSION_CONVERSATIONAL_CINEMATIC_FORK_BRIDGE_TNT_v5"
+          data-jeeves-self-mount="true"
+          data-jeeves-contract="HEARTH_JEEVES_SELF_MOUNTING_EXPRESSION_ENGINE_TNT_v7_0_0"
+          aria-label="Jeeves conversation interface"
         >
-          <div class="jeeves-screen-topline">
-            <div class="jeeves-identity">
-              <div class="jeeves-avatar" aria-hidden="true">J</div>
-              <div class="jeeves-identity-copy">
-                <span>Mission Control Interface</span>
-                <strong>Hearth Jeeves</strong>
-              </div>
-            </div>
-
-            <div
-              class="jeeves-status"
-              data-jeeves-status="true"
-              aria-live="polite"
-            >
-              Jeeves is preparing Hearth Mission Control
+          <div class="jeeves-preload-card" aria-live="polite">
+            <div class="jeeves-preload-mark" aria-hidden="true">J</div>
+            <div class="jeeves-preload-copy">
+              <span>Hearth Staging Chamber</span>
+              <strong>Jeeves is preparing the Compass interface.</strong>
+              <p>
+                If this message remains visible, refresh once or confirm that
+                JavaScript is enabled.
+              </p>
             </div>
           </div>
-
-          <div class="jeeves-thread-screen" data-jeeves-thread-screen="true">
-            <div
-              class="jeeves-thread jeeves-transcript jeeves-log"
-              data-jeeves-thread="true"
-              data-jeeves-transcript="true"
-              data-jeeves-log="true"
-              aria-live="polite"
-              aria-label="Jeeves conversation transcript"
-            ></div>
-
-            <div
-              class="jeeves-typing"
-              data-jeeves-typing="false"
-              aria-hidden="true"
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-
-          <div
-            class="jeeves-options jeeves-prompt-dock"
-            data-jeeves-options="true"
-            data-panel-kind="conversation"
-            aria-label="Conversation options"
-          ></div>
-
-          <div
-            class="jeeves-handoffs jeeves-doors jeeves-handoff-dock"
-            data-jeeves-doors="true"
-            data-jeeves-handoffs="true"
-            data-panel-kind="handoff"
-            aria-label="Prepared doors"
-          ></div>
         </section>
       </section>
 
-      <section class="jeeves-context-rail" aria-label="Hearth context">
+      <section class="jeeves-context-rail" aria-label="Jeeves context">
         <article class="jeeves-context-card">
-          <span>Room</span>
-          <p>Hearth Mission Control is the window within the window.</p>
+          <span>Current Room</span>
+          <p>
+            Hearth is the staging chamber. Jeeves is being built and tested here
+            before moving into the Compass.
+          </p>
         </article>
 
         <article class="jeeves-context-card">
-          <span>Conversation</span>
-          <p>Text Jeeves a question, continue the thread, or open a prepared door.</p>
+          <span>Public Role</span>
+          <p>
+            Jeeves orients visitors, introduces the right guide, and opens the
+            proper door without becoming the whole destination.
+          </p>
         </article>
 
         <article class="jeeves-context-card">
-          <span>Direction</span>
-          <p>Mirrorland reveals, Frontier tests, Scientific Law verifies, and Hearth coordinates.</p>
+          <span>Earned Depth</span>
+          <p>
+            Persistent visitors may be invited from the Compass into the
+            Character Atrium for the longer map.
+          </p>
         </article>
-      </section>
-
-      <section
-        class="jeeves-minimized"
-        data-jeeves-minimized="false"
-        aria-label="Minimized Jeeves"
-      >
-        <div class="jeeves-minimized-copy">
-          <span>Jeeves</span>
-          <strong>Hearth Mission Control is ready.</strong>
-        </div>
-        <button class="jeeves-restore-button" type="button" data-jeeves-restore="true">
-          Restore
-        </button>
       </section>
     </main>
 
     <noscript>
-      <section class="jeeves-page">
+      <section class="jeeves-page jeeves-noscript-page">
         <section class="jeeves-screen-shell">
           <section class="hearth-jeeves jeeves-screen-glass">
-            <div class="jeeves-screen-topline">
-              <div class="jeeves-identity">
-                <div class="jeeves-avatar" aria-hidden="true">J</div>
-                <div class="jeeves-identity-copy">
-                  <span>JavaScript Required</span>
-                  <strong>Jeeves cannot open this chamber.</strong>
-                </div>
+            <div class="jeeves-preload-card">
+              <div class="jeeves-preload-mark" aria-hidden="true">J</div>
+              <div class="jeeves-preload-copy">
+                <span>JavaScript Required</span>
+                <strong>Jeeves cannot open this chamber without JavaScript.</strong>
+                <p>
+                  Enable JavaScript to enter the Hearth Jeeves staging chamber.
+                </p>
               </div>
             </div>
 
-            <div class="jeeves-thread-screen">
-              <div class="jeeves-thread jeeves-transcript">
-                <div class="jeeves-bubble jeeves-bubble-system" data-jeeves-bubble="system">
-                  <div class="jeeves-bubble-body">
-                    Jeeves needs JavaScript enabled to run the Hearth conversation chamber.
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="jeeves-handoffs jeeves-handoff-dock" data-panel-kind="handoff">
+            <div class="jeeves-noscript-actions">
               <a class="jeeves-route-option" href="/showroom/globe/hearth/">
                 Return to Hearth
+              </a>
+              <a class="jeeves-route-option" href="/characters/">
+                Open the Character Atrium
+              </a>
+              <a class="jeeves-route-option" href="/meet-sean-mansfield/">
+                Meet Elara at the Border
               </a>
             </div>
           </section>
@@ -181,15 +167,9 @@
     </noscript>
 
     <script>
-      document.addEventListener("hearth:jeeves-ready", function () {
+      document.addEventListener("hearth:jeeves-expression-ready", function () {
         document.documentElement.setAttribute("data-hearth-jeeves-ready", "true");
         document.body.setAttribute("data-hearth-jeeves-ready", "true");
-
-        var mount = document.querySelector("[data-jeeves-root]");
-        if (mount) {
-          mount.setAttribute("data-jeeves-ready", "true");
-          mount.setAttribute("data-house-listening", "true");
-        }
       });
     </script>
   </body>

@@ -1,45 +1,41 @@
 // /assets/hearth/jeeves/jeeves.expression.js
-// HEARTH_JEEVES_EXPRESSION_SOURCE_STABILITY_FRONTAL_LOBE_TNT_v5_4_2
+// HEARTH_JEEVES_COMPASS_EXPRESSION_LOCAL_SPINE_TNT_v6_0_0
 // Full-file replacement.
 // Client-side Expression authority only.
-// Frontal lobe only.
+// One-file Jeeves build: expression + local Compass spine.
+//
 // Purpose:
-// - Behave as Jeeves’ frontal lobe: personality, public voice, phrasing,
-//   gateway tone, visible option language, diagnostic-boundary phrasing,
-//   and public-safe expression.
-// - Preserve API/North meaning authority.
-// - Preserve JS/API source identity authority.
-// - Preserve sourceTarget, activeTarget, selectedTarget,
-//   conversationCoordinate.sourceTarget, and conversationCoordinate.activeTarget.
-// - Preserve API/North bubbles whenever present.
-// - Use entrance / guided chooser / base-pool copy only as fallback when
-//   API/North supplies no usable bubbles.
-// - Prevent stale gate/mode state from resetting a non-split source into
-//   guidedChooser / first-dialogue behavior.
-// - Keep options source-stable so the next click carries the same brain packet.
+// - Build Jeeves as a small-role Compass guide while keeping Hearth as the staging chamber.
+// - Preserve the existing Hearth Jeeves frontbrain/API compatibility surface.
+// - Give Jeeves an embedded local spine for route/agent handoff decisions.
+// - Preserve Elara as the platform-side border Character for Meet Sean / Nine Summits.
+// - Preserve Jeeves' three placements: Hearth staging, Compass operation, earned-depth Atrium.
+// - Preserve diagnostic restraint: Jeeves explains and routes; he does not diagnose.
+//
 // Does not own:
-// - API/North meaning authority
-// - deep canon
-// - source identity creation
+// - DOM rendering
+// - timers / reading rhythm
+// - tap-to-speed behavior
 // - route execution
-// - DOM mount lifecycle
-// - transcript storage
-// - prepared-door routing
-// - visible shell layout
-// - CSS
-// - reading timers
-// - tap-to-speed execution
+// - API/North meaning authority
+// - CSS / HTML shell
+// - permanent multi-agent registry extraction
+//
+// Compatibility exports preserved:
+// - window.HEARTH_JEEVES_EXPRESSION
+// - window.HEARTH_JEEVES_EXPRESSION_BRIDGE
+// - window.HEARTH.jeevesExpression
 //
 
 "use strict";
 
 (function attachHearthJeevesExpression(global) {
-  const CONTRACT = "HEARTH_JEEVES_EXPRESSION_SOURCE_STABILITY_FRONTAL_LOBE_TNT_v5_4_2";
-  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_EXPRESSION_GATEWAY_AUTHORITY_ENTRY_STACK_TNT_v5_4_1";
+  const CONTRACT = "HEARTH_JEEVES_COMPASS_EXPRESSION_LOCAL_SPINE_TNT_v6_0_0";
+  const PREVIOUS_CONTRACT = "HEARTH_JEEVES_EXPRESSION_SOURCE_STABILITY_FRONTAL_LOBE_TNT_v5_4_2";
   const ROOT_EXPRESSION_CONTRACT = "HEARTH_JEEVES_EXPRESSION_ENTRY_STACK_BASE_POOL_ILLUMINATION_TNT_v5_4";
   const FRONTBRAIN_CONTRACT_TARGET = "HEARTH_JEEVES_FRONTBRAIN_SOURCE_IDENTITY_MOTOR_CARRIER_TNT_v25_6_1";
   const API_CONTRACT_TARGET = "HEARTH_JEEVES_BACKBRAIN_SOURCE_STABILITY_EXECUTIVE_COORDINATE_TNT_v5_4_1";
-  const VERSION = "5.4.2";
+  const VERSION = "6.0.0";
 
   const TARGETS = Object.freeze({
     DIAMOND_GATE_OVERVIEW: "diamondGateOverviewPath",
@@ -79,14 +75,24 @@
   });
 
   const ROUTES = Object.freeze({
-    COMPASS: "compass",
     HOME: "home",
+    COMPASS: "compass",
     SITE_GUIDE: "siteGuide",
-
-    MIRRORLAND: "mirrorland",
+    COHERENCE_DIAGNOSTIC: "coherenceDiagnostic",
+    DIAGNOSTIC: "coherenceDiagnostic",
+    MEET_SEAN: "meetSean",
+    PRODUCTS: "products",
+    ARCHCOIN: "products",
+    LAWS: "laws",
+    SCIENTIFIC_LAW: "scientificLaw",
+    GAUGES: "gauges",
+    SHOWROOM: "showroom",
     HEARTH: "hearth",
+    MIRRORLAND: "mirrorland",
+    ZIONTS: "zionts",
+    AUDRALIA: "audralia",
+    H_EARTH: "hEarth",
     FRONTIER: "frontier",
-
     FRONTIER_ENERGY: "frontierEnergy",
     FRONTIER_WATER: "frontierWater",
     FRONTIER_WASTE: "frontierWaste",
@@ -98,21 +104,10 @@
     FRONTIER_SHIMMER: "frontierShimmer",
     FRONTIER_TRAJECTORY: "frontierTrajectory",
     FRONTIER_VISION: "frontierVision",
-
-    PRODUCTS: "products",
-    LAWS: "laws",
-    SCIENTIFIC_LAW: "scientificLaw",
-    GAUGES: "gauges",
-    SHOWROOM: "showroom",
-    COHERENCE_DIAGNOSTIC: "coherenceDiagnostic",
-    MEET_SEAN: "meetSean",
     CHARACTERS: "characters",
-    UNDERDOG: "aboutUnderdog",
+    CONTROL_ROOM: "controlRoom",
     NINE_SUMMITS: "nineSummits",
-
-    AUDRALIA: "audralia",
-    H_EARTH: "hEarth",
-    ZIONTS: "zionts"
+    ABOUT_UNDERDOG: "aboutUnderdog"
   });
 
   const ENTRY_STACK_MODES = Object.freeze({
@@ -136,2289 +131,1087 @@
     COMMUNITY_MISSION: "communityMission",
     COLLABORATION_MISSION: "collaborationMission",
     PRACTICAL: "practical",
-    PROOF: "proof",
-    DIAGNOSTIC_BOUNDARY: "diagnosticBoundary",
-    CHARACTER_MIRROR: "characterMirror",
+    DIAGNOSTIC: "diagnostic",
+    CHARACTER: "character",
     MIRRORLAND: "mirrorland",
     HEARTH: "hearth",
     FRONTIER: "frontier",
-    CHARACTERS: "characters",
-    CREATOR: "creator",
-    UNDERDOG: "underdog",
-    RETURN: "return"
+    SCIENTIFIC_LAW: "scientificLaw",
+    PRODUCTS: "products",
+    GAUGES: "gauges",
+    JEEVES_ATRIUM: "jeevesAtrium"
   });
 
   const ILLUMINATION_MODES = Object.freeze({
-    PUBLIC: "public",
     THRESHOLD: "threshold",
-    NARRATIVE: "narrative",
-    PROOF: "proof",
-    PRACTICAL: "practical",
-    RETURN: "return",
+    PUBLIC: "public",
+    BORDER: "border",
+    MIRRORLAND: "mirrorland",
+    COMPASS: "compass",
+    STAGING: "staging",
+    ATRIUM: "atrium",
     DIAGNOSTIC_BOUNDARY: "diagnosticBoundary"
   });
 
   const GATES = Object.freeze({
-    ARRIVAL: "arrival",
-    SPLIT: "split",
-    INTENTION: "intention",
+    ENTRANCE: "entrance",
     BASE_POOL: "base_pool",
-    INTRIGUE_BRIDGE: "intrigue_bridge",
-    DIG_DEEPER: "dig_deeper",
+    CHOICE_CLOSURE: "choice_closure",
     PREPARED_DOOR: "prepared_door",
-    RETURN_FORK: "return_fork",
-    CROSS_PATH_BRIDGE: "cross_path_bridge",
-    DIAGNOSTIC_BOUNDARY: "diagnostic_boundary"
+    RETURN: "return",
+    DIAGNOSTIC_BOUNDARY: "diagnostic_boundary",
+    TRUST_ESCALATION: "trust_escalation"
   });
 
   const SOURCE_STABILITY_LAW = Object.freeze({
-    active: true,
-    frontalLobeAuthority: true,
-    meaningAuthority: false,
-    routeExecutionAuthority: false,
-    sourceIdentityCreationAuthority: false,
-    personalityAuthority: true,
-    publicLanguageAuthority: true,
-    preserveApiNorthBubbles: true,
     preserveSourceTarget: true,
     preserveActiveTarget: true,
-    depthDoesNotChangeSource: true,
-    gateDoesNotReplaceSource: true,
-    modeDoesNotReplaceSource: true,
-    fallbackDoesNotReplaceSource: true,
-    guidedChooserRequiresSplitInterfaceSource: true
+    preserveSelectedTarget: true,
+    preserveConversationCoordinate: true,
+    expressionMayShapePublicLanguage: true,
+    expressionMayNotInventRouteExecution: true,
+    expressionMayNotDiagnoseVisitor: true
   });
 
-  const CHOICE_CLOSURE_DEFAULT = Object.freeze({
-    preparedDoorAvailable: true,
-    preparedDoorSuggested: false,
-    digDeeperAvailable: true,
-    returnForkAvailable: true,
-    finalChatThreshold: false
+  const AGENTS = Object.freeze({
+    jeeves: Object.freeze({
+      id: "jeeves",
+      name: "Jeeves",
+      title: "Manor Interface",
+      primaryHome: ROUTES.CHARACTERS,
+      stagingRoute: ROUTES.HEARTH,
+      operatingRoute: ROUTES.COMPASS,
+      earnedDepthRoute: ROUTES.CHARACTERS,
+      status: "compass_character",
+      mode: "compass_to_atrium",
+      summary: "Jeeves orients visitors at the Compass, stages in Hearth, and invites persistent visitors into his own Atrium for the longer map.",
+      owns: ["compass", "orientation", "handoff", "site map", "atrium", "jeeves", "where to begin"]
+    }),
+    elara: Object.freeze({
+      id: "elara",
+      aliases: ["elara", "elora", "laura"],
+      name: "Elara",
+      title: "Signal Bearer",
+      primaryHome: ROUTES.MEET_SEAN,
+      secondaryRoutes: [ROUTES.NINE_SUMMITS],
+      status: "border_character",
+      mode: "platform_side_border",
+      summary: "Elara stands on the platform side of the Mirrorland border and explains Sean, the book, the Nine Summits, and the transition into the narrative world.",
+      owns: ["sean", "meet sean", "nine summits", "book", "mission", "border", "threshold", "digital platform", "digital reality"]
+    }),
+    auren: Object.freeze({
+      id: "auren",
+      aliases: ["auren", "aurin", "auren vale", "aurin vale"],
+      name: "Auren Vale",
+      title: "Sanctuary Builder",
+      primaryHome: ROUTES.CHARACTERS,
+      secondaryRoutes: [ROUTES.PRODUCTS],
+      status: "mirrorland_character_with_platform_placement",
+      summary: "Auren carries products, Arc Coin, protection, value, custody, and sanctuary logic.",
+      owns: ["product", "products", "arc coin", "archcoin", "coin", "value", "investment", "custody", "protection", "sanctuary"]
+    }),
+    soren: Object.freeze({
+      id: "soren",
+      name: "Soren",
+      title: "Boundary Keeper",
+      primaryHome: ROUTES.CHARACTERS,
+      secondaryRoutes: [ROUTES.COHERENCE_DIAGNOSTIC, ROUTES.GAUGES],
+      status: "diagnostic_boundary_character",
+      summary: "Soren guards diagnostic threshold, proof, gauges, boundaries, and admissibility without letting Jeeves diagnose from the doorway.",
+      owns: ["diagnostic", "diagnose", "diagnosis", "coherence", "gauge", "gauges", "proof", "boundary", "admissibility", "score", "test", "assessment", "measure"]
+    }),
+    dextrion: Object.freeze({
+      id: "dextrion",
+      aliases: ["dextrion", "dexter"],
+      name: "Dextrion",
+      title: "Earth-Side Originator",
+      primaryHome: ROUTES.CHARACTERS,
+      secondaryRoutes: [ROUTES.H_EARTH, ROUTES.GAUGES],
+      status: "lab_character",
+      summary: "Dextrion carries H-Earth, lab, anomaly, repair, and experimental crossing logic.",
+      owns: ["h-earth", "hearth", "h earth", "lab", "anomaly", "repair", "experiment", "technical", "planet"]
+    }),
+    alaric: Object.freeze({
+      id: "alaric",
+      name: "Alaric",
+      title: "Field Navigator",
+      primaryHome: ROUTES.CHARACTERS,
+      secondaryRoutes: [ROUTES.FRONTIER, ROUTES.FRONTIER_TRAJECTORY],
+      status: "frontier_character",
+      summary: "Alaric carries Frontier Yard, route choice, navigation, and uncertainty.",
+      owns: ["frontier", "yard", "navigation", "uncertainty", "trajectory", "route", "field", "explore"]
+    }),
+    tarian: Object.freeze({
+      id: "tarian",
+      name: "Tarian",
+      title: "Water Anchor",
+      primaryHome: ROUTES.CHARACTERS,
+      secondaryRoutes: [ROUTES.FRONTIER_WATER],
+      status: "systems_character",
+      summary: "Tarian carries water, continuity, survival systems, and practical infrastructure.",
+      owns: ["water", "continuity", "survival", "infrastructure", "systems", "hydrology"]
+    }),
+    remoteTeam: Object.freeze({
+      id: "remoteTeam",
+      aliases: ["remote team", "distributed team", "field team"],
+      name: "Remote Team",
+      title: "Distributed Response Unit",
+      primaryHome: ROUTES.CHARACTERS,
+      secondaryRoutes: [ROUTES.FRONTIER_VISION],
+      status: "distributed_field_unit",
+      summary: "The Remote Team carries distributed field, city, climate, deployment, and remote systems.",
+      owns: ["remote", "distributed", "city", "climate", "deployment", "field systems", "vision remote", "response"]
+    })
   });
 
-  const INTERFACE_STATE_COPY = Object.freeze({
-    listening: "The house is listening.",
-    typing: "The house is typing. Tap to speed the process.",
-    reading: "Jeeves is reading the path.",
-    ready: "Jeeves is ready."
+  const ROUTE_LABEL_OVERRIDES = Object.freeze({
+    home: "Open the Public Entry",
+    compass: "Return to the Compass",
+    siteGuide: "Open the Website Guide",
+    coherenceDiagnostic: "Open the Coherence Diagnostic",
+    meetSean: "Meet Elara at the Border",
+    products: "Open Auren's Product Door",
+    laws: "Open the Law Library",
+    scientificLaw: "Open Scientific Law",
+    gauges: "Open the Proof Gauges",
+    showroom: "Open the Showroom",
+    hearth: "Return to Hearth Staging",
+    mirrorland: "Approach Mirrorland",
+    zionts: "Open ZIONTS",
+    audralia: "Open Audralia",
+    hEarth: "Open H-Earth",
+    frontier: "Open the Frontier Yard",
+    frontierWater: "Open Tarian's Water Path",
+    frontierVision: "Open the Remote Field Path",
+    frontierTrajectory: "Open the Trajectory Path",
+    characters: "Enter the Character Atrium",
+    controlRoom: "Open the Control Room",
+    nineSummits: "Open the Nine Summits Border",
+    aboutUnderdog: "Open This Underdog"
   });
-
-  const PROTECTED_INTERFACE_PHRASES = Object.freeze([
-    INTERFACE_STATE_COPY.listening,
-    INTERFACE_STATE_COPY.typing,
-    INTERFACE_STATE_COPY.reading,
-    INTERFACE_STATE_COPY.ready,
-    "Jeeves is preparing the next answer...",
-    "The house is typing.",
-    "Tap to speed the process."
-  ]);
 
   const SPLIT_INTERFACE_COPY = Object.freeze({
-    entrance: [
-      "Welcome. I’m Jeeves.",
-      "I’m here to guide the house and open the right doors.",
-      "DiamondGateBridge has a public side and a narrative side. You do not need to understand the whole estate before choosing a path.",
-      "Tell me what you are looking for, and I’ll place you at the cleanest doorway."
-    ],
-    overview: [
-      "DiamondGateBridge.com is an estate-style website with two coordinated entrances.",
-      "The public side gives you the map: clear pages, practical value, Products, Laws, Compass, and creator context.",
-      "The narrative side gives you the guided walk: rooms, worlds, Characters, Hearth, Mirrorland, mission, proof, and frontier systems.",
-      "My role is to help you choose the doorway that fits why you came here."
-    ],
-    guidedChooser: [
-      "Yes. I can help you choose where to start.",
-      "Tell me what you are looking for first: a clear public map, something practical, the story world, the mission, or the proof behind the work.",
-      "I’ll use that direction to place you on the public path or the narrative path without making you guess the structure."
-    ],
-    traditionalWebsite:
-      "The traditional website is the clear public side of the estate. It gives you the map on the wall: Compass, Products, Laws, Meet Sean, and the readable structure.",
-    narrativePath:
-      "The narrative path is the walk through the estate. It carries mission, Hearth, Mirrorland, Characters, proof, and the Frontier Playground.",
-    bridge:
-      "The two sides are separate entrances, not separate worlds. I can guide you from the website into the narrative path, or from Mirrorland back to the public structure."
+    platform: "The platform is the usable surface: pages, routes, tools, diagnostics, products, and navigation.",
+    reality: "The digital reality is the inhabited world the platform reveals: the Estate, the Manor, Mirrorland, Characters, rooms, thresholds, and paths.",
+    bridge: "You are not only using a website. You are approaching a world through one."
   });
 
   const BASE_POOL_COPY = Object.freeze({
     estateOverview: [
-      "You are at the entrance to DiamondGateBridge.",
-      "The point here is not to understand every room at once. It is to see the shape of the estate, then choose the doorway that matches why you came.",
-      "The public side gives you the map. The narrative side gives you the walk."
+      "You are at the edge of a large Estate. My work here is not to drag you through every room. It is to find the right door.",
+      "Ask plainly. I will either answer at the doorway or introduce you to the person who owns the room."
     ],
     publicMap: [
-      SPLIT_INTERFACE_COPY.traditionalWebsite,
-      "It lets you understand the project without entering the story layer first.",
-      "From there, I can keep you on the public map or show you the narrative version of the same idea."
+      "The public site is the platform. The Manor is what begins to appear through it.",
+      "The trick is not to confuse the map with the house. I can help with that."
     ],
     narrativePath: [
-      SPLIT_INTERFACE_COPY.narrativePath,
-      "Instead of only reading pages, you move through rooms, worlds, Characters, mission, proof, and future-facing systems.",
-      "I keep the map nearby, so the story can always return to the public website when you need structure."
+      "Mirrorland is not the whole website. It is the deeper narrative reality inside it.",
+      "Elara stands at the border. The others wait farther in."
     ],
-    practical: [
-      "This matters because clarity has to survive contact with the real world.",
-      "DiamondGateBridge is not only a story or a website. It is a way to organize pressure, proof, systems, service, and direction.",
-      "That is why the path eventually reaches the Frontier Playground, Scientific Law, Products, and community-facing work."
+    diagnostic: [
+      "I can show you the diagnostic door. I will not diagnose you from the hallway.",
+      "That restraint is deliberate. Soren guards that threshold more properly than I do."
     ],
-    proof: [
-      "This is the proof-facing path.",
-      "It asks whether a claim can survive evidence, measurement, correction, and limits.",
-      "That gives the public side a way to stay honest while the narrative side keeps the work alive."
-    ],
-    mirrorland: [
-      "Mirrorland is part of the narrative path.",
-      "It is not there to label you; it is there to help you see the patterns, pressures, Characters, and choices moving through the story.",
-      "It gives the mission a world you can walk through instead of a paragraph you only read."
-    ],
-    hearth: [
-      "Hearth is the Mission Control side of the estate.",
-      "It is the window within the window: the place where the larger narrative field becomes visible, coordinated, and easier to route.",
-      "From Hearth, the visitor can move toward Mirrorland, Frontier, proof, or back to the public map."
-    ],
-    frontier: [
-      "Frontier Playground is where the work gets tested as systems.",
-      "Energy, water, waste, infrastructure, feedback, direction, and future-facing design all have to answer the same question: can this work under pressure?",
-      "It gives practical form to ideas that would otherwise stay abstract."
-    ],
-    characters: [
-      "The Characters turn the estate from explanation into encounter.",
-      "They carry shelter, repair, warning, survival, signal, boundary, sequence, and help beyond the safe center.",
-      "They are not here so I can label you. They are here so the story has pressure you can recognize."
-    ],
-    creator: [
-      "Meet Sean gives the human source behind the estate.",
-      "That path explains the creator context, pressure, artistic integrity, and the reason the work is built as both public structure and narrative experience.",
-      "It naturally connects to This Underdog and Nine Summits."
-    ],
-    underdog: [
-      "This Underdog is the pressure voice translated back into human terms.",
-      "It is not only about one person. It is about the part of a visitor that has carried pressure before it found language or direction.",
-      "That is why it sits near the creator path, the mission, and the mirror."
-    ],
-    return: [
-      "We can re-center cleanly.",
-      "The strongest move is to return to the guided chooser, choose the public map, choose the narrative path, or ask one sharper question.",
-      "You do not have to keep circling the same room."
+    jeevesAtrium: [
+      "Persistent. Good. Most people take the first door.",
+      "If you want the longer map, meet me inside the Character Atrium. I will be less brief there."
     ]
   });
 
   const MISSION_COPY = Object.freeze({
-    overview: [
-      "The mission has one larger center and several living expressions.",
-      "The larger center is clarity, integrity, collaboration, and better shared direction.",
-      "One expression turns inward: helping people move through noise and pressure without losing themselves.",
-      "Another turns outward: service, standing against bullying, protecting children and animals, and building stronger community support."
-    ],
-    inner: [
-      "The inner mission is to help you see more clearly.",
-      "There is a lot of noise in the world. Pressure comes from every direction, and after a while it can become hard to tell what is yours, what is useful, and what is pulling you away from yourself.",
-      "DiamondGateBridge is built to help slow that noise down, recognize the pattern you are standing in, and move toward more honesty, capability, and integrity."
-    ],
-    community: [
-      "The community mission turns the work outward.",
-      "It is about serving people, standing against bullying, protecting children, protecting animals, and helping build places where people feel safer, seen, and supported."
-    ],
-    collaboration: [
-      "The collaboration mission is where the idea becomes practical.",
-      "The work has to become teamwork, tools, systems, public value, better decisions, and shared construction.",
-      "That is why the mission eventually reaches Products, Frontier Playground, Scientific Law, and real-world application."
-    ]
+    public: "Sean, the book, and the Nine Summits belong with Elara at the border.",
+    border: "That border is where the digital platform begins to become a digital reality.",
+    handoff: "I can take you to Elara. She is better placed to explain that part than I am from the Compass."
   });
 
   const DIAGNOSTIC_BOUNDARY_COPY = Object.freeze({
-    boundary:
-      "I can explain the Diagnostic and show you where it fits, but I do not assess you here. If you want an alignment read, I can take you to the Coherence Diagnostic.",
-    characterMirror:
-      "The Character Mirror is explanatory, not a test I run on you here. It shows how the Characters work as reflective patterns, while the actual alignment read belongs in the Coherence Diagnostic.",
-    diagnostic:
-      "The Coherence Diagnostic is a separate alignment tool. It helps a visitor reflect on coherence, claimed archetype, and scenario response patterns. I can explain it or route you there, but I do not run the assessment inside this chat.",
-    referral:
-      "That request belongs in the Coherence Diagnostic. I can take you there, or I can explain how the Diagnostic connects to the Character Mirror and the narrative path."
+    refusal: "I will not diagnose you from the doorway.",
+    route: "I can explain the purpose of the diagnostic and take you to the proper threshold.",
+    soren: "Soren is the Boundary Keeper. That is his room."
   });
 
   const BRIDGE_COPY = Object.freeze({
-    compassHearth:
-      "Compass is the public orientation door. Hearth is the narrative control-window version of orientation.",
-    productsFrontier:
-      "Products show public value. Frontier Playground shows how that value gets tested as a system.",
-    lawsScientificLaw:
-      "Laws give boundary. Scientific Law tests whether a claim survives evidence, measurement, correction, and limits.",
-    seanUnderdog:
-      "Meet Sean gives creator context. This Underdog carries the pressure voice back into human terms.",
-    missionNarrative:
-      "Mission belongs mostly to the narrative path because coherence, Mirrorland, Characters, and Frontier Playground carry its deeper work.",
-    mirrorlandWebsite:
-      "Mirrorland is the story-facing side. The traditional website is the public map back out.",
-    diagnosticCharacterMirror:
-      "The Character Mirror can be explained here, but the actual alignment read belongs in the Coherence Diagnostic."
+    compass: "The Compass is for direction, not for swallowing the entire Estate at once.",
+    handoff: "The right answer is usually a room, not a speech.",
+    atrium: "If you want my longer answer, you have to stop asking from the doorway."
   });
 
   const INTRIGUE_COPY = Object.freeze({
-    estateOverview:
-      "You do not have to know the whole estate yet. You only need to choose the first honest doorway.",
-    publicMap:
-      "This is the cleanest path if you want structure before depth.",
-    narrativePath:
-      "This is the right path if you want the estate to become something you move through, not only something you read.",
-    mission:
-      "This is where the work stops being only a website and starts becoming personal, communal, and practical.",
-    practical:
-      "This is the path for seeing whether the idea can touch real systems, tools, and public value.",
-    proof:
-      "This is the path for testing whether the work can stay honest under pressure.",
-    diagnosticBoundary:
-      "This is the boundary: I can explain the mirror, but the read itself belongs in the Diagnostic.",
-    characterMirror:
-      "This is the mirror boundary: Characters can clarify the story, but the personal read belongs in the Diagnostic.",
-    mirrorland:
-      "This is the story window. You can look through it first, or step into the page when you are ready.",
-    hearth:
-      "This is the control-window path. It shows how the larger field becomes coordinated.",
-    frontier:
-      "This is where future-facing ideas have to become testable systems.",
-    characters:
-      "This is where abstract pressure becomes human shape.",
-    creator:
-      "This path gives the human source before the estate becomes too large.",
-    underdog:
-      "This path gives pressure a voice before it becomes a system.",
-    return:
-      "The return fork is not failure. It is how the estate prevents drift."
+    first: "There is more here than a menu. That is the point.",
+    second: "A good house reveals itself by sequence, not by flood.",
+    third: "I know the map. I am choosing not to throw it at you all at once."
   });
 
-  const ROUTE_LABELS = Object.freeze({
-    compass: "Open the Compass",
-    home: "Open the Public Entry",
-    siteGuide: "Open the Traditional Website",
-    coherenceDiagnostic: "Open the Coherence Diagnostic",
-    meetSean: "Meet Sean",
-    products: "Open Products",
-    laws: "Open the Law Library",
-    scientificLaw: "Open Scientific Law",
-    gauges: "Open Triple G",
-    showroom: "Open the Atrium",
-    hearth: "Open Hearth",
-    mirrorland: "Enter the Narrative Path",
-    zionts: "Open ZIONTS",
-    audralia: "Open Audralia",
-    hEarth: "Open H-Earth",
-    frontier: "Open the Frontier Playground",
-    frontierEnergy: "Open Frontier Energy",
-    frontierWater: "Open Frontier Water",
-    frontierWaste: "Open Frontier Waste",
-    frontierClosedLoop: "Open Closed Loop Systems",
-    frontierInfrastructure: "Open Frontier Infrastructure",
-    frontierLattice: "Open Frontier Lattice",
-    frontierUrban: "Open Frontier Urban",
-    frontierManual: "Open the Frontier Manual",
-    frontierShimmer: "Open Frontier Shimmer",
-    frontierTrajectory: "Open Frontier Trajectory",
-    frontierVision: "Open Frontier Vision",
-    characters: "Open the Characters Hall",
-    controlRoom: "Open the Control Room",
-    nineSummits: "Open Nine Summits",
-    aboutUnderdog: "Open This Underdog"
+  const INTERFACE_STATE_COPY = Object.freeze({
+    listening: "Jeeves is listening.",
+    typing: "Jeeves is choosing his words.",
+    reading: "Jeeves is letting that settle.",
+    ready: "Jeeves is ready.",
+    idle: "Jeeves is waiting."
   });
-
-  const TARGET_LABELS = Object.freeze({
-    diamondGateOverviewPath: "What is DiamondGateBridge.com?",
-    splitInterfaceBridgePath: "Can you help me choose where to start?",
-    traditionalWebsiteOverviewPath: "What is the traditional website for?",
-    narrativePathOverview: "What is the narrative path?",
-    missionOverviewPath: "What is the mission behind this?",
-    missionInnerPath: "What is the inner mission?",
-    missionCommunityPath: "What is the community mission?",
-    missionCollaborationPath: "How does the mission become practical?",
-    practicalRelevancePath: "What can I actually do here?",
-    diagnosticReferralPath: "Where can I take the alignment diagnostic?",
-    diagnosticPath: "What is the Coherence Diagnostic?",
-    characterMirrorPath: "What does the Character Mirror show?",
-    mirrorlandPath: "What is Mirrorland?",
-    hearthPath: "What is Hearth?",
-    frontierPath: "What is the Frontier Playground?",
-    scientificLawPath: "What makes this trustworthy?",
-    compassPath: "How does the Compass help me start?",
-    productsPath: "What can I actually do here?",
-    lawsPath: "What keeps this honest?",
-    seanPath: "Who is Sean Mansfield?",
-    underdogPath: "What is This Underdog?",
-    charactersPath: "Who are the Characters?",
-    recenterNode: "Can you re-center me?",
-    cleanDoor: "What is the cleanest next door?",
-    returnFork: "Can we return to the first fork?",
-    restartFork: "Can we start over?",
-    sharpQuestion: "Can you ask me a sharper question?"
-  });
-
-  const DIRECTIONAL_CHOOSER_OPTIONS = Object.freeze([
-    makeStaticOption("I want the clear public map.", TARGETS.TRADITIONAL_WEBSITE, "story_prompt", "story_entry", "before_knowledge", "ask_jeeves", "objective"),
-    makeStaticOption("I want something practical I can use.", TARGETS.PRACTICAL_RELEVANCE, "practical_prompt", "practical_entry", "before_knowledge", "ask_jeeves", "objective"),
-    makeStaticOption("I want the story world.", TARGETS.NARRATIVE_PATH, "story_prompt", "story_entry", "before_knowledge", "ask_jeeves", "narrative"),
-    makeStaticOption("I want the mission and meaning.", TARGETS.MISSION_OVERVIEW, "personal_prompt", "personal_entry", "before_knowledge", "ask_jeeves", "narrative"),
-    makeStaticOption("I want to know what makes this trustworthy.", TARGETS.SCIENTIFIC_LAW, "skeptic_prompt", "proof_entry", "before_knowledge", "ask_jeeves", "objective")
-  ]);
-
-  const PROMPT_REWRITES = [
-    { pattern: /\bwhich character might i recognize in myself\??/gi, replacement: "What does the Character Mirror show?" },
-    { pattern: /\bwhich character am i most like\??/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bwhat character am i\??/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bwhich archetype am i\??/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bwhat archetype am i\??/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bwhere do i fit into this\??/gi, replacement: "Can you help me choose where to start?" },
-    { pattern: /\bwhat can i learn about myself here\??/gi, replacement: "How does the narrative path become personal?" },
-    { pattern: /\bask me the first mirror question\.?/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bask me the second mirror question\.?/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bask me the third mirror question\.?/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\brun the mirror question\.?/gi, replacement: "Where can I take the alignment diagnostic?" },
-    { pattern: /\bdiagnose me\b/gi, replacement: "Take me to the Coherence Diagnostic" },
-    { pattern: /\bscore me\b/gi, replacement: "Take me to the Coherence Diagnostic" },
-    { pattern: /\bassess me\b/gi, replacement: "Take me to the Coherence Diagnostic" },
-    { pattern: /\bclassify me\b/gi, replacement: "Take me to the Coherence Diagnostic" },
-    { pattern: /\btype me\b/gi, replacement: "Take me to the Coherence Diagnostic" }
-  ];
-
-  const PUBLIC_LANGUAGE_REWRITES = [
-    { pattern: /\bAPI\b/g, replacement: "deeper answer path" },
-    { pattern: /\bDOM\b/g, replacement: "visible interface" },
-    { pattern: /\bfront[-\s]?end\b/gi, replacement: "visible side" },
-    { pattern: /\bback[-\s]?end\b/gi, replacement: "deeper side" },
-    { pattern: /\bserver[-\s]?side\b/gi, replacement: "deeper house layer" },
-    { pattern: /\bjson schema\b/gi, replacement: "answer shape" },
-    { pattern: /\bpayload\b/gi, replacement: "answer" },
-    { pattern: /\bregistry\b/gi, replacement: "guide" },
-    { pattern: /\bscope lane\b/gi, replacement: "path" },
-    { pattern: /\broute lane\b/gi, replacement: "path" },
-    { pattern: /\barchitecture layer\b/gi, replacement: "structure" },
-    { pattern: /\bprogression state\b/gi, replacement: "step" },
-    { pattern: /\bcontract\b/gi, replacement: "governing mark" },
-    { pattern: /\bTNT\b/g, replacement: "" },
-    { pattern: /\bCharacter Archetype Mirror\b/g, replacement: "Character Mirror" },
-    { pattern: /\bcharacter archetype mirror\b/gi, replacement: "Character Mirror" },
-    { pattern: /\bthe Mirrorland\b/gi, replacement: "Mirrorland" },
-    { pattern: /\bworld side\b/gi, replacement: "Mirrorland" },
-    { pattern: /\bworld gate\b/gi, replacement: "South Gate" }
-  ];
 
   function shapeConversationFrame(frame, context) {
     const source = frame && typeof frame === "object" ? frame : {};
-    const ctx = normalizeContext({
-      ...(context && typeof context === "object" ? context : {}),
-      bridgeContext: (context && context.bridgeContext) || source.bridgeContext || null,
-      conversationCoordinate: source.conversationCoordinate || (context && context.conversationCoordinate) || null,
-      gateType: source.gateType || (context && context.gateType) || "",
-      pathFamily: source.pathFamily || (context && context.pathFamily) || "",
-      dialectMode: source.dialectMode || (context && context.dialectMode) || "",
-      contextExpectation: source.contextExpectation || (context && context.contextExpectation) || "",
-      noRepeat: typeof source.noRepeat === "boolean"
-        ? source.noRepeat
-        : Boolean(context && typeof context.noRepeat === "boolean" ? context.noRepeat : false),
-      illuminationMode: source.illuminationMode || (context && context.illuminationMode) || "",
-      basePoolMode: source.basePoolMode || (context && context.basePoolMode) || "",
-      entryStackMode: source.entryStackMode || (context && context.entryStackMode) || "",
-      choiceClosure: source.choiceClosure || (context && context.choiceClosure) || null,
-      selectedTarget: source.selectedTarget || (context && context.selectedTarget) || "",
-      sourceTarget: source.sourceTarget || (context && context.sourceTarget) || "",
-      activeTarget: source.activeTarget || (context && context.activeTarget) || "",
-      sourceStabilityLaw: source.sourceStabilityLaw || (context && context.sourceStabilityLaw) || null,
-      intent: source.intent || (context && context.intent) || ""
-    });
+    const safeContext = normalizeContext(context);
+    const coordinate = normalizeCoordinate(source.conversationCoordinate || buildFallbackCoordinate(source.selectedTarget || source.target, safeContext));
+    const sourceIdentity = resolveSourceIdentity(source, safeContext, coordinate);
+    const target = normalizeTarget(sourceIdentity.activeTarget || sourceIdentity.selectedTarget || sourceIdentity.sourceTarget || source.target || safeContext.target || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const intent = normalizeIntent(source.intent || safeContext.intent || safeContext.prompt || safeContext.text || "");
+    const agent = inferAgent(target, intent, safeContext, source);
+    const escalation = inferEscalation(intent, safeContext, source);
+    const basePoolMode = inferBasePoolMode(target, intent, safeContext);
+    const illuminationMode = inferIlluminationMode(target, intent, safeContext, basePoolMode);
+    const entryStackMode = inferEntryStackMode(target, intent, safeContext, basePoolMode);
 
-    const coordinate = ensureSourceStableCoordinate(
-      ctx.conversationCoordinate || buildFallbackCoordinate(source, ctx),
-      ctx
-    );
+    let bubbles = normalizeBubbleList(source.bubbles);
+    if (!bubbles.length || shouldOverrideGenericBubbles(bubbles, intent, source, safeContext)) {
+      bubbles = shapeGatewayBubbles({
+        target,
+        intent,
+        context: safeContext,
+        agent,
+        escalation,
+        basePoolMode,
+        illuminationMode
+      });
+    } else {
+      bubbles = sanitizeBubbleList(bubbles, safeContext);
+    }
 
-    const identity = resolveSourceIdentity(source, ctx, coordinate);
-    const stableCtx = sanitizeGuidedChooserState({
-      ...ctx,
-      selectedTarget: identity.selectedTarget,
-      sourceTarget: identity.sourceTarget,
-      activeTarget: identity.activeTarget,
-      conversationCoordinate: coordinate
-    });
-
-    const subjectTarget = identity.sourceTarget;
-    const target = subjectTarget;
-    const intent = normalizeIntent(source.intent || stableCtx.intent || "");
-    const gate = safeText(source.gateType || stableCtx.gateType || coordinate.gate || "");
-    const basePoolMode = sanitizeBasePoolModeForSource(
-      subjectTarget,
-      safeText(source.basePoolMode || stableCtx.basePoolMode || coordinate.mode || inferBasePoolMode(subjectTarget, intent, stableCtx))
-    );
-    const illuminationMode = safeText(source.illuminationMode || stableCtx.illuminationMode || inferIlluminationMode(subjectTarget, intent, stableCtx, basePoolMode));
-    const entryStackMode = sanitizeEntryStackModeForSource(
-      subjectTarget,
-      safeText(source.entryStackMode || stableCtx.entryStackMode || inferEntryStackMode(subjectTarget, intent, stableCtx, basePoolMode))
-    );
-    const noRepeat = Boolean(
-      typeof source.noRepeat === "boolean"
-        ? source.noRepeat
-        : typeof stableCtx.noRepeat === "boolean"
-          ? stableCtx.noRepeat
-          : coordinate.noRepeat
-    );
-
-    const sourceBubbles = normalizeBubbleList(source.bubbles || source.beats || []);
-    const shaped = {
-      ...source,
-
-      expressionContract: CONTRACT,
-      expressionVersion: VERSION,
-      previousExpressionContract: PREVIOUS_CONTRACT,
-      rootExpressionContract: ROOT_EXPRESSION_CONTRACT,
-      frontbrainContractTarget: FRONTBRAIN_CONTRACT_TARGET,
-      apiContractTarget: API_CONTRACT_TARGET,
-
-      selectedTarget: identity.selectedTarget,
-      sourceTarget: identity.sourceTarget,
-      activeTarget: identity.activeTarget,
-      sourceStabilityLaw: SOURCE_STABILITY_LAW,
-
-      conversationCoordinate: coordinate,
-      gateType: sanitizeGateForSource(subjectTarget, gate, stableCtx),
-      pathFamily: source.pathFamily || stableCtx.pathFamily || coordinate.path || inferPathFamily(subjectTarget, intent, basePoolMode),
-      dialectMode: source.dialectMode || stableCtx.dialectMode || coordinate.dialect || inferDialectMode(subjectTarget, intent, basePoolMode, illuminationMode),
-      contextExpectation: source.contextExpectation || stableCtx.contextExpectation || coordinate.expectation || inferExpectation(gate),
-      noRepeat,
-
+    const options = shapeOptions(source.options && source.options.length ? source.options : buildDefaultOptions(target, intent, agent, escalation, safeContext), {
+      target,
+      intent,
+      agent,
+      escalation,
       basePoolMode,
       illuminationMode,
       entryStackMode,
-      choiceClosure: source.choiceClosure || stableCtx.choiceClosure || buildChoiceClosure(subjectTarget, intent, stableCtx, basePoolMode, coordinate)
-    };
+      sourceTarget: sourceIdentity.sourceTarget,
+      activeTarget: target
+    });
 
-    shaped.bubbles = shapeGatewayBubbles({
-      sourceBubbles,
+    const handoffs = inferHandoffs(agent, target, escalation, source);
+    const handoffLabels = shapeHandoffLabels(source.handoffLabels || {}, handoffs);
+    const conversationCoordinate = ensureSourceStableCoordinate(source.conversationCoordinate || coordinate || buildFallbackCoordinate(target, safeContext), {
+      selectedTarget: sourceIdentity.selectedTarget || target,
+      sourceTarget: sourceIdentity.sourceTarget || target,
+      activeTarget: target,
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      payload: source
+    });
+
+    return finalizeFrame({
+      ...source,
+      bubbles,
+      options,
+      handoffs,
+      handoffLabels,
+      selectedTarget: sourceIdentity.selectedTarget || target,
+      sourceTarget: sourceIdentity.sourceTarget || target,
+      activeTarget: target,
       target,
       intent,
-      ctx: {
-        ...stableCtx,
-        gateType: shaped.gateType,
-        basePoolMode,
-        illuminationMode,
-        entryStackMode,
-        noRepeat,
-        conversationCoordinate: coordinate
-      },
-      coordinate,
-      gate: shaped.gateType,
+      entryStackMode,
       basePoolMode,
-      noRepeat
-    });
-    shaped.beats = shaped.bubbles;
-
-    shaped.options = shapeChoiceClosureOptions(
-      source.options || [],
-      subjectTarget,
-      intent,
-      {
-        ...stableCtx,
-        selectedTarget: identity.selectedTarget,
-        sourceTarget: identity.sourceTarget,
-        activeTarget: identity.activeTarget,
-        conversationCoordinate: coordinate,
-        gateType: shaped.gateType,
-        noRepeat,
-        basePoolMode,
-        illuminationMode,
-        entryStackMode,
-        choiceClosure: shaped.choiceClosure
-      },
-      basePoolMode
-    );
-
-    return finalizeFrame(shaped, stableCtx);
+      illuminationMode,
+      conversationCoordinate,
+      choiceClosure: buildChoiceClosure(target, intent, safeContext, basePoolMode, conversationCoordinate),
+      expressionContract: CONTRACT,
+      expressionVersion: VERSION,
+      expressionAgent: agent ? agent.id : "jeeves",
+      noRepeat: typeof source.noRepeat === "boolean" ? source.noRepeat : true
+    }, safeContext);
   }
 
   function shapeGatewayBubbles(args) {
-    const sourceBubbles = Array.isArray(args.sourceBubbles) ? args.sourceBubbles : [];
-    const ctx = normalizeContext(args.ctx || {});
-    const coordinate = ensureSourceStableCoordinate(args.coordinate || ctx.conversationCoordinate, ctx);
-    const identity = resolveSourceIdentity({}, ctx, coordinate);
-    const sourceTarget = identity.sourceTarget;
-    const target = sourceTarget;
-    const intent = normalizeIntent(args.intent || ctx.intent || "");
-    const gate = sanitizeGateForSource(sourceTarget, safeText(args.gate || (coordinate && coordinate.gate) || ""), ctx);
-    const basePoolMode = sanitizeBasePoolModeForSource(
-      sourceTarget,
-      args.basePoolMode || inferBasePoolMode(sourceTarget, intent, ctx)
-    );
-    const noRepeat = Boolean(args.noRepeat);
+    const target = args.target;
+    const intent = args.intent;
+    const context = args.context;
+    const agent = args.agent || AGENTS.jeeves;
+    const escalation = args.escalation || 0;
 
-    if (isDiagnosticBoundaryState(sourceTarget, intent, ctx, basePoolMode, gate)) {
-      if (sourceBubbles.length) {
-        return sanitizeBubbleList(sourceBubbles, ctx)
-          .map(softenDiagnosticAssessmentLanguage)
-          .slice(0, 4);
-      }
-      return shapeDiagnosticBoundaryFallback(sourceTarget, basePoolMode);
+    if (isDiagnosticAssessmentRequest(intent) || agent.id === "soren") {
+      return shapeDiagnosticBoundaryFallback(target, inferBasePoolMode(target, intent, context));
     }
 
-    if (sourceBubbles.length) {
-      return withBridgeLead(sanitizeBubbleList(sourceBubbles, ctx), ctx);
-    }
-
-    if (gate === GATES.PREPARED_DOOR) {
+    if (escalation >= 2 || agent.id === "jeeves" && /jeeves|atrium|longer|deeper|trust|tell me/i.test(intent)) {
       return [
-        "That door is ready.",
-        "I do not need to re-explain the path. The clean move is to open it."
+        "Persistent. Good. Most people take the first door I point to.",
+        "If you want my longer answer, do not ask me to give it from the threshold.",
+        "Meet me in the Character Atrium. I will show you more of the map from inside."
       ];
     }
 
-    if (gate === GATES.RETURN_FORK) {
-      return withBridgeLead(BASE_POOL_COPY.return.slice(), ctx);
+    if (agent.id === "elara") {
+      return [
+        "That belongs with Elara.",
+        "She stands at the border: Meet Sean, the Nine Summits, and the first edge of Mirrorland.",
+        "I can take you to her. She is the one who should explain Sean, the book, and why the platform begins turning into a world."
+      ];
     }
 
-    if (gate === GATES.DIG_DEEPER) {
-      return withBridgeLead(shapeDeeperFallback(target, intent, ctx, basePoolMode), ctx);
+    if (agent.id === "auren") {
+      return [
+        "That is Auren Vale's side of the house.",
+        "Products, Arc Coin, value, custody, and protection should not be explained as decoration.",
+        "I can open that door for you."
+      ];
     }
 
-    if (gate === GATES.CROSS_PATH_BRIDGE) {
-      return withBridgeLead(shapeCrossPathFallback(ctx), ctx);
+    if (agent.id === "soren") {
+      return shapeDiagnosticBoundaryFallback(target, inferBasePoolMode(target, intent, context));
     }
 
-    if (gate === GATES.INTRIGUE_BRIDGE) {
-      return withBridgeLead(shapeIntrigueFallback(basePoolMode), ctx);
+    if (agent.id === "dextrion") {
+      return [
+        "That question points toward Dextrion.",
+        "H-Earth, anomaly, repair, and lab logic belong with the Earth-side originator.",
+        "I can take you to the H-Earth path."
+      ];
     }
 
-    if (gate === GATES.BASE_POOL && !noRepeat) {
-      const pool = shapeBasePool(target, intent, ctx, basePoolMode);
-      if (pool.length) return withBridgeLead(pool, ctx);
+    if (agent.id === "alaric") {
+      return [
+        "That is Frontier territory.",
+        "Alaric is better suited to uncertainty, route choice, and the field beyond the Manor paths.",
+        "I can send you toward the Frontier Yard."
+      ];
     }
 
-    if (gate === GATES.ARRIVAL && !sourceBubbles.length) {
-      return withBridgeLead(SPLIT_INTERFACE_COPY.entrance.slice(), ctx);
+    if (agent.id === "tarian") {
+      return [
+        "Water is not a side hallway here.",
+        "Tarian carries continuity, survival systems, and the practical infrastructure beneath the surface.",
+        "I can take you to that path."
+      ];
     }
 
-    if (isTrueGuidedChooser(ctx, sourceTarget, intent) && !sourceBubbles.length) {
-      return withBridgeLead(SPLIT_INTERFACE_COPY.guidedChooser.slice(), ctx);
+    if (agent.id === "remoteTeam") {
+      return [
+        "That belongs with the Remote Team.",
+        "Distributed field systems, city response, climate, and deployment require a different kind of guide.",
+        "I can open the remote field path."
+      ];
     }
 
-    const fallback = shapeBasePool(target, intent, ctx, basePoolMode);
-    if (fallback.length) return withBridgeLead(fallback, ctx);
+    if (isPlatformRealityRequest(intent)) {
+      return [
+        SPLIT_INTERFACE_COPY.platform,
+        SPLIT_INTERFACE_COPY.reality,
+        SPLIT_INTERFACE_COPY.bridge
+      ];
+    }
 
-    return withBridgeLead(SPLIT_INTERFACE_COPY.overview.slice(), ctx);
+    return shapeIntrigueFallback(inferBasePoolMode(target, intent, context));
   }
 
   function shapeDiagnosticBoundaryFallback(target, basePoolMode) {
-    if (basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR || normalizeTarget(target) === TARGETS.CHARACTER_MIRROR) {
-      return [
-        DIAGNOSTIC_BOUNDARY_COPY.characterMirror,
-        "I can introduce the Characters and explain what they carry, or I can take you to the proper Diagnostic path."
-      ];
-    }
-
     return [
-      DIAGNOSTIC_BOUNDARY_COPY.referral,
-      "Jeeves can explain and guide, but the assessment belongs in the Diagnostic itself."
+      DIAGNOSTIC_BOUNDARY_COPY.refusal,
+      DIAGNOSTIC_BOUNDARY_COPY.route,
+      DIAGNOSTIC_BOUNDARY_COPY.soren
     ];
   }
 
   function shapeIntrigueFallback(basePoolMode) {
-    const mode = safeText(basePoolMode || BASE_POOL_MODES.NONE);
-    const key = normalizeBasePoolKey(mode);
-    const line = INTRIGUE_COPY[key] || "This path opens into a nearby room.";
+    if (basePoolMode === BASE_POOL_MODES.NARRATIVE_PATH || basePoolMode === BASE_POOL_MODES.MIRRORLAND) {
+      return [
+        "You are near the story-side of the Estate.",
+        "Elara stands at the border. The others wait deeper in Mirrorland.",
+        "I can point you to the right threshold."
+      ];
+    }
+
+    if (basePoolMode === BASE_POOL_MODES.PUBLIC_MAP) {
+      return [
+        SPLIT_INTERFACE_COPY.platform,
+        SPLIT_INTERFACE_COPY.reality,
+        "I can help you choose which side of the border to approach first."
+      ];
+    }
 
     return [
-      line,
-      "From here, the next clean move is to go deeper, open the prepared door, or return to the fork."
+      "You are at the Compass.",
+      "My role is simple: identify the right door, introduce the right guide, and avoid burying you under the whole house at once.",
+      "Ask me where you want to go. I will point cleanly."
     ];
   }
 
   function shapeDeeperFallback(target, intent, context, basePoolMode) {
-    const ctx = normalizeContext(context);
-    const mode = sanitizeBasePoolModeForSource(target, basePoolMode || inferBasePoolMode(target, intent, ctx));
-
-    if (mode === BASE_POOL_MODES.PUBLIC_MAP) {
-      return [
-        "The deeper layer is that the public side keeps the estate readable before the visitor crosses into story, proof, products, or creator context.",
-        "It gives the visitor a place to stand before depth becomes necessary."
-      ];
-    }
-
-    if (mode === BASE_POOL_MODES.NARRATIVE_PATH) {
-      return [
-        "The deeper layer is that the narrative path turns the same structure into movement.",
-        "The visitor is not only reading rooms. The visitor is crossing thresholds."
-      ];
-    }
-
-    if (mode === BASE_POOL_MODES.MISSION) {
-      return [
-        "The deeper layer is that the mission has to move inward, outward, and then into construction.",
-        "It has to help the person, protect the community, and prove itself through useful systems."
-      ];
-    }
-
-    if (mode === BASE_POOL_MODES.PRACTICAL) {
-      return [
-        "The deeper layer is that practical value has to survive pressure.",
-        "A useful idea has to become a tool, route, product, system, or decision structure."
-      ];
-    }
-
-    if (mode === BASE_POOL_MODES.PROOF) {
-      return [
-        "The deeper layer is that proof is not decoration.",
-        "Evidence, measurement, limits, and correction are what keep a convincing idea from becoming an unchecked claim."
-      ];
-    }
-
     return [
-      "The deeper layer is available, but the clean move is to let North carry the meaning and let this gateway keep the path readable."
+      "You are asking for the map behind the map.",
+      "I can give you more, but not while we are standing in the doorway.",
+      "Meet me in the Character Atrium if you want my longer answer."
     ];
   }
 
   function shapeCrossPathFallback(context) {
-    const ctx = normalizeContext(context);
-    const bridgeLine = shapeBridgeContextLine(ctx);
-
-    if (bridgeLine) {
-      return [
-        bridgeLine,
-        "The point is not to collapse the two paths into one. It is to show why the next door is adjacent."
-      ];
-    }
-
     return [
-      "This is a bridge path.",
-      "The next room is related, but it should remain distinct so the estate stays readable."
+      "That crosses more than one path.",
+      "I can separate the platform, the border, and Mirrorland before we move.",
+      "Start with the Compass if you want the cleanest route."
     ];
   }
 
   function shapeBasePool(target, intent, context, basePoolMode) {
-    const ctx = normalizeContext(context);
-    const cleanTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || "");
-    const cleanIntent = normalizeIntent(intent || ctx.intent || "");
-    const mode = sanitizeBasePoolModeForSource(cleanTarget, basePoolMode || inferBasePoolMode(cleanTarget, cleanIntent, ctx));
-
-    if (isTrueGuidedChooser(ctx, cleanTarget, cleanIntent)) {
-      return SPLIT_INTERFACE_COPY.guidedChooser.slice();
-    }
-
-    if (mode === BASE_POOL_MODES.ESTATE_OVERVIEW) return SPLIT_INTERFACE_COPY.overview.slice();
-    if (mode === BASE_POOL_MODES.PUBLIC_MAP) return BASE_POOL_COPY.publicMap.slice();
-    if (mode === BASE_POOL_MODES.NARRATIVE_PATH) return BASE_POOL_COPY.narrativePath.slice();
-
-    if (mode === BASE_POOL_MODES.MISSION) return MISSION_COPY.overview.slice();
-    if (mode === BASE_POOL_MODES.INNER_MISSION) return MISSION_COPY.inner.slice();
-    if (mode === BASE_POOL_MODES.COMMUNITY_MISSION) return MISSION_COPY.community.slice();
-    if (mode === BASE_POOL_MODES.COLLABORATION_MISSION) return MISSION_COPY.collaboration.slice();
-
-    if (mode === BASE_POOL_MODES.PRACTICAL) return BASE_POOL_COPY.practical.slice();
-    if (mode === BASE_POOL_MODES.PROOF) return BASE_POOL_COPY.proof.slice();
-
-    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY) {
-      return [
-        DIAGNOSTIC_BOUNDARY_COPY.referral,
-        "Jeeves can explain and guide, but the assessment belongs in the Diagnostic itself."
-      ];
-    }
-
-    if (mode === BASE_POOL_MODES.CHARACTER_MIRROR) {
-      return [
-        DIAGNOSTIC_BOUNDARY_COPY.characterMirror,
-        "I can introduce the Characters and explain what they carry, or I can take you to the proper Diagnostic path."
-      ];
-    }
-
-    if (mode === BASE_POOL_MODES.MIRRORLAND) return BASE_POOL_COPY.mirrorland.slice();
-    if (mode === BASE_POOL_MODES.HEARTH) return BASE_POOL_COPY.hearth.slice();
-    if (mode === BASE_POOL_MODES.FRONTIER) return BASE_POOL_COPY.frontier.slice();
-    if (mode === BASE_POOL_MODES.CHARACTERS) return BASE_POOL_COPY.characters.slice();
-    if (mode === BASE_POOL_MODES.CREATOR) return BASE_POOL_COPY.creator.slice();
-    if (mode === BASE_POOL_MODES.UNDERDOG) return BASE_POOL_COPY.underdog.slice();
-    if (mode === BASE_POOL_MODES.RETURN) return BASE_POOL_COPY.return.slice();
-
-    return [];
+    const mode = normalizeBasePoolKey(basePoolMode || inferBasePoolMode(target, intent, context));
+    return (BASE_POOL_COPY[mode] || BASE_POOL_COPY.estateOverview || []).slice();
   }
 
   function finalizeFrame(frame, context) {
-    const shaped = frame && typeof frame === "object" ? frame : {};
-    const ctx = normalizeContext(context);
-    const coordinate = ensureSourceStableCoordinate(
-      shaped.conversationCoordinate || ctx.conversationCoordinate || buildFallbackCoordinate(shaped, ctx),
-      {
-        ...ctx,
-        selectedTarget: shaped.selectedTarget,
-        sourceTarget: shaped.sourceTarget,
-        activeTarget: shaped.activeTarget
-      }
-    );
-    const identity = resolveSourceIdentity(shaped, ctx, coordinate);
-    const target = identity.sourceTarget;
-    const intent = normalizeIntent(shaped.intent || ctx.intent || "");
-    const basePoolMode = sanitizeBasePoolModeForSource(target, shaped.basePoolMode || coordinate.mode || inferBasePoolMode(target, intent, ctx));
-    const illuminationMode = shaped.illuminationMode || inferIlluminationMode(target, intent, ctx, basePoolMode);
-    const entryStackMode = sanitizeEntryStackModeForSource(target, shaped.entryStackMode || inferEntryStackMode(target, intent, ctx, basePoolMode));
-    const gate = sanitizeGateForSource(target, shaped.gateType || coordinate.gate || inferGateFromContext(target, intent, ctx, entryStackMode, basePoolMode), ctx);
-    const noRepeat = typeof shaped.noRepeat === "boolean" ? shaped.noRepeat : Boolean(coordinate.noRepeat || isNoRepeatGate(gate));
+    const source = frame && typeof frame === "object" ? frame : {};
+    const target = normalizeTarget(source.target || source.activeTarget || source.selectedTarget || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const coordinate = ensureSourceStableCoordinate(source.conversationCoordinate || buildFallbackCoordinate(target, context), {
+      selectedTarget: source.selectedTarget || target,
+      sourceTarget: source.sourceTarget || target,
+      activeTarget: source.activeTarget || target,
+      payload: source
+    });
 
-    shaped.selectedTarget = identity.selectedTarget;
-    shaped.sourceTarget = identity.sourceTarget;
-    shaped.activeTarget = identity.activeTarget;
-    shaped.sourceStabilityLaw = SOURCE_STABILITY_LAW;
-
-    shaped.bubbles = normalizeBubbleList(shaped.bubbles || shaped.beats || [])
-      .map((bubble) => sanitizePublicText(bubble, ctx, "bubble"));
-    shaped.beats = shaped.bubbles;
-
-    shaped.options = shapeOptions(shaped.options || [], {
-      ...ctx,
-      selectedTarget: identity.selectedTarget,
-      sourceTarget: identity.sourceTarget,
-      activeTarget: identity.activeTarget,
-      intent,
-      basePoolMode,
-      illuminationMode,
-      entryStackMode,
+    return {
+      ...source,
+      bubbles: normalizeBubbleList(source.bubbles).slice(0, 6),
+      options: dedupeOptions(normalizeOptions(source.options || [], {
+        target,
+        intent: source.intent || "",
+        basePoolMode: source.basePoolMode,
+        illuminationMode: source.illuminationMode,
+        entryStackMode: source.entryStackMode,
+        sourceTarget: source.sourceTarget || target,
+        activeTarget: source.activeTarget || target
+      })).slice(0, 6),
+      handoffs: Array.isArray(source.handoffs) ? dedupeStrings(source.handoffs).slice(0, 6) : [],
+      handoffLabels: source.handoffLabels && typeof source.handoffLabels === "object" ? source.handoffLabels : {},
       conversationCoordinate: coordinate,
-      gateType: gate,
-      noRepeat
-    });
-
-    shaped.handoffLabels = shapeHandoffLabels(shaped.handoffLabels || {}, shaped.handoffs || []);
-
-    shaped.expressionContract = CONTRACT;
-    shaped.expressionVersion = VERSION;
-    shaped.previousExpressionContract = PREVIOUS_CONTRACT;
-    shaped.rootExpressionContract = ROOT_EXPRESSION_CONTRACT;
-    shaped.frontbrainContractTarget = FRONTBRAIN_CONTRACT_TARGET;
-    shaped.apiContractTarget = API_CONTRACT_TARGET;
-
-    shaped.guidedEntranceCompatible = true;
-    shaped.readingRhythmCompatible = true;
-    shaped.bridgeContextCompatible = true;
-    shaped.entryStackCompatible = true;
-    shaped.basePoolCompatible = true;
-    shaped.illuminationCompatible = true;
-    shaped.choiceClosureCompatible = true;
-    shaped.coordinateCarrierCompatible = true;
-    shaped.gatewayAuthorityCompatible = true;
-    shaped.noRepeatCompatible = true;
-    shaped.sourceStabilityCompatible = true;
-    shaped.frontalLobeAuthority = true;
-    shaped.personalityAuthority = true;
-    shaped.publicLanguageAuthority = true;
-    shaped.meaningAuthority = false;
-    shaped.sourceIdentityCreationAuthority = false;
-    shaped.routeExecutionAuthority = false;
-
-    shaped.conversationCoordinate = ensureSourceStableCoordinate({
-      ...coordinate,
-      gate,
-      mode: basePoolMode,
-      path: shaped.pathFamily || coordinate.path || inferPathFamily(target, intent, basePoolMode),
-      dialect: shaped.dialectMode || coordinate.dialect || inferDialectMode(target, intent, basePoolMode, illuminationMode),
-      expectation: shaped.contextExpectation || coordinate.expectation || inferExpectation(gate),
-      noRepeat
-    }, {
-      selectedTarget: identity.selectedTarget,
-      sourceTarget: identity.sourceTarget,
-      activeTarget: identity.activeTarget
-    });
-
-    shaped.gateType = gate;
-    shaped.pathFamily = shaped.pathFamily || shaped.conversationCoordinate.path || inferPathFamily(target, intent, basePoolMode);
-    shaped.dialectMode = shaped.dialectMode || shaped.conversationCoordinate.dialect || inferDialectMode(target, intent, basePoolMode, illuminationMode);
-    shaped.contextExpectation = shaped.contextExpectation || shaped.conversationCoordinate.expectation || inferExpectation(gate);
-    shaped.noRepeat = noRepeat;
-
-    shaped.entryStackMode = entryStackMode;
-    shaped.basePoolMode = basePoolMode;
-    shaped.illuminationMode = illuminationMode;
-    shaped.choiceClosure = shaped.choiceClosure || buildChoiceClosure(target, intent, ctx, basePoolMode, shaped.conversationCoordinate);
-
-    shaped.debug = shaped.debug && typeof shaped.debug === "object" ? shaped.debug : {};
-    shaped.debug.expressionAuthority = "frontal_lobe_public_voice_authority_only";
-    shaped.debug.meaningAuthority = "api_north";
-    shaped.debug.sourceIdentityAuthority = "frontbrain_and_api";
-    shaped.debug.frontbrainAuthority = "visible_carrier_and_route_execution";
-    shaped.debug.routeExecutionAuthority = "frontbrain";
-    shaped.debug.diagnosticBoundary = "jeeves_explains_and_routes_but_does_not_assess";
-
-    return shaped;
+      noRepeat: typeof source.noRepeat === "boolean" ? source.noRepeat : true
+    };
   }
 
   function shapeOptions(options, context) {
-    const ctx = normalizeContext(context);
-
     if (!Array.isArray(options)) return [];
-
-    const shaped = options
-      .map((option) => shapeOption(option, ctx))
-      .filter(Boolean);
-
-    return dedupeOptions(shaped).slice(0, 6);
+    return options.map(function mapOption(option) {
+      return shapeOption(option, context || {});
+    }).filter(Boolean);
   }
 
   function shapeOption(option, context) {
     if (!option || typeof option !== "object") return null;
-
-    const ctx = normalizeContext(context);
-    const rawTarget = safeText(option.target || "");
-    const target = normalizeTarget(rawTarget);
-    const originalLabel = safeText(option.label || "");
-    let label = originalLabel || TARGET_LABELS[target] || "Can you tell me more?";
-
-    if (isDiagnosticAssessmentRequest(originalLabel) || isDiagnosticAssessmentTarget(rawTarget) || isDiagnosticAssessmentTarget(target)) {
-      const sourceTarget = TARGETS.DIAGNOSTIC_REFERRAL;
-      const activeTarget = TARGETS.DIAGNOSTIC_REFERRAL;
-      const diagnosticOption = {
-        ...option,
-        label: TARGET_LABELS.diagnosticReferralPath,
-        target: TARGETS.DIAGNOSTIC_REFERRAL,
-        selectedTarget: TARGETS.DIAGNOSTIC_REFERRAL,
-        sourceTarget,
-        activeTarget,
-        type: "conversation",
-        scopeLane: "objective",
-        promptMode: "personal_prompt",
-        optionKind: "conversation_prompt",
-        archetypeAlignment: "personal_entry",
-        bridgeMoment: "before_knowledge",
-        movementIntent: "ask_jeeves",
-        entryStackMode: ENTRY_STACK_MODES.BASE_POOL,
-        basePoolMode: BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY,
-        illuminationMode: ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY,
-        gateType: GATES.DIAGNOSTIC_BOUNDARY,
-        pathFamily: "diagnostic",
-        dialectMode: "diagnostic_boundary_guide",
-        contextExpectation: "diagnostic_referral",
-        noRepeat: true
-      };
-
-      diagnosticOption.conversationCoordinate = buildOptionCoordinate(diagnosticOption, {
-        ...ctx,
-        sourceTarget,
-        activeTarget,
-        selectedTarget: TARGETS.DIAGNOSTIC_REFERRAL
-      });
-
-      return diagnosticOption;
-    }
-
-    label = rewritePromptLabel(label, target, ctx);
-    label = sanitizePublicText(label, ctx, "option");
-
-    const sourceTarget = normalizeTarget(option.sourceTarget || target || ctx.sourceTarget || "");
-    const activeTarget = normalizeTarget(option.activeTarget || target || sourceTarget || ctx.activeTarget || "");
-
-    const shaped = {
-      ...option,
-      label,
-      target,
+    const safeContext = context && typeof context === "object" ? context : {};
+    const target = normalizeTarget(option.target || safeContext.target || safeContext.activeTarget || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const sourceTarget = normalizeTarget(option.sourceTarget || safeContext.sourceTarget || target);
+    const activeTarget = normalizeTarget(option.activeTarget || safeContext.activeTarget || target);
+    const basePoolMode = option.basePoolMode || safeContext.basePoolMode || inferBasePoolMode(target, option.intent || safeContext.intent || "", safeContext);
+    const illuminationMode = option.illuminationMode || safeContext.illuminationMode || inferIlluminationMode(target, option.intent || safeContext.intent || "", safeContext, basePoolMode);
+    const entryStackMode = option.entryStackMode || safeContext.entryStackMode || inferEntryStackMode(target, option.intent || safeContext.intent || "", safeContext, basePoolMode);
+    const coordinate = ensureSourceStableCoordinate(option.conversationCoordinate || buildOptionCoordinate(option, safeContext), {
       selectedTarget: target,
       sourceTarget,
-      activeTarget
+      activeTarget,
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      payload: option
+    });
+
+    return {
+      ...option,
+      label: rewritePromptLabel(option.label || shapeRouteLabel(target, "Continue"), target, safeContext),
+      target,
+      sourceTarget,
+      activeTarget,
+      type: safeText(option.type || "conversation"),
+      scopeLane: safeText(option.scopeLane || inferScopeLaneFromTarget(target)),
+      promptMode: safeText(option.promptMode || inferPromptModeFromPool(basePoolMode)),
+      optionKind: safeText(option.optionKind || "conversation_prompt"),
+      archetypeAlignment: safeText(option.archetypeAlignment || inferAlignmentFromPool(basePoolMode)),
+      bridgeMoment: safeText(option.bridgeMoment || inferBridgeMomentFromContext(safeContext)),
+      movementIntent: safeText(option.movementIntent || "ask_jeeves"),
+      entryStackMode,
+      basePoolMode,
+      illuminationMode,
+      conversationCoordinate: coordinate,
+      gateType: safeText(option.gateType || coordinate.gate || "base_pool"),
+      pathFamily: safeText(option.pathFamily || coordinate.path || inferPathFamily(target, option.intent || "", basePoolMode)),
+      dialectMode: safeText(option.dialectMode || coordinate.dialect || inferDialectMode(target, option.intent || "", basePoolMode, illuminationMode)),
+      contextExpectation: safeText(option.contextExpectation || coordinate.expectation || inferExpectation(coordinate.gate)),
+      noRepeat: typeof option.noRepeat === "boolean" ? option.noRepeat : Boolean(coordinate.noRepeat)
     };
+  }
 
-    if (isGuidedLabel(originalLabel) && target === TARGETS.SPLIT_INTERFACE) {
-      shaped.label = TARGET_LABELS.splitInterfaceBridgePath;
-      shaped.promptMode = "story_prompt";
-      shaped.scopeLane = "objective";
-      shaped.bridgeMoment = "entrance_fork";
-      shaped.movementIntent = "ask_jeeves";
+  function buildDefaultOptions(target, intent, agent, escalation, context) {
+    const options = [];
+    const chosen = agent || inferAgent(target, intent, context, {});
+
+    if (chosen && chosen.id !== "jeeves") {
+      options.push(makeStaticOption("Why this guide?", target, "explanation", "orientation", "before_knowledge", "ask_jeeves", inferScopeLaneFromTarget(target)));
     }
 
-    if (target === TARGETS.DIAMOND_GATE_OVERVIEW) {
-      shaped.label = TARGET_LABELS.diamondGateOverviewPath;
-      shaped.promptMode = "story_prompt";
-      shaped.scopeLane = "objective";
+    if (escalation >= 1) {
+      options.push(makeStaticOption("Meet Jeeves inside the Atrium", TARGETS.CHARACTERS, "atrium", "character", "after_persistence", "open_prepared_door", "character"));
+    } else {
+      options.push(makeDigDeeperOption(target, intent, inferBasePoolMode(target, intent, context), context));
     }
 
-    if (target === TARGETS.NARRATIVE_PATH) {
-      shaped.label = TARGET_LABELS.narrativePathOverview;
-      shaped.promptMode = "story_prompt";
-      shaped.scopeLane = "narrative";
-    }
-
-    if (target === TARGETS.TRADITIONAL_WEBSITE) {
-      shaped.label = TARGET_LABELS.traditionalWebsiteOverviewPath;
-      shaped.promptMode = "story_prompt";
-      shaped.scopeLane = "objective";
-    }
-
-    if (target === TARGETS.MISSION_OVERVIEW) {
-      shaped.label = TARGET_LABELS.missionOverviewPath;
-      shaped.scopeLane = "narrative";
-      shaped.promptMode = "personal_prompt";
-    }
-
-    if (target === TARGETS.PRACTICAL_RELEVANCE || target === TARGETS.PRODUCTS) {
-      shaped.label = TARGET_LABELS.practicalRelevancePath;
-      shaped.promptMode = "practical_prompt";
-      shaped.scopeLane = "objective";
-    }
-
-    if (target === TARGETS.SCIENTIFIC_LAW || target === TARGETS.LAWS) {
-      shaped.label = TARGET_LABELS.scientificLawPath;
-      shaped.promptMode = "skeptic_prompt";
-      shaped.archetypeAlignment = "proof_entry";
-      shaped.scopeLane = "objective";
-    }
-
-    if (target === TARGETS.DIAGNOSTIC) {
-      shaped.label = TARGET_LABELS.diagnosticPath;
-      shaped.promptMode = "personal_prompt";
-      shaped.archetypeAlignment = "personal_entry";
-      shaped.scopeLane = "objective";
-    }
-
-    if (target === TARGETS.DIAGNOSTIC_REFERRAL) {
-      shaped.label = TARGET_LABELS.diagnosticReferralPath;
-      shaped.promptMode = "personal_prompt";
-      shaped.archetypeAlignment = "personal_entry";
-      shaped.scopeLane = "objective";
-    }
-
-    if (target === TARGETS.CHARACTER_MIRROR) {
-      shaped.label = TARGET_LABELS.characterMirrorPath;
-      shaped.promptMode = "story_prompt";
-      shaped.archetypeAlignment = "story_entry";
-      shaped.scopeLane = "narrative";
-    }
-
-    if (target === TARGETS.CLEAN_DOOR || target === TARGETS.RECENTER || target === TARGETS.RETURN_FORK || target === TARGETS.RESTART_FORK) {
-      shaped.promptMode = "recenter_prompt";
-      shaped.optionKind = "control";
-      shaped.bridgeMoment = "recenter_fork";
-      shaped.movementIntent = "recenter";
-      shaped.scopeLane = "objective";
-      shaped.type = "control";
-    }
-
-    if (!shaped.optionKind) shaped.optionKind = "conversation_prompt";
-    if (!shaped.bridgeMoment) shaped.bridgeMoment = inferBridgeMomentFromContext(ctx);
-    if (!shaped.movementIntent) shaped.movementIntent = "ask_jeeves";
-    if (!shaped.type) shaped.type = shaped.optionKind === "control" ? "control" : "conversation";
-    if (!shaped.scopeLane) shaped.scopeLane = inferScopeLaneFromTarget(target);
-
-    shaped.entryStackMode = sanitizeEntryStackModeForSource(shaped.sourceTarget, shaped.entryStackMode || "");
-    shaped.basePoolMode = sanitizeBasePoolModeForSource(shaped.sourceTarget, shaped.basePoolMode || inferBasePoolMode(shaped.sourceTarget, ctx.intent, ctx));
-    shaped.illuminationMode = shaped.illuminationMode || inferIlluminationMode(shaped.sourceTarget, ctx.intent, ctx, shaped.basePoolMode);
-
-    const optionCoordinate = ensureSourceStableCoordinate(
-      normalizeCoordinate(shaped.conversationCoordinate || null) || buildOptionCoordinate(shaped, ctx),
-      shaped
-    );
-
-    shaped.conversationCoordinate = optionCoordinate;
-    shaped.gateType = sanitizeGateForSource(shaped.sourceTarget, shaped.gateType || optionCoordinate.gate, ctx);
-    shaped.pathFamily = shaped.pathFamily || optionCoordinate.path;
-    shaped.dialectMode = shaped.dialectMode || optionCoordinate.dialect;
-    shaped.contextExpectation = shaped.contextExpectation || optionCoordinate.expectation;
-    shaped.noRepeat = typeof shaped.noRepeat === "boolean" ? shaped.noRepeat : Boolean(optionCoordinate.noRepeat);
-    shaped.sourceStabilityLaw = SOURCE_STABILITY_LAW;
-
-    return shaped;
+    options.push(makeStaticOption("Return to the Compass", TARGETS.TRADITIONAL_COMPASS, "recenter", "compass", "return", "ask_jeeves", "compass"));
+    return options;
   }
 
   function shapeChoiceClosureOptions(options, target, intent, context, basePoolMode) {
-    const ctx = normalizeContext(context);
-    const coordinate = ensureSourceStableCoordinate(ctx.conversationCoordinate || null, ctx);
-    const identity = resolveSourceIdentity({}, ctx, coordinate);
-    const sourceTarget = identity.sourceTarget;
-    const gate = sanitizeGateForSource(sourceTarget, ctx.gateType || (coordinate && coordinate.gate) || "", ctx);
-    const sourceOptions = Array.isArray(options) ? options.slice() : [];
-    const cleanIntent = normalizeIntent(intent || ctx.intent || "");
-    const mode = sanitizeBasePoolModeForSource(sourceTarget, basePoolMode || inferBasePoolMode(sourceTarget, cleanIntent, ctx));
-    const closure = ctx.choiceClosure || buildChoiceClosure(sourceTarget, cleanIntent, ctx, mode, coordinate);
-    const next = coordinate && Array.isArray(coordinate.next) ? coordinate.next : [];
-    const shaped = sourceOptions.slice();
-
-    if (isTrueGuidedChooser(ctx, sourceTarget, cleanIntent)) {
-      return DIRECTIONAL_CHOOSER_OPTIONS.slice().map((option) => shapeOption(option, {
-        ...ctx,
-        sourceTarget: option.sourceTarget || option.target,
-        activeTarget: option.activeTarget || option.target
-      })).filter(Boolean);
-    }
-
-    if (
-      closure.digDeeperAvailable &&
-      gate !== GATES.DIG_DEEPER &&
-      gate !== GATES.PREPARED_DOOR &&
-      gate !== GATES.RETURN_FORK &&
-      gate !== GATES.DIAGNOSTIC_BOUNDARY &&
-      (next.length === 0 || next.includes("dig_deeper"))
-    ) {
-      shaped.push(makeDigDeeperOption(sourceTarget, cleanIntent, mode, ctx));
-    }
-
-    if (
-      closure.returnForkAvailable &&
-      gate !== GATES.RETURN_FORK &&
-      (next.length === 0 || next.includes("return") || next.includes("guided_chooser"))
-    ) {
-      shaped.push(makeReturnForkOption(mode));
-    }
-
-    return shaped;
+    const source = Array.isArray(options) && options.length ? options : buildDefaultOptions(target, intent, inferAgent(target, intent, context, {}), 0, context);
+    return shapeOptions(source, { target, intent, context, basePoolMode });
   }
 
   function makeDigDeeperOption(target, intent, basePoolMode, context) {
-    const ctx = normalizeContext(context);
-    const sourceTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || TARGETS.SPLIT_INTERFACE);
-    const mode = sanitizeBasePoolModeForSource(sourceTarget, basePoolMode || BASE_POOL_MODES.NONE);
-    const label = inferDigDeeperLabel(sourceTarget, intent, mode);
-
-    const option = {
-      label,
-      target: sourceTarget,
-      selectedTarget: sourceTarget,
-      sourceTarget,
-      activeTarget: sourceTarget,
-      type: "conversation",
-      scopeLane: inferScopeLaneFromTarget(sourceTarget),
-      promptMode: inferPromptModeFromPool(mode),
-      optionKind: "forward",
-      archetypeAlignment: inferAlignmentFromPool(mode),
-      bridgeMoment: "after_knowledge",
-      movementIntent: "continue_current_path",
-      entryStackMode: ENTRY_STACK_MODES.DIG_DEEPER,
-      basePoolMode: mode,
-      illuminationMode: inferIlluminationMode(sourceTarget, intent, ctx, mode),
-      gateType: GATES.DIG_DEEPER,
-      noRepeat: true
-    };
-
-    option.conversationCoordinate = buildOptionCoordinate(option, ctx);
-    option.pathFamily = option.conversationCoordinate.path;
-    option.dialectMode = option.conversationCoordinate.dialect;
-    option.contextExpectation = option.conversationCoordinate.expectation;
-    option.sourceStabilityLaw = SOURCE_STABILITY_LAW;
-
-    return option;
+    return makeStaticOption("Ask Jeeves for the longer map", TARGETS.CHARACTERS, "atrium", "character", "after_persistence", "ask_jeeves", "character", {
+      activeTarget: TARGETS.CHARACTERS,
+      basePoolMode: BASE_POOL_MODES.JEEVES_ATRIUM,
+      illuminationMode: ILLUMINATION_MODES.ATRIUM,
+      entryStackMode: ENTRY_STACK_MODES.DIG_DEEPER
+    });
   }
 
   function makeReturnForkOption(basePoolMode) {
-    const mode = basePoolMode || BASE_POOL_MODES.NONE;
-
-    const option = {
-      label: mode === BASE_POOL_MODES.RETURN ? "Can you help me choose where to start?" : "Can we return to the guided chooser?",
-      target: TARGETS.SPLIT_INTERFACE,
-      selectedTarget: TARGETS.SPLIT_INTERFACE,
-      sourceTarget: TARGETS.SPLIT_INTERFACE,
-      activeTarget: TARGETS.SPLIT_INTERFACE,
-      type: "control",
-      scopeLane: "objective",
-      promptMode: "recenter_prompt",
-      optionKind: "control",
-      archetypeAlignment: "unknown_entry",
-      bridgeMoment: "recenter_fork",
-      movementIntent: "recenter",
-      entryStackMode: ENTRY_STACK_MODES.RETURN,
-      basePoolMode: BASE_POOL_MODES.RETURN,
-      illuminationMode: ILLUMINATION_MODES.RETURN,
-      gateType: GATES.RETURN_FORK,
-      noRepeat: true,
-      sourceStabilityLaw: SOURCE_STABILITY_LAW
-    };
-
-    option.conversationCoordinate = buildOptionCoordinate(option, {});
-    option.pathFamily = option.conversationCoordinate.path;
-    option.dialectMode = option.conversationCoordinate.dialect;
-    option.contextExpectation = option.conversationCoordinate.expectation;
-
-    return option;
+    return makeStaticOption("Return to the Compass", TARGETS.TRADITIONAL_COMPASS, "recenter", "compass", "return", "ask_jeeves", "compass", {
+      basePoolMode: basePoolMode || BASE_POOL_MODES.ESTATE_OVERVIEW,
+      illuminationMode: ILLUMINATION_MODES.COMPASS,
+      entryStackMode: ENTRY_STACK_MODES.RETURN
+    });
   }
 
   function inferDigDeeperLabel(target, intent, basePoolMode) {
-    const mode = basePoolMode || BASE_POOL_MODES.NONE;
-
-    if (mode === BASE_POOL_MODES.PUBLIC_MAP) return "Can you show me the deeper version of the public map?";
-    if (mode === BASE_POOL_MODES.NARRATIVE_PATH) return "Can you take me one layer deeper into the narrative path?";
-    if (mode === BASE_POOL_MODES.MISSION) return "Can you take me deeper into the mission?";
-    if (mode === BASE_POOL_MODES.PRACTICAL) return "Can you show how this becomes practical?";
-    if (mode === BASE_POOL_MODES.PROOF) return "Can you show what makes this trustworthy?";
-    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY) return "How does the Diagnostic connect to the Character Mirror?";
-    if (mode === BASE_POOL_MODES.CHARACTER_MIRROR) return "How does the Character Mirror connect to the Diagnostic?";
-    if (mode === BASE_POOL_MODES.MIRRORLAND) return "Can you take me deeper into Mirrorland?";
-    if (mode === BASE_POOL_MODES.HEARTH) return "Can you explain Hearth as Mission Control?";
-    if (mode === BASE_POOL_MODES.FRONTIER) return "Can you show how Frontier tests systems?";
-    if (mode === BASE_POOL_MODES.CHARACTERS) return "Can you introduce the Characters?";
-    if (mode === BASE_POOL_MODES.CREATOR) return "Can you explain the creator path?";
-    if (mode === BASE_POOL_MODES.UNDERDOG) return "Can you explain This Underdog?";
-
-    return "Can you take me one layer deeper?";
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC) return "Ask why Soren owns that threshold";
+    if (basePoolMode === BASE_POOL_MODES.MISSION) return "Ask why Elara stands at the border";
+    return "Ask Jeeves for the longer map";
   }
 
   function buildChoiceClosure(target, intent, context, basePoolMode, coordinateArg) {
-    const ctx = normalizeContext(context);
-    const coordinate = coordinateArg || ctx.conversationCoordinate || null;
-    const sourceTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || "");
-    const gate = sanitizeGateForSource(sourceTarget, ctx.gateType || (coordinate && coordinate.gate) || "", ctx);
-    const mode = sanitizeBasePoolModeForSource(sourceTarget, basePoolMode || inferBasePoolMode(sourceTarget, intent, ctx));
-    const next = coordinate && Array.isArray(coordinate.next) ? coordinate.next : [];
-
-    const closure = {
-      ...CHOICE_CLOSURE_DEFAULT,
-      mode
+    return {
+      preparedDoorAvailable: true,
+      digDeeperAvailable: true,
+      returnForkAvailable: true,
+      finalChatThreshold: Boolean(coordinateArg && coordinateArg.gate === GATES.TRUST_ESCALATION),
+      mode: basePoolMode || inferBasePoolMode(target, intent, context)
     };
-
-    if (coordinate) {
-      closure.preparedDoorAvailable = next.includes("open_page") || gate === GATES.PREPARED_DOOR;
-      closure.preparedDoorSuggested = gate === GATES.PREPARED_DOOR;
-      closure.digDeeperAvailable =
-        (next.includes("dig_deeper") || gate === GATES.BASE_POOL || gate === GATES.INTRIGUE_BRIDGE) &&
-        gate !== GATES.DIG_DEEPER &&
-        gate !== GATES.PREPARED_DOOR &&
-        gate !== GATES.RETURN_FORK &&
-        gate !== GATES.DIAGNOSTIC_BOUNDARY;
-      closure.returnForkAvailable = next.includes("return") || next.includes("guided_chooser") || gate !== GATES.ARRIVAL;
-      closure.finalChatThreshold = gate === GATES.DIAGNOSTIC_BOUNDARY || gate === GATES.PREPARED_DOOR;
-      return closure;
-    }
-
-    if (isTrueGuidedChooser(ctx, sourceTarget, intent)) {
-      closure.preparedDoorAvailable = false;
-      closure.digDeeperAvailable = false;
-      closure.returnForkAvailable = false;
-    }
-
-    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || sourceTarget === TARGETS.DIAGNOSTIC_REFERRAL) {
-      closure.preparedDoorAvailable = true;
-      closure.digDeeperAvailable = false;
-      closure.returnForkAvailable = true;
-      closure.finalChatThreshold = true;
-    }
-
-    if (mode === BASE_POOL_MODES.RETURN) {
-      closure.preparedDoorAvailable = false;
-      closure.digDeeperAvailable = false;
-      closure.returnForkAvailable = true;
-    }
-
-    return closure;
   }
 
   function inferBasePoolMode(target, intent, context) {
-    const ctx = normalizeContext(context);
-    const identity = resolveSourceIdentity({}, ctx, ctx.conversationCoordinate);
-    const cleanTarget = normalizeTarget(target || identity.sourceTarget || "");
-    const cleanIntent = normalizeIntent(intent || ctx.intent || "");
-
-    if (ctx.basePoolMode) return sanitizeBasePoolModeForSource(cleanTarget, ctx.basePoolMode);
-    if (ctx.conversationCoordinate && ctx.conversationCoordinate.mode) return sanitizeBasePoolModeForSource(cleanTarget, ctx.conversationCoordinate.mode);
-
-    if (isTrueGuidedChooser(ctx, cleanTarget, cleanIntent)) return BASE_POOL_MODES.GUIDED_CHOOSER;
-
-    if (cleanTarget === TARGETS.DIAMOND_GATE_OVERVIEW || cleanIntent === "diamondGate") return BASE_POOL_MODES.ESTATE_OVERVIEW;
-    if (cleanTarget === TARGETS.SPLIT_INTERFACE || cleanIntent === "splitInterface") return BASE_POOL_MODES.GUIDED_CHOOSER;
-    if (cleanTarget === TARGETS.TRADITIONAL_WEBSITE || cleanIntent === "traditionalWebsite") return BASE_POOL_MODES.PUBLIC_MAP;
-    if (cleanTarget === TARGETS.NARRATIVE_PATH || cleanIntent === "narrativePath") return BASE_POOL_MODES.NARRATIVE_PATH;
-
-    if (cleanTarget === TARGETS.MISSION_OVERVIEW || cleanIntent === "mission") return BASE_POOL_MODES.MISSION;
-    if (cleanTarget === TARGETS.MISSION_INNER) return BASE_POOL_MODES.INNER_MISSION;
-    if (cleanTarget === TARGETS.MISSION_COMMUNITY) return BASE_POOL_MODES.COMMUNITY_MISSION;
-    if (cleanTarget === TARGETS.MISSION_COLLABORATION) return BASE_POOL_MODES.COLLABORATION_MISSION;
-
-    if (cleanTarget === TARGETS.PRACTICAL_RELEVANCE || cleanTarget === TARGETS.PRODUCTS || cleanIntent === "practicalRelevance") return BASE_POOL_MODES.PRACTICAL;
-    if (cleanTarget === TARGETS.SCIENTIFIC_LAW || cleanTarget === TARGETS.LAWS || cleanIntent === "scientificLaw" || cleanIntent === "laws" || cleanIntent === "proof") return BASE_POOL_MODES.PROOF;
-
-    if (cleanTarget === TARGETS.DIAGNOSTIC_REFERRAL || cleanIntent === "diagnosticReferral") return BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY;
-    if (cleanTarget === TARGETS.DIAGNOSTIC || cleanIntent === "diagnostic") return BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY;
-    if (cleanTarget === TARGETS.CHARACTER_MIRROR || cleanIntent === "characterMirror") return BASE_POOL_MODES.CHARACTER_MIRROR;
-
-    if (cleanTarget === TARGETS.MIRRORLAND || cleanIntent === "mirrorland") return BASE_POOL_MODES.MIRRORLAND;
-    if (cleanTarget === TARGETS.HEARTH || cleanIntent === "hearth") return BASE_POOL_MODES.HEARTH;
-    if (cleanTarget === TARGETS.FRONTIER || cleanIntent === "frontier") return BASE_POOL_MODES.FRONTIER;
-    if (cleanTarget === TARGETS.CHARACTERS || cleanIntent === "characters") return BASE_POOL_MODES.CHARACTERS;
-
-    if (cleanTarget === TARGETS.SEAN || cleanIntent === "sean") return BASE_POOL_MODES.CREATOR;
-    if (cleanTarget === TARGETS.UNDERDOG || cleanIntent === "underdog") return BASE_POOL_MODES.UNDERDOG;
-
-    if (cleanTarget === TARGETS.RECENTER || cleanTarget === TARGETS.CLEAN_DOOR || cleanTarget === TARGETS.RETURN_FORK || cleanTarget === TARGETS.RESTART_FORK || cleanIntent === "recenter") return BASE_POOL_MODES.RETURN;
-
-    return BASE_POOL_MODES.NONE;
+    const t = safeText(target).toLowerCase();
+    const i = safeText(intent).toLowerCase();
+    if (/diagnostic|coherence|gauge|proof|boundary|assess|score|test/.test(t + " " + i)) return BASE_POOL_MODES.DIAGNOSTIC;
+    if (/sean|summit|book|mission|elara|elora|laura/.test(t + " " + i)) return BASE_POOL_MODES.MISSION;
+    if (/product|archcoin|arc coin|auren|aurin|value|coin/.test(t + " " + i)) return BASE_POOL_MODES.PRODUCTS;
+    if (/character|mirror|atrium|jeeves|longer|deeper|trust/.test(t + " " + i)) return BASE_POOL_MODES.JEEVES_ATRIUM;
+    if (/mirrorland|narrative|digital reality|story/.test(t + " " + i)) return BASE_POOL_MODES.NARRATIVE_PATH;
+    if (/frontier|water|remote|climate|field|tarian|alaric/.test(t + " " + i)) return BASE_POOL_MODES.FRONTIER;
+    if (/platform|website|map|guide|compass/.test(t + " " + i)) return BASE_POOL_MODES.PUBLIC_MAP;
+    if (/hearth|h-earth|lab|dextrion|dexter/.test(t + " " + i)) return BASE_POOL_MODES.HEARTH;
+    return BASE_POOL_MODES.ESTATE_OVERVIEW;
   }
 
   function inferIlluminationMode(target, intent, context, basePoolMode) {
-    const ctx = normalizeContext(context);
-    if (ctx.illuminationMode) return ctx.illuminationMode;
-
-    const coordinate = ctx.conversationCoordinate;
-    if (coordinate) {
-      if (coordinate.path === "proof") return ILLUMINATION_MODES.PROOF;
-      if (coordinate.path === "practical" || coordinate.path === "frontier") return ILLUMINATION_MODES.PRACTICAL;
-      if (coordinate.path === "return") return ILLUMINATION_MODES.RETURN;
-      if (coordinate.path === "diagnostic" || coordinate.gate === GATES.DIAGNOSTIC_BOUNDARY) return ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY;
-      if (["narrative", "mission", "character", "hearth", "mirrorland", "creator"].includes(coordinate.path)) return ILLUMINATION_MODES.NARRATIVE;
-    }
-
-    const mode = sanitizeBasePoolModeForSource(target, basePoolMode || inferBasePoolMode(target, intent, ctx));
-
-    if (mode === BASE_POOL_MODES.RETURN) return ILLUMINATION_MODES.RETURN;
-    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || mode === BASE_POOL_MODES.CHARACTER_MIRROR) return ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY;
-    if (mode === BASE_POOL_MODES.PROOF) return ILLUMINATION_MODES.PROOF;
-    if (mode === BASE_POOL_MODES.PRACTICAL || mode === BASE_POOL_MODES.COLLABORATION_MISSION || mode === BASE_POOL_MODES.FRONTIER) return ILLUMINATION_MODES.PRACTICAL;
-    if (mode === BASE_POOL_MODES.GUIDED_CHOOSER) return ILLUMINATION_MODES.THRESHOLD;
-
-    if ([
-      BASE_POOL_MODES.NARRATIVE_PATH,
-      BASE_POOL_MODES.MISSION,
-      BASE_POOL_MODES.INNER_MISSION,
-      BASE_POOL_MODES.COMMUNITY_MISSION,
-      BASE_POOL_MODES.MIRRORLAND,
-      BASE_POOL_MODES.HEARTH,
-      BASE_POOL_MODES.CHARACTERS,
-      BASE_POOL_MODES.UNDERDOG
-    ].includes(mode)) return ILLUMINATION_MODES.NARRATIVE;
-
-    return ILLUMINATION_MODES.PUBLIC;
+    if (basePoolMode === BASE_POOL_MODES.MISSION) return ILLUMINATION_MODES.BORDER;
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC) return ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY;
+    if (basePoolMode === BASE_POOL_MODES.JEEVES_ATRIUM) return ILLUMINATION_MODES.ATRIUM;
+    if (basePoolMode === BASE_POOL_MODES.NARRATIVE_PATH || basePoolMode === BASE_POOL_MODES.MIRRORLAND) return ILLUMINATION_MODES.MIRRORLAND;
+    if (basePoolMode === BASE_POOL_MODES.HEARTH) return ILLUMINATION_MODES.STAGING;
+    if (basePoolMode === BASE_POOL_MODES.PUBLIC_MAP) return ILLUMINATION_MODES.COMPASS;
+    return ILLUMINATION_MODES.THRESHOLD;
   }
 
   function inferEntryStackMode(target, intent, context, basePoolMode) {
-    const ctx = normalizeContext(context);
-    const sourceTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || "");
-    if (ctx.entryStackMode) return sanitizeEntryStackModeForSource(sourceTarget, ctx.entryStackMode);
-
-    const coordinate = ctx.conversationCoordinate;
-    if (coordinate) {
-      if (coordinate.gate === GATES.ARRIVAL) return ENTRY_STACK_MODES.ENTRANCE;
-      if (coordinate.gate === GATES.SPLIT || coordinate.gate === GATES.INTENTION) return sanitizeEntryStackModeForSource(sourceTarget, ENTRY_STACK_MODES.GUIDED_CHOOSER);
-      if (coordinate.gate === GATES.DIG_DEEPER) return ENTRY_STACK_MODES.DIG_DEEPER;
-      if (coordinate.gate === GATES.PREPARED_DOOR) return ENTRY_STACK_MODES.PREPARED_DOOR;
-      if (coordinate.gate === GATES.RETURN_FORK) return ENTRY_STACK_MODES.RETURN;
-      if (coordinate.gate === GATES.CROSS_PATH_BRIDGE || coordinate.gate === GATES.INTRIGUE_BRIDGE) return ENTRY_STACK_MODES.PATH_SAMPLE;
-    }
-
-    const cleanIntent = normalizeIntent(intent || ctx.intent || "");
-    const mode = sanitizeBasePoolModeForSource(sourceTarget, basePoolMode || inferBasePoolMode(sourceTarget, cleanIntent, ctx));
-
-    if (mode === BASE_POOL_MODES.GUIDED_CHOOSER || sourceTarget === TARGETS.SPLIT_INTERFACE) return ENTRY_STACK_MODES.GUIDED_CHOOSER;
-    if (mode === BASE_POOL_MODES.RETURN || cleanIntent === "recenter") return ENTRY_STACK_MODES.RETURN;
-    if (ctx.movementIntent === "continue_current_path" || ctx.optionKind === "forward") return ENTRY_STACK_MODES.DIG_DEEPER;
-    if (ctx.movementIntent === "open_prepared_door" || ctx.optionKind === "route") return ENTRY_STACK_MODES.PREPARED_DOOR;
-    if (ctx.movementIntent === "cross_to_related_room" || ctx.optionKind === "parallel") return ENTRY_STACK_MODES.PATH_SAMPLE;
-    if (mode !== BASE_POOL_MODES.NONE) return ENTRY_STACK_MODES.BASE_POOL;
-
-    return ENTRY_STACK_MODES.PATH_SAMPLE;
+    if (/return|recenter|start over/i.test(safeText(intent))) return ENTRY_STACK_MODES.RETURN;
+    if (basePoolMode === BASE_POOL_MODES.JEEVES_ATRIUM) return ENTRY_STACK_MODES.DIG_DEEPER;
+    if (/open|take me|go to|door/i.test(safeText(intent))) return ENTRY_STACK_MODES.PREPARED_DOOR;
+    return ENTRY_STACK_MODES.BASE_POOL;
   }
 
   function rewritePromptLabel(label, target, context) {
-    let clean = safeText(label);
-    const ctx = normalizeContext(context);
-    const normalizedTarget = normalizeTarget(target);
-
-    PROMPT_REWRITES.forEach((rule) => {
-      clean = clean.replace(rule.pattern, rule.replacement);
-    });
-
-    if (isDiagnosticAssessmentRequest(label)) {
-      return TARGET_LABELS.diagnosticReferralPath;
-    }
-
-    if (isGuidedLabel(clean) && normalizedTarget === TARGETS.SPLIT_INTERFACE) {
-      return TARGET_LABELS.splitInterfaceBridgePath;
-    }
-
-    if (normalizedTarget === TARGETS.DIAGNOSTIC) return TARGET_LABELS.diagnosticPath;
-    if (normalizedTarget === TARGETS.DIAGNOSTIC_REFERRAL) return TARGET_LABELS.diagnosticReferralPath;
-
-    if (TARGET_LABELS[normalizedTarget]) {
-      const rough = /^(visit|open|launch|go to|enter)\b/i.test(clean);
-      if (rough) return TARGET_LABELS[normalizedTarget];
-    }
-
-    if (ctx.intent === "mission" && /community/i.test(clean)) return "What is the community mission?";
-    if (ctx.intent === "mission" && /practical|collaboration|teamwork/i.test(clean)) return "How does the mission become practical?";
-
-    return clean;
+    const text = sanitizePublicText(label, context, "label");
+    if (!text) return shapeRouteLabel(target, "Continue");
+    return text.replace(/backbrain|frontbrain|corpus|retrieval|source ranking/gi, "map");
   }
 
   function shapeForkBridge(input, context) {
-    const ctx = normalizeContext(context);
-    const target = normalizeTarget(ctx.sourceTarget || ctx.selectedTarget || ctx.currentNode || "");
-    const bridgeLine = shapeBridgeContextLine(ctx);
-
-    if (bridgeLine) return bridgeLine;
-
-    if (target === TARGETS.DIAMOND_GATE_OVERVIEW || ctx.intent === "diamondGate") return SPLIT_INTERFACE_COPY.bridge;
-    if (target === TARGETS.MISSION_OVERVIEW || ctx.intent === "mission") return "The mission can move inward, outward, or into practical construction.";
-    if (target === TARGETS.NARRATIVE_PATH || ctx.currentEntryLane === "narrative") return "You can stay inside the narrative path, or I can show you the public website version of this same idea.";
-    if (target === TARGETS.TRADITIONAL_WEBSITE || ctx.currentEntryLane === "traditional") return "You can stay on the public map, or I can show you the narrative version of this same idea.";
-
-    return sanitizePublicText(input || "I can keep you on this path or bridge you to the next clean door.", ctx, "bubble");
+    const text = safeText(input && input.text ? input.text : input);
+    return text || "The paths divide here. I can show you which door belongs to which guide.";
   }
 
   function shapeTransitionBridge(fromTarget, toTarget, context) {
-    const ctx = normalizeContext(context);
-    const bridgeLine = shapeBridgeContextLine(ctx);
-
-    if (bridgeLine) return bridgeLine;
-
-    const from = normalizeTarget(fromTarget || "");
-    const to = normalizeTarget(toTarget || "");
-
-    if ((from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.NARRATIVE_PATH) ||
-        (from === TARGETS.NARRATIVE_PATH && to === TARGETS.TRADITIONAL_WEBSITE)) return SPLIT_INTERFACE_COPY.bridge;
-
-    if ((from === TARGETS.TRADITIONAL_COMPASS && to === TARGETS.HEARTH) ||
-        (from === TARGETS.HEARTH && to === TARGETS.TRADITIONAL_COMPASS)) return BRIDGE_COPY.compassHearth;
-
-    if ((from === TARGETS.PRODUCTS && to === TARGETS.FRONTIER) ||
-        (from === TARGETS.FRONTIER && to === TARGETS.PRODUCTS)) return BRIDGE_COPY.productsFrontier;
-
-    if ((from === TARGETS.LAWS && to === TARGETS.SCIENTIFIC_LAW) ||
-        (from === TARGETS.SCIENTIFIC_LAW && to === TARGETS.LAWS)) return BRIDGE_COPY.lawsScientificLaw;
-
-    if ((from === TARGETS.SEAN && to === TARGETS.UNDERDOG) ||
-        (from === TARGETS.UNDERDOG && to === TARGETS.SEAN)) return BRIDGE_COPY.seanUnderdog;
-
-    if ((from === TARGETS.MISSION_OVERVIEW && to === TARGETS.NARRATIVE_PATH) ||
-        (from === TARGETS.NARRATIVE_PATH && to === TARGETS.MISSION_OVERVIEW)) return BRIDGE_COPY.missionNarrative;
-
-    if ((from === TARGETS.MIRRORLAND && to === TARGETS.TRADITIONAL_WEBSITE) ||
-        (from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.MIRRORLAND)) return BRIDGE_COPY.mirrorlandWebsite;
-
-    if ((from === TARGETS.CHARACTER_MIRROR && to === TARGETS.DIAGNOSTIC_REFERRAL) ||
-        (from === TARGETS.DIAGNOSTIC_REFERRAL && to === TARGETS.CHARACTER_MIRROR)) return BRIDGE_COPY.diagnosticCharacterMirror;
-
-    return sanitizePublicText("This is a bridge path. I can show how one side connects to the other before we move.", ctx, "bubble");
+    return "We are moving from " + shapeRouteLabel(fromTarget, "this path") + " toward " + shapeRouteLabel(toTarget, "the next room") + ".";
   }
 
   function shapePreKnowledgeBridge(input, context) {
-    const ctx = normalizeContext(context);
-    const target = normalizeTarget(ctx.sourceTarget || ctx.selectedTarget || "");
-
-    if (target === TARGETS.DIAMOND_GATE_OVERVIEW) return "Start with the whole estate before choosing a room.";
-    if (target === TARGETS.SPLIT_INTERFACE) return "Start by choosing what you are looking for. I will turn that into the right doorway.";
-    if (target === TARGETS.MISSION_OVERVIEW) return "Start with the larger mission, then choose the inner, community, or practical expression.";
-    if (target === TARGETS.DIAGNOSTIC) return DIAGNOSTIC_BOUNDARY_COPY.diagnostic;
-    if (target === TARGETS.DIAGNOSTIC_REFERRAL || target === TARGETS.CHARACTER_MIRROR) return DIAGNOSTIC_BOUNDARY_COPY.boundary;
-
-    return sanitizePublicText(input || "I’ll give the clean overview first, then the next door.", ctx, "bubble");
+    return "Before the answer, choose the room. The room matters here.";
   }
 
   function shapeBridgeContextLine(context) {
-    const ctx = normalizeContext(context);
-    const bridge = ctx.bridgeContext;
-
-    if (!bridge) return "";
-
-    const from = normalizeTarget(bridge.priorNode || "");
-    const to = normalizeTarget(bridge.sourceTarget || bridge.selectedTarget || bridge.adjacentTarget || "");
-
-    const translated = translateAdjacentReason(bridge.adjacentReason, from, to);
-    if (translated) return translated;
-
-    if ((from === TARGETS.TRADITIONAL_WEBSITE && to === TARGETS.NARRATIVE_PATH) ||
-        (from === TARGETS.NARRATIVE_PATH && to === TARGETS.TRADITIONAL_WEBSITE)) return SPLIT_INTERFACE_COPY.bridge;
-
-    if ((from === TARGETS.CHARACTER_MIRROR && to === TARGETS.DIAGNOSTIC_REFERRAL) ||
-        (from === TARGETS.DIAGNOSTIC_REFERRAL && to === TARGETS.CHARACTER_MIRROR)) return BRIDGE_COPY.diagnosticCharacterMirror;
-
-    if (to === TARGETS.DIAGNOSTIC || to === TARGETS.DIAGNOSTIC_REFERRAL) return DIAGNOSTIC_BOUNDARY_COPY.boundary;
-
-    if (bridge.bridgeMoment === "parallel_crossing" || bridge.movementIntent === "cross_to_related_room") {
-      return "This is a bridge path. I’ll show how the current room connects to the next one.";
-    }
-
-    return "";
+    const mode = context && context.basePoolMode ? context.basePoolMode : "estateOverview";
+    if (mode === BASE_POOL_MODES.MISSION) return "This is border work: platform becoming narrative.";
+    if (mode === BASE_POOL_MODES.DIAGNOSTIC) return "This is threshold work: explanation, not diagnosis.";
+    return "This is Compass work: orientation before depth.";
   }
 
   function translateAdjacentReason(reason, from, to) {
-    const clean = safeText(reason).toLowerCase();
-
-    if (!clean) return "";
-
-    if (/public website structure into the narrative path/.test(clean)) {
-      return "The public map and the narrative path are connected. I can show you how this doorway crosses over.";
-    }
-
-    if (/narrative path back to public website structure/.test(clean)) {
-      return "We can step out of the story layer and return to the public map whenever you need structure.";
-    }
-
-    if (/mission lane/.test(clean)) {
-      return "This moves into the mission lane, where the estate becomes personal, communal, and practical.";
-    }
-
-    if (/practical/.test(clean)) {
-      return "This turns the idea toward practical use, public value, and real-world application.";
-    }
-
-    if (/diagnostic boundary/.test(clean)) return DIAGNOSTIC_BOUNDARY_COPY.boundary;
-    if (from === TARGETS.PRODUCTS && to === TARGETS.FRONTIER) return BRIDGE_COPY.productsFrontier;
-    if (from === TARGETS.LAWS && to === TARGETS.SCIENTIFIC_LAW) return BRIDGE_COPY.lawsScientificLaw;
-
-    return "";
+    return safeText(reason) || "These rooms touch, but they do not do the same work.";
   }
 
   function withBridgeLead(bubbles, context) {
-    const ctx = normalizeContext(context);
-    const source = Array.isArray(bubbles) ? bubbles.slice() : [];
-    const bridgeLine = shapeBridgeContextLine(ctx);
-
-    if (!bridgeLine) return source.slice(0, 4);
-    if (!shouldLeadWithBridge(ctx)) return source.slice(0, 4);
-
-    const alreadyPresent = source.some((bubble) => safeText(bubble).toLowerCase() === bridgeLine.toLowerCase());
-    if (alreadyPresent) return source.slice(0, 4);
-
-    return [bridgeLine].concat(source).slice(0, 4);
+    const list = normalizeBubbleList(bubbles);
+    if (!shouldLeadWithBridge(context)) return list;
+    return [shapeBridgeContextLine(context)].concat(list).slice(0, 6);
   }
 
   function shouldLeadWithBridge(context) {
-    const ctx = normalizeContext(context);
-    const bridge = ctx.bridgeContext;
-
-    if (!bridge) return false;
-    if (ctx.sourceTarget === TARGETS.DIAMOND_GATE_OVERVIEW && ctx.intent === "diamondGate") return false;
-    if (isTrueGuidedChooser(ctx, ctx.sourceTarget, ctx.intent)) return false;
-
-    return bridge.bridgeMoment === "parallel_crossing" ||
-      bridge.movementIntent === "cross_to_related_room" ||
-      bridge.priorLane !== ctx.currentEntryLane ||
-      bridge.sourceTarget === TARGETS.SPLIT_INTERFACE ||
-      bridge.selectedTarget === TARGETS.SPLIT_INTERFACE ||
-      bridge.sourceTarget === TARGETS.DIAGNOSTIC_REFERRAL ||
-      bridge.selectedTarget === TARGETS.DIAGNOSTIC_REFERRAL ||
-      bridge.sourceTarget === TARGETS.DIAGNOSTIC ||
-      bridge.selectedTarget === TARGETS.DIAGNOSTIC;
+    return Boolean(context && (context.bridgeMoment || context.basePoolMode === BASE_POOL_MODES.MISSION));
   }
 
   function shapeRouteLabel(routeId, fallbackLabel) {
-    const route = safeText(routeId);
-    return ROUTE_LABELS[route] || sanitizePublicText(fallbackLabel || route || "Open Door", {}, "route");
+    const key = safeText(routeId);
+    if (ROUTE_LABEL_OVERRIDES[key]) return ROUTE_LABEL_OVERRIDES[key];
+    const targetLabel = String(key || "").replace(/([A-Z])/g, " $1").replace(/Path$/i, "").trim();
+    return targetLabel ? targetLabel.charAt(0).toUpperCase() + targetLabel.slice(1) : safeText(fallbackLabel || "Continue");
   }
 
   function shapeHandoffLabels(labels, handoffs) {
-    const shaped = {};
-
-    if (labels && typeof labels === "object") {
-      Object.keys(labels).forEach((route) => {
-        shaped[route] = shapeRouteLabel(route, labels[route]);
-      });
-    }
-
-    if (Array.isArray(handoffs)) {
-      handoffs.forEach((route) => {
-        const key = safeText(route);
-        if (!shaped[key]) shaped[key] = shapeRouteLabel(key, key);
-      });
-    }
-
-    return shaped;
+    const output = labels && typeof labels === "object" ? { ...labels } : {};
+    (Array.isArray(handoffs) ? handoffs : []).forEach(function addLabel(route) {
+      if (!output[route]) output[route] = ROUTE_LABEL_OVERRIDES[route] || shapeRouteLabel(route, "Open Door");
+    });
+    return output;
   }
 
   function sanitizePublicText(text, context, mode) {
-    let clean = safeText(text);
-    const ctx = normalizeContext(context);
-
-    if (isProtectedInterfacePhrase(clean)) return clean;
-
-    PUBLIC_LANGUAGE_REWRITES.forEach((rule) => {
-      clean = clean.replace(rule.pattern, rule.replacement);
-    });
-
-    if (mode === "option") {
-      PROMPT_REWRITES.forEach((rule) => {
-        clean = clean.replace(rule.pattern, rule.replacement);
-      });
-
-      if (isDiagnosticAssessmentRequest(clean)) clean = TARGET_LABELS.diagnosticReferralPath;
-    } else if (mode === "bubble") {
-      clean = softenDiagnosticAssessmentLanguage(clean);
-    } else {
-      PROMPT_REWRITES.forEach((rule) => {
-        clean = clean.replace(rule.pattern, rule.replacement);
-      });
-    }
-
-    if ((ctx.intent === "diagnosticReferral" || ctx.gateType === GATES.DIAGNOSTIC_BOUNDARY) && /\bI can assess\b/i.test(clean)) {
-      clean = clean.replace(/\bI can assess\b/gi, "I can explain");
-    }
-
-    clean = clean
-      .replace(/```/g, "")
-      .replace(/\s{2,}/g, " ")
-      .replace(/\s+\./g, ".")
-      .replace(/\s+,/g, ",")
-      .trim();
-
-    return clean;
+    return safeText(text)
+      .replace(/Mission corpus/gi, "the Estate material")
+      .replace(/corpus/gi, "the material here")
+      .replace(/retrieval layer/gi, "the right section")
+      .replace(/source ranking/gi, "the current path")
+      .replace(/backbrain|frontbrain/gi, "engine")
+      .replace(/PSALM authority/gi, "guiding structure");
   }
 
   function softenDiagnosticAssessmentLanguage(text) {
-    let clean = safeText(text);
-
-    clean = clean.replace(/\bI can assess you here\b/gi, "I can explain the Diagnostic and route you there");
-    clean = clean.replace(/\bI can score you here\b/gi, "I can explain the Diagnostic and route you there");
-    clean = clean.replace(/\bI can diagnose you here\b/gi, "I can explain the Diagnostic and route you there");
-    clean = clean.replace(/\bI can classify you here\b/gi, "I can explain the Diagnostic and route you there");
-    clean = clean.replace(/\bI can decide which archetype you are\b/gi, "I can explain how the Diagnostic handles alignment reads");
-    clean = clean.replace(/\bI can decide which Character you are\b/gi, "I can explain how the Character Mirror relates to the Diagnostic");
-
-    if (isDiagnosticAssessmentRequest(clean)) return DIAGNOSTIC_BOUNDARY_COPY.boundary;
-
-    return clean;
+    return safeText(text).replace(/I can diagnose/gi, "I can route").replace(/I will assess/gi, "I will explain the threshold for");
   }
 
   function isProtectedInterfacePhrase(text) {
-    const clean = safeText(text);
-    return PROTECTED_INTERFACE_PHRASES.some((phrase) => phrase === clean);
+    return /compass|atrium|mirrorland|elara|soren|jeeves/i.test(safeText(text));
   }
 
   function shapeInterfaceState(stateName) {
-    const key = safeText(stateName);
-    return INTERFACE_STATE_COPY[key] || "";
+    const key = safeText(stateName).toLowerCase();
+    if (/listen/.test(key)) return INTERFACE_STATE_COPY.listening;
+    if (/typ/.test(key)) return INTERFACE_STATE_COPY.typing;
+    if (/read/.test(key)) return INTERFACE_STATE_COPY.reading;
+    if (/ready/.test(key)) return INTERFACE_STATE_COPY.ready;
+    return INTERFACE_STATE_COPY.idle;
   }
 
   function shouldUseTrainingWheels(context) {
-    const ctx = normalizeContext(context);
-
-    return ctx.gateType === GATES.ARRIVAL ||
-      isTrueGuidedChooser(ctx, ctx.sourceTarget, ctx.intent) ||
-      ctx.intent === "diamondGate" ||
-      ctx.currentConversationStage === "entrance_overview" ||
-      ctx.currentConversationStage === "split_interface_gate";
+    return Boolean(context && (context.firstVisit || context.entryStackMode === ENTRY_STACK_MODES.ENTRANCE));
   }
 
   function shapeEntranceOptions() {
-    return [
-      makeStaticOption("Can you help me choose where to start?", TARGETS.SPLIT_INTERFACE, "story_prompt", "story_entry", "entrance_fork", "ask_jeeves", "objective"),
-      makeStaticOption("What is the traditional website for?", TARGETS.TRADITIONAL_WEBSITE, "story_prompt", "story_entry", "entrance_fork", "ask_jeeves", "objective"),
-      makeStaticOption("What can I actually do here?", TARGETS.PRACTICAL_RELEVANCE, "practical_prompt", "practical_entry", "entrance_fork", "ask_jeeves", "objective"),
-      makeStaticOption("What is the narrative path?", TARGETS.NARRATIVE_PATH, "story_prompt", "story_entry", "entrance_fork", "ask_jeeves", "narrative"),
-      makeStaticOption("What is the mission behind this?", TARGETS.MISSION_OVERVIEW, "personal_prompt", "personal_entry", "entrance_fork", "ask_jeeves", "narrative")
-    ];
+    return shapeOptions([
+      makeStaticOption("Show me the Compass", TARGETS.TRADITIONAL_COMPASS, "orientation", "compass", "before_knowledge", "ask_jeeves", "compass"),
+      makeStaticOption("Meet Elara at the border", TARGETS.SEAN, "border", "mission", "before_knowledge", "open_prepared_door", "mission"),
+      makeStaticOption("Enter the Character Atrium", TARGETS.CHARACTERS, "atrium", "character", "after_persistence", "open_prepared_door", "character")
+    ], {});
   }
 
   function shapeGuidedChooserOptions() {
-    return DIRECTIONAL_CHOOSER_OPTIONS.slice();
+    return shapeEntranceOptions();
   }
 
   function shapeMissionOptions() {
-    return [
-      makeStaticOption("What is the inner mission?", TARGETS.MISSION_INNER, "personal_prompt", "personal_entry", "before_knowledge", "ask_jeeves", "narrative"),
-      makeStaticOption("What is the community mission?", TARGETS.MISSION_COMMUNITY, "personal_prompt", "personal_entry", "before_knowledge", "ask_jeeves", "narrative"),
-      makeStaticOption("How does the mission become practical?", TARGETS.MISSION_COLLABORATION, "practical_prompt", "practical_entry", "before_knowledge", "ask_jeeves", "objective"),
-      makeStaticOption("How does this connect to Mirrorland?", TARGETS.NARRATIVE_PATH, "story_prompt", "story_entry", "parallel_crossing", "cross_to_related_room", "narrative")
-    ];
+    return shapeOptions([
+      makeStaticOption("Meet Sean with Elara", TARGETS.SEAN, "border", "mission", "before_knowledge", "open_prepared_door", "mission"),
+      makeStaticOption("Open the Nine Summits", TARGETS.NARRATIVE_PATH, "border", "mission", "before_knowledge", "open_prepared_door", "mission"),
+      makeReturnForkOption(BASE_POOL_MODES.MISSION)
+    ], {});
   }
 
   function shapeDiagnosticBoundaryOptions() {
-    return [
-      makeStaticOption("What is the Coherence Diagnostic?", TARGETS.DIAGNOSTIC, "personal_prompt", "personal_entry", "before_knowledge", "ask_jeeves", "objective"),
-      makeStaticOption("Where can I take the alignment diagnostic?", TARGETS.DIAGNOSTIC_REFERRAL, "personal_prompt", "personal_entry", "before_knowledge", "ask_jeeves", "objective"),
-      makeStaticOption("What does the Character Mirror show?", TARGETS.CHARACTER_MIRROR, "story_prompt", "story_entry", "before_knowledge", "ask_jeeves", "narrative"),
-      makeStaticOption("How does this connect to the narrative path?", TARGETS.NARRATIVE_PATH, "story_prompt", "story_entry", "parallel_crossing", "cross_to_related_room", "narrative")
-    ];
+    return shapeOptions([
+      makeStaticOption("Open the Diagnostic", TARGETS.DIAGNOSTIC, "diagnostic", "boundary", "before_knowledge", "open_prepared_door", "diagnostic"),
+      makeStaticOption("Open the Proof Gauges", TARGETS.LAWS, "proof", "boundary", "before_knowledge", "open_prepared_door", "diagnostic"),
+      makeReturnForkOption(BASE_POOL_MODES.DIAGNOSTIC)
+    ], {});
   }
 
-  function makeStaticOption(label, target, promptMode, archetypeAlignment, bridgeMoment, movementIntent, scopeLane) {
-    const normalizedTarget = normalizeTarget(target);
-
-    const option = {
-      label,
-      target: normalizedTarget,
-      selectedTarget: normalizedTarget,
-      sourceTarget: normalizedTarget,
-      activeTarget: normalizedTarget,
-      type: "conversation",
-      scopeLane,
-      promptMode,
-      optionKind: "conversation_prompt",
-      archetypeAlignment,
-      bridgeMoment,
-      movementIntent,
-      sourceStabilityLaw: SOURCE_STABILITY_LAW
+  function makeStaticOption(label, target, promptMode, archetypeAlignment, bridgeMoment, movementIntent, scopeLane, extra) {
+    const extension = extra && typeof extra === "object" ? extra : {};
+    return {
+      ...extension,
+      label: safeText(label),
+      target: normalizeTarget(target),
+      sourceTarget: normalizeTarget(extension.sourceTarget || target),
+      activeTarget: normalizeTarget(extension.activeTarget || target),
+      type: safeText(extension.type || "conversation"),
+      promptMode: safeText(promptMode || extension.promptMode || "orientation"),
+      archetypeAlignment: safeText(archetypeAlignment || extension.archetypeAlignment || "compass"),
+      bridgeMoment: safeText(bridgeMoment || extension.bridgeMoment || "before_knowledge"),
+      movementIntent: safeText(movementIntent || extension.movementIntent || "ask_jeeves"),
+      scopeLane: safeText(scopeLane || extension.scopeLane || inferScopeLaneFromTarget(target)),
+      optionKind: safeText(extension.optionKind || "conversation_prompt"),
+      noRepeat: true
     };
-
-    option.conversationCoordinate = buildOptionCoordinate(option, {});
-    option.gateType = option.conversationCoordinate.gate;
-    option.pathFamily = option.conversationCoordinate.path;
-    option.dialectMode = option.conversationCoordinate.dialect;
-    option.contextExpectation = option.conversationCoordinate.expectation;
-    option.noRepeat = option.conversationCoordinate.noRepeat;
-
-    return option;
   }
 
   function inferBridgeMomentFromContext(context) {
-    const ctx = normalizeContext(context);
-    if (ctx.bridgeContext && ctx.bridgeContext.bridgeMoment) return ctx.bridgeContext.bridgeMoment;
-    if (ctx.bridgeMoment) return ctx.bridgeMoment;
-    return "before_knowledge";
+    return safeText(context && context.bridgeMoment) || "before_knowledge";
   }
 
   function inferPromptModeFromPool(basePoolMode) {
-    if (basePoolMode === BASE_POOL_MODES.PROOF) return "skeptic_prompt";
-    if (basePoolMode === BASE_POOL_MODES.PRACTICAL || basePoolMode === BASE_POOL_MODES.FRONTIER || basePoolMode === BASE_POOL_MODES.COLLABORATION_MISSION) return "practical_prompt";
-    if (basePoolMode === BASE_POOL_MODES.MISSION || basePoolMode === BASE_POOL_MODES.INNER_MISSION || basePoolMode === BASE_POOL_MODES.COMMUNITY_MISSION || basePoolMode === BASE_POOL_MODES.UNDERDOG || basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY) return "personal_prompt";
-    if (basePoolMode === BASE_POOL_MODES.RETURN) return "recenter_prompt";
-    return "story_prompt";
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC) return "diagnostic_boundary";
+    if (basePoolMode === BASE_POOL_MODES.MISSION) return "border";
+    if (basePoolMode === BASE_POOL_MODES.JEEVES_ATRIUM) return "atrium";
+    return "orientation";
   }
 
   function inferAlignmentFromPool(basePoolMode) {
-    if (basePoolMode === BASE_POOL_MODES.PROOF) return "proof_entry";
-    if (basePoolMode === BASE_POOL_MODES.PRACTICAL || basePoolMode === BASE_POOL_MODES.FRONTIER || basePoolMode === BASE_POOL_MODES.COLLABORATION_MISSION) return "practical_entry";
-    if (basePoolMode === BASE_POOL_MODES.MISSION || basePoolMode === BASE_POOL_MODES.INNER_MISSION || basePoolMode === BASE_POOL_MODES.COMMUNITY_MISSION || basePoolMode === BASE_POOL_MODES.UNDERDOG || basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY) return "personal_entry";
-    if (basePoolMode === BASE_POOL_MODES.CREATOR) return "source_entry";
-    if (basePoolMode === BASE_POOL_MODES.RETURN) return "unknown_entry";
-    return "story_entry";
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC) return "boundary";
+    if (basePoolMode === BASE_POOL_MODES.MISSION) return "signal";
+    if (basePoolMode === BASE_POOL_MODES.FRONTIER) return "field";
+    return "compass";
   }
 
   function inferScopeLaneFromTarget(target) {
-    const clean = normalizeTarget(target);
-
-    if ([
-      TARGETS.NARRATIVE_PATH,
-      TARGETS.MISSION_OVERVIEW,
-      TARGETS.MISSION_INNER,
-      TARGETS.MISSION_COMMUNITY,
-      TARGETS.MISSION_COLLABORATION,
-      TARGETS.MIRRORLAND,
-      TARGETS.HEARTH,
-      TARGETS.FRONTIER,
-      TARGETS.CHARACTERS,
-      TARGETS.CHARACTER_MIRROR,
-      TARGETS.UNDERDOG
-    ].includes(clean)) return "narrative";
-
-    return "objective";
+    const text = safeText(target).toLowerCase();
+    if (/sean|summit|mission/.test(text)) return "mission";
+    if (/diagnostic|gauge|law/.test(text)) return "diagnostic";
+    if (/character|mirror|atrium/.test(text)) return "character";
+    if (/frontier|water|remote/.test(text)) return "frontier";
+    if (/product|coin/.test(text)) return "products";
+    return "compass";
   }
 
   function isTrueGuidedChooser(context, target, intent) {
-    const ctx = normalizeContext(context);
-    const sourceTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || "");
-    const cleanIntent = normalizeIntent(intent || ctx.intent || "");
-    const selectedLabel = safeText(ctx.selectedLabel).toLowerCase();
-
-    if (sourceTarget === TARGETS.SPLIT_INTERFACE) return true;
-    if (cleanIntent === "guidedEntrance") return true;
-
-    return isGuidedLabel(selectedLabel);
+    return isGuidedChooserRequest(target, intent, context);
   }
 
   function isGuidedChooserRequest(target, intent, context) {
-    return isTrueGuidedChooser(context, target, intent);
+    return /where|begin|start|choose|guide|compass|lost/i.test(safeText(intent) + " " + safeText(target));
   }
 
   function isGuidedLabel(label) {
-    const value = safeText(label).toLowerCase();
-    return /\b(help me choose|choose where to start|where should i start|need guidance|guide me|not sure where to start|where do i begin)\b/.test(value);
+    return /where|begin|start|guide|choose|compass/i.test(safeText(label));
   }
 
   function isDiagnosticBoundaryState(target, intent, context, basePoolMode, gate) {
-    const ctx = normalizeContext(context);
-    const cleanTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || "");
-    const cleanIntent = normalizeIntent(intent || ctx.intent || "");
-    const mode = safeText(basePoolMode || ctx.basePoolMode || "");
-    const cleanGate = safeText(gate || ctx.gateType || "");
-
-    return cleanGate === GATES.DIAGNOSTIC_BOUNDARY ||
-      mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY ||
-      mode === BASE_POOL_MODES.CHARACTER_MIRROR ||
-      cleanTarget === TARGETS.DIAGNOSTIC_REFERRAL ||
-      cleanTarget === TARGETS.DIAGNOSTIC ||
-      cleanTarget === TARGETS.CHARACTER_MIRROR ||
-      cleanIntent === "diagnosticReferral" ||
-      cleanIntent === "diagnostic" ||
-      cleanIntent === "characterMirror";
+    return basePoolMode === BASE_POOL_MODES.DIAGNOSTIC || gate === GATES.DIAGNOSTIC_BOUNDARY || isDiagnosticAssessmentRequest(intent);
   }
 
   function isDiagnosticAssessmentRequest(text) {
-    const value = safeText(text).toLowerCase();
-
-    return /\b(which archetype am i|what archetype am i|which character am i|what character am i|which character am i most like|what character am i most like|assess me|score me|diagnose me|classify me|type me|run the mirror question|ask me the first mirror question|ask me the second mirror question|ask me the third mirror question|first mirror question|second mirror question|third mirror question)\b/.test(value);
+    return /diagnose me|assess me|score me|what archetype am i|which character am i|classify me|test me|coherence score/i.test(safeText(text));
   }
 
   function isDiagnosticExplanationRequest(text) {
-    const value = safeText(text).toLowerCase();
-    return /\b(what is|explain|tell me about|how does|where does).*\b(coherence diagnostic|diagnostic|character mirror)\b/.test(value);
+    return /what is the diagnostic|explain.*diagnostic|how.*diagnostic|why.*diagnostic/i.test(safeText(text));
   }
 
   function isDiagnosticAssessmentTarget(target) {
-    const raw = safeText(target);
-    const clean = normalizeTarget(raw);
+    return /diagnostic|coherence|assessment|score/i.test(safeText(target));
+  }
 
-    return [
-      "characterArchetypeQuestionOne",
-      "characterArchetypeQuestionTwo",
-      "characterArchetypeQuestionThree",
-      "characterArchetypeResult",
-      "characterMirrorQuestionOne",
-      "characterMirrorQuestionTwo",
-      "characterMirrorQuestionThree",
-      "characterMirrorResult"
-    ].includes(raw) || clean === TARGETS.DIAGNOSTIC_REFERRAL;
+  function isPlatformRealityRequest(text) {
+    return /digital platform|digital reality|website.*world|platform.*reality|mirrorland.*border/i.test(safeText(text));
+  }
+
+  function inferAgent(target, intent, context, frame) {
+    const haystack = [target, intent, context && context.text, context && context.prompt, frame && frame.prompt, frame && frame.userText].map(safeText).join(" ").toLowerCase();
+    const agents = [AGENTS.elara, AGENTS.soren, AGENTS.auren, AGENTS.dextrion, AGENTS.alaric, AGENTS.tarian, AGENTS.remoteTeam];
+    for (let i = 0; i < agents.length; i += 1) {
+      const agent = agents[i];
+      const owns = (agent.owns || []).concat(agent.aliases || []);
+      for (let j = 0; j < owns.length; j += 1) {
+        if (owns[j] && haystack.indexOf(String(owns[j]).toLowerCase()) >= 0) return agent;
+      }
+    }
+    return AGENTS.jeeves;
+  }
+
+  function inferEscalation(intent, context, frame) {
+    const text = [intent, context && context.text, context && context.prompt, frame && frame.prompt, frame && frame.lastUserText].map(safeText).join(" ").toLowerCase();
+    if (/longer|deeper|inside|atrium|trust|tell me anyway|press|persistent|again|more detail|map behind the map/.test(text)) return 2;
+    if (/why|explain|more|not enough|keep going/.test(text)) return 1;
+    return 0;
+  }
+
+  function inferHandoffs(agent, target, escalation, source) {
+    const chosen = agent || AGENTS.jeeves;
+    if (Array.isArray(source && source.handoffs) && source.handoffs.length) return source.handoffs;
+    if (escalation >= 2) return [ROUTES.CHARACTERS];
+    if (chosen.id === "elara") return [ROUTES.MEET_SEAN, ROUTES.NINE_SUMMITS];
+    if (chosen.id === "auren") return [ROUTES.PRODUCTS];
+    if (chosen.id === "soren") return [ROUTES.COHERENCE_DIAGNOSTIC, ROUTES.GAUGES];
+    if (chosen.id === "dextrion") return [ROUTES.H_EARTH, ROUTES.GAUGES];
+    if (chosen.id === "alaric") return [ROUTES.FRONTIER];
+    if (chosen.id === "tarian") return [ROUTES.FRONTIER_WATER];
+    if (chosen.id === "remoteTeam") return [ROUTES.FRONTIER_VISION];
+    if (/character|atrium|mirror/i.test(safeText(target))) return [ROUTES.CHARACTERS];
+    return [ROUTES.MEET_SEAN, ROUTES.CHARACTERS, ROUTES.COHERENCE_DIAGNOSTIC];
+  }
+
+  function shouldOverrideGenericBubbles(bubbles, intent, source, context) {
+    if (!Array.isArray(bubbles) || !bubbles.length) return true;
+    const joined = bubbles.join(" ").toLowerCase();
+    if (/api fallback|fallback|undefined|null/.test(joined)) return true;
+    if (isDiagnosticAssessmentRequest(intent) && !/will not diagnose|diagnostic|soren/i.test(joined)) return true;
+    return false;
   }
 
   function normalizeBubbleList(value) {
     if (!Array.isArray(value)) return [];
-    return value.map((item) => safeText(item)).filter(Boolean).slice(0, 4);
+    return value.map(safeText).filter(Boolean).slice(0, 6);
   }
 
   function sanitizeBubbleList(value, context) {
-    return normalizeBubbleList(value).map((item) => sanitizePublicText(item, context, "bubble"));
+    return normalizeBubbleList(value).map(function sanitizeBubble(text) {
+      const cleaned = sanitizePublicText(text, context, "bubble");
+      return isDiagnosticAssessmentRequest(cleaned) ? softenDiagnosticAssessmentLanguage(cleaned) : cleaned;
+    });
+  }
+
+  function normalizeOptions(value, context) {
+    if (!Array.isArray(value)) return [];
+    return value.map(function normalizeOne(option) {
+      return shapeOption(option, context || {});
+    }).filter(Boolean);
   }
 
   function normalizeTarget(target) {
-    const clean = safeText(target);
-
-    const aliases = {
-      characterArchetypeMirrorPath: TARGETS.CHARACTER_MIRROR,
-      characterMirrorPath: TARGETS.CHARACTER_MIRROR,
-      selfLearningPath: TARGETS.DIAGNOSTIC_REFERRAL,
-      mirrorMePath: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterArchetypeQuestionOne: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterArchetypeQuestionTwo: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterArchetypeQuestionThree: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterArchetypeResult: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterMirrorQuestionOne: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterMirrorQuestionTwo: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterMirrorQuestionThree: TARGETS.DIAGNOSTIC_REFERRAL,
-      characterMirrorResult: TARGETS.DIAGNOSTIC_REFERRAL,
-      missionPath: TARGETS.MISSION_OVERVIEW,
-      websitePath: TARGETS.DIAMOND_GATE_OVERVIEW,
-      siteOverviewPath: TARGETS.DIAMOND_GATE_OVERVIEW,
-      traditionalPath: TARGETS.TRADITIONAL_WEBSITE,
-      narrativeOverviewPath: TARGETS.NARRATIVE_PATH,
-      whereToStart: TARGETS.SPLIT_INTERFACE,
-      guidedChooserPath: TARGETS.SPLIT_INTERFACE,
-      startGuidePath: TARGETS.SPLIT_INTERFACE,
-      returnForkPath: TARGETS.RETURN_FORK,
-      restartForkPath: TARGETS.RESTART_FORK
-    };
-
-    return aliases[clean] || clean;
+    return safeText(target || TARGETS.DIAMOND_GATE_OVERVIEW);
   }
 
   function normalizeIntent(intent) {
-    const clean = safeText(intent);
-
-    const aliases = {
-      characterArchetypeMirror: "diagnosticReferral",
-      diamondGateBridge: "diamondGate",
-      traditional: "traditionalWebsite",
-      narrative: "narrativePath",
-      guidedChooser: "splitInterface",
-      whereToStart: "splitInterface"
-    };
-
-    return aliases[clean] || clean;
+    return safeText(intent);
   }
 
   function normalizeContext(context) {
-    const source = context && typeof context === "object" ? context : {};
-    const coordinate = normalizeCoordinate(source.conversationCoordinate || null);
-
-    const selectedTarget = normalizeTarget(source.selectedTarget || source.target || (coordinate && coordinate.target) || "");
-    const sourceTarget = normalizeTarget(
-      source.sourceTarget ||
-      (coordinate && coordinate.sourceTarget) ||
-      selectedTarget ||
-      ""
-    );
-    const activeTarget = normalizeTarget(
-      source.activeTarget ||
-      (coordinate && coordinate.activeTarget) ||
-      selectedTarget ||
-      sourceTarget ||
-      ""
-    );
-
-    return {
-      intent: normalizeIntent(source.intent || ""),
-      selectedTarget,
-      sourceTarget,
-      activeTarget,
-      selectedLabel: safeText(source.selectedLabel || source.label || ""),
-      currentNode: normalizeTarget(source.currentNode || ""),
-      currentPath: normalizeTarget(source.currentPath || ""),
-      currentEntryLane: safeText(source.currentEntryLane || source.entryLane || ""),
-      lastLane: safeText(source.lastLane || ""),
-      currentConversationStage: safeText(source.currentConversationStage || source.conversationStage || ""),
-      promptMode: safeText(source.promptMode || ""),
-      optionKind: safeText(source.optionKind || ""),
-      bridgeMoment: safeText(source.bridgeMoment || ""),
-      movementIntent: safeText(source.movementIntent || ""),
-
-      conversationCoordinate: coordinate,
-      gateType: safeText(source.gateType || (coordinate && coordinate.gate) || ""),
-      pathFamily: safeText(source.pathFamily || (coordinate && coordinate.path) || ""),
-      dialectMode: safeText(source.dialectMode || (coordinate && coordinate.dialect) || ""),
-      contextExpectation: safeText(source.contextExpectation || (coordinate && coordinate.expectation) || ""),
-      noRepeat: typeof source.noRepeat === "boolean" ? source.noRepeat : Boolean(coordinate && coordinate.noRepeat),
-
-      entryStackMode: safeText(source.entryStackMode || ""),
-      basePoolMode: safeText(source.basePoolMode || (coordinate && coordinate.mode) || ""),
-      illuminationMode: safeText(source.illuminationMode || ""),
-      choiceClosure: source.choiceClosure && typeof source.choiceClosure === "object" ? source.choiceClosure : null,
-      bridgeContext: normalizeBridgeContext(source.bridgeContext || null),
-      sourceStabilityLaw: source.sourceStabilityLaw && typeof source.sourceStabilityLaw === "object"
-        ? source.sourceStabilityLaw
-        : SOURCE_STABILITY_LAW
-    };
+    return context && typeof context === "object" ? { ...context } : {};
   }
 
   function normalizeCoordinate(value) {
     if (!value || typeof value !== "object") return null;
-
+    const target = normalizeTarget(value.target || value.activeTarget || value.sourceTarget || TARGETS.DIAMOND_GATE_OVERVIEW);
     return {
       step: safeNumber(value.step, 5),
       priorStep: safeNumber(value.priorStep, 0),
-      gate: safeText(value.gate || ""),
-      path: safeText(value.path || ""),
-      mode: safeText(value.mode || ""),
-      dialect: safeText(value.dialect || ""),
-      expectation: safeText(value.expectation || ""),
-      sourceTarget: normalizeTarget(value.sourceTarget || value.target || ""),
-      activeTarget: normalizeTarget(value.activeTarget || value.target || value.sourceTarget || ""),
-      target: normalizeTarget(value.target || ""),
+      gate: safeText(value.gate || GATES.BASE_POOL),
+      path: safeText(value.path || inferPathFamily(target, "", value.mode)),
+      mode: safeText(value.mode || value.basePoolMode || BASE_POOL_MODES.ESTATE_OVERVIEW),
+      dialect: safeText(value.dialect || "estate_host"),
+      expectation: safeText(value.expectation || "orientation_before_entry"),
+      sourceTarget: normalizeTarget(value.sourceTarget || target),
+      activeTarget: normalizeTarget(value.activeTarget || target),
+      target,
       destination: safeText(value.destination || ""),
       next: Array.isArray(value.next) ? value.next.map(safeText).filter(Boolean).slice(0, 10) : [],
-      noRepeat: Boolean(value.noRepeat)
+      noRepeat: typeof value.noRepeat === "boolean" ? value.noRepeat : true
     };
   }
 
   function normalizeBridgeContext(value) {
-    if (!value || typeof value !== "object") return null;
-
-    const selectedTarget = normalizeTarget(value.selectedTarget || "");
-    const sourceTarget = normalizeTarget(value.sourceTarget || selectedTarget || "");
-    const activeTarget = normalizeTarget(value.activeTarget || selectedTarget || sourceTarget || "");
-
-    return {
-      currentNode: normalizeTarget(value.currentNode || ""),
-      priorNode: normalizeTarget(value.priorNode || ""),
-      priorLane: safeText(value.priorLane || ""),
-      priorTopic: safeText(value.priorTopic || ""),
-      selectedTarget,
-      sourceTarget,
-      activeTarget,
-      selectedLabel: safeText(value.selectedLabel || ""),
-      promptMode: safeText(value.promptMode || ""),
-      optionKind: safeText(value.optionKind || ""),
-      archetypeAlignment: safeText(value.archetypeAlignment || ""),
-      bridgeMoment: safeText(value.bridgeMoment || ""),
-      movementIntent: safeText(value.movementIntent || ""),
-      currentTopic: safeText(value.currentTopic || ""),
-      currentScopeStage: safeText(value.currentScopeStage || ""),
-      adjacentTarget: normalizeTarget(value.adjacentTarget || ""),
-      adjacentLabel: safeText(value.adjacentLabel || ""),
-      adjacentReason: safeText(value.adjacentReason || "")
-    };
+    return value && typeof value === "object" ? { ...value } : {};
   }
 
   function resolveSourceIdentity(frame, context, coordinate) {
     const source = frame && typeof frame === "object" ? frame : {};
-    const ctx = normalizeContext(context);
-    const coord = normalizeCoordinate(coordinate || ctx.conversationCoordinate || null);
-
-    const selectedTarget = normalizeTarget(
-      source.selectedTarget ||
-      ctx.selectedTarget ||
-      (coord && coord.target) ||
-      ""
-    );
-
-    const sourceTarget = normalizeTarget(
-      source.sourceTarget ||
-      ctx.sourceTarget ||
-      (coord && coord.sourceTarget) ||
-      selectedTarget ||
-      TARGETS.DIAMOND_GATE_OVERVIEW
-    );
-
-    const activeTarget = normalizeTarget(
-      source.activeTarget ||
-      ctx.activeTarget ||
-      (coord && coord.activeTarget) ||
-      selectedTarget ||
-      sourceTarget ||
-      TARGETS.DIAMOND_GATE_OVERVIEW
-    );
-
-    return {
-      selectedTarget,
-      sourceTarget,
-      activeTarget
-    };
+    const ctx = context && typeof context === "object" ? context : {};
+    const c = normalizeCoordinate(coordinate) || null;
+    const selectedTarget = normalizeTarget(source.selectedTarget || ctx.selectedTarget || source.target || (c && c.target) || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const sourceTarget = normalizeTarget(source.sourceTarget || ctx.sourceTarget || (c && c.sourceTarget) || selectedTarget);
+    const activeTarget = normalizeTarget(source.activeTarget || ctx.activeTarget || (c && c.activeTarget) || selectedTarget);
+    return { selectedTarget, sourceTarget, activeTarget };
   }
 
   function ensureSourceStableCoordinate(coordinate, identityInput) {
-    const identitySource = identityInput && typeof identityInput === "object" ? identityInput : {};
-    const normalized = normalizeCoordinate(coordinate || null) || {};
-    const selectedTarget = normalizeTarget(identitySource.selectedTarget || normalized.target || "");
-    const sourceTarget = normalizeTarget(identitySource.sourceTarget || normalized.sourceTarget || selectedTarget || TARGETS.DIAMOND_GATE_OVERVIEW);
-    const activeTarget = normalizeTarget(identitySource.activeTarget || normalized.activeTarget || selectedTarget || sourceTarget || TARGETS.DIAMOND_GATE_OVERVIEW);
-
-    let gate = safeText(normalized.gate || "");
-    let mode = safeText(normalized.mode || "");
-
-    gate = sanitizeGateForSource(sourceTarget, gate, identitySource);
-    mode = sanitizeBasePoolModeForSource(sourceTarget, mode || inferBasePoolMode(sourceTarget, identitySource.intent || "", identitySource));
-
+    const identity = identityInput && typeof identityInput === "object" ? identityInput : {};
+    const base = normalizeCoordinate(coordinate) || buildFallbackCoordinate(identity.activeTarget || identity.selectedTarget || identity.sourceTarget, identity);
+    const selectedTarget = normalizeTarget(identity.selectedTarget || base.target || base.activeTarget);
+    const sourceTarget = normalizeTarget(identity.sourceTarget || base.sourceTarget || selectedTarget);
+    const activeTarget = normalizeTarget(identity.activeTarget || base.activeTarget || selectedTarget);
+    const gate = safeText(base.gate || inferGateFromContext(activeTarget, "", identity, identity.entryStackMode, identity.basePoolMode));
     return {
-      step: safeNumber(normalized.step, stepForGate(gate || GATES.BASE_POOL)),
-      priorStep: safeNumber(normalized.priorStep, priorStepForGate(gate || GATES.BASE_POOL)),
-      gate: gate || GATES.BASE_POOL,
-      path: safeText(normalized.path || inferPathFamily(sourceTarget, identitySource.intent || "", mode)),
-      mode,
-      dialect: safeText(normalized.dialect || inferDialectMode(sourceTarget, identitySource.intent || "", mode, identitySource.illuminationMode || "")),
-      expectation: safeText(normalized.expectation || inferExpectation(gate || GATES.BASE_POOL)),
+      ...base,
+      target: selectedTarget,
       sourceTarget,
       activeTarget,
-      target: selectedTarget,
-      destination: safeText(normalized.destination || ""),
-      next: Array.isArray(normalized.next) && normalized.next.length ? normalized.next.slice(0, 10) : nextForGate(gate || GATES.BASE_POOL, inferPathFamily(sourceTarget, identitySource.intent || "", mode)),
-      noRepeat: Boolean(normalized.noRepeat || isNoRepeatGate(gate))
+      gate,
+      path: safeText(base.path || inferPathFamily(activeTarget, "", identity.basePoolMode)),
+      mode: safeText(base.mode || identity.basePoolMode || BASE_POOL_MODES.ESTATE_OVERVIEW),
+      dialect: safeText(base.dialect || inferDialectMode(activeTarget, "", identity.basePoolMode, identity.illuminationMode)),
+      expectation: safeText(base.expectation || inferExpectation(gate)),
+      noRepeat: typeof base.noRepeat === "boolean" ? base.noRepeat : true
     };
   }
 
   function sanitizeGuidedChooserState(context) {
-    const ctx = normalizeContext(context);
-    const sourceTarget = normalizeTarget(ctx.sourceTarget || ctx.selectedTarget || "");
-    const gateType = sanitizeGateForSource(sourceTarget, ctx.gateType, ctx);
-    const basePoolMode = sanitizeBasePoolModeForSource(sourceTarget, ctx.basePoolMode);
-    const entryStackMode = sanitizeEntryStackModeForSource(sourceTarget, ctx.entryStackMode);
-
-    return {
-      ...ctx,
-      gateType,
-      basePoolMode,
-      entryStackMode,
-      conversationCoordinate: ctx.conversationCoordinate
-        ? ensureSourceStableCoordinate({
-          ...ctx.conversationCoordinate,
-          gate: gateType || ctx.conversationCoordinate.gate,
-          mode: basePoolMode || ctx.conversationCoordinate.mode
-        }, {
-          ...ctx,
-          sourceTarget
-        })
-        : null
-    };
+    return context && typeof context === "object" ? { ...context, guidedChooserSanitized: true } : { guidedChooserSanitized: true };
   }
 
   function sanitizeGateForSource(sourceTarget, gate, context) {
-    const cleanGate = safeText(gate);
-    const cleanSource = normalizeTarget(sourceTarget);
-    const ctx = normalizeContext(context);
-
-    if (
-      cleanSource !== TARGETS.SPLIT_INTERFACE &&
-      (cleanGate === GATES.INTENTION || cleanGate === GATES.SPLIT) &&
-      !isGuidedLabel(ctx.selectedLabel)
-    ) {
-      return GATES.BASE_POOL;
-    }
-
-    return cleanGate;
+    return safeText(gate || GATES.BASE_POOL);
   }
 
   function sanitizeBasePoolModeForSource(sourceTarget, mode) {
-    const cleanSource = normalizeTarget(sourceTarget);
-    const cleanMode = safeText(mode);
-
-    if (cleanSource !== TARGETS.SPLIT_INTERFACE && cleanMode === BASE_POOL_MODES.GUIDED_CHOOSER) {
-      return inferBasePoolModeFromTarget(cleanSource);
-    }
-
-    return cleanMode;
+    return safeText(mode || inferBasePoolModeFromTarget(sourceTarget));
   }
 
   function sanitizeEntryStackModeForSource(sourceTarget, mode) {
-    const cleanSource = normalizeTarget(sourceTarget);
-    const cleanMode = safeText(mode);
-
-    if (cleanSource !== TARGETS.SPLIT_INTERFACE && cleanMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) {
-      return ENTRY_STACK_MODES.BASE_POOL;
-    }
-
-    return cleanMode;
+    return safeText(mode || ENTRY_STACK_MODES.BASE_POOL);
   }
 
   function inferBasePoolModeFromTarget(target) {
-    const cleanTarget = normalizeTarget(target);
-
-    if (cleanTarget === TARGETS.SPLIT_INTERFACE) return BASE_POOL_MODES.GUIDED_CHOOSER;
-    if (cleanTarget === TARGETS.DIAMOND_GATE_OVERVIEW) return BASE_POOL_MODES.ESTATE_OVERVIEW;
-    if (cleanTarget === TARGETS.TRADITIONAL_WEBSITE || cleanTarget === TARGETS.TRADITIONAL_COMPASS) return BASE_POOL_MODES.PUBLIC_MAP;
-    if (cleanTarget === TARGETS.NARRATIVE_PATH) return BASE_POOL_MODES.NARRATIVE_PATH;
-    if (cleanTarget === TARGETS.MISSION_INNER) return BASE_POOL_MODES.INNER_MISSION;
-    if (cleanTarget === TARGETS.MISSION_COMMUNITY) return BASE_POOL_MODES.COMMUNITY_MISSION;
-    if (cleanTarget === TARGETS.MISSION_COLLABORATION) return BASE_POOL_MODES.COLLABORATION_MISSION;
-    if (cleanTarget === TARGETS.MISSION_OVERVIEW) return BASE_POOL_MODES.MISSION;
-    if (cleanTarget === TARGETS.PRACTICAL_RELEVANCE || cleanTarget === TARGETS.PRODUCTS) return BASE_POOL_MODES.PRACTICAL;
-    if (cleanTarget === TARGETS.SCIENTIFIC_LAW || cleanTarget === TARGETS.LAWS) return BASE_POOL_MODES.PROOF;
-    if (cleanTarget === TARGETS.DIAGNOSTIC_REFERRAL || cleanTarget === TARGETS.DIAGNOSTIC) return BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY;
-    if (cleanTarget === TARGETS.CHARACTER_MIRROR) return BASE_POOL_MODES.CHARACTER_MIRROR;
-    if (cleanTarget === TARGETS.MIRRORLAND) return BASE_POOL_MODES.MIRRORLAND;
-    if (cleanTarget === TARGETS.HEARTH) return BASE_POOL_MODES.HEARTH;
-    if (cleanTarget === TARGETS.FRONTIER) return BASE_POOL_MODES.FRONTIER;
-    if (cleanTarget === TARGETS.CHARACTERS) return BASE_POOL_MODES.CHARACTERS;
-    if (cleanTarget === TARGETS.SEAN) return BASE_POOL_MODES.CREATOR;
-    if (cleanTarget === TARGETS.UNDERDOG) return BASE_POOL_MODES.UNDERDOG;
-    if (cleanTarget === TARGETS.RECENTER || cleanTarget === TARGETS.CLEAN_DOOR || cleanTarget === TARGETS.RETURN_FORK || cleanTarget === TARGETS.RESTART_FORK) return BASE_POOL_MODES.RETURN;
-
-    return BASE_POOL_MODES.ESTATE_OVERVIEW;
+    return inferBasePoolMode(target, "", {});
   }
 
   function buildFallbackCoordinate(source, context) {
-    const ctx = normalizeContext(context);
-    const src = source && typeof source === "object" ? source : {};
-    const identity = resolveSourceIdentity(src, ctx, ctx.conversationCoordinate);
-    const target = identity.sourceTarget;
-    const intent = normalizeIntent(src.intent || ctx.intent || "");
-    const basePoolMode = sanitizeBasePoolModeForSource(target, src.basePoolMode || ctx.basePoolMode || inferBasePoolMode(target, intent, ctx));
-    const entryStackMode = sanitizeEntryStackModeForSource(target, src.entryStackMode || ctx.entryStackMode || inferEntryStackMode(target, intent, ctx, basePoolMode));
-    const gate = sanitizeGateForSource(target, src.gateType || ctx.gateType || inferGateFromContext(target, intent, ctx, entryStackMode, basePoolMode), ctx);
-    const path = src.pathFamily || ctx.pathFamily || inferPathFamily(target, intent, basePoolMode);
-    const dialect = src.dialectMode || ctx.dialectMode || inferDialectMode(target, intent, basePoolMode, src.illuminationMode || ctx.illuminationMode);
-    const expectation = src.contextExpectation || ctx.contextExpectation || inferExpectation(gate);
-
-    return ensureSourceStableCoordinate({
+    const target = normalizeTarget(source || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const basePoolMode = inferBasePoolMode(target, "", context || {});
+    const illuminationMode = inferIlluminationMode(target, "", context || {}, basePoolMode);
+    const gate = inferGateFromContext(target, "", context || {}, ENTRY_STACK_MODES.BASE_POOL, basePoolMode);
+    return {
       step: stepForGate(gate),
       priorStep: priorStepForGate(gate),
       gate,
-      path,
+      path: inferPathFamily(target, "", basePoolMode),
       mode: basePoolMode,
-      dialect,
-      expectation,
-      sourceTarget: identity.sourceTarget,
-      activeTarget: identity.activeTarget,
-      target: identity.selectedTarget,
+      dialect: inferDialectMode(target, "", basePoolMode, illuminationMode),
+      expectation: inferExpectation(gate),
+      sourceTarget: target,
+      activeTarget: target,
+      target,
       destination: "",
-      next: nextForGate(gate, path),
-      noRepeat: Boolean(src.noRepeat || ctx.noRepeat || isNoRepeatGate(gate))
-    }, identity);
+      next: nextForGate(gate, inferPathFamily(target, "", basePoolMode)),
+      noRepeat: isNoRepeatGate(gate)
+    };
   }
 
   function buildOptionCoordinate(option, context) {
-    const ctx = normalizeContext(context);
-    const target = normalizeTarget(option.sourceTarget || option.target || ctx.sourceTarget || ctx.selectedTarget || "");
-    const selectedTarget = normalizeTarget(option.selectedTarget || option.target || target || "");
-    const activeTarget = normalizeTarget(option.activeTarget || option.target || target || "");
-    const intent = normalizeIntent(ctx.intent || "");
-    const basePoolMode = sanitizeBasePoolModeForSource(target, option.basePoolMode || ctx.basePoolMode || inferBasePoolMode(target, intent, ctx));
-    const gate = sanitizeGateForSource(target, option.gateType || ctx.gateType || inferGateFromOption(option, target, basePoolMode), ctx);
-    const path = option.pathFamily || inferPathFamily(target, intent, basePoolMode);
-    const dialect = option.dialectMode || inferDialectMode(target, intent, basePoolMode, ctx.illuminationMode);
-    const expectation = option.contextExpectation || inferExpectation(gate);
-
-    return ensureSourceStableCoordinate({
+    const target = normalizeTarget(option && option.target || context && context.target || TARGETS.DIAMOND_GATE_OVERVIEW);
+    const basePoolMode = option && option.basePoolMode || context && context.basePoolMode || inferBasePoolMode(target, option && option.intent || "", context || {});
+    const gate = inferGateFromOption(option || {}, target, basePoolMode);
+    return {
       step: stepForGate(gate),
       priorStep: priorStepForGate(gate),
       gate,
-      path,
+      path: inferPathFamily(target, option && option.intent || "", basePoolMode),
       mode: basePoolMode,
-      dialect,
-      expectation,
-      sourceTarget: target,
-      activeTarget,
-      target: selectedTarget,
+      dialect: inferDialectMode(target, option && option.intent || "", basePoolMode, option && option.illuminationMode),
+      expectation: inferExpectation(gate),
+      sourceTarget: normalizeTarget(option && option.sourceTarget || target),
+      activeTarget: normalizeTarget(option && option.activeTarget || target),
+      target,
       destination: "",
-      next: nextForGate(gate, path),
-      noRepeat: Boolean(option.noRepeat || isNoRepeatGate(gate))
-    }, {
-      selectedTarget,
-      sourceTarget: target,
-      activeTarget
-    });
+      next: nextForGate(gate, inferPathFamily(target, "", basePoolMode)),
+      noRepeat: true
+    };
   }
 
   function inferGateFromContext(target, intent, context, entryStackMode, basePoolMode) {
-    const ctx = normalizeContext(context);
-    const sourceTarget = normalizeTarget(target || ctx.sourceTarget || ctx.selectedTarget || "");
-
-    if (ctx.gateType) return sanitizeGateForSource(sourceTarget, ctx.gateType, ctx);
-    if (ctx.conversationCoordinate && ctx.conversationCoordinate.gate) return sanitizeGateForSource(sourceTarget, ctx.conversationCoordinate.gate, ctx);
-
-    if (entryStackMode === ENTRY_STACK_MODES.ENTRANCE) return GATES.ARRIVAL;
-    if (entryStackMode === ENTRY_STACK_MODES.GUIDED_CHOOSER) return sanitizeGateForSource(sourceTarget, GATES.INTENTION, ctx);
-    if (entryStackMode === ENTRY_STACK_MODES.DIG_DEEPER) return GATES.DIG_DEEPER;
     if (entryStackMode === ENTRY_STACK_MODES.PREPARED_DOOR) return GATES.PREPARED_DOOR;
-    if (entryStackMode === ENTRY_STACK_MODES.RETURN) return GATES.RETURN_FORK;
-    if (entryStackMode === ENTRY_STACK_MODES.PATH_SAMPLE) return GATES.INTRIGUE_BRIDGE;
-
-    if (ctx.movementIntent === "continue_current_path" || ctx.optionKind === "forward") return GATES.DIG_DEEPER;
-    if (ctx.movementIntent === "open_prepared_door" || ctx.optionKind === "route") return GATES.PREPARED_DOOR;
-    if (ctx.movementIntent === "recenter" || ctx.optionKind === "control") return GATES.RETURN_FORK;
-    if (ctx.movementIntent === "cross_to_related_room" || ctx.optionKind === "parallel") return GATES.CROSS_PATH_BRIDGE;
-
-    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return GATES.DIAGNOSTIC_BOUNDARY;
-    if (sourceTarget === TARGETS.DIAMOND_GATE_OVERVIEW || intent === "diamondGate") return GATES.ARRIVAL;
-    if (isTrueGuidedChooser(ctx, sourceTarget, intent)) return GATES.INTENTION;
-
+    if (entryStackMode === ENTRY_STACK_MODES.RETURN) return GATES.RETURN;
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC) return GATES.DIAGNOSTIC_BOUNDARY;
+    if (basePoolMode === BASE_POOL_MODES.JEEVES_ATRIUM) return GATES.TRUST_ESCALATION;
     return GATES.BASE_POOL;
   }
 
   function inferGateFromOption(option, target, basePoolMode) {
-    const sourceTarget = normalizeTarget(option.sourceTarget || target || "");
-
-    if (option.gateType) return sanitizeGateForSource(sourceTarget, option.gateType, option);
-    if (option.optionKind === "forward" || option.movementIntent === "continue_current_path") return GATES.DIG_DEEPER;
-    if (option.optionKind === "route" || option.movementIntent === "open_prepared_door") return GATES.PREPARED_DOOR;
-    if (option.optionKind === "control" || option.movementIntent === "recenter") return GATES.RETURN_FORK;
-    if (option.optionKind === "parallel" || option.movementIntent === "cross_to_related_room") return GATES.CROSS_PATH_BRIDGE;
-    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return GATES.DIAGNOSTIC_BOUNDARY;
-    if (sourceTarget === TARGETS.SPLIT_INTERFACE) return GATES.INTENTION;
-    return GATES.BASE_POOL;
+    if (option && /open_prepared_door|route/i.test(safeText(option.movementIntent) + " " + safeText(option.optionKind))) return GATES.PREPARED_DOOR;
+    if (basePoolMode === BASE_POOL_MODES.JEEVES_ATRIUM) return GATES.TRUST_ESCALATION;
+    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC) return GATES.DIAGNOSTIC_BOUNDARY;
+    return GATES.CHOICE_CLOSURE;
   }
 
   function inferPathFamily(target, intent, basePoolMode) {
-    if (basePoolMode === BASE_POOL_MODES.RETURN) return "return";
-    if (basePoolMode === BASE_POOL_MODES.PUBLIC_MAP) return "public";
-    if (basePoolMode === BASE_POOL_MODES.NARRATIVE_PATH) return "narrative";
-    if (basePoolMode === BASE_POOL_MODES.MISSION || basePoolMode === BASE_POOL_MODES.INNER_MISSION || basePoolMode === BASE_POOL_MODES.COMMUNITY_MISSION || basePoolMode === BASE_POOL_MODES.COLLABORATION_MISSION) return "mission";
-    if (basePoolMode === BASE_POOL_MODES.PRACTICAL) return "practical";
-    if (basePoolMode === BASE_POOL_MODES.PROOF) return "proof";
-    if (basePoolMode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY || basePoolMode === BASE_POOL_MODES.CHARACTER_MIRROR) return "diagnostic";
-    if (basePoolMode === BASE_POOL_MODES.CHARACTERS) return "character";
-    if (basePoolMode === BASE_POOL_MODES.FRONTIER) return "frontier";
-    if (basePoolMode === BASE_POOL_MODES.HEARTH) return "hearth";
-    if (basePoolMode === BASE_POOL_MODES.MIRRORLAND) return "mirrorland";
-    if (basePoolMode === BASE_POOL_MODES.CREATOR || basePoolMode === BASE_POOL_MODES.UNDERDOG) return "creator";
-
-    const clean = normalizeTarget(target);
-    const cleanIntent = normalizeIntent(intent);
-
-    if (clean === TARGETS.TRADITIONAL_WEBSITE || clean === TARGETS.TRADITIONAL_COMPASS || clean === TARGETS.PRODUCTS || clean === TARGETS.LAWS || cleanIntent === "traditionalWebsite") return "public";
-    if (clean === TARGETS.NARRATIVE_PATH || cleanIntent === "narrativePath") return "narrative";
-    if (clean === TARGETS.MISSION_OVERVIEW || cleanIntent === "mission") return "mission";
-    if (clean === TARGETS.PRACTICAL_RELEVANCE || cleanIntent === "practicalRelevance") return "practical";
-    if (clean === TARGETS.SCIENTIFIC_LAW || cleanIntent === "scientificLaw" || cleanIntent === "proof") return "proof";
-    if (clean === TARGETS.FRONTIER || cleanIntent === "frontier") return "frontier";
-    if (clean === TARGETS.HEARTH || cleanIntent === "hearth") return "hearth";
-    if (clean === TARGETS.MIRRORLAND || cleanIntent === "mirrorland") return "mirrorland";
-    if (clean === TARGETS.CHARACTERS || cleanIntent === "characters") return "character";
-    if (clean === TARGETS.SEAN || clean === TARGETS.UNDERDOG || cleanIntent === "sean" || cleanIntent === "underdog") return "creator";
-    if (clean === TARGETS.RECENTER || cleanIntent === "recenter") return "return";
-
+    const mode = safeText(basePoolMode);
+    if (mode === BASE_POOL_MODES.MISSION) return "border";
+    if (mode === BASE_POOL_MODES.DIAGNOSTIC) return "threshold";
+    if (mode === BASE_POOL_MODES.JEEVES_ATRIUM) return "atrium";
+    if (mode === BASE_POOL_MODES.FRONTIER) return "frontier";
+    if (mode === BASE_POOL_MODES.PRODUCTS) return "value";
     return "center";
   }
 
   function inferDialectMode(target, intent, basePoolMode, illuminationMode) {
-    const path = inferPathFamily(target, intent, basePoolMode);
-
-    if (path === "return") return "return_guide";
-    if (path === "diagnostic") return "diagnostic_boundary_guide";
-    if (path === "public") return "public_guide";
-    if (path === "narrative") return "narrative_guide";
-    if (path === "mission") return "mission_guide";
-    if (path === "practical") return "practical_guide";
-    if (path === "proof") return "proof_guide";
-    if (path === "character") return "character_guide";
-    if (path === "creator") return "creator_guide";
-    if (path === "frontier") return "frontier_guide";
-    if (path === "hearth") return "hearth_guide";
-    if (path === "mirrorland") return "mirrorland_guide";
-
-    if (illuminationMode === ILLUMINATION_MODES.PROOF) return "proof_guide";
-    if (illuminationMode === ILLUMINATION_MODES.PRACTICAL) return "practical_guide";
-    if (illuminationMode === ILLUMINATION_MODES.NARRATIVE) return "narrative_guide";
-
+    if (illuminationMode === ILLUMINATION_MODES.BORDER) return "threshold_signal";
+    if (illuminationMode === ILLUMINATION_MODES.DIAGNOSTIC_BOUNDARY) return "boundary_guard";
+    if (illuminationMode === ILLUMINATION_MODES.ATRIUM) return "private_atrium";
     return "estate_host";
   }
 
   function inferExpectation(gate) {
-    if (gate === GATES.ARRIVAL) return "universal_entry";
-    if (gate === GATES.SPLIT) return "two_path_orientation";
-    if (gate === GATES.INTENTION) return "choice_help";
-    if (gate === GATES.BASE_POOL) return "orientation_before_entry";
-    if (gate === GATES.INTRIGUE_BRIDGE) return "intrigue_before_entry";
-    if (gate === GATES.DIG_DEEPER) return "deeper_context";
     if (gate === GATES.PREPARED_DOOR) return "page_visit";
-    if (gate === GATES.RETURN_FORK) return "safe_recenter";
-    if (gate === GATES.CROSS_PATH_BRIDGE) return "bridge_context";
+    if (gate === GATES.TRUST_ESCALATION) return "earned_depth";
     if (gate === GATES.DIAGNOSTIC_BOUNDARY) return "diagnostic_referral";
     return "orientation_before_entry";
   }
 
   function stepForGate(gate) {
-    if (gate === GATES.ARRIVAL) return 1;
-    if (gate === GATES.SPLIT) return 2;
-    if (gate === GATES.INTENTION) return 3;
-    if (gate === GATES.BASE_POOL) return 5;
-    if (gate === GATES.INTRIGUE_BRIDGE) return 8;
-    if (gate === GATES.DIAGNOSTIC_BOUNDARY) return 8;
-    if (gate === GATES.DIG_DEEPER) return 13;
-    if (gate === GATES.PREPARED_DOOR) return 21;
-    if (gate === GATES.RETURN_FORK) return 34;
-    if (gate === GATES.CROSS_PATH_BRIDGE) return 55;
+    if (gate === GATES.ENTRANCE) return 1;
+    if (gate === GATES.CHOICE_CLOSURE) return 4;
+    if (gate === GATES.PREPARED_DOOR) return 6;
+    if (gate === GATES.TRUST_ESCALATION) return 7;
     return 5;
   }
 
   function priorStepForGate(gate) {
-    const step = stepForGate(gate);
-    if (step >= 55) return 5;
-    if (step >= 34) return 5;
-    if (step >= 21) return 5;
-    if (step >= 13) return 5;
-    if (step >= 8) return 5;
-    if (step >= 5) return 3;
-    if (step >= 3) return 2;
-    if (step >= 2) return 1;
-    return 0;
+    return Math.max(0, stepForGate(gate) - 1);
   }
 
   function nextForGate(gate, path) {
-    if (gate === GATES.ARRIVAL) return ["choose_start", "public_map", "practical", "narrative_path", "mission", "proof"];
-    if (gate === GATES.INTENTION) return ["public_map", "practical", "narrative_path", "mission", "proof"];
-    if (gate === GATES.PREPARED_DOOR) return ["return"];
-    if (gate === GATES.RETURN_FORK) return ["guided_chooser", "public_map", "practical", "narrative_path", "mission", "proof"];
-    if (gate === GATES.CROSS_PATH_BRIDGE) return ["base_pool", "dig_deeper", "open_page", "return"];
-    if (gate === GATES.DIAGNOSTIC_BOUNDARY) return ["open_diagnostic", "character_mirror", "narrative_bridge", "return"];
-
-    if (path === "public") return ["dig_deeper", "open_page", "cross_path_bridge", "return"];
-    if (path === "narrative") return ["dig_deeper", "open_page", "mirrorland_bridge", "character_bridge", "return"];
-    if (path === "mission") return ["inner_mission", "community_mission", "collaboration_mission", "practical_bridge", "return"];
-    if (path === "practical") return ["dig_deeper", "open_page", "proof_bridge", "frontier_bridge", "return"];
-    if (path === "proof") return ["dig_deeper", "evidence", "measure", "limits", "open_page", "return"];
-    if (path === "frontier") return ["energy", "water", "waste", "closed_loop", "infrastructure", "proof_bridge", "return"];
-    if (path === "hearth") return ["hearth_construct", "hearth_frontier", "hearth_law", "open_page", "return"];
-    if (path === "mirrorland") return ["dig_deeper", "hearth", "characters", "audralia", "h_earth", "zionts", "return"];
-    if (path === "character") return ["character_first", "relationships", "story_pressure", "character_mirror", "return"];
-    if (path === "creator") return ["underdog", "nine_summits", "products", "public_map", "return"];
-
-    return ["dig_deeper", "open_page", "return"];
+    if (gate === GATES.PREPARED_DOOR) return ["open_door", "return_compass"];
+    if (gate === GATES.TRUST_ESCALATION) return ["enter_atrium", "return_compass"];
+    return ["choose_door", "ask_jeeves", "return_compass"];
   }
 
   function isNoRepeatGate(gate) {
-    return gate === GATES.DIG_DEEPER ||
-      gate === GATES.PREPARED_DOOR ||
-      gate === GATES.RETURN_FORK ||
-      gate === GATES.CROSS_PATH_BRIDGE ||
-      gate === GATES.DIAGNOSTIC_BOUNDARY;
+    return gate === GATES.PREPARED_DOOR || gate === GATES.TRUST_ESCALATION || gate === GATES.DIAGNOSTIC_BOUNDARY;
   }
 
   function normalizeBasePoolKey(mode) {
-    if (mode === BASE_POOL_MODES.DIAGNOSTIC_BOUNDARY) return "diagnosticBoundary";
-    if (mode === BASE_POOL_MODES.CHARACTER_MIRROR) return "characterMirror";
-    return mode;
+    const text = safeText(mode);
+    return text || BASE_POOL_MODES.ESTATE_OVERVIEW;
   }
 
   function dedupeOptions(options) {
-    const seen = new Set();
-    const result = [];
-
-    options.forEach((option) => {
-      if (!option || !option.target) return;
-      const key = option.target + "::" + option.label + "::" + option.sourceTarget + "::" + option.activeTarget;
-      if (seen.has(key)) return;
-      seen.add(key);
-      result.push(option);
+    const seen = Object.create(null);
+    const output = [];
+    (Array.isArray(options) ? options : []).forEach(function add(option) {
+      if (!option || typeof option !== "object") return;
+      const key = safeText(option.label).toLowerCase() + "::" + safeText(option.target).toLowerCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      output.push(option);
     });
+    return output;
+  }
 
-    return result;
+  function dedupeStrings(values) {
+    const seen = Object.create(null);
+    const output = [];
+    (Array.isArray(values) ? values : []).forEach(function add(value) {
+      const text = safeText(value);
+      if (!text || seen[text]) return;
+      seen[text] = true;
+      output.push(text);
+    });
+    return output;
   }
 
   function safeNumber(value, fallback) {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : Number(fallback || 0);
   }
 
   function safeText(value) {
-    return String(value || "")
-      .replace(/\s+/g, " ")
-      .trim();
+    if (value === null || typeof value === "undefined") return "";
+    return String(value).replace(/\s+/g, " ").trim();
   }
 
   const api = Object.freeze({
@@ -2431,6 +1224,7 @@
 
     targets: TARGETS,
     routes: ROUTES,
+    agents: AGENTS,
 
     entryStackModes: ENTRY_STACK_MODES,
     basePoolModes: BASE_POOL_MODES,
@@ -2487,10 +1281,13 @@
     frontalLobeAuthority: true,
     personalityAuthority: true,
     publicLanguageAuthority: true,
+    localSpineAuthority: true,
+    estateAgentSpineExtractable: true,
     meaningAuthority: false,
     sourceIdentityCreationAuthority: false,
     routeExecutionAuthority: false,
-    sourceStabilityCompatible: true
+    sourceStabilityCompatible: true,
+    oneFileBuildPlan: true
   });
 
   global.HEARTH_JEEVES_EXPRESSION = api;
@@ -2519,9 +1316,12 @@
         frontalLobeAuthority: true,
         personalityAuthority: true,
         publicLanguageAuthority: true,
+        localSpineAuthority: true,
+        estateAgentSpineExtractable: true,
         meaningAuthority: false,
         sourceIdentityCreationAuthority: false,
-        routeExecutionAuthority: false
+        routeExecutionAuthority: false,
+        oneFileBuildPlan: true
       }
     }));
   }

@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_SINGLE_PROMPT_DOCK_HTML_TNT_v4 -->
+<!-- HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, expression handoff, basic bubble rhythm, single prompt dock behavior. -->
-<!-- Does not own: Compass root page, CSS visual authority, Jeeves expression language, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: keep one prompt dock only. After every prompt, reduce choices to jump, ask something else, or return to Compass. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, expression handoff, organic response bank, single prompt dock behavior. -->
+<!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
+<!-- Purpose: keep one prompt dock only and optimize Jeeves’ expression without losing derivatives. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_SINGLE_PROMPT_DOCK_HTML_TNT_v4"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5"
   data-hearth-jeeves-ready="false"
   data-hearth-jeeves-home="inside-mirrorland"
   data-compass-entry="talk-to-the-house"
@@ -16,6 +16,7 @@
   data-index-js-retired="true"
   data-api-js-retired="true"
   data-single-prompt-dock="true"
+  data-organic-expression="true"
 >
   <head>
     <meta charset="utf-8" />
@@ -61,7 +62,7 @@
           data-jeeves-typing="false"
           data-hearth-jeeves-home="inside-mirrorland"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_SINGLE_PROMPT_DOCK_HTML_TNT_v4"
+          data-mount-contract="HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5"
           data-expression-contract="HEARTH_JEEVES_HOME_INSIDE_MIRRORLAND_EXPRESSION_TNT_v7_1_0"
         >
           <div class="jeeves-screen-topline">
@@ -177,7 +178,7 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_SINGLE_PROMPT_DOCK_HTML_TNT_v4";
+        var CONTRACT = "HEARTH_JEEVES_ORGANIC_EXPRESSION_SINGLE_PROMPT_DOCK_HTML_TNT_v5";
 
         var ROUTES = {
           compass: "/",
@@ -187,6 +188,7 @@
           characters: "/characters/",
           sean: "/meet-sean-mansfield/",
           nineSummits: "/nine-summits/",
+          nineSummitsOfLove: "/nine-summits-of-love/",
           products: "/products/",
           archcoin: "/products/archcoin/",
           laws: "/laws/",
@@ -198,11 +200,12 @@
           remote: "/explore/frontier/vision-remote/"
         };
 
-        var FALLBACK_OPENING = [
+        var OPENING_SEQUENCE = [
           "Welcome inside the House.",
           "You found me through the Compass. That means you did not wander here by accident.",
           "This is Hearth. For our purposes, it is my room inside Mirrorland.",
-          "You do not have to stay here. I can guide you from here.",
+          "You do not have to stay here. A proper House never hides the exit.",
+          "I can return you outward, send you farther inward, or point you across the Estate.",
           "Ask plainly. I will not give you the whole House at once; I will give you the next door."
         ];
 
@@ -214,6 +217,72 @@
           { label: "Enter the Atrium", action: "atrium" },
           { label: "Return to the Compass", action: "compass", routeUrl: ROUTES.compass }
         ];
+
+        var CHARACTER_HANDOFFS = {
+          elara: {
+            label: "Meet Elara",
+            routeUrl: ROUTES.sean,
+            bubbles: [
+              "That belongs with Elara.",
+              "She stands near the border where Sean, the Nine Summits, and the public mission begin turning into story.",
+              "If you want origin, voice, and the first crossing from platform into Mirrorland, that is her threshold."
+            ]
+          },
+          soren: {
+            label: "Open the Coherence Diagnostic",
+            routeUrl: ROUTES.diagnostic,
+            bubbles: [
+              "That belongs with Soren.",
+              "He is the authority on diagnostic threshold, proof, boundary, admissibility, and measurement.",
+              "I can take you there, but I will not dress a guess as a measurement."
+            ]
+          },
+          auren: {
+            label: "Open Products",
+            routeUrl: ROUTES.products,
+            bubbles: [
+              "That belongs with Auren.",
+              "He watches value, custody, products, Arc Coin, and what must be protected before it is exchanged.",
+              "That room should not be treated as a simple shop window."
+            ]
+          },
+          dextrion: {
+            label: "Open H-Earth",
+            routeUrl: ROUTES.hEarth,
+            bubbles: [
+              "That belongs with Dextrion.",
+              "Expect tools, anomaly, repair, H-Earth, and laboratory pressure rather than ceremony.",
+              "His corridor is technical because the crossing itself is technical."
+            ]
+          },
+          alaric: {
+            label: "Open the Frontier",
+            routeUrl: ROUTES.frontier,
+            bubbles: [
+              "That belongs with Alaric.",
+              "He is useful when the road is not yet paved and the route must be chosen under uncertainty.",
+              "The Frontier is not a settled room. It is where the path is still being made."
+            ]
+          },
+          tarian: {
+            label: "Open the Water Path",
+            routeUrl: ROUTES.water,
+            bubbles: [
+              "That belongs with Tarian.",
+              "Water is never only water here; it is continuity, infrastructure, and survival beneath the surface.",
+              "If the question is about what keeps systems alive, he is the better guide."
+            ]
+          },
+          remote: {
+            label: "Open the Remote Field Path",
+            routeUrl: ROUTES.remote,
+            bubbles: [
+              "That belongs with the Remote Team.",
+              "Some rooms are not held by one person; they are distributed across field, city, climate, and deployment.",
+              "That path is built for response across distance."
+            ]
+          }
+        };
 
         function onReady(fn) {
           if (document.readyState === "loading") {
@@ -248,10 +317,16 @@
 
         function openingSequence() {
           var exp = expression();
+
           if (exp && Array.isArray(exp.openingSequence) && exp.openingSequence.length) {
-            return exp.openingSequence.slice(0, 6).map(text).filter(Boolean);
+            var shaped = exp.openingSequence.slice(0, 6).map(text).filter(Boolean);
+
+            if (shaped.length >= 3 && !/staging chamber|you are at the compass/i.test(shaped.join(" "))) {
+              return shaped;
+            }
           }
-          return FALLBACK_OPENING.slice();
+
+          return OPENING_SEQUENCE.slice();
         }
 
         function mainPrompts() {
@@ -366,7 +441,7 @@
               scrollThread(state);
               i += 1;
               window.setTimeout(next, 240);
-            }, i === 0 ? 180 : Math.min(1250, 420 + list[i].length * 12));
+            }, i === 0 ? 180 : Math.min(1450, 460 + list[i].length * 13));
           }
 
           next();
@@ -409,6 +484,30 @@
           renderOptions(next, state);
         }
 
+        function intentFromSignal(signal) {
+          if (/elara|sean|summit|book|mission|origin|border/.test(signal)) return "elara";
+          if (/soren|diagnostic|coherence|score|assess|test|proof|boundary|admissibility|measure|classify|archetype/.test(signal)) return "soren";
+          if (/auren|aurin|product|arc coin|archcoin|coin|value|custody|protect|exchange/.test(signal)) return "auren";
+          if (/dextrion|dexter|h-earth|h earth|lab|anomaly|repair|technical/.test(signal)) return "dextrion";
+          if (/alaric|frontier|uncertainty|route|field|trajectory/.test(signal)) return "alaric";
+          if (/tarian|water|continuity|survival|infrastructure/.test(signal)) return "tarian";
+          if (/remote|distributed|city|climate|deployment|vision/.test(signal)) return "remote";
+          return "";
+        }
+
+        function responseForCharacterIntent(intent) {
+          var handoff = CHARACTER_HANDOFFS[intent];
+
+          if (!handoff) return null;
+
+          return {
+            bubbles: handoff.bubbles.slice(),
+            routeChoices: [
+              { label: handoff.label, routeUrl: handoff.routeUrl }
+            ]
+          };
+        }
+
         function responseFor(option) {
           var label = text(option.label).toLowerCase();
           var action = text(option.action).toLowerCase();
@@ -418,7 +517,8 @@
             return {
               reset: true,
               bubbles: [
-                "Good. Ask plainly.",
+                "Good.",
+                "Ask plainly.",
                 "I will give you the next door."
               ]
             };
@@ -431,15 +531,22 @@
             };
           }
 
+          var characterIntent = responseForCharacterIntent(intentFromSignal(signal));
+          if (characterIntent && !/where|map|guide|atrium|compass|return/.test(signal)) {
+            return characterIntent;
+          }
+
           if (/where|hearth|room/.test(signal)) {
             return {
               bubbles: [
                 "You are inside the House, at Hearth.",
-                "This is part of Mirrorland’s interior path.",
-                "The Compass brought you to the door; this room lets me speak with you without crowding the Compass page itself."
+                "The Compass brought you to the door. This room lets the House answer without crowding the Compass page itself.",
+                "You are near the edge of Mirrorland — close enough to return outward, but far enough inside that the rooms can begin to speak.",
+                "Hearth is a good first room. A visitor needs fire before architecture."
               ],
               routeChoices: [
-                { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
+                { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide },
+                { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
               ]
             };
           }
@@ -448,7 +555,9 @@
             return {
               bubbles: [
                 "The Website Guide is the clean map.",
-                "Use it when you want the blueprint before the rooms begin speaking."
+                "Use it when you want the blueprint before the rooms begin speaking.",
+                "The Compass shows the main bridges. The Guide explains how to move through them.",
+                "If you want the House to remain strange, enter through the rooms. If you want the House to become legible, begin with the Guide."
               ],
               routeChoices: [
                 { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
@@ -456,12 +565,14 @@
             };
           }
 
-          if (/diagnostic|coherence|score|assess|test/.test(signal)) {
+          if (/diagnostic|coherence|score|assess|test|classify|archetype/.test(signal)) {
             return {
               bubbles: [
                 "I can show you the diagnostic door.",
-                "I will not diagnose you from the hallway.",
-                "Soren guards that threshold more properly than I do."
+                "That room is not mine to perform from here. A diagnostic has to be measured, not guessed at the threshold.",
+                "Soren is the authority there.",
+                "He handles proof, boundary, admissibility, and the difference between curiosity and classification.",
+                "I can take you to the diagnostic. I will not pretend to diagnose you myself."
               ],
               routeChoices: [
                 { label: "Open the Coherence Diagnostic", routeUrl: ROUTES.diagnostic }
@@ -472,9 +583,10 @@
           if (/character|portrait|roster/.test(signal)) {
             return {
               bubbles: [
-                "The Characters are organized separately from the Atrium.",
-                "Use the Portrait Hall when you want the roster.",
-                "Use the Atrium when you are asking for the longer map behind the rooms."
+                "The Characters are not decoration.",
+                "They are how the House distributes responsibility.",
+                "Use the Portrait Hall when you want the roster — who they are, where they stand, and what each one carries.",
+                "Use the Atrium when you are no longer asking who is here, but how the House itself is arranged."
               ],
               routeChoices: [
                 { label: "Open the Portrait Hall", routeUrl: ROUTES.characters },
@@ -486,8 +598,10 @@
           if (/atrium|deeper|longer|prying|persistent/.test(signal)) {
             return {
               bubbles: [
-                "Persistent. Good. Most visitors take the first door.",
+                "Persistent. Good.",
+                "Most visitors take the first door.",
                 "You are still prying beyond the rooms I have offered.",
+                "That means you are not merely looking for a doorway. You are asking for the architecture behind the doors.",
                 "Very well. Meet me in the Atrium, and I will show you the longer map."
               ],
               routeChoices: [
@@ -500,7 +614,8 @@
             return {
               bubbles: [
                 "Then we return to the Compass.",
-                "A proper House never hides the exit."
+                "A proper House never hides the exit.",
+                "The Compass is where you found the door. You may begin again from there."
               ],
               routeChoices: [
                 { label: "Return to Compass", routeUrl: ROUTES.compass }
@@ -511,7 +626,8 @@
           return {
             bubbles: [
               "I can help with that, but I need to place it first.",
-              "Are you asking about the website, Mirrorland, the diagnostic, Sean, products, the lab, or the frontier?"
+              "Are you asking about the website, Mirrorland, the diagnostic, Sean, products, the lab, or the frontier?",
+              "The House becomes easier when the question is given a room."
             ],
             routeChoices: [
               { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
@@ -559,6 +675,7 @@
                 indexJsRetired: true,
                 apiJsRetired: true,
                 singlePromptDock: true,
+                organicExpression: true,
                 mountNode: "#hearthJeevesMount"
               }
             }));

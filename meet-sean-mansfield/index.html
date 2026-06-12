@@ -4,8 +4,8 @@
   data-route="/meet-sean-mansfield/"
   data-page="meet-sean-mansfield"
   data-version="G2-V1"
-  data-contract="MEET_SEAN_MANSFIELD_GEM_PROFILE_RENEWAL_TNT_v1"
-  data-previous-contract="MEET_SEAN_MANSFIELD_CONDENSED_RUSSIAN_DOLL_PROFILE_TNT_v3"
+  data-contract="MEET_SEAN_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1"
+  data-previous-contract="MEET_SEAN_MANSFIELD_GEM_PROFILE_RENEWAL_TNT_v1"
   data-status="active"
   data-parent="/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -218,41 +218,151 @@
     }
 
     .nav{
+      position:relative;
       display:flex;
       flex-wrap:wrap;
       justify-content:flex-end;
-      gap:.48rem;
+      align-items:flex-start;
+      gap:.58rem;
+      z-index:20;
     }
 
-    .nav a{
-      min-height:2.25rem;
+    .nav a,
+    .team-menu summary{
+      min-height:2.35rem;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border:1px solid rgba(255,255,255,.13);
       border-radius:999px;
-      padding:.5rem .74rem;
-      color:rgba(241,246,255,.84);
-      background:rgba(255,255,255,.035);
+      padding:.54rem .82rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.04);
       font-size:.68rem;
       font-weight:950;
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      cursor:pointer;
+      user-select:none;
+      list-style:none;
     }
 
     .nav a:hover,
-    .nav a:focus-visible{
+    .nav a:focus-visible,
+    .team-menu summary:hover,
+    .team-menu summary:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.46);
       outline:none;
     }
 
-    .nav a[aria-current="page"]{
-      border-color:rgba(243,200,111,.88);
+    .nav a.primary-return{
+      border-color:rgba(243,200,111,.62);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
+    }
+
+    .team-menu{
+      position:relative;
+      display:inline-block;
+    }
+
+    .team-menu summary::-webkit-details-marker{display:none}
+
+    .team-menu summary::after{
+      content:"▾";
+      display:inline-block;
+      margin-left:.52rem;
+      color:var(--gold);
+      font-size:.76rem;
+      line-height:1;
+      transition:transform .18s ease;
+    }
+
+    .team-menu[open] summary{
+      border-color:rgba(141,216,255,.42);
+      background:rgba(141,216,255,.075);
+    }
+
+    .team-menu[open] summary::after{
+      transform:rotate(180deg);
+    }
+
+    .team-panel{
+      position:absolute;
+      right:0;
+      top:calc(100% + .7rem);
+      width:min(21rem,calc(100vw - 28px));
+      display:grid;
+      gap:.7rem;
+      padding:.82rem;
+      border:1px solid rgba(243,200,111,.26);
+      border-radius:1.2rem;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,200,111,.12),transparent 60%),
+        radial-gradient(circle at 100% 20%,rgba(141,216,255,.10),transparent 48%),
+        rgba(5,9,20,.97);
+      box-shadow:0 1.4rem 3.2rem rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.08);
+      z-index:40;
+    }
+
+    .team-intro{
+      display:block;
+      padding:.15rem .18rem .1rem;
+      color:var(--soft);
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .team-member{
+      display:grid;
+      gap:.34rem;
+      padding:.62rem;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:.92rem;
+      background:rgba(255,255,255,.028);
+    }
+
+    .team-member b{
+      color:rgba(255,244,216,.96);
+      font-size:.78rem;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .team-member span{
+      color:var(--soft);
+      font-size:.78rem;
+      line-height:1.3;
+    }
+
+    .team-links{
+      display:grid;
+      gap:.34rem;
+      margin-top:.18rem;
+    }
+
+    .team-panel .team-links a{
+      width:100%;
+      min-height:2.15rem;
+      justify-content:flex-start;
+      border-radius:.78rem;
+      padding:.48rem .62rem;
+      color:rgba(241,246,255,.86);
+      background:rgba(255,255,255,.035);
+      font-size:.68rem;
+      letter-spacing:.045em;
+      text-transform:none;
+    }
+
+    .team-panel .team-links a:hover,
+    .team-panel .team-links a:focus-visible{
+      transform:translateX(2px);
+      border-color:rgba(243,200,111,.48);
     }
 
     .panel{
@@ -519,213 +629,197 @@
       letter-spacing:-.08em;
     }
 
-    .portrait.has-image .fallback{display:none}
+    .portrait.has-image .fallback{
+      opacity:0;
+    }
 
     .meta{
       display:grid;
-      gap:.65rem;
-      padding:.1rem .2rem;
-      position:relative;
-      z-index:2;
+      gap:.6rem;
     }
 
     .meta-row{
       display:grid;
-      gap:.12rem;
-      padding:.78rem .85rem;
-      border:1px solid rgba(255,255,255,.10);
+      gap:.18rem;
+      padding:.75rem .85rem;
+      border:1px solid rgba(255,255,255,.09);
       border-radius:1rem;
-      background:rgba(255,255,255,.032);
+      background:rgba(255,255,255,.026);
     }
 
     .meta-row b{
       color:var(--gold);
-      font-size:.7rem;
+      font-size:.68rem;
       letter-spacing:.13em;
       text-transform:uppercase;
     }
 
     .meta-row span{
-      color:rgba(241,246,255,.86);
-      font-size:.95rem;
-      font-weight:850;
-      line-height:1.35;
+      color:rgba(241,246,255,.84);
+      font-size:.92rem;
+      line-height:1.36;
     }
 
     .section{
       margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
+      padding:clamp(1rem,4vw,1.65rem);
       display:grid;
-      gap:1.05rem;
+      gap:1rem;
     }
 
-    .gem-grid,
     .split-grid,
-    .path-grid{
+    .gem-grid,
+    .path-grid,
+    .short-grid{
       display:grid;
-      gap:.85rem;
+      gap:.8rem;
     }
 
     .split-grid{
       grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
-    .gem-grid{
+    .gem-grid,
+    .path-grid{
       grid-template-columns:repeat(3,minmax(0,1fr));
     }
 
-    .path-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
+    .short-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      margin-top:.9rem;
     }
 
-    .gem-card,
     .split-card,
+    .gem-card,
     .path-card{
       position:relative;
       min-height:12rem;
       display:grid;
-      gap:.65rem;
       align-content:start;
+      gap:.65rem;
       padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1.18rem;
       background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
+        radial-gradient(circle at 90% 0%,rgba(243,200,111,.08),transparent 48%),
+        rgba(255,255,255,.028);
       overflow:hidden;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .2s ease,border-color .2s ease,background .2s ease;
     }
 
-    .path-card{
-      min-height:10rem;
-    }
-
-    .gem-card::after,
-    .split-card::after,
-    .path-card::after{
-      content:"";
-      position:absolute;
-      right:.86rem;
-      top:.86rem;
-      width:4rem;
-      height:2.95rem;
-      clip-path:var(--brand-gem);
-      opacity:.46;
-      background:
-        linear-gradient(35deg,transparent 0 20%,rgba(255,255,255,.26) 21% 23%,transparent 24%),
-        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.24),rgba(143,101,255,.38),rgba(20,10,62,.70),rgba(243,200,111,.16),rgba(255,255,255,.22)),
-        radial-gradient(circle at 50% 26%,rgba(255,255,255,.30),transparent 44%);
-      filter:drop-shadow(0 .8rem 1rem rgba(0,0,0,.28)) drop-shadow(0 0 .8rem rgba(143,101,255,.18));
-      pointer-events:none;
-    }
-
-    .gem-card:hover,
-    .gem-card:focus-visible,
     .split-card:hover,
     .split-card:focus-visible,
     .path-card:hover,
     .path-card:focus-visible{
       transform:translateY(-3px);
-      border-color:rgba(243,200,111,.46);
+      border-color:rgba(243,200,111,.36);
+      background:rgba(255,255,255,.043);
       outline:none;
     }
 
+    .split-card::after,
+    .gem-card::after,
+    .path-card::after{
+      content:"";
+      position:absolute;
+      right:-1.2rem;
+      bottom:-1.2rem;
+      width:5.4rem;
+      height:4rem;
+      clip-path:var(--brand-gem);
+      opacity:.32;
+      background:
+        conic-gradient(from 45deg at 50% 50%,rgba(255,255,255,.20),rgba(143,101,255,.34),rgba(20,10,62,.70),rgba(243,200,111,.13),rgba(255,255,255,.18));
+      pointer-events:none;
+    }
+
     .card-kicker{
+      width:fit-content;
+      display:inline-flex;
       color:var(--gold);
-      font-size:.68rem;
+      font-size:.67rem;
       font-weight:950;
-      letter-spacing:.12em;
+      letter-spacing:.13em;
       text-transform:uppercase;
       position:relative;
       z-index:2;
     }
 
-    .gem-card strong,
     .split-card strong,
+    .gem-card strong,
     .path-card strong{
       color:rgba(255,244,216,.98);
-      font-size:1.12rem;
-      line-height:1.08;
-      letter-spacing:-.035em;
+      font-size:clamp(1.15rem,3vw,1.55rem);
+      line-height:1.03;
+      letter-spacing:-.05em;
       position:relative;
       z-index:2;
     }
 
-    .gem-card span,
     .split-card span,
+    .gem-card span,
     .path-card span{
       color:var(--muted);
-      font-size:.94rem;
-      line-height:1.42;
       position:relative;
       z-index:2;
     }
 
     .open-path{
       margin-top:auto;
-      color:rgba(230,238,255,.88);
-      font-size:.74rem;
+      color:var(--blue)!important;
+      font-size:.7rem;
       font-weight:950;
-      letter-spacing:.12em;
+      letter-spacing:.08em;
       text-transform:uppercase;
-      position:relative;
-      z-index:2;
     }
 
     .doll{
       display:grid;
-      gap:.75rem;
+      gap:.65rem;
     }
 
     details.layer{
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:1.35rem;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.026));
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.026);
       overflow:hidden;
     }
 
     details.layer[open]{
-      border-color:rgba(243,200,111,.30);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.08),transparent 34%),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.028));
+      border-color:rgba(243,200,111,.25);
+      background:rgba(243,200,111,.045);
     }
 
     details.layer summary{
+      min-height:4rem;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:1rem;
-      list-style:none;
+      padding:.9rem 1rem;
       cursor:pointer;
-      padding:1rem;
-      color:rgba(255,244,216,.96);
-      font-weight:950;
+      list-style:none;
     }
 
     details.layer summary::-webkit-details-marker{display:none}
 
     details.layer summary::after{
       content:"+";
-      flex:0 0 auto;
       width:2rem;
       height:2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:.62rem;
-      transform:rotate(45deg);
+      flex:0 0 auto;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
       color:var(--gold);
-      background:rgba(243,200,111,.055);
-      font-size:1.05rem;
-      line-height:1;
+      font-weight:950;
+      background:rgba(255,255,255,.04);
     }
 
     details.layer[open] summary::after{
       content:"–";
-      border-color:rgba(141,216,255,.28);
-      color:var(--blue);
     }
 
     .summary-text{
@@ -735,28 +829,22 @@
 
     .summary-text b{
       color:var(--gold);
-      font-size:.7rem;
-      letter-spacing:.13em;
+      font-size:.65rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .summary-text span{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2.6vw,1.16rem);
-      line-height:1.15;
-      letter-spacing:-.035em;
+      color:rgba(255,244,216,.94);
+      font-size:1.02rem;
+      font-weight:950;
+      letter-spacing:-.02em;
     }
 
     .doll-body{
       display:grid;
-      gap:.9rem;
+      gap:.8rem;
       padding:0 1rem 1rem;
-    }
-
-    .short-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.75rem;
     }
 
     .short-card{
@@ -914,6 +1002,11 @@
 
       .nav{justify-content:flex-start}
 
+      .team-panel{
+        left:0;
+        right:auto;
+      }
+
       .hero{
         grid-template-columns:1fr;
       }
@@ -975,15 +1068,49 @@
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/showroom/globe/">Interactive Narrative</a>
-        <a href="/showroom/">Showroom</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/meet-sean-mansfield/" aria-current="page">Meet Sean</a>
+        <a class="primary-return" href="/">Return to Compass</a>
+
+        <details class="team-menu">
+          <summary>Talk to the Team</summary>
+
+          <div class="team-panel" role="group" aria-label="Choose an AI team member">
+            <span class="team-intro">Choose your guide</span>
+
+            <div class="team-member">
+              <b>Jeeves</b>
+              <span>House guide · orientation · whole map</span>
+              <div class="team-links">
+                <a href="/showroom/globe/hearth/jeeves/">Ask Jeeves for the whole House</a>
+                <a href="/showroom/">Ask Jeeves in the Showroom</a>
+              </div>
+            </div>
+
+            <div class="team-member">
+              <b>Auren</b>
+              <span>Product guide · tools · practical systems</span>
+              <div class="team-links">
+                <a href="/products/auren/">Talk to Auren on the Product Floor</a>
+              </div>
+            </div>
+
+            <div class="team-member">
+              <b>Soren</b>
+              <span>Diagnostic guide · coherence boundary</span>
+              <div class="team-links">
+                <a href="/coherence-diagnostic/">Talk to Soren at the Diagnostic</a>
+              </div>
+            </div>
+
+            <div class="team-member">
+              <b>Elara</b>
+              <span>Human threshold · Sean · Book threshold</span>
+              <div class="team-links">
+                <a href="/meet-sean-mansfield/" aria-current="page">Meet Elara on Sean’s Page</a>
+                <a href="/nine-summits-of-love/">Meet Elara at The Nine Summits of Love</a>
+              </div>
+            </div>
+          </div>
+        </details>
       </nav>
     </header>
 

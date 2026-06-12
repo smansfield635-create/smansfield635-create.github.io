@@ -1,122 +1,101 @@
 /* /assets/house-control-pad/house.control-pad.css */
-/* HOUSE_CONTROL_PAD_STATIC_ESTATE_ARCHITECTURE_CSS_TNT_v2 */
+/* HOUSE_CONTROL_PAD_DIAMOND_HEART_3D_STATIC_ARCHITECTURE_CSS_TNT_v3 */
 /* Full-file replacement. */
 /*
-  Five-layer House Control Pad architecture:
+  Layer ownership:
 
-  1. house.control-pad.data.js
-     Stable content, room geometry, routes, authority, camera metadata,
-     corridor declarations, and resident identity metadata.
+  house.control-pad.data.js
+  - stable heart coordinates
+  - room definitions
+  - facets
+  - corridors
+  - camera metadata
+  - avatar anchors
 
-  2. house.control-pad.js
-     Controller, camera, room selection, routing, travel, focus, and public API.
+  house.control-pad.css
+  - controller shell
+  - static three-dimensional heart estate
+  - facet architecture
+  - room architecture
+  - corridor presentation
+  - room information surfaces
+  - mobile architectural framing
 
-  3. house.avatar-life.js
-     Blink scheduling, inactivity, gestures, yawns, and avatar runtime state.
+  house.control-pad.js
+  - DOM construction
+  - camera execution
+  - selection
+  - travel
+  - route actions
 
-  4. house.control-pad.css
-     Static estate architecture and interface presentation.
+  house.avatar-life.js
+  - resident behavioral scheduling
 
-  5. house.avatars.css
-     Resident appearance and motion presentation.
+  house.avatars.css
+  - resident appearance and motion
 
-  Separation law:
-
-  Data describes.
-  House CSS renders architecture.
-  Controller coordinates.
-  Avatar life schedules.
-  Avatar CSS expresses the residents.
-
-  This file owns:
-
-  - controller overlay and panel
-  - header and footer
-  - estate viewport and canvas
-  - static estate geometry
-  - room boundaries
-  - room shapes
-  - room architectural features
-  - labels
-  - summaries
-  - detail zones
-  - action zones
-  - arrival confirmation structure
-  - route-path presentation
-  - responsive architectural layout
-  - Estate View and Room View presentation
-  - structural reduced-motion behavior
-
-  This file does not own:
-
-  - avatar anatomy
-  - avatar faces
-  - avatar hair
-  - avatar clothing
-  - avatar accessories
-  - eyelids
-  - pupils
-  - blinking
-  - breathing
-  - yawns
-  - gestures
-  - arrival character animation
-  - avatar state keyframes
-
-  Avatar presentation belongs exclusively to:
-
-  /assets/house-control-pad/house.avatars.css
+  This file does not own avatar anatomy or avatar-life timing.
 */
 
 :root {
   --hcp-z: 9999;
 
-  --hcp-black: #01030a;
+  --hcp-black: #010208;
   --hcp-deep: #040817;
-  --hcp-panel: #071023;
-  --hcp-panel-2: #0a1730;
-  --hcp-room: rgba(8, 17, 36, 0.96);
-  --hcp-room-soft: rgba(12, 24, 48, 0.94);
+  --hcp-deep-2: #071126;
+  --hcp-panel: rgba(5, 11, 26, 0.985);
+  --hcp-panel-soft: rgba(10, 19, 39, 0.94);
 
-  --hcp-ink: #fff2d1;
-  --hcp-text: #edf5ff;
-  --hcp-muted: rgba(233, 241, 255, 0.76);
-  --hcp-soft: rgba(233, 241, 255, 0.56);
-  --hcp-faint: rgba(233, 241, 255, 0.34);
+  --hcp-ink: #fff1cf;
+  --hcp-text: #edf4ff;
+  --hcp-muted: rgba(232, 240, 255, 0.76);
+  --hcp-soft: rgba(232, 240, 255, 0.56);
+  --hcp-faint: rgba(232, 240, 255, 0.34);
 
   --hcp-gold: #f3c86f;
-  --hcp-gold-bright: #ffe9a7;
+  --hcp-gold-bright: #fff0ad;
+  --hcp-amber: #eda85f;
+  --hcp-rose: #ffacd2;
+  --hcp-violet: #9471ff;
   --hcp-blue: #8dd8ff;
   --hcp-green: #8ff0c3;
   --hcp-silver: #d9e7ff;
-  --hcp-rose: #ffb8da;
-  --hcp-violet: #9471ff;
 
-  --hcp-wall: rgba(255, 244, 216, 0.42);
-  --hcp-wall-strong: rgba(255, 244, 216, 0.68);
   --hcp-line: rgba(255, 255, 255, 0.1);
-  --hcp-line-soft: rgba(255, 255, 255, 0.06);
-  --hcp-grid: rgba(141, 216, 255, 0.038);
-  --hcp-corridor: rgba(243, 200, 111, 0.075);
-  --hcp-corridor-line: rgba(243, 200, 111, 0.2);
+  --hcp-line-soft: rgba(255, 255, 255, 0.055);
+  --hcp-wall: rgba(255, 237, 190, 0.44);
+  --hcp-wall-strong: rgba(255, 237, 190, 0.72);
 
-  --hcp-estate-width: 1120px;
-  --hcp-estate-height: 1120px;
+  --hcp-heart-width: 1000px;
+  --hcp-heart-height: 900px;
+  --hcp-heart-depth: 320px;
+  --hcp-heart-perspective: 1180px;
+
+  --hcp-header-height: 12.8rem;
+  --hcp-arrival-height: 11rem;
+
+  --hcp-panel-radius: 1.75rem;
 
   --hcp-shadow:
     0 34px 120px rgba(0, 0, 0, 0.62),
-    0 0 0 1px rgba(255, 255, 255, 0.03);
+    0 0 0 1px rgba(255, 255, 255, 0.025);
 
-  --hcp-room-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  --hcp-heart-shadow:
+    0 42px 70px rgba(0, 0, 0, 0.54),
+    0 0 64px rgba(243, 200, 111, 0.13);
 
-  --hcp-radius: 1.15rem;
-  --hcp-radius-large: 1.8rem;
+  --hcp-camera-x: 0px;
+  --hcp-camera-y: 0px;
+  --hcp-camera-z: 0px;
+  --hcp-camera-scale: 0.86;
+  --hcp-camera-rotate-x: 7deg;
+  --hcp-camera-rotate-y: 0deg;
+  --hcp-camera-rotate-z: 0deg;
+  --hcp-camera-perspective: var(--hcp-heart-perspective);
 }
 
 /* =========================================================
-   DOCUMENT OPEN STATE
+   DOCUMENT STATE
    ========================================================= */
 
 html[data-house-control-pad-open="true"],
@@ -137,34 +116,36 @@ body[data-house-control-pad-open="true"] {
   place-items: center;
 
   padding:
-    max(0.7rem, env(safe-area-inset-top))
-    0.7rem
-    max(0.7rem, env(safe-area-inset-bottom));
+    max(0.65rem, env(safe-area-inset-top))
+    0.65rem
+    max(0.65rem, env(safe-area-inset-bottom));
 
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 
+  color: var(--hcp-text);
+
   background:
     radial-gradient(
-      circle at 50% 4%,
-      rgba(243, 200, 111, 0.14),
-      transparent 30rem
+      circle at 50% 5%,
+      rgba(243, 200, 111, 0.15),
+      transparent 31rem
     ),
     radial-gradient(
-      circle at 12% 24%,
-      rgba(148, 113, 255, 0.17),
+      circle at 12% 25%,
+      rgba(148, 113, 255, 0.16),
       transparent 34rem
     ),
     radial-gradient(
-      circle at 88% 26%,
-      rgba(141, 216, 255, 0.13),
+      circle at 88% 28%,
+      rgba(141, 216, 255, 0.12),
       transparent 34rem
     ),
-    rgba(0, 0, 0, 0.76);
+    rgba(0, 0, 0, 0.78);
 
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 
   transition:
     opacity 0.22s ease,
@@ -178,15 +159,15 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   PANEL
+   CONTROLLER PANEL
    ========================================================= */
 
 .hcp-panel {
   position: relative;
 
-  width: min(1280px, calc(100vw - 1.4rem));
-  height: min(940px, calc(100vh - 1.4rem));
-  max-height: calc(100vh - 1.4rem);
+  width: min(1280px, calc(100vw - 1.3rem));
+  height: min(960px, calc(100vh - 1.3rem));
+  max-height: calc(100vh - 1.3rem);
 
   display: grid;
   grid-template-rows:
@@ -197,28 +178,26 @@ body[data-house-control-pad-open="true"] {
 
   overflow: hidden;
 
-  border: 1px solid rgba(243, 200, 111, 0.24);
-  border-radius: var(--hcp-radius-large);
-
-  color: var(--hcp-text);
+  border: 1px solid rgba(243, 200, 111, 0.25);
+  border-radius: var(--hcp-panel-radius);
 
   background:
     radial-gradient(
-      circle at 10% 0%,
-      rgba(243, 200, 111, 0.11),
-      transparent 28rem
+      circle at 50% 22%,
+      rgba(243, 200, 111, 0.055),
+      transparent 34rem
     ),
     radial-gradient(
-      circle at 92% 16%,
-      rgba(141, 216, 255, 0.09),
-      transparent 30rem
+      circle at 84% 18%,
+      rgba(141, 216, 255, 0.065),
+      transparent 32rem
     ),
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.06),
-      rgba(255, 255, 255, 0.014)
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.012)
     ),
-    rgba(4, 9, 21, 0.98);
+    var(--hcp-panel);
 
   box-shadow: var(--hcp-shadow);
 
@@ -238,23 +217,26 @@ body[data-house-control-pad-open="true"] {
 
 .hcp-header {
   position: relative;
-  z-index: 30;
+  z-index: 80;
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: 1rem;
 
-  padding: 1rem 1rem 0.92rem;
+  padding: 1rem;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.075);
 
   background:
     linear-gradient(
       180deg,
-      rgba(9, 18, 39, 0.995),
-      rgba(6, 13, 29, 0.99)
+      rgba(7, 15, 33, 0.997),
+      rgba(4, 10, 24, 0.99)
     );
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
 .hcp-title-wrap {
@@ -271,35 +253,32 @@ body[data-house-control-pad-open="true"] {
   align-items: center;
   gap: 0.52rem;
 
-  padding: 0.46rem 0.76rem;
+  padding: 0.45rem 0.76rem;
 
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
 
-  color: rgba(235, 242, 255, 0.86);
-  background: rgba(255, 255, 255, 0.038);
+  color: rgba(235, 243, 255, 0.86);
+  background: rgba(255, 255, 255, 0.036);
 
   font:
     950 0.65rem/1
     Inter,
     ui-sans-serif,
     system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
     sans-serif;
 
-  letter-spacing: 0.14em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
 .hcp-kicker::before {
   content: "";
 
-  width: 0.64rem;
-  height: 0.64rem;
+  width: 0.62rem;
+  height: 0.62rem;
 
-  border-radius: 0.18rem;
+  border-radius: 0.16rem;
 
   transform: rotate(45deg);
 
@@ -317,18 +296,15 @@ body[data-house-control-pad-open="true"] {
 .hcp-title {
   margin: 0;
 
-  max-width: 860px;
+  max-width: 880px;
 
   color: var(--hcp-ink);
 
   font:
-    950 clamp(1.42rem, 3.4vw, 2.35rem) / 0.99
+    950 clamp(1.4rem, 3.3vw, 2.3rem) / 0.98
     Inter,
     ui-sans-serif,
     system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
     sans-serif;
 
   letter-spacing: -0.06em;
@@ -338,18 +314,15 @@ body[data-house-control-pad-open="true"] {
 .hcp-subtitle {
   margin: 0;
 
-  max-width: 900px;
+  max-width: 850px;
 
   color: var(--hcp-muted);
 
   font:
-    500 0.92rem/1.42
+    520 0.92rem/1.42
     Inter,
     ui-sans-serif,
     system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
     sans-serif;
 }
 
@@ -370,11 +343,7 @@ body[data-house-control-pad-open="true"] {
   border: 1px solid rgba(255, 255, 255, 0.14);
 
   color: var(--hcp-ink);
-
-  background: rgba(255, 255, 255, 0.05);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.045);
 
   cursor: pointer;
 
@@ -385,7 +354,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 .hcp-return-estate {
-  padding: 0.55rem 0.82rem;
+  padding: 0.54rem 0.82rem;
 
   border-radius: 999px;
 
@@ -396,7 +365,7 @@ body[data-house-control-pad-open="true"] {
     system-ui,
     sans-serif;
 
-  letter-spacing: 0.06em;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
 }
 
@@ -428,7 +397,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   ESTATE VIEWPORT
+   VIEWPORT
    ========================================================= */
 
 .hcp-estate-viewport {
@@ -439,34 +408,87 @@ body[data-house-control-pad-open="true"] {
 
   overflow: hidden;
   overscroll-behavior: contain;
+  touch-action: none;
+
+  perspective: var(--hcp-camera-perspective);
+  perspective-origin: 50% 46%;
 
   background:
     radial-gradient(
-      circle at 50% 48%,
-      rgba(243, 200, 111, 0.055),
+      circle at 50% 44%,
+      rgba(243, 200, 111, 0.075),
       transparent 26rem
+    ),
+    radial-gradient(
+      circle at 22% 52%,
+      rgba(148, 113, 255, 0.07),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 78% 52%,
+      rgba(141, 216, 255, 0.06),
+      transparent 28rem
     ),
     linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.11),
-      rgba(0, 0, 0, 0.24)
+      rgba(1, 4, 13, 0.74),
+      rgba(0, 0, 0, 0.3)
     );
 }
 
+.hcp-estate-viewport::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.11) 0 1px,
+      transparent 1.3px
+    );
+
+  background-size: 126px 126px;
+
+  opacity: 0.19;
+}
+
 .hcp-estate-viewport:focus-visible {
-  outline: 2px solid rgba(141, 216, 255, 0.38);
+  outline:
+    2px solid rgba(141, 216, 255, 0.42);
+
   outline-offset: -2px;
 }
 
-.hcp-estate-stage {
+/* =========================================================
+   CAMERA RIG
+   ========================================================= */
+
+.hcp-camera-rig {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
 
-  width: var(--hcp-estate-width);
-  height: var(--hcp-estate-height);
+  width: var(--hcp-heart-width);
+  height: var(--hcp-heart-height);
 
-  transform-origin: 0 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+
+  transform:
+    translate3d(
+      calc(-50% + var(--hcp-camera-x)),
+      calc(-50% + var(--hcp-camera-y)),
+      var(--hcp-camera-z)
+    )
+    rotateX(var(--hcp-camera-rotate-x))
+    rotateY(var(--hcp-camera-rotate-y))
+    rotateZ(var(--hcp-camera-rotate-z))
+    scale(var(--hcp-camera-scale));
 
   will-change: transform;
 
@@ -474,115 +496,343 @@ body[data-house-control-pad-open="true"] {
     transform 0.62s cubic-bezier(0.22, 0.8, 0.22, 1);
 }
 
-.hcp-estate-canvas {
-  position: relative;
+/*
+  Legacy controller compatibility.
+  The existing controller may still mount hcp-estate-stage.
+*/
 
-  width: var(--hcp-estate-width);
-  height: var(--hcp-estate-height);
-
-  isolation: isolate;
-
-  background:
-    linear-gradient(
-      var(--hcp-grid) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      var(--hcp-grid) 1px,
-      transparent 1px
-    ),
-    radial-gradient(
-      circle at 50% 47%,
-      rgba(243, 200, 111, 0.075),
-      transparent 28rem
-    ),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.014),
-      rgba(0, 0, 0, 0.08)
-    ),
-    #040917;
-
-  background-size:
-    34px 34px,
-    34px 34px,
-    auto,
-    auto,
-    auto;
-}
-
-.hcp-estate-canvas::before {
-  content: "IMMERSIVE CARDINAL ESTATE";
-
+.hcp-estate-stage {
   position: absolute;
-  left: 1.1rem;
-  top: 0.9rem;
-  z-index: 2;
+  left: 50%;
+  top: 50%;
 
-  color: rgba(243, 200, 111, 0.38);
+  width: var(--hcp-heart-width);
+  height: var(--hcp-heart-height);
 
-  font:
-    950 0.62rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
 
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  transform:
+    translate3d(
+      calc(-50% + var(--hcp-camera-x)),
+      calc(-50% + var(--hcp-camera-y)),
+      var(--hcp-camera-z)
+    )
+    rotateX(var(--hcp-camera-rotate-x))
+    rotateY(var(--hcp-camera-rotate-y))
+    rotateZ(var(--hcp-camera-rotate-z))
+    scale(var(--hcp-camera-scale));
 
-  pointer-events: none;
+  will-change: transform;
+
+  transition:
+    transform 0.62s cubic-bezier(0.22, 0.8, 0.22, 1);
 }
 
 /* =========================================================
-   STATIC CARDINAL ENGRAVINGS
+   HEART ESTATE ROOT
    ========================================================= */
 
-.hcp-estate-canvas::after {
+.hcp-estate-canvas,
+.hcp-heart-estate {
+  position: relative;
+
+  width: var(--hcp-heart-width);
+  height: var(--hcp-heart-height);
+
+  transform-style: preserve-3d;
+  isolation: isolate;
+
+  background: transparent;
+}
+
+.hcp-estate-canvas::before,
+.hcp-heart-estate::before {
   content: "";
 
   position: absolute;
-  inset: 1.2rem;
-  z-index: 1;
+  left: 50%;
+  bottom: 4%;
+  z-index: -4;
 
-  border: 1px solid rgba(243, 200, 111, 0.07);
-  border-radius: 1.2rem;
+  width: 68%;
+  height: 11%;
+
+  transform:
+    translateX(-50%)
+    translateZ(-120px);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(0, 0, 0, 0.76),
+      transparent 72%
+    );
+
+  filter: blur(18px);
+
+  pointer-events: none;
+}
+
+.hcp-estate-canvas::after,
+.hcp-heart-estate::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  z-index: -3;
+
+  width: 68%;
+  height: 68%;
+
+  transform:
+    translate(-50%, -50%)
+    translateZ(-90px);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(243, 200, 111, 0.14),
+      rgba(255, 172, 210, 0.07) 38%,
+      rgba(148, 113, 255, 0.045) 56%,
+      transparent 74%
+    );
+
+  filter: blur(30px);
 
   pointer-events: none;
 }
 
 /* =========================================================
-   LAYERS
+   HEART SHELL
    ========================================================= */
 
-.hcp-route-layer,
+.hcp-heart-rear-shell,
+.hcp-heart-shell,
+.hcp-heart-facet-layer,
+.hcp-heart-corridor-layer,
+.hcp-heart-room-layer,
+.hcp-heart-light-layer,
 .hcp-room-layer,
+.hcp-route-layer,
 .hcp-avatar-layer {
   position: absolute;
   inset: 0;
+
+  width: 100%;
+  height: 100%;
 }
 
-.hcp-route-layer {
-  z-index: 2;
+.hcp-heart-rear-shell {
+  z-index: 1;
+
+  transform:
+    translate3d(0, 18px, -82px)
+    scale(0.982);
+
+  clip-path:
+    path(
+      "M500 865 L382 746 L252 637 Q128 531 92 382 Q52 215 157 105 Q251 6 379 70 Q446 104 500 196 Q554 104 621 70 Q749 6 843 105 Q948 215 908 382 Q872 531 748 637 L618 746 Z"
+    );
+
+  background:
+    linear-gradient(
+      180deg,
+      #1d0d22,
+      #090b1c 74%,
+      #040711
+    );
+
+  border:
+    8px solid rgba(243, 200, 111, 0.22);
+
+  filter:
+    brightness(0.68)
+    drop-shadow(
+      0 34px 34px rgba(0, 0, 0, 0.46)
+    );
+
   pointer-events: none;
 }
 
-.hcp-room-layer {
-  z-index: 4;
-}
+.hcp-heart-shell {
+  z-index: 2;
 
-.hcp-avatar-layer {
-  z-index: 20;
+  transform: translateZ(-32px);
+
+  clip-path:
+    path(
+      "M500 865 L382 746 L252 637 Q128 531 92 382 Q52 215 157 105 Q251 6 379 70 Q446 104 500 196 Q554 104 621 70 Q749 6 843 105 Q948 215 908 382 Q872 531 748 637 L618 746 Z"
+    );
+
+  background:
+    radial-gradient(
+      circle at 50% 43%,
+      rgba(255, 230, 161, 0.14),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 28% 25%,
+      rgba(255, 172, 210, 0.17),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 72% 25%,
+      rgba(141, 216, 255, 0.13),
+      transparent 36%
+    ),
+    linear-gradient(
+      135deg,
+      #6f304f,
+      #3b2457 42%,
+      #151833 74%,
+      #080b19
+    );
+
+  border:
+    8px solid rgba(255, 228, 163, 0.54);
+
+  box-shadow:
+    var(--hcp-heart-shadow),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.055),
+    inset 0 0 74px rgba(255, 255, 255, 0.045);
+
   pointer-events: none;
 }
 
 /* =========================================================
-   ROOM BASE
+   HEART FACETS
+   ========================================================= */
+
+.hcp-heart-facet-layer {
+  z-index: 4;
+
+  transform-style: preserve-3d;
+
+  pointer-events: none;
+}
+
+.hcp-heart-facet,
+.hcp-room-node {
+  --room-center-x: 500px;
+  --room-center-y: 430px;
+  --room-z: 20px;
+  --room-width: 180px;
+  --room-height: 150px;
+  --room-depth: 60px;
+
+  position: absolute;
+
+  left: calc(var(--room-center-x) - var(--room-width) / 2);
+  top: calc(var(--room-center-y) - var(--room-height) / 2);
+
+  width: var(--room-width);
+  height: var(--room-height);
+
+  transform:
+    translateZ(var(--room-z));
+
+  transform-style: preserve-3d;
+
+  pointer-events: auto;
+}
+
+.hcp-heart-facet {
+  overflow: hidden;
+
+  border:
+    2px solid rgba(255, 231, 174, 0.28);
+
+  background:
+    radial-gradient(
+      circle at 50% 12%,
+      rgba(255, 255, 255, 0.14),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 173, 211, 0.14),
+      rgba(148, 113, 255, 0.09) 42%,
+      rgba(9, 15, 33, 0.84)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    inset 0 0 36px rgba(255, 255, 255, 0.025);
+
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    filter 0.2s ease,
+    transform 0.42s ease;
+}
+
+.hcp-heart-facet::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      115deg,
+      transparent 10%,
+      rgba(255, 255, 255, 0.08) 32%,
+      transparent 48%
+    );
+
+  opacity: 0.66;
+}
+
+.hcp-heart-facet[data-depth-band="rear"] {
+  filter:
+    brightness(0.76)
+    saturate(0.82);
+}
+
+.hcp-heart-facet[data-depth-band="middle"] {
+  filter:
+    brightness(0.93)
+    saturate(0.94);
+}
+
+.hcp-heart-facet[data-depth-band="front"] {
+  filter:
+    brightness(1.06)
+    saturate(1.04);
+
+  border-color:
+    rgba(255, 233, 179, 0.42);
+}
+
+.hcp-heart-facet[data-selected="true"],
+.hcp-heart-facet[data-current="true"] {
+  border-color:
+    rgba(255, 238, 196, 0.78);
+
+  filter:
+    brightness(1.16)
+    saturate(1.08);
+
+  box-shadow:
+    0 0 0 2px rgba(243, 200, 111, 0.12),
+    0 0 32px rgba(243, 200, 111, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* =========================================================
+   ROOM NODE
    ========================================================= */
 
 .hcp-room-node {
-  position: absolute;
+  z-index: 8;
 
   display: block;
 
@@ -590,89 +840,301 @@ body[data-house-control-pad-open="true"] {
 
   padding: 0;
 
-  border: 3px solid var(--hcp-wall);
+  border:
+    2px solid rgba(255, 238, 196, 0.4);
 
   color: var(--hcp-text);
 
   background:
     radial-gradient(
-      circle at 100% 0%,
-      rgba(255, 255, 255, 0.052),
-      transparent 58%
+      circle at 50% 0%,
+      rgba(255, 255, 255, 0.08),
+      transparent 42%
     ),
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.012)
-    ),
-    var(--hcp-room);
+      rgba(22, 31, 59, 0.78),
+      rgba(6, 12, 28, 0.92)
+    );
 
-  box-shadow: var(--hcp-room-shadow);
+  box-shadow:
+    0 18px 32px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
 
   cursor: pointer;
-
   text-align: left;
 
   transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    filter 0.18s ease,
-    opacity 0.18s ease;
+    opacity 0.2s ease,
+    filter 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.42s ease;
 }
 
 .hcp-room-node::before {
   content: "";
 
   position: absolute;
-  inset: 0.4rem;
+  inset: 0.38rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.045);
+  border:
+    1px solid rgba(255, 255, 255, 0.045);
+
+  pointer-events: none;
+}
+
+.hcp-room-node::after {
+  content: "";
+
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -12px;
+
+  height: 18px;
+
+  transform:
+    translateZ(-20px);
+
+  border-radius: 50%;
+
+  background:
+    rgba(0, 0, 0, 0.44);
+
+  filter: blur(8px);
 
   pointer-events: none;
 }
 
 .hcp-room-node:hover,
 .hcp-room-node:focus-visible {
-  border-color: rgba(243, 200, 111, 0.7);
+  border-color:
+    rgba(243, 200, 111, 0.76);
 
   box-shadow:
-    0 18px 38px rgba(0, 0, 0, 0.36),
-    0 0 0 2px rgba(243, 200, 111, 0.08),
-    0 0 1.2rem rgba(243, 200, 111, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    0 20px 38px rgba(0, 0, 0, 0.34),
+    0 0 0 2px rgba(243, 200, 111, 0.09),
+    0 0 24px rgba(243, 200, 111, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   outline: none;
 }
 
+.hcp-room-node[data-selected="true"],
 .hcp-room-node[data-current="true"] {
-  border-color: rgba(141, 216, 255, 0.74);
+  border-color:
+    rgba(255, 236, 187, 0.88);
 
   box-shadow:
-    0 16px 34px rgba(0, 0, 0, 0.33),
-    0 0 0 2px rgba(141, 216, 255, 0.11),
-    0 0 1.5rem rgba(141, 216, 255, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
-}
-
-.hcp-room-node[data-selected="true"] {
-  border-color: rgba(243, 200, 111, 0.76);
-}
-
-.hcp-room-node[data-destination="true"] {
-  box-shadow:
-    0 18px 38px rgba(0, 0, 0, 0.36),
-    0 0 0 2px rgba(243, 200, 111, 0.11),
-    0 0 1.8rem rgba(243, 200, 111, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    0 22px 42px rgba(0, 0, 0, 0.36),
+    0 0 0 3px rgba(243, 200, 111, 0.11),
+    0 0 34px rgba(243, 200, 111, 0.19),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .hcp-room-node[data-arrived="true"] {
   animation:
-    hcpArchitectureRoomArrival 0.78s ease both;
+    hcpHeartRoomArrival 0.8s ease both;
 }
 
-.hcp-room-node[data-focused="true"] {
-  z-index: 12;
+/* =========================================================
+   FACET SHAPES
+   ========================================================= */
+
+.hcp-room-human-threshold,
+.hcp-heart-facet-human-threshold {
+  clip-path:
+    polygon(
+      6% 35%,
+      15% 7%,
+      46% 0,
+      100% 5%,
+      95% 55%,
+      72% 100%,
+      18% 87%
+    );
+}
+
+.hcp-room-product-gallery,
+.hcp-heart-facet-product-gallery {
+  clip-path:
+    polygon(
+      0 5%,
+      54% 0,
+      85% 7%,
+      94% 35%,
+      82% 87%,
+      28% 100%,
+      5% 55%
+    );
+}
+
+.hcp-room-guide-foyer,
+.hcp-heart-facet-guide-foyer {
+  clip-path:
+    polygon(
+      0 0,
+      100% 42%,
+      100% 100%,
+      18% 58%
+    );
+}
+
+.hcp-room-book-chamber,
+.hcp-heart-facet-book-chamber {
+  clip-path:
+    polygon(
+      0 42%,
+      100% 0,
+      82% 58%,
+      0 100%
+    );
+}
+
+.hcp-room-law-library,
+.hcp-heart-facet-law-library {
+  clip-path:
+    polygon(
+      0 36%,
+      38% 0,
+      100% 30%,
+      78% 100%,
+      6% 88%
+    );
+}
+
+.hcp-room-diagnostic-room,
+.hcp-heart-facet-diagnostic-room {
+  clip-path:
+    polygon(
+      0 30%,
+      62% 0,
+      100% 36%,
+      94% 88%,
+      22% 100%
+    );
+}
+
+.hcp-room-showroom,
+.hcp-heart-facet-showroom {
+  clip-path:
+    polygon(
+      0 0,
+      100% 18%,
+      82% 54%,
+      100% 100%,
+      20% 92%
+    );
+}
+
+.hcp-room-lab,
+.hcp-heart-facet-lab {
+  clip-path:
+    polygon(
+      0 18%,
+      100% 0,
+      80% 92%,
+      0 100%,
+      18% 54%
+    );
+}
+
+.hcp-room-house-core,
+.hcp-heart-facet-house-core {
+  clip-path:
+    polygon(
+      50% 0,
+      100% 40%,
+      82% 90%,
+      50% 100%,
+      18% 90%,
+      0 40%
+    );
+
+  background:
+    radial-gradient(
+      circle at 50% 46%,
+      rgba(255, 246, 215, 0.24),
+      rgba(243, 200, 111, 0.11) 28%,
+      rgba(255, 172, 210, 0.055) 50%,
+      transparent 70%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(89, 58, 106, 0.94),
+      rgba(20, 25, 53, 0.97)
+    );
+}
+
+.hcp-room-education-room,
+.hcp-heart-facet-education-room {
+  clip-path:
+    polygon(
+      0 0,
+      92% 0,
+      100% 58%,
+      62% 100%,
+      12% 90%
+    );
+}
+
+.hcp-room-portrait-hall,
+.hcp-heart-facet-portrait-hall {
+  clip-path:
+    polygon(
+      8% 0,
+      92% 0,
+      100% 44%,
+      50% 100%,
+      0 44%
+    );
+}
+
+.hcp-room-atlas-study,
+.hcp-heart-facet-atlas-study {
+  clip-path:
+    polygon(
+      0 0,
+      100% 8%,
+      88% 100%,
+      24% 92%
+    );
+}
+
+.hcp-room-frontier-workshop,
+.hcp-heart-facet-frontier-workshop {
+  clip-path:
+    polygon(
+      0 8%,
+      100% 0,
+      76% 92%,
+      12% 100%
+    );
+}
+
+.hcp-room-hearth-room,
+.hcp-heart-facet-hearth-room {
+  clip-path:
+    polygon(
+      0 0,
+      50% 12%,
+      100% 0,
+      50% 100%
+    );
+
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      rgba(255, 233, 169, 0.22),
+      rgba(237, 168, 95, 0.09) 34%,
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(102, 50, 74, 0.92),
+      rgba(18, 17, 39, 0.97)
+    );
 }
 
 /* =========================================================
@@ -685,380 +1147,148 @@ body[data-house-control-pad-open="true"] {
 .hcp-room-proof,
 .hcp-room-law,
 .hcp-room-future-character {
-  border-color: rgba(141, 216, 255, 0.34);
+  border-color:
+    rgba(141, 216, 255, 0.4);
 }
 
 .hcp-room-product,
 .hcp-room-frontier {
-  border-color: rgba(143, 240, 195, 0.36);
+  border-color:
+    rgba(143, 240, 195, 0.4);
 }
 
 .hcp-room-diagnostic {
-  border-color: rgba(216, 230, 255, 0.42);
+  border-color:
+    rgba(216, 230, 255, 0.5);
 }
 
 .hcp-room-human,
 .hcp-room-book {
-  border-color: rgba(255, 184, 218, 0.38);
+  border-color:
+    rgba(255, 172, 210, 0.44);
 }
 
 /* =========================================================
-   ROOM RANK HIERARCHY
+   ROOM DEPTH
    ========================================================= */
 
-.hcp-room-rank-grand {
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
-}
+.hcp-room-floor {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 
-.hcp-room-rank-medium {
-  box-shadow:
-    0 15px 34px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
-}
-
-.hcp-room-rank-small {
-  box-shadow:
-    0 11px 24px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.045);
-}
-
-/* =========================================================
-   UNIQUE STATIC ROOM ARCHITECTURE
-   ========================================================= */
-
-/* House Core / Great Hall */
-
-.hcp-room-shape-great-hall {
-  clip-path:
-    polygon(
-      9% 0,
-      91% 0,
-      100% 9%,
-      100% 91%,
-      91% 100%,
-      9% 100%,
-      0 91%,
-      0 9%
-    );
-
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(243, 200, 111, 0.11),
-      transparent 34%
-    ),
-    conic-gradient(
-      from 45deg at 50% 50%,
-      rgba(141, 216, 255, 0.04),
-      transparent 22%,
-      rgba(243, 200, 111, 0.05),
-      transparent 50%,
-      rgba(141, 216, 255, 0.04),
-      transparent 78%
-    ),
-    rgba(9, 19, 40, 0.98);
-}
-
-.hcp-room-shape-great-hall::before {
-  inset: 1rem;
-
-  clip-path:
-    polygon(
-      8% 0,
-      92% 0,
-      100% 8%,
-      100% 92%,
-      92% 100%,
-      8% 100%,
-      0 92%,
-      0 8%
-    );
-}
-
-/* Guide Foyer */
-
-.hcp-room-shape-formal-foyer {
-  clip-path:
-    polygon(
-      8% 0,
-      92% 0,
-      100% 22%,
-      100% 100%,
-      0 100%,
-      0 22%
-    );
+  transform:
+    translateZ(var(--room-floor-z, -12px));
 
   background:
     linear-gradient(
       180deg,
-      rgba(243, 200, 111, 0.075),
+      rgba(255, 255, 255, 0.025),
+      rgba(0, 0, 0, 0.18)
+    );
+
+  pointer-events: none;
+}
+
+.hcp-room-wall {
+  position: absolute;
+  z-index: 2;
+
+  border:
+    1px solid rgba(255, 239, 198, 0.22);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.07),
       rgba(255, 255, 255, 0.018)
-    ),
-    rgba(8, 17, 35, 0.97);
-}
-
-.hcp-room-shape-formal-foyer::before {
-  clip-path:
-    polygon(
-      8% 0,
-      92% 0,
-      100% 22%,
-      100% 100%,
-      0 100%,
-      0 22%
-    );
-}
-
-/* Human Threshold */
-
-.hcp-room-shape-angled-threshold {
-  clip-path:
-    polygon(
-      15% 0,
-      100% 0,
-      100% 100%,
-      0 100%,
-      0 22%
     );
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 184, 218, 0.09),
-      transparent 44%
-    ),
-    rgba(10, 17, 35, 0.97);
+  transform-style: preserve-3d;
+
+  pointer-events: none;
 }
 
-/* Book Chamber */
+.hcp-room-wall-north {
+  left: 0;
+  top: 0;
 
-.hcp-room-shape-book-apse {
-  border-radius:
-    0 0 48% 48% /
-    0 0 22% 22%;
+  width: 100%;
+  height: var(--room-wall-height, 38px);
 
-  background:
-    radial-gradient(
-      ellipse at 72% 8%,
-      rgba(255, 184, 218, 0.11),
-      transparent 32%
-    ),
-    rgba(10, 17, 35, 0.97);
-}
-
-/* Law Library */
-
-.hcp-room-shape-archive-aisle {
-  clip-path:
-    polygon(
-      0 7%,
-      100% 0,
-      100% 93%,
-      0 100%
+  transform:
+    rotateX(90deg)
+    translateZ(
+      calc(
+        var(--room-wall-height, 38px) / 2
+      )
     );
 
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(216, 230, 255, 0.035) 0 7%,
-      transparent 7% 14%
-    ),
-    rgba(8, 16, 34, 0.98);
+  transform-origin: 50% 0;
 }
 
-/* Showroom / Atrium */
+.hcp-room-wall-south {
+  left: 0;
+  bottom: 0;
 
-.hcp-room-shape-bowed-atrium {
-  border-radius:
-    40% 4% 4% 40% /
-    50% 4% 4% 50%;
+  width: 100%;
+  height: var(--room-wall-height, 38px);
 
-  background:
-    radial-gradient(
-      ellipse at 6% 50%,
-      rgba(141, 216, 255, 0.11),
-      transparent 38%
-    ),
-    rgba(8, 17, 36, 0.98);
-}
-
-/* Product Gallery */
-
-.hcp-room-shape-workshop-gallery {
-  clip-path:
-    polygon(
-      0 0,
-      82% 0,
-      100% 17%,
-      100% 100%,
-      14% 100%,
-      0 86%
+  transform:
+    rotateX(-90deg)
+    translateZ(
+      calc(
+        var(--room-wall-height, 38px) / 2
+      )
     );
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(143, 240, 195, 0.085),
-      transparent 42%
-    ),
-    rgba(8, 19, 35, 0.98);
+  transform-origin: 50% 100%;
 }
 
-/* Atlas Study */
+.hcp-room-wall-west {
+  left: 0;
+  top: 0;
 
-.hcp-room-shape-round-study {
-  border-radius: 50%;
+  width: var(--room-wall-height, 38px);
+  height: 100%;
 
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(141, 216, 255, 0.09),
-      transparent 44%
-    ),
-    repeating-conic-gradient(
-      from 0deg,
-      rgba(141, 216, 255, 0.03) 0 4deg,
-      transparent 4deg 32deg
-    ),
-    rgba(8, 17, 36, 0.98);
-}
-
-/* Hearth Room */
-
-.hcp-room-shape-rounded-hearth {
-  border-radius: 999px;
-
-  background:
-    radial-gradient(
-      ellipse at 45% 50%,
-      rgba(243, 200, 111, 0.13),
-      transparent 42%
-    ),
-    rgba(10, 17, 31, 0.98);
-}
-
-/* Portrait Hall */
-
-.hcp-room-shape-portrait-gallery {
-  clip-path:
-    polygon(
-      4% 0,
-      96% 0,
-      100% 14%,
-      100% 86%,
-      96% 100%,
-      4% 100%,
-      0 86%,
-      0 14%
+  transform:
+    rotateY(-90deg)
+    translateZ(
+      calc(
+        var(--room-wall-height, 38px) / 2
+      )
     );
 
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.025) 0 12%,
-      transparent 12% 24%
-    ),
-    rgba(9, 17, 36, 0.98);
+  transform-origin: 0 50%;
 }
 
-/* Education Room */
+.hcp-room-wall-east {
+  right: 0;
+  top: 0;
 
-.hcp-room-shape-tiered-classroom {
-  clip-path:
-    polygon(
-      0 0,
-      100% 0,
-      100% 100%,
-      18% 100%,
-      18% 84%,
-      10% 84%,
-      10% 67%,
-      0 67%
+  width: var(--room-wall-height, 38px);
+  height: 100%;
+
+  transform:
+    rotateY(90deg)
+    translateZ(
+      calc(
+        var(--room-wall-height, 38px) / 2
+      )
     );
 
-  background:
-    linear-gradient(
-      180deg,
-      rgba(143, 240, 195, 0.07),
-      transparent 40%
-    ),
-    rgba(8, 18, 35, 0.98);
-}
-
-/* Diagnostic Room */
-
-.hcp-room-shape-hex-diagnostic {
-  clip-path:
-    polygon(
-      25% 0,
-      75% 0,
-      100% 50%,
-      75% 100%,
-      25% 100%,
-      0 50%
-    );
-
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(216, 230, 255, 0.11),
-      transparent 40%
-    ),
-    rgba(7, 14, 31, 0.98);
-}
-
-/* The Lab */
-
-.hcp-room-shape-technical-annex {
-  clip-path:
-    polygon(
-      0 0,
-      74% 0,
-      74% 14%,
-      100% 14%,
-      100% 100%,
-      0 100%
-    );
-
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(141, 216, 255, 0.03) 0 8%,
-      transparent 8% 16%
-    ),
-    rgba(7, 15, 32, 0.98);
-}
-
-/* Frontier Workshop */
-
-.hcp-room-shape-frontier-wedge {
-  clip-path:
-    polygon(
-      0 0,
-      100% 22%,
-      100% 78%,
-      0 100%
-    );
-
-  background:
-    linear-gradient(
-      120deg,
-      rgba(143, 240, 195, 0.1),
-      rgba(148, 113, 255, 0.08),
-      transparent 72%
-    ),
-    rgba(8, 17, 34, 0.98);
+  transform-origin: 100% 50%;
 }
 
 /* =========================================================
-   STATIC ROOM ARCHITECTURAL FEATURES
+   ARCHITECTURAL FEATURES
    ========================================================= */
 
 .hcp-room-architecture {
   position: absolute;
   inset: 0;
+  z-index: 3;
 
   overflow: hidden;
 
@@ -1070,15 +1300,19 @@ body[data-house-control-pad-open="true"] {
 
   display: block;
 
-  border: 1px solid rgba(255, 255, 255, 0.055);
+  border:
+    1px solid rgba(255, 255, 255, 0.07);
 
   background:
-    rgba(255, 255, 255, 0.018);
+    rgba(255, 255, 255, 0.025);
 
-  opacity: 0.82;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
+  opacity: 0.88;
 }
 
-/* Circular and radial features */
+/* Circular architectural features */
 
 .hcp-room-feature-central-seal,
 .hcp-room-feature-entry-seal,
@@ -1090,96 +1324,70 @@ body[data-house-control-pad-open="true"] {
 }
 
 .hcp-room-feature-central-seal {
-  border-color: rgba(243, 200, 111, 0.24);
+  border-color:
+    rgba(243, 200, 111, 0.35);
 
   background:
     radial-gradient(
       circle,
-      rgba(243, 200, 111, 0.13),
-      rgba(243, 200, 111, 0.03) 42%,
-      transparent 68%
+      rgba(255, 244, 210, 0.22),
+      rgba(243, 200, 111, 0.08) 34%,
+      transparent 70%
     );
-}
 
-.hcp-room-feature-central-seal::before,
-.hcp-room-feature-central-seal::after,
-.hcp-room-feature-diagnostic-seal::before,
-.hcp-room-feature-diagnostic-seal::after {
-  content: "";
-
-  position: absolute;
-  left: 50%;
-  top: 50%;
-
-  background:
-    rgba(243, 200, 111, 0.18);
-}
-
-.hcp-room-feature-central-seal::before,
-.hcp-room-feature-diagnostic-seal::before {
-  width: 72%;
-  height: 1px;
-
-  transform: translate(-50%, -50%);
-}
-
-.hcp-room-feature-central-seal::after,
-.hcp-room-feature-diagnostic-seal::after {
-  width: 1px;
-  height: 72%;
-
-  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 22px rgba(243, 200, 111, 0.16);
 }
 
 .hcp-room-feature-entry-seal {
   border-color:
-    rgba(243, 200, 111, 0.24);
+    rgba(243, 200, 111, 0.25);
 
   background:
     radial-gradient(
       circle,
-      rgba(243, 200, 111, 0.12),
-      transparent 68%
+      rgba(243, 200, 111, 0.14),
+      transparent 70%
     );
 }
 
 .hcp-room-feature-diagnostic-seal {
   border-color:
-    rgba(216, 230, 255, 0.24);
+    rgba(216, 230, 255, 0.3);
 
   background:
     radial-gradient(
       circle,
-      rgba(216, 230, 255, 0.1),
-      transparent 68%
+      rgba(216, 230, 255, 0.11),
+      transparent 70%
     );
 }
 
 .hcp-room-feature-radial-floor {
   border-color:
-    rgba(141, 216, 255, 0.09);
+    rgba(141, 216, 255, 0.13);
 
   background:
     repeating-conic-gradient(
       from 0deg,
-      rgba(141, 216, 255, 0.05) 0 2deg,
-      transparent 2deg 20deg
+      rgba(141, 216, 255, 0.055) 0 2deg,
+      transparent 2deg 22deg
     );
 }
 
 .hcp-room-feature-threshold-light {
   border-color:
-    rgba(255, 184, 218, 0.22);
+    rgba(255, 172, 210, 0.28);
 
   background:
     radial-gradient(
       circle,
-      rgba(255, 184, 218, 0.17),
-      transparent 68%
+      rgba(255, 172, 210, 0.22),
+      transparent 70%
     );
 }
 
-/* Rounded and bowed architectural surfaces */
+/* Apse and bowed forms */
 
 .hcp-room-feature-reading-apse,
 .hcp-room-feature-bowed-wall,
@@ -1189,66 +1397,60 @@ body[data-house-control-pad-open="true"] {
 
 .hcp-room-feature-reading-apse {
   border-color:
-    rgba(255, 184, 218, 0.16);
+    rgba(255, 172, 210, 0.18);
 
   background:
     radial-gradient(
-      ellipse at 50% 15%,
-      rgba(255, 184, 218, 0.08),
-      transparent 70%
+      ellipse at 50% 14%,
+      rgba(255, 172, 210, 0.1),
+      transparent 72%
     );
 }
 
 .hcp-room-feature-bowed-wall {
   border-color:
-    rgba(141, 216, 255, 0.13);
+    rgba(141, 216, 255, 0.16);
 
   border-right: 0;
 
   background:
     linear-gradient(
       90deg,
-      rgba(141, 216, 255, 0.06),
+      rgba(141, 216, 255, 0.08),
       transparent
     );
 }
 
-.hcp-room-feature-rounded-wall {
-  border-color:
-    rgba(243, 200, 111, 0.1);
-}
-
-/* Archive and shelving systems */
+/* Shelves and archives */
 
 .hcp-room-feature-book-wall,
 .hcp-room-feature-shelf-left,
 .hcp-room-feature-shelf-right,
 .hcp-room-feature-service-wall,
-.hcp-room-feature-gauge-bank,
-.hcp-room-feature-archive-aisle {
+.hcp-room-feature-gauge-bank {
   background:
     repeating-linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.06) 0 2px,
-      transparent 2px 9px
+      rgba(255, 255, 255, 0.07) 0 2px,
+      transparent 2px 10px
     ),
-    rgba(255, 255, 255, 0.015);
+    rgba(255, 255, 255, 0.018);
 }
 
 .hcp-room-feature-archive-aisle {
   border-color:
-    rgba(216, 230, 255, 0.12);
+    rgba(216, 230, 255, 0.14);
 
   background:
     linear-gradient(
       90deg,
       transparent,
-      rgba(216, 230, 255, 0.05),
+      rgba(216, 230, 255, 0.055),
       transparent
     );
 }
 
-/* Tables and work surfaces */
+/* Tables and benches */
 
 .hcp-room-feature-reading-table,
 .hcp-room-feature-workbench,
@@ -1258,86 +1460,83 @@ body[data-house-control-pad-open="true"] {
   background:
     linear-gradient(
       180deg,
-      rgba(243, 200, 111, 0.09),
-      rgba(243, 200, 111, 0.025)
+      rgba(243, 200, 111, 0.12),
+      rgba(243, 200, 111, 0.03)
     );
 }
 
 .hcp-room-feature-reading-table {
   border-color:
-    rgba(255, 184, 218, 0.15);
+    rgba(255, 172, 210, 0.18);
 }
 
 .hcp-room-feature-workbench {
   border-color:
-    rgba(143, 240, 195, 0.15);
+    rgba(143, 240, 195, 0.18);
 }
 
 .hcp-room-feature-atlas-table {
   border-color:
-    rgba(141, 216, 255, 0.17);
+    rgba(141, 216, 255, 0.2);
 }
 
-/* Bays, instruments, exhibits, and niches */
+/* Bays and instruments */
 
 .hcp-room-feature-instrument-bay,
 .hcp-room-feature-exhibit-bay,
 .hcp-room-feature-display-bay,
 .hcp-room-feature-future-bay,
-.hcp-room-feature-portrait-niche {
-  border-radius: 0.4rem;
+.hcp-room-feature-portrait-niche,
+.hcp-room-feature-map-reference {
+  border-radius: 0.42rem;
 
   background:
     linear-gradient(
       180deg,
-      rgba(141, 216, 255, 0.05),
-      rgba(255, 255, 255, 0.012)
+      rgba(141, 216, 255, 0.06),
+      rgba(255, 255, 255, 0.014)
     );
 }
 
-.hcp-room-feature-instrument-bay {
-  border-color:
-    rgba(141, 216, 255, 0.15);
-}
-
+.hcp-room-feature-instrument-bay,
 .hcp-room-feature-exhibit-bay {
   border-color:
-    rgba(141, 216, 255, 0.13);
+    rgba(141, 216, 255, 0.17);
 }
 
 .hcp-room-feature-display-bay {
   border-color:
-    rgba(143, 240, 195, 0.14);
+    rgba(143, 240, 195, 0.17);
 }
 
 .hcp-room-feature-future-bay {
   border-color:
-    rgba(148, 113, 255, 0.18);
+    rgba(148, 113, 255, 0.22);
 
   background:
     linear-gradient(
       135deg,
-      rgba(143, 240, 195, 0.06),
-      rgba(148, 113, 255, 0.07)
+      rgba(143, 240, 195, 0.07),
+      rgba(148, 113, 255, 0.09)
     );
 }
 
 .hcp-room-feature-portrait-niche {
   border-color:
-    rgba(243, 200, 111, 0.12);
+    rgba(243, 200, 111, 0.16);
 }
 
-/* Classroom systems */
+/* Classroom */
 
 .hcp-room-feature-teaching-wall {
   border-color:
-    rgba(143, 240, 195, 0.18);
+    rgba(143, 240, 195, 0.2);
 
   background:
     linear-gradient(
       90deg,
-      rgba(143, 240, 195, 0.08),
-      rgba(141, 216, 255, 0.035)
+      rgba(143, 240, 195, 0.09),
+      rgba(141, 216, 255, 0.04)
     );
 }
 
@@ -1345,10 +1544,10 @@ body[data-house-control-pad-open="true"] {
   border-radius: 999px;
 
   background:
-    rgba(143, 240, 195, 0.05);
+    rgba(143, 240, 195, 0.065);
 }
 
-/* Crossings and entrances */
+/* Crossings */
 
 .hcp-room-feature-north-crossing,
 .hcp-room-feature-south-crossing,
@@ -1359,44 +1558,42 @@ body[data-house-control-pad-open="true"] {
   border: 0;
 
   background:
-    rgba(243, 200, 111, 0.055);
+    rgba(243, 200, 111, 0.07);
 }
 
 .hcp-room-feature-north-crossing,
 .hcp-room-feature-south-crossing {
   border-left:
-    1px solid rgba(243, 200, 111, 0.12);
+    1px solid rgba(243, 200, 111, 0.15);
 
   border-right:
-    1px solid rgba(243, 200, 111, 0.12);
+    1px solid rgba(243, 200, 111, 0.15);
 }
 
 .hcp-room-feature-west-crossing,
 .hcp-room-feature-east-crossing {
   border-top:
-    1px solid rgba(243, 200, 111, 0.12);
+    1px solid rgba(243, 200, 111, 0.15);
 
   border-bottom:
-    1px solid rgba(243, 200, 111, 0.12);
-}
-
-.hcp-room-feature-double-door {
-  border-left:
-    1px solid rgba(243, 200, 111, 0.2);
-
-  border-right:
-    1px solid rgba(243, 200, 111, 0.2);
+    1px solid rgba(243, 200, 111, 0.15);
 }
 
 .hcp-room-feature-controlled-entry {
   border-top:
-    1px solid rgba(216, 230, 255, 0.17);
+    1px solid rgba(216, 230, 255, 0.2);
 
   border-bottom:
-    1px solid rgba(216, 230, 255, 0.17);
+    1px solid rgba(216, 230, 255, 0.2);
 }
 
-/* Angled structural wall */
+.hcp-room-feature-double-door {
+  border-left:
+    1px solid rgba(243, 200, 111, 0.24);
+
+  border-right:
+    1px solid rgba(243, 200, 111, 0.24);
+}
 
 .hcp-room-feature-angled-wall {
   border: 0;
@@ -1412,12 +1609,12 @@ body[data-house-control-pad-open="true"] {
   background:
     linear-gradient(
       135deg,
-      rgba(255, 184, 218, 0.07),
+      rgba(255, 172, 210, 0.09),
       transparent
     );
 }
 
-/* Static hearth feature */
+/* Static hearth */
 
 .hcp-room-feature-hearth-fire {
   border: 0;
@@ -1426,20 +1623,82 @@ body[data-house-control-pad-open="true"] {
   background:
     radial-gradient(
       ellipse at 50% 70%,
-      rgba(255, 232, 158, 0.76),
-      rgba(243, 200, 111, 0.44) 28%,
-      rgba(255, 136, 82, 0.16) 58%,
-      transparent 72%
+      rgba(255, 241, 187, 0.82),
+      rgba(243, 200, 111, 0.5) 26%,
+      rgba(255, 138, 82, 0.17) 58%,
+      transparent 74%
     );
 
   filter:
     drop-shadow(
-      0 0 0.8rem rgba(243, 200, 111, 0.3)
+      0 0 0.9rem rgba(243, 200, 111, 0.34)
     );
 }
 
 /* =========================================================
-   ROOM INFORMATION ZONES
+   CORRIDORS
+   ========================================================= */
+
+.hcp-heart-corridor-layer,
+.hcp-route-layer {
+  z-index: 6;
+
+  transform-style: preserve-3d;
+
+  pointer-events: none;
+}
+
+.hcp-heart-corridor,
+.hcp-travel-segment {
+  position: absolute;
+
+  height: 3px;
+
+  transform-origin: 0 50%;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(243, 200, 111, 0),
+      rgba(243, 200, 111, 0.5) 20%,
+      rgba(255, 235, 183, 0.72) 50%,
+      rgba(141, 216, 255, 0.46) 80%,
+      rgba(141, 216, 255, 0)
+    );
+
+  box-shadow:
+    0 0 0.75rem rgba(243, 200, 111, 0.18);
+
+  opacity: 0.6;
+
+  pointer-events: none;
+}
+
+.hcp-travel-segment {
+  z-index: 30;
+
+  opacity: 1;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(243, 200, 111, 0),
+      rgba(255, 241, 196, 0.98),
+      rgba(141, 216, 255, 0.82),
+      rgba(255, 172, 210, 0)
+    );
+
+  box-shadow:
+    0 0 1.1rem rgba(243, 200, 111, 0.38);
+
+  animation:
+    hcpHeartTravelSegment 0.7s ease both;
+}
+
+/* =========================================================
+   LABELS AND INFORMATION
    ========================================================= */
 
 .hcp-room-label-zone,
@@ -1448,10 +1707,8 @@ body[data-house-control-pad-open="true"] {
 .hcp-room-portrait-zone,
 .hcp-room-action-zone {
   position: absolute;
-  z-index: 6;
+  z-index: 14;
 }
-
-/* Labels */
 
 .hcp-room-label-zone {
   display: grid;
@@ -1468,15 +1725,20 @@ body[data-house-control-pad-open="true"] {
   display: inline-flex;
   align-items: center;
 
-  padding: 0.31rem 0.48rem;
+  padding: 0.3rem 0.48rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border:
+    1px solid rgba(255, 255, 255, 0.13);
+
   border-radius: 999px;
 
   color: var(--hcp-ink);
 
   background:
-    rgba(1, 5, 14, 0.64);
+    rgba(1, 4, 13, 0.75);
+
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.24);
 
   font:
     950 0.68rem/1
@@ -1485,7 +1747,7 @@ body[data-house-control-pad-open="true"] {
     system-ui,
     sans-serif;
 
-  letter-spacing: -0.015em;
+  letter-spacing: -0.012em;
 
   white-space: nowrap;
   overflow: hidden;
@@ -1498,21 +1760,18 @@ body[data-house-control-pad-open="true"] {
   color: var(--hcp-soft);
 
   font:
-    850 0.49rem/1.1
+    850 0.48rem/1.1
     Inter,
     ui-sans-serif,
     system-ui,
     sans-serif;
 
-  letter-spacing: 0.09em;
+  letter-spacing: 0.085em;
   text-transform: uppercase;
 }
 
-/* Estate summaries */
-
 .hcp-room-summary-zone {
   display: grid;
-  align-content: start;
   gap: 0.28rem;
 
   opacity: 0;
@@ -1528,9 +1787,6 @@ body[data-house-control-pad-open="true"] {
 .hcp-room-node[data-summary-active="true"]
   .hcp-room-summary-zone,
 .hcp-room-node[data-selected="true"]
-  .hcp-room-summary-zone,
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-rank-grand
   .hcp-room-summary-zone {
   opacity: 1;
   transform: translateY(0);
@@ -1539,7 +1795,8 @@ body[data-house-control-pad-open="true"] {
 .hcp-room-summary {
   margin: 0;
 
-  color: rgba(235, 243, 255, 0.76);
+  color:
+    rgba(235, 243, 255, 0.78);
 
   font:
     650 0.56rem/1.34
@@ -1554,13 +1811,16 @@ body[data-house-control-pad-open="true"] {
 
   padding: 0.17rem 0.32rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
   border-radius: 999px;
 
-  color: rgba(243, 200, 111, 0.8);
+  color:
+    rgba(243, 200, 111, 0.84);
 
   background:
-    rgba(1, 5, 14, 0.44);
+    rgba(1, 4, 13, 0.5);
 
   font:
     900 0.45rem/1
@@ -1573,21 +1833,19 @@ body[data-house-control-pad-open="true"] {
   text-transform: uppercase;
 }
 
-/* Immersive detail */
-
 .hcp-room-detail-zone {
   display: grid;
   align-content: start;
   gap: 0.35rem;
 
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(7px);
 
   pointer-events: none;
 
   transition:
-    opacity 0.22s ease,
-    transform 0.22s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .hcp-room-node[data-information-visible="true"]
@@ -1617,7 +1875,7 @@ body[data-house-control-pad-open="true"] {
   color: var(--hcp-muted);
 
   font:
-    560 0.64rem/1.42
+    560 0.63rem/1.4
     Inter,
     ui-sans-serif,
     system-ui,
@@ -1625,41 +1883,32 @@ body[data-house-control-pad-open="true"] {
 }
 
 .hcp-room-visitor-list {
-  margin: 0.2rem 0 0;
+  margin: 0.18rem 0 0;
   padding-left: 1rem;
 
   display: grid;
-  gap: 0.16rem;
+  gap: 0.15rem;
 
-  color: rgba(237, 245, 255, 0.84);
+  color:
+    rgba(237, 245, 255, 0.84);
 
   font:
-    750 0.56rem/1.28
+    740 0.55rem/1.28
     Inter,
     ui-sans-serif,
     system-ui,
     sans-serif;
 }
 
-/* Portrait reservation zone */
-
-.hcp-room-portrait-zone {
-  border: 1px solid transparent;
-
-  pointer-events: none;
-}
-
-/* Room actions */
-
 .hcp-room-action-zone {
   opacity: 0;
-  transform: translateY(7px);
+  transform: translateY(6px);
 
   pointer-events: none;
 
   transition:
-    opacity 0.22s ease,
-    transform 0.22s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .hcp-room-node[data-information-visible="true"]
@@ -1687,16 +1936,19 @@ body[data-house-control-pad-open="true"] {
 
   padding: 0.34rem 0.52rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border:
+    1px solid rgba(255, 255, 255, 0.13);
+
   border-radius: 999px;
 
-  color: rgba(240, 247, 255, 0.9);
+  color:
+    rgba(240, 247, 255, 0.92);
 
   background:
-    rgba(255, 255, 255, 0.04);
+    rgba(255, 255, 255, 0.045);
 
   font:
-    900 0.48rem/1
+    900 0.47rem/1
     Inter,
     ui-sans-serif,
     system-ui,
@@ -1717,18 +1969,20 @@ body[data-house-control-pad-open="true"] {
 .hcp-room-action:focus-visible {
   transform: translateY(-1px);
 
-  border-color: rgba(243, 200, 111, 0.46);
+  border-color:
+    rgba(243, 200, 111, 0.5);
 
   background:
-    rgba(243, 200, 111, 0.07);
+    rgba(243, 200, 111, 0.075);
 
   outline: none;
 }
 
 .hcp-room-action-primary {
-  border-color: rgba(243, 200, 111, 0.72);
+  border-color:
+    rgba(243, 200, 111, 0.78);
 
-  color: #060811;
+  color: #050811;
 
   background:
     linear-gradient(
@@ -1743,7 +1997,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   VIEW MODE PRESENTATION
+   ESTATE VIEW
    ========================================================= */
 
 .hcp-panel[data-house-view-mode="estate"]
@@ -1753,6 +2007,32 @@ body[data-house-control-pad-open="true"] {
   display: none;
 }
 
+.hcp-panel[data-house-view-mode="estate"]
+  .hcp-room-node {
+  opacity: 0.96;
+}
+
+.hcp-panel[data-house-view-mode="estate"]
+  .hcp-room-summary-zone {
+  display: none;
+}
+
+.hcp-panel[data-house-view-mode="estate"]
+  .hcp-room-node:hover
+  .hcp-room-summary-zone,
+.hcp-panel[data-house-view-mode="estate"]
+  .hcp-room-node:focus-visible
+  .hcp-room-summary-zone,
+.hcp-panel[data-house-view-mode="estate"]
+  .hcp-room-node[data-selected="true"]
+  .hcp-room-summary-zone {
+  display: grid;
+}
+
+/* =========================================================
+   ROOM VIEW
+   ========================================================= */
+
 .hcp-panel[data-house-view-mode="room"]
   .hcp-room-summary-zone {
   display: none;
@@ -1760,56 +2040,69 @@ body[data-house-control-pad-open="true"] {
 
 .hcp-panel[data-house-view-mode="room"]
   .hcp-room-node:not([data-focused="true"]) {
-  opacity: 0.34;
+  opacity: 0.28;
 
   filter:
-    saturate(0.55)
-    brightness(0.72);
+    saturate(0.52)
+    brightness(0.68);
+}
+
+.hcp-panel[data-house-view-mode="room"]
+  .hcp-heart-facet:not([data-selected="true"]) {
+  opacity: 0.32;
+
+  filter:
+    saturate(0.5)
+    brightness(0.64);
 }
 
 .hcp-panel[data-house-view-mode="room"]
   .hcp-room-node[data-focused="true"] {
+  z-index: 40;
+
   opacity: 1;
   filter: none;
-}
 
-/* =========================================================
-   ROUTE PATH PRESENTATION
-   ========================================================= */
-
-.hcp-travel-segment {
-  position: absolute;
-  z-index: 18;
-
-  height: 3px;
-
-  transform-origin: 0 50%;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(243, 200, 111, 0),
-      rgba(243, 200, 111, 0.92),
-      rgba(141, 216, 255, 0.78),
-      rgba(255, 184, 218, 0)
+  transform:
+    translateZ(
+      calc(var(--room-z) + 28px)
     );
+}
 
-  box-shadow:
-    0 0 0.9rem rgba(243, 200, 111, 0.34);
+.hcp-panel[data-house-view-mode="room"]
+  .hcp-room-node[data-focused="true"]
+  .hcp-room-detail-zone,
+.hcp-panel[data-house-view-mode="room"]
+  .hcp-room-node[data-focused="true"]
+  .hcp-room-action-zone {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  animation:
-    hcpArchitectureTravelSegment 0.68s ease both;
+/*
+  Neighbor-context law.
+  The selected room remains dominant without erasing the heart.
+*/
 
-  pointer-events: none;
+.hcp-panel[data-house-view-mode="room"]
+  .hcp-heart-shell,
+.hcp-panel[data-house-view-mode="room"]
+  .hcp-heart-rear-shell {
+  opacity: 0.62;
+}
+
+.hcp-panel[data-house-view-mode="room"]
+  .hcp-heart-corridor-layer {
+  opacity: 0.46;
 }
 
 /* =========================================================
-   ARRIVAL CONFIRMATION
+   ARRIVAL SHEET
    ========================================================= */
 
 .hcp-arrival-sheet {
   position: relative;
-  z-index: 35;
+  z-index: 90;
 
   display: none;
 
@@ -1839,7 +2132,7 @@ body[data-house-control-pad-open="true"] {
   display: block;
 
   animation:
-    hcpArchitectureArrivalSheet 0.22s ease both;
+    hcpHeartArrivalSheet 0.22s ease both;
 }
 
 .hcp-arrival-content {
@@ -1881,7 +2174,7 @@ body[data-house-control-pad-open="true"] {
   color: var(--hcp-ink);
 
   font:
-    950 clamp(1rem, 2.4vw, 1.3rem) / 1.05
+    950 clamp(1rem, 2.3vw, 1.28rem) / 1.05
     Inter,
     ui-sans-serif,
     system-ui,
@@ -1900,7 +2193,7 @@ body[data-house-control-pad-open="true"] {
   color: var(--hcp-muted);
 
   font:
-    500 0.84rem/1.38
+    500 0.83rem/1.38
     Inter,
     ui-sans-serif,
     system-ui,
@@ -1926,13 +2219,16 @@ body[data-house-control-pad-open="true"] {
 
   padding: 0.5rem 0.76rem;
 
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  border:
+    1px solid rgba(255, 255, 255, 0.13);
+
   border-radius: 999px;
 
-  color: rgba(241, 247, 255, 0.9);
+  color:
+    rgba(241, 247, 255, 0.92);
 
   background:
-    rgba(255, 255, 255, 0.04);
+    rgba(255, 255, 255, 0.045);
 
   font:
     950 0.66rem/1
@@ -1941,7 +2237,7 @@ body[data-house-control-pad-open="true"] {
     system-ui,
     sans-serif;
 
-  letter-spacing: 0.055em;
+  letter-spacing: 0.052em;
   text-transform: uppercase;
 
   cursor: pointer;
@@ -1959,19 +2255,19 @@ body[data-house-control-pad-open="true"] {
   transform: translateY(-2px);
 
   border-color:
-    rgba(243, 200, 111, 0.48);
+    rgba(243, 200, 111, 0.5);
 
   background:
-    rgba(243, 200, 111, 0.07);
+    rgba(243, 200, 111, 0.075);
 
   outline: none;
 }
 
 .hcp-arrival-primary {
   border-color:
-    rgba(243, 200, 111, 0.76);
+    rgba(243, 200, 111, 0.8);
 
-  color: #060811;
+  color: #050811;
 
   background:
     linear-gradient(
@@ -1991,7 +2287,7 @@ body[data-house-control-pad-open="true"] {
 
 .hcp-footer {
   position: relative;
-  z-index: 34;
+  z-index: 85;
 
   display: flex;
   flex-wrap: wrap;
@@ -1999,10 +2295,10 @@ body[data-house-control-pad-open="true"] {
   justify-content: space-between;
   gap: 0.7rem;
 
-  padding: 0.68rem 1rem 0.78rem;
+  padding: 0.66rem 1rem 0.76rem;
 
   border-top:
-    1px solid rgba(255, 255, 255, 0.075);
+    1px solid rgba(255, 255, 255, 0.07);
 
   background:
     rgba(5, 11, 25, 0.99);
@@ -2012,7 +2308,7 @@ body[data-house-control-pad-open="true"] {
   color: var(--hcp-soft);
 
   font:
-    800 0.72rem/1.34
+    800 0.71rem/1.34
     Inter,
     ui-sans-serif,
     system-ui,
@@ -2022,25 +2318,20 @@ body[data-house-control-pad-open="true"] {
 .hcp-footer-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.46rem;
+  gap: 0.45rem;
 }
 
 .hcp-panel[data-house-view-mode="room"]
   .hcp-footer {
-  padding-top: 0.5rem;
-  padding-bottom: 0.56rem;
-}
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-footer-actions {
-  display: none;
+  padding-top: 0.48rem;
+  padding-bottom: 0.54rem;
 }
 
 /* =========================================================
    STRUCTURAL ANIMATIONS
    ========================================================= */
 
-@keyframes hcpArchitectureTravelSegment {
+@keyframes hcpHeartTravelSegment {
   0% {
     opacity: 0;
 
@@ -2048,40 +2339,48 @@ body[data-house-control-pad-open="true"] {
       inset(0 100% 0 0);
   }
 
-  22% {
+  24% {
     opacity: 1;
   }
 
   100% {
-    opacity: 0.92;
+    opacity: 0.96;
 
     clip-path:
       inset(0 0 0 0);
   }
 }
 
-@keyframes hcpArchitectureRoomArrival {
+@keyframes hcpHeartRoomArrival {
   0% {
+    filter:
+      brightness(1);
+
     box-shadow:
-      var(--hcp-room-shadow),
-      0 0 0 0 rgba(243, 200, 111, 0);
+      0 18px 32px rgba(0, 0, 0, 0.26);
   }
 
-  45% {
+  48% {
+    filter:
+      brightness(1.25);
+
     box-shadow:
-      var(--hcp-room-shadow),
-      0 0 0 9px rgba(243, 200, 111, 0.11),
-      0 0 1.6rem rgba(243, 200, 111, 0.22);
+      0 20px 38px rgba(0, 0, 0, 0.34),
+      0 0 0 8px rgba(243, 200, 111, 0.09),
+      0 0 34px rgba(243, 200, 111, 0.22);
   }
 
   100% {
+    filter:
+      brightness(1);
+
     box-shadow:
-      var(--hcp-room-shadow),
+      0 20px 38px rgba(0, 0, 0, 0.34),
       0 0 0 2px rgba(243, 200, 111, 0.08);
   }
 }
 
-@keyframes hcpArchitectureArrivalSheet {
+@keyframes hcpHeartArrivalSheet {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -2099,8 +2398,8 @@ body[data-house-control-pad-open="true"] {
 
 @media (max-width: 980px) {
   :root {
-    --hcp-estate-width: 1080px;
-    --hcp-estate-height: 1080px;
+    --hcp-heart-width: 940px;
+    --hcp-heart-height: 846px;
   }
 
   .hcp-panel {
@@ -2110,11 +2409,7 @@ body[data-house-control-pad-open="true"] {
   }
 
   .hcp-room-label {
-    font-size: 0.61rem;
-  }
-
-  .hcp-room-summary {
-    font-size: 0.52rem;
+    font-size: 0.6rem;
   }
 
   .hcp-room-detail-title {
@@ -2126,7 +2421,7 @@ body[data-house-control-pad-open="true"] {
   }
 
   .hcp-room-visitor-list {
-    font-size: 0.52rem;
+    font-size: 0.51rem;
   }
 }
 
@@ -2136,8 +2431,10 @@ body[data-house-control-pad-open="true"] {
 
 @media (max-width: 760px) {
   :root {
-    --hcp-estate-width: 1000px;
-    --hcp-estate-height: 1000px;
+    --hcp-heart-width: 900px;
+    --hcp-heart-height: 810px;
+    --hcp-heart-perspective: 1320px;
+    --hcp-panel-radius: 1.08rem;
   }
 
   .hcp-overlay {
@@ -2154,45 +2451,75 @@ body[data-house-control-pad-open="true"] {
     height: calc(100vh - 0.84rem);
     max-height: calc(100vh - 0.84rem);
 
-    border-radius: 1.08rem;
+    border-radius: var(--hcp-panel-radius);
   }
 
   .hcp-header {
-    padding: 0.76rem 0.76rem 0.7rem;
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+
+    padding: 0.72rem 0.72rem 0.68rem;
   }
 
   .hcp-kicker {
-    padding: 0.39rem 0.58rem;
-
-    font-size: 0.55rem;
-  }
-
-  .hcp-title {
-    font-size:
-      clamp(1.18rem, 6.1vw, 1.7rem);
-  }
-
-  .hcp-subtitle {
-    font-size: 0.8rem;
-    line-height: 1.34;
-  }
-
-  .hcp-header-controls {
-    align-items: flex-start;
-  }
-
-  .hcp-return-estate {
-    max-width: 8rem;
-
-    padding: 0.48rem 0.62rem;
+    padding: 0.38rem 0.56rem;
 
     font-size: 0.54rem;
   }
 
+  .hcp-title {
+    max-width: 18rem;
+
+    font-size:
+      clamp(1.2rem, 6.8vw, 1.72rem);
+
+    line-height: 0.98;
+  }
+
+  .hcp-subtitle {
+    max-width: 19rem;
+
+    font-size: 0.78rem;
+    line-height: 1.34;
+  }
+
+  .hcp-return-estate {
+    max-width: 7.5rem;
+
+    padding: 0.46rem 0.6rem;
+
+    font-size: 0.52rem;
+  }
+
   .hcp-close {
-    width: 2.42rem;
-    height: 2.42rem;
-    min-height: 2.42rem;
+    width: 2.38rem;
+    height: 2.38rem;
+    min-height: 2.38rem;
+  }
+
+  .hcp-estate-viewport {
+    perspective-origin: 50% 42%;
+  }
+
+  /*
+    Mobile heart framing law:
+    The camera is intentionally farther away than the previous
+    rectangular-room system so neighboring facets remain visible.
+  */
+
+  .hcp-camera-rig,
+  .hcp-estate-stage {
+    transform:
+      translate3d(
+        calc(-50% + var(--hcp-camera-x)),
+        calc(-50% + var(--hcp-camera-y)),
+        var(--hcp-camera-z)
+      )
+      rotateX(var(--hcp-camera-rotate-x))
+      rotateY(var(--hcp-camera-rotate-y))
+      rotateZ(var(--hcp-camera-rotate-z))
+      scale(var(--hcp-camera-scale));
   }
 
   .hcp-room-node {
@@ -2206,45 +2533,51 @@ body[data-house-control-pad-open="true"] {
   .hcp-room-label {
     padding: 0.24rem 0.36rem;
 
-    font-size: 0.53rem;
-  }
-
-  .hcp-room-category {
-    font-size: 0.43rem;
-  }
-
-  .hcp-room-summary {
-    font-size: 0.46rem;
-    line-height: 1.26;
-  }
-
-  .hcp-room-guide {
-    font-size: 0.39rem;
-  }
-
-  .hcp-room-detail-title {
-    font-size: 0.82rem;
-  }
-
-  .hcp-room-detail-copy {
     font-size: 0.52rem;
-    line-height: 1.32;
   }
 
-  .hcp-room-visitor-list {
-    font-size: 0.47rem;
-  }
-
-  .hcp-room-action {
-    min-height: 1.5rem;
-
-    padding: 0.28rem 0.4rem;
-
+  .hcp-room-category,
+  .hcp-room-guide {
     font-size: 0.4rem;
   }
 
+  .hcp-room-detail-title {
+    font-size: 0.78rem;
+  }
+
+  .hcp-room-detail-copy {
+    font-size: 0.49rem;
+    line-height: 1.31;
+  }
+
+  .hcp-room-visitor-list {
+    font-size: 0.44rem;
+  }
+
+  .hcp-room-action {
+    min-height: 1.48rem;
+
+    padding: 0.27rem 0.38rem;
+
+    font-size: 0.39rem;
+  }
+
+  /*
+    In room view, the room detail remains inside the chamber,
+    but the arrival sheet is restricted so it cannot consume the
+    majority of the remaining viewport.
+  */
+
   .hcp-arrival-sheet {
-    padding: 0.64rem 0.74rem 0.72rem;
+    max-height:
+      min(
+        24vh,
+        12.5rem
+      );
+
+    overflow-y: auto;
+
+    padding: 0.58rem 0.72rem 0.64rem;
   }
 
   .hcp-arrival-content {
@@ -2256,16 +2589,16 @@ body[data-house-control-pad-open="true"] {
       "body"
       "actions";
 
-    gap: 0.24rem;
+    gap: 0.22rem;
   }
 
   .hcp-arrival-title {
-    font-size: 0.98rem;
+    font-size: 0.94rem;
   }
 
   .hcp-arrival-body {
-    font-size: 0.76rem;
-    line-height: 1.32;
+    font-size: 0.72rem;
+    line-height: 1.3;
   }
 
   .hcp-arrival-actions {
@@ -2277,34 +2610,29 @@ body[data-house-control-pad-open="true"] {
       1fr
       auto;
 
-    margin-top: 0.28rem;
+    margin-top: 0.26rem;
   }
 
   .hcp-arrival-action {
     min-width: 0;
 
-    padding: 0.48rem 0.56rem;
+    padding: 0.46rem 0.52rem;
 
-    font-size: 0.56rem;
+    font-size: 0.53rem;
   }
 
   .hcp-footer {
-    padding: 0.58rem 0.74rem 0.66rem;
+    padding: 0.54rem 0.72rem 0.62rem;
   }
 
   .hcp-status {
-    font-size: 0.64rem;
+    font-size: 0.61rem;
   }
 
   .hcp-footer-button {
-    padding: 0.46rem 0.58rem;
+    padding: 0.44rem 0.56rem;
 
-    font-size: 0.56rem;
-  }
-
-  .hcp-panel[data-house-view-mode="room"]
-    .hcp-footer {
-    min-height: 2rem;
+    font-size: 0.54rem;
   }
 }
 
@@ -2314,17 +2642,21 @@ body[data-house-control-pad-open="true"] {
 
 @media (max-width: 520px) {
   :root {
-    --hcp-estate-width: 960px;
-    --hcp-estate-height: 960px;
+    --hcp-heart-width: 860px;
+    --hcp-heart-height: 774px;
+  }
+
+  .hcp-header {
+    gap: 0.55rem;
   }
 
   .hcp-title {
     font-size:
-      clamp(1.1rem, 6.5vw, 1.48rem);
+      clamp(1.14rem, 7.1vw, 1.48rem);
   }
 
   .hcp-subtitle {
-    font-size: 0.74rem;
+    font-size: 0.72rem;
   }
 
   .hcp-room-category,
@@ -2333,23 +2665,19 @@ body[data-house-control-pad-open="true"] {
   }
 
   .hcp-room-label {
-    font-size: 0.49rem;
-  }
-
-  .hcp-room-summary {
-    font-size: 0.42rem;
+    font-size: 0.47rem;
   }
 
   .hcp-room-detail-title {
-    font-size: 0.74rem;
+    font-size: 0.7rem;
   }
 
   .hcp-room-detail-copy {
-    font-size: 0.48rem;
+    font-size: 0.44rem;
   }
 
   .hcp-room-visitor-list {
-    font-size: 0.43rem;
+    font-size: 0.4rem;
   }
 
   .hcp-arrival-actions {
@@ -2376,15 +2704,17 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   STRUCTURAL REDUCED MOTION
+   REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .hcp-overlay,
   .hcp-panel,
+  .hcp-camera-rig,
   .hcp-estate-stage,
   .hcp-return-estate,
   .hcp-close,
+  .hcp-heart-facet,
   .hcp-room-node,
   .hcp-room-summary-zone,
   .hcp-room-detail-zone,

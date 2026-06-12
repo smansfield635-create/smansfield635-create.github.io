@@ -4,8 +4,8 @@
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
   data-version="G1-V2"
-  data-contract="NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2"
+  data-contract="NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1"
   data-status="active"
   data-parent="/nine-summits/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -18,6 +18,8 @@
   data-graphic-box="false"
   data-streaming="false"
   data-visual-pass-claimed="false"
+  data-house-room="book-chamber"
+  data-house-control-pad-mounted="true"
 >
 <head>
   <meta charset="utf-8">
@@ -28,6 +30,8 @@
     name="description"
     content="The Nine Summits of Love is the book and seminar lane inside Diamond Gate Bridge: a human-first climb through character, structure, balance, stability, peace, joy, dignity, free will, and love."
   >
+
+  <link rel="stylesheet" href="/assets/house-control-pad/house.control-pad.css">
 
   <style>
     :root{
@@ -202,7 +206,7 @@
     }
 
     .nav a,
-    .team-menu summary{
+    .team-control-pad-open{
       min-height:2.35rem;
       display:inline-flex;
       align-items:center;
@@ -212,21 +216,19 @@
       padding:.54rem .82rem;
       color:rgba(241,246,255,.86);
       background:rgba(255,255,255,.04);
-      font-size:.68rem;
-      font-weight:950;
+      font:950 .68rem/1 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       letter-spacing:.055em;
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
       cursor:pointer;
       user-select:none;
-      list-style:none;
     }
 
     .nav a:hover,
     .nav a:focus-visible,
-    .team-menu summary:hover,
-    .team-menu summary:focus-visible{
+    .team-control-pad-open:hover,
+    .team-control-pad-open:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(243,200,111,.46);
       outline:none;
@@ -238,113 +240,20 @@
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
     }
 
-    .team-menu{
-      position:relative;
-      display:inline-block;
-      border:0;
-      border-radius:0;
-      background:transparent;
-      overflow:visible;
+    .team-control-pad-open{
+      border-color:rgba(141,216,255,.38);
+      background:rgba(141,216,255,.065);
     }
 
-    .team-menu summary{
-      padding:.54rem .88rem;
-    }
-
-    .team-menu summary::-webkit-details-marker{display:none}
-
-    .team-menu summary::after{
-      content:"▾";
-      display:inline-block;
-      margin-left:.52rem;
-      color:var(--gold);
-      font-size:.76rem;
-      line-height:1;
-      transition:transform .18s ease;
-    }
-
-    .team-menu[open] summary{
-      border-color:rgba(141,216,255,.42);
-      background:rgba(141,216,255,.075);
-    }
-
-    .team-menu[open] summary::after{
-      transform:rotate(180deg);
-    }
-
-    .team-panel{
-      position:absolute;
-      right:0;
-      top:calc(100% + .7rem);
-      width:min(21rem,calc(100vw - 28px));
-      display:grid;
-      gap:.7rem;
-      padding:.82rem;
-      border:1px solid rgba(243,200,111,.26);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(243,200,111,.12),transparent 60%),
-        radial-gradient(circle at 100% 20%,rgba(141,216,255,.10),transparent 48%),
-        rgba(5,9,20,.97);
-      box-shadow:0 1.4rem 3.2rem rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.08);
-      z-index:40;
-    }
-
-    .team-intro{
-      display:block;
-      padding:.15rem .18rem .1rem;
-      color:var(--soft);
-      font-size:.66rem;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .team-member{
-      display:grid;
-      gap:.34rem;
-      padding:.62rem;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:.92rem;
-      background:rgba(255,255,255,.028);
-    }
-
-    .team-member b{
-      color:rgba(255,244,216,.96);
-      font-size:.78rem;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-    }
-
-    .team-member span{
-      color:var(--soft);
-      font-size:.78rem;
-      line-height:1.3;
-    }
-
-    .team-links{
-      display:grid;
-      gap:.34rem;
-      margin-top:.18rem;
-    }
-
-    .team-panel .team-links a{
-      width:100%;
-      min-height:2.15rem;
-      justify-content:flex-start;
-      border-radius:.78rem;
-      padding:.48rem .62rem;
-      color:rgba(241,246,255,.86);
-      background:rgba(255,255,255,.035);
-      font-size:.68rem;
-      letter-spacing:.045em;
-      text-transform:none;
-    }
-
-    .team-panel .team-links a:hover,
-    .team-panel .team-links a:focus-visible{
-      transform:translateX(2px);
-      border-color:rgba(243,200,111,.48);
+    .team-control-pad-open::before{
+      content:"";
+      width:.58rem;
+      height:.58rem;
+      margin-right:.48rem;
+      border-radius:.16rem;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold2),var(--blue));
+      box-shadow:0 0 .9rem rgba(141,216,255,.36);
     }
 
     .panel{
@@ -453,34 +362,21 @@
       color:var(--muted);
       font-size:clamp(.98rem,2.7vw,1.16rem);
       line-height:1.55;
-    }
-
-    .lead{
-      max-width:900px;
       position:relative;
       z-index:2;
     }
 
-    .quote{
-      max-width:820px;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(243,200,111,.22);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.92);
-      background:rgba(243,200,111,.065);
-      font-weight:850;
-      position:relative;
-      z-index:2;
+    .hero p{
+      max-width:850px;
     }
 
-    .actions,
-    .backlinks{
+    .actions{
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
       margin-top:.2rem;
       position:relative;
-      z-index:2;
+      z-index:3;
     }
 
     .button{
@@ -508,8 +404,7 @@
       outline:none;
     }
 
-    .button.gold,
-    .button.primary{
+    .button.gold{
       border-color:rgba(243,200,111,.9);
       color:#060811;
       background:linear-gradient(135deg,#fff2a8,#f3c86f);
@@ -518,32 +413,132 @@
 
     .section{
       margin-top:1.15rem;
-      padding:clamp(1rem,3vw,1.45rem);
+      padding:clamp(1rem,4vw,1.65rem);
       display:grid;
-      gap:1.05rem;
-    }
-
-    .cover-stage{
-      display:grid;
-      justify-items:center;
       gap:1rem;
-      margin-top:.35rem;
     }
 
-    .cover-main{
-      width:min(700px,100%);
+    .cover-split{
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(260px,.58fr);
+      gap:1rem;
+      align-items:stretch;
+    }
+
+    .cover-card{
+      display:grid;
+      align-content:start;
+      gap:.8rem;
+      padding:1.05rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1.2rem;
+      background:rgba(255,255,255,.028);
+    }
+
+    .cover-frame{
+      position:relative;
+      min-height:clamp(19rem,36vw,31rem);
       overflow:hidden;
-      border:1px solid rgba(243,200,111,.38);
-      border-radius:clamp(1.35rem,5vw,2rem);
-      background:rgba(255,255,255,.04);
-      box-shadow:0 24px 80px rgba(0,0,0,.52);
+      border:1px solid rgba(243,200,111,.24);
+      border-radius:1.45rem;
+      background:
+        radial-gradient(circle at 50% 20%,rgba(243,200,111,.12),transparent 38%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1.2rem 3.2rem rgba(0,0,0,.28);
     }
 
-    .cover-main img,
     .cover-frame img{
-      display:block;
       width:100%;
-      height:auto;
+      height:100%;
+      min-height:inherit;
+      display:block;
+      object-fit:cover;
+    }
+
+    .cover-frame::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg,transparent 46%,rgba(2,4,11,.56)),
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.12),transparent 26%);
+    }
+
+    .short-grid,
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.75rem;
+    }
+
+    .short-card,
+    .route-card{
+      position:relative;
+      min-height:10rem;
+      display:grid;
+      align-content:start;
+      gap:.55rem;
+      padding:.95rem;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:1.05rem;
+      background:
+        radial-gradient(circle at 90% 0%,rgba(243,200,111,.07),transparent 48%),
+        rgba(255,255,255,.026);
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .route-card:hover,
+    .route-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(243,200,111,.36);
+      background:rgba(255,255,255,.043);
+      outline:none;
+    }
+
+    .short-card::after,
+    .route-card::after{
+      content:"";
+      position:absolute;
+      right:-1.2rem;
+      bottom:-1.2rem;
+      width:5.2rem;
+      height:5.2rem;
+      border:1px solid rgba(243,200,111,.16);
+      border-radius:1rem;
+      transform:rotate(45deg);
+      opacity:.6;
+      pointer-events:none;
+    }
+
+    .short-card b,
+    .route-card b{
+      color:var(--gold);
+      font-size:.66rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      position:relative;
+      z-index:2;
+    }
+
+    .short-card strong,
+    .route-card strong{
+      color:rgba(255,244,216,.98);
+      font-size:clamp(1.05rem,3vw,1.35rem);
+      line-height:1.05;
+      letter-spacing:-.045em;
+      position:relative;
+      z-index:2;
+    }
+
+    .short-card span,
+    .route-card span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.42;
+      position:relative;
+      z-index:2;
     }
 
     .summit-strip{
@@ -552,79 +547,68 @@
       gap:.45rem;
     }
 
-    .summit-chip{
-      min-height:4.8rem;
+    .summit-pill{
+      min-height:5.4rem;
       display:grid;
       place-items:center;
       text-align:center;
-      padding:.65rem .45rem;
-      border:1px solid rgba(255,255,255,.12);
+      padding:.62rem .45rem;
+      border:1px solid rgba(255,255,255,.10);
       border-radius:1rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
-      color:rgba(255,244,216,.94);
+      background:rgba(255,255,255,.026);
+      color:rgba(255,244,216,.92);
       font-size:.68rem;
       font-weight:950;
-      letter-spacing:.075em;
+      letter-spacing:.06em;
       text-transform:uppercase;
-      line-height:1.2;
     }
 
     .doll{
       display:grid;
-      gap:.75rem;
+      gap:.65rem;
     }
 
     details{
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:1.35rem;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.026));
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:1.1rem;
+      background:rgba(255,255,255,.026);
       overflow:hidden;
     }
 
     details[open]{
-      border-color:rgba(243,200,111,.30);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,200,111,.08),transparent 34%),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.028));
+      border-color:rgba(243,200,111,.25);
+      background:rgba(243,200,111,.045);
     }
 
-    summary{
+    details summary{
+      min-height:4rem;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:1rem;
-      list-style:none;
+      padding:.9rem 1rem;
       cursor:pointer;
-      padding:1rem;
-      color:rgba(255,244,216,.96);
-      font-weight:950;
+      list-style:none;
     }
 
-    summary::-webkit-details-marker{display:none}
+    details summary::-webkit-details-marker{display:none}
 
-    summary::after{
+    details summary::after{
       content:"+";
-      flex:0 0 auto;
       width:2rem;
       height:2rem;
       display:grid;
       place-items:center;
-      border:1px solid rgba(243,200,111,.24);
-      border-radius:.62rem;
-      transform:rotate(45deg);
+      flex:0 0 auto;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:999px;
       color:var(--gold);
-      background:rgba(243,200,111,.055);
-      font-size:1.05rem;
-      line-height:1;
+      font-weight:950;
+      background:rgba(255,255,255,.04);
     }
 
     details[open] summary::after{
       content:"–";
-      border-color:rgba(141,216,255,.28);
-      color:var(--blue);
     }
 
     .summary-text{
@@ -634,152 +618,45 @@
 
     .summary-text b{
       color:var(--gold);
-      font-size:.7rem;
-      letter-spacing:.13em;
+      font-size:.65rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .summary-text span{
-      color:rgba(255,244,216,.96);
-      font-size:clamp(1rem,2.6vw,1.16rem);
-      line-height:1.15;
-      letter-spacing:-.035em;
+      color:rgba(255,244,216,.94);
+      font-size:1.02rem;
+      font-weight:950;
+      letter-spacing:-.02em;
     }
 
     .doll-body{
       display:grid;
-      gap:.9rem;
+      gap:.85rem;
       padding:0 1rem 1rem;
-    }
-
-    .short-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .short-card{
-      min-height:8.7rem;
-      display:grid;
-      gap:.45rem;
-      align-content:start;
-      padding:.9rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1rem;
-      background:rgba(255,255,255,.026);
-    }
-
-    .short-card b{
-      color:var(--gold);
-      font-size:.66rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .short-card span{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.4;
     }
 
     .summit-list{
       display:grid;
-      gap:.55rem;
+      gap:.45rem;
     }
 
     .summit-row{
       display:grid;
-      grid-template-columns:150px 1fr;
-      gap:.75rem;
-      align-items:start;
-      padding:.85rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:1rem;
-      background:rgba(255,255,255,.026);
+      grid-template-columns:minmax(150px,.32fr) 1fr;
+      gap:.65rem;
+      padding:.7rem;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:.9rem;
+      background:rgba(255,255,255,.022);
     }
 
     .summit-row strong{
-      color:var(--green);
-      font-size:.9rem;
-      line-height:1.25;
+      color:rgba(255,244,216,.96);
     }
 
     .summit-row span{
       color:var(--muted);
-      font-size:.94rem;
-      line-height:1.4;
-    }
-
-    .cover-split{
-      display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(280px,1fr);
-      gap:1rem;
-      align-items:start;
-    }
-
-    .cover-card{
-      display:grid;
-      gap:1rem;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.35rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
-    }
-
-    .cover-frame{
-      overflow:hidden;
-      border:1px solid rgba(243,200,111,.30);
-      border-radius:1.35rem;
-      background:rgba(255,255,255,.04);
-      box-shadow:0 20px 70px rgba(0,0,0,.42);
-    }
-
-    .route-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.75rem;
-    }
-
-    .route-card{
-      min-height:10.5rem;
-      display:grid;
-      gap:.55rem;
-      align-content:start;
-      padding:1rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:1.2rem;
-      background:
-        radial-gradient(circle at 20% 0%,rgba(143,101,255,.10),transparent 60%),
-        rgba(255,255,255,.035);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .route-card:hover,
-    .route-card:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(243,200,111,.46);
-      outline:none;
-    }
-
-    .route-card b{
-      color:var(--gold);
-      font-size:.68rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .route-card strong{
-      color:rgba(255,244,216,.98);
-      font-size:1.05rem;
-      line-height:1.1;
-    }
-
-    .route-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.4;
     }
 
     .final-band{
@@ -792,7 +669,7 @@
       background:
         radial-gradient(circle at 16% 0%,rgba(243,200,111,.10),transparent 36%),
         linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.024));
-      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+      box-shadow:0 1.5rem 4rem rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .final-band strong{
@@ -804,28 +681,21 @@
 
     .receipt{
       margin-top:1.15rem;
-      color:var(--faint);
+      display:none;
     }
 
     .receipt summary{
-      cursor:pointer;
-      padding:1rem;
-      border:1px solid rgba(184,205,255,.14);
-      border-radius:1.2rem;
-      color:rgba(255,244,216,.96);
-      font-size:.72rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.035);
+      min-height:unset;
+      display:inline-flex;
+      border-radius:999px;
     }
 
     .receipt pre{
       margin:0;
-      padding:1rem;
       white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .68rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      color:rgba(230,238,255,.7);
+      font-size:.76rem;
+      line-height:1.35;
     }
 
     footer{
@@ -846,6 +716,15 @@
     }
 
     @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+
       body::after,
       .hero::before{
         animation:none!important;
@@ -866,11 +745,6 @@
 
       .nav{justify-content:flex-start}
 
-      .team-panel{
-        left:0;
-        right:auto;
-      }
-
       .short-grid,
       .route-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -884,34 +758,31 @@
     @media (max-width:720px){
       .shell{width:min(100% - 22px,var(--max))}
 
-      h1{font-size:clamp(3rem,17vw,5rem)}
+      h1{font-size:clamp(3rem,17vw,5.2rem)}
 
       .hero{
-        min-height:31rem;
         padding:1rem;
       }
 
-      .short-grid,
-      .route-grid,
-      .summit-strip{
-        grid-template-columns:1fr;
-      }
-
-      .summit-row{
-        grid-template-columns:1fr;
-      }
-
-      summary{
-        align-items:flex-start;
-      }
-
-      .actions,
-      .backlinks{
+      .actions{
         display:grid;
       }
 
       .button{
         width:100%;
+      }
+
+      .short-grid,
+      .route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .summit-strip{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .summit-row{
+        grid-template-columns:1fr;
       }
     }
   </style>
@@ -921,7 +792,7 @@
   <a class="skip" href="#summits-love-main">Skip to The Nine Summits of Love</a>
 
   <div class="shell">
-    <header class="topbar" aria-label="Nine Summits of Love header">
+    <header class="topbar" aria-label="The Nine Summits of Love header">
       <a class="brand" href="/">
         <span class="brand-mark"><span>NS</span></span>
         <span class="brand-copy">
@@ -933,66 +804,35 @@
       <nav class="nav" aria-label="Primary navigation">
         <a class="primary-return" href="/">Return to Compass</a>
 
-        <details class="team-menu">
-          <summary>Talk to the Team</summary>
+        <button
+          class="team-control-pad-open"
+          type="button"
+          data-house-control-pad-open
+          data-house-room="book-chamber"
+          aria-label="Open the House Control Pad for the Book Chamber"
+        >
+          Open House Controller
+        </button>
 
-          <div class="team-panel" role="group" aria-label="Choose an AI team member">
-            <span class="team-intro">Choose your guide</span>
-
-            <div class="team-member">
-              <b>Jeeves</b>
-              <span>House guide · orientation · whole map</span>
-              <div class="team-links">
-                <a href="/showroom/globe/hearth/jeeves/">Ask Jeeves for the whole House</a>
-                <a href="/showroom/">Ask Jeeves in the Showroom</a>
-              </div>
-            </div>
-
-            <div class="team-member">
-              <b>Auren</b>
-              <span>Product guide · tools · practical systems</span>
-              <div class="team-links">
-                <a href="/products/auren/">Talk to Auren on the Product Floor</a>
-              </div>
-            </div>
-
-            <div class="team-member">
-              <b>Soren</b>
-              <span>Diagnostic guide · coherence boundary</span>
-              <div class="team-links">
-                <a href="/coherence-diagnostic/">Talk to Soren at the Diagnostic</a>
-              </div>
-            </div>
-
-            <div class="team-member">
-              <b>Elara</b>
-              <span>Human threshold · Sean · Book threshold</span>
-              <div class="team-links">
-                <a href="/meet-sean-mansfield/">Meet Elara on Sean’s Page</a>
-                <a href="/nine-summits-of-love/" aria-current="page">Meet Elara at The Nine Summits of Love</a>
-              </div>
-            </div>
-          </div>
-        </details>
+        <div
+          data-house-control-pad-root
+          data-house-room="book-chamber"
+          aria-hidden="true"
+        ></div>
       </nav>
     </header>
 
     <main id="summits-love-main">
       <section class="panel hero" aria-labelledby="page-title">
         <div class="kicker">The Nine Summits of Love · 256 Carats</div>
-        <h1 id="page-title">The locked heart is not the ending.</h1>
-        <h2>The book keeps the climb human first.</h2>
-
-        <p class="lead">
-          The Nine Summits of Love is the book and seminar path inside Diamond Gate Bridge. It begins with value under pressure: a diamond heart, a chain, a lock, a key, and the choice to move anyway.
+        <h1 id="page-title">A book path for the locked heart.</h1>
+        <h2>256 Carats of Human Potential.</h2>
+        <p>
+          The Nine Summits of Love is the human-first book and seminar lane. It begins with the diamond heart under pressure, the visible lock, the chain, the key, and the climb toward love through nine summits.
         </p>
 
-        <div class="quote">
-          The book gives the climb. The Universe gives the climb a world. The voice gives the climb a human room.
-        </div>
-
-        <div class="actions" aria-label="Primary Nine Summits of Love actions">
-          <a class="button gold" href="/nine-summits/">Open Nine Summits</a>
+        <div class="actions">
+          <a class="button gold" href="/nine-summits/">Open Nine Summits Hub</a>
           <a class="button" href="/nine-summits/universe/">Enter the Universe</a>
           <a class="button" href="/about-this-underdog/">About This Underdog</a>
           <a class="button" href="/meet-sean-mansfield/">Meet Sean</a>
@@ -1000,49 +840,58 @@
       </section>
 
       <section class="panel section" aria-labelledby="origin-cover-title">
-        <div class="kicker">Visible origin cover</div>
-        <h2 id="origin-cover-title">The origin panel stays at the front.</h2>
+        <div class="kicker">Original book cover</div>
+        <h2 id="origin-cover-title">The locked heart remains the beginning.</h2>
 
-        <p>
-          The heart is locked, but not destroyed. The chain is present, but not final. The key is visible, but it must be recognized.
-        </p>
-
-        <div class="cover-stage">
-          <div class="cover-main">
+        <div class="cover-split">
+          <div class="cover-frame">
             <img
               src="/assets/nine-summits-love-preface-cover.png"
-              alt="The Nine Summits of Love preface cover with locked diamond heart, key, chain, and This Underdog signature."
+              alt="The Nine Summits of Love preface cover showing a locked diamond heart, chain, key, and mountain ascent."
               loading="eager"
               decoding="sync"
               fetchpriority="high">
           </div>
+
+          <article class="cover-card">
+            <h3>The symbol is already right.</h3>
+            <p>
+              The first cover is not discarded. It anchors the human path: value under pressure, love not yet unlocked, the mountain waiting beyond the first recognition.
+            </p>
+
+            <div class="short-grid">
+              <div class="short-card"><b>Heart</b><span>Value is still present.</span></div>
+              <div class="short-card"><b>Lock</b><span>Love is not yet accessed cleanly.</span></div>
+              <div class="short-card"><b>Key</b><span>The path exists, but must be recognized and used.</span></div>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section class="panel section" aria-labelledby="book-title">
-        <div class="kicker">Book lane</div>
-        <h2 id="book-title">The Nine Summits of Love is the human climb.</h2>
+      <section class="panel section" aria-labelledby="summits-title">
+        <div class="kicker">Nine Summits</div>
+        <h2 id="summits-title">The climb names the human formation.</h2>
+
+        <div class="summit-strip" aria-label="The Nine Summits">
+          <div class="summit-pill">Character</div>
+          <div class="summit-pill">Structure</div>
+          <div class="summit-pill">Balance</div>
+          <div class="summit-pill">Stability</div>
+          <div class="summit-pill">Peace</div>
+          <div class="summit-pill">Joy</div>
+          <div class="summit-pill">Dignity</div>
+          <div class="summit-pill">Free Will</div>
+          <div class="summit-pill">Love</div>
+        </div>
 
         <p>
-          This page holds the book and seminar path. It is not the Universe page, not the profile page, and not a product chamber. It is the human climb through the conditions that make love stable, truthful, embodied, and strong enough to live.
+          The summits are not slogans. They are formation stages: the way pressure, choice, repair, discipline, and love become livable.
         </p>
-
-        <div class="summit-strip" aria-label="Nine Summits quick list">
-          <div class="summit-chip">1 · Character</div>
-          <div class="summit-chip">2 · Structure</div>
-          <div class="summit-chip">3 · Balance</div>
-          <div class="summit-chip">4 · Stability</div>
-          <div class="summit-chip">5 · Peace</div>
-          <div class="summit-chip">6 · Joy</div>
-          <div class="summit-chip">7 · Dignity</div>
-          <div class="summit-chip">8 · Free Will</div>
-          <div class="summit-chip">9 · Love</div>
-        </div>
       </section>
 
       <section class="panel section" aria-labelledby="doll-title">
         <div class="kicker">Russian-doll book path</div>
-        <h2 id="doll-title">Open only the layer needed.</h2>
+        <h2 id="doll-title">Open the layer needed.</h2>
 
         <div class="doll">
           <details open>
@@ -1055,25 +904,8 @@
 
             <div class="doll-body">
               <p>
-                The book is not a slogan about love. It is a path for becoming whole without losing dignity under pressure.
+                The book begins with the locked heart because most people do not begin at love. They begin with pressure, confusion, inheritance, fear, repair, and a need to understand why love has been difficult to hold cleanly.
               </p>
-
-              <div class="short-grid">
-                <div class="short-card">
-                  <b>Purpose</b>
-                  <span>Love becomes a path, not a vague feeling.</span>
-                </div>
-
-                <div class="short-card">
-                  <b>Reader promise</b>
-                  <span>Pressure can become language the person can use.</span>
-                </div>
-
-                <div class="short-card">
-                  <b>Measure</b>
-                  <span>256 carats names value under pressure, cut through experience, clarified through love.</span>
-                </div>
-              </div>
             </div>
           </details>
 
@@ -1086,8 +918,8 @@
             </summary>
 
             <div class="doll-body">
-              <div class="summit-list" aria-label="Nine Summits list">
-                <div class="summit-row"><strong>1 · Character</strong><span>Who a person becomes when no one else can perform the work for them.</span></div>
+              <div class="summit-list">
+                <div class="summit-row"><strong>1 · Character</strong><span>Becoming someone love can trust without pretending pressure never happened.</span></div>
                 <div class="summit-row"><strong>2 · Structure</strong><span>Building a life strong enough to carry feeling, responsibility, pressure, and future.</span></div>
                 <div class="summit-row"><strong>3 · Balance</strong><span>Holding difference without collapsing into chaos, avoidance, or control.</span></div>
                 <div class="summit-row"><strong>4 · Stability</strong><span>Repeatable support: the person becomes more reliable to themselves and others.</span></div>
@@ -1259,17 +1091,22 @@
 
       <details class="receipt">
         <summary>Route receipt</summary>
-        <pre>NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1
-previous=NINE_SUMMITS_OF_LOVE_CONDENSED_RUSSIAN_DOLL_BOOK_PATH_TNT_v2
+        <pre>NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1
+previous=NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1
 route=/nine-summits-of-love/
 page=nine_summits_of_love
 role=book_and_seminar_lane
-contract=condensed_russian_doll_book_path
+contract=house_control_pad_mount
 source_preserving_images=true
 preface_cover=/assets/nine-summits-love-preface-cover.png
 universe_cover=/assets/nine-summits-love-hero.png
 image_paths_changed=false
 image_placement_changed=false
+house_control_pad_css=/assets/house-control-pad/house.control-pad.css
+house_control_pad_js=/assets/house-control-pad/house.control-pad.js
+house_room=book-chamber
+team_dropdown_removed=true
+universal_controller_mounted=true
 origin_cover_position=front_preserved
 universe_cover_position=universe_extension_preserved
 book_lane=human_first
@@ -1298,8 +1135,9 @@ visual_pass_claimed=false</pre>
     </main>
 
     <footer>
-      NINE_SUMMITS_OF_LOVE_TEAM_DROPDOWN_NAV_ONLY_HTML_TNT_v1 · Book and Seminar Lane · Team Dropdown Nav Only.
+      NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1 · Book and Seminar Lane · House Control Pad Mount.
     </footer>
   </div>
+  <script src="/assets/house-control-pad/house.control-pad.js" defer></script>
 </body>
 </html>

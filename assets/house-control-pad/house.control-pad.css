@@ -1,25 +1,71 @@
 /* /assets/house-control-pad/house.control-pad.css */
-/* HOUSE_CONTROL_PAD_IMMERSIVE_CARDINAL_ESTATE_ARCHITECTURE_AND_AVATAR_LIFE_CSS_TNT_v5 */
+/* HOUSE_CONTROL_PAD_STATIC_ESTATE_ARCHITECTURE_CSS_TNT_v2 */
 /* Full-file replacement. */
 /*
-  Governing design:
-  HOUSE_CONTROL_PAD_IMMERSIVE_CARDINAL_ESTATE_STRATEGIC_LOGIC_FINAL_DRAFT_v5
+  Five-layer House Control Pad architecture:
 
-  Purpose:
-  - Render the shared House Control Pad as an explorable estate.
-  - Preserve cardinal structure beneath unique architectural rooms.
-  - Support Estate View and Room View.
-  - Integrate room summaries, details, actions, guides, and features.
-  - Give Jeeves, Auren, Soren, and Elara distinct silhouettes and anatomy.
-  - Support independent blink, glance, breathing, gesture, sleepy, travel,
-    arrival, and focused states.
-  - Prevent partially clipped non-focused avatars in Room View.
-  - Preserve reduced-motion accessibility.
-  - Keep the House alive without becoming noisy.
+  1. house.control-pad.data.js
+     Stable content, room geometry, routes, authority, camera metadata,
+     corridor declarations, and resident identity metadata.
 
-  Required companion:
-  /assets/house-control-pad/house.control-pad.js
-  HOUSE_CONTROL_PAD_IMMERSIVE_CARDINAL_ESTATE_AVATAR_LIFE_JS_TNT_v5
+  2. house.control-pad.js
+     Controller, camera, room selection, routing, travel, focus, and public API.
+
+  3. house.avatar-life.js
+     Blink scheduling, inactivity, gestures, yawns, and avatar runtime state.
+
+  4. house.control-pad.css
+     Static estate architecture and interface presentation.
+
+  5. house.avatars.css
+     Resident appearance and motion presentation.
+
+  Separation law:
+
+  Data describes.
+  House CSS renders architecture.
+  Controller coordinates.
+  Avatar life schedules.
+  Avatar CSS expresses the residents.
+
+  This file owns:
+
+  - controller overlay and panel
+  - header and footer
+  - estate viewport and canvas
+  - static estate geometry
+  - room boundaries
+  - room shapes
+  - room architectural features
+  - labels
+  - summaries
+  - detail zones
+  - action zones
+  - arrival confirmation structure
+  - route-path presentation
+  - responsive architectural layout
+  - Estate View and Room View presentation
+  - structural reduced-motion behavior
+
+  This file does not own:
+
+  - avatar anatomy
+  - avatar faces
+  - avatar hair
+  - avatar clothing
+  - avatar accessories
+  - eyelids
+  - pupils
+  - blinking
+  - breathing
+  - yawns
+  - gestures
+  - arrival character animation
+  - avatar state keyframes
+
+  Avatar presentation belongs exclusively to:
+
+  /assets/house-control-pad/house.avatars.css
 */
 
 :root {
@@ -57,9 +103,6 @@
   --hcp-estate-width: 1120px;
   --hcp-estate-height: 1120px;
 
-  --hcp-avatar-overview: 82px;
-  --hcp-avatar-room: 150px;
-
   --hcp-shadow:
     0 34px 120px rgba(0, 0, 0, 0.62),
     0 0 0 1px rgba(255, 255, 255, 0.03);
@@ -73,7 +116,7 @@
 }
 
 /* =========================================================
-   ROOT OPEN STATE
+   DOCUMENT OPEN STATE
    ========================================================= */
 
 html[data-house-control-pad-open="true"],
@@ -493,6 +536,23 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
+   STATIC CARDINAL ENGRAVINGS
+   ========================================================= */
+
+.hcp-estate-canvas::after {
+  content: "";
+
+  position: absolute;
+  inset: 1.2rem;
+  z-index: 1;
+
+  border: 1px solid rgba(243, 200, 111, 0.07);
+  border-radius: 1.2rem;
+
+  pointer-events: none;
+}
+
+/* =========================================================
    LAYERS
    ========================================================= */
 
@@ -607,7 +667,8 @@ body[data-house-control-pad-open="true"] {
 }
 
 .hcp-room-node[data-arrived="true"] {
-  animation: hcpRoomArrival 0.78s ease both;
+  animation:
+    hcpArchitectureRoomArrival 0.78s ease both;
 }
 
 .hcp-room-node[data-focused="true"] {
@@ -642,10 +703,32 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   UNIQUE ROOM ARCHITECTURE
+   ROOM RANK HIERARCHY
    ========================================================= */
 
-/* Great Hall */
+.hcp-room-rank-grand {
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.hcp-room-rank-medium {
+  box-shadow:
+    0 15px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.hcp-room-rank-small {
+  box-shadow:
+    0 11px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+}
+
+/* =========================================================
+   UNIQUE STATIC ROOM ARCHITECTURE
+   ========================================================= */
+
+/* House Core / Great Hall */
 
 .hcp-room-shape-great-hall {
   clip-path:
@@ -694,7 +777,7 @@ body[data-house-control-pad-open="true"] {
     );
 }
 
-/* Formal Foyer */
+/* Guide Foyer */
 
 .hcp-room-shape-formal-foyer {
   clip-path:
@@ -749,7 +832,7 @@ body[data-house-control-pad-open="true"] {
     rgba(10, 17, 35, 0.97);
 }
 
-/* Book Apse */
+/* Book Chamber */
 
 .hcp-room-shape-book-apse {
   border-radius:
@@ -765,7 +848,7 @@ body[data-house-control-pad-open="true"] {
     rgba(10, 17, 35, 0.97);
 }
 
-/* Archive Aisle */
+/* Law Library */
 
 .hcp-room-shape-archive-aisle {
   clip-path:
@@ -785,7 +868,7 @@ body[data-house-control-pad-open="true"] {
     rgba(8, 16, 34, 0.98);
 }
 
-/* Bowed Atrium */
+/* Showroom / Atrium */
 
 .hcp-room-shape-bowed-atrium {
   border-radius:
@@ -801,7 +884,7 @@ body[data-house-control-pad-open="true"] {
     rgba(8, 17, 36, 0.98);
 }
 
-/* Workshop Gallery */
+/* Product Gallery */
 
 .hcp-room-shape-workshop-gallery {
   clip-path:
@@ -823,7 +906,7 @@ body[data-house-control-pad-open="true"] {
     rgba(8, 19, 35, 0.98);
 }
 
-/* Round Study */
+/* Atlas Study */
 
 .hcp-room-shape-round-study {
   border-radius: 50%;
@@ -842,7 +925,7 @@ body[data-house-control-pad-open="true"] {
     rgba(8, 17, 36, 0.98);
 }
 
-/* Rounded Hearth */
+/* Hearth Room */
 
 .hcp-room-shape-rounded-hearth {
   border-radius: 999px;
@@ -856,7 +939,7 @@ body[data-house-control-pad-open="true"] {
     rgba(10, 17, 31, 0.98);
 }
 
-/* Portrait Gallery */
+/* Portrait Hall */
 
 .hcp-room-shape-portrait-gallery {
   clip-path:
@@ -880,7 +963,7 @@ body[data-house-control-pad-open="true"] {
     rgba(9, 17, 36, 0.98);
 }
 
-/* Tiered Classroom */
+/* Education Room */
 
 .hcp-room-shape-tiered-classroom {
   clip-path:
@@ -904,7 +987,7 @@ body[data-house-control-pad-open="true"] {
     rgba(8, 18, 35, 0.98);
 }
 
-/* Diagnostic Hex */
+/* Diagnostic Room */
 
 .hcp-room-shape-hex-diagnostic {
   clip-path:
@@ -926,7 +1009,7 @@ body[data-house-control-pad-open="true"] {
     rgba(7, 14, 31, 0.98);
 }
 
-/* Technical Annex */
+/* The Lab */
 
 .hcp-room-shape-technical-annex {
   clip-path:
@@ -948,7 +1031,7 @@ body[data-house-control-pad-open="true"] {
     rgba(7, 15, 32, 0.98);
 }
 
-/* Frontier Wedge */
+/* Frontier Workshop */
 
 .hcp-room-shape-frontier-wedge {
   clip-path:
@@ -970,7 +1053,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   ROOM ARCHITECTURAL FEATURES
+   STATIC ROOM ARCHITECTURAL FEATURES
    ========================================================= */
 
 .hcp-room-architecture {
@@ -995,11 +1078,14 @@ body[data-house-control-pad-open="true"] {
   opacity: 0.82;
 }
 
+/* Circular and radial features */
+
 .hcp-room-feature-central-seal,
 .hcp-room-feature-entry-seal,
 .hcp-room-feature-diagnostic-seal,
 .hcp-room-feature-radial-floor,
-.hcp-room-feature-atlas-table {
+.hcp-room-feature-atlas-table,
+.hcp-room-feature-threshold-light {
   border-radius: 50%;
 }
 
@@ -1045,17 +1131,101 @@ body[data-house-control-pad-open="true"] {
   transform: translate(-50%, -50%);
 }
 
+.hcp-room-feature-entry-seal {
+  border-color:
+    rgba(243, 200, 111, 0.24);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(243, 200, 111, 0.12),
+      transparent 68%
+    );
+}
+
+.hcp-room-feature-diagnostic-seal {
+  border-color:
+    rgba(216, 230, 255, 0.24);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(216, 230, 255, 0.1),
+      transparent 68%
+    );
+}
+
+.hcp-room-feature-radial-floor {
+  border-color:
+    rgba(141, 216, 255, 0.09);
+
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(141, 216, 255, 0.05) 0 2deg,
+      transparent 2deg 20deg
+    );
+}
+
+.hcp-room-feature-threshold-light {
+  border-color:
+    rgba(255, 184, 218, 0.22);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 184, 218, 0.17),
+      transparent 68%
+    );
+}
+
+/* Rounded and bowed architectural surfaces */
+
 .hcp-room-feature-reading-apse,
 .hcp-room-feature-bowed-wall,
 .hcp-room-feature-rounded-wall {
   border-radius: 50%;
 }
 
+.hcp-room-feature-reading-apse {
+  border-color:
+    rgba(255, 184, 218, 0.16);
+
+  background:
+    radial-gradient(
+      ellipse at 50% 15%,
+      rgba(255, 184, 218, 0.08),
+      transparent 70%
+    );
+}
+
+.hcp-room-feature-bowed-wall {
+  border-color:
+    rgba(141, 216, 255, 0.13);
+
+  border-right: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(141, 216, 255, 0.06),
+      transparent
+    );
+}
+
+.hcp-room-feature-rounded-wall {
+  border-color:
+    rgba(243, 200, 111, 0.1);
+}
+
+/* Archive and shelving systems */
+
 .hcp-room-feature-book-wall,
 .hcp-room-feature-shelf-left,
 .hcp-room-feature-shelf-right,
 .hcp-room-feature-service-wall,
-.hcp-room-feature-gauge-bank {
+.hcp-room-feature-gauge-bank,
+.hcp-room-feature-archive-aisle {
   background:
     repeating-linear-gradient(
       180deg,
@@ -1064,6 +1234,21 @@ body[data-house-control-pad-open="true"] {
     ),
     rgba(255, 255, 255, 0.015);
 }
+
+.hcp-room-feature-archive-aisle {
+  border-color:
+    rgba(216, 230, 255, 0.12);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(216, 230, 255, 0.05),
+      transparent
+    );
+}
+
+/* Tables and work surfaces */
 
 .hcp-room-feature-reading-table,
 .hcp-room-feature-workbench,
@@ -1077,6 +1262,23 @@ body[data-house-control-pad-open="true"] {
       rgba(243, 200, 111, 0.025)
     );
 }
+
+.hcp-room-feature-reading-table {
+  border-color:
+    rgba(255, 184, 218, 0.15);
+}
+
+.hcp-room-feature-workbench {
+  border-color:
+    rgba(143, 240, 195, 0.15);
+}
+
+.hcp-room-feature-atlas-table {
+  border-color:
+    rgba(141, 216, 255, 0.17);
+}
+
+/* Bays, instruments, exhibits, and niches */
 
 .hcp-room-feature-instrument-bay,
 .hcp-room-feature-exhibit-bay,
@@ -1093,8 +1295,43 @@ body[data-house-control-pad-open="true"] {
     );
 }
 
+.hcp-room-feature-instrument-bay {
+  border-color:
+    rgba(141, 216, 255, 0.15);
+}
+
+.hcp-room-feature-exhibit-bay {
+  border-color:
+    rgba(141, 216, 255, 0.13);
+}
+
+.hcp-room-feature-display-bay {
+  border-color:
+    rgba(143, 240, 195, 0.14);
+}
+
+.hcp-room-feature-future-bay {
+  border-color:
+    rgba(148, 113, 255, 0.18);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(143, 240, 195, 0.06),
+      rgba(148, 113, 255, 0.07)
+    );
+}
+
+.hcp-room-feature-portrait-niche {
+  border-color:
+    rgba(243, 200, 111, 0.12);
+}
+
+/* Classroom systems */
+
 .hcp-room-feature-teaching-wall {
-  border-color: rgba(143, 240, 195, 0.18);
+  border-color:
+    rgba(143, 240, 195, 0.18);
 
   background:
     linear-gradient(
@@ -1110,6 +1347,77 @@ body[data-house-control-pad-open="true"] {
   background:
     rgba(143, 240, 195, 0.05);
 }
+
+/* Crossings and entrances */
+
+.hcp-room-feature-north-crossing,
+.hcp-room-feature-south-crossing,
+.hcp-room-feature-west-crossing,
+.hcp-room-feature-east-crossing,
+.hcp-room-feature-controlled-entry,
+.hcp-room-feature-double-door {
+  border: 0;
+
+  background:
+    rgba(243, 200, 111, 0.055);
+}
+
+.hcp-room-feature-north-crossing,
+.hcp-room-feature-south-crossing {
+  border-left:
+    1px solid rgba(243, 200, 111, 0.12);
+
+  border-right:
+    1px solid rgba(243, 200, 111, 0.12);
+}
+
+.hcp-room-feature-west-crossing,
+.hcp-room-feature-east-crossing {
+  border-top:
+    1px solid rgba(243, 200, 111, 0.12);
+
+  border-bottom:
+    1px solid rgba(243, 200, 111, 0.12);
+}
+
+.hcp-room-feature-double-door {
+  border-left:
+    1px solid rgba(243, 200, 111, 0.2);
+
+  border-right:
+    1px solid rgba(243, 200, 111, 0.2);
+}
+
+.hcp-room-feature-controlled-entry {
+  border-top:
+    1px solid rgba(216, 230, 255, 0.17);
+
+  border-bottom:
+    1px solid rgba(216, 230, 255, 0.17);
+}
+
+/* Angled structural wall */
+
+.hcp-room-feature-angled-wall {
+  border: 0;
+
+  clip-path:
+    polygon(
+      0 0,
+      100% 0,
+      28% 100%,
+      0 100%
+    );
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 184, 218, 0.07),
+      transparent
+    );
+}
+
+/* Static hearth feature */
 
 .hcp-room-feature-hearth-fire {
   border: 0;
@@ -1128,9 +1436,6 @@ body[data-house-control-pad-open="true"] {
     drop-shadow(
       0 0 0.8rem rgba(243, 200, 111, 0.3)
     );
-
-  animation:
-    hcpHearthPulse 4.8s ease-in-out infinite;
 }
 
 /* =========================================================
@@ -1145,6 +1450,8 @@ body[data-house-control-pad-open="true"] {
   position: absolute;
   z-index: 6;
 }
+
+/* Labels */
 
 .hcp-room-label-zone {
   display: grid;
@@ -1201,6 +1508,8 @@ body[data-house-control-pad-open="true"] {
   text-transform: uppercase;
 }
 
+/* Estate summaries */
+
 .hcp-room-summary-zone {
   display: grid;
   align-content: start;
@@ -1216,8 +1525,10 @@ body[data-house-control-pad-open="true"] {
     transform 0.18s ease;
 }
 
-.hcp-room-node[data-summary-active="true"] .hcp-room-summary-zone,
-.hcp-room-node[data-selected="true"] .hcp-room-summary-zone,
+.hcp-room-node[data-summary-active="true"]
+  .hcp-room-summary-zone,
+.hcp-room-node[data-selected="true"]
+  .hcp-room-summary-zone,
 .hcp-panel[data-house-view-mode="estate"]
   .hcp-room-rank-grand
   .hcp-room-summary-zone {
@@ -1261,6 +1572,8 @@ body[data-house-control-pad-open="true"] {
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
+
+/* Immersive detail */
 
 .hcp-room-detail-zone {
   display: grid;
@@ -1328,11 +1641,15 @@ body[data-house-control-pad-open="true"] {
     sans-serif;
 }
 
+/* Portrait reservation zone */
+
 .hcp-room-portrait-zone {
   border: 1px solid transparent;
 
   pointer-events: none;
 }
+
+/* Room actions */
 
 .hcp-room-action-zone {
   opacity: 0;
@@ -1426,7 +1743,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   VIEW MODE INFORMATION LAW
+   VIEW MODE PRESENTATION
    ========================================================= */
 
 .hcp-panel[data-house-view-mode="estate"]
@@ -1444,7 +1761,10 @@ body[data-house-control-pad-open="true"] {
 .hcp-panel[data-house-view-mode="room"]
   .hcp-room-node:not([data-focused="true"]) {
   opacity: 0.34;
-  filter: saturate(0.55) brightness(0.72);
+
+  filter:
+    saturate(0.55)
+    brightness(0.72);
 }
 
 .hcp-panel[data-house-view-mode="room"]
@@ -1454,7 +1774,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   TRAVEL PATH
+   ROUTE PATH PRESENTATION
    ========================================================= */
 
 .hcp-travel-segment {
@@ -1478,1547 +1798,13 @@ body[data-house-control-pad-open="true"] {
     0 0 0.9rem rgba(243, 200, 111, 0.34);
 
   animation:
-    hcpTravelSegment 0.68s ease both;
+    hcpArchitectureTravelSegment 0.68s ease both;
 
   pointer-events: none;
 }
 
 /* =========================================================
-   AVATAR BASE
-   ========================================================= */
-
-.hcp-avatar {
-  position: absolute;
-
-  width: calc(var(--hcp-avatar-overview) + 24px);
-  min-height: calc(var(--hcp-avatar-overview) + 34px);
-
-  display: grid;
-  justify-items: center;
-  gap: 0.28rem;
-
-  transform:
-    translate(-50%, -50%)
-    scale(var(--hcp-agent-overview-scale, 1));
-
-  transform-origin: 50% 60%;
-
-  padding: 0;
-
-  border: 0;
-
-  color: var(--hcp-ink);
-  background: transparent;
-
-  pointer-events: auto;
-  cursor: pointer;
-
-  transition:
-    left 0.25s linear,
-    top 0.25s linear,
-    opacity 0.18s ease,
-    filter 0.18s ease,
-    transform 0.32s ease;
-
-  will-change:
-    left,
-    top,
-    transform,
-    opacity;
-}
-
-.hcp-avatar[data-avatar-scale-mode="room"] {
-  transform:
-    translate(-50%, -50%)
-    scale(var(--hcp-agent-room-scale, 1.7));
-}
-
-.hcp-avatar[data-camera-visible="false"] {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.hcp-avatar[data-camera-visible="true"] {
-  opacity: 1;
-}
-
-.hcp-avatar:hover,
-.hcp-avatar:focus-visible {
-  filter:
-    drop-shadow(
-      0 0 0.8rem rgba(243, 200, 111, 0.32)
-    );
-
-  outline: none;
-}
-
-.hcp-avatar[data-traveling="true"] {
-  z-index: 30;
-
-  filter:
-    drop-shadow(
-      0 0 1.1rem rgba(243, 200, 111, 0.48)
-    );
-}
-
-.hcp-avatar[data-arrived="true"] {
-  animation:
-    hcpAvatarArrival 0.74s ease both;
-}
-
-.hcp-avatar-nameplate {
-  max-width: 7rem;
-
-  padding: 0.2rem 0.42rem;
-
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 999px;
-
-  color: rgba(241, 247, 255, 0.92);
-
-  background:
-    rgba(1, 4, 11, 0.66);
-
-  font:
-    950 0.58rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-
-  white-space: nowrap;
-}
-
-/* =========================================================
-   AVATAR PORTRAIT STRUCTURE
-   ========================================================= */
-
-.hcp-avatar-portrait {
-  position: relative;
-
-  width: var(--hcp-avatar-overview);
-  height: var(--hcp-avatar-overview);
-
-  display: block;
-
-  overflow: visible;
-
-  filter:
-    drop-shadow(
-      0 12px 22px rgba(0, 0, 0, 0.36)
-    );
-}
-
-.hcp-avatar[data-avatar-scale-mode="room"]
-  .hcp-avatar-portrait {
-  width: var(--hcp-avatar-room);
-  height: var(--hcp-avatar-room);
-}
-
-.hcp-portrait-frame {
-  position: absolute;
-  inset: 0;
-
-  overflow: hidden;
-
-  border: 2px solid rgba(255, 255, 255, 0.22);
-  border-radius: 1.3rem;
-
-  background:
-    radial-gradient(
-      circle at 34% 18%,
-      rgba(255, 255, 255, 0.28),
-      transparent 34%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.018)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
-}
-
-.hcp-avatar[data-avatar-scale-mode="room"]
-  .hcp-portrait-frame {
-  border-radius: 2rem;
-}
-
-.hcp-portrait-frame::before {
-  content: "";
-
-  position: absolute;
-  inset: 0.3rem;
-
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 1rem;
-
-  pointer-events: none;
-}
-
-.hcp-portrait-torso {
-  position: absolute;
-  inset: 0;
-
-  z-index: 2;
-}
-
-.hcp-portrait-shoulders {
-  position: absolute;
-  left: 50%;
-  bottom: -0.9rem;
-
-  width: 78%;
-  height: 44%;
-
-  transform: translateX(-50%);
-
-  border-radius: 50% 50% 0 0;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(55, 68, 92, 0.98),
-      rgba(16, 22, 38, 0.98)
-    );
-}
-
-.hcp-portrait-clothing {
-  position: absolute;
-  left: 50%;
-  bottom: -0.15rem;
-
-  width: 52%;
-  height: 34%;
-
-  transform: translateX(-50%);
-
-  z-index: 3;
-}
-
-.hcp-portrait-neck {
-  position: absolute;
-  left: 50%;
-  bottom: 1.08rem;
-
-  width: 18%;
-  height: 22%;
-
-  transform: translateX(-50%);
-
-  border-radius: 0 0 0.6rem 0.6rem;
-
-  background:
-    linear-gradient(
-      180deg,
-      #d89b72,
-      #b87552
-    );
-
-  z-index: 4;
-}
-
-.hcp-portrait-ears {
-  position: absolute;
-  left: 50%;
-  top: 43%;
-
-  width: 52%;
-  height: 16%;
-
-  transform: translateX(-50%);
-
-  z-index: 4;
-}
-
-.hcp-portrait-ears::before,
-.hcp-portrait-ears::after {
-  content: "";
-
-  position: absolute;
-  top: 0;
-
-  width: 12%;
-  height: 100%;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      180deg,
-      #e8b58e,
-      #c88360
-    );
-}
-
-.hcp-portrait-ears::before {
-  left: 0;
-}
-
-.hcp-portrait-ears::after {
-  right: 0;
-}
-
-.hcp-portrait-head {
-  position: absolute;
-  left: 50%;
-  top: 47%;
-
-  width: 43%;
-  height: 55%;
-
-  transform: translate(-50%, -50%);
-
-  border-radius:
-    46% 46% 48% 48% /
-    42% 42% 56% 56%;
-
-  background:
-    radial-gradient(
-      circle at 34% 26%,
-      rgba(255, 255, 255, 0.28),
-      transparent 24%
-    ),
-    linear-gradient(
-      180deg,
-      #f3c8a3,
-      #c78661
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 0.18rem 0.4rem rgba(0, 0, 0, 0.2);
-
-  z-index: 5;
-}
-
-.hcp-portrait-hair-back,
-.hcp-portrait-hair-front {
-  position: absolute;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  z-index: 6;
-}
-
-.hcp-portrait-hair-back {
-  top: 16%;
-
-  width: 51%;
-  height: 30%;
-
-  border-radius:
-    58% 58% 38% 38% /
-    76% 76% 32% 32%;
-
-  background: #2d2532;
-}
-
-.hcp-portrait-hair-front {
-  top: 18%;
-
-  width: 44%;
-  height: 16%;
-
-  border-radius:
-    62% 62% 34% 34% /
-    78% 78% 28% 28%;
-
-  background: #2d2532;
-}
-
-.hcp-portrait-brows {
-  position: absolute;
-  left: 50%;
-  top: 34%;
-
-  width: 56%;
-  height: 10%;
-
-  transform: translateX(-50%);
-
-  z-index: 8;
-}
-
-.hcp-portrait-brows::before,
-.hcp-portrait-brows::after {
-  content: "";
-
-  position: absolute;
-  top: 0;
-
-  width: 32%;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background:
-    rgba(53, 34, 31, 0.7);
-}
-
-.hcp-portrait-brows::before {
-  left: 5%;
-}
-
-.hcp-portrait-brows::after {
-  right: 5%;
-}
-
-.hcp-portrait-eyes {
-  position: absolute;
-  left: 50%;
-  top: 40%;
-
-  width: 58%;
-  height: 16%;
-
-  transform: translateX(-50%);
-
-  z-index: 9;
-}
-
-.hcp-portrait-eye {
-  position: absolute;
-  top: 0;
-
-  width: 25%;
-  height: 62%;
-
-  overflow: hidden;
-
-  border-radius: 50%;
-
-  background:
-    rgba(246, 246, 244, 0.92);
-
-  box-shadow:
-    inset 0 -1px 0 rgba(64, 44, 44, 0.2);
-}
-
-.hcp-portrait-eye-left {
-  left: 4%;
-}
-
-.hcp-portrait-eye-right {
-  right: 4%;
-}
-
-.hcp-portrait-lid {
-  position: absolute;
-  left: 0;
-  top: -100%;
-
-  width: 100%;
-  height: 110%;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      180deg,
-      #e9b58e,
-      #c88662
-    );
-
-  transform-origin: 50% 0;
-
-  transition:
-    transform 0.08s linear,
-    top 0.08s linear;
-}
-
-.hcp-portrait-pupils {
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-}
-
-.hcp-portrait-pupil {
-  position: absolute;
-  top: 20%;
-
-  width: 10%;
-  height: 38%;
-
-  border-radius: 50%;
-
-  background:
-    rgba(22, 25, 31, 0.94);
-
-  transition:
-    transform 0.28s ease;
-}
-
-.hcp-portrait-pupil-left {
-  left: 13%;
-}
-
-.hcp-portrait-pupil-right {
-  right: 13%;
-}
-
-.hcp-portrait-nose {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-
-  width: 7%;
-  height: 19%;
-
-  transform: translateX(-50%);
-
-  border-radius: 999px;
-
-  background:
-    rgba(96, 55, 43, 0.22);
-
-  z-index: 8;
-}
-
-.hcp-portrait-mouth {
-  position: absolute;
-  left: 50%;
-  top: 70%;
-
-  width: 31%;
-  height: 10%;
-
-  transform: translateX(-50%);
-
-  border-bottom:
-    2px solid rgba(73, 34, 38, 0.56);
-
-  border-radius:
-    0 0 999px 999px;
-
-  z-index: 8;
-
-  transition:
-    width 0.18s ease,
-    height 0.18s ease,
-    border-radius 0.18s ease,
-    background 0.18s ease;
-}
-
-.hcp-portrait-accessory,
-.hcp-portrait-identity-cue {
-  position: absolute;
-  z-index: 12;
-
-  pointer-events: none;
-}
-
-.hcp-portrait-badge {
-  position: absolute;
-  right: -0.18rem;
-  bottom: -0.16rem;
-  z-index: 13;
-
-  min-width: 1.08rem;
-  height: 1.08rem;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-
-  color: var(--hcp-ink);
-
-  background:
-    rgba(2, 5, 12, 0.84);
-
-  font:
-    950 0.52rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-/* =========================================================
-   DISTINCT FACE SHAPES
-   ========================================================= */
-
-.hcp-face-shape-narrow-formal
-  .hcp-portrait-head {
-  width: 39%;
-  height: 57%;
-
-  border-radius:
-    44% 44% 46% 46% /
-    38% 38% 60% 60%;
-}
-
-.hcp-face-shape-open-angular
-  .hcp-portrait-head {
-  width: 46%;
-  height: 53%;
-
-  clip-path:
-    polygon(
-      14% 0,
-      86% 0,
-      100% 36%,
-      86% 100%,
-      14% 100%,
-      0 36%
-    );
-
-  border-radius: 42%;
-}
-
-.hcp-face-shape-balanced-oval
-  .hcp-portrait-head {
-  width: 42%;
-  height: 58%;
-
-  border-radius: 48%;
-}
-
-.hcp-face-shape-soft-heart
-  .hcp-portrait-head {
-  width: 44%;
-  height: 56%;
-
-  border-radius:
-    50% 50% 45% 45% /
-    42% 42% 61% 61%;
-}
-
-/* =========================================================
-   DISTINCT HAIR
-   ========================================================= */
-
-.hcp-hair-controlled-side-part
-  .hcp-portrait-hair-back,
-.hcp-hair-controlled-side-part
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      180deg,
-      #172034,
-      #0f1728
-    );
-}
-
-.hcp-hair-controlled-side-part
-  .hcp-portrait-hair-front {
-  clip-path:
-    polygon(
-      0 22%,
-      58% 0,
-      100% 25%,
-      86% 100%,
-      8% 78%
-    );
-}
-
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-back,
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      180deg,
-      #714725,
-      #4a2a17
-    );
-}
-
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-front {
-  clip-path:
-    polygon(
-      0 45%,
-      15% 8%,
-      34% 35%,
-      50% 0,
-      67% 33%,
-      86% 8%,
-      100% 52%,
-      92% 100%,
-      6% 100%
-    );
-}
-
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-back,
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      180deg,
-      #edf2fb,
-      #a9b5cb
-    );
-}
-
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-front {
-  clip-path:
-    polygon(
-      0 25%,
-      26% 0,
-      52% 20%,
-      76% 0,
-      100% 28%,
-      90% 100%,
-      10% 100%
-    );
-}
-
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-back,
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      135deg,
-      #43275e,
-      #8a4f83
-    );
-}
-
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-back {
-  top: 12%;
-
-  width: 61%;
-  height: 49%;
-
-  border-radius:
-    56% 56% 44% 44% /
-    74% 74% 52% 52%;
-}
-
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-front {
-  width: 48%;
-  height: 19%;
-
-  clip-path:
-    polygon(
-      0 35%,
-      23% 0,
-      51% 24%,
-      73% 0,
-      100% 42%,
-      86% 100%,
-      7% 82%
-    );
-}
-
-/* =========================================================
-   DISTINCT BROWS AND EYES
-   ========================================================= */
-
-.hcp-brows-measured
-  .hcp-portrait-brows::before,
-.hcp-brows-measured
-  .hcp-portrait-brows::after {
-  transform: rotate(-2deg);
-}
-
-.hcp-brows-active
-  .hcp-portrait-brows::before {
-  transform: rotate(-9deg);
-}
-
-.hcp-brows-active
-  .hcp-portrait-brows::after {
-  transform: rotate(7deg);
-}
-
-.hcp-brows-analytical
-  .hcp-portrait-brows::before {
-  transform: rotate(5deg);
-}
-
-.hcp-brows-analytical
-  .hcp-portrait-brows::after {
-  transform: rotate(-5deg);
-}
-
-.hcp-brows-expressive
-  .hcp-portrait-brows::before {
-  transform: rotate(-12deg);
-}
-
-.hcp-brows-expressive
-  .hcp-portrait-brows::after {
-  transform: rotate(11deg);
-}
-
-.hcp-eyes-composed
-  .hcp-portrait-eye {
-  height: 50%;
-}
-
-.hcp-eyes-alert
-  .hcp-portrait-eye {
-  height: 70%;
-}
-
-.hcp-eyes-measured
-  .hcp-portrait-eye {
-  height: 44%;
-}
-
-.hcp-eyes-bright
-  .hcp-portrait-eye {
-  width: 27%;
-  height: 72%;
-}
-
-/* =========================================================
-   DISTINCT MOUTHS
-   ========================================================= */
-
-.hcp-mouth-restrained
-  .hcp-portrait-mouth {
-  width: 23%;
-}
-
-.hcp-mouth-open-friendly
-  .hcp-portrait-mouth {
-  width: 36%;
-
-  border-bottom-width: 3px;
-}
-
-.hcp-mouth-neutral
-  .hcp-portrait-mouth {
-  width: 24%;
-  height: 5%;
-
-  border-radius: 0;
-}
-
-.hcp-mouth-warm
-  .hcp-portrait-mouth {
-  width: 34%;
-
-  border-bottom:
-    3px solid rgba(73, 34, 38, 0.58);
-}
-
-/* =========================================================
-   DISTINCT CLOTHING
-   ========================================================= */
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      #28334d,
-      #111827
-    );
-}
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::before,
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::after {
-  content: "";
-
-  position: absolute;
-  top: 0;
-
-  width: 42%;
-  height: 70%;
-
-  background:
-    rgba(237, 245, 255, 0.86);
-}
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::before {
-  left: 4%;
-
-  clip-path:
-    polygon(
-      0 0,
-      100% 18%,
-      58% 100%
-    );
-}
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::after {
-  right: 4%;
-
-  clip-path:
-    polygon(
-      100% 0,
-      0 18%,
-      42% 100%
-    );
-}
-
-.hcp-clothing-maker-jacket
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      #4a765d,
-      #193528
-    );
-}
-
-.hcp-clothing-maker-jacket
-  .hcp-portrait-clothing {
-  border-left:
-    3px solid rgba(243, 200, 111, 0.7);
-
-  transform:
-    translateX(-50%)
-    rotate(-4deg);
-}
-
-.hcp-clothing-diagnostic-coat
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      #63718a,
-      #283147
-    );
-}
-
-.hcp-clothing-diagnostic-coat
-  .hcp-portrait-clothing::before {
-  content: "";
-
-  position: absolute;
-  left: 50%;
-  top: 0;
-
-  width: 2px;
-  height: 88%;
-
-  transform: translateX(-50%);
-
-  background:
-    rgba(216, 230, 255, 0.48);
-}
-
-.hcp-clothing-signal-robe
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      #815080,
-      #2c1c49
-    );
-}
-
-.hcp-clothing-signal-robe
-  .hcp-portrait-clothing {
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle at 50% 30%,
-      rgba(255, 184, 218, 0.24),
-      transparent 64%
-    );
-}
-
-/* =========================================================
-   DISTINCT POSTURE
-   ========================================================= */
-
-.hcp-posture-upright
-  .hcp-portrait-torso {
-  transform: none;
-}
-
-.hcp-posture-forward-relaxed
-  .hcp-portrait-torso {
-  transform:
-    translateY(2%)
-    rotate(-2deg);
-}
-
-.hcp-posture-centered
-  .hcp-portrait-torso {
-  transform:
-    scaleX(0.94);
-}
-
-.hcp-posture-soft-asymmetrical
-  .hcp-portrait-torso {
-  transform:
-    rotate(2deg)
-    translateX(2%);
-}
-
-/* =========================================================
-   ACCESSORIES AND IDENTITY CUES
-   ========================================================= */
-
-/* Jeeves monocle */
-
-.hcp-accessory-monocle
-  .hcp-portrait-accessory {
-  right: 24%;
-  top: 38%;
-
-  width: 16%;
-  height: 16%;
-
-  border:
-    2px solid rgba(243, 200, 111, 0.92);
-  border-radius: 50%;
-
-  background:
-    rgba(255, 255, 255, 0.02);
-}
-
-.hcp-accessory-monocle
-  .hcp-portrait-accessory::after {
-  content: "";
-
-  position: absolute;
-  right: -0.34rem;
-  bottom: -0.42rem;
-
-  width: 1px;
-  height: 0.66rem;
-
-  transform: rotate(-18deg);
-
-  background:
-    rgba(243, 200, 111, 0.76);
-}
-
-.hcp-cue-house-seal
-  .hcp-portrait-identity-cue {
-  left: 0.45rem;
-  bottom: 0.62rem;
-
-  width: 1rem;
-  height: 1rem;
-
-  border:
-    1px solid rgba(141, 216, 255, 0.64);
-
-  transform: rotate(45deg);
-
-  background:
-    rgba(141, 216, 255, 0.06);
-}
-
-/* Auren tool loop and gear */
-
-.hcp-accessory-tool-loop
-  .hcp-portrait-accessory {
-  left: 0.34rem;
-  bottom: 0.72rem;
-
-  width: 1.35rem;
-  height: 0.36rem;
-
-  border-radius: 0.18rem;
-
-  transform: rotate(-34deg);
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--hcp-gold),
-      var(--hcp-green)
-    );
-}
-
-.hcp-cue-gear
-  .hcp-portrait-identity-cue {
-  right: 0.35rem;
-  top: 0.42rem;
-
-  width: 1.08rem;
-  height: 1.08rem;
-
-  border:
-    2px dashed rgba(143, 240, 195, 0.8);
-  border-radius: 50%;
-
-  box-shadow:
-    0 0 0.8rem rgba(143, 240, 195, 0.18);
-}
-
-/* Soren diagnostic lens and seal */
-
-.hcp-accessory-diagnostic-lens
-  .hcp-portrait-accessory {
-  left: 0.35rem;
-  top: 0.45rem;
-
-  width: 1.1rem;
-  height: 1.1rem;
-
-  border:
-    2px solid rgba(141, 216, 255, 0.86);
-  border-radius: 50%;
-
-  background:
-    rgba(141, 216, 255, 0.045);
-}
-
-.hcp-cue-seal
-  .hcp-portrait-identity-cue {
-  right: 0.36rem;
-  bottom: 0.56rem;
-
-  width: 1rem;
-  height: 1rem;
-
-  clip-path:
-    polygon(
-      25% 0,
-      75% 0,
-      100% 50%,
-      75% 100%,
-      25% 100%,
-      0 50%
-    );
-
-  background:
-    rgba(216, 230, 255, 0.14);
-
-  border:
-    1px solid rgba(216, 230, 255, 0.32);
-}
-
-/* Elara signal orb and speech light */
-
-.hcp-accessory-signal-orb
-  .hcp-portrait-accessory {
-  right: 0.26rem;
-  top: 0.32rem;
-
-  width: 1.18rem;
-  height: 1.18rem;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 244, 216, 0.98),
-      rgba(255, 184, 218, 0.68) 38%,
-      transparent 67%
-    );
-
-  box-shadow:
-    0 0 1rem rgba(255, 184, 218, 0.58);
-}
-
-.hcp-cue-speech-light
-  .hcp-portrait-identity-cue {
-  left: 0.28rem;
-  bottom: 0.54rem;
-
-  width: 1.16rem;
-  height: 0.78rem;
-
-  border:
-    1px solid rgba(255, 244, 216, 0.64);
-  border-radius:
-    0.48rem 0.48rem 0.48rem 0.1rem;
-
-  background:
-    rgba(255, 255, 255, 0.06);
-}
-
-/* =========================================================
-   CHARACTER FRAME PALETTES
-   ========================================================= */
-
-.hcp-avatar-jeeves
-  .hcp-portrait-frame {
-  border-color:
-    rgba(141, 216, 255, 0.36);
-
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(243, 200, 111, 0.15),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(141, 216, 255, 0.26),
-      rgba(6, 18, 44, 0.98)
-    );
-}
-
-.hcp-avatar-auren
-  .hcp-portrait-frame {
-  border-color:
-    rgba(143, 240, 195, 0.36);
-
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(143, 240, 195, 0.21),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(243, 200, 111, 0.25),
-      rgba(8, 42, 32, 0.98)
-    );
-}
-
-.hcp-avatar-soren
-  .hcp-portrait-frame {
-  border-color:
-    rgba(216, 230, 255, 0.4);
-
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(141, 216, 255, 0.19),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(216, 230, 255, 0.23),
-      rgba(7, 14, 34, 0.98)
-    );
-}
-
-.hcp-avatar-elara
-  .hcp-portrait-frame {
-  border-color:
-    rgba(255, 184, 218, 0.4);
-
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(255, 184, 218, 0.25),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 184, 218, 0.24),
-      rgba(148, 113, 255, 0.31),
-      rgba(8, 8, 30, 0.98)
-    );
-}
-
-/* =========================================================
-   BLINK STATES
-   ========================================================= */
-
-.hcp-avatar[data-blinking="true"]
-  .hcp-portrait-lid {
-  top: -4%;
-
-  transform:
-    scaleY(1);
-}
-
-.hcp-avatar[data-blink-type="slow"]
-  .hcp-portrait-lid {
-  transition:
-    transform 0.17s ease,
-    top 0.17s ease;
-}
-
-.hcp-avatar[data-blink-type="double"]
-  .hcp-portrait-lid {
-  transition:
-    transform 0.07s linear,
-    top 0.07s linear;
-}
-
-/* =========================================================
-   GLANCE STATES
-   ========================================================= */
-
-.hcp-avatar[data-avatar-gesture="corridor-glance"]
-  .hcp-portrait-pupils,
-.hcp-avatar[data-avatar-gesture="tool-glance"]
-  .hcp-portrait-pupils,
-.hcp-avatar[data-avatar-gesture="diagnostic-glance"]
-  .hcp-portrait-pupils,
-.hcp-avatar[data-avatar-gesture="visitor-glance"]
-  .hcp-portrait-pupils {
-  transform: translateX(12%);
-}
-
-.hcp-avatar[data-avatar-gesture="slow-head-tilt"]
-  .hcp-portrait-head,
-.hcp-avatar[data-avatar-gesture="small-head-move"]
-  .hcp-portrait-head {
-  transform:
-    translate(-50%, -50%)
-    rotate(4deg);
-}
-
-/* =========================================================
-   RESTING / BREATHING
-   ========================================================= */
-
-.hcp-avatar[data-avatar-state="resting"]
-  .hcp-portrait-torso,
-.hcp-avatar[data-avatar-state="focused"]
-  .hcp-portrait-torso {
-  animation:
-    hcpBreathing 6.4s ease-in-out infinite;
-}
-
-.hcp-avatar-auren[data-avatar-state="resting"]
-  .hcp-portrait-torso {
-  animation-duration: 5.2s;
-}
-
-.hcp-avatar-soren[data-avatar-state="resting"]
-  .hcp-portrait-torso {
-  animation-duration: 7.4s;
-}
-
-.hcp-avatar-elara[data-avatar-state="resting"]
-  .hcp-portrait-torso {
-  animation-duration: 5.8s;
-}
-
-/* =========================================================
-   PERSONALITY GESTURES
-   ========================================================= */
-
-/* Jeeves */
-
-.hcp-avatar[data-avatar-gesture="monocle-adjust"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpMonocleAdjust 1.2s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="cuff-correction"]
-  .hcp-portrait-clothing {
-  animation:
-    hcpCuffCorrection 1s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="jacket-smooth"]
-  .hcp-portrait-torso {
-  animation:
-    hcpJacketSmooth 1.35s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="posture-reset"]
-  .hcp-portrait-torso {
-  animation:
-    hcpPostureReset 1s ease both;
-}
-
-/* Auren */
-
-.hcp-avatar[data-avatar-gesture="gear-adjust"]
-  .hcp-portrait-identity-cue {
-  animation:
-    hcpGearAdjust 1.25s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="tool-check"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpToolCheck 1.2s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="shoulder-shift"]
-  .hcp-portrait-shoulders {
-  animation:
-    hcpShoulderShift 1s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="hand-stretch"]
-  .hcp-portrait-torso,
-.hcp-avatar[data-avatar-gesture="maker-stretch"]
-  .hcp-portrait-torso {
-  animation:
-    hcpMakerStretch 1.8s ease both;
-}
-
-/* Soren */
-
-.hcp-avatar[data-avatar-gesture="lens-adjust"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpLensAdjust 1.3s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="seal-inspection"]
-  .hcp-portrait-identity-cue {
-  animation:
-    hcpSealInspect 1.5s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="small-brow-shift"]
-  .hcp-portrait-brows {
-  animation:
-    hcpBrowShift 0.9s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="posture-release"]
-  .hcp-portrait-torso {
-  animation:
-    hcpPostureRelease 1.7s ease both;
-}
-
-/* Elara */
-
-.hcp-avatar[data-avatar-gesture="signal-pulse"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="signal-interaction"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="signal-dim-recover"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpSignalPulse 1.45s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="hair-adjust"]
-  .hcp-portrait-hair-back,
-.hcp-avatar[data-avatar-gesture="hair-adjust"]
-  .hcp-portrait-hair-front {
-  animation:
-    hcpHairAdjust 1.3s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="soft-stretch"]
-  .hcp-portrait-torso {
-  animation:
-    hcpSoftStretch 1.8s ease both;
-}
-
-/* =========================================================
-   SLEEPY / YAWN STATES
-   ========================================================= */
-
-.hcp-avatar[data-avatar-state="sleepy"]
-  .hcp-portrait-mouth {
-  width: 20%;
-  height: 22%;
-
-  border: 0;
-  border-radius: 50%;
-
-  background:
-    rgba(73, 34, 38, 0.72);
-
-  animation:
-    hcpYawnMouth 1.9s ease both;
-}
-
-.hcp-avatar[data-avatar-state="sleepy"]
-  .hcp-portrait-lid {
-  top: -2%;
-
-  animation:
-    hcpSleepyLids 1.9s ease both;
-}
-
-.hcp-avatar[data-avatar-state="sleepy"]
-  .hcp-portrait-head {
-  animation:
-    hcpSleepyHead 1.9s ease both;
-}
-
-/* =========================================================
-   FOCUSED / TRAVEL / ARRIVAL
-   ========================================================= */
-
-.hcp-avatar[data-avatar-state="focused"]
-  .hcp-portrait-frame {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 0 2px rgba(243, 200, 111, 0.1),
-    0 0 1.2rem rgba(243, 200, 111, 0.18);
-}
-
-.hcp-avatar[data-avatar-state="traveling"]
-  .hcp-portrait-torso {
-  animation:
-    hcpTravelPosture 0.65s ease-in-out infinite alternate;
-}
-
-.hcp-avatar[data-avatar-state="traveling"]
-  .hcp-portrait-eyes {
-  transform:
-    translateX(-50%)
-    scaleY(0.92);
-}
-
-.hcp-avatar[data-avatar-state="arriving"]
-  .hcp-portrait-frame {
-  animation:
-    hcpArrivalGlow 0.74s ease both;
-}
-
-/* Room-specific arrival gestures */
-
-.hcp-avatar[data-avatar-gesture="formal-welcome"]
-  .hcp-portrait-head,
-.hcp-avatar[data-avatar-gesture="formal-center"]
-  .hcp-portrait-head {
-  animation:
-    hcpFormalNod 0.72s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="signal-greeting"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="signal-illumination"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpSignalArrival 0.86s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="instrument-check"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="map-reference"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpReferenceGesture 0.84s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="tool-ready"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="teaching-ready"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="frontier-ready"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpToolReady 0.84s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="diagnostic-attend"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="gallery-present"]
-  .hcp-portrait-identity-cue {
-  animation:
-    hcpDiagnosticAttend 0.84s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="hearth-settle"]
-  .hcp-portrait-torso {
-  animation:
-    hcpHearthSettle 0.84s ease both;
-}
-
-/* =========================================================
-   ARRIVAL SHEET
+   ARRIVAL CONFIRMATION
    ========================================================= */
 
 .hcp-arrival-sheet {
@@ -3053,7 +1839,7 @@ body[data-house-control-pad-open="true"] {
   display: block;
 
   animation:
-    hcpArrivalSheet 0.22s ease both;
+    hcpArchitectureArrivalSheet 0.22s ease both;
 }
 
 .hcp-arrival-content {
@@ -3251,13 +2037,15 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   ANIMATIONS
+   STRUCTURAL ANIMATIONS
    ========================================================= */
 
-@keyframes hcpTravelSegment {
+@keyframes hcpArchitectureTravelSegment {
   0% {
     opacity: 0;
-    clip-path: inset(0 100% 0 0);
+
+    clip-path:
+      inset(0 100% 0 0);
   }
 
   22% {
@@ -3266,34 +2054,13 @@ body[data-house-control-pad-open="true"] {
 
   100% {
     opacity: 0.92;
-    clip-path: inset(0 0 0 0);
+
+    clip-path:
+      inset(0 0 0 0);
   }
 }
 
-@keyframes hcpAvatarArrival {
-  0% {
-    filter:
-      drop-shadow(
-        0 0 0 rgba(243, 200, 111, 0)
-      );
-  }
-
-  45% {
-    filter:
-      drop-shadow(
-        0 0 1.4rem rgba(243, 200, 111, 0.56)
-      );
-  }
-
-  100% {
-    filter:
-      drop-shadow(
-        0 0 0.7rem rgba(243, 200, 111, 0.18)
-      );
-  }
-}
-
-@keyframes hcpRoomArrival {
+@keyframes hcpArchitectureRoomArrival {
   0% {
     box-shadow:
       var(--hcp-room-shadow),
@@ -3314,7 +2081,7 @@ body[data-house-control-pad-open="true"] {
   }
 }
 
-@keyframes hcpArrivalSheet {
+@keyframes hcpArchitectureArrivalSheet {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -3326,377 +2093,6 @@ body[data-house-control-pad-open="true"] {
   }
 }
 
-@keyframes hcpBreathing {
-  0%,
-  100% {
-    transform:
-      translateY(0)
-      scaleY(1);
-  }
-
-  50% {
-    transform:
-      translateY(-1px)
-      scaleY(1.015);
-  }
-}
-
-@keyframes hcpMonocleAdjust {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  45% {
-    transform: translate(-2px, -3px);
-  }
-}
-
-@keyframes hcpCuffCorrection {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-50%)
-      scaleX(1.05);
-  }
-}
-
-@keyframes hcpJacketSmooth {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(2px);
-  }
-}
-
-@keyframes hcpPostureReset {
-  0% {
-    transform: translateY(1px);
-  }
-
-  55% {
-    transform:
-      translateY(-2px)
-      scaleY(1.02);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes hcpGearAdjust {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform: rotate(24deg);
-  }
-}
-
-@keyframes hcpToolCheck {
-  0%,
-  100% {
-    transform: rotate(-34deg);
-  }
-
-  45% {
-    transform:
-      rotate(-18deg)
-      translateY(-3px);
-  }
-}
-
-@keyframes hcpShoulderShift {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-47%)
-      rotate(-2deg);
-  }
-}
-
-@keyframes hcpMakerStretch {
-  0%,
-  100% {
-    transform:
-      translateY(0)
-      rotate(-2deg);
-  }
-
-  50% {
-    transform:
-      translateY(-4px)
-      rotate(2deg)
-      scaleY(1.05);
-  }
-}
-
-@keyframes hcpLensAdjust {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(2px, -2px);
-  }
-}
-
-@keyframes hcpSealInspect {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform:
-      rotate(12deg)
-      scale(1.08);
-  }
-}
-
-@keyframes hcpBrowShift {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-50%)
-      translateY(-1px);
-  }
-}
-
-@keyframes hcpPostureRelease {
-  0%,
-  100% {
-    transform: scaleX(0.94);
-  }
-
-  50% {
-    transform:
-      scaleX(0.98)
-      translateY(2px);
-  }
-}
-
-@keyframes hcpSignalPulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.55;
-    transform: scale(1.22);
-  }
-}
-
-@keyframes hcpHairAdjust {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-47%)
-      rotate(2deg);
-  }
-}
-
-@keyframes hcpSoftStretch {
-  0%,
-  100% {
-    transform:
-      rotate(2deg)
-      translateX(2%);
-  }
-
-  50% {
-    transform:
-      rotate(-1deg)
-      translateX(0)
-      translateY(-3px)
-      scaleY(1.04);
-  }
-}
-
-@keyframes hcpYawnMouth {
-  0%,
-  100% {
-    transform:
-      translateX(-50%)
-      scaleY(0.5);
-  }
-
-  50% {
-    transform:
-      translateX(-50%)
-      scaleY(1.12);
-  }
-}
-
-@keyframes hcpSleepyLids {
-  0%,
-  100% {
-    transform: scaleY(0.35);
-  }
-
-  50% {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes hcpSleepyHead {
-  0%,
-  100% {
-    transform:
-      translate(-50%, -50%)
-      rotate(0deg);
-  }
-
-  50% {
-    transform:
-      translate(-50%, -47%)
-      rotate(4deg);
-  }
-}
-
-@keyframes hcpTravelPosture {
-  from {
-    transform:
-      translateY(0)
-      rotate(-1deg);
-  }
-
-  to {
-    transform:
-      translateY(-2px)
-      rotate(1deg);
-  }
-}
-
-@keyframes hcpArrivalGlow {
-  0%,
-  100% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  }
-
-  50% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.16),
-      0 0 1.4rem rgba(243, 200, 111, 0.45);
-  }
-}
-
-@keyframes hcpFormalNod {
-  0%,
-  100% {
-    transform:
-      translate(-50%, -50%)
-      rotate(0deg);
-  }
-
-  50% {
-    transform:
-      translate(-50%, -47%)
-      rotate(2deg);
-  }
-}
-
-@keyframes hcpSignalArrival {
-  0% {
-    opacity: 0.4;
-    transform: scale(0.8);
-  }
-
-  55% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes hcpReferenceGesture {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(3px, -3px);
-  }
-}
-
-@keyframes hcpToolReady {
-  0%,
-  100% {
-    transform: rotate(-34deg);
-  }
-
-  50% {
-    transform:
-      rotate(-12deg)
-      translateY(-3px);
-  }
-}
-
-@keyframes hcpDiagnosticAttend {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.18);
-  }
-}
-
-@keyframes hcpHearthSettle {
-  0% {
-    transform: translateY(-3px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes hcpHearthPulse {
-  0%,
-  100% {
-    opacity: 0.82;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-}
-
 /* =========================================================
    TABLET
    ========================================================= */
@@ -3705,8 +2101,6 @@ body[data-house-control-pad-open="true"] {
   :root {
     --hcp-estate-width: 1080px;
     --hcp-estate-height: 1080px;
-    --hcp-avatar-overview: 76px;
-    --hcp-avatar-room: 136px;
   }
 
   .hcp-panel {
@@ -3744,8 +2138,6 @@ body[data-house-control-pad-open="true"] {
   :root {
     --hcp-estate-width: 1000px;
     --hcp-estate-height: 1000px;
-    --hcp-avatar-overview: 68px;
-    --hcp-avatar-room: 124px;
   }
 
   .hcp-overlay {
@@ -3851,18 +2243,13 @@ body[data-house-control-pad-open="true"] {
     font-size: 0.4rem;
   }
 
-  .hcp-avatar-nameplate {
-    max-width: 5.2rem;
-
-    font-size: 0.48rem;
-  }
-
   .hcp-arrival-sheet {
     padding: 0.64rem 0.74rem 0.72rem;
   }
 
   .hcp-arrival-content {
     grid-template-columns: 1fr;
+
     grid-template-areas:
       "eyebrow"
       "title"
@@ -3929,8 +2316,6 @@ body[data-house-control-pad-open="true"] {
   :root {
     --hcp-estate-width: 960px;
     --hcp-estate-height: 960px;
-    --hcp-avatar-overview: 64px;
-    --hcp-avatar-room: 116px;
   }
 
   .hcp-title {
@@ -3991,7 +2376,7 @@ body[data-house-control-pad-open="true"] {
 }
 
 /* =========================================================
-   REDUCED MOTION
+   STRUCTURAL REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -4005,43 +2390,15 @@ body[data-house-control-pad-open="true"] {
   .hcp-room-detail-zone,
   .hcp-room-action-zone,
   .hcp-room-action,
-  .hcp-avatar,
-  .hcp-portrait-head,
-  .hcp-portrait-pupils,
-  .hcp-portrait-lid,
   .hcp-arrival-sheet,
   .hcp-arrival-action,
   .hcp-footer-button {
     transition: none !important;
   }
 
-  .hcp-avatar[data-avatar-state="resting"]
-    .hcp-portrait-torso,
-  .hcp-avatar[data-avatar-state="focused"]
-    .hcp-portrait-torso,
-  .hcp-avatar[data-avatar-state="traveling"]
-    .hcp-portrait-torso,
-  .hcp-avatar[data-avatar-state="arriving"]
-    .hcp-portrait-frame,
-  .hcp-avatar[data-avatar-state="sleepy"]
-    .hcp-portrait-mouth,
-  .hcp-avatar[data-avatar-state="sleepy"]
-    .hcp-portrait-lid,
-  .hcp-avatar[data-avatar-state="sleepy"]
-    .hcp-portrait-head,
-  .hcp-room-feature-hearth-fire,
   .hcp-travel-segment,
   .hcp-arrival-sheet[data-visible="true"],
-  .hcp-room-node[data-arrived="true"],
-  .hcp-avatar[data-arrived="true"] {
+  .hcp-room-node[data-arrived="true"] {
     animation: none !important;
-  }
-
-  .hcp-avatar[data-blinking="true"]
-    .hcp-portrait-lid {
-    top: 8%;
-
-    transform:
-      scaleY(0.55);
   }
 }

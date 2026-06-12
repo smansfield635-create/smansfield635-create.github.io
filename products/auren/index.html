@@ -1,0 +1,1198 @@
+<!-- /products/auren/index.html -->
+<!-- AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1 -->
+<!-- Full-file replacement. -->
+<!-- Owns: Auren product-floor chat shell, local response bank, product calibration flow, four-question product branches, internal product routing, Elara/Soren/Jeeves handoffs, one-tap-one-line pacing. -->
+<!-- Does not own: /products/index.html, product child pages, Elara page, Soren diagnostic page, Jeeves page, external CSS visual authority, backend/API, product runtime, gauges. -->
+<!-- Purpose: create Auren's products-floor work station. This is not Auren's home page. It is his product calibration floor. -->
+
+<!doctype html>
+<html
+  lang="en"
+  data-route="/products/auren/"
+  data-page="auren-products-work-floor"
+  data-contract="AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1"
+  data-role="product-floor-agent"
+  data-character="auren"
+  data-character-age="13"
+  data-character-layer="public-work-floor-persona"
+  data-home-page="false"
+  data-work-floor="true"
+  data-local-chat="true"
+  data-api-dependency="false"
+  data-single-prompt-dock="true"
+  data-one-tap-one-line="true"
+  data-product-calibration="true"
+  data-four-question-product-branches="true"
+  data-default-routing-system="products"
+  data-external-handoffs="elara,soren,jeeves"
+>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+
+  <title>Auren · Product Floor · Diamond Gate Bridge</title>
+
+  <meta
+    name="description"
+    content="Speak to Auren on the product floor before opening a product. Auren gives his opinionated product calibration first."
+  >
+
+  <link rel="stylesheet" href="/products/auren/index.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#auren-main">Skip to Auren</a>
+
+  <main
+    id="auren-main"
+    class="auren-page"
+    data-auren-page="true"
+    data-product-floor="true"
+  >
+    <header class="auren-header" aria-label="Auren product-floor header">
+      <a class="auren-brand" href="/products/" aria-label="Return to Products">
+        <span class="auren-brand-mark" aria-hidden="true">A</span>
+        <span class="auren-brand-copy">
+          <span>Products · Work Floor</span>
+          <strong>Auren</strong>
+        </span>
+      </a>
+
+      <nav class="auren-header-actions" aria-label="Auren page actions">
+        <a href="/products/">Products</a>
+        <a href="/showroom/globe/hearth/jeeves/">Ask Jeeves</a>
+      </nav>
+    </header>
+
+    <section class="auren-shell" aria-label="Auren conversation shell">
+      <section
+        id="aurenProductFloorMount"
+        class="auren-console"
+        data-auren-root="true"
+        data-auren-ready="false"
+        data-auren-speaking="false"
+        data-contract="AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1"
+      >
+        <div class="auren-console-topline">
+          <div class="auren-identity">
+            <div class="auren-avatar" aria-hidden="true">A</div>
+            <div class="auren-identity-copy">
+              <span>Product Floor · Not His Room</span>
+              <strong>Auren Vale</strong>
+            </div>
+          </div>
+
+          <div
+            class="auren-status"
+            data-auren-status="true"
+            aria-live="polite"
+          >
+            Auren is checking the floor.
+          </div>
+        </div>
+
+        <div class="auren-thread-screen" data-auren-thread-screen="true">
+          <div
+            class="auren-thread"
+            data-auren-thread="true"
+            aria-live="polite"
+            aria-label="Auren product-floor conversation"
+          >
+            <div class="auren-bubble auren-bubble-system" data-auren-bubble="system">
+              <div class="auren-bubble-body">
+                Auren is checking the inventory. If this remains, check the local mount.
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="auren-typing"
+            data-auren-typing="false"
+            aria-hidden="true"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div
+          class="auren-options"
+          data-auren-options="true"
+          data-panel-kind="conversation"
+          data-single-prompt-dock="true"
+          aria-label="Auren conversation options"
+        ></div>
+      </section>
+    </section>
+
+    <section class="auren-context-grid" aria-label="Auren context cards">
+      <article class="auren-context-card">
+        <span>Work Floor</span>
+        <p>This is not Auren’s home page. This is where he checks products, utility, readiness, and routes.</p>
+      </article>
+
+      <article class="auren-context-card">
+        <span>Product Calibration</span>
+        <p>Auren gives his view first. The official product page comes after the visitor is oriented.</p>
+      </article>
+
+      <article class="auren-context-card">
+        <span>Two Exits</span>
+        <p>Leaving the product system usually means Elara for the human mission layer, Soren for the Diagnostic, or Jeeves for broader House context.</p>
+      </article>
+    </section>
+
+    <template id="auren-route-receipt" data-route-receipt>
+AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1
+route=/products/auren/
+page=auren_products_work_floor
+character=auren
+age=13
+home_page=false
+work_floor=true
+role=product_floor_agent
+persona=brash_know_it_all_rich_kid_public_layer
+deeper_layer=protective_accountable_overburdened_heir
+local_chat=true
+api_dependency=false
+single_prompt_dock=true
+one_tap_one_line=true
+product_calibration=true
+four_question_product_branches=true
+default_routing=inside_products
+external_handoffs=elara,soren,jeeves
+elara_route=/meet-sean-mansfield/
+soren_route=/coherence-diagnostic/
+jeeves_route=/showroom/globe/hearth/jeeves/
+products_route=/products/
+route_owns=auren_chat_shell,local_response_bank,product_prefaces,four_question_answers,product_routes,handoffs,one_tap_one_line
+route_does_not_own=products_index,product_child_pages,official_product_descriptions,elara_page,soren_page,jeeves_page,css_visual_authority,api,gauges
+    </template>
+  </main>
+
+  <noscript>
+    <main class="auren-page">
+      <section class="auren-shell">
+        <section class="auren-console">
+          <div class="auren-console-topline">
+            <div class="auren-identity">
+              <div class="auren-avatar" aria-hidden="true">A</div>
+              <div class="auren-identity-copy">
+                <span>JavaScript Required</span>
+                <strong>Auren cannot open the product floor.</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="auren-thread-screen">
+            <div class="auren-thread">
+              <div class="auren-bubble auren-bubble-system" data-auren-bubble="system">
+                <div class="auren-bubble-body">
+                  Auren needs JavaScript enabled to run the product-floor conversation.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="auren-options">
+            <a class="auren-route-option" href="/products/">Return to Products</a>
+          </div>
+        </section>
+      </section>
+    </main>
+  </noscript>
+
+  <script>
+    (function mountAurenProductFloor() {
+      "use strict";
+
+      var CONTRACT = "AUREN_PRODUCTS_WORK_FLOOR_LOCAL_CHAT_HTML_TNT_v1";
+
+      var ROUTES = {
+        products: "/products/",
+        onYourSideAI: "/products/on-your-side-ai/",
+        communitySystems: "/products/",
+        archcoin: "/products/archcoin/",
+        fiveFlags: "/products/five-flags/",
+        education: "/products/education/",
+        nutrition: "/products/nutrition/",
+        coherenceDiagnostic: "/coherence-diagnostic/",
+        meetSean: "/meet-sean-mansfield/",
+        nineSummits: "/nine-summits/",
+        book: "/nine-summits-of-love/",
+        elara: "/meet-sean-mansfield/",
+        soren: "/coherence-diagnostic/",
+        jeeves: "/showroom/globe/hearth/jeeves/",
+        compass: "/"
+      };
+
+      var TIMING = {
+        entranceDelay: 780,
+        firstBubbleDelay: 900,
+        shortBubbleDelay: 1900,
+        mediumBubbleDelay: 2800,
+        longBubbleDelay: 3800,
+        extraLongBubbleDelay: 4700,
+        betweenBubbleDelay: 720,
+        maxNaturalJitter: 180
+      };
+
+      var PRODUCT_ORDER = [
+        "on_your_side_ai",
+        "community_systems",
+        "archcoin",
+        "five_flags",
+        "education",
+        "nutrition"
+      ];
+
+      var PRODUCT_DATA = {
+        on_your_side_ai: {
+          name: "On Your Side AI",
+          route: ROUTES.onYourSideAI,
+          openLabel: "Open On Your Side AI",
+          promptLabel: "What is On Your Side AI?",
+          preface: [
+            "Fine. We can talk about On Your Side AI.",
+            "Do not open the product yet.",
+            "If you go in cold, you will probably think it is just another chatbot.",
+            "It is not.",
+            "It is the demo version of the assistant team we are building across the website.",
+            "Jeeves is one expression of it.",
+            "He handles threshold, orientation, rooms, and proper handoffs.",
+            "The larger product is a configured team of assistants, each attached to the part of the House where they are actually useful.",
+            "Four questions first. Then you can open it."
+          ],
+          answers: {
+            what: [
+              "On Your Side AI is the assistant-team layer of the platform.",
+              "It turns the website from static pages into guided conversations.",
+              "The demo version is what you are already seeing with Jeeves.",
+              "Each assistant can be configured with a role, tone, boundary, routing logic, and specific product or mission responsibility.",
+              "So no, it is not just a chat box.",
+              "It is a guided intelligence layer."
+            ],
+            problem: [
+              "It solves the problem of people getting dropped into too much information with no guide.",
+              "Most websites throw pages at the visitor.",
+              "Most AI bots answer without knowing where the answer belongs.",
+              "On Your Side AI is designed to route the person through the right layer: product, mission, diagnostic, story, guide, or next action.",
+              "That means less confusion, less wandering, and fewer wasted clicks."
+            ],
+            audience: [
+              "It is for people, teams, platforms, and communities that need guided digital help instead of a pile of disconnected pages.",
+              "It can serve visitors, customers, students, patients, donors, product users, or internal teams.",
+              "The important part is configuration.",
+              "An assistant should not sound the same in every room.",
+              "Jeeves should not talk like me.",
+              "I should not talk like Elara.",
+              "Soren should not talk like Jeeves.",
+              "That is the whole point."
+            ],
+            status: [
+              "Demo-ready.",
+              "Not finished.",
+              "The Jeeves build proves the model: local mount, prompt dock, step-by-step pacing, response bank, branch routing, and character-specific handoffs.",
+              "The larger On Your Side AI system still needs more agents, more product branches, more route testing, and better persistence.",
+              "But the architecture is no longer imaginary.",
+              "It works."
+            ]
+          }
+        },
+
+        community_systems: {
+          name: "Community Systems",
+          route: ROUTES.communitySystems,
+          openLabel: "Open Products",
+          promptLabel: "What are community systems?",
+          preface: [
+            "Community systems are where products stop being decorative.",
+            "This is the layer where tools, value, exchange, repair, and usefulness have to survive contact with real people.",
+            "I care about this floor because a mission that cannot become useful eventually becomes noise.",
+            "And I hate noise.",
+            "Four questions. Then decide whether you still want the product floor."
+          ],
+          answers: {
+            what: [
+              "Community systems are the practical-use layer of the House.",
+              "They include tools, services, product paths, value structures, and systems meant to help people organize, protect, exchange, learn, repair, or build.",
+              "It is not just a store.",
+              "It is where mission-facing ideas are tested for real utility."
+            ],
+            problem: [
+              "It solves the problem of good ideas staying trapped as slogans.",
+              "If something cannot become usable, teachable, exchangeable, or protective, then it cannot help very many people.",
+              "Community systems ask what the idea does once it leaves the page."
+            ],
+            audience: [
+              "People who need tools, not just inspiration.",
+              "Builders.",
+              "Families.",
+              "Communities.",
+              "Small teams.",
+              "People trying to turn pressure into structure.",
+              "And anyone who needs something practical enough to use without reading an entire philosophy first."
+            ],
+            status: [
+              "Mixed.",
+              "Some parts can be public-facing now.",
+              "Some are still in testing.",
+              "Some are only frameworks until they are turned into a usable product.",
+              "That is why I am here.",
+              "Someone has to tell the difference."
+            ]
+          }
+        },
+
+        archcoin: {
+          name: "ARCHCOIN",
+          route: ROUTES.archcoin,
+          openLabel: "Open ARCHCOIN",
+          promptLabel: "What is ARCHCOIN?",
+          preface: [
+            "ARCHCOIN is a value and custody system.",
+            "So no, I am not explaining it like a shiny coin with a logo.",
+            "If it does not protect value, structure exchange, or make custody clearer, it does not deserve the name.",
+            "Ask the four questions."
+          ],
+          answers: {
+            what: [
+              "ARCHCOIN is a value-system concept connected to custody, exchange, and protected utility inside the broader product architecture.",
+              "It belongs near the question of how value moves without becoming careless."
+            ],
+            problem: [
+              "It addresses the problem of value becoming vague, scattered, or disconnected from responsibility.",
+              "A useful value system should clarify what is being exchanged, why it matters, and what protects it from becoming cheap or meaningless."
+            ],
+            audience: [
+              "People or communities that need value logic tied to custody, utility, and protected exchange.",
+              "Not speculators first.",
+              "Users first.",
+              "That difference matters."
+            ],
+            status: [
+              "Still being built.",
+              "The concept has value, but the rules, use cases, protections, and public explanation need to be tightened before it should be treated as ready.",
+              "That is not a weakness.",
+              "That is basic responsibility."
+            ]
+          }
+        },
+
+        five_flags: {
+          name: "Five Flags",
+          route: ROUTES.fiveFlags,
+          openLabel: "Open Five Flags",
+          promptLabel: "What is Five Flags?",
+          preface: [
+            "Five Flags is easier to misunderstand than people think.",
+            "It sounds symbolic, which means people will try to make it vague.",
+            "I am not letting that happen.",
+            "If it is going to be a product, it needs a use.",
+            "Four questions."
+          ],
+          answers: {
+            what: [
+              "Five Flags is a structured identity, orientation, or signal system within the product wing.",
+              "It can hold symbolic value, but it needs to remain practical enough to guide use, belonging, sorting, or action."
+            ],
+            problem: [
+              "It helps organize identity and direction without forcing everything into one flat label.",
+              "People, teams, products, or missions often need clearer signals.",
+              "Five Flags can become one way to carry those signals."
+            ],
+            audience: [
+              "Users who need a structured way to recognize alignment, role, belonging, or direction.",
+              "That could become personal, team-based, community-based, or product-based depending on how the system is finished."
+            ],
+            status: [
+              "Still being shaped.",
+              "The concept is strong enough to keep on the floor.",
+              "But it needs sharper use cases before it should be treated as a finished product."
+            ]
+          }
+        },
+
+        education: {
+          name: "Education",
+          route: ROUTES.education,
+          openLabel: "Open Education",
+          promptLabel: "What is Education?",
+          preface: [
+            "Education belongs on this floor because learning is not just content.",
+            "Content is cheap.",
+            "Understanding is harder.",
+            "If the education product does not help someone learn, remember, apply, or move, then it is just decoration with homework stapled to it.",
+            "Four questions."
+          ],
+          answers: {
+            what: [
+              "The Education product path is the learning and curriculum layer.",
+              "It can hold guides, lessons, interactive material, structured explanations, and training systems connected to the House."
+            ],
+            problem: [
+              "It solves the problem of knowledge being present but not usable.",
+              "People do not need more information thrown at them.",
+              "They need structure, sequence, examples, and ways to apply what they are learning."
+            ],
+            audience: [
+              "Students, families, teachers, self-learners, community programs, and anyone who needs guided learning instead of scattered content."
+            ],
+            status: [
+              "Partly ready, partly building.",
+              "The education lane can start with structured guides and expand into courses, interactive lessons, and agent-supported learning."
+            ]
+          }
+        },
+
+        nutrition: {
+          name: "Nutrition",
+          route: ROUTES.nutrition,
+          openLabel: "Open Nutrition",
+          promptLabel: "What is Nutrition?",
+          preface: [
+            "Nutrition is not a vibes product.",
+            "It has to be practical.",
+            "What does someone take? Why? What problem does it solve? What should they avoid assuming?",
+            "If this lane is going to exist, it has to be careful.",
+            "Four questions."
+          ],
+          answers: {
+            what: [
+              "The Nutrition product path is the health-support and daily-use wellness layer.",
+              "It should organize practical nutritional support, education, routines, and product logic."
+            ],
+            problem: [
+              "It helps solve the problem of people wanting better health support but getting lost in claims, supplements, trends, and scattered advice.",
+              "A useful nutrition product should make the basics clearer and safer."
+            ],
+            audience: [
+              "People who want practical nutrition support, daily routines, clearer education, or a simpler way to understand what they are using.",
+              "It should be especially careful with claims.",
+              "That matters."
+            ],
+            status: [
+              "Still building.",
+              "This lane needs careful wording, clear boundaries, and responsible product logic before it should be pushed too hard.",
+              "I would rather be slow than careless."
+            ]
+          }
+        }
+      };
+
+      var OPENING_SEQUENCE = [
+        "You are on the products floor.",
+        "No, this is not my room.",
+        "This is where I spend most of the day because apparently somebody has to keep track of what is actually useful.",
+        "A product is not useful because it has a good name.",
+        "A product is useful when it solves a real problem, survives testing, and still makes sense after it leaves the page.",
+        "That is the part people love skipping.",
+        "I do not.",
+        "So here is how this works.",
+        "You pick a product.",
+        "I give you my view of it.",
+        "Not the brochure version. The useful version.",
+        "Then I answer the four questions that matter before you waste your time opening the actual thing.",
+        "If you are calibrated after that, I send you into the product system.",
+        "If you are asking about the mission or the human-facing threshold, that belongs to Elara.",
+        "If you are asking about the Diagnostic, that belongs to Soren.",
+        "If you are lost, ask Jeeves.",
+        "If you are here for products, stay here and try to keep up."
+      ];
+
+      var MAIN_PROMPTS = [
+        { label: "Show me the products.", action: "products_menu" },
+        { label: "What is On Your Side AI?", action: "product", productId: "on_your_side_ai" },
+        { label: "What are community systems?", action: "product", productId: "community_systems" },
+        { label: "What is the Coherence Diagnostic?", action: "diagnostic_handoff" },
+        { label: "Ask Jeeves first.", action: "jeeves_handoff" },
+        { label: "Return to Products", action: "route", routeUrl: ROUTES.products }
+      ];
+
+      var PRODUCT_QUESTION_PROMPTS = [
+        { label: "What is this?", action: "product_answer", question: "what" },
+        { label: "What problem does it solve?", action: "product_answer", question: "problem" },
+        { label: "Who is it for?", action: "product_answer", question: "audience" },
+        { label: "Is it ready, testing, or still being built?", action: "product_answer", question: "status" }
+      ];
+
+      function onReady(fn) {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", fn, { once: true });
+        } else {
+          fn();
+        }
+      }
+
+      function text(value) {
+        if (value === null || typeof value === "undefined") return "";
+        return String(value).replace(/\s+/g, " ").trim();
+      }
+
+      function query(selector, root) {
+        return (root || document).querySelector(selector);
+      }
+
+      function empty(node) {
+        if (!node) return;
+        while (node.firstChild) node.removeChild(node.firstChild);
+      }
+
+      function makeRouteAction(label, routeUrl) {
+        return { label: label, action: "route", routeUrl: routeUrl };
+      }
+
+      function makeResetAction() {
+        return { label: "Ask about something else.", action: "reset" };
+      }
+
+      function makeBackToProductsAction() {
+        return { label: "Back to Products.", action: "products_menu" };
+      }
+
+      function makeBackToCurrentProductAction(state) {
+        if (!state || !state.currentProductId || !PRODUCT_DATA[state.currentProductId]) return null;
+        return {
+          label: "Back to " + PRODUCT_DATA[state.currentProductId].name + ".",
+          action: "product_questions",
+          productId: state.currentProductId
+        };
+      }
+
+      function productMenuPrompts() {
+        return PRODUCT_ORDER.map(function (productId) {
+          return {
+            label: PRODUCT_DATA[productId].promptLabel,
+            action: "product",
+            productId: productId
+          };
+        }).concat([
+          { label: "What is the Coherence Diagnostic?", action: "diagnostic_handoff" },
+          { label: "Meet Sean.", action: "elara_handoff", handoffType: "meet_sean" },
+          { label: "The Nine Summits.", action: "elara_handoff", handoffType: "nine_summits" },
+          { label: "The Book.", action: "elara_handoff", handoffType: "book" },
+          { label: "Ask Jeeves first.", action: "jeeves_handoff" },
+          { label: "Return to Products", action: "route", routeUrl: ROUTES.products }
+        ]);
+      }
+
+      function normalizeOption(option) {
+        if (!option || typeof option !== "object") return null;
+        var label = text(option.label || option.title || option.name);
+        if (!label) return null;
+
+        return {
+          label: label,
+          action: text(option.action || ""),
+          routeUrl: text(option.routeUrl || ""),
+          productId: text(option.productId || ""),
+          question: text(option.question || ""),
+          handoffType: text(option.handoffType || "")
+        };
+      }
+
+      function bubble(message, kind) {
+        var node = document.createElement("div");
+        var bubbleKind = kind || "auren";
+
+        node.className = "auren-bubble";
+        node.classList.add("auren-bubble-" + bubbleKind);
+        node.setAttribute("data-auren-bubble", bubbleKind);
+
+        var body = document.createElement("div");
+        body.className = "auren-bubble-body";
+        body.textContent = text(message);
+
+        node.appendChild(body);
+        return node;
+      }
+
+      function optionButton(option, state) {
+        var normalized = normalizeOption(option);
+        if (!normalized) return null;
+
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "auren-option";
+        button.setAttribute("data-auren-option", "true");
+        button.textContent = normalized.label;
+
+        if (normalized.action === "route" && normalized.routeUrl) {
+          button.setAttribute("data-auren-route-option", "true");
+        }
+
+        button.addEventListener("click", function () {
+          respondToOption(normalized, state);
+        });
+
+        return button;
+      }
+
+      function setTyping(state, active) {
+        if (state.mount) {
+          state.mount.setAttribute("data-auren-speaking", active ? "true" : "false");
+        }
+
+        if (state.typing) {
+          state.typing.setAttribute("data-auren-typing", active ? "true" : "false");
+          state.typing.setAttribute("aria-hidden", active ? "false" : "true");
+        }
+
+        state.sequenceActive = Boolean(active);
+      }
+
+      function setStatus(state, message) {
+        if (state.status) state.status.textContent = message;
+      }
+
+      function scrollThread(state) {
+        if (state.thread) state.thread.scrollTop = state.thread.scrollHeight;
+      }
+
+      function clearCurrentTimer(state) {
+        if (!state) return;
+
+        if (state.currentTimer) {
+          window.clearTimeout(state.currentTimer);
+          state.currentTimer = null;
+        }
+      }
+
+      function setStepTimer(state, fn, delay) {
+        clearCurrentTimer(state);
+
+        state.pendingStepFn = fn;
+
+        state.currentTimer = window.setTimeout(function () {
+          var pending = state.pendingStepFn;
+
+          state.currentTimer = null;
+          state.pendingStepFn = null;
+
+          if (typeof pending === "function") pending();
+        }, delay);
+      }
+
+      function naturalJitter(seedText, index) {
+        var seed = String(seedText || "").length + index * 19;
+        return Math.abs(Math.sin(seed) * TIMING.maxNaturalJitter);
+      }
+
+      function normalBubbleDelay(message, index) {
+        var value = text(message);
+        var length = value.length;
+        var sentenceCount = Math.max(1, (value.match(/[.!?;:—]/g) || []).length);
+        var commaCount = (value.match(/[,]/g) || []).length;
+        var delay;
+
+        if (index === 0) {
+          delay = TIMING.firstBubbleDelay;
+        } else if (length < 55) {
+          delay = TIMING.shortBubbleDelay;
+        } else if (length < 115) {
+          delay = TIMING.mediumBubbleDelay;
+        } else if (length < 180) {
+          delay = TIMING.longBubbleDelay;
+        } else {
+          delay = TIMING.extraLongBubbleDelay;
+        }
+
+        delay += sentenceCount * 130;
+        delay += commaCount * 75;
+        delay += naturalJitter(value, index);
+
+        return Math.round(delay);
+      }
+
+      function requestStep(state) {
+        if (!state || !state.sequenceActive || !state.pendingStepFn) return;
+
+        var pending = state.pendingStepFn;
+
+        clearCurrentTimer(state);
+        state.pendingStepFn = null;
+
+        setStatus(state, "Auren advanced one line.");
+
+        if (typeof pending === "function") pending();
+      }
+
+      function installStepListeners(state) {
+        if (!state || !state.mount || state.stepListenersInstalled) return;
+
+        state.stepListenersInstalled = true;
+
+        state.mount.addEventListener("pointerdown", function (event) {
+          var target = event.target;
+
+          if (target && target.closest && target.closest("[data-auren-option]")) {
+            return;
+          }
+
+          requestStep(state);
+        });
+      }
+
+      function renderSequence(messages, state, done) {
+        var list = Array.isArray(messages) ? messages.map(text).filter(Boolean) : [];
+        var i = 0;
+
+        clearCurrentTimer(state);
+
+        state.pendingStepFn = null;
+        state.sequenceActive = true;
+
+        function finish() {
+          clearCurrentTimer(state);
+          state.pendingStepFn = null;
+
+          setTyping(state, false);
+          state.sequenceActive = false;
+
+          setStatus(state, "Auren is waiting.");
+
+          if (typeof done === "function") done();
+        }
+
+        function scheduleStep(fn, delay) {
+          setStepTimer(state, fn, delay);
+        }
+
+        function showBubbleAndScheduleNext() {
+          if (i >= list.length) {
+            finish();
+            return;
+          }
+
+          setTyping(state, true);
+          setStatus(state, "Auren is speaking.");
+
+          state.thread.appendChild(bubble(list[i], "auren"));
+          scrollThread(state);
+
+          i += 1;
+
+          if (i >= list.length) {
+            scheduleStep(finish, TIMING.betweenBubbleDelay);
+            return;
+          }
+
+          scheduleStep(showBubbleAndScheduleNext, TIMING.betweenBubbleDelay + normalBubbleDelay(list[i], i));
+        }
+
+        if (!list.length) {
+          finish();
+          return;
+        }
+
+        scheduleStep(showBubbleAndScheduleNext, TIMING.entranceDelay);
+      }
+
+      function renderOptions(options, state) {
+        empty(state.options);
+
+        options.forEach(function (option) {
+          var button = optionButton(option, state);
+          if (button) state.options.appendChild(button);
+        });
+      }
+
+      function renderMainPrompts(state) {
+        state.mode = "main";
+        renderOptions(MAIN_PROMPTS, state);
+      }
+
+      function renderProductsMenu(state) {
+        state.mode = "products";
+        renderOptions(productMenuPrompts(), state);
+      }
+
+      function renderProductQuestions(state, productId) {
+        var product = PRODUCT_DATA[productId];
+        if (!product) {
+          renderProductsMenu(state);
+          return;
+        }
+
+        state.currentProductId = productId;
+        state.mode = "product:" + productId;
+
+        var options = PRODUCT_QUESTION_PROMPTS.map(function (item) {
+          return {
+            label: item.label,
+            action: item.action,
+            productId: productId,
+            question: item.question
+          };
+        });
+
+        options.push(makeRouteAction(product.openLabel, product.route));
+        options.push(makeBackToProductsAction());
+        options.push({ label: "Ask Jeeves first.", action: "jeeves_handoff" });
+        options.push(makeRouteAction("Return to Products", ROUTES.products));
+
+        renderOptions(options, state);
+      }
+
+      function renderAfterProductAnswer(state, product) {
+        var options = [];
+
+        var backToCurrent = makeBackToCurrentProductAction(state);
+        if (backToCurrent) options.push(backToCurrent);
+
+        options.push(makeBackToProductsAction());
+        options.push(makeRouteAction(product.openLabel, product.route));
+        options.push({ label: "Ask Jeeves first.", action: "jeeves_handoff" });
+        options.push(makeRouteAction("Return to Products", ROUTES.products));
+
+        renderOptions(options, state);
+      }
+
+      function responseForProductPreface(option, state) {
+        var product = PRODUCT_DATA[option.productId];
+
+        if (!product) {
+          return {
+            bubbles: [
+              "That is not on my current product list.",
+              "Back to the floor.",
+              "Pick a product that actually exists here."
+            ],
+            after: "products_menu"
+          };
+        }
+
+        state.currentProductId = option.productId;
+
+        return {
+          bubbles: product.preface.slice(),
+          after: "product_questions",
+          productId: option.productId
+        };
+      }
+
+      function responseForProductAnswer(option, state) {
+        var productId = option.productId || state.currentProductId;
+        var product = PRODUCT_DATA[productId];
+
+        if (!product) {
+          return {
+            bubbles: [
+              "You lost the product context.",
+              "Which is exactly why I make people stay organized.",
+              "Back to Products."
+            ],
+            after: "products_menu"
+          };
+        }
+
+        var question = option.question;
+        var bubbles = product.answers[question];
+
+        if (!Array.isArray(bubbles)) {
+          bubbles = [
+            "That is not one of the four questions.",
+            "I made this simple on purpose.",
+            "Back to the product."
+          ];
+        }
+
+        state.currentProductId = productId;
+
+        return {
+          bubbles: bubbles.slice(),
+          after: "product_answer",
+          productId: productId
+        };
+      }
+
+      function responseForElaraHandoff(option) {
+        var type = option.handoffType;
+
+        if (type === "nine_summits") {
+          return {
+            bubbles: [
+              "The Nine Summits is not a normal product.",
+              "It is part of the climb, the invitation, and the human-facing mission layer.",
+              "That belongs closer to Elara.",
+              "I can send you to her, or Jeeves can orient you before you go."
+            ],
+            options: [
+              makeRouteAction("Go to Elara", ROUTES.elara),
+              { label: "Ask Jeeves first.", action: "jeeves_handoff" },
+              makeBackToProductsAction(),
+              makeRouteAction("Return to Products", ROUTES.products)
+            ]
+          };
+        }
+
+        if (type === "book") {
+          return {
+            bubbles: [
+              "The book belongs near Elara too.",
+              "It is not my main floor unless we are talking about format, readiness, packaging, or product utility.",
+              "If you want the human threshold, go to Elara.",
+              "If you want the House context, ask Jeeves."
+            ],
+            options: [
+              makeRouteAction("Go to Elara", ROUTES.elara),
+              { label: "Ask Jeeves first.", action: "jeeves_handoff" },
+              makeBackToProductsAction(),
+              makeRouteAction("Return to Products", ROUTES.products)
+            ]
+          };
+        }
+
+        return {
+          bubbles: [
+            "That is not my floor.",
+            "Meet Sean belongs closer to Elara.",
+            "She handles the human-facing threshold.",
+            "I can send you straight to her, or you can ask Jeeves for broader House context first."
+          ],
+          options: [
+            makeRouteAction("Go to Elara", ROUTES.elara),
+            { label: "Ask Jeeves first.", action: "jeeves_handoff" },
+            makeBackToProductsAction(),
+            makeRouteAction("Return to Products", ROUTES.products)
+          ]
+        };
+      }
+
+      function responseForDiagnosticHandoff() {
+        return {
+          bubbles: [
+            "The Diagnostic is not mine.",
+            "I can tell you it exists.",
+            "I can tell you why it matters.",
+            "But I am not doing personal readings from the product floor.",
+            "That is Soren’s room.",
+            "Soren handles boundary, reading, and diagnostic structure.",
+            "If you want the tool, go to Soren.",
+            "If you need to understand where it fits in the House first, ask Jeeves."
+          ],
+          options: [
+            makeRouteAction("Go to Soren", ROUTES.soren),
+            { label: "Ask Jeeves first.", action: "jeeves_handoff" },
+            makeBackToProductsAction(),
+            makeRouteAction("Return to Products", ROUTES.products)
+          ]
+        };
+      }
+
+      function responseForJeevesHandoff() {
+        return {
+          bubbles: [
+            "If you need the whole House explained, go ask Jeeves.",
+            "That is his job.",
+            "Mine is making sure products do not leave this floor pretending to be more useful than they are."
+          ],
+          options: [
+            makeRouteAction("Ask Jeeves", ROUTES.jeeves),
+            makeBackToProductsAction(),
+            makeRouteAction("Return to Products", ROUTES.products)
+          ]
+        };
+      }
+
+      function responseFor(option, state) {
+        var action = option.action;
+
+        if (action === "route" && option.routeUrl) {
+          return {
+            immediateRoute: true,
+            routeUrl: option.routeUrl
+          };
+        }
+
+        if (action === "reset") {
+          state.currentProductId = "";
+          return {
+            bubbles: [
+              "Fine. New product.",
+              "Try to pick one you actually want explained."
+            ],
+            after: "main"
+          };
+        }
+
+        if (action === "products_menu") {
+          state.currentProductId = "";
+          return {
+            bubbles: [
+              "Back to the floor.",
+              "Do not wander.",
+              "There are still products to sort."
+            ],
+            after: "products_menu"
+          };
+        }
+
+        if (action === "product") {
+          return responseForProductPreface(option, state);
+        }
+
+        if (action === "product_questions") {
+          return {
+            bubbles: [
+              "Back to " + (PRODUCT_DATA[option.productId] ? PRODUCT_DATA[option.productId].name : "the product") + ".",
+              "Four questions.",
+              "Try not to make it complicated."
+            ],
+            after: "product_questions",
+            productId: option.productId
+          };
+        }
+
+        if (action === "product_answer") {
+          return responseForProductAnswer(option, state);
+        }
+
+        if (action === "elara_handoff") {
+          return responseForElaraHandoff(option);
+        }
+
+        if (action === "diagnostic_handoff") {
+          return responseForDiagnosticHandoff();
+        }
+
+        if (action === "jeeves_handoff") {
+          return responseForJeevesHandoff();
+        }
+
+        return {
+          bubbles: [
+            "That does not belong anywhere useful yet.",
+            "Back to the product floor.",
+            "Pick a product, ask Jeeves, or leave."
+          ],
+          after: "products_menu"
+        };
+      }
+
+      function respondToOption(option, state) {
+        var response = responseFor(option, state);
+
+        if (response.immediateRoute && response.routeUrl) {
+          window.location.href = response.routeUrl;
+          return;
+        }
+
+        state.thread.appendChild(bubble(option.label, "user"));
+        scrollThread(state);
+
+        renderSequence(response.bubbles, state, function () {
+          if (response.options) {
+            renderOptions(response.options, state);
+            return;
+          }
+
+          if (response.after === "main") {
+            renderMainPrompts(state);
+            return;
+          }
+
+          if (response.after === "products_menu") {
+            renderProductsMenu(state);
+            return;
+          }
+
+          if (response.after === "product_questions") {
+            renderProductQuestions(state, response.productId || state.currentProductId);
+            return;
+          }
+
+          if (response.after === "product_answer") {
+            var product = PRODUCT_DATA[response.productId || state.currentProductId];
+            if (product) {
+              renderAfterProductAnswer(state, product);
+              return;
+            }
+
+            renderProductsMenu(state);
+            return;
+          }
+
+          renderMainPrompts(state);
+        });
+      }
+
+      function markReady(state) {
+        document.documentElement.setAttribute("data-auren-ready", "true");
+        document.body.setAttribute("data-auren-ready", "true");
+
+        state.mount.setAttribute("data-auren-ready", "true");
+        state.mount.setAttribute("data-auren-speaking", "false");
+
+        setStatus(state, "Auren is waiting.");
+
+        if (typeof window.dispatchEvent === "function" && typeof window.CustomEvent === "function") {
+          window.dispatchEvent(new CustomEvent("products:auren-ready", {
+            detail: {
+              contract: CONTRACT,
+              mountReady: true,
+              localChat: true,
+              apiDependency: false,
+              singlePromptDock: true,
+              oneTapOneLine: true,
+              productCalibration: true,
+              route: "/products/auren/",
+              mountNode: "#aurenProductFloorMount"
+            }
+          }));
+        }
+      }
+
+      function mount() {
+        var mountNode = document.getElementById("aurenProductFloorMount");
+        if (!mountNode) return;
+
+        var state = {
+          mount: mountNode,
+          thread: query("[data-auren-thread]", mountNode),
+          options: query("[data-auren-options]", mountNode),
+          status: query("[data-auren-status]", mountNode),
+          typing: query(".auren-typing", mountNode),
+          mode: "opening",
+          sequenceActive: false,
+          stepListenersInstalled: false,
+          currentTimer: null,
+          pendingStepFn: null,
+          currentProductId: ""
+        };
+
+        if (!state.thread || !state.options) {
+          mountNode.setAttribute("data-auren-ready", "false");
+          return;
+        }
+
+        installStepListeners(state);
+
+        empty(state.thread);
+        empty(state.options);
+
+        setStatus(state, "Auren is opening the product floor.");
+
+        renderSequence(OPENING_SEQUENCE, state, function () {
+          renderMainPrompts(state);
+          markReady(state);
+        });
+      }
+
+      var mounted = false;
+
+      function mountOnce() {
+        if (mounted) return;
+        mounted = true;
+        mount();
+      }
+
+      onReady(function () {
+        window.setTimeout(mountOnce, 80);
+      });
+    })();
+  </script>
+</body>
+</html>

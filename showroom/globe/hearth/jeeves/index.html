@@ -1,14 +1,14 @@
 <!-- /showroom/globe/hearth/jeeves/index.html -->
-<!-- HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1 -->
+<!-- HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11 -->
 <!-- Full-file replacement. -->
-<!-- Owns: HTML shell, local mount adapter, stable mount node, context-first response bank, Mirrorland pry path, single prompt dock, slower bubble timing, one-tap-one-line behavior. -->
+<!-- Owns: HTML shell, local mount adapter, stable mount node, context-first response bank, question prompt dock, Mirrorland branch reveal, repaired one-tap-one-line behavior. -->
 <!-- Does not own: Compass root page, CSS visual authority, external Jeeves expression file, diagnostics, API, index.js, or sitewide Character registry. -->
-<!-- Purpose: correct Hearth/Atrium/Mirrorland story logic and repair step-tap so each tap advances only the currently pending message. -->
+<!-- Purpose: preserve working mount while making Mirrorland a pry path, making prompts question-led, and routing deeper Mirrorland interest to the Portrait Hall. -->
 
 <!doctype html>
 <html
   lang="en"
-  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1"
+  data-hearth-jeeves-shell="HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11"
   data-hearth-jeeves-ready="false"
   data-hearth-role="hidden-control-room"
   data-atrium-role="first-room-of-house"
@@ -17,8 +17,9 @@
   data-index-js-retired="true"
   data-api-js-retired="true"
   data-single-prompt-dock="true"
+  data-question-prompt-dock="true"
   data-context-first-expression="true"
-  data-mirrorland-pry-path="true"
+  data-mirrorland-branch-reveal="true"
   data-step-tap="true"
 >
   <head>
@@ -66,7 +67,7 @@
           data-hearth-role="hidden-control-room"
           data-atrium-role="first-room-of-house"
           data-compass-entry="talk-to-the-house"
-          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1"
+          data-mount-contract="HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11"
           data-expression-contract="LOCAL_CONTEXT_FIRST_RESPONSE_BANK"
         >
           <div class="jeeves-screen-topline">
@@ -182,15 +183,17 @@
       (function mountHearthJeeves() {
         "use strict";
 
-        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_PRY_STEP_TAP_HTML_TNT_v10_1";
+        var CONTRACT = "HEARTH_JEEVES_MIRRORLAND_BRANCH_TRUST_REVEAL_HTML_TNT_v11";
 
         var ROUTES = {
           compass: "/",
           siteGuide: "/site-guide/",
           diagnostic: "/coherence-diagnostic/",
           atrium: "/showroom/",
+          portraitHall: "/characters/",
           characters: "/characters/",
           sean: "/meet-sean-mansfield/",
+          mission: "/meet-sean-mansfield/",
           nineSummits: "/nine-summits/",
           nineSummitsOfLove: "/nine-summits-of-love/",
           products: "/products/",
@@ -217,20 +220,19 @@
 
         var OPENING_SEQUENCE = [
           "Welcome inside the House.",
-          "You found me through the Compass.",
-          "This is Hearth — not the first room, and not my main room.",
-          "Hearth is a hidden control room. Research, development, and routing happen closer to the machinery here.",
+          "You found a side room.",
+          "This is Hearth — a hidden control room, not the front hall.",
+          "Research, development, and routing sit closer to the machinery here.",
           "I check in from time to time.",
-          "If you want the first room of the House, that is the Atrium.",
           "Ask plainly. I will give you the surface, then the proper door."
         ];
 
         var MAIN_PROMPTS = [
           { label: "Where am I?", action: "where" },
-          { label: "Show me the map", action: "map" },
-          { label: "Take me to the Diagnostic", action: "diagnostic" },
+          { label: "Where is the map?", action: "map" },
+          { label: "What is the Diagnostic?", action: "diagnostic" },
           { label: "What is Mirrorland?", action: "mirrorland" },
-          { label: "Enter the Atrium", action: "atrium" },
+          { label: "What is our mission?", action: "mission" },
           { label: "Return to the Compass", action: "compass", routeUrl: ROUTES.compass }
         ];
 
@@ -250,8 +252,8 @@
             routeUrl: ROUTES.diagnostic,
             bubbles: [
               "Soren is the boundary keeper.",
-              "He owns diagnostic threshold, proof, admissibility, and measurement.",
-              "He stands where guessing stops.",
+              "He belongs near the Diagnostic because personal readings need care.",
+              "He keeps the room from becoming a guess.",
               "Where I orient, he verifies."
             ]
           },
@@ -594,6 +596,18 @@
         function renderNarrowedPrompts(state, response) {
           var next = [];
 
+          if (Array.isArray(response.followups) && response.followups.length) {
+            response.followups.forEach(function (choice) {
+              if (choice && choice.label && choice.action) {
+                next.push({
+                  label: choice.label,
+                  action: choice.action,
+                  routeUrl: choice.routeUrl || ""
+                });
+              }
+            });
+          }
+
           if (Array.isArray(response.routeChoices) && response.routeChoices.length) {
             response.routeChoices.forEach(function (choice) {
               if (choice && choice.label && choice.routeUrl) {
@@ -638,6 +652,37 @@
           };
         }
 
+        function mirrorlandRevealFromAtrium() {
+          return {
+            bubbles: [
+              "The Atrium is the first room of the House.",
+              "It is where the separate doors begin to connect into one architecture.",
+              "The Atrium shows arrangement: how the rooms relate, why the paths branch, and how the House becomes more than a set of pages.",
+              "You are not asking about navigation anymore. You are asking about Mirrorland.",
+              "I do not usually indulge that here.",
+              "Since you have continued to press, meet me in the Portrait Hall."
+            ],
+            routeChoices: [
+              { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
+            ]
+          };
+        }
+
+        function mirrorlandRevealFromPortraitHall() {
+          return {
+            bubbles: [
+              "The Portrait Hall is where the Characters become visible.",
+              "Not as mascots. As keepers of responsibility: mission, proof, value, repair, movement, continuity, and story.",
+              "It is where Mirrorland begins to speak through people instead of pages.",
+              "That is not a conversation I usually hold in this room.",
+              "Since you have intrigued me, meet me in the Portrait Hall."
+            ],
+            routeChoices: [
+              { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
+            ]
+          };
+        }
+
         function responseFor(option) {
           var label = text(option.label).toLowerCase();
           var action = text(option.action).toLowerCase();
@@ -661,6 +706,14 @@
             };
           }
 
+          if (action === "mirrorland_atrium") {
+            return mirrorlandRevealFromAtrium();
+          }
+
+          if (action === "mirrorland_portrait_hall") {
+            return mirrorlandRevealFromPortraitHall();
+          }
+
           if (/where|hearth|room/.test(signal)) {
             return {
               bubbles: [
@@ -670,8 +723,7 @@
                 "The Atrium is the first room of the House. Hearth is where one checks the pressure behind the walls."
               ],
               routeChoices: [
-                { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide },
-                { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
+                { label: "Open the Website Guide", routeUrl: ROUTES.siteGuide }
               ]
             };
           }
@@ -680,7 +732,7 @@
             return {
               bubbles: [
                 "The Website Guide is the plain map of the public platform.",
-                "It explains the main routes, rooms, and entry points without asking you to discover every connection through story.",
+                "It shows the main routes, rooms, and entry points without making you discover every connection through story.",
                 "The Compass points. The Guide orients.",
                 "Use it when you want structure before mystery."
               ],
@@ -693,11 +745,11 @@
           if (/diagnostic|coherence|score|assess|test|classify|archetype/.test(signal)) {
             return {
               bubbles: [
-                "The Coherence Diagnostic is an interactive assessment path.",
-                "It helps examine whether a person, project, claim, or system is internally aligned enough to be read responsibly.",
-                "Meaning is easy to feel. Coherence has to survive the reading.",
-                "Soren guards that room: proof, boundary, admissibility, measurement.",
-                "I can take you there. I will not perform it here."
+                "The Coherence Diagnostic is the website’s self-orientation tool.",
+                "It helps you see whether your strengths, choices, and direction are working together.",
+                "It can also show where you may be getting stuck, scattered, or pulled off course.",
+                "Soren guards that room because a personal reading needs boundaries, not guesses.",
+                "I can take you there. I will not read you from here."
               ],
               routeChoices: [
                 { label: "Open the Coherence Diagnostic", routeUrl: ROUTES.diagnostic }
@@ -710,29 +762,54 @@
               bubbles: [
                 "Mirrorland is the story-world behind the public platform.",
                 "It is where the House, the Characters, the rooms, and the deeper logic begin to connect.",
-                "Most visitors do not need that door first.",
-                "But you are prying.",
-                "Persistent. Good.",
-                "If you want to talk more about Mirrorland, the story, and the Characters, I can show you where that conversation belongs."
+                "The public site gives you pages. Mirrorland gives those pages memory, voice, and consequence.",
+                "Most visitors only need the surface.",
+                "Mirrorland is for visitors who keep asking what is behind it."
               ],
-              routeChoices: [
-                { label: "Enter Mirrorland", routeUrl: ROUTES.characters },
-                { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
+              followups: [
+                { label: "What is the Atrium?", action: "mirrorland_atrium" },
+                { label: "What is the Portrait Hall?", action: "mirrorland_portrait_hall" }
               ]
             };
           }
 
-          if (/atrium|deeper|longer|prying|persistent/.test(signal)) {
+          if (/mission|purpose|why/.test(signal)) {
+            return {
+              bubbles: [
+                "Our mission is to help people find a clearer path when life, work, or purpose starts pulling in too many directions.",
+                "The House is built around a simple idea: when your strengths, choices, and direction begin working together, you can move with less confusion and more force.",
+                "The Guide gives structure. The Diagnostic helps you understand yourself. Mirrorland carries the story underneath it.",
+                "If you want the public mission before the deeper rooms, I can show you that path."
+              ],
+              routeChoices: [
+                { label: "Open Our Mission", routeUrl: ROUTES.mission }
+              ]
+            };
+          }
+
+          if (/atrium/.test(signal)) {
             return {
               bubbles: [
                 "The Atrium is the first room of the House.",
                 "It is where separate pages begin to connect into one structure.",
                 "A visitor can know the doors and still not understand the House.",
-                "The Atrium shows the arrangement.",
-                "Enter there if you want the structure behind the rooms."
+                "The Atrium shows the arrangement."
               ],
               routeChoices: [
                 { label: "Enter the Atrium", routeUrl: ROUTES.atrium }
+              ]
+            };
+          }
+
+          if (/portrait hall|characters|character/.test(signal)) {
+            return {
+              bubbles: [
+                "The Portrait Hall is where the Characters are gathered.",
+                "It is not merely a roster. It is where responsibility begins to take shape.",
+                "If you are asking for the Characters plainly, I can take you there."
+              ],
+              routeChoices: [
+                { label: "Enter the Portrait Hall", routeUrl: ROUTES.portraitHall }
               ]
             };
           }
@@ -758,7 +835,7 @@
           return {
             bubbles: [
               "I can help, but I need to place the question.",
-              "If you are asking about structure, begin with the Website Guide. If you are asking about proof, Soren is likely involved. If you are asking about story, ask about Mirrorland.",
+              "If you are asking about structure, begin with the Website Guide. If you are asking about a personal reading, the Diagnostic is likely involved. If you are asking about story, ask about Mirrorland.",
               "Give the question a room, and I can give you the door."
             ],
             routeChoices: [
@@ -807,7 +884,8 @@
                 indexJsRetired: true,
                 apiJsRetired: true,
                 singlePromptDock: true,
-                mirrorlandPryPath: true,
+                questionPromptDock: true,
+                mirrorlandBranchReveal: true,
                 stepTap: true,
                 stepTapMode: "one-tap-one-line",
                 hearthRole: "hidden-control-room",

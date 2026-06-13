@@ -1,14 +1,14 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_ELARA_HOMEROOM_COMPACT_ARCHITECTURAL_DROPDOWN_HTML_TNT_v3 -->
+<!-- SHOWROOM_ELARA_HOMEROOM_SECTION_COLOR_DIRECT_ROUTE_HTML_TNT_v4 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G3-ELARA-HOMEROOM-COMPACT-ARCHITECTURAL-DROPDOWN"
-  data-contract="SHOWROOM_ELARA_HOMEROOM_COMPACT_ARCHITECTURAL_DROPDOWN_HTML_TNT_v3"
-  data-previous-contract="SHOWROOM_ELARA_HOMEROOM_DOOR_TO_MIRRORLAND_ARCHITECTURAL_HTML_TNT_v2"
+  data-version="G3-ELARA-HOMEROOM-SECTION-COLOR-DIRECT-ROUTE"
+  data-contract="SHOWROOM_ELARA_HOMEROOM_SECTION_COLOR_DIRECT_ROUTE_HTML_TNT_v4"
+  data-previous-contract="SHOWROOM_ELARA_HOMEROOM_COMPACT_ARCHITECTURAL_DROPDOWN_HTML_TNT_v3"
   data-baseline-contract="SHOWROOM_DIAMOND_G3_TRUE_3D_OBJECT_LATTICE_HTML_TNT_v1"
   data-contract-family="SHOWROOM_DIAMOND_G3_TRUE_3D_OBJECT_LATTICE_FOUR_FILE_FAMILY_v1"
   data-role="map-blip-single-mirrorland-entryway"
@@ -18,16 +18,16 @@
   data-room-narrative-title="The Door to Mirrorland"
   data-homeroom-guide="elara"
   data-elara-homeroom="true"
-  data-elara-route="/elara/"
-  data-talk-to-elara-control="true"
+  data-elara-route="/elara/index.html"
   data-talk-to-elara-direct-link="true"
+  data-talk-to-elara-event-hook="false"
   data-team-selector-held="true"
   data-dextreon-path-held="true"
   data-sorin-path-held="true"
   data-public-work="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND"
   data-primary-subject="mirrorland"
   data-door-object="diamond-lattice"
-  data-context-renewal="compact-architectural-dropdown-showroom"
+  data-context-renewal="section-color-direct-elara-route"
   data-page-is-door-context="true"
   data-this-is-door-to-mirrorland="true"
   data-map-blip-single-entryway="true"
@@ -40,14 +40,6 @@
   data-main-menu-website-options-only="true"
   data-mirrorland-doors-category-only="true"
   data-support-does-not-equal-ownership="true"
-  data-gauges-mirrorland-aligned="false"
-  data-laws-mirrorland-aligned="false"
-  data-governance-mirrorland-aligned="false"
-  data-products-mirrorland-aligned="false"
-  data-narrative-pages-mirrorland="true"
-  data-characters-mirrorland="true"
-  data-nine-summits-mirrorland="true"
-  data-frontier-mirrorland-aligned="true"
   data-page-body-mirrorland-directory="false"
   data-top-portal-context-active="true"
   data-floating-map-context-at-top="true"
@@ -58,19 +50,24 @@
   data-object-meaning-dropdown="true"
   data-visible-paragraphs="false"
   data-paragraphs-dropdown-governed="true"
-  data-diamond-viewport-compressed="false"
-  data-diamond-viewport-enlarged="false"
   data-diamond-viewport-wide-short="true"
   data-diamond-viewport-aspect-ratio="16/10"
   data-diamond-viewport-mobile-aspect-ratio="4/3"
-  data-route-jump-cards-removed="true"
+  data-diamond-viewport-background="neutral-graphite"
+  data-section-color-governance="true"
+  data-arrival-color-family="gold-amber"
+  data-exhibit-color-family="cobalt-cyan"
+  data-surface-color-family="indigo-violet"
+  data-construction-color-family="graphite-steel-cyan"
+  data-anatomy-color-family="sapphire"
+  data-threshold-color-family="bronze-navy"
+  data-passage-color-family="midnight-violet-cyan"
   data-route-burden-owned-by-portal="true"
   data-portal-menu-owns-navigation="true"
   data-cardinal-room-map-cache-aligned="true"
   data-single-door-page="true"
   data-diamond-lattice-showcase="true"
   data-mirrorland-portal-blip-active="true"
-  data-frontier-page-jump-exposed="false"
   data-compass-separated="true"
   data-top-dropdown-reduced="true"
   data-page-architecture="arrival,exhibit,revelation,construction,anatomy,threshold,passage"
@@ -80,9 +77,6 @@
   data-construction-metric-cards-removed="true"
   data-anatomy-dropdowns="true"
   data-threshold-dropdowns="true"
-  data-bright-color-renewal="true"
-  data-glow-renewal="true"
-  data-shine-renewal="true"
   data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
   data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
@@ -163,8 +157,6 @@
       --bg:#01030a;
       --ink:#fff9e9;
       --white:#ffffff;
-      --white-glow:#f5fbff;
-
       --muted:rgba(239,246,255,.84);
       --faint:rgba(230,240,255,.58);
 
@@ -176,22 +168,24 @@
       --cyan-hot:#00d9ff;
       --cyan-soft:#c8fbff;
 
-      --sapphire:#347cff;
-      --sapphire-hot:#1458ff;
-      --sapphire-deep:#071d72;
+      --blue:#347cff;
+      --blue-hot:#1458ff;
+      --blue-deep:#071d72;
 
       --violet:#a86cff;
       --violet-hot:#8f3fff;
+      --violet-deep:#170944;
+
+      --steel:#8da8c7;
+      --graphite:#10131a;
+      --graphite-deep:#07090e;
+
+      --bronze:#d78a38;
+      --bronze-soft:#f2bd78;
+      --navy:#071329;
 
       --green:#82ffd0;
       --red:#ff8f9b;
-
-      --panel:rgba(5,10,27,.90);
-      --panel-strong:rgba(4,8,22,.97);
-
-      --line:rgba(170,214,255,.22);
-      --line-bright:rgba(85,246,255,.44);
-      --line-gold:rgba(255,216,106,.42);
 
       --shadow:
         0 36px 120px rgba(0,0,0,.58);
@@ -207,6 +201,14 @@
       --violet-glow:
         0 0 1rem rgba(168,108,255,.30),
         0 0 3rem rgba(143,63,255,.16);
+
+      --blue-glow:
+        0 0 1rem rgba(52,124,255,.30),
+        0 0 3rem rgba(20,88,255,.16);
+
+      --bronze-glow:
+        0 0 1rem rgba(215,138,56,.26),
+        0 0 2.8rem rgba(242,189,120,.14);
 
       --max:1440px;
       --text-max:980px;
@@ -259,62 +261,55 @@
       background:
         radial-gradient(
           circle at 50% -10%,
-          rgba(255,181,31,.30),
+          rgba(255,181,31,.18),
           transparent 34rem
         ),
         radial-gradient(
           circle at 8% 18%,
-          rgba(20,88,255,.32),
+          rgba(20,88,255,.20),
           transparent 36rem
         ),
         radial-gradient(
           circle at 92% 25%,
-          rgba(0,217,255,.22),
+          rgba(0,217,255,.14),
           transparent 34rem
         ),
         radial-gradient(
           circle at 50% 58%,
-          rgba(143,63,255,.17),
+          rgba(143,63,255,.11),
           transparent 42rem
-        ),
-        radial-gradient(
-          circle at 25% 88%,
-          rgba(0,217,255,.12),
-          transparent 35rem
         ),
         linear-gradient(
           180deg,
-          #080b1a 0%,
-          #030817 42%,
-          #050218 72%,
+          #080b14 0%,
+          #030710 42%,
+          #050211 72%,
           #010207 100%
         );
     }
 
     body::before{
       content:"";
-
       position:fixed;
       inset:0;
       z-index:0;
-
       pointer-events:none;
 
-      opacity:.30;
+      opacity:.24;
 
       background-image:
         radial-gradient(
           circle,
-          rgba(255,255,255,.28) 0 1px,
+          rgba(255,255,255,.25) 0 1px,
           transparent 1.7px
         ),
         linear-gradient(
-          rgba(85,246,255,.045) 1px,
+          rgba(85,246,255,.035) 1px,
           transparent 1px
         ),
         linear-gradient(
           90deg,
-          rgba(85,246,255,.045) 1px,
+          rgba(85,246,255,.035) 1px,
           transparent 1px
         );
 
@@ -330,32 +325,6 @@
           rgba(0,0,0,.58) 66%,
           rgba(0,0,0,.20)
         );
-    }
-
-    body::after{
-      content:"";
-
-      position:fixed;
-      inset:-20%;
-      z-index:0;
-
-      pointer-events:none;
-
-      opacity:.22;
-
-      background:
-        conic-gradient(
-          from 0deg at 50% 50%,
-          transparent,
-          rgba(85,246,255,.10),
-          transparent 20%,
-          rgba(255,216,106,.09),
-          transparent 46%,
-          rgba(168,108,255,.10),
-          transparent 72%
-        );
-
-      filter:blur(70px);
     }
 
     a{
@@ -460,7 +429,6 @@
       place-items:center;
 
       clip-path:var(--gem-path);
-
       transform:rotate(45deg);
 
       border:1px solid rgba(255,216,106,.62);
@@ -532,9 +500,6 @@
       font-size:clamp(1.16rem,3vw,1.72rem);
       line-height:1;
       letter-spacing:-.045em;
-
-      text-shadow:
-        0 0 1.4rem rgba(255,216,106,.22);
     }
 
     .nav{
@@ -693,7 +658,6 @@
         rgba(255,255,255,.055);
 
       box-shadow:
-        0 0 1.6rem rgba(255,181,31,.12),
         inset 0 1px 0 rgba(255,255,255,.10);
 
       font-size:.72rem;
@@ -745,24 +709,13 @@
       border-radius:1.1rem;
 
       background:
-        radial-gradient(
-          circle at 12% 0%,
-          rgba(255,181,31,.25),
-          transparent 15rem
-        ),
-        radial-gradient(
-          circle at 96% 25%,
-          rgba(0,217,255,.18),
-          transparent 15rem
-        ),
         linear-gradient(
           180deg,
-          rgba(11,13,42,.98),
-          rgba(3,7,18,.99)
+          rgba(18,18,24,.98),
+          rgba(5,7,12,.99)
         );
 
       box-shadow:
-        var(--gold-glow),
         0 1.4rem 3.4rem rgba(0,0,0,.50),
         inset 0 1px 0 rgba(255,255,255,.12);
     }
@@ -780,7 +733,7 @@
       align-items:center;
       justify-content:center;
 
-      border:1px solid rgba(85,246,255,.20);
+      border:1px solid rgba(255,255,255,.15);
       border-radius:.86rem;
 
       padding:.52rem .64rem;
@@ -788,68 +741,21 @@
       color:rgba(245,251,255,.94);
 
       background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(85,246,255,.14),
-          transparent 72%
-        ),
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,.068),
-          rgba(255,255,255,.025)
-        );
+        rgba(255,255,255,.045);
 
       font-size:.66rem;
       font-weight:950;
       letter-spacing:.07em;
       text-align:center;
       text-transform:uppercase;
-
-      transition:
-        border-color .18s ease,
-        transform .18s ease,
-        box-shadow .18s ease;
-    }
-
-    .menu-grid a:hover,
-    .menu-grid a:focus-visible{
-      transform:translateY(-2px);
-
-      border-color:rgba(85,246,255,.70);
-
-      box-shadow:var(--cyan-glow);
     }
 
     .panel{
       position:relative;
 
-      border:1px solid var(--line);
       border-radius:clamp(1.35rem,5vw,2.5rem);
 
       overflow:hidden;
-
-      background:
-        radial-gradient(
-          circle at 14% 0%,
-          rgba(85,246,255,.13),
-          transparent 30rem
-        ),
-        radial-gradient(
-          circle at 86% 18%,
-          rgba(20,88,255,.18),
-          transparent 30rem
-        ),
-        radial-gradient(
-          circle at 52% 105%,
-          rgba(143,63,255,.13),
-          transparent 28rem
-        ),
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,.085),
-          rgba(255,255,255,.024)
-        ),
-        var(--panel);
 
       box-shadow:
         var(--shadow),
@@ -867,8 +773,189 @@
       border-radius:inherit;
 
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.018),
-        inset 0 0 4rem rgba(85,246,255,.025);
+        inset 0 0 0 1px rgba(255,255,255,.018);
+    }
+
+    .chamber-arrival{
+      --chamber-accent:var(--gold);
+      --chamber-soft:var(--gold-soft);
+      --chamber-line:rgba(255,216,106,.42);
+      --chamber-open:rgba(255,181,31,.12);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 12% 0%,
+          rgba(255,216,106,.24),
+          transparent 27rem
+        ),
+        radial-gradient(
+          circle at 90% 100%,
+          rgba(215,138,56,.12),
+          transparent 28rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(44,30,12,.94),
+          rgba(15,12,10,.97)
+        );
+    }
+
+    .chamber-exhibit{
+      --chamber-accent:var(--cyan);
+      --chamber-soft:var(--cyan-soft);
+      --chamber-line:rgba(85,246,255,.42);
+      --chamber-open:rgba(0,217,255,.10);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 8% 0%,
+          rgba(0,217,255,.20),
+          transparent 27rem
+        ),
+        radial-gradient(
+          circle at 92% 25%,
+          rgba(20,88,255,.18),
+          transparent 30rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(5,27,54,.96),
+          rgba(4,12,28,.98)
+        );
+    }
+
+    .chamber-surface{
+      --chamber-accent:var(--violet);
+      --chamber-soft:#d8c4ff;
+      --chamber-line:rgba(168,108,255,.44);
+      --chamber-open:rgba(143,63,255,.11);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(168,108,255,.22),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 90% 100%,
+          rgba(52,124,255,.15),
+          transparent 28rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(25,13,65,.96),
+          rgba(10,7,34,.98)
+        );
+    }
+
+    .chamber-construction{
+      --chamber-accent:var(--steel);
+      --chamber-soft:#d5e4f7;
+      --chamber-line:rgba(141,168,199,.44);
+      --chamber-open:rgba(141,168,199,.10);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(141,168,199,.18),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 92% 100%,
+          rgba(0,217,255,.08),
+          transparent 28rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(23,28,36,.97),
+          rgba(8,11,16,.99)
+        );
+    }
+
+    .chamber-anatomy{
+      --chamber-accent:#75a5ff;
+      --chamber-soft:#d4e2ff;
+      --chamber-line:rgba(52,124,255,.44);
+      --chamber-open:rgba(52,124,255,.10);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 12% 0%,
+          rgba(52,124,255,.23),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 88% 100%,
+          rgba(8,43,128,.18),
+          transparent 30rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(7,29,79,.97),
+          rgba(3,11,35,.99)
+        );
+    }
+
+    .chamber-threshold{
+      --chamber-accent:var(--bronze-soft);
+      --chamber-soft:#ffe0ad;
+      --chamber-line:rgba(215,138,56,.46);
+      --chamber-open:rgba(215,138,56,.11);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 10% 0%,
+          rgba(215,138,56,.25),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 90% 100%,
+          rgba(19,42,80,.22),
+          transparent 30rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(44,30,17,.97),
+          rgba(5,15,32,.99)
+        );
+    }
+
+    .chamber-passage{
+      --chamber-accent:var(--cyan);
+      --chamber-soft:#e0d5ff;
+      --chamber-line:rgba(168,108,255,.46);
+      --chamber-open:rgba(85,246,255,.09);
+
+      border:1px solid var(--chamber-line);
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(168,108,255,.24),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(0,217,255,.20),
+          transparent 32rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(18,8,52,.97),
+          rgba(2,16,32,.99)
+        );
     }
 
     .arrival{
@@ -908,20 +995,9 @@
         ),
         radial-gradient(
           circle at 50% 72%,
-          rgba(20,88,255,.28),
+          rgba(215,138,56,.18),
           transparent 62%
-        ),
-        conic-gradient(
-          from 45deg,
-          rgba(255,255,255,.07),
-          rgba(85,246,255,.05),
-          rgba(168,108,255,.06),
-          rgba(255,216,106,.08)
         );
-
-      box-shadow:
-        0 0 3rem rgba(255,181,31,.12),
-        0 0 5rem rgba(0,217,255,.10);
 
       pointer-events:none;
 
@@ -940,20 +1016,15 @@
 
       padding:.58rem .94rem;
 
-      border:1px solid rgba(85,246,255,.30);
+      border:1px solid var(--chamber-line);
       border-radius:999px;
 
-      color:var(--cyan-soft);
+      color:var(--chamber-soft);
 
       background:
-        linear-gradient(
-          135deg,
-          rgba(0,217,255,.12),
-          rgba(168,108,255,.07)
-        );
+        var(--chamber-open);
 
       box-shadow:
-        0 0 1.4rem rgba(0,217,255,.12),
         inset 0 1px 0 rgba(255,255,255,.10);
 
       font-size:.70rem;
@@ -975,13 +1046,16 @@
       background:
         linear-gradient(
           135deg,
-          var(--gold-soft),
-          var(--gold-hot)
+          var(--chamber-soft),
+          var(--chamber-accent)
         );
 
       box-shadow:
-        0 0 .9rem rgba(255,181,31,.70),
-        0 0 1.6rem rgba(255,216,106,.45);
+        0 0 .9rem color-mix(
+          in srgb,
+          var(--chamber-accent) 68%,
+          transparent
+        );
     }
 
     .arrival-title{
@@ -1004,10 +1078,6 @@
       letter-spacing:-.108em;
 
       text-wrap:balance;
-
-      text-shadow:
-        0 0 1.6rem rgba(255,216,106,.20),
-        0 0 4rem rgba(0,217,255,.10);
     }
 
     .door-subtitle{
@@ -1026,16 +1096,13 @@
     h2{
       margin:0;
 
-      color:var(--gold);
+      color:var(--chamber-accent);
 
       font-size:clamp(1.75rem,4.8vw,3.25rem);
       line-height:.98;
       letter-spacing:-.075em;
 
       text-wrap:balance;
-
-      text-shadow:
-        0 0 1.25rem rgba(255,181,31,.22);
     }
 
     h3{
@@ -1069,25 +1136,17 @@
       background:
         radial-gradient(
           circle at 12% 0%,
-          rgba(255,240,168,.22),
+          rgba(255,240,168,.24),
           transparent 20rem
-        ),
-        radial-gradient(
-          circle at 90% 100%,
-          rgba(0,217,255,.17),
-          transparent 24rem
         ),
         linear-gradient(
           135deg,
-          rgba(255,181,31,.10),
-          rgba(20,88,255,.09) 52%,
-          rgba(143,63,255,.10)
-        ),
-        rgba(255,255,255,.045);
+          rgba(255,181,31,.12),
+          rgba(82,44,6,.18)
+        );
 
       box-shadow:
         var(--gold-glow),
-        var(--cyan-glow),
         inset 0 1px 0 rgba(255,255,255,.15);
     }
 
@@ -1127,10 +1186,6 @@
       letter-spacing:-.045em;
 
       text-wrap:balance;
-
-      text-shadow:
-        0 0 1rem rgba(255,216,106,.32),
-        0 0 2.6rem rgba(0,217,255,.16);
     }
 
     @keyframes thesisShine{
@@ -1167,11 +1222,6 @@
       max-width:var(--text-max);
     }
 
-    .section-heading-compact{
-      display:grid;
-      gap:.45rem;
-    }
-
     .diamond-layout,
     .diamond-view-column{
       display:grid;
@@ -1189,7 +1239,7 @@
       min-height:0;
       aspect-ratio:16 / 10;
 
-      border:1px solid rgba(85,246,255,.25);
+      border:1px solid rgba(255,216,106,.30);
       border-radius:clamp(1.2rem,4vw,2.2rem);
 
       overflow:hidden;
@@ -1197,36 +1247,27 @@
 
       background:
         radial-gradient(
-          circle at 50% 30%,
-          rgba(255,216,106,.14),
-          transparent 18rem
+          circle at 50% 34%,
+          rgba(255,216,106,.16),
+          transparent 19rem
         ),
         radial-gradient(
-          circle at 50% 44%,
-          rgba(85,246,255,.20),
-          transparent 24rem
-        ),
-        radial-gradient(
-          circle at 50% 68%,
-          rgba(20,88,255,.24),
-          transparent 30rem
-        ),
-        radial-gradient(
-          circle at 50% 92%,
-          rgba(168,108,255,.16),
-          transparent 34rem
+          circle at 50% 70%,
+          rgba(168,108,255,.09),
+          transparent 27rem
         ),
         linear-gradient(
           180deg,
-          rgba(1,5,20,.74),
-          rgba(2,5,18,.98)
+          #18140f 0%,
+          #100d14 48%,
+          #07070d 100%
         );
 
       box-shadow:
-        0 0 1.5rem rgba(0,217,255,.15),
-        0 0 4rem rgba(20,88,255,.13),
-        inset 0 1px 0 rgba(255,255,255,.10),
-        inset 0 0 5rem rgba(0,217,255,.035);
+        0 0 1.8rem rgba(255,181,31,.10),
+        0 0 3.8rem rgba(168,108,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.09),
+        inset 0 0 5rem rgba(0,0,0,.30);
     }
 
     .diamond-viewport-card::before,
@@ -1249,23 +1290,21 @@
       width:min(88%,54rem);
       height:min(64%,33rem);
 
-      border:1px solid rgba(255,216,106,.22);
+      border:1px solid rgba(255,216,106,.20);
 
       box-shadow:
-        0 0 3rem rgba(255,181,31,.10),
-        0 0 5rem rgba(20,88,255,.14),
-        inset 0 0 34px rgba(85,246,255,.055);
+        0 0 3rem rgba(255,181,31,.08),
+        inset 0 0 2rem rgba(255,255,255,.025);
     }
 
     .diamond-viewport-card::after{
       width:min(68%,38rem);
       height:min(46%,24rem);
 
-      border:1px solid rgba(85,246,255,.22);
+      border:1px solid rgba(255,255,255,.10);
 
       box-shadow:
-        0 0 3rem rgba(0,217,255,.12),
-        inset 0 0 2.4rem rgba(168,108,255,.045);
+        0 0 3rem rgba(168,108,255,.07);
     }
 
     .diamond-stage{
@@ -1300,14 +1339,12 @@
 
       padding:.5rem .82rem;
 
-      border:1px solid rgba(85,246,255,.32);
+      border:1px solid rgba(255,216,106,.30);
       border-radius:999px;
 
       color:rgba(245,251,255,.80);
 
-      background:rgba(2,6,18,.78);
-
-      box-shadow:var(--cyan-glow);
+      background:rgba(8,7,10,.82);
 
       font-size:.66rem;
       font-weight:900;
@@ -1337,12 +1374,7 @@
           rgba(255,216,106,.20),
           transparent 20rem
         ),
-        radial-gradient(
-          circle at 50% 66%,
-          rgba(20,88,255,.24),
-          transparent 26rem
-        ),
-        rgba(1,4,14,.90);
+        rgba(7,7,12,.94);
     }
 
     .diamond-fallback[hidden]{
@@ -1358,14 +1390,10 @@
 
       padding:1.3rem;
 
-      border:1px solid rgba(85,246,255,.26);
+      border:1px solid rgba(255,216,106,.26);
       border-radius:1.5rem;
 
-      background:rgba(6,11,30,.84);
-
-      box-shadow:
-        var(--cyan-glow),
-        0 1.5rem 5rem rgba(0,0,0,.44);
+      background:rgba(15,13,17,.88);
     }
 
     .diamond-fallback-object{
@@ -1385,8 +1413,6 @@
         18% 19%
       );
 
-      border:1px solid rgba(255,255,255,.28);
-
       background:
         linear-gradient(
           180deg,
@@ -1399,64 +1425,13 @@
 
       box-shadow:
         var(--gold-glow),
-        var(--cyan-glow),
         0 1.4rem 3rem rgba(0,0,0,.50);
-    }
-
-    .diamond-fallback-object::before,
-    .diamond-fallback-object::after{
-      content:"";
-
-      position:absolute;
-      inset:0;
-
-      pointer-events:none;
-    }
-
-    .diamond-fallback-object::before{
-      background:
-        linear-gradient(
-          58deg,
-          transparent 0 47%,
-          rgba(255,255,255,.52) 48% 49%,
-          transparent 50%
-        ),
-        linear-gradient(
-          -58deg,
-          transparent 0 47%,
-          rgba(255,255,255,.34) 48% 49%,
-          transparent 50%
-        ),
-        linear-gradient(
-          90deg,
-          transparent 0 49%,
-          rgba(85,246,255,.38) 50%,
-          transparent 51%
-        );
-    }
-
-    .diamond-fallback-object::after{
-      inset:42% 8% auto;
-
-      height:2px;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(225,253,255,.98),
-          transparent
-        );
-
-      box-shadow:
-        0 0 1.4rem rgba(85,246,255,.95);
     }
 
     .diamond-fallback strong{
       color:var(--gold-soft);
 
       font-size:1.05rem;
-      letter-spacing:-.02em;
     }
 
     .diamond-fallback p{
@@ -1470,28 +1445,13 @@
     .object-control-tray{
       position:relative;
 
-      border:1px solid rgba(85,246,255,.20);
+      border:1px solid var(--chamber-line);
       border-radius:1.12rem;
 
       overflow:hidden;
 
       background:
-        radial-gradient(
-          circle at 12% 0%,
-          rgba(255,216,106,.12),
-          transparent 18rem
-        ),
-        radial-gradient(
-          circle at 100% 24%,
-          rgba(85,246,255,.12),
-          transparent 18rem
-        ),
-        linear-gradient(
-          135deg,
-          rgba(20,88,255,.08),
-          rgba(143,63,255,.055)
-        ),
-        rgba(255,255,255,.04);
+        var(--chamber-open);
 
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.09);
@@ -1510,7 +1470,7 @@
 
       padding:.82rem 1rem;
 
-      color:var(--gold);
+      color:var(--chamber-soft);
 
       cursor:pointer;
 
@@ -1518,9 +1478,6 @@
       font-weight:950;
       letter-spacing:.115em;
       text-transform:uppercase;
-
-      text-shadow:
-        0 0 .9rem rgba(255,181,31,.22);
     }
 
     .architectural-drop summary::-webkit-details-marker,
@@ -1532,30 +1489,17 @@
     .object-control-tray summary::after{
       content:"+";
 
-      color:var(--cyan);
+      color:var(--chamber-accent);
 
       font-size:1.05rem;
       font-weight:950;
-
-      text-shadow:var(--cyan-glow);
     }
 
     .architectural-drop[open] summary::after,
     .object-control-tray[open] summary::after{
       content:"–";
 
-      color:var(--gold-soft);
-
-      text-shadow:var(--gold-glow);
-    }
-
-    .architectural-drop[open],
-    .object-control-tray[open]{
-      border-color:rgba(85,246,255,.38);
-
-      box-shadow:
-        0 0 1.8rem rgba(0,217,255,.08),
-        inset 0 1px 0 rgba(255,255,255,.10);
+      color:var(--chamber-soft);
     }
 
     .drop-content,
@@ -1592,70 +1536,6 @@
       gap:.8rem;
     }
 
-    .architectural-drop[data-tone="gold"]{
-      border-color:rgba(255,216,106,.38);
-
-      background:
-        radial-gradient(
-          circle at 20% 0%,
-          rgba(255,240,168,.20),
-          transparent 18rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(255,181,31,.14),
-          rgba(55,25,0,.24)
-        );
-    }
-
-    .architectural-drop[data-tone="cyan"]{
-      border-color:rgba(85,246,255,.42);
-
-      background:
-        radial-gradient(
-          circle at 18% 0%,
-          rgba(200,251,255,.20),
-          transparent 18rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(0,217,255,.14),
-          rgba(2,28,51,.32)
-        );
-    }
-
-    .architectural-drop[data-tone="blue"]{
-      border-color:rgba(52,124,255,.44);
-
-      background:
-        radial-gradient(
-          circle at 18% 0%,
-          rgba(52,124,255,.22),
-          transparent 18rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(20,88,255,.16),
-          rgba(3,9,48,.40)
-        );
-    }
-
-    .architectural-drop[data-tone="violet"]{
-      border-color:rgba(168,108,255,.44);
-
-      background:
-        radial-gradient(
-          circle at 18% 0%,
-          rgba(168,108,255,.22),
-          transparent 18rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(143,63,255,.15),
-          rgba(12,4,46,.42)
-        );
-    }
-
     .two-view-buttons{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1664,12 +1544,9 @@
     }
 
     .two-view-buttons button{
-      position:relative;
-      overflow:hidden;
-
       min-height:3.2rem;
 
-      border:1px solid rgba(85,246,255,.20);
+      border:1px solid rgba(85,246,255,.24);
       border-radius:1rem;
 
       padding:.82rem .92rem;
@@ -1677,19 +1554,7 @@
       color:rgba(245,251,255,.92);
 
       background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(255,216,106,.12),
-          transparent 75%
-        ),
-        linear-gradient(
-          180deg,
-          rgba(20,88,255,.12),
-          rgba(255,255,255,.04)
-        );
-
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08);
+        rgba(0,217,255,.07);
 
       font-size:.78rem;
       font-weight:950;
@@ -1697,12 +1562,6 @@
       text-transform:uppercase;
 
       cursor:pointer;
-
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        box-shadow .18s ease,
-        background .18s ease;
     }
 
     .two-view-buttons button[data-active],
@@ -1719,26 +1578,7 @@
         );
 
       box-shadow:
-        var(--gold-glow),
-        inset 0 1px 0 rgba(255,255,255,.70);
-    }
-
-    .two-view-buttons button:hover,
-    .two-view-buttons button:focus-visible{
-      transform:translateY(-2px);
-
-      border-color:rgba(85,246,255,.78);
-
-      box-shadow:var(--cyan-glow);
-
-      outline:none;
-    }
-
-    .two-view-note{
-      color:rgba(239,246,255,.74);
-
-      font-size:.88rem;
-      line-height:1.4;
+        var(--gold-glow);
     }
 
     .technical-control-bridge{
@@ -1753,9 +1593,7 @@
       clip-path:inset(50%)!important;
 
       white-space:nowrap!important;
-
       pointer-events:none!important;
-
       opacity:0!important;
     }
 
@@ -1769,7 +1607,6 @@
       margin:0!important;
 
       border:0!important;
-
       overflow:hidden!important;
     }
 
@@ -1785,12 +1622,7 @@
 
       padding:.78rem;
 
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0,217,255,.055),
-          rgba(168,108,255,.035)
-        );
+      background:rgba(0,217,255,.045);
     }
 
     .status-strip span{
@@ -1807,20 +1639,13 @@
 
     .status-strip span[data-status-kind="selection"]{
       color:var(--gold-soft);
-
-      text-shadow:var(--gold-glow);
     }
 
     .status-strip span[data-status-kind="waiting"]{
       color:var(--cyan);
-
-      text-shadow:var(--cyan-glow);
     }
 
     .actions{
-      position:relative;
-      z-index:2;
-
       display:flex;
       flex-wrap:wrap;
       gap:.62rem;
@@ -1828,31 +1653,20 @@
 
     .button,
     button.button{
-      position:relative;
-      overflow:hidden;
-
       min-height:2.7rem;
 
       display:inline-flex;
       align-items:center;
       justify-content:center;
 
-      border:1px solid rgba(85,246,255,.20);
+      border:1px solid var(--chamber-line);
       border-radius:999px;
 
       padding:.67rem 1.05rem;
 
       color:rgba(245,251,255,.94);
 
-      background:
-        linear-gradient(
-          135deg,
-          rgba(20,88,255,.16),
-          rgba(168,108,255,.09)
-        );
-
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.09);
+      background:var(--chamber-open);
 
       font-size:.76rem;
       font-weight:950;
@@ -1860,30 +1674,6 @@
       text-transform:uppercase;
 
       cursor:pointer;
-
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease,
-        box-shadow .18s ease;
-    }
-
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-2px);
-
-      border-color:rgba(85,246,255,.72);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0,217,255,.18),
-          rgba(143,63,255,.16)
-        );
-
-      box-shadow:var(--cyan-glow);
-
-      outline:none;
     }
 
     .button-gold{
@@ -1898,25 +1688,7 @@
           var(--gold)
         );
 
-      box-shadow:
-        var(--gold-glow),
-        inset 0 1px 0 rgba(255,255,255,.58);
-    }
-
-    .button-gold:hover,
-    .button-gold:focus-visible{
-      border-color:var(--white);
-
-      background:
-        linear-gradient(
-          135deg,
-          #fffbd9,
-          var(--gold)
-        );
-
-      box-shadow:
-        0 0 1.1rem rgba(255,216,106,.48),
-        0 0 3.2rem rgba(255,181,31,.26);
+      box-shadow:var(--gold-glow);
     }
 
     .mirror-bridge{
@@ -1929,16 +1701,6 @@
       border-radius:clamp(1.25rem,4vw,2.2rem);
 
       background:
-        radial-gradient(
-          circle at 12% 0%,
-          rgba(255,216,106,.14),
-          transparent 24rem
-        ),
-        radial-gradient(
-          circle at 88% 100%,
-          rgba(85,246,255,.15),
-          transparent 28rem
-        ),
         linear-gradient(
           135deg,
           rgba(20,88,255,.12),
@@ -1959,11 +1721,6 @@
       letter-spacing:-.08em;
 
       text-wrap:balance;
-
-      text-shadow:
-        0 0 1.4rem rgba(255,216,106,.20),
-        0 0 3.2rem rgba(0,217,255,.16),
-        0 0 4.8rem rgba(143,63,255,.14);
     }
 
     .construction-access{
@@ -1972,29 +1729,10 @@
 
       padding:clamp(1rem,3vw,1.5rem);
 
-      border:1px solid rgba(255,216,106,.38);
+      border:1px solid var(--chamber-line);
       border-radius:1.4rem;
 
-      background:
-        radial-gradient(
-          circle at 12% 0%,
-          rgba(255,216,106,.18),
-          transparent 24rem
-        ),
-        radial-gradient(
-          circle at 90% 100%,
-          rgba(0,217,255,.15),
-          transparent 25rem
-        ),
-        linear-gradient(
-          135deg,
-          rgba(255,181,31,.08),
-          rgba(20,88,255,.09)
-        );
-
-      box-shadow:
-        var(--gold-glow),
-        inset 0 1px 0 rgba(255,255,255,.10);
+      background:var(--chamber-open);
     }
 
     .construction-access strong{
@@ -2015,36 +1753,6 @@
 
       padding:clamp(1.35rem,4vw,2.5rem);
 
-      border-color:rgba(85,246,255,.30);
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(255,216,106,.18),
-          transparent 24rem
-        ),
-        radial-gradient(
-          circle at 50% 100%,
-          rgba(0,217,255,.22),
-          transparent 30rem
-        ),
-        radial-gradient(
-          circle at 80% 58%,
-          rgba(168,108,255,.13),
-          transparent 24rem
-        ),
-        linear-gradient(
-          180deg,
-          rgba(9,15,42,.90),
-          rgba(3,7,20,.97)
-        );
-
-      box-shadow:
-        var(--gold-glow),
-        var(--cyan-glow),
-        var(--shadow),
-        inset 0 1px 0 rgba(255,255,255,.11);
-
       text-align:center;
       justify-items:center;
     }
@@ -2055,10 +1763,6 @@
       color:var(--white);
 
       font-size:clamp(2rem,6vw,4.9rem);
-
-      text-shadow:
-        0 0 1.4rem rgba(255,216,106,.22),
-        0 0 3rem rgba(0,217,255,.16);
     }
 
     dialog{
@@ -2071,7 +1775,7 @@
 
       padding:0;
 
-      border:1px solid rgba(85,246,255,.45);
+      border:1px solid rgba(141,168,199,.48);
       border-radius:1.6rem;
 
       color:var(--ink);
@@ -2079,42 +1783,33 @@
       background:
         radial-gradient(
           circle at 10% 0%,
-          rgba(255,216,106,.20),
+          rgba(141,168,199,.18),
           transparent 24rem
-        ),
-        radial-gradient(
-          circle at 96% 100%,
-          rgba(0,217,255,.18),
-          transparent 28rem
-        ),
-        radial-gradient(
-          circle at 75% 20%,
-          rgba(168,108,255,.13),
-          transparent 22rem
         ),
         linear-gradient(
           180deg,
-          rgba(8,12,36,.99),
-          rgba(2,6,18,.99)
+          rgba(23,28,36,.99),
+          rgba(6,8,12,.99)
         );
 
       box-shadow:
-        var(--gold-glow),
-        var(--cyan-glow),
         0 2rem 8rem rgba(0,0,0,.72);
 
       overflow:auto;
     }
 
     dialog::backdrop{
-      background:
-        rgba(0,2,10,.76);
+      background:rgba(0,2,10,.76);
 
-      backdrop-filter:
-        blur(10px);
+      backdrop-filter:blur(10px);
     }
 
     .dialog-shell{
+      --chamber-accent:var(--steel);
+      --chamber-soft:#d5e4f7;
+      --chamber-line:rgba(141,168,199,.44);
+      --chamber-open:rgba(141,168,199,.10);
+
       display:grid;
       gap:1rem;
 
@@ -2134,14 +1829,12 @@
     }
 
     .dialog-title span{
-      color:var(--cyan);
+      color:var(--steel);
 
       font-size:.67rem;
       font-weight:950;
       letter-spacing:.14em;
       text-transform:uppercase;
-
-      text-shadow:var(--cyan-glow);
     }
 
     .dialog-close{
@@ -2181,26 +1874,18 @@
 
       padding:1rem;
 
-      border:1px solid rgba(85,246,255,.20);
+      border:1px solid rgba(141,168,199,.24);
       border-radius:1.05rem;
 
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(85,246,255,.13),
-          transparent 72%
-        ),
-        rgba(255,255,255,.035);
+      background:rgba(141,168,199,.055);
 
       text-align:center;
     }
 
     .construction-record strong{
-      color:var(--gold-soft);
+      color:#d5e4f7;
 
       font-size:clamp(1.45rem,4vw,2.2rem);
-
-      text-shadow:var(--gold-glow);
     }
 
     .construction-record span{
@@ -2215,16 +1900,6 @@
     .construction-details{
       display:grid;
       gap:.7rem;
-    }
-
-    .construction-details .architectural-drop{
-      background:
-        linear-gradient(
-          135deg,
-          rgba(20,88,255,.08),
-          rgba(143,63,255,.06)
-        ),
-        rgba(255,255,255,.035);
     }
 
     footer{
@@ -2293,10 +1968,7 @@
         font-size:clamp(3.2rem,15vw,5.8rem);
       }
 
-      .arrival{
-        padding:1rem;
-      }
-
+      .arrival,
       .section{
         padding:1rem;
       }
@@ -2328,7 +2000,6 @@
       }
 
       .status-strip .button{
-        flex:1 1 100%;
         width:100%;
       }
 
@@ -2418,9 +2089,7 @@
         <div class="elara-quick-path">
           <a
             class="elara-button"
-            href="/elara/"
-            data-talk-to-elara
-            data-elara-route="/elara/"
+            href="/elara/index.html"
           >
             Talk to Elara
           </a>
@@ -2442,7 +2111,7 @@
     <main id="main">
       <section
         id="arrival"
-        class="panel arrival"
+        class="panel arrival chamber-arrival"
         aria-labelledby="page-title"
       >
         <div class="kicker">
@@ -2494,7 +2163,7 @@
 
       <section
         id="diamond-object"
-        class="panel section"
+        class="panel section chamber-exhibit"
         aria-labelledby="diamond-title"
       >
         <div class="section-heading">
@@ -2619,12 +2288,6 @@
                   </button>
                 </div>
 
-                <p class="two-view-note">
-                  Object View shows the complete visible body. Lattice
-                  View reveals the internal 256-seat structure without
-                  replacing or destroying the object.
-                </p>
-
                 <div
                   class="technical-control-bridge"
                   aria-hidden="true"
@@ -2727,7 +2390,7 @@
 
       <section
         id="behind-the-surface"
-        class="panel section"
+        class="panel section chamber-surface"
         aria-labelledby="surface-title"
       >
         <div class="section-heading">
@@ -2741,10 +2404,7 @@
         </div>
 
         <div class="drop-grid">
-          <details
-            class="architectural-drop"
-            data-tone="gold"
-          >
+          <details class="architectural-drop">
             <summary>
               Object View · What the Diamond presents
             </summary>
@@ -2765,10 +2425,7 @@
             </div>
           </details>
 
-          <details
-            class="architectural-drop"
-            data-tone="violet"
-          >
+          <details class="architectural-drop">
             <summary>
               Lattice View · What allows the Diamond to remain whole
             </summary>
@@ -2816,7 +2473,7 @@
 
       <section
         id="construction"
-        class="panel section"
+        class="panel section chamber-construction"
         aria-labelledby="construction-title"
       >
         <div class="section-heading">
@@ -2848,7 +2505,7 @@
 
       <section
         id="anatomy"
-        class="panel section"
+        class="panel section chamber-anatomy"
         aria-labelledby="anatomy-title"
       >
         <div class="section-heading">
@@ -2862,10 +2519,7 @@
         </div>
 
         <div class="drop-grid-four">
-          <details
-            class="architectural-drop"
-            data-tone="gold"
-          >
+          <details class="architectural-drop">
             <summary>
               Region 01 · Gold Crown
             </summary>
@@ -2884,10 +2538,7 @@
             </div>
           </details>
 
-          <details
-            class="architectural-drop"
-            data-tone="cyan"
-          >
+          <details class="architectural-drop">
             <summary>
               Region 02 · Illuminated Girdle
             </summary>
@@ -2906,10 +2557,7 @@
             </div>
           </details>
 
-          <details
-            class="architectural-drop"
-            data-tone="blue"
-          >
+          <details class="architectural-drop">
             <summary>
               Region 03 · Sapphire Pavilion
             </summary>
@@ -2927,10 +2575,7 @@
             </div>
           </details>
 
-          <details
-            class="architectural-drop"
-            data-tone="violet"
-          >
+          <details class="architectural-drop">
             <summary>
               Region 04 · Internal Lattice
             </summary>
@@ -2953,7 +2598,7 @@
 
       <section
         id="threshold-law"
-        class="panel section"
+        class="panel section chamber-threshold"
         aria-labelledby="threshold-title"
       >
         <div class="section-heading">
@@ -2967,10 +2612,7 @@
         </div>
 
         <div class="drop-grid-three">
-          <details
-            class="architectural-drop"
-            data-tone="cyan"
-          >
+          <details class="architectural-drop">
             <summary>
               01 · Visible form can contain invisible order
             </summary>
@@ -2989,10 +2631,7 @@
             </div>
           </details>
 
-          <details
-            class="architectural-drop"
-            data-tone="gold"
-          >
+          <details class="architectural-drop">
             <summary>
               02 · Surface and structure must remain connected
             </summary>
@@ -3012,10 +2651,7 @@
             </div>
           </details>
 
-          <details
-            class="architectural-drop"
-            data-tone="violet"
-          >
+          <details class="architectural-drop">
             <summary>
               03 · Movement begins after the threshold is understood
             </summary>
@@ -3038,7 +2674,7 @@
 
       <section
         id="passage"
-        class="panel passage"
+        class="panel passage chamber-passage"
         aria-labelledby="passage-title"
       >
         <div class="kicker">

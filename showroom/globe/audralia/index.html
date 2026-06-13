@@ -1,823 +1,626 @@
-<!-- TARGET FILE: /showroom/globe/audralia/index.html -->
-<!-- TNT FULL-FILE REPLACEMENT -->
-<!-- AUDRALIA_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1 -->
+<!-- /showroom/globe/audralia/index.html -->
+<!-- AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v1 -->
+<!-- Full-file replacement. -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/"
-  data-page="audralia-mirrorland-threshold"
-  data-version="G1-MIRRORLAND-COMPACT-SINGLE-FOCUS-MAP-BLIP"
-  data-contract="AUDRALIA_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1"
-  data-previous-contract="AUDRALIA_MIRRORLAND_NARRATIVE_SIMPLIFICATION_MAP_BLIP_HTML_TNT_v1"
-  data-baseline-contract="AUDRALIA_PARENT_ROUTE_PLANETARY_PATH_RELINK_HTML_TNT_v1"
-  data-js-contract-held="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
-  data-route-family="AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE"
-  data-threshold-role="after-door-welcome-to-mirrorland"
-  data-planetary-template="Audralia"
-  data-planetary-path="/showroom/globe/audralia/planet/"
-  data-planetary-path-label="Audralia Planetary Path"
-  data-page-simplified="true"
-  data-page-compact="true"
-  data-single-focus="true"
-  data-central-focus="audralia-object-stage"
-  data-audralia-narrative-primary="true"
-  data-mirrorland-context-preserved="true"
-  data-planetary-doorway-preserved="true"
-  data-cardinal-menu-active="false"
-  data-route-directory-removed="true"
-  data-jump-options-removed="true"
-  data-status-card-stack-removed="true"
-  data-visible-signal-dock-collapsed="true"
-  data-technical-scope-collapsed="true"
-  data-map-blip-added="true"
-  data-floating-map-portal-active="true"
-  data-map-blip-owns-navigation="true"
-  data-mirrorland-page-blip-required="true"
-  data-renderer-runtime-held="true"
-  data-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
-  data-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
-  data-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
-  data-active-water="false"
-  data-hydration-active="false"
+  data-page="audralia-conservatory"
+  data-room="audralia-conservatory"
+  data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v1"
+  data-route-family="diamond-gate-bridge"
+  data-world-family="mirrorland"
+  data-current-role="planetary-holder"
+  data-current-state="conservatory"
+  data-construction-engine-state="awaiting-hearth-r-and-d"
+  data-construction-engine-provider="hearth-development-r-and-d-chamber"
+  data-future-experience-count="2"
+  data-future-experience-one="audralia-storyworld"
+  data-future-experience-two="mirror-me-journey"
+  data-character-spirit-assignment="coming-soon"
+  data-mirror-me-journey="coming-soon"
+  data-mirror-mes-journey="coming-soon"
+  data-frontier-science-storyworld="coming-soon"
+  data-race-the-clock-storyline="coming-soon"
+  data-exposed-copy="minimal"
+  data-visible-receipts="false"
   data-final-visual-pass="false"
   data-generated-image="false"
   data-graphic-box="false"
+  data-house-control-pad-runtime="/assets/house-control-pad/house.control-pad.js"
+  data-house-control-pad-css="/assets/house-control-pad/house.control-pad.css"
+  data-audralia-geometry="/assets/audralia/audralia.planet.js"
+  data-audralia-runtime="/showroom/globe/audralia/index.js"
+  data-audralia-manifest="/assets/audralia/audralia.3d-model.manifest.js"
 >
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-  <title>Audralia · Mirrorland Possibility Planet</title>
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <title>Audralia Conservatory · Diamond Gate Bridge</title>
+
   <meta
     name="description"
-    content="Audralia is the first living possibility planet inside Mirrorland. The page is condensed around one central object stage, with movement handled by the floating Map Portal blip."
+    content="The Audralia Conservatory holds the developing planet while the Hearth Development R&D Chamber builds the planetary construction engine. Coming soon: the Audralia storyworld and the Mirror Me journey."
+  >
+
+  <meta
+    name="theme-color"
+    content="#030711"
   >
 
   <link
     rel="stylesheet"
-    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_CARDINAL_ROOM_MAP_VISUAL_CSS_TNT_v1"
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
+    href="/assets/house-control-pad/house.control-pad.css"
+    data-house-control-pad-styles
   >
 
-  <style>
-    :root{
-      color-scheme:dark;
-      --bg:#030711;
-      --ink:#fff3d2;
-      --muted:rgba(226,235,255,.78);
-      --faint:rgba(226,235,255,.58);
-      --gold:#f2c66d;
-      --gold2:#ffe9a6;
-      --blue:#7fd8ff;
-      --panel:rgba(11,18,34,.84);
-      --line:rgba(188,208,255,.17);
-      --max:1180px;
-      --gem:polygon(50% 0%,78% 10%,100% 35%,90% 74%,50% 100%,10% 74%,0 35%,22% 10%);
-    }
+  <link
+    rel="stylesheet"
+    href="/showroom/globe/audralia/index.css"
+    data-audralia-conservatory-styles
+  >
 
-    *{box-sizing:border-box}
+  <script
+    defer
+    src="/assets/audralia/audralia.planet.js"
+    data-audralia-geometry-authority
+  ></script>
 
-    html{
-      min-width:320px;
-      min-height:100%;
-      background:var(--bg);
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-    }
+  <script
+    defer
+    src="/showroom/globe/audralia/index.js"
+    data-audralia-runtime-authority
+  ></script>
 
-    body{
-      margin:0;
-      min-width:320px;
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
-      background:
-        radial-gradient(circle at 14% -8%,rgba(126,216,255,.19),transparent 26rem),
-        radial-gradient(circle at 92% 16%,rgba(242,198,109,.13),transparent 30rem),
-        radial-gradient(circle at 50% 75%,rgba(58,108,255,.10),transparent 36rem),
-        linear-gradient(180deg,#07101f 0%,#030711 54%,#01030a 100%);
-      -webkit-font-smoothing:antialiased;
-      text-rendering:geometricPrecision;
-    }
+  <script
+    defer
+    src="/assets/audralia/audralia.3d-model.manifest.js"
+    data-audralia-model-manifest
+  ></script>
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity:.22;
-      background-image:
-        linear-gradient(rgba(138,163,220,.05) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(138,163,220,.05) 1px,transparent 1px),
-        radial-gradient(circle,rgba(255,255,255,.18) 0 1px,transparent 1.6px);
-      background-size:56px 56px,56px 56px,210px 250px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.62) 68%,rgba(0,0,0,.20));
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    a:focus-visible,
-    button:focus-visible,
-    summary:focus-visible{
-      outline:2px solid var(--gold);
-      outline-offset:4px;
-    }
-
-    .skip{
-      position:absolute;
-      left:-999px;
-      top:8px;
-      z-index:50;
-      padding:.72rem 1rem;
-      border-radius:999px;
-      background:var(--gold);
-      color:#05070d;
-      font-weight:950;
-    }
-
-    .skip:focus{left:8px}
-
-    .shell{
-      position:relative;
-      z-index:1;
-      width:min(var(--max),calc(100% - 28px));
-      margin:0 auto;
-      padding:max(18px,env(safe-area-inset-top)) 0 max(38px,env(safe-area-inset-bottom));
-    }
-
-    .topbar{
-      display:grid;
-      grid-template-columns:auto minmax(12rem,1fr);
-      gap:1rem;
-      align-items:center;
-      padding:.75rem 0 .95rem;
-    }
-
-    .brand{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:.82rem;
-      align-items:center;
-      min-width:0;
-    }
-
-    .brand-mark{
-      width:3.65rem;
-      height:3.65rem;
-      display:grid;
-      place-items:center;
-      clip-path:var(--gem);
-      color:#fff3d2;
-      font-weight:950;
-      font-size:1rem;
-      background:
-        radial-gradient(circle at 32% 18%,rgba(255,255,255,.35),transparent 26%),
-        conic-gradient(from 45deg,rgba(255,255,255,.18),rgba(73,100,185,.42),rgba(3,10,28,.92),rgba(242,198,109,.18),rgba(255,255,255,.18)),
-        linear-gradient(145deg,#17254a,#061226);
-      box-shadow:0 1rem 2rem rgba(0,0,0,.42),0 0 1.6rem rgba(126,216,255,.16),inset 0 1px 0 rgba(255,255,255,.16);
-    }
-
-    .brand-copy{
-      display:grid;
-      gap:.12rem;
-      min-width:0;
-    }
-
-    .brand-copy span{
-      color:var(--muted);
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
-
-    .brand-copy strong{
-      font-size:clamp(1rem,3vw,1.45rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    .header-note{
-      justify-self:end;
-      max-width:24rem;
-      color:rgba(226,235,255,.66);
-      font-size:.76rem;
-      font-weight:820;
-      line-height:1.34;
-      text-align:right;
-    }
-
-    .panel{
-      border:1px solid var(--line);
-      border-radius:clamp(1.1rem,4vw,1.8rem);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(126,216,255,.10),transparent 28rem),
-        radial-gradient(circle at 88% 16%,rgba(242,198,109,.10),transparent 30rem),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.022)),
-        var(--panel);
-      box-shadow:0 26px 90px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .hero{
-      display:grid;
-      gap:.82rem;
-      padding:clamp(1rem,3vw,1.65rem);
-      margin-bottom:.85rem;
-    }
-
-    .kicker{
-      width:fit-content;
-      display:inline-flex;
-      align-items:center;
-      gap:.5rem;
-      padding:.48rem .78rem;
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:999px;
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.045);
-      font-size:.64rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .kicker::before{
-      content:"";
-      width:.62rem;
-      height:.62rem;
-      border-radius:.16rem;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold2),var(--gold));
-      box-shadow:0 0 .9rem rgba(242,198,109,.40);
-    }
-
-    h1{
-      margin:0;
-      max-width:930px;
-      font-size:clamp(2.55rem,8.4vw,5.65rem);
-      line-height:.88;
-      letter-spacing:-.105em;
-      text-wrap:balance;
-    }
-
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.35rem,4vw,2.2rem);
-      line-height:1;
-      letter-spacing:-.06em;
-      text-wrap:balance;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(.95rem,2.5vw,1.08rem);
-      line-height:1.5;
-    }
-
-    .lead{
-      max-width:900px;
-      font-size:clamp(.98rem,2.8vw,1.16rem);
-    }
-
-    .core-layout{
-      display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(16rem,.38fr);
-      gap:.85rem;
-      align-items:stretch;
-    }
-
-    .globe-stage{
-      position:relative;
-      min-height:clamp(30rem,62vw,43rem);
-      border:1px solid rgba(188,208,255,.15);
-      border-radius:clamp(1rem,3.8vw,1.6rem);
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 38%,rgba(126,216,255,.13),transparent 21rem),
-        radial-gradient(circle at 50% 62%,rgba(38,96,255,.12),transparent 28rem),
-        linear-gradient(180deg,rgba(0,6,18,.72),rgba(1,5,15,.96));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-      isolation:isolate;
-      touch-action:none;
-      user-select:none;
-      -webkit-user-select:none;
-    }
-
-    .globe-stage::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
-      background-image:
-        linear-gradient(rgba(126,216,255,.035) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(126,216,255,.035) 1px,transparent 1px);
-      background-size:38px 38px;
-      opacity:.52;
-      pointer-events:none;
-    }
-
-    .globe-label{
-      position:absolute;
-      left:.85rem;
-      top:.85rem;
-      z-index:5;
-      display:grid;
-      gap:.14rem;
-      max-width:min(29rem,calc(100% - 1.7rem));
-      padding:.7rem .78rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:.9rem;
-      background:rgba(2,6,18,.74);
-      backdrop-filter:blur(8px);
-      pointer-events:none;
-    }
-
-    .globe-label b{
-      color:var(--gold);
-      font-size:.58rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .globe-label span{
-      color:rgba(230,238,255,.80);
-      font-size:.76rem;
-      font-weight:760;
-    }
-
-    .globe-mount{
-      position:absolute;
-      inset:0;
-      z-index:2;
-    }
-
-    .globe-status{
-      position:absolute;
-      left:.85rem;
-      right:.85rem;
-      bottom:.85rem;
-      z-index:5;
-      display:grid;
-      gap:.5rem;
-      padding:.78rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:.9rem;
-      background:rgba(2,6,18,.78);
-      backdrop-filter:blur(8px);
-    }
-
-    .globe-status strong{
-      color:var(--blue);
-      font-size:clamp(.98rem,2.8vw,1.28rem);
-      line-height:1.08;
-    }
-
-    .globe-status span{
-      color:rgba(230,238,255,.80);
-      font-size:.9rem;
-      font-weight:820;
-      line-height:1.38;
-    }
-
-    .side-panel{
-      display:grid;
-      gap:.75rem;
-      align-content:start;
-      padding:.9rem;
-      border:1px solid rgba(188,208,255,.14);
-      border-radius:1.15rem;
-      background:rgba(255,255,255,.032);
-    }
-
-    .lens-buttons{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:.48rem;
-    }
-
-    .button,
-    button.button{
-      min-height:2.5rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:999px;
-      padding:.58rem .86rem;
-      background:rgba(255,255,255,.045);
-      color:rgba(241,246,255,.88);
-      font-family:inherit;
-      font-size:.7rem;
-      font-weight:950;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
-      cursor:pointer;
-    }
-
-    .button.gold,
-    button.button.gold,
-    .lens-buttons button[aria-pressed="true"]{
-      border-color:rgba(242,198,109,.9);
-      color:#060811;
-      background:linear-gradient(135deg,#fff2a8,#f3c86f);
-    }
-
-    .micro-card{
-      display:grid;
-      gap:.22rem;
-      padding:.68rem;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:.9rem;
-      background:rgba(255,255,255,.032);
-    }
-
-    .micro-card b{
-      color:var(--gold);
-      font-size:.56rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .micro-card span{
-      color:rgba(230,238,255,.76);
-      font-size:.78rem;
-      font-weight:760;
-      line-height:1.32;
-    }
-
-    .drawers{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.75rem;
-      margin-top:.85rem;
-    }
-
-    details.drawer{
-      border:1px solid rgba(188,208,255,.14);
-      border-radius:1.05rem;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(126,216,255,.07),transparent 80%),
-        rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-
-    details.drawer[open]{
-      border-color:rgba(242,198,109,.28);
-      background:
-        radial-gradient(circle at 18% 0%,rgba(242,198,109,.08),transparent 80%),
-        rgba(255,255,255,.036);
-    }
-
-    details.drawer summary{
-      cursor:pointer;
-      list-style:none;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:.85rem;
-      min-height:3rem;
-      padding:.82rem .95rem;
-      color:var(--gold);
-      font-size:.7rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    details.drawer summary::-webkit-details-marker{display:none}
-
-    details.drawer summary::after{
-      content:"+";
-      color:rgba(230,238,255,.72);
-      font-size:1.05rem;
-      font-weight:950;
-    }
-
-    details.drawer[open] summary::after{
-      content:"–";
-      color:var(--gold2);
-    }
-
-    .drawer-body{
-      display:grid;
-      gap:.65rem;
-      padding:0 .95rem .95rem;
-    }
-
-    .drawer-body strong{
-      color:rgba(255,243,210,.98);
-      font-size:1rem;
-      line-height:1.1;
-    }
-
-    .drawer-body p{
-      font-size:.9rem;
-      line-height:1.42;
-    }
-
-    .diagnostic-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.42rem;
-    }
-
-    .diagnostic{
-      display:grid;
-      gap:.1rem;
-      padding:.45rem;
-      border:1px solid rgba(255,255,255,.075);
-      border-radius:.72rem;
-      background:rgba(255,255,255,.022);
-    }
-
-    .diagnostic b{
-      color:rgba(242,198,109,.78);
-      font-size:.5rem;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-    }
-
-    .diagnostic span{
-      color:rgba(230,238,255,.68);
-      font-size:.68rem;
-      font-weight:760;
-      line-height:1.25;
-    }
-
-    .receipt,
-    [data-route-receipt],
-    [data-audralia-parent-route-receipt]{
-      display:none!important;
-      visibility:hidden!important;
-      position:absolute!important;
-      width:0!important;
-      height:0!important;
-      overflow:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-      clip-path:inset(50%)!important;
-      white-space:nowrap!important;
-    }
-
-    footer{
-      padding:1rem 0 .35rem;
-      color:var(--faint);
-      text-align:center;
-      font-size:.68rem;
-    }
-
-    @media (max-width:980px){
-      .topbar,
-      .core-layout{
-        grid-template-columns:1fr;
-      }
-
-      .header-note{
-        justify-self:start;
-        text-align:left;
-      }
-
-      .drawers{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media (max-width:760px){
-      .shell{width:min(100% - 20px,var(--max))}
-      h1{font-size:clamp(2.8rem,14.5vw,5rem)}
-      .hero{padding:.9rem}
-      .core-layout{gap:.75rem}
-      .globe-stage{min-height:34rem}
-      .globe-label{left:.65rem;right:.65rem;max-width:none}
-      .globe-status{left:.65rem;right:.65rem}
-      .diagnostic-grid{grid-template-columns:1fr}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        scroll-behavior:auto!important;
-        animation-duration:.01ms!important;
-        animation-iteration-count:1!important;
-        transition-duration:.01ms!important;
-      }
-    }
-  </style>
+  <script
+    defer
+    src="/assets/house-control-pad/house.control-pad.js"
+    data-house-control-pad-authority
+  ></script>
 </head>
 
-<body>
-  <a class="skip" href="#main">Skip to Audralia</a>
+<body
+  data-audralia-page
+  data-audralia-planet-page
+  data-audralia-state="loading"
+  data-audralia-planet-runtime-mounted="false"
+  data-audralia-planet-runtime-mode="held"
+  data-audralia-planet-runtime-context-lost="false"
+  data-audralia-planet-runtime-error-count="0"
+>
+  <a
+    class="skip"
+    href="#audraliaGlobeStage"
+  >
+    Skip to Audralia
+  </a>
 
-  <div class="shell">
-    <header class="topbar" aria-label="Audralia Mirrorland header">
-      <a class="brand" href="/showroom/globe/audralia/">
-        <span class="brand-mark" aria-hidden="true">AU</span>
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge · Mirrorland</span>
-          <strong>Audralia</strong>
-        </span>
-      </a>
-
-      <div class="header-note">
-        Use the Map / Portal blip for movement. This page stays centered on Audralia.
-      </div>
-    </header>
-
-    <main id="main">
-      <section class="panel hero" aria-labelledby="page-title">
-        <div class="kicker">Mirrorland · Living Possibility Planet</div>
-
-        <h1 id="page-title">Audralia is the first planetary doorway inside Mirrorland.</h1>
-
-        <p class="lead">
-          The visitor has crossed the Door. Audralia is the first world-object: a living possibility planet, a visible threshold, and the place where Mirrorland begins to feel inhabitable.
-        </p>
-      </section>
-
-      <section class="core-layout" aria-label="Audralia compact object experience">
-        <section
-          id="audraliaGlobeStage"
-          class="globe-stage"
-          data-audralia-globe-stage="true"
-          data-route-family="AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE"
-          aria-label="Interactive Audralia globe stage"
+  <main
+    class="audralia-page"
+    data-audralia-page
+    data-audralia-planet-page
+    aria-labelledby="audralia-title"
+  >
+    <div
+      class="audralia-shell"
+      data-audralia-shell
+      data-audralia-planet-shell
+    >
+      <header
+        class="audralia-header"
+        data-audralia-header
+        data-audralia-planet-header
+      >
+        <div
+          class="audralia-heading"
+          data-audralia-heading
         >
-          <div class="globe-label">
-            <b>Audralia · Mirrorland Planetary Template</b>
-            <span data-audralia-stage-label>
-              <strong>Object View</strong> → spherical carrier · living possibility planet
-            </span>
+          <div
+            class="audralia-eyebrow"
+            data-audralia-eyebrow
+          >
+            Diamond Gate Bridge · Mirrorland
+          </div>
+
+          <h1
+            id="audralia-title"
+            class="audralia-title"
+            data-audralia-title
+          >
+            Audralia Conservatory
+          </h1>
+
+          <div
+            class="audralia-subtitle"
+            data-audralia-subtitle
+          >
+            Planetary holder now. Frontier-science storyworld next.
+          </div>
+        </div>
+
+        <nav
+          class="audralia-header-actions"
+          data-audralia-header-actions
+          aria-label="Audralia Conservatory controls"
+        >
+          <button
+            id="audralia-control-map-button"
+            class="audralia-header-action"
+            type="button"
+            data-house-control-pad-open
+            data-house-context="audralia-conservatory"
+            aria-label="Open the Diamond Gate Bridge control map"
+            aria-haspopup="dialog"
+            aria-controls="house-control-pad-dialog"
+            aria-expanded="false"
+          >
+            Open Control Map
+          </button>
+        </nav>
+      </header>
+
+      <section
+        id="audraliaGlobeStage"
+        class="audralia-globe-stage audralia-planet-stage"
+        data-audralia-globe-stage
+        data-audralia-planet-stage
+        aria-label="Interactive Audralia planetary holder"
+        tabindex="-1"
+      >
+        <div
+          id="audraliaGlobeMount"
+          class="audralia-globe-mount audralia-planet-mount"
+          data-audralia-globe-mount
+          data-audralia-planet-mount
+          aria-label="Audralia interactive planet"
+        ></div>
+
+        <div
+          class="audralia-stage-overlay"
+          data-audralia-stage-overlay
+          aria-hidden="false"
+        >
+          <div
+            class="audralia-runtime-status"
+            data-audralia-runtime-status
+          >
+            <div
+              class="audralia-status-card"
+              data-audralia-status-card
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span
+                class="audralia-status-dot"
+                data-audralia-status-dot
+                aria-hidden="true"
+              ></span>
+
+              <span
+                id="audralia-runtime-status-label"
+                class="audralia-status-label"
+                data-audralia-status-label
+              >
+                Planetary holder preparing
+              </span>
+            </div>
+          </div>
+
+          <aside
+            class="audralia-hud"
+            data-audralia-hud
+            data-audralia-planet-hud
+            aria-label="Audralia development status"
+          >
+            <div
+              class="audralia-hud-title"
+              data-audralia-hud-title
+            >
+              Conservatory
+            </div>
+
+            <div
+              class="audralia-hud-grid"
+              data-audralia-hud-grid
+            >
+              <div
+                class="audralia-hud-item"
+                data-audralia-hud-item
+              >
+                <span
+                  class="audralia-hud-key"
+                  data-audralia-hud-key
+                >
+                  Current
+                </span>
+
+                <span
+                  class="audralia-hud-value"
+                  data-audralia-hud-value
+                >
+                  Planetary holder
+                </span>
+              </div>
+
+              <div
+                class="audralia-hud-item"
+                data-audralia-hud-item
+              >
+                <span
+                  class="audralia-hud-key"
+                  data-audralia-hud-key
+                >
+                  Engine
+                </span>
+
+                <span
+                  class="audralia-hud-value"
+                  data-audralia-hud-value
+                >
+                  Hearth R&amp;D
+                </span>
+              </div>
+            </div>
+          </aside>
+
+          <div
+            class="audralia-instructions"
+            data-audralia-instructions
+          >
+            Drag to turn · pinch or scroll to move · double-tap to reset
           </div>
 
           <div
-            id="audraliaGlobeMount"
-            class="globe-mount"
-            data-audralia-globe-mount="true"
-            aria-hidden="true"
-          ></div>
-
-          <div class="globe-status">
-            <strong data-audralia-lens-title>Object View</strong>
-            <span data-audralia-lens-copy>
-              Object View preserves the observable Audralia carrier. The held runtime owns spin, lattice, and scope behavior.
-            </span>
-          </div>
-        </section>
-
-        <aside class="side-panel" aria-label="Audralia controls">
-          <div class="kicker">Object Controls</div>
-
-          <div class="lens-buttons" role="group" aria-label="Audralia object view controls">
-            <button class="button gold" type="button" data-audralia-lens-button="planet" aria-pressed="true">
-              Object View
+            class="audralia-controls"
+            data-audralia-controls
+            data-audralia-planet-controls
+            aria-label="Planet controls"
+          >
+            <button
+              id="audraliaResetButton"
+              class="audralia-control"
+              type="button"
+              data-audralia-action="reset"
+              aria-label="Reset the Audralia view"
+            >
+              Reset
             </button>
-            <button class="button" type="button" data-audralia-lens-button="lattice" aria-pressed="false">
-              Lattice View
+
+            <button
+              id="audraliaPauseButton"
+              class="audralia-control"
+              type="button"
+              data-audralia-action="pause"
+              aria-label="Pause or resume Audralia rotation"
+              aria-pressed="false"
+            >
+              Pause
             </button>
-            <button class="button" type="button" data-audralia-lens-button="diagnostic" aria-pressed="false">
-              Scope
+
+            <button
+              id="audraliaCloudsButton"
+              class="audralia-control"
+              type="button"
+              data-audralia-action="clouds"
+              aria-label="Show or hide Audralia clouds"
+              aria-pressed="true"
+            >
+              Clouds
+            </button>
+
+            <button
+              id="audraliaAtmosphereButton"
+              class="audralia-control"
+              type="button"
+              data-audralia-action="atmosphere"
+              aria-label="Show or hide the Audralia atmosphere"
+              aria-pressed="true"
+            >
+              Atmosphere
             </button>
           </div>
+        </div>
 
-          <div class="micro-card">
-            <b>Interaction</b>
-            <span>Finger drag spins the globe. Double tap resets the carrier.</span>
-          </div>
+        <div
+          class="audralia-state-layer"
+          data-audralia-state-layer
+          data-state="loading"
+          aria-live="polite"
+        >
+          <div
+            class="audralia-state-card"
+            data-audralia-state-card
+          >
+            <div
+              class="audralia-loader"
+              data-audralia-loader
+              aria-hidden="true"
+            ></div>
 
-          <div class="micro-card">
-            <b>Boundary</b>
-            <span>Visible planet. Not final surface truth. No final visual pass claimed.</span>
-          </div>
-        </aside>
-      </section>
-
-      <section class="drawers" aria-label="Audralia condensed support drawers">
-        <details class="drawer" open>
-          <summary>About Audralia</summary>
-          <div class="drawer-body">
-            <strong>Audralia gives possibility a planet.</strong>
-            <p>
-              Inside Mirrorland, Audralia is the constructive path: a world that can still be shaped, inhabited, studied, and grown.
-            </p>
-            <p>
-              The planet itself is the orientation point. Navigation, route discovery, Main Menu, and Mirrorland Menu belong to the Map / Portal blip.
-            </p>
-          </div>
-        </details>
-
-        <details class="drawer">
-          <summary>Technical Scope</summary>
-          <div class="drawer-body">
-            <strong>Runtime held. Signal preserved.</strong>
-            <p>
-              The existing Audralia JavaScript remains the controller for globe population, spin, lattice view, and scope reporting. The technical slots stay available here without turning the page into a diagnostics board.
-            </p>
-
-            <div class="diagnostic-grid">
-              <div class="diagnostic"><b>Route</b><span data-audralia-diagnostic-route>boot pending</span></div>
-              <div class="diagnostic"><b>Carrier</b><span data-audralia-diagnostic-carrier>boot pending</span></div>
-              <div class="diagnostic"><b>Lens</b><span data-audralia-diagnostic-lens>planet</span></div>
-              <div class="diagnostic"><b>Canvas</b><span data-audralia-diagnostic-canvas>canvas pending</span></div>
-              <div class="diagnostic"><b>Loop</b><span data-audralia-diagnostic-loop>loop pending</span></div>
-              <div class="diagnostic"><b>Children</b><span data-audralia-diagnostic-children>downstream held</span></div>
-              <div class="diagnostic"><b>NEWS</b><span data-audralia-diagnostic-news>boot pending</span></div>
-              <div class="diagnostic"><b>Scope</b><span data-audralia-diagnostic-scope>360 scope pending</span></div>
-              <div class="diagnostic"><b>Datum</b><span data-audralia-diagnostic-datum-child>datum pending</span></div>
-              <div class="diagnostic"><b>Receive</b><span data-audralia-diagnostic-receive-map>receive map pending</span></div>
-              <div class="diagnostic"><b>NEWS Map</b><span data-audralia-diagnostic-news-map>NEWS map pending</span></div>
-              <div class="diagnostic"><b>Packet</b><span data-audralia-diagnostic-child-packet>packet pending</span></div>
-              <div class="diagnostic"><b>Seats</b><span data-audralia-diagnostic-seat-count>256 pending</span></div>
-              <div class="diagnostic"><b>Downstream</b><span data-audralia-diagnostic-downstream>held · no activation</span></div>
+            <div
+              class="audralia-state-title"
+              data-audralia-state-title
+            >
+              Preparing Audralia
             </div>
           </div>
-        </details>
+        </div>
 
-        <template id="audralia-compact-single-focus-map-blip-receipt" class="receipt" data-audralia-parent-route-receipt>
-AUDRALIA_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1
-route=/showroom/globe/audralia/
-routeFamily=AUDRALIA_MIRRORLAND_THRESHOLD_INTERACTIVE_TEMPLATE_ROUTE
-previousHtml=AUDRALIA_MIRRORLAND_NARRATIVE_SIMPLIFICATION_MAP_BLIP_HTML_TNT_v1
-baselineHtml=AUDRALIA_PARENT_ROUTE_PLANETARY_PATH_RELINK_HTML_TNT_v1
-heldJs=/showroom/globe/audralia/index.js
-heldJsContract=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1
-pageSimplified=true
-pageCompact=true
-singleFocus=true
-centralFocus=audralia_object_stage
-audraliaNarrativePrimary=true
-mirrorlandContextPreserved=true
-planetaryDoorwayPreserved=true
-cardinalMenuActive=false
-routeDirectoryRemoved=true
-jumpOptionsRemoved=true
-statusCardStackRemoved=true
-visibleSignalDockCollapsed=true
-technicalScopeCollapsed=true
-mapBlipAdded=true
-floatingMapPortalActive=true
-mapBlipOwnsNavigation=true
-mirrorlandPageBlipRequired=true
-rendererRuntimeHeld=true
-primaryHeadline=Audralia is the first planetary doorway inside Mirrorland.
-planetaryTemplate=Audralia
-planetaryPath=/showroom/globe/audralia/planet/
-planetaryPathLabel=Audralia Planetary Path
-requiredStage=#audraliaGlobeStage
-requiredMount=#audraliaGlobeMount
-lensButtons=planet,lattice,diagnostic
-lensButtonLabels=Object_View,Lattice_View,Scope
-diagnosticSlots=14
-runtimeTouched=false
-planetRouteTouched=false
-blueprintCss=/assets/manor-blueprint/manor.blueprint.css
-blueprintRegistry=/assets/manor-blueprint/manor.blueprint.registry.js
-blueprintRuntime=/assets/manor-blueprint/manor.blueprint.js
-navigationOwner=Map_Portal_Blip
-interactiveGlobeRequired=true
-fingerDragRequired=true
-latticeViewRequired=true
-scopeRequired=true
-waterActive=false
-hydrationActive=false
-generatedImage=false
-graphicBox=false
-finalVisualPass=false
-        </template>
+        <div
+          class="audralia-state-layer"
+          data-audralia-state-layer
+          data-state="held"
+          aria-live="polite"
+        >
+          <div
+            class="audralia-state-card"
+            data-audralia-state-card
+          >
+            <div
+              class="audralia-state-title"
+              data-audralia-state-title
+            >
+              Planetary holder standing by
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="audralia-state-layer"
+          data-audralia-state-layer
+          data-state="fallback"
+          aria-live="polite"
+        >
+          <div
+            class="audralia-state-card"
+            data-audralia-state-card
+          >
+            <div
+              class="audralia-state-title"
+              data-audralia-state-title
+            >
+              Conservatory fallback active
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="audralia-state-layer"
+          data-audralia-state-layer
+          data-state="context-lost"
+          aria-live="assertive"
+        >
+          <div
+            class="audralia-state-card"
+            data-audralia-state-card
+          >
+            <div
+              class="audralia-state-title"
+              data-audralia-state-title
+            >
+              Restoring the planetary view
+            </div>
+          </div>
+        </div>
+
+        <noscript>
+          <div
+            class="audralia-state-layer"
+            style="opacity:1;visibility:visible"
+          >
+            <div
+              class="audralia-state-card"
+              data-audralia-state-card
+            >
+              <div
+                class="audralia-state-title"
+                data-audralia-state-title
+              >
+                JavaScript is required to enter the Conservatory
+              </div>
+            </div>
+          </div>
+        </noscript>
       </section>
-    </main>
 
-    <footer>
-      AUDRALIA_COMPACT_MIRRORLAND_SINGLE_FOCUS_MAP_BLIP_HTML_TNT_v1 · Audralia · Compact Mirrorland object page · Runtime held.
-    </footer>
-  </div>
+      <footer
+        class="audralia-footer"
+        data-audralia-footer
+        data-audralia-planet-footer
+        aria-label="Coming soon to Audralia"
+      >
+        <div
+          class="audralia-status-card"
+          data-audralia-status-card
+          data-coming-soon="audralia-storyworld"
+        >
+          <strong>The Audralia Storyworld</strong>
 
-  <script
-    src="/showroom/globe/audralia/index.js?v=AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
-    defer
-    data-contract="AUDRALIA_PARENT_ROUTE_INTERACTIVE_GLOBE_AND_LATTICE_RESTORE_JS_TNT_v1"
-  ></script>
+          <span>
+            Characters, frontier science, and a race against the clock.
+          </span>
+        </div>
 
-  <script
-    src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_REGISTRY_TNT_v1"
-    defer
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
-  ></script>
+        <div
+          class="audralia-status-card"
+          data-audralia-status-card
+          data-coming-soon="mirror-me-journey"
+        >
+          <strong>The Mirror Me Journey</strong>
 
-  <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_VISITOR_ORIENTATION_RUNTIME_TNT_v1"
-    defer
-    data-mirrorland-blueprint-marker="true"
-    data-blueprint-page-scoped="true"
-  ></script>
+          <span>
+            Receive a character spirit and seek your Mirror Mes.
+          </span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    (function bindAudraliaConservatoryPage(global, document) {
+      "use strict";
+
+      if (!global || !document) {
+        return;
+      }
+
+      const CONTRACT =
+        "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v1";
+
+      const mapButton =
+        document.getElementById("audralia-control-map-button");
+
+      const statusLabel =
+        document.getElementById("audralia-runtime-status-label");
+
+      function setMapExpanded(expanded) {
+        if (!mapButton) {
+          return;
+        }
+
+        mapButton.setAttribute(
+          "aria-expanded",
+          expanded ? "true" : "false"
+        );
+      }
+
+      function prepareHouseDialog() {
+        const root =
+          document.querySelector("[data-house-control-pad]");
+
+        const dialog =
+          document.querySelector("[data-house-dialog]");
+
+        if (root && !root.id) {
+          root.id = "house-control-pad-root";
+        }
+
+        if (dialog && !dialog.id) {
+          dialog.id = "house-control-pad-dialog";
+        }
+      }
+
+      function syncRuntime(detail) {
+        const runtime =
+          global.DGBAudraliaPlanetRuntime;
+
+        const status =
+          detail ||
+          (
+            runtime &&
+            typeof runtime.getStatus === "function"
+              ? runtime.getStatus()
+              : null
+          );
+
+        if (!status) {
+          return;
+        }
+
+        let label =
+          "Planetary holder standing by";
+
+        if (status.contextLost) {
+          label =
+            "Restoring planetary view";
+        } else if (status.fallbackActive) {
+          label =
+            "Conservatory fallback active";
+        } else if (
+          status.mounted &&
+          status.geometryReady &&
+          status.firstVisiblePixelObserved
+        ) {
+          label =
+            "Planetary holder online";
+        } else if (
+          status.mounted &&
+          status.geometryReady
+        ) {
+          label =
+            "Rendering Audralia";
+        } else if (
+          status.geometryAuthorityPresent
+        ) {
+          label =
+            "Preparing planetary holder";
+        }
+
+        if (statusLabel) {
+          statusLabel.textContent =
+            label;
+        }
+
+        document.body.dataset.audraliaState =
+          status.contextLost
+            ? "context-lost"
+            : status.fallbackActive
+              ? "fallback"
+              : status.firstVisiblePixelObserved
+                ? "ready"
+                : "loading";
+      }
+
+      document.addEventListener(
+        "house:control-pad-ready",
+        function () {
+          prepareHouseDialog();
+          setMapExpanded(false);
+        }
+      );
+
+      document.addEventListener(
+        "house:control-pad-open",
+        function () {
+          prepareHouseDialog();
+          setMapExpanded(true);
+        }
+      );
+
+      document.addEventListener(
+        "house:control-pad-close",
+        function () {
+          setMapExpanded(false);
+        }
+      );
+
+      global.addEventListener(
+        "audralia-planet-runtime-state",
+        function (event) {
+          syncRuntime(
+            event && event.detail
+              ? event.detail
+              : null
+          );
+        }
+      );
+
+      document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+          document.documentElement.dataset.audraliaConservatoryContract =
+            CONTRACT;
+
+          prepareHouseDialog();
+          syncRuntime(null);
+        },
+        {
+          once: true
+        }
+      );
+    })(window, document);
+  </script>
 </body>
 </html>

@@ -1,23 +1,9 @@
 // /assets/house-control-pad/house.control-pad.js
-// HOUSE_CONTROL_PAD_SELF_CONTAINED_ESTATE_MAP_RUNTIME_TNT_v1
+// HOUSE_CONTROL_PAD_NINE_ROOM_DIGITAL_GEM_RUNTIME_TNT_v2
 // Full-file replacement.
-//
-// Complete authority for:
-// - canonical estate map
-// - room and guide definitions
-// - map rendering
-// - shared overlay construction
-// - page-door binding
-// - opening and closing
-// - room selection
-// - canonical navigation
-// - focus custody
-// - background custody
-// - scroll custody
-// - runtime status
-// - cleanup
-//
-(function houseControlPadSelfContainedRuntime(global, document) {
+// Complete runtime authority for the nine-room estate map.
+
+(function houseControlPadNineRoomRuntime(global, document) {
   "use strict";
 
   if (!global || !document) {
@@ -25,14 +11,13 @@
   }
 
   const CONTRACT =
-    "HOUSE_CONTROL_PAD_SELF_CONTAINED_ESTATE_MAP_RUNTIME_TNT_v1";
+    "HOUSE_CONTROL_PAD_NINE_ROOM_DIGITAL_GEM_RUNTIME_TNT_v2";
 
   const PUBLIC_GLOBAL = "HOUSE_CONTROL_PAD";
-  const STATUS_GLOBAL = "__HOUSE_CONTROL_PAD_STATUS__";
   const SVG_NS = "http://www.w3.org/2000/svg";
 
   const SELECTORS = Object.freeze({
-    door: "[data-house-control-pad-open]",
+    open: "[data-house-control-pad-open]",
     root: "[data-house-control-pad]",
     dialog: "[data-house-dialog]",
     backdrop: "[data-house-backdrop]",
@@ -42,10 +27,9 @@
     svg: "[data-house-svg]",
     markers: "[data-house-markers]",
     details: "[data-house-details]",
-    route: "[data-house-route]",
-    selectable: "[data-house-select]",
     room: "[data-house-room]",
-    avatar: "[data-house-avatar]"
+    guide: "[data-house-guide]",
+    route: "[data-house-route]"
   });
 
   const EVENTS = Object.freeze({
@@ -75,335 +59,207 @@
     destroyed: "destroyed"
   });
 
-  const MAP = deepFreeze({
-    contract: CONTRACT,
-
-    estate: {
-      id: "diamond-gate-heart-estate",
-      eyebrow: "Diamond Gate Bridge",
-      label: "The House Map",
-      description:
-        "Choose a chamber, world, guide, or diagnostic path from the Heart Estate."
-    },
+  const ESTATE = deepFreeze({
+    id: "diamond-gate-nine-room-estate",
+    eyebrow: "Diamond Gate Bridge",
+    label: "The House Map",
+    description:
+      "Nine primary rooms form the public estate. Select a room gem to preview its purpose and enter its route.",
 
     viewBox: {
       minX: 0,
       minY: 0,
-      width: 1000,
-      height: 720
+      width: 1200,
+      height: 900
     },
 
-    heartPath:
-      "M500 668 C438 618 224 493 143 348 C75 226 119 92 253 68 C346 51 428 101 500 184 C572 101 654 51 747 68 C881 92 925 226 857 348 C776 493 562 618 500 668 Z",
+    center: {
+      x: 600,
+      y: 450
+    },
+
+    guide: {
+      id: "house-guide",
+      label: "House Guide",
+      shortLabel: "Guide",
+      description:
+        "The center of the estate. Use the guide to reset the map and review the complete nine-room structure.",
+      marker: {
+        x: 600,
+        y: 450
+      }
+    },
 
     rooms: [
       {
-        id: "website-grand-hall",
-        label: "Website Grand Hall",
-        shortLabel: "Website",
+        id: "main-hall",
+        order: 1,
+        label: "Main Hall",
+        shortLabel: "Main Hall",
+        category: "Public Center",
         description:
-          "Enter the traditional Diamond Gate Bridge website and its primary public pages.",
+          "The primary public center of the House and the main entrance into the traditional website.",
         route: "/home/",
         marker: {
-          x: 500,
-          y: 120
-        },
-        polygon: [
-          [388, 82],
-          [500, 54],
-          [612, 82],
-          [582, 194],
-          [500, 226],
-          [418, 194]
-        ]
+          x: 600,
+          y: 112
+        }
       },
 
       {
-        id: "guide-library",
-        label: "Guide Library",
-        shortLabel: "Guide",
+        id: "law-library",
+        order: 2,
+        label: "Law Library",
+        shortLabel: "Law",
+        category: "Law and Coherence",
         description:
-          "Open the site guide and instructions for navigating the House.",
-        route: "/site-guide/",
+          "The estate chamber for laws, governing principles, boundaries, coherence, and admissibility.",
+        route: "/laws/",
         marker: {
-          x: 282,
+          x: 835,
           y: 190
-        },
-        polygon: [
-          [166, 112],
-          [300, 78],
-          [416, 144],
-          [382, 258],
-          [250, 282],
-          [150, 220]
-        ]
+        }
       },
 
       {
-        id: "jeeves-salon",
-        label: "Jeeves Salon",
-        shortLabel: "Jeeves",
+        id: "council-room",
+        order: 3,
+        label: "Council Room",
+        shortLabel: "Council",
+        category: "Coherence Diagnostic",
         description:
-          "Talk directly to Jeeves, the House guide and estate interpreter.",
-        route: "/showroom/globe/hearth/jeeves/",
-        marker: {
-          x: 718,
-          y: 190
-        },
-        polygon: [
-          [584, 144],
-          [700, 78],
-          [834, 112],
-          [850, 220],
-          [750, 282],
-          [618, 258]
-        ]
-      },
-
-      {
-        id: "atlas-observatory",
-        label: "Atlas Observatory",
-        shortLabel: "Atlas",
-        description:
-          "Enter the planetary atlas and choose among the available worlds.",
-        route: "/showroom/globe/",
-        marker: {
-          x: 208,
-          y: 360
-        },
-        polygon: [
-          [112, 252],
-          [250, 282],
-          [350, 360],
-          [286, 458],
-          [150, 438],
-          [88, 350]
-        ]
-      },
-
-      {
-        id: "mirrorland-gallery",
-        label: "Mirrorland Gallery",
-        shortLabel: "Mirrorland",
-        description:
-          "Enter Mirrorland and move into the interactive world layer.",
-        route: "/showroom/",
-        marker: {
-          x: 792,
-          y: 360
-        },
-        polygon: [
-          [650, 360],
-          [750, 282],
-          [888, 252],
-          [912, 350],
-          [850, 438],
-          [714, 458]
-        ]
-      },
-
-      {
-        id: "audralia-conservatory",
-        label: "Audralia Conservatory",
-        shortLabel: "Audralia",
-        description:
-          "Enter Audralia, its planetary conservatory, and its living world.",
-        route: "/showroom/globe/audralia/",
-        marker: {
-          x: 318,
-          y: 515
-        },
-        polygon: [
-          [150, 438],
-          [286, 458],
-          [430, 520],
-          [398, 618],
-          [282, 592],
-          [194, 526]
-        ]
-      },
-
-      {
-        id: "coherence-diagnostic-chamber",
-        label: "Coherence Diagnostic Chamber",
-        shortLabel: "Diagnostic",
-        description:
-          "Take the coherence diagnostic and begin the structured assessment path.",
+          "The chamber where coherence is examined, conditions are weighed, and the diagnostic path begins.",
         route: "/coherence-diagnostic/",
         marker: {
-          x: 682,
-          y: 515
-        },
-        polygon: [
-          [570, 520],
-          [714, 458],
-          [850, 438],
-          [806, 526],
-          [718, 592],
-          [602, 618]
-        ]
+          x: 1018,
+          y: 392
+        }
       },
 
       {
-        id: "hearth-chamber",
-        label: "Hearth Chamber",
-        shortLabel: "Hearth",
+        id: "hearth-room-lab",
+        order: 4,
+        label: "Hearth Room / The Lab",
+        shortLabel: "Hearth Lab",
+        category: "Living Laboratory",
         description:
-          "Enter Hearth, the central planetary and House-world chamber.",
+          "The estate laboratory inside Hearth, where the living world, House systems, experiments, and guided interpretation meet.",
         route: "/showroom/globe/hearth/",
         marker: {
-          x: 500,
-          y: 574
-        },
-        polygon: [
-          [430, 520],
-          [500, 476],
-          [570, 520],
-          [602, 618],
-          [500, 674],
-          [398, 618]
-        ]
-      }
-    ],
+          x: 974,
+          y: 650
+        }
+      },
 
-    avatars: [
       {
-        id: "house-guide",
-        label: "House Guide",
-        shortLabel: "Guide",
-        role: "Estate Interpreter",
+        id: "portrait-hall",
+        order: 5,
+        label: "Portrait Hall",
+        shortLabel: "Portrait Hall",
+        category: "Characters",
         description:
-          "The central guide can explain the House and direct you to its rooms.",
-        route: "/showroom/globe/hearth/jeeves/",
+          "The hall of characters, inhabitants, identities, and narrative presences throughout the estate.",
+        route: "/characters/",
         marker: {
-          x: 500,
-          y: 356
-        }
-      }
-    ],
-
-    corridors: [
-      {
-        id: "corridor-guide-library",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "guide-library"
+          x: 748,
+          y: 798
         }
       },
 
       {
-        id: "corridor-website",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "website-grand-hall"
+        id: "portrait-room",
+        order: 6,
+        label: "Portrait Room / Host Portrait",
+        shortLabel: "Host Portrait",
+        category: "Host Identity",
+        description:
+          "The estate portrait room for the host, the Underdog identity, and the human center behind the House.",
+        route: "/about-this-underdog/",
+        marker: {
+          x: 452,
+          y: 798
         }
       },
 
       {
-        id: "corridor-jeeves",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "jeeves-salon"
+        id: "product-gallery",
+        order: 7,
+        label: "Product Gallery",
+        shortLabel: "Products",
+        category: "Usable Value",
+        description:
+          "The public gallery for tools, products, applications, and usable expressions of the estate.",
+        route: "/products/",
+        marker: {
+          x: 226,
+          y: 650
         }
       },
 
       {
-        id: "corridor-atlas",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "atlas-observatory"
+        id: "atlas-study",
+        order: 8,
+        label: "Atlas Study",
+        shortLabel: "Atlas",
+        category: "World Study",
+        description:
+          "The parent world-study chamber containing the estate's planetary routes, worlds, and annexes.",
+        route: "/showroom/globe/",
+        marker: {
+          x: 182,
+          y: 392
         }
       },
 
       {
-        id: "corridor-mirrorland",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "mirrorland-gallery"
-        }
-      },
-
-      {
-        id: "corridor-audralia",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "audralia-conservatory"
-        }
-      },
-
-      {
-        id: "corridor-diagnostic",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "coherence-diagnostic-chamber"
-        }
-      },
-
-      {
-        id: "corridor-hearth",
-        from: {
-          type: "avatar",
-          id: "house-guide"
-        },
-        to: {
-          type: "room",
-          id: "hearth-chamber"
+        id: "atrium",
+        order: 9,
+        label: "Atrium",
+        shortLabel: "Atrium",
+        category: "Mirrorland Entrance",
+        description:
+          "The main entrance into Mirrorland, the estate's interactive narrative and world-expression layer.",
+        route: "/showroom/",
+        marker: {
+          x: 365,
+          y: 190
         }
       }
     ]
   });
 
-  const existingController = global[PUBLIC_GLOBAL];
+  validateEstate(ESTATE);
+
+  const priorController = global[PUBLIC_GLOBAL];
 
   if (
-    existingController &&
-    typeof existingController.destroy === "function"
+    priorController &&
+    typeof priorController.destroy === "function"
   ) {
     try {
-      existingController.destroy("full-file-renewal");
+      priorController.destroy("authority-replacement");
     } catch (_error) {
-      removeExistingRoot();
+      removeExistingRoots();
     }
   } else {
-    removeExistingRoot();
+    removeExistingRoots();
+  }
+
+  try {
+    delete global[PUBLIC_GLOBAL];
+  } catch (_error) {
+    // The new authority is installed below.
   }
 
   const state = {
-    lifecycleState: STATES.uninitialized,
-    previousState: "",
+    lifecycle: STATES.uninitialized,
+    previousLifecycle: "",
     initialized: false,
     ready: false,
     mounted: false,
     open: false,
     destroyed: false,
+
     root: null,
     dialog: null,
     backdrop: null,
@@ -413,46 +269,56 @@
     svg: null,
     markersLayer: null,
     detailsPanel: null,
+    guideButton: null,
+
+    selectedRoomId: "",
+    activeContext: "",
     activeDoor: null,
     returnFocusTarget: null,
-    selectedType: "",
-    selectedId: "",
-    activeContext: "",
+
     listeners: [],
     backgroundRecords: [],
     closeTimer: null,
+
     openCount: 0,
     closeCount: 0,
     routeCount: 0,
+
     initializedAt: "",
     openedAt: "",
     closedAt: "",
     destroyedAt: "",
-    lastUpdatedAt: nowIso()
+    updatedAt: nowIso()
   };
 
   const controller = Object.freeze({
     contract: CONTRACT,
+    roomCount: ESTATE.rooms.length,
+
     init,
     open,
     close,
     toggle,
     rebind,
+    selectRoom,
     routeTo,
+    getRegistry,
     getStatus,
     getSnapshot,
     destroy
   });
 
-  Object.defineProperty(global, PUBLIC_GLOBAL, {
-    configurable: true,
-    enumerable: true,
-    writable: false,
-    value: controller
-  });
-
-  publishStatus();
+  installController();
   autoBoot();
+
+  function installController() {
+    Object.defineProperty(global, PUBLIC_GLOBAL, {
+      configurable: true,
+      enumerable: true,
+      writable: false,
+      value: controller
+    });
+  }
 
   function autoBoot() {
     if (document.readyState === "loading") {
@@ -474,19 +340,23 @@
 
   function init() {
     if (state.destroyed) {
-      return makeResult(
+      return result(
         false,
         STATES.destroyed,
         "The House Map runtime has been destroyed."
       );
     }
 
-    if (state.initialized && state.root && state.root.isConnected) {
+    if (
+      state.initialized &&
+      state.root &&
+      state.root.isConnected
+    ) {
       bindRuntime();
 
-      return makeResult(
+      return result(
         true,
-        state.lifecycleState,
+        state.lifecycle,
         "The House Map is already initialized."
       );
     }
@@ -495,7 +365,8 @@
 
     try {
       buildRoot();
-      renderMap();
+      renderEstate();
+      renderGuideDetails();
       bindRuntime();
 
       state.initialized = true;
@@ -504,20 +375,20 @@
         state.root &&
         state.root.isConnected
       );
+
       state.initializedAt =
         state.initializedAt ||
         nowIso();
 
       transitionTo(STATES.ready);
-      updateStatus("House Map ready.");
+      updateStatus("Nine-room estate ready.");
 
       dispatch(EVENTS.ready, {
-        reason: "initialization-complete"
+        reason: "initialization-complete",
+        roomCount: ESTATE.rooms.length
       });
 
-      publishStatus();
-
-      return makeResult(
+      return result(
         true,
         STATES.ready,
         "The House Map initialized successfully."
@@ -526,19 +397,14 @@
       state.ready = false;
 
       transitionTo(STATES.failed);
-
-      updateStatus(
-        "The House Map could not initialize."
-      );
+      updateStatus("The House Map could not initialize.");
 
       dispatch(EVENTS.error, {
         reason: "initialization-failed",
         error: normalizeError(error)
       });
 
-      publishStatus();
-
-      return makeResult(
+      return result(
         false,
         STATES.failed,
         "The House Map could not initialize.",
@@ -551,7 +417,7 @@
 
   function open(request) {
     if (state.destroyed) {
-      return makeResult(
+      return result(
         false,
         STATES.destroyed,
         "The House Map runtime has been destroyed."
@@ -566,27 +432,29 @@
       }
     }
 
-    if (!state.root || !state.dialog) {
-      return makeResult(
+    if (
+      !state.root ||
+      !state.dialog
+    ) {
+      return result(
         false,
         STATES.failed,
         "The House Map overlay is unavailable."
       );
     }
 
-    const normalizedRequest =
-      normalizeOpenRequest(request);
+    const normalized = normalizeOpenRequest(request);
 
     if (state.open) {
       state.activeDoor =
-        normalizedRequest.door ||
+        normalized.door ||
         state.activeDoor;
 
       state.activeContext =
-        normalizedRequest.context ||
+        normalized.context ||
         state.activeContext;
 
-      return makeResult(
+      return result(
         true,
         STATES.open,
         "The House Map is already open."
@@ -597,7 +465,7 @@
       EVENTS.openRequest,
       {
         reason: "open-request",
-        context: normalizedRequest.context
+        context: normalized.context
       },
       {
         cancelable: true
@@ -605,39 +473,31 @@
     );
 
     if (openRequestEvent.defaultPrevented) {
-      return makeResult(
+      return result(
         false,
-        state.lifecycleState,
+        state.lifecycle,
         "The House Map open request was canceled."
       );
     }
 
-    state.activeDoor =
-      normalizedRequest.door;
-
-    state.activeContext =
-      normalizedRequest.context;
-
-    state.returnFocusTarget =
-      resolveReturnFocusTarget(
-        normalizedRequest.door
-      );
+    state.activeDoor = normalized.door;
+    state.activeContext = normalized.context;
+    state.returnFocusTarget = resolveReturnFocusTarget(
+      normalized.door
+    );
 
     transitionTo(STATES.opening);
+    clearCloseTimer();
 
     try {
-      clearCloseTimer();
-
       state.root.hidden = false;
-      state.root.setAttribute(
-        "aria-hidden",
-        "false"
-      );
-      state.root.dataset.houseOpen = "true";
-      state.root.dataset.houseContext =
-        state.activeContext;
+      state.root.setAttribute("aria-hidden", "false");
+      state.root.dataset.houseContext = state.activeContext;
+
+      void state.root.offsetWidth;
 
       state.open = true;
+      state.root.dataset.houseOpen = "true";
 
       applyBackgroundCustody();
       lockDocumentScroll();
@@ -647,17 +507,16 @@
       state.openCount += 1;
       state.openedAt = nowIso();
 
-      updateStatus("House Map open.");
+      updateStatus("Nine-room estate open.");
       focusInitialElement();
 
       dispatch(EVENTS.open, {
         reason: "open-complete",
-        context: state.activeContext
+        context: state.activeContext,
+        roomCount: ESTATE.rooms.length
       });
 
-      publishStatus();
-
-      return makeResult(
+      return result(
         true,
         STATES.open,
         "The House Map opened."
@@ -668,12 +527,9 @@
       restoreBackgroundCustody();
       unlockDocumentScroll();
 
-      state.root.hidden = true;
-      state.root.setAttribute(
-        "aria-hidden",
-        "true"
-      );
       state.root.dataset.houseOpen = "false";
+      state.root.hidden = true;
+      state.root.setAttribute("aria-hidden", "true");
 
       transitionTo(STATES.ready);
 
@@ -682,9 +538,7 @@
         error: normalizeError(error)
       });
 
-      publishStatus();
-
-      return makeResult(
+      return result(
         false,
         STATES.ready,
         "The House Map could not open.",
@@ -697,7 +551,7 @@
 
   function close(reason) {
     if (state.destroyed) {
-      return makeResult(
+      return result(
         false,
         STATES.destroyed,
         "The House Map runtime has been destroyed."
@@ -705,9 +559,9 @@
     }
 
     if (!state.open) {
-      return makeResult(
+      return result(
         true,
-        state.lifecycleState,
+        state.lifecycle,
         "The House Map is already closed."
       );
     }
@@ -727,7 +581,7 @@
     );
 
     if (closeRequestEvent.defaultPrevented) {
-      return makeResult(
+      return result(
         false,
         STATES.open,
         "The House Map close request was canceled."
@@ -748,12 +602,10 @@
 
     state.closeTimer = global.setTimeout(
       completeClose,
-      prefersReducedMotion()
-        ? 0
-        : 280
+      prefersReducedMotion() ? 0 : 280
     );
 
-    return makeResult(
+    return result(
       true,
       STATES.closing,
       "The House Map is closing."
@@ -770,24 +622,19 @@
       }
 
       state.root.hidden = true;
-      state.root.setAttribute(
-        "aria-hidden",
-        "true"
-      );
+      state.root.setAttribute("aria-hidden", "true");
 
       transitionTo(STATES.closed);
 
       state.closeCount += 1;
       state.closedAt = nowIso();
 
-      updateStatus("House Map closed.");
+      updateStatus("Nine-room estate closed.");
       restoreFocus();
 
       dispatch(EVENTS.close, {
         reason: closeReason
       });
-
-      publishStatus();
     }
   }
 
@@ -799,7 +646,7 @@
 
   function rebind() {
     if (state.destroyed) {
-      return makeResult(
+      return result(
         false,
         STATES.destroyed,
         "The House Map runtime has been destroyed."
@@ -808,28 +655,83 @@
 
     bindRuntime();
 
-    return makeResult(
+    return result(
       true,
-      state.lifecycleState,
+      state.lifecycle,
       "The House Map controls were rebound."
     );
   }
 
-  function routeTo(request) {
+  function selectRoom(roomId, options) {
     if (state.destroyed) {
-      return makeResult(
+      return result(
         false,
         STATES.destroyed,
         "The House Map runtime has been destroyed."
       );
     }
 
-    const normalized =
-      normalizeRouteRequest(request);
+    const id = safeIdentifier(roomId);
+    const room = findRoom(id);
+
+    if (!room) {
+      return result(
+        false,
+        state.lifecycle,
+        "The requested estate room does not exist."
+      );
+    }
+
+    state.selectedRoomId = room.id;
+
+    syncSelection();
+    renderRoomDetails(room);
+
+    if (
+      !options ||
+      options.silent !== true
+    ) {
+      updateStatus(`${room.label} selected.`);
+
+      dispatch(EVENTS.select, {
+        reason: "room-selection",
+        roomId: room.id,
+        roomLabel: room.label,
+        route: room.route
+      });
+    }
+
+    if (
+      options &&
+      options.focus === true
+    ) {
+      focusSelectedMarker();
+    }
+
+    return result(
+      true,
+      state.lifecycle,
+      `${room.label} selected.`,
+      {
+        roomId: room.id,
+        route: room.route
+      }
+    );
+  }
+
+  function routeTo(request) {
+    if (state.destroyed) {
+      return result(
+        false,
+        STATES.destroyed,
+        "The House Map runtime has been destroyed."
+      );
+    }
+
+    const normalized = normalizeRouteRequest(request);
 
     if (!normalized.ok) {
       updateStatus(normalized.reason);
-
       return normalized;
     }
 
@@ -837,8 +739,8 @@
       EVENTS.routeRequest,
       {
         reason: "route-request",
-        targetType: normalized.type,
-        targetId: normalized.id,
+        roomId: normalized.room.id,
+        roomLabel: normalized.room.label,
         route: normalized.route
       },
       {
@@ -847,13 +749,11 @@
     );
 
     if (routeRequestEvent.defaultPrevented) {
-      updateStatus(
-        "Navigation request canceled."
-      );
+      updateStatus("Navigation request canceled.");
 
-      return makeResult(
+      return result(
         false,
-        state.lifecycleState,
+        state.lifecycle,
         "Navigation request canceled."
       );
     }
@@ -864,24 +764,20 @@
 
     dispatch(EVENTS.routeCommit, {
       reason: "route-commit",
-      targetType: normalized.type,
-      targetId: normalized.id,
+      roomId: normalized.room.id,
+      roomLabel: normalized.room.label,
       route: normalized.route
     });
 
-    publishStatus();
-
     try {
-      global.location.assign(
-        normalized.route
-      );
+      global.location.assign(normalized.route);
 
-      return makeResult(
+      return result(
         true,
         STATES.routing,
         "Navigation committed.",
         {
-          targetId: normalized.id,
+          roomId: normalized.room.id,
           route: normalized.route
         }
       );
@@ -897,11 +793,9 @@
         error: normalizeError(error)
       });
 
-      publishStatus();
-
-      return makeResult(
+      return result(
         false,
-        state.lifecycleState,
+        state.lifecycle,
         "Navigation could not be completed.",
         {
           error: normalizeError(error)
@@ -910,33 +804,52 @@
     }
   }
 
+  function getRegistry() {
+    return deepFreeze({
+      contract: CONTRACT,
+      estateId: ESTATE.id,
+      roomCount: ESTATE.rooms.length,
+      rooms: ESTATE.rooms.map((room) => ({
+        id: room.id,
+        order: room.order,
+        label: room.label,
+        shortLabel: room.shortLabel,
+        category: room.category,
+        description: room.description,
+        route: room.route
+      }))
+    });
+  }
+
   function getStatus() {
-    return Object.freeze(
-      buildStatusSnapshot()
-    );
+    return Object.freeze(buildStatus());
   }
 
   function getSnapshot() {
     return deepFreeze({
-      status: buildStatusSnapshot(),
-      map: {
-        estate: MAP.estate,
-        viewBox: MAP.viewBox,
-        roomCount: MAP.rooms.length,
-        avatarCount: MAP.avatars.length,
-        corridorCount:
-          MAP.corridors.length
+      status: buildStatus(),
+
+      estate: {
+        id: ESTATE.id,
+        label: ESTATE.label,
+        roomCount: ESTATE.rooms.length
       },
+
       selection: {
-        type: state.selectedType,
-        id: state.selectedId
-      }
+        roomId: state.selectedRoomId
+      },
+
+      registry: ESTATE.rooms.map((room) => ({
+        id: room.id,
+        label: room.label,
+        route: room.route
+      }))
     });
   }
 
   function destroy(reason) {
     if (state.destroyed) {
-      return makeResult(
+      return result(
         true,
         STATES.destroyed,
         "The House Map runtime is already destroyed."
@@ -952,9 +865,7 @@
       state.root &&
       state.root.parentNode
     ) {
-      state.root.parentNode.removeChild(
-        state.root
-      );
+      state.root.parentNode.removeChild(state.root);
     }
 
     state.root = null;
@@ -966,8 +877,11 @@
     state.svg = null;
     state.markersLayer = null;
     state.detailsPanel = null;
+    state.guideButton = null;
+
     state.activeDoor = null;
     state.returnFocusTarget = null;
+
     state.open = false;
     state.ready = false;
     state.mounted = false;
@@ -986,20 +900,17 @@
         "destroy"
     });
 
-    publishStatus();
-
     if (
-      global[PUBLIC_GLOBAL] ===
-      controller
+      global[PUBLIC_GLOBAL] === controller
     ) {
       try {
         delete global[PUBLIC_GLOBAL];
       } catch (_error) {
-        // Runtime cleanup is already complete.
+        // Destruction is already complete.
       }
     }
 
-    return makeResult(
+    return result(
       true,
       STATES.destroyed,
       "The House Map runtime was destroyed."
@@ -1007,135 +918,86 @@
   }
 
   function buildRoot() {
-    removeExistingRoot();
+    removeExistingRoots();
 
-    const root = createElement(
-      "div",
-      {
-        className: "house-control-pad",
-        attributes: {
-          "data-house-control-pad": "",
-          "data-house-contract":
-            CONTRACT,
-          "data-house-state":
-            STATES.closed,
-          "data-house-ready":
-            "false",
-          "data-house-open":
-            "false",
-          "data-house-context":
-            "",
-          "data-house-selected-type":
-            "",
-          "data-house-selected-id":
-            "",
-          "aria-hidden":
-            "true"
-        }
+    const root = createElement("div", {
+      className: "house-control-pad",
+      attributes: {
+        "data-house-control-pad": "",
+        "data-house-contract": CONTRACT,
+        "data-house-state": STATES.closed,
+        "data-house-ready": "false",
+        "data-house-open": "false",
+        "data-house-room-count": String(
+          ESTATE.rooms.length
+        ),
+        "data-house-selected-room": "",
+        "data-house-context": "",
+        "aria-hidden": "true"
       }
-    );
+    });
 
     root.hidden = true;
 
-    const backdrop = createElement(
-      "div",
-      {
-        className:
-          "house-control-pad__backdrop",
-        attributes: {
-          "data-house-backdrop": "",
-          "aria-hidden": "true"
-        }
+    const backdrop = createElement("div", {
+      className: "house-control-pad__backdrop",
+      attributes: {
+        "data-house-backdrop": "",
+        "aria-hidden": "true"
       }
-    );
+    });
 
-    const dialog = createElement(
-      "section",
-      {
-        className:
-          "house-control-pad__dialog",
-        attributes: {
-          "data-house-dialog": "",
-          role: "dialog",
-          "aria-modal": "true",
-          "aria-labelledby":
-            "house-control-pad-title",
-          "aria-describedby":
-            "house-control-pad-description",
-          tabindex: "-1"
-        }
+    const dialog = createElement("section", {
+      className: "house-control-pad__dialog",
+      attributes: {
+        "data-house-dialog": "",
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-labelledby": "house-control-pad-title",
+        "aria-describedby":
+          "house-control-pad-description",
+        tabindex: "-1"
       }
-    );
+    });
 
-    const header = createElement(
-      "header",
-      {
-        className:
-          "house-control-pad__header"
-      }
-    );
+    const header = createElement("header", {
+      className: "house-control-pad__header"
+    });
 
-    const heading = createElement(
-      "div",
-      {
-        className:
-          "house-control-pad__heading"
-      }
-    );
+    const heading = createElement("div", {
+      className: "house-control-pad__heading"
+    });
 
-    const eyebrow = createElement(
-      "p",
-      {
-        className:
-          "house-control-pad__eyebrow",
-        text:
-          MAP.estate.eyebrow
-      }
-    );
+    const eyebrow = createElement("p", {
+      className: "house-control-pad__eyebrow",
+      text: ESTATE.eyebrow
+    });
 
-    const title = createElement(
-      "h2",
-      {
-        className:
-          "house-control-pad__title",
-        text:
-          MAP.estate.label,
-        attributes: {
-          id:
-            "house-control-pad-title"
-        }
+    const title = createElement("h2", {
+      className: "house-control-pad__title",
+      text: ESTATE.label,
+      attributes: {
+        id: "house-control-pad-title"
       }
-    );
+    });
 
-    const description = createElement(
-      "p",
-      {
-        className:
-          "house-control-pad__description",
-        text:
-          MAP.estate.description,
-        attributes: {
-          id:
-            "house-control-pad-description"
-        }
+    const description = createElement("p", {
+      className: "house-control-pad__description",
+      text: ESTATE.description,
+      attributes: {
+        id: "house-control-pad-description"
       }
-    );
+    });
 
-    const closeButton = createElement(
-      "button",
-      {
-        className:
-          "house-control-pad__close",
-        text:
-          "Close",
-        attributes: {
-          type: "button",
-          "data-house-close": "",
-          "aria-label":
-            "Close the House Map"
-        }
+    const closeButton = createElement("button", {
+      className: "house-control-pad__close",
+      text: "Close",
+      attributes: {
+        type: "button",
+        "data-house-close": "",
+        "aria-label": "Close the House Map"
       }
-    );
+    });
 
     heading.append(
       eyebrow,
@@ -1148,98 +1010,63 @@
       closeButton
     );
 
-    const statusNode = createElement(
-      "div",
-      {
-        className:
-          "house-control-pad__status",
-        text:
-          "House Map ready.",
-        attributes: {
-          "data-house-status": "",
-          role: "status",
-          "aria-live": "polite",
-          "aria-atomic": "true"
-        }
+    const statusNode = createElement("div", {
+      className: "house-control-pad__status",
+      text: "Nine-room estate ready.",
+      attributes: {
+        "data-house-status": "",
+        role: "status",
+        "aria-live": "polite",
+        "aria-atomic": "true"
       }
-    );
+    });
 
-    const content = createElement(
-      "div",
-      {
-        className:
-          "house-control-pad__content"
+    const content = createElement("div", {
+      className: "house-control-pad__content"
+    });
+
+    const estateNode = createElement("div", {
+      className: "house-control-pad__estate",
+      attributes: {
+        "data-house-estate": "",
+        "data-house-digital-gem-map": "true"
       }
-    );
+    });
 
-    const estateNode = createElement(
-      "div",
-      {
-        className:
-          "house-control-pad__estate",
-        attributes: {
-          "data-house-estate": ""
-        }
+    const svg = createSvgElement("svg", {
+      class: "house-control-pad__svg",
+      "data-house-svg": "",
+      "aria-hidden": "true",
+      focusable: "false",
+      viewBox: [
+        ESTATE.viewBox.minX,
+        ESTATE.viewBox.minY,
+        ESTATE.viewBox.width,
+        ESTATE.viewBox.height
+      ].join(" "),
+      preserveAspectRatio: "xMidYMid meet"
+    });
+
+    const markersLayer = createElement("div", {
+      className: "house-control-pad__markers",
+      attributes: {
+        "data-house-markers": ""
       }
-    );
+    });
 
-    const svg = createSvgElement(
-      "svg",
-      {
-        class:
-          "house-control-pad__svg",
-        "data-house-svg":
-          "",
-        "aria-hidden":
-          "true",
-        focusable:
-          "false",
-        viewBox:
-          [
-            MAP.viewBox.minX,
-            MAP.viewBox.minY,
-            MAP.viewBox.width,
-            MAP.viewBox.height
-          ].join(" "),
-        preserveAspectRatio:
-          "xMidYMid meet"
+    const detailsPanel = createElement("aside", {
+      className: "house-control-pad__details",
+      attributes: {
+        id: "house-control-pad-details",
+        "data-house-details": "",
+        "aria-live": "polite"
       }
-    );
+    });
 
-    const markersLayer =
-      createElement(
-        "div",
-        {
-          className:
-            "house-control-pad__markers",
-          attributes: {
-            "data-house-markers": ""
-          }
-        }
-      );
-
-    const detailsPanel =
-      createElement(
-        "aside",
-        {
-          className:
-            "house-control-pad__details",
-          attributes: {
-            "data-house-details": "",
-            "aria-live": "polite"
-          }
-        }
-      );
-
-    const footer = createElement(
-      "footer",
-      {
-        className:
-          "house-control-pad__footer",
-        text:
-          "Select a destination, then choose Enter."
-      }
-    );
+    const footer = createElement("footer", {
+      className: "house-control-pad__footer",
+      text: "Nine rooms · one estate"
+    });
 
     estateNode.append(
       svg,
@@ -1272,608 +1099,590 @@
     state.statusNode = statusNode;
     state.estateNode = estateNode;
     state.svg = svg;
-    state.markersLayer =
-      markersLayer;
-    state.detailsPanel =
-      detailsPanel;
+    state.markersLayer = markersLayer;
+    state.detailsPanel = detailsPanel;
     state.mounted = true;
   }
 
-  function renderMap() {
+  function renderEstate() {
     if (
       !state.svg ||
-      !state.markersLayer ||
-      !state.detailsPanel
+      !state.markersLayer
     ) {
       throw new Error(
-        "The House Map DOM contract is incomplete."
+        "The House Map rendering surface is unavailable."
       );
     }
 
     clearElement(state.svg);
     clearElement(state.markersLayer);
-    clearElement(state.detailsPanel);
 
-    const defs = createSvgElement(
-      "defs"
+    const defs = createSvgElement("defs");
+
+    const estateGradient = createSvgElement(
+      "radialGradient",
+      {
+        id: "houseEstateGradient",
+        cx: "50%",
+        cy: "46%",
+        r: "72%"
+      }
     );
-
-    const estateGradient =
-      createSvgElement(
-        "radialGradient",
-        {
-          id:
-            "houseEstateGradient",
-          cx:
-            "50%",
-          cy:
-            "40%",
-          r:
-            "68%"
-        }
-      );
 
     estateGradient.append(
-      createSvgElement(
-        "stop",
-        {
-          offset:
-            "0%",
-          "stop-color":
-            "#183977",
-          "stop-opacity":
-            ".78"
-        }
-      ),
-      createSvgElement(
-        "stop",
-        {
-          offset:
-            "48%",
-          "stop-color":
-            "#07152f",
-          "stop-opacity":
-            ".94"
-        }
-      ),
-      createSvgElement(
-        "stop",
-        {
-          offset:
-            "100%",
-          "stop-color":
-            "#020711",
-          "stop-opacity":
-            "1"
-        }
-      )
+      createSvgElement("stop", {
+        offset: "0%",
+        "stop-color": "#174687",
+        "stop-opacity": ".48"
+      }),
+      createSvgElement("stop", {
+        offset: "46%",
+        "stop-color": "#071a38",
+        "stop-opacity": ".76"
+      }),
+      createSvgElement("stop", {
+        offset: "100%",
+        "stop-color": "#01040d",
+        "stop-opacity": ".98"
+      })
     );
 
-    const roomGradient =
-      createSvgElement(
-        "linearGradient",
-        {
-          id:
-            "houseRoomGradient",
-          x1:
-            "0%",
-          y1:
-            "0%",
-          x2:
-            "100%",
-          y2:
-            "100%"
-        }
-      );
+    const roomGradient = createSvgElement(
+      "linearGradient",
+      {
+        id: "houseRoomGradient",
+        x1: "0%",
+        y1: "0%",
+        x2: "100%",
+        y2: "100%"
+      }
+    );
 
     roomGradient.append(
-      createSvgElement(
-        "stop",
-        {
-          offset:
-            "0%",
-          "stop-color":
-            "#8dd8ff",
-          "stop-opacity":
-            ".20"
-        }
-      ),
-      createSvgElement(
-        "stop",
-        {
-          offset:
-            "52%",
-          "stop-color":
-            "#244f9a",
-          "stop-opacity":
-            ".18"
-        }
-      ),
-      createSvgElement(
-        "stop",
-        {
-          offset:
-            "100%",
-          "stop-color":
-            "#f3c86f",
-          "stop-opacity":
-            ".10"
-        }
-      )
+      createSvgElement("stop", {
+        offset: "0%",
+        "stop-color": "#d7f4ff",
+        "stop-opacity": ".78"
+      }),
+      createSvgElement("stop", {
+        offset: "28%",
+        "stop-color": "#55a9ff",
+        "stop-opacity": ".42"
+      }),
+      createSvgElement("stop", {
+        offset: "62%",
+        "stop-color": "#142d63",
+        "stop-opacity": ".74"
+      }),
+      createSvgElement("stop", {
+        offset: "100%",
+        "stop-color": "#f3c86f",
+        "stop-opacity": ".38"
+      })
     );
 
-    const glowFilter =
-      createSvgElement(
-        "filter",
-        {
-          id:
-            "houseEstateGlow",
-          x:
-            "-30%",
-          y:
-            "-30%",
-          width:
-            "160%",
-          height:
-            "160%"
-        }
-      );
-
-    glowFilter.append(
-      createSvgElement(
-        "feGaussianBlur",
-        {
-          stdDeviation:
-            "9",
-          result:
-            "blur"
-        }
-      ),
-      createSvgElement(
-        "feMerge"
-      )
+    const roomCoreGradient = createSvgElement(
+      "radialGradient",
+      {
+        id: "houseRoomCoreGradient",
+        cx: "35%",
+        cy: "28%",
+        r: "82%"
+      }
     );
 
-    const merge =
-      glowFilter.querySelector(
-        "feMerge"
-      );
+    roomCoreGradient.append(
+      createSvgElement("stop", {
+        offset: "0%",
+        "stop-color": "#ffffff",
+        "stop-opacity": ".72"
+      }),
+      createSvgElement("stop", {
+        offset: "34%",
+        "stop-color": "#8dd8ff",
+        "stop-opacity": ".34"
+      }),
+      createSvgElement("stop", {
+        offset: "76%",
+        "stop-color": "#08245b",
+        "stop-opacity": ".58"
+      }),
+      createSvgElement("stop", {
+        offset: "100%",
+        "stop-color": "#020711",
+        "stop-opacity": ".82"
+      })
+    );
+
+    const glow = createSvgElement("filter", {
+      id: "houseEstateGlow",
+      x: "-40%",
+      y: "-40%",
+      width: "180%",
+      height: "180%"
+    });
+
+    glow.append(
+      createSvgElement("feGaussianBlur", {
+        stdDeviation: "8",
+        result: "blur"
+      })
+    );
+
+    const merge = createSvgElement("feMerge");
 
     merge.append(
-      createSvgElement(
-        "feMergeNode",
-        {
-          in:
-            "blur"
-        }
-      ),
-      createSvgElement(
-        "feMergeNode",
-        {
-          in:
-            "SourceGraphic"
-        }
-      )
+      createSvgElement("feMergeNode", {
+        in: "blur"
+      }),
+      createSvgElement("feMergeNode", {
+        in: "SourceGraphic"
+      })
+    );
+
+    glow.append(merge);
+
+    const gridPattern = createSvgElement("pattern", {
+      id: "houseDigitalGrid",
+      width: "60",
+      height: "60",
+      patternUnits: "userSpaceOnUse"
+    });
+
+    gridPattern.append(
+      createSvgElement("path", {
+        d: "M 60 0 L 0 0 0 60",
+        fill: "none",
+        stroke: "rgba(141,216,255,.09)",
+        "stroke-width": "1"
+      })
     );
 
     defs.append(
       estateGradient,
       roomGradient,
-      glowFilter
+      roomCoreGradient,
+      glow,
+      gridPattern
     );
 
-    const estateBackdrop =
-      createSvgElement(
-        "path",
-        {
+    const background = createSvgElement("rect", {
+      class: "house-control-pad__digital-grid",
+      x: "0",
+      y: "0",
+      width: String(ESTATE.viewBox.width),
+      height: String(ESTATE.viewBox.height),
+      fill: "url(#houseDigitalGrid)"
+    });
+
+    const estateShell = createSvgElement("polygon", {
+      class: "house-control-pad__estate-shape",
+      points: polygonPoints(
+        ESTATE.center.x,
+        ESTATE.center.y,
+        455,
+        9,
+        -Math.PI / 2
+      ),
+      fill: "url(#houseEstateGradient)",
+      stroke: "rgba(243,200,111,.45)",
+      "stroke-width": "4",
+      filter: "url(#houseEstateGlow)"
+    });
+
+    const outerOrbit = createSvgElement("ellipse", {
+      class:
+        "house-control-pad__orbit house-control-pad__orbit--outer",
+      cx: String(ESTATE.center.x),
+      cy: String(ESTATE.center.y),
+      rx: "438",
+      ry: "352",
+      fill: "none",
+      stroke: "rgba(141,216,255,.24)",
+      "stroke-width": "2",
+      "stroke-dasharray": "9 15"
+    });
+
+    const middleOrbit = createSvgElement("ellipse", {
+      class:
+        "house-control-pad__orbit house-control-pad__orbit--middle",
+      cx: String(ESTATE.center.x),
+      cy: String(ESTATE.center.y),
+      rx: "316",
+      ry: "256",
+      fill: "none",
+      stroke: "rgba(243,200,111,.18)",
+      "stroke-width": "2",
+      "stroke-dasharray": "4 13"
+    });
+
+    const innerOrbit = createSvgElement("circle", {
+      class:
+        "house-control-pad__orbit house-control-pad__orbit--inner",
+      cx: String(ESTATE.center.x),
+      cy: String(ESTATE.center.y),
+      r: "126",
+      fill: "rgba(4,14,35,.54)",
+      stroke: "rgba(141,216,255,.26)",
+      "stroke-width": "3"
+    });
+
+    const network = createSvgElement("g", {
+      class: "house-control-pad__network"
+    });
+
+    ESTATE.rooms.forEach((room, index) => {
+      const nextRoom =
+        ESTATE.rooms[
+          (index + 1) %
+          ESTATE.rooms.length
+        ];
+
+      network.append(
+        createSvgElement("line", {
           class:
-            "house-control-pad__estate-shape",
-          d:
-            MAP.heartPath,
-          fill:
-            "url(#houseEstateGradient)",
-          stroke:
-            "rgba(243,200,111,.58)",
-          "stroke-width":
-            "5",
-          filter:
-            "url(#houseEstateGlow)"
-        }
-      );
-
-    const corridorGroup =
-      createSvgElement(
-        "g",
-        {
+            "house-control-pad__corridor house-control-pad__corridor--spoke",
+          "data-house-corridor": "",
+          "data-house-corridor-room": room.id,
+          x1: String(ESTATE.center.x),
+          y1: String(ESTATE.center.y),
+          x2: String(room.marker.x),
+          y2: String(room.marker.y)
+        }),
+        createSvgElement("line", {
           class:
-            "house-control-pad__corridors",
-          "data-house-corridors":
-            ""
-        }
+            "house-control-pad__corridor house-control-pad__corridor--ring",
+          "data-house-ring-link": "",
+          "data-house-ring-from": room.id,
+          "data-house-ring-to": nextRoom.id,
+          x1: String(room.marker.x),
+          y1: String(room.marker.y),
+          x2: String(nextRoom.marker.x),
+          y2: String(nextRoom.marker.y)
+        })
       );
+    });
 
-    MAP.corridors.forEach(
-      (
-        corridor,
-        index
-      ) => {
-        const start =
-          findMapItem(
-            corridor.from.type,
-            corridor.from.id
-          );
+    const roomsGroup = createSvgElement("g", {
+      class: "house-control-pad__rooms",
+      "data-house-room-gems": ""
+    });
 
-        const end =
-          findMapItem(
-            corridor.to.type,
-            corridor.to.id
-          );
-
-        if (!start || !end) {
-          return;
-        }
-
-        const line =
-          createSvgElement(
-            "line",
-            {
-              class:
-                "house-control-pad__corridor",
-              "data-house-corridor":
-                "",
-              "data-house-corridor-id":
-                corridor.id,
-              x1:
-                String(
-                  start.marker.x
-                ),
-              y1:
-                String(
-                  start.marker.y
-                ),
-              x2:
-                String(
-                  end.marker.x
-                ),
-              y2:
-                String(
-                  end.marker.y
-                )
-            }
-          );
-
-        line.style.setProperty(
-          "--house-corridor-index",
-          String(index)
-        );
-
-        corridorGroup.append(
-          line
-        );
-      }
-    );
-
-    const roomGroup =
-      createSvgElement(
-        "g",
-        {
-          class:
-            "house-control-pad__rooms",
-          "data-house-rooms":
-            ""
-        }
+    ESTATE.rooms.forEach((room, index) => {
+      roomsGroup.append(
+        createRoomGem(room, index)
       );
+    });
 
-    MAP.rooms.forEach(
-      (
-        room,
-        index
-      ) => {
-        const polygon =
-          createSvgElement(
-            "polygon",
-            {
-              class:
-                "house-control-pad__room-shape",
-              "data-house-room-shape":
-                "",
-              "data-house-room-id":
-                room.id,
-              points:
-                room.polygon
-                  .map(
-                    (point) =>
-                      `${point[0]},${point[1]}`
-                  )
-                  .join(" "),
-              fill:
-                "url(#houseRoomGradient)"
-            }
-          );
+    const centerHalo = createSvgElement("circle", {
+      class: "house-control-pad__guide-halo",
+      cx: String(ESTATE.center.x),
+      cy: String(ESTATE.center.y),
+      r: "88",
+      fill: "rgba(36,120,255,.10)",
+      stroke: "rgba(243,200,111,.32)",
+      "stroke-width": "2",
+      "stroke-dasharray": "5 9"
+    });
 
-        polygon.style.setProperty(
-          "--house-room-index",
-          String(index)
-        );
-
-        roomGroup.append(
-          polygon
-        );
-      }
-    );
-
-    const coreRing =
-      createSvgElement(
-        "circle",
-        {
-          class:
-            "house-control-pad__core-ring",
-          cx:
-            "500",
-          cy:
-            "356",
-          r:
-            "73"
-        }
-      );
-
-    const coreDiamond =
-      createSvgElement(
-        "path",
-        {
-          class:
-            "house-control-pad__core-diamond",
-          d:
-            "M500 292 L564 356 L500 420 L436 356 Z"
-        }
-      );
+    const centerDiamond = createSvgElement("path", {
+      class: "house-control-pad__guide-diamond",
+      d: [
+        `M ${ESTATE.center.x} ${ESTATE.center.y - 62}`,
+        `L ${ESTATE.center.x + 62} ${ESTATE.center.y}`,
+        `L ${ESTATE.center.x} ${ESTATE.center.y + 62}`,
+        `L ${ESTATE.center.x - 62} ${ESTATE.center.y}`,
+        "Z"
+      ].join(" "),
+      fill: "url(#houseRoomCoreGradient)",
+      stroke: "rgba(255,232,163,.72)",
+      "stroke-width": "3",
+      filter: "url(#houseEstateGlow)"
+    });
 
     state.svg.append(
       defs,
-      estateBackdrop,
-      corridorGroup,
-      roomGroup,
-      coreRing,
-      coreDiamond
+      background,
+      estateShell,
+      outerOrbit,
+      middleOrbit,
+      innerOrbit,
+      network,
+      roomsGroup,
+      centerHalo,
+      centerDiamond
     );
 
-    MAP.rooms.forEach(
-      (
-        room,
-        index
-      ) => {
-        state.markersLayer.append(
-          createMarker(
-            "room",
-            room,
-            index
-          )
-        );
+    ESTATE.rooms.forEach((room, index) => {
+      state.markersLayer.append(
+        createRoomMarker(room, index)
+      );
+    });
+
+    const guideButton = createElement("button", {
+      className:
+        "house-control-pad__marker house-control-pad__marker--avatar house-control-pad__guide",
+      attributes: {
+        type: "button",
+        "data-house-guide": "",
+        "aria-label": "Open the House Guide overview",
+        "aria-controls": "house-control-pad-details"
       }
+    });
+
+    guideButton.style.setProperty(
+      "--house-marker-x",
+      percentageX(ESTATE.guide.marker.x)
     );
 
-    MAP.avatars.forEach(
-      (
-        avatar,
-        index
-      ) => {
-        state.markersLayer.append(
-          createMarker(
-            "avatar",
-            avatar,
-            index
-          )
-        );
-      }
+    guideButton.style.setProperty(
+      "--house-marker-y",
+      percentageY(ESTATE.guide.marker.y)
     );
 
-    renderDefaultDetails();
+    guideButton.append(
+      createElement("span", {
+        className:
+          "house-control-pad__marker-label",
+        text: ESTATE.guide.shortLabel
+      })
+    );
+
+    state.markersLayer.append(guideButton);
+    state.guideButton = guideButton;
   }
 
-  function createMarker(
-    type,
-    item,
-    index
-  ) {
-    const marker = createElement(
-      "button",
-      {
-        className:
-          type === "room"
-            ? "house-control-pad__marker house-control-pad__marker--room"
-            : "house-control-pad__marker house-control-pad__marker--avatar",
-        attributes: {
-          type: "button",
-          "data-house-select": "",
-          "aria-pressed": "false",
-          "aria-label": item.label
-        }
-      }
+  function createRoomGem(room, index) {
+    const group = createSvgElement("g", {
+      class: "house-control-pad__room-gem",
+      "data-house-room-gem": "",
+      "data-house-room-id": room.id,
+      "data-house-selected": "false"
+    });
+
+    group.style.setProperty(
+      "--house-room-index",
+      String(index)
     );
 
-    if (type === "room") {
-      marker.setAttribute(
-        "data-house-room",
-        ""
-      );
+    const outerVertices = polygonVertexList(
+      room.marker.x,
+      room.marker.y,
+      78,
+      8,
+      Math.PI / 8
+    );
 
-      marker.dataset.houseRoomId =
-        item.id;
+    const innerVertices = polygonVertexList(
+      room.marker.x,
+      room.marker.y,
+      50,
+      8,
+      Math.PI / 8
+    );
 
-      marker.style.setProperty(
-        "--house-room-index",
-        String(index)
-      );
-    } else {
-      marker.setAttribute(
-        "data-house-avatar",
-        ""
-      );
+    const outer = createSvgElement("polygon", {
+      class:
+        "house-control-pad__room-shape house-control-pad__room-shell",
+      "data-house-room-shape": "",
+      "data-house-room-id": room.id,
+      "data-house-selected": "false",
+      points: vertexString(outerVertices),
+      fill: "url(#houseRoomGradient)",
+      stroke: "rgba(215,244,255,.55)",
+      "stroke-width": "3",
+      filter: "url(#houseEstateGlow)"
+    });
 
-      marker.dataset.houseAvatarId =
-        item.id;
+    const inner = createSvgElement("polygon", {
+      class: "house-control-pad__room-core",
+      points: vertexString(innerVertices),
+      fill: "url(#houseRoomCoreGradient)",
+      stroke: "rgba(141,216,255,.34)",
+      "stroke-width": "2"
+    });
 
-      marker.style.setProperty(
-        "--house-avatar-index",
-        String(index)
+    group.append(outer);
+
+    for (
+      let facetIndex = 0;
+      facetIndex < outerVertices.length;
+      facetIndex += 1
+    ) {
+      const current = outerVertices[facetIndex];
+      const next =
+        outerVertices[
+          (facetIndex + 1) %
+          outerVertices.length
+        ];
+
+      group.append(
+        createSvgElement("polygon", {
+          class: "house-control-pad__room-facet",
+          points: [
+            `${room.marker.x},${room.marker.y}`,
+            `${current.x},${current.y}`,
+            `${next.x},${next.y}`
+          ].join(" "),
+          fill:
+            facetIndex % 3 === 0
+              ? "rgba(255,255,255,.12)"
+              : facetIndex % 3 === 1
+                ? "rgba(36,120,255,.08)"
+                : "rgba(243,200,111,.07)"
+        })
       );
     }
 
-    const normalizedX =
-      (
-        (
-          item.marker.x -
-          MAP.viewBox.minX
-        ) /
-        MAP.viewBox.width
-      ) *
-      100;
+    const node = createSvgElement("circle", {
+      class: "house-control-pad__room-node",
+      cx: String(room.marker.x),
+      cy: String(room.marker.y),
+      r: "8",
+      fill: "rgba(255,232,163,.88)",
+      stroke: "rgba(255,255,255,.76)",
+      "stroke-width": "2"
+    });
 
-    const normalizedY =
-      (
-        (
-          item.marker.y -
-          MAP.viewBox.minY
-        ) /
-        MAP.viewBox.height
-      ) *
-      100;
+    group.append(
+      inner,
+      node
+    );
+
+    return group;
+  }
+
+  function createRoomMarker(room, index) {
+    const marker = createElement("button", {
+      className:
+        "house-control-pad__marker house-control-pad__marker--room",
+      attributes: {
+        type: "button",
+        "data-house-room": "",
+        "data-house-room-id": room.id,
+        "data-house-room-order": String(room.order),
+        "aria-label": room.label,
+        "aria-pressed": "false",
+        "aria-controls": "house-control-pad-details"
+      }
+    });
 
     marker.style.setProperty(
       "--house-marker-x",
-      `${normalizedX}%`
+      percentageX(room.marker.x)
     );
 
     marker.style.setProperty(
       "--house-marker-y",
-      `${normalizedY}%`
+      percentageY(room.marker.y)
     );
 
-    marker.dataset.houseNormalizedX =
-      String(normalizedX);
+    marker.style.setProperty(
+      "--house-room-index",
+      String(index)
+    );
 
-    marker.dataset.houseNormalizedY =
-      String(normalizedY);
+    const number = createElement("span", {
+      className:
+        "house-control-pad__marker-number",
+      text: String(room.order)
+    });
+
+    const label = createElement("span", {
+      className:
+        "house-control-pad__marker-label",
+      text: room.shortLabel
+    });
 
     marker.append(
-      createElement(
-        "span",
-        {
-          className:
-            "house-control-pad__marker-label",
-          text:
-            item.shortLabel ||
-            item.label
-        }
-      )
+      number,
+      label
     );
 
     return marker;
   }
 
-  function renderDefaultDetails() {
-    clearElement(
-      state.detailsPanel
-    );
+  function renderGuideDetails() {
+    if (!state.detailsPanel) {
+      return;
+    }
 
-    const title = createElement(
-      "h3",
-      {
-        className:
-          "house-control-pad__details-title",
-        text:
-          MAP.estate.label
-      }
-    );
+    state.selectedRoomId = "";
+    syncSelection();
+    clearElement(state.detailsPanel);
 
-    const description =
-      createElement(
-        "p",
-        {
-          className:
-            "house-control-pad__details-description",
-          text:
-            "Select any chamber or the central House Guide."
-        }
-      );
+    const eyebrow = createElement("p", {
+      className:
+        "house-control-pad__details-eyebrow",
+      text: "Nine-room estate"
+    });
+
+    const title = createElement("h3", {
+      className:
+        "house-control-pad__details-title",
+      text: ESTATE.guide.label
+    });
+
+    const description = createElement("p", {
+      className:
+        "house-control-pad__details-description",
+      text: ESTATE.guide.description
+    });
+
+    const count = createElement("p", {
+      className:
+        "house-control-pad__details-count",
+      text: `${ESTATE.rooms.length} primary rooms`
+    });
 
     state.detailsPanel.append(
+      eyebrow,
       title,
-      description
+      description,
+      count
     );
   }
 
-  function renderSelectedDetails(
-    type,
-    item
-  ) {
-    clearElement(
-      state.detailsPanel
-    );
-
-    const title = createElement(
-      "h3",
-      {
-        className:
-          "house-control-pad__details-title",
-        text:
-          item.label
-      }
-    );
-
-    state.detailsPanel.append(
-      title
-    );
-
-    if (
-      type === "avatar" &&
-      item.role
-    ) {
-      state.detailsPanel.append(
-        createElement(
-          "p",
-          {
-            className:
-              "house-control-pad__details-role",
-            text:
-              item.role
-          }
-        )
-      );
+  function renderRoomDetails(room) {
+    if (!state.detailsPanel) {
+      return;
     }
 
-    state.detailsPanel.append(
-      createElement(
-        "p",
-        {
-          className:
-            "house-control-pad__details-description",
-          text:
-            item.description
-        }
-      )
-    );
+    clearElement(state.detailsPanel);
+
+    const eyebrow = createElement("p", {
+      className:
+        "house-control-pad__details-eyebrow",
+      text: room.category
+    });
+
+    const title = createElement("h3", {
+      className:
+        "house-control-pad__details-title",
+      text: room.label
+    });
+
+    const description = createElement("p", {
+      className:
+        "house-control-pad__details-description",
+      text: room.description
+    });
+
+    const routeButton = createElement("button", {
+      className: "house-control-pad__route",
+      text: `Enter ${room.shortLabel}`,
+      attributes: {
+        type: "button",
+        "data-house-route": "",
+        "data-house-room-id": room.id
+      }
+    });
 
     state.detailsPanel.append(
-      createElement(
-        "button",
-        {
-          className:
-            "house-control-pad__route",
-          text:
-            `Enter ${item.shortLabel || item.label}`,
-          attributes: {
-            type:
-              "button",
-            "data-house-route":
-              "",
-            "data-house-target-type":
-              type,
-            "data-house-target-id":
-              item.id
-          }
-        }
-      )
+      eyebrow,
+      title,
+      description,
+      routeButton
     );
   }
 
@@ -1917,7 +1726,7 @@
 
     const door = closestElement(
       event.target,
-      SELECTORS.door
+      SELECTORS.open
     );
 
     if (!door) {
@@ -1933,7 +1742,7 @@
       return;
     }
 
-    const result = open({
+    const opened = open({
       door,
       context:
         safeString(
@@ -1943,7 +1752,7 @@
     });
 
     if (
-      result.ok &&
+      opened.ok &&
       state.open
     ) {
       event.preventDefault();
@@ -1951,86 +1760,68 @@
   }
 
   function onRootClick(event) {
-    const closeControl =
-      closestElement(
-        event.target,
-        SELECTORS.close
-      );
+    const closeControl = closestElement(
+      event.target,
+      SELECTORS.close
+    );
 
     if (closeControl) {
       event.preventDefault();
-
       close("close-control");
       return;
     }
 
     if (
       state.backdrop &&
-      event.target ===
-        state.backdrop
+      event.target === state.backdrop
     ) {
       close("backdrop");
       return;
     }
 
-    const routeControl =
-      closestElement(
-        event.target,
-        SELECTORS.route
-      );
+    const guideControl = closestElement(
+      event.target,
+      SELECTORS.guide
+    );
+
+    if (guideControl) {
+      event.preventDefault();
+
+      renderGuideDetails();
+      updateStatus("House Guide overview.");
+
+      return;
+    }
+
+    const routeControl = closestElement(
+      event.target,
+      SELECTORS.route
+    );
 
     if (routeControl) {
       event.preventDefault();
 
       routeTo({
-        type:
-          routeControl.dataset
-            .houseTargetType,
-        id:
-          routeControl.dataset
-            .houseTargetId
+        roomId:
+          routeControl.dataset.houseRoomId
       });
 
       return;
     }
 
-    const selectable =
-      closestElement(
-        event.target,
-        SELECTORS.selectable
-      );
+    const roomControl = closestElement(
+      event.target,
+      SELECTORS.room
+    );
 
-    if (!selectable) {
+    if (!roomControl) {
       return;
     }
 
     event.preventDefault();
 
-    const type =
-      selectable.matches(
-        SELECTORS.room
-      )
-        ? "room"
-        : selectable.matches(
-            SELECTORS.avatar
-          )
-          ? "avatar"
-          : "";
-
-    const id =
-      type === "room"
-        ? selectable.dataset
-            .houseRoomId
-        : selectable.dataset
-            .houseAvatarId;
-
-    if (!type || !id) {
-      return;
-    }
-
-    selectTarget(
-      type,
-      id
+    selectRoom(
+      roomControl.dataset.houseRoomId
     );
   }
 
@@ -2044,7 +1835,6 @@
 
     if (event.key === "Escape") {
       event.preventDefault();
-
       close("escape");
       return;
     }
@@ -2064,11 +1854,10 @@
         "End"
       ].includes(event.key)
     ) {
-      const activeMarker =
-        closestElement(
-          document.activeElement,
-          SELECTORS.selectable
-        );
+      const activeMarker = closestElement(
+        document.activeElement,
+        `${SELECTORS.room}, ${SELECTORS.guide}`
+      );
 
       if (activeMarker) {
         moveMarkerFocus(
@@ -2083,9 +1872,7 @@
     if (
       !state.open ||
       !state.dialog ||
-      state.dialog.contains(
-        event.target
-      )
+      state.dialog.contains(event.target)
     ) {
       return;
     }
@@ -2093,104 +1880,24 @@
     focusInitialElement();
   }
 
-  function selectTarget(type, id) {
-    const item = findMapItem(
-      type,
-      id
-    );
-
-    if (!item) {
-      return makeResult(
-        false,
-        state.lifecycleState,
-        "The selected destination does not exist."
-      );
-    }
-
-    state.selectedType = type;
-    state.selectedId = id;
-
-    syncSelection();
-    renderSelectedDetails(
-      type,
-      item
-    );
-
-    updateStatus(
-      `${item.label} selected.`
-    );
-
-    dispatch(EVENTS.select, {
-      reason:
-        "selection",
-      targetType:
-        type,
-      targetId:
-        id,
-      route:
-        item.route
-    });
-
-    publishStatus();
-
-    return makeResult(
-      true,
-      state.lifecycleState,
-      `${item.label} selected.`,
-      {
-        targetId:
-          id,
-        route:
-          item.route
-      }
-    );
-  }
-
   function syncSelection() {
     if (!state.root) {
       return;
     }
 
-    state.root.dataset
-      .houseSelectedType =
-        state.selectedType;
+    state.root.dataset.houseSelectedRoom =
+      state.selectedRoomId;
 
-    state.root.dataset
-      .houseSelectedId =
-        state.selectedId;
-
-    const markers =
-      state.root.querySelectorAll(
-        SELECTORS.selectable
-      );
-
-    markers.forEach(
-      (marker) => {
-        const type =
-          marker.matches(
-            SELECTORS.room
-          )
-            ? "room"
-            : "avatar";
-
-        const id =
-          type === "room"
-            ? marker.dataset
-                .houseRoomId
-            : marker.dataset
-                .houseAvatarId;
-
+    state.root
+      .querySelectorAll(SELECTORS.room)
+      .forEach((marker) => {
         const selected =
-          type ===
-            state.selectedType &&
-          id ===
-            state.selectedId;
+          marker.dataset.houseRoomId ===
+          state.selectedRoomId;
 
         marker.setAttribute(
           "aria-pressed",
-          selected
-            ? "true"
-            : "false"
+          selected ? "true" : "false"
         );
 
         if (selected) {
@@ -2203,137 +1910,360 @@
             "aria-current"
           );
         }
-      }
-    );
+      });
 
-    const shapes =
-      state.root.querySelectorAll(
-        "[data-house-room-shape]"
-      );
-
-    shapes.forEach(
-      (shape) => {
+    state.root
+      .querySelectorAll(
+        "[data-house-room-gem]"
+      )
+      .forEach((gem) => {
         const selected =
-          state.selectedType ===
-            "room" &&
-          shape.dataset
-            .houseRoomId ===
-            state.selectedId;
+          gem.dataset.houseRoomId ===
+          state.selectedRoomId;
 
-        shape.dataset
-          .houseSelected =
-            selected
-              ? "true"
-              : "false";
-      }
+        gem.dataset.houseSelected =
+          selected ? "true" : "false";
+      });
+
+    state.root
+      .querySelectorAll(
+        "[data-house-room-shape]"
+      )
+      .forEach((shape) => {
+        const selected =
+          shape.dataset.houseRoomId ===
+          state.selectedRoomId;
+
+        shape.dataset.houseSelected =
+          selected ? "true" : "false";
+      });
+  }
+
+  function focusInitialElement() {
+    const target =
+      state.selectedRoomId
+        ? getSelectedMarker()
+        : state.guideButton ||
+          state.closeButton ||
+          state.dialog;
+
+    if (!target) {
+      return;
+    }
+
+    try {
+      target.focus({
+        preventScroll: true
+      });
+    } catch (_error) {
+      target.focus();
+    }
+  }
+
+  function focusSelectedMarker() {
+    const marker = getSelectedMarker();
+
+    if (!marker) {
+      return;
+    }
+
+    try {
+      marker.focus({
+        preventScroll: true
+      });
+    } catch (_error) {
+      marker.focus();
+    }
+  }
+
+  function getSelectedMarker() {
+    if (
+      !state.markersLayer ||
+      !state.selectedRoomId
+    ) {
+      return null;
+    }
+
+    return state.markersLayer.querySelector(
+      `[data-house-room-id="${cssEscape(
+        state.selectedRoomId
+      )}"]`
     );
   }
 
-  function normalizeRouteRequest(
-    request
+  function trapFocus(event) {
+    const focusable = getFocusableElements(
+      state.dialog
+    );
+
+    if (!focusable.length) {
+      event.preventDefault();
+      state.dialog.focus();
+      return;
+    }
+
+    const first = focusable[0];
+    const last =
+      focusable[
+        focusable.length - 1
+      ];
+
+    const active = document.activeElement;
+
+    if (
+      event.shiftKey &&
+      active === first
+    ) {
+      event.preventDefault();
+      last.focus();
+      return;
+    }
+
+    if (
+      !event.shiftKey &&
+      active === last
+    ) {
+      event.preventDefault();
+      first.focus();
+      return;
+    }
+
+    if (
+      !state.dialog.contains(active)
+    ) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function moveMarkerFocus(
+    event,
+    activeMarker
   ) {
+    if (!state.markersLayer) {
+      return;
+    }
+
+    const markers = Array.from(
+      state.markersLayer.querySelectorAll(
+        `${SELECTORS.room}, ${SELECTORS.guide}`
+      )
+    ).filter(isFocusable);
+
+    if (!markers.length) {
+      return;
+    }
+
+    const currentIndex =
+      markers.indexOf(activeMarker);
+
+    if (currentIndex < 0) {
+      return;
+    }
+
+    let nextIndex = currentIndex;
+
     if (
-      !request ||
-      typeof request !== "object"
+      event.key === "ArrowRight" ||
+      event.key === "ArrowDown"
     ) {
-      return makeResult(
-        false,
-        state.lifecycleState,
-        "A destination type and id are required."
-      );
-    }
-
-    const type =
-      safeString(
-        request.type,
-        40
-      );
-
-    const id =
-      safeIdentifier(
-        request.id
-      );
-
-    if (
-      !["room", "avatar"].includes(
-        type
-      ) ||
-      !id
+      nextIndex =
+        (currentIndex + 1) %
+        markers.length;
+    } else if (
+      event.key === "ArrowLeft" ||
+      event.key === "ArrowUp"
     ) {
-      return makeResult(
+      nextIndex =
+        (
+          currentIndex -
+          1 +
+          markers.length
+        ) %
+        markers.length;
+    } else if (
+      event.key === "Home"
+    ) {
+      nextIndex = 0;
+    } else if (
+      event.key === "End"
+    ) {
+      nextIndex =
+        markers.length - 1;
+    }
+
+    event.preventDefault();
+
+    markers[nextIndex].focus({
+      preventScroll: true
+    });
+  }
+
+  function normalizeOpenRequest(request) {
+    const source =
+      request &&
+      typeof request === "object"
+        ? request
+        : {};
+
+    const door =
+      source.door &&
+      source.door.nodeType === 1
+        ? source.door
+        : null;
+
+    return {
+      door,
+      context:
+        safeString(
+          source.context,
+          200
+        ) ||
+        safeString(
+          door &&
+            door.dataset.houseContext,
+          200
+        )
+    };
+  }
+
+  function normalizeRouteRequest(request) {
+    const roomId =
+      typeof request === "string"
+        ? safeIdentifier(request)
+        : request &&
+            typeof request === "object"
+          ? safeIdentifier(
+              request.roomId ||
+              request.id
+            )
+          : "";
+
+    if (!roomId) {
+      return result(
         false,
-        state.lifecycleState,
-        "A valid destination type and id are required."
+        state.lifecycle,
+        "A valid estate room is required."
       );
     }
 
-    const item =
-      findMapItem(
-        type,
-        id
-      );
+    const room = findRoom(roomId);
 
-    if (!item) {
-      return makeResult(
+    if (!room) {
+      return result(
         false,
-        state.lifecycleState,
-        "The requested destination does not exist."
+        state.lifecycle,
+        "The requested estate room does not exist."
       );
     }
 
-    const route =
-      validateInternalRoute(
-        item.route
-      );
+    const route = validateInternalRoute(
+      room.route
+    );
 
     if (!route) {
-      return makeResult(
+      return result(
         false,
-        state.lifecycleState,
-        "The requested destination route is invalid."
+        state.lifecycle,
+        "The requested estate route is invalid."
       );
     }
 
     return {
       ok: true,
-      type,
-      id,
+      room,
       route
     };
   }
 
-  function findMapItem(type, id) {
-    if (type === "room") {
-      return (
-        MAP.rooms.find(
-          (room) =>
-            room.id === id
-        ) ||
-        null
-      );
-    }
-
-    if (type === "avatar") {
-      return (
-        MAP.avatars.find(
-          (avatar) =>
-            avatar.id === id
-        ) ||
-        null
-      );
-    }
-
-    return null;
+  function findRoom(roomId) {
+    return (
+      ESTATE.rooms.find(
+        (room) =>
+          room.id === roomId
+      ) ||
+      null
+    );
   }
 
-  function validateInternalRoute(
-    rawRoute
-  ) {
-    const route =
-      safeString(
-        rawRoute,
-        2000
+  function validateEstate(estate) {
+    if (
+      !estate ||
+      !Array.isArray(estate.rooms)
+    ) {
+      throw new Error(
+        "The estate registry is unavailable."
       );
+    }
+
+    if (estate.rooms.length !== 9) {
+      throw new Error(
+        "The estate registry must contain exactly nine rooms."
+      );
+    }
+
+    const ids = new Set();
+    const routes = new Set();
+
+    estate.rooms.forEach((room, index) => {
+      if (
+        !safeIdentifier(room.id)
+      ) {
+        throw new Error(
+          `Invalid room id at index ${index}.`
+        );
+      }
+
+      if (ids.has(room.id)) {
+        throw new Error(
+          `Duplicate room id: ${room.id}`
+        );
+      }
+
+      ids.add(room.id);
+
+      if (
+        !safeString(room.label, 200)
+      ) {
+        throw new Error(
+          `Missing room label: ${room.id}`
+        );
+      }
+
+      const route =
+        validateInternalRoute(room.route);
+
+      if (!route) {
+        throw new Error(
+          `Invalid room route: ${room.id}`
+        );
+      }
+
+      if (routes.has(route)) {
+        throw new Error(
+          `Duplicate room route: ${route}`
+        );
+      }
+
+      routes.add(route);
+
+      if (
+        !room.marker ||
+        !Number.isFinite(room.marker.x) ||
+        !Number.isFinite(room.marker.y)
+      ) {
+        throw new Error(
+          `Invalid room position: ${room.id}`
+        );
+      }
+    });
+  }
+
+  function validateInternalRoute(rawRoute) {
+    const route = safeString(
+      rawRoute,
+      2000
+    );
 
     if (!route) {
       return "";
@@ -2370,40 +2300,7 @@
     }
   }
 
-  function normalizeOpenRequest(
-    request
-  ) {
-    const source =
-      request &&
-      typeof request === "object"
-        ? request
-        : {};
-
-    const door =
-      source.door &&
-      source.door.nodeType === 1
-        ? source.door
-        : null;
-
-    return {
-      door,
-      context:
-        safeString(
-          source.context,
-          200
-        ) ||
-        safeString(
-          door &&
-            door.dataset
-              .houseContext,
-          200
-        )
-    };
-  }
-
-  function resolveReturnFocusTarget(
-    door
-  ) {
+  function resolveReturnFocusTarget(door) {
     if (
       door &&
       door.isConnected
@@ -2415,8 +2312,7 @@
       document.activeElement &&
       document.activeElement !==
         document.body &&
-      document.activeElement
-        .isConnected
+      document.activeElement.isConnected
     ) {
       return document.activeElement;
     }
@@ -2424,54 +2320,12 @@
     return null;
   }
 
-  function focusInitialElement() {
-    if (!state.dialog) {
-      return;
-    }
-
-    let target =
-      state.closeButton ||
-      state.dialog;
-
-    if (
-      state.selectedType &&
-      state.selectedId &&
-      state.markersLayer
-    ) {
-      const selector =
-        state.selectedType ===
-        "room"
-          ? `[data-house-room-id="${cssEscape(
-              state.selectedId
-            )}"]`
-          : `[data-house-avatar-id="${cssEscape(
-              state.selectedId
-            )}"]`;
-
-      target =
-        state.markersLayer.querySelector(
-          selector
-        ) ||
-        target;
-    }
-
-    try {
-      target.focus({
-        preventScroll: true
-      });
-    } catch (_error) {
-      target.focus();
-    }
-  }
-
   function restoreFocus() {
     const target =
       state.returnFocusTarget;
 
-    state.returnFocusTarget =
-      null;
-    state.activeDoor =
-      null;
+    state.returnFocusTarget = null;
+    state.activeDoor = null;
 
     if (
       target &&
@@ -2491,142 +2345,21 @@
 
     const firstDoor =
       document.querySelector(
-        SELECTORS.door
+        SELECTORS.open
       );
 
     if (
       firstDoor &&
       isFocusable(firstDoor)
     ) {
-      firstDoor.focus({
-        preventScroll: true
-      });
+      try {
+        firstDoor.focus({
+          preventScroll: true
+        });
+      } catch (_error) {
+        firstDoor.focus();
+      }
     }
-  }
-
-  function trapFocus(event) {
-    const focusable =
-      getFocusableElements(
-        state.dialog
-      );
-
-    if (!focusable.length) {
-      event.preventDefault();
-      state.dialog.focus();
-      return;
-    }
-
-    const first =
-      focusable[0];
-
-    const last =
-      focusable[
-        focusable.length - 1
-      ];
-
-    const active =
-      document.activeElement;
-
-    if (
-      event.shiftKey &&
-      active === first
-    ) {
-      event.preventDefault();
-      last.focus();
-      return;
-    }
-
-    if (
-      !event.shiftKey &&
-      active === last
-    ) {
-      event.preventDefault();
-      first.focus();
-      return;
-    }
-
-    if (
-      !state.dialog.contains(active)
-    ) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
-
-  function moveMarkerFocus(
-    event,
-    activeMarker
-  ) {
-    if (!state.markersLayer) {
-      return;
-    }
-
-    const markers =
-      Array.from(
-        state.markersLayer
-          .querySelectorAll(
-            SELECTORS.selectable
-          )
-      ).filter(isFocusable);
-
-    if (!markers.length) {
-      return;
-    }
-
-    const currentIndex =
-      markers.indexOf(
-        activeMarker
-      );
-
-    if (currentIndex < 0) {
-      return;
-    }
-
-    let nextIndex =
-      currentIndex;
-
-    if (
-      event.key ===
-        "ArrowRight" ||
-      event.key ===
-        "ArrowDown"
-    ) {
-      nextIndex =
-        (
-          currentIndex + 1
-        ) %
-        markers.length;
-    } else if (
-      event.key ===
-        "ArrowLeft" ||
-      event.key ===
-        "ArrowUp"
-    ) {
-      nextIndex =
-        (
-          currentIndex -
-          1 +
-          markers.length
-        ) %
-        markers.length;
-    } else if (
-      event.key === "Home"
-    ) {
-      nextIndex = 0;
-    } else if (
-      event.key === "End"
-    ) {
-      nextIndex =
-        markers.length - 1;
-    }
-
-    event.preventDefault();
-
-    markers[
-      nextIndex
-    ].focus({
-      preventScroll: true
-    });
   }
 
   function applyBackgroundCustody() {
@@ -2641,53 +2374,42 @@
 
     Array.from(
       document.body.children
-    ).forEach(
-      (element) => {
-        if (
-          element === state.root
-        ) {
-          return;
-        }
-
-        const record = {
-          element,
-          inertSupported:
-            "inert" in element,
-          inertValue:
-            "inert" in element
-              ? Boolean(
-                  element.inert
-                )
-              : false,
-          ariaHidden:
-            element.getAttribute(
-              "aria-hidden"
-            )
-        };
-
-        state.backgroundRecords.push(
-          record
-        );
-
-        if (
-          record.inertSupported
-        ) {
-          element.inert = true;
-        } else {
-          element.setAttribute(
-            "aria-hidden",
-            "true"
-          );
-        }
+    ).forEach((element) => {
+      if (element === state.root) {
+        return;
       }
-    );
+
+      const record = {
+        element,
+        inertSupported:
+          "inert" in element,
+        inertValue:
+          "inert" in element
+            ? Boolean(element.inert)
+            : false,
+        ariaHidden:
+          element.getAttribute(
+            "aria-hidden"
+          )
+      };
+
+      state.backgroundRecords.push(record);
+
+      if (record.inertSupported) {
+        element.inert = true;
+      } else {
+        element.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+      }
+    });
   }
 
   function restoreBackgroundCustody() {
     state.backgroundRecords.forEach(
       (record) => {
-        const element =
-          record.element;
+        const element = record.element;
 
         if (
           !element ||
@@ -2696,9 +2418,7 @@
           return;
         }
 
-        if (
-          record.inertSupported
-        ) {
+        if (record.inertSupported) {
           element.inert =
             record.inertValue;
         }
@@ -2730,32 +2450,23 @@
     if (
       !html ||
       !body ||
-      html.dataset
-        .houseScrollLock ===
+      html.dataset.houseScrollLock ===
         "true"
     ) {
       return;
     }
 
-    html.dataset
-      .housePreviousOverflow =
-        html.style.overflow ||
-        "";
+    html.dataset.housePreviousOverflow =
+      html.style.overflow || "";
 
-    body.dataset
-      .housePreviousOverflow =
-        body.style.overflow ||
-        "";
+    body.dataset.housePreviousOverflow =
+      body.style.overflow || "";
 
-    html.style.overflow =
-      "hidden";
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
 
-    body.style.overflow =
-      "hidden";
-
-    html.dataset
-      .houseScrollLock =
-        "true";
+    html.dataset.houseScrollLock =
+      "true";
   }
 
   function unlockDocumentScroll() {
@@ -2767,8 +2478,7 @@
     if (
       !html ||
       !body ||
-      html.dataset
-        .houseScrollLock !==
+      html.dataset.houseScrollLock !==
         "true"
     ) {
       return;
@@ -2794,6 +2504,54 @@
       .houseScrollLock;
   }
 
+  function transitionTo(
+    nextState,
+    force
+  ) {
+    if (
+      state.lifecycle ===
+        STATES.destroyed &&
+      !force
+    ) {
+      return false;
+    }
+
+    const previous =
+      state.lifecycle;
+
+    state.previousLifecycle =
+      previous;
+
+    state.lifecycle =
+      nextState;
+
+    state.updatedAt =
+      nowIso();
+
+    if (state.root) {
+      state.root.dataset.houseState =
+        nextState;
+
+      state.root.dataset.houseReady =
+        state.ready
+          ? "true"
+          : "false";
+
+      state.root.dataset.houseOpen =
+        state.open
+          ? "true"
+          : "false";
+    }
+
+    dispatch(EVENTS.state, {
+      reason: "state-transition",
+      previousState: previous,
+      nextState
+    });
+
+    return true;
+  }
+
   function updateStatus(message) {
     if (state.statusNode) {
       state.statusNode.textContent =
@@ -2804,228 +2562,70 @@
     }
   }
 
-  function transitionTo(
-    nextState,
-    force
-  ) {
-    if (
-      state.lifecycleState ===
-        STATES.destroyed &&
-      !force
-    ) {
-      return false;
-    }
-
-    const previous =
-      state.lifecycleState;
-
-    state.previousState =
-      previous;
-
-    state.lifecycleState =
-      nextState;
-
-    state.lastUpdatedAt =
-      nowIso();
-
-    if (state.root) {
-      state.root.dataset
-        .houseState =
-          nextState;
-
-      state.root.dataset
-        .houseReady =
-          state.ready
-            ? "true"
-            : "false";
-
-      state.root.dataset
-        .houseOpen =
-          state.open
-            ? "true"
-            : "false";
-    }
-
-    dispatch(EVENTS.state, {
-      reason:
-        "state-transition",
-      previousState:
-        previous,
-      nextState
-    });
-
-    publishStatus();
-
-    return true;
-  }
-
   function dispatch(
     eventName,
     extraDetail,
     options
   ) {
     const detail = Object.freeze({
-      contract:
-        CONTRACT,
-      state:
-        state.lifecycleState,
+      contract: CONTRACT,
+      state: state.lifecycle,
       previousState:
-        state.previousState,
-      context:
-        state.activeContext,
-      selectedType:
-        state.selectedType,
-      selectedId:
-        state.selectedId,
-      timestamp:
-        nowIso(),
+        state.previousLifecycle,
+      roomCount: ESTATE.rooms.length,
+      selectedRoomId:
+        state.selectedRoomId,
+      context: state.activeContext,
+      timestamp: nowIso(),
       ...clonePlain(
         extraDetail ||
         {}
       )
     });
 
-    const event =
-      new CustomEvent(
-        eventName,
-        {
-          detail,
-          bubbles:
-            false,
-          cancelable:
-            Boolean(
-              options &&
-              options.cancelable
-            ),
-          composed:
-            false
-        }
-      );
-
-    document.dispatchEvent(
-      event
+    const event = new CustomEvent(
+      eventName,
+      {
+        detail,
+        bubbles: false,
+        cancelable: Boolean(
+          options &&
+          options.cancelable
+        ),
+        composed: false
+      }
     );
 
-    if (
-      state.root &&
-      state.root.isConnected
-    ) {
-      state.root.dispatchEvent(
-        new CustomEvent(
-          eventName,
-          {
-            detail,
-            bubbles:
-              false,
-            cancelable:
-              Boolean(
-                options &&
-                options.cancelable
-              ),
-            composed:
-              false
-          }
-        )
-      );
-    }
+    document.dispatchEvent(event);
 
     return event;
   }
 
-  function publishStatus() {
-    state.lastUpdatedAt =
-      nowIso();
-
-    const snapshot =
-      Object.freeze(
-        buildStatusSnapshot()
-      );
-
-    try {
-      Object.defineProperty(
-        global,
-        STATUS_GLOBAL,
-        {
-          configurable:
-            true,
-          enumerable:
-            false,
-          writable:
-            false,
-          value:
-            snapshot
-        }
-      );
-    } catch (_error) {
-      global[STATUS_GLOBAL] =
-        snapshot;
-    }
-
-    if (state.root) {
-      state.root.dataset
-        .houseState =
-          state.lifecycleState;
-
-      state.root.dataset
-        .houseReady =
-          state.ready
-            ? "true"
-            : "false";
-
-      state.root.dataset
-        .houseOpen =
-          state.open
-            ? "true"
-            : "false";
-
-      state.root.dataset
-        .houseSelectedType =
-          state.selectedType;
-
-      state.root.dataset
-        .houseSelectedId =
-          state.selectedId;
-    }
-
-    return snapshot;
-  }
-
-  function buildStatusSnapshot() {
+  function buildStatus() {
     return {
-      contract:
-        CONTRACT,
-      state:
-        state.lifecycleState,
+      contract: CONTRACT,
+      state: state.lifecycle,
       previousState:
-        state.previousState,
+        state.previousLifecycle,
       initialized:
         state.initialized,
-      ready:
-        state.ready,
-      mounted:
-        Boolean(
-          state.root &&
-          state.root.isConnected
-        ),
-      open:
-        state.open,
+      ready: state.ready,
+      mounted: Boolean(
+        state.root &&
+        state.root.isConnected
+      ),
+      open: state.open,
       destroyed:
         state.destroyed,
-      selectedType:
-        state.selectedType,
-      selectedId:
-        state.selectedId,
+      roomCount:
+        ESTATE.rooms.length,
+      selectedRoomId:
+        state.selectedRoomId,
       activeContext:
         state.activeContext,
-      roomCount:
-        MAP.rooms.length,
-      avatarCount:
-        MAP.avatars.length,
-      corridorCount:
-        MAP.corridors.length,
       doorCount:
         document.querySelectorAll(
-          SELECTORS.door
+          SELECTORS.open
         ).length,
       openCount:
         state.openCount,
@@ -3041,8 +2641,8 @@
         state.closedAt,
       destroyedAt:
         state.destroyedAt,
-      lastUpdatedAt:
-        state.lastUpdatedAt
+      updatedAt:
+        state.updatedAt
     };
   }
 
@@ -3054,8 +2654,7 @@
   ) {
     if (
       !target ||
-      typeof target
-        .addEventListener !==
+      typeof target.addEventListener !==
         "function"
     ) {
       return;
@@ -3076,29 +2675,23 @@
   }
 
   function removeAllListeners() {
-    state.listeners.forEach(
-      (record) => {
-        try {
-          record.target
-            .removeEventListener(
-              record.type,
-              record.handler,
-              record.options
-            );
-        } catch (_error) {
-          // Continue cleanup.
-        }
+    state.listeners.forEach((record) => {
+      try {
+        record.target.removeEventListener(
+          record.type,
+          record.handler,
+          record.options
+        );
+      } catch (_error) {
+        // Continue removing listeners.
       }
-    );
+    });
 
     state.listeners = [];
   }
 
   function clearCloseTimer() {
-    if (
-      state.closeTimer ===
-      null
-    ) {
+    if (state.closeTimer === null) {
       return;
     }
 
@@ -3121,9 +2714,7 @@
     }
 
     if (
-      door.hasAttribute(
-        "disabled"
-      ) ||
+      door.hasAttribute("disabled") ||
       door.getAttribute(
         "aria-disabled"
       ) === "true"
@@ -3142,20 +2733,15 @@
     }
 
     if (
-      door.hasAttribute(
-        "download"
-      )
+      door.hasAttribute("download")
     ) {
       return false;
     }
 
-    const target =
-      safeString(
-        door.getAttribute(
-          "target"
-        ),
-        40
-      );
+    const target = safeString(
+      door.getAttribute("target"),
+      40
+    );
 
     if (
       target &&
@@ -3167,9 +2753,7 @@
     return true;
   }
 
-  function getFocusableElements(
-    container
-  ) {
+  function getFocusableElements(container) {
     if (!container) {
       return [];
     }
@@ -3193,9 +2777,7 @@
       !element ||
       element.nodeType !== 1 ||
       element.hidden ||
-      element.hasAttribute(
-        "disabled"
-      ) ||
+      element.hasAttribute("disabled") ||
       element.getAttribute(
         "aria-hidden"
       ) === "true"
@@ -3204,14 +2786,11 @@
     }
 
     const style =
-      global.getComputedStyle(
-        element
-      );
+      global.getComputedStyle(element);
 
     return (
       style.display !== "none" &&
-      style.visibility !==
-        "hidden"
+      style.visibility !== "hidden"
     );
   }
 
@@ -3233,9 +2812,7 @@
       typeof element.closest ===
         "function"
     )
-      ? element.closest(
-          selector
-        )
+      ? element.closest(selector)
       : null;
   }
 
@@ -3244,13 +2821,9 @@
     config
   ) {
     const element =
-      document.createElement(
-        tagName
-      );
+      document.createElement(tagName);
 
-    const source =
-      config ||
-      {};
+    const source = config || {};
 
     if (source.className) {
       element.className =
@@ -3258,13 +2831,12 @@
     }
 
     if (
-      source.text !==
-      undefined
+      source.text !== undefined
     ) {
       element.textContent =
         safeString(
           source.text,
-          3000
+          4000
         );
     }
 
@@ -3275,26 +2847,19 @@
     ) {
       Object.entries(
         source.attributes
-      ).forEach(
-        (
-          [
-            name,
-            value
-          ]
-        ) => {
-          if (
-            value === undefined ||
-            value === null
-          ) {
-            return;
-          }
-
-          element.setAttribute(
-            name,
-            String(value)
-          );
+      ).forEach(([name, value]) => {
+        if (
+          value === undefined ||
+          value === null
+        ) {
+          return;
         }
-      );
+
+        element.setAttribute(
+          name,
+          String(value)
+        );
+      });
     }
 
     return element;
@@ -3315,15 +2880,8 @@
       typeof attributes ===
         "object"
     ) {
-      Object.entries(
-        attributes
-      ).forEach(
-        (
-          [
-            name,
-            value
-          ]
-        ) => {
+      Object.entries(attributes).forEach(
+        ([name, value]) => {
           if (
             value === undefined ||
             value === null
@@ -3347,31 +2905,114 @@
       return;
     }
 
-    while (
-      element.firstChild
-    ) {
+    while (element.firstChild) {
       element.removeChild(
         element.firstChild
       );
     }
   }
 
-  function removeExistingRoot() {
+  function removeExistingRoots() {
     document
       .querySelectorAll(
         SELECTORS.root
       )
-      .forEach(
-        (root) => {
-          if (
-            root.parentNode
-          ) {
-            root.parentNode.removeChild(
-              root
-            );
-          }
+      .forEach((root) => {
+        if (root.parentNode) {
+          root.parentNode.removeChild(root);
         }
-      );
+      });
+  }
+
+  function polygonVertexList(
+    centerX,
+    centerY,
+    radius,
+    sides,
+    rotation
+  ) {
+    const vertices = [];
+
+    for (
+      let index = 0;
+      index < sides;
+      index += 1
+    ) {
+      const angle =
+        rotation +
+        (
+          Math.PI *
+          2 *
+          index
+        ) /
+          sides;
+
+      vertices.push({
+        x:
+          centerX +
+          Math.cos(angle) *
+            radius,
+        y:
+          centerY +
+          Math.sin(angle) *
+            radius
+      });
+    }
+
+    return vertices;
+  }
+
+  function polygonPoints(
+    centerX,
+    centerY,
+    radius,
+    sides,
+    rotation
+  ) {
+    return vertexString(
+      polygonVertexList(
+        centerX,
+        centerY,
+        radius,
+        sides,
+        rotation
+      )
+    );
+  }
+
+  function vertexString(vertices) {
+    return vertices
+      .map(
+        (vertex) =>
+          `${vertex.x.toFixed(2)},${vertex.y.toFixed(2)}`
+      )
+      .join(" ");
+  }
+
+  function percentageX(value) {
+    return `${
+      (
+        (
+          value -
+          ESTATE.viewBox.minX
+        ) /
+        ESTATE.viewBox.width
+      ) *
+      100
+    }%`;
+  }
+
+  function percentageY(value) {
+    return `${
+      (
+        (
+          value -
+          ESTATE.viewBox.minY
+        ) /
+        ESTATE.viewBox.height
+      ) *
+      100
+    }%`;
   }
 
   function prefersReducedMotion() {
@@ -3404,22 +3045,17 @@
       .trim()
       .slice(
         0,
-        Number.isFinite(
-          maxLength
-        )
+        Number.isFinite(maxLength)
           ? maxLength
           : 2000
       );
   }
 
-  function safeIdentifier(
-    value
-  ) {
-    const candidate =
-      safeString(
-        value,
-        160
-      );
+  function safeIdentifier(value) {
+    const candidate = safeString(
+      value,
+      160
+    );
 
     return /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/.test(
       candidate
@@ -3429,73 +3065,53 @@
   }
 
   function normalizeError(error) {
-    if (
-      error instanceof Error
-    ) {
+    if (error instanceof Error) {
       return {
-        name:
-          safeString(
-            error.name,
-            120
-          ),
-        message:
-          safeString(
-            error.message,
-            1000
-          )
+        name: safeString(
+          error.name,
+          120
+        ),
+        message: safeString(
+          error.message,
+          1000
+        )
       };
     }
 
     return {
-      name:
-        "Error",
+      name: "Error",
       message:
-        safeString(
-          error,
-          1000
-        ) ||
+        safeString(error, 1000) ||
         "Unknown error"
     };
   }
 
-  function makeResult(
+  function result(
     ok,
     resultState,
     reason,
     extra
   ) {
     return Object.freeze({
-      ok:
-        Boolean(ok),
+      ok: Boolean(ok),
       state:
         resultState ||
-        state.lifecycleState,
-      reason:
-        safeString(
-          reason,
-          1000
-        ),
-      targetId:
-        "",
-      route:
-        "",
-      error:
-        null,
-      ...clonePlain(
-        extra ||
-        {}
-      )
+        state.lifecycle,
+      reason: safeString(
+        reason,
+        1000
+      ),
+      roomId: "",
+      route: "",
+      error: null,
+      ...clonePlain(extra || {})
     });
   }
 
-  function clonePlain(
-    value,
-    seen
-  ) {
+  function clonePlain(value, seen) {
     if (
       value === null ||
-      typeof value !==
-        "object"
+      typeof value !== "object"
     ) {
       return value;
     }
@@ -3504,26 +3120,15 @@
       seen ||
       new WeakMap();
 
-    if (
-      memory.has(value)
-    ) {
+    if (memory.has(value)) {
       return "[Circular]";
     }
 
-    memory.set(
-      value,
-      true
-    );
+    memory.set(value, true);
 
-    if (
-      Array.isArray(value)
-    ) {
-      return value.map(
-        (entry) =>
-          clonePlain(
-            entry,
-            memory
-          )
+    if (Array.isArray(value)) {
+      return value.map((entry) =>
+        clonePlain(entry, memory)
       );
     }
 
@@ -3537,26 +3142,16 @@
 
     const output = {};
 
-    Object.entries(
-      value
-    ).forEach(
-      (
-        [
-          key,
-          entry
-        ]
-      ) => {
+    Object.entries(value).forEach(
+      ([key, entry]) => {
         const cloned =
           clonePlain(
             entry,
             memory
           );
 
-        if (
-          cloned !== undefined
-        ) {
-          output[key] =
-            cloned;
+        if (cloned !== undefined) {
+          output[key] = cloned;
         }
       }
     );
@@ -3564,14 +3159,10 @@
     return output;
   }
 
-  function deepFreeze(
-    value,
-    seen
-  ) {
+  function deepFreeze(value, seen) {
     if (
       value === null ||
-      typeof value !==
-        "object" ||
+      typeof value !== "object" ||
       Object.isFrozen(value)
     ) {
       return value;
@@ -3581,52 +3172,38 @@
       seen ||
       new WeakSet();
 
-    if (
-      memory.has(value)
-    ) {
+    if (memory.has(value)) {
       return value;
     }
 
     memory.add(value);
 
-    Object.values(
-      value
-    ).forEach(
+    Object.values(value).forEach(
       (entry) => {
-        deepFreeze(
-          entry,
-          memory
-        );
+        deepFreeze(entry, memory);
       }
     );
 
-    return Object.freeze(
-      value
-    );
+    return Object.freeze(value);
   }
 
   function cssEscape(value) {
     if (
       global.CSS &&
-      typeof global.CSS
-        .escape ===
+      typeof global.CSS.escape ===
         "function"
     ) {
-      return global.CSS.escape(
-        value
-      );
+      return global.CSS.escape(value);
     }
 
-    return String(value)
-      .replace(
-        /[^A-Za-z0-9_-]/g,
-        (character) =>
-          `\\${character}`
-      );
+    return String(value).replace(
+      /[^A-Za-z0-9_-]/g,
+      (character) =>
+        `\\${character}`
+    );
   }
 
   function nowIso() {
-    return new Date()
-      .toISOString();
+    return new Date().toISOString();
   }
 })(window, document);

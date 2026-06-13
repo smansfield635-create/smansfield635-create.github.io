@@ -1,5 +1,5 @@
 <!-- /showroom/globe/audralia/index.html -->
-<!-- AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2 -->
+<!-- AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3 -->
 <!-- Full-file replacement. -->
 <!doctype html>
 <html
@@ -7,11 +7,20 @@
   data-route="/showroom/globe/audralia/"
   data-page="audralia-conservatory"
   data-room="audralia-conservatory"
-  data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2"
+  data-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3"
+  data-previous-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2"
   data-route-family="diamond-gate-bridge"
   data-world-family="mirrorland"
   data-current-role="planetary-holder"
   data-current-state="conservatory"
+  data-current-room="audralia-conservatory"
+  data-directional-compass="true"
+  data-mirrorland-entrance="/showroom/"
+  data-mirrorland-entrance-room="atrium"
+  data-mirrorland-previous-room="/showroom/globe/"
+  data-mirrorland-previous-room-name="atlas-study"
+  data-mirrorland-next-room="/characters/"
+  data-mirrorland-next-room-name="portrait-hall"
   data-construction-engine-state="awaiting-hearth-r-and-d"
   data-construction-engine-provider="hearth-development-r-and-d-chamber"
   data-future-experience-count="2"
@@ -45,7 +54,7 @@
 
   <meta
     name="description"
-    content="Audralia is currently held in the Audralia Conservatory while the Hearth Development R&D Chamber builds the planetary construction engine."
+    content="Audralia is currently held in the Audralia Conservatory while the Hearth Development R&amp;D Chamber builds the planetary construction engine."
   >
 
   <meta
@@ -161,6 +170,19 @@
             aria-expanded="false"
           >
             Open Control Map
+          </button>
+
+          <button
+            id="audralia-compass-button"
+            class="audralia-header-action"
+            type="button"
+            data-audralia-dialog-open="audralia-compass-dialog"
+            aria-label="Open the directional Mirrorland Compass"
+            aria-haspopup="dialog"
+            aria-controls="audralia-compass-dialog"
+            aria-expanded="false"
+          >
+            Compass
           </button>
 
           <button
@@ -403,16 +425,18 @@
         aria-labelledby="audralia-attractions-title"
       >
         <header class="audralia-attractions-header">
-          <div class="audralia-section-eyebrow">
-            Conservatory Preview
-          </div>
+          <div>
+            <div class="audralia-section-eyebrow">
+              Conservatory Preview
+            </div>
 
-          <h2
-            id="audralia-attractions-title"
-            class="audralia-section-title"
-          >
-            Coming Soon
-          </h2>
+            <h2
+              id="audralia-attractions-title"
+              class="audralia-section-title"
+            >
+              Coming Soon
+            </h2>
+          </div>
         </header>
 
         <div class="audralia-attraction-grid">
@@ -478,6 +502,251 @@
       </section>
     </div>
   </main>
+
+  <dialog
+    id="audralia-compass-dialog"
+    class="audralia-dialog"
+    data-audralia-dialog
+    data-audralia-directional-compass
+    aria-labelledby="audralia-compass-dialog-title"
+    aria-describedby="audralia-compass-dialog-body"
+  >
+    <div class="audralia-dialog-card">
+      <header class="audralia-dialog-header">
+        <div>
+          <div class="audralia-dialog-eyebrow">
+            Mirrorland Direction
+          </div>
+
+          <h2
+            id="audralia-compass-dialog-title"
+            class="audralia-dialog-title"
+          >
+            Mirrorland Compass
+          </h2>
+        </div>
+
+        <button
+          class="audralia-dialog-close"
+          type="button"
+          data-audralia-dialog-close
+          aria-label="Close the Mirrorland Compass"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div
+        id="audralia-compass-dialog-body"
+        class="audralia-dialog-body"
+      >
+        <section
+          aria-labelledby="audralia-compass-backward-title"
+          data-mirrorland-direction="backward"
+        >
+          <div class="audralia-dialog-eyebrow">
+            Return Toward the Entrance
+          </div>
+
+          <h3
+            id="audralia-compass-backward-title"
+            class="audralia-attraction-title"
+          >
+            Move backward through Mirrorland
+          </h3>
+
+          <p>
+            The Atrium is the entrance into Mirrorland. The Atlas Study
+            follows it and leads toward the Audralia Conservatory.
+          </p>
+
+          <nav
+            aria-label="Return toward the Mirrorland entrance"
+            style="
+              display:grid;
+              grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+              gap:10px;
+              margin-top:16px;
+            "
+          >
+            <a
+              class="audralia-control"
+              href="/"
+              data-mirrorland-route="compass"
+              data-mirrorland-direction="backward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Back to Compass
+            </a>
+
+            <a
+              class="audralia-control"
+              href="/showroom/"
+              data-mirrorland-route="atrium"
+              data-mirrorland-direction="backward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Return to Atrium
+            </a>
+
+            <a
+              class="audralia-control"
+              href="/showroom/globe/"
+              data-mirrorland-route="atlas-study"
+              data-mirrorland-direction="backward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Return to Atlas Study
+            </a>
+          </nav>
+        </section>
+
+        <section
+          aria-labelledby="audralia-compass-current-title"
+          data-mirrorland-direction="current"
+          style="margin-top:24px"
+        >
+          <div class="audralia-dialog-eyebrow">
+            Current Position
+          </div>
+
+          <h3
+            id="audralia-compass-current-title"
+            class="audralia-attraction-title"
+          >
+            You are here: Audralia Conservatory
+          </h3>
+
+          <p>
+            This is the protected planetary holder between the Atlas
+            Study and the deeper character, world, control, and Frontier
+            rooms.
+          </p>
+        </section>
+
+        <section
+          aria-labelledby="audralia-compass-forward-title"
+          data-mirrorland-direction="forward"
+          style="margin-top:24px"
+        >
+          <div class="audralia-dialog-eyebrow">
+            Go Deeper into Mirrorland
+          </div>
+
+          <h3
+            id="audralia-compass-forward-title"
+            class="audralia-attraction-title"
+          >
+            Continue beyond the Conservatory
+          </h3>
+
+          <p>
+            Move forward into the people, living world, instruments, and
+            applied systems of Mirrorland.
+          </p>
+
+          <nav
+            aria-label="Go deeper into Mirrorland"
+            style="
+              display:grid;
+              grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+              gap:10px;
+              margin-top:16px;
+            "
+          >
+            <a
+              class="audralia-control"
+              href="/characters/"
+              data-mirrorland-route="portrait-hall"
+              data-mirrorland-direction="forward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Enter Portrait Hall
+            </a>
+
+            <a
+              class="audralia-control"
+              href="/showroom/globe/audralia/planet/"
+              data-mirrorland-route="audralia-worldroom"
+              data-mirrorland-direction="forward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Enter Audralia Worldroom
+            </a>
+
+            <a
+              class="audralia-control"
+              href="/showroom/globe/audralia/disposition/"
+              data-mirrorland-route="control-cockpit"
+              data-mirrorland-direction="forward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Enter Control Cockpit
+            </a>
+
+            <a
+              class="audralia-control"
+              href="/explore/frontier/"
+              data-mirrorland-route="frontier-workshop-yard"
+              data-mirrorland-direction="forward"
+              style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                min-height:48px;
+                text-decoration:none;
+                text-align:center;
+              "
+            >
+              Enter Frontier Workshop Yard
+            </a>
+          </nav>
+        </section>
+      </div>
+    </div>
+  </dialog>
 
   <dialog
     id="audralia-about-dialog"
@@ -643,7 +912,7 @@
       }
 
       const CONTRACT =
-        "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2";
+        "AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3";
 
       const mapButton =
         document.getElementById("audralia-control-map-button");
@@ -693,11 +962,13 @@
           );
 
         if (root && !root.id) {
-          root.id = "house-control-pad-root";
+          root.id =
+            "house-control-pad-root";
         }
 
         if (dialog && !dialog.id) {
-          dialog.id = "house-control-pad-dialog";
+          dialog.id =
+            "house-control-pad-dialog";
         }
 
         if (mapButton) {

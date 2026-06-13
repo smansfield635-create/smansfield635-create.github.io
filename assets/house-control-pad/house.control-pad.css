@@ -1,2734 +1,1045 @@
 /* /assets/house-control-pad/house.control-pad.css */
-/* HOUSE_CONTROL_PAD_DIAMOND_HEART_3D_STATIC_ARCHITECTURE_CSS_TNT_v3 */
+/* HOUSE_CONTROL_PAD_HEART_ESTATE_CSS_TNT_v1_1 */
 /* Full-file replacement. */
 /*
-  Layer ownership:
+Renewal boundary:
+- Preserve HOUSE_CONTROL_PAD_HEART_ESTATE_CSS_TNT_v1 architecture.
+- Preserve all selectors, layout, responsive behavior, states, colors,
+  accessibility treatments, and JavaScript/CSS ownership boundaries.
+- Correct reduced-motion marker geometry only.
+- Preserve translate(-50%, -50%) for every room and avatar marker.
+- Remove animated scaling and movement without displacing map coordinates.
 
-  house.control-pad.data.js
-  - stable heart coordinates
-  - room definitions
-  - facets
-  - corridors
-  - camera metadata
-  - avatar anchors
+Purpose:
+- Present the shared House Control Pad overlay created by house.control-pad.js.
+- Render the heart-estate map, room markers, avatar markers, corridors,
+  details panel, dialog shell, and interaction states.
+- Preserve the JavaScript ownership boundary.
+- Provide responsive behavior, focus visibility, reduced-motion behavior,
+  high-contrast support, and the CSS contract marker.
 
-  house.control-pad.css
-  - controller shell
-  - static three-dimensional heart estate
-  - facet architecture
-  - room architecture
-  - corridor presentation
-  - room information surfaces
-  - mobile architectural framing
+Owns:
+- overlay presentation
+- backdrop presentation
+- dialog layout
+- heart-estate visual field
+- SVG room and corridor styling
+- room and avatar marker presentation
+- selected, hover, focus, hold, degraded, and error states
+- open and close transitions
+- responsive behavior
+- reduced-motion behavior
+- high-contrast adjustments
+- CSS contract proof marker
 
-  house.control-pad.js
-  - DOM construction
-  - camera execution
-  - selection
-  - travel
-  - route actions
-
-  house.avatar-life.js
-  - resident behavioral scheduling
-
-  house.avatars.css
-  - resident appearance and motion
-
-  This file does not own avatar anatomy or avatar-life timing.
+Does not own:
+- canonical estate data
+- canonical routes
+- controller lifecycle
+- event dispatch
+- data validation
+- route execution
+- focus custody
+- scroll locking
+- runtime state truth
+- host-page door markup
 */
 
 :root {
-  --hcp-z: 9999;
+  --house-control-pad-css-contract: "HOUSE_CONTROL_PAD_HEART_ESTATE_CSS_TNT_v1_1";
 
-  --hcp-black: #010208;
-  --hcp-deep: #040817;
-  --hcp-deep-2: #071126;
-  --hcp-panel: rgba(5, 11, 26, 0.985);
-  --hcp-panel-soft: rgba(10, 19, 39, 0.94);
+  --house-overlay-z: 2147483000;
+  --house-overlay-padding: clamp(0.75rem, 2vw, 1.5rem);
 
-  --hcp-ink: #fff1cf;
-  --hcp-text: #edf4ff;
-  --hcp-muted: rgba(232, 240, 255, 0.76);
-  --hcp-soft: rgba(232, 240, 255, 0.56);
-  --hcp-faint: rgba(232, 240, 255, 0.34);
+  --house-backdrop-color: rgba(5, 8, 16, 0.82);
+  --house-backdrop-blur: 18px;
 
-  --hcp-gold: #f3c86f;
-  --hcp-gold-bright: #fff0ad;
-  --hcp-amber: #eda85f;
-  --hcp-rose: #ffacd2;
-  --hcp-violet: #9471ff;
-  --hcp-blue: #8dd8ff;
-  --hcp-green: #8ff0c3;
-  --hcp-silver: #d9e7ff;
+  --house-dialog-width: min(96vw, 92rem);
+  --house-dialog-height: min(94vh, 58rem);
+  --house-dialog-radius: clamp(1rem, 2vw, 1.75rem);
+  --house-dialog-border-width: 1px;
 
-  --hcp-line: rgba(255, 255, 255, 0.1);
-  --hcp-line-soft: rgba(255, 255, 255, 0.055);
-  --hcp-wall: rgba(255, 237, 190, 0.44);
-  --hcp-wall-strong: rgba(255, 237, 190, 0.72);
+  --house-surface-0: #071018;
+  --house-surface-1: #0c1722;
+  --house-surface-2: #122233;
+  --house-surface-3: #183149;
+  --house-surface-soft: rgba(255, 255, 255, 0.055);
 
-  --hcp-heart-width: 1000px;
-  --hcp-heart-height: 900px;
-  --hcp-heart-depth: 320px;
-  --hcp-heart-perspective: 1180px;
+  --house-text-primary: #f5f8fb;
+  --house-text-secondary: #c6d3df;
+  --house-text-muted: #8fa3b6;
+  --house-text-dark: #081018;
 
-  --hcp-header-height: 12.8rem;
-  --hcp-arrival-height: 11rem;
+  --house-border-soft: rgba(185, 215, 239, 0.17);
+  --house-border-medium: rgba(185, 215, 239, 0.31);
+  --house-border-strong: rgba(206, 231, 250, 0.58);
 
-  --hcp-panel-radius: 1.75rem;
+  --house-accent: #d6a75a;
+  --house-accent-soft: rgba(214, 167, 90, 0.2);
+  --house-accent-bright: #f3c979;
 
-  --hcp-shadow:
-    0 34px 120px rgba(0, 0, 0, 0.62),
-    0 0 0 1px rgba(255, 255, 255, 0.025);
+  --house-room: #6db6d7;
+  --house-room-soft: rgba(109, 182, 215, 0.2);
+  --house-room-strong: #9edbf2;
 
-  --hcp-heart-shadow:
-    0 42px 70px rgba(0, 0, 0, 0.54),
-    0 0 64px rgba(243, 200, 111, 0.13);
+  --house-avatar: #d68cb7;
+  --house-avatar-soft: rgba(214, 140, 183, 0.2);
+  --house-avatar-strong: #f1b6d7;
 
-  --hcp-camera-x: 0px;
-  --hcp-camera-y: 0px;
-  --hcp-camera-z: 0px;
-  --hcp-camera-scale: 0.86;
-  --hcp-camera-rotate-x: 7deg;
-  --hcp-camera-rotate-y: 0deg;
-  --hcp-camera-rotate-z: 0deg;
-  --hcp-camera-perspective: var(--hcp-heart-perspective);
+  --house-corridor: rgba(171, 214, 237, 0.42);
+  --house-corridor-active: rgba(243, 201, 121, 0.8);
+
+  --house-success: #86d6a4;
+  --house-warning: #f0c26a;
+  --house-error: #f08d8d;
+
+  --house-focus-ring: #ffffff;
+  --house-focus-shadow:
+    0 0 0 3px rgba(7, 16, 24, 0.95),
+    0 0 0 6px rgba(243, 201, 121, 0.95);
+
+  --house-shadow-lg: 0 2rem 6rem rgba(0, 0, 0, 0.52);
+  --house-shadow-md: 0 1rem 2.5rem rgba(0, 0, 0, 0.34);
+  --house-shadow-sm: 0 0.45rem 1rem rgba(0, 0, 0, 0.24);
+
+  --house-transition-fast: 140ms;
+  --house-transition-medium: 240ms;
+  --house-transition-slow: 360ms;
+
+  --house-estate-aspect: 1 / 1;
+  --house-marker-size: clamp(2.6rem, 4vw, 4.5rem);
+  --house-avatar-size: clamp(2.4rem, 3.6vw, 4rem);
+  --house-details-width: minmax(18rem, 26rem);
 }
 
-/* =========================================================
-   DOCUMENT STATE
-   ========================================================= */
+/* ========================================================================== */
+/* Root overlay                                                               */
+/* ========================================================================== */
 
-html[data-house-control-pad-open="true"],
-body[data-house-control-pad-open="true"] {
-  overflow: hidden !important;
-}
-
-/* =========================================================
-   OVERLAY
-   ========================================================= */
-
-.hcp-overlay {
+.house-control-pad,
+[data-house-control-pad] {
   position: fixed;
   inset: 0;
-  z-index: var(--hcp-z);
-
+  z-index: var(--house-overlay-z);
   display: grid;
   place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: var(--house-overlay-padding);
+  isolation: isolate;
+  color: var(--house-text-primary);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.45;
+  overscroll-behavior: contain;
+}
 
-  padding:
-    max(0.65rem, env(safe-area-inset-top))
-    0.65rem
-    max(0.65rem, env(safe-area-inset-bottom));
+.house-control-pad[hidden],
+[data-house-control-pad][hidden] {
+  display: none !important;
+}
 
-  opacity: 0;
-  visibility: hidden;
+.house-control-pad,
+.house-control-pad *,
+.house-control-pad *::before,
+.house-control-pad *::after {
+  box-sizing: border-box;
+}
+
+.house-control-pad::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
   pointer-events: none;
-
-  color: var(--hcp-text);
-
   background:
     radial-gradient(
-      circle at 50% 5%,
-      rgba(243, 200, 111, 0.15),
-      transparent 31rem
+      circle at 50% 15%,
+      rgba(109, 182, 215, 0.12),
+      transparent 40%
     ),
     radial-gradient(
-      circle at 12% 25%,
-      rgba(148, 113, 255, 0.16),
-      transparent 34rem
+      circle at 18% 76%,
+      rgba(214, 140, 183, 0.1),
+      transparent 38%
     ),
     radial-gradient(
-      circle at 88% 28%,
-      rgba(141, 216, 255, 0.12),
-      transparent 34rem
-    ),
-    rgba(0, 0, 0, 0.78);
-
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  transition:
-    opacity 0.22s ease,
-    visibility 0.22s ease;
+      circle at 82% 78%,
+      rgba(214, 167, 90, 0.1),
+      transparent 38%
+    );
 }
 
-.hcp-overlay[data-open="true"] {
+.house-control-pad__backdrop,
+[data-house-backdrop] {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--house-backdrop-color);
+  -webkit-backdrop-filter: blur(var(--house-backdrop-blur));
+  backdrop-filter: blur(var(--house-backdrop-blur));
+  opacity: 0;
+  transition: opacity var(--house-transition-medium) ease;
+}
+
+[data-house-control-pad][data-house-open="true"]
+  .house-control-pad__backdrop {
   opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
 }
 
-/* =========================================================
-   CONTROLLER PANEL
-   ========================================================= */
+/* ========================================================================== */
+/* Dialog                                                                     */
+/* ========================================================================== */
 
-.hcp-panel {
+.house-control-pad__dialog,
+[data-house-dialog] {
   position: relative;
-
-  width: min(1280px, calc(100vw - 1.3rem));
-  height: min(960px, calc(100vh - 1.3rem));
-  max-height: calc(100vh - 1.3rem);
-
   display: grid;
-  grid-template-rows:
-    auto
-    minmax(0, 1fr)
-    auto
-    auto;
-
+  grid-template-columns: minmax(0, 1fr) var(--house-details-width);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "header header"
+    "status status"
+    "estate details"
+    "footer footer";
+  width: var(--house-dialog-width);
+  max-width: 100%;
+  height: var(--house-dialog-height);
+  max-height: 100%;
   overflow: hidden;
-
-  border: 1px solid rgba(243, 200, 111, 0.25);
-  border-radius: var(--hcp-panel-radius);
-
+  border: var(--house-dialog-border-width) solid var(--house-border-medium);
+  border-radius: var(--house-dialog-radius);
   background:
-    radial-gradient(
-      circle at 50% 22%,
-      rgba(243, 200, 111, 0.055),
-      transparent 34rem
-    ),
-    radial-gradient(
-      circle at 84% 18%,
-      rgba(141, 216, 255, 0.065),
-      transparent 32rem
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.01)
     ),
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.04),
-      rgba(255, 255, 255, 0.012)
-    ),
-    var(--hcp-panel);
-
-  box-shadow: var(--hcp-shadow);
-
-  transform: translateY(10px) scale(0.988);
-
+      var(--house-surface-1),
+      var(--house-surface-0)
+    );
+  box-shadow: var(--house-shadow-lg);
+  opacity: 0;
+  transform: translateY(1rem) scale(0.985);
   transition:
-    transform 0.22s ease;
+    opacity var(--house-transition-medium) ease,
+    transform var(--house-transition-slow) cubic-bezier(0.2, 0.75, 0.2, 1);
+  outline: none;
 }
 
-.hcp-overlay[data-open="true"] .hcp-panel {
+[data-house-control-pad][data-house-open="true"]
+  .house-control-pad__dialog {
+  opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.hcp-header {
-  position: relative;
-  z-index: 80;
-
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 1rem;
-
-  padding: 1rem;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.075);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(7, 15, 33, 0.997),
-      rgba(4, 10, 24, 0.99)
-    );
-
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.22);
-}
-
-.hcp-title-wrap {
-  min-width: 0;
-
-  display: grid;
-  gap: 0.34rem;
-}
-
-.hcp-kicker {
-  width: fit-content;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 0.52rem;
-
-  padding: 0.45rem 0.76rem;
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-
-  color: rgba(235, 243, 255, 0.86);
-  background: rgba(255, 255, 255, 0.036);
-
-  font:
-    950 0.65rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.hcp-kicker::before {
+.house-control-pad__dialog::before {
   content: "";
-
-  width: 0.62rem;
-  height: 0.62rem;
-
-  border-radius: 0.16rem;
-
-  transform: rotate(45deg);
-
-  background:
-    linear-gradient(
-      135deg,
-      var(--hcp-gold-bright),
-      var(--hcp-gold)
-    );
-
-  box-shadow:
-    0 0 1rem rgba(243, 200, 111, 0.42);
-}
-
-.hcp-title {
-  margin: 0;
-
-  max-width: 880px;
-
-  color: var(--hcp-ink);
-
-  font:
-    950 clamp(1.4rem, 3.3vw, 2.3rem) / 0.98
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: -0.06em;
-  text-wrap: balance;
-}
-
-.hcp-subtitle {
-  margin: 0;
-
-  max-width: 850px;
-
-  color: var(--hcp-muted);
-
-  font:
-    520 0.92rem/1.42
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-.hcp-header-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.hcp-return-estate,
-.hcp-close {
-  min-height: 2.7rem;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.14);
-
-  color: var(--hcp-ink);
-  background: rgba(255, 255, 255, 0.045);
-
-  cursor: pointer;
-
-  transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
-}
-
-.hcp-return-estate {
-  padding: 0.54rem 0.82rem;
-
-  border-radius: 999px;
-
-  font:
-    950 0.67rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-}
-
-.hcp-close {
-  width: 2.7rem;
-  height: 2.7rem;
-
-  border-radius: 999px;
-
-  font:
-    950 1.35rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-.hcp-return-estate:hover,
-.hcp-return-estate:focus-visible,
-.hcp-close:hover,
-.hcp-close:focus-visible {
-  transform: translateY(-2px);
-
-  border-color: rgba(243, 200, 111, 0.5);
-
-  background: rgba(243, 200, 111, 0.075);
-
-  outline: none;
-}
-
-/* =========================================================
-   VIEWPORT
-   ========================================================= */
-
-.hcp-estate-viewport {
-  position: relative;
-  z-index: 1;
-
-  min-height: 0;
-
-  overflow: hidden;
-  overscroll-behavior: contain;
-  touch-action: none;
-
-  perspective: var(--hcp-camera-perspective);
-  perspective-origin: 50% 46%;
-
-  background:
-    radial-gradient(
-      circle at 50% 44%,
-      rgba(243, 200, 111, 0.075),
-      transparent 26rem
-    ),
-    radial-gradient(
-      circle at 22% 52%,
-      rgba(148, 113, 255, 0.07),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 78% 52%,
-      rgba(141, 216, 255, 0.06),
-      transparent 28rem
-    ),
-    linear-gradient(
-      180deg,
-      rgba(1, 4, 13, 0.74),
-      rgba(0, 0, 0, 0.3)
-    );
-}
-
-.hcp-estate-viewport::before {
-  content: "";
-
   position: absolute;
   inset: 0;
   z-index: 0;
-
   pointer-events: none;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.11) 0 1px,
-      transparent 1.3px
-    );
-
-  background-size: 126px 126px;
-
-  opacity: 0.19;
-}
-
-.hcp-estate-viewport:focus-visible {
-  outline:
-    2px solid rgba(141, 216, 255, 0.42);
-
-  outline-offset: -2px;
-}
-
-/* =========================================================
-   CAMERA RIG
-   ========================================================= */
-
-.hcp-camera-rig {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-
-  width: var(--hcp-heart-width);
-  height: var(--hcp-heart-height);
-
-  transform-style: preserve-3d;
-  transform-origin: 50% 50%;
-
-  transform:
-    translate3d(
-      calc(-50% + var(--hcp-camera-x)),
-      calc(-50% + var(--hcp-camera-y)),
-      var(--hcp-camera-z)
-    )
-    rotateX(var(--hcp-camera-rotate-x))
-    rotateY(var(--hcp-camera-rotate-y))
-    rotateZ(var(--hcp-camera-rotate-z))
-    scale(var(--hcp-camera-scale));
-
-  will-change: transform;
-
-  transition:
-    transform 0.62s cubic-bezier(0.22, 0.8, 0.22, 1);
-}
-
-/*
-  Legacy controller compatibility.
-  The existing controller may still mount hcp-estate-stage.
-*/
-
-.hcp-estate-stage {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-
-  width: var(--hcp-heart-width);
-  height: var(--hcp-heart-height);
-
-  transform-style: preserve-3d;
-  transform-origin: 50% 50%;
-
-  transform:
-    translate3d(
-      calc(-50% + var(--hcp-camera-x)),
-      calc(-50% + var(--hcp-camera-y)),
-      var(--hcp-camera-z)
-    )
-    rotateX(var(--hcp-camera-rotate-x))
-    rotateY(var(--hcp-camera-rotate-y))
-    rotateZ(var(--hcp-camera-rotate-z))
-    scale(var(--hcp-camera-scale));
-
-  will-change: transform;
-
-  transition:
-    transform 0.62s cubic-bezier(0.22, 0.8, 0.22, 1);
-}
-
-/* =========================================================
-   HEART ESTATE ROOT
-   ========================================================= */
-
-.hcp-estate-canvas,
-.hcp-heart-estate {
-  position: relative;
-
-  width: var(--hcp-heart-width);
-  height: var(--hcp-heart-height);
-
-  transform-style: preserve-3d;
-  isolation: isolate;
-
-  background: transparent;
-}
-
-.hcp-estate-canvas::before,
-.hcp-heart-estate::before {
-  content: "";
-
-  position: absolute;
-  left: 50%;
-  bottom: 4%;
-  z-index: -4;
-
-  width: 68%;
-  height: 11%;
-
-  transform:
-    translateX(-50%)
-    translateZ(-120px);
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(0, 0, 0, 0.76),
-      transparent 72%
-    );
-
-  filter: blur(18px);
-
-  pointer-events: none;
-}
-
-.hcp-estate-canvas::after,
-.hcp-heart-estate::after {
-  content: "";
-
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  z-index: -3;
-
-  width: 68%;
-  height: 68%;
-
-  transform:
-    translate(-50%, -50%)
-    translateZ(-90px);
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(243, 200, 111, 0.14),
-      rgba(255, 172, 210, 0.07) 38%,
-      rgba(148, 113, 255, 0.045) 56%,
-      transparent 74%
-    );
-
-  filter: blur(30px);
-
-  pointer-events: none;
-}
-
-/* =========================================================
-   HEART SHELL
-   ========================================================= */
-
-.hcp-heart-rear-shell,
-.hcp-heart-shell,
-.hcp-heart-facet-layer,
-.hcp-heart-corridor-layer,
-.hcp-heart-room-layer,
-.hcp-heart-light-layer,
-.hcp-room-layer,
-.hcp-route-layer,
-.hcp-avatar-layer {
-  position: absolute;
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-}
-
-.hcp-heart-rear-shell {
-  z-index: 1;
-
-  transform:
-    translate3d(0, 18px, -82px)
-    scale(0.982);
-
-  clip-path:
-    path(
-      "M500 865 L382 746 L252 637 Q128 531 92 382 Q52 215 157 105 Q251 6 379 70 Q446 104 500 196 Q554 104 621 70 Q749 6 843 105 Q948 215 908 382 Q872 531 748 637 L618 746 Z"
-    );
-
-  background:
-    linear-gradient(
-      180deg,
-      #1d0d22,
-      #090b1c 74%,
-      #040711
-    );
-
-  border:
-    8px solid rgba(243, 200, 111, 0.22);
-
-  filter:
-    brightness(0.68)
-    drop-shadow(
-      0 34px 34px rgba(0, 0, 0, 0.46)
-    );
-
-  pointer-events: none;
-}
-
-.hcp-heart-shell {
-  z-index: 2;
-
-  transform: translateZ(-32px);
-
-  clip-path:
-    path(
-      "M500 865 L382 746 L252 637 Q128 531 92 382 Q52 215 157 105 Q251 6 379 70 Q446 104 500 196 Q554 104 621 70 Q749 6 843 105 Q948 215 908 382 Q872 531 748 637 L618 746 Z"
-    );
-
-  background:
-    radial-gradient(
-      circle at 50% 43%,
-      rgba(255, 230, 161, 0.14),
-      transparent 20%
-    ),
-    radial-gradient(
-      circle at 28% 25%,
-      rgba(255, 172, 210, 0.17),
-      transparent 36%
-    ),
-    radial-gradient(
-      circle at 72% 25%,
-      rgba(141, 216, 255, 0.13),
-      transparent 36%
-    ),
-    linear-gradient(
-      135deg,
-      #6f304f,
-      #3b2457 42%,
-      #151833 74%,
-      #080b19
-    );
-
-  border:
-    8px solid rgba(255, 228, 163, 0.54);
-
-  box-shadow:
-    var(--hcp-heart-shadow),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.055),
-    inset 0 0 74px rgba(255, 255, 255, 0.045);
-
-  pointer-events: none;
-}
-
-/* =========================================================
-   HEART FACETS
-   ========================================================= */
-
-.hcp-heart-facet-layer {
-  z-index: 4;
-
-  transform-style: preserve-3d;
-
-  pointer-events: none;
-}
-
-.hcp-heart-facet,
-.hcp-room-node {
-  --room-center-x: 500px;
-  --room-center-y: 430px;
-  --room-z: 20px;
-  --room-width: 180px;
-  --room-height: 150px;
-  --room-depth: 60px;
-
-  position: absolute;
-
-  left: calc(var(--room-center-x) - var(--room-width) / 2);
-  top: calc(var(--room-center-y) - var(--room-height) / 2);
-
-  width: var(--room-width);
-  height: var(--room-height);
-
-  transform:
-    translateZ(var(--room-z));
-
-  transform-style: preserve-3d;
-
-  pointer-events: auto;
-}
-
-.hcp-heart-facet {
-  overflow: hidden;
-
-  border:
-    2px solid rgba(255, 231, 174, 0.28);
-
-  background:
-    radial-gradient(
-      circle at 50% 12%,
-      rgba(255, 255, 255, 0.14),
-      transparent 38%
-    ),
-    linear-gradient(
-      145deg,
-      rgba(255, 173, 211, 0.14),
-      rgba(148, 113, 255, 0.09) 42%,
-      rgba(9, 15, 33, 0.84)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.13),
-    inset 0 0 36px rgba(255, 255, 255, 0.025);
-
-  transition:
-    opacity 0.2s ease,
-    border-color 0.2s ease,
-    filter 0.2s ease,
-    transform 0.42s ease;
-}
-
-.hcp-heart-facet::before {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      115deg,
-      transparent 10%,
-      rgba(255, 255, 255, 0.08) 32%,
-      transparent 48%
-    );
-
-  opacity: 0.66;
-}
-
-.hcp-heart-facet[data-depth-band="rear"] {
-  filter:
-    brightness(0.76)
-    saturate(0.82);
-}
-
-.hcp-heart-facet[data-depth-band="middle"] {
-  filter:
-    brightness(0.93)
-    saturate(0.94);
-}
-
-.hcp-heart-facet[data-depth-band="front"] {
-  filter:
-    brightness(1.06)
-    saturate(1.04);
-
-  border-color:
-    rgba(255, 233, 179, 0.42);
-}
-
-.hcp-heart-facet[data-selected="true"],
-.hcp-heart-facet[data-current="true"] {
-  border-color:
-    rgba(255, 238, 196, 0.78);
-
-  filter:
-    brightness(1.16)
-    saturate(1.08);
-
-  box-shadow:
-    0 0 0 2px rgba(243, 200, 111, 0.12),
-    0 0 32px rgba(243, 200, 111, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-/* =========================================================
-   ROOM NODE
-   ========================================================= */
-
-.hcp-room-node {
-  z-index: 8;
-
-  display: block;
-
-  overflow: visible;
-
-  padding: 0;
-
-  border:
-    2px solid rgba(255, 238, 196, 0.4);
-
-  color: var(--hcp-text);
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(255, 255, 255, 0.08),
-      transparent 42%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(22, 31, 59, 0.78),
-      rgba(6, 12, 28, 0.92)
-    );
-
-  box-shadow:
-    0 18px 32px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.09);
-
-  cursor: pointer;
-  text-align: left;
-
-  transition:
-    opacity 0.2s ease,
-    filter 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.42s ease;
-}
-
-.hcp-room-node::before {
-  content: "";
-
-  position: absolute;
-  inset: 0.38rem;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.045);
-
-  pointer-events: none;
-}
-
-.hcp-room-node::after {
-  content: "";
-
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: -12px;
-
-  height: 18px;
-
-  transform:
-    translateZ(-20px);
-
-  border-radius: 50%;
-
-  background:
-    rgba(0, 0, 0, 0.44);
-
-  filter: blur(8px);
-
-  pointer-events: none;
-}
-
-.hcp-room-node:hover,
-.hcp-room-node:focus-visible {
-  border-color:
-    rgba(243, 200, 111, 0.76);
-
-  box-shadow:
-    0 20px 38px rgba(0, 0, 0, 0.34),
-    0 0 0 2px rgba(243, 200, 111, 0.09),
-    0 0 24px rgba(243, 200, 111, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-
-  outline: none;
-}
-
-.hcp-room-node[data-selected="true"],
-.hcp-room-node[data-current="true"] {
-  border-color:
-    rgba(255, 236, 187, 0.88);
-
-  box-shadow:
-    0 22px 42px rgba(0, 0, 0, 0.36),
-    0 0 0 3px rgba(243, 200, 111, 0.11),
-    0 0 34px rgba(243, 200, 111, 0.19),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
-}
-
-.hcp-room-node[data-arrived="true"] {
-  animation:
-    hcpHeartRoomArrival 0.8s ease both;
-}
-
-/* =========================================================
-   FACET SHAPES
-   ========================================================= */
-
-.hcp-room-human-threshold,
-.hcp-heart-facet-human-threshold {
-  clip-path:
-    polygon(
-      6% 35%,
-      15% 7%,
-      46% 0,
-      100% 5%,
-      95% 55%,
-      72% 100%,
-      18% 87%
-    );
-}
-
-.hcp-room-product-gallery,
-.hcp-heart-facet-product-gallery {
-  clip-path:
-    polygon(
-      0 5%,
-      54% 0,
-      85% 7%,
-      94% 35%,
-      82% 87%,
-      28% 100%,
-      5% 55%
-    );
-}
-
-.hcp-room-guide-foyer,
-.hcp-heart-facet-guide-foyer {
-  clip-path:
-    polygon(
-      0 0,
-      100% 42%,
-      100% 100%,
-      18% 58%
-    );
-}
-
-.hcp-room-book-chamber,
-.hcp-heart-facet-book-chamber {
-  clip-path:
-    polygon(
-      0 42%,
-      100% 0,
-      82% 58%,
-      0 100%
-    );
-}
-
-.hcp-room-law-library,
-.hcp-heart-facet-law-library {
-  clip-path:
-    polygon(
-      0 36%,
-      38% 0,
-      100% 30%,
-      78% 100%,
-      6% 88%
-    );
-}
-
-.hcp-room-diagnostic-room,
-.hcp-heart-facet-diagnostic-room {
-  clip-path:
-    polygon(
-      0 30%,
-      62% 0,
-      100% 36%,
-      94% 88%,
-      22% 100%
-    );
-}
-
-.hcp-room-showroom,
-.hcp-heart-facet-showroom {
-  clip-path:
-    polygon(
-      0 0,
-      100% 18%,
-      82% 54%,
-      100% 100%,
-      20% 92%
-    );
-}
-
-.hcp-room-lab,
-.hcp-heart-facet-lab {
-  clip-path:
-    polygon(
-      0 18%,
-      100% 0,
-      80% 92%,
-      0 100%,
-      18% 54%
-    );
-}
-
-.hcp-room-house-core,
-.hcp-heart-facet-house-core {
-  clip-path:
-    polygon(
-      50% 0,
-      100% 40%,
-      82% 90%,
-      50% 100%,
-      18% 90%,
-      0 40%
-    );
-
-  background:
-    radial-gradient(
-      circle at 50% 46%,
-      rgba(255, 246, 215, 0.24),
-      rgba(243, 200, 111, 0.11) 28%,
-      rgba(255, 172, 210, 0.055) 50%,
-      transparent 70%
-    ),
-    linear-gradient(
-      145deg,
-      rgba(89, 58, 106, 0.94),
-      rgba(20, 25, 53, 0.97)
-    );
-}
-
-.hcp-room-education-room,
-.hcp-heart-facet-education-room {
-  clip-path:
-    polygon(
-      0 0,
-      92% 0,
-      100% 58%,
-      62% 100%,
-      12% 90%
-    );
-}
-
-.hcp-room-portrait-hall,
-.hcp-heart-facet-portrait-hall {
-  clip-path:
-    polygon(
-      8% 0,
-      92% 0,
-      100% 44%,
-      50% 100%,
-      0 44%
-    );
-}
-
-.hcp-room-atlas-study,
-.hcp-heart-facet-atlas-study {
-  clip-path:
-    polygon(
-      0 0,
-      100% 8%,
-      88% 100%,
-      24% 92%
-    );
-}
-
-.hcp-room-frontier-workshop,
-.hcp-heart-facet-frontier-workshop {
-  clip-path:
-    polygon(
-      0 8%,
-      100% 0,
-      76% 92%,
-      12% 100%
-    );
-}
-
-.hcp-room-hearth-room,
-.hcp-heart-facet-hearth-room {
-  clip-path:
-    polygon(
-      0 0,
-      50% 12%,
-      100% 0,
-      50% 100%
-    );
-
-  background:
-    radial-gradient(
-      circle at 50% 34%,
-      rgba(255, 233, 169, 0.22),
-      rgba(237, 168, 95, 0.09) 34%,
-      transparent 62%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(102, 50, 74, 0.92),
-      rgba(18, 17, 39, 0.97)
-    );
-}
-
-/* =========================================================
-   ROOM COLOR FAMILIES
-   ========================================================= */
-
-.hcp-room-orientation,
-.hcp-room-showroom,
-.hcp-room-world,
-.hcp-room-proof,
-.hcp-room-law,
-.hcp-room-future-character {
-  border-color:
-    rgba(141, 216, 255, 0.4);
-}
-
-.hcp-room-product,
-.hcp-room-frontier {
-  border-color:
-    rgba(143, 240, 195, 0.4);
-}
-
-.hcp-room-diagnostic {
-  border-color:
-    rgba(216, 230, 255, 0.5);
-}
-
-.hcp-room-human,
-.hcp-room-book {
-  border-color:
-    rgba(255, 172, 210, 0.44);
-}
-
-/* =========================================================
-   ROOM DEPTH
-   ========================================================= */
-
-.hcp-room-floor {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-
-  transform:
-    translateZ(var(--room-floor-z, -12px));
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.025),
-      rgba(0, 0, 0, 0.18)
-    );
-
-  pointer-events: none;
-}
-
-.hcp-room-wall {
-  position: absolute;
-  z-index: 2;
-
-  border:
-    1px solid rgba(255, 239, 198, 0.22);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.07),
-      rgba(255, 255, 255, 0.018)
-    );
-
-  transform-style: preserve-3d;
-
-  pointer-events: none;
-}
-
-.hcp-room-wall-north {
-  left: 0;
-  top: 0;
-
-  width: 100%;
-  height: var(--room-wall-height, 38px);
-
-  transform:
-    rotateX(90deg)
-    translateZ(
-      calc(
-        var(--room-wall-height, 38px) / 2
-      )
-    );
-
-  transform-origin: 50% 0;
-}
-
-.hcp-room-wall-south {
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: var(--room-wall-height, 38px);
-
-  transform:
-    rotateX(-90deg)
-    translateZ(
-      calc(
-        var(--room-wall-height, 38px) / 2
-      )
-    );
-
-  transform-origin: 50% 100%;
-}
-
-.hcp-room-wall-west {
-  left: 0;
-  top: 0;
-
-  width: var(--room-wall-height, 38px);
-  height: 100%;
-
-  transform:
-    rotateY(-90deg)
-    translateZ(
-      calc(
-        var(--room-wall-height, 38px) / 2
-      )
-    );
-
-  transform-origin: 0 50%;
-}
-
-.hcp-room-wall-east {
-  right: 0;
-  top: 0;
-
-  width: var(--room-wall-height, 38px);
-  height: 100%;
-
-  transform:
-    rotateY(90deg)
-    translateZ(
-      calc(
-        var(--room-wall-height, 38px) / 2
-      )
-    );
-
-  transform-origin: 100% 50%;
-}
-
-/* =========================================================
-   ARCHITECTURAL FEATURES
-   ========================================================= */
-
-.hcp-room-architecture {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-
-  overflow: hidden;
-
-  pointer-events: none;
-}
-
-.hcp-room-feature {
-  position: absolute;
-
-  display: block;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.07);
-
-  background:
-    rgba(255, 255, 255, 0.025);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.045);
-
-  opacity: 0.88;
-}
-
-/* Circular architectural features */
-
-.hcp-room-feature-central-seal,
-.hcp-room-feature-entry-seal,
-.hcp-room-feature-diagnostic-seal,
-.hcp-room-feature-radial-floor,
-.hcp-room-feature-atlas-table,
-.hcp-room-feature-threshold-light {
-  border-radius: 50%;
-}
-
-.hcp-room-feature-central-seal {
-  border-color:
-    rgba(243, 200, 111, 0.35);
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 244, 210, 0.22),
-      rgba(243, 200, 111, 0.08) 34%,
-      transparent 70%
-    );
-
-  box-shadow:
-    0 0 22px rgba(243, 200, 111, 0.16);
-}
-
-.hcp-room-feature-entry-seal {
-  border-color:
-    rgba(243, 200, 111, 0.25);
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(243, 200, 111, 0.14),
-      transparent 70%
-    );
-}
-
-.hcp-room-feature-diagnostic-seal {
-  border-color:
-    rgba(216, 230, 255, 0.3);
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(216, 230, 255, 0.11),
-      transparent 70%
-    );
-}
-
-.hcp-room-feature-radial-floor {
-  border-color:
-    rgba(141, 216, 255, 0.13);
-
-  background:
-    repeating-conic-gradient(
-      from 0deg,
-      rgba(141, 216, 255, 0.055) 0 2deg,
-      transparent 2deg 22deg
-    );
-}
-
-.hcp-room-feature-threshold-light {
-  border-color:
-    rgba(255, 172, 210, 0.28);
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 172, 210, 0.22),
-      transparent 70%
-    );
-}
-
-/* Apse and bowed forms */
-
-.hcp-room-feature-reading-apse,
-.hcp-room-feature-bowed-wall,
-.hcp-room-feature-rounded-wall {
-  border-radius: 50%;
-}
-
-.hcp-room-feature-reading-apse {
-  border-color:
-    rgba(255, 172, 210, 0.18);
-
-  background:
-    radial-gradient(
-      ellipse at 50% 14%,
-      rgba(255, 172, 210, 0.1),
-      transparent 72%
-    );
-}
-
-.hcp-room-feature-bowed-wall {
-  border-color:
-    rgba(141, 216, 255, 0.16);
-
-  border-right: 0;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(141, 216, 255, 0.08),
-      transparent
-    );
-}
-
-/* Shelves and archives */
-
-.hcp-room-feature-book-wall,
-.hcp-room-feature-shelf-left,
-.hcp-room-feature-shelf-right,
-.hcp-room-feature-service-wall,
-.hcp-room-feature-gauge-bank {
-  background:
-    repeating-linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.07) 0 2px,
-      transparent 2px 10px
-    ),
-    rgba(255, 255, 255, 0.018);
-}
-
-.hcp-room-feature-archive-aisle {
-  border-color:
-    rgba(216, 230, 255, 0.14);
-
+  border-radius: inherit;
   background:
     linear-gradient(
       90deg,
       transparent,
-      rgba(216, 230, 255, 0.055),
+      rgba(255, 255, 255, 0.035),
       transparent
     );
+  mix-blend-mode: screen;
 }
 
-/* Tables and benches */
-
-.hcp-room-feature-reading-table,
-.hcp-room-feature-workbench,
-.hcp-room-feature-atlas-table {
-  border-radius: 999px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(243, 200, 111, 0.12),
-      rgba(243, 200, 111, 0.03)
-    );
-}
-
-.hcp-room-feature-reading-table {
-  border-color:
-    rgba(255, 172, 210, 0.18);
-}
-
-.hcp-room-feature-workbench {
-  border-color:
-    rgba(143, 240, 195, 0.18);
-}
-
-.hcp-room-feature-atlas-table {
-  border-color:
-    rgba(141, 216, 255, 0.2);
-}
-
-/* Bays and instruments */
-
-.hcp-room-feature-instrument-bay,
-.hcp-room-feature-exhibit-bay,
-.hcp-room-feature-display-bay,
-.hcp-room-feature-future-bay,
-.hcp-room-feature-portrait-niche,
-.hcp-room-feature-map-reference {
-  border-radius: 0.42rem;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(141, 216, 255, 0.06),
-      rgba(255, 255, 255, 0.014)
-    );
-}
-
-.hcp-room-feature-instrument-bay,
-.hcp-room-feature-exhibit-bay {
-  border-color:
-    rgba(141, 216, 255, 0.17);
-}
-
-.hcp-room-feature-display-bay {
-  border-color:
-    rgba(143, 240, 195, 0.17);
-}
-
-.hcp-room-feature-future-bay {
-  border-color:
-    rgba(148, 113, 255, 0.22);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(143, 240, 195, 0.07),
-      rgba(148, 113, 255, 0.09)
-    );
-}
-
-.hcp-room-feature-portrait-niche {
-  border-color:
-    rgba(243, 200, 111, 0.16);
-}
-
-/* Classroom */
-
-.hcp-room-feature-teaching-wall {
-  border-color:
-    rgba(143, 240, 195, 0.2);
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(143, 240, 195, 0.09),
-      rgba(141, 216, 255, 0.04)
-    );
-}
-
-.hcp-room-feature-tier {
-  border-radius: 999px;
-
-  background:
-    rgba(143, 240, 195, 0.065);
-}
-
-/* Crossings */
-
-.hcp-room-feature-north-crossing,
-.hcp-room-feature-south-crossing,
-.hcp-room-feature-west-crossing,
-.hcp-room-feature-east-crossing,
-.hcp-room-feature-controlled-entry,
-.hcp-room-feature-double-door {
-  border: 0;
-
-  background:
-    rgba(243, 200, 111, 0.07);
-}
-
-.hcp-room-feature-north-crossing,
-.hcp-room-feature-south-crossing {
-  border-left:
-    1px solid rgba(243, 200, 111, 0.15);
-
-  border-right:
-    1px solid rgba(243, 200, 111, 0.15);
-}
-
-.hcp-room-feature-west-crossing,
-.hcp-room-feature-east-crossing {
-  border-top:
-    1px solid rgba(243, 200, 111, 0.15);
-
-  border-bottom:
-    1px solid rgba(243, 200, 111, 0.15);
-}
-
-.hcp-room-feature-controlled-entry {
-  border-top:
-    1px solid rgba(216, 230, 255, 0.2);
-
-  border-bottom:
-    1px solid rgba(216, 230, 255, 0.2);
-}
-
-.hcp-room-feature-double-door {
-  border-left:
-    1px solid rgba(243, 200, 111, 0.24);
-
-  border-right:
-    1px solid rgba(243, 200, 111, 0.24);
-}
-
-.hcp-room-feature-angled-wall {
-  border: 0;
-
-  clip-path:
-    polygon(
-      0 0,
-      100% 0,
-      28% 100%,
-      0 100%
-    );
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 172, 210, 0.09),
-      transparent
-    );
-}
-
-/* Static hearth */
-
-.hcp-room-feature-hearth-fire {
-  border: 0;
-  border-radius: 50% 50% 38% 38%;
-
-  background:
-    radial-gradient(
-      ellipse at 50% 70%,
-      rgba(255, 241, 187, 0.82),
-      rgba(243, 200, 111, 0.5) 26%,
-      rgba(255, 138, 82, 0.17) 58%,
-      transparent 74%
-    );
-
-  filter:
-    drop-shadow(
-      0 0 0.9rem rgba(243, 200, 111, 0.34)
-    );
-}
-
-/* =========================================================
-   CORRIDORS
-   ========================================================= */
-
-.hcp-heart-corridor-layer,
-.hcp-route-layer {
-  z-index: 6;
-
-  transform-style: preserve-3d;
-
-  pointer-events: none;
-}
-
-.hcp-heart-corridor,
-.hcp-travel-segment {
-  position: absolute;
-
-  height: 3px;
-
-  transform-origin: 0 50%;
-
-  border-radius: 999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(243, 200, 111, 0),
-      rgba(243, 200, 111, 0.5) 20%,
-      rgba(255, 235, 183, 0.72) 50%,
-      rgba(141, 216, 255, 0.46) 80%,
-      rgba(141, 216, 255, 0)
-    );
-
-  box-shadow:
-    0 0 0.75rem rgba(243, 200, 111, 0.18);
-
-  opacity: 0.6;
-
-  pointer-events: none;
-}
-
-.hcp-travel-segment {
-  z-index: 30;
-
-  opacity: 1;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(243, 200, 111, 0),
-      rgba(255, 241, 196, 0.98),
-      rgba(141, 216, 255, 0.82),
-      rgba(255, 172, 210, 0)
-    );
-
-  box-shadow:
-    0 0 1.1rem rgba(243, 200, 111, 0.38);
-
-  animation:
-    hcpHeartTravelSegment 0.7s ease both;
-}
-
-/* =========================================================
-   LABELS AND INFORMATION
-   ========================================================= */
-
-.hcp-room-label-zone,
-.hcp-room-summary-zone,
-.hcp-room-detail-zone,
-.hcp-room-portrait-zone,
-.hcp-room-action-zone {
-  position: absolute;
-  z-index: 14;
-}
-
-.hcp-room-label-zone {
-  display: grid;
-  align-content: start;
-  justify-items: start;
-  gap: 0.2rem;
-
-  pointer-events: none;
-}
-
-.hcp-room-label {
-  max-width: 100%;
-
-  display: inline-flex;
-  align-items: center;
-
-  padding: 0.3rem 0.48rem;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.13);
-
-  border-radius: 999px;
-
-  color: var(--hcp-ink);
-
-  background:
-    rgba(1, 4, 13, 0.75);
-
-  box-shadow:
-    0 5px 14px rgba(0, 0, 0, 0.24);
-
-  font:
-    950 0.68rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: -0.012em;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hcp-room-category {
-  padding-left: 0.12rem;
-
-  color: var(--hcp-soft);
-
-  font:
-    850 0.48rem/1.1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.085em;
-  text-transform: uppercase;
-}
-
-.hcp-room-summary-zone {
-  display: grid;
-  gap: 0.28rem;
-
-  opacity: 0;
-  transform: translateY(4px);
-
-  pointer-events: none;
-
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
-}
-
-.hcp-room-node[data-summary-active="true"]
-  .hcp-room-summary-zone,
-.hcp-room-node[data-selected="true"]
-  .hcp-room-summary-zone {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.hcp-room-summary {
-  margin: 0;
-
-  color:
-    rgba(235, 243, 255, 0.78);
-
-  font:
-    650 0.56rem/1.34
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-.hcp-room-guide {
-  width: fit-content;
-
-  padding: 0.17rem 0.32rem;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.08);
-
-  border-radius: 999px;
-
-  color:
-    rgba(243, 200, 111, 0.84);
-
-  background:
-    rgba(1, 4, 13, 0.5);
-
-  font:
-    900 0.45rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.hcp-room-detail-zone {
-  display: grid;
-  align-content: start;
-  gap: 0.35rem;
-
-  opacity: 0;
-  transform: translateY(7px);
-
-  pointer-events: none;
-
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.hcp-room-node[data-information-visible="true"]
-  .hcp-room-detail-zone {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.hcp-room-detail-title {
-  margin: 0;
-
-  color: var(--hcp-ink);
-
-  font:
-    950 1rem/1.02
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: -0.035em;
-}
-
-.hcp-room-detail-copy {
-  margin: 0;
-
-  color: var(--hcp-muted);
-
-  font:
-    560 0.63rem/1.4
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-.hcp-room-visitor-list {
-  margin: 0.18rem 0 0;
-  padding-left: 1rem;
-
-  display: grid;
-  gap: 0.15rem;
-
-  color:
-    rgba(237, 245, 255, 0.84);
-
-  font:
-    740 0.55rem/1.28
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-.hcp-room-action-zone {
-  opacity: 0;
-  transform: translateY(6px);
-
-  pointer-events: none;
-
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.hcp-room-node[data-information-visible="true"]
-  .hcp-room-action-zone {
-  opacity: 1;
-  transform: translateY(0);
-
-  pointer-events: auto;
-}
-
-.hcp-room-actions {
-  width: 100%;
-
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.28rem;
-}
-
-.hcp-room-action {
-  min-height: 1.7rem;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.34rem 0.52rem;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.13);
-
-  border-radius: 999px;
-
-  color:
-    rgba(240, 247, 255, 0.92);
-
-  background:
-    rgba(255, 255, 255, 0.045);
-
-  font:
-    900 0.47rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
-}
-
-.hcp-room-action:hover,
-.hcp-room-action:focus-visible {
-  transform: translateY(-1px);
-
-  border-color:
-    rgba(243, 200, 111, 0.5);
-
-  background:
-    rgba(243, 200, 111, 0.075);
-
-  outline: none;
-}
-
-.hcp-room-action-primary {
-  border-color:
-    rgba(243, 200, 111, 0.78);
-
-  color: #050811;
-
-  background:
-    linear-gradient(
-      135deg,
-      #fff2aa,
-      #f3c86f
-    );
-}
-
-.hcp-room-action-muted {
-  color: var(--hcp-soft);
-}
-
-/* =========================================================
-   ESTATE VIEW
-   ========================================================= */
-
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-detail-zone,
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-action-zone {
-  display: none;
-}
-
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-node {
-  opacity: 0.96;
-}
-
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-summary-zone {
-  display: none;
-}
-
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-node:hover
-  .hcp-room-summary-zone,
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-node:focus-visible
-  .hcp-room-summary-zone,
-.hcp-panel[data-house-view-mode="estate"]
-  .hcp-room-node[data-selected="true"]
-  .hcp-room-summary-zone {
-  display: grid;
-}
-
-/* =========================================================
-   ROOM VIEW
-   ========================================================= */
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-room-summary-zone {
-  display: none;
-}
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-room-node:not([data-focused="true"]) {
-  opacity: 0.28;
-
-  filter:
-    saturate(0.52)
-    brightness(0.68);
-}
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-heart-facet:not([data-selected="true"]) {
-  opacity: 0.32;
-
-  filter:
-    saturate(0.5)
-    brightness(0.64);
-}
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-room-node[data-focused="true"] {
-  z-index: 40;
-
-  opacity: 1;
-  filter: none;
-
-  transform:
-    translateZ(
-      calc(var(--room-z) + 28px)
-    );
-}
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-room-node[data-focused="true"]
-  .hcp-room-detail-zone,
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-room-node[data-focused="true"]
-  .hcp-room-action-zone {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/*
-  Neighbor-context law.
-  The selected room remains dominant without erasing the heart.
-*/
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-heart-shell,
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-heart-rear-shell {
-  opacity: 0.62;
-}
-
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-heart-corridor-layer {
-  opacity: 0.46;
-}
-
-/* =========================================================
-   ARRIVAL SHEET
-   ========================================================= */
-
-.hcp-arrival-sheet {
+.house-control-pad__dialog > * {
   position: relative;
-  z-index: 90;
-
-  display: none;
-
-  padding: 0.72rem 1rem 0.82rem;
-
-  border-top:
-    1px solid rgba(243, 200, 111, 0.2);
-
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      rgba(243, 200, 111, 0.085),
-      transparent 22rem
-    ),
-    radial-gradient(
-      circle at 92% 10%,
-      rgba(141, 216, 255, 0.065),
-      transparent 22rem
-    ),
-    rgba(7, 14, 31, 0.99);
-
-  box-shadow:
-    0 -18px 34px rgba(0, 0, 0, 0.24);
+  z-index: 1;
 }
 
-.hcp-arrival-sheet[data-visible="true"] {
-  display: block;
+/* ========================================================================== */
+/* Header                                                                     */
+/* ========================================================================== */
 
-  animation:
-    hcpHeartArrivalSheet 0.22s ease both;
-}
-
-.hcp-arrival-content {
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
-
-  grid-template-areas:
-    "eyebrow actions"
-    "title actions"
-    "body actions";
-
-  gap: 0.24rem 1rem;
-  align-items: center;
-}
-
-.hcp-arrival-eyebrow {
-  grid-area: eyebrow;
-
-  color: var(--hcp-gold);
-
-  font:
-    950 0.61rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.hcp-arrival-title {
-  grid-area: title;
-
-  margin: 0;
-
-  color: var(--hcp-ink);
-
-  font:
-    950 clamp(1rem, 2.3vw, 1.28rem) / 1.05
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: -0.035em;
-}
-
-.hcp-arrival-body {
-  grid-area: body;
-
-  margin: 0;
-
-  max-width: 760px;
-
-  color: var(--hcp-muted);
-
-  font:
-    500 0.83rem/1.38
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-.hcp-arrival-actions {
-  grid-area: actions;
-
+.house-control-pad__header {
+  grid-area: header;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.45rem;
-}
-
-.hcp-arrival-action,
-.hcp-footer-button {
-  min-height: 2.25rem;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.5rem 0.76rem;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.13);
-
-  border-radius: 999px;
-
-  color:
-    rgba(241, 247, 255, 0.92);
-
-  background:
-    rgba(255, 255, 255, 0.045);
-
-  font:
-    950 0.66rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-
-  letter-spacing: 0.052em;
-  text-transform: uppercase;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
-}
-
-.hcp-arrival-action:hover,
-.hcp-arrival-action:focus-visible,
-.hcp-footer-button:hover,
-.hcp-footer-button:focus-visible {
-  transform: translateY(-2px);
-
-  border-color:
-    rgba(243, 200, 111, 0.5);
-
-  background:
-    rgba(243, 200, 111, 0.075);
-
-  outline: none;
-}
-
-.hcp-arrival-primary {
-  border-color:
-    rgba(243, 200, 111, 0.8);
-
-  color: #050811;
-
-  background:
-    linear-gradient(
-      135deg,
-      #fff2aa,
-      #f3c86f
-    );
-}
-
-.hcp-arrival-muted {
-  color: var(--hcp-soft);
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.hcp-footer {
-  position: relative;
-  z-index: 85;
-
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 0.7rem;
-
-  padding: 0.66rem 1rem 0.76rem;
-
-  border-top:
-    1px solid rgba(255, 255, 255, 0.07);
-
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  border-bottom: 1px solid var(--house-border-soft);
   background:
-    rgba(5, 11, 25, 0.99);
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045),
+      transparent
+    );
 }
 
-.hcp-status {
-  color: var(--hcp-soft);
-
-  font:
-    800 0.71rem/1.34
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
+.house-control-pad__heading {
+  min-width: 0;
 }
 
-.hcp-footer-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
+.house-control-pad__eyebrow {
+  margin: 0 0 0.3rem;
+  color: var(--house-accent-bright);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-.hcp-panel[data-house-view-mode="room"]
-  .hcp-footer {
-  padding-top: 0.48rem;
-  padding-bottom: 0.54rem;
+.house-control-pad__title {
+  margin: 0;
+  color: var(--house-text-primary);
+  font-size: clamp(1.35rem, 2.5vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
 }
 
-/* =========================================================
-   STRUCTURAL ANIMATIONS
-   ========================================================= */
+.house-control-pad__description {
+  max-width: 56rem;
+  margin: 0.5rem 0 0;
+  color: var(--house-text-secondary);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+}
 
-@keyframes hcpHeartTravelSegment {
-  0% {
-    opacity: 0;
+.house-control-pad__close {
+  flex: 0 0 auto;
+  min-width: 3rem;
+  min-height: 2.65rem;
+  padding: 0.65rem 0.95rem;
+  border: 1px solid var(--house-border-medium);
+  border-radius: 999px;
+  color: var(--house-text-primary);
+  background: var(--house-surface-soft);
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    color var(--house-transition-fast) ease,
+    background var(--house-transition-fast) ease,
+    border-color var(--house-transition-fast) ease,
+    transform var(--house-transition-fast) ease;
+}
 
-    clip-path:
-      inset(0 100% 0 0);
+.house-control-pad__close:hover {
+  color: var(--house-text-dark);
+  border-color: var(--house-accent-bright);
+  background: var(--house-accent-bright);
+  transform: translateY(-1px);
+}
+
+.house-control-pad__close:active {
+  transform: translateY(0);
+}
+
+/* ========================================================================== */
+/* Status                                                                     */
+/* ========================================================================== */
+
+.house-control-pad__status,
+[data-house-status] {
+  grid-area: status;
+  min-height: 2.25rem;
+  padding: 0.55rem clamp(1rem, 2vw, 1.6rem);
+  border-bottom: 1px solid var(--house-border-soft);
+  color: var(--house-text-muted);
+  background: rgba(0, 0, 0, 0.12);
+  font-size: 0.82rem;
+}
+
+[data-house-control-pad][data-house-degraded="true"]
+  .house-control-pad__status {
+  color: var(--house-warning);
+}
+
+[data-house-control-pad][data-house-hold="true"]
+  .house-control-pad__status,
+[data-house-control-pad][data-house-error="true"]
+  .house-control-pad__status {
+  color: var(--house-error);
+}
+
+/* ========================================================================== */
+/* Estate field                                                               */
+/* ========================================================================== */
+
+.house-control-pad__estate,
+[data-house-estate] {
+  grid-area: estate;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: clamp(0.75rem, 1.5vw, 1.25rem);
+  overflow: hidden;
+  border: 1px solid var(--house-border-soft);
+  border-radius: clamp(0.9rem, 1.6vw, 1.4rem);
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(109, 182, 215, 0.1),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(9, 22, 32, 0.98),
+      rgba(4, 11, 17, 0.98)
+    );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    inset 0 -2rem 5rem rgba(0, 0, 0, 0.22);
+  aspect-ratio: var(--house-estate-aspect);
+}
+
+.house-control-pad__estate::before {
+  content: "";
+  position: absolute;
+  inset: 7%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 32% 28%,
+      rgba(109, 182, 215, 0.13),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 68% 28%,
+      rgba(214, 140, 183, 0.13),
+      transparent 28%
+    ),
+    radial-gradient(
+      ellipse at 50% 66%,
+      rgba(214, 167, 90, 0.12),
+      transparent 42%
+    );
+  clip-path: path(
+    "M50 88 C20 69 7 46 12 27 C16 11 34 5 50 21 C66 5 84 11 88 27 C93 46 80 69 50 88 Z"
+  );
+  opacity: 0.95;
+}
+
+.house-control-pad__estate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.025),
+      transparent 30%
+    );
+}
+
+/* ========================================================================== */
+/* SVG                                                                        */
+/* ========================================================================== */
+
+.house-control-pad__svg,
+[data-house-svg] {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.house-control-pad__rooms {
+  pointer-events: none;
+}
+
+.house-control-pad__room-shape {
+  fill: var(--house-room-soft);
+  stroke: rgba(158, 219, 242, 0.56);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 10px rgba(109, 182, 215, 0.12));
+  transition:
+    fill var(--house-transition-medium) ease,
+    stroke var(--house-transition-medium) ease,
+    opacity var(--house-transition-medium) ease;
+}
+
+.house-control-pad__room-shape[data-house-status="inactive"],
+.house-control-pad__room-shape[data-house-status="held"] {
+  opacity: 0.36;
+  stroke-dasharray: 5 5;
+}
+
+.house-control-pad__corridors {
+  pointer-events: none;
+}
+
+.house-control-pad__corridor {
+  fill: none;
+  stroke: var(--house-corridor);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.84;
+  filter: drop-shadow(0 0 5px rgba(109, 182, 215, 0.12));
+  transition:
+    stroke var(--house-transition-medium) ease,
+    opacity var(--house-transition-medium) ease;
+}
+
+.house-control-pad__corridor[data-house-status="inactive"],
+.house-control-pad__corridor[data-house-status="held"] {
+  opacity: 0.24;
+  stroke-dasharray: 5 7;
+}
+
+/* ========================================================================== */
+/* Marker layer                                                               */
+/* ========================================================================== */
+
+.house-control-pad__markers,
+[data-house-markers] {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.house-control-pad__marker {
+  position: absolute;
+  left: var(--house-marker-x, 50%);
+  top: var(--house-marker-y, 50%);
+  display: grid;
+  place-items: center;
+  min-width: var(--house-marker-size);
+  min-height: var(--house-marker-size);
+  padding: 0.45rem;
+  border: 1px solid var(--house-border-medium);
+  border-radius: 50%;
+  color: var(--house-text-primary);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.025)
+    ),
+    var(--house-surface-2);
+  box-shadow:
+    var(--house-shadow-sm),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  pointer-events: auto;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition:
+    transform var(--house-transition-fast) ease,
+    border-color var(--house-transition-fast) ease,
+    background var(--house-transition-fast) ease,
+    color var(--house-transition-fast) ease,
+    box-shadow var(--house-transition-fast) ease,
+    opacity var(--house-transition-fast) ease;
+}
+
+.house-control-pad__marker:hover {
+  transform: translate(-50%, -50%) scale(1.07);
+}
+
+.house-control-pad__marker:active {
+  transform: translate(-50%, -50%) scale(0.98);
+}
+
+.house-control-pad__marker--room {
+  border-color: rgba(109, 182, 215, 0.58);
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(255, 255, 255, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(109, 182, 215, 0.34),
+      rgba(20, 57, 75, 0.94)
+    );
+}
+
+.house-control-pad__marker--room:hover {
+  border-color: var(--house-room-strong);
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(255, 255, 255, 0.24),
+      transparent 32%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(109, 182, 215, 0.48),
+      rgba(20, 57, 75, 0.98)
+    );
+}
+
+.house-control-pad__marker--avatar {
+  min-width: var(--house-avatar-size);
+  min-height: var(--house-avatar-size);
+  border-color: rgba(214, 140, 183, 0.58);
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(255, 255, 255, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(214, 140, 183, 0.34),
+      rgba(77, 36, 62, 0.95)
+    );
+}
+
+.house-control-pad__marker--avatar:hover {
+  border-color: var(--house-avatar-strong);
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(255, 255, 255, 0.24),
+      transparent 32%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(214, 140, 183, 0.46),
+      rgba(77, 36, 62, 0.98)
+    );
+}
+
+.house-control-pad__marker[aria-pressed="true"] {
+  z-index: 5;
+  color: var(--house-text-dark);
+  border-color: var(--house-accent-bright);
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(255, 255, 255, 0.34),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      var(--house-accent-bright),
+      var(--house-accent)
+    );
+  box-shadow:
+    0 0 0 3px rgba(214, 167, 90, 0.16),
+    0 0 2rem rgba(214, 167, 90, 0.34),
+    var(--house-shadow-md);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.house-control-pad__marker[data-house-status="inactive"],
+.house-control-pad__marker[data-house-status="held"] {
+  opacity: 0.42;
+  filter: grayscale(0.65);
+}
+
+.house-control-pad__marker-label {
+  display: block;
+  max-width: 7rem;
+  overflow: hidden;
+  color: inherit;
+  font-size: clamp(0.62rem, 1vw, 0.78rem);
+  font-weight: 800;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+  white-space: nowrap;
+}
+
+.house-control-pad__marker[aria-pressed="true"]
+  .house-control-pad__marker-label {
+  text-shadow: none;
+}
+
+/* ========================================================================== */
+/* Details panel                                                              */
+/* ========================================================================== */
+
+.house-control-pad__details,
+[data-house-details] {
+  grid-area: details;
+  min-width: 0;
+  margin:
+    clamp(0.75rem, 1.5vw, 1.25rem)
+    clamp(0.75rem, 1.5vw, 1.25rem)
+    clamp(0.75rem, 1.5vw, 1.25rem)
+    0;
+  padding: clamp(1rem, 1.6vw, 1.4rem);
+  overflow: auto;
+  border: 1px solid var(--house-border-soft);
+  border-radius: clamp(0.9rem, 1.6vw, 1.4rem);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    ),
+    rgba(7, 16, 24, 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    var(--house-shadow-sm);
+  scrollbar-width: thin;
+  scrollbar-color:
+    var(--house-border-medium)
+    transparent;
+}
+
+.house-control-pad__details::-webkit-scrollbar {
+  width: 0.55rem;
+}
+
+.house-control-pad__details::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.house-control-pad__details::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--house-border-medium);
+}
+
+.house-control-pad__details-title {
+  margin: 0;
+  color: var(--house-text-primary);
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  line-height: 1.15;
+}
+
+.house-control-pad__details-role {
+  margin: 0.35rem 0 0;
+  color: var(--house-avatar-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.house-control-pad__details-description,
+.house-control-pad__details-status {
+  margin: 0.8rem 0 0;
+  color: var(--house-text-secondary);
+  font-size: 0.94rem;
+}
+
+.house-control-pad__details-status {
+  color: var(--house-text-muted);
+}
+
+.house-control-pad__route {
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--house-accent-bright);
+  border-radius: 0.85rem;
+  color: var(--house-text-dark);
+  background:
+    linear-gradient(
+      145deg,
+      var(--house-accent-bright),
+      var(--house-accent)
+    );
+  box-shadow: 0 0.75rem 1.75rem rgba(214, 167, 90, 0.2);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+  transition:
+    transform var(--house-transition-fast) ease,
+    box-shadow var(--house-transition-fast) ease,
+    filter var(--house-transition-fast) ease;
+}
+
+.house-control-pad__route:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 1rem 2rem rgba(214, 167, 90, 0.3);
+  filter: brightness(1.05);
+}
+
+.house-control-pad__route:active {
+  transform: translateY(0);
+}
+
+/* ========================================================================== */
+/* Footer                                                                     */
+/* ========================================================================== */
+
+.house-control-pad__footer {
+  grid-area: footer;
+  min-height: 0.6rem;
+  border-top: 1px solid var(--house-border-soft);
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(214, 167, 90, 0.14),
+      transparent
+    );
+}
+
+/* ========================================================================== */
+/* Focus                                                                      */
+/* ========================================================================== */
+
+.house-control-pad button:focus-visible,
+.house-control-pad a:focus-visible,
+.house-control-pad [tabindex]:focus-visible {
+  outline: none;
+  box-shadow: var(--house-focus-shadow);
+}
+
+.house-control-pad__dialog:focus-visible {
+  outline: 2px solid var(--house-focus-ring);
+  outline-offset: -4px;
+}
+
+/* ========================================================================== */
+/* Runtime states                                                             */
+/* ========================================================================== */
+
+[data-house-control-pad][data-house-state="initializing"]
+  .house-control-pad__dialog {
+  cursor: progress;
+}
+
+[data-house-control-pad][data-house-state="routing"]
+  .house-control-pad__dialog {
+  cursor: progress;
+}
+
+[data-house-control-pad][data-house-state="routing"]
+  .house-control-pad__route,
+[data-house-control-pad][data-house-state="routing"]
+  .house-control-pad__marker {
+  pointer-events: none;
+  opacity: 0.64;
+}
+
+[data-house-control-pad][data-house-degraded="true"]
+  .house-control-pad__dialog {
+  border-color: rgba(240, 194, 106, 0.45);
+}
+
+[data-house-control-pad][data-house-hold="true"]
+  .house-control-pad__dialog,
+[data-house-control-pad][data-house-error="true"]
+  .house-control-pad__dialog {
+  border-color: rgba(240, 141, 141, 0.52);
+}
+
+[data-house-control-pad][data-house-ready="false"]
+  .house-control-pad__marker,
+[data-house-control-pad][data-house-ready="false"]
+  .house-control-pad__route {
+  pointer-events: none;
+}
+
+/* ========================================================================== */
+/* Responsive                                                                 */
+/* ========================================================================== */
+
+@media (max-width: 72rem) {
+  .house-control-pad__dialog {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 21rem);
   }
 
-  24% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.96;
-
-    clip-path:
-      inset(0 0 0 0);
+  .house-control-pad__details {
+    padding: 1rem;
   }
 }
 
-@keyframes hcpHeartRoomArrival {
-  0% {
-    filter:
-      brightness(1);
-
-    box-shadow:
-      0 18px 32px rgba(0, 0, 0, 0.26);
-  }
-
-  48% {
-    filter:
-      brightness(1.25);
-
-    box-shadow:
-      0 20px 38px rgba(0, 0, 0, 0.34),
-      0 0 0 8px rgba(243, 200, 111, 0.09),
-      0 0 34px rgba(243, 200, 111, 0.22);
-  }
-
-  100% {
-    filter:
-      brightness(1);
-
-    box-shadow:
-      0 20px 38px rgba(0, 0, 0, 0.34),
-      0 0 0 2px rgba(243, 200, 111, 0.08);
-  }
-}
-
-@keyframes hcpHeartArrivalSheet {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 980px) {
+@media (max-width: 56rem) {
   :root {
-    --hcp-heart-width: 940px;
-    --hcp-heart-height: 846px;
+    --house-dialog-width: min(98vw, 52rem);
+    --house-dialog-height: min(96vh, 68rem);
+    --house-estate-aspect: 4 / 3;
   }
 
-  .hcp-panel {
-    width: calc(100vw - 1rem);
-    height: calc(100vh - 1rem);
-    max-height: calc(100vh - 1rem);
+  .house-control-pad {
+    padding: 0.5rem;
   }
 
-  .hcp-room-label {
-    font-size: 0.6rem;
-  }
-
-  .hcp-room-detail-title {
-    font-size: 0.9rem;
-  }
-
-  .hcp-room-detail-copy {
-    font-size: 0.58rem;
-  }
-
-  .hcp-room-visitor-list {
-    font-size: 0.51rem;
-  }
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 760px) {
-  :root {
-    --hcp-heart-width: 900px;
-    --hcp-heart-height: 810px;
-    --hcp-heart-perspective: 1320px;
-    --hcp-panel-radius: 1.08rem;
-  }
-
-  .hcp-overlay {
-    place-items: start center;
-
-    padding:
-      max(0.42rem, env(safe-area-inset-top))
-      0.42rem
-      max(0.42rem, env(safe-area-inset-bottom));
-  }
-
-  .hcp-panel {
-    width: calc(100vw - 0.84rem);
-    height: calc(100vh - 0.84rem);
-    max-height: calc(100vh - 0.84rem);
-
-    border-radius: var(--hcp-panel-radius);
-  }
-
-  .hcp-header {
-    grid-template-columns:
-      minmax(0, 1fr)
+  .house-control-pad__dialog {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows:
+      auto
+      auto
+      minmax(18rem, 1fr)
+      auto
       auto;
-
-    padding: 0.72rem 0.72rem 0.68rem;
-  }
-
-  .hcp-kicker {
-    padding: 0.38rem 0.56rem;
-
-    font-size: 0.54rem;
-  }
-
-  .hcp-title {
-    max-width: 18rem;
-
-    font-size:
-      clamp(1.2rem, 6.8vw, 1.72rem);
-
-    line-height: 0.98;
-  }
-
-  .hcp-subtitle {
-    max-width: 19rem;
-
-    font-size: 0.78rem;
-    line-height: 1.34;
-  }
-
-  .hcp-return-estate {
-    max-width: 7.5rem;
-
-    padding: 0.46rem 0.6rem;
-
-    font-size: 0.52rem;
-  }
-
-  .hcp-close {
-    width: 2.38rem;
-    height: 2.38rem;
-    min-height: 2.38rem;
-  }
-
-  .hcp-estate-viewport {
-    perspective-origin: 50% 42%;
-  }
-
-  /*
-    Mobile heart framing law:
-    The camera is intentionally farther away than the previous
-    rectangular-room system so neighboring facets remain visible.
-  */
-
-  .hcp-camera-rig,
-  .hcp-estate-stage {
-    transform:
-      translate3d(
-        calc(-50% + var(--hcp-camera-x)),
-        calc(-50% + var(--hcp-camera-y)),
-        var(--hcp-camera-z)
-      )
-      rotateX(var(--hcp-camera-rotate-x))
-      rotateY(var(--hcp-camera-rotate-y))
-      rotateZ(var(--hcp-camera-rotate-z))
-      scale(var(--hcp-camera-scale));
-  }
-
-  .hcp-room-node {
-    border-width: 2px;
-  }
-
-  .hcp-room-node::before {
-    inset: 0.28rem;
-  }
-
-  .hcp-room-label {
-    padding: 0.24rem 0.36rem;
-
-    font-size: 0.52rem;
-  }
-
-  .hcp-room-category,
-  .hcp-room-guide {
-    font-size: 0.4rem;
-  }
-
-  .hcp-room-detail-title {
-    font-size: 0.78rem;
-  }
-
-  .hcp-room-detail-copy {
-    font-size: 0.49rem;
-    line-height: 1.31;
-  }
-
-  .hcp-room-visitor-list {
-    font-size: 0.44rem;
-  }
-
-  .hcp-room-action {
-    min-height: 1.48rem;
-
-    padding: 0.27rem 0.38rem;
-
-    font-size: 0.39rem;
-  }
-
-  /*
-    In room view, the room detail remains inside the chamber,
-    but the arrival sheet is restricted so it cannot consume the
-    majority of the remaining viewport.
-  */
-
-  .hcp-arrival-sheet {
-    max-height:
-      min(
-        24vh,
-        12.5rem
-      );
-
-    overflow-y: auto;
-
-    padding: 0.58rem 0.72rem 0.64rem;
-  }
-
-  .hcp-arrival-content {
-    grid-template-columns: 1fr;
-
     grid-template-areas:
-      "eyebrow"
-      "title"
-      "body"
-      "actions";
-
-    gap: 0.22rem;
+      "header"
+      "status"
+      "estate"
+      "details"
+      "footer";
   }
 
-  .hcp-arrival-title {
-    font-size: 0.94rem;
+  .house-control-pad__estate {
+    margin:
+      0.75rem
+      0.75rem
+      0;
+    min-height: 18rem;
   }
 
-  .hcp-arrival-body {
-    font-size: 0.72rem;
-    line-height: 1.3;
+  .house-control-pad__details {
+    max-height: 14rem;
+    margin: 0.75rem;
   }
 
-  .hcp-arrival-actions {
-    justify-content: stretch;
-
-    display: grid;
-    grid-template-columns:
-      1fr
-      1fr
-      auto;
-
-    margin-top: 0.26rem;
-  }
-
-  .hcp-arrival-action {
-    min-width: 0;
-
-    padding: 0.46rem 0.52rem;
-
-    font-size: 0.53rem;
-  }
-
-  .hcp-footer {
-    padding: 0.54rem 0.72rem 0.62rem;
-  }
-
-  .hcp-status {
-    font-size: 0.61rem;
-  }
-
-  .hcp-footer-button {
-    padding: 0.44rem 0.56rem;
-
-    font-size: 0.54rem;
+  .house-control-pad__marker-label {
+    max-width: 5.5rem;
+    font-size: 0.68rem;
   }
 }
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 520px) {
+@media (max-width: 36rem) {
   :root {
-    --hcp-heart-width: 860px;
-    --hcp-heart-height: 774px;
+    --house-overlay-padding: 0;
+    --house-dialog-radius: 0;
+    --house-dialog-width: 100vw;
+    --house-dialog-height: 100dvh;
+    --house-marker-size: 2.75rem;
+    --house-avatar-size: 2.55rem;
   }
 
-  .hcp-header {
-    gap: 0.55rem;
+  .house-control-pad__dialog {
+    border-right: 0;
+    border-left: 0;
   }
 
-  .hcp-title {
-    font-size:
-      clamp(1.14rem, 7.1vw, 1.48rem);
+  .house-control-pad__header {
+    align-items: center;
+    padding: 0.85rem;
   }
 
-  .hcp-subtitle {
-    font-size: 0.72rem;
-  }
-
-  .hcp-room-category,
-  .hcp-room-guide {
+  .house-control-pad__description {
     display: none;
   }
 
-  .hcp-room-label {
-    font-size: 0.47rem;
+  .house-control-pad__status {
+    min-height: 2rem;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.74rem;
   }
 
-  .hcp-room-detail-title {
-    font-size: 0.7rem;
+  .house-control-pad__estate {
+    min-height: 16rem;
+    margin:
+      0.6rem
+      0.6rem
+      0;
   }
 
-  .hcp-room-detail-copy {
-    font-size: 0.44rem;
+  .house-control-pad__details {
+    margin: 0.6rem;
+    padding: 0.9rem;
   }
 
-  .hcp-room-visitor-list {
-    font-size: 0.4rem;
+  .house-control-pad__close {
+    min-width: 2.75rem;
+    padding-inline: 0.75rem;
   }
 
-  .hcp-arrival-actions {
-    grid-template-columns:
-      1fr
-      1fr;
-  }
-
-  .hcp-arrival-muted {
-    grid-column: 1 / -1;
-  }
-
-  .hcp-footer {
-    display: grid;
-  }
-
-  .hcp-footer-actions {
-    width: 100%;
-  }
-
-  .hcp-footer-button {
-    width: 100%;
+  .house-control-pad__marker-label {
+    max-width: 4rem;
+    font-size: 0.6rem;
   }
 }
 
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
+/* ========================================================================== */
+/* Reduced motion                                                             */
+/* ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .hcp-overlay,
-  .hcp-panel,
-  .hcp-camera-rig,
-  .hcp-estate-stage,
-  .hcp-return-estate,
-  .hcp-close,
-  .hcp-heart-facet,
-  .hcp-room-node,
-  .hcp-room-summary-zone,
-  .hcp-room-detail-zone,
-  .hcp-room-action-zone,
-  .hcp-room-action,
-  .hcp-arrival-sheet,
-  .hcp-arrival-action,
-  .hcp-footer-button {
-    transition: none !important;
+  .house-control-pad *,
+  .house-control-pad *::before,
+  .house-control-pad *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 
-  .hcp-travel-segment,
-  .hcp-arrival-sheet[data-visible="true"],
-  .hcp-room-node[data-arrived="true"] {
-    animation: none !important;
+  .house-control-pad__dialog,
+  .house-control-pad__backdrop,
+  .house-control-pad__route,
+  .house-control-pad__close {
+    transform: none;
+  }
+
+  .house-control-pad__marker,
+  .house-control-pad__marker:hover,
+  .house-control-pad__marker:active,
+  .house-control-pad__marker[aria-pressed="true"] {
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ========================================================================== */
+/* Forced colors / high contrast                                              */
+/* ========================================================================== */
+
+@media (forced-colors: active) {
+  .house-control-pad__dialog,
+  .house-control-pad__estate,
+  .house-control-pad__details,
+  .house-control-pad__marker,
+  .house-control-pad__close,
+  .house-control-pad__route {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+
+  .house-control-pad__room-shape {
+    fill: transparent;
+    stroke: CanvasText;
+  }
+
+  .house-control-pad__corridor {
+    stroke: CanvasText;
+  }
+
+  .house-control-pad__marker[aria-pressed="true"] {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  .house-control-pad button:focus-visible,
+  .house-control-pad a:focus-visible,
+  .house-control-pad [tabindex]:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 3px;
+    box-shadow: none;
+  }
+}
+
+/* ========================================================================== */
+/* Print                                                                      */
+/* ========================================================================== */
+
+@media print {
+  .house-control-pad,
+  [data-house-control-pad] {
+    display: none !important;
   }
 }

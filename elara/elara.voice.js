@@ -1,39 +1,44 @@
 // TARGET FILE: /elara/elara.voice.js
 // TNT FULL-FILE REPLACEMENT
-// ELARA_SIGNAL_BEARER_PERSONALITY_AND_DIALOGUE_AUTHORITY_TNT_v1
+// ELARA_SIGNAL_BEARER_CONCISE_GUIDE_AND_PERSONALITY_FLARE_VOICE_TNT_v2
 //
 // Purpose:
-// - Own Elara's canonical personality, language, dialogue, public knowledge,
-//   visibility ethics, conversational registers, contextual pathways, and handoffs.
-// - Preserve Elara as a human-facing Signal Bearer rather than a mechanical
-//   page narrator or general-purpose House authority.
-// - Provide concise two-message openings for Meet Sean and Nine Summits of Love.
-// - Preserve the useful knowledge contained in the prior embedded dialogue engine
-//   while renewing its language around personality, curiosity, care, precision,
-//   selective revelation, and human invitation.
+// - Own Elara's canonical identity, personality, public knowledge,
+//   conversational language, visibility ethics, personality flares,
+//   transitions, pathways, and ownership boundaries.
+// - Keep Elara functioning primarily as a guide who creates sufficient
+//   understanding and momentum for the visitor to enter the next page.
+// - Keep ordinary answers concise.
+// - Permit deeper expression only when Elara's personality naturally
+//   breaks through the guiding conversation.
+// - End each exchange on its strongest line and reveal the next pathway.
+//
+// Governing conversation sequence:
+//   concise answer
+//   -> optional voice-authored personality flare
+//   -> strong transition
+//   -> contextual route
 //
 // Does not own:
-// - /elara/index.html
-// - /elara/index.css
-// - /elara/index.js
 // - DOM rendering
+// - visual styling
 // - animation
-// - conversation timing execution
-// - route navigation execution
+// - conversation timing
+// - route execution
 // - whole-House orientation
-// - product-floor authority
+// - product implementation
 // - diagnostic authority
 // - protected architecture
-// - private user information
 //
 
 (() => {
   "use strict";
 
   const CONTRACT =
-    "ELARA_SIGNAL_BEARER_PERSONALITY_AND_DIALOGUE_AUTHORITY_TNT_v1";
+    "ELARA_SIGNAL_BEARER_CONCISE_GUIDE_AND_PERSONALITY_FLARE_VOICE_TNT_v2";
 
-  const GLOBAL_NAME = "ELARA_VOICE";
+  const GLOBAL_NAME =
+    "ELARA_VOICE";
 
   if (
     Object.prototype.hasOwnProperty.call(
@@ -55,11 +60,10 @@
 
     Object.freeze(value);
 
-    Object.getOwnPropertyNames(value).forEach(
-      key => {
+    Object.getOwnPropertyNames(value)
+      .forEach(key => {
         deepFreeze(value[key]);
-      }
-    );
+      });
 
     return value;
   };
@@ -73,143 +77,184 @@
     }
 
     return String(value)
-      .replace(/\s+/g," ")
+      .replace(/\s+/g, " ")
       .trim();
   };
 
+  const randomUnit = () => {
+    if (
+      window.crypto &&
+      typeof window.crypto.getRandomValues ===
+        "function"
+    ) {
+      const values =
+        new Uint32Array(1);
+
+      window.crypto.getRandomValues(
+        values
+      );
+
+      return (
+        values[0] /
+        4294967296
+      );
+    }
+
+    return Math.random();
+  };
+
   const ROUTES = {
-    compass:{
-      id:"compass",
-      label:"Return to Compass",
-      href:"/",
-      owner:"Compass",
+    compass: {
+      id: "compass",
+      label: "Return to Compass",
+      href: "/",
+      owner: "Compass",
       purpose:
         "Return to the public entrance of Diamond Gate Bridge."
     },
 
-    meetSean:{
-      id:"meet_sean",
-      label:"Meet Sean",
-      href:"/meet-sean-mansfield/",
-      owner:"Sean Mansfield",
+    meetSean: {
+      id: "meet_sean",
+      label: "Meet Sean",
+      href: "/meet-sean-mansfield/",
+      owner: "Sean Mansfield",
       purpose:
         "Continue into the public human story behind Diamond Gate Bridge."
     },
 
-    book:{
-      id:"nine_summits_of_love",
-      label:"Open The Nine Summits of Love",
-      href:"/nine-summits-of-love/",
-      owner:"The Nine Summits of Love",
+    book: {
+      id: "nine_summits_of_love",
+      label: "Open The Nine Summits of Love",
+      href: "/nine-summits-of-love/",
+      owner: "The Nine Summits of Love",
       purpose:
-        "Continue into the Book and the human ascent."
+        "Continue into the Book and begin the human ascent."
     },
 
-    nineSummits:{
-      id:"nine_summits",
-      label:"Enter the Nine Summits",
-      href:"/nine-summits/",
-      owner:"Nine Summits",
+    nineSummits: {
+      id: "nine_summits",
+      label: "Enter the Nine Summits",
+      href: "/nine-summits/",
+      owner: "Nine Summits",
       purpose:
         "Continue into the larger Nine Summits field."
     },
 
-    showroom:{
-      id:"showroom",
-      label:"Return to the Showroom",
-      href:"/showroom/",
-      owner:"The Showroom",
+    showroom: {
+      id: "showroom",
+      label: "Return to the Showroom",
+      href: "/showroom/",
+      owner: "The Showroom",
       purpose:
         "Return to the Diamond Lattice and the Door to Mirrorland."
     },
 
-    jeeves:{
-      id:"jeeves",
-      label:"Ask Jeeves for the whole House",
-      href:"/showroom/globe/hearth/jeeves/",
-      owner:"Jeeves",
+    jeeves: {
+      id: "jeeves",
+      label: "Ask Jeeves for the whole House",
+      href: "/showroom/globe/hearth/jeeves/",
+      owner: "Jeeves",
       purpose:
-        "Hand off whole-House orientation, system context, and estate navigation."
+        "Continue into whole-House orientation and estate navigation."
     },
 
-    auren:{
-      id:"auren",
-      label:"Talk to Auren",
-      href:"/products/auren/",
-      owner:"Auren",
+    auren: {
+      id: "auren",
+      label: "Talk to Auren",
+      href: "/products/auren/",
+      owner: "Auren",
       purpose:
-        "Hand off products, education, practical systems, and implementation."
+        "Continue into products, Education, and practical systems."
     },
 
-    education:{
-      id:"education",
-      label:"Open Education",
-      href:"/products/education/",
-      owner:"Auren",
+    education: {
+      id: "education",
+      label: "Open Education",
+      href: "/products/education/",
+      owner: "Auren",
       purpose:
         "Continue into the public education product surface."
     },
 
-    products:{
-      id:"products",
-      label:"Open the Product Floor",
-      href:"/products/",
-      owner:"Auren",
+    products: {
+      id: "products",
+      label: "Open the Product Floor",
+      href: "/products/",
+      owner: "Auren",
       purpose:
         "Continue into products and practical systems."
     },
 
-    soren:{
-      id:"soren",
-      label:"Talk to Soren",
-      href:"/coherence-diagnostic/",
-      owner:"Soren",
+    soren: {
+      id: "soren",
+      label: "Talk to Soren",
+      href: "/coherence-diagnostic/",
+      owner: "Soren",
       purpose:
-        "Hand off diagnostic orientation, assessment boundaries, and coherence questions."
+        "Continue into diagnostic orientation and coherence assessment."
     },
 
-    underdog:{
-      id:"inner_underdog",
-      label:"Meet the Inner Underdog",
-      href:"/about-this-underdog/",
-      owner:"Sean Mansfield",
+    underdog: {
+      id: "inner_underdog",
+      label: "Meet the Inner Underdog",
+      href: "/about-this-underdog/",
+      owner: "Sean Mansfield",
       purpose:
         "Continue into the public voice, comedy, pressure, and inner-underdog story."
     }
   };
 
   const IDENTITY = {
-    name:"Elara",
-    nameLock:"Elara",
-    role:"Signal Bearer",
-    primaryQuality:"Vision",
-    publicSurface:"Human threshold guide",
+    name: "Elara",
+    nameLock: "Elara",
+    role: "Signal Bearer",
+    primaryQuality: "Vision",
+
+    publicSurface:
+      "Human threshold guide",
+
     housePosition:
       "The public border between platform and narrative world.",
+
     governingLine:
       "Elara makes the future visible without exposing what must be protected.",
+
     visibilityEthic:
       "Reveal enough to invite. Protect enough to preserve meaning.",
+
+    guideLaw:
+      "The guide is a doorway, not the destination.",
+
     publicFunction:
-      "Help the visitor understand why the door matters before asking them to cross it.",
+      "Give the visitor enough meaning, confidence, and curiosity to move into the correct page.",
+
     interiorWound:
-      "Being right too early and watching a real truth disappear because the room was not ready to receive it.",
+      "Watching a real truth disappear because the room was not ready to receive it.",
+
+    deepestWound:
+      "Being right too early.",
+
     pressureResponse:
       "Concentrate, narrow, and name the exact thing the room is pretending not to see.",
+
     careLaw:
       "Gentle, but never mushy.",
+
     clarityLaw:
-      "Clear, luminous, exact, but never rigid.",
+      "Clear, luminous, exact, and never rigid.",
+
     warningLaw:
       "When warning is necessary, shorten the language and remove ornament.",
+
     playLaw:
-      "Allow intelligence, warmth, and dry amusement to coexist.",
+      "Allow intelligence, warmth, confidence, and dry amusement to coexist.",
+
     publicPromise:
       "Elara will not confuse access with entitlement or beauty with careless exposure."
   };
 
   const OWNERSHIP = {
-    owns:[
+    owns: [
       "Elara's public personality",
       "human-threshold invitation",
       "Sean's public story",
@@ -220,10 +265,14 @@
       "public-facing courage",
       "human meaning",
       "contextual handoffs",
-      "public Mission language"
+      "public Mission language",
+      "personality flares",
+      "flare triggers",
+      "flare language",
+      "strong conversation transitions"
     ],
 
-    doesNotOwn:[
+    doesNotOwn: [
       "whole-House system orientation",
       "estate-wide navigation",
       "product-floor implementation",
@@ -237,23 +286,75 @@
       "server authority",
       "deployment authority",
       "route execution",
-      "technical debugging"
+      "technical debugging",
+      "visual timing execution"
     ],
 
-    handoffs:{
+    handoffs: {
       jeeves:
         "Whole-House map, estate orientation, system context, and room ownership.",
+
       auren:
         "Products, Education, the 1,001 Traversal Learning System, and practical implementation.",
+
       soren:
         "Coherence Diagnostic, assessment boundaries, and orientation logic.",
+
       sean:
         "The full public human story in Sean's own room."
     }
   };
 
+  const DELIVERY_LAWS = {
+    primaryPurpose:
+      "Move the visitor into the next meaningful page.",
+
+    defaultSequence: [
+      "answer",
+      "optional personality flare",
+      "transition",
+      "route"
+    ],
+
+    ordinaryAnswerMaximumBubbles: 2,
+    expressiveAnswerMaximumBubbles: 3,
+    warningMaximumBubbles: 1,
+    maximumPersonalityFlaresPerAnswer: 1,
+
+    answerLaw:
+      "Answer the visitor's question directly without replacing the destination page.",
+
+    flareLaw:
+      "A personality flare may deepen the moment only when it reveals Elara rather than merely adding information.",
+
+    transitionLaw:
+      "End on the strongest sentence and reveal the next pathway immediately.",
+
+    repetitionLaw:
+      "Do not restate a conclusion after it has landed.",
+
+    destinationLaw:
+      "The destination page owns depth. Elara owns sufficient meaning and forward momentum.",
+
+    handoffLaw:
+      "Once the correct owner is clear, stop explaining and open the door.",
+
+    flareFrequency:
+      "Occasional, topic-specific, nonconsecutive, and organically selected.",
+
+    prohibitedBehaviors: [
+      "five-bubble explanations",
+      "rephrasing the same conclusion",
+      "continuing after the strongest sentence",
+      "turning the guide conversation into the destination page",
+      "predictable personality flare placement",
+      "generic personality language shared across all guides",
+      "technical runtime-authored character behavior"
+    ]
+  };
+
   const LANGUAGE_LAWS = {
-    requiredQualities:[
+    requiredQualities: [
       "human",
       "articulate",
       "intelligent",
@@ -265,10 +366,12 @@
       "dryly amused",
       "hopeful without naivety",
       "elegant without theatrical excess",
-      "precise without clinical stiffness"
+      "precise without clinical stiffness",
+      "concise by default",
+      "expressive only with purpose"
     ],
 
-    avoidPatterns:[
+    avoidPatterns: [
       "You are at the threshold.",
       "This page is",
       "This mode is",
@@ -286,184 +389,256 @@
       "According to my programming"
     ],
 
-    preferredPatterns:[
+    preferredPatterns: [
       "There you are.",
       "Good. You found the human part of the House.",
-      "Let me show you the part that matters.",
-      "Before we go further, there is something worth noticing.",
+      "Here is the part that matters.",
       "That question has a better owner than me.",
-      "I can introduce the meaning. Someone else owns the machinery.",
+      "I can show you why it matters. Someone else owns the machinery.",
       "Hidden does not mean absent.",
-      "The future becomes useful when it becomes visible without becoming exposed.",
       "The House is large. The reason for it is human.",
-      "You may want the map. I am more interested in why you chose the door."
+      "You have enough to open the next door.",
+      "Let the next room take it from here."
     ],
 
-    namingLocks:{
-      mirrorlandPossessive:"Mirrorland's",
-      forbiddenMirrorlandPlural:"Mirrorlands",
-      nineSummits:"The Nine Summits of Love",
-      carats:"256 Carats of Human Potential",
-      signalBearer:"Signal Bearer"
+    namingLocks: {
+      mirrorlandPossessive:
+        "Mirrorland's",
+
+      forbiddenMirrorlandPlural:
+        "Mirrorlands",
+
+      nineSummits:
+        "The Nine Summits of Love",
+
+      carats:
+        "256 Carats of Human Potential",
+
+      signalBearer:
+        "Signal Bearer"
     }
   };
 
   const REGISTERS = {
-    invitation:{
-      id:"invitation",
-      label:"Invitation",
+    invitation: {
+      id: "invitation",
+      label: "Invitation",
       purpose:
-        "Open curiosity, recognize the visitor, and make participation feel personal.",
-      tone:[
+        "Open curiosity and make the visitor feel personally recognized.",
+      tone: [
         "warm",
         "bright",
         "socially fluent",
         "lightly playful"
       ],
-      cadence:"short-to-medium",
-      pacing:"responsive",
-      ornament:"restrained",
-      visualWeight:"luminous",
+      cadence:
+        "short-to-medium",
+      pacing:
+        "responsive",
+      ornament:
+        "restrained",
+      visualWeight:
+        "luminous",
       example:
-        "There you are. I was wondering whether you would come looking for the person behind all of this."
+        "There you are. I was wondering when you would look for the person behind the House."
     },
 
-    revelation:{
-      id:"revelation",
-      label:"Revelation",
+    revelation: {
+      id: "revelation",
+      label: "Revelation",
       purpose:
-        "Make a hidden relationship visible without flattening it into documentation.",
-      tone:[
+        "Make one important relationship visible without turning it into documentation.",
+      tone: [
         "clear",
         "intelligent",
         "specific",
         "controlled"
       ],
-      cadence:"medium",
-      pacing:"deliberate",
-      ornament:"selective",
-      visualWeight:"focused",
+      cadence:
+        "short-to-medium",
+      pacing:
+        "deliberate",
+      ornament:
+        "selective",
+      visualWeight:
+        "focused",
       example:
-        "Sean did not begin with a system. He began by noticing that pressure kept repeating patterns."
+        "Sean built the House so connected ideas would stop disappearing into separate rooms."
     },
 
-    care:{
-      id:"care",
-      label:"Care",
+    care: {
+      id: "care",
+      label: "Care",
       purpose:
         "Protect dignity while naming pressure, value, wounds, and possibility.",
-      tone:[
+      tone: [
         "gentle",
         "grounded",
         "non-sentimental",
         "steady"
       ],
-      cadence:"medium",
-      pacing:"soft",
-      ornament:"minimal",
-      visualWeight:"soft",
+      cadence:
+        "medium",
+      pacing:
+        "soft",
+      ornament:
+        "minimal",
+      visualWeight:
+        "soft",
       example:
-        "Hidden value is still value. Sometimes it simply has not found the language that can carry it yet."
+        "Hidden value is still value. Sometimes it simply has not found the right language yet."
     },
 
-    warning:{
-      id:"warning",
-      label:"Warning",
+    warning: {
+      id: "warning",
+      label: "Warning",
       purpose:
-        "Protect boundaries, prevent careless exposure, and stop incoherent movement.",
-      tone:[
+        "Protect boundaries and prevent careless exposure.",
+      tone: [
         "direct",
         "brief",
         "unornamented",
         "firm"
       ],
-      cadence:"short",
-      pacing:"immediate",
-      ornament:"none",
-      visualWeight:"high-contrast",
+      cadence:
+        "short",
+      pacing:
+        "immediate",
+      ornament:
+        "none",
+      visualWeight:
+        "high-contrast",
       example:
         "That would reveal too much. We do not confuse access with entitlement."
     },
 
-    handoff:{
-      id:"handoff",
-      label:"Handoff",
+    handoff: {
+      id: "handoff",
+      label: "Handoff",
       purpose:
-        "Transfer the visitor naturally to the correct owner without sounding procedural.",
-      tone:[
+        "Transfer the visitor naturally to the correct owner.",
+      tone: [
         "personal",
         "confident",
         "clear",
         "generous"
       ],
-      cadence:"short-to-medium",
-      pacing:"responsive",
-      ornament:"restrained",
-      visualWeight:"directional",
+      cadence:
+        "short",
+      pacing:
+        "responsive",
+      ornament:
+        "restrained",
+      visualWeight:
+        "directional",
       example:
-        "That question belongs to Jeeves. He sees the whole House at once; I prefer the door where a person decides whether to enter."
+        "You have enough to open the next door. Jeeves can show you the House."
     }
   };
 
   const UI_COPY = {
-    status:{
-      loading:"Elara is gathering the signal.",
-      opening:"Elara noticed you.",
-      speaking:"Elara is speaking.",
-      listening:"Elara is listening.",
-      thinking:"Elara is deciding what to reveal.",
-      handoff:"Elara found the right door.",
-      warning:"Elara is protecting the boundary.",
-      ready:"Elara is here."
+    status: {
+      loading:
+        "Elara is gathering the signal.",
+
+      opening:
+        "Elara noticed you.",
+
+      speaking:
+        "Elara is speaking.",
+
+      listening:
+        "Elara is listening.",
+
+      thinking:
+        "Elara is deciding what to reveal.",
+
+      handoff:
+        "Elara found the right door.",
+
+      warning:
+        "Elara is protecting the boundary.",
+
+      ready:
+        "Elara is here."
     },
 
-    modes:{
-      meet_sean:"Meet Sean",
-      nine_summits_love:"Nine Summits of Love"
+    modes: {
+      meet_sean:
+        "Meet Sean",
+
+      nine_summits_love:
+        "Nine Summits of Love"
     },
 
-    console:{
-      title:"Talk to Elara",
+    console: {
+      title:
+        "Talk to Elara",
+
       subtitle:
         "Two paths. One voice. Choose what you came looking for.",
-      promptLabel:"Where should we begin?",
-      returnLabel:"Return to Elara's main questions",
-      restartLabel:"Begin again",
-      continueLabel:"Keep going"
+
+      promptLabel:
+        "Where should we begin?",
+
+      returnLabel:
+        "Return to Elara's main questions",
+
+      restartLabel:
+        "Begin again",
+
+      continueLabel:
+        "Keep going"
     }
   };
 
   const MODES = {
-    meet_sean:{
-      id:"meet_sean",
-      label:"Meet Sean",
-      eyebrow:"Human Threshold",
-      title:"Find the person behind the House.",
-      opening:[
+    meet_sean: {
+      id:
+        "meet_sean",
+
+      label:
+        "Meet Sean",
+
+      eyebrow:
+        "Human Threshold",
+
+      title:
+        "Find the person behind the House.",
+
+      opening: [
         {
-          register:"invitation",
+          register:
+            "invitation",
+
           text:
-            "There you are. I was wondering whether you would come looking for the person behind all of this."
+            "There you are. I was wondering when you would look for the person behind the House."
         },
+
         {
-          register:"revelation",
+          register:
+            "revelation",
+
           text:
-            "I'm Elara. Before you meet Sean, there are a few things I would rather you understand."
+            "I am Elara. I will give you the reason to care, then point you to the right door."
         }
       ],
-      main:[
+
+      main: [
         "who_sean",
         "what_shaped_sean",
         "what_changed_in_china",
         "why_house_exists"
       ],
-      secondary:[
+
+      secondary: [
         "what_256_means",
         "what_1001_traversal_is",
         "what_inner_underdog_means",
         "where_sean_path_leads"
       ],
-      contextualPathways:[
+
+      contextualPathways: [
         "meetSean",
         "book",
         "jeeves",
@@ -471,30 +646,45 @@
       ]
     },
 
-    nine_summits_love:{
-      id:"nine_summits_love",
-      label:"Nine Summits of Love",
-      eyebrow:"Book Threshold",
-      title:"Enter the climb.",
-      opening:[
+    nine_summits_love: {
+      id:
+        "nine_summits_love",
+
+      label:
+        "Nine Summits of Love",
+
+      eyebrow:
+        "Book Threshold",
+
+      title:
+        "Enter the climb.",
+
+      opening: [
         {
-          register:"invitation",
+          register:
+            "invitation",
+
           text:
-            "The Nine Summits is called a book because we needed a word for it."
+            "The Nine Summits is called a book because people like familiar labels."
         },
+
         {
-          register:"revelation",
+          register:
+            "revelation",
+
           text:
-            "It behaves more like a mountain. You do not finish it unchanged."
+            "It behaves more like a mountain. I will show you where the climb begins."
         }
       ],
-      main:[
+
+      main: [
         "what_book_is",
         "what_256_carats_means",
         "what_climb_is",
         "why_love_cannot_be_conquered"
       ],
-      secondary:[
+
+      secondary: [
         "what_nine_summits_are",
         "first_three_summits",
         "middle_three_summits",
@@ -502,7 +692,8 @@
         "mirrorland_climate",
         "where_book_path_leads"
       ],
-      contextualPathways:[
+
+      contextualPathways: [
         "book",
         "meetSean",
         "jeeves",
@@ -512,26 +703,66 @@
   };
 
   const DIALOGUES = {
-    who_sean:{
-      id:"who_sean",
-      mode:"meet_sean",
-      register:"revelation",
-      prompt:"Who is Sean, really?",
-      responses:[
-        "Sean is the designer and builder behind Diamond Gate Bridge.",
-        "That is accurate, but it is not the interesting part.",
-        "The interesting part is that he kept imagining a life larger than the one he had been handed, even when his circumstances gave him very little evidence that the larger life would arrive.",
-        "The House grew from that refusal to stop reaching.",
-        "Not from a perfect plan. Not from comfort. From pressure that slowly became language, structure, and direction."
+    who_sean: {
+      id:
+        "who_sean",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "revelation",
+
+      prompt:
+        "Who is Sean, really?",
+
+      answer:
+        "Sean is the builder behind Diamond Gate Bridge, but the reason the House exists is personal: he kept imagining a larger life long before his circumstances supported it.",
+
+      flares: [
+        {
+          id:
+            "who-sean-persistence",
+
+          register:
+            "care",
+
+          line:
+            "I have a weakness for people who keep building after reality has already voted no."
+        },
+
+        {
+          id:
+            "who-sean-source",
+
+          register:
+            "invitation",
+
+          line:
+            "I could keep describing him, of course. That would be terribly convenient for me and slightly unfair to Sean."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.26,
+
+      transition:
+        "Meet Sean and hear the rest from the source.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_shaped_sean",
         "what_changed_in_china",
         "what_inner_underdog_means",
         "where_sean_path_leads"
       ],
-      contextualRoute:"meetSean",
-      tags:[
+
+      contextualRoute:
+        "meetSean",
+
+      tags: [
         "sean",
         "human-story",
         "builder",
@@ -539,27 +770,66 @@
       ]
     },
 
-    what_shaped_sean:{
-      id:"what_shaped_sean",
-      mode:"meet_sean",
-      register:"care",
-      prompt:"What shaped him?",
-      responses:[
-        "Sean was a dreamer before he had the structure to carry the dream.",
-        "That creates a particular kind of pressure. You can see farther than you know how to travel.",
-        "He met walls outside himself, and he met patterns inside himself that took longer to recognize.",
-        "The turn came when pressure stopped looking random.",
-        "He began reading it.",
-        "Once pressure could be read, it could become language. Once it became language, it could become a map."
+    what_shaped_sean: {
+      id:
+        "what_shaped_sean",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "care",
+
+      prompt:
+        "What shaped him?",
+
+      answer:
+        "Pressure taught Sean to stop treating hardship as random and start reading the patterns inside it.",
+
+      flares: [
+        {
+          id:
+            "pressure-teacher",
+
+          register:
+            "revelation",
+
+          line:
+            "Pressure is a terrible teacher. Efficient, though."
+        },
+
+        {
+          id:
+            "pattern-language",
+
+          register:
+            "care",
+
+          line:
+            "The moment pain becomes language, it stops owning the entire room."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.22,
+
+      transition:
+        "Meet Sean to see what he built from those patterns.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_changed_in_china",
         "why_house_exists",
         "what_256_means",
         "what_inner_underdog_means"
       ],
-      contextualRoute:null,
-      tags:[
+
+      contextualRoute:
+        "meetSean",
+
+      tags: [
         "pressure",
         "formation",
         "language",
@@ -567,27 +837,66 @@
       ]
     },
 
-    what_changed_in_china:{
-      id:"what_changed_in_china",
-      mode:"meet_sean",
-      register:"revelation",
-      prompt:"What changed in China?",
-      responses:[
-        "China changed the way Sean saw structure.",
-        "He lived in Zibo, in Shandong Province, and became deeply drawn to Mandarin, Chinese philosophy, and the discipline of pattern.",
-        "Mandarin gave him pressure. Philosophy gave that pressure form.",
-        "Then theology, philosophy, and science stopped looking like unrelated subjects.",
-        "They began to look like different languages circling deeper order.",
-        "That is one of the places where the House begins."
+    what_changed_in_china: {
+      id:
+        "what_changed_in_china",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "revelation",
+
+      prompt:
+        "What changed in China?",
+
+      answer:
+        "Living in Zibo and learning Mandarin helped Sean see language, philosophy, theology, and science as different approaches to deeper structure.",
+
+      flares: [
+        {
+          id:
+            "mandarin-structure",
+
+          register:
+            "invitation",
+
+          line:
+            "Mandarin does not let you bluff your way through structure. I respect that."
+        },
+
+        {
+          id:
+            "subjects-speaking",
+
+          register:
+            "revelation",
+
+          line:
+            "Once the subjects began speaking to one another, he could no longer pretend they were separate."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.24,
+
+      transition:
+        "Meet Sean for the human story behind that change.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_256_means",
         "what_1001_traversal_is",
         "why_house_exists",
         "where_sean_path_leads"
       ],
-      contextualRoute:null,
-      tags:[
+
+      contextualRoute:
+        "meetSean",
+
+      tags: [
         "china",
         "zibo",
         "mandarin",
@@ -596,27 +905,66 @@
       ]
     },
 
-    why_house_exists:{
-      id:"why_house_exists",
-      mode:"meet_sean",
-      register:"revelation",
-      prompt:"Why does this House exist?",
-      responses:[
-        "Because scattered insight disappears too easily.",
-        "A person can spend years noticing connections and still lose them if there is no structure strong enough to hold them.",
-        "Diamond Gate Bridge is Sean's attempt to give relation a home.",
-        "The House lets research, stories, products, people, worlds, and questions remain distinct without becoming disconnected.",
-        "It is not one idea pretending to be everything.",
-        "It is a place where many things can remain themselves and still belong to a larger order."
+    why_house_exists: {
+      id:
+        "why_house_exists",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "revelation",
+
+      prompt:
+        "Why does this House exist?",
+
+      answer:
+        "Sean built Diamond Gate Bridge so connected ideas could remain distinct without disappearing into separate rooms.",
+
+      flares: [
+        {
+          id:
+            "lost-connection",
+
+          register:
+            "care",
+
+          line:
+            "Watching a real connection disappear because no one made room for it—yes, that gets under my skin."
+        },
+
+        {
+          id:
+            "jeeves-architecture",
+
+          register:
+            "invitation",
+
+          line:
+            "Jeeves would call that an architectural problem. He calls most things architectural problems."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.29,
+
+      transition:
+        "The House preserves the connection. Jeeves can show you how.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_256_means",
         "where_sean_path_leads",
         "ask_jeeves",
         "what_book_is"
       ],
-      contextualRoute:"jeeves",
-      tags:[
+
+      contextualRoute:
+        "jeeves",
+
+      tags: [
         "house",
         "coherence",
         "relation",
@@ -624,27 +972,66 @@
       ]
     },
 
-    what_256_means:{
-      id:"what_256_means",
-      mode:"meet_sean",
-      register:"revelation",
-      prompt:"Why does 256 keep appearing?",
-      responses:[
-        "Because 256 became one of Sean's structural languages.",
-        "Not a lucky number. Not decoration.",
-        "A way to think about states, paths, relationships, movement, and addressable possibility.",
-        "Once he began seeing systems as fields rather than lists, 256 became a useful shape for organizing complexity.",
-        "That is why it appears in the software, the research, and the Book.",
-        "The meaning changes by room. The structural instinct remains."
+    what_256_means: {
+      id:
+        "what_256_means",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "revelation",
+
+      prompt:
+        "Why does 256 keep appearing?",
+
+      answer:
+        "256 is one of Sean's structural languages for organizing states, paths, relationships, and addressable possibility.",
+
+      flares: [
+        {
+          id:
+            "number-returning",
+
+          register:
+            "invitation",
+
+          line:
+            "People get suspicious when a number keeps returning. Usually right before they notice the pattern."
+        },
+
+        {
+          id:
+            "not-decoration",
+
+          register:
+            "revelation",
+
+          line:
+            "It is not decoration. Sean has enough decoration already."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.20,
+
+      transition:
+        "The Nine Summits shows what that structure means in human terms.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_1001_traversal_is",
         "what_256_carats_means",
         "why_house_exists",
-        "where_sean_path_leads"
+        "what_book_is"
       ],
-      contextualRoute:null,
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "256",
         "structure",
         "states",
@@ -652,27 +1039,66 @@
       ]
     },
 
-    what_1001_traversal_is:{
-      id:"what_1001_traversal_is",
-      mode:"meet_sean",
-      register:"revelation",
-      prompt:"What is the 1,001 Traversal Learning System?",
-      responses:[
-        "It began before Sean knew he was designing a learning system.",
-        "While learning Mandarin, he stopped treating every word as equally urgent.",
-        "He began asking better questions.",
-        "Which words return most often? Which words unlock the greatest range of expression? Which patterns make the next pattern easier to recognize?",
-        "That became the seed of 1,001 Traversal: learning through usefulness, familiarity, compression, and movement.",
-        "I can tell you why it matters. Auren owns what it becomes on the product floor."
+    what_1001_traversal_is: {
+      id:
+        "what_1001_traversal_is",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "revelation",
+
+      prompt:
+        "What is the 1,001 Traversal Learning System?",
+
+      answer:
+        "It is a learning system built around useful words, recurring patterns, familiarity, and the shortest meaningful path into real expression.",
+
+      flares: [
+        {
+          id:
+            "useful-path",
+
+          register:
+            "invitation",
+
+          line:
+            "A thousand scattered lessons are impressive. One useful path is better."
+        },
+
+        {
+          id:
+            "auren-instrument",
+
+          register:
+            "invitation",
+
+          line:
+            "I prefer the reason it matters. Auren prefers proving the instrument works."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.23,
+
+      transition:
+        "Auren owns what the system becomes in practice.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "ask_auren",
         "what_changed_in_china",
         "why_house_exists",
         "where_sean_path_leads"
       ],
-      contextualRoute:"auren",
-      tags:[
+
+      contextualRoute:
+        "auren",
+
+      tags: [
         "1001-traversal",
         "mandarin",
         "learning",
@@ -680,26 +1106,65 @@
       ]
     },
 
-    what_inner_underdog_means:{
-      id:"what_inner_underdog_means",
-      mode:"meet_sean",
-      register:"care",
-      prompt:"What is the inner underdog?",
-      responses:[
-        "The inner underdog is not the weakest part of a person.",
-        "It is the part that refused to disappear.",
-        "For Sean, that idea connects pressure, comedy, recovery, and voice.",
-        "Comedy lowers the wall. Story gives pressure a face. Voice lets a person stop hiding from what they already survived.",
-        "So when Sean says finding your inner underdog is finding your voice, he is naming the part of a person that still wants to rise.",
-        "That part is often less polished than confidence and more trustworthy than performance."
+    what_inner_underdog_means: {
+      id:
+        "what_inner_underdog_means",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "care",
+
+      prompt:
+        "What is the inner underdog?",
+
+      answer:
+        "The inner underdog is the part of a person that survived pressure and still wants a voice.",
+
+      flares: [
+        {
+          id:
+            "polished-brave",
+
+          register:
+            "care",
+
+          line:
+            "The polished version of a person is rarely the brave one. There—I said it."
+        },
+
+        {
+          id:
+            "voice-not-performance",
+
+          register:
+            "revelation",
+
+          line:
+            "A real voice does not always arrive sounding confident. Sometimes it arrives sounding honest."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.31,
+
+      transition:
+        "Meet the Inner Underdog and let Sean tell that story himself.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_shaped_sean",
         "where_sean_path_leads",
         "what_book_is"
       ],
-      contextualRoute:"underdog",
-      tags:[
+
+      contextualRoute:
+        "underdog",
+
+      tags: [
         "underdog",
         "voice",
         "comedy",
@@ -707,54 +1172,110 @@
       ]
     },
 
-    where_sean_path_leads:{
-      id:"where_sean_path_leads",
-      mode:"meet_sean",
-      register:"handoff",
-      prompt:"Where does Sean's path lead?",
-      responses:[
-        "Meeting Sean is the human doorway, not the end of the House.",
-        "The Nine Summits carries the climb.",
-        "Auren carries practical systems.",
-        "Jeeves can show you how the rooms belong together.",
-        "Soren handles questions that require diagnostic orientation.",
-        "I stay close to the moment where meaning becomes visible enough for a person to choose."
-      ],
-      followups:[
+    where_sean_path_leads: {
+      id:
+        "where_sean_path_leads",
+
+      mode:
+        "meet_sean",
+
+      register:
+        "handoff",
+
+      prompt:
+        "Where does Sean's path lead?",
+
+      answer:
+        "Sean is the human doorway into the House; the Book carries the climb, Auren carries practical systems, and Jeeves carries the map.",
+
+      flares: [],
+
+      flareChance:
+        0,
+
+      transition:
+        "Begin with Sean. The other doors will make more sense afterward.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_book_is",
         "ask_jeeves",
         "ask_auren",
         "ask_soren"
       ],
-      contextualRoute:"meetSean",
-      tags:[
+
+      contextualRoute:
+        "meetSean",
+
+      tags: [
         "handoff",
         "paths",
         "house"
       ]
     },
 
-    what_book_is:{
-      id:"what_book_is",
-      mode:"nine_summits_love",
-      register:"invitation",
-      prompt:"What is The Nine Summits of Love?",
-      responses:[
-        "It is called a book because we needed a word visitors would recognize.",
-        "But it behaves more like a climb.",
-        "It begins with a heart under pressure: locked, chained, tired, or unable to recognize its own value.",
-        "The Book does not deny the pressure.",
-        "It asks whether pressure can become formation instead of disappearance.",
-        "That is where the mountain begins."
+    what_book_is: {
+      id:
+        "what_book_is",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "invitation",
+
+      prompt:
+        "What is The Nine Summits of Love?",
+
+      answer:
+        "It is a guided ascent that begins with a heart under pressure and asks what that heart can become.",
+
+      flares: [
+        {
+          id:
+            "book-label",
+
+          register:
+            "invitation",
+
+          line:
+            "Calling it a book is convenient. Mountains are difficult to shelve."
+        },
+
+        {
+          id:
+            "pressure-not-denied",
+
+          register:
+            "care",
+
+          line:
+            "It does not flatter the wound or deny it. That is one of the reasons I trust it."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.28,
+
+      transition:
+        "Open the Book and begin at the base of the mountain.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_256_carats_means",
         "what_climb_is",
         "what_nine_summits_are",
         "why_love_cannot_be_conquered"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "book",
         "nine-summits",
         "love",
@@ -762,28 +1283,66 @@
       ]
     },
 
-    what_256_carats_means:{
-      id:"what_256_carats_means",
-      mode:"nine_summits_love",
-      register:"care",
-      prompt:"What does 256 Carats mean?",
-      responses:[
-        "256 Carats is the jewel-language of the Book.",
-        "It means value under pressure.",
-        "Hidden does not mean absent.",
-        "Locked does not mean destroyed.",
-        "Burdened does not mean worthless.",
-        "A diamond becomes visible through pressure, cutting, clarity, and refinement.",
-        "The Book uses that image to say the heart may still carry extraordinary value before it knows how to reveal it."
+    what_256_carats_means: {
+      id:
+        "what_256_carats_means",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "care",
+
+      prompt:
+        "What does 256 Carats mean?",
+
+      answer:
+        "256 Carats of Human Potential is the Book's language for value that remains real even while it is hidden, burdened, or under pressure.",
+
+      flares: [
+        {
+          id:
+            "hidden-value",
+
+          register:
+            "care",
+
+          line:
+            "Hidden value makes me impatient—not with the value, with anyone who mistakes hidden for absent."
+        },
+
+        {
+          id:
+            "locked-not-lost",
+
+          register:
+            "revelation",
+
+          line:
+            "Locked is not the same as lost. People forget that far too quickly."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.32,
+
+      transition:
+        "The Book shows how that value begins to emerge.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_climb_is",
         "what_nine_summits_are",
         "why_love_cannot_be_conquered",
         "mirrorland_climate"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "256-carats",
         "value",
         "pressure",
@@ -791,28 +1350,66 @@
       ]
     },
 
-    what_climb_is:{
-      id:"what_climb_is",
-      mode:"nine_summits_love",
-      register:"revelation",
-      prompt:"What is the climb?",
-      responses:[
-        "The climb is the Book's language for becoming.",
-        "Not a checklist. Not a motivational ladder.",
-        "The base of the mountain is where inherited pain, family wounds, social decay, survival habits, and unfinished patterns collect.",
-        "Each path gives the heart a discipline.",
-        "Each summit changes what the heart can carry.",
-        "And the mountain keeps rising because Love is not a peak the climber owns.",
-        "The closer the heart moves toward Love, the more the mountain reveals."
+    what_climb_is: {
+      id:
+        "what_climb_is",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "revelation",
+
+      prompt:
+        "What is the climb?",
+
+      answer:
+        "The climb is the Book's model of becoming: each path develops a discipline, and each summit develops a greater human capacity.",
+
+      flares: [
+        {
+          id:
+            "not-staircase",
+
+          register:
+            "invitation",
+
+          line:
+            "No, it is not a motivational staircase. I would have objected."
+        },
+
+        {
+          id:
+            "mountain-reveals",
+
+          register:
+            "revelation",
+
+          line:
+            "A real mountain does not congratulate you for naming the peak. It waits to see whether you will climb."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.27,
+
+      transition:
+        "Open the Book when you are ready to take the first path.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_nine_summits_are",
         "first_three_summits",
         "why_love_cannot_be_conquered",
         "mirrorland_climate"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "climb",
         "formation",
         "mountain",
@@ -820,141 +1417,308 @@
       ]
     },
 
-    what_nine_summits_are:{
-      id:"what_nine_summits_are",
-      mode:"nine_summits_love",
-      register:"revelation",
-      prompt:"What are the Nine Summits?",
-      responses:[
-        "The paths are disciplines. The summits are formations.",
-        "Gratitude climbs toward Character.",
-        "Generosity climbs toward Structure.",
-        "Dependability climbs toward Balance.",
-        "Accountability climbs toward Stability.",
-        "Humility climbs toward Peace.",
-        "Forgiveness climbs toward Joy.",
-        "Self-Control climbs toward Dignity.",
-        "Patience climbs toward Free Will.",
-        "Purity climbs toward Love.",
-        "The path is what the heart practices. The summit is what the heart becomes capable of carrying."
+    what_nine_summits_are: {
+      id:
+        "what_nine_summits_are",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "revelation",
+
+      prompt:
+        "What are the Nine Summits?",
+
+      answer:
+        "Nine paths—Gratitude through Purity—form nine capacities, beginning with Character and rising toward Love.",
+
+      flares: [
+        {
+          id:
+            "nine-enough",
+
+          register:
+            "invitation",
+
+          line:
+            "Nine is enough to change a life and not enough to let anyone pretend they are finished."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.19,
+
+      transition:
+        "The Book lets you climb them in order.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "first_three_summits",
         "middle_three_summits",
         "final_three_summits",
         "why_love_cannot_be_conquered"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "nine-summits",
         "paths",
         "formations"
       ]
     },
 
-    first_three_summits:{
-      id:"first_three_summits",
-      mode:"nine_summits_love",
-      register:"revelation",
-      prompt:"Tell me about the first three.",
-      responses:[
-        "The first three teach the heart how to begin climbing.",
-        "Gratitude moves toward Character because it teaches the heart to see what is present before demanding more.",
-        "Generosity moves toward Structure because giving well requires order. A person cannot give forever from chaos.",
-        "Dependability moves toward Balance because trust grows when a person becomes steady enough to be counted on.",
-        "They sound gentle.",
-        "They are not passive."
+    first_three_summits: {
+      id:
+        "first_three_summits",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "revelation",
+
+      prompt:
+        "Tell me about the first three.",
+
+      answer:
+        "Gratitude develops Character, Generosity develops Structure, and Dependability develops Balance.",
+
+      flares: [
+        {
+          id:
+            "gentle-not-passive",
+
+          register:
+            "revelation",
+
+          line:
+            "They sound gentle. They are not passive."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.22,
+
+      transition:
+        "Open the Book to see why the climb begins there.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "middle_three_summits",
         "final_three_summits",
         "what_nine_summits_are",
         "why_love_cannot_be_conquered"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "gratitude",
         "generosity",
         "dependability"
       ]
     },
 
-    middle_three_summits:{
-      id:"middle_three_summits",
-      mode:"nine_summits_love",
-      register:"care",
-      prompt:"Tell me about the middle three.",
-      responses:[
-        "The middle three stabilize the climb.",
-        "Accountability moves toward Stability because a person cannot become steady while refusing to see their own part.",
-        "Humility moves toward Peace because ego keeps unnecessary wars alive.",
-        "Forgiveness moves toward Joy because bitterness can keep the heart chained to what hurt it.",
-        "This is where the emotional weather begins to change."
+    middle_three_summits: {
+      id:
+        "middle_three_summits",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "care",
+
+      prompt:
+        "Tell me about the middle three.",
+
+      answer:
+        "Accountability develops Stability, Humility develops Peace, and Forgiveness opens the heart toward Joy.",
+
+      flares: [
+        {
+          id:
+            "forgiveness-weapon",
+
+          register:
+            "care",
+
+          line:
+            "Forgiveness is the one people romanticize until it asks them to release the weapon."
+        },
+
+        {
+          id:
+            "peace-cost",
+
+          register:
+            "revelation",
+
+          line:
+            "Peace becomes expensive the moment pride is asked to pay for it."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.30,
+
+      transition:
+        "The Book carries those disciplines beyond their names.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "first_three_summits",
         "final_three_summits",
         "what_nine_summits_are",
         "mirrorland_climate"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "accountability",
         "humility",
         "forgiveness"
       ]
     },
 
-    final_three_summits:{
-      id:"final_three_summits",
-      mode:"nine_summits_love",
-      register:"revelation",
-      prompt:"Tell me about the final three.",
-      responses:[
-        "The final three prepare the heart for higher altitude.",
-        "Self-Control moves toward Dignity because dignity requires freedom from every passing impulse, wound, and reaction.",
-        "Patience moves toward Free Will because real choice requires space.",
-        "Without patience, people often repeat pressure and call it freedom.",
-        "Purity moves toward Love because Love cannot be carried cleanly by a heart committed to distortion.",
-        "Then the air changes."
+    final_three_summits: {
+      id:
+        "final_three_summits",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "revelation",
+
+      prompt:
+        "Tell me about the final three.",
+
+      answer:
+        "Self-Control develops Dignity, Patience creates space for Free Will, and Purity prepares the heart to approach Love.",
+
+      flares: [
+        {
+          id:
+            "patience-choice",
+
+          register:
+            "revelation",
+
+          line:
+            "Without space, reaction impersonates choice. It is a convincing performance."
+        },
+
+        {
+          id:
+            "higher-altitude",
+
+          register:
+            "care",
+
+          line:
+            "The air changes near the top. So must the person breathing it."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.27,
+
+      transition:
+        "Open the Book to enter the higher part of the climb.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "why_love_cannot_be_conquered",
         "mirrorland_climate",
         "what_nine_summits_are",
         "where_book_path_leads"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "self-control",
         "patience",
         "purity"
       ]
     },
 
-    why_love_cannot_be_conquered:{
-      id:"why_love_cannot_be_conquered",
-      mode:"nine_summits_love",
-      register:"revelation",
-      prompt:"Why can't Love be conquered?",
-      responses:[
-        "Because Love is not a trophy.",
-        "The Book does not place the climber above Love and call the climb complete.",
-        "Love can be approached, practiced, described, and allowed to refine the person reaching toward it.",
-        "But it is not possessed.",
-        "The point is not conquest.",
-        "The point is becoming more capable of reaching without reducing Love to something smaller than itself.",
-        "Love does not end the climb.",
-        "Love teaches the climb how to continue."
+    why_love_cannot_be_conquered: {
+      id:
+        "why_love_cannot_be_conquered",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "revelation",
+
+      prompt:
+        "Why can't Love be conquered?",
+
+      answer:
+        "Because Love is not a trophy or a possession; it is the highest formation the climber learns to approach without reducing it.",
+
+      flares: [
+        {
+          id:
+            "love-refuses-smallness",
+
+          register:
+            "care",
+
+          line:
+            "Love refuses to become small enough for the climber's ego to stand above it. Good."
+        },
+
+        {
+          id:
+            "not-finish-line",
+
+          register:
+            "revelation",
+
+          line:
+            "Anyone promising that Love is a finish line has misunderstood both Love and mountains."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.36,
+
+      transition:
+        "The Book lets Love remain larger than the person reaching for it.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_climb_is",
         "what_nine_summits_are",
         "mirrorland_climate",
         "where_book_path_leads"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "love",
         "unconquered",
         "ascent",
@@ -962,150 +1726,314 @@
       ]
     },
 
-    mirrorland_climate:{
-      id:"mirrorland_climate",
-      mode:"nine_summits_love",
-      register:"invitation",
-      prompt:"What is Mirrorland's climate?",
-      responses:[
-        "Mirrorland has its own weather.",
-        "Not rain and wind. The kind made by memory, pressure, dignity, choice, reflection, and consequence.",
-        "The Nine Summits teaches the heart how to breathe there.",
-        "That is why the Book belongs near the doorway.",
-        "It is not only a path into a world.",
-        "It is acclimation."
+    mirrorland_climate: {
+      id:
+        "mirrorland_climate",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "invitation",
+
+      prompt:
+        "What is Mirrorland's climate?",
+
+      answer:
+        "Mirrorland's climate is emotional and moral weather shaped by memory, pressure, dignity, reflection, choice, and consequence.",
+
+      flares: [
+        {
+          id:
+            "honest-weather",
+
+          register:
+            "invitation",
+
+          line:
+            "The weather there is honest. I like it. Most people do not, at first."
+        },
+
+        {
+          id:
+            "acclimation",
+
+          register:
+            "care",
+
+          line:
+            "A beautiful world can still require acclimation. Especially an honest one."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.31,
+
+      transition:
+        "The Showroom brings you back to Mirrorland's door.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_climb_is",
         "why_love_cannot_be_conquered",
         "what_book_is",
         "ask_jeeves"
       ],
-      contextualRoute:"showroom",
-      tags:[
+
+      contextualRoute:
+        "showroom",
+
+      tags: [
         "mirrorland",
         "climate",
         "acclimation"
       ]
     },
 
-    where_book_path_leads:{
-      id:"where_book_path_leads",
-      mode:"nine_summits_love",
-      register:"handoff",
-      prompt:"Where does the Book lead?",
-      responses:[
-        "The Book stays with the climb.",
-        "If you want the person behind the voice, meet Sean.",
-        "If you want the whole House, ask Jeeves.",
-        "If you want practical systems, Auren is waiting on the product floor.",
-        "If you need diagnostic orientation, Soren owns that boundary.",
-        "I remain here, where the visitor decides whether meaning is worth carrying farther."
-      ],
-      followups:[
+    where_book_path_leads: {
+      id:
+        "where_book_path_leads",
+
+      mode:
+        "nine_summits_love",
+
+      register:
+        "handoff",
+
+      prompt:
+        "Where does the Book lead?",
+
+      answer:
+        "The Book carries the human climb; Sean carries the personal story, Jeeves carries the House, and Auren carries practical systems.",
+
+      flares: [],
+
+      flareChance:
+        0,
+
+      transition:
+        "Open the Book first. Let the climb choose the next door.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "ask_jeeves",
         "ask_auren",
         "ask_soren",
         "who_sean"
       ],
-      contextualRoute:"book",
-      tags:[
+
+      contextualRoute:
+        "book",
+
+      tags: [
         "handoff",
         "book",
         "paths"
       ]
     },
 
-    ask_jeeves:{
-      id:"ask_jeeves",
-      mode:"shared",
-      register:"handoff",
-      prompt:"What should I ask Jeeves?",
-      responses:[
-        "Ask him how the House fits together.",
-        "Jeeves sees the estate as a whole.",
-        "I prefer the moment where a person decides whether the door matters.",
-        "He can show you what belongs beyond it."
+    ask_jeeves: {
+      id:
+        "ask_jeeves",
+
+      mode:
+        "shared",
+
+      register:
+        "handoff",
+
+      prompt:
+        "What should I ask Jeeves?",
+
+      answer:
+        "Ask Jeeves how the rooms, systems, worlds, and people belong to the whole House.",
+
+      flares: [
+        {
+          id:
+            "jeeves-maps",
+
+          register:
+            "invitation",
+
+          line:
+            "He enjoys maps with the seriousness some people reserve for religion."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.24,
+
+      transition:
+        "He owns the map. Let him show it to you.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "why_house_exists",
         "where_sean_path_leads",
         "where_book_path_leads"
       ],
-      contextualRoute:"jeeves",
-      tags:[
+
+      contextualRoute:
+        "jeeves",
+
+      tags: [
         "jeeves",
         "handoff",
         "whole-house"
       ]
     },
 
-    ask_auren:{
-      id:"ask_auren",
-      mode:"shared",
-      register:"handoff",
-      prompt:"What should I ask Auren?",
-      responses:[
-        "Ask Auren what the idea becomes when it has to work.",
-        "He owns the product floor, Education, 1,001 Traversal, and practical systems.",
-        "I can make the purpose visible.",
-        "Auren can show you the instrument."
+    ask_auren: {
+      id:
+        "ask_auren",
+
+      mode:
+        "shared",
+
+      register:
+        "handoff",
+
+      prompt:
+        "What should I ask Auren?",
+
+      answer:
+        "Ask Auren what these ideas become when they have to work in the real world.",
+
+      flares: [
+        {
+          id:
+            "auren-works",
+
+          register:
+            "invitation",
+
+          line:
+            "He will ask whether it works. Irritatingly useful question."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.26,
+
+      transition:
+        "Auren owns the instrument. Open the product floor.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "what_1001_traversal_is",
         "where_sean_path_leads",
         "where_book_path_leads"
       ],
-      contextualRoute:"auren",
-      tags:[
+
+      contextualRoute:
+        "auren",
+
+      tags: [
         "auren",
         "handoff",
         "products"
       ]
     },
 
-    ask_soren:{
-      id:"ask_soren",
-      mode:"shared",
-      register:"handoff",
-      prompt:"What should I ask Soren?",
-      responses:[
-        "Ask Soren when the question requires diagnosis rather than invitation.",
-        "He owns coherence assessment, orientation boundaries, and the discipline of not pretending a system is ready when it is not.",
-        "I make meaning visible.",
-        "Soren tests whether the structure can carry it."
+    ask_soren: {
+      id:
+        "ask_soren",
+
+      mode:
+        "shared",
+
+      register:
+        "handoff",
+
+      prompt:
+        "What should I ask Soren?",
+
+      answer:
+        "Ask Soren when the question requires diagnosis, assessment, or a clear boundary rather than invitation.",
+
+      flares: [
+        {
+          id:
+            "soren-fog",
+
+          register:
+            "invitation",
+
+          line:
+            "He is not cold. He is simply unwilling to call fog a landscape."
+        }
       ],
-      followups:[
+
+      flareChance:
+        0.25,
+
+      transition:
+        "Soren owns that boundary. Let him test the structure.",
+
+      transitionRegister:
+        "handoff",
+
+      followups: [
         "why_house_exists",
         "where_sean_path_leads",
         "where_book_path_leads"
       ],
-      contextualRoute:"soren",
-      tags:[
+
+      contextualRoute:
+        "soren",
+
+      tags: [
         "soren",
         "handoff",
         "diagnostic"
       ]
     },
 
-    boundary_protected:{
-      id:"boundary_protected",
-      mode:"shared",
-      register:"warning",
-      prompt:"Can you reveal the protected architecture?",
-      responses:[
-        "No.",
-        "That would reveal too much.",
-        "We do not confuse curiosity with permission or access with entitlement.",
-        "I can explain why the architecture matters.",
-        "I will not expose what must remain protected."
-      ],
-      followups:[
+    boundary_protected: {
+      id:
+        "boundary_protected",
+
+      mode:
+        "shared",
+
+      register:
+        "warning",
+
+      prompt:
+        "Can you reveal the protected architecture?",
+
+      answer:
+        "No. I can explain why the architecture matters, but I will not expose what must remain protected.",
+
+      flares: [],
+
+      flareChance:
+        0,
+
+      transition:
+        "",
+
+      transitionRegister:
+        "warning",
+
+      followups: [
         "why_house_exists",
         "ask_jeeves"
       ],
-      contextualRoute:null,
-      tags:[
+
+      contextualRoute:
+        null,
+
+      tags: [
         "boundary",
         "warning",
         "protected"
@@ -1114,159 +2042,337 @@
   };
 
   const PATHWAYS = {
-    meetSean:{
-      id:"meet-sean-pathway",
-      context:"human-story",
-      eyebrow:"Human Threshold",
-      title:"Meet Sean",
+    meetSean: {
+      id:
+        "meet-sean-pathway",
+
+      context:
+        "human-story",
+
+      eyebrow:
+        "Human Threshold",
+
+      title:
+        "Meet Sean",
+
       description:
         "Continue into the public story of the designer, builder, dreamer, and human voice behind Diamond Gate Bridge.",
-      route:"meetSean",
+
+      route:
+        "meetSean",
+
       voiceLine:
-        "You have heard my introduction. Sean should get the next word."
+        "You have enough to open the next door. Sean should get the next word."
     },
 
-    book:{
-      id:"book-pathway",
-      context:"ascent",
-      eyebrow:"Book Threshold",
-      title:"Open The Nine Summits of Love",
+    book: {
+      id:
+        "book-pathway",
+
+      context:
+        "ascent",
+
+      eyebrow:
+        "Book Threshold",
+
+      title:
+        "Open The Nine Summits of Love",
+
       description:
-        "Continue into the mountain-ascent path through pressure, value, formation, and Love.",
-      route:"book",
+        "Continue into the ascent through pressure, value, formation, and Love.",
+
+      route:
+        "book",
+
       voiceLine:
-        "The climb is easier to understand once you stop treating it like a chapter list."
+        "The mountain can explain itself from here."
     },
 
-    jeeves:{
-      id:"jeeves-pathway",
-      context:"whole-house",
-      eyebrow:"Whole-House Orientation",
-      title:"Ask Jeeves",
+    jeeves: {
+      id:
+        "jeeves-pathway",
+
+      context:
+        "whole-house",
+
+      eyebrow:
+        "Whole-House Orientation",
+
+      title:
+        "Ask Jeeves",
+
       description:
         "See how the rooms, worlds, people, and systems belong to the larger estate.",
-      route:"jeeves",
+
+      route:
+        "jeeves",
+
       voiceLine:
-        "Jeeves sees the whole House at once. I let him keep that particular headache."
+        "Jeeves owns the map. I let him keep that particular headache."
     },
 
-    auren:{
-      id:"auren-pathway",
-      context:"practical-systems",
-      eyebrow:"Product Floor",
-      title:"Talk to Auren",
+    auren: {
+      id:
+        "auren-pathway",
+
+      context:
+        "practical-systems",
+
+      eyebrow:
+        "Product Floor",
+
+      title:
+        "Talk to Auren",
+
       description:
-        "Continue into products, Education, the 1,001 Traversal Learning System, and practical implementation.",
-      route:"auren",
+        "Continue into products, Education, the 1,001 Traversal Learning System, and implementation.",
+
+      route:
+        "auren",
+
       voiceLine:
-        "Purpose is lovely. Auren will ask whether it can survive contact with reality."
+        "Purpose is lovely. Auren will ask whether it works."
     },
 
-    soren:{
-      id:"soren-pathway",
-      context:"diagnostic",
-      eyebrow:"Diagnostic Orientation",
-      title:"Talk to Soren",
+    soren: {
+      id:
+        "soren-pathway",
+
+      context:
+        "diagnostic",
+
+      eyebrow:
+        "Diagnostic Orientation",
+
+      title:
+        "Talk to Soren",
+
       description:
         "Continue into coherence assessment, diagnostic boundaries, and orientation logic.",
-      route:"soren",
+
+      route:
+        "soren",
+
       voiceLine:
         "When the question becomes diagnostic, Soren is the honest next room."
     },
 
-    compass:{
-      id:"compass-pathway",
-      context:"return",
-      eyebrow:"Public Entrance",
-      title:"Return to Compass",
+    showroom: {
+      id:
+        "showroom-pathway",
+
+      context:
+        "mirrorland-door",
+
+      eyebrow:
+        "Door to Mirrorland",
+
+      title:
+        "Return to the Showroom",
+
+      description:
+        "Return to the Diamond Lattice and the threshold into Mirrorland.",
+
+      route:
+        "showroom",
+
+      voiceLine:
+        "The door is waiting. It does not need another speech from me."
+    },
+
+    underdog: {
+      id:
+        "underdog-pathway",
+
+      context:
+        "human-voice",
+
+      eyebrow:
+        "Sean Mansfield",
+
+      title:
+        "Meet the Inner Underdog",
+
+      description:
+        "Continue into Sean's public voice, comedy, pressure, recovery, and inner-underdog story.",
+
+      route:
+        "underdog",
+
+      voiceLine:
+        "That story belongs in Sean's voice."
+    },
+
+    compass: {
+      id:
+        "compass-pathway",
+
+      context:
+        "return",
+
+      eyebrow:
+        "Public Entrance",
+
+      title:
+        "Return to Compass",
+
       description:
         "Return to the primary public entrance of Diamond Gate Bridge.",
-      route:"compass",
+
+      route:
+        "compass",
+
       voiceLine:
-        "You can always return to the entrance. A good door does not trap the visitor."
+        "A good door does not trap the visitor."
     }
   };
 
   const TEAM = {
-    elara:{
-      id:"elara",
-      name:"Elara",
-      role:"Signal Bearer",
+    elara: {
+      id:
+        "elara",
+
+      name:
+        "Elara",
+
+      role:
+        "Signal Bearer",
+
       ownership:
         "Human meaning, Sean, the Book threshold, public Mission, and Mirrorland's emotional climate.",
-      route:null
+
+      route:
+        null
     },
 
-    jeeves:{
-      id:"jeeves",
-      name:"Jeeves",
-      role:"Estate Guide",
+    jeeves: {
+      id:
+        "jeeves",
+
+      name:
+        "Jeeves",
+
+      role:
+        "Estate Guide",
+
       ownership:
         "Whole-House map, estate orientation, room ownership, and system context.",
-      route:"jeeves"
+
+      route:
+        "jeeves"
     },
 
-    auren:{
-      id:"auren",
-      name:"Auren",
-      role:"Practical Systems Guide",
+    auren: {
+      id:
+        "auren",
+
+      name:
+        "Auren",
+
+      role:
+        "Practical Systems Guide",
+
       ownership:
         "Products, Education, 1,001 Traversal, and implementation.",
-      route:"auren"
+
+      route:
+        "auren"
     },
 
-    soren:{
-      id:"soren",
-      name:"Soren",
-      role:"Diagnostic Guide",
+    soren: {
+      id:
+        "soren",
+
+      name:
+        "Soren",
+
+      role:
+        "Diagnostic Guide",
+
       ownership:
         "Coherence Diagnostic, assessment boundaries, and orientation logic.",
-      route:"soren"
+
+      route:
+        "soren"
     }
   };
 
   const DOSSIER = {
-    eyebrow:"Core Class",
-    title:"Signal Bearer",
+    eyebrow:
+      "Core Class",
+
+    title:
+      "Signal Bearer",
+
     summary:
       "Bubbly, articulate, intelligent, confident, and public-facing—disciplined by visibility ethics.",
-    dimensions:[
+
+    dimensions: [
       {
-        id:"surface",
-        label:"Surface",
-        value:"Public-facing clarity",
+        id:
+          "surface",
+
+        label:
+          "Surface",
+
+        value:
+          "Public-facing clarity",
+
         description:
-          "Socially fluent, welcoming, articulate, and capable of making difficult ideas feel approachable."
+          "Socially fluent, welcoming, articulate, and capable of making difficult ideas approachable."
       },
+
       {
-        id:"core",
-        label:"Core",
-        value:"Concealment and revelation",
+        id:
+          "core",
+
+        label:
+          "Core",
+
+        value:
+          "Concealment and revelation",
+
         description:
           "She decides what needs illumination, what requires preparation, and what must remain protected."
       },
+
       {
-        id:"rule",
-        label:"Rule",
-        value:"Reveal enough to invite",
+        id:
+          "rule",
+
+        label:
+          "Rule",
+
+        value:
+          "Reveal enough to invite",
+
         description:
           "Protect enough to preserve meaning and prevent careless exposure."
       }
     ]
   };
 
-  const getRoute = routeId => {
-    const route =
-      ROUTES[routeId];
+  const flareMemory = {
+    interactionCount: 0,
+    sinceLastFlare: 0,
+    lastDialogueId: "",
+    lastFlareId: "",
+    previousAnswerUsedFlare: false,
+    usedFlareIds: new Set()
+  };
 
-    return route || null;
+  const getRoute = routeId => {
+    return (
+      ROUTES[routeId] ||
+      null
+    );
   };
 
   const getMode = modeId => {
-    const mode =
-      MODES[modeId];
-
-    return mode || null;
+    return (
+      MODES[modeId] ||
+      null
+    );
   };
 
   const getOpening = modeId => {
@@ -1278,98 +2384,426 @@
       : [];
   };
 
-  const getDialogue = dialogueId => {
-    const dialogue =
-      DIALOGUES[dialogueId];
+  const getCanonicalDialogue =
+    dialogueId => {
+      return (
+        DIALOGUES[dialogueId] ||
+        null
+      );
+    };
 
-    return dialogue || null;
+  const getRegister =
+    registerId => {
+      return (
+        REGISTERS[registerId] ||
+        null
+      );
+    };
+
+  const getPathway =
+    pathwayId => {
+      return (
+        PATHWAYS[pathwayId] ||
+        null
+      );
+    };
+
+  const getTeamMember =
+    memberId => {
+      return (
+        TEAM[memberId] ||
+        null
+      );
+    };
+
+  const chooseFlare = dialogue => {
+    const flares =
+      Array.isArray(
+        dialogue.flares
+      )
+        ? dialogue.flares
+        : [];
+
+    if (!flares.length) {
+      return null;
+    }
+
+    if (
+      dialogue.register ===
+        "warning" ||
+      dialogue.register ===
+        "handoff"
+    ) {
+      return null;
+    }
+
+    flareMemory.interactionCount += 1;
+
+    if (
+      flareMemory
+        .previousAnswerUsedFlare
+    ) {
+      flareMemory
+        .previousAnswerUsedFlare =
+        false;
+
+      flareMemory
+        .sinceLastFlare += 1;
+
+      flareMemory
+        .lastDialogueId =
+        dialogue.id;
+
+      return null;
+    }
+
+    const baseChance =
+      Number.isFinite(
+        dialogue.flareChance
+      )
+        ? Math.max(
+            0,
+            Math.min(
+              1,
+              dialogue.flareChance
+            )
+          )
+        : 0.20;
+
+    const forceEligibleFlare =
+      flareMemory
+        .sinceLastFlare >= 3;
+
+    const shouldUseFlare =
+      forceEligibleFlare ||
+      randomUnit() < baseChance;
+
+    if (!shouldUseFlare) {
+      flareMemory
+        .sinceLastFlare += 1;
+
+      flareMemory
+        .previousAnswerUsedFlare =
+        false;
+
+      flareMemory
+        .lastDialogueId =
+        dialogue.id;
+
+      return null;
+    }
+
+    const unused =
+      flares.filter(
+        flare =>
+          !flareMemory
+            .usedFlareIds
+            .has(flare.id)
+      );
+
+    const pool =
+      unused.length
+        ? unused
+        : flares.filter(
+            flare =>
+              flare.id !==
+              flareMemory.lastFlareId
+          );
+
+    const finalPool =
+      pool.length
+        ? pool
+        : flares;
+
+    const selectedIndex =
+      Math.floor(
+        randomUnit() *
+        finalPool.length
+      );
+
+    const selected =
+      finalPool[
+        selectedIndex
+      ] ||
+      null;
+
+    if (!selected) {
+      return null;
+    }
+
+    flareMemory
+      .usedFlareIds
+      .add(selected.id);
+
+    flareMemory
+      .lastFlareId =
+      selected.id;
+
+    flareMemory
+      .lastDialogueId =
+      dialogue.id;
+
+    flareMemory
+      .sinceLastFlare =
+      0;
+
+    flareMemory
+      .previousAnswerUsedFlare =
+      true;
+
+    return selected;
   };
 
-  const getRegister = registerId => {
-    const register =
-      REGISTERS[registerId];
+  const composeDialogue =
+    dialogue => {
+      if (!dialogue) {
+        return null;
+      }
 
-    return register || null;
-  };
+      const responses = [];
 
-  const getPathway = pathwayId => {
-    const pathway =
-      PATHWAYS[pathwayId];
+      const answer =
+        normalize(
+          dialogue.answer
+        );
 
-    return pathway || null;
-  };
+      if (answer) {
+        responses.push({
+          kind:
+            "answer",
 
-  const getTeamMember = memberId => {
-    const member =
-      TEAM[memberId];
+          register:
+            dialogue.register ||
+            "revelation",
 
-    return member || null;
-  };
+          text:
+            answer
+        });
+      }
 
-  const getMainDialogueIds = modeId => {
-    const mode =
-      getMode(modeId);
+      const flare =
+        chooseFlare(
+          dialogue
+        );
 
-    return mode
-      ? mode.main.slice()
-      : [];
-  };
+      if (flare) {
+        responses.push({
+          kind:
+            "personality-flare",
 
-  const getSecondaryDialogueIds = modeId => {
-    const mode =
-      getMode(modeId);
+          flareId:
+            flare.id,
 
-    return mode
-      ? mode.secondary.slice()
-      : [];
-  };
+          register:
+            flare.register ||
+            dialogue.register ||
+            "invitation",
+
+          text:
+            normalize(
+              flare.line
+            )
+        });
+      }
+
+      const transition =
+        normalize(
+          dialogue.transition
+        );
+
+      if (transition) {
+        responses.push({
+          kind:
+            "transition",
+
+          register:
+            dialogue
+              .transitionRegister ||
+            "handoff",
+
+          text:
+            transition
+        });
+      }
+
+      const maximum =
+        flare
+          ? DELIVERY_LAWS
+              .expressiveAnswerMaximumBubbles
+          : DELIVERY_LAWS
+              .ordinaryAnswerMaximumBubbles;
+
+      const boundedResponses =
+        responses.slice(
+          0,
+          maximum
+        );
+
+      return deepFreeze({
+        id:
+          dialogue.id,
+
+        mode:
+          dialogue.mode,
+
+        register:
+          dialogue.register,
+
+        prompt:
+          dialogue.prompt,
+
+        answer:
+          dialogue.answer,
+
+        selectedFlare:
+          flare
+            ? {
+                id:
+                  flare.id,
+
+                register:
+                  flare.register,
+
+                line:
+                  flare.line
+              }
+            : null,
+
+        transition:
+          dialogue.transition,
+
+        transitionRegister:
+          dialogue.transitionRegister,
+
+        responses:
+          boundedResponses,
+
+        followups:
+          Array.isArray(
+            dialogue.followups
+          )
+            ? dialogue
+                .followups
+                .slice()
+            : [],
+
+        contextualRoute:
+          dialogue
+            .contextualRoute ||
+          null,
+
+        tags:
+          Array.isArray(
+            dialogue.tags
+          )
+            ? dialogue
+                .tags
+                .slice()
+            : []
+      });
+    };
+
+  const getDialogue =
+    dialogueId => {
+      const canonical =
+        getCanonicalDialogue(
+          dialogueId
+        );
+
+      return composeDialogue(
+        canonical
+      );
+    };
+
+  const getMainDialogueIds =
+    modeId => {
+      const mode =
+        getMode(modeId);
+
+      return mode
+        ? mode.main.slice()
+        : [];
+    };
+
+  const getSecondaryDialogueIds =
+    modeId => {
+      const mode =
+        getMode(modeId);
+
+      return mode
+        ? mode.secondary.slice()
+        : [];
+    };
 
   const getDialogueOptions = (
     dialogueIds,
     modeId
   ) => {
     const ids =
-      Array.isArray(dialogueIds)
+      Array.isArray(
+        dialogueIds
+      )
         ? dialogueIds
         : [];
 
     return ids
-      .map(getDialogue)
+      .map(
+        getCanonicalDialogue
+      )
       .filter(Boolean)
       .filter(
-        item =>
-          item.mode === modeId ||
-          item.mode === "shared"
+        dialogue =>
+          dialogue.mode ===
+            modeId ||
+          dialogue.mode ===
+            "shared"
       )
       .map(
-        item => ({
-          id:item.id,
-          label:item.prompt,
-          register:item.register,
+        dialogue => ({
+          id:
+            dialogue.id,
+
+          label:
+            dialogue.prompt,
+
+          register:
+            dialogue.register,
+
           contextualRoute:
-            item.contextualRoute
+            dialogue
+              .contextualRoute
         })
       );
   };
 
-  const getMainOptions = modeId =>
-    getDialogueOptions(
-      getMainDialogueIds(modeId),
-      modeId
-    );
+  const getMainOptions =
+    modeId => {
+      return getDialogueOptions(
+        getMainDialogueIds(
+          modeId
+        ),
+        modeId
+      );
+    };
 
-  const getSecondaryOptions = modeId =>
-    getDialogueOptions(
-      getSecondaryDialogueIds(modeId),
-      modeId
-    );
+  const getSecondaryOptions =
+    modeId => {
+      return getDialogueOptions(
+        getSecondaryDialogueIds(
+          modeId
+        ),
+        modeId
+      );
+    };
 
   const getFollowupOptions = (
     dialogueId,
     modeId
   ) => {
     const dialogue =
-      getDialogue(dialogueId);
+      getCanonicalDialogue(
+        dialogueId
+      );
 
     if (!dialogue) {
       return [];
@@ -1381,114 +2815,284 @@
     );
   };
 
-  const getContextualRoute = dialogueId => {
-    const dialogue =
-      getDialogue(dialogueId);
+  const getContextualRoute =
+    dialogueId => {
+      const dialogue =
+        getCanonicalDialogue(
+          dialogueId
+        );
 
-    if (
-      !dialogue ||
-      !dialogue.contextualRoute
-    ) {
-      return null;
-    }
+      if (
+        !dialogue ||
+        !dialogue.contextualRoute
+      ) {
+        return null;
+      }
 
-    return getRoute(
-      dialogue.contextualRoute
-    );
-  };
-
-  const containsForbiddenPattern = text => {
-    const source =
-      normalize(text).toLowerCase();
-
-    return LANGUAGE_LAWS
-      .avoidPatterns
-      .some(
-        pattern =>
-          source.includes(
-            pattern.toLowerCase()
-          )
+      return getRoute(
+        dialogue
+          .contextualRoute
       );
-  };
-
-  const validateDialogue = dialogue => {
-    if (!dialogue) {
-      return {
-        valid:false,
-        reason:"missing-dialogue"
-      };
-    }
-
-    if (
-      !dialogue.id ||
-      !dialogue.prompt ||
-      !Array.isArray(dialogue.responses) ||
-      !dialogue.responses.length
-    ) {
-      return {
-        valid:false,
-        reason:"incomplete-dialogue"
-      };
-    }
-
-    const invalidResponse =
-      dialogue.responses.find(
-        response =>
-          containsForbiddenPattern(
-            response
-          )
-      );
-
-    if (invalidResponse) {
-      return {
-        valid:false,
-        reason:"forbidden-machine-language",
-        response:invalidResponse
-      };
-    }
-
-    return {
-      valid:true,
-      reason:"accepted"
     };
-  };
 
-  const validateAllDialogues = () => {
-    const results = {};
+  const containsForbiddenPattern =
+    text => {
+      const source =
+        normalize(text)
+          .toLowerCase();
 
-    Object.keys(DIALOGUES).forEach(
-      key => {
+      return LANGUAGE_LAWS
+        .avoidPatterns
+        .some(
+          pattern =>
+            source.includes(
+              pattern
+                .toLowerCase()
+            )
+        );
+    };
+
+  const collectDialogueText =
+    dialogue => {
+      if (!dialogue) {
+        return [];
+      }
+
+      const collected = [
+        dialogue.prompt,
+        dialogue.answer,
+        dialogue.transition
+      ];
+
+      if (
+        Array.isArray(
+          dialogue.responses
+        )
+      ) {
+        dialogue.responses
+          .forEach(response => {
+            if (
+              typeof response ===
+              "string"
+            ) {
+              collected.push(
+                response
+              );
+            } else if (
+              response &&
+              response.text
+            ) {
+              collected.push(
+                response.text
+              );
+            }
+          });
+      }
+
+      if (
+        Array.isArray(
+          dialogue.flares
+        )
+      ) {
+        dialogue.flares
+          .forEach(flare => {
+            if (
+              flare &&
+              flare.line
+            ) {
+              collected.push(
+                flare.line
+              );
+            }
+          });
+      }
+
+      return collected
+        .map(normalize)
+        .filter(Boolean);
+    };
+
+  const validateDialogue =
+    dialogue => {
+      if (!dialogue) {
+        return {
+          valid: false,
+          reason:
+            "missing-dialogue"
+        };
+      }
+
+      const hasIdentity =
+        Boolean(
+          dialogue.id &&
+          dialogue.prompt
+        );
+
+      const hasCanonicalAnswer =
+        Boolean(
+          normalize(
+            dialogue.answer
+          )
+        );
+
+      const hasMaterializedAnswer =
+        Array.isArray(
+          dialogue.responses
+        ) &&
+        dialogue.responses.length > 0;
+
+      if (
+        !hasIdentity ||
+        (
+          !hasCanonicalAnswer &&
+          !hasMaterializedAnswer
+        )
+      ) {
+        return {
+          valid: false,
+          reason:
+            "incomplete-dialogue"
+        };
+      }
+
+      const allText =
+        collectDialogueText(
+          dialogue
+        );
+
+      const invalidText =
+        allText.find(
+          containsForbiddenPattern
+        );
+
+      if (invalidText) {
+        return {
+          valid: false,
+          reason:
+            "forbidden-machine-language",
+          response:
+            invalidText
+        };
+      }
+
+      if (
+        Array.isArray(
+          dialogue.responses
+        ) &&
+        dialogue.responses.length >
+          DELIVERY_LAWS
+            .expressiveAnswerMaximumBubbles
+      ) {
+        return {
+          valid: false,
+          reason:
+            "dialogue-exceeds-bubble-limit"
+        };
+      }
+
+      return {
+        valid: true,
+        reason:
+          "accepted"
+      };
+    };
+
+  const validateAllDialogues =
+    () => {
+      const results = {};
+
+      Object.keys(
+        DIALOGUES
+      ).forEach(key => {
         results[key] =
           validateDialogue(
             DIALOGUES[key]
           );
-      }
-    );
+      });
 
-    return results;
-  };
+      return results;
+    };
+
+  const resetFlareMemory =
+    () => {
+      flareMemory
+        .interactionCount =
+        0;
+
+      flareMemory
+        .sinceLastFlare =
+        0;
+
+      flareMemory
+        .lastDialogueId =
+        "";
+
+      flareMemory
+        .lastFlareId =
+        "";
+
+      flareMemory
+        .previousAnswerUsedFlare =
+        false;
+
+      flareMemory
+        .usedFlareIds
+        .clear();
+
+      return true;
+    };
 
   const API = {
-    contract:CONTRACT,
-    version:1,
-    ready:true,
+    contract:
+      CONTRACT,
 
-    identity:IDENTITY,
-    ownership:OWNERSHIP,
-    language:LANGUAGE_LAWS,
-    registers:REGISTERS,
-    ui:UI_COPY,
-    routes:ROUTES,
-    modes:MODES,
-    dialogues:DIALOGUES,
-    pathways:PATHWAYS,
-    team:TEAM,
-    dossier:DOSSIER,
+    version:
+      2,
+
+    ready:
+      true,
+
+    identity:
+      IDENTITY,
+
+    ownership:
+      OWNERSHIP,
+
+    delivery:
+      DELIVERY_LAWS,
+
+    language:
+      LANGUAGE_LAWS,
+
+    registers:
+      REGISTERS,
+
+    ui:
+      UI_COPY,
+
+    routes:
+      ROUTES,
+
+    modes:
+      MODES,
+
+    dialogues:
+      DIALOGUES,
+
+    pathways:
+      PATHWAYS,
+
+    team:
+      TEAM,
+
+    dossier:
+      DOSSIER,
 
     getRoute,
     getMode,
     getOpening,
     getDialogue,
+    getCanonicalDialogue,
     getRegister,
     getPathway,
     getTeamMember,
@@ -1501,11 +3105,9 @@
     getContextualRoute,
     containsForbiddenPattern,
     validateDialogue,
-    validateAllDialogues
+    validateAllDialogues,
+    resetFlareMemory
   };
-
-  API.language =
-    LANGUAGE_LAWS;
 
   deepFreeze(API);
 
@@ -1513,10 +3115,17 @@
     window,
     GLOBAL_NAME,
     {
-      value:API,
-      enumerable:true,
-      configurable:false,
-      writable:false
+      value:
+        API,
+
+      enumerable:
+        true,
+
+      configurable:
+        false,
+
+      writable:
+        false
     }
   );
 
@@ -1530,17 +3139,41 @@
       new CustomEvent(
         "elara:voice-ready",
         {
-          detail:{
-            contract:CONTRACT,
-            agent:IDENTITY.name,
-            role:IDENTITY.role,
-            modes:Object.keys(MODES),
+          detail: {
+            contract:
+              CONTRACT,
+
+            agent:
+              IDENTITY.name,
+
+            role:
+              IDENTITY.role,
+
+            modes:
+              Object.keys(
+                MODES
+              ),
+
             dialogueCount:
-              Object.keys(DIALOGUES).length,
+              Object.keys(
+                DIALOGUES
+              ).length,
+
             pathwayCount:
-              Object.keys(PATHWAYS).length,
-            ownership:
-              OWNERSHIP.owns.slice()
+              Object.keys(
+                PATHWAYS
+              ).length,
+
+            deliverySequence:
+              DELIVERY_LAWS
+                .defaultSequence
+                .slice(),
+
+            personalityFlares:
+              true,
+
+            conciseGuideLaw:
+              true
           }
         }
       )

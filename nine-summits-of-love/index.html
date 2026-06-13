@@ -1,15 +1,17 @@
 <!-- /nine-summits-of-love/index.html -->
-<!-- NINE_SUMMITS_OF_LOVE_ROUNDED_3D_HEART_CONNECTED_PATHS_HTML_TNT_v4 -->
+<!-- NINE_SUMMITS_OF_LOVE_INTERNAL_GLOW_HEART_CONNECTED_PATHS_HTML_TNT_v5 -->
 <!-- Full-file replacement. -->
 <!--
   Purpose:
-  - Preserve both Nine Summits book-cover images.
-  - Replace the flat/slab heart with a rounded double-convex 3D heart.
-  - Keep the heart continuously illuminated throughout fixed Y-axis rotation.
-  - Preserve true object depth, side profile, rear face, and projected shadow.
-  - Preserve the House Control Pad entrance.
-  - Consolidate the page into one connected Nine Summits path experience.
-  - Remove repetitive route cards, accordions, and duplicated explanations.
+  - Preserve the accepted rounded double-convex heart geometry without alteration.
+  - Preserve both original Nine Summits book-cover images.
+  - Replace angle-dependent darkness with strong internal gemstone emission.
+  - Keep external lights softer than the internal illumination.
+  - Add a rotating geometry-following halo around the heart.
+  - Preserve one cast shadow beneath the heart on the floor plane.
+  - Forbid dark internal shadowing and blackout rotation angles.
+  - Preserve fixed local-Y-axis rotation, screen fit, and House entrance behavior.
+  - Preserve the unified connected Nine Summits path experience.
   - Use native WebGL with no external 3D library.
 -->
 
@@ -18,23 +20,29 @@
   lang="en"
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
-  data-version="G1-V5"
-  data-contract="NINE_SUMMITS_OF_LOVE_ROUNDED_3D_HEART_CONNECTED_PATHS_HTML_TNT_v4"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_TRUE_3D_AXIAL_HEART_HTML_TNT_v3"
+  data-version="G1-V6"
+  data-contract="NINE_SUMMITS_OF_LOVE_INTERNAL_GLOW_HEART_CONNECTED_PATHS_HTML_TNT_v5"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_ROUNDED_3D_HEART_CONNECTED_PATHS_HTML_TNT_v4"
   data-status="active"
   data-parent="/nine-summits/"
   data-role="book-and-seminar-lane"
   data-source-preserving-images="true"
   data-front-cover="/assets/nine-summits-love-preface-cover.png"
   data-back-cover="/assets/nine-summits-love-hero.png"
-  data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
   data-house-controller-form="rounded-double-convex-diamond-heart"
+  data-heart-geometry-renewed="false"
+  data-heart-geometry-preserved="true"
+  data-heart-internal-emission="strong"
+  data-heart-external-lighting="supporting"
+  data-heart-halo="geometry-following-additive"
+  data-heart-ground-shadow-only="true"
+  data-heart-internal-shadow="forbidden"
+  data-heart-blackout="forbidden"
   data-heart-rotation="fixed-local-y-axis"
   data-heart-orbit="forbidden"
-  data-heart-blackout="forbidden"
   data-heart-fibonacci-sync="13-21-34-55-89-144-233-377-610-987"
 >
 <head>
@@ -572,7 +580,7 @@
     }
 
     /* =====================================================
-       ROUNDED TRUE-DEPTH HEART
+       INTERNALLY LUMINOUS ROUNDED HEART
        ===================================================== */
 
     .heart-stage{
@@ -601,8 +609,8 @@
       top:48%;
       z-index:0;
 
-      width:76%;
-      height:76%;
+      width:80%;
+      height:80%;
 
       transform:
         translate(-50%,-50%);
@@ -614,13 +622,44 @@
       background:
         radial-gradient(
           circle,
-          rgba(243,200,111,.13),
-          rgba(156,121,255,.075) 38%,
-          rgba(97,143,255,.035) 56%,
-          transparent 74%
+          rgba(255,232,163,.2) 0%,
+          rgba(243,200,111,.13) 24%,
+          rgba(255,157,206,.09) 39%,
+          rgba(156,121,255,.075) 53%,
+          rgba(97,143,255,.035) 67%,
+          transparent 78%
         );
 
-      filter:blur(34px);
+      filter:blur(38px);
+    }
+
+    .heart-stage::after{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      top:47%;
+      z-index:0;
+
+      width:57%;
+      height:57%;
+
+      transform:
+        translate(-50%,-50%);
+
+      border-radius:50%;
+
+      pointer-events:none;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,247,206,.17),
+          rgba(243,200,111,.075) 37%,
+          transparent 70%
+        );
+
+      filter:blur(24px);
     }
 
     .heart-canvas{
@@ -659,8 +698,16 @@
           rgba(0,0,0,.54)
         )
         drop-shadow(
-          0 0 1.4rem
-          rgba(243,200,111,.28)
+          0 0 .7rem
+          rgba(255,244,188,.74)
+        )
+        drop-shadow(
+          0 0 1.8rem
+          rgba(243,200,111,.54)
+        )
+        drop-shadow(
+          0 0 3rem
+          rgba(156,121,255,.34)
         );
     }
 
@@ -752,7 +799,7 @@
       transform:translateX(-50%);
 
       color:
-        rgba(229,237,255,.54);
+        rgba(229,237,255,.57);
 
       font-size:.58rem;
       font-weight:950;
@@ -1759,6 +1806,9 @@
           data-heart-axis="y"
           data-heart-orbit="false"
           data-heart-blackout="false"
+          data-heart-internal-emission="true"
+          data-heart-additive-halo="true"
+          data-heart-ground-shadow-only="true"
         >
           <canvas
             class="heart-canvas"
@@ -1774,59 +1824,86 @@
           >
             <defs>
               <radialGradient
-                id="fallbackRoundedHeart"
-                cx="42%"
-                cy="30%"
-                r="74%"
+                id="fallbackLuminousHeart"
+                cx="48%"
+                cy="42%"
+                r="72%"
               >
                 <stop
                   offset="0%"
+                  stop-color="#ffffff"
+                />
+
+                <stop
+                  offset="13%"
                   stop-color="#fff7ce"
                 />
 
                 <stop
-                  offset="18%"
-                  stop-color="#f3c86f"
+                  offset="31%"
+                  stop-color="#ffe08a"
                 />
 
                 <stop
-                  offset="42%"
-                  stop-color="#ca6fa2"
+                  offset="50%"
+                  stop-color="#ffb0d4"
                 />
 
                 <stop
                   offset="70%"
-                  stop-color="#69469c"
+                  stop-color="#b28cff"
+                />
+
+                <stop
+                  offset="87%"
+                  stop-color="#70cfff"
                 />
 
                 <stop
                   offset="100%"
-                  stop-color="#24355d"
+                  stop-color="#3f5291"
                 />
               </radialGradient>
 
               <filter
-                id="fallbackRoundedGlow"
-                x="-40%"
-                y="-40%"
-                width="180%"
-                height="190%"
+                id="fallbackLuminousGlow"
+                x="-60%"
+                y="-60%"
+                width="220%"
+                height="230%"
               >
-                <feDropShadow
-                  dx="0"
-                  dy="24"
-                  stdDeviation="20"
-                  flood-color="#000000"
-                  flood-opacity=".62"
+                <feGaussianBlur
+                  in="SourceGraphic"
+                  stdDeviation="32"
+                  result="outerBlur"
+                />
+
+                <feColorMatrix
+                  in="outerBlur"
+                  type="matrix"
+                  values="
+                    1.20 0    0    0 0
+                    0    .86  0    0 0
+                    0    0    1.20 0 0
+                    0    0    0    .58 0
+                  "
+                  result="coloredGlow"
                 />
 
                 <feDropShadow
                   dx="0"
-                  dy="0"
-                  stdDeviation="14"
-                  flood-color="#f3c86f"
-                  flood-opacity=".32"
+                  dy="24"
+                  stdDeviation="18"
+                  flood-color="#000000"
+                  flood-opacity=".58"
+                  result="groundDepth"
                 />
+
+                <feMerge>
+                  <feMergeNode in="coloredGlow"/>
+                  <feMergeNode in="groundDepth"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
               </filter>
             </defs>
 
@@ -1843,10 +1920,10 @@
                 C 650 734 556 805 500 865
                 Z
               "
-              fill="url(#fallbackRoundedHeart)"
-              stroke="#ffe8a3"
-              stroke-width="8"
-              filter="url(#fallbackRoundedGlow)"
+              fill="url(#fallbackLuminousHeart)"
+              stroke="#fff4bc"
+              stroke-width="9"
+              filter="url(#fallbackLuminousGlow)"
             />
           </svg>
 
@@ -1855,10 +1932,10 @@
             type="button"
             data-house-control-pad-open
             data-house-context="nine-summits-of-love"
-            aria-label="Open the interactive House estate from the rotating Nine Summits diamond heart"
+            aria-label="Open the interactive House estate from the internally luminous rotating Nine Summits diamond heart"
           >
             <span class="heart-status">
-              Rounded · illuminated · fixed-axis heart
+              Internally luminous · rounded · fixed-axis
             </span>
 
             <span class="heart-enter">
@@ -2082,7 +2159,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Gratitude</strong>
               </div>
 
@@ -2092,7 +2168,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Joy</strong>
               </div>
 
@@ -2104,7 +2179,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Generosity</strong>
               </div>
 
@@ -2114,7 +2188,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Love</strong>
               </div>
 
@@ -2126,7 +2199,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Dependability</strong>
               </div>
 
@@ -2136,7 +2208,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Stability</strong>
               </div>
 
@@ -2148,7 +2219,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Accountability</strong>
               </div>
 
@@ -2158,7 +2228,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Character</strong>
               </div>
 
@@ -2170,7 +2239,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Forgiveness</strong>
               </div>
 
@@ -2180,7 +2248,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Peace</strong>
               </div>
 
@@ -2192,7 +2259,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Self-Control</strong>
               </div>
 
@@ -2202,7 +2268,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Balance</strong>
               </div>
 
@@ -2214,7 +2279,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Patience</strong>
               </div>
 
@@ -2224,7 +2288,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Structure</strong>
               </div>
 
@@ -2236,7 +2299,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Humility</strong>
               </div>
 
@@ -2246,7 +2308,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Dignity</strong>
               </div>
 
@@ -2258,7 +2319,6 @@
             <article class="path-step">
               <div class="path-origin">
                 <small>Beginning</small>
-
                 <strong>Purity</strong>
               </div>
 
@@ -2268,7 +2328,6 @@
 
               <div class="path-summit">
                 <small>Summit</small>
-
                 <strong>Free Will</strong>
               </div>
 
@@ -2352,7 +2411,7 @@
       </nav>
 
       <span>
-        The Nine Summits of Love · Book and Seminar Lane · Rounded True-Depth Diamond Heart.
+        The Nine Summits of Love · Book and Seminar Lane · Internally Luminous True-Depth Diamond Heart.
       </span>
     </footer>
   </div>
@@ -2433,6 +2492,30 @@
           0,
           144,
           -233
+        ],
+
+        shadowLight:[
+          -144,
+          610,
+          233
+        ],
+
+        haloLayers:[
+          {
+            scale:1.035,
+            color:[1.0,.83,.48],
+            alpha:.16
+          },
+          {
+            scale:1.072,
+            color:[1.0,.48,.78],
+            alpha:.09
+          },
+          {
+            scale:1.115,
+            color:[.42,.61,1.0],
+            alpha:.045
+          }
         ]
       });
 
@@ -2456,7 +2539,7 @@
         return;
       }
 
-      const VERTEX_SOURCE = `
+      const HEART_VERTEX_SOURCE = `
         attribute vec3 aPosition;
         attribute vec3 aNormal;
         attribute vec4 aColor;
@@ -2466,12 +2549,16 @@
         uniform mat4 uView;
         uniform mat4 uProjection;
 
+        varying vec3 vLocalPosition;
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
         varying vec4 vColor;
         varying float vSurface;
 
         void main(void) {
+          vLocalPosition =
+            aPosition;
+
           vec4 worldPosition =
             uModel *
             vec4(
@@ -2501,9 +2588,10 @@
         }
       `;
 
-      const FRAGMENT_SOURCE = `
-        precision mediump float;
+      const HEART_FRAGMENT_SOURCE = `
+        precision highp float;
 
+        varying vec3 vLocalPosition;
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
         varying vec4 vColor;
@@ -2514,7 +2602,7 @@
         uniform vec3 uFillLight;
         uniform vec3 uRimLight;
 
-        vec3 diffuseLight(
+        vec3 directionalContribution(
           vec3 normal,
           vec3 worldPosition,
           vec3 lightPosition,
@@ -2527,7 +2615,7 @@
               worldPosition
             );
 
-          float diffuseAmount =
+          float amount =
             max(
               dot(
                 normal,
@@ -2538,8 +2626,25 @@
 
           return
             lightColor *
-            diffuseAmount *
+            amount *
             strength;
+        }
+
+        float safeFacing(
+          vec3 normal,
+          vec3 viewDirection
+        ) {
+          return
+            clamp(
+              abs(
+                dot(
+                  normal,
+                  viewDirection
+                )
+              ),
+              0.0,
+              1.0
+            );
         }
 
         void main(void) {
@@ -2552,197 +2657,361 @@
               vWorldPosition
             );
 
-          float viewFacing =
-            max(
-              dot(
-                normal,
-                viewDirection
-              ),
-              0.0
+          float facing =
+            safeFacing(
+              normal,
+              viewDirection
             );
 
-          float skyFactor =
-            normal.y *
-            0.5 +
-            0.5;
-
-          vec3 hemisphere =
-            mix(
-              vec3(
-                0.18,
-                0.105,
-                0.16
-              ),
-              vec3(
-                0.23,
-                0.34,
-                0.58
-              ),
-              skyFactor
-            ) *
-            0.58;
-
-          vec3 headlight =
-            vec3(
-              1.0,
-              0.92,
-              0.78
-            ) *
-            (
-              0.32 +
-              viewFacing *
-              0.68
-            ) *
-            0.72;
-
-          vec3 key =
-            diffuseLight(
-              normal,
-              vWorldPosition,
-              uKeyLight,
-              vec3(
-                1.0,
-                0.67,
-                0.29
-              ),
-              0.78
+          float fresnel =
+            pow(
+              1.0 -
+              facing,
+              2.15
             );
 
-          vec3 fill =
-            diffuseLight(
-              normal,
-              vWorldPosition,
-              uFillLight,
-              vec3(
-                0.30,
-                0.70,
+          vec2 normalizedBody =
+            vec2(
+              vLocalPosition.x /
+              188.5,
+
+              (
+                vLocalPosition.y -
+                18.0
+              ) /
+              184.0
+            );
+
+          float bodyDistance =
+            length(
+              normalizedBody
+            );
+
+          float centerField =
+            pow(
+              clamp(
+                1.0 -
+                bodyDistance *
+                .78,
+                0.0,
                 1.0
               ),
-              0.58
+              1.45
             );
 
-          vec3 rear =
-            diffuseLight(
-              normal,
-              vWorldPosition,
-              uRimLight,
-              vec3(
-                0.56,
-                0.42,
-                1.0
-              ),
-              0.66
+          float crownField =
+            clamp(
+              abs(
+                vLocalPosition.z
+              ) /
+              44.5,
+              0.0,
+              1.0
             );
 
           float rearMask =
             smoothstep(
-              0.45,
-              1.45,
+              .45,
+              1.35,
               vSurface
             );
 
           float sideMask =
             smoothstep(
               1.45,
-              2.2,
+              2.15,
               vSurface
-            );
-
-          float lightFloor =
-            mix(
-              0.28,
-              0.32,
-              rearMask
-            );
-
-          lightFloor =
-            mix(
-              lightFloor,
-              0.30,
-              sideMask
-            );
-
-          vec3 lighting =
-            vec3(lightFloor) +
-            hemisphere +
-            headlight +
-            key +
-            fill +
-            rear;
-
-          vec3 halfVector =
-            normalize(
-              normalize(
-                uKeyLight -
-                vWorldPosition
-              ) +
-              viewDirection
-            );
-
-          float specular =
-            pow(
-              max(
-                dot(
-                  normal,
-                  halfVector
-                ),
-                0.0
-              ),
-              34.0
-            );
-
-          float fresnel =
-            pow(
-              1.0 -
-              viewFacing,
-              2.2
             );
 
           vec3 baseColor =
             max(
               vColor.rgb,
               vec3(
-                0.12,
-                0.11,
-                0.16
+                .22,
+                .20,
+                .27
               )
             );
 
-          vec3 emission =
-            baseColor *
-            (
-              0.105 +
-              rearMask *
-              0.035 +
-              sideMask *
-              0.025
-            );
-
-          vec3 color =
-            baseColor *
-            lighting +
-            emission +
+          vec3 warmCore =
             vec3(
               1.0,
-              0.88,
-              0.56
-            ) *
-            specular *
-            0.82 +
+              .82,
+              .40
+            );
+
+          vec3 whiteCore =
             vec3(
-              0.48,
-              0.62,
+              1.0,
+              .97,
+              .79
+            );
+
+          vec3 roseCore =
+            vec3(
+              1.0,
+              .46,
+              .74
+            );
+
+          vec3 violetCore =
+            vec3(
+              .54,
+              .43,
               1.0
+            );
+
+          vec3 cyanCore =
+            vec3(
+              .28,
+              .74,
+              1.0
+            );
+
+          vec3 internalColor =
+            mix(
+              baseColor,
+              warmCore,
+              centerField *
+              .48
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              whiteCore,
+              centerField *
+              crownField *
+              .34
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              roseCore,
+              rearMask *
+              .14
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              violetCore,
+              sideMask *
+              .17
+            );
+
+          float internalStrength =
+            .72 +
+            centerField *
+            .76 +
+            crownField *
+            .18 +
+            rearMask *
+            .08 +
+            sideMask *
+            .06;
+
+          vec3 internalEmission =
+            internalColor *
+            internalStrength;
+
+          float hemisphereAmount =
+            normal.y *
+            .5 +
+            .5;
+
+          vec3 hemisphere =
+            mix(
+              vec3(
+                .06,
+                .035,
+                .08
+              ),
+              vec3(
+                .11,
+                .17,
+                .29
+              ),
+              hemisphereAmount
+            ) *
+            .33;
+
+          vec3 cameraFill =
+            vec3(
+              1.0,
+              .91,
+              .74
+            ) *
+            (
+              .11 +
+              facing *
+              .18
+            );
+
+          vec3 key =
+            directionalContribution(
+              normal,
+              vWorldPosition,
+              uKeyLight,
+              vec3(
+                1.0,
+                .64,
+                .25
+              ),
+              .34
+            );
+
+          vec3 fill =
+            directionalContribution(
+              normal,
+              vWorldPosition,
+              uFillLight,
+              vec3(
+                .26,
+                .69,
+                1.0
+              ),
+              .27
+            );
+
+          vec3 rim =
+            directionalContribution(
+              normal,
+              vWorldPosition,
+              uRimLight,
+              vec3(
+                .57,
+                .42,
+                1.0
+              ),
+              .31
+            );
+
+          vec3 externalLighting =
+            hemisphere +
+            cameraFill +
+            key +
+            fill +
+            rim;
+
+          vec3 keyDirection =
+            normalize(
+              uKeyLight -
+              vWorldPosition
+            );
+
+          vec3 halfVector =
+            normalize(
+              keyDirection +
+              viewDirection
+            );
+
+          float specular =
+            pow(
+              max(
+                abs(
+                  dot(
+                    normal,
+                    halfVector
+                  )
+                ),
+                0.0
+              ),
+              40.0
+            );
+
+          float secondarySpecular =
+            pow(
+              max(
+                facing,
+                0.0
+              ),
+              7.0
+            ) *
+            centerField;
+
+          vec3 edgeRadiance =
+            mix(
+              violetCore,
+              cyanCore,
+              clamp(
+                normalizedBody.x *
+                .5 +
+                .5,
+                0.0,
+                1.0
+              )
             ) *
             fresnel *
-            0.32;
+            (
+              .48 +
+              centerField *
+              .12
+            );
+
+          vec3 reflectedSurface =
+            baseColor *
+            externalLighting *
+            .52;
+
+          vec3 sparkle =
+            whiteCore *
+            specular *
+            .72 +
+            warmCore *
+            secondarySpecular *
+            .16;
+
+          vec3 color =
+            internalEmission +
+            reflectedSurface +
+            edgeRadiance +
+            sparkle;
+
+          vec3 visibilityFloor =
+            mix(
+              baseColor *
+              .62,
+              internalColor *
+              .78,
+              centerField
+            );
+
+          visibilityFloor =
+            mix(
+              visibilityFloor,
+              internalColor *
+              .72,
+              rearMask
+            );
+
+          visibilityFloor =
+            mix(
+              visibilityFloor,
+              internalColor *
+              .68,
+              sideMask
+            );
+
+          color =
+            max(
+              color,
+              visibilityFloor
+            );
+
+          color +=
+            whiteCore *
+            centerField *
+            crownField *
+            .13;
 
           color =
             color /
             (
               vec3(1.0) +
               color *
-              0.48
+              .31
             );
 
           color =
@@ -2761,6 +3030,63 @@
             vec4(
               color,
               vColor.a
+            );
+        }
+      `;
+
+      const HALO_VERTEX_SOURCE = `
+        attribute vec3 aPosition;
+
+        uniform mat4 uModel;
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        varying float vHeight;
+
+        void main(void) {
+          vHeight =
+            clamp(
+              (
+                aPosition.y +
+                184.0
+              ) /
+              368.0,
+              0.0,
+              1.0
+            );
+
+          gl_Position =
+            uProjection *
+            uView *
+            uModel *
+            vec4(
+              aPosition,
+              1.0
+            );
+        }
+      `;
+
+      const HALO_FRAGMENT_SOURCE = `
+        precision mediump float;
+
+        varying float vHeight;
+
+        uniform vec3 uHaloColor;
+        uniform float uHaloAlpha;
+
+        void main(void) {
+          vec3 warmTop =
+            mix(
+              uHaloColor *
+              .74,
+              uHaloColor,
+              vHeight
+            );
+
+          gl_FragColor =
+            vec4(
+              warmTop,
+              uHaloAlpha
             );
         }
       `;
@@ -2796,9 +3122,9 @@
         void main(void) {
           gl_FragColor =
             vec4(
-              0.0,
-              0.0,
-              0.0,
+              .005,
+              .008,
+              .018,
               vAlpha
             );
         }
@@ -3102,9 +3428,10 @@
         return out;
       }
 
-      function rotationY(
+      function rotationYScale(
         out,
-        radians
+        radians,
+        scale
       ) {
         const cosine =
           Math.cos(radians);
@@ -3114,11 +3441,24 @@
 
         identity(out);
 
-        out[0] = cosine;
-        out[2] = -sine;
+        out[0] =
+          cosine *
+          scale;
 
-        out[8] = sine;
-        out[10] = cosine;
+        out[2] =
+          -sine *
+          scale;
+
+        out[5] =
+          scale;
+
+        out[8] =
+          sine *
+          scale;
+
+        out[10] =
+          cosine *
+          scale;
 
         return out;
       }
@@ -3616,7 +3956,7 @@
                   facetIndex %
                   FRONT_PALETTE.length
                 ],
-                .24
+                .30
               );
 
             const rearColor =
@@ -3625,7 +3965,7 @@
                   facetIndex %
                   REAR_PALETTE.length
                 ],
-                .26
+                .30
               );
 
             frontRing.push(
@@ -3667,7 +4007,7 @@
             ],
             brightenColor(
               FRONT_PALETTE[0],
-              .3
+              .36
             ),
             0
           );
@@ -3682,7 +4022,7 @@
             ],
             brightenColor(
               REAR_PALETTE[0],
-              .3
+              .34
             ),
             1
           );
@@ -4039,7 +4379,7 @@
                 segmentIndex %
                 SIDE_PALETTE.length
               ],
-              .24
+              .29
             );
 
           const frontA =
@@ -4420,7 +4760,7 @@
           const floorPoint =
             projectPointToFloor(
               rotated,
-              CONFIG.keyLight,
+              CONFIG.shadowLight,
               CONFIG.floorY
             );
 
@@ -4491,20 +4831,20 @@
             );
 
           const scale =
-            1.14 -
+            1.17 -
             normalizedLayer *
-            .14;
+            .17;
 
           const alpha =
-            .015 +
+            .010 +
             normalizedLayer *
-            .0115;
+            .0085;
 
           const y =
             CONFIG.floorY +
-            .16 +
+            .12 +
             layer *
-            .018;
+            .015;
 
           const layerPoints =
             hull.map(
@@ -4682,10 +5022,16 @@
       }
 
       try {
-        const mainProgram =
+        const heartProgram =
           createProgram(
-            VERTEX_SOURCE,
-            FRAGMENT_SOURCE
+            HEART_VERTEX_SOURCE,
+            HEART_FRAGMENT_SOURCE
+          );
+
+        const haloProgram =
+          createProgram(
+            HALO_VERTEX_SOURCE,
+            HALO_FRAGMENT_SOURCE
           );
 
         const shadowProgram =
@@ -4733,71 +5079,109 @@
         const shadowAlphaBuffer =
           createDynamicBuffer();
 
-        const mainLocations = {
+        const heartLocations = {
           position:
             gl.getAttribLocation(
-              mainProgram,
+              heartProgram,
               "aPosition"
             ),
 
           normal:
             gl.getAttribLocation(
-              mainProgram,
+              heartProgram,
               "aNormal"
             ),
 
           color:
             gl.getAttribLocation(
-              mainProgram,
+              heartProgram,
               "aColor"
             ),
 
           surface:
             gl.getAttribLocation(
-              mainProgram,
+              heartProgram,
               "aSurface"
             ),
 
           model:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uModel"
             ),
 
           view:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uView"
             ),
 
           projection:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uProjection"
             ),
 
           camera:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uCameraPosition"
             ),
 
           key:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uKeyLight"
             ),
 
           fill:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uFillLight"
             ),
 
           rim:
             gl.getUniformLocation(
-              mainProgram,
+              heartProgram,
               "uRimLight"
+            )
+        };
+
+        const haloLocations = {
+          position:
+            gl.getAttribLocation(
+              haloProgram,
+              "aPosition"
+            ),
+
+          model:
+            gl.getUniformLocation(
+              haloProgram,
+              "uModel"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              haloProgram,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              haloProgram,
+              "uProjection"
+            ),
+
+          color:
+            gl.getUniformLocation(
+              haloProgram,
+              "uHaloColor"
+            ),
+
+          alpha:
+            gl.getUniformLocation(
+              haloProgram,
+              "uHaloAlpha"
             )
         };
 
@@ -4827,7 +5211,10 @@
             )
         };
 
-        const modelMatrix =
+        const heartModelMatrix =
+          createMat4();
+
+        const haloModelMatrix =
           createMat4();
 
         const viewMatrix =
@@ -4919,7 +5306,7 @@
           2;
         }
 
-        function drawShadow(
+        function drawGroundShadow(
           angle
         ) {
           const shadow =
@@ -4999,6 +5386,11 @@
             projectionMatrix
           );
 
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA
+          );
+
           gl.depthMask(false);
 
           gl.drawArrays(
@@ -5010,39 +5402,127 @@
           gl.depthMask(true);
         }
 
-        function drawHeart(
+        function drawHalo(
           angle
         ) {
-          rotationY(
-            modelMatrix,
-            angle
-          );
-
           gl.useProgram(
-            mainProgram
+            haloProgram
           );
 
           bindAttribute(
             positionBuffer,
-            mainLocations.position,
+            haloLocations.position,
+            3
+          );
+
+          gl.bindBuffer(
+            gl.ELEMENT_ARRAY_BUFFER,
+            indexBuffer
+          );
+
+          gl.uniformMatrix4fv(
+            haloLocations.view,
+            false,
+            viewMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            haloLocations.projection,
+            false,
+            projectionMatrix
+          );
+
+          gl.disable(
+            gl.DEPTH_TEST
+          );
+
+          gl.depthMask(false);
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE
+          );
+
+          for (
+            const layer of
+            CONFIG.haloLayers
+          ) {
+            rotationYScale(
+              haloModelMatrix,
+              angle,
+              layer.scale
+            );
+
+            gl.uniformMatrix4fv(
+              haloLocations.model,
+              false,
+              haloModelMatrix
+            );
+
+            gl.uniform3fv(
+              haloLocations.color,
+              layer.color
+            );
+
+            gl.uniform1f(
+              haloLocations.alpha,
+              layer.alpha
+            );
+
+            gl.drawElements(
+              gl.TRIANGLES,
+              mesh.indexCount,
+              gl.UNSIGNED_SHORT,
+              0
+            );
+          }
+
+          gl.depthMask(true);
+
+          gl.enable(
+            gl.DEPTH_TEST
+          );
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA
+          );
+        }
+
+        function drawHeart(
+          angle
+        ) {
+          rotationYScale(
+            heartModelMatrix,
+            angle,
+            1
+          );
+
+          gl.useProgram(
+            heartProgram
+          );
+
+          bindAttribute(
+            positionBuffer,
+            heartLocations.position,
             3
           );
 
           bindAttribute(
             normalBuffer,
-            mainLocations.normal,
+            heartLocations.normal,
             3
           );
 
           bindAttribute(
             colorBuffer,
-            mainLocations.color,
+            heartLocations.color,
             4
           );
 
           bindAttribute(
             surfaceBuffer,
-            mainLocations.surface,
+            heartLocations.surface,
             1
           );
 
@@ -5052,41 +5532,46 @@
           );
 
           gl.uniformMatrix4fv(
-            mainLocations.model,
+            heartLocations.model,
             false,
-            modelMatrix
+            heartModelMatrix
           );
 
           gl.uniformMatrix4fv(
-            mainLocations.view,
+            heartLocations.view,
             false,
             viewMatrix
           );
 
           gl.uniformMatrix4fv(
-            mainLocations.projection,
+            heartLocations.projection,
             false,
             projectionMatrix
           );
 
           gl.uniform3fv(
-            mainLocations.camera,
+            heartLocations.camera,
             cameraPosition
           );
 
           gl.uniform3fv(
-            mainLocations.key,
+            heartLocations.key,
             CONFIG.keyLight
           );
 
           gl.uniform3fv(
-            mainLocations.fill,
+            heartLocations.fill,
             CONFIG.fillLight
           );
 
           gl.uniform3fv(
-            mainLocations.rim,
+            heartLocations.rim,
             CONFIG.rimLight
+          );
+
+          gl.blendFunc(
+            gl.SRC_ALPHA,
+            gl.ONE_MINUS_SRC_ALPHA
           );
 
           gl.drawElements(
@@ -5134,7 +5619,8 @@
           storedAngle =
             angle;
 
-          drawShadow(angle);
+          drawGroundShadow(angle);
+          drawHalo(angle);
           drawHeart(angle);
         }
 
@@ -5177,7 +5663,7 @@
         );
       } catch (error) {
         console.error(
-          "[Nine Summits Rounded Heart] Initialization failed.",
+          "[Nine Summits Internal Glow Heart] Initialization failed.",
           error
         );
 

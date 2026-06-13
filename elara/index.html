@@ -1,28 +1,30 @@
 <!-- TARGET FILE: /elara/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- ELARA_SIGNAL_BEARER_MODERN_AGENT_SURFACE_HTML_TNT_v2 -->
+<!-- ELARA_CONVERSATION_FIRST_DEDUPLICATED_GUIDE_SURFACE_HTML_TNT_v3 -->
 <!--
+  Purpose:
+  - Keep Elara's conversation as the primary movement instrument.
+  - Remove duplicate destination sections and repeated route choices.
+  - Allow the active conversation to reveal one contextual destination at a time.
+  - Preserve only one compact AI-team ownership map below the conversation.
+  - Preserve accessible fallbacks when the runtime cannot load.
+
   Owns:
   - Elara's public page structure
-  - modern agent-surface mounts
   - compact identity header
-  - cinematic hero
-  - immediate conversation-console placement
-  - contextual public pathways
+  - hero
+  - conversation mounts
   - compact Signal Bearer dossier
-  - AI-team handoff map
-  - accessible non-JavaScript fallbacks
+  - one concise AI-team ownership map
+  - non-JavaScript fallback
 
   Does not own:
-  - Elara's voice and dialogue knowledge
-  - conversation runtime behavior
-  - visual styling
-  - Meet Sean page
-  - Nine Summits of Love page
-  - Jeeves page
-  - Auren page
-  - Soren diagnostic page
+  - Elara's voice
+  - personality flares
+  - conversation sequencing
   - route execution
+  - visual styling
+  - destination-page content
 -->
 
 <!doctype html>
@@ -30,35 +32,27 @@
   lang="en"
   data-route="/elara/"
   data-page="elara-agent"
-  data-contract="ELARA_SIGNAL_BEARER_MODERN_AGENT_SURFACE_HTML_TNT_v2"
-  data-previous-contract="ELARA_AGENT_INDEX_HTML_TNT_v1"
+  data-contract="ELARA_CONVERSATION_FIRST_DEDUPLICATED_GUIDE_SURFACE_HTML_TNT_v3"
+  data-previous-contract="ELARA_SIGNAL_BEARER_MODERN_AGENT_SURFACE_HTML_TNT_v2"
   data-status="active"
   data-agent="elara"
   data-agent-name-lock="Elara"
   data-agent-role="signal-bearer"
-  data-agent-surface="team-member"
-  data-ai-team-member="true"
   data-primary-quality="vision"
-  data-public-function="human-threshold-guide"
-  data-mode-count="2"
-  data-mode-meet-sean="true"
-  data-mode-nine-summits-love="true"
-  data-conversation-immediately-after-hero="true"
+  data-guide-law="doorway-not-destination"
+  data-conversation-first="true"
+  data-contextual-route-limit="1"
+  data-duplicate-pathway-sections-retired="true"
+  data-human-pathways-section-retired="true"
+  data-contextual-handoffs-section-retired="true"
+  data-ai-team-map-count="1"
   data-automatic-opening-message-limit="2"
-  data-contextual-pathways="true"
-  data-compact-dossier="true"
-  data-machine-language-retired="true"
-  data-register-aware-dialogue="true"
-  data-registers="invitation,revelation,care,warning,handoff"
   data-voice-authority="/elara/elara.voice.js"
   data-runtime-authority="/elara/index.js"
   data-css-authority="/elara/index.css"
-  data-mirrorland-name-lock="Mirrorland's"
-  data-no-mirrorlands-plural="true"
-  data-local-dialogue="true"
-  data-public-route-fallbacks="true"
   data-no-inline-dialogue-engine="true"
   data-no-inline-css="true"
+  data-mirrorland-name-lock="Mirrorland's"
 >
 <head>
   <meta charset="utf-8">
@@ -79,7 +73,7 @@
 
   <meta
     name="description"
-    content="Talk with Elara, the Signal Bearer and human-threshold guide for Sean Mansfield, The Nine Summits of Love, 256 Carats of Human Potential, and Mirrorland's climate."
+    content="Talk with Elara, the Signal Bearer guiding visitors toward Sean Mansfield, The Nine Summits of Love, and the next meaningful room in Diamond Gate Bridge."
   >
 
   <link
@@ -145,22 +139,18 @@
 
           <nav
             class="elara-house-menu"
-            aria-label="Elara House handoffs"
+            aria-label="House guide paths"
           >
             <a href="/showroom/globe/hearth/jeeves/">
-              Ask Jeeves for the whole House
+              Jeeves · Whole House
             </a>
 
             <a href="/products/auren/">
-              Talk to Auren
+              Auren · Practical Systems
             </a>
 
             <a href="/coherence-diagnostic/">
-              Talk to Soren
-            </a>
-
-            <a href="/showroom/">
-              Return to the Showroom
+              Soren · Diagnostic Orientation
             </a>
           </nav>
         </details>
@@ -181,14 +171,12 @@
         </h1>
 
         <p class="elara-hero-lead">
-          She introduces the human meaning behind Diamond Gate Bridge:
-          Sean, The Nine Summits of Love, 256 Carats of Human Potential,
-          and the emotional climate surrounding Mirrorland.
+          She gives visitors enough meaning to choose the next door—
+          without replacing the story waiting beyond it.
         </p>
 
         <p class="elara-hero-line">
-          “There are things worth revealing—and ways of revealing them
-          that keep their meaning intact.”
+          “Reveal enough to invite. Protect enough to preserve meaning.”
         </p>
       </div>
     </section>
@@ -205,6 +193,7 @@
         data-elara-mode="meet_sean"
         data-elara-ready="false"
         data-elara-speaking="false"
+        data-single-contextual-destination="true"
         tabindex="0"
       >
         <header class="elara-console-head">
@@ -250,7 +239,8 @@
             </h2>
 
             <p>
-              Two paths. One voice. Choose what you came looking for.
+              Ask one question. Elara will answer briefly and reveal the
+              most relevant next door.
             </p>
           </div>
 
@@ -287,24 +277,15 @@
 
         <section
           class="elara-console"
-          aria-label="Elara conversation"
+          aria-label="Conversation with Elara"
         >
           <div class="elara-thread-screen">
             <div
               class="elara-thread"
               data-elara-thread
               aria-live="polite"
-              aria-label="Conversation with Elara"
-            >
-              <article
-                class="elara-bubble elara-bubble-system"
-                data-elara-bubble="system"
-              >
-                <div class="elara-bubble-body">
-                  Elara is preparing the conversation.
-                </div>
-              </article>
-            </div>
+              aria-label="Elara conversation thread"
+            ></div>
 
             <div
               class="elara-typing"
@@ -321,6 +302,7 @@
           <div
             class="elara-context-route"
             data-elara-context-route
+            data-route-card-limit="1"
             aria-live="polite"
           ></div>
 
@@ -343,8 +325,8 @@
 
         <div class="elara-runtime-fallback">
           <p>
-            Elara’s interactive voice is loading. Her primary public
-            paths remain available below.
+            Elara’s conversation is unavailable, but her two primary
+            story paths remain open.
           </p>
 
           <div class="elara-runtime-fallback-links">
@@ -354,14 +336,6 @@
 
             <a href="/nine-summits-of-love/">
               Open the Book
-            </a>
-
-            <a href="/showroom/globe/hearth/jeeves/">
-              Ask Jeeves
-            </a>
-
-            <a href="/products/auren/">
-              Talk to Auren
             </a>
           </div>
         </div>
@@ -382,8 +356,8 @@
         </h2>
 
         <p>
-          Bubbly, articulate, intelligent, confident, and public-facing—
-          disciplined by visibility ethics.
+          Elara introduces meaning, protects the boundary, and moves the
+          visitor forward before the conversation becomes the destination.
         </p>
       </div>
 
@@ -398,8 +372,7 @@
           </strong>
 
           <p>
-            Socially fluent, welcoming, articulate, and capable of
-            making difficult ideas feel approachable.
+            Warm, articulate, confident, and socially fluent.
           </p>
         </article>
 
@@ -409,222 +382,27 @@
           </span>
 
           <strong>
-            Concealment and revelation
+            Selective revelation
           </strong>
 
           <p>
-            She decides what needs illumination, what requires
-            preparation, and what must remain protected.
+            She reveals what creates readiness and protects what requires
+            deeper custody.
           </p>
         </article>
 
         <article class="elara-dossier-card">
           <span>
-            Rule
+            Guide Law
           </span>
 
           <strong>
-            Reveal enough to invite
+            Doorway, not destination
           </strong>
 
           <p>
-            Protect enough to preserve meaning and prevent careless
-            exposure.
+            She answers, lands the point, and opens the correct next room.
           </p>
-        </article>
-      </div>
-    </section>
-
-    <section
-      class="elara-section elara-panel elara-pathways"
-      aria-labelledby="human-pathways-title"
-    >
-      <div class="elara-pathways-head">
-        <div class="elara-kicker">
-          Human Pathways
-        </div>
-
-        <h2
-          id="human-pathways-title"
-          class="elara-section-title"
-        >
-          Follow the meaning where it becomes personal.
-        </h2>
-
-        <p class="elara-section-copy">
-          These paths continue the human story rather than interrupting
-          it with a navigation wall.
-        </p>
-      </div>
-
-      <div class="elara-pathways-grid">
-        <article class="elara-editorial-path">
-          <div class="elara-editorial-path-copy">
-            <span>
-              Human Threshold
-            </span>
-
-            <strong>
-              Meet Sean
-            </strong>
-
-            <p>
-              Continue into the public story of the designer, builder,
-              dreamer, and human voice behind Diamond Gate Bridge.
-            </p>
-          </div>
-
-          <a
-            href="/meet-sean-mansfield/"
-            aria-label="Meet Sean"
-          >
-            Meet Sean
-          </a>
-        </article>
-
-        <article class="elara-editorial-path">
-          <div class="elara-editorial-path-copy">
-            <span>
-              Book Threshold
-            </span>
-
-            <strong>
-              Enter the climb
-            </strong>
-
-            <p>
-              Open The Nine Summits of Love and follow the ascent through
-              pressure, formation, value, and Love.
-            </p>
-          </div>
-
-          <a
-            href="/nine-summits-of-love/"
-            aria-label="Open The Nine Summits of Love"
-          >
-            Open the Book
-          </a>
-        </article>
-      </div>
-    </section>
-
-    <section
-      class="elara-section elara-panel elara-pathways"
-      aria-labelledby="house-pathways-title"
-    >
-      <div class="elara-pathways-head">
-        <div class="elara-kicker">
-          Contextual Handoffs
-        </div>
-
-        <h2
-          id="house-pathways-title"
-          class="elara-section-title"
-        >
-          Elara does not pretend to own every question.
-        </h2>
-
-        <p class="elara-section-copy">
-          She keeps the signal human, then routes the visitor to the
-          correct owner when the question changes.
-        </p>
-      </div>
-
-      <div class="elara-pathways-grid">
-        <article class="elara-editorial-path">
-          <div class="elara-editorial-path-copy">
-            <span>
-              Whole-House Orientation
-            </span>
-
-            <strong>
-              Ask Jeeves
-            </strong>
-
-            <p>
-              See how the rooms, worlds, people, and systems belong to
-              the larger estate.
-            </p>
-          </div>
-
-          <a
-            href="/showroom/globe/hearth/jeeves/"
-            aria-label="Ask Jeeves for the whole House"
-          >
-            Ask Jeeves
-          </a>
-        </article>
-
-        <article class="elara-editorial-path">
-          <div class="elara-editorial-path-copy">
-            <span>
-              Practical Systems
-            </span>
-
-            <strong>
-              Talk to Auren
-            </strong>
-
-            <p>
-              Continue into products, Education, the 1,001 Traversal
-              Learning System, and practical implementation.
-            </p>
-          </div>
-
-          <a
-            href="/products/auren/"
-            aria-label="Talk to Auren"
-          >
-            Talk to Auren
-          </a>
-        </article>
-
-        <article class="elara-editorial-path">
-          <div class="elara-editorial-path-copy">
-            <span>
-              Diagnostic Orientation
-            </span>
-
-            <strong>
-              Talk to Soren
-            </strong>
-
-            <p>
-              Continue into coherence assessment, diagnostic boundaries,
-              and orientation logic.
-            </p>
-          </div>
-
-          <a
-            href="/coherence-diagnostic/"
-            aria-label="Talk to Soren"
-          >
-            Talk to Soren
-          </a>
-        </article>
-
-        <article class="elara-editorial-path">
-          <div class="elara-editorial-path-copy">
-            <span>
-              Door to Mirrorland
-            </span>
-
-            <strong>
-              Return to the Showroom
-            </strong>
-
-            <p>
-              Return to the Diamond Lattice and the threshold where the
-              object answers before movement begins.
-            </p>
-          </div>
-
-          <a
-            href="/showroom/"
-            aria-label="Return to the Showroom"
-          >
-            Return to the Showroom
-          </a>
         </article>
       </div>
     </section>
@@ -635,19 +413,19 @@
     >
       <div class="elara-pathways-head">
         <div class="elara-kicker">
-          AI Team Connection
+          AI Team Ownership
         </div>
 
         <h2
           id="elara-team-title"
           class="elara-section-title"
         >
-          Four voices. Clear ownership.
+          Four guides. No blurred authority.
         </h2>
 
         <p class="elara-section-copy">
-          Each team member protects a different part of the House from
-          becoming blurred or falsely combined.
+          Elara handles human meaning. The other guides take over when
+          the visitor’s question changes.
         </p>
       </div>
 
@@ -718,8 +496,8 @@
           </strong>
 
           <p>
-            Coherence Diagnostic, assessment boundaries, and
-            orientation logic.
+            Coherence assessment, diagnostic boundaries, and structural
+            orientation.
           </p>
         </a>
       </div>
@@ -737,10 +515,10 @@
   </main>
 
   <noscript>
-    <div class="elara-runtime-fallback">
+    <section class="elara-runtime-fallback">
       <p>
-        Elara’s interactive conversation requires JavaScript. Her public
-        paths remain available.
+        Elara’s interactive conversation requires JavaScript. Her two
+        primary story paths remain available.
       </p>
 
       <div class="elara-runtime-fallback-links">
@@ -751,24 +529,12 @@
         <a href="/nine-summits-of-love/">
           Open the Book
         </a>
-
-        <a href="/showroom/globe/hearth/jeeves/">
-          Ask Jeeves
-        </a>
-
-        <a href="/products/auren/">
-          Talk to Auren
-        </a>
-
-        <a href="/coherence-diagnostic/">
-          Talk to Soren
-        </a>
       </div>
-    </div>
+    </section>
   </noscript>
 
   <script
-    src="/elara/elara.voice.js?v=ELARA_SIGNAL_BEARER_PERSONALITY_AND_DIALOGUE_AUTHORITY_TNT_v1"
+    src="/elara/elara.voice.js?v=ELARA_SIGNAL_BEARER_CONCISE_GUIDE_AND_PERSONALITY_FLARE_VOICE_TNT_v2"
     defer
     data-elara-child="voice"
   ></script>

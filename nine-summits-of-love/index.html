@@ -1,20 +1,19 @@
 <!-- /nine-summits-of-love/index.html -->
-<!-- NINE_SUMMITS_OF_LOVE_RUBY_INTERNAL_GLOW_HEART_CONTRAST_BUTTONS_HTML_TNT_v6 -->
+<!-- NINE_SUMMITS_OF_LOVE_TED_RUBY_HEART_MOBILE_CONTAINMENT_HTML_TNT_v7 -->
 <!-- Full-file replacement. -->
 <!--
   Purpose:
-  - Preserve the accepted rounded double-convex heart geometry.
+  - Preserve the accepted rounded double-convex ruby heart geometry.
+  - Preserve internal ruby illumination, additive halo, fixed-axis rotation,
+    and the single cast shadow beneath the heart.
   - Preserve both original Nine Summits book-cover images.
   - Preserve the connected Nine Summits path map.
-  - Renew the internally luminous heart from pale pastel light to ruby,
-    crimson, rose, garnet, burgundy, and restrained gold illumination.
-  - Keep violet and blue only as minor reflective accents.
-  - Preserve one cast shadow beneath the heart.
-  - Prevent internal darkness and blackout rotation angles.
-  - Correct contrast inside the large navigation bubbles.
+  - Replace drab architectural copy with a concise TED-style human narrative.
+  - Correct white-on-gold navigation text caused by selector specificity.
   - Give gold navigation bubbles dark navy-black lettering.
   - Give dark navigation bubbles saturated cyan lettering.
-  - Preserve fixed local-Y-axis rotation and House entrance behavior.
+  - Correct mobile horizontal overflow in the header, title, kicker, and controls.
+  - Preserve the House Control Pad entrance.
   - Use native WebGL with no external 3D library.
 -->
 
@@ -23,18 +22,21 @@
   lang="en"
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
-  data-version="G1-V7"
-  data-contract="NINE_SUMMITS_OF_LOVE_RUBY_INTERNAL_GLOW_HEART_CONTRAST_BUTTONS_HTML_TNT_v6"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_INTERNAL_GLOW_HEART_CONNECTED_PATHS_HTML_TNT_v5"
+  data-version="G1-V8"
+  data-contract="NINE_SUMMITS_OF_LOVE_TED_RUBY_HEART_MOBILE_CONTAINMENT_HTML_TNT_v7"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_RUBY_INTERNAL_GLOW_HEART_CONTRAST_BUTTONS_HTML_TNT_v6"
   data-status="active"
   data-parent="/nine-summits/"
   data-role="book-and-seminar-lane"
+  data-narrative-mode="ted-style-human-path"
   data-source-preserving-images="true"
   data-front-cover="/assets/nine-summits-love-preface-cover.png"
   data-back-cover="/assets/nine-summits-love-hero.png"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
+  data-mobile-horizontal-overflow="forbidden"
+  data-navigation-bubble-contrast="renewed"
   data-house-controller-form="rounded-double-convex-diamond-heart"
   data-heart-geometry-renewed="false"
   data-heart-geometry-preserved="true"
@@ -49,7 +51,6 @@
   data-heart-blackout="forbidden"
   data-heart-rotation="fixed-local-y-axis"
   data-heart-orbit="forbidden"
-  data-navigation-bubble-contrast="renewed"
   data-heart-fibonacci-sync="13-21-34-55-89-144-233-377-610-987"
 >
 <head>
@@ -57,14 +58,14 @@
 
   <meta
     name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
+    content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover"
   >
 
   <title>The Nine Summits of Love · Diamond Gate Bridge</title>
 
   <meta
     name="description"
-    content="The Nine Summits of Love is a connected human path beginning with gratitude, generosity, dependability, accountability, forgiveness, self-control, patience, humility, and purity."
+    content="What if the heart is not broken, but simply under pressure? The Nine Summits of Love presents a connected path from pressure to human potential."
   >
 
   <link
@@ -122,7 +123,11 @@
     }
 
     html{
+      width:100%;
+      min-width:0;
       min-height:100%;
+
+      overflow-x:hidden;
 
       background:var(--page-black);
 
@@ -130,6 +135,8 @@
     }
 
     body{
+      width:100%;
+      min-width:0;
       min-height:100vh;
 
       margin:0;
@@ -299,7 +306,12 @@
           calc(100% - 28px)
         );
 
+      max-width:100%;
+      min-width:0;
+
       margin:0 auto;
+
+      overflow:hidden;
 
       padding:
         max(18px,env(safe-area-inset-top))
@@ -307,7 +319,21 @@
         max(44px,env(safe-area-inset-bottom));
     }
 
+    .page-shell main,
+    .page-shell section,
+    .page-shell header,
+    .page-shell footer,
+    .page-shell nav,
+    .page-shell div,
+    .page-shell figure{
+      min-width:0;
+    }
+
     .page-topbar{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+
       display:grid;
       grid-template-columns:minmax(0,1fr) auto;
       align-items:center;
@@ -318,6 +344,8 @@
     }
 
     .page-brand{
+      width:100%;
+      max-width:100%;
       min-width:0;
 
       display:grid;
@@ -326,16 +354,24 @@
     }
 
     .page-brand small{
+      max-width:100%;
+
       color:var(--page-gold);
 
       font-size:.68rem;
       font-weight:950;
 
       letter-spacing:.16em;
+      line-height:1.35;
       text-transform:uppercase;
+
+      overflow-wrap:anywhere;
     }
 
     .page-brand strong{
+      max-width:100%;
+      min-width:0;
+
       color:var(--page-ink);
 
       font-size:
@@ -345,12 +381,16 @@
           1.72rem
         );
 
-      line-height:1;
+      line-height:1.02;
 
       letter-spacing:-.045em;
+
+      overflow-wrap:anywhere;
     }
 
     .page-return{
+      max-width:100%;
+      min-width:0;
       min-height:2.45rem;
 
       display:inline-flex;
@@ -365,8 +405,6 @@
 
       border-radius:999px;
 
-      color:var(--button-gold-text);
-
       background:
         linear-gradient(
           135deg,
@@ -378,13 +416,22 @@
       font-weight:950;
 
       letter-spacing:.07em;
+      line-height:1.2;
+      text-align:center;
       text-transform:uppercase;
 
       text-shadow:none;
 
+      overflow-wrap:anywhere;
+      white-space:normal;
+
       transition:
         transform .18s ease,
         filter .18s ease;
+    }
+
+    .page-shell a.page-return{
+      color:var(--button-gold-text);
     }
 
     .page-return:hover,
@@ -398,6 +445,10 @@
 
     .page-panel{
       position:relative;
+
+      width:100%;
+      max-width:100%;
+      min-width:0;
 
       overflow:hidden;
 
@@ -437,9 +488,12 @@
 
     .page-kicker{
       width:fit-content;
+      max-width:100%;
+      min-width:0;
 
       display:inline-flex;
       align-items:center;
+      justify-content:flex-start;
 
       gap:.6rem;
 
@@ -459,7 +513,12 @@
       font-weight:950;
 
       letter-spacing:.14em;
+      line-height:1.35;
+      text-align:left;
       text-transform:uppercase;
+
+      overflow-wrap:anywhere;
+      white-space:normal;
     }
 
     .page-kicker::before{
@@ -490,7 +549,12 @@
     .page-shell h2,
     .page-shell h3,
     .page-shell p{
+      max-width:100%;
+      min-width:0;
+
       margin:0;
+
+      overflow-wrap:anywhere;
     }
 
     .page-shell h1{
@@ -498,14 +562,14 @@
 
       font-size:
         clamp(
-          3rem,
+          2.85rem,
           9.4vw,
           6.8rem
         );
 
-      line-height:.86;
+      line-height:.88;
 
-      letter-spacing:-.095em;
+      letter-spacing:-.085em;
 
       text-wrap:balance;
     }
@@ -520,9 +584,9 @@
           3.4rem
         );
 
-      line-height:.96;
+      line-height:.98;
 
-      letter-spacing:-.065em;
+      letter-spacing:-.06em;
 
       text-wrap:balance;
     }
@@ -563,7 +627,7 @@
       display:grid;
       justify-items:center;
 
-      gap:1rem;
+      gap:1.1rem;
 
       padding:
         clamp(
@@ -585,14 +649,57 @@
           100%
         );
 
+      max-width:100%;
+      min-width:0;
+
       display:grid;
       justify-items:center;
 
-      gap:.8rem;
+      gap:.9rem;
     }
 
     .hero-copy p{
       max-width:830px;
+    }
+
+    .hero-opening{
+      width:min(820px,100%);
+
+      display:grid;
+
+      gap:.75rem;
+    }
+
+    .hero-thesis{
+      width:min(760px,100%);
+
+      margin-top:.2rem;
+      padding:.9rem 1rem;
+
+      border:
+        1px solid
+        rgba(243,200,111,.27);
+
+      border-radius:1rem;
+
+      color:var(--page-ink);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(243,200,111,.1),
+          rgba(201,20,66,.055)
+        );
+
+      font-size:
+        clamp(
+          1rem,
+          2.8vw,
+          1.22rem
+        );
+
+      font-weight:850;
+      line-height:1.5;
     }
 
     /* =====================================================
@@ -608,6 +715,9 @@
           var(--heart-stage),
           100%
         );
+
+      max-width:100%;
+      min-width:0;
 
       aspect-ratio:1 / 1;
 
@@ -813,6 +923,8 @@
       left:50%;
       top:3.5%;
 
+      max-width:92%;
+
       transform:translateX(-50%);
 
       color:
@@ -822,9 +934,12 @@
       font-weight:950;
 
       letter-spacing:.13em;
+      line-height:1.35;
+      text-align:center;
       text-transform:uppercase;
 
-      white-space:nowrap;
+      overflow-wrap:anywhere;
+      white-space:normal;
 
       pointer-events:none;
     }
@@ -834,6 +949,8 @@
       left:50%;
       bottom:5.5%;
 
+      max-width:90%;
+      min-width:0;
       min-height:2.72rem;
 
       display:inline-flex;
@@ -852,8 +969,6 @@
 
       transform:translateX(-50%);
 
-      color:var(--button-gold-text);
-
       background:
         linear-gradient(
           135deg,
@@ -871,11 +986,14 @@
       font-weight:950;
 
       letter-spacing:.075em;
+      line-height:1.2;
+      text-align:center;
       text-transform:uppercase;
 
       text-shadow:none;
 
-      white-space:nowrap;
+      overflow-wrap:anywhere;
+      white-space:normal;
 
       pointer-events:none;
 
@@ -884,11 +1002,17 @@
         filter .18s ease;
     }
 
+    .heart-door .heart-enter{
+      color:var(--button-gold-text);
+    }
+
     .heart-enter::before{
       content:"";
 
       width:.62rem;
       height:.62rem;
+
+      flex:0 0 auto;
 
       border-radius:.15rem;
 
@@ -920,6 +1044,8 @@
       left:50%;
       bottom:.9%;
 
+      max-width:90%;
+
       transform:translateX(-50%);
 
       color:
@@ -929,15 +1055,20 @@
       font-weight:900;
 
       letter-spacing:.11em;
+      line-height:1.35;
+      text-align:center;
       text-transform:uppercase;
 
-      white-space:nowrap;
+      overflow-wrap:anywhere;
+      white-space:normal;
 
       pointer-events:none;
     }
 
     .hero-actions,
     .final-actions{
+      width:min(860px,100%);
+
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
@@ -946,6 +1077,8 @@
     }
 
     .page-button{
+      max-width:100%;
+      min-width:0;
       min-height:2.7rem;
 
       display:inline-flex;
@@ -960,8 +1093,6 @@
 
       border-radius:999px;
 
-      color:var(--button-dark-text);
-
       background:
         linear-gradient(
           180deg,
@@ -973,11 +1104,16 @@
       font-weight:950;
 
       letter-spacing:.065em;
+      line-height:1.25;
+      text-align:center;
       text-transform:uppercase;
 
       text-shadow:
         0 0 .65rem
         rgba(141,231,255,.28);
+
+      overflow-wrap:anywhere;
+      white-space:normal;
 
       box-shadow:
         inset 0 1px 0
@@ -985,11 +1121,18 @@
         0 0 1.1rem
         rgba(141,231,255,.04);
 
+      cursor:pointer;
+
       transition:
         transform .18s ease,
         border-color .18s ease,
         filter .18s ease,
         box-shadow .18s ease;
+    }
+
+    .page-shell a.page-button:not(.page-button--gold),
+    .page-shell button.page-button:not(.page-button--gold){
+      color:var(--button-dark-text);
     }
 
     .page-button:hover,
@@ -1012,8 +1155,6 @@
       border-color:
         rgba(243,200,111,.84);
 
-      color:var(--button-gold-text);
-
       background:
         linear-gradient(
           135deg,
@@ -1028,6 +1169,11 @@
         rgba(255,255,255,.32),
         0 .75rem 1.75rem
         rgba(243,200,111,.12);
+    }
+
+    .page-shell a.page-button--gold,
+    .page-shell button.page-button--gold{
+      color:var(--button-gold-text);
     }
 
     .page-button--gold:hover,
@@ -1062,6 +1208,14 @@
     }
 
     .book-heading{
+      display:grid;
+
+      gap:.82rem;
+    }
+
+    .book-heading-copy{
+      max-width:900px;
+
       display:grid;
 
       gap:.72rem;
@@ -1198,15 +1352,23 @@
     .journey-heading{
       display:grid;
 
-      gap:.72rem;
+      gap:.82rem;
     }
 
-    .journey-heading p{
-      max-width:880px;
+    .journey-heading-copy{
+      max-width:900px;
+
+      display:grid;
+
+      gap:.72rem;
     }
 
     .path-map{
       position:relative;
+
+      width:100%;
+      max-width:100%;
+      min-width:0;
 
       overflow:hidden;
 
@@ -1312,8 +1474,15 @@
       font-weight:950;
 
       letter-spacing:.13em;
+      line-height:1.35;
       text-align:center;
       text-transform:uppercase;
+    }
+
+    .path-columns span{
+      min-width:0;
+
+      overflow-wrap:anywhere;
     }
 
     .path-list{
@@ -1331,6 +1500,9 @@
 
       position:relative;
 
+      min-width:0;
+      min-height:6.2rem;
+
       display:grid;
       grid-template-columns:
         minmax(0,1fr)
@@ -1340,8 +1512,6 @@
       align-items:center;
 
       gap:.55rem;
-
-      min-height:6.2rem;
 
       padding:.72rem;
 
@@ -1445,7 +1615,10 @@
       font-weight:950;
 
       letter-spacing:.11em;
+      line-height:1.35;
       text-transform:uppercase;
+
+      overflow-wrap:anywhere;
     }
 
     .path-origin strong,
@@ -1459,9 +1632,11 @@
           1.05rem
         );
 
-      line-height:1.05;
+      line-height:1.08;
 
       letter-spacing:-.025em;
+
+      overflow-wrap:anywhere;
     }
 
     .path-node{
@@ -1515,14 +1690,18 @@
     .path-thread{
       grid-column:1 / -1;
 
+      min-width:0;
+
       margin-top:.08rem;
 
       color:
-        rgba(229,237,255,.6);
+        rgba(229,237,255,.66);
 
-      font-size:.68rem;
-      line-height:1.42;
+      font-size:.72rem;
+      line-height:1.48;
       text-align:center;
+
+      overflow-wrap:anywhere;
     }
 
     .path-law{
@@ -1531,7 +1710,7 @@
 
       margin-top:.9rem;
 
-      padding:.9rem 1rem;
+      padding:1rem;
 
       border:
         1px solid
@@ -1540,13 +1719,13 @@
       border-radius:1rem;
 
       color:
-        rgba(229,237,255,.72);
+        rgba(229,237,255,.76);
 
       background:
         rgba(141,231,255,.045);
 
-      font-size:.77rem;
-      line-height:1.5;
+      font-size:.8rem;
+      line-height:1.58;
       text-align:center;
     }
 
@@ -1567,7 +1746,7 @@
       display:grid;
       justify-items:center;
 
-      gap:.85rem;
+      gap:.9rem;
 
       text-align:center;
 
@@ -1588,8 +1767,18 @@
         rgba(8,11,22,.92);
     }
 
+    .final-copy{
+      width:min(820px,100%);
+
+      display:grid;
+
+      gap:.7rem;
+    }
+
     .final-section p{
       max-width:760px;
+
+      margin-inline:auto;
     }
 
     .page-footer{
@@ -1639,13 +1828,31 @@
     }
 
     @media (max-width:760px){
+      .page-shell{
+        width:
+          min(
+            calc(100% - 20px),
+            var(--page-max)
+          );
+      }
+
       .page-topbar{
-        grid-template-columns:1fr;
+        width:100%;
+
+        grid-template-columns:minmax(0,1fr);
         align-items:start;
+
+        gap:.7rem;
+      }
+
+      .page-brand{
+        width:100%;
       }
 
       .page-return{
-        justify-self:start;
+        width:100%;
+
+        justify-self:stretch;
       }
 
       .book-pair{
@@ -1661,7 +1868,7 @@
         width:100%;
 
         display:grid;
-        grid-template-columns:1fr;
+        grid-template-columns:minmax(0,1fr);
       }
 
       .page-button{
@@ -1673,7 +1880,7 @@
       .page-shell{
         width:
           min(
-            calc(100% - 20px),
+            calc(100% - 16px),
             var(--page-max)
           );
       }
@@ -1688,10 +1895,27 @@
       .page-shell h1{
         font-size:
           clamp(
-            2.9rem,
-            17vw,
-            4.8rem
+            2.42rem,
+            13.2vw,
+            4rem
           );
+
+        letter-spacing:-.072em;
+      }
+
+      .page-shell h2{
+        font-size:
+          clamp(
+            1.55rem,
+            8vw,
+            2.4rem
+          );
+      }
+
+      .page-kicker{
+        width:100%;
+
+        border-radius:1rem;
       }
 
       .heart-enter{
@@ -1728,6 +1952,12 @@
         gap:.36rem;
       }
 
+      .path-columns{
+        font-size:.47rem;
+
+        letter-spacing:.08em;
+      }
+
       .path-step{
         min-height:5.7rem;
 
@@ -1759,11 +1989,48 @@
       }
 
       .path-thread{
-        font-size:.59rem;
+        font-size:.61rem;
       }
 
       .book-cover-frame{
         min-height:24rem;
+      }
+    }
+
+    @media (max-width:370px){
+      .page-shell{
+        width:
+          min(
+            calc(100% - 12px),
+            var(--page-max)
+          );
+      }
+
+      .hero,
+      .book-section,
+      .journey-section,
+      .final-section{
+        padding:.78rem;
+      }
+
+      .page-shell h1{
+        font-size:
+          clamp(
+            2.1rem,
+            12.5vw,
+            3rem
+          );
+      }
+
+      .path-columns{
+        display:none;
+      }
+
+      .path-step{
+        grid-template-columns:
+          minmax(0,1fr)
+          2.2rem
+          minmax(0,1fr);
       }
     }
 
@@ -1825,20 +2092,34 @@
       >
         <div class="hero-copy">
           <div class="page-kicker">
-            The Nine Summits of Love · 256 Carats
+            The Nine Summits of Love · 256 Carats of Human Potential
           </div>
 
           <h1 id="page-title">
-            A book path for the locked heart.
+            What if the heart is not broken?
           </h1>
 
           <h2>
-            256 Carats of Human Potential.
+            What if it is simply under pressure?
           </h2>
 
-          <p>
-            The Nine Summits of Love begins with value under pressure. The heart is not empty. It is waiting for a connected path through gratitude, generosity, dependability, accountability, forgiveness, self-control, patience, humility, and purity.
-          </p>
+          <div class="hero-opening">
+            <p>
+              We often talk about love as though it is something we are supposed to find: the right person, the right moment, the right answer.
+            </p>
+
+            <p>
+              But what if love is not merely something we find? What if love is something we must become capable of carrying?
+            </p>
+
+            <p>
+              Pressure does not always destroy what is valuable. Sometimes pressure reveals it. A diamond does not emerge by avoiding pressure. Neither does character. Neither does trust. Neither does love.
+            </p>
+          </div>
+
+          <div class="hero-thesis">
+            The heart is not empty. Its value is still present—even when it is locked, guarded, exhausted, or afraid.
+          </div>
         </div>
 
         <div
@@ -1991,7 +2272,7 @@
             aria-label="Open the interactive House estate from the ruby internally luminous rotating Nine Summits diamond heart"
           >
             <span class="heart-status">
-              Ruby luminous · rounded · fixed-axis
+              A living heart under pressure
             </span>
 
             <span class="heart-enter">
@@ -2027,16 +2308,22 @@
       >
         <div class="book-heading">
           <div class="page-kicker">
-            The book remains intact
+            The story behind the climb
           </div>
 
-          <h2 id="book-covers-title">
-            The front and back remain part of the path.
-          </h2>
+          <div class="book-heading-copy">
+            <h2 id="book-covers-title">
+              Every journey needs a beginning—and a reason to keep climbing.
+            </h2>
 
-          <p>
-            The original book images remain visible in full. They anchor the locked heart, the key, the climb, and the larger world carried by the Nine Summits.
-          </p>
+            <p>
+              The front and back of the book hold the complete movement of the Nine Summits: the locked heart, the chain, the key, the mountain, the climb, and the larger world waiting beyond it.
+            </p>
+
+            <p>
+              One image begins with pressure. The other asks what becomes possible when the heart is finally able to carry its own light.
+            </p>
+          </div>
         </div>
 
         <div class="book-pair">
@@ -2087,16 +2374,22 @@
       >
         <div class="journey-heading">
           <div class="page-kicker">
-            Nine beginnings · connected paths · nine summits
+            Nine beginnings · nine paths · nine summits
           </div>
 
-          <h2 id="connected-paths-title">
-            The paths rise together.
-          </h2>
+          <div class="journey-heading-copy">
+            <h2 id="connected-paths-title">
+              No one reaches love by taking only one path.
+            </h2>
 
-          <p>
-            Each summit begins with a human practice. No path stands alone. Every path strengthens the neighboring paths until the climb becomes one connected formation.
-          </p>
+            <p>
+              We tend to separate human growth into isolated instructions: be grateful, be patient, be accountable, forgive, exercise self-control.
+            </p>
+
+            <p>
+              But these qualities do not develop independently. The paths cross because human formation is connected.
+            </p>
+          </div>
         </div>
 
         <div
@@ -2228,7 +2521,7 @@
               </div>
 
               <div class="path-thread">
-                Recognition opens the capacity to receive brightness and share it without entitlement.
+                Joy does not begin with having everything. It begins with recognizing what is already alive, valuable, and worth receiving.
               </div>
             </article>
 
@@ -2248,7 +2541,7 @@
               </div>
 
               <div class="path-thread">
-                Giving without erasing the self teaches love to become active, disciplined, and real.
+                Love becomes visible when value moves outward without destroying the person giving it.
               </div>
             </article>
 
@@ -2268,7 +2561,7 @@
               </div>
 
               <div class="path-thread">
-                Repeated trustworthy action becomes the structure other people and future choices can stand on.
+                Stability is not a feeling. It is trustworthy action repeated long enough for others—and your future self—to stand on it.
               </div>
             </article>
 
@@ -2288,7 +2581,7 @@
               </div>
 
               <div class="path-thread">
-                The willingness to answer for choices transforms intention into trustworthy character.
+                Character begins when we stop asking only what we intended and become willing to answer for what our choices produced.
               </div>
             </article>
 
@@ -2308,7 +2601,7 @@
               </div>
 
               <div class="path-thread">
-                Releasing unnecessary war makes room for repair without surrendering truth or boundaries.
+                Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.
               </div>
             </article>
 
@@ -2328,7 +2621,7 @@
               </div>
 
               <div class="path-thread">
-                Governed response allows emotion, responsibility, freedom, and consequence to remain in proportion.
+                Balance is not the absence of emotion. It is the ability to feel deeply without surrendering authority over what happens next.
               </div>
             </article>
 
@@ -2348,7 +2641,7 @@
               </div>
 
               <div class="path-thread">
-                Patience allows strong structures to form in the right sequence instead of collapsing under haste.
+                Anything built too quickly can collapse under the weight it was meant to carry. Patience gives strong things time to form.
               </div>
             </article>
 
@@ -2368,7 +2661,7 @@
               </div>
 
               <div class="path-thread">
-                Honest proportion protects dignity from both self-erasure and artificial superiority.
+                Humility is not becoming smaller. It is seeing yourself in honest proportion—without self-erasure or artificial superiority.
               </div>
             </article>
 
@@ -2388,13 +2681,13 @@
               </div>
 
               <div class="path-thread">
-                Clear intention reduces hidden coercion and prepares choice to become genuinely free.
+                A choice is not fully free when fear, coercion, resentment, or appetite is making it for us. Purity clears the field.
               </div>
             </article>
           </div>
 
           <div class="path-law">
-            Gratitude strengthens generosity. Generosity reinforces dependability. Dependability makes accountability credible. Accountability makes forgiveness possible. Forgiveness creates room for self-control. Self-control protects patience. Patience allows humility. Humility protects purity. Purity prepares the heart for love.
+            The Nine Summits are not nine separate achievements. They are one connected human formation. Each path strengthens the next. Each summit supports the others. Love is not waiting at the top as a prize. Love is what the climber becomes capable of carrying.
           </div>
         </div>
       </section>
@@ -2404,16 +2697,22 @@
         aria-labelledby="final-title"
       >
         <div class="page-kicker">
-          One connected climb
+          The climb begins here
         </div>
 
-        <h2 id="final-title">
-          Nine beginnings. Nine paths. Nine summits. One heart.
-        </h2>
+        <div class="final-copy">
+          <h2 id="final-title">
+            The heart does not need to be discarded. It needs a path.
+          </h2>
 
-        <p>
-          The summits are not isolated achievements. They are connected formations built through repeatable human practices.
-        </p>
+          <p>
+            The pressure may be real. The lock may be real. The fear may be real. But so is the value still living inside the heart.
+          </p>
+
+          <p>
+            Begin with one practice. Take one honest step. Follow the connected path. Then keep climbing.
+          </p>
+        </div>
 
         <div class="final-actions">
           <a
@@ -2430,12 +2729,14 @@
             Enter the Universe
           </a>
 
-          <a
+          <button
             class="page-button"
-            href="/"
+            type="button"
+            data-house-control-pad-open
+            data-house-context="nine-summits-of-love-final"
           >
-            Return to Compass
-          </a>
+            Enter the House
+          </button>
         </div>
       </section>
     </main>
@@ -2467,7 +2768,7 @@
       </nav>
 
       <span>
-        The Nine Summits of Love · Book and Seminar Lane · Ruby Internally Luminous True-Depth Diamond Heart.
+        The Nine Summits of Love · A connected path from pressure to human potential.
       </span>
     </footer>
   </div>
@@ -5763,7 +6064,7 @@
         );
       } catch (error) {
         console.error(
-          "[Nine Summits Ruby Internal Glow Heart] Initialization failed.",
+          "[Nine Summits TED Ruby Heart] Initialization failed.",
           error
         );
 

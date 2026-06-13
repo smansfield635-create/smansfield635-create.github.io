@@ -1,336 +1,175 @@
 // /assets/house-control-pad/house.control-pad.js
-// HOUSE_CONTROL_PAD_LEAN_IMMERSIVE_ESTATE_CONTROLLER_TNT_v2
+// HOUSE_CONTROL_PAD_PRIMARY_CONTROLLER_CONTROL_1_TNT_v1
 // Full-file replacement.
 //
-// Required load order:
+// CONTROL 1 AUTHORITY ONLY.
 //
-// 1. /assets/house-control-pad/house.control-pad.data.js
-// 2. /assets/house-control-pad/house.control-pad.js
-// 3. /assets/house-control-pad/house.avatar-life.js
+// Owns:
+// - controller mounting
+// - controller opening and closing
+// - House DOM construction
+// - room and facet construction from data
+// - room selection
+// - room-entry state
+// - guide-authority resolution
+// - route requests
+// - arrival-sheet content
+// - status messaging
+// - coordination with Control Pad Control 2
+// - coordination with Avatar Life
 //
-// Required styles:
+// Does not own:
+// - camera calculations
+// - camera transforms
+// - usable viewport measurement
+// - room fitting
+// - responsive composition
+// - arrival-sheet compensation
+// - avatar root placement
+// - avatar root scale
+// - avatar containment calculations
+// - avatar drawing
+// - blink, gesture, or idle timing
 //
-// 1. /assets/house-control-pad/house.control-pad.css
-// 2. /assets/house-control-pad/house.avatars.css
+// Runtime dependencies:
 //
-// Five-layer separation:
+// window.HOUSE_CONTROL_PAD_DATA
+// window.HOUSE_CONTROL_PAD_CONTROL_2
+// window.HOUSE_AVATAR_LIFE
+//
+// Canonical files:
+//
+// /assets/house-control-pad/house.control-pad.data.js
+// /assets/house-control-pad/house.control-pad.css
+// /assets/house-control-pad/house.control-pad.js
+// /assets/house-control-pad/house.control-pad.control2.js
+// /assets/house-control-pad/house.avatar-life.js
+// /assets/house-control-pad/house.avatars.css
+//
+// Separation law:
 //
 // Data describes.
 // House CSS renders architecture.
-// Controller coordinates.
-// Avatar life schedules.
-// Avatar CSS expresses the residents.
-//
-// This file owns:
-//
-// - controller initialization
-// - House opening and closing
-// - Estate View
-// - Room View
-// - camera calculations
-// - camera transitions
-// - room selection
-// - progressive room-information state
-// - explicit route actions
-// - corridor pathfinding
-// - guide travel
-// - persistent guide locations
-// - same-room handling
-// - DOM construction
-// - focus management
-// - accessibility coordination
-// - reduced-motion detection
-// - public API
-// - lifecycle cleanup
-// - coordination with HOUSE_AVATAR_LIFE
-//
-// This file does not own:
-//
-// - canonical room content
-// - canonical routes
-// - canonical room geometry
-// - canonical agent identity data
-// - avatar blink scheduling
-// - inactivity timing
-// - avatar gesture selection
-// - yawn scheduling
-// - room architecture CSS
-// - avatar appearance CSS
-// - animation keyframes
-//
-// Canonical names:
-//
-// - Jeeves
-// - Auren
-// - Soren
-// - Elara
+// Control Pad Control 1 coordinates.
+// Control Pad Control 2 composes.
+// Avatar Life schedules.
+// Avatar CSS expresses.
 //
 
-(function bindLeanHouseControlPadController(global) {
+(function bindHouseControlPadControl1(global) {
   "use strict";
 
   var CONTRACT =
-    "HOUSE_CONTROL_PAD_LEAN_IMMERSIVE_ESTATE_CONTROLLER_TNT_v2";
+    "HOUSE_CONTROL_PAD_PRIMARY_CONTROLLER_CONTROL_1_TNT_v1";
 
-  var DATA_CONTRACT =
-    "HOUSE_CONTROL_PAD_STATIC_ESTATE_DATA_TNT_v1";
+  var VERSION =
+    "1.0.0";
 
-  var DATA = global.HOUSE_CONTROL_PAD_DATA;
+  var DATA_READY_EVENT =
+    "house-control-pad:data-ready";
 
-  if (!DATA) {
-    reportFatal(
-      "HOUSE_CONTROL_PAD_DATA is unavailable. Load " +
-        "/assets/house-control-pad/house.control-pad.data.js " +
-        "before house.control-pad.js."
-    );
+  var CONTROL_2_READY_EVENT =
+    "house-control-pad:control-2-ready";
 
-    return;
-  }
+  var CONTROL_1_READY_EVENT =
+    "house-control-pad:control-1-ready";
 
-  var DEFAULT_ROOM_ID = DATA.defaultRoomId;
-  var VIEW_MODE = DATA.viewModes;
-  var TIMING = DATA.timing;
+  var OPEN_EVENT =
+    "house-control-pad:open";
 
-  var ROOMS = DATA.rooms;
-  var AGENTS = DATA.agents;
-  var CORRIDORS = DATA.corridors;
+  var CLOSE_EVENT =
+    "house-control-pad:close";
 
-  var STATE = {
-    initialized: false,
-    ready: false,
-    isOpen: false,
+  var ROOM_SELECTED_EVENT =
+    "house-control-pad:room-selected";
 
-    currentPageRoom: DEFAULT_ROOM_ID,
-    selectedRoom: null,
-    selectedAgent: null,
+  var ROOM_ENTERING_EVENT =
+    "house-control-pad:room-entering";
 
-    viewMode: VIEW_MODE.ESTATE,
-    zoomLevel: 1,
-    focusedRoom: null,
-    previousFocusedRoom: null,
+  var ROOM_ARRIVED_EVENT =
+    "house-control-pad:room-arrived";
 
-    cameraTransitioning: false,
-    cameraToken: 0,
-    cameraTimers: [],
+  var GUIDE_REQUEST_EVENT =
+    "house-control-pad:guide-request";
+
+  var ROUTE_REQUEST_EVENT =
+    "house-control-pad:route-request";
+
+  var OPEN_TRIGGER_SELECTOR =
+    "[data-house-control-pad-open]";
+
+  var ROOT_SELECTOR =
+    "[data-house-control-pad-root]";
+
+  var state = {
+    mounted: false,
+    destroyed: false,
+    open: false,
+
+    viewMode: "estate",
+
+    selectedRoomId: null,
+    currentRoomId: null,
+    previousRoomId: null,
+    pendingRoomId: null,
+
+    currentAgentId: null,
 
     traveling: false,
+    arrivalVisible: false,
+
     travelToken: 0,
-    travelTimers: [],
-    activePath: [],
 
-    reducedMotion: false,
-    reducedMotionMedia: null,
+    returnFocusElement: null,
 
-    agentLocations: clone(DATA.homeAgentLocations),
+    data: null,
+    control2: null,
+    avatarLife: null,
 
-    previousFocus: null,
-
-    root: null,
+    mountRoot: null,
     overlay: null,
     panel: null,
     header: null,
-    returnButton: null,
-    closeButton: null,
-
-    estateViewport: null,
-    estateStage: null,
-    estateCanvas: null,
-    routeLayer: null,
+    viewport: null,
+    cameraRig: null,
+    estate: null,
+    heartRearShell: null,
+    heartShell: null,
+    facetLayer: null,
+    corridorLayer: null,
     roomLayer: null,
     avatarLayer: null,
-
     arrivalSheet: null,
+    arrivalContent: null,
+    footer: null,
     status: null,
 
-    boundOpenButtons: new WeakSet(),
+    roomElements: Object.create(null),
+    facetElements: Object.create(null),
+    corridorElements: Object.create(null),
+    avatarMounts: Object.create(null),
 
-    resizeFrame: 0
+    listeners: [],
+    pendingControl2Commands: []
   };
 
-  function reportFatal(message) {
-    try {
-      console.error("[House Control Pad]", message);
-    } catch (error) {
-      // No-op.
-    }
-
-    try {
-      global.dispatchEvent(
-        new CustomEvent("house-control-pad:error", {
-          detail: {
-            contract: CONTRACT,
-            fatal: true,
-            message: message
-          }
-        })
-      );
-    } catch (error) {
-      // No-op.
-    }
+  function getData() {
+    return global.HOUSE_CONTROL_PAD_DATA || null;
   }
 
-  function clone(value) {
-    if (
-      value === null ||
-      typeof value !== "object"
-    ) {
-      return value;
-    }
-
-    if (Array.isArray(value)) {
-      return value.map(clone);
-    }
-
-    var copy = {};
-
-    Object.keys(value).forEach(function cloneKey(key) {
-      copy[key] = clone(value[key]);
-    });
-
-    return copy;
-  }
-
-  function normalize(value) {
-    if (
-      value === null ||
-      typeof value === "undefined"
-    ) {
-      return "";
-    }
-
-    return String(value)
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  function clamp(value, minimum, maximum) {
-    return Math.min(
-      maximum,
-      Math.max(minimum, value)
-    );
-  }
-
-  function q(selector, root) {
-    return (root || document).querySelector(selector);
-  }
-
-  function qa(selector, root) {
-    return Array.prototype.slice.call(
-      (root || document).querySelectorAll(selector)
-    );
-  }
-
-  function create(tagName, className, attributes) {
-    var node = document.createElement(tagName);
-
-    if (className) {
-      node.className = className;
-    }
-
-    if (
-      attributes &&
-      typeof attributes === "object"
-    ) {
-      Object.keys(attributes).forEach(
-        function applyAttribute(key) {
-          var value = attributes[key];
-
-          if (key === "text") {
-            node.textContent = value;
-            return;
-          }
-
-          if (key === "html") {
-            node.innerHTML = value;
-            return;
-          }
-
-          if (
-            value !== null &&
-            typeof value !== "undefined"
-          ) {
-            node.setAttribute(key, value);
-          }
-        }
-      );
-    }
-
-    return node;
-  }
-
-  function roomExists(roomId) {
-    return DATA.roomExists(roomId);
-  }
-
-  function agentExists(agentId) {
-    return DATA.agentExists(agentId);
-  }
-
-  function corridorExists(corridorId) {
-    return DATA.corridorExists(corridorId);
-  }
-
-  function getRoom(roomId) {
-    return DATA.getRoom(roomId);
-  }
-
-  function getAgent(agentId) {
-    return DATA.getAgent(agentId);
-  }
-
-  function resolveAuthority(roomOrRoomId) {
-    return DATA.resolveAuthority(roomOrRoomId);
+  function getControl2() {
+    return global.HOUSE_CONTROL_PAD_CONTROL_2 || null;
   }
 
   function getAvatarLife() {
     return global.HOUSE_AVATAR_LIFE || null;
   }
 
-  function notifyAvatarLife(methodName) {
-    var avatarLife = getAvatarLife();
-
-    if (
-      !avatarLife ||
-      typeof avatarLife[methodName] !== "function"
-    ) {
-      return undefined;
-    }
-
-    var args = Array.prototype.slice.call(
-      arguments,
-      1
-    );
-
-    try {
-      return avatarLife[methodName].apply(
-        avatarLife,
-        args
-      );
-    } catch (error) {
-      try {
-        console.warn(
-          "[House Control Pad] Avatar-life call failed:",
-          methodName,
-          error
-        );
-      } catch (consoleError) {
-        // No-op.
-      }
-
-      return undefined;
-    }
-  }
-
   function emit(eventName, detail) {
     try {
       global.dispatchEvent(
         new CustomEvent(eventName, {
-          detail: Object.assign(
-            {
-              contract: CONTRACT
-            },
-            detail || {}
-          )
+          detail: detail || {}
         })
       );
     } catch (error) {
@@ -338,464 +177,1016 @@
     }
   }
 
-  function ensureRoot() {
-    var root = q(
-      "[data-house-control-pad-root]"
-    );
+  function createElement(tagName, className, attributes) {
+    var element =
+      global.document.createElement(tagName);
 
-    if (!root) {
-      root = create("div", "", {
-        "data-house-control-pad-root": "true"
-      });
-
-      document.body.appendChild(root);
+    if (className) {
+      element.className = className;
     }
 
-    STATE.root = root;
+    if (attributes) {
+      Object.keys(attributes).forEach(
+        function applyAttribute(name) {
+          var value =
+            attributes[name];
 
-    return root;
+          if (
+            value === false ||
+            value === null ||
+            typeof value === "undefined"
+          ) {
+            return;
+          }
+
+          if (value === true) {
+            element.setAttribute(name, "");
+            return;
+          }
+
+          element.setAttribute(
+            name,
+            String(value)
+          );
+        }
+      );
+    }
+
+    return element;
+  }
+
+  function createSvgElement(tagName, attributes) {
+    var element =
+      global.document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        tagName
+      );
+
+    if (attributes) {
+      Object.keys(attributes).forEach(
+        function applySvgAttribute(name) {
+          var value =
+            attributes[name];
+
+          if (
+            value === null ||
+            typeof value === "undefined"
+          ) {
+            return;
+          }
+
+          element.setAttribute(
+            name,
+            String(value)
+          );
+        }
+      );
+    }
+
+    return element;
+  }
+
+  function createTextElement(
+    tagName,
+    className,
+    text,
+    attributes
+  ) {
+    var element =
+      createElement(
+        tagName,
+        className,
+        attributes
+      );
+
+    element.textContent =
+      typeof text === "string"
+        ? text
+        : "";
+
+    return element;
+  }
+
+  function createButton(
+    className,
+    label,
+    attributes
+  ) {
+    var button =
+      createElement(
+        "button",
+        className,
+        attributes
+      );
+
+    button.type = "button";
+    button.textContent = label;
+
+    return button;
+  }
+
+  function setStyleVariables(element, variables) {
+    if (!element || !variables) {
+      return;
+    }
+
+    Object.keys(variables).forEach(
+      function setVariable(name) {
+        element.style.setProperty(
+          name,
+          variables[name]
+        );
+      }
+    );
+  }
+
+  function listen(target, eventName, handler, options) {
+    if (
+      !target ||
+      typeof target.addEventListener !== "function"
+    ) {
+      return;
+    }
+
+    target.addEventListener(
+      eventName,
+      handler,
+      options
+    );
+
+    state.listeners.push({
+      target: target,
+      eventName: eventName,
+      handler: handler,
+      options: options
+    });
+  }
+
+  function removeAllListeners() {
+    state.listeners.forEach(
+      function removeListener(record) {
+        record.target.removeEventListener(
+          record.eventName,
+          record.handler,
+          record.options
+        );
+      }
+    );
+
+    state.listeners.length = 0;
+  }
+
+  function roomExists(roomId) {
+    return Boolean(
+      state.data &&
+      typeof state.data.roomExists === "function" &&
+      state.data.roomExists(roomId)
+    );
+  }
+
+  function agentExists(agentId) {
+    return Boolean(
+      state.data &&
+      typeof state.data.agentExists === "function" &&
+      state.data.agentExists(agentId)
+    );
+  }
+
+  function normalizeRoomId(roomId) {
+    if (roomExists(roomId)) {
+      return roomId;
+    }
+
+    return state.data
+      ? state.data.defaultRoomId
+      : "house-core";
+  }
+
+  function getRoom(roomId) {
+    if (
+      state.data &&
+      typeof state.data.getRoom === "function"
+    ) {
+      return state.data.getRoom(roomId);
+    }
+
+    return null;
+  }
+
+  function getAgent(agentId) {
+    if (
+      state.data &&
+      typeof state.data.getAgent === "function"
+    ) {
+      return state.data.getAgent(agentId);
+    }
+
+    return null;
+  }
+
+  function resolveAuthority(roomId) {
+    if (
+      state.data &&
+      typeof state.data.resolveAuthority === "function"
+    ) {
+      return state.data.resolveAuthority(roomId);
+    }
+
+    var room =
+      getRoom(roomId);
+
+    return room && room.authority
+      ? room.authority
+      : "jeeves";
+  }
+
+  function resolveInitialRoom(trigger) {
+    if (
+      trigger &&
+      typeof trigger.getAttribute === "function"
+    ) {
+      var triggerRoom =
+        trigger.getAttribute(
+          "data-house-room"
+        );
+
+      if (roomExists(triggerRoom)) {
+        return triggerRoom;
+      }
+    }
+
+    if (
+      state.data &&
+      typeof state.data.resolveRoomFromPath === "function"
+    ) {
+      return state.data.resolveRoomFromPath(
+        global.location.pathname
+      );
+    }
+
+    return state.data.defaultRoomId;
+  }
+
+  function px(value) {
+    return String(value) + "px";
+  }
+
+  function clamp(value, minimum, maximum) {
+    return Math.max(
+      minimum,
+      Math.min(maximum, value)
+    );
   }
 
   function setStatus(message) {
-    if (STATE.status) {
-      STATE.status.textContent =
-        normalize(message);
+    if (state.status) {
+      state.status.textContent =
+        message || "";
     }
   }
 
-  function setDocumentOpenState(isOpen) {
-    var value = isOpen ? "true" : "false";
+  function setPanelAttribute(name, value) {
+    if (!state.panel) {
+      return;
+    }
 
-    document.documentElement.setAttribute(
-      "data-house-control-pad-open",
-      value
-    );
-
-    document.body.setAttribute(
-      "data-house-control-pad-open",
-      value
+    state.panel.setAttribute(
+      name,
+      String(value)
     );
   }
 
-  function safeFocus(node) {
+  function mount() {
     if (
-      !node ||
-      typeof node.focus !== "function"
+      state.destroyed ||
+      state.mounted
     ) {
-      return;
+      return state.overlay;
     }
 
-    try {
-      node.focus({
-        preventScroll: true
-      });
-    } catch (error) {
-      node.focus();
-    }
-  }
+    state.data =
+      getData();
 
-  function getFocusable(root) {
-    return qa(
-      [
-        'a[href]',
-        'button:not([disabled])',
-        'textarea:not([disabled])',
-        'input:not([disabled])',
-        'select:not([disabled])',
-        '[tabindex]:not([tabindex="-1"])'
-      ].join(","),
-      root
-    ).filter(function keepFocusable(node) {
-      return (
-        node.offsetParent !== null ||
-        node === document.activeElement
-      );
-    });
-  }
-
-  function trapFocus(event) {
-    if (
-      !STATE.isOpen ||
-      !STATE.panel ||
-      event.key !== "Tab"
-    ) {
-      return;
+    if (!state.data) {
+      return null;
     }
 
-    var focusable = getFocusable(STATE.panel);
+    state.mountRoot =
+      global.document.querySelector(
+        ROOT_SELECTOR
+      ) ||
+      global.document.body;
 
-    if (!focusable.length) {
-      return;
-    }
+    buildController();
+    buildEstate();
+    bindControllerEvents();
+    bindOpenTriggers();
+    connectControl2();
+    connectAvatarLife();
 
-    var first = focusable[0];
-    var last =
-      focusable[focusable.length - 1];
-
-    if (
-      event.shiftKey &&
-      document.activeElement === first
-    ) {
-      event.preventDefault();
-      safeFocus(last);
-      return;
-    }
-
-    if (
-      !event.shiftKey &&
-      document.activeElement === last
-    ) {
-      event.preventDefault();
-      safeFocus(first);
-    }
-  }
-
-  function handleKeydown(event) {
-    notifyAvatarLife("recordInteraction", {
-      source: "keyboard",
-      eventType: event.key
-    });
-
-    if (!STATE.isOpen) {
-      return;
-    }
-
-    if (event.key === "Escape") {
-      event.preventDefault();
-
-      if (STATE.viewMode === VIEW_MODE.ROOM) {
-        returnToEstate();
-      } else {
-        closeControlPad();
-      }
-
-      return;
-    }
-
-    trapFocus(event);
-  }
-
-  function clearTimerList(timerList) {
-    timerList.forEach(function clearTimer(timerId) {
-      global.clearTimeout(timerId);
-      global.clearInterval(timerId);
-    });
-
-    timerList.length = 0;
-  }
-
-  function cancelCameraTransition() {
-    STATE.cameraToken += 1;
-    STATE.cameraTransitioning = false;
-
-    clearTimerList(STATE.cameraTimers);
-  }
-
-  function clearTravelSegments() {
-    if (!STATE.routeLayer) {
-      return;
-    }
-
-    qa(
-      "[data-house-travel-segment]",
-      STATE.routeLayer
-    ).forEach(function removeSegment(segment) {
-      segment.remove();
-    });
-  }
-
-  function cancelTravel(options) {
-    options = options || {};
-
-    STATE.travelToken += 1;
-    STATE.traveling = false;
-    STATE.activePath = [];
-
-    clearTimerList(STATE.travelTimers);
-    clearTravelSegments();
-
-    if (STATE.panel) {
-      qa(
-        "[data-house-avatar]",
-        STATE.panel
-      ).forEach(function clearTravelState(node) {
-        node.setAttribute(
-          "data-traveling",
-          "false"
-        );
-      });
-    }
-
-    if (!options.silent) {
-      notifyAvatarLife("handleTravelCancel");
-    }
-  }
-
-  function getCurrentRoomFromDOM() {
-    var root = q(
-      "[data-house-control-pad-root]"
-    );
-
-    var rootRoom =
-      root &&
-      root.getAttribute("data-house-room");
-
-    if (roomExists(rootRoom)) {
-      return rootRoom;
-    }
-
-    var bodyRoom =
-      document.body &&
-      document.body.getAttribute(
-        "data-house-room"
-      );
-
-    if (roomExists(bodyRoom)) {
-      return bodyRoom;
-    }
-
-    var htmlRoom =
-      document.documentElement.getAttribute(
-        "data-house-room"
-      );
-
-    if (roomExists(htmlRoom)) {
-      return htmlRoom;
-    }
-
-    return DATA.resolveRoomFromPath(
-      global.location.pathname
-    );
-  }
-
-  function getAgentLocation(agentId) {
-    var agent = getAgent(agentId);
-
-    return (
-      STATE.agentLocations[agent.id] ||
-      agent.homeRoom
-    );
-  }
-
-  function setAgentLocation(
-    agentId,
-    roomId
-  ) {
-    if (
-      !agentExists(agentId) ||
-      !roomExists(roomId)
-    ) {
-      return false;
-    }
-
-    STATE.agentLocations[agentId] =
-      roomId;
-
-    return true;
-  }
-
-  function resetAgentLocations() {
-    cancelTravel({
-      silent: true
-    });
-
-    STATE.agentLocations = clone(
-      DATA.homeAgentLocations
-    );
-
-    if (STATE.initialized) {
-      restoreAgentPositions();
-      updateAvatarVisibility();
-      updateAvatarScaleModes();
-    }
-
-    notifyAvatarLife(
-      "handleAgentLocationsReset",
-      clone(STATE.agentLocations)
-    );
-
-    setStatus(
-      "All guides returned to their home rooms."
-    );
+    state.mounted = true;
 
     emit(
-      "house-control-pad:agent-locations-reset",
+      CONTROL_1_READY_EVENT,
       {
-        agentLocations: clone(
-          STATE.agentLocations
-        )
+        contract: CONTRACT,
+        version: VERSION,
+        role: "control-1",
+        secondaryController:
+          "HOUSE_CONTROL_PAD_CONTROL_2"
       }
     );
 
-    return clone(
-      STATE.agentLocations
-    );
-  }
+    if (state.pendingRoomId) {
+      var pendingRoomId =
+        state.pendingRoomId;
 
-  function getRoomAnchorId(roomId) {
-    return "room:" + roomId;
-  }
+      state.pendingRoomId = null;
 
-  function getRoomCenter(roomId) {
-    var room = getRoom(roomId);
-
-    return {
-      x: room.x + room.width / 2,
-      y: room.y + room.height / 2
-    };
-  }
-
-  function getRoomZonePoint(
-    roomId,
-    zoneName
-  ) {
-    var room = getRoom(roomId);
-
-    var zone =
-      room[zoneName] || {
-        x: 50,
-        y: 50,
-        width: 0,
-        height: 0
-      };
-
-    return {
-      x:
-        room.x +
-        room.width *
-          ((zone.x + zone.width / 2) /
-            100),
-
-      y:
-        room.y +
-        room.height *
-          ((zone.y + zone.height / 2) /
-            100)
-    };
-  }
-
-  function getRoomPortraitPoint(roomId) {
-    return getRoomZonePoint(
-      roomId,
-      "portraitZone"
-    );
-  }
-
-  function getGraphNeighbors(nodeId) {
-    if (
-      typeof nodeId !== "string"
-    ) {
-      return [];
+      open({
+        roomId: pendingRoomId,
+        enterRoom: true
+      });
     }
 
-    if (
-      nodeId.indexOf("room:") === 0
-    ) {
-      var roomId = nodeId.slice(5);
-      var room = getRoom(roomId);
-
-      return Array.isArray(
-        room.corridorAccess
-      )
-        ? room.corridorAccess.slice()
-        : [];
-    }
-
-    var corridor = CORRIDORS[nodeId];
-
-    return corridor &&
-      Array.isArray(corridor.connections)
-      ? corridor.connections.slice()
-      : [];
+    return state.overlay;
   }
 
-  function findGraphPath(
-    fromRoomId,
-    toRoomId
-  ) {
-    var start =
-      getRoomAnchorId(fromRoomId);
-
-    var goal =
-      getRoomAnchorId(toRoomId);
-
-    if (start === goal) {
-      return [start];
-    }
-
-    var queue = [start];
-    var visited = {};
-    var previous = {};
-
-    visited[start] = true;
-
-    while (queue.length) {
-      var current = queue.shift();
-      var neighbors =
-        getGraphNeighbors(current);
-
-      for (
-        var index = 0;
-        index < neighbors.length;
-        index += 1
-      ) {
-        var next = neighbors[index];
-
-        if (visited[next]) {
-          continue;
+  function buildController() {
+    state.overlay =
+      createElement(
+        "div",
+        "hcp-overlay",
+        {
+          "data-house-control-pad-overlay": "",
+          "data-open": "false",
+          "aria-hidden": "true"
         }
-
-        visited[next] = true;
-        previous[next] = current;
-
-        if (next === goal) {
-          return reconstructPath(
-            previous,
-            start,
-            goal
-          );
-        }
-
-        queue.push(next);
-      }
-    }
-
-    return [];
-  }
-
-  function reconstructPath(
-    previous,
-    start,
-    goal
-  ) {
-    var path = [goal];
-    var cursor = goal;
-
-    while (
-      cursor !== start &&
-      previous[cursor]
-    ) {
-      cursor = previous[cursor];
-      path.unshift(cursor);
-    }
-
-    if (path[0] !== start) {
-      return [];
-    }
-
-    return path;
-  }
-
-  function graphNodePoint(nodeId) {
-    if (
-      nodeId.indexOf("room:") === 0
-    ) {
-      return getRoomPortraitPoint(
-        nodeId.slice(5)
       );
+
+    state.panel =
+      createElement(
+        "section",
+        "hcp-panel",
+        {
+          "data-house-control-pad-panel": "",
+          "data-house-view-mode": "estate",
+          "data-current-room": "",
+          "data-current-agent": "",
+          "data-traveling": "false",
+          role: "dialog",
+          "aria-modal": "true",
+          "aria-labelledby": "hcp-title",
+          "aria-describedby": "hcp-subtitle"
+        }
+      );
+
+    state.header =
+      buildHeader();
+
+    state.viewport =
+      buildViewport();
+
+    state.arrivalSheet =
+      buildArrivalSheet();
+
+    state.footer =
+      buildFooter();
+
+    state.panel.appendChild(
+      state.header
+    );
+
+    state.panel.appendChild(
+      state.viewport
+    );
+
+    state.panel.appendChild(
+      state.arrivalSheet
+    );
+
+    state.panel.appendChild(
+      state.footer
+    );
+
+    state.overlay.appendChild(
+      state.panel
+    );
+
+    state.mountRoot.appendChild(
+      state.overlay
+    );
+  }
+
+  function buildHeader() {
+    var header =
+      createElement(
+        "header",
+        "hcp-header",
+        {
+          "data-house-control-pad-header": ""
+        }
+      );
+
+    var titleWrap =
+      createElement(
+        "div",
+        "hcp-title-wrap"
+      );
+
+    var kicker =
+      createTextElement(
+        "div",
+        "hcp-kicker",
+        "Universal House Controller"
+      );
+
+    var title =
+      createTextElement(
+        "h2",
+        "hcp-title",
+        "Choose a room.",
+        {
+          id: "hcp-title"
+        }
+      );
+
+    var subtitle =
+      createTextElement(
+        "p",
+        "hcp-subtitle",
+        "Explore the estate, enter a room, understand its purpose, and meet its resident guide.",
+        {
+          id: "hcp-subtitle"
+        }
+      );
+
+    titleWrap.appendChild(kicker);
+    titleWrap.appendChild(title);
+    titleWrap.appendChild(subtitle);
+
+    var controls =
+      createElement(
+        "div",
+        "hcp-header-controls"
+      );
+
+    var returnEstate =
+      createButton(
+        "hcp-return-estate",
+        "Return to Estate",
+        {
+          "data-house-return-estate": ""
+        }
+      );
+
+    var closeButton =
+      createButton(
+        "hcp-close",
+        "×",
+        {
+          "data-house-control-pad-close": "",
+          "aria-label":
+            "Close House Control Pad"
+        }
+      );
+
+    controls.appendChild(returnEstate);
+    controls.appendChild(closeButton);
+
+    header.appendChild(titleWrap);
+    header.appendChild(controls);
+
+    return header;
+  }
+
+  function buildViewport() {
+    var viewport =
+      createElement(
+        "div",
+        "hcp-estate-viewport",
+        {
+          "data-house-estate-viewport": "",
+          tabindex: "0",
+          "aria-label":
+            "Interactive House estate"
+        }
+      );
+
+    state.cameraRig =
+      createElement(
+        "div",
+        "hcp-camera-rig",
+        {
+          "data-house-camera-rig": ""
+        }
+      );
+
+    state.estate =
+      createElement(
+        "div",
+        "hcp-heart-estate hcp-estate-canvas",
+        {
+          "data-house-heart-estate": "",
+          "data-house-estate-canvas": ""
+        }
+      );
+
+    state.facetLayer =
+      createElement(
+        "div",
+        "hcp-heart-facet-layer",
+        {
+          "data-house-heart-facet-layer": ""
+        }
+      );
+
+    state.corridorLayer =
+      createElement(
+        "div",
+        "hcp-heart-corridor-layer hcp-route-layer",
+        {
+          "data-house-heart-corridor-layer": ""
+        }
+      );
+
+    state.roomLayer =
+      createElement(
+        "div",
+        "hcp-heart-room-layer hcp-room-layer",
+        {
+          "data-house-heart-room-layer": ""
+        }
+      );
+
+    state.avatarLayer =
+      createElement(
+        "div",
+        "hcp-avatar-layer",
+        {
+          "data-house-avatar-layer": ""
+        }
+      );
+
+    state.cameraRig.appendChild(
+      state.estate
+    );
+
+    viewport.appendChild(
+      state.cameraRig
+    );
+
+    return viewport;
+  }
+
+  function buildArrivalSheet() {
+    var sheet =
+      createElement(
+        "section",
+        "hcp-arrival-sheet",
+        {
+          "data-house-arrival-sheet": "",
+          "data-visible": "false",
+          "aria-hidden": "true",
+          "aria-live": "polite"
+        }
+      );
+
+    state.arrivalContent =
+      createElement(
+        "div",
+        "hcp-arrival-content"
+      );
+
+    sheet.appendChild(
+      state.arrivalContent
+    );
+
+    return sheet;
+  }
+
+  function buildFooter() {
+    var footer =
+      createElement(
+        "footer",
+        "hcp-footer",
+        {
+          "data-house-control-pad-footer": ""
+        }
+      );
+
+    state.status =
+      createTextElement(
+        "div",
+        "hcp-status",
+        "Estate ready.",
+        {
+          "data-house-status": "",
+          "aria-live": "polite"
+        }
+      );
+
+    var footerActions =
+      createElement(
+        "div",
+        "hcp-footer-actions"
+      );
+
+    var estateButton =
+      createButton(
+        "hcp-footer-button",
+        "Estate View",
+        {
+          "data-house-return-estate": ""
+        }
+      );
+
+    footerActions.appendChild(
+      estateButton
+    );
+
+    footer.appendChild(
+      state.status
+    );
+
+    footer.appendChild(
+      footerActions
+    );
+
+    return footer;
+  }
+
+  function buildEstate() {
+    buildHeartShells();
+    buildFacets();
+    buildCorridors();
+    buildRooms();
+    buildResidents();
+
+    state.estate.appendChild(
+      state.heartRearShell
+    );
+
+    state.estate.appendChild(
+      state.heartShell
+    );
+
+    state.estate.appendChild(
+      state.facetLayer
+    );
+
+    state.estate.appendChild(
+      state.corridorLayer
+    );
+
+    state.estate.appendChild(
+      state.roomLayer
+    );
+
+    state.estate.appendChild(
+      state.avatarLayer
+    );
+  }
+
+  function buildHeartShells() {
+    var world =
+      state.data.heartWorld;
+
+    var viewBox =
+      "0 0 " +
+      world.width +
+      " " +
+      world.height;
+
+    state.heartRearShell =
+      createSvgElement(
+        "svg",
+        {
+          class:
+            "hcp-heart-rear-shell",
+          viewBox: viewBox,
+          "aria-hidden": "true"
+        }
+      );
+
+    var rearPath =
+      createSvgElement(
+        "path",
+        {
+          d:
+            world.silhouette.path,
+          fill:
+            "currentColor"
+        }
+      );
+
+    state.heartRearShell.appendChild(
+      rearPath
+    );
+
+    state.heartShell =
+      createSvgElement(
+        "svg",
+        {
+          class:
+            "hcp-heart-shell",
+          viewBox: viewBox,
+          "aria-hidden": "true"
+        }
+      );
+
+    var mainPath =
+      createSvgElement(
+        "path",
+        {
+          d:
+            world.silhouette.path,
+          fill:
+            "currentColor"
+        }
+      );
+
+    state.heartShell.appendChild(
+      mainPath
+    );
+  }
+
+  function buildFacets() {
+    var world =
+      state.data.heartWorld;
+
+    var viewBox =
+      "0 0 " +
+      world.width +
+      " " +
+      world.height;
+
+    Object.keys(
+      state.data.heartFacets
+    ).forEach(
+      function buildFacet(roomId) {
+        var room =
+          getRoom(roomId);
+
+        var facet =
+          state.data.heartFacets[
+            roomId
+          ];
+
+        if (!room || !facet) {
+          return;
+        }
+
+        var button =
+          createElement(
+            "button",
+            [
+              "hcp-heart-facet",
+              "hcp-heart-facet-" +
+                roomId
+            ].join(" "),
+            {
+              type: "button",
+              "data-house-heart-facet": "",
+              "data-house-room":
+                roomId,
+              "data-room-id":
+                roomId,
+              "data-facet-id":
+                facet.id,
+              "data-depth-band":
+                facet.depthBand ||
+                "middle",
+              "data-selected":
+                "false",
+              "data-current":
+                "false",
+              "aria-label":
+                "Select " +
+                room.label
+            }
+          );
+
+        button.style.position =
+          "absolute";
+
+        button.style.inset =
+          "0";
+
+        button.style.width =
+          "100%";
+
+        button.style.height =
+          "100%";
+
+        button.style.padding =
+          "0";
+
+        button.style.border =
+          "0";
+
+        button.style.background =
+          "transparent";
+
+        var svg =
+          createSvgElement(
+            "svg",
+            {
+              viewBox: viewBox,
+              "aria-hidden": "true"
+            }
+          );
+
+        svg.style.width =
+          "100%";
+
+        svg.style.height =
+          "100%";
+
+        var polygon =
+          createSvgElement(
+            "polygon",
+            {
+              class:
+                "hcp-heart-facet-shape",
+              points:
+                serializeFacetPolygon(
+                  facet.polygon
+                ),
+              "vector-effect":
+                "non-scaling-stroke"
+            }
+          );
+
+        svg.appendChild(
+          polygon
+        );
+
+        button.appendChild(
+          svg
+        );
+
+        state.facetLayer.appendChild(
+          button
+        );
+
+        state.facetElements[
+          roomId
+        ] = button;
+      }
+    );
+  }
+
+  function serializeFacetPolygon(polygon) {
+    return polygon.map(
+      function serializePoint(point) {
+        return (
+          point[0] +
+          "," +
+          point[1]
+        );
+      }
+    ).join(" ");
+  }
+
+  function buildCorridors() {
+    var corridors =
+      state.data.corridors;
+
+    var renderedConnections =
+      Object.create(null);
+
+    Object.keys(corridors).forEach(
+      function buildCorridorNode(corridorId) {
+        var corridor =
+          corridors[corridorId];
+
+        var node =
+          createElement(
+            "span",
+            "hcp-corridor-node",
+            {
+              "data-house-corridor-node": "",
+              "data-corridor-id":
+                corridorId,
+              "aria-hidden":
+                "true"
+            }
+          );
+
+        node.style.left =
+          px(corridor.x);
+
+        node.style.top =
+          px(corridor.y);
+
+        node.style.transform =
+          "translate3d(-50%, -50%, " +
+          corridor.z +
+          "px)";
+
+        state.corridorLayer.appendChild(
+          node
+        );
+
+        state.corridorElements[
+          corridorId
+        ] = node;
+      }
+    );
+
+    Object.keys(corridors).forEach(
+      function buildCorridorConnections(
+        corridorId
+      ) {
+        var corridor =
+          corridors[corridorId];
+
+        corridor.connections.forEach(
+          function buildConnection(
+            connection
+          ) {
+            var start = {
+              x: corridor.x,
+              y: corridor.y,
+              z: corridor.z
+            };
+
+            var end =
+              resolveConnectionPoint(
+                connection
+              );
+
+            if (!end) {
+              return;
+            }
+
+            var connectionKey =
+              normalizeConnectionKey(
+                corridorId,
+                connection
+              );
+
+            if (
+              renderedConnections[
+                connectionKey
+              ]
+            ) {
+              return;
+            }
+
+            renderedConnections[
+              connectionKey
+            ] = true;
+
+            var segment =
+              createLineSegment(
+                start,
+                end
+              );
+
+            segment.setAttribute(
+              "data-corridor-connection",
+              connectionKey
+            );
+
+            state.corridorLayer.appendChild(
+              segment
+            );
+          }
+        );
+      }
+    );
+  }
+
+  function resolveConnectionPoint(connection) {
+    if (
+      connection.indexOf("room:") === 0
+    ) {
+      var roomId =
+        connection.slice(5);
+
+      var room =
+        getRoom(roomId);
+
+      if (!room) {
+        return null;
+      }
+
+      return {
+        x:
+          room.heart3d.center.x,
+        y:
+          room.heart3d.center.y,
+        z:
+          room.heart3d.center.z
+      };
     }
 
-    var corridor = CORRIDORS[nodeId];
+    var corridor =
+      state.data.corridors[
+        connection
+      ];
 
     if (!corridor) {
       return null;
@@ -803,3787 +1194,2475 @@
 
     return {
       x: corridor.x,
-      y: corridor.y
+      y: corridor.y,
+      z: corridor.z
     };
   }
 
-  function graphPathToVisualPoints(path) {
-    return path
-      .map(function mapPathNode(nodeId) {
-        var point = graphNodePoint(nodeId);
-
-        if (!point) {
-          return null;
-        }
-
-        return {
-          id: nodeId,
-          roomId:
-            nodeId.indexOf("room:") === 0
-              ? nodeId.slice(5)
-              : null,
-          point: point
-        };
-      })
-      .filter(Boolean);
-  }
-
-  function setCurrentPageRoom(roomId) {
-    var room = getRoom(roomId);
-
-    STATE.currentPageRoom = room.id;
-
-    if (STATE.root) {
-      STATE.root.setAttribute(
-        "data-house-room",
-        room.id
-      );
-    }
-
-    if (!STATE.panel) {
-      return;
-    }
-
-    qa(
-      "[data-house-room-node]",
-      STATE.panel
-    ).forEach(function clearCurrentRoom(node) {
-      node.setAttribute(
-        "data-current",
-        "false"
-      );
-    });
-
-    markRoomState(
-      room.id,
-      "data-current",
-      true
-    );
-  }
-
-  function clearRoomInteractionStates() {
-    if (!STATE.panel) {
-      return;
-    }
-
-    qa(
-      "[data-house-room-node]",
-      STATE.panel
-    ).forEach(function clearRoomState(node) {
-      node.setAttribute(
-        "data-selected",
-        "false"
-      );
-
-      node.setAttribute(
-        "data-destination",
-        "false"
-      );
-
-      node.setAttribute(
-        "data-arrived",
-        "false"
-      );
-
-      node.setAttribute(
-        "data-focused",
-        "false"
-      );
-    });
-
-    qa(
-      "[data-house-avatar]",
-      STATE.panel
-    ).forEach(function clearAvatarState(node) {
-      node.setAttribute(
-        "data-selected",
-        "false"
-      );
-
-      node.setAttribute(
-        "data-arrived",
-        "false"
-      );
-
-      node.setAttribute(
-        "data-focused",
-        "false"
-      );
-    });
-  }
-
-  function markRoomState(
-    roomId,
-    attribute,
-    value
-  ) {
-    if (!STATE.panel) {
-      return;
-    }
-
-    var roomNode = q(
-      '[data-house-room-node="' +
-        roomId +
-        '"]',
-      STATE.panel
-    );
-
-    if (roomNode) {
-      roomNode.setAttribute(
-        attribute,
-        value ? "true" : "false"
-      );
-    }
-  }
-
-  function markAgentState(
-    agentId,
-    attribute,
-    value
-  ) {
-    if (!STATE.panel) {
-      return;
-    }
-
-    var avatarNode = q(
-      '[data-house-avatar="' +
-        agentId +
-        '"]',
-      STATE.panel
-    );
-
-    if (avatarNode) {
-      avatarNode.setAttribute(
-        attribute,
-        value ? "true" : "false"
-      );
-    }
-  }
-
-  function setAvatarPoint(
-    agentId,
-    point,
-    roomId
+  function normalizeConnectionKey(
+    corridorId,
+    connection
   ) {
     if (
-      !STATE.panel ||
-      !point
+      connection.indexOf("room:") === 0
     ) {
-      return;
-    }
-
-    var avatar = q(
-      '[data-house-avatar="' +
-        agentId +
-        '"]',
-      STATE.panel
-    );
-
-    if (!avatar) {
-      return;
-    }
-
-    avatar.style.left =
-      point.x + "%";
-
-    avatar.style.top =
-      point.y + "%";
-
-    if (roomId) {
-      avatar.setAttribute(
-        "data-current-room",
-        roomId
-      );
-    }
-  }
-
-  function setAvatarRoom(
-    agentId,
-    roomId
-  ) {
-    setAvatarPoint(
-      agentId,
-      getRoomPortraitPoint(roomId),
-      roomId
-    );
-  }
-
-  function restoreAgentPositions() {
-    Object.keys(AGENTS).forEach(
-      function restoreAgent(agentId) {
-        setAvatarRoom(
-          agentId,
-          getAgentLocation(agentId)
-        );
-      }
-    );
-  }
-
-  function setViewMode(viewMode) {
-    STATE.viewMode =
-      viewMode === VIEW_MODE.ROOM
-        ? VIEW_MODE.ROOM
-        : VIEW_MODE.ESTATE;
-
-    STATE.zoomLevel =
-      STATE.viewMode === VIEW_MODE.ROOM
-        ? 2
-        : 1;
-
-    if (STATE.panel) {
-      STATE.panel.setAttribute(
-        "data-house-view-mode",
-        STATE.viewMode
-      );
-
-      STATE.panel.setAttribute(
-        "data-house-zoom-level",
-        String(STATE.zoomLevel)
+      return (
+        corridorId +
+        "::" +
+        connection
       );
     }
 
-    if (STATE.returnButton) {
-      STATE.returnButton.hidden =
-        STATE.viewMode !==
-        VIEW_MODE.ROOM;
-    }
-
-    notifyAvatarLife(
-      "handleViewModeChange",
-      {
-        viewMode: STATE.viewMode,
-        zoomLevel: STATE.zoomLevel,
-        focusedRoom:
-          STATE.focusedRoom
-      }
-    );
+    return [
+      corridorId,
+      connection
+    ].sort().join("::");
   }
 
-  function getViewMode() {
-    return STATE.viewMode;
-  }
-
-  function getOverviewTransform() {
-    if (
-      !STATE.estateViewport ||
-      !STATE.estateCanvas
-    ) {
-      return {
-        scale: 1,
-        x: 0,
-        y: 0
-      };
-    }
-
-    var viewportWidth =
-      STATE.estateViewport.clientWidth;
-
-    var viewportHeight =
-      STATE.estateViewport.clientHeight;
-
-    var canvasWidth =
-      STATE.estateCanvas.offsetWidth;
-
-    var canvasHeight =
-      STATE.estateCanvas.offsetHeight;
-
-    if (
-      !viewportWidth ||
-      !viewportHeight ||
-      !canvasWidth ||
-      !canvasHeight
-    ) {
-      return {
-        scale: 1,
-        x: 0,
-        y: 0
-      };
-    }
-
-    var scale = Math.min(
-      viewportWidth / canvasWidth,
-      viewportHeight / canvasHeight
-    );
-
-    scale = clamp(
-      scale,
-      0.26,
-      1
-    );
-
-    return {
-      scale: scale,
-      x:
-        (viewportWidth -
-          canvasWidth * scale) /
-        2,
-      y:
-        (viewportHeight -
-          canvasHeight * scale) /
-        2
-    };
-  }
-
-  function getRoomTransform(roomId) {
-    var room = getRoom(roomId);
-    var camera =
-      room.cameraFocus || {};
-
-    var requestedScale =
-      Number(camera.scale) || 1.7;
-
-    if (
-      !STATE.estateViewport ||
-      !STATE.estateCanvas
-    ) {
-      return {
-        scale: requestedScale,
-        x: 0,
-        y: 0
-      };
-    }
-
-    var viewportWidth =
-      STATE.estateViewport.clientWidth;
-
-    var viewportHeight =
-      STATE.estateViewport.clientHeight;
-
-    var canvasWidth =
-      STATE.estateCanvas.offsetWidth;
-
-    var canvasHeight =
-      STATE.estateCanvas.offsetHeight;
-
-    var roomCenter =
-      getRoomCenter(roomId);
-
-    var roomCenterX =
-      canvasWidth *
-      (roomCenter.x / 100);
-
-    var roomCenterY =
-      canvasHeight *
-      (roomCenter.y / 100);
-
-    var scale = requestedScale;
-
-    var x =
-      viewportWidth / 2 -
-      roomCenterX * scale +
-      Number(camera.offsetX || 0);
-
-    var y =
-      viewportHeight / 2 -
-      roomCenterY * scale +
-      Number(camera.offsetY || 0);
-
-    return {
-      scale: scale,
-      x: x,
-      y: y
-    };
-  }
-
-  function applyCameraTransform(
-    transform,
-    immediate
-  ) {
-    if (!STATE.estateStage) {
-      return;
-    }
-
-    STATE.estateStage.style.transition =
-      immediate ||
-      STATE.reducedMotion
-        ? "none"
-        : "";
-
-    STATE.estateStage.style.transform =
-      "translate3d(" +
-      transform.x +
-      "px," +
-      transform.y +
-      "px,0) scale(" +
-      transform.scale +
-      ")";
-  }
-
-  function focusRoom(
-    roomId,
-    options
-  ) {
-    options = options || {};
-
-    if (!roomExists(roomId)) {
-      return false;
-    }
-
-    var transform =
-      options.overview
-        ? getOverviewTransform()
-        : getRoomTransform(roomId);
-
-    applyCameraTransform(
-      transform,
-      Boolean(options.immediate)
-    );
-
-    return true;
-  }
-
-  function revealRoomInformation(
-    roomId,
-    visible
-  ) {
-    if (!STATE.panel) {
-      return;
-    }
-
-    var roomNode = q(
-      '[data-house-room-node="' +
-        roomId +
-        '"]',
-      STATE.panel
-    );
-
-    if (!roomNode) {
-      return;
-    }
-
-    roomNode.setAttribute(
-      "data-information-visible",
-      visible ? "true" : "false"
-    );
-  }
-
-  function hideAllRoomInformation() {
-    if (!STATE.panel) {
-      return;
-    }
-
-    qa(
-      "[data-house-room-node]",
-      STATE.panel
-    ).forEach(function hideRoomInformation(node) {
-      node.setAttribute(
-        "data-information-visible",
-        "false"
-      );
-    });
-  }
-
-  function updateAvatarScaleModes() {
-    if (!STATE.panel) {
-      return;
-    }
-
-    Object.keys(AGENTS).forEach(
-      function updateAvatarScale(agentId) {
-        var avatar = q(
-          '[data-house-avatar="' +
-            agentId +
-            '"]',
-          STATE.panel
-        );
-
-        if (!avatar) {
-          return;
-        }
-
-        var agent = getAgent(agentId);
-        var currentRoom =
-          getAgentLocation(agentId);
-
-        var roomScaleMode =
-          STATE.viewMode === VIEW_MODE.ROOM &&
-          currentRoom ===
-            STATE.focusedRoom;
-
-        avatar.setAttribute(
-          "data-avatar-scale-mode",
-          roomScaleMode
-            ? "room"
-            : "overview"
-        );
-
-        avatar.style.setProperty(
-          "--hcp-agent-overview-scale",
-          String(agent.scale.overview)
-        );
-
-        avatar.style.setProperty(
-          "--hcp-agent-room-scale",
-          String(agent.scale.room)
-        );
-
-        avatar.style.setProperty(
-          "--hcp-agent-conversation-scale",
-          String(
-            agent.scale.conversation
-          )
-        );
-      }
-    );
-  }
-
-  function roomIsRelated(
-    roomId,
-    comparisonRoomId
-  ) {
-    var room = getRoom(roomId);
-    var comparisonRoom =
-      getRoom(comparisonRoomId);
-
-    return (
-      room.relatedRooms.indexOf(
-        comparisonRoomId
-      ) !== -1 ||
-      comparisonRoom.relatedRooms.indexOf(
-        roomId
-      ) !== -1
-    );
-  }
-
-  function updateAvatarVisibility() {
-    if (!STATE.panel) {
-      return;
-    }
-
-    Object.keys(AGENTS).forEach(
-      function updateAvatar(agentId) {
-        var avatar = q(
-          '[data-house-avatar="' +
-            agentId +
-            '"]',
-          STATE.panel
-        );
-
-        if (!avatar) {
-          return;
-        }
-
-        if (
-          STATE.viewMode ===
-            VIEW_MODE.ESTATE ||
-          !STATE.focusedRoom
-        ) {
-          avatar.setAttribute(
-            "data-camera-visible",
-            "true"
-          );
-
-          return;
-        }
-
-        var currentRoomId =
-          getAgentLocation(agentId);
-
-        var visible =
-          currentRoomId ===
-            STATE.focusedRoom ||
-          roomIsRelated(
-            currentRoomId,
-            STATE.focusedRoom
-          );
-
-        avatar.setAttribute(
-          "data-camera-visible",
-          visible ? "true" : "false"
-        );
-      }
-    );
-  }
-
-  function enterRoomView(
-    roomId,
-    options
-  ) {
-    options = options || {};
-
-    if (!STATE.initialized) {
-      render();
-    }
-
-    var room = getRoom(roomId);
-    var authorityId =
-      resolveAuthority(room);
-
-    cancelCameraTransition();
-    hideArrivalSheet();
-    hideAllRoomInformation();
-
-    STATE.previousFocusedRoom =
-      STATE.focusedRoom;
-
-    STATE.focusedRoom = room.id;
-    STATE.selectedRoom = room.id;
-    STATE.selectedAgent =
-      authorityId;
-
-    STATE.cameraTransitioning = true;
-
-    setViewMode(VIEW_MODE.ROOM);
-
-    clearRoomInteractionStates();
-    setCurrentPageRoom(
-      STATE.currentPageRoom
-    );
-
-    markRoomState(
-      room.id,
-      "data-selected",
-      true
-    );
-
-    markRoomState(
-      room.id,
-      "data-focused",
-      true
-    );
-
-    markAgentState(
-      authorityId,
-      "data-focused",
-      true
-    );
-
-    updateAvatarVisibility();
-    updateAvatarScaleModes();
-
-    notifyAvatarLife(
-      "handleRoomSelected",
-      {
-        roomId: room.id,
-        agentId: authorityId,
-        room: room
-      }
-    );
-
-    var token = STATE.cameraToken;
-
-    focusRoom(room.id, {
-      immediate: Boolean(
-        options.immediate
-      )
-    });
-
-    setStatus(
-      "Entering " +
-        room.label +
-        ". " +
-        room.summary
-    );
-
-    emit(
-      "house-control-pad:camera-start",
-      {
-        viewMode: VIEW_MODE.ROOM,
-        room: room.id,
-        agent: authorityId,
-        camera: clone(
-          room.cameraFocus
-        )
-      }
-    );
-
-    var revealDelay =
-      STATE.reducedMotion ||
-      options.immediate
-        ? 0
-        : TIMING.CAMERA_MS;
-
-    var revealTimer =
-      global.setTimeout(
-        function settleRoomCamera() {
-          if (
-            token !==
-            STATE.cameraToken
-          ) {
-            return;
-          }
-
-          STATE.cameraTransitioning =
-            false;
-
-          revealRoomInformation(
-            room.id,
-            true
-          );
-
-          var roomNode = q(
-            '[data-house-room-node="' +
-              room.id +
-              '"]',
-            STATE.panel
-          );
-
-          safeFocus(roomNode);
-
-          notifyAvatarLife(
-            "handleCameraSettled",
-            {
-              viewMode:
-                VIEW_MODE.ROOM,
-              roomId: room.id,
-              agentId:
-                authorityId
-            }
-          );
-
-          emit(
-            "house-control-pad:room-view",
-            {
-              room: room.id,
-              agent: authorityId,
-              camera: clone(
-                room.cameraFocus
-              ),
-              architecture:
-                room.architecturalShape
-            }
-          );
-
-          if (
-            options.summon !== false
-          ) {
-            var summonTimer =
-              global.setTimeout(
-                function summonAfterCamera() {
-                  if (
-                    token !==
-                    STATE.cameraToken
-                  ) {
-                    return;
-                  }
-
-                  travelToRoom(
-                    room.id,
-                    {
-                      source:
-                        "room-view",
-                      preserveCamera:
-                        true,
-                      skipRoomView:
-                        true
-                    }
-                  );
-                },
-                STATE.reducedMotion
-                  ? 0
-                  : TIMING.CAMERA_SETTLE_MS
-              );
-
-            STATE.cameraTimers.push(
-              summonTimer
-            );
-          }
-        },
-        revealDelay
-      );
-
-    STATE.cameraTimers.push(
-      revealTimer
-    );
-
-    return true;
-  }
-
-  function returnToEstate(options) {
-    options = options || {};
-
-    if (!STATE.initialized) {
-      return false;
-    }
-
-    cancelCameraTransition();
-    hideArrivalSheet();
-    hideAllRoomInformation();
-
-    var previousRoom =
-      STATE.focusedRoom;
-
-    STATE.previousFocusedRoom =
-      previousRoom;
-
-    STATE.focusedRoom = null;
-    STATE.cameraTransitioning = true;
-
-    setViewMode(VIEW_MODE.ESTATE);
-
-    updateAvatarVisibility();
-    updateAvatarScaleModes();
-
-    notifyAvatarLife(
-      "handleReturnToEstate",
-      {
-        previousRoom:
-          previousRoom
-      }
-    );
-
-    var token = STATE.cameraToken;
-
-    focusRoom(DEFAULT_ROOM_ID, {
-      overview: true,
-      immediate: Boolean(
-        options.immediate
-      )
-    });
-
-    setStatus(
-      previousRoom
-        ? "Returned to the full estate from " +
-            getRoom(previousRoom).label +
-            "."
-        : "Full estate overview."
-    );
-
-    emit(
-      "house-control-pad:camera-start",
-      {
-        viewMode:
-          VIEW_MODE.ESTATE,
-        previousRoom:
-          previousRoom
-      }
-    );
-
-    var settleDelay =
-      STATE.reducedMotion ||
-      options.immediate
-        ? 0
-        : TIMING.CAMERA_MS;
-
-    var settleTimer =
-      global.setTimeout(
-        function settleEstateCamera() {
-          if (
-            token !==
-            STATE.cameraToken
-          ) {
-            return;
-          }
-
-          STATE.cameraTransitioning =
-            false;
-
-          if (previousRoom) {
-            markRoomState(
-              previousRoom,
-              "data-selected",
-              true
-            );
-
-            var previousRoomNode = q(
-              '[data-house-room-node="' +
-                previousRoom +
-                '"]',
-              STATE.panel
-            );
-
-            safeFocus(
-              previousRoomNode
-            );
-          }
-
-          notifyAvatarLife(
-            "handleCameraSettled",
-            {
-              viewMode:
-                VIEW_MODE.ESTATE,
-              previousRoom:
-                previousRoom
-            }
-          );
-
-          emit(
-            "house-control-pad:estate-view",
-            {
-              previousRoom:
-                previousRoom
-            }
-          );
-        },
-        settleDelay
-      );
-
-    STATE.cameraTimers.push(
-      settleTimer
-    );
-
-    return true;
-  }
-
-  function getEstateCanvasPixelPoint(
-    percentagePoint
-  ) {
-    if (!STATE.estateCanvas) {
-      return {
-        x: 0,
-        y: 0
-      };
-    }
-
-    return {
-      x:
-        STATE.estateCanvas.offsetWidth *
-        (percentagePoint.x / 100),
-
-      y:
-        STATE.estateCanvas.offsetHeight *
-        (percentagePoint.y / 100)
-    };
-  }
-
-  function drawTravelSegment(
-    fromPoint,
-    toPoint,
-    index
-  ) {
-    if (!STATE.routeLayer) {
-      return null;
-    }
-
-    var fromPixels =
-      getEstateCanvasPixelPoint(
-        fromPoint
-      );
-
-    var toPixels =
-      getEstateCanvasPixelPoint(
-        toPoint
-      );
-
+  function createLineSegment(start, end) {
     var deltaX =
-      toPixels.x - fromPixels.x;
+      end.x - start.x;
 
     var deltaY =
-      toPixels.y - fromPixels.y;
+      end.y - start.y;
 
-    var length = Math.sqrt(
-      deltaX * deltaX +
-      deltaY * deltaY
-    );
+    var length =
+      Math.sqrt(
+        deltaX * deltaX +
+        deltaY * deltaY
+      );
 
     var angle =
       Math.atan2(
         deltaY,
         deltaX
-      ) *
-      180 /
-      Math.PI;
+      ) * 180 / Math.PI;
 
-    var segment = create(
-      "span",
-      "hcp-travel-segment",
-      {
-        "data-house-travel-segment":
-          "true",
-        "aria-hidden": "true"
-      }
-    );
+    var averageZ =
+      (
+        Number(start.z || 0) +
+        Number(end.z || 0)
+      ) / 2;
+
+    var segment =
+      createElement(
+        "span",
+        "hcp-heart-corridor",
+        {
+          "data-house-corridor-segment": "",
+          "aria-hidden": "true"
+        }
+      );
 
     segment.style.left =
-      fromPixels.x + "px";
+      px(start.x);
 
     segment.style.top =
-      fromPixels.y + "px";
+      px(start.y);
 
     segment.style.width =
-      length + "px";
+      px(length);
 
     segment.style.transform =
-      "rotate(" +
+      "translateZ(" +
+      averageZ +
+      "px) rotate(" +
       angle +
       "deg)";
-
-    segment.style.animationDelay =
-      index * 55 + "ms";
-
-    STATE.routeLayer.appendChild(
-      segment
-    );
 
     return segment;
   }
 
-  function drawTravelPath(points) {
-    clearTravelSegments();
+  function buildRooms() {
+    Object.keys(
+      state.data.rooms
+    ).forEach(
+      function buildRoom(roomId) {
+        var room =
+          state.data.rooms[
+            roomId
+          ];
 
-    for (
-      var index = 0;
-      index < points.length - 1;
-      index += 1
-    ) {
-      drawTravelSegment(
-        points[index].point,
-        points[index + 1].point,
-        index
-      );
-    }
-  }
+        var roomElement =
+          createElement(
+            "article",
+            [
+              "hcp-room-node",
+              "hcp-room-" +
+                room.type,
+              "hcp-room-" +
+                roomId
+            ].join(" "),
+            {
+              "data-house-room-node": "",
+              "data-house-room":
+                roomId,
+              "data-room-id":
+                roomId,
+              "data-room-type":
+                room.type,
+              "data-room-rank":
+                room.rank,
+              "data-authority":
+                room.authority,
+              "data-selected":
+                "false",
+              "data-current":
+                "false",
+              "data-focused":
+                "false",
+              "data-information-visible":
+                "false",
+              "data-summary-active":
+                "false",
+              tabindex: "0",
+              role: "button",
+              "aria-label":
+                "Enter " +
+                room.label
+            }
+          );
 
-  function hideArrivalSheet() {
-    if (!STATE.arrivalSheet) {
-      return;
-    }
+        applyRoomGeometry(
+          roomElement,
+          room
+        );
 
-    STATE.arrivalSheet.setAttribute(
-      "data-visible",
-      "false"
-    );
-  }
+        var floor =
+          createElement(
+            "div",
+            "hcp-room-floor",
+            {
+              "aria-hidden":
+                "true"
+            }
+          );
 
-  function showArrivalSheet(
-    room,
-    agent,
-    sameRoom
-  ) {
-    if (!STATE.arrivalSheet) {
-      return;
-    }
+        var walls =
+          buildRoomWalls();
 
-    var title = q(
-      "[data-hcp-arrival-title]",
-      STATE.arrivalSheet
-    );
+        var architecture =
+          buildRoomArchitecture(
+            room
+          );
 
-    var body = q(
-      "[data-hcp-arrival-body]",
-      STATE.arrivalSheet
-    );
+        var interior =
+          createElement(
+            "div",
+            "hcp-room-interior",
+            {
+              "data-house-room-interior": ""
+            }
+          );
 
-    var roomButton = q(
-      "[data-hcp-arrival-room]",
-      STATE.arrivalSheet
-    );
+        var safeFrame =
+          createElement(
+            "div",
+            "hcp-avatar-safe-frame",
+            {
+              "data-house-avatar-safe-frame": "",
+              "data-house-room":
+                roomId
+            }
+          );
 
-    var talkButton = q(
-      "[data-hcp-arrival-talk]",
-      STATE.arrivalSheet
-    );
+        var avatarMount =
+          createElement(
+            "div",
+            "hcp-avatar-mount",
+            {
+              "data-house-avatar-mount": "",
+              "data-house-room":
+                roomId,
+              "data-authority":
+                room.authority
+            }
+          );
 
-    if (title) {
-      title.textContent =
-        sameRoom
-          ? agent.label +
-            " is already in " +
-            room.label +
-            "."
-          : agent.label +
-            " has arrived at " +
-            room.label +
-            ".";
-    }
+        safeFrame.appendChild(
+          avatarMount
+        );
 
-    if (body) {
-      body.textContent =
-        agent.authorityLine;
-    }
+        interior.appendChild(
+          safeFrame
+        );
 
-    if (roomButton) {
-      roomButton.textContent =
-        room.visitorCan &&
-        room.visitorCan.length
-          ? room.visitorCan[0]
-          : "Open " +
-            room.shortLabel;
-    }
+        var labelZone =
+          buildRoomLabelZone(
+            room
+          );
 
-    if (talkButton) {
-      talkButton.textContent =
-        agent.actionLabel;
-    }
+        var summaryZone =
+          buildRoomSummaryZone(
+            room
+          );
 
-    STATE.arrivalSheet.setAttribute(
-      "data-visible",
-      "true"
-    );
-  }
+        var detailZone =
+          buildRoomDetailZone(
+            room
+          );
 
-  function completeArrival(
-    room,
-    agent,
-    sameRoom,
-    token
-  ) {
-    if (
-      token !== STATE.travelToken
-    ) {
-      return;
-    }
+        var actionZone =
+          buildRoomActionZone(
+            room
+          );
 
-    STATE.traveling = false;
-    STATE.activePath = [];
+        roomElement.appendChild(
+          floor
+        );
 
-    clearTimerList(
-      STATE.travelTimers
-    );
+        walls.forEach(
+          function appendWall(wall) {
+            roomElement.appendChild(
+              wall
+            );
+          }
+        );
 
-    clearTravelSegments();
+        roomElement.appendChild(
+          architecture
+        );
 
-    setAgentLocation(
-      agent.id,
-      room.id
-    );
+        roomElement.appendChild(
+          interior
+        );
 
-    setAvatarRoom(
-      agent.id,
-      room.id
-    );
+        roomElement.appendChild(
+          labelZone
+        );
 
-    markAgentState(
-      agent.id,
-      "data-traveling",
-      false
-    );
+        roomElement.appendChild(
+          summaryZone
+        );
 
-    markAgentState(
-      agent.id,
-      "data-arrived",
-      true
-    );
+        roomElement.appendChild(
+          detailZone
+        );
 
-    markRoomState(
-      room.id,
-      "data-destination",
-      false
-    );
+        roomElement.appendChild(
+          actionZone
+        );
 
-    markRoomState(
-      room.id,
-      "data-arrived",
-      true
-    );
+        state.roomLayer.appendChild(
+          roomElement
+        );
 
-    updateAvatarVisibility();
-    updateAvatarScaleModes();
+        state.roomElements[
+          roomId
+        ] = roomElement;
 
-    setStatus(
-      sameRoom
-        ? agent.label +
-            " is already in " +
-            room.label +
-            "."
-        : agent.label +
-            " has arrived at " +
-            room.label +
-            "."
-    );
-
-    showArrivalSheet(
-      room,
-      agent,
-      sameRoom
-    );
-
-    notifyAvatarLife(
-      "handleArrival",
-      {
-        roomId: room.id,
-        agentId: agent.id,
-        sameRoom:
-          Boolean(sameRoom),
-        arrivalGesture:
-          room.roomBehavior
-            .arrivalGesture ||
-          agent.arrivalGesture
-      }
-    );
-
-    emit(
-      "house-control-pad:arrival",
-      {
-        room: room.id,
-        agent: agent.id,
-        sameRoom:
-          Boolean(sameRoom),
-        roomRoute: room.route,
-        agentRoute: agent.route
+        state.avatarMounts[
+          roomId
+        ] = avatarMount;
       }
     );
   }
 
-  function animateAgentAlongPath(
-    agent,
-    room,
-    visualPoints,
-    token
+  function applyRoomGeometry(
+    element,
+    room
   ) {
-    if (!visualPoints.length) {
-      completeArrival(
-        room,
-        agent,
-        false,
-        token
-      );
+    var heart =
+      room.heart3d;
 
-      return;
-    }
+    setStyleVariables(
+      element,
+      {
+        "--room-center-x":
+          px(heart.center.x),
 
-    STATE.activePath =
-      visualPoints.map(
-        function mapVisualPoint(item) {
-          return item.id;
+        "--room-center-y":
+          px(heart.center.y),
+
+        "--room-z":
+          px(heart.center.z),
+
+        "--room-width":
+          px(heart.size.width),
+
+        "--room-height":
+          px(heart.size.height),
+
+        "--room-depth":
+          px(heart.size.depth),
+
+        "--room-floor-z":
+          px(heart.floorZ),
+
+        "--room-wall-height":
+          px(
+            Math.max(
+              24,
+              heart.wallZ -
+              heart.floorZ
+            )
+          ),
+
+        "--avatar-anchor-z":
+          px(
+            heart.avatarAnchor.z
+          )
+      }
+    );
+  }
+
+  function buildRoomWalls() {
+    return [
+      createElement(
+        "div",
+        "hcp-room-wall hcp-room-wall-north",
+        {
+          "aria-hidden": "true"
+        }
+      ),
+      createElement(
+        "div",
+        "hcp-room-wall hcp-room-wall-east",
+        {
+          "aria-hidden": "true"
+        }
+      ),
+      createElement(
+        "div",
+        "hcp-room-wall hcp-room-wall-south",
+        {
+          "aria-hidden": "true"
+        }
+      ),
+      createElement(
+        "div",
+        "hcp-room-wall hcp-room-wall-west",
+        {
+          "aria-hidden": "true"
+        }
+      )
+    ];
+  }
+
+  function buildRoomArchitecture(room) {
+    var architecture =
+      createElement(
+        "div",
+        "hcp-room-architecture",
+        {
+          "aria-hidden": "true"
         }
       );
 
-    markAgentState(
-      agent.id,
-      "data-traveling",
-      true
-    );
+    room.architecturalFeatureZones.forEach(
+      function buildFeature(feature) {
+        var featureElement =
+          createElement(
+            "span",
+            [
+              "hcp-room-feature",
+              "hcp-room-feature-" +
+                feature.type
+            ].join(" ")
+          );
 
-    notifyAvatarLife(
-      "handleTravelStart",
-      {
-        agentId: agent.id,
-        roomId: room.id,
-        expression:
-          agent.travelExpression,
-        path:
-          STATE.activePath.slice()
+        featureElement.style.left =
+          feature.x + "%";
+
+        featureElement.style.top =
+          feature.y + "%";
+
+        featureElement.style.width =
+          feature.width + "%";
+
+        featureElement.style.height =
+          feature.height + "%";
+
+        architecture.appendChild(
+          featureElement
+        );
       }
     );
 
-    drawTravelPath(
-      visualPoints
-    );
-
-    for (
-      var index = 1;
-      index < visualPoints.length;
-      index += 1
-    ) {
-      (function schedulePoint(
-        pointItem,
-        pointIndex
-      ) {
-        var timer =
-          global.setTimeout(
-            function moveAgent() {
-              if (
-                token !==
-                STATE.travelToken
-              ) {
-                return;
-              }
-
-              setAvatarPoint(
-                agent.id,
-                pointItem.point,
-                pointItem.roomId
-              );
-
-              notifyAvatarLife(
-                "handleTravelStep",
-                {
-                  agentId:
-                    agent.id,
-                  roomId:
-                    pointItem.roomId,
-                  nodeId:
-                    pointItem.id,
-                  index:
-                    pointIndex
-                }
-              );
-            },
-            STATE.reducedMotion
-              ? 0
-              : pointIndex *
-                  TIMING.TRAVEL_SEGMENT_MS
-          );
-
-        STATE.travelTimers.push(
-          timer
-        );
-      })(
-        visualPoints[index],
-        index
-      );
-    }
-
-    var completionDelay =
-      STATE.reducedMotion
-        ? 0
-        : Math.max(
-            1,
-            visualPoints.length - 1
-          ) *
-            TIMING.TRAVEL_SEGMENT_MS +
-          TIMING.TRAVEL_SETTLE_MS;
-
-    var completionTimer =
-      global.setTimeout(
-        function finishTravel() {
-          completeArrival(
-            room,
-            agent,
-            false,
-            token
-          );
-        },
-        completionDelay
-      );
-
-    STATE.travelTimers.push(
-      completionTimer
-    );
+    return architecture;
   }
 
-  function travelToRoom(
-    roomId,
-    options
-  ) {
-    options = options || {};
-
-    if (!STATE.initialized) {
-      render();
-    }
-
-    if (!STATE.isOpen) {
-      openControlPad({
-        room: roomId
-      });
-    }
-
-    var room = getRoom(roomId);
-
-    if (
-      STATE.viewMode ===
-        VIEW_MODE.ESTATE &&
-      options.skipRoomView !== true
-    ) {
-      enterRoomView(room.id, {
-        summon: false
-      });
-
-      var cameraToken =
-        STATE.cameraToken;
-
-      var delayedTravel =
-        global.setTimeout(
-          function travelAfterRoomView() {
-            if (
-              cameraToken !==
-              STATE.cameraToken
-            ) {
-              return;
-            }
-
-            travelToRoom(
-              room.id,
-              {
-                source:
-                  options.source ||
-                  "estate-selection",
-                preserveCamera: true,
-                skipRoomView: true,
-                agent:
-                  options.agent
-              }
-            );
-          },
-          STATE.reducedMotion
-            ? 0
-            : TIMING.CAMERA_MS +
-                TIMING.CAMERA_SETTLE_MS
-        );
-
-      STATE.cameraTimers.push(
-        delayedTravel
+  function buildRoomLabelZone(room) {
+    var zone =
+      createElement(
+        "div",
+        "hcp-room-label-zone"
       );
 
-      return true;
-    }
+    applyZone(
+      zone,
+      room.labelZone
+    );
 
-    cancelTravel({
-      silent: true
-    });
+    var label =
+      createTextElement(
+        "strong",
+        "hcp-room-label",
+        room.shortLabel ||
+        room.label
+      );
 
-    hideArrivalSheet();
+    var category =
+      createTextElement(
+        "span",
+        "hcp-room-category",
+        room.categoryLabel
+      );
 
-    var authorityId =
-      options.agent &&
-      agentExists(options.agent)
-        ? options.agent
-        : resolveAuthority(room);
+    zone.appendChild(label);
+    zone.appendChild(category);
+
+    return zone;
+  }
+
+  function buildRoomSummaryZone(room) {
+    var zone =
+      createElement(
+        "div",
+        "hcp-room-summary-zone"
+      );
+
+    applyZone(
+      zone,
+      room.summaryZone
+    );
+
+    var summary =
+      createTextElement(
+        "p",
+        "hcp-room-summary",
+        room.summary
+      );
 
     var agent =
-      getAgent(authorityId);
-
-    var fromRoomId =
-      getAgentLocation(agent.id);
-
-    var token =
-      STATE.travelToken;
-
-    STATE.selectedRoom =
-      room.id;
-
-    STATE.selectedAgent =
-      agent.id;
-
-    clearRoomInteractionStates();
-    setCurrentPageRoom(
-      STATE.currentPageRoom
-    );
-
-    markRoomState(
-      room.id,
-      "data-selected",
-      true
-    );
-
-    markRoomState(
-      room.id,
-      "data-destination",
-      true
-    );
-
-    markRoomState(
-      room.id,
-      "data-focused",
-      true
-    );
-
-    markAgentState(
-      agent.id,
-      "data-selected",
-      true
-    );
-
-    markAgentState(
-      agent.id,
-      "data-focused",
-      true
-    );
-
-    revealRoomInformation(
-      room.id,
-      true
-    );
-
-    if (
-      fromRoomId === room.id
-    ) {
-      completeArrival(
-        room,
-        agent,
-        true,
-        token
+      getAgent(
+        room.authority
       );
 
-      emit(
-        "house-control-pad:same-room",
+    var guide =
+      createTextElement(
+        "span",
+        "hcp-room-guide",
+        agent
+          ? agent.label
+          : room.authority
+      );
+
+    zone.appendChild(summary);
+    zone.appendChild(guide);
+
+    return zone;
+  }
+
+  function buildRoomDetailZone(room) {
+    var zone =
+      createElement(
+        "div",
+        "hcp-room-detail-zone"
+      );
+
+    applyZone(
+      zone,
+      room.detailZone
+    );
+
+    var title =
+      createTextElement(
+        "h3",
+        "hcp-room-detail-title",
+        room.label
+      );
+
+    var copy =
+      createTextElement(
+        "p",
+        "hcp-room-detail-copy",
+        room.detail
+      );
+
+    var list =
+      createElement(
+        "ul",
+        "hcp-room-visitor-list"
+      );
+
+    room.visitorCan.forEach(
+      function appendVisitorItem(
+        item
+      ) {
+        list.appendChild(
+          createTextElement(
+            "li",
+            "",
+            item
+          )
+        );
+      }
+    );
+
+    zone.appendChild(title);
+    zone.appendChild(copy);
+    zone.appendChild(list);
+
+    return zone;
+  }
+
+  function buildRoomActionZone(room) {
+    var zone =
+      createElement(
+        "div",
+        "hcp-room-action-zone"
+      );
+
+    applyZone(
+      zone,
+      room.actionZone
+    );
+
+    var actions =
+      createElement(
+        "div",
+        "hcp-room-actions"
+      );
+
+    var routeAction =
+      createButton(
+        "hcp-room-action hcp-room-action-primary",
+        "Open " +
+        (
+          room.shortLabel ||
+          room.label
+        ),
         {
-          room: room.id,
-          agent: agent.id
+          "data-house-route-action": "",
+          "data-house-room":
+            room.id,
+          "data-route":
+            room.route
         }
       );
 
-      return true;
+    var agent =
+      getAgent(
+        room.authority
+      );
+
+    var guideAction =
+      createButton(
+        "hcp-room-action",
+        agent
+          ? agent.actionLabel
+          : "Ask Guide",
+        {
+          "data-house-guide-action": "",
+          "data-house-room":
+            room.id,
+          "data-agent-id":
+            room.authority
+        }
+      );
+
+    var estateAction =
+      createButton(
+        "hcp-room-action hcp-room-action-muted",
+        "Estate View",
+        {
+          "data-house-return-estate": ""
+        }
+      );
+
+    actions.appendChild(
+      routeAction
+    );
+
+    actions.appendChild(
+      guideAction
+    );
+
+    actions.appendChild(
+      estateAction
+    );
+
+    zone.appendChild(
+      actions
+    );
+
+    return zone;
+  }
+
+  function applyZone(element, zone) {
+    if (!zone) {
+      return;
     }
 
-    var graphPath =
-      findGraphPath(
-        fromRoomId,
-        room.id
-      );
+    element.style.left =
+      zone.x + "%";
 
-    if (!graphPath.length) {
-      setStatus(
-        "No declared corridor route connects " +
-          getRoom(fromRoomId).label +
-          " to " +
-          room.label +
-          "."
-      );
+    element.style.top =
+      zone.y + "%";
 
-      emit(
-        "house-control-pad:route-unavailable",
-        {
-          agent: agent.id,
-          from: fromRoomId,
-          to: room.id
+    element.style.width =
+      zone.width + "%";
+
+    element.style.height =
+      zone.height + "%";
+  }
+
+  function buildResidents() {
+    Object.keys(
+      state.data.agents
+    ).forEach(
+      function buildResident(agentId) {
+        var agent =
+          state.data.agents[
+            agentId
+          ];
+
+        var homeRoomId =
+          agent.homeRoom;
+
+        var mount =
+          state.avatarMounts[
+            homeRoomId
+          ];
+
+        if (!mount) {
+          return;
         }
+
+        var resident =
+          createElement(
+            "div",
+            [
+              "hcp-avatar",
+              "hcp-avatar-" +
+                agentId
+            ].join(" "),
+            {
+              "data-house-avatar": "",
+              "data-agent-id":
+                agentId,
+              "data-house-room":
+                homeRoomId,
+              "data-avatar-state":
+                "resting",
+              "data-avatar-focus":
+                "false",
+              "aria-label":
+                agent.label
+            }
+          );
+
+        var placeholder =
+          createElement(
+            "div",
+            "hcp-avatar-placeholder",
+            {
+              "aria-hidden":
+                "true"
+            }
+          );
+
+        var placeholderName =
+          createTextElement(
+            "span",
+            "hcp-avatar-name",
+            agent.label
+          );
+
+        placeholder.appendChild(
+          placeholderName
+        );
+
+        resident.appendChild(
+          placeholder
+        );
+
+        mount.appendChild(
+          resident
+        );
+      }
+    );
+  }
+
+  function bindControllerEvents() {
+    listen(
+      state.overlay,
+      "click",
+      handleOverlayClick
+    );
+
+    listen(
+      state.overlay,
+      "keydown",
+      handleOverlayKeydown
+    );
+
+    listen(
+      global,
+      CONTROL_2_READY_EVENT,
+      handleControl2Ready
+    );
+  }
+
+  function bindOpenTriggers() {
+    var triggers =
+      global.document.querySelectorAll(
+        OPEN_TRIGGER_SELECTOR
+      );
+
+    Array.prototype.forEach.call(
+      triggers,
+      function bindTrigger(trigger) {
+        if (
+          trigger.getAttribute(
+            "data-house-control-pad-bound"
+          ) === "true"
+        ) {
+          return;
+        }
+
+        trigger.setAttribute(
+          "data-house-control-pad-bound",
+          "true"
+        );
+
+        listen(
+          trigger,
+          "click",
+          function openFromTrigger(event) {
+            event.preventDefault();
+
+            state.returnFocusElement =
+              trigger;
+
+            open({
+              roomId:
+                resolveInitialRoom(
+                  trigger
+                ),
+              enterRoom:
+                trigger.getAttribute(
+                  "data-house-enter-room"
+                ) === "true"
+            });
+          }
+        );
+      }
+    );
+  }
+
+  function handleOverlayClick(event) {
+    var closeTrigger =
+      event.target.closest(
+        "[data-house-control-pad-close]"
+      );
+
+    if (closeTrigger) {
+      event.preventDefault();
+      close();
+      return;
+    }
+
+    var returnEstateTrigger =
+      event.target.closest(
+        "[data-house-return-estate]"
+      );
+
+    if (returnEstateTrigger) {
+      event.preventDefault();
+      showEstate();
+      return;
+    }
+
+    var routeTrigger =
+      event.target.closest(
+        "[data-house-route-action]"
+      );
+
+    if (routeTrigger) {
+      event.preventDefault();
+
+      requestRoute(
+        routeTrigger.getAttribute(
+          "data-house-room"
+        ),
+        routeTrigger.getAttribute(
+          "data-route"
+        )
+      );
+
+      return;
+    }
+
+    var guideTrigger =
+      event.target.closest(
+        "[data-house-guide-action]"
+      );
+
+    if (guideTrigger) {
+      event.preventDefault();
+
+      requestGuide(
+        guideTrigger.getAttribute(
+          "data-house-room"
+        ),
+        guideTrigger.getAttribute(
+          "data-agent-id"
+        )
+      );
+
+      return;
+    }
+
+    var facetTrigger =
+      event.target.closest(
+        "[data-house-heart-facet]"
+      );
+
+    if (facetTrigger) {
+      event.preventDefault();
+
+      selectRoom(
+        facetTrigger.getAttribute(
+          "data-house-room"
+        ),
+        {
+          source:
+            "facet"
+        }
+      );
+
+      return;
+    }
+
+    var roomTrigger =
+      event.target.closest(
+        "[data-house-room-node]"
+      );
+
+    if (roomTrigger) {
+      event.preventDefault();
+
+      selectRoom(
+        roomTrigger.getAttribute(
+          "data-house-room"
+        ),
+        {
+          source:
+            "room"
+        }
+      );
+    }
+  }
+
+  function handleOverlayKeydown(event) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+
+      if (
+        state.viewMode === "room"
+      ) {
+        showEstate();
+      } else {
+        close();
+      }
+
+      return;
+    }
+
+    if (
+      event.key !== "Enter" &&
+      event.key !== " "
+    ) {
+      return;
+    }
+
+    var roomTrigger =
+      event.target.closest(
+        "[data-house-room-node]," +
+        "[data-house-heart-facet]"
+      );
+
+    if (!roomTrigger) {
+      return;
+    }
+
+    event.preventDefault();
+
+    selectRoom(
+      roomTrigger.getAttribute(
+        "data-house-room"
+      ),
+      {
+        source:
+          "keyboard"
+      }
+    );
+  }
+
+  function handleControl2Ready() {
+    connectControl2();
+    flushControl2Commands();
+  }
+
+  function connectControl2() {
+    state.control2 =
+      getControl2();
+
+    if (
+      !state.control2 ||
+      typeof state.control2.mount !==
+        "function"
+    ) {
+      return false;
+    }
+
+    try {
+      state.control2.mount(
+        getControl2Context()
+      );
+
+      flushControl2Commands();
+
+      return true;
+    } catch (error) {
+      setStatus(
+        "Control Pad Control 2 could not mount."
+      );
+
+      return false;
+    }
+  }
+
+  function connectAvatarLife() {
+    state.avatarLife =
+      getAvatarLife();
+
+    if (
+      !state.avatarLife ||
+      typeof state.avatarLife.mount !==
+        "function"
+    ) {
+      return false;
+    }
+
+    try {
+      state.avatarLife.mount({
+        controller:
+          API,
+
+        panel:
+          state.panel,
+
+        roomElements:
+          state.roomElements,
+
+        avatarMounts:
+          state.avatarMounts,
+
+        getState:
+          getPublicState
+      });
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function getControl2Context() {
+    return {
+      contract: CONTRACT,
+
+      data:
+        state.data,
+
+      overlay:
+        state.overlay,
+
+      panel:
+        state.panel,
+
+      header:
+        state.header,
+
+      viewport:
+        state.viewport,
+
+      cameraRig:
+        state.cameraRig,
+
+      estate:
+        state.estate,
+
+      heartRearShell:
+        state.heartRearShell,
+
+      heartShell:
+        state.heartShell,
+
+      facetLayer:
+        state.facetLayer,
+
+      corridorLayer:
+        state.corridorLayer,
+
+      roomLayer:
+        state.roomLayer,
+
+      avatarLayer:
+        state.avatarLayer,
+
+      arrivalSheet:
+        state.arrivalSheet,
+
+      footer:
+        state.footer,
+
+      status:
+        state.status,
+
+      roomElements:
+        state.roomElements,
+
+      facetElements:
+        state.facetElements,
+
+      avatarMounts:
+        state.avatarMounts,
+
+      getState:
+        getPublicState
+    };
+  }
+
+  function queueControl2Command(
+    command,
+    payload
+  ) {
+    state.pendingControl2Commands.push({
+      command: command,
+      payload: payload || {}
+    });
+  }
+
+  function sendControl2Command(
+    command,
+    payload
+  ) {
+    state.control2 =
+      getControl2();
+
+    if (!state.control2) {
+      queueControl2Command(
+        command,
+        payload
       );
 
       return false;
     }
 
-    var visualPoints =
-      graphPathToVisualPoints(
-        graphPath
+    try {
+      if (
+        command === "open" &&
+        typeof state.control2.open ===
+          "function"
+      ) {
+        state.control2.open(
+          payload || {}
+        );
+
+        return true;
+      }
+
+      if (
+        command === "close" &&
+        typeof state.control2.close ===
+          "function"
+      ) {
+        state.control2.close(
+          payload || {}
+        );
+
+        return true;
+      }
+
+      if (
+        command === "showEstate" &&
+        typeof state.control2.showEstate ===
+          "function"
+      ) {
+        state.control2.showEstate(
+          payload || {}
+        );
+
+        return true;
+      }
+
+      if (
+        command === "focusRoom" &&
+        typeof state.control2.focusRoom ===
+          "function"
+      ) {
+        state.control2.focusRoom(
+          payload.roomId,
+          payload || {}
+        );
+
+        return true;
+      }
+
+      if (
+        command === "roomArrived" &&
+        typeof state.control2.roomArrived ===
+          "function"
+      ) {
+        state.control2.roomArrived(
+          payload.roomId,
+          payload || {}
+        );
+
+        return true;
+      }
+
+      if (
+        command ===
+          "setArrivalSheetVisible" &&
+        typeof state.control2
+          .setArrivalSheetVisible ===
+          "function"
+      ) {
+        state.control2
+          .setArrivalSheetVisible(
+            Boolean(
+              payload.visible
+            ),
+            payload || {}
+          );
+
+        return true;
+      }
+
+      if (
+        command === "reframe" &&
+        typeof state.control2.reframe ===
+          "function"
+      ) {
+        state.control2.reframe(
+          payload || {}
+        );
+
+        return true;
+      }
+
+      if (
+        typeof state.control2
+          .handleCommand ===
+          "function"
+      ) {
+        state.control2.handleCommand(
+          command,
+          payload || {}
+        );
+
+        return true;
+      }
+    } catch (error) {
+      setStatus(
+        "Control Pad Control 2 command failed."
       );
+    }
 
-    STATE.traveling = true;
-
-    setStatus(
-      agent.label +
-        " is traveling from " +
-        getRoom(fromRoomId).label +
-        " to " +
-        room.label +
-        "."
-    );
-
-    animateAgentAlongPath(
-      agent,
-      room,
-      visualPoints,
-      token
-    );
-
-    emit(
-      "house-control-pad:travel",
-      {
-        source:
-          options.source ||
-          "unknown",
-        room: room.id,
-        agent: agent.id,
-        from: fromRoomId,
-        to: room.id,
-        graphPath:
-          graphPath.slice()
-      }
-    );
-
-    return true;
+    return false;
   }
 
-  function positionZone(
-    node,
-    zone
-  ) {
-    node.style.left =
-      zone.x + "%";
-
-    node.style.top =
-      zone.y + "%";
-
-    node.style.width =
-      zone.width + "%";
-
-    node.style.height =
-      zone.height + "%";
-  }
-
-  function buildFeatureNode(feature) {
-    var featureNode = create(
-      "span",
-      "hcp-room-feature hcp-room-feature-" +
-        feature.type,
-      {
-        "data-house-feature-type":
-          feature.type,
-        "aria-hidden": "true"
-      }
-    );
-
-    featureNode.style.left =
-      feature.x + "%";
-
-    featureNode.style.top =
-      feature.y + "%";
-
-    featureNode.style.width =
-      feature.width + "%";
-
-    featureNode.style.height =
-      feature.height + "%";
-
-    return featureNode;
-  }
-
-  function navigateToRoute(route) {
-    if (!route) {
+  function flushControl2Commands() {
+    if (!getControl2()) {
       return;
     }
 
-    global.location.href = route;
+    var pending =
+      state.pendingControl2Commands.slice();
+
+    state.pendingControl2Commands.length =
+      0;
+
+    pending.forEach(
+      function executePendingCommand(
+        record
+      ) {
+        sendControl2Command(
+          record.command,
+          record.payload
+        );
+      }
+    );
   }
 
-  function buildRoomActions(room) {
-    var actionContainer = create(
-      "div",
-      "hcp-room-actions",
-      {
-        "data-house-room-actions":
-          room.id
-      }
-    );
+  function open(options) {
+    options = options || {};
 
-    var authorityId =
-      resolveAuthority(room);
+    if (state.destroyed) {
+      return;
+    }
 
-    var authority =
-      getAgent(authorityId);
-
-    var primary = create(
-      "button",
-      "hcp-room-action hcp-room-action-primary",
-      {
-        type: "button",
-        "data-house-room-open":
-          room.id,
-        text:
-          room.visitorCan &&
-          room.visitorCan.length
-            ? room.visitorCan[0]
-            : "Open Room"
-      }
-    );
-
-    var talk = create(
-      "button",
-      "hcp-room-action",
-      {
-        type: "button",
-        "data-house-agent-open":
-          authority.id,
-        text:
-          authority.actionLabel
-      }
-    );
-
-    var relatedRoomId =
-      room.relatedRooms &&
-      room.relatedRooms.length
-        ? room.relatedRooms[0]
-        : null;
-
-    var related = create(
-      "button",
-      "hcp-room-action",
-      {
-        type: "button",
-        text: relatedRoomId
-          ? "Visit " +
-            getRoom(
-              relatedRoomId
-            ).shortLabel
-          : "Return to Estate"
-      }
-    );
-
-    var back = create(
-      "button",
-      "hcp-room-action hcp-room-action-muted",
-      {
-        type: "button",
-        text: "Return to Estate"
-      }
-    );
-
-    primary.addEventListener(
-      "click",
-      function openRoom(event) {
-        event.stopPropagation();
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "room-action",
-            roomId: room.id
-          }
+    if (!state.mounted) {
+      state.pendingRoomId =
+        normalizeRoomId(
+          options.roomId
         );
 
-        navigateToRoute(
-          room.route
-        );
+      mount();
+
+      if (!state.mounted) {
+        return;
       }
-    );
+    }
 
-    talk.addEventListener(
-      "click",
-      function openGuide(event) {
-        event.stopPropagation();
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "guide-action",
-            agentId:
-              authority.id
-          }
-        );
-
-        navigateToRoute(
-          authority.route
-        );
-      }
-    );
-
-    related.addEventListener(
-      "click",
-      function openRelated(event) {
-        event.stopPropagation();
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "related-room-action",
-            roomId:
-              relatedRoomId
-          }
-        );
-
-        if (relatedRoomId) {
-          enterRoomView(
-            relatedRoomId
-          );
-        } else {
-          returnToEstate();
-        }
-      }
-    );
-
-    back.addEventListener(
-      "click",
-      function returnFromRoom(event) {
-        event.stopPropagation();
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "return-to-estate"
-          }
-        );
-
-        returnToEstate();
-      }
-    );
-
-    actionContainer.appendChild(
-      primary
-    );
-
-    actionContainer.appendChild(
-      talk
-    );
-
-    actionContainer.appendChild(
-      related
-    );
-
-    actionContainer.appendChild(
-      back
-    );
-
-    return actionContainer;
-  }
-
-  function buildRoomNode(room) {
-    var authority =
-      getAgent(
-        resolveAuthority(room)
+    var roomId =
+      normalizeRoomId(
+        options.roomId
       );
 
-    var roomNode = create(
-      "section",
-      [
-        "hcp-room-node",
-        "hcp-room-" + room.type,
-        "hcp-room-rank-" + room.rank,
-        "hcp-room-shape-" +
-          room.architecturalShape,
-        "hcp-room-wing-" +
-          room.estateWing
-      ].join(" "),
+    state.open = true;
+
+    state.overlay.setAttribute(
+      "data-open",
+      "true"
+    );
+
+    state.overlay.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+    global.document.documentElement
+      .setAttribute(
+        "data-house-control-pad-open",
+        "true"
+      );
+
+    global.document.body.setAttribute(
+      "data-house-control-pad-open",
+      "true"
+    );
+
+    showEstate({
+      silent: true
+    });
+
+    sendControl2Command(
+      "open",
       {
-        tabindex: "0",
-        role: "button",
-        "data-house-room-node":
-          room.id,
-        "data-house-room-type":
-          room.type,
-        "data-house-room-rank":
-          room.rank,
-        "data-house-room-shape":
-          room.architecturalShape,
-        "data-house-cardinal-sector":
-          room.cardinalSector,
-        "data-house-estate-wing":
-          room.estateWing,
-        "data-current": "false",
-        "data-selected": "false",
-        "data-destination":
-          "false",
-        "data-arrived": "false",
-        "data-focused": "false",
-        "data-information-visible":
-          "false",
-        "data-summary-active":
-          "false",
-        "aria-label":
-          room.label +
-          ". " +
-          room.summary +
-          " Guide: " +
-          authority.label +
-          "."
+        roomId: roomId
       }
     );
 
-    roomNode.style.left =
-      room.x + "%";
-
-    roomNode.style.top =
-      room.y + "%";
-
-    roomNode.style.width =
-      room.width + "%";
-
-    roomNode.style.height =
-      room.height + "%";
-
-    var architecture = create(
-      "div",
-      "hcp-room-architecture",
-      {
-        "aria-hidden": "true"
-      }
-    );
-
-    room.architecturalFeatureZones.forEach(
-      function appendFeature(feature) {
-        architecture.appendChild(
-          buildFeatureNode(feature)
-        );
-      }
-    );
-
-    var labelZone = create(
-      "div",
-      "hcp-room-label-zone"
-    );
-
-    positionZone(
-      labelZone,
-      room.labelZone
-    );
-
-    labelZone.appendChild(
-      create(
-        "span",
-        "hcp-room-label",
+    if (
+      options.enterRoom === true
+    ) {
+      selectRoom(
+        roomId,
         {
-          text:
-            room.shortLabel
-        }
-      )
-    );
-
-    labelZone.appendChild(
-      create(
-        "span",
-        "hcp-room-category",
-        {
-          text:
-            room.categoryLabel
-        }
-      )
-    );
-
-    var summaryZone = create(
-      "div",
-      "hcp-room-summary-zone"
-    );
-
-    positionZone(
-      summaryZone,
-      room.summaryZone
-    );
-
-    summaryZone.appendChild(
-      create(
-        "p",
-        "hcp-room-summary",
-        {
-          text: room.summary
-        }
-      )
-    );
-
-    summaryZone.appendChild(
-      create(
-        "span",
-        "hcp-room-guide",
-        {
-          text:
-            "Guide: " +
-            authority.label
-        }
-      )
-    );
-
-    var detailZone = create(
-      "div",
-      "hcp-room-detail-zone"
-    );
-
-    positionZone(
-      detailZone,
-      room.detailZone
-    );
-
-    detailZone.appendChild(
-      create(
-        "h3",
-        "hcp-room-detail-title",
-        {
-          text: room.label
-        }
-      )
-    );
-
-    detailZone.appendChild(
-      create(
-        "p",
-        "hcp-room-detail-copy",
-        {
-          text: room.detail
-        }
-      )
-    );
-
-    var visitorList = create(
-      "ul",
-      "hcp-room-visitor-list"
-    );
-
-    room.visitorCan.forEach(
-      function appendVisitorItem(item) {
-        visitorList.appendChild(
-          create(
-            "li",
-            "",
-            {
-              text: item
-            }
-          )
-        );
-      }
-    );
-
-    detailZone.appendChild(
-      visitorList
-    );
-
-    var portraitZone = create(
-      "div",
-      "hcp-room-portrait-zone",
-      {
-        "aria-hidden": "true"
-      }
-    );
-
-    positionZone(
-      portraitZone,
-      room.portraitZone
-    );
-
-    var actionZone = create(
-      "div",
-      "hcp-room-action-zone"
-    );
-
-    positionZone(
-      actionZone,
-      room.actionZone
-    );
-
-    actionZone.appendChild(
-      buildRoomActions(room)
-    );
-
-    roomNode.appendChild(
-      architecture
-    );
-
-    roomNode.appendChild(
-      labelZone
-    );
-
-    roomNode.appendChild(
-      summaryZone
-    );
-
-    roomNode.appendChild(
-      detailZone
-    );
-
-    roomNode.appendChild(
-      portraitZone
-    );
-
-    roomNode.appendChild(
-      actionZone
-    );
-
-    roomNode.addEventListener(
-      "click",
-      function selectRoom(event) {
-        if (
-          event.target.closest(
-            "button"
-          )
-        ) {
-          return;
-        }
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "room-selection",
-            roomId: room.id
-          }
-        );
-
-        if (
-          STATE.viewMode ===
-            VIEW_MODE.ROOM &&
-          STATE.focusedRoom ===
-            room.id
-        ) {
-          revealRoomInformation(
-            room.id,
+          source:
+            "open",
+          immediate:
             true
-          );
-
-          return;
         }
+      );
+    } else {
+      state.selectedRoomId =
+        roomId;
 
-        enterRoomView(room.id);
-      }
-    );
+      setRoomSelection(
+        roomId,
+        false
+      );
 
-    roomNode.addEventListener(
-      "keydown",
-      function activateRoom(event) {
+      sendControl2Command(
+        "showEstate",
+        {
+          selectedRoomId:
+            roomId
+        }
+      );
+    }
+
+    global.requestAnimationFrame(
+      function focusViewport() {
         if (
-          event.key !== "Enter" &&
-          event.key !== " "
+          state.viewport &&
+          state.open
         ) {
-          return;
-        }
-
-        event.preventDefault();
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "room-keyboard-selection",
-            roomId: room.id
+          try {
+            state.viewport.focus({
+              preventScroll: true
+            });
+          } catch (error) {
+            state.viewport.focus();
           }
-        );
+        }
+      }
+    );
 
+    emit(
+      OPEN_EVENT,
+      {
+        contract: CONTRACT,
+        roomId: roomId,
+        viewMode:
+          state.viewMode
+      }
+    );
+  }
+
+  function close() {
+    if (
+      !state.mounted ||
+      !state.open
+    ) {
+      return;
+    }
+
+    state.open = false;
+    state.traveling = false;
+    state.travelToken += 1;
+
+    hideArrivalSheet({
+      reframe: false
+    });
+
+    state.overlay.setAttribute(
+      "data-open",
+      "false"
+    );
+
+    state.overlay.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    global.document.documentElement
+      .removeAttribute(
+        "data-house-control-pad-open"
+      );
+
+    global.document.body
+      .removeAttribute(
+        "data-house-control-pad-open"
+      );
+
+    sendControl2Command(
+      "close",
+      {}
+    );
+
+    emit(
+      CLOSE_EVENT,
+      {
+        contract: CONTRACT,
+        roomId:
+          state.currentRoomId,
+        viewMode:
+          state.viewMode
+      }
+    );
+
+    if (
+      state.returnFocusElement &&
+      typeof state.returnFocusElement
+        .focus === "function"
+    ) {
+      global.setTimeout(
+        function restoreFocus() {
+          try {
+            state.returnFocusElement
+              .focus({
+                preventScroll: true
+              });
+          } catch (error) {
+            state.returnFocusElement
+              .focus();
+          }
+        },
+        0
+      );
+    }
+  }
+
+  function showEstate(options) {
+    options = options || {};
+
+    state.viewMode =
+      "estate";
+
+    state.previousRoomId =
+      state.currentRoomId;
+
+    state.currentRoomId =
+      null;
+
+    state.currentAgentId =
+      null;
+
+    state.traveling =
+      false;
+
+    state.travelToken += 1;
+
+    setPanelAttribute(
+      "data-house-view-mode",
+      "estate"
+    );
+
+    setPanelAttribute(
+      "data-current-room",
+      ""
+    );
+
+    setPanelAttribute(
+      "data-current-agent",
+      ""
+    );
+
+    setPanelAttribute(
+      "data-traveling",
+      "false"
+    );
+
+    clearRoomStates();
+
+    hideArrivalSheet({
+      reframe: false
+    });
+
+    setStatus(
+      "Estate view ready. Choose a room."
+    );
+
+    sendControl2Command(
+      "showEstate",
+      {
+        selectedRoomId:
+          state.selectedRoomId
+      }
+    );
+
+    if (!options.silent) {
+      emit(
+        ROOM_SELECTED_EVENT,
+        {
+          contract: CONTRACT,
+          roomId: null,
+          viewMode:
+            "estate"
+        }
+      );
+    }
+  }
+
+  function selectRoom(roomId, options) {
+    options = options || {};
+
+    var normalizedRoomId =
+      normalizeRoomId(
+        roomId
+      );
+
+    var room =
+      getRoom(
+        normalizedRoomId
+      );
+
+    if (!room) {
+      return;
+    }
+
+    var authorityId =
+      resolveAuthority(
+        normalizedRoomId
+      );
+
+    state.previousRoomId =
+      state.currentRoomId;
+
+    state.selectedRoomId =
+      normalizedRoomId;
+
+    state.currentRoomId =
+      normalizedRoomId;
+
+    state.currentAgentId =
+      authorityId;
+
+    state.viewMode =
+      "room";
+
+    state.traveling =
+      true;
+
+    state.travelToken += 1;
+
+    var activeTravelToken =
+      state.travelToken;
+
+    setPanelAttribute(
+      "data-house-view-mode",
+      "room"
+    );
+
+    setPanelAttribute(
+      "data-current-room",
+      normalizedRoomId
+    );
+
+    setPanelAttribute(
+      "data-current-agent",
+      authorityId
+    );
+
+    setPanelAttribute(
+      "data-traveling",
+      "true"
+    );
+
+    clearRoomStates();
+
+    setRoomSelection(
+      normalizedRoomId,
+      true
+    );
+
+    hideArrivalSheet({
+      reframe: false
+    });
+
+    setStatus(
+      "Entering " +
+      room.label +
+      "."
+    );
+
+    emit(
+      ROOM_SELECTED_EVENT,
+      {
+        contract: CONTRACT,
+        roomId:
+          normalizedRoomId,
+        previousRoomId:
+          state.previousRoomId,
+        agentId:
+          authorityId,
+        source:
+          options.source ||
+          "unknown"
+      }
+    );
+
+    emit(
+      ROOM_ENTERING_EVENT,
+      {
+        contract: CONTRACT,
+        roomId:
+          normalizedRoomId,
+        agentId:
+          authorityId
+      }
+    );
+
+    requestAvatarTravel(
+      authorityId,
+      normalizedRoomId
+    );
+
+    sendControl2Command(
+      "focusRoom",
+      {
+        roomId:
+          normalizedRoomId,
+        agentId:
+          authorityId,
+        immediate:
+          Boolean(
+            options.immediate
+          )
+      }
+    );
+
+    var settleDelay =
+      options.immediate
+        ? 0
+        : getCameraSettleDelay();
+
+    global.setTimeout(
+      function completeSelectedRoom() {
         if (
-          STATE.viewMode ===
-            VIEW_MODE.ROOM &&
-          STATE.focusedRoom ===
-            room.id
+          activeTravelToken !==
+            state.travelToken ||
+          state.currentRoomId !==
+            normalizedRoomId ||
+          !state.open
         ) {
-          revealRoomInformation(
-            room.id,
-            true
-          );
-
           return;
         }
 
-        enterRoomView(room.id);
-      }
+        completeRoomArrival(
+          normalizedRoomId,
+          authorityId
+        );
+      },
+      settleDelay
     );
+  }
 
-    roomNode.addEventListener(
-      "mouseenter",
-      function activateSummary() {
-        roomNode.setAttribute(
-          "data-summary-active",
-          "true"
+  function getCameraSettleDelay() {
+    var timing =
+      state.data.timing || {};
+
+    return (
+      Number(
+        timing.CAMERA_MS ||
+        620
+      ) +
+      Number(
+        timing.CAMERA_SETTLE_MS ||
+        170
+      )
+    );
+  }
+
+  function clearRoomStates() {
+    Object.keys(
+      state.roomElements
+    ).forEach(
+      function clearRoom(roomId) {
+        var roomElement =
+          state.roomElements[
+            roomId
+          ];
+
+        roomElement.setAttribute(
+          "data-selected",
+          "false"
+        );
+
+        roomElement.setAttribute(
+          "data-current",
+          "false"
+        );
+
+        roomElement.setAttribute(
+          "data-focused",
+          "false"
+        );
+
+        roomElement.setAttribute(
+          "data-information-visible",
+          "false"
+        );
+
+        roomElement.removeAttribute(
+          "data-arrived"
         );
       }
     );
 
-    roomNode.addEventListener(
-      "mouseleave",
-      function deactivateSummary() {
-        roomNode.setAttribute(
-          "data-summary-active",
+    Object.keys(
+      state.facetElements
+    ).forEach(
+      function clearFacet(roomId) {
+        var facetElement =
+          state.facetElements[
+            roomId
+          ];
+
+        facetElement.setAttribute(
+          "data-selected",
+          "false"
+        );
+
+        facetElement.setAttribute(
+          "data-current",
           "false"
         );
       }
     );
 
-    roomNode.addEventListener(
-      "focus",
-      function focusSummary() {
-        roomNode.setAttribute(
-          "data-summary-active",
-          "true"
-        );
-      }
-    );
+    var avatars =
+      state.panel
+        ? state.panel.querySelectorAll(
+            "[data-house-avatar]"
+          )
+        : [];
 
-    roomNode.addEventListener(
-      "blur",
-      function blurSummary() {
-        roomNode.setAttribute(
-          "data-summary-active",
+    Array.prototype.forEach.call(
+      avatars,
+      function clearAvatar(avatar) {
+        avatar.setAttribute(
+          "data-avatar-focus",
           "false"
         );
       }
     );
-
-    return roomNode;
   }
 
-  function buildAvatarAnatomy(agent) {
-    var identity =
-      agent.visualIdentity;
+  function setRoomSelection(
+    roomId,
+    focused
+  ) {
+    var roomElement =
+      state.roomElements[
+        roomId
+      ];
 
-    var portrait = create(
-      "span",
-      [
-        "hcp-avatar-portrait",
-        "hcp-silhouette-" +
-          identity.silhouette,
-        "hcp-face-shape-" +
-          identity.faceShape,
-        "hcp-hair-" +
-          identity.hairStyle,
-        "hcp-brows-" +
-          identity.browStyle,
-        "hcp-eyes-" +
-          identity.eyeStyle,
-        "hcp-mouth-" +
-          identity.mouthStyle,
-        "hcp-clothing-" +
-          identity.clothingStyle,
-        "hcp-posture-" +
-          identity.posture,
-        "hcp-accessory-" +
-          identity.accessory,
-        "hcp-cue-" +
-          identity.identityCue
-      ].join(" "),
-      {
-        "aria-hidden": "true"
-      }
-    );
+    var facetElement =
+      state.facetElements[
+        roomId
+      ];
 
-    var frame = create(
-      "span",
-      "hcp-portrait-frame"
-    );
+    if (roomElement) {
+      roomElement.setAttribute(
+        "data-selected",
+        "true"
+      );
 
-    var torso = create(
-      "span",
-      "hcp-portrait-torso"
-    );
+      roomElement.setAttribute(
+        "data-current",
+        String(
+          Boolean(focused)
+        )
+      );
 
-    var shoulders = create(
-      "span",
-      "hcp-portrait-shoulders"
-    );
+      roomElement.setAttribute(
+        "data-focused",
+        String(
+          Boolean(focused)
+        )
+      );
+    }
 
-    var clothing = create(
-      "span",
-      "hcp-portrait-clothing"
-    );
+    if (facetElement) {
+      facetElement.setAttribute(
+        "data-selected",
+        "true"
+      );
 
-    var neck = create(
-      "span",
-      "hcp-portrait-neck"
-    );
+      facetElement.setAttribute(
+        "data-current",
+        String(
+          Boolean(focused)
+        )
+      );
+    }
 
-    var ears = create(
-      "span",
-      "hcp-portrait-ears"
-    );
+    var avatar =
+      state.panel
+        ? state.panel.querySelector(
+            '[data-house-avatar]' +
+            '[data-house-room="' +
+            escapeSelector(roomId) +
+            '"]'
+          )
+        : null;
 
-    var head = create(
-      "span",
-      "hcp-portrait-head"
-    );
-
-    var hairBack = create(
-      "span",
-      "hcp-portrait-hair-back"
-    );
-
-    var hairFront = create(
-      "span",
-      "hcp-portrait-hair-front"
-    );
-
-    var brows = create(
-      "span",
-      "hcp-portrait-brows"
-    );
-
-    var eyes = create(
-      "span",
-      "hcp-portrait-eyes"
-    );
-
-    var leftEye = create(
-      "span",
-      "hcp-portrait-eye hcp-portrait-eye-left"
-    );
-
-    var rightEye = create(
-      "span",
-      "hcp-portrait-eye hcp-portrait-eye-right"
-    );
-
-    var leftLid = create(
-      "span",
-      "hcp-portrait-lid hcp-portrait-lid-left"
-    );
-
-    var rightLid = create(
-      "span",
-      "hcp-portrait-lid hcp-portrait-lid-right"
-    );
-
-    var pupils = create(
-      "span",
-      "hcp-portrait-pupils"
-    );
-
-    var leftPupil = create(
-      "span",
-      "hcp-portrait-pupil hcp-portrait-pupil-left"
-    );
-
-    var rightPupil = create(
-      "span",
-      "hcp-portrait-pupil hcp-portrait-pupil-right"
-    );
-
-    var nose = create(
-      "span",
-      "hcp-portrait-nose"
-    );
-
-    var mouth = create(
-      "span",
-      "hcp-portrait-mouth"
-    );
-
-    var accessory = create(
-      "span",
-      "hcp-portrait-accessory"
-    );
-
-    var identityCue = create(
-      "span",
-      "hcp-portrait-identity-cue"
-    );
-
-    var badge = create(
-      "span",
-      "hcp-portrait-badge",
-      {
-        text:
-          agent.label.charAt(0)
-      }
-    );
-
-    leftEye.appendChild(
-      leftLid
-    );
-
-    rightEye.appendChild(
-      rightLid
-    );
-
-    pupils.appendChild(
-      leftPupil
-    );
-
-    pupils.appendChild(
-      rightPupil
-    );
-
-    eyes.appendChild(
-      leftEye
-    );
-
-    eyes.appendChild(
-      rightEye
-    );
-
-    eyes.appendChild(
-      pupils
-    );
-
-    head.appendChild(
-      brows
-    );
-
-    head.appendChild(
-      eyes
-    );
-
-    head.appendChild(
-      nose
-    );
-
-    head.appendChild(
-      mouth
-    );
-
-    torso.appendChild(
-      shoulders
-    );
-
-    torso.appendChild(
-      clothing
-    );
-
-    torso.appendChild(
-      neck
-    );
-
-    frame.appendChild(
-      torso
-    );
-
-    frame.appendChild(
-      ears
-    );
-
-    frame.appendChild(
-      hairBack
-    );
-
-    frame.appendChild(
-      head
-    );
-
-    frame.appendChild(
-      hairFront
-    );
-
-    frame.appendChild(
-      accessory
-    );
-
-    frame.appendChild(
-      identityCue
-    );
-
-    frame.appendChild(
-      badge
-    );
-
-    portrait.appendChild(
-      frame
-    );
-
-    return portrait;
+    if (avatar) {
+      avatar.setAttribute(
+        "data-avatar-focus",
+        String(
+          Boolean(focused)
+        )
+      );
+    }
   }
 
-  function buildAvatar(agent) {
-    var avatar = create(
-      "button",
-      "hcp-avatar hcp-avatar-" +
-        agent.id,
+  function completeRoomArrival(
+    roomId,
+    agentId
+  ) {
+    var room =
+      getRoom(roomId);
+
+    var agent =
+      getAgent(agentId);
+
+    if (!room || !agent) {
+      return;
+    }
+
+    state.traveling =
+      false;
+
+    setPanelAttribute(
+      "data-traveling",
+      "false"
+    );
+
+    var roomElement =
+      state.roomElements[
+        roomId
+      ];
+
+    if (roomElement) {
+      roomElement.setAttribute(
+        "data-arrived",
+        "true"
+      );
+
+      roomElement.setAttribute(
+        "data-information-visible",
+        "true"
+      );
+    }
+
+    requestAvatarArrival(
+      agentId,
+      roomId
+    );
+
+    showArrivalSheet(
+      room,
+      agent
+    );
+
+    setStatus(
+      room.label +
+      " ready. " +
+      agent.label +
+      " is present."
+    );
+
+    sendControl2Command(
+      "roomArrived",
       {
-        type: "button",
-        "data-house-avatar":
-          agent.id,
-        "data-avatar-state":
-          "resting",
-        "data-avatar-gesture": "",
-        "data-avatar-expression":
-          "",
-        "data-avatar-scale-mode":
-          "overview",
-        "data-camera-visible":
-          "true",
-        "data-blinking": "false",
-        "data-blink-type": "",
-        "data-traveling":
-          "false",
-        "data-arrived": "false",
-        "data-selected": "false",
-        "data-focused": "false",
-        "data-current-room":
-          agent.homeRoom,
-        "aria-label":
-          agent.label +
-          ". " +
-          agent.description
+        roomId:
+          roomId,
+        agentId:
+          agentId
       }
     );
 
-    avatar.appendChild(
-      buildAvatarAnatomy(agent)
-    );
-
-    avatar.appendChild(
-      create(
-        "span",
-        "hcp-avatar-nameplate",
-        {
-          text: agent.label
-        }
-      )
-    );
-
-    avatar.addEventListener(
-      "click",
-      function selectAvatar(event) {
-        event.stopPropagation();
-
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "avatar-selection",
-            agentId: agent.id
-          }
-        );
-
-        enterRoomView(
-          getAgentLocation(
-            agent.id
-          ),
-          {
-            summon: false
-          }
-        );
+    emit(
+      ROOM_ARRIVED_EVENT,
+      {
+        contract: CONTRACT,
+        roomId:
+          roomId,
+        agentId:
+          agentId
       }
     );
-
-    return avatar;
   }
 
-  function buildHeader() {
-    var header = create(
-      "header",
-      "hcp-header"
-    );
+  function showArrivalSheet(
+    room,
+    agent
+  ) {
+    state.arrivalContent
+      .replaceChildren();
 
-    var titleWrap = create(
-      "div",
-      "hcp-title-wrap"
-    );
-
-    titleWrap.appendChild(
-      create(
-        "div",
-        "hcp-kicker",
-        {
-          text:
-            "Universal House Controller"
-        }
-      )
-    );
-
-    titleWrap.appendChild(
-      create(
-        "h2",
-        "hcp-title",
-        {
-          text:
-            "Choose a room. The House summons the right guide."
-        }
-      )
-    );
-
-    titleWrap.appendChild(
-      create(
-        "p",
-        "hcp-subtitle",
-        {
-          text:
-            "Explore the estate, enter a room, understand its purpose, and meet its resident guide."
-        }
-      )
-    );
-
-    var controls = create(
-      "div",
-      "hcp-header-controls"
-    );
-
-    var returnButton = create(
-      "button",
-      "hcp-return-estate",
-      {
-        type: "button",
-        hidden: "hidden",
-        text: "Return to Estate"
-      }
-    );
-
-    var closeButton = create(
-      "button",
-      "hcp-close",
-      {
-        type: "button",
-        "data-house-control-pad-close":
-          "true",
-        "aria-label":
-          "Close House controller",
-        text: "×"
-      }
-    );
-
-    returnButton.addEventListener(
-      "click",
-      function returnFromHeader() {
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "header-return"
-          }
-        );
-
-        returnToEstate();
-      }
-    );
-
-    closeButton.addEventListener(
-      "click",
-      closeControlPad
-    );
-
-    controls.appendChild(
-      returnButton
-    );
-
-    controls.appendChild(
-      closeButton
-    );
-
-    header.appendChild(
-      titleWrap
-    );
-
-    header.appendChild(
-      controls
-    );
-
-    STATE.header = header;
-    STATE.returnButton =
-      returnButton;
-    STATE.closeButton =
-      closeButton;
-
-    return header;
-  }
-
-  function buildArrivalSheet() {
-    var sheet = create(
-      "section",
-      "hcp-arrival-sheet",
-      {
-        "data-house-control-pad-arrival":
-          "true",
-        "data-visible": "false",
-        "aria-label":
-          "Guide arrival"
-      }
-    );
-
-    var content = create(
-      "div",
-      "hcp-arrival-content"
-    );
-
-    content.appendChild(
-      create(
+    var eyebrow =
+      createTextElement(
         "div",
         "hcp-arrival-eyebrow",
-        {
-          text:
-            "Guide Authority"
-        }
-      )
-    );
+        "Guide Authority"
+      );
 
-    content.appendChild(
-      create(
+    var title =
+      createTextElement(
         "h3",
         "hcp-arrival-title",
-        {
-          "data-hcp-arrival-title":
-            "true",
-          text:
-            "Choose a room."
-        }
-      )
-    );
+        agent.label +
+        " has arrived at " +
+        room.label +
+        "."
+      );
 
-    content.appendChild(
-      create(
+    var body =
+      createTextElement(
         "p",
         "hcp-arrival-body",
+        agent.authorityLine
+      );
+
+    var actions =
+      createElement(
+        "div",
+        "hcp-arrival-actions"
+      );
+
+    var routeButton =
+      createButton(
+        "hcp-arrival-action hcp-arrival-primary",
+        getPrimaryActionLabel(
+          room
+        ),
         {
-          "data-hcp-arrival-body":
-            "true",
-          text:
-            "The House will summon the correct guide."
+          "data-house-route-action": "",
+          "data-house-room":
+            room.id,
+          "data-route":
+            room.route
         }
-      )
-    );
+      );
 
-    var actions = create(
-      "div",
-      "hcp-arrival-actions"
-    );
-
-    var roomButton = create(
-      "button",
-      "hcp-arrival-action hcp-arrival-primary",
-      {
-        type: "button",
-        "data-hcp-arrival-room":
-          "true",
-        text: "Open Room"
-      }
-    );
-
-    var talkButton = create(
-      "button",
-      "hcp-arrival-action",
-      {
-        type: "button",
-        "data-hcp-arrival-talk":
-          "true",
-        text: "Talk to Guide"
-      }
-    );
-
-    var dismissButton = create(
-      "button",
-      "hcp-arrival-action hcp-arrival-muted",
-      {
-        type: "button",
-        text: "Dismiss"
-      }
-    );
-
-    roomButton.addEventListener(
-      "click",
-      function openSelectedRoom() {
-        if (!STATE.selectedRoom) {
-          return;
+    var guideButton =
+      createButton(
+        "hcp-arrival-action",
+        agent.actionLabel ||
+        (
+          "Ask " +
+          agent.label
+        ),
+        {
+          "data-house-guide-action": "",
+          "data-house-room":
+            room.id,
+          "data-agent-id":
+            agent.id
         }
+      );
 
-        navigateToRoute(
-          getRoom(
-            STATE.selectedRoom
-          ).route
-        );
-      }
-    );
-
-    talkButton.addEventListener(
-      "click",
-      function openSelectedAgent() {
-        if (!STATE.selectedAgent) {
-          return;
+    var dismissButton =
+      createButton(
+        "hcp-arrival-action hcp-arrival-muted",
+        "Dismiss",
+        {
+          "data-house-arrival-dismiss": ""
         }
+      );
 
-        navigateToRoute(
-          getAgent(
-            STATE.selectedAgent
-          ).route
-        );
-      }
-    );
-
-    dismissButton.addEventListener(
-      "click",
-      hideArrivalSheet
+    actions.appendChild(
+      routeButton
     );
 
     actions.appendChild(
-      roomButton
-    );
-
-    actions.appendChild(
-      talkButton
+      guideButton
     );
 
     actions.appendChild(
       dismissButton
     );
 
-    content.appendChild(
+    state.arrivalContent.appendChild(
+      eyebrow
+    );
+
+    state.arrivalContent.appendChild(
+      title
+    );
+
+    state.arrivalContent.appendChild(
+      body
+    );
+
+    state.arrivalContent.appendChild(
       actions
     );
 
-    sheet.appendChild(
-      content
-    );
+    state.arrivalVisible =
+      true;
 
-    STATE.arrivalSheet =
-      sheet;
-
-    return sheet;
-  }
-
-  function buildFooter() {
-    var footer = create(
-      "footer",
-      "hcp-footer"
-    );
-
-    var status = create(
-      "div",
-      "hcp-status",
-      {
-        "data-house-control-pad-status":
-          "true",
-        "aria-live": "polite",
-        text:
-          "House controller ready."
-      }
-    );
-
-    var actions = create(
-      "div",
-      "hcp-footer-actions"
-    );
-
-    var summonButton = create(
-      "button",
-      "hcp-footer-button",
-      {
-        type: "button",
-        text:
-          "Summon guide for this page"
-      }
-    );
-
-    summonButton.addEventListener(
-      "click",
-      function summonCurrentPageGuide() {
-        notifyAvatarLife(
-          "recordInteraction",
-          {
-            source:
-              "page-guide-summon",
-            roomId:
-              STATE.currentPageRoom
-          }
-        );
-
-        enterRoomView(
-          STATE.currentPageRoom
-        );
-      }
-    );
-
-    actions.appendChild(
-      summonButton
-    );
-
-    footer.appendChild(
-      status
-    );
-
-    footer.appendChild(
-      actions
-    );
-
-    STATE.status = status;
-
-    return footer;
-  }
-
-  function buildEstate() {
-    var viewport = create(
-      "section",
-      "hcp-estate-viewport",
-      {
-        "data-house-estate-viewport":
-          "true",
-        tabindex: "0",
-        "aria-label":
-          "Immersive House estate"
-      }
-    );
-
-    var stage = create(
-      "div",
-      "hcp-estate-stage",
-      {
-        "data-house-estate-stage":
-          "true"
-      }
-    );
-
-    var canvas = create(
-      "div",
-      "hcp-estate-canvas",
-      {
-        "data-house-estate-canvas":
-          "true",
-        "data-blueprint-layout":
-          "immersive-cardinal-estate"
-      }
-    );
-
-    var routeLayer = create(
-      "div",
-      "hcp-route-layer",
-      {
-        "data-house-route-layer":
-          "true",
-        "aria-hidden": "true"
-      }
-    );
-
-    var roomLayer = create(
-      "div",
-      "hcp-room-layer",
-      {
-        "data-house-room-layer":
-          "true"
-      }
-    );
-
-    Object.keys(ROOMS).forEach(
-      function appendRoom(roomId) {
-        var room =
-          ROOMS[roomId];
-
-        if (room.visible !== false) {
-          roomLayer.appendChild(
-            buildRoomNode(room)
-          );
-        }
-      }
-    );
-
-    var avatarLayer = create(
-      "div",
-      "hcp-avatar-layer",
-      {
-        "data-house-avatar-layer":
-          "true"
-      }
-    );
-
-    Object.keys(AGENTS).forEach(
-      function appendAvatar(agentId) {
-        avatarLayer.appendChild(
-          buildAvatar(
-            AGENTS[agentId]
-          )
-        );
-      }
-    );
-
-    canvas.appendChild(
-      routeLayer
-    );
-
-    canvas.appendChild(
-      roomLayer
-    );
-
-    canvas.appendChild(
-      avatarLayer
-    );
-
-    stage.appendChild(
-      canvas
-    );
-
-    viewport.appendChild(
-      stage
-    );
-
-    STATE.estateViewport =
-      viewport;
-
-    STATE.estateStage =
-      stage;
-
-    STATE.estateCanvas =
-      canvas;
-
-    STATE.routeLayer =
-      routeLayer;
-
-    STATE.roomLayer =
-      roomLayer;
-
-    STATE.avatarLayer =
-      avatarLayer;
-
-    return viewport;
-  }
-
-  function buildPanel() {
-    var overlay = create(
-      "div",
-      "hcp-overlay",
-      {
-        "data-house-control-pad-overlay":
-          "true",
-        "data-open": "false",
-        role: "dialog",
-        "aria-modal": "true",
-        "aria-label":
-          "House controller"
-      }
-    );
-
-    var panel = create(
-      "div",
-      "hcp-panel",
-      {
-        "data-house-control-pad-panel":
-          "true",
-        "data-house-view-mode":
-          VIEW_MODE.ESTATE,
-        "data-house-zoom-level":
-          "1"
-      }
-    );
-
-    panel.appendChild(
-      buildHeader()
-    );
-
-    panel.appendChild(
-      buildEstate()
-    );
-
-    panel.appendChild(
-      buildArrivalSheet()
-    );
-
-    panel.appendChild(
-      buildFooter()
-    );
-
-    overlay.appendChild(
-      panel
-    );
-
-    overlay.addEventListener(
-      "click",
-      function closeFromBackdrop(event) {
-        if (event.target === overlay) {
-          closeControlPad();
-        }
-      }
-    );
-
-    STATE.overlay = overlay;
-    STATE.panel = panel;
-
-    return overlay;
-  }
-
-  function render() {
-    ensureRoot();
-
-    cancelCameraTransition();
-
-    cancelTravel({
-      silent: true
-    });
-
-    notifyAvatarLife(
-      "handleControllerRenderStart"
-    );
-
-    if (
-      STATE.overlay &&
-      STATE.overlay.parentNode
-    ) {
-      STATE.overlay.parentNode.removeChild(
-        STATE.overlay
-      );
-    }
-
-    document.body.appendChild(
-      buildPanel()
-    );
-
-    restoreAgentPositions();
-    updateAvatarScaleModes();
-    updateAvatarVisibility();
-
-    setCurrentPageRoom(
-      STATE.currentPageRoom
-    );
-
-    STATE.initialized = true;
-    STATE.ready = true;
-
-    document.documentElement.setAttribute(
-      "data-house-control-pad-ready",
+    state.arrivalSheet.setAttribute(
+      "data-visible",
       "true"
     );
 
-    document.documentElement.setAttribute(
-      "data-house-control-pad-layout",
-      "immersive-cardinal-estate"
-    );
-
-    notifyAvatarLife(
-      "bindController",
-      getAvatarLifeBridge()
-    );
-
-    emit(
-      "house-control-pad:ready",
-      {
-        dataContract:
-          DATA_CONTRACT,
-        currentPageRoom:
-          STATE.currentPageRoom,
-        viewMode:
-          STATE.viewMode,
-        roomFirst: true,
-        immersiveCamera: true,
-        uniqueArchitecture:
-          true,
-        separatedAvatarLife:
-          true
-      }
-    );
-  }
-
-  function openControlPad(options) {
-    options = options || {};
-
-    if (!STATE.initialized) {
-      render();
-    }
-
-    cancelCameraTransition();
-
-    cancelTravel({
-      silent: true
-    });
-
-    hideArrivalSheet();
-    hideAllRoomInformation();
-    clearRoomInteractionStates();
-
-    STATE.previousFocus =
-      document.activeElement;
-
-    STATE.currentPageRoom =
-      getRoom(
-        options.room ||
-          getCurrentRoomFromDOM()
-      ).id;
-
-    STATE.selectedRoom = null;
-    STATE.selectedAgent = null;
-    STATE.focusedRoom = null;
-    STATE.previousFocusedRoom =
-      null;
-
-    setCurrentPageRoom(
-      STATE.currentPageRoom
-    );
-
-    setViewMode(
-      VIEW_MODE.ESTATE
-    );
-
-    STATE.overlay.setAttribute(
-      "data-open",
-      "true"
-    );
-
-    STATE.isOpen = true;
-
-    setDocumentOpenState(true);
-
-    restoreAgentPositions();
-    updateAvatarScaleModes();
-    updateAvatarVisibility();
-
-    setStatus(
-      "Estate overview. Select a room to zoom in and meet its guide."
-    );
-
-    document.addEventListener(
-      "keydown",
-      handleKeydown
-    );
-
-    notifyAvatarLife(
-      "recordInteraction",
-      {
-        source:
-          "controller-open"
-      }
-    );
-
-    notifyAvatarLife(
-      "start",
-      getAvatarLifeBridge()
-    );
-
-    global.setTimeout(
-      function initializeEstateCamera() {
-        focusRoom(
-          DEFAULT_ROOM_ID,
-          {
-            overview: true,
-            immediate: true
-          }
-        );
-
-        safeFocus(
-          STATE.estateViewport
-        );
-      },
-      40
-    );
-
-    if (options.autoSummon) {
-      global.setTimeout(
-        function autoSummonCurrentRoom() {
-          enterRoomView(
-            STATE.currentPageRoom
-          );
-        },
-        220
-      );
-    }
-
-    emit(
-      "house-control-pad:open",
-      {
-        currentPageRoom:
-          STATE.currentPageRoom,
-        viewMode:
-          VIEW_MODE.ESTATE
-      }
-    );
-
-    return true;
-  }
-
-  function closeControlPad() {
-    if (!STATE.overlay) {
-      return false;
-    }
-
-    cancelCameraTransition();
-
-    cancelTravel({
-      silent: true
-    });
-
-    hideArrivalSheet();
-
-    notifyAvatarLife(
-      "stop",
-      {
-        reason:
-          "controller-close"
-      }
-    );
-
-    STATE.overlay.setAttribute(
-      "data-open",
+    state.arrivalSheet.setAttribute(
+      "aria-hidden",
       "false"
     );
 
-    STATE.isOpen = false;
-
-    setDocumentOpenState(false);
-
-    document.removeEventListener(
-      "keydown",
-      handleKeydown
-    );
-
-    if (STATE.previousFocus) {
-      safeFocus(
-        STATE.previousFocus
+    var dismissTrigger =
+      state.arrivalSheet.querySelector(
+        "[data-house-arrival-dismiss]"
       );
 
-      STATE.previousFocus =
-        null;
+    if (dismissTrigger) {
+      dismissTrigger.addEventListener(
+        "click",
+        function dismissArrival(
+          event
+        ) {
+          event.preventDefault();
+
+          hideArrivalSheet();
+        },
+        {
+          once: true
+        }
+      );
+    }
+
+    sendControl2Command(
+      "setArrivalSheetVisible",
+      {
+        visible:
+          true,
+        roomId:
+          room.id,
+        agentId:
+          agent.id
+      }
+    );
+  }
+
+  function getPrimaryActionLabel(room) {
+    if (
+      room.visitorCan &&
+      room.visitorCan.length > 0
+    ) {
+      return room.visitorCan[0];
+    }
+
+    return (
+      "Open " +
+      (
+        room.shortLabel ||
+        room.label
+      )
+    );
+  }
+
+  function hideArrivalSheet(options) {
+    options = options || {};
+
+    if (!state.arrivalSheet) {
+      return;
+    }
+
+    state.arrivalVisible =
+      false;
+
+    state.arrivalSheet.setAttribute(
+      "data-visible",
+      "false"
+    );
+
+    state.arrivalSheet.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    sendControl2Command(
+      "setArrivalSheetVisible",
+      {
+        visible:
+          false,
+        roomId:
+          state.currentRoomId
+      }
+    );
+
+    if (options.reframe !== false) {
+      sendControl2Command(
+        "reframe",
+        {
+          roomId:
+            state.currentRoomId,
+          viewMode:
+            state.viewMode,
+          arrivalVisible:
+            false
+        }
+      );
+    }
+  }
+
+  function requestRoute(roomId, route) {
+    var normalizedRoomId =
+      normalizeRoomId(
+        roomId
+      );
+
+    var room =
+      getRoom(
+        normalizedRoomId
+      );
+
+    var targetRoute =
+      route ||
+      (
+        room
+          ? room.route
+          : null
+      );
+
+    if (!targetRoute) {
+      return;
     }
 
     emit(
-      "house-control-pad:close"
-    );
-
-    return true;
-  }
-
-  function handleResize() {
-    if (!STATE.isOpen) {
-      return;
-    }
-
-    if (STATE.resizeFrame) {
-      global.cancelAnimationFrame(
-        STATE.resizeFrame
-      );
-    }
-
-    STATE.resizeFrame =
-      global.requestAnimationFrame(
-        function refitCamera() {
-          STATE.resizeFrame = 0;
-
-          if (
-            STATE.viewMode ===
-              VIEW_MODE.ROOM &&
-            STATE.focusedRoom
-          ) {
-            focusRoom(
-              STATE.focusedRoom,
-              {
-                immediate: true
-              }
-            );
-          } else {
-            focusRoom(
-              DEFAULT_ROOM_ID,
-              {
-                overview: true,
-                immediate: true
-              }
-            );
-          }
-        }
-      );
-  }
-
-  function detectReducedMotion() {
-    var media = global.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    );
-
-    STATE.reducedMotionMedia =
-      media;
-
-    STATE.reducedMotion =
-      media.matches;
-
-    document.documentElement.setAttribute(
-      "data-house-reduced-motion",
-      STATE.reducedMotion
-        ? "true"
-        : "false"
-    );
-
-    function handleChange(event) {
-      STATE.reducedMotion =
-        event.matches;
-
-      document.documentElement.setAttribute(
-        "data-house-reduced-motion",
-        STATE.reducedMotion
-          ? "true"
-          : "false"
-      );
-
-      notifyAvatarLife(
-        "handleReducedMotionChange",
-        {
-          reducedMotion:
-            STATE.reducedMotion
-        }
-      );
-
-      handleResize();
-    }
-
-    if (
-      typeof media.addEventListener ===
-      "function"
-    ) {
-      media.addEventListener(
-        "change",
-        handleChange
-      );
-    } else if (
-      typeof media.addListener ===
-      "function"
-    ) {
-      media.addListener(
-        handleChange
-      );
-    }
-  }
-
-  function bindOpenButtons() {
-    qa(
-      "[data-house-control-pad-open]"
-    ).forEach(function bindButton(button) {
-      if (
-        STATE.boundOpenButtons.has(
-          button
-        )
-      ) {
-        return;
-      }
-
-      STATE.boundOpenButtons.add(
-        button
-      );
-
-      button.addEventListener(
-        "click",
-        function openFromButton() {
-          openControlPad({
-            room:
-              button.getAttribute(
-                "data-house-room"
-              ) ||
-              getCurrentRoomFromDOM(),
-
-            autoSummon:
-              button.getAttribute(
-                "data-house-control-pad-auto-summon"
-              ) === "true"
-          });
-        }
-      );
-    });
-  }
-
-  function getRouteGraph() {
-    var graph = {};
-
-    Object.keys(ROOMS).forEach(
-      function addRoom(roomId) {
-        graph[
-          getRoomAnchorId(roomId)
-        ] = getGraphNeighbors(
-          getRoomAnchorId(roomId)
-        );
+      ROUTE_REQUEST_EVENT,
+      {
+        contract: CONTRACT,
+        roomId:
+          normalizedRoomId,
+        route:
+          targetRoute
       }
     );
 
-    Object.keys(CORRIDORS).forEach(
-      function addCorridor(corridorId) {
-        graph[corridorId] =
-          getGraphNeighbors(
-            corridorId
-          );
-      }
-    );
-
-    return clone(graph);
+    global.location.href =
+      targetRoute;
   }
 
-  function getEstateState() {
-    return {
-      contract: CONTRACT,
-      dataContract:
-        DATA.contract,
-      initialized:
-        STATE.initialized,
-      ready:
-        STATE.ready,
-      isOpen:
-        STATE.isOpen,
-
-      currentPageRoom:
-        STATE.currentPageRoom,
-      selectedRoom:
-        STATE.selectedRoom,
-      selectedAgent:
-        STATE.selectedAgent,
-
-      viewMode:
-        STATE.viewMode,
-      zoomLevel:
-        STATE.zoomLevel,
-      focusedRoom:
-        STATE.focusedRoom,
-      previousFocusedRoom:
-        STATE.previousFocusedRoom,
-
-      cameraTransitioning:
-        STATE.cameraTransitioning,
-      traveling:
-        STATE.traveling,
-      activePath:
-        STATE.activePath.slice(),
-
-      reducedMotion:
-        STATE.reducedMotion,
-
-      agentLocations:
-        clone(
-          STATE.agentLocations
-        )
-    };
-  }
-
-  function getAvatarElement(agentId) {
-    if (!STATE.panel) {
-      return null;
-    }
-
-    return q(
-      '[data-house-avatar="' +
-        agentId +
-        '"]',
-      STATE.panel
-    );
-  }
-
-  function getRoomElement(roomId) {
-    if (!STATE.panel) {
-      return null;
-    }
-
-    return q(
-      '[data-house-room-node="' +
-        roomId +
-        '"]',
-      STATE.panel
-    );
-  }
-
-  function setAvatarDOMState(
-    agentId,
-    state
+  function requestGuide(
+    roomId,
+    agentId
   ) {
-    var avatar =
-      getAvatarElement(agentId);
-
-    if (!avatar) {
-      return false;
-    }
-
-    if (
-      state.primaryState
-    ) {
-      avatar.setAttribute(
-        "data-avatar-state",
-        state.primaryState
+    var normalizedRoomId =
+      normalizeRoomId(
+        roomId
       );
-    }
 
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "gesture"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-avatar-gesture",
-        state.gesture || ""
+    var room =
+      getRoom(
+        normalizedRoomId
       );
-    }
 
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "expression"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-avatar-expression",
-        state.expression || ""
-      );
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "blinking"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-blinking",
-        state.blinking
-          ? "true"
-          : "false"
-      );
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "blinkType"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-blink-type",
-        state.blinkType || ""
-      );
-    }
-
-    return true;
-  }
-
-  function getAvatarLifeBridge() {
-    return {
-      contract: CONTRACT,
-      data: DATA,
-
-      getState:
-        getEstateState,
-
-      getAvatarElement:
-        getAvatarElement,
-
-      getRoomElement:
-        getRoomElement,
-
-      getAgentLocation:
-        getAgentLocation,
-
-      setAvatarDOMState:
-        setAvatarDOMState,
-
-      isOpen: function isOpen() {
-        return STATE.isOpen;
-      },
-
-      isCameraTransitioning:
-        function isCameraTransitioning() {
-          return STATE.cameraTransitioning;
-        },
-
-      isTraveling:
-        function isTraveling(agentId) {
-          if (!agentId) {
-            return STATE.traveling;
-          }
-
-          var avatar =
-            getAvatarElement(
-              agentId
-            );
-
-          return Boolean(
-            avatar &&
-            avatar.getAttribute(
-              "data-traveling"
-            ) === "true"
+    var resolvedAgentId =
+      agentExists(agentId)
+        ? agentId
+        : resolveAuthority(
+            normalizedRoomId
           );
-        },
 
-      getFocusedRoom:
-        function getFocusedRoom() {
-          return STATE.focusedRoom;
-        },
-
-      getViewMode:
-        getViewMode,
-
-      getReducedMotion:
-        function getReducedMotion() {
-          return STATE.reducedMotion;
-        },
-
-      emit: emit
-    };
-  }
-
-  function registerRoom() {
-    throw new Error(
-      "Runtime room mutation is disabled in the separated data architecture. " +
-        "Add rooms to house.control-pad.data.js."
-    );
-  }
-
-  function registerAgent() {
-    throw new Error(
-      "Runtime agent mutation is disabled in the separated data architecture. " +
-        "Add agents to house.control-pad.data.js."
-    );
-  }
-
-  function cleanup() {
-    cancelCameraTransition();
-
-    cancelTravel({
-      silent: true
-    });
-
-    notifyAvatarLife(
-      "destroy"
-    );
-
-    if (STATE.resizeFrame) {
-      global.cancelAnimationFrame(
-        STATE.resizeFrame
+    var agent =
+      getAgent(
+        resolvedAgentId
       );
 
-      STATE.resizeFrame = 0;
+    if (!room || !agent) {
+      return;
     }
-  }
 
-  function boot() {
-    var validation =
-      typeof DATA.getValidationReport ===
-      "function"
-        ? DATA.getValidationReport()
-        : null;
+    emit(
+      GUIDE_REQUEST_EVENT,
+      {
+        contract: CONTRACT,
+        roomId:
+          normalizedRoomId,
+        agentId:
+          resolvedAgentId,
+        route:
+          agent.route
+      }
+    );
 
     if (
-      validation &&
-      !validation.valid
+      state.avatarLife &&
+      typeof state.avatarLife
+        .requestAttention ===
+        "function"
     ) {
-      reportFatal(
-        "House Control Pad data validation failed: " +
-          validation.errors.join(
-            " | "
-          )
+      state.avatarLife
+        .requestAttention(
+          resolvedAgentId,
+          normalizedRoomId
+        );
+
+      setStatus(
+        agent.label +
+        " is attending in " +
+        room.label +
+        "."
       );
 
       return;
     }
 
-    STATE.currentPageRoom =
-      getCurrentRoomFromDOM();
+    if (agent.route) {
+      global.location.href =
+        agent.route;
+    }
+  }
 
-    detectReducedMotion();
-    ensureRoot();
-    render();
-    bindOpenButtons();
+  function requestAvatarTravel(
+    agentId,
+    roomId
+  ) {
+    state.avatarLife =
+      getAvatarLife();
 
-    global.addEventListener(
-      "resize",
-      handleResize,
+    if (!state.avatarLife) {
+      return;
+    }
+
+    if (
+      typeof state.avatarLife.travel ===
+        "function"
+    ) {
+      state.avatarLife.travel(
+        agentId,
+        roomId
+      );
+
+      return;
+    }
+
+    if (
+      typeof state.avatarLife.setState ===
+        "function"
+    ) {
+      state.avatarLife.setState(
+        agentId,
+        "traveling",
+        {
+          roomId: roomId
+        }
+      );
+    }
+  }
+
+  function requestAvatarArrival(
+    agentId,
+    roomId
+  ) {
+    state.avatarLife =
+      getAvatarLife();
+
+    if (!state.avatarLife) {
+      return;
+    }
+
+    if (
+      typeof state.avatarLife.arrive ===
+        "function"
+    ) {
+      state.avatarLife.arrive(
+        agentId,
+        roomId
+      );
+
+      return;
+    }
+
+    if (
+      typeof state.avatarLife.setState ===
+        "function"
+    ) {
+      state.avatarLife.setState(
+        agentId,
+        "arriving",
+        {
+          roomId: roomId
+        }
+      );
+    }
+  }
+
+  function reframe() {
+    sendControl2Command(
+      "reframe",
       {
-        passive: true
+        roomId:
+          state.currentRoomId,
+        viewMode:
+          state.viewMode,
+        arrivalVisible:
+          state.arrivalVisible
       }
     );
+  }
 
-    global.addEventListener(
-      "orientationchange",
-      handleResize,
-      {
-        passive: true
-      }
-    );
+  function rebindTriggers() {
+    bindOpenTriggers();
+  }
 
-    global.addEventListener(
-      "beforeunload",
-      cleanup
-    );
-
-    global.HOUSE_CONTROL_PAD = {
+  function getPublicState() {
+    return {
       contract: CONTRACT,
-      dataContract:
-        DATA.contract,
+      version: VERSION,
+
+      mounted:
+        state.mounted,
+
+      destroyed:
+        state.destroyed,
 
       open:
-        openControlPad,
+        state.open,
 
-      close:
-        closeControlPad,
+      viewMode:
+        state.viewMode,
 
-      travelToRoom:
-        travelToRoom,
+      selectedRoomId:
+        state.selectedRoomId,
 
-      enterRoomView:
-        enterRoomView,
+      currentRoomId:
+        state.currentRoomId,
 
-      returnToEstate:
-        returnToEstate,
+      previousRoomId:
+        state.previousRoomId,
 
-      focusRoom:
-        focusRoom,
+      currentAgentId:
+        state.currentAgentId,
 
-      getRouteGraph:
-        getRouteGraph,
+      traveling:
+        state.traveling,
 
-      getAgentLocation:
-        getAgentLocation,
-
-      resetAgentLocations:
-        resetAgentLocations,
-
-      getEstateState:
-        getEstateState,
-
-      getState:
-        getEstateState,
-
-      getViewMode:
-        getViewMode,
-
-      getAvatarElement:
-        getAvatarElement,
-
-      getRoomElement:
-        getRoomElement,
-
-      getAvatarLifeBridge:
-        getAvatarLifeBridge,
-
-      registerRoom:
-        registerRoom,
-
-      registerAgent:
-        registerAgent,
-
-      rooms:
-        ROOMS,
-
-      agents:
-        AGENTS,
-
-      corridors:
-        CORRIDORS,
-
-      data:
-        DATA
+      arrivalVisible:
+        state.arrivalVisible
     };
+  }
 
-    emit(
-      "house-control-pad:controller-ready",
-      {
-        dataContract:
-          DATA.contract,
-        currentPageRoom:
-          STATE.currentPageRoom
+  function destroy() {
+    if (state.destroyed) {
+      return;
+    }
+
+    close();
+
+    if (
+      state.control2 &&
+      typeof state.control2.destroy ===
+        "function"
+    ) {
+      try {
+        state.control2.destroy();
+      } catch (error) {
+        // No-op.
       }
+    }
+
+    if (
+      state.avatarLife &&
+      typeof state.avatarLife.destroy ===
+        "function"
+    ) {
+      try {
+        state.avatarLife.destroy();
+      } catch (error) {
+        // No-op.
+      }
+    }
+
+    removeAllListeners();
+
+    if (
+      state.overlay &&
+      state.overlay.parentNode
+    ) {
+      state.overlay.parentNode
+        .removeChild(
+          state.overlay
+        );
+    }
+
+    state.mounted =
+      false;
+
+    state.destroyed =
+      true;
+
+    state.open =
+      false;
+
+    state.roomElements =
+      Object.create(null);
+
+    state.facetElements =
+      Object.create(null);
+
+    state.corridorElements =
+      Object.create(null);
+
+    state.avatarMounts =
+      Object.create(null);
+
+    state.pendingControl2Commands.length =
+      0;
+  }
+
+  function escapeSelector(value) {
+    if (
+      global.CSS &&
+      typeof global.CSS.escape ===
+        "function"
+    ) {
+      return global.CSS.escape(
+        String(value)
+      );
+    }
+
+    return String(value).replace(
+      /["\\]/g,
+      "\\$&"
     );
   }
 
+  var API = {
+    contract: CONTRACT,
+    version: VERSION,
+
+    role:
+      "control-1",
+
+    secondaryController:
+      "HOUSE_CONTROL_PAD_CONTROL_2",
+
+    mount: mount,
+    open: open,
+    close: close,
+
+    showEstate:
+      showEstate,
+
+    selectRoom:
+      selectRoom,
+
+    hideArrivalSheet:
+      hideArrivalSheet,
+
+    requestRoute:
+      requestRoute,
+
+    requestGuide:
+      requestGuide,
+
+    reframe:
+      reframe,
+
+    rebindTriggers:
+      rebindTriggers,
+
+    getState:
+      getPublicState,
+
+    getControl2Context:
+      getControl2Context,
+
+    destroy:
+      destroy
+  };
+
+  global.HOUSE_CONTROL_PAD =
+    API;
+
+  listen(
+    global,
+    DATA_READY_EVENT,
+    function handleDataReady() {
+      mount();
+    }
+  );
+
   if (
-    document.readyState ===
-    "loading"
+    global.document.readyState ===
+      "loading"
   ) {
-    document.addEventListener(
+    listen(
+      global.document,
       "DOMContentLoaded",
-      boot,
+      function handleDomReady() {
+        mount();
+      },
       {
         once: true
       }
     );
   } else {
-    global.setTimeout(
-      boot,
-      0
-    );
+    mount();
   }
 })(window);

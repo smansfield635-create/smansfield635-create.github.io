@@ -1,14 +1,16 @@
 <!-- /nine-summits-of-love/index.html -->
-<!-- NINE_SUMMITS_OF_LOVE_TRUE_3D_AXIAL_HEART_HTML_TNT_v3 -->
+<!-- NINE_SUMMITS_OF_LOVE_ROUNDED_3D_HEART_CONNECTED_PATHS_HTML_TNT_v4 -->
 <!-- Full-file replacement. -->
 <!--
   Purpose:
-  - Preserve the complete Nine Summits of Love page.
-  - Replace the oversized flat SVG heart with a bounded true-depth WebGL object.
-  - Rotate the heart around its own fixed vertical Y axis.
-  - Generate front, rear, bevel, side-wall, lighting, and projected floor-shadow geometry.
-  - Preserve the House Control Pad entrance contract.
-  - Require no external 3D library.
+  - Preserve both Nine Summits book-cover images.
+  - Replace the flat/slab heart with a rounded double-convex 3D heart.
+  - Keep the heart continuously illuminated throughout fixed Y-axis rotation.
+  - Preserve true object depth, side profile, rear face, and projected shadow.
+  - Preserve the House Control Pad entrance.
+  - Consolidate the page into one connected Nine Summits path experience.
+  - Remove repetitive route cards, accordions, and duplicated explanations.
+  - Use native WebGL with no external 3D library.
 -->
 
 <!doctype html>
@@ -16,26 +18,23 @@
   lang="en"
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
-  data-version="G1-V4"
-  data-contract="NINE_SUMMITS_OF_LOVE_TRUE_3D_AXIAL_HEART_HTML_TNT_v3"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_DIAMOND_HEART_HOUSE_CONTROLLER_HERO_HTML_TNT_v2"
+  data-version="G1-V5"
+  data-contract="NINE_SUMMITS_OF_LOVE_ROUNDED_3D_HEART_CONNECTED_PATHS_HTML_TNT_v4"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_TRUE_3D_AXIAL_HEART_HTML_TNT_v3"
   data-status="active"
   data-parent="/nine-summits/"
-  data-baseline="AUDRALIA_MANOR_CURRENT"
   data-role="book-and-seminar-lane"
   data-source-preserving-images="true"
-  data-preface-cover="/assets/nine-summits-love-preface-cover.png"
-  data-universe-cover="/assets/nine-summits-love-hero.png"
+  data-front-cover="/assets/nine-summits-love-preface-cover.png"
+  data-back-cover="/assets/nine-summits-love-hero.png"
   data-heavy-runtime-loaded="false"
   data-generated-image="false"
   data-graphic-box="false"
   data-streaming="false"
-  data-visual-pass-claimed="false"
-  data-house-room="book-chamber"
-  data-house-control-pad-mounted="true"
-  data-house-controller-form="true-3d-extruded-diamond-heart"
-  data-heart-rotation="fixed-y-axis"
+  data-house-controller-form="rounded-double-convex-diamond-heart"
+  data-heart-rotation="fixed-local-y-axis"
   data-heart-orbit="forbidden"
+  data-heart-blackout="forbidden"
   data-heart-fibonacci-sync="13-21-34-55-89-144-233-377-610-987"
 >
 <head>
@@ -50,7 +49,7 @@
 
   <meta
     name="description"
-    content="The Nine Summits of Love is the book and seminar lane inside Diamond Gate Bridge: a human-first climb through character, structure, balance, stability, peace, joy, dignity, free will, and love."
+    content="The Nine Summits of Love is a connected human path beginning with gratitude, generosity, dependability, accountability, forgiveness, self-control, patience, humility, and purity."
   >
 
   <link
@@ -58,46 +57,42 @@
     href="/assets/house-control-pad/house.control-pad.css"
   >
 
-  <link
-    rel="stylesheet"
-    href="/assets/house-control-pad/house.avatars.css"
-  >
-
   <style>
     :root{
       color-scheme:dark;
 
-      --bg:#02040b;
-      --ink:#fff4d8;
-      --muted:rgba(230,238,255,.78);
-      --soft:rgba(230,238,255,.58);
-      --faint:rgba(230,238,255,.42);
+      --page-black:#01030a;
+      --page-deep:#040817;
+      --page-panel:rgba(9,15,31,.88);
 
-      --gold:#f3c86f;
-      --gold2:#ffe8a3;
-      --green:#8ff0c6;
-      --blue:#8dd8ff;
-      --purple:#8f65ff;
-      --rose:#ffafd6;
+      --page-ink:#fff4d8;
+      --page-muted:rgba(229,237,255,.78);
+      --page-soft:rgba(229,237,255,.58);
+      --page-faint:rgba(229,237,255,.42);
 
-      --panel:rgba(9,15,31,.84);
-      --line:rgba(184,205,255,.18);
-      --line2:rgba(243,200,111,.34);
+      --page-gold:#f3c86f;
+      --page-gold-light:#ffe8a3;
+      --page-cyan:#8de7ff;
+      --page-blue:#618fff;
+      --page-violet:#9c79ff;
+      --page-rose:#ff9dce;
+      --page-green:#8ff0c6;
 
-      --shadow:
-        0 32px 110px rgba(0,0,0,.46);
+      --page-line:rgba(184,205,255,.18);
+      --page-line-gold:rgba(243,200,111,.34);
 
-      --max:1180px;
+      --page-max:1180px;
 
       --heart-stage:610px;
       --heart-width:377;
       --heart-height:368;
       --heart-depth:89;
-      --heart-bevel:13;
+      --heart-rim-depth:13;
+      --heart-dome-rise:31.5;
       --heart-floor-gap:55;
       --heart-shadow-width:233;
       --heart-camera-distance:987;
-      --heart-rotation-seconds:34;
+      --heart-rotation-duration:34s;
     }
 
     *{
@@ -107,19 +102,19 @@
     html{
       min-height:100%;
 
-      background:var(--bg);
+      background:var(--page-black);
 
       scroll-behavior:smooth;
     }
 
     body{
-      margin:0;
-
       min-height:100vh;
+
+      margin:0;
 
       overflow-x:hidden;
 
-      color:var(--ink);
+      color:var(--page-ink);
 
       font-family:
         Inter,
@@ -135,33 +130,27 @@
       background:
         radial-gradient(
           circle at 50% -8%,
-          rgba(243,200,111,.22),
-          transparent 28rem
+          rgba(243,200,111,.2),
+          transparent 30rem
         ),
         radial-gradient(
-          circle at 10% 18%,
-          rgba(143,101,255,.20),
-          transparent 28rem
+          circle at 8% 26%,
+          rgba(156,121,255,.17),
+          transparent 30rem
         ),
         radial-gradient(
-          circle at 92% 30%,
-          rgba(141,216,255,.14),
-          transparent 28rem
-        ),
-        radial-gradient(
-          circle at 50% 78%,
-          rgba(143,101,255,.12),
-          transparent 34rem
+          circle at 92% 34%,
+          rgba(97,143,255,.13),
+          transparent 30rem
         ),
         linear-gradient(
           180deg,
-          #080c17 0%,
-          #030713 58%,
-          #010207 100%
+          #080c19 0%,
+          #030713 52%,
+          #010208 100%
         );
 
       -webkit-font-smoothing:antialiased;
-
       text-rendering:geometricPrecision;
     }
 
@@ -177,32 +166,32 @@
       background-image:
         radial-gradient(
           circle,
-          rgba(255,255,255,.18) 0 1px,
+          rgba(255,255,255,.14) 0 1px,
           transparent 1.5px
         ),
         linear-gradient(
-          rgba(141,216,255,.045) 1px,
+          rgba(141,216,255,.034) 1px,
           transparent 1px
         ),
         linear-gradient(
           90deg,
-          rgba(141,216,255,.045) 1px,
+          rgba(141,216,255,.034) 1px,
           transparent 1px
         );
 
       background-size:
-        220px 260px,
-        54px 54px,
-        54px 54px;
+        240px 280px,
+        55px 55px,
+        55px 55px;
 
-      opacity:.24;
+      opacity:.25;
 
       mask-image:
         linear-gradient(
           180deg,
-          rgba(0,0,0,.92),
-          rgba(0,0,0,.52) 64%,
-          rgba(0,0,0,.24)
+          rgba(0,0,0,.94),
+          rgba(0,0,0,.5) 64%,
+          transparent
         );
     }
 
@@ -210,48 +199,57 @@
       content:"";
 
       position:fixed;
-      inset:-20%;
+      inset:-24%;
       z-index:0;
 
       pointer-events:none;
 
       background:
         conic-gradient(
-          from 90deg at 50% 50%,
-          transparent 0deg,
-          rgba(143,101,255,.08) 52deg,
-          transparent 108deg,
-          rgba(243,200,111,.06) 172deg,
-          transparent 224deg,
-          rgba(141,216,255,.07) 292deg,
-          transparent 360deg
+          from 0deg at 50% 50%,
+          transparent,
+          rgba(156,121,255,.055),
+          transparent,
+          rgba(243,200,111,.045),
+          transparent,
+          rgba(141,231,255,.05),
+          transparent
         );
 
-      filter:blur(42px);
-
-      opacity:.58;
+      filter:blur(54px);
 
       animation:
-        auroraDrift
-        28s
+        page-aurora-rotation
+        34s
         linear
         infinite;
     }
 
-    .shell a{
+    .page-shell,
+    .page-shell *,
+    .page-shell *::before,
+    .page-shell *::after{
+      box-sizing:border-box;
+    }
+
+    .page-shell a{
       color:inherit;
 
       text-decoration:none;
     }
 
-    .shell button{
+    .page-shell button{
       font:inherit;
     }
 
-    .skip{
+    .page-shell img{
+      max-width:100%;
+    }
+
+    .page-skip{
       position:absolute;
-      left:-999px;
-      top:8px;
+      left:-9999px;
+      top:.5rem;
       z-index:10000;
 
       padding:.75rem 1rem;
@@ -260,51 +258,44 @@
 
       color:#05070d;
 
-      background:var(--gold);
+      background:var(--page-gold);
 
       font-weight:950;
     }
 
-    .skip:focus{
-      left:8px;
+    .page-skip:focus{
+      left:.5rem;
     }
 
-    .shell{
+    .page-shell{
       position:relative;
       z-index:2;
 
       width:
         min(
-          var(--max),
+          var(--page-max),
           calc(100% - 28px)
         );
 
       margin:0 auto;
 
       padding:
-        max(22px,env(safe-area-inset-top))
+        max(18px,env(safe-area-inset-top))
         0
-        max(46px,env(safe-area-inset-bottom));
+        max(44px,env(safe-area-inset-bottom));
     }
 
-    /* =====================================================
-       TOP NAVIGATION
-       ===================================================== */
-
-    .topbar{
+    .page-topbar{
       display:grid;
-      grid-template-columns:
-        minmax(0,1fr)
-        auto;
-
+      grid-template-columns:minmax(0,1fr) auto;
       align-items:center;
 
-      gap:18px;
+      gap:1rem;
 
-      padding:12px 0 18px;
+      padding:.75rem 0 1.1rem;
     }
 
-    .brand{
+    .page-brand{
       min-width:0;
 
       display:grid;
@@ -312,20 +303,24 @@
       gap:.18rem;
     }
 
-    .brand-copy{
-      display:grid;
+    .page-brand small{
+      color:var(--page-gold);
 
-      gap:.18rem;
+      font-size:.68rem;
+      font-weight:950;
+
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
-    .brand-copy strong{
-      color:var(--ink);
+    .page-brand strong{
+      color:var(--page-ink);
 
       font-size:
         clamp(
-          1.08rem,
-          3vw,
-          1.7rem
+          1.12rem,
+          3.2vw,
+          1.72rem
         );
 
       line-height:1;
@@ -333,140 +328,207 @@
       letter-spacing:-.045em;
     }
 
-    .brand-copy span{
-      color:var(--muted);
+    .page-return{
+      min-height:2.45rem;
 
-      font-size:.74rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+
+      padding:.58rem .88rem;
+
+      border:
+        1px solid
+        rgba(243,200,111,.58);
+
+      border-radius:999px;
+
+      color:#080a11;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fff3b2,
+          #f3c86f
+        );
+
+      font-size:.68rem;
+      font-weight:950;
+
+      letter-spacing:.07em;
+      text-transform:uppercase;
+
+      transition:
+        transform .18s ease,
+        filter .18s ease;
+    }
+
+    .page-return:hover,
+    .page-return:focus-visible{
+      transform:translateY(-2px);
+
+      filter:brightness(1.05);
+
+      outline:none;
+    }
+
+    .page-panel{
+      position:relative;
+
+      overflow:hidden;
+
+      border:
+        1px solid
+        var(--page-line);
+
+      border-radius:
+        clamp(
+          1.35rem,
+          4vw,
+          2.3rem
+        );
+
+      background:
+        radial-gradient(
+          circle at 12% 0%,
+          rgba(141,231,255,.08),
+          transparent 26rem
+        ),
+        radial-gradient(
+          circle at 88% 8%,
+          rgba(156,121,255,.12),
+          transparent 30rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.065),
+          rgba(255,255,255,.018)
+        ),
+        var(--page-panel);
+
+      box-shadow:
+        0 2rem 7rem rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .page-kicker{
+      width:fit-content;
+
+      display:inline-flex;
+      align-items:center;
+
+      gap:.6rem;
+
+      padding:.58rem .9rem;
+
+      border:
+        1px solid
+        rgba(255,255,255,.14);
+
+      border-radius:999px;
+
+      color:rgba(232,240,255,.84);
+
+      background:rgba(255,255,255,.035);
+
+      font-size:.68rem;
       font-weight:950;
 
       letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .nav{
-      position:relative;
-      z-index:20;
+    .page-kicker::before{
+      content:"";
 
-      display:flex;
-      flex-wrap:wrap;
+      width:.68rem;
+      height:.68rem;
 
-      justify-content:flex-end;
-      align-items:center;
+      flex:0 0 auto;
 
-      gap:.58rem;
-    }
+      border-radius:.16rem;
 
-    .nav a{
-      min-height:2.35rem;
-
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-
-      padding:.54rem .82rem;
-
-      border:
-        1px solid
-        rgba(255,255,255,.13);
-
-      border-radius:999px;
-
-      color:rgba(241,246,255,.86);
-
-      background:
-        rgba(255,255,255,.04);
-
-      font:
-        950 .68rem/1
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-      letter-spacing:.055em;
-
-      text-transform:uppercase;
-
-      box-shadow:
-        inset
-        0 1px 0
-        rgba(255,255,255,.06);
-
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease;
-    }
-
-    .nav a:hover,
-    .nav a:focus-visible{
-      transform:
-        translateY(-2px);
-
-      border-color:
-        rgba(243,200,111,.46);
-
-      outline:none;
-    }
-
-    .nav a.primary-return{
-      border-color:
-        rgba(243,200,111,.62);
-
-      color:#060811;
+      transform:rotate(45deg);
 
       background:
         linear-gradient(
           135deg,
-          #fff2a8,
-          #f3c86f
+          var(--page-gold-light),
+          var(--page-gold)
         );
-    }
-
-    /* =====================================================
-       SHARED PANELS
-       ===================================================== */
-
-    .panel{
-      overflow:hidden;
-
-      border:
-        1px solid
-        var(--line);
-
-      border-radius:
-        clamp(
-          1.35rem,
-          5vw,
-          2.35rem
-        );
-
-      background:
-        radial-gradient(
-          circle at 14% 0%,
-          rgba(141,216,255,.10),
-          transparent 28rem
-        ),
-        radial-gradient(
-          circle at 86% 18%,
-          rgba(143,101,255,.14),
-          transparent 28rem
-        ),
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,.07),
-          rgba(255,255,255,.022)
-        ),
-        var(--panel);
 
       box-shadow:
-        var(--shadow),
-        inset
-        0 1px 0
-        rgba(255,255,255,.08);
+        0 0 1rem
+        rgba(243,200,111,.48);
+    }
+
+    .page-shell h1,
+    .page-shell h2,
+    .page-shell h3,
+    .page-shell p{
+      margin:0;
+    }
+
+    .page-shell h1{
+      max-width:970px;
+
+      font-size:
+        clamp(
+          3rem,
+          9.4vw,
+          6.8rem
+        );
+
+      line-height:.86;
+
+      letter-spacing:-.095em;
+
+      text-wrap:balance;
+    }
+
+    .page-shell h2{
+      color:var(--page-gold);
+
+      font-size:
+        clamp(
+          1.7rem,
+          5.4vw,
+          3.4rem
+        );
+
+      line-height:.96;
+
+      letter-spacing:-.065em;
+
+      text-wrap:balance;
+    }
+
+    .page-shell h3{
+      color:var(--page-ink);
+
+      font-size:
+        clamp(
+          1.1rem,
+          3.5vw,
+          1.6rem
+        );
+
+      line-height:1.05;
+
+      letter-spacing:-.04em;
+    }
+
+    .page-shell p{
+      color:var(--page-muted);
+
+      font-size:
+        clamp(
+          .98rem,
+          2.7vw,
+          1.15rem
+        );
+
+      line-height:1.58;
     }
 
     /* =====================================================
@@ -474,34 +536,19 @@
        ===================================================== */
 
     .hero{
-      position:relative;
-
       display:grid;
       justify-items:center;
-      align-content:start;
 
-      gap:1.2rem;
-
-      margin-top:.6rem;
+      gap:1rem;
 
       padding:
         clamp(
-          1.4rem,
+          1.35rem,
           4vw,
           3rem
-        )
-        clamp(
-          1rem,
-          4vw,
-          3rem
-        )
-        clamp(
-          1.8rem,
-          5vw,
-          3.5rem
         );
 
-      isolation:isolate;
+      text-align:center;
     }
 
     .hero-copy{
@@ -510,162 +557,25 @@
 
       width:
         min(
-          960px,
+          940px,
           100%
         );
 
       display:grid;
       justify-items:center;
 
-      gap:.85rem;
-
-      text-align:center;
-    }
-
-    .kicker{
-      position:relative;
-      z-index:2;
-
-      width:fit-content;
-
-      display:inline-flex;
-      align-items:center;
-
-      gap:.58rem;
-
-      padding:.58rem .95rem;
-
-      border:
-        1px solid
-        rgba(255,255,255,.14);
-
-      border-radius:999px;
-
-      color:
-        rgba(230,238,255,.86);
-
-      background:
-        rgba(255,255,255,.04);
-
-      font-size:.72rem;
-      font-weight:950;
-
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .kicker::before{
-      content:"";
-
-      width:.72rem;
-      height:.72rem;
-
-      border-radius:.18rem;
-
-      transform:
-        rotate(45deg);
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--gold2),
-          var(--gold)
-        );
-
-      box-shadow:
-        0 0 1.1rem
-        rgba(243,200,111,.46);
-    }
-
-    .shell h1{
-      position:relative;
-      z-index:2;
-
-      max-width:980px;
-
-      margin:0;
-
-      font-size:
-        clamp(
-          3rem,
-          9.8vw,
-          7rem
-        );
-
-      line-height:.84;
-
-      letter-spacing:-.105em;
-
-      text-wrap:balance;
-    }
-
-    .shell h2{
-      position:relative;
-      z-index:2;
-
-      margin:0;
-
-      color:var(--gold);
-
-      font-size:
-        clamp(
-          1.45rem,
-          4.7vw,
-          2.85rem
-        );
-
-      line-height:.98;
-
-      letter-spacing:-.07em;
-
-      text-wrap:balance;
-    }
-
-    .shell h3{
-      margin:0;
-
-      color:
-        rgba(255,244,216,.98);
-
-      font-size:
-        clamp(
-          1.05rem,
-          3vw,
-          1.34rem
-        );
-
-      line-height:1.08;
-
-      letter-spacing:-.035em;
-    }
-
-    .shell p{
-      position:relative;
-      z-index:2;
-
-      margin:0;
-
-      color:var(--muted);
-
-      font-size:
-        clamp(
-          .98rem,
-          2.7vw,
-          1.16rem
-        );
-
-      line-height:1.55;
+      gap:.8rem;
     }
 
     .hero-copy p{
-      max-width:850px;
+      max-width:830px;
     }
 
     /* =====================================================
-       TRUE 3D HEART STAGE
+       ROUNDED TRUE-DEPTH HEART
        ===================================================== */
 
-    .heart-controller-shell{
+    .heart-stage{
       position:relative;
       z-index:4;
 
@@ -680,21 +590,19 @@
       display:grid;
       place-items:center;
 
-      margin-top:.4rem;
-
       isolation:isolate;
     }
 
-    .heart-controller-shell::before{
+    .heart-stage::before{
       content:"";
 
       position:absolute;
       left:50%;
-      top:50%;
+      top:48%;
       z-index:0;
 
-      width:78%;
-      height:78%;
+      width:76%;
+      height:76%;
 
       transform:
         translate(-50%,-50%);
@@ -706,48 +614,16 @@
       background:
         radial-gradient(
           circle,
-          rgba(243,200,111,.12),
-          rgba(143,101,255,.08) 42%,
-          transparent 72%
-        );
-
-      filter:blur(34px);
-
-      opacity:.86;
-    }
-
-    .heart-controller-shell::after{
-      content:"";
-
-      position:absolute;
-      left:50%;
-      bottom:9%;
-      z-index:0;
-
-      width:38.2%;
-      height:6%;
-
-      transform:
-        translateX(-50%);
-
-      border-radius:50%;
-
-      pointer-events:none;
-
-      background:
-        radial-gradient(
-          ellipse,
-          rgba(0,0,0,.54),
-          rgba(0,0,0,.14) 56%,
+          rgba(243,200,111,.13),
+          rgba(156,121,255,.075) 38%,
+          rgba(97,143,255,.035) 56%,
           transparent 74%
         );
 
-      filter:blur(9px);
-
-      opacity:.46;
+      filter:blur(34px);
     }
 
-    .heart-3d-canvas{
+    .heart-canvas{
       position:absolute;
       inset:0;
       z-index:1;
@@ -760,52 +636,45 @@
       pointer-events:none;
 
       background:transparent;
-
-      filter:
-        drop-shadow(
-          0 1.5rem 2.4rem
-          rgba(0,0,0,.24)
-        );
     }
 
-    .heart-static-fallback{
+    .heart-fallback{
       position:absolute;
       left:50%;
-      top:49%;
+      top:48%;
       z-index:1;
 
       width:61.8%;
-      height:auto;
 
       display:none;
 
       transform:
         translate(-50%,-50%);
 
+      pointer-events:none;
+
       filter:
         drop-shadow(
-          0 1.2rem 1.5rem
+          0 1.3rem 1.6rem
           rgba(0,0,0,.54)
         )
         drop-shadow(
-          0 0 1.2rem
-          rgba(243,200,111,.24)
+          0 0 1.4rem
+          rgba(243,200,111,.28)
         );
-
-      pointer-events:none;
     }
 
-    .heart-controller-shell[data-webgl-state="failed"]
-      .heart-3d-canvas{
+    .heart-stage[data-webgl-state="failed"]
+    .heart-canvas{
       display:none;
     }
 
-    .heart-controller-shell[data-webgl-state="failed"]
-      .heart-static-fallback{
+    .heart-stage[data-webgl-state="failed"]
+    .heart-fallback{
       display:block;
     }
 
-    .heart-controller-open{
+    .heart-door{
       position:absolute;
       inset:0;
       z-index:5;
@@ -813,18 +682,10 @@
       width:100%;
       height:100%;
 
-      display:block;
-
       padding:0;
 
       border:0;
-
-      border-radius:
-        clamp(
-          1rem,
-          4vw,
-          2rem
-        );
+      border-radius:2rem;
 
       color:inherit;
 
@@ -837,12 +698,11 @@
       -webkit-tap-highlight-color:transparent;
     }
 
-    .heart-controller-open::before{
+    .heart-door::before{
       content:"";
 
       position:absolute;
-      inset:7%;
-      z-index:0;
+      inset:6%;
 
       border:
         2px solid
@@ -860,79 +720,93 @@
         box-shadow .18s ease;
     }
 
-    .heart-controller-open:hover::before{
-      opacity:.42;
+    .heart-door:hover::before{
+      opacity:.36;
 
       border-color:
-        rgba(243,200,111,.24);
-
-      box-shadow:
-        inset
-        0 0 2rem
-        rgba(243,200,111,.06);
+        rgba(243,200,111,.25);
     }
 
-    .heart-controller-open:focus-visible{
+    .heart-door:focus-visible{
       outline:none;
     }
 
-    .heart-controller-open:focus-visible::before{
+    .heart-door:focus-visible::before{
       opacity:1;
 
       border-color:
-        rgba(141,216,255,.9);
+        rgba(141,231,255,.9);
 
       box-shadow:
         0 0 0 .28rem
-        rgba(141,216,255,.13),
-        0 0 1.6rem
-        rgba(141,216,255,.24);
+        rgba(141,231,255,.13),
+        0 0 1.8rem
+        rgba(141,231,255,.28);
     }
 
-    .heart-enter-label{
+    .heart-status{
+      position:absolute;
+      left:50%;
+      top:3.5%;
+
+      transform:translateX(-50%);
+
+      color:
+        rgba(229,237,255,.54);
+
+      font-size:.58rem;
+      font-weight:950;
+
+      letter-spacing:.13em;
+      text-transform:uppercase;
+
+      white-space:nowrap;
+
+      pointer-events:none;
+    }
+
+    .heart-enter{
       position:absolute;
       left:50%;
       bottom:5.5%;
-      z-index:8;
 
-      min-height:2.65rem;
+      min-height:2.72rem;
 
       display:inline-flex;
       align-items:center;
       justify-content:center;
 
-      gap:.55rem;
+      gap:.56rem;
 
-      padding:.65rem 1rem;
+      padding:.68rem 1.08rem;
 
       border:
         1px solid
-        rgba(243,200,111,.62);
+        rgba(243,200,111,.72);
 
       border-radius:999px;
 
-      transform:
-        translateX(-50%);
+      transform:translateX(-50%);
 
-      color:#060811;
+      color:#080a11;
 
       background:
         linear-gradient(
           135deg,
-          #fff2a8,
+          #fff5bd,
           #f3c86f
         );
 
       box-shadow:
-        0 .8rem 1.8rem
-        rgba(243,200,111,.16),
+        0 .9rem 2rem
+        rgba(243,200,111,.18),
         0 0 2rem
-        rgba(243,200,111,.12);
+        rgba(243,200,111,.13);
 
-      font-size:.76rem;
+      font-size:.74rem;
       font-weight:950;
 
-      letter-spacing:.07em;
+      letter-spacing:.075em;
       text-transform:uppercase;
 
       white-space:nowrap;
@@ -941,29 +815,10 @@
 
       transition:
         transform .18s ease,
-        filter .18s ease,
-        box-shadow .18s ease;
+        filter .18s ease;
     }
 
-    .heart-controller-open:hover
-      .heart-enter-label,
-    .heart-controller-open:focus-visible
-      .heart-enter-label{
-      transform:
-        translateX(-50%)
-        translateY(-2px);
-
-      filter:
-        brightness(1.06);
-
-      box-shadow:
-        0 1rem 2rem
-        rgba(243,200,111,.22),
-        0 0 2.3rem
-        rgba(243,200,111,.18);
-    }
-
-    .heart-enter-label::before{
+    .heart-enter::before{
       content:"";
 
       width:.62rem;
@@ -971,60 +826,43 @@
 
       border-radius:.15rem;
 
-      transform:
-        rotate(45deg);
+      transform:rotate(45deg);
 
       background:
         linear-gradient(
           135deg,
-          #fff8d9,
-          var(--blue)
+          #fff9df,
+          var(--page-cyan)
         );
 
       box-shadow:
-        0 0 .8rem
-        rgba(141,216,255,.46);
+        0 0 .9rem
+        rgba(141,231,255,.54);
     }
 
-    .heart-controller-help{
-      position:absolute;
-      left:50%;
-      bottom:.8%;
-      z-index:7;
-
+    .heart-door:hover .heart-enter,
+    .heart-door:focus-visible .heart-enter{
       transform:
-        translateX(-50%);
+        translateX(-50%)
+        translateY(-2px);
 
-      color:
-        rgba(230,238,255,.68);
-
-      font-size:.68rem;
-      font-weight:850;
-
-      letter-spacing:.12em;
-      text-transform:uppercase;
-
-      white-space:nowrap;
-
-      pointer-events:none;
+      filter:brightness(1.06);
     }
 
-    .heart-controller-status{
+    .heart-help{
       position:absolute;
       left:50%;
-      top:4%;
-      z-index:7;
+      bottom:.9%;
 
-      transform:
-        translateX(-50%);
+      transform:translateX(-50%);
 
       color:
-        rgba(230,238,255,.5);
+        rgba(229,237,255,.57);
 
-      font-size:.58rem;
+      font-size:.61rem;
       font-weight:900;
 
-      letter-spacing:.12em;
+      letter-spacing:.11em;
       text-transform:uppercase;
 
       white-space:nowrap;
@@ -1032,46 +870,23 @@
       pointer-events:none;
     }
 
-    .heart-controller-root{
-      position:absolute;
-
-      width:1px;
-      height:1px;
-
-      overflow:hidden;
-
-      clip-path:
-        inset(50%);
-
-      white-space:nowrap;
-    }
-
-    /* =====================================================
-       HERO ACTIONS
-       ===================================================== */
-
-    .actions{
-      position:relative;
-      z-index:6;
-
+    .hero-actions,
+    .final-actions{
       display:flex;
       flex-wrap:wrap;
-
       justify-content:center;
 
-      gap:.62rem;
-
-      margin-top:.2rem;
+      gap:.65rem;
     }
 
-    .button{
-      min-height:2.65rem;
+    .page-button{
+      min-height:2.7rem;
 
       display:inline-flex;
       align-items:center;
       justify-content:center;
 
-      padding:.65rem 1rem;
+      padding:.68rem 1.05rem;
 
       border:
         1px solid
@@ -1080,69 +895,63 @@
       border-radius:999px;
 
       color:
-        rgba(241,246,255,.88);
+        rgba(244,248,255,.9);
 
       background:
         rgba(255,255,255,.045);
 
-      font-size:.76rem;
+      font-size:.73rem;
       font-weight:950;
 
-      letter-spacing:.055em;
+      letter-spacing:.065em;
       text-transform:uppercase;
 
       box-shadow:
-        inset
-        0 1px 0
+        inset 0 1px 0
         rgba(255,255,255,.07);
 
       transition:
         transform .18s ease,
         border-color .18s ease,
-        background .18s ease;
+        filter .18s ease;
     }
 
-    .button:hover,
-    .button:focus-visible{
-      transform:
-        translateY(-2px);
+    .page-button:hover,
+    .page-button:focus-visible{
+      transform:translateY(-2px);
 
       border-color:
-        rgba(243,200,111,.62);
+        rgba(243,200,111,.58);
 
       outline:none;
     }
 
-    .button.gold{
+    .page-button--gold{
       border-color:
-        rgba(243,200,111,.9);
+        rgba(243,200,111,.84);
 
-      color:#060811;
+      color:#080a11;
 
       background:
         linear-gradient(
           135deg,
-          #fff2a8,
+          #fff4b4,
           #f3c86f
         );
-
-      box-shadow:
-        0 .8rem 1.8rem
-        rgba(243,200,111,.13);
     }
 
     /* =====================================================
-       DOWNSTREAM PAGE
+       PRESERVED BOOK COVERS
        ===================================================== */
 
-    .section{
+    .book-section{
       margin-top:1.15rem;
 
       padding:
         clamp(
-          1rem,
+          1.15rem,
           4vw,
-          1.65rem
+          2rem
         );
 
       display:grid;
@@ -1150,637 +959,711 @@
       gap:1rem;
     }
 
-    .cover-split{
+    .book-heading{
       display:grid;
-      grid-template-columns:
-        minmax(0,.82fr)
-        minmax(260px,.58fr);
 
-      gap:1rem;
-
-      align-items:stretch;
+      gap:.72rem;
     }
 
-    .cover-card{
+    .book-pair{
       display:grid;
-      align-content:start;
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0,1fr)
+        );
 
-      gap:.8rem;
+      gap:1rem;
+    }
 
-      padding:1.05rem;
+    .book-cover{
+      display:grid;
+
+      gap:.72rem;
+
+      margin:0;
+
+      padding:.82rem;
 
       border:
         1px solid
-        rgba(255,255,255,.10);
+        rgba(255,255,255,.11);
 
-      border-radius:1.2rem;
+      border-radius:1.4rem;
 
       background:
-        rgba(255,255,255,.028);
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(243,200,111,.1),
+          transparent 38%
+        ),
+        rgba(255,255,255,.025);
     }
 
-    .cover-frame{
+    .book-cover-frame{
       position:relative;
 
       min-height:
         clamp(
-          19rem,
-          36vw,
-          31rem
+          22rem,
+          46vw,
+          38rem
         );
 
       overflow:hidden;
 
       border:
         1px solid
-        rgba(243,200,111,.24);
+        rgba(243,200,111,.27);
 
-      border-radius:1.45rem;
+      border-radius:1rem;
 
-      background:
-        radial-gradient(
-          circle at 50% 20%,
-          rgba(243,200,111,.12),
-          transparent 38%
-        ),
-        linear-gradient(
-          180deg,
-          rgba(255,255,255,.06),
-          rgba(255,255,255,.02)
-        );
+      background:#050710;
 
       box-shadow:
-        inset
-        0 1px 0
-        rgba(255,255,255,.08),
-        0 1.2rem 3.2rem
-        rgba(0,0,0,.28);
+        0 1.4rem 3rem
+        rgba(0,0,0,.3);
     }
 
-    .cover-frame img{
+    .book-cover-frame img{
       width:100%;
       height:100%;
       min-height:inherit;
 
       display:block;
 
-      object-fit:cover;
-    }
-
-    .cover-frame::after{
-      content:"";
-
-      position:absolute;
-      inset:0;
-
-      pointer-events:none;
-
-      background:
-        linear-gradient(
-          180deg,
-          transparent 46%,
-          rgba(2,4,11,.56)
-        ),
-        radial-gradient(
-          circle at 50% 16%,
-          rgba(255,255,255,.12),
-          transparent 26%
-        );
-    }
-
-    .short-grid,
-    .route-grid{
-      display:grid;
-      grid-template-columns:
-        repeat(
-          3,
-          minmax(0,1fr)
-        );
-
-      gap:.75rem;
-    }
-
-    .short-card,
-    .route-card{
-      position:relative;
-
-      min-height:10rem;
-
-      display:grid;
-      align-content:start;
-
-      gap:.55rem;
-
-      padding:.95rem;
-
-      overflow:hidden;
-
-      border:
-        1px solid
-        rgba(255,255,255,.10);
-
-      border-radius:1.05rem;
+      object-fit:contain;
 
       background:
         radial-gradient(
-          circle at 90% 0%,
-          rgba(243,200,111,.07),
-          transparent 48%
+          circle at 50% 30%,
+          rgba(243,200,111,.08),
+          transparent 42%
         ),
-        rgba(255,255,255,.026);
-
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        background .18s ease;
+        #050710;
     }
 
-    .route-card:hover,
-    .route-card:focus-visible{
-      transform:
-        translateY(-3px);
+    .book-cover figcaption{
+      display:grid;
 
-      border-color:
-        rgba(243,200,111,.36);
+      gap:.18rem;
 
-      background:
-        rgba(255,255,255,.043);
-
-      outline:none;
+      padding:.12rem .25rem .2rem;
     }
 
-    .short-card::after,
-    .route-card::after{
-      content:"";
+    .book-cover figcaption b{
+      color:var(--page-gold);
 
-      position:absolute;
-      right:-1.2rem;
-      bottom:-1.2rem;
+      font-size:.63rem;
+      font-weight:950;
 
-      width:5.2rem;
-      height:5.2rem;
-
-      border:
-        1px solid
-        rgba(243,200,111,.16);
-
-      border-radius:1rem;
-
-      transform:
-        rotate(45deg);
-
-      opacity:.6;
-
-      pointer-events:none;
-    }
-
-    .short-card b,
-    .route-card b{
-      position:relative;
-      z-index:2;
-
-      color:var(--gold);
-
-      font-size:.66rem;
-
-      letter-spacing:.12em;
+      letter-spacing:.14em;
       text-transform:uppercase;
     }
 
-    .short-card strong,
-    .route-card strong{
-      position:relative;
-      z-index:2;
-
-      color:
-        rgba(255,244,216,.98);
+    .book-cover figcaption strong{
+      color:var(--page-ink);
 
       font-size:
         clamp(
-          1.05rem,
-          3vw,
-          1.35rem
+          1rem,
+          2.8vw,
+          1.25rem
         );
 
-      line-height:1.05;
-
-      letter-spacing:-.045em;
+      letter-spacing:-.03em;
     }
 
-    .short-card span,
-    .route-card span{
-      position:relative;
-      z-index:2;
+    /* =====================================================
+       CONNECTED PATH MAP
+       ===================================================== */
 
-      color:var(--muted);
-
-      font-size:.92rem;
-
-      line-height:1.42;
-    }
-
-    .summit-strip{
-      display:grid;
-      grid-template-columns:
-        repeat(
-          9,
-          minmax(0,1fr)
-        );
-
-      gap:.45rem;
-    }
-
-    .summit-pill{
-      min-height:5.4rem;
-
-      display:grid;
-      place-items:center;
-
-      padding:.62rem .45rem;
-
-      border:
-        1px solid
-        rgba(255,255,255,.10);
-
-      border-radius:1rem;
-
-      color:
-        rgba(255,244,216,.92);
-
-      background:
-        rgba(255,255,255,.026);
-
-      text-align:center;
-
-      font-size:.68rem;
-      font-weight:950;
-
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-
-    .doll{
-      display:grid;
-
-      gap:.65rem;
-    }
-
-    .shell details{
-      overflow:hidden;
-
-      border:
-        1px solid
-        rgba(255,255,255,.11);
-
-      border-radius:1.1rem;
-
-      background:
-        rgba(255,255,255,.026);
-    }
-
-    .shell details[open]{
-      border-color:
-        rgba(243,200,111,.25);
-
-      background:
-        rgba(243,200,111,.045);
-    }
-
-    .shell details summary{
-      min-height:4rem;
-
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-
-      gap:1rem;
-
-      padding:.9rem 1rem;
-
-      cursor:pointer;
-
-      list-style:none;
-    }
-
-    .shell details summary::-webkit-details-marker{
-      display:none;
-    }
-
-    .shell details summary::after{
-      content:"+";
-
-      width:2rem;
-      height:2rem;
-
-      display:grid;
-      place-items:center;
-
-      flex:0 0 auto;
-
-      border:
-        1px solid
-        rgba(255,255,255,.13);
-
-      border-radius:999px;
-
-      color:var(--gold);
-
-      background:
-        rgba(255,255,255,.04);
-
-      font-weight:950;
-    }
-
-    .shell details[open] summary::after{
-      content:"–";
-    }
-
-    .summary-text{
-      display:grid;
-
-      gap:.16rem;
-    }
-
-    .summary-text b{
-      color:var(--gold);
-
-      font-size:.65rem;
-
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .summary-text span{
-      color:
-        rgba(255,244,216,.94);
-
-      font-size:1.02rem;
-      font-weight:950;
-
-      letter-spacing:-.02em;
-    }
-
-    .doll-body{
-      display:grid;
-
-      gap:.85rem;
+    .journey-section{
+      margin-top:1.15rem;
 
       padding:
-        0
-        1rem
-        1rem;
-    }
+        clamp(
+          1.15rem,
+          4vw,
+          2.1rem
+        );
 
-    .summit-list{
       display:grid;
 
-      gap:.45rem;
+      gap:1rem;
     }
 
-    .summit-row{
+    .journey-heading{
       display:grid;
-      grid-template-columns:
-        minmax(150px,.32fr)
-        1fr;
 
-      gap:.65rem;
-
-      padding:.7rem;
-
-      border:
-        1px solid
-        rgba(255,255,255,.08);
-
-      border-radius:.9rem;
-
-      background:
-        rgba(255,255,255,.022);
+      gap:.72rem;
     }
 
-    .summit-row strong{
-      color:
-        rgba(255,244,216,.96);
+    .journey-heading p{
+      max-width:880px;
     }
 
-    .summit-row span{
-      color:var(--muted);
-    }
+    .path-map{
+      position:relative;
 
-    .final-band{
-      margin-top:1.15rem;
+      overflow:hidden;
 
       padding:
         clamp(
           1rem,
           3vw,
-          1.35rem
+          1.5rem
         );
-
-      display:grid;
-
-      gap:.9rem;
 
       border:
         1px solid
-        rgba(243,200,111,.28);
+        rgba(243,200,111,.2);
 
       border-radius:
         clamp(
-          1.25rem,
-          5vw,
-          2rem
+          1.15rem,
+          4vw,
+          1.8rem
         );
 
       background:
         radial-gradient(
-          circle at 16% 0%,
-          rgba(243,200,111,.10),
+          circle at 50% 48%,
+          rgba(156,121,255,.13),
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(243,200,111,.09),
           transparent 36%
         ),
         linear-gradient(
           180deg,
-          rgba(255,255,255,.06),
-          rgba(255,255,255,.024)
+          rgba(6,12,30,.94),
+          rgba(3,7,19,.98)
+        );
+
+      isolation:isolate;
+    }
+
+    .path-map::before{
+      content:"";
+
+      position:absolute;
+      left:50%;
+      top:5%;
+      bottom:5%;
+      z-index:0;
+
+      width:2px;
+
+      transform:translateX(-50%);
+
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(141,231,255,.5) 10%,
+          rgba(243,200,111,.6) 48%,
+          rgba(156,121,255,.55) 90%,
+          transparent
         );
 
       box-shadow:
-        0 1.5rem 4rem
-        rgba(0,0,0,.24),
-        inset
-        0 1px 0
-        rgba(255,255,255,.08);
+        0 0 1rem
+        rgba(141,231,255,.3);
     }
 
-    .final-band strong{
+    .path-network{
+      position:absolute;
+      inset:0;
+      z-index:0;
+
+      width:100%;
+      height:100%;
+
+      pointer-events:none;
+
+      opacity:.54;
+    }
+
+    .path-columns{
+      position:relative;
+      z-index:2;
+
+      display:grid;
+      grid-template-columns:
+        minmax(0,1fr)
+        3.5rem
+        minmax(0,1fr);
+
+      align-items:center;
+
+      gap:.55rem;
+
+      margin-bottom:.8rem;
+
       color:
-        rgba(255,244,216,.98);
+        rgba(229,237,255,.52);
+
+      font-size:.58rem;
+      font-weight:950;
+
+      letter-spacing:.13em;
+      text-align:center;
+      text-transform:uppercase;
+    }
+
+    .path-list{
+      position:relative;
+      z-index:2;
+
+      display:grid;
+
+      gap:.65rem;
+    }
+
+    .path-step{
+      --step-color:
+        var(--page-gold);
+
+      position:relative;
+
+      display:grid;
+      grid-template-columns:
+        minmax(0,1fr)
+        3.5rem
+        minmax(0,1fr);
+
+      align-items:center;
+
+      gap:.55rem;
+
+      min-height:6.2rem;
+
+      padding:.72rem;
+
+      border:
+        1px solid
+        rgba(255,255,255,.085);
+
+      border-radius:1rem;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.025),
+          rgba(255,255,255,.045),
+          rgba(255,255,255,.025)
+        );
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.035);
+    }
+
+    .path-step:nth-child(1){
+      --step-color:#f3c86f;
+    }
+
+    .path-step:nth-child(2){
+      --step-color:#ff9dce;
+    }
+
+    .path-step:nth-child(3){
+      --step-color:#8ff0c6;
+    }
+
+    .path-step:nth-child(4){
+      --step-color:#ffe8a3;
+    }
+
+    .path-step:nth-child(5){
+      --step-color:#8de7ff;
+    }
+
+    .path-step:nth-child(6){
+      --step-color:#a88bff;
+    }
+
+    .path-step:nth-child(7){
+      --step-color:#72b7ff;
+    }
+
+    .path-step:nth-child(8){
+      --step-color:#d5b2ff;
+    }
+
+    .path-step:nth-child(9){
+      --step-color:#fff5d0;
+    }
+
+    .path-origin,
+    .path-summit{
+      min-width:0;
+
+      display:grid;
+
+      gap:.18rem;
+
+      padding:.72rem;
+
+      border:
+        1px solid
+        color-mix(
+          in srgb,
+          var(--step-color) 32%,
+          transparent
+        );
+
+      border-radius:.82rem;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--step-color) 7%,
+          rgba(4,8,20,.88)
+        );
+    }
+
+    .path-origin{
+      text-align:right;
+    }
+
+    .path-summit{
+      text-align:left;
+    }
+
+    .path-origin small,
+    .path-summit small{
+      color:
+        rgba(229,237,255,.5);
+
+      font-size:.5rem;
+      font-weight:950;
+
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .path-origin strong,
+    .path-summit strong{
+      color:var(--page-ink);
 
       font-size:
         clamp(
-          1.2rem,
-          3vw,
-          1.55rem
+          .82rem,
+          2.7vw,
+          1.05rem
         );
 
       line-height:1.05;
 
-      letter-spacing:-.04em;
+      letter-spacing:-.025em;
     }
 
-    .shell footer{
-      padding:
-        1.35rem
-        0
-        .5rem;
+    .path-node{
+      position:relative;
 
-      color:var(--faint);
+      width:2.25rem;
+      height:2.25rem;
+
+      display:grid;
+      place-items:center;
+
+      justify-self:center;
+
+      border:
+        2px solid
+        color-mix(
+          in srgb,
+          var(--step-color) 76%,
+          white
+        );
+
+      border-radius:.48rem;
+
+      transform:rotate(45deg);
+
+      color:#070912;
+
+      background:
+        linear-gradient(
+          135deg,
+          white,
+          var(--step-color)
+        );
+
+      box-shadow:
+        0 0 1rem
+        color-mix(
+          in srgb,
+          var(--step-color) 45%,
+          transparent
+        );
+    }
+
+    .path-node span{
+      transform:rotate(-45deg);
+
+      font-size:.66rem;
+      font-weight:950;
+    }
+
+    .path-thread{
+      grid-column:1 / -1;
+
+      margin-top:.08rem;
+
+      color:
+        rgba(229,237,255,.6);
+
+      font-size:.68rem;
+      line-height:1.42;
+      text-align:center;
+    }
+
+    .path-law{
+      position:relative;
+      z-index:2;
+
+      margin-top:.9rem;
+
+      padding:.9rem 1rem;
+
+      border:
+        1px solid
+        rgba(141,231,255,.16);
+
+      border-radius:1rem;
+
+      color:
+        rgba(229,237,255,.72);
+
+      background:
+        rgba(141,231,255,.045);
+
+      font-size:.77rem;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    /* =====================================================
+       FINAL ACTIONS
+       ===================================================== */
+
+    .final-section{
+      margin-top:1.15rem;
+
+      padding:
+        clamp(
+          1.2rem,
+          4vw,
+          2rem
+        );
+
+      display:grid;
+      justify-items:center;
+
+      gap:.85rem;
 
       text-align:center;
 
-      font-size:.76rem;
+      border-color:
+        rgba(243,200,111,.28);
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(243,200,111,.1),
+          transparent 28rem
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.018)
+        ),
+        rgba(8,11,22,.92);
     }
 
-    /* =====================================================
-       MOTION
-       ===================================================== */
+    .final-section p{
+      max-width:760px;
+    }
 
-    @keyframes auroraDrift{
+    .page-footer{
+      display:grid;
+
+      gap:.65rem;
+
+      padding:1.4rem .5rem .5rem;
+
+      color:var(--page-faint);
+
+      text-align:center;
+
+      font-size:.7rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+
+      gap:.45rem .8rem;
+    }
+
+    .footer-links a{
+      color:
+        rgba(229,237,255,.62);
+
+      font-weight:800;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible{
+      color:var(--page-gold);
+
+      outline:none;
+    }
+
+    @keyframes page-aurora-rotation{
       from{
-        transform:
-          rotate(0deg)
-          scale(1);
+        transform:rotate(0deg);
       }
 
       to{
-        transform:
-          rotate(360deg)
-          scale(1);
+        transform:rotate(360deg);
       }
     }
 
-    /* =====================================================
-       RESPONSIVE
-       ===================================================== */
-
-    @media (max-width:1080px){
-      .summit-strip{
-        grid-template-columns:
-          repeat(
-            3,
-            minmax(0,1fr)
-          );
-      }
-    }
-
-    @media (max-width:980px){
-      .topbar{
+    @media (max-width:760px){
+      .page-topbar{
         grid-template-columns:1fr;
-
         align-items:start;
       }
 
-      .nav{
-        justify-content:flex-start;
+      .page-return{
+        justify-self:start;
       }
 
-      .short-grid,
-      .route-grid{
-        grid-template-columns:
-          repeat(
-            2,
-            minmax(0,1fr)
-          );
-      }
-
-      .cover-split{
+      .book-pair{
         grid-template-columns:1fr;
       }
-    }
 
-    @media (max-width:720px){
-      .shell{
-        width:
-          min(
-            calc(100% - 22px),
-            var(--max)
-          );
-      }
-
-      .hero{
-        padding:1rem;
-      }
-
-      .shell h1{
-        font-size:
-          clamp(
-            3rem,
-            17vw,
-            5.2rem
-          );
-      }
-
-      .heart-controller-shell{
+      .heart-stage{
         width:100%;
       }
 
-      .actions{
+      .hero-actions,
+      .final-actions{
         width:100%;
 
         display:grid;
         grid-template-columns:1fr;
       }
 
-      .button{
+      .page-button{
         width:100%;
-      }
-
-      .short-grid,
-      .route-grid{
-        grid-template-columns:1fr;
-      }
-
-      .summit-strip{
-        grid-template-columns:
-          repeat(
-            2,
-            minmax(0,1fr)
-          );
-      }
-
-      .summit-row{
-        grid-template-columns:1fr;
       }
     }
 
     @media (max-width:520px){
-      .heart-controller-shell{
-        width:100%;
+      .page-shell{
+        width:
+          min(
+            calc(100% - 20px),
+            var(--page-max)
+          );
       }
 
-      .heart-enter-label{
+      .hero,
+      .book-section,
+      .journey-section,
+      .final-section{
+        padding:1rem;
+      }
+
+      .page-shell h1{
+        font-size:
+          clamp(
+            2.9rem,
+            17vw,
+            4.8rem
+          );
+      }
+
+      .heart-enter{
         bottom:5%;
 
-        min-height:2.35rem;
+        min-height:2.38rem;
 
-        padding:.56rem .78rem;
+        padding:.58rem .82rem;
 
         font-size:.62rem;
       }
 
-      .heart-controller-help{
+      .heart-help{
         display:none;
       }
 
-      .heart-controller-status{
+      .heart-status{
         top:2%;
 
-        font-size:.5rem;
+        font-size:.48rem;
+      }
+
+      .path-map{
+        padding:.7rem;
+      }
+
+      .path-columns,
+      .path-step{
+        grid-template-columns:
+          minmax(0,1fr)
+          2.55rem
+          minmax(0,1fr);
+
+        gap:.36rem;
+      }
+
+      .path-step{
+        min-height:5.7rem;
+
+        padding:.48rem;
+      }
+
+      .path-origin,
+      .path-summit{
+        padding:.52rem .42rem;
+      }
+
+      .path-origin strong,
+      .path-summit strong{
+        font-size:
+          clamp(
+            .68rem,
+            3.3vw,
+            .88rem
+          );
+      }
+
+      .path-node{
+        width:1.86rem;
+        height:1.86rem;
+      }
+
+      .path-node span{
+        font-size:.56rem;
+      }
+
+      .path-thread{
+        font-size:.59rem;
+      }
+
+      .book-cover-frame{
+        min-height:24rem;
       }
     }
-
-    /* =====================================================
-       REDUCED MOTION
-       ===================================================== */
 
     @media (prefers-reduced-motion:reduce){
       *,
@@ -1803,51 +1686,43 @@
 
 <body>
   <a
-    class="skip"
-    href="#summits-love-main"
+    class="page-skip"
+    href="#nine-summits-main"
   >
     Skip to The Nine Summits of Love
   </a>
 
-  <div class="shell">
+  <div class="page-shell">
     <header
-      class="topbar"
+      class="page-topbar"
       aria-label="The Nine Summits of Love header"
     >
       <a
-        class="brand"
-        href="/"
+        class="page-brand"
+        href="/nine-summits-of-love/"
       >
-        <span class="brand-copy">
-          <span>Diamond Gate Bridge</span>
+        <small>Diamond Gate Bridge</small>
 
-          <strong>
-            The Nine Summits of Love
-          </strong>
-        </span>
+        <strong>
+          The Nine Summits of Love
+        </strong>
       </a>
 
-      <nav
-        class="nav"
-        aria-label="Primary navigation"
+      <a
+        class="page-return"
+        href="/"
       >
-        <a
-          class="primary-return"
-          href="/"
-        >
-          Return to Compass
-        </a>
-      </nav>
+        Return to Compass
+      </a>
     </header>
 
-    <main id="summits-love-main">
+    <main id="nine-summits-main">
       <section
-        class="panel hero"
+        class="page-panel hero"
         aria-labelledby="page-title"
-        data-nine-summits-heart-hero
       >
         <div class="hero-copy">
-          <div class="kicker">
+          <div class="page-kicker">
             The Nine Summits of Love · 256 Carats
           </div>
 
@@ -1860,19 +1735,20 @@
           </h2>
 
           <p>
-            The Nine Summits of Love is the human-first book and seminar lane. It begins with the diamond heart under pressure, the visible lock, the chain, the key, and the climb toward love through nine summits.
+            The Nine Summits of Love begins with value under pressure. The heart is not empty. It is waiting for a connected path through gratitude, generosity, dependability, accountability, forgiveness, self-control, patience, humility, and purity.
           </p>
         </div>
 
         <div
-          class="heart-controller-shell"
-          data-house-heart-shell
+          class="heart-stage"
           data-nine-summits-heart-stage
+          data-house-heart-shell
           data-webgl-state="loading"
           data-heart-width="377"
           data-heart-height="368"
           data-heart-depth="89"
-          data-heart-bevel="13"
+          data-heart-rim-depth="13"
+          data-heart-dome-rise="31.5"
           data-heart-floor-gap="55"
           data-heart-shadow-width="233"
           data-heart-camera-distance="987"
@@ -1882,69 +1758,74 @@
           data-heart-origin-z="0"
           data-heart-axis="y"
           data-heart-orbit="false"
+          data-heart-blackout="false"
         >
           <canvas
-            class="heart-3d-canvas"
+            class="heart-canvas"
             data-nine-summits-heart-canvas
             aria-hidden="true"
           ></canvas>
 
           <svg
-            class="heart-static-fallback"
+            class="heart-fallback"
             viewBox="0 0 1000 900"
             aria-hidden="true"
             focusable="false"
           >
             <defs>
-              <linearGradient
-                id="fallbackHeartGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="1"
+              <radialGradient
+                id="fallbackRoundedHeart"
+                cx="42%"
+                cy="30%"
+                r="74%"
               >
                 <stop
                   offset="0%"
-                  stop-color="#ffe8a3"
+                  stop-color="#fff7ce"
                 />
 
                 <stop
-                  offset="24%"
-                  stop-color="#9e5d75"
+                  offset="18%"
+                  stop-color="#f3c86f"
                 />
 
                 <stop
-                  offset="56%"
-                  stop-color="#4d3273"
+                  offset="42%"
+                  stop-color="#ca6fa2"
+                />
+
+                <stop
+                  offset="70%"
+                  stop-color="#69469c"
                 />
 
                 <stop
                   offset="100%"
-                  stop-color="#10162e"
+                  stop-color="#24355d"
                 />
-              </linearGradient>
+              </radialGradient>
 
               <filter
-                id="fallbackHeartGlow"
+                id="fallbackRoundedGlow"
                 x="-40%"
                 y="-40%"
                 width="180%"
-                height="180%"
+                height="190%"
               >
                 <feDropShadow
                   dx="0"
-                  dy="22"
-                  stdDeviation="18"
+                  dy="24"
+                  stdDeviation="20"
                   flood-color="#000000"
-                  flood-opacity=".64"
+                  flood-opacity=".62"
                 />
 
                 <feDropShadow
                   dx="0"
                   dy="0"
-                  stdDeviation="12"
+                  stdDeviation="14"
                   flood-color="#f3c86f"
-                  flood-opacity=".34"
+                  flood-opacity=".32"
                 />
               </filter>
             </defs>
@@ -1962,662 +1843,517 @@
                 C 650 734 556 805 500 865
                 Z
               "
-              fill="url(#fallbackHeartGradient)"
-              stroke="#f3c86f"
+              fill="url(#fallbackRoundedHeart)"
+              stroke="#ffe8a3"
               stroke-width="8"
-              filter="url(#fallbackHeartGlow)"
+              filter="url(#fallbackRoundedGlow)"
             />
           </svg>
 
           <button
-            class="heart-controller-open"
+            class="heart-door"
             type="button"
             data-house-control-pad-open
-            data-house-room="book-chamber"
-            data-house-heart-controller-open
+            data-house-context="nine-summits-of-love"
             aria-label="Open the interactive House estate from the rotating Nine Summits diamond heart"
           >
-            <span class="heart-controller-status">
-              True-depth axial diamond heart
+            <span class="heart-status">
+              Rounded · illuminated · fixed-axis heart
             </span>
 
-            <span class="heart-enter-label">
+            <span class="heart-enter">
               Enter the House
             </span>
 
-            <span class="heart-controller-help">
-              Choose the rotating heart to open the interactive estate
+            <span class="heart-help">
+              Select the heart to open the interactive estate
             </span>
           </button>
-
-          <div
-            class="heart-controller-root"
-            data-house-control-pad-root
-            data-house-room="book-chamber"
-            aria-hidden="true"
-          ></div>
         </div>
 
-        <div class="actions">
+        <div class="hero-actions">
           <a
-            class="button gold"
-            href="/nine-summits/"
-          >
-            Open Nine Summits Hub
-          </a>
-
-          <a
-            class="button"
-            href="/nine-summits/universe/"
-          >
-            Enter the Universe
-          </a>
-
-          <a
-            class="button"
-            href="/about-this-underdog/"
-          >
-            About This Underdog
-          </a>
-
-          <a
-            class="button"
-            href="/meet-sean-mansfield/"
-          >
-            Meet Sean
-          </a>
-        </div>
-      </section>
-
-      <section
-        class="panel section"
-        aria-labelledby="origin-cover-title"
-      >
-        <div class="kicker">
-          Original book cover
-        </div>
-
-        <h2 id="origin-cover-title">
-          The locked heart remains the beginning.
-        </h2>
-
-        <div class="cover-split">
-          <div class="cover-frame">
-            <img
-              src="/assets/nine-summits-love-preface-cover.png"
-              alt="The Nine Summits of Love preface cover showing a locked diamond heart, chain, key, and mountain ascent."
-              loading="eager"
-              decoding="sync"
-              fetchpriority="high"
-            >
-          </div>
-
-          <article class="cover-card">
-            <h3>
-              The symbol is already right.
-            </h3>
-
-            <p>
-              The first cover is not discarded. It anchors the human path: value under pressure, love not yet unlocked, the mountain waiting beyond the first recognition.
-            </p>
-
-            <div class="short-grid">
-              <div class="short-card">
-                <b>Heart</b>
-
-                <span>
-                  Value is still present.
-                </span>
-              </div>
-
-              <div class="short-card">
-                <b>Lock</b>
-
-                <span>
-                  Love is not yet accessed cleanly.
-                </span>
-              </div>
-
-              <div class="short-card">
-                <b>Key</b>
-
-                <span>
-                  The path exists, but must be recognized and used.
-                </span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="panel section"
-        aria-labelledby="summits-title"
-      >
-        <div class="kicker">
-          Nine Summits
-        </div>
-
-        <h2 id="summits-title">
-          The climb names the human formation.
-        </h2>
-
-        <div
-          class="summit-strip"
-          aria-label="The Nine Summits"
-        >
-          <div class="summit-pill">
-            Character
-          </div>
-
-          <div class="summit-pill">
-            Structure
-          </div>
-
-          <div class="summit-pill">
-            Balance
-          </div>
-
-          <div class="summit-pill">
-            Stability
-          </div>
-
-          <div class="summit-pill">
-            Peace
-          </div>
-
-          <div class="summit-pill">
-            Joy
-          </div>
-
-          <div class="summit-pill">
-            Dignity
-          </div>
-
-          <div class="summit-pill">
-            Free Will
-          </div>
-
-          <div class="summit-pill">
-            Love
-          </div>
-        </div>
-
-        <p>
-          The summits are not slogans. They are formation stages: the way pressure, choice, repair, discipline, and love become livable.
-        </p>
-      </section>
-
-      <section
-        class="panel section"
-        aria-labelledby="doll-title"
-      >
-        <div class="kicker">
-          Russian-doll book path
-        </div>
-
-        <h2 id="doll-title">
-          Open the layer needed.
-        </h2>
-
-        <div class="doll">
-          <details open>
-            <summary>
-              <span class="summary-text">
-                <b>Layer 1</b>
-
-                <span>The Book</span>
-              </span>
-            </summary>
-
-            <div class="doll-body">
-              <p>
-                The book begins with the locked heart because most people do not begin at love. They begin with pressure, confusion, inheritance, fear, repair, and a need to understand why love has been difficult to hold cleanly.
-              </p>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              <span class="summary-text">
-                <b>Layer 2</b>
-
-                <span>The Nine Summits</span>
-              </span>
-            </summary>
-
-            <div class="doll-body">
-              <div class="summit-list">
-                <div class="summit-row">
-                  <strong>
-                    1 · Character
-                  </strong>
-
-                  <span>
-                    Becoming someone love can trust without pretending pressure never happened.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    2 · Structure
-                  </strong>
-
-                  <span>
-                    Building a life strong enough to carry feeling, responsibility, pressure, and future.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    3 · Balance
-                  </strong>
-
-                  <span>
-                    Holding difference without collapsing into chaos, avoidance, or control.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    4 · Stability
-                  </strong>
-
-                  <span>
-                    Repeatable support: the person becomes more reliable to themselves and others.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    5 · Peace
-                  </strong>
-
-                  <span>
-                    Reducing unnecessary war inside the self, the home, the relationship field, and the future.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    6 · Joy
-                  </strong>
-
-                  <span>
-                    The person becomes capable of brightness again, not only endurance.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    7 · Dignity
-                  </strong>
-
-                  <span>
-                    The human being stops begging for permission to have value.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    8 · Free Will
-                  </strong>
-
-                  <span>
-                    Choosing with awareness instead of repeating inherited pressure blindly.
-                  </span>
-                </div>
-
-                <div class="summit-row">
-                  <strong>
-                    9 · Love
-                  </strong>
-
-                  <span>
-                    Love becomes disciplined, embodied, and able to hold truth without destroying the person.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              <span class="summary-text">
-                <b>Layer 3</b>
-
-                <span>Universe Extension</span>
-              </span>
-            </summary>
-
-            <div class="doll-body">
-              <p>
-                The Universe does not replace the book. It gives the book terrain: places, rooms, products, experiences, public events, story paths, and future media.
-              </p>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              <span class="summary-text">
-                <b>Layer 4</b>
-
-                <span>Voice Connection</span>
-              </span>
-            </summary>
-
-            <div class="doll-body">
-              <p>
-                About This Underdog carries the universal underdog message. Meet Sean Mansfield carries the personal profile behind the voice. The two pages support the book without competing with it.
-              </p>
-
-              <div class="actions">
-                <a
-                  class="button gold"
-                  href="/about-this-underdog/"
-                >
-                  About This Underdog
-                </a>
-
-                <a
-                  class="button"
-                  href="/meet-sean-mansfield/"
-                >
-                  Meet Sean
-                </a>
-              </div>
-            </div>
-          </details>
-
-          <details>
-            <summary>
-              <span class="summary-text">
-                <b>Layer 5</b>
-
-                <span>Proof and Usefulness</span>
-              </span>
-            </summary>
-
-            <div class="doll-body">
-              <p>
-                The book gives the human path. Products, Showroom, and Gauges give that path usable surfaces, visible demonstrations, and measurement.
-              </p>
-
-              <div class="short-grid">
-                <div class="short-card">
-                  <b>Products</b>
-
-                  <span>
-                    Ideas become tools.
-                  </span>
-                </div>
-
-                <div class="short-card">
-                  <b>Showroom</b>
-
-                  <span>
-                    The build becomes visible.
-                  </span>
-                </div>
-
-                <div class="short-card">
-                  <b>Gauges</b>
-
-                  <span>
-                    The route truth gets measured.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <section
-        class="panel section"
-        aria-labelledby="universe-cover-title"
-      >
-        <div class="kicker">
-          Universe cover
-        </div>
-
-        <h2 id="universe-cover-title">
-          The diamond heart becomes world-bearing.
-        </h2>
-
-        <div class="cover-split">
-          <article class="cover-card">
-            <h3>
-              The path becomes place.
-            </h3>
-
-            <p>
-              The second image carries the expansion field. The book remains the human path while the Universe becomes the wider environment where the summits can become places, lessons, events, products, and proof.
-            </p>
-
-            <div class="actions">
-              <a
-                class="button gold"
-                href="/nine-summits/universe/"
-              >
-                Enter the Universe
-              </a>
-
-              <a
-                class="button"
-                href="/showroom/"
-              >
-                Open Showroom
-              </a>
-            </div>
-          </article>
-
-          <div class="cover-frame">
-            <img
-              src="/assets/nine-summits-love-hero.png"
-              alt="The Nine Summits of Love universe cover with radiant diamond heart and mountain landscape."
-              loading="lazy"
-              decoding="async"
-            >
-          </div>
-        </div>
-      </section>
-
-      <section
-        class="panel section"
-        aria-labelledby="route-title"
-      >
-        <div class="kicker">
-          Clean route split
-        </div>
-
-        <h2 id="route-title">
-          The pages do not compete.
-        </h2>
-
-        <div
-          class="route-grid"
-          aria-label="Nine Summits route cards"
-        >
-          <a
-            class="route-card"
-            href="/nine-summits/"
-          >
-            <b>Hub</b>
-
-            <strong>
-              Nine Summits
-            </strong>
-
-            <span>
-              The public gate that keeps the book, Universe, voice, products, and proof lanes clean.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/nine-summits/universe/"
-          >
-            <b>World lane</b>
-
-            <strong>
-              Nine Summits Universe
-            </strong>
-
-            <span>
-              The larger world around the book: terrain, rooms, experiences, stories, and platform expansion.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/about-this-underdog/"
-          >
-            <b>Universal voice</b>
-
-            <strong>
-              About This Underdog
-            </strong>
-
-            <span>
-              The underdog concept for everybody: pressure, survival, voice, accountability, and return.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/meet-sean-mansfield/"
-          >
-            <b>Personal profile</b>
-
-            <strong>
-              Meet Sean Mansfield
-            </strong>
-
-            <span>
-              The person behind the voice, introduced without forcing the whole system to explain itself at once.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/products/"
-          >
-            <b>Use</b>
-
-            <strong>
-              Products
-            </strong>
-
-            <span>
-              Where ideas become tools, games, learning systems, and support surfaces.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/showroom/"
-          >
-            <b>Proof surface</b>
-
-            <strong>
-              Showroom
-            </strong>
-
-            <span>
-              Where public-facing demonstrations make the build visible.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/gauges/"
-          >
-            <b>Measurement</b>
-
-            <strong>
-              Gauges
-            </strong>
-
-            <span>
-              Where the served route truth is checked.
-            </span>
-          </a>
-
-          <a
-            class="route-card"
-            href="/"
-          >
-            <b>Return</b>
-
-            <strong>
-              Compass
-            </strong>
-
-            <span>
-              Return to the estate command surface.
-            </span>
-          </a>
-        </div>
-      </section>
-
-      <section
-        class="final-band"
-        aria-labelledby="final-title"
-      >
-        <div class="kicker">
-          Final direction
-        </div>
-
-        <strong id="final-title">
-          Start with the locked heart.
-        </strong>
-
-        <p>
-          The locked heart is not proof that love failed. It is proof that value is still present under pressure. Follow the climb first. Enter the world when the human path is clear.
-        </p>
-
-        <div class="actions">
-          <a
-            class="button gold"
+            class="page-button page-button--gold"
             href="/nine-summits/"
           >
             Open Nine Summits
           </a>
 
           <a
-            class="button"
+            class="page-button"
+            href="/nine-summits/universe/"
+          >
+            Enter the Universe
+          </a>
+        </div>
+      </section>
+
+      <section
+        class="page-panel book-section"
+        aria-labelledby="book-covers-title"
+      >
+        <div class="book-heading">
+          <div class="page-kicker">
+            The book remains intact
+          </div>
+
+          <h2 id="book-covers-title">
+            The front and back remain part of the path.
+          </h2>
+
+          <p>
+            The original book images remain visible in full. They anchor the locked heart, the key, the climb, and the larger world carried by the Nine Summits.
+          </p>
+        </div>
+
+        <div class="book-pair">
+          <figure class="book-cover">
+            <div class="book-cover-frame">
+              <img
+                src="/assets/nine-summits-love-preface-cover.png"
+                alt="Front cover of The Nine Summits of Love showing the locked diamond heart, chain, key, and mountain ascent."
+                loading="eager"
+                decoding="sync"
+                fetchpriority="high"
+              >
+            </div>
+
+            <figcaption>
+              <b>Front Cover</b>
+
+              <strong>
+                The locked heart and the beginning of the climb
+              </strong>
+            </figcaption>
+          </figure>
+
+          <figure class="book-cover">
+            <div class="book-cover-frame">
+              <img
+                src="/assets/nine-summits-love-hero.png"
+                alt="Back cover of The Nine Summits of Love showing the radiant diamond heart and the wider summit world."
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+
+            <figcaption>
+              <b>Back Cover</b>
+
+              <strong>
+                The radiant heart and the world beyond the climb
+              </strong>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section
+        class="page-panel journey-section"
+        aria-labelledby="connected-paths-title"
+      >
+        <div class="journey-heading">
+          <div class="page-kicker">
+            Nine beginnings · connected paths · nine summits
+          </div>
+
+          <h2 id="connected-paths-title">
+            The paths rise together.
+          </h2>
+
+          <p>
+            Each summit begins with a human practice. No path stands alone. Every path strengthens the neighboring paths until the climb becomes one connected formation.
+          </p>
+        </div>
+
+        <div
+          class="path-map"
+          aria-label="Connected paths from nine human beginnings to the Nine Summits of Love"
+        >
+          <svg
+            class="path-network"
+            viewBox="0 0 1000 1280"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient
+                id="pathSpineGradient"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stop-color="#8de7ff"
+                  stop-opacity=".7"
+                />
+
+                <stop
+                  offset="48%"
+                  stop-color="#f3c86f"
+                  stop-opacity=".8"
+                />
+
+                <stop
+                  offset="100%"
+                  stop-color="#9c79ff"
+                  stop-opacity=".72"
+                />
+              </linearGradient>
+
+              <filter
+                id="pathGlow"
+                x="-40%"
+                y="-20%"
+                width="180%"
+                height="140%"
+              >
+                <feGaussianBlur
+                  stdDeviation="7"
+                  result="blur"
+                />
+
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <path
+              d="
+                M 500 52
+                C 490 180 510 280 500 410
+                C 490 540 510 650 500 790
+                C 490 930 510 1060 500 1228
+              "
+              fill="none"
+              stroke="url(#pathSpineGradient)"
+              stroke-width="4"
+              stroke-linecap="round"
+              filter="url(#pathGlow)"
+            />
+
+            <g
+              fill="none"
+              stroke="#8de7ff"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              opacity=".54"
+            >
+              <path d="M 165 115 C 310 115 350 115 500 115 C 650 115 690 115 835 115"/>
+              <path d="M 165 250 C 320 250 365 250 500 250 C 635 250 680 250 835 250"/>
+              <path d="M 165 385 C 300 385 385 385 500 385 C 615 385 700 385 835 385"/>
+              <path d="M 165 520 C 315 520 365 520 500 520 C 635 520 685 520 835 520"/>
+              <path d="M 165 655 C 295 655 380 655 500 655 C 620 655 705 655 835 655"/>
+              <path d="M 165 790 C 315 790 365 790 500 790 C 635 790 685 790 835 790"/>
+              <path d="M 165 925 C 300 925 385 925 500 925 C 615 925 700 925 835 925"/>
+              <path d="M 165 1060 C 315 1060 365 1060 500 1060 C 635 1060 685 1060 835 1060"/>
+              <path d="M 165 1195 C 295 1195 380 1195 500 1195 C 620 1195 705 1195 835 1195"/>
+            </g>
+
+            <g
+              fill="none"
+              stroke="#f3c86f"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-dasharray="8 14"
+              opacity=".42"
+            >
+              <path d="M 170 115 C 330 170 360 200 500 250 C 640 300 680 330 830 385"/>
+              <path d="M 170 250 C 320 315 370 350 500 385 C 630 420 680 465 830 520"/>
+              <path d="M 170 385 C 330 440 360 485 500 520 C 640 555 680 610 830 655"/>
+              <path d="M 170 520 C 310 580 380 615 500 655 C 620 695 690 750 830 790"/>
+              <path d="M 170 655 C 320 710 370 760 500 790 C 630 820 680 880 830 925"/>
+              <path d="M 170 790 C 330 850 360 900 500 925 C 640 950 680 1010 830 1060"/>
+              <path d="M 170 925 C 310 985 380 1025 500 1060 C 620 1095 690 1150 830 1195"/>
+            </g>
+          </svg>
+
+          <div class="path-columns">
+            <span>Path begins with</span>
+            <span>Link</span>
+            <span>Summit formation</span>
+          </div>
+
+          <div class="path-list">
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Gratitude</strong>
+              </div>
+
+              <div class="path-node">
+                <span>1</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Joy</strong>
+              </div>
+
+              <div class="path-thread">
+                Recognition opens the capacity to receive brightness and share it without entitlement.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Generosity</strong>
+              </div>
+
+              <div class="path-node">
+                <span>2</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Love</strong>
+              </div>
+
+              <div class="path-thread">
+                Giving without erasing the self teaches love to become active, disciplined, and real.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Dependability</strong>
+              </div>
+
+              <div class="path-node">
+                <span>3</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Stability</strong>
+              </div>
+
+              <div class="path-thread">
+                Repeated trustworthy action becomes the structure other people and future choices can stand on.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Accountability</strong>
+              </div>
+
+              <div class="path-node">
+                <span>4</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Character</strong>
+              </div>
+
+              <div class="path-thread">
+                The willingness to answer for choices transforms intention into trustworthy character.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Forgiveness</strong>
+              </div>
+
+              <div class="path-node">
+                <span>5</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Peace</strong>
+              </div>
+
+              <div class="path-thread">
+                Releasing unnecessary war makes room for repair without surrendering truth or boundaries.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Self-Control</strong>
+              </div>
+
+              <div class="path-node">
+                <span>6</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Balance</strong>
+              </div>
+
+              <div class="path-thread">
+                Governed response allows emotion, responsibility, freedom, and consequence to remain in proportion.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Patience</strong>
+              </div>
+
+              <div class="path-node">
+                <span>7</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Structure</strong>
+              </div>
+
+              <div class="path-thread">
+                Patience allows strong structures to form in the right sequence instead of collapsing under haste.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Humility</strong>
+              </div>
+
+              <div class="path-node">
+                <span>8</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Dignity</strong>
+              </div>
+
+              <div class="path-thread">
+                Honest proportion protects dignity from both self-erasure and artificial superiority.
+              </div>
+            </article>
+
+            <article class="path-step">
+              <div class="path-origin">
+                <small>Beginning</small>
+
+                <strong>Purity</strong>
+              </div>
+
+              <div class="path-node">
+                <span>9</span>
+              </div>
+
+              <div class="path-summit">
+                <small>Summit</small>
+
+                <strong>Free Will</strong>
+              </div>
+
+              <div class="path-thread">
+                Clear intention reduces hidden coercion and prepares choice to become genuinely free.
+              </div>
+            </article>
+          </div>
+
+          <div class="path-law">
+            Gratitude strengthens generosity. Generosity reinforces dependability. Dependability makes accountability credible. Accountability makes forgiveness possible. Forgiveness creates room for self-control. Self-control protects patience. Patience allows humility. Humility protects purity. Purity prepares the heart for love.
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="page-panel final-section"
+        aria-labelledby="final-title"
+      >
+        <div class="page-kicker">
+          One connected climb
+        </div>
+
+        <h2 id="final-title">
+          Nine beginnings. Nine paths. Nine summits. One heart.
+        </h2>
+
+        <p>
+          The summits are not isolated achievements. They are connected formations built through repeatable human practices.
+        </p>
+
+        <div class="final-actions">
+          <a
+            class="page-button page-button--gold"
+            href="/nine-summits/"
+          >
+            Open Nine Summits
+          </a>
+
+          <a
+            class="page-button"
             href="/nine-summits/universe/"
           >
             Enter the Universe
           </a>
 
           <a
-            class="button"
-            href="/about-this-underdog/"
+            class="page-button"
+            href="/"
           >
-            About This Underdog
-          </a>
-
-          <a
-            class="button"
-            href="/meet-sean-mansfield/"
-          >
-            Meet Sean
-          </a>
-
-          <a
-            class="button"
-            href="/gauges/"
-          >
-            Read Gauges
+            Return to Compass
           </a>
         </div>
       </section>
     </main>
 
-    <footer>
-      The Nine Summits of Love · Book and Seminar Lane · True-Depth Diamond Heart House Controller.
+    <footer class="page-footer">
+      <nav
+        class="footer-links"
+        aria-label="Secondary navigation"
+      >
+        <a href="/about-this-underdog/">
+          About This Underdog
+        </a>
+
+        <a href="/meet-sean-mansfield/">
+          Meet Sean
+        </a>
+
+        <a href="/products/">
+          Products
+        </a>
+
+        <a href="/showroom/">
+          Showroom
+        </a>
+
+        <a href="/gauges/">
+          Gauges
+        </a>
+      </nav>
+
+      <span>
+        The Nine Summits of Love · Book and Seminar Lane · Rounded True-Depth Diamond Heart.
+      </span>
     </footer>
   </div>
 
@@ -2645,39 +2381,78 @@
         );
 
       const CONFIG = Object.freeze({
-        stage: 610,
-        width: 377,
-        height: 368,
-        depth: 89,
-        bevel: 13,
-        floorGap: 55,
-        shadowWidth: 233,
-        cameraDistance: 987,
-        rotationDuration: 34000,
-        perimeterSamples: 89,
-        facetFamilies: 21,
-        frontInset: 0.92,
-        floorY: -233,
-        keyLight: [-233, 233, 377],
-        fillLight: [233, 89, 144],
-        rimLight: [0, 144, -233]
+        stage:610,
+        width:377,
+        height:368,
+
+        depth:89,
+        rimDepth:13,
+        domeRise:31.5,
+
+        floorGap:55,
+        floorY:-239,
+
+        shadowWidth:233,
+        cameraDistance:987,
+
+        rotationDuration:34000,
+        perimeterSamples:89,
+        shadowLayers:13,
+
+        ringScales:[
+          1,
+          .944,
+          .786,
+          .618,
+          .486,
+          .382,
+          .300,
+          .236,
+          .146,
+          .090
+        ],
+
+        shrinkFocus:[
+          0,
+          18
+        ],
+
+        keyLight:[
+          -233,
+          233,
+          377
+        ],
+
+        fillLight:[
+          233,
+          89,
+          144
+        ],
+
+        rimLight:[
+          0,
+          144,
+          -233
+        ]
       });
 
       const gl =
         canvas.getContext(
           "webgl",
           {
-            alpha: true,
-            antialias: true,
-            depth: true,
-            premultipliedAlpha: false,
-            preserveDrawingBuffer: false,
-            powerPreference: "high-performance"
+            alpha:true,
+            antialias:true,
+            depth:true,
+            premultipliedAlpha:false,
+            preserveDrawingBuffer:false,
+            powerPreference:"high-performance"
           }
         );
 
       if (!gl) {
-        stage.dataset.webglState = "failed";
+        stage.dataset.webglState =
+          "failed";
+
         return;
       }
 
@@ -2685,6 +2460,7 @@
         attribute vec3 aPosition;
         attribute vec3 aNormal;
         attribute vec4 aColor;
+        attribute float aSurface;
 
         uniform mat4 uModel;
         uniform mat4 uView;
@@ -2693,14 +2469,18 @@
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
         varying vec4 vColor;
+        varying float vSurface;
 
         void main(void) {
-          vec4 world =
+          vec4 worldPosition =
             uModel *
-            vec4(aPosition, 1.0);
+            vec4(
+              aPosition,
+              1.0
+            );
 
           vWorldPosition =
-            world.xyz;
+            worldPosition.xyz;
 
           vNormal =
             normalize(
@@ -2711,10 +2491,13 @@
           vColor =
             aColor;
 
+          vSurface =
+            aSurface;
+
           gl_Position =
             uProjection *
             uView *
-            world;
+            worldPosition;
         }
       `;
 
@@ -2724,34 +2507,38 @@
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
         varying vec4 vColor;
+        varying float vSurface;
 
         uniform vec3 uCameraPosition;
         uniform vec3 uKeyLight;
         uniform vec3 uFillLight;
         uniform vec3 uRimLight;
 
-        vec3 applyLight(
+        vec3 diffuseLight(
           vec3 normal,
           vec3 worldPosition,
           vec3 lightPosition,
           vec3 lightColor,
           float strength
         ) {
-          vec3 direction =
+          vec3 lightDirection =
             normalize(
               lightPosition -
               worldPosition
             );
 
-          float diffuse =
+          float diffuseAmount =
             max(
-              dot(normal, direction),
+              dot(
+                normal,
+                lightDirection
+              ),
               0.0
             );
 
           return
             lightColor *
-            diffuse *
+            diffuseAmount *
             strength;
         }
 
@@ -2765,68 +2552,123 @@
               vWorldPosition
             );
 
+          float viewFacing =
+            max(
+              dot(
+                normal,
+                viewDirection
+              ),
+              0.0
+            );
+
+          float skyFactor =
+            normal.y *
+            0.5 +
+            0.5;
+
+          vec3 hemisphere =
+            mix(
+              vec3(
+                0.18,
+                0.105,
+                0.16
+              ),
+              vec3(
+                0.23,
+                0.34,
+                0.58
+              ),
+              skyFactor
+            ) *
+            0.58;
+
+          vec3 headlight =
+            vec3(
+              1.0,
+              0.92,
+              0.78
+            ) *
+            (
+              0.32 +
+              viewFacing *
+              0.68
+            ) *
+            0.72;
+
           vec3 key =
-            applyLight(
+            diffuseLight(
               normal,
               vWorldPosition,
               uKeyLight,
-              vec3(1.0, 0.72, 0.35),
-              0.96
+              vec3(
+                1.0,
+                0.67,
+                0.29
+              ),
+              0.78
             );
 
           vec3 fill =
-            applyLight(
+            diffuseLight(
               normal,
               vWorldPosition,
               uFillLight,
-              vec3(0.30, 0.72, 1.0),
-              0.62
+              vec3(
+                0.30,
+                0.70,
+                1.0
+              ),
+              0.58
             );
 
-          vec3 rimDirection =
-            normalize(
-              uRimLight -
-              vWorldPosition
+          vec3 rear =
+            diffuseLight(
+              normal,
+              vWorldPosition,
+              uRimLight,
+              vec3(
+                0.56,
+                0.42,
+                1.0
+              ),
+              0.66
             );
 
-          float rimBase =
-            1.0 -
-            max(
-              dot(normal, viewDirection),
-              0.0
+          float rearMask =
+            smoothstep(
+              0.45,
+              1.45,
+              vSurface
             );
 
-          float rim =
-            pow(
-              rimBase,
-              2.4
-            ) *
-            max(
-              dot(normal, rimDirection),
-              0.0
+          float sideMask =
+            smoothstep(
+              1.45,
+              2.2,
+              vSurface
             );
 
-          vec3 ambient =
-            vec3(
-              0.20,
-              0.18,
-              0.30
+          float lightFloor =
+            mix(
+              0.28,
+              0.32,
+              rearMask
+            );
+
+          lightFloor =
+            mix(
+              lightFloor,
+              0.30,
+              sideMask
             );
 
           vec3 lighting =
-            ambient +
+            vec3(lightFloor) +
+            hemisphere +
+            headlight +
             key +
             fill +
-            vec3(
-              0.56,
-              0.42,
-              1.0
-            ) *
-            rim *
-            0.95;
-
-          float specular =
-            0.0;
+            rear;
 
           vec3 halfVector =
             normalize(
@@ -2837,25 +2679,83 @@
               viewDirection
             );
 
-          specular =
+          float specular =
             pow(
               max(
-                dot(normal, halfVector),
+                dot(
+                  normal,
+                  halfVector
+                ),
                 0.0
               ),
-              38.0
+              34.0
+            );
+
+          float fresnel =
+            pow(
+              1.0 -
+              viewFacing,
+              2.2
+            );
+
+          vec3 baseColor =
+            max(
+              vColor.rgb,
+              vec3(
+                0.12,
+                0.11,
+                0.16
+              )
+            );
+
+          vec3 emission =
+            baseColor *
+            (
+              0.105 +
+              rearMask *
+              0.035 +
+              sideMask *
+              0.025
             );
 
           vec3 color =
-            vColor.rgb *
+            baseColor *
             lighting +
+            emission +
             vec3(
               1.0,
-              0.90,
-              0.62
+              0.88,
+              0.56
             ) *
             specular *
-            0.85;
+            0.82 +
+            vec3(
+              0.48,
+              0.62,
+              1.0
+            ) *
+            fresnel *
+            0.32;
+
+          color =
+            color /
+            (
+              vec3(1.0) +
+              color *
+              0.48
+            );
+
+          color =
+            pow(
+              max(
+                color,
+                vec3(0.0)
+              ),
+              vec3(
+                1.0 /
+                2.2
+              )
+            );
 
           gl_FragColor =
             vec4(
@@ -2904,7 +2804,10 @@
         }
       `;
 
-      function compileShader(type, source) {
+      function compileShader(
+        type,
+        source
+      ) {
         const shader =
           gl.createShader(type);
 
@@ -3035,14 +2938,21 @@
         const f =
           1 /
           Math.tan(
-            fieldOfView / 2
+            fieldOfView /
+            2
           );
 
         const inverseRange =
           1 /
-          (near - far);
+          (
+            near -
+            far
+          );
 
-        out[0] = f / aspect;
+        out[0] =
+          f /
+          aspect;
+
         out[1] = 0;
         out[2] = 0;
         out[3] = 0;
@@ -3054,14 +2964,19 @@
 
         out[8] = 0;
         out[9] = 0;
+
         out[10] =
-          (far + near) *
+          (
+            far +
+            near
+          ) *
           inverseRange;
 
         out[11] = -1;
 
         out[12] = 0;
         out[13] = 0;
+
         out[14] =
           2 *
           far *
@@ -3073,13 +2988,16 @@
         return out;
       }
 
-      function normalizeVector(vector) {
+      function normalizeVector(
+        vector
+      ) {
         const length =
           Math.hypot(
             vector[0],
             vector[1],
             vector[2]
-          ) || 1;
+          ) ||
+          1;
 
         return [
           vector[0] / length,
@@ -3088,7 +3006,10 @@
         ];
       }
 
-      function subtractVector(a, b) {
+      function subtractVector(
+        a,
+        b
+      ) {
         return [
           a[0] - b[0],
           a[1] - b[1],
@@ -3096,7 +3017,10 @@
         ];
       }
 
-      function crossVector(a, b) {
+      function crossVector(
+        a,
+        b
+      ) {
         return [
           a[1] * b[2] -
           a[2] * b[1],
@@ -3207,19 +3131,24 @@
         t
       ) {
         const inverse =
-          1 - t;
+          1 -
+          t;
 
         const inverse2 =
-          inverse * inverse;
+          inverse *
+          inverse;
 
         const inverse3 =
-          inverse2 * inverse;
+          inverse2 *
+          inverse;
 
         const t2 =
-          t * t;
+          t *
+          t;
 
         const t3 =
-          t2 * t;
+          t2 *
+          t;
 
         return [
           inverse3 * p0[0] +
@@ -3289,7 +3218,8 @@
         const points = [];
 
         const scale =
-          CONFIG.width / 800;
+          CONFIG.width /
+          800;
 
         const centerX = 500;
         const centerY = 475;
@@ -3329,13 +3259,23 @@
             );
 
           points.push([
-            (point[0] - centerX) * scale,
-            -(point[1] - centerY) * scale
+            (
+              point[0] -
+              centerX
+            ) *
+            scale,
+
+            -(
+              point[1] -
+              centerY
+            ) *
+            scale
           ]);
         }
 
         if (
-          signedArea(points) < 0
+          signedArea(points) <
+          0
         ) {
           points.reverse();
         }
@@ -3343,7 +3283,9 @@
         return points;
       }
 
-      function signedArea(points) {
+      function signedArea(
+        points
+      ) {
         let area = 0;
 
         for (
@@ -3356,205 +3298,46 @@
 
           const next =
             points[
-              (index + 1) %
+              (
+                index +
+                1
+              ) %
               points.length
             ];
 
           area +=
-            current[0] * next[1] -
-            next[0] * current[1];
+            current[0] *
+            next[1] -
+            next[0] *
+            current[1];
         }
 
-        return area / 2;
+        return area /
+        2;
       }
 
-      function cross2D(a, b, c) {
-        return (
-          (b[0] - a[0]) *
-          (c[1] - a[1]) -
-          (b[1] - a[1]) *
-          (c[0] - a[0])
-        );
-      }
-
-      function pointInTriangle(
-        point,
-        a,
-        b,
-        c
+      function domeAmount(
+        scale
       ) {
-        const area1 =
-          cross2D(
-            point,
-            a,
-            b
-          );
-
-        const area2 =
-          cross2D(
-            point,
-            b,
-            c
-          );
-
-        const area3 =
-          cross2D(
-            point,
-            c,
-            a
-          );
-
-        const hasNegative =
-          area1 < 0 ||
-          area2 < 0 ||
-          area3 < 0;
-
-        const hasPositive =
-          area1 > 0 ||
-          area2 > 0 ||
-          area3 > 0;
-
-        return !(
-          hasNegative &&
-          hasPositive
+        return Math.pow(
+          Math.max(
+            0,
+            1 -
+            scale *
+            scale
+          ),
+          .72
         );
       }
 
-      function triangulatePolygon(points) {
-        const remaining =
-          points.map(
-            (_, index) => index
-          );
-
-        const triangles = [];
-
-        let guard = 0;
-
-        while (
-          remaining.length > 3 &&
-          guard < 10000
-        ) {
-          guard += 1;
-
-          let earFound = false;
-
-          for (
-            let index = 0;
-            index < remaining.length;
-            index += 1
-          ) {
-            const previousIndex =
-              remaining[
-                (
-                  index -
-                  1 +
-                  remaining.length
-                ) %
-                remaining.length
-              ];
-
-            const currentIndex =
-              remaining[index];
-
-            const nextIndex =
-              remaining[
-                (
-                  index +
-                  1
-                ) %
-                remaining.length
-              ];
-
-            const previous =
-              points[previousIndex];
-
-            const current =
-              points[currentIndex];
-
-            const next =
-              points[nextIndex];
-
-            if (
-              cross2D(
-                previous,
-                current,
-                next
-              ) <= 0.00001
-            ) {
-              continue;
-            }
-
-            let containsPoint = false;
-
-            for (
-              let test = 0;
-              test < remaining.length;
-              test += 1
-            ) {
-              const testIndex =
-                remaining[test];
-
-              if (
-                testIndex === previousIndex ||
-                testIndex === currentIndex ||
-                testIndex === nextIndex
-              ) {
-                continue;
-              }
-
-              if (
-                pointInTriangle(
-                  points[testIndex],
-                  previous,
-                  current,
-                  next
-                )
-              ) {
-                containsPoint = true;
-                break;
-              }
-            }
-
-            if (containsPoint) {
-              continue;
-            }
-
-            triangles.push([
-              previousIndex,
-              currentIndex,
-              nextIndex
-            ]);
-
-            remaining.splice(
-              index,
-              1
-            );
-
-            earFound = true;
-            break;
-          }
-
-          if (!earFound) {
-            break;
-          }
-        }
-
-        if (
-          remaining.length === 3
-        ) {
-          triangles.push([
-            remaining[0],
-            remaining[1],
-            remaining[2]
-          ]);
-        }
-
-        return triangles;
-      }
-
-      function hexColor(hex) {
+      function hexColor(
+        hex
+      ) {
         const normalized =
-          hex.replace("#", "");
+          hex.replace(
+            "#",
+            ""
+          );
 
         const value =
           parseInt(
@@ -3564,489 +3347,809 @@
 
         return [
           (
-            (value >> 16) &
+            (
+              value >>
+              16
+            ) &
             255
-          ) / 255,
+          ) /
+          255,
 
           (
-            (value >> 8) &
+            (
+              value >>
+              8
+            ) &
             255
-          ) / 255,
+          ) /
+          255,
 
           (
             value &
             255
-          ) / 255,
+          ) /
+          255,
 
           1
         ];
       }
 
-      const FACET_PALETTE = [
+      const FRONT_PALETTE = [
         "#fff0a9",
         "#f3c86f",
-        "#d89656",
-        "#ffafd6",
-        "#b66b91",
-        "#9f7cff",
-        "#7a56bd",
-        "#8dd8ff",
-        "#4d86bd",
-        "#8ff0c6",
-        "#4e9d82",
-        "#b993ff",
-        "#684995",
-        "#f29cc3",
-        "#9c5278",
-        "#70bce6",
-        "#345d8f",
-        "#d4b2ff",
-        "#8060a8",
-        "#675174",
-        "#322946"
+        "#e9a665",
+        "#ffb4d9",
+        "#e580b7",
+        "#c593ff",
+        "#9670eb",
+        "#9de7ff",
+        "#66b9e8",
+        "#9cf3d0",
+        "#63c7a5",
+        "#d2b0ff",
+        "#a47bd3",
+        "#f3a8ce",
+        "#c76d9f",
+        "#8ed8ff",
+        "#6598d7",
+        "#e3c4ff",
+        "#af90d1",
+        "#9478a9",
+        "#715f88"
+      ].map(hexColor);
+
+      const REAR_PALETTE = [
+        "#f0bd68",
+        "#dd955f",
+        "#ca7693",
+        "#d981bd",
+        "#9f78da",
+        "#728de0",
+        "#73bada",
+        "#67c8b2",
+        "#a78ad7",
+        "#c57aa9",
+        "#8469bd",
+        "#5f82bd"
       ].map(hexColor);
 
       const SIDE_PALETTE = [
-        "#352344",
-        "#251c3c",
-        "#19314b",
-        "#34213a",
-        "#1c273a",
-        "#402a4c",
-        "#17243a",
-        "#2d1e39"
+        "#845b9f",
+        "#4f6ea6",
+        "#9f5f86",
+        "#5b8ca4",
+        "#7e67b2",
+        "#9c725f",
+        "#547f86",
+        "#73558f"
       ].map(hexColor);
 
-      function colorForFacet(
-        triangle,
-        points,
-        offset = 0
+      function brightenColor(
+        color,
+        minimum
       ) {
-        const a =
-          points[triangle[0]];
+        return [
+          Math.max(
+            color[0],
+            minimum
+          ),
 
-        const b =
-          points[triangle[1]];
+          Math.max(
+            color[1],
+            minimum *
+            .92
+          ),
 
-        const c =
-          points[triangle[2]];
+          Math.max(
+            color[2],
+            minimum *
+            1.05
+          ),
 
-        const centerX =
-          (
-            a[0] +
-            b[0] +
-            c[0]
-          ) / 3;
-
-        const centerY =
-          (
-            a[1] +
-            b[1] +
-            c[1]
-          ) / 3;
-
-        const angle =
-          Math.atan2(
-            centerY,
-            centerX
-          );
-
-        const radius =
-          Math.hypot(
-            centerX,
-            centerY
-          );
-
-        const family =
-          Math.abs(
-            Math.floor(
-              (
-                angle +
-                Math.PI
-              ) /
-              (
-                Math.PI *
-                2
-              ) *
-              13
-            ) +
-            Math.floor(
-              radius /
-              34
-            ) +
-            offset
-          ) %
-          CONFIG.facetFamilies;
-
-        return FACET_PALETTE[family];
+          1
+        ];
       }
 
-      function facetHeight(x, y) {
-        const normalizedX =
-          x /
-          (
-            CONFIG.width /
-            2
+      function macroFacetIndex(
+        ringIndex,
+        segmentIndex
+      ) {
+        const angularBand =
+          Math.floor(
+            segmentIndex /
+            CONFIG.perimeterSamples *
+            5
           );
 
-        const normalizedY =
-          y /
-          (
-            CONFIG.height /
-            2
-          );
-
-        const radius =
+        const verticalBand =
           Math.min(
-            1,
-            Math.hypot(
-              normalizedX,
-              normalizedY
+            4,
+            Math.floor(
+              ringIndex /
+              Math.max(
+                CONFIG.ringScales.length -
+                1,
+                1
+              ) *
+              5
             )
           );
 
-        const angle =
-          Math.atan2(
-            normalizedY,
-            normalizedX
-          );
+        if (
+          ringIndex ===
+          CONFIG.ringScales.length
+        ) {
+          return 20;
+        }
 
         return (
-          (
-            1 -
-            radius
-          ) *
-          8 +
-          Math.sin(
-            angle *
-            5
-          ) *
-          2.1 +
-          Math.cos(
-            angle *
-            8
-          ) *
-          1.3
-        );
-      }
-
-      function triangleNormal(
-        a,
-        b,
-        c
-      ) {
-        const edge1 = [
-          b[0] - a[0],
-          b[1] - a[1],
-          b[2] - a[2]
-        ];
-
-        const edge2 = [
-          c[0] - a[0],
-          c[1] - a[1],
-          c[2] - a[2]
-        ];
-
-        return normalizeVector(
-          crossVector(
-            edge1,
-            edge2
-          )
-        );
+          verticalBand *
+          5 +
+          angularBand
+        ) %
+        20;
       }
 
       function buildHeartMesh() {
         const perimeter =
           createHeartPerimeter();
 
-        const triangles =
-          triangulatePolygon(perimeter);
-
-        if (
-          triangles.length < 3
-        ) {
-          throw new Error(
-            "Heart triangulation failed."
-          );
-        }
-
         const positions = [];
         const normals = [];
         const colors = [];
+        const surfaces = [];
+        const indices = [];
 
-        const frontFaceZ =
-          CONFIG.depth / 2;
+        function addVertex(
+          position,
+          color,
+          surface
+        ) {
+          const index =
+            positions.length /
+            3;
 
-        const frontOuterZ =
-          frontFaceZ -
-          CONFIG.bevel;
+          positions.push(
+            position[0],
+            position[1],
+            position[2]
+          );
 
-        const rearFaceZ =
-          -CONFIG.depth / 2;
+          normals.push(
+            0,
+            0,
+            0
+          );
 
-        const rearOuterZ =
-          rearFaceZ +
-          CONFIG.bevel;
+          colors.push(
+            color[0],
+            color[1],
+            color[2],
+            color[3]
+          );
+
+          surfaces.push(surface);
+
+          return index;
+        }
 
         function pushTriangle(
           a,
           b,
-          c,
-          color
+          c
         ) {
-          const normal =
-            triangleNormal(
-              a,
-              b,
-              c
-            );
-
-          const vertices = [
+          indices.push(
             a,
             b,
             c
-          ];
+          );
+        }
+
+        const frontRings = [];
+        const rearRings = [];
+
+        for (
+          let ringIndex = 0;
+          ringIndex <
+          CONFIG.ringScales.length;
+          ringIndex += 1
+        ) {
+          const ringScale =
+            CONFIG.ringScales[
+              ringIndex
+            ];
+
+          const dome =
+            domeAmount(
+              ringScale
+            );
+
+          const frontZ =
+            CONFIG.rimDepth +
+            CONFIG.domeRise *
+            dome;
+
+          const rearZ =
+            -CONFIG.rimDepth -
+            CONFIG.domeRise *
+            dome;
+
+          const frontRing = [];
+          const rearRing = [];
 
           for (
-            const vertex of vertices
+            let segmentIndex = 0;
+            segmentIndex <
+            perimeter.length;
+            segmentIndex += 1
           ) {
-            positions.push(
-              vertex[0],
-              vertex[1],
-              vertex[2]
+            const point =
+              perimeter[
+                segmentIndex
+              ];
+
+            const x =
+              CONFIG.shrinkFocus[0] +
+              (
+                point[0] -
+                CONFIG.shrinkFocus[0]
+              ) *
+              ringScale;
+
+            const y =
+              CONFIG.shrinkFocus[1] +
+              (
+                point[1] -
+                CONFIG.shrinkFocus[1]
+              ) *
+              ringScale;
+
+            const facetIndex =
+              macroFacetIndex(
+                ringIndex,
+                segmentIndex
+              );
+
+            const frontColor =
+              brightenColor(
+                FRONT_PALETTE[
+                  facetIndex %
+                  FRONT_PALETTE.length
+                ],
+                .24
+              );
+
+            const rearColor =
+              brightenColor(
+                REAR_PALETTE[
+                  facetIndex %
+                  REAR_PALETTE.length
+                ],
+                .26
+              );
+
+            frontRing.push(
+              addVertex(
+                [
+                  x,
+                  y,
+                  frontZ
+                ],
+                frontColor,
+                0
+              )
             );
 
-            normals.push(
-              normal[0],
-              normal[1],
-              normal[2]
+            rearRing.push(
+              addVertex(
+                [
+                  x,
+                  y,
+                  rearZ
+                ],
+                rearColor,
+                1
+              )
             );
+          }
 
-            colors.push(
-              color[0],
-              color[1],
-              color[2],
-              color[3]
-            );
+          frontRings.push(frontRing);
+          rearRings.push(rearRing);
+        }
+
+        const frontCenter =
+          addVertex(
+            [
+              CONFIG.shrinkFocus[0],
+              CONFIG.shrinkFocus[1],
+              CONFIG.depth /
+              2
+            ],
+            brightenColor(
+              FRONT_PALETTE[0],
+              .3
+            ),
+            0
+          );
+
+        const rearCenter =
+          addVertex(
+            [
+              CONFIG.shrinkFocus[0],
+              CONFIG.shrinkFocus[1],
+              -CONFIG.depth /
+              2
+            ],
+            brightenColor(
+              REAR_PALETTE[0],
+              .3
+            ),
+            1
+          );
+
+        function connectRings(
+          outerRing,
+          innerRing,
+          reverse,
+          ringIndex
+        ) {
+          for (
+            let segmentIndex = 0;
+            segmentIndex <
+            perimeter.length;
+            segmentIndex += 1
+          ) {
+            const next =
+              (
+                segmentIndex +
+                1
+              ) %
+              perimeter.length;
+
+            const outerA =
+              outerRing[
+                segmentIndex
+              ];
+
+            const outerB =
+              outerRing[next];
+
+            const innerA =
+              innerRing[
+                segmentIndex
+              ];
+
+            const innerB =
+              innerRing[next];
+
+            const alternate =
+              (
+                ringIndex +
+                segmentIndex
+              ) %
+              2 ===
+              0;
+
+            if (!reverse) {
+              if (alternate) {
+                pushTriangle(
+                  outerA,
+                  outerB,
+                  innerB
+                );
+
+                pushTriangle(
+                  outerA,
+                  innerB,
+                  innerA
+                );
+              } else {
+                pushTriangle(
+                  outerA,
+                  outerB,
+                  innerA
+                );
+
+                pushTriangle(
+                  outerB,
+                  innerB,
+                  innerA
+                );
+              }
+            } else {
+              if (alternate) {
+                pushTriangle(
+                  outerA,
+                  innerB,
+                  outerB
+                );
+
+                pushTriangle(
+                  outerA,
+                  innerA,
+                  innerB
+                );
+              } else {
+                pushTriangle(
+                  outerA,
+                  innerA,
+                  outerB
+                );
+
+                pushTriangle(
+                  outerB,
+                  innerA,
+                  innerB
+                );
+              }
+            }
           }
         }
 
-        const frontInner =
-          perimeter.map(
-            ([x, y]) => [
-              x *
-              CONFIG.frontInset,
-
-              y *
-              CONFIG.frontInset,
-
-              frontFaceZ +
-              facetHeight(
-                x,
-                y
-              )
-            ]
+        for (
+          let ringIndex = 0;
+          ringIndex <
+          frontRings.length - 1;
+          ringIndex += 1
+        ) {
+          connectRings(
+            frontRings[
+              ringIndex
+            ],
+            frontRings[
+              ringIndex + 1
+            ],
+            false,
+            ringIndex
           );
 
-        const rearInner =
-          perimeter.map(
-            ([x, y]) => [
-              x *
-              CONFIG.frontInset,
-
-              y *
-              CONFIG.frontInset,
-
-              rearFaceZ -
-              facetHeight(
-                x,
-                y
-              ) *
-              .36
-            ]
+          connectRings(
+            rearRings[
+              ringIndex
+            ],
+            rearRings[
+              ringIndex + 1
+            ],
+            true,
+            ringIndex
           );
+        }
 
-        const frontOuter =
-          perimeter.map(
-            ([x, y]) => [
-              x,
-              y,
-              frontOuterZ
-            ]
-          );
+        const finalFrontRing =
+          frontRings[
+            frontRings.length -
+            1
+          ];
 
-        const rearOuter =
-          perimeter.map(
-            ([x, y]) => [
-              x,
-              y,
-              rearOuterZ
-            ]
-          );
-
-        triangles.forEach(
-          (
-            triangle,
-            triangleIndex
-          ) => {
-            const color =
-              colorForFacet(
-                triangle,
-                perimeter,
-                triangleIndex %
-                CONFIG.facetFamilies
-              );
-
-            pushTriangle(
-              frontInner[
-                triangle[0]
-              ],
-              frontInner[
-                triangle[1]
-              ],
-              frontInner[
-                triangle[2]
-              ],
-              color
-            );
-          }
-        );
-
-        triangles.forEach(
-          (
-            triangle,
-            triangleIndex
-          ) => {
-            const frontColor =
-              colorForFacet(
-                triangle,
-                perimeter,
-                (
-                  triangleIndex +
-                  9
-                ) %
-                CONFIG.facetFamilies
-              );
-
-            const rearColor = [
-              frontColor[0] * .44,
-              frontColor[1] * .40,
-              frontColor[2] * .58,
-              1
-            ];
-
-            pushTriangle(
-              rearInner[
-                triangle[2]
-              ],
-              rearInner[
-                triangle[1]
-              ],
-              rearInner[
-                triangle[0]
-              ],
-              rearColor
-            );
-          }
-        );
+        const finalRearRing =
+          rearRings[
+            rearRings.length -
+            1
+          ];
 
         for (
-          let index = 0;
-          index < perimeter.length;
-          index += 1
+          let segmentIndex = 0;
+          segmentIndex <
+          perimeter.length;
+          segmentIndex += 1
         ) {
           const next =
             (
-              index +
+              segmentIndex +
               1
             ) %
             perimeter.length;
 
-          const frontColor =
-            FACET_PALETTE[
-              (
-                index +
-                3
-              ) %
-              FACET_PALETTE.length
-            ];
-
-          const frontBevelColor = [
-            Math.min(
-              1,
-              frontColor[0] *
-              1.08
-            ),
-            Math.min(
-              1,
-              frontColor[1] *
-              1.05
-            ),
-            Math.min(
-              1,
-              frontColor[2] *
-              1.08
-            ),
-            1
-          ];
-
           pushTriangle(
-            frontOuter[index],
-            frontOuter[next],
-            frontInner[next],
-            frontBevelColor
+            finalFrontRing[
+              segmentIndex
+            ],
+            finalFrontRing[next],
+            frontCenter
           );
 
           pushTriangle(
-            frontOuter[index],
-            frontInner[next],
-            frontInner[index],
-            frontBevelColor
-          );
-
-          const rearColor =
-            SIDE_PALETTE[
-              index %
-              SIDE_PALETTE.length
-            ];
-
-          pushTriangle(
-            rearOuter[index],
-            rearInner[next],
-            rearOuter[next],
-            rearColor
-          );
-
-          pushTriangle(
-            rearOuter[index],
-            rearInner[index],
-            rearInner[next],
-            rearColor
-          );
-
-          const sideColor =
-            SIDE_PALETTE[
-              (
-                index +
-                3
-              ) %
-              SIDE_PALETTE.length
-            ];
-
-          pushTriangle(
-            frontOuter[index],
-            rearOuter[next],
-            frontOuter[next],
-            sideColor
-          );
-
-          pushTriangle(
-            frontOuter[index],
-            rearOuter[index],
-            rearOuter[next],
-            sideColor
+            finalRearRing[
+              segmentIndex
+            ],
+            rearCenter,
+            finalRearRing[next]
           );
         }
+
+        const smoothVertexCount =
+          positions.length /
+          3;
+
+        for (
+          let triangleIndex = 0;
+          triangleIndex <
+          indices.length;
+          triangleIndex += 3
+        ) {
+          const indexA =
+            indices[
+              triangleIndex
+            ];
+
+          const indexB =
+            indices[
+              triangleIndex + 1
+            ];
+
+          const indexC =
+            indices[
+              triangleIndex + 2
+            ];
+
+          const a = [
+            positions[
+              indexA * 3
+            ],
+            positions[
+              indexA * 3 + 1
+            ],
+            positions[
+              indexA * 3 + 2
+            ]
+          ];
+
+          const b = [
+            positions[
+              indexB * 3
+            ],
+            positions[
+              indexB * 3 + 1
+            ],
+            positions[
+              indexB * 3 + 2
+            ]
+          ];
+
+          const c = [
+            positions[
+              indexC * 3
+            ],
+            positions[
+              indexC * 3 + 1
+            ],
+            positions[
+              indexC * 3 + 2
+            ]
+          ];
+
+          const edge1 =
+            subtractVector(
+              b,
+              a
+            );
+
+          const edge2 =
+            subtractVector(
+              c,
+              a
+            );
+
+          const faceNormal =
+            crossVector(
+              edge1,
+              edge2
+            );
+
+          for (
+            const vertexIndex of [
+              indexA,
+              indexB,
+              indexC
+            ]
+          ) {
+            normals[
+              vertexIndex * 3
+            ] +=
+              faceNormal[0];
+
+            normals[
+              vertexIndex * 3 + 1
+            ] +=
+              faceNormal[1];
+
+            normals[
+              vertexIndex * 3 + 2
+            ] +=
+              faceNormal[2];
+          }
+        }
+
+        for (
+          let vertexIndex = 0;
+          vertexIndex <
+          smoothVertexCount;
+          vertexIndex += 1
+        ) {
+          const normal =
+            normalizeVector([
+              normals[
+                vertexIndex * 3
+              ],
+              normals[
+                vertexIndex * 3 + 1
+              ],
+              normals[
+                vertexIndex * 3 + 2
+              ]
+            ]);
+
+          normals[
+            vertexIndex * 3
+          ] =
+            normal[0];
+
+          normals[
+            vertexIndex * 3 + 1
+          ] =
+            normal[1];
+
+          normals[
+            vertexIndex * 3 + 2
+          ] =
+            normal[2];
+        }
+
+        const shadowSource = [];
+
+        for (
+          let segmentIndex = 0;
+          segmentIndex <
+          perimeter.length;
+          segmentIndex += 1
+        ) {
+          const next =
+            (
+              segmentIndex +
+              1
+            ) %
+            perimeter.length;
+
+          const point =
+            perimeter[
+              segmentIndex
+            ];
+
+          const nextPoint =
+            perimeter[next];
+
+          const tangentX =
+            nextPoint[0] -
+            point[0];
+
+          const tangentY =
+            nextPoint[1] -
+            point[1];
+
+          const outwardNormal =
+            normalizeVector([
+              tangentY,
+              -tangentX,
+              0
+            ]);
+
+          const sideColor =
+            brightenColor(
+              SIDE_PALETTE[
+                segmentIndex %
+                SIDE_PALETTE.length
+              ],
+              .24
+            );
+
+          const frontA =
+            addVertex(
+              [
+                point[0],
+                point[1],
+                CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          const rearA =
+            addVertex(
+              [
+                point[0],
+                point[1],
+                -CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          const rearB =
+            addVertex(
+              [
+                nextPoint[0],
+                nextPoint[1],
+                -CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          const frontB =
+            addVertex(
+              [
+                nextPoint[0],
+                nextPoint[1],
+                CONFIG.rimDepth
+              ],
+              sideColor,
+              2
+            );
+
+          for (
+            const vertexIndex of [
+              frontA,
+              rearA,
+              rearB,
+              frontB
+            ]
+          ) {
+            normals[
+              vertexIndex * 3
+            ] =
+              outwardNormal[0];
+
+            normals[
+              vertexIndex * 3 + 1
+            ] =
+              outwardNormal[1];
+
+            normals[
+              vertexIndex * 3 + 2
+            ] =
+              outwardNormal[2];
+          }
+
+          pushTriangle(
+            frontA,
+            rearA,
+            rearB
+          );
+
+          pushTriangle(
+            frontA,
+            rearB,
+            frontB
+          );
+
+          shadowSource.push(
+            [
+              point[0],
+              point[1],
+              CONFIG.rimDepth
+            ],
+            [
+              point[0],
+              point[1],
+              -CONFIG.rimDepth
+            ]
+          );
+        }
+
+        shadowSource.push(
+          [
+            CONFIG.shrinkFocus[0],
+            CONFIG.shrinkFocus[1],
+            CONFIG.depth /
+            2
+          ],
+          [
+            CONFIG.shrinkFocus[0],
+            CONFIG.shrinkFocus[1],
+            -CONFIG.depth /
+            2
+          ]
+        );
 
         return {
           positions:
@@ -4064,15 +4167,20 @@
               colors
             ),
 
-          perimeter,
+          surfaces:
+            new Float32Array(
+              surfaces
+            ),
 
-          frontOuter,
+          indices:
+            new Uint16Array(
+              indices
+            ),
 
-          rearOuter,
+          indexCount:
+            indices.length,
 
-          vertexCount:
-            positions.length /
-            3
+          shadowSource
         };
       }
 
@@ -4127,13 +4235,17 @@
           Math.sin(angle);
 
         return [
-          cosine * point[0] +
-          sine * point[2],
+          cosine *
+          point[0] +
+          sine *
+          point[2],
 
           point[1],
 
-          -sine * point[0] +
-          cosine * point[2]
+          -sine *
+          point[0] +
+          cosine *
+          point[2]
         ];
       }
 
@@ -4147,8 +4259,10 @@
           light[1];
 
         if (
-          Math.abs(denominator) <
-          0.0001
+          Math.abs(
+            denominator
+          ) <
+          .0001
         ) {
           return null;
         }
@@ -4177,7 +4291,9 @@
         ];
       }
 
-      function convexHull(points) {
+      function convexHull(
+        points
+      ) {
         if (
           points.length <= 3
         ) {
@@ -4188,25 +4304,36 @@
           points
             .slice()
             .sort(
-              (a, b) =>
-                a[0] === b[0]
-                  ? a[1] - b[1]
-                  : a[0] - b[0]
+              (a,b) =>
+                a[0] ===
+                b[0]
+                  ? a[1] -
+                    b[1]
+                  : a[0] -
+                    b[0]
             );
 
         const cross =
-          (origin, a, b) =>
+          (
+            origin,
+            a,
+            b
+          ) =>
             (
-              a[0] - origin[0]
+              a[0] -
+              origin[0]
             ) *
             (
-              b[1] - origin[1]
+              b[1] -
+              origin[1]
             ) -
             (
-              a[1] - origin[1]
+              a[1] -
+              origin[1]
             ) *
             (
-              b[0] - origin[0]
+              b[0] -
+              origin[0]
             );
 
         const lower = [];
@@ -4218,13 +4345,16 @@
             lower.length >= 2 &&
             cross(
               lower[
-                lower.length - 2
+                lower.length -
+                2
               ],
               lower[
-                lower.length - 1
+                lower.length -
+                1
               ],
               point
-            ) <= 0
+            ) <=
+            0
           ) {
             lower.pop();
           }
@@ -4236,7 +4366,8 @@
 
         for (
           let index =
-            sorted.length - 1;
+            sorted.length -
+            1;
           index >= 0;
           index -= 1
         ) {
@@ -4247,13 +4378,16 @@
             upper.length >= 2 &&
             cross(
               upper[
-                upper.length - 2
+                upper.length -
+                2
               ],
               upper[
-                upper.length - 1
+                upper.length -
+                1
               ],
               point
-            ) <= 0
+            ) <=
+            0
           ) {
             upper.pop();
           }
@@ -4273,17 +4407,13 @@
       ) {
         const projected = [];
 
-        const sourcePoints = [
-          ...mesh.frontOuter,
-          ...mesh.rearOuter
-        ];
-
         for (
-          const point of sourcePoints
+          const sourcePoint of
+          mesh.shadowSource
         ) {
           const rotated =
             rotatePointY(
-              point,
+              sourcePoint,
               angle
             );
 
@@ -4302,7 +4432,9 @@
         }
 
         const hull =
-          convexHull(projected);
+          convexHull(
+            projected
+          );
 
         if (
           hull.length < 3
@@ -4320,7 +4452,10 @@
 
         const center =
           hull.reduce(
-            (accumulator, point) => {
+            (
+              accumulator,
+              point
+            ) => {
               accumulator[0] +=
                 point[0];
 
@@ -4341,32 +4476,35 @@
         const positions = [];
         const alphas = [];
 
-        const layers = 7;
-
         for (
           let layer = 0;
-          layer < layers;
+          layer <
+          CONFIG.shadowLayers;
           layer += 1
         ) {
+          const normalizedLayer =
+            layer /
+            Math.max(
+              CONFIG.shadowLayers -
+              1,
+              1
+            );
+
           const scale =
-            1 +
-            (
-              layers -
-              1 -
-              layer
-            ) *
-            .027;
+            1.14 -
+            normalizedLayer *
+            .14;
 
           const alpha =
-            .018 +
-            layer *
-            .012;
+            .015 +
+            normalizedLayer *
+            .0115;
 
           const y =
             CONFIG.floorY +
-            .25 +
+            .16 +
             layer *
-            .025;
+            .018;
 
           const layerPoints =
             hull.map(
@@ -4389,7 +4527,8 @@
 
           for (
             let index = 0;
-            index < layerPoints.length;
+            index <
+            layerPoints.length;
             index += 1
           ) {
             const next =
@@ -4406,19 +4545,28 @@
                 center[1]
               ],
               [
-                layerPoints[index][0],
+                layerPoints[
+                  index
+                ][0],
                 y,
-                layerPoints[index][1]
+                layerPoints[
+                  index
+                ][1]
               ],
               [
-                layerPoints[next][0],
+                layerPoints[
+                  next
+                ][0],
                 y,
-                layerPoints[next][1]
+                layerPoints[
+                  next
+                ][1]
               ]
             ];
 
             for (
-              const vertex of vertices
+              const vertex of
+              vertices
             ) {
               positions.push(
                 vertex[0],
@@ -4451,8 +4599,7 @@
       function bindAttribute(
         buffer,
         location,
-        size,
-        type = gl.FLOAT
+        size
       ) {
         gl.bindBuffer(
           gl.ARRAY_BUFFER,
@@ -4466,7 +4613,7 @@
         gl.vertexAttribPointer(
           location,
           size,
-          type,
+          gl.FLOAT,
           false,
           0,
           0
@@ -4503,11 +4650,16 @@
           );
 
         if (
-          canvas.width !== width ||
-          canvas.height !== height
+          canvas.width !==
+          width ||
+          canvas.height !==
+          height
         ) {
-          canvas.width = width;
-          canvas.height = height;
+          canvas.width =
+            width;
+
+          canvas.height =
+            height;
         }
 
         gl.viewport(
@@ -4563,6 +4715,18 @@
             mesh.colors
           );
 
+        const surfaceBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.surfaces
+          );
+
+        const indexBuffer =
+          createStaticBuffer(
+            gl.ELEMENT_ARRAY_BUFFER,
+            mesh.indices
+          );
+
         const shadowPositionBuffer =
           createDynamicBuffer();
 
@@ -4586,6 +4750,12 @@
             gl.getAttribLocation(
               mainProgram,
               "aColor"
+            ),
+
+          surface:
+            gl.getAttribLocation(
+              mainProgram,
+              "aSurface"
             ),
 
           model:
@@ -4668,14 +4838,14 @@
 
         const cameraPosition = [
           0,
-          30,
+          28,
           CONFIG.cameraDistance
         ];
 
         lookAt(
           viewMatrix,
           cameraPosition,
-          [0,-28,0],
+          [0,-22,0],
           [0,1,0]
         );
 
@@ -4706,12 +4876,31 @@
         let startTime =
           performance.now();
 
-        let pausedAngle = 0;
+        let storedAngle = 0;
+        let visible = true;
 
-        let previousReducedMotion =
-          reducedMotion.matches;
+        const intersectionObserver =
+          new IntersectionObserver(
+            entries => {
+              visible =
+                entries.some(
+                  entry =>
+                    entry.isIntersecting
+                );
+            },
+            {
+              rootMargin:
+                "120px 0px"
+            }
+          );
 
-        function currentAngle(time) {
+        intersectionObserver.observe(
+          stage
+        );
+
+        function currentAngle(
+          time
+        ) {
           if (
             reducedMotion.matches
           ) {
@@ -4730,7 +4919,9 @@
           2;
         }
 
-        function drawShadow(angle) {
+        function drawShadow(
+          angle
+        ) {
           const shadow =
             buildShadowGeometry(
               mesh,
@@ -4738,7 +4929,8 @@
             );
 
           if (
-            shadow.vertexCount === 0
+            shadow.vertexCount ===
+            0
           ) {
             return;
           }
@@ -4818,7 +5010,9 @@
           gl.depthMask(true);
         }
 
-        function drawHeart(angle) {
+        function drawHeart(
+          angle
+        ) {
           rotationY(
             modelMatrix,
             angle
@@ -4844,6 +5038,17 @@
             colorBuffer,
             mainLocations.color,
             4
+          );
+
+          bindAttribute(
+            surfaceBuffer,
+            mainLocations.surface,
+            1
+          );
+
+          gl.bindBuffer(
+            gl.ELEMENT_ARRAY_BUFFER,
+            indexBuffer
           );
 
           gl.uniformMatrix4fv(
@@ -4884,36 +5089,23 @@
             CONFIG.rimLight
           );
 
-          gl.drawArrays(
+          gl.drawElements(
             gl.TRIANGLES,
-            0,
-            mesh.vertexCount
+            mesh.indexCount,
+            gl.UNSIGNED_SHORT,
+            0
           );
         }
 
-        function render(time) {
-          if (
-            previousReducedMotion !==
-            reducedMotion.matches
-          ) {
-            if (
-              reducedMotion.matches
-            ) {
-              pausedAngle =
-                currentAngle(time);
-            } else {
-              startTime =
-                time -
-                pausedAngle /
-                (
-                  Math.PI *
-                  2
-                ) *
-                CONFIG.rotationDuration;
-            }
+        function render(
+          time
+        ) {
+          requestAnimationFrame(
+            render
+          );
 
-            previousReducedMotion =
-              reducedMotion.matches;
+          if (!visible) {
+            return;
           }
 
           const viewport =
@@ -4921,7 +5113,7 @@
 
           perspective(
             projectionMatrix,
-            34 *
+            33 *
             Math.PI /
             180,
             viewport.aspect,
@@ -4939,19 +5131,53 @@
               ? 0
               : currentAngle(time);
 
+          storedAngle =
+            angle;
+
           drawShadow(angle);
           drawHeart(angle);
-
-          requestAnimationFrame(render);
         }
+
+        reducedMotion.addEventListener?.(
+          "change",
+          event => {
+            if (!event.matches) {
+              startTime =
+                performance.now() -
+                storedAngle /
+                (
+                  Math.PI *
+                  2
+                ) *
+                CONFIG.rotationDuration;
+            }
+          }
+        );
+
+        canvas.addEventListener(
+          "webglcontextlost",
+          event => {
+            event.preventDefault();
+
+            stage.dataset.webglState =
+              "failed";
+          }
+        );
 
         stage.dataset.webglState =
           "ready";
 
-        requestAnimationFrame(render);
+        document.documentElement
+          .dataset
+          .heavyRuntimeLoaded =
+            "true";
+
+        requestAnimationFrame(
+          render
+        );
       } catch (error) {
         console.error(
-          "[Nine Summits Heart] WebGL initialization failed.",
+          "[Nine Summits Rounded Heart] Initialization failed.",
           error
         );
 
@@ -4962,17 +5188,7 @@
   </script>
 
   <script
-    src="/assets/house-control-pad/house.control-pad.data.js"
-    defer
-  ></script>
-
-  <script
     src="/assets/house-control-pad/house.control-pad.js"
-    defer
-  ></script>
-
-  <script
-    src="/assets/house-control-pad/house.avatar-life.js"
     defer
   ></script>
 </body>

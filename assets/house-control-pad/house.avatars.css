@@ -1,2050 +1,1589 @@
 /* /assets/house-control-pad/house.avatars.css */
-/* HOUSE_AVATAR_IDENTITY_AND_MOTION_PRESENTATION_CSS_TNT_v1 */
-/* Full-file addition. */
+/* HOUSE_AVATARS_CONTAINED_RESIDENT_EXPRESSION_TNT_v1 */
+/* Full-file replacement. */
 /*
-  Five-layer House Control Pad architecture:
+  AVATAR PRESENTATION AUTHORITY ONLY.
 
-  1. house.control-pad.data.js
-     Stable room, corridor, authority, route, camera, and identity data.
-
-  2. house.control-pad.js
-     Controller, camera, room selection, routing, travel, focus, and public API.
-
-  3. house.avatar-life.js
-     Blink scheduling, inactivity, gestures, yawns, and avatar runtime state.
-
-  4. house.control-pad.css
-     Static estate architecture and interface presentation.
-
-  5. house.avatars.css
-     Resident appearance and motion presentation.
-
-  Separation law:
-
-  Data describes.
-  House CSS renders architecture.
-  Controller coordinates.
-  Avatar life schedules.
-  Avatar CSS expresses the residents.
-
-  This file owns:
-
-  - avatar placement presentation
-  - avatar overview, room, and conversation scales
-  - portrait frames
-  - anatomy
-  - faces
-  - hair
-  - brows
-  - eyes
-  - eyelids
-  - pupils
-  - noses
-  - mouths
-  - clothing
-  - posture
-  - accessories
-  - identity cues
-  - nameplates
-  - grayscale-distinguishable resident silhouettes
+  Owns:
+  - resident visual construction
+  - resident proportions
+  - clothing presentation
+  - facial features
+  - local body-part animation
   - blink presentation
-  - glance presentation
-  - breathing presentation
   - gesture presentation
-  - sleepy and yawn presentation
-  - travel posture
-  - arrival presentation
-  - focused and speaking states
-  - reduced-motion avatar behavior
-  - responsive avatar sizing
+  - expression presentation
+  - agent-specific visual identity
+  - avatar placeholder replacement surface
+  - contained resident rendering
 
-  This file does not own:
-
-  - rooms
-  - estate geometry
-  - room shapes
-  - room content
-  - corridor graph data
-  - pathfinding
-  - camera execution
-  - route execution
+  Does not own:
+  - room selection
+  - route state
+  - camera framing
+  - usable viewport measurement
+  - room fitting
+  - avatar safe-frame dimensions
+  - avatar root placement
+  - avatar root containment
+  - permanent avatar root scale
   - blink scheduling
-  - inactivity tracking
-  - gesture selection
-  - timer ownership
+  - gesture scheduling
+  - idle scheduling
 
-  Canonical residents:
+  Runtime authorities:
 
-  - Jeeves
-  - Auren
-  - Soren
-  - Elara
+  Control Pad Control 1 coordinates.
+  Control Pad Control 2 composes.
+  Avatar Life schedules.
+  Avatar CSS expresses.
+
+  Structural rule:
+
+  The avatar root must remain inside the safe frame supplied by
+  Control Pad Control 2.
+
+  Local animation may move internal body parts.
+  Local animation may not change permanent root placement.
+  Local animation may not apply uncontrolled root enlargement.
 */
 
 :root {
-  --hcp-avatar-overview: 82px;
-  --hcp-avatar-room: 150px;
-  --hcp-avatar-conversation: 190px;
+  --hcp-avatar-default-width: 8rem;
+  --hcp-avatar-default-height: 12rem;
 
-  --hcp-avatar-skin-light: #f1c39d;
-  --hcp-avatar-skin-mid: #d79570;
-  --hcp-avatar-skin-dark: #b87150;
+  --hcp-avatar-root-scale: 1;
+  --hcp-avatar-structural-scale: 1;
+  --hcp-avatar-local-scale: 1;
 
-  --hcp-avatar-eye-white: rgba(249, 249, 246, 0.96);
-  --hcp-avatar-eye-dark: rgba(18, 22, 29, 0.96);
-  --hcp-avatar-brow: rgba(52, 34, 31, 0.76);
-  --hcp-avatar-mouth: rgba(76, 34, 40, 0.66);
+  --hcp-avatar-head-size: 3.35rem;
+  --hcp-avatar-body-width: 4.5rem;
+  --hcp-avatar-body-height: 6.6rem;
 
-  --hcp-avatar-frame-border: rgba(255, 255, 255, 0.24);
-  --hcp-avatar-nameplate: rgba(1, 4, 11, 0.72);
+  --hcp-avatar-skin: #bd7f59;
+  --hcp-avatar-skin-light: #e2ad84;
+  --hcp-avatar-skin-shadow: #7d4f3b;
 
-  --hcp-avatar-jeeves-primary: #162139;
-  --hcp-avatar-jeeves-secondary: #293653;
+  --hcp-avatar-hair: #2b1d22;
+  --hcp-avatar-hair-light: #5b3944;
 
-  --hcp-avatar-auren-primary: #1b3a2d;
-  --hcp-avatar-auren-secondary: #4d7d61;
+  --hcp-avatar-eye: #18202c;
+  --hcp-avatar-eye-light: #ecf7ff;
 
-  --hcp-avatar-soren-primary: #283248;
-  --hcp-avatar-soren-secondary: #68768e;
+  --hcp-avatar-clothing: #20283d;
+  --hcp-avatar-clothing-light: #45506c;
+  --hcp-avatar-clothing-dark: #101522;
 
-  --hcp-avatar-elara-primary: #2f1d4c;
-  --hcp-avatar-elara-secondary: #875487;
+  --hcp-avatar-accent: #f3c86f;
+  --hcp-avatar-accent-soft: rgba(243, 200, 111, 0.3);
 
-  --hcp-avatar-gold: #f3c86f;
-  --hcp-avatar-blue: #8dd8ff;
-  --hcp-avatar-green: #8ff0c3;
-  --hcp-avatar-silver: #d9e7ff;
-  --hcp-avatar-rose: #ffb8da;
-  --hcp-avatar-violet: #9471ff;
+  --hcp-avatar-shadow:
+    0 0.9rem 1.8rem rgba(0, 0, 0, 0.34);
+
+  --hcp-avatar-glow:
+    0 0 1.2rem rgba(243, 200, 111, 0.16);
+
+  --hcp-avatar-transition:
+    180ms ease;
 }
 
 /* =========================================================
-   AVATAR LAYER
+   SAFE-FRAME CONTRACT
    ========================================================= */
 
-.hcp-avatar-layer {
-  overflow: visible;
+.hcp-avatar-safe-frame {
+  position: absolute;
+
+  overflow: hidden;
+  contain: layout paint;
+  isolation: isolate;
+
+  pointer-events: none;
+
+  border-radius: 0.8rem;
+
+  transform-style: preserve-3d;
+}
+
+.hcp-avatar-safe-frame::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 86%,
+      rgba(0, 0, 0, 0.3),
+      transparent 60%
+    );
+
+  opacity: 0.56;
+}
+
+.hcp-avatar-mount {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  place-items: end center;
+
+  transform:
+    translateX(-50%);
+
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+
   pointer-events: none;
 }
 
 /* =========================================================
-   AVATAR BASE
+   ROOT CONTAINMENT
    ========================================================= */
 
 .hcp-avatar {
-  position: absolute;
+  --avatar-scale:
+    calc(
+      var(--hcp-avatar-root-scale, 1) *
+      var(--hcp-avatar-structural-scale, 1) *
+      var(--hcp-avatar-local-scale, 1)
+    );
 
-  width: calc(var(--hcp-avatar-overview) + 24px);
-  min-height: calc(var(--hcp-avatar-overview) + 34px);
+  position: relative;
+  z-index: 2;
+
+  width: min(
+    var(--hcp-avatar-default-width),
+    100%
+  );
+
+  height: min(
+    var(--hcp-avatar-default-height),
+    100%
+  );
+
+  max-width: 100%;
+  max-height: 100%;
 
   display: grid;
-  justify-items: center;
-  align-content: start;
-  gap: 0.28rem;
-
-  padding: 0;
-  margin: 0;
-
-  border: 0;
-
-  color: var(--hcp-ink, #fff2d1);
-  background: transparent;
+  place-items: end center;
 
   transform:
-    translate(-50%, -50%)
-    scale(var(--hcp-agent-overview-scale, 1));
+    scale(var(--avatar-scale));
 
-  transform-origin: 50% 62%;
+  transform-origin: 50% 100%;
 
-  pointer-events: auto;
-  cursor: pointer;
+  pointer-events: none;
+
+  filter:
+    drop-shadow(
+      0 0.8rem 0.8rem rgba(0, 0, 0, 0.24)
+    );
 
   transition:
-    left 0.25s linear,
-    top 0.25s linear,
-    opacity 0.18s ease,
-    filter 0.18s ease,
-    transform 0.32s ease;
-
-  will-change:
-    left,
-    top,
-    transform,
-    opacity;
+    opacity var(--hcp-avatar-transition),
+    filter var(--hcp-avatar-transition);
 }
 
-.hcp-avatar[data-avatar-scale-mode="room"] {
-  width: calc(var(--hcp-avatar-room) + 28px);
-  min-height: calc(var(--hcp-avatar-room) + 40px);
-
-  transform:
-    translate(-50%, -50%)
-    scale(var(--hcp-agent-room-scale, 1.7));
+.hcp-avatar[data-avatar-contained="true"] {
+  max-width: 100%;
+  max-height: 100%;
 }
 
-.hcp-avatar[data-avatar-scale-mode="conversation"] {
-  width: calc(var(--hcp-avatar-conversation) + 32px);
-  min-height: calc(var(--hcp-avatar-conversation) + 46px);
+.hcp-avatar[data-avatar-focus="false"] {
+  opacity: 0.58;
 
-  transform:
-    translate(-50%, -50%)
-    scale(var(--hcp-agent-conversation-scale, 2));
+  filter:
+    saturate(0.68)
+    brightness(0.78)
+    drop-shadow(
+      0 0.6rem 0.7rem rgba(0, 0, 0, 0.2)
+    );
 }
 
-.hcp-avatar[data-camera-visible="false"] {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.hcp-avatar[data-camera-visible="true"] {
+.hcp-avatar[data-avatar-focus="true"] {
   opacity: 1;
-  visibility: visible;
-}
-
-.hcp-avatar:hover,
-.hcp-avatar:focus-visible {
-  filter:
-    drop-shadow(
-      0 0 0.9rem rgba(243, 200, 111, 0.34)
-    );
-
-  outline: none;
-}
-
-.hcp-avatar[data-selected="true"],
-.hcp-avatar[data-focused="true"] {
-  z-index: 28;
-}
-
-.hcp-avatar[data-traveling="true"] {
-  z-index: 32;
 
   filter:
+    saturate(1)
+    brightness(1)
     drop-shadow(
-      0 0 1.15rem rgba(243, 200, 111, 0.5)
+      0 0.9rem 0.9rem rgba(0, 0, 0, 0.28)
     );
 }
 
-.hcp-avatar[data-arrived="true"] {
-  z-index: 31;
-
-  animation:
-    hcpAvatarArrivalPresence 0.74s ease both;
+.hcp-avatar[data-avatar-composition-mode="estate"] {
+  --hcp-avatar-local-scale: 0.82;
 }
 
-.hcp-avatar[data-avatar-state="disabled"] {
-  opacity: 0.48;
-  filter: saturate(0.35);
+.hcp-avatar[data-avatar-composition-mode="room"] {
+  --hcp-avatar-local-scale: 1;
 }
 
 /* =========================================================
-   NAMEPLATES
+   PLACEHOLDER COMPATIBILITY
    ========================================================= */
 
-.hcp-avatar-nameplate {
-  max-width: 7rem;
+.hcp-avatar-placeholder {
+  position: relative;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
 
-  padding: 0.21rem 0.44rem;
+  display: grid;
+  place-items: end center;
 
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  transform-style: preserve-3d;
+}
+
+.hcp-avatar-name {
+  position: absolute;
+  left: 50%;
+  bottom: 0.12rem;
+  z-index: 20;
+
+  transform:
+    translateX(-50%);
+
+  min-width: max-content;
+
+  padding: 0.22rem 0.4rem;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.1);
+
   border-radius: 999px;
 
-  color: rgba(241, 247, 255, 0.94);
+  color:
+    rgba(255, 244, 216, 0.94);
 
   background:
-    var(--hcp-avatar-nameplate);
+    rgba(3, 7, 16, 0.72);
 
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.28);
+    0 0.35rem 0.8rem rgba(0, 0, 0, 0.24);
 
   font:
-    950 0.58rem/1
+    900 0.46rem/1
     Inter,
     ui-sans-serif,
     system-ui,
     sans-serif;
 
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hcp-avatar[data-avatar-scale-mode="room"]
-  .hcp-avatar-nameplate {
-  max-width: 9rem;
-
-  padding: 0.26rem 0.52rem;
-
-  font-size: 0.64rem;
-}
-
-.hcp-avatar[data-avatar-scale-mode="conversation"]
-  .hcp-avatar-nameplate {
-  max-width: 11rem;
-
-  padding: 0.29rem 0.58rem;
-
-  font-size: 0.69rem;
 }
 
 /* =========================================================
-   PORTRAIT CONTAINER
+   GENERIC RESIDENT BODY
    ========================================================= */
 
-.hcp-avatar-portrait {
-  position: relative;
+.hcp-avatar-placeholder::before {
+  content: "";
 
-  width: var(--hcp-avatar-overview);
-  height: var(--hcp-avatar-overview);
-
-  display: block;
-
-  overflow: visible;
-
-  filter:
-    drop-shadow(
-      0 12px 22px rgba(0, 0, 0, 0.36)
-    );
-
-  transition:
-    width 0.28s ease,
-    height 0.28s ease,
-    filter 0.22s ease;
-}
-
-.hcp-avatar[data-avatar-scale-mode="room"]
-  .hcp-avatar-portrait {
-  width: var(--hcp-avatar-room);
-  height: var(--hcp-avatar-room);
-}
-
-.hcp-avatar[data-avatar-scale-mode="conversation"]
-  .hcp-avatar-portrait {
-  width: var(--hcp-avatar-conversation);
-  height: var(--hcp-avatar-conversation);
-}
-
-/* =========================================================
-   PORTRAIT FRAME
-   ========================================================= */
-
-.hcp-portrait-frame {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  bottom: 0.8rem;
+  z-index: 2;
 
-  overflow: hidden;
+  width: var(--hcp-avatar-body-width);
+  height: var(--hcp-avatar-body-height);
 
-  border: 2px solid var(--hcp-avatar-frame-border);
-  border-radius: 1.3rem;
+  transform:
+    translateX(-50%);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius:
+    46% 46% 22% 22% /
+    18% 18% 12% 12%;
 
   background:
-    radial-gradient(
-      circle at 34% 18%,
-      rgba(255, 255, 255, 0.26),
-      transparent 34%
-    ),
     linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.018)
+      160deg,
+      var(--hcp-avatar-clothing-light),
+      var(--hcp-avatar-clothing) 46%,
+      var(--hcp-avatar-clothing-dark)
     );
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
-
-  transition:
-    border-radius 0.28s ease,
-    box-shadow 0.22s ease;
+    var(--hcp-avatar-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.hcp-avatar[data-avatar-scale-mode="room"]
-  .hcp-portrait-frame {
-  border-radius: 2rem;
-}
-
-.hcp-avatar[data-avatar-scale-mode="conversation"]
-  .hcp-portrait-frame {
-  border-radius: 2.4rem;
-}
-
-.hcp-portrait-frame::before {
+.hcp-avatar-placeholder::after {
   content: "";
 
   position: absolute;
-  inset: 0.3rem;
-  z-index: 18;
+  left: 50%;
+  bottom:
+    calc(
+      0.8rem +
+      var(--hcp-avatar-body-height) -
+      0.25rem
+    );
+  z-index: 4;
 
-  border: 1px solid rgba(255, 255, 255, 0.065);
-  border-radius: 1rem;
+  width: var(--hcp-avatar-head-size);
+  height: var(--hcp-avatar-head-size);
 
-  pointer-events: none;
-}
+  transform:
+    translateX(-50%);
 
-.hcp-avatar[data-avatar-scale-mode="room"]
-  .hcp-portrait-frame::before {
-  inset: 0.45rem;
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
 
-  border-radius: 1.5rem;
-}
+  border-radius:
+    48% 48% 44% 44% /
+    44% 44% 52% 52%;
 
-.hcp-avatar[data-avatar-scale-mode="conversation"]
-  .hcp-portrait-frame::before {
-  inset: 0.55rem;
+  background:
+    radial-gradient(
+      circle at 36% 28%,
+      var(--hcp-avatar-skin-light),
+      transparent 28%
+    ),
+    linear-gradient(
+      145deg,
+      var(--hcp-avatar-skin-light),
+      var(--hcp-avatar-skin) 56%,
+      var(--hcp-avatar-skin-shadow)
+    );
 
-  border-radius: 1.8rem;
+  box-shadow:
+    0 0.5rem 0.9rem rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 /* =========================================================
-   ANATOMY LAYERS
+   GENERIC INTERNAL PARTS
    ========================================================= */
 
-.hcp-portrait-torso,
-.hcp-portrait-shoulders,
-.hcp-portrait-clothing,
-.hcp-portrait-neck,
-.hcp-portrait-ears,
-.hcp-portrait-head,
-.hcp-portrait-hair-back,
-.hcp-portrait-hair-front,
-.hcp-portrait-brows,
-.hcp-portrait-eyes,
-.hcp-portrait-nose,
-.hcp-portrait-mouth,
-.hcp-portrait-accessory,
-.hcp-portrait-identity-cue,
-.hcp-portrait-badge {
+.hcp-avatar-face,
+.hcp-avatar-head,
+.hcp-avatar-body,
+.hcp-avatar-hair,
+.hcp-avatar-eyes,
+.hcp-avatar-eye,
+.hcp-avatar-mouth,
+.hcp-avatar-brow,
+.hcp-avatar-arm,
+.hcp-avatar-hand,
+.hcp-avatar-accessory,
+.hcp-avatar-clothing,
+.hcp-avatar-shadow,
+.hcp-avatar-aura {
   position: absolute;
+  display: block;
 }
 
-.hcp-portrait-torso {
-  inset: 0;
+.hcp-avatar-body {
+  left: 50%;
+  bottom: 0.82rem;
   z-index: 2;
 
-  transform-origin: 50% 100%;
+  width: var(--hcp-avatar-body-width);
+  height: var(--hcp-avatar-body-height);
+
+  transform:
+    translateX(-50%);
+
+  border-radius:
+    46% 46% 22% 22% /
+    18% 18% 12% 12%;
+
+  background:
+    linear-gradient(
+      160deg,
+      var(--hcp-avatar-clothing-light),
+      var(--hcp-avatar-clothing) 46%,
+      var(--hcp-avatar-clothing-dark)
+    );
+
+  box-shadow:
+    var(--hcp-avatar-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.hcp-portrait-shoulders {
+.hcp-avatar-head {
   left: 50%;
-  bottom: -11%;
+  bottom:
+    calc(
+      0.82rem +
+      var(--hcp-avatar-body-height) -
+      0.28rem
+    );
+  z-index: 5;
 
-  width: 78%;
+  width: var(--hcp-avatar-head-size);
+  height: var(--hcp-avatar-head-size);
+
+  transform:
+    translateX(-50%);
+
+  border-radius:
+    48% 48% 44% 44% /
+    44% 44% 52% 52%;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--hcp-avatar-skin-light),
+      var(--hcp-avatar-skin) 56%,
+      var(--hcp-avatar-skin-shadow)
+    );
+
+  box-shadow:
+    0 0.5rem 0.9rem rgba(0, 0, 0, 0.24);
+}
+
+.hcp-avatar-hair {
+  left: 50%;
+  top: -0.18rem;
+  z-index: 6;
+
+  width: 94%;
   height: 44%;
 
-  transform: translateX(-50%);
+  transform:
+    translateX(-50%);
 
   border-radius:
-    50% 50% 0 0;
+    52% 52% 36% 36% /
+    72% 72% 28% 28%;
 
   background:
     linear-gradient(
-      180deg,
-      #37445d,
-      #111827
+      145deg,
+      var(--hcp-avatar-hair-light),
+      var(--hcp-avatar-hair)
     );
 }
 
-.hcp-portrait-clothing {
+.hcp-avatar-eyes {
   left: 50%;
-  bottom: -2%;
+  top: 45%;
+  z-index: 8;
 
-  width: 52%;
-  height: 34%;
-
-  transform: translateX(-50%);
-
-  z-index: 3;
-}
-
-.hcp-portrait-neck {
-  left: 50%;
-  bottom: 13%;
-
-  width: 18%;
-  height: 22%;
-
-  transform: translateX(-50%);
-
-  border-radius:
-    0 0 38% 38%;
-
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-skin-mid),
-      var(--hcp-avatar-skin-dark)
-    );
-
-  z-index: 4;
-}
-
-.hcp-portrait-ears {
-  left: 50%;
-  top: 43%;
-
-  width: 52%;
+  width: 62%;
   height: 16%;
-
-  transform: translateX(-50%);
-
-  z-index: 4;
-}
-
-.hcp-portrait-ears::before,
-.hcp-portrait-ears::after {
-  content: "";
-
-  position: absolute;
-  top: 0;
-
-  width: 12%;
-  height: 100%;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-skin-light),
-      var(--hcp-avatar-skin-mid)
-    );
-}
-
-.hcp-portrait-ears::before {
-  left: 0;
-}
-
-.hcp-portrait-ears::after {
-  right: 0;
-}
-
-.hcp-portrait-head {
-  left: 50%;
-  top: 47%;
-
-  width: 43%;
-  height: 55%;
 
   transform:
     translate(-50%, -50%);
 
-  transform-origin: 50% 68%;
-
-  border-radius:
-    46% 46% 48% 48% /
-    42% 42% 56% 56%;
-
-  background:
-    radial-gradient(
-      circle at 34% 26%,
-      rgba(255, 255, 255, 0.28),
-      transparent 24%
-    ),
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-skin-light),
-      var(--hcp-avatar-skin-mid)
-    );
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 0.18rem 0.4rem rgba(0, 0, 0, 0.2);
-
-  z-index: 5;
-
-  transition:
-    transform 0.24s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.hcp-portrait-hair-back,
-.hcp-portrait-hair-front {
-  left: 50%;
+.hcp-avatar-eye {
+  position: relative;
 
-  transform: translateX(-50%);
-
-  z-index: 6;
-
-  transform-origin: 50% 100%;
-}
-
-.hcp-portrait-hair-back {
-  top: 16%;
-
-  width: 51%;
-  height: 30%;
-
-  border-radius:
-    58% 58% 38% 38% /
-    76% 76% 32% 32%;
-
-  background: #2d2532;
-}
-
-.hcp-portrait-hair-front {
-  top: 18%;
-
-  width: 44%;
-  height: 16%;
-
-  border-radius:
-    62% 62% 34% 34% /
-    78% 78% 28% 28%;
-
-  background: #2d2532;
-}
-
-.hcp-portrait-brows {
-  left: 50%;
-  top: 34%;
-
-  width: 56%;
-  height: 10%;
-
-  transform: translateX(-50%);
-
-  z-index: 8;
-}
-
-.hcp-portrait-brows::before,
-.hcp-portrait-brows::after {
-  content: "";
-
-  position: absolute;
-  top: 0;
-
-  width: 32%;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background:
-    var(--hcp-avatar-brow);
-}
-
-.hcp-portrait-brows::before {
-  left: 5%;
-}
-
-.hcp-portrait-brows::after {
-  right: 5%;
-}
-
-.hcp-portrait-eyes {
-  left: 50%;
-  top: 40%;
-
-  width: 58%;
-  height: 16%;
-
-  transform: translateX(-50%);
-
-  z-index: 9;
-}
-
-.hcp-portrait-eye {
-  position: absolute;
-  top: 0;
-
-  width: 25%;
-  height: 62%;
+  width: 34%;
+  height: 100%;
 
   overflow: hidden;
 
-  border-radius: 50%;
+  border-radius: 999px;
 
   background:
-    var(--hcp-avatar-eye-white);
+    var(--hcp-avatar-eye-light);
 
   box-shadow:
-    inset 0 -1px 0 rgba(64, 44, 44, 0.2);
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
 }
 
-.hcp-portrait-eye-left {
-  left: 4%;
-}
+.hcp-avatar-eye::before {
+  content: "";
 
-.hcp-portrait-eye-right {
-  right: 4%;
-}
-
-.hcp-portrait-lid {
   position: absolute;
-  left: 0;
-  top: -100%;
-
-  width: 100%;
-  height: 110%;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-skin-light),
-      var(--hcp-avatar-skin-mid)
-    );
-
-  transform-origin: 50% 0;
-
-  transition:
-    transform 0.08s linear,
-    top 0.08s linear;
-}
-
-.hcp-portrait-pupils {
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  transition:
-    transform 0.28s ease;
-}
-
-.hcp-portrait-pupil {
-  position: absolute;
-  top: 20%;
-
-  width: 10%;
-  height: 38%;
-
-  border-radius: 50%;
-
-  background:
-    var(--hcp-avatar-eye-dark);
-}
-
-.hcp-portrait-pupil-left {
-  left: 13%;
-}
-
-.hcp-portrait-pupil-right {
-  right: 13%;
-}
-
-.hcp-portrait-nose {
   left: 50%;
   top: 50%;
 
-  width: 7%;
-  height: 19%;
-
-  transform: translateX(-50%);
-
-  border-radius: 999px;
-
-  background:
-    rgba(96, 55, 43, 0.22);
-
-  z-index: 8;
-}
-
-.hcp-portrait-mouth {
-  left: 50%;
-  top: 70%;
-
-  width: 31%;
-  height: 10%;
-
-  transform: translateX(-50%);
-
-  border-bottom:
-    2px solid var(--hcp-avatar-mouth);
-
-  border-radius:
-    0 0 999px 999px;
-
-  z-index: 8;
-
-  transition:
-    width 0.18s ease,
-    height 0.18s ease,
-    border-radius 0.18s ease,
-    background 0.18s ease,
-    transform 0.18s ease;
-}
-
-.hcp-portrait-accessory,
-.hcp-portrait-identity-cue {
-  z-index: 12;
-
-  pointer-events: none;
-}
-
-.hcp-portrait-badge {
-  right: -0.18rem;
-  bottom: -0.16rem;
-  z-index: 13;
-
-  min-width: 1.08rem;
-  height: 1.08rem;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-
-  color: var(--hcp-ink, #fff2d1);
-
-  background:
-    rgba(2, 5, 12, 0.84);
-
-  font:
-    950 0.52rem/1
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
-}
-
-/* =========================================================
-   SILHOUETTES
-   ========================================================= */
-
-/* Jeeves: narrow, formal, vertical */
-
-.hcp-silhouette-formal-upright
-  .hcp-portrait-shoulders {
-  width: 71%;
-  height: 42%;
-}
-
-.hcp-silhouette-formal-upright
-  .hcp-portrait-head {
-  top: 46%;
-}
-
-.hcp-silhouette-formal-upright
-  .hcp-portrait-torso {
-  transform: scaleX(0.94);
-}
-
-/* Auren: wider, practical, forward */
-
-.hcp-silhouette-practical-forward
-  .hcp-portrait-shoulders {
-  width: 86%;
-  height: 47%;
-
-  border-radius:
-    42% 48% 0 0;
-}
-
-.hcp-silhouette-practical-forward
-  .hcp-portrait-head {
-  top: 48%;
-}
-
-.hcp-silhouette-practical-forward
-  .hcp-portrait-torso {
-  transform:
-    translateY(2%)
-    rotate(-2deg);
-}
-
-/* Soren: contained and symmetrical */
-
-.hcp-silhouette-contained-symmetrical
-  .hcp-portrait-shoulders {
-  width: 72%;
-  height: 43%;
-}
-
-.hcp-silhouette-contained-symmetrical
-  .hcp-portrait-torso {
-  transform: scaleX(0.9);
-}
-
-/* Elara: flowing and asymmetrical */
-
-.hcp-silhouette-expressive-soft
-  .hcp-portrait-shoulders {
-  width: 82%;
-  height: 46%;
-
-  border-radius:
-    58% 44% 0 0;
-}
-
-.hcp-silhouette-expressive-soft
-  .hcp-portrait-torso {
-  transform:
-    rotate(2deg)
-    translateX(2%);
-}
-
-/* =========================================================
-   FACE SHAPES
-   ========================================================= */
-
-.hcp-face-shape-narrow-formal
-  .hcp-portrait-head {
-  width: 39%;
-  height: 57%;
-
-  border-radius:
-    44% 44% 46% 46% /
-    38% 38% 60% 60%;
-}
-
-.hcp-face-shape-open-angular
-  .hcp-portrait-head {
-  width: 46%;
-  height: 53%;
-
-  clip-path:
-    polygon(
-      14% 0,
-      86% 0,
-      100% 36%,
-      86% 100%,
-      14% 100%,
-      0 36%
-    );
-
-  border-radius: 42%;
-}
-
-.hcp-face-shape-balanced-oval
-  .hcp-portrait-head {
   width: 42%;
-  height: 58%;
+  height: 78%;
 
-  border-radius: 48%;
-}
+  transform:
+    translate(-50%, -50%);
 
-.hcp-face-shape-soft-heart
-  .hcp-portrait-head {
-  width: 44%;
-  height: 56%;
+  border-radius: 50%;
 
-  border-radius:
-    50% 50% 45% 45% /
-    42% 42% 61% 61%;
-}
-
-/* =========================================================
-   HAIR
-   ========================================================= */
-
-.hcp-hair-controlled-side-part
-  .hcp-portrait-hair-back,
-.hcp-hair-controlled-side-part
-  .hcp-portrait-hair-front {
   background:
-    linear-gradient(
-      180deg,
-      #172034,
-      #0f1728
-    );
+    var(--hcp-avatar-eye);
 }
 
-.hcp-hair-controlled-side-part
-  .hcp-portrait-hair-front {
-  clip-path:
-    polygon(
-      0 22%,
-      58% 0,
-      100% 25%,
-      86% 100%,
-      8% 78%
-    );
-}
-
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-back,
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      180deg,
-      #714725,
-      #4a2a17
-    );
-}
-
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-back {
-  width: 55%;
-  height: 33%;
-}
-
-.hcp-hair-maker-tousled
-  .hcp-portrait-hair-front {
-  width: 49%;
-  height: 20%;
-
-  clip-path:
-    polygon(
-      0 45%,
-      15% 8%,
-      34% 35%,
-      50% 0,
-      67% 33%,
-      86% 8%,
-      100% 52%,
-      92% 100%,
-      6% 100%
-    );
-}
-
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-back,
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      180deg,
-      #edf2fb,
-      #a9b5cb
-    );
-}
-
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-back {
-  width: 49%;
-  height: 28%;
-}
-
-.hcp-hair-structured-silver
-  .hcp-portrait-hair-front {
-  clip-path:
-    polygon(
-      0 25%,
-      26% 0,
-      52% 20%,
-      76% 0,
-      100% 28%,
-      90% 100%,
-      10% 100%
-    );
-}
-
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-back,
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-front {
-  background:
-    linear-gradient(
-      135deg,
-      #43275e,
-      #8a4f83
-    );
-}
-
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-back {
-  top: 12%;
-
-  width: 61%;
-  height: 49%;
-
-  border-radius:
-    56% 56% 44% 44% /
-    74% 74% 52% 52%;
-}
-
-.hcp-hair-flowing-sculpted
-  .hcp-portrait-hair-front {
-  width: 48%;
-  height: 19%;
-
-  clip-path:
-    polygon(
-      0 35%,
-      23% 0,
-      51% 24%,
-      73% 0,
-      100% 42%,
-      86% 100%,
-      7% 82%
-    );
-}
-
-/* =========================================================
-   BROWS
-   ========================================================= */
-
-.hcp-brows-measured
-  .hcp-portrait-brows::before,
-.hcp-brows-measured
-  .hcp-portrait-brows::after {
-  transform: rotate(-2deg);
-}
-
-.hcp-brows-active
-  .hcp-portrait-brows::before {
-  transform: rotate(-9deg);
-}
-
-.hcp-brows-active
-  .hcp-portrait-brows::after {
-  transform: rotate(7deg);
-}
-
-.hcp-brows-analytical
-  .hcp-portrait-brows::before {
-  transform: rotate(5deg);
-}
-
-.hcp-brows-analytical
-  .hcp-portrait-brows::after {
-  transform: rotate(-5deg);
-}
-
-.hcp-brows-expressive
-  .hcp-portrait-brows::before {
-  transform: rotate(-12deg);
-}
-
-.hcp-brows-expressive
-  .hcp-portrait-brows::after {
-  transform: rotate(11deg);
-}
-
-/* =========================================================
-   EYES
-   ========================================================= */
-
-.hcp-eyes-composed
-  .hcp-portrait-eye {
-  height: 50%;
-}
-
-.hcp-eyes-alert
-  .hcp-portrait-eye {
-  height: 70%;
-}
-
-.hcp-eyes-measured
-  .hcp-portrait-eye {
-  height: 44%;
-}
-
-.hcp-eyes-bright
-  .hcp-portrait-eye {
-  width: 27%;
-  height: 72%;
-}
-
-/* =========================================================
-   MOUTHS
-   ========================================================= */
-
-.hcp-mouth-restrained
-  .hcp-portrait-mouth {
-  width: 23%;
-}
-
-.hcp-mouth-open-friendly
-  .hcp-portrait-mouth {
-  width: 36%;
-
-  border-bottom-width: 3px;
-}
-
-.hcp-mouth-neutral
-  .hcp-portrait-mouth {
-  width: 24%;
-  height: 5%;
-
-  border-radius: 0;
-}
-
-.hcp-mouth-warm
-  .hcp-portrait-mouth {
-  width: 34%;
-
-  border-bottom-width: 3px;
-}
-
-/* =========================================================
-   CLOTHING
-   ========================================================= */
-
-/* Jeeves */
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-jeeves-secondary),
-      var(--hcp-avatar-jeeves-primary)
-    );
-}
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::before,
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::after {
+.hcp-avatar-eye::after {
   content: "";
 
   position: absolute;
-  top: 0;
+  left: 57%;
+  top: 24%;
 
-  width: 42%;
-  height: 70%;
+  width: 18%;
+  height: 24%;
+
+  border-radius: 50%;
 
   background:
-    rgba(237, 245, 255, 0.88);
+    rgba(255, 255, 255, 0.92);
 }
 
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::before {
-  left: 4%;
+.hcp-avatar-brow {
+  top: 34%;
+  z-index: 9;
 
-  clip-path:
-    polygon(
-      0 0,
-      100% 18%,
-      58% 100%
-    );
-}
+  width: 25%;
+  height: 6%;
 
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing::after {
-  right: 4%;
+  border-radius: 999px;
 
-  clip-path:
-    polygon(
-      100% 0,
-      0 18%,
-      42% 100%
-    );
-}
-
-.hcp-clothing-butler-coat
-  .hcp-portrait-clothing {
   background:
-    radial-gradient(
-      circle at 50% 42%,
-      var(--hcp-avatar-gold) 0 7%,
-      transparent 8%
+    color-mix(
+      in srgb,
+      var(--hcp-avatar-hair) 86%,
+      transparent
     );
 }
 
-/* Auren */
-
-.hcp-clothing-maker-jacket
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-auren-secondary),
-      var(--hcp-avatar-auren-primary)
-    );
-}
-
-.hcp-clothing-maker-jacket
-  .hcp-portrait-clothing {
-  border-left:
-    3px solid rgba(243, 200, 111, 0.72);
+.hcp-avatar-brow-left {
+  left: 19%;
 
   transform:
-    translateX(-50%)
     rotate(-4deg);
 }
 
-/* Soren */
+.hcp-avatar-brow-right {
+  right: 19%;
 
-.hcp-clothing-diagnostic-coat
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-soren-secondary),
-      var(--hcp-avatar-soren-primary)
-    );
+  transform:
+    rotate(4deg);
 }
 
-.hcp-clothing-diagnostic-coat
-  .hcp-portrait-clothing::before {
-  content: "";
-
-  position: absolute;
+.hcp-avatar-mouth {
   left: 50%;
-  top: 0;
+  top: 70%;
+  z-index: 9;
 
-  width: 2px;
-  height: 88%;
+  width: 30%;
+  height: 8%;
 
-  transform: translateX(-50%);
-
-  background:
-    rgba(216, 230, 255, 0.48);
-}
-
-/* Elara */
-
-.hcp-clothing-signal-robe
-  .hcp-portrait-shoulders {
-  background:
-    linear-gradient(
-      180deg,
-      var(--hcp-avatar-elara-secondary),
-      var(--hcp-avatar-elara-primary)
-    );
-}
-
-.hcp-clothing-signal-robe
-  .hcp-portrait-clothing {
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle at 50% 30%,
-      rgba(255, 184, 218, 0.26),
-      transparent 64%
-    );
-}
-
-/* =========================================================
-   POSTURE
-   ========================================================= */
-
-.hcp-posture-upright
-  .hcp-portrait-torso {
-  transform: none;
-}
-
-.hcp-posture-forward-relaxed
-  .hcp-portrait-torso {
   transform:
-    translateY(2%)
-    rotate(-2deg);
+    translateX(-50%);
+
+  border-bottom:
+    2px solid rgba(67, 26, 30, 0.7);
+
+  border-radius:
+    0 0 999px 999px;
 }
 
-.hcp-posture-centered
-  .hcp-portrait-torso {
-  transform:
-    scaleX(0.94);
-}
+.hcp-avatar-arm {
+  top: 26%;
+  z-index: 1;
 
-.hcp-posture-soft-asymmetrical
-  .hcp-portrait-torso {
-  transform:
-    rotate(2deg)
-    translateX(2%);
-}
-
-/* =========================================================
-   ACCESSORIES AND IDENTITY CUES
-   ========================================================= */
-
-/* Jeeves monocle */
-
-.hcp-accessory-monocle
-  .hcp-portrait-accessory {
-  right: 24%;
-  top: 38%;
-
-  width: 16%;
-  height: 16%;
-
-  border:
-    2px solid rgba(243, 200, 111, 0.94);
-  border-radius: 50%;
-
-  background:
-    rgba(255, 255, 255, 0.02);
-}
-
-.hcp-accessory-monocle
-  .hcp-portrait-accessory::after {
-  content: "";
-
-  position: absolute;
-  right: -34%;
-  bottom: -48%;
-
-  width: 1px;
-  height: 76%;
-
-  transform: rotate(-18deg);
-
-  background:
-    rgba(243, 200, 111, 0.78);
-}
-
-.hcp-cue-house-seal
-  .hcp-portrait-identity-cue {
-  left: 7%;
-  bottom: 9%;
-
-  width: 13%;
-  height: 13%;
-
-  border:
-    1px solid rgba(141, 216, 255, 0.68);
-
-  transform: rotate(45deg);
-
-  background:
-    rgba(141, 216, 255, 0.06);
-}
-
-/* Auren tool and gear */
-
-.hcp-accessory-tool-loop
-  .hcp-portrait-accessory {
-  left: 6%;
-  bottom: 10%;
-
-  width: 24%;
-  height: 5%;
+  width: 28%;
+  height: 58%;
 
   border-radius: 999px;
 
-  transform: rotate(-34deg);
+  background:
+    linear-gradient(
+      180deg,
+      var(--hcp-avatar-clothing-light),
+      var(--hcp-avatar-clothing-dark)
+    );
+
+  transform-origin: 50% 10%;
+}
+
+.hcp-avatar-arm-left {
+  left: -14%;
+
+  transform:
+    rotate(8deg);
+}
+
+.hcp-avatar-arm-right {
+  right: -14%;
+
+  transform:
+    rotate(-8deg);
+}
+
+.hcp-avatar-hand {
+  left: 50%;
+  bottom: -7%;
+
+  width: 90%;
+  aspect-ratio: 1;
+
+  transform:
+    translateX(-50%);
+
+  border-radius: 50%;
 
   background:
     linear-gradient(
-      90deg,
-      var(--hcp-avatar-gold),
-      var(--hcp-avatar-green)
+      145deg,
+      var(--hcp-avatar-skin-light),
+      var(--hcp-avatar-skin)
     );
 }
 
-.hcp-cue-gear
-  .hcp-portrait-identity-cue {
-  right: 5%;
-  top: 7%;
+.hcp-avatar-shadow {
+  left: 50%;
+  bottom: 0.44rem;
+  z-index: 0;
 
-  width: 15%;
-  height: 15%;
+  width: 64%;
+  height: 8%;
 
-  border:
-    2px dashed rgba(143, 240, 195, 0.84);
-  border-radius: 50%;
+  transform:
+    translateX(-50%);
 
-  box-shadow:
-    0 0 0.8rem rgba(143, 240, 195, 0.18);
-}
-
-/* Soren diagnostic lens and seal */
-
-.hcp-accessory-diagnostic-lens
-  .hcp-portrait-accessory {
-  left: 5%;
-  top: 7%;
-
-  width: 16%;
-  height: 16%;
-
-  border:
-    2px solid rgba(141, 216, 255, 0.88);
   border-radius: 50%;
 
   background:
-    rgba(141, 216, 255, 0.045);
+    rgba(0, 0, 0, 0.34);
+
+  filter:
+    blur(0.28rem);
 }
 
-.hcp-cue-seal
-  .hcp-portrait-identity-cue {
-  right: 5%;
-  bottom: 8%;
+.hcp-avatar-aura {
+  left: 50%;
+  bottom: 1.4rem;
+  z-index: -1;
 
-  width: 15%;
-  height: 15%;
+  width: 76%;
+  height: 82%;
 
-  clip-path:
-    polygon(
-      25% 0,
-      75% 0,
-      100% 50%,
-      75% 100%,
-      25% 100%,
-      0 50%
-    );
-
-  background:
-    rgba(216, 230, 255, 0.17);
-}
-
-/* Elara signal orb and speech light */
-
-.hcp-accessory-signal-orb
-  .hcp-portrait-accessory {
-  right: 4%;
-  top: 5%;
-
-  width: 17%;
-  height: 17%;
+  transform:
+    translateX(-50%);
 
   border-radius: 50%;
 
   background:
     radial-gradient(
-      circle,
-      rgba(255, 244, 216, 0.98),
-      rgba(255, 184, 218, 0.7) 38%,
-      transparent 67%
+      ellipse,
+      var(--hcp-avatar-accent-soft),
+      transparent 68%
     );
 
-  box-shadow:
-    0 0 1rem rgba(255, 184, 218, 0.58);
-}
+  filter:
+    blur(0.4rem);
 
-.hcp-cue-speech-light
-  .hcp-portrait-identity-cue {
-  left: 4%;
-  bottom: 8%;
-
-  width: 18%;
-  height: 11%;
-
-  border:
-    1px solid rgba(255, 244, 216, 0.68);
-  border-radius:
-    50% 50% 50% 14%;
-
-  background:
-    rgba(255, 255, 255, 0.06);
+  opacity: 0.52;
 }
 
 /* =========================================================
-   RESIDENT FRAME IDENTITIES
+   LOCAL ROOT STATES
    ========================================================= */
 
-.hcp-avatar-jeeves
-  .hcp-portrait-frame {
-  border-color:
-    rgba(141, 216, 255, 0.38);
+.hcp-avatar[data-avatar-state="resting"] {
+  --hcp-avatar-local-scale: 1;
+}
 
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(243, 200, 111, 0.15),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(141, 216, 255, 0.26),
-      rgba(6, 18, 44, 0.98)
+.hcp-avatar[data-avatar-state="focused"] {
+  --hcp-avatar-local-scale: 1;
+}
+
+.hcp-avatar[data-avatar-state="traveling"] {
+  opacity: 0.76;
+
+  filter:
+    saturate(0.84)
+    brightness(0.9)
+    drop-shadow(
+      0 0.7rem 0.7rem rgba(0, 0, 0, 0.2)
     );
 }
 
-.hcp-avatar-jeeves
-  .hcp-avatar-nameplate {
-  border-color:
-    rgba(141, 216, 255, 0.3);
+.hcp-avatar[data-avatar-state="arriving"] {
+  opacity: 1;
 }
 
-.hcp-avatar-auren
-  .hcp-portrait-frame {
-  border-color:
-    rgba(143, 240, 195, 0.38);
+.hcp-avatar[data-avatar-state="speaking"] {
+  opacity: 1;
+}
 
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(143, 240, 195, 0.21),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(243, 200, 111, 0.25),
-      rgba(8, 42, 32, 0.98)
+.hcp-avatar[data-avatar-state="sleepy"] {
+  filter:
+    saturate(0.72)
+    brightness(0.88)
+    drop-shadow(
+      0 0.7rem 0.7rem rgba(0, 0, 0, 0.2)
     );
 }
 
-.hcp-avatar-auren
-  .hcp-avatar-nameplate {
-  border-color:
-    rgba(143, 240, 195, 0.3);
-}
+.hcp-avatar[data-avatar-state="disabled"] {
+  opacity: 0.28;
 
-.hcp-avatar-soren
-  .hcp-portrait-frame {
-  border-color:
-    rgba(216, 230, 255, 0.42);
-
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(141, 216, 255, 0.19),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(216, 230, 255, 0.23),
-      rgba(7, 14, 34, 0.98)
-    );
-}
-
-.hcp-avatar-soren
-  .hcp-avatar-nameplate {
-  border-color:
-    rgba(216, 230, 255, 0.32);
-}
-
-.hcp-avatar-elara
-  .hcp-portrait-frame {
-  border-color:
-    rgba(255, 184, 218, 0.42);
-
-  background:
-    radial-gradient(
-      circle at 76% 76%,
-      rgba(255, 184, 218, 0.25),
-      transparent 50%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 184, 218, 0.24),
-      rgba(148, 113, 255, 0.31),
-      rgba(8, 8, 30, 0.98)
-    );
-}
-
-.hcp-avatar-elara
-  .hcp-avatar-nameplate {
-  border-color:
-    rgba(255, 184, 218, 0.32);
+  filter:
+    grayscale(0.65)
+    brightness(0.7);
 }
 
 /* =========================================================
    BLINK PRESENTATION
    ========================================================= */
 
-.hcp-avatar[data-blinking="true"]
-  .hcp-portrait-lid {
-  top: -4%;
+.hcp-avatar[data-blink="true"]
+  .hcp-avatar-eye,
+.hcp-avatar.is-blinking
+  .hcp-avatar-eye {
+  transform:
+    scaleY(0.08);
+}
+
+.hcp-avatar[data-slow-blink="true"]
+  .hcp-avatar-eye,
+.hcp-avatar.is-slow-blinking
+  .hcp-avatar-eye {
+  animation:
+    hcpAvatarSlowBlink 290ms ease both;
+}
+
+.hcp-avatar[data-double-blink="true"]
+  .hcp-avatar-eye,
+.hcp-avatar.is-double-blinking
+  .hcp-avatar-eye {
+  animation:
+    hcpAvatarDoubleBlink 420ms ease both;
+}
+
+/* =========================================================
+   GENERIC LOCAL GESTURES
+   ========================================================= */
+
+.hcp-avatar[data-gesture="small-head-move"]
+  .hcp-avatar-head,
+.hcp-avatar.is-small-head-move
+  .hcp-avatar-head {
+  animation:
+    hcpAvatarSmallHeadMove 900ms ease both;
+}
+
+.hcp-avatar[data-gesture="slow-head-tilt"]
+  .hcp-avatar-head,
+.hcp-avatar.is-slow-head-tilt
+  .hcp-avatar-head {
+  animation:
+    hcpAvatarSlowHeadTilt 1300ms ease both;
+}
+
+.hcp-avatar[data-gesture="shoulder-shift"]
+  .hcp-avatar-body,
+.hcp-avatar.is-shoulder-shift
+  .hcp-avatar-body {
+  animation:
+    hcpAvatarShoulderShift 850ms ease both;
+}
+
+.hcp-avatar[data-gesture="posture-reset"]
+  .hcp-avatar-body,
+.hcp-avatar.is-posture-reset
+  .hcp-avatar-body {
+  animation:
+    hcpAvatarPostureReset 1100ms ease both;
+}
+
+.hcp-avatar[data-gesture="posture-release"]
+  .hcp-avatar-body,
+.hcp-avatar.is-posture-release
+  .hcp-avatar-body {
+  animation:
+    hcpAvatarPostureRelease 1100ms ease both;
+}
+
+.hcp-avatar[data-gesture="hand-stretch"]
+  .hcp-avatar-arm,
+.hcp-avatar.is-hand-stretch
+  .hcp-avatar-arm {
+  animation:
+    hcpAvatarHandStretch 1150ms ease both;
+}
+
+.hcp-avatar[data-gesture="brief-eye-rest"]
+  .hcp-avatar-eye,
+.hcp-avatar.is-brief-eye-rest
+  .hcp-avatar-eye {
+  animation:
+    hcpAvatarEyeRest 900ms ease both;
+}
+
+.hcp-avatar[data-gesture="soft-stretch"]
+  .hcp-avatar-arm-left,
+.hcp-avatar.is-soft-stretch
+  .hcp-avatar-arm-left {
+  animation:
+    hcpAvatarSoftStretchLeft 1300ms ease both;
+}
+
+.hcp-avatar[data-gesture="soft-stretch"]
+  .hcp-avatar-arm-right,
+.hcp-avatar.is-soft-stretch
+  .hcp-avatar-arm-right {
+  animation:
+    hcpAvatarSoftStretchRight 1300ms ease both;
+}
+
+.hcp-avatar[data-gesture="maker-stretch"]
+  .hcp-avatar-arm-left,
+.hcp-avatar.is-maker-stretch
+  .hcp-avatar-arm-left {
+  animation:
+    hcpAvatarMakerStretchLeft 1300ms ease both;
+}
+
+.hcp-avatar[data-gesture="maker-stretch"]
+  .hcp-avatar-arm-right,
+.hcp-avatar.is-maker-stretch
+  .hcp-avatar-arm-right {
+  animation:
+    hcpAvatarMakerStretchRight 1300ms ease both;
+}
+
+/* =========================================================
+   GENERIC EXPRESSIONS
+   ========================================================= */
+
+.hcp-avatar[data-expression="warm-attention"]
+  .hcp-avatar-mouth {
+  width: 34%;
+  height: 10%;
+
+  border-bottom-width: 3px;
+}
+
+.hcp-avatar[data-expression="attentive-formal"]
+  .hcp-avatar-brow-left {
+  transform:
+    rotate(-2deg)
+    translateY(-1px);
+}
+
+.hcp-avatar[data-expression="attentive-formal"]
+  .hcp-avatar-brow-right {
+  transform:
+    rotate(2deg)
+    translateY(-1px);
+}
+
+.hcp-avatar[data-expression="diagnostic-attention"]
+  .hcp-avatar-eye::before {
+  width: 36%;
+  height: 72%;
+}
+
+.hcp-avatar[data-expression="ready-practical"]
+  .hcp-avatar-mouth {
+  width: 36%;
+
+  border-bottom-width: 3px;
+}
+
+.hcp-avatar[data-expression="sleepy"]
+  .hcp-avatar-eye {
+  transform:
+    scaleY(0.5);
+}
+
+.hcp-avatar[data-expression="speaking"]
+  .hcp-avatar-mouth,
+.hcp-avatar[data-avatar-state="speaking"]
+  .hcp-avatar-mouth {
+  animation:
+    hcpAvatarSpeakMouth 620ms ease-in-out infinite;
+}
+
+/* =========================================================
+   JEEVES
+   ========================================================= */
+
+.hcp-avatar-jeeves {
+  --hcp-avatar-skin: #b87855;
+  --hcp-avatar-skin-light: #d8a17c;
+  --hcp-avatar-skin-shadow: #704231;
+
+  --hcp-avatar-hair: #272127;
+  --hcp-avatar-hair-light: #524454;
+
+  --hcp-avatar-clothing: #141821;
+  --hcp-avatar-clothing-light: #343c4f;
+  --hcp-avatar-clothing-dark: #080b11;
+
+  --hcp-avatar-accent: #f3c86f;
+  --hcp-avatar-accent-soft:
+    rgba(243, 200, 111, 0.3);
+
+  --hcp-avatar-head-size: 3.25rem;
+  --hcp-avatar-body-width: 4.35rem;
+  --hcp-avatar-body-height: 6.85rem;
+}
+
+.hcp-avatar-jeeves
+  .hcp-avatar-body,
+.hcp-avatar-jeeves
+  .hcp-avatar-placeholder::before {
+  border-radius:
+    38% 38% 18% 18% /
+    16% 16% 10% 10%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 47%,
+      rgba(243, 200, 111, 0.52) 48% 52%,
+      transparent 53%
+    ),
+    linear-gradient(
+      160deg,
+      #3a4255,
+      #151922 44%,
+      #080b11
+    );
+}
+
+.hcp-avatar-jeeves
+  .hcp-avatar-hair {
+  height: 36%;
+
+  border-radius:
+    46% 58% 30% 24% /
+    72% 72% 28% 28%;
 
   transform:
-    scaleY(1);
+    translateX(-50%)
+    rotate(-3deg);
 }
 
-.hcp-avatar[data-blink-type="slow"]
-  .hcp-portrait-lid {
-  transition:
-    transform 0.17s ease,
-    top 0.17s ease;
-}
+.hcp-avatar-jeeves
+  .hcp-avatar-accessory {
+  right: 7%;
+  top: 39%;
+  z-index: 12;
 
-.hcp-avatar[data-blink-type="double"]
-  .hcp-portrait-lid {
-  transition:
-    transform 0.07s linear,
-    top 0.07s linear;
-}
+  width: 28%;
+  aspect-ratio: 1;
 
-/* =========================================================
-   GLANCE PRESENTATION
-   ========================================================= */
+  border:
+    2px solid rgba(243, 200, 111, 0.9);
 
-.hcp-avatar[data-avatar-gesture="corridor-glance"]
-  .hcp-portrait-pupils,
-.hcp-avatar[data-avatar-gesture="tool-glance"]
-  .hcp-portrait-pupils,
-.hcp-avatar[data-avatar-gesture="diagnostic-glance"]
-  .hcp-portrait-pupils,
-.hcp-avatar[data-avatar-gesture="visitor-glance"]
-  .hcp-portrait-pupils {
-  transform: translateX(12%);
-}
+  border-radius: 50%;
 
-.hcp-avatar[data-avatar-gesture="slow-head-tilt"]
-  .hcp-portrait-head,
-.hcp-avatar[data-avatar-gesture="small-head-move"]
-  .hcp-portrait-head {
-  transform:
-    translate(-50%, -50%)
-    rotate(4deg);
-}
-
-.hcp-avatar[data-avatar-gesture="eyebrow-shift"]
-  .hcp-portrait-brows,
-.hcp-avatar[data-avatar-gesture="small-brow-shift"]
-  .hcp-portrait-brows {
-  animation:
-    hcpAvatarBrowShift 0.9s ease both;
-}
-
-/* =========================================================
-   RESTING AND BREATHING
-   ========================================================= */
-
-.hcp-avatar[data-avatar-state="resting"]
-  .hcp-portrait-torso,
-.hcp-avatar[data-avatar-state="focused"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarBreathing 6.4s ease-in-out infinite;
-}
-
-.hcp-avatar-auren[data-avatar-state="resting"]
-  .hcp-portrait-torso,
-.hcp-avatar-auren[data-avatar-state="focused"]
-  .hcp-portrait-torso {
-  animation-duration: 5.2s;
-}
-
-.hcp-avatar-soren[data-avatar-state="resting"]
-  .hcp-portrait-torso,
-.hcp-avatar-soren[data-avatar-state="focused"]
-  .hcp-portrait-torso {
-  animation-duration: 7.4s;
-}
-
-.hcp-avatar-elara[data-avatar-state="resting"]
-  .hcp-portrait-torso,
-.hcp-avatar-elara[data-avatar-state="focused"]
-  .hcp-portrait-torso {
-  animation-duration: 5.8s;
-}
-
-/* =========================================================
-   FOCUSED STATE
-   ========================================================= */
-
-.hcp-avatar[data-avatar-state="focused"]
-  .hcp-portrait-frame {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 0 2px rgba(243, 200, 111, 0.1),
-    0 0 1.2rem rgba(243, 200, 111, 0.18);
+    0 0 0.5rem rgba(243, 200, 111, 0.2);
 }
 
-.hcp-avatar[data-avatar-state="focused"]
-  .hcp-portrait-pupils {
-  transform: translateY(-2%);
+.hcp-avatar-jeeves
+  .hcp-avatar-accessory::after {
+  content: "";
+
+  position: absolute;
+  left: 50%;
+  top: 100%;
+
+  width: 1px;
+  height: 1.25rem;
+
+  background:
+    linear-gradient(
+      rgba(243, 200, 111, 0.7),
+      transparent
+    );
+}
+
+.hcp-avatar-jeeves[data-gesture="monocle-adjust"]
+  .hcp-avatar-accessory,
+.hcp-avatar-jeeves.is-monocle-adjust
+  .hcp-avatar-accessory {
+  animation:
+    hcpJeevesMonocleAdjust 1050ms ease both;
+}
+
+.hcp-avatar-jeeves[data-gesture="cuff-correction"]
+  .hcp-avatar-arm-right,
+.hcp-avatar-jeeves.is-cuff-correction
+  .hcp-avatar-arm-right {
+  animation:
+    hcpJeevesCuffCorrection 1100ms ease both;
+}
+
+.hcp-avatar-jeeves[data-gesture="jacket-smooth"]
+  .hcp-avatar-body,
+.hcp-avatar-jeeves.is-jacket-smooth
+  .hcp-avatar-body {
+  animation:
+    hcpJeevesJacketSmooth 1200ms ease both;
+}
+
+.hcp-avatar-jeeves[data-gesture="formal-welcome"]
+  .hcp-avatar-arm-right,
+.hcp-avatar-jeeves.is-formal-welcome
+  .hcp-avatar-arm-right {
+  animation:
+    hcpJeevesFormalWelcome 1450ms ease both;
+}
+
+.hcp-avatar-jeeves[data-gesture="formal-reference"]
+  .hcp-avatar-arm-left,
+.hcp-avatar-jeeves.is-formal-reference
+  .hcp-avatar-arm-left {
+  animation:
+    hcpJeevesFormalReference 1250ms ease both;
 }
 
 /* =========================================================
-   SPEAKING STATE
+   AUREN
    ========================================================= */
 
-.hcp-avatar[data-avatar-state="speaking"]
-  .hcp-portrait-mouth {
-  animation:
-    hcpAvatarSpeakingMouth 0.5s ease-in-out infinite;
+.hcp-avatar-auren {
+  --hcp-avatar-skin: #b7734d;
+  --hcp-avatar-skin-light: #dda37a;
+  --hcp-avatar-skin-shadow: #75402e;
+
+  --hcp-avatar-hair: #412625;
+  --hcp-avatar-hair-light: #7b4a3d;
+
+  --hcp-avatar-clothing: #31443f;
+  --hcp-avatar-clothing-light: #5f7869;
+  --hcp-avatar-clothing-dark: #15211f;
+
+  --hcp-avatar-accent: #8ff0c3;
+  --hcp-avatar-accent-soft:
+    rgba(143, 240, 195, 0.28);
+
+  --hcp-avatar-head-size: 3.45rem;
+  --hcp-avatar-body-width: 4.8rem;
+  --hcp-avatar-body-height: 6.45rem;
 }
 
-.hcp-avatar[data-avatar-state="speaking"]
-  .hcp-portrait-brows {
-  animation:
-    hcpAvatarSpeakingBrows 1.2s ease-in-out infinite;
+.hcp-avatar-auren
+  .hcp-avatar-body,
+.hcp-avatar-auren
+  .hcp-avatar-placeholder::before {
+  border-radius:
+    44% 44% 24% 24% /
+    20% 20% 14% 14%;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(143, 240, 195, 0.28),
+      transparent 30%
+    ),
+    linear-gradient(
+      160deg,
+      #6b8374,
+      #32463f 48%,
+      #15211f
+    );
 }
 
-.hcp-avatar-elara[data-avatar-state="speaking"]
-  .hcp-portrait-accessory {
+.hcp-avatar-auren
+  .hcp-avatar-hair {
+  height: 42%;
+
+  clip-path:
+    polygon(
+      2% 54%,
+      12% 26%,
+      26% 35%,
+      38% 7%,
+      53% 29%,
+      72% 0,
+      84% 34%,
+      100% 22%,
+      92% 74%,
+      68% 100%,
+      20% 94%
+    );
+
+  border-radius: 0;
+}
+
+.hcp-avatar-auren
+  .hcp-avatar-accessory {
+  right: -8%;
+  bottom: 15%;
+  z-index: 8;
+
+  width: 30%;
+  height: 42%;
+
+  border:
+    2px solid rgba(143, 240, 195, 0.42);
+
+  border-radius: 0.3rem;
+
+  transform:
+    rotate(10deg);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(143, 240, 195, 0.18),
+      rgba(18, 31, 29, 0.8)
+    );
+}
+
+.hcp-avatar-auren[data-gesture="gear-adjust"]
+  .hcp-avatar-accessory,
+.hcp-avatar-auren.is-gear-adjust
+  .hcp-avatar-accessory {
   animation:
-    hcpAvatarSignalPulse 1.2s ease-in-out infinite;
+    hcpAurenGearAdjust 1100ms ease both;
+}
+
+.hcp-avatar-auren[data-gesture="tool-check"]
+  .hcp-avatar-arm-right,
+.hcp-avatar-auren.is-tool-check
+  .hcp-avatar-arm-right {
+  animation:
+    hcpAurenToolCheck 1200ms ease both;
+}
+
+.hcp-avatar-auren[data-gesture="tool-ready"]
+  .hcp-avatar-arm-right,
+.hcp-avatar-auren.is-tool-ready
+  .hcp-avatar-arm-right {
+  animation:
+    hcpAurenToolReady 1350ms ease both;
+}
+
+.hcp-avatar-auren[data-gesture="teaching-ready"]
+  .hcp-avatar-arm-left,
+.hcp-avatar-auren.is-teaching-ready
+  .hcp-avatar-arm-left {
+  animation:
+    hcpAurenTeachingReady 1300ms ease both;
+}
+
+.hcp-avatar-auren[data-gesture="frontier-ready"]
+  .hcp-avatar-body,
+.hcp-avatar-auren.is-frontier-ready
+  .hcp-avatar-body {
+  animation:
+    hcpAurenFrontierReady 1400ms ease both;
 }
 
 /* =========================================================
-   JEEVES GESTURES
+   SOREN
    ========================================================= */
 
-.hcp-avatar[data-avatar-gesture="monocle-adjust"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarMonocleAdjust 1.2s ease both;
+.hcp-avatar-soren {
+  --hcp-avatar-skin: #ad7454;
+  --hcp-avatar-skin-light: #d7a17f;
+  --hcp-avatar-skin-shadow: #6c4333;
+
+  --hcp-avatar-hair: #b8bdc7;
+  --hcp-avatar-hair-light: #eef2f7;
+
+  --hcp-avatar-clothing: #293443;
+  --hcp-avatar-clothing-light: #627080;
+  --hcp-avatar-clothing-dark: #111923;
+
+  --hcp-avatar-accent: #d9e7ff;
+  --hcp-avatar-accent-soft:
+    rgba(217, 231, 255, 0.28);
+
+  --hcp-avatar-head-size: 3.3rem;
+  --hcp-avatar-body-width: 4.4rem;
+  --hcp-avatar-body-height: 6.55rem;
 }
 
-.hcp-avatar[data-avatar-gesture="cuff-correction"]
-  .hcp-portrait-clothing {
-  animation:
-    hcpAvatarCuffCorrection 1s ease both;
+.hcp-avatar-soren
+  .hcp-avatar-body,
+.hcp-avatar-soren
+  .hcp-avatar-placeholder::before {
+  border-radius:
+    40% 40% 20% 20% /
+    18% 18% 12% 12%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(217, 231, 255, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(
+      160deg,
+      #6c7989,
+      #2b3645 48%,
+      #111923
+    );
 }
 
-.hcp-avatar[data-avatar-gesture="jacket-smooth"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarJacketSmooth 1.35s ease both;
+.hcp-avatar-soren
+  .hcp-avatar-hair {
+  height: 32%;
+
+  border-radius:
+    48% 48% 28% 28% /
+    74% 74% 26% 26%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f3f5f8,
+      #adb5c1 58%,
+      #6d7380
+    );
 }
 
-.hcp-avatar[data-avatar-gesture="posture-reset"]
-  .hcp-portrait-torso,
-.hcp-avatar[data-avatar-gesture="formal-recovery"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarPostureReset 1s ease both;
-}
+.hcp-avatar-soren
+  .hcp-avatar-accessory {
+  left: 50%;
+  top: 41%;
+  z-index: 12;
 
-/* =========================================================
-   AUREN GESTURES
-   ========================================================= */
-
-.hcp-avatar[data-avatar-gesture="gear-adjust"]
-  .hcp-portrait-identity-cue {
-  animation:
-    hcpAvatarGearAdjust 1.25s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="tool-check"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarToolCheck 1.2s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="shoulder-shift"]
-  .hcp-portrait-shoulders {
-  animation:
-    hcpAvatarShoulderShift 1s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="hand-stretch"]
-  .hcp-portrait-torso,
-.hcp-avatar[data-avatar-gesture="maker-stretch"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarMakerStretch 1.8s ease both;
-}
-
-/* =========================================================
-   SOREN GESTURES
-   ========================================================= */
-
-.hcp-avatar[data-avatar-gesture="lens-adjust"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarLensAdjust 1.3s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="seal-inspection"]
-  .hcp-portrait-identity-cue {
-  animation:
-    hcpAvatarSealInspect 1.5s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="posture-release"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarPostureRelease 1.7s ease both;
-}
-
-/* =========================================================
-   ELARA GESTURES
-   ========================================================= */
-
-.hcp-avatar[data-avatar-gesture="signal-pulse"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="signal-interaction"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="signal-dim-recover"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarSignalPulse 1.45s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="hair-adjust"]
-  .hcp-portrait-hair-back,
-.hcp-avatar[data-avatar-gesture="hair-adjust"]
-  .hcp-portrait-hair-front {
-  animation:
-    hcpAvatarHairAdjust 1.3s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="soft-stretch"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarSoftStretch 1.8s ease both;
-}
-
-.hcp-avatar[data-avatar-gesture="expressive-blink"]
-  .hcp-portrait-lid {
-  animation:
-    hcpAvatarExpressiveBlink 0.78s ease both;
-}
-
-/* =========================================================
-   SLEEPY AND YAWN STATES
-   ========================================================= */
-
-.hcp-avatar[data-avatar-state="sleepy"]
-  .hcp-portrait-mouth {
-  width: 20%;
+  width: 72%;
   height: 22%;
 
-  border: 0;
+  transform:
+    translateX(-50%);
+
+  border:
+    1px solid rgba(217, 231, 255, 0.5);
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 4%,
+      rgba(217, 231, 255, 0.15) 30%,
+      transparent 48%,
+      rgba(217, 231, 255, 0.15) 70%,
+      transparent 96%
+    );
+}
+
+.hcp-avatar-soren[data-gesture="lens-adjust"]
+  .hcp-avatar-accessory,
+.hcp-avatar-soren.is-lens-adjust
+  .hcp-avatar-accessory {
+  animation:
+    hcpSorenLensAdjust 1050ms ease both;
+}
+
+.hcp-avatar-soren[data-gesture="seal-inspection"]
+  .hcp-avatar-arm-left,
+.hcp-avatar-soren.is-seal-inspection
+  .hcp-avatar-arm-left {
+  animation:
+    hcpSorenSealInspection 1300ms ease both;
+}
+
+.hcp-avatar-soren[data-gesture="diagnostic-attend"]
+  .hcp-avatar-head,
+.hcp-avatar-soren.is-diagnostic-attend
+  .hcp-avatar-head {
+  animation:
+    hcpSorenDiagnosticAttend 1450ms ease both;
+}
+
+/* =========================================================
+   ELARA
+   ========================================================= */
+
+.hcp-avatar-elara {
+  --hcp-avatar-skin: #b8785f;
+  --hcp-avatar-skin-light: #e0aa8c;
+  --hcp-avatar-skin-shadow: #774838;
+
+  --hcp-avatar-hair: #44243b;
+  --hcp-avatar-hair-light: #8a4f78;
+
+  --hcp-avatar-clothing: #5c365c;
+  --hcp-avatar-clothing-light: #92618c;
+  --hcp-avatar-clothing-dark: #28182c;
+
+  --hcp-avatar-accent: #ffacd2;
+  --hcp-avatar-accent-soft:
+    rgba(255, 172, 210, 0.3);
+
+  --hcp-avatar-head-size: 3.5rem;
+  --hcp-avatar-body-width: 4.65rem;
+  --hcp-avatar-body-height: 6.7rem;
+}
+
+.hcp-avatar-elara
+  .hcp-avatar-body,
+.hcp-avatar-elara
+  .hcp-avatar-placeholder::before {
+  border-radius:
+    48% 48% 30% 30% /
+    22% 22% 18% 18%;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 172, 210, 0.24),
+      transparent 28%
+    ),
+    linear-gradient(
+      160deg,
+      #996794,
+      #5e385f 50%,
+      #28182c
+    );
+}
+
+.hcp-avatar-elara
+  .hcp-avatar-hair {
+  top: -0.28rem;
+
+  width: 106%;
+  height: 68%;
+
+  border-radius:
+    48% 52% 42% 46% /
+    64% 70% 38% 42%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #9f5d8a,
+      #57304c 48%,
+      #251322
+    );
+
+  box-shadow:
+    -0.45rem 0.6rem 0 rgba(68, 36, 59, 0.72),
+    0.45rem 0.9rem 0 rgba(68, 36, 59, 0.66);
+}
+
+.hcp-avatar-elara
+  .hcp-avatar-accessory {
+  right: -10%;
+  top: 36%;
+  z-index: 12;
+
+  width: 32%;
+  aspect-ratio: 1;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.36);
+
   border-radius: 50%;
 
   background:
-    rgba(73, 34, 38, 0.74);
+    radial-gradient(
+      circle at 36% 28%,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 172, 210, 0.66) 34%,
+      rgba(148, 113, 255, 0.3) 62%,
+      transparent 74%
+    );
 
-  animation:
-    hcpAvatarYawnMouth 1.9s ease both;
+  box-shadow:
+    0 0 1rem rgba(255, 172, 210, 0.42);
 }
 
-.hcp-avatar[data-avatar-state="sleepy"]
-  .hcp-portrait-lid {
-  top: -2%;
-
+.hcp-avatar-elara[data-gesture="signal-pulse"]
+  .hcp-avatar-accessory,
+.hcp-avatar-elara.is-signal-pulse
+  .hcp-avatar-accessory {
   animation:
-    hcpAvatarSleepyLids 1.9s ease both;
+    hcpElaraSignalPulse 1300ms ease both;
 }
 
-.hcp-avatar[data-avatar-state="sleepy"]
-  .hcp-portrait-head {
+.hcp-avatar-elara[data-gesture="hair-adjust"]
+  .hcp-avatar-hair,
+.hcp-avatar-elara.is-hair-adjust
+  .hcp-avatar-hair {
   animation:
-    hcpAvatarSleepyHead 1.9s ease both;
+    hcpElaraHairAdjust 1100ms ease both;
 }
 
-.hcp-avatar[data-avatar-gesture="brief-eye-rest"]
-  .hcp-portrait-lid {
+.hcp-avatar-elara[data-gesture="signal-greeting"]
+  .hcp-avatar-arm-right,
+.hcp-avatar-elara.is-signal-greeting
+  .hcp-avatar-arm-right {
   animation:
-    hcpAvatarEyeRest 1.8s ease both;
+    hcpElaraSignalGreeting 1450ms ease both;
+}
+
+.hcp-avatar-elara[data-gesture="signal-illumination"]
+  .hcp-avatar-accessory,
+.hcp-avatar-elara.is-signal-illumination
+  .hcp-avatar-accessory {
+  animation:
+    hcpElaraSignalIllumination 1700ms ease both;
 }
 
 /* =========================================================
-   TRAVEL STATE
+   ROOM-SPECIFIC CALIBRATION
    ========================================================= */
 
-.hcp-avatar[data-avatar-state="traveling"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarTravelPosture 0.65s ease-in-out infinite alternate;
+.hcp-avatar-safe-frame[data-house-room="house-core"] {
+  border-radius: 1rem;
 }
 
-.hcp-avatar[data-avatar-state="traveling"]
-  .hcp-portrait-eyes {
-  transform:
-    translateX(-50%)
-    scaleY(0.92);
+.hcp-avatar-safe-frame[data-house-room="human-threshold"],
+.hcp-avatar-safe-frame[data-house-room="product-gallery"] {
+  border-radius: 0.9rem;
 }
 
-.hcp-avatar[data-avatar-state="traveling"]
-  .hcp-portrait-pupils {
-  transform: translateX(8%);
+.hcp-avatar-safe-frame[data-house-room="hearth-room"] {
+  border-radius:
+    1rem 1rem 1.4rem 1.4rem;
 }
 
-.hcp-avatar[data-avatar-state="traveling"]
-  .hcp-avatar-nameplate {
-  border-color:
-    rgba(243, 200, 111, 0.38);
+.hcp-avatar-safe-frame[data-avatar-safe-mode="estate"]
+  .hcp-avatar-name {
+  opacity: 0;
+}
 
-  background:
-    rgba(16, 12, 4, 0.82);
+.hcp-avatar-safe-frame[data-avatar-safe-mode="room"]
+  .hcp-avatar-name {
+  opacity: 1;
 }
 
 /* =========================================================
-   ARRIVAL STATE
+   MOBILE CONTAINMENT
    ========================================================= */
 
-.hcp-avatar[data-avatar-state="arriving"]
-  .hcp-portrait-frame {
-  animation:
-    hcpAvatarArrivalGlow 0.74s ease both;
+@media (max-width: 760px) {
+  :root {
+    --hcp-avatar-default-width: 6.4rem;
+    --hcp-avatar-default-height: 9.8rem;
+
+    --hcp-avatar-head-size: 2.7rem;
+    --hcp-avatar-body-width: 3.7rem;
+    --hcp-avatar-body-height: 5.45rem;
+  }
+
+  .hcp-avatar-safe-frame {
+    border-radius: 0.62rem;
+  }
+
+  .hcp-avatar-name {
+    bottom: 0.08rem;
+
+    padding: 0.18rem 0.3rem;
+
+    font-size: 0.38rem;
+  }
+
+  .hcp-avatar[data-avatar-composition-mode="room"] {
+    --hcp-avatar-local-scale: 0.96;
+  }
+
+  .hcp-avatar[data-avatar-composition-mode="estate"] {
+    --hcp-avatar-local-scale: 0.74;
+  }
 }
 
-/* Jeeves arrival */
+@media (max-width: 520px) {
+  :root {
+    --hcp-avatar-default-width: 5.7rem;
+    --hcp-avatar-default-height: 8.8rem;
 
-.hcp-avatar[data-avatar-gesture="formal-welcome"]
-  .hcp-portrait-head,
-.hcp-avatar[data-avatar-gesture="formal-center"]
-  .hcp-portrait-head,
-.hcp-avatar[data-avatar-gesture="formal-reference"]
-  .hcp-portrait-head {
-  animation:
-    hcpAvatarFormalNod 0.72s ease both;
-}
+    --hcp-avatar-head-size: 2.45rem;
+    --hcp-avatar-body-width: 3.35rem;
+    --hcp-avatar-body-height: 4.95rem;
+  }
 
-/* Elara arrival */
+  .hcp-avatar-name {
+    font-size: 0.34rem;
+  }
 
-.hcp-avatar[data-avatar-gesture="signal-greeting"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="signal-illumination"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarSignalArrival 0.86s ease both;
-}
+  .hcp-avatar[data-avatar-composition-mode="room"] {
+    --hcp-avatar-local-scale: 0.9;
+  }
 
-/* Jeeves reference arrival */
-
-.hcp-avatar[data-avatar-gesture="instrument-check"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="map-reference"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="atrium-present"]
-  .hcp-portrait-identity-cue,
-.hcp-avatar[data-avatar-gesture="gallery-present"]
-  .hcp-portrait-identity-cue {
-  animation:
-    hcpAvatarReferenceGesture 0.84s ease both;
-}
-
-/* Auren arrival */
-
-.hcp-avatar[data-avatar-gesture="tool-ready"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="teaching-ready"]
-  .hcp-portrait-accessory,
-.hcp-avatar[data-avatar-gesture="frontier-ready"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarToolReady 0.84s ease both;
-}
-
-/* Soren arrival */
-
-.hcp-avatar[data-avatar-gesture="diagnostic-attend"]
-  .hcp-portrait-accessory {
-  animation:
-    hcpAvatarDiagnosticAttend 0.84s ease both;
-}
-
-/* Hearth arrival */
-
-.hcp-avatar[data-avatar-gesture="hearth-settle"]
-  .hcp-portrait-torso {
-  animation:
-    hcpAvatarHearthSettle 0.84s ease both;
+  .hcp-avatar[data-avatar-composition-mode="estate"] {
+    --hcp-avatar-local-scale: 0.68;
+  }
 }
 
 /* =========================================================
-   AVATAR KEYFRAMES
+   ANIMATIONS
    ========================================================= */
 
-@keyframes hcpAvatarArrivalPresence {
-  0% {
-    filter:
-      drop-shadow(
-        0 0 0 rgba(243, 200, 111, 0)
-      );
-  }
-
-  45% {
-    filter:
-      drop-shadow(
-        0 0 1.4rem rgba(243, 200, 111, 0.56)
-      );
-  }
-
-  100% {
-    filter:
-      drop-shadow(
-        0 0 0.7rem rgba(243, 200, 111, 0.18)
-      );
-  }
-}
-
-@keyframes hcpAvatarBreathing {
+@keyframes hcpAvatarSlowBlink {
   0%,
   100% {
     transform:
-      translateY(0)
       scaleY(1);
+  }
+
+  42%,
+  58% {
+    transform:
+      scaleY(0.08);
+  }
+}
+
+@keyframes hcpAvatarDoubleBlink {
+  0%,
+  18%,
+  42%,
+  62%,
+  100% {
+    transform:
+      scaleY(1);
+  }
+
+  9%,
+  30%,
+  52% {
+    transform:
+      scaleY(0.08);
+  }
+}
+
+@keyframes hcpAvatarSmallHeadMove {
+  0%,
+  100% {
+    transform:
+      translateX(-50%)
+      rotate(0);
+  }
+
+  40% {
+    transform:
+      translateX(-50%)
+      rotate(-3deg);
+  }
+
+  70% {
+    transform:
+      translateX(-50%)
+      rotate(2deg);
+  }
+}
+
+@keyframes hcpAvatarSlowHeadTilt {
+  0%,
+  100% {
+    transform:
+      translateX(-50%)
+      rotate(0);
   }
 
   50% {
     transform:
-      translateY(-1px)
-      scaleY(1.015);
+      translateX(-50%)
+      rotate(5deg);
   }
 }
 
-@keyframes hcpAvatarBrowShift {
+@keyframes hcpAvatarShoulderShift {
   0%,
   100% {
     transform:
@@ -2055,485 +1594,384 @@
   50% {
     transform:
       translateX(-50%)
-      translateY(-1px);
-  }
-}
-
-@keyframes hcpAvatarSpeakingMouth {
-  0%,
-  100% {
-    width: 25%;
-    height: 8%;
-  }
-
-  45% {
-    width: 30%;
-    height: 15%;
-
-    border-radius: 50%;
-
-    background:
-      rgba(73, 34, 38, 0.42);
-  }
-}
-
-@keyframes hcpAvatarSpeakingBrows {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-50%)
-      translateY(-1px);
-  }
-}
-
-@keyframes hcpAvatarMonocleAdjust {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  45% {
-    transform: translate(-2px, -3px);
-  }
-}
-
-@keyframes hcpAvatarCuffCorrection {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-50%)
-      scaleX(1.05);
-  }
-}
-
-@keyframes hcpAvatarJacketSmooth {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(2px);
+      translateY(-2px)
+      rotate(-1deg);
   }
 }
 
 @keyframes hcpAvatarPostureReset {
-  0% {
-    transform: translateY(1px);
-  }
-
-  55% {
-    transform:
-      translateY(-2px)
-      scaleY(1.02);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes hcpAvatarGearAdjust {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform: rotate(24deg);
-  }
-}
-
-@keyframes hcpAvatarToolCheck {
-  0%,
-  100% {
-    transform: rotate(-34deg);
-  }
-
-  45% {
-    transform:
-      rotate(-18deg)
-      translateY(-3px);
-  }
-}
-
-@keyframes hcpAvatarShoulderShift {
-  0%,
-  100% {
-    transform: translateX(-50%);
-  }
-
-  50% {
-    transform:
-      translateX(-47%)
-      rotate(-2deg);
-  }
-}
-
-@keyframes hcpAvatarMakerStretch {
   0%,
   100% {
     transform:
-      translateY(0)
-      rotate(-2deg);
+      translateX(-50%)
+      scaleY(1);
   }
 
-  50% {
+  42% {
     transform:
-      translateY(-4px)
-      rotate(2deg)
-      scaleY(1.05);
-  }
-}
-
-@keyframes hcpAvatarLensAdjust {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(2px, -2px);
-  }
-}
-
-@keyframes hcpAvatarSealInspect {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform:
-      rotate(12deg)
-      scale(1.08);
+      translateX(-50%)
+      scaleY(1.025);
   }
 }
 
 @keyframes hcpAvatarPostureRelease {
   0%,
   100% {
-    transform: scaleX(0.94);
+    transform:
+      translateX(-50%)
+      scaleY(1);
   }
 
-  50% {
+  48% {
     transform:
-      scaleX(0.98)
+      translateX(-50%)
+      scaleY(0.97)
       translateY(2px);
   }
 }
 
-@keyframes hcpAvatarSignalPulse {
+@keyframes hcpAvatarHandStretch {
   0%,
   100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.55;
-    transform: scale(1.22);
-  }
-}
-
-@keyframes hcpAvatarHairAdjust {
-  0%,
-  100% {
-    transform: translateX(-50%);
+    transform:
+      rotate(8deg);
   }
 
   50% {
     transform:
-      translateX(-47%)
-      rotate(2deg);
-  }
-}
-
-@keyframes hcpAvatarSoftStretch {
-  0%,
-  100% {
-    transform:
-      rotate(2deg)
-      translateX(2%);
-  }
-
-  50% {
-    transform:
-      rotate(-1deg)
-      translateX(0)
-      translateY(-3px)
-      scaleY(1.04);
-  }
-}
-
-@keyframes hcpAvatarExpressiveBlink {
-  0%,
-  100% {
-    top: -100%;
-  }
-
-  32%,
-  60% {
-    top: -4%;
-  }
-}
-
-@keyframes hcpAvatarYawnMouth {
-  0%,
-  100% {
-    transform:
-      translateX(-50%)
-      scaleY(0.5);
-  }
-
-  50% {
-    transform:
-      translateX(-50%)
-      scaleY(1.12);
-  }
-}
-
-@keyframes hcpAvatarSleepyLids {
-  0%,
-  100% {
-    transform: scaleY(0.35);
-  }
-
-  50% {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes hcpAvatarSleepyHead {
-  0%,
-  100% {
-    transform:
-      translate(-50%, -50%)
-      rotate(0deg);
-  }
-
-  50% {
-    transform:
-      translate(-50%, -47%)
-      rotate(4deg);
+      rotate(22deg);
   }
 }
 
 @keyframes hcpAvatarEyeRest {
   0%,
   100% {
-    top: -100%;
+    transform:
+      scaleY(1);
   }
 
   28%,
-  72% {
-    top: -4%;
+  74% {
+    transform:
+      scaleY(0.08);
   }
 }
 
-@keyframes hcpAvatarTravelPosture {
-  from {
+@keyframes hcpAvatarSoftStretchLeft {
+  0%,
+  100% {
+    transform:
+      rotate(8deg);
+  }
+
+  50% {
+    transform:
+      rotate(24deg);
+  }
+}
+
+@keyframes hcpAvatarSoftStretchRight {
+  0%,
+  100% {
+    transform:
+      rotate(-8deg);
+  }
+
+  50% {
+    transform:
+      rotate(-24deg);
+  }
+}
+
+@keyframes hcpAvatarMakerStretchLeft {
+  0%,
+  100% {
+    transform:
+      rotate(8deg);
+  }
+
+  45% {
+    transform:
+      rotate(34deg);
+  }
+}
+
+@keyframes hcpAvatarMakerStretchRight {
+  0%,
+  100% {
+    transform:
+      rotate(-8deg);
+  }
+
+  45% {
+    transform:
+      rotate(-34deg);
+  }
+}
+
+@keyframes hcpAvatarSpeakMouth {
+  0%,
+  100% {
+    height: 8%;
+    width: 30%;
+  }
+
+  50% {
+    height: 14%;
+    width: 24%;
+
+    border-bottom-width: 3px;
+  }
+}
+
+@keyframes hcpJeevesMonocleAdjust {
+  0%,
+  100% {
     transform:
       translateY(0)
-      rotate(-1deg);
+      scale(1);
   }
 
-  to {
+  45% {
     transform:
       translateY(-2px)
-      rotate(1deg);
+      scale(1.06);
   }
 }
 
-@keyframes hcpAvatarArrivalGlow {
-  0%,
-  100% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  }
-
-  50% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.16),
-      0 0 1.4rem rgba(243, 200, 111, 0.45);
-  }
-}
-
-@keyframes hcpAvatarFormalNod {
+@keyframes hcpJeevesCuffCorrection {
   0%,
   100% {
     transform:
-      translate(-50%, -50%)
-      rotate(0deg);
+      rotate(-8deg);
   }
 
-  50% {
+  45% {
     transform:
-      translate(-50%, -47%)
-      rotate(2deg);
+      rotate(-26deg);
   }
 }
 
-@keyframes hcpAvatarSignalArrival {
-  0% {
-    opacity: 0.4;
-    transform: scale(0.8);
-  }
-
-  55% {
-    opacity: 1;
-    transform: scale(1.35);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes hcpAvatarReferenceGesture {
+@keyframes hcpJeevesJacketSmooth {
   0%,
   100% {
-    transform: translate(0, 0);
+    filter:
+      brightness(1);
   }
 
   50% {
-    transform: translate(3px, -3px);
+    filter:
+      brightness(1.08);
   }
 }
 
-@keyframes hcpAvatarToolReady {
+@keyframes hcpJeevesFormalWelcome {
   0%,
   100% {
-    transform: rotate(-34deg);
+    transform:
+      rotate(-8deg);
+  }
+
+  38%,
+  68% {
+    transform:
+      rotate(-34deg);
+  }
+}
+
+@keyframes hcpJeevesFormalReference {
+  0%,
+  100% {
+    transform:
+      rotate(8deg);
+  }
+
+  48% {
+    transform:
+      rotate(28deg);
+  }
+}
+
+@keyframes hcpAurenGearAdjust {
+  0%,
+  100% {
+    transform:
+      rotate(10deg)
+      translateY(0);
   }
 
   50% {
     transform:
-      rotate(-12deg)
+      rotate(4deg)
       translateY(-3px);
   }
 }
 
-@keyframes hcpAvatarDiagnosticAttend {
+@keyframes hcpAurenToolCheck {
   0%,
   100% {
-    transform: scale(1);
+    transform:
+      rotate(-8deg);
   }
 
   50% {
-    transform: scale(1.18);
+    transform:
+      rotate(-30deg);
   }
 }
 
-@keyframes hcpAvatarHearthSettle {
-  0% {
-    transform: translateY(-3px);
-  }
-
+@keyframes hcpAurenToolReady {
+  0%,
   100% {
-    transform: translateY(0);
+    transform:
+      rotate(-8deg);
+  }
+
+  42%,
+  72% {
+    transform:
+      rotate(-38deg);
   }
 }
 
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 980px) {
-  :root {
-    --hcp-avatar-overview: 76px;
-    --hcp-avatar-room: 136px;
-    --hcp-avatar-conversation: 172px;
+@keyframes hcpAurenTeachingReady {
+  0%,
+  100% {
+    transform:
+      rotate(8deg);
   }
 
-  .hcp-avatar {
-    width: calc(var(--hcp-avatar-overview) + 20px);
-    min-height: calc(var(--hcp-avatar-overview) + 30px);
-  }
-
-  .hcp-avatar[data-avatar-scale-mode="room"] {
-    width: calc(var(--hcp-avatar-room) + 24px);
-    min-height: calc(var(--hcp-avatar-room) + 36px);
-  }
-
-  .hcp-avatar-nameplate {
-    font-size: 0.54rem;
+  48% {
+    transform:
+      rotate(30deg);
   }
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 760px) {
-  :root {
-    --hcp-avatar-overview: 68px;
-    --hcp-avatar-room: 124px;
-    --hcp-avatar-conversation: 154px;
+@keyframes hcpAurenFrontierReady {
+  0%,
+  100% {
+    filter:
+      brightness(1);
   }
 
-  .hcp-avatar {
-    width: calc(var(--hcp-avatar-overview) + 18px);
-    min-height: calc(var(--hcp-avatar-overview) + 28px);
-  }
-
-  .hcp-avatar[data-avatar-scale-mode="room"] {
-    width: calc(var(--hcp-avatar-room) + 22px);
-    min-height: calc(var(--hcp-avatar-room) + 34px);
-  }
-
-  .hcp-avatar-nameplate {
-    max-width: 5.2rem;
-
-    font-size: 0.48rem;
-  }
-
-  .hcp-avatar[data-avatar-scale-mode="room"]
-    .hcp-avatar-nameplate {
-    max-width: 7.5rem;
-
-    font-size: 0.56rem;
-  }
-
-  .hcp-portrait-badge {
-    min-width: 0.98rem;
-    height: 0.98rem;
-
-    font-size: 0.46rem;
+  50% {
+    filter:
+      brightness(1.1)
+      saturate(1.08);
   }
 }
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 520px) {
-  :root {
-    --hcp-avatar-overview: 64px;
-    --hcp-avatar-room: 116px;
-    --hcp-avatar-conversation: 144px;
+@keyframes hcpSorenLensAdjust {
+  0%,
+  100% {
+    transform:
+      translateX(-50%)
+      scale(1);
   }
 
-  .hcp-avatar {
-    width: calc(var(--hcp-avatar-overview) + 16px);
-    min-height: calc(var(--hcp-avatar-overview) + 26px);
+  48% {
+    transform:
+      translateX(-50%)
+      scale(1.05);
+  }
+}
+
+@keyframes hcpSorenSealInspection {
+  0%,
+  100% {
+    transform:
+      rotate(8deg);
   }
 
-  .hcp-avatar-nameplate {
-    max-width: 4.8rem;
+  50% {
+    transform:
+      rotate(25deg);
+  }
+}
 
-    padding: 0.18rem 0.36rem;
+@keyframes hcpSorenDiagnosticAttend {
+  0%,
+  100% {
+    transform:
+      translateX(-50%)
+      rotate(0);
+  }
 
-    font-size: 0.44rem;
+  42% {
+    transform:
+      translateX(-50%)
+      rotate(-3deg);
+  }
+
+  72% {
+    transform:
+      translateX(-50%)
+      rotate(2deg);
+  }
+}
+
+@keyframes hcpElaraSignalPulse {
+  0%,
+  100% {
+    transform:
+      scale(1);
+
+    opacity: 1;
+  }
+
+  50% {
+    transform:
+      scale(1.16);
+
+    opacity: 0.82;
+  }
+}
+
+@keyframes hcpElaraHairAdjust {
+  0%,
+  100% {
+    transform:
+      translateX(-50%)
+      rotate(0);
+  }
+
+  50% {
+    transform:
+      translateX(-50%)
+      rotate(3deg);
+  }
+}
+
+@keyframes hcpElaraSignalGreeting {
+  0%,
+  100% {
+    transform:
+      rotate(-8deg);
+  }
+
+  38%,
+  70% {
+    transform:
+      rotate(-34deg);
+  }
+}
+
+@keyframes hcpElaraSignalIllumination {
+  0%,
+  100% {
+    transform:
+      scale(1);
+
+    box-shadow:
+      0 0 1rem rgba(255, 172, 210, 0.42);
+  }
+
+  50% {
+    transform:
+      scale(1.22);
+
+    box-shadow:
+      0 0 1.6rem rgba(255, 172, 210, 0.68);
   }
 }
 
@@ -2543,55 +1981,23 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hcp-avatar,
-  .hcp-avatar-portrait,
-  .hcp-portrait-frame,
-  .hcp-portrait-head,
-  .hcp-portrait-pupils,
-  .hcp-portrait-lid,
-  .hcp-portrait-mouth {
+  .hcp-avatar-head,
+  .hcp-avatar-body,
+  .hcp-avatar-eye,
+  .hcp-avatar-brow,
+  .hcp-avatar-mouth,
+  .hcp-avatar-arm,
+  .hcp-avatar-accessory,
+  .hcp-avatar-hair {
+    animation: none !important;
     transition: none !important;
   }
 
-  .hcp-avatar,
-  .hcp-avatar *,
-  .hcp-avatar::before,
-  .hcp-avatar::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-  }
-
-  .hcp-avatar[data-avatar-state="resting"]
-    .hcp-portrait-torso,
-  .hcp-avatar[data-avatar-state="focused"]
-    .hcp-portrait-torso,
-  .hcp-avatar[data-avatar-state="traveling"]
-    .hcp-portrait-torso,
-  .hcp-avatar[data-avatar-state="arriving"]
-    .hcp-portrait-frame,
-  .hcp-avatar[data-avatar-state="speaking"]
-    .hcp-portrait-mouth,
-  .hcp-avatar[data-avatar-state="sleepy"]
-    .hcp-portrait-mouth,
-  .hcp-avatar[data-avatar-state="sleepy"]
-    .hcp-portrait-lid,
-  .hcp-avatar[data-avatar-state="sleepy"]
-    .hcp-portrait-head,
-  .hcp-avatar[data-arrived="true"] {
-    animation: none !important;
-  }
-
-  .hcp-avatar[data-blinking="true"]
-    .hcp-portrait-lid {
-    top: 8%;
-
+  .hcp-avatar[data-blink="true"]
+    .hcp-avatar-eye,
+  .hcp-avatar.is-blinking
+    .hcp-avatar-eye {
     transform:
-      scaleY(0.55);
-  }
-
-  .hcp-avatar[data-traveling="true"] {
-    filter:
-      drop-shadow(
-        0 0 0.45rem rgba(243, 200, 111, 0.2)
-      );
+      scaleY(0.3);
   }
 }

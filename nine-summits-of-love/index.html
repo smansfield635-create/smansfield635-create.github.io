@@ -1,17 +1,20 @@
 <!-- /nine-summits-of-love/index.html -->
-<!-- NINE_SUMMITS_OF_LOVE_INTERNAL_GLOW_HEART_CONNECTED_PATHS_HTML_TNT_v5 -->
+<!-- NINE_SUMMITS_OF_LOVE_RUBY_INTERNAL_GLOW_HEART_CONTRAST_BUTTONS_HTML_TNT_v6 -->
 <!-- Full-file replacement. -->
 <!--
   Purpose:
-  - Preserve the accepted rounded double-convex heart geometry without alteration.
+  - Preserve the accepted rounded double-convex heart geometry.
   - Preserve both original Nine Summits book-cover images.
-  - Replace angle-dependent darkness with strong internal gemstone emission.
-  - Keep external lights softer than the internal illumination.
-  - Add a rotating geometry-following halo around the heart.
-  - Preserve one cast shadow beneath the heart on the floor plane.
-  - Forbid dark internal shadowing and blackout rotation angles.
-  - Preserve fixed local-Y-axis rotation, screen fit, and House entrance behavior.
-  - Preserve the unified connected Nine Summits path experience.
+  - Preserve the connected Nine Summits path map.
+  - Renew the internally luminous heart from pale pastel light to ruby,
+    crimson, rose, garnet, burgundy, and restrained gold illumination.
+  - Keep violet and blue only as minor reflective accents.
+  - Preserve one cast shadow beneath the heart.
+  - Prevent internal darkness and blackout rotation angles.
+  - Correct contrast inside the large navigation bubbles.
+  - Give gold navigation bubbles dark navy-black lettering.
+  - Give dark navigation bubbles saturated cyan lettering.
+  - Preserve fixed local-Y-axis rotation and House entrance behavior.
   - Use native WebGL with no external 3D library.
 -->
 
@@ -20,9 +23,9 @@
   lang="en"
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
-  data-version="G1-V6"
-  data-contract="NINE_SUMMITS_OF_LOVE_INTERNAL_GLOW_HEART_CONNECTED_PATHS_HTML_TNT_v5"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_ROUNDED_3D_HEART_CONNECTED_PATHS_HTML_TNT_v4"
+  data-version="G1-V7"
+  data-contract="NINE_SUMMITS_OF_LOVE_RUBY_INTERNAL_GLOW_HEART_CONTRAST_BUTTONS_HTML_TNT_v6"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_INTERNAL_GLOW_HEART_CONNECTED_PATHS_HTML_TNT_v5"
   data-status="active"
   data-parent="/nine-summits/"
   data-role="book-and-seminar-lane"
@@ -35,6 +38,9 @@
   data-house-controller-form="rounded-double-convex-diamond-heart"
   data-heart-geometry-renewed="false"
   data-heart-geometry-preserved="true"
+  data-heart-primary-color-family="ruby-crimson-rose-garnet-burgundy"
+  data-heart-secondary-color-family="restrained-gold"
+  data-heart-reflective-accents="minor-violet-blue"
   data-heart-internal-emission="strong"
   data-heart-external-lighting="supporting"
   data-heart-halo="geometry-following-additive"
@@ -43,6 +49,7 @@
   data-heart-blackout="forbidden"
   data-heart-rotation="fixed-local-y-axis"
   data-heart-orbit="forbidden"
+  data-navigation-bubble-contrast="renewed"
   data-heart-fibonacci-sync="13-21-34-55-89-144-233-377-610-987"
 >
 <head>
@@ -83,8 +90,15 @@
       --page-cyan:#8de7ff;
       --page-blue:#618fff;
       --page-violet:#9c79ff;
-      --page-rose:#ff9dce;
+      --page-rose:#ff5f87;
+      --page-ruby:#c91442;
+      --page-crimson:#981032;
+      --page-garnet:#6d0b29;
+      --page-burgundy:#47071e;
       --page-green:#8ff0c6;
+
+      --button-gold-text:#111827;
+      --button-dark-text:#8de7ff;
 
       --page-line:rgba(184,205,255,.18);
       --page-line-gold:rgba(243,200,111,.34);
@@ -351,7 +365,7 @@
 
       border-radius:999px;
 
-      color:#080a11;
+      color:var(--button-gold-text);
 
       background:
         linear-gradient(
@@ -365,6 +379,8 @@
 
       letter-spacing:.07em;
       text-transform:uppercase;
+
+      text-shadow:none;
 
       transition:
         transform .18s ease,
@@ -580,7 +596,7 @@
     }
 
     /* =====================================================
-       INTERNALLY LUMINOUS ROUNDED HEART
+       RUBY INTERNALLY LUMINOUS ROUNDED HEART
        ===================================================== */
 
     .heart-stage{
@@ -622,15 +638,15 @@
       background:
         radial-gradient(
           circle,
-          rgba(255,232,163,.2) 0%,
-          rgba(243,200,111,.13) 24%,
-          rgba(255,157,206,.09) 39%,
-          rgba(156,121,255,.075) 53%,
-          rgba(97,143,255,.035) 67%,
-          transparent 78%
+          rgba(255,224,198,.19) 0%,
+          rgba(255,94,126,.16) 21%,
+          rgba(201,20,66,.13) 39%,
+          rgba(109,11,41,.095) 55%,
+          rgba(156,121,255,.045) 68%,
+          transparent 79%
         );
 
-      filter:blur(38px);
+      filter:blur(40px);
     }
 
     .heart-stage::after{
@@ -641,8 +657,8 @@
       top:47%;
       z-index:0;
 
-      width:57%;
-      height:57%;
+      width:58%;
+      height:58%;
 
       transform:
         translate(-50%,-50%);
@@ -654,12 +670,13 @@
       background:
         radial-gradient(
           circle,
-          rgba(255,247,206,.17),
-          rgba(243,200,111,.075) 37%,
-          transparent 70%
+          rgba(255,240,211,.16),
+          rgba(255,87,118,.11) 31%,
+          rgba(152,16,50,.06) 51%,
+          transparent 72%
         );
 
-      filter:blur(24px);
+      filter:blur(25px);
     }
 
     .heart-canvas{
@@ -699,15 +716,15 @@
         )
         drop-shadow(
           0 0 .7rem
-          rgba(255,244,188,.74)
+          rgba(255,115,137,.74)
         )
         drop-shadow(
           0 0 1.8rem
-          rgba(243,200,111,.54)
+          rgba(201,20,66,.54)
         )
         drop-shadow(
           0 0 3rem
-          rgba(156,121,255,.34)
+          rgba(109,11,41,.38)
         );
     }
 
@@ -771,7 +788,7 @@
       opacity:.36;
 
       border-color:
-        rgba(243,200,111,.25);
+        rgba(255,95,135,.28);
     }
 
     .heart-door:focus-visible{
@@ -835,7 +852,7 @@
 
       transform:translateX(-50%);
 
-      color:#080a11;
+      color:var(--button-gold-text);
 
       background:
         linear-gradient(
@@ -855,6 +872,8 @@
 
       letter-spacing:.075em;
       text-transform:uppercase;
+
+      text-shadow:none;
 
       white-space:nowrap;
 
@@ -937,15 +956,18 @@
 
       border:
         1px solid
-        rgba(255,255,255,.15);
+        rgba(141,231,255,.34);
 
       border-radius:999px;
 
-      color:
-        rgba(244,248,255,.9);
+      color:var(--button-dark-text);
 
       background:
-        rgba(255,255,255,.045);
+        linear-gradient(
+          180deg,
+          rgba(20,29,48,.94),
+          rgba(10,16,30,.96)
+        );
 
       font-size:.73rem;
       font-weight:950;
@@ -953,14 +975,21 @@
       letter-spacing:.065em;
       text-transform:uppercase;
 
+      text-shadow:
+        0 0 .65rem
+        rgba(141,231,255,.28);
+
       box-shadow:
         inset 0 1px 0
-        rgba(255,255,255,.07);
+        rgba(255,255,255,.07),
+        0 0 1.1rem
+        rgba(141,231,255,.04);
 
       transition:
         transform .18s ease,
         border-color .18s ease,
-        filter .18s ease;
+        filter .18s ease,
+        box-shadow .18s ease;
     }
 
     .page-button:hover,
@@ -968,7 +997,13 @@
       transform:translateY(-2px);
 
       border-color:
-        rgba(243,200,111,.58);
+        rgba(141,231,255,.72);
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.09),
+        0 0 1.25rem
+        rgba(141,231,255,.17);
 
       outline:none;
     }
@@ -977,7 +1012,7 @@
       border-color:
         rgba(243,200,111,.84);
 
-      color:#080a11;
+      color:var(--button-gold-text);
 
       background:
         linear-gradient(
@@ -985,6 +1020,26 @@
           #fff4b4,
           #f3c86f
         );
+
+      text-shadow:none;
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.32),
+        0 .75rem 1.75rem
+        rgba(243,200,111,.12);
+    }
+
+    .page-button--gold:hover,
+    .page-button--gold:focus-visible{
+      border-color:
+        rgba(255,232,163,.96);
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.42),
+        0 .85rem 1.9rem
+        rgba(243,200,111,.2);
     }
 
     /* =====================================================
@@ -1809,6 +1864,7 @@
           data-heart-internal-emission="true"
           data-heart-additive-halo="true"
           data-heart-ground-shadow-only="true"
+          data-heart-primary-color="ruby"
         >
           <canvas
             class="heart-canvas"
@@ -1824,49 +1880,49 @@
           >
             <defs>
               <radialGradient
-                id="fallbackLuminousHeart"
-                cx="48%"
-                cy="42%"
-                r="72%"
+                id="fallbackRubyHeart"
+                cx="46%"
+                cy="40%"
+                r="74%"
               >
                 <stop
                   offset="0%"
-                  stop-color="#ffffff"
+                  stop-color="#fff0d1"
                 />
 
                 <stop
-                  offset="13%"
-                  stop-color="#fff7ce"
+                  offset="12%"
+                  stop-color="#ffb0ad"
                 />
 
                 <stop
-                  offset="31%"
-                  stop-color="#ffe08a"
+                  offset="29%"
+                  stop-color="#ff5f78"
                 />
 
                 <stop
-                  offset="50%"
-                  stop-color="#ffb0d4"
+                  offset="49%"
+                  stop-color="#d71d4d"
                 />
 
                 <stop
-                  offset="70%"
-                  stop-color="#b28cff"
+                  offset="68%"
+                  stop-color="#9c1235"
                 />
 
                 <stop
-                  offset="87%"
-                  stop-color="#70cfff"
+                  offset="85%"
+                  stop-color="#6d0b29"
                 />
 
                 <stop
                   offset="100%"
-                  stop-color="#3f5291"
+                  stop-color="#40071c"
                 />
               </radialGradient>
 
               <filter
-                id="fallbackLuminousGlow"
+                id="fallbackRubyGlow"
                 x="-60%"
                 y="-60%"
                 width="220%"
@@ -1874,7 +1930,7 @@
               >
                 <feGaussianBlur
                   in="SourceGraphic"
-                  stdDeviation="32"
+                  stdDeviation="31"
                   result="outerBlur"
                 />
 
@@ -1882,12 +1938,12 @@
                   in="outerBlur"
                   type="matrix"
                   values="
-                    1.20 0    0    0 0
-                    0    .86  0    0 0
-                    0    0    1.20 0 0
-                    0    0    0    .58 0
+                    1.25 0    0    0 0
+                    0    .28  0    0 0
+                    0    0    .46  0 0
+                    0    0    0    .62 0
                   "
-                  result="coloredGlow"
+                  result="rubyGlow"
                 />
 
                 <feDropShadow
@@ -1900,7 +1956,7 @@
                 />
 
                 <feMerge>
-                  <feMergeNode in="coloredGlow"/>
+                  <feMergeNode in="rubyGlow"/>
                   <feMergeNode in="groundDepth"/>
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
@@ -1920,10 +1976,10 @@
                 C 650 734 556 805 500 865
                 Z
               "
-              fill="url(#fallbackLuminousHeart)"
-              stroke="#fff4bc"
+              fill="url(#fallbackRubyHeart)"
+              stroke="#ffb083"
               stroke-width="9"
-              filter="url(#fallbackLuminousGlow)"
+              filter="url(#fallbackRubyGlow)"
             />
           </svg>
 
@@ -1932,10 +1988,10 @@
             type="button"
             data-house-control-pad-open
             data-house-context="nine-summits-of-love"
-            aria-label="Open the interactive House estate from the internally luminous rotating Nine Summits diamond heart"
+            aria-label="Open the interactive House estate from the ruby internally luminous rotating Nine Summits diamond heart"
           >
             <span class="heart-status">
-              Internally luminous · rounded · fixed-axis
+              Ruby luminous · rounded · fixed-axis
             </span>
 
             <span class="heart-enter">
@@ -2411,7 +2467,7 @@
       </nav>
 
       <span>
-        The Nine Summits of Love · Book and Seminar Lane · Internally Luminous True-Depth Diamond Heart.
+        The Nine Summits of Love · Book and Seminar Lane · Ruby Internally Luminous True-Depth Diamond Heart.
       </span>
     </footer>
   </div>
@@ -2502,18 +2558,18 @@
 
         haloLayers:[
           {
-            scale:1.035,
-            color:[1.0,.83,.48],
-            alpha:.16
+            scale:1.034,
+            color:[1.0,.10,.24],
+            alpha:.18
           },
           {
-            scale:1.072,
-            color:[1.0,.48,.78],
-            alpha:.09
+            scale:1.069,
+            color:[1.0,.28,.44],
+            alpha:.095
           },
           {
-            scale:1.115,
-            color:[.42,.61,1.0],
+            scale:1.108,
+            color:[1.0,.58,.26],
             alpha:.045
           }
         ]
@@ -2696,7 +2752,7 @@
                 0.0,
                 1.0
               ),
-              1.45
+              1.42
             );
 
           float crownField =
@@ -2727,90 +2783,120 @@
             max(
               vColor.rgb,
               vec3(
-                .22,
                 .20,
-                .27
+                .025,
+                .07
               )
             );
 
-          vec3 warmCore =
+          vec3 rubyCore =
             vec3(
               1.0,
-              .82,
-              .40
+              .055,
+              .17
             );
 
-          vec3 whiteCore =
+          vec3 crimsonCore =
             vec3(
-              1.0,
-              .97,
-              .79
+              .87,
+              .035,
+              .14
             );
 
           vec3 roseCore =
             vec3(
               1.0,
-              .46,
-              .74
+              .25,
+              .38
             );
 
-          vec3 violetCore =
+          vec3 garnetCore =
             vec3(
-              .54,
-              .43,
-              1.0
+              .52,
+              .025,
+              .12
             );
 
-          vec3 cyanCore =
+          vec3 hotCore =
             vec3(
-              .28,
-              .74,
-              1.0
+              1.0,
+              .62,
+              .48
+            );
+
+          vec3 goldCore =
+            vec3(
+              1.0,
+              .58,
+              .18
+            );
+
+          vec3 violetAccent =
+            vec3(
+              .48,
+              .30,
+              .88
+            );
+
+          vec3 blueAccent =
+            vec3(
+              .24,
+              .49,
+              .86
             );
 
           vec3 internalColor =
             mix(
               baseColor,
-              warmCore,
+              rubyCore,
               centerField *
-              .48
-            );
-
-          internalColor =
-            mix(
-              internalColor,
-              whiteCore,
-              centerField *
-              crownField *
-              .34
+              .62
             );
 
           internalColor =
             mix(
               internalColor,
               roseCore,
-              rearMask *
-              .14
+              centerField *
+              crownField *
+              .24
             );
 
           internalColor =
             mix(
               internalColor,
-              violetCore,
+              crimsonCore,
+              rearMask *
+              .18
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              garnetCore,
               sideMask *
-              .17
+              .18
+            );
+
+          internalColor =
+            mix(
+              internalColor,
+              hotCore,
+              centerField *
+              crownField *
+              .11
             );
 
           float internalStrength =
-            .72 +
+            .75 +
             centerField *
-            .76 +
+            .68 +
             crownField *
-            .18 +
+            .15 +
             rearMask *
-            .08 +
+            .10 +
             sideMask *
-            .06;
+            .07;
 
           vec3 internalEmission =
             internalColor *
@@ -2824,29 +2910,29 @@
           vec3 hemisphere =
             mix(
               vec3(
-                .06,
-                .035,
-                .08
+                .055,
+                .012,
+                .035
               ),
               vec3(
-                .11,
-                .17,
-                .29
+                .12,
+                .045,
+                .085
               ),
               hemisphereAmount
             ) *
-            .33;
+            .31;
 
           vec3 cameraFill =
             vec3(
               1.0,
-              .91,
-              .74
+              .34,
+              .30
             ) *
             (
-              .11 +
+              .09 +
               facing *
-              .18
+              .15
             );
 
           vec3 key =
@@ -2856,10 +2942,10 @@
               uKeyLight,
               vec3(
                 1.0,
-                .64,
-                .25
+                .46,
+                .19
               ),
-              .34
+              .31
             );
 
           vec3 fill =
@@ -2868,11 +2954,11 @@
               vWorldPosition,
               uFillLight,
               vec3(
-                .26,
-                .69,
-                1.0
+                .34,
+                .30,
+                .72
               ),
-              .27
+              .19
             );
 
           vec3 rim =
@@ -2881,11 +2967,11 @@
               vWorldPosition,
               uRimLight,
               vec3(
-                .57,
-                .42,
-                1.0
+                .40,
+                .27,
+                .78
               ),
-              .31
+              .21
             );
 
           vec3 externalLighting =
@@ -2918,7 +3004,7 @@
                 ),
                 0.0
               ),
-              40.0
+              42.0
             );
 
           float secondarySpecular =
@@ -2927,41 +3013,58 @@
                 facing,
                 0.0
               ),
-              7.0
+              8.0
             ) *
             centerField;
 
+          float horizontalField =
+            clamp(
+              normalizedBody.x *
+              .5 +
+              .5,
+              0.0,
+              1.0
+            );
+
+          vec3 minorCoolAccent =
+            mix(
+              violetAccent,
+              blueAccent,
+              horizontalField
+            );
+
           vec3 edgeRadiance =
             mix(
-              violetCore,
-              cyanCore,
-              clamp(
-                normalizedBody.x *
-                .5 +
-                .5,
-                0.0,
-                1.0
-              )
+              roseCore,
+              goldCore,
+              .34 +
+              crownField *
+              .18
             ) *
             fresnel *
             (
-              .48 +
+              .42 +
               centerField *
-              .12
+              .10
             );
+
+          edgeRadiance +=
+            minorCoolAccent *
+            fresnel *
+            .07;
 
           vec3 reflectedSurface =
             baseColor *
             externalLighting *
-            .52;
+            .43;
 
           vec3 sparkle =
-            whiteCore *
+            hotCore *
             specular *
-            .72 +
-            warmCore *
+            .58 +
+            goldCore *
             secondarySpecular *
-            .16;
+            .11;
 
           vec3 color =
             internalEmission +
@@ -2972,9 +3075,9 @@
           vec3 visibilityFloor =
             mix(
               baseColor *
-              .62,
+              .72,
               internalColor *
-              .78,
+              .83,
               centerField
             );
 
@@ -2982,7 +3085,7 @@
             mix(
               visibilityFloor,
               internalColor *
-              .72,
+              .77,
               rearMask
             );
 
@@ -2990,7 +3093,7 @@
             mix(
               visibilityFloor,
               internalColor *
-              .68,
+              .72,
               sideMask
             );
 
@@ -3001,17 +3104,17 @@
             );
 
           color +=
-            whiteCore *
+            hotCore *
             centerField *
             crownField *
-            .13;
+            .055;
 
           color =
             color /
             (
               vec3(1.0) +
               color *
-              .31
+              .41
             );
 
           color =
@@ -3075,17 +3178,17 @@
         uniform float uHaloAlpha;
 
         void main(void) {
-          vec3 warmTop =
+          vec3 verticalColor =
             mix(
               uHaloColor *
-              .74,
+              .68,
               uHaloColor,
               vHeight
             );
 
           gl_FragColor =
             vec4(
-              warmTop,
+              verticalColor,
               uHaloAlpha
             );
         }
@@ -3715,53 +3818,56 @@
       }
 
       const FRONT_PALETTE = [
-        "#fff0a9",
-        "#f3c86f",
-        "#e9a665",
-        "#ffb4d9",
-        "#e580b7",
-        "#c593ff",
-        "#9670eb",
-        "#9de7ff",
-        "#66b9e8",
-        "#9cf3d0",
-        "#63c7a5",
-        "#d2b0ff",
-        "#a47bd3",
-        "#f3a8ce",
-        "#c76d9f",
-        "#8ed8ff",
-        "#6598d7",
-        "#e3c4ff",
-        "#af90d1",
-        "#9478a9",
-        "#715f88"
+        "#ffd2bc",
+        "#ff9b9f",
+        "#ff6b7f",
+        "#f74768",
+        "#df2854",
+        "#c91442",
+        "#ab1038",
+        "#8f0d32",
+        "#76102f",
+        "#ff7a93",
+        "#ed4d70",
+        "#d32f5c",
+        "#b7224e",
+        "#991a43",
+        "#7c1538",
+        "#ffb36d",
+        "#ef844f",
+        "#a766b7",
+        "#7557a6",
+        "#526ca1",
+        "#6a1637"
       ].map(hexColor);
 
       const REAR_PALETTE = [
-        "#f0bd68",
-        "#dd955f",
-        "#ca7693",
-        "#d981bd",
-        "#9f78da",
-        "#728de0",
-        "#73bada",
-        "#67c8b2",
-        "#a78ad7",
-        "#c57aa9",
-        "#8469bd",
-        "#5f82bd"
+        "#f77b82",
+        "#e84c65",
+        "#d52c53",
+        "#bd1746",
+        "#a4113c",
+        "#8c0e34",
+        "#74102f",
+        "#61102b",
+        "#cf3158",
+        "#a91c45",
+        "#8b214b",
+        "#6c244f",
+        "#b64b4f",
+        "#823338"
       ].map(hexColor);
 
       const SIDE_PALETTE = [
-        "#845b9f",
-        "#4f6ea6",
-        "#9f5f86",
-        "#5b8ca4",
-        "#7e67b2",
-        "#9c725f",
-        "#547f86",
-        "#73558f"
+        "#7a102f",
+        "#5f0d28",
+        "#94153b",
+        "#741844",
+        "#5a1a46",
+        "#8a2942",
+        "#623051",
+        "#49355c",
+        "#693050"
       ].map(hexColor);
 
       function brightenColor(
@@ -3777,13 +3883,13 @@
           Math.max(
             color[1],
             minimum *
-            .92
+            .19
           ),
 
           Math.max(
             color[2],
             minimum *
-            1.05
+            .34
           ),
 
           1
@@ -3956,7 +4062,7 @@
                   facetIndex %
                   FRONT_PALETTE.length
                 ],
-                .30
+                .34
               );
 
             const rearColor =
@@ -4005,10 +4111,7 @@
               CONFIG.depth /
               2
             ],
-            brightenColor(
-              FRONT_PALETTE[0],
-              .36
-            ),
+            hexColor("#ff8f87"),
             0
           );
 
@@ -4020,10 +4123,7 @@
               -CONFIG.depth /
               2
             ],
-            brightenColor(
-              REAR_PALETTE[0],
-              .34
-            ),
+            hexColor("#d52c53"),
             1
           );
 
@@ -4379,7 +4479,7 @@
                 segmentIndex %
                 SIDE_PALETTE.length
               ],
-              .29
+              .27
             );
 
           const frontA =
@@ -5663,7 +5763,7 @@
         );
       } catch (error) {
         console.error(
-          "[Nine Summits Internal Glow Heart] Initialization failed.",
+          "[Nine Summits Ruby Internal Glow Heart] Initialization failed.",
           error
         );
 

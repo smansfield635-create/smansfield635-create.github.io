@@ -1,1145 +1,886 @@
 // /assets/house-control-pad/house.avatar-life.js
-// HOUSE_AVATAR_LIFE_RUNTIME_TNT_v1
-// Full-file addition.
+// HOUSE_AVATAR_LIFE_SCHEDULER_TNT_v1
+// Full-file replacement.
 //
-// Required load order:
+// AVATAR LIFE AUTHORITY ONLY.
 //
-// 1. /assets/house-control-pad/house.control-pad.data.js
-// 2. /assets/house-control-pad/house.control-pad.js
-// 3. /assets/house-control-pad/house.avatar-life.js
-//
-// Required avatar presentation:
-//
-// /assets/house-control-pad/house.avatars.css
-//
-// Five-layer separation:
-//
-// Data describes.
-// House CSS renders architecture.
-// Controller coordinates.
-// Avatar life schedules.
-// Avatar CSS expresses the residents.
-//
-// This file owns:
-//
-// - avatar runtime state
-// - independent blink scheduling
-// - blink type selection
-// - inactivity tracking
-// - idle-stage calculation
-// - personality-specific gesture scheduling
-// - rare yawn and stretch eligibility
-// - large-gesture exclusivity
-// - state-priority enforcement
-// - room-aware reactions
-// - camera reaction coordination
-// - travel interruption
-// - arrival behavior
+// Owns:
+// - resident idle scheduling
+// - blink scheduling
+// - slow-blink scheduling
+// - double-blink scheduling
+// - gesture scheduling
+// - expression scheduling
+// - travel-state timing
+// - arrival-state timing
+// - attention requests
+// - speaking-state timing
+// - resident activity suspension
 // - reduced-motion behavior
-// - timer ownership
-// - lifecycle cleanup
+// - visibility recovery
 //
-// This file does not own:
+// Does not own:
+// - avatar anatomy
+// - avatar drawing
+// - avatar permanent root placement
+// - avatar permanent root scale
+// - avatar safe-frame dimensions
+// - room selection
+// - camera framing
+// - controller routes
+// - guide authority
 //
-// - room content
-// - room geometry
-// - corridor definitions
-// - route execution
-// - pathfinding
-// - camera calculations
-// - guide travel interpolation
-// - DOM construction
-// - static architecture
-// - avatar anatomy styling
-// - animation keyframes
+// Runtime dependencies:
 //
-// Public authority:
+// window.HOUSE_CONTROL_PAD_DATA
+// window.HOUSE_CONTROL_PAD
+//
+// Public runtime object:
 //
 // window.HOUSE_AVATAR_LIFE
 //
-// Canonical residents:
+// Separation law:
 //
-// - Jeeves
-// - Auren
-// - Soren
-// - Elara
+// Data describes.
+// Control Pad Control 1 coordinates.
+// Control Pad Control 2 composes.
+// Avatar Life schedules.
+// Avatar CSS expresses.
 //
 
-(function bindHouseAvatarLifeRuntime(global) {
+(function bindHouseAvatarLife(global) {
   "use strict";
 
   var CONTRACT =
-    "HOUSE_AVATAR_LIFE_RUNTIME_TNT_v1";
+    "HOUSE_AVATAR_LIFE_SCHEDULER_TNT_v1";
 
-  var DATA = global.HOUSE_CONTROL_PAD_DATA;
+  var VERSION =
+    "1.0.0";
 
-  if (!DATA) {
-    reportFatal(
-      "HOUSE_CONTROL_PAD_DATA is unavailable. Load " +
-        "/assets/house-control-pad/house.control-pad.data.js " +
-        "before house.avatar-life.js."
-    );
+  var READY_EVENT =
+    "house-control-pad:avatar-life-ready";
 
-    return;
-  }
+  var STATE_EVENT =
+    "house-control-pad:avatar-state-changed";
 
-  var AGENTS = DATA.agents;
-  var ROOMS = DATA.rooms;
-  var TIMING = DATA.timing;
-  var IDLE_STAGE = DATA.idleStages;
-  var STATE_PRIORITY =
-    DATA.avatarStatePriority;
+  var GESTURE_EVENT =
+    "house-control-pad:avatar-gesture";
 
-  var LIFE = {
-    initialized: false,
-    enabled: true,
-    running: false,
+  var EXPRESSION_EVENT =
+    "house-control-pad:avatar-expression";
+
+  var ATTENTION_EVENT =
+    "house-control-pad:avatar-attention";
+
+  var DEFAULT_IDLE_MIN_MS =
+    4200;
+
+  var DEFAULT_IDLE_MAX_MS =
+    9200;
+
+  var DEFAULT_BLINK_MIN_MS =
+    2600;
+
+  var DEFAULT_BLINK_MAX_MS =
+    6200;
+
+  var DEFAULT_GESTURE_DURATION_MS =
+    1200;
+
+  var DEFAULT_EXPRESSION_DURATION_MS =
+    1800;
+
+  var DEFAULT_TRAVEL_DURATION_MS =
+    520;
+
+  var DEFAULT_ARRIVAL_DURATION_MS =
+    900;
+
+  var DEFAULT_SPEAKING_DURATION_MS =
+    2400;
+
+  var state = {
+    mounted: false,
     destroyed: false,
+    active: true,
+    documentVisible: true,
     reducedMotion: false,
 
-    bridge: null,
+    context: null,
+    controller: null,
+    panel: null,
 
-    lastInteractionAt: Date.now(),
-    lastInteractionRecordedAt: 0,
-    idleStage: IDLE_STAGE.ACTIVE,
+    roomElements: Object.create(null),
+    avatarMounts: Object.create(null),
 
-    activeLargeGestureAgent: null,
-    lastLargeGestureAt: 0,
+    agents: Object.create(null),
+    listeners: [],
 
-    evaluationTimer: null,
-    globalTimers: [],
-
-    interactionBound: false,
-    interactionHandlers: [],
-
-    agentRuntime: {}
+    timers: Object.create(null),
+    gestureTokens: Object.create(null),
+    expressionTokens: Object.create(null),
+    stateTokens: Object.create(null)
   };
 
-  function reportFatal(message) {
-    try {
-      console.error(
-        "[House Avatar Life]",
-        message
-      );
-    } catch (error) {
-      // No-op.
-    }
+  function getData() {
+    return global.HOUSE_CONTROL_PAD_DATA || null;
+  }
 
-    emit(
-      "house-avatar-life:error",
-      {
-        fatal: true,
-        message: message
-      }
-    );
+  function getController() {
+    return global.HOUSE_CONTROL_PAD || null;
   }
 
   function emit(eventName, detail) {
     try {
       global.dispatchEvent(
         new CustomEvent(eventName, {
-          detail: Object.assign(
-            {
-              contract: CONTRACT
-            },
-            detail || {}
-          )
+          detail: detail || {}
         })
       );
     } catch (error) {
       // No-op.
     }
-
-    if (
-      LIFE.bridge &&
-      typeof LIFE.bridge.emit === "function"
-    ) {
-      try {
-        LIFE.bridge.emit(
-          eventName,
-          Object.assign(
-            {
-              avatarLifeContract:
-                CONTRACT
-            },
-            detail || {}
-          )
-        );
-      } catch (error) {
-        // No-op.
-      }
-    }
   }
 
-  function agentExists(agentId) {
-    return Boolean(
-      typeof agentId === "string" &&
-      Object.prototype.hasOwnProperty.call(
-        AGENTS,
-        agentId
-      )
+  function listen(target, eventName, handler, options) {
+    if (
+      !target ||
+      typeof target.addEventListener !== "function"
+    ) {
+      return;
+    }
+
+    target.addEventListener(
+      eventName,
+      handler,
+      options
     );
+
+    state.listeners.push({
+      target: target,
+      eventName: eventName,
+      handler: handler,
+      options: options
+    });
   }
 
-  function getAgent(agentId) {
-    if (agentExists(agentId)) {
-      return AGENTS[agentId];
-    }
+  function removeAllListeners() {
+    state.listeners.forEach(
+      function removeListener(record) {
+        record.target.removeEventListener(
+          record.eventName,
+          record.handler,
+          record.options
+        );
+      }
+    );
 
-    return AGENTS.jeeves;
+    state.listeners.length = 0;
   }
 
-  function getRoom(roomId) {
-    if (
-      typeof roomId === "string" &&
-      Object.prototype.hasOwnProperty.call(
-        ROOMS,
-        roomId
-      )
-    ) {
-      return ROOMS[roomId];
-    }
+  function finiteNumber(value, fallback) {
+    var number =
+      Number(value);
 
-    return ROOMS[DATA.defaultRoomId];
+    return Number.isFinite(number)
+      ? number
+      : fallback;
+  }
+
+  function clamp(value, minimum, maximum) {
+    return Math.max(
+      minimum,
+      Math.min(maximum, value)
+    );
   }
 
   function randomBetween(minimum, maximum) {
-    return Math.round(
-      minimum +
+    var min =
+      finiteNumber(
+        minimum,
+        0
+      );
+
+    var max =
+      finiteNumber(
+        maximum,
+        min
+      );
+
+    if (max < min) {
+      var swap = min;
+      min = max;
+      max = swap;
+    }
+
+    return (
+      min +
       Math.random() *
-        (maximum - minimum)
+      (max - min)
     );
   }
 
-  function chance(probability) {
-    return Math.random() < probability;
+  function randomInteger(minimum, maximum) {
+    return Math.floor(
+      randomBetween(
+        minimum,
+        maximum + 1
+      )
+    );
   }
 
-  function choose(list) {
+  function chooseRandom(items) {
     if (
-      !Array.isArray(list) ||
-      !list.length
+      !Array.isArray(items) ||
+      items.length === 0
     ) {
       return null;
     }
 
-    return list[
-      Math.floor(
-        Math.random() * list.length
+    return items[
+      randomInteger(
+        0,
+        items.length - 1
       )
     ];
   }
 
-  function now() {
-    return Date.now();
-  }
+  function getAgent(agentId) {
+    var data =
+      getData();
 
-  function clearTimer(timerId) {
-    if (!timerId) {
-      return;
-    }
-
-    global.clearTimeout(timerId);
-    global.clearInterval(timerId);
-  }
-
-  function removeTimerFromList(
-    timerId,
-    timerList
-  ) {
-    var index =
-      timerList.indexOf(timerId);
-
-    if (index !== -1) {
-      timerList.splice(index, 1);
-    }
-  }
-
-  function scheduleTimeout(
-    callback,
-    delay,
-    ownerList
-  ) {
-    var timerList =
-      ownerList || LIFE.globalTimers;
-
-    var timerId =
-      global.setTimeout(
-        function executeScheduledTimeout() {
-          removeTimerFromList(
-            timerId,
-            timerList
-          );
-
-          callback();
-        },
-        Math.max(0, delay)
-      );
-
-    timerList.push(timerId);
-
-    return timerId;
-  }
-
-  function clearTimerList(timerList) {
-    timerList.forEach(
-      function cancelTimer(timerId) {
-        clearTimer(timerId);
-      }
-    );
-
-    timerList.length = 0;
-  }
-
-  function getRuntime(agentId) {
-    if (!LIFE.agentRuntime[agentId]) {
-      LIFE.agentRuntime[agentId] = {
-        agentId: agentId,
-
-        primaryState: "resting",
-        previousState: null,
-
-        gesture: null,
-        expression: null,
-
-        blinking: false,
-        blinkType: null,
-
-        stateToken: 0,
-        blinkToken: 0,
-        gestureToken: 0,
-
-        blinkTimer: null,
-        gestureTimer: null,
-        stateTimer: null,
-
-        timers: [],
-
-        lastBlinkAt: 0,
-        lastGestureAt: 0,
-        lastYawnAt: 0,
-        lastTravelAt: 0,
-        lastArrivalAt: 0,
-
-        gestureCooldowns: {},
-
-        cameraFocused: false,
-        roomFocused: false,
-        traveling: false,
-        arriving: false,
-        speaking: false,
-        disabled: false,
-
-        currentRoomId:
-          getAgent(agentId).homeRoom
-      };
-    }
-
-    return LIFE.agentRuntime[agentId];
-  }
-
-  function getAvatarElement(agentId) {
-    if (
-      !LIFE.bridge ||
-      typeof LIFE.bridge.getAvatarElement !==
-        "function"
-    ) {
+    if (!data) {
       return null;
     }
 
-    return LIFE.bridge.getAvatarElement(
+    if (
+      typeof data.getAgent === "function"
+    ) {
+      return data.getAgent(agentId);
+    }
+
+    return data.agents
+      ? data.agents[agentId] || null
+      : null;
+  }
+
+  function getControllerState() {
+    var controller =
+      state.controller ||
+      getController();
+
+    if (
+      controller &&
+      typeof controller.getState ===
+        "function"
+    ) {
+      return controller.getState();
+    }
+
+    return {
+      open: true,
+      viewMode: "estate",
+      currentRoomId: null,
+      currentAgentId: null,
+      traveling: false
+    };
+  }
+
+  function normalizeContext(context) {
+    context =
+      context || {};
+
+    state.context =
+      context;
+
+    state.controller =
+      context.controller ||
+      getController();
+
+    state.panel =
+      context.panel ||
+      state.panel;
+
+    state.roomElements =
+      context.roomElements ||
+      context.rooms ||
+      state.roomElements;
+
+    state.avatarMounts =
+      context.avatarMounts ||
+      state.avatarMounts;
+  }
+
+  function detectReducedMotion() {
+    state.reducedMotion =
+      Boolean(
+        global.matchMedia &&
+        global.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+      );
+  }
+
+  function mount(context) {
+    if (state.destroyed) {
+      return false;
+    }
+
+    normalizeContext(context);
+    detectReducedMotion();
+
+    if (!state.panel) {
+      return false;
+    }
+
+    discoverAgents();
+
+    if (!state.mounted) {
+      bindRuntimeEvents();
+      state.mounted = true;
+    }
+
+    state.active = true;
+
+    startAllResidents();
+
+    emit(
+      READY_EVENT,
+      {
+        contract: CONTRACT,
+        version: VERSION,
+        role: "avatar-life",
+        residentCount:
+          Object.keys(
+            state.agents
+          ).length
+      }
+    );
+
+    return true;
+  }
+
+  function bindRuntimeEvents() {
+    listen(
+      global.document,
+      "visibilitychange",
+      handleVisibilityChange
+    );
+
+    listen(
+      global,
+      "house-control-pad:open",
+      handleControllerOpen
+    );
+
+    listen(
+      global,
+      "house-control-pad:close",
+      handleControllerClose
+    );
+
+    listen(
+      global,
+      "house-control-pad:room-entering",
+      handleRoomEntering
+    );
+
+    listen(
+      global,
+      "house-control-pad:room-arrived",
+      handleRoomArrived
+    );
+
+    listen(
+      global,
+      "house-control-pad:guide-request",
+      handleGuideRequest
+    );
+
+    if (global.matchMedia) {
+      var motionQuery =
+        global.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+      if (
+        typeof motionQuery.addEventListener ===
+          "function"
+      ) {
+        listen(
+          motionQuery,
+          "change",
+          handleMotionPreferenceChange
+        );
+      }
+    }
+  }
+
+  function handleVisibilityChange() {
+    state.documentVisible =
+      global.document.visibilityState !==
+      "hidden";
+
+    if (!state.documentVisible) {
+      suspendAllResidents();
+      return;
+    }
+
+    if (state.active) {
+      startAllResidents();
+    }
+  }
+
+  function handleMotionPreferenceChange(event) {
+    state.reducedMotion =
+      Boolean(event.matches);
+
+    restartAllResidents();
+  }
+
+  function handleControllerOpen() {
+    state.active = true;
+    startAllResidents();
+  }
+
+  function handleControllerClose() {
+    state.active = false;
+    suspendAllResidents();
+  }
+
+  function handleRoomEntering(event) {
+    var detail =
+      event && event.detail
+        ? event.detail
+        : {};
+
+    if (
+      detail.agentId &&
+      detail.roomId
+    ) {
+      travel(
+        detail.agentId,
+        detail.roomId
+      );
+    }
+  }
+
+  function handleRoomArrived(event) {
+    var detail =
+      event && event.detail
+        ? event.detail
+        : {};
+
+    if (
+      detail.agentId &&
+      detail.roomId
+    ) {
+      arrive(
+        detail.agentId,
+        detail.roomId
+      );
+    }
+  }
+
+  function handleGuideRequest(event) {
+    var detail =
+      event && event.detail
+        ? event.detail
+        : {};
+
+    if (
+      detail.agentId &&
+      detail.roomId
+    ) {
+      requestAttention(
+        detail.agentId,
+        detail.roomId
+      );
+    }
+  }
+
+  function discoverAgents() {
+    var data =
+      getData();
+
+    if (
+      !data ||
+      !data.agents
+    ) {
+      return;
+    }
+
+    Object.keys(
+      data.agents
+    ).forEach(
+      function discoverAgent(agentId) {
+        var agent =
+          data.agents[agentId];
+
+        var resident =
+          state.panel.querySelector(
+            '[data-house-avatar]' +
+            '[data-agent-id="' +
+            escapeSelector(agentId) +
+            '"]'
+          );
+
+        if (!resident) {
+          return;
+        }
+
+        state.agents[agentId] = {
+          id: agentId,
+          config: agent,
+          element: resident,
+          roomId:
+            resident.getAttribute(
+              "data-house-room"
+            ) ||
+            agent.homeRoom,
+          currentState:
+            resident.getAttribute(
+              "data-avatar-state"
+            ) ||
+            "resting",
+          currentGesture: null,
+          currentExpression: null,
+          suspended: false
+        };
+      }
+    );
+  }
+
+  function startAllResidents() {
+    if (
+      !state.active ||
+      !state.documentVisible
+    ) {
+      return;
+    }
+
+    Object.keys(
+      state.agents
+    ).forEach(
+      function startResident(agentId) {
+        startResidentLife(
+          agentId
+        );
+      }
+    );
+  }
+
+  function suspendAllResidents() {
+    Object.keys(
+      state.agents
+    ).forEach(
+      function suspendResident(agentId) {
+        suspendResidentLife(
+          agentId
+        );
+      }
+    );
+  }
+
+  function restartAllResidents() {
+    suspendAllResidents();
+
+    if (
+      state.active &&
+      state.documentVisible
+    ) {
+      startAllResidents();
+    }
+  }
+
+  function startResidentLife(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return;
+    }
+
+    record.suspended = false;
+
+    scheduleBlink(
+      agentId
+    );
+
+    if (!state.reducedMotion) {
+      scheduleIdleGesture(
+        agentId
+      );
+    }
+  }
+
+  function suspendResidentLife(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return;
+    }
+
+    record.suspended = true;
+
+    clearTimer(
+      agentId,
+      "blink"
+    );
+
+    clearTimer(
+      agentId,
+      "idle"
+    );
+
+    clearTimer(
+      agentId,
+      "gesture"
+    );
+
+    clearTimer(
+      agentId,
+      "expression"
+    );
+
+    clearTimer(
+      agentId,
+      "state"
+    );
+
+    clearTransientPresentation(
       agentId
     );
   }
 
-  function setAvatarDOMState(
-    agentId,
-    state
-  ) {
-    if (
-      LIFE.bridge &&
-      typeof LIFE.bridge.setAvatarDOMState ===
-        "function"
-    ) {
-      LIFE.bridge.setAvatarDOMState(
-        agentId,
-        state
-      );
+  function scheduleBlink(agentId) {
+    var record =
+      state.agents[agentId];
 
+    if (
+      !record ||
+      record.suspended ||
+      !state.active ||
+      !state.documentVisible
+    ) {
       return;
     }
 
-    var avatar =
-      getAvatarElement(agentId);
-
-    if (!avatar) {
-      return;
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "primaryState"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-avatar-state",
-        state.primaryState || "resting"
-      );
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "gesture"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-avatar-gesture",
-        state.gesture || ""
-      );
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "expression"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-avatar-expression",
-        state.expression || ""
-      );
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "blinking"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-blinking",
-        state.blinking
-          ? "true"
-          : "false"
-      );
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        state,
-        "blinkType"
-      )
-    ) {
-      avatar.setAttribute(
-        "data-blink-type",
-        state.blinkType || ""
-      );
-    }
-  }
-
-  function syncRuntimeToDOM(agentId) {
-    var runtime =
-      getRuntime(agentId);
-
-    setAvatarDOMState(
+    clearTimer(
       agentId,
-      {
-        primaryState:
-          runtime.primaryState,
-        gesture:
-          runtime.gesture,
-        expression:
-          runtime.expression,
-        blinking:
-          runtime.blinking,
-        blinkType:
-          runtime.blinkType
-      }
-    );
-  }
-
-  function getPriority(stateName) {
-    if (
-      Object.prototype.hasOwnProperty.call(
-        STATE_PRIORITY,
-        stateName
-      )
-    ) {
-      return STATE_PRIORITY[stateName];
-    }
-
-    return 0;
-  }
-
-  function canOverrideState(
-    currentState,
-    nextState
-  ) {
-    return (
-      getPriority(nextState) >=
-      getPriority(currentState)
-    );
-  }
-
-  function deriveBaselineState(agentId) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      !LIFE.enabled ||
-      runtime.disabled
-    ) {
-      return "disabled";
-    }
-
-    if (runtime.traveling) {
-      return "traveling";
-    }
-
-    if (runtime.arriving) {
-      return "arriving";
-    }
-
-    if (runtime.speaking) {
-      return "speaking";
-    }
-
-    if (
-      runtime.cameraFocused ||
-      runtime.roomFocused
-    ) {
-      return "focused";
-    }
-
-    return "resting";
-  }
-
-  function setPrimaryState(
-    agentId,
-    nextState,
-    metadata
-  ) {
-    metadata = metadata || {};
-
-    var runtime =
-      getRuntime(agentId);
-
-    var currentState =
-      runtime.primaryState ||
-      "resting";
-
-    if (
-      metadata.force !== true &&
-      !canOverrideState(
-        currentState,
-        nextState
-      )
-    ) {
-      return false;
-    }
-
-    runtime.stateToken += 1;
-    runtime.previousState =
-      currentState;
-
-    runtime.primaryState =
-      nextState;
-
-    runtime.gesture =
-      metadata.gesture || null;
-
-    runtime.expression =
-      metadata.expression || null;
-
-    syncRuntimeToDOM(agentId);
-
-    emit(
-      "house-avatar-life:state-change",
-      {
-        agentId: agentId,
-        previousState:
-          currentState,
-        primaryState:
-          nextState,
-        gesture:
-          runtime.gesture,
-        expression:
-          runtime.expression
-      }
+      "blink"
     );
 
-    return true;
-  }
+    var life =
+      getLifeProfile(
+        record.config
+      );
 
-  function releasePrimaryState(
-    agentId,
-    expectedState
-  ) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      expectedState &&
-      runtime.primaryState !==
-        expectedState
-    ) {
-      return false;
-    }
-
-    var baseline =
-      deriveBaselineState(agentId);
-
-    runtime.primaryState =
-      baseline;
-
-    runtime.gesture = null;
-    runtime.expression = null;
-    runtime.stateToken += 1;
-
-    syncRuntimeToDOM(agentId);
-
-    return true;
-  }
-
-  function clearAgentTimers(agentId) {
-    var runtime =
-      getRuntime(agentId);
-
-    clearTimer(
-      runtime.blinkTimer
-    );
-
-    clearTimer(
-      runtime.gestureTimer
-    );
-
-    clearTimer(
-      runtime.stateTimer
-    );
-
-    runtime.blinkTimer = null;
-    runtime.gestureTimer = null;
-    runtime.stateTimer = null;
-
-    clearTimerList(
-      runtime.timers
-    );
-  }
-
-  function chooseBlinkType(agent) {
-    if (
-      chance(
-        agent.blinkProfile
-          .doubleBlinkChance
-      )
-    ) {
-      return "double";
-    }
-
-    if (
-      chance(
-        agent.blinkProfile
-          .slowBlinkChance
-      )
-    ) {
-      return "slow";
-    }
-
-    return "single";
-  }
-
-  function blinkAllowed(agentId) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      !LIFE.running ||
-      !LIFE.enabled ||
-      LIFE.reducedMotion ||
-      runtime.disabled
-    ) {
-      return false;
-    }
-
-    if (
-      runtime.primaryState ===
-        "traveling" ||
-      runtime.primaryState ===
-        "arriving" ||
-      runtime.primaryState ===
-        "gesturing" ||
-      runtime.primaryState ===
-        "sleepy" ||
-      runtime.primaryState ===
-        "disabled"
-    ) {
-      return false;
-    }
-
-    return true;
-  }
-
-  function scheduleNextBlink(
-    agentId,
-    options
-  ) {
-    options = options || {};
-
-    if (!agentExists(agentId)) {
-      return false;
-    }
-
-    var runtime =
-      getRuntime(agentId);
-
-    var agent =
-      getAgent(agentId);
-
-    clearTimer(
-      runtime.blinkTimer
-    );
-
-    runtime.blinkTimer = null;
-
-    if (
-      !LIFE.running ||
-      !LIFE.enabled ||
-      LIFE.reducedMotion ||
-      runtime.disabled
-    ) {
-      return false;
-    }
+    var blinkRange =
+      life.blinkRangeMs || [
+        DEFAULT_BLINK_MIN_MS,
+        DEFAULT_BLINK_MAX_MS
+      ];
 
     var delay =
-      options.initial
-        ? agent.blinkProfile
-            .initialOffset
-        : randomBetween(
-            agent.blinkProfile.min,
-            agent.blinkProfile.max
-          );
+      randomBetween(
+        blinkRange[0],
+        blinkRange[1]
+      );
 
-    runtime.blinkTimer =
-      scheduleTimeout(
-        function executeBlink() {
-          runtime.blinkTimer = null;
-
+    setTimer(
+      agentId,
+      "blink",
+      global.setTimeout(
+        function executeScheduledBlink() {
           if (
-            !blinkAllowed(agentId)
+            record.suspended ||
+            !state.active ||
+            !state.documentVisible
           ) {
-            scheduleNextBlink(
-              agentId
-            );
-
             return;
           }
 
-          performBlink(
-            agentId,
-            chooseBlinkType(agent)
+          performBlink(agentId);
+
+          scheduleBlink(
+            agentId
           );
         },
-        delay,
-        runtime.timers
-      );
-
-    return true;
-  }
-
-  function performBlink(
-    agentId,
-    blinkType
-  ) {
-    if (
-      !agentExists(agentId) ||
-      !blinkAllowed(agentId)
-    ) {
-      return false;
-    }
-
-    var runtime =
-      getRuntime(agentId);
-
-    runtime.blinkToken += 1;
-
-    var token =
-      runtime.blinkToken;
-
-    runtime.blinking = true;
-    runtime.blinkType =
-      blinkType || "single";
-
-    runtime.lastBlinkAt =
-      now();
-
-    syncRuntimeToDOM(agentId);
-
-    emit(
-      "house-avatar-life:blink",
-      {
-        agentId: agentId,
-        blinkType:
-          runtime.blinkType
-      }
+        delay
+      )
     );
-
-    var duration =
-      runtime.blinkType === "slow"
-        ? TIMING.BLINK_SLOW_MS
-        : TIMING.BLINK_SINGLE_MS;
-
-    scheduleTimeout(
-      function finishFirstBlink() {
-        if (
-          token !==
-          runtime.blinkToken
-        ) {
-          return;
-        }
-
-        runtime.blinking = false;
-        runtime.blinkType = null;
-
-        syncRuntimeToDOM(
-          agentId
-        );
-
-        if (
-          blinkType === "double"
-        ) {
-          scheduleTimeout(
-            function beginSecondBlink() {
-              if (
-                token !==
-                runtime.blinkToken
-              ) {
-                return;
-              }
-
-              runtime.blinking = true;
-              runtime.blinkType =
-                "single";
-
-              syncRuntimeToDOM(
-                agentId
-              );
-
-              scheduleTimeout(
-                function finishSecondBlink() {
-                  if (
-                    token !==
-                    runtime.blinkToken
-                  ) {
-                    return;
-                  }
-
-                  runtime.blinking =
-                    false;
-
-                  runtime.blinkType =
-                    null;
-
-                  syncRuntimeToDOM(
-                    agentId
-                  );
-
-                  scheduleNextBlink(
-                    agentId
-                  );
-                },
-                TIMING.BLINK_SINGLE_MS,
-                runtime.timers
-              );
-            },
-            TIMING.BLINK_DOUBLE_GAP_MS,
-            runtime.timers
-          );
-
-          return;
-        }
-
-        scheduleNextBlink(
-          agentId
-        );
-      },
-      duration,
-      runtime.timers
-    );
-
-    return true;
   }
 
-  function cancelBlink(agentId) {
-    var runtime =
-      getRuntime(agentId);
+  function performBlink(agentId) {
+    var record =
+      state.agents[agentId];
 
-    runtime.blinkToken += 1;
-
-    clearTimer(
-      runtime.blinkTimer
-    );
-
-    runtime.blinkTimer = null;
-    runtime.blinking = false;
-    runtime.blinkType = null;
-
-    syncRuntimeToDOM(agentId);
-  }
-
-  function deriveIdleStage() {
-    var idleDuration =
-      now() -
-      LIFE.lastInteractionAt;
-
-    if (idleDuration < 20000) {
-      return IDLE_STAGE.ACTIVE;
-    }
-
-    if (idleDuration < 45000) {
-      return IDLE_STAGE.SETTLED;
-    }
-
-    if (idleDuration < 90000) {
-      return IDLE_STAGE.IDLE;
-    }
-
-    return IDLE_STAGE.LONG_IDLE;
-  }
-
-  function updateIdleStage() {
-    var previousStage =
-      LIFE.idleStage;
-
-    LIFE.idleStage =
-      deriveIdleStage();
-
-    if (
-      previousStage !==
-      LIFE.idleStage
-    ) {
-      emit(
-        "house-avatar-life:idle-stage",
-        {
-          previousStage:
-            previousStage,
-          idleStage:
-            LIFE.idleStage,
-          idleDuration:
-            now() -
-            LIFE.lastInteractionAt
-        }
-      );
-    }
-  }
-
-  function recordInteraction(metadata) {
-    metadata = metadata || {};
-
-    var currentTime = now();
-
-    if (
-      currentTime -
-        LIFE.lastInteractionRecordedAt <
-      TIMING.INTERACTION_THROTTLE_MS
-    ) {
-      return false;
-    }
-
-    LIFE.lastInteractionRecordedAt =
-      currentTime;
-
-    LIFE.lastInteractionAt =
-      currentTime;
-
-    var previousStage =
-      LIFE.idleStage;
-
-    LIFE.idleStage =
-      IDLE_STAGE.ACTIVE;
-
-    if (
-      previousStage !==
-      IDLE_STAGE.ACTIVE
-    ) {
-      emit(
-        "house-avatar-life:interaction-reset",
-        {
-          source:
-            metadata.source ||
-            "unknown",
-          previousIdleStage:
-            previousStage
-        }
-      );
-    }
-
-    return true;
-  }
-
-  function bindInteractionTracking() {
-    if (LIFE.interactionBound) {
+    if (!record) {
       return;
     }
 
-    var definitions = [
-      {
-        target: document,
-        eventName: "pointerdown",
-        options: {
-          passive: true
-        }
-      },
-      {
-        target: document,
-        eventName: "touchstart",
-        options: {
-          passive: true
-        }
-      },
-      {
-        target: document,
-        eventName: "touchmove",
-        options: {
-          passive: true
-        }
-      },
-      {
-        target: document,
-        eventName: "wheel",
-        options: {
-          passive: true
-        }
-      },
-      {
-        target: document,
-        eventName: "scroll",
-        options: {
-          passive: true,
-          capture: true
-        }
-      },
-      {
-        target: document,
-        eventName: "keydown",
-        options: false
-      },
-      {
-        target: document,
-        eventName: "pointermove",
-        options: {
-          passive: true
-        }
-      }
-    ];
+    var life =
+      getLifeProfile(
+        record.config
+      );
 
-    definitions.forEach(
-      function bindDefinition(definition) {
-        var handler =
-          function interactionHandler() {
-            recordInteraction({
-              source:
-                definition.eventName
-            });
-          };
+    var roll =
+      Math.random();
 
-        definition.target.addEventListener(
-          definition.eventName,
-          handler,
-          definition.options
-        );
+    var slowBlinkChance =
+      clamp(
+        finiteNumber(
+          life.slowBlinkChance,
+          0.12
+        ),
+        0,
+        1
+      );
 
-        LIFE.interactionHandlers.push({
-          target:
-            definition.target,
-          eventName:
-            definition.eventName,
-          handler:
-            handler,
-          options:
-            definition.options
-        });
-      }
+    var doubleBlinkChance =
+      clamp(
+        finiteNumber(
+          life.doubleBlinkChance,
+          0.08
+        ),
+        0,
+        1
+      );
+
+    if (
+      roll <
+      doubleBlinkChance
+    ) {
+      applyTemporaryAttribute(
+        record.element,
+        "data-double-blink",
+        "true",
+        430
+      );
+
+      return;
+    }
+
+    if (
+      roll <
+      doubleBlinkChance +
+      slowBlinkChance
+    ) {
+      applyTemporaryAttribute(
+        record.element,
+        "data-slow-blink",
+        "true",
+        310
+      );
+
+      return;
+    }
+
+    applyTemporaryAttribute(
+      record.element,
+      "data-blink",
+      "true",
+      140
     );
-
-    LIFE.interactionBound = true;
   }
 
-  function unbindInteractionTracking() {
-    LIFE.interactionHandlers.forEach(
-      function removeHandler(binding) {
-        binding.target.removeEventListener(
-          binding.eventName,
-          binding.handler,
-          binding.options
-        );
-      }
+  function scheduleIdleGesture(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (
+      !record ||
+      record.suspended ||
+      state.reducedMotion ||
+      !state.active ||
+      !state.documentVisible
+    ) {
+      return;
+    }
+
+    clearTimer(
+      agentId,
+      "idle"
     );
 
-    LIFE.interactionHandlers.length = 0;
-    LIFE.interactionBound = false;
+    var life =
+      getLifeProfile(
+        record.config
+      );
+
+    var idleRange =
+      life.idleRangeMs || [
+        DEFAULT_IDLE_MIN_MS,
+        DEFAULT_IDLE_MAX_MS
+      ];
+
+    var delay =
+      randomBetween(
+        idleRange[0],
+        idleRange[1]
+      );
+
+    setTimer(
+      agentId,
+      "idle",
+      global.setTimeout(
+        function executeIdleGesture() {
+          if (
+            record.suspended ||
+            state.reducedMotion ||
+            !state.active ||
+            !state.documentVisible
+          ) {
+            return;
+          }
+
+          if (
+            mayPerformIdleGesture(
+              agentId
+            )
+          ) {
+            performIdleGesture(
+              agentId
+            );
+          }
+
+          scheduleIdleGesture(
+            agentId
+          );
+        },
+        delay
+      )
+    );
   }
 
-  function gestureAllowed(
-    agentId,
-    level
-  ) {
-    if (
-      !LIFE.running ||
-      !LIFE.enabled ||
-      LIFE.reducedMotion ||
-      LIFE.destroyed
-    ) {
+  function mayPerformIdleGesture(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
       return false;
     }
 
-    var runtime =
-      getRuntime(agentId);
+    var controllerState =
+      getControllerState();
 
     if (
-      runtime.disabled ||
-      runtime.traveling ||
-      runtime.arriving ||
-      runtime.speaking
-    ) {
-      return false;
-    }
-
-    if (
-      runtime.primaryState ===
-        "gesturing" ||
-      runtime.primaryState ===
-        "sleepy"
-    ) {
-      return false;
-    }
-
-    if (
-      LIFE.bridge &&
-      typeof LIFE.bridge
-        .isCameraTransitioning ===
-        "function" &&
-      LIFE.bridge
-        .isCameraTransitioning()
-    ) {
-      return false;
-    }
-
-    if (
-      level === "large" &&
-      LIFE.activeLargeGestureAgent &&
-      LIFE.activeLargeGestureAgent !==
+      controllerState.traveling &&
+      controllerState.currentAgentId ===
         agentId
     ) {
       return false;
     }
 
     if (
-      level === "large" &&
-      now() -
-        LIFE.lastLargeGestureAt <
-        TIMING.LARGE_GESTURE_MIN_GAP_MS
+      record.currentState ===
+        "speaking" ||
+      record.currentState ===
+        "traveling" ||
+      record.currentState ===
+        "arriving"
     ) {
       return false;
     }
@@ -1147,1480 +888,885 @@
     return true;
   }
 
-  function inferGestureState(
-    gestureName,
-    options
-  ) {
-    if (
-      options &&
-      options.sleepy
-    ) {
-      return "sleepy";
-    }
+  function performIdleGesture(agentId) {
+    var record =
+      state.agents[agentId];
 
-    if (
-      /yawn|eye-rest|sleep/i.test(
-        gestureName || ""
-      )
-    ) {
-      return "sleepy";
-    }
-
-    if (
-      /glance|head-tilt|brow/i.test(
-        gestureName || ""
-      )
-    ) {
-      return "glancing";
-    }
-
-    return "gesturing";
-  }
-
-  function performGesture(
-    agentId,
-    gestureName,
-    options
-  ) {
-    options = options || {};
-
-    if (
-      !agentExists(agentId) ||
-      !gestureName
-    ) {
-      return false;
-    }
-
-    var level =
-      options.level || "medium";
-
-    if (
-      !gestureAllowed(
-        agentId,
-        level
-      )
-    ) {
-      return false;
-    }
-
-    var runtime =
-      getRuntime(agentId);
-
-    cancelBlink(agentId);
-
-    runtime.gestureToken += 1;
-
-    var token =
-      runtime.gestureToken;
-
-    var gestureState =
-      inferGestureState(
-        gestureName,
-        options
-      );
-
-    var duration =
-      Number(options.duration) ||
-      (
-        level === "large"
-          ? randomBetween(
-              1900,
-              2800
-            )
-          : level === "minor"
-            ? randomBetween(
-                650,
-                1050
-              )
-            : randomBetween(
-                950,
-                1550
-              )
-      );
-
-    if (level === "large") {
-      LIFE.activeLargeGestureAgent =
-        agentId;
-
-      LIFE.lastLargeGestureAt =
-        now();
-    }
-
-    runtime.lastGestureAt =
-      now();
-
-    if (
-      gestureState === "sleepy"
-    ) {
-      runtime.lastYawnAt =
-        now();
-    }
-
-    setPrimaryState(
-      agentId,
-      gestureState,
-      {
-        gesture:
-          gestureName,
-        expression:
-          options.expression ||
-          null
-      }
-    );
-
-    emit(
-      "house-avatar-life:gesture",
-      {
-        agentId: agentId,
-        gesture:
-          gestureName,
-        level: level,
-        state:
-          gestureState,
-        duration: duration
-      }
-    );
-
-    runtime.gestureTimer =
-      scheduleTimeout(
-        function finishGesture() {
-          if (
-            token !==
-            runtime.gestureToken
-          ) {
-            return;
-          }
-
-          runtime.gestureTimer =
-            null;
-
-          if (
-            LIFE.activeLargeGestureAgent ===
-            agentId
-          ) {
-            LIFE.activeLargeGestureAgent =
-              null;
-          }
-
-          releasePrimaryState(
-            agentId,
-            gestureState
-          );
-
-          scheduleNextBlink(
-            agentId
-          );
-        },
-        duration,
-        runtime.timers
-      );
-
-    return true;
-  }
-
-  function evaluateActiveStage(
-    agentId
-  ) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      runtime.primaryState ===
-        "resting" ||
-      runtime.primaryState ===
-        "focused"
-    ) {
+    if (!record) {
       return;
     }
 
-    if (
-      runtime.primaryState ===
-        "glancing"
-    ) {
-      releasePrimaryState(
-        agentId,
-        "glancing"
+    var life =
+      getLifeProfile(
+        record.config
       );
-    }
-  }
 
-  function evaluateSettledStage(
-    agentId
-  ) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      now() -
-        runtime.lastGestureAt <
-      13000
-    ) {
-      return;
-    }
-
-    if (!chance(0.12)) {
-      return;
-    }
+    var gestures =
+      life.idleGestures ||
+      life.gestures ||
+      getDefaultGestures(
+        agentId
+      );
 
     var gesture =
-      choose(
-        getAgent(agentId)
-          .idleProfile
-          .minorGestures
+      chooseRandom(
+        gestures
       );
+
+    if (!gesture) {
+      return;
+    }
 
     performGesture(
       agentId,
       gesture,
-      {
-        level: "minor"
-      }
-    );
-  }
-
-  function evaluateIdleStage(
-    agentId
-  ) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      now() -
-        runtime.lastGestureAt <
-      15000
-    ) {
-      return;
-    }
-
-    var agent =
-      getAgent(agentId);
-
-    if (chance(0.11)) {
-      performGesture(
-        agentId,
-        choose(
-          agent.idleProfile
-            .mediumGestures
-        ),
-        {
-          level: "medium"
-        }
-      );
-
-      return;
-    }
-
-    if (chance(0.16)) {
-      performGesture(
-        agentId,
-        choose(
-          agent.idleProfile
-            .minorGestures
-        ),
-        {
-          level: "minor"
-        }
-      );
-    }
-  }
-
-  function evaluateLongIdleStage(
-    agentId
-  ) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      now() -
-        runtime.lastGestureAt <
-      18000
-    ) {
-      return;
-    }
-
-    var agent =
-      getAgent(agentId);
-
-    var yawnCooldownPassed =
-      now() -
-        runtime.lastYawnAt >
-      agent.idleProfile
-        .yawnCooldown;
-
-    var yawnEligible =
-      yawnCooldownPassed &&
-      chance(
-        agent.idleProfile
-          .yawnChance
-      );
-
-    if (yawnEligible) {
-      performGesture(
-        agentId,
-        choose(
-          agent.idleProfile
-            .rareGestures
-        ),
-        {
-          level: "large",
-          sleepy: true
-        }
-      );
-
-      return;
-    }
-
-    if (chance(0.08)) {
-      performGesture(
-        agentId,
-        choose(
-          agent.idleProfile
-            .mediumGestures
-        ),
-        {
-          level: "medium"
-        }
-      );
-
-      return;
-    }
-
-    if (chance(0.12)) {
-      performGesture(
-        agentId,
-        choose(
-          agent.idleProfile
-            .minorGestures
-        ),
-        {
-          level: "minor"
-        }
-      );
-    }
-  }
-
-  function evaluateAgentIdle(agentId) {
-    var runtime =
-      getRuntime(agentId);
-
-    if (
-      runtime.disabled ||
-      runtime.traveling ||
-      runtime.arriving ||
-      runtime.speaking
-    ) {
-      return;
-    }
-
-    if (
-      runtime.primaryState !==
-        "resting" &&
-      runtime.primaryState !==
-        "focused"
-    ) {
-      return;
-    }
-
-    if (
-      LIFE.idleStage ===
-      IDLE_STAGE.ACTIVE
-    ) {
-      evaluateActiveStage(
-        agentId
-      );
-
-      return;
-    }
-
-    if (
-      LIFE.idleStage ===
-      IDLE_STAGE.SETTLED
-    ) {
-      evaluateSettledStage(
-        agentId
-      );
-
-      return;
-    }
-
-    if (
-      LIFE.idleStage ===
-      IDLE_STAGE.IDLE
-    ) {
-      evaluateIdleStage(
-        agentId
-      );
-
-      return;
-    }
-
-    if (
-      LIFE.idleStage ===
-      IDLE_STAGE.LONG_IDLE
-    ) {
-      evaluateLongIdleStage(
-        agentId
-      );
-    }
-  }
-
-  function evaluateLife() {
-    if (
-      !LIFE.running ||
-      !LIFE.enabled ||
-      LIFE.destroyed ||
-      LIFE.reducedMotion
-    ) {
-      return;
-    }
-
-    if (
-      LIFE.bridge &&
-      typeof LIFE.bridge.isOpen ===
-        "function" &&
-      !LIFE.bridge.isOpen()
-    ) {
-      return;
-    }
-
-    updateIdleStage();
-
-    Object.keys(AGENTS).forEach(
-      function evaluateAgent(agentId) {
-        evaluateAgentIdle(
-          agentId
-        );
-      }
-    );
-  }
-
-  function startEvaluationTimer() {
-    clearTimer(
-      LIFE.evaluationTimer
-    );
-
-    LIFE.evaluationTimer = null;
-
-    if (
-      !LIFE.running ||
-      !LIFE.enabled ||
-      LIFE.reducedMotion
-    ) {
-      return;
-    }
-
-    LIFE.evaluationTimer =
-      global.setInterval(
-        evaluateLife,
-        TIMING.LIFE_EVALUATION_MS
-      );
-  }
-
-  function stopEvaluationTimer() {
-    clearTimer(
-      LIFE.evaluationTimer
-    );
-
-    LIFE.evaluationTimer = null;
-  }
-
-  function initializeAgentRuntime() {
-    Object.keys(AGENTS).forEach(
-      function initializeAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.currentRoomId =
-          AGENTS[agentId].homeRoom;
-
-        syncRuntimeToDOM(
-          agentId
-        );
-      }
-    );
-  }
-
-  function start(bridge) {
-    if (bridge) {
-      bindController(bridge);
-    }
-
-    if (
-      LIFE.destroyed ||
-      !LIFE.enabled
-    ) {
-      return false;
-    }
-
-    LIFE.running = true;
-
-    LIFE.reducedMotion =
-      resolveReducedMotion();
-
-    LIFE.lastInteractionAt =
-      now();
-
-    LIFE.idleStage =
-      IDLE_STAGE.ACTIVE;
-
-    bindInteractionTracking();
-    initializeAgentRuntime();
-
-    Object.keys(AGENTS).forEach(
-      function beginAgentLife(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.disabled = false;
-        runtime.traveling = false;
-        runtime.arriving = false;
-        runtime.speaking = false;
-
-        releasePrimaryState(
-          agentId
-        );
-
-        scheduleNextBlink(
-          agentId,
-          {
-            initial: true
-          }
-        );
-      }
-    );
-
-    startEvaluationTimer();
-
-    LIFE.initialized = true;
-
-    emit(
-      "house-avatar-life:start",
-      {
-        reducedMotion:
-          LIFE.reducedMotion,
-        agentCount:
-          Object.keys(AGENTS).length
-      }
-    );
-
-    return true;
-  }
-
-  function stop(options) {
-    options = options || {};
-
-    LIFE.running = false;
-
-    stopEvaluationTimer();
-
-    Object.keys(AGENTS).forEach(
-      function stopAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        clearAgentTimers(
-          agentId
-        );
-
-        runtime.blinkToken += 1;
-        runtime.gestureToken += 1;
-        runtime.stateToken += 1;
-
-        runtime.blinking = false;
-        runtime.blinkType = null;
-        runtime.gesture = null;
-        runtime.expression = null;
-
-        runtime.traveling = false;
-        runtime.arriving = false;
-        runtime.speaking = false;
-
-        runtime.primaryState =
-          runtime.disabled
-            ? "disabled"
-            : "resting";
-
-        syncRuntimeToDOM(
-          agentId
-        );
-      }
-    );
-
-    LIFE.activeLargeGestureAgent =
-      null;
-
-    emit(
-      "house-avatar-life:stop",
-      {
-        reason:
-          options.reason ||
-          "unspecified"
-      }
-    );
-
-    return true;
-  }
-
-  function pause() {
-    LIFE.enabled = false;
-
-    stop({
-      reason: "paused"
-    });
-
-    Object.keys(AGENTS).forEach(
-      function disableAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.disabled = true;
-
-        setPrimaryState(
-          agentId,
-          "disabled",
-          {
-            force: true
-          }
-        );
-      }
-    );
-
-    emit(
-      "house-avatar-life:pause"
-    );
-
-    return true;
-  }
-
-  function resume() {
-    LIFE.enabled = true;
-    LIFE.destroyed = false;
-
-    Object.keys(AGENTS).forEach(
-      function enableAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.disabled = false;
-
-        releasePrimaryState(
-          agentId,
-          "disabled"
-        );
-      }
-    );
-
-    emit(
-      "house-avatar-life:resume"
-    );
-
-    if (
-      LIFE.bridge &&
-      (
-        typeof LIFE.bridge.isOpen !==
-          "function" ||
-        LIFE.bridge.isOpen()
+      finiteNumber(
+        life.gestureDurationMs,
+        DEFAULT_GESTURE_DURATION_MS
       )
-    ) {
-      start();
+    );
+  }
+
+  function getLifeProfile(agent) {
+    if (!agent) {
+      return {};
     }
 
-    return true;
+    return (
+      agent.life ||
+      agent.lifeProfile ||
+      agent.behavior ||
+      {}
+    );
   }
 
-  function resolveReducedMotion() {
-    if (
-      LIFE.bridge &&
-      typeof LIFE.bridge
-        .getReducedMotion ===
-        "function"
-    ) {
-      return Boolean(
-        LIFE.bridge
-          .getReducedMotion()
-      );
-    }
+  function getDefaultGestures(agentId) {
+    var defaults = {
+      jeeves: [
+        "small-head-move",
+        "monocle-adjust",
+        "cuff-correction",
+        "jacket-smooth"
+      ],
 
-    if (
-      typeof global.matchMedia ===
-      "function"
-    ) {
-      return global
-        .matchMedia(
-          "(prefers-reduced-motion: reduce)"
-        )
-        .matches;
-    }
+      auren: [
+        "shoulder-shift",
+        "gear-adjust",
+        "tool-check",
+        "maker-stretch"
+      ],
 
-    return false;
+      soren: [
+        "slow-head-tilt",
+        "lens-adjust",
+        "seal-inspection",
+        "brief-eye-rest"
+      ],
+
+      elara: [
+        "slow-head-tilt",
+        "hair-adjust",
+        "signal-pulse",
+        "soft-stretch"
+      ]
+    };
+
+    return defaults[agentId] || [
+      "small-head-move",
+      "shoulder-shift",
+      "posture-reset"
+    ];
   }
 
-  function handleReducedMotionChange(
-    payload
-  ) {
-    LIFE.reducedMotion =
-      Boolean(
-        payload &&
-        payload.reducedMotion
-      );
-
-    Object.keys(AGENTS).forEach(
-      function handleAgent(agentId) {
-        cancelBlink(agentId);
-
-        var runtime =
-          getRuntime(agentId);
-
-        if (
-          LIFE.reducedMotion &&
-          (
-            runtime.primaryState ===
-              "gesturing" ||
-            runtime.primaryState ===
-              "glancing" ||
-            runtime.primaryState ===
-              "sleepy"
-          )
-        ) {
-          runtime.gestureToken += 1;
-
-          releasePrimaryState(
-            agentId
-          );
-        }
-      }
-    );
-
-    if (LIFE.reducedMotion) {
-      stopEvaluationTimer();
-    } else if (
-      LIFE.running &&
-      LIFE.enabled
-    ) {
-      Object.keys(AGENTS).forEach(
-        function restartBlink(agentId) {
-          scheduleNextBlink(
-            agentId,
-            {
-              initial: true
-            }
-          );
-        }
-      );
-
-      startEvaluationTimer();
-    }
-
-    emit(
-      "house-avatar-life:reduced-motion",
-      {
-        reducedMotion:
-          LIFE.reducedMotion
-      }
-    );
-
-    return true;
-  }
-
-  function bindController(bridge) {
-    if (!bridge) {
-      return false;
-    }
-
-    LIFE.bridge = bridge;
-
-    LIFE.reducedMotion =
-      resolveReducedMotion();
-
-    Object.keys(AGENTS).forEach(
-      function synchronizeAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        if (
-          typeof bridge.getAgentLocation ===
-          "function"
-        ) {
-          runtime.currentRoomId =
-            bridge.getAgentLocation(
-              agentId
-            );
-        }
-
-        syncRuntimeToDOM(
-          agentId
-        );
-      }
-    );
-
-    LIFE.initialized = true;
-
-    emit(
-      "house-avatar-life:controller-bound",
-      {
-        controllerContract:
-          bridge.contract || null
-      }
-    );
-
-    return true;
-  }
-
-  function handleControllerRenderStart() {
-    Object.keys(AGENTS).forEach(
-      function resetRenderedAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.blinkToken += 1;
-        runtime.gestureToken += 1;
-        runtime.stateToken += 1;
-
-        clearAgentTimers(
-          agentId
-        );
-      }
-    );
-
-    return true;
-  }
-
-  function handleViewModeChange(
-    payload
-  ) {
-    payload = payload || {};
-
-    var focusedRoom =
-      payload.focusedRoom || null;
-
-    Object.keys(AGENTS).forEach(
-      function updateAgentFocus(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        var agentRoom =
-          getCurrentAgentRoom(
-            agentId
-          );
-
-        runtime.cameraFocused =
-          payload.viewMode ===
-            DATA.viewModes.ROOM &&
-          Boolean(focusedRoom) &&
-          agentRoom === focusedRoom;
-
-        if (
-          !runtime.traveling &&
-          !runtime.arriving &&
-          !runtime.speaking &&
-          runtime.primaryState !==
-            "gesturing" &&
-          runtime.primaryState !==
-            "sleepy" &&
-          runtime.primaryState !==
-            "glancing"
-        ) {
-          releasePrimaryState(
-            agentId
-          );
-        }
-      }
-    );
-
-    return true;
-  }
-
-  function handleRoomSelected(
-    payload
-  ) {
-    payload = payload || {};
-
-    var roomId =
-      payload.roomId;
-
-    var assignedAgentId =
-      payload.agentId;
-
-    Object.keys(AGENTS).forEach(
-      function reactToSelection(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.roomFocused =
-          agentId ===
-          assignedAgentId;
-
-        if (
-          agentId ===
-          assignedAgentId
-        ) {
-          cancelBlink(agentId);
-
-          setPrimaryState(
-            agentId,
-            "focused",
-            {
-              expression:
-                getAgent(agentId)
-                  .focusedExpression,
-              force: true
-            }
-          );
-
-          var room =
-            getRoom(roomId);
-
-          var glanceGesture =
-            chooseRoomGlanceGesture(
-              agentId,
-              room
-            );
-
-          if (
-            glanceGesture &&
-            !LIFE.reducedMotion
-          ) {
-            scheduleTimeout(
-              function performAssignedGlance() {
-                performGesture(
-                  agentId,
-                  glanceGesture,
-                  {
-                    level: "minor",
-                    duration: 780
-                  }
-                );
-              },
-              110,
-              runtime.timers
-            );
-          }
-
-          return;
-        }
-
-        if (
-          !LIFE.reducedMotion &&
-          chance(0.18)
-        ) {
-          var minorGesture =
-            choose(
-              getAgent(agentId)
-                .idleProfile
-                .minorGestures
-            );
-
-          scheduleTimeout(
-            function performOtherGuideReaction() {
-              performGesture(
-                agentId,
-                minorGesture,
-                {
-                  level: "minor",
-                  duration: 700
-                }
-              );
-            },
-            randomBetween(
-              180,
-              520
-            ),
-            runtime.timers
-          );
-        }
-      }
-    );
-
-    emit(
-      "house-avatar-life:room-selected",
-      {
-        roomId: roomId,
-        agentId:
-          assignedAgentId
-      }
-    );
-
-    return true;
-  }
-
-  function chooseRoomGlanceGesture(
+  function performGesture(
     agentId,
-    room
+    gesture,
+    duration
   ) {
-    var agent =
-      getAgent(agentId);
-
-    var preferred =
-      agent.idleProfile
-        .minorGestures.filter(
-          function filterGlance(gesture) {
-            return /glance|head|brow|signal/i.test(
-              gesture
-            );
-          }
-        );
-
-    if (preferred.length) {
-      return choose(preferred);
-    }
-
-    return choose(
-      agent.idleProfile
-        .minorGestures
-    );
-  }
-
-  function handleCameraSettled(
-    payload
-  ) {
-    payload = payload || {};
-
-    Object.keys(AGENTS).forEach(
-      function settleAgent(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        var currentRoom =
-          getCurrentAgentRoom(
-            agentId
-          );
-
-        runtime.cameraFocused =
-          payload.viewMode ===
-            DATA.viewModes.ROOM &&
-          payload.roomId ===
-            currentRoom;
-
-        if (
-          !runtime.traveling &&
-          !runtime.arriving &&
-          !runtime.speaking
-        ) {
-          releasePrimaryState(
-            agentId
-          );
-        }
-      }
-    );
-
-    return true;
-  }
-
-  function handleReturnToEstate() {
-    Object.keys(AGENTS).forEach(
-      function returnAgentToAmbient(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        runtime.cameraFocused = false;
-        runtime.roomFocused = false;
-
-        if (
-          !runtime.traveling &&
-          !runtime.arriving &&
-          !runtime.speaking
-        ) {
-          releasePrimaryState(
-            agentId
-          );
-        }
-      }
-    );
-
-    return true;
-  }
-
-  function handleTravelStart(
-    payload
-  ) {
-    payload = payload || {};
-
-    var agentId =
-      payload.agentId;
-
-    if (!agentExists(agentId)) {
-      return false;
-    }
-
-    var runtime =
-      getRuntime(agentId);
-
-    cancelBlink(agentId);
-
-    runtime.traveling = true;
-    runtime.arriving = false;
-    runtime.lastTravelAt =
-      now();
-
-    runtime.currentRoomId =
-      getCurrentAgentRoom(
-        agentId
-      );
-
-    setPrimaryState(
-      agentId,
-      "traveling",
-      {
-        expression:
-          payload.expression ||
-          getAgent(agentId)
-            .travelExpression,
-        force: true
-      }
-    );
-
-    emit(
-      "house-avatar-life:travel-start",
-      {
-        agentId: agentId,
-        roomId:
-          payload.roomId,
-        path:
-          Array.isArray(
-            payload.path
-          )
-            ? payload.path.slice()
-            : []
-      }
-    );
-
-    return true;
-  }
-
-  function handleTravelStep(
-    payload
-  ) {
-    payload = payload || {};
-
-    var agentId =
-      payload.agentId;
-
-    if (!agentExists(agentId)) {
-      return false;
-    }
-
-    var runtime =
-      getRuntime(agentId);
-
-    if (payload.roomId) {
-      runtime.currentRoomId =
-        payload.roomId;
-    }
-
-    return true;
-  }
-
-  function handleTravelCancel() {
-    Object.keys(AGENTS).forEach(
-      function cancelAgentTravel(agentId) {
-        var runtime =
-          getRuntime(agentId);
-
-        if (!runtime.traveling) {
-          return;
-        }
-
-        runtime.traveling = false;
-        runtime.arriving = false;
-
-        releasePrimaryState(
-          agentId,
-          "traveling"
-        );
-
-        scheduleNextBlink(
-          agentId
-        );
-      }
-    );
-
-    return true;
-  }
-
-  function handleArrival(
-    payload
-  ) {
-    payload = payload || {};
-
-    var agentId =
-      payload.agentId;
-
-    var roomId =
-      payload.roomId;
+    var record =
+      state.agents[agentId];
 
     if (
-      !agentExists(agentId) ||
-      !roomId
+      !record ||
+      !gesture
     ) {
       return false;
     }
 
-    var runtime =
-      getRuntime(agentId);
-
-    runtime.traveling = false;
-    runtime.arriving = true;
-    runtime.lastArrivalAt =
-      now();
-
-    runtime.currentRoomId =
-      roomId;
-
-    cancelBlink(agentId);
-
-    setPrimaryState(
-      agentId,
-      "arriving",
-      {
-        gesture:
-          payload.arrivalGesture ||
-          getAgent(agentId)
-            .arrivalGesture,
-        force: true
-      }
-    );
+    duration =
+      finiteNumber(
+        duration,
+        DEFAULT_GESTURE_DURATION_MS
+      );
 
     var token =
-      ++runtime.stateToken;
+      incrementToken(
+        state.gestureTokens,
+        agentId
+      );
 
-    runtime.stateTimer =
-      scheduleTimeout(
-        function finishArrivalState() {
+    clearTimer(
+      agentId,
+      "gesture"
+    );
+
+    record.currentGesture =
+      gesture;
+
+    record.element.setAttribute(
+      "data-gesture",
+      gesture
+    );
+
+    emit(
+      GESTURE_EVENT,
+      {
+        contract: CONTRACT,
+        agentId: agentId,
+        roomId: record.roomId,
+        gesture: gesture,
+        duration: duration
+      }
+    );
+
+    setTimer(
+      agentId,
+      "gesture",
+      global.setTimeout(
+        function clearGestureAfterDuration() {
           if (
-            token !==
-            runtime.stateToken
+            state.gestureTokens[
+              agentId
+            ] !== token
           ) {
             return;
           }
 
-          runtime.arriving = false;
-          runtime.stateTimer = null;
-
-          releasePrimaryState(
-            agentId,
-            "arriving"
-          );
-
-          scheduleNextBlink(
+          clearGesture(
             agentId
           );
         },
-        LIFE.reducedMotion
-          ? 0
-          : TIMING.ARRIVAL_HOLD_MS,
-        runtime.timers
-      );
-
-    emit(
-      "house-avatar-life:arrival",
-      {
-        agentId: agentId,
-        roomId: roomId,
-        sameRoom:
-          Boolean(
-            payload.sameRoom
-          ),
-        gesture:
-          payload.arrivalGesture ||
-          getAgent(agentId)
-            .arrivalGesture
-      }
+        state.reducedMotion
+          ? 80
+          : duration
+      )
     );
 
     return true;
   }
 
-  function handleAgentLocationsReset(
-    locations
-  ) {
-    Object.keys(AGENTS).forEach(
-      function resetAgentRuntime(agentId) {
-        var runtime =
-          getRuntime(agentId);
+  function clearGesture(agentId) {
+    var record =
+      state.agents[agentId];
 
-        runtime.currentRoomId =
-          locations &&
-          locations[agentId]
-            ? locations[agentId]
-            : getAgent(agentId)
-                .homeRoom;
-
-        runtime.traveling = false;
-        runtime.arriving = false;
-        runtime.cameraFocused =
-          false;
-        runtime.roomFocused =
-          false;
-
-        releasePrimaryState(
-          agentId
-        );
-      }
-    );
-
-    return true;
-  }
-
-  function getCurrentAgentRoom(
-    agentId
-  ) {
-    if (
-      LIFE.bridge &&
-      typeof LIFE.bridge
-        .getAgentLocation ===
-        "function"
-    ) {
-      return LIFE.bridge
-        .getAgentLocation(
-          agentId
-        );
+    if (!record) {
+      return;
     }
 
-    return getRuntime(agentId)
-      .currentRoomId;
+    record.currentGesture =
+      null;
+
+    record.element.removeAttribute(
+      "data-gesture"
+    );
+
+    clearTimer(
+      agentId,
+      "gesture"
+    );
   }
 
-  function setSpeaking(
+  function setExpression(
     agentId,
-    speaking,
-    expression
+    expression,
+    duration
   ) {
-    if (!agentExists(agentId)) {
+    var record =
+      state.agents[agentId];
+
+    if (
+      !record ||
+      !expression
+    ) {
       return false;
     }
 
-    var runtime =
-      getRuntime(agentId);
-
-    runtime.speaking =
-      Boolean(speaking);
-
-    if (runtime.speaking) {
-      cancelBlink(agentId);
-
-      setPrimaryState(
-        agentId,
-        "speaking",
-        {
-          expression:
-            expression ||
-            "speaking",
-          force: true
-        }
-      );
-    } else {
-      releasePrimaryState(
-        agentId,
-        "speaking"
+    duration =
+      finiteNumber(
+        duration,
+        DEFAULT_EXPRESSION_DURATION_MS
       );
 
-      scheduleNextBlink(
+    var token =
+      incrementToken(
+        state.expressionTokens,
         agentId
+      );
+
+    clearTimer(
+      agentId,
+      "expression"
+    );
+
+    record.currentExpression =
+      expression;
+
+    record.element.setAttribute(
+      "data-expression",
+      expression
+    );
+
+    emit(
+      EXPRESSION_EVENT,
+      {
+        contract: CONTRACT,
+        agentId: agentId,
+        roomId: record.roomId,
+        expression: expression,
+        duration: duration
+      }
+    );
+
+    if (duration > 0) {
+      setTimer(
+        agentId,
+        "expression",
+        global.setTimeout(
+          function clearExpressionAfterDuration() {
+            if (
+              state.expressionTokens[
+                agentId
+              ] !== token
+            ) {
+              return;
+            }
+
+            clearExpression(
+              agentId
+            );
+          },
+          state.reducedMotion
+            ? 100
+            : duration
+        )
       );
     }
 
     return true;
   }
 
-  function triggerGesture(
+  function clearExpression(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return;
+    }
+
+    record.currentExpression =
+      null;
+
+    record.element.removeAttribute(
+      "data-expression"
+    );
+
+    clearTimer(
+      agentId,
+      "expression"
+    );
+  }
+
+  function setState(
     agentId,
-    gestureName,
+    nextState,
     options
   ) {
-    return performGesture(
-      agentId,
-      gestureName,
-      options || {}
+    var record =
+      state.agents[agentId];
+
+    if (
+      !record ||
+      !nextState
+    ) {
+      return false;
+    }
+
+    options =
+      options || {};
+
+    if (options.roomId) {
+      record.roomId =
+        options.roomId;
+
+      record.element.setAttribute(
+        "data-house-room",
+        options.roomId
+      );
+    }
+
+    var previousState =
+      record.currentState;
+
+    record.currentState =
+      nextState;
+
+    record.element.setAttribute(
+      "data-avatar-state",
+      nextState
     );
+
+    emit(
+      STATE_EVENT,
+      {
+        contract: CONTRACT,
+        agentId: agentId,
+        roomId: record.roomId,
+        previousState:
+          previousState,
+        state:
+          nextState
+      }
+    );
+
+    if (
+      finiteNumber(
+        options.duration,
+        0
+      ) > 0
+    ) {
+      scheduleStateReset(
+        agentId,
+        options.duration,
+        options.returnState ||
+        "resting"
+      );
+    }
+
+    return true;
   }
 
-  function triggerBlink(
+  function scheduleStateReset(
     agentId,
-    blinkType
+    duration,
+    returnState
   ) {
-    return performBlink(
+    var token =
+      incrementToken(
+        state.stateTokens,
+        agentId
+      );
+
+    clearTimer(
       agentId,
-      blinkType || "single"
+      "state"
+    );
+
+    setTimer(
+      agentId,
+      "state",
+      global.setTimeout(
+        function resetResidentState() {
+          if (
+            state.stateTokens[
+              agentId
+            ] !== token
+          ) {
+            return;
+          }
+
+          setState(
+            agentId,
+            returnState || "resting"
+          );
+        },
+        state.reducedMotion
+          ? 80
+          : duration
+      )
     );
   }
 
-  function getAvatarLifeState(
-    agentId
+  function travel(agentId, roomId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return false;
+    }
+
+    clearGesture(
+      agentId
+    );
+
+    clearExpression(
+      agentId
+    );
+
+    setState(
+      agentId,
+      "traveling",
+      {
+        roomId: roomId
+      }
+    );
+
+    performGesture(
+      agentId,
+      getTravelGesture(agentId),
+      DEFAULT_TRAVEL_DURATION_MS
+    );
+
+    return true;
+  }
+
+  function arrive(agentId, roomId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return false;
+    }
+
+    setState(
+      agentId,
+      "arriving",
+      {
+        roomId: roomId,
+        duration:
+          DEFAULT_ARRIVAL_DURATION_MS,
+        returnState:
+          "focused"
+      }
+    );
+
+    setExpression(
+      agentId,
+      getArrivalExpression(
+        agentId
+      ),
+      DEFAULT_ARRIVAL_DURATION_MS +
+      400
+    );
+
+    performGesture(
+      agentId,
+      getArrivalGesture(
+        agentId
+      ),
+      DEFAULT_ARRIVAL_DURATION_MS +
+      300
+    );
+
+    return true;
+  }
+
+  function requestAttention(agentId, roomId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return false;
+    }
+
+    record.roomId =
+      roomId ||
+      record.roomId;
+
+    clearGesture(
+      agentId
+    );
+
+    setState(
+      agentId,
+      "focused",
+      {
+        roomId:
+          record.roomId
+      }
+    );
+
+    setExpression(
+      agentId,
+      getAttentionExpression(
+        agentId
+      ),
+      2200
+    );
+
+    performGesture(
+      agentId,
+      getAttentionGesture(
+        agentId
+      ),
+      1500
+    );
+
+    emit(
+      ATTENTION_EVENT,
+      {
+        contract: CONTRACT,
+        agentId: agentId,
+        roomId: record.roomId
+      }
+    );
+
+    return true;
+  }
+
+  function speak(
+    agentId,
+    duration,
+    options
   ) {
-    if (!agentExists(agentId)) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return false;
+    }
+
+    options =
+      options || {};
+
+    duration =
+      finiteNumber(
+        duration,
+        DEFAULT_SPEAKING_DURATION_MS
+      );
+
+    setState(
+      agentId,
+      "speaking",
+      {
+        roomId:
+          options.roomId ||
+          record.roomId,
+        duration:
+          duration,
+        returnState:
+          options.returnState ||
+          "focused"
+      }
+    );
+
+    setExpression(
+      agentId,
+      options.expression ||
+      "speaking",
+      duration
+    );
+
+    if (options.gesture) {
+      performGesture(
+        agentId,
+        options.gesture,
+        duration
+      );
+    }
+
+    return true;
+  }
+
+  function rest(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return false;
+    }
+
+    clearTransientPresentation(
+      agentId
+    );
+
+    setState(
+      agentId,
+      "resting"
+    );
+
+    return true;
+  }
+
+  function focus(agentId, roomId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return false;
+    }
+
+    setState(
+      agentId,
+      "focused",
+      {
+        roomId:
+          roomId ||
+          record.roomId
+      }
+    );
+
+    return true;
+  }
+
+  function getTravelGesture(agentId) {
+    var gestures = {
+      jeeves:
+        "posture-reset",
+
+      auren:
+        "shoulder-shift",
+
+      soren:
+        "slow-head-tilt",
+
+      elara:
+        "signal-pulse"
+    };
+
+    return gestures[agentId] ||
+      "posture-reset";
+  }
+
+  function getArrivalGesture(agentId) {
+    var gestures = {
+      jeeves:
+        "formal-welcome",
+
+      auren:
+        "tool-ready",
+
+      soren:
+        "diagnostic-attend",
+
+      elara:
+        "signal-greeting"
+    };
+
+    return gestures[agentId] ||
+      "small-head-move";
+  }
+
+  function getArrivalExpression(agentId) {
+    var expressions = {
+      jeeves:
+        "attentive-formal",
+
+      auren:
+        "ready-practical",
+
+      soren:
+        "diagnostic-attention",
+
+      elara:
+        "warm-attention"
+    };
+
+    return expressions[agentId] ||
+      "warm-attention";
+  }
+
+  function getAttentionGesture(agentId) {
+    var gestures = {
+      jeeves:
+        "formal-reference",
+
+      auren:
+        "teaching-ready",
+
+      soren:
+        "diagnostic-attend",
+
+      elara:
+        "signal-illumination"
+    };
+
+    return gestures[agentId] ||
+      "small-head-move";
+  }
+
+  function getAttentionExpression(agentId) {
+    var expressions = {
+      jeeves:
+        "attentive-formal",
+
+      auren:
+        "ready-practical",
+
+      soren:
+        "diagnostic-attention",
+
+      elara:
+        "warm-attention"
+    };
+
+    return expressions[agentId] ||
+      "warm-attention";
+  }
+
+  function clearTransientPresentation(agentId) {
+    clearGesture(
+      agentId
+    );
+
+    clearExpression(
+      agentId
+    );
+
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
+      return;
+    }
+
+    record.element.removeAttribute(
+      "data-blink"
+    );
+
+    record.element.removeAttribute(
+      "data-slow-blink"
+    );
+
+    record.element.removeAttribute(
+      "data-double-blink"
+    );
+  }
+
+  function applyTemporaryAttribute(
+    element,
+    name,
+    value,
+    duration
+  ) {
+    if (!element) {
+      return;
+    }
+
+    element.setAttribute(
+      name,
+      value
+    );
+
+    global.setTimeout(
+      function removeTemporaryAttribute() {
+        if (element) {
+          element.removeAttribute(
+            name
+          );
+        }
+      },
+      state.reducedMotion
+        ? 60
+        : duration
+    );
+  }
+
+  function incrementToken(collection, key) {
+    collection[key] =
+      finiteNumber(
+        collection[key],
+        0
+      ) + 1;
+
+    return collection[key];
+  }
+
+  function ensureTimerRecord(agentId) {
+    if (!state.timers[agentId]) {
+      state.timers[agentId] = {
+        blink: null,
+        idle: null,
+        gesture: null,
+        expression: null,
+        state: null
+      };
+    }
+
+    return state.timers[agentId];
+  }
+
+  function setTimer(agentId, timerName, timerId) {
+    var record =
+      ensureTimerRecord(
+        agentId
+      );
+
+    record[timerName] =
+      timerId;
+  }
+
+  function clearTimer(agentId, timerName) {
+    var record =
+      state.timers[agentId];
+
+    if (
+      !record ||
+      !record[timerName]
+    ) {
+      return;
+    }
+
+    global.clearTimeout(
+      record[timerName]
+    );
+
+    record[timerName] =
+      null;
+  }
+
+  function clearAllTimers() {
+    Object.keys(
+      state.timers
+    ).forEach(
+      function clearResidentTimers(agentId) {
+        [
+          "blink",
+          "idle",
+          "gesture",
+          "expression",
+          "state"
+        ].forEach(
+          function clearNamedTimer(timerName) {
+            clearTimer(
+              agentId,
+              timerName
+            );
+          }
+        );
+      }
+    );
+  }
+
+  function getResidentState(agentId) {
+    var record =
+      state.agents[agentId];
+
+    if (!record) {
       return null;
     }
 
-    var runtime =
-      getRuntime(agentId);
-
     return {
-      contract: CONTRACT,
-      agentId: agentId,
-
-      primaryState:
-        runtime.primaryState,
-      previousState:
-        runtime.previousState,
-
-      gesture:
-        runtime.gesture,
+      id: record.id,
+      roomId: record.roomId,
+      state: record.currentState,
+      gesture: record.currentGesture,
       expression:
-        runtime.expression,
-
-      blinking:
-        runtime.blinking,
-      blinkType:
-        runtime.blinkType,
-
-      traveling:
-        runtime.traveling,
-      arriving:
-        runtime.arriving,
-      speaking:
-        runtime.speaking,
-      disabled:
-        runtime.disabled,
-
-      cameraFocused:
-        runtime.cameraFocused,
-      roomFocused:
-        runtime.roomFocused,
-
-      currentRoomId:
-        getCurrentAgentRoom(
-          agentId
-        ),
-
-      lastBlinkAt:
-        runtime.lastBlinkAt,
-      lastGestureAt:
-        runtime.lastGestureAt,
-      lastYawnAt:
-        runtime.lastYawnAt,
-      lastTravelAt:
-        runtime.lastTravelAt,
-      lastArrivalAt:
-        runtime.lastArrivalAt,
-
-      idleStage:
-        LIFE.idleStage,
-      lifeEnabled:
-        LIFE.enabled,
-      running:
-        LIFE.running,
-      reducedMotion:
-        LIFE.reducedMotion
+        record.currentExpression,
+      suspended:
+        record.suspended
     };
   }
 
   function getState() {
-    var agents = {};
+    var residents =
+      Object.create(null);
 
-    Object.keys(AGENTS).forEach(
-      function collectAgentState(agentId) {
-        agents[agentId] =
-          getAvatarLifeState(
+    Object.keys(
+      state.agents
+    ).forEach(
+      function collectResidentState(agentId) {
+        residents[agentId] =
+          getResidentState(
             agentId
           );
       }
@@ -2628,186 +1774,155 @@
 
     return {
       contract: CONTRACT,
-      initialized:
-        LIFE.initialized,
-      enabled:
-        LIFE.enabled,
-      running:
-        LIFE.running,
-      destroyed:
-        LIFE.destroyed,
+      version: VERSION,
+      mounted: state.mounted,
+      destroyed: state.destroyed,
+      active: state.active,
+      documentVisible:
+        state.documentVisible,
       reducedMotion:
-        LIFE.reducedMotion,
-
-      lastInteractionAt:
-        LIFE.lastInteractionAt,
-      idleStage:
-        LIFE.idleStage,
-
-      activeLargeGestureAgent:
-        LIFE.activeLargeGestureAgent,
-      lastLargeGestureAt:
-        LIFE.lastLargeGestureAt,
-
-      agents: agents
+        state.reducedMotion,
+      residents: residents
     };
   }
 
   function destroy() {
-    stop({
-      reason: "destroy"
-    });
+    if (state.destroyed) {
+      return;
+    }
 
-    unbindInteractionTracking();
+    state.active = false;
+    state.mounted = false;
+    state.destroyed = true;
 
-    clearTimerList(
-      LIFE.globalTimers
+    clearAllTimers();
+    removeAllListeners();
+
+    Object.keys(
+      state.agents
+    ).forEach(
+      function clearResident(agentId) {
+        clearTransientPresentation(
+          agentId
+        );
+      }
     );
 
-    LIFE.bridge = null;
-    LIFE.destroyed = true;
-    LIFE.initialized = false;
+    state.context = null;
+    state.controller = null;
+    state.panel = null;
 
-    emit(
-      "house-avatar-life:destroy"
-    );
+    state.roomElements =
+      Object.create(null);
 
-    return true;
+    state.avatarMounts =
+      Object.create(null);
+
+    state.agents =
+      Object.create(null);
+
+    state.timers =
+      Object.create(null);
+
+    state.gestureTokens =
+      Object.create(null);
+
+    state.expressionTokens =
+      Object.create(null);
+
+    state.stateTokens =
+      Object.create(null);
   }
 
-  function boot() {
-    initializeAgentRuntime();
-
+  function escapeSelector(value) {
     if (
-      global.HOUSE_CONTROL_PAD &&
-      typeof global.HOUSE_CONTROL_PAD
-        .getAvatarLifeBridge ===
+      global.CSS &&
+      typeof global.CSS.escape ===
         "function"
     ) {
-      bindController(
-        global.HOUSE_CONTROL_PAD
-          .getAvatarLifeBridge()
+      return global.CSS.escape(
+        String(value)
       );
     }
 
-    LIFE.initialized = true;
-
-    emit(
-      "house-avatar-life:ready",
-      {
-        agentCount:
-          Object.keys(AGENTS).length,
-        dataContract:
-          DATA.contract
-      }
+    return String(value).replace(
+      /["\\]/g,
+      "\\$&"
     );
-
-    if (
-      global.HOUSE_CONTROL_PAD &&
-      typeof global.HOUSE_CONTROL_PAD
-        .getEstateState ===
-        "function"
-    ) {
-      var estateState =
-        global.HOUSE_CONTROL_PAD
-          .getEstateState();
-
-      if (estateState.isOpen) {
-        start();
-      }
-    }
   }
 
-  global.HOUSE_AVATAR_LIFE = {
+  var API = {
     contract: CONTRACT,
-    dataContract:
-      DATA.contract,
+    version: VERSION,
 
-    bindController:
-      bindController,
+    role:
+      "avatar-life",
 
-    start:
-      start,
+    mount: mount,
 
-    stop:
-      stop,
+    startAllResidents:
+      startAllResidents,
 
-    pause:
-      pause,
+    suspendAllResidents:
+      suspendAllResidents,
 
-    resume:
-      resume,
+    restartAllResidents:
+      restartAllResidents,
 
-    destroy:
-      destroy,
+    setState:
+      setState,
 
-    recordInteraction:
-      recordInteraction,
+    performGesture:
+      performGesture,
 
-    triggerBlink:
-      triggerBlink,
+    clearGesture:
+      clearGesture,
 
-    triggerGesture:
-      triggerGesture,
+    setExpression:
+      setExpression,
 
-    setSpeaking:
-      setSpeaking,
+    clearExpression:
+      clearExpression,
 
-    getAvatarLifeState:
-      getAvatarLifeState,
+    travel:
+      travel,
+
+    arrive:
+      arrive,
+
+    requestAttention:
+      requestAttention,
+
+    speak:
+      speak,
+
+    rest:
+      rest,
+
+    focus:
+      focus,
+
+    getResidentState:
+      getResidentState,
 
     getState:
       getState,
 
-    handleControllerRenderStart:
-      handleControllerRenderStart,
-
-    handleViewModeChange:
-      handleViewModeChange,
-
-    handleRoomSelected:
-      handleRoomSelected,
-
-    handleCameraSettled:
-      handleCameraSettled,
-
-    handleReturnToEstate:
-      handleReturnToEstate,
-
-    handleTravelStart:
-      handleTravelStart,
-
-    handleTravelStep:
-      handleTravelStep,
-
-    handleTravelCancel:
-      handleTravelCancel,
-
-    handleArrival:
-      handleArrival,
-
-    handleAgentLocationsReset:
-      handleAgentLocationsReset,
-
-    handleReducedMotionChange:
-      handleReducedMotionChange
+    destroy:
+      destroy
   };
 
-  if (
-    document.readyState ===
-    "loading"
-  ) {
-    document.addEventListener(
-      "DOMContentLoaded",
-      boot,
-      {
-        once: true
-      }
-    );
-  } else {
-    global.setTimeout(
-      boot,
-      0
-    );
-  }
+  global.HOUSE_AVATAR_LIFE =
+    API;
+
+  emit(
+    READY_EVENT,
+    {
+      contract: CONTRACT,
+      version: VERSION,
+      role: "avatar-life",
+      runtimeObject:
+        "HOUSE_AVATAR_LIFE"
+    }
+  );
 })(window);

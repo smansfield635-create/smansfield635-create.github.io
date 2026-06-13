@@ -70,6 +70,8 @@
     content="Diamond Gate Bridge begins with three choices: take the Coherence Diagnostic, enter the website through the Compass, or open the Website Guide for instructions first."
   >
 
+  <link rel="stylesheet" href="/assets/house-control-pad/house.control-pad.css">
+
   <style>
     :root{
       color-scheme:dark;
@@ -1313,6 +1315,59 @@
         animation:none!important;
       }
     }
+
+    /* House Control Pad door */
+    .house-map-door{
+      position:relative;
+      z-index:3;
+      width:min(var(--max),calc(100% - 28px));
+      margin:0 auto;
+      padding:max(16px,env(safe-area-inset-top)) 0 4px;
+      display:grid;
+      place-items:center;
+    }
+
+    .house-map-door__link{
+      position:relative;
+      width:clamp(13rem,28vw,20rem);
+      aspect-ratio:220 / 160;
+      display:grid;
+      place-items:center;
+      color:var(--ink);
+    }
+
+    .house-map-door__link:hover,
+    .house-map-door__link:focus-visible{
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .house-map-door__svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      pointer-events:none;
+    }
+
+    .house-map-door__label{
+      position:relative;
+      z-index:2;
+      color:rgba(255,244,216,.98);
+      font-size:clamp(.82rem,2vw,1.18rem);
+      font-weight:950;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.95),0 0 10px rgba(0,28,90,.80);
+      pointer-events:none;
+    }
+
+    @media (max-width:760px){
+      .house-map-door__link{
+        width:min(76vw,17rem);
+      }
+    }
   </style>
 </head>
 
@@ -1410,6 +1465,21 @@
   </svg>
 
   <a class="skip" href="#compass-entry">Skip to Compass</a>
+
+  <div class="house-map-door">
+    <a
+      class="house-map-door__link"
+      href="/door/"
+      data-house-control-pad-open
+      data-house-context="root"
+      aria-label="House Map"
+    >
+      <svg class="house-map-door__svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+        <use href="#compassOrganicGem"></use>
+      </svg>
+      <span class="house-map-door__label">House Map</span>
+    </a>
+  </div>
 
   <div class="shell">
     <header class="topbar" aria-label="Compass header">
@@ -1772,5 +1842,8 @@ deploy_marker=COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_DEPLOY_MARKER_v1
       COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_HTML_TNT_v1 · Coherence Gateway · Website Guide promoted · Split navigation · Compass preserved downstream · Four Bridges · Systems Hatch preserved.
     </footer>
   </div>
+
+  <script src="/assets/house-control-pad/house.control-pad.js"></script>
 </body>
 </html>
+``` [❶](code://python)

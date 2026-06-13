@@ -1,106 +1,122 @@
 /* /showroom/globe/audralia/index.css */
-/* AUDRALIA_G1_PUBLIC_3D_PLANET_PRESENTATION_CSS_TNT_v1 */
-/* Full-file construction. */
+/* AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2 */
+/* Full-file replacement. */
 /*
 Purpose:
-- Provide the complete presentation authority for the Audralia G1 public 3D planet route.
-- Guarantee nonzero stage and mount dimensions for the WebGL runtime.
-- Present the terrain, ocean, cloud, atmosphere, controls, status, fallback,
-  loading, held, ready, context-loss, and responsive states.
-- Preserve keyboard access, safe-area support, reduced-motion support,
-  mobile stability, and full-bleed planet presentation.
+- Present the Audralia Conservatory as a protected planetary holder.
+- Preserve nonzero stage and mount dimensions for the existing runtime.
+- Keep the planet unobstructed by ordinary controls and page content.
+- Place instructions, controls, and coming-soon attractions below the stage.
+- Support native information dialogs, responsive layout, safe areas,
+  keyboard focus, reduced motion, and mobile browser stability.
 
 Owns:
-- route-stage dimensions
-- globe-mount dimensions
+- page presentation
+- header presentation
+- stage and mount dimensions
 - canvas placement
-- control placement
 - runtime-state presentation
+- interaction-guide presentation
+- control-toolbar presentation
+- attraction-card presentation
+- Audralia information-dialog presentation
 - responsive layout
-- focus-visible presentation
 - safe-area spacing
-- overflow and clipping prevention
-- fallback-canvas presentation
+- focus-visible presentation
+- overflow prevention
 
 Does not own:
 - planet geometry
 - WebGL or Canvas rendering
-- runtime logic
-- interaction behavior
+- runtime interaction logic
+- House Control Pad presentation
 - route orchestration
 - model registration
-- final visual acceptance
 */
 
 :root {
+  color-scheme: dark;
+
   --audralia-page-background:
     radial-gradient(
-      circle at 50% 28%,
-      rgba(17, 47, 87, 0.42) 0%,
-      rgba(7, 18, 39, 0.88) 38%,
-      rgba(2, 7, 18, 0.98) 72%,
+      circle at 50% 18%,
+      rgba(20, 62, 108, 0.46) 0%,
+      rgba(7, 23, 48, 0.84) 34%,
+      rgba(2, 9, 23, 0.97) 68%,
       #01040c 100%
     );
 
   --audralia-stage-background:
     radial-gradient(
-      circle at 50% 42%,
-      rgba(18, 55, 101, 0.36) 0%,
-      rgba(5, 17, 38, 0.78) 52%,
+      circle at 50% 46%,
+      rgba(20, 65, 116, 0.34) 0%,
+      rgba(5, 18, 40, 0.76) 54%,
       rgba(1, 5, 15, 0.98) 100%
     );
 
   --audralia-panel-background:
     linear-gradient(
       180deg,
-      rgba(8, 19, 38, 0.86) 0%,
-      rgba(3, 10, 24, 0.92) 100%
+      rgba(10, 25, 49, 0.94) 0%,
+      rgba(3, 11, 27, 0.97) 100%
+    );
+
+  --audralia-panel-background-soft:
+    linear-gradient(
+      180deg,
+      rgba(11, 29, 56, 0.76) 0%,
+      rgba(4, 13, 30, 0.88) 100%
+    );
+
+  --audralia-button-background:
+    linear-gradient(
+      180deg,
+      rgba(27, 62, 99, 0.92) 0%,
+      rgba(8, 28, 54, 0.98) 100%
+    );
+
+  --audralia-button-background-active:
+    linear-gradient(
+      180deg,
+      rgba(31, 112, 166, 0.96) 0%,
+      rgba(10, 53, 94, 0.98) 100%
     );
 
   --audralia-panel-border:
-    rgba(133, 190, 233, 0.24);
+    rgba(132, 191, 231, 0.25);
 
   --audralia-panel-border-strong:
-    rgba(140, 211, 255, 0.48);
+    rgba(130, 214, 255, 0.56);
 
   --audralia-text:
-    #edf7ff;
+    #eef8ff;
 
   --audralia-text-muted:
-    rgba(219, 237, 251, 0.72);
+    rgba(222, 239, 251, 0.76);
 
   --audralia-text-faint:
-    rgba(201, 225, 242, 0.52);
+    rgba(204, 227, 242, 0.58);
 
   --audralia-cyan:
-    #70d7ff;
-
-  --audralia-blue:
-    #3f8fd6;
-
-  --audralia-deep-blue:
-    #10345d;
-
-  --audralia-gold:
-    #d7b86e;
+    #75d9ff;
 
   --audralia-success:
-    #7adca2;
+    #79dca6;
 
   --audralia-warning:
-    #e1bd69;
+    #e0bd6d;
 
   --audralia-danger:
-    #ed7f88;
+    #ed818b;
 
   --audralia-focus:
-    #9be6ff;
+    #a3e9ff;
 
   --audralia-shadow:
-    0 28px 80px rgba(0, 0, 0, 0.52);
+    0 28px 80px rgba(0, 0, 0, 0.54);
 
   --audralia-soft-shadow:
-    0 12px 36px rgba(0, 0, 0, 0.34);
+    0 12px 34px rgba(0, 0, 0, 0.34);
 
   --audralia-radius-large:
     28px;
@@ -111,14 +127,8 @@ Does not own:
   --audralia-radius-small:
     12px;
 
-  --audralia-stage-min-height:
-    620px;
-
-  --audralia-stage-mobile-min-height:
-    520px;
-
   --audralia-control-height:
-    44px;
+    48px;
 
   --audralia-safe-top:
     env(safe-area-inset-top, 0px);
@@ -136,8 +146,8 @@ Does not own:
 html {
   min-width: 320px;
   min-height: 100%;
+  margin: 0;
   background: #01040c;
-  color-scheme: dark;
   overflow-x: hidden;
 }
 
@@ -152,14 +162,11 @@ body {
   overscroll-behavior-x: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body[data-route="/showroom/globe/audralia/"],
-body[data-page="audralia"],
-body[data-page="audralia-globe"],
-body[data-page="audralia-planet"] {
-  display: flex;
-  flex-direction: column;
+body:not([data-audralia-dialog-state="closed"]) {
+  overflow: hidden;
 }
 
 *,
@@ -171,6 +178,7 @@ body[data-page="audralia-planet"] {
 img,
 svg,
 canvas {
+  display: block;
   max-width: 100%;
 }
 
@@ -198,11 +206,10 @@ button {
   min-height: 100vh;
   min-height: 100svh;
   padding:
-    calc(20px + var(--audralia-safe-top))
-    calc(20px + var(--audralia-safe-right))
-    calc(20px + var(--audralia-safe-bottom))
-    calc(20px + var(--audralia-safe-left));
-  overflow: clip;
+    calc(22px + var(--audralia-safe-top))
+    calc(22px + var(--audralia-safe-right))
+    calc(30px + var(--audralia-safe-bottom))
+    calc(22px + var(--audralia-safe-left));
 }
 
 .audralia-page::before,
@@ -215,14 +222,14 @@ button {
   pointer-events: none;
   background:
     radial-gradient(
-      circle at 18% 22%,
-      rgba(65, 132, 191, 0.12) 0%,
-      rgba(65, 132, 191, 0) 34%
+      circle at 17% 20%,
+      rgba(69, 144, 203, 0.13) 0%,
+      rgba(69, 144, 203, 0) 34%
     ),
     radial-gradient(
-      circle at 82% 72%,
-      rgba(42, 99, 155, 0.10) 0%,
-      rgba(42, 99, 155, 0) 36%
+      circle at 84% 72%,
+      rgba(43, 108, 169, 0.11) 0%,
+      rgba(43, 108, 169, 0) 36%
     );
 }
 
@@ -242,12 +249,17 @@ button {
       transparent 0.8px
     );
   background-size: 72px 72px;
-  background-position:
-    12px 18px;
+  background-position: 12px 18px;
   mask-image:
     linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.9),
+      rgba(0, 0, 0, 0.94),
+      rgba(0, 0, 0, 0.18)
+    );
+  -webkit-mask-image:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.94),
       rgba(0, 0, 0, 0.18)
     );
 }
@@ -256,26 +268,11 @@ button {
 [data-audralia-shell],
 [data-audralia-planet-shell] {
   position: relative;
-  width: min(100%, 1600px);
-  min-height: calc(
-    100vh -
-    40px -
-    var(--audralia-safe-top) -
-    var(--audralia-safe-bottom)
-  );
-  min-height: calc(
-    100svh -
-    40px -
-    var(--audralia-safe-top) -
-    var(--audralia-safe-bottom)
-  );
+  width: min(100%, 1440px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows:
-    auto
-    minmax(0, 1fr)
-    auto;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
 }
 
 .audralia-header,
@@ -284,23 +281,27 @@ button {
   position: relative;
   z-index: 20;
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 18px;
+  gap: 24px;
   width: 100%;
+  min-width: 0;
 }
 
 .audralia-heading,
 [data-audralia-heading] {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
 .audralia-eyebrow,
-[data-audralia-eyebrow] {
-  margin: 0 0 6px;
+[data-audralia-eyebrow],
+.audralia-section-eyebrow,
+.audralia-dialog-eyebrow {
+  margin: 0 0 7px;
   color: var(--audralia-cyan);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 750;
   line-height: 1.3;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -310,28 +311,105 @@ button {
 [data-audralia-title] {
   margin: 0;
   color: var(--audralia-text);
-  font-size: clamp(1.55rem, 3vw, 2.65rem);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(2rem, 4.3vw, 3.7rem);
   font-weight: 650;
-  line-height: 1.04;
+  line-height: 1.02;
   letter-spacing: -0.035em;
 }
 
-.audralia-subtitle,
-[data-audralia-subtitle] {
-  max-width: 70ch;
-  margin: 8px 0 0;
+.audralia-purpose,
+[data-audralia-purpose] {
+  max-width: 76ch;
+  margin: 12px 0 0;
   color: var(--audralia-text-muted);
-  font-size: clamp(0.9rem, 1.3vw, 1.04rem);
+  font-size: clamp(0.96rem, 1.5vw, 1.15rem);
   line-height: 1.55;
 }
 
 .audralia-header-actions,
 [data-audralia-header-actions] {
+  flex: 0 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px;
-  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.audralia-header-action,
+.audralia-control,
+.audralia-attraction-action,
+.audralia-dialog-close {
+  appearance: none;
+  border:
+    1px solid
+    rgba(137, 201, 241, 0.28);
+  background: var(--audralia-button-background);
+  color: var(--audralia-text-muted);
+  box-shadow: var(--audralia-soft-shadow);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.audralia-header-action {
+  min-height: var(--audralia-control-height);
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.audralia-header-action:hover,
+.audralia-control:hover,
+.audralia-attraction-action:hover,
+.audralia-dialog-close:hover {
+  border-color: var(--audralia-panel-border-strong);
+  color: var(--audralia-text);
+  box-shadow:
+    0 0 0 1px rgba(117, 217, 255, 0.08),
+    0 12px 28px rgba(0, 0, 0, 0.36);
+  transform: translateY(-1px);
+}
+
+.audralia-header-action:active,
+.audralia-control:active,
+.audralia-attraction-action:active,
+.audralia-dialog-close:active {
+  transform: translateY(0);
+}
+
+.audralia-header-action:focus-visible,
+.audralia-control:focus-visible,
+.audralia-attraction-action:focus-visible,
+.audralia-dialog-close:focus-visible,
+#audraliaGlobeMount canvas:focus-visible,
+[data-audralia-globe-mount] canvas:focus-visible,
+[data-audralia-planet-mount] canvas:focus-visible {
+  outline: 3px solid var(--audralia-focus);
+  outline-offset: 3px;
+}
+
+.audralia-header-action:disabled,
+.audralia-control:disabled,
+.audralia-attraction-action:disabled,
+.audralia-dialog-close:disabled {
+  opacity: 0.44;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 #audraliaGlobeStage,
@@ -343,29 +421,14 @@ button {
   isolation: isolate;
   width: 100%;
   min-width: 0;
-  min-height: var(--audralia-stage-min-height);
-  height:
-    min(
-      78vh,
-      880px
-    );
-  height:
-    min(
-      78svh,
-      880px
-    );
+  min-height: 560px;
+  height: clamp(560px, 72svh, 860px);
   overflow: hidden;
-  border:
-    1px solid
-    var(--audralia-panel-border);
-  border-radius:
-    var(--audralia-radius-large);
-  background:
-    var(--audralia-stage-background);
-  box-shadow:
-    var(--audralia-shadow);
-  contain:
-    layout paint;
+  border: 1px solid var(--audralia-panel-border);
+  border-radius: var(--audralia-radius-large);
+  background: var(--audralia-stage-background);
+  box-shadow: var(--audralia-shadow);
+  contain: layout paint;
 }
 
 #audraliaGlobeStage::before,
@@ -381,9 +444,9 @@ button {
   border-radius: inherit;
   background:
     radial-gradient(
-      circle at 50% 50%,
-      rgba(39, 111, 170, 0.08) 0%,
-      rgba(39, 111, 170, 0) 54%
+      circle at 50% 48%,
+      rgba(41, 117, 179, 0.08) 0%,
+      rgba(41, 117, 179, 0) 55%
     ),
     linear-gradient(
       180deg,
@@ -402,12 +465,10 @@ button {
   inset: 0;
   z-index: 12;
   pointer-events: none;
-  border:
-    1px solid
-    rgba(156, 218, 255, 0.06);
+  border: 1px solid rgba(156, 218, 255, 0.07);
   border-radius: inherit;
   box-shadow:
-    inset 0 0 80px rgba(1, 6, 18, 0.48);
+    inset 0 0 90px rgba(1, 6, 18, 0.44);
 }
 
 #audraliaGlobeMount,
@@ -427,10 +488,10 @@ button {
   border-radius: inherit;
   background:
     radial-gradient(
-      circle at 50% 48%,
-      rgba(20, 72, 126, 0.16) 0%,
-      rgba(3, 13, 31, 0.16) 56%,
-      rgba(1, 5, 15, 0.36) 100%
+      circle at 50% 49%,
+      rgba(21, 75, 132, 0.17) 0%,
+      rgba(4, 15, 34, 0.18) 57%,
+      rgba(1, 5, 15, 0.38) 100%
     );
   touch-action: none;
   user-select: none;
@@ -476,42 +537,21 @@ button {
   z-index: 3;
 }
 
-#audraliaGlobeMount canvas:focus-visible,
-[data-audralia-globe-mount] canvas:focus-visible,
-[data-audralia-planet-mount] canvas:focus-visible {
-  outline:
-    2px solid
-    var(--audralia-focus);
-  outline-offset:
-    -4px;
-}
-
 .audralia-stage-overlay,
 [data-audralia-stage-overlay] {
   position: absolute;
   inset: 0;
   z-index: 10;
   pointer-events: none;
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
-  grid-template-rows:
-    auto
-    minmax(0, 1fr)
-    auto;
-  gap: 12px;
-  padding:
-    clamp(14px, 2vw, 22px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: clamp(14px, 2vw, 22px);
 }
 
 .audralia-runtime-status,
 [data-audralia-runtime-status] {
-  grid-column: 1;
-  grid-row: 1;
-  justify-self: start;
-  align-self: start;
-  max-width: min(440px, 78vw);
+  max-width: min(460px, calc(100% - 24px));
   pointer-events: none;
 }
 
@@ -520,38 +560,28 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  min-height: 34px;
-  padding:
-    7px
-    11px;
-  border:
-    1px solid
-    var(--audralia-panel-border);
-  border-radius:
-    999px;
-  background:
-    rgba(3, 11, 26, 0.74);
-  color:
-    var(--audralia-text-muted);
-  box-shadow:
-    var(--audralia-soft-shadow);
-  backdrop-filter:
-    blur(14px);
-  -webkit-backdrop-filter:
-    blur(14px);
+  max-width: 100%;
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 1px solid var(--audralia-panel-border);
+  border-radius: 999px;
+  background: rgba(3, 11, 26, 0.76);
+  color: var(--audralia-text-muted);
+  box-shadow: var(--audralia-soft-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .audralia-status-dot,
 [data-audralia-status-dot] {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   flex: 0 0 auto;
   border-radius: 50%;
-  background:
-    var(--audralia-warning);
+  background: var(--audralia-warning);
   box-shadow:
-    0 0 0 4px
-    rgba(225, 189, 105, 0.10);
+    0 0 0 5px
+    rgba(224, 189, 109, 0.11);
 }
 
 .audralia-status-label,
@@ -559,261 +589,51 @@ button {
   min-width: 0;
   overflow: hidden;
   color: inherit;
-  font-size: 0.76rem;
-  font-weight: 650;
-  line-height: 1.2;
-  letter-spacing: 0.08em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.audralia-hud,
-[data-audralia-hud],
-[data-audralia-planet-hud] {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: end;
-  align-self: start;
-  pointer-events: auto;
-  display: grid;
-  gap: 8px;
-  width: min(280px, 42vw);
-  padding: 12px;
-  border:
-    1px solid
-    var(--audralia-panel-border);
-  border-radius:
-    var(--audralia-radius-medium);
-  background:
-    var(--audralia-panel-background);
-  box-shadow:
-    var(--audralia-soft-shadow);
-  backdrop-filter:
-    blur(16px);
-  -webkit-backdrop-filter:
-    blur(16px);
-}
-
-.audralia-hud-title,
-[data-audralia-hud-title] {
-  margin: 0;
-  color:
-    var(--audralia-text);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.audralia-hud-grid,
-[data-audralia-hud-grid] {
-  display: grid;
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-  gap:
-    8px
-    12px;
-}
-
-.audralia-hud-item,
-[data-audralia-hud-item] {
-  min-width: 0;
-}
-
-.audralia-hud-key,
-[data-audralia-hud-key] {
-  display: block;
-  margin-bottom: 2px;
-  color:
-    var(--audralia-text-faint);
-  font-size: 0.64rem;
-  font-weight: 650;
-  line-height: 1.2;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.audralia-hud-value,
-[data-audralia-hud-value] {
-  display: block;
-  overflow: hidden;
-  color:
-    var(--audralia-text-muted);
   font-size: 0.75rem;
-  line-height: 1.25;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: 0.075em;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.audralia-instructions,
-[data-audralia-instructions] {
-  grid-column: 1;
-  grid-row: 3;
-  justify-self: start;
-  align-self: end;
-  max-width: min(560px, 72vw);
-  padding:
-    9px
-    12px;
-  border:
-    1px solid
-    rgba(133, 190, 233, 0.14);
-  border-radius:
-    var(--audralia-radius-small);
-  background:
-    rgba(2, 9, 22, 0.58);
-  color:
-    var(--audralia-text-faint);
-  font-size: 0.72rem;
-  line-height: 1.45;
-  backdrop-filter:
-    blur(10px);
-  -webkit-backdrop-filter:
-    blur(10px);
-}
-
-.audralia-controls,
-[data-audralia-controls],
-[data-audralia-planet-controls] {
-  grid-column: 2;
-  grid-row: 3;
-  justify-self: end;
-  align-self: end;
-  pointer-events: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-  max-width: min(520px, 68vw);
-  padding: 9px;
-  border:
-    1px solid
-    var(--audralia-panel-border);
-  border-radius:
-    999px;
-  background:
-    rgba(2, 9, 22, 0.78);
+body[data-audralia-state="ready"]
+  .audralia-status-dot,
+body[data-audralia-state="ready"]
+  [data-audralia-status-dot] {
+  background: var(--audralia-success);
   box-shadow:
-    var(--audralia-soft-shadow);
-  backdrop-filter:
-    blur(16px);
-  -webkit-backdrop-filter:
-    blur(16px);
+    0 0 0 5px
+    rgba(121, 220, 166, 0.13);
 }
 
-.audralia-control,
-[data-audralia-action],
-.audralia-button,
-.audralia-header-action {
-  appearance: none;
-  min-width: 0;
-  min-height:
-    var(--audralia-control-height);
-  padding:
-    0
-    15px;
-  border:
-    1px solid
-    rgba(137, 199, 239, 0.24);
-  border-radius:
-    999px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(25, 55, 88, 0.84) 0%,
-      rgba(8, 25, 48, 0.92) 100%
-    );
-  color:
-    var(--audralia-text-muted);
-  font-size:
-    0.76rem;
-  font-weight:
-    680;
-  line-height:
-    1;
-  letter-spacing:
-    0.06em;
-  text-transform:
-    uppercase;
-  cursor:
-    pointer;
-  transition:
-    border-color 140ms ease,
-    background-color 140ms ease,
-    color 140ms ease,
-    transform 140ms ease,
-    box-shadow 140ms ease;
-  -webkit-tap-highlight-color:
-    transparent;
-}
-
-.audralia-control:hover,
-[data-audralia-action]:hover,
-.audralia-button:hover,
-.audralia-header-action:hover {
-  border-color:
-    var(--audralia-panel-border-strong);
-  color:
-    var(--audralia-text);
+body[data-audralia-state="fallback"]
+  .audralia-status-dot,
+body[data-audralia-state="fallback"]
+  [data-audralia-status-dot] {
+  background: var(--audralia-warning);
   box-shadow:
-    0 8px 22px
-    rgba(0, 0, 0, 0.26);
-  transform:
-    translateY(-1px);
+    0 0 0 5px
+    rgba(224, 189, 109, 0.13);
 }
 
-.audralia-control:active,
-[data-audralia-action]:active,
-.audralia-button:active,
-.audralia-header-action:active {
-  transform:
-    translateY(0);
-}
-
-.audralia-control:focus-visible,
-[data-audralia-action]:focus-visible,
-.audralia-button:focus-visible,
-.audralia-header-action:focus-visible {
-  outline:
-    2px solid
-    var(--audralia-focus);
-  outline-offset:
-    3px;
-}
-
-.audralia-control[aria-pressed="true"],
-[data-audralia-action][aria-pressed="true"],
-.audralia-control[data-active="true"],
-[data-audralia-action][data-active="true"] {
-  border-color:
-    rgba(112, 215, 255, 0.54);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(35, 101, 151, 0.92) 0%,
-      rgba(13, 52, 91, 0.96) 100%
-    );
-  color:
-    #f4fbff;
+body[data-audralia-state="context-lost"]
+  .audralia-status-dot,
+body[data-audralia-state="context-lost"]
+  [data-audralia-status-dot],
+body[data-audralia-planet-runtime-error-count]:not(
+    [data-audralia-planet-runtime-error-count="0"]
+  )
+  .audralia-status-dot,
+body[data-audralia-planet-runtime-error-count]:not(
+    [data-audralia-planet-runtime-error-count="0"]
+  )
+  [data-audralia-status-dot] {
+  background: var(--audralia-danger);
   box-shadow:
-    0 0 0 1px
-    rgba(112, 215, 255, 0.08),
-    0 10px 28px
-    rgba(0, 0, 0, 0.32);
-}
-
-.audralia-control:disabled,
-[data-audralia-action]:disabled,
-.audralia-button:disabled,
-.audralia-header-action:disabled {
-  opacity: 0.42;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+    0 0 0 5px
+    rgba(237, 129, 139, 0.13);
 }
 
 .audralia-state-layer,
@@ -826,6 +646,7 @@ button {
   place-items: center;
   padding: 24px;
   border-radius: inherit;
+  background: rgba(1, 5, 15, 0.38);
   opacity: 0;
   visibility: hidden;
   transition:
@@ -833,68 +654,43 @@ button {
     visibility 180ms ease;
 }
 
+.audralia-state-layer[aria-hidden="false"],
+[data-audralia-state-layer][aria-hidden="false"] {
+  pointer-events: auto;
+}
+
 .audralia-state-card,
 [data-audralia-state-card] {
   width: min(100%, 460px);
-  padding:
-    clamp(18px, 3vw, 28px);
-  border:
-    1px solid
-    var(--audralia-panel-border);
-  border-radius:
-    var(--audralia-radius-medium);
-  background:
-    rgba(3, 11, 26, 0.88);
-  box-shadow:
-    var(--audralia-shadow);
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid var(--audralia-panel-border);
+  border-radius: var(--audralia-radius-medium);
+  background: rgba(3, 11, 26, 0.9);
+  box-shadow: var(--audralia-shadow);
   text-align: center;
-  backdrop-filter:
-    blur(18px);
-  -webkit-backdrop-filter:
-    blur(18px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .audralia-state-title,
 [data-audralia-state-title] {
   margin: 0;
-  color:
-    var(--audralia-text);
-  font-size:
-    clamp(1rem, 2vw, 1.3rem);
-  font-weight:
-    700;
-  line-height:
-    1.2;
-}
-
-.audralia-state-message,
-[data-audralia-state-message] {
-  margin:
-    8px
-    0
-    0;
-  color:
-    var(--audralia-text-muted);
-  font-size:
-    0.88rem;
-  line-height:
-    1.55;
+  color: var(--audralia-text);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 750;
+  line-height: 1.25;
 }
 
 .audralia-loader,
 [data-audralia-loader] {
   width: 38px;
   height: 38px;
-  margin:
-    0 auto
-    16px;
+  margin: 0 auto 16px;
   border:
     2px solid
-    rgba(112, 215, 255, 0.16);
-  border-top-color:
-    var(--audralia-cyan);
-  border-radius:
-    50%;
+    rgba(117, 217, 255, 0.17);
+  border-top-color: var(--audralia-cyan);
+  border-radius: 50%;
   animation:
     audralia-loader-spin
     900ms
@@ -904,315 +700,412 @@ button {
 
 @keyframes audralia-loader-spin {
   to {
-    transform:
-      rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
-html[data-audralia-planet-runtime-mounted="false"]
+body[data-audralia-state="loading"]
   .audralia-state-layer[data-state="loading"],
-body[data-audralia-planet-runtime-mounted="false"]
-  .audralia-state-layer[data-state="loading"],
-[data-audralia-planet-runtime-mounted="false"]
-  .audralia-state-layer[data-state="loading"],
-[data-audralia-state="loading"]
-  .audralia-state-layer[data-state="loading"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-html[data-audralia-planet-runtime-mode="held"]
+body[data-audralia-state="loading"]
+  [data-audralia-state-layer][data-state="loading"],
+body[data-audralia-state="held"]
   .audralia-state-layer[data-state="held"],
-body[data-audralia-planet-runtime-mode="held"]
-  .audralia-state-layer[data-state="held"],
-[data-audralia-planet-runtime-mode="held"]
-  .audralia-state-layer[data-state="held"],
-[data-audralia-state="held"]
-  .audralia-state-layer[data-state="held"] {
+body[data-audralia-state="held"]
+  [data-audralia-state-layer][data-state="held"],
+body[data-audralia-state="fallback"]
+  .audralia-state-layer[data-state="fallback"],
+body[data-audralia-state="fallback"]
+  [data-audralia-state-layer][data-state="fallback"],
+body[data-audralia-state="context-lost"]
+  .audralia-state-layer[data-state="context-lost"],
+body[data-audralia-state="context-lost"]
+  [data-audralia-state-layer][data-state="context-lost"] {
   opacity: 1;
   visibility: visible;
 }
 
-html[data-audralia-planet-runtime-context-lost="true"]
-  .audralia-state-layer[data-state="context-lost"],
-body[data-audralia-planet-runtime-context-lost="true"]
-  .audralia-state-layer[data-state="context-lost"],
-[data-audralia-planet-runtime-context-lost="true"]
-  .audralia-state-layer[data-state="context-lost"],
-[data-audralia-state="context-lost"]
-  .audralia-state-layer[data-state="context-lost"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-html[data-audralia-planet-runtime-mode="fallback"]
-  .audralia-state-layer[data-state="fallback"],
-body[data-audralia-planet-runtime-mode="fallback"]
-  .audralia-state-layer[data-state="fallback"],
-[data-audralia-planet-runtime-mode="fallback"]
-  .audralia-state-layer[data-state="fallback"],
-[data-audralia-state="fallback"]
-  .audralia-state-layer[data-state="fallback"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-html[data-audralia-planet-runtime-mode="webgl"]
+body[data-audralia-state="ready"]
   .audralia-state-layer,
-body[data-audralia-planet-runtime-mode="webgl"]
-  .audralia-state-layer,
-[data-audralia-planet-runtime-mode="webgl"]
-  .audralia-state-layer {
+body[data-audralia-state="ready"]
+  [data-audralia-state-layer] {
+  pointer-events: none;
   opacity: 0;
   visibility: hidden;
 }
 
-html[data-audralia-planet-runtime-mode="webgl"]
-  .audralia-status-dot,
-body[data-audralia-planet-runtime-mode="webgl"]
-  .audralia-status-dot,
-[data-audralia-planet-runtime-mode="webgl"]
-  .audralia-status-dot {
-  background:
-    var(--audralia-success);
-  box-shadow:
-    0 0 0 4px
-    rgba(122, 220, 162, 0.12);
-}
-
-html[data-audralia-planet-runtime-mode="fallback"]
-  .audralia-status-dot,
-body[data-audralia-planet-runtime-mode="fallback"]
-  .audralia-status-dot,
-[data-audralia-planet-runtime-mode="fallback"]
-  .audralia-status-dot {
-  background:
-    var(--audralia-warning);
-  box-shadow:
-    0 0 0 4px
-    rgba(225, 189, 105, 0.12);
-}
-
-html[data-audralia-planet-runtime-context-lost="true"]
-  .audralia-status-dot,
-body[data-audralia-planet-runtime-context-lost="true"]
-  .audralia-status-dot,
-[data-audralia-planet-runtime-context-lost="true"]
-  .audralia-status-dot,
-html[data-audralia-planet-runtime-error-count]:not(
-    [data-audralia-planet-runtime-error-count="0"]
-  )
-  .audralia-status-dot,
-body[data-audralia-planet-runtime-error-count]:not(
-    [data-audralia-planet-runtime-error-count="0"]
-  )
-  .audralia-status-dot {
-  background:
-    var(--audralia-danger);
-  box-shadow:
-    0 0 0 4px
-    rgba(237, 127, 136, 0.12);
-}
-
-.audralia-footer,
-[data-audralia-footer],
-[data-audralia-planet-footer] {
+.audralia-instructions,
+[data-audralia-instructions] {
   position: relative;
   z-index: 20;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 16px;
+  border: 1px solid rgba(133, 190, 233, 0.17);
+  border-radius: var(--audralia-radius-small);
+  background: rgba(3, 11, 27, 0.66);
+  color: var(--audralia-text-muted);
+  font-size: 0.76rem;
+  font-weight: 620;
+  line-height: 1.45;
+  text-align: center;
+  box-shadow: var(--audralia-soft-shadow);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.audralia-instructions > span[aria-hidden="true"],
+[data-audralia-instructions] > span[aria-hidden="true"] {
+  color: var(--audralia-cyan);
+  opacity: 0.78;
+}
+
+.audralia-controls,
+[data-audralia-controls],
+[data-audralia-planet-controls] {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+  gap: 10px;
   width: 100%;
   min-width: 0;
-  color:
-    var(--audralia-text-faint);
-  font-size:
-    0.72rem;
-  line-height:
-    1.45;
+  padding: 11px;
+  border: 1px solid var(--audralia-panel-border);
+  border-radius: var(--audralia-radius-medium);
+  background: rgba(3, 11, 27, 0.82);
+  box-shadow: var(--audralia-soft-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.audralia-footer-meta,
-[data-audralia-footer-meta] {
+.audralia-control {
+  width: 100%;
   min-width: 0;
-  overflow-wrap: anywhere;
+  min-height: var(--audralia-control-height);
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
-.audralia-footer-links,
-[data-audralia-footer-links] {
+.audralia-control[aria-pressed="true"],
+.audralia-control[data-active="true"],
+[data-audralia-action][aria-pressed="true"],
+[data-audralia-action][data-active="true"] {
+  border-color: rgba(117, 217, 255, 0.6);
+  background: var(--audralia-button-background-active);
+  color: #f7fcff;
+  box-shadow:
+    0 0 0 1px rgba(117, 217, 255, 0.09),
+    0 12px 30px rgba(0, 0, 0, 0.34);
+}
+
+.audralia-attractions,
+[data-audralia-attractions] {
+  position: relative;
+  z-index: 20;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.audralia-attractions-header {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap:
-    8px
-    14px;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
 }
 
-.audralia-link,
-[data-audralia-link],
-.audralia-footer a,
-.audralia-header a {
-  color:
-    var(--audralia-text-muted);
-  text-decoration:
-    none;
-  text-underline-offset:
-    3px;
+.audralia-section-title {
+  margin: 0;
+  color: var(--audralia-text);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  font-weight: 650;
+  line-height: 1.08;
 }
 
-.audralia-link:hover,
-[data-audralia-link]:hover,
-.audralia-footer a:hover,
-.audralia-header a:hover {
-  color:
-    var(--audralia-text);
-  text-decoration:
-    underline;
+.audralia-attraction-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
 }
 
-.audralia-link:focus-visible,
-[data-audralia-link]:focus-visible,
-.audralia-footer a:focus-visible,
-.audralia-header a:focus-visible {
-  outline:
-    2px solid
-    var(--audralia-focus);
-  outline-offset:
-    3px;
-  border-radius:
-    4px;
+.audralia-attraction-card {
+  position: relative;
+  display: grid;
+  grid-template-rows:
+    auto
+    auto
+    1fr
+    auto;
+  gap: 10px;
+  min-width: 0;
+  min-height: 224px;
+  padding: clamp(18px, 2.5vw, 26px);
+  overflow: hidden;
+  border: 1px solid var(--audralia-panel-border);
+  border-radius: var(--audralia-radius-medium);
+  background: var(--audralia-panel-background-soft);
+  box-shadow: var(--audralia-soft-shadow);
 }
 
-.audralia-diagnostic-panel,
-[data-audralia-diagnostic-panel] {
+.audralia-attraction-card::before {
+  content: "";
   position: absolute;
-  left:
-    clamp(14px, 2vw, 22px);
-  bottom:
-    clamp(76px, 9vw, 96px);
-  z-index: 11;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(86, 184, 235, 0.14),
+      transparent 42%
+    );
+}
+
+.audralia-attraction-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.audralia-attraction-part {
+  color: var(--audralia-cyan);
+  font-size: 0.69rem;
+  font-weight: 760;
+  line-height: 1.3;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.audralia-attraction-title {
+  margin: 0;
+  color: var(--audralia-text);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+  font-weight: 650;
+  line-height: 1.15;
+}
+
+.audralia-attraction-teaser {
+  margin: 0;
+  color: var(--audralia-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.audralia-attraction-action {
+  justify-self: start;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+.audralia-dialog {
+  position: fixed;
+  inset: 0;
   width:
     min(
-      360px,
-      calc(100% - 28px)
+      640px,
+      calc(
+        100vw -
+        var(--audralia-safe-left) -
+        var(--audralia-safe-right) -
+        28px
+      )
+    );
+  max-width: 640px;
+  max-height:
+    min(
+      86vh,
+      calc(
+        100vh -
+        var(--audralia-safe-top) -
+        var(--audralia-safe-bottom) -
+        28px
+      )
     );
   max-height:
     min(
-      44vh,
-      360px
+      86dvh,
+      calc(
+        100dvh -
+        var(--audralia-safe-top) -
+        var(--audralia-safe-bottom) -
+        28px
+      )
     );
-  overflow:
-    auto;
-  padding:
-    12px;
-  border:
-    1px solid
-    var(--audralia-panel-border);
-  border-radius:
-    var(--audralia-radius-medium);
-  background:
-    rgba(2, 9, 22, 0.86);
-  color:
-    var(--audralia-text-muted);
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    "Liberation Mono",
-    monospace;
-  font-size:
-    0.68rem;
-  line-height:
-    1.5;
-  box-shadow:
-    var(--audralia-soft-shadow);
-  backdrop-filter:
-    blur(16px);
-  -webkit-backdrop-filter:
-    blur(16px);
-  scrollbar-width:
-    thin;
-  scrollbar-color:
-    rgba(112, 215, 255, 0.34)
-    rgba(0, 0, 0, 0.18);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--audralia-panel-border-strong);
+  border-radius: var(--audralia-radius-large);
+  background: transparent;
+  color: var(--audralia-text);
+  box-shadow: var(--audralia-shadow);
 }
 
-.audralia-diagnostic-panel[hidden],
-[data-audralia-diagnostic-panel][hidden] {
+.audralia-dialog:not([open]) {
   display: none;
 }
 
-@media (max-width: 1100px) {
-  :root {
-    --audralia-stage-min-height:
-      580px;
-  }
+.audralia-dialog[open] {
+  display: block;
+}
 
-  .audralia-hud,
-  [data-audralia-hud],
-  [data-audralia-planet-hud] {
-    width:
-      min(
-        250px,
-        46vw
-      );
-  }
+.audralia-dialog::backdrop {
+  background:
+    rgba(0, 4, 12, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
 
-  .audralia-controls,
-  [data-audralia-controls],
-  [data-audralia-planet-controls] {
-    max-width:
-      min(
-        470px,
-        72vw
-      );
+.audralia-dialog-card {
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr);
+  width: 100%;
+  max-height: inherit;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--audralia-panel-background);
+}
+
+.audralia-dialog-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 22px 18px;
+  border-bottom:
+    1px solid
+    rgba(132, 191, 231, 0.18);
+  background:
+    rgba(5, 16, 36, 0.96);
+}
+
+.audralia-dialog-title {
+  margin: 0;
+  color: var(--audralia-text);
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+  font-size: clamp(1.45rem, 4vw, 2.15rem);
+  font-weight: 650;
+  line-height: 1.12;
+}
+
+.audralia-dialog-body {
+  min-height: 0;
+  padding: 22px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--audralia-text-muted);
+  font-size: 1rem;
+  line-height: 1.68;
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(117, 217, 255, 0.42)
+    rgba(0, 0, 0, 0.18);
+}
+
+.audralia-dialog-body p {
+  margin: 0;
+}
+
+.audralia-dialog-body p + p {
+  margin-top: 16px;
+}
+
+.audralia-dialog-close {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.65rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+@media (max-width: 980px) {
+  #audraliaGlobeStage,
+  [data-audralia-globe-stage],
+  [data-audralia-planet-stage],
+  .audralia-globe-stage,
+  .audralia-planet-stage {
+    min-height: 520px;
+    height: clamp(520px, 68svh, 760px);
   }
 }
 
 @media (max-width: 820px) {
-  :root {
-    --audralia-stage-min-height:
-      560px;
-  }
-
   .audralia-page,
   [data-audralia-page],
   [data-audralia-planet-page] {
     padding:
-      calc(14px + var(--audralia-safe-top))
-      calc(14px + var(--audralia-safe-right))
-      calc(14px + var(--audralia-safe-bottom))
-      calc(14px + var(--audralia-safe-left));
+      calc(16px + var(--audralia-safe-top))
+      calc(16px + var(--audralia-safe-right))
+      calc(24px + var(--audralia-safe-bottom))
+      calc(16px + var(--audralia-safe-left));
   }
 
   .audralia-shell,
   [data-audralia-shell],
   [data-audralia-planet-shell] {
-    min-height:
-      calc(
-        100svh -
-        28px -
-        var(--audralia-safe-top) -
-        var(--audralia-safe-bottom)
-      );
+    gap: 15px;
   }
 
   .audralia-header,
   [data-audralia-header],
   [data-audralia-planet-header] {
-    flex-direction:
-      column;
-    align-items:
-      stretch;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
   }
 
   .audralia-header-actions,
   [data-audralia-header-actions] {
-    justify-content:
-      flex-start;
+    justify-content: flex-start;
   }
 
   #audraliaGlobeStage,
@@ -1220,332 +1113,273 @@ body[data-audralia-planet-runtime-error-count]:not(
   [data-audralia-planet-stage],
   .audralia-globe-stage,
   .audralia-planet-stage {
-    height:
-      min(
-        72svh,
-        720px
-      );
-    border-radius:
-      22px;
-  }
-
-  .audralia-stage-overlay,
-  [data-audralia-stage-overlay] {
-    grid-template-columns:
-      minmax(0, 1fr);
-    grid-template-rows:
-      auto
-      minmax(0, 1fr)
-      auto
-      auto;
-    padding:
-      14px;
-  }
-
-  .audralia-runtime-status,
-  [data-audralia-runtime-status] {
-    grid-column:
-      1;
-    grid-row:
-      1;
-  }
-
-  .audralia-hud,
-  [data-audralia-hud],
-  [data-audralia-planet-hud] {
-    grid-column:
-      1;
-    grid-row:
-      1;
-    justify-self:
-      end;
-    width:
-      min(
-        230px,
-        52vw
-      );
-  }
-
-  .audralia-instructions,
-  [data-audralia-instructions] {
-    grid-column:
-      1;
-    grid-row:
-      3;
-    max-width:
-      100%;
+    min-height: 500px;
+    height: clamp(500px, 66svh, 700px);
+    border-radius: 22px;
   }
 
   .audralia-controls,
   [data-audralia-controls],
   [data-audralia-planet-controls] {
-    grid-column:
-      1;
-    grid-row:
-      4;
-    justify-self:
-      stretch;
-    justify-content:
-      center;
-    max-width:
-      none;
-    border-radius:
-      var(--audralia-radius-medium);
-  }
-
-  .audralia-footer,
-  [data-audralia-footer],
-  [data-audralia-planet-footer] {
-    align-items:
-      flex-start;
-    flex-direction:
-      column;
-  }
-
-  .audralia-footer-links,
-  [data-audralia-footer-links] {
-    justify-content:
-      flex-start;
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 680px) {
   :root {
-    --audralia-stage-min-height:
-      var(--audralia-stage-mobile-min-height);
-
     --audralia-control-height:
-      42px;
+      46px;
   }
 
+  .audralia-page,
+  [data-audralia-page],
+  [data-audralia-planet-page] {
+    padding:
+      calc(12px + var(--audralia-safe-top))
+      calc(12px + var(--audralia-safe-right))
+      calc(20px + var(--audralia-safe-bottom))
+      calc(12px + var(--audralia-safe-left));
+  }
+
+  .audralia-title,
+  [data-audralia-title] {
+    font-size: clamp(1.85rem, 9vw, 2.7rem);
+  }
+
+  .audralia-purpose,
+  [data-audralia-purpose] {
+    margin-top: 9px;
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+
+  .audralia-header-actions,
+  [data-audralia-header-actions] {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, auto);
+    width: 100%;
+  }
+
+  .audralia-header-action {
+    min-width: 0;
+    padding: 0 14px;
+  }
+
+  #audraliaGlobeStage,
+  [data-audralia-globe-stage],
+  [data-audralia-planet-stage],
+  .audralia-globe-stage,
+  .audralia-planet-stage {
+    min-height: 460px;
+    height: clamp(460px, 62svh, 620px);
+    border-radius: 20px;
+  }
+
+  .audralia-stage-overlay,
+  [data-audralia-stage-overlay] {
+    padding: 12px;
+  }
+
+  .audralia-runtime-status,
+  [data-audralia-runtime-status] {
+    max-width: calc(100% - 8px);
+  }
+
+  .audralia-status-card,
+  [data-audralia-status-card] {
+    min-height: 34px;
+    padding: 7px 11px;
+  }
+
+  .audralia-status-label,
+  [data-audralia-status-label] {
+    max-width: 72vw;
+    font-size: 0.7rem;
+  }
+
+  .audralia-instructions,
+  [data-audralia-instructions] {
+    min-height: 0;
+    gap: 5px;
+    padding: 10px 12px;
+    font-size: 0.7rem;
+  }
+
+  .audralia-controls,
+  [data-audralia-controls],
+  [data-audralia-planet-controls] {
+    gap: 8px;
+    padding: 9px;
+  }
+
+  .audralia-control {
+    padding: 0 10px;
+    font-size: 0.7rem;
+  }
+
+  .audralia-attraction-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .audralia-attraction-card {
+    min-height: 0;
+  }
+
+  .audralia-dialog {
+    width:
+      calc(
+        100vw -
+        var(--audralia-safe-left) -
+        var(--audralia-safe-right) -
+        20px
+      );
+    max-height:
+      calc(
+        100dvh -
+        var(--audralia-safe-top) -
+        var(--audralia-safe-bottom) -
+        20px
+      );
+    border-radius: 20px;
+  }
+
+  .audralia-dialog-header {
+    gap: 12px;
+    padding: 18px 16px 15px;
+  }
+
+  .audralia-dialog-body {
+    padding: 17px 16px 20px;
+    font-size: 0.94rem;
+  }
+
+  .audralia-dialog-close {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 440px) {
+  .audralia-shell,
+  [data-audralia-shell],
+  [data-audralia-planet-shell] {
+    gap: 12px;
+  }
+
+  .audralia-eyebrow,
+  [data-audralia-eyebrow],
+  .audralia-section-eyebrow,
+  .audralia-dialog-eyebrow {
+    font-size: 0.64rem;
+    letter-spacing: 0.15em;
+  }
+
+  .audralia-header-actions,
+  [data-audralia-header-actions] {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(92px, auto);
+    gap: 8px;
+  }
+
+  .audralia-header-action {
+    font-size: 0.68rem;
+    letter-spacing: 0.055em;
+  }
+
+  #audraliaGlobeStage,
+  [data-audralia-globe-stage],
+  [data-audralia-planet-stage],
+  .audralia-globe-stage,
+  .audralia-planet-stage {
+    min-height: 430px;
+    height: clamp(430px, 58svh, 540px);
+    border-radius: 18px;
+  }
+
+  .audralia-status-label,
+  [data-audralia-status-label] {
+    max-width: 68vw;
+    font-size: 0.66rem;
+  }
+
+  .audralia-instructions,
+  [data-audralia-instructions] {
+    line-height: 1.55;
+  }
+
+  .audralia-controls,
+  [data-audralia-controls],
+  [data-audralia-planet-controls] {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  .audralia-section-title {
+    font-size: 1.55rem;
+  }
+
+  .audralia-attraction-card {
+    padding: 17px;
+  }
+
+  .audralia-attraction-action {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 350px) {
+  .audralia-header-actions,
+  [data-audralia-header-actions] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .audralia-controls,
+  [data-audralia-controls],
+  [data-audralia-planet-controls] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #audraliaGlobeStage,
+  [data-audralia-globe-stage],
+  [data-audralia-planet-stage],
+  .audralia-globe-stage,
+  .audralia-planet-stage {
+    min-height: 410px;
+    height: 410px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 620px) {
   .audralia-page,
   [data-audralia-page],
   [data-audralia-planet-page] {
     padding:
       calc(10px + var(--audralia-safe-top))
       calc(10px + var(--audralia-safe-right))
-      calc(10px + var(--audralia-safe-bottom))
+      calc(16px + var(--audralia-safe-bottom))
       calc(10px + var(--audralia-safe-left));
-  }
-
-  .audralia-shell,
-  [data-audralia-shell],
-  [data-audralia-planet-shell] {
-    gap:
-      10px;
-  }
-
-  .audralia-eyebrow,
-  [data-audralia-eyebrow] {
-    font-size:
-      0.66rem;
-  }
-
-  .audralia-subtitle,
-  [data-audralia-subtitle] {
-    font-size:
-      0.86rem;
-  }
-
-  #audraliaGlobeStage,
-  [data-audralia-globe-stage],
-  [data-audralia-planet-stage],
-  .audralia-globe-stage,
-  .audralia-planet-stage {
-    min-height:
-      var(--audralia-stage-mobile-min-height);
-    height:
-      min(
-        74svh,
-        660px
-      );
-    border-radius:
-      18px;
-  }
-
-  .audralia-stage-overlay,
-  [data-audralia-stage-overlay] {
-    padding:
-      10px;
-  }
-
-  .audralia-hud,
-  [data-audralia-hud],
-  [data-audralia-planet-hud] {
-    display:
-      none;
-  }
-
-  .audralia-runtime-status,
-  [data-audralia-runtime-status] {
-    max-width:
-      calc(100vw - 44px);
-  }
-
-  .audralia-status-card,
-  [data-audralia-status-card] {
-    max-width:
-      100%;
-  }
-
-  .audralia-status-label,
-  [data-audralia-status-label] {
-    max-width:
-      58vw;
-  }
-
-  .audralia-instructions,
-  [data-audralia-instructions] {
-    font-size:
-      0.67rem;
-    padding:
-      8px
-      10px;
-  }
-
-  .audralia-controls,
-  [data-audralia-controls],
-  [data-audralia-planet-controls] {
-    display:
-      grid;
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
-    gap:
-      7px;
-    width:
-      100%;
-    padding:
-      8px;
-  }
-
-  .audralia-control,
-  [data-audralia-action],
-  .audralia-button {
-    width:
-      100%;
-    padding:
-      0
-      10px;
-    font-size:
-      0.68rem;
-  }
-
-  .audralia-diagnostic-panel,
-  [data-audralia-diagnostic-panel] {
-    left:
-      10px;
-    right:
-      10px;
-    bottom:
-      112px;
-    width:
-      auto;
-    max-height:
-      36vh;
-  }
-}
-
-@media (max-width: 420px) {
-  :root {
-    --audralia-stage-mobile-min-height:
-      500px;
-  }
-
-  .audralia-title,
-  [data-audralia-title] {
-    font-size:
-      1.45rem;
-  }
-
-  #audraliaGlobeStage,
-  [data-audralia-globe-stage],
-  [data-audralia-planet-stage],
-  .audralia-globe-stage,
-  .audralia-planet-stage {
-    height:
-      min(
-        72svh,
-        610px
-      );
-  }
-
-  .audralia-controls,
-  [data-audralia-controls],
-  [data-audralia-planet-controls] {
-    grid-template-columns:
-      minmax(0, 1fr);
-  }
-
-  .audralia-instructions,
-  [data-audralia-instructions] {
-    display:
-      none;
-  }
-
-  .audralia-diagnostic-panel,
-  [data-audralia-diagnostic-panel] {
-    bottom:
-      232px;
-  }
-}
-
-@media (max-height: 680px) and (min-width: 621px) {
-  :root {
-    --audralia-stage-min-height:
-      460px;
-  }
-
-  #audraliaGlobeStage,
-  [data-audralia-globe-stage],
-  [data-audralia-planet-stage],
-  .audralia-globe-stage,
-  .audralia-planet-stage {
-    height:
-      calc(
-        100svh -
-        142px
-      );
-    min-height:
-      460px;
-  }
-}
-
-@media (orientation: landscape) and (max-height: 560px) {
-  .audralia-page,
-  [data-audralia-page],
-  [data-audralia-planet-page] {
-    padding:
-      calc(8px + var(--audralia-safe-top))
-      calc(8px + var(--audralia-safe-right))
-      calc(8px + var(--audralia-safe-bottom))
-      calc(8px + var(--audralia-safe-left));
   }
 
   .audralia-header,
   [data-audralia-header],
   [data-audralia-planet-header] {
-    display:
-      none;
+    gap: 10px;
   }
 
-  .audralia-shell,
-  [data-audralia-shell],
-  [data-audralia-planet-shell] {
-    min-height:
-      calc(
-        100svh -
-        16px -
-        var(--audralia-safe-top) -
-        var(--audralia-safe-bottom)
-      );
-    grid-template-rows:
-      minmax(0, 1fr)
-      auto;
-    gap:
-      8px;
+  .audralia-purpose,
+  [data-audralia-purpose] {
+    font-size: 0.86rem;
   }
 
   #audraliaGlobeStage,
@@ -1553,24 +1387,8 @@ body[data-audralia-planet-runtime-error-count]:not(
   [data-audralia-planet-stage],
   .audralia-globe-stage,
   .audralia-planet-stage {
-    min-height:
-      0;
-    height:
-      auto;
-  }
-
-  .audralia-footer,
-  [data-audralia-footer],
-  [data-audralia-planet-footer] {
-    display:
-      none;
-  }
-
-  .audralia-controls,
-  [data-audralia-controls],
-  [data-audralia-planet-controls] {
-    max-width:
-      74vw;
+    min-height: 420px;
+    height: 82svh;
   }
 }
 
@@ -1578,73 +1396,66 @@ body[data-audralia-planet-runtime-error-count]:not(
   *,
   *::before,
   *::after {
-    scroll-behavior:
-      auto !important;
-    animation-duration:
-      0.001ms !important;
-    animation-iteration-count:
-      1 !important;
-    transition-duration:
-      0.001ms !important;
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 
   .audralia-loader,
   [data-audralia-loader] {
-    animation:
-      none;
-    border-top-color:
-      rgba(112, 215, 255, 0.64);
+    animation: none;
+    border-top-color: rgba(117, 217, 255, 0.66);
   }
 
+  .audralia-header-action:hover,
   .audralia-control:hover,
-  [data-audralia-action]:hover,
-  .audralia-button:hover,
-  .audralia-header-action:hover {
-    transform:
-      none;
+  .audralia-attraction-action:hover,
+  .audralia-dialog-close:hover {
+    transform: none;
   }
 }
 
 @media (prefers-contrast: more) {
   :root {
     --audralia-panel-border:
-      rgba(202, 235, 255, 0.62);
+      rgba(211, 239, 255, 0.68);
 
     --audralia-panel-border-strong:
-      rgba(225, 245, 255, 0.92);
+      rgba(234, 249, 255, 0.96);
 
     --audralia-text-muted:
-      rgba(239, 249, 255, 0.94);
+      rgba(244, 251, 255, 0.96);
 
     --audralia-text-faint:
-      rgba(228, 243, 252, 0.82);
+      rgba(231, 245, 253, 0.86);
   }
 
   #audraliaGlobeStage,
   [data-audralia-globe-stage],
   [data-audralia-planet-stage],
   .audralia-globe-stage,
-  .audralia-planet-stage {
-    border-width:
-      2px;
+  .audralia-planet-stage,
+  .audralia-controls,
+  [data-audralia-controls],
+  [data-audralia-planet-controls],
+  .audralia-attraction-card,
+  .audralia-dialog {
+    border-width: 2px;
   }
 }
 
 @media print {
   body {
-    background:
-      #ffffff;
-    color:
-      #000000;
+    background: #ffffff;
+    color: #000000;
   }
 
   .audralia-page,
   [data-audralia-page],
   [data-audralia-planet-page] {
-    min-height:
-      auto;
-    padding:
-      0;
+    min-height: auto;
+    padding: 0;
   }
 
   .audralia-page::before,
@@ -1653,15 +1464,17 @@ body[data-audralia-planet-runtime-error-count]:not(
   [data-audralia-page]::after,
   [data-audralia-planet-page]::before,
   [data-audralia-planet-page]::after,
+  .audralia-header-actions,
+  [data-audralia-header-actions],
   .audralia-controls,
   [data-audralia-controls],
   [data-audralia-planet-controls],
   .audralia-instructions,
   [data-audralia-instructions],
-  .audralia-diagnostic-panel,
-  [data-audralia-diagnostic-panel] {
-    display:
-      none !important;
+  .audralia-attractions,
+  [data-audralia-attractions],
+  .audralia-dialog {
+    display: none !important;
   }
 
   #audraliaGlobeStage,
@@ -1669,14 +1482,9 @@ body[data-audralia-planet-runtime-error-count]:not(
   [data-audralia-planet-stage],
   .audralia-globe-stage,
   .audralia-planet-stage {
-    min-height:
-      520px;
-    height:
-      520px;
-    border:
-      1px solid
-      #666666;
-    box-shadow:
-      none;
+    min-height: 520px;
+    height: 520px;
+    border: 1px solid #666666;
+    box-shadow: none;
   }
 }

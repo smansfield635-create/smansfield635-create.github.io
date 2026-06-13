@@ -1,11 +1,24 @@
+<!-- /nine-summits-of-love/index.html -->
+<!-- NINE_SUMMITS_OF_LOVE_TRUE_3D_AXIAL_HEART_HTML_TNT_v3 -->
+<!-- Full-file replacement. -->
+<!--
+  Purpose:
+  - Preserve the complete Nine Summits of Love page.
+  - Replace the oversized flat SVG heart with a bounded true-depth WebGL object.
+  - Rotate the heart around its own fixed vertical Y axis.
+  - Generate front, rear, bevel, side-wall, lighting, and projected floor-shadow geometry.
+  - Preserve the House Control Pad entrance contract.
+  - Require no external 3D library.
+-->
+
 <!doctype html>
 <html
   lang="en"
   data-route="/nine-summits-of-love/"
   data-page="nine-summits-of-love"
-  data-version="G1-V3"
-  data-contract="NINE_SUMMITS_OF_LOVE_DIAMOND_HEART_HOUSE_CONTROLLER_HERO_HTML_TNT_v2"
-  data-previous-contract="NINE_SUMMITS_OF_LOVE_HOUSE_CONTROL_PAD_MOUNT_HTML_TNT_v1"
+  data-version="G1-V4"
+  data-contract="NINE_SUMMITS_OF_LOVE_TRUE_3D_AXIAL_HEART_HTML_TNT_v3"
+  data-previous-contract="NINE_SUMMITS_OF_LOVE_DIAMOND_HEART_HOUSE_CONTROLLER_HERO_HTML_TNT_v2"
   data-status="active"
   data-parent="/nine-summits/"
   data-baseline="AUDRALIA_MANOR_CURRENT"
@@ -20,10 +33,14 @@
   data-visual-pass-claimed="false"
   data-house-room="book-chamber"
   data-house-control-pad-mounted="true"
-  data-house-controller-form="diamond-heart-3d"
+  data-house-controller-form="true-3d-extruded-diamond-heart"
+  data-heart-rotation="fixed-y-axis"
+  data-heart-orbit="forbidden"
+  data-heart-fibonacci-sync="13-21-34-55-89-144-233-377-610-987"
 >
 <head>
   <meta charset="utf-8">
+
   <meta
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
@@ -72,12 +89,15 @@
 
       --max:1180px;
 
-      --heart-width:1000;
-      --heart-height:900;
-      --heart-depth:320;
-      --heart-origin-x:500;
-      --heart-origin-y:430;
-      --heart-origin-z:0;
+      --heart-stage:610px;
+      --heart-width:377;
+      --heart-height:368;
+      --heart-depth:89;
+      --heart-bevel:13;
+      --heart-floor-gap:55;
+      --heart-shadow-width:233;
+      --heart-camera-distance:987;
+      --heart-rotation-seconds:34;
     }
 
     *{
@@ -86,13 +106,18 @@
 
     html{
       min-height:100%;
+
       background:var(--bg);
+
       scroll-behavior:smooth;
     }
 
     body{
       margin:0;
+
       min-height:100vh;
+
+      overflow-x:hidden;
 
       color:var(--ink);
 
@@ -135,9 +160,8 @@
           #010207 100%
         );
 
-      overflow-x:hidden;
-
       -webkit-font-smoothing:antialiased;
+
       text-rendering:geometricPrecision;
     }
 
@@ -204,18 +228,23 @@
         );
 
       filter:blur(42px);
+
       opacity:.58;
 
       animation:
-        auroraDrift 28s linear infinite;
+        auroraDrift
+        28s
+        linear
+        infinite;
     }
 
-    a{
+    .shell a{
       color:inherit;
+
       text-decoration:none;
     }
 
-    button{
+    .shell button{
       font:inherit;
     }
 
@@ -230,6 +259,7 @@
       border-radius:999px;
 
       color:#05070d;
+
       background:var(--gold);
 
       font-weight:950;
@@ -243,10 +273,11 @@
       position:relative;
       z-index:2;
 
-      width:min(
-        var(--max),
-        calc(100% - 28px)
-      );
+      width:
+        min(
+          var(--max),
+          calc(100% - 28px)
+        );
 
       margin:0 auto;
 
@@ -257,13 +288,17 @@
     }
 
     /* =====================================================
-       PRESERVED TOP NAVIGATION
+       TOP NAVIGATION
        ===================================================== */
 
     .topbar{
       display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
+      grid-template-columns:
+        minmax(0,1fr)
+        auto;
+
       align-items:center;
+
       gap:18px;
 
       padding:12px 0 18px;
@@ -273,11 +308,13 @@
       min-width:0;
 
       display:grid;
+
       gap:.18rem;
     }
 
     .brand-copy{
       display:grid;
+
       gap:.18rem;
     }
 
@@ -285,9 +322,14 @@
       color:var(--ink);
 
       font-size:
-        clamp(1.08rem,3vw,1.7rem);
+        clamp(
+          1.08rem,
+          3vw,
+          1.7rem
+        );
 
       line-height:1;
+
       letter-spacing:-.045em;
     }
 
@@ -307,8 +349,10 @@
 
       display:flex;
       flex-wrap:wrap;
+
       justify-content:flex-end;
       align-items:center;
+
       gap:.58rem;
     }
 
@@ -322,12 +366,15 @@
       padding:.54rem .82rem;
 
       border:
-        1px solid rgba(255,255,255,.13);
+        1px solid
+        rgba(255,255,255,.13);
 
       border-radius:999px;
 
       color:rgba(241,246,255,.86);
-      background:rgba(255,255,255,.04);
+
+      background:
+        rgba(255,255,255,.04);
 
       font:
         950 .68rem/1
@@ -340,10 +387,13 @@
         sans-serif;
 
       letter-spacing:.055em;
+
       text-transform:uppercase;
 
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.06);
+        inset
+        0 1px 0
+        rgba(255,255,255,.06);
 
       transition:
         transform .18s ease,
@@ -353,7 +403,8 @@
 
     .nav a:hover,
     .nav a:focus-visible{
-      transform:translateY(-2px);
+      transform:
+        translateY(-2px);
 
       border-color:
         rgba(243,200,111,.46);
@@ -383,10 +434,15 @@
       overflow:hidden;
 
       border:
-        1px solid var(--line);
+        1px solid
+        var(--line);
 
       border-radius:
-        clamp(1.35rem,5vw,2.35rem);
+        clamp(
+          1.35rem,
+          5vw,
+          2.35rem
+        );
 
       background:
         radial-gradient(
@@ -408,30 +464,42 @@
 
       box-shadow:
         var(--shadow),
-        inset 0 1px 0 rgba(255,255,255,.08);
+        inset
+        0 1px 0
+        rgba(255,255,255,.08);
     }
 
     /* =====================================================
-       DIAMOND HEART HERO
+       HERO
        ===================================================== */
 
     .hero{
       position:relative;
 
-      min-height:
-        clamp(48rem,92vw,72rem);
-
       display:grid;
       justify-items:center;
       align-content:start;
+
       gap:1.2rem;
 
       margin-top:.6rem;
 
       padding:
-        clamp(1.4rem,4vw,3rem)
-        clamp(1rem,4vw,3rem)
-        clamp(1.8rem,5vw,3.5rem);
+        clamp(
+          1.4rem,
+          4vw,
+          3rem
+        )
+        clamp(
+          1rem,
+          4vw,
+          3rem
+        )
+        clamp(
+          1.8rem,
+          5vw,
+          3.5rem
+        );
 
       isolation:isolate;
     }
@@ -440,10 +508,15 @@
       position:relative;
       z-index:5;
 
-      width:min(960px,100%);
+      width:
+        min(
+          960px,
+          100%
+        );
 
       display:grid;
       justify-items:center;
+
       gap:.85rem;
 
       text-align:center;
@@ -457,17 +530,22 @@
 
       display:inline-flex;
       align-items:center;
+
       gap:.58rem;
 
       padding:.58rem .95rem;
 
       border:
-        1px solid rgba(255,255,255,.14);
+        1px solid
+        rgba(255,255,255,.14);
 
       border-radius:999px;
 
-      color:rgba(230,238,255,.86);
-      background:rgba(255,255,255,.04);
+      color:
+        rgba(230,238,255,.86);
+
+      background:
+        rgba(255,255,255,.04);
 
       font-size:.72rem;
       font-weight:950;
@@ -484,7 +562,8 @@
 
       border-radius:.18rem;
 
-      transform:rotate(45deg);
+      transform:
+        rotate(45deg);
 
       background:
         linear-gradient(
@@ -494,26 +573,33 @@
         );
 
       box-shadow:
-        0 0 1.1rem rgba(243,200,111,.46);
+        0 0 1.1rem
+        rgba(243,200,111,.46);
     }
 
-    h1{
+    .shell h1{
       position:relative;
       z-index:2;
 
-      margin:0;
-
       max-width:980px;
 
+      margin:0;
+
       font-size:
-        clamp(3rem,9.8vw,7rem);
+        clamp(
+          3rem,
+          9.8vw,
+          7rem
+        );
 
       line-height:.84;
+
       letter-spacing:-.105em;
+
       text-wrap:balance;
     }
 
-    h2{
+    .shell h2{
       position:relative;
       z-index:2;
 
@@ -522,26 +608,38 @@
       color:var(--gold);
 
       font-size:
-        clamp(1.45rem,4.7vw,2.85rem);
+        clamp(
+          1.45rem,
+          4.7vw,
+          2.85rem
+        );
 
       line-height:.98;
+
       letter-spacing:-.07em;
+
       text-wrap:balance;
     }
 
-    h3{
+    .shell h3{
       margin:0;
 
-      color:rgba(255,244,216,.98);
+      color:
+        rgba(255,244,216,.98);
 
       font-size:
-        clamp(1.05rem,3vw,1.34rem);
+        clamp(
+          1.05rem,
+          3vw,
+          1.34rem
+        );
 
       line-height:1.08;
+
       letter-spacing:-.035em;
     }
 
-    p{
+    .shell p{
       position:relative;
       z-index:2;
 
@@ -550,7 +648,11 @@
       color:var(--muted);
 
       font-size:
-        clamp(.98rem,2.7vw,1.16rem);
+        clamp(
+          .98rem,
+          2.7vw,
+          1.16rem
+        );
 
       line-height:1.55;
     }
@@ -560,23 +662,27 @@
     }
 
     /* =====================================================
-       HEART CONTROLLER MOUNT
+       TRUE 3D HEART STAGE
        ===================================================== */
 
     .heart-controller-shell{
       position:relative;
       z-index:4;
 
-      width:min(920px,100%);
-      aspect-ratio:1000 / 900;
+      width:
+        min(
+          var(--heart-stage),
+          100%
+        );
+
+      aspect-ratio:1 / 1;
 
       display:grid;
       place-items:center;
 
-      perspective:1400px;
-      perspective-origin:50% 42%;
+      margin-top:.4rem;
 
-      margin-top:.5rem;
+      isolation:isolate;
     }
 
     .heart-controller-shell::before{
@@ -584,27 +690,30 @@
 
       position:absolute;
       left:50%;
-      bottom:3%;
+      top:50%;
+      z-index:0;
 
-      width:70%;
-      height:12%;
+      width:78%;
+      height:78%;
 
       transform:
-        translateX(-50%)
-        translateZ(-100px);
+        translate(-50%,-50%);
 
       border-radius:50%;
 
+      pointer-events:none;
+
       background:
         radial-gradient(
-          ellipse,
-          rgba(0,0,0,.72),
-          transparent 70%
+          circle,
+          rgba(243,200,111,.12),
+          rgba(143,101,255,.08) 42%,
+          transparent 72%
         );
 
-      filter:blur(18px);
+      filter:blur(34px);
 
-      pointer-events:none;
+      opacity:.86;
     }
 
     .heart-controller-shell::after{
@@ -612,332 +721,178 @@
 
       position:absolute;
       left:50%;
-      top:47%;
+      bottom:9%;
+      z-index:0;
 
-      width:60%;
-      height:58%;
+      width:38.2%;
+      height:6%;
 
       transform:
-        translate(-50%,-50%)
-        translateZ(-90px);
+        translateX(-50%);
 
       border-radius:50%;
 
+      pointer-events:none;
+
       background:
         radial-gradient(
-          circle,
-          rgba(243,200,111,.18),
-          rgba(143,101,255,.08) 40%,
-          transparent 72%
+          ellipse,
+          rgba(0,0,0,.54),
+          rgba(0,0,0,.14) 56%,
+          transparent 74%
         );
 
-      filter:blur(36px);
+      filter:blur(9px);
 
-      pointer-events:none;
+      opacity:.46;
     }
 
-    .heart-controller-open{
-      position:relative;
-      z-index:4;
+    .heart-3d-canvas{
+      position:absolute;
+      inset:0;
+      z-index:1;
 
-      width:100%;
-      height:100%;
-
-      display:grid;
-      place-items:center;
-
-      padding:0;
-
-      border:0;
-
-      color:inherit;
-      background:transparent;
-
-      cursor:pointer;
-
-      transform-style:preserve-3d;
-
-      transform:
-        rotateX(8deg)
-        rotateY(0deg)
-        translateZ(0);
-
-      transition:
-        transform .48s cubic-bezier(.2,.8,.2,1),
-        filter .28s ease;
-    }
-
-    .heart-controller-open:hover,
-    .heart-controller-open:focus-visible{
-      transform:
-        rotateX(5deg)
-        rotateY(-2deg)
-        translateZ(26px)
-        scale(1.018);
-
-      filter:
-        drop-shadow(
-          0 0 2rem rgba(243,200,111,.24)
-        );
-
-      outline:none;
-    }
-
-    .heart-controller-open:focus-visible
-      .heart-focus-ring{
-      opacity:1;
-    }
-
-    .heart-svg{
       width:100%;
       height:100%;
 
       display:block;
 
-      overflow:visible;
+      pointer-events:none;
 
-      transform-style:preserve-3d;
+      background:transparent;
+
+      filter:
+        drop-shadow(
+          0 1.5rem 2.4rem
+          rgba(0,0,0,.24)
+        );
     }
 
-    .heart-rear-shell{
-      fill:
-        rgba(8,12,28,.96);
+    .heart-static-fallback{
+      position:absolute;
+      left:50%;
+      top:49%;
+      z-index:1;
 
-      stroke:
-        rgba(141,216,255,.14);
+      width:61.8%;
+      height:auto;
 
-      stroke-width:6;
+      display:none;
 
       transform:
-        translateY(20px)
-        scale(.985);
-
-      transform-origin:500px 430px;
+        translate(-50%,-50%);
 
       filter:
-        url("#heartRearShadow");
+        drop-shadow(
+          0 1.2rem 1.5rem
+          rgba(0,0,0,.54)
+        )
+        drop-shadow(
+          0 0 1.2rem
+          rgba(243,200,111,.24)
+        );
+
+      pointer-events:none;
     }
 
-    .heart-main-shell{
-      fill:
-        url("#heartMainGradient");
-
-      stroke:
-        rgba(255,225,148,.72);
-
-      stroke-width:7;
-
-      filter:
-        url("#heartOuterGlow");
+    .heart-controller-shell[data-webgl-state="failed"]
+      .heart-3d-canvas{
+      display:none;
     }
 
-    .heart-inner-surface{
-      fill:
-        url("#heartInteriorGradient");
-
-      stroke:
-        rgba(255,255,255,.16);
-
-      stroke-width:2;
+    .heart-controller-shell[data-webgl-state="failed"]
+      .heart-static-fallback{
+      display:block;
     }
 
-    .heart-facet{
-      stroke:
-        rgba(255,235,184,.34);
+    .heart-controller-open{
+      position:absolute;
+      inset:0;
+      z-index:5;
 
-      stroke-width:3;
+      width:100%;
+      height:100%;
 
-      vector-effect:
-        non-scaling-stroke;
+      display:block;
 
-      transition:
-        opacity .22s ease,
-        filter .22s ease,
-        stroke .22s ease;
+      padding:0;
+
+      border:0;
+
+      border-radius:
+        clamp(
+          1rem,
+          4vw,
+          2rem
+        );
+
+      color:inherit;
+
+      background:transparent;
+
+      cursor:pointer;
+
+      touch-action:manipulation;
+
+      -webkit-tap-highlight-color:transparent;
     }
 
-    .heart-facet-gold{
-      fill:url("#facetGold");
-    }
+    .heart-controller-open::before{
+      content:"";
 
-    .heart-facet-violet{
-      fill:url("#facetViolet");
-    }
+      position:absolute;
+      inset:7%;
+      z-index:0;
 
-    .heart-facet-blue{
-      fill:url("#facetBlue");
-    }
+      border:
+        2px solid
+        transparent;
 
-    .heart-facet-rose{
-      fill:url("#facetRose");
-    }
-
-    .heart-facet-green{
-      fill:url("#facetGreen");
-    }
-
-    .heart-facet-dark{
-      fill:url("#facetDark");
-    }
-
-    .heart-controller-open:hover
-      .heart-facet,
-    .heart-controller-open:focus-visible
-      .heart-facet{
-      stroke:
-        rgba(255,239,194,.58);
-    }
-
-    .heart-ridge{
-      fill:none;
-
-      stroke:
-        rgba(255,245,214,.42);
-
-      stroke-width:3;
-
-      vector-effect:
-        non-scaling-stroke;
-    }
-
-    .heart-ridge-soft{
-      stroke:
-        rgba(141,216,255,.22);
-    }
-
-    .heart-corridor{
-      fill:none;
-
-      stroke:
-        rgba(255,224,147,.24);
-
-      stroke-width:4;
-
-      stroke-linecap:round;
-      stroke-linejoin:round;
-
-      vector-effect:
-        non-scaling-stroke;
-    }
-
-    .heart-core-ring{
-      fill:
-        rgba(9,9,19,.7);
-
-      stroke:
-        rgba(255,232,163,.76);
-
-      stroke-width:5;
-
-      filter:
-        url("#heartCoreGlow");
-    }
-
-    .heart-core-light{
-      fill:
-        url("#heartCoreGradient");
-
-      filter:
-        url("#heartCoreGlow");
-    }
-
-    .heart-core-mark{
-      fill:none;
-
-      stroke:
-        rgba(255,250,224,.82);
-
-      stroke-width:4;
-
-      vector-effect:
-        non-scaling-stroke;
-    }
-
-    .heart-room-node{
-      fill:
-        rgba(255,255,255,.015);
-
-      stroke:
-        rgba(255,255,255,.14);
-
-      stroke-width:2;
-
-      vector-effect:
-        non-scaling-stroke;
-    }
-
-    .heart-room-label{
-      fill:
-        rgba(255,247,223,.9);
-
-      font:
-        950 18px/1
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        sans-serif;
-
-      letter-spacing:1.6px;
-
-      text-anchor:middle;
+      border-radius:2rem;
 
       pointer-events:none;
 
-      paint-order:stroke;
-      stroke:
-        rgba(2,4,11,.8);
-
-      stroke-width:5px;
-      stroke-linejoin:round;
-    }
-
-    .heart-room-label-small{
-      font-size:14px;
-      letter-spacing:1px;
-    }
-
-    .heart-core-label{
-      fill:
-        rgba(255,247,223,.96);
-
-      font:
-        950 22px/1
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        sans-serif;
-
-      letter-spacing:2px;
-
-      text-anchor:middle;
-
-      paint-order:stroke;
-      stroke:
-        rgba(2,4,11,.86);
-
-      stroke-width:6px;
-    }
-
-    .heart-focus-ring{
-      fill:none;
-
-      stroke:
-        rgba(141,216,255,.88);
-
-      stroke-width:8;
-
       opacity:0;
 
-      transition:opacity .18s ease;
+      transition:
+        opacity .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease;
+    }
 
-      filter:
-        url("#heartCoreGlow");
+    .heart-controller-open:hover::before{
+      opacity:.42;
+
+      border-color:
+        rgba(243,200,111,.24);
+
+      box-shadow:
+        inset
+        0 0 2rem
+        rgba(243,200,111,.06);
+    }
+
+    .heart-controller-open:focus-visible{
+      outline:none;
+    }
+
+    .heart-controller-open:focus-visible::before{
+      opacity:1;
+
+      border-color:
+        rgba(141,216,255,.9);
+
+      box-shadow:
+        0 0 0 .28rem
+        rgba(141,216,255,.13),
+        0 0 1.6rem
+        rgba(141,216,255,.24);
     }
 
     .heart-enter-label{
       position:absolute;
       left:50%;
-      bottom:9%;
+      bottom:5.5%;
       z-index:8;
 
       min-height:2.65rem;
@@ -945,18 +900,19 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
+
       gap:.55rem;
 
       padding:.65rem 1rem;
 
       border:
-        1px solid rgba(243,200,111,.62);
+        1px solid
+        rgba(243,200,111,.62);
 
       border-radius:999px;
 
       transform:
-        translateX(-50%)
-        translateZ(160px);
+        translateX(-50%);
 
       color:#060811;
 
@@ -968,8 +924,10 @@
         );
 
       box-shadow:
-        0 .8rem 1.8rem rgba(243,200,111,.16),
-        0 0 2rem rgba(243,200,111,.12);
+        0 .8rem 1.8rem
+        rgba(243,200,111,.16),
+        0 0 2rem
+        rgba(243,200,111,.12);
 
       font-size:.76rem;
       font-weight:950;
@@ -977,7 +935,32 @@
       letter-spacing:.07em;
       text-transform:uppercase;
 
+      white-space:nowrap;
+
       pointer-events:none;
+
+      transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .heart-controller-open:hover
+      .heart-enter-label,
+    .heart-controller-open:focus-visible
+      .heart-enter-label{
+      transform:
+        translateX(-50%)
+        translateY(-2px);
+
+      filter:
+        brightness(1.06);
+
+      box-shadow:
+        0 1rem 2rem
+        rgba(243,200,111,.22),
+        0 0 2.3rem
+        rgba(243,200,111,.18);
     }
 
     .heart-enter-label::before{
@@ -988,7 +971,8 @@
 
       border-radius:.15rem;
 
-      transform:rotate(45deg);
+      transform:
+        rotate(45deg);
 
       background:
         linear-gradient(
@@ -998,23 +982,47 @@
         );
 
       box-shadow:
-        0 0 .8rem rgba(141,216,255,.46);
+        0 0 .8rem
+        rgba(141,216,255,.46);
     }
 
     .heart-controller-help{
       position:absolute;
       left:50%;
-      bottom:2%;
+      bottom:.8%;
       z-index:7;
 
       transform:
-        translateX(-50%)
-        translateZ(120px);
+        translateX(-50%);
 
-      color:rgba(230,238,255,.68);
+      color:
+        rgba(230,238,255,.68);
 
       font-size:.68rem;
       font-weight:850;
+
+      letter-spacing:.12em;
+      text-transform:uppercase;
+
+      white-space:nowrap;
+
+      pointer-events:none;
+    }
+
+    .heart-controller-status{
+      position:absolute;
+      left:50%;
+      top:4%;
+      z-index:7;
+
+      transform:
+        translateX(-50%);
+
+      color:
+        rgba(230,238,255,.5);
+
+      font-size:.58rem;
+      font-weight:900;
 
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -1031,7 +1039,9 @@
       height:1px;
 
       overflow:hidden;
-      clip-path:inset(50%);
+
+      clip-path:
+        inset(50%);
 
       white-space:nowrap;
     }
@@ -1046,7 +1056,9 @@
 
       display:flex;
       flex-wrap:wrap;
+
       justify-content:center;
+
       gap:.62rem;
 
       margin-top:.2rem;
@@ -1062,12 +1074,16 @@
       padding:.65rem 1rem;
 
       border:
-        1px solid rgba(255,255,255,.15);
+        1px solid
+        rgba(255,255,255,.15);
 
       border-radius:999px;
 
-      color:rgba(241,246,255,.88);
-      background:rgba(255,255,255,.045);
+      color:
+        rgba(241,246,255,.88);
+
+      background:
+        rgba(255,255,255,.045);
 
       font-size:.76rem;
       font-weight:950;
@@ -1076,7 +1092,9 @@
       text-transform:uppercase;
 
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.07);
+        inset
+        0 1px 0
+        rgba(255,255,255,.07);
 
       transition:
         transform .18s ease,
@@ -1086,7 +1104,8 @@
 
     .button:hover,
     .button:focus-visible{
-      transform:translateY(-2px);
+      transform:
+        translateY(-2px);
 
       border-color:
         rgba(243,200,111,.62);
@@ -1108,20 +1127,26 @@
         );
 
       box-shadow:
-        0 .8rem 1.8rem rgba(243,200,111,.13);
+        0 .8rem 1.8rem
+        rgba(243,200,111,.13);
     }
 
     /* =====================================================
-       PRESERVED DOWNSTREAM PAGE STYLES
+       DOWNSTREAM PAGE
        ===================================================== */
 
     .section{
       margin-top:1.15rem;
 
       padding:
-        clamp(1rem,4vw,1.65rem);
+        clamp(
+          1rem,
+          4vw,
+          1.65rem
+        );
 
       display:grid;
+
       gap:1rem;
     }
 
@@ -1132,18 +1157,21 @@
         minmax(260px,.58fr);
 
       gap:1rem;
+
       align-items:stretch;
     }
 
     .cover-card{
       display:grid;
       align-content:start;
+
       gap:.8rem;
 
       padding:1.05rem;
 
       border:
-        1px solid rgba(255,255,255,.10);
+        1px solid
+        rgba(255,255,255,.10);
 
       border-radius:1.2rem;
 
@@ -1155,12 +1183,17 @@
       position:relative;
 
       min-height:
-        clamp(19rem,36vw,31rem);
+        clamp(
+          19rem,
+          36vw,
+          31rem
+        );
 
       overflow:hidden;
 
       border:
-        1px solid rgba(243,200,111,.24);
+        1px solid
+        rgba(243,200,111,.24);
 
       border-radius:1.45rem;
 
@@ -1177,8 +1210,11 @@
         );
 
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 1.2rem 3.2rem rgba(0,0,0,.28);
+        inset
+        0 1px 0
+        rgba(255,255,255,.08),
+        0 1.2rem 3.2rem
+        rgba(0,0,0,.28);
     }
 
     .cover-frame img{
@@ -1216,7 +1252,10 @@
     .route-grid{
       display:grid;
       grid-template-columns:
-        repeat(3,minmax(0,1fr));
+        repeat(
+          3,
+          minmax(0,1fr)
+        );
 
       gap:.75rem;
     }
@@ -1229,6 +1268,7 @@
 
       display:grid;
       align-content:start;
+
       gap:.55rem;
 
       padding:.95rem;
@@ -1236,7 +1276,8 @@
       overflow:hidden;
 
       border:
-        1px solid rgba(255,255,255,.10);
+        1px solid
+        rgba(255,255,255,.10);
 
       border-radius:1.05rem;
 
@@ -1256,7 +1297,8 @@
 
     .route-card:hover,
     .route-card:focus-visible{
-      transform:translateY(-3px);
+      transform:
+        translateY(-3px);
 
       border-color:
         rgba(243,200,111,.36);
@@ -1279,11 +1321,13 @@
       height:5.2rem;
 
       border:
-        1px solid rgba(243,200,111,.16);
+        1px solid
+        rgba(243,200,111,.16);
 
       border-radius:1rem;
 
-      transform:rotate(45deg);
+      transform:
+        rotate(45deg);
 
       opacity:.6;
 
@@ -1312,9 +1356,14 @@
         rgba(255,244,216,.98);
 
       font-size:
-        clamp(1.05rem,3vw,1.35rem);
+        clamp(
+          1.05rem,
+          3vw,
+          1.35rem
+        );
 
       line-height:1.05;
+
       letter-spacing:-.045em;
     }
 
@@ -1326,13 +1375,17 @@
       color:var(--muted);
 
       font-size:.92rem;
+
       line-height:1.42;
     }
 
     .summit-strip{
       display:grid;
       grid-template-columns:
-        repeat(9,minmax(0,1fr));
+        repeat(
+          9,
+          minmax(0,1fr)
+        );
 
       gap:.45rem;
     }
@@ -1346,7 +1399,8 @@
       padding:.62rem .45rem;
 
       border:
-        1px solid rgba(255,255,255,.10);
+        1px solid
+        rgba(255,255,255,.10);
 
       border-radius:1rem;
 
@@ -1367,14 +1421,16 @@
 
     .doll{
       display:grid;
+
       gap:.65rem;
     }
 
-    details{
+    .shell details{
       overflow:hidden;
 
       border:
-        1px solid rgba(255,255,255,.11);
+        1px solid
+        rgba(255,255,255,.11);
 
       border-radius:1.1rem;
 
@@ -1382,7 +1438,7 @@
         rgba(255,255,255,.026);
     }
 
-    details[open]{
+    .shell details[open]{
       border-color:
         rgba(243,200,111,.25);
 
@@ -1390,25 +1446,27 @@
         rgba(243,200,111,.045);
     }
 
-    details summary{
+    .shell details summary{
       min-height:4rem;
 
       display:flex;
       align-items:center;
       justify-content:space-between;
+
       gap:1rem;
 
       padding:.9rem 1rem;
 
       cursor:pointer;
+
       list-style:none;
     }
 
-    details summary::-webkit-details-marker{
+    .shell details summary::-webkit-details-marker{
       display:none;
     }
 
-    details summary::after{
+    .shell details summary::after{
       content:"+";
 
       width:2rem;
@@ -1420,22 +1478,26 @@
       flex:0 0 auto;
 
       border:
-        1px solid rgba(255,255,255,.13);
+        1px solid
+        rgba(255,255,255,.13);
 
       border-radius:999px;
 
       color:var(--gold);
-      background:rgba(255,255,255,.04);
+
+      background:
+        rgba(255,255,255,.04);
 
       font-weight:950;
     }
 
-    details[open] summary::after{
+    .shell details[open] summary::after{
       content:"–";
     }
 
     .summary-text{
       display:grid;
+
       gap:.16rem;
     }
 
@@ -1460,13 +1522,18 @@
 
     .doll-body{
       display:grid;
+
       gap:.85rem;
 
-      padding:0 1rem 1rem;
+      padding:
+        0
+        1rem
+        1rem;
     }
 
     .summit-list{
       display:grid;
+
       gap:.45rem;
     }
 
@@ -1481,7 +1548,8 @@
       padding:.7rem;
 
       border:
-        1px solid rgba(255,255,255,.08);
+        1px solid
+        rgba(255,255,255,.08);
 
       border-radius:.9rem;
 
@@ -1502,16 +1570,26 @@
       margin-top:1.15rem;
 
       padding:
-        clamp(1rem,3vw,1.35rem);
+        clamp(
+          1rem,
+          3vw,
+          1.35rem
+        );
 
       display:grid;
+
       gap:.9rem;
 
       border:
-        1px solid rgba(243,200,111,.28);
+        1px solid
+        rgba(243,200,111,.28);
 
       border-radius:
-        clamp(1.25rem,5vw,2rem);
+        clamp(
+          1.25rem,
+          5vw,
+          2rem
+        );
 
       background:
         radial-gradient(
@@ -1526,8 +1604,11 @@
         );
 
       box-shadow:
-        0 1.5rem 4rem rgba(0,0,0,.24),
-        inset 0 1px 0 rgba(255,255,255,.08);
+        0 1.5rem 4rem
+        rgba(0,0,0,.24),
+        inset
+        0 1px 0
+        rgba(255,255,255,.08);
     }
 
     .final-band strong{
@@ -1535,18 +1616,27 @@
         rgba(255,244,216,.98);
 
       font-size:
-        clamp(1.2rem,3vw,1.55rem);
+        clamp(
+          1.2rem,
+          3vw,
+          1.55rem
+        );
 
       line-height:1.05;
+
       letter-spacing:-.04em;
     }
 
-    footer{
-      padding:1.35rem 0 .5rem;
+    .shell footer{
+      padding:
+        1.35rem
+        0
+        .5rem;
 
       color:var(--faint);
 
       text-align:center;
+
       font-size:.76rem;
     }
 
@@ -1568,26 +1658,6 @@
       }
     }
 
-    @keyframes heartCoreBreath{
-      0%,
-      100%{
-        opacity:.82;
-        transform-origin:500px 430px;
-        transform:scale(1);
-      }
-
-      50%{
-        opacity:1;
-        transform-origin:500px 430px;
-        transform:scale(1.05);
-      }
-    }
-
-    .heart-core-light{
-      animation:
-        heartCoreBreath 5.8s ease-in-out infinite;
-    }
-
     /* =====================================================
        RESPONSIVE
        ===================================================== */
@@ -1595,13 +1665,17 @@
     @media (max-width:1080px){
       .summit-strip{
         grid-template-columns:
-          repeat(3,minmax(0,1fr));
+          repeat(
+            3,
+            minmax(0,1fr)
+          );
       }
     }
 
     @media (max-width:980px){
       .topbar{
         grid-template-columns:1fr;
+
         align-items:start;
       }
 
@@ -1612,74 +1686,41 @@
       .short-grid,
       .route-grid{
         grid-template-columns:
-          repeat(2,minmax(0,1fr));
+          repeat(
+            2,
+            minmax(0,1fr)
+          );
       }
 
       .cover-split{
         grid-template-columns:1fr;
       }
-
-      .hero{
-        min-height:
-          clamp(44rem,110vw,62rem);
-      }
-
-      .heart-controller-shell{
-        width:min(820px,100%);
-      }
     }
 
     @media (max-width:720px){
       .shell{
-        width:min(
-          calc(100% - 22px),
-          var(--max)
-        );
+        width:
+          min(
+            calc(100% - 22px),
+            var(--max)
+          );
       }
 
       .hero{
-        min-height:43rem;
         padding:1rem;
       }
 
-      h1{
+      .shell h1{
         font-size:
-          clamp(3rem,17vw,5.2rem);
+          clamp(
+            3rem,
+            17vw,
+            5.2rem
+          );
       }
 
       .heart-controller-shell{
-        width:112%;
-        margin-left:-6%;
-      }
-
-      .heart-room-label{
-        font-size:14px;
-        stroke-width:4px;
-      }
-
-      .heart-room-label-small{
-        font-size:11px;
-      }
-
-      .heart-core-label{
-        font-size:17px;
-        stroke-width:5px;
-      }
-
-      .heart-enter-label{
-        bottom:7%;
-
-        min-height:2.4rem;
-
-        padding:.58rem .8rem;
-
-        font-size:.66rem;
-      }
-
-      .heart-controller-help{
-        bottom:0;
-
-        font-size:.57rem;
+        width:100%;
       }
 
       .actions{
@@ -1700,7 +1741,10 @@
 
       .summit-strip{
         grid-template-columns:
-          repeat(2,minmax(0,1fr));
+          repeat(
+            2,
+            minmax(0,1fr)
+          );
       }
 
       .summit-row{
@@ -1709,31 +1753,28 @@
     }
 
     @media (max-width:520px){
-      .hero{
-        min-height:39rem;
-      }
-
       .heart-controller-shell{
-        width:126%;
-        margin-left:-13%;
-      }
-
-      .heart-room-label{
-        display:none;
-      }
-
-      .heart-core-label{
-        display:block;
+        width:100%;
       }
 
       .heart-enter-label{
         bottom:5%;
 
-        font-size:.6rem;
+        min-height:2.35rem;
+
+        padding:.56rem .78rem;
+
+        font-size:.62rem;
       }
 
       .heart-controller-help{
         display:none;
+      }
+
+      .heart-controller-status{
+        top:2%;
+
+        font-size:.5rem;
       }
     }
 
@@ -1753,19 +1794,8 @@
         transition-duration:.01ms!important;
       }
 
-      body::after,
-      .heart-core-light{
+      body::after{
         animation:none!important;
-      }
-
-      .heart-controller-open,
-      .heart-controller-open:hover,
-      .heart-controller-open:focus-visible{
-        transform:
-          rotateX(0deg)
-          rotateY(0deg)
-          translateZ(0)
-          scale(1);
       }
     }
   </style>
@@ -1790,7 +1820,10 @@
       >
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-          <strong>The Nine Summits of Love</strong>
+
+          <strong>
+            The Nine Summits of Love
+          </strong>
         </span>
       </a>
 
@@ -1834,996 +1867,126 @@
         <div
           class="heart-controller-shell"
           data-house-heart-shell
-          data-heart-width="1000"
-          data-heart-height="900"
-          data-heart-depth="320"
-          data-heart-origin-x="500"
-          data-heart-origin-y="430"
+          data-nine-summits-heart-stage
+          data-webgl-state="loading"
+          data-heart-width="377"
+          data-heart-height="368"
+          data-heart-depth="89"
+          data-heart-bevel="13"
+          data-heart-floor-gap="55"
+          data-heart-shadow-width="233"
+          data-heart-camera-distance="987"
+          data-heart-rotation-seconds="34"
+          data-heart-origin-x="0"
+          data-heart-origin-y="0"
           data-heart-origin-z="0"
+          data-heart-axis="y"
+          data-heart-orbit="false"
         >
+          <canvas
+            class="heart-3d-canvas"
+            data-nine-summits-heart-canvas
+            aria-hidden="true"
+          ></canvas>
+
+          <svg
+            class="heart-static-fallback"
+            viewBox="0 0 1000 900"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient
+                id="fallbackHeartGradient"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stop-color="#ffe8a3"
+                />
+
+                <stop
+                  offset="24%"
+                  stop-color="#9e5d75"
+                />
+
+                <stop
+                  offset="56%"
+                  stop-color="#4d3273"
+                />
+
+                <stop
+                  offset="100%"
+                  stop-color="#10162e"
+                />
+              </linearGradient>
+
+              <filter
+                id="fallbackHeartGlow"
+                x="-40%"
+                y="-40%"
+                width="180%"
+                height="180%"
+              >
+                <feDropShadow
+                  dx="0"
+                  dy="22"
+                  stdDeviation="18"
+                  flood-color="#000000"
+                  flood-opacity=".64"
+                />
+
+                <feDropShadow
+                  dx="0"
+                  dy="0"
+                  stdDeviation="12"
+                  flood-color="#f3c86f"
+                  flood-opacity=".34"
+                />
+              </filter>
+            </defs>
+
+            <path
+              d="
+                M 500 865
+                C 444 805 350 734 255 645
+                C 153 550 94 440 100 330
+                C 106 215 166 119 270 101
+                C 361 85 433 133 500 238
+                C 567 133 639 85 730 101
+                C 834 119 894 215 900 330
+                C 906 440 847 550 745 645
+                C 650 734 556 805 500 865
+                Z
+              "
+              fill="url(#fallbackHeartGradient)"
+              stroke="#f3c86f"
+              stroke-width="8"
+              filter="url(#fallbackHeartGlow)"
+            />
+          </svg>
+
           <button
             class="heart-controller-open"
             type="button"
             data-house-control-pad-open
             data-house-room="book-chamber"
             data-house-heart-controller-open
-            aria-label="Open the interactive House estate shaped as the Nine Summits diamond heart"
+            aria-label="Open the interactive House estate from the rotating Nine Summits diamond heart"
           >
-            <svg
-              class="heart-svg"
-              viewBox="0 0 1000 900"
-              role="img"
-              aria-labelledby="heart-controller-title heart-controller-description"
-              data-house-heart-svg
-            >
-              <title id="heart-controller-title">
-                The Nine Summits Diamond Heart House
-              </title>
-
-              <desc id="heart-controller-description">
-                A three-dimensional faceted diamond heart containing the rooms of the House. Activate the heart to open the House Controller.
-              </desc>
-
-              <defs>
-                <linearGradient
-                  id="heartMainGradient"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#9e5d75"
-                  />
-                  <stop
-                    offset="28%"
-                    stop-color="#5e396e"
-                  />
-                  <stop
-                    offset="58%"
-                    stop-color="#311f51"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#11162f"
-                  />
-                </linearGradient>
-
-                <radialGradient
-                  id="heartInteriorGradient"
-                  cx="50%"
-                  cy="44%"
-                  r="66%"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#523269"
-                  />
-                  <stop
-                    offset="40%"
-                    stop-color="#211a41"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#090d20"
-                  />
-                </radialGradient>
-
-                <linearGradient
-                  id="facetGold"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#fff0a9"
-                    stop-opacity=".72"
-                  />
-                  <stop
-                    offset="55%"
-                    stop-color="#d89656"
-                    stop-opacity=".42"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#6b3452"
-                    stop-opacity=".26"
-                  />
-                </linearGradient>
-
-                <linearGradient
-                  id="facetViolet"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#a884ff"
-                    stop-opacity=".58"
-                  />
-                  <stop
-                    offset="50%"
-                    stop-color="#5d3c88"
-                    stop-opacity=".5"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#171730"
-                    stop-opacity=".74"
-                  />
-                </linearGradient>
-
-                <linearGradient
-                  id="facetBlue"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#a8e7ff"
-                    stop-opacity=".58"
-                  />
-                  <stop
-                    offset="52%"
-                    stop-color="#3f6086"
-                    stop-opacity=".45"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#12182d"
-                    stop-opacity=".72"
-                  />
-                </linearGradient>
-
-                <linearGradient
-                  id="facetRose"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#ffb8d8"
-                    stop-opacity=".58"
-                  />
-                  <stop
-                    offset="50%"
-                    stop-color="#7b405f"
-                    stop-opacity=".45"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#21142d"
-                    stop-opacity=".72"
-                  />
-                </linearGradient>
-
-                <linearGradient
-                  id="facetGreen"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#9df2c8"
-                    stop-opacity=".5"
-                  />
-                  <stop
-                    offset="50%"
-                    stop-color="#3f675b"
-                    stop-opacity=".4"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#101c22"
-                    stop-opacity=".72"
-                  />
-                </linearGradient>
-
-                <linearGradient
-                  id="facetDark"
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="1"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#3a315c"
-                    stop-opacity=".55"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#080d1c"
-                    stop-opacity=".8"
-                  />
-                </linearGradient>
-
-                <radialGradient
-                  id="heartCoreGradient"
-                  cx="50%"
-                  cy="45%"
-                  r="58%"
-                >
-                  <stop
-                    offset="0%"
-                    stop-color="#fffbe6"
-                  />
-                  <stop
-                    offset="22%"
-                    stop-color="#ffe89f"
-                  />
-                  <stop
-                    offset="50%"
-                    stop-color="#f3b95d"
-                  />
-                  <stop
-                    offset="78%"
-                    stop-color="#8f4f61"
-                    stop-opacity=".72"
-                  />
-                  <stop
-                    offset="100%"
-                    stop-color="#34204a"
-                    stop-opacity=".2"
-                  />
-                </radialGradient>
-
-                <filter
-                  id="heartOuterGlow"
-                  x="-30%"
-                  y="-30%"
-                  width="160%"
-                  height="170%"
-                >
-                  <feDropShadow
-                    dx="0"
-                    dy="18"
-                    stdDeviation="18"
-                    flood-color="#000000"
-                    flood-opacity=".65"
-                  />
-
-                  <feDropShadow
-                    dx="0"
-                    dy="0"
-                    stdDeviation="10"
-                    flood-color="#f3c86f"
-                    flood-opacity=".28"
-                  />
-                </filter>
-
-                <filter
-                  id="heartRearShadow"
-                  x="-30%"
-                  y="-30%"
-                  width="160%"
-                  height="170%"
-                >
-                  <feGaussianBlur
-                    stdDeviation="4"
-                  />
-                </filter>
-
-                <filter
-                  id="heartCoreGlow"
-                  x="-80%"
-                  y="-80%"
-                  width="260%"
-                  height="260%"
-                >
-                  <feDropShadow
-                    dx="0"
-                    dy="0"
-                    stdDeviation="10"
-                    flood-color="#ffe89f"
-                    flood-opacity=".85"
-                  />
-
-                  <feDropShadow
-                    dx="0"
-                    dy="0"
-                    stdDeviation="22"
-                    flood-color="#f3a95c"
-                    flood-opacity=".4"
-                  />
-                </filter>
-
-                <clipPath id="heartClip">
-                  <path
-                    d="
-                      M 500 865
-                      C 444 805 350 734 255 645
-                      C 153 550 94 440 100 330
-                      C 106 215 166 119 270 101
-                      C 361 85 433 133 500 238
-                      C 567 133 639 85 730 101
-                      C 834 119 894 215 900 330
-                      C 906 440 847 550 745 645
-                      C 650 734 556 805 500 865
-                      Z
-                    "
-                  />
-                </clipPath>
-              </defs>
-
-              <path
-                class="heart-rear-shell"
-                d="
-                  M 500 865
-                  C 444 805 350 734 255 645
-                  C 153 550 94 440 100 330
-                  C 106 215 166 119 270 101
-                  C 361 85 433 133 500 238
-                  C 567 133 639 85 730 101
-                  C 834 119 894 215 900 330
-                  C 906 440 847 550 745 645
-                  C 650 734 556 805 500 865
-                  Z
-                "
-              />
-
-              <path
-                class="heart-main-shell"
-                d="
-                  M 500 865
-                  C 444 805 350 734 255 645
-                  C 153 550 94 440 100 330
-                  C 106 215 166 119 270 101
-                  C 361 85 433 133 500 238
-                  C 567 133 639 85 730 101
-                  C 834 119 894 215 900 330
-                  C 906 440 847 550 745 645
-                  C 650 734 556 805 500 865
-                  Z
-                "
-              />
-
-              <g clip-path="url(#heartClip)">
-                <path
-                  class="heart-inner-surface"
-                  d="
-                    M 500 827
-                    C 430 759 342 691 270 623
-                    C 183 540 131 443 137 338
-                    C 143 244 193 163 277 149
-                    C 357 135 425 180 500 286
-                    C 575 180 643 135 723 149
-                    C 807 163 857 244 863 338
-                    C 869 443 817 540 730 623
-                    C 658 691 570 759 500 827
-                    Z
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-rose"
-                  points="
-                    100,330
-                    125,190
-                    270,101
-                    355,115
-                    310,300
-                    205,420
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-gold"
-                  points="
-                    355,115
-                    500,238
-                    430,190
-                    310,300
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-violet"
-                  points="
-                    500,238
-                    645,115
-                    690,300
-                    570,190
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-blue"
-                  points="
-                    645,115
-                    730,101
-                    875,190
-                    900,330
-                    795,420
-                    690,300
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-dark"
-                  points="
-                    100,330
-                    205,420
-                    330,430
-                    255,645
-                    145,500
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-rose"
-                  points="
-                    310,300
-                    430,190
-                    500,238
-                    500,430
-                    330,430
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-blue"
-                  points="
-                    500,238
-                    570,190
-                    690,300
-                    670,430
-                    500,430
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-violet"
-                  points="
-                    690,300
-                    795,420
-                    900,330
-                    855,500
-                    745,645
-                    670,430
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-green"
-                  points="
-                    205,420
-                    330,430
-                    390,545
-                    290,545
-                    255,645
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-gold"
-                  points="
-                    330,430
-                    500,430
-                    500,555
-                    390,545
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-dark"
-                  points="
-                    500,430
-                    670,430
-                    610,545
-                    500,555
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-blue"
-                  points="
-                    670,430
-                    795,420
-                    745,645
-                    710,545
-                    610,545
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-violet"
-                  points="
-                    255,645
-                    290,545
-                    390,545
-                    390,650
-                    500,750
-                    390,755
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-gold"
-                  points="
-                    390,545
-                    500,555
-                    500,750
-                    390,650
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-rose"
-                  points="
-                    500,555
-                    610,545
-                    610,650
-                    500,750
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-green"
-                  points="
-                    610,545
-                    710,545
-                    745,645
-                    610,755
-                    500,750
-                    610,650
-                  "
-                />
-
-                <polygon
-                  class="heart-facet heart-facet-dark"
-                  points="
-                    390,755
-                    500,750
-                    610,755
-                    500,865
-                  "
-                />
-
-                <path
-                  class="heart-ridge"
-                  d="
-                    M 500 238
-                    L 500 865
-                  "
-                />
-
-                <path
-                  class="heart-ridge heart-ridge-soft"
-                  d="
-                    M 100 330
-                    L 500 430
-                    L 900 330
-                  "
-                />
-
-                <path
-                  class="heart-ridge heart-ridge-soft"
-                  d="
-                    M 255 645
-                    L 500 555
-                    L 745 645
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 430 190
-                    L 410 275
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 570 190
-                    L 590 275
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 270 215
-                    L 330 430
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 730 215
-                    L 670 430
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 215 415
-                    L 330 430
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 785 415
-                    L 670 430
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 290 545
-                    L 390 545
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 710 545
-                    L 610 545
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 390 650
-                    L 500 555
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 610 650
-                    L 500 555
-                    L 500 430
-                  "
-                />
-
-                <path
-                  class="heart-corridor"
-                  d="
-                    M 500 750
-                    L 500 625
-                    L 500 430
-                  "
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="430"
-                  cy="190"
-                  r="34"
-                  data-house-heart-room="guide-foyer"
-                  data-heart-x="430"
-                  data-heart-y="190"
-                  data-heart-z="42"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="570"
-                  cy="190"
-                  r="34"
-                  data-house-heart-room="book-chamber"
-                  data-heart-x="570"
-                  data-heart-y="190"
-                  data-heart-z="42"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="270"
-                  cy="215"
-                  r="40"
-                  data-house-heart-room="human-threshold"
-                  data-heart-x="270"
-                  data-heart-y="215"
-                  data-heart-z="28"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="730"
-                  cy="215"
-                  r="40"
-                  data-house-heart-room="product-gallery"
-                  data-heart-x="730"
-                  data-heart-y="215"
-                  data-heart-z="28"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="355"
-                  cy="335"
-                  r="31"
-                  data-house-heart-room="law-library"
-                  data-heart-x="355"
-                  data-heart-y="335"
-                  data-heart-z="24"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="645"
-                  cy="335"
-                  r="31"
-                  data-house-heart-room="diagnostic-room"
-                  data-heart-x="645"
-                  data-heart-y="335"
-                  data-heart-z="24"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="215"
-                  cy="415"
-                  r="34"
-                  data-house-heart-room="showroom"
-                  data-heart-x="215"
-                  data-heart-y="415"
-                  data-heart-z="12"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="785"
-                  cy="415"
-                  r="34"
-                  data-house-heart-room="lab"
-                  data-heart-x="785"
-                  data-heart-y="415"
-                  data-heart-z="12"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="290"
-                  cy="545"
-                  r="31"
-                  data-house-heart-room="education-room"
-                  data-heart-x="290"
-                  data-heart-y="545"
-                  data-heart-z="8"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="500"
-                  cy="555"
-                  r="35"
-                  data-house-heart-room="portrait-hall"
-                  data-heart-x="500"
-                  data-heart-y="555"
-                  data-heart-z="18"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="390"
-                  cy="650"
-                  r="30"
-                  data-house-heart-room="atlas-study"
-                  data-heart-x="390"
-                  data-heart-y="650"
-                  data-heart-z="4"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="610"
-                  cy="650"
-                  r="30"
-                  data-house-heart-room="frontier-workshop"
-                  data-heart-x="610"
-                  data-heart-y="650"
-                  data-heart-z="4"
-                />
-
-                <circle
-                  class="heart-room-node"
-                  cx="500"
-                  cy="750"
-                  r="34"
-                  data-house-heart-room="hearth-room"
-                  data-heart-x="500"
-                  data-heart-y="750"
-                  data-heart-z="16"
-                />
-
-                <circle
-                  class="heart-core-ring"
-                  cx="500"
-                  cy="430"
-                  r="96"
-                  data-house-heart-room="house-core"
-                  data-heart-x="500"
-                  data-heart-y="430"
-                  data-heart-z="65"
-                />
-
-                <circle
-                  class="heart-core-light"
-                  cx="500"
-                  cy="430"
-                  r="64"
-                />
-
-                <path
-                  class="heart-core-mark"
-                  d="
-                    M 500 384
-                    L 546 430
-                    L 500 476
-                    L 454 430
-                    Z
-                  "
-                />
-
-                <text
-                  class="heart-room-label"
-                  x="270"
-                  y="220"
-                >
-                  HUMAN
-                </text>
-
-                <text
-                  class="heart-room-label"
-                  x="430"
-                  y="194"
-                >
-                  FOYER
-                </text>
-
-                <text
-                  class="heart-room-label"
-                  x="570"
-                  y="194"
-                >
-                  BOOK
-                </text>
-
-                <text
-                  class="heart-room-label"
-                  x="730"
-                  y="220"
-                >
-                  PRODUCTS
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="355"
-                  y="340"
-                >
-                  LAW
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="645"
-                  y="340"
-                >
-                  DIAGNOSTIC
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="215"
-                  y="420"
-                >
-                  SHOWROOM
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="785"
-                  y="420"
-                >
-                  LAB
-                </text>
-
-                <text
-                  class="heart-core-label"
-                  x="500"
-                  y="437"
-                >
-                  HOUSE CORE
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="290"
-                  y="550"
-                >
-                  EDUCATION
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="500"
-                  y="560"
-                >
-                  PORTRAITS
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="390"
-                  y="655"
-                >
-                  ATLAS
-                </text>
-
-                <text
-                  class="heart-room-label heart-room-label-small"
-                  x="610"
-                  y="655"
-                >
-                  FRONTIER
-                </text>
-
-                <text
-                  class="heart-room-label"
-                  x="500"
-                  y="757"
-                >
-                  HEARTH
-                </text>
-
-                <path
-                  class="heart-focus-ring"
-                  d="
-                    M 500 865
-                    C 444 805 350 734 255 645
-                    C 153 550 94 440 100 330
-                    C 106 215 166 119 270 101
-                    C 361 85 433 133 500 238
-                    C 567 133 639 85 730 101
-                    C 834 119 894 215 900 330
-                    C 906 440 847 550 745 645
-                    C 650 734 556 805 500 865
-                    Z
-                  "
-                />
-              </g>
-            </svg>
+            <span class="heart-controller-status">
+              True-depth axial diamond heart
+            </span>
 
             <span class="heart-enter-label">
               Enter the House
             </span>
 
             <span class="heart-controller-help">
-              Choose the heart to open the interactive estate
+              Choose the rotating heart to open the interactive estate
             </span>
           </button>
 
@@ -2901,17 +2064,26 @@
             <div class="short-grid">
               <div class="short-card">
                 <b>Heart</b>
-                <span>Value is still present.</span>
+
+                <span>
+                  Value is still present.
+                </span>
               </div>
 
               <div class="short-card">
                 <b>Lock</b>
-                <span>Love is not yet accessed cleanly.</span>
+
+                <span>
+                  Love is not yet accessed cleanly.
+                </span>
               </div>
 
               <div class="short-card">
                 <b>Key</b>
-                <span>The path exists, but must be recognized and used.</span>
+
+                <span>
+                  The path exists, but must be recognized and used.
+                </span>
               </div>
             </div>
           </article>
@@ -2934,15 +2106,41 @@
           class="summit-strip"
           aria-label="The Nine Summits"
         >
-          <div class="summit-pill">Character</div>
-          <div class="summit-pill">Structure</div>
-          <div class="summit-pill">Balance</div>
-          <div class="summit-pill">Stability</div>
-          <div class="summit-pill">Peace</div>
-          <div class="summit-pill">Joy</div>
-          <div class="summit-pill">Dignity</div>
-          <div class="summit-pill">Free Will</div>
-          <div class="summit-pill">Love</div>
+          <div class="summit-pill">
+            Character
+          </div>
+
+          <div class="summit-pill">
+            Structure
+          </div>
+
+          <div class="summit-pill">
+            Balance
+          </div>
+
+          <div class="summit-pill">
+            Stability
+          </div>
+
+          <div class="summit-pill">
+            Peace
+          </div>
+
+          <div class="summit-pill">
+            Joy
+          </div>
+
+          <div class="summit-pill">
+            Dignity
+          </div>
+
+          <div class="summit-pill">
+            Free Will
+          </div>
+
+          <div class="summit-pill">
+            Love
+          </div>
         </div>
 
         <p>
@@ -2967,6 +2165,7 @@
             <summary>
               <span class="summary-text">
                 <b>Layer 1</b>
+
                 <span>The Book</span>
               </span>
             </summary>
@@ -2982,6 +2181,7 @@
             <summary>
               <span class="summary-text">
                 <b>Layer 2</b>
+
                 <span>The Nine Summits</span>
               </span>
             </summary>
@@ -2989,48 +2189,93 @@
             <div class="doll-body">
               <div class="summit-list">
                 <div class="summit-row">
-                  <strong>1 · Character</strong>
-                  <span>Becoming someone love can trust without pretending pressure never happened.</span>
+                  <strong>
+                    1 · Character
+                  </strong>
+
+                  <span>
+                    Becoming someone love can trust without pretending pressure never happened.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>2 · Structure</strong>
-                  <span>Building a life strong enough to carry feeling, responsibility, pressure, and future.</span>
+                  <strong>
+                    2 · Structure
+                  </strong>
+
+                  <span>
+                    Building a life strong enough to carry feeling, responsibility, pressure, and future.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>3 · Balance</strong>
-                  <span>Holding difference without collapsing into chaos, avoidance, or control.</span>
+                  <strong>
+                    3 · Balance
+                  </strong>
+
+                  <span>
+                    Holding difference without collapsing into chaos, avoidance, or control.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>4 · Stability</strong>
-                  <span>Repeatable support: the person becomes more reliable to themselves and others.</span>
+                  <strong>
+                    4 · Stability
+                  </strong>
+
+                  <span>
+                    Repeatable support: the person becomes more reliable to themselves and others.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>5 · Peace</strong>
-                  <span>Reducing unnecessary war inside the self, the home, the relationship field, and the future.</span>
+                  <strong>
+                    5 · Peace
+                  </strong>
+
+                  <span>
+                    Reducing unnecessary war inside the self, the home, the relationship field, and the future.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>6 · Joy</strong>
-                  <span>The person becomes capable of brightness again, not only endurance.</span>
+                  <strong>
+                    6 · Joy
+                  </strong>
+
+                  <span>
+                    The person becomes capable of brightness again, not only endurance.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>7 · Dignity</strong>
-                  <span>The human being stops begging for permission to have value.</span>
+                  <strong>
+                    7 · Dignity
+                  </strong>
+
+                  <span>
+                    The human being stops begging for permission to have value.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>8 · Free Will</strong>
-                  <span>Choosing with awareness instead of repeating inherited pressure blindly.</span>
+                  <strong>
+                    8 · Free Will
+                  </strong>
+
+                  <span>
+                    Choosing with awareness instead of repeating inherited pressure blindly.
+                  </span>
                 </div>
 
                 <div class="summit-row">
-                  <strong>9 · Love</strong>
-                  <span>Love becomes disciplined, embodied, and able to hold truth without destroying the person.</span>
+                  <strong>
+                    9 · Love
+                  </strong>
+
+                  <span>
+                    Love becomes disciplined, embodied, and able to hold truth without destroying the person.
+                  </span>
                 </div>
               </div>
             </div>
@@ -3040,6 +2285,7 @@
             <summary>
               <span class="summary-text">
                 <b>Layer 3</b>
+
                 <span>Universe Extension</span>
               </span>
             </summary>
@@ -3055,6 +2301,7 @@
             <summary>
               <span class="summary-text">
                 <b>Layer 4</b>
+
                 <span>Voice Connection</span>
               </span>
             </summary>
@@ -3086,6 +2333,7 @@
             <summary>
               <span class="summary-text">
                 <b>Layer 5</b>
+
                 <span>Proof and Usefulness</span>
               </span>
             </summary>
@@ -3098,17 +2346,26 @@
               <div class="short-grid">
                 <div class="short-card">
                   <b>Products</b>
-                  <span>Ideas become tools.</span>
+
+                  <span>
+                    Ideas become tools.
+                  </span>
                 </div>
 
                 <div class="short-card">
                   <b>Showroom</b>
-                  <span>The build becomes visible.</span>
+
+                  <span>
+                    The build becomes visible.
+                  </span>
                 </div>
 
                 <div class="short-card">
                   <b>Gauges</b>
-                  <span>The route truth gets measured.</span>
+
+                  <span>
+                    The route truth gets measured.
+                  </span>
                 </div>
               </div>
             </div>
@@ -3159,9 +2416,8 @@
             <img
               src="/assets/nine-summits-love-hero.png"
               alt="The Nine Summits of Love universe cover with radiant diamond heart and mountain landscape."
-              loading="eager"
-              decoding="sync"
-              fetchpriority="high"
+              loading="lazy"
+              decoding="async"
             >
           </div>
         </div>
@@ -3188,8 +2444,14 @@
             href="/nine-summits/"
           >
             <b>Hub</b>
-            <strong>Nine Summits</strong>
-            <span>The public gate that keeps the book, Universe, voice, products, and proof lanes clean.</span>
+
+            <strong>
+              Nine Summits
+            </strong>
+
+            <span>
+              The public gate that keeps the book, Universe, voice, products, and proof lanes clean.
+            </span>
           </a>
 
           <a
@@ -3197,8 +2459,14 @@
             href="/nine-summits/universe/"
           >
             <b>World lane</b>
-            <strong>Nine Summits Universe</strong>
-            <span>The larger world around the book: terrain, rooms, experiences, stories, and platform expansion.</span>
+
+            <strong>
+              Nine Summits Universe
+            </strong>
+
+            <span>
+              The larger world around the book: terrain, rooms, experiences, stories, and platform expansion.
+            </span>
           </a>
 
           <a
@@ -3206,8 +2474,14 @@
             href="/about-this-underdog/"
           >
             <b>Universal voice</b>
-            <strong>About This Underdog</strong>
-            <span>The underdog concept for everybody: pressure, survival, voice, accountability, and return.</span>
+
+            <strong>
+              About This Underdog
+            </strong>
+
+            <span>
+              The underdog concept for everybody: pressure, survival, voice, accountability, and return.
+            </span>
           </a>
 
           <a
@@ -3215,8 +2489,14 @@
             href="/meet-sean-mansfield/"
           >
             <b>Personal profile</b>
-            <strong>Meet Sean Mansfield</strong>
-            <span>The person behind the voice, introduced without forcing the whole system to explain itself at once.</span>
+
+            <strong>
+              Meet Sean Mansfield
+            </strong>
+
+            <span>
+              The person behind the voice, introduced without forcing the whole system to explain itself at once.
+            </span>
           </a>
 
           <a
@@ -3224,8 +2504,14 @@
             href="/products/"
           >
             <b>Use</b>
-            <strong>Products</strong>
-            <span>Where ideas become tools, games, learning systems, and support surfaces.</span>
+
+            <strong>
+              Products
+            </strong>
+
+            <span>
+              Where ideas become tools, games, learning systems, and support surfaces.
+            </span>
           </a>
 
           <a
@@ -3233,8 +2519,14 @@
             href="/showroom/"
           >
             <b>Proof surface</b>
-            <strong>Showroom</strong>
-            <span>Where public-facing demonstrations make the build visible.</span>
+
+            <strong>
+              Showroom
+            </strong>
+
+            <span>
+              Where public-facing demonstrations make the build visible.
+            </span>
           </a>
 
           <a
@@ -3242,8 +2534,14 @@
             href="/gauges/"
           >
             <b>Measurement</b>
-            <strong>Gauges</strong>
-            <span>Where the served route truth is checked.</span>
+
+            <strong>
+              Gauges
+            </strong>
+
+            <span>
+              Where the served route truth is checked.
+            </span>
           </a>
 
           <a
@@ -3251,8 +2549,14 @@
             href="/"
           >
             <b>Return</b>
-            <strong>Compass</strong>
-            <span>Return to the estate command surface.</span>
+
+            <strong>
+              Compass
+            </strong>
+
+            <span>
+              Return to the estate command surface.
+            </span>
           </a>
         </div>
       </section>
@@ -3313,9 +2617,2349 @@
     </main>
 
     <footer>
-      The Nine Summits of Love · Book and Seminar Lane · Diamond Heart House Controller.
+      The Nine Summits of Love · Book and Seminar Lane · True-Depth Diamond Heart House Controller.
     </footer>
   </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const stage =
+        document.querySelector(
+          "[data-nine-summits-heart-stage]"
+        );
+
+      const canvas =
+        document.querySelector(
+          "[data-nine-summits-heart-canvas]"
+        );
+
+      if (!stage || !canvas) {
+        return;
+      }
+
+      const reducedMotion =
+        window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+      const CONFIG = Object.freeze({
+        stage: 610,
+        width: 377,
+        height: 368,
+        depth: 89,
+        bevel: 13,
+        floorGap: 55,
+        shadowWidth: 233,
+        cameraDistance: 987,
+        rotationDuration: 34000,
+        perimeterSamples: 89,
+        facetFamilies: 21,
+        frontInset: 0.92,
+        floorY: -233,
+        keyLight: [-233, 233, 377],
+        fillLight: [233, 89, 144],
+        rimLight: [0, 144, -233]
+      });
+
+      const gl =
+        canvas.getContext(
+          "webgl",
+          {
+            alpha: true,
+            antialias: true,
+            depth: true,
+            premultipliedAlpha: false,
+            preserveDrawingBuffer: false,
+            powerPreference: "high-performance"
+          }
+        );
+
+      if (!gl) {
+        stage.dataset.webglState = "failed";
+        return;
+      }
+
+      const VERTEX_SOURCE = `
+        attribute vec3 aPosition;
+        attribute vec3 aNormal;
+        attribute vec4 aColor;
+
+        uniform mat4 uModel;
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        varying vec3 vWorldPosition;
+        varying vec3 vNormal;
+        varying vec4 vColor;
+
+        void main(void) {
+          vec4 world =
+            uModel *
+            vec4(aPosition, 1.0);
+
+          vWorldPosition =
+            world.xyz;
+
+          vNormal =
+            normalize(
+              mat3(uModel) *
+              aNormal
+            );
+
+          vColor =
+            aColor;
+
+          gl_Position =
+            uProjection *
+            uView *
+            world;
+        }
+      `;
+
+      const FRAGMENT_SOURCE = `
+        precision mediump float;
+
+        varying vec3 vWorldPosition;
+        varying vec3 vNormal;
+        varying vec4 vColor;
+
+        uniform vec3 uCameraPosition;
+        uniform vec3 uKeyLight;
+        uniform vec3 uFillLight;
+        uniform vec3 uRimLight;
+
+        vec3 applyLight(
+          vec3 normal,
+          vec3 worldPosition,
+          vec3 lightPosition,
+          vec3 lightColor,
+          float strength
+        ) {
+          vec3 direction =
+            normalize(
+              lightPosition -
+              worldPosition
+            );
+
+          float diffuse =
+            max(
+              dot(normal, direction),
+              0.0
+            );
+
+          return
+            lightColor *
+            diffuse *
+            strength;
+        }
+
+        void main(void) {
+          vec3 normal =
+            normalize(vNormal);
+
+          vec3 viewDirection =
+            normalize(
+              uCameraPosition -
+              vWorldPosition
+            );
+
+          vec3 key =
+            applyLight(
+              normal,
+              vWorldPosition,
+              uKeyLight,
+              vec3(1.0, 0.72, 0.35),
+              0.96
+            );
+
+          vec3 fill =
+            applyLight(
+              normal,
+              vWorldPosition,
+              uFillLight,
+              vec3(0.30, 0.72, 1.0),
+              0.62
+            );
+
+          vec3 rimDirection =
+            normalize(
+              uRimLight -
+              vWorldPosition
+            );
+
+          float rimBase =
+            1.0 -
+            max(
+              dot(normal, viewDirection),
+              0.0
+            );
+
+          float rim =
+            pow(
+              rimBase,
+              2.4
+            ) *
+            max(
+              dot(normal, rimDirection),
+              0.0
+            );
+
+          vec3 ambient =
+            vec3(
+              0.20,
+              0.18,
+              0.30
+            );
+
+          vec3 lighting =
+            ambient +
+            key +
+            fill +
+            vec3(
+              0.56,
+              0.42,
+              1.0
+            ) *
+            rim *
+            0.95;
+
+          float specular =
+            0.0;
+
+          vec3 halfVector =
+            normalize(
+              normalize(
+                uKeyLight -
+                vWorldPosition
+              ) +
+              viewDirection
+            );
+
+          specular =
+            pow(
+              max(
+                dot(normal, halfVector),
+                0.0
+              ),
+              38.0
+            );
+
+          vec3 color =
+            vColor.rgb *
+            lighting +
+            vec3(
+              1.0,
+              0.90,
+              0.62
+            ) *
+            specular *
+            0.85;
+
+          gl_FragColor =
+            vec4(
+              color,
+              vColor.a
+            );
+        }
+      `;
+
+      const SHADOW_VERTEX_SOURCE = `
+        attribute vec3 aPosition;
+        attribute float aAlpha;
+
+        uniform mat4 uView;
+        uniform mat4 uProjection;
+
+        varying float vAlpha;
+
+        void main(void) {
+          vAlpha =
+            aAlpha;
+
+          gl_Position =
+            uProjection *
+            uView *
+            vec4(
+              aPosition,
+              1.0
+            );
+        }
+      `;
+
+      const SHADOW_FRAGMENT_SOURCE = `
+        precision mediump float;
+
+        varying float vAlpha;
+
+        void main(void) {
+          gl_FragColor =
+            vec4(
+              0.0,
+              0.0,
+              0.0,
+              vAlpha
+            );
+        }
+      `;
+
+      function compileShader(type, source) {
+        const shader =
+          gl.createShader(type);
+
+        if (!shader) {
+          throw new Error(
+            "Unable to create shader."
+          );
+        }
+
+        gl.shaderSource(
+          shader,
+          source
+        );
+
+        gl.compileShader(shader);
+
+        if (
+          !gl.getShaderParameter(
+            shader,
+            gl.COMPILE_STATUS
+          )
+        ) {
+          const message =
+            gl.getShaderInfoLog(shader) ||
+            "Shader compilation failed.";
+
+          gl.deleteShader(shader);
+
+          throw new Error(message);
+        }
+
+        return shader;
+      }
+
+      function createProgram(
+        vertexSource,
+        fragmentSource
+      ) {
+        const vertexShader =
+          compileShader(
+            gl.VERTEX_SHADER,
+            vertexSource
+          );
+
+        const fragmentShader =
+          compileShader(
+            gl.FRAGMENT_SHADER,
+            fragmentSource
+          );
+
+        const program =
+          gl.createProgram();
+
+        if (!program) {
+          throw new Error(
+            "Unable to create WebGL program."
+          );
+        }
+
+        gl.attachShader(
+          program,
+          vertexShader
+        );
+
+        gl.attachShader(
+          program,
+          fragmentShader
+        );
+
+        gl.linkProgram(program);
+
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
+
+        if (
+          !gl.getProgramParameter(
+            program,
+            gl.LINK_STATUS
+          )
+        ) {
+          const message =
+            gl.getProgramInfoLog(program) ||
+            "Program linking failed.";
+
+          gl.deleteProgram(program);
+
+          throw new Error(message);
+        }
+
+        return program;
+      }
+
+      function createMat4() {
+        return new Float32Array(16);
+      }
+
+      function identity(out) {
+        out[0] = 1;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = 1;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 1;
+        out[11] = 0;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+
+        return out;
+      }
+
+      function perspective(
+        out,
+        fieldOfView,
+        aspect,
+        near,
+        far
+      ) {
+        const f =
+          1 /
+          Math.tan(
+            fieldOfView / 2
+          );
+
+        const inverseRange =
+          1 /
+          (near - far);
+
+        out[0] = f / aspect;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = f;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] =
+          (far + near) *
+          inverseRange;
+
+        out[11] = -1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] =
+          2 *
+          far *
+          near *
+          inverseRange;
+
+        out[15] = 0;
+
+        return out;
+      }
+
+      function normalizeVector(vector) {
+        const length =
+          Math.hypot(
+            vector[0],
+            vector[1],
+            vector[2]
+          ) || 1;
+
+        return [
+          vector[0] / length,
+          vector[1] / length,
+          vector[2] / length
+        ];
+      }
+
+      function subtractVector(a, b) {
+        return [
+          a[0] - b[0],
+          a[1] - b[1],
+          a[2] - b[2]
+        ];
+      }
+
+      function crossVector(a, b) {
+        return [
+          a[1] * b[2] -
+          a[2] * b[1],
+
+          a[2] * b[0] -
+          a[0] * b[2],
+
+          a[0] * b[1] -
+          a[1] * b[0]
+        ];
+      }
+
+      function lookAt(
+        out,
+        eye,
+        target,
+        up
+      ) {
+        const z =
+          normalizeVector(
+            subtractVector(
+              eye,
+              target
+            )
+          );
+
+        const x =
+          normalizeVector(
+            crossVector(
+              up,
+              z
+            )
+          );
+
+        const y =
+          crossVector(
+            z,
+            x
+          );
+
+        out[0] = x[0];
+        out[1] = y[0];
+        out[2] = z[0];
+        out[3] = 0;
+
+        out[4] = x[1];
+        out[5] = y[1];
+        out[6] = z[1];
+        out[7] = 0;
+
+        out[8] = x[2];
+        out[9] = y[2];
+        out[10] = z[2];
+        out[11] = 0;
+
+        out[12] =
+          -(
+            x[0] * eye[0] +
+            x[1] * eye[1] +
+            x[2] * eye[2]
+          );
+
+        out[13] =
+          -(
+            y[0] * eye[0] +
+            y[1] * eye[1] +
+            y[2] * eye[2]
+          );
+
+        out[14] =
+          -(
+            z[0] * eye[0] +
+            z[1] * eye[1] +
+            z[2] * eye[2]
+          );
+
+        out[15] = 1;
+
+        return out;
+      }
+
+      function rotationY(
+        out,
+        radians
+      ) {
+        const cosine =
+          Math.cos(radians);
+
+        const sine =
+          Math.sin(radians);
+
+        identity(out);
+
+        out[0] = cosine;
+        out[2] = -sine;
+
+        out[8] = sine;
+        out[10] = cosine;
+
+        return out;
+      }
+
+      function cubicPoint(
+        p0,
+        p1,
+        p2,
+        p3,
+        t
+      ) {
+        const inverse =
+          1 - t;
+
+        const inverse2 =
+          inverse * inverse;
+
+        const inverse3 =
+          inverse2 * inverse;
+
+        const t2 =
+          t * t;
+
+        const t3 =
+          t2 * t;
+
+        return [
+          inverse3 * p0[0] +
+          3 * inverse2 * t * p1[0] +
+          3 * inverse * t2 * p2[0] +
+          t3 * p3[0],
+
+          inverse3 * p0[1] +
+          3 * inverse2 * t * p1[1] +
+          3 * inverse * t2 * p2[1] +
+          t3 * p3[1]
+        ];
+      }
+
+      function createHeartPerimeter() {
+        const segments = [
+          [
+            [500,865],
+            [444,805],
+            [350,734],
+            [255,645]
+          ],
+          [
+            [255,645],
+            [153,550],
+            [94,440],
+            [100,330]
+          ],
+          [
+            [100,330],
+            [106,215],
+            [166,119],
+            [270,101]
+          ],
+          [
+            [270,101],
+            [361,85],
+            [433,133],
+            [500,238]
+          ],
+          [
+            [500,238],
+            [567,133],
+            [639,85],
+            [730,101]
+          ],
+          [
+            [730,101],
+            [834,119],
+            [894,215],
+            [900,330]
+          ],
+          [
+            [900,330],
+            [906,440],
+            [847,550],
+            [745,645]
+          ],
+          [
+            [745,645],
+            [650,734],
+            [556,805],
+            [500,865]
+          ]
+        ];
+
+        const points = [];
+
+        const scale =
+          CONFIG.width / 800;
+
+        const centerX = 500;
+        const centerY = 475;
+
+        for (
+          let index = 0;
+          index < CONFIG.perimeterSamples;
+          index += 1
+        ) {
+          const progress =
+            (
+              index /
+              CONFIG.perimeterSamples
+            ) *
+            segments.length;
+
+          const segmentIndex =
+            Math.min(
+              segments.length - 1,
+              Math.floor(progress)
+            );
+
+          const localT =
+            progress -
+            segmentIndex;
+
+          const segment =
+            segments[segmentIndex];
+
+          const point =
+            cubicPoint(
+              segment[0],
+              segment[1],
+              segment[2],
+              segment[3],
+              localT
+            );
+
+          points.push([
+            (point[0] - centerX) * scale,
+            -(point[1] - centerY) * scale
+          ]);
+        }
+
+        if (
+          signedArea(points) < 0
+        ) {
+          points.reverse();
+        }
+
+        return points;
+      }
+
+      function signedArea(points) {
+        let area = 0;
+
+        for (
+          let index = 0;
+          index < points.length;
+          index += 1
+        ) {
+          const current =
+            points[index];
+
+          const next =
+            points[
+              (index + 1) %
+              points.length
+            ];
+
+          area +=
+            current[0] * next[1] -
+            next[0] * current[1];
+        }
+
+        return area / 2;
+      }
+
+      function cross2D(a, b, c) {
+        return (
+          (b[0] - a[0]) *
+          (c[1] - a[1]) -
+          (b[1] - a[1]) *
+          (c[0] - a[0])
+        );
+      }
+
+      function pointInTriangle(
+        point,
+        a,
+        b,
+        c
+      ) {
+        const area1 =
+          cross2D(
+            point,
+            a,
+            b
+          );
+
+        const area2 =
+          cross2D(
+            point,
+            b,
+            c
+          );
+
+        const area3 =
+          cross2D(
+            point,
+            c,
+            a
+          );
+
+        const hasNegative =
+          area1 < 0 ||
+          area2 < 0 ||
+          area3 < 0;
+
+        const hasPositive =
+          area1 > 0 ||
+          area2 > 0 ||
+          area3 > 0;
+
+        return !(
+          hasNegative &&
+          hasPositive
+        );
+      }
+
+      function triangulatePolygon(points) {
+        const remaining =
+          points.map(
+            (_, index) => index
+          );
+
+        const triangles = [];
+
+        let guard = 0;
+
+        while (
+          remaining.length > 3 &&
+          guard < 10000
+        ) {
+          guard += 1;
+
+          let earFound = false;
+
+          for (
+            let index = 0;
+            index < remaining.length;
+            index += 1
+          ) {
+            const previousIndex =
+              remaining[
+                (
+                  index -
+                  1 +
+                  remaining.length
+                ) %
+                remaining.length
+              ];
+
+            const currentIndex =
+              remaining[index];
+
+            const nextIndex =
+              remaining[
+                (
+                  index +
+                  1
+                ) %
+                remaining.length
+              ];
+
+            const previous =
+              points[previousIndex];
+
+            const current =
+              points[currentIndex];
+
+            const next =
+              points[nextIndex];
+
+            if (
+              cross2D(
+                previous,
+                current,
+                next
+              ) <= 0.00001
+            ) {
+              continue;
+            }
+
+            let containsPoint = false;
+
+            for (
+              let test = 0;
+              test < remaining.length;
+              test += 1
+            ) {
+              const testIndex =
+                remaining[test];
+
+              if (
+                testIndex === previousIndex ||
+                testIndex === currentIndex ||
+                testIndex === nextIndex
+              ) {
+                continue;
+              }
+
+              if (
+                pointInTriangle(
+                  points[testIndex],
+                  previous,
+                  current,
+                  next
+                )
+              ) {
+                containsPoint = true;
+                break;
+              }
+            }
+
+            if (containsPoint) {
+              continue;
+            }
+
+            triangles.push([
+              previousIndex,
+              currentIndex,
+              nextIndex
+            ]);
+
+            remaining.splice(
+              index,
+              1
+            );
+
+            earFound = true;
+            break;
+          }
+
+          if (!earFound) {
+            break;
+          }
+        }
+
+        if (
+          remaining.length === 3
+        ) {
+          triangles.push([
+            remaining[0],
+            remaining[1],
+            remaining[2]
+          ]);
+        }
+
+        return triangles;
+      }
+
+      function hexColor(hex) {
+        const normalized =
+          hex.replace("#", "");
+
+        const value =
+          parseInt(
+            normalized,
+            16
+          );
+
+        return [
+          (
+            (value >> 16) &
+            255
+          ) / 255,
+
+          (
+            (value >> 8) &
+            255
+          ) / 255,
+
+          (
+            value &
+            255
+          ) / 255,
+
+          1
+        ];
+      }
+
+      const FACET_PALETTE = [
+        "#fff0a9",
+        "#f3c86f",
+        "#d89656",
+        "#ffafd6",
+        "#b66b91",
+        "#9f7cff",
+        "#7a56bd",
+        "#8dd8ff",
+        "#4d86bd",
+        "#8ff0c6",
+        "#4e9d82",
+        "#b993ff",
+        "#684995",
+        "#f29cc3",
+        "#9c5278",
+        "#70bce6",
+        "#345d8f",
+        "#d4b2ff",
+        "#8060a8",
+        "#675174",
+        "#322946"
+      ].map(hexColor);
+
+      const SIDE_PALETTE = [
+        "#352344",
+        "#251c3c",
+        "#19314b",
+        "#34213a",
+        "#1c273a",
+        "#402a4c",
+        "#17243a",
+        "#2d1e39"
+      ].map(hexColor);
+
+      function colorForFacet(
+        triangle,
+        points,
+        offset = 0
+      ) {
+        const a =
+          points[triangle[0]];
+
+        const b =
+          points[triangle[1]];
+
+        const c =
+          points[triangle[2]];
+
+        const centerX =
+          (
+            a[0] +
+            b[0] +
+            c[0]
+          ) / 3;
+
+        const centerY =
+          (
+            a[1] +
+            b[1] +
+            c[1]
+          ) / 3;
+
+        const angle =
+          Math.atan2(
+            centerY,
+            centerX
+          );
+
+        const radius =
+          Math.hypot(
+            centerX,
+            centerY
+          );
+
+        const family =
+          Math.abs(
+            Math.floor(
+              (
+                angle +
+                Math.PI
+              ) /
+              (
+                Math.PI *
+                2
+              ) *
+              13
+            ) +
+            Math.floor(
+              radius /
+              34
+            ) +
+            offset
+          ) %
+          CONFIG.facetFamilies;
+
+        return FACET_PALETTE[family];
+      }
+
+      function facetHeight(x, y) {
+        const normalizedX =
+          x /
+          (
+            CONFIG.width /
+            2
+          );
+
+        const normalizedY =
+          y /
+          (
+            CONFIG.height /
+            2
+          );
+
+        const radius =
+          Math.min(
+            1,
+            Math.hypot(
+              normalizedX,
+              normalizedY
+            )
+          );
+
+        const angle =
+          Math.atan2(
+            normalizedY,
+            normalizedX
+          );
+
+        return (
+          (
+            1 -
+            radius
+          ) *
+          8 +
+          Math.sin(
+            angle *
+            5
+          ) *
+          2.1 +
+          Math.cos(
+            angle *
+            8
+          ) *
+          1.3
+        );
+      }
+
+      function triangleNormal(
+        a,
+        b,
+        c
+      ) {
+        const edge1 = [
+          b[0] - a[0],
+          b[1] - a[1],
+          b[2] - a[2]
+        ];
+
+        const edge2 = [
+          c[0] - a[0],
+          c[1] - a[1],
+          c[2] - a[2]
+        ];
+
+        return normalizeVector(
+          crossVector(
+            edge1,
+            edge2
+          )
+        );
+      }
+
+      function buildHeartMesh() {
+        const perimeter =
+          createHeartPerimeter();
+
+        const triangles =
+          triangulatePolygon(perimeter);
+
+        if (
+          triangles.length < 3
+        ) {
+          throw new Error(
+            "Heart triangulation failed."
+          );
+        }
+
+        const positions = [];
+        const normals = [];
+        const colors = [];
+
+        const frontFaceZ =
+          CONFIG.depth / 2;
+
+        const frontOuterZ =
+          frontFaceZ -
+          CONFIG.bevel;
+
+        const rearFaceZ =
+          -CONFIG.depth / 2;
+
+        const rearOuterZ =
+          rearFaceZ +
+          CONFIG.bevel;
+
+        function pushTriangle(
+          a,
+          b,
+          c,
+          color
+        ) {
+          const normal =
+            triangleNormal(
+              a,
+              b,
+              c
+            );
+
+          const vertices = [
+            a,
+            b,
+            c
+          ];
+
+          for (
+            const vertex of vertices
+          ) {
+            positions.push(
+              vertex[0],
+              vertex[1],
+              vertex[2]
+            );
+
+            normals.push(
+              normal[0],
+              normal[1],
+              normal[2]
+            );
+
+            colors.push(
+              color[0],
+              color[1],
+              color[2],
+              color[3]
+            );
+          }
+        }
+
+        const frontInner =
+          perimeter.map(
+            ([x, y]) => [
+              x *
+              CONFIG.frontInset,
+
+              y *
+              CONFIG.frontInset,
+
+              frontFaceZ +
+              facetHeight(
+                x,
+                y
+              )
+            ]
+          );
+
+        const rearInner =
+          perimeter.map(
+            ([x, y]) => [
+              x *
+              CONFIG.frontInset,
+
+              y *
+              CONFIG.frontInset,
+
+              rearFaceZ -
+              facetHeight(
+                x,
+                y
+              ) *
+              .36
+            ]
+          );
+
+        const frontOuter =
+          perimeter.map(
+            ([x, y]) => [
+              x,
+              y,
+              frontOuterZ
+            ]
+          );
+
+        const rearOuter =
+          perimeter.map(
+            ([x, y]) => [
+              x,
+              y,
+              rearOuterZ
+            ]
+          );
+
+        triangles.forEach(
+          (
+            triangle,
+            triangleIndex
+          ) => {
+            const color =
+              colorForFacet(
+                triangle,
+                perimeter,
+                triangleIndex %
+                CONFIG.facetFamilies
+              );
+
+            pushTriangle(
+              frontInner[
+                triangle[0]
+              ],
+              frontInner[
+                triangle[1]
+              ],
+              frontInner[
+                triangle[2]
+              ],
+              color
+            );
+          }
+        );
+
+        triangles.forEach(
+          (
+            triangle,
+            triangleIndex
+          ) => {
+            const frontColor =
+              colorForFacet(
+                triangle,
+                perimeter,
+                (
+                  triangleIndex +
+                  9
+                ) %
+                CONFIG.facetFamilies
+              );
+
+            const rearColor = [
+              frontColor[0] * .44,
+              frontColor[1] * .40,
+              frontColor[2] * .58,
+              1
+            ];
+
+            pushTriangle(
+              rearInner[
+                triangle[2]
+              ],
+              rearInner[
+                triangle[1]
+              ],
+              rearInner[
+                triangle[0]
+              ],
+              rearColor
+            );
+          }
+        );
+
+        for (
+          let index = 0;
+          index < perimeter.length;
+          index += 1
+        ) {
+          const next =
+            (
+              index +
+              1
+            ) %
+            perimeter.length;
+
+          const frontColor =
+            FACET_PALETTE[
+              (
+                index +
+                3
+              ) %
+              FACET_PALETTE.length
+            ];
+
+          const frontBevelColor = [
+            Math.min(
+              1,
+              frontColor[0] *
+              1.08
+            ),
+            Math.min(
+              1,
+              frontColor[1] *
+              1.05
+            ),
+            Math.min(
+              1,
+              frontColor[2] *
+              1.08
+            ),
+            1
+          ];
+
+          pushTriangle(
+            frontOuter[index],
+            frontOuter[next],
+            frontInner[next],
+            frontBevelColor
+          );
+
+          pushTriangle(
+            frontOuter[index],
+            frontInner[next],
+            frontInner[index],
+            frontBevelColor
+          );
+
+          const rearColor =
+            SIDE_PALETTE[
+              index %
+              SIDE_PALETTE.length
+            ];
+
+          pushTriangle(
+            rearOuter[index],
+            rearInner[next],
+            rearOuter[next],
+            rearColor
+          );
+
+          pushTriangle(
+            rearOuter[index],
+            rearInner[index],
+            rearInner[next],
+            rearColor
+          );
+
+          const sideColor =
+            SIDE_PALETTE[
+              (
+                index +
+                3
+              ) %
+              SIDE_PALETTE.length
+            ];
+
+          pushTriangle(
+            frontOuter[index],
+            rearOuter[next],
+            frontOuter[next],
+            sideColor
+          );
+
+          pushTriangle(
+            frontOuter[index],
+            rearOuter[index],
+            rearOuter[next],
+            sideColor
+          );
+        }
+
+        return {
+          positions:
+            new Float32Array(
+              positions
+            ),
+
+          normals:
+            new Float32Array(
+              normals
+            ),
+
+          colors:
+            new Float32Array(
+              colors
+            ),
+
+          perimeter,
+
+          frontOuter,
+
+          rearOuter,
+
+          vertexCount:
+            positions.length /
+            3
+        };
+      }
+
+      function createStaticBuffer(
+        target,
+        data
+      ) {
+        const buffer =
+          gl.createBuffer();
+
+        if (!buffer) {
+          throw new Error(
+            "Unable to create WebGL buffer."
+          );
+        }
+
+        gl.bindBuffer(
+          target,
+          buffer
+        );
+
+        gl.bufferData(
+          target,
+          data,
+          gl.STATIC_DRAW
+        );
+
+        return buffer;
+      }
+
+      function createDynamicBuffer() {
+        const buffer =
+          gl.createBuffer();
+
+        if (!buffer) {
+          throw new Error(
+            "Unable to create dynamic WebGL buffer."
+          );
+        }
+
+        return buffer;
+      }
+
+      function rotatePointY(
+        point,
+        angle
+      ) {
+        const cosine =
+          Math.cos(angle);
+
+        const sine =
+          Math.sin(angle);
+
+        return [
+          cosine * point[0] +
+          sine * point[2],
+
+          point[1],
+
+          -sine * point[0] +
+          cosine * point[2]
+        ];
+      }
+
+      function projectPointToFloor(
+        point,
+        light,
+        floorY
+      ) {
+        const denominator =
+          point[1] -
+          light[1];
+
+        if (
+          Math.abs(denominator) <
+          0.0001
+        ) {
+          return null;
+        }
+
+        const factor =
+          (
+            floorY -
+            light[1]
+          ) /
+          denominator;
+
+        return [
+          light[0] +
+          factor *
+          (
+            point[0] -
+            light[0]
+          ),
+
+          light[2] +
+          factor *
+          (
+            point[2] -
+            light[2]
+          )
+        ];
+      }
+
+      function convexHull(points) {
+        if (
+          points.length <= 3
+        ) {
+          return points.slice();
+        }
+
+        const sorted =
+          points
+            .slice()
+            .sort(
+              (a, b) =>
+                a[0] === b[0]
+                  ? a[1] - b[1]
+                  : a[0] - b[0]
+            );
+
+        const cross =
+          (origin, a, b) =>
+            (
+              a[0] - origin[0]
+            ) *
+            (
+              b[1] - origin[1]
+            ) -
+            (
+              a[1] - origin[1]
+            ) *
+            (
+              b[0] - origin[0]
+            );
+
+        const lower = [];
+
+        for (
+          const point of sorted
+        ) {
+          while (
+            lower.length >= 2 &&
+            cross(
+              lower[
+                lower.length - 2
+              ],
+              lower[
+                lower.length - 1
+              ],
+              point
+            ) <= 0
+          ) {
+            lower.pop();
+          }
+
+          lower.push(point);
+        }
+
+        const upper = [];
+
+        for (
+          let index =
+            sorted.length - 1;
+          index >= 0;
+          index -= 1
+        ) {
+          const point =
+            sorted[index];
+
+          while (
+            upper.length >= 2 &&
+            cross(
+              upper[
+                upper.length - 2
+              ],
+              upper[
+                upper.length - 1
+              ],
+              point
+            ) <= 0
+          ) {
+            upper.pop();
+          }
+
+          upper.push(point);
+        }
+
+        lower.pop();
+        upper.pop();
+
+        return lower.concat(upper);
+      }
+
+      function buildShadowGeometry(
+        mesh,
+        angle
+      ) {
+        const projected = [];
+
+        const sourcePoints = [
+          ...mesh.frontOuter,
+          ...mesh.rearOuter
+        ];
+
+        for (
+          const point of sourcePoints
+        ) {
+          const rotated =
+            rotatePointY(
+              point,
+              angle
+            );
+
+          const floorPoint =
+            projectPointToFloor(
+              rotated,
+              CONFIG.keyLight,
+              CONFIG.floorY
+            );
+
+          if (floorPoint) {
+            projected.push(
+              floorPoint
+            );
+          }
+        }
+
+        const hull =
+          convexHull(projected);
+
+        if (
+          hull.length < 3
+        ) {
+          return {
+            positions:
+              new Float32Array(0),
+
+            alphas:
+              new Float32Array(0),
+
+            vertexCount:0
+          };
+        }
+
+        const center =
+          hull.reduce(
+            (accumulator, point) => {
+              accumulator[0] +=
+                point[0];
+
+              accumulator[1] +=
+                point[1];
+
+              return accumulator;
+            },
+            [0,0]
+          );
+
+        center[0] /=
+          hull.length;
+
+        center[1] /=
+          hull.length;
+
+        const positions = [];
+        const alphas = [];
+
+        const layers = 7;
+
+        for (
+          let layer = 0;
+          layer < layers;
+          layer += 1
+        ) {
+          const scale =
+            1 +
+            (
+              layers -
+              1 -
+              layer
+            ) *
+            .027;
+
+          const alpha =
+            .018 +
+            layer *
+            .012;
+
+          const y =
+            CONFIG.floorY +
+            .25 +
+            layer *
+            .025;
+
+          const layerPoints =
+            hull.map(
+              point => [
+                center[0] +
+                (
+                  point[0] -
+                  center[0]
+                ) *
+                scale,
+
+                center[1] +
+                (
+                  point[1] -
+                  center[1]
+                ) *
+                scale
+              ]
+            );
+
+          for (
+            let index = 0;
+            index < layerPoints.length;
+            index += 1
+          ) {
+            const next =
+              (
+                index +
+                1
+              ) %
+              layerPoints.length;
+
+            const vertices = [
+              [
+                center[0],
+                y,
+                center[1]
+              ],
+              [
+                layerPoints[index][0],
+                y,
+                layerPoints[index][1]
+              ],
+              [
+                layerPoints[next][0],
+                y,
+                layerPoints[next][1]
+              ]
+            ];
+
+            for (
+              const vertex of vertices
+            ) {
+              positions.push(
+                vertex[0],
+                vertex[1],
+                vertex[2]
+              );
+
+              alphas.push(alpha);
+            }
+          }
+        }
+
+        return {
+          positions:
+            new Float32Array(
+              positions
+            ),
+
+          alphas:
+            new Float32Array(
+              alphas
+            ),
+
+          vertexCount:
+            positions.length /
+            3
+        };
+      }
+
+      function bindAttribute(
+        buffer,
+        location,
+        size,
+        type = gl.FLOAT
+      ) {
+        gl.bindBuffer(
+          gl.ARRAY_BUFFER,
+          buffer
+        );
+
+        gl.enableVertexAttribArray(
+          location
+        );
+
+        gl.vertexAttribPointer(
+          location,
+          size,
+          type,
+          false,
+          0,
+          0
+        );
+      }
+
+      function resizeCanvas() {
+        const rectangle =
+          canvas.getBoundingClientRect();
+
+        const ratio =
+          Math.min(
+            window.devicePixelRatio ||
+            1,
+            2
+          );
+
+        const width =
+          Math.max(
+            1,
+            Math.round(
+              rectangle.width *
+              ratio
+            )
+          );
+
+        const height =
+          Math.max(
+            1,
+            Math.round(
+              rectangle.height *
+              ratio
+            )
+          );
+
+        if (
+          canvas.width !== width ||
+          canvas.height !== height
+        ) {
+          canvas.width = width;
+          canvas.height = height;
+        }
+
+        gl.viewport(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        return {
+          width,
+          height,
+          aspect:
+            width /
+            Math.max(
+              height,
+              1
+            )
+        };
+      }
+
+      try {
+        const mainProgram =
+          createProgram(
+            VERTEX_SOURCE,
+            FRAGMENT_SOURCE
+          );
+
+        const shadowProgram =
+          createProgram(
+            SHADOW_VERTEX_SOURCE,
+            SHADOW_FRAGMENT_SOURCE
+          );
+
+        const mesh =
+          buildHeartMesh();
+
+        const positionBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.positions
+          );
+
+        const normalBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.normals
+          );
+
+        const colorBuffer =
+          createStaticBuffer(
+            gl.ARRAY_BUFFER,
+            mesh.colors
+          );
+
+        const shadowPositionBuffer =
+          createDynamicBuffer();
+
+        const shadowAlphaBuffer =
+          createDynamicBuffer();
+
+        const mainLocations = {
+          position:
+            gl.getAttribLocation(
+              mainProgram,
+              "aPosition"
+            ),
+
+          normal:
+            gl.getAttribLocation(
+              mainProgram,
+              "aNormal"
+            ),
+
+          color:
+            gl.getAttribLocation(
+              mainProgram,
+              "aColor"
+            ),
+
+          model:
+            gl.getUniformLocation(
+              mainProgram,
+              "uModel"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              mainProgram,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              mainProgram,
+              "uProjection"
+            ),
+
+          camera:
+            gl.getUniformLocation(
+              mainProgram,
+              "uCameraPosition"
+            ),
+
+          key:
+            gl.getUniformLocation(
+              mainProgram,
+              "uKeyLight"
+            ),
+
+          fill:
+            gl.getUniformLocation(
+              mainProgram,
+              "uFillLight"
+            ),
+
+          rim:
+            gl.getUniformLocation(
+              mainProgram,
+              "uRimLight"
+            )
+        };
+
+        const shadowLocations = {
+          position:
+            gl.getAttribLocation(
+              shadowProgram,
+              "aPosition"
+            ),
+
+          alpha:
+            gl.getAttribLocation(
+              shadowProgram,
+              "aAlpha"
+            ),
+
+          view:
+            gl.getUniformLocation(
+              shadowProgram,
+              "uView"
+            ),
+
+          projection:
+            gl.getUniformLocation(
+              shadowProgram,
+              "uProjection"
+            )
+        };
+
+        const modelMatrix =
+          createMat4();
+
+        const viewMatrix =
+          createMat4();
+
+        const projectionMatrix =
+          createMat4();
+
+        const cameraPosition = [
+          0,
+          30,
+          CONFIG.cameraDistance
+        ];
+
+        lookAt(
+          viewMatrix,
+          cameraPosition,
+          [0,-28,0],
+          [0,1,0]
+        );
+
+        gl.enable(
+          gl.DEPTH_TEST
+        );
+
+        gl.depthFunc(
+          gl.LEQUAL
+        );
+
+        gl.enable(
+          gl.BLEND
+        );
+
+        gl.blendFunc(
+          gl.SRC_ALPHA,
+          gl.ONE_MINUS_SRC_ALPHA
+        );
+
+        gl.clearColor(
+          0,
+          0,
+          0,
+          0
+        );
+
+        let startTime =
+          performance.now();
+
+        let pausedAngle = 0;
+
+        let previousReducedMotion =
+          reducedMotion.matches;
+
+        function currentAngle(time) {
+          if (
+            reducedMotion.matches
+          ) {
+            return 0;
+          }
+
+          return (
+            (
+              time -
+              startTime
+            ) %
+            CONFIG.rotationDuration
+          ) /
+          CONFIG.rotationDuration *
+          Math.PI *
+          2;
+        }
+
+        function drawShadow(angle) {
+          const shadow =
+            buildShadowGeometry(
+              mesh,
+              angle
+            );
+
+          if (
+            shadow.vertexCount === 0
+          ) {
+            return;
+          }
+
+          gl.useProgram(
+            shadowProgram
+          );
+
+          gl.bindBuffer(
+            gl.ARRAY_BUFFER,
+            shadowPositionBuffer
+          );
+
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            shadow.positions,
+            gl.DYNAMIC_DRAW
+          );
+
+          gl.enableVertexAttribArray(
+            shadowLocations.position
+          );
+
+          gl.vertexAttribPointer(
+            shadowLocations.position,
+            3,
+            gl.FLOAT,
+            false,
+            0,
+            0
+          );
+
+          gl.bindBuffer(
+            gl.ARRAY_BUFFER,
+            shadowAlphaBuffer
+          );
+
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            shadow.alphas,
+            gl.DYNAMIC_DRAW
+          );
+
+          gl.enableVertexAttribArray(
+            shadowLocations.alpha
+          );
+
+          gl.vertexAttribPointer(
+            shadowLocations.alpha,
+            1,
+            gl.FLOAT,
+            false,
+            0,
+            0
+          );
+
+          gl.uniformMatrix4fv(
+            shadowLocations.view,
+            false,
+            viewMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            shadowLocations.projection,
+            false,
+            projectionMatrix
+          );
+
+          gl.depthMask(false);
+
+          gl.drawArrays(
+            gl.TRIANGLES,
+            0,
+            shadow.vertexCount
+          );
+
+          gl.depthMask(true);
+        }
+
+        function drawHeart(angle) {
+          rotationY(
+            modelMatrix,
+            angle
+          );
+
+          gl.useProgram(
+            mainProgram
+          );
+
+          bindAttribute(
+            positionBuffer,
+            mainLocations.position,
+            3
+          );
+
+          bindAttribute(
+            normalBuffer,
+            mainLocations.normal,
+            3
+          );
+
+          bindAttribute(
+            colorBuffer,
+            mainLocations.color,
+            4
+          );
+
+          gl.uniformMatrix4fv(
+            mainLocations.model,
+            false,
+            modelMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            mainLocations.view,
+            false,
+            viewMatrix
+          );
+
+          gl.uniformMatrix4fv(
+            mainLocations.projection,
+            false,
+            projectionMatrix
+          );
+
+          gl.uniform3fv(
+            mainLocations.camera,
+            cameraPosition
+          );
+
+          gl.uniform3fv(
+            mainLocations.key,
+            CONFIG.keyLight
+          );
+
+          gl.uniform3fv(
+            mainLocations.fill,
+            CONFIG.fillLight
+          );
+
+          gl.uniform3fv(
+            mainLocations.rim,
+            CONFIG.rimLight
+          );
+
+          gl.drawArrays(
+            gl.TRIANGLES,
+            0,
+            mesh.vertexCount
+          );
+        }
+
+        function render(time) {
+          if (
+            previousReducedMotion !==
+            reducedMotion.matches
+          ) {
+            if (
+              reducedMotion.matches
+            ) {
+              pausedAngle =
+                currentAngle(time);
+            } else {
+              startTime =
+                time -
+                pausedAngle /
+                (
+                  Math.PI *
+                  2
+                ) *
+                CONFIG.rotationDuration;
+            }
+
+            previousReducedMotion =
+              reducedMotion.matches;
+          }
+
+          const viewport =
+            resizeCanvas();
+
+          perspective(
+            projectionMatrix,
+            34 *
+            Math.PI /
+            180,
+            viewport.aspect,
+            1,
+            2600
+          );
+
+          gl.clear(
+            gl.COLOR_BUFFER_BIT |
+            gl.DEPTH_BUFFER_BIT
+          );
+
+          const angle =
+            reducedMotion.matches
+              ? 0
+              : currentAngle(time);
+
+          drawShadow(angle);
+          drawHeart(angle);
+
+          requestAnimationFrame(render);
+        }
+
+        stage.dataset.webglState =
+          "ready";
+
+        requestAnimationFrame(render);
+      } catch (error) {
+        console.error(
+          "[Nine Summits Heart] WebGL initialization failed.",
+          error
+        );
+
+        stage.dataset.webglState =
+          "failed";
+      }
+    })();
+  </script>
 
   <script
     src="/assets/house-control-pad/house.control-pad.data.js"

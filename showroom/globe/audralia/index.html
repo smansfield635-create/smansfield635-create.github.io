@@ -1,5 +1,5 @@
 <!-- /showroom/globe/audralia/index.html -->
-<!-- AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v1 -->
+<!-- AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2 -->
 <!-- Full-file replacement. -->
 <!doctype html>
 <html
@@ -7,7 +7,7 @@
   data-route="/showroom/globe/audralia/"
   data-page="audralia-conservatory"
   data-room="audralia-conservatory"
-  data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v1"
+  data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2"
   data-route-family="diamond-gate-bridge"
   data-world-family="mirrorland"
   data-current-role="planetary-holder"
@@ -45,7 +45,7 @@
 
   <meta
     name="description"
-    content="The Audralia Conservatory holds the developing planet while the Hearth Development R&D Chamber builds the planetary construction engine. Coming soon: the Audralia storyworld and the Mirror Me journey."
+    content="Audralia is currently held in the Audralia Conservatory while the Hearth Development R&D Chamber builds the planetary construction engine."
   >
 
   <meta
@@ -94,18 +94,12 @@
   data-audralia-page
   data-audralia-planet-page
   data-audralia-state="loading"
+  data-audralia-dialog-state="closed"
   data-audralia-planet-runtime-mounted="false"
   data-audralia-planet-runtime-mode="held"
   data-audralia-planet-runtime-context-lost="false"
   data-audralia-planet-runtime-error-count="0"
 >
-  <a
-    class="skip"
-    href="#audraliaGlobeStage"
-  >
-    Skip to Audralia
-  </a>
-
   <main
     class="audralia-page"
     data-audralia-page
@@ -141,18 +135,19 @@
             Audralia Conservatory
           </h1>
 
-          <div
-            class="audralia-subtitle"
-            data-audralia-subtitle
+          <p
+            class="audralia-purpose"
+            data-audralia-purpose
           >
-            Planetary holder now. Frontier-science storyworld next.
-          </div>
+            Audralia is currently held here while the Hearth Development
+            R&amp;D Chamber builds the planetary construction engine.
+          </p>
         </div>
 
         <nav
           class="audralia-header-actions"
           data-audralia-header-actions
-          aria-label="Audralia Conservatory controls"
+          aria-label="Audralia Conservatory actions"
         >
           <button
             id="audralia-control-map-button"
@@ -160,12 +155,24 @@
             type="button"
             data-house-control-pad-open
             data-house-context="audralia-conservatory"
-            aria-label="Open the Diamond Gate Bridge control map"
+            aria-label="Open the Diamond Gate Bridge Control Map"
             aria-haspopup="dialog"
             aria-controls="house-control-pad-dialog"
             aria-expanded="false"
           >
             Open Control Map
+          </button>
+
+          <button
+            id="audralia-about-button"
+            class="audralia-header-action"
+            type="button"
+            data-audralia-dialog-open="audralia-about-dialog"
+            aria-haspopup="dialog"
+            aria-controls="audralia-about-dialog"
+            aria-expanded="false"
+          >
+            About
           </button>
         </nav>
       </header>
@@ -176,6 +183,7 @@
         data-audralia-globe-stage
         data-audralia-planet-stage
         aria-label="Interactive Audralia planetary holder"
+        aria-describedby="audralia-interaction-guide"
         tabindex="-1"
       >
         <div
@@ -217,120 +225,6 @@
               </span>
             </div>
           </div>
-
-          <aside
-            class="audralia-hud"
-            data-audralia-hud
-            data-audralia-planet-hud
-            aria-label="Audralia development status"
-          >
-            <div
-              class="audralia-hud-title"
-              data-audralia-hud-title
-            >
-              Conservatory
-            </div>
-
-            <div
-              class="audralia-hud-grid"
-              data-audralia-hud-grid
-            >
-              <div
-                class="audralia-hud-item"
-                data-audralia-hud-item
-              >
-                <span
-                  class="audralia-hud-key"
-                  data-audralia-hud-key
-                >
-                  Current
-                </span>
-
-                <span
-                  class="audralia-hud-value"
-                  data-audralia-hud-value
-                >
-                  Planetary holder
-                </span>
-              </div>
-
-              <div
-                class="audralia-hud-item"
-                data-audralia-hud-item
-              >
-                <span
-                  class="audralia-hud-key"
-                  data-audralia-hud-key
-                >
-                  Engine
-                </span>
-
-                <span
-                  class="audralia-hud-value"
-                  data-audralia-hud-value
-                >
-                  Hearth R&amp;D
-                </span>
-              </div>
-            </div>
-          </aside>
-
-          <div
-            class="audralia-instructions"
-            data-audralia-instructions
-          >
-            Drag to turn · pinch or scroll to move · double-tap to reset
-          </div>
-
-          <div
-            class="audralia-controls"
-            data-audralia-controls
-            data-audralia-planet-controls
-            aria-label="Planet controls"
-          >
-            <button
-              id="audraliaResetButton"
-              class="audralia-control"
-              type="button"
-              data-audralia-action="reset"
-              aria-label="Reset the Audralia view"
-            >
-              Reset
-            </button>
-
-            <button
-              id="audraliaPauseButton"
-              class="audralia-control"
-              type="button"
-              data-audralia-action="pause"
-              aria-label="Pause or resume Audralia rotation"
-              aria-pressed="false"
-            >
-              Pause
-            </button>
-
-            <button
-              id="audraliaCloudsButton"
-              class="audralia-control"
-              type="button"
-              data-audralia-action="clouds"
-              aria-label="Show or hide Audralia clouds"
-              aria-pressed="true"
-            >
-              Clouds
-            </button>
-
-            <button
-              id="audraliaAtmosphereButton"
-              class="audralia-control"
-              type="button"
-              data-audralia-action="atmosphere"
-              aria-label="Show or hide the Audralia atmosphere"
-              aria-pressed="true"
-            >
-              Atmosphere
-            </button>
-          </div>
         </div>
 
         <div
@@ -338,6 +232,7 @@
           data-audralia-state-layer
           data-state="loading"
           aria-live="polite"
+          aria-hidden="false"
         >
           <div
             class="audralia-state-card"
@@ -363,6 +258,7 @@
           data-audralia-state-layer
           data-state="held"
           aria-live="polite"
+          aria-hidden="true"
         >
           <div
             class="audralia-state-card"
@@ -382,6 +278,7 @@
           data-audralia-state-layer
           data-state="fallback"
           aria-live="polite"
+          aria-hidden="true"
         >
           <div
             class="audralia-state-card"
@@ -401,6 +298,7 @@
           data-audralia-state-layer
           data-state="context-lost"
           aria-live="assertive"
+          aria-hidden="true"
         >
           <div
             class="audralia-state-card"
@@ -418,7 +316,7 @@
         <noscript>
           <div
             class="audralia-state-layer"
-            style="opacity:1;visibility:visible"
+            style="opacity:1;visibility:visible;pointer-events:auto"
           >
             <div
               class="audralia-state-card"
@@ -435,38 +333,306 @@
         </noscript>
       </section>
 
-      <footer
-        class="audralia-footer"
-        data-audralia-footer
-        data-audralia-planet-footer
-        aria-label="Coming soon to Audralia"
+      <div
+        id="audralia-interaction-guide"
+        class="audralia-instructions"
+        data-audralia-instructions
+        aria-label="Audralia interaction instructions"
       >
-        <div
-          class="audralia-status-card"
-          data-audralia-status-card
-          data-coming-soon="audralia-storyworld"
+        <span>Drag to rotate</span>
+        <span aria-hidden="true">·</span>
+        <span>Pinch or scroll to zoom in and out</span>
+        <span aria-hidden="true">·</span>
+        <span>Double-tap to reset</span>
+      </div>
+
+      <div
+        class="audralia-controls"
+        data-audralia-controls
+        data-audralia-planet-controls
+        role="group"
+        aria-label="Audralia planet controls"
+      >
+        <button
+          id="audraliaResetButton"
+          class="audralia-control"
+          type="button"
+          data-audralia-action="reset"
+          aria-label="Reset the Audralia view"
         >
-          <strong>The Audralia Storyworld</strong>
+          Reset
+        </button>
 
-          <span>
-            Characters, frontier science, and a race against the clock.
-          </span>
-        </div>
-
-        <div
-          class="audralia-status-card"
-          data-audralia-status-card
-          data-coming-soon="mirror-me-journey"
+        <button
+          id="audraliaPauseButton"
+          class="audralia-control"
+          type="button"
+          data-audralia-action="pause"
+          aria-label="Pause or resume Audralia rotation"
+          aria-pressed="false"
         >
-          <strong>The Mirror Me Journey</strong>
+          Pause
+        </button>
 
-          <span>
-            Receive a character spirit and seek your Mirror Mes.
-          </span>
+        <button
+          id="audraliaCloudsButton"
+          class="audralia-control"
+          type="button"
+          data-audralia-action="clouds"
+          aria-label="Show or hide Audralia clouds"
+          aria-pressed="true"
+        >
+          Clouds
+        </button>
+
+        <button
+          id="audraliaAtmosphereButton"
+          class="audralia-control"
+          type="button"
+          data-audralia-action="atmosphere"
+          aria-label="Show or hide the Audralia atmosphere"
+          aria-pressed="true"
+        >
+          Atmosphere
+        </button>
+      </div>
+
+      <section
+        class="audralia-attractions"
+        data-audralia-attractions
+        aria-labelledby="audralia-attractions-title"
+      >
+        <header class="audralia-attractions-header">
+          <div class="audralia-section-eyebrow">
+            Conservatory Preview
+          </div>
+
+          <h2
+            id="audralia-attractions-title"
+            class="audralia-section-title"
+          >
+            Coming Soon
+          </h2>
+        </header>
+
+        <div class="audralia-attraction-grid">
+          <article
+            class="audralia-attraction-card"
+            data-coming-soon="audralia-storyworld"
+          >
+            <div class="audralia-attraction-part">
+              Coming Soon · Part One
+            </div>
+
+            <h3 class="audralia-attraction-title">
+              The Audralia Storyworld
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Characters, frontier science, and a race against the clock.
+            </p>
+
+            <button
+              id="audralia-storyworld-button"
+              class="audralia-attraction-action"
+              type="button"
+              data-audralia-dialog-open="audralia-storyworld-dialog"
+              aria-haspopup="dialog"
+              aria-controls="audralia-storyworld-dialog"
+              aria-expanded="false"
+            >
+              Explore Part One
+            </button>
+          </article>
+
+          <article
+            class="audralia-attraction-card"
+            data-coming-soon="mirror-me-journey"
+          >
+            <div class="audralia-attraction-part">
+              Coming Soon · Part Two
+            </div>
+
+            <h3 class="audralia-attraction-title">
+              The Mirror Me Journey
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Receive a character spirit and begin the search for your
+              Mirror Mes.
+            </p>
+
+            <button
+              id="audralia-mirror-me-button"
+              class="audralia-attraction-action"
+              type="button"
+              data-audralia-dialog-open="audralia-mirror-me-dialog"
+              aria-haspopup="dialog"
+              aria-controls="audralia-mirror-me-dialog"
+              aria-expanded="false"
+            >
+              Explore Part Two
+            </button>
+          </article>
         </div>
-      </footer>
+      </section>
     </div>
   </main>
+
+  <dialog
+    id="audralia-about-dialog"
+    class="audralia-dialog"
+    data-audralia-dialog
+    aria-labelledby="audralia-about-dialog-title"
+    aria-describedby="audralia-about-dialog-body"
+  >
+    <div class="audralia-dialog-card">
+      <header class="audralia-dialog-header">
+        <div>
+          <div class="audralia-dialog-eyebrow">
+            Audralia Conservatory
+          </div>
+
+          <h2
+            id="audralia-about-dialog-title"
+            class="audralia-dialog-title"
+          >
+            About This Conservatory
+          </h2>
+        </div>
+
+        <button
+          class="audralia-dialog-close"
+          type="button"
+          data-audralia-dialog-close
+          aria-label="Close About This Conservatory"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div
+        id="audralia-about-dialog-body"
+        class="audralia-dialog-body"
+      >
+        <p>
+          The Audralia Conservatory is a protected planetary holder and
+          viewing environment. It preserves a stable place for Audralia
+          while the Hearth Development R&amp;D Chamber develops the
+          reusable construction engine that will later build and deliver
+          the fuller planetary system.
+        </p>
+
+        <p>
+          The planet currently presented here is provisional. This page
+          is prepared to receive the later canonical planet, but the
+          planetary construction engine is not running inside the
+          Conservatory.
+        </p>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog
+    id="audralia-storyworld-dialog"
+    class="audralia-dialog"
+    data-audralia-dialog
+    aria-labelledby="audralia-storyworld-dialog-title"
+    aria-describedby="audralia-storyworld-dialog-body"
+  >
+    <div class="audralia-dialog-card">
+      <header class="audralia-dialog-header">
+        <div>
+          <div class="audralia-dialog-eyebrow">
+            Coming Soon · Part One
+          </div>
+
+          <h2
+            id="audralia-storyworld-dialog-title"
+            class="audralia-dialog-title"
+          >
+            The Audralia Storyworld
+          </h2>
+        </div>
+
+        <button
+          class="audralia-dialog-close"
+          type="button"
+          data-audralia-dialog-close
+          aria-label="Close The Audralia Storyworld"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div
+        id="audralia-storyworld-dialog-body"
+        class="audralia-dialog-body"
+      >
+        <p>
+          Audralia will become the playground where its characters,
+          locations, conflicts, discoveries, and storyline develop
+          around frontier science.
+        </p>
+
+        <p>
+          The shared world will evolve under the pressure of a race
+          against the clock, where new knowledge, dangerous
+          consequences, and urgent decisions shape the story.
+        </p>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog
+    id="audralia-mirror-me-dialog"
+    class="audralia-dialog"
+    data-audralia-dialog
+    aria-labelledby="audralia-mirror-me-dialog-title"
+    aria-describedby="audralia-mirror-me-dialog-body"
+  >
+    <div class="audralia-dialog-card">
+      <header class="audralia-dialog-header">
+        <div>
+          <div class="audralia-dialog-eyebrow">
+            Coming Soon · Part Two
+          </div>
+
+          <h2
+            id="audralia-mirror-me-dialog-title"
+            class="audralia-dialog-title"
+          >
+            The Mirror Me Journey
+          </h2>
+        </div>
+
+        <button
+          class="audralia-dialog-close"
+          type="button"
+          data-audralia-dialog-close
+          aria-label="Close The Mirror Me Journey"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div
+        id="audralia-mirror-me-dialog-body"
+        class="audralia-dialog-body"
+      >
+        <p>
+          Participants will be assigned a character spirit and begin a
+          personal journey through Audralia.
+        </p>
+
+        <p>
+          The journey leads toward the discovery of a Mirror Me and
+          multiple Mirror Mes: alternate, developing, and higher
+          expressions of the self.
+        </p>
+      </div>
+    </div>
+  </dialog>
 
   <script>
     (function bindAudraliaConservatoryPage(global, document) {
@@ -477,7 +643,7 @@
       }
 
       const CONTRACT =
-        "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v1";
+        "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2";
 
       const mapButton =
         document.getElementById("audralia-control-map-button");
@@ -485,23 +651,46 @@
       const statusLabel =
         document.getElementById("audralia-runtime-status-label");
 
-      function setMapExpanded(expanded) {
-        if (!mapButton) {
+      const dialogTriggers =
+        Array.from(
+          document.querySelectorAll("[data-audralia-dialog-open]")
+        );
+
+      const dialogs =
+        Array.from(
+          document.querySelectorAll("[data-audralia-dialog]")
+        );
+
+      const triggerByDialog =
+        new Map();
+
+      function setTriggerExpanded(trigger, expanded) {
+        if (!trigger) {
           return;
         }
 
-        mapButton.setAttribute(
+        trigger.setAttribute(
           "aria-expanded",
           expanded ? "true" : "false"
         );
       }
 
+      function setMapExpanded(expanded) {
+        setTriggerExpanded(mapButton, expanded);
+      }
+
       function prepareHouseDialog() {
         const root =
-          document.querySelector("[data-house-control-pad]");
+          document.querySelector(
+            "[data-house-control-pad], " +
+            "[data-house-control-pad-root]"
+          );
 
         const dialog =
-          document.querySelector("[data-house-dialog]");
+          document.querySelector(
+            "[data-house-dialog], " +
+            "[data-house-control-pad-dialog]"
+          );
 
         if (root && !root.id) {
           root.id = "house-control-pad-root";
@@ -510,6 +699,107 @@
         if (dialog && !dialog.id) {
           dialog.id = "house-control-pad-dialog";
         }
+
+        if (mapButton) {
+          mapButton.setAttribute(
+            "aria-controls",
+            dialog && dialog.id
+              ? dialog.id
+              : "house-control-pad-dialog"
+          );
+        }
+
+        return dialog;
+      }
+
+      function openAudraliaDialog(dialog, trigger) {
+        if (!dialog) {
+          return;
+        }
+
+        dialogs.forEach(function closeOtherDialog(otherDialog) {
+          if (
+            otherDialog !== dialog &&
+            otherDialog.open
+          ) {
+            otherDialog.close();
+          }
+        });
+
+        triggerByDialog.set(
+          dialog,
+          trigger || document.activeElement
+        );
+
+        setTriggerExpanded(trigger, true);
+
+        document.body.dataset.audraliaDialogState =
+          dialog.id || "open";
+
+        if (
+          typeof dialog.showModal === "function"
+        ) {
+          if (!dialog.open) {
+            dialog.showModal();
+          }
+        } else {
+          dialog.setAttribute("open", "");
+        }
+
+        const closeButton =
+          dialog.querySelector(
+            "[data-audralia-dialog-close]"
+          );
+
+        if (closeButton) {
+          global.requestAnimationFrame(function focusCloseButton() {
+            closeButton.focus();
+          });
+        }
+      }
+
+      function restoreDialogFocus(dialog) {
+        const trigger =
+          triggerByDialog.get(dialog);
+
+        triggerByDialog.delete(dialog);
+
+        if (
+          trigger &&
+          typeof trigger.focus === "function" &&
+          trigger.isConnected
+        ) {
+          trigger.focus();
+        }
+      }
+
+      function synchronizeDialogClosed(dialog) {
+        const trigger =
+          triggerByDialog.get(dialog);
+
+        setTriggerExpanded(trigger, false);
+
+        document.body.dataset.audraliaDialogState =
+          "closed";
+
+        restoreDialogFocus(dialog);
+      }
+
+      function closeAudraliaDialog(dialog) {
+        if (!dialog) {
+          return;
+        }
+
+        if (
+          typeof dialog.close === "function" &&
+          dialog.open
+        ) {
+          dialog.close();
+          return;
+        }
+
+        dialog.removeAttribute("open");
+        synchronizeDialogClosed(dialog);
       }
 
       function syncRuntime(detail) {
@@ -532,12 +822,21 @@
         let label =
           "Planetary holder standing by";
 
+        let pageState =
+          "held";
+
         if (status.contextLost) {
           label =
             "Restoring planetary view";
+
+          pageState =
+            "context-lost";
         } else if (status.fallbackActive) {
           label =
             "Conservatory fallback active";
+
+          pageState =
+            "fallback";
         } else if (
           status.mounted &&
           status.geometryReady &&
@@ -545,17 +844,26 @@
         ) {
           label =
             "Planetary holder online";
+
+          pageState =
+            "ready";
         } else if (
           status.mounted &&
           status.geometryReady
         ) {
           label =
             "Rendering Audralia";
+
+          pageState =
+            "loading";
         } else if (
           status.geometryAuthorityPresent
         ) {
           label =
             "Preparing planetary holder";
+
+          pageState =
+            "loading";
         }
 
         if (statusLabel) {
@@ -564,18 +872,118 @@
         }
 
         document.body.dataset.audraliaState =
+          pageState;
+
+        document.body.dataset.audraliaPlanetRuntimeMounted =
+          status.mounted
+            ? "true"
+            : "false";
+
+        document.body.dataset.audraliaPlanetRuntimeMode =
+          status.fallbackActive
+            ? "fallback"
+            : status.mounted
+              ? "mounted"
+              : "held";
+
+        document.body.dataset.audraliaPlanetRuntimeContextLost =
           status.contextLost
-            ? "context-lost"
-            : status.fallbackActive
-              ? "fallback"
-              : status.firstVisiblePixelObserved
-                ? "ready"
-                : "loading";
+            ? "true"
+            : "false";
+
+        if (
+          typeof status.errorCount === "number"
+        ) {
+          document.body.dataset.audraliaPlanetRuntimeErrorCount =
+            String(status.errorCount);
+        }
+
+        const stateLayers =
+          document.querySelectorAll(
+            "[data-audralia-state-layer][data-state]"
+          );
+
+        stateLayers.forEach(function synchronizeStateLayer(layer) {
+          const active =
+            layer.dataset.state === pageState;
+
+          layer.setAttribute(
+            "aria-hidden",
+            active ? "false" : "true"
+          );
+        });
       }
+
+      dialogTriggers.forEach(function bindDialogTrigger(trigger) {
+        trigger.addEventListener(
+          "click",
+          function openRequestedDialog() {
+            const dialogId =
+              trigger.getAttribute(
+                "data-audralia-dialog-open"
+              );
+
+            const dialog =
+              dialogId
+                ? document.getElementById(dialogId)
+                : null;
+
+            openAudraliaDialog(
+              dialog,
+              trigger
+            );
+          }
+        );
+      });
+
+      dialogs.forEach(function bindDialog(dialog) {
+        const closeButtons =
+          dialog.querySelectorAll(
+            "[data-audralia-dialog-close]"
+          );
+
+        closeButtons.forEach(function bindCloseButton(button) {
+          button.addEventListener(
+            "click",
+            function closeCurrentDialog() {
+              closeAudraliaDialog(dialog);
+            }
+          );
+        });
+
+        dialog.addEventListener(
+          "click",
+          function closeFromBackdrop(event) {
+            if (event.target === dialog) {
+              closeAudraliaDialog(dialog);
+            }
+          }
+        );
+
+        dialog.addEventListener(
+          "close",
+          function synchronizeNativeClose() {
+            synchronizeDialogClosed(dialog);
+          }
+        );
+
+        dialog.addEventListener(
+          "cancel",
+          function synchronizeEscapeClose() {
+            const trigger =
+              triggerByDialog.get(dialog);
+
+            setTriggerExpanded(
+              trigger,
+              false
+            );
+          }
+        );
+      });
 
       document.addEventListener(
         "house:control-pad-ready",
-        function () {
+        function handleHouseReady() {
           prepareHouseDialog();
           setMapExpanded(false);
         }
@@ -583,7 +991,7 @@
 
       document.addEventListener(
         "house:control-pad-open",
-        function () {
+        function handleHouseOpen() {
           prepareHouseDialog();
           setMapExpanded(true);
         }
@@ -591,14 +999,48 @@
 
       document.addEventListener(
         "house:control-pad-close",
-        function () {
+        function handleHouseClose() {
+          setMapExpanded(false);
+        }
+      );
+
+      global.addEventListener(
+        "house:control-pad-ready",
+        function handleWindowHouseReady() {
+          prepareHouseDialog();
+          setMapExpanded(false);
+        }
+      );
+
+      global.addEventListener(
+        "house:control-pad-open",
+        function handleWindowHouseOpen() {
+          prepareHouseDialog();
+          setMapExpanded(true);
+        }
+      );
+
+      global.addEventListener(
+        "house:control-pad-close",
+        function handleWindowHouseClose() {
           setMapExpanded(false);
         }
       );
 
       global.addEventListener(
         "audralia-planet-runtime-state",
-        function (event) {
+        function handleAudraliaRuntimeState(event) {
+          syncRuntime(
+            event && event.detail
+              ? event.detail
+              : null
+          );
+        }
+      );
+
+      document.addEventListener(
+        "audralia-planet-runtime-state",
+        function handleDocumentAudraliaRuntimeState(event) {
           syncRuntime(
             event && event.detail
               ? event.detail
@@ -609,7 +1051,7 @@
 
       document.addEventListener(
         "DOMContentLoaded",
-        function () {
+        function initializeAudraliaConservatory() {
           document.documentElement.dataset.audraliaConservatoryContract =
             CONTRACT;
 

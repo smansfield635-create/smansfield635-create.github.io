@@ -1,5 +1,5 @@
 <!-- /showroom/globe/audralia/index.html -->
-<!-- AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3 -->
+<!-- AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4 -->
 <!-- Full-file replacement. -->
 <!doctype html>
 <html
@@ -7,20 +7,23 @@
   data-route="/showroom/globe/audralia/"
   data-page="audralia-conservatory"
   data-room="audralia-conservatory"
-  data-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3"
-  data-previous-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_HTML_TNT_v2"
+  data-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4"
+  data-previous-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3"
+  data-css-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
   data-route-family="diamond-gate-bridge"
   data-world-family="mirrorland"
   data-current-role="planetary-holder"
   data-current-state="conservatory"
   data-current-room="audralia-conservatory"
-  data-directional-compass="true"
   data-mirrorland-entrance="/showroom/"
   data-mirrorland-entrance-room="atrium"
   data-mirrorland-previous-room="/showroom/globe/"
   data-mirrorland-previous-room-name="atlas-study"
   data-mirrorland-next-room="/characters/"
   data-mirrorland-next-room-name="portrait-hall"
+  data-backward-navigation-owner="compass-dialog"
+  data-broad-navigation-owner="house-control-pad"
+  data-forward-navigation-owner="deeper-into-mirrorland-section"
   data-construction-engine-state="awaiting-hearth-r-and-d"
   data-construction-engine-provider="hearth-development-r-and-d-chamber"
   data-future-experience-count="2"
@@ -31,6 +34,11 @@
   data-mirror-mes-journey="coming-soon"
   data-frontier-science-storyworld="coming-soon"
   data-race-the-clock-storyline="coming-soon"
+  data-deeper-path-count="4"
+  data-deeper-path-one="portrait-hall"
+  data-deeper-path-two="audralia-worldroom"
+  data-deeper-path-three="control-cockpit"
+  data-deeper-path-four="frontier-workshop-yard"
   data-exposed-copy="minimal"
   data-visible-receipts="false"
   data-final-visual-pass="false"
@@ -63,6 +71,11 @@
   >
 
   <link
+    rel="canonical"
+    href="https://diamondgatebridge.com/showroom/globe/audralia/"
+  >
+
+  <link
     rel="stylesheet"
     href="/assets/house-control-pad/house.control-pad.css"
     data-house-control-pad-styles
@@ -70,8 +83,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/globe/audralia/index.css"
+    href="/showroom/globe/audralia/index.css?v=AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
     data-audralia-conservatory-styles
+    data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
   >
 
   <script
@@ -177,7 +191,7 @@
             class="audralia-header-action"
             type="button"
             data-audralia-dialog-open="audralia-compass-dialog"
-            aria-label="Open the directional Mirrorland Compass"
+            aria-label="Open the backward Mirrorland Compass"
             aria-haspopup="dialog"
             aria-controls="audralia-compass-dialog"
             aria-expanded="false"
@@ -500,6 +514,132 @@
           </article>
         </div>
       </section>
+
+      <section
+        class="audralia-attractions"
+        data-audralia-deeper-paths
+        aria-labelledby="audralia-deeper-paths-title"
+      >
+        <header class="audralia-attractions-header">
+          <div>
+            <div class="audralia-section-eyebrow">
+              Continue Forward
+            </div>
+
+            <h2
+              id="audralia-deeper-paths-title"
+              class="audralia-section-title"
+            >
+              Go Deeper into Mirrorland
+            </h2>
+          </div>
+        </header>
+
+        <div
+          class="audralia-attraction-grid"
+          aria-label="Deeper Mirrorland destinations"
+        >
+          <a
+            class="audralia-attraction-card"
+            href="/characters/"
+            data-mirrorland-direction="forward"
+            data-mirrorland-destination="portrait-hall"
+            style="color:inherit;text-decoration:none"
+          >
+            <div class="audralia-attraction-part">
+              Next Room · Characters
+            </div>
+
+            <h3 class="audralia-attraction-title">
+              Portrait Hall
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Meet the characters, families, operators, witnesses, and
+              pressure agents who give Mirrorland its living identity.
+            </p>
+
+            <span class="audralia-attraction-action">
+              Enter Portrait Hall
+            </span>
+          </a>
+
+          <a
+            class="audralia-attraction-card"
+            href="/showroom/globe/audralia/planet/"
+            data-mirrorland-direction="forward"
+            data-mirrorland-destination="audralia-worldroom"
+            style="color:inherit;text-decoration:none"
+          >
+            <div class="audralia-attraction-part">
+              Planetary Experience
+            </div>
+
+            <h3 class="audralia-attraction-title">
+              Audralia Worldroom
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Continue from the protected Conservatory into the fuller
+              Audralia planetary experience.
+            </p>
+
+            <span class="audralia-attraction-action">
+              Enter Audralia Worldroom
+            </span>
+          </a>
+
+          <a
+            class="audralia-attraction-card"
+            href="/showroom/globe/audralia/disposition/"
+            data-mirrorland-direction="forward"
+            data-mirrorland-destination="control-cockpit"
+            style="color:inherit;text-decoration:none"
+          >
+            <div class="audralia-attraction-part">
+              Instrument Room
+            </div>
+
+            <h3 class="audralia-attraction-title">
+              Control Cockpit
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Inspect Audralia through its controls, instruments,
+              dispositions, and operational views.
+            </p>
+
+            <span class="audralia-attraction-action">
+              Enter Control Cockpit
+            </span>
+          </a>
+
+          <a
+            class="audralia-attraction-card"
+            href="/explore/frontier/"
+            data-mirrorland-direction="forward"
+            data-mirrorland-destination="frontier-workshop-yard"
+            style="color:inherit;text-decoration:none"
+          >
+            <div class="audralia-attraction-part">
+              Applied Systems
+            </div>
+
+            <h3 class="audralia-attraction-title">
+              Frontier Workshop Yard
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Move into energy, water, waste, infrastructure, cities,
+              signals, and the applied systems surrounding the world.
+            </p>
+
+            <span class="audralia-attraction-action">
+              Enter Frontier Workshop Yard
+            </span>
+          </a>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -515,7 +655,7 @@
       <header class="audralia-dialog-header">
         <div>
           <div class="audralia-dialog-eyebrow">
-            Mirrorland Direction
+            Return Direction
           </div>
 
           <h2
@@ -540,210 +680,117 @@
         id="audralia-compass-dialog-body"
         class="audralia-dialog-body"
       >
-        <section
-          aria-labelledby="audralia-compass-backward-title"
-          data-mirrorland-direction="backward"
-        >
-          <div class="audralia-dialog-eyebrow">
-            Return Toward the Entrance
-          </div>
-
-          <h3
-            id="audralia-compass-backward-title"
-            class="audralia-attraction-title"
-          >
-            Move backward through Mirrorland
-          </h3>
-
-          <p>
-            The Atrium is the entrance into Mirrorland. The Atlas Study
-            follows it and leads toward the Audralia Conservatory.
-          </p>
-
-          <nav
-            aria-label="Return toward the Mirrorland entrance"
-            style="
-              display:grid;
-              grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-              gap:10px;
-              margin-top:16px;
-            "
-          >
-            <a
-              class="audralia-control"
-              href="/"
-              data-mirrorland-route="compass"
-              data-mirrorland-direction="backward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Back to Compass
-            </a>
-
-            <a
-              class="audralia-control"
-              href="/showroom/"
-              data-mirrorland-route="atrium"
-              data-mirrorland-direction="backward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Return to Atrium
-            </a>
-
-            <a
-              class="audralia-control"
-              href="/showroom/globe/"
-              data-mirrorland-route="atlas-study"
-              data-mirrorland-direction="backward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Return to Atlas Study
-            </a>
-          </nav>
-        </section>
+        <p>
+          The Atrium is the entrance into Mirrorland. The Atlas Study
+          follows the Atrium and leads to the Audralia Conservatory.
+          These paths move back toward the entrance.
+        </p>
 
         <section
+          class="audralia-attractions"
           aria-labelledby="audralia-compass-current-title"
-          data-mirrorland-direction="current"
-          style="margin-top:24px"
+          style="margin-top:20px"
         >
-          <div class="audralia-dialog-eyebrow">
-            Current Position
+          <div class="audralia-attraction-card">
+            <div class="audralia-attraction-part">
+              Current Position
+            </div>
+
+            <h3
+              id="audralia-compass-current-title"
+              class="audralia-attraction-title"
+            >
+              You Are Here · Audralia Conservatory
+            </h3>
+
+            <p class="audralia-attraction-teaser">
+              Continue downward on this page to go deeper into
+              Mirrorland, or use one of the return paths below.
+            </p>
           </div>
-
-          <h3
-            id="audralia-compass-current-title"
-            class="audralia-attraction-title"
-          >
-            You are here: Audralia Conservatory
-          </h3>
-
-          <p>
-            This is the protected planetary holder between the Atlas
-            Study and the deeper character, world, control, and Frontier
-            rooms.
-          </p>
         </section>
 
-        <section
-          aria-labelledby="audralia-compass-forward-title"
-          data-mirrorland-direction="forward"
-          style="margin-top:24px"
+        <nav
+          class="audralia-attractions"
+          aria-label="Return toward the Mirrorland entrance"
+          style="margin-top:20px"
         >
-          <div class="audralia-dialog-eyebrow">
-            Go Deeper into Mirrorland
+          <div class="audralia-attraction-grid">
+            <a
+              class="audralia-attraction-card"
+              href="/showroom/globe/"
+              data-mirrorland-direction="backward"
+              data-mirrorland-destination="atlas-study"
+              style="color:inherit;text-decoration:none"
+            >
+              <div class="audralia-attraction-part">
+                Previous Mirrorland Room
+              </div>
+
+              <h3 class="audralia-attraction-title">
+                Atlas Study
+              </h3>
+
+              <p class="audralia-attraction-teaser">
+                Return to the planetary orientation room immediately
+                before the Conservatory.
+              </p>
+
+              <span class="audralia-attraction-action">
+                Return to Atlas Study
+              </span>
+            </a>
+
+            <a
+              class="audralia-attraction-card"
+              href="/showroom/"
+              data-mirrorland-direction="backward"
+              data-mirrorland-destination="atrium"
+              style="color:inherit;text-decoration:none"
+            >
+              <div class="audralia-attraction-part">
+                Mirrorland Entrance
+              </div>
+
+              <h3 class="audralia-attraction-title">
+                Atrium
+              </h3>
+
+              <p class="audralia-attraction-teaser">
+                Return to the first room and entrance into Mirrorland.
+              </p>
+
+              <span class="audralia-attraction-action">
+                Return to Atrium
+              </span>
+            </a>
+
+            <a
+              class="audralia-attraction-card"
+              href="/"
+              data-mirrorland-direction="backward"
+              data-mirrorland-destination="compass"
+              style="color:inherit;text-decoration:none"
+            >
+              <div class="audralia-attraction-part">
+                Before Mirrorland
+              </div>
+
+              <h3 class="audralia-attraction-title">
+                Compass
+              </h3>
+
+              <p class="audralia-attraction-teaser">
+                Leave the Mirrorland room sequence and return to the
+                primary Diamond Gate Bridge orientation point.
+              </p>
+
+              <span class="audralia-attraction-action">
+                Back to Compass
+              </span>
+            </a>
           </div>
-
-          <h3
-            id="audralia-compass-forward-title"
-            class="audralia-attraction-title"
-          >
-            Continue beyond the Conservatory
-          </h3>
-
-          <p>
-            Move forward into the people, living world, instruments, and
-            applied systems of Mirrorland.
-          </p>
-
-          <nav
-            aria-label="Go deeper into Mirrorland"
-            style="
-              display:grid;
-              grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-              gap:10px;
-              margin-top:16px;
-            "
-          >
-            <a
-              class="audralia-control"
-              href="/characters/"
-              data-mirrorland-route="portrait-hall"
-              data-mirrorland-direction="forward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Enter Portrait Hall
-            </a>
-
-            <a
-              class="audralia-control"
-              href="/showroom/globe/audralia/planet/"
-              data-mirrorland-route="audralia-worldroom"
-              data-mirrorland-direction="forward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Enter Audralia Worldroom
-            </a>
-
-            <a
-              class="audralia-control"
-              href="/showroom/globe/audralia/disposition/"
-              data-mirrorland-route="control-cockpit"
-              data-mirrorland-direction="forward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Enter Control Cockpit
-            </a>
-
-            <a
-              class="audralia-control"
-              href="/explore/frontier/"
-              data-mirrorland-route="frontier-workshop-yard"
-              data-mirrorland-direction="forward"
-              style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                min-height:48px;
-                text-decoration:none;
-                text-align:center;
-              "
-            >
-              Enter Frontier Workshop Yard
-            </a>
-          </nav>
-        </section>
+        </nav>
       </div>
     </div>
   </dialog>
@@ -912,7 +959,13 @@
       }
 
       const CONTRACT =
-        "AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3";
+        "AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4";
+
+      const root =
+        document.documentElement;
+
+      const body =
+        document.body;
 
       const mapButton =
         document.getElementById("audralia-control-map-button");
@@ -933,6 +986,21 @@
       const triggerByDialog =
         new Map();
 
+      let houseObserver =
+        null;
+
+      function setDatasetValue(name, value) {
+        if (root) {
+          root.dataset[name] =
+            String(value);
+        }
+
+        if (body) {
+          body.dataset[name] =
+            String(value);
+        }
+      }
+
       function setTriggerExpanded(trigger, expanded) {
         if (!trigger) {
           return;
@@ -945,42 +1013,107 @@
       }
 
       function setMapExpanded(expanded) {
-        setTriggerExpanded(mapButton, expanded);
+        setTriggerExpanded(
+          mapButton,
+          expanded
+        );
+      }
+
+      function getHouseRoot() {
+        return document.querySelector(
+          "[data-house-control-pad], " +
+          "[data-house-control-pad-root], " +
+          "#house-control-pad-root"
+        );
+      }
+
+      function getHouseDialog() {
+        return document.querySelector(
+          "[data-house-dialog], " +
+          "[data-house-control-pad-dialog], " +
+          "#house-control-pad-dialog"
+        );
       }
 
       function prepareHouseDialog() {
-        const root =
-          document.querySelector(
-            "[data-house-control-pad], " +
-            "[data-house-control-pad-root]"
-          );
+        const houseRoot =
+          getHouseRoot();
 
-        const dialog =
-          document.querySelector(
-            "[data-house-dialog], " +
-            "[data-house-control-pad-dialog]"
-          );
+        const houseDialog =
+          getHouseDialog();
 
-        if (root && !root.id) {
-          root.id =
+        if (
+          houseRoot &&
+          !houseRoot.id
+        ) {
+          houseRoot.id =
             "house-control-pad-root";
         }
 
-        if (dialog && !dialog.id) {
-          dialog.id =
+        if (
+          houseDialog &&
+          !houseDialog.id
+        ) {
+          houseDialog.id =
             "house-control-pad-dialog";
         }
 
         if (mapButton) {
           mapButton.setAttribute(
             "aria-controls",
-            dialog && dialog.id
-              ? dialog.id
+            houseDialog && houseDialog.id
+              ? houseDialog.id
               : "house-control-pad-dialog"
           );
         }
 
-        return dialog;
+        if (
+          houseDialog &&
+          houseObserver
+        ) {
+          houseObserver.disconnect();
+          houseObserver =
+            null;
+        }
+
+        return houseDialog;
+      }
+
+      function observeHouseInterface() {
+        if (
+          getHouseDialog() ||
+          typeof global.MutationObserver !== "function"
+        ) {
+          return;
+        }
+
+        houseObserver =
+          new global.MutationObserver(
+            function detectHouseInterface() {
+              prepareHouseDialog();
+            }
+          );
+
+        houseObserver.observe(
+          document.body,
+          {
+            childList: true,
+            subtree: true
+          }
+        );
+      }
+
+      function closeOtherAudraliaDialogs(activeDialog) {
+        dialogs.forEach(
+          function closeOtherDialog(dialog) {
+            if (
+              dialog !== activeDialog &&
+              dialog.open
+            ) {
+              dialog.close();
+            }
+          }
+        );
       }
 
       function openAudraliaDialog(dialog, trigger) {
@@ -988,24 +1121,22 @@
           return;
         }
 
-        dialogs.forEach(function closeOtherDialog(otherDialog) {
-          if (
-            otherDialog !== dialog &&
-            otherDialog.open
-          ) {
-            otherDialog.close();
-          }
-        });
+        closeOtherAudraliaDialogs(dialog);
 
         triggerByDialog.set(
           dialog,
           trigger || document.activeElement
         );
 
-        setTriggerExpanded(trigger, true);
+        setTriggerExpanded(
+          trigger,
+          true
+        );
 
-        document.body.dataset.audraliaDialogState =
-          dialog.id || "open";
+        setDatasetValue(
+          "audraliaDialogState",
+          dialog.id || "open"
+        );
 
         if (
           typeof dialog.showModal === "function"
@@ -1014,7 +1145,10 @@
             dialog.showModal();
           }
         } else {
-          dialog.setAttribute("open", "");
+          dialog.setAttribute(
+            "open",
+            ""
+          );
         }
 
         const closeButton =
@@ -1023,9 +1157,11 @@
           );
 
         if (closeButton) {
-          global.requestAnimationFrame(function focusCloseButton() {
-            closeButton.focus();
-          });
+          global.requestAnimationFrame(
+            function focusDialogCloseButton() {
+              closeButton.focus();
+            }
+          );
         }
       }
 
@@ -1037,8 +1173,8 @@
 
         if (
           trigger &&
-          typeof trigger.focus === "function" &&
-          trigger.isConnected
+          trigger.isConnected &&
+          typeof trigger.focus === "function"
         ) {
           trigger.focus();
         }
@@ -1048,10 +1184,15 @@
         const trigger =
           triggerByDialog.get(dialog);
 
-        setTriggerExpanded(trigger, false);
+        setTriggerExpanded(
+          trigger,
+          false
+        );
 
-        document.body.dataset.audraliaDialogState =
-          "closed";
+        setDatasetValue(
+          "audraliaDialogState",
+          "closed"
+        );
 
         restoreDialogFocus(dialog);
       }
@@ -1069,8 +1210,32 @@
           return;
         }
 
-        dialog.removeAttribute("open");
-        synchronizeDialogClosed(dialog);
+        dialog.removeAttribute(
+          "open"
+        );
+
+        synchronizeDialogClosed(
+          dialog
+        );
+      }
+
+      function synchronizeStateLayers(pageState) {
+        const stateLayers =
+          document.querySelectorAll(
+            "[data-audralia-state-layer][data-state]"
+          );
+
+        stateLayers.forEach(
+          function synchronizeStateLayer(layer) {
+            const active =
+              layer.dataset.state === pageState;
+
+            layer.setAttribute(
+              "aria-hidden",
+              active ? "false" : "true"
+            );
+          }
+        );
       }
 
       function syncRuntime(detail) {
@@ -1096,17 +1261,26 @@
         let pageState =
           "held";
 
+        let runtimeMode =
+          "held";
+
         if (status.contextLost) {
           label =
             "Restoring planetary view";
 
           pageState =
             "context-lost";
+
+          runtimeMode =
+            "context-lost";
         } else if (status.fallbackActive) {
           label =
             "Conservatory fallback active";
 
           pageState =
+            "fallback";
+
+          runtimeMode =
             "fallback";
         } else if (
           status.mounted &&
@@ -1118,6 +1292,9 @@
 
           pageState =
             "ready";
+
+          runtimeMode =
+            "webgl";
         } else if (
           status.mounted &&
           status.geometryReady
@@ -1127,6 +1304,9 @@
 
           pageState =
             "loading";
+
+          runtimeMode =
+            "webgl";
         } else if (
           status.geometryAuthorityPresent
         ) {
@@ -1135,6 +1315,9 @@
 
           pageState =
             "loading";
+
+          runtimeMode =
+            "held";
         }
 
         if (statusLabel) {
@@ -1142,197 +1325,230 @@
             label;
         }
 
-        document.body.dataset.audraliaState =
-          pageState;
+        setDatasetValue(
+          "audraliaState",
+          pageState
+        );
 
-        document.body.dataset.audraliaPlanetRuntimeMounted =
+        setDatasetValue(
+          "audraliaPlanetRuntimeMounted",
           status.mounted
             ? "true"
-            : "false";
+            : "false"
+        );
 
-        document.body.dataset.audraliaPlanetRuntimeMode =
-          status.fallbackActive
-            ? "fallback"
-            : status.mounted
-              ? "mounted"
-              : "held";
+        setDatasetValue(
+          "audraliaPlanetRuntimeMode",
+          runtimeMode
+        );
 
-        document.body.dataset.audraliaPlanetRuntimeContextLost =
+        setDatasetValue(
+          "audraliaPlanetRuntimeContextLost",
           status.contextLost
             ? "true"
-            : "false";
+            : "false"
+        );
 
         if (
           typeof status.errorCount === "number"
         ) {
-          document.body.dataset.audraliaPlanetRuntimeErrorCount =
-            String(status.errorCount);
+          setDatasetValue(
+            "audraliaPlanetRuntimeErrorCount",
+            status.errorCount
+          );
         }
 
-        const stateLayers =
-          document.querySelectorAll(
-            "[data-audralia-state-layer][data-state]"
-          );
-
-        stateLayers.forEach(function synchronizeStateLayer(layer) {
-          const active =
-            layer.dataset.state === pageState;
-
-          layer.setAttribute(
-            "aria-hidden",
-            active ? "false" : "true"
-          );
-        });
+        synchronizeStateLayers(
+          pageState
+        );
       }
 
-      dialogTriggers.forEach(function bindDialogTrigger(trigger) {
-        trigger.addEventListener(
-          "click",
-          function openRequestedDialog() {
-            const dialogId =
-              trigger.getAttribute(
-                "data-audralia-dialog-open"
-              );
-
-            const dialog =
-              dialogId
-                ? document.getElementById(dialogId)
-                : null;
-
-            openAudraliaDialog(
-              dialog,
-              trigger
-            );
-          }
-        );
-      });
-
-      dialogs.forEach(function bindDialog(dialog) {
-        const closeButtons =
-          dialog.querySelectorAll(
-            "[data-audralia-dialog-close]"
-          );
-
-        closeButtons.forEach(function bindCloseButton(button) {
-          button.addEventListener(
+      dialogTriggers.forEach(
+        function bindDialogTrigger(trigger) {
+          trigger.addEventListener(
             "click",
-            function closeCurrentDialog() {
-              closeAudraliaDialog(dialog);
+            function openRequestedDialog() {
+              const dialogId =
+                trigger.getAttribute(
+                  "data-audralia-dialog-open"
+                );
+
+              const dialog =
+                dialogId
+                  ? document.getElementById(dialogId)
+                  : null;
+
+              openAudraliaDialog(
+                dialog,
+                trigger
+              );
             }
           );
-        });
+        }
+      );
 
-        dialog.addEventListener(
-          "click",
-          function closeFromBackdrop(event) {
-            if (event.target === dialog) {
-              closeAudraliaDialog(dialog);
-            }
-          }
-        );
-
-        dialog.addEventListener(
-          "close",
-          function synchronizeNativeClose() {
-            synchronizeDialogClosed(dialog);
-          }
-        );
-
-        dialog.addEventListener(
-          "cancel",
-          function synchronizeEscapeClose() {
-            const trigger =
-              triggerByDialog.get(dialog);
-
-            setTriggerExpanded(
-              trigger,
-              false
+      dialogs.forEach(
+        function bindDialog(dialog) {
+          const closeButtons =
+            dialog.querySelectorAll(
+              "[data-audralia-dialog-close]"
             );
+
+          closeButtons.forEach(
+            function bindCloseButton(button) {
+              button.addEventListener(
+                "click",
+                function closeCurrentDialog() {
+                  closeAudraliaDialog(
+                    dialog
+                  );
+                }
+              );
+            }
+          );
+
+          dialog.addEventListener(
+            "click",
+            function closeFromBackdrop(event) {
+              if (
+                event.target === dialog
+              ) {
+                closeAudraliaDialog(
+                  dialog
+                );
+              }
+            }
+          );
+
+          dialog.addEventListener(
+            "close",
+            function synchronizeNativeClose() {
+              synchronizeDialogClosed(
+                dialog
+              );
+            }
+          );
+
+          dialog.addEventListener(
+            "cancel",
+            function synchronizeEscapeClose() {
+              const trigger =
+                triggerByDialog.get(dialog);
+
+              setTriggerExpanded(
+                trigger,
+                false
+              );
+            }
+          );
+        }
+      );
+
+      if (mapButton) {
+        mapButton.addEventListener(
+          "click",
+          function prepareHouseInterfaceFromTrigger() {
+            prepareHouseDialog();
           }
         );
-      });
+      }
+
+      function handleHouseReady() {
+        prepareHouseDialog();
+        setMapExpanded(false);
+      }
+
+      function handleHouseOpen() {
+        prepareHouseDialog();
+
+        dialogs.forEach(
+          function closeAudraliaDialogBeforeHouse(dialog) {
+            if (dialog.open) {
+              dialog.close();
+            }
+          }
+        );
+
+        setMapExpanded(true);
+      }
+
+      function handleHouseClose() {
+        setMapExpanded(false);
+      }
 
       document.addEventListener(
         "house:control-pad-ready",
-        function handleHouseReady() {
-          prepareHouseDialog();
-          setMapExpanded(false);
-        }
+        handleHouseReady
       );
 
       document.addEventListener(
         "house:control-pad-open",
-        function handleHouseOpen() {
-          prepareHouseDialog();
-          setMapExpanded(true);
-        }
+        handleHouseOpen
       );
 
       document.addEventListener(
         "house:control-pad-close",
-        function handleHouseClose() {
-          setMapExpanded(false);
-        }
+        handleHouseClose
       );
 
       global.addEventListener(
         "house:control-pad-ready",
-        function handleWindowHouseReady() {
-          prepareHouseDialog();
-          setMapExpanded(false);
-        }
+        handleHouseReady
       );
 
       global.addEventListener(
         "house:control-pad-open",
-        function handleWindowHouseOpen() {
-          prepareHouseDialog();
-          setMapExpanded(true);
-        }
+        handleHouseOpen
       );
 
       global.addEventListener(
         "house:control-pad-close",
-        function handleWindowHouseClose() {
-          setMapExpanded(false);
-        }
+        handleHouseClose
       );
+
+      function handleAudraliaRuntimeState(event) {
+        syncRuntime(
+          event && event.detail
+            ? event.detail
+            : null
+        );
+      }
 
       global.addEventListener(
         "audralia-planet-runtime-state",
-        function handleAudraliaRuntimeState(event) {
-          syncRuntime(
-            event && event.detail
-              ? event.detail
-              : null
-          );
-        }
+        handleAudraliaRuntimeState
       );
 
       document.addEventListener(
         "audralia-planet-runtime-state",
-        function handleDocumentAudraliaRuntimeState(event) {
-          syncRuntime(
-            event && event.detail
-              ? event.detail
-              : null
-          );
-        }
+        handleAudraliaRuntimeState
       );
 
-      document.addEventListener(
-        "DOMContentLoaded",
-        function initializeAudraliaConservatory() {
-          document.documentElement.dataset.audraliaConservatoryContract =
-            CONTRACT;
+      function initializeAudraliaConservatory() {
+        root.dataset.audraliaConservatoryContract =
+          CONTRACT;
 
-          prepareHouseDialog();
-          syncRuntime(null);
-        },
-        {
-          once: true
-        }
-      );
+        root.dataset.audraliaCssContract =
+          "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2";
+
+        prepareHouseDialog();
+        observeHouseInterface();
+        syncRuntime(null);
+      }
+
+      if (
+        document.readyState === "loading"
+      ) {
+        document.addEventListener(
+          "DOMContentLoaded",
+          initializeAudraliaConservatory,
+          {
+            once: true
+          }
+        );
+      } else {
+        initializeAudraliaConservatory();
+      }
     })(window, document);
   </script>
 </body>

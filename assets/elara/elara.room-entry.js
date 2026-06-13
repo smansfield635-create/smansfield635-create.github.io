@@ -1,13 +1,14 @@
 // TARGET FILE: /assets/elara/elara.room-entry.js
 // TNT FULL-FILE REPLACEMENT
-// ELARA_ROOM_ENTRY_ISOLATED_HARD_NAVIGATION_ASSET_TNT_v1
+// ELARA_ROOM_ENTRY_RESTRAINED_ROOM_HARMONY_HARD_NAVIGATION_ASSET_TNT_v2
 //
 // Purpose:
 // - Own the reusable "Talk to Elara" room-entry control.
-// - Isolate its styling from page-level CSS through Shadow DOM.
-// - Bypass page routers, theme toggles, and intercepted anchor behavior.
+// - Preserve its isolated Shadow DOM styling and native navigation.
+// - Reduce visual dominance while keeping Elara visible at the top of a room.
+// - Harmonize the control with dark navy, graphite, cyan, and violet room palettes.
+// - Permit future room-level tuning through host CSS custom properties.
 // - Perform a full native document navigation to /elara/index.html.
-// - Remain reusable across future rooms.
 //
 // Does not own:
 // - /elara/index.html
@@ -20,9 +21,14 @@
 (() => {
   "use strict";
 
-  const ELEMENT_NAME = "elara-room-entry";
-  const DEFAULT_ROUTE = "/elara/index.html";
-  const DEFAULT_LABEL = "Talk to Elara";
+  const ELEMENT_NAME =
+    "elara-room-entry";
+
+  const DEFAULT_ROUTE =
+    "/elara/index.html";
+
+  const DEFAULT_LABEL =
+    "Talk to Elara";
 
   if (
     !("customElements" in window) ||
@@ -44,10 +50,13 @@
     constructor() {
       super();
 
-      this._navigating = false;
-      this._shadow = this.attachShadow({
-        mode: "open"
-      });
+      this._navigating =
+        false;
+
+      this._shadow =
+        this.attachShadow({
+          mode: "open"
+        });
 
       this._shadow.innerHTML = `
         <style>
@@ -56,12 +65,34 @@
             width:100%;
             min-width:0;
 
-            --elara-blue:#245dff;
-            --elara-violet:#8d36f4;
-            --elara-cyan:#5df7ff;
-            --elara-white:#ffffff;
-            --elara-muted:rgba(240,246,255,.72);
-            --elara-line:rgba(163,120,255,.78);
+            --elara-entry-text:#f8fbff;
+            --elara-entry-muted:rgba(226,238,249,.72);
+
+            --elara-entry-cyan:#8edcf3;
+            --elara-entry-violet:#9d83db;
+            --elara-entry-blue:#385f94;
+
+            --elara-entry-line:rgba(139,190,224,.38);
+            --elara-entry-line-hover:rgba(157,218,241,.62);
+
+            --elara-entry-top:rgba(21,45,76,.96);
+            --elara-entry-bottom:rgba(8,19,38,.99);
+
+            --elara-entry-height:3.55rem;
+            --elara-entry-radius:999px;
+            --elara-entry-font-size:.78rem;
+            --elara-entry-letter-spacing:.105em;
+
+            --elara-entry-shadow:
+              0 .8rem 2rem rgba(0,0,0,.30),
+              0 0 1.3rem rgba(82,139,184,.10),
+              inset 0 1px 0 rgba(255,255,255,.12);
+
+            --elara-entry-shadow-hover:
+              0 .95rem 2.2rem rgba(0,0,0,.34),
+              0 0 1.5rem rgba(142,220,243,.16),
+              0 0 2.2rem rgba(157,131,219,.10),
+              inset 0 1px 0 rgba(255,255,255,.16);
           }
 
           *{
@@ -70,8 +101,9 @@
 
           .entry{
             display:grid;
-            gap:.38rem;
+            gap:.34rem;
             width:100%;
+            min-width:0;
           }
 
           .button{
@@ -80,41 +112,44 @@
             overflow:hidden;
 
             width:100%;
-            min-height:4.9rem;
+            min-width:0;
+            min-height:var(--elara-entry-height);
 
             display:flex;
             align-items:center;
             justify-content:center;
-            gap:.8rem;
+            gap:.66rem;
 
             margin:0;
-            padding:.85rem 1.2rem;
+            padding:.72rem 1rem;
 
-            border:1px solid var(--elara-line);
-            border-radius:999px;
+            border:
+              1px solid
+              var(--elara-entry-line);
 
-            color:var(--elara-white);
+            border-radius:
+              var(--elara-entry-radius);
+
+            color:
+              var(--elara-entry-text);
 
             background:
               radial-gradient(
                 circle at 50% 0%,
-                rgba(255,255,255,.20),
-                transparent 66%
+                rgba(255,255,255,.085),
+                transparent 68%
               ),
               linear-gradient(
                 135deg,
-                var(--elara-blue),
-                var(--elara-violet)
+                var(--elara-entry-top),
+                var(--elara-entry-bottom)
               );
 
             box-shadow:
-              0 0 1.1rem rgba(93,247,255,.22),
-              0 0 2.8rem rgba(141,54,244,.34),
-              0 1.2rem 3rem rgba(0,0,0,.38),
-              inset 0 1px 0 rgba(255,255,255,.30);
+              var(--elara-entry-shadow);
 
             font:
-              950 .92rem/1
+              900 var(--elara-entry-font-size)/1.1
               Inter,
               ui-sans-serif,
               system-ui,
@@ -123,7 +158,10 @@
               "Segoe UI",
               sans-serif;
 
-            letter-spacing:.13em;
+            letter-spacing:
+              var(--elara-entry-letter-spacing);
+
+            text-align:center;
             text-transform:uppercase;
 
             cursor:pointer;
@@ -131,17 +169,18 @@
             -webkit-tap-highlight-color:transparent;
 
             transition:
-              transform .18s ease,
-              border-color .18s ease,
-              box-shadow .18s ease,
-              filter .18s ease;
+              transform .16s ease,
+              border-color .16s ease,
+              background .16s ease,
+              box-shadow .16s ease,
+              color .16s ease;
           }
 
           .button::before{
             content:"";
 
-            width:.82rem;
-            height:.82rem;
+            width:.64rem;
+            height:.64rem;
             flex:0 0 auto;
 
             border-radius:50%;
@@ -149,87 +188,118 @@
             background:
               radial-gradient(
                 circle at 34% 28%,
-                #ffffff 0 12%,
-                var(--elara-cyan) 36%,
-                #a563ff 72%,
-                #4e22ba 100%
+                #ffffff 0 10%,
+                var(--elara-entry-cyan) 36%,
+                var(--elara-entry-violet) 72%,
+                #3d315f 100%
               );
 
             box-shadow:
-              0 0 .85rem rgba(93,247,255,.94),
-              0 0 1.7rem rgba(141,54,244,.72);
+              0 0 .5rem rgba(142,220,243,.60),
+              0 0 .95rem rgba(157,131,219,.28);
           }
 
           .button::after{
             content:"";
 
             position:absolute;
-            inset:-110% -36%;
+            inset:0;
             z-index:-1;
 
-            transform:
-              translateX(-72%)
-              rotate(17deg);
+            pointer-events:none;
+
+            opacity:.46;
 
             background:
               linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,.42),
-                transparent
+                105deg,
+                transparent 0 34%,
+                rgba(142,220,243,.07) 48%,
+                rgba(157,131,219,.08) 56%,
+                transparent 72%
               );
 
-            transition:transform .68s ease;
+            transform:
+              translateX(-22%);
+
+            transition:
+              opacity .16s ease,
+              transform .34s ease;
           }
 
           .button:hover,
           .button:focus-visible{
-            transform:translateY(-2px);
+            transform:
+              translateY(-1px);
 
-            border-color:rgba(93,247,255,.94);
+            border-color:
+              var(--elara-entry-line-hover);
+
+            color:
+              #ffffff;
+
+            background:
+              radial-gradient(
+                circle at 50% 0%,
+                rgba(255,255,255,.11),
+                transparent 68%
+              ),
+              linear-gradient(
+                135deg,
+                rgba(25,55,91,.98),
+                rgba(12,24,47,.99)
+              );
 
             box-shadow:
-              0 0 1.2rem rgba(93,247,255,.50),
-              0 0 3.2rem rgba(141,54,244,.44),
-              0 1.4rem 3.2rem rgba(0,0,0,.42),
-              inset 0 1px 0 rgba(255,255,255,.34);
-
-            filter:saturate(1.12);
+              var(--elara-entry-shadow-hover);
           }
 
           .button:hover::after,
           .button:focus-visible::after{
+            opacity:.72;
+
             transform:
-              translateX(72%)
-              rotate(17deg);
+              translateX(18%);
           }
 
           .button:focus-visible{
-            outline:2px solid var(--elara-cyan);
-            outline-offset:4px;
+            outline:
+              2px solid
+              var(--elara-entry-cyan);
+
+            outline-offset:
+              4px;
           }
 
           .button:active{
-            transform:translateY(0) scale(.99);
+            transform:
+              translateY(0)
+              scale(.995);
+          }
+
+          .button[aria-busy="true"]{
+            cursor:progress;
           }
 
           .button[disabled]{
             cursor:not-allowed;
             opacity:.48;
-            filter:saturate(.55);
+            filter:saturate(.5);
             transform:none;
+            box-shadow:none;
           }
 
           .subtitle{
             min-height:1rem;
 
             margin:0;
-            padding:0 .8rem;
+            padding:0 .72rem;
 
-            color:var(--elara-muted);
+            color:
+              var(--elara-entry-muted);
 
             font:
-              750 .69rem/1.4
+              720 .67rem/1.4
               Inter,
               ui-sans-serif,
               system-ui,
@@ -247,9 +317,22 @@
           }
 
           @media (max-width:760px){
+            :host{
+              --elara-entry-height:3.7rem;
+              --elara-entry-font-size:.76rem;
+              --elara-entry-letter-spacing:.095em;
+            }
+
             .button{
-              min-height:5.15rem;
-              font-size:.9rem;
+              padding:.76rem .92rem;
+            }
+          }
+
+          @media (prefers-contrast:more){
+            :host{
+              --elara-entry-line:rgba(201,232,247,.72);
+              --elara-entry-line-hover:rgba(231,249,255,.96);
+              --elara-entry-muted:rgba(240,248,255,.90);
             }
           }
 
@@ -257,6 +340,12 @@
             .button,
             .button::after{
               transition:none;
+            }
+
+            .button:hover,
+            .button:focus-visible,
+            .button:active{
+              transform:none;
             }
           }
         </style>
@@ -276,10 +365,14 @@
       `;
 
       this._button =
-        this._shadow.querySelector(".button");
+        this._shadow.querySelector(
+          ".button"
+        );
 
       this._subtitle =
-        this._shadow.querySelector(".subtitle");
+        this._shadow.querySelector(
+          ".subtitle"
+        );
 
       this._onClick =
         this._onClick.bind(this);
@@ -342,7 +435,10 @@
 
     set href(value) {
       if (!value) {
-        this.removeAttribute("href");
+        this.removeAttribute(
+          "href"
+        );
+
         return;
       }
 
@@ -361,7 +457,10 @@
 
     set label(value) {
       if (!value) {
-        this.removeAttribute("label");
+        this.removeAttribute(
+          "label"
+        );
+
         return;
       }
 
@@ -372,7 +471,9 @@
     }
 
     get disabled() {
-      return this.hasAttribute("disabled");
+      return this.hasAttribute(
+        "disabled"
+      );
     }
 
     set disabled(value) {
@@ -390,7 +491,9 @@
         return;
       }
 
-      this._navigating = true;
+      this._navigating =
+        true;
+
       this._button.setAttribute(
         "aria-busy",
         "true"
@@ -438,6 +541,10 @@
         this.label
       );
 
+      this._button.removeAttribute(
+        "aria-busy"
+      );
+
       this._subtitle.textContent =
         subtitle;
     }
@@ -475,12 +582,19 @@
 
     _submitNativeNavigation(destination) {
       const form =
-        document.createElement("form");
+        document.createElement(
+          "form"
+        );
 
-      form.method = "GET";
+      form.method =
+        "GET";
+
       form.action =
         destination.pathname;
-      form.hidden = true;
+
+      form.hidden =
+        true;
+
       form.setAttribute(
         "aria-hidden",
         "true"
@@ -489,13 +603,22 @@
       destination.searchParams.forEach(
         (value,key) => {
           const input =
-            document.createElement("input");
+            document.createElement(
+              "input"
+            );
 
-          input.type = "hidden";
-          input.name = key;
-          input.value = value;
+          input.type =
+            "hidden";
 
-          form.appendChild(input);
+          input.name =
+            key;
+
+          input.value =
+            value;
+
+          form.appendChild(
+            input
+          );
         }
       );
 
@@ -503,7 +626,9 @@
         document.body ||
         document.documentElement;
 
-      mount.appendChild(form);
+      mount.appendChild(
+        form
+      );
 
       try {
         HTMLFormElement.prototype.submit.call(

@@ -1,44 +1,52 @@
 /* /assets/house-control-pad/house.control-pad.css */
-/* HOUSE_CONTROL_PAD_NINE_ROOM_DIGITAL_GEM_CSS_TNT_v2 */
+/* HOUSE_CONTROL_PAD_NINE_ROOM_HEART_GEM_CSS_TNT_v3 */
 /* Full-file replacement. */
+/* Paired exclusively with:
+   HOUSE_CONTROL_PAD_NINE_ROOM_HEART_GEM_RUNTIME_TNT_v3 */
 
 :root {
-  --house-control-pad-css-contract:
-    "HOUSE_CONTROL_PAD_NINE_ROOM_DIGITAL_GEM_CSS_TNT_v2";
-
-  --house-pad-z: 2147483000;
+  --house-pad-z-index: 2147483000;
   --house-pad-transition: 280ms;
 
-  --house-black: #01030a;
-  --house-deep: #030713;
-  --house-navy: #07142b;
-  --house-panel: rgba(7, 15, 34, 0.96);
-  --house-panel-soft: rgba(11, 24, 53, 0.82);
-
-  --house-white: #f8fbff;
-  --house-cream: #fff4d6;
-  --house-muted: rgba(220, 234, 255, 0.72);
-  --house-faint: rgba(220, 234, 255, 0.46);
+  --house-black: #010308;
+  --house-deep-black: #02050d;
+  --house-deep-blue: #061126;
+  --house-mid-blue: #0b2149;
+  --house-electric-blue: #2478ff;
+  --house-cyan: #63efff;
+  --house-pale-blue: #d7f4ff;
 
   --house-gold: #f3c86f;
   --house-gold-light: #ffe8a3;
-  --house-blue: #8dd8ff;
-  --house-blue-strong: #2478ff;
-  --house-cyan: #63efff;
-  --house-violet: #a88bff;
-  --house-green: #8ff0c3;
+  --house-gold-deep: #9b6d23;
 
-  --house-line: rgba(167, 202, 255, 0.18);
-  --house-line-strong: rgba(141, 216, 255, 0.44);
-  --house-line-gold: rgba(243, 200, 111, 0.48);
+  --house-white: #f8fbff;
+  --house-muted: rgba(220, 234, 255, 0.72);
+  --house-faint: rgba(220, 234, 255, 0.48);
+
+  --house-border: rgba(141, 216, 255, 0.24);
+  --house-border-soft: rgba(167, 202, 255, 0.12);
+  --house-border-gold: rgba(243, 200, 111, 0.48);
+
+  --house-panel:
+    linear-gradient(
+      145deg,
+      rgba(9, 20, 44, 0.985),
+      rgba(3, 8, 20, 0.995) 58%,
+      rgba(1, 3, 10, 0.998)
+    );
 
   --house-dialog-shadow:
-    0 2rem 7rem rgba(0, 0, 0, 0.82),
-    0 0 3rem rgba(36, 120, 255, 0.12);
+    0 2rem 7rem rgba(0, 0, 0, 0.84),
+    0 0 3.5rem rgba(36, 120, 255, 0.13);
 
   --house-room-hue: 205;
-  --house-room-hue-secondary: 46;
+  --house-room-secondary-hue: 46;
 }
+
+/* =========================================================
+   ROOT
+   ========================================================= */
 
 .house-control-pad,
 .house-control-pad *,
@@ -54,7 +62,7 @@
 .house-control-pad {
   position: fixed;
   inset: 0;
-  z-index: var(--house-pad-z);
+  z-index: var(--house-pad-z-index);
 
   display: grid;
   place-items: center;
@@ -86,6 +94,7 @@
   line-height: 1.4;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   pointer-events: none;
 }
@@ -105,10 +114,15 @@
 }
 
 .house-control-pad button:focus-visible,
-.house-control-pad a:focus-visible {
+.house-control-pad a:focus-visible,
+.house-control-pad [tabindex]:focus-visible {
   outline: 2px solid var(--house-gold);
   outline-offset: 4px;
 }
+
+/* =========================================================
+   BACKDROP
+   ========================================================= */
 
 .house-control-pad__backdrop {
   position: absolute;
@@ -119,28 +133,28 @@
 
   background:
     radial-gradient(
-      circle at 50% 18%,
-      rgba(36, 120, 255, 0.25),
-      transparent 36rem
+      circle at 50% 14%,
+      rgba(36, 120, 255, 0.26),
+      transparent 38rem
     ),
     radial-gradient(
-      circle at 50% 86%,
+      circle at 50% 88%,
       rgba(243, 200, 111, 0.12),
       transparent 34rem
     ),
     linear-gradient(
       180deg,
-      rgba(0, 2, 9, 0.88),
-      rgba(0, 1, 5, 0.96)
+      rgba(0, 2, 9, 0.89),
+      rgba(0, 1, 5, 0.97)
     );
 
   backdrop-filter:
     blur(16px)
-    saturate(0.82);
+    saturate(0.84);
 
   -webkit-backdrop-filter:
     blur(16px)
-    saturate(0.82);
+    saturate(0.84);
 
   transition:
     opacity
@@ -153,11 +167,15 @@
   opacity: 1;
 }
 
+/* =========================================================
+   DIALOG
+   ========================================================= */
+
 .house-control-pad__dialog {
   position: relative;
   z-index: 2;
 
-  width: min(1240px, 100%);
+  width: min(1260px, 100%);
   max-height:
     calc(
       100dvh -
@@ -176,27 +194,22 @@
 
   border:
     1px solid
-    rgba(141, 216, 255, 0.28);
+    rgba(141, 216, 255, 0.3);
 
   border-radius: 1.75rem;
 
   background:
     radial-gradient(
-      circle at 10% 0%,
-      rgba(99, 239, 255, 0.11),
+      circle at 8% 0%,
+      rgba(99, 239, 255, 0.1),
       transparent 24rem
     ),
     radial-gradient(
       circle at 92% 0%,
-      rgba(243, 200, 111, 0.11),
-      transparent 22rem
+      rgba(243, 200, 111, 0.1),
+      transparent 24rem
     ),
-    linear-gradient(
-      150deg,
-      rgba(10, 22, 49, 0.985),
-      rgba(3, 8, 20, 0.995) 56%,
-      rgba(1, 3, 10, 0.998)
-    );
+    var(--house-panel);
 
   box-shadow:
     var(--house-dialog-shadow),
@@ -247,15 +260,18 @@
     );
 
   background-size: 220% 100%;
-
-  opacity: 0.6;
+  opacity: 0.64;
 
   animation:
-    houseDialogSheen
-    12s
+    house-dialog-sheen
+    13s
     linear
     infinite;
 }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .house-control-pad__header {
   position: relative;
@@ -270,18 +286,18 @@
   gap: 1rem;
 
   padding:
-    clamp(1rem, 2.4vw, 1.5rem)
-    clamp(1rem, 2.8vw, 1.8rem)
+    clamp(1rem, 2.4vw, 1.55rem)
+    clamp(1rem, 2.8vw, 1.9rem)
     0.95rem;
 
   border-bottom:
     1px solid
-    rgba(167, 202, 255, 0.12);
+    var(--house-border-soft);
 
   background:
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.047),
+      rgba(255, 255, 255, 0.048),
       rgba(255, 255, 255, 0.012)
     );
 }
@@ -290,7 +306,7 @@
   min-width: 0;
 
   display: grid;
-  gap: 0.32rem;
+  gap: 0.34rem;
 }
 
 .house-control-pad__eyebrow {
@@ -314,7 +330,7 @@
     clamp(
       1.85rem,
       4.8vw,
-      3.65rem
+      3.7rem
     );
 
   font-weight: 950;
@@ -324,11 +340,11 @@
 
   text-shadow:
     0 0 1.2rem
-    rgba(141, 216, 255, 0.15);
+    rgba(141, 216, 255, 0.16);
 }
 
 .house-control-pad__description {
-  max-width: 59rem;
+  max-width: 61rem;
 
   margin: 0.12rem 0 0;
 
@@ -346,18 +362,20 @@
 }
 
 .house-control-pad__close {
-  min-width: 5.2rem;
-  min-height: 2.65rem;
+  min-width: 5.3rem;
+  min-height: 2.68rem;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  padding: 0.65rem 0.95rem;
+  padding:
+    0.65rem
+    0.95rem;
 
   border:
     1px solid
-    rgba(243, 200, 111, 0.38);
+    rgba(243, 200, 111, 0.4);
 
   border-radius: 999px;
 
@@ -393,7 +411,7 @@
   transform: translateY(-1px);
 
   border-color:
-    rgba(243, 200, 111, 0.72);
+    rgba(243, 200, 111, 0.74);
 
   background:
     linear-gradient(
@@ -404,7 +422,7 @@
 
   box-shadow:
     0 0 1rem
-    rgba(243, 200, 111, 0.13),
+    rgba(243, 200, 111, 0.14),
     inset 0 1px 0
     rgba(255, 255, 255, 0.13);
 }
@@ -412,6 +430,10 @@
 .house-control-pad__close:active {
   transform: translateY(0);
 }
+
+/* =========================================================
+   STATUS
+   ========================================================= */
 
 .house-control-pad__status {
   position: relative;
@@ -424,17 +446,17 @@
 
   padding:
     0.56rem
-    clamp(1rem, 2.8vw, 1.8rem);
+    clamp(1rem, 2.8vw, 1.9rem);
 
   border-bottom:
     1px solid
     rgba(167, 202, 255, 0.095);
 
   color:
-    rgba(220, 234, 255, 0.58);
+    rgba(220, 234, 255, 0.6);
 
   background:
-    rgba(1, 5, 14, 0.42);
+    rgba(1, 5, 14, 0.45);
 
   font-size: 0.65rem;
   font-weight: 850;
@@ -454,18 +476,22 @@
 
   border-radius: 50%;
 
-  background: var(--house-green);
+  background: #8ff0c3;
 
   box-shadow:
     0 0 0.8rem
     rgba(143, 240, 195, 0.72);
 
   animation:
-    houseStatusPulse
+    house-status-pulse
     3.4s
     ease-in-out
     infinite;
 }
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
 
 .house-control-pad__content {
   position: relative;
@@ -513,6 +539,10 @@
     padding-box;
 }
 
+/* =========================================================
+   ESTATE SURFACE
+   ========================================================= */
+
 .house-control-pad__estate {
   position: relative;
 
@@ -528,23 +558,23 @@
 
   border-right:
     1px solid
-    rgba(167, 202, 255, 0.12);
+    var(--house-border-soft);
 
   background:
     radial-gradient(
-      circle at 50% 46%,
-      rgba(36, 120, 255, 0.14),
-      transparent 45%
+      circle at 50% 45%,
+      rgba(36, 120, 255, 0.17),
+      transparent 44%
     ),
     radial-gradient(
       circle at 50% 92%,
       rgba(243, 200, 111, 0.075),
-      transparent 38%
+      transparent 39%
     ),
     linear-gradient(
       180deg,
-      rgba(4, 12, 28, 0.82),
-      rgba(1, 4, 12, 0.95)
+      rgba(4, 12, 28, 0.86),
+      rgba(1, 4, 12, 0.97)
     );
 }
 
@@ -566,8 +596,7 @@
       transparent 6px
     );
 
-  opacity: 0.72;
-
+  opacity: 0.76;
   mix-blend-mode: screen;
 }
 
@@ -584,7 +613,7 @@
     radial-gradient(
       circle at 50% 48%,
       transparent 35%,
-      rgba(1, 3, 10, 0.18) 68%,
+      rgba(1, 3, 10, 0.16) 68%,
       rgba(1, 3, 10, 0.7) 100%
     );
 }
@@ -605,68 +634,163 @@
       0
       1.4rem
       2.6rem
-      rgba(0, 0, 0, 0.44)
+      rgba(0, 0, 0, 0.46)
     );
 }
 
+/* =========================================================
+   DIGITAL GRID
+   ========================================================= */
+
 .house-control-pad__digital-grid {
-  opacity: 0.55;
+  opacity: 0.58;
 
   animation:
-    houseGridDrift
-    22s
+    house-grid-drift
+    24s
     linear
     infinite;
 }
 
-.house-control-pad__estate-shape {
-  vector-effect:
-    non-scaling-stroke;
+/* =========================================================
+   HEART ESTATE
+   ========================================================= */
 
+.house-control-pad__estate-shape,
+.house-control-pad__heart-shape,
+.house-control-pad__heart-inner,
+.house-control-pad__heart-pulse,
+.house-control-pad__heart-core,
+.house-control-pad__heart-seam {
+  vector-effect: non-scaling-stroke;
+}
+
+.house-control-pad__heart-shape {
+  opacity: 0.98;
+
+  filter:
+    drop-shadow(
+      0
+      0
+      1.2rem
+      rgba(243, 200, 111, 0.2)
+    )
+    drop-shadow(
+      0
+      0
+      2.8rem
+      rgba(36, 120, 255, 0.17)
+    );
+
+  animation:
+    house-heart-shell-breathe
+    7s
+    ease-in-out
+    infinite;
+}
+
+.house-control-pad__heart-inner {
+  opacity: 0.88;
+
+  animation:
+    house-heart-inner-flow
+    14s
+    linear
+    infinite;
+}
+
+.house-control-pad__heart-field {
   opacity: 0.96;
 }
 
-.house-control-pad__orbit {
-  vector-effect:
-    non-scaling-stroke;
-
-  transform-box: fill-box;
-  transform-origin: center;
-
+.house-control-pad__heart-facets {
   pointer-events: none;
 }
 
-.house-control-pad__orbit--outer {
+.house-control-pad__heart-facet {
+  opacity: 0.9;
+  mix-blend-mode: screen;
+
+  transition:
+    opacity 220ms ease,
+    filter 220ms ease;
+}
+
+.house-control-pad__heart-facet[data-house-heart-facet="1"],
+.house-control-pad__heart-facet[data-house-heart-facet="5"],
+.house-control-pad__heart-facet[data-house-heart-facet="9"] {
+  fill:
+    rgba(255, 255, 255, 0.055);
+}
+
+.house-control-pad__heart-facet[data-house-heart-facet="2"],
+.house-control-pad__heart-facet[data-house-heart-facet="6"],
+.house-control-pad__heart-facet[data-house-heart-facet="10"] {
+  fill:
+    rgba(36, 120, 255, 0.062);
+}
+
+.house-control-pad__heart-facet[data-house-heart-facet="3"],
+.house-control-pad__heart-facet[data-house-heart-facet="7"],
+.house-control-pad__heart-facet[data-house-heart-facet="11"] {
+  fill:
+    rgba(99, 239, 255, 0.042);
+}
+
+.house-control-pad__heart-facet[data-house-heart-facet="4"],
+.house-control-pad__heart-facet[data-house-heart-facet="8"],
+.house-control-pad__heart-facet[data-house-heart-facet="12"] {
+  fill:
+    rgba(243, 200, 111, 0.048);
+}
+
+.house-control-pad__heart-seams {
+  pointer-events: none;
+}
+
+.house-control-pad__heart-seam {
+  stroke:
+    rgba(141, 216, 255, 0.1);
+
+  stroke-width: 1.4;
+
+  stroke-dasharray: 3 10;
+
+  opacity: 0.82;
+}
+
+.house-control-pad__heart-pulse {
+  opacity: 0.7;
+
   animation:
-    houseOrbitClockwise
-    42s
+    house-heart-pulse-flow
+    10s
     linear
     infinite;
 }
 
-.house-control-pad__orbit--middle {
-  animation:
-    houseOrbitCounter
-    34s
-    linear
-    infinite;
-}
+.house-control-pad__heart-core {
+  transform-box: fill-box;
+  transform-origin: center;
 
-.house-control-pad__orbit--inner {
   filter:
     drop-shadow(
       0
       0
       1rem
-      rgba(36, 120, 255, 0.2)
+      rgba(243, 200, 111, 0.32)
     );
 
   animation:
-    houseInnerOrbitPulse
-    6s
+    house-heart-core-beat
+    4.8s
     ease-in-out
     infinite;
 }
+
+/* =========================================================
+   NETWORK
+   ========================================================= */
 
 .house-control-pad__network {
   pointer-events: none;
@@ -675,24 +799,32 @@
 .house-control-pad__corridor {
   fill: none;
 
-  vector-effect:
-    non-scaling-stroke;
+  vector-effect: non-scaling-stroke;
 
   stroke-linecap: round;
+  stroke-linejoin: round;
 
-  opacity: 0.78;
+  opacity: 0.8;
 }
 
 .house-control-pad__corridor--spoke {
   stroke:
-    rgba(99, 239, 255, 0.34);
+    rgba(99, 239, 255, 0.36);
 
-  stroke-width: 2.4;
+  stroke-width: 2.35;
 
   stroke-dasharray: 7 13;
 
+  filter:
+    drop-shadow(
+      0
+      0
+      0.35rem
+      rgba(99, 239, 255, 0.2)
+    );
+
   animation:
-    houseSpokeFlow
+    house-spoke-flow
     9s
     linear
     infinite;
@@ -700,95 +832,114 @@
 
 .house-control-pad__corridor--ring {
   stroke:
-    rgba(243, 200, 111, 0.25);
+    rgba(243, 200, 111, 0.28);
 
   stroke-width: 1.8;
 
   stroke-dasharray: 3 11;
 
+  filter:
+    drop-shadow(
+      0
+      0
+      0.3rem
+      rgba(243, 200, 111, 0.16)
+    );
+
   animation:
-    houseRingFlow
+    house-ring-flow
     12s
     linear
     infinite;
 }
+
+/* =========================================================
+   ROOM COLOR AUTHORITY
+   ========================================================= */
+
+.house-control-pad__room-gem,
+.house-control-pad__marker {
+  --room-hue:
+    var(--house-room-hue);
+
+  --room-secondary-hue:
+    var(--house-room-secondary-hue);
+}
+
+.house-control-pad__room-gem[data-house-room-id="main-hall"],
+.house-control-pad__marker[data-house-room-id="main-hall"] {
+  --room-hue: 46;
+  --room-secondary-hue: 205;
+}
+
+.house-control-pad__room-gem[data-house-room-id="law-library"],
+.house-control-pad__marker[data-house-room-id="law-library"] {
+  --room-hue: 208;
+  --room-secondary-hue: 46;
+}
+
+.house-control-pad__room-gem[data-house-room-id="council-room"],
+.house-control-pad__marker[data-house-room-id="council-room"] {
+  --room-hue: 274;
+  --room-secondary-hue: 205;
+}
+
+.house-control-pad__room-gem[data-house-room-id="hearth-room-lab"],
+.house-control-pad__marker[data-house-room-id="hearth-room-lab"] {
+  --room-hue: 160;
+  --room-secondary-hue: 198;
+}
+
+.house-control-pad__room-gem[data-house-room-id="portrait-hall"],
+.house-control-pad__marker[data-house-room-id="portrait-hall"] {
+  --room-hue: 326;
+  --room-secondary-hue: 275;
+}
+
+.house-control-pad__room-gem[data-house-room-id="portrait-room"],
+.house-control-pad__marker[data-house-room-id="portrait-room"] {
+  --room-hue: 24;
+  --room-secondary-hue: 46;
+}
+
+.house-control-pad__room-gem[data-house-room-id="product-gallery"],
+.house-control-pad__marker[data-house-room-id="product-gallery"] {
+  --room-hue: 188;
+  --room-secondary-hue: 155;
+}
+
+.house-control-pad__room-gem[data-house-room-id="atlas-study"],
+.house-control-pad__marker[data-house-room-id="atlas-study"] {
+  --room-hue: 225;
+  --room-secondary-hue: 196;
+}
+
+.house-control-pad__room-gem[data-house-room-id="atrium"],
+.house-control-pad__marker[data-house-room-id="atrium"] {
+  --room-hue: 196;
+  --room-secondary-hue: 225;
+}
+
+/* =========================================================
+   ROOM GEMS
+   ========================================================= */
 
 .house-control-pad__rooms {
   pointer-events: none;
 }
 
 .house-control-pad__room-gem {
-  --room-hue:
-    var(--house-room-hue);
-
-  --room-hue-secondary:
-    var(--house-room-hue-secondary);
-
   pointer-events: none;
 
   transform-box: fill-box;
   transform-origin: center;
 
-  opacity: 0.94;
+  opacity: 0.95;
 
   transition:
     opacity 180ms ease,
     filter 180ms ease,
     transform 180ms ease;
-}
-
-.house-control-pad__room-gem[data-house-room-id="main-hall"],
-.house-control-pad__marker[data-house-room-id="main-hall"] {
-  --room-hue: 46;
-  --room-hue-secondary: 205;
-}
-
-.house-control-pad__room-gem[data-house-room-id="law-library"],
-.house-control-pad__marker[data-house-room-id="law-library"] {
-  --room-hue: 208;
-  --room-hue-secondary: 46;
-}
-
-.house-control-pad__room-gem[data-house-room-id="council-room"],
-.house-control-pad__marker[data-house-room-id="council-room"] {
-  --room-hue: 274;
-  --room-hue-secondary: 205;
-}
-
-.house-control-pad__room-gem[data-house-room-id="hearth-room-lab"],
-.house-control-pad__marker[data-house-room-id="hearth-room-lab"] {
-  --room-hue: 160;
-  --room-hue-secondary: 198;
-}
-
-.house-control-pad__room-gem[data-house-room-id="portrait-hall"],
-.house-control-pad__marker[data-house-room-id="portrait-hall"] {
-  --room-hue: 326;
-  --room-hue-secondary: 275;
-}
-
-.house-control-pad__room-gem[data-house-room-id="portrait-room"],
-.house-control-pad__marker[data-house-room-id="portrait-room"] {
-  --room-hue: 24;
-  --room-hue-secondary: 46;
-}
-
-.house-control-pad__room-gem[data-house-room-id="product-gallery"],
-.house-control-pad__marker[data-house-room-id="product-gallery"] {
-  --room-hue: 188;
-  --room-hue-secondary: 155;
-}
-
-.house-control-pad__room-gem[data-house-room-id="atlas-study"],
-.house-control-pad__marker[data-house-room-id="atlas-study"] {
-  --room-hue: 225;
-  --room-hue-secondary: 196;
-}
-
-.house-control-pad__room-gem[data-house-room-id="atrium"],
-.house-control-pad__marker[data-house-room-id="atrium"] {
-  --room-hue: 196;
-  --room-hue-secondary: 225;
 }
 
 .house-control-pad__room-shell {
@@ -805,7 +956,7 @@
       var(--room-hue),
       96%,
       78%,
-      0.74
+      0.76
     );
 
   stroke-width: 3;
@@ -817,12 +968,12 @@
     drop-shadow(
       0
       0
-      0.8rem
+      0.82rem
       hsla(
         var(--room-hue),
         94%,
         62%,
-        0.26
+        0.27
       )
     );
 
@@ -843,10 +994,10 @@
 
   stroke:
     hsla(
-      var(--room-hue-secondary),
+      var(--room-secondary-hue),
       94%,
       76%,
-      0.34
+      0.35
     );
 
   vector-effect:
@@ -854,21 +1005,20 @@
 }
 
 .house-control-pad__room-facet {
-  opacity: 0.84;
-
+  opacity: 0.86;
   mix-blend-mode: screen;
 }
 
 .house-control-pad__room-node {
   fill:
     hsl(
-      var(--room-hue-secondary),
+      var(--room-secondary-hue),
       95%,
       78%
     );
 
   stroke:
-    rgba(255, 255, 255, 0.82);
+    rgba(255, 255, 255, 0.84);
 
   vector-effect:
     non-scaling-stroke;
@@ -877,17 +1027,17 @@
     drop-shadow(
       0
       0
-      0.7rem
+      0.72rem
       hsla(
         var(--room-hue),
         95%,
         66%,
-        0.72
+        0.74
       )
     );
 
   animation:
-    houseRoomNodePulse
+    house-room-node-pulse
     4.5s
     ease-in-out
     infinite;
@@ -909,12 +1059,12 @@
     drop-shadow(
       0
       0
-      1.3rem
+      1.35rem
       hsla(
         var(--room-hue),
         96%,
         68%,
-        0.74
+        0.76
       )
     );
 }
@@ -925,12 +1075,12 @@
       var(--room-hue),
       96%,
       66%,
-      0.44
+      0.46
     );
 
   stroke:
     hsl(
-      var(--room-hue-secondary),
+      var(--room-secondary-hue),
       96%,
       82%
     );
@@ -944,10 +1094,14 @@
         var(--room-hue),
         98%,
         64%,
-        0.84
+        0.86
       )
     );
 }
+
+/* =========================================================
+   GUIDE GEOMETRY
+   ========================================================= */
 
 .house-control-pad__guide-halo {
   vector-effect:
@@ -957,7 +1111,7 @@
   transform-origin: center;
 
   animation:
-    houseGuideHalo
+    house-guide-halo
     8s
     linear
     infinite;
@@ -971,11 +1125,15 @@
   transform-origin: center;
 
   animation:
-    houseGuideDiamond
+    house-guide-diamond
     5.8s
     ease-in-out
     infinite;
 }
+
+/* =========================================================
+   MARKER LAYER
+   ========================================================= */
 
 .house-control-pad__markers {
   position: absolute;
@@ -986,12 +1144,6 @@
 }
 
 .house-control-pad__marker {
-  --room-hue:
-    var(--house-room-hue);
-
-  --room-hue-secondary:
-    var(--house-room-hue-secondary);
-
   position: absolute;
   left: var(--house-marker-x);
   top: var(--house-marker-y);
@@ -1006,7 +1158,9 @@
   justify-content: center;
   gap: 0.22rem;
 
-  padding: 0.35rem 0.42rem;
+  padding:
+    0.35rem
+    0.42rem;
 
   border: 0;
 
@@ -1029,9 +1183,9 @@
 
   width:
     clamp(
-      1.1rem,
-      2.4vw,
-      1.7rem
+      1.08rem,
+      2.35vw,
+      1.68rem
     );
 
   aspect-ratio: 1;
@@ -1058,37 +1212,37 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.88),
+      rgba(255, 255, 255, 0.9),
       hsla(
         var(--room-hue),
         96%,
         72%,
-        0.72
+        0.74
       ) 24%,
       hsla(
         var(--room-hue),
         92%,
         48%,
-        0.78
+        0.8
       ) 54%,
-      rgba(2, 8, 24, 0.96) 82%,
+      rgba(2, 8, 24, 0.97) 82%,
       hsla(
-        var(--room-hue-secondary),
+        var(--room-secondary-hue),
         96%,
         72%,
-        0.56
+        0.58
       )
     );
 
   box-shadow:
     0 0.35rem 0.75rem
-    rgba(0, 0, 0, 0.48),
-    0 0 0.9rem
+    rgba(0, 0, 0, 0.5),
+    0 0 0.92rem
     hsla(
       var(--room-hue),
       96%,
       62%,
-      0.52
+      0.54
     );
 
   transform:
@@ -1121,13 +1275,13 @@
 
   box-shadow:
     0 0.4rem 0.85rem
-    rgba(0, 0, 0, 0.48),
-    0 0 1.25rem
+    rgba(0, 0, 0, 0.5),
+    0 0 1.28rem
     hsla(
       var(--room-hue),
       98%,
       68%,
-      0.78
+      0.8
     );
 }
 
@@ -1148,34 +1302,34 @@
       135deg,
       #ffffff,
       hsla(
-        var(--room-hue-secondary),
+        var(--room-secondary-hue),
         100%,
         84%,
-        0.94
+        0.95
       ) 22%,
       hsla(
         var(--room-hue),
         96%,
         65%,
-        0.96
+        0.97
       ) 55%,
       hsla(
         var(--room-hue),
         92%,
         24%,
-        0.98
+        0.99
       ) 84%
     );
 
   box-shadow:
     0 0.45rem 0.9rem
-    rgba(0, 0, 0, 0.5),
-    0 0 1.55rem
+    rgba(0, 0, 0, 0.52),
+    0 0 1.58rem
     hsla(
       var(--room-hue),
       100%,
       72%,
-      0.94
+      0.96
     );
 
   transform:
@@ -1188,8 +1342,8 @@
   top: 0.15rem;
   right: 0.28rem;
 
-  min-width: 1.05rem;
-  min-height: 1.05rem;
+  min-width: 1.06rem;
+  min-height: 1.06rem;
 
   display: inline-flex;
   align-items: center;
@@ -1202,14 +1356,14 @@
   border-radius: 999px;
 
   color:
-    rgba(255, 255, 255, 0.88);
+    rgba(255, 255, 255, 0.9);
 
   background:
-    rgba(1, 6, 17, 0.88);
+    rgba(1, 6, 17, 0.9);
 
   box-shadow:
     0 0.2rem 0.5rem
-    rgba(0, 0, 0, 0.38);
+    rgba(0, 0, 0, 0.4);
 
   font-size: 0.48rem;
   font-weight: 950;
@@ -1218,7 +1372,7 @@
 }
 
 .house-control-pad__marker-label {
-  max-width: 8.2rem;
+  max-width: 8.4rem;
 
   display: block;
 
@@ -1228,24 +1382,24 @@
 
   border:
     1px solid
-    rgba(167, 202, 255, 0.14);
+    rgba(167, 202, 255, 0.15);
 
   border-radius: 999px;
 
   color:
-    rgba(248, 251, 255, 0.95);
+    rgba(248, 251, 255, 0.96);
 
   background:
-    rgba(1, 6, 17, 0.82);
+    rgba(1, 6, 17, 0.84);
 
   box-shadow:
     0 0.25rem 0.75rem
-    rgba(0, 0, 0, 0.38);
+    rgba(0, 0, 0, 0.4);
 
   font-size:
     clamp(
       0.47rem,
-      1.22vw,
+      1.2vw,
       0.68rem
     );
 
@@ -1258,7 +1412,7 @@
 
   text-shadow:
     0 1px 5px
-    rgba(0, 0, 0, 0.95);
+    rgba(0, 0, 0, 0.96);
 }
 
 .house-control-pad__marker[aria-pressed="true"]
@@ -1268,7 +1422,7 @@
       var(--room-hue),
       96%,
       72%,
-      0.68
+      0.7
     );
 
   color: #ffffff;
@@ -1278,7 +1432,7 @@
       var(--room-hue),
       70%,
       12%,
-      0.92
+      0.94
     );
 
   box-shadow:
@@ -1287,9 +1441,13 @@
       var(--room-hue),
       92%,
       58%,
-      0.2
+      0.22
     );
 }
+
+/* =========================================================
+   HOUSE GUIDE CONTROL
+   ========================================================= */
 
 .house-control-pad__marker--avatar {
   z-index: 10;
@@ -1301,18 +1459,17 @@
 .house-control-pad__marker--avatar::before {
   width:
     clamp(
-      1.7rem,
+      1.72rem,
       3.3vw,
-      2.45rem
+      2.48rem
     );
 
   border-radius: 50%;
-
   clip-path: none;
 
   border:
     2px solid
-    rgba(255, 232, 163, 0.78);
+    rgba(255, 232, 163, 0.8);
 
   background:
     radial-gradient(
@@ -1326,14 +1483,14 @@
 
   box-shadow:
     0 0.5rem 1rem
-    rgba(0, 0, 0, 0.48),
-    0 0 1.45rem
-    rgba(243, 200, 111, 0.72);
+    rgba(0, 0, 0, 0.5),
+    0 0 1.48rem
+    rgba(243, 200, 111, 0.74);
 
   transform: none;
 
   animation:
-    houseGuideButtonPulse
+    house-guide-button-pulse
     4.8s
     ease-in-out
     infinite;
@@ -1346,10 +1503,14 @@
 
   box-shadow:
     0 0.55rem 1rem
-    rgba(0, 0, 0, 0.5),
-    0 0 1.85rem
-    rgba(243, 200, 111, 0.92);
+    rgba(0, 0, 0, 0.52),
+    0 0 1.88rem
+    rgba(243, 200, 111, 0.94);
 }
+
+/* =========================================================
+   DETAILS PANEL
+   ========================================================= */
 
 .house-control-pad__details {
   position: relative;
@@ -1361,7 +1522,7 @@
   align-items: flex-start;
 
   padding:
-    clamp(1rem, 2.4vw, 1.5rem);
+    clamp(1rem, 2.4vw, 1.55rem);
 
   overflow: auto;
   overscroll-behavior: contain;
@@ -1378,7 +1539,7 @@
     ),
     radial-gradient(
       circle at 0% 100%,
-      rgba(36, 120, 255, 0.1),
+      rgba(36, 120, 255, 0.11),
       transparent 18rem
     ),
     linear-gradient(
@@ -1397,7 +1558,7 @@
 .house-control-pad__details::before {
   content: "";
 
-  width: 3.25rem;
+  width: 3.3rem;
   height: 0.18rem;
 
   display: block;
@@ -1410,17 +1571,20 @@
     linear-gradient(
       90deg,
       var(--house-gold),
-      var(--house-blue),
+      var(--house-cyan),
       transparent
     );
 
   box-shadow:
     0 0 0.8rem
-    rgba(141, 216, 255, 0.28);
+    rgba(141, 216, 255, 0.3);
 }
 
 .house-control-pad__details-eyebrow {
-  margin: 0 0 0.58rem;
+  margin:
+    0
+    0
+    0.58rem;
 
   color: var(--house-gold);
 
@@ -1440,7 +1604,7 @@
     clamp(
       1.4rem,
       3vw,
-      2.25rem
+      2.28rem
     );
 
   font-weight: 950;
@@ -1450,7 +1614,10 @@
 }
 
 .house-control-pad__details-description {
-  margin: 0.9rem 0 0;
+  margin:
+    0.9rem
+    0
+    0;
 
   color: var(--house-muted);
 
@@ -1470,14 +1637,14 @@
 
   border:
     1px solid
-    rgba(141, 216, 255, 0.18);
+    rgba(141, 216, 255, 0.19);
 
   border-radius: 0.75rem;
 
-  color: var(--house-blue);
+  color: var(--house-cyan);
 
   background:
-    rgba(36, 120, 255, 0.07);
+    rgba(36, 120, 255, 0.075);
 
   font-size: 0.65rem;
   font-weight: 950;
@@ -1485,22 +1652,27 @@
   text-transform: uppercase;
 }
 
+/* =========================================================
+   ROUTE CONTROL
+   ========================================================= */
+
 .house-control-pad__route {
   width: 100%;
-  min-height: 3.15rem;
+  min-height: 3.18rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   margin-top: auto;
+
   padding:
     0.8rem
     1rem;
 
   border:
     1px solid
-    rgba(243, 200, 111, 0.55);
+    rgba(243, 200, 111, 0.56);
 
   border-radius: 1rem;
 
@@ -1516,11 +1688,11 @@
 
   box-shadow:
     0 0.8rem 1.7rem
-    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.32),
     0 0 1.2rem
-    rgba(243, 200, 111, 0.09),
+    rgba(243, 200, 111, 0.1),
     inset 0 1px 0
-    rgba(255, 255, 255, 0.74);
+    rgba(255, 255, 255, 0.76);
 
   cursor: pointer;
 
@@ -1547,11 +1719,11 @@
 
   box-shadow:
     0 1rem 2rem
-    rgba(0, 0, 0, 0.36),
-    0 0 1.35rem
-    rgba(243, 200, 111, 0.22),
+    rgba(0, 0, 0, 0.38),
+    0 0 1.38rem
+    rgba(243, 200, 111, 0.24),
     inset 0 1px 0
-    rgba(255, 255, 255, 0.8);
+    rgba(255, 255, 255, 0.82);
 }
 
 .house-control-pad__route:active {
@@ -1559,11 +1731,15 @@
     translateY(0);
 }
 
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
 .house-control-pad__footer {
   position: relative;
   z-index: 4;
 
-  min-height: 2.65rem;
+  min-height: 2.66rem;
 
   display: flex;
   align-items: center;
@@ -1580,7 +1756,7 @@
   color: var(--house-faint);
 
   background:
-    rgba(1, 4, 12, 0.62);
+    rgba(1, 4, 12, 0.64);
 
   font-size: 0.59rem;
   font-weight: 850;
@@ -1588,6 +1764,10 @@
   text-align: center;
   text-transform: uppercase;
 }
+
+/* =========================================================
+   LIFECYCLE
+   ========================================================= */
 
 .house-control-pad[data-house-state="opening"]
 .house-control-pad__dialog,
@@ -1600,7 +1780,29 @@
     opacity;
 }
 
-@keyframes houseDialogSheen {
+.house-control-pad[data-house-ready="false"]
+.house-control-pad__status::before {
+  background: var(--house-gold);
+
+  box-shadow:
+    0 0 0.8rem
+    rgba(243, 200, 111, 0.7);
+}
+
+.house-control-pad[data-house-state="failed"]
+.house-control-pad__status::before {
+  background: #ff7b7b;
+
+  box-shadow:
+    0 0 0.8rem
+    rgba(255, 123, 123, 0.72);
+}
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes house-dialog-sheen {
   from {
     background-position:
       160% 0;
@@ -1612,7 +1814,7 @@
   }
 }
 
-@keyframes houseStatusPulse {
+@keyframes house-status-pulse {
   0%,
   100% {
     opacity: 0.72;
@@ -1625,7 +1827,7 @@
   }
 }
 
-@keyframes houseGridDrift {
+@keyframes house-grid-drift {
   from {
     transform:
       translate(0, 0);
@@ -1637,44 +1839,109 @@
   }
 }
 
-@keyframes houseOrbitClockwise {
-  to {
-    transform:
-      rotate(360deg);
-  }
-}
-
-@keyframes houseOrbitCounter {
-  to {
-    transform:
-      rotate(-360deg);
-  }
-}
-
-@keyframes houseInnerOrbitPulse {
+@keyframes house-heart-shell-breathe {
   0%,
   100% {
-    opacity: 0.72;
+    opacity: 0.92;
+
+    filter:
+      drop-shadow(
+        0
+        0
+        1.15rem
+        rgba(243, 200, 111, 0.18)
+      )
+      drop-shadow(
+        0
+        0
+        2.6rem
+        rgba(36, 120, 255, 0.15)
+      );
   }
 
   50% {
     opacity: 1;
+
+    filter:
+      drop-shadow(
+        0
+        0
+        1.45rem
+        rgba(243, 200, 111, 0.28)
+      )
+      drop-shadow(
+        0
+        0
+        3rem
+        rgba(36, 120, 255, 0.22)
+      );
   }
 }
 
-@keyframes houseSpokeFlow {
+@keyframes house-heart-inner-flow {
+  to {
+    stroke-dashoffset: -160;
+  }
+}
+
+@keyframes house-heart-pulse-flow {
+  to {
+    stroke-dashoffset: -190;
+  }
+}
+
+@keyframes house-heart-core-beat {
+  0%,
+  100% {
+    opacity: 0.74;
+
+    transform:
+      scale(0.98);
+  }
+
+  12% {
+    opacity: 1;
+
+    transform:
+      scale(1.055);
+  }
+
+  24% {
+    opacity: 0.82;
+
+    transform:
+      scale(1);
+  }
+
+  36% {
+    opacity: 1;
+
+    transform:
+      scale(1.035);
+  }
+
+  52%,
+  100% {
+    opacity: 0.74;
+
+    transform:
+      scale(0.98);
+  }
+}
+
+@keyframes house-spoke-flow {
   to {
     stroke-dashoffset: -80;
   }
 }
 
-@keyframes houseRingFlow {
+@keyframes house-ring-flow {
   to {
     stroke-dashoffset: 72;
   }
 }
 
-@keyframes houseRoomNodePulse {
+@keyframes house-room-node-pulse {
   0%,
   100% {
     opacity: 0.72;
@@ -1685,14 +1952,14 @@
   }
 }
 
-@keyframes houseGuideHalo {
+@keyframes house-guide-halo {
   to {
     transform:
       rotate(360deg);
   }
 }
 
-@keyframes houseGuideDiamond {
+@keyframes house-guide-diamond {
   0%,
   100% {
     opacity: 0.8;
@@ -1709,7 +1976,7 @@
   }
 }
 
-@keyframes houseGuideButtonPulse {
+@keyframes house-guide-button-pulse {
   0%,
   100% {
     filter:
@@ -1721,6 +1988,10 @@
       brightness(1.18);
   }
 }
+
+/* =========================================================
+   TABLET
+   ========================================================= */
 
 @media (max-width: 920px) {
   .house-control-pad__dialog {
@@ -1739,7 +2010,7 @@
 
     border-bottom:
       1px solid
-      rgba(167, 202, 255, 0.12);
+      var(--house-border-soft);
   }
 
   .house-control-pad__details {
@@ -1754,6 +2025,10 @@
     margin-top: 1.25rem;
   }
 }
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
 @media (max-width: 620px) {
   .house-control-pad {
@@ -1821,6 +2096,12 @@
     font-size: 0.54rem;
   }
 
+  .house-control-pad__estate {
+    min-height: 0;
+
+    aspect-ratio: 4 / 3;
+  }
+
   .house-control-pad__marker {
     min-width: 3.35rem;
     min-height: 3.15rem;
@@ -1840,7 +2121,7 @@
   }
 
   .house-control-pad__marker-label {
-    max-width: 5.25rem;
+    max-width: 5.3rem;
 
     padding:
       0.14rem
@@ -1937,11 +2218,60 @@
   }
 }
 
-@media (
-  max-height: 690px
-) and (
-  min-width: 921px
-) {
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .house-control-pad__header {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .house-control-pad__description {
+    max-width: 100%;
+  }
+
+  .house-control-pad__marker {
+    min-width: 2.8rem;
+    min-height: 2.8rem;
+  }
+
+  .house-control-pad__marker-label {
+    max-width: 4.6rem;
+
+    font-size:
+      clamp(
+        0.32rem,
+        2vw,
+        0.44rem
+      );
+
+    line-height: 1.05;
+  }
+
+  .house-control-pad__marker-number {
+    display: none;
+  }
+
+  .house-control-pad__heart-seam {
+    opacity: 0.55;
+  }
+
+  .house-control-pad__corridor--ring {
+    opacity: 0.48;
+  }
+}
+
+/* =========================================================
+   SHORT DESKTOP
+   ========================================================= */
+
+@media
+  (max-height: 690px)
+  and
+  (min-width: 921px) {
   .house-control-pad__header {
     padding-top: 0.82rem;
     padding-bottom: 0.68rem;
@@ -1952,7 +2282,7 @@
       clamp(
         1.6rem,
         4vw,
-        2.6rem
+        2.65rem
       );
   }
 
@@ -1972,6 +2302,10 @@
   }
 }
 
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
 @media (prefers-reduced-motion: reduce) {
   .house-control-pad *,
   .house-control-pad *::before,
@@ -1982,6 +2316,37 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* =========================================================
+   HIGH CONTRAST
+   ========================================================= */
+
+@media (prefers-contrast: more) {
+  .house-control-pad__dialog,
+  .house-control-pad__close,
+  .house-control-pad__marker-label,
+  .house-control-pad__details-count,
+  .house-control-pad__route {
+    border-width: 2px;
+  }
+
+  .house-control-pad__description,
+  .house-control-pad__details-description,
+  .house-control-pad__status,
+  .house-control-pad__footer {
+    color:
+      rgba(248, 251, 255, 0.9);
+  }
+
+  .house-control-pad__heart-seam,
+  .house-control-pad__corridor {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   PRINT
+   ========================================================= */
 
 @media print {
   .house-control-pad {

@@ -1,9 +1,9 @@
 // /assets/house-control-pad/house.control-pad.js
-// HOUSE_CONTROL_PAD_NINE_ROOM_DIGITAL_GEM_RUNTIME_TNT_v2
+// HOUSE_CONTROL_PAD_NINE_ROOM_HEART_GEM_RUNTIME_TNT_v3
 // Full-file replacement.
-// Complete runtime authority for the nine-room estate map.
+// Complete runtime authority for the nine-room Heart Estate map.
 
-(function houseControlPadNineRoomRuntime(global, document) {
+(function houseControlPadNineRoomHeartRuntime(global, document) {
   "use strict";
 
   if (!global || !document) {
@@ -11,9 +11,10 @@
   }
 
   const CONTRACT =
-    "HOUSE_CONTROL_PAD_NINE_ROOM_DIGITAL_GEM_RUNTIME_TNT_v2";
+    "HOUSE_CONTROL_PAD_NINE_ROOM_HEART_GEM_RUNTIME_TNT_v3";
 
   const PUBLIC_GLOBAL = "HOUSE_CONTROL_PAD";
+  const STATUS_GLOBAL = "__HOUSE_CONTROL_PAD_STATUS__";
   const SVG_NS = "http://www.w3.org/2000/svg";
 
   const SELECTORS = Object.freeze({
@@ -59,12 +60,54 @@
     destroyed: "destroyed"
   });
 
+  const HEART_PATH = [
+    "M 600 830",
+    "C 555 790 500 750 440 710",
+    "C 300 616 180 520 150 360",
+    "C 122 210 215 105 345 98",
+    "C 462 92 553 165 600 256",
+    "C 647 165 738 92 855 98",
+    "C 985 105 1078 210 1050 360",
+    "C 1020 520 900 616 760 710",
+    "C 700 750 645 790 600 830",
+    "Z"
+  ].join(" ");
+
+  const HEART_INNER_PATH = [
+    "M 600 760",
+    "C 557 723 511 690 461 657",
+    "C 343 579 244 493 220 370",
+    "C 199 261 269 180 368 174",
+    "C 458 169 535 226 600 337",
+    "C 665 226 742 169 832 174",
+    "C 931 180 1001 261 980 370",
+    "C 956 493 857 579 739 657",
+    "C 689 690 643 723 600 760",
+    "Z"
+  ].join(" ");
+
+  const HEART_BOUNDARY_POINTS = deepFreeze([
+    { x: 600, y: 830 },
+    { x: 475, y: 700 },
+    { x: 340, y: 545 },
+    { x: 240, y: 370 },
+    { x: 360, y: 220 },
+    { x: 480, y: 165 },
+    { x: 600, y: 256 },
+    { x: 720, y: 165 },
+    { x: 840, y: 220 },
+    { x: 960, y: 370 },
+    { x: 860, y: 545 },
+    { x: 725, y: 700 }
+  ]);
+
   const ESTATE = deepFreeze({
-    id: "diamond-gate-nine-room-estate",
+    id: "diamond-gate-nine-room-heart-estate",
+    shape: "heart",
     eyebrow: "Diamond Gate Bridge",
     label: "The House Map",
     description:
-      "Nine primary rooms form the public estate. Select a room gem to preview its purpose and enter its route.",
+      "Nine primary rooms form the Heart Estate. Select a room gem to preview its purpose and enter its route.",
 
     viewBox: {
       minX: 0,
@@ -75,7 +118,13 @@
 
     center: {
       x: 600,
-      y: 450
+      y: 495
+    },
+
+    heart: {
+      outerPath: HEART_PATH,
+      innerPath: HEART_INNER_PATH,
+      boundaryPoints: HEART_BOUNDARY_POINTS
     },
 
     guide: {
@@ -83,10 +132,10 @@
       label: "House Guide",
       shortLabel: "Guide",
       description:
-        "The center of the estate. Use the guide to reset the map and review the complete nine-room structure.",
+        "The living center of the Heart Estate. Use the guide to reset the map and review the complete nine-room structure.",
       marker: {
         x: 600,
-        y: 450
+        y: 495
       }
     },
 
@@ -102,10 +151,9 @@
         route: "/home/",
         marker: {
           x: 600,
-          y: 112
+          y: 292
         }
       },
-
       {
         id: "law-library",
         order: 2,
@@ -116,11 +164,10 @@
           "The estate chamber for laws, governing principles, boundaries, coherence, and admissibility.",
         route: "/laws/",
         marker: {
-          x: 835,
-          y: 190
+          x: 360,
+          y: 220
         }
       },
-
       {
         id: "council-room",
         order: 3,
@@ -131,11 +178,10 @@
           "The chamber where coherence is examined, conditions are weighed, and the diagnostic path begins.",
         route: "/coherence-diagnostic/",
         marker: {
-          x: 1018,
-          y: 392
+          x: 960,
+          y: 370
         }
       },
-
       {
         id: "hearth-room-lab",
         order: 4,
@@ -146,11 +192,10 @@
           "The estate laboratory inside Hearth, where the living world, House systems, experiments, and guided interpretation meet.",
         route: "/showroom/globe/hearth/",
         marker: {
-          x: 974,
-          y: 650
+          x: 860,
+          y: 545
         }
       },
-
       {
         id: "portrait-hall",
         order: 5,
@@ -161,11 +206,10 @@
           "The hall of characters, inhabitants, identities, and narrative presences throughout the estate.",
         route: "/characters/",
         marker: {
-          x: 748,
-          y: 798
+          x: 725,
+          y: 700
         }
       },
-
       {
         id: "portrait-room",
         order: 6,
@@ -176,11 +220,10 @@
           "The estate portrait room for the host, the Underdog identity, and the human center behind the House.",
         route: "/about-this-underdog/",
         marker: {
-          x: 452,
-          y: 798
+          x: 475,
+          y: 700
         }
       },
-
       {
         id: "product-gallery",
         order: 7,
@@ -191,11 +234,10 @@
           "The public gallery for tools, products, applications, and usable expressions of the estate.",
         route: "/products/",
         marker: {
-          x: 226,
-          y: 650
+          x: 340,
+          y: 545
         }
       },
-
       {
         id: "atlas-study",
         order: 8,
@@ -206,11 +248,10 @@
           "The parent world-study chamber containing the estate's planetary routes, worlds, and annexes.",
         route: "/showroom/globe/",
         marker: {
-          x: 182,
-          y: 392
+          x: 240,
+          y: 370
         }
       },
-
       {
         id: "atrium",
         order: 9,
@@ -221,8 +262,8 @@
           "The main entrance into Mirrorland, the estate's interactive narrative and world-expression layer.",
         route: "/showroom/",
         marker: {
-          x: 365,
-          y: 190
+          x: 840,
+          y: 220
         }
       }
     ]
@@ -232,10 +273,7 @@
 
   const priorController = global[PUBLIC_GLOBAL];
 
-  if (
-    priorController &&
-    typeof priorController.destroy === "function"
-  ) {
+  if (priorController && typeof priorController.destroy === "function") {
     try {
       priorController.destroy("authority-replacement");
     } catch (_error) {
@@ -294,6 +332,7 @@
   const controller = Object.freeze({
     contract: CONTRACT,
     roomCount: ESTATE.rooms.length,
+    estateShape: ESTATE.shape,
 
     init,
     open,
@@ -309,6 +348,7 @@
   });
 
   installController();
+  publishStatus();
   autoBoot();
 
   function installController() {
@@ -327,9 +367,7 @@
         () => {
           init();
         },
-        {
-          once: true
-        }
+        { once: true }
       );
 
       return;
@@ -347,11 +385,7 @@
       );
     }
 
-    if (
-      state.initialized &&
-      state.root &&
-      state.root.isConnected
-    ) {
+    if (state.initialized && state.root && state.root.isConnected) {
       bindRuntime();
 
       return result(
@@ -371,21 +405,16 @@
 
       state.initialized = true;
       state.ready = true;
-      state.mounted = Boolean(
-        state.root &&
-        state.root.isConnected
-      );
-
-      state.initializedAt =
-        state.initializedAt ||
-        nowIso();
+      state.mounted = Boolean(state.root && state.root.isConnected);
+      state.initializedAt = state.initializedAt || nowIso();
 
       transitionTo(STATES.ready);
-      updateStatus("Nine-room estate ready.");
+      updateStatus("Nine-room Heart Estate ready.");
 
       dispatch(EVENTS.ready, {
         reason: "initialization-complete",
-        roomCount: ESTATE.rooms.length
+        roomCount: ESTATE.rooms.length,
+        estateShape: ESTATE.shape
       });
 
       return result(
@@ -432,10 +461,7 @@
       }
     }
 
-    if (
-      !state.root ||
-      !state.dialog
-    ) {
+    if (!state.root || !state.dialog) {
       return result(
         false,
         STATES.failed,
@@ -446,13 +472,10 @@
     const normalized = normalizeOpenRequest(request);
 
     if (state.open) {
-      state.activeDoor =
-        normalized.door ||
-        state.activeDoor;
+      state.activeDoor = normalized.door || state.activeDoor;
+      state.activeContext = normalized.context || state.activeContext;
 
-      state.activeContext =
-        normalized.context ||
-        state.activeContext;
+      publishStatus();
 
       return result(
         true,
@@ -482,9 +505,7 @@
 
     state.activeDoor = normalized.door;
     state.activeContext = normalized.context;
-    state.returnFocusTarget = resolveReturnFocusTarget(
-      normalized.door
-    );
+    state.returnFocusTarget = resolveReturnFocusTarget(normalized.door);
 
     transitionTo(STATES.opening);
     clearCloseTimer();
@@ -507,13 +528,14 @@
       state.openCount += 1;
       state.openedAt = nowIso();
 
-      updateStatus("Nine-room estate open.");
+      updateStatus("Nine-room Heart Estate open.");
       focusInitialElement();
 
       dispatch(EVENTS.open, {
         reason: "open-complete",
         context: state.activeContext,
-        roomCount: ESTATE.rooms.length
+        roomCount: ESTATE.rooms.length,
+        estateShape: ESTATE.shape
       });
 
       return result(
@@ -614,10 +636,7 @@
     function completeClose() {
       state.closeTimer = null;
 
-      if (
-        state.destroyed ||
-        !state.root
-      ) {
+      if (state.destroyed || !state.root) {
         return;
       }
 
@@ -629,7 +648,7 @@
       state.closeCount += 1;
       state.closedAt = nowIso();
 
-      updateStatus("Nine-room estate closed.");
+      updateStatus("Nine-room Heart Estate closed.");
       restoreFocus();
 
       dispatch(EVENTS.close, {
@@ -687,10 +706,7 @@
     syncSelection();
     renderRoomDetails(room);
 
-    if (
-      !options ||
-      options.silent !== true
-    ) {
+    if (!options || options.silent !== true) {
       updateStatus(`${room.label} selected.`);
 
       dispatch(EVENTS.select, {
@@ -701,12 +717,11 @@
       });
     }
 
-    if (
-      options &&
-      options.focus === true
-    ) {
+    if (options && options.focus === true) {
       focusSelectedMarker();
     }
+
+    publishStatus();
 
     return result(
       true,
@@ -732,6 +747,7 @@
 
     if (!normalized.ok) {
       updateStatus(normalized.reason);
+
       return normalized;
     }
 
@@ -808,6 +824,7 @@
     return deepFreeze({
       contract: CONTRACT,
       estateId: ESTATE.id,
+      estateShape: ESTATE.shape,
       roomCount: ESTATE.rooms.length,
       rooms: ESTATE.rooms.map((room) => ({
         id: room.id,
@@ -816,7 +833,11 @@
         shortLabel: room.shortLabel,
         category: room.category,
         description: room.description,
-        route: room.route
+        route: room.route,
+        marker: {
+          x: room.marker.x,
+          y: room.marker.y
+        }
       }))
     });
   }
@@ -832,7 +853,9 @@
       estate: {
         id: ESTATE.id,
         label: ESTATE.label,
-        roomCount: ESTATE.rooms.length
+        shape: ESTATE.shape,
+        roomCount: ESTATE.rooms.length,
+        viewBox: clonePlain(ESTATE.viewBox)
       },
 
       selection: {
@@ -861,10 +884,7 @@
     restoreBackgroundCustody();
     unlockDocumentScroll();
 
-    if (
-      state.root &&
-      state.root.parentNode
-    ) {
+    if (state.root && state.root.parentNode) {
       state.root.parentNode.removeChild(state.root);
     }
 
@@ -900,9 +920,7 @@
         "destroy"
     });
 
-    if (
-      global[PUBLIC_GLOBAL] === controller
-    ) {
+    if (global[PUBLIC_GLOBAL] === controller) {
       try {
         delete global[PUBLIC_GLOBAL];
       } catch (_error) {
@@ -928,11 +946,10 @@
         "data-house-state": STATES.closed,
         "data-house-ready": "false",
         "data-house-open": "false",
-        "data-house-room-count": String(
-          ESTATE.rooms.length
-        ),
+        "data-house-room-count": String(ESTATE.rooms.length),
         "data-house-selected-room": "",
         "data-house-context": "",
+        "data-house-estate-shape": ESTATE.shape,
         "aria-hidden": "true"
       }
     });
@@ -954,8 +971,7 @@
         role: "dialog",
         "aria-modal": "true",
         "aria-labelledby": "house-control-pad-title",
-        "aria-describedby":
-          "house-control-pad-description",
+        "aria-describedby": "house-control-pad-description",
         tabindex: "-1"
       }
     });
@@ -1012,7 +1028,7 @@
 
     const statusNode = createElement("div", {
       className: "house-control-pad__status",
-      text: "Nine-room estate ready.",
+      text: "Nine-room Heart Estate ready.",
       attributes: {
         "data-house-status": "",
         role: "status",
@@ -1029,6 +1045,7 @@
       className: "house-control-pad__estate",
       attributes: {
         "data-house-estate": "",
+        "data-house-heart-estate": "true",
         "data-house-digital-gem-map": "true"
       }
     });
@@ -1065,7 +1082,7 @@
 
     const footer = createElement("footer", {
       className: "house-control-pad__footer",
-      text: "Nine rooms · one estate"
+      text: "Nine rooms · one Heart Estate"
     });
 
     estateNode.append(
@@ -1105,10 +1122,7 @@
   }
 
   function renderEstate() {
-    if (
-      !state.svg ||
-      !state.markersLayer
-    ) {
+    if (!state.svg || !state.markersLayer) {
       throw new Error(
         "The House Map rendering surface is unavailable."
       );
@@ -1119,12 +1133,22 @@
 
     const defs = createSvgElement("defs");
 
+    const heartClip = createSvgElement("clipPath", {
+      id: "houseHeartClip"
+    });
+
+    heartClip.append(
+      createSvgElement("path", {
+        d: ESTATE.heart.outerPath
+      })
+    );
+
     const estateGradient = createSvgElement(
       "radialGradient",
       {
-        id: "houseEstateGradient",
+        id: "houseHeartEstateGradient",
         cx: "50%",
-        cy: "46%",
+        cy: "45%",
         r: "72%"
       }
     );
@@ -1133,17 +1157,46 @@
       createSvgElement("stop", {
         offset: "0%",
         "stop-color": "#174687",
-        "stop-opacity": ".48"
+        "stop-opacity": ".52"
       }),
       createSvgElement("stop", {
-        offset: "46%",
+        offset: "43%",
         "stop-color": "#071a38",
-        "stop-opacity": ".76"
+        "stop-opacity": ".78"
       }),
       createSvgElement("stop", {
         offset: "100%",
         "stop-color": "#01040d",
-        "stop-opacity": ".98"
+        "stop-opacity": ".99"
+      })
+    );
+
+    const innerHeartGradient = createSvgElement(
+      "linearGradient",
+      {
+        id: "houseHeartInnerGradient",
+        x1: "0%",
+        y1: "0%",
+        x2: "100%",
+        y2: "100%"
+      }
+    );
+
+    innerHeartGradient.append(
+      createSvgElement("stop", {
+        offset: "0%",
+        "stop-color": "#d7f4ff",
+        "stop-opacity": ".14"
+      }),
+      createSvgElement("stop", {
+        offset: "42%",
+        "stop-color": "#2478ff",
+        "stop-opacity": ".10"
+      }),
+      createSvgElement("stop", {
+        offset: "100%",
+        "stop-color": "#f3c86f",
+        "stop-opacity": ".12"
       })
     );
 
@@ -1259,7 +1312,9 @@
     );
 
     defs.append(
+      heartClip,
       estateGradient,
+      innerHeartGradient,
       roomGradient,
       roomCoreGradient,
       glow,
@@ -1275,57 +1330,95 @@
       fill: "url(#houseDigitalGrid)"
     });
 
-    const estateShell = createSvgElement("polygon", {
-      class: "house-control-pad__estate-shape",
-      points: polygonPoints(
-        ESTATE.center.x,
-        ESTATE.center.y,
-        455,
-        9,
-        -Math.PI / 2
-      ),
-      fill: "url(#houseEstateGradient)",
-      stroke: "rgba(243,200,111,.45)",
-      "stroke-width": "4",
+    const heartShell = createSvgElement("path", {
+      class:
+        "house-control-pad__estate-shape house-control-pad__heart-shape",
+      "data-house-heart-shell": "",
+      d: ESTATE.heart.outerPath,
+      fill: "url(#houseHeartEstateGradient)",
+      stroke: "rgba(243,200,111,.55)",
+      "stroke-width": "5",
       filter: "url(#houseEstateGlow)"
     });
 
-    const outerOrbit = createSvgElement("ellipse", {
-      class:
-        "house-control-pad__orbit house-control-pad__orbit--outer",
-      cx: String(ESTATE.center.x),
-      cy: String(ESTATE.center.y),
-      rx: "438",
-      ry: "352",
-      fill: "none",
+    const heartInner = createSvgElement("path", {
+      class: "house-control-pad__heart-inner",
+      "data-house-heart-inner": "",
+      d: ESTATE.heart.innerPath,
+      fill: "url(#houseHeartInnerGradient)",
       stroke: "rgba(141,216,255,.24)",
-      "stroke-width": "2",
-      "stroke-dasharray": "9 15"
+      "stroke-width": "2.5",
+      "stroke-dasharray": "9 14"
     });
 
-    const middleOrbit = createSvgElement("ellipse", {
-      class:
-        "house-control-pad__orbit house-control-pad__orbit--middle",
-      cx: String(ESTATE.center.x),
-      cy: String(ESTATE.center.y),
-      rx: "316",
-      ry: "256",
+    const clippedField = createSvgElement("g", {
+      class: "house-control-pad__heart-field",
+      "clip-path": "url(#houseHeartClip)"
+    });
+
+    const heartFacets = createSvgElement("g", {
+      class: "house-control-pad__heart-facets",
+      "data-house-heart-facets": ""
+    });
+
+    ESTATE.heart.boundaryPoints.forEach(
+      (point, index, points) => {
+        const nextPoint =
+          points[
+            (index + 1) %
+            points.length
+          ];
+
+        heartFacets.append(
+          createSvgElement("polygon", {
+            class: "house-control-pad__heart-facet",
+            "data-house-heart-facet": String(index + 1),
+            points: [
+              `${ESTATE.center.x},${ESTATE.center.y}`,
+              `${point.x},${point.y}`,
+              `${nextPoint.x},${nextPoint.y}`
+            ].join(" "),
+            fill: facetFallbackFill(index)
+          })
+        );
+      }
+    );
+
+    const heartSeams = createSvgElement("g", {
+      class: "house-control-pad__heart-seams",
+      "data-house-heart-seams": ""
+    });
+
+    ESTATE.heart.boundaryPoints.forEach(
+      (point, index) => {
+        heartSeams.append(
+          createSvgElement("line", {
+            class: "house-control-pad__heart-seam",
+            "data-house-heart-seam": String(index + 1),
+            x1: String(ESTATE.center.x),
+            y1: String(ESTATE.center.y),
+            x2: String(point.x),
+            y2: String(point.y)
+          })
+        );
+      }
+    );
+
+    const heartPulse = createSvgElement("path", {
+      class: "house-control-pad__heart-pulse",
+      "data-house-heart-pulse": "",
+      d: ESTATE.heart.innerPath,
       fill: "none",
-      stroke: "rgba(243,200,111,.18)",
-      "stroke-width": "2",
-      "stroke-dasharray": "4 13"
+      stroke: "rgba(99,239,255,.25)",
+      "stroke-width": "3",
+      "stroke-dasharray": "6 18"
     });
 
-    const innerOrbit = createSvgElement("circle", {
-      class:
-        "house-control-pad__orbit house-control-pad__orbit--inner",
-      cx: String(ESTATE.center.x),
-      cy: String(ESTATE.center.y),
-      r: "126",
-      fill: "rgba(4,14,35,.54)",
-      stroke: "rgba(141,216,255,.26)",
-      "stroke-width": "3"
-    });
+    clippedField.append(
+      heartFacets,
+      heartSeams,
+      heartPulse
+    );
 
     const network = createSvgElement("g", {
       class: "house-control-pad__network"
@@ -1339,26 +1432,28 @@
         ];
 
       network.append(
-        createSvgElement("line", {
+        createSvgElement("path", {
           class:
             "house-control-pad__corridor house-control-pad__corridor--spoke",
           "data-house-corridor": "",
           "data-house-corridor-room": room.id,
-          x1: String(ESTATE.center.x),
-          y1: String(ESTATE.center.y),
-          x2: String(room.marker.x),
-          y2: String(room.marker.y)
+          d: curvedConnectionPath(
+            ESTATE.center,
+            room.marker,
+            index % 2 === 0 ? 24 : -24
+          )
         }),
-        createSvgElement("line", {
+        createSvgElement("path", {
           class:
             "house-control-pad__corridor house-control-pad__corridor--ring",
           "data-house-ring-link": "",
           "data-house-ring-from": room.id,
           "data-house-ring-to": nextRoom.id,
-          x1: String(room.marker.x),
-          y1: String(room.marker.y),
-          x2: String(nextRoom.marker.x),
-          y2: String(nextRoom.marker.y)
+          d: curvedConnectionPath(
+            room.marker,
+            nextRoom.marker,
+            index % 2 === 0 ? -18 : 18
+          )
         })
       );
     });
@@ -1378,24 +1473,37 @@
       class: "house-control-pad__guide-halo",
       cx: String(ESTATE.center.x),
       cy: String(ESTATE.center.y),
-      r: "88",
+      r: "92",
       fill: "rgba(36,120,255,.10)",
-      stroke: "rgba(243,200,111,.32)",
-      "stroke-width": "2",
+      stroke: "rgba(243,200,111,.35)",
+      "stroke-width": "2.5",
       "stroke-dasharray": "5 9"
+    });
+
+    const centerHeart = createSvgElement("path", {
+      class: "house-control-pad__heart-core",
+      "data-house-heart-core": "",
+      d: smallHeartPath(
+        ESTATE.center.x,
+        ESTATE.center.y,
+        58
+      ),
+      fill: "rgba(243,200,111,.13)",
+      stroke: "rgba(255,232,163,.48)",
+      "stroke-width": "2"
     });
 
     const centerDiamond = createSvgElement("path", {
       class: "house-control-pad__guide-diamond",
       d: [
-        `M ${ESTATE.center.x} ${ESTATE.center.y - 62}`,
-        `L ${ESTATE.center.x + 62} ${ESTATE.center.y}`,
-        `L ${ESTATE.center.x} ${ESTATE.center.y + 62}`,
-        `L ${ESTATE.center.x - 62} ${ESTATE.center.y}`,
+        `M ${ESTATE.center.x} ${ESTATE.center.y - 54}`,
+        `L ${ESTATE.center.x + 54} ${ESTATE.center.y}`,
+        `L ${ESTATE.center.x} ${ESTATE.center.y + 54}`,
+        `L ${ESTATE.center.x - 54} ${ESTATE.center.y}`,
         "Z"
       ].join(" "),
       fill: "url(#houseRoomCoreGradient)",
-      stroke: "rgba(255,232,163,.72)",
+      stroke: "rgba(255,232,163,.76)",
       "stroke-width": "3",
       filter: "url(#houseEstateGlow)"
     });
@@ -1403,13 +1511,13 @@
     state.svg.append(
       defs,
       background,
-      estateShell,
-      outerOrbit,
-      middleOrbit,
-      innerOrbit,
+      heartShell,
+      clippedField,
+      heartInner,
       network,
       roomsGroup,
       centerHalo,
+      centerHeart,
       centerDiamond
     );
 
@@ -1442,8 +1550,7 @@
 
     guideButton.append(
       createElement("span", {
-        className:
-          "house-control-pad__marker-label",
+        className: "house-control-pad__marker-label",
         text: ESTATE.guide.shortLabel
       })
     );
@@ -1468,7 +1575,7 @@
     const outerVertices = polygonVertexList(
       room.marker.x,
       room.marker.y,
-      78,
+      70,
       8,
       Math.PI / 8
     );
@@ -1476,7 +1583,7 @@
     const innerVertices = polygonVertexList(
       room.marker.x,
       room.marker.y,
-      50,
+      46,
       8,
       Math.PI / 8
     );
@@ -1509,7 +1616,9 @@
       facetIndex < outerVertices.length;
       facetIndex += 1
     ) {
-      const current = outerVertices[facetIndex];
+      const current =
+        outerVertices[facetIndex];
+
       const next =
         outerVertices[
           (facetIndex + 1) %
@@ -1583,14 +1692,12 @@
     );
 
     const number = createElement("span", {
-      className:
-        "house-control-pad__marker-number",
+      className: "house-control-pad__marker-number",
       text: String(room.order)
     });
 
     const label = createElement("span", {
-      className:
-        "house-control-pad__marker-label",
+      className: "house-control-pad__marker-label",
       text: room.shortLabel
     });
 
@@ -1608,30 +1715,27 @@
     }
 
     state.selectedRoomId = "";
+
     syncSelection();
     clearElement(state.detailsPanel);
 
     const eyebrow = createElement("p", {
-      className:
-        "house-control-pad__details-eyebrow",
-      text: "Nine-room estate"
+      className: "house-control-pad__details-eyebrow",
+      text: "Nine-room Heart Estate"
     });
 
     const title = createElement("h3", {
-      className:
-        "house-control-pad__details-title",
+      className: "house-control-pad__details-title",
       text: ESTATE.guide.label
     });
 
     const description = createElement("p", {
-      className:
-        "house-control-pad__details-description",
+      className: "house-control-pad__details-description",
       text: ESTATE.guide.description
     });
 
     const count = createElement("p", {
-      className:
-        "house-control-pad__details-count",
+      className: "house-control-pad__details-count",
       text: `${ESTATE.rooms.length} primary rooms`
     });
 
@@ -1641,6 +1745,8 @@
       description,
       count
     );
+
+    publishStatus();
   }
 
   function renderRoomDetails(room) {
@@ -1651,20 +1757,17 @@
     clearElement(state.detailsPanel);
 
     const eyebrow = createElement("p", {
-      className:
-        "house-control-pad__details-eyebrow",
+      className: "house-control-pad__details-eyebrow",
       text: room.category
     });
 
     const title = createElement("h3", {
-      className:
-        "house-control-pad__details-title",
+      className: "house-control-pad__details-title",
       text: room.label
     });
 
     const description = createElement("p", {
-      className:
-        "house-control-pad__details-description",
+      className: "house-control-pad__details-description",
       text: room.description
     });
 
@@ -1729,15 +1832,9 @@
       SELECTORS.open
     );
 
-    if (!door) {
-      return;
-    }
-
     if (
-      !isEligibleDoorActivation(
-        event,
-        door
-      )
+      !door ||
+      !isEligibleDoorActivation(event, door)
     ) {
       return;
     }
@@ -1767,7 +1864,9 @@
 
     if (closeControl) {
       event.preventDefault();
+
       close("close-control");
+
       return;
     }
 
@@ -1776,6 +1875,7 @@
       event.target === state.backdrop
     ) {
       close("backdrop");
+
       return;
     }
 
@@ -1835,12 +1935,15 @@
 
     if (event.key === "Escape") {
       event.preventDefault();
+
       close("escape");
+
       return;
     }
 
     if (event.key === "Tab") {
       trapFocus(event);
+
       return;
     }
 
@@ -1992,13 +2095,14 @@
   }
 
   function trapFocus(event) {
-    const focusable = getFocusableElements(
-      state.dialog
-    );
+    const focusable =
+      getFocusableElements(state.dialog);
 
     if (!focusable.length) {
       event.preventDefault();
+
       state.dialog.focus();
+
       return;
     }
 
@@ -2008,14 +2112,17 @@
         focusable.length - 1
       ];
 
-    const active = document.activeElement;
+    const active =
+      document.activeElement;
 
     if (
       event.shiftKey &&
       active === first
     ) {
       event.preventDefault();
+
       last.focus();
+
       return;
     }
 
@@ -2024,7 +2131,9 @@
       active === last
     ) {
       event.preventDefault();
+
       first.focus();
+
       return;
     }
 
@@ -2032,6 +2141,7 @@
       !state.dialog.contains(active)
     ) {
       event.preventDefault();
+
       first.focus();
     }
   }
@@ -2061,7 +2171,8 @@
       return;
     }
 
-    let nextIndex = currentIndex;
+    let nextIndex =
+      currentIndex;
 
     if (
       event.key === "ArrowRight" ||
@@ -2147,7 +2258,8 @@
       );
     }
 
-    const room = findRoom(roomId);
+    const room =
+      findRoom(roomId);
 
     if (!room) {
       return result(
@@ -2157,9 +2269,8 @@
       );
     }
 
-    const route = validateInternalRoute(
-      room.route
-    );
+    const route =
+      validateInternalRoute(room.route);
 
     if (!route) {
       return result(
@@ -2196,7 +2307,29 @@
       );
     }
 
-    if (estate.rooms.length !== 9) {
+    if (
+      estate.shape !== "heart"
+    ) {
+      throw new Error(
+        "The estate registry must declare the heart shape."
+      );
+    }
+
+    if (
+      !safeString(
+        estate.heart &&
+          estate.heart.outerPath,
+        20000
+      )
+    ) {
+      throw new Error(
+        "The Heart Estate path is unavailable."
+      );
+    }
+
+    if (
+      estate.rooms.length !== 9
+    ) {
       throw new Error(
         "The estate registry must contain exactly nine rooms."
       );
@@ -2214,7 +2347,9 @@
         );
       }
 
-      if (ids.has(room.id)) {
+      if (
+        ids.has(room.id)
+      ) {
         throw new Error(
           `Duplicate room id: ${room.id}`
         );
@@ -2239,7 +2374,9 @@
         );
       }
 
-      if (routes.has(route)) {
+      if (
+        routes.has(route)
+      ) {
         throw new Error(
           `Duplicate room route: ${route}`
         );
@@ -2260,10 +2397,8 @@
   }
 
   function validateInternalRoute(rawRoute) {
-    const route = safeString(
-      rawRoute,
-      2000
-    );
+    const route =
+      safeString(rawRoute, 2000);
 
     if (!route) {
       return "";
@@ -2409,7 +2544,8 @@
   function restoreBackgroundCustody() {
     state.backgroundRecords.forEach(
       (record) => {
-        const element = record.element;
+        const element =
+          record.element;
 
         if (
           !element ||
@@ -2444,6 +2580,7 @@
   function lockDocumentScroll() {
     const html =
       document.documentElement;
+
     const body =
       document.body;
 
@@ -2472,6 +2609,7 @@
   function unlockDocumentScroll() {
     const html =
       document.documentElement;
+
     const body =
       document.body;
 
@@ -2485,23 +2623,16 @@
     }
 
     html.style.overflow =
-      html.dataset
-        .housePreviousOverflow ||
+      html.dataset.housePreviousOverflow ||
       "";
 
     body.style.overflow =
-      body.dataset
-        .housePreviousOverflow ||
+      body.dataset.housePreviousOverflow ||
       "";
 
-    delete html.dataset
-      .housePreviousOverflow;
-
-    delete body.dataset
-      .housePreviousOverflow;
-
-    delete html.dataset
-      .houseScrollLock;
+    delete html.dataset.housePreviousOverflow;
+    delete body.dataset.housePreviousOverflow;
+    delete html.dataset.houseScrollLock;
   }
 
   function transitionTo(
@@ -2543,6 +2674,8 @@
           : "false";
     }
 
+    publishStatus();
+
     dispatch(EVENTS.state, {
       reason: "state-transition",
       previousState: previous,
@@ -2560,6 +2693,22 @@
           1000
         );
     }
+
+    publishStatus();
+  }
+
+  function publishStatus() {
+    const snapshot =
+      Object.freeze(buildStatus());
+
+    try {
+      global[STATUS_GLOBAL] =
+        snapshot;
+    } catch (_error) {
+      // Public status publication is non-blocking.
+    }
+
+    return snapshot;
   }
 
   function dispatch(
@@ -2572,11 +2721,16 @@
       state: state.lifecycle,
       previousState:
         state.previousLifecycle,
-      roomCount: ESTATE.rooms.length,
+      estateShape:
+        ESTATE.shape,
+      roomCount:
+        ESTATE.rooms.length,
       selectedRoomId:
         state.selectedRoomId,
-      context: state.activeContext,
-      timestamp: nowIso(),
+      context:
+        state.activeContext,
+      timestamp:
+        nowIso(),
       ...clonePlain(
         extraDetail ||
         {}
@@ -2604,19 +2758,25 @@
   function buildStatus() {
     return {
       contract: CONTRACT,
-      state: state.lifecycle,
+      state:
+        state.lifecycle,
       previousState:
         state.previousLifecycle,
       initialized:
         state.initialized,
-      ready: state.ready,
-      mounted: Boolean(
-        state.root &&
-        state.root.isConnected
-      ),
-      open: state.open,
+      ready:
+        state.ready,
+      mounted:
+        Boolean(
+          state.root &&
+          state.root.isConnected
+        ),
+      open:
+        state.open,
       destroyed:
         state.destroyed,
+      estateShape:
+        ESTATE.shape,
       roomCount:
         ESTATE.rooms.length,
       selectedRoomId:
@@ -2691,7 +2851,9 @@
   }
 
   function clearCloseTimer() {
-    if (state.closeTimer === null) {
+    if (
+      state.closeTimer === null
+    ) {
       return;
     }
 
@@ -2738,10 +2900,11 @@
       return false;
     }
 
-    const target = safeString(
-      door.getAttribute("target"),
-      40
-    );
+    const target =
+      safeString(
+        door.getAttribute("target"),
+        40
+      );
 
     if (
       target &&
@@ -2823,7 +2986,8 @@
     const element =
       document.createElement(tagName);
 
-    const source = config || {};
+    const source =
+      config || {};
 
     if (source.className) {
       element.className =
@@ -2924,6 +3088,94 @@
       });
   }
 
+  function curvedConnectionPath(
+    start,
+    end,
+    bend
+  ) {
+    const dx =
+      end.x - start.x;
+
+    const dy =
+      end.y - start.y;
+
+    const length =
+      Math.hypot(dx, dy) || 1;
+
+    const perpendicularX =
+      -dy / length;
+
+    const perpendicularY =
+      dx / length;
+
+    const controlX =
+      (start.x + end.x) / 2 +
+      perpendicularX * bend;
+
+    const controlY =
+      (start.y + end.y) / 2 +
+      perpendicularY * bend;
+
+    return [
+      `M ${start.x} ${start.y}`,
+      `Q ${controlX.toFixed(2)} ${controlY.toFixed(2)} ${end.x} ${end.y}`
+    ].join(" ");
+  }
+
+  function smallHeartPath(
+    centerX,
+    centerY,
+    size
+  ) {
+    const top =
+      centerY - size * 0.35;
+
+    const bottom =
+      centerY + size;
+
+    const left =
+      centerX - size;
+
+    const right =
+      centerX + size;
+
+    const notch =
+      centerY - size * 0.08;
+
+    return [
+      `M ${centerX} ${bottom}`,
+      `C ${centerX - size * 0.28} ${centerY + size * 0.72}`,
+      `${left} ${centerY + size * 0.2}`,
+      `${left} ${centerY - size * 0.22}`,
+      `C ${left} ${top}`,
+      `${centerX - size * 0.18} ${top}`,
+      `${centerX} ${notch}`,
+      `C ${centerX + size * 0.18} ${top}`,
+      `${right} ${top}`,
+      `${right} ${centerY - size * 0.22}`,
+      `C ${right} ${centerY + size * 0.2}`,
+      `${centerX + size * 0.28} ${centerY + size * 0.72}`,
+      `${centerX} ${bottom}`,
+      "Z"
+    ].join(" ");
+  }
+
+  function facetFallbackFill(index) {
+    const fills = [
+      "rgba(255,255,255,.055)",
+      "rgba(36,120,255,.055)",
+      "rgba(99,239,255,.038)",
+      "rgba(243,200,111,.044)"
+    ];
+
+    return (
+      fills[
+        index %
+        fills.length
+      ]
+    );
+  }
+
   function polygonVertexList(
     centerX,
     centerY,
@@ -2960,24 +3212,6 @@
     }
 
     return vertices;
-  }
-
-  function polygonPoints(
-    centerX,
-    centerY,
-    radius,
-    sides,
-    rotation
-  ) {
-    return vertexString(
-      polygonVertexList(
-        centerX,
-        centerY,
-        radius,
-        sides,
-        rotation
-      )
-    );
   }
 
   function vertexString(vertices) {
@@ -3052,10 +3286,11 @@
   }
 
   function safeIdentifier(value) {
-    const candidate = safeString(
-      value,
-      160
-    );
+    const candidate =
+      safeString(
+        value,
+        160
+      );
 
     return /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/.test(
       candidate
@@ -3067,14 +3302,16 @@
   function normalizeError(error) {
     if (error instanceof Error) {
       return {
-        name: safeString(
-          error.name,
-          120
-        ),
-        message: safeString(
-          error.message,
-          1000
-        )
+        name:
+          safeString(
+            error.name,
+            120
+          ),
+        message:
+          safeString(
+            error.message,
+            1000
+          )
       };
     }
 
@@ -3093,22 +3330,27 @@
     extra
   ) {
     return Object.freeze({
-      ok: Boolean(ok),
+      ok:
+        Boolean(ok),
       state:
         resultState ||
         state.lifecycle,
-      reason: safeString(
-        reason,
-        1000
-      ),
+      reason:
+        safeString(reason, 1000),
       roomId: "",
       route: "",
       error: null,
-      ...clonePlain(extra || {})
+      ...clonePlain(
+        extra ||
+        {}
+      )
     });
   }
 
-  function clonePlain(value, seen) {
+  function clonePlain(
+    value,
+    seen
+  ) {
     if (
       value === null ||
       typeof value !== "object"
@@ -3120,15 +3362,25 @@
       seen ||
       new WeakMap();
 
-    if (memory.has(value)) {
+    if (
+      memory.has(value)
+    ) {
       return "[Circular]";
     }
 
-    memory.set(value, true);
+    memory.set(
+      value,
+      true
+    );
 
-    if (Array.isArray(value)) {
+    if (
+      Array.isArray(value)
+    ) {
       return value.map((entry) =>
-        clonePlain(entry, memory)
+        clonePlain(
+          entry,
+          memory
+        )
       );
     }
 
@@ -3150,8 +3402,11 @@
             memory
           );
 
-        if (cloned !== undefined) {
-          output[key] = cloned;
+        if (
+          cloned !== undefined
+        ) {
+          output[key] =
+            cloned;
         }
       }
     );
@@ -3159,7 +3414,10 @@
     return output;
   }
 
-  function deepFreeze(value, seen) {
+  function deepFreeze(
+    value,
+    seen
+  ) {
     if (
       value === null ||
       typeof value !== "object" ||
@@ -3172,7 +3430,9 @@
       seen ||
       new WeakSet();
 
-    if (memory.has(value)) {
+    if (
+      memory.has(value)
+    ) {
       return value;
     }
 
@@ -3180,7 +3440,10 @@
 
     Object.values(value).forEach(
       (entry) => {
-        deepFreeze(entry, memory);
+        deepFreeze(
+          entry,
+          memory
+        );
       }
     );
 
@@ -3198,8 +3461,9 @@
 
     return String(value).replace(
       /[^A-Za-z0-9_-]/g,
-      (character) =>
-        `\\${character}`
+      (character) => {
+        return `\\${character}`;
+      }
     );
   }
 

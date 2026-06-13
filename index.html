@@ -1316,33 +1316,50 @@
       }
     }
 
-    /* House Control Pad door */
-    .house-map-door{
+    /* House Control Pad three-diamond entrance */
+    .house-entry-diamonds{
       position:relative;
       z-index:3;
       width:min(var(--max),calc(100% - 28px));
       margin:0 auto;
-      padding:max(16px,env(safe-area-inset-top)) 0 4px;
+      padding:max(14px,env(safe-area-inset-top)) 0 2px;
       display:grid;
-      place-items:center;
+      justify-items:center;
+      gap:.15rem;
     }
 
-    .house-map-door__link{
+    .house-entry-diamonds__secondary{
+      display:flex;
+      justify-content:center;
+      gap:clamp(.9rem,4vw,2.4rem);
+      margin-top:-.5rem;
+    }
+
+    .house-entry-diamond{
       position:relative;
-      width:clamp(13rem,28vw,20rem);
-      aspect-ratio:220 / 160;
       display:grid;
       place-items:center;
+      width:clamp(9.5rem,18vw,13.5rem);
+      aspect-ratio:220 / 160;
+      padding:0;
+      border:0;
       color:var(--ink);
+      background:transparent;
+      cursor:pointer;
+      font:inherit;
     }
 
-    .house-map-door__link:hover,
-    .house-map-door__link:focus-visible{
+    .house-entry-diamond--primary{
+      width:clamp(12rem,22vw,16rem);
+    }
+
+    .house-entry-diamond:hover,
+    .house-entry-diamond:focus-visible{
       filter:brightness(1.12);
       outline:none;
     }
 
-    .house-map-door__svg{
+    .house-entry-diamond__svg{
       position:absolute;
       inset:0;
       width:100%;
@@ -1351,22 +1368,29 @@
       pointer-events:none;
     }
 
-    .house-map-door__label{
+    .house-entry-diamond__label{
       position:relative;
       z-index:2;
+      max-width:68%;
       color:rgba(255,244,216,.98);
-      font-size:clamp(.82rem,2vw,1.18rem);
+      font-size:clamp(.58rem,1.25vw,.86rem);
       font-weight:950;
-      letter-spacing:.1em;
+      letter-spacing:.08em;
+      line-height:1.05;
+      text-align:center;
       text-transform:uppercase;
       text-shadow:0 2px 12px rgba(0,0,0,.95),0 0 10px rgba(0,28,90,.80);
       pointer-events:none;
     }
 
+    .house-entry-diamond--primary .house-entry-diamond__label{
+      font-size:clamp(.72rem,1.55vw,1rem);
+    }
+
     @media (max-width:760px){
-      .house-map-door__link{
-        width:min(76vw,17rem);
-      }
+      .house-entry-diamond{width:clamp(8rem,33vw,10.5rem)}
+      .house-entry-diamond--primary{width:clamp(10rem,42vw,13rem)}
+      .house-entry-diamonds__secondary{gap:.45rem;margin-top:-.3rem}
     }
   </style>
 </head>
@@ -1466,19 +1490,35 @@
 
   <a class="skip" href="#compass-entry">Skip to Compass</a>
 
-  <div class="house-map-door">
-    <a
-      class="house-map-door__link"
-      href="/door/"
+  <div class="house-entry-diamonds" aria-label="House entrances">
+    <button
+      class="house-entry-diamond house-entry-diamond--primary"
+      type="button"
       data-house-control-pad-open
       data-house-context="root"
-      aria-label="House Map"
+      aria-label="Open House Map"
     >
-      <svg class="house-map-door__svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+      <svg class="house-entry-diamond__svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
         <use href="#compassOrganicGem"></use>
       </svg>
-      <span class="house-map-door__label">House Map</span>
-    </a>
+      <span class="house-entry-diamond__label">House Map</span>
+    </button>
+
+    <div class="house-entry-diamonds__secondary">
+      <a class="house-entry-diamond" href="/site-guide/" aria-label="Open Guide and Instructions">
+        <svg class="house-entry-diamond__svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+          <use href="#compassOrganicGem"></use>
+        </svg>
+        <span class="house-entry-diamond__label">Guide + Instructions</span>
+      </a>
+
+      <a class="house-entry-diamond" href="/showroom/globe/hearth/jeeves/" aria-label="Talk to the House through Jeeves">
+        <svg class="house-entry-diamond__svg" viewBox="0 0 220 160" aria-hidden="true" focusable="false">
+          <use href="#compassOrganicGem"></use>
+        </svg>
+        <span class="house-entry-diamond__label">Talk to the House</span>
+      </a>
+    </div>
   </div>
 
   <div class="shell">
@@ -1532,14 +1572,6 @@
             </div>
           </div>
         </details>
-
-        <a class="guide-direct-link" href="/site-guide/">Website Guide</a>
-
-        <a
-          class="guide-direct-link"
-          href="/showroom/globe/hearth/jeeves/"
-          aria-label="Talk to the House through Jeeves"
-        >Talk to the House</a>
       </nav>
     </header>
 
@@ -1846,4 +1878,3 @@ deploy_marker=COMPASS_ROOT_THREE_OPTION_GUIDE_GATEWAY_SPLIT_NAV_DEPLOY_MARKER_v1
   <script src="/assets/house-control-pad/house.control-pad.js"></script>
 </body>
 </html>
-``` [❶](code://python)

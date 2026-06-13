@@ -1,15 +1,15 @@
 <!-- TARGET FILE: /showroom/index.html -->
 <!-- TNT FULL-FILE REPLACEMENT -->
-<!-- SHOWROOM_ELARA_HOMEROOM_DOOR_TO_MIRRORLAND_ARCHITECTURAL_HTML_TNT_v2 -->
+<!-- SHOWROOM_ELARA_HOMEROOM_COMPACT_ARCHITECTURAL_DROPDOWN_HTML_TNT_v3 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/"
   data-page="showroom"
-  data-version="G3-ELARA-HOMEROOM-ARCHITECTURAL-RENEWAL"
-  data-contract="SHOWROOM_ELARA_HOMEROOM_DOOR_TO_MIRRORLAND_ARCHITECTURAL_HTML_TNT_v2"
-  data-previous-contract="SHOWROOM_DIAMOND_G3_TRUE_3D_OBJECT_LATTICE_HTML_TNT_v1"
-  data-baseline-contract="SHOWROOM_MIRRORLAND_MENU_CATEGORY_OWNERSHIP_HTML_TNT_v1"
+  data-version="G3-ELARA-HOMEROOM-COMPACT-ARCHITECTURAL-DROPDOWN"
+  data-contract="SHOWROOM_ELARA_HOMEROOM_COMPACT_ARCHITECTURAL_DROPDOWN_HTML_TNT_v3"
+  data-previous-contract="SHOWROOM_ELARA_HOMEROOM_DOOR_TO_MIRRORLAND_ARCHITECTURAL_HTML_TNT_v2"
+  data-baseline-contract="SHOWROOM_DIAMOND_G3_TRUE_3D_OBJECT_LATTICE_HTML_TNT_v1"
   data-contract-family="SHOWROOM_DIAMOND_G3_TRUE_3D_OBJECT_LATTICE_FOUR_FILE_FAMILY_v1"
   data-role="map-blip-single-mirrorland-entryway"
   data-house-room="showroom"
@@ -18,16 +18,16 @@
   data-room-narrative-title="The Door to Mirrorland"
   data-homeroom-guide="elara"
   data-elara-homeroom="true"
+  data-elara-route="/elara/"
   data-talk-to-elara-control="true"
-  data-talk-to-elara-ready="event"
-  data-elara-route=""
+  data-talk-to-elara-direct-link="true"
   data-team-selector-held="true"
   data-dextreon-path-held="true"
   data-sorin-path-held="true"
   data-public-work="SHADOWS_NEVER_SHATTER_IN_MIRRORLAND"
   data-primary-subject="mirrorland"
   data-door-object="diamond-lattice"
-  data-context-renewal="architectural-showroom-chambers"
+  data-context-renewal="compact-architectural-dropdown-showroom"
   data-page-is-door-context="true"
   data-this-is-door-to-mirrorland="true"
   data-map-blip-single-entryway="true"
@@ -56,12 +56,14 @@
   data-technical-control-options-hidden="true"
   data-object-controls-immediately-below-object="true"
   data-object-meaning-dropdown="true"
+  data-visible-paragraphs="false"
+  data-paragraphs-dropdown-governed="true"
   data-diamond-viewport-compressed="false"
-  data-diamond-viewport-enlarged="true"
-  data-diamond-viewport-min-height="clamp(36rem,62vw,52rem)"
-  data-diamond-viewport-mobile-min-height="clamp(36rem,122vw,46rem)"
-  data-route-jump-cards-removed="false"
-  data-route-jump-cards-renewed-as-chamber-navigation="true"
+  data-diamond-viewport-enlarged="false"
+  data-diamond-viewport-wide-short="true"
+  data-diamond-viewport-aspect-ratio="16/10"
+  data-diamond-viewport-mobile-aspect-ratio="4/3"
+  data-route-jump-cards-removed="true"
   data-route-burden-owned-by-portal="true"
   data-portal-menu-owns-navigation="true"
   data-cardinal-room-map-cache-aligned="true"
@@ -73,9 +75,11 @@
   data-top-dropdown-reduced="true"
   data-page-architecture="arrival,exhibit,revelation,construction,anatomy,threshold,passage"
   data-construction-record-dialog="true"
-  data-exhibit-bulletins="true"
-  data-anatomy-gallery="true"
-  data-threshold-bulletins="true"
+  data-construction-record-single-location="true"
+  data-construction-ribbons-removed="true"
+  data-construction-metric-cards-removed="true"
+  data-anatomy-dropdowns="true"
+  data-threshold-dropdowns="true"
   data-bright-color-renewal="true"
   data-glow-renewal="true"
   data-shine-renewal="true"
@@ -142,7 +146,7 @@
 
   <meta
     name="description"
-    content="Welcome to the Showroom, the Door to Mirrorland. Explore the interactive G3 Diamond Lattice in Object View and Lattice View before entering through the floating Map Portal."
+    content="Welcome to the Showroom, the Door to Mirrorland. Explore the G3 Diamond Lattice, open its architectural bulletins, review its complete construction record, and speak with Elara."
   >
 
   <link
@@ -157,9 +161,6 @@
       color-scheme:dark;
 
       --bg:#01030a;
-      --bg-blue:#03091b;
-      --bg-violet:#08031d;
-
       --ink:#fff9e9;
       --white:#ffffff;
       --white-glow:#f5fbff;
@@ -185,8 +186,8 @@
       --green:#82ffd0;
       --red:#ff8f9b;
 
-      --panel:rgba(5,10,27,.88);
-      --panel-strong:rgba(4,8,22,.96);
+      --panel:rgba(5,10,27,.90);
+      --panel-strong:rgba(4,8,22,.97);
 
       --line:rgba(170,214,255,.22);
       --line-bright:rgba(85,246,255,.44);
@@ -292,9 +293,11 @@
 
     body::before{
       content:"";
+
       position:fixed;
       inset:0;
       z-index:0;
+
       pointer-events:none;
 
       opacity:.30;
@@ -331,9 +334,11 @@
 
     body::after{
       content:"";
+
       position:fixed;
       inset:-20%;
       z-index:0;
+
       pointer-events:none;
 
       opacity:.22;
@@ -368,6 +373,10 @@
       color:inherit;
     }
 
+    p{
+      margin:0;
+    }
+
     a:focus-visible,
     button:focus-visible,
     summary:focus-visible,
@@ -392,11 +401,13 @@
       border-radius:999px;
 
       color:#05070d;
-      background:linear-gradient(
-        135deg,
-        var(--gold-soft),
-        var(--gold)
-      );
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-soft),
+          var(--gold)
+        );
 
       font-weight:950;
     }
@@ -449,6 +460,7 @@
       place-items:center;
 
       clip-path:var(--gem-path);
+
       transform:rotate(45deg);
 
       border:1px solid rgba(255,216,106,.62);
@@ -531,11 +543,9 @@
       gap:.55rem;
     }
 
-    .elara-quick-path{
+    .elara-quick-path,
+    .route-menu{
       width:min(18rem,100%);
-
-      display:grid;
-      gap:.38rem;
     }
 
     .elara-button{
@@ -589,6 +599,7 @@
 
     .elara-button::before{
       content:"";
+
       width:.72rem;
       height:.72rem;
 
@@ -611,12 +622,14 @@
 
     .elara-button::after{
       content:"";
+
       position:absolute;
       inset:-100% -35%;
-
       z-index:-1;
 
-      transform:translateX(-65%) rotate(18deg);
+      transform:
+        translateX(-65%)
+        rotate(18deg);
 
       background:
         linear-gradient(
@@ -626,7 +639,8 @@
           transparent
         );
 
-      transition:transform .65s ease;
+      transition:
+        transform .65s ease;
     }
 
     .elara-button:hover,
@@ -643,23 +657,13 @@
 
     .elara-button:hover::after,
     .elara-button:focus-visible::after{
-      transform:translateX(65%) rotate(18deg);
-    }
-
-    .elara-status{
-      min-height:1rem;
-
-      color:rgba(239,246,255,.66);
-
-      font-size:.68rem;
-      line-height:1.35;
-      text-align:right;
+      transform:
+        translateX(65%)
+        rotate(18deg);
     }
 
     .route-menu{
       position:relative;
-
-      width:min(18rem,100%);
     }
 
     .route-menu summary{
@@ -711,11 +715,16 @@
       border-right:2px solid rgba(245,251,255,.88);
       border-bottom:2px solid rgba(245,251,255,.88);
 
-      transform:rotate(45deg) translateY(-.12rem);
+      transform:
+        rotate(45deg)
+        translateY(-.12rem);
     }
 
     .route-menu[open] summary::after{
-      transform:rotate(225deg) translateY(-.08rem);
+      transform:
+        rotate(225deg)
+        translateY(-.08rem);
+
       border-color:var(--gold);
     }
 
@@ -725,7 +734,10 @@
       top:calc(100% + .55rem);
       z-index:40;
 
-      width:min(18rem,calc(100vw - 2rem));
+      width:min(
+        18rem,
+        calc(100vw - 2rem)
+      );
 
       padding:.72rem;
 
@@ -846,6 +858,7 @@
 
     .panel::after{
       content:"";
+
       position:absolute;
       inset:0;
 
@@ -860,7 +873,7 @@
 
     .arrival{
       display:grid;
-      gap:1.1rem;
+      gap:1.05rem;
 
       padding:clamp(1.2rem,4vw,2.5rem);
 
@@ -871,6 +884,7 @@
 
     .arrival::before{
       content:"";
+
       position:absolute;
       right:clamp(1rem,6vw,5.6rem);
       top:44%;
@@ -910,6 +924,7 @@
         0 0 5rem rgba(0,217,255,.10);
 
       pointer-events:none;
+
       opacity:.72;
     }
 
@@ -1035,22 +1050,6 @@
       text-wrap:balance;
     }
 
-    p{
-      margin:0;
-
-      color:var(--muted);
-
-      font-size:clamp(.98rem,2.7vw,1.15rem);
-      line-height:1.58;
-    }
-
-    .lead{
-      position:relative;
-      z-index:2;
-
-      max-width:var(--text-max);
-    }
-
     .thesis-field{
       position:relative;
       z-index:2;
@@ -1094,9 +1093,9 @@
 
     .thesis-field::before{
       content:"";
+
       position:absolute;
       inset:-100% -35%;
-
       z-index:-1;
 
       transform:
@@ -1134,13 +1133,6 @@
         0 0 2.6rem rgba(0,217,255,.16);
     }
 
-    .thesis-field span{
-      color:rgba(245,251,255,.76);
-
-      font-size:.9rem;
-      line-height:1.45;
-    }
-
     @keyframes thesisShine{
       0%,
       26%{
@@ -1157,75 +1149,27 @@
       }
     }
 
-    .chamber-navigation{
-      position:relative;
-      z-index:2;
-
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
-
-      padding-top:.2rem;
-    }
-
-    .chamber-navigation a{
-      min-height:2.45rem;
-
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-
-      border:1px solid rgba(85,246,255,.22);
-      border-radius:999px;
-
-      padding:.56rem .88rem;
-
-      color:rgba(245,251,255,.88);
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(0,217,255,.12),
-          transparent 72%
-        ),
-        rgba(255,255,255,.04);
-
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.075em;
-      text-transform:uppercase;
-
-      transition:
-        transform .18s ease,
-        border-color .18s ease,
-        box-shadow .18s ease;
-    }
-
-    .chamber-navigation a:hover,
-    .chamber-navigation a:focus-visible{
-      transform:translateY(-2px);
-
-      border-color:rgba(85,246,255,.72);
-
-      box-shadow:var(--cyan-glow);
-    }
-
     .section{
       margin-top:1.25rem;
 
       padding:clamp(1.05rem,3.4vw,1.75rem);
 
       display:grid;
-      gap:1.15rem;
+      gap:1rem;
 
       scroll-margin-top:1rem;
     }
 
     .section-heading{
       display:grid;
-      gap:.55rem;
+      gap:.45rem;
 
       max-width:var(--text-max);
+    }
+
+    .section-heading-compact{
+      display:grid;
+      gap:.45rem;
     }
 
     .diamond-layout,
@@ -1234,10 +1178,16 @@
       gap:.8rem;
     }
 
+    .diamond-exhibit-frame{
+      width:100%;
+    }
+
     .diamond-viewport-card{
       position:relative;
 
-      min-height:clamp(36rem,62vw,52rem);
+      width:100%;
+      min-height:0;
+      aspect-ratio:16 / 10;
 
       border:1px solid rgba(85,246,255,.25);
       border-radius:clamp(1.2rem,4vw,2.2rem);
@@ -1282,6 +1232,7 @@
     .diamond-viewport-card::before,
     .diamond-viewport-card::after{
       content:"";
+
       position:absolute;
       left:50%;
       top:50%;
@@ -1343,10 +1294,9 @@
       position:absolute;
       left:50%;
       bottom:1rem;
+      z-index:4;
 
       transform:translateX(-50%);
-
-      z-index:4;
 
       padding:.5rem .82rem;
 
@@ -1365,6 +1315,7 @@
       text-transform:uppercase;
 
       pointer-events:none;
+
       backdrop-filter:blur(10px);
     }
 
@@ -1455,6 +1406,7 @@
     .diamond-fallback-object::before,
     .diamond-fallback-object::after{
       content:"";
+
       position:absolute;
       inset:0;
 
@@ -1485,6 +1437,7 @@
 
     .diamond-fallback-object::after{
       inset:42% 8% auto;
+
       height:2px;
 
       background:
@@ -1513,15 +1466,12 @@
       line-height:1.48;
     }
 
-    .object-control-tray,
-    .meaning-detail,
-    .anatomy-detail,
-    .threshold-detail,
-    .philosophy-detail{
+    .architectural-drop,
+    .object-control-tray{
       position:relative;
 
       border:1px solid rgba(85,246,255,.20);
-      border-radius:1.1rem;
+      border-radius:1.12rem;
 
       overflow:hidden;
 
@@ -1536,54 +1486,50 @@
           rgba(85,246,255,.12),
           transparent 18rem
         ),
+        linear-gradient(
+          135deg,
+          rgba(20,88,255,.08),
+          rgba(143,63,255,.055)
+        ),
         rgba(255,255,255,.04);
 
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.09);
     }
 
-    .object-control-tray summary,
-    .meaning-detail summary,
-    .anatomy-detail summary,
-    .threshold-detail summary,
-    .philosophy-detail summary{
+    .architectural-drop summary,
+    .object-control-tray summary{
       list-style:none;
 
-      min-height:2.9rem;
+      min-height:3.05rem;
 
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:.75rem;
+      gap:.8rem;
 
-      padding:.78rem .95rem;
+      padding:.82rem 1rem;
 
       color:var(--gold);
 
       cursor:pointer;
 
-      font-size:.69rem;
+      font-size:.71rem;
       font-weight:950;
-      letter-spacing:.12em;
+      letter-spacing:.115em;
       text-transform:uppercase;
 
       text-shadow:
         0 0 .9rem rgba(255,181,31,.22);
     }
 
-    .object-control-tray summary::-webkit-details-marker,
-    .meaning-detail summary::-webkit-details-marker,
-    .anatomy-detail summary::-webkit-details-marker,
-    .threshold-detail summary::-webkit-details-marker,
-    .philosophy-detail summary::-webkit-details-marker{
+    .architectural-drop summary::-webkit-details-marker,
+    .object-control-tray summary::-webkit-details-marker{
       display:none;
     }
 
-    .object-control-tray summary::after,
-    .meaning-detail summary::after,
-    .anatomy-detail summary::after,
-    .threshold-detail summary::after,
-    .philosophy-detail summary::after{
+    .architectural-drop summary::after,
+    .object-control-tray summary::after{
       content:"+";
 
       color:var(--cyan);
@@ -1594,11 +1540,8 @@
       text-shadow:var(--cyan-glow);
     }
 
-    .object-control-tray[open] summary::after,
-    .meaning-detail[open] summary::after,
-    .anatomy-detail[open] summary::after,
-    .threshold-detail[open] summary::after,
-    .philosophy-detail[open] summary::after{
+    .architectural-drop[open] summary::after,
+    .object-control-tray[open] summary::after{
       content:"–";
 
       color:var(--gold-soft);
@@ -1606,11 +1549,111 @@
       text-shadow:var(--gold-glow);
     }
 
+    .architectural-drop[open],
+    .object-control-tray[open]{
+      border-color:rgba(85,246,255,.38);
+
+      box-shadow:
+        0 0 1.8rem rgba(0,217,255,.08),
+        inset 0 1px 0 rgba(255,255,255,.10);
+    }
+
+    .drop-content,
     .object-control-body{
       display:grid;
-      gap:.85rem;
+      gap:.7rem;
 
       padding:0 1rem 1rem;
+    }
+
+    .drop-content p,
+    .object-control-body p{
+      color:rgba(239,246,255,.82);
+
+      font-size:.92rem;
+      line-height:1.55;
+    }
+
+    .drop-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .drop-grid-four{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .drop-grid-three{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.8rem;
+    }
+
+    .architectural-drop[data-tone="gold"]{
+      border-color:rgba(255,216,106,.38);
+
+      background:
+        radial-gradient(
+          circle at 20% 0%,
+          rgba(255,240,168,.20),
+          transparent 18rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(255,181,31,.14),
+          rgba(55,25,0,.24)
+        );
+    }
+
+    .architectural-drop[data-tone="cyan"]{
+      border-color:rgba(85,246,255,.42);
+
+      background:
+        radial-gradient(
+          circle at 18% 0%,
+          rgba(200,251,255,.20),
+          transparent 18rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(0,217,255,.14),
+          rgba(2,28,51,.32)
+        );
+    }
+
+    .architectural-drop[data-tone="blue"]{
+      border-color:rgba(52,124,255,.44);
+
+      background:
+        radial-gradient(
+          circle at 18% 0%,
+          rgba(52,124,255,.22),
+          transparent 18rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(20,88,255,.16),
+          rgba(3,9,48,.40)
+        );
+    }
+
+    .architectural-drop[data-tone="violet"]{
+      border-color:rgba(168,108,255,.44);
+
+      background:
+        radial-gradient(
+          circle at 18% 0%,
+          rgba(168,108,255,.22),
+          transparent 18rem
+        ),
+        linear-gradient(
+          145deg,
+          rgba(143,63,255,.15),
+          rgba(12,4,46,.42)
+        );
     }
 
     .two-view-buttons{
@@ -1712,6 +1755,7 @@
       white-space:nowrap!important;
 
       pointer-events:none!important;
+
       opacity:0!important;
     }
 
@@ -1763,11 +1807,13 @@
 
     .status-strip span[data-status-kind="selection"]{
       color:var(--gold-soft);
+
       text-shadow:var(--gold-glow);
     }
 
     .status-strip span[data-status-kind="waiting"]{
       color:var(--cyan);
+
       text-shadow:var(--cyan-glow);
     }
 
@@ -1877,7 +1923,7 @@
       display:grid;
       gap:.72rem;
 
-      padding:clamp(1.4rem,4vw,2.5rem);
+      padding:clamp(1.3rem,4vw,2.4rem);
 
       border:1px solid rgba(168,108,255,.38);
       border-radius:clamp(1.25rem,4vw,2.2rem);
@@ -1920,494 +1966,47 @@
         0 0 4.8rem rgba(143,63,255,.14);
     }
 
-    .mirror-bridge span{
-      max-width:900px;
-
-      color:rgba(239,246,255,.78);
-
-      font-size:clamp(.98rem,2.5vw,1.12rem);
-      line-height:1.5;
-    }
-
-    .bulletin-ribbon{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.72rem;
-    }
-
-    .bulletin{
-      position:relative;
-      overflow:hidden;
-
-      min-height:7.5rem;
-
-      display:grid;
-      align-content:center;
-      gap:.15rem;
-
-      padding:1rem;
-
-      border:1px solid rgba(85,246,255,.22);
-      border-radius:1.15rem;
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(85,246,255,.16),
-          transparent 76%
-        ),
-        linear-gradient(
-          150deg,
-          rgba(20,88,255,.16),
-          rgba(255,255,255,.035)
-        );
-
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.09);
-
-      text-align:center;
-    }
-
-    .bulletin::before{
-      content:"";
-      position:absolute;
-      inset:-110% -30%;
-
-      transform:
-        translateX(-75%)
-        rotate(18deg);
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,.18),
-          transparent
-        );
-
-      transition:transform .7s ease;
-    }
-
-    .bulletin:hover::before{
-      transform:
-        translateX(75%)
-        rotate(18deg);
-    }
-
-    .bulletin strong{
-      color:var(--gold-soft);
-
-      font-size:clamp(1.65rem,4vw,2.5rem);
-      line-height:1;
-
-      text-shadow:var(--gold-glow);
-    }
-
-    .bulletin span{
-      color:rgba(239,246,255,.72);
-
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-    }
-
-    .meaning-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.8rem;
-    }
-
-    .meaning-card{
-      position:relative;
-      overflow:hidden;
-
+    .construction-access{
       display:grid;
       gap:.8rem;
 
-      min-height:14rem;
+      padding:clamp(1rem,3vw,1.5rem);
 
-      padding:1.15rem;
-
-      border:1px solid rgba(85,246,255,.22);
-      border-radius:1.3rem;
-
-      background:
-        radial-gradient(
-          circle at 15% 0%,
-          rgba(255,216,106,.15),
-          transparent 20rem
-        ),
-        radial-gradient(
-          circle at 100% 100%,
-          rgba(0,217,255,.13),
-          transparent 22rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(20,88,255,.13),
-          rgba(255,255,255,.035)
-        );
-
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.09);
-    }
-
-    .meaning-card[data-view-card="lattice"]{
-      border-color:rgba(168,108,255,.30);
+      border:1px solid rgba(255,216,106,.38);
+      border-radius:1.4rem;
 
       background:
         radial-gradient(
           circle at 12% 0%,
-          rgba(85,246,255,.15),
-          transparent 20rem
+          rgba(255,216,106,.18),
+          transparent 24rem
         ),
         radial-gradient(
-          circle at 100% 100%,
-          rgba(168,108,255,.16),
-          transparent 22rem
-        ),
-        linear-gradient(
-          145deg,
-          rgba(7,29,114,.40),
-          rgba(143,63,255,.10)
-        );
-    }
-
-    .meaning-label{
-      width:fit-content;
-
-      display:inline-flex;
-      align-items:center;
-      gap:.5rem;
-
-      padding:.45rem .7rem;
-
-      border:1px solid rgba(255,216,106,.30);
-      border-radius:999px;
-
-      color:var(--gold-soft);
-
-      background:rgba(255,216,106,.07);
-
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
-    .meaning-card[data-view-card="lattice"] .meaning-label{
-      border-color:rgba(85,246,255,.32);
-
-      color:var(--cyan-soft);
-
-      background:rgba(0,217,255,.07);
-    }
-
-    .meaning-list{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.45rem;
-    }
-
-    .meaning-list span{
-      display:inline-flex;
-
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-
-      padding:.38rem .58rem;
-
-      color:rgba(239,246,255,.76);
-      background:rgba(255,255,255,.035);
-
-      font-size:.70rem;
-      font-weight:850;
-    }
-
-    .detail-copy{
-      display:grid;
-      gap:.5rem;
-
-      padding:0 .95rem .95rem;
-    }
-
-    .detail-copy p,
-    .detail-copy span{
-      color:rgba(239,246,255,.80);
-
-      font-size:.9rem;
-      line-height:1.48;
-    }
-
-    .construction-banner{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:1rem;
-      align-items:center;
-
-      padding:clamp(1rem,3vw,1.45rem);
-
-      border:1px solid rgba(255,216,106,.34);
-      border-radius:1.35rem;
-
-      background:
-        radial-gradient(
-          circle at 10% 0%,
-          rgba(255,216,106,.17),
-          transparent 22rem
-        ),
-        radial-gradient(
-          circle at 92% 100%,
-          rgba(0,217,255,.14),
-          transparent 22rem
+          circle at 90% 100%,
+          rgba(0,217,255,.15),
+          transparent 25rem
         ),
         linear-gradient(
           135deg,
-          rgba(255,181,31,.075),
-          rgba(20,88,255,.08)
-        );
-
-      box-shadow:
-        0 0 2.2rem rgba(255,181,31,.10),
-        inset 0 1px 0 rgba(255,255,255,.09);
-    }
-
-    .construction-banner-copy{
-      display:grid;
-      gap:.35rem;
-    }
-
-    .construction-banner-copy strong{
-      color:var(--white);
-
-      font-size:clamp(1.15rem,3vw,1.55rem);
-      letter-spacing:-.04em;
-    }
-
-    .construction-banner-copy span{
-      color:rgba(239,246,255,.72);
-
-      font-size:.86rem;
-      line-height:1.4;
-    }
-
-    .anatomy-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.8rem;
-    }
-
-    .anatomy-card{
-      position:relative;
-      overflow:hidden;
-
-      min-height:15rem;
-
-      display:grid;
-      align-content:space-between;
-      gap:1rem;
-
-      padding:1.05rem;
-
-      border:1px solid rgba(255,255,255,.13);
-      border-radius:1.25rem;
-
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.11);
-
-      isolation:isolate;
-    }
-
-    .anatomy-card::before{
-      content:"";
-      position:absolute;
-      inset:-100% -35%;
-
-      z-index:-1;
-
-      transform:
-        translateX(-72%)
-        rotate(17deg);
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,.22),
-          transparent
-        );
-
-      transition:transform .7s ease;
-    }
-
-    .anatomy-card:hover::before{
-      transform:
-        translateX(72%)
-        rotate(17deg);
-    }
-
-    .anatomy-card[data-anatomy="crown"]{
-      border-color:rgba(255,216,106,.46);
-
-      background:
-        radial-gradient(
-          circle at 40% 0%,
-          rgba(255,240,168,.28),
-          transparent 18rem
-        ),
-        linear-gradient(
-          155deg,
-          rgba(255,181,31,.24),
-          rgba(55,25,0,.55)
+          rgba(255,181,31,.08),
+          rgba(20,88,255,.09)
         );
 
       box-shadow:
         var(--gold-glow),
-        inset 0 1px 0 rgba(255,255,255,.14);
+        inset 0 1px 0 rgba(255,255,255,.10);
     }
 
-    .anatomy-card[data-anatomy="girdle"]{
-      border-color:rgba(85,246,255,.48);
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(200,251,255,.24),
-          transparent 18rem
-        ),
-        linear-gradient(
-          155deg,
-          rgba(0,217,255,.24),
-          rgba(2,28,51,.62)
-        );
-
-      box-shadow:
-        var(--cyan-glow),
-        inset 0 1px 0 rgba(255,255,255,.14);
-    }
-
-    .anatomy-card[data-anatomy="pavilion"]{
-      border-color:rgba(52,124,255,.52);
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(52,124,255,.28),
-          transparent 18rem
-        ),
-        linear-gradient(
-          155deg,
-          rgba(20,88,255,.30),
-          rgba(3,9,48,.76)
-        );
-
-      box-shadow:
-        0 0 1.2rem rgba(52,124,255,.25),
-        0 0 3rem rgba(20,88,255,.13),
-        inset 0 1px 0 rgba(255,255,255,.14);
-    }
-
-    .anatomy-card[data-anatomy="lattice"]{
-      border-color:rgba(168,108,255,.50);
-
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(168,108,255,.28),
-          transparent 18rem
-        ),
-        linear-gradient(
-          155deg,
-          rgba(143,63,255,.26),
-          rgba(12,4,46,.76)
-        );
-
-      box-shadow:
-        var(--violet-glow),
-        inset 0 1px 0 rgba(255,255,255,.14);
-    }
-
-    .anatomy-number{
-      color:rgba(255,255,255,.50);
-
-      font-size:.68rem;
-      font-weight:950;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .anatomy-card h3{
+    .construction-access strong{
       color:var(--white);
 
-      text-shadow:
-        0 0 1rem rgba(255,255,255,.10);
+      font-size:clamp(1.3rem,3.5vw,2rem);
+      line-height:1.08;
+      letter-spacing:-.045em;
     }
 
-    .anatomy-card p{
-      color:rgba(245,251,255,.79);
-
-      font-size:.88rem;
-      line-height:1.48;
-    }
-
-    .threshold-wall{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:.8rem;
-    }
-
-    .threshold-bulletin{
-      position:relative;
-      overflow:hidden;
-
-      min-height:12rem;
-
-      display:grid;
-      align-content:start;
-      gap:.72rem;
-
-      padding:1.1rem;
-
-      border:1px solid rgba(85,246,255,.22);
-      border-radius:1.3rem;
-
-      background:
-        radial-gradient(
-          circle at 20% 0%,
-          rgba(255,216,106,.13),
-          transparent 18rem
-        ),
-        radial-gradient(
-          circle at 100% 100%,
-          rgba(168,108,255,.11),
-          transparent 20rem
-        ),
-        rgba(255,255,255,.035);
-
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.09);
-    }
-
-    .threshold-bulletin strong{
-      color:var(--cyan);
-
-      font-size:clamp(1.55rem,4vw,2.4rem);
-      line-height:1;
-
-      text-shadow:var(--cyan-glow);
-    }
-
-    .threshold-bulletin h3{
-      color:var(--gold-soft);
-
-      text-shadow:var(--gold-glow);
-    }
-
-    .threshold-bulletin p{
-      color:rgba(239,246,255,.74);
-
-      font-size:.88rem;
+    .construction-access .button{
+      width:fit-content;
     }
 
     .passage{
@@ -2462,60 +2061,13 @@
         0 0 3rem rgba(0,217,255,.16);
     }
 
-    .passage p{
-      max-width:820px;
-    }
-
-    .portal-reminder{
-      width:min(780px,100%);
-
-      padding:1rem 1.1rem;
-
-      border:1px solid rgba(85,246,255,.32);
-      border-radius:1.15rem;
-
-      color:rgba(245,251,255,.88);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0,217,255,.09),
-          rgba(143,63,255,.08)
-        );
-
-      box-shadow:
-        var(--cyan-glow),
-        inset 0 1px 0 rgba(255,255,255,.10);
-
-      font-size:.92rem;
-      line-height:1.5;
-    }
-
-    .movement-reminder{
-      border:1px solid rgba(130,255,208,.28);
-      border-radius:1rem;
-
-      padding:.9rem 1rem;
-
-      color:rgba(239,246,255,.80);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(130,255,208,.07),
-          rgba(0,217,255,.045)
-        );
-
-      box-shadow:
-        0 0 1.6rem rgba(130,255,208,.08);
-
-      font-size:.9rem;
-      line-height:1.42;
-    }
-
     dialog{
-      width:min(820px,calc(100% - 28px));
-      max-height:min(88vh,900px);
+      width:min(
+        900px,
+        calc(100% - 28px)
+      );
+
+      max-height:min(90vh,960px);
 
       padding:0;
 
@@ -2660,29 +2212,19 @@
       text-transform:uppercase;
     }
 
-    .construction-note{
+    .construction-details{
       display:grid;
-      gap:.5rem;
+      gap:.7rem;
+    }
 
-      padding:1rem;
-
-      border:1px solid rgba(168,108,255,.24);
-      border-radius:1rem;
-
+    .construction-details .architectural-drop{
       background:
         linear-gradient(
           135deg,
-          rgba(20,88,255,.09),
-          rgba(143,63,255,.08)
-        );
-    }
-
-    .construction-note strong{
-      color:var(--cyan-soft);
-    }
-
-    .construction-note p{
-      font-size:.88rem;
+          rgba(20,88,255,.08),
+          rgba(143,63,255,.06)
+        ),
+        rgba(255,255,255,.035);
     }
 
     footer{
@@ -2696,13 +2238,12 @@
     }
 
     @media (max-width:1120px){
-      .bulletin-ribbon,
-      .anatomy-grid{
+      .drop-grid-four{
         grid-template-columns:
           repeat(2,minmax(0,1fr));
       }
 
-      .threshold-wall{
+      .drop-grid-three{
         grid-template-columns:1fr;
       }
     }
@@ -2722,10 +2263,6 @@
         max-width:none;
       }
 
-      .elara-status{
-        text-align:left;
-      }
-
       .route-menu-panel{
         position:static;
 
@@ -2734,16 +2271,8 @@
         margin-top:.45rem;
       }
 
-      .meaning-grid{
+      .drop-grid{
         grid-template-columns:1fr;
-      }
-
-      .construction-banner{
-        grid-template-columns:1fr;
-      }
-
-      .construction-banner .button{
-        width:100%;
       }
 
       .construction-grid{
@@ -2755,7 +2284,7 @@
     @media (max-width:760px){
       .shell{
         width:min(
-          calc(100% - 22px),
+          calc(100% - 18px),
           var(--max)
         );
       }
@@ -2768,17 +2297,22 @@
         padding:1rem;
       }
 
-      .chamber-navigation{
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .section{
+        padding:1rem;
       }
 
-      .chamber-navigation a{
-        width:100%;
+      .diamond-exhibit-frame{
+        width:calc(100% + 2rem);
+
+        margin-inline:-1rem;
       }
 
       .diamond-viewport-card{
-        min-height:clamp(36rem,122vw,46rem);
+        width:100%;
+        min-height:0;
+        aspect-ratio:4 / 3;
+
+        border-radius:1.4rem;
       }
 
       .two-view-buttons{
@@ -2798,17 +2332,16 @@
         width:100%;
       }
 
-      .bulletin-ribbon,
-      .anatomy-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .drop-grid-four{
+        grid-template-columns:1fr;
       }
 
-      .bulletin{
-        min-height:6.7rem;
+      .construction-access .button{
+        width:100%;
       }
 
       .mirror-bridge{
-        padding:1.25rem;
+        padding:1.2rem;
       }
     }
 
@@ -2822,9 +2355,6 @@
         height:3.7rem;
       }
 
-      .chamber-navigation,
-      .bulletin-ribbon,
-      .anatomy-grid,
       .construction-grid{
         grid-template-columns:1fr;
       }
@@ -2855,7 +2385,9 @@
   <a
     class="skip"
     href="#main"
-  >Skip to the Showroom</a>
+  >
+    Skip to the Showroom
+  </a>
 
   <div class="shell">
     <header
@@ -2869,7 +2401,9 @@
         <span
           class="brand-mark"
           aria-hidden="true"
-        ><span>DG</span></span>
+        >
+          <span>DG</span>
+        </span>
 
         <span class="brand-copy">
           <span>Shadows Never Shatter</span>
@@ -2882,24 +2416,14 @@
         aria-label="Showroom guide and reduced website navigation"
       >
         <div class="elara-quick-path">
-          <button
+          <a
             class="elara-button"
-            type="button"
+            href="/elara/"
             data-talk-to-elara
-            data-elara-route=""
-            aria-describedby="elara-path-status"
+            data-elara-route="/elara/"
           >
             Talk to Elara
-          </button>
-
-          <span
-            id="elara-path-status"
-            class="elara-status"
-            data-elara-status
-            aria-live="polite"
-          >
-            Elara is the guide and homeroom keeper of the Showroom.
-          </span>
+          </a>
         </div>
 
         <details class="route-menu">
@@ -2935,13 +2459,6 @@
           </span>
         </div>
 
-        <p class="lead">
-          The Showroom presents the object at the threshold. The Diamond
-          Lattice reveals its visible body and the structure that holds
-          that body together. When the object has answered, the floating
-          Map / Portal blip carries passage into Mirrorland.
-        </p>
-
         <div
           class="thesis-field"
           aria-label="Showroom highlighting statement"
@@ -2950,25 +2467,29 @@
             When you learn to live a life without expectations, you
             experience a life without limitations.
           </strong>
-
-          <span>
-            This is not the abandonment of purpose or standards. It is
-            the release of predetermined outcomes so that possibility
-            can remain open.
-          </span>
         </div>
 
-        <nav
-          class="chamber-navigation"
-          aria-label="Showroom chamber navigation"
-        >
-          <a href="#diamond-object">The Diamond</a>
-          <a href="#behind-the-surface">Behind the Surface</a>
-          <a href="#construction">Construction Record</a>
-          <a href="#anatomy">Diamond Anatomy</a>
-          <a href="#threshold-law">The Threshold</a>
-          <a href="#passage">The Passage</a>
-        </nav>
+        <details class="architectural-drop">
+          <summary>
+            Open the Showroom introduction
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The Showroom presents the object at the threshold. The
+              Diamond Lattice reveals its visible body and the structure
+              that holds that body together. When the object has
+              answered, the floating Map / Portal blip carries passage
+              into Mirrorland.
+            </p>
+
+            <p>
+              Living without expectations does not require abandoning
+              purpose or standards. It releases predetermined outcomes
+              so that possibility can remain open.
+            </p>
+          </div>
+        </details>
       </section>
 
       <section
@@ -2988,65 +2509,79 @@
           <h3>
             The object answers before movement begins.
           </h3>
-
-          <p>
-            Object View presents the complete computational gem.
-            Lattice View reveals the same object's internal 16 × 16
-            structural field. The two views do not describe separate
-            objects. They reveal two conditions of one object.
-          </p>
         </div>
+
+        <details class="architectural-drop">
+          <summary>
+            Open the exhibit context
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              Object View presents the complete computational gem.
+              Lattice View reveals the same object's internal 16 × 16
+              structural field.
+            </p>
+
+            <p>
+              The two views do not describe separate objects. They
+              reveal two conditions of one object.
+            </p>
+          </div>
+        </details>
 
         <div class="diamond-layout">
           <div class="diamond-view-column">
-            <div class="diamond-viewport-card">
-              <div
-                class="diamond-stage"
-                data-showroom-diamond-stage
-                data-diamond-object-stage="true"
-                data-diamond-generation="G3"
-                data-diamond-render-mode="native-webgl"
-                data-object-thesis="computational-gem-at-the-mirrorland-door"
-                data-globe-inspired="true"
-                data-gem-governed="true"
-                data-radial-sectors="16"
-                data-structural-bands="16"
-                data-lattice-seats="256"
-                data-surface-triangles="512"
-                data-lattice-connections="800"
-                data-webgl-state="loading"
-                role="group"
-                tabindex="0"
-                aria-label="Interactive G3 Diamond Gate Bridge computational gem. Drag or swipe to rotate. Pinch or use the mouse wheel to zoom."
-              >
-                <canvas
-                  data-showroom-diamond-canvas
-                  aria-hidden="true"
-                ></canvas>
-
+            <div class="diamond-exhibit-frame">
+              <div class="diamond-viewport-card">
                 <div
-                  class="diamond-fallback"
-                  data-showroom-diamond-fallback
-                  role="status"
-                  aria-live="polite"
-                  hidden
+                  class="diamond-stage"
+                  data-showroom-diamond-stage
+                  data-diamond-object-stage="true"
+                  data-diamond-generation="G3"
+                  data-diamond-render-mode="native-webgl"
+                  data-object-thesis="computational-gem-at-the-mirrorland-door"
+                  data-globe-inspired="true"
+                  data-gem-governed="true"
+                  data-radial-sectors="16"
+                  data-structural-bands="16"
+                  data-lattice-seats="256"
+                  data-surface-triangles="512"
+                  data-lattice-connections="800"
+                  data-webgl-state="loading"
+                  role="group"
+                  tabindex="0"
+                  aria-label="Interactive G3 Diamond Gate Bridge computational gem. Drag or swipe to rotate. Pinch or use the mouse wheel to zoom."
                 >
-                  <div class="diamond-fallback-card">
-                    <span
-                      class="diamond-fallback-object"
-                      aria-hidden="true"
-                    ></span>
+                  <canvas
+                    data-showroom-diamond-canvas
+                    aria-hidden="true"
+                  ></canvas>
 
-                    <strong>
-                      G3 Diamond Lattice fallback
-                    </strong>
+                  <div
+                    class="diamond-fallback"
+                    data-showroom-diamond-fallback
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                  >
+                    <div class="diamond-fallback-card">
+                      <span
+                        class="diamond-fallback-object"
+                        aria-hidden="true"
+                      ></span>
 
-                    <p>
-                      The live three-dimensional renderer is unavailable.
-                      The object remains represented as a gold crown,
-                      illuminated bridge girdle, sapphire pavilion, and
-                      16 × 16 structural field.
-                    </p>
+                      <strong>
+                        G3 Diamond Lattice fallback
+                      </strong>
+
+                      <p>
+                        The live three-dimensional renderer is
+                        unavailable. The object remains represented as a
+                        gold crown, illuminated bridge girdle, sapphire
+                        pavilion, and 16 × 16 structural field.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -3056,7 +2591,9 @@
               class="object-control-tray"
               open
             >
-              <summary>Object Controls</summary>
+              <summary>
+                Object Controls
+              </summary>
 
               <div class="object-control-body">
                 <div
@@ -3165,37 +2702,24 @@
                 A shadow cannot.
               </strong>
 
-              <span>
-                The mirror presents an image. The shadow remains bound
-                to its source. The visible surface may be placed under
-                pressure, but the relationships beneath it determine
-                whether the whole remains coherent.
-              </span>
-            </div>
+              <details class="architectural-drop">
+                <summary>
+                  Open the Mirrorland interpretation
+                </summary>
 
-            <div
-              class="bulletin-ribbon"
-              aria-label="Diamond construction highlights"
-            >
-              <article class="bulletin">
-                <strong>16</strong>
-                <span>Radial Sectors</span>
-              </article>
+                <div class="drop-content">
+                  <p>
+                    The mirror presents an image. The shadow remains
+                    bound to its source.
+                  </p>
 
-              <article class="bulletin">
-                <strong>16</strong>
-                <span>Structural Bands</span>
-              </article>
-
-              <article class="bulletin">
-                <strong>256</strong>
-                <span>Addressable Seats</span>
-              </article>
-
-              <article class="bulletin">
-                <strong>800</strong>
-                <span>Internal Connections</span>
-              </article>
+                  <p>
+                    The visible surface may be placed under pressure,
+                    but the relationships beneath it determine whether
+                    the whole remains coherent.
+                  </p>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -3214,97 +2738,62 @@
           <h2 id="surface-title">
             Two views. One object.
           </h2>
-
-          <p>
-            The Diamond does not become a different object when its
-            internal order is revealed. Surface and structure remain
-            connected expressions of the same computational body.
-          </p>
         </div>
 
-        <div class="meaning-grid">
-          <article
-            class="meaning-card"
-            data-view-card="object"
+        <div class="drop-grid">
+          <details
+            class="architectural-drop"
+            data-tone="gold"
           >
-            <span class="meaning-label">
-              Object View
-            </span>
+            <summary>
+              Object View · What the Diamond presents
+            </summary>
 
-            <h3>
-              What the Diamond presents
-            </h3>
+            <div class="drop-content">
+              <p>
+                Object View holds the visible body: the gold crown, the
+                illuminated bridge girdle, the sapphire pavilion, the
+                exterior facets, the reflected light, and the complete
+                silhouette.
+              </p>
 
-            <p>
-              Object View holds the visible body: the gold crown, the
-              illuminated bridge girdle, the sapphire pavilion, the
-              exterior facets, the reflected light, and the complete
-              silhouette.
-            </p>
-
-            <div class="meaning-list">
-              <span>Gold Crown</span>
-              <span>Bridge Girdle</span>
-              <span>Sapphire Pavilion</span>
-              <span>Exterior Facets</span>
+              <p>
+                The visible form establishes identity. It is the
+                condition in which the object first presents itself to
+                the visitor.
+              </p>
             </div>
+          </details>
 
-            <details class="meaning-detail">
-              <summary>View the visible body</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The visible form establishes identity. It is the
-                  condition in which the object first presents itself to
-                  the visitor.
-                </p>
-              </div>
-            </details>
-          </article>
-
-          <article
-            class="meaning-card"
-            data-view-card="lattice"
+          <details
+            class="architectural-drop"
+            data-tone="violet"
           >
-            <span class="meaning-label">
-              Lattice View
-            </span>
+            <summary>
+              Lattice View · What allows the Diamond to remain whole
+            </summary>
 
-            <h3>
-              What allows the Diamond to remain whole
-            </h3>
+            <div class="drop-content">
+              <p>
+                Lattice View reveals the radial sectors, structural
+                bands, addressable seats, nodes, and internal
+                connections that organize the complete body.
+              </p>
 
-            <p>
-              Lattice View reveals the radial sectors, structural bands,
-              addressable seats, nodes, and internal connections that
-              organize the complete body.
-            </p>
-
-            <div class="meaning-list">
-              <span>16 Sectors</span>
-              <span>16 Bands</span>
-              <span>256 Seats</span>
-              <span>800 Connections</span>
+              <p>
+                The lattice does not replace the Diamond's visible form.
+                It reveals the order upon which that form depends.
+              </p>
             </div>
-
-            <details class="meaning-detail">
-              <summary>View the governing structure</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The lattice does not replace the Diamond's visible
-                  form. It reveals the order upon which that form
-                  depends.
-                </p>
-              </div>
-            </details>
-          </article>
+          </details>
         </div>
 
-        <details class="philosophy-detail">
-          <summary>What does Mirrorland reveal?</summary>
+        <details class="architectural-drop">
+          <summary>
+            What does Mirrorland reveal?
+          </summary>
 
-          <div class="detail-copy">
+          <div class="drop-content">
             <p>
               Mirrorland is not merely an inversion of appearance. It
               examines what remains coherent when appearance is placed
@@ -3314,6 +2803,9 @@
             <p>
               Expectation begins with the image we believe we should
               find. Observation begins with what is actually present.
+            </p>
+
+            <p>
               Object View presents the expected visible form. Lattice
               View reveals an order that was always there, even when it
               could not be seen from the surface.
@@ -3329,31 +2821,18 @@
       >
         <div class="section-heading">
           <div class="kicker">
-            Construction Record
+            Complete Construction Record
           </div>
 
           <h2 id="construction-title">
-            The exhibit is not a picture of a system.
+            Everything under the hood. One record.
           </h2>
-
-          <p>
-            It is the system being rendered. The object is generated
-            from a deterministic geometry authority and expressed
-            through a native WebGL renderer.
-          </p>
         </div>
 
-        <div class="construction-banner">
-          <div class="construction-banner-copy">
-            <strong>
-              Open the complete Diamond construction record.
-            </strong>
-
-            <span>
-              Review the geometry, surface, lattice, material, view, and
-              rendering facts behind the principal Showroom exhibit.
-            </span>
-          </div>
+        <div class="construction-access">
+          <strong>
+            Open the complete Diamond construction record.
+          </strong>
 
           <button
             class="button button-gold"
@@ -3364,31 +2843,6 @@
           >
             Open Construction Record
           </button>
-        </div>
-
-        <div
-          class="bulletin-ribbon"
-          aria-label="Permanent construction record summary"
-        >
-          <article class="bulletin">
-            <strong>512</strong>
-            <span>Exterior Facets</span>
-          </article>
-
-          <article class="bulletin">
-            <strong>14</strong>
-            <span>Material Regions</span>
-          </article>
-
-          <article class="bulletin">
-            <strong>2</strong>
-            <span>Public Views</span>
-          </article>
-
-          <article class="bulletin">
-            <strong>WebGL</strong>
-            <span>Native Rendering</span>
-          </article>
         </div>
       </section>
 
@@ -3405,133 +2859,95 @@
           <h2 id="anatomy-title">
             The architecture of the Diamond
           </h2>
-
-          <p>
-            Each visible region carries both a structural role and a
-            threshold meaning inside the Showroom.
-          </p>
         </div>
 
-        <div class="anatomy-grid">
-          <article
-            class="anatomy-card"
-            data-anatomy="crown"
+        <div class="drop-grid-four">
+          <details
+            class="architectural-drop"
+            data-tone="gold"
           >
-            <span class="anatomy-number">
-              Region 01
-            </span>
+            <summary>
+              Region 01 · Gold Crown
+            </summary>
 
-            <div>
-              <h3>Gold Crown</h3>
+            <div class="drop-content">
+              <p>
+                The Crown represents visible form, identity,
+                declaration, and what the object presents to the world.
+              </p>
 
               <p>
-                Visible form, identity, declaration, and what the object
-                presents to the world.
+                It receives the first light and establishes the
+                Diamond's visible identity before the visitor is shown
+                what lies beneath it.
               </p>
             </div>
+          </details>
 
-            <details class="anatomy-detail">
-              <summary>Open Crown Bulletin</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The Crown receives the first light. It establishes the
-                  Diamond's visible identity before the visitor is shown
-                  what lies beneath it.
-                </p>
-              </div>
-            </details>
-          </article>
-
-          <article
-            class="anatomy-card"
-            data-anatomy="girdle"
+          <details
+            class="architectural-drop"
+            data-tone="cyan"
           >
-            <span class="anatomy-number">
-              Region 02
-            </span>
+            <summary>
+              Region 02 · Illuminated Girdle
+            </summary>
 
-            <div>
-              <h3>Illuminated Girdle</h3>
+            <div class="drop-content">
+              <p>
+                The Girdle is the joining boundary between the upper
+                body and the deeper supporting structure.
+              </p>
 
               <p>
-                The joining boundary between the upper body and the
-                deeper supporting structure.
+                It is the visual expression of the Diamond Gate Bridge,
+                joining visible declaration to hidden depth without
+                collapsing either one.
               </p>
             </div>
+          </details>
 
-            <details class="anatomy-detail">
-              <summary>Open Bridge Bulletin</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The Girdle is the visual expression of the Diamond Gate
-                  Bridge. It joins visible declaration to hidden depth
-                  without collapsing either one.
-                </p>
-              </div>
-            </details>
-          </article>
-
-          <article
-            class="anatomy-card"
-            data-anatomy="pavilion"
+          <details
+            class="architectural-drop"
+            data-tone="blue"
           >
-            <span class="anatomy-number">
-              Region 03
-            </span>
+            <summary>
+              Region 03 · Sapphire Pavilion
+            </summary>
 
-            <div>
-              <h3>Sapphire Pavilion</h3>
+            <div class="drop-content">
+              <p>
+                The Pavilion represents depth, memory, support, and the
+                structure extending beneath immediate appearance.
+              </p>
 
               <p>
-                Depth, memory, support, and the structure extending
-                beneath immediate appearance.
+                It carries the Diamond downward and gives the visible
+                Crown its depth, weight, balance, and continuity.
               </p>
             </div>
+          </details>
 
-            <details class="anatomy-detail">
-              <summary>Open Pavilion Bulletin</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The Pavilion carries the Diamond downward. It gives
-                  the visible Crown its depth, weight, balance, and
-                  continuity.
-                </p>
-              </div>
-            </details>
-          </article>
-
-          <article
-            class="anatomy-card"
-            data-anatomy="lattice"
+          <details
+            class="architectural-drop"
+            data-tone="violet"
           >
-            <span class="anatomy-number">
-              Region 04
-            </span>
+            <summary>
+              Region 04 · Internal Lattice
+            </summary>
 
-            <div>
-              <h3>Internal Lattice</h3>
+            <div class="drop-content">
+              <p>
+                The lattice contains the relationships that allow the
+                complete visible body to remain coherent.
+              </p>
 
               <p>
-                The relationships that allow the complete visible body
-                to remain coherent.
+                It is not decoration hidden inside the gem. It is an
+                addressable structural field that expresses the
+                Diamond's internal order.
               </p>
             </div>
-
-            <details class="anatomy-detail">
-              <summary>Open Lattice Bulletin</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The lattice is not decoration hidden inside the gem.
-                  It is an addressable structural field that expresses
-                  the Diamond's internal order.
-                </p>
-              </div>
-            </details>
-          </article>
+          </details>
         </div>
       </section>
 
@@ -3548,89 +2964,75 @@
           <h2 id="threshold-title">
             Why the Diamond stands at the Door
           </h2>
-
-          <p>
-            Before passage begins, the threshold object establishes
-            three conditions.
-          </p>
         </div>
 
-        <div class="threshold-wall">
-          <article class="threshold-bulletin">
-            <strong>01</strong>
+        <div class="drop-grid-three">
+          <details
+            class="architectural-drop"
+            data-tone="cyan"
+          >
+            <summary>
+              01 · Visible form can contain invisible order
+            </summary>
 
-            <h3>
-              Visible form can contain invisible order.
-            </h3>
+            <div class="drop-content">
+              <p>
+                What is immediately visible may be complete as an image
+                while still depending upon a deeper field of
+                relationships.
+              </p>
 
-            <p>
-              What is immediately visible may be complete as an image
-              while still depending upon a deeper field of
-              relationships.
-            </p>
+              <p>
+                The Diamond presents a coherent visible body before it
+                reveals the lattice that organizes that body.
+              </p>
+            </div>
+          </details>
 
-            <details class="threshold-detail">
-              <summary>Open Bulletin</summary>
+          <details
+            class="architectural-drop"
+            data-tone="gold"
+          >
+            <summary>
+              02 · Surface and structure must remain connected
+            </summary>
 
-              <div class="detail-copy">
-                <p>
-                  The Diamond presents a coherent visible body before it
-                  reveals the lattice that organizes that body.
-                </p>
-              </div>
-            </details>
-          </article>
+            <div class="drop-content">
+              <p>
+                A beautiful surface is not a substitute for the order
+                that supports it. Neither can hidden order replace
+                meaningful expression.
+              </p>
 
-          <article class="threshold-bulletin">
-            <strong>02</strong>
+              <p>
+                Object View and Lattice View remain two expressions of
+                one Diamond. The bridge between them is the governing
+                relationship.
+              </p>
+            </div>
+          </details>
 
-            <h3>
-              Surface and structure must remain connected.
-            </h3>
+          <details
+            class="architectural-drop"
+            data-tone="violet"
+          >
+            <summary>
+              03 · Movement begins after the threshold is understood
+            </summary>
 
-            <p>
-              A beautiful surface is not a substitute for the order that
-              supports it. Neither can hidden order replace meaningful
-              expression.
-            </p>
+            <div class="drop-content">
+              <p>
+                The object answers before the map opens. The visitor
+                first encounters the law, then chooses movement.
+              </p>
 
-            <details class="threshold-detail">
-              <summary>Open Bulletin</summary>
-
-              <div class="detail-copy">
-                <p>
-                  Object View and Lattice View remain two expressions of
-                  one Diamond. The bridge between them is the governing
-                  relationship.
-                </p>
-              </div>
-            </details>
-          </article>
-
-          <article class="threshold-bulletin">
-            <strong>03</strong>
-
-            <h3>
-              Movement begins after the threshold is understood.
-            </h3>
-
-            <p>
-              The object answers before the map opens. The visitor first
-              encounters the law, then chooses movement.
-            </p>
-
-            <details class="threshold-detail">
-              <summary>Open Bulletin</summary>
-
-              <div class="detail-copy">
-                <p>
-                  The Diamond is the threshold object. The floating Map /
-                  Portal blip remains the single public entryway into
-                  Mirrorland.
-                </p>
-              </div>
-            </details>
-          </article>
+              <p>
+                The Diamond is the threshold object. The floating Map /
+                Portal blip remains the single public entryway into
+                Mirrorland.
+              </p>
+            </div>
+          </details>
         </div>
       </section>
 
@@ -3648,24 +3050,29 @@
           The Map can now open.
         </h2>
 
-        <p>
-          The Showroom presents the threshold. The Diamond reveals its
-          structure. The floating Map / Portal blip carries you into
-          Mirrorland.
-        </p>
+        <details class="architectural-drop">
+          <summary>
+            Open the passage explanation
+          </summary>
 
-        <div class="portal-reminder">
-          The Diamond Lattice is not a second entrance. Movement and
-          Mirrorland entry remain in the floating Map / Portal blip.
-          Open the map, then choose a door inside the Mirrorland room
-          blueprint.
-        </div>
+          <div class="drop-content">
+            <p>
+              The Showroom presents the threshold. The Diamond reveals
+              its structure. The floating Map / Portal blip carries you
+              into Mirrorland.
+            </p>
 
-        <div class="movement-reminder">
-          Elara remains the guide and homeroom keeper of the Showroom.
-          Use <strong>Talk to Elara</strong> above the fallback menu when
-          her route becomes available.
-        </div>
+            <p>
+              The Diamond Lattice is not a second entrance. Movement and
+              Mirrorland entry remain in the floating Map / Portal blip.
+            </p>
+
+            <p>
+              Open the map, then choose a door inside the Mirrorland room
+              blueprint.
+            </p>
+          </div>
+        </details>
       </section>
     </main>
 
@@ -3682,7 +3089,9 @@
     <div class="dialog-shell">
       <div class="dialog-header">
         <div class="dialog-title">
-          <span>Showroom Exhibit Record</span>
+          <span>
+            Complete Showroom Exhibit Record
+          </span>
 
           <h2 id="construction-dialog-title">
             What we built into the Diamond
@@ -3698,12 +3107,6 @@
           ×
         </button>
       </div>
-
-      <p>
-        The G3 Diamond Lattice is a purpose-built computational object.
-        It is not an imported model, a generated image, or a video
-        presentation.
-      </p>
 
       <div class="construction-grid">
         <article class="construction-record">
@@ -3752,17 +3155,135 @@
         </article>
       </div>
 
-      <div class="construction-note">
-        <strong>
-          Construction boundary
-        </strong>
+      <div class="construction-details">
+        <details class="architectural-drop">
+          <summary>
+            Open the construction identity
+          </summary>
 
-        <p>
-          The HTML presents the exhibit and preserves its controls. The
-          geometry authority owns the model. The native WebGL renderer
-          owns visual expression. The UI controller owns the accepted
-          interaction controls.
-        </p>
+          <div class="drop-content">
+            <p>
+              The G3 Diamond Lattice is a purpose-built computational
+              object.
+            </p>
+
+            <p>
+              It is not an imported model, a generated image, a video,
+              or a static illustration.
+            </p>
+
+            <p>
+              Its visible surface and internal lattice originate from
+              one deterministic geometry authority.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Open the geometry record
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The model is governed by 16 radial sectors and 16
+              structural bands.
+            </p>
+
+            <p>
+              Their intersection establishes 256 addressable structural
+              seats.
+            </p>
+
+            <p>
+              The exterior contains 512 rendered triangles and the
+              internal field contains 800 lattice connections.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Open the material record
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The Diamond uses 14 material regions across the table,
+              crown, bridge girdle, pavilion, culet, lattice, and active
+              inspection state.
+            </p>
+
+            <p>
+              The visible architecture is organized around a gold crown,
+              a cyan-white illuminated bridge girdle, a sapphire
+              pavilion, and a gold-cyan internal lattice.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Open the rendering record
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The object is expressed through a native WebGL renderer
+              without an external 3D rendering library.
+            </p>
+
+            <p>
+              The renderer owns shaders, buffers, lighting, rotation,
+              zoom, facet selection, context-loss handling, and the
+              projected ground shadow.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Open the interaction record
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The public interface exposes two accepted views: Object
+              View and Lattice View.
+            </p>
+
+            <p>
+              The object supports pointer rotation, touch rotation,
+              pinch zoom, wheel zoom, idle rotation, reset, inspection,
+              reduced motion, responsive resizing, and WebGL fallback.
+            </p>
+          </div>
+        </details>
+
+        <details class="architectural-drop">
+          <summary>
+            Open the ownership boundary
+          </summary>
+
+          <div class="drop-content">
+            <p>
+              The HTML owns the route shell, exhibit architecture,
+              accessible controls, narrative presentation, dialog, and
+              fallback placement.
+            </p>
+
+            <p>
+              The geometry file owns the model. The renderer owns visual
+              expression. The UI controller owns the accepted public
+              object controls.
+            </p>
+
+            <p>
+              The floating Map / Portal blip remains the sole public
+              entryway into Mirrorland.
+            </p>
+          </div>
+        </details>
       </div>
 
       <div class="actions">
@@ -3812,8 +3333,6 @@
   <script>
     (() => {
       "use strict";
-
-      const root = document.documentElement;
 
       const constructionDialog =
         document.querySelector(
@@ -3892,69 +3411,6 @@
               constructionDialog
             ) {
               closeConstructionRecord();
-            }
-          }
-        );
-      }
-
-      const talkToElaraButton =
-        document.querySelector(
-          "[data-talk-to-elara]"
-        );
-
-      const elaraStatus =
-        document.querySelector(
-          "[data-elara-status]"
-        );
-
-      if (talkToElaraButton) {
-        talkToElaraButton.addEventListener(
-          "click",
-          () => {
-            const declaredRoute =
-              talkToElaraButton.dataset.elaraRoute ||
-              root.dataset.elaraRoute ||
-              "";
-
-            if (declaredRoute) {
-              window.location.href =
-                declaredRoute;
-
-              return;
-            }
-
-            const detail = {
-              source:
-                "/showroom/",
-
-              room:
-                "showroom",
-
-              guide:
-                "elara",
-
-              homeroom:
-                true,
-
-              routeDeclared:
-                false,
-
-              requestedAt:
-                new Date().toISOString()
-            };
-
-            window.dispatchEvent(
-              new CustomEvent(
-                "showroom-talk-to-elara-request",
-                {
-                  detail
-                }
-              )
-            );
-
-            if (elaraStatus) {
-              elaraStatus.textContent =
-                "Elara's homeroom is prepared. Her direct conversation route is awaiting declaration.";
             }
           }
         );

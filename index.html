@@ -1,14 +1,14 @@
 <!-- /index.html -->
-<!-- DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2 -->
+<!-- DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_MISSION_CONTROL_DOOR_HTML_TNT_v3 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/"
   data-page="consolidated-agent-gateway"
-  data-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2"
-  data-previous-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_HTML_TNT_v1"
+  data-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_MISSION_CONTROL_DOOR_HTML_TNT_v3"
+  data-previous-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2"
   data-header-count="1"
-  data-house-entry-gems="3"
+  data-house-entry-gems="4"
   data-primary-paths="3"
   data-house-map-door="manor-blueprint"
   data-house-map-api="DGB_MANOR_BLUEPRINT_API.open"
@@ -16,9 +16,13 @@
   data-manor-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
   data-manor-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
   data-manor-blueprint-door-state="closed"
+  data-mission-control-door="direct-hearth-entry"
+  data-mission-control-route="/showroom/globe/hearth/"
+  data-mission-control-javascript-required="false"
 >
 <head>
   <meta charset="utf-8">
+
   <meta
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
@@ -28,7 +32,7 @@
 
   <meta
     name="description"
-    content="Enter Diamond Gate Bridge through the House Map, Guide and Instructions, Talk to the House, the website, Mirrorland, or the Coherence Diagnostic."
+    content="Enter Diamond Gate Bridge through the House Map, Guide and Instructions, Talk to the House, Mission Control, the website, Mirrorland, or the Coherence Diagnostic."
   >
 
   <link
@@ -661,17 +665,36 @@
     }
 
     .house-entry__secondary{
-      display:flex;
-      justify-content:center;
+      width:min(100%,40rem);
+
+      display:grid;
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0,1fr)
+        );
+
+      align-items:center;
+      justify-items:center;
 
       gap:
         clamp(
-          .7rem,
-          4vw,
-          2.4rem
+          .2rem,
+          2vw,
+          1.35rem
         );
 
       margin-top:-.65rem;
+    }
+
+    .house-entry__secondary .house-gem{
+      width:100%;
+      min-width:0;
+      max-width:12.75rem;
+    }
+
+    .house-gem--mission-control .house-gem__label{
+      color:var(--green);
     }
 
     .gateway-copy{
@@ -1049,18 +1072,34 @@
       .house-entry__secondary{
         width:100%;
 
-        gap:.2rem;
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0,1fr)
+          );
+
+        gap:.08rem;
 
         margin-top:-.45rem;
       }
 
+      .house-entry__secondary .house-gem{
+        width:100%;
+        min-width:0;
+        max-width:none;
+      }
+
       .house-gem__label{
+        max-width:76%;
+
         font-size:
           clamp(
-            .47rem,
-            2.2vw,
-            .64rem
+            .43rem,
+            2vw,
+            .61rem
           );
+
+        letter-spacing:.045em;
       }
 
       .house-gem--primary .house-gem__label{
@@ -1079,6 +1118,19 @@
             13vw,
             4rem
           );
+      }
+    }
+
+    @media (max-width:370px){
+      .house-entry__secondary{
+        gap:0;
+      }
+
+      .house-gem__label{
+        max-width:78%;
+
+        font-size:.41rem;
+        letter-spacing:.025em;
       }
     }
 
@@ -1621,6 +1673,28 @@
               Talk to the House
             </span>
           </a>
+
+          <a
+            class="house-gem house-gem--mission-control"
+            href="/showroom/globe/hearth/"
+            aria-label="Enter Hearth Mission Control"
+            data-direct-hearth-entry
+            data-mission-control-entry
+            style="--delay:-2.9s"
+          >
+            <svg
+              class="house-gem__svg"
+              viewBox="0 0 220 160"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <use href="#gatewayOrganicGem"></use>
+            </svg>
+
+            <span class="house-gem__label">
+              Mission Control
+            </span>
+          </a>
         </div>
       </section>
 
@@ -1691,7 +1765,7 @@
     </main>
 
     <footer>
-      Diamond Gate Bridge · One Header · Three House Gems · Three Primary Paths
+      Diamond Gate Bridge · One Header · Four House Gems · Three Primary Paths
     </footer>
   </div>
 
@@ -1710,7 +1784,7 @@
       "use strict";
 
       const CONTRACT =
-        "DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2";
+        "DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_MISSION_CONTROL_DOOR_HTML_TNT_v3";
 
       const TRIGGER_SELECTOR =
         "[data-manor-blueprint-open]";
@@ -1718,10 +1792,14 @@
       const API_GLOBAL =
         "DGB_MANOR_BLUEPRINT_API";
 
-      const MAX_ATTEMPTS = 160;
-      const RETRY_DELAY_MS = 50;
+      const MAX_ATTEMPTS =
+        160;
 
-      let requestToken = 0;
+      const RETRY_DELAY_MS =
+        50;
+
+      let requestToken =
+        0;
 
       function setDoorState(state, detail) {
         const root =
@@ -1775,7 +1853,8 @@
 
         if (
           status &&
-          status.overlayMounted === true
+          status.overlayMounted ===
+            true
         ) {
           return true;
         }
@@ -1793,7 +1872,8 @@
 
         if (
           status &&
-          status.overlayOpen === true
+          status.overlayOpen ===
+            true
         ) {
           return true;
         }
@@ -1808,8 +1888,11 @@
         }
 
         return (
-          overlay.hidden === false &&
-          overlay.getAttribute("data-open") ===
+          overlay.hidden ===
+            false &&
+          overlay.getAttribute(
+            "data-open"
+          ) ===
             "true"
         );
       }
@@ -1826,7 +1909,9 @@
           return;
         }
 
-        if (runtimeIsOpen(api)) {
+        if (
+          runtimeIsOpen(api)
+        ) {
           setDoorState(
             "open",
             "api.open"
@@ -1940,7 +2025,8 @@
       }
 
       function requestOpen() {
-        requestToken += 1;
+        requestToken +=
+          1;
 
         const token =
           requestToken;

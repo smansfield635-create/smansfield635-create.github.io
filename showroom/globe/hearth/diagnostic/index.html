@@ -1,43 +1,99 @@
 <!-- /showroom/globe/hearth/diagnostic/index.html -->
-<!-- HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_7 -->
+<!-- HEARTH_DIAGNOSTIC_ROUTE_DGB_ENGINE_CONTRACT_PRELOAD_STATIC_SHELL_TNT_v9_4_8 -->
 <!-- Full-file replacement. -->
 <!-- HTML only. -->
-<!-- Owns: Mirrorland diagnostic page structure, category orbit, diagnostic box shell, target observation shell, report shell. -->
-<!-- Does not own: diagnostic logic, production mutation, canvas build, canvas release, controls, runtime restart, route repair, visual pass, WebGL, GraphicBox, generated image. -->
+<!-- Owns: Mirrorland diagnostic page structure, category orbit, diagnostic box shell, target observation shell, report shell, DGB engine-contract preload order. -->
+<!-- Does not own: engine-contract implementation, surface-truth probe logic, diagnostic logic, production mutation, canvas build, canvas release, controls, runtime restart, route repair, visual pass, WebGL, WebGPU, GraphicBox, generated image. -->
+<!-- Previous contract:
+   HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_7
+-->
 <!-- Paired files:
+   /assets/engine/dgb.engine.contract.js
    /showroom/globe/hearth/diagnostic/index.css
    /showroom/globe/hearth/diagnostic/index.js
 -->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-route="/showroom/globe/hearth/diagnostic/"
+  data-page="hearth-diagnostic-chamber"
+  data-contract="HEARTH_DIAGNOSTIC_ROUTE_DGB_ENGINE_CONTRACT_PRELOAD_STATIC_SHELL_TNT_v9_4_8"
+  data-previous-contract="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_7"
+  data-target-route="/showroom/globe/hearth/"
+  data-diagnostic-route="/showroom/globe/hearth/diagnostic/"
+  data-dgb-engine-contract-required="true"
+  data-dgb-engine-contract-path="/assets/engine/dgb.engine.contract.js"
+  data-dgb-engine-contract-load-order="before-diagnostic-controller"
+  data-production-mutation-authorized="false"
+  data-canvas-mutation-authorized="false"
+  data-runtime-restart-authorized="false"
+  data-visual-pass-claimed="false"
+>
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  />
+
+  <meta
+    name="color-scheme"
+    content="dark"
+  />
 
   <title>Hearth Diagnostic Chamber</title>
 
   <meta
     name="hearth-diagnostic-html-contract"
+    content="HEARTH_DIAGNOSTIC_ROUTE_DGB_ENGINE_CONTRACT_PRELOAD_STATIC_SHELL_TNT_v9_4_8"
+  />
+
+  <meta
+    name="hearth-diagnostic-previous-html-contract"
     content="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STATIC_SHELL_TNT_v9_4_7"
   />
+
   <meta
     name="hearth-diagnostic-css-contract"
     content="HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STYLE_TNT_v9_4_7"
   />
+
   <meta
     name="hearth-diagnostic-js-contract"
     content="HEARTH_DIAGNOSTIC_ROUTE_TWO_CHAPEL_CYCLE_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_7"
   />
 
-  <link rel="stylesheet" href="/showroom/globe/hearth/diagnostic/index.css" />
+  <meta
+    name="dgb-engine-contract"
+    content="DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+  />
+
+  <meta
+    name="dgb-engine-model-schema"
+    content="DGB_MODEL_PACKAGE_v1"
+  />
+
+  <link
+    rel="stylesheet"
+    href="/showroom/globe/hearth/diagnostic/index.css?v=HEARTH_DIAGNOSTIC_ROUTE_MIRRORLAND_ORBIT_WORKBENCH_STYLE_TNT_v9_4_7"
+  />
 </head>
 
 <body>
-  <main class="shell" id="hearthDiagnosticShell">
-    <header class="command" aria-label="Hearth diagnostic command chamber">
+  <main
+    class="shell"
+    id="hearthDiagnosticShell"
+  >
+    <header
+      class="command"
+      aria-label="Hearth diagnostic command chamber"
+    >
       <div class="identity">
-        <div class="mark" aria-hidden="true"></div>
+        <div
+          class="mark"
+          aria-hidden="true"
+        ></div>
 
         <div>
           <h1>Hearth Diagnostic Chamber</h1>
@@ -45,32 +101,114 @@
         </div>
       </div>
 
-      <nav class="command-actions" aria-label="Diagnostic navigation">
-        <a class="button-link return" href="#categoryOrbit">Return to Orbit</a>
-        <a class="button-link ghost" href="#diagnosticWorkbench">Audit Box</a>
-        <button class="ghost" type="button" id="toggleTarget">Target Window</button>
-        <button class="ghost" type="button" id="reloadChamber">Reload Chamber</button>
-        <a class="button-link ghost" href="/showroom/globe/hearth/">Return to Hearth</a>
+      <nav
+        class="command-actions"
+        aria-label="Diagnostic navigation"
+      >
+        <a
+          class="button-link return"
+          href="#categoryOrbit"
+        >
+          Return to Orbit
+        </a>
+
+        <a
+          class="button-link ghost"
+          href="#diagnosticWorkbench"
+        >
+          Audit Box
+        </a>
+
+        <button
+          class="ghost"
+          type="button"
+          id="toggleTarget"
+        >
+          Target Window
+        </button>
+
+        <button
+          class="ghost"
+          type="button"
+          id="reloadChamber"
+        >
+          Reload Chamber
+        </button>
+
+        <a
+          class="button-link ghost"
+          href="/showroom/globe/hearth/"
+        >
+          Return to Hearth
+        </a>
       </nav>
     </header>
 
-    <section class="status-strip" id="statusStrip" aria-label="Diagnostic status strip">
-      <div class="status-chip-mini warn"><b>Load</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Target</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Surface</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Cycle</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Lane</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Mount</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Canvas</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>C1</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>Bridge</b><span>WAITING</span></div>
-      <div class="status-chip-mini warn"><b>C2</b><span>WAITING</span></div>
+    <section
+      class="status-strip"
+      id="statusStrip"
+      aria-label="Diagnostic status strip"
+    >
+      <div class="status-chip-mini warn">
+        <b>Load</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Target</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Surface</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Cycle</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Lane</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Mount</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Canvas</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>C1</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>Bridge</b>
+        <span>WAITING</span>
+      </div>
+
+      <div class="status-chip-mini warn">
+        <b>C2</b>
+        <span>WAITING</span>
+      </div>
     </section>
 
-    <section class="manifest-panel" id="categoryOrbit" aria-labelledby="categoryOrbitTitle">
+    <section
+      class="manifest-panel"
+      id="categoryOrbit"
+      aria-labelledby="categoryOrbitTitle"
+    >
       <div class="workbench-head">
         <div>
           <strong>Category Orbit</strong>
+
           <span id="categoryOrbitTitle">
             Choose a diagnostic category, descend to the audit box, read the box, then return to orbit.
           </span>
@@ -79,7 +217,10 @@
         <div class="pill">MIRRORLAND_ORBIT</div>
       </div>
 
-      <nav class="manifest-grid" aria-label="Diagnostic category orbit">
+      <nav
+        class="manifest-grid"
+        aria-label="Diagnostic category orbit"
+      >
         <a
           class="manifest-card good"
           href="#diagnosticWorkbench"
@@ -134,22 +275,33 @@
           <span>No-touch proof</span>
         </a>
 
-        <a class="manifest-card" href="#targetPanel">
+        <a
+          class="manifest-card"
+          href="#targetPanel"
+        >
           <b>Target View</b>
           <span>Iframe observation</span>
         </a>
 
-        <a class="manifest-card" href="#reportOutput">
+        <a
+          class="manifest-card"
+          href="#reportOutput"
+        >
           <b>Report Box</b>
           <span>Copy and archive</span>
         </a>
       </nav>
     </section>
 
-    <section class="workbench" id="diagnosticWorkbench" aria-labelledby="diagnosticWorkbenchTitle">
+    <section
+      class="workbench"
+      id="diagnosticWorkbench"
+      aria-labelledby="diagnosticWorkbenchTitle"
+    >
       <div class="workbench-head">
         <div>
           <strong>Diagnostic Box</strong>
+
           <span id="diagnosticWorkbenchTitle">
             Select the category and audit, then create or run the diagnostic report.
           </span>
@@ -158,11 +310,17 @@
         <div class="pill">NO_TOUCH_ACTIVE</div>
       </div>
 
-      <section class="selector-zone" aria-label="Diagnostic selectors">
+      <section
+        class="selector-zone"
+        aria-label="Diagnostic selectors"
+      >
         <div class="field">
           <div class="field-label">Category</div>
 
-          <div class="custom-dropdown is-top" id="categoryDropdown">
+          <div
+            class="custom-dropdown is-top"
+            id="categoryDropdown"
+          >
             <button
               class="dropdown-bubble"
               id="categoryDropdownButton"
@@ -171,21 +329,38 @@
               aria-expanded="false"
             >
               <span class="dropdown-bubble-main">
-                <strong id="categoryDropdownLabel">Chamber / Receiver</strong>
-                <small id="categoryDropdownMeta">Receiver and chamber condition</small>
+                <strong id="categoryDropdownLabel">
+                  Chamber / Receiver
+                </strong>
+
+                <small id="categoryDropdownMeta">
+                  Receiver and chamber condition
+                </small>
               </span>
 
-              <span class="dropdown-chevron" aria-hidden="true">⌄</span>
+              <span
+                class="dropdown-chevron"
+                aria-hidden="true"
+              >
+                ⌄
+              </span>
             </button>
 
-            <div class="dropdown-menu" id="categoryDropdownMenu" role="menu"></div>
+            <div
+              class="dropdown-menu"
+              id="categoryDropdownMenu"
+              role="menu"
+            ></div>
           </div>
         </div>
 
         <div class="field">
           <div class="field-label">Audit</div>
 
-          <div class="custom-dropdown" id="auditDropdown">
+          <div
+            class="custom-dropdown"
+            id="auditDropdown"
+          >
             <button
               class="dropdown-bubble"
               id="auditDropdownButton"
@@ -194,50 +369,131 @@
               aria-expanded="false"
             >
               <span class="dropdown-bubble-main">
-                <strong id="auditDropdownLabel">00 · Chamber Index</strong>
-                <small id="auditDropdownMeta">Safe · Creates a complete chamber index.</small>
+                <strong id="auditDropdownLabel">
+                  00 · Chamber Index
+                </strong>
+
+                <small id="auditDropdownMeta">
+                  Safe · Creates a complete chamber index.
+                </small>
               </span>
 
-              <span class="dropdown-chevron" aria-hidden="true">⌄</span>
+              <span
+                class="dropdown-chevron"
+                aria-hidden="true"
+              >
+                ⌄
+              </span>
             </button>
 
-            <div class="dropdown-menu" id="auditDropdownMenu" role="menu"></div>
+            <div
+              class="dropdown-menu"
+              id="auditDropdownMenu"
+              role="menu"
+            ></div>
           </div>
         </div>
       </section>
 
-      <section class="selected-audit" aria-label="Selected diagnostic audit">
+      <section
+        class="selected-audit"
+        aria-label="Selected diagnostic audit"
+      >
         <div class="meta">
           <span id="selectedAuditMeta">00 · SAFE</span>
           <span id="selectedSectionLabel">Chamber / Receiver</span>
         </div>
 
-        <h2 id="selectedAuditTitle">Chamber Index</h2>
+        <h2 id="selectedAuditTitle">
+          Chamber Index
+        </h2>
 
         <p id="selectedAuditSummary">
           Choose a category and audit. The report box will generate the diagnostic packet without mutating Hearth production files.
         </p>
       </section>
 
-      <section class="report-actions" aria-label="Diagnostic report controls">
-        <button class="primary" type="button" id="createReport">Create Report</button>
-        <button class="primary" type="button" id="runDirectReport" hidden disabled>Run Direct Check</button>
-        <button type="button" id="copyReport" disabled>Copy Report</button>
-        <button type="button" id="copyRaw" disabled>Copy Raw</button>
-        <button type="button" id="copyArchive">Deep Archive</button>
-        <button class="ghost" type="button" id="toggleRaw">Toggle Raw</button>
-        <button class="ghost" type="button" id="resetReport">Reset</button>
+      <section
+        class="report-actions"
+        aria-label="Diagnostic report controls"
+      >
+        <button
+          class="primary"
+          type="button"
+          id="createReport"
+        >
+          Create Report
+        </button>
+
+        <button
+          class="primary"
+          type="button"
+          id="runDirectReport"
+          hidden
+          disabled
+        >
+          Run Direct Check
+        </button>
+
+        <button
+          type="button"
+          id="copyReport"
+          disabled
+        >
+          Copy Report
+        </button>
+
+        <button
+          type="button"
+          id="copyRaw"
+          disabled
+        >
+          Copy Raw
+        </button>
+
+        <button
+          type="button"
+          id="copyArchive"
+        >
+          Deep Archive
+        </button>
+
+        <button
+          class="ghost"
+          type="button"
+          id="toggleRaw"
+        >
+          Toggle Raw
+        </button>
+
+        <button
+          class="ghost"
+          type="button"
+          id="resetReport"
+        >
+          Reset
+        </button>
       </section>
 
-      <section class="report-output" id="reportOutput" aria-label="Generated diagnostic report">
+      <section
+        class="report-output"
+        id="reportOutput"
+        aria-label="Generated diagnostic report"
+      >
         <div class="report-title-row">
-          <strong id="reportTitle">No Report Created</strong>
+          <strong id="reportTitle">
+            No Report Created
+          </strong>
+
           <span id="reportMeta">WAITING</span>
         </div>
 
         <pre id="generatedReport">Choose a category, choose an audit, then create a report.</pre>
 
-        <div id="rawOutput" hidden>
+        <div
+          id="rawOutput"
+          hidden
+        >
           <div class="report-title-row">
             <strong>Raw Diagnostic Packet</strong>
             <span>JSON</span>
@@ -246,18 +502,44 @@
           <pre id="rawReport"></pre>
         </div>
 
-        <div class="command-actions" aria-label="Report box navigation">
-          <a class="button-link return" href="#categoryOrbit">Return to Orbit</a>
-          <a class="button-link ghost" href="#diagnosticWorkbench">Return to Audit Box</a>
-          <a class="button-link ghost" href="#targetPanel">Target Window</a>
+        <div
+          class="command-actions"
+          aria-label="Report box navigation"
+        >
+          <a
+            class="button-link return"
+            href="#categoryOrbit"
+          >
+            Return to Orbit
+          </a>
+
+          <a
+            class="button-link ghost"
+            href="#diagnosticWorkbench"
+          >
+            Return to Audit Box
+          </a>
+
+          <a
+            class="button-link ghost"
+            href="#targetPanel"
+          >
+            Target Window
+          </a>
         </div>
       </section>
     </section>
 
-    <section class="target-panel" id="targetPanel" hidden aria-labelledby="targetPanelTitle">
+    <section
+      class="target-panel"
+      id="targetPanel"
+      hidden
+      aria-labelledby="targetPanelTitle"
+    >
       <div class="workbench-head">
         <div>
           <strong>Target Observation Window</strong>
+
           <span id="targetPanelTitle">
             Reads the Hearth target route through the diagnostic frame only.
           </span>
@@ -276,17 +558,35 @@
           ></iframe>
         </div>
 
-        <div class="command-actions" aria-label="Target panel navigation">
-          <a class="button-link return" href="#categoryOrbit">Return to Orbit</a>
-          <a class="button-link ghost" href="#diagnosticWorkbench">Return to Audit Box</a>
+        <div
+          class="command-actions"
+          aria-label="Target panel navigation"
+        >
+          <a
+            class="button-link return"
+            href="#categoryOrbit"
+          >
+            Return to Orbit
+          </a>
+
+          <a
+            class="button-link ghost"
+            href="#diagnosticWorkbench"
+          >
+            Return to Audit Box
+          </a>
         </div>
       </div>
     </section>
 
-    <section class="manifest-panel" aria-labelledby="boundaryManifestTitle">
+    <section
+      class="manifest-panel"
+      aria-labelledby="boundaryManifestTitle"
+    >
       <div class="workbench-head">
         <div>
           <strong>Boundary Manifest</strong>
+
           <span id="boundaryManifestTitle">
             This chamber may observe and report. It may not repair, mutate, release, or claim visual completion.
           </span>
@@ -296,7 +596,10 @@
       </div>
 
       <div class="report-output">
-        <div class="manifest-grid" aria-label="Diagnostic boundary manifest">
+        <div
+          class="manifest-grid"
+          aria-label="Diagnostic boundary manifest"
+        >
           <div class="manifest-card good">
             <b>Diagnostic</b>
             <span>Authorized</span>
@@ -338,17 +641,55 @@
           </div>
         </div>
 
-        <div class="command-actions" aria-label="Boundary navigation">
-          <a class="button-link return" href="#categoryOrbit">Return to Orbit</a>
-          <a class="button-link ghost" href="#diagnosticWorkbench">Return to Audit Box</a>
-          <a class="button-link ghost" href="/showroom/globe/hearth/">Return to Hearth</a>
+        <div
+          class="command-actions"
+          aria-label="Boundary navigation"
+        >
+          <a
+            class="button-link return"
+            href="#categoryOrbit"
+          >
+            Return to Orbit
+          </a>
+
+          <a
+            class="button-link ghost"
+            href="#diagnosticWorkbench"
+          >
+            Return to Audit Box
+          </a>
+
+          <a
+            class="button-link ghost"
+            href="/showroom/globe/hearth/"
+          >
+            Return to Hearth
+          </a>
         </div>
       </div>
     </section>
   </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
 
-  <script src="/showroom/globe/hearth/diagnostic/index.js" defer></script>
+  <script
+    src="/assets/engine/dgb.engine.contract.js?v=DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+    defer
+    data-dgb-engine-contract-script="true"
+    data-dgb-engine-model-schema="DGB_MODEL_PACKAGE_v1"
+    data-dgb-engine-load-order="1"
+  ></script>
+
+  <script
+    src="/showroom/globe/hearth/diagnostic/index.js?v=HEARTH_DIAGNOSTIC_ROUTE_TWO_CHAPEL_CYCLE_WORKBENCH_BUTTON_CONTROLLER_TNT_v9_4_7"
+    defer
+    data-hearth-diagnostic-controller-script="true"
+    data-dgb-engine-load-order="2"
+  ></script>
 </body>
 </html>

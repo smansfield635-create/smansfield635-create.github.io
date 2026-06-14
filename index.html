@@ -1,26 +1,24 @@
 <!-- /index.html -->
-<!-- DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v1 -->
+<!-- DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/"
   data-page="consolidated-agent-gateway"
-  data-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v1"
+  data-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2"
   data-previous-contract="DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_HTML_TNT_v1"
   data-header-count="1"
   data-house-entry-gems="3"
   data-primary-paths="3"
   data-house-map-door="manor-blueprint"
-  data-manor-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-house-map-api="DGB_MANOR_BLUEPRINT_API.open"
+  data-manor-blueprint-runtime="/assets/manor-blueprint/manor.blueprint.js"
   data-manor-blueprint-css="/assets/manor-blueprint/manor.blueprint.css"
-  data-manor-blueprint-js="/assets/manor-blueprint/manor.blueprint.js"
-  data-manor-blueprint-registry-contract="MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1"
-  data-manor-blueprint-css-contract="MANOR_BLUEPRINT_DIAMOND_ESTATE_NATIVE_WEBGL_VISUAL_CSS_TNT_v1"
-  data-manor-blueprint-js-contract="MANOR_BLUEPRINT_DIAMOND_ESTATE_NATIVE_WEBGL_RUNTIME_TNT_v1"
+  data-manor-blueprint-registry="/assets/manor-blueprint/manor.blueprint.registry.js"
+  data-manor-blueprint-door-state="closed"
 >
 <head>
   <meta charset="utf-8">
-
   <meta
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
@@ -30,14 +28,12 @@
 
   <meta
     name="description"
-    content="Enter Diamond Gate Bridge through the Map and Portal, Guide and Instructions, Talk to the House, the website, Mirrorland, or the Coherence Diagnostic."
+    content="Enter Diamond Gate Bridge through the House Map, Guide and Instructions, Talk to the House, the website, Mirrorland, or the Coherence Diagnostic."
   >
 
   <link
     rel="stylesheet"
-    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_DIAMOND_ESTATE_NATIVE_WEBGL_VISUAL_CSS_TNT_v1"
-    data-manor-blueprint-css
-    data-contract="MANOR_BLUEPRINT_DIAMOND_ESTATE_NATIVE_WEBGL_VISUAL_CSS_TNT_v1"
+    href="/assets/manor-blueprint/manor.blueprint.css?v=MANOR_BLUEPRINT_ESTATE_ORIENTATION_VISUAL_CSS_TNT_v1"
   >
 
   <style>
@@ -1383,7 +1379,7 @@
           />
 
           <path
-            d="M148 83 L110 101 L111 155 L147 139 Z"
+            d="M148 83 L110 101 L111 155 Z"
             fill="rgba(4,10,22,.36)"
           />
 
@@ -1498,10 +1494,7 @@
 
         <span class="brand-copy">
           <span>Diamond Gate Bridge</span>
-
-          <strong>
-            Coherence Gateway
-          </strong>
+          <strong>Coherence Gateway</strong>
         </span>
       </a>
 
@@ -1513,25 +1506,15 @@
           <summary>Website</summary>
 
           <div class="route-panel">
-            <a href="/home/">
-              Home
-            </a>
+            <a href="/home/">Home</a>
 
             <a href="/coherence-diagnostic/">
               Coherence Diagnostic
             </a>
 
-            <a href="/laws/">
-              Laws
-            </a>
-
-            <a href="/gauges/">
-              The Lab
-            </a>
-
-            <a href="/products/">
-              Products
-            </a>
+            <a href="/laws/">Laws</a>
+            <a href="/gauges/">The Lab</a>
+            <a href="/products/">Products</a>
 
             <a href="/meet-sean-mansfield/">
               Meet Sean
@@ -1580,8 +1563,7 @@
           class="house-gem house-gem--primary"
           type="button"
           data-manor-blueprint-open
-          data-manor-blueprint-lens="mirrorland"
-          aria-label="Open the Map and Portal"
+          aria-label="Open House Map"
           aria-haspopup="dialog"
           style="--delay:-.2s"
         >
@@ -1595,7 +1577,7 @@
           </svg>
 
           <span class="house-gem__label">
-            Map / Portal
+            House Map
           </span>
         </button>
 
@@ -1716,37 +1698,53 @@
   <script
     src="/assets/manor-blueprint/manor.blueprint.registry.js?v=MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1"
     defer
-    data-manor-blueprint-registry
-    data-contract="MANOR_BLUEPRINT_MENU_CATEGORY_OWNERSHIP_REGISTRY_TNT_v1"
   ></script>
 
   <script
-    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_DIAMOND_ESTATE_NATIVE_WEBGL_RUNTIME_TNT_v1"
+    src="/assets/manor-blueprint/manor.blueprint.js?v=MANOR_BLUEPRINT_MAIN_MENU_INSTRUCTIONS_RUNTIME_TNT_v1"
     defer
-    data-manor-blueprint-js
-    data-contract="MANOR_BLUEPRINT_DIAMOND_ESTATE_NATIVE_WEBGL_RUNTIME_TNT_v1"
   ></script>
 
   <script>
-    (function bindRootManorBlueprintDoor(window, document) {
+    (function bindHouseMapToManorBlueprint(window, document) {
       "use strict";
 
       const CONTRACT =
-        "DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v1";
+        "DIAMOND_GATE_BRIDGE_CONSOLIDATED_AGENT_GATEWAY_MANOR_BLUEPRINT_DOOR_HTML_TNT_v2";
 
       const TRIGGER_SELECTOR =
         "[data-manor-blueprint-open]";
 
-      let pendingOpen = false;
-      let readyObserved = false;
+      const API_GLOBAL =
+        "DGB_MANOR_BLUEPRINT_API";
+
+      const MAX_ATTEMPTS = 160;
+      const RETRY_DELAY_MS = 50;
+
+      let requestToken = 0;
+
+      function setDoorState(state, detail) {
+        const root =
+          document.documentElement;
+
+        root.dataset.manorBlueprintDoorState =
+          state;
+
+        if (detail) {
+          root.dataset.manorBlueprintDoorDetail =
+            detail;
+        } else {
+          delete root.dataset.manorBlueprintDoorDetail;
+        }
+      }
 
       function getApi() {
         const api =
-          window.DGB_MANOR_BLUEPRINT_API;
+          window[API_GLOBAL];
 
         if (
           !api ||
-          typeof api.openMirrorland !==
+          typeof api.open !==
             "function"
         ) {
           return null;
@@ -1755,33 +1753,210 @@
         return api;
       }
 
-      function openMirrorland() {
-        const api =
-          getApi();
+      function getStatus(api) {
+        if (
+          !api ||
+          typeof api.status !==
+            "function"
+        ) {
+          return null;
+        }
 
-        if (!api) {
-          pendingOpen = true;
+        try {
+          return api.status();
+        } catch (_error) {
+          return null;
+        }
+      }
 
-          document.documentElement.dataset.manorBlueprintDoorState =
-            "waiting";
+      function runtimeIsMounted(api) {
+        const status =
+          getStatus(api);
 
+        if (
+          status &&
+          status.overlayMounted === true
+        ) {
+          return true;
+        }
+
+        return Boolean(
+          document.querySelector(
+            "[data-dgb-blueprint-overlay]"
+          )
+        );
+      }
+
+      function runtimeIsOpen(api) {
+        const status =
+          getStatus(api);
+
+        if (
+          status &&
+          status.overlayOpen === true
+        ) {
+          return true;
+        }
+
+        const overlay =
+          document.querySelector(
+            "[data-dgb-blueprint-overlay]"
+          );
+
+        if (!overlay) {
           return false;
         }
 
-        pendingOpen = false;
-
-        document.documentElement.dataset.manorBlueprintDoorState =
-          "opening";
-
-        api.openMirrorland();
-
-        document.documentElement.dataset.manorBlueprintDoorState =
-          "open";
-
-        return true;
+        return (
+          overlay.hidden === false &&
+          overlay.getAttribute("data-open") ===
+            "true"
+        );
       }
 
-      function handleTrigger(event) {
+      function verifyOpen(
+        api,
+        token,
+        attempt
+      ) {
+        if (
+          token !==
+          requestToken
+        ) {
+          return;
+        }
+
+        if (runtimeIsOpen(api)) {
+          setDoorState(
+            "open",
+            "api.open"
+          );
+
+          return;
+        }
+
+        if (
+          attempt >=
+          MAX_ATTEMPTS
+        ) {
+          setDoorState(
+            "failed",
+            "overlay-did-not-open"
+          );
+
+          return;
+        }
+
+        window.setTimeout(
+          function verifyAgain() {
+            verifyOpen(
+              api,
+              token,
+              attempt + 1
+            );
+          },
+          RETRY_DELAY_MS
+        );
+      }
+
+      function attemptOpen(
+        token,
+        attempt
+      ) {
+        if (
+          token !==
+          requestToken
+        ) {
+          return;
+        }
+
+        const api =
+          getApi();
+
+        if (
+          api &&
+          runtimeIsMounted(api)
+        ) {
+          try {
+            setDoorState(
+              "opening",
+              "api.open"
+            );
+
+            api.open();
+
+            window.requestAnimationFrame(
+              function verifyAfterPaint() {
+                verifyOpen(
+                  api,
+                  token,
+                  0
+                );
+              }
+            );
+          } catch (error) {
+            setDoorState(
+              "failed",
+              error &&
+              error.message
+                ? error.message
+                : "api-open-error"
+            );
+          }
+
+          return;
+        }
+
+        if (
+          attempt >=
+          MAX_ATTEMPTS
+        ) {
+          setDoorState(
+            "failed",
+            api
+              ? "runtime-not-mounted"
+              : "api-not-available"
+          );
+
+          return;
+        }
+
+        setDoorState(
+          "waiting",
+          api
+            ? "runtime-mount"
+            : "api-load"
+        );
+
+        window.setTimeout(
+          function retryOpen() {
+            attemptOpen(
+              token,
+              attempt + 1
+            );
+          },
+          RETRY_DELAY_MS
+        );
+      }
+
+      function requestOpen() {
+        requestToken += 1;
+
+        const token =
+          requestToken;
+
+        setDoorState(
+          "waiting",
+          "house-map-request"
+        );
+
+        attemptOpen(
+          token,
+          0
+        );
+      }
+
+      function handleDocumentClick(event) {
         const target =
           event.target;
 
@@ -1804,51 +1979,20 @@
 
         event.preventDefault();
 
-        openMirrorland();
-      }
-
-      function handleReady() {
-        readyObserved = true;
-
-        document.documentElement.dataset.manorBlueprintDoorReady =
-          "true";
-
-        if (pendingOpen) {
-          openMirrorland();
-        }
+        requestOpen();
       }
 
       document.addEventListener(
         "click",
-        handleTrigger
-      );
-
-      window.addEventListener(
-        "manor-blueprint-estate-ready",
-        handleReady
+        handleDocumentClick
       );
 
       document.documentElement.dataset.manorBlueprintDoorContract =
         CONTRACT;
 
-      document.documentElement.dataset.manorBlueprintDoorReady =
-        "false";
-
-      document.documentElement.dataset.manorBlueprintDoorState =
-        "closed";
-
-      window.setTimeout(
-        function inspectImmediateReadiness() {
-          if (
-            readyObserved ||
-            !getApi()
-          ) {
-            return;
-          }
-
-          handleReady();
-        },
-        0
+      setDoorState(
+        "closed",
+        "ready"
       );
     })(window, document);
   </script>

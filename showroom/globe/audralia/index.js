@@ -1,6271 +1,5204 @@
-// /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2
-// Full-file replacement.
-// Diagnostic engine authority only.
-// No DOM event ownership.
+// /showroom/globe/audralia/index.js
+// AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1
+// Full-file construction.
 //
-// CANONICAL AUTHORITY:
-// - AUDRALIA_DIAGNOSTIC_OWNERSHIP_STANDARD_LOCK_v1
-// - AUDRALIA_DIAGNOSTIC_ENGINE_STRUCTURAL_PREWRITE_ALIGNMENT_v1
-// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1
-// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1
+// Purpose:
+// - Consume /assets/audralia/audralia.planet.js as the sole planet-geometry authority.
+// - Render Audralia as a native WebGL three-dimensional planet.
+// - Mount terrain, ocean, cloud, and atmosphere meshes into the public route.
+// - Provide responsive sizing, camera, lighting, motion, controls, fallback,
+//   context recovery, diagnostics, runtime evidence, and receipts.
 //
-// PAIRED FAMILY:
-// - HTML:
-//   AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_OWNERSHIP_ALIGNED_STATIC_SHELL_TNT_v3
-// - CSS:
-//   AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_OWNERSHIP_ALIGNED_STYLE_TNT_v2
-// - CONTROL PANEL:
-//   AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2
+// Owns:
+// - native WebGL runtime and GPU-resource lifecycle
+// - terrain, ocean, cloud, and atmosphere rendering
+// - camera, projection, lighting, idle rotation, drag, touch, pinch, wheel,
+//   keyboard, reset, pause, cloud visibility, and atmosphere visibility
+// - responsive canvas sizing and non-WebGL fallback
+// - mount, first-frame, visible-pixel, context, and runtime receipts
 //
-// ENGINE SOLE OWNERSHIP:
-// - canonical diagnostic state;
-// - category registry;
-// - audit registry;
-// - participant manifest;
-// - participant discovery;
-// - alias resolution;
-// - target observation;
-// - registry and engine inspection;
-// - runtime inspection;
-// - Surface Truth inspection;
-// - synchronous report construction;
-// - READ interpretation;
-// - direct diagnostic execution;
-// - nine-cycle execution;
-// - conductor coordination;
-// - receipt normalization;
-// - cycle ledger construction;
-// - diagnostic archive construction;
-// - engine-owned data rendering;
-// - public diagnostic API.
-//
-// ENGINE DOES NOT OWN:
-// - addEventListener;
-// - click handling;
-// - keyboard handling;
-// - dropdown behavior;
-// - user-input tab behavior;
-// - clipboard access;
-// - page reload;
-// - target-window visibility;
-// - target-window expansion;
-// - target-frame reload;
-// - control binding audit;
-// - control fallback report behavior;
-// - production mutation;
-// - runtime restart;
-// - renderer mutation;
-// - canvas repair;
-// - controls repair;
-// - route repair;
-// - readiness claims;
-// - visual-pass claims;
-// - cycle-pass claims;
-// - F21 authority claims.
-//
-// DROP:
-// - Direct Execution
-// - Report
-// - Observation
-// - Participant
-//
-// READ:
-// - Result
-// - Evidence
-// - Absence
-// - Direction
-//
-// NEWS ORDER:
-// - North
-// - East
-// - West
-// - South
-// - Rail terminal synthesis
-//
-// FIBONACCI ORDER:
-// 1. F1  NORTH_PROBE_INTAKE
-// 2. F3  EAST_PROBE_SOURCE
-// 3. F5  EAST_CONSTRUCTION_INTERPRETATION
-// 4. F8  CANVAS_SURFACE_TRUTH
-// 5. F13 WEST_PROBE_RUNTIME
-// 6. F21 WEST_RUNTIME_INTERPRETATION
-// 7. F34 SOUTH_PROBE_HANDOFF
-// 8. F55 SOUTH_RESTITUTION_INTERPRETATION
-// 9. F89 RAIL_TERMINAL_SYNTHESIS
-//
-// AUXILIARY:
-// - SOUTH_SURFACE_POINTER
-// - parent station: F55
-// - parent position: 8
-// - creates no tenth station.
-//
-// REPORT LAW:
-// - report creation remains available while the engine is healthy;
-// - report creation is synchronous;
-// - report creation does not run direct execution;
-// - report creation does not run the nine-cycle;
-// - missing evidence belongs in READ Absence;
-// - unavailable participants do not block report construction.
-//
-// PUBLICATION LAW:
-// - the healthy API publishes only after initialization succeeds;
-// - status READY means engine-internal API readiness only;
-// - READY does not mean production ready;
-// - READY does not mean visual pass;
-// - READY does not mean cycle pass;
-// - READY does not mean F21 passage.
-
-(function installAudraliaDropWithReadDiagnosticEngine(global) {
-"use strict";
-
-var root =
-global ||
-(
-typeof window !== "undefined"
-? window
-: typeof globalThis !== "undefined"
-? globalThis
-: this
-);
-
-var doc =
-root && root.document
-? root.document
-: null;
-
-if (!doc) {
-return;
-}
-
-var CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
-
-var PREVIOUS_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1";
-
-var VERSION =
-"2.0.0";
-
-var FILE =
-"/showroom/globe/audralia/diagnostic/index.js";
-
-var HTML_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_OWNERSHIP_ALIGNED_STATIC_SHELL_TNT_v3";
-
-var CSS_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_OWNERSHIP_ALIGNED_STYLE_TNT_v2";
-
-var CONTROL_PANEL_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2";
-
-var TARGET_ROUTE =
-"/showroom/globe/audralia/";
-
-var TARGET_FRAME_ID =
-"audraliaDiagnosticTargetFrame";
-
-var REPORT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_v2";
-
-var PACKET_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_PACKET_v2";
-
-var OBSERVATION_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_OBSERVATION_v2";
-
-var PARTICIPANT_INPUT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_PARTICIPANT_INPUT_v2";
-
-var RECEIPT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_RECEIPT_v2";
-
-var LEDGER_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_NINE_CYCLE_LEDGER_v2";
-
-var ARCHIVE_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ARCHIVE_v2";
-
-var ENGINE_RECEIPT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT_v2";
-
-var VALID_STATUSES =
-Object.freeze([
-"READY",
-"AVAILABLE",
-"ACTIVE",
-"FOUND",
-"COMPLETE",
-"HELD",
-"MISSING",
-"ERROR",
-"UNKNOWN",
-"NOT_RUN",
-"RUNNING",
-"IDLE",
-"EMPTY",
-"LOADING",
-"OBSERVING"
-]);
-
-var NO_CLAIMS =
-deepFreeze({
-productionMutationAuthorized: false,
-runtimeRestartAuthorized: false,
-rendererMutationAuthorized: false,
-canvasRepairAuthorized: false,
-canvasBuildAuthorized: false,
-canvasReleaseAuthorized: false,
-controlsRepairAuthorized: false,
-routeRepairAuthorized: false,
-repairAuthorized: false,
-syntheticEvidenceAuthorized: false,
-readyClaimed: false,
-visualPassClaimed: false,
-cyclePassClaimed: false,
-f21Claimed: false
-});
-
-var CATEGORY_REGISTRY =
-deepFreeze([
-{
-id: "observatoryReceiver",
-label: "Observatory / Receiver",
-summary:
-"Shell, engine, control panel, target access, and diagnostic receiver state."
-},
-{
-id: "registryEngine",
-label: "Registry / Engine",
-summary:
-"Governing authority, runtime engine, registry, and assigned engine slots."
-},
-{
-id: "sourceSurface",
-label: "Source / Surface",
-summary:
-"Target runtime, canvas, geometry, frame state, and F8 Surface Truth."
-},
-{
-id: "cardinalStations",
-label: "Cardinal Stations",
-summary:
-"North, East, West, South, Rail, and auxiliary participant availability."
-},
-{
-id: "nineCycle",
-label: "Nine-Cycle Diagnostics",
-summary:
-"Registration, preflight, cycle execution, ledger, and station receipts."
-},
-{
-id: "directExecution",
-label: "Direct Execution",
-summary:
-"Explicit invocation of one verified diagnostic authority."
-},
-{
-id: "boundaryArchive",
-label: "Boundary / Archive",
-summary:
-"No-touch laws, reports, receipts, errors, and diagnostic archive."
-}
-]);
-
-var AUDIT_REGISTRY =
-deepFreeze([
-{
-id: "observatoryIndex",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 01",
-classification: "SAFE_REPORT",
-title: "Observatory Index",
-summary:
-"Summarize the diagnostic shell, engine, control panel, participant availability, observation state, and current cycle evidence.",
-directParticipant: null
-},
-{
-id: "receiverContract",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 02",
-classification: "SAFE_REPORT",
-title: "Receiver Contract",
-summary:
-"Inspect route metadata, paired-file contracts, declared load order, and receiver boundaries.",
-directParticipant: null
-},
-{
-id: "controlSeparation",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 03",
-classification: "SAFE_REPORT",
-title: "Control Separation",
-summary:
-"Inspect engine/control ownership separation without binding or executing controls.",
-directParticipant: null
-},
-{
-id: "targetAccess",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 04",
-classification: "SAFE_REPORT",
-title: "Target Access",
-summary:
-"Inspect the target frame, same-origin accessibility, route match, and document state.",
-directParticipant: null
-},
-{
-id: "scriptOrder",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 05",
-classification: "SAFE_REPORT",
-title: "Script Order",
-summary:
-"Inspect the declared engine-family, participant-family, diagnostic-engine, and control-panel order.",
-directParticipant: null
-},
-{
-id: "engineAvailability",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 06",
-classification: "SAFE_REPORT",
-title: "Engine Availability",
-summary:
-"Inspect whether the diagnostic engine completed initialization and published a healthy API.",
-directParticipant: null
-},
-{
-id: "reportAvailability",
-categoryId: "observatoryReceiver",
-sequence: "AUDIT 07",
-classification: "SAFE_REPORT",
-title: "Report Availability",
-summary:
-"Confirm report construction remains independent from direct execution and nine-cycle execution.",
-directParticipant: null
-},
-{
-id: "governingContract",
-categoryId: "registryEngine",
-sequence: "AUDIT 08",
-classification: "SAFE_REPORT",
-title: "Governing Contract",
-summary:
-"Inspect the DGB governing engine contract and associated runtime authority.",
-directParticipant: null
-},
-{
-id: "engineRegistry",
-categoryId: "registryEngine",
-sequence: "AUDIT 09",
-classification: "SAFE_REPORT",
-title: "Engine Registry",
-summary:
-"Inspect engine subjects, authority records, selected engine, and reserved slots.",
-directParticipant: null
-},
-{
-id: "runtimeSurface",
-categoryId: "sourceSurface",
-sequence: "AUDIT 10",
-classification: "SAFE_REPORT",
-title: "Runtime Surface",
-summary:
-"Inspect runtime globals, mount state, stage geometry, first frame, and visible-pixel evidence.",
-directParticipant: "WEST_PROBE_RUNTIME"
-},
-{
-id: "surfaceTruth",
-categoryId: "sourceSurface",
-sequence: "AUDIT 11",
-classification: "DIRECT_AVAILABLE",
-title: "Canvas Surface Truth",
-summary:
-"Inspect F8 Surface Truth availability and permit explicit direct execution.",
-directParticipant: "CANVAS_SURFACE_TRUTH"
-},
-{
-id: "participantConstellation",
-categoryId: "cardinalStations",
-sequence: "AUDIT 12",
-classification: "SAFE_REPORT",
-title: "Participant Constellation",
-summary:
-"Inspect required and optional cardinal diagnostic participants and aliases.",
-directParticipant: null
-},
-{
-id: "northIntake",
-categoryId: "cardinalStations",
-sequence: "AUDIT 13",
-classification: "DIRECT_AVAILABLE",
-title: "North Intake",
-summary:
-"Inspect and explicitly invoke the F1 North intake station.",
-directParticipant: "NORTH_PROBE_INTAKE"
-},
-{
-id: "eastSource",
-categoryId: "cardinalStations",
-sequence: "AUDIT 14",
-classification: "DIRECT_AVAILABLE",
-title: "East Source",
-summary:
-"Inspect and explicitly invoke the F3 East source station.",
-directParticipant: "EAST_PROBE_SOURCE"
-},
-{
-id: "eastConstruction",
-categoryId: "cardinalStations",
-sequence: "AUDIT 15",
-classification: "DIRECT_AVAILABLE",
-title: "East Construction",
-summary:
-"Inspect and explicitly invoke the F5 East construction interpretation station.",
-directParticipant: "EAST_CONSTRUCTION_INTERPRETATION"
-},
-{
-id: "westRuntime",
-categoryId: "cardinalStations",
-sequence: "AUDIT 16",
-classification: "DIRECT_AVAILABLE",
-title: "West Runtime",
-summary:
-"Inspect and explicitly invoke the F13 West runtime probe.",
-directParticipant: "WEST_PROBE_RUNTIME"
-},
-{
-id: "westInterpretation",
-categoryId: "cardinalStations",
-sequence: "AUDIT 17",
-classification: "DIRECT_AVAILABLE",
-title: "West Interpretation",
-summary:
-"Inspect and explicitly invoke the F21 runtime interpretation station without claiming F21 passage.",
-directParticipant: "WEST_RUNTIME_INTERPRETATION"
-},
-{
-id: "southHandoff",
-categoryId: "cardinalStations",
-sequence: "AUDIT 18",
-classification: "DIRECT_AVAILABLE",
-title: "South Handoff",
-summary:
-"Inspect and explicitly invoke the F34 South handoff station.",
-directParticipant: "SOUTH_PROBE_HANDOFF"
-},
-{
-id: "southRestitution",
-categoryId: "cardinalStations",
-sequence: "AUDIT 19",
-classification: "DIRECT_AVAILABLE",
-title: "South Restitution",
-summary:
-"Inspect and explicitly invoke the F55 restitution interpretation station.",
-directParticipant: "SOUTH_RESTITUTION_INTERPRETATION"
-},
-{
-id: "railSynthesis",
-categoryId: "cardinalStations",
-sequence: "AUDIT 20",
-classification: "DIRECT_AVAILABLE",
-title: "Rail Synthesis",
-summary:
-"Inspect and explicitly invoke the F89 terminal synthesis station.",
-directParticipant: "RAIL_TERMINAL_SYNTHESIS"
-},
-{
-id: "cyclePreview",
-categoryId: "nineCycle",
-sequence: "AUDIT 21",
-classification: "SAFE_REPORT",
-title: "Nine-Cycle Preview",
-summary:
-"Inspect the nine stations and conductor without executing the cycle.",
-directParticipant: null
-},
-{
-id: "cycleExecution",
-categoryId: "nineCycle",
-sequence: "AUDIT 22",
-classification: "NINE_CYCLE_AVAILABLE",
-title: "Nine-Cycle Execution",
-summary:
-"Permit one explicit nine-station diagnostic cycle.",
-directParticipant: null
-},
-{
-id: "directSelected",
-categoryId: "directExecution",
-sequence: "AUDIT 23",
-classification: "DIRECT_AVAILABLE",
-title: "Selected Direct Check",
-summary:
-"Execute the selected audit participant only when a verified callable authority exists.",
-directParticipant: null
-},
-{
-id: "boundaryManifest",
-categoryId: "boundaryArchive",
-sequence: "AUDIT 24",
-classification: "SAFE_REPORT",
-title: "Boundary Manifest",
-summary:
-"Inspect permanent no-touch declarations and forbidden claims.",
-directParticipant: null
-},
-{
-id: "diagnosticArchive",
-categoryId: "boundaryArchive",
-sequence: "AUDIT 25",
-classification: "SAFE_REPORT",
-title: "Diagnostic Archive",
-summary:
-"Inspect reports, receipts, errors, participant snapshots, and observation snapshots.",
-directParticipant: null
-}
-]);
-
-var PARTICIPANT_MANIFEST =
-deepFreeze([
-participant({
-role: "NORTH_CONDUCTOR",
-label: "North Conductor",
-path: "/assets/audralia/audralia.diagnostic.north.conductor.js",
-required: true,
-direction: "NORTH",
-cyclePosition: null,
-fibonacci: null,
-aliases: [
-"AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR",
-"AUDRALIA.diagnosticNorthConductor",
-"AUDRALIA.northConductor"
-],
-methods: [
-"registerStation",
-"register",
-"runNineCycle",
-"run",
-"execute"
-]
-}),
-participant({
-role: "NORTH_PROBE_INTAKE",
-label: "F1 · North Intake",
-path: "/assets/audralia/audralia.diagnostic.probe.north.js",
-required: true,
-direction: "NORTH",
-cyclePosition: 1,
-fibonacci: "F1",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_PROBE_NORTH",
-"AUDRALIA_DIAGNOSTIC_NORTH_PROBE",
-"AUDRALIA.diagnosticProbeNorth"
-],
-methods: [
-"inspect",
-"probe",
-"run",
-"execute"
-]
-}),
-participant({
-role: "EAST_PROBE_SOURCE",
-label: "F3 · East Source",
-path: "/assets/audralia/audralia.diagnostic.probe.east.js",
-required: true,
-direction: "EAST",
-cyclePosition: 2,
-fibonacci: "F3",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_PROBE_EAST",
-"AUDRALIA_DIAGNOSTIC_EAST_PROBE",
-"AUDRALIA.diagnosticProbeEast"
-],
-methods: [
-"inspect",
-"probe",
-"run",
-"execute"
-]
-}),
-participant({
-role: "EAST_CONSTRUCTION_INTERPRETATION",
-label: "F5 · East Construction",
-path: "/assets/audralia/audralia.diagnostic.east.js",
-required: true,
-direction: "EAST",
-cyclePosition: 3,
-fibonacci: "F5",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_EAST",
-"AUDRALIA_DIAGNOSTIC_EAST_INTERPRETATION",
-"AUDRALIA.diagnosticEast"
-],
-methods: [
-"interpret",
-"inspect",
-"run",
-"execute"
-]
-}),
-participant({
-role: "CANVAS_SURFACE_TRUTH",
-label: "F8 · 3D Surface Truth",
-path: "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
-required: true,
-direction: "CENTER",
-cyclePosition: 4,
-fibonacci: "F8",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_CANVAS_SURFACE_TRUTH",
-"AUDRALIA_CANVAS_SURFACE_TRUTH",
-"AUDRALIA.diagnosticCanvasSurfaceTruth"
-],
-methods: [
-"inspect",
-"probe",
-"run",
-"execute"
-]
-}),
-participant({
-role: "WEST_PROBE_RUNTIME",
-label: "F13 · West Runtime",
-path: "/assets/audralia/audralia.diagnostic.probe.west.js",
-required: true,
-direction: "WEST",
-cyclePosition: 5,
-fibonacci: "F13",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_PROBE_WEST",
-"AUDRALIA_DIAGNOSTIC_WEST_PROBE",
-"AUDRALIA.diagnosticProbeWest"
-],
-methods: [
-"inspect",
-"probe",
-"run",
-"execute"
-]
-}),
-participant({
-role: "WEST_RUNTIME_INTERPRETATION",
-label: "F21 · West Interpretation",
-path: "/assets/audralia/audralia.diagnostic.west.js",
-required: true,
-direction: "WEST",
-cyclePosition: 6,
-fibonacci: "F21",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_WEST",
-"AUDRALIA_DIAGNOSTIC_WEST_INTERPRETATION",
-"AUDRALIA.diagnosticWest"
-],
-methods: [
-"interpret",
-"inspect",
-"run",
-"execute"
-]
-}),
-participant({
-role: "SOUTH_PROBE_HANDOFF",
-label: "F34 · South Handoff",
-path: "/assets/audralia/audralia.diagnostic.probe.south.js",
-required: true,
-direction: "SOUTH",
-cyclePosition: 7,
-fibonacci: "F34",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_PROBE_SOUTH",
-"AUDRALIA_DIAGNOSTIC_SOUTH_PROBE",
-"AUDRALIA.diagnosticProbeSouth"
-],
-methods: [
-"inspect",
-"probe",
-"run",
-"execute"
-]
-}),
-participant({
-role: "SOUTH_RESTITUTION_INTERPRETATION",
-label: "F55 · South Restitution",
-path: "/assets/audralia/audralia.diagnostic.south.js",
-required: true,
-direction: "SOUTH",
-cyclePosition: 8,
-fibonacci: "F55",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_SOUTH",
-"AUDRALIA_DIAGNOSTIC_SOUTH_INTERPRETATION",
-"AUDRALIA.diagnosticSouth"
-],
-methods: [
-"interpret",
-"inspect",
-"run",
-"execute"
-]
-}),
-participant({
-role: "SOUTH_SURFACE_POINTER",
-label: "South Surface Pointer",
-path: "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
-required: false,
-direction: "SOUTH",
-cyclePosition: null,
-parentCyclePosition: 8,
-fibonacci: null,
-parentFibonacci: "F55",
-auxiliary: true,
-aliases: [
-"AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
-"AUDRALIA_SOUTH_SURFACE_POINTER",
-"AUDRALIA.diagnosticSouthSurfacePointer"
-],
-methods: [
-"inspect",
-"point",
-"run",
-"execute"
-]
-}),
-participant({
-role: "RAIL_TERMINAL_SYNTHESIS",
-label: "F89 · Rail Synthesis",
-path: "/assets/audralia/audralia.diagnostic.rail.js",
-required: true,
-direction: "TERMINAL_RAIL",
-cyclePosition: 9,
-fibonacci: "F89",
-aliases: [
-"AUDRALIA_DIAGNOSTIC_RAIL",
-"AUDRALIA_DIAGNOSTIC_TERMINAL_RAIL",
-"AUDRALIA.diagnosticRail"
-],
-methods: [
-"synthesize",
-"inspect",
-"run",
-"execute"
-]
-})
-]);
-
-var STATION_ORDER =
-deepFreeze(
-PARTICIPANT_MANIFEST
-.filter(function onlyStations(entry) {
-return (
-typeof entry.cyclePosition === "number"
-);
-})
-.sort(function stationSort(a, b) {
-return (
-a.cyclePosition -
-b.cyclePosition
-);
-})
-);
-
-var state = {
-initialized: false,
-initializedAt: null,
-status: "LOADING",
-
-selection: {
-  categoryId: "observatoryReceiver",
-  auditId: "observatoryIndex",
-  participantRole: null,
-  reportMode: "read",
-  observationLens: "target",
-  instrumentChamber: "cycle"
-},
-
-participants: [],
-observation: null,
-
-report: {
-  current: null,
-  history: []
-},
-
-direct: {
-  running: false,
-  count: 0,
-  lastResult: null,
-  lastError: null
-},
-
-cycle: {
-  running: false,
-  count: 0,
-  lastRunAt: null,
-  receipts: [],
-  ledger: null,
-  lastError: null
-},
-
-receipts: [],
-
-archive: {
-  reports: [],
-  errors: [],
-  sessions: [],
-  deepArchive: null
-},
-
-errors: [],
-actionCount: 0,
-lastAction: null
-
-};
-
-function participant(config) {
-return {
-role: config.role,
-label: config.label,
-path: config.path,
-required: Boolean(config.required),
-auxiliary: Boolean(config.auxiliary),
-direction: config.direction || "UNKNOWN",
-cyclePosition:
-typeof config.cyclePosition === "number"
-? config.cyclePosition
-: null,
-fibonacci:
-config.fibonacci || null,
-parentCyclePosition:
-typeof config.parentCyclePosition === "number"
-? config.parentCyclePosition
-: null,
-parentFibonacci:
-config.parentFibonacci || null,
-aliases:
-Array.isArray(config.aliases)
-? config.aliases.slice()
-: [],
-methods:
-Array.isArray(config.methods)
-? config.methods.slice()
-: []
-};
-}
-
-function byId(id) {
-return doc.getElementById(id);
-}
-
-function isFunction(value) {
-return typeof value === "function";
-}
-
-function isObject(value) {
-return Boolean(
-value &&
-typeof value === "object" &&
-!Array.isArray(value)
-);
-}
-
-function nowIso() {
-try {
-return new Date().toISOString();
-} catch (_error) {
-return null;
-}
-}
-
-function clone(value, seen) {
-var memory;
-var output;
-
-if (
-  value === null ||
-  value === undefined ||
-  typeof value === "string" ||
-  typeof value === "number" ||
-  typeof value === "boolean"
-) {
-  return value;
-}
-
-if (typeof value === "bigint") {
-  return value.toString();
-}
-
-if (typeof value === "function") {
-  return {
-    type: "Function",
-    name: value.name || "anonymous"
-  };
-}
-
-memory =
-  seen || [];
-
-if (memory.indexOf(value) !== -1) {
-  return "[Circular]";
-}
-
-memory.push(value);
-
-if (Array.isArray(value)) {
-  return value.map(function cloneEntry(entry) {
-    return clone(
-      entry,
-      memory.slice()
-    );
-  });
-}
-
-output = {};
-
-Object.keys(value)
-  .forEach(function cloneProperty(key) {
-    try {
-      output[key] =
-        clone(
-          value[key],
-          memory.slice()
-        );
-    } catch (_error) {
-      output[key] =
-        "[Unreadable]";
-    }
-  });
-
-return output;
-
-}
-
-function deepFreeze(value, seen) {
-var memory;
-
-if (
-  !value ||
-  (
-    typeof value !== "object" &&
-    typeof value !== "function"
-  )
-) {
-  return value;
-}
-
-memory =
-  seen || [];
-
-if (memory.indexOf(value) !== -1) {
-  return value;
-}
-
-memory.push(value);
-
-try {
-  Object.getOwnPropertyNames(value)
-    .forEach(function freezeProperty(key) {
-      var child;
-
-      try {
-        child =
-          value[key];
-      } catch (_error) {
-        child =
-          null;
-      }
-
-      deepFreeze(
-        child,
-        memory
-      );
-    });
-
-  Object.freeze(value);
-} catch (_error) {}
-
-return value;
-
-}
-
-function frozenClone(value) {
-return deepFreeze(
-clone(value)
-);
-}
-
-function safeJson(value) {
-try {
-return JSON.stringify(
-clone(value),
-null,
-2
-);
-} catch (_error) {
-return String(value);
-}
-}
-
-function escapeHtml(value) {
-return String(
-value === null ||
-value === undefined
-? ""
-: value
-)
-.replace(/&/g, "&")
-.replace(/</g, "<")
-.replace(/>/g, ">")
-.replace(/"/g, """)
-.replace(/'/g, "'");
-}
-
-function normalizeStatus(value) {
-var status =
-String(value || "UNKNOWN")
-.trim()
-.toUpperCase();
-
-return VALID_STATUSES.indexOf(status) !== -1
-  ? status
-  : "UNKNOWN";
-
-}
-
-function firstDefined(values) {
-var index;
-
-for (
-  index = 0;
-  index < values.length;
-  index += 1
-) {
-  if (
-    values[index] !== null &&
-    values[index] !== undefined
-  ) {
-    return values[index];
-  }
-}
-
-return null;
-
-}
-
-function setText(id, value) {
-var node =
-byId(id);
-
-if (!node) {
-  return;
-}
-
-node.textContent =
-  value === null ||
-  value === undefined
-    ? ""
-    : String(value);
-
-}
-
-function setHtml(id, value) {
-var node =
-byId(id);
-
-if (!node) {
-  return;
-}
-
-node.innerHTML =
-  String(value || "");
-
-}
-
-function setHidden(id, hidden) {
-var node =
-byId(id);
-
-if (node) {
-  node.hidden =
-    Boolean(hidden);
-}
-
-}
-
-function setDisabled(id, disabled) {
-var node =
-byId(id);
-
-if (node) {
-  node.disabled =
-    Boolean(disabled);
-}
-
-}
-
-function setStatus(idOrNode, status) {
-var node =
-typeof idOrNode === "string"
-? byId(idOrNode)
-: idOrNode;
-
-if (!node) {
-  return;
-}
-
-node.setAttribute(
-  "data-status",
-  normalizeStatus(status)
-);
-
-}
-
-function readPath(path, base) {
-var parts =
-String(path || "")
-.split(".")
-.filter(Boolean);
-
-var cursor =
-  base || root;
-
-var index;
-
-for (
-  index = 0;
-  index < parts.length;
-  index += 1
-) {
-  if (
-    cursor === null ||
-    cursor === undefined ||
-    cursor[parts[index]] === null ||
-    cursor[parts[index]] === undefined
-  ) {
-    return null;
-  }
-
-  cursor =
-    cursor[parts[index]];
-}
-
-return cursor;
-
-}
-
-function recordAction(action, detail) {
-state.actionCount += 1;
-
-state.lastAction = {
-  action: action,
-  detail: clone(detail || null),
-  actionNumber: state.actionCount,
-  occurredAt: nowIso()
-};
-
-publishEngineReceipt();
-
-return frozenClone(
-  state.lastAction
-);
-
-}
-
-function recordError(action, error, detail) {
-var entry = {
-action: action,
-message:
-String(
-error &&
-error.message
-? error.message
-: error
-),
-detail:
-clone(detail || null),
-occurredAt:
-nowIso()
-};
-
-state.errors.push(entry);
-state.archive.errors.push(entry);
-
-publishEngineReceipt();
-renderArchive();
-
-return frozenClone(entry);
-
-}
-
-function getCategory(categoryId) {
-return CATEGORY_REGISTRY
-.filter(function categoryMatch(entry) {
-return entry.id === categoryId;
-})[0] || null;
-}
-
-function getAudit(auditId) {
-return AUDIT_REGISTRY
-.filter(function auditMatch(entry) {
-return entry.id === auditId;
-})[0] || null;
-}
-
-function getParticipantManifestEntry(role) {
-return PARTICIPANT_MANIFEST
-.filter(function participantMatch(entry) {
-return entry.role === role;
-})[0] || null;
-}
-
-function resolveParticipantObject(manifest) {
-var aliases =
-manifest.aliases || [];
-
-var index;
-var candidate;
-
-for (
-  index = 0;
-  index < aliases.length;
-  index += 1
-) {
-  candidate =
-    readPath(
-      aliases[index]
-    );
-
-  if (
-    candidate !== null &&
-    candidate !== undefined
-  ) {
-    return {
-      alias:
-        aliases[index],
-      value:
-        candidate
-    };
-  }
-}
-
-return {
-  alias: null,
-  value: null
-};
-
-}
-
-function identifyCallableMethod(manifest, value) {
-var methods =
-manifest.methods || [];
-
-var index;
-
-if (isFunction(value)) {
-  return {
-    method:
-      "[[callable]]",
-    callable:
-      value
-  };
-}
-
-if (
-  !value ||
-  typeof value !== "object"
-) {
-  return {
-    method: null,
-    callable: null
-  };
-}
-
-for (
-  index = 0;
-  index < methods.length;
-  index += 1
-) {
-  if (
-    isFunction(
-      value[methods[index]]
-    )
-  ) {
-    return {
-      method:
-        methods[index],
-      callable:
-        value[methods[index]]
-    };
-  }
-}
-
-return {
-  method: null,
-  callable: null
-};
-
-}
-
-function inspectParticipant(manifest) {
-var resolution =
-resolveParticipantObject(manifest);
-
-var value =
-  resolution.value;
-
-var callable =
-  identifyCallableMethod(
-    manifest,
-    value
-  );
-
-var contract =
-  firstDefined([
-    value && value.CONTRACT,
-    value && value.contract,
-    value &&
-      value.receipt &&
-      value.receipt.contract,
-    value &&
-      value.RECEIPT &&
-      value.RECEIPT.contract
+// Does not own:
+// - Audralia topology, continents, islands, elevation, coastlines, hydrology,
+//   summit locations, surface classes, materials hints, or world generation
+// - HTML shell structure, CSS presentation authority, adapter authority,
+//   F34/F55/F89/F144/F233, market judgment, North authority, or visual approval
+
+(function installAudraliaPlanetRuntime(root, doc) {
+  "use strict";
+
+  const CONTRACT = "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1";
+  const RECEIPT = "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_RECEIPT_v1";
+  const FILE = "/showroom/globe/audralia/index.js";
+  const VERSION = "1.0.0";
+  const MODEL_ID = "audralia-planet-3d-g1";
+
+  const STAGE_ID = "audraliaGlobeStage";
+  const MOUNT_ID = "audraliaGlobeMount";
+  const MAX_DPR = 2;
+  const MIN_DISTANCE = 2.35;
+  const MAX_DISTANCE = 5.4;
+  const DEFAULT_DISTANCE = 3.15;
+  const DEFAULT_YAW = 0.58;
+  const DEFAULT_PITCH = -0.18;
+  const AXIAL_TILT = -0.19;
+  const IDLE_DELAY = 2600;
+  const AUTO_MOUNT_LIMIT = 160;
+
+  const COLORS = Object.freeze([
+    [0.018, 0.075, 0.190],
+    [0.026, 0.170, 0.340],
+    [0.055, 0.310, 0.480],
+    [0.580, 0.660, 0.570],
+    [0.820, 0.720, 0.480],
+    [0.200, 0.460, 0.240],
+    [0.075, 0.300, 0.160],
+    [0.550, 0.410, 0.210],
+    [0.260, 0.390, 0.220],
+    [0.340, 0.310, 0.300],
+    [0.900, 0.940, 0.970],
+    [0.075, 0.350, 0.480],
+    [0.045, 0.230, 0.420]
   ]);
 
-var version =
-  firstDefined([
-    value && value.VERSION,
-    value && value.version,
-    value &&
-      value.receipt &&
-      value.receipt.version,
-    value &&
-      value.RECEIPT &&
-      value.RECEIPT.version
-  ]);
+  const state = {
+    installedAt: iso(),
+    updatedAt: "",
 
-var available =
-  value !== null &&
-  value !== undefined;
+    stage: null,
+    mount: null,
+    canvas: null,
+    fallbackCanvas: null,
+    fallbackContext: null,
 
-return deepFreeze({
-  role:
-    manifest.role,
-  label:
-    manifest.label,
-  path:
-    manifest.path,
-  required:
-    manifest.required,
-  auxiliary:
-    manifest.auxiliary,
-  direction:
-    manifest.direction,
-  cyclePosition:
-    manifest.cyclePosition,
-  fibonacci:
-    manifest.fibonacci,
-  parentCyclePosition:
-    manifest.parentCyclePosition,
-  parentFibonacci:
-    manifest.parentFibonacci,
-  aliases:
-    manifest.aliases.slice(),
-  resolvedAlias:
-    resolution.alias,
-  available:
-    available,
-  callable:
-    Boolean(
-      callable.callable
-    ),
-  callableMethod:
-    callable.method,
-  contract:
-    contract || null,
-  version:
-    version || null,
-  status:
-    available
-      ? callable.callable
-        ? "AVAILABLE"
-        : "HELD"
-      : manifest.required
-        ? "MISSING"
-        : "UNKNOWN",
-  observedAt:
-    nowIso()
-});
+    gl: null,
+    geometryAuthority: null,
+    geometryPacket: null,
 
-}
+    programs: {},
+    meshes: {},
 
-function inspectParticipants() {
-state.participants =
-PARTICIPANT_MANIFEST
-.map(
-inspectParticipant
-);
+    width: 0,
+    height: 0,
+    pixelWidth: 0,
+    pixelHeight: 0,
+    dpr: 1,
 
-renderParticipants();
-renderDropParticipantState();
+    mounted: false,
+    initializing: false,
+    running: false,
+    destroyed: false,
+    paused: false,
+    reducedMotion: false,
+    hidden: false,
 
-addReceipt({
-  type:
-    "participant",
-  source:
-    "PARTICIPANT_MANIFEST",
-  title:
-    "Participant constellation inspection",
-  status:
-    state.participants
-      .some(function requiredMissing(entry) {
-        return (
-          entry.required &&
-          !entry.available
-        );
-      })
-      ? "HELD"
-      : "COMPLETE",
-  payload:
-    state.participants
-});
+    contextLost: false,
+    contextRestoreCount: 0,
 
-return frozenClone(
-  state.participants
-);
+    fallbackActive: false,
+    fallbackReason: "",
 
-}
+    stageRectNonzero: false,
+    terrainLevel: null,
 
-function findParticipantState(role) {
-return state.participants
-.filter(function stateMatch(entry) {
-return entry.role === role;
-})[0] || null;
-}
+    yaw: DEFAULT_YAW,
+    pitch: DEFAULT_PITCH,
+    distance: DEFAULT_DISTANCE,
 
-function inspectTargetFrame() {
-var frame =
-byId(TARGET_FRAME_ID);
+    cloudsVisible: true,
+    atmosphereVisible: true,
+    autoRotate: true,
 
-var result = {
-  framePresent:
-    Boolean(frame),
-  sameOrigin:
-    false,
-  documentState:
-    "UNKNOWN",
-  routeMatch:
-    false,
-  path:
-    TARGET_ROUTE,
-  title:
-    null,
-  accessError:
-    null,
-  frameRect:
-    null
-};
+    pointers: new Map(),
+    dragId: null,
+    pinchDistance: 0,
+    interacting: false,
 
-if (!frame) {
-  result.accessError =
-    "TARGET_FRAME_NOT_FOUND";
+    lastInteractionAt: 0,
 
-  return result;
-}
+    frameId: 0,
+    lastFrameAt: 0,
+    frameCount: 0,
+    drawCount: 0,
 
-try {
-  var rect =
-    frame.getBoundingClientRect();
+    firstFrameDrawn: false,
+    firstVisiblePixelObserved: false,
+    firstFrameAt: null,
 
-  result.frameRect = {
-    width:
-      rect.width,
-    height:
-      rect.height,
-    top:
-      rect.top,
-    left:
-      rect.left
+    lastFrameDurationMs: 0,
+    averageFrameDurationMs: 0,
+    frameAccumulator: 0,
+    frameSamples: 0,
+
+    needsRender: true,
+
+    resizeObserver: null,
+    listeners: [],
+    buttons: [],
+
+    autoMountAttempts: 0,
+    autoMountTimer: 0,
+
+    errors: [],
+    shaderErrors: [],
+    events: [],
+
+    lastReceipt: null,
+
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    generatedImage: false,
+    graphicBox: false,
+    visualPassClaimed: false
   };
-} catch (_error) {}
 
-try {
-  var frameWindow =
-    frame.contentWindow;
-
-  var frameDocument =
-    frame.contentDocument ||
-    (
-      frameWindow &&
-      frameWindow.document
-    );
-
-  result.sameOrigin =
-    Boolean(frameDocument);
-
-  if (frameDocument) {
-    result.documentState =
-      frameDocument.readyState ||
-      "UNKNOWN";
-
-    result.title =
-      frameDocument.title ||
-      "";
-
-    var pathname =
-      frameWindow &&
-      frameWindow.location
-        ? frameWindow.location.pathname
-        : null;
-
-    result.path =
-      pathname ||
-      TARGET_ROUTE;
-
-    result.routeMatch =
-      pathname === TARGET_ROUTE ||
-      pathname ===
-        TARGET_ROUTE.replace(
-          /\/$/,
-          ""
-        );
+  function iso() {
+    return new Date().toISOString();
   }
-} catch (error) {
-  result.accessError =
-    String(
-      error &&
-      error.message
-        ? error.message
-        : error
-    );
-}
 
-return result;
-
-}
-
-function inspectRuntime(targetWindow) {
-var runtimeAliases = [
-"AUDRALIA_RUNTIME",
-"AUDRALIA.runtime",
-"AUDRALIA_ENGINE",
-"AUDRALIA.engine",
-"AUDRALIA_CANVAS",
-"AUDRALIA.canvas"
-];
-
-var runtime =
-  null;
-
-var runtimeAlias =
-  null;
-
-var index;
-
-for (
-  index = 0;
-  index < runtimeAliases.length;
-  index += 1
-) {
-  runtime =
-    readPath(
-      runtimeAliases[index],
-      targetWindow || root
-    );
-
-  if (runtime) {
-    runtimeAlias =
-      runtimeAliases[index];
-
-    break;
+  function fn(value) {
+    return typeof value === "function";
   }
-}
 
-var mount =
-  null;
+  function number(value, fallback = 0) {
+    const parsed = Number(value);
 
-var mountSelector =
-  null;
-
-var mountSelectors = [
-  "#audraliaCanvasMount",
-  "#audraliaMount",
-  "#globeMount",
-  "canvas"
-];
-
-var targetDocument =
-  targetWindow &&
-  targetWindow.document
-    ? targetWindow.document
-    : null;
-
-if (targetDocument) {
-  for (
-    index = 0;
-    index < mountSelectors.length;
-    index += 1
-  ) {
-    mount =
-      targetDocument.querySelector(
-        mountSelectors[index]
-      );
-
-    if (mount) {
-      mountSelector =
-        mountSelectors[index];
-
-      break;
-    }
+    return Number.isFinite(parsed)
+      ? parsed
+      : fallback;
   }
-}
 
-var rect =
-  null;
-
-var visiblePixel =
-  null;
-
-if (mount) {
-  try {
-    var mountRect =
-      mount.getBoundingClientRect();
-
-    rect = {
-      width:
-        mountRect.width,
-      height:
-        mountRect.height,
-      top:
-        mountRect.top,
-      left:
-        mountRect.left,
-      nonzero:
-        mountRect.width > 0 &&
-        mountRect.height > 0
-    };
-  } catch (_error) {}
-
-  if (
-    String(
-      mount.tagName || ""
-    ).toUpperCase() === "CANVAS"
-  ) {
-    try {
-      var context =
-        mount.getContext &&
-        mount.getContext("2d");
-
-      if (
-        context &&
-        mount.width > 0 &&
-        mount.height > 0
-      ) {
-        var pixel =
-          context
-            .getImageData(
-              Math.floor(
-                mount.width / 2
-              ),
-              Math.floor(
-                mount.height / 2
-              ),
-              1,
-              1
-            )
-            .data;
-
-        visiblePixel =
-          pixel[3] > 0;
-      }
-    } catch (_error) {
-      visiblePixel =
-        null;
-    }
-  }
-}
-
-return {
-  runtimeAlias:
-    runtimeAlias,
-  runtimeFound:
-    Boolean(runtime),
-  runtimeContract:
-    runtime &&
-    (
-      runtime.CONTRACT ||
-      runtime.contract
-    )
-      ? runtime.CONTRACT ||
-        runtime.contract
-      : null,
-  runtimeMounted:
-    runtime
-      ? firstDefined([
-          runtime.mounted,
-          runtime.isMounted,
-          runtime.status === "MOUNTED"
-            ? true
-            : null
-        ])
-      : null,
-  mountFound:
-    Boolean(mount),
-  mountSelector:
-    mountSelector,
-  mountTag:
-    mount
-      ? mount.tagName
-      : null,
-  geometry:
-    rect,
-  stageRectNonzero:
-    rect
-      ? rect.nonzero
-      : null,
-  firstFrame:
-    firstDefined([
-      runtime &&
-        runtime.firstFrame,
-      runtime &&
-        runtime.firstFrameRendered,
-      runtime &&
-        runtime.frameReady
-    ]),
-  visiblePixel:
-    visiblePixel,
-  fallback:
-    firstDefined([
-      runtime &&
-        runtime.fallback,
-      runtime &&
-        runtime.fallbackActive
-    ]),
-  receiptAvailability:
-    Boolean(
-      runtime &&
-      (
-        runtime.RECEIPT ||
-        runtime.receipt ||
-        runtime.getReceipt
+  function clamp(value, minimum, maximum) {
+    return Math.max(
+      minimum,
+      Math.min(
+        maximum,
+        number(value, minimum)
       )
-    )
-};
+    );
+  }
 
-}
+  function plain(value) {
+    if (value === undefined) {
+      return undefined;
+    }
 
-function inspectEngineFamily(targetWindow) {
-var source =
-targetWindow || root;
-
-var governing =
-  readPath(
-    "DGB_ENGINE_CONTRACT",
-    source
-  ) ||
-  readPath(
-    "DGB.engineContract",
-    source
-  );
-
-var runtime =
-  readPath(
-    "DGB_ENGINE",
-    source
-  ) ||
-  readPath(
-    "DGB.engine",
-    source
-  );
-
-var registry =
-  readPath(
-    "DGB_ENGINE_SUBJECTS",
-    source
-  ) ||
-  readPath(
-    "DGB.engineSubjects",
-    source
-  ) ||
-  readPath(
-    "DGB_ENGINE_REGISTRY",
-    source
-  );
-
-return {
-  governingContractFound:
-    Boolean(governing),
-  governingContract:
-    governing &&
-    (
-      governing.CONTRACT ||
-      governing.contract
-    )
-      ? governing.CONTRACT ||
-        governing.contract
-      : null,
-  runtimeEngineFound:
-    Boolean(runtime),
-  runtimeEngineContract:
-    runtime &&
-    (
-      runtime.CONTRACT ||
-      runtime.contract
-    )
-      ? runtime.CONTRACT ||
-        runtime.contract
-      : null,
-  registryFound:
-    Boolean(registry),
-  registryContract:
-    registry &&
-    (
-      registry.CONTRACT ||
-      registry.contract
-    )
-      ? registry.CONTRACT ||
-        registry.contract
-      : null,
-  registrySnapshot:
-    snapshotRegistry(
-      registry
-    )
-};
-
-}
-
-function snapshotRegistry(registry) {
-if (!registry) {
-return {
-governingContracts: [],
-assignedEngines: [],
-selectableEngines: [],
-reservedSlots: []
-};
-}
-
-return {
-  governingContracts:
-    normalizeCollection(
-      firstDefined([
-        registry.governingContracts,
-        registry.contracts,
-        registry.authorities
-      ])
-    ),
-  assignedEngines:
-    normalizeCollection(
-      firstDefined([
-        registry.assignedEngines,
-        registry.assigned,
-        registry.subjects
-      ])
-    ),
-  selectableEngines:
-    normalizeCollection(
-      firstDefined([
-        registry.selectableEngines,
-        registry.selectable,
-        registry.options
-      ])
-    ),
-  reservedSlots:
-    normalizeCollection(
-      firstDefined([
-        registry.reservedSlots,
-        registry.reserved,
-        registry.slots
-      ])
-    )
-};
-
-}
-
-function normalizeCollection(value) {
-if (Array.isArray(value)) {
-return value.map(function mapCollection(entry) {
-return clone(entry);
-});
-}
-
-if (isObject(value)) {
-  return Object.keys(value)
-    .map(function mapObjectEntry(key) {
+    if (ArrayBuffer.isView(value)) {
       return {
-        key:
-          key,
-        value:
-          clone(
-            value[key]
-          )
+        type: value.constructor.name,
+        length: value.length
       };
+    }
+
+    try {
+      return JSON.parse(
+        JSON.stringify(value)
+      );
+    } catch (_error) {
+      return String(value);
+    }
+  }
+
+  function event(type, detail = {}) {
+    const entry = {
+      type,
+      detail: plain(detail),
+      time: iso()
+    };
+
+    state.events.push(entry);
+
+    if (state.events.length > 192) {
+      state.events.splice(
+        0,
+        state.events.length - 192
+      );
+    }
+
+    state.updatedAt = entry.time;
+
+    return entry;
+  }
+
+  function fail(scope, error) {
+    const entry = {
+      scope,
+
+      message:
+        error && error.message
+          ? error.message
+          : String(error),
+
+      time: iso()
+    };
+
+    state.errors.push(entry);
+
+    if (state.errors.length > 96) {
+      state.errors.splice(
+        0,
+        state.errors.length - 96
+      );
+    }
+
+    event(
+      "AUDRALIA_PLANET_RUNTIME_ERROR",
+      entry
+    );
+
+    publish();
+
+    return entry;
+  }
+
+  function shaderFail(stage, message) {
+    const entry = {
+      stage,
+      message: String(message),
+      time: iso()
+    };
+
+    state.shaderErrors.push(entry);
+
+    if (state.shaderErrors.length > 24) {
+      state.shaderErrors.splice(
+        0,
+        state.shaderErrors.length - 24
+      );
+    }
+
+    event(
+      "AUDRALIA_PLANET_SHADER_ERROR",
+      entry
+    );
+
+    return entry;
+  }
+
+  function emit(name, detail) {
+    if (
+      !root ||
+      !fn(root.dispatchEvent) ||
+      typeof root.CustomEvent !== "function"
+    ) {
+      return false;
+    }
+
+    try {
+      root.dispatchEvent(
+        new root.CustomEvent(
+          name,
+          {
+            detail: plain(detail)
+          }
+        )
+      );
+
+      return true;
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function listen(
+    target,
+    type,
+    handler,
+    options
+  ) {
+    if (
+      !target ||
+      !fn(target.addEventListener)
+    ) {
+      return false;
+    }
+
+    target.addEventListener(
+      type,
+      handler,
+      options
+    );
+
+    state.listeners.push({
+      target,
+      type,
+      handler,
+      options
     });
-}
 
-return [];
+    return true;
+  }
 
-}
+  function unlistenAll() {
+    for (const item of state.listeners) {
+      try {
+        item.target.removeEventListener(
+          item.type,
+          item.handler,
+          item.options
+        );
+      } catch (_error) {}
+    }
 
-function inspectSurfaceTruth() {
-var participantState =
-findParticipantState(
-"CANVAS_SURFACE_TRUTH"
-);
+    state.listeners.length = 0;
 
-var value =
-  participantState &&
-  participantState.resolvedAlias
-    ? readPath(
-        participantState.resolvedAlias
+    for (const item of state.buttons) {
+      try {
+        item.element.removeEventListener(
+          "click",
+          item.handler
+        );
+      } catch (_error) {}
+    }
+
+    state.buttons.length = 0;
+  }
+
+  function dataset(
+    target,
+    key,
+    value
+  ) {
+    if (
+      target &&
+      target.dataset
+    ) {
+      try {
+        target.dataset[key] =
+          String(value);
+      } catch (_error) {}
+    }
+  }
+
+  function m4Identity() {
+    return new Float32Array([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ]);
+  }
+
+  function m4Multiply(a, b) {
+    const output =
+      new Float32Array(16);
+
+    for (
+      let column = 0;
+      column < 4;
+      column += 1
+    ) {
+      for (
+        let row = 0;
+        row < 4;
+        row += 1
+      ) {
+        output[
+          column * 4 + row
+        ] =
+          a[row] *
+          b[column * 4] +
+
+          a[4 + row] *
+          b[column * 4 + 1] +
+
+          a[8 + row] *
+          b[column * 4 + 2] +
+
+          a[12 + row] *
+          b[column * 4 + 3];
+      }
+    }
+
+    return output;
+  }
+
+  function m4Perspective(
+    fieldOfView,
+    aspect,
+    near,
+    far
+  ) {
+    const f =
+      1 /
+      Math.tan(
+        fieldOfView / 2
+      );
+
+    const inverse =
+      1 /
+      (
+        near - far
+      );
+
+    return new Float32Array([
+      f / aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0,
+      (near + far) * inverse,
+      -1,
+      0, 0,
+      near * far * inverse * 2,
+      0
+    ]);
+  }
+
+  function m4Translate(
+    x,
+    y,
+    z
+  ) {
+    const output =
+      m4Identity();
+
+    output[12] = x;
+    output[13] = y;
+    output[14] = z;
+
+    return output;
+  }
+
+  function m4RotateX(angle) {
+    const cosine =
+      Math.cos(angle);
+
+    const sine =
+      Math.sin(angle);
+
+    return new Float32Array([
+      1, 0, 0, 0,
+      0, cosine, sine, 0,
+      0, -sine, cosine, 0,
+      0, 0, 0, 1
+    ]);
+  }
+
+  function m4RotateY(angle) {
+    const cosine =
+      Math.cos(angle);
+
+    const sine =
+      Math.sin(angle);
+
+    return new Float32Array([
+      cosine, 0, -sine, 0,
+      0, 1, 0, 0,
+      sine, 0, cosine, 0,
+      0, 0, 0, 1
+    ]);
+  }
+
+  function m4RotateZ(angle) {
+    const cosine =
+      Math.cos(angle);
+
+    const sine =
+      Math.sin(angle);
+
+    return new Float32Array([
+      cosine, sine, 0, 0,
+      -sine, cosine, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ]);
+  }
+
+  function m3Rotation(matrix) {
+    return new Float32Array([
+      matrix[0],
+      matrix[1],
+      matrix[2],
+
+      matrix[4],
+      matrix[5],
+      matrix[6],
+
+      matrix[8],
+      matrix[9],
+      matrix[10]
+    ]);
+  }
+
+  function transform(
+    matrix,
+    point
+  ) {
+    return [
+      matrix[0] *
+      point[0] +
+
+      matrix[4] *
+      point[1] +
+
+      matrix[8] *
+      point[2],
+
+      matrix[1] *
+      point[0] +
+
+      matrix[5] *
+      point[1] +
+
+      matrix[9] *
+      point[2],
+
+      matrix[2] *
+      point[0] +
+
+      matrix[6] *
+      point[1] +
+
+      matrix[10] *
+      point[2]
+    ];
+  }
+
+  function modelMatrix() {
+    return m4Multiply(
+      m4RotateZ(
+        AXIAL_TILT
+      ),
+
+      m4Multiply(
+        m4RotateX(
+          state.pitch
+        ),
+
+        m4RotateY(
+          state.yaw
+        )
       )
-    : null;
-
-var receipt =
-  firstDefined([
-    value &&
-      value.RECEIPT,
-    value &&
-      value.receipt,
-    value &&
-      isFunction(value.getReceipt)
-      ? safeInvoke(
-          value.getReceipt,
-          value,
-          []
-        )
-      : null
-  ]);
-
-var packet =
-  firstDefined([
-    value &&
-      value.PACKET,
-    value &&
-      value.packet,
-    value &&
-      isFunction(value.getPacket)
-      ? safeInvoke(
-          value.getPacket,
-          value,
-          []
-        )
-      : null
-  ]);
-
-return {
-  authorityFound:
-    Boolean(value),
-  authorityAlias:
-    participantState
-      ? participantState.resolvedAlias
-      : null,
-  method:
-    participantState
-      ? participantState.callableMethod
-      : null,
-  contract:
-    participantState
-      ? participantState.contract
-      : null,
-  receiptFound:
-    Boolean(receipt),
-  receipt:
-    clone(receipt),
-  packetKeys:
-    isObject(packet)
-      ? Object.keys(packet)
-      : [],
-  firstHeld:
-    findFirstByStatus(
-      packet,
-      "HELD"
-    ),
-  firstFailed:
-    findFirstByStatus(
-      packet,
-      "ERROR"
-    ) ||
-    findFirstByStatus(
-      packet,
-      "FAILED"
-    ) ||
-    findFirstByStatus(
-      packet,
-      "FAIL"
-    ),
-  recommendedOwner:
-    firstDefined([
-      packet &&
-        packet.recommendedOwner,
-      packet &&
-        packet.owner,
-      receipt &&
-        receipt.recommendedOwner
-    ]),
-  recommendedFile:
-    firstDefined([
-      packet &&
-        packet.recommendedFile,
-      packet &&
-        packet.file,
-      receipt &&
-        receipt.recommendedFile
-    ]),
-  recommendedAction:
-    firstDefined([
-      packet &&
-        packet.recommendedAction,
-      packet &&
-        packet.action,
-      receipt &&
-        receipt.recommendedAction
-    ]),
-  error:
-    null
-};
-
-}
-
-function findFirstByStatus(value, status) {
-var target =
-String(status || "")
-.trim()
-.toUpperCase();
-
-var seen = [];
-
-function walk(node, path) {
-  var keys;
-  var index;
-  var found;
-
-  if (
-    node === null ||
-    node === undefined ||
-    typeof node !== "object"
-  ) {
-    return null;
+    );
   }
 
-  if (seen.indexOf(node) !== -1) {
-    return null;
-  }
-
-  seen.push(node);
-
-  if (
-    typeof node.status === "string" &&
-    node.status
-      .trim()
-      .toUpperCase() === target
+  function resolveElements(
+    options = {}
   ) {
+    if (!doc) {
+      return {
+        stage: null,
+        mount: null
+      };
+    }
+
+    const stage =
+      options.stage ||
+
+      doc.getElementById(
+        options.stageId ||
+        STAGE_ID
+      ) ||
+
+      doc.querySelector(
+        "[data-audralia-globe-stage]"
+      ) ||
+
+      doc.querySelector(
+        "[data-audralia-planet-stage]"
+      );
+
+    const mount =
+      options.mount ||
+
+      doc.getElementById(
+        options.mountId ||
+        MOUNT_ID
+      ) ||
+
+      doc.querySelector(
+        "[data-audralia-globe-mount]"
+      ) ||
+
+      doc.querySelector(
+        "[data-audralia-planet-mount]"
+      ) ||
+
+      stage;
+
     return {
-      path:
-        path,
-      value:
-        clone(node)
+      stage:
+        stage ||
+        mount ||
+        null,
+
+      mount:
+        mount ||
+        stage ||
+        null
     };
   }
 
-  keys =
-    Object.keys(node);
-
-  for (
-    index = 0;
-    index < keys.length;
-    index += 1
-  ) {
-    found =
-      walk(
-        node[keys[index]],
-        path
-          ? path + "." + keys[index]
-          : keys[index]
-      );
-
-    if (found) {
-      return found;
-    }
-  }
-
-  return null;
-}
-
-return walk(
-  value,
-  ""
-);
-
-}
-
-function safeInvoke(fn, context, args) {
-try {
-return fn.apply(
-context,
-args || []
-);
-} catch (error) {
-return {
-error:
-String(
-error &&
-error.message
-? error.message
-: error
-)
-};
-}
-}
-
-function observe() {
-if (!state.initialized && state.status !== "LOADING") {
-throw new Error(
-"DIAGNOSTIC_ENGINE_NOT_INITIALIZED"
-);
-}
-
-var target =
-  inspectTargetFrame();
-
-var targetWindow =
-  null;
-
-if (target.framePresent) {
-  try {
-    targetWindow =
-      byId(TARGET_FRAME_ID)
-        .contentWindow;
-  } catch (_error) {}
-}
-
-var runtime =
-  inspectRuntime(
-    targetWindow
-  );
-
-var engineFamily =
-  inspectEngineFamily(
-    targetWindow
-  );
-
-var surface =
-  inspectSurfaceTruth();
-
-state.observation =
-  deepFreeze({
-    schema:
-      OBSERVATION_SCHEMA,
-    observedAt:
-      nowIso(),
-    target:
-      target,
-    runtime:
-      runtime,
-    engineFamily:
-      engineFamily,
-    surface:
-      surface,
-    noClaims:
-      NO_CLAIMS
-  });
-
-addReceipt({
-  type:
-    "observation",
-  source:
-    "DROP_OBSERVATION",
-  title:
-    "Audralia target observation",
-  status:
-    target.framePresent
-      ? "COMPLETE"
-      : "HELD",
-  payload:
-    state.observation
-});
-
-renderObservation();
-renderRegistry();
-renderEvidenceRail();
-renderDropObservationState();
-
-recordAction(
-  "observe",
-  {
-    framePresent:
-      target.framePresent,
-    sameOrigin:
-      target.sameOrigin
-  }
-);
-
-return frozenClone(
-  state.observation
-);
-
-}
-
-function createReport() {
-if (!state.initialized) {
-throw new Error(
-"DIAGNOSTIC_ENGINE_NOT_INITIALIZED"
-);
-}
-
-inspectParticipants();
-observe();
-
-var audit =
-  getAudit(
-    state.selection.auditId
-  ) ||
-  AUDIT_REGISTRY[0];
-
-var category =
-  getCategory(
-    audit.categoryId
-  ) ||
-  CATEGORY_REGISTRY[0];
-
-var interpretation =
-  interpretRead(
-    audit,
-    category
-  );
-
-var report = {
-  schema:
-    REPORT_SCHEMA,
-  reportId:
-    "AUDRALIA_REPORT_" +
-    Date.now(),
-  createdAt:
-    nowIso(),
-  category:
-    clone(category),
-  audit:
-    clone(audit),
-  read:
-    interpretation,
-  participantSnapshot:
-    frozenClone(
-      state.participants
-    ),
-  observationSnapshot:
-    frozenClone(
-      state.observation
-    ),
-  directSnapshot:
-    frozenClone(
-      state.direct
-    ),
-  cycleSnapshot:
-    frozenClone(
-      state.cycle
-    ),
-  boundary:
-    NO_CLAIMS
-};
-
-state.report.current =
-  deepFreeze(report);
-
-state.report.history.push(
-  state.report.current
-);
-
-addReceipt({
-  type:
-    "report",
-  source:
-    "DROP_REPORT",
-  title:
-    audit.title,
-  status:
-    "COMPLETE",
-  payload: {
-    reportId:
-      report.reportId,
-    auditId:
-      audit.id,
-    categoryId:
-      category.id
-  }
-});
-
-renderReport(
-  state.report.current
-);
-
-renderArchive();
-renderDropReportState();
-
-recordAction(
-  "createReport",
-  {
-    reportId:
-      report.reportId,
-    auditId:
-      audit.id
-  }
-);
-
-return frozenClone(
-  state.report.current
-);
-
-}
-
-function interpretRead(audit, category) {
-var participants =
-state.participants || [];
-
-var required =
-  participants
-    .filter(function requiredOnly(entry) {
-      return entry.required;
-    });
-
-var availableRequired =
-  required
-    .filter(function availableOnly(entry) {
-      return entry.available;
-    });
-
-var missingRequired =
-  required
-    .filter(function missingOnly(entry) {
-      return !entry.available;
-    });
-
-var unavailableCallable =
-  required
-    .filter(function nonCallable(entry) {
-      return (
-        entry.available &&
-        !entry.callable
-      );
-    });
-
-var optionalMissing =
-  participants
-    .filter(function optionalMissingOnly(entry) {
-      return (
-        !entry.required &&
-        !entry.available
-      );
-    });
-
-var observation =
-  state.observation || {};
-
-var evidence = [
-  "The diagnostic engine initialized under contract " +
-    CONTRACT +
-    ".",
-  String(
-    availableRequired.length
-  ) +
-    " of " +
-    String(
-      required.length
-    ) +
-    " required diagnostic participants are currently available.",
-  "The selected audit is " +
-    audit.title +
-    " under " +
-    category.label +
-    ".",
-  "Report construction completed synchronously.",
-  "Report creation did not invoke direct execution.",
-  "Report creation did not invoke the nine-cycle."
-];
-
-if (
-  observation.target &&
-  observation.target.framePresent
-) {
-  evidence.push(
-    "The Audralia target iframe is present."
-  );
-}
-
-if (
-  observation.target &&
-  observation.target.sameOrigin
-) {
-  evidence.push(
-    "The target document is accessible through the same-origin observation path."
-  );
-}
-
-if (
-  observation.runtime &&
-  observation.runtime.runtimeFound
-) {
-  evidence.push(
-    "An Audralia runtime global was observed at " +
-      observation.runtime.runtimeAlias +
-      "."
-  );
-}
-
-if (
-  observation.runtime &&
-  observation.runtime.mountFound
-) {
-  evidence.push(
-    "A target mount element was observed at " +
-      observation.runtime.mountSelector +
-      "."
-  );
-}
-
-if (
-  observation.surface &&
-  observation.surface.authorityFound
-) {
-  evidence.push(
-    "The F8 Canvas Surface Truth participant is available."
-  );
-}
-
-var absence = [];
-
-missingRequired
-  .forEach(function describeMissing(entry) {
-    absence.push(
-      entry.role +
-      " is required but was not resolved."
-    );
-  });
-
-unavailableCallable
-  .forEach(function describeUncallable(entry) {
-    absence.push(
-      entry.role +
-      " is available but no recognized callable diagnostic method was found."
-    );
-  });
-
-optionalMissing
-  .forEach(function describeOptionalMissing(entry) {
-    absence.push(
-      entry.role +
-      " is optional and was not resolved."
-    );
-  });
-
-if (
-  !observation.target ||
-  !observation.target.framePresent
-) {
-  absence.push(
-    "The Audralia target frame was not observed."
-  );
-}
-
-if (
-  observation.target &&
-  observation.target.framePresent &&
-  !observation.target.sameOrigin
-) {
-  absence.push(
-    "The target frame exists but same-origin document access was not confirmed."
-  );
-}
-
-if (
-  !observation.runtime ||
-  !observation.runtime.runtimeFound
-) {
-  absence.push(
-    "No recognized Audralia runtime global was observed."
-  );
-}
-
-if (
-  observation.runtime &&
-  observation.runtime.mountFound &&
-  observation.runtime.stageRectNonzero === false
-) {
-  absence.push(
-    "The observed target mount rectangle is zero."
-  );
-}
-
-if (
-  state.cycle.count === 0
-) {
-  absence.push(
-    "No nine-cycle execution exists for this session."
-  );
-}
-
-if (
-  state.direct.count === 0
-) {
-  absence.push(
-    "No explicit direct diagnostic execution exists for this session."
-  );
-}
-
-if (!absence.length) {
-  absence.push(
-    "No additional absence was established by the current safe report."
-  );
-}
-
-var direction = [];
-
-if (missingRequired.length) {
-  direction.push(
-    "Inspect the first missing required participant: " +
-    missingRequired[0].role +
-    " at " +
-    missingRequired[0].path +
-    "."
-  );
-}
-
-if (unavailableCallable.length) {
-  direction.push(
-    "Inspect the callable contract for " +
-    unavailableCallable[0].role +
-    "."
-  );
-}
-
-if (
-  observation.runtime &&
-  observation.runtime.mountFound &&
-  observation.runtime.stageRectNonzero === false
-) {
-  direction.push(
-    "Inspect the target HTML shell and stage layout because the observed mount rectangle is zero."
-  );
-}
-
-if (
-  audit.classification ===
-  "DIRECT_AVAILABLE"
-) {
-  direction.push(
-    "Use Run Direct Check only when deliberate participant execution is required."
-  );
-}
-
-if (
-  audit.classification ===
-  "NINE_CYCLE_AVAILABLE"
-) {
-  direction.push(
-    "Use Run Nine-Cycle only when a complete nine-station execution record is required."
-  );
-}
-
-direction.push(
-  "Preserve the production no-touch boundary. This diagnostic engine does not authorize repairs."
-);
-
-var result;
-
-if (
-  missingRequired.length ||
-  unavailableCallable.length
-) {
-  result =
-    "The diagnostic observatory is operational, but one or more required diagnostic participants are unavailable or non-callable.";
-} else if (
-  observation.target &&
-  observation.target.framePresent
-) {
-  result =
-    "The diagnostic observatory and required participant family are available, and the Audralia target is observable.";
-} else {
-  result =
-    "The diagnostic observatory and required participant family are available, but target observation is incomplete.";
-}
-
-return deepFreeze({
-  result:
-    result,
-  evidence:
-    evidence,
-  absence:
-    absence,
-  direction:
-    direction
-});
-
-}
-
-function runSelectedDirectCheck() {
-if (!state.initialized) {
-throw new Error(
-"DIAGNOSTIC_ENGINE_NOT_INITIALIZED"
-);
-}
-
-if (state.direct.running) {
-  throw new Error(
-    "DIRECT_CHECK_ALREADY_RUNNING"
-  );
-}
-
-var audit =
-  getAudit(
-    state.selection.auditId
-  );
-
-if (!audit) {
-  throw new Error(
-    "SELECTED_AUDIT_NOT_FOUND"
-  );
-}
-
-var role =
-  audit.directParticipant ||
-  state.selection.participantRole;
-
-if (!role) {
-  throw new Error(
-    "SELECTED_AUDIT_HAS_NO_DIRECT_PARTICIPANT"
-  );
-}
-
-var manifest =
-  getParticipantManifestEntry(
-    role
-  );
-
-if (!manifest) {
-  throw new Error(
-    "DIRECT_PARTICIPANT_NOT_REGISTERED:" +
-    role
-  );
-}
-
-var inspection =
-  inspectParticipant(
-    manifest
-  );
-
-if (!inspection.available) {
-  throw new Error(
-    "DIRECT_PARTICIPANT_UNAVAILABLE:" +
-    role
-  );
-}
-
-if (!inspection.callable) {
-  throw new Error(
-    "DIRECT_PARTICIPANT_NOT_CALLABLE:" +
-    role
-  );
-}
-
-var resolution =
-  resolveParticipantObject(
-    manifest
-  );
-
-var callable =
-  identifyCallableMethod(
-    manifest,
-    resolution.value
-  );
-
-state.direct.running =
-  true;
-
-renderDropDirectState(
-  "RUNNING"
-);
-
-try {
-  var input =
-    buildParticipantInput(
-      manifest,
-      "DIRECT"
-    );
-
-  var raw =
-    callable.method ===
-    "[[callable]]"
-      ? callable.callable(
-          input
-        )
-      : callable.callable.call(
-          resolution.value,
-          input
-        );
-
-  if (
-    raw &&
-    isFunction(raw.then)
-  ) {
-    throw new Error(
-      "DIRECT_PARTICIPANT_RETURNED_ASYNC_RESULT"
-    );
-  }
-
-  var normalized =
-    normalizeReceipt({
-      type:
-        "direct",
-      source:
-        role,
-      title:
-        manifest.label,
-      status:
-        deriveReceiptStatus(
-          raw
-        ),
-      cyclePosition:
-        manifest.cyclePosition,
-      fibonacci:
-        manifest.fibonacci,
-      payload:
-        raw
-    });
-
-  state.direct.count += 1;
-
-  state.direct.lastResult =
-    deepFreeze(
-      normalized
-    );
-
-  state.direct.lastError =
-    null;
-
-  addReceipt(
-    normalized
-  );
-
-  renderDropDirectState(
-    normalized.status
-  );
-
-  renderReceipts();
-  renderEvidenceRail();
-
-  recordAction(
-    "runSelectedDirectCheck",
-    {
-      role:
-        role,
-      status:
-        normalized.status
-    }
-  );
-
-  return frozenClone(
-    normalized
-  );
-} catch (error) {
-  state.direct.lastError =
-    recordError(
-      "runSelectedDirectCheck",
-      error,
-      {
-        role:
-          role
-      }
-    );
-
-  renderDropDirectState(
-    "ERROR"
-  );
-
-  throw error;
-} finally {
-  state.direct.running =
-    false;
-}
-
-}
-
-function runNineCycle() {
-if (!state.initialized) {
-throw new Error(
-"DIAGNOSTIC_ENGINE_NOT_INITIALIZED"
-);
-}
-
-if (state.cycle.running) {
-  throw new Error(
-    "NINE_CYCLE_ALREADY_RUNNING"
-  );
-}
-
-inspectParticipants();
-observe();
-
-var unavailable =
-  STATION_ORDER
-    .filter(function unavailableStation(manifest) {
-      var participantState =
-        findParticipantState(
-          manifest.role
-        );
-
-      return (
-        !participantState ||
-        !participantState.available ||
-        !participantState.callable
-      );
-    });
-
-if (unavailable.length) {
-  state.cycle.lastError =
-    recordError(
-      "runNineCycle",
-      new Error(
-        "NINE_CYCLE_PREFLIGHT_HELD:" +
-        unavailable
-          .map(function unavailableRole(entry) {
-            return entry.role;
-          })
-          .join(",")
+  function geometryAuthority() {
+    const authority =
+      root &&
+      root.DGBAudraliaPlanetGeometry;
+
+    return (
+      authority &&
+      fn(
+        authority.createGeometry
+      ) &&
+      fn(
+        authority.createTerrainMesh
       )
-    );
-
-  renderCyclePreflightHeld(
-    unavailable
-  );
-
-  throw new Error(
-    "NINE_CYCLE_PREFLIGHT_HELD:" +
-    unavailable
-      .map(function unavailableRole(entry) {
-        return entry.role;
-      })
-      .join(",")
-  );
-}
-
-state.cycle.running =
-  true;
-
-state.cycle.receipts =
-  [];
-
-state.cycle.ledger =
-  null;
-
-state.cycle.lastError =
-  null;
-
-renderCycleRunning();
-
-try {
-  var conductorManifest =
-    getParticipantManifestEntry(
-      "NORTH_CONDUCTOR"
-    );
-
-  var conductorInspection =
-    inspectParticipant(
-      conductorManifest
-    );
-
-  var conductorResolution =
-    resolveParticipantObject(
-      conductorManifest
-    );
-
-  var conductorCallable =
-    identifyCallableMethod(
-      conductorManifest,
-      conductorResolution.value
-    );
-
-  var stationInputs =
-    STATION_ORDER
-      .map(function buildStationRecord(manifest) {
-        return {
-          manifest:
-            manifest,
-          participant:
-            findParticipantState(
-              manifest.role
-            ),
-          input:
-            buildParticipantInput(
-              manifest,
-              "NINE_CYCLE"
-            )
-        };
-      });
-
-  var receipts;
-
-  if (
-    conductorInspection.available &&
-    conductorInspection.callable &&
-    conductorCallable.callable
-  ) {
-    receipts =
-      executeThroughConductor(
-        conductorResolution.value,
-        conductorCallable,
-        stationInputs
-      );
-  } else {
-    receipts =
-      executeStationsSequentially(
-        stationInputs
-      );
-  }
-
-  state.cycle.receipts =
-    receipts
-      .map(
-        normalizeReceipt
-      );
-
-  state.cycle.count += 1;
-
-  state.cycle.lastRunAt =
-    nowIso();
-
-  state.cycle.ledger =
-    buildCycleLedger(
-      state.cycle.receipts
-    );
-
-  state.cycle.receipts
-    .forEach(
-      addReceipt
-    );
-
-  addReceipt({
-    type:
-      "cycle",
-    source:
-      "NORTH_CONDUCTOR",
-    title:
-      "Nine-cycle terminal receipt",
-    status:
-      state.cycle.ledger.status,
-    payload:
-      state.cycle.ledger
-  });
-
-  renderCycle();
-  renderReceipts();
-  renderEvidenceRail();
-
-  recordAction(
-    "runNineCycle",
-    {
-      cycleNumber:
-        state.cycle.count,
-      receiptCount:
-        state.cycle.receipts.length,
-      status:
-        state.cycle.ledger.status
-    }
-  );
-
-  return frozenClone({
-    receipts:
-      state.cycle.receipts,
-    ledger:
-      state.cycle.ledger
-  });
-} catch (error) {
-  state.cycle.lastError =
-    recordError(
-      "runNineCycle",
-      error
-    );
-
-  renderCycleError(
-    error
-  );
-
-  throw error;
-} finally {
-  state.cycle.running =
-    false;
-}
-
-}
-
-function executeThroughConductor(
-conductor,
-callable,
-stationInputs
-) {
-var payload = {
-schema:
-"AUDRALIA_DROP_WITH_READ_NINE_CYCLE_INPUT_v2",
-contract:
-CONTRACT,
-stations:
-stationInputs
-.map(function stationPayload(entry) {
-return {
-role:
-entry.manifest.role,
-cyclePosition:
-entry.manifest.cyclePosition,
-fibonacci:
-entry.manifest.fibonacci,
-input:
-clone(
-entry.input
-)
-};
-}),
-executeStation:
-function executeStation(role) {
-var selected =
-stationInputs
-.filter(function roleMatch(entry) {
-return (
-entry.manifest.role ===
-role
-);
-})[0];
-
-      if (!selected) {
-        throw new Error(
-          "CONDUCTOR_REQUESTED_UNKNOWN_STATION:" +
-          role
-        );
-      }
-
-      return executeSingleStation(
-        selected
-      );
-    },
-  noClaims:
-    NO_CLAIMS
-};
-
-var raw =
-  callable.method ===
-  "[[callable]]"
-    ? callable.callable(
-        payload
-      )
-    : callable.callable.call(
-        conductor,
-        payload
-      );
-
-if (
-  raw &&
-  isFunction(raw.then)
-) {
-  throw new Error(
-    "NORTH_CONDUCTOR_RETURNED_ASYNC_RESULT"
-  );
-}
-
-if (Array.isArray(raw)) {
-  return raw;
-}
-
-if (
-  raw &&
-  Array.isArray(raw.receipts)
-) {
-  return raw.receipts;
-}
-
-return executeStationsSequentially(
-  stationInputs
-);
-
-}
-
-function executeStationsSequentially(stationInputs) {
-return stationInputs
-.map(
-executeSingleStation
-);
-}
-
-function executeSingleStation(entry) {
-var resolution =
-resolveParticipantObject(
-entry.manifest
-);
-
-var callable =
-  identifyCallableMethod(
-    entry.manifest,
-    resolution.value
-  );
-
-if (!callable.callable) {
-  return normalizeReceipt({
-    type:
-      "cycle",
-    source:
-      entry.manifest.role,
-    title:
-      entry.manifest.label,
-    status:
-      "HELD",
-    cyclePosition:
-      entry.manifest.cyclePosition,
-    fibonacci:
-      entry.manifest.fibonacci,
-    payload: {
-      reason:
-        "PARTICIPANT_NOT_CALLABLE"
-    }
-  });
-}
-
-try {
-  var raw =
-    callable.method ===
-    "[[callable]]"
-      ? callable.callable(
-          entry.input
-        )
-      : callable.callable.call(
-          resolution.value,
-          entry.input
-        );
-
-  if (
-    raw &&
-    isFunction(raw.then)
-  ) {
-    throw new Error(
-      "STATION_RETURNED_ASYNC_RESULT"
-    );
-  }
-
-  return normalizeReceipt({
-    type:
-      "cycle",
-    source:
-      entry.manifest.role,
-    title:
-      entry.manifest.label,
-    status:
-      deriveReceiptStatus(
-        raw
-      ),
-    cyclePosition:
-      entry.manifest.cyclePosition,
-    fibonacci:
-      entry.manifest.fibonacci,
-    payload:
-      raw
-  });
-} catch (error) {
-  return normalizeReceipt({
-    type:
-      "cycle",
-    source:
-      entry.manifest.role,
-    title:
-      entry.manifest.label,
-    status:
-      "ERROR",
-    cyclePosition:
-      entry.manifest.cyclePosition,
-    fibonacci:
-      entry.manifest.fibonacci,
-    payload: {
-      error:
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
-        )
-    }
-  });
-}
-
-}
-
-function buildParticipantInput(manifest, mode) {
-return deepFreeze({
-schema:
-PARTICIPANT_INPUT_SCHEMA,
-mode:
-mode,
-engineContract:
-CONTRACT,
-selectedCategoryId:
-state.selection.categoryId,
-selectedAuditId:
-state.selection.auditId,
-participantRole:
-manifest.role,
-cyclePosition:
-manifest.cyclePosition,
-fibonacci:
-manifest.fibonacci,
-participantSnapshot:
-frozenClone(
-state.participants
-),
-observationSnapshot:
-frozenClone(
-state.observation
-),
-noClaims:
-NO_CLAIMS,
-createdAt:
-nowIso()
-});
-}
-
-function deriveReceiptStatus(raw) {
-if (
-raw &&
-typeof raw.status === "string"
-) {
-return normalizeStatus(
-raw.status
-);
-}
-
-if (
-  raw &&
-  raw.error
-) {
-  return "ERROR";
-}
-
-if (raw === false) {
-  return "HELD";
-}
-
-if (
-  raw === null ||
-  raw === undefined
-) {
-  return "UNKNOWN";
-}
-
-return "COMPLETE";
-
-}
-
-function normalizeReceipt(input) {
-if (
-input &&
-input.schema === RECEIPT_SCHEMA
-) {
-return deepFreeze(
-clone(input)
-);
-}
-
-return deepFreeze({
-  schema:
-    RECEIPT_SCHEMA,
-  receiptId:
-    "AUDRALIA_RECEIPT_" +
-    Date.now() +
-    "_" +
-    Math.random()
-      .toString(36)
-      .slice(2, 8),
-  type:
-    input &&
-    input.type
-      ? input.type
-      : "diagnostic",
-  source:
-    input &&
-    input.source
-      ? input.source
-      : "UNKNOWN",
-  title:
-    input &&
-    input.title
-      ? input.title
-      : "Diagnostic receipt",
-  status:
-    normalizeStatus(
-      input &&
-      input.status
-    ),
-  cyclePosition:
-    input &&
-    typeof input.cyclePosition === "number"
-      ? input.cyclePosition
-      : null,
-  fibonacci:
-    input &&
-    input.fibonacci
-      ? input.fibonacci
-      : null,
-  payload:
-    clone(
-      input &&
-      input.payload
-    ),
-  createdAt:
-    nowIso(),
-  noClaims:
-    NO_CLAIMS
-});
-
-}
-
-function addReceipt(input) {
-var receipt =
-normalizeReceipt(
-input
-);
-
-state.receipts.push(
-  receipt
-);
-
-return receipt;
-
-}
-
-function deriveCycleStatus(receipts) {
-if (
-receipts
-.some(function hasError(entry) {
-return (
-entry.status === "ERROR"
-);
-})
-) {
-return "ERROR";
-}
-
-if (
-  receipts
-    .some(function hasHeld(entry) {
-      return (
-        entry.status === "HELD" ||
-        entry.status === "MISSING" ||
-        entry.status === "UNKNOWN"
-      );
-    })
-) {
-  return "HELD";
-}
-
-return "COMPLETE";
-
-}
-
-function buildCycleLedger(receipts) {
-var sorted =
-receipts
-.slice()
-.sort(function receiptSort(a, b) {
-return (
-Number(
-a.cyclePosition || 0
-) -
-Number(
-b.cyclePosition || 0
-)
-);
-});
-
-var firstHeld =
-  sorted
-    .filter(function heldReceipt(entry) {
-      return (
-        entry.status === "HELD" ||
-        entry.status === "MISSING" ||
-        entry.status === "UNKNOWN"
-      );
-    })[0] || null;
-
-var firstError =
-  sorted
-    .filter(function errorReceipt(entry) {
-      return (
-        entry.status === "ERROR"
-      );
-    })[0] || null;
-
-return deepFreeze({
-  schema:
-    LEDGER_SCHEMA,
-  cycleNumber:
-    state.cycle.count,
-  createdAt:
-    nowIso(),
-  stationCount:
-    STATION_ORDER.length,
-  receiptCount:
-    sorted.length,
-  status:
-    deriveCycleStatus(
-      sorted
-    ),
-  firstHeld:
-    clone(
-      firstHeld
-    ),
-  firstError:
-    clone(
-      firstError
-    ),
-  sequence:
-    sorted
-      .map(function sequenceEntry(entry) {
-        return {
-          cyclePosition:
-            entry.cyclePosition,
-          fibonacci:
-            entry.fibonacci,
-          source:
-            entry.source,
-          status:
-            entry.status
-        };
-      }),
-  noClaims:
-    NO_CLAIMS
-});
-
-}
-
-function addCurrentReportToArchive() {
-if (!state.report.current) {
-throw new Error(
-"NO_CURRENT_REPORT_TO_ARCHIVE"
-);
-}
-
-var exists =
-  state.archive.reports
-    .some(function duplicateReport(entry) {
-      return (
-        entry.reportId ===
-        state.report.current.reportId
-      );
-    });
-
-if (!exists) {
-  state.archive.reports.push(
-    state.report.current
-  );
-}
-
-addReceipt({
-  type:
-    "archive",
-  source:
-    "DIAGNOSTIC_ARCHIVE",
-  title:
-    "Report added to archive",
-  status:
-    "COMPLETE",
-  payload: {
-    reportId:
-      state.report.current.reportId
-  }
-});
-
-renderArchive();
-renderReceipts();
-
-recordAction(
-  "addCurrentReportToArchive",
-  {
-    reportId:
-      state.report.current.reportId
-  }
-);
-
-return frozenClone(
-  state.archive.reports
-);
-
-}
-
-function createDeepArchive() {
-if (!state.initialized) {
-throw new Error(
-"DIAGNOSTIC_ENGINE_NOT_INITIALIZED"
-);
-}
-
-var archive = {
-  schema:
-    ARCHIVE_SCHEMA,
-  archiveId:
-    "AUDRALIA_ARCHIVE_" +
-    Date.now(),
-  createdAt:
-    nowIso(),
-  engine:
-    getState(),
-  categories:
-    CATEGORY_REGISTRY,
-  audits:
-    AUDIT_REGISTRY,
-  participantManifest:
-    PARTICIPANT_MANIFEST,
-  participants:
-    frozenClone(
-      state.participants
-    ),
-  observation:
-    frozenClone(
-      state.observation
-    ),
-  currentReport:
-    frozenClone(
-      state.report.current
-    ),
-  reportHistory:
-    frozenClone(
-      state.report.history
-    ),
-  archivedReports:
-    frozenClone(
-      state.archive.reports
-    ),
-  direct:
-    frozenClone(
-      state.direct
-    ),
-  cycle:
-    frozenClone(
-      state.cycle
-    ),
-  receipts:
-    frozenClone(
-      state.receipts
-    ),
-  errors:
-    frozenClone(
-      state.errors
-    ),
-  engineReceipt:
-    frozenClone(
-      root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT ||
-      null
-    ),
-  noClaims:
-    NO_CLAIMS
-};
-
-state.archive.deepArchive =
-  deepFreeze(
-    archive
-  );
-
-state.archive.sessions.push(
-  state.archive.deepArchive
-);
-
-addReceipt({
-  type:
-    "archive",
-  source:
-    "DIAGNOSTIC_ARCHIVE",
-  title:
-    "Deep diagnostic archive",
-  status:
-    "COMPLETE",
-  payload: {
-    archiveId:
-      archive.archiveId
-  }
-});
-
-renderArchive();
-renderReceipts();
-
-recordAction(
-  "createDeepArchive",
-  {
-    archiveId:
-      archive.archiveId
-  }
-);
-
-return frozenClone(
-  state.archive.deepArchive
-);
-
-}
-
-function resetCurrentReport() {
-state.report.current =
-null;
-
-renderEmptyReport();
-
-recordAction(
-  "resetCurrentReport"
-);
-
-return null;
-
-}
-
-function resetWorkbench() {
-state.selection = {
-categoryId:
-"observatoryReceiver",
-auditId:
-"observatoryIndex",
-participantRole:
-null,
-reportMode:
-"read",
-observationLens:
-"target",
-instrumentChamber:
-"cycle"
-};
-
-state.report.current =
-  null;
-
-state.direct = {
-  running:
-    false,
-  count:
-    0,
-  lastResult:
-    null,
-  lastError:
-    null
-};
-
-state.cycle = {
-  running:
-    false,
-  count:
-    0,
-  lastRunAt:
-    null,
-  receipts:
-    [],
-  ledger:
-    null,
-  lastError:
-    null
-};
-
-state.receipts =
-  [];
-
-state.errors =
-  [];
-
-inspectParticipants();
-observe();
-
-renderSelection();
-renderEmptyReport();
-renderCycle();
-renderReceipts();
-renderArchive();
-renderEvidenceRail();
-renderDropStates();
-
-recordAction(
-  "resetWorkbench"
-);
-
-return getState();
-
-}
-
-function selectCategory(categoryId) {
-var category =
-getCategory(
-categoryId
-);
-
-if (!category) {
-  throw new Error(
-    "CATEGORY_NOT_FOUND:" +
-    categoryId
-  );
-}
-
-var audits =
-  AUDIT_REGISTRY
-    .filter(function auditsInCategory(entry) {
-      return (
-        entry.categoryId ===
-        categoryId
-      );
-    });
-
-state.selection.categoryId =
-  categoryId;
-
-var currentAudit =
-  getAudit(
-    state.selection.auditId
-  );
-
-if (
-  !currentAudit ||
-  currentAudit.categoryId !== categoryId
-) {
-  state.selection.auditId =
-    audits.length
-      ? audits[0].id
+    )
+      ? authority
       : null;
-}
-
-state.selection.participantRole =
-  null;
-
-renderSelection();
-
-recordAction(
-  "selectCategory",
-  {
-    categoryId:
-      categoryId
   }
-);
 
-return frozenClone(
-  category
-);
-
-}
-
-function selectAudit(auditId) {
-var audit =
-getAudit(
-auditId
-);
-
-if (!audit) {
-  throw new Error(
-    "AUDIT_NOT_FOUND:" +
-    auditId
-  );
-}
-
-state.selection.auditId =
-  auditId;
-
-state.selection.categoryId =
-  audit.categoryId;
-
-state.selection.participantRole =
-  audit.directParticipant ||
-  null;
-
-renderSelection();
-
-recordAction(
-  "selectAudit",
-  {
-    auditId:
-      auditId
-  }
-);
-
-return frozenClone(
-  audit
-);
-
-}
-
-function selectParticipant(role) {
-var participantState =
-findParticipantState(
-role
-);
-
-if (!participantState) {
-  inspectParticipants();
-
-  participantState =
-    findParticipantState(
-      role
-    );
-}
-
-if (!participantState) {
-  throw new Error(
-    "PARTICIPANT_NOT_FOUND:" +
-    role
-  );
-}
-
-state.selection.participantRole =
-  role;
-
-renderParticipantDetail(
-  participantState
-);
-
-recordAction(
-  "selectParticipant",
-  {
-    role:
-      role
-  }
-);
-
-return frozenClone(
-  participantState
-);
-
-}
-
-function selectReportMode(mode) {
-state.selection.reportMode =
-String(
-mode || "read"
-);
-
-return state.selection.reportMode;
-
-}
-
-function selectObservationLens(lens) {
-state.selection.observationLens =
-String(
-lens || "target"
-);
-
-return state.selection.observationLens;
-
-}
-
-function selectInstrumentChamber(chamber) {
-state.selection.instrumentChamber =
-String(
-chamber || "cycle"
-);
-
-return state.selection.instrumentChamber;
-
-}
-
-function getReadableReport() {
-var report =
-state.report.current;
-
-if (!report) {
-  return "";
-}
-
-return [
-  "AUDRALIA DROP WITH READ DIAGNOSTIC REPORT",
-  "REPORT_ID=" +
-    report.reportId,
-  "SCHEMA=" +
-    report.schema,
-  "CREATED_AT=" +
-    report.createdAt,
-  "CATEGORY=" +
-    report.category.label,
-  "AUDIT=" +
-    report.audit.title,
-  "CLASSIFICATION=" +
-    report.audit.classification,
-  "",
-  "RESULT",
-  report.read.result,
-  "",
-  "EVIDENCE",
-  report.read.evidence
-    .map(function readableEvidence(entry) {
-      return "- " + entry;
-    })
-    .join("\n"),
-  "",
-  "ABSENCE",
-  report.read.absence
-    .map(function readableAbsence(entry) {
-      return "- " + entry;
-    })
-    .join("\n"),
-  "",
-  "DIRECTION",
-  report.read.direction
-    .map(function readableDirection(entry) {
-      return "- " + entry;
-    })
-    .join("\n"),
-  "",
-  "BOUNDARY",
-  "Diagnostic-only. Read-only. No repair, readiness, visual-pass, cycle-pass, or F21 claim."
-].join("\n");
-
-}
-
-function getReportPacket() {
-var report =
-state.report.current;
-
-if (!report) {
-  return "";
-}
-
-return safeJson({
-  schema:
-    PACKET_SCHEMA,
-  reportId:
-    report.reportId,
-  createdAt:
-    report.createdAt,
-  category:
-    report.category,
-  audit:
-    report.audit,
-  result:
-    report.read.result,
-  evidence:
-    report.read.evidence,
-  absence:
-    report.read.absence,
-  direction:
-    report.read.direction,
-  noClaims:
-    NO_CLAIMS
-});
-
-}
-
-function getRawReport() {
-return state.report.current
-? safeJson(
-state.report.current
-)
-: "";
-}
-
-function getState() {
-return frozenClone({
-CONTRACT:
-CONTRACT,
-contract:
-CONTRACT,
-PREVIOUS_CONTRACT:
-PREVIOUS_CONTRACT,
-previousContract:
-PREVIOUS_CONTRACT,
-VERSION:
-VERSION,
-version:
-VERSION,
-FILE:
-FILE,
-file:
-FILE,
-status:
-state.status,
-initialized:
-state.initialized,
-initializedAt:
-state.initializedAt,
-selection:
-state.selection,
-participantCount:
-state.participants.length,
-reportCount:
-state.report.history.length,
-directCount:
-state.direct.count,
-cycleCount:
-state.cycle.count,
-receiptCount:
-state.receipts.length,
-errorCount:
-state.errors.length,
-actionCount:
-state.actionCount,
-lastAction:
-state.lastAction,
-noClaims:
-NO_CLAIMS
-});
-}
-
-function getCurrentReport() {
-return frozenClone(
-state.report.current
-);
-}
-
-function getParticipants() {
-return frozenClone(
-state.participants
-);
-}
-
-function getObservation() {
-return frozenClone(
-state.observation
-);
-}
-
-function getLedger() {
-return frozenClone(
-state.cycle.ledger
-);
-}
-
-function getReceipts() {
-return frozenClone(
-state.receipts
-);
-}
-
-function getArchive() {
-return frozenClone(
-state.archive
-);
-}
-
-function renderSelection() {
-var category =
-getCategory(
-state.selection.categoryId
-);
-
-var audit =
-  getAudit(
-    state.selection.auditId
-  );
-
-var audits =
-  AUDIT_REGISTRY
-    .filter(function categoryAudits(entry) {
-      return (
-        category &&
-        entry.categoryId ===
-          category.id
+  function terrainLevel(
+    options = {}
+  ) {
+    if (
+      Number.isFinite(
+        Number(
+          options.terrainLevel
+        )
+      )
+    ) {
+      return clamp(
+        Math.floor(
+          Number(
+            options.terrainLevel
+          )
+        ),
+        0,
+        6
       );
-    });
+    }
 
-if (category) {
-  setText(
-    "categorySelectorLabel",
-    category.label
-  );
+    const narrow =
+      root &&
+      fn(root.matchMedia)
+        ? root.matchMedia(
+            "(max-width: 760px)"
+          ).matches
+        : false;
 
-  setText(
-    "categorySelectorMeta",
-    String(
-      audits.length
-    ) +
-    (
-      audits.length === 1
-        ? " audit"
-        : " audits"
+    const coarse =
+      root &&
+      fn(root.matchMedia)
+        ? root.matchMedia(
+            "(pointer: coarse)"
+          ).matches
+        : false;
+
+    const memory =
+      root &&
+      root.navigator
+        ? number(
+            root.navigator.deviceMemory,
+            4
+          )
+        : 4;
+
+    return (
+      narrow ||
+      coarse ||
+      memory < 4 ||
+      state.reducedMotion
     )
-  );
+      ? 5
+      : 6;
+  }
 
-  setText(
-    "selectedCategoryLabel",
-    category.label
-  );
+  function makeCanvas(fallback) {
+    if (
+      !doc ||
+      !state.mount
+    ) {
+      return null;
+    }
 
-  Array.prototype.slice.call(
-    doc.querySelectorAll(
-      "[data-category-id]"
-    )
-  ).forEach(function updateCategoryButton(button) {
-    button.setAttribute(
-      "aria-selected",
-      button.getAttribute(
-        "data-category-id"
-      ) === category.id
-        ? "true"
-        : "false"
-    );
-  });
-}
+    const attribute =
+      fallback
+        ? "data-audralia-planet-fallback-canvas"
+        : "data-audralia-planet-runtime-canvas";
 
-if (audit) {
-  setText(
-    "auditSelectorLabel",
-    audit.title
-  );
+    let canvas =
+      state.mount.querySelector(
+        `canvas[${attribute}]`
+      );
 
-  setText(
-    "auditSelectorMeta",
-    audit.classification
-  );
+    if (!canvas) {
+      canvas =
+        doc.createElement(
+          "canvas"
+        );
 
-  setText(
-    "selectedAuditSequence",
-    audit.sequence
-  );
+      canvas.setAttribute(
+        attribute,
+        "true"
+      );
 
-  setText(
-    "selectedAuditClassification",
-    audit.classification
-  );
+      canvas.setAttribute(
+        "aria-label",
 
-  setText(
-    "selectedAuditTitle",
-    audit.title
-  );
+        fallback
+          ? "Fallback rendering of Audralia"
+          : "Interactive three-dimensional model of Audralia"
+      );
 
-  setText(
-    "selectedAuditSummary",
-    audit.summary
-  );
+      canvas.setAttribute(
+        "role",
+        "img"
+      );
 
-  setText(
-    "activeAuditMode",
-    audit.classification
-  );
+      state.mount.appendChild(
+        canvas
+      );
+    }
 
-  setHidden(
-    "runDirectCheck",
-    audit.classification !==
-      "DIRECT_AVAILABLE"
-  );
+    canvas.tabIndex = 0;
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.touchAction = "none";
+    canvas.style.userSelect = "none";
+    canvas.style.outline = "none";
 
-  setHidden(
-    "runNineCycle",
-    audit.classification !==
-      "NINE_CYCLE_AVAILABLE"
-  );
+    if (fallback) {
+      state.fallbackCanvas =
+        canvas;
 
-  Array.prototype.slice.call(
-    doc.querySelectorAll(
-      "[data-audit-id]"
-    )
-  ).forEach(function updateAuditButton(button) {
-    button.setAttribute(
-      "aria-selected",
-      button.getAttribute(
-        "data-audit-id"
-      ) === audit.id
-        ? "true"
-        : "false"
-    );
-  });
+      state.fallbackContext =
+        canvas.getContext(
+          "2d",
+          {
+            alpha: true
+          }
+        );
+    } else {
+      state.canvas =
+        canvas;
+    }
 
-  renderAuditMenu(
-    audits
-  );
-}
+    return canvas;
+  }
 
-}
+  function webgl(canvas) {
+    if (
+      !canvas ||
+      !fn(canvas.getContext)
+    ) {
+      return null;
+    }
 
-function renderAuditMenu(audits) {
-setHtml(
-"auditSelectorMenu",
-audits
-.map(function renderAuditOption(audit) {
-return (
-'<button type="button" role="option" ' +
-'aria-selected="' +
-(
-audit.id ===
-state.selection.auditId
-? "true"
-: "false"
-) +
-'" data-audit-id="' +
-escapeHtml(
-audit.id
-) +
-'">' +
-"<strong>" +
-escapeHtml(
-audit.title
-) +
-"</strong>" +
-"<span>" +
-escapeHtml(
-audit.summary
-) +
-"</span>" +
-"</button>"
-);
-})
-.join("")
-);
-}
-
-function renderParticipants() {
-var available =
-state.participants
-.filter(function availableParticipant(entry) {
-return entry.available;
-});
-
-var held =
-  state.participants
-    .filter(function heldParticipant(entry) {
+    try {
       return (
-        entry.required &&
-        (
-          !entry.available ||
-          !entry.callable
+        canvas.getContext(
+          "webgl",
+          {
+            alpha: true,
+            antialias: true,
+            depth: true,
+            stencil: false,
+            premultipliedAlpha: true,
+            preserveDrawingBuffer: false,
+            powerPreference: "high-performance",
+            failIfMajorPerformanceCaveat: false
+          }
+        ) ||
+
+        canvas.getContext(
+          "experimental-webgl"
         )
       );
-    });
-
-var required =
-  state.participants
-    .filter(function requiredParticipant(entry) {
-      return entry.required;
-    });
-
-var optional =
-  state.participants
-    .filter(function optionalParticipant(entry) {
-      return !entry.required;
-    });
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-participant-summary]"
-  )
-).forEach(function updateSummary(node) {
-  var key =
-    node.getAttribute(
-      "data-participant-summary"
-    );
-
-  var value =
-    0;
-
-  if (key === "required") {
-    value =
-      required.length;
-  } else if (key === "optional") {
-    value =
-      optional.length;
-  } else if (key === "available") {
-    value =
-      available.length;
-  } else if (key === "held") {
-    value =
-      held.length;
+    } catch (_error) {
+      return null;
+    }
   }
 
-  node.textContent =
-    String(value);
-});
-
-state.participants
-  .forEach(function updateParticipantNode(entry) {
-    var node =
-      doc.querySelector(
-        '[data-participant-role="' +
-        entry.role +
-        '"]'
+  function compile(
+    gl,
+    type,
+    source,
+    label
+  ) {
+    const shader =
+      gl.createShader(
+        type
       );
 
-    if (!node) {
+    if (!shader) {
+      throw new Error(
+        `Unable to create ${label} shader.`
+      );
+    }
+
+    gl.shaderSource(
+      shader,
+      source
+    );
+
+    gl.compileShader(
+      shader
+    );
+
+    if (
+      !gl.getShaderParameter(
+        shader,
+        gl.COMPILE_STATUS
+      )
+    ) {
+      const message =
+        gl.getShaderInfoLog(
+          shader
+        ) ||
+
+        `${label} shader failed.`;
+
+      shaderFail(
+        label,
+        message
+      );
+
+      gl.deleteShader(
+        shader
+      );
+
+      throw new Error(
+        message
+      );
+    }
+
+    return shader;
+  }
+
+  function program(
+    gl,
+    vertexSource,
+    fragmentSource,
+    label
+  ) {
+    const vertex =
+      compile(
+        gl,
+        gl.VERTEX_SHADER,
+        vertexSource,
+        `${label}:vertex`
+      );
+
+    const fragment =
+      compile(
+        gl,
+        gl.FRAGMENT_SHADER,
+        fragmentSource,
+        `${label}:fragment`
+      );
+
+    const linked =
+      gl.createProgram();
+
+    if (!linked) {
+      throw new Error(
+        `Unable to create ${label} program.`
+      );
+    }
+
+    gl.attachShader(
+      linked,
+      vertex
+    );
+
+    gl.attachShader(
+      linked,
+      fragment
+    );
+
+    gl.linkProgram(
+      linked
+    );
+
+    gl.deleteShader(
+      vertex
+    );
+
+    gl.deleteShader(
+      fragment
+    );
+
+    if (
+      !gl.getProgramParameter(
+        linked,
+        gl.LINK_STATUS
+      )
+    ) {
+      const message =
+        gl.getProgramInfoLog(
+          linked
+        ) ||
+
+        `${label} link failed.`;
+
+      shaderFail(
+        label,
+        message
+      );
+
+      gl.deleteProgram(
+        linked
+      );
+
+      throw new Error(
+        message
+      );
+    }
+
+    return linked;
+  }
+
+  function createPrograms(gl) {
+    const terrainVertex = `
+      precision highp float;
+
+      attribute vec3 a_position;
+      attribute vec3 a_normal;
+      attribute vec3 a_color;
+
+      uniform mat4 u_model;
+      uniform mat4 u_viewProjection;
+      uniform mat3 u_normalMatrix;
+
+      varying vec3 v_world;
+      varying vec3 v_normal;
+      varying vec3 v_color;
+
+      void main(void) {
+        vec4 world =
+          u_model *
+          vec4(
+            a_position,
+            1.0
+          );
+
+        v_world =
+          world.xyz;
+
+        v_normal =
+          normalize(
+            u_normalMatrix *
+            a_normal
+          );
+
+        v_color =
+          a_color;
+
+        gl_Position =
+          u_viewProjection *
+          world;
+      }
+    `;
+
+    const terrainFragment = `
+      precision highp float;
+
+      varying vec3 v_world;
+      varying vec3 v_normal;
+      varying vec3 v_color;
+
+      uniform vec3 u_camera;
+      uniform vec3 u_light;
+      uniform vec3 u_fill;
+
+      void main(void) {
+        vec3 normal =
+          normalize(
+            v_normal
+          );
+
+        vec3 viewDirection =
+          normalize(
+            u_camera -
+            v_world
+          );
+
+        vec3 lightDirection =
+          normalize(
+            -u_light
+          );
+
+        vec3 fillDirection =
+          normalize(
+            -u_fill
+          );
+
+        float key =
+          max(
+            dot(
+              normal,
+              lightDirection
+            ),
+            0.0
+          );
+
+        float fill =
+          max(
+            dot(
+              normal,
+              fillDirection
+            ),
+            0.0
+          );
+
+        float hemisphere =
+          normal.y *
+          0.5 +
+          0.5;
+
+        float rim =
+          pow(
+            1.0 -
+            max(
+              dot(
+                normal,
+                viewDirection
+              ),
+              0.0
+            ),
+            2.7
+          );
+
+        float specular =
+          pow(
+            max(
+              dot(
+                reflect(
+                  -lightDirection,
+                  normal
+                ),
+                viewDirection
+              ),
+              0.0
+            ),
+            36.0
+          );
+
+        vec3 color =
+          v_color *
+          mix(
+            0.16,
+            0.27,
+            hemisphere
+          ) +
+
+          v_color *
+          key *
+          vec3(
+            1.00,
+            0.96,
+            0.88
+          ) *
+          0.86 +
+
+          v_color *
+          fill *
+          vec3(
+            0.30,
+            0.54,
+            0.78
+          ) *
+          0.23 +
+
+          vec3(
+            0.44,
+            0.58,
+            0.72
+          ) *
+          specular *
+          0.24 +
+
+          vec3(
+            0.06,
+            0.16,
+            0.24
+          ) *
+          rim *
+          0.22;
+
+        gl_FragColor =
+          vec4(
+            pow(
+              max(
+                color,
+                vec3(0.0)
+              ),
+              vec3(0.92)
+            ),
+            1.0
+          );
+      }
+    `;
+
+    const shellVertex = `
+      precision highp float;
+
+      attribute vec3 a_position;
+      attribute vec3 a_normal;
+
+      uniform mat4 u_model;
+      uniform mat4 u_viewProjection;
+      uniform mat3 u_normalMatrix;
+
+      varying vec3 v_world;
+      varying vec3 v_normal;
+      varying vec3 v_local;
+
+      void main(void) {
+        vec4 world =
+          u_model *
+          vec4(
+            a_position,
+            1.0
+          );
+
+        v_world =
+          world.xyz;
+
+        v_normal =
+          normalize(
+            u_normalMatrix *
+            a_normal
+          );
+
+        v_local =
+          normalize(
+            a_position
+          );
+
+        gl_Position =
+          u_viewProjection *
+          world;
+      }
+    `;
+
+    const shellFragment = `
+      precision highp float;
+
+      varying vec3 v_world;
+      varying vec3 v_normal;
+      varying vec3 v_local;
+
+      uniform vec3 u_camera;
+      uniform vec3 u_light;
+      uniform vec3 u_base;
+      uniform vec3 u_secondary;
+
+      uniform float u_alpha;
+      uniform float u_kind;
+      uniform float u_time;
+
+      float clouds(vec3 direction) {
+        vec3 point =
+          direction *
+          8.0;
+
+        float a =
+          sin(
+            point.x *
+            1.7 +
+
+            point.y *
+            0.8 +
+
+            u_time *
+            0.00008
+          );
+
+        float b =
+          sin(
+            point.y *
+            2.4 -
+
+            point.z *
+            1.3 -
+
+            u_time *
+            0.00005
+          );
+
+        float c =
+          sin(
+            point.z *
+            3.2 +
+
+            point.x *
+            0.9 +
+
+            u_time *
+            0.00003
+          );
+
+        return smoothstep(
+          0.15,
+          0.68,
+
+          a *
+          0.34 +
+
+          b *
+          0.31 +
+
+          c *
+          0.27 +
+
+          0.18
+        );
+      }
+
+      void main(void) {
+        vec3 normal =
+          normalize(
+            v_normal
+          );
+
+        vec3 viewDirection =
+          normalize(
+            u_camera -
+            v_world
+          );
+
+        vec3 lightDirection =
+          normalize(
+            -u_light
+          );
+
+        float diffuse =
+          max(
+            dot(
+              normal,
+              lightDirection
+            ),
+            0.0
+          );
+
+        float facing =
+          max(
+            dot(
+              normal,
+              viewDirection
+            ),
+            0.0
+          );
+
+        float rim =
+          pow(
+            1.0 -
+            facing,
+            3.0
+          );
+
+        vec3 color =
+          u_base;
+
+        float alpha =
+          u_alpha;
+
+        if (
+          u_kind <
+          0.5
+        ) {
+          float fresnel =
+            pow(
+              1.0 -
+              facing,
+              3.2
+            );
+
+          float specular =
+            pow(
+              max(
+                dot(
+                  reflect(
+                    -lightDirection,
+                    normal
+                  ),
+                  viewDirection
+                ),
+                0.0
+              ),
+              72.0
+            );
+
+          color =
+            mix(
+              u_base,
+              u_secondary,
+
+              fresnel *
+              0.72 +
+
+              specular *
+              0.42
+            );
+
+          color +=
+            vec3(
+              0.04,
+              0.12,
+              0.20
+            ) *
+            diffuse;
+
+          alpha *=
+            0.66 +
+            fresnel *
+            0.34;
+        } else if (
+          u_kind <
+          1.5
+        ) {
+          alpha *=
+            clouds(
+              normalize(
+                v_local
+              )
+            );
+
+          color =
+            mix(
+              u_base,
+              u_secondary,
+              diffuse *
+              0.55
+            ) *
+            (
+              0.42 +
+              diffuse *
+              0.58
+            );
+
+          if (
+            alpha <
+            0.025
+          ) {
+            discard;
+          }
+        } else {
+          alpha *=
+            pow(
+              1.0 -
+              facing,
+              3.8
+            );
+
+          color =
+            mix(
+              u_base,
+              u_secondary,
+              rim
+            );
+
+          if (
+            alpha <
+            0.012
+          ) {
+            discard;
+          }
+        }
+
+        gl_FragColor =
+          vec4(
+            color,
+            alpha
+          );
+      }
+    `;
+
+    const terrain =
+      program(
+        gl,
+        terrainVertex,
+        terrainFragment,
+        "terrain"
+      );
+
+    const shell =
+      program(
+        gl,
+        shellVertex,
+        shellFragment,
+        "shell"
+      );
+
+    return {
+      terrain: {
+        program:
+          terrain,
+
+        a: {
+          position:
+            gl.getAttribLocation(
+              terrain,
+              "a_position"
+            ),
+
+          normal:
+            gl.getAttribLocation(
+              terrain,
+              "a_normal"
+            ),
+
+          color:
+            gl.getAttribLocation(
+              terrain,
+              "a_color"
+            )
+        },
+
+        u: {
+          model:
+            gl.getUniformLocation(
+              terrain,
+              "u_model"
+            ),
+
+          viewProjection:
+            gl.getUniformLocation(
+              terrain,
+              "u_viewProjection"
+            ),
+
+          normalMatrix:
+            gl.getUniformLocation(
+              terrain,
+              "u_normalMatrix"
+            ),
+
+          camera:
+            gl.getUniformLocation(
+              terrain,
+              "u_camera"
+            ),
+
+          light:
+            gl.getUniformLocation(
+              terrain,
+              "u_light"
+            ),
+
+          fill:
+            gl.getUniformLocation(
+              terrain,
+              "u_fill"
+            )
+        }
+      },
+
+      shell: {
+        program:
+          shell,
+
+        a: {
+          position:
+            gl.getAttribLocation(
+              shell,
+              "a_position"
+            ),
+
+          normal:
+            gl.getAttribLocation(
+              shell,
+              "a_normal"
+            )
+        },
+
+        u: {
+          model:
+            gl.getUniformLocation(
+              shell,
+              "u_model"
+            ),
+
+          viewProjection:
+            gl.getUniformLocation(
+              shell,
+              "u_viewProjection"
+            ),
+
+          normalMatrix:
+            gl.getUniformLocation(
+              shell,
+              "u_normalMatrix"
+            ),
+
+          camera:
+            gl.getUniformLocation(
+              shell,
+              "u_camera"
+            ),
+
+          light:
+            gl.getUniformLocation(
+              shell,
+              "u_light"
+            ),
+
+          base:
+            gl.getUniformLocation(
+              shell,
+              "u_base"
+            ),
+
+          secondary:
+            gl.getUniformLocation(
+              shell,
+              "u_secondary"
+            ),
+
+          alpha:
+            gl.getUniformLocation(
+              shell,
+              "u_alpha"
+            ),
+
+          kind:
+            gl.getUniformLocation(
+              shell,
+              "u_kind"
+            ),
+
+          time:
+            gl.getUniformLocation(
+              shell,
+              "u_time"
+            )
+        }
+      }
+    };
+  }
+
+  function arrayBuffer(
+    gl,
+    data
+  ) {
+    const buffer =
+      gl.createBuffer();
+
+    if (!buffer) {
+      throw new Error(
+        "Unable to allocate array buffer."
+      );
+    }
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      buffer
+    );
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      data,
+      gl.STATIC_DRAW
+    );
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      null
+    );
+
+    return buffer;
+  }
+
+  function elementBuffer(
+    gl,
+    data
+  ) {
+    const buffer =
+      gl.createBuffer();
+
+    if (!buffer) {
+      throw new Error(
+        "Unable to allocate element buffer."
+      );
+    }
+
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      buffer
+    );
+
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      data,
+      gl.STATIC_DRAW
+    );
+
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      null
+    );
+
+    return buffer;
+  }
+
+  function indexType(
+    gl,
+    indices
+  ) {
+    if (
+      !(
+        indices instanceof
+        Uint32Array
+      )
+    ) {
+      return gl.UNSIGNED_SHORT;
+    }
+
+    const extension =
+      gl.getExtension(
+        "OES_element_index_uint"
+      );
+
+    if (!extension) {
+      throw new Error(
+        "Uint32 indices require OES_element_index_uint."
+      );
+    }
+
+    return gl.UNSIGNED_INT;
+  }
+
+  function colorArray(terrain) {
+    const output =
+      new Float32Array(
+        terrain.vertexCount *
+        3
+      );
+
+    for (
+      let index = 0;
+      index <
+      terrain.vertexCount;
+      index += 1
+    ) {
+      const base =
+        COLORS[
+          terrain.materialHints[
+            index
+          ]
+        ] ||
+        COLORS[5];
+
+      const elevation =
+        terrain.elevations[
+          index
+        ];
+
+      const moisture =
+        terrain.moistures[
+          index
+        ];
+
+      const temperature =
+        terrain.temperatures[
+          index
+        ];
+
+      const brightness =
+        1 +
+
+        clamp(
+          elevation * 3.5,
+          -0.09,
+          0.16
+        ) +
+
+        clamp(
+          moisture * 0.05,
+          -0.03,
+          0.04
+        ) +
+
+        clamp(
+          temperature * 0.018,
+          -0.02,
+          0.02
+        );
+
+      output[
+        index * 3
+      ] =
+        clamp(
+          base[0] *
+          brightness,
+          0,
+          1
+        );
+
+      output[
+        index * 3 + 1
+      ] =
+        clamp(
+          base[1] *
+          brightness,
+          0,
+          1
+        );
+
+      output[
+        index * 3 + 2
+      ] =
+        clamp(
+          base[2] *
+          brightness,
+          0,
+          1
+        );
+    }
+
+    return output;
+  }
+
+  function terrainGPU(
+    gl,
+    terrain
+  ) {
+    return {
+      indexCount:
+        terrain.indices.length,
+
+      indexType:
+        indexType(
+          gl,
+          terrain.indices
+        ),
+
+      position:
+        arrayBuffer(
+          gl,
+          terrain.positions
+        ),
+
+      normal:
+        arrayBuffer(
+          gl,
+          terrain.normals
+        ),
+
+      color:
+        arrayBuffer(
+          gl,
+          colorArray(
+            terrain
+          )
+        ),
+
+      index:
+        elementBuffer(
+          gl,
+          terrain.indices
+        ),
+
+      geometryHash:
+        terrain.geometryHash
+    };
+  }
+
+  function shellGPU(
+    gl,
+    shell
+  ) {
+    return {
+      indexCount:
+        shell.indices.length,
+
+      indexType:
+        indexType(
+          gl,
+          shell.indices
+        ),
+
+      position:
+        arrayBuffer(
+          gl,
+          shell.positions
+        ),
+
+      normal:
+        arrayBuffer(
+          gl,
+          shell.normals
+        ),
+
+      index:
+        elementBuffer(
+          gl,
+          shell.indices
+        ),
+
+      geometryHash:
+        shell.geometryHash
+    };
+  }
+
+  function deleteMesh(
+    gl,
+    mesh
+  ) {
+    if (
+      !gl ||
+      !mesh
+    ) {
       return;
     }
 
-    setStatus(
-      node,
-      entry.status
-    );
-
-    var small =
-      node.querySelector(
-        "small"
-      );
-
-    if (small) {
-      small.textContent =
-        entry.status;
-    }
-  });
-
-setText(
-  "dropParticipantAvailableCount",
-  available.length
-);
-
-setText(
-  "dropParticipantHeldCount",
-  held.length
-);
-
-}
-
-function renderParticipantDetail(entry) {
-setHtml(
-"participantDetail",
-"<h3>" +
-escapeHtml(
-entry.label
-) +
-"</h3>" +
-"<p><strong>Role:</strong> " +
-escapeHtml(
-entry.role
-) +
-"</p>" +
-"<p><strong>Path:</strong> " +
-escapeHtml(
-entry.path
-) +
-"</p>" +
-"<p><strong>Required:</strong> " +
-escapeHtml(
-entry.required
-? "Yes"
-: "No"
-) +
-"</p>" +
-"<p><strong>Status:</strong> " +
-escapeHtml(
-entry.status
-) +
-"</p>" +
-"<p><strong>Resolved alias:</strong> " +
-escapeHtml(
-entry.resolvedAlias ||
-"None"
-) +
-"</p>" +
-"<p><strong>Contract:</strong> " +
-escapeHtml(
-entry.contract ||
-"Unknown"
-) +
-"</p>" +
-"<p><strong>Callable method:</strong> " +
-escapeHtml(
-entry.callableMethod ||
-"None"
-) +
-"</p>"
-);
-}
-
-function renderObservation() {
-var observation =
-state.observation;
-
-if (!observation) {
-  return;
-}
-
-var target =
-  observation.target;
-
-var runtime =
-  observation.runtime;
-
-var surface =
-  observation.surface;
-
-setText(
-  "targetFramePresent",
-  target.framePresent
-    ? "Yes"
-    : "No"
-);
-
-setText(
-  "targetSameOrigin",
-  target.sameOrigin
-    ? "Yes"
-    : "No"
-);
-
-setText(
-  "targetDocumentState",
-  target.documentState
-);
-
-setText(
-  "targetRouteMatch",
-  target.routeMatch
-    ? "Yes"
-    : "No"
-);
-
-setText(
-  "targetPath",
-  target.path ||
-  TARGET_ROUTE
-);
-
-setText(
-  "targetTitle",
-  target.title ||
-  "Unknown"
-);
-
-setText(
-  "targetAccessError",
-  target.accessError ||
-  "None observed"
-);
-
-setText(
-  "runtimeGlobal",
-  runtime.runtimeAlias ||
-  "Not found"
-);
-
-setText(
-  "runtimeMounted",
-  runtime.runtimeMounted === null
-    ? "Unknown"
-    : runtime.runtimeMounted
-      ? "Yes"
-      : "No"
-);
-
-setText(
-  "runtimeGeometry",
-  runtime.geometry
-    ? safeJson(
-        runtime.geometry
-      )
-    : "Unknown"
-);
-
-setText(
-  "runtimeStageRect",
-  runtime.stageRectNonzero === null
-    ? "Unknown"
-    : runtime.stageRectNonzero
-      ? "Nonzero"
-      : "Zero"
-);
-
-setText(
-  "runtimeFirstFrame",
-  runtime.firstFrame === null
-    ? "Unknown"
-    : String(
-        runtime.firstFrame
-      )
-);
-
-setText(
-  "runtimeVisiblePixel",
-  runtime.visiblePixel === null
-    ? "Unknown"
-    : runtime.visiblePixel
-      ? "Yes"
-      : "No"
-);
-
-setText(
-  "runtimeFallback",
-  runtime.fallback === null
-    ? "Unknown"
-    : String(
-        runtime.fallback
-      )
-);
-
-setText(
-  "runtimeReceiptAvailability",
-  runtime.receiptAvailability
-    ? "Available"
-    : "Not observed"
-);
-
-setText(
-  "surfaceAuthority",
-  surface.authorityFound
-    ? surface.authorityAlias
-    : "Not found"
-);
-
-setText(
-  "surfaceMethod",
-  surface.method ||
-  "Unknown"
-);
-
-setText(
-  "surfaceContract",
-  surface.contract ||
-  "Unknown"
-);
-
-setText(
-  "surfaceReceipt",
-  surface.receiptFound
-    ? "Available"
-    : "Not observed"
-);
-
-setText(
-  "surfacePacketKeys",
-  surface.packetKeys.length
-    ? surface.packetKeys.join(", ")
-    : "None observed"
-);
-
-setText(
-  "surfaceFirstHeld",
-  surface.firstHeld
-    ? surface.firstHeld.path
-    : "None observed"
-);
-
-setText(
-  "surfaceFirstFailed",
-  surface.firstFailed
-    ? surface.firstFailed.path
-    : "None observed"
-);
-
-setText(
-  "surfaceRecommendedOwner",
-  surface.recommendedOwner ||
-  "Unknown"
-);
-
-setText(
-  "surfaceRecommendedFile",
-  surface.recommendedFile ||
-  "Unknown"
-);
-
-setText(
-  "surfaceRecommendedAction",
-  surface.recommendedAction ||
-  "Unknown"
-);
-
-setText(
-  "surfaceError",
-  surface.error ||
-  "None observed"
-);
-
-}
-
-function renderRegistry() {
-var registry =
-state.observation &&
-state.observation.engineFamily
-? state.observation.engineFamily
-: null;
-
-if (!registry) {
-  return;
-}
-
-var snapshot =
-  registry.registrySnapshot;
-
-setText(
-  "governingContractCount",
-  snapshot.governingContracts.length
-);
-
-setText(
-  "assignedEngineCount",
-  snapshot.assignedEngines.length
-);
-
-setText(
-  "selectableEngineCount",
-  snapshot.selectableEngines.length
-);
-
-setText(
-  "reservedEngineCount",
-  snapshot.reservedSlots.length
-);
-
-var records = []
-  .concat(
-    snapshot.governingContracts
-      .map(
-        registryRecord(
-          "Governing Contract"
-        )
-      )
-  )
-  .concat(
-    snapshot.assignedEngines
-      .map(
-        registryRecord(
-          "Assigned Engine"
-        )
-      )
-  )
-  .concat(
-    snapshot.selectableEngines
-      .map(
-        registryRecord(
-          "Selectable Engine"
-        )
-      )
-  )
-  .concat(
-    snapshot.reservedSlots
-      .map(
-        registryRecord(
-          "Reserved Slot"
-        )
-      )
-  );
-
-setHtml(
-  "registryRecordList",
-  records.length
-    ? records.join("")
-    : (
-        '<article class="empty-state">' +
-        "<h4>No registry records observed</h4>" +
-        "<p>The registry global may be missing or use an unrecognized shape.</p>" +
-        "</article>"
-      )
-);
-
-setHtml(
-  "selectedEngineDetail",
-  "<h4>Selected Engine</h4>" +
-  "<p><strong>Runtime engine found:</strong> " +
-  escapeHtml(
-    registry.runtimeEngineFound
-      ? "Yes"
-      : "No"
-  ) +
-  "</p>" +
-  "<p><strong>Contract:</strong> " +
-  escapeHtml(
-    registry.runtimeEngineContract ||
-    "Unknown"
-  ) +
-  "</p>"
-);
-
-setHtml(
-  "engineRuntimeDetail",
-  "<h4>Registry Evidence</h4>" +
-  "<p><strong>Registry found:</strong> " +
-  escapeHtml(
-    registry.registryFound
-      ? "Yes"
-      : "No"
-  ) +
-  "</p>" +
-  "<p><strong>Contract:</strong> " +
-  escapeHtml(
-    registry.registryContract ||
-    "Unknown"
-  ) +
-  "</p>"
-);
-
-}
-
-function registryRecord(label) {
-return function renderRegistryRecord(entry) {
-return (
-"<article>" +
-"<h4>" +
-escapeHtml(
-label
-) +
-"</h4>" +
-"<pre>" +
-escapeHtml(
-safeJson(
-entry
-)
-) +
-"</pre>" +
-"</article>"
-);
-};
-}
-
-function renderReport(report) {
-setText(
-"reportStatus",
-"COMPLETE"
-);
-
-setStatus(
-  "reportStatus",
-  "COMPLETE"
-);
-
-setText(
-  "reportTitle",
-  report.audit.title
-);
-
-setText(
-  "reportCreatedAt",
-  report.createdAt
-);
-
-setText(
-  "reportMeta",
-  report.reportId +
-  " · " +
-  report.audit.classification
-);
-
-renderReadRegion(
-  "readResult",
-  "R",
-  "Result",
-  report.read.result,
-  [report.read.result]
-);
-
-renderReadRegion(
-  "readEvidence",
-  "E",
-  "Evidence",
-  "Observed evidence",
-  report.read.evidence
-);
-
-renderReadRegion(
-  "readAbsence",
-  "A",
-  "Absence",
-  "Missing or unresolved evidence",
-  report.read.absence
-);
-
-renderReadRegion(
-  "readDirection",
-  "D",
-  "Direction",
-  "Recommended diagnostic direction",
-  report.read.direction
-);
-
-setText(
-  "packetOutput",
-  getReportPacket()
-);
-
-setText(
-  "rawOutput",
-  getRawReport()
-);
-
-setHtml(
-  "evidenceOutput",
-  buildEvidenceHtml(
-    report
-  )
-);
-
-setDisabled(
-  "copyReadableReport",
-  false
-);
-
-setDisabled(
-  "copyPacketReport",
-  false
-);
-
-setDisabled(
-  "copyRawReport",
-  false
-);
-
-setDisabled(
-  "addReportToArchive",
-  false
-);
-
-}
-
-function renderReadRegion(
-id,
-letter,
-label,
-headline,
-entries
-) {
-var list =
-Array.isArray(entries)
-? entries
-: [entries];
-
-setHtml(
-  id,
-  "<header>" +
-  "<span>" +
-  escapeHtml(
-    letter
-  ) +
-  "</span>" +
-  "<div>" +
-  "<p>" +
-  escapeHtml(
-    label
-  ) +
-  "</p>" +
-  "<strong>" +
-  escapeHtml(
-    headline
-  ) +
-  "</strong>" +
-  "</div>" +
-  "</header>" +
-  (
-    list.length > 1
-      ? "<ul>" +
-        list
-          .map(function readListItem(entry) {
-            return (
-              "<li>" +
-              escapeHtml(
-                entry
-              ) +
-              "</li>"
-            );
-          })
-          .join("") +
-        "</ul>"
-      : "<p>" +
-        escapeHtml(
-          list[0] || ""
-        ) +
-        "</p>"
-  )
-);
-
-}
-
-function buildEvidenceHtml(report) {
-return [
-"<article>",
-"<h3>Report Evidence</h3>",
-"<pre>",
-escapeHtml(
-safeJson(
-report.read.evidence
-)
-),
-"</pre>",
-"</article>",
-"<article>",
-"<h3>Participant Snapshot</h3>",
-"<pre>",
-escapeHtml(
-safeJson(
-report.participantSnapshot
-)
-),
-"</pre>",
-"</article>",
-"<article>",
-"<h3>Observation Snapshot</h3>",
-"<pre>",
-escapeHtml(
-safeJson(
-report.observationSnapshot
-)
-),
-"</pre>",
-"</article>"
-].join("");
-}
-
-function renderEmptyReport() {
-setText(
-"reportStatus",
-"READY"
-);
-
-setStatus(
-  "reportStatus",
-  "READY"
-);
-
-setText(
-  "reportTitle",
-  "No report created"
-);
-
-setText(
-  "reportCreatedAt",
-  "—"
-);
-
-setText(
-  "reportMeta",
-  "Choose an audit and create a report."
-);
-
-renderReadRegion(
-  "readResult",
-  "R",
-  "Result",
-  "Observatory available",
-  "Create a report to evaluate the selected audit."
-);
-
-renderReadRegion(
-  "readEvidence",
-  "E",
-  "Evidence",
-  "Engine available",
-  "The diagnostic engine completed initialization."
-);
-
-renderReadRegion(
-  "readAbsence",
-  "A",
-  "Absence",
-  "No report yet",
-  "No current report is displayed."
-);
-
-renderReadRegion(
-  "readDirection",
-  "D",
-  "Direction",
-  "Create the first report",
-  "Use Create Report to inspect the selected audit."
-);
-
-setText(
-  "packetOutput",
-  "No report packet has been created."
-);
-
-setText(
-  "rawOutput",
-  "No raw report has been created."
-);
-
-setHtml(
-  "evidenceOutput",
-  '<article class="empty-state">' +
-  "<h3>No evidence report yet</h3>" +
-  "<p>Create a report to collect current diagnostic evidence.</p>" +
-  "</article>"
-);
-
-setDisabled(
-  "copyReadableReport",
-  true
-);
-
-setDisabled(
-  "copyPacketReport",
-  true
-);
-
-setDisabled(
-  "copyRawReport",
-  true
-);
-
-setDisabled(
-  "addReportToArchive",
-  true
-);
-
-}
-
-function renderCycleRunning() {
-setText(
-"cycleStatus",
-"Cycle · Running"
-);
-
-setStatus(
-  "cycleStatus",
-  "RUNNING"
-);
-
-setHtml(
-  "cycleExecutionSummary",
-  "<span>Execution</span>" +
-  "<strong>Running</strong>" +
-  "<p>The nine-cycle is executing.</p>"
-);
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "#cycleMap [data-station]"
-  )
-).forEach(function markStationRunning(node) {
-  setStatus(
-    node,
-    "RUNNING"
-  );
-});
-
-}
-
-function renderCyclePreflightHeld(unavailable) {
-setText(
-"cycleStatus",
-"Cycle · Held"
-);
-
-setStatus(
-  "cycleStatus",
-  "HELD"
-);
-
-setHtml(
-  "cyclePreflightSummary",
-  "<span>Preflight</span>" +
-  "<strong>Held</strong>" +
-  "<p>Unavailable stations: " +
-  escapeHtml(
-    unavailable
-      .map(function unavailableRole(entry) {
-        return entry.role;
-      })
-      .join(", ")
-  ) +
-  "</p>"
-);
-
-}
-
-function renderCycleError(error) {
-setText(
-"cycleStatus",
-"Cycle · Error"
-);
-
-setStatus(
-  "cycleStatus",
-  "ERROR"
-);
-
-setHtml(
-  "cycleExecutionSummary",
-  "<span>Execution</span>" +
-  "<strong>Error</strong>" +
-  "<p>" +
-  escapeHtml(
-    error &&
-    error.message
-      ? error.message
-      : error
-  ) +
-  "</p>"
-);
-
-}
-
-function renderCycle() {
-var receipts =
-state.cycle.receipts || [];
-
-var ledger =
-  state.cycle.ledger;
-
-if (!receipts.length) {
-  setText(
-    "cycleStatus",
-    "Cycle · Not Run"
-  );
-
-  setStatus(
-    "cycleStatus",
-    "NOT_RUN"
-  );
-
-  setHtml(
-    "cycleExecutionSummary",
-    "<span>Execution</span>" +
-    "<strong>Not run</strong>" +
-    "<p>No conductor cycle has been created during this session.</p>"
-  );
-
-  setText(
-    "cycleLedgerOutput",
-    "No cycle ledger has been produced."
-  );
-
-  setHtml(
-    "cycleReceiptList",
-    '<article class="empty-state">' +
-    "<h4>No cycle receipts</h4>" +
-    "<p>Run Nine-Cycle explicitly to create station receipts.</p>" +
-    "</article>"
-  );
-
-  Array.prototype.slice.call(
-    doc.querySelectorAll(
-      "#cycleMap [data-station]"
-    )
-  ).forEach(function resetStation(node) {
-    setStatus(
-      node,
-      "UNKNOWN"
-    );
-  });
-
-  return;
-}
-
-setText(
-  "cycleStatus",
-  "Cycle · " +
-  ledger.status
-);
-
-setStatus(
-  "cycleStatus",
-  ledger.status
-);
-
-setHtml(
-  "cycleExecutionSummary",
-  "<span>Execution</span>" +
-  "<strong>" +
-  escapeHtml(
-    ledger.status
-  ) +
-  "</strong>" +
-  "<p>" +
-  escapeHtml(
-    String(
-      receipts.length
-    ) +
-    " station receipts recorded."
-  ) +
-  "</p>"
-);
-
-setText(
-  "cycleLedgerOutput",
-  safeJson(
-    ledger
-  )
-);
-
-setHtml(
-  "cycleReceiptList",
-  receipts
-    .map(function renderCycleReceipt(receipt) {
-      return (
-        "<article>" +
-        "<h4>" +
-        escapeHtml(
-          receipt.fibonacci +
-          " · " +
-          receipt.source
-        ) +
-        "</h4>" +
-        "<p>Status: " +
-        escapeHtml(
-          receipt.status
-        ) +
-        "</p>" +
-        "<pre>" +
-        escapeHtml(
-          safeJson(
-            receipt.payload
-          )
-        ) +
-        "</pre>" +
-        "</article>"
-      );
-    })
-    .join("")
-);
-
-receipts
-  .forEach(function updateCycleStation(receipt) {
-    var node =
-      doc.querySelector(
-        '#cycleMap [data-station="' +
-        receipt.source +
-        '"]'
-      );
-
-    if (node) {
-      setStatus(
-        node,
-        receipt.status
-      );
-    }
-  });
-
-}
-
-function renderReceipts() {
-setHtml(
-"receiptList",
-state.receipts.length
-? state.receipts
-.map(function renderReceipt(receipt, index) {
-return (
-'<article tabindex="0" role="button" ' +
-'data-receipt-index="' +
-String(index) +
-'" data-receipt-type="' +
-escapeHtml(
-receipt.type
-) +
-'">' +
-"<h4>" +
-escapeHtml(
-receipt.title
-) +
-"</h4>" +
-"<p>" +
-escapeHtml(
-receipt.source
-) +
-" · " +
-escapeHtml(
-receipt.status
-) +
-"</p>" +
-"</article>"
-);
-})
-.join("")
-: (
-'<article class="empty-state">' +
-"<h4>No receipts collected</h4>" +
-"<p>Reports, observations, direct checks, and cycle execution may contribute receipts.</p>" +
-"</article>"
-)
-);
-}
-
-function renderArchive() {
-setText(
-"archiveSessionCount",
-state.archive.sessions.length
-);
-
-setHtml(
-  "archiveReportList",
-  state.archive.reports.length
-    ? state.archive.reports
-        .map(function renderArchivedReport(report) {
-          return (
-            "<article>" +
-            "<h4>" +
-            escapeHtml(
-              report.audit.title
-            ) +
-            "</h4>" +
-            "<p>" +
-            escapeHtml(
-              report.reportId
-            ) +
-            "</p>" +
-            "</article>"
+    for (
+      const key of [
+        "position",
+        "normal",
+        "color",
+        "index"
+      ]
+    ) {
+      if (mesh[key]) {
+        try {
+          gl.deleteBuffer(
+            mesh[key]
           );
-        })
-        .join("")
-    : (
-        '<article class="empty-state">' +
-        "<h4>No archived reports</h4>" +
-        "<p>Create a report and add it to the archive.</p>" +
-        "</article>"
-      )
-);
-
-setHtml(
-  "archiveErrorList",
-  state.archive.errors.length
-    ? state.archive.errors
-        .map(function renderArchivedError(error) {
-          return (
-            "<article>" +
-            "<h4>" +
-            escapeHtml(
-              error.action
-            ) +
-            "</h4>" +
-            "<p>" +
-            escapeHtml(
-              error.message
-            ) +
-            "</p>" +
-            "</article>"
-          );
-        })
-        .join("")
-    : (
-        '<article class="empty-state">' +
-        "<h4>No archived errors</h4>" +
-        "<p>No diagnostic-engine errors have been recorded.</p>" +
-        "</article>"
-      )
-);
-
-setHtml(
-  "archiveParticipantSnapshot",
-  "<h4>Participant Snapshot</h4>" +
-  "<pre>" +
-  escapeHtml(
-    safeJson(
-      state.participants
-    )
-  ) +
-  "</pre>"
-);
-
-setHtml(
-  "archiveObservationSnapshot",
-  "<h4>Observation Snapshot</h4>" +
-  "<pre>" +
-  escapeHtml(
-    safeJson(
-      state.observation
-    )
-  ) +
-  "</pre>"
-);
-
-setText(
-  "archiveRawOutput",
-  state.archive.deepArchive
-    ? safeJson(
-        state.archive.deepArchive
-      )
-    : "No deep archive has been created."
-);
-
-}
-
-function renderEvidenceRail() {
-var participants =
-state.participants || [];
-
-var target =
-  state.observation &&
-  state.observation.target;
-
-var runtime =
-  state.observation &&
-  state.observation.runtime;
-
-var surface =
-  state.observation &&
-  state.observation.surface;
-
-setRailStatus(
-  "targetStatus",
-  "Target",
-  target
-    ? target.framePresent
-      ? "FOUND"
-      : "MISSING"
-    : "UNKNOWN"
-);
-
-setRailStatus(
-  "runtimeStatus",
-  "Runtime",
-  runtime
-    ? runtime.runtimeFound
-      ? "FOUND"
-      : "MISSING"
-    : "UNKNOWN"
-);
-
-setRailStatus(
-  "rendererStatus",
-  "Renderer",
-  runtime
-    ? runtime.mountFound
-      ? "FOUND"
-      : "UNKNOWN"
-    : "UNKNOWN"
-);
-
-setRailStatus(
-  "surfaceStatus",
-  "Surface",
-  surface
-    ? surface.authorityFound
-      ? "FOUND"
-      : "MISSING"
-    : "UNKNOWN"
-);
-
-setDirectionStatus(
-  "northStatus",
-  "North",
-  participants,
-  "NORTH"
-);
-
-setDirectionStatus(
-  "eastStatus",
-  "East",
-  participants,
-  "EAST"
-);
-
-setDirectionStatus(
-  "westStatus",
-  "West",
-  participants,
-  "WEST"
-);
-
-setDirectionStatus(
-  "southStatus",
-  "South",
-  participants,
-  "SOUTH"
-);
-
-setRailStatus(
-  "cycleStatus",
-  "Cycle",
-  state.cycle.count
-    ? state.cycle.ledger.status
-    : "NOT_RUN"
-);
-
-var registry =
-  state.observation &&
-  state.observation.engineFamily;
-
-setRailStatus(
-  "registryStatus",
-  "Registry",
-  registry
-    ? registry.registryFound
-      ? "FOUND"
-      : "MISSING"
-    : "UNKNOWN"
-);
-
-setRailStatus(
-  "mountStatus",
-  "Mount",
-  runtime
-    ? runtime.mountFound
-      ? "FOUND"
-      : "MISSING"
-    : "UNKNOWN"
-);
-
-setRailStatus(
-  "canvasStatus",
-  "Canvas",
-  runtime
-    ? String(
-        runtime.mountTag || ""
-      ).toUpperCase() === "CANVAS"
-      ? "FOUND"
-      : "UNKNOWN"
-    : "UNKNOWN"
-);
-
-setRailStatus(
-  "frameStatus",
-  "Frame",
-  target
-    ? target.framePresent
-      ? "FOUND"
-      : "MISSING"
-    : "UNKNOWN"
-);
-
-}
-
-function setRailStatus(id, label, status) {
-setText(
-id,
-label +
-" · " +
-status
-);
-
-setStatus(
-  id,
-  status
-);
-
-}
-
-function setDirectionStatus(
-id,
-label,
-participants,
-direction
-) {
-var directional =
-participants
-.filter(function directionMatch(entry) {
-return (
-entry.direction ===
-direction
-);
-});
-
-var status;
-
-if (!directional.length) {
-  status =
-    "UNKNOWN";
-} else if (
-  directional
-    .every(function allAvailable(entry) {
-      return (
-        entry.available &&
-        entry.callable
-      );
-    })
-) {
-  status =
-    "FOUND";
-} else {
-  status =
-    "HELD";
-}
-
-setRailStatus(
-  id,
-  label,
-  status
-);
-
-}
-
-function renderDropStates() {
-renderDropParticipantState();
-renderDropObservationState();
-renderDropReportState();
-
-renderDropDirectState(
-  state.direct.count
-    ? state.direct.lastResult.status
-    : "IDLE"
-);
-
-}
-
-function renderDropParticipantState() {
-var available =
-state.participants
-.filter(function availableEntry(entry) {
-return (
-entry.available &&
-entry.callable
-);
-}).length;
-
-var held =
-  state.participants
-    .filter(function heldEntry(entry) {
-      return (
-        entry.required &&
-        (
-          !entry.available ||
-          !entry.callable
-        )
-      );
-    }).length;
-
-setText(
-  "dropParticipantState",
-  held
-    ? "HELD"
-    : "READY"
-);
-
-setStatus(
-  "dropParticipantCell",
-  held
-    ? "HELD"
-    : "READY"
-);
-
-setText(
-  "dropParticipantAvailableCount",
-  available
-);
-
-setText(
-  "dropParticipantHeldCount",
-  held
-);
-
-setText(
-  "dropParticipantLastAction",
-  "Participant inspection completed at " +
-  nowIso()
-);
-
-}
-
-function renderDropObservationState() {
-var target =
-state.observation &&
-state.observation.target;
-
-var held =
-  !target ||
-  !target.framePresent;
-
-setText(
-  "dropObservationState",
-  held
-    ? "HELD"
-    : "READY"
-);
-
-setStatus(
-  "dropObservationCell",
-  held
-    ? "HELD"
-    : "READY"
-);
-
-setText(
-  "dropObservationAvailableCount",
-  target &&
-  target.framePresent
-    ? "1"
-    : "0"
-);
-
-setText(
-  "dropObservationHeldCount",
-  held
-    ? "1"
-    : "0"
-);
-
-setText(
-  "dropObservationLastAction",
-  "Observation completed at " +
-  nowIso()
-);
-
-}
-
-function renderDropReportState() {
-setText(
-"dropReportState",
-"READY"
-);
-
-setStatus(
-  "dropReportCell",
-  "READY"
-);
-
-setText(
-  "dropReportAvailableCount",
-  Math.max(
-    1,
-    state.report.history.length
-  )
-);
-
-setText(
-  "dropReportHeldCount",
-  "0"
-);
-
-setText(
-  "dropReportLastAction",
-  state.report.current
-    ? "Report created at " +
-      state.report.current.createdAt
-    : "Create Report is available immediately."
-);
-
-}
-
-function renderDropDirectState(status) {
-var normalized =
-normalizeStatus(
-status
-);
-
-setText(
-  "dropDirectState",
-  normalized
-);
-
-setStatus(
-  "dropDirectCell",
-  normalized
-);
-
-setText(
-  "dropDirectAvailableCount",
-  state.participants
-    .filter(function callableEntry(entry) {
-      return entry.callable;
-    }).length
-);
-
-setText(
-  "dropDirectHeldCount",
-  state.participants
-    .filter(function heldCallable(entry) {
-      return (
-        entry.required &&
-        !entry.callable
-      );
-    }).length
-);
-
-setText(
-  "dropDirectLastAction",
-  state.direct.lastResult
-    ? state.direct.lastResult.title +
-      " · " +
-      state.direct.lastResult.status
-    : "No direct command has been executed."
-);
-
-}
-
-function publishEngineReceipt() {
-root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT =
-deepFreeze({
-schema:
-ENGINE_RECEIPT_SCHEMA,
-contract:
-CONTRACT,
-previousContract:
-PREVIOUS_CONTRACT,
-version:
-VERSION,
-file:
-FILE,
-htmlContract:
-HTML_CONTRACT,
-cssContract:
-CSS_CONTRACT,
-controlPanelContract:
-CONTROL_PANEL_CONTRACT,
-initialized:
-state.initialized,
-initializedAt:
-state.initializedAt,
-status:
-state.status,
-participantCount:
-state.participants.length,
-reportCount:
-state.report.history.length,
-directCount:
-state.direct.count,
-cycleCount:
-state.cycle.count,
-receiptCount:
-state.receipts.length,
-errorCount:
-state.errors.length,
-actionCount:
-state.actionCount,
-lastAction:
-frozenClone(
-state.lastAction
-),
-newsOrder: [
-"NORTH",
-"EAST",
-"WEST",
-"SOUTH",
-"TERMINAL_RAIL"
-],
-fibonacciOrder: [
-"F1",
-"F3",
-"F5",
-"F8",
-"F13",
-"F21",
-"F34",
-"F55",
-"F89"
-],
-auxiliary: {
-role:
-"SOUTH_SURFACE_POINTER",
-parentCyclePosition:
-8,
-parentFibonacci:
-"F55",
-createsStation:
-false
-},
-noClaims:
-NO_CLAIMS,
-generatedAt:
-nowIso()
-});
-}
-
-function publishApi() {
-var api =
-Object.freeze({
-CONTRACT:
-CONTRACT,
-contract:
-CONTRACT,
-PREVIOUS_CONTRACT:
-PREVIOUS_CONTRACT,
-previousContract:
-PREVIOUS_CONTRACT,
-VERSION:
-VERSION,
-version:
-VERSION,
-FILE:
-FILE,
-file:
-FILE,
-STATUS:
-"READY",
-status:
-"READY",
-
-    createReport:
-      createReport,
-
-    observe:
-      observe,
-
-    runSelectedDirectCheck:
-      runSelectedDirectCheck,
-
-    runNineCycle:
-      runNineCycle,
-
-    createDeepArchive:
-      createDeepArchive,
-
-    addCurrentReportToArchive:
-      addCurrentReportToArchive,
-
-    resetCurrentReport:
-      resetCurrentReport,
-
-    resetWorkbench:
-      resetWorkbench,
-
-    selectCategory:
-      selectCategory,
-
-    selectAudit:
-      selectAudit,
-
-    selectParticipant:
-      selectParticipant,
-
-    selectReportMode:
-      selectReportMode,
-
-    selectObservationLens:
-      selectObservationLens,
-
-    selectInstrumentChamber:
-      selectInstrumentChamber,
-
-    getState:
-      getState,
-
-    getCurrentReport:
-      getCurrentReport,
-
-    getReadableReport:
-      getReadableReport,
-
-    getReportPacket:
-      getReportPacket,
-
-    getRawReport:
-      getRawReport,
-
-    getParticipants:
-      getParticipants,
-
-    getObservation:
-      getObservation,
-
-    getLedger:
-      getLedger,
-
-    getReceipts:
-      getReceipts,
-
-    getArchive:
-      getArchive,
-
-    getCategories:
-      function getCategories() {
-        return frozenClone(
-          CATEGORY_REGISTRY
-        );
-      },
-
-    getAudits:
-      function getAudits() {
-        return frozenClone(
-          AUDIT_REGISTRY
-        );
-      },
-
-    getParticipantManifest:
-      function getParticipantManifest() {
-        return frozenClone(
-          PARTICIPANT_MANIFEST
-        );
-      },
-
-    getEngineReceipt:
-      function getEngineReceipt() {
-        return frozenClone(
-          root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT ||
-          null
-        );
+        } catch (_error) {}
       }
-  });
-
-root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY =
-  api;
-
-root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
-  api;
-
-if (
-  !root.AUDRALIA ||
-  typeof root.AUDRALIA !== "object"
-) {
-  root.AUDRALIA = {};
-}
-
-root.AUDRALIA.dropWithReadDiagnosticObservatory =
-  api;
-
-root.AUDRALIA.diagnosticRouteController =
-  api;
-
-root.__AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_LOADED__ =
-  true;
-
-root.__AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_CONTRACT__ =
-  CONTRACT;
-
-root.__AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_VERSION__ =
-  VERSION;
-
-return api;
-
-}
-
-function validateNewsAlignment() {
-var expectedDirections = {
-NORTH_PROBE_INTAKE:
-"NORTH",
-EAST_PROBE_SOURCE:
-"EAST",
-EAST_CONSTRUCTION_INTERPRETATION:
-"EAST",
-CANVAS_SURFACE_TRUTH:
-"CENTER",
-WEST_PROBE_RUNTIME:
-"WEST",
-WEST_RUNTIME_INTERPRETATION:
-"WEST",
-SOUTH_PROBE_HANDOFF:
-"SOUTH",
-SOUTH_RESTITUTION_INTERPRETATION:
-"SOUTH",
-RAIL_TERMINAL_SYNTHESIS:
-"TERMINAL_RAIL"
-};
-
-Object.keys(
-  expectedDirections
-).forEach(function validateDirection(role) {
-  var manifest =
-    getParticipantManifestEntry(
-      role
-    );
-
-  if (
-    !manifest ||
-    manifest.direction !==
-      expectedDirections[role]
-  ) {
-    throw new Error(
-      "NEWS_ALIGNMENT_FAILURE:" +
-      role
-    );
+    }
   }
-});
 
-return true;
+  function releaseGPU() {
+    if (!state.gl) {
+      state.meshes = {};
+      state.programs = {};
+      return;
+    }
 
-}
+    for (
+      const mesh of
+      Object.values(
+        state.meshes
+      )
+    ) {
+      deleteMesh(
+        state.gl,
+        mesh
+      );
+    }
 
-function validateFibonacciSynchronization() {
-var expected = [
-{
-role:
-"NORTH_PROBE_INTAKE",
-position:
-1,
-fibonacci:
-"F1"
-},
-{
-role:
-"EAST_PROBE_SOURCE",
-position:
-2,
-fibonacci:
-"F3"
-},
-{
-role:
-"EAST_CONSTRUCTION_INTERPRETATION",
-position:
-3,
-fibonacci:
-"F5"
-},
-{
-role:
-"CANVAS_SURFACE_TRUTH",
-position:
-4,
-fibonacci:
-"F8"
-},
-{
-role:
-"WEST_PROBE_RUNTIME",
-position:
-5,
-fibonacci:
-"F13"
-},
-{
-role:
-"WEST_RUNTIME_INTERPRETATION",
-position:
-6,
-fibonacci:
-"F21"
-},
-{
-role:
-"SOUTH_PROBE_HANDOFF",
-position:
-7,
-fibonacci:
-"F34"
-},
-{
-role:
-"SOUTH_RESTITUTION_INTERPRETATION",
-position:
-8,
-fibonacci:
-"F55"
-},
-{
-role:
-"RAIL_TERMINAL_SYNTHESIS",
-position:
-9,
-fibonacci:
-"F89"
-}
-];
+    for (
+      const info of
+      Object.values(
+        state.programs
+      )
+    ) {
+      if (
+        info &&
+        info.program
+      ) {
+        try {
+          state.gl.deleteProgram(
+            info.program
+          );
+        } catch (_error) {}
+      }
+    }
 
-if (
-  STATION_ORDER.length !==
-  expected.length
-) {
-  throw new Error(
-    "FIBONACCI_STATION_COUNT_MISMATCH"
-  );
-}
+    state.meshes = {};
+    state.programs = {};
+  }
 
-expected
-  .forEach(function validateExpected(entry, index) {
-    var actual =
-      STATION_ORDER[index];
+  function geometry(
+    level,
+    deepValidation
+  ) {
+    state.geometryAuthority =
+      state.geometryAuthority ||
+      geometryAuthority();
 
     if (
-      actual.role !== entry.role ||
-      actual.cyclePosition !== entry.position ||
-      actual.fibonacci !== entry.fibonacci
+      !state.geometryAuthority
     ) {
       throw new Error(
-        "FIBONACCI_SYNCHRONIZATION_FAILURE:" +
-        entry.role
+        "DGBAudraliaPlanetGeometry is unavailable."
       );
     }
-  });
 
-var auxiliary =
-  getParticipantManifestEntry(
-    "SOUTH_SURFACE_POINTER"
-  );
+    const packet =
+      state.geometryAuthority
+        .createGeometry({
+          terrainLevel:
+            level,
 
-if (
-  !auxiliary ||
-  auxiliary.cyclePosition !== null ||
-  auxiliary.parentCyclePosition !== 8 ||
-  auxiliary.parentFibonacci !== "F55"
-) {
-  throw new Error(
-    "SOUTH_SURFACE_POINTER_AUXILIARY_FAILURE"
-  );
-}
+          oceanLevel:
+            5,
 
-return true;
+          cloudLevel:
+            5,
 
-}
+          atmosphereLevel:
+            4,
 
-function init() {
-if (state.initialized) {
-return;
-}
+          includeHydrology:
+            true,
 
-try {
-  state.status =
-    "LOADING";
+          deepValidation:
+            deepValidation ===
+            true
+        });
 
-  validateNewsAlignment();
-  validateFibonacciSynchronization();
-
-  inspectParticipants();
-  observe();
-
-  renderSelection();
-  renderEmptyReport();
-  renderCycle();
-  renderReceipts();
-  renderArchive();
-  renderEvidenceRail();
-  renderDropStates();
-
-  state.initialized =
-    true;
-
-  state.initializedAt =
-    nowIso();
-
-  state.status =
-    "READY";
-
-  setText(
-    "controllerContract",
-    CONTRACT
-  );
-
-  setText(
-    "controllerState",
-    "REPORT READY"
-  );
-
-  setStatus(
-    "controllerState",
-    "READY"
-  );
-
-  publishEngineReceipt();
-  publishApi();
-
-  recordAction(
-    "initialize",
-    {
-      contract:
-        CONTRACT,
-      participantCount:
-        state.participants.length
+    if (
+      !packet ||
+      !packet.validation ||
+      packet.validation.passed !==
+      true
+    ) {
+      throw new Error(
+        "Audralia geometry validation did not pass."
+      );
     }
-  );
-} catch (error) {
-  state.status =
-    "ERROR";
 
-  recordError(
-    "initialize",
-    error
-  );
+    state.geometryPacket =
+      packet;
 
-  publishEngineReceipt();
+    state.terrainLevel =
+      level;
 
-  root.__AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_ERROR__ =
-    deepFreeze({
+    return packet;
+  }
+
+  function buildGPU() {
+    const gl =
+      state.gl;
+
+    const packet =
+      state.geometryPacket;
+
+    if (
+      !gl ||
+      !packet
+    ) {
+      throw new Error(
+        "WebGL and geometry are required before GPU construction."
+      );
+    }
+
+    releaseGPU();
+
+    state.programs =
+      createPrograms(
+        gl
+      );
+
+    state.meshes = {
+      terrain:
+        terrainGPU(
+          gl,
+          packet.terrain
+        ),
+
+      ocean:
+        shellGPU(
+          gl,
+          packet.ocean
+        ),
+
+      clouds:
+        shellGPU(
+          gl,
+          packet.clouds
+        ),
+
+      atmosphere:
+        shellGPU(
+          gl,
+          packet.atmosphere
+        )
+    };
+
+    gl.enable(
+      gl.DEPTH_TEST
+    );
+
+    gl.depthFunc(
+      gl.LEQUAL
+    );
+
+    gl.enable(
+      gl.CULL_FACE
+    );
+
+    gl.cullFace(
+      gl.BACK
+    );
+
+    gl.frontFace(
+      gl.CCW
+    );
+
+    gl.clearDepth(1);
+
+    gl.clearColor(
+      0.006,
+      0.012,
+      0.032,
+      1
+    );
+
+    event(
+      "AUDRALIA_PLANET_GPU_READY",
+      {
+        terrainLevel:
+          state.terrainLevel,
+
+        geometryHash:
+          packet.geometryHash,
+
+        terrainVertices:
+          packet
+            .terrain
+            .vertexCount,
+
+        terrainTriangles:
+          packet
+            .terrain
+            .triangleCount
+      }
+    );
+  }
+
+  function sizeCanvas(
+    canvas,
+    context
+  ) {
+    if (
+      !canvas ||
+      !state.mount
+    ) {
+      return false;
+    }
+
+    const rect =
+      state.mount
+        .getBoundingClientRect();
+
+    state.width =
+      Math.max(
+        0,
+        Math.floor(
+          rect.width
+        )
+      );
+
+    state.height =
+      Math.max(
+        0,
+        Math.floor(
+          rect.height
+        )
+      );
+
+    state.stageRectNonzero =
+      state.width > 0 &&
+      state.height > 0;
+
+    if (
+      !state.stageRectNonzero
+    ) {
+      return false;
+    }
+
+    state.dpr =
+      clamp(
+        number(
+          root &&
+          root.devicePixelRatio,
+          1
+        ),
+        1,
+        MAX_DPR
+      );
+
+    state.pixelWidth =
+      Math.max(
+        1,
+        Math.floor(
+          state.width *
+          state.dpr
+        )
+      );
+
+    state.pixelHeight =
+      Math.max(
+        1,
+        Math.floor(
+          state.height *
+          state.dpr
+        )
+      );
+
+    if (
+      canvas.width !==
+      state.pixelWidth ||
+
+      canvas.height !==
+      state.pixelHeight
+    ) {
+      canvas.width =
+        state.pixelWidth;
+
+      canvas.height =
+        state.pixelHeight;
+    }
+
+    if (
+      context &&
+      fn(context.setTransform)
+    ) {
+      context.setTransform(
+        state.dpr,
+        0,
+        0,
+        state.dpr,
+        0,
+        0
+      );
+    }
+
+    return true;
+  }
+
+  function resize() {
+    if (state.canvas) {
+      sizeCanvas(
+        state.canvas,
+        null
+      );
+    }
+
+    if (
+      state.fallbackCanvas
+    ) {
+      sizeCanvas(
+        state.fallbackCanvas,
+        state.fallbackContext
+      );
+    }
+
+    if (
+      state.gl &&
+      state.stageRectNonzero
+    ) {
+      state.gl.viewport(
+        0,
+        0,
+        state.pixelWidth,
+        state.pixelHeight
+      );
+    }
+
+    state.needsRender =
+      true;
+
+    if (
+      state.fallbackActive
+    ) {
+      drawFallback();
+    }
+
+    publishData();
+
+    return state.stageRectNonzero;
+  }
+
+  function setupResize() {
+    if (!state.mount) {
+      return;
+    }
+
+    if (
+      root &&
+      typeof root.ResizeObserver ===
+      "function"
+    ) {
+      state.resizeObserver =
+        new root.ResizeObserver(
+          resize
+        );
+
+      state.resizeObserver.observe(
+        state.mount
+      );
+    } else {
+      listen(
+        root,
+        "resize",
+        resize,
+        {
+          passive: true
+        }
+      );
+    }
+  }
+
+  function bindAttribute(
+    gl,
+    location,
+    buffer,
+    size
+  ) {
+    if (
+      location < 0 ||
+      !buffer
+    ) {
+      return;
+    }
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      buffer
+    );
+
+    gl.enableVertexAttribArray(
+      location
+    );
+
+    gl.vertexAttribPointer(
+      location,
+      size,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+  }
+
+  function frameMatrices() {
+    const aspect =
+      state.pixelHeight > 0
+        ? state.pixelWidth /
+          state.pixelHeight
+        : 1;
+
+    const projection =
+      m4Perspective(
+        32 *
+        Math.PI /
+        180,
+
+        Math.max(
+          0.01,
+          aspect
+        ),
+
+        0.1,
+        20
+      );
+
+    const view =
+      m4Translate(
+        0,
+        0,
+        -state.distance
+      );
+
+    const model =
+      modelMatrix();
+
+    return {
+      model,
+
+      normal:
+        m3Rotation(
+          model
+        ),
+
+      viewProjection:
+        m4Multiply(
+          projection,
+          view
+        ),
+
+      camera:
+        new Float32Array([
+          0,
+          0,
+          state.distance
+        ])
+    };
+  }
+
+  function drawTerrain(
+    gl,
+    matrices
+  ) {
+    const info =
+      state.programs.terrain;
+
+    const mesh =
+      state.meshes.terrain;
+
+    gl.useProgram(
+      info.program
+    );
+
+    bindAttribute(
+      gl,
+      info.a.position,
+      mesh.position,
+      3
+    );
+
+    bindAttribute(
+      gl,
+      info.a.normal,
+      mesh.normal,
+      3
+    );
+
+    bindAttribute(
+      gl,
+      info.a.color,
+      mesh.color,
+      3
+    );
+
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      mesh.index
+    );
+
+    gl.uniformMatrix4fv(
+      info.u.model,
+      false,
+      matrices.model
+    );
+
+    gl.uniformMatrix4fv(
+      info.u.viewProjection,
+      false,
+      matrices.viewProjection
+    );
+
+    gl.uniformMatrix3fv(
+      info.u.normalMatrix,
+      false,
+      matrices.normal
+    );
+
+    gl.uniform3fv(
+      info.u.camera,
+      matrices.camera
+    );
+
+    gl.uniform3f(
+      info.u.light,
+      -0.62,
+      -0.34,
+      -0.70
+    );
+
+    gl.uniform3f(
+      info.u.fill,
+      0.60,
+      0.12,
+      0.78
+    );
+
+    gl.disable(
+      gl.BLEND
+    );
+
+    gl.depthMask(
+      true
+    );
+
+    gl.cullFace(
+      gl.BACK
+    );
+
+    gl.drawElements(
+      gl.TRIANGLES,
+      mesh.indexCount,
+      mesh.indexType,
+      0
+    );
+
+    state.drawCount += 1;
+  }
+
+  function drawShell(
+    gl,
+    matrices,
+    time,
+    name
+  ) {
+    const info =
+      state.programs.shell;
+
+    const mesh =
+      state.meshes[name];
+
+    let kind = 0;
+
+    let base = [
+      0.02,
+      0.20,
+      0.42
+    ];
+
+    let secondary = [
+      0.10,
+      0.58,
+      0.82
+    ];
+
+    let alpha = 0.78;
+
+    if (
+      name ===
+      "clouds"
+    ) {
+      kind = 1;
+
+      base = [
+        0.74,
+        0.84,
+        0.92
+      ];
+
+      secondary = [
+        1,
+        1,
+        1
+      ];
+
+      alpha = 0.60;
+    } else if (
+      name ===
+      "atmosphere"
+    ) {
+      kind = 2;
+
+      base = [
+        0.06,
+        0.22,
+        0.52
+      ];
+
+      secondary = [
+        0.18,
+        0.64,
+        0.96
+      ];
+
+      alpha = 0.82;
+    }
+
+    gl.useProgram(
+      info.program
+    );
+
+    bindAttribute(
+      gl,
+      info.a.position,
+      mesh.position,
+      3
+    );
+
+    bindAttribute(
+      gl,
+      info.a.normal,
+      mesh.normal,
+      3
+    );
+
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      mesh.index
+    );
+
+    gl.uniformMatrix4fv(
+      info.u.model,
+      false,
+      matrices.model
+    );
+
+    gl.uniformMatrix4fv(
+      info.u.viewProjection,
+      false,
+      matrices.viewProjection
+    );
+
+    gl.uniformMatrix3fv(
+      info.u.normalMatrix,
+      false,
+      matrices.normal
+    );
+
+    gl.uniform3fv(
+      info.u.camera,
+      matrices.camera
+    );
+
+    gl.uniform3f(
+      info.u.light,
+      -0.62,
+      -0.34,
+      -0.70
+    );
+
+    gl.uniform3fv(
+      info.u.base,
+      base
+    );
+
+    gl.uniform3fv(
+      info.u.secondary,
+      secondary
+    );
+
+    gl.uniform1f(
+      info.u.alpha,
+      alpha
+    );
+
+    gl.uniform1f(
+      info.u.kind,
+      kind
+    );
+
+    gl.uniform1f(
+      info.u.time,
+      time
+    );
+
+    gl.enable(
+      gl.BLEND
+    );
+
+    gl.blendFunc(
+      gl.SRC_ALPHA,
+      gl.ONE_MINUS_SRC_ALPHA
+    );
+
+    gl.depthMask(
+      false
+    );
+
+    gl.cullFace(
+      name ===
+      "atmosphere"
+        ? gl.FRONT
+        : gl.BACK
+    );
+
+    gl.drawElements(
+      gl.TRIANGLES,
+      mesh.indexCount,
+      mesh.indexType,
+      0
+    );
+
+    gl.cullFace(
+      gl.BACK
+    );
+
+    gl.depthMask(
+      true
+    );
+
+    gl.disable(
+      gl.BLEND
+    );
+
+    state.drawCount += 1;
+  }
+
+  function visiblePixel() {
+    if (
+      state.firstVisiblePixelObserved ||
+      !state.gl ||
+      !state.stageRectNonzero
+    ) {
+      return state.firstVisiblePixelObserved;
+    }
+
+    try {
+      const pixel =
+        new Uint8Array(4);
+
+      state.gl.readPixels(
+        Math.floor(
+          state.pixelWidth *
+          0.5
+        ),
+
+        Math.floor(
+          state.pixelHeight *
+          0.5
+        ),
+
+        1,
+        1,
+
+        state.gl.RGBA,
+        state.gl.UNSIGNED_BYTE,
+
+        pixel
+      );
+
+      const difference =
+        Math.abs(
+          pixel[0] - 2
+        ) +
+
+        Math.abs(
+          pixel[1] - 3
+        ) +
+
+        Math.abs(
+          pixel[2] - 8
+        );
+
+      if (
+        pixel[3] > 0 &&
+        difference > 12
+      ) {
+        state.firstVisiblePixelObserved =
+          true;
+
+        event(
+          "AUDRALIA_PLANET_VISIBLE_PIXEL_OBSERVED",
+          {
+            pixel:
+              Array.from(
+                pixel
+              ),
+
+            frameCount:
+              state.frameCount
+          }
+        );
+      }
+    } catch (error) {
+      fail(
+        "VISIBLE_PIXEL_CHECK_FAILED",
+        error
+      );
+    }
+
+    return state.firstVisiblePixelObserved;
+  }
+
+  function drawWebGL(time) {
+    if (
+      !state.gl ||
+      state.contextLost ||
+      !state.geometryPacket ||
+      !state.stageRectNonzero
+    ) {
+      return false;
+    }
+
+    const gl =
+      state.gl;
+
+    const matrices =
+      frameMatrices();
+
+    gl.viewport(
+      0,
+      0,
+      state.pixelWidth,
+      state.pixelHeight
+    );
+
+    gl.clear(
+      gl.COLOR_BUFFER_BIT |
+      gl.DEPTH_BUFFER_BIT
+    );
+
+    if (
+      state.atmosphereVisible
+    ) {
+      drawShell(
+        gl,
+        matrices,
+        time,
+        "atmosphere"
+      );
+    }
+
+    drawTerrain(
+      gl,
+      matrices
+    );
+
+    drawShell(
+      gl,
+      matrices,
+      time,
+      "ocean"
+    );
+
+    if (
+      state.cloudsVisible
+    ) {
+      drawShell(
+        gl,
+        matrices,
+        time,
+        "clouds"
+      );
+    }
+
+    if (
+      !state.firstFrameDrawn
+    ) {
+      state.firstFrameDrawn =
+        true;
+
+      state.firstFrameAt =
+        iso();
+
+      event(
+        "AUDRALIA_PLANET_FIRST_FRAME_DRAWN",
+        {
+          terrainLevel:
+            state.terrainLevel,
+
+          pixelWidth:
+            state.pixelWidth,
+
+          pixelHeight:
+            state.pixelHeight
+        }
+      );
+    }
+
+    visiblePixel();
+
+    return true;
+  }
+
+  function fallbackColor(hint) {
+    const color =
+      COLORS[hint] ||
+      COLORS[5];
+
+    return color.map(
+      value =>
+        Math.round(
+          clamp(
+            value,
+            0,
+            1
+          ) *
+          255
+        )
+    );
+  }
+
+  function drawFallback() {
+    const canvas =
+      state.fallbackCanvas;
+
+    const context =
+      state.fallbackContext;
+
+    if (
+      !canvas ||
+      !context ||
+      !state.stageRectNonzero
+    ) {
+      return false;
+    }
+
+    const width =
+      state.width;
+
+    const height =
+      state.height;
+
+    const centerX =
+      width * 0.5;
+
+    const centerY =
+      height * 0.5;
+
+    const radius =
+      Math.max(
+        1,
+
+        Math.min(
+          width,
+          height
+        ) *
+        0.37
+      );
+
+    context.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+    const background =
+      context.createRadialGradient(
+        centerX,
+        centerY,
+        0,
+
+        centerX,
+        centerY,
+
+        Math.max(
+          width,
+          height
+        ) *
+        0.72
+      );
+
+    background.addColorStop(
+      0,
+      "rgba(8,24,54,0.84)"
+    );
+
+    background.addColorStop(
+      1,
+      "rgba(2,5,15,0.98)"
+    );
+
+    context.fillStyle =
+      background;
+
+    context.fillRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+    const ocean =
+      context.createRadialGradient(
+        centerX -
+        radius *
+        0.30,
+
+        centerY -
+        radius *
+        0.34,
+
+        radius *
+        0.08,
+
+        centerX,
+        centerY,
+        radius
+      );
+
+    ocean.addColorStop(
+      0,
+      "rgba(28,112,176,1)"
+    );
+
+    ocean.addColorStop(
+      0.58,
+      "rgba(8,62,118,1)"
+    );
+
+    ocean.addColorStop(
+      1,
+      "rgba(2,20,58,1)"
+    );
+
+    context.save();
+
+    context.beginPath();
+
+    context.arc(
+      centerX,
+      centerY,
+      radius,
+      0,
+      Math.PI * 2
+    );
+
+    context.clip();
+
+    context.fillStyle =
+      ocean;
+
+    context.fillRect(
+      centerX - radius,
+      centerY - radius,
+      radius * 2,
+      radius * 2
+    );
+
+    try {
+      const authority =
+        state.geometryAuthority ||
+        geometryAuthority();
+
+      const terrain =
+        authority &&
+        authority.createTerrainMesh(
+          4
+        );
+
+      if (terrain) {
+        const model =
+          modelMatrix();
+
+        const points = [];
+
+        for (
+          let index = 0;
+          index <
+          terrain.vertexCount;
+          index += 1
+        ) {
+          if (
+            !terrain.landMasks[
+              index
+            ]
+          ) {
+            continue;
+          }
+
+          const offset =
+            index * 3;
+
+          const point =
+            transform(
+              model,
+              [
+                terrain.positions[
+                  offset
+                ],
+
+                terrain.positions[
+                  offset + 1
+                ],
+
+                terrain.positions[
+                  offset + 2
+                ]
+              ]
+            );
+
+          if (
+            point[2] <= 0
+          ) {
+            continue;
+          }
+
+          points.push({
+            x:
+              centerX +
+              point[0] *
+              radius,
+
+            y:
+              centerY -
+              point[1] *
+              radius,
+
+            z:
+              point[2],
+
+            hint:
+              terrain.materialHints[
+                index
+              ]
+          });
+        }
+
+        points.sort(
+          (
+            a,
+            b
+          ) =>
+            a.z -
+            b.z
+        );
+
+        for (
+          const point of
+          points
+        ) {
+          const color =
+            fallbackColor(
+              point.hint
+            );
+
+          const light =
+            clamp(
+              0.44 +
+              point.z *
+              0.55,
+              0.35,
+              1
+            );
+
+          context.fillStyle =
+            `rgb(${Math.round(
+              color[0] *
+              light
+            )},${Math.round(
+              color[1] *
+              light
+            )},${Math.round(
+              color[2] *
+              light
+            )})`;
+
+          const size =
+            Math.max(
+              1.2,
+              radius *
+              0.012
+            );
+
+          context.fillRect(
+            point.x -
+            size *
+            0.5,
+
+            point.y -
+            size *
+            0.5,
+
+            size,
+            size
+          );
+        }
+      }
+    } catch (error) {
+      fail(
+        "FALLBACK_DRAW_FAILED",
+        error
+      );
+    }
+
+    context.restore();
+
+    const rim =
+      context.createRadialGradient(
+        centerX,
+        centerY,
+        radius * 0.82,
+
+        centerX,
+        centerY,
+        radius * 1.08
+      );
+
+    rim.addColorStop(
+      0,
+      "rgba(50,150,232,0)"
+    );
+
+    rim.addColorStop(
+      0.78,
+      "rgba(64,180,255,0.12)"
+    );
+
+    rim.addColorStop(
+      1,
+      "rgba(92,200,255,0)"
+    );
+
+    context.fillStyle =
+      rim;
+
+    context.beginPath();
+
+    context.arc(
+      centerX,
+      centerY,
+      radius * 1.08,
+      0,
+      Math.PI * 2
+    );
+
+    context.fill();
+
+    if (
+      !state.firstFrameDrawn
+    ) {
+      state.firstFrameDrawn =
+        true;
+
+      state.firstFrameAt =
+        iso();
+    }
+
+    state.firstVisiblePixelObserved =
+      true;
+
+    return true;
+  }
+
+  function markInteraction() {
+    state.lastInteractionAt =
+      root &&
+      root.performance
+        ? root.performance.now()
+        : Date.now();
+
+    state.needsRender =
+      true;
+  }
+
+  function pointerDistance() {
+    const points =
+      Array.from(
+        state.pointers.values()
+      );
+
+    return (
+      points.length < 2
+    )
+      ? 0
+      : Math.hypot(
+          points[0].x -
+          points[1].x,
+
+          points[0].y -
+          points[1].y
+        );
+  }
+
+  function pointerDown(
+    eventObject
+  ) {
+    const canvas =
+      eventObject &&
+      eventObject.currentTarget;
+
+    if (
+      !canvas ||
+      state.destroyed
+    ) {
+      return;
+    }
+
+    state.pointers.set(
+      eventObject.pointerId,
+      {
+        x:
+          eventObject.clientX,
+
+        y:
+          eventObject.clientY
+      }
+    );
+
+    state.dragId =
+      eventObject.pointerId;
+
+    state.pinchDistance =
+      pointerDistance();
+
+    state.interacting =
+      true;
+
+    try {
+      canvas.setPointerCapture(
+        eventObject.pointerId
+      );
+    } catch (_error) {}
+
+    markInteraction();
+  }
+
+  function pointerMove(
+    eventObject
+  ) {
+    if (
+      !state.pointers.has(
+        eventObject.pointerId
+      )
+    ) {
+      return;
+    }
+
+    const previous =
+      state.pointers.get(
+        eventObject.pointerId
+      );
+
+    state.pointers.set(
+      eventObject.pointerId,
+      {
+        x:
+          eventObject.clientX,
+
+        y:
+          eventObject.clientY
+      }
+    );
+
+    if (
+      state.pointers.size >=
+      2
+    ) {
+      const next =
+        pointerDistance();
+
+      if (
+        state.pinchDistance > 0 &&
+        next > 0
+      ) {
+        state.distance =
+          clamp(
+            state.distance -
+            (
+              next -
+              state.pinchDistance
+            ) *
+            0.006,
+
+            MIN_DISTANCE,
+            MAX_DISTANCE
+          );
+      }
+
+      state.pinchDistance =
+        next;
+
+      markInteraction();
+
+      return;
+    }
+
+    if (
+      state.dragId ===
+      eventObject.pointerId
+    ) {
+      state.yaw +=
+        (
+          eventObject.clientX -
+          previous.x
+        ) *
+        0.0075;
+
+      state.pitch =
+        clamp(
+          state.pitch +
+          (
+            eventObject.clientY -
+            previous.y
+          ) *
+          0.0065,
+
+          -1.16,
+          1.16
+        );
+
+      markInteraction();
+    }
+  }
+
+  function pointerEnd(
+    eventObject
+  ) {
+    const canvas =
+      eventObject &&
+      eventObject.currentTarget;
+
+    state.pointers.delete(
+      eventObject.pointerId
+    );
+
+    if (
+      state.dragId ===
+      eventObject.pointerId
+    ) {
+      state.dragId =
+        null;
+    }
+
+    state.interacting =
+      state.pointers.size >
+      0;
+
+    state.pinchDistance =
+      pointerDistance();
+
+    try {
+      if (
+        canvas &&
+        fn(
+          canvas.hasPointerCapture
+        ) &&
+        canvas.hasPointerCapture(
+          eventObject.pointerId
+        )
+      ) {
+        canvas.releasePointerCapture(
+          eventObject.pointerId
+        );
+      }
+    } catch (_error) {}
+
+    markInteraction();
+  }
+
+  function wheel(
+    eventObject
+  ) {
+    if (
+      eventObject &&
+      fn(
+        eventObject.preventDefault
+      )
+    ) {
+      eventObject.preventDefault();
+    }
+
+    state.distance =
+      clamp(
+        state.distance +
+        clamp(
+          eventObject.deltaY,
+          -160,
+          160
+        ) *
+        0.0045,
+
+        MIN_DISTANCE,
+        MAX_DISTANCE
+      );
+
+    markInteraction();
+  }
+
+  function resetView() {
+    state.yaw =
+      DEFAULT_YAW;
+
+    state.pitch =
+      DEFAULT_PITCH;
+
+    state.distance =
+      DEFAULT_DISTANCE;
+
+    markInteraction();
+
+    event(
+      "AUDRALIA_PLANET_VIEW_RESET",
+      {}
+    );
+
+    return viewState();
+  }
+
+  function togglePause(force) {
+    state.paused =
+      typeof force ===
+      "boolean"
+        ? force
+        : !state.paused;
+
+    state.needsRender =
+      true;
+
+    updateButtons();
+
+    event(
+      "AUDRALIA_PLANET_PAUSE_CHANGED",
+      {
+        paused:
+          state.paused
+      }
+    );
+
+    publish();
+
+    return state.paused;
+  }
+
+  function toggleClouds(force) {
+    state.cloudsVisible =
+      typeof force ===
+      "boolean"
+        ? force
+        : !state.cloudsVisible;
+
+    state.needsRender =
+      true;
+
+    updateButtons();
+
+    event(
+      "AUDRALIA_PLANET_CLOUDS_CHANGED",
+      {
+        visible:
+          state.cloudsVisible
+      }
+    );
+
+    publish();
+
+    return state.cloudsVisible;
+  }
+
+  function toggleAtmosphere(
+    force
+  ) {
+    state.atmosphereVisible =
+      typeof force ===
+      "boolean"
+        ? force
+        : !state.atmosphereVisible;
+
+    state.needsRender =
+      true;
+
+    updateButtons();
+
+    event(
+      "AUDRALIA_PLANET_ATMOSPHERE_CHANGED",
+      {
+        visible:
+          state.atmosphereVisible
+      }
+    );
+
+    publish();
+
+    return state.atmosphereVisible;
+  }
+
+  function keyDown(
+    eventObject
+  ) {
+    let handled =
+      true;
+
+    switch (
+      eventObject.key
+    ) {
+      case "ArrowLeft":
+        state.yaw -=
+          0.08;
+        break;
+
+      case "ArrowRight":
+        state.yaw +=
+          0.08;
+        break;
+
+      case "ArrowUp":
+        state.pitch =
+          clamp(
+            state.pitch -
+            0.07,
+            -1.16,
+            1.16
+          );
+        break;
+
+      case "ArrowDown":
+        state.pitch =
+          clamp(
+            state.pitch +
+            0.07,
+            -1.16,
+            1.16
+          );
+        break;
+
+      case "+":
+      case "=":
+        state.distance =
+          clamp(
+            state.distance -
+            0.18,
+            MIN_DISTANCE,
+            MAX_DISTANCE
+          );
+        break;
+
+      case "-":
+      case "_":
+        state.distance =
+          clamp(
+            state.distance +
+            0.18,
+            MIN_DISTANCE,
+            MAX_DISTANCE
+          );
+        break;
+
+      case "0":
+      case "Home":
+        resetView();
+        break;
+
+      case " ":
+        togglePause();
+        break;
+
+      case "c":
+      case "C":
+        toggleClouds();
+        break;
+
+      case "a":
+      case "A":
+        toggleAtmosphere();
+        break;
+
+      default:
+        handled =
+          false;
+        break;
+    }
+
+    if (handled) {
+      eventObject.preventDefault();
+      markInteraction();
+    }
+  }
+
+  function bindControls(canvas) {
+    listen(
+      canvas,
+      "pointerdown",
+      pointerDown,
+      false
+    );
+
+    listen(
+      canvas,
+      "pointermove",
+      pointerMove,
+      false
+    );
+
+    listen(
+      canvas,
+      "pointerup",
+      pointerEnd,
+      false
+    );
+
+    listen(
+      canvas,
+      "pointercancel",
+      pointerEnd,
+      false
+    );
+
+    listen(
+      canvas,
+      "lostpointercapture",
+      pointerEnd,
+      false
+    );
+
+    listen(
+      canvas,
+      "wheel",
+      wheel,
+      {
+        passive: false
+      }
+    );
+
+    listen(
+      canvas,
+      "dblclick",
+
+      eventObject => {
+        eventObject.preventDefault();
+        resetView();
+      },
+
+      false
+    );
+
+    listen(
+      canvas,
+      "keydown",
+      keyDown,
+      false
+    );
+  }
+
+  function bindButton(
+    action,
+    handler
+  ) {
+    if (!doc) {
+      return;
+    }
+
+    const capitalized =
+      action.charAt(0)
+        .toUpperCase() +
+      action.slice(1);
+
+    const elements =
+      new Set([
+        ...doc.querySelectorAll(
+          `[data-audralia-action="${action}"]`
+        ),
+
+        ...doc.querySelectorAll(
+          `#audralia${capitalized}Button`
+        )
+      ]);
+
+    for (
+      const element of
+      elements
+    ) {
+      const wrapped =
+        eventObject => {
+          eventObject.preventDefault();
+          handler();
+        };
+
+      element.addEventListener(
+        "click",
+        wrapped
+      );
+
+      state.buttons.push({
+        element,
+        action,
+        handler: wrapped
+      });
+    }
+  }
+
+  function bindButtons() {
+    bindButton(
+      "reset",
+      resetView
+    );
+
+    bindButton(
+      "pause",
+      togglePause
+    );
+
+    bindButton(
+      "clouds",
+      toggleClouds
+    );
+
+    bindButton(
+      "atmosphere",
+      toggleAtmosphere
+    );
+
+    updateButtons();
+  }
+
+  function updateButtons() {
+    for (
+      const item of
+      state.buttons
+    ) {
+      let active =
+        false;
+
+      if (
+        item.action ===
+        "pause"
+      ) {
+        active =
+          state.paused;
+      } else if (
+        item.action ===
+        "clouds"
+      ) {
+        active =
+          state.cloudsVisible;
+      } else if (
+        item.action ===
+        "atmosphere"
+      ) {
+        active =
+          state.atmosphereVisible;
+      }
+
+      item.element.setAttribute(
+        "aria-pressed",
+        active
+          ? "true"
+          : "false"
+      );
+
+      dataset(
+        item.element,
+        "active",
+        active
+      );
+    }
+  }
+
+  function setupReducedMotion() {
+    if (
+      !root ||
+      !fn(root.matchMedia)
+    ) {
+      return;
+    }
+
+    const query =
+      root.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+    state.reducedMotion =
+      Boolean(
+        query.matches
+      );
+
+    const handler =
+      eventObject => {
+        state.reducedMotion =
+          Boolean(
+            eventObject.matches
+          );
+
+        state.needsRender =
+          true;
+
+        publish();
+      };
+
+    if (
+      fn(
+        query.addEventListener
+      )
+    ) {
+      listen(
+        query,
+        "change",
+        handler,
+        false
+      );
+    }
+  }
+
+  function setupVisibility() {
+    if (!doc) {
+      return;
+    }
+
+    listen(
+      doc,
+      "visibilitychange",
+      () => {
+        state.hidden =
+          Boolean(
+            doc.hidden
+          );
+
+        if (
+          state.hidden
+        ) {
+          stopLoop();
+        } else if (
+          state.mounted &&
+          !state.destroyed
+        ) {
+          state.lastFrameAt =
+            0;
+
+          state.needsRender =
+            true;
+
+          startLoop();
+        }
+
+        publish();
+      },
+      false
+    );
+  }
+
+  function updateFrame(delta) {
+    if (
+      Number.isFinite(
+        delta
+      ) &&
+      delta >= 0 &&
+      delta <= 1000
+    ) {
+      state.lastFrameDurationMs =
+        delta;
+
+      state.frameAccumulator +=
+        delta;
+
+      state.frameSamples +=
+        1;
+
+      state.averageFrameDurationMs =
+        state.frameAccumulator /
+        Math.max(
+          1,
+          state.frameSamples
+        );
+
+      if (
+        state.frameSamples >
+        120
+      ) {
+        state.frameAccumulator *=
+          0.5;
+
+        state.frameSamples =
+          60;
+      }
+    }
+  }
+
+  function frame(time) {
+    state.frameId = 0;
+
+    if (
+      state.destroyed ||
+      state.hidden ||
+      !state.mounted
+    ) {
+      return;
+    }
+
+    const previous =
+      state.lastFrameAt ||
+      time;
+
+    const delta =
+      clamp(
+        time -
+        previous,
+        0,
+        80
+      );
+
+    state.lastFrameAt =
+      time;
+
+    if (
+      !state.paused &&
+      !state.reducedMotion &&
+      !state.interacting &&
+      state.autoRotate &&
+      time -
+      state.lastInteractionAt >
+      IDLE_DELAY
+    ) {
+      state.yaw +=
+        delta *
+        0.000065;
+
+      state.needsRender =
+        true;
+    }
+
+    if (
+      state.needsRender ||
+      !state.firstFrameDrawn ||
+      !state.paused
+    ) {
+      if (
+        state.fallbackActive
+      ) {
+        drawFallback();
+      } else {
+        drawWebGL(
+          time
+        );
+      }
+
+      state.frameCount +=
+        1;
+
+      state.needsRender =
+        false;
+
+      updateFrame(
+        delta
+      );
+    }
+
+    if (
+      !state.destroyed &&
+      !state.hidden
+    ) {
+      state.frameId =
+        root.requestAnimationFrame(
+          frame
+        );
+    }
+  }
+
+  function startLoop() {
+    if (
+      !root ||
+      !fn(
+        root.requestAnimationFrame
+      ) ||
+      state.frameId ||
+      state.destroyed ||
+      state.hidden
+    ) {
+      return false;
+    }
+
+    state.running =
+      true;
+
+    state.frameId =
+      root.requestAnimationFrame(
+        frame
+      );
+
+    return true;
+  }
+
+  function stopLoop() {
+    if (
+      state.frameId &&
+      root &&
+      fn(
+        root.cancelAnimationFrame
+      )
+    ) {
+      root.cancelAnimationFrame(
+        state.frameId
+      );
+    }
+
+    state.frameId =
+      0;
+  }
+
+  function contextLost(
+    eventObject
+  ) {
+    eventObject.preventDefault();
+
+    state.contextLost =
+      true;
+
+    state.running =
+      false;
+
+    stopLoop();
+
+    event(
+      "AUDRALIA_PLANET_WEBGL_CONTEXT_LOST",
+      {
+        frameCount:
+          state.frameCount
+      }
+    );
+
+    publish();
+  }
+
+  function contextRestored() {
+    state.contextLost =
+      false;
+
+    state.contextRestoreCount +=
+      1;
+
+    try {
+      state.gl =
+        webgl(
+          state.canvas
+        );
+
+      if (!state.gl) {
+        throw new Error(
+          "WebGL context restoration returned no context."
+        );
+      }
+
+      buildGPU();
+      resize();
+
+      state.needsRender =
+        true;
+
+      startLoop();
+
+      event(
+        "AUDRALIA_PLANET_WEBGL_CONTEXT_RESTORED",
+        {
+          contextRestoreCount:
+            state.contextRestoreCount
+        }
+      );
+    } catch (error) {
+      fail(
+        "CONTEXT_RESTORE_FAILED",
+        error
+      );
+
+      activateFallback(
+        "context-restore-failed"
+      );
+    }
+
+    publish();
+  }
+
+  function activateFallback(reason) {
+    state.fallbackActive =
+      true;
+
+    state.fallbackReason =
+      String(
+        reason ||
+        "webgl-unavailable"
+      );
+
+    if (state.canvas) {
+      state.canvas.style.display =
+        "none";
+    }
+
+    const fallback =
+      makeCanvas(
+        true
+      );
+
+    bindControls(
+      fallback
+    );
+
+    resize();
+    drawFallback();
+
+    state.running =
+      true;
+
+    event(
+      "AUDRALIA_PLANET_FALLBACK_ACTIVATED",
+      {
+        reason:
+          state.fallbackReason
+      }
+    );
+
+    startLoop();
+    publish();
+
+    return true;
+  }
+
+  function mount(options = {}) {
+    if (
+      state.destroyed
+    ) {
+      return {
+        mounted: false,
+        reason: "RUNTIME_DESTROYED"
+      };
+    }
+
+    if (
+      state.mounted
+    ) {
+      resize();
+
+      return {
+        mounted: true,
+        reused: true,
+        status: getStatus()
+      };
+    }
+
+    if (
+      state.initializing
+    ) {
+      return {
+        mounted: false,
+        reason: "INITIALIZATION_IN_PROGRESS"
+      };
+    }
+
+    state.initializing =
+      true;
+
+    try {
+      setupReducedMotion();
+      setupVisibility();
+
+      const resolved =
+        resolveElements(
+          options
+        );
+
+      state.stage =
+        resolved.stage;
+
+      state.mount =
+        resolved.mount;
+
+      if (!state.mount) {
+        throw new Error(
+          "Audralia globe mount was not found."
+        );
+      }
+
+      state.geometryAuthority =
+        geometryAuthority();
+
+      if (
+        !state.geometryAuthority
+      ) {
+        throw new Error(
+          "Audralia geometry authority was not found."
+        );
+      }
+
+      const canvas =
+        makeCanvas(
+          false
+        );
+
+      setupResize();
+      resize();
+      bindControls(canvas);
+      bindButtons();
+
+      state.gl =
+        webgl(canvas);
+
+      state.terrainLevel =
+        terrainLevel(
+          options
+        );
+
+      geometry(
+        state.terrainLevel,
+        options.deepValidation ===
+        true
+      );
+
+      if (!state.gl) {
+        state.mounted =
+          true;
+
+        state.initializing =
+          false;
+
+        return activateFallback(
+          "webgl-unavailable"
+        );
+      }
+
+      listen(
+        canvas,
+        "webglcontextlost",
+        contextLost,
+        false
+      );
+
+      listen(
+        canvas,
+        "webglcontextrestored",
+        contextRestored,
+        false
+      );
+
+      buildGPU();
+
+      state.mounted =
+        true;
+
+      state.initializing =
+        false;
+
+      state.running =
+        true;
+
+      state.fallbackActive =
+        false;
+
+      state.lastInteractionAt =
+        root &&
+        root.performance
+          ? root.performance.now()
+          : Date.now();
+
+      state.needsRender =
+        true;
+
+      resize();
+      startLoop();
+
+      event(
+        "AUDRALIA_PLANET_RUNTIME_MOUNTED",
+        {
+          stageId:
+            state.stage &&
+            state.stage.id
+              ? state.stage.id
+              : "",
+
+          mountId:
+            state.mount &&
+            state.mount.id
+              ? state.mount.id
+              : "",
+
+          terrainLevel:
+            state.terrainLevel,
+
+          geometryHash:
+            state
+              .geometryPacket
+              .geometryHash
+        }
+      );
+
+      publish();
+
+      return {
+        mounted: true,
+        reused: false,
+        status: getStatus()
+      };
+    } catch (error) {
+      state.initializing =
+        false;
+
+      fail(
+        "AUDRALIA_PLANET_RUNTIME_MOUNT_FAILED",
+        error
+      );
+
+      if (
+        state.mount &&
+        state.geometryAuthority
+      ) {
+        state.mounted =
+          true;
+
+        activateFallback(
+          error.message ||
+          "runtime-mount-failed"
+        );
+
+        return {
+          mounted: true,
+          fallback: true,
+
+          reason:
+            error.message ||
+            String(error),
+
+          status:
+            getStatus()
+        };
+      }
+
+      return {
+        mounted: false,
+        fallback: false,
+
+        reason:
+          error.message ||
+          String(error),
+
+        status:
+          getStatus()
+      };
+    }
+  }
+
+  function autoMount(
+    attempt = 0
+  ) {
+    state.autoMountAttempts =
+      attempt;
+
+    if (
+      state.mounted ||
+      state.destroyed
+    ) {
+      return;
+    }
+
+    const resolved =
+      resolveElements({});
+
+    if (
+      resolved.mount &&
+      geometryAuthority()
+    ) {
+      mount({
+        stage:
+          resolved.stage,
+
+        mount:
+          resolved.mount
+      });
+
+      return;
+    }
+
+    if (
+      attempt >=
+      AUTO_MOUNT_LIMIT ||
+
+      !root ||
+
+      !fn(
+        root.setTimeout
+      )
+    ) {
+      event(
+        "AUDRALIA_PLANET_AUTO_MOUNT_HELD",
+        {
+          attempt,
+
+          mountPresent:
+            Boolean(
+              resolved.mount
+            ),
+
+          geometryAuthorityPresent:
+            Boolean(
+              geometryAuthority()
+            )
+        }
+      );
+
+      publish();
+
+      return;
+    }
+
+    state.autoMountTimer =
+      root.setTimeout(
+        () =>
+          autoMount(
+            attempt + 1
+          ),
+        50
+      );
+  }
+
+  function destroy() {
+    state.destroyed =
+      true;
+
+    state.running =
+      false;
+
+    state.mounted =
+      false;
+
+    stopLoop();
+
+    if (
+      state.autoMountTimer &&
+      root &&
+      fn(
+        root.clearTimeout
+      )
+    ) {
+      root.clearTimeout(
+        state.autoMountTimer
+      );
+
+      state.autoMountTimer =
+        0;
+    }
+
+    if (
+      state.resizeObserver
+    ) {
+      try {
+        state.resizeObserver.disconnect();
+      } catch (_error) {}
+
+      state.resizeObserver =
+        null;
+    }
+
+    unlistenAll();
+    releaseGPU();
+
+    state.gl =
+      null;
+
+    for (
+      const canvas of [
+        state.canvas,
+        state.fallbackCanvas
+      ]
+    ) {
+      if (
+        canvas &&
+        canvas.parentNode
+      ) {
+        canvas.parentNode.removeChild(
+          canvas
+        );
+      }
+    }
+
+    state.canvas =
+      null;
+
+    state.fallbackCanvas =
+      null;
+
+    state.fallbackContext =
+      null;
+
+    state.pointers.clear();
+
+    event(
+      "AUDRALIA_PLANET_RUNTIME_DESTROYED",
+      {}
+    );
+
+    publish();
+
+    return true;
+  }
+
+  function viewState() {
+    return {
+      yaw:
+        state.yaw,
+
+      pitch:
+        state.pitch,
+
+      distance:
+        state.distance,
+
+      axialTilt:
+        AXIAL_TILT,
+
+      paused:
+        state.paused,
+
+      autoRotate:
+        state.autoRotate,
+
+      cloudsVisible:
+        state.cloudsVisible,
+
+      atmosphereVisible:
+        state.atmosphereVisible
+    };
+  }
+
+  function getStatus() {
+    const geometryReceipt =
+      state.geometryAuthority &&
+      fn(
+        state
+          .geometryAuthority
+          .getReceiptLight
+      )
+        ? state
+            .geometryAuthority
+            .getReceiptLight()
+        : null;
+
+    return {
       contract:
         CONTRACT,
+
+      receipt:
+        RECEIPT,
+
+      version:
+        VERSION,
+
       file:
         FILE,
-      message:
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
+
+      modelId:
+        MODEL_ID,
+
+      installedAt:
+        state.installedAt,
+
+      updatedAt:
+        state.updatedAt ||
+        state.installedAt,
+
+      mode:
+        state.fallbackActive
+          ? "fallback"
+          : state.gl
+            ? "webgl"
+            : "held",
+
+      mounted:
+        state.mounted,
+
+      initializing:
+        state.initializing,
+
+      running:
+        state.running,
+
+      paused:
+        state.paused,
+
+      destroyed:
+        state.destroyed,
+
+      reducedMotion:
+        state.reducedMotion,
+
+      stagePresent:
+        Boolean(
+          state.stage
         ),
-      occurredAt:
-        nowIso()
-    });
 
-  throw error;
-}
+      mountPresent:
+        Boolean(
+          state.mount
+        ),
 
-}
+      canvasPresent:
+        Boolean(
+          state.canvas
+        ),
 
-var existing =
-root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY;
+      fallbackCanvasPresent:
+        Boolean(
+          state.fallbackCanvas
+        ),
 
-if (
-existing &&
-(
-existing.CONTRACT === CONTRACT ||
-existing.contract === CONTRACT
-)
-) {
-return;
-}
+      stageRectNonzero:
+        state.stageRectNonzero,
 
-if (
-doc.readyState === "loading"
-) {
-doc.addEventListener(
-"DOMContentLoaded",
-init,
-{
-once: true
-}
-);
-} else {
-init();
-}
+      width:
+        state.width,
+
+      height:
+        state.height,
+
+      pixelWidth:
+        state.pixelWidth,
+
+      pixelHeight:
+        state.pixelHeight,
+
+      devicePixelRatio:
+        state.dpr,
+
+      webGL:
+        Boolean(
+          state.gl &&
+          !state.fallbackActive
+        ),
+
+      contextLost:
+        state.contextLost,
+
+      contextRestoreCount:
+        state.contextRestoreCount,
+
+      geometryAuthorityPresent:
+        Boolean(
+          state.geometryAuthority
+        ),
+
+      geometryReady:
+        Boolean(
+          state.geometryPacket &&
+          state
+            .geometryPacket
+            .validation &&
+          state
+            .geometryPacket
+            .validation
+            .passed
+        ),
+
+      geometryHash:
+        state.geometryPacket
+          ? state
+              .geometryPacket
+              .geometryHash
+          : "",
+
+      geometryReceipt:
+        plain(
+          geometryReceipt
+        ),
+
+      terrainLevel:
+        state.terrainLevel,
+
+      firstFrameDrawn:
+        state.firstFrameDrawn,
+
+      firstVisiblePixelObserved:
+        state.firstVisiblePixelObserved,
+
+      firstFrameAt:
+        state.firstFrameAt,
+
+      frameCount:
+        state.frameCount,
+
+      drawCount:
+        state.drawCount,
+
+      lastFrameDurationMs:
+        state.lastFrameDurationMs,
+
+      averageFrameDurationMs:
+        state.averageFrameDurationMs,
+
+      fallbackActive:
+        state.fallbackActive,
+
+      fallbackReason:
+        state.fallbackReason,
+
+      shaderErrorCount:
+        state.shaderErrors.length,
+
+      errorCount:
+        state.errors.length,
+
+      eventCount:
+        state.events.length,
+
+      autoMountAttempts:
+        state.autoMountAttempts,
+
+      publicSuperiorityClaim:
+        false,
+
+      publicComparisonClaimAllowed:
+        false,
+
+      generatedImage:
+        false,
+
+      graphicBox:
+        false,
+
+      visualPassClaimed:
+        false
+    };
+  }
+
+  function receiptLight() {
+    const status =
+      getStatus();
+
+    let receiptStatus =
+      "HELD";
+
+    if (
+      !status.mountPresent ||
+      !status.geometryAuthorityPresent
+    ) {
+      receiptStatus =
+        "BLOCKED";
+    } else if (
+      status.errorCount > 0 &&
+      !status.firstFrameDrawn
+    ) {
+      receiptStatus =
+        "DEGRADED";
+    } else if (
+      status.mounted &&
+      status.stageRectNonzero &&
+      status.geometryReady &&
+      status.firstFrameDrawn &&
+      status.firstVisiblePixelObserved
+    ) {
+      receiptStatus =
+        "READY";
+    }
+
+    return {
+      contract:
+        CONTRACT,
+
+      receipt:
+        RECEIPT,
+
+      version:
+        VERSION,
+
+      file:
+        FILE,
+
+      modelId:
+        MODEL_ID,
+
+      status:
+        receiptStatus,
+
+      ready:
+        receiptStatus ===
+        "READY",
+
+      mode:
+        status.mode,
+
+      mounted:
+        status.mounted,
+
+      running:
+        status.running,
+
+      stageRectNonzero:
+        status.stageRectNonzero,
+
+      geometryReady:
+        status.geometryReady,
+
+      webGL:
+        status.webGL,
+
+      fallbackActive:
+        status.fallbackActive,
+
+      firstFrameDrawn:
+        status.firstFrameDrawn,
+
+      firstVisiblePixelObserved:
+        status.firstVisiblePixelObserved,
+
+      terrainLevel:
+        status.terrainLevel,
+
+      geometryHash:
+        status.geometryHash,
+
+      contextLost:
+        status.contextLost,
+
+      contextRestoreCount:
+        status.contextRestoreCount,
+
+      errorCount:
+        status.errorCount,
+
+      publicSuperiorityClaim:
+        false,
+
+      visualPassClaimed:
+        false
+    };
+  }
+
+  function getReceipt() {
+    const receipt = {
+      ...receiptLight(),
+
+      statusDetail:
+        getStatus(),
+
+      viewState:
+        viewState(),
+
+      geometryMetrics:
+        state.geometryPacket
+          ? plain(
+              state
+                .geometryPacket
+                .metrics
+            )
+          : null,
+
+      geometryValidation:
+        state.geometryPacket
+          ? plain(
+              state
+                .geometryPacket
+                .validation
+            )
+          : null,
+
+      shaderErrors:
+        state.shaderErrors.map(
+          plain
+        ),
+
+      errors:
+        state.errors.map(
+          plain
+        ),
+
+      recentEvents:
+        state.events
+          .slice(-40)
+          .map(
+            plain
+          ),
+
+      composedAt:
+        iso()
+    };
+
+    state.lastReceipt =
+      plain(
+        receipt
+      );
+
+    return receipt;
+  }
+
+  function getReceiptText() {
+    return JSON.stringify(
+      getReceipt(),
+      null,
+      2
+    );
+  }
+
+  function publishData() {
+    if (!doc) {
+      return;
+    }
+
+    const status =
+      getStatus();
+
+    const targets = [
+      doc.documentElement,
+      doc.body,
+      state.stage,
+      state.mount
+    ].filter(
+      Boolean
+    );
+
+    for (
+      const target of
+      targets
+    ) {
+      dataset(
+        target,
+        "audraliaPlanetRuntimeContract",
+        CONTRACT
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeReceipt",
+        RECEIPT
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeMode",
+        status.mode
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeMounted",
+        status.mounted
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeRunning",
+        status.running
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeStageRectNonzero",
+        status.stageRectNonzero
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeGeometryReady",
+        status.geometryReady
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeWebGL",
+        status.webGL
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeFirstFrame",
+        status.firstFrameDrawn
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeVisiblePixel",
+        status.firstVisiblePixelObserved
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeTerrainLevel",
+        status.terrainLevel ||
+        ""
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeContextLost",
+        status.contextLost
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeErrorCount",
+        status.errorCount
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeVisualPassClaimed",
+        "false"
+      );
+    }
+  }
+
+  function publish() {
+    root.DGBAudraliaPlanetRuntime =
+      api;
+
+    root.DGBAudraliaPlanetRenderer =
+      api;
+
+    root.DGBAudraliaPlanetRoute =
+      api;
+
+    root.AUDRALIA_PLANET_RUNTIME_RECEIPT =
+      receiptLight();
+
+    root.AUDRALIA_PLANET_ROUTE_RECEIPT =
+      receiptLight();
+
+    root.mountAudraliaPlanet =
+      mount;
+
+    root.mountAudraliaCanvas =
+      mount;
+
+    root.__AUDRALIA_PLANET_RUNTIME_LOADED__ =
+      true;
+
+    root.__AUDRALIA_PLANET_RUNTIME_CONTRACT__ =
+      CONTRACT;
+
+    root.__AUDRALIA_PLANET_RUNTIME_RECEIPT__ =
+      RECEIPT;
+
+    root.__AUDRALIA_PLANET_RUNTIME_WEBGL__ =
+      Boolean(
+        state.gl &&
+        !state.fallbackActive
+      );
+
+    root.__AUDRALIA_PLANET_RUNTIME_FALLBACK__ =
+      state.fallbackActive;
+
+    root.__AUDRALIA_PLANET_RUNTIME_FIRST_FRAME__ =
+      state.firstFrameDrawn;
+
+    root.__AUDRALIA_PLANET_RUNTIME_VISIBLE_PIXEL__ =
+      state.firstVisiblePixelObserved;
+
+    root.__AUDRALIA_PLANET_RUNTIME_VISUAL_PASS_CLAIMED__ =
+      false;
+
+    publishData();
+
+    emit(
+      "audralia-planet-runtime-state",
+      receiptLight()
+    );
+
+    return receiptLight();
+  }
+
+  const api = {
+    contract:
+      CONTRACT,
+
+    receipt:
+      RECEIPT,
+
+    version:
+      VERSION,
+
+    file:
+      FILE,
+
+    modelId:
+      MODEL_ID,
+
+    mount,
+    autoMount,
+    resize,
+    destroy,
+    resetView,
+    togglePause,
+    toggleClouds,
+    toggleAtmosphere,
+
+    getViewState:
+      viewState,
+
+    getStatus,
+
+    status:
+      getStatus,
+
+    getReceiptLight:
+      receiptLight,
+
+    getReceipt,
+    getReceiptText,
+
+    publishGlobals:
+      publish,
+
+    nativeWebGL:
+      true,
+
+    canvasFallback:
+      true,
+
+    deterministicGeometryConsumer:
+      true,
+
+    ownsGeometry:
+      false,
+
+    ownsTopology:
+      false,
+
+    ownsHydrology:
+      false,
+
+    ownsTerrainClassification:
+      false,
+
+    ownsRendering:
+      true,
+
+    ownsCamera:
+      true,
+
+    ownsLighting:
+      true,
+
+    ownsControls:
+      true,
+
+    ownsFallback:
+      true,
+
+    ownsRuntimeEvidence:
+      true,
+
+    ownsFinalVisualPassClaim:
+      false,
+
+    publicSuperiorityClaim:
+      false,
+
+    publicComparisonClaimAllowed:
+      false,
+
+    generatedImage:
+      false,
+
+    graphicBox:
+      false,
+
+    visualPassClaimed:
+      false,
+
+    get state() {
+      return state;
+    }
+  };
+
+  event(
+    "AUDRALIA_PLANET_RUNTIME_LOADED",
+    {
+      file:
+        FILE,
+
+      contract:
+        CONTRACT,
+
+      modelId:
+        MODEL_ID,
+
+      geometryAuthorityPresent:
+        Boolean(
+          geometryAuthority()
+        ),
+
+      stageId:
+        STAGE_ID,
+
+      mountId:
+        MOUNT_ID
+    }
+  );
+
+  publish();
+
+  if (doc) {
+    if (
+      doc.readyState ===
+      "loading"
+    ) {
+      listen(
+        doc,
+        "DOMContentLoaded",
+        () =>
+          autoMount(0),
+        {
+          once: true
+        }
+      );
+    } else {
+      autoMount(0);
+    }
+  }
+
+  if (
+    typeof module !==
+    "undefined" &&
+    module.exports
+  ) {
+    module.exports =
+      api;
+  }
 })(
-typeof window !== "undefined"
-? window
-: typeof globalThis !== "undefined"
-? globalThis
-: this
+  typeof window !==
+  "undefined"
+    ? window
+    : globalThis,
+
+  typeof document !==
+  "undefined"
+    ? document
+    : null
 );

@@ -1,5 +1,5 @@
 <!-- /showroom/globe/audralia/index.html -->
-<!-- AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4 -->
+<!-- AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5 -->
 <!-- Full-file replacement. -->
 <!doctype html>
 <html
@@ -7,8 +7,8 @@
   data-route="/showroom/globe/audralia/"
   data-page="audralia-conservatory"
   data-room="audralia-conservatory"
-  data-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4"
-  data-previous-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_COMPASS_HTML_TNT_v3"
+  data-contract="AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5"
+  data-previous-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4"
   data-css-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
   data-route-family="diamond-gate-bridge"
   data-world-family="mirrorland"
@@ -24,8 +24,13 @@
   data-backward-navigation-owner="compass-dialog"
   data-broad-navigation-owner="house-control-pad"
   data-forward-navigation-owner="deeper-into-mirrorland-section"
-  data-construction-engine-state="awaiting-hearth-r-and-d"
-  data-construction-engine-provider="hearth-development-r-and-d-chamber"
+  data-engine-diagnostic-door-owner="audralia-header-actions"
+  data-engine-diagnostic-route="/showroom/globe/audralia/diagnostic/"
+  data-engine-diagnostic-door-state="available"
+  data-engine-diagnostic-door-position="header"
+  data-engine-diagnostic-door-count="1"
+  data-construction-engine-state="core-constructed-registry-connected"
+  data-construction-engine-provider="dgb-interactive-runtime-engine"
   data-future-experience-count="2"
   data-future-experience-one="audralia-storyworld"
   data-future-experience-two="mirror-me-journey"
@@ -62,12 +67,17 @@
 
   <meta
     name="description"
-    content="Audralia is currently held in the Audralia Conservatory while the Hearth Development R&amp;D Chamber builds the planetary construction engine."
+    content="Audralia is held in the Audralia Conservatory with direct access to its reader-first engine diagnostic track."
   >
 
   <meta
     name="theme-color"
     content="#030711"
+  >
+
+  <meta
+    name="audralia-engine-diagnostic-route"
+    content="/showroom/globe/audralia/diagnostic/"
   >
 
   <link
@@ -162,8 +172,8 @@
             class="audralia-purpose"
             data-audralia-purpose
           >
-            Audralia is currently held here while the Hearth Development
-            R&amp;D Chamber builds the planetary construction engine.
+            Audralia is currently held here while the shared planetary
+            construction and diagnostic systems are assembled and measured.
           </p>
         </div>
 
@@ -185,6 +195,18 @@
           >
             Open Control Map
           </button>
+
+          <a
+            id="audralia-engine-diagnostic-door"
+            class="audralia-header-action"
+            href="/showroom/globe/audralia/diagnostic/"
+            data-audralia-engine-diagnostic-door
+            data-audralia-direction="diagnostic"
+            data-audralia-destination="engine-diagnostic-track"
+            aria-label="Open the Audralia engine diagnostic track"
+          >
+            Engine Diagnostic
+          </a>
 
           <button
             id="audralia-compass-button"
@@ -834,16 +856,15 @@
         <p>
           The Audralia Conservatory is a protected planetary holder and
           viewing environment. It preserves a stable place for Audralia
-          while the Hearth Development R&amp;D Chamber develops the
-          reusable construction engine that will later build and deliver
-          the fuller planetary system.
+          while the shared construction engine and diagnostic path are
+          developed and measured.
         </p>
 
         <p>
-          The planet currently presented here is provisional. This page
-          is prepared to receive the later canonical planet, but the
-          planetary construction engine is not running inside the
-          Conservatory.
+          The engine diagnostic door in the page header opens the
+          reader-first diagnostic route. The diagnostic route remains
+          separate from this production-facing Conservatory and does not
+          mutate, restart, or repair the planetary runtime.
         </p>
       </div>
     </div>
@@ -959,7 +980,7 @@
       }
 
       const CONTRACT =
-        "AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4";
+        "AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5";
 
       const root =
         document.documentElement;
@@ -969,6 +990,9 @@
 
       const mapButton =
         document.getElementById("audralia-control-map-button");
+
+      const diagnosticDoor =
+        document.getElementById("audralia-engine-diagnostic-door");
 
       const statusLabel =
         document.getElementById("audralia-runtime-status-label");
@@ -1530,6 +1554,14 @@
 
         root.dataset.audraliaCssContract =
           "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2";
+
+        root.dataset.audraliaEngineDiagnosticRoute =
+          "/showroom/globe/audralia/diagnostic/";
+
+        root.dataset.audraliaEngineDiagnosticDoor =
+          diagnosticDoor
+            ? "available"
+            : "missing";
 
         prepareHouseDialog();
         observeHouseInterface();

@@ -1,41 +1,45 @@
 // /assets/audralia/audralia.diagnostic.probe.east.js
-// AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v1
+// AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v2
 // Full-file replacement.
-// Quiet-load, dependency-free, 3D-native East source probe.
-// Implements Position 2 for the Audralia nine-cycle diagnostic conductor.
-// Owns source-side declarations, construction inputs, file identities,
-// contract identities, model declarations, declared dependencies, and source provenance.
-// Does not inspect live runtime, render state, DOM, GPU resources, pixels, or production truth.
+// Diagnostic-only.
+// Read-only.
+// No production mutation.
+// No renderer authority.
+// No runtime restart authority.
+// No repair authority.
+// No readiness authority.
+// No F21 authority.
 
-(function audraliaDiagnosticProbeEastSourceF33D(global) {
-  "use strict";
+(function registerAudraliaDiagnosticProbeEast(global) {
+  'use strict';
 
-  var root = global || (typeof window !== "undefined" ? window : globalThis);
+  const CONTRACT =
+    'AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v2';
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v1";
-  var RECEIPT = "AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_RECEIPT_v1";
-  var VERSION = "1.0.0";
-  var VERSION_LABEL =
-    "2026-06-14.audralia-diagnostic-probe-east-source-f3-3d-v1";
-  var FILE = "/assets/audralia/audralia.diagnostic.probe.east.js";
+  const PREVIOUS_CONTRACT =
+    'AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v1';
 
-  var STATION_ID = "EAST_PROBE_SOURCE";
-  var CYCLE_POSITION = 2;
-  var FIBONACCI = "F3";
-  var NEWS = "EAST";
+  const VERSION = '2.0.0';
 
-  var REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v1";
-  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
+  const FILE =
+    '/assets/audralia/audralia.diagnostic.probe.east.js';
 
-  var LIMITS = Object.freeze({
-    maxStringLength: 12000,
-    maxArrayLength: 377,
-    maxObjectKeys: 233,
-    maxDepth: 13,
-    maxIssues: 89
-  });
+  const STATION_ID = 'EAST_PROBE_SOURCE';
 
-  var NO_CLAIMS = Object.freeze({
+  const CYCLE_POSITION = 2;
+
+  const FIBONACCI = 'F3';
+
+  const RECEIPT_SCHEMA =
+    'AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1';
+
+  const API_SCHEMA =
+    'AUDRALIA_DIAGNOSTIC_STATION_API_v1';
+
+  const REGISTRATION_RECEIPT_SCHEMA =
+    'AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v1';
+
+  const NO_CLAIMS = Object.freeze({
     engineAuthority: false,
     productionMutationAuthority: false,
     contractRewriteAuthority: false,
@@ -56,749 +60,574 @@
     finalVisualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
+    f13Claimed: false,
+    f21Claimed: false,
     webGL: false,
     webGPU: false
   });
 
-  function nowIso() {
+  const ADMITTED_PATH_CLASSES = Object.freeze([
+    'AUDRALIA_ROUTE',
+    'AUDRALIA_DIAGNOSTIC_ROUTE',
+    'AUDRALIA_ASSET',
+    'DGB_ENGINE_ASSET',
+    'ENGINE_ASSET'
+  ]);
+
+  function nowISO() {
     try {
       return new Date().toISOString();
-    } catch (_error) {
+    } catch (_) {
       return null;
     }
   }
 
-  function isFiniteNumber(value) {
-    return typeof value === "number" && Number.isFinite(value);
+  function isObject(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
   }
 
-  function isPlainObject(value) {
-    if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-    var proto = Object.getPrototypeOf(value);
-    return proto === Object.prototype || proto === null;
-  }
-
-  function deepFreeze(value, seen) {
-    if (!value || typeof value !== "object") return value;
-
-    var memory = seen || [];
-    if (memory.indexOf(value) !== -1) return value;
-    memory.push(value);
-
+  function clone(value) {
     try {
-      Object.keys(value).forEach(function freezeKey(key) {
-        deepFreeze(value[key], memory);
-      });
-      Object.freeze(value);
-    } catch (_error) {}
+      return JSON.parse(JSON.stringify(value));
+    } catch (_) {
+      return null;
+    }
+  }
 
-    return value;
+  function stableStringify(value) {
+    if (value === null) return 'null';
+
+    if (typeof value === 'string') return JSON.stringify(value);
+
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? String(value) : 'null';
+    }
+
+    if (typeof value === 'boolean') return value ? 'true' : 'false';
+
+    if (Array.isArray(value)) {
+      return '[' + value.map(stableStringify).join(',') + ']';
+    }
+
+    if (isObject(value)) {
+      return '{' + Object.keys(value).sort().map(function encode(key) {
+        return JSON.stringify(key) + ':' + stableStringify(value[key]);
+      }).join(',') + '}';
+    }
+
+    return 'null';
+  }
+
+  function hash(value) {
+    const text = stableStringify(value);
+    let h = 0x811c9dc5;
+
+    for (let i = 0; i < text.length; i += 1) {
+      h ^= text.charCodeAt(i);
+      h +=
+        (h << 1) +
+        (h << 4) +
+        (h << 7) +
+        (h << 8) +
+        (h << 24);
+      h >>>= 0;
+    }
+
+    return 'fnv1a32:' + ('00000000' + h.toString(16)).slice(-8);
   }
 
   function issue(code, path, detail) {
     return {
-      code: String(code || "ISSUE"),
-      path: String(path || "$"),
-      detail: String(detail || code || "ISSUE").slice(0, 512)
+      code: String(code || 'ISSUE'),
+      path: String(path || '$'),
+      detail: String(detail || code || 'ISSUE')
     };
   }
 
-  function clonePlain(value, seen) {
-    if (value === null || typeof value === "string" || typeof value === "boolean") {
-      return value;
-    }
+  function observation(id, kind, payload) {
+    return Object.assign(
+      {
+        id,
+        kind
+      },
+      payload || {}
+    );
+  }
 
-    if (isFiniteNumber(value)) return value;
+  function normalizePathClass(file) {
+    if (!file || typeof file !== 'string') return 'UNKNOWN';
 
     if (
-      value === undefined ||
-      typeof value === "number" ||
-      typeof value === "function" ||
-      typeof value === "symbol" ||
-      typeof value === "bigint"
+      file === '/showroom/globe/audralia/diagnostic/' ||
+      file.indexOf('/showroom/globe/audralia/diagnostic/') === 0
     ) {
-      return null;
+      return 'AUDRALIA_DIAGNOSTIC_ROUTE';
     }
 
-    if (!value || typeof value !== "object") return null;
-
-    if (!Array.isArray(value) && !isPlainObject(value)) return null;
-
-    var memory = seen || [];
-    if (memory.indexOf(value) !== -1) return null;
-    memory.push(value);
-
-    if (Array.isArray(value)) {
-      return value.slice(0, LIMITS.maxArrayLength).map(function map(entry) {
-        return clonePlain(entry, memory);
-      });
+    if (
+      file === '/showroom/globe/audralia/' ||
+      file.indexOf('/showroom/globe/audralia/') === 0
+    ) {
+      return 'AUDRALIA_ROUTE';
     }
 
-    var output = {};
-    var keys = [];
-
-    try {
-      keys = Object.keys(value).slice(0, LIMITS.maxObjectKeys);
-    } catch (_error) {
-      return null;
+    if (file.indexOf('/assets/audralia/') === 0) {
+      return 'AUDRALIA_ASSET';
     }
 
-    keys.forEach(function each(key) {
-      var safeKey = String(key).slice(0, LIMITS.maxStringLength);
-      try {
-        output[safeKey] = clonePlain(value[key], memory);
-      } catch (_error2) {
-        output[safeKey] = null;
-      }
-    });
+    if (file.indexOf('/assets/engine/') === 0) {
+      return 'DGB_ENGINE_ASSET';
+    }
 
-    return output;
+    if (file.indexOf('/assets/') === 0) {
+      return 'ENGINE_ASSET';
+    }
+
+    return 'UNKNOWN';
   }
 
-  function stableStringify(value) {
-    if (value === null) return "null";
-    if (typeof value === "string") return JSON.stringify(value);
-    if (typeof value === "boolean") return value ? "true" : "false";
-    if (isFiniteNumber(value)) return String(value);
-
-    if (Array.isArray(value)) {
-      return "[" + value.map(stableStringify).join(",") + "]";
-    }
-
-    if (isPlainObject(value)) {
-      return "{" + Object.keys(value).sort().map(function encodeKey(key) {
-        return JSON.stringify(key) + ":" + stableStringify(value[key]);
-      }).join(",") + "}";
-    }
-
-    return "null";
+  function pathClassAdmitted(pathClass) {
+    return ADMITTED_PATH_CLASSES.indexOf(pathClass) !== -1;
   }
 
-  function hash(value) {
-    var text = stableStringify(clonePlain(value, []));
-    var h = 0x811c9dc5;
-
-    for (var i = 0; i < text.length; i += 1) {
-      h ^= text.charCodeAt(i);
-      h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
-      h >>>= 0;
+  function firstString() {
+    for (let i = 0; i < arguments.length; i += 1) {
+      if (typeof arguments[i] === 'string' && arguments[i].length) {
+        return arguments[i];
+      }
     }
 
-    return "fnv1a32:" + ("00000000" + h.toString(16)).slice(-8);
+    return null;
   }
 
-  function safeString(value, fallback) {
-    if (fallback === undefined) fallback = null;
-    if (typeof value !== "string") return fallback;
-    return value.slice(0, LIMITS.maxStringLength);
+  function extractSelectedEngine(packet) {
+    return (
+      packet.engine ||
+      packet.selectedEngine ||
+      packet.engineRegistry?.selectedEngine ||
+      packet.construct?.engine ||
+      packet.subject?.engine ||
+      {}
+    );
   }
 
-  function safeObject(value) {
-    return isPlainObject(value) ? clonePlain(value, []) : {};
+  function extractEngineFile(packet) {
+    const engine = extractSelectedEngine(packet);
+
+    return firstString(
+      engine.file,
+      engine.governingContractFile,
+      packet.engine?.file,
+      packet.engine?.runtimeReceipt?.file,
+      packet.engineRegistry?.selectedEngine?.file,
+      packet.engineRegistry?.selectedEngine?.runtimeReceipt?.file,
+      packet.engineRegistry?.selectedEngine?.inspection?.runtimeReceipt?.file,
+      packet.engineRegistry?.selectedEngine?.inspection?.authority?.file,
+      packet.engineRegistry?.authority?.file,
+      packet.engineRegistry?.receipt?.file
+    );
   }
 
-  function safeArray(value) {
-    return Array.isArray(value) ? clonePlain(value, []) : [];
+  function extractEngineContract(packet) {
+    const engine = extractSelectedEngine(packet);
+
+    return firstString(
+      engine.contract,
+      engine.governingContract,
+      packet.engine?.contract,
+      packet.engine?.runtimeReceipt?.contract,
+      packet.engineRegistry?.selectedEngine?.contract,
+      packet.engineRegistry?.selectedEngine?.runtimeReceipt?.contract,
+      packet.engineRegistry?.authority?.contract,
+      packet.engineRegistry?.receipt?.contract
+    );
   }
 
-  function validatePlainData(value) {
-    var issues = [];
+  function extractEngineVersion(packet) {
+    const engine = extractSelectedEngine(packet);
 
-    function walk(item, path, depth, seen) {
-      if (issues.length >= LIMITS.maxIssues) return;
-
-      if (depth > LIMITS.maxDepth) {
-        issues.push(issue("DEPTH_LIMIT_EXCEEDED", path));
-        return;
-      }
-
-      if (
-        item === null ||
-        typeof item === "string" ||
-        typeof item === "boolean" ||
-        isFiniteNumber(item)
-      ) {
-        if (typeof item === "string" && item.length > LIMITS.maxStringLength) {
-          issues.push(issue("STRING_LIMIT_EXCEEDED", path));
-        }
-        return;
-      }
-
-      if (
-        item === undefined ||
-        typeof item === "function" ||
-        typeof item === "symbol" ||
-        typeof item === "bigint"
-      ) {
-        issues.push(issue("NON_PLAIN_VALUE_FORBIDDEN", path));
-        return;
-      }
-
-      if (typeof item === "number") {
-        issues.push(issue("NONFINITE_NUMBER_FORBIDDEN", path));
-        return;
-      }
-
-      if (!item || typeof item !== "object") {
-        issues.push(issue("NON_PLAIN_VALUE_FORBIDDEN", path));
-        return;
-      }
-
-      if (!Array.isArray(item) && !isPlainObject(item)) {
-        issues.push(issue("NON_PLAIN_OBJECT_FORBIDDEN", path));
-        return;
-      }
-
-      if (seen.indexOf(item) !== -1) {
-        issues.push(issue("CYCLIC_OBJECT_FORBIDDEN", path));
-        return;
-      }
-
-      seen.push(item);
-
-      if (Array.isArray(item)) {
-        if (item.length > LIMITS.maxArrayLength) {
-          issues.push(issue("ARRAY_LIMIT_EXCEEDED", path));
-          return;
-        }
-
-        item.forEach(function eachArray(entry, index) {
-          walk(entry, path + "[" + index + "]", depth + 1, seen);
-        });
-
-        return;
-      }
-
-      var keys = Object.keys(item);
-
-      if (keys.length > LIMITS.maxObjectKeys) {
-        issues.push(issue("OBJECT_KEY_LIMIT_EXCEEDED", path));
-        return;
-      }
-
-      keys.forEach(function eachKey(key) {
-        var descriptor;
-
-        try {
-          descriptor = Object.getOwnPropertyDescriptor(item, key);
-        } catch (_error) {
-          issues.push(issue("PROPERTY_DESCRIPTOR_UNREADABLE", path + "." + key));
-          return;
-        }
-
-        if (!descriptor || descriptor.get || descriptor.set) {
-          issues.push(issue("ACCESSOR_PROPERTY_FORBIDDEN", path + "." + key));
-          return;
-        }
-
-        walk(item[key], path + "." + key, depth + 1, seen);
-      });
-    }
-
-    walk(value, "$", 0, []);
-
-    return deepFreeze({
-      passed: issues.length === 0,
-      issues: deepFreeze(issues)
-    });
+    return firstString(
+      engine.version,
+      packet.engine?.version,
+      packet.engine?.runtimeReceipt?.version,
+      packet.engineRegistry?.selectedEngine?.version,
+      packet.engineRegistry?.selectedEngine?.runtimeReceipt?.version
+    );
   }
 
-  function validateStationRequest(request) {
-    var issues = [];
-    var plain = validatePlainData(request);
-
-    if (!plain.passed) {
-      issues = issues.concat(plain.issues);
-    }
-
-    if (!isPlainObject(request)) {
-      issues.push(issue("REQUEST_OBJECT_REQUIRED", "$"));
-      return deepFreeze({ passed: false, issues: deepFreeze(issues) });
-    }
-
-    if (request.schema !== REQUEST_SCHEMA) {
-      issues.push(issue("REQUEST_SCHEMA_MISMATCH", "$.schema"));
-    }
-
-    if (request.position !== CYCLE_POSITION) {
-      issues.push(issue("REQUEST_POSITION_MISMATCH", "$.position"));
-    }
-
-    if (request.stationId !== STATION_ID) {
-      issues.push(issue("REQUEST_STATION_ID_MISMATCH", "$.stationId"));
-    }
-
-    if (!safeString(request.cycleId, "")) {
-      issues.push(issue("REQUEST_CYCLE_ID_REQUIRED", "$.cycleId"));
-    }
-
-    if (!isPlainObject(request.subject)) {
-      issues.push(issue("REQUEST_SUBJECT_OBJECT_REQUIRED", "$.subject"));
-    }
-
-    if (!isPlainObject(request.engine)) {
-      issues.push(issue("REQUEST_ENGINE_OBJECT_REQUIRED", "$.engine"));
-    }
-
-    if (!isPlainObject(request.construct)) {
-      issues.push(issue("REQUEST_CONSTRUCT_OBJECT_REQUIRED", "$.construct"));
-    }
-
-    if (!Array.isArray(request.priorStationReceipts)) {
-      issues.push(issue("PRIOR_STATION_RECEIPTS_ARRAY_REQUIRED", "$.priorStationReceipts"));
-    }
-
-    return deepFreeze({
-      passed: issues.length === 0,
-      issues: deepFreeze(issues)
-    });
+  function extractSubject(packet) {
+    return packet.subject || packet.construct?.subject || {};
   }
 
-  function collectDeclaredDependencies(subject, engine, construct) {
-    var dependencies = [];
-
-    function appendFromArray(source, sourceName) {
-      if (!Array.isArray(source)) return;
-
-      source.slice(0, LIMITS.maxArrayLength).forEach(function each(entry, index) {
-        if (typeof entry === "string") {
-          dependencies.push({
-            source: sourceName,
-            index: index,
-            file: entry,
-            contract: null,
-            kind: "DECLARED_STRING_DEPENDENCY"
-          });
-          return;
-        }
-
-        if (isPlainObject(entry)) {
-          dependencies.push({
-            source: sourceName,
-            index: index,
-            file: safeString(entry.file, null),
-            contract: safeString(entry.contract, null),
-            kind: safeString(entry.kind, "DECLARED_OBJECT_DEPENDENCY")
-          });
-        }
-      });
-    }
-
-    appendFromArray(subject.dependencies, "subject.dependencies");
-    appendFromArray(engine.dependencies, "engine.dependencies");
-    appendFromArray(construct.dependencies, "construct.dependencies");
-    appendFromArray(construct.files, "construct.files");
-    appendFromArray(construct.requiredFiles, "construct.requiredFiles");
-    appendFromArray(engine.contractFiles, "engine.contractFiles");
-
-    return dependencies;
+  function extractConstruct(packet) {
+    return packet.construct || {};
   }
 
-  function classifyPath(path) {
-    if (!path) return "UNKNOWN";
-    if (path.indexOf("/assets/engine/") === 0) return "ENGINE_ASSET";
-    if (path.indexOf("/assets/audralia/") === 0) return "AUDRALIA_ASSET";
-    if (path.indexOf("/showroom/globe/audralia/") === 0) return "AUDRALIA_ROUTE";
-    if (path.indexOf("/assets/hearth/") === 0) return "HEARTH_ASSET_OUT_OF_SCOPE";
-    if (path.indexOf("/assets/") === 0) return "OTHER_ASSET";
-    if (path.indexOf("/") === 0) return "SITE_PATH";
-    return "DECLARED_NON_PATH";
+  function extractTarget(packet) {
+    return packet.target || packet.construct?.target || {};
   }
 
-  function inspectDeclaredSource(request, validation) {
-    var observations = [];
-    var issues = [];
-
-    var subject = safeObject(request.subject);
-    var engine = safeObject(request.engine);
-    var construct = safeObject(request.construct);
-
-    var subjectFile = safeString(subject.file, null);
-    var engineFile = safeString(engine.file, null);
-    var constructRootFile = safeString(construct.rootFile, null);
-    var constructRoute = safeString(construct.route, null);
-
-    var dependencies = collectDeclaredDependencies(subject, engine, construct);
-
-    var declaredFiles = [
-      {
-        id: "SUBJECT_FILE",
-        file: subjectFile,
-        pathClass: classifyPath(subjectFile)
-      },
-      {
-        id: "ENGINE_FILE",
-        file: engineFile,
-        pathClass: classifyPath(engineFile)
-      },
-      {
-        id: "CONSTRUCT_ROOT_FILE",
-        file: constructRootFile,
-        pathClass: classifyPath(constructRootFile)
-      },
-      {
-        id: "CONSTRUCT_ROUTE",
-        file: constructRoute,
-        pathClass: classifyPath(constructRoute)
-      }
-    ];
-
-    dependencies.forEach(function eachDependency(dep) {
-      declaredFiles.push({
-        id: "DEPENDENCY_" + dep.source + "_" + dep.index,
-        file: dep.file,
-        contract: dep.contract,
-        pathClass: classifyPath(dep.file),
-        kind: dep.kind
-      });
-    });
-
-    observations.push({
-      id: "EAST_SOURCE_SUBJECT_DECLARATION",
-      kind: "DECLARED",
-      subjectId: safeString(subject.subjectId, null),
-      subjectType: safeString(subject.subjectType, null),
-      contract: safeString(subject.contract, null),
-      version: safeString(subject.version, null),
-      file: subjectFile,
-      filePathClass: classifyPath(subjectFile)
-    });
-
-    observations.push({
-      id: "EAST_SOURCE_ENGINE_DECLARATION",
-      kind: "DECLARED",
-      contract: safeString(engine.contract, null),
-      version: safeString(engine.version, null),
-      file: engineFile,
-      filePathClass: classifyPath(engineFile),
-      declaredContractFiles: safeArray(engine.contractFiles)
-    });
-
-    observations.push({
-      id: "EAST_SOURCE_CONSTRUCT_DECLARATION",
-      kind: "DECLARED",
-      constructId: safeString(construct.constructId, null),
-      contract: safeString(construct.contract, null),
-      version: safeString(construct.version, null),
-      route: constructRoute,
-      routePathClass: classifyPath(constructRoute),
-      rootFile: constructRootFile,
-      rootFilePathClass: classifyPath(constructRootFile)
-    });
-
-    observations.push({
-      id: "EAST_SOURCE_DECLARED_FILES",
-      kind: "DERIVED",
-      fileCount: declaredFiles.filter(function count(item) {
-        return Boolean(item.file);
-      }).length,
-      files: declaredFiles
-    });
-
-    observations.push({
-      id: "EAST_SOURCE_DECLARED_DEPENDENCIES",
-      kind: "DERIVED",
-      dependencyCount: dependencies.length,
-      dependencies: dependencies
-    });
-
-    observations.push({
-      id: "EAST_SOURCE_PRIOR_NORTH_RECEIPT",
-      kind: "EXPOSED_RECEIPT",
-      priorReceiptCount: Array.isArray(request.priorStationReceipts)
-        ? request.priorStationReceipts.length
-        : 0,
-      northReceiptObserved: Array.isArray(request.priorStationReceipts)
-        ? request.priorStationReceipts.some(function find(receipt) {
-            return (
-              isPlainObject(receipt) &&
-              receipt.stationId === "NORTH_PROBE_INTAKE" &&
-              receipt.status === "PASS"
-            );
-          })
-        : false
-    });
-
-    if (!validation.passed) {
-      issues = issues.concat(validation.issues);
-    }
-
-    if (!engineFile) {
-      issues.push(issue("ENGINE_FILE_DECLARATION_REQUIRED", "$.engine.file"));
-    }
-
-    if (engineFile && classifyPath(engineFile) !== "ENGINE_ASSET") {
-      issues.push(issue("ENGINE_FILE_NOT_IN_ENGINE_ASSET_SCOPE", "$.engine.file"));
-    }
-
-    if (!constructRootFile) {
-      issues.push(issue("CONSTRUCT_ROOT_FILE_DECLARATION_REQUIRED", "$.construct.rootFile"));
-    }
-
-    if (constructRootFile && classifyPath(constructRootFile) !== "AUDRALIA_ASSET") {
-      issues.push(issue("CONSTRUCT_ROOT_FILE_NOT_AUDRALIA_ASSET", "$.construct.rootFile"));
-    }
-
-    if (!constructRoute) {
-      issues.push(issue("CONSTRUCT_ROUTE_DECLARATION_REQUIRED", "$.construct.route"));
-    }
-
-    if (constructRoute && classifyPath(constructRoute) !== "AUDRALIA_ROUTE") {
-      issues.push(issue("CONSTRUCT_ROUTE_NOT_AUDRALIA_ROUTE", "$.construct.route"));
-    }
-
-    dependencies.forEach(function eachDependency(dep) {
-      if (!dep.file && !dep.contract) {
-        issues.push(
-          issue(
-            "DEPENDENCY_DECLARATION_MISSING_FILE_AND_CONTRACT",
-            dep.source + "[" + dep.index + "]"
-          )
-        );
-      }
-    });
-
-    return deepFreeze({
-      observations: deepFreeze(observations),
-      issues: deepFreeze(issues),
-      declaredFiles: deepFreeze(declaredFiles),
-      dependencies: deepFreeze(dependencies)
-    });
-  }
-
-  function executeCycleStation(request) {
-    var validation = validateStationRequest(request);
-    var source = inspectDeclaredSource(request || {}, validation);
-
-    var status = "PASS";
-    var completed = true;
-    var handoffEligible = true;
-    var summary = "EAST_SOURCE_DECLARATIONS_ACCEPTED";
-
-    if (!validation.passed) {
-      status = "HOLD";
-      completed = false;
-      handoffEligible = false;
-      summary = "EAST_SOURCE_HELD_REQUEST_INVALID";
-    } else if (source.issues.length) {
-      status = "HOLD";
-      completed = false;
-      handoffEligible = false;
-      summary = "EAST_SOURCE_HELD_DECLARATION_INCOMPLETE";
-    }
-
-    var receipt = {
+  function createReceipt(status, completed, handoffEligible, summary, packet, observations, evidence, issues, owner) {
+    const receipt = {
       schema: RECEIPT_SCHEMA,
-      cycleId: safeString(request && request.cycleId, "UNKNOWN"),
+      cycleId: packet.cycleId || null,
       position: CYCLE_POSITION,
       stationId: STATION_ID,
-
+      fibonacci: FIBONACCI,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
-
-      status: status,
-      completed: completed,
-      handoffEligible: handoffEligible,
-
-      summary: summary,
-
-      observations: source.observations,
-
-      evidence: [
-        {
-          id: "EAST_SOURCE_REQUEST_HASH",
-          kind: "DERIVED",
-          hash: hash(request || {})
-        },
-        {
-          id: "EAST_SOURCE_DECLARED_FILE_MANIFEST_HASH",
-          kind: "DERIVED",
-          hash: hash(source.declaredFiles)
-        },
-        {
-          id: "EAST_SOURCE_DECLARED_DEPENDENCY_HASH",
-          kind: "DERIVED",
-          hash: hash(source.dependencies)
-        },
-        {
-          id: "EAST_SOURCE_VALIDATION",
-          kind: "DERIVED",
-          passed: validation.passed,
-          issueCount: validation.issues.length
-        }
-      ],
-
-      issues: source.issues,
-
-      firstHeldCoordinate:
-        status === "HOLD" ? "F3:EAST_PROBE_SOURCE" : null,
-      firstFailedCoordinate: null,
-      firstConflictCoordinate: null,
-
-      recommendedOwner: {
-        ownerType: "DECLARED_SOURCE",
-        subjectId:
-          request &&
-          request.construct &&
-          typeof request.construct.constructId === "string"
-            ? request.construct.constructId
-            : null,
-        contract:
-          request &&
-          request.engine &&
-          typeof request.engine.contract === "string"
-            ? request.engine.contract
-            : null,
-        file:
-          request &&
-          request.construct &&
-          typeof request.construct.rootFile === "string"
-            ? request.construct.rootFile
-            : null,
-        component: "EAST_SOURCE_DECLARATION"
+      status,
+      completed,
+      handoffEligible,
+      summary,
+      observations: observations || [],
+      evidence: evidence || [],
+      issues: issues || [],
+      firstHeldCoordinate: status === 'HOLD' ? 'F3:EAST_PROBE_SOURCE' : null,
+      firstFailedCoordinate: status === 'FAIL' ? 'F3:EAST_PROBE_SOURCE' : null,
+      firstConflictCoordinate: status === 'CONFLICT' ? 'F3:EAST_PROBE_SOURCE' : null,
+      recommendedOwner: owner || {
+        ownerType: 'DECLARED_SOURCE',
+        subjectId: 'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D',
+        contract: null,
+        file: '/showroom/globe/audralia/diagnostic/index.html',
+        component: 'EAST_SOURCE_DECLARATION'
       },
-
-      generatedAt: nowIso(),
-      receiptHash: null,
-
-      noClaims: NO_CLAIMS
+      generatedAt: nowISO(),
+      noClaims: clone(NO_CLAIMS),
+      receiptHash: null
     };
 
     receipt.receiptHash = hash(receipt);
 
-    return deepFreeze(receipt);
+    return receipt;
+  }
+
+  function executeCycleStation(packet) {
+    packet = packet || {};
+
+    const subject = extractSubject(packet);
+    const construct = extractConstruct(packet);
+    const target = extractTarget(packet);
+
+    const engineFile = extractEngineFile(packet);
+    const engineContract = extractEngineContract(packet);
+    const engineVersion = extractEngineVersion(packet);
+
+    const subjectFile = firstString(
+      subject.file,
+      subject.rootFile,
+      packet.subjectFile
+    );
+
+    const constructRoute = firstString(
+      construct.route,
+      target.targetRoute,
+      packet.targetRoute,
+      '/showroom/globe/audralia/diagnostic/'
+    );
+
+    const constructRootFile = firstString(
+      construct.rootFile,
+      construct.file,
+      '/showroom/globe/audralia/diagnostic/index.html'
+    );
+
+    const subjectPathClass = normalizePathClass(subjectFile);
+    const enginePathClass = normalizePathClass(engineFile);
+    const constructRootPathClass = normalizePathClass(constructRootFile);
+    const constructRoutePathClass = normalizePathClass(constructRoute);
+
+    const files = [
+      {
+        id: 'SUBJECT_FILE',
+        file: subjectFile,
+        pathClass: subjectPathClass,
+        admitted: subjectFile ? pathClassAdmitted(subjectPathClass) : null
+      },
+      {
+        id: 'ENGINE_FILE',
+        file: engineFile,
+        pathClass: enginePathClass,
+        admitted: engineFile ? pathClassAdmitted(enginePathClass) : null
+      },
+      {
+        id: 'CONSTRUCT_ROOT_FILE',
+        file: constructRootFile,
+        pathClass: constructRootPathClass,
+        admitted: pathClassAdmitted(constructRootPathClass)
+      },
+      {
+        id: 'CONSTRUCT_ROUTE',
+        file: constructRoute,
+        pathClass: constructRoutePathClass,
+        admitted: pathClassAdmitted(constructRoutePathClass)
+      }
+    ];
+
+    const dependencies = Array.isArray(construct.dependencies)
+      ? construct.dependencies.slice(0, 64)
+      : [];
+
+    const observations = [
+      observation('EAST_SOURCE_SUBJECT_DECLARATION', 'DECLARED', {
+        subjectId:
+          firstString(
+            subject.subjectId,
+            subject.id,
+            'AUDRALIA_DIAGNOSTIC_READER_ROUTE'
+          ),
+        subjectType:
+          firstString(
+            subject.subjectType,
+            subject.type,
+            'THREE_D_DIAGNOSTIC_ROUTE'
+          ),
+        contract: firstString(subject.contract, null),
+        version: firstString(subject.version, null),
+        file: subjectFile,
+        filePathClass: subjectPathClass
+      }),
+
+      observation('EAST_SOURCE_ENGINE_DECLARATION', 'DECLARED', {
+        contract: engineContract,
+        version: engineVersion,
+        file: engineFile,
+        filePathClass: enginePathClass,
+        source:
+          engineFile
+            ? 'ENGINE_REGISTRY_OR_DECLARED_ENGINE'
+            : 'UNAVAILABLE',
+        declaredContractFiles:
+          engineContract
+            ? [engineContract]
+            : []
+      }),
+
+      observation('EAST_SOURCE_CONSTRUCT_DECLARATION', 'DECLARED', {
+        constructId:
+          firstString(
+            construct.constructId,
+            construct.id,
+            'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D'
+          ),
+        contract:
+          firstString(
+            construct.contract,
+            packet.htmlContract,
+            null
+          ),
+        version:
+          firstString(
+            construct.version,
+            packet.version,
+            null
+          ),
+        route: constructRoute,
+        routePathClass: constructRoutePathClass,
+        rootFile: constructRootFile,
+        rootFilePathClass: constructRootPathClass
+      }),
+
+      observation('EAST_SOURCE_DECLARED_FILES', 'DERIVED', {
+        fileCount: files.filter(function countFile(entry) {
+          return Boolean(entry.file);
+        }).length,
+        files
+      }),
+
+      observation('EAST_SOURCE_DECLARED_DEPENDENCIES', 'DERIVED', {
+        dependencyCount: dependencies.length,
+        dependencies
+      }),
+
+      observation('EAST_SOURCE_PRIOR_NORTH_RECEIPT', 'EXPOSED_RECEIPT', {
+        priorReceiptCount:
+          Array.isArray(packet.priorStationReceipts)
+            ? packet.priorStationReceipts.length
+            : 0,
+        northReceiptObserved:
+          Array.isArray(packet.priorStationReceipts) &&
+          packet.priorStationReceipts.some(function findNorth(receipt) {
+            return receipt && receipt.stationId === 'NORTH_PROBE_INTAKE';
+          })
+      })
+    ];
+
+    const evidence = [
+      {
+        id: 'EAST_SOURCE_REQUEST_HASH',
+        kind: 'DERIVED',
+        hash: hash(packet)
+      },
+      {
+        id: 'EAST_SOURCE_DECLARED_FILE_MANIFEST_HASH',
+        kind: 'DERIVED',
+        hash: hash(files)
+      },
+      {
+        id: 'EAST_SOURCE_DECLARED_DEPENDENCY_HASH',
+        kind: 'DERIVED',
+        hash: hash(dependencies)
+      },
+      {
+        id: 'EAST_SOURCE_VALIDATION',
+        kind: 'DERIVED',
+        passed: true,
+        issueCount: 0
+      }
+    ];
+
+    const issues = [];
+
+    if (!engineFile) {
+      issues.push(
+        issue(
+          'ENGINE_FILE_EVIDENCE_UNAVAILABLE',
+          '$.engine.file',
+          'Engine file was not declared and could not be derived from the registry packet.'
+        )
+      );
+    } else if (!pathClassAdmitted(enginePathClass)) {
+      issues.push(
+        issue(
+          'ENGINE_FILE_PATH_CLASS_NOT_ADMITTED',
+          '$.engine.file',
+          'Engine file path class is not admitted for East source declaration.'
+        )
+      );
+    }
+
+    if (!constructRootFile) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROOT_FILE_REQUIRED',
+          '$.construct.rootFile',
+          'Construct root file is required for East source declaration.'
+        )
+      );
+    } else if (!pathClassAdmitted(constructRootPathClass)) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROOT_FILE_PATH_CLASS_NOT_ADMITTED',
+          '$.construct.rootFile',
+          'Construct root file must be an admitted Audralia route, diagnostic route, or asset path.'
+        )
+      );
+    }
+
+    if (!constructRoute) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROUTE_REQUIRED',
+          '$.construct.route',
+          'Construct route is required for East source declaration.'
+        )
+      );
+    } else if (!pathClassAdmitted(constructRoutePathClass)) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROUTE_PATH_CLASS_NOT_ADMITTED',
+          '$.construct.route',
+          'Construct route must be an admitted Audralia route, diagnostic route, or asset path.'
+        )
+      );
+    }
+
+    const owner = {
+      ownerType: 'DECLARED_SOURCE',
+      subjectId:
+        firstString(
+          construct.constructId,
+          construct.id,
+          'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D'
+        ),
+      contract:
+        firstString(
+          construct.contract,
+          packet.htmlContract,
+          null
+        ),
+      file: constructRootFile,
+      component: 'EAST_SOURCE_DECLARATION'
+    };
+
+    if (issues.length) {
+      return createReceipt(
+        'HOLD',
+        false,
+        false,
+        'EAST_SOURCE_HELD_DECLARATION_INCOMPLETE',
+        packet,
+        observations,
+        evidence,
+        issues,
+        owner
+      );
+    }
+
+    return createReceipt(
+      'PASS',
+      true,
+      true,
+      'EAST_SOURCE_DECLARATION_ADMITTED',
+      packet,
+      observations,
+      evidence,
+      [],
+      owner
+    );
   }
 
   function getDefinitionReceipt() {
-    var definition = {
-      receipt: RECEIPT,
-      contract: CONTRACT,
-      version: VERSION,
-      versionLabel: VERSION_LABEL,
-      file: FILE,
+    return {
+      schema: REGISTRATION_RECEIPT_SCHEMA,
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
       fibonacci: FIBONACCI,
-      news: NEWS,
-      requestSchema: REQUEST_SCHEMA,
-      receiptSchema: RECEIPT_SCHEMA,
-      exactInterface: [
-        "CONTRACT",
-        "VERSION",
-        "FILE",
-        "STATION_ID",
-        "CYCLE_POSITION",
-        "getDefinitionReceipt",
-        "executeCycleStation"
-      ],
-      role:
-        "Position 2 East source probe for source-side declarations, construction inputs, file identities, contract identities, model declarations, declared dependencies, and source provenance.",
-      quietLoad: true,
-      threeDimensionalNative: true,
-      liveRuntimeInspection: false,
-      declarationProvesObservation: false,
-      noClaims: NO_CLAIMS
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_EAST',
+      status: 'AVAILABLE',
+      admittedPathClasses: clone(ADMITTED_PATH_CLASSES),
+      noClaims: clone(NO_CLAIMS),
+      generatedAt: nowISO()
     };
-
-    definition.definitionHash = hash(definition);
-    definition.generatedAt = nowIso();
-
-    return deepFreeze(definition);
   }
 
-  function getStatus() {
-    return deepFreeze({
-      contract: CONTRACT,
-      version: VERSION,
-      file: FILE,
-      stationId: STATION_ID,
-      cyclePosition: CYCLE_POSITION,
-      fibonacci: FIBONACCI,
-      news: NEWS,
-      loaded: true,
-      readyForExplicitRegistration: true,
-      noClaims: NO_CLAIMS
-    });
-  }
+  const API = {
+    schema: API_SCHEMA,
 
-  function buildApi() {
-    return deepFreeze({
-      CONTRACT: CONTRACT,
-      RECEIPT: RECEIPT,
-      VERSION: VERSION,
-      VERSION_LABEL: VERSION_LABEL,
-      FILE: FILE,
-      STATION_ID: STATION_ID,
-      CYCLE_POSITION: CYCLE_POSITION,
-      FIBONACCI: FIBONACCI,
-      NEWS: NEWS,
+    STATION_ID,
+    CYCLE_POSITION,
+    FIBONACCI,
+    CONTRACT,
+    PREVIOUS_CONTRACT,
+    VERSION,
+    FILE,
 
-      getDefinitionReceipt: getDefinitionReceipt,
-      executeCycleStation: executeCycleStation,
-      getStatus: getStatus,
+    stationId: STATION_ID,
+    cyclePosition: CYCLE_POSITION,
+    fibonacci: FIBONACCI,
+    contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    version: VERSION,
+    file: FILE,
 
-      validateStationRequest: validateStationRequest,
-      clone: function exposedClone(value) {
-        return deepFreeze(clonePlain(value, []));
-      },
-      hash: hash,
+    role: 'EAST_PROBE_SOURCE',
 
-      noClaims: NO_CLAIMS
-    });
-  }
+    executeCycleStation,
+    execute: executeCycleStation,
+    getDefinitionReceipt
+  };
 
-  function ensureNamespace(name) {
-    if (!root || typeof root !== "object") return null;
-    if (!root[name] || typeof root[name] !== "object") {
-      root[name] = {};
-    }
-    return root[name];
-  }
+  global.AUDRALIA_DIAGNOSTIC_PROBE_EAST = API;
 
-  function publish(api) {
-    if (!root || typeof root !== "object") return api;
+  global.AUDRALIA_DIAGNOSTIC_PROBE_EAST_RECEIPT =
+    getDefinitionReceipt();
 
-    var existing = root.AUDRALIA_DIAGNOSTIC_PROBE_EAST;
-
-    if (existing && existing.CONTRACT !== CONTRACT) {
-      root.AUDRALIA_DIAGNOSTIC_PROBE_EAST_INSTALLATION_CONFLICT =
-        deepFreeze({
-          contract: CONTRACT,
-          file: FILE,
-          status: "CONFLICT",
-          reason: "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY",
-          generatedAt: nowIso()
-        });
-      return api;
-    }
-
-    root.AUDRALIA_DIAGNOSTIC_PROBE_EAST = api;
-
-    var namespace = ensureNamespace("AUDRALIA");
-    if (namespace) {
-      namespace.diagnosticProbeEast = api;
-    }
-
-    root.AUDRALIA_DIAGNOSTIC_PROBE_EAST_RECEIPT = getDefinitionReceipt();
-
-    root.__AUDRALIA_DIAGNOSTIC_PROBE_EAST_LOADED__ = true;
-    root.__AUDRALIA_DIAGNOSTIC_PROBE_EAST_STATION_ID__ = STATION_ID;
-    root.__AUDRALIA_DIAGNOSTIC_PROBE_EAST_VERSION__ = VERSION;
-
-    return api;
-  }
-
-  var API = buildApi();
-  publish(API);
-
-  if (typeof module !== "undefined" && module.exports) {
-    module.exports = API;
-  }
-})(
-  typeof window !== "undefined"
-    ? window
-    : typeof globalThis !== "undefined"
-      ? globalThis
-      : this
-);
+})(window);

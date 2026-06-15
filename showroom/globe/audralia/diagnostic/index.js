@@ -1,19 +1,28 @@
 // /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v5
+// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v6
 // Full-file replacement.
+//
 // Diagnostic-only.
 // Read-only.
-// Controller-side bounded target-runtime surface-truth admission wait.
-// North conductor and all station executions remain synchronous.
-// Timeout does not manufacture positive evidence; the cycle still runs and may HOLD.
-// Public ledger and reader-report schemas remain v4-compatible.
-// No production mutation.
-// No renderer authority.
-// No runtime restart authority.
-// No repair authority.
-// No readiness authority.
-// No visual pass authority.
-// No F21 authority.
+//
+// Purpose:
+// - Preserve the reader-first nine-station Audralia diagnostic route.
+// - Wait asynchronously at the route-controller boundary before createCycle().
+// - Keep the North conductor and every diagnostic station synchronous.
+// - Poll only lightweight runtime status during preflight.
+// - Never call getReceipt() inside the polling loop.
+// - Capture the full runtime receipt once after admission or timeout.
+// - Run the diagnostic honestly after timeout so F8 may return HOLD.
+// - Preserve public ledger and reader-report schema compatibility.
+//
+// Does not own:
+// - production mutation
+// - renderer mutation
+// - runtime restart
+// - repair
+// - production readiness
+// - visual-pass authority
+// - F21 authority
 
 (function installAudraliaDiagnosticRouteController(global) {
 "use strict";
@@ -34,13 +43,13 @@ root && root.document
 : null;
 
 var CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v5";
+"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v6";
 
 var PREVIOUS_CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v4";
+"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v5";
 
 var VERSION =
-"5.1.0";
+"6.0.0";
 
 var FILE =
 "/showroom/globe/audralia/diagnostic/index.js";
@@ -266,10 +275,12 @@ globalPaths: [
 var state = {
 initialized: false,
 running: false,
+runPhase: "IDLE",
 cycleId: "",
 lastRunAt: null,
 
 targetPreflight: null,
+targetPreflightProgress: null,
 
 registrySnapshot: null,
 registryReceipt: null,
@@ -341,17 +352,15 @@ return null;
 }
 
 function firstString() {
-for (
-var index = 0;
-index < arguments.length;
-index += 1
-) {
-if (
-typeof arguments[index] === "string" &&
-arguments[index].length
-) {
-return arguments[index];
-}
+var index;
+
+for (index = 0; index < arguments.length; index += 1) {
+  if (
+    typeof arguments[index] === "string" &&
+    arguments[index].length
+  ) {
+    return arguments[index];
+  }
 }
 
 return null;
@@ -359,14 +368,12 @@ return null;
 }
 
 function firstBoolean() {
-for (
-var index = 0;
-index < arguments.length;
-index += 1
-) {
-if (typeof arguments[index] === "boolean") {
-return arguments[index];
-}
+var index;
+
+for (index = 0; index < arguments.length; index += 1) {
+  if (typeof arguments[index] === "boolean") {
+    return arguments[index];
+  }
 }
 
 return null;
@@ -464,9 +471,11 @@ try {
     var child;
 
     try {
-      child = value[key];
+      child =
+        value[key];
     } catch (_error) {
-      child = null;
+      child =
+        null;
     }
 
     deepFreeze(child, memory);
@@ -480,12 +489,18 @@ return value;
 }
 
 function frozenClone(value) {
-return deepFreeze(clone(value));
+return deepFreeze(
+clone(value)
+);
 }
 
 function safeJson(value) {
 try {
-return JSON.stringify(clone(value), null, 2);
+return JSON.stringify(
+clone(value),
+null,
+2
+);
 } catch (_error) {
 return String(value);
 }
@@ -524,7 +539,10 @@ memory.push(value);
 
 if (Array.isArray(value)) {
   return value.map(function prepareEntry(entry) {
-    return stablePrepare(entry, memory.slice());
+    return stablePrepare(
+      entry,
+      memory.slice()
+    );
   });
 }
 
@@ -534,7 +552,10 @@ Object.keys(value)
   .sort()
   .forEach(function prepareProperty(key) {
     output[key] =
-      stablePrepare(value[key], memory.slice());
+      stablePrepare(
+        value[key],
+        memory.slice()
+      );
   });
 
 return output;
@@ -544,10 +565,13 @@ return output;
 function hashObject(value) {
 var text;
 var result;
+var index;
 
 try {
   text =
-    JSON.stringify(stablePrepare(value));
+    JSON.stringify(
+      stablePrepare(value)
+    );
 } catch (_error) {
   text =
     String(value);
@@ -556,13 +580,13 @@ try {
 result =
   0x811c9dc5;
 
-for (
-  var index = 0;
-  index < text.length;
-  index += 1
-) {
+for (index = 0; index < text.length; index += 1) {
   result ^= text.charCodeAt(index);
-  result = Math.imul(result, 0x01000193) >>> 0;
+  result =
+    Math.imul(
+      result,
+      0x01000193
+    ) >>> 0;
 }
 
 return (
@@ -574,7 +598,10 @@ return (
 
 function delay(milliseconds) {
 return new Promise(function boundedDelay(resolve) {
-root.setTimeout(resolve, milliseconds);
+root.setTimeout(
+resolve,
+milliseconds
+);
 });
 }
 
@@ -587,11 +614,9 @@ String(path || "")
 var cursor =
   root;
 
-for (
-  var index = 0;
-  index < parts.length;
-  index += 1
-) {
+var index;
+
+for (index = 0; index < parts.length; index += 1) {
   if (
     cursor === null ||
     cursor === undefined ||
@@ -610,13 +635,12 @@ return cursor;
 }
 
 function readFirst(paths) {
-for (
-var index = 0;
-index < paths.length;
-index += 1
-) {
-var value =
-readPath(paths[index]);
+var index;
+var value;
+
+for (index = 0; index < paths.length; index += 1) {
+  value =
+    readPath(paths[index]);
 
   if (value) {
     return {
@@ -644,7 +668,9 @@ return fallback;
 try {
   return object[methodName].apply(
     object,
-    Array.isArray(args) ? args : []
+    Array.isArray(args)
+      ? args
+      : []
   );
 } catch (_error) {
   return fallback;
@@ -696,7 +722,8 @@ byId(id);
 
 if (node) {
   node.textContent =
-    value === null || value === undefined
+    value === null ||
+    value === undefined
       ? ""
       : String(value);
 }
@@ -731,7 +758,8 @@ if (active) {
 
 function escapeHtml(value) {
 return String(
-value === null || value === undefined
+value === null ||
+value === undefined
 ? ""
 : value
 )
@@ -755,13 +783,18 @@ node.textContent =
 
 node.classList.add("show");
 node.classList.add("visible");
-node.setAttribute("data-visible", "true");
+node.setAttribute(
+  "data-visible",
+  "true"
+);
 
 if (
   toast._timer &&
   root.clearTimeout
 ) {
-  root.clearTimeout(toast._timer);
+  root.clearTimeout(
+    toast._timer
+  );
 }
 
 if (root.setTimeout) {
@@ -769,7 +802,10 @@ if (root.setTimeout) {
     root.setTimeout(function hideToast() {
       node.classList.remove("show");
       node.classList.remove("visible");
-      node.setAttribute("data-visible", "false");
+      node.setAttribute(
+        "data-visible",
+        "false"
+      );
     }, 2200);
 }
 
@@ -805,7 +841,10 @@ return allowed[status]
 
 function statusClass(status) {
 var value =
-normalizeStatus(status, "UNKNOWN");
+normalizeStatus(
+status,
+"UNKNOWN"
+);
 
 if (
   value === "PASS" ||
@@ -856,6 +895,8 @@ byId("overallGauge");
 var value =
   byId("overallGaugeValue");
 
+var safePercent;
+
 if (
   !gauge ||
   !value
@@ -863,7 +904,7 @@ if (
   return;
 }
 
-var safePercent =
+safePercent =
   Math.max(
     0,
     Math.min(
@@ -874,7 +915,11 @@ var safePercent =
 
 gauge.style.setProperty(
   "--gauge-progress",
-  String(Math.round(safePercent * 3.6)) + "deg"
+  String(
+    Math.round(
+      safePercent * 3.6
+    )
+  ) + "deg"
 );
 
 setClassState(
@@ -896,14 +941,19 @@ setClassState(
 );
 
 value.textContent =
-  String(Math.round(safePercent)) + "%";
+  String(
+    Math.round(safePercent)
+  ) + "%";
 
 gauge.setAttribute(
   "aria-label",
   "Overall diagnostic gauge " +
     String(Math.round(safePercent)) +
     " percent, status " +
-    normalizeStatus(status, "UNKNOWN")
+    normalizeStatus(
+      status,
+      "UNKNOWN"
+    )
 );
 
 }
@@ -937,22 +987,26 @@ null
 }
 
 function resolveTargetRuntime(frameWindow) {
+var index;
+var globalName;
+var candidate;
+
 if (!frameWindow) {
-return {
-runtime: null,
-globalName: null
-};
+  return {
+    runtime: null,
+    globalName: null
+  };
 }
 
 for (
-  var index = 0;
+  index = 0;
   index < TARGET_RUNTIME_GLOBALS.length;
   index += 1
 ) {
-  var globalName =
+  globalName =
     TARGET_RUNTIME_GLOBALS[index];
 
-  var candidate =
+  candidate =
     frameWindow[globalName];
 
   if (candidate) {
@@ -970,9 +1024,17 @@ return {
 
 }
 
-function inspectTargetFrame() {
-var frame =
-byId(TARGET_FRAME_ID);
+/*
+
+* Lightweight target inspection.
+* 
+* This function may run repeatedly during preflight.
+* It does not call runtime.getReceipt().
+* It does not recursively clone the runtime object.
+  */
+  function inspectTargetFrameLight() {
+  var frame =
+  byId(TARGET_FRAME_ID);
 
 var frameWindow =
   null;
@@ -992,7 +1054,7 @@ var runtimeStatus =
 var runtimeReceiptLight =
   null;
 
-var runtimeReceipt =
+var selectedEvidence =
   null;
 
 var accessible =
@@ -1061,7 +1123,9 @@ if (frame) {
       );
 
     var resolvedRuntime =
-      resolveTargetRuntime(frameWindow);
+      resolveTargetRuntime(
+        frameWindow
+      );
 
     runtime =
       resolvedRuntime.runtime;
@@ -1074,48 +1138,39 @@ if (frame) {
       isFunction(runtime.getStatus)
     ) {
       runtimeStatus =
-        frozenClone(
-          callSafely(
-            runtime,
-            "getStatus",
-            [],
-            null
-          )
+        callSafely(
+          runtime,
+          "getStatus",
+          [],
+          null
         );
     }
 
+    /*
+     * getReceiptLight() is used only when getStatus() did not provide
+     * a nonempty object.
+     */
     if (
       runtime &&
+      !isNonemptyObject(runtimeStatus) &&
       isFunction(runtime.getReceiptLight)
     ) {
       runtimeReceiptLight =
-        frozenClone(
-          callSafely(
-            runtime,
-            "getReceiptLight",
-            [],
-            null
-          )
+        callSafely(
+          runtime,
+          "getReceiptLight",
+          [],
+          null
         );
     }
 
-    if (
-      runtime &&
-      isFunction(runtime.getReceipt)
-    ) {
-      runtimeReceipt =
-        frozenClone(
-          callSafely(
-            runtime,
-            "getReceipt",
-            [],
-            null
-          )
-        );
-    }
-
+    /*
+     * Published light receipts may be used only as a final lightweight
+     * fallback. No full receipt is read here.
+     */
     if (
       !isNonemptyObject(runtimeStatus) &&
+      !isNonemptyObject(runtimeReceiptLight) &&
       frameWindow
     ) {
       var publishedReceipt =
@@ -1124,10 +1179,17 @@ if (frame) {
         null;
 
       if (isNonemptyObject(publishedReceipt)) {
-        runtimeStatus =
-          frozenClone(publishedReceipt);
+        runtimeReceiptLight =
+          publishedReceipt;
       }
     }
+
+    selectedEvidence =
+      isNonemptyObject(runtimeStatus)
+        ? runtimeStatus
+        : isNonemptyObject(runtimeReceiptLight)
+          ? runtimeReceiptLight
+          : null;
   } catch (error) {
     accessible =
       false;
@@ -1147,26 +1209,17 @@ if (frame) {
     runtimeReceiptLight =
       null;
 
-    runtimeReceipt =
+    selectedEvidence =
       null;
 
     readError =
       error && error.message
         ? error.message
-        : "TARGET_FRAME_READ_FAILED";
+        : "TARGET_FRAME_LIGHT_READ_FAILED";
   }
 }
 
-var selectedEvidence =
-  isNonemptyObject(runtimeStatus)
-    ? runtimeStatus
-    : isNonemptyObject(runtimeReceiptLight)
-      ? runtimeReceiptLight
-      : isNonemptyObject(runtimeReceipt)
-        ? runtimeReceipt
-        : null;
-
-return deepFreeze({
+return {
   framePresent:
     Boolean(frame),
 
@@ -1183,7 +1236,8 @@ return deepFreeze({
     loaded,
 
   documentReadyState:
-    frameDocument && frameDocument.readyState
+    frameDocument &&
+    frameDocument.readyState
       ? frameDocument.readyState
       : null,
 
@@ -1194,7 +1248,7 @@ return deepFreeze({
     runtimeGlobalName,
 
   acceptedRuntimeGlobals:
-    clone(TARGET_RUNTIME_GLOBALS),
+    TARGET_RUNTIME_GLOBALS.slice(),
 
   runtimeStatusMethodPresent:
     Boolean(
@@ -1243,11 +1297,6 @@ return deepFreeze({
       ? runtimeReceiptLight
       : null,
 
-  runtimeReceipt:
-    isNonemptyObject(runtimeReceipt)
-      ? runtimeReceipt
-      : null,
-
   runtimeEvidenceAvailable:
     isNonemptyObject(selectedEvidence),
 
@@ -1270,6 +1319,193 @@ return deepFreeze({
     runtimeGlobalPresenceProvesReadiness: false,
     runtimeEvidencePresenceProvesSurfaceTruth: false
   }
+};
+
+}
+
+/*
+
+* Full target inspection.
+* 
+* This function is called once after preflight admission or timeout.
+* It may call runtime.getReceipt() once.
+  */
+  function inspectTargetFrameFull() {
+  var light =
+  inspectTargetFrameLight();
+
+var frame =
+  byId(TARGET_FRAME_ID);
+
+var frameWindow =
+  null;
+
+var runtime =
+  null;
+
+var runtimeReceipt =
+  null;
+
+var fullReceiptReadAttempted =
+  false;
+
+var fullReceiptReadSucceeded =
+  false;
+
+var fullReceiptReadError =
+  null;
+
+if (
+  frame &&
+  light.sameOriginAccessible
+) {
+  try {
+    frameWindow =
+      frame.contentWindow || null;
+
+    runtime =
+      resolveTargetRuntime(
+        frameWindow
+      ).runtime;
+
+    if (
+      runtime &&
+      isFunction(runtime.getReceipt)
+    ) {
+      fullReceiptReadAttempted =
+        true;
+
+      runtimeReceipt =
+        callSafely(
+          runtime,
+          "getReceipt",
+          [],
+          null
+        );
+
+      fullReceiptReadSucceeded =
+        isNonemptyObject(
+          runtimeReceipt
+        );
+    }
+  } catch (error) {
+    fullReceiptReadError =
+      error && error.message
+        ? error.message
+        : "TARGET_FRAME_FULL_RECEIPT_READ_FAILED";
+  }
+}
+
+return deepFreeze({
+  framePresent:
+    light.framePresent,
+
+  frameId:
+    light.frameId,
+
+  targetRoute:
+    light.targetRoute,
+
+  sameOriginAccessible:
+    light.sameOriginAccessible,
+
+  documentLoaded:
+    light.documentLoaded,
+
+  documentReadyState:
+    light.documentReadyState,
+
+  runtimeGlobalPresent:
+    light.runtimeGlobalPresent,
+
+  runtimeGlobalName:
+    light.runtimeGlobalName,
+
+  acceptedRuntimeGlobals:
+    clone(
+      light.acceptedRuntimeGlobals
+    ),
+
+  runtimeStatusMethodPresent:
+    light.runtimeStatusMethodPresent,
+
+  receiptLightMethodPresent:
+    light.receiptLightMethodPresent,
+
+  receiptMethodPresent:
+    light.receiptMethodPresent,
+
+  runtimeCanvasPresent:
+    light.runtimeCanvasPresent,
+
+  fallbackCanvasPresent:
+    light.fallbackCanvasPresent,
+
+  anyCanvasPresent:
+    light.anyCanvasPresent,
+
+  canvasPresent:
+    light.canvasPresent,
+
+  targetRuntimeStatus:
+    isNonemptyObject(
+      light.targetRuntimeStatus
+    )
+      ? frozenClone(
+          light.targetRuntimeStatus
+        )
+      : null,
+
+  runtimeStatus:
+    isNonemptyObject(
+      light.runtimeStatus
+    )
+      ? frozenClone(
+          light.runtimeStatus
+        )
+      : null,
+
+  runtimeReceiptLight:
+    isNonemptyObject(
+      light.runtimeReceiptLight
+    )
+      ? frozenClone(
+          light.runtimeReceiptLight
+        )
+      : null,
+
+  runtimeReceipt:
+    isNonemptyObject(runtimeReceipt)
+      ? frozenClone(
+          runtimeReceipt
+        )
+      : null,
+
+  runtimeEvidenceAvailable:
+    light.runtimeEvidenceAvailable,
+
+  classification:
+    light.classification,
+
+  lightReadError:
+    light.readError,
+
+  fullReceiptReadAttempted:
+    fullReceiptReadAttempted,
+
+  fullReceiptReadSucceeded:
+    fullReceiptReadSucceeded,
+
+  fullReceiptReadError:
+    fullReceiptReadError,
+
+  capturedAt:
+    nowIso(),
+
+  noClaims:
+    frozenClone(
+      light.noClaims
+    )
 });
 
 }
@@ -1277,29 +1513,36 @@ return deepFreeze({
 function targetRuntimeAdmissionState(snapshot) {
 var status =
 snapshot &&
-isNonemptyObject(snapshot.targetRuntimeStatus)
+isNonemptyObject(
+snapshot.targetRuntimeStatus
+)
 ? snapshot.targetRuntimeStatus
 : {};
+
+var detail =
+  status &&
+  isObject(status.statusDetail)
+    ? status.statusDetail
+    : {};
 
 var mounted =
   firstBoolean(
     status.mounted,
-    status.statusDetail &&
-      status.statusDetail.mounted
+    detail.mounted
   );
 
 var stageRectNonzero =
   firstBoolean(
     status.stageRectNonzero,
-    status.statusDetail &&
-      status.statusDetail.stageRectNonzero
+    status.surfaceNonzero,
+    detail.stageRectNonzero,
+    detail.surfaceNonzero
   );
 
 var geometryReady =
   firstBoolean(
     status.geometryReady,
-    status.statusDetail &&
-      status.statusDetail.geometryReady
+    detail.geometryReady
   );
 
 var firstFrameDrawn =
@@ -1307,23 +1550,23 @@ var firstFrameDrawn =
     status.firstFrameDrawn,
     status.firstFrameSubmitted,
     status.firstFramePresented,
-    status.statusDetail &&
-      status.statusDetail.firstFrameDrawn
+    detail.firstFrameDrawn,
+    detail.firstFrameSubmitted,
+    detail.firstFramePresented
   );
 
 var visiblePixelObserved =
   firstBoolean(
     status.firstVisiblePixelObserved,
     status.visiblePixelObserved,
-    status.statusDetail &&
-      status.statusDetail.firstVisiblePixelObserved
+    detail.firstVisiblePixelObserved,
+    detail.visiblePixelObserved
   );
 
 var fallbackActive =
   firstBoolean(
     status.fallbackActive,
-    status.statusDetail &&
-      status.statusDetail.fallbackActive
+    detail.fallbackActive
   );
 
 var primaryVisible =
@@ -1342,7 +1585,7 @@ var surfaceTruthCurrentlyAdmissible =
   primaryVisible ||
   fallbackVisible;
 
-return deepFreeze({
+return {
   framePresent:
     snapshot
       ? snapshot.framePresent === true
@@ -1405,7 +1648,208 @@ return deepFreeze({
       snapshot.runtimeEvidenceAvailable === true &&
       surfaceTruthCurrentlyAdmissible === true
     )
-});
+};
+
+}
+
+function buildPreflightProgress(
+attemptNumber,
+elapsedMs,
+snapshot,
+admission
+) {
+return {
+schema:
+"AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS_v1",
+
+  cycleId:
+    state.cycleId,
+
+  phase:
+    "WAITING_FOR_F8_SURFACE_TRUTH",
+
+  attempt:
+    attemptNumber,
+
+  elapsedMs:
+    elapsedMs,
+
+  timeoutMs:
+    TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+
+  framePresent:
+    snapshot.framePresent,
+
+  sameOriginAccessible:
+    snapshot.sameOriginAccessible,
+
+  documentLoaded:
+    snapshot.documentLoaded,
+
+  runtimeGlobalPresent:
+    snapshot.runtimeGlobalPresent,
+
+  runtimeGlobalName:
+    snapshot.runtimeGlobalName,
+
+  runtimeEvidenceAvailable:
+    snapshot.runtimeEvidenceAvailable,
+
+  mounted:
+    admission.mounted,
+
+  stageRectNonzero:
+    admission.stageRectNonzero,
+
+  geometryReady:
+    admission.geometryReady,
+
+  firstFrameDrawn:
+    admission.firstFrameDrawn,
+
+  visiblePixelObserved:
+    admission.visiblePixelObserved,
+
+  fallbackActive:
+    admission.fallbackActive,
+
+  surfaceTruthCurrentlyAdmissible:
+    admission.surfaceTruthCurrentlyAdmissible,
+
+  generatedAt:
+    nowIso()
+};
+
+}
+
+function renderPreflightProgress(progress) {
+var button =
+byId("runDiagnostic");
+
+if (!progress) {
+  return;
+}
+
+if (button) {
+  button.textContent =
+    "Waiting for F8 · " +
+    String(progress.elapsedMs) +
+    " ms";
+}
+
+setText(
+  "overallStatus",
+  "Waiting for target surface truth"
+);
+
+setText(
+  "overallStatusDetail",
+  "Attempt " +
+    String(progress.attempt) +
+    " · runtime global " +
+    (
+      progress.runtimeGlobalPresent
+        ? "present"
+        : "absent"
+    ) +
+    " · first frame " +
+    (
+      progress.firstFrameDrawn === true
+        ? "observed"
+        : "pending"
+    ) +
+    " · visible pixel " +
+    (
+      progress.visiblePixelObserved === true
+        ? "observed"
+        : "pending"
+    )
+);
+
+root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS =
+  frozenClone(progress);
+
+}
+
+function finalizePreflight(
+status,
+admitted,
+timedOut,
+reason,
+startedAt,
+attempts,
+lastLightSnapshot,
+lastAdmission
+) {
+var fullSnapshot =
+inspectTargetFrameFull();
+
+var elapsedMs =
+  Date.now() - startedAt;
+
+var receipt = {
+  schema:
+    "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v2",
+
+  contract:
+    CONTRACT,
+
+  cycleId:
+    state.cycleId,
+
+  status:
+    status,
+
+  admitted:
+    admitted,
+
+  timedOut:
+    timedOut,
+
+  reason:
+    reason,
+
+  admissionRequirement:
+    "FRAME_ACCESSIBLE_DOCUMENT_LOADED_RUNTIME_GLOBAL_NONEMPTY_EVIDENCE_AND_F8_SURFACE_TRUTH",
+
+  pollIntervalMs:
+    TARGET_RUNTIME_WAIT_INTERVAL_MS,
+
+  timeoutMs:
+    TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+
+  elapsedMs:
+    elapsedMs,
+
+  attemptCount:
+    attempts.length,
+
+  finalLightSnapshot:
+    frozenClone(
+      lastLightSnapshot
+    ),
+
+  finalFullSnapshot:
+    fullSnapshot,
+
+  admission:
+    frozenClone(
+      lastAdmission
+    ),
+
+  attempts:
+    frozenClone(
+      attempts
+    ),
+
+  generatedAt:
+    nowIso()
+};
+
+receipt.preflightHash =
+  hashObject(receipt);
+
+return deepFreeze(receipt);
 
 }
 
@@ -1417,137 +1861,77 @@ var attempts =
   [];
 
 function sample() {
-  var snapshot =
-    inspectTargetFrame();
+  var lightSnapshot;
+  var admission;
+  var elapsedMs;
+  var progress;
 
-  var admission =
-    targetRuntimeAdmissionState(snapshot);
+  try {
+    lightSnapshot =
+      inspectTargetFrameLight();
 
-  var elapsedMs =
+    admission =
+      targetRuntimeAdmissionState(
+        lightSnapshot
+      );
+  } catch (error) {
+    lightSnapshot = {
+      framePresent: false,
+      sameOriginAccessible: false,
+      documentLoaded: false,
+      runtimeGlobalPresent: false,
+      runtimeGlobalName: null,
+      runtimeEvidenceAvailable: false,
+      readError:
+        error && error.message
+          ? error.message
+          : "PREFLIGHT_SAMPLE_FAILED",
+      capturedAt:
+        nowIso()
+    };
+
+    admission =
+      targetRuntimeAdmissionState(
+        lightSnapshot
+      );
+  }
+
+  elapsedMs =
     Date.now() - startedAt;
 
-  attempts.push({
-    attempt:
+  progress =
+    buildPreflightProgress(
       attempts.length + 1,
-
-    capturedAt:
-      nowIso(),
-
-    elapsedMs:
       elapsedMs,
+      lightSnapshot,
+      admission
+    );
 
-    framePresent:
-      snapshot.framePresent,
+  state.targetPreflightProgress =
+    frozenClone(progress);
 
-    sameOriginAccessible:
-      snapshot.sameOriginAccessible,
+  attempts.push(
+    clone(progress)
+  );
 
-    documentLoaded:
-      snapshot.documentLoaded,
-
-    documentReadyState:
-      snapshot.documentReadyState,
-
-    runtimeGlobalPresent:
-      snapshot.runtimeGlobalPresent,
-
-    runtimeGlobalName:
-      snapshot.runtimeGlobalName,
-
-    runtimeEvidenceAvailable:
-      snapshot.runtimeEvidenceAvailable,
-
-    mounted:
-      admission.mounted,
-
-    stageRectNonzero:
-      admission.stageRectNonzero,
-
-    geometryReady:
-      admission.geometryReady,
-
-    firstFrameDrawn:
-      admission.firstFrameDrawn,
-
-    visiblePixelObserved:
-      admission.visiblePixelObserved,
-
-    fallbackActive:
-      admission.fallbackActive,
-
-    primaryVisible:
-      admission.primaryVisible,
-
-    fallbackVisible:
-      admission.fallbackVisible,
-
-    controllerAdmissionBoundarySatisfied:
-      admission.controllerAdmissionBoundarySatisfied,
-
-    surfaceTruthCurrentlyAdmissible:
-      admission.surfaceTruthCurrentlyAdmissible,
-
-    readError:
-      snapshot.readError
-  });
+  renderPreflightProgress(
+    progress
+  );
 
   if (
     admission.controllerAdmissionBoundarySatisfied === true
   ) {
     return Promise.resolve(
-      deepFreeze({
-        schema:
-          "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v1",
-
-        contract:
-          CONTRACT,
-
-        status:
-          "ADMITTED",
-
-        admitted:
-          true,
-
-        timedOut:
-          false,
-
-        reason:
-          "F8_SURFACE_TRUTH_BOUNDARY_SATISFIED",
-
-        admissionRequirement:
-          "FRAME_ACCESSIBLE_DOCUMENT_LOADED_RUNTIME_GLOBAL_NONEMPTY_EVIDENCE_AND_F8_SURFACE_TRUTH",
-
-        pollIntervalMs:
-          TARGET_RUNTIME_WAIT_INTERVAL_MS,
-
-        timeoutMs:
-          TARGET_RUNTIME_WAIT_TIMEOUT_MS,
-
-        elapsedMs:
-          elapsedMs,
-
-        attemptCount:
-          attempts.length,
-
-        snapshot:
-          snapshot,
-
-        admission:
-          admission,
-
-        attempts:
-          attempts,
-
-        generatedAt:
-          nowIso(),
-
-        preflightHash:
-          hashObject({
-            attempts: attempts,
-            snapshot: snapshot,
-            admission: admission
-          })
-      })
+      finalizePreflight(
+        "ADMITTED",
+        true,
+        false,
+        "F8_SURFACE_TRUTH_BOUNDARY_SATISFIED",
+        startedAt,
+        attempts,
+        lightSnapshot,
+        admission
+      )
     );
   }
 
@@ -1556,59 +1940,16 @@ function sample() {
     TARGET_RUNTIME_WAIT_TIMEOUT_MS
   ) {
     return Promise.resolve(
-      deepFreeze({
-        schema:
-          "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v1",
-
-        contract:
-          CONTRACT,
-
-        status:
-          "TIMED_OUT",
-
-        admitted:
-          false,
-
-        timedOut:
-          true,
-
-        reason:
-          "F8_SURFACE_TRUTH_NOT_AVAILABLE_WITHIN_BOUND",
-
-        admissionRequirement:
-          "FRAME_ACCESSIBLE_DOCUMENT_LOADED_RUNTIME_GLOBAL_NONEMPTY_EVIDENCE_AND_F8_SURFACE_TRUTH",
-
-        pollIntervalMs:
-          TARGET_RUNTIME_WAIT_INTERVAL_MS,
-
-        timeoutMs:
-          TARGET_RUNTIME_WAIT_TIMEOUT_MS,
-
-        elapsedMs:
-          elapsedMs,
-
-        attemptCount:
-          attempts.length,
-
-        snapshot:
-          snapshot,
-
-        admission:
-          admission,
-
-        attempts:
-          attempts,
-
-        generatedAt:
-          nowIso(),
-
-        preflightHash:
-          hashObject({
-            attempts: attempts,
-            snapshot: snapshot,
-            admission: admission
-          })
-      })
+      finalizePreflight(
+        "TIMED_OUT",
+        false,
+        true,
+        "F8_SURFACE_TRUTH_NOT_AVAILABLE_WITHIN_BOUND",
+        startedAt,
+        attempts,
+        lightSnapshot,
+        admission
+      )
     );
   }
 
@@ -1625,12 +1966,29 @@ function refreshRegistryState() {
 var registry =
 getRegistry();
 
+var snapshot;
+var receipt;
+var authorityRecords;
+var engineRecords;
+var selectedEngine;
+var inspection;
+
 if (!registry) {
-  state.registrySnapshot = null;
-  state.registryReceipt = null;
-  state.authorityRecords = [];
-  state.engineRecords = [];
-  state.selectedEngine = null;
+  state.registrySnapshot =
+    null;
+
+  state.registryReceipt =
+    null;
+
+  state.authorityRecords =
+    [];
+
+  state.engineRecords =
+    [];
+
+  state.selectedEngine =
+    null;
+
   return;
 }
 
@@ -1641,7 +1999,7 @@ callSafely(
   null
 );
 
-var snapshot =
+snapshot =
   callSafely(
     registry,
     "getSnapshot",
@@ -1649,7 +2007,7 @@ var snapshot =
     null
   );
 
-var receipt =
+receipt =
   callSafely(
     registry,
     "getRegistryReceipt",
@@ -1666,7 +2024,7 @@ var receipt =
   root.DGB_ENGINE_SUBJECTS_RECEIPT ||
   null;
 
-var authorityRecords =
+authorityRecords =
   callSafely(
     registry,
     "listAuthorities",
@@ -1674,7 +2032,7 @@ var authorityRecords =
     null
   );
 
-var engineRecords =
+engineRecords =
   callSafely(
     registry,
     "listEngines",
@@ -1687,7 +2045,7 @@ var engineRecords =
     null
   );
 
-var selectedEngine =
+selectedEngine =
   callSafely(
     registry,
     "getDefaultEngine",
@@ -1699,7 +2057,7 @@ if (
   !snapshot &&
   isFunction(registry.inspect)
 ) {
-  var inspection =
+  inspection =
     callSafely(
       registry,
       "inspect",
@@ -1776,7 +2134,9 @@ state.engineRecords =
 state.selectedEngine =
   frozenClone(
     selectedEngine ||
-    deriveSelectedEngineFromReceipt(receipt)
+    deriveSelectedEngineFromReceipt(
+      receipt
+    )
   );
 
 }
@@ -1850,11 +2210,14 @@ getEngine();
 var instanceIds =
   [];
 
+var listed;
+var instanceId;
+
 if (
   engine &&
   isFunction(engine.listInstances)
 ) {
-  var listed =
+  listed =
     callSafely(
       engine,
       "listInstances",
@@ -1895,7 +2258,7 @@ if (
   }
 }
 
-var instanceId =
+instanceId =
   instanceIds.length
     ? instanceIds[0]
     : null;
@@ -1960,20 +2323,23 @@ state.engineReceipt =
 }
 
 function readObserved(source, key) {
+var value;
+
 if (
-!source ||
-!Object.prototype.hasOwnProperty.call(
-Object(source),
-key
-)
+  !source ||
+  !Object.prototype.hasOwnProperty.call(
+    Object(source),
+    key
+  )
 ) {
-return null;
+  return null;
 }
 
-var value =
+value =
   source[key];
 
-return value === null || value === undefined
+return value === null ||
+  value === undefined
   ? null
   : clone(value);
 
@@ -2035,22 +2401,26 @@ var inspection =
   state.engineInspection;
 
 var observed =
-  ops && isObject(ops.observed)
+  ops &&
+  isObject(ops.observed)
     ? ops.observed
     : {};
 
 var lifecycle =
-  inspection && isObject(inspection.lifecycle)
+  inspection &&
+  isObject(inspection.lifecycle)
     ? inspection.lifecycle
     : null;
 
 var renderer =
-  inspection && isObject(inspection.renderer)
+  inspection &&
+  isObject(inspection.renderer)
     ? inspection.renderer
     : null;
 
 var fallback =
-  inspection && isObject(inspection.fallback)
+  inspection &&
+  isObject(inspection.fallback)
     ? inspection.fallback
     : null;
 
@@ -2097,7 +2467,8 @@ return deepFreeze({
     getSelectedEngineVersion(),
 
   backend:
-    ops && typeof ops.backend === "string"
+    ops &&
+    typeof ops.backend === "string"
       ? ops.backend
       : renderer &&
         typeof renderer.selectedBackend === "string"
@@ -2105,7 +2476,8 @@ return deepFreeze({
         : "NONE",
 
   state:
-    ops && typeof ops.state === "string"
+    ops &&
+    typeof ops.state === "string"
       ? ops.state
       : lifecycle &&
         typeof lifecycle.progressState === "string"
@@ -2218,10 +2590,14 @@ return deepFreeze({
       : null,
 
   evidenceAvailable:
-    Boolean(ops || inspection),
+    Boolean(
+      ops ||
+      inspection
+    ),
 
   evidenceUnavailableReason:
-    ops || inspection
+    ops ||
+    inspection
       ? null
       : "NO_LIVE_ENGINE_INSTANCE_EVIDENCE"
 });
@@ -2515,6 +2891,20 @@ state.selectedEngine.engineId
 
 }
 
+function getFinalTargetSnapshot() {
+if (
+state.targetPreflight &&
+state.targetPreflight.finalFullSnapshot
+) {
+return frozenClone(
+state.targetPreflight.finalFullSnapshot
+);
+}
+
+return inspectTargetFrameFull();
+
+}
+
 function buildConstructEvidence(
 targetEvidence,
 engineEvidence,
@@ -2617,7 +3007,8 @@ constructId:
     declaredStructureEqualsRuntimeProof: false,
     iframePresenceEqualsPresentationProof: false,
     runtimeGlobalPresenceEqualsSurfaceTruth: false,
-    preflightTimeoutCreatesPositiveEvidence: false
+    preflightTimeoutCreatesPositiveEvidence: false,
+    fullReceiptPolledRepeatedly: false
   },
 
   noClaims:
@@ -2634,7 +3025,7 @@ var engineEvidence =
   buildEngineEvidence();
 
 var targetEvidence =
-  inspectTargetFrame();
+  getFinalTargetSnapshot();
 
 var constructEvidence =
   buildConstructEvidence(
@@ -2741,50 +3132,49 @@ return deepFreeze({
 function resolveStationApi(definition) {
 var found =
 readFirst(
-definition.globalPaths ||
-[]
+definition.globalPaths || []
 );
+
+var namespace;
+var namespaceKeys;
+var namespaceCandidate;
+var rootKeys;
+var key;
+var candidate;
+var index;
 
 if (found.value) {
   return {
-    api:
-      found.value,
-
-    globalPath:
-      found.path,
-
-    source:
-      "DECLARED_GLOBAL"
+    api: found.value,
+    globalPath: found.path,
+    source: "DECLARED_GLOBAL"
   };
 }
 
-var namespace =
+namespace =
   readPath("AUDRALIA");
 
 if (
   namespace &&
   typeof namespace === "object"
 ) {
-  var namespaceKeys =
+  namespaceKeys =
     Object.keys(namespace);
 
   for (
-    var index = 0;
+    index = 0;
     index < namespaceKeys.length;
     index += 1
   ) {
-    var namespaceCandidate =
+    namespaceCandidate =
       namespace[
         namespaceKeys[index]
       ];
 
     if (
       namespaceCandidate &&
-      namespaceCandidate.STATION_ID ===
-        definition.stationId &&
-      Number(
-        namespaceCandidate.CYCLE_POSITION
-      ) === definition.position
+      namespaceCandidate.STATION_ID === definition.stationId &&
+      Number(namespaceCandidate.CYCLE_POSITION) === definition.position
     ) {
       return {
         api:
@@ -2801,7 +3191,7 @@ if (
   }
 }
 
-var rootKeys =
+rootKeys =
   [];
 
 try {
@@ -2810,12 +3200,12 @@ try {
 } catch (_error) {}
 
 for (
-  var rootIndex = 0;
-  rootIndex < rootKeys.length;
-  rootIndex += 1
+  index = 0;
+  index < rootKeys.length;
+  index += 1
 ) {
-  var key =
-    rootKeys[rootIndex];
+  key =
+    rootKeys[index];
 
   if (
     key.indexOf(
@@ -2825,31 +3215,23 @@ for (
     continue;
   }
 
-  var candidate =
-    null;
-
   try {
     candidate =
       root[key];
-  } catch (_error2) {}
+  } catch (_error2) {
+    candidate =
+      null;
+  }
 
   if (
     candidate &&
-    candidate.STATION_ID ===
-      definition.stationId &&
-    Number(
-      candidate.CYCLE_POSITION
-    ) === definition.position
+    candidate.STATION_ID === definition.stationId &&
+    Number(candidate.CYCLE_POSITION) === definition.position
   ) {
     return {
-      api:
-        candidate,
-
-      globalPath:
-        key,
-
-      source:
-        "ROOT_SCAN"
+      api: candidate,
+      globalPath: key,
+      source: "ROOT_SCAN"
     };
   }
 }
@@ -2865,8 +3247,7 @@ return {
 function resolveAuxiliaryApi(definition) {
 var found =
 readFirst(
-definition.globalPaths ||
-[]
+definition.globalPaths || []
 );
 
 return {
@@ -2942,8 +3323,7 @@ RECEIPT_SCHEMA,
         definition.stationId,
 
       detail:
-        detail ||
-        summary
+        detail || summary
     }
   ],
 
@@ -2970,51 +3350,60 @@ code,
 summary,
 detail
 ) {
-return STATIONS.map(
-function mapHeld(definition) {
+return STATIONS.map(function mapHeld(definition) {
 return makeHeldReceipt(
 definition,
 code,
 summary,
 detail
 );
-}
-);
+});
 }
 
 function extractReceipts(result) {
+var candidates;
+var index;
+
 if (Array.isArray(result)) {
-return result;
+  return result;
 }
 
 if (!isObject(result)) {
   return [];
 }
 
-var candidates = [
+candidates = [
   result.receipts,
   result.stationReceipts,
   result.cycleReceipts,
+
   result.ledger &&
     result.ledger.receipts,
+
   result.ledger &&
     result.ledger.stationReceipts,
+
   result.result &&
     result.result.receipts,
+
   result.result &&
     result.result.stationReceipts,
+
   result.packet &&
     result.packet.receipts,
+
   result.packet &&
     result.packet.stationReceipts,
+
   result.cycleReceipt &&
     result.cycleReceipt.receipts,
+
   result.cycleReceipt &&
     result.cycleReceipt.stationReceipts
 ];
 
 for (
-  var index = 0;
+  index = 0;
   index < candidates.length;
   index += 1
 ) {
@@ -3115,8 +3504,7 @@ return deepFreeze({
     source.handoffEligible === true,
 
   summary:
-    typeof source.summary ===
-      "string" &&
+    typeof source.summary === "string" &&
     source.summary.trim()
       ? source.summary.trim()
       : "No station summary was supplied.",
@@ -3205,50 +3593,45 @@ if (!receipts.length) {
   };
 }
 
-STATIONS.forEach(
-  function normalizeExpectedStation(
-    definition,
-    index
-  ) {
-    var matching =
-      receipts.find(
-        function findMatching(receipt) {
-          return (
-            receipt &&
-            receipt.stationId ===
-              definition.stationId
-          );
-        }
+STATIONS.forEach(function normalizeExpectedStation(
+  definition,
+  index
+) {
+  var matching =
+    receipts.find(function findMatching(receipt) {
+      return (
+        receipt &&
+        receipt.stationId === definition.stationId
       );
+    });
 
-    if (!matching) {
-      matching =
-        receipts[index] ||
-        null;
-    }
+  if (!matching) {
+    matching =
+      receipts[index] ||
+      null;
+  }
 
-    if (!matching) {
-      normalized.push(
-        makeHeldReceipt(
-          definition,
-          "STATION_RECEIPT_MISSING",
-          "The North conductor did not return this station receipt.",
-          "Expected station receipt was absent from the conductor result."
-        )
-      );
-
-      return;
-    }
-
+  if (!matching) {
     normalized.push(
-      normalizeReceipt(
-        matching,
+      makeHeldReceipt(
         definition,
-        index
+        "STATION_RECEIPT_MISSING",
+        "The North conductor did not return this station receipt.",
+        "Expected station receipt was absent from the conductor result."
       )
     );
+
+    return;
   }
-);
+
+  normalized.push(
+    normalizeReceipt(
+      matching,
+      definition,
+      index
+    )
+  );
+});
 
 return {
   conductorResult:
@@ -3263,6 +3646,9 @@ return {
 function invokeConductor(request) {
 var conductor =
 getConductor();
+
+var cycle;
+var sealReceipt;
 
 if (!conductor) {
   return Promise.resolve({
@@ -3295,8 +3681,6 @@ if (
       )
   });
 }
-
-var cycle;
 
 try {
   cycle =
@@ -3390,18 +3774,88 @@ state.stationRegistrations =
 state.auxiliaryRegistrations =
   [];
 
-STATIONS.forEach(
-  function registerStation(
-    definition
-  ) {
-    var resolved =
-      resolveStationApi(
-        definition
-      );
+STATIONS.forEach(function registerStation(definition) {
+  var resolved =
+    resolveStationApi(
+      definition
+    );
 
-    var outcome;
+  var outcome;
 
-    if (!resolved.api) {
+  if (!resolved.api) {
+    outcome = {
+      position:
+        definition.position,
+
+      stationId:
+        definition.stationId,
+
+      file:
+        definition.file,
+
+      status:
+        "REJECTED",
+
+      reason:
+        "STATION_GLOBAL_NOT_FOUND",
+
+      globalPath:
+        null,
+
+      source:
+        resolved.source,
+
+      generatedAt:
+        nowIso()
+    };
+  } else {
+    try {
+      var registration =
+        cycle.registerStation(
+          definition.position,
+          resolved.api
+        );
+
+      outcome = {
+        position:
+          definition.position,
+
+        stationId:
+          definition.stationId,
+
+        file:
+          definition.file,
+
+        status:
+          registration &&
+          registration.status
+            ? registration.status
+            : "UNKNOWN",
+
+        reason:
+          registration &&
+          registration.reason
+            ? registration.reason
+            : null,
+
+        issues:
+          registration &&
+          registration.issues
+            ? frozenClone(
+                registration.issues
+              )
+            : [],
+
+        globalPath:
+          resolved.globalPath,
+
+        source:
+          resolved.source,
+
+        generatedAt:
+          nowIso()
+      };
+    } catch (error) {
       outcome = {
         position:
           definition.position,
@@ -3416,10 +3870,18 @@ STATIONS.forEach(
           "REJECTED",
 
         reason:
-          "STATION_GLOBAL_NOT_FOUND",
+          "STATION_REGISTRATION_THROW",
+
+        detail:
+          String(
+            error &&
+            error.message
+              ? error.message
+              : error
+          ),
 
         globalPath:
-          null,
+          resolved.globalPath,
 
         source:
           resolved.source,
@@ -3427,108 +3889,128 @@ STATIONS.forEach(
         generatedAt:
           nowIso()
       };
-    } else {
-      try {
-        var registration =
-          cycle.registerStation(
-            definition.position,
-            resolved.api
-          );
-
-        outcome = {
-          position:
-            definition.position,
-
-          stationId:
-            definition.stationId,
-
-          file:
-            definition.file,
-
-          status:
-            registration &&
-            registration.status
-              ? registration.status
-              : "UNKNOWN",
-
-          reason:
-            registration &&
-            registration.reason
-              ? registration.reason
-              : null,
-
-          issues:
-            registration &&
-            registration.issues
-              ? frozenClone(
-                  registration.issues
-                )
-              : [],
-
-          globalPath:
-            resolved.globalPath,
-
-          source:
-            resolved.source,
-
-          generatedAt:
-            nowIso()
-        };
-      } catch (error) {
-        outcome = {
-          position:
-            definition.position,
-
-          stationId:
-            definition.stationId,
-
-          file:
-            definition.file,
-
-          status:
-            "REJECTED",
-
-          reason:
-            "STATION_REGISTRATION_THROW",
-
-          detail:
-            String(
-              error &&
-              error.message
-                ? error.message
-                : error
-            ),
-
-          globalPath:
-            resolved.globalPath,
-
-          source:
-            resolved.source,
-
-          generatedAt:
-            nowIso()
-        };
-      }
     }
-
-    state.stationRegistrations.push(
-      deepFreeze(outcome)
-    );
   }
-);
 
-AUXILIARIES.forEach(
-  function registerAuxiliary(
-    definition
+  state.stationRegistrations.push(
+    deepFreeze(outcome)
+  );
+});
+
+AUXILIARIES.forEach(function registerAuxiliary(definition) {
+  var resolved =
+    resolveAuxiliaryApi(
+      definition
+    );
+
+  var outcome;
+
+  if (!resolved.api) {
+    outcome = {
+      parentPosition:
+        definition.parentPosition,
+
+      role:
+        definition.role,
+
+      file:
+        definition.file,
+
+      status:
+        "NOT_REGISTERED",
+
+      reason:
+        "AUXILIARY_GLOBAL_NOT_FOUND",
+
+      generatedAt:
+        nowIso()
+    };
+  } else if (
+    !isFunction(
+      cycle.registerAuxiliary
+    )
   ) {
-    var resolved =
-      resolveAuxiliaryApi(
-        definition
-      );
+    outcome = {
+      parentPosition:
+        definition.parentPosition,
 
-    var outcome;
+      role:
+        definition.role,
 
-    if (!resolved.api) {
+      file:
+        definition.file,
+
+      status:
+        "NOT_REGISTERED",
+
+      reason:
+        "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
+
+      generatedAt:
+        nowIso()
+    };
+  } else {
+    try {
+      var registration =
+        cycle.registerAuxiliary(
+          definition.parentPosition,
+          {
+            role:
+              definition.role,
+
+            file:
+              definition.file,
+
+            contract:
+              resolved.api.CONTRACT ||
+              resolved.api.contract ||
+              null,
+
+            version:
+              resolved.api.VERSION ||
+              resolved.api.version ||
+              null,
+
+            globalPath:
+              resolved.globalPath,
+
+            createsCyclePosition:
+              false
+          }
+        );
+
+      outcome = {
+        parentPosition:
+          definition.parentPosition,
+
+        role:
+          definition.role,
+
+        file:
+          definition.file,
+
+        status:
+          registration &&
+          registration.status
+            ? registration.status
+            : "UNKNOWN",
+
+        reason:
+          registration &&
+          registration.reason
+            ? registration.reason
+            : null,
+
+        globalPath:
+          resolved.globalPath,
+
+        source:
+          resolved.source,
+
+        generatedAt:
+          nowIso()
+      };
+    } catch (error) {
       outcome = {
         parentPosition:
           definition.parentPosition,
@@ -3543,134 +4025,26 @@ AUXILIARIES.forEach(
           "NOT_REGISTERED",
 
         reason:
-          "AUXILIARY_GLOBAL_NOT_FOUND",
+          "AUXILIARY_REGISTRATION_THROW",
+
+        detail:
+          String(
+            error &&
+            error.message
+              ? error.message
+              : error
+          ),
 
         generatedAt:
           nowIso()
       };
-    } else if (
-      !isFunction(
-        cycle.registerAuxiliary
-      )
-    ) {
-      outcome = {
-        parentPosition:
-          definition.parentPosition,
-
-        role:
-          definition.role,
-
-        file:
-          definition.file,
-
-        status:
-          "NOT_REGISTERED",
-
-        reason:
-          "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
-
-        generatedAt:
-          nowIso()
-      };
-    } else {
-      try {
-        var registration =
-          cycle.registerAuxiliary(
-            definition.parentPosition,
-            {
-              role:
-                definition.role,
-
-              file:
-                definition.file,
-
-              contract:
-                resolved.api.CONTRACT ||
-                resolved.api.contract ||
-                null,
-
-              version:
-                resolved.api.VERSION ||
-                resolved.api.version ||
-                null,
-
-              globalPath:
-                resolved.globalPath,
-
-              createsCyclePosition:
-                false
-            }
-          );
-
-        outcome = {
-          parentPosition:
-            definition.parentPosition,
-
-          role:
-            definition.role,
-
-          file:
-            definition.file,
-
-          status:
-            registration &&
-            registration.status
-              ? registration.status
-              : "UNKNOWN",
-
-          reason:
-            registration &&
-            registration.reason
-              ? registration.reason
-              : null,
-
-          globalPath:
-            resolved.globalPath,
-
-          source:
-            resolved.source,
-
-          generatedAt:
-            nowIso()
-        };
-      } catch (error) {
-        outcome = {
-          parentPosition:
-            definition.parentPosition,
-
-          role:
-            definition.role,
-
-          file:
-            definition.file,
-
-          status:
-            "NOT_REGISTERED",
-
-          reason:
-            "AUXILIARY_REGISTRATION_THROW",
-
-          detail:
-            String(
-              error &&
-              error.message
-                ? error.message
-                : error
-            ),
-
-          generatedAt:
-            nowIso()
-        };
-      }
     }
-
-    state.auxiliaryRegistrations.push(
-      deepFreeze(outcome)
-    );
   }
-);
 
-var sealReceipt;
+  state.auxiliaryRegistrations.push(
+    deepFreeze(outcome)
+  );
+});
 
 try {
   sealReceipt =
@@ -3711,157 +4085,146 @@ try {
 
 /*
  * cycle.run() remains synchronous.
+ *
  * Promise.resolve() only normalizes the route-controller continuation.
- * No diagnostic station is allowed to return a Promise.
+ * No station is permitted to return a Promise.
  */
 return Promise.resolve(
   cycle.run()
 )
-  .then(
-    function conductorRunResolved(
-      result
-    ) {
-      var receipt =
-        isObject(result)
-          ? result
-          : cycle.getReceipt();
+  .then(function conductorRunResolved(result) {
+    var receipt =
+      isObject(result)
+        ? result
+        : cycle.getReceipt();
 
-      state.conductorReceipt =
-        frozenClone(receipt);
+    state.conductorReceipt =
+      frozenClone(receipt);
 
-      state.conductorState =
+    state.conductorState =
+      frozenClone(
+        isFunction(
+          cycle.getState
+        )
+          ? cycle.getState()
+          : null
+      );
+
+    return normalizeConductorResult({
+      schema:
+        "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v3",
+
+      cycleReceipt:
+        receipt,
+
+      stationReceipts:
+        receipt &&
+        Array.isArray(
+          receipt.stationReceipts
+        )
+          ? receipt.stationReceipts
+          : extractReceipts(
+              receipt
+            ),
+
+      sealReceipt:
+        sealReceipt,
+
+      state:
+        state.conductorState,
+
+      targetPreflight:
+        state.targetPreflight
+          ? frozenClone(
+              state.targetPreflight
+            )
+          : null,
+
+      stationRegistrations:
         frozenClone(
-          isFunction(
-            cycle.getState
-          )
-            ? cycle.getState()
-            : null
-        );
+          state.stationRegistrations
+        ),
 
-      return normalizeConductorResult({
-        schema:
-          "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v2",
+      auxiliaryRegistrations:
+        frozenClone(
+          state.auxiliaryRegistrations
+        )
+    });
+  })
+  .catch(function conductorRunRejected(error) {
+    state.conductorReceipt =
+      frozenClone(
+        callSafely(
+          cycle,
+          "getReceipt",
+          [],
+          null
+        )
+      );
 
-        cycleReceipt:
-          receipt,
+    state.conductorState =
+      frozenClone(
+        callSafely(
+          cycle,
+          "getState",
+          [],
+          null
+        )
+      );
 
-        stationReceipts:
-          receipt &&
-          Array.isArray(
-            receipt.stationReceipts
-          )
-            ? receipt.stationReceipts
-            : extractReceipts(
-                receipt
-              ),
+    return {
+      conductorResult: {
+        stage:
+          "RUN",
 
-        sealReceipt:
-          sealReceipt,
+        error:
+          String(
+            error &&
+            error.message
+              ? error.message
+              : error
+          ),
 
         state:
           state.conductorState,
 
+        receipt:
+          state.conductorReceipt,
+
         targetPreflight:
-          state.targetPreflight
-            ? frozenClone(
-                state.targetPreflight
-              )
-            : null,
+          state.targetPreflight,
 
         stationRegistrations:
           frozenClone(
             state.stationRegistrations
-          ),
-
-        auxiliaryRegistrations:
-          frozenClone(
-            state.auxiliaryRegistrations
           )
-      });
-    }
-  )
-  .catch(
-    function conductorRunRejected(
-      error
-    ) {
-      state.conductorReceipt =
-        frozenClone(
-          callSafely(
-            cycle,
-            "getReceipt",
-            [],
-            null
+      },
+
+      receipts:
+        makeHeldReceipts(
+          "NORTH_CONDUCTOR_RUN_REJECTED",
+          "The North conductor rejected the diagnostic cycle.",
+          String(
+            error &&
+            error.message
+              ? error.message
+              : error
           )
-        );
-
-      state.conductorState =
-        frozenClone(
-          callSafely(
-            cycle,
-            "getState",
-            [],
-            null
-          )
-        );
-
-      return {
-        conductorResult: {
-          stage:
-            "RUN",
-
-          error:
-            String(
-              error &&
-              error.message
-                ? error.message
-                : error
-            ),
-
-          state:
-            state.conductorState,
-
-          receipt:
-            state.conductorReceipt,
-
-          targetPreflight:
-            state.targetPreflight,
-
-          stationRegistrations:
-            frozenClone(
-              state.stationRegistrations
-            )
-        },
-
-        receipts:
-          makeHeldReceipts(
-            "NORTH_CONDUCTOR_RUN_REJECTED",
-            "The North conductor rejected the diagnostic cycle.",
-            String(
-              error &&
-              error.message
-                ? error.message
-                : error
-            )
-          )
-      };
-    }
-  );
+        )
+    };
+  });
 
 }
 
 function composeLedger() {
 function count(statuses) {
-return state.receipts.filter(
-function countReceipt(
-receipt
-) {
+return state.receipts.filter(function countReceipt(receipt) {
 return (
 statuses.indexOf(
 receipt.status
 ) !== -1
 );
-}
-).length;
+}).length;
 }
 
 var passCount =
@@ -3906,8 +4269,7 @@ var overallStatus =
           : holdCount > 0
             ? "HOLD"
             : (
-                passCount ===
-                  state.receipts.length &&
+                passCount === state.receipts.length &&
                 state.receipts.length > 0
               )
               ? "PASS"
@@ -3920,7 +4282,7 @@ var engineEvidence =
   buildEngineEvidence();
 
 var targetEvidence =
-  inspectTargetFrame();
+  getFinalTargetSnapshot();
 
 var ledger = {
   schema:
@@ -3958,6 +4320,9 @@ var ledger = {
 
   orchestrationMethod:
     "createCycle",
+
+  runPhase:
+    state.runPhase,
 
   targetRuntimePreflight:
     state.targetPreflight
@@ -4065,9 +4430,7 @@ var ledger = {
 ledger.ledgerHash =
   hashObject(ledger);
 
-return deepFreeze(
-  ledger
-);
+return deepFreeze(ledger);
 
 }
 
@@ -4076,45 +4439,27 @@ if (!ledger) {
 return "Waiting";
 }
 
-if (
-  ledger.overallStatus ===
-  "PASS"
-) {
+if (ledger.overallStatus === "PASS") {
   return "Complete diagnostic path";
 }
 
-if (
-  ledger.overallStatus ===
-  "HOLD"
-) {
+if (ledger.overallStatus === "HOLD") {
   return "Held for evidence";
 }
 
-if (
-  ledger.overallStatus ===
-  "DEGRADED"
-) {
+if (ledger.overallStatus === "DEGRADED") {
   return "Degraded diagnostic result";
 }
 
-if (
-  ledger.overallStatus ===
-  "FAIL"
-) {
+if (ledger.overallStatus === "FAIL") {
   return "Failure reported";
 }
 
-if (
-  ledger.overallStatus ===
-  "CONFLICT"
-) {
+if (ledger.overallStatus === "CONFLICT") {
   return "Conflict reported";
 }
 
-if (
-  ledger.overallStatus ===
-  "ERROR"
-) {
+if (ledger.overallStatus === "ERROR") {
   return "Error reported";
 }
 
@@ -4130,45 +4475,35 @@ return (
 );
 }
 
-if (
-  ledger.errorCount > 0
-) {
+if (ledger.errorCount > 0) {
   return (
     "The diagnostic path encountered an execution error. " +
     "Open the station receipts to identify the affected stage."
   );
 }
 
-if (
-  ledger.conflictCount > 0
-) {
+if (ledger.conflictCount > 0) {
   return (
     "The diagnostic path found incompatible authority or runtime claims. " +
     "No readiness conclusion can be made."
   );
 }
 
-if (
-  ledger.failCount > 0
-) {
+if (ledger.failCount > 0) {
   return (
     "The diagnostic path found a failed condition. " +
     "This report identifies the failure but does not authorize repair."
   );
 }
 
-if (
-  ledger.degradedCount > 0
-) {
+if (ledger.degradedCount > 0) {
   return (
     "The diagnostic path completed with degraded evidence. " +
     "The result is not equivalent to a production-ready engine."
   );
 }
 
-if (
-  ledger.holdCount > 0
-) {
+if (ledger.holdCount > 0) {
   return (
     "The diagnostic path is held because required runtime evidence is " +
     "missing, unavailable, or not yet admitted. Missing proof was not " +
@@ -4177,10 +4512,8 @@ if (
 }
 
 if (
-  ledger.passCount ===
-    ledger.receiptCount &&
-  ledger.receiptCount ===
-    STATIONS.length
+  ledger.passCount === ledger.receiptCount &&
+  ledger.receiptCount === STATIONS.length
 ) {
   return (
     "All nine diagnostic stations returned passing diagnostic receipts. " +
@@ -4189,9 +4522,7 @@ if (
   );
 }
 
-return (
-  "The diagnostic path is incomplete."
-);
+return "The diagnostic path is incomplete.";
 
 }
 
@@ -4203,78 +4534,71 @@ ledger.errorCount +
 ledger.degradedCount;
 
 var registeredCount =
-  ledger.stationRegistrations.filter(
-    function countRegistered(
-      outcome
-    ) {
-      return (
-        outcome.status ===
-          "REGISTERED" ||
-        outcome.status ===
-          "DUPLICATE_IDENTICAL"
-      );
-    }
-  ).length;
+  ledger.stationRegistrations.filter(function countRegistered(outcome) {
+    return (
+      outcome.status === "REGISTERED" ||
+      outcome.status === "DUPLICATE_IDENTICAL"
+    );
+  }).length;
 
 var preflight =
   ledger.targetRuntimePreflight;
 
 return [
   "AUDRALIA DIAGNOSTIC READER REPORT",
-  "SCHEMA=" +
-    READER_REPORT_SCHEMA,
+  "SCHEMA=" + READER_REPORT_SCHEMA,
   "",
-  "Overall status: " +
-    readableOverall(ledger),
-  "Passed stations: " +
-    ledger.passCount +
-    " of " +
-    ledger.receiptCount,
-  "Held stations: " +
-    ledger.holdCount,
-  "Attention items: " +
-    attentionCount,
+  "Overall status: " + readableOverall(ledger),
+  "Passed stations: " + ledger.passCount + " of " + ledger.receiptCount,
+  "Held stations: " + ledger.holdCount,
+  "Attention items: " + attentionCount,
   "",
   "Target runtime preflight:",
-  "Status: " +
-    (
-      preflight
-        ? preflight.status
-        : "NOT_RUN"
-    ),
-  "F8 surface truth admitted before cycle: " +
-    (
-      preflight &&
-      preflight.admitted
-        ? "Yes"
-        : "No"
-    ),
-  "Attempts: " +
-    (
-      preflight
-        ? preflight.attemptCount
-        : 0
-    ),
-  "Elapsed milliseconds: " +
-    (
-      preflight
-        ? preflight.elapsedMs
-        : 0
-    ),
+  "Status: " + (
+    preflight
+      ? preflight.status
+      : "NOT_RUN"
+  ),
+  "F8 surface truth admitted before cycle: " + (
+    preflight &&
+    preflight.admitted
+      ? "Yes"
+      : "No"
+  ),
+  "Attempts: " + (
+    preflight
+      ? preflight.attemptCount
+      : 0
+  ),
+  "Elapsed milliseconds: " + (
+    preflight
+      ? preflight.elapsedMs
+      : 0
+  ),
+  "Full receipt read attempted: " + (
+    preflight &&
+    preflight.finalFullSnapshot &&
+    preflight.finalFullSnapshot.fullReceiptReadAttempted
+      ? "Yes"
+      : "No"
+  ),
+  "Full receipt read succeeded: " + (
+    preflight &&
+    preflight.finalFullSnapshot &&
+    preflight.finalFullSnapshot.fullReceiptReadSucceeded
+      ? "Yes"
+      : "No"
+  ),
   "",
   "Engine family:",
   "Governing contracts: " +
-    ledger.engineRegistry
-      .governingAuthorityCount,
+    ledger.engineRegistry.governingAuthorityCount,
   "Assigned engines: " +
-    ledger.engineRegistry
-      .assignedEngineCount,
+    ledger.engineRegistry.assignedEngineCount,
   "Selectable engines: " +
-    ledger.engineRegistry
-      .selectableEngineCount,
+    ledger.engineRegistry.selectableEngineCount,
   "Reserved engine slots: " +
-    ledger.engineRegistry
-      .reservedEngineCount,
+    ledger.engineRegistry.reservedEngineCount,
   "",
   "North conductor:",
   "Invocation: createCycle",
@@ -4299,20 +4623,14 @@ return [
 
 }
 
-function stationLabel(
-stationId
-) {
+function stationLabel(stationId) {
 var definition =
-STATIONS.find(
-function findStation(
-entry
-) {
+STATIONS.find(function findStation(entry) {
 return (
 entry.stationId ===
 stationId
 );
-}
-);
+});
 
 return definition
   ? definition.label
@@ -4322,40 +4640,40 @@ return definition
 }
 
 function renderRegistrySummary() {
+var evidence;
+var pill;
+var available;
+
 refreshRegistryState();
 
-var evidence =
+evidence =
   buildRegistryEvidence();
 
 setText(
   "governingContractCount",
   String(
-    evidence
-      .governingAuthorityCount
+    evidence.governingAuthorityCount
   )
 );
 
 setText(
   "assignedEngineCount",
   String(
-    evidence
-      .assignedEngineCount
+    evidence.assignedEngineCount
   )
 );
 
 setText(
   "selectableEngineCount",
   String(
-    evidence
-      .selectableEngineCount
+    evidence.selectableEngineCount
   )
 );
 
 setText(
   "reservedEngineCount",
   String(
-    evidence
-      .reservedEngineCount
+    evidence.reservedEngineCount
   )
 );
 
@@ -4384,23 +4702,21 @@ setText(
   "reservedEngineSummary",
   evidence.reservedEngineCount > 0
     ? String(
-        evidence
-          .reservedEngineCount
+        evidence.reservedEngineCount
       ) +
       " future engine slots remain reserved."
     : "No reserved engine slots were reported."
 );
 
-var pill =
+pill =
   byId(
     "engineRegistryStatusPill"
   );
 
 if (pill) {
-  var available =
+  available =
     evidence.registryLoaded &&
-    evidence.selectableEngineCount >
-      0;
+    evidence.selectableEngineCount > 0;
 
   setClassState(
     pill,
@@ -4431,9 +4747,10 @@ renderRegistryRecords();
 
 function renderRegistryRecords() {
 var list =
-byId(
-"engineRegistryList"
-);
+byId("engineRegistryList");
+
+var fragments =
+  [];
 
 if (!list) {
   return;
@@ -4452,109 +4769,96 @@ if (
   return;
 }
 
-var fragments =
-  [];
+state.authorityRecords.forEach(function renderAuthority(record) {
+  fragments.push(
+    '<article class="receipt-card authority-record">' +
+    "<h3>" +
+    escapeHtml(
+      record.authorityName ||
+      record.authorityId ||
+      "Governing Contract"
+    ) +
+    "</h3>" +
+    "<p>Role: " +
+    escapeHtml(
+      record.role ||
+      "GOVERNING_CONTRACT"
+    ) +
+    "</p>" +
+    "<p>Status: " +
+    escapeHtml(
+      record.status ||
+      "UNKNOWN"
+    ) +
+    "</p>" +
+    "<p>File: " +
+    escapeHtml(
+      record.file ||
+      DEFAULT_GOVERNING_ENGINE_FILE
+    ) +
+    "</p>" +
+    "<p>Executable engine: " +
+    (
+      record.executableEngine
+        ? "Yes"
+        : "No"
+    ) +
+    "</p>" +
+    "</article>"
+  );
+});
 
-state.authorityRecords.forEach(
-  function renderAuthority(
-    record
-  ) {
-    fragments.push(
-      '<article class="receipt-card authority-record">' +
-      "<h3>" +
-      escapeHtml(
-        record.authorityName ||
-        record.authorityId ||
-        "Governing Contract"
-      ) +
-      "</h3>" +
-      "<p>Role: " +
-      escapeHtml(
-        record.role ||
-        "GOVERNING_CONTRACT"
-      ) +
-      "</p>" +
-      "<p>Status: " +
-      escapeHtml(
-        record.status ||
-        "UNKNOWN"
-      ) +
-      "</p>" +
-      "<p>File: " +
-      escapeHtml(
-        record.file ||
-        DEFAULT_GOVERNING_ENGINE_FILE
-      ) +
-      "</p>" +
-      "<p>Executable engine: " +
-      (
-        record.executableEngine
-          ? "Yes"
-          : "No"
-      ) +
-      "</p>" +
-      "</article>"
-    );
-  }
-);
-
-state.engineRecords.forEach(
-  function renderEngine(
-    record
-  ) {
-    fragments.push(
-      '<article class="receipt-card engine-record ' +
+state.engineRecords.forEach(function renderEngine(record) {
+  fragments.push(
+    '<article class="receipt-card engine-record ' +
+    (
+      record.reserved
+        ? "held"
+        : record.selectable
+          ? "pass"
+          : "hold"
+    ) +
+    '">' +
+    "<h3>" +
+    escapeHtml(
+      record.engineName ||
       (
         record.reserved
-          ? "held"
-          : record.selectable
-            ? "pass"
-            : "hold"
-      ) +
-      '">' +
-      "<h3>" +
-      escapeHtml(
-        record.engineName ||
-        (
-          record.reserved
-            ? "Reserved Engine Slot " +
-              String(
-                record.slot
-              )
-            : record.engineId ||
-              "Runtime Engine"
-        )
-      ) +
-      "</h3>" +
-      "<p>Role: " +
-      escapeHtml(
-        record.role ||
-        "RUNTIME_ENGINE"
-      ) +
-      "</p>" +
-      "<p>Status: " +
-      escapeHtml(
-        record.status ||
-        "UNKNOWN"
-      ) +
-      "</p>" +
-      "<p>Selectable: " +
-      (
-        record.selectable
-          ? "Yes"
-          : "No"
-      ) +
-      "</p>" +
-      "<p>File: " +
-      escapeHtml(
-        record.file ||
-        "Not assigned"
-      ) +
-      "</p>" +
-      "</article>"
-    );
-  }
-);
+          ? "Reserved Engine Slot " +
+            String(record.slot)
+          : record.engineId ||
+            "Runtime Engine"
+      )
+    ) +
+    "</h3>" +
+    "<p>Role: " +
+    escapeHtml(
+      record.role ||
+      "RUNTIME_ENGINE"
+    ) +
+    "</p>" +
+    "<p>Status: " +
+    escapeHtml(
+      record.status ||
+      "UNKNOWN"
+    ) +
+    "</p>" +
+    "<p>Selectable: " +
+    (
+      record.selectable
+        ? "Yes"
+        : "No"
+    ) +
+    "</p>" +
+    "<p>File: " +
+    escapeHtml(
+      record.file ||
+      "Not assigned"
+    ) +
+    "</p>" +
+    "</article>"
+  );
+});
 
 list.innerHTML =
   fragments.join("");
@@ -4648,82 +4952,74 @@ if (!doc) {
 return;
 }
 
-STATIONS.forEach(
-  function renderStation(
-    definition
-  ) {
-    var node =
-      doc.querySelector(
-        '[data-station="' +
-        definition.stationId +
-        '"]'
-      );
-
-    var receipt =
-      state.receipts.find(
-        function findReceipt(
-          entry
-        ) {
-          return (
-            entry.stationId ===
-            definition.stationId
-          );
-        }
-      );
-
-    if (!node) {
-      return;
-    }
-
-    setClassState(
-      node,
-      [
-        "pass",
-        "passed",
-        "hold",
-        "held",
-        "partial",
-        "fail",
-        "error",
-        "conflict",
-        "attention"
-      ],
-      receipt
-        ? statusClass(
-            receipt.status
-          )
-        : null
+STATIONS.forEach(function renderStation(definition) {
+  var node =
+    doc.querySelector(
+      '[data-station="' +
+      definition.stationId +
+      '"]'
     );
 
-    if (!receipt) {
-      node.removeAttribute(
-        "data-status"
+  var receipt =
+    state.receipts.find(function findReceipt(entry) {
+      return (
+        entry.stationId ===
+        definition.stationId
       );
+    });
 
-      node.removeAttribute(
-        "title"
-      );
-
-      return;
-    }
-
-    node.setAttribute(
-      "data-status",
-      receipt.status
-    );
-
-    node.setAttribute(
-      "title",
-      definition.label +
-        ": " +
-        (
-          receipt.summary ||
-          receipt.status ||
-          "UNKNOWN"
-        )
-    );
+  if (!node) {
+    return;
   }
-);
+
+  setClassState(
+    node,
+    [
+      "pass",
+      "passed",
+      "hold",
+      "held",
+      "partial",
+      "fail",
+      "error",
+      "conflict",
+      "attention"
+    ],
+    receipt
+      ? statusClass(
+          receipt.status
+        )
+      : null
+  );
+
+  if (!receipt) {
+    node.removeAttribute(
+      "data-status"
+    );
+
+    node.removeAttribute(
+      "title"
+    );
+
+    return;
+  }
+
+  node.setAttribute(
+    "data-status",
+    receipt.status
+  );
+
+  node.setAttribute(
+    "title",
+    definition.label +
+      ": " +
+      (
+        receipt.summary ||
+        receipt.status ||
+        "UNKNOWN"
+      )
+  );
+});
 
 }
 
@@ -4735,9 +5031,7 @@ if (!list) {
   return;
 }
 
-if (
-  !state.receipts.length
-) {
+if (!state.receipts.length) {
   list.innerHTML =
     '<article class="receipt-empty">' +
     "<h3>No receipts yet</h3>" +
@@ -4749,73 +5043,68 @@ if (
 
 list.innerHTML =
   state.receipts
-    .map(
-      function renderReceipt(
-        receipt,
-        index
-      ) {
-        var issueCount =
-          Array.isArray(
-            receipt.issues
-          )
-            ? receipt.issues.length
-            : 0;
+    .map(function renderReceipt(receipt, index) {
+      var issueCount =
+        Array.isArray(
+          receipt.issues
+        )
+          ? receipt.issues.length
+          : 0;
 
-        return (
-          '<details class="receipt-card ' +
-          escapeHtml(
-            statusClass(
-              receipt.status
-            )
-          ) +
-          '">' +
-          "<summary>" +
-          escapeHtml(
-            String(index + 1)
-          ) +
-          " · " +
-          escapeHtml(
-            stationLabel(
-              receipt.stationId
-            )
-          ) +
-          " · " +
-          escapeHtml(
+      return (
+        '<details class="receipt-card ' +
+        escapeHtml(
+          statusClass(
             receipt.status
-          ) +
-          "</summary>" +
-          '<div class="receipt-meta">' +
-          "<span>" +
-          escapeHtml(
+          )
+        ) +
+        '">' +
+        "<summary>" +
+        escapeHtml(
+          String(index + 1)
+        ) +
+        " · " +
+        escapeHtml(
+          stationLabel(
             receipt.stationId
-          ) +
-          "</span>" +
-          "<span>" +
-          escapeHtml(
-            receipt.fibonacci ||
-            ""
-          ) +
-          "</span>" +
-          "<span>Issues: " +
-          escapeHtml(
-            String(issueCount)
-          ) +
-          "</span>" +
-          "</div>" +
-          "<p>" +
-          escapeHtml(
-            receipt.summary
-          ) +
-          "</p>" +
-          "<pre>" +
-          escapeHtml(
-            safeJson(receipt)
-          ) +
-          "</pre>" +
-          "</details>"
-        );
-      }
-    )
+          )
+        ) +
+        " · " +
+        escapeHtml(
+          receipt.status
+        ) +
+        "</summary>" +
+        '<div class="receipt-meta">' +
+        "<span>" +
+        escapeHtml(
+          receipt.stationId
+        ) +
+        "</span>" +
+        "<span>" +
+        escapeHtml(
+          receipt.fibonacci ||
+          ""
+        ) +
+        "</span>" +
+        "<span>Issues: " +
+        escapeHtml(
+          String(issueCount)
+        ) +
+        "</span>" +
+        "</div>" +
+        "<p>" +
+        escapeHtml(
+          receipt.summary
+        ) +
+        "</p>" +
+        "<pre>" +
+        escapeHtml(
+          safeJson(receipt)
+        ) +
+        "</pre>" +
+        "</details>"
+      );
+    })
     .join("");
 
 }
@@ -4847,24 +5136,75 @@ renderReceipts();
 renderTechnical();
 }
 
-function setRunning(
-running
-) {
+function updateRunButton() {
 var button =
 byId("runDiagnostic");
 
-state.running =
-  Boolean(running);
-
-if (button) {
-  button.disabled =
-    state.running;
-
-  button.textContent =
-    state.running
-      ? "Waiting for F8 Surface Truth"
-      : "Run Diagnostic";
+if (!button) {
+  return;
 }
+
+button.disabled =
+  state.running;
+
+if (!state.running) {
+  button.textContent =
+    "Run Diagnostic";
+
+  return;
+}
+
+if (
+  state.runPhase ===
+  "WAITING_FOR_TARGET"
+) {
+  button.textContent =
+    "Waiting for F8 Surface Truth";
+
+  return;
+}
+
+if (
+  state.runPhase ===
+  "RUNNING_CONDUCTOR"
+) {
+  button.textContent =
+    "Running Diagnostic";
+
+  return;
+}
+
+if (
+  state.runPhase ===
+  "FINALIZING"
+) {
+  button.textContent =
+    "Finalizing Diagnostic";
+
+  return;
+}
+
+button.textContent =
+  "Running Diagnostic";
+
+}
+
+function setRunning(
+running,
+phase
+) {
+state.running =
+Boolean(running);
+
+state.runPhase =
+  phase ||
+  (
+    state.running
+      ? "RUNNING"
+      : "IDLE"
+  );
+
+updateRunButton();
 
 }
 
@@ -4877,6 +5217,9 @@ state.lastRunAt =
   nowIso();
 
 state.targetPreflight =
+  null;
+
+state.targetPreflightProgress =
   null;
 
 state.conductorResult =
@@ -4911,11 +5254,32 @@ state.lastError =
 
 }
 
-function finalizeSuccessfulRun(
-normalized
-) {
+function publishRunOutputs() {
+root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
+state.ledger;
+
+root.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER =
+  state.ledger;
+
+root.AUDRALIA_DIAGNOSTIC_READER_REPORT =
+  state.readerReport;
+
+root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
+  state.targetPreflight;
+
+root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS =
+  state.targetPreflightProgress;
+
+}
+
+function finalizeSuccessfulRun(normalized) {
+setRunning(
+true,
+"FINALIZING"
+);
+
 state.conductorResult =
-normalized.conductorResult;
+  normalized.conductorResult;
 
 state.receipts =
   normalized.receipts;
@@ -4933,23 +5297,11 @@ state.readerReport =
     state.ledger
   );
 
-root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
-  state.ledger;
-
-root.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER =
-  state.ledger;
-
-root.AUDRALIA_DIAGNOSTIC_READER_REPORT =
-  state.readerReport;
-
-root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
-  state.targetPreflight;
-
+publishRunOutputs();
 renderAll();
 
 toast(
-  state.ledger.overallStatus ===
-    "PASS"
+  state.ledger.overallStatus === "PASS"
     ? "Diagnostic cycle completed."
     : "Diagnostic cycle completed with held or attention items."
 );
@@ -4960,16 +5312,19 @@ return frozenClone(
 
 }
 
-function finalizeControllerError(
-error
-) {
-state.lastError =
-String(
-error &&
-error.message
-? error.message
-: error
+function finalizeControllerError(error) {
+setRunning(
+true,
+"FINALIZING"
 );
+
+state.lastError =
+  String(
+    error &&
+    error.message
+      ? error.message
+      : error
+  );
 
 state.receipts =
   makeHeldReceipts(
@@ -4991,18 +5346,7 @@ state.readerReport =
     state.ledger
   );
 
-root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
-  state.ledger;
-
-root.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER =
-  state.ledger;
-
-root.AUDRALIA_DIAGNOSTIC_READER_REPORT =
-  state.readerReport;
-
-root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
-  state.targetPreflight;
-
+publishRunOutputs();
 renderAll();
 
 toast(
@@ -5024,72 +5368,82 @@ state.ledger
 );
 }
 
-setRunning(true);
 resetRunState();
+
+setRunning(
+  true,
+  "WAITING_FOR_TARGET"
+);
 
 refreshRegistryState();
 inspectEngineState();
 renderAll();
 
+setText(
+  "overallStatus",
+  "Waiting for target surface truth"
+);
+
+setText(
+  "overallStatusDetail",
+  "The controller is sampling lightweight runtime status before starting the synchronous North cycle."
+);
+
 /*
- * The asynchronous wait exists only at the controller boundary,
- * before createCycle().
+ * The only asynchronous waiting occurs here, before createCycle().
  *
- * The controller does not admit the cycle merely because the iframe,
- * runtime global, or a receipt object exists. It waits for the exact
- * F8 surface-truth predicate:
+ * Preflight polling reads:
+ * - iframe presence
+ * - same-origin access
+ * - document ready state
+ * - accepted runtime global
+ * - runtime.getStatus()
+ * - runtime.getReceiptLight() only when status is unavailable
  *
- * Primary:
- * mounted=true
- * stageRectNonzero=true
- * geometryReady=true
- * firstFrameDrawn=true
- * visiblePixelObserved=true
+ * Preflight polling does not call runtime.getReceipt().
  *
- * Or fallback:
- * fallbackActive=true
- * firstFrameDrawn=true
- * visiblePixelObserved=true
+ * After admission or timeout, a full receipt may be captured once.
  *
- * Once invokeConductor() begins, North and all stations remain
- * synchronous and return plain receipt objects.
+ * North and all nine stations remain synchronous.
  */
 return waitForTargetRuntimeEvidence()
-  .then(
-    function targetPreflightResolved(
-      preflight
-    ) {
-      state.targetPreflight =
-        frozenClone(
-          preflight
-        );
+  .then(function targetPreflightResolved(preflight) {
+    state.targetPreflight =
+      frozenClone(preflight);
 
-      root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
-        state.targetPreflight;
+    root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
+      state.targetPreflight;
 
-      var button =
-        byId(
-          "runDiagnostic"
-        );
+    setRunning(
+      true,
+      "RUNNING_CONDUCTOR"
+    );
 
-      if (button) {
-        button.textContent =
-          "Running Diagnostic";
-      }
+    setText(
+      "overallStatus",
+      preflight.admitted
+        ? "Target surface truth admitted"
+        : "Target preflight timed out"
+    );
 
-      /*
-       * Timeout does not suppress the diagnostic cycle.
-       * The latest honest target snapshot is transported, and F8
-       * remains authorized to HOLD if its evidence is incomplete.
-       */
-      var request =
-        buildConductorRequest();
+    setText(
+      "overallStatusDetail",
+      preflight.admitted
+        ? "Starting the synchronous nine-station North diagnostic cycle."
+        : "Starting the synchronous cycle with the latest honest evidence. F8 may remain held."
+    );
 
-      return invokeConductor(
-        request
-      );
-    }
-  )
+    /*
+     * Timeout does not suppress the diagnostic cycle.
+     * The final target snapshot is transported honestly.
+     */
+    var request =
+      buildConductorRequest();
+
+    return invokeConductor(
+      request
+    );
+  })
   .then(
     finalizeSuccessfulRun
   )
@@ -5097,16 +5451,20 @@ return waitForTargetRuntimeEvidence()
     finalizeControllerError
   )
   .then(
-    function finishRun(
-      value
-    ) {
-      setRunning(false);
+    function finishRun(value) {
+      setRunning(
+        false,
+        "IDLE"
+      );
+
       return value;
     },
-    function finishRejected(
-      error
-    ) {
-      setRunning(false);
+    function finishRejected(error) {
+      setRunning(
+        false,
+        "IDLE"
+      );
+
       throw error;
     }
   );
@@ -5125,28 +5483,23 @@ if (
   root.navigator &&
   root.navigator.clipboard &&
   isFunction(
-    root.navigator.clipboard
-      .writeText
+    root.navigator.clipboard.writeText
   )
 ) {
   root.navigator.clipboard
     .writeText(text)
-    .then(
-      function copied() {
-        toast(
-          message ||
-          "Copied."
-        );
-      }
-    )
-    .catch(
-      function clipboardRejected() {
-        fallbackCopy(
-          text,
-          message
-        );
-      }
-    );
+    .then(function copied() {
+      toast(
+        message ||
+        "Copied."
+      );
+    })
+    .catch(function clipboardRejected() {
+      fallbackCopy(
+        text,
+        message
+      );
+    });
 
   return;
 }
@@ -5162,11 +5515,13 @@ function fallbackCopy(
 text,
 message
 ) {
+var area;
+
 if (!doc) {
-return;
+  return;
 }
 
-var area =
+area =
   doc.createElement(
     "textarea"
   );
@@ -5213,103 +5568,76 @@ doc.body.removeChild(
 }
 
 function wireTabs() {
+var buttons;
+var panels;
+
 if (!doc) {
-return;
+  return;
 }
 
-var buttons =
+buttons =
   Array.prototype.slice.call(
     doc.querySelectorAll(
       "[data-tab]"
     )
   );
 
-var panels = {
+panels = {
   ledger:
-    byId(
-      "tabLedger"
-    ),
+    byId("tabLedger"),
 
   receipts:
-    byId(
-      "tabReceipts"
-    ),
+    byId("tabReceipts"),
 
   contracts:
-    byId(
-      "tabContracts"
-    ),
+    byId("tabContracts"),
 
   boundary:
-    byId(
-      "tabBoundary"
-    )
+    byId("tabBoundary")
 };
 
-buttons.forEach(
-  function bindTab(
-    button
-  ) {
-    button.addEventListener(
-      "click",
-      function activateTab() {
-        var tab =
-          button.getAttribute(
-            "data-tab"
-          );
-
-        buttons.forEach(
-          function resetTab(
-            other
-          ) {
-            other.setAttribute(
-              "aria-selected",
-              other === button
-                ? "true"
-                : "false"
-            );
-          }
+buttons.forEach(function bindTab(button) {
+  button.addEventListener(
+    "click",
+    function activateTab() {
+      var tab =
+        button.getAttribute(
+          "data-tab"
         );
 
-        Object.keys(
-          panels
-        ).forEach(
-          function togglePanel(
-            key
-          ) {
-            if (panels[key]) {
-              panels[key].hidden =
-                key !== tab;
-            }
-          }
+      buttons.forEach(function resetTab(other) {
+        other.setAttribute(
+          "aria-selected",
+          other === button
+            ? "true"
+            : "false"
         );
-      }
-    );
-  }
-);
+      });
+
+      Object.keys(panels).forEach(function togglePanel(key) {
+        if (panels[key]) {
+          panels[key].hidden =
+            key !== tab;
+        }
+      });
+    }
+  );
+});
 
 }
 
 function wireUi() {
 var runButton =
-byId(
-"runDiagnostic"
-);
+byId("runDiagnostic");
 
 var targetButton =
-  byId(
-    "toggleTargetFrame"
-  );
+  byId("toggleTargetFrame");
 
 var copyReaderButton =
-  byId(
-    "copyReaderReport"
-  );
+  byId("copyReaderReport");
 
 var copyLedgerButton =
-  byId(
-    "copyReceiptLedger"
-  );
+  byId("copyReceiptLedger");
 
 if (runButton) {
   runButton.addEventListener(
@@ -5325,9 +5653,7 @@ if (targetButton) {
     "click",
     function toggleTargetFrame() {
       var shell =
-        byId(
-          "targetFrameShell"
-        );
+        byId("targetFrameShell");
 
       if (!shell) {
         return;
@@ -5394,6 +5720,9 @@ CONTRACT,
   running:
     state.running,
 
+  runPhase:
+    state.runPhase,
+
   cycleId:
     state.cycleId,
 
@@ -5402,6 +5731,9 @@ CONTRACT,
 
   targetPreflight:
     state.targetPreflight,
+
+  targetPreflightProgress:
+    state.targetPreflightProgress,
 
   registrySnapshot:
     state.registrySnapshot,
@@ -5508,10 +5840,26 @@ CONTRACT,
     runDiagnostic,
 
   inspectTargetFrame:
-    inspectTargetFrame,
+    inspectTargetFrameFull,
+
+  inspectTargetFrameLight:
+    function publicInspectTargetFrameLight() {
+      return frozenClone(
+        inspectTargetFrameLight()
+      );
+    },
+
+  inspectTargetFrameFull:
+    inspectTargetFrameFull,
 
   targetRuntimeAdmissionState:
-    targetRuntimeAdmissionState,
+    function publicTargetRuntimeAdmissionState(snapshot) {
+      return frozenClone(
+        targetRuntimeAdmissionState(
+          snapshot
+        )
+      );
+    },
 
   waitForTargetRuntimeEvidence:
     waitForTargetRuntimeEvidence,
@@ -5566,6 +5914,13 @@ CONTRACT,
       );
     },
 
+  getTargetPreflightProgress:
+    function getTargetPreflightProgress() {
+      return frozenClone(
+        state.targetPreflightProgress
+      );
+    },
+
   getRegistrySnapshot:
     function getRegistrySnapshot() {
       return frozenClone(
@@ -5600,8 +5955,7 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
 
 if (
   !root.AUDRALIA ||
-  typeof root.AUDRALIA !==
-    "object"
+  typeof root.AUDRALIA !== "object"
 ) {
   root.AUDRALIA =
     {};
@@ -5621,7 +5975,7 @@ root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONTRACT__ =
 
 root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT = {
   schema:
-    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT_v5",
+    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT_v6",
 
   contract:
     CONTRACT,
@@ -5672,6 +6026,20 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT = {
 
     timeoutMs:
       TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+
+    pollingReads: [
+      "IFRAME_STATE",
+      "DOCUMENT_READY_STATE",
+      "RUNTIME_GLOBAL",
+      "RUNTIME_GET_STATUS",
+      "RUNTIME_GET_RECEIPT_LIGHT_WHEN_STATUS_UNAVAILABLE"
+    ],
+
+    fullReceiptPolling:
+      false,
+
+    fullReceiptCapture:
+      "ONCE_AFTER_ADMISSION_OR_TIMEOUT",
 
     evidenceMustBeNonempty:
       true,
@@ -5740,9 +6108,7 @@ return api;
 }
 
 function init() {
-if (
-state.initialized
-) {
+if (state.initialized) {
 return;
 }
 
@@ -5770,10 +6136,8 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER;
 if (
 existing &&
 existing.CONTRACT &&
-existing.CONTRACT !==
-CONTRACT &&
-existing.CONTRACT !==
-PREVIOUS_CONTRACT
+existing.CONTRACT !== CONTRACT &&
+existing.CONTRACT !== PREVIOUS_CONTRACT
 ) {
 root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONFLICT =
 deepFreeze({
@@ -5802,16 +6166,14 @@ return;
 
 if (
 existing &&
-existing.CONTRACT ===
-CONTRACT
+existing.CONTRACT === CONTRACT
 ) {
 return;
 }
 
 if (
 doc &&
-doc.readyState ===
-"loading"
+doc.readyState === "loading"
 ) {
 doc.addEventListener(
 "DOMContentLoaded",

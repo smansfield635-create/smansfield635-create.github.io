@@ -1,33 +1,72 @@
 <!-- /showroom/globe/audralia/diagnostic/index.html -->
-<!-- AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v1 -->
+<!-- AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2 -->
 <!-- Full-file replacement. -->
 <!-- HTML only. -->
-<!-- Owns: Audralia diagnostic page structure, reader-first gauges, nine-cycle map, receipt access shell, technical tabs, target observation shell. -->
-<!-- Does not own: diagnostic station logic, engine implementation, runtime mutation, production repair, renderer mutation, WebGL/WebGPU initialization, visual pass, readiness claim, generated image, GraphicBox. -->
-<!-- Paired files:
-   /showroom/globe/audralia/diagnostic/index.css
-   /showroom/globe/audralia/diagnostic/index.js
-   /assets/audralia/audralia.diagnostic.north.conductor.js
-   /assets/audralia/audralia.diagnostic.probe.north.js
-   /assets/audralia/audralia.diagnostic.probe.east.js
-   /assets/audralia/audralia.diagnostic.east.js
-   /assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js
-   /assets/audralia/audralia.diagnostic.probe.west.js
-   /assets/audralia/audralia.diagnostic.west.js
-   /assets/audralia/audralia.diagnostic.probe.south.js
-   /assets/audralia/audralia.diagnostic.south.js
-   /assets/audralia/audralia.diagnostic.south.surface.pointer.js
-   /assets/audralia/audralia.diagnostic.rail.js
+<!--
+  Owns:
+  - Audralia diagnostic page structure;
+  - reader-first gauges;
+  - engine-family visibility shell;
+  - nine-cycle map;
+  - receipt access shell;
+  - technical tabs;
+  - target observation shell.
+
+  Does not own:
+  - governing engine-contract behavior;
+  - core-engine implementation;
+  - engine-registry implementation;
+  - diagnostic station logic;
+  - runtime mutation;
+  - production repair;
+  - renderer mutation;
+  - WebGL/WebGPU initialization;
+  - visual pass;
+  - readiness claim;
+  - generated image;
+  - GraphicBox.
+
+  Engine family:
+  - /assets/engine/dgb.engine.contract.js
+  - /assets/engine/dgb.engine.js
+  - /assets/engine/dgb.engine.subjects.js
+
+  Diagnostic family:
+  - /assets/audralia/audralia.diagnostic.north.conductor.js
+  - /assets/audralia/audralia.diagnostic.probe.north.js
+  - /assets/audralia/audralia.diagnostic.probe.east.js
+  - /assets/audralia/audralia.diagnostic.east.js
+  - /assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js
+  - /assets/audralia/audralia.diagnostic.probe.west.js
+  - /assets/audralia/audralia.diagnostic.west.js
+  - /assets/audralia/audralia.diagnostic.probe.south.js
+  - /assets/audralia/audralia.diagnostic.south.js
+  - /assets/audralia/audralia.diagnostic.south.surface.pointer.js
+  - /assets/audralia/audralia.diagnostic.rail.js
+
+  Paired route files:
+  - /showroom/globe/audralia/diagnostic/index.css
+  - /showroom/globe/audralia/diagnostic/index.js
 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/showroom/globe/audralia/diagnostic/"
   data-page="audralia-diagnostic-reader"
-  data-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v1"
+  data-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
+  data-previous-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v1"
   data-target-route="/showroom/globe/audralia/"
   data-diagnostic-route="/showroom/globe/audralia/diagnostic/"
   data-diagnostic-family-root="/assets/audralia/"
+  data-engine-family-root="/assets/engine/"
+  data-engine-contract="/assets/engine/dgb.engine.contract.js"
+  data-engine-core="/assets/engine/dgb.engine.js"
+  data-engine-registry="/assets/engine/dgb.engine.subjects.js"
+  data-engine-count-expected="1"
+  data-governing-contract-count-expected="1"
+  data-reserved-engine-slot-count-expected="5"
+  data-engine-observer-required-for-registry-view="false"
+  data-engine-observer-attached="false"
   data-reader-first="true"
   data-technical-tabs-separated="true"
   data-three-dimensional-native="true"
@@ -38,6 +77,7 @@
   data-repair-authorized="false"
   data-ready-claimed="false"
   data-visual-pass-claimed="false"
+  data-f21-claimed="false"
 >
 <head>
   <meta charset="utf-8" />
@@ -56,6 +96,11 @@
 
   <meta
     name="audralia-diagnostic-html-contract"
+    content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
+  />
+
+  <meta
+    name="audralia-diagnostic-html-previous-contract"
     content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v1"
   />
 
@@ -84,6 +129,21 @@
     content="/showroom/globe/audralia/"
   />
 
+  <meta
+    name="dgb-engine-governing-contract"
+    content="DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+  />
+
+  <meta
+    name="dgb-engine-core-contract"
+    content="DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+  />
+
+  <meta
+    name="dgb-engine-registry-contract"
+    content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
+  />
+
   <link
     rel="stylesheet"
     href="/showroom/globe/audralia/diagnostic/index.css?v=AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STYLE_TNT_v1"
@@ -100,12 +160,17 @@
       aria-label="Audralia diagnostic command"
     >
       <div class="hero-copy">
-        <p class="eyebrow">Audralia · 3D Diagnostic Track</p>
+        <p class="eyebrow">
+          Audralia · 3D Diagnostic Track
+        </p>
 
-        <h1>Reader-first engine health report</h1>
+        <h1>
+          Reader-first engine health report
+        </h1>
 
         <p class="lede">
-          This page explains what the diagnostic system can see, what is still held, and what needs attention before any technical receipt is opened.
+          This page explains what the diagnostic system can see, what is still
+          held, and what needs attention before any technical receipt is opened.
         </p>
 
         <div
@@ -125,6 +190,13 @@
             href="#readerSummary"
           >
             Read Summary
+          </a>
+
+          <a
+            class="button-link ghost"
+            href="#engineFamilyPanel"
+          >
+            Engine Family
           </a>
 
           <a
@@ -156,7 +228,10 @@
         </div>
 
         <div>
-          <strong id="overallStatus">Waiting for diagnostic run</strong>
+          <strong id="overallStatus">
+            Waiting for diagnostic run
+          </strong>
+
           <span id="overallStatusDetail">
             The system has not produced a ledger yet.
           </span>
@@ -172,36 +247,140 @@
       <div class="section-head">
         <div>
           <p class="eyebrow">Public View</p>
-          <h2 id="readerSummaryTitle">Plain-language summary</h2>
+
+          <h2 id="readerSummaryTitle">
+            Plain-language summary
+          </h2>
         </div>
 
-        <span class="pill">READER_SAFE</span>
+        <span class="pill">
+          READER_SAFE
+        </span>
       </div>
 
       <article class="summary-card primary-card">
         <h3>What this means</h3>
+
         <p id="plainSummary">
-          Run the diagnostic track to receive a readable summary of the Audralia 3D engine path.
+          Run the diagnostic track to receive a readable summary of the
+          Audralia 3D engine path.
         </p>
       </article>
 
       <article class="summary-card">
         <h3>Passed</h3>
+
         <strong id="passedCount">0</strong>
-        <span>Stations with enough evidence to continue.</span>
+
+        <span>
+          Stations with enough evidence to continue.
+        </span>
       </article>
 
       <article class="summary-card">
         <h3>Held</h3>
+
         <strong id="heldCount">0</strong>
-        <span>Stations waiting for evidence or owner clarification.</span>
+
+        <span>
+          Stations waiting for evidence or owner clarification.
+        </span>
       </article>
 
       <article class="summary-card">
         <h3>Attention</h3>
+
         <strong id="attentionCount">0</strong>
-        <span>Failures, conflicts, or errors requiring review.</span>
+
+        <span>
+          Failures, conflicts, or errors requiring review.
+        </span>
       </article>
+    </section>
+
+    <section
+      class="receipt-panel"
+      id="engineFamilyPanel"
+      aria-labelledby="engineFamilyPanelTitle"
+    >
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">
+            Engine Registry
+          </p>
+
+          <h2 id="engineFamilyPanelTitle">
+            Governing authority and runtime engine
+          </h2>
+        </div>
+
+        <span
+          class="pill"
+          id="engineRegistryStatusPill"
+        >
+          WAITING_FOR_REGISTRY
+        </span>
+      </div>
+
+      <div
+        class="reader-grid"
+        aria-label="Engine registry summary"
+      >
+        <article class="summary-card primary-card">
+          <h3>Governing contract</h3>
+
+          <strong id="governingContractCount">--</strong>
+
+          <span id="governingContractSummary">
+            Waiting for the governing contract registry record.
+          </span>
+        </article>
+
+        <article class="summary-card">
+          <h3>Assigned engines</h3>
+
+          <strong id="assignedEngineCount">--</strong>
+
+          <span id="assignedEngineSummary">
+            Waiting for the runtime engine registry record.
+          </span>
+        </article>
+
+        <article class="summary-card">
+          <h3>Selectable engines</h3>
+
+          <strong id="selectableEngineCount">--</strong>
+
+          <span id="selectableEngineSummary">
+            No engine selection has been confirmed.
+          </span>
+        </article>
+
+        <article class="summary-card">
+          <h3>Reserved slots</h3>
+
+          <strong id="reservedEngineCount">--</strong>
+
+          <span id="reservedEngineSummary">
+            Waiting for the six-slot registry.
+          </span>
+        </article>
+      </div>
+
+      <div
+        class="receipt-list"
+        id="engineRegistryList"
+        aria-live="polite"
+      >
+        <article class="receipt-empty">
+          <h3>Engine family not read yet</h3>
+
+          <p>
+            The route controller will read the governing contract, runtime
+            engine, and registry after their scripts are loaded.
+          </p>
+        </article>
+      </div>
     </section>
 
     <section
@@ -210,11 +389,18 @@
     >
       <div class="section-head">
         <div>
-          <p class="eyebrow">Nine-Cycle Map</p>
-          <h2 id="cycleMapTitle">Diagnostic path</h2>
+          <p class="eyebrow">
+            Nine-Cycle Map
+          </p>
+
+          <h2 id="cycleMapTitle">
+            Diagnostic path
+          </h2>
         </div>
 
-        <span class="pill">NORTH → EAST → SURFACE → WEST → SOUTH → NORTH_RETURN</span>
+        <span class="pill">
+          NORTH → EAST → SURFACE → WEST → SOUTH → NORTH_RETURN
+        </span>
       </div>
 
       <ol
@@ -285,7 +471,10 @@
       <div class="section-head">
         <div>
           <p class="eyebrow">Receipts</p>
-          <h2 id="receiptPanelTitle">Accessible station receipts</h2>
+
+          <h2 id="receiptPanelTitle">
+            Accessible station receipts
+          </h2>
         </div>
 
         <div class="receipt-actions">
@@ -314,7 +503,10 @@
       >
         <article class="receipt-empty">
           <h3>No receipts yet</h3>
-          <p>Run the diagnostic track to populate station receipts.</p>
+
+          <p>
+            Run the diagnostic track to populate station receipts.
+          </p>
         </article>
       </div>
     </section>
@@ -327,7 +519,10 @@
       <div class="section-head">
         <div>
           <p class="eyebrow">Target</p>
-          <h2 id="targetPanelTitle">Audralia observation window</h2>
+
+          <h2 id="targetPanelTitle">
+            Audralia observation window
+          </h2>
         </div>
 
         <button
@@ -360,11 +555,18 @@
     >
       <div class="section-head">
         <div>
-          <p class="eyebrow">Technical View</p>
-          <h2 id="technicalPanelTitle">Separated technical tabs</h2>
+          <p class="eyebrow">
+            Technical View
+          </p>
+
+          <h2 id="technicalPanelTitle">
+            Separated technical tabs
+          </h2>
         </div>
 
-        <span class="pill">TECHNICAL_ONLY</span>
+        <span class="pill">
+          TECHNICAL_ONLY
+        </span>
       </div>
 
       <div
@@ -444,59 +646,108 @@
         hidden
       >
         <div class="contract-grid">
+          <article
+            data-contract-role="governing-engine-contract"
+          >
+            <b>Governing Engine Contract</b>
+            <span>
+              /assets/engine/dgb.engine.contract.js
+            </span>
+          </article>
+
+          <article
+            data-contract-role="runtime-engine-core"
+          >
+            <b>Runtime Engine Core</b>
+            <span>
+              /assets/engine/dgb.engine.js
+            </span>
+          </article>
+
+          <article
+            data-contract-role="engine-subject-registry"
+          >
+            <b>Engine and Authority Registry</b>
+            <span>
+              /assets/engine/dgb.engine.subjects.js
+            </span>
+          </article>
+
           <article>
             <b>Conductor</b>
-            <span>/assets/audralia/audralia.diagnostic.north.conductor.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.north.conductor.js
+            </span>
           </article>
 
           <article>
             <b>North Probe</b>
-            <span>/assets/audralia/audralia.diagnostic.probe.north.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.probe.north.js
+            </span>
           </article>
 
           <article>
             <b>East Probe</b>
-            <span>/assets/audralia/audralia.diagnostic.probe.east.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.probe.east.js
+            </span>
           </article>
 
           <article>
             <b>East Interpreter</b>
-            <span>/assets/audralia/audralia.diagnostic.east.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.east.js
+            </span>
           </article>
 
           <article>
             <b>Surface Truth</b>
-            <span>/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js
+            </span>
           </article>
 
           <article>
             <b>West Probe</b>
-            <span>/assets/audralia/audralia.diagnostic.probe.west.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.probe.west.js
+            </span>
           </article>
 
           <article>
             <b>West Interpreter</b>
-            <span>/assets/audralia/audralia.diagnostic.west.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.west.js
+            </span>
           </article>
 
           <article>
             <b>South Probe</b>
-            <span>/assets/audralia/audralia.diagnostic.probe.south.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.probe.south.js
+            </span>
           </article>
 
           <article>
             <b>South Interpreter</b>
-            <span>/assets/audralia/audralia.diagnostic.south.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.south.js
+            </span>
           </article>
 
           <article>
             <b>South Pointer</b>
-            <span>/assets/audralia/audralia.diagnostic.south.surface.pointer.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.south.surface.pointer.js
+            </span>
           </article>
 
           <article>
             <b>Rail</b>
-            <span>/assets/audralia/audralia.diagnostic.rail.js</span>
+            <span>
+              /assets/audralia/audralia.diagnostic.rail.js
+            </span>
           </article>
         </div>
       </section>
@@ -509,14 +760,75 @@
         hidden
       >
         <div class="boundary-grid">
-          <article><b>Production mutation</b><span>Not authorized</span></article>
-          <article><b>Runtime restart</b><span>Not authorized</span></article>
-          <article><b>Renderer mutation</b><span>Not authorized</span></article>
-          <article><b>Repair</b><span>Not authorized</span></article>
-          <article><b>Readiness</b><span>Not claimed</span></article>
-          <article><b>Visual pass</b><span>Not claimed</span></article>
-          <article><b>Canvas2D</b><span>Not governing</span></article>
-          <article><b>3D host</b><span>Observation only</span></article>
+          <article>
+            <b>Governing contract</b>
+            <span>Authority only; not a second engine</span>
+          </article>
+
+          <article>
+            <b>Core engine</b>
+            <span>Executable runtime subject</span>
+          </article>
+
+          <article>
+            <b>Registry</b>
+            <span>Metadata and inspection only</span>
+          </article>
+
+          <article>
+            <b>Observer</b>
+            <span>Not required for registry visibility</span>
+          </article>
+
+          <article>
+            <b>Production mutation</b>
+            <span>Not authorized</span>
+          </article>
+
+          <article>
+            <b>Runtime restart</b>
+            <span>Not authorized</span>
+          </article>
+
+          <article>
+            <b>Renderer mutation</b>
+            <span>Not authorized</span>
+          </article>
+
+          <article>
+            <b>Repair</b>
+            <span>Not authorized</span>
+          </article>
+
+          <article>
+            <b>Readiness</b>
+            <span>Not claimed by this route</span>
+          </article>
+
+          <article>
+            <b>Visual pass</b>
+            <span>Not claimed</span>
+          </article>
+
+          <article>
+            <b>Canvas2D</b>
+            <span>Not governing</span>
+          </article>
+
+          <article>
+            <b>3D host</b>
+            <span>Observation only</span>
+          </article>
+
+          <article>
+            <b>F13</b>
+            <span>Conditional engine-authority inheritance</span>
+          </article>
+
+          <article>
+            <b>F21</b>
+            <span>Unclaimed pending runtime measurement</span>
+          </article>
         </div>
       </section>
     </section>
@@ -529,88 +841,127 @@
     aria-live="polite"
   ></div>
 
+  <!-- ============================================================
+       ENGINE FAMILY
+       Canonical dependency order:
+       1. Governing contract
+       2. Runtime core
+       3. Engine and authority registry
+       ============================================================ -->
+
   <script
-    src="/assets/audralia/audralia.diagnostic.north.conductor.js?v=AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_3D_TNT_v1"
+    src="/assets/engine/dgb.engine.contract.js?v=DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+    defer
+    data-engine-family-script="governing-contract"
+    data-load-order="1"
+  ></script>
+
+  <script
+    src="/assets/engine/dgb.engine.js?v=DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+    defer
+    data-engine-family-script="runtime-core"
+    data-load-order="2"
+  ></script>
+
+  <script
+    src="/assets/engine/dgb.engine.subjects.js?v=DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
+    defer
+    data-engine-family-script="engine-registry"
+    data-load-order="3"
+  ></script>
+
+  <!-- ============================================================
+       AUDRALIA DIAGNOSTIC FAMILY
+       Loads only after contract, engine, and registry.
+       ============================================================ -->
+
+  <script
+    src="/assets/audralia/audralia.diagnostic.north.conductor.js?v=AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="conductor"
-    data-load-order="1"
+    data-load-order="4"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.probe.north.js?v=AUDRALIA_DIAGNOSTIC_PROBE_NORTH_INTAKE_F1_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="north-probe"
-    data-load-order="2"
+    data-load-order="5"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.probe.east.js?v=AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="east-probe"
-    data-load-order="3"
+    data-load-order="6"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.east.js?v=AUDRALIA_DIAGNOSTIC_EAST_CONSTRUCTION_INTERPRETATION_F5_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="east"
-    data-load-order="4"
+    data-load-order="7"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js?v=AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="surface-truth"
-    data-load-order="5"
+    data-load-order="8"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.probe.west.js?v=AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="west-probe"
-    data-load-order="6"
+    data-load-order="9"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.west.js?v=AUDRALIA_DIAGNOSTIC_WEST_RUNTIME_INTERPRETATION_F21_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="west"
-    data-load-order="7"
+    data-load-order="10"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.probe.south.js?v=AUDRALIA_DIAGNOSTIC_PROBE_SOUTH_HANDOFF_F34_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="south-probe"
-    data-load-order="8"
+    data-load-order="11"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.south.js?v=AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="south"
-    data-load-order="9"
+    data-load-order="12"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.south.surface.pointer.js?v=AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="south-pointer"
-    data-load-order="10"
+    data-load-order="13"
   ></script>
 
   <script
     src="/assets/audralia/audralia.diagnostic.rail.js?v=AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="rail"
-    data-load-order="11"
+    data-load-order="14"
   ></script>
+
+  <!-- ============================================================
+       ROUTE CONTROLLER
+       Must load after every engine and diagnostic dependency.
+       ============================================================ -->
 
   <script
     src="/showroom/globe/audralia/diagnostic/index.js?v=AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v1"
     defer
     data-audralia-diagnostic-controller-script="true"
-    data-load-order="12"
+    data-load-order="15"
   ></script>
 </body>
 </html>

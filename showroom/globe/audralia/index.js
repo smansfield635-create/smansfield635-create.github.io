@@ -1,6 +1,6 @@
 // /showroom/globe/audralia/index.js
 // AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1
-// Full-file construction.
+// Full-file construction. 
 //
 // Purpose:
 // - Consume /assets/audralia/audralia.planet.js as the sole planet-geometry authority.

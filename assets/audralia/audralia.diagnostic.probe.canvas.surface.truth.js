@@ -1,58 +1,25 @@
 // /assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js
 // AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v1
 // Full-file replacement.
-// Quiet-load, dependency-free, 3D-native surface truth probe.
-// Owns observation of diagnostic target frame, 3D host availability,
-// presentation surface dimensions, canvas/WebGL/WebGPU surface hints,
-// and non-mutating surface evidence.
-// Does not own rendering, canvas creation, WebGL/WebGPU initialization,
-// runtime restart, repair authorization, readiness, visual pass, or F21.
+// Diagnostic-only.
+// Read-only.
 
-(function installAudraliaDiagnosticProbeCanvasSurfaceTruthF8(global) {
+(function registerAudraliaDiagnosticCanvasSurfaceTruth(global) {
   "use strict";
-
-  var root =
-    global ||
-    (
-      typeof window !== "undefined"
-        ? window
-        : typeof globalThis !== "undefined"
-          ? globalThis
-          : this
-    );
 
   var CONTRACT =
     "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v1";
 
-  var VERSION =
-    "1.0.0";
+  var VERSION = "1.0.0";
+  var FILE = "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js";
+  var STATION_ID = "CANVAS_SURFACE_TRUTH";
+  var CYCLE_POSITION = 4;
+  var FIBONACCI = "F8";
+  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
+  var API_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_API_v1";
 
-  var FILE =
-    "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js";
-
-  var STATION_ID =
-    "CANVAS_SURFACE_TRUTH";
-
-  var CYCLE_POSITION =
-    4;
-
-  var FIBONACCI =
-    "F8";
-
-  var STATION_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
-
-  var DEFINITION_RECEIPT =
-    "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_DEFINITION_RECEIPT_v1";
-
-  var INSTALLATION_RECEIPT =
-    "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_INSTALLATION_RECEIPT_v1";
-
-  var TARGET_FRAME_ID =
-    "audraliaDiagnosticTargetFrame";
-
-  var TARGET_ROUTE =
-    "/showroom/globe/audralia/";
+  var TARGET_ROUTE = "/showroom/globe/audralia/";
+  var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
 
   var NO_CLAIMS = Object.freeze({
     engineAuthority: false,
@@ -60,1285 +27,602 @@
     contractRewriteAuthority: false,
     routeMutationAuthority: false,
     rendererAuthority: false,
+    runtimeAuthority: false,
     canvasAuthority: false,
     webGLAuthority: false,
     webGPUAuthority: false,
     repairAuthorizationAuthority: false,
     fileAuthorizationAuthority: false,
     finalProductionVerdictAuthority: false,
+    diagnosticPassProvesReady: false,
+    surfacePresenceProvesReadiness: false,
+    iframePresenceProvesPresentation: false,
     readyClaimed: false,
     verifiedClaimed: false,
-    f13Claimed: false,
-    f21Claimed: false,
     visualPassClaimed: false,
     finalVisualPassClaimed: false,
     generatedImage: false,
     graphicBox: false,
+    f21Claimed: false,
     webGL: false,
     webGPU: false
   });
 
-  function nowIso() {
+  function nowISO() {
     try {
       return new Date().toISOString();
-    } catch (_error) {
+    } catch (_) {
       return null;
     }
   }
 
   function isObject(value) {
-    return Boolean(
-      value &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    );
+    return value !== null && typeof value === "object" && !Array.isArray(value);
   }
 
-  function isFunction(value) {
-    return typeof value === "function";
-  }
-
-  function clone(value, seen) {
-    if (
-      value === null ||
-      value === undefined ||
-      typeof value === "string" ||
-      typeof value === "number" ||
-      typeof value === "boolean"
-    ) {
-      return value;
-    }
-
-    if (typeof value === "bigint") {
-      return value.toString();
-    }
-
-    if (
-      typeof value === "function" ||
-      typeof value === "symbol"
-    ) {
+  function clone(value) {
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (_) {
       return null;
     }
+  }
 
-    var memory =
-      seen || [];
-
-    if (memory.indexOf(value) !== -1) {
-      return "[Circular]";
-    }
-
-    memory.push(value);
+  function stableStringify(value) {
+    if (value === null) return "null";
+    if (typeof value === "string") return JSON.stringify(value);
+    if (typeof value === "number") return Number.isFinite(value) ? String(value) : "null";
+    if (typeof value === "boolean") return value ? "true" : "false";
 
     if (Array.isArray(value)) {
-      return value.map(function cloneEntry(entry) {
-        return clone(
-          entry,
-          memory.slice()
-        );
-      });
+      return "[" + value.map(stableStringify).join(",") + "]";
     }
 
-    if (!isObject(value)) {
-      return null;
+    if (isObject(value)) {
+      return "{" + Object.keys(value).sort().map(function encode(key) {
+        return JSON.stringify(key) + ":" + stableStringify(value[key]);
+      }).join(",") + "}";
     }
 
-    var output = {};
-
-    Object.keys(value).forEach(function cloneKey(key) {
-      try {
-        output[key] =
-          clone(
-            value[key],
-            memory.slice()
-          );
-      } catch (_error) {
-        output[key] =
-          "[Unreadable]";
-      }
-    });
-
-    return output;
+    return "null";
   }
 
-  function deepFreeze(value, seen) {
-    if (
-      !value ||
-      (
-        typeof value !== "object" &&
-        typeof value !== "function"
-      )
-    ) {
-      return value;
+  function hash(value) {
+    var text = stableStringify(value);
+    var h = 0x811c9dc5;
+
+    for (var i = 0; i < text.length; i += 1) {
+      h ^= text.charCodeAt(i);
+      h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+      h >>>= 0;
     }
 
-    var memory =
-      seen || [];
-
-    if (memory.indexOf(value) !== -1) {
-      return value;
-    }
-
-    memory.push(value);
-
-    try {
-      Object.getOwnPropertyNames(value).forEach(
-        function freezeProperty(key) {
-          try {
-            deepFreeze(
-              value[key],
-              memory
-            );
-          } catch (_error) {}
-        }
-      );
-
-      Object.freeze(value);
-    } catch (_error2) {}
-
-    return value;
-  }
-
-  function frozenClone(value) {
-    return deepFreeze(
-      clone(value)
-    );
-  }
-
-  function stablePrepare(value, seen) {
-    if (
-      value === null ||
-      value === undefined ||
-      typeof value === "string" ||
-      typeof value === "number" ||
-      typeof value === "boolean"
-    ) {
-      return value;
-    }
-
-    if (typeof value === "bigint") {
-      return value.toString();
-    }
-
-    if (
-      typeof value === "function" ||
-      typeof value === "symbol"
-    ) {
-      return null;
-    }
-
-    var memory =
-      seen || [];
-
-    if (memory.indexOf(value) !== -1) {
-      return "[Circular]";
-    }
-
-    memory.push(value);
-
-    if (Array.isArray(value)) {
-      return value.map(function stableArray(entry) {
-        return stablePrepare(
-          entry,
-          memory.slice()
-        );
-      });
-    }
-
-    if (!isObject(value)) {
-      return null;
-    }
-
-    var output = {};
-
-    Object.keys(value)
-      .sort()
-      .forEach(function stableKey(key) {
-        output[key] =
-          stablePrepare(
-            value[key],
-            memory.slice()
-          );
-      });
-
-    return output;
-  }
-
-  function hashObject(value) {
-    var text;
-
-    try {
-      text =
-        JSON.stringify(
-          stablePrepare(value)
-        );
-    } catch (_error) {
-      text =
-        String(value);
-    }
-
-    var result =
-      0x811c9dc5;
-
-    for (
-      var index = 0;
-      index < text.length;
-      index += 1
-    ) {
-      result ^=
-        text.charCodeAt(index);
-
-      result =
-        Math.imul(
-          result,
-          0x01000193
-        ) >>> 0;
-    }
-
-    return (
-      "fnv1a32:" +
-      ("00000000" + result.toString(16))
-        .slice(-8)
-    );
-  }
-
-  function readPathFrom(source, path) {
-    var parts =
-      String(path || "")
-        .split(".")
-        .filter(Boolean);
-
-    var cursor =
-      source;
-
-    for (
-      var index = 0;
-      index < parts.length;
-      index += 1
-    ) {
-      if (
-        cursor === null ||
-        cursor === undefined ||
-        cursor[parts[index]] === null ||
-        cursor[parts[index]] === undefined
-      ) {
-        return null;
-      }
-
-      cursor =
-        cursor[parts[index]];
-    }
-
-    return cursor;
+    return "fnv1a32:" + ("00000000" + h.toString(16)).slice(-8);
   }
 
   function issue(code, path, detail) {
     return {
-      code:
-        String(code || "ISSUE"),
-
-      path:
-        String(path || STATION_ID),
-
-      detail:
-        String(detail || code || "ISSUE")
-          .slice(0, 512)
+      code: String(code || "ISSUE"),
+      path: String(path || "$"),
+      detail: String(detail || code || "ISSUE")
     };
   }
 
-  function safeRect(element) {
-    if (
-      !element ||
-      !isFunction(element.getBoundingClientRect)
-    ) {
-      return null;
-    }
-
-    try {
-      var rect =
-        element.getBoundingClientRect();
-
-      return {
-        x:
-          Number(rect.x || 0),
-
-        y:
-          Number(rect.y || 0),
-
-        width:
-          Number(rect.width || 0),
-
-        height:
-          Number(rect.height || 0),
-
-        top:
-          Number(rect.top || 0),
-
-        right:
-          Number(rect.right || 0),
-
-        bottom:
-          Number(rect.bottom || 0),
-
-        left:
-          Number(rect.left || 0),
-
-        nonzero:
-          Number(rect.width || 0) > 0 &&
-          Number(rect.height || 0) > 0
-      };
-    } catch (_error) {
-      return null;
-    }
+  function observation(id, kind, payload) {
+    return Object.assign({ id: id, kind: kind }, payload || {});
   }
 
-  function inspectCanvas(canvas) {
-    var rect =
-      safeRect(canvas);
+  function getPath(root, path) {
+    if (!isObject(root) || !path) return null;
 
-    var width =
-      canvas &&
-      Number.isFinite(Number(canvas.width))
-        ? Number(canvas.width)
-        : null;
+    var parts = String(path).split(".");
+    var cursor = root;
 
-    var height =
-      canvas &&
-      Number.isFinite(Number(canvas.height))
-        ? Number(canvas.height)
-        : null;
+    for (var i = 0; i < parts.length; i += 1) {
+      if (cursor === null || cursor === undefined) return null;
+      cursor = cursor[parts[i]];
+    }
 
-    return {
-      tagName:
-        canvas && canvas.tagName
-          ? String(canvas.tagName)
-          : null,
-
-      id:
-        canvas && canvas.id
-          ? String(canvas.id)
-          : null,
-
-      className:
-        canvas && canvas.className
-          ? String(canvas.className)
-          : "",
-
-      width:
-        width,
-
-      height:
-        height,
-
-      backingStoreNonzero:
-        Number(width || 0) > 0 &&
-        Number(height || 0) > 0,
-
-      rect:
-        rect,
-
-      rectNonzero:
-        Boolean(
-          rect &&
-          rect.nonzero
-        )
-    };
+    return cursor === undefined ? null : cursor;
   }
 
-  function collectCanvases(documentRef) {
-    if (!documentRef || !isFunction(documentRef.querySelectorAll)) {
-      return [];
-    }
-
-    try {
-      return Array.prototype.slice.call(
-        documentRef.querySelectorAll("canvas")
-      ).map(inspectCanvas);
-    } catch (_error) {
-      return [];
-    }
-  }
-
-  function findLikelySurface(documentRef) {
-    if (!documentRef || !isFunction(documentRef.querySelector)) {
-      return null;
-    }
-
-    var selectors = [
-      "#audraliaCanvas",
-      "#audraliaPlanetCanvas",
-      "#audraliaCanvasMount canvas",
-      "#audraliaMount canvas",
-      "#planetCanvas",
-      "canvas[data-audralia-surface]",
-      "canvas[data-engine-surface]",
-      "canvas"
-    ];
-
-    for (
-      var index = 0;
-      index < selectors.length;
-      index += 1
-    ) {
-      try {
-        var found =
-          documentRef.querySelector(
-            selectors[index]
-          );
-
-        if (found) {
-          return {
-            selector:
-              selectors[index],
-
-            surface:
-              inspectCanvas(found)
-          };
-        }
-      } catch (_error) {}
+  function firstObject() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      if (isObject(arguments[i])) return arguments[i];
     }
 
     return null;
   }
 
-  function inspectFrame() {
-    var localDocument =
-      root && root.document
-        ? root.document
-        : null;
+  function firstBoolean() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      if (typeof arguments[i] === "boolean") return arguments[i];
+    }
 
-    var frame =
-      localDocument && isFunction(localDocument.getElementById)
-        ? localDocument.getElementById(TARGET_FRAME_ID)
-        : null;
+    return null;
+  }
 
-    var frameWindow =
-      null;
+  function firstString() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      if (typeof arguments[i] === "string" && arguments[i].length) {
+        return arguments[i];
+      }
+    }
 
-    var frameDocument =
-      null;
+    return null;
+  }
 
-    var sameOriginAccessible =
-      false;
+  function readLiveTargetFrame() {
+    var doc = global.document || null;
 
-    var documentLoaded =
-      false;
+    var frame = doc
+      ? (
+          doc.getElementById(TARGET_FRAME_ID) ||
+          doc.querySelector('iframe[data-diagnostic-target="audralia"]') ||
+          doc.querySelector('iframe[src="' + TARGET_ROUTE + '"]')
+        )
+      : null;
 
-    var documentReadyState =
-      null;
-
-    var surface =
-      null;
-
-    var canvases =
-      [];
-
-    var runtimeStatus =
-      null;
-
-    var runtimeGlobals = {
-      DGBAudraliaPlanetRuntime: false,
-      AUDRALIA_PLANET_RUNTIME: false,
-      AudraliaPlanetRuntime: false
+    var result = {
+      framePresent: Boolean(frame),
+      frameId: frame && frame.id ? frame.id : null,
+      targetRoute: TARGET_ROUTE,
+      sameOriginAccessible: false,
+      documentLoaded: false,
+      runtimeStatus: null,
+      receiptLight: null,
+      receipt: null,
+      canvasPresent: false,
+      runtimeGlobalPresent: false,
+      readError: null
     };
 
-    if (frame) {
-      try {
-        frameWindow =
-          frame.contentWindow || null;
+    if (!frame) return result;
 
-        frameDocument =
-          frame.contentDocument ||
-          (
-            frameWindow
-              ? frameWindow.document
-              : null
-          );
+    try {
+      var frameWindow = frame.contentWindow || null;
+      var frameDocument = frame.contentDocument || (frameWindow ? frameWindow.document : null);
 
-        sameOriginAccessible =
-          Boolean(frameDocument);
-
-        documentReadyState =
-          frameDocument && frameDocument.readyState
-            ? String(frameDocument.readyState)
-            : null;
-
-        documentLoaded =
-          documentReadyState === "complete" ||
-          documentReadyState === "interactive";
-
-        if (frameDocument) {
-          surface =
-            findLikelySurface(frameDocument);
-
-          canvases =
-            collectCanvases(frameDocument);
-        }
-
-        if (frameWindow) {
-          runtimeGlobals.DGBAudraliaPlanetRuntime =
-            Boolean(frameWindow.DGBAudraliaPlanetRuntime);
-
-          runtimeGlobals.AUDRALIA_PLANET_RUNTIME =
-            Boolean(frameWindow.AUDRALIA_PLANET_RUNTIME);
-
-          runtimeGlobals.AudraliaPlanetRuntime =
-            Boolean(frameWindow.AudraliaPlanetRuntime);
-
-          var runtime =
-            frameWindow.DGBAudraliaPlanetRuntime ||
-            frameWindow.AUDRALIA_PLANET_RUNTIME ||
-            frameWindow.AudraliaPlanetRuntime ||
-            null;
-
-          if (
-            runtime &&
-            isFunction(runtime.getStatus)
-          ) {
-            try {
-              runtimeStatus =
-                frozenClone(
-                  runtime.getStatus()
-                );
-            } catch (_error2) {
-              runtimeStatus =
-                null;
-            }
-          }
-        }
-      } catch (_error3) {
-        sameOriginAccessible =
-          false;
-
-        documentLoaded =
-          false;
-
-        documentReadyState =
-          null;
-      }
-    }
-
-    return deepFreeze({
-      framePresent:
-        Boolean(frame),
-
-      frameId:
-        TARGET_FRAME_ID,
-
-      targetRoute:
-        TARGET_ROUTE,
-
-      sameOriginAccessible:
-        sameOriginAccessible,
-
-      documentLoaded:
-        documentLoaded,
-
-      documentReadyState:
-        documentReadyState,
-
-      runtimeGlobals:
-        runtimeGlobals,
-
-      runtimeStatus:
-        runtimeStatus,
-
-      runtimeStatusAvailable:
-        Boolean(runtimeStatus),
-
-      likelySurface:
-        surface,
-
-      canvasCount:
-        canvases.length,
-
-      canvases:
-        canvases,
-
-      noClaims: {
-        iframePresenceProvesWebGL2:
-          false,
-
-        iframePresenceProvesSubmission:
-          false,
-
-        iframePresenceProvesPresentation:
-          false,
-
-        iframePresenceProvesVisibility:
-          false,
-
-        canvasPresenceProvesRendering:
-          false,
-
-        nonzeroRectProvesVisualPass:
-          false
-      }
-    });
-  }
-
-  function inspectRequestEvidence(request) {
-    var target =
-      isObject(request)
-        ? request.target
-        : null;
-
-    var engineFamily =
-      isObject(request)
-        ? request.engineFamily
-        : null;
-
-    var runtime =
-      engineFamily &&
-      isObject(engineFamily.runtime)
-        ? engineFamily.runtime
-        : null;
-
-    return deepFreeze({
-      requestTarget:
-        target
-          ? frozenClone(target)
-          : null,
-
-      requestRuntime:
-        runtime
-          ? frozenClone(runtime)
-          : null,
-
-      requestClaimsSurfaceNonzero:
-        runtime &&
-        runtime.surfaceNonzero === true,
-
-      requestClaimsVisiblePixel:
-        runtime &&
-        runtime.visiblePixelObserved === true,
-
-      requestRuntimeEvidenceAvailable:
-        runtime &&
-        runtime.evidenceAvailable === true,
-
-      requestTargetRuntimeEvidenceAvailable:
-        target &&
-        target.runtimeEvidenceAvailable === true
-    });
-  }
-
-  function determineStatus(frameEvidence, requestEvidence) {
-    var issues = [];
-
-    if (!frameEvidence.framePresent) {
-      issues.push(
-        issue(
-          "TARGET_FRAME_NOT_PRESENT",
-          STATION_ID,
-          "The diagnostic target iframe was not found."
-        )
-      );
-    }
-
-    if (
-      frameEvidence.framePresent &&
-      !frameEvidence.sameOriginAccessible
-    ) {
-      issues.push(
-        issue(
-          "TARGET_FRAME_NOT_ACCESSIBLE",
-          STATION_ID,
-          "The diagnostic target iframe could not be inspected from this route."
-        )
-      );
-    }
-
-    if (
-      frameEvidence.framePresent &&
-      frameEvidence.sameOriginAccessible &&
-      !frameEvidence.documentLoaded
-    ) {
-      issues.push(
-        issue(
-          "TARGET_DOCUMENT_NOT_LOADED",
-          STATION_ID,
-          "The target frame document is present but not loaded enough for surface inspection."
-        )
-      );
-    }
-
-    if (
-      frameEvidence.framePresent &&
-      frameEvidence.sameOriginAccessible &&
-      frameEvidence.documentLoaded &&
-      !frameEvidence.canvasCount
-    ) {
-      issues.push(
-        issue(
-          "NO_CANVAS_SURFACE_FOUND",
-          STATION_ID,
-          "No canvas surface was found in the Audralia target frame."
-        )
-      );
-    }
-
-    if (
-      frameEvidence.canvasCount > 0 &&
-      frameEvidence.likelySurface &&
-      frameEvidence.likelySurface.surface &&
-      frameEvidence.likelySurface.surface.rectNonzero !== true
-    ) {
-      issues.push(
-        issue(
-          "SURFACE_RECT_NOT_NONZERO",
-          STATION_ID,
-          "A candidate surface exists, but its presentation rectangle is zero or unavailable."
-        )
-      );
-    }
-
-    var hasNonzeroSurface =
-      Boolean(
-        frameEvidence.likelySurface &&
-        frameEvidence.likelySurface.surface &&
-        frameEvidence.likelySurface.surface.rectNonzero === true &&
-        frameEvidence.likelySurface.surface.backingStoreNonzero === true
-      );
-
-    var runtimeVisible =
-      Boolean(
-        requestEvidence &&
+      result.sameOriginAccessible = Boolean(frameDocument);
+      result.documentLoaded = Boolean(
+        frameDocument &&
         (
-          requestEvidence.requestClaimsSurfaceNonzero ||
-          requestEvidence.requestClaimsVisiblePixel ||
-          requestEvidence.requestTargetRuntimeEvidenceAvailable
+          frameDocument.readyState === "interactive" ||
+          frameDocument.readyState === "complete"
         )
       );
 
-    if (
-      frameEvidence.framePresent &&
-      frameEvidence.sameOriginAccessible &&
-      frameEvidence.documentLoaded &&
-      hasNonzeroSurface
-    ) {
-      return {
-        status:
-          "PASS",
+      result.canvasPresent = Boolean(
+        frameDocument &&
+        (
+          frameDocument.querySelector("canvas[data-audralia-planet-runtime-canvas]") ||
+          frameDocument.querySelector("canvas[data-audralia-planet-fallback-canvas]") ||
+          frameDocument.querySelector("canvas")
+        )
+      );
 
-        completed:
-          true,
+      var runtime =
+        frameWindow &&
+        (
+          frameWindow.DGBAudraliaPlanetRuntime ||
+          frameWindow.DGBAudraliaPlanetRenderer ||
+          frameWindow.DGBAudraliaPlanetRoute
+        );
 
-        handoffEligible:
-          true,
+      result.runtimeGlobalPresent = Boolean(runtime);
 
-        summary:
-          "3D presentation host surface is present and nonzero for diagnostic observation.",
+      if (runtime && typeof runtime.getStatus === "function") {
+        result.runtimeStatus = clone(runtime.getStatus());
+      }
 
-        issues:
-          issues,
+      if (runtime && typeof runtime.getReceiptLight === "function") {
+        result.receiptLight = clone(runtime.getReceiptLight());
+      }
 
-        evidenceClass:
-          runtimeVisible
-            ? "SURFACE_AND_RUNTIME_HINTS"
-            : "SURFACE_ONLY"
-      };
+      if (runtime && typeof runtime.getReceipt === "function") {
+        result.receipt = clone(runtime.getReceipt());
+      }
+    } catch (error) {
+      result.readError =
+        error && error.message
+          ? error.message
+          : "TARGET_FRAME_READ_FAILED";
     }
+
+    return result;
+  }
+
+  function extractPacketTarget(packet) {
+    return firstObject(
+      packet.target,
+      packet.construct && packet.construct.target,
+      packet.targetFrame,
+      {}
+    );
+  }
+
+  function extractRuntimeStatus(packet, liveFrame) {
+    var target = extractPacketTarget(packet);
+
+    return firstObject(
+      liveFrame && liveFrame.runtimeStatus,
+      liveFrame && liveFrame.receiptLight,
+      liveFrame && liveFrame.receipt,
+      target.targetRuntimeStatus,
+      target.runtimeStatus,
+      target.receiptLight,
+      packet.targetRuntimeStatus,
+      packet.runtimeStatus,
+      packet.engineRuntime && packet.engineRuntime.targetRuntimeStatus,
+      {}
+    );
+  }
+
+  function evaluateSurface(packet, liveFrame) {
+    var target = extractPacketTarget(packet);
+    var runtimeStatus = extractRuntimeStatus(packet, liveFrame);
+
+    var framePresent = firstBoolean(
+      liveFrame && liveFrame.framePresent,
+      target.framePresent
+    );
+
+    var sameOriginAccessible = firstBoolean(
+      liveFrame && liveFrame.sameOriginAccessible,
+      target.sameOriginAccessible
+    );
+
+    var documentLoaded = firstBoolean(
+      liveFrame && liveFrame.documentLoaded,
+      target.documentLoaded
+    );
+
+    var runtimeEvidenceAvailable = Boolean(
+      isObject(runtimeStatus) &&
+      Object.keys(runtimeStatus).length
+    );
+
+    var mounted = firstBoolean(
+      runtimeStatus.mounted,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.mounted
+    );
+
+    var stageRectNonzero = firstBoolean(
+      runtimeStatus.stageRectNonzero,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.stageRectNonzero
+    );
+
+    var geometryReady = firstBoolean(
+      runtimeStatus.geometryReady,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.geometryReady
+    );
+
+    var firstFrameDrawn = firstBoolean(
+      runtimeStatus.firstFrameDrawn,
+      runtimeStatus.firstFrameSubmitted,
+      runtimeStatus.firstFramePresented,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.firstFrameDrawn
+    );
+
+    var visiblePixelObserved = firstBoolean(
+      runtimeStatus.firstVisiblePixelObserved,
+      runtimeStatus.visiblePixelObserved,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.firstVisiblePixelObserved
+    );
+
+    var fallbackActive = firstBoolean(
+      runtimeStatus.fallbackActive,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.fallbackActive
+    );
+
+    var webGL = firstBoolean(
+      runtimeStatus.webGL,
+      runtimeStatus.statusDetail && runtimeStatus.statusDetail.webGL
+    );
+
+    var fallbackVisible =
+      fallbackActive === true &&
+      firstFrameDrawn === true &&
+      visiblePixelObserved === true;
+
+    var primaryVisible =
+      mounted === true &&
+      stageRectNonzero === true &&
+      geometryReady === true &&
+      firstFrameDrawn === true &&
+      visiblePixelObserved === true;
 
     return {
-      status:
-        "HOLD",
-
-      completed:
-        false,
-
-      handoffEligible:
-        false,
-
-      summary:
-        issues.length
-          ? "3D surface evidence is held pending a valid target host and nonzero presentation surface."
-          : "3D surface evidence is held because runtime presentation proof is not admitted.",
-
-      issues:
-        issues.length
-          ? issues
-          : [
-              issue(
-                "SURFACE_EVIDENCE_NOT_ADMITTED",
-                STATION_ID,
-                "No sufficient non-mutating surface evidence was admitted."
-              )
-            ],
-
-      evidenceClass:
-        "HELD_SURFACE_EVIDENCE"
+      framePresent: framePresent,
+      sameOriginAccessible: sameOriginAccessible,
+      documentLoaded: documentLoaded,
+      canvasPresent: liveFrame ? liveFrame.canvasPresent : null,
+      runtimeGlobalPresent: liveFrame ? liveFrame.runtimeGlobalPresent : null,
+      runtimeEvidenceAvailable: runtimeEvidenceAvailable,
+      mounted: mounted,
+      stageRectNonzero: stageRectNonzero,
+      geometryReady: geometryReady,
+      webGL: webGL,
+      fallbackActive: fallbackActive,
+      firstFrameDrawn: firstFrameDrawn,
+      visiblePixelObserved: visiblePixelObserved,
+      primaryVisible: primaryVisible,
+      fallbackVisible: fallbackVisible,
+      surfaceTruthAdmitted: primaryVisible || fallbackVisible,
+      runtimeStatus: clone(runtimeStatus)
     };
   }
 
-  function executeCycleStation(request) {
-    var cycleId =
-      request && request.cycleId
-        ? String(request.cycleId)
-        : "AUDRALIA_DIAGNOSTIC_CYCLE_UNKNOWN";
-
-    var frameEvidence =
-      inspectFrame();
-
-    var requestEvidence =
-      inspectRequestEvidence(request || {});
-
-    var decision =
-      determineStatus(
-        frameEvidence,
-        requestEvidence
-      );
-
+  function createReceipt(status, completed, handoffEligible, summary, packet, observations, evidence, issues, owner) {
     var receipt = {
-      schema:
-        STATION_SCHEMA,
-
-      cycleId:
-        cycleId,
-
-      position:
-        CYCLE_POSITION,
-
-      stationId:
-        STATION_ID,
-
-      fibonacci:
-        FIBONACCI,
-
-      contract:
-        CONTRACT,
-
-      version:
-        VERSION,
-
-      file:
-        FILE,
-
-      status:
-        decision.status,
-
-      completed:
-        decision.completed,
-
-      handoffEligible:
-        decision.handoffEligible,
-
-      summary:
-        decision.summary,
-
-      observations: [
-        {
-          id:
-            "SURFACE_FRAME_OBSERVATION",
-
-          kind:
-            "OBSERVED",
-
-          framePresent:
-            frameEvidence.framePresent,
-
-          sameOriginAccessible:
-            frameEvidence.sameOriginAccessible,
-
-          documentLoaded:
-            frameEvidence.documentLoaded,
-
-          documentReadyState:
-            frameEvidence.documentReadyState,
-
-          canvasCount:
-            frameEvidence.canvasCount
-        },
-        {
-          id:
-            "SURFACE_RUNTIME_HINTS",
-
-          kind:
-            "OBSERVED_OR_REQUEST_DERIVED",
-
-          runtimeStatusAvailable:
-            frameEvidence.runtimeStatusAvailable,
-
-          requestRuntimeEvidenceAvailable:
-            requestEvidence.requestRuntimeEvidenceAvailable,
-
-          requestTargetRuntimeEvidenceAvailable:
-            requestEvidence.requestTargetRuntimeEvidenceAvailable,
-
-          requestClaimsSurfaceNonzero:
-            requestEvidence.requestClaimsSurfaceNonzero,
-
-          requestClaimsVisiblePixel:
-            requestEvidence.requestClaimsVisiblePixel
-        }
-      ],
-
-      evidence: [
-        {
-          id:
-            "TARGET_FRAME_EVIDENCE",
-
-          kind:
-            "OBSERVED",
-
-          value:
-            frozenClone(frameEvidence)
-        },
-        {
-          id:
-            "REQUEST_SURFACE_EVIDENCE",
-
-          kind:
-            "REQUEST_DERIVED",
-
-          value:
-            frozenClone(requestEvidence)
-        },
-        {
-          id:
-            "SURFACE_EVIDENCE_CLASS",
-
-          kind:
-            "DERIVED",
-
-          value:
-            decision.evidenceClass
-        }
-      ],
-
-      issues:
-        frozenClone(decision.issues),
-
-      firstHeldCoordinate:
-        decision.status === "HOLD"
-          ? STATION_ID
-          : null,
-
-      firstFailedCoordinate:
-        null,
-
-      firstConflictCoordinate:
-        null,
-
-      recommendedOwner:
-        decision.status === "PASS"
-          ? null
-          : {
-              ownerType:
-                "DIAGNOSTIC_TARGET_SURFACE",
-
-              subjectId:
-                STATION_ID,
-
-              contract:
-                null,
-
-              file:
-                "/showroom/globe/audralia/index.html",
-
-              component:
-                "AUDRALIA_TARGET_3D_PRESENTATION_HOST"
-            },
-
-      generatedAt:
-        nowIso(),
-
-      noClaims:
-        NO_CLAIMS,
-
-      receiptHash:
-        null
+      schema: RECEIPT_SCHEMA,
+      cycleId: packet && packet.cycleId ? packet.cycleId : null,
+      position: CYCLE_POSITION,
+      stationId: STATION_ID,
+      fibonacci: FIBONACCI,
+      contract: CONTRACT,
+      version: VERSION,
+      file: FILE,
+      status: status,
+      completed: completed,
+      handoffEligible: handoffEligible,
+      summary: summary,
+      observations: observations || [],
+      evidence: evidence || [],
+      issues: issues || [],
+      firstHeldCoordinate: status === "HOLD" ? "F8:CANVAS_SURFACE_TRUTH" : null,
+      firstFailedCoordinate: status === "FAIL" ? "F8:CANVAS_SURFACE_TRUTH" : null,
+      firstConflictCoordinate: status === "CONFLICT" ? "F8:CANVAS_SURFACE_TRUTH" : null,
+      recommendedOwner: owner || {
+        ownerType: "PUBLIC_AUDRALIA_RUNTIME",
+        subjectId: "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME",
+        contract: firstString(
+          getPath(packet || {}, "construct.target.targetRuntimeStatus.contract"),
+          getPath(packet || {}, "target.targetRuntimeStatus.contract"),
+          null
+        ),
+        file: "/showroom/globe/audralia/index.js",
+        component: "CANVAS_SURFACE_TRUTH"
+      },
+      generatedAt: nowISO(),
+      noClaims: clone(NO_CLAIMS),
+      receiptHash: null
     };
 
-    receipt.receiptHash =
-      hashObject(receipt);
+    receipt.receiptHash = hash(receipt);
 
-    return deepFreeze(receipt);
+    return receipt;
+  }
+
+  function executeCycleStation(packet) {
+    packet = packet || {};
+
+    var liveFrame = readLiveTargetFrame();
+    var surface = evaluateSurface(packet, liveFrame);
+
+    var observations = [
+      observation("CANVAS_SURFACE_TARGET_FRAME", "OBSERVED", {
+        framePresent: surface.framePresent,
+        sameOriginAccessible: surface.sameOriginAccessible,
+        documentLoaded: surface.documentLoaded,
+        canvasPresent: surface.canvasPresent,
+        runtimeGlobalPresent: surface.runtimeGlobalPresent
+      }),
+
+      observation("CANVAS_SURFACE_RUNTIME_STATUS", "OBSERVED", {
+        runtimeEvidenceAvailable: surface.runtimeEvidenceAvailable,
+        mounted: surface.mounted,
+        stageRectNonzero: surface.stageRectNonzero,
+        geometryReady: surface.geometryReady,
+        webGL: surface.webGL,
+        fallbackActive: surface.fallbackActive,
+        firstFrameDrawn: surface.firstFrameDrawn,
+        visiblePixelObserved: surface.visiblePixelObserved
+      }),
+
+      observation("CANVAS_SURFACE_TRUTH_CLASSIFICATION", "DERIVED", {
+        primaryVisible: surface.primaryVisible,
+        fallbackVisible: surface.fallbackVisible,
+        surfaceTruthAdmitted: surface.surfaceTruthAdmitted,
+        missingEvidenceDisposition: "HOLD",
+        syntheticPositiveEvidenceAllowed: false
+      })
+    ];
+
+    var evidence = [
+      {
+        id: "CANVAS_SURFACE_REQUEST_HASH",
+        kind: "DERIVED",
+        hash: hash(packet)
+      },
+      {
+        id: "CANVAS_SURFACE_LIVE_FRAME_HASH",
+        kind: "DERIVED",
+        hash: hash(liveFrame)
+      },
+      {
+        id: "CANVAS_SURFACE_RUNTIME_STATUS_HASH",
+        kind: "DERIVED",
+        hash: hash(surface.runtimeStatus)
+      },
+      {
+        id: "CANVAS_SURFACE_EVALUATION_HASH",
+        kind: "DERIVED",
+        hash: hash(surface)
+      }
+    ];
+
+    var issues = [];
+
+    if (surface.framePresent !== true) {
+      issues.push(issue(
+        "TARGET_FRAME_NOT_PRESENT",
+        "$.target.framePresent",
+        "The Audralia diagnostic target iframe was not present."
+      ));
+    }
+
+    if (surface.sameOriginAccessible !== true) {
+      issues.push(issue(
+        "TARGET_FRAME_NOT_ACCESSIBLE",
+        "$.target.sameOriginAccessible",
+        "The Audralia target frame was not same-origin accessible."
+      ));
+    }
+
+    if (surface.documentLoaded !== true) {
+      issues.push(issue(
+        "TARGET_DOCUMENT_NOT_LOADED",
+        "$.target.documentLoaded",
+        "The Audralia target document was not loaded."
+      ));
+    }
+
+    if (surface.runtimeEvidenceAvailable !== true) {
+      issues.push(issue(
+        "TARGET_RUNTIME_EVIDENCE_UNAVAILABLE",
+        "$.target.targetRuntimeStatus",
+        "No target runtime status, receipt, or live runtime status was available."
+      ));
+    }
+
+    if (surface.mounted !== true) {
+      issues.push(issue(
+        "PUBLIC_RUNTIME_NOT_MOUNTED",
+        "$.target.runtimeStatus.mounted",
+        "The public Audralia runtime has not reported mounted=true."
+      ));
+    }
+
+    if (surface.stageRectNonzero !== true) {
+      issues.push(issue(
+        "SURFACE_RECT_NONZERO_REQUIRED",
+        "$.target.runtimeStatus.stageRectNonzero",
+        "The public Audralia surface has not reported a nonzero rendering rectangle."
+      ));
+    }
+
+    if (surface.geometryReady !== true) {
+      issues.push(issue(
+        "GEOMETRY_READY_REQUIRED",
+        "$.target.runtimeStatus.geometryReady",
+        "The public Audralia runtime has not reported geometryReady=true."
+      ));
+    }
+
+    if (surface.firstFrameDrawn !== true) {
+      issues.push(issue(
+        "FIRST_FRAME_DRAWN_REQUIRED",
+        "$.target.runtimeStatus.firstFrameDrawn",
+        "The public Audralia runtime has not reported firstFrameDrawn=true."
+      ));
+    }
+
+    if (surface.visiblePixelObserved !== true) {
+      issues.push(issue(
+        "VISIBLE_PIXEL_OBSERVED_REQUIRED",
+        "$.target.runtimeStatus.firstVisiblePixelObserved",
+        "The public Audralia runtime has not reported visible-pixel evidence."
+      ));
+    }
+
+    var owner = {
+      ownerType: "PUBLIC_AUDRALIA_RUNTIME",
+      subjectId: "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME",
+      contract: firstString(
+        surface.runtimeStatus && surface.runtimeStatus.contract,
+        "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1"
+      ),
+      file: "/showroom/globe/audralia/index.js",
+      component: "CANVAS_SURFACE_TRUTH"
+    };
+
+    if (issues.length) {
+      return createReceipt(
+        "HOLD",
+        false,
+        false,
+        "CANVAS_SURFACE_TRUTH_HELD_RUNTIME_SURFACE_EVIDENCE_INCOMPLETE",
+        packet,
+        observations,
+        evidence.concat([
+          {
+            id: "CANVAS_SURFACE_VALIDATION",
+            kind: "DERIVED",
+            passed: false,
+            issueCount: issues.length
+          }
+        ]),
+        issues,
+        owner
+      );
+    }
+
+    return createReceipt(
+      "PASS",
+      true,
+      true,
+      "CANVAS_SURFACE_TRUTH_ADMITTED_VISIBLE_3D_SURFACE",
+      packet,
+      observations,
+      evidence.concat([
+        {
+          id: "CANVAS_SURFACE_VALIDATION",
+          kind: "DERIVED",
+          passed: true,
+          issueCount: 0
+        }
+      ]),
+      [],
+      owner
+    );
   }
 
   function getDefinitionReceipt() {
-    return deepFreeze({
-      receipt:
-        DEFINITION_RECEIPT,
-
-      contract:
-        CONTRACT,
-
-      version:
-        VERSION,
-
-      file:
-        FILE,
-
-      stationId:
-        STATION_ID,
-
-      cyclePosition:
-        CYCLE_POSITION,
-
-      fibonacci:
-        FIBONACCI,
-
-      quietLoad:
-        true,
-
-      dependencyFree:
-        true,
-
-      surfaceObservationAuthority:
-        true,
-
-      rendererAuthority:
-        false,
-
-      canvasAuthority:
-        false,
-
-      webGLAuthority:
-        false,
-
-      webGPUAuthority:
-        false,
-
-      repairAuthorizationAuthority:
-        false,
-
-      finalProductionVerdictAuthority:
-        false,
-
-      generatedAt:
-        nowIso(),
-
-      noClaims:
-        NO_CLAIMS
-    });
+    return {
+      schema: "AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v1",
+      stationId: STATION_ID,
+      cyclePosition: CYCLE_POSITION,
+      fibonacci: FIBONACCI,
+      contract: CONTRACT,
+      version: VERSION,
+      file: FILE,
+      globalPath: "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+      status: "AVAILABLE",
+      noClaims: clone(NO_CLAIMS),
+      generatedAt: nowISO()
+    };
   }
 
-  var INSTALLATION = {
-    decision:
-      "LOCAL_ONLY_NO_ROOT",
+  var API = {
+    schema: API_SCHEMA,
 
-    reason:
-      "ROOT_UNAVAILABLE",
+    STATION_ID: STATION_ID,
+    CYCLE_POSITION: CYCLE_POSITION,
+    FIBONACCI: FIBONACCI,
+    CONTRACT: CONTRACT,
+    VERSION: VERSION,
+    FILE: FILE,
 
-    published:
-      [],
+    stationId: STATION_ID,
+    cyclePosition: CYCLE_POSITION,
+    fibonacci: FIBONACCI,
+    contract: CONTRACT,
+    version: VERSION,
+    file: FILE,
 
-    warnings:
-      [],
+    role: "CANVAS_SURFACE_TRUTH",
 
-    errors:
-      [],
-
-    installedAt:
-      nowIso()
+    executeCycleStation: executeCycleStation,
+    execute: executeCycleStation,
+    getDefinitionReceipt: getDefinitionReceipt
   };
 
-  function getInstallationReceipt() {
-    return deepFreeze({
-      receipt:
-        INSTALLATION_RECEIPT,
+  global.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = API;
+  global.AUDRALIA_DIAGNOSTIC_CANVAS_SURFACE_TRUTH = API;
+  global.AUDRALIA_DIAGNOSTIC_SURFACE_TRUTH = API;
 
-      contract:
-        CONTRACT,
+  global.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT =
+    getDefinitionReceipt();
 
-      version:
-        VERSION,
-
-      file:
-        FILE,
-
-      decision:
-        INSTALLATION.decision,
-
-      reason:
-        INSTALLATION.reason,
-
-      published:
-        frozenClone(INSTALLATION.published),
-
-      warnings:
-        frozenClone(INSTALLATION.warnings),
-
-      errors:
-        frozenClone(INSTALLATION.errors),
-
-      installedAt:
-        INSTALLATION.installedAt,
-
-      noClaims:
-        NO_CLAIMS
-    });
-  }
-
-  function buildApi() {
-    return deepFreeze({
-      CONTRACT:
-        CONTRACT,
-
-      VERSION:
-        VERSION,
-
-      FILE:
-        FILE,
-
-      STATION_ID:
-        STATION_ID,
-
-      CYCLE_POSITION:
-        CYCLE_POSITION,
-
-      FIBONACCI:
-        FIBONACCI,
-
-      getDefinitionReceipt:
-        getDefinitionReceipt,
-
-      getInstallationReceipt:
-        getInstallationReceipt,
-
-      executeCycleStation:
-        executeCycleStation,
-
-      inspectFrame:
-        inspectFrame,
-
-      hash:
-        hashObject,
-
-      clone:
-        clone,
-
-      deepFreeze:
-        deepFreeze,
-
-      NO_CLAIMS:
-        NO_CLAIMS
-    });
-  }
-
-  function ensureNamespace(name) {
-    if (!root || typeof root !== "object") {
-      return null;
-    }
-
-    if (
-      !root[name] ||
-      typeof root[name] !== "object"
-    ) {
-      root[name] = {};
-    }
-
-    return root[name];
-  }
-
-  function publish() {
-    if (!root || typeof root !== "object") {
-      return;
-    }
-
-    var existing =
-      root.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH;
-
-    if (
-      existing &&
-      existing.CONTRACT &&
-      existing.CONTRACT !== CONTRACT
-    ) {
-      INSTALLATION.decision =
-        "CONFLICT";
-
-      INSTALLATION.reason =
-        "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY";
-
-      INSTALLATION.errors.push(
-        "PRIMARY_GLOBAL_CONFLICT"
-      );
-
-      return;
-    }
-
-    var api =
-      buildApi();
-
-    try {
-      root.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH =
-        api;
-
-      INSTALLATION.published.push(
-        "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH"
-      );
-
-      var namespace =
-        ensureNamespace("AUDRALIA");
-
-      if (namespace) {
-        if (
-          !namespace.diagnostics ||
-          typeof namespace.diagnostics !== "object"
-        ) {
-          namespace.diagnostics = {};
-        }
-
-        namespace.diagnostics.canvasSurfaceTruth =
-          api;
-
-        INSTALLATION.published.push(
-          "AUDRALIA.diagnostics.canvasSurfaceTruth"
-        );
-      }
-
-      root.__AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LOADED__ =
-        true;
-
-      INSTALLATION.published.push(
-        "__AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_LOADED__"
-      );
-
-      root.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT =
-        getDefinitionReceipt();
-
-      INSTALLATION.published.push(
-        "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_RECEIPT"
-      );
-
-      INSTALLATION.decision =
-        existing
-          ? "COMPATIBLE_EXISTING"
-          : "NEW_INSTALLATION";
-
-      INSTALLATION.reason =
-        "PUBLISHED";
-    } catch (error) {
-      INSTALLATION.decision =
-        "CONFLICT";
-
-      INSTALLATION.reason =
-        "PUBLICATION_FAILED";
-
-      INSTALLATION.errors.push(
-        error && error.message
-          ? error.message
-          : String(error)
-      );
-    }
-  }
-
-  publish();
-
-  if (
-    typeof module !== "undefined" &&
-    module.exports
-  ) {
-    module.exports =
-      root &&
-      root.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH
-        ? root.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH
-        : buildApi();
-  }
-})(
-  typeof window !== "undefined"
-    ? window
-    : typeof globalThis !== "undefined"
-      ? globalThis
-      : this
-);
+})(window);

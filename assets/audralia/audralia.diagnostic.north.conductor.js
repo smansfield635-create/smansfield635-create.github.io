@@ -1,11 +1,12 @@
 // /assets/audralia/audralia.diagnostic.north.conductor.js
-// AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v1
+// AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v2
 // Full-file replacement.
 // Quiet-load, dependency-free, 3D-native diagnostic conductor.
 // Owns nine-cycle diagnostic sequence, station registration, handoff authority,
-// interrupted-cycle terminal rail synthesis, and restitution-coordinate reporting.
+// route-compatible cycle execution, interrupted-cycle terminal rail synthesis,
+// station discovery, and restitution-coordinate reporting.
 // Does not own engine execution, rendering, production mutation, repair authorization,
-// route mutation, contract rewrite, or final production readiness.
+// route mutation, contract rewrite, WebGL/WebGPU initialization, or final production readiness.
 
 (function audraliaDiagnosticNorthConductorNineCycleAuthority3D(global) {
   "use strict";
@@ -13,19 +14,23 @@
   var root = global || (typeof window !== "undefined" ? window : globalThis);
 
   var CONTRACT =
+    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v2";
+  var PREVIOUS_CONTRACT =
     "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v1";
-  var VERSION = "1.0.0";
+  var VERSION = "2.0.0";
   var VERSION_LABEL =
-    "2026-06-14.audralia-diagnostic-north-conductor-nine-cycle-authority-3d-v1";
+    "2026-06-15.audralia-diagnostic-north-conductor-nine-cycle-authority-3d-v2";
   var FILE = "/assets/audralia/audralia.diagnostic.north.conductor.js";
 
   var DEFINITION_RECEIPT =
-    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_DEFINITION_RECEIPT_v1";
+    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_DEFINITION_RECEIPT_v2";
   var INSTALLATION_RECEIPT =
-    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_INSTALLATION_RECEIPT_v1";
+    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_INSTALLATION_RECEIPT_v2";
 
   var CYCLE_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_PACKET_v1";
   var REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_REQUEST_v1";
+  var ROUTE_REQUEST_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_CONDUCTOR_REQUEST_v2";
   var STATION_SCHEMA =
     "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
   var HANDOFF_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_HANDOFF_v1";
@@ -112,6 +117,8 @@
     cycleInterruptionAuthority: true,
     terminalRailInvocationAuthority: true,
     restitutionCoordinateAuthority: true,
+    routeCompatibleExecutionAuthority: true,
+    stationDiscoveryAuthority: true,
     engineAuthority: false,
     productionMutationAuthority: false,
     contractRewriteAuthority: false,
@@ -132,6 +139,15 @@
       news: "NORTH",
       stationId: "NORTH_PROBE_INTAKE",
       file: "/assets/audralia/audralia.diagnostic.probe.north.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_PROBE_NORTH",
+        "AUDRALIA_DIAGNOSTIC_NORTH_PROBE",
+        "AUDRALIA_DIAGNOSTIC_PROBE_NORTH_INTAKE",
+        "AUDRALIA_DIAGNOSTIC_NORTH_INTAKE",
+        "AUDRALIA.diagnosticProbeNorth",
+        "AUDRALIA.diagnostics.probeNorth",
+        "AUDRALIA.diagnostics.northProbe"
+      ],
       role: "Establish cycle subject identity, engine identity, construct identity, route identity, mode, and provenance."
     },
     {
@@ -140,6 +156,15 @@
       news: "EAST",
       stationId: "EAST_PROBE_SOURCE",
       file: "/assets/audralia/audralia.diagnostic.probe.east.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_PROBE_EAST",
+        "AUDRALIA_DIAGNOSTIC_EAST_PROBE",
+        "AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE",
+        "AUDRALIA_DIAGNOSTIC_EAST_SOURCE",
+        "AUDRALIA.diagnosticProbeEast",
+        "AUDRALIA.diagnostics.probeEast",
+        "AUDRALIA.diagnostics.eastProbe"
+      ],
       role: "Observe source-side declarations, construction inputs, file identities, contract identities, model declarations, and declared dependencies."
     },
     {
@@ -148,6 +173,14 @@
       news: "EAST",
       stationId: "EAST_CONSTRUCTION_INTERPRETATION",
       file: "/assets/audralia/audralia.diagnostic.east.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_EAST",
+        "AUDRALIA_DIAGNOSTIC_EAST_CONSTRUCTION",
+        "AUDRALIA_DIAGNOSTIC_EAST_INTERPRETATION",
+        "AUDRALIA.diagnosticEast",
+        "AUDRALIA.diagnostics.east",
+        "AUDRALIA.diagnostics.eastInterpretation"
+      ],
       role: "Interpret source-side composition and construction admissibility."
     },
     {
@@ -156,6 +189,15 @@
       news: "SURFACE",
       stationId: "CANVAS_SURFACE_TRUTH",
       file: "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+        "AUDRALIA_DIAGNOSTIC_CANVAS_SURFACE_TRUTH",
+        "AUDRALIA_DIAGNOSTIC_SURFACE_TRUTH",
+        "AUDRALIA.diagnosticCanvasSurfaceTruth",
+        "AUDRALIA.diagnosticSurfaceTruth",
+        "AUDRALIA.diagnostics.canvasSurfaceTruth",
+        "AUDRALIA.diagnostics.surfaceTruth"
+      ],
       role: "Observe the 3D host and presentation surface. Canvas filename is retained for navigation; Canvas2D is not governing."
     },
     {
@@ -164,6 +206,15 @@
       news: "WEST",
       stationId: "WEST_PROBE_RUNTIME",
       file: "/assets/audralia/audralia.diagnostic.probe.west.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_PROBE_WEST",
+        "AUDRALIA_DIAGNOSTIC_WEST_PROBE",
+        "AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME",
+        "AUDRALIA_DIAGNOSTIC_WEST_RUNTIME_PROBE",
+        "AUDRALIA.diagnosticProbeWest",
+        "AUDRALIA.diagnostics.probeWest",
+        "AUDRALIA.diagnostics.westProbe"
+      ],
       role: "Observe live 3D runtime, scene, camera, geometry, material, shader, pipeline, render pass, submission, presentation, and interaction evidence."
     },
     {
@@ -172,6 +223,14 @@
       news: "WEST",
       stationId: "WEST_RUNTIME_INTERPRETATION",
       file: "/assets/audralia/audralia.diagnostic.west.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_WEST",
+        "AUDRALIA_DIAGNOSTIC_WEST_RUNTIME",
+        "AUDRALIA_DIAGNOSTIC_WEST_INTERPRETATION",
+        "AUDRALIA.diagnosticWest",
+        "AUDRALIA.diagnostics.west",
+        "AUDRALIA.diagnostics.westInterpretation"
+      ],
       role: "Compare source-side construction claims with live runtime evidence."
     },
     {
@@ -180,6 +239,15 @@
       news: "SOUTH",
       stationId: "SOUTH_PROBE_HANDOFF",
       file: "/assets/audralia/audralia.diagnostic.probe.south.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_PROBE_SOUTH",
+        "AUDRALIA_DIAGNOSTIC_SOUTH_PROBE",
+        "AUDRALIA_DIAGNOSTIC_PROBE_SOUTH_HANDOFF",
+        "AUDRALIA_DIAGNOSTIC_SOUTH_HANDOFF_PROBE",
+        "AUDRALIA.diagnosticProbeSouth",
+        "AUDRALIA.diagnostics.probeSouth",
+        "AUDRALIA.diagnostics.southProbe"
+      ],
       role: "Inspect packet integrity, provenance continuity, output completeness, and downstream handoff readiness."
     },
     {
@@ -188,6 +256,14 @@
       news: "SOUTH",
       stationId: "SOUTH_RESTITUTION_INTERPRETATION",
       file: "/assets/audralia/audralia.diagnostic.south.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_SOUTH",
+        "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION",
+        "AUDRALIA_DIAGNOSTIC_SOUTH_INTERPRETATION",
+        "AUDRALIA.diagnosticSouth",
+        "AUDRALIA.diagnostics.south",
+        "AUDRALIA.diagnostics.southInterpretation"
+      ],
       role: "Interpret construction continuation, restitution location, ownership, and return path."
     },
     {
@@ -196,6 +272,15 @@
       news: "NORTH_RETURN",
       stationId: "RAIL_TERMINAL_SYNTHESIS",
       file: "/assets/audralia/audralia.diagnostic.rail.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_RAIL",
+        "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL",
+        "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS",
+        "AUDRALIA_DIAGNOSTIC_TERMINAL_RAIL",
+        "AUDRALIA.diagnosticRail",
+        "AUDRALIA.diagnostics.rail",
+        "AUDRALIA.diagnostics.railTerminal"
+      ],
       role: "Receive the full or interrupted ledger and produce terminal diagnostic synthesis."
     }
   ]);
@@ -205,6 +290,11 @@
       parentPosition: 8,
       role: "SOUTH_SURFACE_POINTER",
       file: "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
+      globalNames: [
+        "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
+        "AUDRALIA.diagnosticSouthSurfacePointer",
+        "AUDRALIA.diagnostics.southSurfacePointer"
+      ],
       createsCyclePosition: false
     }
   ]);
@@ -262,15 +352,12 @@
     }
 
     if (isFiniteNumber(value)) return value;
-
     if (typeof value === "number") return null;
     if (typeof value === "undefined") return null;
     if (typeof value === "bigint") return null;
     if (typeof value === "symbol") return null;
     if (isFunction(value)) return null;
-
     if (!value || typeof value !== "object") return null;
-
     if (!isPlainObject(value) && !Array.isArray(value)) return null;
 
     if (seen.indexOf(value) !== -1) return null;
@@ -278,12 +365,13 @@
 
     if (Array.isArray(value)) {
       return value.slice(0, LIMITS.maxArrayLength).map(function mapItem(item) {
-        return clonePlain(item, seen);
+        return clonePlain(item, seen.slice());
       });
     }
 
     var output = {};
     var keys = [];
+
     try {
       keys = Object.keys(value).slice(0, LIMITS.maxObjectKeys);
     } catch (_error) {
@@ -293,7 +381,7 @@
     keys.forEach(function eachKey(key) {
       var safeKey = String(key).slice(0, LIMITS.maxStringLength);
       try {
-        output[safeKey] = clonePlain(value[key], seen);
+        output[safeKey] = clonePlain(value[key], seen.slice());
       } catch (_error2) {
         output[safeKey] = null;
       }
@@ -347,6 +435,14 @@
     return validatePlainData(value).passed;
   }
 
+  function issue(code, path, detail) {
+    return {
+      code: String(code || "ISSUE"),
+      path: String(path || "$"),
+      detail: String(detail || code || "ISSUE").slice(0, 512)
+    };
+  }
+
   function validatePlainData(value) {
     var issues = [];
 
@@ -364,10 +460,7 @@
         typeof item === "boolean" ||
         isFiniteNumber(item)
       ) {
-        if (
-          typeof item === "string" &&
-          item.length > LIMITS.maxStringLength
-        ) {
+        if (typeof item === "string" && item.length > LIMITS.maxStringLength) {
           issues.push(issue("STRING_LIMIT_EXCEEDED", path));
         }
         return;
@@ -416,7 +509,7 @@
         }
 
         item.forEach(function eachArray(entry, index) {
-          walk(entry, path + "[" + index + "]", depth + 1, seen);
+          walk(entry, path + "[" + index + "]", depth + 1, seen.slice());
         });
 
         return;
@@ -442,7 +535,7 @@
           return;
         }
 
-        walk(item[key], path + "." + key, depth + 1, seen);
+        walk(item[key], path + "." + key, depth + 1, seen.slice());
       });
     }
 
@@ -452,14 +545,6 @@
       passed: issues.length === 0,
       issues: deepFreeze(issues)
     });
-  }
-
-  function issue(code, path, detail) {
-    return {
-      code: String(code || "ISSUE"),
-      path: String(path || "$"),
-      detail: String(detail || code || "ISSUE").slice(0, 512)
-    };
   }
 
   function normalizeString(value, fallback) {
@@ -474,7 +559,44 @@
     if (value === MODES.CALIBRATION) return value;
     if (value === MODES.RESTITUTION) return value;
     if (value === MODES.AUDIT) return value;
+    if (value === "READ_REPORTABILITY_EVIDENCE_ADMISSION_DIAGNOSTIC") {
+      return MODES.AUDIT;
+    }
     return MODES.AUDIT;
+  }
+
+  function readPath(path) {
+    var parts = String(path || "").split(".").filter(Boolean);
+    var cursor = root;
+
+    for (var i = 0; i < parts.length; i += 1) {
+      if (
+        cursor === null ||
+        cursor === undefined ||
+        cursor[parts[i]] === null ||
+        cursor[parts[i]] === undefined
+      ) {
+        return null;
+      }
+
+      cursor = cursor[parts[i]];
+    }
+
+    return cursor;
+  }
+
+  function getPositionDefinition(position) {
+    for (var i = 0; i < POSITIONS.length; i += 1) {
+      if (POSITIONS[i].position === Number(position)) return POSITIONS[i];
+    }
+    return null;
+  }
+
+  function getPositionByStationId(stationId) {
+    for (var i = 0; i < POSITIONS.length; i += 1) {
+      if (POSITIONS[i].stationId === stationId) return POSITIONS[i];
+    }
+    return null;
   }
 
   function validateCycleRequest(raw) {
@@ -495,10 +617,20 @@
       construct: isPlainObject(source.construct) ? clone(source.construct) : {},
       requestedStartPosition: Number(source.requestedStartPosition) || 1,
       generatedAtEnabled: source.generatedAtEnabled !== false,
+      route: isPlainObject(source.route) ? clone(source.route) : {},
+      engineFamily: isPlainObject(source.engineFamily) ? clone(source.engineFamily) : {},
+      target: isPlainObject(source.target) ? clone(source.target) : {},
+      evidencePolicy: isPlainObject(source.evidencePolicy)
+        ? clone(source.evidencePolicy)
+        : {},
       extensions: isPlainObject(source.extensions) ? clone(source.extensions) : {}
     };
 
-    if (source.schema && source.schema !== REQUEST_SCHEMA) {
+    if (
+      source.schema &&
+      source.schema !== REQUEST_SCHEMA &&
+      source.schema !== ROUTE_REQUEST_SCHEMA
+    ) {
       issues.push(issue("REQUEST_SCHEMA_MISMATCH", "$.schema"));
     }
 
@@ -525,13 +657,6 @@
       normalized: deepFreeze(normalized),
       issues: deepFreeze(issues)
     });
-  }
-
-  function getPositionDefinition(position) {
-    for (var i = 0; i < POSITIONS.length; i += 1) {
-      if (POSITIONS[i].position === position) return POSITIONS[i];
-    }
-    return null;
   }
 
   function validateStationDefinition(position, stationApi) {
@@ -569,7 +694,9 @@
     }
 
     if (!isFunction(stationApi.getDefinitionReceipt)) {
-      issues.push(issue("STATION_DEFINITION_RECEIPT_METHOD_REQUIRED", "$.getDefinitionReceipt"));
+      issues.push(
+        issue("STATION_DEFINITION_RECEIPT_METHOD_REQUIRED", "$.getDefinitionReceipt")
+      );
     }
 
     if (!isFunction(stationApi.executeCycleStation)) {
@@ -633,6 +760,82 @@
     });
   }
 
+  function normalizeStationReceipt(receipt, def, fallbackStatus, fallbackSummary) {
+    var source = isPlainObject(receipt) ? clone(receipt) : {};
+    var output = {
+      schema: source.schema || STATION_SCHEMA,
+      cycleId: source.cycleId || null,
+      position: Number(source.position) || def.position,
+      stationId: source.stationId || def.stationId,
+      fibonacci: source.fibonacci || def.fibonacci,
+      contract: source.contract || "UNKNOWN_STATION_CONTRACT",
+      version: source.version || "UNKNOWN",
+      file: source.file || def.file,
+      status: source.status || fallbackStatus || STATUSES.HOLD,
+      completed: source.completed === true,
+      handoffEligible: source.handoffEligible === true,
+      summary: normalizeString(
+        source.summary,
+        fallbackSummary || "No station summary was supplied."
+      ),
+      observations: Array.isArray(source.observations) ? clone(source.observations) : [],
+      evidence: Array.isArray(source.evidence) ? clone(source.evidence) : [],
+      issues: Array.isArray(source.issues) ? clone(source.issues) : [],
+      firstHeldCoordinate: source.firstHeldCoordinate || null,
+      firstFailedCoordinate: source.firstFailedCoordinate || null,
+      firstConflictCoordinate: source.firstConflictCoordinate || null,
+      recommendedOwner: isPlainObject(source.recommendedOwner)
+        ? clone(source.recommendedOwner)
+        : null,
+      generatedAt: source.generatedAt || nowIso(),
+      noClaims: isPlainObject(source.noClaims) ? clone(source.noClaims) : clone(NO_CLAIMS),
+      receiptHash: source.receiptHash || null
+    };
+
+    if (!output.receiptHash) {
+      output.receiptHash = hash(output);
+    }
+
+    return deepFreeze(output);
+  }
+
+  function makeSyntheticReceipt(sessionRef, def, status, summary, issues) {
+    var r = {
+      schema: STATION_SCHEMA,
+      cycleId: sessionRef.cycleId,
+      position: def.position,
+      stationId: def.stationId,
+      fibonacci: def.fibonacci || null,
+      contract: CONTRACT,
+      version: VERSION,
+      file: def.file || FILE,
+      status: status,
+      completed: false,
+      handoffEligible: false,
+      summary: summary,
+      observations: [],
+      evidence: [],
+      issues: issues || [],
+      firstHeldCoordinate: status === STATUSES.HOLD ? def.stationId : null,
+      firstFailedCoordinate: status === STATUSES.FAIL ? def.stationId : null,
+      firstConflictCoordinate:
+        status === STATUSES.CONFLICT ? def.stationId : null,
+      recommendedOwner: {
+        ownerType: "DIAGNOSTIC_STATION",
+        subjectId: def.stationId,
+        contract: null,
+        file: def.file || null,
+        component: def.stationId
+      },
+      generatedAt: nowIso(),
+      noClaims: clone(NO_CLAIMS),
+      receiptHash: null
+    };
+
+    r.receiptHash = hash(r);
+    return deepFreeze(r);
+  }
+
   function composeStationRequest(session, position, terminal) {
     var def = getPositionDefinition(position);
 
@@ -645,6 +848,10 @@
       subject: clone(session.request.subject),
       engine: clone(session.request.engine),
       construct: clone(session.request.construct),
+      route: clone(session.request.route),
+      engineFamily: clone(session.request.engineFamily),
+      target: clone(session.request.target),
+      evidencePolicy: clone(session.request.evidencePolicy),
       priorLedgerHash: hash(session.ledger),
       priorStationReceipts: clone(session.ledger.stationReceipts),
       parentHandoff: session.ledger.handoffs.length
@@ -652,12 +859,13 @@
         : null,
       auxiliaryEvidence: clone(session.ledger.auxiliaryReceipts),
       terminalSynthesisMode: Boolean(terminal),
-      limits: clone(LIMITS)
+      limits: clone(LIMITS),
+      noClaims: clone(NO_CLAIMS)
     });
   }
 
   function composeHandoff(session, fromDef, toDef, sourceReceipt) {
-    var handoff = {
+    return deepFreeze({
       schema: HANDOFF_SCHEMA,
       cycleId: session.cycleId,
       fromPosition: fromDef.position,
@@ -670,9 +878,7 @@
       status: "AUTHORIZED",
       reasonCode: "PREDECESSOR_PASS",
       generatedAt: nowIso()
-    };
-
-    return deepFreeze(handoff);
+    });
   }
 
   function deniedHandoff(session, fromDef, toDef, reasonCode) {
@@ -712,7 +918,7 @@
       ? receipt.recommendedOwner
       : {};
 
-    var coord = {
+    return deepFreeze({
       schema: RESTITUTION_SCHEMA,
       cycleId: session.cycleId,
       position: Number(receipt.position) || null,
@@ -723,17 +929,19 @@
       ownerFile: normalizeString(owner.file, null),
       ownerComponent: normalizeString(owner.component, null),
       evidenceRequired: [],
-      issueIds: [],
+      issueIds: Array.isArray(receipt.issues)
+        ? receipt.issues.map(function mapIssue(entry) {
+            return entry && entry.code ? entry.code : "ISSUE";
+          })
+        : [],
       recommendedAction:
         condition === "CONFLICT"
           ? "RECONCILE_CONFLICT"
           : condition === "ERROR"
-            ? "INSPECT_CONDUCTOR"
+            ? "INSPECT_CONDUCTOR_OR_STATION"
             : "RESTORE_EVIDENCE",
       authorized: false
-    };
-
-    return deepFreeze(coord);
+    });
   }
 
   function statusFromReceiptStatus(status) {
@@ -744,6 +952,24 @@
     if (status === STATUSES.FAIL) return CYCLE_STATUSES.FAILED;
     if (status === STATUSES.CONFLICT) return CYCLE_STATUSES.CONFLICTING;
     return CYCLE_STATUSES.ERROR;
+  }
+
+  function markFirst(sessionRef, receipt) {
+    if (receipt.status === STATUSES.HOLD && sessionRef.ledger.firstHeldPosition === null) {
+      sessionRef.ledger.firstHeldPosition = receipt.position;
+    }
+    if (receipt.status === STATUSES.FAIL && sessionRef.ledger.firstFailedPosition === null) {
+      sessionRef.ledger.firstFailedPosition = receipt.position;
+    }
+    if (
+      receipt.status === STATUSES.CONFLICT &&
+      sessionRef.ledger.firstConflictPosition === null
+    ) {
+      sessionRef.ledger.firstConflictPosition = receipt.position;
+    }
+    if (receipt.status === STATUSES.ERROR && sessionRef.ledger.firstErrorPosition === null) {
+      sessionRef.ledger.firstErrorPosition = receipt.position;
+    }
   }
 
   function createCycle(rawRequest) {
@@ -797,15 +1023,33 @@
       var validationResult = validateStationDefinition(position, stationApi);
 
       if (!validationResult.passed) {
-        return freezeRegistration(position, "REJECTED", "STATION_INVALID", validationResult.issues);
+        return freezeRegistration(
+          position,
+          "REJECTED",
+          "STATION_INVALID",
+          validationResult.issues,
+          def
+        );
       }
 
       if (session.registry[position]) {
         if (session.registry[position] === stationApi) {
-          return freezeRegistration(position, "DUPLICATE_IDENTICAL", "STATION_ALREADY_REGISTERED");
+          return freezeRegistration(
+            position,
+            "DUPLICATE_IDENTICAL",
+            "STATION_ALREADY_REGISTERED",
+            [],
+            def
+          );
         }
 
-        return freezeRegistration(position, "CONFLICT", "STATION_POSITION_OCCUPIED");
+        return freezeRegistration(
+          position,
+          "CONFLICT",
+          "STATION_POSITION_OCCUPIED",
+          [],
+          def
+        );
       }
 
       session.registry[position] = stationApi;
@@ -814,9 +1058,10 @@
     }
 
     function freezeRegistration(position, status, reason, issues, def) {
+      var safeDef = def || getPositionDefinition(position);
       var outcome = deepFreeze({
         position: Number(position) || null,
-        stationId: def ? def.stationId : null,
+        stationId: safeDef ? safeDef.stationId : null,
         status: status,
         reason: reason,
         issues: deepFreeze(issues || []),
@@ -891,9 +1136,21 @@
       if (!def || !api) {
         var missing = makeSyntheticReceipt(
           session,
-          def || { position: position, stationId: "UNKNOWN", file: null },
+          def || {
+            position: position,
+            stationId: "UNKNOWN",
+            fibonacci: null,
+            file: null
+          },
           STATUSES.HOLD,
-          "STATION_NOT_REGISTERED"
+          "Station is not registered with the North conductor.",
+          [
+            issue(
+              "STATION_NOT_REGISTERED",
+              def ? def.stationId : "UNKNOWN",
+              "No compatible station API was discovered or registered for this cycle position."
+            )
+          ]
         );
 
         session.ledger.stationReceipts.push(missing);
@@ -912,15 +1169,25 @@
             session,
             def,
             STATUSES.ERROR,
-            "STATION_RECEIPT_INVALID",
+            "Station returned an invalid receipt.",
             validationResult.issues
           );
         } else {
-          receipt = clone(receipt);
-          if (!receipt.receiptHash) {
-            receipt.receiptHash = hash(receipt);
+          receipt = normalizeStationReceipt(
+            receipt,
+            def,
+            STATUSES.HOLD,
+            "Station receipt normalized by North conductor."
+          );
+
+          if (!receipt.cycleId) {
+            receipt = normalizeStationReceipt(
+              Object.assign({}, clone(receipt), { cycleId: session.cycleId }),
+              def,
+              receipt.status,
+              receipt.summary
+            );
           }
-          receipt = deepFreeze(receipt);
         }
 
         session.ledger.stationReceipts.push(receipt);
@@ -931,9 +1198,16 @@
           session,
           def,
           STATUSES.ERROR,
-          "STATION_EXECUTION_THROW",
-          [issue("STATION_THROW", "$", error && error.message ? error.message : error)]
+          "Station threw during diagnostic execution.",
+          [
+            issue(
+              "STATION_EXECUTION_THROW",
+              def.stationId,
+              error && error.message ? error.message : error
+            )
+          ]
         );
+
         session.ledger.stationReceipts.push(synthetic);
         markFirst(session, synthetic);
         return synthetic;
@@ -951,7 +1225,11 @@
 
       var stopped = false;
 
-      for (var position = session.request.requestedStartPosition; position <= 8; position += 1) {
+      for (
+        var position = session.request.requestedStartPosition;
+        position <= 8;
+        position += 1
+      ) {
         if (stopped) {
           session.ledger.skippedPositions.push(getPositionDefinition(position));
           continue;
@@ -1001,59 +1279,6 @@
       return getReceipt();
     }
 
-    function makeSyntheticReceipt(sessionRef, def, status, summary, issues) {
-      var r = {
-        schema: STATION_SCHEMA,
-        cycleId: sessionRef.cycleId,
-        position: def.position,
-        stationId: def.stationId,
-        contract: CONTRACT,
-        version: VERSION,
-        file: def.file || FILE,
-        status: status,
-        completed: false,
-        handoffEligible: false,
-        summary: summary,
-        observations: [],
-        evidence: [],
-        issues: issues || [],
-        firstHeldCoordinate: status === STATUSES.HOLD ? def.stationId : null,
-        firstFailedCoordinate: status === STATUSES.FAIL ? def.stationId : null,
-        firstConflictCoordinate:
-          status === STATUSES.CONFLICT ? def.stationId : null,
-        recommendedOwner: {
-          ownerType: "DIAGNOSTIC_STATION",
-          subjectId: def.stationId,
-          contract: null,
-          file: def.file || null,
-          component: def.stationId
-        },
-        generatedAt: nowIso(),
-        receiptHash: null
-      };
-
-      r.receiptHash = hash(r);
-      return deepFreeze(r);
-    }
-
-    function markFirst(sessionRef, receipt) {
-      if (receipt.status === STATUSES.HOLD && sessionRef.ledger.firstHeldPosition === null) {
-        sessionRef.ledger.firstHeldPosition = receipt.position;
-      }
-      if (receipt.status === STATUSES.FAIL && sessionRef.ledger.firstFailedPosition === null) {
-        sessionRef.ledger.firstFailedPosition = receipt.position;
-      }
-      if (
-        receipt.status === STATUSES.CONFLICT &&
-        sessionRef.ledger.firstConflictPosition === null
-      ) {
-        sessionRef.ledger.firstConflictPosition = receipt.position;
-      }
-      if (receipt.status === STATUSES.ERROR && sessionRef.ledger.firstErrorPosition === null) {
-        sessionRef.ledger.firstErrorPosition = receipt.position;
-      }
-    }
-
     function getLedger() {
       var ledger = clone(session.ledger);
       ledger.ledgerHash = hash(ledger);
@@ -1062,6 +1287,7 @@
 
     function getSummary() {
       var receipt = getReceipt();
+
       return deepFreeze({
         cycleId: receipt.cycleId,
         mode: receipt.mode,
@@ -1082,6 +1308,7 @@
       var packet = {
         schema: CYCLE_SCHEMA,
         contract: CONTRACT,
+        previousContract: PREVIOUS_CONTRACT,
         version: VERSION,
         file: FILE,
         cycleId: session.cycleId,
@@ -1111,9 +1338,12 @@
         }).length,
         skippedStationCount: session.ledger.skippedPositions.length,
         stationReceipts: clone(stationReceipts),
+        receipts: clone(stationReceipts),
         handoffs: clone(session.ledger.handoffs),
         deniedHandoffs: clone(session.ledger.deniedHandoffs),
         auxiliaryReceipts: clone(session.ledger.auxiliaryReceipts),
+        registrationOutcomes: clone(session.ledger.registrationOutcomes),
+        auxiliaryRegistrations: clone(session.ledger.auxiliaryRegistrations),
         firstHeldPosition: session.ledger.firstHeldPosition,
         firstFailedPosition: session.ledger.firstFailedPosition,
         firstConflictPosition: session.ledger.firstConflictPosition,
@@ -1181,6 +1411,188 @@
     });
   }
 
+  function resolveStationCandidate(def) {
+    if (!def || !Array.isArray(def.globalNames)) return null;
+
+    for (var i = 0; i < def.globalNames.length; i += 1) {
+      var candidate = readPath(def.globalNames[i]);
+      if (
+        candidate &&
+        typeof candidate === "object" &&
+        isFunction(candidate.executeCycleStation)
+      ) {
+        return {
+          api: candidate,
+          globalName: def.globalNames[i],
+          discovered: true
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function discoverStations() {
+    return deepFreeze(
+      POSITIONS.map(function mapPosition(def) {
+        var found = resolveStationCandidate(def);
+
+        return {
+          position: def.position,
+          stationId: def.stationId,
+          file: def.file,
+          discovered: Boolean(found),
+          globalName: found ? found.globalName : null,
+          api: found ? found.api : null
+        };
+      })
+    );
+  }
+
+  function discoverAuxiliaries() {
+    return deepFreeze(
+      AUXILIARY_DEFINITIONS.map(function mapAux(def) {
+        var found = null;
+
+        if (Array.isArray(def.globalNames)) {
+          for (var i = 0; i < def.globalNames.length; i += 1) {
+            var candidate = readPath(def.globalNames[i]);
+            if (candidate && typeof candidate === "object") {
+              found = {
+                api: candidate,
+                globalName: def.globalNames[i]
+              };
+              break;
+            }
+          }
+        }
+
+        return {
+          parentPosition: def.parentPosition,
+          role: def.role,
+          file: def.file,
+          createsCyclePosition: false,
+          discovered: Boolean(found),
+          globalName: found ? found.globalName : null,
+          api: found ? found.api : null
+        };
+      })
+    );
+  }
+
+  function runRegisteredCycle(rawRequest, options) {
+    var settings = isPlainObject(options) ? options : {};
+    var cycle = createCycle(rawRequest || {});
+    var stationDiscovery = discoverStations();
+    var auxiliaryDiscovery = discoverAuxiliaries();
+
+    stationDiscovery.forEach(function eachStation(record) {
+      if (record.discovered && record.api) {
+        cycle.registerStation(record.position, record.api);
+      }
+    });
+
+    auxiliaryDiscovery.forEach(function eachAux(record) {
+      if (record.discovered && record.api) {
+        cycle.registerAuxiliary(record.parentPosition, {
+          role: record.role,
+          file: record.file,
+          globalName: record.globalName,
+          apiContract: record.api.CONTRACT || null,
+          apiVersion: record.api.VERSION || null
+        });
+      }
+    });
+
+    if (Array.isArray(settings.extraStations)) {
+      settings.extraStations.forEach(function eachExtra(entry) {
+        if (entry && entry.position && entry.api) {
+          cycle.registerStation(Number(entry.position), entry.api);
+        }
+      });
+    }
+
+    if (Array.isArray(settings.extraAuxiliaries)) {
+      settings.extraAuxiliaries.forEach(function eachExtraAux(entry) {
+        if (entry && entry.parentPosition) {
+          cycle.registerAuxiliary(Number(entry.parentPosition), entry.descriptor || entry);
+        }
+      });
+    }
+
+    cycle.seal();
+    var packet = cycle.run();
+    var ledger = cycle.getLedger();
+    var summary = cycle.getSummary();
+
+    return deepFreeze({
+      schema: "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_ROUTE_RESULT_v2",
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      cycleId: packet.cycleId,
+      status: packet.status,
+      packet: clone(packet),
+      ledger: clone(ledger),
+      summary: clone(summary),
+      stationDiscovery: clone(
+        stationDiscovery.map(function stripApi(entry) {
+          return {
+            position: entry.position,
+            stationId: entry.stationId,
+            file: entry.file,
+            discovered: entry.discovered,
+            globalName: entry.globalName
+          };
+        })
+      ),
+      auxiliaryDiscovery: clone(
+        auxiliaryDiscovery.map(function stripAuxApi(entry) {
+          return {
+            parentPosition: entry.parentPosition,
+            role: entry.role,
+            file: entry.file,
+            discovered: entry.discovered,
+            globalName: entry.globalName,
+            createsCyclePosition: false
+          };
+        })
+      ),
+      receipts: clone(packet.stationReceipts || []),
+      stationReceipts: clone(packet.stationReceipts || []),
+      terminalRailReceipt: clone(packet.terminalRailReceipt),
+      restitutionCoordinate: clone(packet.restitutionCoordinate),
+      noClaims: clone(NO_CLAIMS),
+      generatedAt: nowIso(),
+      resultHash: hash(packet)
+    });
+  }
+
+  function executeCycle(request) {
+    return runRegisteredCycle(request || {});
+  }
+
+  function executeDiagnosticCycle(request) {
+    return runRegisteredCycle(request || {});
+  }
+
+  function executeNineCycle(request) {
+    return runRegisteredCycle(request || {});
+  }
+
+  function runNineCycle(request) {
+    return runRegisteredCycle(request || {});
+  }
+
+  function conduct(request) {
+    return runRegisteredCycle(request || {});
+  }
+
+  function run(request) {
+    return runRegisteredCycle(request || {});
+  }
+
   function validateCyclePacket(packet) {
     var issues = [];
     var plainResult = validatePlainData(packet);
@@ -1193,7 +1605,7 @@
       if (packet.schema !== CYCLE_SCHEMA) {
         issues.push(issue("CYCLE_SCHEMA_MISMATCH", "$.schema"));
       }
-      if (packet.contract !== CONTRACT) {
+      if (packet.contract !== CONTRACT && packet.contract !== PREVIOUS_CONTRACT) {
         issues.push(issue("CYCLE_CONTRACT_MISMATCH", "$.contract"));
       }
       if (packet.stationCount !== 9) {
@@ -1210,6 +1622,7 @@
   function getContractDefinition() {
     return deepFreeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       versionLabel: VERSION_LABEL,
       file: FILE,
@@ -1217,16 +1630,25 @@
       installationReceipt: INSTALLATION_RECEIPT,
       cycleSchema: CYCLE_SCHEMA,
       requestSchema: REQUEST_SCHEMA,
+      routeRequestSchema: ROUTE_REQUEST_SCHEMA,
       stationSchema: STATION_SCHEMA,
       handoffSchema: HANDOFF_SCHEMA,
       restitutionSchema: RESTITUTION_SCHEMA,
       hashLabel: HASH_LABEL,
-      newsSequence: ["NORTH", "EAST", "WEST", "SOUTH", "NORTH_RETURN"],
+      newsSequence: ["NORTH", "EAST", "SURFACE", "WEST", "SOUTH", "NORTH_RETURN"],
       railTerminalSynthesisIsNorthReturn: true,
       fibonacciMapIsDiagnosticSequenceOnly: true,
       fibonacciMapIsNotEngineReadiness: true,
       fibonacciMapIsNotContractAuthority: true,
       fibonacciMapDoesNotCreateNewFScale: true,
+      routeCompatibleExecutionMethods: [
+        "executeNineCycle",
+        "runNineCycle",
+        "executeDiagnosticCycle",
+        "executeCycle",
+        "conduct",
+        "run"
+      ],
       positions: POSITIONS,
       auxiliaryDefinitions: AUXILIARY_DEFINITIONS,
       limits: LIMITS,
@@ -1244,13 +1666,20 @@
 
     var seenPositions = {};
     var seenStations = {};
+
     POSITIONS.forEach(function eachPosition(position) {
       if (seenPositions[position.position]) {
         issues.push(issue("DUPLICATE_POSITION", "$.POSITIONS"));
       }
+
       if (seenStations[position.stationId]) {
         issues.push(issue("DUPLICATE_STATION", "$.POSITIONS"));
       }
+
+      if (!Array.isArray(position.globalNames) || !position.globalNames.length) {
+        issues.push(issue("POSITION_GLOBAL_DISCOVERY_NAMES_MISSING", position.stationId));
+      }
+
       seenPositions[position.position] = true;
       seenStations[position.stationId] = true;
     });
@@ -1260,11 +1689,11 @@
     }
 
     return deepFreeze({
-      schema: "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_DEFINITION_VALIDATION_v1",
+      schema: "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_DEFINITION_VALIDATION_v2",
       passed: issues.length === 0,
       issueCount: issues.length,
       issues: deepFreeze(issues),
-      checkCount: 6,
+      checkCount: 8,
       generatedAt: nowIso()
     });
   }
@@ -1275,12 +1704,15 @@
     return deepFreeze({
       receipt: DEFINITION_RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       validationPassed: validation.passed,
       stationCount: POSITIONS.length,
       nineCycleAuthority: true,
       diagnosticSequenceAuthority: true,
+      routeCompatibleExecutionAuthority: true,
+      stationDiscoveryAuthority: true,
       engineAuthority: false,
       productionMutationAuthority: false,
       railTerminalSynthesisIsNorthReturn: true,
@@ -1305,6 +1737,7 @@
     return deepFreeze({
       receipt: INSTALLATION_RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       decision: INSTALLATION.decision,
@@ -1326,79 +1759,16 @@
     return root[name];
   }
 
-  function publish() {
-    if (!root || typeof root !== "object") return;
-
-    var existing = root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR;
-
-    if (existing && existing.CONTRACT !== CONTRACT) {
-      INSTALLATION.decision = "CONFLICT";
-      INSTALLATION.reason = "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY";
-      INSTALLATION.errors.push("PRIMARY_GLOBAL_CONFLICT");
-      return;
-    }
-
-    var api = buildApi();
-
-    try {
-      root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR = api;
-      INSTALLATION.published.push("AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR");
-
-      var namespace = ensureNamespace("AUDRALIA");
-      if (namespace) {
-        namespace.diagnosticNorthConductor = api;
-        INSTALLATION.published.push("AUDRALIA.diagnosticNorthConductor");
-      }
-
-      root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_RECEIPT =
-        getDefinitionReceipt();
-      INSTALLATION.published.push("AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_RECEIPT");
-
-      root.__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_VERSION__ = VERSION;
-      INSTALLATION.published.push("__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_VERSION__");
-
-      root.__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_SCHEMA__ = CYCLE_SCHEMA;
-      INSTALLATION.published.push("__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_SCHEMA__");
-
-      root.__AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_LOADED__ = true;
-      INSTALLATION.published.push("__AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_LOADED__");
-
-      INSTALLATION.decision = existing
-        ? "COMPATIBLE_EXISTING"
-        : "NEW_INSTALLATION";
-      INSTALLATION.reason = "PUBLISHED";
-      INSTALLATION.rollbackComplete = true;
-    } catch (error) {
-      INSTALLATION.decision = "CONFLICT";
-      INSTALLATION.reason = "PUBLICATION_FAILED";
-      INSTALLATION.errors.push(error && error.message ? error.message : String(error));
-      rollback();
-    }
-  }
-
-  function rollback() {
-    var names = INSTALLATION.published.slice().reverse();
-
-    names.forEach(function remove(name) {
-      try {
-        if (name === "AUDRALIA.diagnosticNorthConductor") {
-          if (root.AUDRALIA) delete root.AUDRALIA.diagnosticNorthConductor;
-        } else {
-          delete root[name];
-        }
-      } catch (_error) {}
-    });
-
-    INSTALLATION.rollbackComplete = true;
-  }
-
   function buildApi() {
     return deepFreeze({
       CONTRACT: CONTRACT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
       VERSION: VERSION,
       VERSION_LABEL: VERSION_LABEL,
       FILE: FILE,
       CYCLE_SCHEMA: CYCLE_SCHEMA,
+      REQUEST_SCHEMA: REQUEST_SCHEMA,
+      ROUTE_REQUEST_SCHEMA: ROUTE_REQUEST_SCHEMA,
       STATION_SCHEMA: STATION_SCHEMA,
       HANDOFF_SCHEMA: HANDOFF_SCHEMA,
       RESTITUTION_SCHEMA: RESTITUTION_SCHEMA,
@@ -1424,13 +1794,104 @@
       validateStationReceipt: validateStationReceipt,
       validateCyclePacket: validateCyclePacket,
 
+      discoverStations: discoverStations,
+      discoverAuxiliaries: discoverAuxiliaries,
       createCycle: createCycle,
+
+      executeCycle: executeCycle,
+      executeDiagnosticCycle: executeDiagnosticCycle,
+      executeNineCycle: executeNineCycle,
+      runNineCycle: runNineCycle,
+      conduct: conduct,
+      run: run,
 
       getContractDefinition: getContractDefinition,
       getDefinitionValidation: getDefinitionValidation,
       getDefinitionReceipt: getDefinitionReceipt,
       getInstallationReceipt: getInstallationReceipt
     });
+  }
+
+  function rollback() {
+    var names = INSTALLATION.published.slice().reverse();
+
+    names.forEach(function remove(name) {
+      try {
+        if (name === "AUDRALIA.diagnosticNorthConductor") {
+          if (root.AUDRALIA) delete root.AUDRALIA.diagnosticNorthConductor;
+        } else if (name === "AUDRALIA.diagnostics.northConductor") {
+          if (root.AUDRALIA && root.AUDRALIA.diagnostics) {
+            delete root.AUDRALIA.diagnostics.northConductor;
+          }
+        } else {
+          delete root[name];
+        }
+      } catch (_error) {}
+    });
+
+    INSTALLATION.rollbackComplete = true;
+  }
+
+  function publish() {
+    if (!root || typeof root !== "object") return;
+
+    var existing = root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR;
+
+    if (
+      existing &&
+      existing.CONTRACT &&
+      existing.CONTRACT !== CONTRACT &&
+      existing.CONTRACT !== PREVIOUS_CONTRACT
+    ) {
+      INSTALLATION.decision = "CONFLICT";
+      INSTALLATION.reason = "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY";
+      INSTALLATION.errors.push("PRIMARY_GLOBAL_CONFLICT");
+      return;
+    }
+
+    var api = buildApi();
+
+    try {
+      root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR = api;
+      INSTALLATION.published.push("AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR");
+
+      var namespace = ensureNamespace("AUDRALIA");
+      if (namespace) {
+        namespace.diagnosticNorthConductor = api;
+        INSTALLATION.published.push("AUDRALIA.diagnosticNorthConductor");
+
+        if (!namespace.diagnostics || typeof namespace.diagnostics !== "object") {
+          namespace.diagnostics = {};
+        }
+
+        namespace.diagnostics.northConductor = api;
+        INSTALLATION.published.push("AUDRALIA.diagnostics.northConductor");
+      }
+
+      root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_RECEIPT =
+        getDefinitionReceipt();
+      INSTALLATION.published.push("AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_RECEIPT");
+
+      root.__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_VERSION__ = VERSION;
+      INSTALLATION.published.push("__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_VERSION__");
+
+      root.__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_SCHEMA__ = CYCLE_SCHEMA;
+      INSTALLATION.published.push("__AUDRALIA_DIAGNOSTIC_NINE_CYCLE_SCHEMA__");
+
+      root.__AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_LOADED__ = true;
+      INSTALLATION.published.push("__AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_LOADED__");
+
+      INSTALLATION.decision = existing
+        ? "COMPATIBLE_REPLACEMENT_OR_UPGRADE"
+        : "NEW_INSTALLATION";
+      INSTALLATION.reason = "PUBLISHED";
+      INSTALLATION.rollbackComplete = true;
+    } catch (error) {
+      INSTALLATION.decision = "CONFLICT";
+      INSTALLATION.reason = "PUBLICATION_FAILED";
+      INSTALLATION.errors.push(error && error.message ? error.message : String(error));
+      rollback();
+    }
   }
 
   publish();

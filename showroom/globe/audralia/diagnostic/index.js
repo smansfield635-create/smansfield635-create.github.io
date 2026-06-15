@@ -1,30 +1,73 @@
 // /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v6
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1
 // Full-file replacement.
-//
 // Diagnostic-only.
 // Read-only.
 //
-// Purpose:
-// - Preserve the reader-first nine-station Audralia diagnostic route.
-// - Wait asynchronously at the route-controller boundary before createCycle().
-// - Keep the North conductor and every diagnostic station synchronous.
-// - Poll only lightweight runtime status during preflight.
-// - Never call getReceipt() inside the polling loop.
-// - Capture the full runtime receipt once after admission or timeout.
-// - Run the diagnostic honestly after timeout so F8 may return HOLD.
-// - Preserve public ledger and reader-report schema compatibility.
+// Canonical authority:
+// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1
+// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1
+//
+// DROP:
+// - Direct Execution
+// - Report
+// - Observation
+// - Participant
+//
+// READ:
+// - Result
+// - Evidence
+// - Absence
+// - Direction
+//
+// Governing laws:
+// - Report creation is synchronous and nonblocking.
+// - Participant, observation, runtime, Surface Truth, direct execution,
+//   conductor, receipt, and cycle readiness may not block Create Report.
+// - Missing evidence becomes report evidence.
+// - Observation does not mutate the target.
+// - Direct execution requires explicit user command.
+// - Nine-cycle execution requires explicit user command.
+// - Nine-cycle execution is not the report engine.
+// - runtime.getReceipt() is never polled repeatedly.
+// - Full target receipt capture is deliberate and bounded.
+// - No production mutation, runtime restart, renderer mutation, repair,
+//   readiness claim, visual-pass claim, F21 claim, or synthetic evidence.
+//
+// Owns:
+// - observatory boot;
+// - canonical state;
+// - audit registry;
+// - participant manifest;
+// - participant and alias inspection;
+// - registry and engine inspection;
+// - target observation;
+// - Surface Truth observation;
+// - synchronous report creation;
+// - READ interpretation;
+// - report-mode rendering;
+// - explicit direct checks;
+// - explicit nine-cycle execution;
+// - receipt normalization;
+// - archive creation;
+// - copy controls;
+// - UI bindings;
+// - public controller API.
 //
 // Does not own:
-// - production mutation
-// - renderer mutation
-// - runtime restart
-// - repair
-// - production readiness
-// - visual-pass authority
-// - F21 authority
+// - production;
+// - target rendering;
+// - target runtime mutation;
+// - canvas repair;
+// - controls repair;
+// - route repair;
+// - renderer repair;
+// - WebGL or WebGPU initialization;
+// - readiness;
+// - visual pass;
+// - F21 authority.
 
-(function installAudraliaDiagnosticRouteController(global) {
+(function installAudraliaDropWithReadDiagnosticObservatory(global) {
 "use strict";
 
 var root =
@@ -42,23 +85,33 @@ root && root.document
 ? root.document
 : null;
 
+if (!doc) {
+return;
+}
+
 var CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v6";
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1";
 
 var PREVIOUS_CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v5";
+"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v6";
 
 var VERSION =
-"6.0.0";
+"1.0.0";
 
 var FILE =
 "/showroom/globe/audralia/diagnostic/index.js";
 
 var HTML_CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2";
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1";
 
 var CSS_CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STYLE_TNT_v2";
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1";
+
+var BLUEPRINT =
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1";
+
+var PREBUILD_REGISTRY =
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1";
 
 var GOVERNING_ENGINE_CONTRACT =
 "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
@@ -69,23 +122,11 @@ var CORE_ENGINE_CONTRACT =
 var REGISTRY_CONTRACT =
 "DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2";
 
-var DEFAULT_ENGINE_ID =
-"DGB_INTERACTIVE_RUNTIME_ENGINE_CORE";
-
-var DEFAULT_ENGINE_FILE =
-"/assets/engine/dgb.engine.js";
-
-var DEFAULT_GOVERNING_ENGINE_FILE =
-"/assets/engine/dgb.engine.contract.js";
-
 var TARGET_ROUTE =
 "/showroom/globe/audralia/";
 
 var DIAGNOSTIC_ROUTE =
 "/showroom/globe/audralia/diagnostic/";
-
-var DIAGNOSTIC_ROOT_FILE =
-"/showroom/globe/audralia/diagnostic/index.html";
 
 var TARGET_FRAME_ID =
 "audraliaDiagnosticTargetFrame";
@@ -102,6 +143,15 @@ var TARGET_RUNTIME_WAIT_INTERVAL_MS =
 
 var TARGET_RUNTIME_WAIT_TIMEOUT_MS =
 5000;
+
+var REPORT_SCHEMA =
+"AUDRALIA_DROP_WITH_READ_REPORT_v1";
+
+var READ_SCHEMA =
+"AUDRALIA_DROP_WITH_READ_INTERPRETATION_v1";
+
+var ARCHIVE_SCHEMA =
+"AUDRALIA_DROP_WITH_READ_DEEP_ARCHIVE_v1";
 
 var CONDUCTOR_REQUEST_SCHEMA =
 "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_REQUEST_v1";
@@ -120,12 +170,19 @@ deepFreeze({
 productionMutationAuthorized: false,
 runtimeRestartAuthorized: false,
 rendererMutationAuthorized: false,
+canvasRepairAuthorized: false,
+canvasBuildAuthorized: false,
+canvasReleaseAuthorized: false,
+controlsRepairAuthorized: false,
+routeRepairAuthorized: false,
 repairAuthorized: false,
 readyClaimed: false,
 verifiedClaimed: false,
 visualPassClaimed: false,
 finalVisualPassClaimed: false,
-f21Claimed: false
+cyclePassClaimed: false,
+f21Claimed: false,
+syntheticEvidenceAuthorized: false
 });
 
 var STATIONS =
@@ -258,59 +315,664 @@ station(
   )
 ]);
 
-var AUXILIARIES =
+var PARTICIPANT_MANIFEST =
 deepFreeze([
-{
-parentPosition: 8,
-role: "SOUTH_SURFACE_POINTER",
-file: "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
-globalPaths: [
-"AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
-"AUDRALIA.diagnosticSouthSurfacePointer",
-"AUDRALIA.diagnostics.southSurfacePointer"
+participant(
+"GOVERNING_ENGINE_CONTRACT",
+"Governing Engine Contract",
+"/assets/engine/dgb.engine.contract.js",
+true,
+[
+"DGB_ENGINE_CONTRACT",
+"DGBInteractiveRuntimeEngineContract",
+"DGB_ENGINE_GOVERNING_CONTRACT"
+],
+"ENGINE"
+),
+
+  participant(
+    "RUNTIME_ENGINE_CORE",
+    "Runtime Engine Core",
+    "/assets/engine/dgb.engine.js",
+    true,
+    [
+      "DGB_ENGINE",
+      "DGBEngine"
+    ],
+    "ENGINE"
+  ),
+
+  participant(
+    "ENGINE_AND_AUTHORITY_REGISTRY",
+    "Engine and Authority Registry",
+    "/assets/engine/dgb.engine.subjects.js",
+    true,
+    [
+      "DGB_ENGINE_SUBJECT_REGISTRY",
+      "DGBEngineSubjectRegistry",
+      "DGB_ENGINE_SUBJECTS",
+      "DGB_ENGINE_REGISTRY",
+      "DGB_ENGINE_SUBJECTS_REGISTRY"
+    ],
+    "ENGINE"
+  ),
+
+  participant(
+    "NORTH_CONDUCTOR",
+    "North Conductor",
+    "/assets/audralia/audralia.diagnostic.north.conductor.js",
+    true,
+    [
+      "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR",
+      "AUDRALIA.diagnosticNorthConductor",
+      "AUDRALIA.diagnostics.northConductor"
+    ],
+    "DIAGNOSTIC"
+  ),
+
+  participantFromStation(STATIONS[0]),
+  participantFromStation(STATIONS[1]),
+  participantFromStation(STATIONS[2]),
+  participantFromStation(STATIONS[3]),
+  participantFromStation(STATIONS[4]),
+  participantFromStation(STATIONS[5]),
+  participantFromStation(STATIONS[6]),
+  participantFromStation(STATIONS[7]),
+
+  participant(
+    "SOUTH_SURFACE_POINTER",
+    "South Surface Pointer",
+    "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
+    false,
+    [
+      "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
+      "AUDRALIA.diagnosticSouthSurfacePointer",
+      "AUDRALIA.diagnostics.southSurfacePointer"
+    ],
+    "AUXILIARY",
+    {
+      parentPosition: 8,
+      fibonacci: "F55",
+      createsCyclePosition: false
+    }
+  ),
+
+  participantFromStation(STATIONS[8])
+]);
+
+var CATEGORY_REGISTRY =
+deepFreeze([
+category(
+"observatoryReceiver",
+"Observatory / Receiver",
+[
+audit(
+"observatoryIndex",
+"Observatory Index",
+"SAFE_REPORT",
+"Summarize the shell, controller, participants, observations, and current cycle evidence."
+),
+audit(
+"controllerHealth",
+"Controller Health",
+"SAFE_REPORT",
+"Inspect controller installation, contract lineage, boot state, bindings, and public API."
+),
+audit(
+"shellContract",
+"Shell Contract",
+"SAFE_REPORT",
+"Inspect the HTML shell, paired contracts, route declarations, target declaration, and boundaries."
+),
+audit(
+"loadOrder",
+"Load Order",
+"SAFE_REPORT",
+"Inspect shell-preloaded engine and diagnostic scripts in declared dependency order."
+),
+audit(
+"targetAccess",
+"Target Access",
+"SAFE_REPORT",
+"Inspect target-frame presence, access, document state, route, and title."
+),
+audit(
+"aliasMap",
+"Alias Map",
+"SAFE_REPORT",
+"Inspect participant alias candidates and resolved authority globals."
+)
 ]
-}
+),
+
+  category(
+    "registryEngine",
+    "Registry / Engine",
+    [
+      audit(
+        "registrySummary",
+        "Registry Summary",
+        "SAFE_REPORT",
+        "Inspect governing authority, assigned engines, selectable engines, reserved slots, and registry receipt."
+      ),
+      audit(
+        "governingAuthority",
+        "Governing Authority",
+        "SAFE_REPORT",
+        "Inspect the governing engine contract as an authority rather than a second executable engine."
+      ),
+      audit(
+        "runtimeEngine",
+        "Runtime Engine",
+        "SAFE_REPORT",
+        "Inspect the runtime engine identity, contract, file, version, state, and observed operations."
+      ),
+      audit(
+        "selectedEngine",
+        "Selected Engine",
+        "SAFE_REPORT",
+        "Inspect the registry-selected engine and its authority relationship."
+      ),
+      audit(
+        "reservedSlots",
+        "Reserved Slots",
+        "SAFE_REPORT",
+        "Inspect reserved future engine positions without treating them as assigned engines."
+      ),
+      audit(
+        "engineRuntimeEvidence",
+        "Engine Runtime Evidence",
+        "SAFE_REPORT",
+        "Inspect current engine instance, lifecycle, backend, mount, surface, frame, visibility, and fallback evidence."
+      ),
+      audit(
+        "engineReceipt",
+        "Engine Receipt",
+        "SAFE_REPORT",
+        "Inspect the runtime engine receipt if it is available."
+      )
+    ]
+  ),
+
+  category(
+    "sourceSurface",
+    "Source / Surface",
+    [
+      audit(
+        "targetRuntimeLight",
+        "Target Runtime Light",
+        "SAFE_REPORT",
+        "Inspect lightweight target-runtime evidence without requesting the full receipt."
+      ),
+      audit(
+        "targetRuntimeFull",
+        "Target Runtime Full",
+        "DIRECT_EXECUTION",
+        "Deliberately capture one full target-runtime receipt."
+      ),
+      audit(
+        "canvasPresence",
+        "Canvas Presence",
+        "SAFE_REPORT",
+        "Inspect runtime canvas, fallback canvas, and any canvas presence."
+      ),
+      audit(
+        "geometryState",
+        "Geometry State",
+        "SAFE_REPORT",
+        "Inspect mount, stage rectangle, and geometry-ready evidence."
+      ),
+      audit(
+        "firstFrameState",
+        "First Frame State",
+        "SAFE_REPORT",
+        "Inspect first-frame drawing, submission, or presentation evidence."
+      ),
+      audit(
+        "visiblePixelState",
+        "Visible Pixel State",
+        "SAFE_REPORT",
+        "Inspect visible-pixel evidence without creating a visual-pass claim."
+      ),
+      audit(
+        "surfaceTruthSummary",
+        "Surface Truth Summary",
+        "SAFE_REPORT",
+        "Inspect the resolved Surface Truth authority, contract, methods, and current evidence."
+      ),
+      audit(
+        "surfaceTruthPacket",
+        "Surface Truth Packet",
+        "DIRECT_EXECUTION",
+        "Deliberately invoke a verified Surface Truth read method when one exists."
+      )
+    ]
+  ),
+
+  category(
+    "cardinalStations",
+    "Cardinal Stations",
+    [
+      audit(
+        "northParticipant",
+        "North Participant",
+        "SAFE_REPORT",
+        "Inspect the North conductor and North intake participant."
+      ),
+      audit(
+        "eastProbeParticipant",
+        "East Probe Participant",
+        "SAFE_REPORT",
+        "Inspect the East source probe participant."
+      ),
+      audit(
+        "eastInterpreterParticipant",
+        "East Interpreter Participant",
+        "SAFE_REPORT",
+        "Inspect the East construction interpreter participant."
+      ),
+      audit(
+        "westProbeParticipant",
+        "West Probe Participant",
+        "SAFE_REPORT",
+        "Inspect the West runtime probe participant."
+      ),
+      audit(
+        "westInterpreterParticipant",
+        "West Interpreter Participant",
+        "SAFE_REPORT",
+        "Inspect the West runtime interpreter participant."
+      ),
+      audit(
+        "southProbeParticipant",
+        "South Probe Participant",
+        "SAFE_REPORT",
+        "Inspect the South handoff probe participant."
+      ),
+      audit(
+        "southInterpreterParticipant",
+        "South Interpreter Participant",
+        "SAFE_REPORT",
+        "Inspect the South restitution interpreter participant."
+      ),
+      audit(
+        "southPointerParticipant",
+        "South Pointer Participant",
+        "SAFE_REPORT",
+        "Inspect the optional South Surface Pointer auxiliary."
+      ),
+      audit(
+        "railParticipant",
+        "Rail Participant",
+        "SAFE_REPORT",
+        "Inspect the terminal Rail Synthesis participant."
+      )
+    ]
+  ),
+
+  category(
+    "nineCycle",
+    "Nine-Cycle Diagnostics",
+    [
+      audit(
+        "cyclePreview",
+        "Cycle Preview",
+        "CYCLE_PREVIEW",
+        "Preview all nine cycle stations, participant availability, aliases, and current evidence without execution."
+      ),
+      audit(
+        "cycleRegistrationMap",
+        "Cycle Registration Map",
+        "CYCLE_PREVIEW",
+        "Inspect whether each station and auxiliary can be resolved for registration."
+      ),
+      audit(
+        "cyclePreflight",
+        "Cycle Preflight",
+        "CYCLE_PREVIEW",
+        "Inspect the current target-runtime admission state without starting a cycle."
+      ),
+      audit(
+        "cycleExecution",
+        "Cycle Execution",
+        "CYCLE_EXECUTION",
+        "Explicitly run bounded preflight and the synchronous nine-station North cycle."
+      ),
+      audit(
+        "cycleLedger",
+        "Cycle Ledger",
+        "SAFE_REPORT",
+        "Inspect the most recent compatible cycle ledger."
+      ),
+      audit(
+        "cycleReceipts",
+        "Cycle Receipts",
+        "SAFE_REPORT",
+        "Inspect normalized station receipts from the most recent cycle."
+      ),
+      audit(
+        "cycleTerminalSynthesis",
+        "Cycle Terminal Synthesis",
+        "SAFE_REPORT",
+        "Inspect the most recent terminal Rail Synthesis receipt."
+      )
+    ]
+  ),
+
+  category(
+    "directExecution",
+    "Direct Execution",
+    [
+      audit(
+        "conductorDirect",
+        "Conductor Direct",
+        "DIRECT_PREVIEW",
+        "Preview the North conductor authority and verified cycle API."
+      ),
+      audit(
+        "surfaceTruthDirect",
+        "Surface Truth Direct",
+        "DIRECT_EXECUTION",
+        "Invoke one verified read-only Surface Truth method."
+      ),
+      audit(
+        "runtimeObservationDirect",
+        "Runtime Observation Direct",
+        "DIRECT_EXECUTION",
+        "Capture one deliberate full runtime observation."
+      ),
+      audit(
+        "registryRefreshDirect",
+        "Registry Refresh Direct",
+        "DIRECT_EXECUTION",
+        "Invoke the verified registry refresh method and inspect the resulting state."
+      )
+    ]
+  ),
+
+  category(
+    "boundaryArchive",
+    "Boundary / Archive",
+    [
+      audit(
+        "noTouchBoundary",
+        "No-Touch Boundary",
+        "SAFE_REPORT",
+        "Inspect permanent diagnostic-only and read-only boundaries."
+      ),
+      audit(
+        "sessionReports",
+        "Session Reports",
+        "SAFE_REPORT",
+        "Inspect all reports created during the current session."
+      ),
+      audit(
+        "errorArchive",
+        "Error Archive",
+        "SAFE_REPORT",
+        "Inspect controller, participant, observation, direct, and cycle errors."
+      ),
+      audit(
+        "receiptArchive",
+        "Receipt Archive",
+        "SAFE_REPORT",
+        "Inspect all collected receipts."
+      ),
+      audit(
+        "participantArchive",
+        "Participant Archive",
+        "SAFE_REPORT",
+        "Inspect archived participant snapshots."
+      ),
+      audit(
+        "deepArchive",
+        "Deep Archive",
+        "ARCHIVE_REPORT",
+        "Create a complete session archive containing reports, participants, observations, direct results, cycle runs, errors, and boundaries."
+      ),
+      audit(
+        "nextDirection",
+        "Next Direction",
+        "SAFE_REPORT",
+        "Identify the highest-priority next diagnostic action from current absence evidence."
+      )
+    ]
+  )
 ]);
 
 var state = {
 initialized: false,
-running: false,
-runPhase: "IDLE",
-cycleId: "",
-lastRunAt: null,
+bootedAt: null,
+updatedAt: null,
 
-targetPreflight: null,
-targetPreflightProgress: null,
+activeCategoryId:
+  "observatoryReceiver",
 
-registrySnapshot: null,
-registryReceipt: null,
-authorityRecords: [],
-engineRecords: [],
-selectedEngine: null,
+activeAuditId:
+  "observatoryIndex",
 
-engineInspection: null,
-engineOps: null,
-engineReceipt: null,
+activeParticipantRole:
+  null,
 
-conductorResult: null,
-conductorReceipt: null,
-conductorState: null,
+activeReportMode:
+  "read",
 
-stationRegistrations: [],
-auxiliaryRegistrations: [],
+activeObservationLens:
+  "target",
 
-receipts: [],
-ledger: null,
-readerReport: "",
-rawLedgerText: "",
-lastError: null
+activeInstrumentChamber:
+  "cycle",
+
+targetVisible:
+  false,
+
+targetExpanded:
+  false,
+
+drop: {
+  direct: laneState("IDLE"),
+  report: laneState("READY"),
+  observation: laneState("OBSERVING"),
+  participant: laneState("LOADING")
+},
+
+participants: {
+  manifest:
+    clone(PARTICIPANT_MANIFEST),
+
+  records:
+    [],
+
+  requiredCount:
+    0,
+
+  optionalCount:
+    0,
+
+  availableCount:
+    0,
+
+  heldCount:
+    0,
+
+  errorCount:
+    0,
+
+  observedAt:
+    null
+},
+
+observation: {
+  targetLight:
+    null,
+
+  targetFull:
+    null,
+
+  registry:
+    null,
+
+  registryReceipt:
+    null,
+
+  authorityRecords:
+    [],
+
+  engineRecords:
+    [],
+
+  selectedEngine:
+    null,
+
+  engineInspection:
+    null,
+
+  engineOps:
+    null,
+
+  engineReceipt:
+    null,
+
+  surfaceTruth:
+    null,
+
+  errors:
+    [],
+
+  observedAt:
+    null
+},
+
+report: {
+  current:
+    null,
+
+  readableText:
+    "",
+
+  packetText:
+    "",
+
+  rawText:
+    "",
+
+  evidence:
+    [],
+
+  sessionReports:
+    []
+},
+
+direct: {
+  running:
+    false,
+
+  selectedAuthority:
+    null,
+
+  selectedMethod:
+    null,
+
+  lastResult:
+    null,
+
+  lastError:
+    null,
+
+  history:
+    []
+},
+
+cycle: {
+  running:
+    false,
+
+  cycleId:
+    null,
+
+  runPhase:
+    "IDLE",
+
+  preflight:
+    null,
+
+  preflightProgress:
+    null,
+
+  stationRegistrations:
+    [],
+
+  auxiliaryRegistrations:
+    [],
+
+  conductorResult:
+    null,
+
+  conductorReceipt:
+    null,
+
+  conductorState:
+    null,
+
+  receipts:
+    [],
+
+  ledger:
+    null,
+
+  readerReport:
+    "",
+
+  lastRunAt:
+    null,
+
+  lastError:
+    null
+},
+
+archive: {
+  reports:
+    [],
+
+  directResults:
+    [],
+
+  cycleRuns:
+    [],
+
+  errors:
+    [],
+
+  participantSnapshots:
+    [],
+
+  observationSnapshots:
+    [],
+
+  deepArchive:
+    null,
+
+  createdAt:
+    null,
+
+  updatedAt:
+    null
+}
 
 };
 
-function station(position, stationId, label, fibonacci, file, globalPaths) {
+function station(
+position,
+stationId,
+label,
+fibonacci,
+file,
+globalPaths
+) {
 return {
 position: position,
 stationId: stationId,
+role: stationId,
 label: label,
 fibonacci: fibonacci,
 file: file,
@@ -318,10 +980,84 @@ globalPaths: globalPaths
 };
 }
 
+function participant(
+role,
+label,
+file,
+required,
+globalPaths,
+group,
+extra
+) {
+var output = {
+role: role,
+label: label,
+file: file,
+required: Boolean(required),
+globalPaths: Array.isArray(globalPaths)
+? globalPaths.slice()
+: [],
+group: group || "DIAGNOSTIC",
+position: null,
+fibonacci: null,
+parentPosition: null,
+createsCyclePosition: null
+};
+
+if (extra && typeof extra === "object") {
+  Object.keys(extra).forEach(function assignExtra(key) {
+    output[key] = extra[key];
+  });
+}
+
+return output;
+
+}
+
+function participantFromStation(definition) {
+return participant(
+definition.stationId,
+definition.label,
+definition.file,
+true,
+definition.globalPaths,
+"STATION",
+{
+position: definition.position,
+fibonacci: definition.fibonacci,
+createsCyclePosition: true
+}
+);
+}
+
+function category(id, label, audits) {
+return {
+id: id,
+label: label,
+audits: audits
+};
+}
+
+function audit(id, label, classification, summary) {
+return {
+id: id,
+label: label,
+classification: classification,
+summary: summary
+};
+}
+
+function laneState(status) {
+return {
+status: status,
+availableCount: 0,
+heldCount: 0,
+lastAction: null
+};
+}
+
 function byId(id) {
-return doc
-? doc.getElementById(id)
-: null;
+return doc.getElementById(id);
 }
 
 function isObject(value) {
@@ -354,10 +1090,14 @@ return null;
 function firstString() {
 var index;
 
-for (index = 0; index < arguments.length; index += 1) {
+for (
+  index = 0;
+  index < arguments.length;
+  index += 1
+) {
   if (
     typeof arguments[index] === "string" &&
-    arguments[index].length
+    arguments[index].trim()
   ) {
     return arguments[index];
   }
@@ -370,7 +1110,11 @@ return null;
 function firstBoolean() {
 var index;
 
-for (index = 0; index < arguments.length; index += 1) {
+for (
+  index = 0;
+  index < arguments.length;
+  index += 1
+) {
   if (typeof arguments[index] === "boolean") {
     return arguments[index];
   }
@@ -424,7 +1168,10 @@ memory.push(value);
 
 if (Array.isArray(value)) {
   return value.map(function cloneEntry(entry) {
-    return clone(entry, memory.slice());
+    return clone(
+      entry,
+      memory.slice()
+    );
   });
 }
 
@@ -433,7 +1180,10 @@ output = {};
 Object.keys(value).forEach(function cloneProperty(key) {
   try {
     output[key] =
-      clone(value[key], memory.slice());
+      clone(
+        value[key],
+        memory.slice()
+      );
   } catch (_error) {
     output[key] =
       "[Unreadable]";
@@ -471,11 +1221,9 @@ try {
     var child;
 
     try {
-      child =
-        value[key];
+      child = value[key];
     } catch (_error) {
-      child =
-        null;
+      child = null;
     }
 
     deepFreeze(child, memory);
@@ -580,8 +1328,13 @@ try {
 result =
   0x811c9dc5;
 
-for (index = 0; index < text.length; index += 1) {
+for (
+  index = 0;
+  index < text.length;
+  index += 1
+) {
   result ^= text.charCodeAt(index);
+
   result =
     Math.imul(
       result,
@@ -594,6 +1347,20 @@ return (
   ("00000000" + result.toString(16)).slice(-8)
 );
 
+}
+
+function escapeHtml(value) {
+return String(
+value === null ||
+value === undefined
+? ""
+: value
+)
+.replace(/&/g, "&")
+.replace(/</g, "<")
+.replace(/>/g, ">")
+.replace(/"/g, """)
+.replace(/'/g, "'");
 }
 
 function delay(milliseconds) {
@@ -616,7 +1383,11 @@ var cursor =
 
 var index;
 
-for (index = 0; index < parts.length; index += 1) {
+for (
+  index = 0;
+  index < parts.length;
+  index += 1
+) {
   if (
     cursor === null ||
     cursor === undefined ||
@@ -638,7 +1409,11 @@ function readFirst(paths) {
 var index;
 var value;
 
-for (index = 0; index < paths.length; index += 1) {
+for (
+  index = 0;
+  index < paths.length;
+  index += 1
+) {
   value =
     readPath(paths[index]);
 
@@ -657,7 +1432,12 @@ return {
 
 }
 
-function callSafely(object, methodName, args, fallback) {
+function callSafely(
+object,
+methodName,
+args,
+fallback
+) {
 if (
 !object ||
 !isFunction(object[methodName])
@@ -678,54 +1458,29 @@ try {
 
 }
 
-function normalizePathClass(file) {
-if (
-!file ||
-typeof file !== "string"
-) {
-return "UNKNOWN";
-}
-
-if (
-  file === DIAGNOSTIC_ROUTE ||
-  file.indexOf("/showroom/globe/audralia/diagnostic/") === 0
-) {
-  return "AUDRALIA_DIAGNOSTIC_ROUTE";
-}
-
-if (
-  file === TARGET_ROUTE ||
-  file.indexOf("/showroom/globe/audralia/") === 0
-) {
-  return "AUDRALIA_ROUTE";
-}
-
-if (file.indexOf("/assets/audralia/") === 0) {
-  return "AUDRALIA_ASSET";
-}
-
-if (file.indexOf("/assets/engine/") === 0) {
-  return "DGB_ENGINE_ASSET";
-}
-
-if (file.indexOf("/assets/") === 0) {
-  return "ENGINE_ASSET";
-}
-
-return "UNKNOWN";
-
-}
-
 function setText(id, value) {
 var node =
 byId(id);
 
+if (!node) {
+  return;
+}
+
+node.textContent =
+  value === null ||
+  value === undefined
+    ? ""
+    : String(value);
+
+}
+
+function setHtml(id, value) {
+var node =
+byId(id);
+
 if (node) {
-  node.textContent =
-    value === null ||
-    value === undefined
-      ? ""
-      : String(value);
+  node.innerHTML =
+    String(value || "");
 }
 
 }
@@ -741,33 +1496,35 @@ if (node) {
 
 }
 
-function setClassState(node, names, active) {
+function setHidden(id, hidden) {
+var node =
+byId(id);
+
+if (node) {
+  node.hidden =
+    Boolean(hidden);
+}
+
+}
+
+function setStatus(nodeOrId, status) {
+var node =
+typeof nodeOrId === "string"
+? byId(nodeOrId)
+: nodeOrId;
+
 if (!node) {
-return;
+  return;
 }
 
-names.forEach(function removeClass(name) {
-  node.classList.remove(name);
-});
+node.setAttribute(
+  "data-status",
+  normalizeStatus(
+    status,
+    "UNKNOWN"
+  )
+);
 
-if (active) {
-  node.classList.add(active);
-}
-
-}
-
-function escapeHtml(value) {
-return String(
-value === null ||
-value === undefined
-? ""
-: value
-)
-.replace(/&/g, "&")
-.replace(/</g, "<")
-.replace(/>/g, ">")
-.replace(/"/g, """)
-.replace(/'/g, "'");
 }
 
 function toast(message) {
@@ -783,6 +1540,7 @@ node.textContent =
 
 node.classList.add("show");
 node.classList.add("visible");
+
 node.setAttribute(
   "data-visible",
   "true"
@@ -797,17 +1555,16 @@ if (
   );
 }
 
-if (root.setTimeout) {
-  toast._timer =
-    root.setTimeout(function hideToast() {
-      node.classList.remove("show");
-      node.classList.remove("visible");
-      node.setAttribute(
-        "data-visible",
-        "false"
-      );
-    }, 2200);
-}
+toast._timer =
+  root.setTimeout(function hideToast() {
+    node.classList.remove("show");
+    node.classList.remove("visible");
+
+    node.setAttribute(
+      "data-visible",
+      "false"
+    );
+  }, 2200);
 
 }
 
@@ -818,19 +1575,31 @@ typeof value === "string"
 : "";
 
 var allowed = {
+  READY: true,
+  FOUND: true,
   PASS: true,
-  PARTIAL_PASS: true,
+  COMPLETE: true,
+  AVAILABLE: true,
+  ACTIVE: true,
   HOLD: true,
   HELD: true,
+  MISSING: true,
+  PARTIAL_PASS: true,
+  NOT_RUN: true,
+  EMPTY: true,
+  RUNNING: true,
+  OBSERVING: true,
+  LOADING: true,
   FAIL: true,
+  FAILED: true,
   ERROR: true,
   CONFLICT: true,
   DEGRADED: true,
-  UNVERIFIED: true,
   UNKNOWN: true,
-  COMPLETE: true,
-  FAILED: true,
-  CONFLICTING: true
+  IDLE: true,
+  UNVERIFIED: true,
+  REJECTED: true,
+  REGISTERED: true
 };
 
 return allowed[status]
@@ -839,123 +1608,72 @@ return allowed[status]
 
 }
 
-function statusClass(status) {
-var value =
-normalizeStatus(
-status,
-"UNKNOWN"
+function methodNames(object) {
+var names = [];
+
+if (!object) {
+  return names;
+}
+
+try {
+  Object.getOwnPropertyNames(object).forEach(function inspectOwn(key) {
+    try {
+      if (isFunction(object[key])) {
+        names.push(key);
+      }
+    } catch (_error) {}
+  });
+
+  var prototype =
+    Object.getPrototypeOf(object);
+
+  if (prototype) {
+    Object.getOwnPropertyNames(prototype).forEach(function inspectPrototype(key) {
+      if (
+        key !== "constructor" &&
+        names.indexOf(key) === -1
+      ) {
+        try {
+          if (isFunction(object[key])) {
+            names.push(key);
+          }
+        } catch (_error) {}
+      }
+    });
+  }
+} catch (_error) {}
+
+return names.sort();
+
+}
+
+function getCategory(categoryId) {
+return CATEGORY_REGISTRY.find(function findCategory(entry) {
+return entry.id === categoryId;
+}) || CATEGORY_REGISTRY[0];
+}
+
+function getAudit(categoryId, auditId) {
+var categoryRecord =
+getCategory(categoryId);
+
+return categoryRecord.audits.find(function findAudit(entry) {
+  return entry.id === auditId;
+}) || categoryRecord.audits[0];
+
+}
+
+function getActiveCategory() {
+return getCategory(
+state.activeCategoryId
 );
-
-if (
-  value === "PASS" ||
-  value === "COMPLETE"
-) {
-  return "pass";
 }
 
-if (
-  value === "HOLD" ||
-  value === "HELD" ||
-  value === "PARTIAL_PASS" ||
-  value === "UNVERIFIED"
-) {
-  return "hold";
-}
-
-if (
-  value === "FAIL" ||
-  value === "FAILED"
-) {
-  return "fail";
-}
-
-if (
-  value === "CONFLICT" ||
-  value === "CONFLICTING"
-) {
-  return "conflict";
-}
-
-if (value === "ERROR") {
-  return "error";
-}
-
-if (value === "DEGRADED") {
-  return "attention";
-}
-
-return "waiting";
-
-}
-
-function setGauge(percent, status) {
-var gauge =
-byId("overallGauge");
-
-var value =
-  byId("overallGaugeValue");
-
-var safePercent;
-
-if (
-  !gauge ||
-  !value
-) {
-  return;
-}
-
-safePercent =
-  Math.max(
-    0,
-    Math.min(
-      100,
-      Number(percent) || 0
-    )
-  );
-
-gauge.style.setProperty(
-  "--gauge-progress",
-  String(
-    Math.round(
-      safePercent * 3.6
-    )
-  ) + "deg"
+function getActiveAudit() {
+return getAudit(
+state.activeCategoryId,
+state.activeAuditId
 );
-
-setClassState(
-  gauge,
-  [
-    "waiting",
-    "pass",
-    "passed",
-    "ready",
-    "hold",
-    "held",
-    "partial",
-    "fail",
-    "error",
-    "conflict",
-    "attention"
-  ],
-  statusClass(status)
-);
-
-value.textContent =
-  String(
-    Math.round(safePercent)
-  ) + "%";
-
-gauge.setAttribute(
-  "aria-label",
-  "Overall diagnostic gauge " +
-    String(Math.round(safePercent)) +
-    " percent, status " +
-    normalizeStatus(
-      status,
-      "UNKNOWN"
-    )
-);
-
 }
 
 function getRegistry() {
@@ -1024,17 +1742,268 @@ return {
 
 }
 
-/*
+function inspectShellScripts() {
+var scripts =
+Array.prototype.slice.call(
+doc.querySelectorAll(
+"script[data-participant-role]"
+)
+);
 
-* Lightweight target inspection.
-* 
-* This function may run repeatedly during preflight.
-* It does not call runtime.getReceipt().
-* It does not recursively clone the runtime object.
-  */
-  function inspectTargetFrameLight() {
-  var frame =
-  byId(TARGET_FRAME_ID);
+return scripts.map(function mapScript(script) {
+  return {
+    role:
+      script.getAttribute(
+        "data-participant-role"
+      ),
+
+    src:
+      script.getAttribute("src"),
+
+    loadOrder:
+      Number(
+        script.getAttribute(
+          "data-load-order"
+        )
+      ) || null,
+
+    required:
+      script.getAttribute(
+        "data-participant-required"
+      ) !== "false",
+
+    cyclePosition:
+      Number(
+        script.getAttribute(
+          "data-cycle-position"
+        )
+      ) || null,
+
+    fibonacci:
+      script.getAttribute(
+        "data-fibonacci"
+      ) || null,
+
+    readyState:
+      script.readyState || null,
+
+    connected:
+      script.isConnected === true
+  };
+});
+
+}
+
+function resolveParticipant(definition, shellScripts) {
+var found =
+readFirst(
+definition.globalPaths || []
+);
+
+var scriptRecord =
+  shellScripts.find(function findScript(entry) {
+    return entry.role === definition.role;
+  }) || null;
+
+var api =
+  found.value;
+
+var contract =
+  api
+    ? firstString(
+        api.CONTRACT,
+        api.contract
+      )
+    : null;
+
+var version =
+  api
+    ? firstString(
+        api.VERSION,
+        api.version
+      )
+    : null;
+
+var methods =
+  methodNames(api);
+
+var status =
+  api
+    ? "AVAILABLE"
+    : scriptRecord
+      ? "HELD"
+      : "MISSING";
+
+return deepFreeze({
+  role:
+    definition.role,
+
+  label:
+    definition.label,
+
+  group:
+    definition.group,
+
+  file:
+    definition.file,
+
+  required:
+    definition.required,
+
+  position:
+    definition.position,
+
+  fibonacci:
+    definition.fibonacci,
+
+  parentPosition:
+    definition.parentPosition,
+
+  createsCyclePosition:
+    definition.createsCyclePosition,
+
+  shellScriptPresent:
+    Boolean(scriptRecord),
+
+  shellScript:
+    scriptRecord
+      ? frozenClone(scriptRecord)
+      : null,
+
+  resolved:
+    Boolean(api),
+
+  resolvedGlobal:
+    found.path,
+
+  resolutionSource:
+    found.value
+      ? "DECLARED_GLOBAL"
+      : "NOT_FOUND",
+
+  contract:
+    contract,
+
+  version:
+    version,
+
+  methodCount:
+    methods.length,
+
+  methods:
+    methods,
+
+  stationId:
+    api
+      ? firstString(
+          api.STATION_ID,
+          api.stationId
+        )
+      : null,
+
+  cyclePosition:
+    api
+      ? (
+          Number(
+            api.CYCLE_POSITION ||
+            api.cyclePosition
+          ) || definition.position
+        )
+      : definition.position,
+
+  status:
+    status,
+
+  observedAt:
+    nowIso()
+});
+
+}
+
+function buildParticipantSnapshot() {
+var shellScripts =
+inspectShellScripts();
+
+var records =
+  PARTICIPANT_MANIFEST.map(function mapParticipant(definition) {
+    return resolveParticipant(
+      definition,
+      shellScripts
+    );
+  });
+
+var requiredCount =
+  records.filter(function countRequired(record) {
+    return record.required;
+  }).length;
+
+var optionalCount =
+  records.length - requiredCount;
+
+var availableCount =
+  records.filter(function countAvailable(record) {
+    return record.resolved;
+  }).length;
+
+var heldCount =
+  records.filter(function countHeld(record) {
+    return !record.resolved;
+  }).length;
+
+var snapshot = {
+  manifest:
+    frozenClone(PARTICIPANT_MANIFEST),
+
+  shellScripts:
+    frozenClone(shellScripts),
+
+  records:
+    frozenClone(records),
+
+  requiredCount:
+    requiredCount,
+
+  optionalCount:
+    optionalCount,
+
+  availableCount:
+    availableCount,
+
+  heldCount:
+    heldCount,
+
+  errorCount:
+    0,
+
+  observedAt:
+    nowIso()
+};
+
+state.participants =
+  snapshot;
+
+state.drop.participant.status =
+  heldCount > 0
+    ? "HELD"
+    : "READY";
+
+state.drop.participant.availableCount =
+  availableCount;
+
+state.drop.participant.heldCount =
+  heldCount;
+
+state.drop.participant.lastAction =
+  "Participant manifest inspected at " +
+  snapshot.observedAt;
+
+return frozenClone(snapshot);
+
+}
+
+function inspectTargetFrameLight() {
+var frame =
+byId(TARGET_FRAME_ID);
 
 var frameWindow =
   null;
@@ -1062,6 +2031,15 @@ var accessible =
 
 var loaded =
   false;
+
+var routeMatch =
+  false;
+
+var targetPath =
+  null;
+
+var targetTitle =
+  null;
 
 var runtimeCanvasPresent =
   false;
@@ -1099,6 +2077,19 @@ if (frame) {
           frameDocument.readyState === "complete"
         )
       );
+
+    if (frameWindow && frameWindow.location) {
+      targetPath =
+        frameWindow.location.pathname || null;
+
+      routeMatch =
+        targetPath === TARGET_ROUTE;
+    }
+
+    targetTitle =
+      frameDocument && frameDocument.title
+        ? frameDocument.title
+        : null;
 
     runtimeCanvasPresent =
       Boolean(
@@ -1146,10 +2137,6 @@ if (frame) {
         );
     }
 
-    /*
-     * getReceiptLight() is used only when getStatus() did not provide
-     * a nonempty object.
-     */
     if (
       runtime &&
       !isNonemptyObject(runtimeStatus) &&
@@ -1164,10 +2151,6 @@ if (frame) {
         );
     }
 
-    /*
-     * Published light receipts may be used only as a final lightweight
-     * fallback. No full receipt is read here.
-     */
     if (
       !isNonemptyObject(runtimeStatus) &&
       !isNonemptyObject(runtimeReceiptLight) &&
@@ -1197,21 +2180,6 @@ if (frame) {
     loaded =
       false;
 
-    runtime =
-      null;
-
-    runtimeGlobalName =
-      null;
-
-    runtimeStatus =
-      null;
-
-    runtimeReceiptLight =
-      null;
-
-    selectedEvidence =
-      null;
-
     readError =
       error && error.message
         ? error.message
@@ -1219,7 +2187,7 @@ if (frame) {
   }
 }
 
-return {
+return deepFreeze({
   framePresent:
     Boolean(frame),
 
@@ -1240,6 +2208,15 @@ return {
     frameDocument.readyState
       ? frameDocument.readyState
       : null,
+
+  routeMatch:
+    routeMatch,
+
+  targetPath:
+    targetPath,
+
+  targetTitle:
+    targetTitle,
 
   runtimeGlobalPresent:
     Boolean(runtime),
@@ -1285,16 +2262,18 @@ return {
     ),
 
   targetRuntimeStatus:
-    selectedEvidence,
+    selectedEvidence
+      ? frozenClone(selectedEvidence)
+      : null,
 
   runtimeStatus:
     isNonemptyObject(runtimeStatus)
-      ? runtimeStatus
+      ? frozenClone(runtimeStatus)
       : null,
 
   runtimeReceiptLight:
     isNonemptyObject(runtimeReceiptLight)
-      ? runtimeReceiptLight
+      ? frozenClone(runtimeReceiptLight)
       : null,
 
   runtimeEvidenceAvailable:
@@ -1311,28 +2290,15 @@ return {
   capturedAt:
     nowIso(),
 
-  noClaims: {
-    iframePresenceProvesWebGL2: false,
-    iframePresenceProvesSubmission: false,
-    iframePresenceProvesPresentation: false,
-    iframePresenceProvesVisibility: false,
-    runtimeGlobalPresenceProvesReadiness: false,
-    runtimeEvidencePresenceProvesSurfaceTruth: false
-  }
-};
+  noClaims:
+    NO_CLAIMS
+});
 
 }
 
-/*
-
-* Full target inspection.
-* 
-* This function is called once after preflight admission or timeout.
-* It may call runtime.getReceipt() once.
-  */
-  function inspectTargetFrameFull() {
-  var light =
-  inspectTargetFrameLight();
+function inspectTargetFrameFull() {
+var light =
+inspectTargetFrameLight();
 
 var frame =
   byId(TARGET_FRAME_ID);
@@ -1397,98 +2363,13 @@ if (
 }
 
 return deepFreeze({
-  framePresent:
-    light.framePresent,
-
-  frameId:
-    light.frameId,
-
-  targetRoute:
-    light.targetRoute,
-
-  sameOriginAccessible:
-    light.sameOriginAccessible,
-
-  documentLoaded:
-    light.documentLoaded,
-
-  documentReadyState:
-    light.documentReadyState,
-
-  runtimeGlobalPresent:
-    light.runtimeGlobalPresent,
-
-  runtimeGlobalName:
-    light.runtimeGlobalName,
-
-  acceptedRuntimeGlobals:
-    clone(
-      light.acceptedRuntimeGlobals
-    ),
-
-  runtimeStatusMethodPresent:
-    light.runtimeStatusMethodPresent,
-
-  receiptLightMethodPresent:
-    light.receiptLightMethodPresent,
-
-  receiptMethodPresent:
-    light.receiptMethodPresent,
-
-  runtimeCanvasPresent:
-    light.runtimeCanvasPresent,
-
-  fallbackCanvasPresent:
-    light.fallbackCanvasPresent,
-
-  anyCanvasPresent:
-    light.anyCanvasPresent,
-
-  canvasPresent:
-    light.canvasPresent,
-
-  targetRuntimeStatus:
-    isNonemptyObject(
-      light.targetRuntimeStatus
-    )
-      ? frozenClone(
-          light.targetRuntimeStatus
-        )
-      : null,
-
-  runtimeStatus:
-    isNonemptyObject(
-      light.runtimeStatus
-    )
-      ? frozenClone(
-          light.runtimeStatus
-        )
-      : null,
-
-  runtimeReceiptLight:
-    isNonemptyObject(
-      light.runtimeReceiptLight
-    )
-      ? frozenClone(
-          light.runtimeReceiptLight
-        )
-      : null,
+  light:
+    frozenClone(light),
 
   runtimeReceipt:
     isNonemptyObject(runtimeReceipt)
-      ? frozenClone(
-          runtimeReceipt
-        )
+      ? frozenClone(runtimeReceipt)
       : null,
-
-  runtimeEvidenceAvailable:
-    light.runtimeEvidenceAvailable,
-
-  classification:
-    light.classification,
-
-  lightReadError:
-    light.readError,
 
   fullReceiptReadAttempted:
     fullReceiptReadAttempted,
@@ -1503,21 +2384,1026 @@ return deepFreeze({
     nowIso(),
 
   noClaims:
-    frozenClone(
-      light.noClaims
-    )
+    NO_CLAIMS
 });
 
 }
 
+function refreshRegistryState() {
+var registry =
+getRegistry();
+
+var snapshot =
+  null;
+
+var receipt =
+  null;
+
+var authorityRecords =
+  [];
+
+var engineRecords =
+  [];
+
+var selectedEngine =
+  null;
+
+if (registry) {
+  callSafely(
+    registry,
+    "refresh",
+    [],
+    null
+  );
+
+  snapshot =
+    callSafely(
+      registry,
+      "getSnapshot",
+      [],
+      null
+    );
+
+  receipt =
+    callSafely(
+      registry,
+      "getRegistryReceipt",
+      [],
+      null
+    ) ||
+    callSafely(
+      registry,
+      "getReceipt",
+      [],
+      null
+    ) ||
+    root.DGB_ENGINE_REGISTRY_RECEIPT ||
+    root.DGB_ENGINE_SUBJECTS_RECEIPT ||
+    null;
+
+  authorityRecords =
+    callSafely(
+      registry,
+      "listAuthorities",
+      [],
+      []
+    ) || [];
+
+  engineRecords =
+    callSafely(
+      registry,
+      "listEngines",
+      [
+        {
+          includeReserved: true,
+          selectableOnly: false
+        }
+      ],
+      []
+    ) || [];
+
+  selectedEngine =
+    callSafely(
+      registry,
+      "getDefaultEngine",
+      [],
+      null
+    );
+}
+
+state.observation.registry =
+  frozenClone(snapshot);
+
+state.observation.registryReceipt =
+  frozenClone(receipt);
+
+state.observation.authorityRecords =
+  frozenClone(
+    Array.isArray(authorityRecords)
+      ? authorityRecords
+      : []
+  );
+
+state.observation.engineRecords =
+  frozenClone(
+    Array.isArray(engineRecords)
+      ? engineRecords
+      : []
+  );
+
+state.observation.selectedEngine =
+  frozenClone(selectedEngine);
+
+return {
+  registryLoaded:
+    Boolean(registry),
+
+  snapshot:
+    frozenClone(snapshot),
+
+  receipt:
+    frozenClone(receipt),
+
+  authorityRecords:
+    frozenClone(
+      state.observation.authorityRecords
+    ),
+
+  engineRecords:
+    frozenClone(
+      state.observation.engineRecords
+    ),
+
+  selectedEngine:
+    frozenClone(selectedEngine)
+};
+
+}
+
+function inspectEngineState() {
+var engine =
+getEngine();
+
+var inspection =
+  null;
+
+var ops =
+  null;
+
+var receipt =
+  null;
+
+var instanceId =
+  null;
+
+if (engine) {
+  var instances =
+    callSafely(
+      engine,
+      "listInstances",
+      [
+        {
+          includeTombstones: false
+        }
+      ],
+      []
+    );
+
+  if (Array.isArray(instances) && instances.length) {
+    var first =
+      instances[0];
+
+    instanceId =
+      typeof first === "string"
+        ? first
+        : first && first.instanceId
+          ? first.instanceId
+          : first &&
+            first.identity &&
+            first.identity.instanceId
+            ? first.identity.instanceId
+            : null;
+  }
+
+  inspection =
+    callSafely(
+      engine,
+      "inspect",
+      [
+        {
+          includeInstances: true,
+          includeTombstones: false,
+          includeAdapters: true,
+          includeDiagnostics: false
+        }
+      ],
+      null
+    );
+
+  if (instanceId) {
+    ops =
+      callSafely(
+        engine,
+        "getOps",
+        [instanceId],
+        null
+      );
+  }
+
+  receipt =
+    callSafely(
+      engine,
+      "getRuntimeReceipt",
+      [],
+      null
+    ) ||
+    callSafely(
+      engine,
+      "getReceipt",
+      [],
+      null
+    );
+}
+
+state.observation.engineInspection =
+  frozenClone(inspection);
+
+state.observation.engineOps =
+  frozenClone(ops);
+
+state.observation.engineReceipt =
+  frozenClone(receipt);
+
+return {
+  engineLoaded:
+    Boolean(engine),
+
+  instanceId:
+    instanceId,
+
+  inspection:
+    frozenClone(inspection),
+
+  ops:
+    frozenClone(ops),
+
+  receipt:
+    frozenClone(receipt)
+};
+
+}
+
+function inspectSurfaceTruth() {
+var participantRecord =
+state.participants.records.find(function findSurface(record) {
+return record.role === "CANVAS_SURFACE_TRUTH";
+}) || null;
+
+var authority =
+  participantRecord &&
+  participantRecord.resolvedGlobal
+    ? readPath(
+        participantRecord.resolvedGlobal
+      )
+    : null;
+
+var methods =
+  methodNames(authority);
+
+var receipt =
+  authority
+    ? (
+        callSafely(
+          authority,
+          "getReceipt",
+          [],
+          null
+        ) ||
+        authority.RECEIPT ||
+        authority.receipt ||
+        null
+      )
+    : null;
+
+var output = {
+  authorityPresent:
+    Boolean(authority),
+
+  globalPath:
+    participantRecord
+      ? participantRecord.resolvedGlobal
+      : null,
+
+  contract:
+    participantRecord
+      ? participantRecord.contract
+      : null,
+
+  version:
+    participantRecord
+      ? participantRecord.version
+      : null,
+
+  methods:
+    methods,
+
+  receipt:
+    frozenClone(receipt),
+
+  packetKeys:
+    receipt && isObject(receipt)
+      ? Object.keys(receipt)
+      : [],
+
+  firstHeldCoordinate:
+    receipt
+      ? firstString(
+          receipt.firstHeldCoordinate,
+          receipt.heldCoordinate
+        )
+      : null,
+
+  firstFailedCoordinate:
+    receipt
+      ? firstString(
+          receipt.firstFailedCoordinate,
+          receipt.failedCoordinate
+        )
+      : null,
+
+  recommendedOwner:
+    receipt
+      ? frozenClone(
+          receipt.recommendedOwner ||
+          receipt.owner ||
+          null
+        )
+      : null,
+
+  recommendedFile:
+    receipt
+      ? firstString(
+          receipt.recommendedFile,
+          receipt.nextFile
+        )
+      : null,
+
+  recommendedAction:
+    receipt
+      ? firstString(
+          receipt.recommendedAction,
+          receipt.nextAction
+        )
+      : null,
+
+  observedAt:
+    nowIso()
+};
+
+state.observation.surfaceTruth =
+  deepFreeze(output);
+
+return state.observation.surfaceTruth;
+
+}
+
+function observeLightweight() {
+var errors = [];
+
+state.drop.observation.status =
+  "OBSERVING";
+
+var targetLight =
+  inspectTargetFrameLight();
+
+var registry =
+  refreshRegistryState();
+
+var engine =
+  inspectEngineState();
+
+var surface =
+  inspectSurfaceTruth();
+
+if (targetLight.readError) {
+  errors.push({
+    source: "TARGET_LIGHT",
+    message: targetLight.readError,
+    capturedAt: nowIso()
+  });
+}
+
+state.observation.targetLight =
+  frozenClone(targetLight);
+
+state.observation.errors =
+  frozenClone(errors);
+
+state.observation.observedAt =
+  nowIso();
+
+state.drop.observation.status =
+  errors.length
+    ? "HELD"
+    : "READY";
+
+state.drop.observation.availableCount =
+  [
+    targetLight.framePresent,
+    registry.registryLoaded,
+    engine.engineLoaded,
+    surface.authorityPresent
+  ].filter(Boolean).length;
+
+state.drop.observation.heldCount =
+  4 -
+  state.drop.observation.availableCount;
+
+state.drop.observation.lastAction =
+  "Lightweight observation completed at " +
+  state.observation.observedAt;
+
+state.updatedAt =
+  nowIso();
+
+return frozenClone({
+  targetLight: targetLight,
+  registry: registry,
+  engine: engine,
+  surfaceTruth: surface,
+  errors: errors,
+  observedAt: state.observation.observedAt
+});
+
+}
+
+function buildAbsenceList(auditRecord) {
+var absence = [];
+
+state.participants.records.forEach(function inspectParticipant(record) {
+  if (
+    record.required &&
+    !record.resolved
+  ) {
+    absence.push({
+      type: "PARTICIPANT",
+      code: "REQUIRED_PARTICIPANT_UNRESOLVED",
+      role: record.role,
+      file: record.file,
+      status: record.status
+    });
+  }
+});
+
+if (
+  !state.observation.targetLight ||
+  !state.observation.targetLight.framePresent
+) {
+  absence.push({
+    type: "TARGET",
+    code: "TARGET_FRAME_NOT_OBSERVED",
+    route: TARGET_ROUTE
+  });
+}
+
+if (
+  state.observation.targetLight &&
+  !state.observation.targetLight.runtimeGlobalPresent
+) {
+  absence.push({
+    type: "RUNTIME",
+    code: "TARGET_RUNTIME_GLOBAL_NOT_OBSERVED",
+    acceptedGlobals:
+      TARGET_RUNTIME_GLOBALS.slice()
+  });
+}
+
+if (
+  !state.observation.surfaceTruth ||
+  !state.observation.surfaceTruth.authorityPresent
+) {
+  absence.push({
+    type: "SURFACE_TRUTH",
+    code: "SURFACE_TRUTH_AUTHORITY_UNRESOLVED",
+    file:
+      "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js"
+  });
+}
+
+if (!state.cycle.ledger) {
+  absence.push({
+    type: "CYCLE",
+    code: "NINE_CYCLE_NOT_EXECUTED"
+  });
+}
+
+if (
+  auditRecord.classification === "DIRECT_EXECUTION" &&
+  !state.direct.lastResult
+) {
+  absence.push({
+    type: "DIRECT",
+    code: "SELECTED_DIRECT_CHECK_NOT_EXECUTED"
+  });
+}
+
+return absence;
+
+}
+
+function buildDirectionList(absence, auditRecord) {
+var directions = [];
+
+absence.forEach(function mapAbsence(entry) {
+  if (
+    entry.code ===
+    "REQUIRED_PARTICIPANT_UNRESOLVED"
+  ) {
+    directions.push({
+      priority: "HIGH",
+      action: "Inspect participant",
+      participant: entry.role,
+      file: entry.file
+    });
+  }
+
+  if (
+    entry.code ===
+    "TARGET_FRAME_NOT_OBSERVED"
+  ) {
+    directions.push({
+      priority: "MEDIUM",
+      action: "Open the Target Window and inspect target access",
+      route: TARGET_ROUTE
+    });
+  }
+
+  if (
+    entry.code ===
+    "TARGET_RUNTIME_GLOBAL_NOT_OBSERVED"
+  ) {
+    directions.push({
+      priority: "HIGH",
+      action: "Inspect target runtime publication",
+      acceptedGlobals:
+        TARGET_RUNTIME_GLOBALS.slice()
+    });
+  }
+
+  if (
+    entry.code ===
+    "SURFACE_TRUTH_AUTHORITY_UNRESOLVED"
+  ) {
+    directions.push({
+      priority: "HIGH",
+      action: "Inspect the Surface Truth participant",
+      file: entry.file
+    });
+  }
+
+  if (
+    entry.code ===
+    "NINE_CYCLE_NOT_EXECUTED"
+  ) {
+    directions.push({
+      priority: "OPTIONAL",
+      action: "Run Nine-Cycle only when cycle evidence is required",
+      audit: "cycleExecution"
+    });
+  }
+
+  if (
+    entry.code ===
+    "SELECTED_DIRECT_CHECK_NOT_EXECUTED"
+  ) {
+    directions.push({
+      priority: "OPTIONAL",
+      action: "Run the selected direct check explicitly",
+      audit: auditRecord.id
+    });
+  }
+});
+
+if (!directions.length) {
+  directions.push({
+    priority: "LOW",
+    action: "Review the current report and select the next audit"
+  });
+}
+
+return directions;
+
+}
+
+function buildResult(auditRecord, absence) {
+var available =
+state.participants.availableCount;
+
+var total =
+  state.participants.records.length;
+
+if (auditRecord.id === "cycleExecution") {
+  return state.cycle.ledger
+    ? "The most recent nine-cycle execution produced a compatible diagnostic ledger."
+    : "The nine-cycle has not been executed during this session.";
+}
+
+if (auditRecord.id === "cycleLedger") {
+  return state.cycle.ledger
+    ? "A compatible nine-cycle ledger is available."
+    : "No compatible nine-cycle ledger is available.";
+}
+
+if (auditRecord.id === "targetRuntimeFull") {
+  return state.observation.targetFull
+    ? "A deliberate full target-runtime observation is available."
+    : "No deliberate full target-runtime observation has been captured.";
+}
+
+if (auditRecord.id === "deepArchive") {
+  return state.archive.deepArchive
+    ? "A deep observatory archive is available."
+    : "No deep observatory archive has been created.";
+}
+
+return (
+  "The Audralia diagnostic observatory is available. " +
+  String(available) +
+  " of " +
+  String(total) +
+  " declared participants are resolved. " +
+  String(absence.length) +
+  " absence record" +
+  (
+    absence.length === 1
+      ? " is"
+      : "s are"
+  ) +
+  " currently associated with this report."
+);
+
+}
+
+function buildEvidenceSnapshot(auditRecord) {
+return deepFreeze({
+audit:
+frozenClone(auditRecord),
+
+  controller: {
+    contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
+    version: VERSION,
+    file: FILE,
+    initialized: state.initialized,
+    bootedAt: state.bootedAt,
+    updatedAt: state.updatedAt
+  },
+
+  shell: {
+    htmlContract: HTML_CONTRACT,
+    cssContract: CSS_CONTRACT,
+    blueprint: BLUEPRINT,
+    prebuildRegistry: PREBUILD_REGISTRY,
+    route: DIAGNOSTIC_ROUTE,
+    targetRoute: TARGET_ROUTE
+  },
+
+  participants:
+    frozenClone(state.participants),
+
+  observation:
+    frozenClone(state.observation),
+
+  direct:
+    frozenClone(state.direct),
+
+  cycle:
+    frozenClone(state.cycle),
+
+  archive: {
+    reportCount:
+      state.archive.reports.length,
+
+    directResultCount:
+      state.archive.directResults.length,
+
+    cycleRunCount:
+      state.archive.cycleRuns.length,
+
+    errorCount:
+      state.archive.errors.length
+  },
+
+  noClaims:
+    NO_CLAIMS,
+
+  capturedAt:
+    nowIso()
+});
+
+}
+
+function buildReadInterpretation(
+auditRecord,
+evidence,
+absence,
+direction
+) {
+return deepFreeze({
+schema:
+READ_SCHEMA,
+
+  result:
+    buildResult(
+      auditRecord,
+      absence
+    ),
+
+  evidence: [
+    {
+      label: "Controller",
+      value:
+        CONTRACT
+    },
+    {
+      label: "Resolved participants",
+      value:
+        String(
+          state.participants.availableCount
+        ) +
+        " of " +
+        String(
+          state.participants.records.length
+        )
+    },
+    {
+      label: "Target frame",
+      value:
+        state.observation.targetLight &&
+        state.observation.targetLight.framePresent
+          ? "Present"
+          : "Not observed"
+    },
+    {
+      label: "Runtime global",
+      value:
+        state.observation.targetLight &&
+        state.observation.targetLight.runtimeGlobalName
+          ? state.observation.targetLight.runtimeGlobalName
+          : "Not observed"
+    },
+    {
+      label: "Cycle ledger",
+      value:
+        state.cycle.ledger
+          ? state.cycle.ledger.ledgerHash ||
+            "Available"
+          : "Not available"
+    },
+    {
+      label: "Evidence hash",
+      value:
+        hashObject(evidence)
+    }
+  ],
+
+  absence:
+    frozenClone(absence),
+
+  direction:
+    frozenClone(direction),
+
+  generatedAt:
+    nowIso(),
+
+  noClaims:
+    NO_CLAIMS
+});
+
+}
+
+function composeReadableReport(report) {
+var lines = [
+"AUDRALIA DROP WITH READ DIAGNOSTIC REPORT",
+"REPORT_ID=" + report.reportId,
+"SCHEMA=" + report.schema,
+"CLASSIFICATION=" + report.classification,
+"CATEGORY=" + report.category.label,
+"AUDIT=" + report.audit.label,
+"CREATED_AT=" + report.createdAt,
+"",
+"RESULT",
+report.read.result,
+"",
+"EVIDENCE"
+];
+
+report.read.evidence.forEach(function addEvidence(entry) {
+  lines.push(
+    "- " +
+    String(entry.label) +
+    ": " +
+    String(entry.value)
+  );
+});
+
+lines.push("");
+lines.push("ABSENCE");
+
+if (report.read.absence.length) {
+  report.read.absence.forEach(function addAbsence(entry) {
+    lines.push(
+      "- " +
+      String(entry.code || entry.type || "UNKNOWN")
+    );
+  });
+} else {
+  lines.push("- No absence records.");
+}
+
+lines.push("");
+lines.push("DIRECTION");
+
+report.read.direction.forEach(function addDirection(entry) {
+  lines.push(
+    "- " +
+    String(entry.action || "Review current evidence")
+  );
+});
+
+lines.push("");
+lines.push("BOUNDARY");
+lines.push(
+  "Diagnostic-only. Read-only. No production mutation, runtime restart, renderer mutation, repair, readiness claim, visual-pass claim, cycle-pass claim, F21 claim, or synthetic evidence."
+);
+
+return lines.join("\n");
+
+}
+
+function buildReport() {
+var categoryRecord =
+getActiveCategory();
+
+var auditRecord =
+  getActiveAudit();
+
+var evidence =
+  buildEvidenceSnapshot(
+    auditRecord
+  );
+
+var absence =
+  buildAbsenceList(
+    auditRecord
+  );
+
+var direction =
+  buildDirectionList(
+    absence,
+    auditRecord
+  );
+
+var read =
+  buildReadInterpretation(
+    auditRecord,
+    evidence,
+    absence,
+    direction
+  );
+
+var report = {
+  schema:
+    REPORT_SCHEMA,
+
+  reportId:
+    "AUDRALIA_DROP_READ_REPORT_" +
+    Date.now(),
+
+  classification:
+    auditRecord.classification,
+
+  category:
+    frozenClone(categoryRecord),
+
+  audit:
+    frozenClone(auditRecord),
+
+  createdAt:
+    nowIso(),
+
+  controllerContract:
+    CONTRACT,
+
+  htmlContract:
+    HTML_CONTRACT,
+
+  cssContract:
+    CSS_CONTRACT,
+
+  diagnosticRoute:
+    DIAGNOSTIC_ROUTE,
+
+  targetRoute:
+    TARGET_ROUTE,
+
+  read:
+    read,
+
+  evidence:
+    evidence,
+
+  directResult:
+    frozenClone(
+      state.direct.lastResult
+    ),
+
+  cycleLedger:
+    frozenClone(
+      state.cycle.ledger
+    ),
+
+  cycleReceipts:
+    frozenClone(
+      state.cycle.receipts
+    ),
+
+  noClaims:
+    NO_CLAIMS
+};
+
+report.reportHash =
+  hashObject(report);
+
+return deepFreeze(report);
+
+}
+
+function createReport() {
+/*
+* Synchronous nonblocking report law.
+*
+* No polling.
+* No waiting.
+* No conductor call.
+* No station call.
+* No full target receipt call.
+*/
+var report =
+buildReport();
+
+state.report.current =
+  report;
+
+state.report.readableText =
+  composeReadableReport(
+    report
+  );
+
+state.report.packetText =
+  safeJson({
+    schema: report.schema,
+    reportId: report.reportId,
+    classification: report.classification,
+    category: report.category,
+    audit: report.audit,
+    createdAt: report.createdAt,
+    read: report.read,
+    reportHash: report.reportHash
+  });
+
+state.report.rawText =
+  safeJson(report);
+
+state.report.evidence =
+  frozenClone(
+    report.read.evidence
+  );
+
+state.report.sessionReports.push(
+  report
+);
+
+state.drop.report.status =
+  "READY";
+
+state.drop.report.availableCount =
+  state.report.sessionReports.length;
+
+state.drop.report.heldCount =
+  0;
+
+state.drop.report.lastAction =
+  "Report created at " +
+  report.createdAt;
+
+state.updatedAt =
+  nowIso();
+
+publishDiagnosticOutputs();
+renderWorkbench();
+
+toast(
+  "Report created."
+);
+
+return frozenClone(report);
+
+}
+
 function targetRuntimeAdmissionState(snapshot) {
+var light =
+snapshot && snapshot.light
+? snapshot.light
+: snapshot || {};
+
 var status =
-snapshot &&
-isNonemptyObject(
-snapshot.targetRuntimeStatus
-)
-? snapshot.targetRuntimeStatus
-: {};
+  light &&
+  isNonemptyObject(
+    light.targetRuntimeStatus
+  )
+    ? light.targetRuntimeStatus
+    : {};
 
 var detail =
   status &&
@@ -1581,36 +3467,7 @@ var fallbackVisible =
   firstFrameDrawn === true &&
   visiblePixelObserved === true;
 
-var surfaceTruthCurrentlyAdmissible =
-  primaryVisible ||
-  fallbackVisible;
-
-return {
-  framePresent:
-    snapshot
-      ? snapshot.framePresent === true
-      : false,
-
-  sameOriginAccessible:
-    snapshot
-      ? snapshot.sameOriginAccessible === true
-      : false,
-
-  documentLoaded:
-    snapshot
-      ? snapshot.documentLoaded === true
-      : false,
-
-  runtimeGlobalPresent:
-    snapshot
-      ? snapshot.runtimeGlobalPresent === true
-      : false,
-
-  runtimeEvidenceAvailable:
-    snapshot
-      ? snapshot.runtimeEvidenceAvailable === true
-      : false,
-
+return deepFreeze({
   mounted:
     mounted,
 
@@ -1636,220 +3493,24 @@ return {
     fallbackVisible,
 
   surfaceTruthCurrentlyAdmissible:
-    surfaceTruthCurrentlyAdmissible,
+    Boolean(
+      primaryVisible ||
+      fallbackVisible
+    ),
 
   controllerAdmissionBoundarySatisfied:
     Boolean(
-      snapshot &&
-      snapshot.framePresent === true &&
-      snapshot.sameOriginAccessible === true &&
-      snapshot.documentLoaded === true &&
-      snapshot.runtimeGlobalPresent === true &&
-      snapshot.runtimeEvidenceAvailable === true &&
-      surfaceTruthCurrentlyAdmissible === true
+      light.framePresent &&
+      light.sameOriginAccessible &&
+      light.documentLoaded &&
+      light.runtimeGlobalPresent &&
+      light.runtimeEvidenceAvailable &&
+      (
+        primaryVisible ||
+        fallbackVisible
+      )
     )
-};
-
-}
-
-function buildPreflightProgress(
-attemptNumber,
-elapsedMs,
-snapshot,
-admission
-) {
-return {
-schema:
-"AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS_v1",
-
-  cycleId:
-    state.cycleId,
-
-  phase:
-    "WAITING_FOR_F8_SURFACE_TRUTH",
-
-  attempt:
-    attemptNumber,
-
-  elapsedMs:
-    elapsedMs,
-
-  timeoutMs:
-    TARGET_RUNTIME_WAIT_TIMEOUT_MS,
-
-  framePresent:
-    snapshot.framePresent,
-
-  sameOriginAccessible:
-    snapshot.sameOriginAccessible,
-
-  documentLoaded:
-    snapshot.documentLoaded,
-
-  runtimeGlobalPresent:
-    snapshot.runtimeGlobalPresent,
-
-  runtimeGlobalName:
-    snapshot.runtimeGlobalName,
-
-  runtimeEvidenceAvailable:
-    snapshot.runtimeEvidenceAvailable,
-
-  mounted:
-    admission.mounted,
-
-  stageRectNonzero:
-    admission.stageRectNonzero,
-
-  geometryReady:
-    admission.geometryReady,
-
-  firstFrameDrawn:
-    admission.firstFrameDrawn,
-
-  visiblePixelObserved:
-    admission.visiblePixelObserved,
-
-  fallbackActive:
-    admission.fallbackActive,
-
-  surfaceTruthCurrentlyAdmissible:
-    admission.surfaceTruthCurrentlyAdmissible,
-
-  generatedAt:
-    nowIso()
-};
-
-}
-
-function renderPreflightProgress(progress) {
-var button =
-byId("runDiagnostic");
-
-if (!progress) {
-  return;
-}
-
-if (button) {
-  button.textContent =
-    "Waiting for F8 · " +
-    String(progress.elapsedMs) +
-    " ms";
-}
-
-setText(
-  "overallStatus",
-  "Waiting for target surface truth"
-);
-
-setText(
-  "overallStatusDetail",
-  "Attempt " +
-    String(progress.attempt) +
-    " · runtime global " +
-    (
-      progress.runtimeGlobalPresent
-        ? "present"
-        : "absent"
-    ) +
-    " · first frame " +
-    (
-      progress.firstFrameDrawn === true
-        ? "observed"
-        : "pending"
-    ) +
-    " · visible pixel " +
-    (
-      progress.visiblePixelObserved === true
-        ? "observed"
-        : "pending"
-    )
-);
-
-root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS =
-  frozenClone(progress);
-
-}
-
-function finalizePreflight(
-status,
-admitted,
-timedOut,
-reason,
-startedAt,
-attempts,
-lastLightSnapshot,
-lastAdmission
-) {
-var fullSnapshot =
-inspectTargetFrameFull();
-
-var elapsedMs =
-  Date.now() - startedAt;
-
-var receipt = {
-  schema:
-    "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v2",
-
-  contract:
-    CONTRACT,
-
-  cycleId:
-    state.cycleId,
-
-  status:
-    status,
-
-  admitted:
-    admitted,
-
-  timedOut:
-    timedOut,
-
-  reason:
-    reason,
-
-  admissionRequirement:
-    "FRAME_ACCESSIBLE_DOCUMENT_LOADED_RUNTIME_GLOBAL_NONEMPTY_EVIDENCE_AND_F8_SURFACE_TRUTH",
-
-  pollIntervalMs:
-    TARGET_RUNTIME_WAIT_INTERVAL_MS,
-
-  timeoutMs:
-    TARGET_RUNTIME_WAIT_TIMEOUT_MS,
-
-  elapsedMs:
-    elapsedMs,
-
-  attemptCount:
-    attempts.length,
-
-  finalLightSnapshot:
-    frozenClone(
-      lastLightSnapshot
-    ),
-
-  finalFullSnapshot:
-    fullSnapshot,
-
-  admission:
-    frozenClone(
-      lastAdmission
-    ),
-
-  attempts:
-    frozenClone(
-      attempts
-    ),
-
-  generatedAt:
-    nowIso()
-};
-
-receipt.preflightHash =
-  hashObject(receipt);
-
-return deepFreeze(receipt);
+});
 
 }
 
@@ -1861,65 +3522,52 @@ var attempts =
   [];
 
 function sample() {
-  var lightSnapshot;
-  var admission;
-  var elapsedMs;
-  var progress;
+  var light =
+    inspectTargetFrameLight();
 
-  try {
-    lightSnapshot =
-      inspectTargetFrameLight();
-
-    admission =
-      targetRuntimeAdmissionState(
-        lightSnapshot
-      );
-  } catch (error) {
-    lightSnapshot = {
-      framePresent: false,
-      sameOriginAccessible: false,
-      documentLoaded: false,
-      runtimeGlobalPresent: false,
-      runtimeGlobalName: null,
-      runtimeEvidenceAvailable: false,
-      readError:
-        error && error.message
-          ? error.message
-          : "PREFLIGHT_SAMPLE_FAILED",
-      capturedAt:
-        nowIso()
-    };
-
-    admission =
-      targetRuntimeAdmissionState(
-        lightSnapshot
-      );
-  }
-
-  elapsedMs =
-    Date.now() - startedAt;
-
-  progress =
-    buildPreflightProgress(
-      attempts.length + 1,
-      elapsedMs,
-      lightSnapshot,
-      admission
+  var admission =
+    targetRuntimeAdmissionState(
+      light
     );
 
-  state.targetPreflightProgress =
+  var elapsedMs =
+    Date.now() - startedAt;
+
+  var progress = {
+    schema:
+      "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS_v1",
+
+    cycleId:
+      state.cycle.cycleId,
+
+    attempt:
+      attempts.length + 1,
+
+    elapsedMs:
+      elapsedMs,
+
+    timeoutMs:
+      TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+
+    light:
+      frozenClone(light),
+
+    admission:
+      frozenClone(admission),
+
+    generatedAt:
+      nowIso()
+  };
+
+  attempts.push(progress);
+
+  state.cycle.preflightProgress =
     frozenClone(progress);
 
-  attempts.push(
-    clone(progress)
-  );
-
-  renderPreflightProgress(
-    progress
-  );
+  renderExecutionState();
 
   if (
-    admission.controllerAdmissionBoundarySatisfied === true
+    admission.controllerAdmissionBoundarySatisfied
   ) {
     return Promise.resolve(
       finalizePreflight(
@@ -1929,7 +3577,7 @@ function sample() {
         "F8_SURFACE_TRUTH_BOUNDARY_SATISFIED",
         startedAt,
         attempts,
-        lightSnapshot,
+        light,
         admission
       )
     );
@@ -1947,7 +3595,7 @@ function sample() {
         "F8_SURFACE_TRUTH_NOT_AVAILABLE_WITHIN_BOUND",
         startedAt,
         attempts,
-        lightSnapshot,
+        light,
         admission
       )
     );
@@ -1962,1289 +3610,88 @@ return sample();
 
 }
 
-function refreshRegistryState() {
-var registry =
-getRegistry();
-
-var snapshot;
-var receipt;
-var authorityRecords;
-var engineRecords;
-var selectedEngine;
-var inspection;
-
-if (!registry) {
-  state.registrySnapshot =
-    null;
-
-  state.registryReceipt =
-    null;
-
-  state.authorityRecords =
-    [];
-
-  state.engineRecords =
-    [];
-
-  state.selectedEngine =
-    null;
-
-  return;
-}
-
-callSafely(
-  registry,
-  "refresh",
-  [],
-  null
-);
-
-snapshot =
-  callSafely(
-    registry,
-    "getSnapshot",
-    [],
-    null
-  );
-
-receipt =
-  callSafely(
-    registry,
-    "getRegistryReceipt",
-    [],
-    null
-  ) ||
-  callSafely(
-    registry,
-    "getReceipt",
-    [],
-    null
-  ) ||
-  root.DGB_ENGINE_REGISTRY_RECEIPT ||
-  root.DGB_ENGINE_SUBJECTS_RECEIPT ||
-  null;
-
-authorityRecords =
-  callSafely(
-    registry,
-    "listAuthorities",
-    [],
-    null
-  );
-
-engineRecords =
-  callSafely(
-    registry,
-    "listEngines",
-    [
-      {
-        includeReserved: true,
-        selectableOnly: false
-      }
-    ],
-    null
-  );
-
-selectedEngine =
-  callSafely(
-    registry,
-    "getDefaultEngine",
-    [],
-    null
-  );
-
-if (
-  !snapshot &&
-  isFunction(registry.inspect)
+function finalizePreflight(
+status,
+admitted,
+timedOut,
+reason,
+startedAt,
+attempts,
+lastLightSnapshot,
+lastAdmission
 ) {
-  inspection =
-    callSafely(
-      registry,
-      "inspect",
-      [],
-      null
-    );
+var fullSnapshot =
+inspectTargetFrameFull();
 
-  if (inspection) {
-    snapshot =
-      inspection;
-
-    receipt =
-      receipt ||
-      inspection.receipt ||
-      null;
-
-    selectedEngine =
-      selectedEngine ||
-      inspection.selectedEngine ||
-      inspection.coreEngine ||
-      (
-        inspection.receipt
-          ? inspection.receipt.coreEngine
-          : null
-      );
-  }
-}
-
-if (
-  !authorityRecords &&
-  registry.authority
-) {
-  authorityRecords =
-    [registry.authority];
-}
-
-if (
-  !authorityRecords &&
-  snapshot &&
-  snapshot.authority
-) {
-  authorityRecords =
-    [snapshot.authority];
-}
-
-if (
-  !engineRecords &&
-  selectedEngine
-) {
-  engineRecords =
-    [selectedEngine];
-}
-
-state.registrySnapshot =
-  frozenClone(snapshot);
-
-state.registryReceipt =
-  frozenClone(receipt);
-
-state.authorityRecords =
-  frozenClone(
-    Array.isArray(authorityRecords)
-      ? authorityRecords
-      : []
-  );
-
-state.engineRecords =
-  frozenClone(
-    Array.isArray(engineRecords)
-      ? engineRecords
-      : []
-  );
-
-state.selectedEngine =
-  frozenClone(
-    selectedEngine ||
-    deriveSelectedEngineFromReceipt(
-      receipt
-    )
-  );
-
-}
-
-function deriveSelectedEngineFromReceipt(receipt) {
-if (
-!receipt ||
-!receipt.coreEngine
-) {
-return null;
-}
-
-return {
-  engineId:
-    receipt.coreEngine.engineId ||
-    DEFAULT_ENGINE_ID,
-
-  engineName:
-    "DGB Interactive Runtime Engine Core",
-
-  role:
-    "RUNTIME_ENGINE",
-
-  file:
-    DEFAULT_ENGINE_FILE,
-
-  contract:
-    CORE_ENGINE_CONTRACT,
-
-  version:
-    "1.0.0",
-
-  governingContract:
-    GOVERNING_ENGINE_CONTRACT,
-
-  governingContractFile:
-    DEFAULT_GOVERNING_ENGINE_FILE,
-
-  modelSchema:
-    "DGB_MODEL_PACKAGE_v1",
-
-  loaded:
-    receipt.coreEngine.loaded !== false,
-
-  identityMatched:
-    receipt.coreEngine.identityMatched !== false,
-
-  governingContractMatched:
-    receipt.coreEngine.governingContractMatched !== false,
-
-  selectable:
-    receipt.coreEngine.selectable !== false,
-
-  status:
-    receipt.coreEngine.status ||
-    "AVAILABLE",
-
-  f13InheritedConditionally:
-    receipt.coreEngine.f13InheritedConditionally === true,
-
-  f21Claimed:
-    false
-};
-
-}
-
-function inspectEngineState() {
-var engine =
-getEngine();
-
-var instanceIds =
-  [];
-
-var listed;
-var instanceId;
-
-if (
-  engine &&
-  isFunction(engine.listInstances)
-) {
-  listed =
-    callSafely(
-      engine,
-      "listInstances",
-      [
-        {
-          includeTombstones: false
-        }
-      ],
-      []
-    );
-
-  if (Array.isArray(listed)) {
-    instanceIds =
-      listed
-        .map(function mapInstance(entry) {
-          if (typeof entry === "string") {
-            return entry;
-          }
-
-          if (
-            entry &&
-            typeof entry.instanceId === "string"
-          ) {
-            return entry.instanceId;
-          }
-
-          if (
-            entry &&
-            entry.identity &&
-            typeof entry.identity.instanceId === "string"
-          ) {
-            return entry.identity.instanceId;
-          }
-
-          return null;
-        })
-        .filter(Boolean);
-  }
-}
-
-instanceId =
-  instanceIds.length
-    ? instanceIds[0]
-    : null;
-
-state.engineInspection =
-  frozenClone(
-    engine &&
-    isFunction(engine.inspect)
-      ? callSafely(
-          engine,
-          "inspect",
-          [
-            {
-              includeInstances: true,
-              includeTombstones: false,
-              includeAdapters: true,
-              includeDiagnostics: false
-            }
-          ],
-          null
-        )
-      : null
-  );
-
-state.engineOps =
-  frozenClone(
-    engine &&
-    instanceId &&
-    isFunction(engine.getOps)
-      ? callSafely(
-          engine,
-          "getOps",
-          [instanceId],
-          null
-        )
-      : null
-  );
-
-state.engineReceipt =
-  frozenClone(
-    engine
-      ? (
-          isFunction(engine.getRuntimeReceipt)
-            ? callSafely(
-                engine,
-                "getRuntimeReceipt",
-                [],
-                null
-              )
-            : isFunction(engine.getReceipt)
-              ? callSafely(
-                  engine,
-                  "getReceipt",
-                  [],
-                  null
-                )
-              : null
-        )
-      : null
-  );
-
-}
-
-function readObserved(source, key) {
-var value;
-
-if (
-  !source ||
-  !Object.prototype.hasOwnProperty.call(
-    Object(source),
-    key
-  )
-) {
-  return null;
-}
-
-value =
-  source[key];
-
-return value === null ||
-  value === undefined
-  ? null
-  : clone(value);
-
-}
-
-function getSelectedEngineFile() {
-return firstString(
-state.selectedEngine &&
-state.selectedEngine.file,
-
-  state.engineReceipt &&
-    state.engineReceipt.file,
-
-  state.engineInspection &&
-    state.engineInspection.file,
-
-  DEFAULT_ENGINE_FILE
-);
-
-}
-
-function getSelectedEngineContract() {
-return firstString(
-state.selectedEngine &&
-state.selectedEngine.contract,
-
-  state.engineReceipt &&
-    state.engineReceipt.contract,
-
-  state.engineInspection &&
-    state.engineInspection.contract,
-
-  CORE_ENGINE_CONTRACT
-);
-
-}
-
-function getSelectedEngineVersion() {
-return firstString(
-state.selectedEngine &&
-state.selectedEngine.version,
-
-  state.engineReceipt &&
-    state.engineReceipt.version,
-
-  state.engineInspection &&
-    state.engineInspection.version,
-
-  "1.0.0"
-);
-
-}
-
-function buildRuntimeEvidence() {
-var ops =
-state.engineOps;
-
-var inspection =
-  state.engineInspection;
-
-var observed =
-  ops &&
-  isObject(ops.observed)
-    ? ops.observed
-    : {};
-
-var lifecycle =
-  inspection &&
-  isObject(inspection.lifecycle)
-    ? inspection.lifecycle
-    : null;
-
-var renderer =
-  inspection &&
-  isObject(inspection.renderer)
-    ? inspection.renderer
-    : null;
-
-var fallback =
-  inspection &&
-  isObject(inspection.fallback)
-    ? inspection.fallback
-    : null;
-
-return deepFreeze({
-  classification:
-    ops || inspection
-      ? "REGISTERED_EXTERNAL_PROVIDER"
-      : "UNKNOWN",
-
-  source:
-    ops
-      ? "DGB_ENGINE.getOps"
-      : inspection
-        ? "DGB_ENGINE.inspect"
-        : "UNAVAILABLE",
-
-  engineId:
-    state.selectedEngine &&
-    state.selectedEngine.engineId
-      ? state.selectedEngine.engineId
-      : DEFAULT_ENGINE_ID,
-
-  engineLoaded:
-    Boolean(
-      state.selectedEngine
-        ? state.selectedEngine.loaded !== false
-        : getEngine()
-    ),
-
-  contractMatched:
-    Boolean(
-      state.selectedEngine
-        ? state.selectedEngine.governingContractMatched !== false
-        : false
-    ),
-
-  file:
-    getSelectedEngineFile(),
-
-  contract:
-    getSelectedEngineContract(),
-
-  version:
-    getSelectedEngineVersion(),
-
-  backend:
-    ops &&
-    typeof ops.backend === "string"
-      ? ops.backend
-      : renderer &&
-        typeof renderer.selectedBackend === "string"
-        ? renderer.selectedBackend
-        : "NONE",
-
-  state:
-    ops &&
-    typeof ops.state === "string"
-      ? ops.state
-      : lifecycle &&
-        typeof lifecycle.progressState === "string"
-        ? lifecycle.progressState
-        : "UNKNOWN",
-
-  lifecycle:
-    lifecycle
-      ? frozenClone(lifecycle)
-      : null,
-
-  fileLoaded:
-    readObserved(
-      observed,
-      "fileLoaded"
-    ),
-
-  modelValidated:
-    readObserved(
-      observed,
-      "modelValidated"
-    ),
-
-  instanceCreated:
-    readObserved(
-      observed,
-      "instanceCreated"
-    ),
-
-  mountPresent:
-    readObserved(
-      observed,
-      "mountPresent"
-    ),
-
-  surfaceNonzero:
-    readObserved(
-      observed,
-      "surfaceNonzero"
-    ),
-
-  backendInitialized:
-    readObserved(
-      observed,
-      "backendInitialized"
-    ),
-
-  resourcesUploaded:
-    readObserved(
-      observed,
-      "resourcesUploaded"
-    ),
-
-  firstFrameSubmitted:
-    readObserved(
-      observed,
-      "firstFrameSubmitted"
-    ),
-
-  firstFramePresented:
-    readObserved(
-      observed,
-      "firstFramePresented"
-    ),
-
-  visiblePixelObserved:
-    readObserved(
-      observed,
-      "visiblePixelObserved"
-    ),
-
-  interactionObserved:
-    readObserved(
-      observed,
-      "interactionObserved"
-    ),
-
-  fallbackAvailable:
-    readObserved(
-      observed,
-      "fallbackAvailable"
-    ),
-
-  contextRecoveryAvailable:
-    readObserved(
-      observed,
-      "contextRecoveryAvailable"
-    ),
-
-  noBlockingError:
-    readObserved(
-      observed,
-      "noBlockingError"
-    ),
-
-  primaryVisibility:
-    renderer
-      ? readObserved(
-          renderer,
-          "visiblePixelObserved"
-        )
-      : null,
-
-  fallbackVisibility:
-    fallback
-      ? readObserved(
-          fallback,
-          "visibleOutputObserved"
-        )
-      : null,
-
-  evidenceAvailable:
-    Boolean(
-      ops ||
-      inspection
-    ),
-
-  evidenceUnavailableReason:
-    ops ||
-    inspection
-      ? null
-      : "NO_LIVE_ENGINE_INSTANCE_EVIDENCE"
-});
-
-}
-
-function buildRegistryEvidence() {
-var snapshot =
-state.registrySnapshot;
-
-var registry =
-  getRegistry();
-
-var receipt =
-  state.registryReceipt;
-
-return deepFreeze({
-  registryLoaded:
-    Boolean(registry),
-
-  registryContract:
-    firstString(
-      registry && registry.CONTRACT,
-      registry && registry.contract,
-      snapshot && snapshot.registryContract,
-      receipt && receipt.contract,
-      REGISTRY_CONTRACT
-    ),
-
-  registryContractMatched:
-    Boolean(
-      registry &&
-      (
-        registry.CONTRACT === REGISTRY_CONTRACT ||
-        registry.contract === REGISTRY_CONTRACT
-      )
-    ) ||
-    Boolean(
-      snapshot &&
-      snapshot.registryContractMatched === true
-    ) ||
-    Boolean(
-      receipt &&
-      receipt.contract === REGISTRY_CONTRACT
-    ),
-
-  governingAuthorityCount:
-    snapshot
-      ? Number(
-          snapshot.authorityCount ||
-          snapshot.governingAuthorityCount ||
-          0
-        )
-      : state.authorityRecords.length,
-
-  assignedEngineCount:
-    snapshot
-      ? Number(
-          snapshot.assignedEngineCount ||
-          0
-        )
-      : state.engineRecords.filter(function assigned(record) {
-          return Boolean(
-            record &&
-            !record.reserved
-          );
-        }).length,
-
-  selectableEngineCount:
-    snapshot
-      ? Number(
-          snapshot.selectableEngineCount ||
-          0
-        )
-      : state.engineRecords.filter(function selectable(record) {
-          return Boolean(
-            record &&
-            record.selectable
-          );
-        }).length,
-
-  reservedEngineCount:
-    snapshot
-      ? Number(
-          snapshot.reservedEngineCount ||
-          0
-        )
-      : state.engineRecords.filter(function reserved(record) {
-          return Boolean(
-            record &&
-            record.reserved
-          );
-        }).length,
-
-  authority:
-    state.authorityRecords.length
-      ? frozenClone(
-          state.authorityRecords[0]
-        )
-      : null,
-
-  selectedEngine:
-    state.selectedEngine
-      ? frozenClone(
-          state.selectedEngine
-        )
-      : null,
-
-  receipt:
-    receipt
-      ? frozenClone(receipt)
-      : null
-});
-
-}
-
-function buildSubjectEvidence() {
-return deepFreeze({
-subjectId:
-"AUDRALIA_DIAGNOSTIC_READER_ROUTE",
-
-  subjectType:
-    "THREE_D_DIAGNOSTIC_ROUTE",
-
-  modelSchema:
-    "DGB_MODEL_PACKAGE_v1",
-
-  contract:
-    CONTRACT,
-
-  previousContract:
-    PREVIOUS_CONTRACT,
-
-  version:
-    VERSION,
-
-  file:
-    FILE,
-
-  rootFile:
-    DIAGNOSTIC_ROOT_FILE,
-
-  route:
-    DIAGNOSTIC_ROUTE,
-
-  targetRoute:
-    TARGET_ROUTE,
-
-  filePathClass:
-    normalizePathClass(FILE),
-
-  rootFilePathClass:
-    normalizePathClass(
-      DIAGNOSTIC_ROOT_FILE
-    ),
-
-  routePathClass:
-    normalizePathClass(
-      DIAGNOSTIC_ROUTE
-    ),
-
-  targetRoutePathClass:
-    normalizePathClass(
-      TARGET_ROUTE
-    )
-});
-
-}
-
-function buildEngineEvidence() {
-return deepFreeze({
-engineId:
-state.selectedEngine &&
-state.selectedEngine.engineId
-? state.selectedEngine.engineId
-: DEFAULT_ENGINE_ID,
-
-  engineName:
-    state.selectedEngine &&
-    state.selectedEngine.engineName
-      ? state.selectedEngine.engineName
-      : "DGB Interactive Runtime Engine Core",
-
-  role:
-    state.selectedEngine &&
-    state.selectedEngine.role
-      ? state.selectedEngine.role
-      : "RUNTIME_ENGINE",
-
-  file:
-    getSelectedEngineFile(),
-
-  contract:
-    getSelectedEngineContract(),
-
-  version:
-    getSelectedEngineVersion(),
-
-  governingContract:
-    firstString(
-      state.selectedEngine &&
-        state.selectedEngine.governingContract,
-
-      state.engineReceipt &&
-        state.engineReceipt.governingContract,
-
-      GOVERNING_ENGINE_CONTRACT
-    ),
-
-  governingContractFile:
-    firstString(
-      state.selectedEngine &&
-        state.selectedEngine.governingContractFile,
-
-      DEFAULT_GOVERNING_ENGINE_FILE
-    ),
-
-  coreContract:
-    CORE_ENGINE_CONTRACT,
-
-  registryContract:
-    REGISTRY_CONTRACT,
-
-  defaultEngineId:
-    DEFAULT_ENGINE_ID,
-
-  modelSchema:
-    firstString(
-      state.selectedEngine &&
-        state.selectedEngine.modelSchema,
-
-      state.engineReceipt &&
-        state.engineReceipt.modelSchema,
-
-      "DGB_MODEL_PACKAGE_v1"
-    ),
-
-  filePathClass:
-    normalizePathClass(
-      getSelectedEngineFile()
-    ),
-
-  loaded:
-    state.selectedEngine
-      ? state.selectedEngine.loaded !== false
-      : Boolean(getEngine()),
-
-  identityMatched:
-    state.selectedEngine
-      ? state.selectedEngine.identityMatched !== false
-      : false,
-
-  governingContractMatched:
-    state.selectedEngine
-      ? state.selectedEngine.governingContractMatched !== false
-      : false,
-
-  selectable:
-    state.selectedEngine
-      ? state.selectedEngine.selectable !== false
-      : false,
-
-  status:
-    firstString(
-      state.selectedEngine &&
-        state.selectedEngine.status,
-
-      "AVAILABLE"
-    ),
-
-  registry:
-    buildRegistryEvidence(),
-
-  runtime:
-    buildRuntimeEvidence(),
-
-  runtimeReceipt:
-    state.engineReceipt
-      ? frozenClone(
-          state.engineReceipt
-        )
-      : null,
-
-  inspection:
-    state.engineInspection
-      ? frozenClone(
-          state.engineInspection
-        )
-      : null
-});
-
-}
-
-function getFinalTargetSnapshot() {
-if (
-state.targetPreflight &&
-state.targetPreflight.finalFullSnapshot
-) {
-return frozenClone(
-state.targetPreflight.finalFullSnapshot
-);
-}
-
-return inspectTargetFrameFull();
-
-}
-
-function buildConstructEvidence(
-targetEvidence,
-engineEvidence,
-subjectEvidence
-) {
-return deepFreeze({
-constructId:
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D",
-
-  id:
-    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D",
-
-  constructType:
-    "DIAGNOSTIC_ROUTE_READER",
-
-  contract:
-    HTML_CONTRACT,
-
-  controllerContract:
-    CONTRACT,
-
-  previousControllerContract:
-    PREVIOUS_CONTRACT,
-
-  cssContract:
-    CSS_CONTRACT,
-
-  version:
-    "2.0.0",
-
-  controllerVersion:
-    VERSION,
-
-  route:
-    DIAGNOSTIC_ROUTE,
-
-  rootFile:
-    DIAGNOSTIC_ROOT_FILE,
-
-  file:
-    DIAGNOSTIC_ROOT_FILE,
-
-  controllerFile:
-    FILE,
-
-  routePathClass:
-    normalizePathClass(
-      DIAGNOSTIC_ROUTE
-    ),
-
-  rootFilePathClass:
-    normalizePathClass(
-      DIAGNOSTIC_ROOT_FILE
-    ),
-
-  controllerFilePathClass:
-    normalizePathClass(FILE),
-
-  targetRoute:
-    TARGET_ROUTE,
-
-  targetRoutePathClass:
-    normalizePathClass(
-      TARGET_ROUTE
-    ),
-
-  subject:
-    subjectEvidence,
-
-  engine:
-    engineEvidence,
-
-  target:
-    targetEvidence,
-
-  targetPreflight:
-    state.targetPreflight
-      ? frozenClone(
-          state.targetPreflight
-        )
-      : null,
-
-  dependencies: [
-    "/assets/audralia/audralia.diagnostic.north.conductor.js",
-    "/assets/audralia/audralia.diagnostic.probe.north.js",
-    "/assets/audralia/audralia.diagnostic.probe.east.js",
-    "/assets/audralia/audralia.diagnostic.east.js",
-    "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
-    "/assets/audralia/audralia.diagnostic.probe.west.js",
-    "/assets/audralia/audralia.diagnostic.west.js",
-    "/assets/audralia/audralia.diagnostic.probe.south.js",
-    "/assets/audralia/audralia.diagnostic.south.js",
-    "/assets/audralia/audralia.diagnostic.rail.js"
-  ],
-
-  evidencePolicy: {
-    positiveRuntimeEvidenceMayBeInferred: false,
-    missingEvidenceDisposition: "HOLD",
-    diagnosticEvidenceGoverning: false,
-    declaredStructureEqualsRuntimeProof: false,
-    iframePresenceEqualsPresentationProof: false,
-    runtimeGlobalPresenceEqualsSurfaceTruth: false,
-    preflightTimeoutCreatesPositiveEvidence: false,
-    fullReceiptPolledRepeatedly: false
-  },
-
-  noClaims:
-    NO_CLAIMS
-});
-
-}
-
-function buildConductorRequest() {
-var subjectEvidence =
-buildSubjectEvidence();
-
-var engineEvidence =
-  buildEngineEvidence();
-
-var targetEvidence =
-  getFinalTargetSnapshot();
-
-var constructEvidence =
-  buildConstructEvidence(
-    targetEvidence,
-    engineEvidence,
-    subjectEvidence
-  );
-
-return deepFreeze({
+var receipt = {
   schema:
-    CONDUCTOR_REQUEST_SCHEMA,
+    "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v2",
+
+  contract:
+    CONTRACT,
 
   cycleId:
-    state.cycleId,
+    state.cycle.cycleId,
 
-  mode:
-    "AUDIT",
+  status:
+    status,
 
-  targetRoute:
-    TARGET_ROUTE,
+  admitted:
+    admitted,
 
-  diagnosticRoute:
-    DIAGNOSTIC_ROUTE,
+  timedOut:
+    timedOut,
 
-  subject:
-    subjectEvidence,
+  reason:
+    reason,
 
-  engine:
-    engineEvidence,
+  pollIntervalMs:
+    TARGET_RUNTIME_WAIT_INTERVAL_MS,
 
-  construct:
-    constructEvidence,
+  timeoutMs:
+    TARGET_RUNTIME_WAIT_TIMEOUT_MS,
 
-  target:
-    targetEvidence,
+  elapsedMs:
+    Date.now() - startedAt,
 
-  targetPreflight:
-    state.targetPreflight
-      ? frozenClone(
-          state.targetPreflight
-        )
-      : null,
+  attemptCount:
+    attempts.length,
 
-  engineRegistry:
-    buildRegistryEvidence(),
+  finalLightSnapshot:
+    frozenClone(
+      lastLightSnapshot
+    ),
 
-  engineRuntime:
-    buildRuntimeEvidence(),
+  finalFullSnapshot:
+    frozenClone(
+      fullSnapshot
+    ),
 
-  requestedStartPosition:
-    1,
+  admission:
+    frozenClone(
+      lastAdmission
+    ),
 
-  priorLedgerHash:
-    state.ledger &&
-    state.ledger.ledgerHash
-      ? state.ledger.ledgerHash
-      : null,
+  attempts:
+    frozenClone(
+      attempts
+    ),
 
   generatedAt:
     nowIso(),
 
-  generatedAtEnabled:
-    true,
-
-  extensions: {
-    routeControllerHash:
-      hashObject({
-        contract: CONTRACT,
-        version: VERSION,
-        file: FILE
-      }),
-
-    targetRuntimePreflight:
-      state.targetPreflight
-        ? frozenClone(
-            state.targetPreflight
-          )
-        : null,
-
-    eastEvidenceTransport: {
-      subjectFileDeclared:
-        subjectEvidence.file,
-
-      engineFileDeclared:
-        engineEvidence.file,
-
-      constructRootFileDeclared:
-        constructEvidence.rootFile,
-
-      constructRouteDeclared:
-        constructEvidence.route,
-
-      targetRouteDeclared:
-        TARGET_ROUTE
-    }
-  },
-
   noClaims:
     NO_CLAIMS
-});
+};
+
+receipt.preflightHash =
+  hashObject(receipt);
+
+return deepFreeze(receipt);
 
 }
 
 function resolveStationApi(definition) {
-var found =
-readFirst(
-definition.globalPaths || []
-);
-
-var namespace;
-var namespaceKeys;
-var namespaceCandidate;
-var rootKeys;
-var key;
-var candidate;
-var index;
-
-if (found.value) {
-  return {
-    api: found.value,
-    globalPath: found.path,
-    source: "DECLARED_GLOBAL"
-  };
-}
-
-namespace =
-  readPath("AUDRALIA");
-
-if (
-  namespace &&
-  typeof namespace === "object"
-) {
-  namespaceKeys =
-    Object.keys(namespace);
-
-  for (
-    index = 0;
-    index < namespaceKeys.length;
-    index += 1
-  ) {
-    namespaceCandidate =
-      namespace[
-        namespaceKeys[index]
-      ];
-
-    if (
-      namespaceCandidate &&
-      namespaceCandidate.STATION_ID === definition.stationId &&
-      Number(namespaceCandidate.CYCLE_POSITION) === definition.position
-    ) {
-      return {
-        api:
-          namespaceCandidate,
-
-        globalPath:
-          "AUDRALIA." +
-          namespaceKeys[index],
-
-        source:
-          "AUDRALIA_NAMESPACE_SCAN"
-      };
-    }
-  }
-}
-
-rootKeys =
-  [];
-
-try {
-  rootKeys =
-    Object.keys(root);
-} catch (_error) {}
-
-for (
-  index = 0;
-  index < rootKeys.length;
-  index += 1
-) {
-  key =
-    rootKeys[index];
-
-  if (
-    key.indexOf(
-      "AUDRALIA_DIAGNOSTIC"
-    ) !== 0
-  ) {
-    continue;
-  }
-
-  try {
-    candidate =
-      root[key];
-  } catch (_error2) {
-    candidate =
-      null;
-  }
-
-  if (
-    candidate &&
-    candidate.STATION_ID === definition.stationId &&
-    Number(candidate.CYCLE_POSITION) === definition.position
-  ) {
-    return {
-      api: candidate,
-      globalPath: key,
-      source: "ROOT_SCAN"
-    };
-  }
-}
-
-return {
-  api: null,
-  globalPath: null,
-  source: "NOT_FOUND"
-};
-
-}
-
-function resolveAuxiliaryApi(definition) {
 var found =
 readFirst(
 definition.globalPaths || []
@@ -3276,7 +3723,7 @@ schema:
 RECEIPT_SCHEMA,
 
   cycleId:
-    state.cycleId,
+    state.cycle.cycleId,
 
   position:
     definition.position,
@@ -3376,30 +3823,14 @@ candidates = [
   result.receipts,
   result.stationReceipts,
   result.cycleReceipts,
-
-  result.ledger &&
-    result.ledger.receipts,
-
-  result.ledger &&
-    result.ledger.stationReceipts,
-
-  result.result &&
-    result.result.receipts,
-
-  result.result &&
-    result.result.stationReceipts,
-
-  result.packet &&
-    result.packet.receipts,
-
-  result.packet &&
-    result.packet.stationReceipts,
-
-  result.cycleReceipt &&
-    result.cycleReceipt.receipts,
-
-  result.cycleReceipt &&
-    result.cycleReceipt.stationReceipts
+  result.ledger && result.ledger.receipts,
+  result.ledger && result.ledger.stationReceipts,
+  result.result && result.result.receipts,
+  result.result && result.result.stationReceipts,
+  result.packet && result.packet.receipts,
+  result.packet && result.packet.stationReceipts,
+  result.cycleReceipt && result.cycleReceipt.receipts,
+  result.cycleReceipt && result.cycleReceipt.stationReceipts
 ];
 
 for (
@@ -3407,11 +3838,7 @@ for (
   index < candidates.length;
   index += 1
 ) {
-  if (
-    Array.isArray(
-      candidates[index]
-    )
-  ) {
+  if (Array.isArray(candidates[index])) {
     return candidates[index];
   }
 }
@@ -3432,23 +3859,7 @@ isObject(receipt)
 
 var stationDefinition =
   definition ||
-  STATIONS[index] ||
-  {
-    position:
-      index + 1,
-
-    stationId:
-      source.stationId ||
-      "UNKNOWN_STATION",
-
-    label:
-      source.stationId ||
-      "Unknown Station",
-
-    fibonacci:
-      source.fibonacci ||
-      ""
-  };
+  STATIONS[index];
 
 return deepFreeze({
   schema:
@@ -3457,14 +3868,13 @@ return deepFreeze({
 
   cycleId:
     source.cycleId ||
-    state.cycleId,
+    state.cycle.cycleId,
 
   position:
-    Number.isFinite(
-      Number(source.position)
-    )
-      ? Number(source.position)
-      : stationDefinition.position,
+    Number(
+      source.position ||
+      stationDefinition.position
+    ),
 
   stationId:
     source.stationId ||
@@ -3472,8 +3882,7 @@ return deepFreeze({
 
   fibonacci:
     source.fibonacci ||
-    stationDefinition.fibonacci ||
-    "",
+    stationDefinition.fibonacci,
 
   contract:
     source.contract ||
@@ -3489,7 +3898,7 @@ return deepFreeze({
 
   file:
     source.file ||
-    "UNKNOWN",
+    stationDefinition.file,
 
   status:
     normalizeStatus(
@@ -3504,36 +3913,24 @@ return deepFreeze({
     source.handoffEligible === true,
 
   summary:
-    typeof source.summary === "string" &&
-    source.summary.trim()
-      ? source.summary.trim()
-      : "No station summary was supplied.",
+    firstString(
+      source.summary,
+      "No station summary was supplied."
+    ),
 
   observations:
-    Array.isArray(
-      source.observations
-    )
-      ? frozenClone(
-          source.observations
-        )
+    Array.isArray(source.observations)
+      ? frozenClone(source.observations)
       : [],
 
   evidence:
-    Array.isArray(
-      source.evidence
-    )
-      ? frozenClone(
-          source.evidence
-        )
+    Array.isArray(source.evidence)
+      ? frozenClone(source.evidence)
       : [],
 
   issues:
-    Array.isArray(
-      source.issues
-    )
-      ? frozenClone(
-          source.issues
-        )
+    Array.isArray(source.issues)
+      ? frozenClone(source.issues)
       : [],
 
   firstHeldCoordinate:
@@ -3549,11 +3946,10 @@ return deepFreeze({
     null,
 
   recommendedOwner:
-    source.recommendedOwner
-      ? frozenClone(
-          source.recommendedOwner
-        )
-      : null,
+    frozenClone(
+      source.recommendedOwner ||
+      null
+    ),
 
   generatedAt:
     source.generatedAt ||
@@ -3561,9 +3957,7 @@ return deepFreeze({
 
   noClaims:
     isObject(source.noClaims)
-      ? frozenClone(
-          source.noClaims
-        )
+      ? frozenClone(source.noClaims)
       : NO_CLAIMS,
 
   raw:
@@ -3576,8 +3970,7 @@ function normalizeConductorResult(result) {
 var receipts =
 extractReceipts(result);
 
-var normalized =
-  [];
+var normalized = [];
 
 if (!receipts.length) {
   return {
@@ -3593,23 +3986,16 @@ if (!receipts.length) {
   };
 }
 
-STATIONS.forEach(function normalizeExpectedStation(
-  definition,
-  index
-) {
+STATIONS.forEach(function normalizeExpectedStation(definition, index) {
   var matching =
     receipts.find(function findMatching(receipt) {
       return (
         receipt &&
         receipt.stationId === definition.stationId
       );
-    });
-
-  if (!matching) {
-    matching =
-      receipts[index] ||
-      null;
-  }
+    }) ||
+    receipts[index] ||
+    null;
 
   if (!matching) {
     normalized.push(
@@ -3643,18 +4029,98 @@ return {
 
 }
 
+function buildConductorRequest() {
+return deepFreeze({
+schema:
+CONDUCTOR_REQUEST_SCHEMA,
+
+  cycleId:
+    state.cycle.cycleId,
+
+  mode:
+    "AUDIT",
+
+  targetRoute:
+    TARGET_ROUTE,
+
+  diagnosticRoute:
+    DIAGNOSTIC_ROUTE,
+
+  subject: {
+    subjectId:
+      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
+
+    subjectType:
+      "THREE_D_DIAGNOSTIC_ROUTE",
+
+    contract:
+      CONTRACT,
+
+    version:
+      VERSION,
+
+    file:
+      FILE
+  },
+
+  engine: {
+    contract:
+      CORE_ENGINE_CONTRACT,
+
+    governingContract:
+      GOVERNING_ENGINE_CONTRACT,
+
+    registryContract:
+      REGISTRY_CONTRACT,
+
+    selectedEngine:
+      frozenClone(
+        state.observation.selectedEngine
+      ),
+
+    inspection:
+      frozenClone(
+        state.observation.engineInspection
+      ),
+
+    receipt:
+      frozenClone(
+        state.observation.engineReceipt
+      )
+  },
+
+  target:
+    frozenClone(
+      state.cycle.preflight &&
+      state.cycle.preflight.finalFullSnapshot
+        ? state.cycle.preflight.finalFullSnapshot
+        : state.observation.targetLight
+    ),
+
+  targetPreflight:
+    frozenClone(
+      state.cycle.preflight
+    ),
+
+  requestedStartPosition:
+    1,
+
+  generatedAt:
+    nowIso(),
+
+  noClaims:
+    NO_CLAIMS
+});
+
+}
+
 function invokeConductor(request) {
 var conductor =
 getConductor();
 
-var cycle;
-var sealReceipt;
-
 if (!conductor) {
   return Promise.resolve({
-    conductorResult:
-      null,
-
+    conductorResult: null,
     receipts:
       makeHeldReceipts(
         "NORTH_CONDUCTOR_UNAVAILABLE",
@@ -3664,11 +4130,7 @@ if (!conductor) {
   });
 }
 
-if (
-  !isFunction(
-    conductor.createCycle
-  )
-) {
+if (!isFunction(conductor.createCycle)) {
   return Promise.resolve({
     conductorResult:
       frozenClone(conductor),
@@ -3677,10 +4139,12 @@ if (
       makeHeldReceipts(
         "NORTH_CONDUCTOR_CREATE_CYCLE_UNAVAILABLE",
         "The North conductor does not expose createCycle().",
-        "The installed conductor contract requires the canonical createCycle() path."
+        "The installed conductor requires the canonical createCycle() path."
       )
   });
 }
+
+var cycle;
 
 try {
   cycle =
@@ -3690,9 +4154,7 @@ try {
 } catch (error) {
   return Promise.resolve({
     conductorResult: {
-      stage:
-        "CREATE_CYCLE",
-
+      stage: "CREATE_CYCLE",
       error:
         String(
           error &&
@@ -3719,41 +4181,21 @@ try {
 if (
   cycle &&
   (
-    Array.isArray(
-      cycle.receipts
-    ) ||
-    Array.isArray(
-      cycle.stationReceipts
-    ) ||
-    isObject(
-      cycle.cycleReceipt
-    ) ||
-    isObject(
-      cycle.receipt
-    )
+    Array.isArray(cycle.receipts) ||
+    Array.isArray(cycle.stationReceipts)
   )
 ) {
   return Promise.resolve(
-    normalizeConductorResult(
-      cycle
-    )
+    normalizeConductorResult(cycle)
   );
 }
 
 if (
   !cycle ||
-  !isFunction(
-    cycle.registerStation
-  ) ||
-  !isFunction(
-    cycle.seal
-  ) ||
-  !isFunction(
-    cycle.run
-  ) ||
-  !isFunction(
-    cycle.getReceipt
-  )
+  !isFunction(cycle.registerStation) ||
+  !isFunction(cycle.seal) ||
+  !isFunction(cycle.run) ||
+  !isFunction(cycle.getReceipt)
 ) {
   return Promise.resolve({
     conductorResult:
@@ -3768,11 +4210,8 @@ if (
   });
 }
 
-state.stationRegistrations =
-  [];
-
-state.auxiliaryRegistrations =
-  [];
+state.cycle.stationRegistrations = [];
+state.cycle.auxiliaryRegistrations = [];
 
 STATIONS.forEach(function registerStation(definition) {
   var resolved =
@@ -3801,9 +4240,6 @@ STATIONS.forEach(function registerStation(definition) {
 
       globalPath:
         null,
-
-      source:
-        resolved.source,
 
       generatedAt:
         nowIso()
@@ -3849,9 +4285,6 @@ STATIONS.forEach(function registerStation(definition) {
         globalPath:
           resolved.globalPath,
 
-        source:
-          resolved.source,
-
         generatedAt:
           nowIso()
       };
@@ -3883,150 +4316,73 @@ STATIONS.forEach(function registerStation(definition) {
         globalPath:
           resolved.globalPath,
 
-        source:
-          resolved.source,
-
         generatedAt:
           nowIso()
       };
     }
   }
 
-  state.stationRegistrations.push(
+  state.cycle.stationRegistrations.push(
     deepFreeze(outcome)
   );
 });
 
-AUXILIARIES.forEach(function registerAuxiliary(definition) {
-  var resolved =
-    resolveAuxiliaryApi(
-      definition
-    );
+var pointer =
+  state.participants.records.find(function findPointer(record) {
+    return record.role === "SOUTH_SURFACE_POINTER";
+  });
 
-  var outcome;
+if (
+  pointer &&
+  pointer.resolved &&
+  isFunction(cycle.registerAuxiliary)
+) {
+  try {
+    var auxiliaryRegistration =
+      cycle.registerAuxiliary(
+        8,
+        {
+          role:
+            "SOUTH_SURFACE_POINTER",
 
-  if (!resolved.api) {
-    outcome = {
-      parentPosition:
-        definition.parentPosition,
+          file:
+            pointer.file,
 
-      role:
-        definition.role,
+          contract:
+            pointer.contract,
 
-      file:
-        definition.file,
+          version:
+            pointer.version,
 
-      status:
-        "NOT_REGISTERED",
+          globalPath:
+            pointer.resolvedGlobal,
 
-      reason:
-        "AUXILIARY_GLOBAL_NOT_FOUND",
+          createsCyclePosition:
+            false
+        }
+      );
 
-      generatedAt:
-        nowIso()
-    };
-  } else if (
-    !isFunction(
-      cycle.registerAuxiliary
-    )
-  ) {
-    outcome = {
-      parentPosition:
-        definition.parentPosition,
-
-      role:
-        definition.role,
-
-      file:
-        definition.file,
-
-      status:
-        "NOT_REGISTERED",
-
-      reason:
-        "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
-
-      generatedAt:
-        nowIso()
-    };
-  } else {
-    try {
-      var registration =
-        cycle.registerAuxiliary(
-          definition.parentPosition,
-          {
-            role:
-              definition.role,
-
-            file:
-              definition.file,
-
-            contract:
-              resolved.api.CONTRACT ||
-              resolved.api.contract ||
-              null,
-
-            version:
-              resolved.api.VERSION ||
-              resolved.api.version ||
-              null,
-
-            globalPath:
-              resolved.globalPath,
-
-            createsCyclePosition:
-              false
-          }
-        );
-
-      outcome = {
-        parentPosition:
-          definition.parentPosition,
-
-        role:
-          definition.role,
-
-        file:
-          definition.file,
-
+    state.cycle.auxiliaryRegistrations.push(
+      deepFreeze({
+        parentPosition: 8,
+        role: "SOUTH_SURFACE_POINTER",
+        file: pointer.file,
         status:
-          registration &&
-          registration.status
-            ? registration.status
+          auxiliaryRegistration &&
+          auxiliaryRegistration.status
+            ? auxiliaryRegistration.status
             : "UNKNOWN",
-
-        reason:
-          registration &&
-          registration.reason
-            ? registration.reason
-            : null,
-
-        globalPath:
-          resolved.globalPath,
-
-        source:
-          resolved.source,
-
-        generatedAt:
-          nowIso()
-      };
-    } catch (error) {
-      outcome = {
-        parentPosition:
-          definition.parentPosition,
-
-        role:
-          definition.role,
-
-        file:
-          definition.file,
-
-        status:
-          "NOT_REGISTERED",
-
-        reason:
-          "AUXILIARY_REGISTRATION_THROW",
-
+        generatedAt: nowIso()
+      })
+    );
+  } catch (error) {
+    state.cycle.auxiliaryRegistrations.push(
+      deepFreeze({
+        parentPosition: 8,
+        role: "SOUTH_SURFACE_POINTER",
+        file: pointer.file,
+        status: "NOT_REGISTERED",
+        reason: "AUXILIARY_REGISTRATION_THROW",
         detail:
           String(
             error &&
@@ -4034,17 +4390,13 @@ AUXILIARIES.forEach(function registerAuxiliary(definition) {
               ? error.message
               : error
           ),
-
-        generatedAt:
-          nowIso()
-      };
-    }
+        generatedAt: nowIso()
+      })
+    );
   }
+}
 
-  state.auxiliaryRegistrations.push(
-    deepFreeze(outcome)
-  );
-});
+var sealReceipt;
 
 try {
   sealReceipt =
@@ -4052,9 +4404,7 @@ try {
 } catch (error) {
   return Promise.resolve({
     conductorResult: {
-      stage:
-        "SEAL",
-
+      stage: "SEAL",
       error:
         String(
           error &&
@@ -4062,10 +4412,9 @@ try {
             ? error.message
             : error
         ),
-
       stationRegistrations:
         frozenClone(
-          state.stationRegistrations
+          state.cycle.stationRegistrations
         )
     },
 
@@ -4083,12 +4432,6 @@ try {
   });
 }
 
-/*
- * cycle.run() remains synchronous.
- *
- * Promise.resolve() only normalizes the route-controller continuation.
- * No station is permitted to return a Promise.
- */
 return Promise.resolve(
   cycle.run()
 )
@@ -4098,14 +4441,12 @@ return Promise.resolve(
         ? result
         : cycle.getReceipt();
 
-    state.conductorReceipt =
+    state.cycle.conductorReceipt =
       frozenClone(receipt);
 
-    state.conductorState =
+    state.cycle.conductorState =
       frozenClone(
-        isFunction(
-          cycle.getState
-        )
+        isFunction(cycle.getState)
           ? cycle.getState()
           : null
       );
@@ -4119,84 +4460,42 @@ return Promise.resolve(
 
       stationReceipts:
         receipt &&
-        Array.isArray(
-          receipt.stationReceipts
-        )
+        Array.isArray(receipt.stationReceipts)
           ? receipt.stationReceipts
-          : extractReceipts(
-              receipt
-            ),
+          : extractReceipts(receipt),
 
       sealReceipt:
         sealReceipt,
 
       state:
-        state.conductorState,
+        state.cycle.conductorState,
 
       targetPreflight:
-        state.targetPreflight
-          ? frozenClone(
-              state.targetPreflight
-            )
-          : null,
+        frozenClone(
+          state.cycle.preflight
+        ),
 
       stationRegistrations:
         frozenClone(
-          state.stationRegistrations
+          state.cycle.stationRegistrations
         ),
 
       auxiliaryRegistrations:
         frozenClone(
-          state.auxiliaryRegistrations
+          state.cycle.auxiliaryRegistrations
         )
     });
   })
   .catch(function conductorRunRejected(error) {
-    state.conductorReceipt =
-      frozenClone(
-        callSafely(
-          cycle,
-          "getReceipt",
-          [],
-          null
-        )
-      );
-
-    state.conductorState =
-      frozenClone(
-        callSafely(
-          cycle,
-          "getState",
-          [],
-          null
-        )
-      );
-
     return {
       conductorResult: {
-        stage:
-          "RUN",
-
+        stage: "RUN",
         error:
           String(
             error &&
             error.message
               ? error.message
               : error
-          ),
-
-        state:
-          state.conductorState,
-
-        receipt:
-          state.conductorReceipt,
-
-        targetPreflight:
-          state.targetPreflight,
-
-        stationRegistrations:
-          frozenClone(
-            state.stationRegistrations
           )
       },
 
@@ -4218,17 +4517,13 @@ return Promise.resolve(
 
 function composeLedger() {
 function count(statuses) {
-return state.receipts.filter(function countReceipt(receipt) {
-return (
-statuses.indexOf(
-receipt.status
-) !== -1
-);
+return state.cycle.receipts.filter(function countReceipt(receipt) {
+return statuses.indexOf(receipt.status) !== -1;
 }).length;
 }
 
 var passCount =
-  count(["PASS"]);
+  count(["PASS", "COMPLETE"]);
 
 var holdCount =
   count([
@@ -4239,7 +4534,7 @@ var holdCount =
   ]);
 
 var failCount =
-  count(["FAIL"]);
+  count(["FAIL", "FAILED"]);
 
 var conflictCount =
   count(["CONFLICT"]);
@@ -4251,9 +4546,9 @@ var degradedCount =
   count(["DEGRADED"]);
 
 var terminalReceipt =
-  state.receipts.length
-    ? state.receipts[
-        state.receipts.length - 1
+  state.cycle.receipts.length
+    ? state.cycle.receipts[
+        state.cycle.receipts.length - 1
       ]
     : null;
 
@@ -4269,20 +4564,12 @@ var overallStatus =
           : holdCount > 0
             ? "HOLD"
             : (
-                passCount === state.receipts.length &&
-                state.receipts.length > 0
+                passCount ===
+                state.cycle.receipts.length &&
+                state.cycle.receipts.length > 0
               )
               ? "PASS"
               : "HOLD";
-
-var subjectEvidence =
-  buildSubjectEvidence();
-
-var engineEvidence =
-  buildEngineEvidence();
-
-var targetEvidence =
-  getFinalTargetSnapshot();
 
 var ledger = {
   schema:
@@ -4307,7 +4594,7 @@ var ledger = {
     CSS_CONTRACT,
 
   cycleId:
-    state.cycleId,
+    state.cycle.cycleId,
 
   generatedAt:
     nowIso(),
@@ -4322,17 +4609,15 @@ var ledger = {
     "createCycle",
 
   runPhase:
-    state.runPhase,
+    state.cycle.runPhase,
 
   targetRuntimePreflight:
-    state.targetPreflight
-      ? frozenClone(
-          state.targetPreflight
-        )
-      : null,
+    frozenClone(
+      state.cycle.preflight
+    ),
 
   receiptCount:
-    state.receipts.length,
+    state.cycle.receipts.length,
 
   passCount:
     passCount,
@@ -4365,62 +4650,34 @@ var ledger = {
       ? terminalReceipt.summary
       : "No terminal receipt was returned.",
 
-  engineRegistry:
-    buildRegistryEvidence(),
-
-  engineRuntime:
-    buildRuntimeEvidence(),
-
-  subject:
-    subjectEvidence,
-
-  engine:
-    engineEvidence,
-
-  construct:
-    buildConstructEvidence(
-      targetEvidence,
-      engineEvidence,
-      subjectEvidence
-    ),
-
-  target:
-    targetEvidence,
-
-  conductorState:
-    state.conductorState
-      ? frozenClone(
-          state.conductorState
-        )
-      : null,
-
-  conductorReceipt:
-    state.conductorReceipt
-      ? frozenClone(
-          state.conductorReceipt
-        )
-      : null,
-
   stationRegistrations:
     frozenClone(
-      state.stationRegistrations
+      state.cycle.stationRegistrations
     ),
 
   auxiliaryRegistrations:
     frozenClone(
-      state.auxiliaryRegistrations
+      state.cycle.auxiliaryRegistrations
+    ),
+
+  conductorState:
+    frozenClone(
+      state.cycle.conductorState
+    ),
+
+  conductorReceipt:
+    frozenClone(
+      state.cycle.conductorReceipt
     ),
 
   conductorResult:
-    state.conductorResult
-      ? frozenClone(
-          state.conductorResult
-        )
-      : null,
+    frozenClone(
+      state.cycle.conductorResult
+    ),
 
   receipts:
     frozenClone(
-      state.receipts
+      state.cycle.receipts
     ),
 
   noClaims:
@@ -4434,1047 +4691,530 @@ return deepFreeze(ledger);
 
 }
 
-function readableOverall(ledger) {
-if (!ledger) {
-return "Waiting";
-}
-
-if (ledger.overallStatus === "PASS") {
-  return "Complete diagnostic path";
-}
-
-if (ledger.overallStatus === "HOLD") {
-  return "Held for evidence";
-}
-
-if (ledger.overallStatus === "DEGRADED") {
-  return "Degraded diagnostic result";
-}
-
-if (ledger.overallStatus === "FAIL") {
-  return "Failure reported";
-}
-
-if (ledger.overallStatus === "CONFLICT") {
-  return "Conflict reported";
-}
-
-if (ledger.overallStatus === "ERROR") {
-  return "Error reported";
-}
-
-return "Unverified diagnostic path";
-
-}
-
-function plainLanguage(ledger) {
-if (!ledger) {
-return (
-"No diagnostic ledger has been produced yet. " +
-"The engine registry may still be inspected independently."
-);
-}
-
-if (ledger.errorCount > 0) {
-  return (
-    "The diagnostic path encountered an execution error. " +
-    "Open the station receipts to identify the affected stage."
-  );
-}
-
-if (ledger.conflictCount > 0) {
-  return (
-    "The diagnostic path found incompatible authority or runtime claims. " +
-    "No readiness conclusion can be made."
-  );
-}
-
-if (ledger.failCount > 0) {
-  return (
-    "The diagnostic path found a failed condition. " +
-    "This report identifies the failure but does not authorize repair."
-  );
-}
-
-if (ledger.degradedCount > 0) {
-  return (
-    "The diagnostic path completed with degraded evidence. " +
-    "The result is not equivalent to a production-ready engine."
-  );
-}
-
-if (ledger.holdCount > 0) {
-  return (
-    "The diagnostic path is held because required runtime evidence is " +
-    "missing, unavailable, or not yet admitted. Missing proof was not " +
-    "replaced with synthetic positive evidence."
-  );
-}
-
-if (
-  ledger.passCount === ledger.receiptCount &&
-  ledger.receiptCount === STATIONS.length
-) {
-  return (
-    "All nine diagnostic stations returned passing diagnostic receipts. " +
-    "This confirms diagnostic completion only; it does not independently " +
-    "claim production readiness, visual pass, or F21."
-  );
-}
-
-return "The diagnostic path is incomplete.";
-
-}
-
-function composeReaderReport(ledger) {
-var attentionCount =
-ledger.failCount +
-ledger.conflictCount +
-ledger.errorCount +
-ledger.degradedCount;
-
-var registeredCount =
-  ledger.stationRegistrations.filter(function countRegistered(outcome) {
-    return (
-      outcome.status === "REGISTERED" ||
-      outcome.status === "DUPLICATE_IDENTICAL"
-    );
-  }).length;
-
-var preflight =
-  ledger.targetRuntimePreflight;
-
-return [
-  "AUDRALIA DIAGNOSTIC READER REPORT",
-  "SCHEMA=" + READER_REPORT_SCHEMA,
-  "",
-  "Overall status: " + readableOverall(ledger),
-  "Passed stations: " + ledger.passCount + " of " + ledger.receiptCount,
-  "Held stations: " + ledger.holdCount,
-  "Attention items: " + attentionCount,
-  "",
-  "Target runtime preflight:",
-  "Status: " + (
-    preflight
-      ? preflight.status
-      : "NOT_RUN"
-  ),
-  "F8 surface truth admitted before cycle: " + (
-    preflight &&
-    preflight.admitted
-      ? "Yes"
-      : "No"
-  ),
-  "Attempts: " + (
-    preflight
-      ? preflight.attemptCount
-      : 0
-  ),
-  "Elapsed milliseconds: " + (
-    preflight
-      ? preflight.elapsedMs
-      : 0
-  ),
-  "Full receipt read attempted: " + (
-    preflight &&
-    preflight.finalFullSnapshot &&
-    preflight.finalFullSnapshot.fullReceiptReadAttempted
-      ? "Yes"
-      : "No"
-  ),
-  "Full receipt read succeeded: " + (
-    preflight &&
-    preflight.finalFullSnapshot &&
-    preflight.finalFullSnapshot.fullReceiptReadSucceeded
-      ? "Yes"
-      : "No"
-  ),
-  "",
-  "Engine family:",
-  "Governing contracts: " +
-    ledger.engineRegistry.governingAuthorityCount,
-  "Assigned engines: " +
-    ledger.engineRegistry.assignedEngineCount,
-  "Selectable engines: " +
-    ledger.engineRegistry.selectableEngineCount,
-  "Reserved engine slots: " +
-    ledger.engineRegistry.reservedEngineCount,
-  "",
-  "North conductor:",
-  "Invocation: createCycle",
-  "Registered stations: " +
-    registeredCount +
-    " of 9",
-  "",
-  "Plain-language reading:",
-  plainLanguage(ledger),
-  "",
-  "Terminal summary:",
-  ledger.terminalSummary,
-  "",
-  "Boundary:",
-  "This diagnostic route does not authorize production mutation, " +
-    "runtime restart, renderer mutation, repair, readiness, visual pass, " +
-    "or F21.",
-  "",
-  "Ledger hash:",
-  ledger.ledgerHash
-].join("\n");
-
-}
-
-function stationLabel(stationId) {
-var definition =
-STATIONS.find(function findStation(entry) {
-return (
-entry.stationId ===
-stationId
-);
-});
-
-return definition
-  ? definition.label
-  : stationId ||
-    "Unknown Station";
-
-}
-
-function renderRegistrySummary() {
-var evidence;
-var pill;
-var available;
-
-refreshRegistryState();
-
-evidence =
-  buildRegistryEvidence();
-
-setText(
-  "governingContractCount",
-  String(
-    evidence.governingAuthorityCount
-  )
-);
-
-setText(
-  "assignedEngineCount",
-  String(
-    evidence.assignedEngineCount
-  )
-);
-
-setText(
-  "selectableEngineCount",
-  String(
-    evidence.selectableEngineCount
-  )
-);
-
-setText(
-  "reservedEngineCount",
-  String(
-    evidence.reservedEngineCount
-  )
-);
-
-setText(
-  "governingContractSummary",
-  evidence.governingAuthorityCount > 0
-    ? "The governing contract is registered separately from the runtime engine."
-    : "The governing contract record is unavailable."
-);
-
-setText(
-  "assignedEngineSummary",
-  evidence.assignedEngineCount > 0
-    ? "One runtime engine subject is assigned to the registry."
-    : "No runtime engine subject is currently assigned."
-);
-
-setText(
-  "selectableEngineSummary",
-  evidence.selectableEngineCount > 0
-    ? "The registered runtime core is available for selection."
-    : "The runtime core is held until authority and identity are admitted."
-);
-
-setText(
-  "reservedEngineSummary",
-  evidence.reservedEngineCount > 0
-    ? String(
-        evidence.reservedEngineCount
-      ) +
-      " future engine slots remain reserved."
-    : "No reserved engine slots were reported."
-);
-
-pill =
-  byId(
-    "engineRegistryStatusPill"
-  );
-
-if (pill) {
-  available =
-    evidence.registryLoaded &&
-    evidence.selectableEngineCount > 0;
-
-  setClassState(
-    pill,
-    [
-      "available",
-      "ready",
-      "pass",
-      "held",
-      "waiting",
-      "error"
-    ],
-    available
-      ? "available"
-      : "held"
-  );
-
-  pill.textContent =
-    !evidence.registryLoaded
-      ? "REGISTRY_NOT_LOADED"
-      : available
-        ? "REGISTRY_AVAILABLE"
-        : "REGISTRY_HELD";
-}
-
-renderRegistryRecords();
-
-}
-
-function renderRegistryRecords() {
-var list =
-byId("engineRegistryList");
-
-var fragments =
-  [];
-
-if (!list) {
-  return;
-}
-
-if (
-  !state.authorityRecords.length &&
-  !state.engineRecords.length
-) {
-  list.innerHTML =
-    '<article class="receipt-empty">' +
-    "<h3>Engine registry unavailable</h3>" +
-    "<p>The registry global was not found. The diagnostic route remains held.</p>" +
-    "</article>";
-
-  return;
-}
-
-state.authorityRecords.forEach(function renderAuthority(record) {
-  fragments.push(
-    '<article class="receipt-card authority-record">' +
-    "<h3>" +
-    escapeHtml(
-      record.authorityName ||
-      record.authorityId ||
-      "Governing Contract"
-    ) +
-    "</h3>" +
-    "<p>Role: " +
-    escapeHtml(
-      record.role ||
-      "GOVERNING_CONTRACT"
-    ) +
-    "</p>" +
-    "<p>Status: " +
-    escapeHtml(
-      record.status ||
-      "UNKNOWN"
-    ) +
-    "</p>" +
-    "<p>File: " +
-    escapeHtml(
-      record.file ||
-      DEFAULT_GOVERNING_ENGINE_FILE
-    ) +
-    "</p>" +
-    "<p>Executable engine: " +
-    (
-      record.executableEngine
-        ? "Yes"
-        : "No"
-    ) +
-    "</p>" +
-    "</article>"
-  );
-});
-
-state.engineRecords.forEach(function renderEngine(record) {
-  fragments.push(
-    '<article class="receipt-card engine-record ' +
-    (
-      record.reserved
-        ? "held"
-        : record.selectable
-          ? "pass"
-          : "hold"
-    ) +
-    '">' +
-    "<h3>" +
-    escapeHtml(
-      record.engineName ||
-      (
-        record.reserved
-          ? "Reserved Engine Slot " +
-            String(record.slot)
-          : record.engineId ||
-            "Runtime Engine"
-      )
-    ) +
-    "</h3>" +
-    "<p>Role: " +
-    escapeHtml(
-      record.role ||
-      "RUNTIME_ENGINE"
-    ) +
-    "</p>" +
-    "<p>Status: " +
-    escapeHtml(
-      record.status ||
-      "UNKNOWN"
-    ) +
-    "</p>" +
-    "<p>Selectable: " +
-    (
-      record.selectable
-        ? "Yes"
-        : "No"
-    ) +
-    "</p>" +
-    "<p>File: " +
-    escapeHtml(
-      record.file ||
-      "Not assigned"
-    ) +
-    "</p>" +
-    "</article>"
-  );
-});
-
-list.innerHTML =
-  fragments.join("");
-
-}
-
-function renderSummary() {
-var ledger =
-state.ledger;
-
-var attention =
-  ledger
-    ? (
-        ledger.failCount +
-        ledger.conflictCount +
-        ledger.errorCount +
-        ledger.degradedCount
-      )
-    : 0;
-
-var percent =
-  ledger &&
-  ledger.receiptCount > 0
-    ? (
-        ledger.passCount /
-        ledger.receiptCount
-      ) * 100
-    : 0;
-
-setText(
-  "passedCount",
-  ledger
-    ? String(
-        ledger.passCount
-      )
-    : "0"
-);
-
-setText(
-  "heldCount",
-  ledger
-    ? String(
-        ledger.holdCount
-      )
-    : "0"
-);
-
-setText(
-  "attentionCount",
-  String(attention)
-);
-
-setText(
-  "plainSummary",
-  plainLanguage(ledger)
-);
-
-setText(
-  "overallStatus",
-  readableOverall(ledger)
-);
-
-setText(
-  "overallStatusDetail",
-  ledger
-    ? ledger.terminalSummary
-    : "The system has not produced a ledger yet."
-);
-
-setGauge(
-  percent,
-  ledger
-    ? ledger.overallStatus
-    : "UNKNOWN"
-);
-
-setDisabled(
-  "copyReaderReport",
-  !ledger
-);
-
-setDisabled(
-  "copyReceiptLedger",
-  !ledger
-);
-
-}
-
-function renderCycleMap() {
-if (!doc) {
-return;
-}
-
-STATIONS.forEach(function renderStation(definition) {
-  var node =
-    doc.querySelector(
-      '[data-station="' +
-      definition.stationId +
-      '"]'
-    );
-
-  var receipt =
-    state.receipts.find(function findReceipt(entry) {
-      return (
-        entry.stationId ===
-        definition.stationId
-      );
-    });
-
-  if (!node) {
-    return;
-  }
-
-  setClassState(
-    node,
-    [
-      "pass",
-      "passed",
-      "hold",
-      "held",
-      "partial",
-      "fail",
-      "error",
-      "conflict",
-      "attention"
-    ],
-    receipt
-      ? statusClass(
-          receipt.status
-        )
-      : null
-  );
-
-  if (!receipt) {
-    node.removeAttribute(
-      "data-status"
-    );
-
-    node.removeAttribute(
-      "title"
-    );
-
-    return;
-  }
-
-  node.setAttribute(
-    "data-status",
-    receipt.status
-  );
-
-  node.setAttribute(
-    "title",
-    definition.label +
-      ": " +
-      (
-        receipt.summary ||
-        receipt.status ||
-        "UNKNOWN"
-      )
-  );
-});
-
-}
-
-function renderReceipts() {
-var list =
-byId("receiptList");
-
-if (!list) {
-  return;
-}
-
-if (!state.receipts.length) {
-  list.innerHTML =
-    '<article class="receipt-empty">' +
-    "<h3>No receipts yet</h3>" +
-    "<p>Run the diagnostic track to populate station receipts.</p>" +
-    "</article>";
-
-  return;
-}
-
-list.innerHTML =
-  state.receipts
-    .map(function renderReceipt(receipt, index) {
-      var issueCount =
-        Array.isArray(
-          receipt.issues
-        )
-          ? receipt.issues.length
-          : 0;
-
-      return (
-        '<details class="receipt-card ' +
-        escapeHtml(
-          statusClass(
-            receipt.status
-          )
-        ) +
-        '">' +
-        "<summary>" +
-        escapeHtml(
-          String(index + 1)
-        ) +
-        " · " +
-        escapeHtml(
-          stationLabel(
-            receipt.stationId
-          )
-        ) +
-        " · " +
-        escapeHtml(
-          receipt.status
-        ) +
-        "</summary>" +
-        '<div class="receipt-meta">' +
-        "<span>" +
-        escapeHtml(
-          receipt.stationId
-        ) +
-        "</span>" +
-        "<span>" +
-        escapeHtml(
-          receipt.fibonacci ||
-          ""
-        ) +
-        "</span>" +
-        "<span>Issues: " +
-        escapeHtml(
-          String(issueCount)
-        ) +
-        "</span>" +
-        "</div>" +
-        "<p>" +
-        escapeHtml(
-          receipt.summary
-        ) +
-        "</p>" +
-        "<pre>" +
-        escapeHtml(
-          safeJson(receipt)
-        ) +
-        "</pre>" +
-        "</details>"
-      );
-    })
-    .join("");
-
-}
-
-function renderTechnical() {
-setText(
-"ledgerOutput",
-state.ledger
-? state.rawLedgerText
-: "No ledger produced yet."
-);
-
-setText(
-  "rawReceiptsOutput",
-  state.receipts.length
-    ? safeJson(
-        state.receipts
-      )
-    : "No receipts produced yet."
-);
-
-}
-
-function renderAll() {
-renderRegistrySummary();
-renderSummary();
-renderCycleMap();
-renderReceipts();
-renderTechnical();
-}
-
-function updateRunButton() {
-var button =
-byId("runDiagnostic");
-
-if (!button) {
-  return;
-}
-
-button.disabled =
-  state.running;
-
-if (!state.running) {
-  button.textContent =
-    "Run Diagnostic";
-
-  return;
-}
-
-if (
-  state.runPhase ===
-  "WAITING_FOR_TARGET"
-) {
-  button.textContent =
-    "Waiting for F8 Surface Truth";
-
-  return;
-}
-
-if (
-  state.runPhase ===
-  "RUNNING_CONDUCTOR"
-) {
-  button.textContent =
-    "Running Diagnostic";
-
-  return;
-}
-
-if (
-  state.runPhase ===
-  "FINALIZING"
-) {
-  button.textContent =
-    "Finalizing Diagnostic";
-
-  return;
-}
-
-button.textContent =
-  "Running Diagnostic";
-
-}
-
-function setRunning(
-running,
-phase
-) {
-state.running =
-Boolean(running);
-
-state.runPhase =
-  phase ||
-  (
-    state.running
-      ? "RUNNING"
-      : "IDLE"
-  );
-
-updateRunButton();
-
-}
-
-function resetRunState() {
-state.cycleId =
-"AUDRALIA_DIAGNOSTIC_CYCLE_" +
-Date.now();
-
-state.lastRunAt =
-  nowIso();
-
-state.targetPreflight =
-  null;
-
-state.targetPreflightProgress =
-  null;
-
-state.conductorResult =
-  null;
-
-state.conductorReceipt =
-  null;
-
-state.conductorState =
-  null;
-
-state.stationRegistrations =
-  [];
-
-state.auxiliaryRegistrations =
-  [];
-
-state.receipts =
-  [];
-
-state.ledger =
-  null;
-
-state.readerReport =
-  "";
-
-state.rawLedgerText =
-  "";
-
-state.lastError =
-  null;
-
-}
-
-function publishRunOutputs() {
-root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
-state.ledger;
-
-root.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER =
-  state.ledger;
-
-root.AUDRALIA_DIAGNOSTIC_READER_REPORT =
-  state.readerReport;
-
-root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
-  state.targetPreflight;
-
-root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_PROGRESS =
-  state.targetPreflightProgress;
-
-}
-
-function finalizeSuccessfulRun(normalized) {
-setRunning(
-true,
-"FINALIZING"
-);
-
-state.conductorResult =
-  normalized.conductorResult;
-
-state.receipts =
-  normalized.receipts;
-
-state.ledger =
-  composeLedger();
-
-state.rawLedgerText =
-  safeJson(
-    state.ledger
-  );
-
-state.readerReport =
-  composeReaderReport(
-    state.ledger
-  );
-
-publishRunOutputs();
-renderAll();
-
-toast(
-  state.ledger.overallStatus === "PASS"
-    ? "Diagnostic cycle completed."
-    : "Diagnostic cycle completed with held or attention items."
-);
-
-return frozenClone(
-  state.ledger
-);
-
-}
-
-function finalizeControllerError(error) {
-setRunning(
-true,
-"FINALIZING"
-);
-
-state.lastError =
-  String(
-    error &&
-    error.message
-      ? error.message
-      : error
-  );
-
-state.receipts =
-  makeHeldReceipts(
-    "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
-    "The route controller could not complete the diagnostic cycle.",
-    state.lastError
-  );
-
-state.ledger =
-  composeLedger();
-
-state.rawLedgerText =
-  safeJson(
-    state.ledger
-  );
-
-state.readerReport =
-  composeReaderReport(
-    state.ledger
-  );
-
-publishRunOutputs();
-renderAll();
-
-toast(
-  "Diagnostic cycle held after controller error."
-);
-
-return frozenClone(
-  state.ledger
-);
-
-}
-
-function runDiagnostic() {
-if (state.running) {
+function runNineCycle() {
+if (state.cycle.running) {
 return Promise.resolve(
 frozenClone(
-state.ledger
+state.cycle.ledger
 )
 );
 }
 
-resetRunState();
+state.cycle.running =
+  true;
 
-setRunning(
-  true,
-  "WAITING_FOR_TARGET"
-);
+state.cycle.cycleId =
+  "AUDRALIA_DIAGNOSTIC_CYCLE_" +
+  Date.now();
 
-refreshRegistryState();
-inspectEngineState();
-renderAll();
+state.cycle.runPhase =
+  "WAITING_FOR_TARGET";
 
-setText(
-  "overallStatus",
-  "Waiting for target surface truth"
-);
+state.cycle.preflight =
+  null;
 
-setText(
-  "overallStatusDetail",
-  "The controller is sampling lightweight runtime status before starting the synchronous North cycle."
-);
+state.cycle.preflightProgress =
+  null;
 
-/*
- * The only asynchronous waiting occurs here, before createCycle().
- *
- * Preflight polling reads:
- * - iframe presence
- * - same-origin access
- * - document ready state
- * - accepted runtime global
- * - runtime.getStatus()
- * - runtime.getReceiptLight() only when status is unavailable
- *
- * Preflight polling does not call runtime.getReceipt().
- *
- * After admission or timeout, a full receipt may be captured once.
- *
- * North and all nine stations remain synchronous.
- */
+state.cycle.stationRegistrations =
+  [];
+
+state.cycle.auxiliaryRegistrations =
+  [];
+
+state.cycle.conductorResult =
+  null;
+
+state.cycle.conductorReceipt =
+  null;
+
+state.cycle.conductorState =
+  null;
+
+state.cycle.receipts =
+  [];
+
+state.cycle.ledger =
+  null;
+
+state.cycle.readerReport =
+  "";
+
+state.cycle.lastError =
+  null;
+
+state.drop.direct.status =
+  "RUNNING";
+
+state.drop.direct.lastAction =
+  "Nine-cycle execution started.";
+
+renderExecutionState();
+
+buildParticipantSnapshot();
+observeLightweight();
+
 return waitForTargetRuntimeEvidence()
-  .then(function targetPreflightResolved(preflight) {
-    state.targetPreflight =
+  .then(function preflightResolved(preflight) {
+    state.cycle.preflight =
       frozenClone(preflight);
 
-    root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
-      state.targetPreflight;
+    state.observation.targetFull =
+      frozenClone(
+        preflight.finalFullSnapshot
+      );
 
-    setRunning(
-      true,
-      "RUNNING_CONDUCTOR"
-    );
+    state.cycle.runPhase =
+      "RUNNING_CONDUCTOR";
 
-    setText(
-      "overallStatus",
-      preflight.admitted
-        ? "Target surface truth admitted"
-        : "Target preflight timed out"
-    );
-
-    setText(
-      "overallStatusDetail",
-      preflight.admitted
-        ? "Starting the synchronous nine-station North diagnostic cycle."
-        : "Starting the synchronous cycle with the latest honest evidence. F8 may remain held."
-    );
-
-    /*
-     * Timeout does not suppress the diagnostic cycle.
-     * The final target snapshot is transported honestly.
-     */
-    var request =
-      buildConductorRequest();
+    renderExecutionState();
 
     return invokeConductor(
-      request
+      buildConductorRequest()
     );
   })
-  .then(
-    finalizeSuccessfulRun
-  )
-  .catch(
-    finalizeControllerError
-  )
-  .then(
-    function finishRun(value) {
-      setRunning(
-        false,
-        "IDLE"
+  .then(function cycleResolved(normalized) {
+    state.cycle.conductorResult =
+      normalized.conductorResult;
+
+    state.cycle.receipts =
+      normalized.receipts;
+
+    state.cycle.runPhase =
+      "FINALIZING";
+
+    state.cycle.ledger =
+      composeLedger();
+
+    state.cycle.readerReport =
+      safeJson(
+        state.cycle.ledger
       );
 
-      return value;
-    },
-    function finishRejected(error) {
-      setRunning(
-        false,
-        "IDLE"
+    state.cycle.lastRunAt =
+      nowIso();
+
+    state.archive.cycleRuns.push(
+      deepFreeze({
+        cycleId:
+          state.cycle.cycleId,
+
+        preflight:
+          frozenClone(
+            state.cycle.preflight
+          ),
+
+        ledger:
+          frozenClone(
+            state.cycle.ledger
+          ),
+
+        receipts:
+          frozenClone(
+            state.cycle.receipts
+          ),
+
+        archivedAt:
+          nowIso()
+      })
+    );
+
+    state.drop.direct.status =
+      "IDLE";
+
+    state.drop.direct.availableCount =
+      1;
+
+    state.drop.direct.heldCount =
+      state.cycle.ledger &&
+      state.cycle.ledger.overallStatus !== "PASS"
+        ? 1
+        : 0;
+
+    state.drop.direct.lastAction =
+      "Nine-cycle execution completed at " +
+      state.cycle.lastRunAt;
+
+    state.cycle.running =
+      false;
+
+    state.cycle.runPhase =
+      "IDLE";
+
+    observeLightweight();
+    createReport();
+    renderWorkbench();
+
+    toast(
+      state.cycle.ledger.overallStatus === "PASS"
+        ? "Nine-cycle completed."
+        : "Nine-cycle completed with held or attention evidence."
+    );
+
+    return frozenClone(
+      state.cycle.ledger
+    );
+  })
+  .catch(function cycleRejected(error) {
+    state.cycle.lastError =
+      String(
+        error &&
+        error.message
+          ? error.message
+          : error
       );
 
-      throw error;
-    }
-  );
+    state.cycle.receipts =
+      makeHeldReceipts(
+        "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
+        "The observatory controller could not complete the nine-cycle.",
+        state.cycle.lastError
+      );
+
+    state.cycle.ledger =
+      composeLedger();
+
+    state.cycle.running =
+      false;
+
+    state.cycle.runPhase =
+      "IDLE";
+
+    state.drop.direct.status =
+      "HELD";
+
+    state.drop.direct.heldCount =
+      1;
+
+    state.drop.direct.lastAction =
+      "Nine-cycle execution held after controller error.";
+
+    state.archive.errors.push(
+      deepFreeze({
+        type: "CYCLE",
+        message: state.cycle.lastError,
+        capturedAt: nowIso()
+      })
+    );
+
+    createReport();
+    renderWorkbench();
+
+    toast(
+      "Nine-cycle held after controller error."
+    );
+
+    return frozenClone(
+      state.cycle.ledger
+    );
+  });
 
 }
 
-function copyText(
-text,
-message
-) {
+function runSelectedDirectCheck() {
+var auditRecord =
+getActiveAudit();
+
+if (state.direct.running) {
+  return Promise.resolve(
+    frozenClone(
+      state.direct.lastResult
+    )
+  );
+}
+
+state.direct.running =
+  true;
+
+state.drop.direct.status =
+  "RUNNING";
+
+state.drop.direct.lastAction =
+  "Direct check started: " +
+  auditRecord.label;
+
+renderExecutionState();
+
+return Promise.resolve()
+  .then(function executeDirectCheck() {
+    var result;
+
+    if (
+      auditRecord.id === "targetRuntimeFull" ||
+      auditRecord.id === "runtimeObservationDirect"
+    ) {
+      result =
+        inspectTargetFrameFull();
+
+      state.observation.targetFull =
+        frozenClone(result);
+    } else if (
+      auditRecord.id === "registryRefreshDirect"
+    ) {
+      result =
+        refreshRegistryState();
+    } else if (
+      auditRecord.id === "surfaceTruthPacket" ||
+      auditRecord.id === "surfaceTruthDirect"
+    ) {
+      var surface =
+        state.observation.surfaceTruth ||
+        inspectSurfaceTruth();
+
+      var authority =
+        surface.globalPath
+          ? readPath(surface.globalPath)
+          : null;
+
+      var preferredMethods = [
+        "getReceipt",
+        "getPacket",
+        "inspect",
+        "read",
+        "probe"
+      ];
+
+      var selectedMethod =
+        preferredMethods.find(function findMethod(name) {
+          return (
+            authority &&
+            isFunction(authority[name])
+          );
+        }) || null;
+
+      if (!selectedMethod) {
+        throw new Error(
+          "NO_VERIFIED_SURFACE_TRUTH_READ_METHOD"
+        );
+      }
+
+      state.direct.selectedAuthority =
+        surface.globalPath;
+
+      state.direct.selectedMethod =
+        selectedMethod;
+
+      result =
+        authority[selectedMethod]();
+    } else {
+      throw new Error(
+        "DIRECT_CHECK_NOT_AVAILABLE_FOR_SELECTED_AUDIT"
+      );
+    }
+
+    var record =
+      deepFreeze({
+        audit:
+          frozenClone(auditRecord),
+
+        authority:
+          state.direct.selectedAuthority,
+
+        method:
+          state.direct.selectedMethod,
+
+        result:
+          frozenClone(result),
+
+        executedAt:
+          nowIso(),
+
+        status:
+          "COMPLETE",
+
+        noClaims:
+          NO_CLAIMS
+      });
+
+    state.direct.lastResult =
+      record;
+
+    state.direct.lastError =
+      null;
+
+    state.direct.history.push(
+      record
+    );
+
+    state.archive.directResults.push(
+      record
+    );
+
+    state.drop.direct.status =
+      "IDLE";
+
+    state.drop.direct.availableCount =
+      state.direct.history.length;
+
+    state.drop.direct.heldCount =
+      0;
+
+    state.drop.direct.lastAction =
+      "Direct check completed at " +
+      record.executedAt;
+
+    return record;
+  })
+  .catch(function directCheckRejected(error) {
+    var errorRecord =
+      deepFreeze({
+        audit:
+          frozenClone(auditRecord),
+
+        message:
+          String(
+            error &&
+            error.message
+              ? error.message
+              : error
+          ),
+
+        executedAt:
+          nowIso(),
+
+        status:
+          "ERROR"
+      });
+
+    state.direct.lastError =
+      errorRecord;
+
+    state.archive.errors.push(
+      errorRecord
+    );
+
+    state.drop.direct.status =
+      "HELD";
+
+    state.drop.direct.heldCount =
+      1;
+
+    state.drop.direct.lastAction =
+      "Direct check held: " +
+      errorRecord.message;
+
+    return errorRecord;
+  })
+  .then(function finalizeDirectCheck(record) {
+    state.direct.running =
+      false;
+
+    observeLightweight();
+    createReport();
+    renderWorkbench();
+
+    toast(
+      record.status === "COMPLETE"
+        ? "Direct check completed."
+        : "Direct check held."
+    );
+
+    return frozenClone(record);
+  });
+
+}
+
+function createDeepArchive() {
+var archive = {
+schema:
+ARCHIVE_SCHEMA,
+
+  contract:
+    CONTRACT,
+
+  blueprint:
+    BLUEPRINT,
+
+  createdAt:
+    nowIso(),
+
+  controllerState:
+    getPublicState(),
+
+  reports:
+    frozenClone(
+      state.report.sessionReports
+    ),
+
+  directResults:
+    frozenClone(
+      state.direct.history
+    ),
+
+  cycleRuns:
+    frozenClone(
+      state.archive.cycleRuns
+    ),
+
+  errors:
+    frozenClone(
+      state.archive.errors
+    ),
+
+  participantSnapshots:
+    frozenClone(
+      state.archive.participantSnapshots
+    ),
+
+  observationSnapshots:
+    frozenClone(
+      state.archive.observationSnapshots
+    ),
+
+  boundaries:
+    NO_CLAIMS
+};
+
+archive.archiveHash =
+  hashObject(archive);
+
+state.archive.deepArchive =
+  deepFreeze(archive);
+
+state.archive.updatedAt =
+  nowIso();
+
+renderArchiveChamber();
+
+toast(
+  "Deep archive created."
+);
+
+return frozenClone(
+  state.archive.deepArchive
+);
+
+}
+
+function addCurrentReportToArchive() {
+if (!state.report.current) {
+toast(
+"Create a report first."
+);
+
+  return null;
+}
+
+state.archive.reports.push(
+  state.report.current
+);
+
+state.archive.updatedAt =
+  nowIso();
+
+renderArchiveChamber();
+
+toast(
+  "Report added to archive."
+);
+
+return frozenClone(
+  state.report.current
+);
+
+}
+
+function copyText(text, message) {
 if (!text) {
 return;
 }
@@ -5489,42 +5229,22 @@ if (
   root.navigator.clipboard
     .writeText(text)
     .then(function copied() {
-      toast(
-        message ||
-        "Copied."
-      );
+      toast(message || "Copied.");
     })
     .catch(function clipboardRejected() {
-      fallbackCopy(
-        text,
-        message
-      );
+      fallbackCopy(text, message);
     });
 
   return;
 }
 
-fallbackCopy(
-  text,
-  message
-);
+fallbackCopy(text, message);
 
 }
 
-function fallbackCopy(
-text,
-message
-) {
-var area;
-
-if (!doc) {
-  return;
-}
-
-area =
-  doc.createElement(
-    "textarea"
-  );
+function fallbackCopy(text, message) {
+var area =
+doc.createElement("textarea");
 
 area.value =
   text;
@@ -5540,72 +5260,1932 @@ area.style.position =
 area.style.left =
   "-9999px";
 
-doc.body.appendChild(
-  area
-);
+doc.body.appendChild(area);
 
 area.select();
 
 try {
-  doc.execCommand(
-    "copy"
-  );
-
-  toast(
-    message ||
-    "Copied."
-  );
+  doc.execCommand("copy");
+  toast(message || "Copied.");
 } catch (_error) {
-  toast(
-    "Copy unavailable."
-  );
+  toast("Copy unavailable.");
 }
 
-doc.body.removeChild(
-  area
+doc.body.removeChild(area);
+
+}
+
+function selectCategory(categoryId) {
+var categoryRecord =
+getCategory(categoryId);
+
+state.activeCategoryId =
+  categoryRecord.id;
+
+state.activeAuditId =
+  categoryRecord.audits[0].id;
+
+renderSelectors();
+renderSelectedAudit();
+
+}
+
+function selectAudit(auditId) {
+var auditRecord =
+getAudit(
+state.activeCategoryId,
+auditId
+);
+
+state.activeAuditId =
+  auditRecord.id;
+
+renderSelectors();
+renderSelectedAudit();
+
+}
+
+function selectParticipant(role) {
+state.activeParticipantRole =
+role;
+
+renderParticipantDetail();
+
+}
+
+function selectReportMode(mode) {
+state.activeReportMode =
+mode;
+
+renderReportModes();
+
+}
+
+function selectObservationLens(lens) {
+state.activeObservationLens =
+lens;
+
+renderObservationLensTabs();
+
+}
+
+function selectInstrumentChamber(chamber) {
+state.activeInstrumentChamber =
+chamber;
+
+renderInstrumentDeckTabs();
+
+}
+
+function renderDropRail() {
+renderLane(
+"dropDirect",
+state.drop.direct
+);
+
+renderLane(
+  "dropReport",
+  state.drop.report
+);
+
+renderLane(
+  "dropObservation",
+  state.drop.observation
+);
+
+renderLane(
+  "dropParticipant",
+  state.drop.participant
 );
 
 }
 
-function wireTabs() {
-var buttons;
-var panels;
+function renderLane(prefix, lane) {
+setText(
+prefix + "State",
+lane.status
+);
 
-if (!doc) {
-  return;
+setText(
+  prefix + "AvailableCount",
+  lane.availableCount
+);
+
+setText(
+  prefix + "HeldCount",
+  lane.heldCount
+);
+
+setText(
+  prefix + "LastAction",
+  lane.lastAction ||
+  "No action recorded."
+);
+
+setStatus(
+  prefix + "Cell",
+  lane.status
+);
+
 }
 
-buttons =
-  Array.prototype.slice.call(
-    doc.querySelectorAll(
-      "[data-tab]"
+function renderEvidenceRail() {
+var target =
+state.observation.targetLight;
+
+setText(
+  "targetStatus",
+  "Target · " +
+  (
+    target && target.framePresent
+      ? "Found"
+      : "Unknown"
+  )
+);
+
+setStatus(
+  "targetStatus",
+  target && target.framePresent
+    ? "FOUND"
+    : "UNKNOWN"
+);
+
+setText(
+  "runtimeStatus",
+  "Runtime · " +
+  (
+    target && target.runtimeGlobalPresent
+      ? "Found"
+      : "Unknown"
+  )
+);
+
+setStatus(
+  "runtimeStatus",
+  target && target.runtimeGlobalPresent
+    ? "FOUND"
+    : "UNKNOWN"
+);
+
+setText(
+  "surfaceStatus",
+  "Surface · " +
+  (
+    state.observation.surfaceTruth &&
+    state.observation.surfaceTruth.authorityPresent
+      ? "Found"
+      : "Held"
+  )
+);
+
+setStatus(
+  "surfaceStatus",
+  state.observation.surfaceTruth &&
+  state.observation.surfaceTruth.authorityPresent
+    ? "FOUND"
+    : "HELD"
+);
+
+setText(
+  "cycleStatus",
+  "Cycle · " +
+  (
+    state.cycle.ledger
+      ? state.cycle.ledger.overallStatus
+      : "Not Run"
+  )
+);
+
+setStatus(
+  "cycleStatus",
+  state.cycle.ledger
+    ? state.cycle.ledger.overallStatus
+    : "NOT_RUN"
+);
+
+setText(
+  "registryStatus",
+  "Registry · " +
+  (
+    getRegistry()
+      ? "Found"
+      : "Held"
+  )
+);
+
+setStatus(
+  "registryStatus",
+  getRegistry()
+    ? "FOUND"
+    : "HELD"
+);
+
+var groups = {
+  north: [
+    "NORTH_CONDUCTOR",
+    "NORTH_PROBE_INTAKE"
+  ],
+  east: [
+    "EAST_PROBE_SOURCE",
+    "EAST_CONSTRUCTION_INTERPRETATION"
+  ],
+  west: [
+    "WEST_PROBE_RUNTIME",
+    "WEST_RUNTIME_INTERPRETATION"
+  ],
+  south: [
+    "SOUTH_PROBE_HANDOFF",
+    "SOUTH_RESTITUTION_INTERPRETATION",
+    "SOUTH_SURFACE_POINTER"
+  ]
+};
+
+Object.keys(groups).forEach(function renderGroup(key) {
+  var allFound =
+    groups[key].every(function everyRole(role) {
+      var record =
+        state.participants.records.find(function findRecord(entry) {
+          return entry.role === role;
+        });
+
+      return Boolean(
+        record &&
+        record.resolved
+      );
+    });
+
+  setText(
+    key + "Status",
+    key.charAt(0).toUpperCase() +
+    key.slice(1) +
+    " · " +
+    (
+      allFound
+        ? "Found"
+        : "Held"
     )
   );
 
-panels = {
-  ledger:
-    byId("tabLedger"),
+  setStatus(
+    key + "Status",
+    allFound
+      ? "FOUND"
+      : "HELD"
+  );
+});
 
-  receipts:
-    byId("tabReceipts"),
+setText(
+  "frameStatus",
+  "Frame · " +
+  (
+    target &&
+    target.documentLoaded
+      ? "Found"
+      : "Unknown"
+  )
+);
 
-  contracts:
-    byId("tabContracts"),
+setStatus(
+  "frameStatus",
+  target &&
+  target.documentLoaded
+    ? "FOUND"
+    : "UNKNOWN"
+);
 
-  boundary:
-    byId("tabBoundary")
+setText(
+  "canvasStatus",
+  "Canvas · " +
+  (
+    target &&
+    target.canvasPresent
+      ? "Found"
+      : "Unknown"
+  )
+);
+
+setStatus(
+  "canvasStatus",
+  target &&
+  target.canvasPresent
+    ? "FOUND"
+    : "UNKNOWN"
+);
+
+var runtimeStatus =
+  target &&
+  target.targetRuntimeStatus
+    ? target.targetRuntimeStatus
+    : {};
+
+var mounted =
+  firstBoolean(
+    runtimeStatus.mounted,
+    runtimeStatus.statusDetail &&
+    runtimeStatus.statusDetail.mounted
+  );
+
+setText(
+  "mountStatus",
+  "Mount · " +
+  (
+    mounted === true
+      ? "Found"
+      : mounted === false
+        ? "Held"
+        : "Unknown"
+  )
+);
+
+setStatus(
+  "mountStatus",
+  mounted === true
+    ? "FOUND"
+    : mounted === false
+      ? "HELD"
+      : "UNKNOWN"
+);
+
+}
+
+function renderSelectors() {
+var categoryRecord =
+getActiveCategory();
+
+var auditRecord =
+  getActiveAudit();
+
+setText(
+  "categorySelectorLabel",
+  categoryRecord.label
+);
+
+setText(
+  "categorySelectorMeta",
+  String(categoryRecord.audits.length) +
+  " audits"
+);
+
+setText(
+  "auditSelectorLabel",
+  auditRecord.label
+);
+
+setText(
+  "auditSelectorMeta",
+  auditRecord.classification.replace(/_/g, " ")
+);
+
+var auditMenu =
+  byId("auditSelectorMenu");
+
+if (auditMenu) {
+  auditMenu.innerHTML =
+    categoryRecord.audits
+      .map(function renderAuditOption(entry) {
+        return (
+          '<button type="button" role="option" aria-selected="' +
+          (
+            entry.id === auditRecord.id
+              ? "true"
+              : "false"
+          ) +
+          '" data-audit-id="' +
+          escapeHtml(entry.id) +
+          '">' +
+          "<strong>" +
+          escapeHtml(entry.label) +
+          "</strong>" +
+          "<span>" +
+          escapeHtml(entry.summary) +
+          "</span>" +
+          "</button>"
+        );
+      })
+      .join("");
+}
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-category-id]"
+  )
+).forEach(function updateCategoryOption(button) {
+  button.setAttribute(
+    "aria-selected",
+    button.getAttribute("data-category-id") ===
+    categoryRecord.id
+      ? "true"
+      : "false"
+  );
+});
+
+wireDynamicAuditOptions();
+
+}
+
+function renderSelectedAudit() {
+var categoryRecord =
+getActiveCategory();
+
+var auditRecord =
+  getActiveAudit();
+
+setText(
+  "selectedCategoryLabel",
+  categoryRecord.label
+);
+
+setText(
+  "selectedAuditTitle",
+  auditRecord.label
+);
+
+setText(
+  "selectedAuditSummary",
+  auditRecord.summary
+);
+
+setText(
+  "selectedAuditClassification",
+  auditRecord.classification
+);
+
+setText(
+  "activeAuditMode",
+  auditRecord.classification
+);
+
+var index =
+  categoryRecord.audits.indexOf(
+    auditRecord
+  ) + 1;
+
+setText(
+  "selectedAuditSequence",
+  "AUDIT " +
+  String(index).padStart(2, "0")
+);
+
+setHidden(
+  "runDirectCheck",
+  auditRecord.classification !==
+  "DIRECT_EXECUTION"
+);
+
+setHidden(
+  "runNineCycle",
+  auditRecord.classification !==
+  "CYCLE_EXECUTION"
+);
+
+}
+
+function renderParticipantConstellation() {
+var list =
+byId("participantList");
+
+if (!list) {
+  return;
+}
+
+setText(
+  "dropParticipantAvailableCount",
+  state.participants.availableCount
+);
+
+setText(
+  "dropParticipantHeldCount",
+  state.participants.heldCount
+);
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-participant-summary]"
+  )
+).forEach(function renderSummaryValue(node) {
+  var key =
+    node.getAttribute(
+      "data-participant-summary"
+    );
+
+  if (key === "required") {
+    node.textContent =
+      state.participants.requiredCount;
+  }
+
+  if (key === "optional") {
+    node.textContent =
+      state.participants.optionalCount;
+  }
+
+  if (key === "available") {
+    node.textContent =
+      state.participants.availableCount;
+  }
+
+  if (key === "held") {
+    node.textContent =
+      state.participants.heldCount;
+  }
+});
+
+list.innerHTML =
+  state.participants.records
+    .filter(function excludeEngine(record) {
+      return (
+        record.group !== "ENGINE"
+      );
+    })
+    .map(function renderParticipant(record) {
+      return (
+        '<article class="participant-node" tabindex="0" role="button" ' +
+        'data-participant-role="' +
+        escapeHtml(record.role) +
+        '" data-required="' +
+        String(record.required) +
+        '" data-status="' +
+        escapeHtml(record.status) +
+        '">' +
+        "<div>" +
+        "<strong>" +
+        escapeHtml(
+          record.fibonacci
+            ? record.fibonacci +
+              " · " +
+              record.label
+            : record.label
+        ) +
+        "</strong>" +
+        "<span>" +
+        escapeHtml(
+          record.required
+            ? "Required"
+            : "Optional"
+        ) +
+        " · " +
+        escapeHtml(record.file) +
+        "</span>" +
+        "</div>" +
+        "<small>" +
+        escapeHtml(record.status) +
+        "</small>" +
+        "</article>"
+      );
+    })
+    .join("");
+
+wireParticipantNodes();
+renderParticipantDetail();
+
+}
+
+function renderParticipantDetail() {
+var detail =
+byId("participantDetail");
+
+if (!detail) {
+  return;
+}
+
+var record =
+  state.participants.records.find(function findSelected(entry) {
+    return (
+      entry.role ===
+      state.activeParticipantRole
+    );
+  }) || null;
+
+if (!record) {
+  detail.innerHTML =
+    "<h3>Select a participant</h3>" +
+    "<p>Participant inspection reveals file, requirement, alias, contract, version, position, and callable methods without execution.</p>";
+
+  return;
+}
+
+detail.innerHTML =
+  "<h3>" +
+  escapeHtml(record.label) +
+  "</h3>" +
+  "<p><strong>Status:</strong> " +
+  escapeHtml(record.status) +
+  "</p>" +
+  "<p><strong>File:</strong> " +
+  escapeHtml(record.file) +
+  "</p>" +
+  "<p><strong>Resolved global:</strong> " +
+  escapeHtml(record.resolvedGlobal || "Not resolved") +
+  "</p>" +
+  "<p><strong>Contract:</strong> " +
+  escapeHtml(record.contract || "Unknown") +
+  "</p>" +
+  "<p><strong>Version:</strong> " +
+  escapeHtml(record.version || "Unknown") +
+  "</p>" +
+  "<p><strong>Methods:</strong> " +
+  escapeHtml(
+    record.methods.length
+      ? record.methods.join(", ")
+      : "None observed"
+  ) +
+  "</p>";
+
+}
+
+function renderReadReport() {
+var report =
+state.report.current;
+
+if (!report) {
+  return;
+}
+
+setHtml(
+  "readResult",
+  renderReadRegion(
+    "R",
+    "Result",
+    report.read.result
+  )
+);
+
+setHtml(
+  "readEvidence",
+  renderReadRegion(
+    "E",
+    "Evidence",
+    report.read.evidence
+      .map(function mapEvidence(entry) {
+        return (
+          String(entry.label) +
+          ": " +
+          String(entry.value)
+        );
+      })
+      .join("\n")
+  )
+);
+
+setHtml(
+  "readAbsence",
+  renderReadRegion(
+    "A",
+    "Absence",
+    report.read.absence.length
+      ? report.read.absence
+          .map(function mapAbsence(entry) {
+            return (
+              entry.code ||
+              entry.type ||
+              "UNKNOWN"
+            );
+          })
+          .join("\n")
+      : "No absence records."
+  )
+);
+
+setHtml(
+  "readDirection",
+  renderReadRegion(
+    "D",
+    "Direction",
+    report.read.direction
+      .map(function mapDirection(entry) {
+        return (
+          entry.action ||
+          "Review current evidence"
+        );
+      })
+      .join("\n")
+  )
+);
+
+}
+
+function renderReadRegion(letter, label, content) {
+var paragraphs =
+String(content || "")
+.split("\n")
+.filter(Boolean);
+
+return (
+  "<header>" +
+  "<span>" +
+  escapeHtml(letter) +
+  "</span>" +
+  "<div>" +
+  "<p>" +
+  escapeHtml(label) +
+  "</p>" +
+  "<strong>" +
+  escapeHtml(
+    paragraphs[0] ||
+    "No current entry"
+  ) +
+  "</strong>" +
+  "</div>" +
+  "</header>" +
+  (
+    paragraphs.length > 1
+      ? "<ul>" +
+        paragraphs
+          .slice(1)
+          .map(function renderParagraph(entry) {
+            return (
+              "<li>" +
+              escapeHtml(entry) +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ul>"
+      : "<p>" +
+        escapeHtml(
+          paragraphs[0] ||
+          "No current entry"
+        ) +
+        "</p>"
+  )
+);
+
+}
+
+function renderReportChamber() {
+var report =
+state.report.current;
+
+setDisabled(
+  "copyReadableReport",
+  !report
+);
+
+setDisabled(
+  "copyPacketReport",
+  !report
+);
+
+setDisabled(
+  "copyRawReport",
+  !report
+);
+
+setDisabled(
+  "addReportToArchive",
+  !report
+);
+
+if (!report) {
+  setText(
+    "reportStatus",
+    "READY"
+  );
+
+  setStatus(
+    "reportStatus",
+    "READY"
+  );
+
+  setText(
+    "reportTitle",
+    "No report created"
+  );
+
+  setText(
+    "reportCreatedAt",
+    "—"
+  );
+
+  return;
+}
+
+setText(
+  "reportStatus",
+  "READY"
+);
+
+setStatus(
+  "reportStatus",
+  "READY"
+);
+
+setText(
+  "reportTitle",
+  report.audit.label
+);
+
+setText(
+  "reportCreatedAt",
+  report.createdAt
+);
+
+setText(
+  "reportMeta",
+  report.reportId +
+  " · " +
+  report.reportHash
+);
+
+setText(
+  "packetOutput",
+  state.report.packetText
+);
+
+setText(
+  "rawOutput",
+  state.report.rawText
+);
+
+setHtml(
+  "evidenceOutput",
+  report.read.evidence
+    .map(function renderEvidence(entry) {
+      return (
+        "<article>" +
+        "<h3>" +
+        escapeHtml(entry.label) +
+        "</h3>" +
+        "<p>" +
+        escapeHtml(entry.value) +
+        "</p>" +
+        "</article>"
+      );
+    })
+    .join("")
+);
+
+renderReadReport();
+
+}
+
+function renderReportModes() {
+var modes = [
+"read",
+"packet",
+"raw",
+"evidence"
+];
+
+modes.forEach(function toggleMode(mode) {
+  var button =
+    byId(
+      "report" +
+      mode.charAt(0).toUpperCase() +
+      mode.slice(1) +
+      "Button"
+    );
+
+  var panel =
+    byId(
+      "report" +
+      mode.charAt(0).toUpperCase() +
+      mode.slice(1) +
+      "Panel"
+    );
+
+  if (button) {
+    button.setAttribute(
+      "aria-selected",
+      mode === state.activeReportMode
+        ? "true"
+        : "false"
+    );
+  }
+
+  if (panel) {
+    panel.hidden =
+      mode !== state.activeReportMode;
+  }
+});
+
+}
+
+function renderObservationLens() {
+var target =
+state.observation.targetLight;
+
+var runtimeStatus =
+  target &&
+  target.targetRuntimeStatus
+    ? target.targetRuntimeStatus
+    : {};
+
+var detail =
+  runtimeStatus &&
+  runtimeStatus.statusDetail
+    ? runtimeStatus.statusDetail
+    : {};
+
+setText(
+  "targetFramePresent",
+  target
+    ? yesNoUnknown(
+        target.framePresent
+      )
+    : "Unknown"
+);
+
+setText(
+  "targetSameOrigin",
+  target
+    ? yesNoUnknown(
+        target.sameOriginAccessible
+      )
+    : "Unknown"
+);
+
+setText(
+  "targetDocumentState",
+  target &&
+  target.documentReadyState
+    ? target.documentReadyState
+    : "Unknown"
+);
+
+setText(
+  "targetRouteMatch",
+  target
+    ? yesNoUnknown(
+        target.routeMatch
+      )
+    : "Unknown"
+);
+
+setText(
+  "targetPath",
+  target &&
+  target.targetPath
+    ? target.targetPath
+    : TARGET_ROUTE
+);
+
+setText(
+  "targetTitle",
+  target &&
+  target.targetTitle
+    ? target.targetTitle
+    : "Unknown"
+);
+
+setText(
+  "targetAccessError",
+  target &&
+  target.readError
+    ? target.readError
+    : "None observed"
+);
+
+setText(
+  "runtimeGlobal",
+  target &&
+  target.runtimeGlobalName
+    ? target.runtimeGlobalName
+    : "Unknown"
+);
+
+setText(
+  "runtimeMounted",
+  yesNoUnknown(
+    firstBoolean(
+      runtimeStatus.mounted,
+      detail.mounted
+    )
+  )
+);
+
+setText(
+  "runtimeGeometry",
+  yesNoUnknown(
+    firstBoolean(
+      runtimeStatus.geometryReady,
+      detail.geometryReady
+    )
+  )
+);
+
+setText(
+  "runtimeStageRect",
+  yesNoUnknown(
+    firstBoolean(
+      runtimeStatus.stageRectNonzero,
+      runtimeStatus.surfaceNonzero,
+      detail.stageRectNonzero,
+      detail.surfaceNonzero
+    )
+  )
+);
+
+setText(
+  "runtimeFirstFrame",
+  yesNoUnknown(
+    firstBoolean(
+      runtimeStatus.firstFrameDrawn,
+      runtimeStatus.firstFrameSubmitted,
+      runtimeStatus.firstFramePresented,
+      detail.firstFrameDrawn,
+      detail.firstFrameSubmitted,
+      detail.firstFramePresented
+    )
+  )
+);
+
+setText(
+  "runtimeVisiblePixel",
+  yesNoUnknown(
+    firstBoolean(
+      runtimeStatus.visiblePixelObserved,
+      runtimeStatus.firstVisiblePixelObserved,
+      detail.visiblePixelObserved,
+      detail.firstVisiblePixelObserved
+    )
+  )
+);
+
+setText(
+  "runtimeFallback",
+  yesNoUnknown(
+    firstBoolean(
+      runtimeStatus.fallbackActive,
+      detail.fallbackActive
+    )
+  )
+);
+
+setText(
+  "runtimeReceiptAvailability",
+  target
+    ? (
+        target.receiptMethodPresent
+          ? "Full receipt available"
+          : target.receiptLightMethodPresent
+            ? "Light receipt available"
+            : "No receipt method observed"
+      )
+    : "Unknown"
+);
+
+var surface =
+  state.observation.surfaceTruth;
+
+setText(
+  "surfaceAuthority",
+  surface &&
+  surface.globalPath
+    ? surface.globalPath
+    : "Unknown"
+);
+
+setText(
+  "surfaceMethod",
+  surface &&
+  surface.methods.length
+    ? surface.methods.join(", ")
+    : "Unknown"
+);
+
+setText(
+  "surfaceContract",
+  surface &&
+  surface.contract
+    ? surface.contract
+    : "Unknown"
+);
+
+setText(
+  "surfaceReceipt",
+  surface &&
+  surface.receipt
+    ? "Available"
+    : "Unknown"
+);
+
+setText(
+  "surfacePacketKeys",
+  surface &&
+  surface.packetKeys.length
+    ? surface.packetKeys.join(", ")
+    : "Unknown"
+);
+
+setText(
+  "surfaceFirstHeld",
+  surface &&
+  surface.firstHeldCoordinate
+    ? surface.firstHeldCoordinate
+    : "Unknown"
+);
+
+setText(
+  "surfaceFirstFailed",
+  surface &&
+  surface.firstFailedCoordinate
+    ? surface.firstFailedCoordinate
+    : "Unknown"
+);
+
+setText(
+  "surfaceRecommendedOwner",
+  surface &&
+  surface.recommendedOwner
+    ? safeJson(
+        surface.recommendedOwner
+      )
+    : "Unknown"
+);
+
+setText(
+  "surfaceRecommendedFile",
+  surface &&
+  surface.recommendedFile
+    ? surface.recommendedFile
+    : "Unknown"
+);
+
+setText(
+  "surfaceRecommendedAction",
+  surface &&
+  surface.recommendedAction
+    ? surface.recommendedAction
+    : "Unknown"
+);
+
+setText(
+  "surfaceError",
+  surface &&
+  surface.error
+    ? surface.error
+    : "None observed"
+);
+
+renderObservationLensTabs();
+
+}
+
+function yesNoUnknown(value) {
+return value === true
+? "Yes"
+: value === false
+? "No"
+: "Unknown";
+}
+
+function renderObservationLensTabs() {
+var map = {
+target: "targetLens",
+runtime: "runtimeLens",
+surface: "surfaceLens",
+window: "targetWindow"
 };
 
-buttons.forEach(function bindTab(button) {
+Object.keys(map).forEach(function toggleLens(key) {
+  var button =
+    doc.querySelector(
+      '[data-observation-lens="' +
+      key +
+      '"]'
+    );
+
+  var panel =
+    byId(map[key]);
+
+  if (button) {
+    button.setAttribute(
+      "aria-selected",
+      key === state.activeObservationLens
+        ? "true"
+        : "false"
+    );
+  }
+
+  if (panel) {
+    panel.hidden =
+      key !== state.activeObservationLens;
+  }
+});
+
+}
+
+function renderCycleChamber() {
+var ledger =
+state.cycle.ledger;
+
+setText(
+  "cyclePreviewSummary",
+  ""
+);
+
+setText(
+  "cycleLedgerOutput",
+  ledger
+    ? safeJson(ledger)
+    : "No cycle ledger has been produced."
+);
+
+var list =
+  byId("cycleReceiptList");
+
+if (list) {
+  list.innerHTML =
+    state.cycle.receipts.length
+      ? state.cycle.receipts
+          .map(function renderReceipt(receipt) {
+            return (
+              "<article>" +
+              "<h4>" +
+              escapeHtml(
+                receipt.fibonacci +
+                " · " +
+                receipt.stationId
+              ) +
+              "</h4>" +
+              "<p>" +
+              escapeHtml(receipt.status) +
+              "</p>" +
+              "<p>" +
+              escapeHtml(receipt.summary) +
+              "</p>" +
+              "</article>"
+            );
+          })
+          .join("")
+      : '<article class="empty-state"><h4>No cycle receipts</h4><p>Run Nine-Cycle explicitly to create station receipts.</p></article>';
+}
+
+STATIONS.forEach(function renderStation(definition) {
+  var node =
+    doc.querySelector(
+      '[data-station="' +
+      definition.stationId +
+      '"]'
+    );
+
+  var receipt =
+    state.cycle.receipts.find(function findReceipt(entry) {
+      return entry.stationId === definition.stationId;
+    });
+
+  if (node) {
+    setStatus(
+      node,
+      receipt
+        ? receipt.status
+        : "UNKNOWN"
+    );
+  }
+});
+
+var execution =
+  byId("cycleExecutionSummary");
+
+if (execution) {
+  execution.innerHTML =
+    "<span>Execution</span>" +
+    "<strong>" +
+    escapeHtml(
+      ledger
+        ? ledger.overallStatus
+        : state.cycle.running
+          ? state.cycle.runPhase
+          : "Not run"
+    ) +
+    "</strong>" +
+    "<p>" +
+    escapeHtml(
+      ledger
+        ? ledger.terminalSummary
+        : state.cycle.running
+          ? "The explicit nine-cycle is in progress."
+          : "No conductor cycle has been created during this session."
+    ) +
+    "</p>";
+}
+
+}
+
+function renderRegistryChamber() {
+var snapshot =
+state.observation.registry || {};
+
+var authorityRecords =
+  state.observation.authorityRecords || [];
+
+var engineRecords =
+  state.observation.engineRecords || [];
+
+setText(
+  "governingContractCount",
+  Number(
+    snapshot.authorityCount ||
+    snapshot.governingAuthorityCount ||
+    authorityRecords.length ||
+    0
+  )
+);
+
+setText(
+  "assignedEngineCount",
+  Number(
+    snapshot.assignedEngineCount ||
+    engineRecords.filter(function countAssigned(record) {
+      return !record.reserved;
+    }).length ||
+    0
+  )
+);
+
+setText(
+  "selectableEngineCount",
+  Number(
+    snapshot.selectableEngineCount ||
+    engineRecords.filter(function countSelectable(record) {
+      return record.selectable;
+    }).length ||
+    0
+  )
+);
+
+setText(
+  "reservedEngineCount",
+  Number(
+    snapshot.reservedEngineCount ||
+    engineRecords.filter(function countReserved(record) {
+      return record.reserved;
+    }).length ||
+    0
+  )
+);
+
+var list =
+  byId("registryRecordList");
+
+if (list) {
+  var records =
+    authorityRecords.concat(engineRecords);
+
+  list.innerHTML =
+    records.length
+      ? records
+          .map(function renderRecord(record) {
+            return (
+              "<article>" +
+              "<h4>" +
+              escapeHtml(
+                record.authorityName ||
+                record.engineName ||
+                record.authorityId ||
+                record.engineId ||
+                "Registry Record"
+              ) +
+              "</h4>" +
+              "<p>Status: " +
+              escapeHtml(
+                record.status ||
+                "UNKNOWN"
+              ) +
+              "</p>" +
+              "<p>File: " +
+              escapeHtml(
+                record.file ||
+                "Not declared"
+              ) +
+              "</p>" +
+              "</article>"
+            );
+          })
+          .join("")
+      : '<article class="empty-state"><h4>Registry not observed</h4><p>No registry records are currently available.</p></article>';
+}
+
+setHtml(
+  "selectedEngineDetail",
+  "<h4>Selected Engine</h4><pre>" +
+  escapeHtml(
+    safeJson(
+      state.observation.selectedEngine
+    )
+  ) +
+  "</pre>"
+);
+
+setHtml(
+  "engineRuntimeDetail",
+  "<h4>Runtime Evidence</h4><pre>" +
+  escapeHtml(
+    safeJson({
+      inspection:
+        state.observation.engineInspection,
+      ops:
+        state.observation.engineOps,
+      receipt:
+        state.observation.engineReceipt
+    })
+  ) +
+  "</pre>"
+);
+
+}
+
+function renderReceiptChamber() {
+var receipts = [];
+
+state.cycle.receipts.forEach(function addCycleReceipt(receipt) {
+  receipts.push({
+    type: "cycle",
+    label:
+      receipt.fibonacci +
+      " · " +
+      receipt.stationId,
+    record:
+      receipt
+  });
+});
+
+state.direct.history.forEach(function addDirectReceipt(record) {
+  receipts.push({
+    type: "direct",
+    label:
+      record.audit.label,
+    record:
+      record
+  });
+});
+
+state.archive.errors.forEach(function addErrorReceipt(record) {
+  receipts.push({
+    type: "error",
+    label:
+      record.message ||
+      record.type ||
+      "Error",
+    record:
+      record
+  });
+});
+
+var list =
+  byId("receiptList");
+
+if (!list) {
+  return;
+}
+
+list.innerHTML =
+  receipts.length
+    ? receipts
+        .map(function renderReceipt(entry, index) {
+          return (
+            '<article tabindex="0" role="button" data-receipt-index="' +
+            String(index) +
+            '">' +
+            "<h4>" +
+            escapeHtml(entry.label) +
+            "</h4>" +
+            "<p>Type: " +
+            escapeHtml(entry.type) +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("")
+    : '<article class="empty-state"><h4>No receipts collected</h4><p>Reports, direct checks, observations, and cycle execution may contribute receipts.</p></article>';
+
+}
+
+function renderArchiveChamber() {
+var count =
+state.archive.reports.length +
+state.archive.directResults.length +
+state.archive.cycleRuns.length +
+state.archive.errors.length;
+
+setText(
+  "archiveSessionCount",
+  count
+);
+
+setHtml(
+  "archiveReportList",
+  state.archive.reports.length
+    ? state.archive.reports
+        .map(function renderArchivedReport(report) {
+          return (
+            "<article>" +
+            "<h4>" +
+            escapeHtml(
+              report.audit.label
+            ) +
+            "</h4>" +
+            "<p>" +
+            escapeHtml(
+              report.reportId
+            ) +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("")
+    : '<article class="empty-state"><h4>No archived reports</h4><p>Create a report and add it to the archive.</p></article>'
+);
+
+setHtml(
+  "archiveErrorList",
+  state.archive.errors.length
+    ? state.archive.errors
+        .map(function renderArchivedError(error) {
+          return (
+            "<article>" +
+            "<h4>Error</h4>" +
+            "<p>" +
+            escapeHtml(
+              error.message ||
+              safeJson(error)
+            ) +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("")
+    : '<article class="empty-state"><h4>No archived errors</h4><p>No controller, participant, observation, direct, or cycle errors have been archived.</p></article>'
+);
+
+setText(
+  "archiveRawOutput",
+  state.archive.deepArchive
+    ? safeJson(
+        state.archive.deepArchive
+      )
+    : "No deep archive has been created."
+);
+
+}
+
+function renderBoundaryChamber() {
+setStatus(
+"boundaryChamber",
+"ACTIVE"
+);
+}
+
+function renderInstrumentDeckTabs() {
+var map = {
+cycle: "cycleChamber",
+registry: "registryChamber",
+receipts: "receiptChamber",
+archive: "archiveChamber",
+boundary: "boundaryChamber"
+};
+
+Object.keys(map).forEach(function toggleChamber(key) {
+  var button =
+    doc.querySelector(
+      '[data-instrument-chamber="' +
+      key +
+      '"]'
+    );
+
+  var panel =
+    byId(map[key]);
+
+  if (button) {
+    button.setAttribute(
+      "aria-selected",
+      key === state.activeInstrumentChamber
+        ? "true"
+        : "false"
+    );
+  }
+
+  if (panel) {
+    panel.hidden =
+      key !== state.activeInstrumentChamber;
+  }
+});
+
+}
+
+function renderExecutionState() {
+var controllerState =
+byId("controllerState");
+
+if (state.cycle.running) {
+  setText(
+    "controllerState",
+    state.cycle.runPhase
+  );
+
+  setStatus(
+    controllerState,
+    "RUNNING"
+  );
+} else if (state.direct.running) {
+  setText(
+    "controllerState",
+    "EXECUTING"
+  );
+
+  setStatus(
+    controllerState,
+    "RUNNING"
+  );
+} else {
+  setText(
+    "controllerState",
+    "REPORT READY"
+  );
+
+  setStatus(
+    controllerState,
+    "READY"
+  );
+}
+
+setDisabled(
+  "runDirectCheck",
+  state.direct.running ||
+  state.cycle.running
+);
+
+setDisabled(
+  "runNineCycle",
+  state.direct.running ||
+  state.cycle.running
+);
+
+}
+
+function renderWorkbench() {
+renderDropRail();
+renderEvidenceRail();
+renderSelectors();
+renderSelectedAudit();
+renderParticipantConstellation();
+renderReportChamber();
+renderReportModes();
+renderObservationLens();
+renderCycleChamber();
+renderRegistryChamber();
+renderReceiptChamber();
+renderArchiveChamber();
+renderBoundaryChamber();
+renderInstrumentDeckTabs();
+renderExecutionState();
+}
+
+function resetCurrentReport() {
+state.report.current =
+null;
+
+state.report.readableText =
+  "";
+
+state.report.packetText =
+  "";
+
+state.report.rawText =
+  "";
+
+state.report.evidence =
+  [];
+
+renderWorkbench();
+
+toast(
+  "Current report reset."
+);
+
+}
+
+function resetWorkbench() {
+state.report.current =
+null;
+
+state.report.readableText =
+  "";
+
+state.report.packetText =
+  "";
+
+state.report.rawText =
+  "";
+
+state.report.evidence =
+  [];
+
+state.direct.lastResult =
+  null;
+
+state.direct.lastError =
+  null;
+
+state.cycle.preflight =
+  null;
+
+state.cycle.preflightProgress =
+  null;
+
+state.cycle.stationRegistrations =
+  [];
+
+state.cycle.auxiliaryRegistrations =
+  [];
+
+state.cycle.conductorResult =
+  null;
+
+state.cycle.conductorReceipt =
+  null;
+
+state.cycle.conductorState =
+  null;
+
+state.cycle.receipts =
+  [];
+
+state.cycle.ledger =
+  null;
+
+state.cycle.readerReport =
+  "";
+
+state.cycle.lastError =
+  null;
+
+state.drop.direct =
+  laneState("IDLE");
+
+state.drop.report =
+  laneState("READY");
+
+state.drop.observation =
+  laneState("OBSERVING");
+
+state.drop.participant =
+  laneState("LOADING");
+
+buildParticipantSnapshot();
+observeLightweight();
+renderWorkbench();
+
+toast(
+  "Workbench reset."
+);
+
+}
+
+function toggleSelector(buttonId, menuId) {
+var button =
+byId(buttonId);
+
+var menu =
+  byId(menuId);
+
+if (!button || !menu) {
+  return;
+}
+
+var willOpen =
+  menu.hidden;
+
+closeAllSelectors();
+
+menu.hidden =
+  !willOpen;
+
+button.setAttribute(
+  "aria-expanded",
+  willOpen
+    ? "true"
+    : "false"
+);
+
+}
+
+function closeAllSelectors() {
+[
+["categorySelectorButton", "categorySelectorMenu"],
+["auditSelectorButton", "auditSelectorMenu"]
+].forEach(function closePair(pair) {
+var button =
+byId(pair[0]);
+
+  var menu =
+    byId(pair[1]);
+
+  if (button) {
+    button.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+  }
+
+  if (menu) {
+    menu.hidden =
+      true;
+  }
+});
+
+}
+
+function wireDynamicAuditOptions() {
+Array.prototype.slice.call(
+doc.querySelectorAll(
+"[data-audit-id]"
+)
+).forEach(function bindAuditOption(button) {
+if (button.__audraliaBound) {
+return;
+}
+
+  button.__audraliaBound =
+    true;
+
   button.addEventListener(
     "click",
-    function activateTab() {
-      var tab =
+    function chooseAudit() {
+      selectAudit(
         button.getAttribute(
-          "data-tab"
-        );
+          "data-audit-id"
+        )
+      );
 
-      buttons.forEach(function resetTab(other) {
+      closeAllSelectors();
+    }
+  );
+});
+
+}
+
+function wireParticipantNodes() {
+Array.prototype.slice.call(
+doc.querySelectorAll(
+".participant-node[data-participant-role]"
+)
+).forEach(function bindParticipant(node) {
+if (node.__audraliaBound) {
+return;
+}
+
+  node.__audraliaBound =
+    true;
+
+  function chooseParticipant() {
+    selectParticipant(
+      node.getAttribute(
+        "data-participant-role"
+      )
+    );
+  }
+
+  node.addEventListener(
+    "click",
+    chooseParticipant
+  );
+
+  node.addEventListener(
+    "keydown",
+    function participantKeydown(event) {
+      if (
+        event.key === "Enter" ||
+        event.key === " "
+      ) {
+        event.preventDefault();
+        chooseParticipant();
+      }
+    }
+  );
+});
+
+}
+
+function wireTabs() {
+Array.prototype.slice.call(
+doc.querySelectorAll(
+"[data-left-orbit-view]"
+)
+).forEach(function bindLeftOrbit(button) {
+button.addEventListener(
+"click",
+function switchLeftOrbit() {
+var view =
+button.getAttribute(
+"data-left-orbit-view"
+);
+
+      setHidden(
+        "auditOrbit",
+        view !== "audits"
+      );
+
+      setHidden(
+        "participantConstellation",
+        view !== "participants"
+      );
+
+      Array.prototype.slice.call(
+        doc.querySelectorAll(
+          "[data-left-orbit-view]"
+        )
+      ).forEach(function updateButton(other) {
         other.setAttribute(
           "aria-selected",
           other === button
@@ -5613,13 +7193,57 @@ buttons.forEach(function bindTab(button) {
             : "false"
         );
       });
+    }
+  );
+});
 
-      Object.keys(panels).forEach(function togglePanel(key) {
-        if (panels[key]) {
-          panels[key].hidden =
-            key !== tab;
-        }
-      });
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-report-mode]"
+  )
+).forEach(function bindReportMode(button) {
+  button.addEventListener(
+    "click",
+    function chooseReportMode() {
+      selectReportMode(
+        button.getAttribute(
+          "data-report-mode"
+        )
+      );
+    }
+  );
+});
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-observation-lens]"
+  )
+).forEach(function bindObservationLens(button) {
+  button.addEventListener(
+    "click",
+    function chooseObservationLens() {
+      selectObservationLens(
+        button.getAttribute(
+          "data-observation-lens"
+        )
+      );
+    }
+  );
+});
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-instrument-chamber]"
+  )
+).forEach(function bindInstrumentChamber(button) {
+  button.addEventListener(
+    "click",
+    function chooseInstrumentChamber() {
+      selectInstrumentChamber(
+        button.getAttribute(
+          "data-instrument-chamber"
+        )
+      );
     }
   );
 });
@@ -5627,76 +7251,251 @@ buttons.forEach(function bindTab(button) {
 }
 
 function wireUi() {
-var runButton =
-byId("runDiagnostic");
+byId("categorySelectorButton")
+.addEventListener(
+"click",
+function openCategorySelector() {
+toggleSelector(
+"categorySelectorButton",
+"categorySelectorMenu"
+);
+}
+);
 
-var targetButton =
-  byId("toggleTargetFrame");
-
-var copyReaderButton =
-  byId("copyReaderReport");
-
-var copyLedgerButton =
-  byId("copyReceiptLedger");
-
-if (runButton) {
-  runButton.addEventListener(
+byId("auditSelectorButton")
+  .addEventListener(
     "click",
-    function requestDiagnosticRun() {
-      runDiagnostic();
+    function openAuditSelector() {
+      toggleSelector(
+        "auditSelectorButton",
+        "auditSelectorMenu"
+      );
     }
   );
-}
 
-if (targetButton) {
-  targetButton.addEventListener(
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-category-id]"
+  )
+).forEach(function bindCategoryOption(button) {
+  button.addEventListener(
     "click",
-    function toggleTargetFrame() {
-      var shell =
-        byId("targetFrameShell");
+    function chooseCategory() {
+      selectCategory(
+        button.getAttribute(
+          "data-category-id"
+        )
+      );
 
-      if (!shell) {
-        return;
+      closeAllSelectors();
+    }
+  );
+});
+
+byId("createReport")
+  .addEventListener(
+    "click",
+    createReport
+  );
+
+byId("runDirectCheck")
+  .addEventListener(
+    "click",
+    runSelectedDirectCheck
+  );
+
+byId("runNineCycle")
+  .addEventListener(
+    "click",
+    runNineCycle
+  );
+
+byId("copyReadableReport")
+  .addEventListener(
+    "click",
+    function copyReadable() {
+      copyText(
+        state.report.readableText,
+        "Readable report copied."
+      );
+    }
+  );
+
+byId("copyPacketReport")
+  .addEventListener(
+    "click",
+    function copyPacket() {
+      copyText(
+        state.report.packetText,
+        "Report packet copied."
+      );
+    }
+  );
+
+byId("copyRawReport")
+  .addEventListener(
+    "click",
+    function copyRaw() {
+      copyText(
+        state.report.rawText,
+        "Raw report copied."
+      );
+    }
+  );
+
+byId("addReportToArchive")
+  .addEventListener(
+    "click",
+    addCurrentReportToArchive
+  );
+
+byId("resetCurrentReport")
+  .addEventListener(
+    "click",
+    resetCurrentReport
+  );
+
+byId("resetWorkbench")
+  .addEventListener(
+    "click",
+    resetWorkbench
+  );
+
+byId("createDeepArchive")
+  .addEventListener(
+    "click",
+    createDeepArchive
+  );
+
+byId("reloadObservatory")
+  .addEventListener(
+    "click",
+    function reloadObservatory() {
+      root.location.reload();
+    }
+  );
+
+byId("toggleObservationTarget")
+  .addEventListener(
+    "click",
+    function toggleObservationTarget() {
+      state.targetVisible =
+        !state.targetVisible;
+
+      state.activeObservationLens =
+        state.targetVisible
+          ? "window"
+          : "target";
+
+      byId("toggleObservationTarget")
+        .setAttribute(
+          "aria-expanded",
+          state.targetVisible
+            ? "true"
+            : "false"
+        );
+
+      setText(
+        "toggleObservationTarget",
+        state.targetVisible
+          ? "Hide Target"
+          : "Show Target"
+      );
+
+      renderObservationLensTabs();
+    }
+  );
+
+byId("expandTargetWindow")
+  .addEventListener(
+    "click",
+    function expandTargetWindow() {
+      state.targetExpanded =
+        !state.targetExpanded;
+
+      var targetWindow =
+        byId("targetWindow");
+
+      targetWindow.classList.toggle(
+        "is-expanded",
+        state.targetExpanded
+      );
+
+      byId("expandTargetWindow")
+        .setAttribute(
+          "aria-pressed",
+          state.targetExpanded
+            ? "true"
+            : "false"
+        );
+
+      setText(
+        "expandTargetWindow",
+        state.targetExpanded
+          ? "Collapse"
+          : "Expand"
+      );
+    }
+  );
+
+byId("reloadTargetFrame")
+  .addEventListener(
+    "click",
+    function reloadTargetFrame() {
+      var frame =
+        byId(TARGET_FRAME_ID);
+
+      if (frame) {
+        frame.src =
+          TARGET_ROUTE +
+          "?diagnosticReload=" +
+          Date.now();
       }
-
-      shell.hidden =
-        !shell.hidden;
-
-      targetButton.setAttribute(
-        "aria-expanded",
-        shell.hidden
-          ? "false"
-          : "true"
-      );
     }
   );
-}
 
-if (copyReaderButton) {
-  copyReaderButton.addEventListener(
-    "click",
-    function copyReaderReport() {
-      copyText(
-        state.readerReport,
-        "Reader report copied."
-      );
+byId(TARGET_FRAME_ID)
+  .addEventListener(
+    "load",
+    function targetFrameLoaded() {
+      observeLightweight();
+      renderWorkbench();
     }
   );
-}
 
-if (copyLedgerButton) {
-  copyLedgerButton.addEventListener(
-    "click",
-    function copyLedger() {
-      copyText(
-        state.rawLedgerText,
-        "Receipt ledger copied."
-      );
+doc.addEventListener(
+  "click",
+  function closeMenusOnOutsideClick(event) {
+    if (
+      !event.target.closest(
+        ".custom-selector"
+      )
+    ) {
+      closeAllSelectors();
     }
-  );
-}
+  }
+);
 
 wireTabs();
+wireDynamicAuditOptions();
+
+}
+
+function publishDiagnosticOutputs() {
+root.AUDRALIA_DROP_WITH_READ_CURRENT_REPORT =
+state.report.current;
+
+root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
+  state.cycle.ledger;
+
+root.AUDRALIA_DIAGNOSTIC_READER_REPORT =
+  state.cycle.readerReport;
+
+root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
+  state.cycle.preflight;
+
+root.AUDRALIA_DROP_WITH_READ_DEEP_ARCHIVE =
+  state.archive.deepArchive;
 
 }
 
@@ -5717,74 +7516,50 @@ CONTRACT,
   initialized:
     state.initialized,
 
-  running:
-    state.running,
+  bootedAt:
+    state.bootedAt,
 
-  runPhase:
-    state.runPhase,
+  updatedAt:
+    state.updatedAt,
 
-  cycleId:
-    state.cycleId,
+  activeCategoryId:
+    state.activeCategoryId,
 
-  lastRunAt:
-    state.lastRunAt,
+  activeAuditId:
+    state.activeAuditId,
 
-  targetPreflight:
-    state.targetPreflight,
+  activeParticipantRole:
+    state.activeParticipantRole,
 
-  targetPreflightProgress:
-    state.targetPreflightProgress,
+  activeReportMode:
+    state.activeReportMode,
 
-  registrySnapshot:
-    state.registrySnapshot,
+  activeObservationLens:
+    state.activeObservationLens,
 
-  registryReceipt:
-    state.registryReceipt,
+  activeInstrumentChamber:
+    state.activeInstrumentChamber,
 
-  authorityRecords:
-    state.authorityRecords,
+  drop:
+    state.drop,
 
-  engineRecords:
-    state.engineRecords,
+  participants:
+    state.participants,
 
-  selectedEngine:
-    state.selectedEngine,
+  observation:
+    state.observation,
 
-  engineInspection:
-    state.engineInspection,
+  report:
+    state.report,
 
-  engineOps:
-    state.engineOps,
+  direct:
+    state.direct,
 
-  engineReceipt:
-    state.engineReceipt,
+  cycle:
+    state.cycle,
 
-  conductorReceipt:
-    state.conductorReceipt,
-
-  conductorState:
-    state.conductorState,
-
-  stationRegistrations:
-    state.stationRegistrations,
-
-  auxiliaryRegistrations:
-    state.auxiliaryRegistrations,
-
-  receiptCount:
-    state.receipts.length,
-
-  receipts:
-    state.receipts,
-
-  ledger:
-    state.ledger,
-
-  readerReport:
-    state.readerReport,
-
-  lastError:
-    state.lastError
+  archive:
+    state.archive
 });
 
 }
@@ -5809,75 +7584,101 @@ CONTRACT,
   CSS_CONTRACT:
     CSS_CONTRACT,
 
-  GOVERNING_ENGINE_CONTRACT:
-    GOVERNING_ENGINE_CONTRACT,
+  BLUEPRINT:
+    BLUEPRINT,
 
-  CORE_ENGINE_CONTRACT:
-    CORE_ENGINE_CONTRACT,
+  PREBUILD_REGISTRY:
+    PREBUILD_REGISTRY,
 
-  REGISTRY_CONTRACT:
-    REGISTRY_CONTRACT,
+  REPORT_SCHEMA:
+    REPORT_SCHEMA,
 
-  DEFAULT_ENGINE_ID:
-    DEFAULT_ENGINE_ID,
+  READ_SCHEMA:
+    READ_SCHEMA,
 
-  TARGET_RUNTIME_GLOBALS:
-    TARGET_RUNTIME_GLOBALS,
-
-  TARGET_RUNTIME_WAIT_INTERVAL_MS:
-    TARGET_RUNTIME_WAIT_INTERVAL_MS,
-
-  TARGET_RUNTIME_WAIT_TIMEOUT_MS:
-    TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+  ARCHIVE_SCHEMA:
+    ARCHIVE_SCHEMA,
 
   LEDGER_SCHEMA:
     LEDGER_SCHEMA,
 
+  RECEIPT_SCHEMA:
+    RECEIPT_SCHEMA,
+
   READER_REPORT_SCHEMA:
     READER_REPORT_SCHEMA,
 
-  runDiagnostic:
-    runDiagnostic,
+  TARGET_RUNTIME_GLOBALS:
+    TARGET_RUNTIME_GLOBALS,
 
-  inspectTargetFrame:
-    inspectTargetFrameFull,
+  PARTICIPANT_MANIFEST:
+    PARTICIPANT_MANIFEST,
+
+  CATEGORY_REGISTRY:
+    CATEGORY_REGISTRY,
+
+  createReport:
+    createReport,
+
+  runSelectedDirectCheck:
+    runSelectedDirectCheck,
+
+  runNineCycle:
+    runNineCycle,
+
+  observe:
+    function publicObserve() {
+      var observation =
+        observeLightweight();
+
+      renderWorkbench();
+
+      return observation;
+    },
 
   inspectTargetFrameLight:
-    function publicInspectTargetFrameLight() {
-      return frozenClone(
-        inspectTargetFrameLight()
-      );
-    },
+    inspectTargetFrameLight,
 
   inspectTargetFrameFull:
     inspectTargetFrameFull,
 
-  targetRuntimeAdmissionState:
-    function publicTargetRuntimeAdmissionState(snapshot) {
-      return frozenClone(
-        targetRuntimeAdmissionState(
-          snapshot
-        )
-      );
+  buildParticipantSnapshot:
+    function publicBuildParticipantSnapshot() {
+      var snapshot =
+        buildParticipantSnapshot();
+
+      renderWorkbench();
+
+      return snapshot;
     },
 
-  waitForTargetRuntimeEvidence:
-    waitForTargetRuntimeEvidence,
+  createDeepArchive:
+    createDeepArchive,
 
-  refreshRegistry:
-    function refreshRegistry() {
-      refreshRegistryState();
-      inspectEngineState();
-      renderAll();
+  addCurrentReportToArchive:
+    addCurrentReportToArchive,
 
-      return frozenClone(
-        state.registrySnapshot
-      );
-    },
+  selectCategory:
+    selectCategory,
+
+  selectAudit:
+    selectAudit,
+
+  selectParticipant:
+    selectParticipant,
+
+  selectReportMode:
+    selectReportMode,
+
+  selectObservationLens:
+    selectObservationLens,
+
+  selectInstrumentChamber:
+    selectInstrumentChamber,
 
   render:
-    function render() {
-      renderAll();
+    function publicRender() {
+      renderWorkbench();
 
       return getPublicState();
     },
@@ -5885,62 +7686,53 @@ CONTRACT,
   getState:
     getPublicState,
 
+  getCurrentReport:
+    function getCurrentReport() {
+      return frozenClone(
+        state.report.current
+      );
+    },
+
+  getReports:
+    function getReports() {
+      return frozenClone(
+        state.report.sessionReports
+      );
+    },
+
+  getParticipants:
+    function getParticipants() {
+      return frozenClone(
+        state.participants
+      );
+    },
+
+  getObservation:
+    function getObservation() {
+      return frozenClone(
+        state.observation
+      );
+    },
+
   getLedger:
     function getLedger() {
       return frozenClone(
-        state.ledger
+        state.cycle.ledger
       );
     },
 
   getReceipts:
     function getReceipts() {
       return frozenClone(
-        state.receipts
+        state.cycle.receipts
       );
     },
 
-  getReaderReport:
-    function getReaderReport() {
-      return String(
-        state.readerReport ||
-        ""
-      );
-    },
-
-  getTargetPreflight:
-    function getTargetPreflight() {
+  getArchive:
+    function getArchive() {
       return frozenClone(
-        state.targetPreflight
+        state.archive.deepArchive
       );
-    },
-
-  getTargetPreflightProgress:
-    function getTargetPreflightProgress() {
-      return frozenClone(
-        state.targetPreflightProgress
-      );
-    },
-
-  getRegistrySnapshot:
-    function getRegistrySnapshot() {
-      return frozenClone(
-        state.registrySnapshot
-      );
-    },
-
-  getRegistryReceipt:
-    function getRegistryReceipt() {
-      return frozenClone(
-        state.registryReceipt
-      );
-    },
-
-  buildConductorRequest:
-    function publicBuildConductorRequest() {
-      refreshRegistryState();
-      inspectEngineState();
-
-      return buildConductorRequest();
     }
 });
 
@@ -5953,15 +7745,20 @@ buildApi();
 root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
   api;
 
+root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY =
+  api;
+
 if (
   !root.AUDRALIA ||
   typeof root.AUDRALIA !== "object"
 ) {
-  root.AUDRALIA =
-    {};
+  root.AUDRALIA = {};
 }
 
 root.AUDRALIA.diagnosticRouteController =
+  api;
+
+root.AUDRALIA.dropWithReadDiagnosticObservatory =
   api;
 
 root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_LOADED__ =
@@ -5973,141 +7770,88 @@ root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_VERSION__ =
 root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONTRACT__ =
   CONTRACT;
 
-root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT = {
-  schema:
-    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT_v6",
+root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT =
+  deepFreeze({
+    schema:
+      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_RECEIPT_v1",
 
-  contract:
-    CONTRACT,
+    contract:
+      CONTRACT,
 
-  previousContract:
-    PREVIOUS_CONTRACT,
+    previousContract:
+      PREVIOUS_CONTRACT,
 
-  version:
-    VERSION,
+    version:
+      VERSION,
 
-  file:
-    FILE,
+    file:
+      FILE,
 
-  status:
-    "AVAILABLE",
+    htmlContract:
+      HTML_CONTRACT,
 
-  orchestrationOwner:
-    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR",
+    cssContract:
+      CSS_CONTRACT,
 
-  orchestrationMethod:
-    "createCycle",
+    blueprint:
+      BLUEPRINT,
 
-  publicSchemas: {
-    ledger:
-      LEDGER_SCHEMA,
+    prebuildRegistry:
+      PREBUILD_REGISTRY,
 
-    readerReport:
-      READER_REPORT_SCHEMA,
+    status:
+      "AVAILABLE",
 
-    compatibilityPreserved:
-      true
-  },
-
-  targetRuntimePreflight: {
-    enabled:
+    reportNonblocking:
       true,
 
-    owner:
-      "DIAGNOSTIC_ROUTE_CONTROLLER",
+    createReportSynchronous:
+      true,
 
-    acceptedRuntimeGlobals:
-      clone(
-        TARGET_RUNTIME_GLOBALS
-      ),
+    targetObservationOnly:
+      true,
 
-    pollIntervalMs:
-      TARGET_RUNTIME_WAIT_INTERVAL_MS,
+    directExecutionExplicit:
+      true,
 
-    timeoutMs:
-      TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+    nineCycleExplicit:
+      true,
 
-    pollingReads: [
-      "IFRAME_STATE",
-      "DOCUMENT_READY_STATE",
-      "RUNTIME_GLOBAL",
-      "RUNTIME_GET_STATUS",
-      "RUNTIME_GET_RECEIPT_LIGHT_WHEN_STATUS_UNAVAILABLE"
-    ],
+    stationExecutionRemainsSynchronous:
+      true,
 
     fullReceiptPolling:
       false,
 
     fullReceiptCapture:
-      "ONCE_AFTER_ADMISSION_OR_TIMEOUT",
+      "DELIBERATE_OR_ONCE_AFTER_CYCLE_PREFLIGHT",
 
-    evidenceMustBeNonempty:
-      true,
+    noClaims:
+      NO_CLAIMS,
 
-    admissionPredicate:
-      "F8_SURFACE_TRUTH",
-
-    primaryPredicate: {
-      mounted:
-        true,
-
-      stageRectNonzero:
-        true,
-
-      geometryReady:
-        true,
-
-      firstFrameDrawn:
-        true,
-
-      visiblePixelObserved:
-        true
-    },
-
-    fallbackPredicate: {
-      fallbackActive:
-        true,
-
-      firstFrameDrawn:
-        true,
-
-      visiblePixelObserved:
-        true
-    },
-
-    timeoutDisposition:
-      "RUN_CYCLE_WITH_HONEST_EVIDENCE",
-
-    stationExecutionRemainsSynchronous:
-      true
-  },
-
-  packetNormalization: {
-    subjectFileDeclared:
-      FILE,
-
-    engineFileDerivedFromRegistry:
-      true,
-
-    constructRootFileDeclared:
-      DIAGNOSTIC_ROOT_FILE,
-
-    targetRouteDeclared:
-      TARGET_ROUTE
-  },
-
-  noClaims:
-    NO_CLAIMS,
-
-  generatedAt:
-    nowIso()
-};
+    generatedAt:
+      nowIso()
+  });
 
 return api;
 
 }
 
-function init() {
+function sameControllerFamily(contract) {
+return Boolean(
+typeof contract === "string" &&
+(
+contract.indexOf(
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER"
+) === 0 ||
+contract.indexOf(
+"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER"
+) === 0
+)
+);
+}
+
+function boot() {
 if (state.initialized) {
 return;
 }
@@ -6115,17 +7859,39 @@ return;
 state.initialized =
   true;
 
+state.bootedAt =
+  nowIso();
+
+state.updatedAt =
+  state.bootedAt;
+
 wireUi();
 publishApi();
 
-refreshRegistryState();
-inspectEngineState();
-renderAll();
+buildParticipantSnapshot();
+observeLightweight();
+
+state.archive.createdAt =
+  nowIso();
+
+state.archive.participantSnapshots.push(
+  frozenClone(
+    state.participants
+  )
+);
+
+state.archive.observationSnapshots.push(
+  frozenClone(
+    state.observation
+  )
+);
+
+renderWorkbench();
 
 toast(
-  getRegistry()
-    ? "Audralia diagnostic registry loaded."
-    : "Audralia diagnostic page loaded; registry held."
+  state.participants.heldCount
+    ? "Observatory loaded; some participants are held."
+    : "Audralia diagnostic observatory loaded."
 );
 
 }
@@ -6135,9 +7901,17 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER;
 
 if (
 existing &&
+existing.CONTRACT === CONTRACT
+) {
+return;
+}
+
+if (
+existing &&
 existing.CONTRACT &&
-existing.CONTRACT !== CONTRACT &&
-existing.CONTRACT !== PREVIOUS_CONTRACT
+!sameControllerFamily(
+existing.CONTRACT
+)
 ) {
 root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONFLICT =
 deepFreeze({
@@ -6153,8 +7927,14 @@ schema:
     existingContract:
       existing.CONTRACT,
 
+    sameFamily:
+      false,
+
     replacementPerformed:
       false,
+
+    reason:
+      "FOREIGN_CONTROLLER_PRESENT",
 
     generatedAt:
       nowIso()
@@ -6166,24 +7946,50 @@ return;
 
 if (
 existing &&
-existing.CONTRACT === CONTRACT
+existing.CONTRACT &&
+sameControllerFamily(
+existing.CONTRACT
+)
 ) {
-return;
+root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RENEWAL =
+deepFreeze({
+schema:
+"AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RENEWAL_v1",
+
+    expectedContract:
+      CONTRACT,
+
+    previousContract:
+      PREVIOUS_CONTRACT,
+
+    existingContract:
+      existing.CONTRACT,
+
+    sameFamily:
+      true,
+
+    replacementPerformed:
+      true,
+
+    reason:
+      "SAME_FAMILY_CONTROLLER_RENEWED",
+
+    generatedAt:
+      nowIso()
+  });
+
 }
 
-if (
-doc &&
-doc.readyState === "loading"
-) {
+if (doc.readyState === "loading") {
 doc.addEventListener(
 "DOMContentLoaded",
-init,
+boot,
 {
 once: true
 }
 );
 } else {
-init();
+boot();
 }
 })(
 typeof window !== "undefined"

@@ -1,53 +1,31 @@
 // /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v2
+// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v3
+// Version: 3.0.0
+// Previous version: 2.0.0
 // Full-file replacement.
 //
 // Purpose:
 // - Control the reader-first Audralia diagnostic route.
-// - Read and render the DGB governing contract, runtime core, and engine registry.
-// - Delegate nine-cycle orchestration to the Audralia North conductor.
-// - Supply only observed, registry-derived, or explicitly unavailable evidence.
-// - Render reader summaries, station receipts, technical ledgers, tabs, and target frame.
-// - Expose cloned and frozen inspection snapshots.
-//
-// Owns:
-// - route UI wiring;
-// - engine-family registry rendering;
-// - diagnostic-run request construction;
-// - North-conductor invocation;
-// - ledger normalization;
-// - reader-report rendering;
-// - receipt rendering;
-// - technical-tab controls;
-// - target-frame visibility;
-// - copy controls.
+// - Read the governing contract, runtime core, and engine registry.
+// - Invoke the North conductor through its canonical createCycle() interface.
+// - Register all nine diagnostic stations before sealing and running the cycle.
+// - Preserve missing-evidence-as-HOLD behavior.
+// - Render summaries, receipts, ledgers, registry records, tabs, and target frame.
 //
 // Does not own:
-// - governing engine-contract behavior;
-// - runtime-engine implementation;
-// - registry implementation;
-// - diagnostic station logic;
-// - lifecycle mutation;
-// - production evidence submission;
-// - renderer mutation;
+// - engine execution;
+// - renderer execution;
+// - WebGL/WebGPU initialization;
 // - runtime restart;
+// - production mutation;
 // - repair authorization;
-// - readiness;
-// - visual pass;
-// - WebGL/WebGPU initialization.
-//
-// Evidence law:
-// - Missing evidence becomes HOLD or UNKNOWN.
-// - Declared structure is not runtime proof.
-// - No positive frame, presentation, visibility, interaction, backend,
-//   scene, camera, geometry, material, shader, or pipeline evidence is fabricated.
+// - readiness, visual pass, or F21.
 //
 // Quiet load:
+// - no diagnostic run until explicitly requested;
 // - no engine instance creation;
 // - no adapter registration;
-// - no scheduler activation;
-// - no production mutation;
-// - no diagnostic run until explicitly requested.
+// - no scheduler activation.
 
 (function installAudraliaDiagnosticRouteController(global) {
   "use strict";
@@ -68,13 +46,13 @@
       : null;
 
   var CONTRACT =
-    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v2";
+    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v3";
 
   var PREVIOUS_CONTRACT =
-    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v1";
+    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v2";
 
   var VERSION =
-    "2.0.0";
+    "3.0.0";
 
   var FILE =
     "/showroom/globe/audralia/diagnostic/index.js";
@@ -103,103 +81,225 @@
   var TARGET_FRAME_ID =
     "audraliaDiagnosticTargetFrame";
 
-  var REQUEST_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_CONDUCTOR_REQUEST_v2";
+  var CONDUCTOR_REQUEST_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_REQUEST_v1";
 
   var LEDGER_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v2";
+    "AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v3";
 
   var RECEIPT_SCHEMA =
     "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
 
   var READER_REPORT_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_READER_REPORT_v2";
+    "AUDRALIA_DIAGNOSTIC_READER_REPORT_v3";
 
-  var STATIONS = Object.freeze([
-    Object.freeze({
-      position: 1,
-      stationId: "NORTH_PROBE_INTAKE",
-      label: "North Intake",
-      fibonacci: "F1"
-    }),
+  var NO_CLAIMS =
+    deepFreeze({
+      productionMutationAuthorized: false,
+      runtimeRestartAuthorized: false,
+      rendererMutationAuthorized: false,
+      repairAuthorized: false,
+      readyClaimed: false,
+      verifiedClaimed: false,
+      visualPassClaimed: false,
+      finalVisualPassClaimed: false,
+      f21Claimed: false
+    });
 
-    Object.freeze({
-      position: 2,
-      stationId: "EAST_PROBE_SOURCE",
-      label: "East Source",
-      fibonacci: "F3"
-    }),
+  var STATIONS =
+    deepFreeze([
+      station(
+        1,
+        "NORTH_PROBE_INTAKE",
+        "North Intake",
+        "F1",
+        "/assets/audralia/audralia.diagnostic.probe.north.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_PROBE_NORTH",
+          "AUDRALIA_DIAGNOSTIC_NORTH_PROBE",
+          "AUDRALIA.diagnosticProbeNorth",
+          "AUDRALIA.diagnostics.probeNorth"
+        ]
+      ),
 
-    Object.freeze({
-      position: 3,
-      stationId: "EAST_CONSTRUCTION_INTERPRETATION",
-      label: "East Construction",
-      fibonacci: "F5"
-    }),
+      station(
+        2,
+        "EAST_PROBE_SOURCE",
+        "East Source",
+        "F3",
+        "/assets/audralia/audralia.diagnostic.probe.east.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_PROBE_EAST",
+          "AUDRALIA_DIAGNOSTIC_EAST_PROBE",
+          "AUDRALIA.diagnosticProbeEast",
+          "AUDRALIA.diagnostics.probeEast"
+        ]
+      ),
 
-    Object.freeze({
-      position: 4,
-      stationId: "CANVAS_SURFACE_TRUTH",
-      label: "3D Surface Truth",
-      fibonacci: "F8"
-    }),
+      station(
+        3,
+        "EAST_CONSTRUCTION_INTERPRETATION",
+        "East Construction",
+        "F5",
+        "/assets/audralia/audralia.diagnostic.east.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_EAST",
+          "AUDRALIA_DIAGNOSTIC_EAST_INTERPRETER",
+          "AUDRALIA.diagnosticEast",
+          "AUDRALIA.diagnostics.east"
+        ]
+      ),
 
-    Object.freeze({
-      position: 5,
-      stationId: "WEST_PROBE_RUNTIME",
-      label: "West Runtime",
-      fibonacci: "F13"
-    }),
+      station(
+        4,
+        "CANVAS_SURFACE_TRUTH",
+        "3D Surface Truth",
+        "F8",
+        "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
+          "AUDRALIA_DIAGNOSTIC_CANVAS_SURFACE_TRUTH",
+          "AUDRALIA_DIAGNOSTIC_SURFACE_TRUTH",
+          "AUDRALIA.diagnosticProbeCanvasSurfaceTruth",
+          "AUDRALIA.diagnostics.surfaceTruth"
+        ]
+      ),
 
-    Object.freeze({
-      position: 6,
-      stationId: "WEST_RUNTIME_INTERPRETATION",
-      label: "West Interpretation",
-      fibonacci: "F21"
-    }),
+      station(
+        5,
+        "WEST_PROBE_RUNTIME",
+        "West Runtime",
+        "F13",
+        "/assets/audralia/audralia.diagnostic.probe.west.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_PROBE_WEST",
+          "AUDRALIA_DIAGNOSTIC_WEST_PROBE",
+          "AUDRALIA.diagnosticProbeWest",
+          "AUDRALIA.diagnostics.probeWest"
+        ]
+      ),
 
-    Object.freeze({
-      position: 7,
-      stationId: "SOUTH_PROBE_HANDOFF",
-      label: "South Handoff",
-      fibonacci: "F34"
-    }),
+      station(
+        6,
+        "WEST_RUNTIME_INTERPRETATION",
+        "West Interpretation",
+        "F21",
+        "/assets/audralia/audralia.diagnostic.west.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_WEST",
+          "AUDRALIA_DIAGNOSTIC_WEST_INTERPRETER",
+          "AUDRALIA.diagnosticWest",
+          "AUDRALIA.diagnostics.west"
+        ]
+      ),
 
-    Object.freeze({
-      position: 8,
-      stationId: "SOUTH_RESTITUTION_INTERPRETATION",
-      label: "South Restitution",
-      fibonacci: "F55"
-    }),
+      station(
+        7,
+        "SOUTH_PROBE_HANDOFF",
+        "South Handoff",
+        "F34",
+        "/assets/audralia/audralia.diagnostic.probe.south.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_PROBE_SOUTH",
+          "AUDRALIA_DIAGNOSTIC_SOUTH_PROBE",
+          "AUDRALIA.diagnosticProbeSouth",
+          "AUDRALIA.diagnostics.probeSouth"
+        ]
+      ),
 
-    Object.freeze({
-      position: 9,
-      stationId: "RAIL_TERMINAL_SYNTHESIS",
-      label: "Rail Synthesis",
-      fibonacci: "F89"
-    })
-  ]);
+      station(
+        8,
+        "SOUTH_RESTITUTION_INTERPRETATION",
+        "South Restitution",
+        "F55",
+        "/assets/audralia/audralia.diagnostic.south.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_SOUTH",
+          "AUDRALIA_DIAGNOSTIC_SOUTH_INTERPRETER",
+          "AUDRALIA.diagnosticSouth",
+          "AUDRALIA.diagnostics.south"
+        ]
+      ),
+
+      station(
+        9,
+        "RAIL_TERMINAL_SYNTHESIS",
+        "Rail Synthesis",
+        "F89",
+        "/assets/audralia/audralia.diagnostic.rail.js",
+        [
+          "AUDRALIA_DIAGNOSTIC_RAIL",
+          "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS",
+          "AUDRALIA.diagnosticRail",
+          "AUDRALIA.diagnostics.rail"
+        ]
+      )
+    ]);
+
+  var AUXILIARIES =
+    deepFreeze([
+      {
+        parentPosition: 8,
+        role: "SOUTH_SURFACE_POINTER",
+        file:
+          "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
+        globalPaths: [
+          "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
+          "AUDRALIA.diagnosticSouthSurfacePointer",
+          "AUDRALIA.diagnostics.southSurfacePointer"
+        ]
+      }
+    ]);
 
   var state = {
     initialized: false,
     running: false,
+
     cycleId: "",
     lastRunAt: null,
+
     registrySnapshot: null,
     registryReceipt: null,
     authorityRecords: [],
     engineRecords: [],
     selectedEngine: null,
+
     engineInspection: null,
     engineOps: null,
     engineReceipt: null,
+
     conductorResult: null,
+    conductorReceipt: null,
+    conductorState: null,
+
+    stationRegistrations: [],
+    auxiliaryRegistrations: [],
+
     receipts: [],
     ledger: null,
     readerReport: "",
     rawLedgerText: "",
+
     lastError: null
   };
+
+  function station(
+    position,
+    stationId,
+    label,
+    fibonacci,
+    file,
+    globalPaths
+  ) {
+    return {
+      position: position,
+      stationId: stationId,
+      label: label,
+      fibonacci: fibonacci,
+      file: file,
+      globalPaths: globalPaths
+    };
+  }
 
   function byId(id) {
     return doc
@@ -250,7 +350,11 @@
     }
 
     if (value instanceof Date) {
-      return value.toISOString();
+      try {
+        return value.toISOString();
+      } catch (_error) {
+        return null;
+      }
     }
 
     var memory =
@@ -309,28 +413,28 @@
 
     memory.push(value);
 
-    Object.getOwnPropertyNames(value).forEach(
-      function freezeProperty(key) {
-        var child;
-
-        try {
-          child = value[key];
-        } catch (_error) {
-          child = null;
-        }
-
-        deepFreeze(
-          child,
-          memory
-        );
-      }
-    );
-
     try {
+      Object.getOwnPropertyNames(value).forEach(
+        function freezeProperty(key) {
+          var child;
+
+          try {
+            child =
+              value[key];
+          } catch (_error) {
+            child =
+              null;
+          }
+
+          deepFreeze(
+            child,
+            memory
+          );
+        }
+      );
+
       Object.freeze(value);
-    } catch (_error) {
-      // Host objects may reject freezing.
-    }
+    } catch (_error) {}
 
     return value;
   }
@@ -405,19 +509,18 @@
     return output;
   }
 
-  function stableStringify(value) {
-    try {
-      return JSON.stringify(
-        stablePrepare(value)
-      );
-    } catch (_error) {
-      return String(value);
-    }
-  }
-
   function hashObject(value) {
-    var text =
-      stableStringify(value);
+    var text;
+
+    try {
+      text =
+        JSON.stringify(
+          stablePrepare(value)
+        );
+    } catch (_error) {
+      text =
+        String(value);
+    }
 
     var result =
       0x811c9dc5;
@@ -439,8 +542,10 @@
 
     return (
       "fnv1a32-" +
-      ("00000000" + result.toString(16))
-        .slice(-8)
+      (
+        "00000000" +
+        result.toString(16)
+      ).slice(-8)
     );
   }
 
@@ -472,6 +577,29 @@
     }
 
     return cursor;
+  }
+
+  function readFirst(paths) {
+    for (
+      var index = 0;
+      index < paths.length;
+      index += 1
+    ) {
+      var value =
+        readPath(paths[index]);
+
+      if (value) {
+        return {
+          value: value,
+          path: paths[index]
+        };
+      }
+    }
+
+    return {
+      value: null,
+      path: null
+    };
   }
 
   function callSafely(
@@ -524,19 +652,19 @@
 
   function setClassState(
     node,
-    allowedClasses,
-    activeClass
+    names,
+    active
   ) {
     if (!node) {
       return;
     }
 
-    allowedClasses.forEach(function removeClass(name) {
+    names.forEach(function removeClass(name) {
       node.classList.remove(name);
     });
 
-    if (activeClass) {
-      node.classList.add(activeClass);
+    if (active) {
+      node.classList.add(active);
     }
   }
 
@@ -567,20 +695,24 @@
 
     node.classList.add("show");
     node.classList.add("visible");
+
     node.setAttribute(
       "data-visible",
       "true"
     );
 
-    root.clearTimeout(
-      toast._timer
-    );
+    if (toast._timer) {
+      root.clearTimeout(
+        toast._timer
+      );
+    }
 
     toast._timer =
       root.setTimeout(
         function hideToast() {
           node.classList.remove("show");
           node.classList.remove("visible");
+
           node.setAttribute(
             "data-visible",
             "false"
@@ -590,8 +722,11 @@
       );
   }
 
-  function normalizeStatus(value, fallback) {
-    var normalized =
+  function normalizeStatus(
+    value,
+    fallback
+  ) {
+    var status =
       typeof value === "string"
         ? value.trim().toUpperCase()
         : "";
@@ -606,57 +741,59 @@
       CONFLICT: true,
       DEGRADED: true,
       UNVERIFIED: true,
-      UNKNOWN: true
+      UNKNOWN: true,
+      COMPLETE: true,
+      FAILED: true,
+      CONFLICTING: true
     };
 
-    return allowed[normalized]
-      ? normalized
+    return allowed[status]
+      ? status
       : fallback || "UNKNOWN";
   }
 
   function statusClass(status) {
-    var normalized =
+    var value =
       normalizeStatus(
         status,
         "UNKNOWN"
       );
 
     if (
-      normalized === "PASS"
+      value === "PASS" ||
+      value === "COMPLETE"
     ) {
       return "pass";
     }
 
     if (
-      normalized === "HOLD" ||
-      normalized === "HELD" ||
-      normalized === "PARTIAL_PASS" ||
-      normalized === "UNVERIFIED"
+      value === "HOLD" ||
+      value === "HELD" ||
+      value === "PARTIAL_PASS" ||
+      value === "UNVERIFIED"
     ) {
       return "hold";
     }
 
     if (
-      normalized === "FAIL"
+      value === "FAIL" ||
+      value === "FAILED"
     ) {
       return "fail";
     }
 
     if (
-      normalized === "CONFLICT"
+      value === "CONFLICT" ||
+      value === "CONFLICTING"
     ) {
       return "conflict";
     }
 
-    if (
-      normalized === "ERROR"
-    ) {
+    if (value === "ERROR") {
       return "error";
     }
 
-    if (
-      normalized === "DEGRADED"
-    ) {
+    if (value === "DEGRADED") {
       return "attention";
     }
 
@@ -746,14 +883,6 @@
     );
   }
 
-  function getContractAuthority() {
-    return (
-      root.DGB_ENGINE_CONTRACT ||
-      root.DGBEngineContract ||
-      null
-    );
-  }
-
   function getConductor() {
     return (
       root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR ||
@@ -772,17 +901,22 @@
       getRegistry();
 
     if (!registry) {
-      state.registrySnapshot = null;
-      state.registryReceipt = null;
-      state.authorityRecords = [];
-      state.engineRecords = [];
-      state.selectedEngine = null;
+      state.registrySnapshot =
+        null;
 
-      return {
-        available: false,
-        status: "HELD",
-        reason: "ENGINE_REGISTRY_NOT_LOADED"
-      };
+      state.registryReceipt =
+        null;
+
+      state.authorityRecords =
+        [];
+
+      state.engineRecords =
+        [];
+
+      state.selectedEngine =
+        null;
+
+      return;
     }
 
     callSafely(
@@ -846,49 +980,14 @@
           null
         )
       );
-
-    var selectableCount =
-      state.registrySnapshot &&
-      Number.isFinite(
-        Number(
-          state.registrySnapshot
-            .selectableEngineCount
-        )
-      )
-        ? Number(
-            state.registrySnapshot
-              .selectableEngineCount
-          )
-        : state.engineRecords.filter(
-            function selectable(record) {
-              return Boolean(
-                record &&
-                record.selectable
-              );
-            }
-          ).length;
-
-    return {
-      available: true,
-      status:
-        selectableCount > 0
-          ? "PASS"
-          : "HOLD",
-      reason:
-        selectableCount > 0
-          ? "ENGINE_REGISTRY_AVAILABLE"
-          : "NO_SELECTABLE_ENGINE"
-    };
   }
 
   function inspectEngineState() {
     var engine =
       getEngine();
 
-    var selected =
-      state.selectedEngine;
-
-    var instanceIds = [];
+    var instanceIds =
+      [];
 
     if (
       engine &&
@@ -996,94 +1095,31 @@
             )
           : null
       );
-
-    return {
-      engineLoaded:
-        Boolean(engine),
-
-      engineIdentityMatched:
-        Boolean(
-          selected &&
-          selected.identityMatched
-        ),
-
-      engineSelectable:
-        Boolean(
-          selected &&
-          selected.selectable
-        ),
-
-      instanceId:
-        instanceId,
-
-      liveInstanceCount:
-        instanceIds.length,
-
-      inspectionAvailable:
-        Boolean(
-          state.engineInspection
-        ),
-
-      opsAvailable:
-        Boolean(
-          state.engineOps
-        ),
-
-      receiptAvailable:
-        Boolean(
-          state.engineReceipt
-        )
-    };
   }
 
-  function readObservedValue(
+  function readObserved(
     source,
-    path
+    key
   ) {
-    if (!source) {
+    if (
+      !source ||
+      !Object.prototype.hasOwnProperty.call(
+        Object(source),
+        key
+      )
+    ) {
       return null;
     }
 
-    var parts =
-      String(path || "")
-        .split(".")
-        .filter(Boolean);
+    var value =
+      source[key];
 
-    var cursor =
-      source;
-
-    for (
-      var index = 0;
-      index < parts.length;
-      index += 1
-    ) {
-      if (
-        cursor === null ||
-        cursor === undefined ||
-        !Object.prototype.hasOwnProperty.call(
-          Object(cursor),
-          parts[index]
-        )
-      ) {
-        return null;
-      }
-
-      cursor =
-        cursor[parts[index]];
-    }
-
-    if (
-      typeof cursor === "boolean" ||
-      typeof cursor === "number" ||
-      typeof cursor === "string"
-    ) {
-      return cursor;
-    }
-
-    return cursor === null ||
-      cursor === undefined
-      ? null
-      : clone(cursor);
+    return (
+      value === null ||
+      value === undefined
+        ? null
+        : clone(value)
+    );
   }
 
   function buildRuntimeEvidence() {
@@ -1092,9 +1128,6 @@
 
     var inspection =
       state.engineInspection;
-
-    var selected =
-      state.selectedEngine;
 
     var observed =
       ops &&
@@ -1134,20 +1167,20 @@
             : "UNAVAILABLE",
 
       engineId:
-        selected
-          ? selected.engineId
+        state.selectedEngine
+          ? state.selectedEngine.engineId
           : DEFAULT_ENGINE_ID,
 
       engineLoaded:
         Boolean(
-          selected &&
-          selected.loaded
+          state.selectedEngine &&
+          state.selectedEngine.loaded
         ),
 
       contractMatched:
         Boolean(
-          selected &&
-          selected.governingContractMatched
+          state.selectedEngine &&
+          state.selectedEngine.governingContractMatched
         ),
 
       backend:
@@ -1174,92 +1207,92 @@
           : null,
 
       fileLoaded:
-        readObservedValue(
+        readObserved(
           observed,
           "fileLoaded"
         ),
 
       modelValidated:
-        readObservedValue(
+        readObserved(
           observed,
           "modelValidated"
         ),
 
       instanceCreated:
-        readObservedValue(
+        readObserved(
           observed,
           "instanceCreated"
         ),
 
       mountPresent:
-        readObservedValue(
+        readObserved(
           observed,
           "mountPresent"
         ),
 
       surfaceNonzero:
-        readObservedValue(
+        readObserved(
           observed,
           "surfaceNonzero"
         ),
 
       backendInitialized:
-        readObservedValue(
+        readObserved(
           observed,
           "backendInitialized"
         ),
 
       resourcesUploaded:
-        readObservedValue(
+        readObserved(
           observed,
           "resourcesUploaded"
         ),
 
       firstFrameSubmitted:
-        readObservedValue(
+        readObserved(
           observed,
           "firstFrameSubmitted"
         ),
 
       firstFramePresented:
-        readObservedValue(
+        readObserved(
           observed,
           "firstFramePresented"
         ),
 
       visiblePixelObserved:
-        readObservedValue(
+        readObserved(
           observed,
           "visiblePixelObserved"
         ),
 
       interactionObserved:
-        readObservedValue(
+        readObserved(
           observed,
           "interactionObserved"
         ),
 
       fallbackAvailable:
-        readObservedValue(
+        readObserved(
           observed,
           "fallbackAvailable"
         ),
 
       contextRecoveryAvailable:
-        readObservedValue(
+        readObserved(
           observed,
           "contextRecoveryAvailable"
         ),
 
       noBlockingError:
-        readObservedValue(
+        readObserved(
           observed,
           "noBlockingError"
         ),
 
       primaryVisibility:
         renderer
-          ? readObservedValue(
+          ? readObserved(
               renderer,
               "visiblePixelObserved"
             )
@@ -1267,47 +1300,11 @@
 
       fallbackVisibility:
         fallback
-          ? readObservedValue(
+          ? readObserved(
               fallback,
               "visibleOutputObserved"
             )
           : null,
-
-      contextLost:
-        renderer
-          ? readObservedValue(
-              renderer,
-              "contextLost"
-            )
-          : null,
-
-      recoveryAvailable:
-        renderer
-          ? readObservedValue(
-              renderer,
-              "recoveryAvailable"
-            )
-          : null,
-
-      recoveryPending:
-        renderer
-          ? readObservedValue(
-              renderer,
-              "recoveryPending"
-            )
-          : null,
-
-      errors:
-        ops &&
-        Array.isArray(ops.errors)
-          ? frozenClone(ops.errors)
-          : [],
-
-      warnings:
-        ops &&
-        Array.isArray(ops.warnings)
-          ? frozenClone(ops.warnings)
-          : [],
 
       evidenceAvailable:
         Boolean(
@@ -1326,10 +1323,13 @@
     var frame =
       byId(TARGET_FRAME_ID);
 
+    var frameWindow =
+      null;
+
     var frameDocument =
       null;
 
-    var frameWindow =
+    var runtimeStatus =
       null;
 
     var accessible =
@@ -1338,13 +1338,11 @@
     var loaded =
       false;
 
-    var targetRuntimeStatus =
-      null;
-
     if (frame) {
       try {
         frameWindow =
-          frame.contentWindow || null;
+          frame.contentWindow ||
+          null;
 
         frameDocument =
           frame.contentDocument ||
@@ -1355,9 +1353,7 @@
           );
 
         accessible =
-          Boolean(
-            frameDocument
-          );
+          Boolean(frameDocument);
 
         loaded =
           Boolean(
@@ -1375,7 +1371,7 @@
           runtime &&
           isFunction(runtime.getStatus)
         ) {
-          targetRuntimeStatus =
+          runtimeStatus =
             frozenClone(
               callSafely(
                 runtime,
@@ -1392,7 +1388,7 @@
         loaded =
           false;
 
-        targetRuntimeStatus =
+        runtimeStatus =
           null;
       }
     }
@@ -1414,15 +1410,13 @@
         loaded,
 
       targetRuntimeStatus:
-        targetRuntimeStatus,
+        runtimeStatus,
 
       runtimeEvidenceAvailable:
-        Boolean(
-          targetRuntimeStatus
-        ),
+        Boolean(runtimeStatus),
 
       classification:
-        targetRuntimeStatus
+        runtimeStatus
           ? "REGISTERED_EXTERNAL_PROVIDER"
           : "UNKNOWN",
 
@@ -1446,42 +1440,32 @@
     var snapshot =
       state.registrySnapshot;
 
-    var receipt =
-      state.registryReceipt;
-
-    var authority =
-      state.authorityRecords.length
-        ? state.authorityRecords[0]
-        : null;
-
-    var selected =
-      state.selectedEngine;
+    var registry =
+      getRegistry();
 
     return deepFreeze({
       registryLoaded:
-        Boolean(
-          getRegistry()
-        ),
+        Boolean(registry),
 
       registryContract:
-        getRegistry() &&
+        registry &&
         (
-          getRegistry().CONTRACT ||
-          getRegistry().contract
+          registry.CONTRACT ||
+          registry.contract
         )
           ? (
-              getRegistry().CONTRACT ||
-              getRegistry().contract
+              registry.CONTRACT ||
+              registry.contract
             )
           : null,
 
       registryContractMatched:
         Boolean(
-          getRegistry() &&
+          registry &&
           (
-            getRegistry().CONTRACT ===
+            registry.CONTRACT ===
               REGISTRY_CONTRACT ||
-            getRegistry().contract ===
+            registry.contract ===
               REGISTRY_CONTRACT
           )
         ),
@@ -1536,73 +1520,38 @@
             ).length,
 
       authority:
-        authority
-          ? frozenClone(authority)
+        state.authorityRecords.length
+          ? frozenClone(
+              state.authorityRecords[0]
+            )
           : null,
 
       selectedEngine:
-        selected
-          ? frozenClone(selected)
+        state.selectedEngine
+          ? frozenClone(
+              state.selectedEngine
+            )
           : null,
 
       receipt:
-        receipt
-          ? frozenClone(receipt)
+        state.registryReceipt
+          ? frozenClone(
+              state.registryReceipt
+            )
           : null
     });
   }
 
   function buildConductorRequest() {
-    var registryEvidence =
-      buildRegistryEvidence();
-
-    var runtimeEvidence =
-      buildRuntimeEvidence();
-
-    var targetEvidence =
-      inspectTargetFrame();
-
     return deepFreeze({
       schema:
-        REQUEST_SCHEMA,
+        CONDUCTOR_REQUEST_SCHEMA,
 
       cycleId:
         state.cycleId,
 
       mode:
         "AUDIT",
-
-      classification:
-        "DIAGNOSTIC_ISOLATED",
-
-      generatedAt:
-        nowIso(),
-
-      route: {
-        contract:
-          CONTRACT,
-
-        previousContract:
-          PREVIOUS_CONTRACT,
-
-        version:
-          VERSION,
-
-        file:
-          FILE,
-
-        htmlContract:
-          HTML_CONTRACT,
-
-        cssContract:
-          CSS_CONTRACT,
-
-        route:
-          "/showroom/globe/audralia/diagnostic/",
-
-        targetRoute:
-          TARGET_ROUTE
-      },
 
       subject: {
         subjectId:
@@ -1612,10 +1561,16 @@
           "THREE_D_DIAGNOSTIC_ROUTE",
 
         modelSchema:
-          "DGB_MODEL_PACKAGE_v1"
+          "DGB_MODEL_PACKAGE_v1",
+
+        route:
+          "/showroom/globe/audralia/diagnostic/",
+
+        targetRoute:
+          TARGET_ROUTE
       },
 
-      engineFamily: {
+      engine: {
         governingContract:
           GOVERNING_ENGINE_CONTRACT,
 
@@ -1629,13 +1584,11 @@
           DEFAULT_ENGINE_ID,
 
         registry:
-          registryEvidence,
+          buildRegistryEvidence(),
 
         runtime:
-          runtimeEvidence
+          buildRuntimeEvidence()
       },
-
-      target: targetEvidence,
 
       construct: {
         constructId:
@@ -1653,99 +1606,219 @@
         rootFile:
           "/showroom/globe/audralia/diagnostic/index.html",
 
-        dependencies: [
-          "/showroom/globe/audralia/diagnostic/index.css",
-          "/showroom/globe/audralia/diagnostic/index.js",
-          "/assets/engine/dgb.engine.contract.js",
-          "/assets/engine/dgb.engine.js",
-          "/assets/engine/dgb.engine.subjects.js"
-        ]
+        routeController: {
+          contract:
+            CONTRACT,
+
+          previousContract:
+            PREVIOUS_CONTRACT,
+
+          version:
+            VERSION,
+
+          file:
+            FILE
+        },
+
+        target:
+          inspectTargetFrame(),
+
+        evidencePolicy: {
+          positiveRuntimeEvidenceMayBeInferred:
+            false,
+
+          missingEvidenceDisposition:
+            "HOLD",
+
+          diagnosticEvidenceGoverning:
+            false,
+
+          declaredStructureEqualsRuntimeProof:
+            false,
+
+          iframePresenceEqualsPresentationProof:
+            false
+        },
+
+        noClaims:
+          NO_CLAIMS
       },
 
-      evidencePolicy: {
-        positiveRuntimeEvidenceMayBeInferred:
-          false,
+      requestedStartPosition:
+        1,
 
-        missingEvidenceDisposition:
-          "HOLD",
+      generatedAtEnabled:
+        true,
 
-        diagnosticEvidenceGoverning:
-          false,
+      extensions: {
+        routeControllerHash:
+          hashObject({
+            contract:
+              CONTRACT,
 
-        declaredStructureEqualsRuntimeProof:
-          false,
+            version:
+              VERSION,
 
-        iframePresenceEqualsPresentationProof:
-          false,
-
-        observerRequiredForRegistryVisibility:
-          false
-      },
-
-      priorStationReceipts: [],
-
-      priorLedgerHash: null,
-
-      terminalSynthesisMode: true,
-
-      noClaims: {
-        productionMutationAuthorized:
-          false,
-
-        runtimeRestartAuthorized:
-          false,
-
-        rendererMutationAuthorized:
-          false,
-
-        repairAuthorized:
-          false,
-
-        readyClaimed:
-          false,
-
-        visualPassClaimed:
-          false,
-
-        f21Claimed:
-          false
+            file:
+              FILE
+          })
       }
     });
   }
 
-  function findConductorMethod(conductor) {
-    if (!conductor) {
-      return null;
+  function resolveStationApi(definition) {
+    var found =
+      readFirst(
+        definition.globalPaths ||
+        []
+      );
+
+    if (found.value) {
+      return {
+        api:
+          found.value,
+
+        globalPath:
+          found.path,
+
+        source:
+          "DECLARED_GLOBAL"
+      };
     }
 
-    var methodNames = [
-      "executeNineCycle",
-      "runNineCycle",
-      "executeDiagnosticCycle",
-      "executeCycle",
-      "conduct",
-      "run"
-    ];
+    var namespace =
+      readPath("AUDRALIA");
 
-    for (
-      var index = 0;
-      index < methodNames.length;
-      index += 1
+    if (
+      namespace &&
+      typeof namespace === "object"
     ) {
-      if (
-        isFunction(
-          conductor[methodNames[index]]
-        )
+      var namespaceKeys =
+        Object.keys(namespace);
+
+      for (
+        var index = 0;
+        index < namespaceKeys.length;
+        index += 1
       ) {
-        return methodNames[index];
+        var namespaceCandidate =
+          namespace[
+            namespaceKeys[index]
+          ];
+
+        if (
+          namespaceCandidate &&
+          namespaceCandidate.STATION_ID ===
+            definition.stationId &&
+          Number(
+            namespaceCandidate.CYCLE_POSITION
+          ) === definition.position
+        ) {
+          return {
+            api:
+              namespaceCandidate,
+
+            globalPath:
+              "AUDRALIA." +
+              namespaceKeys[index],
+
+            source:
+              "AUDRALIA_NAMESPACE_SCAN"
+          };
+        }
       }
     }
 
-    return null;
+    var rootKeys =
+      [];
+
+    try {
+      rootKeys =
+        Object.keys(root);
+    } catch (_error) {}
+
+    for (
+      var rootIndex = 0;
+      rootIndex < rootKeys.length;
+      rootIndex += 1
+    ) {
+      var key =
+        rootKeys[rootIndex];
+
+      if (
+        key.indexOf(
+          "AUDRALIA_DIAGNOSTIC"
+        ) !== 0
+      ) {
+        continue;
+      }
+
+      var candidate;
+
+      try {
+        candidate =
+          root[key];
+      } catch (_error) {
+        candidate =
+          null;
+      }
+
+      if (
+        candidate &&
+        candidate.STATION_ID ===
+          definition.stationId &&
+        Number(
+          candidate.CYCLE_POSITION
+        ) === definition.position
+      ) {
+        return {
+          api:
+            candidate,
+
+          globalPath:
+            key,
+
+          source:
+            "ROOT_SCAN"
+        };
+      }
+    }
+
+    return {
+      api:
+        null,
+
+      globalPath:
+        null,
+
+      source:
+        "NOT_FOUND"
+    };
+  }
+
+  function resolveAuxiliaryApi(definition) {
+    var found =
+      readFirst(
+        definition.globalPaths ||
+        []
+      );
+
+    return {
+      api:
+        found.value,
+
+      globalPath:
+        found.path,
+
+      source:
+        found.value
+          ? "DECLARED_GLOBAL"
+          : "NOT_FOUND"
+    };
   }
 
   function makeHeldReceipt(
-    station,
+    definition,
     code,
     summary,
     detail
@@ -1758,13 +1831,13 @@
         state.cycleId,
 
       position:
-        station.position,
+        definition.position,
 
       stationId:
-        station.stationId,
+        definition.stationId,
 
       fibonacci:
-        station.fibonacci,
+        definition.fibonacci,
 
       contract:
         CONTRACT,
@@ -1787,9 +1860,11 @@
       summary:
         summary,
 
-      observations: [],
+      observations:
+        [],
 
-      evidence: [],
+      evidence:
+        [],
 
       issues: [
         {
@@ -1797,15 +1872,16 @@
             code,
 
           path:
-            station.stationId,
+            definition.stationId,
 
           detail:
-            detail || summary
+            detail ||
+            summary
         }
       ],
 
       firstHeldCoordinate:
-        station.stationId,
+        definition.stationId,
 
       firstFailedCoordinate:
         null,
@@ -1816,49 +1892,83 @@
       generatedAt:
         nowIso(),
 
-      noClaims: {
-        productionMutationAuthorized:
-          false,
-
-        runtimeRestartAuthorized:
-          false,
-
-        rendererMutationAuthorized:
-          false,
-
-        repairAuthorized:
-          false,
-
-        readyClaimed:
-          false,
-
-        visualPassClaimed:
-          false,
-
-        f21Claimed:
-          false
-      }
+      noClaims:
+        NO_CLAIMS
     });
   }
 
-  function makeConductorHeldReceipts(
+  function makeHeldReceipts(
     code,
     summary,
     detail
   ) {
-    return STATIONS.map(function mapHeld(station) {
-      return makeHeldReceipt(
-        station,
-        code,
-        summary,
-        detail
-      );
-    });
+    return STATIONS.map(
+      function mapHeld(definition) {
+        return makeHeldReceipt(
+          definition,
+          code,
+          summary,
+          detail
+        );
+      }
+    );
+  }
+
+  function extractReceipts(result) {
+    if (Array.isArray(result)) {
+      return result;
+    }
+
+    if (!isObject(result)) {
+      return [];
+    }
+
+    var candidates = [
+      result.receipts,
+
+      result.stationReceipts,
+
+      result.cycleReceipts,
+
+      result.ledger &&
+        result.ledger.receipts,
+
+      result.ledger &&
+        result.ledger.stationReceipts,
+
+      result.result &&
+        result.result.receipts,
+
+      result.result &&
+        result.result.stationReceipts,
+
+      result.packet &&
+        result.packet.receipts,
+
+      result.packet &&
+        result.packet.stationReceipts
+    ];
+
+    for (
+      var index = 0;
+      index < candidates.length;
+      index += 1
+    ) {
+      if (
+        Array.isArray(
+          candidates[index]
+        )
+      ) {
+        return candidates[index];
+      }
+    }
+
+    return [];
   }
 
   function normalizeReceipt(
     receipt,
-    station,
+    definition,
     index
   ) {
     var source =
@@ -1866,8 +1976,8 @@
         ? receipt
         : {};
 
-    var resolvedStation =
-      station ||
+    var stationDefinition =
+      definition ||
       STATIONS[index] ||
       {
         position:
@@ -1882,7 +1992,8 @@
           "Unknown Station",
 
         fibonacci:
-          source.fibonacci || ""
+          source.fibonacci ||
+          ""
       };
 
     return deepFreeze({
@@ -1899,15 +2010,15 @@
           Number(source.position)
         )
           ? Number(source.position)
-          : resolvedStation.position,
+          : stationDefinition.position,
 
       stationId:
         source.stationId ||
-        resolvedStation.stationId,
+        stationDefinition.stationId,
 
       fibonacci:
         source.fibonacci ||
-        resolvedStation.fibonacci ||
+        stationDefinition.fibonacci ||
         "",
 
       contract:
@@ -1942,17 +2053,23 @@
 
       observations:
         Array.isArray(source.observations)
-          ? frozenClone(source.observations)
+          ? frozenClone(
+              source.observations
+            )
           : [],
 
       evidence:
         Array.isArray(source.evidence)
-          ? frozenClone(source.evidence)
+          ? frozenClone(
+              source.evidence
+            )
           : [],
 
       issues:
         Array.isArray(source.issues)
-          ? frozenClone(source.issues)
+          ? frozenClone(
+              source.issues
+            )
           : [],
 
       firstHeldCoordinate:
@@ -1973,71 +2090,14 @@
 
       noClaims:
         isObject(source.noClaims)
-          ? frozenClone(source.noClaims)
-          : {
-              productionMutationAuthorized:
-                false,
-
-              runtimeRestartAuthorized:
-                false,
-
-              rendererMutationAuthorized:
-                false,
-
-              repairAuthorized:
-                false,
-
-              readyClaimed:
-                false,
-
-              visualPassClaimed:
-                false,
-
-              f21Claimed:
-                false
-            },
+          ? frozenClone(
+              source.noClaims
+            )
+          : NO_CLAIMS,
 
       raw:
         frozenClone(source)
     });
-  }
-
-  function extractReceipts(result) {
-    if (Array.isArray(result)) {
-      return result;
-    }
-
-    if (!isObject(result)) {
-      return [];
-    }
-
-    var candidatePaths = [
-      result.receipts,
-      result.stationReceipts,
-      result.cycleReceipts,
-      result.ledger &&
-        result.ledger.receipts,
-      result.result &&
-        result.result.receipts,
-      result.packet &&
-        result.packet.receipts
-    ];
-
-    for (
-      var index = 0;
-      index < candidatePaths.length;
-      index += 1
-    ) {
-      if (
-        Array.isArray(
-          candidatePaths[index]
-        )
-      ) {
-        return candidatePaths[index];
-      }
-    }
-
-    return [];
   }
 
   function normalizeConductorResult(result) {
@@ -2050,7 +2110,7 @@
           frozenClone(result),
 
         receipts:
-          makeConductorHeldReceipts(
+          makeHeldReceipts(
             "CONDUCTOR_RETURNED_NO_RECEIPTS",
             "The North conductor returned no station receipts.",
             "No receipt collection could be extracted from the conductor result."
@@ -2058,47 +2118,53 @@
       };
     }
 
-    var normalized = [];
+    var normalized =
+      [];
 
-    STATIONS.forEach(function normalizeExpectedStation(
-      station,
-      index
-    ) {
-      var matching =
-        receipts.find(function findMatching(receipt) {
-          return (
-            receipt &&
-            receipt.stationId ===
-              station.stationId
+    STATIONS.forEach(
+      function normalizeExpectedStation(
+        definition,
+        index
+      ) {
+        var matching =
+          receipts.find(
+            function findMatching(receipt) {
+              return (
+                receipt &&
+                receipt.stationId ===
+                  definition.stationId
+              );
+            }
           );
-        });
 
-      if (!matching) {
-        matching =
-          receipts[index] || null;
-      }
+        if (!matching) {
+          matching =
+            receipts[index] ||
+            null;
+        }
 
-      if (!matching) {
+        if (!matching) {
+          normalized.push(
+            makeHeldReceipt(
+              definition,
+              "STATION_RECEIPT_MISSING",
+              "The North conductor did not return this station receipt.",
+              "Expected station receipt was absent from the conductor result."
+            )
+          );
+
+          return;
+        }
+
         normalized.push(
-          makeHeldReceipt(
-            station,
-            "STATION_RECEIPT_MISSING",
-            "The North conductor did not return this station receipt.",
-            "Expected station receipt was absent from the conductor result."
+          normalizeReceipt(
+            matching,
+            definition,
+            index
           )
         );
-
-        return;
       }
-
-      normalized.push(
-        normalizeReceipt(
-          matching,
-          station,
-          index
-        )
-      );
-    });
+    );
 
     return {
       conductorResult:
@@ -2113,65 +2179,51 @@
     var conductor =
       getConductor();
 
-    var methodName =
-      findConductorMethod(conductor);
-
-    if (
-      !conductor ||
-      !methodName
-    ) {
+    if (!conductor) {
       return Promise.resolve({
-        conductorResult: null,
+        conductorResult:
+          null,
 
         receipts:
-          makeConductorHeldReceipts(
+          makeHeldReceipts(
             "NORTH_CONDUCTOR_UNAVAILABLE",
             "The North conductor is unavailable.",
-            "No compatible North-conductor execution method was found."
+            "No compatible North-conductor authority global was found."
           )
       });
     }
 
-    try {
-      return Promise.resolve(
-        conductor[methodName].call(
-          conductor,
-          request
-        )
+    if (
+      !isFunction(
+        conductor.createCycle
       )
-        .then(function conductorResolved(result) {
-          return normalizeConductorResult(
-            result
-          );
-        })
-        .catch(function conductorRejected(error) {
-          return {
-            conductorResult: {
-              error:
-                String(
-                  error &&
-                  error.message
-                    ? error.message
-                    : error
-                )
-            },
+    ) {
+      return Promise.resolve({
+        conductorResult:
+          frozenClone(conductor),
 
-            receipts:
-              makeConductorHeldReceipts(
-                "NORTH_CONDUCTOR_REJECTED",
-                "The North conductor rejected the diagnostic request.",
-                String(
-                  error &&
-                  error.message
-                    ? error.message
-                    : error
-                )
-              )
-          };
-        });
+        receipts:
+          makeHeldReceipts(
+            "NORTH_CONDUCTOR_CREATE_CYCLE_UNAVAILABLE",
+            "The North conductor does not expose createCycle().",
+            "The installed conductor contract requires the canonical createCycle() path."
+          )
+      });
+    }
+
+    var cycle;
+
+    try {
+      cycle =
+        conductor.createCycle(
+          request
+        );
     } catch (error) {
       return Promise.resolve({
         conductorResult: {
+          stage:
+            "CREATE_CYCLE",
+
           error:
             String(
               error &&
@@ -2182,9 +2234,9 @@
         },
 
         receipts:
-          makeConductorHeldReceipts(
-            "NORTH_CONDUCTOR_THROW",
-            "The North conductor threw during diagnostic execution.",
+          makeHeldReceipts(
+            "NORTH_CONDUCTOR_CREATE_CYCLE_THROW",
+            "The North conductor could not create the diagnostic cycle.",
             String(
               error &&
               error.message
@@ -2194,55 +2246,521 @@
           )
       });
     }
+
+    if (
+      !cycle ||
+      !isFunction(
+        cycle.registerStation
+      ) ||
+      !isFunction(
+        cycle.seal
+      ) ||
+      !isFunction(
+        cycle.run
+      ) ||
+      !isFunction(
+        cycle.getReceipt
+      )
+    ) {
+      return Promise.resolve({
+        conductorResult:
+          frozenClone(cycle),
+
+        receipts:
+          makeHeldReceipts(
+            "NORTH_CONDUCTOR_CYCLE_API_INCOMPATIBLE",
+            "The North conductor created an incompatible cycle.",
+            "The cycle must expose registerStation(), seal(), run(), and getReceipt()."
+          )
+      });
+    }
+
+    state.stationRegistrations =
+      [];
+
+    state.auxiliaryRegistrations =
+      [];
+
+    STATIONS.forEach(
+      function registerStation(definition) {
+        var resolved =
+          resolveStationApi(
+            definition
+          );
+
+        var outcome;
+
+        if (!resolved.api) {
+          outcome = {
+            position:
+              definition.position,
+
+            stationId:
+              definition.stationId,
+
+            file:
+              definition.file,
+
+            status:
+              "REJECTED",
+
+            reason:
+              "STATION_GLOBAL_NOT_FOUND",
+
+            globalPath:
+              null,
+
+            source:
+              resolved.source,
+
+            generatedAt:
+              nowIso()
+          };
+        } else {
+          try {
+            var registration =
+              cycle.registerStation(
+                definition.position,
+                resolved.api
+              );
+
+            outcome = {
+              position:
+                definition.position,
+
+              stationId:
+                definition.stationId,
+
+              file:
+                definition.file,
+
+              status:
+                registration &&
+                registration.status
+                  ? registration.status
+                  : "UNKNOWN",
+
+              reason:
+                registration &&
+                registration.reason
+                  ? registration.reason
+                  : null,
+
+              issues:
+                registration &&
+                registration.issues
+                  ? frozenClone(
+                      registration.issues
+                    )
+                  : [],
+
+              globalPath:
+                resolved.globalPath,
+
+              source:
+                resolved.source,
+
+              generatedAt:
+                nowIso()
+            };
+          } catch (error) {
+            outcome = {
+              position:
+                definition.position,
+
+              stationId:
+                definition.stationId,
+
+              file:
+                definition.file,
+
+              status:
+                "REJECTED",
+
+              reason:
+                "STATION_REGISTRATION_THROW",
+
+              detail:
+                String(
+                  error &&
+                  error.message
+                    ? error.message
+                    : error
+                ),
+
+              globalPath:
+                resolved.globalPath,
+
+              source:
+                resolved.source,
+
+              generatedAt:
+                nowIso()
+            };
+          }
+        }
+
+        state.stationRegistrations.push(
+          deepFreeze(outcome)
+        );
+      }
+    );
+
+    AUXILIARIES.forEach(
+      function registerAuxiliary(
+        definition
+      ) {
+        var resolved =
+          resolveAuxiliaryApi(
+            definition
+          );
+
+        var outcome;
+
+        if (!resolved.api) {
+          outcome = {
+            parentPosition:
+              definition.parentPosition,
+
+            role:
+              definition.role,
+
+            file:
+              definition.file,
+
+            status:
+              "NOT_REGISTERED",
+
+            reason:
+              "AUXILIARY_GLOBAL_NOT_FOUND",
+
+            generatedAt:
+              nowIso()
+          };
+        } else if (
+          !isFunction(
+            cycle.registerAuxiliary
+          )
+        ) {
+          outcome = {
+            parentPosition:
+              definition.parentPosition,
+
+            role:
+              definition.role,
+
+            file:
+              definition.file,
+
+            status:
+              "NOT_REGISTERED",
+
+            reason:
+              "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
+
+            generatedAt:
+              nowIso()
+          };
+        } else {
+          try {
+            var registration =
+              cycle.registerAuxiliary(
+                definition.parentPosition,
+                {
+                  role:
+                    definition.role,
+
+                  file:
+                    definition.file,
+
+                  contract:
+                    resolved.api.CONTRACT ||
+                    null,
+
+                  version:
+                    resolved.api.VERSION ||
+                    null,
+
+                  globalPath:
+                    resolved.globalPath,
+
+                  createsCyclePosition:
+                    false
+                }
+              );
+
+            outcome = {
+              parentPosition:
+                definition.parentPosition,
+
+              role:
+                definition.role,
+
+              file:
+                definition.file,
+
+              status:
+                registration &&
+                registration.status
+                  ? registration.status
+                  : "UNKNOWN",
+
+              reason:
+                registration &&
+                registration.reason
+                  ? registration.reason
+                  : null,
+
+              globalPath:
+                resolved.globalPath,
+
+              source:
+                resolved.source,
+
+              generatedAt:
+                nowIso()
+            };
+          } catch (error) {
+            outcome = {
+              parentPosition:
+                definition.parentPosition,
+
+              role:
+                definition.role,
+
+              file:
+                definition.file,
+
+              status:
+                "NOT_REGISTERED",
+
+              reason:
+                "AUXILIARY_REGISTRATION_THROW",
+
+              detail:
+                String(
+                  error &&
+                  error.message
+                    ? error.message
+                    : error
+                ),
+
+              generatedAt:
+                nowIso()
+            };
+          }
+        }
+
+        state.auxiliaryRegistrations.push(
+          deepFreeze(outcome)
+        );
+      }
+    );
+
+    var sealReceipt;
+
+    try {
+      sealReceipt =
+        cycle.seal();
+    } catch (error) {
+      return Promise.resolve({
+        conductorResult: {
+          stage:
+            "SEAL",
+
+          error:
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            ),
+
+          stationRegistrations:
+            frozenClone(
+              state.stationRegistrations
+            )
+        },
+
+        receipts:
+          makeHeldReceipts(
+            "NORTH_CONDUCTOR_SEAL_THROW",
+            "The North conductor could not seal the diagnostic cycle.",
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            )
+          )
+      });
+    }
+
+    return Promise.resolve(
+      cycle.run()
+    )
+      .then(
+        function conductorRunResolved(result) {
+          var receipt =
+            isObject(result)
+              ? result
+              : cycle.getReceipt();
+
+          state.conductorReceipt =
+            frozenClone(receipt);
+
+          state.conductorState =
+            frozenClone(
+              isFunction(
+                cycle.getState
+              )
+                ? cycle.getState()
+                : null
+            );
+
+          return normalizeConductorResult({
+            schema:
+              "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v1",
+
+            cycleReceipt:
+              receipt,
+
+            stationReceipts:
+              receipt &&
+              Array.isArray(
+                receipt.stationReceipts
+              )
+                ? receipt.stationReceipts
+                : extractReceipts(
+                    receipt
+                  ),
+
+            sealReceipt:
+              sealReceipt,
+
+            state:
+              state.conductorState,
+
+            stationRegistrations:
+              frozenClone(
+                state.stationRegistrations
+              ),
+
+            auxiliaryRegistrations:
+              frozenClone(
+                state.auxiliaryRegistrations
+              )
+          });
+        }
+      )
+      .catch(
+        function conductorRunRejected(error) {
+          state.conductorReceipt =
+            frozenClone(
+              callSafely(
+                cycle,
+                "getReceipt",
+                [],
+                null
+              )
+            );
+
+          state.conductorState =
+            frozenClone(
+              callSafely(
+                cycle,
+                "getState",
+                [],
+                null
+              )
+            );
+
+          return {
+            conductorResult: {
+              stage:
+                "RUN",
+
+              error:
+                String(
+                  error &&
+                  error.message
+                    ? error.message
+                    : error
+                ),
+
+              state:
+                state.conductorState,
+
+              receipt:
+                state.conductorReceipt,
+
+              stationRegistrations:
+                frozenClone(
+                  state.stationRegistrations
+                )
+            },
+
+            receipts:
+              makeHeldReceipts(
+                "NORTH_CONDUCTOR_RUN_REJECTED",
+                "The North conductor rejected the diagnostic cycle.",
+                String(
+                  error &&
+                  error.message
+                    ? error.message
+                    : error
+                )
+              )
+          };
+        }
+      );
   }
 
   function composeLedger() {
-    var passCount =
-      state.receipts.filter(
-        function countPass(receipt) {
-          return receipt.status === "PASS";
-        }
-      ).length;
-
-    var holdCount =
-      state.receipts.filter(
-        function countHold(receipt) {
+    function count(statuses) {
+      return state.receipts.filter(
+        function countReceipt(receipt) {
           return (
-            receipt.status === "HOLD" ||
-            receipt.status === "HELD" ||
-            receipt.status === "PARTIAL_PASS" ||
-            receipt.status === "UNVERIFIED"
+            statuses.indexOf(
+              receipt.status
+            ) !== -1
           );
         }
       ).length;
+    }
+
+    var passCount =
+      count([
+        "PASS"
+      ]);
+
+    var holdCount =
+      count([
+        "HOLD",
+        "HELD",
+        "PARTIAL_PASS",
+        "UNVERIFIED"
+      ]);
 
     var failCount =
-      state.receipts.filter(
-        function countFail(receipt) {
-          return receipt.status === "FAIL";
-        }
-      ).length;
+      count([
+        "FAIL"
+      ]);
 
     var conflictCount =
-      state.receipts.filter(
-        function countConflict(receipt) {
-          return receipt.status === "CONFLICT";
-        }
-      ).length;
+      count([
+        "CONFLICT"
+      ]);
 
     var errorCount =
-      state.receipts.filter(
-        function countError(receipt) {
-          return receipt.status === "ERROR";
-        }
-      ).length;
+      count([
+        "ERROR"
+      ]);
 
     var degradedCount =
-      state.receipts.filter(
-        function countDegraded(receipt) {
-          return receipt.status === "DEGRADED";
-        }
-      ).length;
+      count([
+        "DEGRADED"
+      ]);
 
     var terminalReceipt =
       state.receipts.length
@@ -2270,12 +2788,15 @@
                   ? "PASS"
                   : "HOLD";
 
-    var core = {
+    var ledger = {
       schema:
         LEDGER_SCHEMA,
 
       contract:
         CONTRACT,
+
+      previousContract:
+        PREVIOUS_CONTRACT,
 
       version:
         VERSION,
@@ -2300,6 +2821,9 @@
 
       orchestrationOwner:
         "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR",
+
+      orchestrationMethod:
+        "createCycle",
 
       receiptCount:
         state.receipts.length,
@@ -2344,6 +2868,30 @@
       target:
         inspectTargetFrame(),
 
+      conductorState:
+        state.conductorState
+          ? frozenClone(
+              state.conductorState
+            )
+          : null,
+
+      conductorReceipt:
+        state.conductorReceipt
+          ? frozenClone(
+              state.conductorReceipt
+            )
+          : null,
+
+      stationRegistrations:
+        frozenClone(
+          state.stationRegistrations
+        ),
+
+      auxiliaryRegistrations:
+        frozenClone(
+          state.auxiliaryRegistrations
+        ),
+
       conductorResult:
         state.conductorResult
           ? frozenClone(
@@ -2356,34 +2904,16 @@
           state.receipts
         ),
 
-      noClaims: {
-        productionMutationAuthorized:
-          false,
-
-        runtimeRestartAuthorized:
-          false,
-
-        rendererMutationAuthorized:
-          false,
-
-        repairAuthorized:
-          false,
-
-        readyClaimed:
-          false,
-
-        visualPassClaimed:
-          false,
-
-        f21Claimed:
-          false
-      }
+      noClaims:
+        NO_CLAIMS
     };
 
-    core.ledgerHash =
-      hashObject(core);
+    ledger.ledgerHash =
+      hashObject(ledger);
 
-    return deepFreeze(core);
+    return deepFreeze(
+      ledger
+    );
   }
 
   function readableOverall(ledger) {
@@ -2391,28 +2921,43 @@
       return "Waiting";
     }
 
-    switch (ledger.overallStatus) {
-      case "PASS":
-        return "Complete diagnostic path";
-
-      case "HOLD":
-        return "Held for evidence";
-
-      case "DEGRADED":
-        return "Degraded diagnostic result";
-
-      case "FAIL":
-        return "Failure reported";
-
-      case "CONFLICT":
-        return "Conflict reported";
-
-      case "ERROR":
-        return "Error reported";
-
-      default:
-        return "Unverified diagnostic path";
+    if (
+      ledger.overallStatus === "PASS"
+    ) {
+      return "Complete diagnostic path";
     }
+
+    if (
+      ledger.overallStatus === "HOLD"
+    ) {
+      return "Held for evidence";
+    }
+
+    if (
+      ledger.overallStatus === "DEGRADED"
+    ) {
+      return "Degraded diagnostic result";
+    }
+
+    if (
+      ledger.overallStatus === "FAIL"
+    ) {
+      return "Failure reported";
+    }
+
+    if (
+      ledger.overallStatus === "CONFLICT"
+    ) {
+      return "Conflict reported";
+    }
+
+    if (
+      ledger.overallStatus === "ERROR"
+    ) {
+      return "Error reported";
+    }
+
+    return "Unverified diagnostic path";
   }
 
   function plainLanguage(ledger) {
@@ -2423,35 +2968,45 @@
       );
     }
 
-    if (ledger.errorCount > 0) {
+    if (
+      ledger.errorCount > 0
+    ) {
       return (
         "The diagnostic path encountered an execution error. " +
         "Open the station receipts to identify the affected stage."
       );
     }
 
-    if (ledger.conflictCount > 0) {
+    if (
+      ledger.conflictCount > 0
+    ) {
       return (
         "The diagnostic path found incompatible authority or runtime claims. " +
         "No readiness conclusion can be made."
       );
     }
 
-    if (ledger.failCount > 0) {
+    if (
+      ledger.failCount > 0
+    ) {
       return (
         "The diagnostic path found a failed condition. " +
         "This report identifies the failure but does not authorize repair."
       );
     }
 
-    if (ledger.degradedCount > 0) {
+    if (
+      ledger.degradedCount > 0
+    ) {
       return (
         "The diagnostic path completed with degraded evidence. " +
         "The result is not equivalent to a production-ready engine."
       );
     }
 
-    if (ledger.holdCount > 0) {
+    if (
+      ledger.holdCount > 0
+    ) {
       return (
         "The diagnostic path is held because required runtime evidence is " +
         "missing, unavailable, or not yet admitted. Missing proof was not " +
@@ -2461,9 +3016,9 @@
 
     if (
       ledger.passCount ===
-      ledger.receiptCount &&
+        ledger.receiptCount &&
       ledger.receiptCount ===
-      STATIONS.length
+        STATIONS.length
     ) {
       return (
         "All nine diagnostic stations returned passing diagnostic receipts. " +
@@ -2473,8 +3028,7 @@
     }
 
     return (
-      "The diagnostic path is incomplete. " +
-      "Inspect the station receipts and engine-family records."
+      "The diagnostic path is incomplete."
     );
   }
 
@@ -2485,9 +3039,22 @@
       ledger.errorCount +
       ledger.degradedCount;
 
+    var registeredCount =
+      ledger.stationRegistrations.filter(
+        function countRegistered(outcome) {
+          return (
+            outcome.status ===
+              "REGISTERED" ||
+            outcome.status ===
+              "DUPLICATE_IDENTICAL"
+          );
+        }
+      ).length;
+
     return [
       "AUDRALIA DIAGNOSTIC READER REPORT",
-      "SCHEMA=" + READER_REPORT_SCHEMA,
+      "SCHEMA=" +
+        READER_REPORT_SCHEMA,
       "",
       "Overall status: " +
         readableOverall(ledger),
@@ -2514,6 +3081,12 @@
         ledger.engineRegistry
           .reservedEngineCount,
       "",
+      "North conductor:",
+      "Invocation: createCycle",
+      "Registered stations: " +
+        registeredCount +
+        " of 9",
+      "",
       "Plain-language reading:",
       plainLanguage(ledger),
       "",
@@ -2531,13 +3104,18 @@
   }
 
   function stationLabel(stationId) {
-    var station =
-      STATIONS.find(function findStation(entry) {
-        return entry.stationId === stationId;
-      });
+    var definition =
+      STATIONS.find(
+        function findStation(entry) {
+          return (
+            entry.stationId ===
+            stationId
+          );
+        }
+      );
 
-    return station
-      ? station.label
+    return definition
+      ? definition.label
       : stationId ||
           "Unknown Station";
   }
@@ -2545,108 +3123,77 @@
   function renderRegistrySummary() {
     refreshRegistryState();
 
-    var snapshot =
-      state.registrySnapshot;
-
-    var authorityCount =
-      snapshot
-        ? Number(
-            snapshot.authorityCount || 0
-          )
-        : state.authorityRecords.length;
-
-    var assignedCount =
-      snapshot
-        ? Number(
-            snapshot.assignedEngineCount || 0
-          )
-        : state.engineRecords.filter(
-            function assigned(record) {
-              return record && !record.reserved;
-            }
-          ).length;
-
-    var selectableCount =
-      snapshot
-        ? Number(
-            snapshot.selectableEngineCount || 0
-          )
-        : state.engineRecords.filter(
-            function selectable(record) {
-              return record && record.selectable;
-            }
-          ).length;
-
-    var reservedCount =
-      snapshot
-        ? Number(
-            snapshot.reservedEngineCount || 0
-          )
-        : state.engineRecords.filter(
-            function reserved(record) {
-              return record && record.reserved;
-            }
-          ).length;
+    var evidence =
+      buildRegistryEvidence();
 
     setText(
       "governingContractCount",
-      String(authorityCount)
+      String(
+        evidence.governingAuthorityCount
+      )
     );
 
     setText(
       "assignedEngineCount",
-      String(assignedCount)
+      String(
+        evidence.assignedEngineCount
+      )
     );
 
     setText(
       "selectableEngineCount",
-      String(selectableCount)
+      String(
+        evidence.selectableEngineCount
+      )
     );
 
     setText(
       "reservedEngineCount",
-      String(reservedCount)
+      String(
+        evidence.reservedEngineCount
+      )
     );
 
     setText(
       "governingContractSummary",
-      authorityCount > 0
+      evidence.governingAuthorityCount > 0
         ? "The governing contract is registered separately from the runtime engine."
         : "The governing contract record is unavailable."
     );
 
     setText(
       "assignedEngineSummary",
-      assignedCount > 0
+      evidence.assignedEngineCount > 0
         ? "One runtime engine subject is assigned to the registry."
         : "No runtime engine subject is currently assigned."
     );
 
     setText(
       "selectableEngineSummary",
-      selectableCount > 0
+      evidence.selectableEngineCount > 0
         ? "The registered runtime core is available for selection."
-        : "The runtime core is held until its authority and identity are admitted."
+        : "The runtime core is held until authority and identity are admitted."
     );
 
     setText(
       "reservedEngineSummary",
-      reservedCount > 0
-        ? String(reservedCount) +
+      evidence.reservedEngineCount > 0
+        ? String(
+            evidence.reservedEngineCount
+          ) +
           " future engine slots remain reserved."
         : "No reserved engine slots were reported."
     );
 
     var pill =
-      byId("engineRegistryStatusPill");
+      byId(
+        "engineRegistryStatusPill"
+      );
 
     if (pill) {
-      var pillStatus =
-        !getRegistry()
-          ? "held"
-          : selectableCount > 0
-            ? "available"
-            : "held";
+      var available =
+        evidence.registryLoaded &&
+        evidence.selectableEngineCount > 0;
 
       setClassState(
         pill,
@@ -2656,16 +3203,17 @@
           "pass",
           "held",
           "waiting",
-          "error",
-          "conflict"
+          "error"
         ],
-        pillStatus
+        available
+          ? "available"
+          : "held"
       );
 
       pill.textContent =
-        !getRegistry()
+        !evidence.registryLoaded
           ? "REGISTRY_NOT_LOADED"
-          : selectableCount > 0
+          : available
             ? "REGISTRY_AVAILABLE"
             : "REGISTRY_HELD";
     }
@@ -2685,72 +3233,72 @@
       !state.authorityRecords.length &&
       !state.engineRecords.length
     ) {
-      list.innerHTML = [
-        '<article class="receipt-empty">',
-        "<h3>Engine registry unavailable</h3>",
-        "<p>The registry global was not found. The diagnostic route remains held.</p>",
-        "</article>"
-      ].join("");
+      list.innerHTML =
+        '<article class="receipt-empty">' +
+        "<h3>Engine registry unavailable</h3>" +
+        "<p>The registry global was not found. The diagnostic route remains held.</p>" +
+        "</article>";
 
       return;
     }
 
-    var fragments = [];
+    var fragments =
+      [];
 
     state.authorityRecords.forEach(
       function renderAuthority(record) {
-        fragments.push([
-          '<article class="receipt-card authority-record">',
-          "<h3>",
+        fragments.push(
+          '<article class="receipt-card authority-record">' +
+          "<h3>" +
           escapeHtml(
             record.authorityName ||
             record.authorityId ||
             "Governing Contract"
-          ),
-          "</h3>",
-          "<p>",
-          "Role: ",
+          ) +
+          "</h3>" +
+          "<p>Role: " +
           escapeHtml(
             record.role ||
             "GOVERNING_CONTRACT"
-          ),
-          "</p>",
-          "<p>",
-          "Status: ",
+          ) +
+          "</p>" +
+          "<p>Status: " +
           escapeHtml(
             record.status ||
             "UNKNOWN"
-          ),
-          "</p>",
-          "<p>",
-          "File: ",
+          ) +
+          "</p>" +
+          "<p>File: " +
           escapeHtml(
             record.file ||
             "/assets/engine/dgb.engine.contract.js"
-          ),
-          "</p>",
-          "<p>",
-          "Executable engine: ",
-          record.executableEngine
-            ? "Yes"
-            : "No",
-          "</p>",
+          ) +
+          "</p>" +
+          "<p>Executable engine: " +
+          (
+            record.executableEngine
+              ? "Yes"
+              : "No"
+          ) +
+          "</p>" +
           "</article>"
-        ].join(""));
+        );
       }
     );
 
     state.engineRecords.forEach(
       function renderEngine(record) {
-        fragments.push([
-          '<article class="receipt-card engine-record ',
-          record.reserved
-            ? "held"
-            : record.selectable
-              ? "pass"
-              : "hold",
-          '">',
-          "<h3>",
+        fragments.push(
+          '<article class="receipt-card engine-record ' +
+          (
+            record.reserved
+              ? "held"
+              : record.selectable
+                ? "pass"
+                : "hold"
+          ) +
+          '">' +
+          "<h3>" +
           escapeHtml(
             record.engineName ||
             (
@@ -2760,37 +3308,35 @@
                 : record.engineId ||
                   "Runtime Engine"
             )
-          ),
-          "</h3>",
-          "<p>",
-          "Role: ",
+          ) +
+          "</h3>" +
+          "<p>Role: " +
           escapeHtml(
             record.role ||
             "RUNTIME_ENGINE"
-          ),
-          "</p>",
-          "<p>",
-          "Status: ",
+          ) +
+          "</p>" +
+          "<p>Status: " +
           escapeHtml(
             record.status ||
             "UNKNOWN"
-          ),
-          "</p>",
-          "<p>",
-          "Selectable: ",
-          record.selectable
-            ? "Yes"
-            : "No",
-          "</p>",
-          "<p>",
-          "File: ",
+          ) +
+          "</p>" +
+          "<p>Selectable: " +
+          (
+            record.selectable
+              ? "Yes"
+              : "No"
+          ) +
+          "</p>" +
+          "<p>File: " +
           escapeHtml(
             record.file ||
             "Not assigned"
-          ),
-          "</p>",
+          ) +
+          "</p>" +
           "</article>"
-        ].join(""));
+        );
       }
     );
 
@@ -2802,7 +3348,7 @@
     var ledger =
       state.ledger;
 
-    var attentionCount =
+    var attention =
       ledger
         ? (
             ledger.failCount +
@@ -2824,20 +3370,24 @@
     setText(
       "passedCount",
       ledger
-        ? String(ledger.passCount)
+        ? String(
+            ledger.passCount
+          )
         : "0"
     );
 
     setText(
       "heldCount",
       ledger
-        ? String(ledger.holdCount)
+        ? String(
+            ledger.holdCount
+          )
         : "0"
     );
 
     setText(
       "attentionCount",
-      String(attentionCount)
+      String(attention)
     );
 
     setText(
@@ -2880,76 +3430,80 @@
       return;
     }
 
-    STATIONS.forEach(function renderStation(station) {
-      var node =
-        doc.querySelector(
-          '[data-station="' +
-          station.stationId +
-          '"]'
+    STATIONS.forEach(
+      function renderStation(
+        definition
+      ) {
+        var node =
+          doc.querySelector(
+            '[data-station="' +
+            definition.stationId +
+            '"]'
+          );
+
+        var receipt =
+          state.receipts.find(
+            function findReceipt(entry) {
+              return (
+                entry.stationId ===
+                definition.stationId
+              );
+            }
+          );
+
+        if (!node) {
+          return;
+        }
+
+        setClassState(
+          node,
+          [
+            "pass",
+            "passed",
+            "hold",
+            "held",
+            "partial",
+            "fail",
+            "error",
+            "conflict",
+            "attention"
+          ],
+          receipt
+            ? statusClass(
+                receipt.status
+              )
+            : null
         );
 
-      var receipt =
-        state.receipts.find(
-          function findReceipt(entry) {
-            return (
-              entry.stationId ===
-              station.stationId
-            );
-          }
+        if (!receipt) {
+          node.removeAttribute(
+            "data-status"
+          );
+
+          node.removeAttribute(
+            "title"
+          );
+
+          return;
+        }
+
+        node.setAttribute(
+          "data-status",
+          receipt.status
         );
 
-      if (!node) {
-        return;
+        node.setAttribute(
+          "title",
+          definition.label +
+          ": " +
+          (
+            receipt.summary ||
+            receipt.status ||
+            "UNKNOWN"
+          )
+        );
       }
-
-      setClassState(
-        node,
-        [
-          "pass",
-          "passed",
-          "hold",
-          "held",
-          "partial",
-          "fail",
-          "error",
-          "conflict",
-          "attention"
-        ],
-        receipt
-          ? statusClass(
-              receipt.status
-            )
-          : null
-      );
-
-      if (!receipt) {
-        node.removeAttribute(
-          "data-status"
-        );
-
-        node.removeAttribute(
-          "title"
-        );
-
-        return;
-      }
-
-      node.setAttribute(
-        "data-status",
-        receipt.status
-      );
-
-      node.setAttribute(
-        "title",
-        station.label +
-        ": " +
-        (
-          receipt.summary ||
-          receipt.status ||
-          "UNKNOWN"
-        )
-      );
-    });
+    );
   }
 
   function renderReceipts() {
@@ -2961,80 +3515,84 @@
     }
 
     if (!state.receipts.length) {
-      list.innerHTML = [
-        '<article class="receipt-empty">',
-        "<h3>No receipts yet</h3>",
-        "<p>Run the diagnostic track to populate station receipts.</p>",
-        "</article>"
-      ].join("");
+      list.innerHTML =
+        '<article class="receipt-empty">' +
+        "<h3>No receipts yet</h3>" +
+        "<p>Run the diagnostic track to populate station receipts.</p>" +
+        "</article>";
 
       return;
     }
 
     list.innerHTML =
       state.receipts
-        .map(function renderReceipt(
-          receipt,
-          index
-        ) {
-          var issueCount =
-            Array.isArray(receipt.issues)
-              ? receipt.issues.length
-              : 0;
+        .map(
+          function renderReceipt(
+            receipt,
+            index
+          ) {
+            var issueCount =
+              Array.isArray(
+                receipt.issues
+              )
+                ? receipt.issues.length
+                : 0;
 
-          return [
-            '<details class="receipt-card ',
-            escapeHtml(
-              statusClass(
+            return (
+              '<details class="receipt-card ' +
+              escapeHtml(
+                statusClass(
+                  receipt.status
+                )
+              ) +
+              '">' +
+              "<summary>" +
+              escapeHtml(
+                String(index + 1)
+              ) +
+              " · " +
+              escapeHtml(
+                stationLabel(
+                  receipt.stationId
+                )
+              ) +
+              " · " +
+              escapeHtml(
                 receipt.status
-              )
-            ),
-            '">',
-            "<summary>",
-            escapeHtml(
-              String(index + 1)
-            ),
-            " · ",
-            escapeHtml(
-              stationLabel(
+              ) +
+              "</summary>" +
+              '<div class="receipt-meta">' +
+              "<span>" +
+              escapeHtml(
                 receipt.stationId
-              )
-            ),
-            " · ",
-            escapeHtml(
-              receipt.status
-            ),
-            "</summary>",
-            '<div class="receipt-meta">',
-            "<span>",
-            escapeHtml(
-              receipt.stationId
-            ),
-            "</span>",
-            "<span>",
-            escapeHtml(
-              receipt.fibonacci || ""
-            ),
-            "</span>",
-            "<span>Issues: ",
-            escapeHtml(
-              String(issueCount)
-            ),
-            "</span>",
-            "</div>",
-            "<p>",
-            escapeHtml(
-              receipt.summary
-            ),
-            "</p>",
-            "<pre>",
-            escapeHtml(
-              safeJson(receipt)
-            ),
-            "</pre>",
-            "</details>"
-          ].join("");
-        })
+              ) +
+              "</span>" +
+              "<span>" +
+              escapeHtml(
+                receipt.fibonacci ||
+                ""
+              ) +
+              "</span>" +
+              "<span>Issues: " +
+              escapeHtml(
+                String(issueCount)
+              ) +
+              "</span>" +
+              "</div>" +
+              "<p>" +
+              escapeHtml(
+                receipt.summary
+              ) +
+              "</p>" +
+              "<pre>" +
+              escapeHtml(
+                safeJson(receipt)
+              ) +
+              "</pre>" +
+              "</details>"
+            );
+          }
+        )
         .join("");
   }
 
@@ -3049,7 +3607,9 @@
     setText(
       "rawReceiptsOutput",
       state.receipts.length
-        ? safeJson(state.receipts)
+        ? safeJson(
+            state.receipts
+          )
         : "No receipts produced yet."
     );
   }
@@ -3083,7 +3643,9 @@
   function runDiagnostic() {
     if (state.running) {
       return Promise.resolve(
-        frozenClone(state.ledger)
+        frozenClone(
+          state.ledger
+        )
       );
     }
 
@@ -3096,12 +3658,35 @@
     state.lastRunAt =
       nowIso();
 
-    state.receipts = [];
-    state.ledger = null;
-    state.readerReport = "";
-    state.rawLedgerText = "";
-    state.conductorResult = null;
-    state.lastError = null;
+    state.conductorResult =
+      null;
+
+    state.conductorReceipt =
+      null;
+
+    state.conductorState =
+      null;
+
+    state.stationRegistrations =
+      [];
+
+    state.auxiliaryRegistrations =
+      [];
+
+    state.receipts =
+      [];
+
+    state.ledger =
+      null;
+
+    state.readerReport =
+      "";
+
+    state.rawLedgerText =
+      "";
+
+    state.lastError =
+      null;
 
     refreshRegistryState();
     inspectEngineState();
@@ -3111,84 +3696,102 @@
       buildConductorRequest();
 
     return invokeConductor(request)
-      .then(function receiveConductorResult(
-        normalized
-      ) {
-        state.conductorResult =
-          normalized.conductorResult;
+      .then(
+        function receiveConductorResult(
+          normalized
+        ) {
+          state.conductorResult =
+            normalized.conductorResult;
 
-        state.receipts =
-          normalized.receipts;
+          state.receipts =
+            normalized.receipts;
 
-        state.ledger =
-          composeLedger();
+          state.ledger =
+            composeLedger();
 
-        state.rawLedgerText =
-          safeJson(state.ledger);
+          state.rawLedgerText =
+            safeJson(
+              state.ledger
+            );
 
-        state.readerReport =
-          composeReaderReport(
+          state.readerReport =
+            composeReaderReport(
+              state.ledger
+            );
+
+          renderAll();
+
+          toast(
+            state.ledger.overallStatus ===
+              "PASS"
+              ? "Diagnostic cycle completed."
+              : "Diagnostic cycle completed with held or attention items."
+          );
+
+          return frozenClone(
             state.ledger
           );
+        }
+      )
+      .catch(
+        function handleUnexpectedRunError(
+          error
+        ) {
+          state.lastError =
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            );
 
-        renderAll();
+          state.receipts =
+            makeHeldReceipts(
+              "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
+              "The route controller could not complete the diagnostic cycle.",
+              state.lastError
+            );
 
-        toast(
-          state.ledger.overallStatus ===
-          "PASS"
-            ? "Diagnostic cycle completed."
-            : "Diagnostic cycle completed with held or attention items."
-        );
+          state.ledger =
+            composeLedger();
 
-        return frozenClone(
-          state.ledger
-        );
-      })
-      .catch(function handleUnexpectedRunError(
-        error
-      ) {
-        state.lastError =
-          String(
-            error &&
-            error.message
-              ? error.message
-              : error
+          state.rawLedgerText =
+            safeJson(
+              state.ledger
+            );
+
+          state.readerReport =
+            composeReaderReport(
+              state.ledger
+            );
+
+          renderAll();
+
+          toast(
+            "Diagnostic cycle held after controller error."
           );
 
-        state.receipts =
-          makeConductorHeldReceipts(
-            "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
-            "The route controller could not complete the diagnostic cycle.",
-            state.lastError
-          );
-
-        state.ledger =
-          composeLedger();
-
-        state.rawLedgerText =
-          safeJson(state.ledger);
-
-        state.readerReport =
-          composeReaderReport(
+          return frozenClone(
             state.ledger
           );
-
-        renderAll();
-
-        toast(
-          "Diagnostic cycle held after controller error."
-        );
-
-        return frozenClone(
-          state.ledger
-        );
-      })
-      .finally(function finishRun() {
-        setRunning(false);
-      });
+        }
+      )
+      .then(
+        function finishRun(value) {
+          setRunning(false);
+          return value;
+        },
+        function finishRejected(error) {
+          setRunning(false);
+          throw error;
+        }
+      );
   }
 
-  function copyText(text, message) {
+  function copyText(
+    text,
+    message
+  ) {
     if (!text) {
       return;
     }
@@ -3202,17 +3805,22 @@
     ) {
       root.navigator.clipboard
         .writeText(text)
-        .then(function copied() {
-          toast(
-            message || "Copied."
-          );
-        })
-        .catch(function clipboardRejected() {
-          fallbackCopy(
-            text,
-            message
-          );
-        });
+        .then(
+          function copied() {
+            toast(
+              message ||
+              "Copied."
+            );
+          }
+        )
+        .catch(
+          function clipboardRejected() {
+            fallbackCopy(
+              text,
+              message
+            );
+          }
+        );
 
       return;
     }
@@ -3223,7 +3831,10 @@
     );
   }
 
-  function fallbackCopy(text, message) {
+  function fallbackCopy(
+    text,
+    message
+  ) {
     if (!doc) {
       return;
     }
@@ -3259,7 +3870,8 @@
       );
 
       toast(
-        message || "Copied."
+        message ||
+        "Copied."
       );
     } catch (_error) {
       toast(
@@ -3298,37 +3910,39 @@
         byId("tabBoundary")
     };
 
-    buttons.forEach(function bindTab(button) {
-      button.addEventListener(
-        "click",
-        function activateTab() {
-          var tab =
-            button.getAttribute(
-              "data-tab"
+    buttons.forEach(
+      function bindTab(button) {
+        button.addEventListener(
+          "click",
+          function activateTab() {
+            var tab =
+              button.getAttribute(
+                "data-tab"
+              );
+
+            buttons.forEach(
+              function resetTab(other) {
+                other.setAttribute(
+                  "aria-selected",
+                  other === button
+                    ? "true"
+                    : "false"
+                );
+              }
             );
 
-          buttons.forEach(
-            function resetTab(other) {
-              other.setAttribute(
-                "aria-selected",
-                other === button
-                  ? "true"
-                  : "false"
-              );
-            }
-          );
-
-          Object.keys(panels).forEach(
-            function togglePanel(key) {
-              if (panels[key]) {
-                panels[key].hidden =
-                  key !== tab;
+            Object.keys(panels).forEach(
+              function togglePanel(key) {
+                if (panels[key]) {
+                  panels[key].hidden =
+                    key !== tab;
+                }
               }
-            }
-          );
-        }
-      );
-    });
+            );
+          }
+        );
+      }
+    );
   }
 
   function wireUi() {
@@ -3358,7 +3972,9 @@
         "click",
         function toggleTargetFrame() {
           var shell =
-            byId("targetFrameShell");
+            byId(
+              "targetFrameShell"
+            );
 
           if (!shell) {
             return;
@@ -3409,6 +4025,9 @@
       contract:
         CONTRACT,
 
+      previousContract:
+        PREVIOUS_CONTRACT,
+
       version:
         VERSION,
 
@@ -3451,6 +4070,18 @@
       engineReceipt:
         state.engineReceipt,
 
+      conductorReceipt:
+        state.conductorReceipt,
+
+      conductorState:
+        state.conductorState,
+
+      stationRegistrations:
+        state.stationRegistrations,
+
+      auxiliaryRegistrations:
+        state.auxiliaryRegistrations,
+
       receiptCount:
         state.receipts.length,
 
@@ -3468,111 +4099,117 @@
     });
   }
 
+  function buildApi() {
+    return deepFreeze({
+      CONTRACT:
+        CONTRACT,
+
+      PREVIOUS_CONTRACT:
+        PREVIOUS_CONTRACT,
+
+      VERSION:
+        VERSION,
+
+      FILE:
+        FILE,
+
+      HTML_CONTRACT:
+        HTML_CONTRACT,
+
+      CSS_CONTRACT:
+        CSS_CONTRACT,
+
+      GOVERNING_ENGINE_CONTRACT:
+        GOVERNING_ENGINE_CONTRACT,
+
+      CORE_ENGINE_CONTRACT:
+        CORE_ENGINE_CONTRACT,
+
+      REGISTRY_CONTRACT:
+        REGISTRY_CONTRACT,
+
+      DEFAULT_ENGINE_ID:
+        DEFAULT_ENGINE_ID,
+
+      runDiagnostic:
+        runDiagnostic,
+
+      refreshRegistry:
+        function refreshRegistry() {
+          refreshRegistryState();
+          inspectEngineState();
+          renderAll();
+
+          return frozenClone(
+            state.registrySnapshot
+          );
+        },
+
+      render:
+        function render() {
+          renderAll();
+
+          return getPublicState();
+        },
+
+      getState:
+        getPublicState,
+
+      getLedger:
+        function getLedger() {
+          return frozenClone(
+            state.ledger
+          );
+        },
+
+      getReceipts:
+        function getReceipts() {
+          return frozenClone(
+            state.receipts
+          );
+        },
+
+      getReaderReport:
+        function getReaderReport() {
+          return String(
+            state.readerReport ||
+            ""
+          );
+        },
+
+      getRegistrySnapshot:
+        function getRegistrySnapshot() {
+          return frozenClone(
+            state.registrySnapshot
+          );
+        },
+
+      getRegistryReceipt:
+        function getRegistryReceipt() {
+          return frozenClone(
+            state.registryReceipt
+          );
+        }
+    });
+  }
+
   function publishApi() {
-    var API =
-      deepFreeze({
-        CONTRACT:
-          CONTRACT,
-
-        PREVIOUS_CONTRACT:
-          PREVIOUS_CONTRACT,
-
-        VERSION:
-          VERSION,
-
-        FILE:
-          FILE,
-
-        HTML_CONTRACT:
-          HTML_CONTRACT,
-
-        CSS_CONTRACT:
-          CSS_CONTRACT,
-
-        GOVERNING_ENGINE_CONTRACT:
-          GOVERNING_ENGINE_CONTRACT,
-
-        CORE_ENGINE_CONTRACT:
-          CORE_ENGINE_CONTRACT,
-
-        REGISTRY_CONTRACT:
-          REGISTRY_CONTRACT,
-
-        DEFAULT_ENGINE_ID:
-          DEFAULT_ENGINE_ID,
-
-        runDiagnostic:
-          runDiagnostic,
-
-        refreshRegistry:
-          function refreshRegistry() {
-            refreshRegistryState();
-            inspectEngineState();
-            renderAll();
-
-            return frozenClone(
-              state.registrySnapshot
-            );
-          },
-
-        render:
-          function render() {
-            renderAll();
-
-            return getPublicState();
-          },
-
-        getState:
-          getPublicState,
-
-        getLedger:
-          function getLedger() {
-            return frozenClone(
-              state.ledger
-            );
-          },
-
-        getReceipts:
-          function getReceipts() {
-            return frozenClone(
-              state.receipts
-            );
-          },
-
-        getReaderReport:
-          function getReaderReport() {
-            return String(
-              state.readerReport || ""
-            );
-          },
-
-        getRegistrySnapshot:
-          function getRegistrySnapshot() {
-            return frozenClone(
-              state.registrySnapshot
-            );
-          },
-
-        getRegistryReceipt:
-          function getRegistryReceipt() {
-            return frozenClone(
-              state.registryReceipt
-            );
-          }
-      });
+    var api =
+      buildApi();
 
     root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
-      API;
+      api;
 
     if (
       !root.AUDRALIA ||
       typeof root.AUDRALIA !== "object"
     ) {
-      root.AUDRALIA = {};
+      root.AUDRALIA =
+        {};
     }
 
     root.AUDRALIA.diagnosticRouteController =
-      API;
+      api;
 
     root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_LOADED__ =
       true;
@@ -3583,7 +4220,7 @@
     root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONTRACT__ =
       CONTRACT;
 
-    return API;
+    return api;
   }
 
   function init() {
@@ -3614,7 +4251,8 @@
   if (
     existing &&
     existing.CONTRACT &&
-    existing.CONTRACT !== CONTRACT
+    existing.CONTRACT !== CONTRACT &&
+    existing.CONTRACT !== PREVIOUS_CONTRACT
   ) {
     root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONFLICT__ =
       deepFreeze({
@@ -3623,6 +4261,9 @@
 
         expectedContract:
           CONTRACT,
+
+        previousContract:
+          PREVIOUS_CONTRACT,
 
         existingContract:
           existing.CONTRACT,

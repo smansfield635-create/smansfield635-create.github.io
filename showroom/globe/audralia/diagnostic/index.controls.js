@@ -1,1005 +1,1210 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
 // AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2
 // Full-file replacement.
-// UI control authority only.
-// Diagnostic-route only.
+// Functional coordinative renewal.
 //
 // CANONICAL AUTHORITY:
 // - AUDRALIA_DIAGNOSTIC_OWNERSHIP_STANDARD_LOCK_v1
-// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1
-// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1
+// - AUDRALIA_DIAGNOSTIC_NEWS_FIBONACCI_AUTHORITY_ASSIGNMENT_v1
+// - AUDRALIA_DIAGNOSTIC_CONTROLS_NEWS_FIBONACCI_COORDINATIVE_AUDIT_v1
 //
-// SOLE OWNERSHIP:
-// - all click handling;
-// - all keyboard control handling;
-// - event delegation;
-// - dropdown opening and closing;
-// - left-orbit tab behavior;
-// - report-mode tab behavior;
-// - observation-lens tab behavior;
-// - instrument-deck tab behavior;
-// - category selection forwarding;
-// - audit selection forwarding;
-// - participant selection forwarding;
-// - target-window visibility;
-// - target-window expansion;
-// - target-frame reload;
-// - observatory reload;
-// - clipboard actions;
-// - reset forwarding;
-// - direct-check forwarding;
-// - nine-cycle forwarding;
-// - engine discovery;
-// - engine contract validation;
-// - engine readiness validation;
-// - fallback READ report;
-// - fallback control archive;
-// - receipt filtering;
-// - receipt selection;
-// - complete control-binding audit;
-// - visible control errors;
-// - no-silent-failure enforcement.
+// N.E.W.S. / FIBONACCI AUTHORITY:
+// - SOUTH / F34:
+//   Human-command handoff.
+// - SOUTH / F55:
+//   Participant-facing restitution and control presentation.
+//
+// FUNCTIONAL TARGET:
+// - Parse successfully.
+// - Bind all controls.
+// - Observe Create Report activation.
+// - Resolve the renewed engine API.
+// - Invoke engine.createReport().
+// - Render the returned canonical READ report.
+// - Expose report, engine, inspection, cycle, and control receipts.
+// - Produce and render a fallback READ report if engine invocation fails.
+// - Never leave Create Report at unchanged READY after activation.
 //
 // DOES NOT OWN:
-// - diagnostic state;
+// - unsafe external inspection;
 // - participant discovery;
-// - participant evidence;
-// - alias resolution;
-// - target observation;
-// - runtime evidence;
-// - registry evidence;
-// - Surface Truth evidence;
-// - healthy-engine report construction;
-// - READ interpretation when the engine is healthy;
-// - direct-check implementation;
+// - diagnostic interpretation;
+// - Fibonacci synchronization judgment;
+// - canonical report construction when the engine is healthy;
+// - direct execution implementation;
 // - conductor execution;
-// - nine-cycle implementation;
-// - receipt normalization;
-// - ledger construction;
-// - diagnostic archive construction;
+// - nine-cycle validation;
+// - report archive authority;
+// - F21 interpretation;
+// - F89 terminal commitment;
 // - production mutation;
-// - runtime restart;
-// - renderer mutation;
-// - canvas repair;
-// - controls repair;
-// - route repair;
-// - readiness claims;
-// - visual-pass claims;
-// - F21 authority;
-// - synthetic evidence.
+// - runtime repair;
+// - renderer repair;
+// - canvas repair.
 //
 // LOAD ORDER:
-// - Must load after /showroom/globe/audralia/diagnostic/index.js.
-// - Must still bind if index.js is missing, incompatible, held, or throws.
-//
-// FAILURE LAW:
-// - No interactive control may fail silently.
-// - Create Report must produce a fallback READ report when the engine is
-//   missing, incompatible, not ready, throws, rejects, or returns an invalid
-//   report.
-// - Direct and cycle controls must visibly report engine unavailability.
-// - Local shell controls must remain functional without the engine.
+// 15. index.inspection.lane.js
+// 16. index.js
+// 17. index.controls.js
 
 (function installAudraliaDiagnosticControlPanel(global) {
-"use strict";
+  "use strict";
 
-var root =
-global ||
-(
-typeof window !== "undefined"
-? window
-: typeof globalThis !== "undefined"
-? globalThis
-: this
-);
-
-var doc =
-root && root.document
-? root.document
-: null;
-
-if (!doc) {
-return;
-}
-
-var CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2";
-
-var PREVIOUS_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v1";
-
-var VERSION =
-"2.0.0";
-
-var FILE =
-"/showroom/globe/audralia/diagnostic/index.controls.js";
-
-var EXPECTED_ENGINE_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
-
-var EXPECTED_HTML_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_CONTROL_SPLIT_STATIC_SHELL_TNT_v2";
-
-var EXPECTED_CSS_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1";
-
-var TARGET_ROUTE =
-"/showroom/globe/audralia/";
-
-var TARGET_FRAME_ID =
-"audraliaDiagnosticTargetFrame";
-
-var FALLBACK_REPORT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v2";
-
-var FALLBACK_ARCHIVE_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_ARCHIVE_v2";
-
-var CONTROL_RECEIPT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT_v2";
-
-var ENGINE_GLOBAL_PATHS =
-Object.freeze([
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
-"AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
-"AUDRALIA.dropWithReadDiagnosticObservatory",
-"AUDRALIA.diagnosticRouteController"
-]);
-
-var VALID_ENGINE_STATES =
-Object.freeze([
-"READY",
-"AVAILABLE",
-"ACTIVE"
-]);
-
-var CONTROL_MANIFEST =
-Object.freeze([
-control("returnToAudralia", "anchor", "LOCAL_NAVIGATION"),
-control("toggleObservationTarget", "button", "LOCAL_TARGET_VISIBILITY"),
-control("reloadObservatory", "button", "LOCAL_PAGE_RELOAD"),
-control("createDeepArchive", "button", "ENGINE_OR_FALLBACK_ARCHIVE"),
-control("resetWorkbench", "button", "ENGINE_OR_LOCAL_RESET"),
-
-  control("auditOrbitButton", "tab", "LOCAL_LEFT_ORBIT"),
-  control("participantConstellationButton", "tab", "LOCAL_LEFT_ORBIT"),
-
-  control("categorySelectorButton", "button", "LOCAL_SELECTOR"),
-  control("auditSelectorButton", "button", "LOCAL_SELECTOR"),
-
-  control("createReport", "button", "ENGINE_OR_FALLBACK_REPORT"),
-  control("runDirectCheck", "button", "ENGINE_DIRECT"),
-  control("runNineCycle", "button", "ENGINE_CYCLE"),
-  control("copyReadableReport", "button", "LOCAL_CLIPBOARD"),
-  control("copyPacketReport", "button", "LOCAL_CLIPBOARD"),
-  control("copyRawReport", "button", "LOCAL_CLIPBOARD"),
-  control("addReportToArchive", "button", "ENGINE_ARCHIVE"),
-  control("resetCurrentReport", "button", "ENGINE_OR_LOCAL_RESET"),
-
-  control("reportReadButton", "tab", "LOCAL_REPORT_MODE"),
-  control("reportPacketButton", "tab", "LOCAL_REPORT_MODE"),
-  control("reportRawButton", "tab", "LOCAL_REPORT_MODE"),
-  control("reportEvidenceButton", "tab", "LOCAL_REPORT_MODE"),
-
-  control("targetLensButton", "tab", "LOCAL_OBSERVATION_LENS"),
-  control("runtimeLensButton", "tab", "LOCAL_OBSERVATION_LENS"),
-  control("surfaceLensButton", "tab", "LOCAL_OBSERVATION_LENS"),
-  control("targetWindowButton", "tab", "LOCAL_OBSERVATION_LENS"),
-
-  control("expandTargetWindow", "button", "LOCAL_TARGET_EXPANSION"),
-  control("reloadTargetFrame", "button", "LOCAL_TARGET_RELOAD"),
-
-  control("cycleChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
-  control("registryChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
-  control("receiptChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
-  control("archiveChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
-  control("boundaryChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER")
-]);
-
-var NO_CLAIMS =
-Object.freeze({
-productionMutationAuthorized: false,
-runtimeRestartAuthorized: false,
-rendererMutationAuthorized: false,
-canvasRepairAuthorized: false,
-canvasBuildAuthorized: false,
-canvasReleaseAuthorized: false,
-controlsRepairAuthorized: false,
-routeRepairAuthorized: false,
-repairAuthorized: false,
-readyClaimed: false,
-visualPassClaimed: false,
-cyclePassClaimed: false,
-f21Claimed: false,
-syntheticEvidenceAuthorized: false
-});
-
-var state = {
-initialized: false,
-initializedAt: null,
-
-engine: {
-  resolved: false,
-  compatible: false,
-  ready: false,
-  path: null,
-  contract: null,
-  status: null,
-  reason: null
-},
-
-controls: {
-  manifestCount: CONTROL_MANIFEST.length,
-  discoveredCount: 0,
-  boundCount: 0,
-  missingCount: 0,
-  unownedInteractiveCount: 0,
-  records: [],
-  missing: [],
-  unownedInteractive: []
-},
-
-ui: {
-  leftOrbit: "audits",
-  reportMode: "read",
-  observationLens: "target",
-  instrumentChamber: "cycle",
-  categoryMenuOpen: false,
-  auditMenuOpen: false,
-  targetVisible: false,
-  targetExpanded: false,
-  receiptFilter: "all",
-  selectedReceiptIndex: null
-},
-
-reports: {
-  fallbackCurrent: null,
-  fallbackHistory: []
-},
-
-archive: {
-  fallbackCurrent: null
-},
-
-actionCount: 0,
-errorCount: 0,
-lastAction: null,
-lastError: null
-
-};
-
-function control(id, type, owner) {
-return {
-id: id,
-type: type,
-owner: owner
-};
-}
-
-function byId(id) {
-return doc.getElementById(id);
-}
-
-function isFunction(value) {
-return typeof value === "function";
-}
-
-function isObject(value) {
-return Boolean(
-value &&
-typeof value === "object" &&
-!Array.isArray(value)
-);
-}
-
-function isPromiseLike(value) {
-return Boolean(
-value &&
-isFunction(value.then)
-);
-}
-
-function nowIso() {
-try {
-return new Date().toISOString();
-} catch (_error) {
-return null;
-}
-}
-
-function clone(value, seen) {
-var memory;
-var output;
-
-if (
-  value === null ||
-  value === undefined ||
-  typeof value === "string" ||
-  typeof value === "number" ||
-  typeof value === "boolean"
-) {
-  return value;
-}
-
-if (typeof value === "bigint") {
-  return value.toString();
-}
-
-if (typeof value === "function") {
-  return {
-    type: "Function",
-    name: value.name || "anonymous"
-  };
-}
-
-memory =
-  seen || [];
-
-if (memory.indexOf(value) !== -1) {
-  return "[Circular]";
-}
-
-memory.push(value);
-
-if (Array.isArray(value)) {
-  return value.map(function cloneEntry(entry) {
-    return clone(
-      entry,
-      memory.slice()
+  var root =
+    global ||
+    (
+      typeof window !== "undefined"
+        ? window
+        : typeof globalThis !== "undefined"
+          ? globalThis
+          : this
     );
-  });
-}
 
-output = {};
+  var doc =
+    root && root.document
+      ? root.document
+      : null;
 
-Object.keys(value).forEach(function cloneProperty(key) {
-  try {
-    output[key] =
-      clone(
-        value[key],
-        memory.slice()
-      );
-  } catch (_error) {
-    output[key] =
-      "[Unreadable]";
+  if (!doc) {
+    return;
   }
-});
 
-return output;
+  var CONTRACT =
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2";
 
-}
+  var VERSION =
+    "2.1.0";
 
-function deepFreeze(value, seen) {
-var memory;
+  var FILE =
+    "/showroom/globe/audralia/diagnostic/index.controls.js";
 
-if (
-  !value ||
-  (
-    typeof value !== "object" &&
-    typeof value !== "function"
-  )
-) {
-  return value;
-}
+  var AUTHORITY =
+    "AUDRALIA_DIAGNOSTIC_NEWS_FIBONACCI_AUTHORITY_ASSIGNMENT_v1";
 
-memory =
-  seen || [];
+  var EXPECTED_ENGINE_CONTRACT =
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
 
-if (memory.indexOf(value) !== -1) {
-  return value;
-}
+  var TARGET_ROUTE =
+    "/showroom/globe/audralia/";
 
-memory.push(value);
+  var TARGET_FRAME_ID =
+    "audraliaDiagnosticTargetFrame";
 
-try {
-  Object.getOwnPropertyNames(value).forEach(function freezeProperty(key) {
-    var child;
+  var FALLBACK_REPORT_SCHEMA =
+    "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v2";
 
+  var FALLBACK_RECEIPT_SCHEMA =
+    "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v2";
+
+  var CONTROL_RECEIPT_SCHEMA =
+    "AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT_v2";
+
+  var ENGINE_GLOBAL_PATHS =
+    Object.freeze([
+      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
+      "AUDRALIA.diagnosticEngine",
+
+      // Compatibility paths.
+      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
+      "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
+      "AUDRALIA.dropWithReadDiagnosticObservatory",
+      "AUDRALIA.diagnosticRouteController"
+    ]);
+
+  var VALID_ENGINE_STATES =
+    Object.freeze([
+      "READY",
+      "AVAILABLE",
+      "ACTIVE"
+    ]);
+
+  var CONTROL_IDS =
+    Object.freeze([
+      "returnToAudralia",
+      "toggleObservationTarget",
+      "reloadObservatory",
+      "createDeepArchive",
+      "resetWorkbench",
+
+      "auditOrbitButton",
+      "participantConstellationButton",
+
+      "categorySelectorButton",
+      "auditSelectorButton",
+
+      "createReport",
+      "runDirectCheck",
+      "runNineCycle",
+      "copyReadableReport",
+      "copyPacketReport",
+      "copyRawReport",
+      "addReportToArchive",
+      "resetCurrentReport",
+
+      "reportReadButton",
+      "reportPacketButton",
+      "reportRawButton",
+      "reportEvidenceButton",
+
+      "targetLensButton",
+      "runtimeLensButton",
+      "surfaceLensButton",
+      "targetWindowButton",
+
+      "expandTargetWindow",
+      "reloadTargetFrame",
+
+      "cycleChamberButton",
+      "registryChamberButton",
+      "receiptChamberButton",
+      "archiveChamberButton",
+      "boundaryChamberButton"
+    ]);
+
+  var NO_CLAIMS =
+    Object.freeze({
+      productionMutationAuthorized: false,
+      runtimeRestartAuthorized: false,
+      rendererMutationAuthorized: false,
+      canvasRepairAuthorized: false,
+      routeRepairAuthorized: false,
+      diagnosticInterpretationOwned: false,
+      fibonacciJudgmentOwned: false,
+      reportCommitOwned: false,
+      f21Claimed: false,
+      f89Claimed: false
+    });
+
+  var state = {
+    initialized: false,
+    initializedAt: null,
+
+    engine: {
+      resolved: false,
+      compatible: false,
+      ready: false,
+      path: null,
+      contract: null,
+      status: null,
+      reason: "ENGINE_NOT_RESOLVED"
+    },
+
+    controls: {
+      manifestCount: CONTROL_IDS.length,
+      discoveredCount: 0,
+      missingCount: 0,
+      missing: [],
+      createReportPresent: false,
+      eventDelegationActive: false
+    },
+
+    ui: {
+      leftOrbit: "audits",
+      reportMode: "read",
+      observationLens: "target",
+      instrumentChamber: "cycle",
+      categoryMenuOpen: false,
+      auditMenuOpen: false,
+      targetVisible: false,
+      targetExpanded: false,
+      receiptFilter: "all",
+      selectedReceiptIndex: null,
+      selectedCategory: "ALL",
+      selectedAudit: "READ",
+      selectedParticipant: "ALL"
+    },
+
+    report: {
+      current: null,
+      receipt: null,
+      source: null,
+      fallbackHistory: []
+    },
+
+    cycleReceipt: null,
+    visibleReceipts: [],
+
+    actionCount: 0,
+    clickCount: 0,
+    createReportClickCount: 0,
+    errorCount: 0,
+
+    lastAction: null,
+    lastError: null
+  };
+
+  function byId(id) {
+    return doc.getElementById(id);
+  }
+
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
+  function isObject(value) {
+    return Boolean(
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    );
+  }
+
+  function nowIso() {
     try {
-      child =
-        value[key];
+      return new Date().toISOString();
     } catch (_error) {
-      child =
-        null;
+      return null;
+    }
+  }
+
+  function clone(value, seen) {
+    var memory =
+      seen || [];
+
+    var output;
+    var keys;
+
+    if (
+      value === null ||
+      value === undefined ||
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
+    ) {
+      return value;
     }
 
-    deepFreeze(
-      child,
-      memory
-    );
-  });
+    if (typeof value === "bigint") {
+      return value.toString();
+    }
 
-  Object.freeze(value);
-} catch (_error) {}
+    if (typeof value === "function") {
+      return {
+        type: "Function",
+        name: value.name || "anonymous"
+      };
+    }
 
-return value;
+    if (memory.indexOf(value) !== -1) {
+      return "[Circular]";
+    }
 
-}
+    memory.push(value);
 
-function frozenClone(value) {
-return deepFreeze(
-clone(value)
-);
-}
+    if (Array.isArray(value)) {
+      return value.map(function cloneArrayEntry(entry) {
+        return clone(
+          entry,
+          memory.slice()
+        );
+      });
+    }
 
-function safeJson(value) {
-try {
-return JSON.stringify(
-clone(value),
-null,
-2
-);
-} catch (_error) {
-return String(value);
-}
-}
+    output = {};
 
-function escapeHtml(value) {
-return String(
-value === null ||
-value === undefined
-? ""
-: value
-)
-.replace(/&/g, "&")
-.replace(/</g, "<")
-.replace(/>/g, ">")
-.replace(/"/g, """)
-.replace(/'/g, "'");
-}
+    try {
+      keys = Object.keys(value);
+    } catch (_error) {
+      return {
+        unreadable: true
+      };
+    }
 
-function cssEscape(value) {
-if (
-root.CSS &&
-isFunction(root.CSS.escape)
-) {
-return root.CSS.escape(
-String(value)
-);
-}
+    keys.forEach(function cloneProperty(key) {
+      try {
+        output[key] =
+          clone(
+            value[key],
+            memory.slice()
+          );
+      } catch (_error) {
+        output[key] =
+          "[Unreadable]";
+      }
+    });
 
-return String(value)
-  .replace(/\\/g, "\\\\")
-  .replace(/"/g, '\\"');
-
-}
-
-function readPath(path) {
-var parts =
-String(path || "")
-.split(".")
-.filter(Boolean);
-
-var cursor =
-  root;
-
-var index;
-
-for (
-  index = 0;
-  index < parts.length;
-  index += 1
-) {
-  if (
-    cursor === null ||
-    cursor === undefined ||
-    cursor[parts[index]] === null ||
-    cursor[parts[index]] === undefined
-  ) {
-    return null;
+    return output;
   }
 
-  cursor =
-    cursor[parts[index]];
-}
+  function deepFreeze(value, seen) {
+    var memory =
+      seen || [];
 
-return cursor;
+    if (
+      !value ||
+      (
+        typeof value !== "object" &&
+        typeof value !== "function"
+      )
+    ) {
+      return value;
+    }
 
-}
+    if (memory.indexOf(value) !== -1) {
+      return value;
+    }
 
-function setText(id, value) {
-var node =
-byId(id);
+    memory.push(value);
 
-if (!node) {
-  return;
-}
+    try {
+      Object.keys(value).forEach(function freezeProperty(key) {
+        try {
+          deepFreeze(
+            value[key],
+            memory
+          );
+        } catch (_error) {}
+      });
 
-node.textContent =
-  value === null ||
-  value === undefined
-    ? ""
-    : String(value);
+      Object.freeze(value);
+    } catch (_error) {}
 
-}
+    return value;
+  }
 
-function setHtml(id, value) {
-var node =
-byId(id);
+  function frozenClone(value) {
+    return deepFreeze(
+      clone(value)
+    );
+  }
 
-if (!node) {
-  return;
-}
+  function safeJson(value) {
+    try {
+      return JSON.stringify(
+        clone(value),
+        null,
+        2
+      );
+    } catch (_error) {
+      return String(value);
+    }
+  }
 
-node.innerHTML =
-  String(value || "");
+  function escapeHtml(value) {
+    return String(
+      value === null ||
+      value === undefined
+        ? ""
+        : value
+    )
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
 
-}
+  function cssEscape(value) {
+    if (
+      root.CSS &&
+      isFunction(root.CSS.escape)
+    ) {
+      return root.CSS.escape(
+        String(value)
+      );
+    }
 
-function setHidden(id, hidden) {
-var node =
-byId(id);
+    return String(value)
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"');
+  }
 
-if (node) {
-  node.hidden =
-    Boolean(hidden);
-}
+  function readPath(path) {
+    var parts =
+      String(path || "")
+        .split(".")
+        .filter(Boolean);
 
-}
+    var cursor =
+      root;
 
-function setDisabled(id, disabled) {
-var node =
-byId(id);
+    var index;
 
-if (node) {
-  node.disabled =
-    Boolean(disabled);
-}
+    for (
+      index = 0;
+      index < parts.length;
+      index += 1
+    ) {
+      if (
+        cursor === null ||
+        cursor === undefined
+      ) {
+        return null;
+      }
 
-}
+      try {
+        cursor =
+          cursor[parts[index]];
+      } catch (_error) {
+        return null;
+      }
 
-function setStatus(idOrNode, status) {
-var node =
-typeof idOrNode === "string"
-? byId(idOrNode)
-: idOrNode;
+      if (
+        cursor === null ||
+        cursor === undefined
+      ) {
+        return null;
+      }
+    }
 
-if (node) {
-  node.setAttribute(
-    "data-status",
-    String(status || "UNKNOWN")
-      .trim()
-      .toUpperCase()
-  );
-}
+    return cursor;
+  }
 
-}
+  function setText(id, value) {
+    var node =
+      byId(id);
 
-function toast(message, status) {
-var node =
-byId("toast");
+    if (!node) {
+      return;
+    }
 
-if (!node) {
-  return;
-}
+    node.textContent =
+      value === null ||
+      value === undefined
+        ? ""
+        : String(value);
+  }
 
-node.textContent =
-  String(message || "");
+  function setHtml(id, value) {
+    var node =
+      byId(id);
 
-node.setAttribute(
-  "data-status",
-  String(status || "READY")
-    .toUpperCase()
-);
+    if (!node) {
+      return;
+    }
 
-node.classList.add("show");
-node.classList.add("visible");
+    node.innerHTML =
+      String(value || "");
+  }
 
-node.setAttribute(
-  "data-visible",
-  "true"
-);
+  function setHidden(id, hidden) {
+    var node =
+      byId(id);
 
-if (
-  toast._timer &&
-  root.clearTimeout
-) {
-  root.clearTimeout(
-    toast._timer
-  );
-}
+    if (node) {
+      node.hidden =
+        Boolean(hidden);
+    }
+  }
 
-toast._timer =
-  root.setTimeout(function hideToast() {
-    node.classList.remove("show");
-    node.classList.remove("visible");
+  function setDisabled(id, disabled) {
+    var node =
+      byId(id);
+
+    if (node) {
+      node.disabled =
+        Boolean(disabled);
+    }
+  }
+
+  function setStatus(idOrNode, status) {
+    var node =
+      typeof idOrNode === "string"
+        ? byId(idOrNode)
+        : idOrNode;
+
+    if (!node) {
+      return;
+    }
+
+    node.setAttribute(
+      "data-status",
+      String(status || "UNKNOWN")
+        .trim()
+        .toUpperCase()
+    );
+  }
+
+  function toast(message, status) {
+    var node =
+      byId("toast");
+
+    if (!node) {
+      return;
+    }
+
+    node.textContent =
+      String(message || "");
+
+    node.setAttribute(
+      "data-status",
+      String(status || "READY")
+        .toUpperCase()
+    );
+
+    node.classList.add("show");
+    node.classList.add("visible");
 
     node.setAttribute(
       "data-visible",
-      "false"
-    );
-  }, 2800);
-
-}
-
-function recordAction(action, detail) {
-state.actionCount += 1;
-
-state.lastAction = {
-  action: action,
-  detail: clone(detail || null),
-  actionNumber: state.actionCount,
-  occurredAt: nowIso()
-};
-
-publishReceipt();
-
-}
-
-function recordError(action, error, detail) {
-state.errorCount += 1;
-
-state.lastError = {
-  action: action,
-  message:
-    String(
-      error &&
-      error.message
-        ? error.message
-        : error
-    ),
-  detail: clone(detail || null),
-  errorNumber: state.errorCount,
-  occurredAt: nowIso()
-};
-
-setText(
-  "controllerState",
-  "CONTROL ERROR"
-);
-
-setStatus(
-  "controllerState",
-  "ERROR"
-);
-
-publishReceipt();
-
-toast(
-  state.lastError.message,
-  "ERROR"
-);
-
-return frozenClone(
-  state.lastError
-);
-
-}
-
-function readEngineState(engine) {
-if (
-!engine ||
-!isFunction(engine.getState)
-) {
-return null;
-}
-
-try {
-  return engine.getState();
-} catch (_error) {
-  return null;
-}
-
-}
-
-function deriveEngineStatus(engine, publicState) {
-var statusCandidates = [
-publicState && publicState.status,
-publicState && publicState.engineStatus,
-publicState &&
-publicState.controllerState,
-publicState &&
-publicState.drop &&
-publicState.drop.report &&
-publicState.drop.report.status,
-engine && engine.STATUS,
-engine && engine.status
-];
-
-var index;
-
-for (
-  index = 0;
-  index < statusCandidates.length;
-  index += 1
-) {
-  if (
-    typeof statusCandidates[index] === "string" &&
-    statusCandidates[index].trim()
-  ) {
-    return statusCandidates[index]
-      .trim()
-      .toUpperCase();
-  }
-}
-
-if (
-  publicState &&
-  publicState.initialized === true
-) {
-  return "READY";
-}
-
-return "UNKNOWN";
-
-}
-
-function resolveEngine() {
-var index;
-var candidate;
-var candidatePath;
-var publicState;
-var status;
-
-state.engine = {
-  resolved: false,
-  compatible: false,
-  ready: false,
-  path: null,
-  contract: null,
-  status: null,
-  reason: "ENGINE_NOT_FOUND"
-};
-
-for (
-  index = 0;
-  index < ENGINE_GLOBAL_PATHS.length;
-  index += 1
-) {
-  candidatePath =
-    ENGINE_GLOBAL_PATHS[index];
-
-  candidate =
-    readPath(candidatePath);
-
-  if (
-    !candidate ||
-    typeof candidate !== "object"
-  ) {
-    continue;
-  }
-
-  state.engine.resolved =
-    true;
-
-  state.engine.path =
-    candidatePath;
-
-  state.engine.contract =
-    typeof candidate.CONTRACT === "string"
-      ? candidate.CONTRACT
-      : null;
-
-  if (
-    state.engine.contract !==
-    EXPECTED_ENGINE_CONTRACT
-  ) {
-    state.engine.reason =
-      "ENGINE_CONTRACT_MISMATCH";
-
-    continue;
-  }
-
-  state.engine.compatible =
-    true;
-
-  publicState =
-    readEngineState(candidate);
-
-  status =
-    deriveEngineStatus(
-      candidate,
-      publicState
+      "true"
     );
 
-  state.engine.status =
-    status;
-
-  state.engine.ready =
-    VALID_ENGINE_STATES.indexOf(
-      status
-    ) !== -1;
-
-  state.engine.reason =
-    state.engine.ready
-      ? "ENGINE_READY"
-      : "ENGINE_NOT_READY";
-
-  if (state.engine.ready) {
-    publishReceipt();
-
-    return candidate;
-  }
-}
-
-publishReceipt();
-
-return null;
-
-}
-
-function getResolvedEngineWithoutReadiness() {
-var index;
-var candidate;
-
-for (
-  index = 0;
-  index < ENGINE_GLOBAL_PATHS.length;
-  index += 1
-) {
-  candidate =
-    readPath(
-      ENGINE_GLOBAL_PATHS[index]
-    );
-
-  if (
-    candidate &&
-    typeof candidate === "object" &&
-    candidate.CONTRACT ===
-      EXPECTED_ENGINE_CONTRACT
-  ) {
-    return candidate;
-  }
-}
-
-return null;
-
-}
-
-function validateEngineResult(
-methodName,
-result,
-options
-) {
-var settings =
-options || {};
-
-if (
-  settings.allowNull === true
-) {
-  return true;
-}
-
-if (
-  result === null ||
-  result === undefined
-) {
-  return false;
-}
-
-if (
-  methodName === "createReport"
-) {
-  return Boolean(
-    isObject(result) &&
-    (
-      result.reportId ||
-      result.schema ||
-      result.read
-    )
-  );
-}
-
-return true;
-
-}
-
-function invokeEngine(
-methodName,
-args,
-options
-) {
-var settings =
-options || {};
-
-var engine =
-  resolveEngine();
-
-if (
-  !engine ||
-  !isFunction(engine[methodName])
-) {
-  if (isFunction(settings.fallback)) {
-    return Promise.resolve(
-      settings.fallback({
-        reason:
-          !engine
-            ? state.engine.reason
-            : "ENGINE_METHOD_MISSING",
-        methodName: methodName
-      })
-    );
-  }
-
-  return Promise.resolve(
-    recordError(
-      methodName,
-      new Error(
-        !engine
-          ? state.engine.reason
-          : "ENGINE_METHOD_MISSING:" +
-            methodName
-      )
-    )
-  );
-}
-
-recordAction(
-  methodName,
-  {
-    enginePath:
-      state.engine.path,
-    engineContract:
-      state.engine.contract
-  }
-);
-
-var result;
-
-try {
-  result =
-    engine[methodName].apply(
-      engine,
-      Array.isArray(args)
-        ? args
-        : []
-    );
-} catch (error) {
-  if (isFunction(settings.fallback)) {
-    return Promise.resolve(
-      settings.fallback({
-        reason:
-          "ENGINE_METHOD_THROW",
-        methodName:
-          methodName,
-        error:
-          error
-      })
-    );
-  }
-
-  return Promise.resolve(
-    recordError(
-      methodName,
-      error
-    )
-  );
-}
-
-return Promise.resolve(result)
-  .then(function engineResolved(value) {
     if (
-      !validateEngineResult(
-        methodName,
-        value,
-        settings
-      )
+      toast._timer &&
+      root.clearTimeout
     ) {
-      if (
-        isFunction(settings.fallback)
-      ) {
-        return settings.fallback({
-          reason:
-            "ENGINE_RESULT_INVALID",
-          methodName:
-            methodName,
-          result:
-            clone(value)
-        });
-      }
-
-      return recordError(
-        methodName,
-        new Error(
-          "ENGINE_RESULT_INVALID:" +
-          methodName
-        ),
-        {
-          result:
-            clone(value)
-        }
+      root.clearTimeout(
+        toast._timer
       );
     }
+
+    toast._timer =
+      root.setTimeout(function hideToast() {
+        node.classList.remove("show");
+        node.classList.remove("visible");
+
+        node.setAttribute(
+          "data-visible",
+          "false"
+        );
+      }, 2800);
+  }
+
+  function recordAction(action, detail) {
+    state.actionCount += 1;
+
+    state.lastAction = {
+      action: action,
+      detail:
+        clone(detail || null),
+      actionNumber:
+        state.actionCount,
+      occurredAt:
+        nowIso()
+    };
+
+    publishReceipt();
+  }
+
+  function recordError(action, error, detail) {
+    state.errorCount += 1;
+
+    state.lastError = {
+      action: action,
+      message:
+        String(
+          error &&
+          error.message
+            ? error.message
+            : error
+        ),
+      detail:
+        clone(detail || null),
+      errorNumber:
+        state.errorCount,
+      occurredAt:
+        nowIso()
+    };
+
+    setText(
+      "controllerState",
+      "CONTROL ERROR"
+    );
+
+    setStatus(
+      "controllerState",
+      "ERROR"
+    );
+
+    publishReceipt();
+
+    toast(
+      state.lastError.message,
+      "ERROR"
+    );
+
+    return frozenClone(
+      state.lastError
+    );
+  }
+
+  function deriveEngineStatus(
+    engine,
+    publicState
+  ) {
+    var candidates = [
+      engine && engine.STATUS,
+      engine && engine.status,
+      publicState && publicState.status,
+      publicState && publicState.engineStatus,
+      publicState && publicState.reportStatus
+    ];
+
+    var index;
+
+    for (
+      index = 0;
+      index < candidates.length;
+      index += 1
+    ) {
+      if (
+        typeof candidates[index] === "string" &&
+        candidates[index].trim()
+      ) {
+        return candidates[index]
+          .trim()
+          .toUpperCase();
+      }
+    }
+
+    if (
+      publicState &&
+      publicState.initialized === true
+    ) {
+      return "READY";
+    }
+
+    return "UNKNOWN";
+  }
+
+  function resolveEngine() {
+    var index;
+    var candidate;
+    var candidatePath;
+    var publicState;
+    var status;
+    var contract;
+
+    state.engine = {
+      resolved: false,
+      compatible: false,
+      ready: false,
+      path: null,
+      contract: null,
+      status: null,
+      reason: "ENGINE_NOT_FOUND"
+    };
+
+    for (
+      index = 0;
+      index < ENGINE_GLOBAL_PATHS.length;
+      index += 1
+    ) {
+      candidatePath =
+        ENGINE_GLOBAL_PATHS[index];
+
+      candidate =
+        readPath(candidatePath);
+
+      if (
+        !candidate ||
+        typeof candidate !== "object"
+      ) {
+        continue;
+      }
+
+      contract =
+        typeof candidate.CONTRACT === "string"
+          ? candidate.CONTRACT
+          : typeof candidate.contract === "string"
+            ? candidate.contract
+            : null;
+
+      state.engine.resolved =
+        true;
+
+      state.engine.path =
+        candidatePath;
+
+      state.engine.contract =
+        contract;
+
+      if (
+        contract !==
+        EXPECTED_ENGINE_CONTRACT
+      ) {
+        state.engine.reason =
+          "ENGINE_CONTRACT_MISMATCH";
+
+        continue;
+      }
+
+      state.engine.compatible =
+        true;
+
+      try {
+        publicState =
+          isFunction(candidate.getState)
+            ? candidate.getState()
+            : null;
+      } catch (_error) {
+        publicState =
+          null;
+      }
+
+      status =
+        deriveEngineStatus(
+          candidate,
+          publicState
+        );
+
+      state.engine.status =
+        status;
+
+      state.engine.ready =
+        VALID_ENGINE_STATES.indexOf(
+          status
+        ) !== -1 &&
+        isFunction(
+          candidate.createReport
+        );
+
+      state.engine.reason =
+        state.engine.ready
+          ? "ENGINE_READY"
+          : isFunction(candidate.createReport)
+            ? "ENGINE_NOT_READY"
+            : "ENGINE_CREATE_REPORT_MISSING";
+
+      if (state.engine.ready) {
+        publishReceipt();
+        return candidate;
+      }
+    }
+
+    publishReceipt();
+
+    return null;
+  }
+
+  function getCompatibleEngine() {
+    var engine =
+      resolveEngine();
+
+    if (engine) {
+      return engine;
+    }
+
+    var index;
+    var candidate;
+    var contract;
+
+    for (
+      index = 0;
+      index < ENGINE_GLOBAL_PATHS.length;
+      index += 1
+    ) {
+      candidate =
+        readPath(
+          ENGINE_GLOBAL_PATHS[index]
+        );
+
+      if (
+        !candidate ||
+        typeof candidate !== "object"
+      ) {
+        continue;
+      }
+
+      contract =
+        candidate.CONTRACT ||
+        candidate.contract ||
+        null;
+
+      if (
+        contract ===
+        EXPECTED_ENGINE_CONTRACT
+      ) {
+        return candidate;
+      }
+    }
+
+    return null;
+  }
+
+  function validateReport(report) {
+    return Boolean(
+      isObject(report) &&
+      (
+        report.reportId ||
+        report.schema ||
+        report.READ ||
+        report.read
+      )
+    );
+  }
+
+  function normalizeRead(report) {
+    var canonical =
+      report && report.READ
+        ? report.READ
+        : report && report.read
+          ? report.read
+          : null;
+
+    return {
+      Result:
+        canonical && canonical.Result !== undefined
+          ? canonical.Result
+          : canonical && canonical.result !== undefined
+            ? canonical.result
+            : report && report.result !== undefined
+              ? report.result
+              : "A report was created.",
+
+      Evidence:
+        canonical && Array.isArray(canonical.Evidence)
+          ? canonical.Evidence
+          : canonical && Array.isArray(canonical.evidence)
+            ? canonical.evidence
+            : report && Array.isArray(report.evidence)
+              ? report.evidence
+              : [],
+
+      Absence:
+        canonical && Array.isArray(canonical.Absence)
+          ? canonical.Absence
+          : canonical && Array.isArray(canonical.absence)
+            ? canonical.absence
+            : report && Array.isArray(report.absence)
+              ? report.absence
+              : [],
+
+      Direction:
+        canonical && Array.isArray(canonical.Direction)
+          ? canonical.Direction
+          : canonical && Array.isArray(canonical.direction)
+            ? canonical.direction
+            : report && Array.isArray(report.direction)
+              ? report.direction
+              : []
+    };
+  }
+
+  function getEngineReportReceipt(engine) {
+    var receipt = null;
+
+    try {
+      if (
+        engine &&
+        isFunction(engine.getReportReceipt)
+      ) {
+        receipt =
+          engine.getReportReceipt();
+      }
+    } catch (_error) {}
+
+    if (!receipt) {
+      receipt =
+        root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT ||
+        null;
+    }
+
+    return receipt;
+  }
+
+  function getEngineReport(engine) {
+    var report = null;
+
+    try {
+      if (
+        engine &&
+        isFunction(engine.getReport)
+      ) {
+        report =
+          engine.getReport();
+      }
+    } catch (_error) {}
+
+    if (!report) {
+      report =
+        root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT ||
+        null;
+    }
+
+    return report;
+  }
+
+  function renderReadRegion(
+    id,
+    letter,
+    label,
+    headline,
+    entries
+  ) {
+    var values =
+      Array.isArray(entries)
+        ? entries
+        : [entries];
+
+    setHtml(
+      id,
+      "<header>" +
+        "<span>" +
+        escapeHtml(letter) +
+        "</span>" +
+        "<div>" +
+        "<p>" +
+        escapeHtml(label) +
+        "</p>" +
+        "<strong>" +
+        escapeHtml(headline) +
+        "</strong>" +
+        "</div>" +
+        "</header>" +
+        (
+          values.length > 1
+            ? "<ul>" +
+              values
+                .map(function renderEntry(entry) {
+                  return (
+                    "<li>" +
+                    escapeHtml(entry) +
+                    "</li>"
+                  );
+                })
+                .join("") +
+              "</ul>"
+            : "<p>" +
+              escapeHtml(
+                values[0] || ""
+              ) +
+              "</p>"
+        )
+    );
+  }
+
+  function deriveReadableReport(
+    report,
+    receipt
+  ) {
+    var read =
+      normalizeRead(report);
+
+    return [
+      "AUDRALIA DROP WITH READ DIAGNOSTIC REPORT",
+      "REPORT_ID=" +
+        String(
+          report.reportId || "UNKNOWN"
+        ),
+      "STATUS=" +
+        String(
+          report.status || "AVAILABLE"
+        ),
+      "CREATED_AT=" +
+        String(
+          report.createdAt || "UNKNOWN"
+        ),
+      receipt
+        ? "RECEIPT_ID=" +
+          String(
+            receipt.receiptId || "UNKNOWN"
+          )
+        : "RECEIPT_ID=UNAVAILABLE",
+      "",
+      "RESULT",
+      String(read.Result),
+      "",
+      "EVIDENCE",
+      read.Evidence
+        .map(function mapEvidence(entry) {
+          return "- " + entry;
+        })
+        .join("\n"),
+      "",
+      "ABSENCE",
+      read.Absence
+        .map(function mapAbsence(entry) {
+          return "- " + entry;
+        })
+        .join("\n"),
+      "",
+      "DIRECTION",
+      read.Direction
+        .map(function mapDirection(entry) {
+          return "- " + entry;
+        })
+        .join("\n")
+    ].join("\n");
+  }
+
+  function renderHealthyReport(
+    report,
+    receipt
+  ) {
+    var read =
+      normalizeRead(report);
+
+    var status =
+      String(
+        report.status || "AVAILABLE"
+      ).toUpperCase();
+
+    renderReadRegion(
+      "readResult",
+      "R",
+      "Result",
+      "Diagnostic report",
+      read.Result
+    );
+
+    renderReadRegion(
+      "readEvidence",
+      "E",
+      "Evidence",
+      "Bounded evidence",
+      read.Evidence.length
+        ? read.Evidence
+        : [
+            "No evidence entries were returned."
+          ]
+    );
+
+    renderReadRegion(
+      "readAbsence",
+      "A",
+      "Absence",
+      "Bounded absence",
+      read.Absence.length
+        ? read.Absence
+        : [
+            "No absence entries were returned."
+          ]
+    );
+
+    renderReadRegion(
+      "readDirection",
+      "D",
+      "Direction",
+      "Next diagnostic direction",
+      read.Direction.length
+        ? read.Direction
+        : [
+            "Inspect the report receipt."
+          ]
+    );
+
+    setText(
+      "reportStatus",
+      status
+    );
+
+    setStatus(
+      "reportStatus",
+      status
+    );
+
+    setText(
+      "reportTitle",
+      "Diagnostic Report"
+    );
+
+    setText(
+      "reportCreatedAt",
+      report.createdAt || nowIso()
+    );
+
+    setText(
+      "reportMeta",
+      [
+        report.reportId || "REPORT",
+        receipt && receipt.receiptId
+          ? receipt.receiptId
+          : "RECEIPT UNAVAILABLE"
+      ].join(" · ")
+    );
+
+    setText(
+      "packetOutput",
+      safeJson({
+        schema:
+          report.schema || null,
+        reportId:
+          report.reportId || null,
+        status:
+          report.status || null,
+        createdAt:
+          report.createdAt || null,
+        READ:
+          read,
+        receipt:
+          receipt || null
+      })
+    );
+
+    setText(
+      "rawOutput",
+      safeJson({
+        report:
+          report,
+        receipt:
+          receipt
+      })
+    );
+
+    setHtml(
+      "evidenceOutput",
+      read.Evidence.length
+        ? read.Evidence
+            .map(function renderEvidence(entry) {
+              return (
+                "<article>" +
+                  "<h3>Diagnostic Evidence</h3>" +
+                  "<p>" +
+                  escapeHtml(entry) +
+                  "</p>" +
+                  "</article>"
+              );
+            })
+            .join("")
+        : (
+            '<article class="empty-state">' +
+              "<h3>No evidence entries</h3>" +
+              "<p>The report did not include an evidence list.</p>" +
+              "</article>"
+          )
+    );
+
+    setDisabled(
+      "copyReadableReport",
+      false
+    );
+
+    setDisabled(
+      "copyPacketReport",
+      false
+    );
+
+    setDisabled(
+      "copyRawReport",
+      false
+    );
+
+    setDisabled(
+      "addReportToArchive",
+      false
+    );
+
+    setText(
+      "dropReportState",
+      status
+    );
+
+    setStatus(
+      "dropReportCell",
+      status
+    );
+
+    setText(
+      "dropReportAvailableCount",
+      "1"
+    );
+
+    setText(
+      "dropReportHeldCount",
+      status === "HELD"
+        ? "1"
+        : "0"
+    );
+
+    setText(
+      "dropReportLastAction",
+      "Report created at " +
+        String(
+          report.createdAt || nowIso()
+        )
+    );
 
     setText(
       "controllerState",
@@ -1011,3042 +1216,2792 @@ return Promise.resolve(result)
       "READY"
     );
 
-    return value;
-  })
-  .catch(function engineRejected(error) {
-    if (
-      isFunction(settings.fallback)
-    ) {
-      return settings.fallback({
-        reason:
-          "ENGINE_METHOD_REJECTED",
-        methodName:
-          methodName,
-        error:
-          error
-      });
-    }
-
-    return recordError(
-      methodName,
-      error
-    );
-  });
-
-}
-
-function createFallbackReport(context) {
-var reason =
-context && context.reason
-? context.reason
-: "ENGINE_UNAVAILABLE";
-
-var errorMessage =
-  context &&
-  context.error &&
-  context.error.message
-    ? context.error.message
-    : null;
-
-var report = {
-  schema:
-    FALLBACK_REPORT_SCHEMA,
-
-  reportId:
-    "AUDRALIA_CONTROL_FALLBACK_" +
-    Date.now(),
-
-  classification:
-    "CONTROL_FALLBACK_REPORT",
-
-  createdAt:
-    nowIso(),
-
-  controlPanelContract:
-    CONTRACT,
-
-  expectedEngineContract:
-    EXPECTED_ENGINE_CONTRACT,
-
-  expectedHtmlContract:
-    EXPECTED_HTML_CONTRACT,
-
-  expectedCssContract:
-    EXPECTED_CSS_CONTRACT,
-
-  engineResolution:
-    frozenClone(
-      state.engine
-    ),
-
-  result:
-    "The independent Audralia control panel is functioning, but a healthy compatible diagnostic engine is unavailable.",
-
-  evidence: [
-    "The Create Report control received a user activation.",
-    "The control panel loaded and owns the interface controls.",
-    "The control panel completed engine discovery and validation.",
-    "The fallback READ path rendered without requiring diagnostic-engine execution."
-  ],
-
-  absence: [
-    reason,
-    errorMessage ||
-      "No additional engine exception message was supplied.",
-    "Healthy engine-backed diagnostic evidence could not be constructed."
-  ],
-
-  direction: [
-    "Inspect /showroom/globe/audralia/diagnostic/index.js.",
-    "Verify the engine contract is " +
-      EXPECTED_ENGINE_CONTRACT +
-      ".",
-    "Verify index.js loads before index.controls.js.",
-    "Inspect the diagnostic-engine receipt and browser console.",
-    "Renew the engine before attempting direct or nine-cycle execution."
-  ],
-
-  noClaims:
-    NO_CLAIMS
-};
-
-state.reports.fallbackCurrent =
-  deepFreeze(report);
-
-state.reports.fallbackHistory.push(
-  state.reports.fallbackCurrent
-);
-
-renderFallbackReport(
-  state.reports.fallbackCurrent
-);
-
-recordAction(
-  "createFallbackReport",
-  {
-    reportId:
-      report.reportId,
-    reason:
-      reason
-  }
-);
-
-toast(
-  "Fallback READ report created.",
-  "HELD"
-);
-
-return frozenClone(
-  state.reports.fallbackCurrent
-);
-
-}
-
-function renderFallbackReadRegion(
-id,
-letter,
-label,
-headline,
-entries
-) {
-var lines =
-Array.isArray(entries)
-? entries
-: [entries];
-
-setHtml(
-  id,
-  "<header>" +
-  "<span>" +
-  escapeHtml(letter) +
-  "</span>" +
-  "<div>" +
-  "<p>" +
-  escapeHtml(label) +
-  "</p>" +
-  "<strong>" +
-  escapeHtml(headline) +
-  "</strong>" +
-  "</div>" +
-  "</header>" +
-  (
-    lines.length > 1
-      ? "<ul>" +
-        lines
-          .map(function renderEntry(entry) {
-            return (
-              "<li>" +
-              escapeHtml(entry) +
-              "</li>"
-            );
-          })
-          .join("") +
-        "</ul>"
-      : "<p>" +
-        escapeHtml(
-          lines[0] || ""
-        ) +
-        "</p>"
-  )
-);
-
-}
-
-function renderFallbackReport(report) {
-renderFallbackReadRegion(
-"readResult",
-"R",
-"Result",
-"Diagnostic engine unavailable",
-report.result
-);
-
-renderFallbackReadRegion(
-  "readEvidence",
-  "E",
-  "Evidence",
-  "Control activation confirmed",
-  report.evidence
-);
-
-renderFallbackReadRegion(
-  "readAbsence",
-  "A",
-  "Absence",
-  "Healthy engine evidence unavailable",
-  report.absence
-);
-
-renderFallbackReadRegion(
-  "readDirection",
-  "D",
-  "Direction",
-  "Inspect the diagnostic engine",
-  report.direction
-);
-
-setText(
-  "reportStatus",
-  "HELD"
-);
-
-setStatus(
-  "reportStatus",
-  "HELD"
-);
-
-setText(
-  "reportTitle",
-  "Control Fallback Report"
-);
-
-setText(
-  "reportCreatedAt",
-  report.createdAt
-);
-
-setText(
-  "reportMeta",
-  report.reportId +
-  " · " +
-  state.engine.reason
-);
-
-setText(
-  "packetOutput",
-  safeJson({
-    schema:
-      report.schema,
-    reportId:
-      report.reportId,
-    classification:
-      report.classification,
-    createdAt:
-      report.createdAt,
-    result:
-      report.result,
-    evidence:
-      report.evidence,
-    absence:
-      report.absence,
-    direction:
-      report.direction
-  })
-);
-
-setText(
-  "rawOutput",
-  safeJson(report)
-);
-
-setHtml(
-  "evidenceOutput",
-  report.evidence
-    .map(function renderEvidence(entry) {
-      return (
-        "<article>" +
-        "<h3>Control Evidence</h3>" +
-        "<p>" +
-        escapeHtml(entry) +
-        "</p>" +
-        "</article>"
+    state.report.current =
+      deepFreeze(
+        clone(report)
       );
-    })
-    .join("")
-);
 
-setDisabled(
-  "copyReadableReport",
-  false
-);
+    state.report.receipt =
+      receipt
+        ? deepFreeze(
+            clone(receipt)
+          )
+        : null;
 
-setDisabled(
-  "copyPacketReport",
-  false
-);
+    state.report.source =
+      "ENGINE";
 
-setDisabled(
-  "copyRawReport",
-  false
-);
+    selectReportModeLocal(
+      "read"
+    );
 
-setDisabled(
-  "addReportToArchive",
-  true
-);
-
-setText(
-  "dropReportState",
-  "READY"
-);
-
-setStatus(
-  "dropReportCell",
-  "READY"
-);
-
-setText(
-  "dropReportAvailableCount",
-  state.reports.fallbackHistory.length
-);
-
-setText(
-  "dropReportHeldCount",
-  "1"
-);
-
-setText(
-  "dropReportLastAction",
-  "Fallback report created at " +
-  report.createdAt
-);
-
-setText(
-  "controllerState",
-  "ENGINE HELD"
-);
-
-setStatus(
-  "controllerState",
-  "HELD"
-);
-
-selectReportModeLocal(
-  "read"
-);
-
-}
-
-function fallbackReadableText() {
-var report =
-state.reports.fallbackCurrent;
-
-if (!report) {
-  return "";
-}
-
-return [
-  "AUDRALIA DROP WITH READ CONTROL FALLBACK REPORT",
-  "REPORT_ID=" + report.reportId,
-  "SCHEMA=" + report.schema,
-  "CREATED_AT=" + report.createdAt,
-  "",
-  "RESULT",
-  report.result,
-  "",
-  "EVIDENCE",
-  report.evidence
-    .map(function mapEvidence(entry) {
-      return "- " + entry;
-    })
-    .join("\n"),
-  "",
-  "ABSENCE",
-  report.absence
-    .map(function mapAbsence(entry) {
-      return "- " + entry;
-    })
-    .join("\n"),
-  "",
-  "DIRECTION",
-  report.direction
-    .map(function mapDirection(entry) {
-      return "- " + entry;
-    })
-    .join("\n"),
-  "",
-  "BOUNDARY",
-  "Diagnostic-only. Read-only. No readiness, visual-pass, cycle-pass, or F21 claim."
-].join("\n");
-
-}
-
-function createReport() {
-setText(
-"controllerState",
-"CREATING REPORT"
-);
-
-setStatus(
-  "controllerState",
-  "RUNNING"
-);
-
-return invokeEngine(
-  "createReport",
-  [],
-  {
-    fallback:
-      createFallbackReport
+    renderReceiptList();
+    publishReceipt();
   }
-);
 
-}
+  function createFallbackReport(context) {
+    var reason =
+      context && context.reason
+        ? context.reason
+        : "ENGINE_UNAVAILABLE";
 
-function runDirectCheck() {
-setText(
-"controllerState",
-"DIRECT CHECK"
-);
+    var errorMessage =
+      context &&
+      context.error &&
+      context.error.message
+        ? context.error.message
+        : null;
 
-setStatus(
-  "controllerState",
-  "RUNNING"
-);
+    var report = {
+      schema:
+        FALLBACK_REPORT_SCHEMA,
 
-return invokeEngine(
-  "runSelectedDirectCheck",
-  [],
-  {
-    fallback:
-      function directFallback(context) {
-        renderExecutionUnavailable(
-          "Direct Execution",
-          context
-        );
+      reportId:
+        "AUDRALIA_CONTROL_FALLBACK_" +
+        Date.now(),
 
-        return null;
-      },
-    allowNull:
-      false
-  }
-);
+      status:
+        "HELD",
 
-}
+      classification:
+        "CONTROL_FALLBACK_REPORT",
 
-function runNineCycle() {
-setText(
-"controllerState",
-"NINE-CYCLE"
-);
+      createdAt:
+        nowIso(),
 
-setStatus(
-  "controllerState",
-  "RUNNING"
-);
+      result:
+        "The Create Report command was received, but the authoritative diagnostic engine could not produce a healthy report.",
 
-return invokeEngine(
-  "runNineCycle",
-  [],
-  {
-    fallback:
-      function cycleFallback(context) {
-        renderExecutionUnavailable(
-          "Nine-Cycle",
-          context
-        );
+      evidence: [
+        "The Create Report control received a user activation.",
+        "The controls file parsed and initialized.",
+        "Delegated event handling observed the command.",
+        "The fallback READ path remained available."
+      ],
 
-        return null;
-      },
-    allowNull:
-      false
-  }
-);
+      absence: [
+        reason,
+        errorMessage ||
+          "No additional engine exception message was supplied.",
+        "Healthy engine-backed report construction was unavailable."
+      ],
 
-}
+      direction: [
+        "Inspect the control-panel receipt.",
+        "Inspect the engine receipt.",
+        "Inspect the inspection-lane receipt.",
+        "Verify the current engine global and contract."
+      ],
 
-function renderExecutionUnavailable(label, context) {
-var reason =
-context && context.reason
-? context.reason
-: "ENGINE_UNAVAILABLE";
+      engineResolution:
+        frozenClone(
+          state.engine
+        ),
 
-setText(
-  "controllerState",
-  "ENGINE HELD"
-);
+      noClaims:
+        NO_CLAIMS
+    };
 
-setStatus(
-  "controllerState",
-  "HELD"
-);
+    var receipt = {
+      schema:
+        FALLBACK_RECEIPT_SCHEMA,
 
-setText(
-  "dropDirectState",
-  "HELD"
-);
+      receiptId:
+        "AUDRALIA_CONTROL_FALLBACK_RECEIPT_" +
+        Date.now(),
 
-setStatus(
-  "dropDirectCell",
-  "HELD"
-);
+      reportId:
+        report.reportId,
 
-setText(
-  "dropDirectHeldCount",
-  "1"
-);
+      status:
+        "HELD",
 
-setText(
-  "dropDirectLastAction",
-  label +
-  " unavailable: " +
-  reason
-);
+      reason:
+        reason,
 
-recordError(
-  label,
-  new Error(
-    label +
-    " requires a healthy compatible diagnostic engine."
-  ),
-  context
-);
+      createdAt:
+        report.createdAt
+    };
 
-}
+    state.report.current =
+      deepFreeze(report);
 
-function addReportToArchive() {
-return invokeEngine(
-"addCurrentReportToArchive",
-[],
-{
-fallback:
-function archiveUnavailable(context) {
-recordError(
-"addCurrentReportToArchive",
-new Error(
-"Healthy engine archive unavailable."
-),
-context
-);
+    state.report.receipt =
+      deepFreeze(receipt);
 
-        return null;
-      },
-    allowNull:
-      true
-  }
-);
+    state.report.source =
+      "CONTROL_FALLBACK";
 
-}
+    state.report.fallbackHistory.push(
+      state.report.current
+    );
 
-function createDeepArchive() {
-return invokeEngine(
-"createDeepArchive",
-[],
-{
-fallback:
-createFallbackArchive
-}
-);
-}
+    renderReadRegion(
+      "readResult",
+      "R",
+      "Result",
+      "Diagnostic engine unavailable",
+      report.result
+    );
 
-function createFallbackArchive(context) {
-var archive = {
-schema:
-FALLBACK_ARCHIVE_SCHEMA,
+    renderReadRegion(
+      "readEvidence",
+      "E",
+      "Evidence",
+      "Control activation confirmed",
+      report.evidence
+    );
 
-  archiveId:
-    "AUDRALIA_CONTROL_ARCHIVE_" +
-    Date.now(),
+    renderReadRegion(
+      "readAbsence",
+      "A",
+      "Absence",
+      "Engine-backed report unavailable",
+      report.absence
+    );
 
-  createdAt:
-    nowIso(),
+    renderReadRegion(
+      "readDirection",
+      "D",
+      "Direction",
+      "Inspect the diagnostic receipts",
+      report.direction
+    );
 
-  reason:
-    context && context.reason
-      ? context.reason
-      : "ENGINE_UNAVAILABLE",
+    setText(
+      "reportStatus",
+      "HELD"
+    );
 
-  controlPanel:
-    getPublicState(),
+    setStatus(
+      "reportStatus",
+      "HELD"
+    );
 
-  fallbackReports:
-    frozenClone(
-      state.reports.fallbackHistory
-    ),
+    setText(
+      "reportTitle",
+      "Control Fallback Report"
+    );
 
-  controlReceipt:
-    frozenClone(
-      root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
-      null
-    ),
+    setText(
+      "reportCreatedAt",
+      report.createdAt
+    );
 
-  noClaims:
-    NO_CLAIMS
-};
+    setText(
+      "reportMeta",
+      report.reportId +
+        " · " +
+        receipt.receiptId
+    );
 
-state.archive.fallbackCurrent =
-  deepFreeze(archive);
+    setText(
+      "packetOutput",
+      safeJson({
+        report:
+          report,
+        receipt:
+          receipt
+      })
+    );
 
-setText(
-  "archiveSessionCount",
-  state.reports.fallbackHistory.length
-);
+    setText(
+      "rawOutput",
+      safeJson({
+        report:
+          report,
+        receipt:
+          receipt,
+        controlReceipt:
+          root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
+          null
+      })
+    );
 
-setHtml(
-  "archiveReportList",
-  state.reports.fallbackHistory.length
-    ? state.reports.fallbackHistory
-        .map(function renderArchivedReport(report) {
+    setHtml(
+      "evidenceOutput",
+      report.evidence
+        .map(function renderEvidence(entry) {
           return (
             "<article>" +
-            "<h4>Control Fallback Report</h4>" +
-            "<p>" +
-            escapeHtml(report.reportId) +
-            "</p>" +
-            "</article>"
+              "<h3>Control Evidence</h3>" +
+              "<p>" +
+              escapeHtml(entry) +
+              "</p>" +
+              "</article>"
           );
         })
         .join("")
-    : (
-        '<article class="empty-state">' +
-        "<h4>No fallback reports</h4>" +
-        "<p>Create a fallback report before archiving.</p>" +
-        "</article>"
+    );
+
+    setDisabled(
+      "copyReadableReport",
+      false
+    );
+
+    setDisabled(
+      "copyPacketReport",
+      false
+    );
+
+    setDisabled(
+      "copyRawReport",
+      false
+    );
+
+    setDisabled(
+      "addReportToArchive",
+      true
+    );
+
+    setText(
+      "dropReportState",
+      "HELD"
+    );
+
+    setStatus(
+      "dropReportCell",
+      "HELD"
+    );
+
+    setText(
+      "dropReportAvailableCount",
+      String(
+        state.report.fallbackHistory.length
       )
-);
-
-setText(
-  "archiveRawOutput",
-  safeJson(
-    state.archive.fallbackCurrent
-  )
-);
-
-selectInstrumentChamberLocal(
-  "archive"
-);
-
-recordAction(
-  "createFallbackArchive",
-  {
-    archiveId:
-      archive.archiveId
-  }
-);
-
-toast(
-  "Fallback control archive created.",
-  "HELD"
-);
-
-return frozenClone(
-  state.archive.fallbackCurrent
-);
-
-}
-
-function resetCurrentReport() {
-var engine =
-getResolvedEngineWithoutReadiness();
-
-if (
-  engine &&
-  isFunction(engine.resetCurrentReport)
-) {
-  try {
-    engine.resetCurrentReport();
-  } catch (error) {
-    recordError(
-      "resetCurrentReport",
-      error
     );
-  }
-}
 
-state.reports.fallbackCurrent =
-  null;
-
-setText(
-  "reportStatus",
-  "READY"
-);
-
-setStatus(
-  "reportStatus",
-  "READY"
-);
-
-setText(
-  "reportTitle",
-  "No report created"
-);
-
-setText(
-  "reportCreatedAt",
-  "—"
-);
-
-setText(
-  "reportMeta",
-  "Choose an audit and create a report."
-);
-
-renderFallbackReadRegion(
-  "readResult",
-  "R",
-  "Result",
-  "Observatory available",
-  "Create a report to evaluate the selected audit."
-);
-
-renderFallbackReadRegion(
-  "readEvidence",
-  "E",
-  "Evidence",
-  "Control panel available",
-  "The independent control panel remains bound."
-);
-
-renderFallbackReadRegion(
-  "readAbsence",
-  "A",
-  "Absence",
-  "No report yet",
-  "No current engine or fallback report is displayed."
-);
-
-renderFallbackReadRegion(
-  "readDirection",
-  "D",
-  "Direction",
-  "Create the first report",
-  "Use Create Report to inspect the current engine state."
-);
-
-setText(
-  "packetOutput",
-  "No report packet has been created."
-);
-
-setText(
-  "rawOutput",
-  "No raw report has been created."
-);
-
-setHtml(
-  "evidenceOutput",
-  '<article class="empty-state">' +
-  "<h3>No evidence report yet</h3>" +
-  "<p>Create a report to collect current evidence.</p>" +
-  "</article>"
-);
-
-setDisabled(
-  "copyReadableReport",
-  true
-);
-
-setDisabled(
-  "copyPacketReport",
-  true
-);
-
-setDisabled(
-  "copyRawReport",
-  true
-);
-
-setDisabled(
-  "addReportToArchive",
-  true
-);
-
-selectReportModeLocal(
-  "read"
-);
-
-recordAction(
-  "resetCurrentReport"
-);
-
-toast(
-  "Current report reset.",
-  "READY"
-);
-
-return null;
-
-}
-
-function resetWorkbench() {
-var engine =
-getResolvedEngineWithoutReadiness();
-
-if (
-  engine &&
-  isFunction(engine.resetWorkbench)
-) {
-  try {
-    engine.resetWorkbench();
-  } catch (error) {
-    recordError(
-      "resetWorkbench",
-      error
+    setText(
+      "dropReportHeldCount",
+      "1"
     );
+
+    setText(
+      "dropReportLastAction",
+      "Fallback report created at " +
+        report.createdAt
+    );
+
+    setText(
+      "controllerState",
+      "ENGINE HELD"
+    );
+
+    setStatus(
+      "controllerState",
+      "HELD"
+    );
+
+    recordAction(
+      "createFallbackReport",
+      {
+        reportId:
+          report.reportId,
+        receiptId:
+          receipt.receiptId,
+        reason:
+          reason
+      }
+    );
+
+    selectReportModeLocal(
+      "read"
+    );
+
+    renderReceiptList();
+
+    toast(
+      "Fallback READ report created.",
+      "HELD"
+    );
+
+    return frozenClone(report);
   }
-}
 
-resetCurrentReport();
-closeAllSelectors();
+  function invokeEngine(
+    methodName,
+    args,
+    options
+  ) {
+    var settings =
+      options || {};
 
-selectLeftOrbitLocal(
-  "audits"
-);
+    var engine =
+      resolveEngine();
 
-selectReportModeLocal(
-  "read"
-);
+    if (
+      !engine ||
+      !isFunction(engine[methodName])
+    ) {
+      if (isFunction(settings.fallback)) {
+        return Promise.resolve(
+          settings.fallback({
+            reason:
+              !engine
+                ? state.engine.reason
+                : "ENGINE_METHOD_MISSING",
+            methodName:
+              methodName
+          })
+        );
+      }
 
-selectObservationLensLocal(
-  "target"
-);
+      return Promise.resolve(
+        recordError(
+          methodName,
+          new Error(
+            !engine
+              ? state.engine.reason
+              : "ENGINE_METHOD_MISSING:" +
+                methodName
+          )
+        )
+      );
+    }
 
-selectInstrumentChamberLocal(
-  "cycle"
-);
+    recordAction(
+      "invokeEngine." + methodName,
+      {
+        enginePath:
+          state.engine.path,
+        engineContract:
+          state.engine.contract
+      }
+    );
 
-setTargetVisible(false);
-setTargetExpanded(false);
+    var result;
 
-state.ui.receiptFilter =
-  "all";
+    try {
+      result =
+        engine[methodName].apply(
+          engine,
+          Array.isArray(args)
+            ? args
+            : []
+        );
+    } catch (error) {
+      if (isFunction(settings.fallback)) {
+        return Promise.resolve(
+          settings.fallback({
+            reason:
+              "ENGINE_METHOD_THROW",
+            methodName:
+              methodName,
+            error:
+              error
+          })
+        );
+      }
 
-state.ui.selectedReceiptIndex =
-  null;
+      return Promise.resolve(
+        recordError(
+          methodName,
+          error
+        )
+      );
+    }
 
-applyReceiptFilter(
-  "all"
-);
+    return Promise.resolve(result)
+      .then(function engineResolved(value) {
+        if (
+          isFunction(settings.validate) &&
+          !settings.validate(value)
+        ) {
+          if (isFunction(settings.fallback)) {
+            return settings.fallback({
+              reason:
+                "ENGINE_RESULT_INVALID",
+              methodName:
+                methodName,
+              result:
+                clone(value)
+            });
+          }
 
-recordAction(
-  "resetWorkbench"
-);
+          return recordError(
+            methodName,
+            new Error(
+              "ENGINE_RESULT_INVALID:" +
+                methodName
+            )
+          );
+        }
 
-toast(
-  "Workbench reset.",
-  "READY"
-);
+        return value;
+      })
+      .catch(function engineRejected(error) {
+        if (isFunction(settings.fallback)) {
+          return settings.fallback({
+            reason:
+              "ENGINE_METHOD_REJECTED",
+            methodName:
+              methodName,
+            error:
+              error
+          });
+        }
 
-return null;
+        return recordError(
+          methodName,
+          error
+        );
+      });
+  }
 
-}
+  function createReport() {
+    setText(
+      "controllerState",
+      "CREATING REPORT"
+    );
 
-function copyText(text, successMessage) {
-if (!text) {
-toast(
-"Nothing available to copy.",
-"HELD"
-);
+    setStatus(
+      "controllerState",
+      "RUNNING"
+    );
 
-  return Promise.resolve(false);
-}
+    setText(
+      "reportStatus",
+      "CREATING"
+    );
 
-if (
-  root.navigator &&
-  root.navigator.clipboard &&
-  isFunction(
-    root.navigator.clipboard.writeText
-  )
-) {
-  return root.navigator.clipboard
-    .writeText(text)
-    .then(function clipboardSuccess() {
-      toast(
-        successMessage || "Copied.",
-        "READY"
+    setStatus(
+      "reportStatus",
+      "RUNNING"
+    );
+
+    recordAction(
+      "createReport.begin",
+      {
+        category:
+          state.ui.selectedCategory,
+        audit:
+          state.ui.selectedAudit,
+        participant:
+          state.ui.selectedParticipant
+      }
+    );
+
+    return invokeEngine(
+      "createReport",
+      [
+        {
+          category:
+            state.ui.selectedCategory,
+          audit:
+            state.ui.selectedAudit,
+          participant:
+            state.ui.selectedParticipant
+        }
+      ],
+      {
+        validate:
+          validateReport,
+
+        fallback:
+          createFallbackReport
+      }
+    )
+      .then(function reportCreated(result) {
+        if (
+          result &&
+          result.schema ===
+            FALLBACK_REPORT_SCHEMA
+        ) {
+          return result;
+        }
+
+        var engine =
+          getCompatibleEngine();
+
+        var report =
+          validateReport(result)
+            ? result
+            : getEngineReport(engine);
+
+        if (!validateReport(report)) {
+          return createFallbackReport({
+            reason:
+              "ENGINE_REPORT_UNAVAILABLE_AFTER_CREATE"
+          });
+        }
+
+        var receipt =
+          getEngineReportReceipt(
+            engine
+          );
+
+        renderHealthyReport(
+          report,
+          receipt
+        );
+
+        recordAction(
+          "createReport.complete",
+          {
+            reportId:
+              report.reportId || null,
+            receiptId:
+              receipt &&
+              receipt.receiptId
+                ? receipt.receiptId
+                : null
+          }
+        );
+
+        toast(
+          "Diagnostic report created.",
+          "READY"
+        );
+
+        return frozenClone(report);
+      });
+  }
+
+  function runDirectCheck() {
+    var role =
+      state.ui.selectedParticipant;
+
+    if (
+      !role ||
+      role === "ALL"
+    ) {
+      setText(
+        "controllerState",
+        "DIRECT HELD"
       );
 
-      return true;
-    })
-    .catch(function clipboardFailure() {
-      return fallbackCopy(
-        text,
-        successMessage
+      setStatus(
+        "controllerState",
+        "HELD"
+      );
+
+      toast(
+        "Select a participant before direct execution.",
+        "HELD"
+      );
+
+      return Promise.resolve(null);
+    }
+
+    setText(
+      "controllerState",
+      "DIRECT CHECK"
+    );
+
+    setStatus(
+      "controllerState",
+      "RUNNING"
+    );
+
+    return invokeEngine(
+      "runDirect",
+      [
+        role,
+        {
+          source:
+            "CONTROL_PANEL",
+          requestedAt:
+            nowIso()
+        }
+      ],
+      {
+        validate:
+          function validDirectReceipt(value) {
+            return Boolean(value);
+          },
+
+        fallback:
+          function directFallback(context) {
+            setText(
+              "controllerState",
+              "DIRECT HELD"
+            );
+
+            setStatus(
+              "controllerState",
+              "HELD"
+            );
+
+            setText(
+              "dropDirectState",
+              "HELD"
+            );
+
+            setStatus(
+              "dropDirectCell",
+              "HELD"
+            );
+
+            setText(
+              "dropDirectHeldCount",
+              "1"
+            );
+
+            setText(
+              "dropDirectLastAction",
+              "Direct execution unavailable: " +
+                context.reason
+            );
+
+            return null;
+          }
+      }
+    )
+      .then(function directComplete(receipt) {
+        if (!receipt) {
+          return null;
+        }
+
+        setText(
+          "dropDirectState",
+          receipt.status || "AVAILABLE"
+        );
+
+        setStatus(
+          "dropDirectCell",
+          receipt.status || "AVAILABLE"
+        );
+
+        setText(
+          "dropDirectAvailableCount",
+          receipt.status === "ERROR"
+            ? "0"
+            : "1"
+        );
+
+        setText(
+          "dropDirectHeldCount",
+          receipt.status === "HELD" ||
+          receipt.status === "MISSING"
+            ? "1"
+            : "0"
+        );
+
+        setText(
+          "dropDirectLastAction",
+          "Direct receipt created for " +
+            role
+        );
+
+        setText(
+          "controllerState",
+          "DIRECT COMPLETE"
+        );
+
+        setStatus(
+          "controllerState",
+          receipt.status || "AVAILABLE"
+        );
+
+        recordAction(
+          "runDirect.complete",
+          {
+            role:
+              role,
+            status:
+              receipt.status || null
+          }
+        );
+
+        renderReceiptList();
+
+        return receipt;
+      });
+  }
+
+  function runNineCycle() {
+    setText(
+      "controllerState",
+      "NINE-CYCLE"
+    );
+
+    setStatus(
+      "controllerState",
+      "RUNNING"
+    );
+
+    recordAction(
+      "runNineCycle.begin"
+    );
+
+    return invokeEngine(
+      "runNineCycle",
+      [
+        {
+          source:
+            "CONTROL_PANEL",
+          requestedAt:
+            nowIso()
+        }
+      ],
+      {
+        validate:
+          function validCycleReceipt(value) {
+            return Boolean(
+              value &&
+              typeof value === "object"
+            );
+          },
+
+        fallback:
+          function cycleFallback(context) {
+            setText(
+              "controllerState",
+              "CYCLE HELD"
+            );
+
+            setStatus(
+              "controllerState",
+              "HELD"
+            );
+
+            setText(
+              "cycleState",
+              "HELD"
+            );
+
+            setStatus(
+              "cycleState",
+              "HELD"
+            );
+
+            toast(
+              "Nine-cycle unavailable: " +
+                context.reason,
+              "HELD"
+            );
+
+            return null;
+          }
+      }
+    )
+      .then(function cycleComplete(receipt) {
+        if (!receipt) {
+          return null;
+        }
+
+        state.cycleReceipt =
+          deepFreeze(
+            clone(receipt)
+          );
+
+        setText(
+          "controllerState",
+          receipt.status === "COMMITTED"
+            ? "CYCLE COMMITTED"
+            : "CYCLE HELD"
+        );
+
+        setStatus(
+          "controllerState",
+          receipt.status || "AVAILABLE"
+        );
+
+        setText(
+          "cycleState",
+          receipt.status || "AVAILABLE"
+        );
+
+        setStatus(
+          "cycleState",
+          receipt.status || "AVAILABLE"
+        );
+
+        recordAction(
+          "runNineCycle.complete",
+          {
+            status:
+              receipt.status || null,
+            receiptCount:
+              receipt.receiptCount || 0
+          }
+        );
+
+        renderReceiptList();
+
+        return receipt;
+      });
+  }
+
+  function forwardSelection(
+    key,
+    value
+  ) {
+    var selection = {};
+
+    selection[key] =
+      value;
+
+    var engine =
+      getCompatibleEngine();
+
+    if (
+      engine &&
+      isFunction(engine.setSelection)
+    ) {
+      try {
+        engine.setSelection(
+          selection
+        );
+      } catch (error) {
+        recordError(
+          "setSelection." + key,
+          error
+        );
+      }
+    }
+
+    recordAction(
+      "setSelection." + key,
+      selection
+    );
+  }
+
+  function closeAllSelectors() {
+    var categoryButton =
+      byId("categorySelectorButton");
+
+    var categoryMenu =
+      byId("categorySelectorMenu");
+
+    var auditButton =
+      byId("auditSelectorButton");
+
+    var auditMenu =
+      byId("auditSelectorMenu");
+
+    if (categoryButton) {
+      categoryButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+
+    if (categoryMenu) {
+      categoryMenu.hidden =
+        true;
+    }
+
+    if (auditButton) {
+      auditButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+
+    if (auditMenu) {
+      auditMenu.hidden =
+        true;
+    }
+
+    state.ui.categoryMenuOpen =
+      false;
+
+    state.ui.auditMenuOpen =
+      false;
+  }
+
+  function toggleSelector(
+    buttonId,
+    menuId,
+    stateKey
+  ) {
+    var button =
+      byId(buttonId);
+
+    var menu =
+      byId(menuId);
+
+    if (
+      !button ||
+      !menu
+    ) {
+      recordError(
+        "toggleSelector",
+        new Error(
+          "SELECTOR_CONTROL_MISSING"
+        ),
+        {
+          buttonId:
+            buttonId,
+          menuId:
+            menuId
+        }
+      );
+
+      return;
+    }
+
+    var shouldOpen =
+      menu.hidden;
+
+    closeAllSelectors();
+
+    menu.hidden =
+      !shouldOpen;
+
+    button.setAttribute(
+      "aria-expanded",
+      shouldOpen
+        ? "true"
+        : "false"
+    );
+
+    state.ui[stateKey] =
+      shouldOpen;
+  }
+
+  function selectCategory(categoryId) {
+    state.ui.selectedCategory =
+      categoryId;
+
+    closeAllSelectors();
+
+    var option =
+      doc.querySelector(
+        '[data-category-id="' +
+          cssEscape(categoryId) +
+          '"]'
+      );
+
+    Array.prototype.slice.call(
+      doc.querySelectorAll(
+        "[data-category-id]"
+      )
+    ).forEach(function updateCategory(node) {
+      node.setAttribute(
+        "aria-selected",
+        node === option
+          ? "true"
+          : "false"
       );
     });
-}
 
-return Promise.resolve(
-  fallbackCopy(
-    text,
-    successMessage
-  )
-);
+    if (option) {
+      var title =
+        option.querySelector("strong");
 
-}
-
-function fallbackCopy(text, successMessage) {
-var area =
-doc.createElement(
-"textarea"
-);
-
-area.value =
-  text;
-
-area.setAttribute(
-  "readonly",
-  "true"
-);
-
-area.style.position =
-  "fixed";
-
-area.style.left =
-  "-9999px";
-
-doc.body.appendChild(area);
-
-area.select();
-
-var copied =
-  false;
-
-try {
-  copied =
-    doc.execCommand("copy");
-
-  toast(
-    copied
-      ? successMessage || "Copied."
-      : "Copy unavailable.",
-    copied
-      ? "READY"
-      : "HELD"
-  );
-} catch (_error) {
-  toast(
-    "Copy unavailable.",
-    "HELD"
-  );
-}
-
-doc.body.removeChild(area);
-
-return copied;
-
-}
-
-function copyReadableReport() {
-var engine =
-getResolvedEngineWithoutReadiness();
-
-var text =
-  "";
-
-if (
-  engine &&
-  isFunction(engine.getReadableReport)
-) {
-  try {
-    text =
-      engine.getReadableReport() ||
-      "";
-  } catch (error) {
-    recordError(
-      "getReadableReport",
-      error
-    );
-  }
-}
-
-if (!text) {
-  text =
-    fallbackReadableText();
-}
-
-if (!text) {
-  var current =
-    engine &&
-    isFunction(engine.getCurrentReport)
-      ? engine.getCurrentReport()
-      : null;
-
-  if (current) {
-    text =
-      safeJson(current);
-  }
-}
-
-recordAction(
-  "copyReadableReport"
-);
-
-return copyText(
-  text,
-  "Readable report copied."
-);
-
-}
-
-function copyPacketReport() {
-var engine =
-getResolvedEngineWithoutReadiness();
-
-var text =
-  "";
-
-if (
-  engine &&
-  isFunction(engine.getReportPacket)
-) {
-  try {
-    text =
-      engine.getReportPacket() ||
-      "";
-  } catch (error) {
-    recordError(
-      "getReportPacket",
-      error
-    );
-  }
-}
-
-if (!text) {
-  var node =
-    byId("packetOutput");
-
-  text =
-    node
-      ? node.textContent
-      : "";
-}
-
-recordAction(
-  "copyPacketReport"
-);
-
-return copyText(
-  text,
-  "Report packet copied."
-);
-
-}
-
-function copyRawReport() {
-var engine =
-getResolvedEngineWithoutReadiness();
-
-var text =
-  "";
-
-if (
-  engine &&
-  isFunction(engine.getRawReport)
-) {
-  try {
-    text =
-      engine.getRawReport() ||
-      "";
-  } catch (error) {
-    recordError(
-      "getRawReport",
-      error
-    );
-  }
-}
-
-if (!text) {
-  var node =
-    byId("rawOutput");
-
-  text =
-    node
-      ? node.textContent
-      : "";
-}
-
-recordAction(
-  "copyRawReport"
-);
-
-return copyText(
-  text,
-  "Raw report copied."
-);
-
-}
-
-function closeAllSelectors() {
-var categoryButton =
-byId("categorySelectorButton");
-
-var categoryMenu =
-  byId("categorySelectorMenu");
-
-var auditButton =
-  byId("auditSelectorButton");
-
-var auditMenu =
-  byId("auditSelectorMenu");
-
-if (categoryButton) {
-  categoryButton.setAttribute(
-    "aria-expanded",
-    "false"
-  );
-}
-
-if (categoryMenu) {
-  categoryMenu.hidden =
-    true;
-}
-
-if (auditButton) {
-  auditButton.setAttribute(
-    "aria-expanded",
-    "false"
-  );
-}
-
-if (auditMenu) {
-  auditMenu.hidden =
-    true;
-}
-
-state.ui.categoryMenuOpen =
-  false;
-
-state.ui.auditMenuOpen =
-  false;
-
-}
-
-function toggleSelector(
-buttonId,
-menuId,
-stateKey
-) {
-var button =
-byId(buttonId);
-
-var menu =
-  byId(menuId);
-
-if (!button || !menu) {
-  recordError(
-    "toggleSelector",
-    new Error(
-      "SELECTOR_CONTROL_MISSING"
-    ),
-    {
-      buttonId:
-        buttonId,
-      menuId:
-        menuId
+      setText(
+        "categorySelectorLabel",
+        title
+          ? title.textContent
+          : categoryId
+      );
     }
-  );
 
-  return;
-}
-
-var shouldOpen =
-  menu.hidden;
-
-closeAllSelectors();
-
-menu.hidden =
-  !shouldOpen;
-
-button.setAttribute(
-  "aria-expanded",
-  shouldOpen
-    ? "true"
-    : "false"
-);
-
-state.ui[stateKey] =
-  shouldOpen;
-
-recordAction(
-  "toggleSelector",
-  {
-    buttonId:
-      buttonId,
-    open:
-      shouldOpen
+    forwardSelection(
+      "category",
+      categoryId
+    );
   }
-);
 
-}
+  function selectAudit(auditId) {
+    state.ui.selectedAudit =
+      auditId;
 
-function selectCategory(categoryId) {
-closeAllSelectors();
+    closeAllSelectors();
 
-return invokeEngine(
-  "selectCategory",
-  [categoryId],
-  {
-    fallback:
-      function categoryFallback(context) {
-        renderLocalCategorySelection(
-          categoryId
-        );
+    var option =
+      doc.querySelector(
+        '[data-audit-id="' +
+          cssEscape(auditId) +
+          '"]'
+      );
 
-        recordError(
-          "selectCategory",
-          new Error(
-            "CATEGORY_SELECTION_ENGINE_UNAVAILABLE"
-          ),
-          context
-        );
+    Array.prototype.slice.call(
+      doc.querySelectorAll(
+        "[data-audit-id]"
+      )
+    ).forEach(function updateAudit(node) {
+      node.setAttribute(
+        "aria-selected",
+        node === option
+          ? "true"
+          : "false"
+      );
+    });
 
-        return categoryId;
-      }
+    if (option) {
+      var title =
+        option.querySelector("strong");
+
+      var summary =
+        option.querySelector("span");
+
+      setText(
+        "auditSelectorLabel",
+        title
+          ? title.textContent
+          : auditId
+      );
+
+      setText(
+        "selectedAuditTitle",
+        title
+          ? title.textContent
+          : auditId
+      );
+
+      setText(
+        "selectedAuditSummary",
+        summary
+          ? summary.textContent
+          : "Selected audit."
+      );
+    }
+
+    forwardSelection(
+      "audit",
+      auditId
+    );
   }
-);
 
-}
+  function selectParticipant(role) {
+    state.ui.selectedParticipant =
+      role;
 
-function renderLocalCategorySelection(categoryId) {
-var option =
-doc.querySelector(
-'[data-category-id="' +
-cssEscape(categoryId) +
-'"]'
-);
+    var node =
+      doc.querySelector(
+        '[data-participant-role="' +
+          cssEscape(role) +
+          '"]'
+      );
 
-if (!option) {
-  return;
-}
+    Array.prototype.slice.call(
+      doc.querySelectorAll(
+        "[data-participant-role]"
+      )
+    ).forEach(function updateParticipant(entry) {
+      entry.setAttribute(
+        "aria-selected",
+        entry === node
+          ? "true"
+          : "false"
+      );
+    });
 
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-category-id]"
-  )
-).forEach(function updateCategory(node) {
-  node.setAttribute(
-    "aria-selected",
-    node === option
-      ? "true"
-      : "false"
-  );
-});
-
-var title =
-  option.querySelector("strong");
-
-setText(
-  "categorySelectorLabel",
-  title
-    ? title.textContent
-    : categoryId
-);
-
-}
-
-function selectAudit(auditId) {
-closeAllSelectors();
-
-return invokeEngine(
-  "selectAudit",
-  [auditId],
-  {
-    fallback:
-      function auditFallback(context) {
-        renderLocalAuditSelection(
-          auditId
-        );
-
-        recordError(
-          "selectAudit",
-          new Error(
-            "AUDIT_SELECTION_ENGINE_UNAVAILABLE"
-          ),
-          context
-        );
-
-        return auditId;
-      }
-  }
-);
-
-}
-
-function renderLocalAuditSelection(auditId) {
-var option =
-doc.querySelector(
-'[data-audit-id="' +
-cssEscape(auditId) +
-'"]'
-);
-
-if (!option) {
-  return;
-}
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-audit-id]"
-  )
-).forEach(function updateAudit(node) {
-  node.setAttribute(
-    "aria-selected",
-    node === option
-      ? "true"
-      : "false"
-  );
-});
-
-var title =
-  option.querySelector("strong");
-
-var summary =
-  option.querySelector("span");
-
-setText(
-  "auditSelectorLabel",
-  title
-    ? title.textContent
-    : auditId
-);
-
-setText(
-  "selectedAuditTitle",
-  title
-    ? title.textContent
-    : auditId
-);
-
-setText(
-  "selectedAuditSummary",
-  summary
-    ? summary.textContent
-    : "Selected audit."
-);
-
-}
-
-function selectParticipant(role) {
-return invokeEngine(
-"selectParticipant",
-[role],
-{
-fallback:
-function participantFallback(context) {
-var node =
-doc.querySelector(
-'[data-participant-role="' +
-cssEscape(role) +
-'"]'
-);
-
-        setHtml(
-          "participantDetail",
-          "<h3>" +
+    if (node) {
+      setHtml(
+        "participantDetail",
+        "<h3>" +
           escapeHtml(
-            node &&
             node.querySelector("strong")
               ? node.querySelector("strong").textContent
               : role
           ) +
           "</h3>" +
-          "<p>The participant selection control is functional, but the diagnostic engine is unavailable to inspect this participant.</p>"
+          "<p>Participant selected for diagnostic handoff.</p>"
+      );
+    }
+
+    forwardSelection(
+      "participant",
+      role
+    );
+  }
+
+  function selectLeftOrbitLocal(view) {
+    state.ui.leftOrbit =
+      view;
+
+    setHidden(
+      "auditOrbit",
+      view !== "audits"
+    );
+
+    setHidden(
+      "participantConstellation",
+      view !== "participants"
+    );
+
+    Array.prototype.slice.call(
+      doc.querySelectorAll(
+        "[data-left-orbit-view]"
+      )
+    ).forEach(function updateButton(button) {
+      button.setAttribute(
+        "aria-selected",
+        button.getAttribute(
+          "data-left-orbit-view"
+        ) === view
+          ? "true"
+          : "false"
+      );
+    });
+  }
+
+  function selectReportModeLocal(mode) {
+    state.ui.reportMode =
+      mode;
+
+    [
+      "read",
+      "packet",
+      "raw",
+      "evidence"
+    ].forEach(function updateMode(entry) {
+      var capitalized =
+        entry.charAt(0).toUpperCase() +
+        entry.slice(1);
+
+      var button =
+        byId(
+          "report" +
+            capitalized +
+            "Button"
         );
 
-        recordError(
-          "selectParticipant",
-          new Error(
-            "PARTICIPANT_INSPECTION_ENGINE_UNAVAILABLE"
-          ),
-          context
+      var panel =
+        byId(
+          "report" +
+            capitalized +
+            "Panel"
         );
 
-        return role;
+      if (button) {
+        button.setAttribute(
+          "aria-selected",
+          entry === mode
+            ? "true"
+            : "false"
+        );
       }
-  }
-);
 
-}
-
-function selectLeftOrbitLocal(view) {
-state.ui.leftOrbit =
-view;
-
-setHidden(
-  "auditOrbit",
-  view !== "audits"
-);
-
-setHidden(
-  "participantConstellation",
-  view !== "participants"
-);
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-left-orbit-view]"
-  )
-).forEach(function updateButton(button) {
-  button.setAttribute(
-    "aria-selected",
-    button.getAttribute(
-      "data-left-orbit-view"
-    ) === view
-      ? "true"
-      : "false"
-  );
-});
-
-}
-
-function selectReportModeLocal(mode) {
-state.ui.reportMode =
-mode;
-
-[
-  "read",
-  "packet",
-  "raw",
-  "evidence"
-].forEach(function updateMode(entry) {
-  var capitalized =
-    entry.charAt(0).toUpperCase() +
-    entry.slice(1);
-
-  var button =
-    byId(
-      "report" +
-      capitalized +
-      "Button"
-    );
-
-  var panel =
-    byId(
-      "report" +
-      capitalized +
-      "Panel"
-    );
-
-  if (button) {
-    button.setAttribute(
-      "aria-selected",
-      entry === mode
-        ? "true"
-        : "false"
-    );
+      if (panel) {
+        panel.hidden =
+          entry !== mode;
+      }
+    });
   }
 
-  if (panel) {
-    panel.hidden =
-      entry !== mode;
-  }
-});
+  function selectObservationLensLocal(lens) {
+    state.ui.observationLens =
+      lens;
 
-}
+    var map = {
+      target:
+        "targetLens",
+      runtime:
+        "runtimeLens",
+      surface:
+        "surfaceLens",
+      window:
+        "targetWindow"
+    };
 
-function selectReportMode(mode) {
-selectReportModeLocal(mode);
+    Object.keys(map).forEach(function updateLens(key) {
+      var button =
+        doc.querySelector(
+          '[data-observation-lens="' +
+            key +
+            '"]'
+        );
 
-var engine =
-  getResolvedEngineWithoutReadiness();
+      var panel =
+        byId(map[key]);
 
-if (
-  engine &&
-  isFunction(engine.selectReportMode)
-) {
-  try {
-    engine.selectReportMode(mode);
-  } catch (error) {
-    recordError(
-      "selectReportMode",
-      error
-    );
-  }
-}
+      if (button) {
+        button.setAttribute(
+          "aria-selected",
+          key === lens
+            ? "true"
+            : "false"
+        );
+      }
 
-recordAction(
-  "selectReportMode",
-  {
-    mode:
-      mode
-  }
-);
-
-}
-
-function selectObservationLensLocal(lens) {
-state.ui.observationLens =
-lens;
-
-var map = {
-  target:
-    "targetLens",
-  runtime:
-    "runtimeLens",
-  surface:
-    "surfaceLens",
-  window:
-    "targetWindow"
-};
-
-Object.keys(map).forEach(function updateLens(key) {
-  var button =
-    doc.querySelector(
-      '[data-observation-lens="' +
-      key +
-      '"]'
-    );
-
-  var panel =
-    byId(map[key]);
-
-  if (button) {
-    button.setAttribute(
-      "aria-selected",
-      key === lens
-        ? "true"
-        : "false"
-    );
+      if (panel) {
+        panel.hidden =
+          key !== lens;
+      }
+    });
   }
 
-  if (panel) {
-    panel.hidden =
-      key !== lens;
-  }
-});
+  function selectInstrumentChamberLocal(chamber) {
+    state.ui.instrumentChamber =
+      chamber;
 
-}
+    var map = {
+      cycle:
+        "cycleChamber",
+      registry:
+        "registryChamber",
+      receipts:
+        "receiptChamber",
+      archive:
+        "archiveChamber",
+      boundary:
+        "boundaryChamber"
+    };
 
-function selectObservationLens(lens) {
-selectObservationLensLocal(lens);
+    Object.keys(map).forEach(function updateChamber(key) {
+      var button =
+        doc.querySelector(
+          '[data-instrument-chamber="' +
+            key +
+            '"]'
+        );
 
-var engine =
-  getResolvedEngineWithoutReadiness();
+      var panel =
+        byId(map[key]);
 
-if (
-  engine &&
-  isFunction(
-    engine.selectObservationLens
-  )
-) {
-  try {
-    engine.selectObservationLens(
-      lens
-    );
-  } catch (error) {
-    recordError(
-      "selectObservationLens",
-      error
-    );
-  }
-}
+      if (button) {
+        button.setAttribute(
+          "aria-selected",
+          key === chamber
+            ? "true"
+            : "false"
+        );
+      }
 
-recordAction(
-  "selectObservationLens",
-  {
-    lens:
-      lens
-  }
-);
-
-}
-
-function selectInstrumentChamberLocal(chamber) {
-state.ui.instrumentChamber =
-chamber;
-
-var map = {
-  cycle:
-    "cycleChamber",
-  registry:
-    "registryChamber",
-  receipts:
-    "receiptChamber",
-  archive:
-    "archiveChamber",
-  boundary:
-    "boundaryChamber"
-};
-
-Object.keys(map).forEach(function updateChamber(key) {
-  var button =
-    doc.querySelector(
-      '[data-instrument-chamber="' +
-      key +
-      '"]'
-    );
-
-  var panel =
-    byId(map[key]);
-
-  if (button) {
-    button.setAttribute(
-      "aria-selected",
-      key === chamber
-        ? "true"
-        : "false"
-    );
+      if (panel) {
+        panel.hidden =
+          key !== chamber;
+      }
+    });
   }
 
-  if (panel) {
-    panel.hidden =
-      key !== chamber;
-  }
-});
+  function setTargetVisible(visible) {
+    state.ui.targetVisible =
+      Boolean(visible);
 
-}
+    var button =
+      byId(
+        "toggleObservationTarget"
+      );
 
-function selectInstrumentChamber(chamber) {
-selectInstrumentChamberLocal(
-chamber
-);
+    if (button) {
+      button.setAttribute(
+        "aria-expanded",
+        state.ui.targetVisible
+          ? "true"
+          : "false"
+      );
 
-var engine =
-  getResolvedEngineWithoutReadiness();
+      button.textContent =
+        state.ui.targetVisible
+          ? "Hide Target"
+          : "Show Target";
+    }
 
-if (
-  engine &&
-  isFunction(
-    engine.selectInstrumentChamber
-  )
-) {
-  try {
-    engine.selectInstrumentChamber(
-      chamber
-    );
-  } catch (error) {
-    recordError(
-      "selectInstrumentChamber",
-      error
-    );
-  }
-}
-
-recordAction(
-  "selectInstrumentChamber",
-  {
-    chamber:
-      chamber
-  }
-);
-
-}
-
-function setTargetVisible(visible) {
-state.ui.targetVisible =
-Boolean(visible);
-
-var button =
-  byId(
-    "toggleObservationTarget"
-  );
-
-if (button) {
-  button.setAttribute(
-    "aria-expanded",
-    state.ui.targetVisible
-      ? "true"
-      : "false"
-  );
-
-  button.textContent =
-    state.ui.targetVisible
-      ? "Hide Target"
-      : "Show Target";
-}
-
-selectObservationLens(
-  state.ui.targetVisible
-    ? "window"
-    : "target"
-);
-
-recordAction(
-  "setTargetVisible",
-  {
-    visible:
+    selectObservationLensLocal(
       state.ui.targetVisible
+        ? "window"
+        : "target"
+    );
   }
-);
 
-}
+  function setTargetExpanded(expanded) {
+    state.ui.targetExpanded =
+      Boolean(expanded);
 
-function setTargetExpanded(expanded) {
-state.ui.targetExpanded =
-Boolean(expanded);
+    var targetWindow =
+      byId("targetWindow");
 
-var targetWindow =
-  byId("targetWindow");
+    var button =
+      byId("expandTargetWindow");
 
-var button =
-  byId("expandTargetWindow");
+    if (targetWindow) {
+      targetWindow.classList.toggle(
+        "is-expanded",
+        state.ui.targetExpanded
+      );
+    }
 
-if (targetWindow) {
-  targetWindow.classList.toggle(
-    "is-expanded",
-    state.ui.targetExpanded
-  );
-}
+    if (button) {
+      button.setAttribute(
+        "aria-pressed",
+        state.ui.targetExpanded
+          ? "true"
+          : "false"
+      );
 
-if (button) {
-  button.setAttribute(
-    "aria-pressed",
-    state.ui.targetExpanded
-      ? "true"
-      : "false"
-  );
-
-  button.textContent =
-    state.ui.targetExpanded
-      ? "Collapse"
-      : "Expand";
-}
-
-recordAction(
-  "setTargetExpanded",
-  {
-    expanded:
-      state.ui.targetExpanded
+      button.textContent =
+        state.ui.targetExpanded
+          ? "Collapse"
+          : "Expand";
+    }
   }
-);
 
-}
+  function reloadTargetFrame() {
+    var frame =
+      byId(TARGET_FRAME_ID);
 
-function reloadTargetFrame() {
-var frame =
-byId(TARGET_FRAME_ID);
+    if (!frame) {
+      recordError(
+        "reloadTargetFrame",
+        new Error(
+          "TARGET_FRAME_NOT_FOUND"
+        )
+      );
 
-if (!frame) {
-  recordError(
-    "reloadTargetFrame",
-    new Error(
-      "TARGET_FRAME_NOT_FOUND"
-    )
-  );
+      return;
+    }
 
-  return;
-}
+    frame.src =
+      TARGET_ROUTE +
+      "?diagnosticReload=" +
+      Date.now();
 
-frame.src =
-  TARGET_ROUTE +
-  "?diagnosticReload=" +
-  Date.now();
+    recordAction(
+      "reloadTargetFrame"
+    );
 
-recordAction(
-  "reloadTargetFrame"
-);
+    toast(
+      "Target frame reloading.",
+      "RUNNING"
+    );
+  }
 
-toast(
-  "Target frame reloading.",
-  "RUNNING"
-);
+  function currentReadableText() {
+    if (!state.report.current) {
+      return "";
+    }
 
-}
+    return deriveReadableReport(
+      state.report.current,
+      state.report.receipt
+    );
+  }
 
-function getReceiptEntries() {
-var engine =
-getResolvedEngineWithoutReadiness();
+  function copyText(
+    text,
+    successMessage
+  ) {
+    if (!text) {
+      toast(
+        "Nothing available to copy.",
+        "HELD"
+      );
 
-var entries =
-  [];
+      return Promise.resolve(false);
+    }
 
-if (
-  engine &&
-  isFunction(engine.getReceipts)
-) {
-  try {
-    var cycleReceipts =
-      engine.getReceipts();
+    if (
+      root.navigator &&
+      root.navigator.clipboard &&
+      isFunction(
+        root.navigator.clipboard.writeText
+      )
+    ) {
+      return root.navigator.clipboard
+        .writeText(text)
+        .then(function clipboardSuccess() {
+          toast(
+            successMessage || "Copied.",
+            "READY"
+          );
 
-    if (Array.isArray(cycleReceipts)) {
-      cycleReceipts.forEach(function addCycleReceipt(receipt) {
-        entries.push({
-          type:
-            "cycle",
-          label:
-            (
-              receipt.fibonacci
-                ? receipt.fibonacci +
-                  " · "
-                : ""
-            ) +
-            (
-              receipt.stationId ||
-              "Cycle Receipt"
-            ),
-          record:
-            frozenClone(receipt)
+          return true;
+        })
+        .catch(function clipboardFailure() {
+          return fallbackCopy(
+            text,
+            successMessage
+          );
         });
+    }
+
+    return Promise.resolve(
+      fallbackCopy(
+        text,
+        successMessage
+      )
+    );
+  }
+
+  function fallbackCopy(
+    text,
+    successMessage
+  ) {
+    var area =
+      doc.createElement("textarea");
+
+    area.value =
+      text;
+
+    area.setAttribute(
+      "readonly",
+      "true"
+    );
+
+    area.style.position =
+      "fixed";
+
+    area.style.left =
+      "-9999px";
+
+    doc.body.appendChild(area);
+
+    area.select();
+
+    var copied =
+      false;
+
+    try {
+      copied =
+        doc.execCommand("copy");
+    } catch (_error) {
+      copied =
+        false;
+    }
+
+    doc.body.removeChild(area);
+
+    toast(
+      copied
+        ? successMessage || "Copied."
+        : "Copy unavailable.",
+      copied
+        ? "READY"
+        : "HELD"
+    );
+
+    return copied;
+  }
+
+  function copyReadableReport() {
+    recordAction(
+      "copyReadableReport"
+    );
+
+    return copyText(
+      currentReadableText(),
+      "Readable report copied."
+    );
+  }
+
+  function copyPacketReport() {
+    var packetNode =
+      byId("packetOutput");
+
+    recordAction(
+      "copyPacketReport"
+    );
+
+    return copyText(
+      packetNode
+        ? packetNode.textContent
+        : "",
+      "Report packet copied."
+    );
+  }
+
+  function copyRawReport() {
+    var rawNode =
+      byId("rawOutput");
+
+    recordAction(
+      "copyRawReport"
+    );
+
+    return copyText(
+      rawNode
+        ? rawNode.textContent
+        : "",
+      "Raw report copied."
+    );
+  }
+
+  function resetCurrentReport() {
+    var engine =
+      getCompatibleEngine();
+
+    if (
+      engine &&
+      isFunction(engine.resetWorkbench)
+    ) {
+      try {
+        engine.resetWorkbench();
+      } catch (error) {
+        recordError(
+          "resetWorkbench",
+          error
+        );
+      }
+    }
+
+    state.report.current =
+      null;
+
+    state.report.receipt =
+      null;
+
+    state.report.source =
+      null;
+
+    setText(
+      "reportStatus",
+      "READY"
+    );
+
+    setStatus(
+      "reportStatus",
+      "READY"
+    );
+
+    setText(
+      "reportTitle",
+      "No report created"
+    );
+
+    setText(
+      "reportCreatedAt",
+      "—"
+    );
+
+    setText(
+      "reportMeta",
+      "Choose an audit and create a report."
+    );
+
+    renderReadRegion(
+      "readResult",
+      "R",
+      "Result",
+      "Observatory available",
+      "Create a report to evaluate the selected audit."
+    );
+
+    renderReadRegion(
+      "readEvidence",
+      "E",
+      "Evidence",
+      "Control panel available",
+      "The control panel is bound."
+    );
+
+    renderReadRegion(
+      "readAbsence",
+      "A",
+      "Absence",
+      "No report yet",
+      "No current report is displayed."
+    );
+
+    renderReadRegion(
+      "readDirection",
+      "D",
+      "Direction",
+      "Create the first report",
+      "Use Create Report to inspect the current diagnostic state."
+    );
+
+    setText(
+      "packetOutput",
+      "No report packet has been created."
+    );
+
+    setText(
+      "rawOutput",
+      "No raw report has been created."
+    );
+
+    setDisabled(
+      "copyReadableReport",
+      true
+    );
+
+    setDisabled(
+      "copyPacketReport",
+      true
+    );
+
+    setDisabled(
+      "copyRawReport",
+      true
+    );
+
+    setDisabled(
+      "addReportToArchive",
+      true
+    );
+
+    selectReportModeLocal(
+      "read"
+    );
+
+    renderReceiptList();
+
+    recordAction(
+      "resetCurrentReport"
+    );
+
+    toast(
+      "Current report reset.",
+      "READY"
+    );
+  }
+
+  function resetWorkbench() {
+    resetCurrentReport();
+    closeAllSelectors();
+
+    selectLeftOrbitLocal(
+      "audits"
+    );
+
+    selectObservationLensLocal(
+      "target"
+    );
+
+    selectInstrumentChamberLocal(
+      "cycle"
+    );
+
+    setTargetVisible(false);
+    setTargetExpanded(false);
+
+    state.ui.receiptFilter =
+      "all";
+
+    state.ui.selectedReceiptIndex =
+      null;
+
+    renderReceiptList();
+
+    recordAction(
+      "resetWorkbench"
+    );
+  }
+
+  function addReportToArchive() {
+    if (!state.report.current) {
+      toast(
+        "No current report is available.",
+        "HELD"
+      );
+
+      return;
+    }
+
+    toast(
+      "The current engine report was archived during creation.",
+      "READY"
+    );
+
+    recordAction(
+      "confirmReportArchived",
+      {
+        reportId:
+          state.report.current.reportId || null
+      }
+    );
+  }
+
+  function createDeepArchive() {
+    var engine =
+      getCompatibleEngine();
+
+    var archive =
+      engine &&
+      isFunction(engine.getArchive)
+        ? engine.getArchive()
+        : state.report.fallbackHistory.slice();
+
+    setText(
+      "archiveSessionCount",
+      Array.isArray(archive)
+        ? archive.length
+        : 0
+    );
+
+    setText(
+      "archiveRawOutput",
+      safeJson(archive)
+    );
+
+    selectInstrumentChamberLocal(
+      "archive"
+    );
+
+    recordAction(
+      "createDeepArchive"
+    );
+  }
+
+  function getReceiptEntries() {
+    var entries = [];
+
+    function addReceipt(
+      type,
+      label,
+      record
+    ) {
+      if (!record) {
+        return;
+      }
+
+      entries.push({
+        type:
+          type,
+        label:
+          label,
+        record:
+          frozenClone(record)
       });
     }
-  } catch (error) {
-    recordError(
-      "getReceipts",
-      error
+
+    addReceipt(
+      "inspection",
+      "Inspection Lane Receipt",
+      root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT
     );
-  }
-}
 
-if (
-  state.reports.fallbackCurrent
-) {
-  entries.push({
-    type:
-      "control",
-    label:
-      "Control Fallback Report",
-    record:
-      frozenClone(
-        state.reports.fallbackCurrent
-      )
-  });
-}
+    addReceipt(
+      "engine",
+      "Diagnostic Engine Receipt",
+      root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT
+    );
 
-if (
-  root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT
-) {
-  entries.push({
-    type:
+    addReceipt(
+      "report",
+      "Diagnostic Report Receipt",
+      state.report.receipt ||
+      root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT
+    );
+
+    addReceipt(
+      "cycle",
+      "Nine-Cycle Receipt",
+      state.cycleReceipt
+    );
+
+    addReceipt(
       "control",
-    label:
       "Control Panel Receipt",
-    record:
-      frozenClone(
-        root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT
-      )
-  });
-}
+      root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT
+    );
 
-return entries;
-
-}
-
-function renderReceiptList() {
-var entries =
-getReceiptEntries();
-
-var filter =
-  state.ui.receiptFilter;
-
-var visible =
-  filter === "all"
-    ? entries
-    : entries.filter(function filterReceipt(entry) {
-        if (
-          filter === "participant"
-        ) {
-          return entry.type ===
-            "participant";
-        }
-
-        if (
-          filter === "observation"
-        ) {
-          return entry.type ===
-            "observation";
-        }
-
-        if (
-          filter === "cycle"
-        ) {
-          return entry.type ===
-            "cycle";
-        }
-
-        if (
-          filter === "error"
-        ) {
-          return entry.type ===
-            "error";
-        }
-
-        return entry.type ===
-          filter;
-      });
-
-setHtml(
-  "receiptList",
-  visible.length
-    ? visible
-        .map(function renderReceipt(entry, index) {
-          return (
-            '<article tabindex="0" role="button" ' +
-            'data-receipt-index="' +
-            String(index) +
-            '" data-receipt-type="' +
-            escapeHtml(entry.type) +
-            '">' +
-            "<h4>" +
-            escapeHtml(entry.label) +
-            "</h4>" +
-            "<p>Type: " +
-            escapeHtml(entry.type) +
-            "</p>" +
-            "</article>"
-          );
-        })
-        .join("")
-    : (
-        '<article class="empty-state">' +
-        "<h4>No matching receipts</h4>" +
-        "<p>No receipts match the selected filter.</p>" +
-        "</article>"
-      )
-);
-
-state._visibleReceipts =
-  visible;
-
-}
-
-function applyReceiptFilter(filter) {
-state.ui.receiptFilter =
-filter || "all";
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-receipt-filter]"
-  )
-).forEach(function updateFilter(button) {
-  button.setAttribute(
-    "aria-pressed",
-    button.getAttribute(
-      "data-receipt-filter"
-    ) === state.ui.receiptFilter
-      ? "true"
-      : "false"
-  );
-});
-
-renderReceiptList();
-
-recordAction(
-  "applyReceiptFilter",
-  {
-    filter:
-      state.ui.receiptFilter
+    return entries;
   }
-);
 
-}
+  function renderReceiptList() {
+    var entries =
+      getReceiptEntries();
 
-function selectReceipt(index) {
-var receipts =
-Array.isArray(
-state._visibleReceipts
-)
-? state._visibleReceipts
-: [];
+    var filter =
+      state.ui.receiptFilter;
 
-var entry =
-  receipts[index] ||
-  null;
+    var visible =
+      filter === "all"
+        ? entries
+        : entries.filter(function filterReceipt(entry) {
+            return entry.type === filter;
+          });
 
-state.ui.selectedReceiptIndex =
-  entry
-    ? index
-    : null;
+    state.visibleReceipts =
+      visible;
 
-if (!entry) {
-  setHtml(
-    "selectedReceiptDetail",
-    "<h4>Receipt unavailable</h4>" +
-    "<p>The selected receipt could not be resolved.</p>"
-  );
-
-  return;
-}
-
-setHtml(
-  "selectedReceiptDetail",
-  "<h4>" +
-  escapeHtml(entry.label) +
-  "</h4>" +
-  "<pre>" +
-  escapeHtml(
-    safeJson(entry.record)
-  ) +
-  "</pre>"
-);
-
-recordAction(
-  "selectReceipt",
-  {
-    index:
-      index,
-    type:
-      entry.type,
-    label:
-      entry.label
-  }
-);
-
-}
-
-function inspectControls() {
-var records = [];
-var missing = [];
-
-CONTROL_MANIFEST.forEach(function inspectManifestEntry(entry) {
-  var node =
-    byId(entry.id);
-
-  var record = {
-    id:
-      entry.id,
-    type:
-      entry.type,
-    owner:
-      entry.owner,
-    present:
-      Boolean(node),
-    disabled:
-      node
-        ? Boolean(node.disabled)
-        : null,
-    hidden:
-      node
-        ? Boolean(node.hidden)
-        : null
-  };
-
-  records.push(record);
-
-  if (!node) {
-    missing.push(
-      entry.id
+    setHtml(
+      "receiptList",
+      visible.length
+        ? visible
+            .map(function renderReceipt(entry, index) {
+              return (
+                '<article tabindex="0" role="button" ' +
+                  'data-receipt-index="' +
+                  String(index) +
+                  '" data-receipt-type="' +
+                  escapeHtml(entry.type) +
+                  '">' +
+                  "<h4>" +
+                  escapeHtml(entry.label) +
+                  "</h4>" +
+                  "<p>Type: " +
+                  escapeHtml(entry.type) +
+                  "</p>" +
+                  "</article>"
+              );
+            })
+            .join("")
+        : (
+            '<article class="empty-state">' +
+              "<h4>No matching receipts</h4>" +
+              "<p>No receipts match the selected filter.</p>" +
+              "</article>"
+          )
     );
   }
-});
 
-var interactiveNodes =
-  Array.prototype.slice.call(
-    doc.querySelectorAll(
-      "button, a[href], [role='button'], [role='tab'], [role='option']"
-    )
-  );
+  function applyReceiptFilter(filter) {
+    state.ui.receiptFilter =
+      filter || "all";
 
-var manifestIds =
-  CONTROL_MANIFEST.map(function mapId(entry) {
-    return entry.id;
-  });
-
-var unowned =
-  interactiveNodes
-    .filter(function findUnowned(node) {
-      if (
-        node.hasAttribute(
-          "data-category-id"
-        ) ||
-        node.hasAttribute(
-          "data-audit-id"
-        ) ||
-        node.hasAttribute(
-          "data-participant-role"
-        ) ||
-        node.hasAttribute(
-          "data-report-mode"
-        ) ||
-        node.hasAttribute(
-          "data-observation-lens"
-        ) ||
-        node.hasAttribute(
-          "data-instrument-chamber"
-        ) ||
-        node.hasAttribute(
-          "data-left-orbit-view"
-        ) ||
-        node.hasAttribute(
+    Array.prototype.slice.call(
+      doc.querySelectorAll(
+        "[data-receipt-filter]"
+      )
+    ).forEach(function updateFilter(button) {
+      button.setAttribute(
+        "aria-pressed",
+        button.getAttribute(
           "data-receipt-filter"
-        ) ||
-        node.hasAttribute(
-          "data-receipt-index"
+        ) === state.ui.receiptFilter
+          ? "true"
+          : "false"
+      );
+    });
+
+    renderReceiptList();
+
+    recordAction(
+      "applyReceiptFilter",
+      {
+        filter:
+          state.ui.receiptFilter
+      }
+    );
+  }
+
+  function selectReceipt(index) {
+    var entry =
+      state.visibleReceipts[index] ||
+      null;
+
+    state.ui.selectedReceiptIndex =
+      entry
+        ? index
+        : null;
+
+    if (!entry) {
+      setHtml(
+        "selectedReceiptDetail",
+        "<h4>Receipt unavailable</h4>" +
+          "<p>The selected receipt could not be resolved.</p>"
+      );
+
+      return;
+    }
+
+    setHtml(
+      "selectedReceiptDetail",
+      "<h4>" +
+        escapeHtml(entry.label) +
+        "</h4>" +
+        "<pre>" +
+        escapeHtml(
+          safeJson(entry.record)
+        ) +
+        "</pre>"
+    );
+
+    recordAction(
+      "selectReceipt",
+      {
+        index:
+          index,
+        type:
+          entry.type,
+        label:
+          entry.label
+      }
+    );
+  }
+
+  function inspectControls() {
+    var missing = [];
+
+    CONTROL_IDS.forEach(function inspectControl(id) {
+      if (!byId(id)) {
+        missing.push(id);
+      }
+    });
+
+    state.controls.discoveredCount =
+      CONTROL_IDS.length -
+      missing.length;
+
+    state.controls.missing =
+      missing;
+
+    state.controls.missingCount =
+      missing.length;
+
+    state.controls.createReportPresent =
+      Boolean(
+        byId("createReport")
+      );
+
+    publishReceipt();
+
+    return frozenClone(
+      state.controls
+    );
+  }
+
+  function renderEngineState() {
+    var engine =
+      resolveEngine();
+
+    if (engine) {
+      setText(
+        "controllerState",
+        "REPORT READY"
+      );
+
+      setStatus(
+        "controllerState",
+        "READY"
+      );
+
+      setText(
+        "controllerContract",
+        state.engine.contract
+      );
+
+      setText(
+        "dropReportState",
+        "READY"
+      );
+
+      setStatus(
+        "dropReportCell",
+        "READY"
+      );
+
+      setText(
+        "dropReportLastAction",
+        "Controls bound; compatible engine ready."
+      );
+
+      return;
+    }
+
+    setText(
+      "controllerState",
+      "ENGINE HELD"
+    );
+
+    setStatus(
+      "controllerState",
+      "HELD"
+    );
+
+    setText(
+      "controllerContract",
+      "Control panel active · " +
+        state.engine.reason
+    );
+
+    setText(
+      "dropReportState",
+      "READY"
+    );
+
+    setStatus(
+      "dropReportCell",
+      "READY"
+    );
+
+    setText(
+      "dropReportLastAction",
+      "Fallback READ report path available."
+    );
+  }
+
+  function handleClick(event) {
+    var rawTarget =
+      event.target;
+
+    if (
+      !rawTarget ||
+      !isFunction(rawTarget.closest)
+    ) {
+      return;
+    }
+
+    var target =
+      rawTarget.closest(
+        "button, a[href], [role='button'], [role='tab'], [role='option']"
+      );
+
+    if (!target) {
+      if (
+        !rawTarget.closest(
+          ".custom-selector"
         )
       ) {
-        return false;
+        closeAllSelectors();
       }
 
-      return (
-        !node.id ||
-        manifestIds.indexOf(
-          node.id
-        ) === -1
-      );
-    })
-    .map(function mapUnowned(node) {
-      return {
+      return;
+    }
+
+    state.clickCount += 1;
+
+    var id =
+      target.id || "";
+
+    recordAction(
+      "clickObserved",
+      {
         id:
-          node.id || null,
-        tag:
-          node.tagName,
-        role:
-          node.getAttribute("role"),
+          id || null,
         text:
           String(
-            node.textContent || ""
+            target.textContent || ""
           )
             .trim()
             .slice(0, 100)
-      };
-    });
-
-state.controls.records =
-  records;
-
-state.controls.discoveredCount =
-  records.filter(function countPresent(record) {
-    return record.present;
-  }).length;
-
-state.controls.boundCount =
-  state.controls.discoveredCount;
-
-state.controls.missing =
-  missing;
-
-state.controls.missingCount =
-  missing.length;
-
-state.controls.unownedInteractive =
-  unowned;
-
-state.controls.unownedInteractiveCount =
-  unowned.length;
-
-renderControlAuditStatus();
-publishReceipt();
-
-return frozenClone(
-  state.controls
-);
-
-}
-
-function renderControlAuditStatus() {
-if (
-state.controls.missingCount === 0 &&
-state.controls.unownedInteractiveCount === 0
-) {
-setText(
-"dropDirectLastAction",
-"Control binding audit complete: all declared controls owned."
-);
-
-  return;
-}
-
-var messages = [];
-
-if (
-  state.controls.missingCount
-) {
-  messages.push(
-    "Missing controls: " +
-    state.controls.missing.join(", ")
-  );
-}
-
-if (
-  state.controls.unownedInteractiveCount
-) {
-  messages.push(
-    "Unowned interactive controls: " +
-    state.controls.unownedInteractiveCount
-  );
-}
-
-setText(
-  "dropDirectLastAction",
-  messages.join(" · ")
-);
-
-setStatus(
-  "dropDirectCell",
-  "HELD"
-);
-
-}
-
-function renderEngineState() {
-var engine =
-resolveEngine();
-
-if (engine) {
-  setText(
-    "controllerState",
-    "REPORT READY"
-  );
-
-  setStatus(
-    "controllerState",
-    "READY"
-  );
-
-  setText(
-    "controllerContract",
-    state.engine.contract
-  );
-
-  setText(
-    "dropReportState",
-    "READY"
-  );
-
-  setStatus(
-    "dropReportCell",
-    "READY"
-  );
-
-  setText(
-    "dropReportLastAction",
-    "Independent controls bound; compatible engine ready."
-  );
-
-  return;
-}
-
-setText(
-  "controllerState",
-  "ENGINE HELD"
-);
-
-setStatus(
-  "controllerState",
-  "HELD"
-);
-
-setText(
-  "controllerContract",
-  "Control panel active · " +
-  state.engine.reason
-);
-
-setText(
-  "dropReportState",
-  "READY"
-);
-
-setStatus(
-  "dropReportCell",
-  "READY"
-);
-
-setText(
-  "dropReportLastAction",
-  "Fallback READ report path available."
-);
-
-}
-
-function handleClick(event) {
-var target =
-event.target.closest(
-"button, a[href], [role='button'], [role='tab'], [role='option']"
-);
-
-if (!target) {
-  if (
-    !event.target.closest(
-      ".custom-selector"
-    )
-  ) {
-    closeAllSelectors();
-  }
-
-  return;
-}
-
-var id =
-  target.id || "";
-
-if (id === "returnToAudralia") {
-  recordAction(
-    "returnToAudralia"
-  );
-
-  return;
-}
-
-if (id === "createReport") {
-  event.preventDefault();
-  createReport();
-  return;
-}
-
-if (id === "runDirectCheck") {
-  event.preventDefault();
-  runDirectCheck();
-  return;
-}
-
-if (id === "runNineCycle") {
-  event.preventDefault();
-  runNineCycle();
-  return;
-}
-
-if (id === "copyReadableReport") {
-  event.preventDefault();
-  copyReadableReport();
-  return;
-}
-
-if (id === "copyPacketReport") {
-  event.preventDefault();
-  copyPacketReport();
-  return;
-}
-
-if (id === "copyRawReport") {
-  event.preventDefault();
-  copyRawReport();
-  return;
-}
-
-if (id === "addReportToArchive") {
-  event.preventDefault();
-  addReportToArchive();
-  return;
-}
-
-if (id === "resetCurrentReport") {
-  event.preventDefault();
-  resetCurrentReport();
-  return;
-}
-
-if (id === "resetWorkbench") {
-  event.preventDefault();
-  resetWorkbench();
-  return;
-}
-
-if (id === "createDeepArchive") {
-  event.preventDefault();
-  createDeepArchive();
-  return;
-}
-
-if (id === "reloadObservatory") {
-  event.preventDefault();
-
-  recordAction(
-    "reloadObservatory"
-  );
-
-  root.location.reload();
-  return;
-}
-
-if (id === "toggleObservationTarget") {
-  event.preventDefault();
-
-  setTargetVisible(
-    !state.ui.targetVisible
-  );
-
-  return;
-}
-
-if (id === "expandTargetWindow") {
-  event.preventDefault();
-
-  setTargetExpanded(
-    !state.ui.targetExpanded
-  );
-
-  return;
-}
-
-if (id === "reloadTargetFrame") {
-  event.preventDefault();
-
-  reloadTargetFrame();
-  return;
-}
-
-if (id === "categorySelectorButton") {
-  event.preventDefault();
-
-  toggleSelector(
-    "categorySelectorButton",
-    "categorySelectorMenu",
-    "categoryMenuOpen"
-  );
-
-  return;
-}
-
-if (id === "auditSelectorButton") {
-  event.preventDefault();
-
-  toggleSelector(
-    "auditSelectorButton",
-    "auditSelectorMenu",
-    "auditMenuOpen"
-  );
-
-  return;
-}
-
-if (
-  target.hasAttribute(
-    "data-category-id"
-  )
-) {
-  event.preventDefault();
-
-  selectCategory(
-    target.getAttribute(
-      "data-category-id"
-    )
-  );
-
-  return;
-}
-
-if (
-  target.hasAttribute(
-    "data-audit-id"
-  )
-) {
-  event.preventDefault();
-
-  selectAudit(
-    target.getAttribute(
-      "data-audit-id"
-    )
-  );
-
-  return;
-}
-
-if (
-  target.hasAttribute(
-    "data-participant-role"
-  )
-) {
-  event.preventDefault();
-
-  selectParticipant(
-    target.getAttribute(
-      "data-participant-role"
-    )
-  );
-
-  return;
-}
-
-if (
-  target.hasAttribute(
-    "data-left-orbit-view"
-  )
-) {
-  event.preventDefault();
-
-  var leftView =
-    target.getAttribute(
-      "data-left-orbit-view"
+      }
     );
 
-  selectLeftOrbitLocal(
-    leftView
-  );
+    if (id === "createReport") {
+      event.preventDefault();
 
-  recordAction(
-    "selectLeftOrbit",
-    {
-      view:
-        leftView
+      state.createReportClickCount += 1;
+
+      recordAction(
+        "createReportClickObserved",
+        {
+          clickNumber:
+            state.createReportClickCount
+        }
+      );
+
+      createReport();
+      return;
     }
-  );
 
-  return;
-}
+    if (id === "runDirectCheck") {
+      event.preventDefault();
+      runDirectCheck();
+      return;
+    }
 
-if (
-  target.hasAttribute(
-    "data-report-mode"
-  )
-) {
-  event.preventDefault();
+    if (id === "runNineCycle") {
+      event.preventDefault();
+      runNineCycle();
+      return;
+    }
 
-  selectReportMode(
-    target.getAttribute(
-      "data-report-mode"
-    )
-  );
+    if (id === "copyReadableReport") {
+      event.preventDefault();
+      copyReadableReport();
+      return;
+    }
 
-  return;
-}
+    if (id === "copyPacketReport") {
+      event.preventDefault();
+      copyPacketReport();
+      return;
+    }
 
-if (
-  target.hasAttribute(
-    "data-observation-lens"
-  )
-) {
-  event.preventDefault();
+    if (id === "copyRawReport") {
+      event.preventDefault();
+      copyRawReport();
+      return;
+    }
 
-  selectObservationLens(
-    target.getAttribute(
-      "data-observation-lens"
-    )
-  );
+    if (id === "addReportToArchive") {
+      event.preventDefault();
+      addReportToArchive();
+      return;
+    }
 
-  return;
-}
+    if (id === "resetCurrentReport") {
+      event.preventDefault();
+      resetCurrentReport();
+      return;
+    }
 
-if (
-  target.hasAttribute(
-    "data-instrument-chamber"
-  )
-) {
-  event.preventDefault();
+    if (id === "resetWorkbench") {
+      event.preventDefault();
+      resetWorkbench();
+      return;
+    }
 
-  selectInstrumentChamber(
-    target.getAttribute(
-      "data-instrument-chamber"
-    )
-  );
+    if (id === "createDeepArchive") {
+      event.preventDefault();
+      createDeepArchive();
+      return;
+    }
 
-  return;
-}
+    if (id === "reloadObservatory") {
+      event.preventDefault();
 
-if (
-  target.hasAttribute(
-    "data-receipt-filter"
-  )
-) {
-  event.preventDefault();
+      recordAction(
+        "reloadObservatory"
+      );
 
-  applyReceiptFilter(
-    target.getAttribute(
-      "data-receipt-filter"
-    )
-  );
+      root.location.reload();
+      return;
+    }
 
-  return;
-}
+    if (id === "toggleObservationTarget") {
+      event.preventDefault();
 
-if (
-  target.hasAttribute(
-    "data-receipt-index"
-  )
-) {
-  event.preventDefault();
+      setTargetVisible(
+        !state.ui.targetVisible
+      );
 
-  selectReceipt(
-    Number(
-      target.getAttribute(
+      return;
+    }
+
+    if (id === "expandTargetWindow") {
+      event.preventDefault();
+
+      setTargetExpanded(
+        !state.ui.targetExpanded
+      );
+
+      return;
+    }
+
+    if (id === "reloadTargetFrame") {
+      event.preventDefault();
+      reloadTargetFrame();
+      return;
+    }
+
+    if (id === "categorySelectorButton") {
+      event.preventDefault();
+
+      toggleSelector(
+        "categorySelectorButton",
+        "categorySelectorMenu",
+        "categoryMenuOpen"
+      );
+
+      return;
+    }
+
+    if (id === "auditSelectorButton") {
+      event.preventDefault();
+
+      toggleSelector(
+        "auditSelectorButton",
+        "auditSelectorMenu",
+        "auditMenuOpen"
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-category-id"
+      )
+    ) {
+      event.preventDefault();
+
+      selectCategory(
+        target.getAttribute(
+          "data-category-id"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-audit-id"
+      )
+    ) {
+      event.preventDefault();
+
+      selectAudit(
+        target.getAttribute(
+          "data-audit-id"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-participant-role"
+      )
+    ) {
+      event.preventDefault();
+
+      selectParticipant(
+        target.getAttribute(
+          "data-participant-role"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-left-orbit-view"
+      )
+    ) {
+      event.preventDefault();
+
+      selectLeftOrbitLocal(
+        target.getAttribute(
+          "data-left-orbit-view"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-report-mode"
+      )
+    ) {
+      event.preventDefault();
+
+      selectReportModeLocal(
+        target.getAttribute(
+          "data-report-mode"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-observation-lens"
+      )
+    ) {
+      event.preventDefault();
+
+      selectObservationLensLocal(
+        target.getAttribute(
+          "data-observation-lens"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-instrument-chamber"
+      )
+    ) {
+      event.preventDefault();
+
+      selectInstrumentChamberLocal(
+        target.getAttribute(
+          "data-instrument-chamber"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
+        "data-receipt-filter"
+      )
+    ) {
+      event.preventDefault();
+
+      applyReceiptFilter(
+        target.getAttribute(
+          "data-receipt-filter"
+        )
+      );
+
+      return;
+    }
+
+    if (
+      target.hasAttribute(
         "data-receipt-index"
       )
-    )
-  );
+    ) {
+      event.preventDefault();
 
-  return;
-}
+      selectReceipt(
+        Number(
+          target.getAttribute(
+            "data-receipt-index"
+          )
+        )
+      );
 
-if (
-  !target.closest(
-    ".custom-selector"
-  )
-) {
-  closeAllSelectors();
-}
-
-}
-
-function handleKeydown(event) {
-var target =
-event.target.closest(
-"[role='button'], [role='option'], [role='tab']"
-);
-
-if (
-  target &&
-  (
-    event.key === "Enter" ||
-    event.key === " "
-  )
-) {
-  event.preventDefault();
-  target.click();
-  return;
-}
-
-if (event.key === "Escape") {
-  closeAllSelectors();
-
-  if (state.ui.targetExpanded) {
-    setTargetExpanded(false);
-  }
-}
-
-}
-
-function handleTargetFrameLoad() {
-recordAction(
-"targetFrameLoad"
-);
-
-var engine =
-  getResolvedEngineWithoutReadiness();
-
-if (
-  engine &&
-  isFunction(engine.observe)
-) {
-  try {
-    var result =
-      engine.observe();
-
-    if (isPromiseLike(result)) {
-      result.catch(function observationRejected(error) {
-        recordError(
-          "observe",
-          error
-        );
-      });
+      return;
     }
-  } catch (error) {
-    recordError(
-      "observe",
-      error
+
+    if (
+      !target.closest(
+        ".custom-selector"
+      )
+    ) {
+      closeAllSelectors();
+    }
+  }
+
+  function handleKeydown(event) {
+    var rawTarget =
+      event.target;
+
+    if (
+      !rawTarget ||
+      !isFunction(rawTarget.closest)
+    ) {
+      return;
+    }
+
+    var target =
+      rawTarget.closest(
+        "[role='button'], [role='option'], [role='tab']"
+      );
+
+    if (
+      target &&
+      (
+        event.key === "Enter" ||
+        event.key === " "
+      )
+    ) {
+      event.preventDefault();
+      target.click();
+      return;
+    }
+
+    if (event.key === "Escape") {
+      closeAllSelectors();
+
+      if (state.ui.targetExpanded) {
+        setTargetExpanded(false);
+      }
+    }
+  }
+
+  function handleTargetFrameLoad() {
+    recordAction(
+      "targetFrameLoad"
     );
   }
-}
 
-}
+  function bindEvents() {
+    doc.addEventListener(
+      "click",
+      handleClick
+    );
 
-function bindEvents() {
-doc.addEventListener(
-"click",
-handleClick
-);
+    doc.addEventListener(
+      "keydown",
+      handleKeydown
+    );
 
-doc.addEventListener(
-  "keydown",
-  handleKeydown
-);
+    var frame =
+      byId(TARGET_FRAME_ID);
 
-var frame =
-  byId(TARGET_FRAME_ID);
+    if (frame) {
+      frame.addEventListener(
+        "load",
+        handleTargetFrameLoad
+      );
+    }
 
-if (frame) {
-  frame.addEventListener(
-    "load",
-    handleTargetFrameLoad
-  );
-}
+    state.controls.eventDelegationActive =
+      true;
+  }
 
-}
+  function publishReceipt() {
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT =
+      deepFreeze({
+        schema:
+          CONTROL_RECEIPT_SCHEMA,
 
-function publishReceipt() {
-root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT =
-deepFreeze({
-schema:
-CONTROL_RECEIPT_SCHEMA,
+        contract:
+          CONTRACT,
 
-    contract:
-      CONTRACT,
+        version:
+          VERSION,
 
-    previousContract:
-      PREVIOUS_CONTRACT,
+        file:
+          FILE,
 
-    version:
-      VERSION,
+        authority:
+          AUTHORITY,
 
-    file:
-      FILE,
+        initialized:
+          state.initialized,
 
-    expectedEngineContract:
-      EXPECTED_ENGINE_CONTRACT,
+        initializedAt:
+          state.initializedAt,
 
-    expectedHtmlContract:
-      EXPECTED_HTML_CONTRACT,
+        eventDelegationActive:
+          state.controls.eventDelegationActive,
 
-    expectedCssContract:
-      EXPECTED_CSS_CONTRACT,
+        createReportControlPresent:
+          state.controls.createReportPresent,
 
-    initialized:
-      state.initialized,
+        engineLookupPaths:
+          ENGINE_GLOBAL_PATHS.slice(),
 
-    initializedAt:
-      state.initializedAt,
+        engine:
+          frozenClone(
+            state.engine
+          ),
 
-    engine:
-      frozenClone(
-        state.engine
-      ),
+        controlManifestCount:
+          state.controls.manifestCount,
 
-    controlManifestCount:
-      state.controls.manifestCount,
+        discoveredControlCount:
+          state.controls.discoveredCount,
 
-    discoveredControlCount:
-      state.controls.discoveredCount,
+        missingControlCount:
+          state.controls.missingCount,
 
-    boundControlCount:
-      state.controls.boundCount,
+        missingControls:
+          state.controls.missing.slice(),
 
-    missingControlCount:
-      state.controls.missingCount,
+        clickCount:
+          state.clickCount,
 
-    missingControls:
-      state.controls.missing.slice(),
+        createReportClickCount:
+          state.createReportClickCount,
 
-    unownedInteractiveCount:
-      state.controls.unownedInteractiveCount,
+        currentReportId:
+          state.report.current
+            ? state.report.current.reportId || null
+            : null,
 
-    unownedInteractive:
-      frozenClone(
-        state.controls.unownedInteractive
-      ),
+        currentReportReceiptId:
+          state.report.receipt
+            ? state.report.receipt.receiptId || null
+            : null,
 
-    eventDelegationActive:
-      state.initialized,
+        currentReportSource:
+          state.report.source,
 
-    createReportFallbackAvailable:
-      true,
+        fallbackReportCount:
+          state.report.fallbackHistory.length,
 
-    fallbackConditions: [
-      "ENGINE_NOT_FOUND",
-      "ENGINE_CONTRACT_MISMATCH",
-      "ENGINE_NOT_READY",
-      "ENGINE_METHOD_MISSING",
-      "ENGINE_METHOD_THROW",
-      "ENGINE_METHOD_REJECTED",
-      "ENGINE_RESULT_INVALID"
-    ],
+        actionCount:
+          state.actionCount,
 
-    receiptFilteringOwned:
-      true,
+        errorCount:
+          state.errorCount,
 
-    receiptSelectionOwned:
-      true,
+        lastAction:
+          frozenClone(
+            state.lastAction
+          ),
 
-    actionCount:
-      state.actionCount,
+        lastError:
+          frozenClone(
+            state.lastError
+          ),
 
-    errorCount:
-      state.errorCount,
+        newsAuthority: {
+          direction:
+            "SOUTH",
+          commandHandoff:
+            "F34",
+          restitution:
+            "F55"
+        },
 
-    lastAction:
-      frozenClone(
-        state.lastAction
-      ),
+        noClaims:
+          NO_CLAIMS,
 
-    lastError:
-      frozenClone(
+        generatedAt:
+          nowIso()
+      });
+  }
+
+  function getPublicState() {
+    return frozenClone({
+      contract:
+        CONTRACT,
+
+      version:
+        VERSION,
+
+      file:
+        FILE,
+
+      authority:
+        AUTHORITY,
+
+      initialized:
+        state.initialized,
+
+      initializedAt:
+        state.initializedAt,
+
+      engine:
+        state.engine,
+
+      controls:
+        state.controls,
+
+      ui:
+        state.ui,
+
+      report:
+        state.report,
+
+      cycleReceipt:
+        state.cycleReceipt,
+
+      actionCount:
+        state.actionCount,
+
+      clickCount:
+        state.clickCount,
+
+      createReportClickCount:
+        state.createReportClickCount,
+
+      errorCount:
+        state.errorCount,
+
+      lastAction:
+        state.lastAction,
+
+      lastError:
         state.lastError
-      ),
+    });
+  }
 
-    fallbackReportCount:
-      state.reports.fallbackHistory.length,
+  function publishApi() {
+    var api =
+      Object.freeze({
+        CONTRACT:
+          CONTRACT,
 
-    noClaims:
-      NO_CLAIMS,
+        contract:
+          CONTRACT,
 
-    generatedAt:
-      nowIso()
-  });
+        VERSION:
+          VERSION,
 
-}
+        version:
+          VERSION,
 
-function getPublicState() {
-return frozenClone({
-contract:
-CONTRACT,
+        FILE:
+          FILE,
 
-  previousContract:
-    PREVIOUS_CONTRACT,
+        file:
+          FILE,
 
-  version:
-    VERSION,
+        AUTHORITY:
+          AUTHORITY,
 
-  file:
-    FILE,
+        authority:
+          AUTHORITY,
 
-  initialized:
-    state.initialized,
+        STATUS:
+          "READY",
 
-  initializedAt:
-    state.initializedAt,
+        status:
+          "READY",
 
-  engine:
-    state.engine,
+        createReport:
+          createReport,
 
-  controls:
-    state.controls,
+        runDirectCheck:
+          runDirectCheck,
 
-  ui:
-    state.ui,
+        runNineCycle:
+          runNineCycle,
 
-  fallbackCurrent:
-    state.reports.fallbackCurrent,
+        addReportToArchive:
+          addReportToArchive,
 
-  fallbackHistoryCount:
-    state.reports.fallbackHistory.length,
+        createDeepArchive:
+          createDeepArchive,
 
-  fallbackArchive:
-    state.archive.fallbackCurrent,
+        resetCurrentReport:
+          resetCurrentReport,
 
-  actionCount:
-    state.actionCount,
+        resetWorkbench:
+          resetWorkbench,
 
-  errorCount:
-    state.errorCount,
+        selectCategory:
+          selectCategory,
 
-  lastAction:
-    state.lastAction,
+        selectAudit:
+          selectAudit,
 
-  lastError:
-    state.lastError
-});
+        selectParticipant:
+          selectParticipant,
 
-}
+        selectReportMode:
+          selectReportModeLocal,
 
-function publishApi() {
-var api =
-Object.freeze({
-CONTRACT:
-CONTRACT,
+        selectObservationLens:
+          selectObservationLensLocal,
 
-    PREVIOUS_CONTRACT:
-      PREVIOUS_CONTRACT,
+        selectInstrumentChamber:
+          selectInstrumentChamberLocal,
 
-    VERSION:
-      VERSION,
+        setTargetVisible:
+          setTargetVisible,
 
-    FILE:
-      FILE,
+        setTargetExpanded:
+          setTargetExpanded,
 
-    EXPECTED_ENGINE_CONTRACT:
-      EXPECTED_ENGINE_CONTRACT,
+        reloadTargetFrame:
+          reloadTargetFrame,
 
-    EXPECTED_HTML_CONTRACT:
-      EXPECTED_HTML_CONTRACT,
+        applyReceiptFilter:
+          applyReceiptFilter,
 
-    EXPECTED_CSS_CONTRACT:
-      EXPECTED_CSS_CONTRACT,
+        selectReceipt:
+          selectReceipt,
 
-    createReport:
-      createReport,
+        inspectControls:
+          inspectControls,
 
-    runDirectCheck:
-      runDirectCheck,
+        resolveEngine:
+          resolveEngine,
 
-    runNineCycle:
-      runNineCycle,
+        closeAllSelectors:
+          closeAllSelectors,
 
-    addReportToArchive:
-      addReportToArchive,
+        getState:
+          getPublicState,
 
-    createDeepArchive:
-      createDeepArchive,
+        getCurrentReport:
+          function getCurrentReport() {
+            return frozenClone(
+              state.report.current
+            );
+          },
 
-    resetCurrentReport:
-      resetCurrentReport,
+        getCurrentReportReceipt:
+          function getCurrentReportReceipt() {
+            return frozenClone(
+              state.report.receipt
+            );
+          },
 
-    resetWorkbench:
-      resetWorkbench,
+        getReceipt:
+          function getReceipt() {
+            return frozenClone(
+              root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
+              null
+            );
+          }
+      });
 
-    selectCategory:
-      selectCategory,
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL =
+      api;
 
-    selectAudit:
-      selectAudit,
+    if (
+      !root.AUDRALIA ||
+      typeof root.AUDRALIA !== "object"
+    ) {
+      root.AUDRALIA = {};
+    }
 
-    selectParticipant:
-      selectParticipant,
+    root.AUDRALIA.dropWithReadControlPanel =
+      api;
 
-    selectReportMode:
-      selectReportMode,
+    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_LOADED__ =
+      true;
 
-    selectObservationLens:
-      selectObservationLens,
+    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_CONTRACT__ =
+      CONTRACT;
 
-    selectInstrumentChamber:
-      selectInstrumentChamber,
+    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_VERSION__ =
+      VERSION;
 
-    setTargetVisible:
-      setTargetVisible,
+    return api;
+  }
 
-    setTargetExpanded:
-      setTargetExpanded,
+  function initializeLocalUiState() {
+    selectLeftOrbitLocal(
+      "audits"
+    );
 
-    reloadTargetFrame:
-      reloadTargetFrame,
+    selectReportModeLocal(
+      "read"
+    );
 
-    applyReceiptFilter:
-      applyReceiptFilter,
+    selectObservationLensLocal(
+      "target"
+    );
 
-    selectReceipt:
-      selectReceipt,
+    selectInstrumentChamberLocal(
+      "cycle"
+    );
 
-    inspectControls:
-      inspectControls,
+    setTargetExpanded(false);
 
-    resolveEngine:
-      resolveEngine,
+    state.ui.receiptFilter =
+      "all";
+  }
 
-    closeAllSelectors:
-      closeAllSelectors,
+  function init() {
+    if (state.initialized) {
+      return;
+    }
 
-    getState:
-      getPublicState,
+    state.initialized =
+      true;
 
-    getFallbackReport:
-      function getFallbackReport() {
-        return frozenClone(
-          state.reports.fallbackCurrent
-        );
-      },
+    state.initializedAt =
+      nowIso();
 
-    getFallbackArchive:
-      function getFallbackArchive() {
-        return frozenClone(
-          state.archive.fallbackCurrent
-        );
-      },
+    bindEvents();
+    publishApi();
+    initializeLocalUiState();
+    inspectControls();
+    renderEngineState();
+    renderReceiptList();
+    publishReceipt();
 
-    getReceipt:
-      function getReceipt() {
-        return frozenClone(
-          root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
-          null
-        );
+    recordAction(
+      "initialize",
+      {
+        eventDelegationActive:
+          state.controls.eventDelegationActive,
+        createReportControlPresent:
+          state.controls.createReportPresent,
+        engineReady:
+          state.engine.ready
       }
-  });
+    );
 
-root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL =
-  api;
+    toast(
+      state.engine.ready
+        ? "Audralia control panel bound."
+        : "Control panel bound; fallback READ path active.",
+      state.engine.ready
+        ? "READY"
+        : "HELD"
+    );
+  }
 
-if (
-  !root.AUDRALIA ||
-  typeof root.AUDRALIA !== "object"
-) {
-  root.AUDRALIA = {};
-}
+  var existing =
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL;
 
-root.AUDRALIA.dropWithReadControlPanel =
-  api;
+  if (
+    existing &&
+    (
+      existing.CONTRACT === CONTRACT ||
+      existing.contract === CONTRACT
+    )
+  ) {
+    return;
+  }
 
-root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_LOADED__ =
-  true;
-
-root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_CONTRACT__ =
-  CONTRACT;
-
-root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_VERSION__ =
-  VERSION;
-
-return api;
-
-}
-
-function initializeLocalUiState() {
-selectLeftOrbitLocal(
-"audits"
-);
-
-selectReportModeLocal(
-  "read"
-);
-
-selectObservationLensLocal(
-  "target"
-);
-
-selectInstrumentChamberLocal(
-  "cycle"
-);
-
-setTargetExpanded(false);
-
-state.ui.receiptFilter =
-  "all";
-
-applyReceiptFilter(
-  "all"
-);
-
-}
-
-function init() {
-if (state.initialized) {
-return;
-}
-
-state.initialized =
-  true;
-
-state.initializedAt =
-  nowIso();
-
-bindEvents();
-publishApi();
-initializeLocalUiState();
-inspectControls();
-renderEngineState();
-publishReceipt();
-
-toast(
-  state.engine.ready
-    ? "Audralia control panel bound."
-    : "Control panel bound; fallback READ path active.",
-  state.engine.ready
-    ? "READY"
-    : "HELD"
-);
-
-}
-
-var existing =
-root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL;
-
-if (
-existing &&
-existing.CONTRACT === CONTRACT
-) {
-return;
-}
-
-if (doc.readyState === "loading") {
-doc.addEventListener(
-"DOMContentLoaded",
-init,
-{
-once: true
-}
-);
-} else {
-init();
-}
+  if (
+    doc.readyState === "loading"
+  ) {
+    doc.addEventListener(
+      "DOMContentLoaded",
+      init,
+      {
+        once: true
+      }
+    );
+  } else {
+    init();
+  }
 })(
-typeof window !== "undefined"
-? window
-: typeof globalThis !== "undefined"
-? globalThis
-: this
+  typeof window !== "undefined"
+    ? window
+    : typeof globalThis !== "undefined"
+      ? globalThis
+      : this
 );

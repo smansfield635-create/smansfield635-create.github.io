@@ -1,5 +1,5 @@
 <!-- /showroom/globe/audralia/index.html -->
-<!-- AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5 -->
+<!-- AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v6 -->
 <!-- Full-file replacement. -->
 <!doctype html>
 <html
@@ -7,9 +7,9 @@
   data-route="/showroom/globe/audralia/"
   data-page="audralia-conservatory"
   data-room="audralia-conservatory"
-  data-contract="AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5"
-  data-previous-contract="AUDRALIA_CONSERVATORY_DIRECTIONAL_PATHS_HTML_TNT_v4"
-  data-css-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
+  data-contract="AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v6"
+  data-previous-contract="AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5"
+  data-css-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v3"
   data-route-family="diamond-gate-bridge"
   data-world-family="mirrorland"
   data-current-role="planetary-holder"
@@ -21,29 +21,14 @@
   data-mirrorland-previous-room-name="atlas-study"
   data-mirrorland-next-room="/characters/"
   data-mirrorland-next-room-name="portrait-hall"
-  data-backward-navigation-owner="compass-dialog"
-  data-broad-navigation-owner="house-control-pad"
-  data-forward-navigation-owner="deeper-into-mirrorland-section"
   data-engine-diagnostic-door-owner="audralia-header-actions"
   data-engine-diagnostic-route="/showroom/globe/audralia/diagnostic/"
   data-engine-diagnostic-door-state="available"
   data-engine-diagnostic-door-position="header"
   data-engine-diagnostic-door-count="1"
+  data-engine-diagnostic-door-style="technical-glow-primary"
   data-construction-engine-state="core-constructed-registry-connected"
   data-construction-engine-provider="dgb-interactive-runtime-engine"
-  data-future-experience-count="2"
-  data-future-experience-one="audralia-storyworld"
-  data-future-experience-two="mirror-me-journey"
-  data-character-spirit-assignment="coming-soon"
-  data-mirror-me-journey="coming-soon"
-  data-mirror-mes-journey="coming-soon"
-  data-frontier-science-storyworld="coming-soon"
-  data-race-the-clock-storyline="coming-soon"
-  data-deeper-path-count="4"
-  data-deeper-path-one="portrait-hall"
-  data-deeper-path-two="audralia-worldroom"
-  data-deeper-path-three="control-cockpit"
-  data-deeper-path-four="frontier-workshop-yard"
   data-exposed-copy="minimal"
   data-visible-receipts="false"
   data-final-visual-pass="false"
@@ -93,9 +78,9 @@
 
   <link
     rel="stylesheet"
-    href="/showroom/globe/audralia/index.css?v=AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
+    href="/showroom/globe/audralia/index.css?v=AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v3"
     data-audralia-conservatory-styles
-    data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2"
+    data-contract="AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v3"
   >
 
   <script
@@ -198,14 +183,30 @@
 
           <a
             id="audralia-engine-diagnostic-door"
-            class="audralia-header-action"
+            class="audralia-header-action audralia-header-action-primary audralia-diagnostic-primary"
             href="/showroom/globe/audralia/diagnostic/"
             data-audralia-engine-diagnostic-door
             data-audralia-direction="diagnostic"
             data-audralia-destination="engine-diagnostic-track"
+            data-audralia-action-priority="primary"
+            data-audralia-action-style="technical-glow"
             aria-label="Open the Audralia engine diagnostic track"
           >
-            Engine Diagnostic
+            <span
+              class="audralia-diagnostic-door-core"
+              data-audralia-diagnostic-door-core
+            >
+              <span
+                class="audralia-diagnostic-door-light"
+                aria-hidden="true"
+              ></span>
+
+              <span
+                class="audralia-diagnostic-door-label"
+              >
+                Engine Diagnostic
+              </span>
+            </span>
           </a>
 
           <button
@@ -705,32 +706,7 @@
         <p>
           The Atrium is the entrance into Mirrorland. The Atlas Study
           follows the Atrium and leads to the Audralia Conservatory.
-          These paths move back toward the entrance.
         </p>
-
-        <section
-          class="audralia-attractions"
-          aria-labelledby="audralia-compass-current-title"
-          style="margin-top:20px"
-        >
-          <div class="audralia-attraction-card">
-            <div class="audralia-attraction-part">
-              Current Position
-            </div>
-
-            <h3
-              id="audralia-compass-current-title"
-              class="audralia-attraction-title"
-            >
-              You Are Here · Audralia Conservatory
-            </h3>
-
-            <p class="audralia-attraction-teaser">
-              Continue downward on this page to go deeper into
-              Mirrorland, or use one of the return paths below.
-            </p>
-          </div>
-        </section>
 
         <nav
           class="audralia-attractions"
@@ -980,7 +956,13 @@
       }
 
       const CONTRACT =
+        "AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v6";
+
+      const PREVIOUS_CONTRACT =
         "AUDRALIA_CONSERVATORY_ENGINE_DIAGNOSTIC_DOOR_DIRECTIONAL_PATHS_HTML_TNT_v5";
+
+      const CSS_CONTRACT =
+        "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v3";
 
       const root =
         document.documentElement;
@@ -1033,13 +1015,6 @@
         trigger.setAttribute(
           "aria-expanded",
           expanded ? "true" : "false"
-        );
-      }
-
-      function setMapExpanded(expanded) {
-        setTriggerExpanded(
-          mapButton,
-          expanded
         );
       }
 
@@ -1356,9 +1331,7 @@
 
         setDatasetValue(
           "audraliaPlanetRuntimeMounted",
-          status.mounted
-            ? "true"
-            : "false"
+          status.mounted ? "true" : "false"
         );
 
         setDatasetValue(
@@ -1368,9 +1341,7 @@
 
         setDatasetValue(
           "audraliaPlanetRuntimeContextLost",
-          status.contextLost
-            ? "true"
-            : "false"
+          status.contextLost ? "true" : "false"
         );
 
         if (
@@ -1479,7 +1450,11 @@
 
       function handleHouseReady() {
         prepareHouseDialog();
-        setMapExpanded(false);
+
+        setTriggerExpanded(
+          mapButton,
+          false
+        );
       }
 
       function handleHouseOpen() {
@@ -1493,11 +1468,17 @@
           }
         );
 
-        setMapExpanded(true);
+        setTriggerExpanded(
+          mapButton,
+          true
+        );
       }
 
       function handleHouseClose() {
-        setMapExpanded(false);
+        setTriggerExpanded(
+          mapButton,
+          false
+        );
       }
 
       document.addEventListener(
@@ -1552,8 +1533,11 @@
         root.dataset.audraliaConservatoryContract =
           CONTRACT;
 
+        root.dataset.audraliaPreviousConservatoryContract =
+          PREVIOUS_CONTRACT;
+
         root.dataset.audraliaCssContract =
-          "AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2";
+          CSS_CONTRACT;
 
         root.dataset.audraliaEngineDiagnosticRoute =
           "/showroom/globe/audralia/diagnostic/";
@@ -1562,6 +1546,14 @@
           diagnosticDoor
             ? "available"
             : "missing";
+
+        root.dataset.audraliaEngineDiagnosticDoorStyle =
+          "technical-glow-primary";
+
+        if (diagnosticDoor) {
+          diagnosticDoor.dataset.audraliaDiagnosticDoorReady =
+            "true";
+        }
 
         prepareHouseDialog();
         observeHouseInterface();

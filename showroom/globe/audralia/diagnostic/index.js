@@ -1,31 +1,15 @@
 // /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v3
-// Version: 3.0.0
-// Previous version: 2.0.0
+// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v4
 // Full-file replacement.
-//
-// Purpose:
-// - Control the reader-first Audralia diagnostic route.
-// - Read the governing contract, runtime core, and engine registry.
-// - Invoke the North conductor through its canonical createCycle() interface.
-// - Register all nine diagnostic stations before sealing and running the cycle.
-// - Preserve missing-evidence-as-HOLD behavior.
-// - Render summaries, receipts, ledgers, registry records, tabs, and target frame.
-//
-// Does not own:
-// - engine execution;
-// - renderer execution;
-// - WebGL/WebGPU initialization;
-// - runtime restart;
-// - production mutation;
-// - repair authorization;
-// - readiness, visual pass, or F21.
-//
-// Quiet load:
-// - no diagnostic run until explicitly requested;
-// - no engine instance creation;
-// - no adapter registration;
-// - no scheduler activation.
+// Diagnostic-only.
+// Read-only.
+// No production mutation.
+// No renderer authority.
+// No runtime restart authority.
+// No repair authority.
+// No readiness authority.
+// No visual pass authority.
+// No F21 authority.
 
 (function installAudraliaDiagnosticRouteController(global) {
   "use strict";
@@ -46,13 +30,13 @@
       : null;
 
   var CONTRACT =
-    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v3";
+    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v4";
 
   var PREVIOUS_CONTRACT =
-    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v2";
+    "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v3";
 
   var VERSION =
-    "3.0.0";
+    "4.0.0";
 
   var FILE =
     "/showroom/globe/audralia/diagnostic/index.js";
@@ -75,8 +59,20 @@
   var DEFAULT_ENGINE_ID =
     "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE";
 
+  var DEFAULT_ENGINE_FILE =
+    "/assets/engine/dgb.engine.js";
+
+  var DEFAULT_GOVERNING_ENGINE_FILE =
+    "/assets/engine/dgb.engine.contract.js";
+
   var TARGET_ROUTE =
     "/showroom/globe/audralia/";
+
+  var DIAGNOSTIC_ROUTE =
+    "/showroom/globe/audralia/diagnostic/";
+
+  var DIAGNOSTIC_ROOT_FILE =
+    "/showroom/globe/audralia/diagnostic/index.html";
 
   var TARGET_FRAME_ID =
     "audraliaDiagnosticTargetFrame";
@@ -85,13 +81,13 @@
     "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_REQUEST_v1";
 
   var LEDGER_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v3";
+    "AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v4";
 
   var RECEIPT_SCHEMA =
     "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
 
   var READER_REPORT_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_READER_REPORT_v3";
+    "AUDRALIA_DIAGNOSTIC_READER_REPORT_v4";
 
   var NO_CLAIMS =
     deepFreeze({
@@ -241,8 +237,7 @@
       {
         parentPosition: 8,
         role: "SOUTH_SURFACE_POINTER",
-        file:
-          "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
+        file: "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
         globalPaths: [
           "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER",
           "AUDRALIA.diagnosticSouthSurfacePointer",
@@ -254,43 +249,29 @@
   var state = {
     initialized: false,
     running: false,
-
     cycleId: "",
     lastRunAt: null,
-
     registrySnapshot: null,
     registryReceipt: null,
     authorityRecords: [],
     engineRecords: [],
     selectedEngine: null,
-
     engineInspection: null,
     engineOps: null,
     engineReceipt: null,
-
     conductorResult: null,
     conductorReceipt: null,
     conductorState: null,
-
     stationRegistrations: [],
     auxiliaryRegistrations: [],
-
     receipts: [],
     ledger: null,
     readerReport: "",
     rawLedgerText: "",
-
     lastError: null
   };
 
-  function station(
-    position,
-    stationId,
-    label,
-    fibonacci,
-    file,
-    globalPaths
-  ) {
+  function station(position, stationId, label, fibonacci, file, globalPaths) {
     return {
       position: position,
       stationId: stationId,
@@ -302,17 +283,11 @@
   }
 
   function byId(id) {
-    return doc
-      ? doc.getElementById(id)
-      : null;
+    return doc ? doc.getElementById(id) : null;
   }
 
   function isObject(value) {
-    return Boolean(
-      value &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    );
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
   function isFunction(value) {
@@ -327,7 +302,22 @@
     }
   }
 
+  function firstString() {
+    var index;
+
+    for (index = 0; index < arguments.length; index += 1) {
+      if (typeof arguments[index] === "string" && arguments[index].length) {
+        return arguments[index];
+      }
+    }
+
+    return null;
+  }
+
   function clone(value, seen) {
+    var memory;
+    var output;
+
     if (
       value === null ||
       value === undefined ||
@@ -357,8 +347,7 @@
       }
     }
 
-    var memory =
-      seen || [];
+    memory = seen || [];
 
     if (memory.indexOf(value) !== -1) {
       return "[Circular]";
@@ -368,25 +357,17 @@
 
     if (Array.isArray(value)) {
       return value.map(function cloneEntry(entry) {
-        return clone(
-          entry,
-          memory.slice()
-        );
+        return clone(entry, memory.slice());
       });
     }
 
-    var output = {};
+    output = {};
 
     Object.keys(value).forEach(function cloneProperty(key) {
       try {
-        output[key] =
-          clone(
-            value[key],
-            memory.slice()
-          );
+        output[key] = clone(value[key], memory.slice());
       } catch (_error) {
-        output[key] =
-          "[Unreadable]";
+        output[key] = "[Unreadable]";
       }
     });
 
@@ -394,18 +375,13 @@
   }
 
   function deepFreeze(value, seen) {
-    if (
-      !value ||
-      (
-        typeof value !== "object" &&
-        typeof value !== "function"
-      )
-    ) {
+    var memory;
+
+    if (!value || (typeof value !== "object" && typeof value !== "function")) {
       return value;
     }
 
-    var memory =
-      seen || [];
+    memory = seen || [];
 
     if (memory.indexOf(value) !== -1) {
       return value;
@@ -414,24 +390,17 @@
     memory.push(value);
 
     try {
-      Object.getOwnPropertyNames(value).forEach(
-        function freezeProperty(key) {
-          var child;
+      Object.getOwnPropertyNames(value).forEach(function freezeProperty(key) {
+        var child;
 
-          try {
-            child =
-              value[key];
-          } catch (_error) {
-            child =
-              null;
-          }
-
-          deepFreeze(
-            child,
-            memory
-          );
+        try {
+          child = value[key];
+        } catch (_error) {
+          child = null;
         }
-      );
+
+        deepFreeze(child, memory);
+      });
 
       Object.freeze(value);
     } catch (_error) {}
@@ -440,24 +409,21 @@
   }
 
   function frozenClone(value) {
-    return deepFreeze(
-      clone(value)
-    );
+    return deepFreeze(clone(value));
   }
 
   function safeJson(value) {
     try {
-      return JSON.stringify(
-        clone(value),
-        null,
-        2
-      );
+      return JSON.stringify(clone(value), null, 2);
     } catch (_error) {
       return String(value);
     }
   }
 
   function stablePrepare(value, seen) {
+    var memory;
+    var output;
+
     if (
       value === null ||
       value === undefined ||
@@ -476,8 +442,7 @@
       return "[Function]";
     }
 
-    var memory =
-      seen || [];
+    memory = seen || [];
 
     if (memory.indexOf(value) !== -1) {
       return "[Circular]";
@@ -487,82 +452,53 @@
 
     if (Array.isArray(value)) {
       return value.map(function prepareEntry(entry) {
-        return stablePrepare(
-          entry,
-          memory.slice()
-        );
+        return stablePrepare(entry, memory.slice());
       });
     }
 
-    var output = {};
+    output = {};
 
-    Object.keys(value)
-      .sort()
-      .forEach(function prepareProperty(key) {
-        output[key] =
-          stablePrepare(
-            value[key],
-            memory.slice()
-          );
-      });
+    Object.keys(value).sort().forEach(function prepareProperty(key) {
+      output[key] = stablePrepare(value[key], memory.slice());
+    });
 
     return output;
   }
 
   function hashObject(value) {
     var text;
+    var result;
+    var index;
 
     try {
-      text =
-        JSON.stringify(
-          stablePrepare(value)
-        );
+      text = JSON.stringify(stablePrepare(value));
     } catch (_error) {
-      text =
-        String(value);
+      text = String(value);
     }
 
-    var result =
-      0x811c9dc5;
+    result = 0x811c9dc5;
 
-    for (
-      var index = 0;
-      index < text.length;
-      index += 1
-    ) {
-      result ^=
-        text.charCodeAt(index);
-
-      result =
-        Math.imul(
-          result,
-          0x01000193
-        ) >>> 0;
+    for (index = 0; index < text.length; index += 1) {
+      result ^= text.charCodeAt(index);
+      result = Math.imul(result, 0x01000193) >>> 0;
     }
 
-    return (
-      "fnv1a32-" +
-      (
-        "00000000" +
-        result.toString(16)
-      ).slice(-8)
-    );
+    return "fnv1a32-" + ("00000000" + result.toString(16)).slice(-8);
   }
 
   function readPath(path) {
-    var parts =
+    var parts;
+    var cursor;
+    var index;
+
+    parts =
       String(path || "")
         .split(".")
         .filter(Boolean);
 
-    var cursor =
-      root;
+    cursor = root;
 
-    for (
-      var index = 0;
-      index < parts.length;
-      index += 1
-    ) {
+    for (index = 0; index < parts.length; index += 1) {
       if (
         cursor === null ||
         cursor === undefined ||
@@ -572,21 +508,18 @@
         return null;
       }
 
-      cursor =
-        cursor[parts[index]];
+      cursor = cursor[parts[index]];
     }
 
     return cursor;
   }
 
   function readFirst(paths) {
-    for (
-      var index = 0;
-      index < paths.length;
-      index += 1
-    ) {
-      var value =
-        readPath(paths[index]);
+    var index;
+    var value;
+
+    for (index = 0; index < paths.length; index += 1) {
+      value = readPath(paths[index]);
 
       if (value) {
         return {
@@ -602,59 +535,72 @@
     };
   }
 
-  function callSafely(
-    object,
-    methodName,
-    args,
-    fallback
-  ) {
-    if (
-      !object ||
-      !isFunction(object[methodName])
-    ) {
+  function callSafely(object, methodName, args, fallback) {
+    if (!object || !isFunction(object[methodName])) {
       return fallback;
     }
 
     try {
-      return object[methodName].apply(
-        object,
-        Array.isArray(args)
-          ? args
-          : []
-      );
+      return object[methodName].apply(object, Array.isArray(args) ? args : []);
     } catch (_error) {
       return fallback;
     }
   }
 
+  function normalizePathClass(file) {
+    if (!file || typeof file !== "string") {
+      return "UNKNOWN";
+    }
+
+    if (
+      file === DIAGNOSTIC_ROUTE ||
+      file.indexOf("/showroom/globe/audralia/diagnostic/") === 0
+    ) {
+      return "AUDRALIA_DIAGNOSTIC_ROUTE";
+    }
+
+    if (
+      file === TARGET_ROUTE ||
+      file.indexOf("/showroom/globe/audralia/") === 0
+    ) {
+      return "AUDRALIA_ROUTE";
+    }
+
+    if (file.indexOf("/assets/audralia/") === 0) {
+      return "AUDRALIA_ASSET";
+    }
+
+    if (file.indexOf("/assets/engine/") === 0) {
+      return "DGB_ENGINE_ASSET";
+    }
+
+    if (file.indexOf("/assets/") === 0) {
+      return "ENGINE_ASSET";
+    }
+
+    return "UNKNOWN";
+  }
+
   function setText(id, value) {
-    var node =
-      byId(id);
+    var node = byId(id);
 
     if (node) {
       node.textContent =
-        value === null ||
-        value === undefined
+        value === null || value === undefined
           ? ""
           : String(value);
     }
   }
 
   function setDisabled(id, disabled) {
-    var node =
-      byId(id);
+    var node = byId(id);
 
     if (node) {
-      node.disabled =
-        Boolean(disabled);
+      node.disabled = Boolean(disabled);
     }
   }
 
-  function setClassState(
-    node,
-    names,
-    active
-  ) {
+  function setClassState(node, names, active) {
     if (!node) {
       return;
     }
@@ -669,12 +615,7 @@
   }
 
   function escapeHtml(value) {
-    return String(
-      value === null ||
-      value === undefined
-        ? ""
-        : value
-    )
+    return String(value === null || value === undefined ? "" : value)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
@@ -683,49 +624,32 @@
   }
 
   function toast(message) {
-    var node =
-      byId("toast");
+    var node = byId("toast");
 
     if (!node) {
       return;
     }
 
-    node.textContent =
-      String(message || "");
-
+    node.textContent = String(message || "");
     node.classList.add("show");
     node.classList.add("visible");
+    node.setAttribute("data-visible", "true");
 
-    node.setAttribute(
-      "data-visible",
-      "true"
-    );
-
-    if (toast._timer) {
-      root.clearTimeout(
-        toast._timer
-      );
+    if (toast._timer && root.clearTimeout) {
+      root.clearTimeout(toast._timer);
     }
 
-    toast._timer =
-      root.setTimeout(
-        function hideToast() {
+    if (root.setTimeout) {
+      toast._timer =
+        root.setTimeout(function hideToast() {
           node.classList.remove("show");
           node.classList.remove("visible");
-
-          node.setAttribute(
-            "data-visible",
-            "false"
-          );
-        },
-        2200
-      );
+          node.setAttribute("data-visible", "false");
+        }, 2200);
+    }
   }
 
-  function normalizeStatus(
-    value,
-    fallback
-  ) {
+  function normalizeStatus(value, fallback) {
     var status =
       typeof value === "string"
         ? value.trim().toUpperCase()
@@ -747,22 +671,13 @@
       CONFLICTING: true
     };
 
-    return allowed[status]
-      ? status
-      : fallback || "UNKNOWN";
+    return allowed[status] ? status : fallback || "UNKNOWN";
   }
 
   function statusClass(status) {
-    var value =
-      normalizeStatus(
-        status,
-        "UNKNOWN"
-      );
+    var value = normalizeStatus(status, "UNKNOWN");
 
-    if (
-      value === "PASS" ||
-      value === "COMPLETE"
-    ) {
+    if (value === "PASS" || value === "COMPLETE") {
       return "pass";
     }
 
@@ -775,17 +690,11 @@
       return "hold";
     }
 
-    if (
-      value === "FAIL" ||
-      value === "FAILED"
-    ) {
+    if (value === "FAIL" || value === "FAILED") {
       return "fail";
     }
 
-    if (
-      value === "CONFLICT" ||
-      value === "CONFLICTING"
-    ) {
+    if (value === "CONFLICT" || value === "CONFLICTING") {
       return "conflict";
     }
 
@@ -801,20 +710,15 @@
   }
 
   function setGauge(percent, status) {
-    var gauge =
-      byId("overallGauge");
+    var gauge = byId("overallGauge");
+    var value = byId("overallGaugeValue");
+    var safePercent;
 
-    var value =
-      byId("overallGaugeValue");
-
-    if (
-      !gauge ||
-      !value
-    ) {
+    if (!gauge || !value) {
       return;
     }
 
-    var safePercent =
+    safePercent =
       Math.max(
         0,
         Math.min(
@@ -825,11 +729,7 @@
 
     gauge.style.setProperty(
       "--gauge-progress",
-      String(
-        Math.round(
-          safePercent * 3.6
-        )
-      ) + "deg"
+      String(Math.round(safePercent * 3.6)) + "deg"
     );
 
     setClassState(
@@ -850,20 +750,14 @@
       statusClass(status)
     );
 
-    value.textContent =
-      String(
-        Math.round(safePercent)
-      ) + "%";
+    value.textContent = String(Math.round(safePercent)) + "%";
 
     gauge.setAttribute(
       "aria-label",
       "Overall diagnostic gauge " +
-      String(Math.round(safePercent)) +
-      " percent, status " +
-      normalizeStatus(
-        status,
-        "UNKNOWN"
-      )
+        String(Math.round(safePercent)) +
+        " percent, status " +
+        normalizeStatus(status, "UNKNOWN")
     );
   }
 
@@ -871,6 +765,9 @@
     return (
       root.DGB_ENGINE_SUBJECT_REGISTRY ||
       root.DGBEngineSubjectRegistry ||
+      root.DGB_ENGINE_SUBJECTS ||
+      root.DGB_ENGINE_REGISTRY ||
+      root.DGB_ENGINE_SUBJECTS_REGISTRY ||
       null
     );
   }
@@ -886,114 +783,136 @@
   function getConductor() {
     return (
       root.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR ||
-      readPath(
-        "AUDRALIA.diagnosticNorthConductor"
-      ) ||
-      readPath(
-        "AUDRALIA.diagnostics.northConductor"
-      ) ||
+      readPath("AUDRALIA.diagnosticNorthConductor") ||
+      readPath("AUDRALIA.diagnostics.northConductor") ||
       null
     );
   }
 
   function refreshRegistryState() {
-    var registry =
-      getRegistry();
+    var registry = getRegistry();
+    var snapshot;
+    var receipt;
+    var authorityRecords;
+    var engineRecords;
+    var selectedEngine;
+    var inspection;
 
     if (!registry) {
-      state.registrySnapshot =
-        null;
-
-      state.registryReceipt =
-        null;
-
-      state.authorityRecords =
-        [];
-
-      state.engineRecords =
-        [];
-
-      state.selectedEngine =
-        null;
-
+      state.registrySnapshot = null;
+      state.registryReceipt = null;
+      state.authorityRecords = [];
+      state.engineRecords = [];
+      state.selectedEngine = null;
       return;
     }
 
-    callSafely(
-      registry,
-      "refresh",
-      [],
-      null
-    );
+    callSafely(registry, "refresh", [], null);
 
-    state.registrySnapshot =
-      frozenClone(
-        callSafely(
-          registry,
-          "getSnapshot",
-          [],
-          null
-        )
+    snapshot =
+      callSafely(registry, "getSnapshot", [], null);
+
+    receipt =
+      callSafely(registry, "getRegistryReceipt", [], null) ||
+      callSafely(registry, "getReceipt", [], null) ||
+      root.DGB_ENGINE_REGISTRY_RECEIPT ||
+      root.DGB_ENGINE_SUBJECTS_RECEIPT ||
+      null;
+
+    authorityRecords =
+      callSafely(registry, "listAuthorities", [], null);
+
+    engineRecords =
+      callSafely(
+        registry,
+        "listEngines",
+        [
+          {
+            includeReserved: true,
+            selectableOnly: false
+          }
+        ],
+        null
       );
 
-    state.registryReceipt =
-      frozenClone(
-        callSafely(
-          registry,
-          "getRegistryReceipt",
-          [],
-          null
-        )
-      );
+    selectedEngine =
+      callSafely(registry, "getDefaultEngine", [], null);
 
-    state.authorityRecords =
-      frozenClone(
-        callSafely(
-          registry,
-          "listAuthorities",
-          [],
-          []
-        ) || []
-      );
+    if (!snapshot && isFunction(registry.inspect)) {
+      inspection =
+        callSafely(registry, "inspect", [], null);
 
-    state.engineRecords =
-      frozenClone(
-        callSafely(
-          registry,
-          "listEngines",
-          [
-            {
-              includeReserved: true,
-              selectableOnly: false
-            }
-          ],
-          []
-        ) || []
-      );
+      if (inspection) {
+        snapshot = inspection;
+        receipt = receipt || inspection.receipt || null;
+        selectedEngine =
+          selectedEngine ||
+          inspection.selectedEngine ||
+          inspection.coreEngine ||
+          (
+            inspection.receipt
+              ? inspection.receipt.coreEngine
+              : null
+          );
+      }
+    }
 
-    state.selectedEngine =
-      frozenClone(
-        callSafely(
-          registry,
-          "getDefaultEngine",
-          [],
-          null
-        )
-      );
+    if (!authorityRecords && registry.authority) {
+      authorityRecords = [registry.authority];
+    }
+
+    if (!authorityRecords && snapshot && snapshot.authority) {
+      authorityRecords = [snapshot.authority];
+    }
+
+    if (!engineRecords && selectedEngine) {
+      engineRecords = [selectedEngine];
+    }
+
+    state.registrySnapshot = frozenClone(snapshot);
+    state.registryReceipt = frozenClone(receipt);
+    state.authorityRecords = frozenClone(Array.isArray(authorityRecords) ? authorityRecords : []);
+    state.engineRecords = frozenClone(Array.isArray(engineRecords) ? engineRecords : []);
+    state.selectedEngine = frozenClone(selectedEngine || deriveSelectedEngineFromReceipt(receipt));
+  }
+
+  function deriveSelectedEngineFromReceipt(receipt) {
+    if (!receipt) {
+      return null;
+    }
+
+    if (receipt.coreEngine) {
+      return {
+        engineId: receipt.coreEngine.engineId || DEFAULT_ENGINE_ID,
+        engineName: "DGB Interactive Runtime Engine Core",
+        role: "RUNTIME_ENGINE",
+        file: DEFAULT_ENGINE_FILE,
+        contract: CORE_ENGINE_CONTRACT,
+        version: "1.0.0",
+        governingContract: GOVERNING_ENGINE_CONTRACT,
+        governingContractFile: DEFAULT_GOVERNING_ENGINE_FILE,
+        modelSchema: "DGB_MODEL_PACKAGE_v1",
+        loaded: receipt.coreEngine.loaded !== false,
+        identityMatched: receipt.coreEngine.identityMatched !== false,
+        governingContractMatched: receipt.coreEngine.governingContractMatched !== false,
+        selectable: receipt.coreEngine.selectable !== false,
+        status: receipt.coreEngine.status || "AVAILABLE",
+        f13InheritedConditionally: receipt.coreEngine.f13InheritedConditionally === true,
+        f21Claimed: false
+      };
+    }
+
+    return null;
   }
 
   function inspectEngineState() {
-    var engine =
-      getEngine();
+    var engine = getEngine();
+    var instanceIds = [];
+    var listed;
+    var instanceId;
 
-    var instanceIds =
-      [];
-
-    if (
-      engine &&
-      isFunction(engine.listInstances)
-    ) {
-      var listed =
+    if (engine && isFunction(engine.listInstances)) {
+      listed =
         callSafely(
           engine,
           "listInstances",
@@ -1013,10 +932,7 @@
                 return entry;
               }
 
-              if (
-                entry &&
-                typeof entry.instanceId === "string"
-              ) {
+              if (entry && typeof entry.instanceId === "string") {
                 return entry.instanceId;
               }
 
@@ -1034,15 +950,14 @@
       }
     }
 
-    var instanceId =
+    instanceId =
       instanceIds.length
         ? instanceIds[0]
         : null;
 
     state.engineInspection =
       frozenClone(
-        engine &&
-        isFunction(engine.inspect)
+        engine && isFunction(engine.inspect)
           ? callSafely(
               engine,
               "inspect",
@@ -1061,15 +976,8 @@
 
     state.engineOps =
       frozenClone(
-        engine &&
-        instanceId &&
-        isFunction(engine.getOps)
-          ? callSafely(
-              engine,
-              "getOps",
-              [instanceId],
-              null
-            )
+        engine && instanceId && isFunction(engine.getOps)
+          ? callSafely(engine, "getOps", [instanceId], null)
           : null
       );
 
@@ -1078,80 +986,63 @@
         engine
           ? (
               isFunction(engine.getRuntimeReceipt)
-                ? callSafely(
-                    engine,
-                    "getRuntimeReceipt",
-                    [],
-                    null
-                  )
+                ? callSafely(engine, "getRuntimeReceipt", [], null)
                 : isFunction(engine.getReceipt)
-                  ? callSafely(
-                      engine,
-                      "getReceipt",
-                      [],
-                      null
-                    )
+                  ? callSafely(engine, "getReceipt", [], null)
                   : null
             )
           : null
       );
   }
 
-  function readObserved(
-    source,
-    key
-  ) {
-    if (
-      !source ||
-      !Object.prototype.hasOwnProperty.call(
-        Object(source),
-        key
-      )
-    ) {
+  function readObserved(source, key) {
+    var value;
+
+    if (!source || !Object.prototype.hasOwnProperty.call(Object(source), key)) {
       return null;
     }
 
-    var value =
-      source[key];
+    value = source[key];
 
-    return (
-      value === null ||
-      value === undefined
-        ? null
-        : clone(value)
+    return value === null || value === undefined
+      ? null
+      : clone(value);
+  }
+
+  function getSelectedEngineFile() {
+    return firstString(
+      state.selectedEngine && state.selectedEngine.file,
+      state.engineReceipt && state.engineReceipt.file,
+      state.engineInspection && state.engineInspection.file,
+      DEFAULT_ENGINE_FILE
+    );
+  }
+
+  function getSelectedEngineContract() {
+    return firstString(
+      state.selectedEngine && state.selectedEngine.contract,
+      state.engineReceipt && state.engineReceipt.contract,
+      state.engineInspection && state.engineInspection.contract,
+      CORE_ENGINE_CONTRACT
+    );
+  }
+
+  function getSelectedEngineVersion() {
+    return firstString(
+      state.selectedEngine && state.selectedEngine.version,
+      state.engineReceipt && state.engineReceipt.version,
+      state.engineInspection && state.engineInspection.version,
+      "1.0.0"
     );
   }
 
   function buildRuntimeEvidence() {
-    var ops =
-      state.engineOps;
-
-    var inspection =
-      state.engineInspection;
-
-    var observed =
-      ops &&
-      isObject(ops.observed)
-        ? ops.observed
-        : {};
-
-    var lifecycle =
-      inspection &&
-      isObject(inspection.lifecycle)
-        ? inspection.lifecycle
-        : null;
-
-    var renderer =
-      inspection &&
-      isObject(inspection.renderer)
-        ? inspection.renderer
-        : null;
-
-    var fallback =
-      inspection &&
-      isObject(inspection.fallback)
-        ? inspection.fallback
-        : null;
+    var ops = state.engineOps;
+    var inspection = state.engineInspection;
+    var observed = ops && isObject(ops.observed) ? ops.observed : {};
+    var lifecycle = inspection && isObject(inspection.lifecycle) ? inspection.lifecycle : null;
+    var renderer = inspection && isObject(inspection.renderer) ? inspection.renderer : null;
+    var fallback = inspection && isObject(inspection.fallback) ? inspection.fallback : null;
 
     return deepFreeze({
       classification:
@@ -1167,150 +1058,100 @@
             : "UNAVAILABLE",
 
       engineId:
-        state.selectedEngine
+        state.selectedEngine && state.selectedEngine.engineId
           ? state.selectedEngine.engineId
           : DEFAULT_ENGINE_ID,
 
       engineLoaded:
         Boolean(
-          state.selectedEngine &&
-          state.selectedEngine.loaded
+          state.selectedEngine
+            ? state.selectedEngine.loaded !== false
+            : getEngine()
         ),
 
       contractMatched:
         Boolean(
-          state.selectedEngine &&
-          state.selectedEngine.governingContractMatched
+          state.selectedEngine
+            ? state.selectedEngine.governingContractMatched !== false
+            : false
         ),
 
+      file:
+        getSelectedEngineFile(),
+
+      contract:
+        getSelectedEngineContract(),
+
+      version:
+        getSelectedEngineVersion(),
+
       backend:
-        ops &&
-        typeof ops.backend === "string"
+        ops && typeof ops.backend === "string"
           ? ops.backend
-          : renderer &&
-            typeof renderer.selectedBackend === "string"
+          : renderer && typeof renderer.selectedBackend === "string"
             ? renderer.selectedBackend
             : "NONE",
 
       state:
-        ops &&
-        typeof ops.state === "string"
+        ops && typeof ops.state === "string"
           ? ops.state
-          : lifecycle &&
-            typeof lifecycle.progressState === "string"
+          : lifecycle && typeof lifecycle.progressState === "string"
             ? lifecycle.progressState
             : "UNKNOWN",
 
       lifecycle:
-        lifecycle
-          ? frozenClone(lifecycle)
-          : null,
+        lifecycle ? frozenClone(lifecycle) : null,
 
       fileLoaded:
-        readObserved(
-          observed,
-          "fileLoaded"
-        ),
+        readObserved(observed, "fileLoaded"),
 
       modelValidated:
-        readObserved(
-          observed,
-          "modelValidated"
-        ),
+        readObserved(observed, "modelValidated"),
 
       instanceCreated:
-        readObserved(
-          observed,
-          "instanceCreated"
-        ),
+        readObserved(observed, "instanceCreated"),
 
       mountPresent:
-        readObserved(
-          observed,
-          "mountPresent"
-        ),
+        readObserved(observed, "mountPresent"),
 
       surfaceNonzero:
-        readObserved(
-          observed,
-          "surfaceNonzero"
-        ),
+        readObserved(observed, "surfaceNonzero"),
 
       backendInitialized:
-        readObserved(
-          observed,
-          "backendInitialized"
-        ),
+        readObserved(observed, "backendInitialized"),
 
       resourcesUploaded:
-        readObserved(
-          observed,
-          "resourcesUploaded"
-        ),
+        readObserved(observed, "resourcesUploaded"),
 
       firstFrameSubmitted:
-        readObserved(
-          observed,
-          "firstFrameSubmitted"
-        ),
+        readObserved(observed, "firstFrameSubmitted"),
 
       firstFramePresented:
-        readObserved(
-          observed,
-          "firstFramePresented"
-        ),
+        readObserved(observed, "firstFramePresented"),
 
       visiblePixelObserved:
-        readObserved(
-          observed,
-          "visiblePixelObserved"
-        ),
+        readObserved(observed, "visiblePixelObserved"),
 
       interactionObserved:
-        readObserved(
-          observed,
-          "interactionObserved"
-        ),
+        readObserved(observed, "interactionObserved"),
 
       fallbackAvailable:
-        readObserved(
-          observed,
-          "fallbackAvailable"
-        ),
+        readObserved(observed, "fallbackAvailable"),
 
       contextRecoveryAvailable:
-        readObserved(
-          observed,
-          "contextRecoveryAvailable"
-        ),
+        readObserved(observed, "contextRecoveryAvailable"),
 
       noBlockingError:
-        readObserved(
-          observed,
-          "noBlockingError"
-        ),
+        readObserved(observed, "noBlockingError"),
 
       primaryVisibility:
-        renderer
-          ? readObserved(
-              renderer,
-              "visiblePixelObserved"
-            )
-          : null,
+        renderer ? readObserved(renderer, "visiblePixelObserved") : null,
 
       fallbackVisibility:
-        fallback
-          ? readObserved(
-              fallback,
-              "visibleOutputObserved"
-            )
-          : null,
+        fallback ? readObserved(fallback, "visibleOutputObserved") : null,
 
       evidenceAvailable:
-        Boolean(
-          ops ||
-          inspection
-        ),
+        Boolean(ops || inspection),
 
       evidenceUnavailableReason:
         ops || inspection
@@ -1320,29 +1161,17 @@
   }
 
   function inspectTargetFrame() {
-    var frame =
-      byId(TARGET_FRAME_ID);
-
-    var frameWindow =
-      null;
-
-    var frameDocument =
-      null;
-
-    var runtimeStatus =
-      null;
-
-    var accessible =
-      false;
-
-    var loaded =
-      false;
+    var frame = byId(TARGET_FRAME_ID);
+    var frameWindow = null;
+    var frameDocument = null;
+    var runtimeStatus = null;
+    var accessible = false;
+    var loaded = false;
+    var runtime;
 
     if (frame) {
       try {
-        frameWindow =
-          frame.contentWindow ||
-          null;
+        frameWindow = frame.contentWindow || null;
 
         frameDocument =
           frame.contentDocument ||
@@ -1352,44 +1181,39 @@
               : null
           );
 
-        accessible =
-          Boolean(frameDocument);
+        accessible = Boolean(frameDocument);
 
         loaded =
           Boolean(
             frameDocument &&
-            frameDocument.readyState === "complete"
+            (
+              frameDocument.readyState === "interactive" ||
+              frameDocument.readyState === "complete"
+            )
           );
 
-        var runtime =
-          frameWindow &&
-          frameWindow.DGBAudraliaPlanetRuntime
+        runtime =
+          frameWindow && frameWindow.DGBAudraliaPlanetRuntime
             ? frameWindow.DGBAudraliaPlanetRuntime
             : null;
 
-        if (
-          runtime &&
-          isFunction(runtime.getStatus)
-        ) {
+        if (runtime && isFunction(runtime.getStatus)) {
           runtimeStatus =
             frozenClone(
-              callSafely(
-                runtime,
-                "getStatus",
-                [],
-                null
-              )
+              callSafely(runtime, "getStatus", [], null)
+            );
+        } else if (frameWindow) {
+          runtimeStatus =
+            frozenClone(
+              frameWindow.AUDRALIA_PLANET_RUNTIME_RECEIPT ||
+              frameWindow.AUDRALIA_PLANET_ROUTE_RECEIPT ||
+              null
             );
         }
       } catch (_error) {
-        accessible =
-          false;
-
-        loaded =
-          false;
-
-        runtimeStatus =
-          null;
+        accessible = false;
+        loaded = false;
+        runtimeStatus = null;
       }
     }
 
@@ -1421,128 +1245,341 @@
           : "UNKNOWN",
 
       noClaims: {
-        iframePresenceProvesWebGL2:
-          false,
-
-        iframePresenceProvesSubmission:
-          false,
-
-        iframePresenceProvesPresentation:
-          false,
-
-        iframePresenceProvesVisibility:
-          false
+        iframePresenceProvesWebGL2: false,
+        iframePresenceProvesSubmission: false,
+        iframePresenceProvesPresentation: false,
+        iframePresenceProvesVisibility: false
       }
     });
   }
 
   function buildRegistryEvidence() {
-    var snapshot =
-      state.registrySnapshot;
-
-    var registry =
-      getRegistry();
+    var snapshot = state.registrySnapshot;
+    var registry = getRegistry();
+    var receipt = state.registryReceipt;
 
     return deepFreeze({
       registryLoaded:
         Boolean(registry),
 
       registryContract:
-        registry &&
-        (
-          registry.CONTRACT ||
-          registry.contract
-        )
-          ? (
-              registry.CONTRACT ||
-              registry.contract
-            )
-          : null,
+        firstString(
+          registry && registry.CONTRACT,
+          registry && registry.contract,
+          snapshot && snapshot.registryContract,
+          receipt && receipt.contract,
+          REGISTRY_CONTRACT
+        ),
 
       registryContractMatched:
         Boolean(
           registry &&
           (
-            registry.CONTRACT ===
-              REGISTRY_CONTRACT ||
-            registry.contract ===
-              REGISTRY_CONTRACT
+            registry.CONTRACT === REGISTRY_CONTRACT ||
+            registry.contract === REGISTRY_CONTRACT
           )
+        ) ||
+        Boolean(
+          snapshot &&
+          snapshot.registryContractMatched === true
+        ) ||
+        Boolean(
+          receipt &&
+          receipt.contract === REGISTRY_CONTRACT
         ),
 
       governingAuthorityCount:
         snapshot
-          ? Number(
-              snapshot.authorityCount || 0
-            )
+          ? Number(snapshot.authorityCount || snapshot.governingAuthorityCount || 0)
           : state.authorityRecords.length,
 
       assignedEngineCount:
         snapshot
-          ? Number(
-              snapshot.assignedEngineCount || 0
-            )
-          : state.engineRecords.filter(
-              function assigned(record) {
-                return Boolean(
-                  record &&
-                  !record.reserved
-                );
-              }
-            ).length,
+          ? Number(snapshot.assignedEngineCount || 0)
+          : state.engineRecords.filter(function assigned(record) {
+              return Boolean(record && !record.reserved);
+            }).length,
 
       selectableEngineCount:
         snapshot
-          ? Number(
-              snapshot.selectableEngineCount || 0
-            )
-          : state.engineRecords.filter(
-              function selectable(record) {
-                return Boolean(
-                  record &&
-                  record.selectable
-                );
-              }
-            ).length,
+          ? Number(snapshot.selectableEngineCount || 0)
+          : state.engineRecords.filter(function selectable(record) {
+              return Boolean(record && record.selectable);
+            }).length,
 
       reservedEngineCount:
         snapshot
-          ? Number(
-              snapshot.reservedEngineCount || 0
-            )
-          : state.engineRecords.filter(
-              function reserved(record) {
-                return Boolean(
-                  record &&
-                  record.reserved
-                );
-              }
-            ).length,
+          ? Number(snapshot.reservedEngineCount || 0)
+          : state.engineRecords.filter(function reserved(record) {
+              return Boolean(record && record.reserved);
+            }).length,
 
       authority:
         state.authorityRecords.length
-          ? frozenClone(
-              state.authorityRecords[0]
-            )
+          ? frozenClone(state.authorityRecords[0])
           : null,
 
       selectedEngine:
         state.selectedEngine
-          ? frozenClone(
-              state.selectedEngine
-            )
+          ? frozenClone(state.selectedEngine)
           : null,
 
       receipt:
-        state.registryReceipt
-          ? frozenClone(
-              state.registryReceipt
-            )
+        receipt
+          ? frozenClone(receipt)
           : null
     });
   }
 
+  function buildSubjectEvidence() {
+    return deepFreeze({
+      subjectId:
+        "AUDRALIA_DIAGNOSTIC_READER_ROUTE",
+
+      subjectType:
+        "THREE_D_DIAGNOSTIC_ROUTE",
+
+      modelSchema:
+        "DGB_MODEL_PACKAGE_v1",
+
+      contract:
+        CONTRACT,
+
+      previousContract:
+        PREVIOUS_CONTRACT,
+
+      version:
+        VERSION,
+
+      file:
+        FILE,
+
+      rootFile:
+        DIAGNOSTIC_ROOT_FILE,
+
+      route:
+        DIAGNOSTIC_ROUTE,
+
+      targetRoute:
+        TARGET_ROUTE,
+
+      filePathClass:
+        normalizePathClass(FILE),
+
+      rootFilePathClass:
+        normalizePathClass(DIAGNOSTIC_ROOT_FILE),
+
+      routePathClass:
+        normalizePathClass(DIAGNOSTIC_ROUTE),
+
+      targetRoutePathClass:
+        normalizePathClass(TARGET_ROUTE)
+    });
+  }
+
+  function buildEngineEvidence() {
+    return deepFreeze({
+      engineId:
+        state.selectedEngine && state.selectedEngine.engineId
+          ? state.selectedEngine.engineId
+          : DEFAULT_ENGINE_ID,
+
+      engineName:
+        state.selectedEngine && state.selectedEngine.engineName
+          ? state.selectedEngine.engineName
+          : "DGB Interactive Runtime Engine Core",
+
+      role:
+        state.selectedEngine && state.selectedEngine.role
+          ? state.selectedEngine.role
+          : "RUNTIME_ENGINE",
+
+      file:
+        getSelectedEngineFile(),
+
+      contract:
+        getSelectedEngineContract(),
+
+      version:
+        getSelectedEngineVersion(),
+
+      governingContract:
+        firstString(
+          state.selectedEngine && state.selectedEngine.governingContract,
+          state.engineReceipt && state.engineReceipt.governingContract,
+          GOVERNING_ENGINE_CONTRACT
+        ),
+
+      governingContractFile:
+        firstString(
+          state.selectedEngine && state.selectedEngine.governingContractFile,
+          DEFAULT_GOVERNING_ENGINE_FILE
+        ),
+
+      coreContract:
+        CORE_ENGINE_CONTRACT,
+
+      registryContract:
+        REGISTRY_CONTRACT,
+
+      defaultEngineId:
+        DEFAULT_ENGINE_ID,
+
+      modelSchema:
+        firstString(
+          state.selectedEngine && state.selectedEngine.modelSchema,
+          state.engineReceipt && state.engineReceipt.modelSchema,
+          "DGB_MODEL_PACKAGE_v1"
+        ),
+
+      filePathClass:
+        normalizePathClass(getSelectedEngineFile()),
+
+      loaded:
+        state.selectedEngine
+          ? state.selectedEngine.loaded !== false
+          : Boolean(getEngine()),
+
+      identityMatched:
+        state.selectedEngine
+          ? state.selectedEngine.identityMatched !== false
+          : false,
+
+      governingContractMatched:
+        state.selectedEngine
+          ? state.selectedEngine.governingContractMatched !== false
+          : false,
+
+      selectable:
+        state.selectedEngine
+          ? state.selectedEngine.selectable !== false
+          : false,
+
+      status:
+        firstString(
+          state.selectedEngine && state.selectedEngine.status,
+          "AVAILABLE"
+        ),
+
+      registry:
+        buildRegistryEvidence(),
+
+      runtime:
+        buildRuntimeEvidence(),
+
+      runtimeReceipt:
+        state.engineReceipt
+          ? frozenClone(state.engineReceipt)
+          : null,
+
+      inspection:
+        state.engineInspection
+          ? frozenClone(state.engineInspection)
+          : null
+    });
+  }
+
+  function buildConstructEvidence(targetEvidence, engineEvidence, subjectEvidence) {
+    return deepFreeze({
+      constructId:
+        "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D",
+
+      id:
+        "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D",
+
+      constructType:
+        "DIAGNOSTIC_ROUTE_READER",
+
+      contract:
+        HTML_CONTRACT,
+
+      controllerContract:
+        CONTRACT,
+
+      previousControllerContract:
+        PREVIOUS_CONTRACT,
+
+      cssContract:
+        CSS_CONTRACT,
+
+      version:
+        "2.0.0",
+
+      controllerVersion:
+        VERSION,
+
+      route:
+        DIAGNOSTIC_ROUTE,
+
+      rootFile:
+        DIAGNOSTIC_ROOT_FILE,
+
+      file:
+        DIAGNOSTIC_ROOT_FILE,
+
+      controllerFile:
+        FILE,
+
+      routePathClass:
+        normalizePathClass(DIAGNOSTIC_ROUTE),
+
+      rootFilePathClass:
+        normalizePathClass(DIAGNOSTIC_ROOT_FILE),
+
+      controllerFilePathClass:
+        normalizePathClass(FILE),
+
+      targetRoute:
+        TARGET_ROUTE,
+
+      targetRoutePathClass:
+        normalizePathClass(TARGET_ROUTE),
+
+      subject:
+        subjectEvidence,
+
+      engine:
+        engineEvidence,
+
+      target:
+        targetEvidence,
+
+      dependencies: [
+        "/assets/audralia/audralia.diagnostic.north.conductor.js",
+        "/assets/audralia/audralia.diagnostic.probe.north.js",
+        "/assets/audralia/audralia.diagnostic.probe.east.js",
+        "/assets/audralia/audralia.diagnostic.east.js",
+        "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
+        "/assets/audralia/audralia.diagnostic.probe.west.js",
+        "/assets/audralia/audralia.diagnostic.west.js",
+        "/assets/audralia/audralia.diagnostic.probe.south.js",
+        "/assets/audralia/audralia.diagnostic.south.js",
+        "/assets/audralia/audralia.diagnostic.rail.js"
+      ],
+
+      evidencePolicy: {
+        positiveRuntimeEvidenceMayBeInferred: false,
+        missingEvidenceDisposition: "HOLD",
+        diagnosticEvidenceGoverning: false,
+        declaredStructureEqualsRuntimeProof: false,
+        iframePresenceEqualsPresentationProof: false
+      },
+
+      noClaims:
+        NO_CLAIMS
+    });
+  }
+
   function buildConductorRequest() {
+    var subjectEvidence = buildSubjectEvidence();
+    var engineEvidence = buildEngineEvidence();
+    var targetEvidence = inspectTargetFrame();
+    var constructEvidence = buildConstructEvidence(
+      targetEvidence,
+      engineEvidence,
+      subjectEvidence
+    );
+
     return deepFreeze({
       schema:
         CONDUCTOR_REQUEST_SCHEMA,
@@ -1553,99 +1590,40 @@
       mode:
         "AUDIT",
 
-      subject: {
-        subjectId:
-          "AUDRALIA_DIAGNOSTIC_READER_ROUTE",
+      targetRoute:
+        TARGET_ROUTE,
 
-        subjectType:
-          "THREE_D_DIAGNOSTIC_ROUTE",
+      diagnosticRoute:
+        DIAGNOSTIC_ROUTE,
 
-        modelSchema:
-          "DGB_MODEL_PACKAGE_v1",
+      subject:
+        subjectEvidence,
 
-        route:
-          "/showroom/globe/audralia/diagnostic/",
+      engine:
+        engineEvidence,
 
-        targetRoute:
-          TARGET_ROUTE
-      },
+      construct:
+        constructEvidence,
 
-      engine: {
-        governingContract:
-          GOVERNING_ENGINE_CONTRACT,
+      target:
+        targetEvidence,
 
-        coreContract:
-          CORE_ENGINE_CONTRACT,
+      engineRegistry:
+        buildRegistryEvidence(),
 
-        registryContract:
-          REGISTRY_CONTRACT,
-
-        defaultEngineId:
-          DEFAULT_ENGINE_ID,
-
-        registry:
-          buildRegistryEvidence(),
-
-        runtime:
-          buildRuntimeEvidence()
-      },
-
-      construct: {
-        constructId:
-          "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D",
-
-        contract:
-          HTML_CONTRACT,
-
-        version:
-          "2.0.0",
-
-        route:
-          "/showroom/globe/audralia/diagnostic/",
-
-        rootFile:
-          "/showroom/globe/audralia/diagnostic/index.html",
-
-        routeController: {
-          contract:
-            CONTRACT,
-
-          previousContract:
-            PREVIOUS_CONTRACT,
-
-          version:
-            VERSION,
-
-          file:
-            FILE
-        },
-
-        target:
-          inspectTargetFrame(),
-
-        evidencePolicy: {
-          positiveRuntimeEvidenceMayBeInferred:
-            false,
-
-          missingEvidenceDisposition:
-            "HOLD",
-
-          diagnosticEvidenceGoverning:
-            false,
-
-          declaredStructureEqualsRuntimeProof:
-            false,
-
-          iframePresenceEqualsPresentationProof:
-            false
-        },
-
-        noClaims:
-          NO_CLAIMS
-      },
+      engineRuntime:
+        buildRuntimeEvidence(),
 
       requestedStartPosition:
         1,
+
+      priorLedgerHash:
+        state.ledger && state.ledger.ledgerHash
+          ? state.ledger.ledgerHash
+          : null,
+
+      generatedAt:
+        nowIso(),
 
       generatedAtEnabled:
         true,
@@ -1653,176 +1631,125 @@
       extensions: {
         routeControllerHash:
           hashObject({
-            contract:
-              CONTRACT,
+            contract: CONTRACT,
+            version: VERSION,
+            file: FILE
+          }),
 
-            version:
-              VERSION,
+        eastEvidenceTransport:
+          {
+            subjectFileDeclared:
+              subjectEvidence.file,
 
-            file:
-              FILE
-          })
-      }
+            engineFileDeclared:
+              engineEvidence.file,
+
+            constructRootFileDeclared:
+              constructEvidence.rootFile,
+
+            constructRouteDeclared:
+              constructEvidence.route,
+
+            targetRouteDeclared:
+              TARGET_ROUTE
+          }
+      },
+
+      noClaims:
+        NO_CLAIMS
     });
   }
 
   function resolveStationApi(definition) {
-    var found =
-      readFirst(
-        definition.globalPaths ||
-        []
-      );
+    var found = readFirst(definition.globalPaths || []);
+    var namespace;
+    var namespaceKeys;
+    var namespaceCandidate;
+    var rootKeys;
+    var key;
+    var candidate;
+    var index;
 
     if (found.value) {
       return {
-        api:
-          found.value,
-
-        globalPath:
-          found.path,
-
-        source:
-          "DECLARED_GLOBAL"
+        api: found.value,
+        globalPath: found.path,
+        source: "DECLARED_GLOBAL"
       };
     }
 
-    var namespace =
-      readPath("AUDRALIA");
+    namespace = readPath("AUDRALIA");
 
-    if (
-      namespace &&
-      typeof namespace === "object"
-    ) {
-      var namespaceKeys =
-        Object.keys(namespace);
+    if (namespace && typeof namespace === "object") {
+      namespaceKeys = Object.keys(namespace);
 
-      for (
-        var index = 0;
-        index < namespaceKeys.length;
-        index += 1
-      ) {
-        var namespaceCandidate =
-          namespace[
-            namespaceKeys[index]
-          ];
+      for (index = 0; index < namespaceKeys.length; index += 1) {
+        namespaceCandidate = namespace[namespaceKeys[index]];
 
         if (
           namespaceCandidate &&
-          namespaceCandidate.STATION_ID ===
-            definition.stationId &&
-          Number(
-            namespaceCandidate.CYCLE_POSITION
-          ) === definition.position
+          namespaceCandidate.STATION_ID === definition.stationId &&
+          Number(namespaceCandidate.CYCLE_POSITION) === definition.position
         ) {
           return {
-            api:
-              namespaceCandidate,
-
-            globalPath:
-              "AUDRALIA." +
-              namespaceKeys[index],
-
-            source:
-              "AUDRALIA_NAMESPACE_SCAN"
+            api: namespaceCandidate,
+            globalPath: "AUDRALIA." + namespaceKeys[index],
+            source: "AUDRALIA_NAMESPACE_SCAN"
           };
         }
       }
     }
 
-    var rootKeys =
-      [];
+    rootKeys = [];
 
     try {
-      rootKeys =
-        Object.keys(root);
+      rootKeys = Object.keys(root);
     } catch (_error) {}
 
-    for (
-      var rootIndex = 0;
-      rootIndex < rootKeys.length;
-      rootIndex += 1
-    ) {
-      var key =
-        rootKeys[rootIndex];
+    for (index = 0; index < rootKeys.length; index += 1) {
+      key = rootKeys[index];
 
-      if (
-        key.indexOf(
-          "AUDRALIA_DIAGNOSTIC"
-        ) !== 0
-      ) {
+      if (key.indexOf("AUDRALIA_DIAGNOSTIC") !== 0) {
         continue;
       }
 
-      var candidate;
-
       try {
-        candidate =
-          root[key];
-      } catch (_error) {
-        candidate =
-          null;
+        candidate = root[key];
+      } catch (_error2) {
+        candidate = null;
       }
 
       if (
         candidate &&
-        candidate.STATION_ID ===
-          definition.stationId &&
-        Number(
-          candidate.CYCLE_POSITION
-        ) === definition.position
+        candidate.STATION_ID === definition.stationId &&
+        Number(candidate.CYCLE_POSITION) === definition.position
       ) {
         return {
-          api:
-            candidate,
-
-          globalPath:
-            key,
-
-          source:
-            "ROOT_SCAN"
+          api: candidate,
+          globalPath: key,
+          source: "ROOT_SCAN"
         };
       }
     }
 
     return {
-      api:
-        null,
-
-      globalPath:
-        null,
-
-      source:
-        "NOT_FOUND"
+      api: null,
+      globalPath: null,
+      source: "NOT_FOUND"
     };
   }
 
   function resolveAuxiliaryApi(definition) {
-    var found =
-      readFirst(
-        definition.globalPaths ||
-        []
-      );
+    var found = readFirst(definition.globalPaths || []);
 
     return {
-      api:
-        found.value,
-
-      globalPath:
-        found.path,
-
-      source:
-        found.value
-          ? "DECLARED_GLOBAL"
-          : "NOT_FOUND"
+      api: found.value,
+      globalPath: found.path,
+      source: found.value ? "DECLARED_GLOBAL" : "NOT_FOUND"
     };
   }
 
-  function makeHeldReceipt(
-    definition,
-    code,
-    summary,
-    detail
-  ) {
+  function makeHeldReceipt(definition, code, summary, detail) {
     return deepFreeze({
       schema:
         RECEIPT_SCHEMA,
@@ -1868,15 +1795,9 @@
 
       issues: [
         {
-          code:
-            code,
-
-          path:
-            definition.stationId,
-
-          detail:
-            detail ||
-            summary
+          code: code,
+          path: definition.stationId,
+          detail: detail || summary
         }
       ],
 
@@ -1897,24 +1818,16 @@
     });
   }
 
-  function makeHeldReceipts(
-    code,
-    summary,
-    detail
-  ) {
-    return STATIONS.map(
-      function mapHeld(definition) {
-        return makeHeldReceipt(
-          definition,
-          code,
-          summary,
-          detail
-        );
-      }
-    );
+  function makeHeldReceipts(code, summary, detail) {
+    return STATIONS.map(function mapHeld(definition) {
+      return makeHeldReceipt(definition, code, summary, detail);
+    });
   }
 
   function extractReceipts(result) {
+    var candidates;
+    var index;
+
     if (Array.isArray(result)) {
       return result;
     }
@@ -1923,42 +1836,22 @@
       return [];
     }
 
-    var candidates = [
+    candidates = [
       result.receipts,
-
       result.stationReceipts,
-
       result.cycleReceipts,
-
-      result.ledger &&
-        result.ledger.receipts,
-
-      result.ledger &&
-        result.ledger.stationReceipts,
-
-      result.result &&
-        result.result.receipts,
-
-      result.result &&
-        result.result.stationReceipts,
-
-      result.packet &&
-        result.packet.receipts,
-
-      result.packet &&
-        result.packet.stationReceipts
+      result.ledger && result.ledger.receipts,
+      result.ledger && result.ledger.stationReceipts,
+      result.result && result.result.receipts,
+      result.result && result.result.stationReceipts,
+      result.packet && result.packet.receipts,
+      result.packet && result.packet.stationReceipts,
+      result.cycleReceipt && result.cycleReceipt.receipts,
+      result.cycleReceipt && result.cycleReceipt.stationReceipts
     ];
 
-    for (
-      var index = 0;
-      index < candidates.length;
-      index += 1
-    ) {
-      if (
-        Array.isArray(
-          candidates[index]
-        )
-      ) {
+    for (index = 0; index < candidates.length; index += 1) {
+      if (Array.isArray(candidates[index])) {
         return candidates[index];
       }
     }
@@ -1966,11 +1859,7 @@
     return [];
   }
 
-  function normalizeReceipt(
-    receipt,
-    definition,
-    index
-  ) {
+  function normalizeReceipt(receipt, definition, index) {
     var source =
       isObject(receipt)
         ? receipt
@@ -1980,64 +1869,44 @@
       definition ||
       STATIONS[index] ||
       {
-        position:
-          index + 1,
-
-        stationId:
-          source.stationId ||
-          "UNKNOWN_STATION",
-
-        label:
-          source.stationId ||
-          "Unknown Station",
-
-        fibonacci:
-          source.fibonacci ||
-          ""
+        position: index + 1,
+        stationId: source.stationId || "UNKNOWN_STATION",
+        label: source.stationId || "Unknown Station",
+        fibonacci: source.fibonacci || ""
       };
 
     return deepFreeze({
       schema:
-        source.schema ||
-        RECEIPT_SCHEMA,
+        source.schema || RECEIPT_SCHEMA,
 
       cycleId:
-        source.cycleId ||
-        state.cycleId,
+        source.cycleId || state.cycleId,
 
       position:
-        Number.isFinite(
-          Number(source.position)
-        )
+        Number.isFinite(Number(source.position))
           ? Number(source.position)
           : stationDefinition.position,
 
       stationId:
-        source.stationId ||
-        stationDefinition.stationId,
+        source.stationId || stationDefinition.stationId,
 
       fibonacci:
-        source.fibonacci ||
-        stationDefinition.fibonacci ||
-        "",
+        source.fibonacci || stationDefinition.fibonacci || "",
 
       contract:
-        source.contract ||
-        "UNKNOWN_STATION_CONTRACT",
+        source.contract || "UNKNOWN_STATION_CONTRACT",
+
+      previousContract:
+        source.previousContract || null,
 
       version:
-        source.version ||
-        "UNKNOWN",
+        source.version || "UNKNOWN",
 
       file:
-        source.file ||
-        "UNKNOWN",
+        source.file || "UNKNOWN",
 
       status:
-        normalizeStatus(
-          source.status,
-          "HOLD"
-        ),
+        normalizeStatus(source.status, "HOLD"),
 
       completed:
         source.completed === true,
@@ -2046,53 +1915,45 @@
         source.handoffEligible === true,
 
       summary:
-        typeof source.summary === "string" &&
-        source.summary.trim()
+        typeof source.summary === "string" && source.summary.trim()
           ? source.summary.trim()
           : "No station summary was supplied.",
 
       observations:
         Array.isArray(source.observations)
-          ? frozenClone(
-              source.observations
-            )
+          ? frozenClone(source.observations)
           : [],
 
       evidence:
         Array.isArray(source.evidence)
-          ? frozenClone(
-              source.evidence
-            )
+          ? frozenClone(source.evidence)
           : [],
 
       issues:
         Array.isArray(source.issues)
-          ? frozenClone(
-              source.issues
-            )
+          ? frozenClone(source.issues)
           : [],
 
       firstHeldCoordinate:
-        source.firstHeldCoordinate ||
-        null,
+        source.firstHeldCoordinate || null,
 
       firstFailedCoordinate:
-        source.firstFailedCoordinate ||
-        null,
+        source.firstFailedCoordinate || null,
 
       firstConflictCoordinate:
-        source.firstConflictCoordinate ||
-        null,
+        source.firstConflictCoordinate || null,
+
+      recommendedOwner:
+        source.recommendedOwner
+          ? frozenClone(source.recommendedOwner)
+          : null,
 
       generatedAt:
-        source.generatedAt ||
-        nowIso(),
+        source.generatedAt || nowIso(),
 
       noClaims:
         isObject(source.noClaims)
-          ? frozenClone(
-              source.noClaims
-            )
+          ? frozenClone(source.noClaims)
           : NO_CLAIMS,
 
       raw:
@@ -2101,8 +1962,8 @@
   }
 
   function normalizeConductorResult(result) {
-    var receipts =
-      extractReceipts(result);
+    var receipts = extractReceipts(result);
+    var normalized = [];
 
     if (!receipts.length) {
       return {
@@ -2118,53 +1979,33 @@
       };
     }
 
-    var normalized =
-      [];
+    STATIONS.forEach(function normalizeExpectedStation(definition, index) {
+      var matching =
+        receipts.find(function findMatching(receipt) {
+          return receipt && receipt.stationId === definition.stationId;
+        });
 
-    STATIONS.forEach(
-      function normalizeExpectedStation(
-        definition,
-        index
-      ) {
-        var matching =
-          receipts.find(
-            function findMatching(receipt) {
-              return (
-                receipt &&
-                receipt.stationId ===
-                  definition.stationId
-              );
-            }
-          );
+      if (!matching) {
+        matching = receipts[index] || null;
+      }
 
-        if (!matching) {
-          matching =
-            receipts[index] ||
-            null;
-        }
-
-        if (!matching) {
-          normalized.push(
-            makeHeldReceipt(
-              definition,
-              "STATION_RECEIPT_MISSING",
-              "The North conductor did not return this station receipt.",
-              "Expected station receipt was absent from the conductor result."
-            )
-          );
-
-          return;
-        }
-
+      if (!matching) {
         normalized.push(
-          normalizeReceipt(
-            matching,
+          makeHeldReceipt(
             definition,
-            index
+            "STATION_RECEIPT_MISSING",
+            "The North conductor did not return this station receipt.",
+            "Expected station receipt was absent from the conductor result."
           )
         );
+
+        return;
       }
-    );
+
+      normalized.push(
+        normalizeReceipt(matching, definition, index)
+      );
+    });
 
     return {
       conductorResult:
@@ -2176,8 +2017,9 @@
   }
 
   function invokeConductor(request) {
-    var conductor =
-      getConductor();
+    var conductor = getConductor();
+    var cycle;
+    var sealReceipt;
 
     if (!conductor) {
       return Promise.resolve({
@@ -2193,11 +2035,7 @@
       });
     }
 
-    if (
-      !isFunction(
-        conductor.createCycle
-      )
-    ) {
+    if (!isFunction(conductor.createCycle)) {
       return Promise.resolve({
         conductorResult:
           frozenClone(conductor),
@@ -2211,23 +2049,15 @@
       });
     }
 
-    var cycle;
-
     try {
-      cycle =
-        conductor.createCycle(
-          request
-        );
+      cycle = conductor.createCycle(request);
     } catch (error) {
       return Promise.resolve({
         conductorResult: {
-          stage:
-            "CREATE_CYCLE",
-
+          stage: "CREATE_CYCLE",
           error:
             String(
-              error &&
-              error.message
+              error && error.message
                 ? error.message
                 : error
             )
@@ -2238,8 +2068,7 @@
             "NORTH_CONDUCTOR_CREATE_CYCLE_THROW",
             "The North conductor could not create the diagnostic cycle.",
             String(
-              error &&
-              error.message
+              error && error.message
                 ? error.message
                 : error
             )
@@ -2248,19 +2077,25 @@
     }
 
     if (
-      !cycle ||
-      !isFunction(
-        cycle.registerStation
-      ) ||
-      !isFunction(
-        cycle.seal
-      ) ||
-      !isFunction(
-        cycle.run
-      ) ||
-      !isFunction(
-        cycle.getReceipt
+      cycle &&
+      (
+        Array.isArray(cycle.receipts) ||
+        Array.isArray(cycle.stationReceipts) ||
+        isObject(cycle.cycleReceipt) ||
+        isObject(cycle.receipt)
       )
+    ) {
+      return Promise.resolve(
+        normalizeConductorResult(cycle)
+      );
+    }
+
+    if (
+      !cycle ||
+      !isFunction(cycle.registerStation) ||
+      !isFunction(cycle.seal) ||
+      !isFunction(cycle.run) ||
+      !isFunction(cycle.getReceipt)
     ) {
       return Promise.resolve({
         conductorResult:
@@ -2275,311 +2110,165 @@
       });
     }
 
-    state.stationRegistrations =
-      [];
+    state.stationRegistrations = [];
+    state.auxiliaryRegistrations = [];
 
-    state.auxiliaryRegistrations =
-      [];
+    STATIONS.forEach(function registerStation(definition) {
+      var resolved = resolveStationApi(definition);
+      var outcome;
+      var registration;
 
-    STATIONS.forEach(
-      function registerStation(definition) {
-        var resolved =
-          resolveStationApi(
-            definition
-          );
-
-        var outcome;
-
-        if (!resolved.api) {
-          outcome = {
-            position:
+      if (!resolved.api) {
+        outcome = {
+          position: definition.position,
+          stationId: definition.stationId,
+          file: definition.file,
+          status: "REJECTED",
+          reason: "STATION_GLOBAL_NOT_FOUND",
+          globalPath: null,
+          source: resolved.source,
+          generatedAt: nowIso()
+        };
+      } else {
+        try {
+          registration =
+            cycle.registerStation(
               definition.position,
+              resolved.api
+            );
 
-            stationId:
-              definition.stationId,
-
-            file:
-              definition.file,
-
-            status:
-              "REJECTED",
-
-            reason:
-              "STATION_GLOBAL_NOT_FOUND",
-
-            globalPath:
-              null,
-
-            source:
-              resolved.source,
-
-            generatedAt:
-              nowIso()
-          };
-        } else {
-          try {
-            var registration =
-              cycle.registerStation(
-                definition.position,
-                resolved.api
-              );
-
-            outcome = {
-              position:
-                definition.position,
-
-              stationId:
-                definition.stationId,
-
-              file:
-                definition.file,
-
-              status:
-                registration &&
-                registration.status
-                  ? registration.status
-                  : "UNKNOWN",
-
-              reason:
-                registration &&
-                registration.reason
-                  ? registration.reason
-                  : null,
-
-              issues:
-                registration &&
-                registration.issues
-                  ? frozenClone(
-                      registration.issues
-                    )
-                  : [],
-
-              globalPath:
-                resolved.globalPath,
-
-              source:
-                resolved.source,
-
-              generatedAt:
-                nowIso()
-            };
-          } catch (error) {
-            outcome = {
-              position:
-                definition.position,
-
-              stationId:
-                definition.stationId,
-
-              file:
-                definition.file,
-
-              status:
-                "REJECTED",
-
-              reason:
-                "STATION_REGISTRATION_THROW",
-
-              detail:
-                String(
-                  error &&
-                  error.message
-                    ? error.message
-                    : error
-                ),
-
-              globalPath:
-                resolved.globalPath,
-
-              source:
-                resolved.source,
-
-              generatedAt:
-                nowIso()
-            };
-          }
-        }
-
-        state.stationRegistrations.push(
-          deepFreeze(outcome)
-        );
-      }
-    );
-
-    AUXILIARIES.forEach(
-      function registerAuxiliary(
-        definition
-      ) {
-        var resolved =
-          resolveAuxiliaryApi(
-            definition
-          );
-
-        var outcome;
-
-        if (!resolved.api) {
           outcome = {
-            parentPosition:
-              definition.parentPosition,
-
-            role:
-              definition.role,
-
-            file:
-              definition.file,
-
+            position: definition.position,
+            stationId: definition.stationId,
+            file: definition.file,
             status:
-              "NOT_REGISTERED",
-
+              registration && registration.status
+                ? registration.status
+                : "UNKNOWN",
             reason:
-              "AUXILIARY_GLOBAL_NOT_FOUND",
-
-            generatedAt:
-              nowIso()
+              registration && registration.reason
+                ? registration.reason
+                : null,
+            issues:
+              registration && registration.issues
+                ? frozenClone(registration.issues)
+                : [],
+            globalPath: resolved.globalPath,
+            source: resolved.source,
+            generatedAt: nowIso()
           };
-        } else if (
-          !isFunction(
-            cycle.registerAuxiliary
-          )
-        ) {
+        } catch (error) {
           outcome = {
-            parentPosition:
-              definition.parentPosition,
-
-            role:
-              definition.role,
-
-            file:
-              definition.file,
-
-            status:
-              "NOT_REGISTERED",
-
-            reason:
-              "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
-
-            generatedAt:
-              nowIso()
+            position: definition.position,
+            stationId: definition.stationId,
+            file: definition.file,
+            status: "REJECTED",
+            reason: "STATION_REGISTRATION_THROW",
+            detail:
+              String(
+                error && error.message
+                  ? error.message
+                  : error
+              ),
+            globalPath: resolved.globalPath,
+            source: resolved.source,
+            generatedAt: nowIso()
           };
-        } else {
-          try {
-            var registration =
-              cycle.registerAuxiliary(
-                definition.parentPosition,
-                {
-                  role:
-                    definition.role,
-
-                  file:
-                    definition.file,
-
-                  contract:
-                    resolved.api.CONTRACT ||
-                    null,
-
-                  version:
-                    resolved.api.VERSION ||
-                    null,
-
-                  globalPath:
-                    resolved.globalPath,
-
-                  createsCyclePosition:
-                    false
-                }
-              );
-
-            outcome = {
-              parentPosition:
-                definition.parentPosition,
-
-              role:
-                definition.role,
-
-              file:
-                definition.file,
-
-              status:
-                registration &&
-                registration.status
-                  ? registration.status
-                  : "UNKNOWN",
-
-              reason:
-                registration &&
-                registration.reason
-                  ? registration.reason
-                  : null,
-
-              globalPath:
-                resolved.globalPath,
-
-              source:
-                resolved.source,
-
-              generatedAt:
-                nowIso()
-            };
-          } catch (error) {
-            outcome = {
-              parentPosition:
-                definition.parentPosition,
-
-              role:
-                definition.role,
-
-              file:
-                definition.file,
-
-              status:
-                "NOT_REGISTERED",
-
-              reason:
-                "AUXILIARY_REGISTRATION_THROW",
-
-              detail:
-                String(
-                  error &&
-                  error.message
-                    ? error.message
-                    : error
-                ),
-
-              generatedAt:
-                nowIso()
-            };
-          }
         }
-
-        state.auxiliaryRegistrations.push(
-          deepFreeze(outcome)
-        );
       }
-    );
 
-    var sealReceipt;
+      state.stationRegistrations.push(deepFreeze(outcome));
+    });
+
+    AUXILIARIES.forEach(function registerAuxiliary(definition) {
+      var resolved = resolveAuxiliaryApi(definition);
+      var outcome;
+      var registration;
+
+      if (!resolved.api) {
+        outcome = {
+          parentPosition: definition.parentPosition,
+          role: definition.role,
+          file: definition.file,
+          status: "NOT_REGISTERED",
+          reason: "AUXILIARY_GLOBAL_NOT_FOUND",
+          generatedAt: nowIso()
+        };
+      } else if (!isFunction(cycle.registerAuxiliary)) {
+        outcome = {
+          parentPosition: definition.parentPosition,
+          role: definition.role,
+          file: definition.file,
+          status: "NOT_REGISTERED",
+          reason: "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
+          generatedAt: nowIso()
+        };
+      } else {
+        try {
+          registration =
+            cycle.registerAuxiliary(
+              definition.parentPosition,
+              {
+                role: definition.role,
+                file: definition.file,
+                contract: resolved.api.CONTRACT || resolved.api.contract || null,
+                version: resolved.api.VERSION || resolved.api.version || null,
+                globalPath: resolved.globalPath,
+                createsCyclePosition: false
+              }
+            );
+
+          outcome = {
+            parentPosition: definition.parentPosition,
+            role: definition.role,
+            file: definition.file,
+            status:
+              registration && registration.status
+                ? registration.status
+                : "UNKNOWN",
+            reason:
+              registration && registration.reason
+                ? registration.reason
+                : null,
+            globalPath: resolved.globalPath,
+            source: resolved.source,
+            generatedAt: nowIso()
+          };
+        } catch (error) {
+          outcome = {
+            parentPosition: definition.parentPosition,
+            role: definition.role,
+            file: definition.file,
+            status: "NOT_REGISTERED",
+            reason: "AUXILIARY_REGISTRATION_THROW",
+            detail:
+              String(
+                error && error.message
+                  ? error.message
+                  : error
+              ),
+            generatedAt: nowIso()
+          };
+        }
+      }
+
+      state.auxiliaryRegistrations.push(deepFreeze(outcome));
+    });
 
     try {
-      sealReceipt =
-        cycle.seal();
+      sealReceipt = cycle.seal();
     } catch (error) {
       return Promise.resolve({
         conductorResult: {
-          stage:
-            "SEAL",
-
+          stage: "SEAL",
           error:
             String(
-              error &&
-              error.message
+              error && error.message
                 ? error.message
                 : error
             ),
-
           stationRegistrations:
-            frozenClone(
-              state.stationRegistrations
-            )
+            frozenClone(state.stationRegistrations)
         },
 
         receipts:
@@ -2587,8 +2276,7 @@
             "NORTH_CONDUCTOR_SEAL_THROW",
             "The North conductor could not seal the diagnostic cycle.",
             String(
-              error &&
-              error.message
+              error && error.message
                 ? error.message
                 : error
             )
@@ -2596,145 +2284,108 @@
       });
     }
 
-    return Promise.resolve(
-      cycle.run()
-    )
-      .then(
-        function conductorRunResolved(result) {
-          var receipt =
-            isObject(result)
-              ? result
-              : cycle.getReceipt();
+    return Promise.resolve(cycle.run())
+      .then(function conductorRunResolved(result) {
+        var receipt =
+          isObject(result)
+            ? result
+            : cycle.getReceipt();
 
-          state.conductorReceipt =
-            frozenClone(receipt);
+        state.conductorReceipt =
+          frozenClone(receipt);
 
-          state.conductorState =
-            frozenClone(
-              isFunction(
-                cycle.getState
-              )
-                ? cycle.getState()
-                : null
-            );
+        state.conductorState =
+          frozenClone(
+            isFunction(cycle.getState)
+              ? cycle.getState()
+              : null
+          );
 
-          return normalizeConductorResult({
-            schema:
-              "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v1",
+        return normalizeConductorResult({
+          schema:
+            "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v1",
 
-            cycleReceipt:
-              receipt,
+          cycleReceipt:
+            receipt,
 
-            stationReceipts:
-              receipt &&
-              Array.isArray(
-                receipt.stationReceipts
-              )
-                ? receipt.stationReceipts
-                : extractReceipts(
-                    receipt
-                  ),
+          stationReceipts:
+            receipt && Array.isArray(receipt.stationReceipts)
+              ? receipt.stationReceipts
+              : extractReceipts(receipt),
 
-            sealReceipt:
-              sealReceipt,
+          sealReceipt:
+            sealReceipt,
 
-            state:
-              state.conductorState,
+          state:
+            state.conductorState,
 
-            stationRegistrations:
-              frozenClone(
-                state.stationRegistrations
+          stationRegistrations:
+            frozenClone(state.stationRegistrations),
+
+          auxiliaryRegistrations:
+            frozenClone(state.auxiliaryRegistrations)
+        });
+      })
+      .catch(function conductorRunRejected(error) {
+        state.conductorReceipt =
+          frozenClone(
+            callSafely(cycle, "getReceipt", [], null)
+          );
+
+        state.conductorState =
+          frozenClone(
+            callSafely(cycle, "getState", [], null)
+          );
+
+        return {
+          conductorResult: {
+            stage: "RUN",
+            error:
+              String(
+                error && error.message
+                  ? error.message
+                  : error
               ),
+            state: state.conductorState,
+            receipt: state.conductorReceipt,
+            stationRegistrations:
+              frozenClone(state.stationRegistrations)
+          },
 
-            auxiliaryRegistrations:
-              frozenClone(
-                state.auxiliaryRegistrations
+          receipts:
+            makeHeldReceipts(
+              "NORTH_CONDUCTOR_RUN_REJECTED",
+              "The North conductor rejected the diagnostic cycle.",
+              String(
+                error && error.message
+                  ? error.message
+                  : error
               )
-          });
-        }
-      )
-      .catch(
-        function conductorRunRejected(error) {
-          state.conductorReceipt =
-            frozenClone(
-              callSafely(
-                cycle,
-                "getReceipt",
-                [],
-                null
-              )
-            );
-
-          state.conductorState =
-            frozenClone(
-              callSafely(
-                cycle,
-                "getState",
-                [],
-                null
-              )
-            );
-
-          return {
-            conductorResult: {
-              stage:
-                "RUN",
-
-              error:
-                String(
-                  error &&
-                  error.message
-                    ? error.message
-                    : error
-                ),
-
-              state:
-                state.conductorState,
-
-              receipt:
-                state.conductorReceipt,
-
-              stationRegistrations:
-                frozenClone(
-                  state.stationRegistrations
-                )
-            },
-
-            receipts:
-              makeHeldReceipts(
-                "NORTH_CONDUCTOR_RUN_REJECTED",
-                "The North conductor rejected the diagnostic cycle.",
-                String(
-                  error &&
-                  error.message
-                    ? error.message
-                    : error
-                )
-              )
-          };
-        }
-      );
+            )
+        };
+      });
   }
 
   function composeLedger() {
+    var passCount;
+    var holdCount;
+    var failCount;
+    var conflictCount;
+    var errorCount;
+    var degradedCount;
+    var terminalReceipt;
+    var overallStatus;
+    var ledger;
+
     function count(statuses) {
-      return state.receipts.filter(
-        function countReceipt(receipt) {
-          return (
-            statuses.indexOf(
-              receipt.status
-            ) !== -1
-          );
-        }
-      ).length;
+      return state.receipts.filter(function countReceipt(receipt) {
+        return statuses.indexOf(receipt.status) !== -1;
+      }).length;
     }
 
-    var passCount =
-      count([
-        "PASS"
-      ]);
+    passCount = count(["PASS"]);
 
-    var holdCount =
+    holdCount =
       count([
         "HOLD",
         "HELD",
@@ -2742,34 +2393,17 @@
         "UNVERIFIED"
       ]);
 
-    var failCount =
-      count([
-        "FAIL"
-      ]);
+    failCount = count(["FAIL"]);
+    conflictCount = count(["CONFLICT"]);
+    errorCount = count(["ERROR"]);
+    degradedCount = count(["DEGRADED"]);
 
-    var conflictCount =
-      count([
-        "CONFLICT"
-      ]);
-
-    var errorCount =
-      count([
-        "ERROR"
-      ]);
-
-    var degradedCount =
-      count([
-        "DEGRADED"
-      ]);
-
-    var terminalReceipt =
+    terminalReceipt =
       state.receipts.length
-        ? state.receipts[
-            state.receipts.length - 1
-          ]
+        ? state.receipts[state.receipts.length - 1]
         : null;
 
-    var overallStatus =
+    overallStatus =
       errorCount > 0
         ? "ERROR"
         : conflictCount > 0
@@ -2781,14 +2415,13 @@
               : holdCount > 0
                 ? "HOLD"
                 : (
-                    passCount ===
-                    state.receipts.length &&
+                    passCount === state.receipts.length &&
                     state.receipts.length > 0
                   )
                   ? "PASS"
                   : "HOLD";
 
-    var ledger = {
+    ledger = {
       schema:
         LEDGER_SCHEMA,
 
@@ -2865,55 +2498,53 @@
       engineRuntime:
         buildRuntimeEvidence(),
 
+      subject:
+        buildSubjectEvidence(),
+
+      engine:
+        buildEngineEvidence(),
+
+      construct:
+        buildConstructEvidence(
+          inspectTargetFrame(),
+          buildEngineEvidence(),
+          buildSubjectEvidence()
+        ),
+
       target:
         inspectTargetFrame(),
 
       conductorState:
         state.conductorState
-          ? frozenClone(
-              state.conductorState
-            )
+          ? frozenClone(state.conductorState)
           : null,
 
       conductorReceipt:
         state.conductorReceipt
-          ? frozenClone(
-              state.conductorReceipt
-            )
+          ? frozenClone(state.conductorReceipt)
           : null,
 
       stationRegistrations:
-        frozenClone(
-          state.stationRegistrations
-        ),
+        frozenClone(state.stationRegistrations),
 
       auxiliaryRegistrations:
-        frozenClone(
-          state.auxiliaryRegistrations
-        ),
+        frozenClone(state.auxiliaryRegistrations),
 
       conductorResult:
         state.conductorResult
-          ? frozenClone(
-              state.conductorResult
-            )
+          ? frozenClone(state.conductorResult)
           : null,
 
       receipts:
-        frozenClone(
-          state.receipts
-        ),
+        frozenClone(state.receipts),
 
       noClaims:
         NO_CLAIMS
     };
 
-    ledger.ledgerHash =
-      hashObject(ledger);
+    ledger.ledgerHash = hashObject(ledger);
 
-    return deepFreeze(
-      ledger
-    );
+    return deepFreeze(ledger);
   }
 
   function readableOverall(ledger) {
@@ -2921,39 +2552,27 @@
       return "Waiting";
     }
 
-    if (
-      ledger.overallStatus === "PASS"
-    ) {
+    if (ledger.overallStatus === "PASS") {
       return "Complete diagnostic path";
     }
 
-    if (
-      ledger.overallStatus === "HOLD"
-    ) {
+    if (ledger.overallStatus === "HOLD") {
       return "Held for evidence";
     }
 
-    if (
-      ledger.overallStatus === "DEGRADED"
-    ) {
+    if (ledger.overallStatus === "DEGRADED") {
       return "Degraded diagnostic result";
     }
 
-    if (
-      ledger.overallStatus === "FAIL"
-    ) {
+    if (ledger.overallStatus === "FAIL") {
       return "Failure reported";
     }
 
-    if (
-      ledger.overallStatus === "CONFLICT"
-    ) {
+    if (ledger.overallStatus === "CONFLICT") {
       return "Conflict reported";
     }
 
-    if (
-      ledger.overallStatus === "ERROR"
-    ) {
+    if (ledger.overallStatus === "ERROR") {
       return "Error reported";
     }
 
@@ -2968,45 +2587,35 @@
       );
     }
 
-    if (
-      ledger.errorCount > 0
-    ) {
+    if (ledger.errorCount > 0) {
       return (
         "The diagnostic path encountered an execution error. " +
         "Open the station receipts to identify the affected stage."
       );
     }
 
-    if (
-      ledger.conflictCount > 0
-    ) {
+    if (ledger.conflictCount > 0) {
       return (
         "The diagnostic path found incompatible authority or runtime claims. " +
         "No readiness conclusion can be made."
       );
     }
 
-    if (
-      ledger.failCount > 0
-    ) {
+    if (ledger.failCount > 0) {
       return (
         "The diagnostic path found a failed condition. " +
         "This report identifies the failure but does not authorize repair."
       );
     }
 
-    if (
-      ledger.degradedCount > 0
-    ) {
+    if (ledger.degradedCount > 0) {
       return (
         "The diagnostic path completed with degraded evidence. " +
         "The result is not equivalent to a production-ready engine."
       );
     }
 
-    if (
-      ledger.holdCount > 0
-    ) {
+    if (ledger.holdCount > 0) {
       return (
         "The diagnostic path is held because required runtime evidence is " +
         "missing, unavailable, or not yet admitted. Missing proof was not " +
@@ -3015,10 +2624,8 @@
     }
 
     if (
-      ledger.passCount ===
-        ledger.receiptCount &&
-      ledger.receiptCount ===
-        STATIONS.length
+      ledger.passCount === ledger.receiptCount &&
+      ledger.receiptCount === STATIONS.length
     ) {
       return (
         "All nine diagnostic stations returned passing diagnostic receipts. " +
@@ -3027,65 +2634,45 @@
       );
     }
 
-    return (
-      "The diagnostic path is incomplete."
-    );
+    return "The diagnostic path is incomplete.";
   }
 
   function composeReaderReport(ledger) {
-    var attentionCount =
+    var attentionCount;
+    var registeredCount;
+
+    attentionCount =
       ledger.failCount +
       ledger.conflictCount +
       ledger.errorCount +
       ledger.degradedCount;
 
-    var registeredCount =
-      ledger.stationRegistrations.filter(
-        function countRegistered(outcome) {
-          return (
-            outcome.status ===
-              "REGISTERED" ||
-            outcome.status ===
-              "DUPLICATE_IDENTICAL"
-          );
-        }
-      ).length;
+    registeredCount =
+      ledger.stationRegistrations.filter(function countRegistered(outcome) {
+        return (
+          outcome.status === "REGISTERED" ||
+          outcome.status === "DUPLICATE_IDENTICAL"
+        );
+      }).length;
 
     return [
       "AUDRALIA DIAGNOSTIC READER REPORT",
-      "SCHEMA=" +
-        READER_REPORT_SCHEMA,
+      "SCHEMA=" + READER_REPORT_SCHEMA,
       "",
-      "Overall status: " +
-        readableOverall(ledger),
-      "Passed stations: " +
-        ledger.passCount +
-        " of " +
-        ledger.receiptCount,
-      "Held stations: " +
-        ledger.holdCount,
-      "Attention items: " +
-        attentionCount,
+      "Overall status: " + readableOverall(ledger),
+      "Passed stations: " + ledger.passCount + " of " + ledger.receiptCount,
+      "Held stations: " + ledger.holdCount,
+      "Attention items: " + attentionCount,
       "",
       "Engine family:",
-      "Governing contracts: " +
-        ledger.engineRegistry
-          .governingAuthorityCount,
-      "Assigned engines: " +
-        ledger.engineRegistry
-          .assignedEngineCount,
-      "Selectable engines: " +
-        ledger.engineRegistry
-          .selectableEngineCount,
-      "Reserved engine slots: " +
-        ledger.engineRegistry
-          .reservedEngineCount,
+      "Governing contracts: " + ledger.engineRegistry.governingAuthorityCount,
+      "Assigned engines: " + ledger.engineRegistry.assignedEngineCount,
+      "Selectable engines: " + ledger.engineRegistry.selectableEngineCount,
+      "Reserved engine slots: " + ledger.engineRegistry.reservedEngineCount,
       "",
       "North conductor:",
       "Invocation: createCycle",
-      "Registered stations: " +
-        registeredCount +
-        " of 9",
+      "Registered stations: " + registeredCount + " of 9",
       "",
       "Plain-language reading:",
       plainLanguage(ledger),
@@ -3105,54 +2692,28 @@
 
   function stationLabel(stationId) {
     var definition =
-      STATIONS.find(
-        function findStation(entry) {
-          return (
-            entry.stationId ===
-            stationId
-          );
-        }
-      );
+      STATIONS.find(function findStation(entry) {
+        return entry.stationId === stationId;
+      });
 
     return definition
       ? definition.label
-      : stationId ||
-          "Unknown Station";
+      : stationId || "Unknown Station";
   }
 
   function renderRegistrySummary() {
+    var evidence;
+    var pill;
+    var available;
+
     refreshRegistryState();
 
-    var evidence =
-      buildRegistryEvidence();
+    evidence = buildRegistryEvidence();
 
-    setText(
-      "governingContractCount",
-      String(
-        evidence.governingAuthorityCount
-      )
-    );
-
-    setText(
-      "assignedEngineCount",
-      String(
-        evidence.assignedEngineCount
-      )
-    );
-
-    setText(
-      "selectableEngineCount",
-      String(
-        evidence.selectableEngineCount
-      )
-    );
-
-    setText(
-      "reservedEngineCount",
-      String(
-        evidence.reservedEngineCount
-      )
-    );
+    setText("governingContractCount", String(evidence.governingAuthorityCount));
+    setText("assignedEngineCount", String(evidence.assignedEngineCount));
+    setText("selectableEngineCount", String(evidence.selectableEngineCount));
+    setText("reservedEngineCount", String(evidence.reservedEngineCount));
 
     setText(
       "governingContractSummary",
@@ -3178,20 +2739,14 @@
     setText(
       "reservedEngineSummary",
       evidence.reservedEngineCount > 0
-        ? String(
-            evidence.reservedEngineCount
-          ) +
-          " future engine slots remain reserved."
+        ? String(evidence.reservedEngineCount) + " future engine slots remain reserved."
         : "No reserved engine slots were reported."
     );
 
-    var pill =
-      byId(
-        "engineRegistryStatusPill"
-      );
+    pill = byId("engineRegistryStatusPill");
 
     if (pill) {
-      var available =
+      available =
         evidence.registryLoaded &&
         evidence.selectableEngineCount > 0;
 
@@ -3205,9 +2760,7 @@
           "waiting",
           "error"
         ],
-        available
-          ? "available"
-          : "held"
+        available ? "available" : "held"
       );
 
       pill.textContent =
@@ -3222,17 +2775,14 @@
   }
 
   function renderRegistryRecords() {
-    var list =
-      byId("engineRegistryList");
+    var list = byId("engineRegistryList");
+    var fragments = [];
 
     if (!list) {
       return;
     }
 
-    if (
-      !state.authorityRecords.length &&
-      !state.engineRecords.length
-    ) {
+    if (!state.authorityRecords.length && !state.engineRecords.length) {
       list.innerHTML =
         '<article class="receipt-empty">' +
         "<h3>Engine registry unavailable</h3>" +
@@ -3242,113 +2792,74 @@
       return;
     }
 
-    var fragments =
-      [];
+    state.authorityRecords.forEach(function renderAuthority(record) {
+      fragments.push(
+        '<article class="receipt-card authority-record">' +
+        "<h3>" +
+        escapeHtml(record.authorityName || record.authorityId || "Governing Contract") +
+        "</h3>" +
+        "<p>Role: " +
+        escapeHtml(record.role || "GOVERNING_CONTRACT") +
+        "</p>" +
+        "<p>Status: " +
+        escapeHtml(record.status || "UNKNOWN") +
+        "</p>" +
+        "<p>File: " +
+        escapeHtml(record.file || DEFAULT_GOVERNING_ENGINE_FILE) +
+        "</p>" +
+        "<p>Executable engine: " +
+        (record.executableEngine ? "Yes" : "No") +
+        "</p>" +
+        "</article>"
+      );
+    });
 
-    state.authorityRecords.forEach(
-      function renderAuthority(record) {
-        fragments.push(
-          '<article class="receipt-card authority-record">' +
-          "<h3>" +
-          escapeHtml(
-            record.authorityName ||
-            record.authorityId ||
-            "Governing Contract"
-          ) +
-          "</h3>" +
-          "<p>Role: " +
-          escapeHtml(
-            record.role ||
-            "GOVERNING_CONTRACT"
-          ) +
-          "</p>" +
-          "<p>Status: " +
-          escapeHtml(
-            record.status ||
-            "UNKNOWN"
-          ) +
-          "</p>" +
-          "<p>File: " +
-          escapeHtml(
-            record.file ||
-            "/assets/engine/dgb.engine.contract.js"
-          ) +
-          "</p>" +
-          "<p>Executable engine: " +
-          (
-            record.executableEngine
-              ? "Yes"
-              : "No"
-          ) +
-          "</p>" +
-          "</article>"
-        );
-      }
-    );
-
-    state.engineRecords.forEach(
-      function renderEngine(record) {
-        fragments.push(
-          '<article class="receipt-card engine-record ' +
+    state.engineRecords.forEach(function renderEngine(record) {
+      fragments.push(
+        '<article class="receipt-card engine-record ' +
+        (
+          record.reserved
+            ? "held"
+            : record.selectable
+              ? "pass"
+              : "hold"
+        ) +
+        '">' +
+        "<h3>" +
+        escapeHtml(
+          record.engineName ||
           (
             record.reserved
-              ? "held"
-              : record.selectable
-                ? "pass"
-                : "hold"
-          ) +
-          '">' +
-          "<h3>" +
-          escapeHtml(
-            record.engineName ||
-            (
-              record.reserved
-                ? "Reserved Engine Slot " +
-                  String(record.slot)
-                : record.engineId ||
-                  "Runtime Engine"
-            )
-          ) +
-          "</h3>" +
-          "<p>Role: " +
-          escapeHtml(
-            record.role ||
-            "RUNTIME_ENGINE"
-          ) +
-          "</p>" +
-          "<p>Status: " +
-          escapeHtml(
-            record.status ||
-            "UNKNOWN"
-          ) +
-          "</p>" +
-          "<p>Selectable: " +
-          (
-            record.selectable
-              ? "Yes"
-              : "No"
-          ) +
-          "</p>" +
-          "<p>File: " +
-          escapeHtml(
-            record.file ||
-            "Not assigned"
-          ) +
-          "</p>" +
-          "</article>"
-        );
-      }
-    );
+              ? "Reserved Engine Slot " + String(record.slot)
+              : record.engineId || "Runtime Engine"
+          )
+        ) +
+        "</h3>" +
+        "<p>Role: " +
+        escapeHtml(record.role || "RUNTIME_ENGINE") +
+        "</p>" +
+        "<p>Status: " +
+        escapeHtml(record.status || "UNKNOWN") +
+        "</p>" +
+        "<p>Selectable: " +
+        (record.selectable ? "Yes" : "No") +
+        "</p>" +
+        "<p>File: " +
+        escapeHtml(record.file || "Not assigned") +
+        "</p>" +
+        "</article>"
+      );
+    });
 
-    list.innerHTML =
-      fragments.join("");
+    list.innerHTML = fragments.join("");
   }
 
   function renderSummary() {
-    var ledger =
-      state.ledger;
+    var ledger = state.ledger;
+    var attention;
+    var percent;
 
-    var attention =
+    attention =
       ledger
         ? (
             ledger.failCount +
@@ -3358,47 +2869,16 @@
           )
         : 0;
 
-    var percent =
-      ledger &&
-      ledger.receiptCount > 0
-        ? (
-            ledger.passCount /
-            ledger.receiptCount
-          ) * 100
+    percent =
+      ledger && ledger.receiptCount > 0
+        ? (ledger.passCount / ledger.receiptCount) * 100
         : 0;
 
-    setText(
-      "passedCount",
-      ledger
-        ? String(
-            ledger.passCount
-          )
-        : "0"
-    );
-
-    setText(
-      "heldCount",
-      ledger
-        ? String(
-            ledger.holdCount
-          )
-        : "0"
-    );
-
-    setText(
-      "attentionCount",
-      String(attention)
-    );
-
-    setText(
-      "plainSummary",
-      plainLanguage(ledger)
-    );
-
-    setText(
-      "overallStatus",
-      readableOverall(ledger)
-    );
+    setText("passedCount", ledger ? String(ledger.passCount) : "0");
+    setText("heldCount", ledger ? String(ledger.holdCount) : "0");
+    setText("attentionCount", String(attention));
+    setText("plainSummary", plainLanguage(ledger));
+    setText("overallStatus", readableOverall(ledger));
 
     setText(
       "overallStatusDetail",
@@ -3407,22 +2887,10 @@
         : "The system has not produced a ledger yet."
     );
 
-    setGauge(
-      percent,
-      ledger
-        ? ledger.overallStatus
-        : "UNKNOWN"
-    );
+    setGauge(percent, ledger ? ledger.overallStatus : "UNKNOWN");
 
-    setDisabled(
-      "copyReaderReport",
-      !ledger
-    );
-
-    setDisabled(
-      "copyReceiptLedger",
-      !ledger
-    );
+    setDisabled("copyReaderReport", !ledger);
+    setDisabled("copyReceiptLedger", !ledger);
   }
 
   function renderCycleMap() {
@@ -3430,85 +2898,60 @@
       return;
     }
 
-    STATIONS.forEach(
-      function renderStation(
-        definition
-      ) {
-        var node =
-          doc.querySelector(
-            '[data-station="' +
-            definition.stationId +
-            '"]'
-          );
-
-        var receipt =
-          state.receipts.find(
-            function findReceipt(entry) {
-              return (
-                entry.stationId ===
-                definition.stationId
-              );
-            }
-          );
-
-        if (!node) {
-          return;
-        }
-
-        setClassState(
-          node,
-          [
-            "pass",
-            "passed",
-            "hold",
-            "held",
-            "partial",
-            "fail",
-            "error",
-            "conflict",
-            "attention"
-          ],
-          receipt
-            ? statusClass(
-                receipt.status
-              )
-            : null
+    STATIONS.forEach(function renderStation(definition) {
+      var node =
+        doc.querySelector(
+          '[data-station="' + definition.stationId + '"]'
         );
 
-        if (!receipt) {
-          node.removeAttribute(
-            "data-status"
-          );
+      var receipt =
+        state.receipts.find(function findReceipt(entry) {
+          return entry.stationId === definition.stationId;
+        });
 
-          node.removeAttribute(
-            "title"
-          );
+      if (!node) {
+        return;
+      }
 
-          return;
-        }
+      setClassState(
+        node,
+        [
+          "pass",
+          "passed",
+          "hold",
+          "held",
+          "partial",
+          "fail",
+          "error",
+          "conflict",
+          "attention"
+        ],
+        receipt ? statusClass(receipt.status) : null
+      );
 
-        node.setAttribute(
-          "data-status",
-          receipt.status
-        );
+      if (!receipt) {
+        node.removeAttribute("data-status");
+        node.removeAttribute("title");
+        return;
+      }
 
-        node.setAttribute(
-          "title",
-          definition.label +
+      node.setAttribute("data-status", receipt.status);
+
+      node.setAttribute(
+        "title",
+        definition.label +
           ": " +
           (
             receipt.summary ||
             receipt.status ||
             "UNKNOWN"
           )
-        );
-      }
-    );
+      );
+    });
   }
 
   function renderReceipts() {
-    var list =
-      byId("receiptList");
+    var list = byId("receiptList");
 
     if (!list) {
       return;
@@ -3526,73 +2969,43 @@
 
     list.innerHTML =
       state.receipts
-        .map(
-          function renderReceipt(
-            receipt,
-            index
-          ) {
-            var issueCount =
-              Array.isArray(
-                receipt.issues
-              )
-                ? receipt.issues.length
-                : 0;
+        .map(function renderReceipt(receipt, index) {
+          var issueCount =
+            Array.isArray(receipt.issues)
+              ? receipt.issues.length
+              : 0;
 
-            return (
-              '<details class="receipt-card ' +
-              escapeHtml(
-                statusClass(
-                  receipt.status
-                )
-              ) +
-              '">' +
-              "<summary>" +
-              escapeHtml(
-                String(index + 1)
-              ) +
-              " · " +
-              escapeHtml(
-                stationLabel(
-                  receipt.stationId
-                )
-              ) +
-              " · " +
-              escapeHtml(
-                receipt.status
-              ) +
-              "</summary>" +
-              '<div class="receipt-meta">' +
-              "<span>" +
-              escapeHtml(
-                receipt.stationId
-              ) +
-              "</span>" +
-              "<span>" +
-              escapeHtml(
-                receipt.fibonacci ||
-                ""
-              ) +
-              "</span>" +
-              "<span>Issues: " +
-              escapeHtml(
-                String(issueCount)
-              ) +
-              "</span>" +
-              "</div>" +
-              "<p>" +
-              escapeHtml(
-                receipt.summary
-              ) +
-              "</p>" +
-              "<pre>" +
-              escapeHtml(
-                safeJson(receipt)
-              ) +
-              "</pre>" +
-              "</details>"
-            );
-          }
-        )
+          return (
+            '<details class="receipt-card ' +
+            escapeHtml(statusClass(receipt.status)) +
+            '">' +
+            "<summary>" +
+            escapeHtml(String(index + 1)) +
+            " · " +
+            escapeHtml(stationLabel(receipt.stationId)) +
+            " · " +
+            escapeHtml(receipt.status) +
+            "</summary>" +
+            '<div class="receipt-meta">' +
+            "<span>" +
+            escapeHtml(receipt.stationId) +
+            "</span>" +
+            "<span>" +
+            escapeHtml(receipt.fibonacci || "") +
+            "</span>" +
+            "<span>Issues: " +
+            escapeHtml(String(issueCount)) +
+            "</span>" +
+            "</div>" +
+            "<p>" +
+            escapeHtml(receipt.summary) +
+            "</p>" +
+            "<pre>" +
+            escapeHtml(safeJson(receipt)) +
+            "</pre>" +
+            "</details>"
+          );
+        })
         .join("");
   }
 
@@ -3607,9 +3020,7 @@
     setText(
       "rawReceiptsOutput",
       state.receipts.length
-        ? safeJson(
-            state.receipts
-          )
+        ? safeJson(state.receipts)
         : "No receipts produced yet."
     );
   }
@@ -3623,16 +3034,12 @@
   }
 
   function setRunning(running) {
-    state.running =
-      Boolean(running);
+    var button = byId("runDiagnostic");
 
-    var button =
-      byId("runDiagnostic");
+    state.running = Boolean(running);
 
     if (button) {
-      button.disabled =
-        state.running;
-
+      button.disabled = state.running;
       button.textContent =
         state.running
           ? "Running Diagnostic"
@@ -3641,12 +3048,10 @@
   }
 
   function runDiagnostic() {
+    var request;
+
     if (state.running) {
-      return Promise.resolve(
-        frozenClone(
-          state.ledger
-        )
-      );
+      return Promise.resolve(frozenClone(state.ledger));
     }
 
     setRunning(true);
@@ -3655,127 +3060,75 @@
       "AUDRALIA_DIAGNOSTIC_CYCLE_" +
       Date.now();
 
-    state.lastRunAt =
-      nowIso();
-
-    state.conductorResult =
-      null;
-
-    state.conductorReceipt =
-      null;
-
-    state.conductorState =
-      null;
-
-    state.stationRegistrations =
-      [];
-
-    state.auxiliaryRegistrations =
-      [];
-
-    state.receipts =
-      [];
-
-    state.ledger =
-      null;
-
-    state.readerReport =
-      "";
-
-    state.rawLedgerText =
-      "";
-
-    state.lastError =
-      null;
+    state.lastRunAt = nowIso();
+    state.conductorResult = null;
+    state.conductorReceipt = null;
+    state.conductorState = null;
+    state.stationRegistrations = [];
+    state.auxiliaryRegistrations = [];
+    state.receipts = [];
+    state.ledger = null;
+    state.readerReport = "";
+    state.rawLedgerText = "";
+    state.lastError = null;
 
     refreshRegistryState();
     inspectEngineState();
     renderAll();
 
-    var request =
-      buildConductorRequest();
+    request = buildConductorRequest();
 
     return invokeConductor(request)
-      .then(
-        function receiveConductorResult(
-          normalized
-        ) {
-          state.conductorResult =
-            normalized.conductorResult;
+      .then(function receiveConductorResult(normalized) {
+        state.conductorResult = normalized.conductorResult;
+        state.receipts = normalized.receipts;
+        state.ledger = composeLedger();
+        state.rawLedgerText = safeJson(state.ledger);
+        state.readerReport = composeReaderReport(state.ledger);
 
-          state.receipts =
-            normalized.receipts;
+        root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER = state.ledger;
+        root.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER = state.ledger;
+        root.AUDRALIA_DIAGNOSTIC_READER_REPORT = state.readerReport;
 
-          state.ledger =
-            composeLedger();
+        renderAll();
 
-          state.rawLedgerText =
-            safeJson(
-              state.ledger
-            );
+        toast(
+          state.ledger.overallStatus === "PASS"
+            ? "Diagnostic cycle completed."
+            : "Diagnostic cycle completed with held or attention items."
+        );
 
-          state.readerReport =
-            composeReaderReport(
-              state.ledger
-            );
-
-          renderAll();
-
-          toast(
-            state.ledger.overallStatus ===
-              "PASS"
-              ? "Diagnostic cycle completed."
-              : "Diagnostic cycle completed with held or attention items."
+        return frozenClone(state.ledger);
+      })
+      .catch(function handleUnexpectedRunError(error) {
+        state.lastError =
+          String(
+            error && error.message
+              ? error.message
+              : error
           );
 
-          return frozenClone(
-            state.ledger
-          );
-        }
-      )
-      .catch(
-        function handleUnexpectedRunError(
-          error
-        ) {
-          state.lastError =
-            String(
-              error &&
-              error.message
-                ? error.message
-                : error
-            );
-
-          state.receipts =
-            makeHeldReceipts(
-              "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
-              "The route controller could not complete the diagnostic cycle.",
-              state.lastError
-            );
-
-          state.ledger =
-            composeLedger();
-
-          state.rawLedgerText =
-            safeJson(
-              state.ledger
-            );
-
-          state.readerReport =
-            composeReaderReport(
-              state.ledger
-            );
-
-          renderAll();
-
-          toast(
-            "Diagnostic cycle held after controller error."
+        state.receipts =
+          makeHeldReceipts(
+            "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
+            "The route controller could not complete the diagnostic cycle.",
+            state.lastError
           );
 
-          return frozenClone(
-            state.ledger
-          );
-        }
-      )
+        state.ledger = composeLedger();
+        state.rawLedgerText = safeJson(state.ledger);
+        state.readerReport = composeReaderReport(state.ledger);
+
+        root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER = state.ledger;
+        root.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER = state.ledger;
+        root.AUDRALIA_DIAGNOSTIC_READER_REPORT = state.readerReport;
+
+        renderAll();
+
+        toast("Diagnostic cycle held after controller error.");
+
+        return frozenClone(state.ledger);
+      })
       .then(
         function finishRun(value) {
           setRunning(false);
@@ -3788,10 +3141,7 @@
       );
   }
 
-  function copyText(
-    text,
-    message
-  ) {
+  function copyText(text, message) {
     if (!text) {
       return;
     }
@@ -3799,222 +3149,132 @@
     if (
       root.navigator &&
       root.navigator.clipboard &&
-      isFunction(
-        root.navigator.clipboard.writeText
-      )
+      isFunction(root.navigator.clipboard.writeText)
     ) {
       root.navigator.clipboard
         .writeText(text)
-        .then(
-          function copied() {
-            toast(
-              message ||
-              "Copied."
-            );
-          }
-        )
-        .catch(
-          function clipboardRejected() {
-            fallbackCopy(
-              text,
-              message
-            );
-          }
-        );
+        .then(function copied() {
+          toast(message || "Copied.");
+        })
+        .catch(function clipboardRejected() {
+          fallbackCopy(text, message);
+        });
 
       return;
     }
 
-    fallbackCopy(
-      text,
-      message
-    );
+    fallbackCopy(text, message);
   }
 
-  function fallbackCopy(
-    text,
-    message
-  ) {
+  function fallbackCopy(text, message) {
+    var area;
+
     if (!doc) {
       return;
     }
 
-    var area =
-      doc.createElement(
-        "textarea"
-      );
+    area = doc.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "true");
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
 
-    area.value =
-      text;
-
-    area.setAttribute(
-      "readonly",
-      "true"
-    );
-
-    area.style.position =
-      "fixed";
-
-    area.style.left =
-      "-9999px";
-
-    doc.body.appendChild(
-      area
-    );
-
+    doc.body.appendChild(area);
     area.select();
 
     try {
-      doc.execCommand(
-        "copy"
-      );
-
-      toast(
-        message ||
-        "Copied."
-      );
+      doc.execCommand("copy");
+      toast(message || "Copied.");
     } catch (_error) {
-      toast(
-        "Copy unavailable."
-      );
+      toast("Copy unavailable.");
     }
 
-    doc.body.removeChild(
-      area
-    );
+    doc.body.removeChild(area);
   }
 
   function wireTabs() {
+    var buttons;
+    var panels;
+
     if (!doc) {
       return;
     }
 
-    var buttons =
+    buttons =
       Array.prototype.slice.call(
-        doc.querySelectorAll(
-          "[data-tab]"
-        )
+        doc.querySelectorAll("[data-tab]")
       );
 
-    var panels = {
-      ledger:
-        byId("tabLedger"),
-
-      receipts:
-        byId("tabReceipts"),
-
-      contracts:
-        byId("tabContracts"),
-
-      boundary:
-        byId("tabBoundary")
+    panels = {
+      ledger: byId("tabLedger"),
+      receipts: byId("tabReceipts"),
+      contracts: byId("tabContracts"),
+      boundary: byId("tabBoundary")
     };
 
-    buttons.forEach(
-      function bindTab(button) {
-        button.addEventListener(
-          "click",
-          function activateTab() {
-            var tab =
-              button.getAttribute(
-                "data-tab"
-              );
+    buttons.forEach(function bindTab(button) {
+      button.addEventListener("click", function activateTab() {
+        var tab = button.getAttribute("data-tab");
 
-            buttons.forEach(
-              function resetTab(other) {
-                other.setAttribute(
-                  "aria-selected",
-                  other === button
-                    ? "true"
-                    : "false"
-                );
-              }
-            );
+        buttons.forEach(function resetTab(other) {
+          other.setAttribute(
+            "aria-selected",
+            other === button
+              ? "true"
+              : "false"
+          );
+        });
 
-            Object.keys(panels).forEach(
-              function togglePanel(key) {
-                if (panels[key]) {
-                  panels[key].hidden =
-                    key !== tab;
-                }
-              }
-            );
+        Object.keys(panels).forEach(function togglePanel(key) {
+          if (panels[key]) {
+            panels[key].hidden = key !== tab;
           }
-        );
-      }
-    );
+        });
+      });
+    });
   }
 
   function wireUi() {
-    var runButton =
-      byId("runDiagnostic");
-
-    var targetButton =
-      byId("toggleTargetFrame");
-
-    var copyReaderButton =
-      byId("copyReaderReport");
-
-    var copyLedgerButton =
-      byId("copyReceiptLedger");
+    var runButton = byId("runDiagnostic");
+    var targetButton = byId("toggleTargetFrame");
+    var copyReaderButton = byId("copyReaderReport");
+    var copyLedgerButton = byId("copyReceiptLedger");
 
     if (runButton) {
-      runButton.addEventListener(
-        "click",
-        function requestDiagnosticRun() {
-          runDiagnostic();
-        }
-      );
+      runButton.addEventListener("click", function requestDiagnosticRun() {
+        runDiagnostic();
+      });
     }
 
     if (targetButton) {
-      targetButton.addEventListener(
-        "click",
-        function toggleTargetFrame() {
-          var shell =
-            byId(
-              "targetFrameShell"
-            );
+      targetButton.addEventListener("click", function toggleTargetFrame() {
+        var shell = byId("targetFrameShell");
 
-          if (!shell) {
-            return;
-          }
-
-          shell.hidden =
-            !shell.hidden;
-
-          targetButton.setAttribute(
-            "aria-expanded",
-            shell.hidden
-              ? "false"
-              : "true"
-          );
+        if (!shell) {
+          return;
         }
-      );
+
+        shell.hidden = !shell.hidden;
+
+        targetButton.setAttribute(
+          "aria-expanded",
+          shell.hidden
+            ? "false"
+            : "true"
+        );
+      });
     }
 
     if (copyReaderButton) {
-      copyReaderButton.addEventListener(
-        "click",
-        function copyReaderReport() {
-          copyText(
-            state.readerReport,
-            "Reader report copied."
-          );
-        }
-      );
+      copyReaderButton.addEventListener("click", function copyReaderReport() {
+        copyText(state.readerReport, "Reader report copied.");
+      });
     }
 
     if (copyLedgerButton) {
-      copyLedgerButton.addEventListener(
-        "click",
-        function copyLedger() {
-          copyText(
-            state.rawLedgerText,
-            "Receipt ledger copied."
-          );
-        }
-      );
+      copyLedgerButton.addEventListener("click", function copyLedger() {
+        copyText(state.rawLedgerText, "Receipt ledger copied.");
+      });
     }
 
     wireTabs();
@@ -4022,114 +3282,46 @@
 
   function getPublicState() {
     return frozenClone({
-      contract:
-        CONTRACT,
-
-      previousContract:
-        PREVIOUS_CONTRACT,
-
-      version:
-        VERSION,
-
-      file:
-        FILE,
-
-      initialized:
-        state.initialized,
-
-      running:
-        state.running,
-
-      cycleId:
-        state.cycleId,
-
-      lastRunAt:
-        state.lastRunAt,
-
-      registrySnapshot:
-        state.registrySnapshot,
-
-      registryReceipt:
-        state.registryReceipt,
-
-      authorityRecords:
-        state.authorityRecords,
-
-      engineRecords:
-        state.engineRecords,
-
-      selectedEngine:
-        state.selectedEngine,
-
-      engineInspection:
-        state.engineInspection,
-
-      engineOps:
-        state.engineOps,
-
-      engineReceipt:
-        state.engineReceipt,
-
-      conductorReceipt:
-        state.conductorReceipt,
-
-      conductorState:
-        state.conductorState,
-
-      stationRegistrations:
-        state.stationRegistrations,
-
-      auxiliaryRegistrations:
-        state.auxiliaryRegistrations,
-
-      receiptCount:
-        state.receipts.length,
-
-      receipts:
-        state.receipts,
-
-      ledger:
-        state.ledger,
-
-      readerReport:
-        state.readerReport,
-
-      lastError:
-        state.lastError
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      initialized: state.initialized,
+      running: state.running,
+      cycleId: state.cycleId,
+      lastRunAt: state.lastRunAt,
+      registrySnapshot: state.registrySnapshot,
+      registryReceipt: state.registryReceipt,
+      authorityRecords: state.authorityRecords,
+      engineRecords: state.engineRecords,
+      selectedEngine: state.selectedEngine,
+      engineInspection: state.engineInspection,
+      engineOps: state.engineOps,
+      engineReceipt: state.engineReceipt,
+      conductorReceipt: state.conductorReceipt,
+      conductorState: state.conductorState,
+      stationRegistrations: state.stationRegistrations,
+      auxiliaryRegistrations: state.auxiliaryRegistrations,
+      receiptCount: state.receipts.length,
+      receipts: state.receipts,
+      ledger: state.ledger,
+      readerReport: state.readerReport,
+      lastError: state.lastError
     });
   }
 
   function buildApi() {
     return deepFreeze({
-      CONTRACT:
-        CONTRACT,
-
-      PREVIOUS_CONTRACT:
-        PREVIOUS_CONTRACT,
-
-      VERSION:
-        VERSION,
-
-      FILE:
-        FILE,
-
-      HTML_CONTRACT:
-        HTML_CONTRACT,
-
-      CSS_CONTRACT:
-        CSS_CONTRACT,
-
-      GOVERNING_ENGINE_CONTRACT:
-        GOVERNING_ENGINE_CONTRACT,
-
-      CORE_ENGINE_CONTRACT:
-        CORE_ENGINE_CONTRACT,
-
-      REGISTRY_CONTRACT:
-        REGISTRY_CONTRACT,
-
-      DEFAULT_ENGINE_ID:
-        DEFAULT_ENGINE_ID,
+      CONTRACT: CONTRACT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+      VERSION: VERSION,
+      FILE: FILE,
+      HTML_CONTRACT: HTML_CONTRACT,
+      CSS_CONTRACT: CSS_CONTRACT,
+      GOVERNING_ENGINE_CONTRACT: GOVERNING_ENGINE_CONTRACT,
+      CORE_ENGINE_CONTRACT: CORE_ENGINE_CONTRACT,
+      REGISTRY_CONTRACT: REGISTRY_CONTRACT,
+      DEFAULT_ENGINE_ID: DEFAULT_ENGINE_ID,
 
       runDiagnostic:
         runDiagnostic,
@@ -4140,9 +3332,7 @@
           inspectEngineState();
           renderAll();
 
-          return frozenClone(
-            state.registrySnapshot
-          );
+          return frozenClone(state.registrySnapshot);
         },
 
       render:
@@ -4157,68 +3347,71 @@
 
       getLedger:
         function getLedger() {
-          return frozenClone(
-            state.ledger
-          );
+          return frozenClone(state.ledger);
         },
 
       getReceipts:
         function getReceipts() {
-          return frozenClone(
-            state.receipts
-          );
+          return frozenClone(state.receipts);
         },
 
       getReaderReport:
         function getReaderReport() {
-          return String(
-            state.readerReport ||
-            ""
-          );
+          return String(state.readerReport || "");
         },
 
       getRegistrySnapshot:
         function getRegistrySnapshot() {
-          return frozenClone(
-            state.registrySnapshot
-          );
+          return frozenClone(state.registrySnapshot);
         },
 
       getRegistryReceipt:
         function getRegistryReceipt() {
-          return frozenClone(
-            state.registryReceipt
-          );
+          return frozenClone(state.registryReceipt);
+        },
+
+      buildConductorRequest:
+        function publicBuildConductorRequest() {
+          refreshRegistryState();
+          inspectEngineState();
+          return buildConductorRequest();
         }
     });
   }
 
   function publishApi() {
-    var api =
-      buildApi();
+    var api = buildApi();
 
-    root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
-      api;
+    root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER = api;
 
-    if (
-      !root.AUDRALIA ||
-      typeof root.AUDRALIA !== "object"
-    ) {
-      root.AUDRALIA =
-        {};
+    if (!root.AUDRALIA || typeof root.AUDRALIA !== "object") {
+      root.AUDRALIA = {};
     }
 
-    root.AUDRALIA.diagnosticRouteController =
-      api;
+    root.AUDRALIA.diagnosticRouteController = api;
 
-    root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_LOADED__ =
-      true;
+    root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_LOADED__ = true;
+    root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_VERSION__ = VERSION;
+    root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONTRACT__ = CONTRACT;
 
-    root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_VERSION__ =
-      VERSION;
-
-    root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONTRACT__ =
-      CONTRACT;
+    root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT = {
+      schema: "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT_v4",
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      status: "AVAILABLE",
+      orchestrationOwner: "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR",
+      orchestrationMethod: "createCycle",
+      packetNormalization: {
+        subjectFileDeclared: FILE,
+        engineFileDerivedFromRegistry: true,
+        constructRootFileDeclared: DIAGNOSTIC_ROOT_FILE,
+        targetRouteDeclared: TARGET_ROUTE
+      },
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso()
+    };
 
     return api;
   }
@@ -4228,8 +3421,7 @@
       return;
     }
 
-    state.initialized =
-      true;
+    state.initialized = true;
 
     wireUi();
     publishApi();
@@ -4278,17 +3470,11 @@
     return;
   }
 
-  if (
-    existing &&
-    existing.CONTRACT === CONTRACT
-  ) {
+  if (existing && existing.CONTRACT === CONTRACT) {
     return;
   }
 
-  if (
-    doc &&
-    doc.readyState === "loading"
-  ) {
+  if (doc && doc.readyState === "loading") {
     doc.addEventListener(
       "DOMContentLoaded",
       init,

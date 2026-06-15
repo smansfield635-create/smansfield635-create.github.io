@@ -3,9 +3,10 @@
 // Full-file replacement.
 // Diagnostic-only.
 // Read-only.
-// Controller-side bounded target-runtime admission wait.
-// North conductor and station execution remain synchronous.
+// Controller-side bounded target-runtime surface-truth admission wait.
+// North conductor and all station executions remain synchronous.
 // Timeout does not manufacture positive evidence; the cycle still runs and may HOLD.
+// Public ledger and reader-report schemas remain v4-compatible.
 // No production mutation.
 // No renderer authority.
 // No runtime restart authority.
@@ -39,7 +40,7 @@ var PREVIOUS_CONTRACT =
 "AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v4";
 
 var VERSION =
-"5.0.0";
+"5.1.0";
 
 var FILE =
 "/showroom/globe/audralia/diagnostic/index.js";
@@ -97,13 +98,13 @@ var CONDUCTOR_REQUEST_SCHEMA =
 "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_REQUEST_v1";
 
 var LEDGER_SCHEMA =
-"AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v5";
+"AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v4";
 
 var RECEIPT_SCHEMA =
 "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
 
 var READER_REPORT_SCHEMA =
-"AUDRALIA_DIAGNOSTIC_READER_REPORT_v5";
+"AUDRALIA_DIAGNOSTIC_READER_REPORT_v4";
 
 var NO_CLAIMS =
 deepFreeze({
@@ -317,6 +318,13 @@ return Boolean(
 value &&
 typeof value === "object" &&
 !Array.isArray(value)
+);
+}
+
+function isNonemptyObject(value) {
+return Boolean(
+isObject(value) &&
+Object.keys(value).length > 0
 );
 }
 
@@ -1067,7 +1075,12 @@ if (frame) {
     ) {
       runtimeStatus =
         frozenClone(
-          callSafely(runtime, "getStatus", [], null)
+          callSafely(
+            runtime,
+            "getStatus",
+            [],
+            null
+          )
         );
     }
 
@@ -1077,7 +1090,12 @@ if (frame) {
     ) {
       runtimeReceiptLight =
         frozenClone(
-          callSafely(runtime, "getReceiptLight", [], null)
+          callSafely(
+            runtime,
+            "getReceiptLight",
+            [],
+            null
+          )
         );
     }
 
@@ -1087,17 +1105,28 @@ if (frame) {
     ) {
       runtimeReceipt =
         frozenClone(
-          callSafely(runtime, "getReceipt", [], null)
+          callSafely(
+            runtime,
+            "getReceipt",
+            [],
+            null
+          )
         );
     }
 
-    if (!runtimeStatus && frameWindow) {
-      runtimeStatus =
-        frozenClone(
-          frameWindow.AUDRALIA_PLANET_RUNTIME_RECEIPT ||
-          frameWindow.AUDRALIA_PLANET_ROUTE_RECEIPT ||
-          null
-        );
+    if (
+      !isNonemptyObject(runtimeStatus) &&
+      frameWindow
+    ) {
+      var publishedReceipt =
+        frameWindow.AUDRALIA_PLANET_RUNTIME_RECEIPT ||
+        frameWindow.AUDRALIA_PLANET_ROUTE_RECEIPT ||
+        null;
+
+      if (isNonemptyObject(publishedReceipt)) {
+        runtimeStatus =
+          frozenClone(publishedReceipt);
+      }
     }
   } catch (error) {
     accessible =
@@ -1129,10 +1158,13 @@ if (frame) {
 }
 
 var selectedEvidence =
-  runtimeStatus ||
-  runtimeReceiptLight ||
-  runtimeReceipt ||
-  null;
+  isNonemptyObject(runtimeStatus)
+    ? runtimeStatus
+    : isNonemptyObject(runtimeReceiptLight)
+      ? runtimeReceiptLight
+      : isNonemptyObject(runtimeReceipt)
+        ? runtimeReceipt
+        : null;
 
 return deepFreeze({
   framePresent:
@@ -1202,19 +1234,25 @@ return deepFreeze({
     selectedEvidence,
 
   runtimeStatus:
-    runtimeStatus,
+    isNonemptyObject(runtimeStatus)
+      ? runtimeStatus
+      : null,
 
   runtimeReceiptLight:
-    runtimeReceiptLight,
+    isNonemptyObject(runtimeReceiptLight)
+      ? runtimeReceiptLight
+      : null,
 
   runtimeReceipt:
-    runtimeReceipt,
+    isNonemptyObject(runtimeReceipt)
+      ? runtimeReceipt
+      : null,
 
   runtimeEvidenceAvailable:
-    Boolean(selectedEvidence),
+    isNonemptyObject(selectedEvidence),
 
   classification:
-    selectedEvidence
+    isNonemptyObject(selectedEvidence)
       ? "REGISTERED_EXTERNAL_PROVIDER"
       : "UNKNOWN",
 
@@ -1229,7 +1267,8 @@ return deepFreeze({
     iframePresenceProvesSubmission: false,
     iframePresenceProvesPresentation: false,
     iframePresenceProvesVisibility: false,
-    runtimeGlobalPresenceProvesReadiness: false
+    runtimeGlobalPresenceProvesReadiness: false,
+    runtimeEvidencePresenceProvesSurfaceTruth: false
   }
 });
 
@@ -1237,26 +1276,30 @@ return deepFreeze({
 
 function targetRuntimeAdmissionState(snapshot) {
 var status =
-snapshot && isObject(snapshot.targetRuntimeStatus)
+snapshot &&
+isNonemptyObject(snapshot.targetRuntimeStatus)
 ? snapshot.targetRuntimeStatus
 : {};
 
 var mounted =
   firstBoolean(
     status.mounted,
-    status.statusDetail && status.statusDetail.mounted
+    status.statusDetail &&
+      status.statusDetail.mounted
   );
 
 var stageRectNonzero =
   firstBoolean(
     status.stageRectNonzero,
-    status.statusDetail && status.statusDetail.stageRectNonzero
+    status.statusDetail &&
+      status.statusDetail.stageRectNonzero
   );
 
 var geometryReady =
   firstBoolean(
     status.geometryReady,
-    status.statusDetail && status.statusDetail.geometryReady
+    status.statusDetail &&
+      status.statusDetail.geometryReady
   );
 
 var firstFrameDrawn =
@@ -1264,7 +1307,8 @@ var firstFrameDrawn =
     status.firstFrameDrawn,
     status.firstFrameSubmitted,
     status.firstFramePresented,
-    status.statusDetail && status.statusDetail.firstFrameDrawn
+    status.statusDetail &&
+      status.statusDetail.firstFrameDrawn
   );
 
 var visiblePixelObserved =
@@ -1278,7 +1322,8 @@ var visiblePixelObserved =
 var fallbackActive =
   firstBoolean(
     status.fallbackActive,
-    status.statusDetail && status.statusDetail.fallbackActive
+    status.statusDetail &&
+      status.statusDetail.fallbackActive
   );
 
 var primaryVisible =
@@ -1292,6 +1337,10 @@ var fallbackVisible =
   fallbackActive === true &&
   firstFrameDrawn === true &&
   visiblePixelObserved === true;
+
+var surfaceTruthCurrentlyAdmissible =
+  primaryVisible ||
+  fallbackVisible;
 
 return deepFreeze({
   framePresent:
@@ -1344,7 +1393,7 @@ return deepFreeze({
     fallbackVisible,
 
   surfaceTruthCurrentlyAdmissible:
-    primaryVisible || fallbackVisible,
+    surfaceTruthCurrentlyAdmissible,
 
   controllerAdmissionBoundarySatisfied:
     Boolean(
@@ -1353,7 +1402,8 @@ return deepFreeze({
       snapshot.sameOriginAccessible === true &&
       snapshot.documentLoaded === true &&
       snapshot.runtimeGlobalPresent === true &&
-      snapshot.runtimeEvidenceAvailable === true
+      snapshot.runtimeEvidenceAvailable === true &&
+      surfaceTruthCurrentlyAdmissible === true
     )
 });
 
@@ -1422,6 +1472,15 @@ function sample() {
     visiblePixelObserved:
       admission.visiblePixelObserved,
 
+    fallbackActive:
+      admission.fallbackActive,
+
+    primaryVisible:
+      admission.primaryVisible,
+
+    fallbackVisible:
+      admission.fallbackVisible,
+
     controllerAdmissionBoundarySatisfied:
       admission.controllerAdmissionBoundarySatisfied,
 
@@ -1432,7 +1491,9 @@ function sample() {
       snapshot.readError
   });
 
-  if (admission.controllerAdmissionBoundarySatisfied) {
+  if (
+    admission.controllerAdmissionBoundarySatisfied === true
+  ) {
     return Promise.resolve(
       deepFreeze({
         schema:
@@ -1451,7 +1512,10 @@ function sample() {
           false,
 
         reason:
-          "TARGET_RUNTIME_GLOBAL_AND_EVIDENCE_AVAILABLE",
+          "F8_SURFACE_TRUTH_BOUNDARY_SATISFIED",
+
+        admissionRequirement:
+          "FRAME_ACCESSIBLE_DOCUMENT_LOADED_RUNTIME_GLOBAL_NONEMPTY_EVIDENCE_AND_F8_SURFACE_TRUTH",
 
         pollIntervalMs:
           TARGET_RUNTIME_WAIT_INTERVAL_MS,
@@ -1487,7 +1551,10 @@ function sample() {
     );
   }
 
-  if (elapsedMs >= TARGET_RUNTIME_WAIT_TIMEOUT_MS) {
+  if (
+    elapsedMs >=
+    TARGET_RUNTIME_WAIT_TIMEOUT_MS
+  ) {
     return Promise.resolve(
       deepFreeze({
         schema:
@@ -1506,7 +1573,10 @@ function sample() {
           true,
 
         reason:
-          "TARGET_RUNTIME_EVIDENCE_NOT_AVAILABLE_WITHIN_BOUND",
+          "F8_SURFACE_TRUTH_NOT_AVAILABLE_WITHIN_BOUND",
+
+        admissionRequirement:
+          "FRAME_ACCESSIBLE_DOCUMENT_LOADED_RUNTIME_GLOBAL_NONEMPTY_EVIDENCE_AND_F8_SURFACE_TRUTH",
 
         pollIntervalMs:
           TARGET_RUNTIME_WAIT_INTERVAL_MS,
@@ -1542,8 +1612,9 @@ function sample() {
     );
   }
 
-  return delay(TARGET_RUNTIME_WAIT_INTERVAL_MS)
-    .then(sample);
+  return delay(
+    TARGET_RUNTIME_WAIT_INTERVAL_MS
+  ).then(sample);
 }
 
 return sample();
@@ -1563,20 +1634,45 @@ if (!registry) {
   return;
 }
 
-callSafely(registry, "refresh", [], null);
+callSafely(
+  registry,
+  "refresh",
+  [],
+  null
+);
 
 var snapshot =
-  callSafely(registry, "getSnapshot", [], null);
+  callSafely(
+    registry,
+    "getSnapshot",
+    [],
+    null
+  );
 
 var receipt =
-  callSafely(registry, "getRegistryReceipt", [], null) ||
-  callSafely(registry, "getReceipt", [], null) ||
+  callSafely(
+    registry,
+    "getRegistryReceipt",
+    [],
+    null
+  ) ||
+  callSafely(
+    registry,
+    "getReceipt",
+    [],
+    null
+  ) ||
   root.DGB_ENGINE_REGISTRY_RECEIPT ||
   root.DGB_ENGINE_SUBJECTS_RECEIPT ||
   null;
 
 var authorityRecords =
-  callSafely(registry, "listAuthorities", [], null);
+  callSafely(
+    registry,
+    "listAuthorities",
+    [],
+    null
+  );
 
 var engineRecords =
   callSafely(
@@ -1592,14 +1688,24 @@ var engineRecords =
   );
 
 var selectedEngine =
-  callSafely(registry, "getDefaultEngine", [], null);
+  callSafely(
+    registry,
+    "getDefaultEngine",
+    [],
+    null
+  );
 
 if (
   !snapshot &&
   isFunction(registry.inspect)
 ) {
   var inspection =
-    callSafely(registry, "inspect", [], null);
+    callSafely(
+      registry,
+      "inspect",
+      [],
+      null
+    );
 
   if (inspection) {
     snapshot =
@@ -1796,7 +1902,8 @@ var instanceId =
 
 state.engineInspection =
   frozenClone(
-    engine && isFunction(engine.inspect)
+    engine &&
+    isFunction(engine.inspect)
       ? callSafely(
           engine,
           "inspect",
@@ -1874,29 +1981,50 @@ return value === null || value === undefined
 
 function getSelectedEngineFile() {
 return firstString(
-state.selectedEngine && state.selectedEngine.file,
-state.engineReceipt && state.engineReceipt.file,
-state.engineInspection && state.engineInspection.file,
-DEFAULT_ENGINE_FILE
+state.selectedEngine &&
+state.selectedEngine.file,
+
+  state.engineReceipt &&
+    state.engineReceipt.file,
+
+  state.engineInspection &&
+    state.engineInspection.file,
+
+  DEFAULT_ENGINE_FILE
 );
+
 }
 
 function getSelectedEngineContract() {
 return firstString(
-state.selectedEngine && state.selectedEngine.contract,
-state.engineReceipt && state.engineReceipt.contract,
-state.engineInspection && state.engineInspection.contract,
-CORE_ENGINE_CONTRACT
+state.selectedEngine &&
+state.selectedEngine.contract,
+
+  state.engineReceipt &&
+    state.engineReceipt.contract,
+
+  state.engineInspection &&
+    state.engineInspection.contract,
+
+  CORE_ENGINE_CONTRACT
 );
+
 }
 
 function getSelectedEngineVersion() {
 return firstString(
-state.selectedEngine && state.selectedEngine.version,
-state.engineReceipt && state.engineReceipt.version,
-state.engineInspection && state.engineInspection.version,
-"1.0.0"
+state.selectedEngine &&
+state.selectedEngine.version,
+
+  state.engineReceipt &&
+    state.engineReceipt.version,
+
+  state.engineInspection &&
+    state.engineInspection.version,
+
+  "1.0.0"
 );
+
 }
 
 function buildRuntimeEvidence() {
@@ -1990,55 +2118,103 @@ return deepFreeze({
       : null,
 
   fileLoaded:
-    readObserved(observed, "fileLoaded"),
+    readObserved(
+      observed,
+      "fileLoaded"
+    ),
 
   modelValidated:
-    readObserved(observed, "modelValidated"),
+    readObserved(
+      observed,
+      "modelValidated"
+    ),
 
   instanceCreated:
-    readObserved(observed, "instanceCreated"),
+    readObserved(
+      observed,
+      "instanceCreated"
+    ),
 
   mountPresent:
-    readObserved(observed, "mountPresent"),
+    readObserved(
+      observed,
+      "mountPresent"
+    ),
 
   surfaceNonzero:
-    readObserved(observed, "surfaceNonzero"),
+    readObserved(
+      observed,
+      "surfaceNonzero"
+    ),
 
   backendInitialized:
-    readObserved(observed, "backendInitialized"),
+    readObserved(
+      observed,
+      "backendInitialized"
+    ),
 
   resourcesUploaded:
-    readObserved(observed, "resourcesUploaded"),
+    readObserved(
+      observed,
+      "resourcesUploaded"
+    ),
 
   firstFrameSubmitted:
-    readObserved(observed, "firstFrameSubmitted"),
+    readObserved(
+      observed,
+      "firstFrameSubmitted"
+    ),
 
   firstFramePresented:
-    readObserved(observed, "firstFramePresented"),
+    readObserved(
+      observed,
+      "firstFramePresented"
+    ),
 
   visiblePixelObserved:
-    readObserved(observed, "visiblePixelObserved"),
+    readObserved(
+      observed,
+      "visiblePixelObserved"
+    ),
 
   interactionObserved:
-    readObserved(observed, "interactionObserved"),
+    readObserved(
+      observed,
+      "interactionObserved"
+    ),
 
   fallbackAvailable:
-    readObserved(observed, "fallbackAvailable"),
+    readObserved(
+      observed,
+      "fallbackAvailable"
+    ),
 
   contextRecoveryAvailable:
-    readObserved(observed, "contextRecoveryAvailable"),
+    readObserved(
+      observed,
+      "contextRecoveryAvailable"
+    ),
 
   noBlockingError:
-    readObserved(observed, "noBlockingError"),
+    readObserved(
+      observed,
+      "noBlockingError"
+    ),
 
   primaryVisibility:
     renderer
-      ? readObserved(renderer, "visiblePixelObserved")
+      ? readObserved(
+          renderer,
+          "visiblePixelObserved"
+        )
       : null,
 
   fallbackVisibility:
     fallback
-      ? readObserved(fallback, "visibleOutputObserved")
+      ? readObserved(
+          fallback,
+          "visibleOutputObserved"
+        )
       : null,
 
   evidenceAvailable:
@@ -2103,7 +2279,10 @@ return deepFreeze({
 
   assignedEngineCount:
     snapshot
-      ? Number(snapshot.assignedEngineCount || 0)
+      ? Number(
+          snapshot.assignedEngineCount ||
+          0
+        )
       : state.engineRecords.filter(function assigned(record) {
           return Boolean(
             record &&
@@ -2113,7 +2292,10 @@ return deepFreeze({
 
   selectableEngineCount:
     snapshot
-      ? Number(snapshot.selectableEngineCount || 0)
+      ? Number(
+          snapshot.selectableEngineCount ||
+          0
+        )
       : state.engineRecords.filter(function selectable(record) {
           return Boolean(
             record &&
@@ -2123,7 +2305,10 @@ return deepFreeze({
 
   reservedEngineCount:
     snapshot
-      ? Number(snapshot.reservedEngineCount || 0)
+      ? Number(
+          snapshot.reservedEngineCount ||
+          0
+        )
       : state.engineRecords.filter(function reserved(record) {
           return Boolean(
             record &&
@@ -2133,12 +2318,16 @@ return deepFreeze({
 
   authority:
     state.authorityRecords.length
-      ? frozenClone(state.authorityRecords[0])
+      ? frozenClone(
+          state.authorityRecords[0]
+        )
       : null,
 
   selectedEngine:
     state.selectedEngine
-      ? frozenClone(state.selectedEngine)
+      ? frozenClone(
+          state.selectedEngine
+        )
       : null,
 
   receipt:
@@ -2185,13 +2374,19 @@ subjectId:
     normalizePathClass(FILE),
 
   rootFilePathClass:
-    normalizePathClass(DIAGNOSTIC_ROOT_FILE),
+    normalizePathClass(
+      DIAGNOSTIC_ROOT_FILE
+    ),
 
   routePathClass:
-    normalizePathClass(DIAGNOSTIC_ROUTE),
+    normalizePathClass(
+      DIAGNOSTIC_ROUTE
+    ),
 
   targetRoutePathClass:
-    normalizePathClass(TARGET_ROUTE)
+    normalizePathClass(
+      TARGET_ROUTE
+    )
 });
 
 }
@@ -2229,8 +2424,10 @@ state.selectedEngine.engineId
     firstString(
       state.selectedEngine &&
         state.selectedEngine.governingContract,
+
       state.engineReceipt &&
         state.engineReceipt.governingContract,
+
       GOVERNING_ENGINE_CONTRACT
     ),
 
@@ -2238,6 +2435,7 @@ state.selectedEngine.engineId
     firstString(
       state.selectedEngine &&
         state.selectedEngine.governingContractFile,
+
       DEFAULT_GOVERNING_ENGINE_FILE
     ),
 
@@ -2254,8 +2452,10 @@ state.selectedEngine.engineId
     firstString(
       state.selectedEngine &&
         state.selectedEngine.modelSchema,
+
       state.engineReceipt &&
         state.engineReceipt.modelSchema,
+
       "DGB_MODEL_PACKAGE_v1"
     ),
 
@@ -2288,6 +2488,7 @@ state.selectedEngine.engineId
     firstString(
       state.selectedEngine &&
         state.selectedEngine.status,
+
       "AVAILABLE"
     ),
 
@@ -2299,12 +2500,16 @@ state.selectedEngine.engineId
 
   runtimeReceipt:
     state.engineReceipt
-      ? frozenClone(state.engineReceipt)
+      ? frozenClone(
+          state.engineReceipt
+        )
       : null,
 
   inspection:
     state.engineInspection
-      ? frozenClone(state.engineInspection)
+      ? frozenClone(
+          state.engineInspection
+        )
       : null
 });
 
@@ -2356,10 +2561,14 @@ constructId:
     FILE,
 
   routePathClass:
-    normalizePathClass(DIAGNOSTIC_ROUTE),
+    normalizePathClass(
+      DIAGNOSTIC_ROUTE
+    ),
 
   rootFilePathClass:
-    normalizePathClass(DIAGNOSTIC_ROOT_FILE),
+    normalizePathClass(
+      DIAGNOSTIC_ROOT_FILE
+    ),
 
   controllerFilePathClass:
     normalizePathClass(FILE),
@@ -2368,7 +2577,9 @@ constructId:
     TARGET_ROUTE,
 
   targetRoutePathClass:
-    normalizePathClass(TARGET_ROUTE),
+    normalizePathClass(
+      TARGET_ROUTE
+    ),
 
   subject:
     subjectEvidence,
@@ -2381,7 +2592,9 @@ constructId:
 
   targetPreflight:
     state.targetPreflight
-      ? frozenClone(state.targetPreflight)
+      ? frozenClone(
+          state.targetPreflight
+        )
       : null,
 
   dependencies: [
@@ -2403,6 +2616,7 @@ constructId:
     diagnosticEvidenceGoverning: false,
     declaredStructureEqualsRuntimeProof: false,
     iframePresenceEqualsPresentationProof: false,
+    runtimeGlobalPresenceEqualsSurfaceTruth: false,
     preflightTimeoutCreatesPositiveEvidence: false
   },
 
@@ -2459,7 +2673,9 @@ return deepFreeze({
 
   targetPreflight:
     state.targetPreflight
-      ? frozenClone(state.targetPreflight)
+      ? frozenClone(
+          state.targetPreflight
+        )
       : null,
 
   engineRegistry:
@@ -2493,7 +2709,9 @@ return deepFreeze({
 
     targetRuntimePreflight:
       state.targetPreflight
-        ? frozenClone(state.targetPreflight)
+        ? frozenClone(
+            state.targetPreflight
+          )
         : null,
 
     eastEvidenceTransport: {
@@ -2522,13 +2740,21 @@ return deepFreeze({
 
 function resolveStationApi(definition) {
 var found =
-readFirst(definition.globalPaths || []);
+readFirst(
+definition.globalPaths ||
+[]
+);
 
 if (found.value) {
   return {
-    api: found.value,
-    globalPath: found.path,
-    source: "DECLARED_GLOBAL"
+    api:
+      found.value,
+
+    globalPath:
+      found.path,
+
+    source:
+      "DECLARED_GLOBAL"
   };
 }
 
@@ -2548,18 +2774,26 @@ if (
     index += 1
   ) {
     var namespaceCandidate =
-      namespace[namespaceKeys[index]];
+      namespace[
+        namespaceKeys[index]
+      ];
 
     if (
       namespaceCandidate &&
-      namespaceCandidate.STATION_ID === definition.stationId &&
-      Number(namespaceCandidate.CYCLE_POSITION) === definition.position
+      namespaceCandidate.STATION_ID ===
+        definition.stationId &&
+      Number(
+        namespaceCandidate.CYCLE_POSITION
+      ) === definition.position
     ) {
       return {
-        api: namespaceCandidate,
+        api:
+          namespaceCandidate,
+
         globalPath:
           "AUDRALIA." +
           namespaceKeys[index],
+
         source:
           "AUDRALIA_NAMESPACE_SCAN"
       };
@@ -2584,7 +2818,9 @@ for (
     rootKeys[rootIndex];
 
   if (
-    key.indexOf("AUDRALIA_DIAGNOSTIC") !== 0
+    key.indexOf(
+      "AUDRALIA_DIAGNOSTIC"
+    ) !== 0
   ) {
     continue;
   }
@@ -2599,13 +2835,21 @@ for (
 
   if (
     candidate &&
-    candidate.STATION_ID === definition.stationId &&
-    Number(candidate.CYCLE_POSITION) === definition.position
+    candidate.STATION_ID ===
+      definition.stationId &&
+    Number(
+      candidate.CYCLE_POSITION
+    ) === definition.position
   ) {
     return {
-      api: candidate,
-      globalPath: key,
-      source: "ROOT_SCAN"
+      api:
+        candidate,
+
+      globalPath:
+        key,
+
+      source:
+        "ROOT_SCAN"
     };
   }
 }
@@ -2620,7 +2864,10 @@ return {
 
 function resolveAuxiliaryApi(definition) {
 var found =
-readFirst(definition.globalPaths || []);
+readFirst(
+definition.globalPaths ||
+[]
+);
 
 return {
   api:
@@ -2695,7 +2942,8 @@ RECEIPT_SCHEMA,
         definition.stationId,
 
       detail:
-        detail || summary
+        detail ||
+        summary
     }
   ],
 
@@ -2717,15 +2965,21 @@ RECEIPT_SCHEMA,
 
 }
 
-function makeHeldReceipts(code, summary, detail) {
-return STATIONS.map(function mapHeld(definition) {
+function makeHeldReceipts(
+code,
+summary,
+detail
+) {
+return STATIONS.map(
+function mapHeld(definition) {
 return makeHeldReceipt(
 definition,
 code,
 summary,
 detail
 );
-});
+}
+);
 }
 
 function extractReceipts(result) {
@@ -2741,14 +2995,22 @@ var candidates = [
   result.receipts,
   result.stationReceipts,
   result.cycleReceipts,
-  result.ledger && result.ledger.receipts,
-  result.ledger && result.ledger.stationReceipts,
-  result.result && result.result.receipts,
-  result.result && result.result.stationReceipts,
-  result.packet && result.packet.receipts,
-  result.packet && result.packet.stationReceipts,
-  result.cycleReceipt && result.cycleReceipt.receipts,
-  result.cycleReceipt && result.cycleReceipt.stationReceipts
+  result.ledger &&
+    result.ledger.receipts,
+  result.ledger &&
+    result.ledger.stationReceipts,
+  result.result &&
+    result.result.receipts,
+  result.result &&
+    result.result.stationReceipts,
+  result.packet &&
+    result.packet.receipts,
+  result.packet &&
+    result.packet.stationReceipts,
+  result.cycleReceipt &&
+    result.cycleReceipt.receipts,
+  result.cycleReceipt &&
+    result.cycleReceipt.stationReceipts
 ];
 
 for (
@@ -2756,7 +3018,11 @@ for (
   index < candidates.length;
   index += 1
 ) {
-  if (Array.isArray(candidates[index])) {
+  if (
+    Array.isArray(
+      candidates[index]
+    )
+  ) {
     return candidates[index];
   }
 }
@@ -2765,7 +3031,11 @@ return [];
 
 }
 
-function normalizeReceipt(receipt, definition, index) {
+function normalizeReceipt(
+receipt,
+definition,
+index
+) {
 var source =
 isObject(receipt)
 ? receipt
@@ -2801,7 +3071,9 @@ return deepFreeze({
     state.cycleId,
 
   position:
-    Number.isFinite(Number(source.position))
+    Number.isFinite(
+      Number(source.position)
+    )
       ? Number(source.position)
       : stationDefinition.position,
 
@@ -2843,24 +3115,37 @@ return deepFreeze({
     source.handoffEligible === true,
 
   summary:
-    typeof source.summary === "string" &&
+    typeof source.summary ===
+      "string" &&
     source.summary.trim()
       ? source.summary.trim()
       : "No station summary was supplied.",
 
   observations:
-    Array.isArray(source.observations)
-      ? frozenClone(source.observations)
+    Array.isArray(
+      source.observations
+    )
+      ? frozenClone(
+          source.observations
+        )
       : [],
 
   evidence:
-    Array.isArray(source.evidence)
-      ? frozenClone(source.evidence)
+    Array.isArray(
+      source.evidence
+    )
+      ? frozenClone(
+          source.evidence
+        )
       : [],
 
   issues:
-    Array.isArray(source.issues)
-      ? frozenClone(source.issues)
+    Array.isArray(
+      source.issues
+    )
+      ? frozenClone(
+          source.issues
+        )
       : [],
 
   firstHeldCoordinate:
@@ -2877,7 +3162,9 @@ return deepFreeze({
 
   recommendedOwner:
     source.recommendedOwner
-      ? frozenClone(source.recommendedOwner)
+      ? frozenClone(
+          source.recommendedOwner
+        )
       : null,
 
   generatedAt:
@@ -2886,7 +3173,9 @@ return deepFreeze({
 
   noClaims:
     isObject(source.noClaims)
-      ? frozenClone(source.noClaims)
+      ? frozenClone(
+          source.noClaims
+        )
       : NO_CLAIMS,
 
   raw:
@@ -2916,42 +3205,50 @@ if (!receipts.length) {
   };
 }
 
-STATIONS.forEach(function normalizeExpectedStation(definition, index) {
-  var matching =
-    receipts.find(function findMatching(receipt) {
-      return (
-        receipt &&
-        receipt.stationId === definition.stationId
+STATIONS.forEach(
+  function normalizeExpectedStation(
+    definition,
+    index
+  ) {
+    var matching =
+      receipts.find(
+        function findMatching(receipt) {
+          return (
+            receipt &&
+            receipt.stationId ===
+              definition.stationId
+          );
+        }
       );
-    });
 
-  if (!matching) {
-    matching =
-      receipts[index] ||
-      null;
-  }
+    if (!matching) {
+      matching =
+        receipts[index] ||
+        null;
+    }
 
-  if (!matching) {
+    if (!matching) {
+      normalized.push(
+        makeHeldReceipt(
+          definition,
+          "STATION_RECEIPT_MISSING",
+          "The North conductor did not return this station receipt.",
+          "Expected station receipt was absent from the conductor result."
+        )
+      );
+
+      return;
+    }
+
     normalized.push(
-      makeHeldReceipt(
+      normalizeReceipt(
+        matching,
         definition,
-        "STATION_RECEIPT_MISSING",
-        "The North conductor did not return this station receipt.",
-        "Expected station receipt was absent from the conductor result."
+        index
       )
     );
-
-    return;
   }
-
-  normalized.push(
-    normalizeReceipt(
-      matching,
-      definition,
-      index
-    )
-  );
-});
+);
 
 return {
   conductorResult:
@@ -2981,7 +3278,11 @@ if (!conductor) {
   });
 }
 
-if (!isFunction(conductor.createCycle)) {
+if (
+  !isFunction(
+    conductor.createCycle
+  )
+) {
   return Promise.resolve({
     conductorResult:
       frozenClone(conductor),
@@ -2999,7 +3300,9 @@ var cycle;
 
 try {
   cycle =
-    conductor.createCycle(request);
+    conductor.createCycle(
+      request
+    );
 } catch (error) {
   return Promise.resolve({
     conductorResult: {
@@ -3008,7 +3311,8 @@ try {
 
       error:
         String(
-          error && error.message
+          error &&
+          error.message
             ? error.message
             : error
         )
@@ -3019,7 +3323,8 @@ try {
         "NORTH_CONDUCTOR_CREATE_CYCLE_THROW",
         "The North conductor could not create the diagnostic cycle.",
         String(
-          error && error.message
+          error &&
+          error.message
             ? error.message
             : error
         )
@@ -3030,23 +3335,41 @@ try {
 if (
   cycle &&
   (
-    Array.isArray(cycle.receipts) ||
-    Array.isArray(cycle.stationReceipts) ||
-    isObject(cycle.cycleReceipt) ||
-    isObject(cycle.receipt)
+    Array.isArray(
+      cycle.receipts
+    ) ||
+    Array.isArray(
+      cycle.stationReceipts
+    ) ||
+    isObject(
+      cycle.cycleReceipt
+    ) ||
+    isObject(
+      cycle.receipt
+    )
   )
 ) {
   return Promise.resolve(
-    normalizeConductorResult(cycle)
+    normalizeConductorResult(
+      cycle
+    )
   );
 }
 
 if (
   !cycle ||
-  !isFunction(cycle.registerStation) ||
-  !isFunction(cycle.seal) ||
-  !isFunction(cycle.run) ||
-  !isFunction(cycle.getReceipt)
+  !isFunction(
+    cycle.registerStation
+  ) ||
+  !isFunction(
+    cycle.seal
+  ) ||
+  !isFunction(
+    cycle.run
+  ) ||
+  !isFunction(
+    cycle.getReceipt
+  )
 ) {
   return Promise.resolve({
     conductorResult:
@@ -3067,81 +3390,18 @@ state.stationRegistrations =
 state.auxiliaryRegistrations =
   [];
 
-STATIONS.forEach(function registerStation(definition) {
-  var resolved =
-    resolveStationApi(definition);
+STATIONS.forEach(
+  function registerStation(
+    definition
+  ) {
+    var resolved =
+      resolveStationApi(
+        definition
+      );
 
-  var outcome;
+    var outcome;
 
-  if (!resolved.api) {
-    outcome = {
-      position:
-        definition.position,
-
-      stationId:
-        definition.stationId,
-
-      file:
-        definition.file,
-
-      status:
-        "REJECTED",
-
-      reason:
-        "STATION_GLOBAL_NOT_FOUND",
-
-      globalPath:
-        null,
-
-      source:
-        resolved.source,
-
-      generatedAt:
-        nowIso()
-    };
-  } else {
-    try {
-      var registration =
-        cycle.registerStation(
-          definition.position,
-          resolved.api
-        );
-
-      outcome = {
-        position:
-          definition.position,
-
-        stationId:
-          definition.stationId,
-
-        file:
-          definition.file,
-
-        status:
-          registration && registration.status
-            ? registration.status
-            : "UNKNOWN",
-
-        reason:
-          registration && registration.reason
-            ? registration.reason
-            : null,
-
-        issues:
-          registration && registration.issues
-            ? frozenClone(registration.issues)
-            : [],
-
-        globalPath:
-          resolved.globalPath,
-
-        source:
-          resolved.source,
-
-        generatedAt:
-          nowIso()
-      };
-    } catch (error) {
+    if (!resolved.api) {
       outcome = {
         position:
           definition.position,
@@ -3156,17 +3416,10 @@ STATIONS.forEach(function registerStation(definition) {
           "REJECTED",
 
         reason:
-          "STATION_REGISTRATION_THROW",
-
-        detail:
-          String(
-            error && error.message
-              ? error.message
-              : error
-          ),
+          "STATION_GLOBAL_NOT_FOUND",
 
         globalPath:
-          resolved.globalPath,
+          null,
 
         source:
           resolved.source,
@@ -3174,122 +3427,108 @@ STATIONS.forEach(function registerStation(definition) {
         generatedAt:
           nowIso()
       };
+    } else {
+      try {
+        var registration =
+          cycle.registerStation(
+            definition.position,
+            resolved.api
+          );
+
+        outcome = {
+          position:
+            definition.position,
+
+          stationId:
+            definition.stationId,
+
+          file:
+            definition.file,
+
+          status:
+            registration &&
+            registration.status
+              ? registration.status
+              : "UNKNOWN",
+
+          reason:
+            registration &&
+            registration.reason
+              ? registration.reason
+              : null,
+
+          issues:
+            registration &&
+            registration.issues
+              ? frozenClone(
+                  registration.issues
+                )
+              : [],
+
+          globalPath:
+            resolved.globalPath,
+
+          source:
+            resolved.source,
+
+          generatedAt:
+            nowIso()
+        };
+      } catch (error) {
+        outcome = {
+          position:
+            definition.position,
+
+          stationId:
+            definition.stationId,
+
+          file:
+            definition.file,
+
+          status:
+            "REJECTED",
+
+          reason:
+            "STATION_REGISTRATION_THROW",
+
+          detail:
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            ),
+
+          globalPath:
+            resolved.globalPath,
+
+          source:
+            resolved.source,
+
+          generatedAt:
+            nowIso()
+        };
+      }
     }
+
+    state.stationRegistrations.push(
+      deepFreeze(outcome)
+    );
   }
+);
 
-  state.stationRegistrations.push(
-    deepFreeze(outcome)
-  );
-});
-
-AUXILIARIES.forEach(function registerAuxiliary(definition) {
-  var resolved =
-    resolveAuxiliaryApi(definition);
-
-  var outcome;
-
-  if (!resolved.api) {
-    outcome = {
-      parentPosition:
-        definition.parentPosition,
-
-      role:
-        definition.role,
-
-      file:
-        definition.file,
-
-      status:
-        "NOT_REGISTERED",
-
-      reason:
-        "AUXILIARY_GLOBAL_NOT_FOUND",
-
-      generatedAt:
-        nowIso()
-    };
-  } else if (
-    !isFunction(cycle.registerAuxiliary)
+AUXILIARIES.forEach(
+  function registerAuxiliary(
+    definition
   ) {
-    outcome = {
-      parentPosition:
-        definition.parentPosition,
+    var resolved =
+      resolveAuxiliaryApi(
+        definition
+      );
 
-      role:
-        definition.role,
+    var outcome;
 
-      file:
-        definition.file,
-
-      status:
-        "NOT_REGISTERED",
-
-      reason:
-        "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
-
-      generatedAt:
-        nowIso()
-    };
-  } else {
-    try {
-      var registration =
-        cycle.registerAuxiliary(
-          definition.parentPosition,
-          {
-            role:
-              definition.role,
-
-            file:
-              definition.file,
-
-            contract:
-              resolved.api.CONTRACT ||
-              resolved.api.contract ||
-              null,
-
-            version:
-              resolved.api.VERSION ||
-              resolved.api.version ||
-              null,
-
-            globalPath:
-              resolved.globalPath,
-
-            createsCyclePosition:
-              false
-          }
-        );
-
-      outcome = {
-        parentPosition:
-          definition.parentPosition,
-
-        role:
-          definition.role,
-
-        file:
-          definition.file,
-
-        status:
-          registration && registration.status
-            ? registration.status
-            : "UNKNOWN",
-
-        reason:
-          registration && registration.reason
-            ? registration.reason
-            : null,
-
-        globalPath:
-          resolved.globalPath,
-
-        source:
-          resolved.source,
-
-        generatedAt:
-          nowIso()
-      };
-    } catch (error) {
+    if (!resolved.api) {
       outcome = {
         parentPosition:
           definition.parentPosition,
@@ -3304,25 +3543,132 @@ AUXILIARIES.forEach(function registerAuxiliary(definition) {
           "NOT_REGISTERED",
 
         reason:
-          "AUXILIARY_REGISTRATION_THROW",
-
-        detail:
-          String(
-            error && error.message
-              ? error.message
-              : error
-          ),
+          "AUXILIARY_GLOBAL_NOT_FOUND",
 
         generatedAt:
           nowIso()
       };
-    }
-  }
+    } else if (
+      !isFunction(
+        cycle.registerAuxiliary
+      )
+    ) {
+      outcome = {
+        parentPosition:
+          definition.parentPosition,
 
-  state.auxiliaryRegistrations.push(
-    deepFreeze(outcome)
-  );
-});
+        role:
+          definition.role,
+
+        file:
+          definition.file,
+
+        status:
+          "NOT_REGISTERED",
+
+        reason:
+          "CYCLE_AUXILIARY_REGISTRATION_UNAVAILABLE",
+
+        generatedAt:
+          nowIso()
+      };
+    } else {
+      try {
+        var registration =
+          cycle.registerAuxiliary(
+            definition.parentPosition,
+            {
+              role:
+                definition.role,
+
+              file:
+                definition.file,
+
+              contract:
+                resolved.api.CONTRACT ||
+                resolved.api.contract ||
+                null,
+
+              version:
+                resolved.api.VERSION ||
+                resolved.api.version ||
+                null,
+
+              globalPath:
+                resolved.globalPath,
+
+              createsCyclePosition:
+                false
+            }
+          );
+
+        outcome = {
+          parentPosition:
+            definition.parentPosition,
+
+          role:
+            definition.role,
+
+          file:
+            definition.file,
+
+          status:
+            registration &&
+            registration.status
+              ? registration.status
+              : "UNKNOWN",
+
+          reason:
+            registration &&
+            registration.reason
+              ? registration.reason
+              : null,
+
+          globalPath:
+            resolved.globalPath,
+
+          source:
+            resolved.source,
+
+          generatedAt:
+            nowIso()
+        };
+      } catch (error) {
+        outcome = {
+          parentPosition:
+            definition.parentPosition,
+
+          role:
+            definition.role,
+
+          file:
+            definition.file,
+
+          status:
+            "NOT_REGISTERED",
+
+          reason:
+            "AUXILIARY_REGISTRATION_THROW",
+
+          detail:
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            ),
+
+          generatedAt:
+            nowIso()
+        };
+      }
+    }
+
+    state.auxiliaryRegistrations.push(
+      deepFreeze(outcome)
+    );
+  }
+);
 
 var sealReceipt;
 
@@ -3337,7 +3683,8 @@ try {
 
       error:
         String(
-          error && error.message
+          error &&
+          error.message
             ? error.message
             : error
         ),
@@ -3353,7 +3700,8 @@ try {
         "NORTH_CONDUCTOR_SEAL_THROW",
         "The North conductor could not seal the diagnostic cycle.",
         String(
-          error && error.message
+          error &&
+          error.message
             ? error.message
             : error
         )
@@ -3364,128 +3712,156 @@ try {
 /*
  * cycle.run() remains synchronous.
  * Promise.resolve() only normalizes the route-controller continuation.
- * No station is allowed to return a Promise.
+ * No diagnostic station is allowed to return a Promise.
  */
-return Promise.resolve(cycle.run())
-  .then(function conductorRunResolved(result) {
-    var receipt =
-      isObject(result)
-        ? result
-        : cycle.getReceipt();
+return Promise.resolve(
+  cycle.run()
+)
+  .then(
+    function conductorRunResolved(
+      result
+    ) {
+      var receipt =
+        isObject(result)
+          ? result
+          : cycle.getReceipt();
 
-    state.conductorReceipt =
-      frozenClone(receipt);
+      state.conductorReceipt =
+        frozenClone(receipt);
 
-    state.conductorState =
-      frozenClone(
-        isFunction(cycle.getState)
-          ? cycle.getState()
-          : null
-      );
-
-    return normalizeConductorResult({
-      schema:
-        "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v2",
-
-      cycleReceipt:
-        receipt,
-
-      stationReceipts:
-        receipt &&
-        Array.isArray(receipt.stationReceipts)
-          ? receipt.stationReceipts
-          : extractReceipts(receipt),
-
-      sealReceipt:
-        sealReceipt,
-
-      state:
-        state.conductorState,
-
-      targetPreflight:
-        state.targetPreflight
-          ? frozenClone(state.targetPreflight)
-          : null,
-
-      stationRegistrations:
+      state.conductorState =
         frozenClone(
-          state.stationRegistrations
-        ),
+          isFunction(
+            cycle.getState
+          )
+            ? cycle.getState()
+            : null
+        );
 
-      auxiliaryRegistrations:
-        frozenClone(
-          state.auxiliaryRegistrations
-        )
-    });
-  })
-  .catch(function conductorRunRejected(error) {
-    state.conductorReceipt =
-      frozenClone(
-        callSafely(
-          cycle,
-          "getReceipt",
-          [],
-          null
-        )
-      );
+      return normalizeConductorResult({
+        schema:
+          "AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v2",
 
-    state.conductorState =
-      frozenClone(
-        callSafely(
-          cycle,
-          "getState",
-          [],
-          null
-        )
-      );
+        cycleReceipt:
+          receipt,
 
-    return {
-      conductorResult: {
-        stage:
-          "RUN",
+        stationReceipts:
+          receipt &&
+          Array.isArray(
+            receipt.stationReceipts
+          )
+            ? receipt.stationReceipts
+            : extractReceipts(
+                receipt
+              ),
 
-        error:
-          String(
-            error && error.message
-              ? error.message
-              : error
-          ),
+        sealReceipt:
+          sealReceipt,
 
         state:
           state.conductorState,
 
-        receipt:
-          state.conductorReceipt,
-
         targetPreflight:
-          state.targetPreflight,
+          state.targetPreflight
+            ? frozenClone(
+                state.targetPreflight
+              )
+            : null,
 
         stationRegistrations:
           frozenClone(
             state.stationRegistrations
-          )
-      },
+          ),
 
-      receipts:
-        makeHeldReceipts(
-          "NORTH_CONDUCTOR_RUN_REJECTED",
-          "The North conductor rejected the diagnostic cycle.",
-          String(
-            error && error.message
-              ? error.message
-              : error
+        auxiliaryRegistrations:
+          frozenClone(
+            state.auxiliaryRegistrations
           )
-        )
-    };
-  });
+      });
+    }
+  )
+  .catch(
+    function conductorRunRejected(
+      error
+    ) {
+      state.conductorReceipt =
+        frozenClone(
+          callSafely(
+            cycle,
+            "getReceipt",
+            [],
+            null
+          )
+        );
+
+      state.conductorState =
+        frozenClone(
+          callSafely(
+            cycle,
+            "getState",
+            [],
+            null
+          )
+        );
+
+      return {
+        conductorResult: {
+          stage:
+            "RUN",
+
+          error:
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            ),
+
+          state:
+            state.conductorState,
+
+          receipt:
+            state.conductorReceipt,
+
+          targetPreflight:
+            state.targetPreflight,
+
+          stationRegistrations:
+            frozenClone(
+              state.stationRegistrations
+            )
+        },
+
+        receipts:
+          makeHeldReceipts(
+            "NORTH_CONDUCTOR_RUN_REJECTED",
+            "The North conductor rejected the diagnostic cycle.",
+            String(
+              error &&
+              error.message
+                ? error.message
+                : error
+            )
+          )
+      };
+    }
+  );
 
 }
 
 function composeLedger() {
 function count(statuses) {
-return state.receipts.filter(function countReceipt(receipt) {
-return statuses.indexOf(receipt.status) !== -1;
-}).length;
+return state.receipts.filter(
+function countReceipt(
+receipt
+) {
+return (
+statuses.indexOf(
+receipt.status
+) !== -1
+);
+}
+).length;
 }
 
 var passCount =
@@ -3513,7 +3889,9 @@ var degradedCount =
 
 var terminalReceipt =
   state.receipts.length
-    ? state.receipts[state.receipts.length - 1]
+    ? state.receipts[
+        state.receipts.length - 1
+      ]
     : null;
 
 var overallStatus =
@@ -3528,7 +3906,8 @@ var overallStatus =
           : holdCount > 0
             ? "HOLD"
             : (
-                passCount === state.receipts.length &&
+                passCount ===
+                  state.receipts.length &&
                 state.receipts.length > 0
               )
               ? "PASS"
@@ -3582,7 +3961,9 @@ var ledger = {
 
   targetRuntimePreflight:
     state.targetPreflight
-      ? frozenClone(state.targetPreflight)
+      ? frozenClone(
+          state.targetPreflight
+        )
       : null,
 
   receiptCount:
@@ -3643,27 +4024,39 @@ var ledger = {
 
   conductorState:
     state.conductorState
-      ? frozenClone(state.conductorState)
+      ? frozenClone(
+          state.conductorState
+        )
       : null,
 
   conductorReceipt:
     state.conductorReceipt
-      ? frozenClone(state.conductorReceipt)
+      ? frozenClone(
+          state.conductorReceipt
+        )
       : null,
 
   stationRegistrations:
-    frozenClone(state.stationRegistrations),
+    frozenClone(
+      state.stationRegistrations
+    ),
 
   auxiliaryRegistrations:
-    frozenClone(state.auxiliaryRegistrations),
+    frozenClone(
+      state.auxiliaryRegistrations
+    ),
 
   conductorResult:
     state.conductorResult
-      ? frozenClone(state.conductorResult)
+      ? frozenClone(
+          state.conductorResult
+        )
       : null,
 
   receipts:
-    frozenClone(state.receipts),
+    frozenClone(
+      state.receipts
+    ),
 
   noClaims:
     NO_CLAIMS
@@ -3672,7 +4065,9 @@ var ledger = {
 ledger.ledgerHash =
   hashObject(ledger);
 
-return deepFreeze(ledger);
+return deepFreeze(
+  ledger
+);
 
 }
 
@@ -3681,27 +4076,45 @@ if (!ledger) {
 return "Waiting";
 }
 
-if (ledger.overallStatus === "PASS") {
+if (
+  ledger.overallStatus ===
+  "PASS"
+) {
   return "Complete diagnostic path";
 }
 
-if (ledger.overallStatus === "HOLD") {
+if (
+  ledger.overallStatus ===
+  "HOLD"
+) {
   return "Held for evidence";
 }
 
-if (ledger.overallStatus === "DEGRADED") {
+if (
+  ledger.overallStatus ===
+  "DEGRADED"
+) {
   return "Degraded diagnostic result";
 }
 
-if (ledger.overallStatus === "FAIL") {
+if (
+  ledger.overallStatus ===
+  "FAIL"
+) {
   return "Failure reported";
 }
 
-if (ledger.overallStatus === "CONFLICT") {
+if (
+  ledger.overallStatus ===
+  "CONFLICT"
+) {
   return "Conflict reported";
 }
 
-if (ledger.overallStatus === "ERROR") {
+if (
+  ledger.overallStatus ===
+  "ERROR"
+) {
   return "Error reported";
 }
 
@@ -3717,35 +4130,45 @@ return (
 );
 }
 
-if (ledger.errorCount > 0) {
+if (
+  ledger.errorCount > 0
+) {
   return (
     "The diagnostic path encountered an execution error. " +
     "Open the station receipts to identify the affected stage."
   );
 }
 
-if (ledger.conflictCount > 0) {
+if (
+  ledger.conflictCount > 0
+) {
   return (
     "The diagnostic path found incompatible authority or runtime claims. " +
     "No readiness conclusion can be made."
   );
 }
 
-if (ledger.failCount > 0) {
+if (
+  ledger.failCount > 0
+) {
   return (
     "The diagnostic path found a failed condition. " +
     "This report identifies the failure but does not authorize repair."
   );
 }
 
-if (ledger.degradedCount > 0) {
+if (
+  ledger.degradedCount > 0
+) {
   return (
     "The diagnostic path completed with degraded evidence. " +
     "The result is not equivalent to a production-ready engine."
   );
 }
 
-if (ledger.holdCount > 0) {
+if (
+  ledger.holdCount > 0
+) {
   return (
     "The diagnostic path is held because required runtime evidence is " +
     "missing, unavailable, or not yet admitted. Missing proof was not " +
@@ -3754,8 +4177,10 @@ if (ledger.holdCount > 0) {
 }
 
 if (
-  ledger.passCount === ledger.receiptCount &&
-  ledger.receiptCount === STATIONS.length
+  ledger.passCount ===
+    ledger.receiptCount &&
+  ledger.receiptCount ===
+    STATIONS.length
 ) {
   return (
     "All nine diagnostic stations returned passing diagnostic receipts. " +
@@ -3764,7 +4189,9 @@ if (
   );
 }
 
-return "The diagnostic path is incomplete.";
+return (
+  "The diagnostic path is incomplete."
+);
 
 }
 
@@ -3776,56 +4203,84 @@ ledger.errorCount +
 ledger.degradedCount;
 
 var registeredCount =
-  ledger.stationRegistrations.filter(function countRegistered(outcome) {
-    return (
-      outcome.status === "REGISTERED" ||
-      outcome.status === "DUPLICATE_IDENTICAL"
-    );
-  }).length;
+  ledger.stationRegistrations.filter(
+    function countRegistered(
+      outcome
+    ) {
+      return (
+        outcome.status ===
+          "REGISTERED" ||
+        outcome.status ===
+          "DUPLICATE_IDENTICAL"
+      );
+    }
+  ).length;
 
 var preflight =
   ledger.targetRuntimePreflight;
 
 return [
   "AUDRALIA DIAGNOSTIC READER REPORT",
-  "SCHEMA=" + READER_REPORT_SCHEMA,
+  "SCHEMA=" +
+    READER_REPORT_SCHEMA,
   "",
-  "Overall status: " + readableOverall(ledger),
-  "Passed stations: " + ledger.passCount + " of " + ledger.receiptCount,
-  "Held stations: " + ledger.holdCount,
-  "Attention items: " + attentionCount,
+  "Overall status: " +
+    readableOverall(ledger),
+  "Passed stations: " +
+    ledger.passCount +
+    " of " +
+    ledger.receiptCount,
+  "Held stations: " +
+    ledger.holdCount,
+  "Attention items: " +
+    attentionCount,
   "",
   "Target runtime preflight:",
-  "Status: " + (
-    preflight
-      ? preflight.status
-      : "NOT_RUN"
-  ),
-  "Runtime admitted before cycle: " + (
-    preflight && preflight.admitted
-      ? "Yes"
-      : "No"
-  ),
-  "Attempts: " + (
-    preflight
-      ? preflight.attemptCount
-      : 0
-  ),
-  "Elapsed milliseconds: " + (
-    preflight
-      ? preflight.elapsedMs
-      : 0
-  ),
+  "Status: " +
+    (
+      preflight
+        ? preflight.status
+        : "NOT_RUN"
+    ),
+  "F8 surface truth admitted before cycle: " +
+    (
+      preflight &&
+      preflight.admitted
+        ? "Yes"
+        : "No"
+    ),
+  "Attempts: " +
+    (
+      preflight
+        ? preflight.attemptCount
+        : 0
+    ),
+  "Elapsed milliseconds: " +
+    (
+      preflight
+        ? preflight.elapsedMs
+        : 0
+    ),
   "",
   "Engine family:",
-  "Governing contracts: " + ledger.engineRegistry.governingAuthorityCount,
-  "Assigned engines: " + ledger.engineRegistry.assignedEngineCount,
-  "Selectable engines: " + ledger.engineRegistry.selectableEngineCount,
-  "Reserved engine slots: " + ledger.engineRegistry.reservedEngineCount,
+  "Governing contracts: " +
+    ledger.engineRegistry
+      .governingAuthorityCount,
+  "Assigned engines: " +
+    ledger.engineRegistry
+      .assignedEngineCount,
+  "Selectable engines: " +
+    ledger.engineRegistry
+      .selectableEngineCount,
+  "Reserved engine slots: " +
+    ledger.engineRegistry
+      .reservedEngineCount,
   "",
   "North conductor:",
   "Invocation: createCycle",
-  "Registered stations: " + registeredCount + " of 9",
+  "Registered stations: " +
+    registeredCount +
+    " of 9",
   "",
   "Plain-language reading:",
   plainLanguage(ledger),
@@ -3844,15 +4299,25 @@ return [
 
 }
 
-function stationLabel(stationId) {
+function stationLabel(
+stationId
+) {
 var definition =
-STATIONS.find(function findStation(entry) {
-return entry.stationId === stationId;
-});
+STATIONS.find(
+function findStation(
+entry
+) {
+return (
+entry.stationId ===
+stationId
+);
+}
+);
 
 return definition
   ? definition.label
-  : stationId || "Unknown Station";
+  : stationId ||
+    "Unknown Station";
 
 }
 
@@ -3864,22 +4329,34 @@ var evidence =
 
 setText(
   "governingContractCount",
-  String(evidence.governingAuthorityCount)
+  String(
+    evidence
+      .governingAuthorityCount
+  )
 );
 
 setText(
   "assignedEngineCount",
-  String(evidence.assignedEngineCount)
+  String(
+    evidence
+      .assignedEngineCount
+  )
 );
 
 setText(
   "selectableEngineCount",
-  String(evidence.selectableEngineCount)
+  String(
+    evidence
+      .selectableEngineCount
+  )
 );
 
 setText(
   "reservedEngineCount",
-  String(evidence.reservedEngineCount)
+  String(
+    evidence
+      .reservedEngineCount
+  )
 );
 
 setText(
@@ -3906,18 +4383,24 @@ setText(
 setText(
   "reservedEngineSummary",
   evidence.reservedEngineCount > 0
-    ? String(evidence.reservedEngineCount) +
+    ? String(
+        evidence
+          .reservedEngineCount
+      ) +
       " future engine slots remain reserved."
     : "No reserved engine slots were reported."
 );
 
 var pill =
-  byId("engineRegistryStatusPill");
+  byId(
+    "engineRegistryStatusPill"
+  );
 
 if (pill) {
   var available =
     evidence.registryLoaded &&
-    evidence.selectableEngineCount > 0;
+    evidence.selectableEngineCount >
+      0;
 
   setClassState(
     pill,
@@ -3948,7 +4431,9 @@ renderRegistryRecords();
 
 function renderRegistryRecords() {
 var list =
-byId("engineRegistryList");
+byId(
+"engineRegistryList"
+);
 
 if (!list) {
   return;
@@ -3970,81 +4455,106 @@ if (
 var fragments =
   [];
 
-state.authorityRecords.forEach(function renderAuthority(record) {
-  fragments.push(
-    '<article class="receipt-card authority-record">' +
-    "<h3>" +
-    escapeHtml(
-      record.authorityName ||
-      record.authorityId ||
-      "Governing Contract"
-    ) +
-    "</h3>" +
-    "<p>Role: " +
-    escapeHtml(record.role || "GOVERNING_CONTRACT") +
-    "</p>" +
-    "<p>Status: " +
-    escapeHtml(record.status || "UNKNOWN") +
-    "</p>" +
-    "<p>File: " +
-    escapeHtml(
-      record.file ||
-      DEFAULT_GOVERNING_ENGINE_FILE
-    ) +
-    "</p>" +
-    "<p>Executable engine: " +
-    (
-      record.executableEngine
-        ? "Yes"
-        : "No"
-    ) +
-    "</p>" +
-    "</article>"
-  );
-});
+state.authorityRecords.forEach(
+  function renderAuthority(
+    record
+  ) {
+    fragments.push(
+      '<article class="receipt-card authority-record">' +
+      "<h3>" +
+      escapeHtml(
+        record.authorityName ||
+        record.authorityId ||
+        "Governing Contract"
+      ) +
+      "</h3>" +
+      "<p>Role: " +
+      escapeHtml(
+        record.role ||
+        "GOVERNING_CONTRACT"
+      ) +
+      "</p>" +
+      "<p>Status: " +
+      escapeHtml(
+        record.status ||
+        "UNKNOWN"
+      ) +
+      "</p>" +
+      "<p>File: " +
+      escapeHtml(
+        record.file ||
+        DEFAULT_GOVERNING_ENGINE_FILE
+      ) +
+      "</p>" +
+      "<p>Executable engine: " +
+      (
+        record.executableEngine
+          ? "Yes"
+          : "No"
+      ) +
+      "</p>" +
+      "</article>"
+    );
+  }
+);
 
-state.engineRecords.forEach(function renderEngine(record) {
-  fragments.push(
-    '<article class="receipt-card engine-record ' +
-    (
-      record.reserved
-        ? "held"
-        : record.selectable
-          ? "pass"
-          : "hold"
-    ) +
-    '">' +
-    "<h3>" +
-    escapeHtml(
-      record.engineName ||
+state.engineRecords.forEach(
+  function renderEngine(
+    record
+  ) {
+    fragments.push(
+      '<article class="receipt-card engine-record ' +
       (
         record.reserved
-          ? "Reserved Engine Slot " +
-            String(record.slot)
-          : record.engineId ||
-            "Runtime Engine"
-      )
-    ) +
-    "</h3>" +
-    "<p>Role: " +
-    escapeHtml(record.role || "RUNTIME_ENGINE") +
-    "</p>" +
-    "<p>Status: " +
-    escapeHtml(record.status || "UNKNOWN") +
-    "</p>" +
-    "<p>Selectable: " +
-    (
-      record.selectable
-        ? "Yes"
-        : "No"
-    ) +
-    "</p>" +
-    "<p>File: " +
-    escapeHtml(record.file || "Not assigned") +
-    "</p>" +
-    "</article>"
-  );
-});
+          ? "held"
+          : record.selectable
+            ? "pass"
+            : "hold"
+      ) +
+      '">' +
+      "<h3>" +
+      escapeHtml(
+        record.engineName ||
+        (
+          record.reserved
+            ? "Reserved Engine Slot " +
+              String(
+                record.slot
+              )
+            : record.engineId ||
+              "Runtime Engine"
+        )
+      ) +
+      "</h3>" +
+      "<p>Role: " +
+      escapeHtml(
+        record.role ||
+        "RUNTIME_ENGINE"
+      ) +
+      "</p>" +
+      "<p>Status: " +
+      escapeHtml(
+        record.status ||
+        "UNKNOWN"
+      ) +
+      "</p>" +
+      "<p>Selectable: " +
+      (
+        record.selectable
+          ? "Yes"
+          : "No"
+      ) +
+      "</p>" +
+      "<p>File: " +
+      escapeHtml(
+        record.file ||
+        "Not assigned"
+      ) +
+      "</p>" +
+      "</article>"
+    );
+  }
+);
 
 list.innerHTML =
   fragments.join("");
@@ -4077,14 +4587,18 @@ var percent =
 setText(
   "passedCount",
   ledger
-    ? String(ledger.passCount)
+    ? String(
+        ledger.passCount
+      )
     : "0"
 );
 
 setText(
   "heldCount",
   ledger
-    ? String(ledger.holdCount)
+    ? String(
+        ledger.holdCount
+      )
     : "0"
 );
 
@@ -4134,63 +4648,82 @@ if (!doc) {
 return;
 }
 
-STATIONS.forEach(function renderStation(definition) {
-  var node =
-    doc.querySelector(
-      '[data-station="' +
-      definition.stationId +
-      '"]'
+STATIONS.forEach(
+  function renderStation(
+    definition
+  ) {
+    var node =
+      doc.querySelector(
+        '[data-station="' +
+        definition.stationId +
+        '"]'
+      );
+
+    var receipt =
+      state.receipts.find(
+        function findReceipt(
+          entry
+        ) {
+          return (
+            entry.stationId ===
+            definition.stationId
+          );
+        }
+      );
+
+    if (!node) {
+      return;
+    }
+
+    setClassState(
+      node,
+      [
+        "pass",
+        "passed",
+        "hold",
+        "held",
+        "partial",
+        "fail",
+        "error",
+        "conflict",
+        "attention"
+      ],
+      receipt
+        ? statusClass(
+            receipt.status
+          )
+        : null
     );
 
-  var receipt =
-    state.receipts.find(function findReceipt(entry) {
-      return entry.stationId === definition.stationId;
-    });
+    if (!receipt) {
+      node.removeAttribute(
+        "data-status"
+      );
 
-  if (!node) {
-    return;
+      node.removeAttribute(
+        "title"
+      );
+
+      return;
+    }
+
+    node.setAttribute(
+      "data-status",
+      receipt.status
+    );
+
+    node.setAttribute(
+      "title",
+      definition.label +
+        ": " +
+        (
+          receipt.summary ||
+          receipt.status ||
+          "UNKNOWN"
+        )
+    );
   }
-
-  setClassState(
-    node,
-    [
-      "pass",
-      "passed",
-      "hold",
-      "held",
-      "partial",
-      "fail",
-      "error",
-      "conflict",
-      "attention"
-    ],
-    receipt
-      ? statusClass(receipt.status)
-      : null
-  );
-
-  if (!receipt) {
-    node.removeAttribute("data-status");
-    node.removeAttribute("title");
-    return;
-  }
-
-  node.setAttribute(
-    "data-status",
-    receipt.status
-  );
-
-  node.setAttribute(
-    "title",
-    definition.label +
-      ": " +
-      (
-        receipt.summary ||
-        receipt.status ||
-        "UNKNOWN"
-      )
-  );
-});
+);
 
 }
 
@@ -4202,7 +4735,9 @@ if (!list) {
   return;
 }
 
-if (!state.receipts.length) {
+if (
+  !state.receipts.length
+) {
   list.innerHTML =
     '<article class="receipt-empty">' +
     "<h3>No receipts yet</h3>" +
@@ -4214,43 +4749,73 @@ if (!state.receipts.length) {
 
 list.innerHTML =
   state.receipts
-    .map(function renderReceipt(receipt, index) {
-      var issueCount =
-        Array.isArray(receipt.issues)
-          ? receipt.issues.length
-          : 0;
+    .map(
+      function renderReceipt(
+        receipt,
+        index
+      ) {
+        var issueCount =
+          Array.isArray(
+            receipt.issues
+          )
+            ? receipt.issues.length
+            : 0;
 
-      return (
-        '<details class="receipt-card ' +
-        escapeHtml(statusClass(receipt.status)) +
-        '">' +
-        "<summary>" +
-        escapeHtml(String(index + 1)) +
-        " · " +
-        escapeHtml(stationLabel(receipt.stationId)) +
-        " · " +
-        escapeHtml(receipt.status) +
-        "</summary>" +
-        '<div class="receipt-meta">' +
-        "<span>" +
-        escapeHtml(receipt.stationId) +
-        "</span>" +
-        "<span>" +
-        escapeHtml(receipt.fibonacci || "") +
-        "</span>" +
-        "<span>Issues: " +
-        escapeHtml(String(issueCount)) +
-        "</span>" +
-        "</div>" +
-        "<p>" +
-        escapeHtml(receipt.summary) +
-        "</p>" +
-        "<pre>" +
-        escapeHtml(safeJson(receipt)) +
-        "</pre>" +
-        "</details>"
-      );
-    })
+        return (
+          '<details class="receipt-card ' +
+          escapeHtml(
+            statusClass(
+              receipt.status
+            )
+          ) +
+          '">' +
+          "<summary>" +
+          escapeHtml(
+            String(index + 1)
+          ) +
+          " · " +
+          escapeHtml(
+            stationLabel(
+              receipt.stationId
+            )
+          ) +
+          " · " +
+          escapeHtml(
+            receipt.status
+          ) +
+          "</summary>" +
+          '<div class="receipt-meta">' +
+          "<span>" +
+          escapeHtml(
+            receipt.stationId
+          ) +
+          "</span>" +
+          "<span>" +
+          escapeHtml(
+            receipt.fibonacci ||
+            ""
+          ) +
+          "</span>" +
+          "<span>Issues: " +
+          escapeHtml(
+            String(issueCount)
+          ) +
+          "</span>" +
+          "</div>" +
+          "<p>" +
+          escapeHtml(
+            receipt.summary
+          ) +
+          "</p>" +
+          "<pre>" +
+          escapeHtml(
+            safeJson(receipt)
+          ) +
+          "</pre>" +
+          "</details>"
+        );
+      }
+    )
     .join("");
 
 }
@@ -4266,7 +4831,9 @@ state.ledger
 setText(
   "rawReceiptsOutput",
   state.receipts.length
-    ? safeJson(state.receipts)
+    ? safeJson(
+        state.receipts
+      )
     : "No receipts produced yet."
 );
 
@@ -4280,7 +4847,9 @@ renderReceipts();
 renderTechnical();
 }
 
-function setRunning(running) {
+function setRunning(
+running
+) {
 var button =
 byId("runDiagnostic");
 
@@ -4293,7 +4862,7 @@ if (button) {
 
   button.textContent =
     state.running
-      ? "Waiting for Target Runtime"
+      ? "Waiting for F8 Surface Truth"
       : "Run Diagnostic";
 }
 
@@ -4342,7 +4911,9 @@ state.lastError =
 
 }
 
-function finalizeSuccessfulRun(normalized) {
+function finalizeSuccessfulRun(
+normalized
+) {
 state.conductorResult =
 normalized.conductorResult;
 
@@ -4353,10 +4924,14 @@ state.ledger =
   composeLedger();
 
 state.rawLedgerText =
-  safeJson(state.ledger);
+  safeJson(
+    state.ledger
+  );
 
 state.readerReport =
-  composeReaderReport(state.ledger);
+  composeReaderReport(
+    state.ledger
+  );
 
 root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
   state.ledger;
@@ -4373,19 +4948,25 @@ root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
 renderAll();
 
 toast(
-  state.ledger.overallStatus === "PASS"
+  state.ledger.overallStatus ===
+    "PASS"
     ? "Diagnostic cycle completed."
     : "Diagnostic cycle completed with held or attention items."
 );
 
-return frozenClone(state.ledger);
+return frozenClone(
+  state.ledger
+);
 
 }
 
-function finalizeControllerError(error) {
+function finalizeControllerError(
+error
+) {
 state.lastError =
 String(
-error && error.message
+error &&
+error.message
 ? error.message
 : error
 );
@@ -4401,10 +4982,14 @@ state.ledger =
   composeLedger();
 
 state.rawLedgerText =
-  safeJson(state.ledger);
+  safeJson(
+    state.ledger
+  );
 
 state.readerReport =
-  composeReaderReport(state.ledger);
+  composeReaderReport(
+    state.ledger
+  );
 
 root.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER =
   state.ledger;
@@ -4424,14 +5009,18 @@ toast(
   "Diagnostic cycle held after controller error."
 );
 
-return frozenClone(state.ledger);
+return frozenClone(
+  state.ledger
+);
 
 }
 
 function runDiagnostic() {
 if (state.running) {
 return Promise.resolve(
-frozenClone(state.ledger)
+frozenClone(
+state.ledger
+)
 );
 }
 
@@ -4443,43 +5032,80 @@ inspectEngineState();
 renderAll();
 
 /*
- * The bounded asynchronous wait exists only here, before createCycle().
- * Once invokeConductor() begins, North and all nine stations remain
+ * The asynchronous wait exists only at the controller boundary,
+ * before createCycle().
+ *
+ * The controller does not admit the cycle merely because the iframe,
+ * runtime global, or a receipt object exists. It waits for the exact
+ * F8 surface-truth predicate:
+ *
+ * Primary:
+ * mounted=true
+ * stageRectNonzero=true
+ * geometryReady=true
+ * firstFrameDrawn=true
+ * visiblePixelObserved=true
+ *
+ * Or fallback:
+ * fallbackActive=true
+ * firstFrameDrawn=true
+ * visiblePixelObserved=true
+ *
+ * Once invokeConductor() begins, North and all stations remain
  * synchronous and return plain receipt objects.
  */
 return waitForTargetRuntimeEvidence()
-  .then(function targetPreflightResolved(preflight) {
-    state.targetPreflight =
-      frozenClone(preflight);
-
-    root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
-      state.targetPreflight;
-
-    var button =
-      byId("runDiagnostic");
-
-    if (button) {
-      button.textContent =
-        "Running Diagnostic";
-    }
-
-    /*
-     * Timeout does not suppress the cycle.
-     * The current target snapshot is transported honestly and F8 may HOLD.
-     */
-    var request =
-      buildConductorRequest();
-
-    return invokeConductor(request);
-  })
-  .then(finalizeSuccessfulRun)
-  .catch(finalizeControllerError)
   .then(
-    function finishRun(value) {
+    function targetPreflightResolved(
+      preflight
+    ) {
+      state.targetPreflight =
+        frozenClone(
+          preflight
+        );
+
+      root.AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT =
+        state.targetPreflight;
+
+      var button =
+        byId(
+          "runDiagnostic"
+        );
+
+      if (button) {
+        button.textContent =
+          "Running Diagnostic";
+      }
+
+      /*
+       * Timeout does not suppress the diagnostic cycle.
+       * The latest honest target snapshot is transported, and F8
+       * remains authorized to HOLD if its evidence is incomplete.
+       */
+      var request =
+        buildConductorRequest();
+
+      return invokeConductor(
+        request
+      );
+    }
+  )
+  .then(
+    finalizeSuccessfulRun
+  )
+  .catch(
+    finalizeControllerError
+  )
+  .then(
+    function finishRun(
+      value
+    ) {
       setRunning(false);
       return value;
     },
-    function finishRejected(error) {
+    function finishRejected(
+      error
+    ) {
       setRunning(false);
       throw error;
     }
@@ -4487,7 +5113,10 @@ return waitForTargetRuntimeEvidence()
 
 }
 
-function copyText(text, message) {
+function copyText(
+text,
+message
+) {
 if (!text) {
 return;
 }
@@ -4495,31 +5124,52 @@ return;
 if (
   root.navigator &&
   root.navigator.clipboard &&
-  isFunction(root.navigator.clipboard.writeText)
+  isFunction(
+    root.navigator.clipboard
+      .writeText
+  )
 ) {
   root.navigator.clipboard
     .writeText(text)
-    .then(function copied() {
-      toast(message || "Copied.");
-    })
-    .catch(function clipboardRejected() {
-      fallbackCopy(text, message);
-    });
+    .then(
+      function copied() {
+        toast(
+          message ||
+          "Copied."
+        );
+      }
+    )
+    .catch(
+      function clipboardRejected() {
+        fallbackCopy(
+          text,
+          message
+        );
+      }
+    );
 
   return;
 }
 
-fallbackCopy(text, message);
+fallbackCopy(
+  text,
+  message
+);
 
 }
 
-function fallbackCopy(text, message) {
+function fallbackCopy(
+text,
+message
+) {
 if (!doc) {
 return;
 }
 
 var area =
-  doc.createElement("textarea");
+  doc.createElement(
+    "textarea"
+  );
 
 area.value =
   text;
@@ -4535,17 +5185,30 @@ area.style.position =
 area.style.left =
   "-9999px";
 
-doc.body.appendChild(area);
+doc.body.appendChild(
+  area
+);
+
 area.select();
 
 try {
-  doc.execCommand("copy");
-  toast(message || "Copied.");
+  doc.execCommand(
+    "copy"
+  );
+
+  toast(
+    message ||
+    "Copied."
+  );
 } catch (_error) {
-  toast("Copy unavailable.");
+  toast(
+    "Copy unavailable."
+  );
 }
 
-doc.body.removeChild(area);
+doc.body.removeChild(
+  area
+);
 
 }
 
@@ -4556,63 +5219,97 @@ return;
 
 var buttons =
   Array.prototype.slice.call(
-    doc.querySelectorAll("[data-tab]")
+    doc.querySelectorAll(
+      "[data-tab]"
+    )
   );
 
 var panels = {
   ledger:
-    byId("tabLedger"),
+    byId(
+      "tabLedger"
+    ),
 
   receipts:
-    byId("tabReceipts"),
+    byId(
+      "tabReceipts"
+    ),
 
   contracts:
-    byId("tabContracts"),
+    byId(
+      "tabContracts"
+    ),
 
   boundary:
-    byId("tabBoundary")
+    byId(
+      "tabBoundary"
+    )
 };
 
-buttons.forEach(function bindTab(button) {
-  button.addEventListener(
-    "click",
-    function activateTab() {
-      var tab =
-        button.getAttribute("data-tab");
+buttons.forEach(
+  function bindTab(
+    button
+  ) {
+    button.addEventListener(
+      "click",
+      function activateTab() {
+        var tab =
+          button.getAttribute(
+            "data-tab"
+          );
 
-      buttons.forEach(function resetTab(other) {
-        other.setAttribute(
-          "aria-selected",
-          other === button
-            ? "true"
-            : "false"
+        buttons.forEach(
+          function resetTab(
+            other
+          ) {
+            other.setAttribute(
+              "aria-selected",
+              other === button
+                ? "true"
+                : "false"
+            );
+          }
         );
-      });
 
-      Object.keys(panels).forEach(function togglePanel(key) {
-        if (panels[key]) {
-          panels[key].hidden =
-            key !== tab;
-        }
-      });
-    }
-  );
-});
+        Object.keys(
+          panels
+        ).forEach(
+          function togglePanel(
+            key
+          ) {
+            if (panels[key]) {
+              panels[key].hidden =
+                key !== tab;
+            }
+          }
+        );
+      }
+    );
+  }
+);
 
 }
 
 function wireUi() {
 var runButton =
-byId("runDiagnostic");
+byId(
+"runDiagnostic"
+);
 
 var targetButton =
-  byId("toggleTargetFrame");
+  byId(
+    "toggleTargetFrame"
+  );
 
 var copyReaderButton =
-  byId("copyReaderReport");
+  byId(
+    "copyReaderReport"
+  );
 
 var copyLedgerButton =
-  byId("copyReceiptLedger");
+  byId(
+    "copyReceiptLedger"
+  );
 
 if (runButton) {
   runButton.addEventListener(
@@ -4628,7 +5325,9 @@ if (targetButton) {
     "click",
     function toggleTargetFrame() {
       var shell =
-        byId("targetFrameShell");
+        byId(
+          "targetFrameShell"
+        );
 
       if (!shell) {
         return;
@@ -4799,11 +5498,20 @@ CONTRACT,
   TARGET_RUNTIME_WAIT_TIMEOUT_MS:
     TARGET_RUNTIME_WAIT_TIMEOUT_MS,
 
+  LEDGER_SCHEMA:
+    LEDGER_SCHEMA,
+
+  READER_REPORT_SCHEMA:
+    READER_REPORT_SCHEMA,
+
   runDiagnostic:
     runDiagnostic,
 
   inspectTargetFrame:
     inspectTargetFrame,
+
+  targetRuntimeAdmissionState:
+    targetRuntimeAdmissionState,
 
   waitForTargetRuntimeEvidence:
     waitForTargetRuntimeEvidence,
@@ -4822,6 +5530,7 @@ CONTRACT,
   render:
     function render() {
       renderAll();
+
       return getPublicState();
     },
 
@@ -4830,18 +5539,23 @@ CONTRACT,
 
   getLedger:
     function getLedger() {
-      return frozenClone(state.ledger);
+      return frozenClone(
+        state.ledger
+      );
     },
 
   getReceipts:
     function getReceipts() {
-      return frozenClone(state.receipts);
+      return frozenClone(
+        state.receipts
+      );
     },
 
   getReaderReport:
     function getReaderReport() {
       return String(
-        state.readerReport || ""
+        state.readerReport ||
+        ""
       );
     },
 
@@ -4886,9 +5600,11 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
 
 if (
   !root.AUDRALIA ||
-  typeof root.AUDRALIA !== "object"
+  typeof root.AUDRALIA !==
+    "object"
 ) {
-  root.AUDRALIA = {};
+  root.AUDRALIA =
+    {};
 }
 
 root.AUDRALIA.diagnosticRouteController =
@@ -4928,6 +5644,17 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT = {
   orchestrationMethod:
     "createCycle",
 
+  publicSchemas: {
+    ledger:
+      LEDGER_SCHEMA,
+
+    readerReport:
+      READER_REPORT_SCHEMA,
+
+    compatibilityPreserved:
+      true
+  },
+
   targetRuntimePreflight: {
     enabled:
       true,
@@ -4936,13 +5663,49 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT = {
       "DIAGNOSTIC_ROUTE_CONTROLLER",
 
     acceptedRuntimeGlobals:
-      clone(TARGET_RUNTIME_GLOBALS),
+      clone(
+        TARGET_RUNTIME_GLOBALS
+      ),
 
     pollIntervalMs:
       TARGET_RUNTIME_WAIT_INTERVAL_MS,
 
     timeoutMs:
       TARGET_RUNTIME_WAIT_TIMEOUT_MS,
+
+    evidenceMustBeNonempty:
+      true,
+
+    admissionPredicate:
+      "F8_SURFACE_TRUTH",
+
+    primaryPredicate: {
+      mounted:
+        true,
+
+      stageRectNonzero:
+        true,
+
+      geometryReady:
+        true,
+
+      firstFrameDrawn:
+        true,
+
+      visiblePixelObserved:
+        true
+    },
+
+    fallbackPredicate: {
+      fallbackActive:
+        true,
+
+      firstFrameDrawn:
+        true,
+
+      visiblePixelObserved:
+        true
+    },
 
     timeoutDisposition:
       "RUN_CYCLE_WITH_HONEST_EVIDENCE",
@@ -4977,7 +5740,9 @@ return api;
 }
 
 function init() {
-if (state.initialized) {
+if (
+state.initialized
+) {
 return;
 }
 
@@ -5005,8 +5770,10 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER;
 if (
 existing &&
 existing.CONTRACT &&
-existing.CONTRACT !== CONTRACT &&
-existing.CONTRACT !== PREVIOUS_CONTRACT
+existing.CONTRACT !==
+CONTRACT &&
+existing.CONTRACT !==
+PREVIOUS_CONTRACT
 ) {
 root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONFLICT =
 deepFreeze({
@@ -5035,14 +5802,16 @@ return;
 
 if (
 existing &&
-existing.CONTRACT === CONTRACT
+existing.CONTRACT ===
+CONTRACT
 ) {
 return;
 }
 
 if (
 doc &&
-doc.readyState === "loading"
+doc.readyState ===
+"loading"
 ) {
 doc.addEventListener(
 "DOMContentLoaded",

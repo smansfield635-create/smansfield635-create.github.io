@@ -1,86 +1,41 @@
 /* /showroom/globe/audralia/index.css */
-/* AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v2 */
+/* AUDRALIA_CONSERVATORY_G1_PLANETARY_HOLDER_CSS_TNT_v3 */
 /* Full-file replacement. */
+
 /*
 Purpose:
-- Present the Audralia Conservatory as a protected planetary holder.
-- Preserve nonzero stage and mount dimensions for the existing runtime.
-- Keep the planet unobstructed by ordinary controls and page content.
-- Place instructions, controls, and coming-soon attractions below the stage.
-- Support native information dialogs, responsive layout, safe areas,
-  keyboard focus, reduced motion, and mobile browser stability.
-
-Owns:
-- page presentation
-- header presentation
-- stage and mount dimensions
-- canvas placement
-- runtime-state presentation
-- interaction-guide presentation
-- control-toolbar presentation
-- attraction-card presentation
-- Audralia information-dialog presentation
-- responsive layout
-- safe-area spacing
-- focus-visible presentation
-- overflow prevention
-
-Does not own:
-- planet geometry
-- WebGL or Canvas rendering
-- runtime interaction logic
-- House Control Pad presentation
-- route orchestration
-- model registration
+- Preserve Audralia Conservatory layout and nonzero planet mount.
+- Renew the Engine Diagnostic door as a technical glowing diagnostic button.
+- Correct header-action alignment for anchor and button parity.
+- Preserve mobile layout, stage visibility, controls, dialogs, and safe-area behavior.
 */
 
 :root {
   color-scheme: dark;
 
   --audralia-page-background:
-    radial-gradient(
-      circle at 50% 18%,
-      rgba(20, 62, 108, 0.46) 0%,
-      rgba(7, 23, 48, 0.84) 34%,
-      rgba(2, 9, 23, 0.97) 68%,
-      #01040c 100%
-    );
+    radial-gradient(circle at 50% 18%, rgba(20, 62, 108, 0.46) 0%, rgba(7, 23, 48, 0.84) 34%, rgba(2, 9, 23, 0.97) 68%, #01040c 100%);
 
   --audralia-stage-background:
-    radial-gradient(
-      circle at 50% 46%,
-      rgba(20, 65, 116, 0.34) 0%,
-      rgba(5, 18, 40, 0.76) 54%,
-      rgba(1, 5, 15, 0.98) 100%
-    );
+    radial-gradient(circle at 50% 46%, rgba(20, 65, 116, 0.34) 0%, rgba(5, 18, 40, 0.76) 54%, rgba(1, 5, 15, 0.98) 100%);
 
   --audralia-panel-background:
-    linear-gradient(
-      180deg,
-      rgba(10, 25, 49, 0.94) 0%,
-      rgba(3, 11, 27, 0.97) 100%
-    );
+    linear-gradient(180deg, rgba(10, 25, 49, 0.94) 0%, rgba(3, 11, 27, 0.97) 100%);
 
   --audralia-panel-background-soft:
-    linear-gradient(
-      180deg,
-      rgba(11, 29, 56, 0.76) 0%,
-      rgba(4, 13, 30, 0.88) 100%
-    );
+    linear-gradient(180deg, rgba(11, 29, 56, 0.76) 0%, rgba(4, 13, 30, 0.88) 100%);
 
   --audralia-button-background:
-    linear-gradient(
-      180deg,
-      rgba(27, 62, 99, 0.92) 0%,
-      rgba(8, 28, 54, 0.98) 100%
-    );
+    linear-gradient(180deg, rgba(27, 62, 99, 0.92) 0%, rgba(8, 28, 54, 0.98) 100%);
 
   --audralia-button-background-active:
-    linear-gradient(
-      180deg,
-      rgba(31, 112, 166, 0.96) 0%,
-      rgba(10, 53, 94, 0.98) 100%
-    );
+    linear-gradient(180deg, rgba(31, 112, 166, 0.96) 0%, rgba(10, 53, 94, 0.98) 100%);
+
+  --audralia-diagnostic-background:
+    linear-gradient(180deg, rgba(46, 144, 210, 0.98) 0%, rgba(12, 67, 118, 0.98) 48%, rgba(5, 24, 54, 0.98) 100%);
+
+  --audralia-diagnostic-border:
+    rgba(147, 232, 255, 0.82);
 
   --audralia-panel-border:
     rgba(132, 191, 231, 0.25);
@@ -93,9 +48,6 @@ Does not own:
 
   --audralia-text-muted:
     rgba(222, 239, 251, 0.76);
-
-  --audralia-text-faint:
-    rgba(204, 227, 242, 0.58);
 
   --audralia-cyan:
     #75d9ff;
@@ -117,6 +69,12 @@ Does not own:
 
   --audralia-soft-shadow:
     0 12px 34px rgba(0, 0, 0, 0.34);
+
+  --audralia-diagnostic-shadow:
+    0 0 0 1px rgba(117, 217, 255, 0.20),
+    0 0 18px rgba(117, 217, 255, 0.32),
+    0 0 44px rgba(42, 157, 226, 0.24),
+    0 16px 38px rgba(0, 0, 0, 0.42);
 
   --audralia-radius-large:
     28px;
@@ -189,8 +147,14 @@ textarea {
   font: inherit;
 }
 
-button {
+button,
+a {
   color: inherit;
+}
+
+a {
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.22em;
 }
 
 [hidden] {
@@ -221,16 +185,8 @@ button {
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(
-      circle at 17% 20%,
-      rgba(69, 144, 203, 0.13) 0%,
-      rgba(69, 144, 203, 0) 34%
-    ),
-    radial-gradient(
-      circle at 84% 72%,
-      rgba(43, 108, 169, 0.11) 0%,
-      rgba(43, 108, 169, 0) 36%
-    );
+    radial-gradient(circle at 17% 20%, rgba(69, 144, 203, 0.13) 0%, rgba(69, 144, 203, 0) 34%),
+    radial-gradient(circle at 84% 72%, rgba(43, 108, 169, 0.11) 0%, rgba(43, 108, 169, 0) 36%);
 }
 
 .audralia-page::after,
@@ -242,26 +198,11 @@ button {
   z-index: -1;
   pointer-events: none;
   opacity: 0.32;
-  background-image:
-    radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.72) 0 0.7px,
-      transparent 0.8px
-    );
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 0.7px, transparent 0.8px);
   background-size: 72px 72px;
   background-position: 12px 18px;
-  mask-image:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.94),
-      rgba(0, 0, 0, 0.18)
-    );
-  -webkit-mask-image:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.94),
-      rgba(0, 0, 0, 0.18)
-    );
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.18));
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0.18));
 }
 
 .audralia-shell,
@@ -311,10 +252,7 @@ button {
 [data-audralia-title] {
   margin: 0;
   color: var(--audralia-text);
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2rem, 4.3vw, 3.7rem);
   font-weight: 650;
   line-height: 1.02;
@@ -344,9 +282,7 @@ button {
 .audralia-attraction-action,
 .audralia-dialog-close {
   appearance: none;
-  border:
-    1px solid
-    rgba(137, 201, 241, 0.28);
+  border: 1px solid rgba(137, 201, 241, 0.28);
   background: var(--audralia-button-background);
   color: var(--audralia-text-muted);
   box-shadow: var(--audralia-soft-shadow);
@@ -361,6 +297,9 @@ button {
 }
 
 .audralia-header-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: var(--audralia-control-height);
   padding: 0 18px;
   border-radius: 999px;
@@ -368,8 +307,85 @@ button {
   font-weight: 750;
   line-height: 1;
   letter-spacing: 0.07em;
+  text-align: center;
+  text-decoration: none;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+#audralia-engine-diagnostic-door,
+[data-audralia-engine-diagnostic-door] {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--audralia-diagnostic-border);
+  background: var(--audralia-diagnostic-background);
+  color: #f7fcff;
+  box-shadow: var(--audralia-diagnostic-shadow);
+  text-shadow: 0 0 12px rgba(211, 247, 255, 0.76);
+  animation: audralia-diagnostic-pulse 2.8s ease-in-out infinite;
+}
+
+#audralia-engine-diagnostic-door::before,
+[data-audralia-engine-diagnostic-door]::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.26) 48%, transparent 100%);
+  opacity: 0.48;
+  transform: translateX(-120%);
+  animation: audralia-diagnostic-scan 3.4s ease-in-out infinite;
+}
+
+#audralia-engine-diagnostic-door::after,
+[data-audralia-engine-diagnostic-door]::after {
+  content: "";
+  position: absolute;
+  inset: 6px 12px;
+  z-index: 0;
+  pointer-events: none;
+  border-top: 1px solid rgba(223, 250, 255, 0.36);
+  border-bottom: 1px solid rgba(117, 217, 255, 0.20);
+  border-radius: inherit;
+}
+
+#audralia-engine-diagnostic-door,
+#audralia-engine-diagnostic-door > *,
+[data-audralia-engine-diagnostic-door],
+[data-audralia-engine-diagnostic-door] > * {
+  z-index: 1;
+}
+
+@keyframes audralia-diagnostic-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(117, 217, 255, 0.20),
+      0 0 14px rgba(117, 217, 255, 0.24),
+      0 0 38px rgba(42, 157, 226, 0.18),
+      0 16px 38px rgba(0, 0, 0, 0.42);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(176, 241, 255, 0.42),
+      0 0 24px rgba(117, 217, 255, 0.50),
+      0 0 64px rgba(42, 157, 226, 0.36),
+      0 16px 38px rgba(0, 0, 0, 0.42);
+  }
+}
+
+@keyframes audralia-diagnostic-scan {
+  0% {
+    transform: translateX(-130%);
+  }
+
+  46%,
+  100% {
+    transform: translateX(130%);
+  }
 }
 
 .audralia-header-action:hover,
@@ -382,6 +398,17 @@ button {
     0 0 0 1px rgba(117, 217, 255, 0.08),
     0 12px 28px rgba(0, 0, 0, 0.36);
   transform: translateY(-1px);
+}
+
+#audralia-engine-diagnostic-door:hover,
+[data-audralia-engine-diagnostic-door]:hover {
+  border-color: rgba(229, 253, 255, 0.96);
+  color: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(211, 247, 255, 0.38),
+    0 0 28px rgba(117, 217, 255, 0.64),
+    0 0 78px rgba(42, 157, 226, 0.42),
+    0 18px 42px rgba(0, 0, 0, 0.46);
 }
 
 .audralia-header-action:active,
@@ -443,16 +470,8 @@ button {
   pointer-events: none;
   border-radius: inherit;
   background:
-    radial-gradient(
-      circle at 50% 48%,
-      rgba(41, 117, 179, 0.08) 0%,
-      rgba(41, 117, 179, 0) 55%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.025),
-      rgba(255, 255, 255, 0)
-    );
+    radial-gradient(circle at 50% 48%, rgba(41, 117, 179, 0.08) 0%, rgba(41, 117, 179, 0) 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0));
 }
 
 #audraliaGlobeStage::after,
@@ -467,8 +486,7 @@ button {
   pointer-events: none;
   border: 1px solid rgba(156, 218, 255, 0.07);
   border-radius: inherit;
-  box-shadow:
-    inset 0 0 90px rgba(1, 6, 18, 0.44);
+  box-shadow: inset 0 0 90px rgba(1, 6, 18, 0.44);
 }
 
 #audraliaGlobeMount,
@@ -487,12 +505,7 @@ button {
   overflow: hidden;
   border-radius: inherit;
   background:
-    radial-gradient(
-      circle at 50% 49%,
-      rgba(21, 75, 132, 0.17) 0%,
-      rgba(4, 15, 34, 0.18) 57%,
-      rgba(1, 5, 15, 0.38) 100%
-    );
+    radial-gradient(circle at 50% 49%, rgba(21, 75, 132, 0.17) 0%, rgba(4, 15, 34, 0.18) 57%, rgba(1, 5, 15, 0.38) 100%);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -522,18 +535,14 @@ button {
 }
 
 #audraliaGlobeMount canvas[data-audralia-planet-runtime-canvas],
-[data-audralia-globe-mount]
-  canvas[data-audralia-planet-runtime-canvas],
-[data-audralia-planet-mount]
-  canvas[data-audralia-planet-runtime-canvas] {
+[data-audralia-globe-mount] canvas[data-audralia-planet-runtime-canvas],
+[data-audralia-planet-mount] canvas[data-audralia-planet-runtime-canvas] {
   z-index: 2;
 }
 
 #audraliaGlobeMount canvas[data-audralia-planet-fallback-canvas],
-[data-audralia-globe-mount]
-  canvas[data-audralia-planet-fallback-canvas],
-[data-audralia-planet-mount]
-  canvas[data-audralia-planet-fallback-canvas] {
+[data-audralia-globe-mount] canvas[data-audralia-planet-fallback-canvas],
+[data-audralia-planet-mount] canvas[data-audralia-planet-fallback-canvas] {
   z-index: 3;
 }
 
@@ -579,9 +588,7 @@ button {
   flex: 0 0 auto;
   border-radius: 50%;
   background: var(--audralia-warning);
-  box-shadow:
-    0 0 0 5px
-    rgba(224, 189, 109, 0.11);
+  box-shadow: 0 0 0 5px rgba(224, 189, 109, 0.11);
 }
 
 .audralia-status-label,
@@ -598,42 +605,24 @@ button {
   white-space: nowrap;
 }
 
-body[data-audralia-state="ready"]
-  .audralia-status-dot,
-body[data-audralia-state="ready"]
-  [data-audralia-status-dot] {
+body[data-audralia-state="ready"] .audralia-status-dot,
+body[data-audralia-state="ready"] [data-audralia-status-dot] {
   background: var(--audralia-success);
-  box-shadow:
-    0 0 0 5px
-    rgba(121, 220, 166, 0.13);
+  box-shadow: 0 0 0 5px rgba(121, 220, 166, 0.13);
 }
 
-body[data-audralia-state="fallback"]
-  .audralia-status-dot,
-body[data-audralia-state="fallback"]
-  [data-audralia-status-dot] {
+body[data-audralia-state="fallback"] .audralia-status-dot,
+body[data-audralia-state="fallback"] [data-audralia-status-dot] {
   background: var(--audralia-warning);
-  box-shadow:
-    0 0 0 5px
-    rgba(224, 189, 109, 0.13);
+  box-shadow: 0 0 0 5px rgba(224, 189, 109, 0.13);
 }
 
-body[data-audralia-state="context-lost"]
-  .audralia-status-dot,
-body[data-audralia-state="context-lost"]
-  [data-audralia-status-dot],
-body[data-audralia-planet-runtime-error-count]:not(
-    [data-audralia-planet-runtime-error-count="0"]
-  )
-  .audralia-status-dot,
-body[data-audralia-planet-runtime-error-count]:not(
-    [data-audralia-planet-runtime-error-count="0"]
-  )
-  [data-audralia-status-dot] {
+body[data-audralia-state="context-lost"] .audralia-status-dot,
+body[data-audralia-state="context-lost"] [data-audralia-status-dot],
+body[data-audralia-planet-runtime-error-count]:not([data-audralia-planet-runtime-error-count="0"]) .audralia-status-dot,
+body[data-audralia-planet-runtime-error-count]:not([data-audralia-planet-runtime-error-count="0"]) [data-audralia-status-dot] {
   background: var(--audralia-danger);
-  box-shadow:
-    0 0 0 5px
-    rgba(237, 129, 139, 0.13);
+  box-shadow: 0 0 0 5px rgba(237, 129, 139, 0.13);
 }
 
 .audralia-state-layer,
@@ -649,9 +638,7 @@ body[data-audralia-planet-runtime-error-count]:not(
   background: rgba(1, 5, 15, 0.38);
   opacity: 0;
   visibility: hidden;
-  transition:
-    opacity 180ms ease,
-    visibility 180ms ease;
+  transition: opacity 180ms ease, visibility 180ms ease;
 }
 
 .audralia-state-layer[aria-hidden="false"],
@@ -686,16 +673,10 @@ body[data-audralia-planet-runtime-error-count]:not(
   width: 38px;
   height: 38px;
   margin: 0 auto 16px;
-  border:
-    2px solid
-    rgba(117, 217, 255, 0.17);
+  border: 2px solid rgba(117, 217, 255, 0.17);
   border-top-color: var(--audralia-cyan);
   border-radius: 50%;
-  animation:
-    audralia-loader-spin
-    900ms
-    linear
-    infinite;
+  animation: audralia-loader-spin 900ms linear infinite;
 }
 
 @keyframes audralia-loader-spin {
@@ -704,30 +685,20 @@ body[data-audralia-planet-runtime-error-count]:not(
   }
 }
 
-body[data-audralia-state="loading"]
-  .audralia-state-layer[data-state="loading"],
-body[data-audralia-state="loading"]
-  [data-audralia-state-layer][data-state="loading"],
-body[data-audralia-state="held"]
-  .audralia-state-layer[data-state="held"],
-body[data-audralia-state="held"]
-  [data-audralia-state-layer][data-state="held"],
-body[data-audralia-state="fallback"]
-  .audralia-state-layer[data-state="fallback"],
-body[data-audralia-state="fallback"]
-  [data-audralia-state-layer][data-state="fallback"],
-body[data-audralia-state="context-lost"]
-  .audralia-state-layer[data-state="context-lost"],
-body[data-audralia-state="context-lost"]
-  [data-audralia-state-layer][data-state="context-lost"] {
+body[data-audralia-state="loading"] .audralia-state-layer[data-state="loading"],
+body[data-audralia-state="loading"] [data-audralia-state-layer][data-state="loading"],
+body[data-audralia-state="held"] .audralia-state-layer[data-state="held"],
+body[data-audralia-state="held"] [data-audralia-state-layer][data-state="held"],
+body[data-audralia-state="fallback"] .audralia-state-layer[data-state="fallback"],
+body[data-audralia-state="fallback"] [data-audralia-state-layer][data-state="fallback"],
+body[data-audralia-state="context-lost"] .audralia-state-layer[data-state="context-lost"],
+body[data-audralia-state="context-lost"] [data-audralia-state-layer][data-state="context-lost"] {
   opacity: 1;
   visibility: visible;
 }
 
-body[data-audralia-state="ready"]
-  .audralia-state-layer,
-body[data-audralia-state="ready"]
-  [data-audralia-state-layer] {
+body[data-audralia-state="ready"] .audralia-state-layer,
+body[data-audralia-state="ready"] [data-audralia-state-layer] {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -770,11 +741,7 @@ body[data-audralia-state="ready"]
   position: relative;
   z-index: 20;
   display: grid;
-  grid-template-columns:
-    repeat(
-      4,
-      minmax(0, 1fr)
-    );
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   width: 100%;
   min-width: 0;
@@ -834,10 +801,7 @@ body[data-audralia-state="ready"]
 .audralia-section-title {
   margin: 0;
   color: var(--audralia-text);
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.5rem, 3vw, 2.15rem);
   font-weight: 650;
   line-height: 1.08;
@@ -845,11 +809,7 @@ body[data-audralia-state="ready"]
 
 .audralia-attraction-grid {
   display: grid;
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   width: 100%;
   min-width: 0;
@@ -858,11 +818,7 @@ body[data-audralia-state="ready"]
 .audralia-attraction-card {
   position: relative;
   display: grid;
-  grid-template-rows:
-    auto
-    auto
-    1fr
-    auto;
+  grid-template-rows: auto auto 1fr auto;
   gap: 10px;
   min-width: 0;
   min-height: 224px;
@@ -880,12 +836,7 @@ body[data-audralia-state="ready"]
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(86, 184, 235, 0.14),
-      transparent 42%
-    );
+  background: radial-gradient(circle at 100% 0%, rgba(86, 184, 235, 0.14), transparent 42%);
 }
 
 .audralia-attraction-card > * {
@@ -905,10 +856,7 @@ body[data-audralia-state="ready"]
 .audralia-attraction-title {
   margin: 0;
   color: var(--audralia-text);
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.3rem, 2.2vw, 1.85rem);
   font-weight: 650;
   line-height: 1.15;
@@ -922,6 +870,9 @@ body[data-audralia-state="ready"]
 }
 
 .audralia-attraction-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   justify-self: start;
   min-height: 46px;
   padding: 0 18px;
@@ -930,43 +881,18 @@ body[data-audralia-state="ready"]
   font-weight: 760;
   line-height: 1;
   letter-spacing: 0.065em;
+  text-align: center;
+  text-decoration: none;
   text-transform: uppercase;
 }
 
 .audralia-dialog {
   position: fixed;
   inset: 0;
-  width:
-    min(
-      640px,
-      calc(
-        100vw -
-        var(--audralia-safe-left) -
-        var(--audralia-safe-right) -
-        28px
-      )
-    );
+  width: min(640px, calc(100vw - var(--audralia-safe-left) - var(--audralia-safe-right) - 28px));
   max-width: 640px;
-  max-height:
-    min(
-      86vh,
-      calc(
-        100vh -
-        var(--audralia-safe-top) -
-        var(--audralia-safe-bottom) -
-        28px
-      )
-    );
-  max-height:
-    min(
-      86dvh,
-      calc(
-        100dvh -
-        var(--audralia-safe-top) -
-        var(--audralia-safe-bottom) -
-        28px
-      )
-    );
+  max-height: min(86vh, calc(100vh - var(--audralia-safe-top) - var(--audralia-safe-bottom) - 28px));
+  max-height: min(86dvh, calc(100dvh - var(--audralia-safe-top) - var(--audralia-safe-bottom) - 28px));
   margin: auto;
   padding: 0;
   overflow: hidden;
@@ -986,17 +912,14 @@ body[data-audralia-state="ready"]
 }
 
 .audralia-dialog::backdrop {
-  background:
-    rgba(0, 4, 12, 0.82);
+  background: rgba(0, 4, 12, 0.82);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .audralia-dialog-card {
   display: grid;
-  grid-template-rows:
-    auto
-    minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   width: 100%;
   max-height: inherit;
   overflow: hidden;
@@ -1012,20 +935,14 @@ body[data-audralia-state="ready"]
   justify-content: space-between;
   gap: 18px;
   padding: 22px 22px 18px;
-  border-bottom:
-    1px solid
-    rgba(132, 191, 231, 0.18);
-  background:
-    rgba(5, 16, 36, 0.96);
+  border-bottom: 1px solid rgba(132, 191, 231, 0.18);
+  background: rgba(5, 16, 36, 0.96);
 }
 
 .audralia-dialog-title {
   margin: 0;
   color: var(--audralia-text);
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.45rem, 4vw, 2.15rem);
   font-weight: 650;
   line-height: 1.12;
@@ -1041,9 +958,7 @@ body[data-audralia-state="ready"]
   font-size: 1rem;
   line-height: 1.68;
   scrollbar-width: thin;
-  scrollbar-color:
-    rgba(117, 217, 255, 0.42)
-    rgba(0, 0, 0, 0.18);
+  scrollbar-color: rgba(117, 217, 255, 0.42) rgba(0, 0, 0, 0.18);
 }
 
 .audralia-dialog-body p {
@@ -1121,18 +1036,13 @@ body[data-audralia-state="ready"]
   .audralia-controls,
   [data-audralia-controls],
   [data-audralia-planet-controls] {
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 680px) {
   :root {
-    --audralia-control-height:
-      46px;
+    --audralia-control-height: 46px;
   }
 
   .audralia-page,
@@ -1160,15 +1070,20 @@ body[data-audralia-state="ready"]
   .audralia-header-actions,
   [data-audralia-header-actions] {
     display: grid;
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(0, auto);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     width: 100%;
   }
 
   .audralia-header-action {
+    width: 100%;
     min-width: 0;
     padding: 0 14px;
+    white-space: normal;
+  }
+
+  #audralia-engine-diagnostic-door,
+  [data-audralia-engine-diagnostic-door] {
+    letter-spacing: 0.08em;
   }
 
   #audraliaGlobeStage,
@@ -1232,20 +1147,8 @@ body[data-audralia-state="ready"]
   }
 
   .audralia-dialog {
-    width:
-      calc(
-        100vw -
-        var(--audralia-safe-left) -
-        var(--audralia-safe-right) -
-        20px
-      );
-    max-height:
-      calc(
-        100dvh -
-        var(--audralia-safe-top) -
-        var(--audralia-safe-bottom) -
-        20px
-      );
+    width: calc(100vw - var(--audralia-safe-left) - var(--audralia-safe-right) - 20px);
+    max-height: calc(100dvh - var(--audralia-safe-top) - var(--audralia-safe-bottom) - 20px);
     border-radius: 20px;
   }
 
@@ -1282,15 +1185,19 @@ body[data-audralia-state="ready"]
 
   .audralia-header-actions,
   [data-audralia-header-actions] {
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(92px, auto);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 8px;
   }
 
   .audralia-header-action {
     font-size: 0.68rem;
     letter-spacing: 0.055em;
+  }
+
+  #audralia-engine-diagnostic-door,
+  [data-audralia-engine-diagnostic-door] {
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
   }
 
   #audraliaGlobeStage,
@@ -1317,11 +1224,7 @@ body[data-audralia-state="ready"]
   .audralia-controls,
   [data-audralia-controls],
   [data-audralia-planet-controls] {
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .audralia-section-title {
@@ -1408,6 +1311,13 @@ body[data-audralia-state="ready"]
     border-top-color: rgba(117, 217, 255, 0.66);
   }
 
+  #audralia-engine-diagnostic-door,
+  #audralia-engine-diagnostic-door::before,
+  [data-audralia-engine-diagnostic-door],
+  [data-audralia-engine-diagnostic-door]::before {
+    animation: none !important;
+  }
+
   .audralia-header-action:hover,
   .audralia-control:hover,
   .audralia-attraction-action:hover,
@@ -1418,17 +1328,9 @@ body[data-audralia-state="ready"]
 
 @media (prefers-contrast: more) {
   :root {
-    --audralia-panel-border:
-      rgba(211, 239, 255, 0.68);
-
-    --audralia-panel-border-strong:
-      rgba(234, 249, 255, 0.96);
-
-    --audralia-text-muted:
-      rgba(244, 251, 255, 0.96);
-
-    --audralia-text-faint:
-      rgba(231, 245, 253, 0.86);
+    --audralia-panel-border: rgba(211, 239, 255, 0.68);
+    --audralia-panel-border-strong: rgba(234, 249, 255, 0.96);
+    --audralia-text-muted: rgba(244, 251, 255, 0.96);
   }
 
   #audraliaGlobeStage,
@@ -1441,6 +1343,11 @@ body[data-audralia-state="ready"]
   [data-audralia-planet-controls],
   .audralia-attraction-card,
   .audralia-dialog {
+    border-width: 2px;
+  }
+
+  #audralia-engine-diagnostic-door,
+  [data-audralia-engine-diagnostic-door] {
     border-width: 2px;
   }
 }

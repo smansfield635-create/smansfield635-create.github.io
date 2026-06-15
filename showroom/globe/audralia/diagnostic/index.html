@@ -1,15 +1,16 @@
-<!-- /showroom/globe/audralia/diagnostic/index.html --><!-- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v5 --><!-- Full-file replacement. --><!--
+<!-- /showroom/globe/audralia/diagnostic/index.html --><!-- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v7 --><!-- Full-file replacement. --><!--
   PURPOSE:
   - Preserve the existing Audralia diagnostic engine, bridge, inspection lane,
     participant family, and controls v3.
   - Present Audralia, the website-wide 3D engine system, Mirrorland, DROP,
     and READ through compact educational disclosures.
   - Keep Category, Audit, Create Report, and Copy Report immediately available.
-  - Place Participants, Observation, Instrument Chambers, secondary report
-    operations, utilities, and system state inside expandable groups.
+  - Preserve one lawful shared tablist for Report Context and Participant Context.
+  - Place Observation, Instrument Chambers, secondary report operations,
+    utilities, and system state inside expandable groups.
   - Preserve one authoritative Report Chamber.
   - Preserve all existing canonical IDs, v3 control attributes, evidence panels,
-    status restitution nodes, script declarations, and physical script order.
+    status-restitution nodes, script declarations, and physical script order.
 
   EXPERIENCE LAW:
   - The educational surface teaches broadly.
@@ -18,15 +19,19 @@
   - The lower chambers preserve evidence.
 
   OWNERSHIP:
-  - HTML declares the real visible structure and inventories.
+  - HTML declares real visible structure, inventories, canonical IDs,
+    accessibility relationships, initial states, and physical script order.
   - CSS owns presentation and geometry.
   - Bridge v6 translates only explicit compatibility aliases.
-  - Inspection v1 proves the assembled page.
-  - Controls v3 own interaction and user-command handoff.
-  - Engine v2 owns diagnostic meaning, execution, reports, archive, and synthesis.
+  - Inspection lane v1 performs bounded source, runtime, participant,
+    target-frame, engine-family, registry, and Surface Truth inspection.
+  - Controls v3 own DOM events, selection, switching, explicit commands,
+    copy, reset, receipt filtering, and user-facing restitution.
+  - Engine v2 owns diagnostic meaning, execution, reports, archive,
+    and terminal synthesis.
 
-  IMPORTANT COMPATIBILITY LAW:
-  - No new participant, observation, workspace, or execution grammar is introduced.
+  COMPATIBILITY LAW:
+  - No new participant, observation, workspace, or execution grammar.
   - Existing controls v3 grammar is used directly:
       data-category-id
       data-audit-id
@@ -37,9 +42,19 @@
       data-instrument-chamber
       data-receipt-filter
       data-report-command
-  - Direct and Nine-Cycle controls remain outside generic report-command grammar.
+  - Direct Check, Nine-Cycle, Add to Archive, and Deep Archive use dedicated
+    canonical-ID routes only.
   - No hidden compatibility controls.
   - No duplicated canonical IDs.
+  - No participant disclosure double gate.
+  - Report Context and Participant Context controls are sibling tabs inside
+    one lawful role="tablist".
+
+  EVENT-DISPATCH LAW:
+  - Each interactive control has one intended first-match controls-v3 route.
+  - A canonical control must not carry a higher-priority generic command
+    unless both routes are behaviorally equivalent.
+  - createDeepArchive carries no data-report-command metadata.
 
   N.E.W.S. / CENTER / RAIL:
   - North: educational intake and diagnostic question.
@@ -65,8 +80,8 @@
   lang="en"
   data-route="/showroom/globe/audralia/diagnostic/"
   data-page="audralia-mirrorland-compact-educational-diagnostic-chamber"
-  data-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v5"
-  data-previous-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_THIN_BRIDGE_STATIC_SHELL_TNT_v4"
+  data-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v7"
+  data-previous-contract="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v6"
   data-target-route="/showroom/globe/audralia/"
   data-diagnostic-route="/showroom/globe/audralia/diagnostic/"
   data-diagnostic-family-root="/assets/audralia/"
@@ -88,6 +103,7 @@
   data-report-authority-count="1"
   data-primary-report-action-count="2"
   data-educational-disclosure-count="5"
+  data-left-orbit-tab-count="2"
   data-news-aligned="true"
   data-fibonacci-synchronized="true"
   data-production-mutation-authorized="false"
@@ -119,12 +135,12 @@ content="Explore Audralia, its website-wide 3D engine architecture, Mirrorland, 
 
 <meta
 name="audralia-diagnostic-html-contract"
-content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v5"
+content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v7"
 />
 
 <meta
 name="audralia-diagnostic-html-previous-contract"
-content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_THIN_BRIDGE_STATIC_SHELL_TNT_v4"
+content="AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v6"
 />
 
 <meta
@@ -288,9 +304,6 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
           class="command-button command-button--ghost"
           type="button"
           id="createDeepArchive"
-          data-report-command="open-archive"
-          data-report-chamber="archive"
-          data-report-source="COMMAND_CROWN_DEEP_ARCHIVE"
         >
           Deep Archive
         </button>
@@ -632,6 +645,35 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     </span>
   </header>
 
+  <div
+    class="panel-tablist left-orbit-tablist"
+    id="leftOrbitTabs"
+    role="tablist"
+    aria-label="Diagnostic context views"
+  >
+    <button
+      type="button"
+      role="tab"
+      id="auditOrbitButton"
+      aria-selected="true"
+      aria-controls="auditOrbit"
+      data-left-orbit-view="audits"
+    >
+      Report Context
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="participantConstellationButton"
+      aria-selected="false"
+      aria-controls="participantConstellation"
+      data-left-orbit-view="participants"
+    >
+      Participant Context
+    </button>
+  </div>
+
   <section
     class="orbit-panel control-pad-selection"
     id="auditOrbit"
@@ -934,6 +976,277 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     </article>
   </section>
 
+  <section
+    class="orbit-panel participant-control-panel"
+    id="participantConstellation"
+    role="tabpanel"
+    aria-labelledby="participantConstellationButton"
+    hidden
+  >
+    <header class="panel-heading">
+      <div>
+        <p class="eyebrow">
+          Diagnostic family
+        </p>
+
+        <h2>Participant Constellation</h2>
+
+        <p>
+          Select one participant to establish explicit direct-execution
+          context.
+        </p>
+      </div>
+    </header>
+
+    <div
+      class="participant-summary"
+      id="participantSummary"
+    >
+      <span>Required <strong data-participant-summary="required">10</strong></span>
+      <span>Optional <strong data-participant-summary="optional">1</strong></span>
+      <span>Available <strong data-participant-summary="available">0</strong></span>
+      <span>Held <strong data-participant-summary="held">0</strong></span>
+    </div>
+
+    <div
+      class="participant-list"
+      id="participantList"
+      aria-live="polite"
+    >
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="NORTH_CONDUCTOR"
+        data-required="true"
+        data-news-direction="NORTH"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>North Conductor</strong>
+          <span>Required · Cycle authority</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="NORTH_PROBE_INTAKE"
+        data-required="true"
+        data-news-direction="NORTH"
+        data-cycle-position="1"
+        data-fibonacci="F1"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F1 · North Intake</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="EAST_PROBE_SOURCE"
+        data-required="true"
+        data-news-direction="EAST"
+        data-cycle-position="2"
+        data-fibonacci="F3"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F3 · East Source</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="EAST_CONSTRUCTION_INTERPRETATION"
+        data-required="true"
+        data-news-direction="EAST"
+        data-cycle-position="3"
+        data-fibonacci="F5"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F5 · East Construction</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="CANVAS_SURFACE_TRUTH"
+        data-required="true"
+        data-news-direction="CENTER"
+        data-cycle-position="4"
+        data-fibonacci="F8"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F8 · Canvas Surface Truth</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="WEST_PROBE_RUNTIME"
+        data-required="true"
+        data-news-direction="WEST"
+        data-cycle-position="5"
+        data-fibonacci="F13"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F13 · West Runtime</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="WEST_RUNTIME_INTERPRETATION"
+        data-required="true"
+        data-news-direction="WEST"
+        data-cycle-position="6"
+        data-fibonacci="F21"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F21 · West Interpretation</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="SOUTH_PROBE_HANDOFF"
+        data-required="true"
+        data-news-direction="SOUTH"
+        data-cycle-position="7"
+        data-fibonacci="F34"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F34 · South Handoff</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="SOUTH_RESTITUTION_INTERPRETATION"
+        data-required="true"
+        data-news-direction="SOUTH"
+        data-cycle-position="8"
+        data-fibonacci="F55"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F55 · South Restitution</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="SOUTH_SURFACE_POINTER"
+        data-required="false"
+        data-news-direction="SOUTH"
+        data-parent-cycle-position="8"
+        data-parent-fibonacci="F55"
+        data-creates-cycle-position="false"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>South Surface Pointer</strong>
+          <span>Optional auxiliary · F55 parent</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+
+      <article
+        class="participant-node"
+        tabindex="0"
+        role="button"
+        aria-selected="false"
+        data-participant-role="RAIL_TERMINAL_SYNTHESIS"
+        data-required="true"
+        data-news-direction="TERMINAL_RAIL"
+        data-cycle-position="9"
+        data-fibonacci="F89"
+        data-status="UNKNOWN"
+      >
+        <div>
+          <strong>F89 · Rail Synthesis</strong>
+          <span>Required station</span>
+        </div>
+
+        <small>UNKNOWN</small>
+      </article>
+    </div>
+
+    <article
+      class="participant-detail"
+      id="participantDetail"
+      aria-live="polite"
+    >
+      <h3>Select a participant</h3>
+
+      <p>
+        Path, required status, contract, version, cycle position,
+        aliases, and callable methods will appear here.
+      </p>
+    </article>
+  </section>
+
   <div class="control-pad-primary-actions">
     <button
       class="primary-action"
@@ -959,297 +1272,6 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     class="control-pad-disclosures"
     aria-label="Expandable diagnostic controls"
   >
-    <details class="control-disclosure">
-      <summary>
-        <span>
-          <small>Direct-execution target</small>
-          <strong>Participant</strong>
-        </span>
-
-        <em>
-          Select one participant before Direct Check
-        </em>
-      </summary>
-
-      <section
-        class="orbit-panel participant-control-panel"
-        id="participantConstellation"
-        role="tabpanel"
-        aria-labelledby="participantConstellationButton"
-        hidden
-      >
-        <header class="panel-heading">
-          <div>
-            <p class="eyebrow">
-              Diagnostic family
-            </p>
-
-            <h2>Participant Constellation</h2>
-          </div>
-        </header>
-
-        <div
-          class="participant-summary"
-          id="participantSummary"
-        >
-          <span>Required <strong data-participant-summary="required">10</strong></span>
-          <span>Optional <strong data-participant-summary="optional">1</strong></span>
-          <span>Available <strong data-participant-summary="available">0</strong></span>
-          <span>Held <strong data-participant-summary="held">0</strong></span>
-        </div>
-
-        <div
-          class="participant-list"
-          id="participantList"
-          aria-live="polite"
-        >
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="NORTH_CONDUCTOR"
-            data-required="true"
-            data-news-direction="NORTH"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>North Conductor</strong>
-              <span>Required · Cycle authority</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="NORTH_PROBE_INTAKE"
-            data-required="true"
-            data-news-direction="NORTH"
-            data-cycle-position="1"
-            data-fibonacci="F1"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F1 · North Intake</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="EAST_PROBE_SOURCE"
-            data-required="true"
-            data-news-direction="EAST"
-            data-cycle-position="2"
-            data-fibonacci="F3"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F3 · East Source</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="EAST_CONSTRUCTION_INTERPRETATION"
-            data-required="true"
-            data-news-direction="EAST"
-            data-cycle-position="3"
-            data-fibonacci="F5"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F5 · East Construction</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="CANVAS_SURFACE_TRUTH"
-            data-required="true"
-            data-news-direction="CENTER"
-            data-cycle-position="4"
-            data-fibonacci="F8"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F8 · Canvas Surface Truth</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="WEST_PROBE_RUNTIME"
-            data-required="true"
-            data-news-direction="WEST"
-            data-cycle-position="5"
-            data-fibonacci="F13"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F13 · West Runtime</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="WEST_RUNTIME_INTERPRETATION"
-            data-required="true"
-            data-news-direction="WEST"
-            data-cycle-position="6"
-            data-fibonacci="F21"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F21 · West Interpretation</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="SOUTH_PROBE_HANDOFF"
-            data-required="true"
-            data-news-direction="SOUTH"
-            data-cycle-position="7"
-            data-fibonacci="F34"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F34 · South Handoff</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="SOUTH_RESTITUTION_INTERPRETATION"
-            data-required="true"
-            data-news-direction="SOUTH"
-            data-cycle-position="8"
-            data-fibonacci="F55"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F55 · South Restitution</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="SOUTH_SURFACE_POINTER"
-            data-required="false"
-            data-news-direction="SOUTH"
-            data-parent-cycle-position="8"
-            data-parent-fibonacci="F55"
-            data-creates-cycle-position="false"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>South Surface Pointer</strong>
-              <span>Optional auxiliary · F55 parent</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-
-          <article
-            class="participant-node"
-            tabindex="0"
-            role="button"
-            aria-selected="false"
-            data-participant-role="RAIL_TERMINAL_SYNTHESIS"
-            data-required="true"
-            data-news-direction="TERMINAL_RAIL"
-            data-cycle-position="9"
-            data-fibonacci="F89"
-            data-status="UNKNOWN"
-          >
-            <div>
-              <strong>F89 · Rail Synthesis</strong>
-              <span>Required station</span>
-            </div>
-
-            <small>UNKNOWN</small>
-          </article>
-        </div>
-
-        <article
-          class="participant-detail"
-          id="participantDetail"
-          aria-live="polite"
-        >
-          <h3>Select a participant</h3>
-
-          <p>
-            Path, required status, contract, version, cycle position,
-            aliases, and callable methods will appear here.
-          </p>
-        </article>
-      </section>
-
-      <button
-        class="disclosure-selection-trigger"
-        type="button"
-        role="tab"
-        id="participantConstellationButton"
-        aria-selected="false"
-        aria-controls="participantConstellation"
-        data-left-orbit-view="participants"
-      >
-        Open Participant Inventory
-      </button>
-    </details>
-
     <details class="control-disclosure">
       <summary>
         <span>
@@ -1468,7 +1490,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <p class="direct-requirement">
         Direct execution requires one participant selected from the
-        Participant disclosure.
+        Participant Context tab.
       </p>
     </details>
 
@@ -1638,34 +1660,6 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
         </article>
       </section>
     </details>
-  </div>
-
-  <div
-    class="panel-tablist control-pad-view-switch"
-    id="leftOrbitTabs"
-    role="tablist"
-    aria-label="Control-pad views"
-  >
-    <button
-      type="button"
-      role="tab"
-      id="auditOrbitButton"
-      aria-selected="true"
-      aria-controls="auditOrbit"
-      data-left-orbit-view="audits"
-    >
-      Report Context
-    </button>
-
-    <button
-      type="button"
-      role="tab"
-      aria-selected="false"
-      aria-controls="participantConstellation"
-      data-left-orbit-view="participants"
-    >
-      Participant Context
-    </button>
   </div>
 </section>
 

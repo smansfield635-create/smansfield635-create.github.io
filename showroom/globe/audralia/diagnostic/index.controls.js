@@ -1,73 +1,84 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v1
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2
 // Full-file replacement.
-// Diagnostic route controls only.
+// UI control authority only.
+// Diagnostic-route only.
 //
-// Canonical authority:
+// CANONICAL AUTHORITY:
+// - AUDRALIA_DIAGNOSTIC_OWNERSHIP_STANDARD_LOCK_v1
 // - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1
 // - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1
 //
-// Purpose:
-// - Bind the Audralia diagnostic observatory controls independently from the
-//   diagnostic engine.
-// - Keep button binding available even when the diagnostic engine fails to
-//   publish or initialize.
-// - Forward explicit user actions to the public observatory API.
-// - Provide a minimal fallback READ report when Create Report is activated
-//   without an available diagnostic engine.
-// - Own dropdowns, tabs, visibility controls, copying, reset forwarding,
-//   target-frame controls, error presentation, and control receipts.
-//
-// Owns:
-// - DOM control binding;
+// SOLE OWNERSHIP:
+// - all click handling;
+// - all keyboard control handling;
 // - event delegation;
-// - category and audit selection forwarding;
+// - dropdown opening and closing;
+// - left-orbit tab behavior;
+// - report-mode tab behavior;
+// - observation-lens tab behavior;
+// - instrument-deck tab behavior;
+// - category selection forwarding;
+// - audit selection forwarding;
 // - participant selection forwarding;
-// - report-mode switching forwarding;
-// - observation-lens switching forwarding;
-// - instrument-chamber switching forwarding;
 // - target-window visibility;
 // - target-window expansion;
 // - target-frame reload;
-// - copy forwarding;
-// - report creation forwarding;
+// - observatory reload;
+// - clipboard actions;
+// - reset forwarding;
 // - direct-check forwarding;
 // - nine-cycle forwarding;
-// - archive forwarding;
-// - workbench-reset forwarding;
+// - engine discovery;
+// - engine contract validation;
+// - engine readiness validation;
 // - fallback READ report;
+// - fallback control archive;
+// - receipt filtering;
+// - receipt selection;
+// - complete control-binding audit;
 // - visible control errors;
-// - control-panel public API.
+// - no-silent-failure enforcement.
 //
-// Does not own:
+// DOES NOT OWN:
+// - diagnostic state;
 // - participant discovery;
+// - participant evidence;
 // - alias resolution;
-// - report evidence construction;
-// - READ interpretation when the engine is available;
 // - target observation;
-// - runtime inspection;
-// - Surface Truth inspection;
-// - direct authority selection;
-// - direct execution implementation;
-// - conductor invocation;
-// - cycle execution;
+// - runtime evidence;
+// - registry evidence;
+// - Surface Truth evidence;
+// - healthy-engine report construction;
+// - READ interpretation when the engine is healthy;
+// - direct-check implementation;
+// - conductor execution;
+// - nine-cycle implementation;
 // - receipt normalization;
-// - archive construction;
+// - ledger construction;
+// - diagnostic archive construction;
 // - production mutation;
 // - runtime restart;
 // - renderer mutation;
-// - repair;
-// - readiness;
-// - visual pass;
-// - F21 authority.
+// - canvas repair;
+// - controls repair;
+// - route repair;
+// - readiness claims;
+// - visual-pass claims;
+// - F21 authority;
+// - synthetic evidence.
 //
-// Required load order:
-// 1. Engine family
-// 2. Diagnostic participant family
-// 3. /showroom/globe/audralia/diagnostic/index.js
-// 4. /showroom/globe/audralia/diagnostic/index.controls.js
+// LOAD ORDER:
+// - Must load after /showroom/globe/audralia/diagnostic/index.js.
+// - Must still bind if index.js is missing, incompatible, held, or throws.
 //
-// The control panel must remain independently bindable even when step 3 fails.
+// FAILURE LAW:
+// - No interactive control may fail silently.
+// - Create Report must produce a fallback READ report when the engine is
+//   missing, incompatible, not ready, throws, rejects, or returns an invalid
+//   report.
+// - Direct and cycle controls must visibly report engine unavailability.
+// - Local shell controls must remain functional without the engine.
 
 (function installAudraliaDiagnosticControlPanel(global) {
 "use strict";
@@ -92,32 +103,97 @@ return;
 }
 
 var CONTRACT =
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v2";
+
+var PREVIOUS_CONTRACT =
 "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v1";
 
 var VERSION =
-"1.0.0";
+"2.0.0";
 
 var FILE =
 "/showroom/globe/audralia/diagnostic/index.controls.js";
 
-var ENGINE_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1";
+var EXPECTED_ENGINE_CONTRACT =
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
 
-var HTML_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1";
+var EXPECTED_HTML_CONTRACT =
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_CONTROL_SPLIT_STATIC_SHELL_TNT_v2";
 
-var CSS_CONTRACT =
+var EXPECTED_CSS_CONTRACT =
 "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1";
 
 var TARGET_ROUTE =
 "/showroom/globe/audralia/";
 
-var ENGINE_GLOBALS =
+var TARGET_FRAME_ID =
+"audraliaDiagnosticTargetFrame";
+
+var FALLBACK_REPORT_SCHEMA =
+"AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v2";
+
+var FALLBACK_ARCHIVE_SCHEMA =
+"AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_ARCHIVE_v2";
+
+var CONTROL_RECEIPT_SCHEMA =
+"AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT_v2";
+
+var ENGINE_GLOBAL_PATHS =
 Object.freeze([
 "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
 "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
 "AUDRALIA.dropWithReadDiagnosticObservatory",
 "AUDRALIA.diagnosticRouteController"
+]);
+
+var VALID_ENGINE_STATES =
+Object.freeze([
+"READY",
+"AVAILABLE",
+"ACTIVE"
+]);
+
+var CONTROL_MANIFEST =
+Object.freeze([
+control("returnToAudralia", "anchor", "LOCAL_NAVIGATION"),
+control("toggleObservationTarget", "button", "LOCAL_TARGET_VISIBILITY"),
+control("reloadObservatory", "button", "LOCAL_PAGE_RELOAD"),
+control("createDeepArchive", "button", "ENGINE_OR_FALLBACK_ARCHIVE"),
+control("resetWorkbench", "button", "ENGINE_OR_LOCAL_RESET"),
+
+  control("auditOrbitButton", "tab", "LOCAL_LEFT_ORBIT"),
+  control("participantConstellationButton", "tab", "LOCAL_LEFT_ORBIT"),
+
+  control("categorySelectorButton", "button", "LOCAL_SELECTOR"),
+  control("auditSelectorButton", "button", "LOCAL_SELECTOR"),
+
+  control("createReport", "button", "ENGINE_OR_FALLBACK_REPORT"),
+  control("runDirectCheck", "button", "ENGINE_DIRECT"),
+  control("runNineCycle", "button", "ENGINE_CYCLE"),
+  control("copyReadableReport", "button", "LOCAL_CLIPBOARD"),
+  control("copyPacketReport", "button", "LOCAL_CLIPBOARD"),
+  control("copyRawReport", "button", "LOCAL_CLIPBOARD"),
+  control("addReportToArchive", "button", "ENGINE_ARCHIVE"),
+  control("resetCurrentReport", "button", "ENGINE_OR_LOCAL_RESET"),
+
+  control("reportReadButton", "tab", "LOCAL_REPORT_MODE"),
+  control("reportPacketButton", "tab", "LOCAL_REPORT_MODE"),
+  control("reportRawButton", "tab", "LOCAL_REPORT_MODE"),
+  control("reportEvidenceButton", "tab", "LOCAL_REPORT_MODE"),
+
+  control("targetLensButton", "tab", "LOCAL_OBSERVATION_LENS"),
+  control("runtimeLensButton", "tab", "LOCAL_OBSERVATION_LENS"),
+  control("surfaceLensButton", "tab", "LOCAL_OBSERVATION_LENS"),
+  control("targetWindowButton", "tab", "LOCAL_OBSERVATION_LENS"),
+
+  control("expandTargetWindow", "button", "LOCAL_TARGET_EXPANSION"),
+  control("reloadTargetFrame", "button", "LOCAL_TARGET_RELOAD"),
+
+  control("cycleChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
+  control("registryChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
+  control("receiptChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
+  control("archiveChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER"),
+  control("boundaryChamberButton", "tab", "LOCAL_INSTRUMENT_CHAMBER")
 ]);
 
 var NO_CLAIMS =
@@ -126,52 +202,79 @@ productionMutationAuthorized: false,
 runtimeRestartAuthorized: false,
 rendererMutationAuthorized: false,
 canvasRepairAuthorized: false,
+canvasBuildAuthorized: false,
+canvasReleaseAuthorized: false,
 controlsRepairAuthorized: false,
 routeRepairAuthorized: false,
-readinessClaimed: false,
+repairAuthorized: false,
+readyClaimed: false,
 visualPassClaimed: false,
 cyclePassClaimed: false,
 f21Claimed: false,
 syntheticEvidenceAuthorized: false
 });
 
-var REQUIRED_CONTROL_IDS =
-Object.freeze([
-"createReport",
-"runDirectCheck",
-"runNineCycle",
-"copyReadableReport",
-"copyPacketReport",
-"copyRawReport",
-"addReportToArchive",
-"resetCurrentReport",
-"resetWorkbench",
-"createDeepArchive",
-"reloadObservatory",
-"toggleObservationTarget",
-"expandTargetWindow",
-"reloadTargetFrame",
-"categorySelectorButton",
-"auditSelectorButton",
-"audraliaDiagnosticTargetFrame"
-]);
-
 var state = {
 initialized: false,
-boundAt: null,
-lastAction: null,
-lastError: null,
+initializedAt: null,
+
+engine: {
+  resolved: false,
+  compatible: false,
+  ready: false,
+  path: null,
+  contract: null,
+  status: null,
+  reason: null
+},
+
+controls: {
+  manifestCount: CONTROL_MANIFEST.length,
+  discoveredCount: 0,
+  boundCount: 0,
+  missingCount: 0,
+  unownedInteractiveCount: 0,
+  records: [],
+  missing: [],
+  unownedInteractive: []
+},
+
+ui: {
+  leftOrbit: "audits",
+  reportMode: "read",
+  observationLens: "target",
+  instrumentChamber: "cycle",
+  categoryMenuOpen: false,
+  auditMenuOpen: false,
+  targetVisible: false,
+  targetExpanded: false,
+  receiptFilter: "all",
+  selectedReceiptIndex: null
+},
+
+reports: {
+  fallbackCurrent: null,
+  fallbackHistory: []
+},
+
+archive: {
+  fallbackCurrent: null
+},
+
 actionCount: 0,
-engineAvailable: false,
-enginePath: null,
-missingControls: [],
-boundControls: [],
-fallbackReport: null,
-categoryMenuOpen: false,
-auditMenuOpen: false,
-targetVisible: false,
-targetExpanded: false
+errorCount: 0,
+lastAction: null,
+lastError: null
+
 };
+
+function control(id, type, owner) {
+return {
+id: id,
+type: type,
+owner: owner
+};
+}
 
 function byId(id) {
 return doc.getElementById(id);
@@ -189,83 +292,19 @@ typeof value === "object" &&
 );
 }
 
+function isPromiseLike(value) {
+return Boolean(
+value &&
+isFunction(value.then)
+);
+}
+
 function nowIso() {
 try {
 return new Date().toISOString();
 } catch (_error) {
 return null;
 }
-}
-
-function readPath(path) {
-var parts =
-String(path || "")
-.split(".")
-.filter(Boolean);
-
-var cursor =
-  root;
-
-var index;
-
-for (
-  index = 0;
-  index < parts.length;
-  index += 1
-) {
-  if (
-    cursor === null ||
-    cursor === undefined ||
-    cursor[parts[index]] === null ||
-    cursor[parts[index]] === undefined
-  ) {
-    return null;
-  }
-
-  cursor =
-    cursor[parts[index]];
-}
-
-return cursor;
-
-}
-
-function resolveEngine() {
-var index;
-var candidate;
-
-for (
-  index = 0;
-  index < ENGINE_GLOBALS.length;
-  index += 1
-) {
-  candidate =
-    readPath(
-      ENGINE_GLOBALS[index]
-    );
-
-  if (
-    candidate &&
-    typeof candidate === "object"
-  ) {
-    state.engineAvailable =
-      true;
-
-    state.enginePath =
-      ENGINE_GLOBALS[index];
-
-    return candidate;
-  }
-}
-
-state.engineAvailable =
-  false;
-
-state.enginePath =
-  null;
-
-return null;
-
 }
 
 function clone(value, seen) {
@@ -330,6 +369,59 @@ return output;
 
 }
 
+function deepFreeze(value, seen) {
+var memory;
+
+if (
+  !value ||
+  (
+    typeof value !== "object" &&
+    typeof value !== "function"
+  )
+) {
+  return value;
+}
+
+memory =
+  seen || [];
+
+if (memory.indexOf(value) !== -1) {
+  return value;
+}
+
+memory.push(value);
+
+try {
+  Object.getOwnPropertyNames(value).forEach(function freezeProperty(key) {
+    var child;
+
+    try {
+      child =
+        value[key];
+    } catch (_error) {
+      child =
+        null;
+    }
+
+    deepFreeze(
+      child,
+      memory
+    );
+  });
+
+  Object.freeze(value);
+} catch (_error) {}
+
+return value;
+
+}
+
+function frozenClone(value) {
+return deepFreeze(
+clone(value)
+);
+}
+
 function safeJson(value) {
 try {
 return JSON.stringify(
@@ -354,6 +446,55 @@ value === undefined
 .replace(/>/g, ">")
 .replace(/"/g, """)
 .replace(/'/g, "'");
+}
+
+function cssEscape(value) {
+if (
+root.CSS &&
+isFunction(root.CSS.escape)
+) {
+return root.CSS.escape(
+String(value)
+);
+}
+
+return String(value)
+  .replace(/\\/g, "\\\\")
+  .replace(/"/g, '\\"');
+
+}
+
+function readPath(path) {
+var parts =
+String(path || "")
+.split(".")
+.filter(Boolean);
+
+var cursor =
+  root;
+
+var index;
+
+for (
+  index = 0;
+  index < parts.length;
+  index += 1
+) {
+  if (
+    cursor === null ||
+    cursor === undefined ||
+    cursor[parts[index]] === null ||
+    cursor[parts[index]] === undefined
+  ) {
+    return null;
+  }
+
+  cursor =
+    cursor[parts[index]];
+}
+
+return cursor;
+
 }
 
 function setText(id, value) {
@@ -407,20 +548,24 @@ if (node) {
 
 }
 
-function setStatus(id, status) {
+function setStatus(idOrNode, status) {
 var node =
-byId(id);
+typeof idOrNode === "string"
+? byId(idOrNode)
+: idOrNode;
 
 if (node) {
   node.setAttribute(
     "data-status",
     String(status || "UNKNOWN")
+      .trim()
+      .toUpperCase()
   );
 }
 
 }
 
-function toast(message) {
+function toast(message, status) {
 var node =
 byId("toast");
 
@@ -430,6 +575,12 @@ if (!node) {
 
 node.textContent =
   String(message || "");
+
+node.setAttribute(
+  "data-status",
+  String(status || "READY")
+    .toUpperCase()
+);
 
 node.classList.add("show");
 node.classList.add("visible");
@@ -457,7 +608,7 @@ toast._timer =
       "data-visible",
       "false"
     );
-  }, 2600);
+  }, 2800);
 
 }
 
@@ -465,28 +616,21 @@ function recordAction(action, detail) {
 state.actionCount += 1;
 
 state.lastAction = {
-  action:
-    action,
-
-  detail:
-    detail || null,
-
-  actionNumber:
-    state.actionCount,
-
-  occurredAt:
-    nowIso()
+  action: action,
+  detail: clone(detail || null),
+  actionNumber: state.actionCount,
+  occurredAt: nowIso()
 };
 
 publishReceipt();
 
 }
 
-function recordError(action, error) {
-state.lastError = {
-action:
-action,
+function recordError(action, error, detail) {
+state.errorCount += 1;
 
+state.lastError = {
+  action: action,
   message:
     String(
       error &&
@@ -494,9 +638,9 @@ action,
         ? error.message
         : error
     ),
-
-  occurredAt:
-    nowIso()
+  detail: clone(detail || null),
+  errorNumber: state.errorCount,
+  occurredAt: nowIso()
 };
 
 setText(
@@ -512,144 +656,401 @@ setStatus(
 publishReceipt();
 
 toast(
-  "Control error: " +
-  state.lastError.message
+  state.lastError.message,
+  "ERROR"
+);
+
+return frozenClone(
+  state.lastError
 );
 
 }
 
-function invokeEngineMethod(
+function readEngineState(engine) {
+if (
+!engine ||
+!isFunction(engine.getState)
+) {
+return null;
+}
+
+try {
+  return engine.getState();
+} catch (_error) {
+  return null;
+}
+
+}
+
+function deriveEngineStatus(engine, publicState) {
+var statusCandidates = [
+publicState && publicState.status,
+publicState && publicState.engineStatus,
+publicState &&
+publicState.controllerState,
+publicState &&
+publicState.drop &&
+publicState.drop.report &&
+publicState.drop.report.status,
+engine && engine.STATUS,
+engine && engine.status
+];
+
+var index;
+
+for (
+  index = 0;
+  index < statusCandidates.length;
+  index += 1
+) {
+  if (
+    typeof statusCandidates[index] === "string" &&
+    statusCandidates[index].trim()
+  ) {
+    return statusCandidates[index]
+      .trim()
+      .toUpperCase();
+  }
+}
+
+if (
+  publicState &&
+  publicState.initialized === true
+) {
+  return "READY";
+}
+
+return "UNKNOWN";
+
+}
+
+function resolveEngine() {
+var index;
+var candidate;
+var candidatePath;
+var publicState;
+var status;
+
+state.engine = {
+  resolved: false,
+  compatible: false,
+  ready: false,
+  path: null,
+  contract: null,
+  status: null,
+  reason: "ENGINE_NOT_FOUND"
+};
+
+for (
+  index = 0;
+  index < ENGINE_GLOBAL_PATHS.length;
+  index += 1
+) {
+  candidatePath =
+    ENGINE_GLOBAL_PATHS[index];
+
+  candidate =
+    readPath(candidatePath);
+
+  if (
+    !candidate ||
+    typeof candidate !== "object"
+  ) {
+    continue;
+  }
+
+  state.engine.resolved =
+    true;
+
+  state.engine.path =
+    candidatePath;
+
+  state.engine.contract =
+    typeof candidate.CONTRACT === "string"
+      ? candidate.CONTRACT
+      : null;
+
+  if (
+    state.engine.contract !==
+    EXPECTED_ENGINE_CONTRACT
+  ) {
+    state.engine.reason =
+      "ENGINE_CONTRACT_MISMATCH";
+
+    continue;
+  }
+
+  state.engine.compatible =
+    true;
+
+  publicState =
+    readEngineState(candidate);
+
+  status =
+    deriveEngineStatus(
+      candidate,
+      publicState
+    );
+
+  state.engine.status =
+    status;
+
+  state.engine.ready =
+    VALID_ENGINE_STATES.indexOf(
+      status
+    ) !== -1;
+
+  state.engine.reason =
+    state.engine.ready
+      ? "ENGINE_READY"
+      : "ENGINE_NOT_READY";
+
+  if (state.engine.ready) {
+    publishReceipt();
+
+    return candidate;
+  }
+}
+
+publishReceipt();
+
+return null;
+
+}
+
+function getResolvedEngineWithoutReadiness() {
+var index;
+var candidate;
+
+for (
+  index = 0;
+  index < ENGINE_GLOBAL_PATHS.length;
+  index += 1
+) {
+  candidate =
+    readPath(
+      ENGINE_GLOBAL_PATHS[index]
+    );
+
+  if (
+    candidate &&
+    typeof candidate === "object" &&
+    candidate.CONTRACT ===
+      EXPECTED_ENGINE_CONTRACT
+  ) {
+    return candidate;
+  }
+}
+
+return null;
+
+}
+
+function validateEngineResult(
+methodName,
+result,
+options
+) {
+var settings =
+options || {};
+
+if (
+  settings.allowNull === true
+) {
+  return true;
+}
+
+if (
+  result === null ||
+  result === undefined
+) {
+  return false;
+}
+
+if (
+  methodName === "createReport"
+) {
+  return Boolean(
+    isObject(result) &&
+    (
+      result.reportId ||
+      result.schema ||
+      result.read
+    )
+  );
+}
+
+return true;
+
+}
+
+function invokeEngine(
 methodName,
 args,
 options
 ) {
-var engine =
-resolveEngine();
-
 var settings =
-  options || {};
+options || {};
+
+var engine =
+  resolveEngine();
 
 if (
   !engine ||
   !isFunction(engine[methodName])
 ) {
-  if (settings.fallback) {
-    return settings.fallback();
+  if (isFunction(settings.fallback)) {
+    return Promise.resolve(
+      settings.fallback({
+        reason:
+          !engine
+            ? state.engine.reason
+            : "ENGINE_METHOD_MISSING",
+        methodName: methodName
+      })
+    );
   }
 
-  var unavailable =
-    new Error(
-      "DIAGNOSTIC_ENGINE_METHOD_UNAVAILABLE:" +
-      methodName
-    );
-
-  recordError(
-    methodName,
-    unavailable
+  return Promise.resolve(
+    recordError(
+      methodName,
+      new Error(
+        !engine
+          ? state.engine.reason
+          : "ENGINE_METHOD_MISSING:" +
+            methodName
+      )
+    )
   );
-
-  return null;
 }
 
-try {
-  recordAction(
-    methodName,
-    {
-      enginePath:
-        state.enginePath
-    }
-  );
+recordAction(
+  methodName,
+  {
+    enginePath:
+      state.engine.path,
+    engineContract:
+      state.engine.contract
+  }
+);
 
-  var result =
+var result;
+
+try {
+  result =
     engine[methodName].apply(
       engine,
       Array.isArray(args)
         ? args
         : []
     );
+} catch (error) {
+  if (isFunction(settings.fallback)) {
+    return Promise.resolve(
+      settings.fallback({
+        reason:
+          "ENGINE_METHOD_THROW",
+        methodName:
+          methodName,
+        error:
+          error
+      })
+    );
+  }
 
-  if (
-    result &&
-    isFunction(result.then)
-  ) {
+  return Promise.resolve(
+    recordError(
+      methodName,
+      error
+    )
+  );
+}
+
+return Promise.resolve(result)
+  .then(function engineResolved(value) {
+    if (
+      !validateEngineResult(
+        methodName,
+        value,
+        settings
+      )
+    ) {
+      if (
+        isFunction(settings.fallback)
+      ) {
+        return settings.fallback({
+          reason:
+            "ENGINE_RESULT_INVALID",
+          methodName:
+            methodName,
+          result:
+            clone(value)
+        });
+      }
+
+      return recordError(
+        methodName,
+        new Error(
+          "ENGINE_RESULT_INVALID:" +
+          methodName
+        ),
+        {
+          result:
+            clone(value)
+        }
+      );
+    }
+
     setText(
       "controllerState",
-      "EXECUTING"
+      "REPORT READY"
     );
 
     setStatus(
       "controllerState",
-      "RUNNING"
+      "READY"
     );
 
-    return result
-      .then(function engineMethodResolved(value) {
-        setText(
-          "controllerState",
-          "REPORT READY"
-        );
-
-        setStatus(
-          "controllerState",
-          "READY"
-        );
-
-        return value;
-      })
-      .catch(function engineMethodRejected(error) {
-        recordError(
+    return value;
+  })
+  .catch(function engineRejected(error) {
+    if (
+      isFunction(settings.fallback)
+    ) {
+      return settings.fallback({
+        reason:
+          "ENGINE_METHOD_REJECTED",
+        methodName:
           methodName,
+        error:
           error
-        );
-
-        return null;
       });
-  }
+    }
 
-  return result;
-} catch (error) {
-  recordError(
-    methodName,
-    error
-  );
-
-  return null;
-}
+    return recordError(
+      methodName,
+      error
+    );
+  });
 
 }
 
-function renderFallbackReadRegion(
-id,
-letter,
-label,
-headline,
-body
-) {
-setHtml(
-id,
-"<header>" +
-"<span>" +
-escapeHtml(letter) +
-"</span>" +
-"<div>" +
-"<p>" +
-escapeHtml(label) +
-"</p>" +
-"<strong>" +
-escapeHtml(headline) +
-"</strong>" +
-"</div>" +
-"</header>" +
-"<p>" +
-escapeHtml(body) +
-"</p>"
-);
-}
+function createFallbackReport(context) {
+var reason =
+context && context.reason
+? context.reason
+: "ENGINE_UNAVAILABLE";
 
-function createFallbackReport() {
+var errorMessage =
+  context &&
+  context.error &&
+  context.error.message
+    ? context.error.message
+    : null;
+
 var report = {
-schema:
-"AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v1",
+  schema:
+    FALLBACK_REPORT_SCHEMA,
 
   reportId:
     "AUDRALIA_CONTROL_FALLBACK_" +
@@ -661,56 +1062,143 @@ schema:
   createdAt:
     nowIso(),
 
-  controllerContract:
+  controlPanelContract:
     CONTRACT,
 
   expectedEngineContract:
-    ENGINE_CONTRACT,
+    EXPECTED_ENGINE_CONTRACT,
 
-  htmlContract:
-    HTML_CONTRACT,
+  expectedHtmlContract:
+    EXPECTED_HTML_CONTRACT,
 
-  cssContract:
-    CSS_CONTRACT,
+  expectedCssContract:
+    EXPECTED_CSS_CONTRACT,
+
+  engineResolution:
+    frozenClone(
+      state.engine
+    ),
 
   result:
-    "The diagnostic control panel is functioning, but the diagnostic engine API is unavailable.",
+    "The independent Audralia control panel is functioning, but a healthy compatible diagnostic engine is unavailable.",
 
   evidence: [
     "The Create Report control received a user activation.",
-    "The independent control panel loaded and bound its interface.",
-    "No compatible diagnostic engine API was resolved from the accepted global paths."
+    "The control panel loaded and owns the interface controls.",
+    "The control panel completed engine discovery and validation.",
+    "The fallback READ path rendered without requiring diagnostic-engine execution."
   ],
 
   absence: [
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY API unavailable.",
-    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER API unavailable.",
-    "Engine-backed participant, observation, direct, cycle, and archive evidence could not be read."
+    reason,
+    errorMessage ||
+      "No additional engine exception message was supplied.",
+    "Healthy engine-backed diagnostic evidence could not be constructed."
   ],
 
   direction: [
     "Inspect /showroom/globe/audralia/diagnostic/index.js.",
-    "Check the browser console for parse or initialization errors.",
-    "Verify that index.js loads before index.controls.js.",
-    "Verify that the engine publishes the expected public API."
+    "Verify the engine contract is " +
+      EXPECTED_ENGINE_CONTRACT +
+      ".",
+    "Verify index.js loads before index.controls.js.",
+    "Inspect the diagnostic-engine receipt and browser console.",
+    "Renew the engine before attempting direct or nine-cycle execution."
   ],
-
-  acceptedEngineGlobals:
-    ENGINE_GLOBALS.slice(),
 
   noClaims:
     NO_CLAIMS
 };
 
-state.fallbackReport =
-  report;
+state.reports.fallbackCurrent =
+  deepFreeze(report);
 
+state.reports.fallbackHistory.push(
+  state.reports.fallbackCurrent
+);
+
+renderFallbackReport(
+  state.reports.fallbackCurrent
+);
+
+recordAction(
+  "createFallbackReport",
+  {
+    reportId:
+      report.reportId,
+    reason:
+      reason
+  }
+);
+
+toast(
+  "Fallback READ report created.",
+  "HELD"
+);
+
+return frozenClone(
+  state.reports.fallbackCurrent
+);
+
+}
+
+function renderFallbackReadRegion(
+id,
+letter,
+label,
+headline,
+entries
+) {
+var lines =
+Array.isArray(entries)
+? entries
+: [entries];
+
+setHtml(
+  id,
+  "<header>" +
+  "<span>" +
+  escapeHtml(letter) +
+  "</span>" +
+  "<div>" +
+  "<p>" +
+  escapeHtml(label) +
+  "</p>" +
+  "<strong>" +
+  escapeHtml(headline) +
+  "</strong>" +
+  "</div>" +
+  "</header>" +
+  (
+    lines.length > 1
+      ? "<ul>" +
+        lines
+          .map(function renderEntry(entry) {
+            return (
+              "<li>" +
+              escapeHtml(entry) +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ul>"
+      : "<p>" +
+        escapeHtml(
+          lines[0] || ""
+        ) +
+        "</p>"
+  )
+);
+
+}
+
+function renderFallbackReport(report) {
 renderFallbackReadRegion(
-  "readResult",
-  "R",
-  "Result",
-  "Diagnostic controller unavailable",
-  report.result
+"readResult",
+"R",
+"Result",
+"Diagnostic engine unavailable",
+report.result
 );
 
 renderFallbackReadRegion(
@@ -718,15 +1206,15 @@ renderFallbackReadRegion(
   "E",
   "Evidence",
   "Control activation confirmed",
-  report.evidence.join(" ")
+  report.evidence
 );
 
 renderFallbackReadRegion(
   "readAbsence",
   "A",
   "Absence",
-  "Diagnostic API not published",
-  report.absence.join(" ")
+  "Healthy engine evidence unavailable",
+  report.absence
 );
 
 renderFallbackReadRegion(
@@ -734,7 +1222,7 @@ renderFallbackReadRegion(
   "D",
   "Direction",
   "Inspect the diagnostic engine",
-  report.direction.join(" ")
+  report.direction
 );
 
 setText(
@@ -760,7 +1248,8 @@ setText(
 setText(
   "reportMeta",
   report.reportId +
-  " · Engine API unavailable"
+  " · " +
+  state.engine.reason
 );
 
 setText(
@@ -768,22 +1257,18 @@ setText(
   safeJson({
     schema:
       report.schema,
-
     reportId:
       report.reportId,
-
     classification:
       report.classification,
-
+    createdAt:
+      report.createdAt,
     result:
       report.result,
-
     evidence:
       report.evidence,
-
     absence:
       report.absence,
-
     direction:
       report.direction
   })
@@ -842,7 +1327,7 @@ setStatus(
 
 setText(
   "dropReportAvailableCount",
-  "1"
+  state.reports.fallbackHistory.length
 );
 
 setText(
@@ -866,25 +1351,15 @@ setStatus(
   "HELD"
 );
 
-recordAction(
-  "createFallbackReport",
-  {
-    reportId:
-      report.reportId
-  }
+selectReportModeLocal(
+  "read"
 );
-
-toast(
-  "Fallback report created; diagnostic engine unavailable."
-);
-
-return report;
 
 }
 
 function fallbackReadableText() {
 var report =
-state.fallbackReport;
+state.reports.fallbackCurrent;
 
 if (!report) {
   return "";
@@ -921,181 +1396,294 @@ return [
     .join("\n"),
   "",
   "BOUNDARY",
-  "Diagnostic-only. Read-only. No readiness or visual-pass claim."
+  "Diagnostic-only. Read-only. No readiness, visual-pass, cycle-pass, or F21 claim."
 ].join("\n");
 
 }
 
 function createReport() {
-return invokeEngineMethod(
-"createReport",
-[],
-{
-fallback:
-createFallbackReport
-}
+setText(
+"controllerState",
+"CREATING REPORT"
 );
+
+setStatus(
+  "controllerState",
+  "RUNNING"
+);
+
+return invokeEngine(
+  "createReport",
+  [],
+  {
+    fallback:
+      createFallbackReport
+  }
+);
+
 }
 
 function runDirectCheck() {
-return invokeEngineMethod(
-"runSelectedDirectCheck",
-[],
-{
-fallback:
-function directUnavailable() {
-recordError(
-"runSelectedDirectCheck",
-new Error(
-"DIRECT_EXECUTION_REQUIRES_DIAGNOSTIC_ENGINE"
-)
+setText(
+"controllerState",
+"DIRECT CHECK"
 );
 
+setStatus(
+  "controllerState",
+  "RUNNING"
+);
+
+return invokeEngine(
+  "runSelectedDirectCheck",
+  [],
+  {
+    fallback:
+      function directFallback(context) {
+        renderExecutionUnavailable(
+          "Direct Execution",
+          context
+        );
+
         return null;
-      }
+      },
+    allowNull:
+      false
   }
 );
 
 }
 
 function runNineCycle() {
-return invokeEngineMethod(
-"runNineCycle",
-[],
-{
-fallback:
-function cycleUnavailable() {
-recordError(
-"runNineCycle",
-new Error(
-"NINE_CYCLE_REQUIRES_DIAGNOSTIC_ENGINE"
-)
+setText(
+"controllerState",
+"NINE-CYCLE"
 );
 
+setStatus(
+  "controllerState",
+  "RUNNING"
+);
+
+return invokeEngine(
+  "runNineCycle",
+  [],
+  {
+    fallback:
+      function cycleFallback(context) {
+        renderExecutionUnavailable(
+          "Nine-Cycle",
+          context
+        );
+
         return null;
-      }
+      },
+    allowNull:
+      false
   }
 );
 
 }
 
+function renderExecutionUnavailable(label, context) {
+var reason =
+context && context.reason
+? context.reason
+: "ENGINE_UNAVAILABLE";
+
+setText(
+  "controllerState",
+  "ENGINE HELD"
+);
+
+setStatus(
+  "controllerState",
+  "HELD"
+);
+
+setText(
+  "dropDirectState",
+  "HELD"
+);
+
+setStatus(
+  "dropDirectCell",
+  "HELD"
+);
+
+setText(
+  "dropDirectHeldCount",
+  "1"
+);
+
+setText(
+  "dropDirectLastAction",
+  label +
+  " unavailable: " +
+  reason
+);
+
+recordError(
+  label,
+  new Error(
+    label +
+    " requires a healthy compatible diagnostic engine."
+  ),
+  context
+);
+
+}
+
 function addReportToArchive() {
-return invokeEngineMethod(
+return invokeEngine(
 "addCurrentReportToArchive",
 [],
 {
 fallback:
-function archiveUnavailable() {
-toast(
-"Archive unavailable without diagnostic engine."
+function archiveUnavailable(context) {
+recordError(
+"addCurrentReportToArchive",
+new Error(
+"Healthy engine archive unavailable."
+),
+context
 );
 
         return null;
-      }
+      },
+    allowNull:
+      true
   }
 );
 
 }
 
 function createDeepArchive() {
-return invokeEngineMethod(
+return invokeEngine(
 "createDeepArchive",
 [],
 {
 fallback:
-function deepArchiveUnavailable() {
-var fallbackArchive = {
+createFallbackArchive
+}
+);
+}
+
+function createFallbackArchive(context) {
+var archive = {
 schema:
-"AUDRALIA_CONTROL_PANEL_FALLBACK_ARCHIVE_v1",
+FALLBACK_ARCHIVE_SCHEMA,
 
-          contract:
-            CONTRACT,
+  archiveId:
+    "AUDRALIA_CONTROL_ARCHIVE_" +
+    Date.now(),
 
-          createdAt:
-            nowIso(),
+  createdAt:
+    nowIso(),
 
-          controlState:
-            getPublicState(),
+  reason:
+    context && context.reason
+      ? context.reason
+      : "ENGINE_UNAVAILABLE",
 
-          fallbackReport:
-            clone(
-              state.fallbackReport
-            ),
+  controlPanel:
+    getPublicState(),
 
-          noClaims:
-            NO_CLAIMS
-        };
+  fallbackReports:
+    frozenClone(
+      state.reports.fallbackHistory
+    ),
 
-        fallbackArchive.archiveText =
-          safeJson(
-            fallbackArchive
+  controlReceipt:
+    frozenClone(
+      root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
+      null
+    ),
+
+  noClaims:
+    NO_CLAIMS
+};
+
+state.archive.fallbackCurrent =
+  deepFreeze(archive);
+
+setText(
+  "archiveSessionCount",
+  state.reports.fallbackHistory.length
+);
+
+setHtml(
+  "archiveReportList",
+  state.reports.fallbackHistory.length
+    ? state.reports.fallbackHistory
+        .map(function renderArchivedReport(report) {
+          return (
+            "<article>" +
+            "<h4>Control Fallback Report</h4>" +
+            "<p>" +
+            escapeHtml(report.reportId) +
+            "</p>" +
+            "</article>"
           );
+        })
+        .join("")
+    : (
+        '<article class="empty-state">' +
+        "<h4>No fallback reports</h4>" +
+        "<p>Create a fallback report before archiving.</p>" +
+        "</article>"
+      )
+);
 
-        setText(
-          "archiveRawOutput",
-          fallbackArchive.archiveText
-        );
+setText(
+  "archiveRawOutput",
+  safeJson(
+    state.archive.fallbackCurrent
+  )
+);
 
-        setText(
-          "archiveSessionCount",
-          state.fallbackReport
-            ? "1"
-            : "0"
-        );
+selectInstrumentChamberLocal(
+  "archive"
+);
 
-        setHtml(
-          "archiveReportList",
-          state.fallbackReport
-            ? (
-                "<article>" +
-                "<h4>Control Fallback Report</h4>" +
-                "<p>" +
-                escapeHtml(
-                  state.fallbackReport.reportId
-                ) +
-                "</p>" +
-                "</article>"
-              )
-            : (
-                '<article class="empty-state">' +
-                "<h4>No fallback report</h4>" +
-                "<p>Create a report before building the fallback archive.</p>" +
-                "</article>"
-              )
-        );
-
-        recordAction(
-          "createFallbackArchive"
-        );
-
-        toast(
-          "Fallback control archive created."
-        );
-
-        return fallbackArchive;
-      }
+recordAction(
+  "createFallbackArchive",
+  {
+    archiveId:
+      archive.archiveId
   }
+);
+
+toast(
+  "Fallback control archive created.",
+  "HELD"
+);
+
+return frozenClone(
+  state.archive.fallbackCurrent
 );
 
 }
 
 function resetCurrentReport() {
 var engine =
-resolveEngine();
+getResolvedEngineWithoutReadiness();
 
 if (
   engine &&
-  isFunction(
-    engine.resetCurrentReport
-  )
+  isFunction(engine.resetCurrentReport)
 ) {
-  return invokeEngineMethod(
-    "resetCurrentReport",
-    []
-  );
+  try {
+    engine.resetCurrentReport();
+  } catch (error) {
+    recordError(
+      "resetCurrentReport",
+      error
+    );
+  }
 }
 
-state.fallbackReport =
+state.reports.fallbackCurrent =
   null;
 
 setText(
@@ -1144,7 +1732,7 @@ renderFallbackReadRegion(
   "A",
   "Absence",
   "No report yet",
-  "No fallback or engine report is currently displayed."
+  "No current engine or fallback report is displayed."
 );
 
 renderFallbackReadRegion(
@@ -1193,12 +1781,17 @@ setDisabled(
   true
 );
 
+selectReportModeLocal(
+  "read"
+);
+
 recordAction(
-  "resetFallbackReport"
+  "resetCurrentReport"
 );
 
 toast(
-  "Current report reset."
+  "Current report reset.",
+  "READY"
 );
 
 return null;
@@ -1207,44 +1800,61 @@ return null;
 
 function resetWorkbench() {
 var engine =
-resolveEngine();
+getResolvedEngineWithoutReadiness();
 
 if (
   engine &&
-  isFunction(
-    engine.resetWorkbench
-  )
+  isFunction(engine.resetWorkbench)
 ) {
-  return invokeEngineMethod(
-    "resetWorkbench",
-    []
-  );
+  try {
+    engine.resetWorkbench();
+  } catch (error) {
+    recordError(
+      "resetWorkbench",
+      error
+    );
+  }
 }
 
 resetCurrentReport();
 closeAllSelectors();
-selectReportModeLocal("read");
-selectObservationLensLocal("target");
-selectInstrumentChamberLocal("cycle");
+
+selectLeftOrbitLocal(
+  "audits"
+);
+
+selectReportModeLocal(
+  "read"
+);
+
+selectObservationLensLocal(
+  "target"
+);
+
+selectInstrumentChamberLocal(
+  "cycle"
+);
+
 setTargetVisible(false);
 setTargetExpanded(false);
 
-setText(
-  "controllerState",
-  "ENGINE HELD"
-);
+state.ui.receiptFilter =
+  "all";
 
-setStatus(
-  "controllerState",
-  "HELD"
+state.ui.selectedReceiptIndex =
+  null;
+
+applyReceiptFilter(
+  "all"
 );
 
 recordAction(
-  "resetFallbackWorkbench"
+  "resetWorkbench"
 );
 
 toast(
-  "Fallback workbench reset."
+  "Workbench reset.",
+  "READY"
 );
 
 return null;
@@ -1254,10 +1864,11 @@ return null;
 function copyText(text, successMessage) {
 if (!text) {
 toast(
-"Nothing available to copy."
+"Nothing available to copy.",
+"HELD"
 );
 
-  return;
+  return Promise.resolve(false);
 }
 
 if (
@@ -1267,26 +1878,29 @@ if (
     root.navigator.clipboard.writeText
   )
 ) {
-  root.navigator.clipboard
+  return root.navigator.clipboard
     .writeText(text)
-    .then(function copied() {
+    .then(function clipboardSuccess() {
       toast(
-        successMessage || "Copied."
+        successMessage || "Copied.",
+        "READY"
       );
+
+      return true;
     })
-    .catch(function clipboardRejected() {
-      fallbackCopy(
+    .catch(function clipboardFailure() {
+      return fallbackCopy(
         text,
         successMessage
       );
     });
-
-  return;
 }
 
-fallbackCopy(
-  text,
-  successMessage
+return Promise.resolve(
+  fallbackCopy(
+    text,
+    successMessage
+  )
 );
 
 }
@@ -1311,52 +1925,58 @@ area.style.position =
 area.style.left =
   "-9999px";
 
-doc.body.appendChild(
-  area
-);
+doc.body.appendChild(area);
 
 area.select();
 
+var copied =
+  false;
+
 try {
-  doc.execCommand(
-    "copy"
-  );
+  copied =
+    doc.execCommand("copy");
 
   toast(
-    successMessage || "Copied."
+    copied
+      ? successMessage || "Copied."
+      : "Copy unavailable.",
+    copied
+      ? "READY"
+      : "HELD"
   );
 } catch (_error) {
   toast(
-    "Copy unavailable."
+    "Copy unavailable.",
+    "HELD"
   );
 }
 
-doc.body.removeChild(
-  area
-);
+doc.body.removeChild(area);
+
+return copied;
 
 }
 
 function copyReadableReport() {
 var engine =
-resolveEngine();
+getResolvedEngineWithoutReadiness();
 
-var text = "";
+var text =
+  "";
 
 if (
   engine &&
-  isFunction(
-    engine.getCurrentReport
-  )
+  isFunction(engine.getReadableReport)
 ) {
-  var currentReport =
-    engine.getCurrentReport();
-
-  if (currentReport) {
+  try {
     text =
-      safeJson(
-        currentReport
-      );
+      engine.getReadableReport() ||
+      "";
+  } catch (error) {
+    recordError(
+      "getReadableReport",
+      error
+    );
   }
 }
 
@@ -1365,7 +1985,24 @@ if (!text) {
     fallbackReadableText();
 }
 
-copyText(
+if (!text) {
+  var current =
+    engine &&
+    isFunction(engine.getCurrentReport)
+      ? engine.getCurrentReport()
+      : null;
+
+  if (current) {
+    text =
+      safeJson(current);
+  }
+}
+
+recordAction(
+  "copyReadableReport"
+);
+
+return copyText(
   text,
   "Readable report copied."
 );
@@ -1373,66 +2010,90 @@ copyText(
 }
 
 function copyPacketReport() {
-var packetNode =
-byId("packetOutput");
+var engine =
+getResolvedEngineWithoutReadiness();
 
-copyText(
-  packetNode
-    ? packetNode.textContent
-    : "",
+var text =
+  "";
+
+if (
+  engine &&
+  isFunction(engine.getReportPacket)
+) {
+  try {
+    text =
+      engine.getReportPacket() ||
+      "";
+  } catch (error) {
+    recordError(
+      "getReportPacket",
+      error
+    );
+  }
+}
+
+if (!text) {
+  var node =
+    byId("packetOutput");
+
+  text =
+    node
+      ? node.textContent
+      : "";
+}
+
+recordAction(
+  "copyPacketReport"
+);
+
+return copyText(
+  text,
   "Report packet copied."
 );
 
 }
 
 function copyRawReport() {
-var rawNode =
-byId("rawOutput");
+var engine =
+getResolvedEngineWithoutReadiness();
 
-copyText(
-  rawNode
-    ? rawNode.textContent
-    : "",
+var text =
+  "";
+
+if (
+  engine &&
+  isFunction(engine.getRawReport)
+) {
+  try {
+    text =
+      engine.getRawReport() ||
+      "";
+  } catch (error) {
+    recordError(
+      "getRawReport",
+      error
+    );
+  }
+}
+
+if (!text) {
+  var node =
+    byId("rawOutput");
+
+  text =
+    node
+      ? node.textContent
+      : "";
+}
+
+recordAction(
+  "copyRawReport"
+);
+
+return copyText(
+  text,
   "Raw report copied."
 );
-
-}
-
-function openSelector(buttonId, menuId) {
-var button =
-byId(buttonId);
-
-var menu =
-  byId(menuId);
-
-if (!button || !menu) {
-  return;
-}
-
-var shouldOpen =
-  menu.hidden;
-
-closeAllSelectors();
-
-menu.hidden =
-  !shouldOpen;
-
-button.setAttribute(
-  "aria-expanded",
-  shouldOpen
-    ? "true"
-    : "false"
-);
-
-if (buttonId === "categorySelectorButton") {
-  state.categoryMenuOpen =
-    shouldOpen;
-}
-
-if (buttonId === "auditSelectorButton") {
-  state.auditMenuOpen =
-    shouldOpen;
-}
 
 }
 
@@ -1473,58 +2134,91 @@ if (auditMenu) {
     true;
 }
 
-state.categoryMenuOpen =
+state.ui.categoryMenuOpen =
   false;
 
-state.auditMenuOpen =
+state.ui.auditMenuOpen =
   false;
+
+}
+
+function toggleSelector(
+buttonId,
+menuId,
+stateKey
+) {
+var button =
+byId(buttonId);
+
+var menu =
+  byId(menuId);
+
+if (!button || !menu) {
+  recordError(
+    "toggleSelector",
+    new Error(
+      "SELECTOR_CONTROL_MISSING"
+    ),
+    {
+      buttonId:
+        buttonId,
+      menuId:
+        menuId
+    }
+  );
+
+  return;
+}
+
+var shouldOpen =
+  menu.hidden;
+
+closeAllSelectors();
+
+menu.hidden =
+  !shouldOpen;
+
+button.setAttribute(
+  "aria-expanded",
+  shouldOpen
+    ? "true"
+    : "false"
+);
+
+state.ui[stateKey] =
+  shouldOpen;
+
+recordAction(
+  "toggleSelector",
+  {
+    buttonId:
+      buttonId,
+    open:
+      shouldOpen
+  }
+);
 
 }
 
 function selectCategory(categoryId) {
 closeAllSelectors();
 
-return invokeEngineMethod(
+return invokeEngine(
   "selectCategory",
   [categoryId],
   {
     fallback:
-      function fallbackCategorySelection() {
-        var option =
-          doc.querySelector(
-            '[data-category-id="' +
-            cssEscape(categoryId) +
-            '"]'
-          );
+      function categoryFallback(context) {
+        renderLocalCategorySelection(
+          categoryId
+        );
 
-        if (option) {
-          setText(
-            "categorySelectorLabel",
-            option.querySelector("strong")
-              ? option.querySelector("strong").textContent
-              : categoryId
-          );
-
-          Array.prototype.slice.call(
-            doc.querySelectorAll(
-              "[data-category-id]"
-            )
-          ).forEach(function updateOption(node) {
-            node.setAttribute(
-              "aria-selected",
-              node === option
-                ? "true"
-                : "false"
-            );
-          });
-        }
-
-        recordAction(
-          "fallbackSelectCategory",
-          {
-            categoryId:
-              categoryId
-          }
+        recordError(
+          "selectCategory",
+          new Error(
+            "CATEGORY_SELECTION_ENGINE_UNAVAILABLE"
+          ),
+          context
         );
 
         return categoryId;
@@ -1534,70 +2228,62 @@ return invokeEngineMethod(
 
 }
 
+function renderLocalCategorySelection(categoryId) {
+var option =
+doc.querySelector(
+'[data-category-id="' +
+cssEscape(categoryId) +
+'"]'
+);
+
+if (!option) {
+  return;
+}
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-category-id]"
+  )
+).forEach(function updateCategory(node) {
+  node.setAttribute(
+    "aria-selected",
+    node === option
+      ? "true"
+      : "false"
+  );
+});
+
+var title =
+  option.querySelector("strong");
+
+setText(
+  "categorySelectorLabel",
+  title
+    ? title.textContent
+    : categoryId
+);
+
+}
+
 function selectAudit(auditId) {
 closeAllSelectors();
 
-return invokeEngineMethod(
+return invokeEngine(
   "selectAudit",
   [auditId],
   {
     fallback:
-      function fallbackAuditSelection() {
-        var option =
-          doc.querySelector(
-            '[data-audit-id="' +
-            cssEscape(auditId) +
-            '"]'
-          );
+      function auditFallback(context) {
+        renderLocalAuditSelection(
+          auditId
+        );
 
-        if (option) {
-          var title =
-            option.querySelector("strong");
-
-          var summary =
-            option.querySelector("span");
-
-          setText(
-            "auditSelectorLabel",
-            title
-              ? title.textContent
-              : auditId
-          );
-
-          setText(
-            "selectedAuditTitle",
-            title
-              ? title.textContent
-              : auditId
-          );
-
-          setText(
-            "selectedAuditSummary",
-            summary
-              ? summary.textContent
-              : "Selected audit."
-          );
-
-          Array.prototype.slice.call(
-            doc.querySelectorAll(
-              "[data-audit-id]"
-            )
-          ).forEach(function updateOption(node) {
-            node.setAttribute(
-              "aria-selected",
-              node === option
-                ? "true"
-                : "false"
-            );
-          });
-        }
-
-        recordAction(
-          "fallbackSelectAudit",
-          {
-            auditId:
-              auditId
-          }
+        recordError(
+          "selectAudit",
+          new Error(
+            "AUDIT_SELECTION_ENGINE_UNAVAILABLE"
+          ),
+          context
         );
 
         return auditId;
@@ -1607,13 +2293,67 @@ return invokeEngineMethod(
 
 }
 
+function renderLocalAuditSelection(auditId) {
+var option =
+doc.querySelector(
+'[data-audit-id="' +
+cssEscape(auditId) +
+'"]'
+);
+
+if (!option) {
+  return;
+}
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-audit-id]"
+  )
+).forEach(function updateAudit(node) {
+  node.setAttribute(
+    "aria-selected",
+    node === option
+      ? "true"
+      : "false"
+  );
+});
+
+var title =
+  option.querySelector("strong");
+
+var summary =
+  option.querySelector("span");
+
+setText(
+  "auditSelectorLabel",
+  title
+    ? title.textContent
+    : auditId
+);
+
+setText(
+  "selectedAuditTitle",
+  title
+    ? title.textContent
+    : auditId
+);
+
+setText(
+  "selectedAuditSummary",
+  summary
+    ? summary.textContent
+    : "Selected audit."
+);
+
+}
+
 function selectParticipant(role) {
-return invokeEngineMethod(
+return invokeEngine(
 "selectParticipant",
 [role],
 {
 fallback:
-function fallbackParticipantSelection() {
+function participantFallback(context) {
 var node =
 doc.querySelector(
 '[data-participant-role="' +
@@ -1621,28 +2361,25 @@ cssEscape(role) +
 '"]'
 );
 
-        var detail =
-          byId("participantDetail");
+        setHtml(
+          "participantDetail",
+          "<h3>" +
+          escapeHtml(
+            node &&
+            node.querySelector("strong")
+              ? node.querySelector("strong").textContent
+              : role
+          ) +
+          "</h3>" +
+          "<p>The participant selection control is functional, but the diagnostic engine is unavailable to inspect this participant.</p>"
+        );
 
-        if (detail) {
-          detail.innerHTML =
-            "<h3>" +
-            escapeHtml(
-              node &&
-              node.querySelector("strong")
-                ? node.querySelector("strong").textContent
-                : role
-            ) +
-            "</h3>" +
-            "<p>The control panel received the participant selection, but the diagnostic engine is unavailable to inspect the authority.</p>";
-        }
-
-        recordAction(
-          "fallbackSelectParticipant",
-          {
-            role:
-              role
-          }
+        recordError(
+          "selectParticipant",
+          new Error(
+            "PARTICIPANT_INSPECTION_ENGINE_UNAVAILABLE"
+          ),
+          context
         );
 
         return role;
@@ -1652,15 +2389,47 @@ cssEscape(role) +
 
 }
 
-function selectReportModeLocal(mode) {
-var modes = [
-"read",
-"packet",
-"raw",
-"evidence"
-];
+function selectLeftOrbitLocal(view) {
+state.ui.leftOrbit =
+view;
 
-modes.forEach(function toggleMode(entry) {
+setHidden(
+  "auditOrbit",
+  view !== "audits"
+);
+
+setHidden(
+  "participantConstellation",
+  view !== "participants"
+);
+
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-left-orbit-view]"
+  )
+).forEach(function updateButton(button) {
+  button.setAttribute(
+    "aria-selected",
+    button.getAttribute(
+      "data-left-orbit-view"
+    ) === view
+      ? "true"
+      : "false"
+  );
+});
+
+}
+
+function selectReportModeLocal(mode) {
+state.ui.reportMode =
+mode;
+
+[
+  "read",
+  "packet",
+  "raw",
+  "evidence"
+].forEach(function updateMode(entry) {
   var capitalized =
     entry.charAt(0).toUpperCase() +
     entry.slice(1);
@@ -1699,43 +2468,49 @@ modes.forEach(function toggleMode(entry) {
 function selectReportMode(mode) {
 selectReportModeLocal(mode);
 
-invokeEngineMethod(
-  "selectReportMode",
-  [mode],
-  {
-    fallback:
-      function noEngineReportMode() {
-        recordAction(
-          "fallbackSelectReportMode",
-          {
-            mode:
-              mode
-          }
-        );
+var engine =
+  getResolvedEngineWithoutReadiness();
 
-        return mode;
-      }
+if (
+  engine &&
+  isFunction(engine.selectReportMode)
+) {
+  try {
+    engine.selectReportMode(mode);
+  } catch (error) {
+    recordError(
+      "selectReportMode",
+      error
+    );
+  }
+}
+
+recordAction(
+  "selectReportMode",
+  {
+    mode:
+      mode
   }
 );
 
 }
 
 function selectObservationLensLocal(lens) {
-var map = {
-target:
-"targetLens",
+state.ui.observationLens =
+lens;
 
+var map = {
+  target:
+    "targetLens",
   runtime:
     "runtimeLens",
-
   surface:
     "surfaceLens",
-
   window:
     "targetWindow"
 };
 
-Object.keys(map).forEach(function toggleLens(key) {
+Object.keys(map).forEach(function updateLens(key) {
   var button =
     doc.querySelector(
       '[data-observation-lens="' +
@@ -1766,46 +2541,55 @@ Object.keys(map).forEach(function toggleLens(key) {
 function selectObservationLens(lens) {
 selectObservationLensLocal(lens);
 
-invokeEngineMethod(
-  "selectObservationLens",
-  [lens],
-  {
-    fallback:
-      function noEngineObservationLens() {
-        recordAction(
-          "fallbackSelectObservationLens",
-          {
-            lens:
-              lens
-          }
-        );
+var engine =
+  getResolvedEngineWithoutReadiness();
 
-        return lens;
-      }
+if (
+  engine &&
+  isFunction(
+    engine.selectObservationLens
+  )
+) {
+  try {
+    engine.selectObservationLens(
+      lens
+    );
+  } catch (error) {
+    recordError(
+      "selectObservationLens",
+      error
+    );
+  }
+}
+
+recordAction(
+  "selectObservationLens",
+  {
+    lens:
+      lens
   }
 );
 
 }
 
 function selectInstrumentChamberLocal(chamber) {
-var map = {
-cycle:
-"cycleChamber",
+state.ui.instrumentChamber =
+chamber;
 
+var map = {
+  cycle:
+    "cycleChamber",
   registry:
     "registryChamber",
-
   receipts:
     "receiptChamber",
-
   archive:
     "archiveChamber",
-
   boundary:
     "boundaryChamber"
 };
 
-Object.keys(map).forEach(function toggleChamber(key) {
+Object.keys(map).forEach(function updateChamber(key) {
   var button =
     doc.querySelector(
       '[data-instrument-chamber="' +
@@ -1838,89 +2622,78 @@ selectInstrumentChamberLocal(
 chamber
 );
 
-invokeEngineMethod(
-  "selectInstrumentChamber",
-  [chamber],
-  {
-    fallback:
-      function noEngineInstrumentChamber() {
-        recordAction(
-          "fallbackSelectInstrumentChamber",
-          {
-            chamber:
-              chamber
-          }
-        );
-
-        return chamber;
-      }
-  }
-);
-
-}
-
-function setTargetVisible(visible) {
-state.targetVisible =
-Boolean(visible);
-
-var button =
-  byId("toggleObservationTarget");
-
-if (button) {
-  button.setAttribute(
-    "aria-expanded",
-    state.targetVisible
-      ? "true"
-      : "false"
-  );
-
-  button.textContent =
-    state.targetVisible
-      ? "Hide Target"
-      : "Show Target";
-}
-
-selectObservationLensLocal(
-  state.targetVisible
-    ? "window"
-    : "target"
-);
-
 var engine =
-  resolveEngine();
+  getResolvedEngineWithoutReadiness();
 
 if (
   engine &&
   isFunction(
-    engine.selectObservationLens
+    engine.selectInstrumentChamber
   )
 ) {
   try {
-    engine.selectObservationLens(
-      state.targetVisible
-        ? "window"
-        : "target"
+    engine.selectInstrumentChamber(
+      chamber
     );
   } catch (error) {
     recordError(
-      "selectObservationLens",
+      "selectInstrumentChamber",
       error
     );
   }
 }
 
 recordAction(
+  "selectInstrumentChamber",
+  {
+    chamber:
+      chamber
+  }
+);
+
+}
+
+function setTargetVisible(visible) {
+state.ui.targetVisible =
+Boolean(visible);
+
+var button =
+  byId(
+    "toggleObservationTarget"
+  );
+
+if (button) {
+  button.setAttribute(
+    "aria-expanded",
+    state.ui.targetVisible
+      ? "true"
+      : "false"
+  );
+
+  button.textContent =
+    state.ui.targetVisible
+      ? "Hide Target"
+      : "Show Target";
+}
+
+selectObservationLens(
+  state.ui.targetVisible
+    ? "window"
+    : "target"
+);
+
+recordAction(
   "setTargetVisible",
   {
     visible:
-      state.targetVisible
+      state.ui.targetVisible
   }
 );
 
 }
 
 function setTargetExpanded(expanded) {
-state.targetExpanded =
+state.ui.targetExpanded =
 Boolean(expanded);
 
 var targetWindow =
@@ -1932,20 +2705,20 @@ var button =
 if (targetWindow) {
   targetWindow.classList.toggle(
     "is-expanded",
-    state.targetExpanded
+    state.ui.targetExpanded
   );
 }
 
 if (button) {
   button.setAttribute(
     "aria-pressed",
-    state.targetExpanded
+    state.ui.targetExpanded
       ? "true"
       : "false"
   );
 
   button.textContent =
-    state.targetExpanded
+    state.ui.targetExpanded
       ? "Collapse"
       : "Expand";
 }
@@ -1954,7 +2727,7 @@ recordAction(
   "setTargetExpanded",
   {
     expanded:
-      state.targetExpanded
+      state.ui.targetExpanded
   }
 );
 
@@ -1962,9 +2735,7 @@ recordAction(
 
 function reloadTargetFrame() {
 var frame =
-byId(
-"audraliaDiagnosticTargetFrame"
-);
+byId(TARGET_FRAME_ID);
 
 if (!frame) {
   recordError(
@@ -1987,45 +2758,511 @@ recordAction(
 );
 
 toast(
-  "Target frame reloading."
+  "Target frame reloading.",
+  "RUNNING"
 );
 
 }
 
-function cssEscape(value) {
+function getReceiptEntries() {
+var engine =
+getResolvedEngineWithoutReadiness();
+
+var entries =
+  [];
+
 if (
-root.CSS &&
-isFunction(root.CSS.escape)
+  engine &&
+  isFunction(engine.getReceipts)
 ) {
-return root.CSS.escape(
-String(value)
+  try {
+    var cycleReceipts =
+      engine.getReceipts();
+
+    if (Array.isArray(cycleReceipts)) {
+      cycleReceipts.forEach(function addCycleReceipt(receipt) {
+        entries.push({
+          type:
+            "cycle",
+          label:
+            (
+              receipt.fibonacci
+                ? receipt.fibonacci +
+                  " · "
+                : ""
+            ) +
+            (
+              receipt.stationId ||
+              "Cycle Receipt"
+            ),
+          record:
+            frozenClone(receipt)
+        });
+      });
+    }
+  } catch (error) {
+    recordError(
+      "getReceipts",
+      error
+    );
+  }
+}
+
+if (
+  state.reports.fallbackCurrent
+) {
+  entries.push({
+    type:
+      "control",
+    label:
+      "Control Fallback Report",
+    record:
+      frozenClone(
+        state.reports.fallbackCurrent
+      )
+  });
+}
+
+if (
+  root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT
+) {
+  entries.push({
+    type:
+      "control",
+    label:
+      "Control Panel Receipt",
+    record:
+      frozenClone(
+        root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT
+      )
+  });
+}
+
+return entries;
+
+}
+
+function renderReceiptList() {
+var entries =
+getReceiptEntries();
+
+var filter =
+  state.ui.receiptFilter;
+
+var visible =
+  filter === "all"
+    ? entries
+    : entries.filter(function filterReceipt(entry) {
+        if (
+          filter === "participant"
+        ) {
+          return entry.type ===
+            "participant";
+        }
+
+        if (
+          filter === "observation"
+        ) {
+          return entry.type ===
+            "observation";
+        }
+
+        if (
+          filter === "cycle"
+        ) {
+          return entry.type ===
+            "cycle";
+        }
+
+        if (
+          filter === "error"
+        ) {
+          return entry.type ===
+            "error";
+        }
+
+        return entry.type ===
+          filter;
+      });
+
+setHtml(
+  "receiptList",
+  visible.length
+    ? visible
+        .map(function renderReceipt(entry, index) {
+          return (
+            '<article tabindex="0" role="button" ' +
+            'data-receipt-index="' +
+            String(index) +
+            '" data-receipt-type="' +
+            escapeHtml(entry.type) +
+            '">' +
+            "<h4>" +
+            escapeHtml(entry.label) +
+            "</h4>" +
+            "<p>Type: " +
+            escapeHtml(entry.type) +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("")
+    : (
+        '<article class="empty-state">' +
+        "<h4>No matching receipts</h4>" +
+        "<p>No receipts match the selected filter.</p>" +
+        "</article>"
+      )
 );
-}
 
-return String(value)
-  .replace(/\\/g, "\\\\")
-  .replace(/"/g, '\\"');
+state._visibleReceipts =
+  visible;
 
 }
 
-function inspectControlIds() {
-state.missingControls = [];
-state.boundControls = [];
+function applyReceiptFilter(filter) {
+state.ui.receiptFilter =
+filter || "all";
 
-REQUIRED_CONTROL_IDS.forEach(function inspectControl(id) {
-  if (byId(id)) {
-    state.boundControls.push(id);
-  } else {
-    state.missingControls.push(id);
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-receipt-filter]"
+  )
+).forEach(function updateFilter(button) {
+  button.setAttribute(
+    "aria-pressed",
+    button.getAttribute(
+      "data-receipt-filter"
+    ) === state.ui.receiptFilter
+      ? "true"
+      : "false"
+  );
+});
+
+renderReceiptList();
+
+recordAction(
+  "applyReceiptFilter",
+  {
+    filter:
+      state.ui.receiptFilter
+  }
+);
+
+}
+
+function selectReceipt(index) {
+var receipts =
+Array.isArray(
+state._visibleReceipts
+)
+? state._visibleReceipts
+: [];
+
+var entry =
+  receipts[index] ||
+  null;
+
+state.ui.selectedReceiptIndex =
+  entry
+    ? index
+    : null;
+
+if (!entry) {
+  setHtml(
+    "selectedReceiptDetail",
+    "<h4>Receipt unavailable</h4>" +
+    "<p>The selected receipt could not be resolved.</p>"
+  );
+
+  return;
+}
+
+setHtml(
+  "selectedReceiptDetail",
+  "<h4>" +
+  escapeHtml(entry.label) +
+  "</h4>" +
+  "<pre>" +
+  escapeHtml(
+    safeJson(entry.record)
+  ) +
+  "</pre>"
+);
+
+recordAction(
+  "selectReceipt",
+  {
+    index:
+      index,
+    type:
+      entry.type,
+    label:
+      entry.label
+  }
+);
+
+}
+
+function inspectControls() {
+var records = [];
+var missing = [];
+
+CONTROL_MANIFEST.forEach(function inspectManifestEntry(entry) {
+  var node =
+    byId(entry.id);
+
+  var record = {
+    id:
+      entry.id,
+    type:
+      entry.type,
+    owner:
+      entry.owner,
+    present:
+      Boolean(node),
+    disabled:
+      node
+        ? Boolean(node.disabled)
+        : null,
+    hidden:
+      node
+        ? Boolean(node.hidden)
+        : null
+  };
+
+  records.push(record);
+
+  if (!node) {
+    missing.push(
+      entry.id
+    );
   }
 });
 
+var interactiveNodes =
+  Array.prototype.slice.call(
+    doc.querySelectorAll(
+      "button, a[href], [role='button'], [role='tab'], [role='option']"
+    )
+  );
+
+var manifestIds =
+  CONTROL_MANIFEST.map(function mapId(entry) {
+    return entry.id;
+  });
+
+var unowned =
+  interactiveNodes
+    .filter(function findUnowned(node) {
+      if (
+        node.hasAttribute(
+          "data-category-id"
+        ) ||
+        node.hasAttribute(
+          "data-audit-id"
+        ) ||
+        node.hasAttribute(
+          "data-participant-role"
+        ) ||
+        node.hasAttribute(
+          "data-report-mode"
+        ) ||
+        node.hasAttribute(
+          "data-observation-lens"
+        ) ||
+        node.hasAttribute(
+          "data-instrument-chamber"
+        ) ||
+        node.hasAttribute(
+          "data-left-orbit-view"
+        ) ||
+        node.hasAttribute(
+          "data-receipt-filter"
+        ) ||
+        node.hasAttribute(
+          "data-receipt-index"
+        )
+      ) {
+        return false;
+      }
+
+      return (
+        !node.id ||
+        manifestIds.indexOf(
+          node.id
+        ) === -1
+      );
+    })
+    .map(function mapUnowned(node) {
+      return {
+        id:
+          node.id || null,
+        tag:
+          node.tagName,
+        role:
+          node.getAttribute("role"),
+        text:
+          String(
+            node.textContent || ""
+          )
+            .trim()
+            .slice(0, 100)
+      };
+    });
+
+state.controls.records =
+  records;
+
+state.controls.discoveredCount =
+  records.filter(function countPresent(record) {
+    return record.present;
+  }).length;
+
+state.controls.boundCount =
+  state.controls.discoveredCount;
+
+state.controls.missing =
+  missing;
+
+state.controls.missingCount =
+  missing.length;
+
+state.controls.unownedInteractive =
+  unowned;
+
+state.controls.unownedInteractiveCount =
+  unowned.length;
+
+renderControlAuditStatus();
+publishReceipt();
+
+return frozenClone(
+  state.controls
+);
+
 }
 
-function onClick(event) {
+function renderControlAuditStatus() {
+if (
+state.controls.missingCount === 0 &&
+state.controls.unownedInteractiveCount === 0
+) {
+setText(
+"dropDirectLastAction",
+"Control binding audit complete: all declared controls owned."
+);
+
+  return;
+}
+
+var messages = [];
+
+if (
+  state.controls.missingCount
+) {
+  messages.push(
+    "Missing controls: " +
+    state.controls.missing.join(", ")
+  );
+}
+
+if (
+  state.controls.unownedInteractiveCount
+) {
+  messages.push(
+    "Unowned interactive controls: " +
+    state.controls.unownedInteractiveCount
+  );
+}
+
+setText(
+  "dropDirectLastAction",
+  messages.join(" · ")
+);
+
+setStatus(
+  "dropDirectCell",
+  "HELD"
+);
+
+}
+
+function renderEngineState() {
+var engine =
+resolveEngine();
+
+if (engine) {
+  setText(
+    "controllerState",
+    "REPORT READY"
+  );
+
+  setStatus(
+    "controllerState",
+    "READY"
+  );
+
+  setText(
+    "controllerContract",
+    state.engine.contract
+  );
+
+  setText(
+    "dropReportState",
+    "READY"
+  );
+
+  setStatus(
+    "dropReportCell",
+    "READY"
+  );
+
+  setText(
+    "dropReportLastAction",
+    "Independent controls bound; compatible engine ready."
+  );
+
+  return;
+}
+
+setText(
+  "controllerState",
+  "ENGINE HELD"
+);
+
+setStatus(
+  "controllerState",
+  "HELD"
+);
+
+setText(
+  "controllerContract",
+  "Control panel active · " +
+  state.engine.reason
+);
+
+setText(
+  "dropReportState",
+  "READY"
+);
+
+setStatus(
+  "dropReportCell",
+  "READY"
+);
+
+setText(
+  "dropReportLastAction",
+  "Fallback READ report path available."
+);
+
+}
+
+function handleClick(event) {
 var target =
 event.target.closest(
-"button, a, [role='button']"
+"button, a[href], [role='button'], [role='tab'], [role='option']"
 );
 
 if (!target) {
@@ -2042,6 +3279,14 @@ if (!target) {
 
 var id =
   target.id || "";
+
+if (id === "returnToAudralia") {
+  recordAction(
+    "returnToAudralia"
+  );
+
+  return;
+}
 
 if (id === "createReport") {
   event.preventDefault();
@@ -2105,6 +3350,11 @@ if (id === "createDeepArchive") {
 
 if (id === "reloadObservatory") {
   event.preventDefault();
+
+  recordAction(
+    "reloadObservatory"
+  );
+
   root.location.reload();
   return;
 }
@@ -2113,7 +3363,7 @@ if (id === "toggleObservationTarget") {
   event.preventDefault();
 
   setTargetVisible(
-    !state.targetVisible
+    !state.ui.targetVisible
   );
 
   return;
@@ -2123,7 +3373,7 @@ if (id === "expandTargetWindow") {
   event.preventDefault();
 
   setTargetExpanded(
-    !state.targetExpanded
+    !state.ui.targetExpanded
   );
 
   return;
@@ -2131,6 +3381,7 @@ if (id === "expandTargetWindow") {
 
 if (id === "reloadTargetFrame") {
   event.preventDefault();
+
   reloadTargetFrame();
   return;
 }
@@ -2138,9 +3389,10 @@ if (id === "reloadTargetFrame") {
 if (id === "categorySelectorButton") {
   event.preventDefault();
 
-  openSelector(
+  toggleSelector(
     "categorySelectorButton",
-    "categorySelectorMenu"
+    "categorySelectorMenu",
+    "categoryMenuOpen"
   );
 
   return;
@@ -2149,9 +3401,10 @@ if (id === "categorySelectorButton") {
 if (id === "auditSelectorButton") {
   event.preventDefault();
 
-  openSelector(
+  toggleSelector(
     "auditSelectorButton",
-    "auditSelectorMenu"
+    "auditSelectorMenu",
+    "auditMenuOpen"
   );
 
   return;
@@ -2207,6 +3460,33 @@ if (
 
 if (
   target.hasAttribute(
+    "data-left-orbit-view"
+  )
+) {
+  event.preventDefault();
+
+  var leftView =
+    target.getAttribute(
+      "data-left-orbit-view"
+    );
+
+  selectLeftOrbitLocal(
+    leftView
+  );
+
+  recordAction(
+    "selectLeftOrbit",
+    {
+      view:
+        leftView
+    }
+  );
+
+  return;
+}
+
+if (
+  target.hasAttribute(
     "data-report-mode"
   )
 ) {
@@ -2255,45 +3535,33 @@ if (
 
 if (
   target.hasAttribute(
-    "data-left-orbit-view"
+    "data-receipt-filter"
   )
 ) {
   event.preventDefault();
 
-  var view =
+  applyReceiptFilter(
     target.getAttribute(
-      "data-left-orbit-view"
-    );
-
-  setHidden(
-    "auditOrbit",
-    view !== "audits"
-  );
-
-  setHidden(
-    "participantConstellation",
-    view !== "participants"
-  );
-
-  Array.prototype.slice.call(
-    doc.querySelectorAll(
-      "[data-left-orbit-view]"
+      "data-receipt-filter"
     )
-  ).forEach(function updateLeftOrbitButton(button) {
-    button.setAttribute(
-      "aria-selected",
-      button === target
-        ? "true"
-        : "false"
-    );
-  });
+  );
 
-  recordAction(
-    "selectLeftOrbitView",
-    {
-      view:
-        view
-    }
+  return;
+}
+
+if (
+  target.hasAttribute(
+    "data-receipt-index"
+  )
+) {
+  event.preventDefault();
+
+  selectReceipt(
+    Number(
+      target.getAttribute(
+        "data-receipt-index"
+      )
+    )
   );
 
   return;
@@ -2309,10 +3577,10 @@ if (
 
 }
 
-function onKeydown(event) {
+function handleKeydown(event) {
 var target =
 event.target.closest(
-"[role='button'][data-participant-role]"
+"[role='button'], [role='option'], [role='tab']"
 );
 
 if (
@@ -2323,33 +3591,27 @@ if (
   )
 ) {
   event.preventDefault();
-
-  selectParticipant(
-    target.getAttribute(
-      "data-participant-role"
-    )
-  );
-
+  target.click();
   return;
 }
 
 if (event.key === "Escape") {
   closeAllSelectors();
 
-  if (state.targetExpanded) {
+  if (state.ui.targetExpanded) {
     setTargetExpanded(false);
   }
 }
 
 }
 
-function onTargetFrameLoad() {
+function handleTargetFrameLoad() {
 recordAction(
 "targetFrameLoad"
 );
 
 var engine =
-  resolveEngine();
+  getResolvedEngineWithoutReadiness();
 
 if (
   engine &&
@@ -2359,10 +3621,7 @@ if (
     var result =
       engine.observe();
 
-    if (
-      result &&
-      isFunction(result.then)
-    ) {
+    if (isPromiseLike(result)) {
       result.catch(function observationRejected(error) {
         recordError(
           "observe",
@@ -2383,194 +3642,144 @@ if (
 function bindEvents() {
 doc.addEventListener(
 "click",
-onClick
+handleClick
 );
 
 doc.addEventListener(
   "keydown",
-  onKeydown
+  handleKeydown
 );
 
 var frame =
-  byId(
-    "audraliaDiagnosticTargetFrame"
-  );
+  byId(TARGET_FRAME_ID);
 
 if (frame) {
   frame.addEventListener(
     "load",
-    onTargetFrameLoad
-  );
-}
-
-}
-
-function renderBindingState() {
-var engine =
-resolveEngine();
-
-if (engine) {
-  setText(
-    "controllerState",
-    "REPORT READY"
-  );
-
-  setStatus(
-    "controllerState",
-    "READY"
-  );
-
-  setText(
-    "controllerContract",
-    engine.CONTRACT ||
-    ENGINE_CONTRACT
-  );
-
-  setText(
-    "dropReportState",
-    "READY"
-  );
-
-  setStatus(
-    "dropReportCell",
-    "READY"
-  );
-
-  setText(
-    "dropReportLastAction",
-    "Independent controls bound; engine API available."
-  );
-} else {
-  setText(
-    "controllerState",
-    "ENGINE HELD"
-  );
-
-  setStatus(
-    "controllerState",
-    "HELD"
-  );
-
-  setText(
-    "controllerContract",
-    "Control panel active · Engine API unavailable"
-  );
-
-  setText(
-    "dropReportState",
-    "READY"
-  );
-
-  setStatus(
-    "dropReportCell",
-    "READY"
-  );
-
-  setText(
-    "dropReportLastAction",
-    "Fallback report path available."
-  );
-}
-
-if (state.missingControls.length) {
-  setText(
-    "dropDirectLastAction",
-    "Missing controls: " +
-    state.missingControls.join(", ")
-  );
-
-  setStatus(
-    "dropDirectCell",
-    "HELD"
+    handleTargetFrameLoad
   );
 }
 
 }
 
 function publishReceipt() {
-root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = {
+root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT =
+deepFreeze({
 schema:
-"AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT_v1",
+CONTROL_RECEIPT_SCHEMA,
 
-  contract:
-    CONTRACT,
+    contract:
+      CONTRACT,
 
-  version:
-    VERSION,
+    previousContract:
+      PREVIOUS_CONTRACT,
 
-  file:
-    FILE,
+    version:
+      VERSION,
 
-  expectedEngineContract:
-    ENGINE_CONTRACT,
+    file:
+      FILE,
 
-  htmlContract:
-    HTML_CONTRACT,
+    expectedEngineContract:
+      EXPECTED_ENGINE_CONTRACT,
 
-  cssContract:
-    CSS_CONTRACT,
+    expectedHtmlContract:
+      EXPECTED_HTML_CONTRACT,
 
-  initialized:
-    state.initialized,
+    expectedCssContract:
+      EXPECTED_CSS_CONTRACT,
 
-  boundAt:
-    state.boundAt,
+    initialized:
+      state.initialized,
 
-  engineAvailable:
-    state.engineAvailable,
+    initializedAt:
+      state.initializedAt,
 
-  enginePath:
-    state.enginePath,
+    engine:
+      frozenClone(
+        state.engine
+      ),
 
-  requiredControlCount:
-    REQUIRED_CONTROL_IDS.length,
+    controlManifestCount:
+      state.controls.manifestCount,
 
-  boundControlCount:
-    state.boundControls.length,
+    discoveredControlCount:
+      state.controls.discoveredCount,
 
-  missingControlCount:
-    state.missingControls.length,
+    boundControlCount:
+      state.controls.boundCount,
 
-  missingControls:
-    state.missingControls.slice(),
+    missingControlCount:
+      state.controls.missingCount,
 
-  actionCount:
-    state.actionCount,
+    missingControls:
+      state.controls.missing.slice(),
 
-  lastAction:
-    clone(
-      state.lastAction
-    ),
+    unownedInteractiveCount:
+      state.controls.unownedInteractiveCount,
 
-  lastError:
-    clone(
-      state.lastError
-    ),
+    unownedInteractive:
+      frozenClone(
+        state.controls.unownedInteractive
+      ),
 
-  fallbackReportAvailable:
-    Boolean(
-      state.fallbackReport
-    ),
+    eventDelegationActive:
+      state.initialized,
 
-  createReportFallbackAvailable:
-    true,
+    createReportFallbackAvailable:
+      true,
 
-  eventDelegationActive:
-    state.initialized,
+    fallbackConditions: [
+      "ENGINE_NOT_FOUND",
+      "ENGINE_CONTRACT_MISMATCH",
+      "ENGINE_NOT_READY",
+      "ENGINE_METHOD_MISSING",
+      "ENGINE_METHOD_THROW",
+      "ENGINE_METHOD_REJECTED",
+      "ENGINE_RESULT_INVALID"
+    ],
 
-  noClaims:
-    NO_CLAIMS,
+    receiptFilteringOwned:
+      true,
 
-  generatedAt:
-    nowIso()
-};
+    receiptSelectionOwned:
+      true,
+
+    actionCount:
+      state.actionCount,
+
+    errorCount:
+      state.errorCount,
+
+    lastAction:
+      frozenClone(
+        state.lastAction
+      ),
+
+    lastError:
+      frozenClone(
+        state.lastError
+      ),
+
+    fallbackReportCount:
+      state.reports.fallbackHistory.length,
+
+    noClaims:
+      NO_CLAIMS,
+
+    generatedAt:
+      nowIso()
+  });
 
 }
 
 function getPublicState() {
-return clone({
+return frozenClone({
 contract:
 CONTRACT,
+
+  previousContract:
+    PREVIOUS_CONTRACT,
 
   version:
     VERSION,
@@ -2581,148 +3790,154 @@ CONTRACT,
   initialized:
     state.initialized,
 
-  boundAt:
-    state.boundAt,
+  initializedAt:
+    state.initializedAt,
 
-  engineAvailable:
-    state.engineAvailable,
+  engine:
+    state.engine,
 
-  enginePath:
-    state.enginePath,
+  controls:
+    state.controls,
 
-  missingControls:
-    state.missingControls,
+  ui:
+    state.ui,
 
-  boundControls:
-    state.boundControls,
+  fallbackCurrent:
+    state.reports.fallbackCurrent,
+
+  fallbackHistoryCount:
+    state.reports.fallbackHistory.length,
+
+  fallbackArchive:
+    state.archive.fallbackCurrent,
 
   actionCount:
     state.actionCount,
+
+  errorCount:
+    state.errorCount,
 
   lastAction:
     state.lastAction,
 
   lastError:
-    state.lastError,
-
-  fallbackReport:
-    state.fallbackReport,
-
-  categoryMenuOpen:
-    state.categoryMenuOpen,
-
-  auditMenuOpen:
-    state.auditMenuOpen,
-
-  targetVisible:
-    state.targetVisible,
-
-  targetExpanded:
-    state.targetExpanded
+    state.lastError
 });
 
 }
 
 function publishApi() {
-var api = Object.freeze({
+var api =
+Object.freeze({
 CONTRACT:
 CONTRACT,
 
-  VERSION:
-    VERSION,
+    PREVIOUS_CONTRACT:
+      PREVIOUS_CONTRACT,
 
-  FILE:
-    FILE,
+    VERSION:
+      VERSION,
 
-  ENGINE_CONTRACT:
-    ENGINE_CONTRACT,
+    FILE:
+      FILE,
 
-  HTML_CONTRACT:
-    HTML_CONTRACT,
+    EXPECTED_ENGINE_CONTRACT:
+      EXPECTED_ENGINE_CONTRACT,
 
-  CSS_CONTRACT:
-    CSS_CONTRACT,
+    EXPECTED_HTML_CONTRACT:
+      EXPECTED_HTML_CONTRACT,
 
-  createReport:
-    createReport,
+    EXPECTED_CSS_CONTRACT:
+      EXPECTED_CSS_CONTRACT,
 
-  runDirectCheck:
-    runDirectCheck,
+    createReport:
+      createReport,
 
-  runNineCycle:
-    runNineCycle,
+    runDirectCheck:
+      runDirectCheck,
 
-  addReportToArchive:
-    addReportToArchive,
+    runNineCycle:
+      runNineCycle,
 
-  createDeepArchive:
-    createDeepArchive,
+    addReportToArchive:
+      addReportToArchive,
 
-  resetCurrentReport:
-    resetCurrentReport,
+    createDeepArchive:
+      createDeepArchive,
 
-  resetWorkbench:
-    resetWorkbench,
+    resetCurrentReport:
+      resetCurrentReport,
 
-  selectCategory:
-    selectCategory,
+    resetWorkbench:
+      resetWorkbench,
 
-  selectAudit:
-    selectAudit,
+    selectCategory:
+      selectCategory,
 
-  selectParticipant:
-    selectParticipant,
+    selectAudit:
+      selectAudit,
 
-  selectReportMode:
-    selectReportMode,
+    selectParticipant:
+      selectParticipant,
 
-  selectObservationLens:
-    selectObservationLens,
+    selectReportMode:
+      selectReportMode,
 
-  selectInstrumentChamber:
-    selectInstrumentChamber,
+    selectObservationLens:
+      selectObservationLens,
 
-  setTargetVisible:
-    setTargetVisible,
+    selectInstrumentChamber:
+      selectInstrumentChamber,
 
-  setTargetExpanded:
-    setTargetExpanded,
+    setTargetVisible:
+      setTargetVisible,
 
-  reloadTargetFrame:
-    reloadTargetFrame,
+    setTargetExpanded:
+      setTargetExpanded,
 
-  closeAllSelectors:
-    closeAllSelectors,
+    reloadTargetFrame:
+      reloadTargetFrame,
 
-  getState:
-    getPublicState,
+    applyReceiptFilter:
+      applyReceiptFilter,
 
-  getFallbackReport:
-    function getFallbackReport() {
-      return clone(
-        state.fallbackReport
-      );
-    },
+    selectReceipt:
+      selectReceipt,
 
-  inspectControls:
-    function inspectControls() {
-      inspectControlIds();
-      renderBindingState();
-      publishReceipt();
+    inspectControls:
+      inspectControls,
 
-      return getPublicState();
-    },
+    resolveEngine:
+      resolveEngine,
 
-  resolveEngine:
-    function publicResolveEngine() {
-      var engine =
-        resolveEngine();
+    closeAllSelectors:
+      closeAllSelectors,
 
-      publishReceipt();
+    getState:
+      getPublicState,
 
-      return engine;
-    }
-});
+    getFallbackReport:
+      function getFallbackReport() {
+        return frozenClone(
+          state.reports.fallbackCurrent
+        );
+      },
+
+    getFallbackArchive:
+      function getFallbackArchive() {
+        return frozenClone(
+          state.archive.fallbackCurrent
+        );
+      },
+
+    getReceipt:
+      function getReceipt() {
+        return frozenClone(
+          root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
+          null
+        );
+      }
+  });
 
 root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL =
   api;
@@ -2750,6 +3965,34 @@ return api;
 
 }
 
+function initializeLocalUiState() {
+selectLeftOrbitLocal(
+"audits"
+);
+
+selectReportModeLocal(
+  "read"
+);
+
+selectObservationLensLocal(
+  "target"
+);
+
+selectInstrumentChamberLocal(
+  "cycle"
+);
+
+setTargetExpanded(false);
+
+state.ui.receiptFilter =
+  "all";
+
+applyReceiptFilter(
+  "all"
+);
+
+}
+
 function init() {
 if (state.initialized) {
 return;
@@ -2758,19 +4001,23 @@ return;
 state.initialized =
   true;
 
-state.boundAt =
+state.initializedAt =
   nowIso();
 
-inspectControlIds();
 bindEvents();
 publishApi();
-renderBindingState();
+initializeLocalUiState();
+inspectControls();
+renderEngineState();
 publishReceipt();
 
 toast(
-  state.engineAvailable
+  state.engine.ready
     ? "Audralia control panel bound."
-    : "Control panel bound; diagnostic engine held."
+    : "Control panel bound; fallback READ path active.",
+  state.engine.ready
+    ? "READY"
+    : "HELD"
 );
 
 }

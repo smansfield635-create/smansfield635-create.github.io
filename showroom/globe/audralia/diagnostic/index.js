@@ -1,7 +1,7 @@
 // /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2
 // Full-file replacement.
-// Diagnostic-only.
+// Diagnostic engine only.
 // Read-only.
 //
 // Canonical authority:
@@ -20,54 +20,53 @@
 // - Absence
 // - Direction
 //
-// Governing laws:
-// - Report creation is synchronous and nonblocking.
-// - Participant, observation, runtime, Surface Truth, direct execution,
-//   conductor, receipt, and cycle readiness may not block Create Report.
-// - Missing evidence becomes report evidence.
-// - Observation does not mutate the target.
-// - Direct execution requires explicit user command.
-// - Nine-cycle execution requires explicit user command.
-// - Nine-cycle execution is not the report engine.
-// - runtime.getReceipt() is never polled repeatedly.
-// - Full target receipt capture is deliberate and bounded.
-// - No production mutation, runtime restart, renderer mutation, repair,
-//   readiness claim, visual-pass claim, F21 claim, or synthetic evidence.
+// Engine/control split:
+// - This file owns diagnostic state and diagnostic operations.
+// - This file does not bind DOM events.
+// - /showroom/globe/audralia/diagnostic/index.controls.js is the sole
+//   control owner.
+// - Public methods are exposed for the independent control panel.
+// - Report creation is synchronous and must remain available regardless of
+//   participant, target, runtime, Surface Truth, conductor, station, receipt,
+//   or cycle readiness.
 //
 // Owns:
-// - observatory boot;
-// - canonical state;
-// - audit registry;
+// - diagnostic state;
+// - category and audit registry;
 // - participant manifest;
 // - participant and alias inspection;
-// - registry and engine inspection;
 // - target observation;
-// - Surface Truth observation;
-// - synchronous report creation;
+// - registry inspection;
+// - runtime-engine inspection;
+// - Surface Truth inspection;
+// - synchronous report construction;
 // - READ interpretation;
-// - report-mode rendering;
+// - report rendering;
 // - explicit direct checks;
 // - explicit nine-cycle execution;
 // - receipt normalization;
-// - archive creation;
-// - copy controls;
-// - UI bindings;
-// - public controller API.
+// - archive construction;
+// - public diagnostic API.
 //
 // Does not own:
-// - production;
-// - target rendering;
-// - target runtime mutation;
+// - DOM event binding;
+// - button binding;
+// - dropdown binding;
+// - tab binding;
+// - target-window UI controls;
+// - copy-control binding;
+// - production mutation;
+// - runtime restart;
+// - renderer mutation;
 // - canvas repair;
 // - controls repair;
 // - route repair;
-// - renderer repair;
-// - WebGL or WebGPU initialization;
 // - readiness;
 // - visual pass;
-// - F21 authority.
+// - F21 authority;
+// - synthetic evidence.
 
-(function installAudraliaDropWithReadDiagnosticObservatory(global) {
+(function installAudraliaDropWithReadDiagnosticEngine(global) {
 "use strict";
 
 var root =
@@ -90,22 +89,25 @@ return;
 }
 
 var CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1";
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
 
 var PREVIOUS_CONTRACT =
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v6";
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1";
 
 var VERSION =
-"1.0.0";
+"2.0.0";
 
 var FILE =
 "/showroom/globe/audralia/diagnostic/index.js";
 
 var HTML_CONTRACT =
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1";
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_CONTROL_SPLIT_STATIC_SHELL_TNT_v2";
 
 var CSS_CONTRACT =
 "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1";
+
+var CONTROL_PANEL_CONTRACT =
+"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v1";
 
 var BLUEPRINT =
 "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1";
@@ -145,13 +147,13 @@ var TARGET_RUNTIME_WAIT_TIMEOUT_MS =
 5000;
 
 var REPORT_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_REPORT_v1";
+"AUDRALIA_DROP_WITH_READ_REPORT_v2";
 
 var READ_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_INTERPRETATION_v1";
+"AUDRALIA_DROP_WITH_READ_INTERPRETATION_v2";
 
 var ARCHIVE_SCHEMA =
-"AUDRALIA_DROP_WITH_READ_DEEP_ARCHIVE_v1";
+"AUDRALIA_DROP_WITH_READ_DEEP_ARCHIVE_v2";
 
 var CONDUCTOR_REQUEST_SCHEMA =
 "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_REQUEST_v1";
@@ -161,9 +163,6 @@ var LEDGER_SCHEMA =
 
 var RECEIPT_SCHEMA =
 "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
-
-var READER_REPORT_SCHEMA =
-"AUDRALIA_DIAGNOSTIC_READER_REPORT_v4";
 
 var NO_CLAIMS =
 deepFreeze({
@@ -410,25 +409,31 @@ audit(
 "observatoryIndex",
 "Observatory Index",
 "SAFE_REPORT",
-"Summarize the shell, controller, participants, observations, and current cycle evidence."
+"Summarize the shell, diagnostic engine, independent control panel, participants, observations, and cycle evidence."
 ),
 audit(
 "controllerHealth",
-"Controller Health",
+"Diagnostic Engine Health",
 "SAFE_REPORT",
-"Inspect controller installation, contract lineage, boot state, bindings, and public API."
+"Inspect diagnostic-engine installation, contract lineage, boot state, state model, and public API."
+),
+audit(
+"controlPanelHealth",
+"Control Panel Health",
+"SAFE_REPORT",
+"Inspect the independent control-panel contract and publication state."
 ),
 audit(
 "shellContract",
 "Shell Contract",
 "SAFE_REPORT",
-"Inspect the HTML shell, paired contracts, route declarations, target declaration, and boundaries."
+"Inspect HTML, CSS, diagnostic-engine, control-panel, route, target, and boundary declarations."
 ),
 audit(
 "loadOrder",
 "Load Order",
 "SAFE_REPORT",
-"Inspect shell-preloaded engine and diagnostic scripts in declared dependency order."
+"Inspect engine, participant, diagnostic-engine, and control-panel dependency order."
 ),
 audit(
 "targetAccess",
@@ -440,7 +445,7 @@ audit(
 "aliasMap",
 "Alias Map",
 "SAFE_REPORT",
-"Inspect participant alias candidates and resolved authority globals."
+"Inspect participant alias candidates and resolved globals."
 )
 ]
 ),
@@ -453,43 +458,43 @@ audit(
         "registrySummary",
         "Registry Summary",
         "SAFE_REPORT",
-        "Inspect governing authority, assigned engines, selectable engines, reserved slots, and registry receipt."
+        "Inspect governing authority, assigned engines, selectable engines, reserved slots, and the registry receipt."
       ),
       audit(
         "governingAuthority",
         "Governing Authority",
         "SAFE_REPORT",
-        "Inspect the governing engine contract as an authority rather than a second executable engine."
+        "Inspect the governing contract as authority rather than a second executable engine."
       ),
       audit(
         "runtimeEngine",
         "Runtime Engine",
         "SAFE_REPORT",
-        "Inspect the runtime engine identity, contract, file, version, state, and observed operations."
+        "Inspect runtime-engine identity, contract, version, state, instances, and observed operations."
       ),
       audit(
         "selectedEngine",
         "Selected Engine",
         "SAFE_REPORT",
-        "Inspect the registry-selected engine and its authority relationship."
+        "Inspect the registry-selected engine and authority relationship."
       ),
       audit(
         "reservedSlots",
         "Reserved Slots",
         "SAFE_REPORT",
-        "Inspect reserved future engine positions without treating them as assigned engines."
+        "Inspect future engine slots without classifying them as assigned engines."
       ),
       audit(
         "engineRuntimeEvidence",
         "Engine Runtime Evidence",
         "SAFE_REPORT",
-        "Inspect current engine instance, lifecycle, backend, mount, surface, frame, visibility, and fallback evidence."
+        "Inspect lifecycle, backend, mount, surface, frame, visibility, and fallback evidence."
       ),
       audit(
         "engineReceipt",
         "Engine Receipt",
         "SAFE_REPORT",
-        "Inspect the runtime engine receipt if it is available."
+        "Inspect the engine receipt when available."
       )
     ]
   ),
@@ -502,7 +507,7 @@ audit(
         "targetRuntimeLight",
         "Target Runtime Light",
         "SAFE_REPORT",
-        "Inspect lightweight target-runtime evidence without requesting the full receipt."
+        "Inspect lightweight runtime evidence without requesting a full receipt."
       ),
       audit(
         "targetRuntimeFull",
@@ -514,7 +519,7 @@ audit(
         "canvasPresence",
         "Canvas Presence",
         "SAFE_REPORT",
-        "Inspect runtime canvas, fallback canvas, and any canvas presence."
+        "Inspect runtime, fallback, and general canvas presence."
       ),
       audit(
         "geometryState",
@@ -538,13 +543,13 @@ audit(
         "surfaceTruthSummary",
         "Surface Truth Summary",
         "SAFE_REPORT",
-        "Inspect the resolved Surface Truth authority, contract, methods, and current evidence."
+        "Inspect Surface Truth authority, aliases, contract, methods, and receipt."
       ),
       audit(
         "surfaceTruthPacket",
         "Surface Truth Packet",
         "DIRECT_EXECUTION",
-        "Deliberately invoke a verified Surface Truth read method when one exists."
+        "Invoke one verified read-only Surface Truth method."
       )
     ]
   ),
@@ -563,49 +568,49 @@ audit(
         "eastProbeParticipant",
         "East Probe Participant",
         "SAFE_REPORT",
-        "Inspect the East source probe participant."
+        "Inspect the East source probe."
       ),
       audit(
         "eastInterpreterParticipant",
         "East Interpreter Participant",
         "SAFE_REPORT",
-        "Inspect the East construction interpreter participant."
+        "Inspect the East construction interpreter."
       ),
       audit(
         "westProbeParticipant",
         "West Probe Participant",
         "SAFE_REPORT",
-        "Inspect the West runtime probe participant."
+        "Inspect the West runtime probe."
       ),
       audit(
         "westInterpreterParticipant",
         "West Interpreter Participant",
         "SAFE_REPORT",
-        "Inspect the West runtime interpreter participant."
+        "Inspect the West runtime interpreter."
       ),
       audit(
         "southProbeParticipant",
         "South Probe Participant",
         "SAFE_REPORT",
-        "Inspect the South handoff probe participant."
+        "Inspect the South handoff probe."
       ),
       audit(
         "southInterpreterParticipant",
         "South Interpreter Participant",
         "SAFE_REPORT",
-        "Inspect the South restitution interpreter participant."
+        "Inspect the South restitution interpreter."
       ),
       audit(
         "southPointerParticipant",
         "South Pointer Participant",
         "SAFE_REPORT",
-        "Inspect the optional South Surface Pointer auxiliary."
+        "Inspect the optional South Surface Pointer."
       ),
       audit(
         "railParticipant",
         "Rail Participant",
         "SAFE_REPORT",
-        "Inspect the terminal Rail Synthesis participant."
+        "Inspect terminal Rail Synthesis."
       )
     ]
   ),
@@ -618,7 +623,7 @@ audit(
         "cyclePreview",
         "Cycle Preview",
         "CYCLE_PREVIEW",
-        "Preview all nine cycle stations, participant availability, aliases, and current evidence without execution."
+        "Preview nine stations, participant availability, aliases, and current evidence without execution."
       ),
       audit(
         "cycleRegistrationMap",
@@ -630,31 +635,31 @@ audit(
         "cyclePreflight",
         "Cycle Preflight",
         "CYCLE_PREVIEW",
-        "Inspect the current target-runtime admission state without starting a cycle."
+        "Inspect current target-runtime admission state without starting a cycle."
       ),
       audit(
         "cycleExecution",
         "Cycle Execution",
         "CYCLE_EXECUTION",
-        "Explicitly run bounded preflight and the synchronous nine-station North cycle."
+        "Explicitly run bounded preflight and the synchronous North cycle."
       ),
       audit(
         "cycleLedger",
         "Cycle Ledger",
         "SAFE_REPORT",
-        "Inspect the most recent compatible cycle ledger."
+        "Inspect the latest compatible cycle ledger."
       ),
       audit(
         "cycleReceipts",
         "Cycle Receipts",
         "SAFE_REPORT",
-        "Inspect normalized station receipts from the most recent cycle."
+        "Inspect normalized station receipts."
       ),
       audit(
         "cycleTerminalSynthesis",
         "Cycle Terminal Synthesis",
         "SAFE_REPORT",
-        "Inspect the most recent terminal Rail Synthesis receipt."
+        "Inspect the latest Rail Synthesis receipt."
       )
     ]
   ),
@@ -667,7 +672,7 @@ audit(
         "conductorDirect",
         "Conductor Direct",
         "DIRECT_PREVIEW",
-        "Preview the North conductor authority and verified cycle API."
+        "Preview the North conductor and verified cycle API."
       ),
       audit(
         "surfaceTruthDirect",
@@ -685,7 +690,7 @@ audit(
         "registryRefreshDirect",
         "Registry Refresh Direct",
         "DIRECT_EXECUTION",
-        "Invoke the verified registry refresh method and inspect the resulting state."
+        "Invoke the verified registry refresh method."
       )
     ]
   ),
@@ -704,19 +709,19 @@ audit(
         "sessionReports",
         "Session Reports",
         "SAFE_REPORT",
-        "Inspect all reports created during the current session."
+        "Inspect reports created during the current session."
       ),
       audit(
         "errorArchive",
         "Error Archive",
         "SAFE_REPORT",
-        "Inspect controller, participant, observation, direct, and cycle errors."
+        "Inspect engine, participant, observation, direct, and cycle errors."
       ),
       audit(
         "receiptArchive",
         "Receipt Archive",
         "SAFE_REPORT",
-        "Inspect all collected receipts."
+        "Inspect collected receipts."
       ),
       audit(
         "participantArchive",
@@ -728,13 +733,13 @@ audit(
         "deepArchive",
         "Deep Archive",
         "ARCHIVE_REPORT",
-        "Create a complete session archive containing reports, participants, observations, direct results, cycle runs, errors, and boundaries."
+        "Create a complete session archive."
       ),
       audit(
         "nextDirection",
         "Next Direction",
         "SAFE_REPORT",
-        "Identify the highest-priority next diagnostic action from current absence evidence."
+        "Identify the highest-priority next diagnostic action."
       )
     ]
   )
@@ -763,12 +768,6 @@ activeObservationLens:
 activeInstrumentChamber:
   "cycle",
 
-targetVisible:
-  false,
-
-targetExpanded:
-  false,
-
 drop: {
   direct: laneState("IDLE"),
   report: laneState("READY"),
@@ -776,187 +775,55 @@ drop: {
   participant: laneState("LOADING")
 },
 
-participants: {
-  manifest:
-    clone(PARTICIPANT_MANIFEST),
-
-  records:
-    [],
-
-  requiredCount:
-    0,
-
-  optionalCount:
-    0,
-
-  availableCount:
-    0,
-
-  heldCount:
-    0,
-
-  errorCount:
-    0,
-
-  observedAt:
-    null
-},
+participants: emptyParticipantState(),
 
 observation: {
-  targetLight:
-    null,
-
-  targetFull:
-    null,
-
-  registry:
-    null,
-
-  registryReceipt:
-    null,
-
-  authorityRecords:
-    [],
-
-  engineRecords:
-    [],
-
-  selectedEngine:
-    null,
-
-  engineInspection:
-    null,
-
-  engineOps:
-    null,
-
-  engineReceipt:
-    null,
-
-  surfaceTruth:
-    null,
-
-  errors:
-    [],
-
-  observedAt:
-    null
+  targetLight: null,
+  targetFull: null,
+  registry: null,
+  registryReceipt: null,
+  authorityRecords: [],
+  engineRecords: [],
+  selectedEngine: null,
+  engineInspection: null,
+  engineOps: null,
+  engineReceipt: null,
+  surfaceTruth: null,
+  controlPanel: null,
+  errors: [],
+  observedAt: null
 },
 
 report: {
-  current:
-    null,
-
-  readableText:
-    "",
-
-  packetText:
-    "",
-
-  rawText:
-    "",
-
-  evidence:
-    [],
-
-  sessionReports:
-    []
+  current: null,
+  readableText: "",
+  packetText: "",
+  rawText: "",
+  evidence: [],
+  sessionReports: []
 },
 
 direct: {
-  running:
-    false,
-
-  selectedAuthority:
-    null,
-
-  selectedMethod:
-    null,
-
-  lastResult:
-    null,
-
-  lastError:
-    null,
-
-  history:
-    []
+  running: false,
+  selectedAuthority: null,
+  selectedMethod: null,
+  lastResult: null,
+  lastError: null,
+  history: []
 },
 
-cycle: {
-  running:
-    false,
-
-  cycleId:
-    null,
-
-  runPhase:
-    "IDLE",
-
-  preflight:
-    null,
-
-  preflightProgress:
-    null,
-
-  stationRegistrations:
-    [],
-
-  auxiliaryRegistrations:
-    [],
-
-  conductorResult:
-    null,
-
-  conductorReceipt:
-    null,
-
-  conductorState:
-    null,
-
-  receipts:
-    [],
-
-  ledger:
-    null,
-
-  readerReport:
-    "",
-
-  lastRunAt:
-    null,
-
-  lastError:
-    null
-},
+cycle: emptyCycleState(),
 
 archive: {
-  reports:
-    [],
-
-  directResults:
-    [],
-
-  cycleRuns:
-    [],
-
-  errors:
-    [],
-
-  participantSnapshots:
-    [],
-
-  observationSnapshots:
-    [],
-
-  deepArchive:
-    null,
-
-  createdAt:
-    null,
-
-  updatedAt:
-    null
+  reports: [],
+  directResults: [],
+  cycleRuns: [],
+  errors: [],
+  participantSnapshots: [],
+  observationSnapshots: [],
+  deepArchive: null,
+  createdAt: null,
+  updatedAt: null
 }
 
 };
@@ -994,7 +861,8 @@ role: role,
 label: label,
 file: file,
 required: Boolean(required),
-globalPaths: Array.isArray(globalPaths)
+globalPaths:
+Array.isArray(globalPaths)
 ? globalPaths.slice()
 : [],
 group: group || "DIAGNOSTIC",
@@ -1004,9 +872,13 @@ parentPosition: null,
 createsCyclePosition: null
 };
 
-if (extra && typeof extra === "object") {
+if (
+  extra &&
+  typeof extra === "object"
+) {
   Object.keys(extra).forEach(function assignExtra(key) {
-    output[key] = extra[key];
+    output[key] =
+      extra[key];
   });
 }
 
@@ -1038,7 +910,12 @@ audits: audits
 };
 }
 
-function audit(id, label, classification, summary) {
+function audit(
+id,
+label,
+classification,
+summary
+) {
 return {
 id: id,
 label: label,
@@ -1053,6 +930,58 @@ status: status,
 availableCount: 0,
 heldCount: 0,
 lastAction: null
+};
+}
+
+function emptyParticipantState() {
+return {
+manifest:
+clone(PARTICIPANT_MANIFEST),
+
+  shellScripts:
+    [],
+
+  records:
+    [],
+
+  requiredCount:
+    0,
+
+  optionalCount:
+    0,
+
+  availableCount:
+    0,
+
+  heldCount:
+    0,
+
+  errorCount:
+    0,
+
+  observedAt:
+    null
+};
+
+}
+
+function emptyCycleState() {
+return {
+running: false,
+cycleId: null,
+runPhase: "IDLE",
+preflight: null,
+preflightProgress: null,
+stationRegistrations: [],
+auxiliaryRegistrations: [],
+conductorResult: null,
+conductorReceipt: null,
+conductorState: null,
+receipts: [],
+ledger: null,
+readerReport: "",
+lastRunAt: null,
+lastError: null
 };
 }
 
@@ -1149,14 +1078,6 @@ if (typeof value === "function") {
   };
 }
 
-if (value instanceof Date) {
-  try {
-    return value.toISOString();
-  } catch (_error) {
-    return null;
-  }
-}
-
 memory =
   seen || [];
 
@@ -1221,12 +1142,17 @@ try {
     var child;
 
     try {
-      child = value[key];
+      child =
+        value[key];
     } catch (_error) {
-      child = null;
+      child =
+        null;
     }
 
-    deepFreeze(child, memory);
+    deepFreeze(
+      child,
+      memory
+    );
   });
 
   Object.freeze(value);
@@ -1252,6 +1178,46 @@ null,
 } catch (_error) {
 return String(value);
 }
+}
+
+function hashObject(value) {
+var text;
+var result;
+var index;
+
+try {
+  text =
+    JSON.stringify(
+      stablePrepare(value)
+    );
+} catch (_error) {
+  text =
+    String(value);
+}
+
+result =
+  0x811c9dc5;
+
+for (
+  index = 0;
+  index < text.length;
+  index += 1
+) {
+  result ^=
+    text.charCodeAt(index);
+
+  result =
+    Math.imul(
+      result,
+      0x01000193
+    ) >>> 0;
+}
+
+return (
+  "fnv1a32-" +
+  ("00000000" + result.toString(16)).slice(-8)
+);
+
 }
 
 function stablePrepare(value, seen) {
@@ -1307,45 +1273,6 @@ Object.keys(value)
   });
 
 return output;
-
-}
-
-function hashObject(value) {
-var text;
-var result;
-var index;
-
-try {
-  text =
-    JSON.stringify(
-      stablePrepare(value)
-    );
-} catch (_error) {
-  text =
-    String(value);
-}
-
-result =
-  0x811c9dc5;
-
-for (
-  index = 0;
-  index < text.length;
-  index += 1
-) {
-  result ^= text.charCodeAt(index);
-
-  result =
-    Math.imul(
-      result,
-      0x01000193
-    ) >>> 0;
-}
-
-return (
-  "fnv1a32-" +
-  ("00000000" + result.toString(16)).slice(-8)
-);
 
 }
 
@@ -1485,17 +1412,6 @@ if (node) {
 
 }
 
-function setDisabled(id, disabled) {
-var node =
-byId(id);
-
-if (node) {
-  node.disabled =
-    Boolean(disabled);
-}
-
-}
-
 function setHidden(id, hidden) {
 var node =
 byId(id);
@@ -1507,64 +1423,32 @@ if (node) {
 
 }
 
-function setStatus(nodeOrId, status) {
+function setDisabled(id, disabled) {
 var node =
-typeof nodeOrId === "string"
-? byId(nodeOrId)
-: nodeOrId;
+byId(id);
 
-if (!node) {
-  return;
+if (node) {
+  node.disabled =
+    Boolean(disabled);
 }
-
-node.setAttribute(
-  "data-status",
-  normalizeStatus(
-    status,
-    "UNKNOWN"
-  )
-);
 
 }
 
-function toast(message) {
+function setStatus(idOrNode, status) {
 var node =
-byId("toast");
+typeof idOrNode === "string"
+? byId(idOrNode)
+: idOrNode;
 
-if (!node) {
-  return;
-}
-
-node.textContent =
-  String(message || "");
-
-node.classList.add("show");
-node.classList.add("visible");
-
-node.setAttribute(
-  "data-visible",
-  "true"
-);
-
-if (
-  toast._timer &&
-  root.clearTimeout
-) {
-  root.clearTimeout(
-    toast._timer
+if (node) {
+  node.setAttribute(
+    "data-status",
+    normalizeStatus(
+      status,
+      "UNKNOWN"
+    )
   );
 }
-
-toast._timer =
-  root.setTimeout(function hideToast() {
-    node.classList.remove("show");
-    node.classList.remove("visible");
-
-    node.setAttribute(
-      "data-visible",
-      "false"
-    );
-  }, 2200);
 
 }
 
@@ -1704,58 +1588,17 @@ null
 );
 }
 
-function resolveTargetRuntime(frameWindow) {
-var index;
-var globalName;
-var candidate;
-
-if (!frameWindow) {
-  return {
-    runtime: null,
-    globalName: null
-  };
-}
-
-for (
-  index = 0;
-  index < TARGET_RUNTIME_GLOBALS.length;
-  index += 1
-) {
-  globalName =
-    TARGET_RUNTIME_GLOBALS[index];
-
-  candidate =
-    frameWindow[globalName];
-
-  if (candidate) {
-    return {
-      runtime: candidate,
-      globalName: globalName
-    };
-  }
-}
-
-return {
-  runtime: null,
-  globalName: null
-};
-
-}
-
 function inspectShellScripts() {
-var scripts =
-Array.prototype.slice.call(
+return Array.prototype.slice.call(
 doc.querySelectorAll(
 "script[data-participant-role]"
 )
-);
-
-return scripts.map(function mapScript(script) {
-  return {
-    role:
-      script.getAttribute(
-        "data-participant-role"
-      ),
+).map(function mapScript(script) {
+return {
+role:
+script.getAttribute(
+"data-participant-role"
+),
 
     src:
       script.getAttribute("src"),
@@ -1784,9 +1627,6 @@ return scripts.map(function mapScript(script) {
         "data-fibonacci"
       ) || null,
 
-    readyState:
-      script.readyState || null,
-
     connected:
       script.isConnected === true
   };
@@ -1808,31 +1648,8 @@ var scriptRecord =
 var api =
   found.value;
 
-var contract =
-  api
-    ? firstString(
-        api.CONTRACT,
-        api.contract
-      )
-    : null;
-
-var version =
-  api
-    ? firstString(
-        api.VERSION,
-        api.version
-      )
-    : null;
-
 var methods =
   methodNames(api);
-
-var status =
-  api
-    ? "AVAILABLE"
-    : scriptRecord
-      ? "HELD"
-      : "MISSING";
 
 return deepFreeze({
   role:
@@ -1877,42 +1694,38 @@ return deepFreeze({
     found.path,
 
   resolutionSource:
-    found.value
+    api
       ? "DECLARED_GLOBAL"
       : "NOT_FOUND",
 
   contract:
-    contract,
+    api
+      ? firstString(
+          api.CONTRACT,
+          api.contract
+        )
+      : null,
 
   version:
-    version,
-
-  methodCount:
-    methods.length,
+    api
+      ? firstString(
+          api.VERSION,
+          api.version
+        )
+      : null,
 
   methods:
     methods,
 
-  stationId:
-    api
-      ? firstString(
-          api.STATION_ID,
-          api.stationId
-        )
-      : null,
-
-  cyclePosition:
-    api
-      ? (
-          Number(
-            api.CYCLE_POSITION ||
-            api.cyclePosition
-          ) || definition.position
-        )
-      : definition.position,
+  methodCount:
+    methods.length,
 
   status:
-    status,
+    api
+      ? "AVAILABLE"
+      : scriptRecord
+        ? "HELD"
+        : "MISSING",
 
   observedAt:
     nowIso()
@@ -1938,7 +1751,8 @@ var requiredCount =
   }).length;
 
 var optionalCount =
-  records.length - requiredCount;
+  records.length -
+  requiredCount;
 
 var availableCount =
   records.filter(function countAvailable(record) {
@@ -1946,11 +1760,10 @@ var availableCount =
   }).length;
 
 var heldCount =
-  records.filter(function countHeld(record) {
-    return !record.resolved;
-  }).length;
+  records.length -
+  availableCount;
 
-var snapshot = {
+state.participants = {
   manifest:
     frozenClone(PARTICIPANT_MANIFEST),
 
@@ -1979,9 +1792,6 @@ var snapshot = {
     nowIso()
 };
 
-state.participants =
-  snapshot;
-
 state.drop.participant.status =
   heldCount > 0
     ? "HELD"
@@ -1995,9 +1805,56 @@ state.drop.participant.heldCount =
 
 state.drop.participant.lastAction =
   "Participant manifest inspected at " +
-  snapshot.observedAt;
+  state.participants.observedAt;
 
-return frozenClone(snapshot);
+state.updatedAt =
+  nowIso();
+
+renderParticipantConstellation();
+renderDropRail();
+renderEvidenceRail();
+
+return frozenClone(
+  state.participants
+);
+
+}
+
+function resolveTargetRuntime(frameWindow) {
+var index;
+var globalName;
+var candidate;
+
+if (!frameWindow) {
+  return {
+    runtime: null,
+    globalName: null
+  };
+}
+
+for (
+  index = 0;
+  index < TARGET_RUNTIME_GLOBALS.length;
+  index += 1
+) {
+  globalName =
+    TARGET_RUNTIME_GLOBALS[index];
+
+  candidate =
+    frameWindow[globalName];
+
+  if (candidate) {
+    return {
+      runtime: candidate,
+      globalName: globalName
+    };
+  }
+}
+
+return {
+  runtime: null,
+  globalName: null
+};
 
 }
 
@@ -2023,7 +1880,10 @@ var runtimeStatus =
 var runtimeReceiptLight =
   null;
 
-var selectedEvidence =
+var targetPath =
+  null;
+
+var targetTitle =
   null;
 
 var accessible =
@@ -2034,12 +1894,6 @@ var loaded =
 
 var routeMatch =
   false;
-
-var targetPath =
-  null;
-
-var targetTitle =
-  null;
 
 var runtimeCanvasPresent =
   false;
@@ -2056,7 +1910,8 @@ var readError =
 if (frame) {
   try {
     frameWindow =
-      frame.contentWindow || null;
+      frame.contentWindow ||
+      null;
 
     frameDocument =
       frame.contentDocument ||
@@ -2078,16 +1933,21 @@ if (frame) {
         )
       );
 
-    if (frameWindow && frameWindow.location) {
+    if (
+      frameWindow &&
+      frameWindow.location
+    ) {
       targetPath =
-        frameWindow.location.pathname || null;
+        frameWindow.location.pathname ||
+        null;
 
       routeMatch =
         targetPath === TARGET_ROUTE;
     }
 
     targetTitle =
-      frameDocument && frameDocument.title
+      frameDocument &&
+      frameDocument.title
         ? frameDocument.title
         : null;
 
@@ -2166,26 +2026,21 @@ if (frame) {
           publishedReceipt;
       }
     }
-
-    selectedEvidence =
-      isNonemptyObject(runtimeStatus)
-        ? runtimeStatus
-        : isNonemptyObject(runtimeReceiptLight)
-          ? runtimeReceiptLight
-          : null;
   } catch (error) {
-    accessible =
-      false;
-
-    loaded =
-      false;
-
     readError =
-      error && error.message
+      error &&
+      error.message
         ? error.message
         : "TARGET_FRAME_LIGHT_READ_FAILED";
   }
 }
+
+var selectedEvidence =
+  isNonemptyObject(runtimeStatus)
+    ? runtimeStatus
+    : isNonemptyObject(runtimeReceiptLight)
+      ? runtimeReceiptLight
+      : null;
 
 return deepFreeze({
   framePresent:
@@ -2303,22 +2158,19 @@ inspectTargetFrameLight();
 var frame =
   byId(TARGET_FRAME_ID);
 
-var frameWindow =
-  null;
-
 var runtime =
   null;
 
 var runtimeReceipt =
   null;
 
-var fullReceiptReadAttempted =
+var attempted =
   false;
 
-var fullReceiptReadSucceeded =
+var succeeded =
   false;
 
-var fullReceiptReadError =
+var errorMessage =
   null;
 
 if (
@@ -2326,37 +2178,31 @@ if (
   light.sameOriginAccessible
 ) {
   try {
-    frameWindow =
-      frame.contentWindow || null;
-
     runtime =
       resolveTargetRuntime(
-        frameWindow
+        frame.contentWindow ||
+        null
       ).runtime;
 
     if (
       runtime &&
       isFunction(runtime.getReceipt)
     ) {
-      fullReceiptReadAttempted =
+      attempted =
         true;
 
       runtimeReceipt =
-        callSafely(
-          runtime,
-          "getReceipt",
-          [],
-          null
-        );
+        runtime.getReceipt();
 
-      fullReceiptReadSucceeded =
+      succeeded =
         isNonemptyObject(
           runtimeReceipt
         );
     }
   } catch (error) {
-    fullReceiptReadError =
-      error && error.message
+    errorMessage =
+      error &&
+      error.message
         ? error.message
         : "TARGET_FRAME_FULL_RECEIPT_READ_FAILED";
   }
@@ -2372,13 +2218,13 @@ return deepFreeze({
       : null,
 
   fullReceiptReadAttempted:
-    fullReceiptReadAttempted,
+    attempted,
 
   fullReceiptReadSucceeded:
-    fullReceiptReadSucceeded,
+    succeeded,
 
   fullReceiptReadError:
-    fullReceiptReadError,
+    errorMessage,
 
   capturedAt:
     nowIso(),
@@ -2399,10 +2245,10 @@ var snapshot =
 var receipt =
   null;
 
-var authorityRecords =
+var authorities =
   [];
 
-var engineRecords =
+var engines =
   [];
 
 var selectedEngine =
@@ -2441,7 +2287,7 @@ if (registry) {
     root.DGB_ENGINE_SUBJECTS_RECEIPT ||
     null;
 
-  authorityRecords =
+  authorities =
     callSafely(
       registry,
       "listAuthorities",
@@ -2449,7 +2295,7 @@ if (registry) {
       []
     ) || [];
 
-  engineRecords =
+  engines =
     callSafely(
       registry,
       "listEngines",
@@ -2479,44 +2325,40 @@ state.observation.registryReceipt =
 
 state.observation.authorityRecords =
   frozenClone(
-    Array.isArray(authorityRecords)
-      ? authorityRecords
+    Array.isArray(authorities)
+      ? authorities
       : []
   );
 
 state.observation.engineRecords =
   frozenClone(
-    Array.isArray(engineRecords)
-      ? engineRecords
+    Array.isArray(engines)
+      ? engines
       : []
   );
 
 state.observation.selectedEngine =
   frozenClone(selectedEngine);
 
-return {
+return frozenClone({
   registryLoaded:
     Boolean(registry),
 
   snapshot:
-    frozenClone(snapshot),
+    snapshot,
 
   receipt:
-    frozenClone(receipt),
+    receipt,
 
   authorityRecords:
-    frozenClone(
-      state.observation.authorityRecords
-    ),
+    state.observation.authorityRecords,
 
   engineRecords:
-    frozenClone(
-      state.observation.engineRecords
-    ),
+    state.observation.engineRecords,
 
   selectedEngine:
-    frozenClone(selectedEngine)
-};
+    selectedEngine
+});
 
 }
 
@@ -2527,7 +2369,7 @@ getEngine();
 var inspection =
   null;
 
-var ops =
+var operations =
   null;
 
 var receipt =
@@ -2549,14 +2391,18 @@ if (engine) {
       []
     );
 
-  if (Array.isArray(instances) && instances.length) {
+  if (
+    Array.isArray(instances) &&
+    instances.length
+  ) {
     var first =
       instances[0];
 
     instanceId =
       typeof first === "string"
         ? first
-        : first && first.instanceId
+        : first &&
+          first.instanceId
           ? first.instanceId
           : first &&
             first.identity &&
@@ -2581,7 +2427,7 @@ if (engine) {
     );
 
   if (instanceId) {
-    ops =
+    operations =
       callSafely(
         engine,
         "getOps",
@@ -2609,12 +2455,12 @@ state.observation.engineInspection =
   frozenClone(inspection);
 
 state.observation.engineOps =
-  frozenClone(ops);
+  frozenClone(operations);
 
 state.observation.engineReceipt =
   frozenClone(receipt);
 
-return {
+return frozenClone({
   engineLoaded:
     Boolean(engine),
 
@@ -2622,33 +2468,31 @@ return {
     instanceId,
 
   inspection:
-    frozenClone(inspection),
+    inspection,
 
-  ops:
-    frozenClone(ops),
+  operations:
+    operations,
 
   receipt:
-    frozenClone(receipt)
-};
+    receipt
+});
 
 }
 
 function inspectSurfaceTruth() {
-var participantRecord =
-state.participants.records.find(function findSurface(record) {
-return record.role === "CANVAS_SURFACE_TRUTH";
+var record =
+state.participants.records.find(function findSurface(entry) {
+return entry.role ===
+"CANVAS_SURFACE_TRUTH";
 }) || null;
 
 var authority =
-  participantRecord &&
-  participantRecord.resolvedGlobal
+  record &&
+  record.resolvedGlobal
     ? readPath(
-        participantRecord.resolvedGlobal
+        record.resolvedGlobal
       )
     : null;
-
-var methods =
-  methodNames(authority);
 
 var receipt =
   authority
@@ -2665,95 +2509,135 @@ var receipt =
       )
     : null;
 
-var output = {
-  authorityPresent:
-    Boolean(authority),
-
-  globalPath:
-    participantRecord
-      ? participantRecord.resolvedGlobal
-      : null,
-
-  contract:
-    participantRecord
-      ? participantRecord.contract
-      : null,
-
-  version:
-    participantRecord
-      ? participantRecord.version
-      : null,
-
-  methods:
-    methods,
-
-  receipt:
-    frozenClone(receipt),
-
-  packetKeys:
-    receipt && isObject(receipt)
-      ? Object.keys(receipt)
-      : [],
-
-  firstHeldCoordinate:
-    receipt
-      ? firstString(
-          receipt.firstHeldCoordinate,
-          receipt.heldCoordinate
-        )
-      : null,
-
-  firstFailedCoordinate:
-    receipt
-      ? firstString(
-          receipt.firstFailedCoordinate,
-          receipt.failedCoordinate
-        )
-      : null,
-
-  recommendedOwner:
-    receipt
-      ? frozenClone(
-          receipt.recommendedOwner ||
-          receipt.owner ||
-          null
-        )
-      : null,
-
-  recommendedFile:
-    receipt
-      ? firstString(
-          receipt.recommendedFile,
-          receipt.nextFile
-        )
-      : null,
-
-  recommendedAction:
-    receipt
-      ? firstString(
-          receipt.recommendedAction,
-          receipt.nextAction
-        )
-      : null,
-
-  observedAt:
-    nowIso()
-};
-
 state.observation.surfaceTruth =
-  deepFreeze(output);
+  deepFreeze({
+    authorityPresent:
+      Boolean(authority),
+
+    globalPath:
+      record
+        ? record.resolvedGlobal
+        : null,
+
+    contract:
+      record
+        ? record.contract
+        : null,
+
+    version:
+      record
+        ? record.version
+        : null,
+
+    methods:
+      methodNames(authority),
+
+    receipt:
+      frozenClone(receipt),
+
+    packetKeys:
+      isObject(receipt)
+        ? Object.keys(receipt)
+        : [],
+
+    firstHeldCoordinate:
+      receipt
+        ? firstString(
+            receipt.firstHeldCoordinate,
+            receipt.heldCoordinate
+          )
+        : null,
+
+    firstFailedCoordinate:
+      receipt
+        ? firstString(
+            receipt.firstFailedCoordinate,
+            receipt.failedCoordinate
+          )
+        : null,
+
+    recommendedOwner:
+      receipt
+        ? frozenClone(
+            receipt.recommendedOwner ||
+            receipt.owner ||
+            null
+          )
+        : null,
+
+    recommendedFile:
+      receipt
+        ? firstString(
+            receipt.recommendedFile,
+            receipt.nextFile
+          )
+        : null,
+
+    recommendedAction:
+      receipt
+        ? firstString(
+            receipt.recommendedAction,
+            receipt.nextAction
+          )
+        : null,
+
+    observedAt:
+      nowIso()
+  });
 
 return state.observation.surfaceTruth;
 
 }
 
-function observeLightweight() {
+function inspectControlPanel() {
+var controlPanel =
+root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL ||
+readPath(
+"AUDRALIA.dropWithReadControlPanel"
+) ||
+null;
+
+var receipt =
+  root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
+  null;
+
+state.observation.controlPanel =
+  deepFreeze({
+    present:
+      Boolean(controlPanel),
+
+    contract:
+      controlPanel
+        ? controlPanel.CONTRACT ||
+          null
+        : null,
+
+    version:
+      controlPanel
+        ? controlPanel.VERSION ||
+          null
+        : null,
+
+    receipt:
+      frozenClone(receipt),
+
+    observedAt:
+      nowIso()
+  });
+
+return state.observation.controlPanel;
+
+}
+
+function observe() {
+state.drop.observation.status =
+"OBSERVING";
+
+renderDropRail();
+
 var errors = [];
 
-state.drop.observation.status =
-  "OBSERVING";
-
-var targetLight =
+var target =
   inspectTargetFrameLight();
 
 var registry =
@@ -2765,16 +2649,19 @@ var engine =
 var surface =
   inspectSurfaceTruth();
 
-if (targetLight.readError) {
+var controls =
+  inspectControlPanel();
+
+if (target.readError) {
   errors.push({
     source: "TARGET_LIGHT",
-    message: targetLight.readError,
+    message: target.readError,
     capturedAt: nowIso()
   });
 }
 
 state.observation.targetLight =
-  frozenClone(targetLight);
+  frozenClone(target);
 
 state.observation.errors =
   frozenClone(errors);
@@ -2789,30 +2676,35 @@ state.drop.observation.status =
 
 state.drop.observation.availableCount =
   [
-    targetLight.framePresent,
+    target.framePresent,
     registry.registryLoaded,
     engine.engineLoaded,
-    surface.authorityPresent
+    surface.authorityPresent,
+    controls.present
   ].filter(Boolean).length;
 
 state.drop.observation.heldCount =
-  4 -
+  5 -
   state.drop.observation.availableCount;
 
 state.drop.observation.lastAction =
-  "Lightweight observation completed at " +
+  "Observation completed at " +
   state.observation.observedAt;
 
 state.updatedAt =
   nowIso();
 
+renderAll();
+
 return frozenClone({
-  targetLight: targetLight,
+  target: target,
   registry: registry,
   engine: engine,
   surfaceTruth: surface,
+  controlPanel: controls,
   errors: errors,
-  observedAt: state.observation.observedAt
+  observedAt:
+    state.observation.observedAt
 });
 
 }
@@ -2870,6 +2762,18 @@ if (
   });
 }
 
+if (
+  !state.observation.controlPanel ||
+  !state.observation.controlPanel.present
+) {
+  absence.push({
+    type: "CONTROL_PANEL",
+    code: "INDEPENDENT_CONTROL_PANEL_NOT_OBSERVED",
+    file:
+      "/showroom/globe/audralia/diagnostic/index.controls.js"
+  });
+}
+
 if (!state.cycle.ledger) {
   absence.push({
     type: "CYCLE",
@@ -2878,7 +2782,8 @@ if (!state.cycle.ledger) {
 }
 
 if (
-  auditRecord.classification === "DIRECT_EXECUTION" &&
+  auditRecord.classification ===
+    "DIRECT_EXECUTION" &&
   !state.direct.lastResult
 ) {
   absence.push({
@@ -2892,17 +2797,18 @@ return absence;
 }
 
 function buildDirectionList(absence, auditRecord) {
-var directions = [];
+var direction = [];
 
 absence.forEach(function mapAbsence(entry) {
   if (
     entry.code ===
     "REQUIRED_PARTICIPANT_UNRESOLVED"
   ) {
-    directions.push({
+    direction.push({
       priority: "HIGH",
-      action: "Inspect participant",
-      participant: entry.role,
+      action:
+        "Inspect participant " +
+        entry.role,
       file: entry.file
     });
   }
@@ -2911,9 +2817,10 @@ absence.forEach(function mapAbsence(entry) {
     entry.code ===
     "TARGET_FRAME_NOT_OBSERVED"
   ) {
-    directions.push({
+    direction.push({
       priority: "MEDIUM",
-      action: "Open the Target Window and inspect target access",
+      action:
+        "Inspect target-frame declaration and load state",
       route: TARGET_ROUTE
     });
   }
@@ -2922,9 +2829,10 @@ absence.forEach(function mapAbsence(entry) {
     entry.code ===
     "TARGET_RUNTIME_GLOBAL_NOT_OBSERVED"
   ) {
-    directions.push({
+    direction.push({
       priority: "HIGH",
-      action: "Inspect target runtime publication",
+      action:
+        "Inspect target runtime publication",
       acceptedGlobals:
         TARGET_RUNTIME_GLOBALS.slice()
     });
@@ -2934,9 +2842,22 @@ absence.forEach(function mapAbsence(entry) {
     entry.code ===
     "SURFACE_TRUTH_AUTHORITY_UNRESOLVED"
   ) {
-    directions.push({
+    direction.push({
       priority: "HIGH",
-      action: "Inspect the Surface Truth participant",
+      action:
+        "Inspect Surface Truth participant",
+      file: entry.file
+    });
+  }
+
+  if (
+    entry.code ===
+    "INDEPENDENT_CONTROL_PANEL_NOT_OBSERVED"
+  ) {
+    direction.push({
+      priority: "HIGH",
+      action:
+        "Inspect independent control-panel loading",
       file: entry.file
     });
   }
@@ -2945,10 +2866,10 @@ absence.forEach(function mapAbsence(entry) {
     entry.code ===
     "NINE_CYCLE_NOT_EXECUTED"
   ) {
-    directions.push({
+    direction.push({
       priority: "OPTIONAL",
-      action: "Run Nine-Cycle only when cycle evidence is required",
-      audit: "cycleExecution"
+      action:
+        "Run Nine-Cycle only when cycle evidence is required"
     });
   }
 
@@ -2956,61 +2877,76 @@ absence.forEach(function mapAbsence(entry) {
     entry.code ===
     "SELECTED_DIRECT_CHECK_NOT_EXECUTED"
   ) {
-    directions.push({
+    direction.push({
       priority: "OPTIONAL",
-      action: "Run the selected direct check explicitly",
+      action:
+        "Run the selected direct check explicitly",
       audit: auditRecord.id
     });
   }
 });
 
-if (!directions.length) {
-  directions.push({
+if (!direction.length) {
+  direction.push({
     priority: "LOW",
-    action: "Review the current report and select the next audit"
+    action:
+      "Review the current report and select the next audit"
   });
 }
 
-return directions;
+return direction;
 
 }
 
 function buildResult(auditRecord, absence) {
-var available =
-state.participants.availableCount;
+if (
+auditRecord.id ===
+"controlPanelHealth"
+) {
+return (
+state.observation.controlPanel &&
+state.observation.controlPanel.present
+? "The independent control panel is published and available."
+: "The independent control panel has not been observed."
+);
+}
 
-var total =
-  state.participants.records.length;
-
-if (auditRecord.id === "cycleExecution") {
+if (
+  auditRecord.id ===
+  "cycleExecution"
+) {
   return state.cycle.ledger
-    ? "The most recent nine-cycle execution produced a compatible diagnostic ledger."
+    ? "The latest explicit nine-cycle produced a compatible ledger."
     : "The nine-cycle has not been executed during this session.";
 }
 
-if (auditRecord.id === "cycleLedger") {
-  return state.cycle.ledger
-    ? "A compatible nine-cycle ledger is available."
-    : "No compatible nine-cycle ledger is available.";
-}
-
-if (auditRecord.id === "targetRuntimeFull") {
+if (
+  auditRecord.id ===
+  "targetRuntimeFull"
+) {
   return state.observation.targetFull
     ? "A deliberate full target-runtime observation is available."
     : "No deliberate full target-runtime observation has been captured.";
 }
 
-if (auditRecord.id === "deepArchive") {
+if (
+  auditRecord.id ===
+  "deepArchive"
+) {
   return state.archive.deepArchive
     ? "A deep observatory archive is available."
     : "No deep observatory archive has been created.";
 }
 
 return (
-  "The Audralia diagnostic observatory is available. " +
-  String(available) +
+  "The Audralia diagnostic engine is available. " +
+  String(
+    state.participants.availableCount
+  ) +
   " of " +
-  String(total) +
+  String(
+    state.participants.records.length
+  ) +
   " declared participants are resolved. " +
   String(absence.length) +
   " absence record" +
@@ -3019,7 +2955,7 @@ return (
       ? " is"
       : "s are"
   ) +
-  " currently associated with this report."
+  " associated with this report."
 );
 
 }
@@ -3029,38 +2965,50 @@ return deepFreeze({
 audit:
 frozenClone(auditRecord),
 
-  controller: {
+  engineController: {
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     file: FILE,
     initialized: state.initialized,
     bootedAt: state.bootedAt,
-    updatedAt: state.updatedAt
+    updatedAt: state.updatedAt,
+    controlOwner: false
   },
 
   shell: {
     htmlContract: HTML_CONTRACT,
     cssContract: CSS_CONTRACT,
+    controlPanelContract:
+      CONTROL_PANEL_CONTRACT,
     blueprint: BLUEPRINT,
-    prebuildRegistry: PREBUILD_REGISTRY,
+    prebuildRegistry:
+      PREBUILD_REGISTRY,
     route: DIAGNOSTIC_ROUTE,
     targetRoute: TARGET_ROUTE
   },
 
   participants:
-    frozenClone(state.participants),
+    frozenClone(
+      state.participants
+    ),
 
   observation:
-    frozenClone(state.observation),
+    frozenClone(
+      state.observation
+    ),
 
   direct:
-    frozenClone(state.direct),
+    frozenClone(
+      state.direct
+    ),
 
   cycle:
-    frozenClone(state.cycle),
+    frozenClone(
+      state.cycle
+    ),
 
-  archive: {
+  archiveSummary: {
     reportCount:
       state.archive.reports.length,
 
@@ -3101,12 +3049,27 @@ READ_SCHEMA,
 
   evidence: [
     {
-      label: "Controller",
+      label:
+        "Diagnostic engine",
+
       value:
         CONTRACT
     },
     {
-      label: "Resolved participants",
+      label:
+        "Control panel",
+
+      value:
+        state.observation.controlPanel &&
+        state.observation.controlPanel.present
+          ? state.observation.controlPanel.contract ||
+            "Available"
+          : "Not observed"
+    },
+    {
+      label:
+        "Resolved participants",
+
       value:
         String(
           state.participants.availableCount
@@ -3117,7 +3080,9 @@ READ_SCHEMA,
         )
     },
     {
-      label: "Target frame",
+      label:
+        "Target frame",
+
       value:
         state.observation.targetLight &&
         state.observation.targetLight.framePresent
@@ -3125,7 +3090,9 @@ READ_SCHEMA,
           : "Not observed"
     },
     {
-      label: "Runtime global",
+      label:
+        "Runtime global",
+
       value:
         state.observation.targetLight &&
         state.observation.targetLight.runtimeGlobalName
@@ -3133,7 +3100,9 @@ READ_SCHEMA,
           : "Not observed"
     },
     {
-      label: "Cycle ledger",
+      label:
+        "Cycle ledger",
+
       value:
         state.cycle.ledger
           ? state.cycle.ledger.ledgerHash ||
@@ -3141,7 +3110,9 @@ READ_SCHEMA,
           : "Not available"
     },
     {
-      label: "Evidence hash",
+      label:
+        "Evidence hash",
+
       value:
         hashObject(evidence)
     }
@@ -3162,66 +3133,13 @@ READ_SCHEMA,
 
 }
 
-function composeReadableReport(report) {
-var lines = [
-"AUDRALIA DROP WITH READ DIAGNOSTIC REPORT",
-"REPORT_ID=" + report.reportId,
-"SCHEMA=" + report.schema,
-"CLASSIFICATION=" + report.classification,
-"CATEGORY=" + report.category.label,
-"AUDIT=" + report.audit.label,
-"CREATED_AT=" + report.createdAt,
-"",
-"RESULT",
-report.read.result,
-"",
-"EVIDENCE"
-];
-
-report.read.evidence.forEach(function addEvidence(entry) {
-  lines.push(
-    "- " +
-    String(entry.label) +
-    ": " +
-    String(entry.value)
-  );
-});
-
-lines.push("");
-lines.push("ABSENCE");
-
-if (report.read.absence.length) {
-  report.read.absence.forEach(function addAbsence(entry) {
-    lines.push(
-      "- " +
-      String(entry.code || entry.type || "UNKNOWN")
-    );
-  });
-} else {
-  lines.push("- No absence records.");
-}
-
-lines.push("");
-lines.push("DIRECTION");
-
-report.read.direction.forEach(function addDirection(entry) {
-  lines.push(
-    "- " +
-    String(entry.action || "Review current evidence")
-  );
-});
-
-lines.push("");
-lines.push("BOUNDARY");
-lines.push(
-  "Diagnostic-only. Read-only. No production mutation, runtime restart, renderer mutation, repair, readiness claim, visual-pass claim, cycle-pass claim, F21 claim, or synthetic evidence."
-);
-
-return lines.join("\n");
-
-}
-
-function buildReport() {
+function createReport() {
+/*
+* Synchronous report law.
+*
+* This method performs no polling, no waiting, no conductor invocation,
+* no station invocation, and no full target-receipt request.
+*/
 var categoryRecord =
 getActiveCategory();
 
@@ -3272,8 +3190,11 @@ var report = {
   createdAt:
     nowIso(),
 
-  controllerContract:
+  diagnosticEngineContract:
     CONTRACT,
+
+  controlPanelContract:
+    CONTROL_PANEL_CONTRACT,
 
   htmlContract:
     HTML_CONTRACT,
@@ -3315,41 +3236,39 @@ var report = {
 report.reportHash =
   hashObject(report);
 
-return deepFreeze(report);
-
-}
-
-function createReport() {
-/*
-* Synchronous nonblocking report law.
-*
-* No polling.
-* No waiting.
-* No conductor call.
-* No station call.
-* No full target receipt call.
-*/
-var report =
-buildReport();
-
 state.report.current =
-  report;
+  deepFreeze(report);
 
 state.report.readableText =
   composeReadableReport(
-    report
+    state.report.current
   );
 
 state.report.packetText =
   safeJson({
-    schema: report.schema,
-    reportId: report.reportId,
-    classification: report.classification,
-    category: report.category,
-    audit: report.audit,
-    createdAt: report.createdAt,
-    read: report.read,
-    reportHash: report.reportHash
+    schema:
+      report.schema,
+
+    reportId:
+      report.reportId,
+
+    classification:
+      report.classification,
+
+    category:
+      report.category,
+
+    audit:
+      report.audit,
+
+    read:
+      report.read,
+
+    createdAt:
+      report.createdAt,
+
+    reportHash:
+      report.reportHash
   });
 
 state.report.rawText =
@@ -3361,7 +3280,7 @@ state.report.evidence =
   );
 
 state.report.sessionReports.push(
-  report
+  state.report.current
 );
 
 state.drop.report.status =
@@ -3380,20 +3299,87 @@ state.drop.report.lastAction =
 state.updatedAt =
   nowIso();
 
-publishDiagnosticOutputs();
-renderWorkbench();
+publishOutputs();
+renderAll();
 
-toast(
-  "Report created."
+return frozenClone(
+  state.report.current
 );
 
-return frozenClone(report);
+}
+
+function composeReadableReport(report) {
+var lines = [
+"AUDRALIA DROP WITH READ DIAGNOSTIC REPORT",
+"REPORT_ID=" + report.reportId,
+"SCHEMA=" + report.schema,
+"CLASSIFICATION=" + report.classification,
+"CATEGORY=" + report.category.label,
+"AUDIT=" + report.audit.label,
+"CREATED_AT=" + report.createdAt,
+"",
+"RESULT",
+report.read.result,
+"",
+"EVIDENCE"
+];
+
+report.read.evidence.forEach(function addEvidence(entry) {
+  lines.push(
+    "- " +
+    entry.label +
+    ": " +
+    entry.value
+  );
+});
+
+lines.push("");
+lines.push("ABSENCE");
+
+if (report.read.absence.length) {
+  report.read.absence.forEach(function addAbsence(entry) {
+    lines.push(
+      "- " +
+      (
+        entry.code ||
+        entry.type ||
+        "UNKNOWN"
+      )
+    );
+  });
+} else {
+  lines.push(
+    "- No absence records."
+  );
+}
+
+lines.push("");
+lines.push("DIRECTION");
+
+report.read.direction.forEach(function addDirection(entry) {
+  lines.push(
+    "- " +
+    (
+      entry.action ||
+      "Review current evidence"
+    )
+  );
+});
+
+lines.push("");
+lines.push("BOUNDARY");
+lines.push(
+  "Diagnostic-only. Read-only. No production mutation, runtime restart, renderer mutation, repair, readiness claim, visual-pass claim, cycle-pass claim, F21 claim, or synthetic evidence."
+);
+
+return lines.join("\n");
 
 }
 
 function targetRuntimeAdmissionState(snapshot) {
 var light =
-snapshot && snapshot.light
+snapshot &&
+snapshot.light
 ? snapshot.light
 : snapshot || {};
 
@@ -3443,10 +3429,10 @@ var firstFrameDrawn =
 
 var visiblePixelObserved =
   firstBoolean(
-    status.firstVisiblePixelObserved,
     status.visiblePixelObserved,
-    detail.firstVisiblePixelObserved,
-    detail.visiblePixelObserved
+    status.firstVisiblePixelObserved,
+    detail.visiblePixelObserved,
+    detail.firstVisiblePixelObserved
   );
 
 var fallbackActive =
@@ -3518,8 +3504,7 @@ function waitForTargetRuntimeEvidence() {
 var startedAt =
 Date.now();
 
-var attempts =
-  [];
+var attempts = [];
 
 function sample() {
   var light =
@@ -3531,7 +3516,8 @@ function sample() {
     );
 
   var elapsedMs =
-    Date.now() - startedAt;
+    Date.now() -
+    startedAt;
 
   var progress = {
     schema:
@@ -3617,15 +3603,12 @@ timedOut,
 reason,
 startedAt,
 attempts,
-lastLightSnapshot,
-lastAdmission
+light,
+admission
 ) {
-var fullSnapshot =
-inspectTargetFrameFull();
-
 var receipt = {
-  schema:
-    "AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v2",
+schema:
+"AUDRALIA_DIAGNOSTIC_TARGET_RUNTIME_PREFLIGHT_v2",
 
   contract:
     CONTRACT,
@@ -3652,30 +3635,23 @@ var receipt = {
     TARGET_RUNTIME_WAIT_TIMEOUT_MS,
 
   elapsedMs:
-    Date.now() - startedAt,
+    Date.now() -
+    startedAt,
 
   attemptCount:
     attempts.length,
 
   finalLightSnapshot:
-    frozenClone(
-      lastLightSnapshot
-    ),
+    frozenClone(light),
 
   finalFullSnapshot:
-    frozenClone(
-      fullSnapshot
-    ),
+    inspectTargetFrameFull(),
 
   admission:
-    frozenClone(
-      lastAdmission
-    ),
+    frozenClone(admission),
 
   attempts:
-    frozenClone(
-      attempts
-    ),
+    frozenClone(attempts),
 
   generatedAt:
     nowIso(),
@@ -3694,7 +3670,8 @@ return deepFreeze(receipt);
 function resolveStationApi(definition) {
 var found =
 readFirst(
-definition.globalPaths || []
+definition.globalPaths ||
+[]
 );
 
 return {
@@ -3808,37 +3785,48 @@ detail
 }
 
 function extractReceipts(result) {
-var candidates;
-var index;
-
 if (Array.isArray(result)) {
-  return result;
+return result;
 }
 
 if (!isObject(result)) {
   return [];
 }
 
-candidates = [
+var candidates = [
   result.receipts,
   result.stationReceipts,
   result.cycleReceipts,
-  result.ledger && result.ledger.receipts,
-  result.ledger && result.ledger.stationReceipts,
-  result.result && result.result.receipts,
-  result.result && result.result.stationReceipts,
-  result.packet && result.packet.receipts,
-  result.packet && result.packet.stationReceipts,
-  result.cycleReceipt && result.cycleReceipt.receipts,
-  result.cycleReceipt && result.cycleReceipt.stationReceipts
+  result.ledger &&
+    result.ledger.receipts,
+  result.ledger &&
+    result.ledger.stationReceipts,
+  result.result &&
+    result.result.receipts,
+  result.result &&
+    result.result.stationReceipts,
+  result.packet &&
+    result.packet.receipts,
+  result.packet &&
+    result.packet.stationReceipts,
+  result.cycleReceipt &&
+    result.cycleReceipt.receipts,
+  result.cycleReceipt &&
+    result.cycleReceipt.stationReceipts
 ];
+
+var index;
 
 for (
   index = 0;
   index < candidates.length;
   index += 1
 ) {
-  if (Array.isArray(candidates[index])) {
+  if (
+    Array.isArray(
+      candidates[index]
+    )
+  ) {
     return candidates[index];
   }
 }
@@ -3919,18 +3907,30 @@ return deepFreeze({
     ),
 
   observations:
-    Array.isArray(source.observations)
-      ? frozenClone(source.observations)
+    Array.isArray(
+      source.observations
+    )
+      ? frozenClone(
+          source.observations
+        )
       : [],
 
   evidence:
-    Array.isArray(source.evidence)
-      ? frozenClone(source.evidence)
+    Array.isArray(
+      source.evidence
+    )
+      ? frozenClone(
+          source.evidence
+        )
       : [],
 
   issues:
-    Array.isArray(source.issues)
-      ? frozenClone(source.issues)
+    Array.isArray(
+      source.issues
+    )
+      ? frozenClone(
+          source.issues
+        )
       : [],
 
   firstHeldCoordinate:
@@ -3957,7 +3957,9 @@ return deepFreeze({
 
   noClaims:
     isObject(source.noClaims)
-      ? frozenClone(source.noClaims)
+      ? frozenClone(
+          source.noClaims
+        )
       : NO_CLAIMS,
 
   raw:
@@ -3970,8 +3972,6 @@ function normalizeConductorResult(result) {
 var receipts =
 extractReceipts(result);
 
-var normalized = [];
-
 if (!receipts.length) {
   return {
     conductorResult:
@@ -3981,41 +3981,38 @@ if (!receipts.length) {
       makeHeldReceipts(
         "CONDUCTOR_RETURNED_NO_RECEIPTS",
         "The North conductor returned no station receipts.",
-        "No receipt collection could be extracted from the conductor result."
+        "No receipt collection could be extracted."
       )
   };
 }
 
-STATIONS.forEach(function normalizeExpectedStation(definition, index) {
+var normalized = [];
+
+STATIONS.forEach(function normalizeStation(definition, index) {
   var matching =
     receipts.find(function findMatching(receipt) {
       return (
         receipt &&
-        receipt.stationId === definition.stationId
+        receipt.stationId ===
+          definition.stationId
       );
     }) ||
     receipts[index] ||
     null;
 
-  if (!matching) {
-    normalized.push(
-      makeHeldReceipt(
-        definition,
-        "STATION_RECEIPT_MISSING",
-        "The North conductor did not return this station receipt.",
-        "Expected station receipt was absent from the conductor result."
-      )
-    );
-
-    return;
-  }
-
   normalized.push(
-    normalizeReceipt(
-      matching,
-      definition,
-      index
-    )
+    matching
+      ? normalizeReceipt(
+          matching,
+          definition,
+          index
+        )
+      : makeHeldReceipt(
+          definition,
+          "STATION_RECEIPT_MISSING",
+          "The conductor did not return this station receipt.",
+          "Expected station receipt was absent."
+        )
   );
 });
 
@@ -4064,11 +4061,11 @@ CONDUCTOR_REQUEST_SCHEMA,
   },
 
   engine: {
-    contract:
-      CORE_ENGINE_CONTRACT,
-
     governingContract:
       GOVERNING_ENGINE_CONTRACT,
+
+    coreContract:
+      CORE_ENGINE_CONTRACT,
 
     registryContract:
       REGISTRY_CONTRACT,
@@ -4118,28 +4115,21 @@ function invokeConductor(request) {
 var conductor =
 getConductor();
 
-if (!conductor) {
-  return Promise.resolve({
-    conductorResult: null,
-    receipts:
-      makeHeldReceipts(
-        "NORTH_CONDUCTOR_UNAVAILABLE",
-        "The North conductor is unavailable.",
-        "No compatible North-conductor authority global was found."
-      )
-  });
-}
-
-if (!isFunction(conductor.createCycle)) {
+if (
+  !conductor ||
+  !isFunction(
+    conductor.createCycle
+  )
+) {
   return Promise.resolve({
     conductorResult:
       frozenClone(conductor),
 
     receipts:
       makeHeldReceipts(
-        "NORTH_CONDUCTOR_CREATE_CYCLE_UNAVAILABLE",
-        "The North conductor does not expose createCycle().",
-        "The installed conductor requires the canonical createCycle() path."
+        "NORTH_CONDUCTOR_UNAVAILABLE",
+        "The North conductor is unavailable or incompatible.",
+        "A compatible createCycle() authority was not found."
       )
   });
 }
@@ -4167,35 +4157,26 @@ try {
     receipts:
       makeHeldReceipts(
         "NORTH_CONDUCTOR_CREATE_CYCLE_THROW",
-        "The North conductor could not create the diagnostic cycle.",
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
-        )
+        "The North conductor could not create the cycle.",
+        String(error)
       )
   });
 }
 
 if (
-  cycle &&
-  (
-    Array.isArray(cycle.receipts) ||
-    Array.isArray(cycle.stationReceipts)
-  )
-) {
-  return Promise.resolve(
-    normalizeConductorResult(cycle)
-  );
-}
-
-if (
   !cycle ||
-  !isFunction(cycle.registerStation) ||
-  !isFunction(cycle.seal) ||
-  !isFunction(cycle.run) ||
-  !isFunction(cycle.getReceipt)
+  !isFunction(
+    cycle.registerStation
+  ) ||
+  !isFunction(
+    cycle.seal
+  ) ||
+  !isFunction(
+    cycle.run
+  ) ||
+  !isFunction(
+    cycle.getReceipt
+  )
 ) {
   return Promise.resolve({
     conductorResult:
@@ -4204,14 +4185,14 @@ if (
     receipts:
       makeHeldReceipts(
         "NORTH_CONDUCTOR_CYCLE_API_INCOMPATIBLE",
-        "The North conductor created an incompatible cycle.",
-        "The cycle must expose registerStation(), seal(), run(), and getReceipt()."
+        "The conductor created an incompatible cycle.",
+        "Required cycle methods are missing."
       )
   });
 }
 
-state.cycle.stationRegistrations = [];
-state.cycle.auxiliaryRegistrations = [];
+state.cycle.stationRegistrations =
+  [];
 
 STATIONS.forEach(function registerStation(definition) {
   var resolved =
@@ -4229,17 +4210,14 @@ STATIONS.forEach(function registerStation(definition) {
       stationId:
         definition.stationId,
 
-      file:
-        definition.file,
-
       status:
         "REJECTED",
 
       reason:
         "STATION_GLOBAL_NOT_FOUND",
 
-      globalPath:
-        null,
+      file:
+        definition.file,
 
       generatedAt:
         nowIso()
@@ -4259,9 +4237,6 @@ STATIONS.forEach(function registerStation(definition) {
         stationId:
           definition.stationId,
 
-        file:
-          definition.file,
-
         status:
           registration &&
           registration.status
@@ -4274,13 +4249,8 @@ STATIONS.forEach(function registerStation(definition) {
             ? registration.reason
             : null,
 
-        issues:
-          registration &&
-          registration.issues
-            ? frozenClone(
-                registration.issues
-              )
-            : [],
+        file:
+          definition.file,
 
         globalPath:
           resolved.globalPath,
@@ -4296,9 +4266,6 @@ STATIONS.forEach(function registerStation(definition) {
         stationId:
           definition.stationId,
 
-        file:
-          definition.file,
-
         status:
           "REJECTED",
 
@@ -4313,8 +4280,8 @@ STATIONS.forEach(function registerStation(definition) {
               : error
           ),
 
-        globalPath:
-          resolved.globalPath,
+        file:
+          definition.file,
 
         generatedAt:
           nowIso()
@@ -4326,75 +4293,6 @@ STATIONS.forEach(function registerStation(definition) {
     deepFreeze(outcome)
   );
 });
-
-var pointer =
-  state.participants.records.find(function findPointer(record) {
-    return record.role === "SOUTH_SURFACE_POINTER";
-  });
-
-if (
-  pointer &&
-  pointer.resolved &&
-  isFunction(cycle.registerAuxiliary)
-) {
-  try {
-    var auxiliaryRegistration =
-      cycle.registerAuxiliary(
-        8,
-        {
-          role:
-            "SOUTH_SURFACE_POINTER",
-
-          file:
-            pointer.file,
-
-          contract:
-            pointer.contract,
-
-          version:
-            pointer.version,
-
-          globalPath:
-            pointer.resolvedGlobal,
-
-          createsCyclePosition:
-            false
-        }
-      );
-
-    state.cycle.auxiliaryRegistrations.push(
-      deepFreeze({
-        parentPosition: 8,
-        role: "SOUTH_SURFACE_POINTER",
-        file: pointer.file,
-        status:
-          auxiliaryRegistration &&
-          auxiliaryRegistration.status
-            ? auxiliaryRegistration.status
-            : "UNKNOWN",
-        generatedAt: nowIso()
-      })
-    );
-  } catch (error) {
-    state.cycle.auxiliaryRegistrations.push(
-      deepFreeze({
-        parentPosition: 8,
-        role: "SOUTH_SURFACE_POINTER",
-        file: pointer.file,
-        status: "NOT_REGISTERED",
-        reason: "AUXILIARY_REGISTRATION_THROW",
-        detail:
-          String(
-            error &&
-            error.message
-              ? error.message
-              : error
-          ),
-        generatedAt: nowIso()
-      })
-    );
-  }
-}
 
 var sealReceipt;
 
@@ -4411,23 +4309,14 @@ try {
           error.message
             ? error.message
             : error
-        ),
-      stationRegistrations:
-        frozenClone(
-          state.cycle.stationRegistrations
         )
     },
 
     receipts:
       makeHeldReceipts(
         "NORTH_CONDUCTOR_SEAL_THROW",
-        "The North conductor could not seal the diagnostic cycle.",
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
-        )
+        "The conductor could not seal the cycle.",
+        String(error)
       )
   });
 }
@@ -4435,7 +4324,7 @@ try {
 return Promise.resolve(
   cycle.run()
 )
-  .then(function conductorRunResolved(result) {
+  .then(function cycleResolved(result) {
     var receipt =
       isObject(result)
         ? result
@@ -4446,7 +4335,9 @@ return Promise.resolve(
 
     state.cycle.conductorState =
       frozenClone(
-        isFunction(cycle.getState)
+        isFunction(
+          cycle.getState
+        )
           ? cycle.getState()
           : null
       );
@@ -4459,10 +4350,7 @@ return Promise.resolve(
         receipt,
 
       stationReceipts:
-        receipt &&
-        Array.isArray(receipt.stationReceipts)
-          ? receipt.stationReceipts
-          : extractReceipts(receipt),
+        extractReceipts(receipt),
 
       sealReceipt:
         sealReceipt,
@@ -4470,23 +4358,18 @@ return Promise.resolve(
       state:
         state.cycle.conductorState,
 
-      targetPreflight:
-        frozenClone(
-          state.cycle.preflight
-        ),
-
       stationRegistrations:
         frozenClone(
           state.cycle.stationRegistrations
         ),
 
-      auxiliaryRegistrations:
+      targetPreflight:
         frozenClone(
-          state.cycle.auxiliaryRegistrations
+          state.cycle.preflight
         )
     });
   })
-  .catch(function conductorRunRejected(error) {
+  .catch(function cycleRejected(error) {
     return {
       conductorResult: {
         stage: "RUN",
@@ -4502,13 +4385,8 @@ return Promise.resolve(
       receipts:
         makeHeldReceipts(
           "NORTH_CONDUCTOR_RUN_REJECTED",
-          "The North conductor rejected the diagnostic cycle.",
-          String(
-            error &&
-            error.message
-              ? error.message
-              : error
-          )
+          "The conductor rejected the cycle.",
+          String(error)
         )
     };
   });
@@ -4518,12 +4396,19 @@ return Promise.resolve(
 function composeLedger() {
 function count(statuses) {
 return state.cycle.receipts.filter(function countReceipt(receipt) {
-return statuses.indexOf(receipt.status) !== -1;
+return (
+statuses.indexOf(
+receipt.status
+) !== -1
+);
 }).length;
 }
 
 var passCount =
-  count(["PASS", "COMPLETE"]);
+  count([
+    "PASS",
+    "COMPLETE"
+  ]);
 
 var holdCount =
   count([
@@ -4534,7 +4419,10 @@ var holdCount =
   ]);
 
 var failCount =
-  count(["FAIL", "FAILED"]);
+  count([
+    "FAIL",
+    "FAILED"
+  ]);
 
 var conflictCount =
   count(["CONFLICT"]);
@@ -4553,20 +4441,20 @@ var terminalReceipt =
     : null;
 
 var overallStatus =
-  errorCount > 0
+  errorCount
     ? "ERROR"
-    : conflictCount > 0
+    : conflictCount
       ? "CONFLICT"
-      : failCount > 0
+      : failCount
         ? "FAIL"
-        : degradedCount > 0
+        : degradedCount
           ? "DEGRADED"
-          : holdCount > 0
+          : holdCount
             ? "HOLD"
             : (
                 passCount ===
                 state.cycle.receipts.length &&
-                state.cycle.receipts.length > 0
+                state.cycle.receipts.length
               )
               ? "PASS"
               : "HOLD";
@@ -4587,12 +4475,6 @@ var ledger = {
   file:
     FILE,
 
-  htmlContract:
-    HTML_CONTRACT,
-
-  cssContract:
-    CSS_CONTRACT,
-
   cycleId:
     state.cycle.cycleId,
 
@@ -4601,12 +4483,6 @@ var ledger = {
 
   targetRoute:
     TARGET_ROUTE,
-
-  orchestrationOwner:
-    "AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR",
-
-  orchestrationMethod:
-    "createCycle",
 
   runPhase:
     state.cycle.runPhase,
@@ -4655,11 +4531,6 @@ var ledger = {
       state.cycle.stationRegistrations
     ),
 
-  auxiliaryRegistrations:
-    frozenClone(
-      state.cycle.auxiliaryRegistrations
-    ),
-
   conductorState:
     frozenClone(
       state.cycle.conductorState
@@ -4700,6 +4571,9 @@ state.cycle.ledger
 );
 }
 
+state.cycle =
+  emptyCycleState();
+
 state.cycle.running =
   true;
 
@@ -4710,39 +4584,6 @@ state.cycle.cycleId =
 state.cycle.runPhase =
   "WAITING_FOR_TARGET";
 
-state.cycle.preflight =
-  null;
-
-state.cycle.preflightProgress =
-  null;
-
-state.cycle.stationRegistrations =
-  [];
-
-state.cycle.auxiliaryRegistrations =
-  [];
-
-state.cycle.conductorResult =
-  null;
-
-state.cycle.conductorReceipt =
-  null;
-
-state.cycle.conductorState =
-  null;
-
-state.cycle.receipts =
-  [];
-
-state.cycle.ledger =
-  null;
-
-state.cycle.readerReport =
-  "";
-
-state.cycle.lastError =
-  null;
-
 state.drop.direct.status =
   "RUNNING";
 
@@ -4752,7 +4593,7 @@ state.drop.direct.lastAction =
 renderExecutionState();
 
 buildParticipantSnapshot();
-observeLightweight();
+observe();
 
 return waitForTargetRuntimeEvidence()
   .then(function preflightResolved(preflight) {
@@ -4773,7 +4614,7 @@ return waitForTargetRuntimeEvidence()
       buildConductorRequest()
     );
   })
-  .then(function cycleResolved(normalized) {
+  .then(function conductorResolved(normalized) {
     state.cycle.conductorResult =
       normalized.conductorResult;
 
@@ -4819,6 +4660,12 @@ return waitForTargetRuntimeEvidence()
       })
     );
 
+    state.cycle.running =
+      false;
+
+    state.cycle.runPhase =
+      "IDLE";
+
     state.drop.direct.status =
       "IDLE";
 
@@ -4826,36 +4673,23 @@ return waitForTargetRuntimeEvidence()
       1;
 
     state.drop.direct.heldCount =
-      state.cycle.ledger &&
-      state.cycle.ledger.overallStatus !== "PASS"
-        ? 1
-        : 0;
+      state.cycle.ledger.overallStatus ===
+        "PASS"
+        ? 0
+        : 1;
 
     state.drop.direct.lastAction =
-      "Nine-cycle execution completed at " +
+      "Nine-cycle completed at " +
       state.cycle.lastRunAt;
 
-    state.cycle.running =
-      false;
-
-    state.cycle.runPhase =
-      "IDLE";
-
-    observeLightweight();
+    observe();
     createReport();
-    renderWorkbench();
-
-    toast(
-      state.cycle.ledger.overallStatus === "PASS"
-        ? "Nine-cycle completed."
-        : "Nine-cycle completed with held or attention evidence."
-    );
 
     return frozenClone(
       state.cycle.ledger
     );
   })
-  .catch(function cycleRejected(error) {
+  .catch(function cycleError(error) {
     state.cycle.lastError =
       String(
         error &&
@@ -4866,8 +4700,8 @@ return waitForTargetRuntimeEvidence()
 
     state.cycle.receipts =
       makeHeldReceipts(
-        "DIAGNOSTIC_CONTROLLER_UNEXPECTED_ERROR",
-        "The observatory controller could not complete the nine-cycle.",
+        "DIAGNOSTIC_ENGINE_CYCLE_ERROR",
+        "The diagnostic engine could not complete the cycle.",
         state.cycle.lastError
       );
 
@@ -4886,23 +4720,17 @@ return waitForTargetRuntimeEvidence()
     state.drop.direct.heldCount =
       1;
 
-    state.drop.direct.lastAction =
-      "Nine-cycle execution held after controller error.";
-
     state.archive.errors.push(
       deepFreeze({
         type: "CYCLE",
-        message: state.cycle.lastError,
-        capturedAt: nowIso()
+        message:
+          state.cycle.lastError,
+        capturedAt:
+          nowIso()
       })
     );
 
     createReport();
-    renderWorkbench();
-
-    toast(
-      "Nine-cycle held after controller error."
-    );
 
     return frozenClone(
       state.cycle.ledger
@@ -4936,12 +4764,14 @@ state.drop.direct.lastAction =
 renderExecutionState();
 
 return Promise.resolve()
-  .then(function executeDirectCheck() {
+  .then(function executeDirect() {
     var result;
 
     if (
-      auditRecord.id === "targetRuntimeFull" ||
-      auditRecord.id === "runtimeObservationDirect"
+      auditRecord.id ===
+        "targetRuntimeFull" ||
+      auditRecord.id ===
+        "runtimeObservationDirect"
     ) {
       result =
         inspectTargetFrameFull();
@@ -4949,13 +4779,16 @@ return Promise.resolve()
       state.observation.targetFull =
         frozenClone(result);
     } else if (
-      auditRecord.id === "registryRefreshDirect"
+      auditRecord.id ===
+      "registryRefreshDirect"
     ) {
       result =
         refreshRegistryState();
     } else if (
-      auditRecord.id === "surfaceTruthPacket" ||
-      auditRecord.id === "surfaceTruthDirect"
+      auditRecord.id ===
+        "surfaceTruthPacket" ||
+      auditRecord.id ===
+        "surfaceTruthDirect"
     ) {
       var surface =
         state.observation.surfaceTruth ||
@@ -4963,10 +4796,12 @@ return Promise.resolve()
 
       var authority =
         surface.globalPath
-          ? readPath(surface.globalPath)
+          ? readPath(
+              surface.globalPath
+            )
           : null;
 
-      var preferredMethods = [
+      var preferred = [
         "getReceipt",
         "getPacket",
         "inspect",
@@ -4974,15 +4809,17 @@ return Promise.resolve()
         "probe"
       ];
 
-      var selectedMethod =
-        preferredMethods.find(function findMethod(name) {
+      var method =
+        preferred.find(function findMethod(name) {
           return (
             authority &&
-            isFunction(authority[name])
+            isFunction(
+              authority[name]
+            )
           );
-        }) || null;
+        });
 
-      if (!selectedMethod) {
+      if (!method) {
         throw new Error(
           "NO_VERIFIED_SURFACE_TRUTH_READ_METHOD"
         );
@@ -4992,10 +4829,10 @@ return Promise.resolve()
         surface.globalPath;
 
       state.direct.selectedMethod =
-        selectedMethod;
+        method;
 
       result =
-        authority[selectedMethod]();
+        authority[method]();
     } else {
       throw new Error(
         "DIRECT_CHECK_NOT_AVAILABLE_FOR_SELECTED_AUDIT"
@@ -5055,8 +4892,8 @@ return Promise.resolve()
 
     return record;
   })
-  .catch(function directCheckRejected(error) {
-    var errorRecord =
+  .catch(function directError(error) {
+    var record =
       deepFreeze({
         audit:
           frozenClone(auditRecord),
@@ -5077,10 +4914,10 @@ return Promise.resolve()
       });
 
     state.direct.lastError =
-      errorRecord;
+      record;
 
     state.archive.errors.push(
-      errorRecord
+      record
     );
 
     state.drop.direct.status =
@@ -5091,23 +4928,16 @@ return Promise.resolve()
 
     state.drop.direct.lastAction =
       "Direct check held: " +
-      errorRecord.message;
+      record.message;
 
-    return errorRecord;
+    return record;
   })
-  .then(function finalizeDirectCheck(record) {
+  .then(function finishDirect(record) {
     state.direct.running =
       false;
 
-    observeLightweight();
+    observe();
     createReport();
-    renderWorkbench();
-
-    toast(
-      record.status === "COMPLETE"
-        ? "Direct check completed."
-        : "Direct check held."
-    );
 
     return frozenClone(record);
   });
@@ -5128,7 +4958,7 @@ ARCHIVE_SCHEMA,
   createdAt:
     nowIso(),
 
-  controllerState:
+  engineState:
     getPublicState(),
 
   reports:
@@ -5174,11 +5004,8 @@ state.archive.deepArchive =
 state.archive.updatedAt =
   nowIso();
 
+publishOutputs();
 renderArchiveChamber();
-
-toast(
-  "Deep archive created."
-);
 
 return frozenClone(
   state.archive.deepArchive
@@ -5188,11 +5015,7 @@ return frozenClone(
 
 function addCurrentReportToArchive() {
 if (!state.report.current) {
-toast(
-"Create a report first."
-);
-
-  return null;
+return null;
 }
 
 state.archive.reports.push(
@@ -5204,74 +5027,115 @@ state.archive.updatedAt =
 
 renderArchiveChamber();
 
-toast(
-  "Report added to archive."
-);
-
 return frozenClone(
   state.report.current
 );
 
 }
 
-function copyText(text, message) {
-if (!text) {
-return;
+function resetCurrentReport() {
+state.report.current =
+null;
+
+state.report.readableText =
+  "";
+
+state.report.packetText =
+  "";
+
+state.report.rawText =
+  "";
+
+state.report.evidence =
+  [];
+
+state.drop.report.status =
+  "READY";
+
+state.drop.report.heldCount =
+  0;
+
+state.drop.report.lastAction =
+  "Current report reset at " +
+  nowIso();
+
+publishOutputs();
+renderAll();
+
+return null;
+
 }
 
-if (
-  root.navigator &&
-  root.navigator.clipboard &&
-  isFunction(
-    root.navigator.clipboard.writeText
-  )
-) {
-  root.navigator.clipboard
-    .writeText(text)
-    .then(function copied() {
-      toast(message || "Copied.");
-    })
-    .catch(function clipboardRejected() {
-      fallbackCopy(text, message);
-    });
+function resetWorkbench() {
+state.activeCategoryId =
+"observatoryReceiver";
 
-  return;
-}
+state.activeAuditId =
+  "observatoryIndex";
 
-fallbackCopy(text, message);
+state.activeParticipantRole =
+  null;
 
-}
+state.activeReportMode =
+  "read";
 
-function fallbackCopy(text, message) {
-var area =
-doc.createElement("textarea");
+state.activeObservationLens =
+  "target";
 
-area.value =
-  text;
+state.activeInstrumentChamber =
+  "cycle";
 
-area.setAttribute(
-  "readonly",
-  "true"
-);
+state.report.current =
+  null;
 
-area.style.position =
-  "fixed";
+state.report.readableText =
+  "";
 
-area.style.left =
-  "-9999px";
+state.report.packetText =
+  "";
 
-doc.body.appendChild(area);
+state.report.rawText =
+  "";
 
-area.select();
+state.report.evidence =
+  [];
 
-try {
-  doc.execCommand("copy");
-  toast(message || "Copied.");
-} catch (_error) {
-  toast("Copy unavailable.");
-}
+state.direct.running =
+  false;
 
-doc.body.removeChild(area);
+state.direct.selectedAuthority =
+  null;
+
+state.direct.selectedMethod =
+  null;
+
+state.direct.lastResult =
+  null;
+
+state.direct.lastError =
+  null;
+
+state.cycle =
+  emptyCycleState();
+
+state.drop.direct =
+  laneState("IDLE");
+
+state.drop.report =
+  laneState("READY");
+
+state.drop.observation =
+  laneState("OBSERVING");
+
+state.drop.participant =
+  laneState("LOADING");
+
+buildParticipantSnapshot();
+observe();
+publishOutputs();
+renderAll();
+
+return getPublicState();
 
 }
 
@@ -5288,6 +5152,10 @@ state.activeAuditId =
 renderSelectors();
 renderSelectedAudit();
 
+return frozenClone(
+  categoryRecord
+);
+
 }
 
 function selectAudit(auditId) {
@@ -5303,6 +5171,10 @@ state.activeAuditId =
 renderSelectors();
 renderSelectedAudit();
 
+return frozenClone(
+  auditRecord
+);
+
 }
 
 function selectParticipant(role) {
@@ -5310,6 +5182,12 @@ state.activeParticipantRole =
 role;
 
 renderParticipantDetail();
+
+return frozenClone(
+  state.participants.records.find(function findParticipant(record) {
+    return record.role === role;
+  }) || null
+);
 
 }
 
@@ -5319,6 +5197,8 @@ mode;
 
 renderReportModes();
 
+return mode;
+
 }
 
 function selectObservationLens(lens) {
@@ -5326,6 +5206,8 @@ state.activeObservationLens =
 lens;
 
 renderObservationLensTabs();
+
+return lens;
 
 }
 
@@ -5335,28 +5217,7 @@ chamber;
 
 renderInstrumentDeckTabs();
 
-}
-
-function renderDropRail() {
-renderLane(
-"dropDirect",
-state.drop.direct
-);
-
-renderLane(
-  "dropReport",
-  state.drop.report
-);
-
-renderLane(
-  "dropObservation",
-  state.drop.observation
-);
-
-renderLane(
-  "dropParticipant",
-  state.drop.participant
-);
+return chamber;
 
 }
 
@@ -5389,6 +5250,29 @@ setStatus(
 
 }
 
+function renderDropRail() {
+renderLane(
+"dropDirect",
+state.drop.direct
+);
+
+renderLane(
+  "dropReport",
+  state.drop.report
+);
+
+renderLane(
+  "dropObservation",
+  state.drop.observation
+);
+
+renderLane(
+  "dropParticipant",
+  state.drop.participant
+);
+
+}
+
 function renderEvidenceRail() {
 var target =
 state.observation.targetLight;
@@ -5397,7 +5281,8 @@ setText(
   "targetStatus",
   "Target · " +
   (
-    target && target.framePresent
+    target &&
+    target.framePresent
       ? "Found"
       : "Unknown"
   )
@@ -5405,7 +5290,8 @@ setText(
 
 setStatus(
   "targetStatus",
-  target && target.framePresent
+  target &&
+  target.framePresent
     ? "FOUND"
     : "UNKNOWN"
 );
@@ -5414,7 +5300,8 @@ setText(
   "runtimeStatus",
   "Runtime · " +
   (
-    target && target.runtimeGlobalPresent
+    target &&
+    target.runtimeGlobalPresent
       ? "Found"
       : "Unknown"
   )
@@ -5422,7 +5309,29 @@ setText(
 
 setStatus(
   "runtimeStatus",
-  target && target.runtimeGlobalPresent
+  target &&
+  target.runtimeGlobalPresent
+    ? "FOUND"
+    : "UNKNOWN"
+);
+
+setText(
+  "rendererStatus",
+  "Renderer · " +
+  (
+    target &&
+    target.runtimeGlobalName ===
+      "DGBAudraliaPlanetRenderer"
+      ? "Found"
+      : "Unknown"
+  )
+);
+
+setStatus(
+  "rendererStatus",
+  target &&
+  target.runtimeGlobalName ===
+    "DGBAudraliaPlanetRenderer"
     ? "FOUND"
     : "UNKNOWN"
 );
@@ -5480,59 +5389,41 @@ setStatus(
     : "HELD"
 );
 
-var groups = {
-  north: [
+renderParticipantGroupStatus(
+  "northStatus",
+  "North",
+  [
     "NORTH_CONDUCTOR",
     "NORTH_PROBE_INTAKE"
-  ],
-  east: [
+  ]
+);
+
+renderParticipantGroupStatus(
+  "eastStatus",
+  "East",
+  [
     "EAST_PROBE_SOURCE",
     "EAST_CONSTRUCTION_INTERPRETATION"
-  ],
-  west: [
+  ]
+);
+
+renderParticipantGroupStatus(
+  "westStatus",
+  "West",
+  [
     "WEST_PROBE_RUNTIME",
     "WEST_RUNTIME_INTERPRETATION"
-  ],
-  south: [
-    "SOUTH_PROBE_HANDOFF",
-    "SOUTH_RESTITUTION_INTERPRETATION",
-    "SOUTH_SURFACE_POINTER"
   ]
-};
+);
 
-Object.keys(groups).forEach(function renderGroup(key) {
-  var allFound =
-    groups[key].every(function everyRole(role) {
-      var record =
-        state.participants.records.find(function findRecord(entry) {
-          return entry.role === role;
-        });
-
-      return Boolean(
-        record &&
-        record.resolved
-      );
-    });
-
-  setText(
-    key + "Status",
-    key.charAt(0).toUpperCase() +
-    key.slice(1) +
-    " · " +
-    (
-      allFound
-        ? "Found"
-        : "Held"
-    )
-  );
-
-  setStatus(
-    key + "Status",
-    allFound
-      ? "FOUND"
-      : "HELD"
-  );
-});
+renderParticipantGroupStatus(
+  "southStatus",
+  "South",
+  [
+    "SOUTH_PROBE_HANDOFF",
+    "SOUTH_RESTITUTION_INTERPRETATION"
+  ]
+);
 
 setText(
   "frameStatus",
@@ -5578,11 +5469,16 @@ var runtimeStatus =
     ? target.targetRuntimeStatus
     : {};
 
+var detail =
+  runtimeStatus &&
+  runtimeStatus.statusDetail
+    ? runtimeStatus.statusDetail
+    : {};
+
 var mounted =
   firstBoolean(
     runtimeStatus.mounted,
-    runtimeStatus.statusDetail &&
-    runtimeStatus.statusDetail.mounted
+    detail.mounted
   );
 
 setText(
@@ -5608,6 +5504,41 @@ setStatus(
 
 }
 
+function renderParticipantGroupStatus(
+id,
+label,
+roles
+) {
+var found =
+roles.every(function everyRole(role) {
+return state.participants.records.some(function someRecord(record) {
+return (
+record.role === role &&
+record.resolved
+);
+});
+});
+
+setText(
+  id,
+  label +
+  " · " +
+  (
+    found
+      ? "Found"
+      : "Held"
+  )
+);
+
+setStatus(
+  id,
+  found
+    ? "FOUND"
+    : "HELD"
+);
+
+}
+
 function renderSelectors() {
 var categoryRecord =
 getActiveCategory();
@@ -5622,7 +5553,9 @@ setText(
 
 setText(
   "categorySelectorMeta",
-  String(categoryRecord.audits.length) +
+  String(
+    categoryRecord.audits.length
+  ) +
   " audits"
 );
 
@@ -5633,53 +5566,52 @@ setText(
 
 setText(
   "auditSelectorMeta",
-  auditRecord.classification.replace(/_/g, " ")
+  auditRecord.classification.replace(
+    /_/g,
+    " "
+  )
 );
 
-var auditMenu =
-  byId("auditSelectorMenu");
-
-if (auditMenu) {
-  auditMenu.innerHTML =
-    categoryRecord.audits
-      .map(function renderAuditOption(entry) {
-        return (
-          '<button type="button" role="option" aria-selected="' +
-          (
-            entry.id === auditRecord.id
-              ? "true"
-              : "false"
-          ) +
-          '" data-audit-id="' +
-          escapeHtml(entry.id) +
-          '">' +
-          "<strong>" +
-          escapeHtml(entry.label) +
-          "</strong>" +
-          "<span>" +
-          escapeHtml(entry.summary) +
-          "</span>" +
-          "</button>"
-        );
-      })
-      .join("");
-}
+setHtml(
+  "auditSelectorMenu",
+  categoryRecord.audits
+    .map(function renderAudit(entry) {
+      return (
+        '<button type="button" role="option" aria-selected="' +
+        (
+          entry.id === auditRecord.id
+            ? "true"
+            : "false"
+        ) +
+        '" data-audit-id="' +
+        escapeHtml(entry.id) +
+        '">' +
+        "<strong>" +
+        escapeHtml(entry.label) +
+        "</strong>" +
+        "<span>" +
+        escapeHtml(entry.summary) +
+        "</span>" +
+        "</button>"
+      );
+    })
+    .join("")
+);
 
 Array.prototype.slice.call(
   doc.querySelectorAll(
     "[data-category-id]"
   )
-).forEach(function updateCategoryOption(button) {
-  button.setAttribute(
+).forEach(function updateCategory(node) {
+  node.setAttribute(
     "aria-selected",
-    button.getAttribute("data-category-id") ===
-    categoryRecord.id
+    node.getAttribute(
+      "data-category-id"
+    ) === categoryRecord.id
       ? "true"
       : "false"
   );
 });
-
-wireDynamicAuditOptions();
 
 }
 
@@ -5715,87 +5647,39 @@ setText(
   auditRecord.classification
 );
 
-var index =
-  categoryRecord.audits.indexOf(
-    auditRecord
-  ) + 1;
-
 setText(
   "selectedAuditSequence",
   "AUDIT " +
-  String(index).padStart(2, "0")
+  String(
+    categoryRecord.audits.indexOf(
+      auditRecord
+    ) + 1
+  ).padStart(2, "0")
 );
 
 setHidden(
   "runDirectCheck",
   auditRecord.classification !==
-  "DIRECT_EXECUTION"
+    "DIRECT_EXECUTION"
 );
 
 setHidden(
   "runNineCycle",
   auditRecord.classification !==
-  "CYCLE_EXECUTION"
+    "CYCLE_EXECUTION"
 );
 
 }
 
 function renderParticipantConstellation() {
-var list =
-byId("participantList");
-
-if (!list) {
-  return;
-}
-
-setText(
-  "dropParticipantAvailableCount",
-  state.participants.availableCount
-);
-
-setText(
-  "dropParticipantHeldCount",
-  state.participants.heldCount
-);
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-participant-summary]"
-  )
-).forEach(function renderSummaryValue(node) {
-  var key =
-    node.getAttribute(
-      "data-participant-summary"
-    );
-
-  if (key === "required") {
-    node.textContent =
-      state.participants.requiredCount;
-  }
-
-  if (key === "optional") {
-    node.textContent =
-      state.participants.optionalCount;
-  }
-
-  if (key === "available") {
-    node.textContent =
-      state.participants.availableCount;
-  }
-
-  if (key === "held") {
-    node.textContent =
-      state.participants.heldCount;
-  }
+var records =
+state.participants.records.filter(function excludeEngine(record) {
+return record.group !== "ENGINE";
 });
 
-list.innerHTML =
-  state.participants.records
-    .filter(function excludeEngine(record) {
-      return (
-        record.group !== "ENGINE"
-      );
-    })
+setHtml(
+  "participantList",
+  records
     .map(function renderParticipant(record) {
       return (
         '<article class="participant-node" tabindex="0" role="button" ' +
@@ -5832,38 +5716,62 @@ list.innerHTML =
         "</article>"
       );
     })
-    .join("");
+    .join("")
+);
 
-wireParticipantNodes();
+Array.prototype.slice.call(
+  doc.querySelectorAll(
+    "[data-participant-summary]"
+  )
+).forEach(function renderSummary(node) {
+  var key =
+    node.getAttribute(
+      "data-participant-summary"
+    );
+
+  var map = {
+    required:
+      state.participants.requiredCount,
+
+    optional:
+      state.participants.optionalCount,
+
+    available:
+      state.participants.availableCount,
+
+    held:
+      state.participants.heldCount
+  };
+
+  node.textContent =
+    map[key] !== undefined
+      ? map[key]
+      : "0";
+});
+
 renderParticipantDetail();
 
 }
 
 function renderParticipantDetail() {
-var detail =
-byId("participantDetail");
-
-if (!detail) {
-  return;
-}
-
 var record =
-  state.participants.records.find(function findSelected(entry) {
-    return (
-      entry.role ===
-      state.activeParticipantRole
-    );
-  }) || null;
+state.participants.records.find(function findRecord(entry) {
+return entry.role ===
+state.activeParticipantRole;
+}) || null;
 
 if (!record) {
-  detail.innerHTML =
+  setHtml(
+    "participantDetail",
     "<h3>Select a participant</h3>" +
-    "<p>Participant inspection reveals file, requirement, alias, contract, version, position, and callable methods without execution.</p>";
+    "<p>Participant inspection reveals file, requirement, alias, contract, version, position, and methods without execution.</p>"
+  );
 
   return;
 }
 
-detail.innerHTML =
+setHtml(
+  "participantDetail",
   "<h3>" +
   escapeHtml(record.label) +
   "</h3>" +
@@ -5874,13 +5782,22 @@ detail.innerHTML =
   escapeHtml(record.file) +
   "</p>" +
   "<p><strong>Resolved global:</strong> " +
-  escapeHtml(record.resolvedGlobal || "Not resolved") +
+  escapeHtml(
+    record.resolvedGlobal ||
+    "Not resolved"
+  ) +
   "</p>" +
   "<p><strong>Contract:</strong> " +
-  escapeHtml(record.contract || "Unknown") +
+  escapeHtml(
+    record.contract ||
+    "Unknown"
+  ) +
   "</p>" +
   "<p><strong>Version:</strong> " +
-  escapeHtml(record.version || "Unknown") +
+  escapeHtml(
+    record.version ||
+    "Unknown"
+  ) +
   "</p>" +
   "<p><strong>Methods:</strong> " +
   escapeHtml(
@@ -5888,125 +5805,7 @@ detail.innerHTML =
       ? record.methods.join(", ")
       : "None observed"
   ) +
-  "</p>";
-
-}
-
-function renderReadReport() {
-var report =
-state.report.current;
-
-if (!report) {
-  return;
-}
-
-setHtml(
-  "readResult",
-  renderReadRegion(
-    "R",
-    "Result",
-    report.read.result
-  )
-);
-
-setHtml(
-  "readEvidence",
-  renderReadRegion(
-    "E",
-    "Evidence",
-    report.read.evidence
-      .map(function mapEvidence(entry) {
-        return (
-          String(entry.label) +
-          ": " +
-          String(entry.value)
-        );
-      })
-      .join("\n")
-  )
-);
-
-setHtml(
-  "readAbsence",
-  renderReadRegion(
-    "A",
-    "Absence",
-    report.read.absence.length
-      ? report.read.absence
-          .map(function mapAbsence(entry) {
-            return (
-              entry.code ||
-              entry.type ||
-              "UNKNOWN"
-            );
-          })
-          .join("\n")
-      : "No absence records."
-  )
-);
-
-setHtml(
-  "readDirection",
-  renderReadRegion(
-    "D",
-    "Direction",
-    report.read.direction
-      .map(function mapDirection(entry) {
-        return (
-          entry.action ||
-          "Review current evidence"
-        );
-      })
-      .join("\n")
-  )
-);
-
-}
-
-function renderReadRegion(letter, label, content) {
-var paragraphs =
-String(content || "")
-.split("\n")
-.filter(Boolean);
-
-return (
-  "<header>" +
-  "<span>" +
-  escapeHtml(letter) +
-  "</span>" +
-  "<div>" +
-  "<p>" +
-  escapeHtml(label) +
-  "</p>" +
-  "<strong>" +
-  escapeHtml(
-    paragraphs[0] ||
-    "No current entry"
-  ) +
-  "</strong>" +
-  "</div>" +
-  "</header>" +
-  (
-    paragraphs.length > 1
-      ? "<ul>" +
-        paragraphs
-          .slice(1)
-          .map(function renderParagraph(entry) {
-            return (
-              "<li>" +
-              escapeHtml(entry) +
-              "</li>"
-            );
-          })
-          .join("") +
-        "</ul>"
-      : "<p>" +
-        escapeHtml(
-          paragraphs[0] ||
-          "No current entry"
-        ) +
-        "</p>"
-  )
+  "</p>"
 );
 
 }
@@ -6054,6 +5853,11 @@ if (!report) {
   setText(
     "reportCreatedAt",
     "—"
+  );
+
+  setText(
+    "reportMeta",
+    "Choose an audit and create a report."
   );
 
   return;
@@ -6114,39 +5918,142 @@ setHtml(
     .join("")
 );
 
-renderReadReport();
+renderReadRegion(
+  "readResult",
+  "R",
+  "Result",
+  report.read.result
+);
+
+renderReadRegion(
+  "readEvidence",
+  "E",
+  "Evidence",
+  report.read.evidence
+    .map(function mapEvidence(entry) {
+      return (
+        entry.label +
+        ": " +
+        entry.value
+      );
+    })
+);
+
+renderReadRegion(
+  "readAbsence",
+  "A",
+  "Absence",
+  report.read.absence.length
+    ? report.read.absence.map(function mapAbsence(entry) {
+        return (
+          entry.code ||
+          entry.type ||
+          "UNKNOWN"
+        );
+      })
+    : [
+        "No absence records."
+      ]
+);
+
+renderReadRegion(
+  "readDirection",
+  "D",
+  "Direction",
+  report.read.direction.map(function mapDirection(entry) {
+    return (
+      entry.action ||
+      "Review current evidence"
+    );
+  })
+);
+
+}
+
+function renderReadRegion(
+id,
+letter,
+label,
+content
+) {
+var lines =
+Array.isArray(content)
+? content
+: [content];
+
+setHtml(
+  id,
+  "<header>" +
+  "<span>" +
+  escapeHtml(letter) +
+  "</span>" +
+  "<div>" +
+  "<p>" +
+  escapeHtml(label) +
+  "</p>" +
+  "<strong>" +
+  escapeHtml(
+    lines[0] ||
+    "No current entry"
+  ) +
+  "</strong>" +
+  "</div>" +
+  "</header>" +
+  (
+    lines.length > 1
+      ? "<ul>" +
+        lines
+          .slice(1)
+          .map(function renderLine(line) {
+            return (
+              "<li>" +
+              escapeHtml(line) +
+              "</li>"
+            );
+          })
+          .join("") +
+        "</ul>"
+      : "<p>" +
+        escapeHtml(
+          lines[0] ||
+          "No current entry"
+        ) +
+        "</p>"
+  )
+);
 
 }
 
 function renderReportModes() {
-var modes = [
+[
 "read",
 "packet",
 "raw",
 "evidence"
-];
+].forEach(function toggleMode(mode) {
+var name =
+mode.charAt(0).toUpperCase() +
+mode.slice(1);
 
-modes.forEach(function toggleMode(mode) {
   var button =
     byId(
       "report" +
-      mode.charAt(0).toUpperCase() +
-      mode.slice(1) +
+      name +
       "Button"
     );
 
   var panel =
     byId(
       "report" +
-      mode.charAt(0).toUpperCase() +
-      mode.slice(1) +
+      name +
       "Panel"
     );
 
   if (button) {
     button.setAttribute(
       "aria-selected",
-      mode === state.activeReportMode
+      mode ===
+        state.activeReportMode
         ? "true"
         : "false"
     );
@@ -6154,7 +6061,8 @@ modes.forEach(function toggleMode(mode) {
 
   if (panel) {
     panel.hidden =
-      mode !== state.activeReportMode;
+      mode !==
+      state.activeReportMode;
   }
 });
 
@@ -6178,20 +6086,18 @@ var detail =
 
 setText(
   "targetFramePresent",
-  target
-    ? yesNoUnknown(
-        target.framePresent
-      )
-    : "Unknown"
+  yesNoUnknown(
+    target &&
+    target.framePresent
+  )
 );
 
 setText(
   "targetSameOrigin",
-  target
-    ? yesNoUnknown(
-        target.sameOriginAccessible
-      )
-    : "Unknown"
+  yesNoUnknown(
+    target &&
+    target.sameOriginAccessible
+  )
 );
 
 setText(
@@ -6204,11 +6110,10 @@ setText(
 
 setText(
   "targetRouteMatch",
-  target
-    ? yesNoUnknown(
-        target.routeMatch
-      )
-    : "Unknown"
+  yesNoUnknown(
+    target &&
+    target.routeMatch
+  )
 );
 
 setText(
@@ -6411,10 +6316,7 @@ setText(
 
 setText(
   "surfaceError",
-  surface &&
-  surface.error
-    ? surface.error
-    : "None observed"
+  "None observed"
 );
 
 renderObservationLensTabs();
@@ -6431,10 +6333,17 @@ return value === true
 
 function renderObservationLensTabs() {
 var map = {
-target: "targetLens",
-runtime: "runtimeLens",
-surface: "surfaceLens",
-window: "targetWindow"
+target:
+"targetLens",
+
+  runtime:
+    "runtimeLens",
+
+  surface:
+    "surfaceLens",
+
+  window:
+    "targetWindow"
 };
 
 Object.keys(map).forEach(function toggleLens(key) {
@@ -6451,7 +6360,8 @@ Object.keys(map).forEach(function toggleLens(key) {
   if (button) {
     button.setAttribute(
       "aria-selected",
-      key === state.activeObservationLens
+      key ===
+        state.activeObservationLens
         ? "true"
         : "false"
     );
@@ -6459,57 +6369,49 @@ Object.keys(map).forEach(function toggleLens(key) {
 
   if (panel) {
     panel.hidden =
-      key !== state.activeObservationLens;
+      key !==
+      state.activeObservationLens;
   }
 });
 
 }
 
 function renderCycleChamber() {
-var ledger =
-state.cycle.ledger;
-
 setText(
-  "cyclePreviewSummary",
-  ""
+"cycleLedgerOutput",
+state.cycle.ledger
+? safeJson(
+state.cycle.ledger
+)
+: "No cycle ledger has been produced."
 );
 
-setText(
-  "cycleLedgerOutput",
-  ledger
-    ? safeJson(ledger)
-    : "No cycle ledger has been produced."
+setHtml(
+  "cycleReceiptList",
+  state.cycle.receipts.length
+    ? state.cycle.receipts
+        .map(function renderReceipt(receipt) {
+          return (
+            "<article>" +
+            "<h4>" +
+            escapeHtml(
+              receipt.fibonacci +
+              " · " +
+              receipt.stationId
+            ) +
+            "</h4>" +
+            "<p>" +
+            escapeHtml(receipt.status) +
+            "</p>" +
+            "<p>" +
+            escapeHtml(receipt.summary) +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("")
+    : '<article class="empty-state"><h4>No cycle receipts</h4><p>Run Nine-Cycle explicitly to create station receipts.</p></article>'
 );
-
-var list =
-  byId("cycleReceiptList");
-
-if (list) {
-  list.innerHTML =
-    state.cycle.receipts.length
-      ? state.cycle.receipts
-          .map(function renderReceipt(receipt) {
-            return (
-              "<article>" +
-              "<h4>" +
-              escapeHtml(
-                receipt.fibonacci +
-                " · " +
-                receipt.stationId
-              ) +
-              "</h4>" +
-              "<p>" +
-              escapeHtml(receipt.status) +
-              "</p>" +
-              "<p>" +
-              escapeHtml(receipt.summary) +
-              "</p>" +
-              "</article>"
-            );
-          })
-          .join("")
-      : '<article class="empty-state"><h4>No cycle receipts</h4><p>Run Nine-Cycle explicitly to create station receipts.</p></article>';
-}
 
 STATIONS.forEach(function renderStation(definition) {
   var node =
@@ -6521,7 +6423,10 @@ STATIONS.forEach(function renderStation(definition) {
 
   var receipt =
     state.cycle.receipts.find(function findReceipt(entry) {
-      return entry.stationId === definition.stationId;
+      return (
+        entry.stationId ===
+        definition.stationId
+      );
     });
 
   if (node) {
@@ -6535,15 +6440,17 @@ STATIONS.forEach(function renderStation(definition) {
 });
 
 var execution =
-  byId("cycleExecutionSummary");
+  byId(
+    "cycleExecutionSummary"
+  );
 
 if (execution) {
   execution.innerHTML =
     "<span>Execution</span>" +
     "<strong>" +
     escapeHtml(
-      ledger
-        ? ledger.overallStatus
+      state.cycle.ledger
+        ? state.cycle.ledger.overallStatus
         : state.cycle.running
           ? state.cycle.runPhase
           : "Not run"
@@ -6551,8 +6458,8 @@ if (execution) {
     "</strong>" +
     "<p>" +
     escapeHtml(
-      ledger
-        ? ledger.terminalSummary
+      state.cycle.ledger
+        ? state.cycle.ledger.terminalSummary
         : state.cycle.running
           ? "The explicit nine-cycle is in progress."
           : "No conductor cycle has been created during this session."
@@ -6564,20 +6471,23 @@ if (execution) {
 
 function renderRegistryChamber() {
 var snapshot =
-state.observation.registry || {};
+state.observation.registry ||
+{};
 
-var authorityRecords =
-  state.observation.authorityRecords || [];
+var authorities =
+  state.observation.authorityRecords ||
+  [];
 
-var engineRecords =
-  state.observation.engineRecords || [];
+var engines =
+  state.observation.engineRecords ||
+  [];
 
 setText(
   "governingContractCount",
   Number(
     snapshot.authorityCount ||
     snapshot.governingAuthorityCount ||
-    authorityRecords.length ||
+    authorities.length ||
     0
   )
 );
@@ -6586,7 +6496,7 @@ setText(
   "assignedEngineCount",
   Number(
     snapshot.assignedEngineCount ||
-    engineRecords.filter(function countAssigned(record) {
+    engines.filter(function assigned(record) {
       return !record.reserved;
     }).length ||
     0
@@ -6597,7 +6507,7 @@ setText(
   "selectableEngineCount",
   Number(
     snapshot.selectableEngineCount ||
-    engineRecords.filter(function countSelectable(record) {
+    engines.filter(function selectable(record) {
       return record.selectable;
     }).length ||
     0
@@ -6608,57 +6518,57 @@ setText(
   "reservedEngineCount",
   Number(
     snapshot.reservedEngineCount ||
-    engineRecords.filter(function countReserved(record) {
+    engines.filter(function reserved(record) {
       return record.reserved;
     }).length ||
     0
   )
 );
 
-var list =
-  byId("registryRecordList");
+var records =
+  authorities.concat(
+    engines
+  );
 
-if (list) {
-  var records =
-    authorityRecords.concat(engineRecords);
-
-  list.innerHTML =
-    records.length
-      ? records
-          .map(function renderRecord(record) {
-            return (
-              "<article>" +
-              "<h4>" +
-              escapeHtml(
-                record.authorityName ||
-                record.engineName ||
-                record.authorityId ||
-                record.engineId ||
-                "Registry Record"
-              ) +
-              "</h4>" +
-              "<p>Status: " +
-              escapeHtml(
-                record.status ||
-                "UNKNOWN"
-              ) +
-              "</p>" +
-              "<p>File: " +
-              escapeHtml(
-                record.file ||
-                "Not declared"
-              ) +
-              "</p>" +
-              "</article>"
-            );
-          })
-          .join("")
-      : '<article class="empty-state"><h4>Registry not observed</h4><p>No registry records are currently available.</p></article>';
-}
+setHtml(
+  "registryRecordList",
+  records.length
+    ? records
+        .map(function renderRecord(record) {
+          return (
+            "<article>" +
+            "<h4>" +
+            escapeHtml(
+              record.authorityName ||
+              record.engineName ||
+              record.authorityId ||
+              record.engineId ||
+              "Registry Record"
+            ) +
+            "</h4>" +
+            "<p>Status: " +
+            escapeHtml(
+              record.status ||
+              "UNKNOWN"
+            ) +
+            "</p>" +
+            "<p>File: " +
+            escapeHtml(
+              record.file ||
+              "Not declared"
+            ) +
+            "</p>" +
+            "</article>"
+          );
+        })
+        .join("")
+    : '<article class="empty-state"><h4>Registry not observed</h4><p>No registry records are currently available.</p></article>'
+);
 
 setHtml(
   "selectedEngineDetail",
-  "<h4>Selected Engine</h4><pre>" +
+  "<h4>Selected Engine</h4>" +
+  "<pre>" +
   escapeHtml(
     safeJson(
       state.observation.selectedEngine
@@ -6669,13 +6579,16 @@ setHtml(
 
 setHtml(
   "engineRuntimeDetail",
-  "<h4>Runtime Evidence</h4><pre>" +
+  "<h4>Runtime Evidence</h4>" +
+  "<pre>" +
   escapeHtml(
     safeJson({
       inspection:
         state.observation.engineInspection,
-      ops:
+
+      operations:
         state.observation.engineOps,
+
       receipt:
         state.observation.engineReceipt
     })
@@ -6688,55 +6601,41 @@ setHtml(
 function renderReceiptChamber() {
 var receipts = [];
 
-state.cycle.receipts.forEach(function addCycleReceipt(receipt) {
+state.cycle.receipts.forEach(function addCycle(receipt) {
   receipts.push({
     type: "cycle",
     label:
       receipt.fibonacci +
       " · " +
-      receipt.stationId,
-    record:
-      receipt
+      receipt.stationId
   });
 });
 
-state.direct.history.forEach(function addDirectReceipt(record) {
+state.direct.history.forEach(function addDirect(record) {
   receipts.push({
     type: "direct",
     label:
-      record.audit.label,
-    record:
-      record
+      record.audit.label
   });
 });
 
-state.archive.errors.forEach(function addErrorReceipt(record) {
+state.archive.errors.forEach(function addError(record) {
   receipts.push({
     type: "error",
     label:
       record.message ||
       record.type ||
-      "Error",
-    record:
-      record
+      "Error"
   });
 });
 
-var list =
-  byId("receiptList");
-
-if (!list) {
-  return;
-}
-
-list.innerHTML =
+setHtml(
+  "receiptList",
   receipts.length
     ? receipts
-        .map(function renderReceipt(entry, index) {
+        .map(function renderReceipt(entry) {
           return (
-            '<article tabindex="0" role="button" data-receipt-index="' +
-            String(index) +
-            '">' +
+            "<article>" +
             "<h4>" +
             escapeHtml(entry.label) +
             "</h4>" +
@@ -6747,7 +6646,8 @@ list.innerHTML =
           );
         })
         .join("")
-    : '<article class="empty-state"><h4>No receipts collected</h4><p>Reports, direct checks, observations, and cycle execution may contribute receipts.</p></article>';
+    : '<article class="empty-state"><h4>No receipts collected</h4><p>Reports, direct checks, and cycle execution may contribute receipts.</p></article>'
+);
 
 }
 
@@ -6767,7 +6667,7 @@ setHtml(
   "archiveReportList",
   state.archive.reports.length
     ? state.archive.reports
-        .map(function renderArchivedReport(report) {
+        .map(function renderReport(report) {
           return (
             "<article>" +
             "<h4>" +
@@ -6791,7 +6691,7 @@ setHtml(
   "archiveErrorList",
   state.archive.errors.length
     ? state.archive.errors
-        .map(function renderArchivedError(error) {
+        .map(function renderError(error) {
           return (
             "<article>" +
             "<h4>Error</h4>" +
@@ -6805,7 +6705,7 @@ setHtml(
           );
         })
         .join("")
-    : '<article class="empty-state"><h4>No archived errors</h4><p>No controller, participant, observation, direct, or cycle errors have been archived.</p></article>'
+    : '<article class="empty-state"><h4>No archived errors</h4><p>No diagnostic errors have been archived.</p></article>'
 );
 
 setText(
@@ -6819,20 +6719,22 @@ setText(
 
 }
 
-function renderBoundaryChamber() {
-setStatus(
-"boundaryChamber",
-"ACTIVE"
-);
-}
-
 function renderInstrumentDeckTabs() {
 var map = {
-cycle: "cycleChamber",
-registry: "registryChamber",
-receipts: "receiptChamber",
-archive: "archiveChamber",
-boundary: "boundaryChamber"
+cycle:
+"cycleChamber",
+
+  registry:
+    "registryChamber",
+
+  receipts:
+    "receiptChamber",
+
+  archive:
+    "archiveChamber",
+
+  boundary:
+    "boundaryChamber"
 };
 
 Object.keys(map).forEach(function toggleChamber(key) {
@@ -6849,7 +6751,8 @@ Object.keys(map).forEach(function toggleChamber(key) {
   if (button) {
     button.setAttribute(
       "aria-selected",
-      key === state.activeInstrumentChamber
+      key ===
+        state.activeInstrumentChamber
         ? "true"
         : "false"
     );
@@ -6857,24 +6760,22 @@ Object.keys(map).forEach(function toggleChamber(key) {
 
   if (panel) {
     panel.hidden =
-      key !== state.activeInstrumentChamber;
+      key !==
+      state.activeInstrumentChamber;
   }
 });
 
 }
 
 function renderExecutionState() {
-var controllerState =
-byId("controllerState");
-
 if (state.cycle.running) {
-  setText(
-    "controllerState",
-    state.cycle.runPhase
-  );
+setText(
+"controllerState",
+state.cycle.runPhase
+);
 
   setStatus(
-    controllerState,
+    "controllerState",
     "RUNNING"
   );
 } else if (state.direct.running) {
@@ -6884,7 +6785,7 @@ if (state.cycle.running) {
   );
 
   setStatus(
-    controllerState,
+    "controllerState",
     "RUNNING"
   );
 } else {
@@ -6894,7 +6795,7 @@ if (state.cycle.running) {
   );
 
   setStatus(
-    controllerState,
+    "controllerState",
     "READY"
   );
 }
@@ -6913,7 +6814,7 @@ setDisabled(
 
 }
 
-function renderWorkbench() {
+function renderAll() {
 renderDropRail();
 renderEvidenceRail();
 renderSelectors();
@@ -6926,562 +6827,11 @@ renderCycleChamber();
 renderRegistryChamber();
 renderReceiptChamber();
 renderArchiveChamber();
-renderBoundaryChamber();
 renderInstrumentDeckTabs();
 renderExecutionState();
 }
 
-function resetCurrentReport() {
-state.report.current =
-null;
-
-state.report.readableText =
-  "";
-
-state.report.packetText =
-  "";
-
-state.report.rawText =
-  "";
-
-state.report.evidence =
-  [];
-
-renderWorkbench();
-
-toast(
-  "Current report reset."
-);
-
-}
-
-function resetWorkbench() {
-state.report.current =
-null;
-
-state.report.readableText =
-  "";
-
-state.report.packetText =
-  "";
-
-state.report.rawText =
-  "";
-
-state.report.evidence =
-  [];
-
-state.direct.lastResult =
-  null;
-
-state.direct.lastError =
-  null;
-
-state.cycle.preflight =
-  null;
-
-state.cycle.preflightProgress =
-  null;
-
-state.cycle.stationRegistrations =
-  [];
-
-state.cycle.auxiliaryRegistrations =
-  [];
-
-state.cycle.conductorResult =
-  null;
-
-state.cycle.conductorReceipt =
-  null;
-
-state.cycle.conductorState =
-  null;
-
-state.cycle.receipts =
-  [];
-
-state.cycle.ledger =
-  null;
-
-state.cycle.readerReport =
-  "";
-
-state.cycle.lastError =
-  null;
-
-state.drop.direct =
-  laneState("IDLE");
-
-state.drop.report =
-  laneState("READY");
-
-state.drop.observation =
-  laneState("OBSERVING");
-
-state.drop.participant =
-  laneState("LOADING");
-
-buildParticipantSnapshot();
-observeLightweight();
-renderWorkbench();
-
-toast(
-  "Workbench reset."
-);
-
-}
-
-function toggleSelector(buttonId, menuId) {
-var button =
-byId(buttonId);
-
-var menu =
-  byId(menuId);
-
-if (!button || !menu) {
-  return;
-}
-
-var willOpen =
-  menu.hidden;
-
-closeAllSelectors();
-
-menu.hidden =
-  !willOpen;
-
-button.setAttribute(
-  "aria-expanded",
-  willOpen
-    ? "true"
-    : "false"
-);
-
-}
-
-function closeAllSelectors() {
-[
-["categorySelectorButton", "categorySelectorMenu"],
-["auditSelectorButton", "auditSelectorMenu"]
-].forEach(function closePair(pair) {
-var button =
-byId(pair[0]);
-
-  var menu =
-    byId(pair[1]);
-
-  if (button) {
-    button.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-  }
-
-  if (menu) {
-    menu.hidden =
-      true;
-  }
-});
-
-}
-
-function wireDynamicAuditOptions() {
-Array.prototype.slice.call(
-doc.querySelectorAll(
-"[data-audit-id]"
-)
-).forEach(function bindAuditOption(button) {
-if (button.__audraliaBound) {
-return;
-}
-
-  button.__audraliaBound =
-    true;
-
-  button.addEventListener(
-    "click",
-    function chooseAudit() {
-      selectAudit(
-        button.getAttribute(
-          "data-audit-id"
-        )
-      );
-
-      closeAllSelectors();
-    }
-  );
-});
-
-}
-
-function wireParticipantNodes() {
-Array.prototype.slice.call(
-doc.querySelectorAll(
-".participant-node[data-participant-role]"
-)
-).forEach(function bindParticipant(node) {
-if (node.__audraliaBound) {
-return;
-}
-
-  node.__audraliaBound =
-    true;
-
-  function chooseParticipant() {
-    selectParticipant(
-      node.getAttribute(
-        "data-participant-role"
-      )
-    );
-  }
-
-  node.addEventListener(
-    "click",
-    chooseParticipant
-  );
-
-  node.addEventListener(
-    "keydown",
-    function participantKeydown(event) {
-      if (
-        event.key === "Enter" ||
-        event.key === " "
-      ) {
-        event.preventDefault();
-        chooseParticipant();
-      }
-    }
-  );
-});
-
-}
-
-function wireTabs() {
-Array.prototype.slice.call(
-doc.querySelectorAll(
-"[data-left-orbit-view]"
-)
-).forEach(function bindLeftOrbit(button) {
-button.addEventListener(
-"click",
-function switchLeftOrbit() {
-var view =
-button.getAttribute(
-"data-left-orbit-view"
-);
-
-      setHidden(
-        "auditOrbit",
-        view !== "audits"
-      );
-
-      setHidden(
-        "participantConstellation",
-        view !== "participants"
-      );
-
-      Array.prototype.slice.call(
-        doc.querySelectorAll(
-          "[data-left-orbit-view]"
-        )
-      ).forEach(function updateButton(other) {
-        other.setAttribute(
-          "aria-selected",
-          other === button
-            ? "true"
-            : "false"
-        );
-      });
-    }
-  );
-});
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-report-mode]"
-  )
-).forEach(function bindReportMode(button) {
-  button.addEventListener(
-    "click",
-    function chooseReportMode() {
-      selectReportMode(
-        button.getAttribute(
-          "data-report-mode"
-        )
-      );
-    }
-  );
-});
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-observation-lens]"
-  )
-).forEach(function bindObservationLens(button) {
-  button.addEventListener(
-    "click",
-    function chooseObservationLens() {
-      selectObservationLens(
-        button.getAttribute(
-          "data-observation-lens"
-        )
-      );
-    }
-  );
-});
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-instrument-chamber]"
-  )
-).forEach(function bindInstrumentChamber(button) {
-  button.addEventListener(
-    "click",
-    function chooseInstrumentChamber() {
-      selectInstrumentChamber(
-        button.getAttribute(
-          "data-instrument-chamber"
-        )
-      );
-    }
-  );
-});
-
-}
-
-function wireUi() {
-byId("categorySelectorButton")
-.addEventListener(
-"click",
-function openCategorySelector() {
-toggleSelector(
-"categorySelectorButton",
-"categorySelectorMenu"
-);
-}
-);
-
-byId("auditSelectorButton")
-  .addEventListener(
-    "click",
-    function openAuditSelector() {
-      toggleSelector(
-        "auditSelectorButton",
-        "auditSelectorMenu"
-      );
-    }
-  );
-
-Array.prototype.slice.call(
-  doc.querySelectorAll(
-    "[data-category-id]"
-  )
-).forEach(function bindCategoryOption(button) {
-  button.addEventListener(
-    "click",
-    function chooseCategory() {
-      selectCategory(
-        button.getAttribute(
-          "data-category-id"
-        )
-      );
-
-      closeAllSelectors();
-    }
-  );
-});
-
-byId("createReport")
-  .addEventListener(
-    "click",
-    createReport
-  );
-
-byId("runDirectCheck")
-  .addEventListener(
-    "click",
-    runSelectedDirectCheck
-  );
-
-byId("runNineCycle")
-  .addEventListener(
-    "click",
-    runNineCycle
-  );
-
-byId("copyReadableReport")
-  .addEventListener(
-    "click",
-    function copyReadable() {
-      copyText(
-        state.report.readableText,
-        "Readable report copied."
-      );
-    }
-  );
-
-byId("copyPacketReport")
-  .addEventListener(
-    "click",
-    function copyPacket() {
-      copyText(
-        state.report.packetText,
-        "Report packet copied."
-      );
-    }
-  );
-
-byId("copyRawReport")
-  .addEventListener(
-    "click",
-    function copyRaw() {
-      copyText(
-        state.report.rawText,
-        "Raw report copied."
-      );
-    }
-  );
-
-byId("addReportToArchive")
-  .addEventListener(
-    "click",
-    addCurrentReportToArchive
-  );
-
-byId("resetCurrentReport")
-  .addEventListener(
-    "click",
-    resetCurrentReport
-  );
-
-byId("resetWorkbench")
-  .addEventListener(
-    "click",
-    resetWorkbench
-  );
-
-byId("createDeepArchive")
-  .addEventListener(
-    "click",
-    createDeepArchive
-  );
-
-byId("reloadObservatory")
-  .addEventListener(
-    "click",
-    function reloadObservatory() {
-      root.location.reload();
-    }
-  );
-
-byId("toggleObservationTarget")
-  .addEventListener(
-    "click",
-    function toggleObservationTarget() {
-      state.targetVisible =
-        !state.targetVisible;
-
-      state.activeObservationLens =
-        state.targetVisible
-          ? "window"
-          : "target";
-
-      byId("toggleObservationTarget")
-        .setAttribute(
-          "aria-expanded",
-          state.targetVisible
-            ? "true"
-            : "false"
-        );
-
-      setText(
-        "toggleObservationTarget",
-        state.targetVisible
-          ? "Hide Target"
-          : "Show Target"
-      );
-
-      renderObservationLensTabs();
-    }
-  );
-
-byId("expandTargetWindow")
-  .addEventListener(
-    "click",
-    function expandTargetWindow() {
-      state.targetExpanded =
-        !state.targetExpanded;
-
-      var targetWindow =
-        byId("targetWindow");
-
-      targetWindow.classList.toggle(
-        "is-expanded",
-        state.targetExpanded
-      );
-
-      byId("expandTargetWindow")
-        .setAttribute(
-          "aria-pressed",
-          state.targetExpanded
-            ? "true"
-            : "false"
-        );
-
-      setText(
-        "expandTargetWindow",
-        state.targetExpanded
-          ? "Collapse"
-          : "Expand"
-      );
-    }
-  );
-
-byId("reloadTargetFrame")
-  .addEventListener(
-    "click",
-    function reloadTargetFrame() {
-      var frame =
-        byId(TARGET_FRAME_ID);
-
-      if (frame) {
-        frame.src =
-          TARGET_ROUTE +
-          "?diagnosticReload=" +
-          Date.now();
-      }
-    }
-  );
-
-byId(TARGET_FRAME_ID)
-  .addEventListener(
-    "load",
-    function targetFrameLoaded() {
-      observeLightweight();
-      renderWorkbench();
-    }
-  );
-
-doc.addEventListener(
-  "click",
-  function closeMenusOnOutsideClick(event) {
-    if (
-      !event.target.closest(
-        ".custom-selector"
-      )
-    ) {
-      closeAllSelectors();
-    }
-  }
-);
-
-wireTabs();
-wireDynamicAuditOptions();
-
-}
-
-function publishDiagnosticOutputs() {
+function publishOutputs() {
 root.AUDRALIA_DROP_WITH_READ_CURRENT_REPORT =
 state.report.current;
 
@@ -7584,6 +6934,9 @@ CONTRACT,
   CSS_CONTRACT:
     CSS_CONTRACT,
 
+  CONTROL_PANEL_CONTRACT:
+    CONTROL_PANEL_CONTRACT,
+
   BLUEPRINT:
     BLUEPRINT,
 
@@ -7605,9 +6958,6 @@ CONTRACT,
   RECEIPT_SCHEMA:
     RECEIPT_SCHEMA,
 
-  READER_REPORT_SCHEMA:
-    READER_REPORT_SCHEMA,
-
   TARGET_RUNTIME_GLOBALS:
     TARGET_RUNTIME_GLOBALS,
 
@@ -7620,43 +6970,26 @@ CONTRACT,
   createReport:
     createReport,
 
+  observe:
+    observe,
+
   runSelectedDirectCheck:
     runSelectedDirectCheck,
 
   runNineCycle:
     runNineCycle,
 
-  observe:
-    function publicObserve() {
-      var observation =
-        observeLightweight();
-
-      renderWorkbench();
-
-      return observation;
-    },
-
-  inspectTargetFrameLight:
-    inspectTargetFrameLight,
-
-  inspectTargetFrameFull:
-    inspectTargetFrameFull,
-
-  buildParticipantSnapshot:
-    function publicBuildParticipantSnapshot() {
-      var snapshot =
-        buildParticipantSnapshot();
-
-      renderWorkbench();
-
-      return snapshot;
-    },
-
   createDeepArchive:
     createDeepArchive,
 
   addCurrentReportToArchive:
     addCurrentReportToArchive,
+
+  resetCurrentReport:
+    resetCurrentReport,
+
+  resetWorkbench:
+    resetWorkbench,
 
   selectCategory:
     selectCategory,
@@ -7676,9 +7009,28 @@ CONTRACT,
   selectInstrumentChamber:
     selectInstrumentChamber,
 
+  inspectTargetFrameLight:
+    inspectTargetFrameLight,
+
+  inspectTargetFrameFull:
+    inspectTargetFrameFull,
+
+  buildParticipantSnapshot:
+    buildParticipantSnapshot,
+
+  refreshRegistry:
+    function publicRefreshRegistry() {
+      var result =
+        refreshRegistryState();
+
+      renderAll();
+
+      return result;
+    },
+
   render:
     function publicRender() {
-      renderWorkbench();
+      renderAll();
 
       return getPublicState();
     },
@@ -7693,10 +7045,27 @@ CONTRACT,
       );
     },
 
-  getReports:
-    function getReports() {
-      return frozenClone(
-        state.report.sessionReports
+  getReadableReport:
+    function getReadableReport() {
+      return String(
+        state.report.readableText ||
+        ""
+      );
+    },
+
+  getReportPacket:
+    function getReportPacket() {
+      return String(
+        state.report.packetText ||
+        ""
+      );
+    },
+
+  getRawReport:
+    function getRawReport() {
+      return String(
+        state.report.rawText ||
+        ""
       );
     },
 
@@ -7742,10 +7111,10 @@ function publishApi() {
 var api =
 buildApi();
 
-root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
+root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY =
   api;
 
-root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY =
+root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER =
   api;
 
 if (
@@ -7755,10 +7124,10 @@ if (
   root.AUDRALIA = {};
 }
 
-root.AUDRALIA.diagnosticRouteController =
+root.AUDRALIA.dropWithReadDiagnosticObservatory =
   api;
 
-root.AUDRALIA.dropWithReadDiagnosticObservatory =
+root.AUDRALIA.diagnosticRouteController =
   api;
 
 root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_LOADED__ =
@@ -7773,7 +7142,7 @@ root.__AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONTRACT__ =
 root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT =
   deepFreeze({
     schema:
-      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_RECEIPT_v1",
+      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_RECEIPT_v2",
 
     contract:
       CONTRACT,
@@ -7793,14 +7162,17 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT =
     cssContract:
       CSS_CONTRACT,
 
-    blueprint:
-      BLUEPRINT,
-
-    prebuildRegistry:
-      PREBUILD_REGISTRY,
+    controlPanelContract:
+      CONTROL_PANEL_CONTRACT,
 
     status:
       "AVAILABLE",
+
+    controlOwner:
+      false,
+
+    domEventBindingOwned:
+      false,
 
     reportNonblocking:
       true,
@@ -7817,14 +7189,8 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT =
     nineCycleExplicit:
       true,
 
-    stationExecutionRemainsSynchronous:
-      true,
-
     fullReceiptPolling:
       false,
-
-    fullReceiptCapture:
-      "DELIBERATE_OR_ONCE_AFTER_CYCLE_PREFLIGHT",
 
     noClaims:
       NO_CLAIMS,
@@ -7835,20 +7201,6 @@ root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RECEIPT =
 
 return api;
 
-}
-
-function sameControllerFamily(contract) {
-return Boolean(
-typeof contract === "string" &&
-(
-contract.indexOf(
-"AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER"
-) === 0 ||
-contract.indexOf(
-"AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER"
-) === 0
-)
-);
 }
 
 function boot() {
@@ -7865,11 +7217,15 @@ state.bootedAt =
 state.updatedAt =
   state.bootedAt;
 
-wireUi();
 publishApi();
 
+/*
+ * No DOM event binding occurs here.
+ * The independent control panel owns all user controls.
+ */
+
 buildParticipantSnapshot();
-observeLightweight();
+observe();
 
 state.archive.createdAt =
   nowIso();
@@ -7886,18 +7242,18 @@ state.archive.observationSnapshots.push(
   )
 );
 
-renderWorkbench();
-
-toast(
-  state.participants.heldCount
-    ? "Observatory loaded; some participants are held."
-    : "Audralia diagnostic observatory loaded."
+setText(
+  "controllerContract",
+  CONTRACT
 );
+
+renderAll();
+publishOutputs();
 
 }
 
 var existing =
-root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER;
+root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY;
 
 if (
 existing &&
@@ -7907,80 +7263,8 @@ return;
 }
 
 if (
-existing &&
-existing.CONTRACT &&
-!sameControllerFamily(
-existing.CONTRACT
-)
+doc.readyState === "loading"
 ) {
-root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_CONFLICT =
-deepFreeze({
-schema:
-"AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_INSTALLATION_CONFLICT_v1",
-
-    expectedContract:
-      CONTRACT,
-
-    previousContract:
-      PREVIOUS_CONTRACT,
-
-    existingContract:
-      existing.CONTRACT,
-
-    sameFamily:
-      false,
-
-    replacementPerformed:
-      false,
-
-    reason:
-      "FOREIGN_CONTROLLER_PRESENT",
-
-    generatedAt:
-      nowIso()
-  });
-
-return;
-
-}
-
-if (
-existing &&
-existing.CONTRACT &&
-sameControllerFamily(
-existing.CONTRACT
-)
-) {
-root.AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RENEWAL =
-deepFreeze({
-schema:
-"AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_RENEWAL_v1",
-
-    expectedContract:
-      CONTRACT,
-
-    previousContract:
-      PREVIOUS_CONTRACT,
-
-    existingContract:
-      existing.CONTRACT,
-
-    sameFamily:
-      true,
-
-    replacementPerformed:
-      true,
-
-    reason:
-      "SAME_FAMILY_CONTROLLER_RENEWED",
-
-    generatedAt:
-      nowIso()
-  });
-
-}
-
-if (doc.readyState === "loading") {
 doc.addEventListener(
 "DOMContentLoaded",
 boot,

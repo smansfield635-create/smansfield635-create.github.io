@@ -1,4 +1,4 @@
-<!-- /showroom/globe/audralia/diagnostic/index.html --><!-- AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1 --><!-- Full-file replacement. --><!-- HTML only. --><!--
+<!-- /showroom/globe/audralia/diagnostic/index.html --><!-- AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_CONTROL_SPLIT_STATIC_SHELL_TNT_v2 --><!-- Full-file replacement. --><!-- HTML only. --><!--
   Canonical authority:
   - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1
   - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1
@@ -15,6 +15,14 @@
   - Absence
   - Direction
 
+  Split-interface law:
+  - index.js owns diagnostic state, evidence, reports, observation, direct
+    execution, cycle execution, receipts, and archive.
+  - index.controls.js independently owns DOM controls and loads last.
+  - The control panel must remain bindable even when index.js fails.
+  - Create Report must provide a visible fallback READ report when the
+    diagnostic engine API is unavailable.
+
   Governing laws:
   - Report creation remains available independently of participant readiness,
     target readiness, runtime readiness, Surface Truth, direct execution,
@@ -23,6 +31,7 @@
   - The target iframe is observational only.
   - The nine-cycle is an explicit selectable audit, not the report engine.
   - Direct execution requires explicit user action.
+  - Control ownership belongs exclusively to index.controls.js.
 
   Owns:
   - semantic observatory shell;
@@ -44,14 +53,16 @@
   - receipt chamber;
   - archive chamber;
   - boundary chamber;
-  - dependency load order.
+  - dependency load order;
+  - independent control-panel load order.
 
   Does not own:
   - diagnostic execution;
   - participant resolution logic;
   - alias scoring;
-  - report generation logic;
+  - report-generation logic;
   - READ interpretation logic;
+  - DOM event binding;
   - target mutation;
   - production mutation;
   - runtime restart;
@@ -68,7 +79,7 @@
   - /assets/engine/dgb.engine.js
   - /assets/engine/dgb.engine.subjects.js
 
-  Diagnostic family:
+  Diagnostic participant family:
   - /assets/audralia/audralia.diagnostic.north.conductor.js
   - /assets/audralia/audralia.diagnostic.probe.north.js
   - /assets/audralia/audralia.diagnostic.probe.east.js
@@ -81,17 +92,19 @@
   - /assets/audralia/audralia.diagnostic.south.surface.pointer.js
   - /assets/audralia/audralia.diagnostic.rail.js
 
-  Paired route files:
+  Route family:
+  - /showroom/globe/audralia/diagnostic/index.html
   - /showroom/globe/audralia/diagnostic/index.css
   - /showroom/globe/audralia/diagnostic/index.js
+  - /showroom/globe/audralia/diagnostic/index.controls.js
 --><!doctype html>
 
 <html
   lang="en"
   data-route="/showroom/globe/audralia/diagnostic/"
   data-page="audralia-drop-with-read-diagnostic-observatory"
-  data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1"
-  data-previous-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
+  data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_CONTROL_SPLIT_STATIC_SHELL_TNT_v2"
+  data-previous-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1"
   data-blueprint="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1"
   data-prebuild-registry="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1"
   data-target-route="/showroom/globe/audralia/"
@@ -101,6 +114,14 @@
   data-engine-contract="/assets/engine/dgb.engine.contract.js"
   data-engine-core="/assets/engine/dgb.engine.js"
   data-engine-registry="/assets/engine/dgb.engine.subjects.js"
+  data-diagnostic-engine="/showroom/globe/audralia/diagnostic/index.js"
+  data-control-panel="/showroom/globe/audralia/diagnostic/index.controls.js"
+  data-control-owner="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL"
+  data-engine-load-order="15"
+  data-control-panel-load-order="16"
+  data-control-panel-independent="true"
+  data-control-fallback-report="true"
+  data-engine-may-bind-controls="false"
   data-drop-direct="DIRECT_EXECUTION"
   data-drop-report="REPORT"
   data-drop-observation="OBSERVATION"
@@ -136,17 +157,17 @@ content="dark"
 
   <title>Audralia DROP with READ Diagnostic Observatory</title><meta
 name="description"
-content="Audralia DROP with READ diagnostic observatory for report creation, participant inspection, target observation, explicit direct checks, and explicit nine-cycle execution."
+content="Audralia DROP with READ diagnostic observatory with an independent control panel, nonblocking report creation, participant inspection, target observation, explicit direct checks, and explicit nine-cycle execution."
 />
 
 <meta
 name="audralia-diagnostic-html-contract"
-content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_CONTROL_SPLIT_STATIC_SHELL_TNT_v2"
 />
 
 <meta
 name="audralia-diagnostic-html-previous-contract"
-content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1"
 />
 
 <meta
@@ -155,8 +176,13 @@ content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1"
 />
 
 <meta
-name="audralia-diagnostic-js-contract"
+name="audralia-diagnostic-engine-contract"
 content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1"
+/>
+
+<meta
+name="audralia-diagnostic-control-panel-contract"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v1"
 />
 
 <meta
@@ -172,6 +198,21 @@ content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1"
 <meta
 name="audralia-diagnostic-mode"
 content="DROP_WITH_READ_NONBLOCKING_REPORT_OBSERVATORY"
+/>
+
+<meta
+name="audralia-diagnostic-control-model"
+content="INDEPENDENT_CONTROL_PANEL_LAST"
+/>
+
+<meta
+name="audralia-diagnostic-control-owner"
+content="/showroom/globe/audralia/diagnostic/index.controls.js"
+/>
+
+<meta
+name="audralia-diagnostic-engine-owner"
+content="/showroom/globe/audralia/diagnostic/index.js"
 />
 
 <meta
@@ -236,7 +277,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
       </strong>
 
       <span id="controllerContract">
-        Controller awaiting boot
+        Diagnostic engine awaiting boot
       </span>
     </div>
   </div>
@@ -474,7 +515,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
   >
     <div>
       <strong>DROP gathers the evidence.</strong>
-      <span>READ turns the evidence into a clear diagnostic account.</span>
+
+      <span>
+        READ turns the evidence into a clear diagnostic account.
+      </span>
     </div>
 
     <p>
@@ -503,7 +547,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <div>
         <p>Direct Execution</p>
-        <strong id="dropDirectState">IDLE</strong>
+
+        <strong id="dropDirectState">
+          IDLE
+        </strong>
       </div>
     </header>
 
@@ -535,7 +582,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <div>
         <p>Report</p>
-        <strong id="dropReportState">READY</strong>
+
+        <strong id="dropReportState">
+          READY
+        </strong>
       </div>
     </header>
 
@@ -567,7 +617,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <div>
         <p>Observation</p>
-        <strong id="dropObservationState">OBSERVING</strong>
+
+        <strong id="dropObservationState">
+          OBSERVING
+        </strong>
       </div>
     </header>
 
@@ -584,7 +637,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     </dl>
 
     <p id="dropObservationLastAction">
-      Lightweight observation will begin after controller boot.
+      Lightweight observation will begin after diagnostic-engine boot.
     </p>
   </article>
 
@@ -599,7 +652,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <div>
         <p>Participant</p>
-        <strong id="dropParticipantState">LOADING</strong>
+
+        <strong id="dropParticipantState">
+          LOADING
+        </strong>
       </div>
     </header>
 
@@ -750,6 +806,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
         >
           <span>
             <small>Category</small>
+
             <strong id="categorySelectorLabel">
               Observatory / Receiver
             </strong>
@@ -777,6 +834,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="observatoryReceiver"
           >
             <strong>Observatory / Receiver</strong>
+
             <span>
               Shell, controller, load order, target access, and aliases.
             </span>
@@ -789,6 +847,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="registryEngine"
           >
             <strong>Registry / Engine</strong>
+
             <span>
               Governing authority, runtime engine, registry, and slots.
             </span>
@@ -801,6 +860,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="sourceSurface"
           >
             <strong>Source / Surface</strong>
+
             <span>
               Target runtime, canvas, geometry, frames, and F8.
             </span>
@@ -813,6 +873,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="cardinalStations"
           >
             <strong>Cardinal Stations</strong>
+
             <span>
               North, East, West, South, rail, and auxiliary participants.
             </span>
@@ -825,6 +886,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="nineCycle"
           >
             <strong>Nine-Cycle Diagnostics</strong>
+
             <span>
               Preview, registration, preflight, execution, and receipts.
             </span>
@@ -837,6 +899,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="directExecution"
           >
             <strong>Direct Execution</strong>
+
             <span>
               Explicit invocation of verified authorities only.
             </span>
@@ -849,6 +912,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-category-id="boundaryArchive"
           >
             <strong>Boundary / Archive</strong>
+
             <span>
               No-touch laws, session records, errors, and deep archive.
             </span>
@@ -870,6 +934,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
         >
           <span>
             <small>Audit</small>
+
             <strong id="auditSelectorLabel">
               Observatory Index
             </strong>
@@ -897,6 +962,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
             data-audit-id="observatoryIndex"
           >
             <strong>Observatory Index</strong>
+
             <span>
               Summarize shell, controller, participants, and observations.
             </span>
@@ -967,6 +1033,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
       >
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="NORTH_CONDUCTOR"
           data-required="true"
           data-status="UNKNOWN"
@@ -981,6 +1049,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="NORTH_PROBE_INTAKE"
           data-required="true"
           data-status="UNKNOWN"
@@ -995,6 +1065,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="EAST_PROBE_SOURCE"
           data-required="true"
           data-status="UNKNOWN"
@@ -1009,6 +1081,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="EAST_CONSTRUCTION_INTERPRETATION"
           data-required="true"
           data-status="UNKNOWN"
@@ -1023,6 +1097,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="CANVAS_SURFACE_TRUTH"
           data-required="true"
           data-status="UNKNOWN"
@@ -1037,6 +1113,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="WEST_PROBE_RUNTIME"
           data-required="true"
           data-status="UNKNOWN"
@@ -1051,6 +1129,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="WEST_RUNTIME_INTERPRETATION"
           data-required="true"
           data-status="UNKNOWN"
@@ -1065,6 +1145,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="SOUTH_PROBE_HANDOFF"
           data-required="true"
           data-status="UNKNOWN"
@@ -1079,6 +1161,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="SOUTH_RESTITUTION_INTERPRETATION"
           data-required="true"
           data-status="UNKNOWN"
@@ -1093,6 +1177,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="SOUTH_SURFACE_POINTER"
           data-required="false"
           data-status="UNKNOWN"
@@ -1107,6 +1193,8 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
         <article
           class="participant-node"
+          tabindex="0"
+          role="button"
           data-participant-role="RAIL_TERMINAL_SYNTHESIS"
           data-required="true"
           data-status="UNKNOWN"
@@ -1160,8 +1248,9 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
         </h2>
 
         <p id="selectedAuditSummary">
-          Summarize the diagnostic shell, controller, participant
-          availability, observation state, and current cycle evidence.
+          Summarize the diagnostic shell, engine, control panel,
+          participant availability, observation state, and current cycle
+          evidence.
         </p>
       </div>
 
@@ -1250,6 +1339,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     <div class="report-state">
       <div>
         <span>Status</span>
+
         <strong
           id="reportStatus"
           data-status="READY"
@@ -1260,6 +1350,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <div>
         <span>Report</span>
+
         <strong id="reportTitle">
           No report created
         </strong>
@@ -1267,14 +1358,16 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <div>
         <span>Created</span>
+
         <strong id="reportCreatedAt">
           —
         </strong>
       </div>
 
       <p id="reportMeta">
-        Choose an audit and create a report. No participant, target, runtime,
-        Surface Truth, or cycle readiness is required.
+        Choose an audit and create a report. If the diagnostic engine is
+        unavailable, the independent control panel will create a fallback
+        READ report.
       </p>
     </div>
 
@@ -1344,7 +1437,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
           <div>
             <p>Result</p>
-            <strong>Observatory available</strong>
+
+            <strong>
+              Observatory available
+            </strong>
           </div>
         </header>
 
@@ -1364,13 +1460,17 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
           <div>
             <p>Evidence</p>
-            <strong>Shell declared</strong>
+
+            <strong>
+              Shell declared
+            </strong>
           </div>
         </header>
 
         <p>
           The diagnostic route, target iframe, engine-family dependencies,
-          diagnostic-family dependencies, and report controls are declared.
+          diagnostic participants, diagnostic engine, control panel, and
+          report controls are declared.
         </p>
       </article>
 
@@ -1383,7 +1483,10 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
           <div>
             <p>Absence</p>
-            <strong>No report yet</strong>
+
+            <strong>
+              No report yet
+            </strong>
           </div>
         </header>
 
@@ -1402,13 +1505,16 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
           <div>
             <p>Direction</p>
-            <strong>Create the first report</strong>
+
+            <strong>
+              Create the first report
+            </strong>
           </div>
         </header>
 
         <p>
-          Select an audit and use Create Report. Observation and execution
-          can be performed separately when deeper evidence is required.
+          Use Create Report. The independent control panel will activate
+          the diagnostic engine or produce a visible fallback diagnosis.
         </p>
       </article>
     </section>
@@ -1832,7 +1938,11 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     <div class="cycle-summary-grid">
       <article id="cyclePreviewSummary">
         <span>Preview</span>
-        <strong>Available without execution</strong>
+
+        <strong>
+          Available without execution
+        </strong>
+
         <p>
           Participants and current evidence can be reported before a cycle
           exists.
@@ -1841,7 +1951,11 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <article id="cycleRegistrationSummary">
         <span>Registration</span>
-        <strong>Not attempted</strong>
+
+        <strong>
+          Not attempted
+        </strong>
+
         <p>
           Nine stations and one auxiliary will be registered only during
           explicit execution.
@@ -1850,7 +1964,11 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <article id="cyclePreflightSummary">
         <span>Preflight</span>
-        <strong>Not attempted</strong>
+
+        <strong>
+          Not attempted
+        </strong>
+
         <p>
           Bounded target-runtime preflight belongs only to Run Nine-Cycle.
         </p>
@@ -1858,7 +1976,11 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
 
       <article id="cycleExecutionSummary">
         <span>Execution</span>
-        <strong>Not run</strong>
+
+        <strong>
+          Not run
+        </strong>
+
         <p>
           No conductor cycle has been created during this session.
         </p>
@@ -2096,7 +2218,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
         </h4>
 
         <p>
-          The controller will inspect the shell-preloaded engine registry
+          The diagnostic engine will inspect the shell-preloaded registry
           after boot.
         </p>
       </article>
@@ -2274,8 +2396,7 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
         </h4>
 
         <p>
-          Controller, participant, observation, direct, and cycle errors
-          will be recorded here.
+          Diagnostic-engine and control-panel errors will be recorded here.
         </p>
       </article>
     </div>
@@ -2435,9 +2556,9 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     data-participant-required="true"
     data-load-order="3"
   ></script>  <!-- ============================================================
-       AUDRALIA DIAGNOSTIC FAMILY
+       AUDRALIA DIAGNOSTIC PARTICIPANT FAMILY
        Shell-preloaded participants.
-       Participant resolution and alias inspection belong to index.js.
+       Participant resolution belongs to the diagnostic engine.
        ============================================================ -->  <script
     src="/assets/audralia/audralia.diagnostic.north.conductor.js?v=AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v1"
     defer
@@ -2537,16 +2658,32 @@ content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     data-participant-required="true"
     data-load-order="14"
   ></script>  <!-- ============================================================
-       ROUTE CONTROLLER
-       Must load after all shell-preloaded engine and diagnostic participants.
-       The controller must not run the cycle during boot.
+       DIAGNOSTIC ENGINE
+       Owns state and diagnostic operations.
+       Must not own DOM event binding after the engine/control split.
        ============================================================ -->  <script
     src="/showroom/globe/audralia/diagnostic/index.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1"
     defer
-    data-audralia-diagnostic-controller-script="true"
-    data-participant-role="DROP_WITH_READ_ROUTE_CONTROLLER"
+    data-audralia-diagnostic-engine-script="true"
+    data-participant-role="DROP_WITH_READ_DIAGNOSTIC_ENGINE"
     data-participant-required="true"
+    data-control-owner="false"
     data-report-nonblocking="true"
     data-load-order="15"
+  ></script>  <!-- ============================================================
+       INDEPENDENT CONTROL PANEL
+       Loads last.
+       Sole owner of DOM event binding.
+       Must bind even when the diagnostic engine is unavailable.
+       ============================================================ -->  <script
+    src="/showroom/globe/audralia/diagnostic/index.controls.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROL_PANEL_TNT_v1"
+    defer
+    data-audralia-diagnostic-control-panel-script="true"
+    data-participant-role="DROP_WITH_READ_CONTROL_PANEL"
+    data-participant-required="true"
+    data-control-owner="true"
+    data-independent-binding="true"
+    data-engine-fallback-report="true"
+    data-load-order="16"
   ></script></body>
 </html>

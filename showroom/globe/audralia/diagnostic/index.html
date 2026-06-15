@@ -1,30 +1,67 @@
-<!-- /showroom/globe/audralia/diagnostic/index.html -->
-<!-- AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2 -->
-<!-- Full-file replacement. -->
-<!-- HTML only. -->
-<!--
+<!-- /showroom/globe/audralia/diagnostic/index.html --><!-- AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1 --><!-- Full-file replacement. --><!-- HTML only. --><!--
+  Canonical authority:
+  - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1
+  - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1
+
+  DROP:
+  - Direct Execution
+  - Report
+  - Observation
+  - Participant
+
+  READ:
+  - Result
+  - Evidence
+  - Absence
+  - Direction
+
+  Governing laws:
+  - Report creation remains available independently of participant readiness,
+    target readiness, runtime readiness, Surface Truth, direct execution,
+    conductor readiness, station readiness, receipts, or cycle completion.
+  - Missing or held evidence must appear inside the report.
+  - The target iframe is observational only.
+  - The nine-cycle is an explicit selectable audit, not the report engine.
+  - Direct execution requires explicit user action.
+
   Owns:
-  - Audralia diagnostic page structure;
-  - reader-first gauges;
-  - engine-family visibility shell;
-  - nine-cycle map;
-  - receipt access shell;
-  - technical tabs;
-  - target observation shell.
+  - semantic observatory shell;
+  - canonical DOM IDs;
+  - command crown;
+  - DROP and READ educational layer;
+  - DROP status rail;
+  - evidence status rail;
+  - audit selectors;
+  - participant constellation shell;
+  - report chamber shell;
+  - READ regions;
+  - report-mode panels;
+  - observation lenses;
+  - target iframe;
+  - lower instrument deck;
+  - cycle chamber;
+  - registry chamber;
+  - receipt chamber;
+  - archive chamber;
+  - boundary chamber;
+  - dependency load order.
 
   Does not own:
-  - governing engine-contract behavior;
-  - core-engine implementation;
-  - engine-registry implementation;
-  - diagnostic station logic;
-  - runtime mutation;
-  - production repair;
+  - diagnostic execution;
+  - participant resolution logic;
+  - alias scoring;
+  - report generation logic;
+  - READ interpretation logic;
+  - target mutation;
+  - production mutation;
+  - runtime restart;
   - renderer mutation;
-  - WebGL/WebGPU initialization;
-  - visual pass;
-  - readiness claim;
-  - generated image;
-  - GraphicBox.
+  - canvas repair;
+  - controls repair;
+  - route repair;
+  - readiness authorization;
+  - visual-pass authorization;
+  - nine-cycle pass authorization.
 
   Engine family:
   - /assets/engine/dgb.engine.contract.js
@@ -47,14 +84,16 @@
   Paired route files:
   - /showroom/globe/audralia/diagnostic/index.css
   - /showroom/globe/audralia/diagnostic/index.js
--->
-<!doctype html>
+--><!doctype html>
+
 <html
   lang="en"
   data-route="/showroom/globe/audralia/diagnostic/"
-  data-page="audralia-diagnostic-reader"
-  data-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
-  data-previous-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v1"
+  data-page="audralia-drop-with-read-diagnostic-observatory"
+  data-contract="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1"
+  data-previous-contract="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
+  data-blueprint="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1"
+  data-prebuild-registry="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1"
   data-target-route="/showroom/globe/audralia/"
   data-diagnostic-route="/showroom/globe/audralia/diagnostic/"
   data-diagnostic-family-root="/assets/audralia/"
@@ -62,906 +101,2452 @@
   data-engine-contract="/assets/engine/dgb.engine.contract.js"
   data-engine-core="/assets/engine/dgb.engine.js"
   data-engine-registry="/assets/engine/dgb.engine.subjects.js"
-  data-engine-count-expected="1"
-  data-governing-contract-count-expected="1"
-  data-reserved-engine-slot-count-expected="5"
-  data-engine-observer-required-for-registry-view="false"
-  data-engine-observer-attached="false"
-  data-reader-first="true"
-  data-technical-tabs-separated="true"
-  data-three-dimensional-native="true"
-  data-canvas-2d-governing="false"
+  data-drop-direct="DIRECT_EXECUTION"
+  data-drop-report="REPORT"
+  data-drop-observation="OBSERVATION"
+  data-drop-participant="PARTICIPANT"
+  data-read-result="RESULT"
+  data-read-evidence="EVIDENCE"
+  data-read-absence="ABSENCE"
+  data-read-direction="DIRECTION"
+  data-report-nonblocking="true"
+  data-target-observation-only="true"
+  data-nine-cycle-explicit="true"
+  data-direct-execution-explicit="true"
   data-production-mutation-authorized="false"
   data-runtime-restart-authorized="false"
   data-renderer-mutation-authorized="false"
-  data-repair-authorized="false"
+  data-canvas-repair-authorized="false"
+  data-controls-repair-authorized="false"
+  data-route-repair-authorized="false"
   data-ready-claimed="false"
   data-visual-pass-claimed="false"
-  data-f21-claimed="false"
+  data-cycle-pass-claimed="false"
 >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta
+name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover"
+/>
 
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
-  />
+<meta
+name="color-scheme"
+content="dark"
+/>
 
-  <meta
-    name="color-scheme"
-    content="dark"
-  />
+  <title>Audralia DROP with READ Diagnostic Observatory</title><meta
+name="description"
+content="Audralia DROP with READ diagnostic observatory for report creation, participant inspection, target observation, explicit direct checks, and explicit nine-cycle execution."
+/>
 
-  <title>Audralia Diagnostic Track</title>
+<meta
+name="audralia-diagnostic-html-contract"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STATIC_SHELL_TNT_v1"
+/>
 
-  <meta
-    name="audralia-diagnostic-html-contract"
-    content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
-  />
+<meta
+name="audralia-diagnostic-html-previous-contract"
+content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2"
+/>
 
-  <meta
-    name="audralia-diagnostic-html-previous-contract"
-    content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v1"
-  />
+<meta
+name="audralia-diagnostic-css-contract"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1"
+/>
 
-  <meta
-    name="audralia-diagnostic-css-contract"
-    content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STYLE_TNT_v1"
-  />
+<meta
+name="audralia-diagnostic-js-contract"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1"
+/>
 
-  <meta
-    name="audralia-diagnostic-js-contract"
-    content="AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v1"
-  />
+<meta
+name="audralia-diagnostic-blueprint"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_BLUEPRINT_v1"
+/>
 
-  <meta
-    name="audralia-diagnostic-mode"
-    content="READ_REPORTABILITY_EVIDENCE_ADMISSION_DIAGNOSTIC"
-  />
+<meta
+name="audralia-diagnostic-prebuild-registry"
+content="AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_PREBUILD_REGISTRY_v1"
+/>
 
-  <meta
-    name="audralia-diagnostic-station-count"
-    content="9"
-  />
+<meta
+name="audralia-diagnostic-mode"
+content="DROP_WITH_READ_NONBLOCKING_REPORT_OBSERVATORY"
+/>
 
-  <meta
-    name="audralia-diagnostic-target-route"
-    content="/showroom/globe/audralia/"
-  />
+<meta
+name="audralia-diagnostic-station-count"
+content="9"
+/>
 
-  <meta
-    name="dgb-engine-governing-contract"
-    content="DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
-  />
+<meta
+name="audralia-diagnostic-auxiliary-count"
+content="1"
+/>
 
-  <meta
-    name="dgb-engine-core-contract"
-    content="DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
-  />
+<meta
+name="audralia-diagnostic-target-route"
+content="/showroom/globe/audralia/"
+/>
 
-  <meta
-    name="dgb-engine-registry-contract"
-    content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
-  />
+<meta
+name="dgb-engine-governing-contract"
+content="DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+/>
+
+<meta
+name="dgb-engine-core-contract"
+content="DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
+/>
+
+<meta
+name="dgb-engine-registry-contract"
+content="DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
+/>
 
   <link
     rel="stylesheet"
-    href="/showroom/globe/audralia/diagnostic/index.css?v=AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_STYLE_TNT_v1"
+    href="/showroom/globe/audralia/diagnostic/index.css?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_STYLE_TNT_v1"
   />
-</head>
-
-<body>
+</head><body>
   <main
-    class="diagnostic-shell"
+    class="diagnostic-observatory"
     id="audraliaDiagnosticShell"
+    aria-labelledby="dropReadHeadline"
   >
     <header
-      class="hero"
-      aria-label="Audralia diagnostic command"
+      class="command-crown"
+      id="commandCrown"
+      aria-label="Audralia diagnostic observatory command crown"
     >
-      <div class="hero-copy">
-        <p class="eyebrow">
-          Audralia · 3D Diagnostic Track
-        </p>
-
-        <h1>
-          Reader-first engine health report
-        </h1>
-
-        <p class="lede">
-          This page explains what the diagnostic system can see, what is still
-          held, and what needs attention before any technical receipt is opened.
-        </p>
-
+      <div class="command-crown__identity">
         <div
-          class="hero-actions"
-          aria-label="Primary diagnostic actions"
+          class="observatory-mark"
+          id="observatoryMark"
+          aria-hidden="true"
         >
-          <button
-            class="primary"
-            type="button"
-            id="runDiagnostic"
-          >
-            Run Diagnostic
-          </button>
+          <span>Α</span>
+        </div>    <div class="command-crown__copy">
+      <p class="command-crown__eyebrow">
+        Audralia Diagnostic Observatory
+      </p>
 
-          <a
-            class="button-link"
-            href="#readerSummary"
-          >
-            Read Summary
-          </a>
+      <strong id="observatoryTitle">
+        DROP with READ
+      </strong>
 
-          <a
-            class="button-link ghost"
-            href="#engineFamilyPanel"
-          >
-            Engine Family
-          </a>
+      <span id="controllerContract">
+        Controller awaiting boot
+      </span>
+    </div>
+  </div>
 
-          <a
-            class="button-link ghost"
-            href="#technicalPanel"
-          >
-            Technical Tabs
-          </a>
+  <div
+    class="command-crown__state"
+    aria-label="Current observatory state"
+  >
+    <span
+      class="state-label"
+      id="controllerState"
+      data-status="READY"
+    >
+      REPORT READY
+    </span>
 
-          <a
-            class="button-link ghost"
-            href="/showroom/globe/audralia/"
-          >
-            Return to Audralia
-          </a>
-        </div>
+    <span id="activeAuditMode">
+      SAFE_REPORT
+    </span>
+  </div>
+
+  <nav
+    class="command-crown__actions"
+    aria-label="Observatory commands"
+  >
+    <a
+      class="command-button command-button--ghost"
+      id="returnToAudralia"
+      href="/showroom/globe/audralia/"
+    >
+      Return to Audralia
+    </a>
+
+    <button
+      class="command-button command-button--ghost"
+      type="button"
+      id="toggleObservationTarget"
+      aria-controls="targetWindow"
+      aria-expanded="false"
+    >
+      Show Target
+    </button>
+
+    <button
+      class="command-button command-button--ghost"
+      type="button"
+      id="reloadObservatory"
+    >
+      Reload Observatory
+    </button>
+
+    <button
+      class="command-button command-button--ghost"
+      type="button"
+      id="createDeepArchive"
+    >
+      Deep Archive
+    </button>
+
+    <button
+      class="command-button command-button--danger"
+      type="button"
+      id="resetWorkbench"
+    >
+      Reset
+    </button>
+  </nav>
+</header>
+
+<section
+  class="drop-read-introduction"
+  id="dropReadIntroduction"
+  aria-labelledby="dropReadHeadline"
+>
+  <div class="drop-read-introduction__hero">
+    <p
+      class="eyebrow"
+      id="dropReadEyebrow"
+    >
+      Audralia Diagnostic Observatory
+    </p>
+
+    <h1 id="dropReadHeadline">
+      Drop in and READ a while.
+    </h1>
+
+    <p
+      class="lede"
+      id="dropReadLede"
+    >
+      Inspect what is present, create a report from the evidence available
+      now, identify what is absent, and execute deeper diagnostic checks
+      only when deliberately requested.
+    </p>
+  </div>
+
+  <div class="drop-read-explanations">
+    <article
+      class="acronym-chamber acronym-chamber--drop"
+      id="dropExplanation"
+      aria-labelledby="dropExplanationTitle"
+    >
+      <div class="acronym-chamber__header">
+        <p class="eyebrow">
+          Evidence gathering
+        </p>
+
+        <h2 id="dropExplanationTitle">
+          DROP
+        </h2>
       </div>
 
-      <section
-        class="hero-gauge"
-        aria-label="Overall diagnostic status"
-      >
-        <div
-          class="gauge-ring waiting"
-          id="overallGauge"
-          aria-label="Overall gauge waiting"
-        >
-          <span id="overallGaugeValue">--</span>
+      <dl class="acronym-list">
+        <div>
+          <dt>
+            <span>D</span>
+            Direct Execution
+          </dt>
+
+          <dd>
+            Runs a selected verified authority, probe, station, or cycle
+            only after an explicit command.
+          </dd>
         </div>
 
         <div>
-          <strong id="overallStatus">
-            Waiting for diagnostic run
-          </strong>
+          <dt>
+            <span>R</span>
+            Report
+          </dt>
 
-          <span id="overallStatusDetail">
-            The system has not produced a ledger yet.
-          </span>
+          <dd>
+            Creates a readable record from the evidence currently
+            available. This lane remains accessible even when another lane
+            is held or incomplete.
+          </dd>
         </div>
-      </section>
+
+        <div>
+          <dt>
+            <span>O</span>
+            Observation
+          </dt>
+
+          <dd>
+            Inspects the target, runtime, registry, aliases, receipts,
+            geometry, and Surface Truth without mutating production.
+          </dd>
+        </div>
+
+        <div>
+          <dt>
+            <span>P</span>
+            Participant
+          </dt>
+
+          <dd>
+            Identifies required and optional diagnostic components,
+            resolves aliases, and records their available methods and
+            contracts.
+          </dd>
+        </div>
+      </dl>
+    </article>
+
+    <article
+      class="acronym-chamber acronym-chamber--read"
+      id="readExplanation"
+      aria-labelledby="readExplanationTitle"
+    >
+      <div class="acronym-chamber__header">
+        <p class="eyebrow">
+          Evidence interpretation
+        </p>
+
+        <h2 id="readExplanationTitle">
+          READ
+        </h2>
+      </div>
+
+      <dl class="acronym-list">
+        <div>
+          <dt>
+            <span>R</span>
+            Result
+          </dt>
+
+          <dd>
+            States what the diagnostic presently establishes.
+          </dd>
+        </div>
+
+        <div>
+          <dt>
+            <span>E</span>
+            Evidence
+          </dt>
+
+          <dd>
+            Shows the facts, receipts, globals, paths, measurements, and
+            observations supporting the result.
+          </dd>
+        </div>
+
+        <div>
+          <dt>
+            <span>A</span>
+            Absence
+          </dt>
+
+          <dd>
+            Identifies what is missing, held, unresolved, inaccessible,
+            incomplete, unknown, or erroneous.
+          </dd>
+        </div>
+
+        <div>
+          <dt>
+            <span>D</span>
+            Direction
+          </dt>
+
+          <dd>
+            Identifies the participant, file, authority, owner, or next
+            diagnostic action that should be examined.
+          </dd>
+        </div>
+      </dl>
+    </article>
+  </div>
+
+  <article
+    class="drop-read-integration"
+    id="dropReadIntegration"
+  >
+    <div>
+      <strong>DROP gathers the evidence.</strong>
+      <span>READ turns the evidence into a clear diagnostic account.</span>
+    </div>
+
+    <p>
+      Participants establish what is available. Observation gathers
+      evidence without mutation. Reports remain continuously accessible.
+      Direct Execution performs deeper checks only by explicit command.
+      Missing evidence becomes part of the diagnosis, not a reason the
+      diagnosis cannot be created.
+    </p>
+  </article>
+</section>
+
+<section
+  class="drop-status-rail"
+  id="dropStatusRail"
+  aria-label="DROP diagnostic lane status"
+>
+  <article
+    class="drop-status-cell drop-status-cell--direct"
+    id="dropDirectCell"
+    data-lane="DIRECT_EXECUTION"
+    data-status="IDLE"
+  >
+    <header>
+      <span class="drop-letter">D</span>
+
+      <div>
+        <p>Direct Execution</p>
+        <strong id="dropDirectState">IDLE</strong>
+      </div>
     </header>
 
-    <section
-      class="reader-grid"
-      id="readerSummary"
-      aria-labelledby="readerSummaryTitle"
-    >
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Public View</p>
+    <dl>
+      <div>
+        <dt>Available</dt>
+        <dd id="dropDirectAvailableCount">0</dd>
+      </div>
 
-          <h2 id="readerSummaryTitle">
-            Plain-language summary
+      <div>
+        <dt>Held</dt>
+        <dd id="dropDirectHeldCount">0</dd>
+      </div>
+    </dl>
+
+    <p id="dropDirectLastAction">
+      No direct command has been executed.
+    </p>
+  </article>
+
+  <article
+    class="drop-status-cell drop-status-cell--report"
+    id="dropReportCell"
+    data-lane="REPORT"
+    data-status="READY"
+  >
+    <header>
+      <span class="drop-letter">R</span>
+
+      <div>
+        <p>Report</p>
+        <strong id="dropReportState">READY</strong>
+      </div>
+    </header>
+
+    <dl>
+      <div>
+        <dt>Available</dt>
+        <dd id="dropReportAvailableCount">1</dd>
+      </div>
+
+      <div>
+        <dt>Held</dt>
+        <dd id="dropReportHeldCount">0</dd>
+      </div>
+    </dl>
+
+    <p id="dropReportLastAction">
+      Create Report is available immediately.
+    </p>
+  </article>
+
+  <article
+    class="drop-status-cell drop-status-cell--observation"
+    id="dropObservationCell"
+    data-lane="OBSERVATION"
+    data-status="OBSERVING"
+  >
+    <header>
+      <span class="drop-letter">O</span>
+
+      <div>
+        <p>Observation</p>
+        <strong id="dropObservationState">OBSERVING</strong>
+      </div>
+    </header>
+
+    <dl>
+      <div>
+        <dt>Available</dt>
+        <dd id="dropObservationAvailableCount">0</dd>
+      </div>
+
+      <div>
+        <dt>Held</dt>
+        <dd id="dropObservationHeldCount">0</dd>
+      </div>
+    </dl>
+
+    <p id="dropObservationLastAction">
+      Lightweight observation will begin after controller boot.
+    </p>
+  </article>
+
+  <article
+    class="drop-status-cell drop-status-cell--participant"
+    id="dropParticipantCell"
+    data-lane="PARTICIPANT"
+    data-status="LOADING"
+  >
+    <header>
+      <span class="drop-letter">P</span>
+
+      <div>
+        <p>Participant</p>
+        <strong id="dropParticipantState">LOADING</strong>
+      </div>
+    </header>
+
+    <dl>
+      <div>
+        <dt>Available</dt>
+        <dd id="dropParticipantAvailableCount">0</dd>
+      </div>
+
+      <div>
+        <dt>Held</dt>
+        <dd id="dropParticipantHeldCount">0</dd>
+      </div>
+    </dl>
+
+    <p id="dropParticipantLastAction">
+      Inspecting shell-preloaded diagnostic participants.
+    </p>
+  </article>
+</section>
+
+<section
+  class="evidence-status-rail"
+  id="evidenceStatusRail"
+  aria-label="Diagnostic evidence status"
+>
+  <span id="targetStatus" data-status="UNKNOWN">
+    Target · Unknown
+  </span>
+
+  <span id="runtimeStatus" data-status="UNKNOWN">
+    Runtime · Unknown
+  </span>
+
+  <span id="rendererStatus" data-status="UNKNOWN">
+    Renderer · Unknown
+  </span>
+
+  <span id="surfaceStatus" data-status="UNKNOWN">
+    Surface · Unknown
+  </span>
+
+  <span id="northStatus" data-status="UNKNOWN">
+    North · Unknown
+  </span>
+
+  <span id="eastStatus" data-status="UNKNOWN">
+    East · Unknown
+  </span>
+
+  <span id="westStatus" data-status="UNKNOWN">
+    West · Unknown
+  </span>
+
+  <span id="southStatus" data-status="UNKNOWN">
+    South · Unknown
+  </span>
+
+  <span id="cycleStatus" data-status="NOT_RUN">
+    Cycle · Not Run
+  </span>
+
+  <span id="registryStatus" data-status="UNKNOWN">
+    Registry · Unknown
+  </span>
+
+  <span id="mountStatus" data-status="UNKNOWN">
+    Mount · Unknown
+  </span>
+
+  <span id="canvasStatus" data-status="UNKNOWN">
+    Canvas · Unknown
+  </span>
+
+  <span id="frameStatus" data-status="UNKNOWN">
+    Frame · Unknown
+  </span>
+</section>
+
+<section
+  class="diagnostic-observatory-grid"
+  id="diagnosticObservatoryGrid"
+  aria-label="Audralia diagnostic observatory workbench"
+>
+  <aside
+    class="left-orbit"
+    id="leftOrbit"
+    aria-label="Audit and participant navigation"
+  >
+    <div
+      class="panel-tablist"
+      id="leftOrbitTabs"
+      role="tablist"
+      aria-label="Left orbit views"
+    >
+      <button
+        type="button"
+        role="tab"
+        id="auditOrbitButton"
+        aria-selected="true"
+        aria-controls="auditOrbit"
+        data-left-orbit-view="audits"
+      >
+        Audit Orbit
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="participantConstellationButton"
+        aria-selected="false"
+        aria-controls="participantConstellation"
+        data-left-orbit-view="participants"
+      >
+        Participants
+      </button>
+    </div>
+
+    <section
+      class="orbit-panel"
+      id="auditOrbit"
+      role="tabpanel"
+      aria-labelledby="auditOrbitButton"
+    >
+      <header class="panel-heading">
+        <div>
+          <p class="eyebrow">
+            Select a diagnostic view
+          </p>
+
+          <h2>
+            Audit Orbit
           </h2>
         </div>
+      </header>
 
-        <span class="pill">
-          READER_SAFE
+      <div
+        class="custom-selector"
+        id="categorySelector"
+        data-selector="category"
+      >
+        <button
+          type="button"
+          id="categorySelectorButton"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="categorySelectorMenu"
+        >
+          <span>
+            <small>Category</small>
+            <strong id="categorySelectorLabel">
+              Observatory / Receiver
+            </strong>
+          </span>
+
+          <span
+            class="selector-meta"
+            id="categorySelectorMeta"
+          >
+            6 audits
+          </span>
+        </button>
+
+        <div
+          class="selector-menu"
+          id="categorySelectorMenu"
+          role="listbox"
+          aria-label="Diagnostic categories"
+          hidden
+        >
+          <button
+            type="button"
+            role="option"
+            aria-selected="true"
+            data-category-id="observatoryReceiver"
+          >
+            <strong>Observatory / Receiver</strong>
+            <span>
+              Shell, controller, load order, target access, and aliases.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-category-id="registryEngine"
+          >
+            <strong>Registry / Engine</strong>
+            <span>
+              Governing authority, runtime engine, registry, and slots.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-category-id="sourceSurface"
+          >
+            <strong>Source / Surface</strong>
+            <span>
+              Target runtime, canvas, geometry, frames, and F8.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-category-id="cardinalStations"
+          >
+            <strong>Cardinal Stations</strong>
+            <span>
+              North, East, West, South, rail, and auxiliary participants.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-category-id="nineCycle"
+          >
+            <strong>Nine-Cycle Diagnostics</strong>
+            <span>
+              Preview, registration, preflight, execution, and receipts.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-category-id="directExecution"
+          >
+            <strong>Direct Execution</strong>
+            <span>
+              Explicit invocation of verified authorities only.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-category-id="boundaryArchive"
+          >
+            <strong>Boundary / Archive</strong>
+            <span>
+              No-touch laws, session records, errors, and deep archive.
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="custom-selector"
+        id="auditSelector"
+        data-selector="audit"
+      >
+        <button
+          type="button"
+          id="auditSelectorButton"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="auditSelectorMenu"
+        >
+          <span>
+            <small>Audit</small>
+            <strong id="auditSelectorLabel">
+              Observatory Index
+            </strong>
+          </span>
+
+          <span
+            class="selector-meta"
+            id="auditSelectorMeta"
+          >
+            SAFE REPORT
+          </span>
+        </button>
+
+        <div
+          class="selector-menu"
+          id="auditSelectorMenu"
+          role="listbox"
+          aria-label="Available audits"
+          hidden
+        >
+          <button
+            type="button"
+            role="option"
+            aria-selected="true"
+            data-audit-id="observatoryIndex"
+          >
+            <strong>Observatory Index</strong>
+            <span>
+              Summarize shell, controller, participants, and observations.
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <article class="orbit-instruction">
+        <strong>
+          Selection does not execute.
+        </strong>
+
+        <p>
+          Choose an audit, then create a report. Direct checks and the
+          nine-cycle remain separate explicit actions.
+        </p>
+      </article>
+    </section>
+
+    <section
+      class="orbit-panel"
+      id="participantConstellation"
+      role="tabpanel"
+      aria-labelledby="participantConstellationButton"
+      hidden
+    >
+      <header class="panel-heading">
+        <div>
+          <p class="eyebrow">
+            Diagnostic family
+          </p>
+
+          <h2>
+            Participant Constellation
+          </h2>
+        </div>
+      </header>
+
+      <div
+        class="participant-summary"
+        id="participantSummary"
+      >
+        <span>
+          Required
+          <strong data-participant-summary="required">10</strong>
+        </span>
+
+        <span>
+          Optional
+          <strong data-participant-summary="optional">1</strong>
+        </span>
+
+        <span>
+          Available
+          <strong data-participant-summary="available">0</strong>
+        </span>
+
+        <span>
+          Held
+          <strong data-participant-summary="held">0</strong>
         </span>
       </div>
 
-      <article class="summary-card primary-card">
-        <h3>What this means</h3>
+      <div
+        class="participant-list"
+        id="participantList"
+        aria-live="polite"
+      >
+        <article
+          class="participant-node"
+          data-participant-role="NORTH_CONDUCTOR"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>North Conductor</strong>
+            <span>Required · Cycle authority</span>
+          </div>
 
-        <p id="plainSummary">
-          Run the diagnostic track to receive a readable summary of the
-          Audralia 3D engine path.
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="NORTH_PROBE_INTAKE"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F1 · North Intake</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="EAST_PROBE_SOURCE"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F3 · East Source</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="EAST_CONSTRUCTION_INTERPRETATION"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F5 · East Construction</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="CANVAS_SURFACE_TRUTH"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F8 · 3D Surface Truth</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="WEST_PROBE_RUNTIME"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F13 · West Runtime</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="WEST_RUNTIME_INTERPRETATION"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F21 · West Interpretation</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="SOUTH_PROBE_HANDOFF"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F34 · South Handoff</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="SOUTH_RESTITUTION_INTERPRETATION"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F55 · South Restitution</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="SOUTH_SURFACE_POINTER"
+          data-required="false"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>South Surface Pointer</strong>
+            <span>Optional auxiliary · F55 parent</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+
+        <article
+          class="participant-node"
+          data-participant-role="RAIL_TERMINAL_SYNTHESIS"
+          data-required="true"
+          data-status="UNKNOWN"
+        >
+          <div>
+            <strong>F89 · Rail Synthesis</strong>
+            <span>Required station</span>
+          </div>
+
+          <small>UNKNOWN</small>
+        </article>
+      </div>
+
+      <article
+        class="participant-detail"
+        id="participantDetail"
+        aria-live="polite"
+      >
+        <h3>
+          Select a participant
+        </h3>
+
+        <p>
+          Participant inspection reveals file path, required status,
+          resolved alias, contract, version, cycle position, and callable
+          methods without executing the participant.
+        </p>
+      </article>
+    </section>
+  </aside>
+
+  <section
+    class="report-chamber"
+    id="reportChamber"
+    aria-labelledby="selectedAuditTitle"
+  >
+    <header
+      class="selected-audit-header"
+      id="selectedAuditHeader"
+    >
+      <div>
+        <p
+          class="eyebrow"
+          id="selectedCategoryLabel"
+        >
+          Observatory / Receiver
+        </p>
+
+        <h2 id="selectedAuditTitle">
+          Observatory Index
+        </h2>
+
+        <p id="selectedAuditSummary">
+          Summarize the diagnostic shell, controller, participant
+          availability, observation state, and current cycle evidence.
+        </p>
+      </div>
+
+      <div class="selected-audit-meta">
+        <span id="selectedAuditSequence">
+          AUDIT 01
+        </span>
+
+        <strong id="selectedAuditClassification">
+          SAFE_REPORT
+        </strong>
+      </div>
+    </header>
+
+    <div
+      class="report-actions"
+      aria-label="Report and execution actions"
+    >
+      <button
+        class="primary-action"
+        type="button"
+        id="createReport"
+      >
+        Create Report
+      </button>
+
+      <button
+        class="direct-action"
+        type="button"
+        id="runDirectCheck"
+        hidden
+      >
+        Run Direct Check
+      </button>
+
+      <button
+        class="cycle-action"
+        type="button"
+        id="runNineCycle"
+        hidden
+      >
+        Run Nine-Cycle
+      </button>
+
+      <button
+        type="button"
+        id="copyReadableReport"
+        disabled
+      >
+        Copy Readable
+      </button>
+
+      <button
+        type="button"
+        id="copyPacketReport"
+        disabled
+      >
+        Copy Packet
+      </button>
+
+      <button
+        type="button"
+        id="copyRawReport"
+        disabled
+      >
+        Copy Raw
+      </button>
+
+      <button
+        type="button"
+        id="addReportToArchive"
+        disabled
+      >
+        Add to Archive
+      </button>
+
+      <button
+        class="ghost-action"
+        type="button"
+        id="resetCurrentReport"
+      >
+        Reset Report
+      </button>
+    </div>
+
+    <div class="report-state">
+      <div>
+        <span>Status</span>
+        <strong
+          id="reportStatus"
+          data-status="READY"
+        >
+          READY
+        </strong>
+      </div>
+
+      <div>
+        <span>Report</span>
+        <strong id="reportTitle">
+          No report created
+        </strong>
+      </div>
+
+      <div>
+        <span>Created</span>
+        <strong id="reportCreatedAt">
+          —
+        </strong>
+      </div>
+
+      <p id="reportMeta">
+        Choose an audit and create a report. No participant, target, runtime,
+        Surface Truth, or cycle readiness is required.
+      </p>
+    </div>
+
+    <div
+      class="panel-tablist report-mode-tabs"
+      id="reportModeTabs"
+      role="tablist"
+      aria-label="Report views"
+    >
+      <button
+        type="button"
+        role="tab"
+        id="reportReadButton"
+        aria-selected="true"
+        aria-controls="reportReadPanel"
+        data-report-mode="read"
+      >
+        READ
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="reportPacketButton"
+        aria-selected="false"
+        aria-controls="reportPacketPanel"
+        data-report-mode="packet"
+      >
+        Packet
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="reportRawButton"
+        aria-selected="false"
+        aria-controls="reportRawPanel"
+        data-report-mode="raw"
+      >
+        Raw
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="reportEvidenceButton"
+        aria-selected="false"
+        aria-controls="reportEvidencePanel"
+        data-report-mode="evidence"
+      >
+        Evidence
+      </button>
+    </div>
+
+    <section
+      class="report-panel report-panel--read"
+      id="reportReadPanel"
+      role="tabpanel"
+      aria-labelledby="reportReadButton"
+    >
+      <article
+        class="read-region read-region--result"
+        id="readResult"
+      >
+        <header>
+          <span>R</span>
+
+          <div>
+            <p>Result</p>
+            <strong>Observatory available</strong>
+          </div>
+        </header>
+
+        <p>
+          The Audralia diagnostic observatory shell is available. Create a
+          report to evaluate the selected audit from the evidence currently
+          present.
         </p>
       </article>
 
-      <article class="summary-card">
-        <h3>Passed</h3>
+      <article
+        class="read-region read-region--evidence"
+        id="readEvidence"
+      >
+        <header>
+          <span>E</span>
 
-        <strong id="passedCount">0</strong>
+          <div>
+            <p>Evidence</p>
+            <strong>Shell declared</strong>
+          </div>
+        </header>
 
-        <span>
-          Stations with enough evidence to continue.
-        </span>
+        <p>
+          The diagnostic route, target iframe, engine-family dependencies,
+          diagnostic-family dependencies, and report controls are declared.
+        </p>
       </article>
 
-      <article class="summary-card">
-        <h3>Held</h3>
+      <article
+        class="read-region read-region--absence"
+        id="readAbsence"
+      >
+        <header>
+          <span>A</span>
 
-        <strong id="heldCount">0</strong>
+          <div>
+            <p>Absence</p>
+            <strong>No report yet</strong>
+          </div>
+        </header>
 
-        <span>
-          Stations waiting for evidence or owner clarification.
-        </span>
+        <p>
+          No report, direct check, or nine-cycle execution has been created
+          during this session.
+        </p>
       </article>
 
-      <article class="summary-card">
-        <h3>Attention</h3>
+      <article
+        class="read-region read-region--direction"
+        id="readDirection"
+      >
+        <header>
+          <span>D</span>
 
-        <strong id="attentionCount">0</strong>
+          <div>
+            <p>Direction</p>
+            <strong>Create the first report</strong>
+          </div>
+        </header>
 
-        <span>
-          Failures, conflicts, or errors requiring review.
-        </span>
+        <p>
+          Select an audit and use Create Report. Observation and execution
+          can be performed separately when deeper evidence is required.
+        </p>
       </article>
     </section>
 
     <section
-      class="receipt-panel"
-      id="engineFamilyPanel"
-      aria-labelledby="engineFamilyPanelTitle"
+      class="report-panel"
+      id="reportPacketPanel"
+      role="tabpanel"
+      aria-labelledby="reportPacketButton"
+      hidden
     >
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">
-            Engine Registry
-          </p>
+      <pre id="packetOutput">No report packet has been created.</pre>
+    </section>
 
-          <h2 id="engineFamilyPanelTitle">
-            Governing authority and runtime engine
-          </h2>
+    <section
+      class="report-panel"
+      id="reportRawPanel"
+      role="tabpanel"
+      aria-labelledby="reportRawButton"
+      hidden
+    >
+      <pre id="rawOutput">No raw report has been created.</pre>
+    </section>
+
+    <section
+      class="report-panel"
+      id="reportEvidencePanel"
+      role="tabpanel"
+      aria-labelledby="reportEvidenceButton"
+      hidden
+    >
+      <div
+        class="evidence-output"
+        id="evidenceOutput"
+      >
+        <article class="empty-state">
+          <h3>
+            No evidence report yet
+          </h3>
+
+          <p>
+            Create a report to collect the current participant, target,
+            runtime, registry, Surface Truth, direct, and cycle evidence.
+          </p>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <aside
+    class="observation-lens"
+    id="observationLens"
+    aria-label="Observation lens"
+  >
+    <header class="panel-heading">
+      <div>
+        <p class="eyebrow">
+          Read-only inspection
+        </p>
+
+        <h2>
+          Observation Lens
+        </h2>
+      </div>
+    </header>
+
+    <div
+      class="panel-tablist"
+      id="observationLensTabs"
+      role="tablist"
+      aria-label="Observation lenses"
+    >
+      <button
+        type="button"
+        role="tab"
+        id="targetLensButton"
+        aria-selected="true"
+        aria-controls="targetLens"
+        data-observation-lens="target"
+      >
+        Target
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="runtimeLensButton"
+        aria-selected="false"
+        aria-controls="runtimeLens"
+        data-observation-lens="runtime"
+      >
+        Runtime
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="surfaceLensButton"
+        aria-selected="false"
+        aria-controls="surfaceLens"
+        data-observation-lens="surface"
+      >
+        Surface
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        id="targetWindowButton"
+        aria-selected="false"
+        aria-controls="targetWindow"
+        data-observation-lens="window"
+      >
+        Window
+      </button>
+    </div>
+
+    <section
+      class="lens-panel"
+      id="targetLens"
+      role="tabpanel"
+      aria-labelledby="targetLensButton"
+    >
+      <dl class="observation-list">
+        <div>
+          <dt>Frame present</dt>
+          <dd id="targetFramePresent">Unknown</dd>
         </div>
 
-        <span
-          class="pill"
-          id="engineRegistryStatusPill"
+        <div>
+          <dt>Same-origin access</dt>
+          <dd id="targetSameOrigin">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Document state</dt>
+          <dd id="targetDocumentState">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Route match</dt>
+          <dd id="targetRouteMatch">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Path</dt>
+          <dd id="targetPath">/showroom/globe/audralia/</dd>
+        </div>
+
+        <div>
+          <dt>Title</dt>
+          <dd id="targetTitle">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Access error</dt>
+          <dd id="targetAccessError">None observed</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section
+      class="lens-panel"
+      id="runtimeLens"
+      role="tabpanel"
+      aria-labelledby="runtimeLensButton"
+      hidden
+    >
+      <dl class="observation-list">
+        <div>
+          <dt>Runtime global</dt>
+          <dd id="runtimeGlobal">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Mounted</dt>
+          <dd id="runtimeMounted">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Geometry</dt>
+          <dd id="runtimeGeometry">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Stage rectangle</dt>
+          <dd id="runtimeStageRect">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>First frame</dt>
+          <dd id="runtimeFirstFrame">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Visible pixel</dt>
+          <dd id="runtimeVisiblePixel">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Fallback</dt>
+          <dd id="runtimeFallback">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Receipt availability</dt>
+          <dd id="runtimeReceiptAvailability">Unknown</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section
+      class="lens-panel"
+      id="surfaceLens"
+      role="tabpanel"
+      aria-labelledby="surfaceLensButton"
+      hidden
+    >
+      <dl class="observation-list">
+        <div>
+          <dt>Authority</dt>
+          <dd id="surfaceAuthority">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Method</dt>
+          <dd id="surfaceMethod">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Contract</dt>
+          <dd id="surfaceContract">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Receipt</dt>
+          <dd id="surfaceReceipt">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Packet keys</dt>
+          <dd id="surfacePacketKeys">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>First held</dt>
+          <dd id="surfaceFirstHeld">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>First failed</dt>
+          <dd id="surfaceFirstFailed">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Recommended owner</dt>
+          <dd id="surfaceRecommendedOwner">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Recommended file</dt>
+          <dd id="surfaceRecommendedFile">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Recommended action</dt>
+          <dd id="surfaceRecommendedAction">Unknown</dd>
+        </div>
+
+        <div>
+          <dt>Error</dt>
+          <dd id="surfaceError">None observed</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section
+      class="lens-panel target-window"
+      id="targetWindow"
+      role="tabpanel"
+      aria-labelledby="targetWindowButton"
+      hidden
+    >
+      <div class="target-window__actions">
+        <button
+          type="button"
+          id="expandTargetWindow"
+          aria-pressed="false"
         >
-          WAITING_FOR_REGISTRY
-        </span>
-      </div>
-
-      <div
-        class="reader-grid"
-        aria-label="Engine registry summary"
-      >
-        <article class="summary-card primary-card">
-          <h3>Governing contract</h3>
-
-          <strong id="governingContractCount">--</strong>
-
-          <span id="governingContractSummary">
-            Waiting for the governing contract registry record.
-          </span>
-        </article>
-
-        <article class="summary-card">
-          <h3>Assigned engines</h3>
-
-          <strong id="assignedEngineCount">--</strong>
-
-          <span id="assignedEngineSummary">
-            Waiting for the runtime engine registry record.
-          </span>
-        </article>
-
-        <article class="summary-card">
-          <h3>Selectable engines</h3>
-
-          <strong id="selectableEngineCount">--</strong>
-
-          <span id="selectableEngineSummary">
-            No engine selection has been confirmed.
-          </span>
-        </article>
-
-        <article class="summary-card">
-          <h3>Reserved slots</h3>
-
-          <strong id="reservedEngineCount">--</strong>
-
-          <span id="reservedEngineSummary">
-            Waiting for the six-slot registry.
-          </span>
-        </article>
-      </div>
-
-      <div
-        class="receipt-list"
-        id="engineRegistryList"
-        aria-live="polite"
-      >
-        <article class="receipt-empty">
-          <h3>Engine family not read yet</h3>
-
-          <p>
-            The route controller will read the governing contract, runtime
-            engine, and registry after their scripts are loaded.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section
-      class="cycle-panel"
-      aria-labelledby="cycleMapTitle"
-    >
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">
-            Nine-Cycle Map
-          </p>
-
-          <h2 id="cycleMapTitle">
-            Diagnostic path
-          </h2>
-        </div>
-
-        <span class="pill">
-          NORTH → EAST → SURFACE → WEST → SOUTH → NORTH_RETURN
-        </span>
-      </div>
-
-      <ol
-        class="cycle-map"
-        id="cycleMap"
-        aria-label="Nine diagnostic cycle stations"
-      >
-        <li data-station="NORTH_PROBE_INTAKE">
-          <b>1 · North Intake</b>
-          <span>What are we diagnosing?</span>
-          <small>F1</small>
-        </li>
-
-        <li data-station="EAST_PROBE_SOURCE">
-          <b>2 · East Source</b>
-          <span>What was declared?</span>
-          <small>F3</small>
-        </li>
-
-        <li data-station="EAST_CONSTRUCTION_INTERPRETATION">
-          <b>3 · East Construction</b>
-          <span>Is the construction admissible?</span>
-          <small>F5</small>
-        </li>
-
-        <li data-station="CANVAS_SURFACE_TRUTH">
-          <b>4 · 3D Surface Truth</b>
-          <span>Is there a valid 3D presentation host?</span>
-          <small>F8</small>
-        </li>
-
-        <li data-station="WEST_PROBE_RUNTIME">
-          <b>5 · West Runtime</b>
-          <span>What runtime evidence exists?</span>
-          <small>F13</small>
-        </li>
-
-        <li data-station="WEST_RUNTIME_INTERPRETATION">
-          <b>6 · West Interpretation</b>
-          <span>Does source match runtime?</span>
-          <small>F21</small>
-        </li>
-
-        <li data-station="SOUTH_PROBE_HANDOFF">
-          <b>7 · South Handoff</b>
-          <span>Can the packet return cleanly?</span>
-          <small>F34</small>
-        </li>
-
-        <li data-station="SOUTH_RESTITUTION_INTERPRETATION">
-          <b>8 · South Restitution</b>
-          <span>What owner or continuation is recommended?</span>
-          <small>F55</small>
-        </li>
-
-        <li data-station="RAIL_TERMINAL_SYNTHESIS">
-          <b>9 · Rail Synthesis</b>
-          <span>What is the final diagnostic reading?</span>
-          <small>F89</small>
-        </li>
-      </ol>
-    </section>
-
-    <section
-      class="receipt-panel"
-      aria-labelledby="receiptPanelTitle"
-    >
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Receipts</p>
-
-          <h2 id="receiptPanelTitle">
-            Accessible station receipts
-          </h2>
-        </div>
-
-        <div class="receipt-actions">
-          <button
-            type="button"
-            id="copyReaderReport"
-            disabled
-          >
-            Copy Reader Report
-          </button>
-
-          <button
-            type="button"
-            id="copyReceiptLedger"
-            disabled
-          >
-            Copy Receipt Ledger
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="receipt-list"
-        id="receiptList"
-        aria-live="polite"
-      >
-        <article class="receipt-empty">
-          <h3>No receipts yet</h3>
-
-          <p>
-            Run the diagnostic track to populate station receipts.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section
-      class="target-panel"
-      id="targetPanel"
-      aria-labelledby="targetPanelTitle"
-    >
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Target</p>
-
-          <h2 id="targetPanelTitle">
-            Audralia observation window
-          </h2>
-        </div>
+          Expand
+        </button>
 
         <button
           type="button"
-          class="ghost"
-          id="toggleTargetFrame"
+          id="reloadTargetFrame"
         >
-          Toggle Target
+          Reload Target
         </button>
       </div>
 
       <div
         class="target-frame-shell"
         id="targetFrameShell"
-        hidden
       >
         <iframe
           id="audraliaDiagnosticTargetFrame"
-          title="Audralia target route diagnostic frame"
+          title="Audralia target route diagnostic observation frame"
           src="/showroom/globe/audralia/"
           loading="lazy"
         ></iframe>
       </div>
     </section>
+  </aside>
+</section>
 
-    <section
-      class="technical-panel"
-      id="technicalPanel"
-      aria-labelledby="technicalPanelTitle"
-    >
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">
-            Technical View
-          </p>
+<section
+  class="instrument-deck"
+  id="instrumentDeck"
+  aria-labelledby="instrumentDeckTitle"
+>
+  <header class="instrument-deck__header">
+    <div>
+      <p class="eyebrow">
+        Lower Instrument Deck
+      </p>
 
-          <h2 id="technicalPanelTitle">
-            Separated technical tabs
-          </h2>
-        </div>
+      <h2 id="instrumentDeckTitle">
+        Cycle, registry, receipts, archive, and boundaries
+      </h2>
+    </div>
 
-        <span class="pill">
-          TECHNICAL_ONLY
-        </span>
-      </div>
-
-      <div
-        class="tabs"
-        role="tablist"
-        aria-label="Technical diagnostic tabs"
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected="true"
-          aria-controls="tabLedger"
-          id="tabLedgerButton"
-          data-tab="ledger"
-        >
-          Ledger
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="tabReceipts"
-          id="tabReceiptsButton"
-          data-tab="receipts"
-        >
-          Raw Receipts
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="tabContracts"
-          id="tabContractsButton"
-          data-tab="contracts"
-        >
-          Contracts
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="tabBoundary"
-          id="tabBoundaryButton"
-          data-tab="boundary"
-        >
-          Boundary
-        </button>
-      </div>
-
-      <section
-        class="tab-panel"
-        id="tabLedger"
-        role="tabpanel"
-        aria-labelledby="tabLedgerButton"
-      >
-        <pre id="ledgerOutput">No ledger produced yet.</pre>
-      </section>
-
-      <section
-        class="tab-panel"
-        id="tabReceipts"
-        role="tabpanel"
-        aria-labelledby="tabReceiptsButton"
-        hidden
-      >
-        <pre id="rawReceiptsOutput">No receipts produced yet.</pre>
-      </section>
-
-      <section
-        class="tab-panel"
-        id="tabContracts"
-        role="tabpanel"
-        aria-labelledby="tabContractsButton"
-        hidden
-      >
-        <div class="contract-grid">
-          <article
-            data-contract-role="governing-engine-contract"
-          >
-            <b>Governing Engine Contract</b>
-            <span>
-              /assets/engine/dgb.engine.contract.js
-            </span>
-          </article>
-
-          <article
-            data-contract-role="runtime-engine-core"
-          >
-            <b>Runtime Engine Core</b>
-            <span>
-              /assets/engine/dgb.engine.js
-            </span>
-          </article>
-
-          <article
-            data-contract-role="engine-subject-registry"
-          >
-            <b>Engine and Authority Registry</b>
-            <span>
-              /assets/engine/dgb.engine.subjects.js
-            </span>
-          </article>
-
-          <article>
-            <b>Conductor</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.north.conductor.js
-            </span>
-          </article>
-
-          <article>
-            <b>North Probe</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.probe.north.js
-            </span>
-          </article>
-
-          <article>
-            <b>East Probe</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.probe.east.js
-            </span>
-          </article>
-
-          <article>
-            <b>East Interpreter</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.east.js
-            </span>
-          </article>
-
-          <article>
-            <b>Surface Truth</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js
-            </span>
-          </article>
-
-          <article>
-            <b>West Probe</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.probe.west.js
-            </span>
-          </article>
-
-          <article>
-            <b>West Interpreter</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.west.js
-            </span>
-          </article>
-
-          <article>
-            <b>South Probe</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.probe.south.js
-            </span>
-          </article>
-
-          <article>
-            <b>South Interpreter</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.south.js
-            </span>
-          </article>
-
-          <article>
-            <b>South Pointer</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.south.surface.pointer.js
-            </span>
-          </article>
-
-          <article>
-            <b>Rail</b>
-            <span>
-              /assets/audralia/audralia.diagnostic.rail.js
-            </span>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="tab-panel"
-        id="tabBoundary"
-        role="tabpanel"
-        aria-labelledby="tabBoundaryButton"
-        hidden
-      >
-        <div class="boundary-grid">
-          <article>
-            <b>Governing contract</b>
-            <span>Authority only; not a second engine</span>
-          </article>
-
-          <article>
-            <b>Core engine</b>
-            <span>Executable runtime subject</span>
-          </article>
-
-          <article>
-            <b>Registry</b>
-            <span>Metadata and inspection only</span>
-          </article>
-
-          <article>
-            <b>Observer</b>
-            <span>Not required for registry visibility</span>
-          </article>
-
-          <article>
-            <b>Production mutation</b>
-            <span>Not authorized</span>
-          </article>
-
-          <article>
-            <b>Runtime restart</b>
-            <span>Not authorized</span>
-          </article>
-
-          <article>
-            <b>Renderer mutation</b>
-            <span>Not authorized</span>
-          </article>
-
-          <article>
-            <b>Repair</b>
-            <span>Not authorized</span>
-          </article>
-
-          <article>
-            <b>Readiness</b>
-            <span>Not claimed by this route</span>
-          </article>
-
-          <article>
-            <b>Visual pass</b>
-            <span>Not claimed</span>
-          </article>
-
-          <article>
-            <b>Canvas2D</b>
-            <span>Not governing</span>
-          </article>
-
-          <article>
-            <b>3D host</b>
-            <span>Observation only</span>
-          </article>
-
-          <article>
-            <b>F13</b>
-            <span>Conditional engine-authority inheritance</span>
-          </article>
-
-          <article>
-            <b>F21</b>
-            <span>Unclaimed pending runtime measurement</span>
-          </article>
-        </div>
-      </section>
-    </section>
-  </main>
+    <span class="instrument-deck__status">
+      Diagnostic only · Read-only
+    </span>
+  </header>
 
   <div
+    class="panel-tablist instrument-deck-tabs"
+    id="instrumentDeckTabs"
+    role="tablist"
+    aria-label="Instrument chambers"
+  >
+    <button
+      type="button"
+      role="tab"
+      id="cycleChamberButton"
+      aria-selected="true"
+      aria-controls="cycleChamber"
+      data-instrument-chamber="cycle"
+    >
+      Cycle
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="registryChamberButton"
+      aria-selected="false"
+      aria-controls="registryChamber"
+      data-instrument-chamber="registry"
+    >
+      Registry
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="receiptChamberButton"
+      aria-selected="false"
+      aria-controls="receiptChamber"
+      data-instrument-chamber="receipts"
+    >
+      Receipts
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="archiveChamberButton"
+      aria-selected="false"
+      aria-controls="archiveChamber"
+      data-instrument-chamber="archive"
+    >
+      Archive
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="boundaryChamberButton"
+      aria-selected="false"
+      aria-controls="boundaryChamber"
+      data-instrument-chamber="boundary"
+    >
+      Boundary
+    </button>
+  </div>
+
+  <section
+    class="instrument-chamber"
+    id="cycleChamber"
+    role="tabpanel"
+    aria-labelledby="cycleChamberButton"
+  >
+    <header class="chamber-heading">
+      <div>
+        <p class="eyebrow">
+          Explicit execution audit
+        </p>
+
+        <h3>
+          Nine-Cycle Chamber
+        </h3>
+      </div>
+
+      <span data-status="NOT_RUN">
+        NOT RUN
+      </span>
+    </header>
+
+    <div class="cycle-summary-grid">
+      <article id="cyclePreviewSummary">
+        <span>Preview</span>
+        <strong>Available without execution</strong>
+        <p>
+          Participants and current evidence can be reported before a cycle
+          exists.
+        </p>
+      </article>
+
+      <article id="cycleRegistrationSummary">
+        <span>Registration</span>
+        <strong>Not attempted</strong>
+        <p>
+          Nine stations and one auxiliary will be registered only during
+          explicit execution.
+        </p>
+      </article>
+
+      <article id="cyclePreflightSummary">
+        <span>Preflight</span>
+        <strong>Not attempted</strong>
+        <p>
+          Bounded target-runtime preflight belongs only to Run Nine-Cycle.
+        </p>
+      </article>
+
+      <article id="cycleExecutionSummary">
+        <span>Execution</span>
+        <strong>Not run</strong>
+        <p>
+          No conductor cycle has been created during this session.
+        </p>
+      </article>
+    </div>
+
+    <ol
+      class="cycle-map"
+      id="cycleMap"
+      aria-label="Nine diagnostic cycle stations"
+    >
+      <li
+        data-station="NORTH_PROBE_INTAKE"
+        data-position="1"
+        data-fibonacci="F1"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">1</span>
+
+        <div>
+          <b>North Intake</b>
+          <p>What are we diagnosing?</p>
+        </div>
+
+        <small>F1</small>
+      </li>
+
+      <li
+        data-station="EAST_PROBE_SOURCE"
+        data-position="2"
+        data-fibonacci="F3"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">2</span>
+
+        <div>
+          <b>East Source</b>
+          <p>What was declared?</p>
+        </div>
+
+        <small>F3</small>
+      </li>
+
+      <li
+        data-station="EAST_CONSTRUCTION_INTERPRETATION"
+        data-position="3"
+        data-fibonacci="F5"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">3</span>
+
+        <div>
+          <b>East Construction</b>
+          <p>Is the construction admissible?</p>
+        </div>
+
+        <small>F5</small>
+      </li>
+
+      <li
+        data-station="CANVAS_SURFACE_TRUTH"
+        data-position="4"
+        data-fibonacci="F8"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">4</span>
+
+        <div>
+          <b>3D Surface Truth</b>
+          <p>Is there a valid 3D presentation host?</p>
+        </div>
+
+        <small>F8</small>
+      </li>
+
+      <li
+        data-station="WEST_PROBE_RUNTIME"
+        data-position="5"
+        data-fibonacci="F13"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">5</span>
+
+        <div>
+          <b>West Runtime</b>
+          <p>What runtime evidence exists?</p>
+        </div>
+
+        <small>F13</small>
+      </li>
+
+      <li
+        data-station="WEST_RUNTIME_INTERPRETATION"
+        data-position="6"
+        data-fibonacci="F21"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">6</span>
+
+        <div>
+          <b>West Interpretation</b>
+          <p>Does source match runtime?</p>
+        </div>
+
+        <small>F21</small>
+      </li>
+
+      <li
+        data-station="SOUTH_PROBE_HANDOFF"
+        data-position="7"
+        data-fibonacci="F34"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">7</span>
+
+        <div>
+          <b>South Handoff</b>
+          <p>Can the packet return cleanly?</p>
+        </div>
+
+        <small>F34</small>
+      </li>
+
+      <li
+        data-station="SOUTH_RESTITUTION_INTERPRETATION"
+        data-position="8"
+        data-fibonacci="F55"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">8</span>
+
+        <div>
+          <b>South Restitution</b>
+          <p>What owner or continuation is recommended?</p>
+        </div>
+
+        <small>F55</small>
+      </li>
+
+      <li
+        data-station="RAIL_TERMINAL_SYNTHESIS"
+        data-position="9"
+        data-fibonacci="F89"
+        data-status="UNKNOWN"
+      >
+        <span class="cycle-position">9</span>
+
+        <div>
+          <b>Rail Synthesis</b>
+          <p>What is the final diagnostic reading?</p>
+        </div>
+
+        <small>F89</small>
+      </li>
+    </ol>
+
+    <div class="cycle-ledger">
+      <h4>
+        Cycle Ledger
+      </h4>
+
+      <pre id="cycleLedgerOutput">No cycle ledger has been produced.</pre>
+    </div>
+
+    <div
+      class="cycle-receipt-list"
+      id="cycleReceiptList"
+      aria-live="polite"
+    >
+      <article class="empty-state">
+        <h4>
+          No cycle receipts
+        </h4>
+
+        <p>
+          Run Nine-Cycle explicitly to create station receipts.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section
+    class="instrument-chamber"
+    id="registryChamber"
+    role="tabpanel"
+    aria-labelledby="registryChamberButton"
+    hidden
+  >
+    <header class="chamber-heading">
+      <div>
+        <p class="eyebrow">
+          Engine and authority records
+        </p>
+
+        <h3>
+          Registry Chamber
+        </h3>
+      </div>
+
+      <span data-status="UNKNOWN">
+        UNKNOWN
+      </span>
+    </header>
+
+    <div class="registry-summary-grid">
+      <article>
+        <span>Governing contracts</span>
+        <strong id="governingContractCount">—</strong>
+      </article>
+
+      <article>
+        <span>Assigned engines</span>
+        <strong id="assignedEngineCount">—</strong>
+      </article>
+
+      <article>
+        <span>Selectable engines</span>
+        <strong id="selectableEngineCount">—</strong>
+      </article>
+
+      <article>
+        <span>Reserved slots</span>
+        <strong id="reservedEngineCount">—</strong>
+      </article>
+    </div>
+
+    <div
+      class="registry-record-list"
+      id="registryRecordList"
+      aria-live="polite"
+    >
+      <article class="empty-state">
+        <h4>
+          Registry not observed yet
+        </h4>
+
+        <p>
+          The controller will inspect the shell-preloaded engine registry
+          after boot.
+        </p>
+      </article>
+    </div>
+
+    <div class="registry-detail-grid">
+      <article id="selectedEngineDetail">
+        <h4>
+          Selected Engine
+        </h4>
+
+        <p>
+          No selected-engine record has been observed.
+        </p>
+      </article>
+
+      <article id="engineRuntimeDetail">
+        <h4>
+          Runtime Evidence
+        </h4>
+
+        <p>
+          No engine-runtime evidence has been observed.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section
+    class="instrument-chamber"
+    id="receiptChamber"
+    role="tabpanel"
+    aria-labelledby="receiptChamberButton"
+    hidden
+  >
+    <header class="chamber-heading">
+      <div>
+        <p class="eyebrow">
+          Accessible diagnostic records
+        </p>
+
+        <h3>
+          Receipt Chamber
+        </h3>
+      </div>
+
+      <span data-status="EMPTY">
+        EMPTY
+      </span>
+    </header>
+
+    <div
+      class="receipt-filters"
+      id="receiptFilters"
+      aria-label="Receipt filters"
+    >
+      <button
+        type="button"
+        data-receipt-filter="all"
+        aria-pressed="true"
+      >
+        All
+      </button>
+
+      <button
+        type="button"
+        data-receipt-filter="participant"
+        aria-pressed="false"
+      >
+        Participants
+      </button>
+
+      <button
+        type="button"
+        data-receipt-filter="observation"
+        aria-pressed="false"
+      >
+        Observation
+      </button>
+
+      <button
+        type="button"
+        data-receipt-filter="cycle"
+        aria-pressed="false"
+      >
+        Cycle
+      </button>
+
+      <button
+        type="button"
+        data-receipt-filter="error"
+        aria-pressed="false"
+      >
+        Errors
+      </button>
+    </div>
+
+    <div
+      class="receipt-list"
+      id="receiptList"
+      aria-live="polite"
+    >
+      <article class="empty-state">
+        <h4>
+          No receipts collected
+        </h4>
+
+        <p>
+          Participant observation, full target observation, direct checks,
+          reports, and cycle execution may contribute receipts.
+        </p>
+      </article>
+    </div>
+
+    <article
+      class="selected-receipt-detail"
+      id="selectedReceiptDetail"
+    >
+      <h4>
+        Select a receipt
+      </h4>
+
+      <p>
+        Receipt detail will appear here.
+      </p>
+    </article>
+  </section>
+
+  <section
+    class="instrument-chamber"
+    id="archiveChamber"
+    role="tabpanel"
+    aria-labelledby="archiveChamberButton"
+    hidden
+  >
+    <header class="chamber-heading">
+      <div>
+        <p class="eyebrow">
+          Session evidence
+        </p>
+
+        <h3>
+          Archive Chamber
+        </h3>
+      </div>
+
+      <span>
+        <b id="archiveSessionCount">0</b>
+        records
+      </span>
+    </header>
+
+    <div
+      class="archive-report-list"
+      id="archiveReportList"
+    >
+      <article class="empty-state">
+        <h4>
+          No archived reports
+        </h4>
+
+        <p>
+          Create a report and add it to the archive.
+        </p>
+      </article>
+    </div>
+
+    <div
+      class="archive-error-list"
+      id="archiveErrorList"
+    >
+      <article class="empty-state">
+        <h4>
+          No archived errors
+        </h4>
+
+        <p>
+          Controller, participant, observation, direct, and cycle errors
+          will be recorded here.
+        </p>
+      </article>
+    </div>
+
+    <div class="archive-snapshot-grid">
+      <article id="archiveParticipantSnapshot">
+        <h4>
+          Participant Snapshot
+        </h4>
+
+        <p>
+          No participant snapshot has been archived.
+        </p>
+      </article>
+
+      <article id="archiveObservationSnapshot">
+        <h4>
+          Observation Snapshot
+        </h4>
+
+        <p>
+          No observation snapshot has been archived.
+        </p>
+      </article>
+    </div>
+
+    <div class="archive-raw">
+      <h4>
+        Deep Archive
+      </h4>
+
+      <pre id="archiveRawOutput">No deep archive has been created.</pre>
+    </div>
+  </section>
+
+  <section
+    class="instrument-chamber"
+    id="boundaryChamber"
+    role="tabpanel"
+    aria-labelledby="boundaryChamberButton"
+    hidden
+  >
+    <header class="chamber-heading">
+      <div>
+        <p class="eyebrow">
+          Permanent no-touch declarations
+        </p>
+
+        <h3>
+          Boundary Chamber
+        </h3>
+      </div>
+
+      <span data-status="ACTIVE">
+        ACTIVE
+      </span>
+    </header>
+
+    <div
+      class="boundary-manifest"
+      id="boundaryManifest"
+    >
+      <article id="boundaryNoProduction">
+        <strong>Production mutation</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoCanvasRepair">
+        <strong>Canvas repair</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoCanvasBuild">
+        <strong>Canvas build</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoCanvasRelease">
+        <strong>Canvas release</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoControlsRepair">
+        <strong>Controls repair</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoRuntimeRestart">
+        <strong>Runtime restart</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoRouteRepair">
+        <strong>Route repair</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoRendererMutation">
+        <strong>Renderer mutation</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoSyntheticEvidence">
+        <strong>Synthetic evidence</strong>
+        <span>Forbidden</span>
+      </article>
+
+      <article id="boundaryNoVisualPass">
+        <strong>Visual-pass claim</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoReadinessClaim">
+        <strong>Readiness claim</strong>
+        <span>Not authorized</span>
+      </article>
+
+      <article id="boundaryNoCyclePassClaim">
+        <strong>Cycle-pass claim</strong>
+        <span>Requires explicit evidence</span>
+      </article>
+    </div>
+  </section>
+</section>
+
+  </main>  <div
     class="toast"
     id="toast"
     role="status"
     aria-live="polite"
-  ></div>
-
-  <!-- ============================================================
+    aria-atomic="true"
+  ></div>  <!-- ============================================================
        ENGINE FAMILY
        Canonical dependency order:
        1. Governing contract
        2. Runtime core
        3. Engine and authority registry
-       ============================================================ -->
-
-  <script
+       ============================================================ -->  <script
     src="/assets/engine/dgb.engine.contract.js?v=DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
     defer
     data-engine-family-script="governing-contract"
+    data-participant-role="GOVERNING_ENGINE_CONTRACT"
+    data-participant-required="true"
     data-load-order="1"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/engine/dgb.engine.js?v=DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1"
     defer
     data-engine-family-script="runtime-core"
+    data-participant-role="RUNTIME_ENGINE_CORE"
+    data-participant-required="true"
     data-load-order="2"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/engine/dgb.engine.subjects.js?v=DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2"
     defer
     data-engine-family-script="engine-registry"
+    data-participant-role="ENGINE_AND_AUTHORITY_REGISTRY"
+    data-participant-required="true"
     data-load-order="3"
-  ></script>
-
-  <!-- ============================================================
+  ></script>  <!-- ============================================================
        AUDRALIA DIAGNOSTIC FAMILY
-       Loads only after contract, engine, and registry.
-       ============================================================ -->
-
-  <script
+       Shell-preloaded participants.
+       Participant resolution and alias inspection belong to index.js.
+       ============================================================ -->  <script
     src="/assets/audralia/audralia.diagnostic.north.conductor.js?v=AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_NINE_CYCLE_AUTHORITY_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="conductor"
+    data-participant-role="NORTH_CONDUCTOR"
+    data-participant-required="true"
     data-load-order="4"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.probe.north.js?v=AUDRALIA_DIAGNOSTIC_PROBE_NORTH_INTAKE_F1_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="north-probe"
+    data-participant-role="NORTH_PROBE_INTAKE"
+    data-cycle-position="1"
+    data-fibonacci="F1"
+    data-participant-required="true"
     data-load-order="5"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.probe.east.js?v=AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="east-probe"
+    data-participant-role="EAST_PROBE_SOURCE"
+    data-cycle-position="2"
+    data-fibonacci="F3"
+    data-participant-required="true"
     data-load-order="6"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.east.js?v=AUDRALIA_DIAGNOSTIC_EAST_CONSTRUCTION_INTERPRETATION_F5_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="east"
+    data-participant-role="EAST_CONSTRUCTION_INTERPRETATION"
+    data-cycle-position="3"
+    data-fibonacci="F5"
+    data-participant-required="true"
     data-load-order="7"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js?v=AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="surface-truth"
+    data-participant-role="CANVAS_SURFACE_TRUTH"
+    data-cycle-position="4"
+    data-fibonacci="F8"
+    data-participant-required="true"
     data-load-order="8"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.probe.west.js?v=AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="west-probe"
+    data-participant-role="WEST_PROBE_RUNTIME"
+    data-cycle-position="5"
+    data-fibonacci="F13"
+    data-participant-required="true"
     data-load-order="9"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.west.js?v=AUDRALIA_DIAGNOSTIC_WEST_RUNTIME_INTERPRETATION_F21_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="west"
+    data-participant-role="WEST_RUNTIME_INTERPRETATION"
+    data-cycle-position="6"
+    data-fibonacci="F21"
+    data-participant-required="true"
     data-load-order="10"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.probe.south.js?v=AUDRALIA_DIAGNOSTIC_PROBE_SOUTH_HANDOFF_F34_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="south-probe"
+    data-participant-role="SOUTH_PROBE_HANDOFF"
+    data-cycle-position="7"
+    data-fibonacci="F34"
+    data-participant-required="true"
     data-load-order="11"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.south.js?v=AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="south"
+    data-participant-role="SOUTH_RESTITUTION_INTERPRETATION"
+    data-cycle-position="8"
+    data-fibonacci="F55"
+    data-participant-required="true"
     data-load-order="12"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.south.surface.pointer.js?v=AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="south-pointer"
+    data-participant-role="SOUTH_SURFACE_POINTER"
+    data-parent-cycle-position="8"
+    data-parent-fibonacci="F55"
+    data-participant-required="false"
+    data-creates-cycle-position="false"
     data-load-order="13"
-  ></script>
-
-  <script
+  ></script>  <script
     src="/assets/audralia/audralia.diagnostic.rail.js?v=AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1"
     defer
     data-audralia-diagnostic-script="rail"
+    data-participant-role="RAIL_TERMINAL_SYNTHESIS"
+    data-cycle-position="9"
+    data-fibonacci="F89"
+    data-participant-required="true"
     data-load-order="14"
-  ></script>
-
-  <!-- ============================================================
+  ></script>  <!-- ============================================================
        ROUTE CONTROLLER
-       Must load after every engine and diagnostic dependency.
-       ============================================================ -->
-
-  <script
-    src="/showroom/globe/audralia/diagnostic/index.js?v=AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v1"
+       Must load after all shell-preloaded engine and diagnostic participants.
+       The controller must not run the cycle during boot.
+       ============================================================ -->  <script
+    src="/showroom/globe/audralia/diagnostic/index.js?v=AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_CONTROLLER_TNT_v1"
     defer
     data-audralia-diagnostic-controller-script="true"
+    data-participant-role="DROP_WITH_READ_ROUTE_CONTROLLER"
+    data-participant-required="true"
+    data-report-nonblocking="true"
     data-load-order="15"
-  ></script>
-</body>
+  ></script></body>
 </html>

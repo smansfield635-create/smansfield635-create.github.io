@@ -1,46 +1,62 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v3
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5
 // Full-file replacement.
+//
+// PREVIOUS CONTRACT:
+// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v4
+//
+// CONSTRUCTION BASIS:
+// - 10 STEPS OPERATIONAL TRACK
+// - RELATIONAL AUTHORITY AUDIT
+// - N.E.W.S. ALIGNMENT AUDIT
+// - FIBONACCI AUTHORITY / SEQUENCE AUDIT
+// - AMBIGUITY AUDIT
+// - RELATIONAL RETURN PASS
+// - BOUNDED CORRECTION SET
 //
 // AUTHORITY:
 // - F34 SOUTH_PROBE_HANDOFF
 // - F55 SOUTH_RESTITUTION_INTERPRETATION
 //
-// PURPOSE:
-// - Preserve the working canonical control IDs.
-// - Preserve engine-backed Create Report behavior.
-// - Preserve a visible fallback READ report when the engine is unavailable.
-// - Add distributed Create, View, Copy, Receipt, Archive, and Reset commands.
-// - Commit report state before rendering and command enablement.
-// - Harvest bounded receipt families without executing participants or cycles.
-// - Normalize and deduplicate receipt records for visible filters.
-// - Leave index.js and index.inspection.lane.js unchanged.
+// CONTROLS OWNS:
+// - user-command observation;
+// - local selection and presentation state;
+// - report-command coordination;
+// - direct-check initiation;
+// - Nine-Cycle initiation;
+// - overlapping-cycle prevention;
+// - controls-owned execution-lock state;
+// - preservation of raw engine receipts;
+// - visible placement of returned station receipts;
+// - controls-local DOM observation and update evidence;
+// - report-only reset;
+// - full-workbench reset coordination;
+// - receipt and archive presentation;
+// - controls public API;
+// - controls-owned receipts;
+// - publication of controls requirements.
 //
-// DISTRIBUTED COMMANDS:
-//   data-report-command="create"
-//   data-report-command="view"
-//   data-report-command="copy-readable"
-//   data-report-command="copy-packet"
-//   data-report-command="copy-raw"
-//   data-report-command="open-receipts"
-//   data-report-command="open-archive"
-//   data-report-command="reset"
+// CONTROLS DOES NOT OWN:
+// - canonical diagnostic truth;
+// - canonical Nine-Cycle construction;
+// - station-execution truth;
+// - exact-nine judgment;
+// - restitution judgment;
+// - terminal engine verdict;
+// - cross-file alias certification;
+// - bridge compatibility;
+// - runtime script-order certification;
+// - controls-to-HTML relational certification;
+// - whole-family synchronization certification;
+// - production repair authorization.
 //
-// OPTIONAL CONTEXT:
-//   data-report-category
-//   data-report-audit
-//   data-report-participant
-//   data-report-chamber
-//   data-report-mode
-//   data-report-source
-//   data-report-view-after-create
+// UPSTREAM FREEZE:
+// - /showroom/globe/audralia/diagnostic/index.js remains unchanged.
+// - /showroom/globe/audralia/diagnostic/index.inspection.lane.js remains unchanged.
 //
-// USER-FACING RECEIPT FILTERS:
-//   all
-//   participant
-//   observation
-//   cycle
-//   error
+// NO NEW FILES.
+// NO PATCHES.
+// NO COMPETING CONTROL API.
 
 (function installAudraliaDistributedDiagnosticControls(global) {
   "use strict";
@@ -65,10 +81,13 @@
   }
 
   var CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v3";
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5";
+
+  var PREVIOUS_CONTRACT =
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v4";
 
   var VERSION =
-    "3.0.0";
+    "5.0.0";
 
   var FILE =
     "/showroom/globe/audralia/diagnostic/index.controls.js";
@@ -81,6 +100,9 @@
 
   var INSPECTION_LANE_CONTRACT =
     "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v1";
+
+  var ENGINE_CYCLE_RECEIPT_SCHEMA =
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v2";
 
   var TARGET_ROUTE =
     "/showroom/globe/audralia/";
@@ -95,7 +117,13 @@
     "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v3";
 
   var CONTROL_RECEIPT_SCHEMA =
-    "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v3";
+    "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v5";
+
+  var CYCLE_RENDERING_RECEIPT_SCHEMA =
+    "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v5";
+
+  var CONTROL_REQUIREMENTS_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v1";
 
   var ENGINE_GLOBAL_PATHS =
     Object.freeze([
@@ -118,6 +146,13 @@
       "READY",
       "AVAILABLE",
       "ACTIVE"
+    ]);
+
+  var VALID_CYCLE_TERMINAL_STATUSES =
+    Object.freeze([
+      "COMMITTED",
+      "HELD",
+      "ERROR"
     ]);
 
   var DISTRIBUTED_COMMANDS =
@@ -184,6 +219,77 @@
       "boundaryChamberButton"
     ]);
 
+  var CYCLE_TARGET_IDS =
+    Object.freeze([
+      "cycleStatus",
+      "cycleChamber",
+      "cyclePreviewSummary",
+      "cycleRegistrationSummary",
+      "cyclePreflightSummary",
+      "cycleExecutionSummary",
+      "cycleMap",
+      "cycleLedgerOutput",
+      "cycleReceiptList"
+    ]);
+
+  var CANONICAL_CYCLE_STATIONS =
+    Object.freeze([
+      Object.freeze({
+        position: 1,
+        fibonacci: "F1",
+        role: "NORTH_PROBE_INTAKE",
+        direction: "NORTH"
+      }),
+      Object.freeze({
+        position: 2,
+        fibonacci: "F3",
+        role: "EAST_PROBE_SOURCE",
+        direction: "EAST"
+      }),
+      Object.freeze({
+        position: 3,
+        fibonacci: "F5",
+        role: "EAST_CONSTRUCTION_INTERPRETATION",
+        direction: "EAST"
+      }),
+      Object.freeze({
+        position: 4,
+        fibonacci: "F8",
+        role: "CANVAS_SURFACE_TRUTH",
+        direction: "CENTER"
+      }),
+      Object.freeze({
+        position: 5,
+        fibonacci: "F13",
+        role: "WEST_PROBE_RUNTIME",
+        direction: "WEST"
+      }),
+      Object.freeze({
+        position: 6,
+        fibonacci: "F21",
+        role: "WEST_RUNTIME_INTERPRETATION",
+        direction: "WEST"
+      }),
+      Object.freeze({
+        position: 7,
+        fibonacci: "F34",
+        role: "SOUTH_PROBE_HANDOFF",
+        direction: "SOUTH"
+      }),
+      Object.freeze({
+        position: 8,
+        fibonacci: "F55",
+        role: "SOUTH_RESTITUTION_INTERPRETATION",
+        direction: "SOUTH"
+      }),
+      Object.freeze({
+        position: 9,
+        fibonacci: "F89",
+        role: "RAIL_TERMINAL_SYNTHESIS",
+        direction: "RAIL"
+      })
+    ]);
+
   var NO_CLAIMS =
     Object.freeze({
       productionMutationAuthorized: false,
@@ -195,8 +301,97 @@
       readinessClaimed: false,
       visualPassClaimed: false,
       cyclePassClaimed: false,
+      exactNineIndependentlyClaimed: false,
+      restitutionIndependentlyClaimed: false,
+      bridgeCompatibilityClaimed: false,
+      runtimeOrderClaimed: false,
+      familySynchronizationClaimed: false,
       f21Claimed: false,
       f89Claimed: false
+    });
+
+  var CONTROL_REQUIREMENTS =
+    deepFreezeLiteral({
+      schema:
+        CONTROL_REQUIREMENTS_SCHEMA,
+
+      controlsContract:
+        CONTRACT,
+
+      publicApiRequirements: [
+        "createReport",
+        "runDirectCheck",
+        "runNineCycle",
+        "viewCurrentReport",
+        "copyReadableReport",
+        "copyPacketReport",
+        "copyRawReport",
+        "executeDistributedReportCommand",
+        "applyCommandContext",
+        "openReceiptChamber",
+        "openArchiveChamber",
+        "addReportToArchive",
+        "createDeepArchive",
+        "resetCurrentReport",
+        "resetWorkbench",
+        "selectCategory",
+        "selectAudit",
+        "selectParticipant",
+        "selectReportMode",
+        "selectObservationLens",
+        "selectInstrumentChamber",
+        "setTargetVisible",
+        "setTargetExpanded",
+        "reloadTargetFrame",
+        "applyReceiptFilter",
+        "selectReceipt",
+        "inspectControls",
+        "inspectDistributedCommands",
+        "inspectInspectionLane",
+        "collectReceiptFamilies",
+        "refreshReceiptInventory",
+        "resolveEngine",
+        "closeAllSelectors",
+        "renderCycleChamber",
+        "refreshCycleChamber",
+        "getState",
+        "getCurrentReport",
+        "getCurrentReportReceipt",
+        "getCurrentCycleReceipt",
+        "getCycleRenderingState",
+        "getNormalizedReceipts",
+        "getRequirements",
+        "getReceipt"
+      ],
+
+      requiredCycleTargetIds:
+        CYCLE_TARGET_IDS.slice(),
+
+      requiredStationPositions:
+        CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
+          return station.position;
+        }),
+
+      presentationStationMap:
+        CANONICAL_CYCLE_STATIONS,
+
+      expectedEngineContract:
+        ENGINE_CONTRACT,
+
+      expectedInspectionLaneContract:
+        INSPECTION_LANE_CONTRACT,
+
+      expectedEngineCycleReceiptSchema:
+        ENGINE_CYCLE_RECEIPT_SCHEMA,
+
+      certificationOwner:
+        "INDEX_CONTROL_BRIDGE",
+
+      controlsCertificationScope:
+        "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_EVIDENCE_ONLY",
+
+      noClaims:
+        NO_CLAIMS
     });
 
   var RECEIPT_FIELD_NAMES =
@@ -280,7 +475,17 @@
     },
 
     directReceipts: [],
-    cycleReceipt: null,
+
+    cycle: {
+      running: false,
+      executed: false,
+      rawReceipt: null,
+      rendering: null,
+      renderingReceipt: null,
+      localDomEvidence: null,
+      renderedAt: null
+    },
+
     normalizedReceipts: [],
     visibleReceipts: [],
 
@@ -293,6 +498,40 @@
     lastAction: null,
     lastError: null
   };
+
+  function deepFreezeLiteral(value, seen) {
+    var memory =
+      seen || [];
+
+    if (
+      !value ||
+      (
+        typeof value !== "object" &&
+        typeof value !== "function"
+      )
+    ) {
+      return value;
+    }
+
+    if (memory.indexOf(value) !== -1) {
+      return value;
+    }
+
+    memory.push(value);
+
+    try {
+      Object.keys(value).forEach(function freezeLiteralChild(key) {
+        deepFreezeLiteral(
+          value[key],
+          memory
+        );
+      });
+
+      Object.freeze(value);
+    } catch (_error) {}
+
+    return value;
+  }
 
   function byId(id) {
     return doc.getElementById(id);
@@ -307,6 +546,16 @@
       value &&
       typeof value === "object" &&
       !Array.isArray(value)
+    );
+  }
+
+  function hasOwn(owner, key) {
+    return Boolean(
+      owner &&
+      Object.prototype.hasOwnProperty.call(
+        owner,
+        key
+      )
     );
   }
 
@@ -470,6 +719,43 @@
       .replace(/"/g, '\\"');
   }
 
+  function normalizeToken(value) {
+    return String(
+      value === null ||
+      value === undefined
+        ? ""
+        : value
+    )
+      .trim()
+      .toUpperCase()
+      .replace(/[\s\-]+/g, "_");
+  }
+
+  function normalizeFibonacci(value) {
+    var token =
+      normalizeToken(value);
+
+    if (!token) {
+      return "";
+    }
+
+    if (/^\d+$/.test(token)) {
+      return "F" + token;
+    }
+
+    return token.charAt(0) === "F"
+      ? token
+      : "F" + token;
+  }
+
+  function declarationIsSupplied(value) {
+    return !(
+      value === null ||
+      value === undefined ||
+      String(value).trim() === ""
+    );
+  }
+
   function readPath(path) {
     var parts =
       String(path || "")
@@ -516,7 +802,7 @@
       byId(id);
 
     if (!node) {
-      return;
+      return false;
     }
 
     node.textContent =
@@ -524,6 +810,8 @@
       value === undefined
         ? ""
         : String(value);
+
+    return true;
   }
 
   function setHtml(id, value) {
@@ -531,31 +819,48 @@
       byId(id);
 
     if (!node) {
-      return;
+      return false;
     }
 
     node.innerHTML =
       String(value || "");
+
+    return true;
   }
 
   function setHidden(id, hidden) {
     var node =
       byId(id);
 
-    if (node) {
-      node.hidden =
-        Boolean(hidden);
+    if (!node) {
+      return false;
     }
+
+    node.hidden =
+      Boolean(hidden);
+
+    return true;
   }
 
   function setDisabled(id, disabled) {
     var node =
       byId(id);
 
-    if (node) {
-      node.disabled =
-        Boolean(disabled);
+    if (!node) {
+      return false;
     }
+
+    node.disabled =
+      Boolean(disabled);
+
+    node.setAttribute(
+      "aria-disabled",
+      disabled
+        ? "true"
+        : "false"
+    );
+
+    return true;
   }
 
   function setStatus(idOrNode, status) {
@@ -565,7 +870,7 @@
         : idOrNode;
 
     if (!node) {
-      return;
+      return false;
     }
 
     node.setAttribute(
@@ -574,6 +879,8 @@
         .trim()
         .toUpperCase()
     );
+
+    return true;
   }
 
   function toast(message, status) {
@@ -681,6 +988,40 @@
     );
   }
 
+  function runFinalizer(finalizer, context) {
+    try {
+      finalizer();
+    } catch (error) {
+      recordError(
+        "finalizer",
+        error,
+        context || null
+      );
+    }
+  }
+
+  function withFinalization(promise, finalizer, context) {
+    return Promise.resolve(promise)
+      .then(
+        function finalizeResolved(value) {
+          runFinalizer(
+            finalizer,
+            context
+          );
+
+          return value;
+        },
+        function finalizeRejected(error) {
+          runFinalizer(
+            finalizer,
+            context
+          );
+
+          throw error;
+        }
+      );
+  }
+
   function resolveFirst(paths) {
     var index;
     var value;
@@ -714,14 +1055,6 @@
         INSPECTION_GLOBAL_PATHS
       );
 
-    var receipt =
-      root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT ||
-      null;
-
-    var error =
-      root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__ ||
-      null;
-
     state.inspectionLane = {
       resolved:
         Boolean(resolved),
@@ -739,9 +1072,13 @@
             )
           : null,
       receiptPresent:
-        Boolean(receipt),
+        Boolean(
+          root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT
+        ),
       errorPresent:
-        Boolean(error)
+        Boolean(
+          root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__
+        )
     };
 
     return frozenClone(
@@ -1959,7 +2296,1653 @@
       });
   }
 
+  function getStationByPosition(value) {
+    var position =
+      Number(value);
+
+    if (
+      !Number.isInteger(position) ||
+      position < 1 ||
+      position > 9
+    ) {
+      return null;
+    }
+
+    return CANONICAL_CYCLE_STATIONS[
+      position - 1
+    ] || null;
+  }
+
+  function getStationByRole(value) {
+    var token =
+      normalizeToken(value);
+
+    if (!token) {
+      return null;
+    }
+
+    var index;
+
+    for (
+      index = 0;
+      index < CANONICAL_CYCLE_STATIONS.length;
+      index += 1
+    ) {
+      if (
+        CANONICAL_CYCLE_STATIONS[index].role ===
+        token
+      ) {
+        return CANONICAL_CYCLE_STATIONS[index];
+      }
+    }
+
+    return null;
+  }
+
+  function getStationByFibonacci(value) {
+    var token =
+      normalizeFibonacci(value);
+
+    if (!token) {
+      return null;
+    }
+
+    var index;
+
+    for (
+      index = 0;
+      index < CANONICAL_CYCLE_STATIONS.length;
+      index += 1
+    ) {
+      if (
+        CANONICAL_CYCLE_STATIONS[index].fibonacci ===
+        token
+      ) {
+        return CANONICAL_CYCLE_STATIONS[index];
+      }
+    }
+
+    return null;
+  }
+
+  function inspectCoordinateFamily(
+    record,
+    familyName,
+    keys,
+    resolver
+  ) {
+    var declarations = [];
+    var resolvedDeclarations = [];
+    var unresolvedDeclarations = [];
+    var resolvedPositions = [];
+
+    keys.forEach(function inspectKey(key) {
+      var value;
+      var station;
+      var declaration;
+
+      if (!hasOwn(record, key)) {
+        return;
+      }
+
+      value =
+        record[key];
+
+      if (!declarationIsSupplied(value)) {
+        return;
+      }
+
+      station =
+        resolver(value);
+
+      declaration = {
+        family:
+          familyName,
+        key:
+          key,
+        value:
+          value,
+        resolved:
+          Boolean(station),
+        station:
+          station,
+        resolvedPosition:
+          station
+            ? station.position
+            : null
+      };
+
+      declarations.push(
+        declaration
+      );
+
+      if (station) {
+        resolvedDeclarations.push(
+          declaration
+        );
+
+        if (
+          resolvedPositions.indexOf(
+            station.position
+          ) === -1
+        ) {
+          resolvedPositions.push(
+            station.position
+          );
+        }
+      } else {
+        unresolvedDeclarations.push(
+          declaration
+        );
+      }
+    });
+
+    return {
+      family:
+        familyName,
+
+      declared:
+        declarations.length > 0,
+
+      declarations:
+        declarations,
+
+      declarationCount:
+        declarations.length,
+
+      resolved:
+        resolvedDeclarations.length > 0,
+
+      resolvedDeclarations:
+        resolvedDeclarations,
+
+      resolvedDeclarationCount:
+        resolvedDeclarations.length,
+
+      unresolvedDeclarations:
+        unresolvedDeclarations,
+
+      unresolvedDeclarationCount:
+        unresolvedDeclarations.length,
+
+      firstResolvedStation:
+        resolvedDeclarations.length
+          ? resolvedDeclarations[0].station
+          : null,
+
+      firstDeclaredValue:
+        declarations.length
+          ? declarations[0].value
+          : null,
+
+      resolvedPositions:
+        resolvedPositions,
+
+      internalConflict:
+        resolvedPositions.length > 1
+    };
+  }
+
+  function resolveCycleReceiptCoordinates(receipt) {
+    var record =
+      isObject(receipt)
+        ? receipt
+        : {};
+
+    var positionFamily =
+      inspectCoordinateFamily(
+        record,
+        "position",
+        [
+          "cyclePosition",
+          "position"
+        ],
+        getStationByPosition
+      );
+
+    var stationFamily =
+      inspectCoordinateFamily(
+        record,
+        "station",
+        [
+          "stationId",
+          "role"
+        ],
+        getStationByRole
+      );
+
+    var fibonacciFamily =
+      inspectCoordinateFamily(
+        record,
+        "fibonacci",
+        [
+          "fibonacci"
+        ],
+        getStationByFibonacci
+      );
+
+    var families = [
+      positionFamily,
+      stationFamily,
+      fibonacciFamily
+    ];
+
+    var resolvedPositions = [];
+    var unresolvedDeclarations = [];
+    var allDeclarations = [];
+
+    families.forEach(function inspectFamily(family) {
+      allDeclarations =
+        allDeclarations.concat(
+          family.declarations
+        );
+
+      unresolvedDeclarations =
+        unresolvedDeclarations.concat(
+          family.unresolvedDeclarations
+        );
+
+      family.resolvedPositions.forEach(function addPosition(position) {
+        if (
+          resolvedPositions.indexOf(
+            position
+          ) === -1
+        ) {
+          resolvedPositions.push(
+            position
+          );
+        }
+      });
+    });
+
+    var selectedStation =
+      positionFamily.firstResolvedStation ||
+      stationFamily.firstResolvedStation ||
+      fibonacciFamily.firstResolvedStation ||
+      null;
+
+    var internalConflict =
+      families.some(function familyConflict(family) {
+        return family.internalConflict;
+      });
+
+    var crossFamilyConflict =
+      resolvedPositions.length > 1;
+
+    var noResolvableCoordinate =
+      !selectedStation;
+
+    var coordinateConflict =
+      unresolvedDeclarations.length > 0 ||
+      internalConflict ||
+      crossFamilyConflict ||
+      noResolvableCoordinate;
+
+    return {
+      selectedStation:
+        selectedStation,
+
+      selectedPosition:
+        selectedStation
+          ? selectedStation.position
+          : null,
+
+      declarations:
+        allDeclarations,
+
+      declarationCount:
+        allDeclarations.length,
+
+      positionDeclared:
+        positionFamily.declared,
+
+      positionValue:
+        positionFamily.firstDeclaredValue,
+
+      positionResolved:
+        positionFamily.resolved,
+
+      positionStation:
+        positionFamily.firstResolvedStation,
+
+      positionDeclarations:
+        positionFamily.declarations,
+
+      stationDeclared:
+        stationFamily.declared,
+
+      stationValue:
+        stationFamily.firstDeclaredValue,
+
+      stationResolved:
+        stationFamily.resolved,
+
+      stationStation:
+        stationFamily.firstResolvedStation,
+
+      stationDeclarations:
+        stationFamily.declarations,
+
+      fibonacciDeclared:
+        fibonacciFamily.declared,
+
+      fibonacciValue:
+        fibonacciFamily.firstDeclaredValue,
+
+      fibonacciResolved:
+        fibonacciFamily.resolved,
+
+      fibonacciStation:
+        fibonacciFamily.firstResolvedStation,
+
+      fibonacciDeclarations:
+        fibonacciFamily.declarations,
+
+      unresolvedDeclarations:
+        unresolvedDeclarations,
+
+      unresolvedDeclarationCount:
+        unresolvedDeclarations.length,
+
+      resolvedPositions:
+        resolvedPositions,
+
+      internalConflict:
+        internalConflict,
+
+      crossFamilyConflict:
+        crossFamilyConflict,
+
+      noResolvableCoordinate:
+        noResolvableCoordinate,
+
+      coordinateConflict:
+        coordinateConflict
+    };
+  }
+
+  function extractCycleStationReceipts(receipt) {
+    var candidates = [
+      receipt && receipt.stationReceipts,
+      receipt && receipt.receipts,
+      receipt && receipt.cycleReceipts,
+      receipt && receipt.stations,
+      receipt && receipt.ledger,
+      receipt && receipt.entries
+    ];
+
+    var index;
+
+    for (
+      index = 0;
+      index < candidates.length;
+      index += 1
+    ) {
+      if (Array.isArray(candidates[index])) {
+        return candidates[index].slice();
+      }
+    }
+
+    return [];
+  }
+
+  function deriveExactNineTriState(receipt) {
+    if (!receipt) {
+      return null;
+    }
+
+    if (
+      typeof receipt.exactNineValidated ===
+      "boolean"
+    ) {
+      return receipt.exactNineValidated;
+    }
+
+    if (
+      typeof receipt.exactNine ===
+      "boolean"
+    ) {
+      return receipt.exactNine;
+    }
+
+    if (
+      receipt.validation &&
+      typeof receipt.validation.exactNineValidated ===
+        "boolean"
+    ) {
+      return receipt.validation.exactNineValidated;
+    }
+
+    return null;
+  }
+
+  function normalizeCycleReceipt(receipt, sourceIndex) {
+    var coordinates =
+      resolveCycleReceiptCoordinates(
+        receipt
+      );
+
+    var selected =
+      coordinates.selectedStation;
+
+    return {
+      sourceIndex:
+        sourceIndex,
+
+      rawReceipt:
+        frozenClone(receipt),
+
+      receiptId:
+        receipt.receiptId ||
+        receipt.stationReceiptId ||
+        receipt.id ||
+        null,
+
+      status:
+        normalizeToken(
+          receipt.status ||
+          receipt.result ||
+          receipt.state ||
+          "UNKNOWN"
+        ),
+
+      role:
+        receipt.role ||
+        receipt.stationId ||
+        (
+          selected
+            ? selected.role
+            : null
+        ),
+
+      fibonacci:
+        receipt.fibonacci ||
+        (
+          selected
+            ? selected.fibonacci
+            : null
+        ),
+
+      position:
+        selected
+          ? selected.position
+          : null,
+
+      direction:
+        receipt.direction ||
+        (
+          selected
+            ? selected.direction
+            : null
+        ),
+
+      summary:
+        receipt.summary ||
+        receipt.message ||
+        receipt.result ||
+        null,
+
+      coordinates:
+        coordinates
+    };
+  }
+
+  function buildCycleRenderingState(rawReceipt) {
+    var stationReceipts =
+      extractCycleStationReceipts(
+        rawReceipt
+      );
+
+    var normalized =
+      stationReceipts.map(
+        normalizeCycleReceipt
+      );
+
+    var rows = {};
+    var unmapped = [];
+    var duplicates = [];
+    var coordinateConflicts = [];
+    var unresolvedDeclarations = [];
+
+    CANONICAL_CYCLE_STATIONS.forEach(function initializeRow(station) {
+      rows[station.position] = {
+        station:
+          station,
+        receipts: [],
+        presentationStatus:
+          state.cycle.executed
+            ? "NOT_REACHED"
+            : "UNKNOWN",
+        coordinateConflict:
+          false,
+        duplicate:
+          false
+      };
+    });
+
+    normalized.forEach(function mapNormalized(entry) {
+      if (
+        entry.coordinates.coordinateConflict
+      ) {
+        coordinateConflicts.push(
+          entry
+        );
+      }
+
+      unresolvedDeclarations =
+        unresolvedDeclarations.concat(
+          entry.coordinates.unresolvedDeclarations.map(
+            function mapUnresolved(declaration) {
+              return {
+                sourceIndex:
+                  entry.sourceIndex,
+                receiptId:
+                  entry.receiptId,
+                family:
+                  declaration.family,
+                key:
+                  declaration.key,
+                value:
+                  declaration.value
+              };
+            }
+          )
+        );
+
+      if (!entry.position) {
+        unmapped.push(
+          entry
+        );
+
+        return;
+      }
+
+      rows[entry.position].receipts.push(
+        entry
+      );
+    });
+
+    Object.keys(rows).forEach(function finalizeRow(key) {
+      var row =
+        rows[key];
+
+      if (!row.receipts.length) {
+        row.presentationStatus =
+          state.cycle.executed
+            ? "NOT_REACHED"
+            : "UNKNOWN";
+
+        return;
+      }
+
+      row.coordinateConflict =
+        row.receipts.some(function hasConflict(entry) {
+          return entry.coordinates.coordinateConflict;
+        });
+
+      row.duplicate =
+        row.receipts.length > 1;
+
+      if (row.duplicate) {
+        duplicates.push({
+          position:
+            row.station.position,
+          receiptCount:
+            row.receipts.length,
+          receipts:
+            row.receipts
+        });
+      }
+
+      row.presentationStatus =
+        row.duplicate ||
+        row.coordinateConflict
+          ? "CONFLICT"
+          : row.receipts[0].status ||
+            "AVAILABLE";
+    });
+
+    var mappedReceiptCount =
+      normalized.length -
+      unmapped.length;
+
+    var renderedPositions =
+      Object.keys(rows)
+        .map(Number)
+        .filter(function keepRendered(position) {
+          return rows[position].receipts.length > 0;
+        });
+
+    var notReachedPositions =
+      Object.keys(rows)
+        .map(Number)
+        .filter(function keepNotReached(position) {
+          return (
+            rows[position].presentationStatus ===
+            "NOT_REACHED"
+          );
+        });
+
+    var returnedReceiptMappingComplete =
+      Boolean(
+        state.cycle.executed &&
+        unmapped.length === 0 &&
+        duplicates.length === 0 &&
+        coordinateConflicts.length === 0 &&
+        unresolvedDeclarations.length === 0
+      );
+
+    return {
+      schema:
+        "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v5",
+
+      engineCycleStatus:
+        normalizeToken(
+          rawReceipt &&
+          rawReceipt.status
+            ? rawReceipt.status
+            : "UNKNOWN"
+        ),
+
+      engineCycleTerminalClass:
+        rawReceipt &&
+        (
+          rawReceipt.terminalClass ||
+          rawReceipt.classification ||
+          null
+        ),
+
+      engineExactNineValidated:
+        deriveExactNineTriState(
+          rawReceipt
+        ),
+
+      engineReceiptCount:
+        rawReceipt &&
+        Number.isFinite(
+          Number(rawReceipt.receiptCount)
+        )
+          ? Number(rawReceipt.receiptCount)
+          : normalized.length,
+
+      stationReceipts:
+        normalized,
+
+      rows:
+        rows,
+
+      mappedReceiptCount:
+        mappedReceiptCount,
+
+      unmappedReceiptCount:
+        unmapped.length,
+
+      unmappedReceipts:
+        unmapped,
+
+      duplicateCoordinateCount:
+        duplicates.length,
+
+      duplicateCoordinates:
+        duplicates,
+
+      coordinateConflictCount:
+        coordinateConflicts.length,
+
+      coordinateConflicts:
+        coordinateConflicts,
+
+      unresolvedDeclarationCount:
+        unresolvedDeclarations.length,
+
+      unresolvedDeclarations:
+        unresolvedDeclarations,
+
+      renderedPositions:
+        renderedPositions,
+
+      notReachedPositions:
+        notReachedPositions,
+
+      returnedReceiptMappingComplete:
+        returnedReceiptMappingComplete,
+
+      logicalMappingComplete:
+        returnedReceiptMappingComplete,
+
+      logicalMappingScope:
+        "RETURNED_RECEIPTS_ONLY",
+
+      createdAt:
+        nowIso()
+    };
+  }
+
+  function setCycleRunning(running) {
+    state.cycle.running =
+      Boolean(running);
+
+    setDisabled(
+      "runNineCycle",
+      state.cycle.running
+    );
+
+    var button =
+      byId("runNineCycle");
+
+    if (button) {
+      button.setAttribute(
+        "aria-busy",
+        state.cycle.running
+          ? "true"
+          : "false"
+      );
+
+      button.setAttribute(
+        "data-cycle-running",
+        state.cycle.running
+          ? "true"
+          : "false"
+      );
+    }
+
+    publishReceipt();
+  }
+
+  function getCycleStationRow(position) {
+    return (
+      doc.querySelector(
+        '#cycleMap [data-position="' +
+          String(position) +
+          '"]'
+      ) ||
+      doc.querySelector(
+        '#cycleChamber [data-position="' +
+          String(position) +
+          '"]'
+      )
+    );
+  }
+
+  function renderCycleRow(position, rowState) {
+    var row =
+      getCycleStationRow(
+        position
+      );
+
+    var result = {
+      position:
+        position,
+      found:
+        Boolean(row),
+      updated:
+        false
+    };
+
+    if (!row) {
+      return result;
+    }
+
+    var status =
+      rowState.presentationStatus ||
+      "UNKNOWN";
+
+    row.setAttribute(
+      "data-status",
+      status
+    );
+
+    row.setAttribute(
+      "data-position",
+      String(position)
+    );
+
+    row.setAttribute(
+      "data-fibonacci",
+      rowState.station.fibonacci
+    );
+
+    row.setAttribute(
+      "data-role",
+      rowState.station.role
+    );
+
+    row.setAttribute(
+      "data-coordinate-conflict",
+      rowState.coordinateConflict
+        ? "true"
+        : "false"
+    );
+
+    row.setAttribute(
+      "data-duplicate-coordinate",
+      rowState.duplicate
+        ? "true"
+        : "false"
+    );
+
+    var statusNode =
+      row.querySelector(
+        "[data-station-status]"
+      ) ||
+      row.querySelector(
+        "[data-status-value]"
+      ) ||
+      row.querySelector("b");
+
+    var summaryNode =
+      row.querySelector(
+        "[data-station-summary]"
+      ) ||
+      row.querySelector("small");
+
+    var roleNode =
+      row.querySelector(
+        "[data-station-role]"
+      );
+
+    var fibonacciNode =
+      row.querySelector(
+        "[data-station-fibonacci]"
+      );
+
+    if (statusNode) {
+      statusNode.textContent =
+        status;
+
+      statusNode.setAttribute(
+        "data-status",
+        status
+      );
+    }
+
+    if (roleNode) {
+      roleNode.textContent =
+        rowState.station.role;
+    }
+
+    if (fibonacciNode) {
+      fibonacciNode.textContent =
+        rowState.station.fibonacci;
+    }
+
+    if (summaryNode) {
+      if (!rowState.receipts.length) {
+        summaryNode.textContent =
+          status === "NOT_REACHED"
+            ? "No station receipt returned after cycle execution."
+            : "Cycle not yet executed.";
+      } else if (rowState.duplicate) {
+        summaryNode.textContent =
+          String(rowState.receipts.length) +
+          " receipts declared this position; all are preserved.";
+      } else if (rowState.coordinateConflict) {
+        summaryNode.textContent =
+          "Receipt mapped with unresolved or contradictory coordinate evidence.";
+      } else {
+        summaryNode.textContent =
+          rowState.receipts[0].summary ||
+          rowState.receipts[0].receiptId ||
+          "Station receipt available.";
+      }
+    }
+
+    result.updated =
+      true;
+
+    return result;
+  }
+
+  function renderCycleReceiptList(renderingState) {
+    var entries =
+      renderingState.stationReceipts;
+
+    var html =
+      entries.length
+        ? entries
+            .map(function renderCycleReceipt(entry) {
+              return (
+                '<article data-cycle-receipt-position="' +
+                  escapeHtml(
+                    entry.position === null
+                      ? "UNMAPPED"
+                      : entry.position
+                  ) +
+                  '" data-status="' +
+                  escapeHtml(
+                    entry.coordinates.coordinateConflict
+                      ? "CONFLICT"
+                      : entry.status
+                  ) +
+                  '">' +
+                  "<h4>" +
+                  escapeHtml(
+                    entry.fibonacci ||
+                    "UNMAPPED"
+                  ) +
+                  " · " +
+                  escapeHtml(
+                    entry.role ||
+                    "UNRESOLVED STATION"
+                  ) +
+                  "</h4>" +
+                  "<p>" +
+                  escapeHtml(
+                    entry.coordinates.coordinateConflict
+                      ? "Coordinate conflict retained."
+                      : entry.status
+                  ) +
+                  "</p>" +
+                  (
+                    entry.receiptId
+                      ? "<small>" +
+                        escapeHtml(
+                          entry.receiptId
+                        ) +
+                        "</small>"
+                      : ""
+                  ) +
+                  "<pre>" +
+                  escapeHtml(
+                    safeJson({
+                      receipt:
+                        entry.rawReceipt,
+                      coordinateEvidence:
+                        entry.coordinates
+                    })
+                  ) +
+                  "</pre>" +
+                  "</article>"
+              );
+            })
+            .join("")
+        : (
+            '<article class="empty-state">' +
+              "<h4>No cycle receipts</h4>" +
+              "<p>Run the Nine-Cycle to populate this chamber.</p>" +
+              "</article>"
+          );
+
+    return setHtml(
+      "cycleReceiptList",
+      html
+    );
+  }
+
+  function renderCycleLedger(renderingState) {
+    return setText(
+      "cycleLedgerOutput",
+      safeJson({
+        engineCycleStatus:
+          renderingState.engineCycleStatus,
+        engineCycleTerminalClass:
+          renderingState.engineCycleTerminalClass,
+        engineExactNineValidated:
+          renderingState.engineExactNineValidated,
+        mappedReceiptCount:
+          renderingState.mappedReceiptCount,
+        unmappedReceiptCount:
+          renderingState.unmappedReceiptCount,
+        duplicateCoordinateCount:
+          renderingState.duplicateCoordinateCount,
+        coordinateConflictCount:
+          renderingState.coordinateConflictCount,
+        unresolvedDeclarationCount:
+          renderingState.unresolvedDeclarationCount,
+        renderedPositions:
+          renderingState.renderedPositions,
+        notReachedPositions:
+          renderingState.notReachedPositions,
+        returnedReceiptMappingComplete:
+          renderingState.returnedReceiptMappingComplete,
+        receipts:
+          renderingState.stationReceipts
+      })
+    );
+  }
+
+  function renderCycleSummaryTargets(renderingState) {
+    return {
+      previewSummaryUpdated:
+        setText(
+          "cyclePreviewSummary",
+          state.cycle.executed
+            ? (
+                "Engine cycle status: " +
+                renderingState.engineCycleStatus +
+                "."
+              )
+            : "Nine-Cycle has not been executed."
+        ),
+
+      registrationSummaryUpdated:
+        setText(
+          "cycleRegistrationSummary",
+          [
+            renderingState.mappedReceiptCount,
+            "mapped",
+            renderingState.unmappedReceiptCount,
+            "unmapped"
+          ].join(" ")
+        ),
+
+      preflightSummaryUpdated:
+        setText(
+          "cyclePreflightSummary",
+          [
+            renderingState.coordinateConflictCount,
+            "coordinate conflicts;",
+            renderingState.unresolvedDeclarationCount,
+            "unresolved declarations"
+          ].join(" ")
+        ),
+
+      executionSummaryUpdated:
+        setText(
+          "cycleExecutionSummary",
+          [
+            renderingState.renderedPositions.length,
+            "stations reached;",
+            renderingState.notReachedPositions.length,
+            "not reached"
+          ].join(" ")
+        )
+    };
+  }
+
+  function observeAndUpdateCycleDom(renderingState) {
+    var foundTargetIds = [];
+    var updatedTargetIds = [];
+    var missingTargetIds = [];
+
+    CYCLE_TARGET_IDS.forEach(function inspectTarget(id) {
+      if (byId(id)) {
+        foundTargetIds.push(id);
+      } else {
+        missingTargetIds.push(id);
+      }
+    });
+
+    var cycleStatusUpdated =
+      setText(
+        "cycleStatus",
+        state.cycle.executed
+          ? "Cycle · " +
+            renderingState.engineCycleStatus
+          : "Cycle · Not Run"
+      );
+
+    if (cycleStatusUpdated) {
+      setStatus(
+        "cycleStatus",
+        state.cycle.executed
+          ? renderingState.engineCycleStatus
+          : "NOT_RUN"
+      );
+
+      updatedTargetIds.push(
+        "cycleStatus"
+      );
+    }
+
+    var chamber =
+      byId("cycleChamber");
+
+    var chamberStatusUpdated =
+      false;
+
+    if (chamber) {
+      setStatus(
+        chamber,
+        state.cycle.executed
+          ? renderingState.engineCycleStatus
+          : "NOT_RUN"
+      );
+
+      chamber.setAttribute(
+        "data-cycle-executed",
+        state.cycle.executed
+          ? "true"
+          : "false"
+      );
+
+      chamberStatusUpdated =
+        true;
+
+      updatedTargetIds.push(
+        "cycleChamber"
+      );
+    }
+
+    var summaryResults =
+      renderCycleSummaryTargets(
+        renderingState
+      );
+
+    if (
+      summaryResults.previewSummaryUpdated
+    ) {
+      updatedTargetIds.push(
+        "cyclePreviewSummary"
+      );
+    }
+
+    if (
+      summaryResults.registrationSummaryUpdated
+    ) {
+      updatedTargetIds.push(
+        "cycleRegistrationSummary"
+      );
+    }
+
+    if (
+      summaryResults.preflightSummaryUpdated
+    ) {
+      updatedTargetIds.push(
+        "cyclePreflightSummary"
+      );
+    }
+
+    if (
+      summaryResults.executionSummaryUpdated
+    ) {
+      updatedTargetIds.push(
+        "cycleExecutionSummary"
+      );
+    }
+
+    var rowResults = [];
+
+    CANONICAL_CYCLE_STATIONS.forEach(function renderStation(station) {
+      rowResults.push(
+        renderCycleRow(
+          station.position,
+          renderingState.rows[
+            station.position
+          ]
+        )
+      );
+    });
+
+    var foundStationRowCount =
+      rowResults.filter(function rowFound(result) {
+        return result.found;
+      }).length;
+
+    var updatedStationRowCount =
+      rowResults.filter(function rowUpdated(result) {
+        return result.updated;
+      }).length;
+
+    var missingStationPositions =
+      rowResults
+        .filter(function missingRow(result) {
+          return !result.found;
+        })
+        .map(function mapMissingPosition(result) {
+          return result.position;
+        });
+
+    var cycleMapUpdated =
+      Boolean(
+        byId("cycleMap")
+      ) &&
+      updatedStationRowCount > 0;
+
+    if (cycleMapUpdated) {
+      updatedTargetIds.push(
+        "cycleMap"
+      );
+    }
+
+    var ledgerUpdated =
+      renderCycleLedger(
+        renderingState
+      );
+
+    if (ledgerUpdated) {
+      updatedTargetIds.push(
+        "cycleLedgerOutput"
+      );
+    }
+
+    var receiptListUpdated =
+      renderCycleReceiptList(
+        renderingState
+      );
+
+    if (receiptListUpdated) {
+      updatedTargetIds.push(
+        "cycleReceiptList"
+      );
+    }
+
+    var uniqueUpdatedTargetIds = [];
+
+    updatedTargetIds.forEach(function dedupeUpdatedTarget(id) {
+      if (
+        uniqueUpdatedTargetIds.indexOf(id) === -1
+      ) {
+        uniqueUpdatedTargetIds.push(id);
+      }
+    });
+
+    var allRequiredTargetsObserved =
+      foundTargetIds.length ===
+      CYCLE_TARGET_IDS.length;
+
+    var allRequiredTargetsLocallyUpdated =
+      uniqueUpdatedTargetIds.length ===
+      CYCLE_TARGET_IDS.length;
+
+    var allStationRowsObserved =
+      foundStationRowCount ===
+      CANONICAL_CYCLE_STATIONS.length;
+
+    var allStationRowsLocallyUpdated =
+      updatedStationRowCount ===
+      CANONICAL_CYCLE_STATIONS.length;
+
+    var localDomUpdateComplete =
+      Boolean(
+        allRequiredTargetsObserved &&
+        allRequiredTargetsLocallyUpdated &&
+        allStationRowsObserved &&
+        allStationRowsLocallyUpdated
+      );
+
+    return {
+      schema:
+        "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v5",
+
+      evidenceScope:
+        "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
+
+      certificationOwner:
+        "INDEX_CONTROL_BRIDGE",
+
+      requiredTargetCount:
+        CYCLE_TARGET_IDS.length,
+
+      foundTargetCount:
+        foundTargetIds.length,
+
+      updatedTargetCount:
+        uniqueUpdatedTargetIds.length,
+
+      foundTargetIds:
+        foundTargetIds,
+
+      updatedTargetIds:
+        uniqueUpdatedTargetIds,
+
+      missingTargetIds:
+        missingTargetIds,
+
+      requiredStationRowCount:
+        CANONICAL_CYCLE_STATIONS.length,
+
+      foundStationRowCount:
+        foundStationRowCount,
+
+      updatedStationRowCount:
+        updatedStationRowCount,
+
+      missingStationPositions:
+        missingStationPositions,
+
+      cycleStatusUpdated:
+        cycleStatusUpdated,
+
+      chamberStatusUpdated:
+        chamberStatusUpdated,
+
+      previewSummaryUpdated:
+        summaryResults.previewSummaryUpdated,
+
+      registrationSummaryUpdated:
+        summaryResults.registrationSummaryUpdated,
+
+      preflightSummaryUpdated:
+        summaryResults.preflightSummaryUpdated,
+
+      executionSummaryUpdated:
+        summaryResults.executionSummaryUpdated,
+
+      cycleMapUpdated:
+        cycleMapUpdated,
+
+      ledgerUpdated:
+        ledgerUpdated,
+
+      receiptListUpdated:
+        receiptListUpdated,
+
+      allRequiredTargetsObserved:
+        allRequiredTargetsObserved,
+
+      allRequiredTargetsLocallyUpdated:
+        allRequiredTargetsLocallyUpdated,
+
+      allStationRowsObserved:
+        allStationRowsObserved,
+
+      allStationRowsLocallyUpdated:
+        allStationRowsLocallyUpdated,
+
+      localDomUpdateComplete:
+        localDomUpdateComplete,
+
+      domSynchronizationComplete:
+        localDomUpdateComplete,
+
+      familySynchronizationCertified:
+        false,
+
+      observedAt:
+        nowIso()
+    };
+  }
+
+  function createCycleRenderingReceipt(
+    renderingState,
+    localDomEvidence
+  ) {
+    return deepFreeze({
+      schema:
+        CYCLE_RENDERING_RECEIPT_SCHEMA,
+
+      receiptId:
+        "AUDRALIA_CYCLE_RENDERING_RECEIPT_" +
+        Date.now(),
+
+      controlsContract:
+        CONTRACT,
+
+      evidenceScope:
+        "CONTROLS_LOCAL_PRESENTATION_ONLY",
+
+      certificationOwner:
+        "INDEX_CONTROL_BRIDGE",
+
+      engineCycleReceiptSchema:
+        state.cycle.rawReceipt
+          ? state.cycle.rawReceipt.schema || null
+          : null,
+
+      engineCycleStatus:
+        renderingState.engineCycleStatus,
+
+      engineCycleTerminalClass:
+        renderingState.engineCycleTerminalClass,
+
+      engineExactNineValidated:
+        renderingState.engineExactNineValidated,
+
+      returnedReceiptMappingComplete:
+        renderingState.returnedReceiptMappingComplete,
+
+      logicalMappingComplete:
+        renderingState.logicalMappingComplete,
+
+      logicalMappingScope:
+        renderingState.logicalMappingScope,
+
+      localDomUpdateComplete:
+        Boolean(
+          localDomEvidence &&
+          localDomEvidence.localDomUpdateComplete
+        ),
+
+      domSynchronizationComplete:
+        Boolean(
+          localDomEvidence &&
+          localDomEvidence.localDomUpdateComplete
+        ),
+
+      cycleChamberSynchronized:
+        null,
+
+      cycleChamberSynchronizationOwner:
+        "INDEX_CONTROL_BRIDGE",
+
+      familySynchronizationCertified:
+        false,
+
+      mappedReceiptCount:
+        renderingState.mappedReceiptCount,
+
+      unmappedReceiptCount:
+        renderingState.unmappedReceiptCount,
+
+      duplicateCoordinateCount:
+        renderingState.duplicateCoordinateCount,
+
+      coordinateConflictCount:
+        renderingState.coordinateConflictCount,
+
+      unresolvedDeclarationCount:
+        renderingState.unresolvedDeclarationCount,
+
+      renderedPositions:
+        renderingState.renderedPositions.slice(),
+
+      notReachedPositions:
+        renderingState.notReachedPositions.slice(),
+
+      missingCycleTargets:
+        localDomEvidence
+          ? localDomEvidence.missingTargetIds.slice()
+          : CYCLE_TARGET_IDS.slice(),
+
+      missingStationPositions:
+        localDomEvidence
+          ? localDomEvidence.missingStationPositions.slice()
+          : CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
+              return station.position;
+            }),
+
+      cycleButtonLockReleased:
+        state.cycle.running === false,
+
+      renderedAt:
+        nowIso(),
+
+      requirements:
+        CONTROL_REQUIREMENTS,
+
+      noClaims:
+        NO_CLAIMS
+    });
+  }
+
+  function renderCommittedCycleChamber() {
+    var receipt =
+      state.cycle.rawReceipt ||
+      {
+        schema:
+          ENGINE_CYCLE_RECEIPT_SCHEMA,
+        status:
+          "NOT_RUN",
+        stationReceipts: []
+      };
+
+    var renderingState =
+      buildCycleRenderingState(
+        receipt
+      );
+
+    var localDomEvidence =
+      observeAndUpdateCycleDom(
+        renderingState
+      );
+
+    state.cycle.rendering =
+      deepFreeze(
+        clone(renderingState)
+      );
+
+    state.cycle.localDomEvidence =
+      deepFreeze(
+        clone(localDomEvidence)
+      );
+
+    state.cycle.renderingReceipt =
+      createCycleRenderingReceipt(
+        renderingState,
+        localDomEvidence
+      );
+
+    state.cycle.renderedAt =
+      state.cycle.renderingReceipt.renderedAt;
+
+    refreshReceiptInventory();
+    publishReceipt();
+
+    return frozenClone({
+      rendering:
+        state.cycle.rendering,
+      localDomEvidence:
+        state.cycle.localDomEvidence,
+      renderingReceipt:
+        state.cycle.renderingReceipt
+    });
+  }
+
+  function renderCycleChamber() {
+    return renderCommittedCycleChamber();
+  }
+
+  function refreshCycleChamber() {
+    return renderCommittedCycleChamber();
+  }
+
+  function validateCycleReceipt(value) {
+    if (!isObject(value)) {
+      return false;
+    }
+
+    var schema =
+      value.schema ||
+      value.receiptSchema ||
+      null;
+
+    var status =
+      normalizeToken(
+        value.status ||
+        value.state ||
+        value.result ||
+        ""
+      );
+
+    if (schema) {
+      return (
+        schema ===
+        ENGINE_CYCLE_RECEIPT_SCHEMA
+      );
+    }
+
+    var cycleSpecificEvidence =
+      Boolean(
+        Array.isArray(
+          value.stationReceipts
+        ) ||
+        Array.isArray(
+          value.cycleReceipts
+        ) ||
+        value.cycleReceiptId ||
+        value.exactNineValidated !== undefined ||
+        value.exactNine !== undefined ||
+        value.terminalClass
+      );
+
+    return Boolean(
+      VALID_CYCLE_TERMINAL_STATUSES.indexOf(
+        status
+      ) !== -1 &&
+      cycleSpecificEvidence
+    );
+  }
+
+  function createCycleHeldReceipt(context) {
+    return {
+      schema:
+        ENGINE_CYCLE_RECEIPT_SCHEMA,
+
+      receiptId:
+        "AUDRALIA_CONTROL_CYCLE_HELD_" +
+        Date.now(),
+
+      status:
+        "HELD",
+
+      terminalClass:
+        "CONTROL_INTERFACE_HELD",
+
+      reason:
+        context && context.reason
+          ? context.reason
+          : "ENGINE_CYCLE_UNAVAILABLE",
+
+      requestedAt:
+        nowIso(),
+
+      stationReceipts: [],
+
+      source:
+        "CONTROL_PANEL",
+
+      noClaims:
+        NO_CLAIMS
+    };
+  }
+
+  function commitCycleReceipt(receipt) {
+    state.cycle.executed =
+      true;
+
+    state.cycle.rawReceipt =
+      deepFreeze(
+        clone(receipt)
+      );
+
+    return renderCommittedCycleChamber();
+  }
+
+  function finalizeCycleExecution() {
+    setCycleRunning(false);
+
+    if (
+      state.cycle.rendering &&
+      state.cycle.localDomEvidence
+    ) {
+      state.cycle.renderingReceipt =
+        createCycleRenderingReceipt(
+          state.cycle.rendering,
+          state.cycle.localDomEvidence
+        );
+    }
+
+    refreshReceiptInventory();
+    publishReceipt();
+  }
+
   function runNineCycle() {
+    if (state.cycle.running) {
+      toast(
+        "Nine-Cycle execution is already running.",
+        "HELD"
+      );
+
+      return Promise.resolve(
+        frozenClone(
+          state.cycle.rawReceipt
+        )
+      );
+    }
+
+    setCycleRunning(true);
+
     setText(
       "controllerState",
       "NINE-CYCLE"
@@ -1970,110 +3953,186 @@
       "RUNNING"
     );
 
-    recordAction(
-      "runNineCycle.begin"
+    setText(
+      "cycleStatus",
+      "Cycle · Running"
     );
 
-    return invokeEngine(
-      "runNineCycle",
-      [
-        {
-          source:
-            "CONTROL_PANEL",
-          requestedAt:
-            nowIso()
-        }
-      ],
+    setStatus(
+      "cycleStatus",
+      "RUNNING"
+    );
+
+    recordAction(
+      "runNineCycle.begin",
       {
-        validate:
-          function validCycleReceipt(value) {
-            return Boolean(
-              value &&
-              typeof value === "object"
-            );
-          },
-
-        fallback:
-          function cycleFallback(context) {
-            setText(
-              "controllerState",
-              "CYCLE HELD"
-            );
-
-            setStatus(
-              "controllerState",
-              "HELD"
-            );
-
-            setText(
-              "cycleStatus",
-              "Cycle · Held"
-            );
-
-            setStatus(
-              "cycleStatus",
-              "HELD"
-            );
-
-            toast(
-              "Nine-cycle unavailable: " +
-                context.reason,
-              "HELD"
-            );
-
-            return null;
-          }
+        category:
+          state.ui.selectedCategory,
+        audit:
+          state.ui.selectedAudit,
+        participant:
+          state.ui.selectedParticipant
       }
-    )
-      .then(function cycleComplete(receipt) {
-        if (!receipt) {
-          return null;
-        }
+    );
 
-        state.cycleReceipt =
-          deepFreeze(
-            clone(receipt)
+    var execution =
+      invokeEngine(
+        "runNineCycle",
+        [
+          {
+            source:
+              "CONTROL_PANEL",
+            requestedAt:
+              nowIso(),
+            category:
+              state.ui.selectedCategory,
+            audit:
+              state.ui.selectedAudit,
+            participant:
+              state.ui.selectedParticipant
+          }
+        ],
+        {
+          validate:
+            validateCycleReceipt,
+
+          fallback:
+            createCycleHeldReceipt
+        }
+      )
+        .then(function cycleComplete(receipt) {
+          var committed =
+            validateCycleReceipt(receipt)
+              ? receipt
+              : createCycleHeldReceipt({
+                  reason:
+                    "ENGINE_CYCLE_RESULT_INVALID"
+                });
+
+          try {
+            commitCycleReceipt(
+              committed
+            );
+          } catch (error) {
+            recordError(
+              "commitCycleReceipt",
+              error
+            );
+
+            committed =
+              createCycleHeldReceipt({
+                reason:
+                  "CONTROL_CYCLE_RENDERING_FAILURE"
+              });
+
+            state.cycle.executed =
+              true;
+
+            state.cycle.rawReceipt =
+              deepFreeze(
+                clone(committed)
+              );
+          }
+
+          setText(
+            "controllerState",
+            normalizeToken(
+              committed.status
+            ) === "COMMITTED"
+              ? "CYCLE COMMITTED"
+              : "CYCLE COMPLETE"
           );
 
-        setText(
-          "controllerState",
-          receipt.status === "COMMITTED"
-            ? "CYCLE COMMITTED"
-            : "CYCLE COMPLETE"
-        );
+          setStatus(
+            "controllerState",
+            committed.status || "AVAILABLE"
+          );
 
-        setStatus(
-          "controllerState",
-          receipt.status || "AVAILABLE"
-        );
+          setText(
+            "cycleStatus",
+            "Cycle · " +
+              String(
+                committed.status || "Available"
+              )
+          );
 
-        setText(
-          "cycleStatus",
-          "Cycle · " +
-            String(
-              receipt.status || "Available"
-            )
-        );
+          setStatus(
+            "cycleStatus",
+            committed.status || "AVAILABLE"
+          );
 
-        setStatus(
-          "cycleStatus",
-          receipt.status || "AVAILABLE"
-        );
+          recordAction(
+            "runNineCycle.complete",
+            {
+              status:
+                committed.status || null,
+              receiptCount:
+                committed.receiptCount ||
+                extractCycleStationReceipts(
+                  committed
+                ).length,
+              returnedReceiptMappingComplete:
+                state.cycle.rendering
+                  ? state.cycle.rendering.returnedReceiptMappingComplete
+                  : false,
+              localDomUpdateComplete:
+                state.cycle.localDomEvidence
+                  ? state.cycle.localDomEvidence.localDomUpdateComplete
+                  : false
+            }
+          );
 
-        recordAction(
-          "runNineCycle.complete",
-          {
-            status:
-              receipt.status || null,
-            receiptCount:
-              receipt.receiptCount || 0
+          toast(
+            "Nine-Cycle receipt committed.",
+            committed.status || "AVAILABLE"
+          );
+
+          return frozenClone(
+            committed
+          );
+        })
+        .catch(function cycleUnhandled(error) {
+          var held =
+            createCycleHeldReceipt({
+              reason:
+                "CONTROL_CYCLE_UNHANDLED_REJECTION"
+            });
+
+          state.cycle.executed =
+            true;
+
+          state.cycle.rawReceipt =
+            deepFreeze(
+              clone(held)
+            );
+
+          try {
+            renderCommittedCycleChamber();
+          } catch (renderError) {
+            recordError(
+              "renderCommittedCycleChamber",
+              renderError
+            );
           }
-        );
 
-        refreshReceiptInventory();
+          recordError(
+            "runNineCycle",
+            error
+          );
 
-        return frozenClone(receipt);
-      });
+          return frozenClone(
+            held
+          );
+        });
+
+    return withFinalization(
+      execution,
+      finalizeCycleExecution,
+      {
+        action:
+          "runNineCycle"
+      }
+    );
   }
 
   function forwardSelection(key, value) {
@@ -3166,23 +5225,9 @@
     );
   }
 
-  function resetCurrentReport() {
-    var engine =
-      getCompatibleEngine();
-
-    if (
-      engine &&
-      isFunction(engine.resetWorkbench)
-    ) {
-      try {
-        engine.resetWorkbench();
-      } catch (error) {
-        recordError(
-          "resetWorkbench",
-          error
-        );
-      }
-    }
+  function resetCurrentReportLocal(options) {
+    var settings =
+      options || {};
 
     state.report.current =
       null;
@@ -3320,18 +5365,79 @@
     updateDistributedCommandAvailability();
     refreshReceiptInventory();
 
-    recordAction(
-      "resetCurrentReport"
-    );
+    if (settings.record !== false) {
+      recordAction(
+        "resetCurrentReport"
+      );
+    }
 
-    toast(
-      "Current report reset.",
-      "READY"
-    );
+    if (settings.notify !== false) {
+      toast(
+        "Current report reset.",
+        "READY"
+      );
+    }
+  }
+
+  function resetCurrentReport() {
+    resetCurrentReportLocal({
+      record: true,
+      notify: true
+    });
+  }
+
+  function resetCyclePresentation() {
+    state.cycle.running =
+      false;
+
+    state.cycle.executed =
+      false;
+
+    state.cycle.rawReceipt =
+      null;
+
+    state.cycle.rendering =
+      null;
+
+    state.cycle.renderingReceipt =
+      null;
+
+    state.cycle.localDomEvidence =
+      null;
+
+    state.cycle.renderedAt =
+      null;
+
+    setCycleRunning(false);
+
+    renderCommittedCycleChamber();
   }
 
   function resetWorkbench() {
-    resetCurrentReport();
+    var engine =
+      getCompatibleEngine();
+
+    if (
+      engine &&
+      isFunction(engine.resetWorkbench)
+    ) {
+      try {
+        engine.resetWorkbench();
+      } catch (error) {
+        recordError(
+          "resetWorkbench",
+          error
+        );
+      }
+    }
+
+    resetCurrentReportLocal({
+      record: false,
+      notify: false
+    });
+
+    resetCyclePresentation();
+
     closeAllSelectors();
 
     selectLeftOrbitLocal(
@@ -3359,6 +5465,11 @@
 
     recordAction(
       "resetWorkbench"
+    );
+
+    toast(
+      "Diagnostic workbench reset.",
+      "READY"
     );
   }
 
@@ -3467,29 +5578,12 @@
       return "participant";
     }
 
-    if (
-      containsAny(
-        combined,
-        [
-          "inspection",
-          "observation",
-          "surface",
-          "runtime",
-          "registry",
-          "engine",
-          "report",
-          "control"
-        ]
-      )
-    ) {
-      return "observation";
-    }
-
     return "observation";
   }
 
   function deriveReceiptGroups(record, type, sourceHint, pathHint) {
     var groups = [];
+
     var combined =
       [
         type,
@@ -4090,9 +6184,16 @@
 
     addExplicitReceipt(
       output,
-      state.cycleReceipt,
-      "CONTROL_CYCLE",
-      "state.cycleReceipt"
+      state.cycle.rawReceipt,
+      "CONTROL_CYCLE_ENGINE_RECEIPT",
+      "state.cycle.rawReceipt"
+    );
+
+    addExplicitReceipt(
+      output,
+      state.cycle.renderingReceipt,
+      "CONTROL_CYCLE_RENDERING_RECEIPT",
+      "state.cycle.renderingReceipt"
     );
 
     if (
@@ -4165,9 +6266,18 @@
     );
 
     walkReceiptCandidates(
-      state.cycleReceipt,
-      "CONTROL_CYCLE",
-      "state.cycleReceipt",
+      state.cycle.rawReceipt,
+      "CONTROL_CYCLE_ENGINE_RECEIPT",
+      "state.cycle.rawReceipt",
+      output,
+      [],
+      0
+    );
+
+    walkReceiptCandidates(
+      state.cycle.renderingReceipt,
+      "CONTROL_CYCLE_RENDERING_RECEIPT",
+      "state.cycle.renderingReceipt",
       output,
       [],
       0
@@ -5098,6 +7208,12 @@
   }
 
   function publishReceipt() {
+    var rendering =
+      state.cycle.rendering;
+
+    var localDomEvidence =
+      state.cycle.localDomEvidence;
+
     root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT =
       deepFreeze({
         schema:
@@ -5105,6 +7221,9 @@
 
         contract:
           CONTRACT,
+
+        previousContract:
+          PREVIOUS_CONTRACT,
 
         version:
           VERSION,
@@ -5216,7 +7335,128 @@
 
         cycleReceiptPresent:
           Boolean(
-            state.cycleReceipt
+            state.cycle.rawReceipt
+          ),
+
+        engineCycleReceiptPresent:
+          Boolean(
+            state.cycle.rawReceipt
+          ),
+
+        cycleRunning:
+          state.cycle.running,
+
+        cycleExecuted:
+          state.cycle.executed,
+
+        engineCycleStatus:
+          rendering
+            ? rendering.engineCycleStatus
+            : null,
+
+        engineCycleTerminalClass:
+          rendering
+            ? rendering.engineCycleTerminalClass
+            : null,
+
+        engineExactNineValidated:
+          rendering
+            ? rendering.engineExactNineValidated
+            : null,
+
+        returnedReceiptMappingComplete:
+          rendering
+            ? rendering.returnedReceiptMappingComplete
+            : false,
+
+        logicalMappingComplete:
+          rendering
+            ? rendering.logicalMappingComplete
+            : false,
+
+        logicalMappingScope:
+          rendering
+            ? rendering.logicalMappingScope
+            : "RETURNED_RECEIPTS_ONLY",
+
+        localDomUpdateComplete:
+          localDomEvidence
+            ? localDomEvidence.localDomUpdateComplete
+            : false,
+
+        domSynchronizationComplete:
+          localDomEvidence
+            ? localDomEvidence.localDomUpdateComplete
+            : false,
+
+        domSynchronizationScope:
+          "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
+
+        cycleChamberSynchronized:
+          null,
+
+        cycleChamberSynchronizationOwner:
+          "INDEX_CONTROL_BRIDGE",
+
+        familySynchronizationCertified:
+          false,
+
+        mappedReceiptCount:
+          rendering
+            ? rendering.mappedReceiptCount
+            : 0,
+
+        unmappedReceiptCount:
+          rendering
+            ? rendering.unmappedReceiptCount
+            : 0,
+
+        duplicateCoordinateCount:
+          rendering
+            ? rendering.duplicateCoordinateCount
+            : 0,
+
+        coordinateConflictCount:
+          rendering
+            ? rendering.coordinateConflictCount
+            : 0,
+
+        unresolvedDeclarationCount:
+          rendering
+            ? rendering.unresolvedDeclarationCount
+            : 0,
+
+        renderedPositions:
+          rendering
+            ? rendering.renderedPositions.slice()
+            : [],
+
+        notReachedPositions:
+          rendering
+            ? rendering.notReachedPositions.slice()
+            : [],
+
+        missingCycleTargets:
+          localDomEvidence
+            ? localDomEvidence.missingTargetIds.slice()
+            : CYCLE_TARGET_IDS.slice(),
+
+        missingStationPositions:
+          localDomEvidence
+            ? localDomEvidence.missingStationPositions.slice()
+            : CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
+                return station.position;
+              }),
+
+        cycleButtonLockReleased:
+          state.cycle.running === false,
+
+        cycleRenderedAt:
+          state.cycle.renderedAt,
+
+        cycleRenderingReceipt:
+          frozenClone(
+            state.cycle.renderingReceipt
           ),
 
         normalizedReceiptCount:
@@ -5270,6 +7510,15 @@
             "F55"
         },
 
+        presentationStationMap:
+          CANONICAL_CYCLE_STATIONS,
+
+        requirements:
+          CONTROL_REQUIREMENTS,
+
+        relationalCertificationOwner:
+          "INDEX_CONTROL_BRIDGE",
+
         noClaims:
           NO_CLAIMS,
 
@@ -5282,6 +7531,9 @@
     return frozenClone({
       contract:
         CONTRACT,
+
+      previousContract:
+        PREVIOUS_CONTRACT,
 
       version:
         VERSION,
@@ -5317,7 +7569,10 @@
         state.directReceipts,
 
       cycleReceipt:
-        state.cycleReceipt,
+        state.cycle.rawReceipt,
+
+      cycle:
+        state.cycle,
 
       normalizedReceipts:
         state.normalizedReceipts,
@@ -5341,7 +7596,10 @@
         state.lastAction,
 
       lastError:
-        state.lastError
+        state.lastError,
+
+      requirements:
+        CONTROL_REQUIREMENTS
     });
   }
 
@@ -5353,6 +7611,12 @@
 
         contract:
           CONTRACT,
+
+        PREVIOUS_CONTRACT:
+          PREVIOUS_CONTRACT,
+
+        previousContract:
+          PREVIOUS_CONTRACT,
 
         VERSION:
           VERSION,
@@ -5477,6 +7741,12 @@
         closeAllSelectors:
           closeAllSelectors,
 
+        renderCycleChamber:
+          renderCycleChamber,
+
+        refreshCycleChamber:
+          refreshCycleChamber,
+
         getState:
           getPublicState,
 
@@ -5494,10 +7764,31 @@
             );
           },
 
+        getCurrentCycleReceipt:
+          function getCurrentCycleReceipt() {
+            return frozenClone(
+              state.cycle.rawReceipt
+            );
+          },
+
+        getCycleRenderingState:
+          function getCycleRenderingState() {
+            return frozenClone(
+              state.cycle.rendering
+            );
+          },
+
         getNormalizedReceipts:
           function getNormalizedReceipts() {
             return frozenClone(
               state.normalizedReceipts
+            );
+          },
+
+        getRequirements:
+          function getRequirements() {
+            return frozenClone(
+              CONTROL_REQUIREMENTS
             );
           },
 
@@ -5522,6 +7813,9 @@
 
     root.AUDRALIA.dropWithReadControlPanel =
       api;
+
+    root.AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS =
+      CONTROL_REQUIREMENTS;
 
     root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_LOADED__ =
       true;
@@ -5557,6 +7851,8 @@
 
     state.ui.receiptFilter =
       "all";
+
+    renderCommittedCycleChamber();
   }
 
   function init() {
@@ -5594,7 +7890,19 @@
         engineReady:
           state.engine.ready,
         normalizedReceiptCount:
-          state.normalizedReceipts.length
+          state.normalizedReceipts.length,
+        localCycleTargetsMissing:
+          state.cycle.localDomEvidence
+            ? state.cycle.localDomEvidence.missingTargetIds
+            : CYCLE_TARGET_IDS.slice(),
+        localCycleStationRowsMissing:
+          state.cycle.localDomEvidence
+            ? state.cycle.localDomEvidence.missingStationPositions
+            : CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
+                return station.position;
+              }),
+        relationalCertificationOwner:
+          "INDEX_CONTROL_BRIDGE"
       }
     );
 

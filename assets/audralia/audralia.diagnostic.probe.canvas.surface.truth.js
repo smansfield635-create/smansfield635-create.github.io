@@ -1,25 +1,60 @@
 // /assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js
-// AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v1
+// AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v2
 // Full-file replacement.
 // Diagnostic-only.
 // Read-only.
+// No production mutation.
+// No renderer authority.
+// No runtime restart authority.
+// No repair authority.
+// No readiness authority.
+// No visual pass authority.
+// No F21 authority.
 
 (function registerAudraliaDiagnosticCanvasSurfaceTruth(global) {
   "use strict";
 
   var CONTRACT =
+    "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v2";
+
+  var PREVIOUS_CONTRACT =
     "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v1";
 
-  var VERSION = "1.0.0";
-  var FILE = "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js";
-  var STATION_ID = "CANVAS_SURFACE_TRUTH";
-  var CYCLE_POSITION = 4;
-  var FIBONACCI = "F8";
-  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
-  var API_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_API_v1";
+  var VERSION =
+    "2.0.0";
 
-  var TARGET_ROUTE = "/showroom/globe/audralia/";
-  var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
+  var FILE =
+    "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js";
+
+  var STATION_ID =
+    "CANVAS_SURFACE_TRUTH";
+
+  var CYCLE_POSITION =
+    4;
+
+  var FIBONACCI =
+    "F8";
+
+  var RECEIPT_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
+
+  var API_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_STATION_API_v1";
+
+  var REGISTRATION_RECEIPT_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v1";
+
+  var TARGET_ROUTE =
+    "/showroom/globe/audralia/";
+
+  var TARGET_FRAME_ID =
+    "audraliaDiagnosticTargetFrame";
+
+  var POLL_INTERVAL_MS =
+    100;
+
+  var POLL_TIMEOUT_MS =
+    3200;
 
   var NO_CLAIMS = Object.freeze({
     engineAuthority: false,
@@ -57,7 +92,11 @@
   }
 
   function isObject(value) {
-    return value !== null && typeof value === "object" && !Array.isArray(value);
+    return (
+      value !== null &&
+      typeof value === "object" &&
+      !Array.isArray(value)
+    );
   }
 
   function clone(value) {
@@ -70,34 +109,73 @@
 
   function stableStringify(value) {
     if (value === null) return "null";
-    if (typeof value === "string") return JSON.stringify(value);
-    if (typeof value === "number") return Number.isFinite(value) ? String(value) : "null";
-    if (typeof value === "boolean") return value ? "true" : "false";
+
+    if (typeof value === "string") {
+      return JSON.stringify(value);
+    }
+
+    if (typeof value === "number") {
+      return Number.isFinite(value)
+        ? String(value)
+        : "null";
+    }
+
+    if (typeof value === "boolean") {
+      return value ? "true" : "false";
+    }
 
     if (Array.isArray(value)) {
       return "[" + value.map(stableStringify).join(",") + "]";
     }
 
     if (isObject(value)) {
-      return "{" + Object.keys(value).sort().map(function encode(key) {
-        return JSON.stringify(key) + ":" + stableStringify(value[key]);
-      }).join(",") + "}";
+      return (
+        "{" +
+        Object.keys(value)
+          .sort()
+          .map(function encode(key) {
+            return (
+              JSON.stringify(key) +
+              ":" +
+              stableStringify(value[key])
+            );
+          })
+          .join(",") +
+        "}"
+      );
     }
 
     return "null";
   }
 
   function hash(value) {
-    var text = stableStringify(value);
-    var h = 0x811c9dc5;
+    var text =
+      stableStringify(value);
 
-    for (var i = 0; i < text.length; i += 1) {
+    var h =
+      0x811c9dc5;
+
+    for (
+      var i = 0;
+      i < text.length;
+      i += 1
+    ) {
       h ^= text.charCodeAt(i);
-      h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+
+      h +=
+        (h << 1) +
+        (h << 4) +
+        (h << 7) +
+        (h << 8) +
+        (h << 24);
+
       h >>>= 0;
     }
 
-    return "fnv1a32:" + ("00000000" + h.toString(16)).slice(-8);
+    return (
+      "fnv1a32:" +
+      ("00000000" + h.toString(16)).slice(-8)
+    );
   }
 
   function issue(code, path, detail) {
@@ -109,42 +187,57 @@
   }
 
   function observation(id, kind, payload) {
-    return Object.assign({ id: id, kind: kind }, payload || {});
+    return Object.assign(
+      {
+        id: id,
+        kind: kind
+      },
+      payload || {}
+    );
   }
 
   function getPath(root, path) {
-    if (!isObject(root) || !path) return null;
-
-    var parts = String(path).split(".");
-    var cursor = root;
-
-    for (var i = 0; i < parts.length; i += 1) {
-      if (cursor === null || cursor === undefined) return null;
-      cursor = cursor[parts[i]];
+    if (
+      !isObject(root) ||
+      !path
+    ) {
+      return null;
     }
 
-    return cursor === undefined ? null : cursor;
+    var parts =
+      String(path).split(".");
+
+    var cursor =
+      root;
+
+    for (
+      var i = 0;
+      i < parts.length;
+      i += 1
+    ) {
+      if (
+        cursor === null ||
+        cursor === undefined
+      ) {
+        return null;
+      }
+
+      cursor =
+        cursor[parts[i]];
+    }
+
+    return cursor === undefined
+      ? null
+      : cursor;
   }
 
   function firstObject() {
-    for (var i = 0; i < arguments.length; i += 1) {
-      if (isObject(arguments[i])) return arguments[i];
-    }
-
-    return null;
-  }
-
-  function firstBoolean() {
-    for (var i = 0; i < arguments.length; i += 1) {
-      if (typeof arguments[i] === "boolean") return arguments[i];
-    }
-
-    return null;
-  }
-
-  function firstString() {
-    for (var i = 0; i < arguments.length; i += 1) {
-      if (typeof arguments[i] === "string" && arguments[i].length) {
+    for (
+      var i = 0;
+      i < arguments.length;
+      i += 1
+    ) {
+      if (isObject(arguments[i])) {
         return arguments[i];
       }
     }
@@ -152,16 +245,55 @@
     return null;
   }
 
-  function readLiveTargetFrame() {
-    var doc = global.document || null;
+  function firstBoolean() {
+    for (
+      var i = 0;
+      i < arguments.length;
+      i += 1
+    ) {
+      if (typeof arguments[i] === "boolean") {
+        return arguments[i];
+      }
+    }
 
-    var frame = doc
-      ? (
-          doc.getElementById(TARGET_FRAME_ID) ||
-          doc.querySelector('iframe[data-diagnostic-target="audralia"]') ||
-          doc.querySelector('iframe[src="' + TARGET_ROUTE + '"]')
-        )
-      : null;
+    return null;
+  }
+
+  function firstString() {
+    for (
+      var i = 0;
+      i < arguments.length;
+      i += 1
+    ) {
+      if (
+        typeof arguments[i] === "string" &&
+        arguments[i].length
+      ) {
+        return arguments[i];
+      }
+    }
+
+    return null;
+  }
+
+  function delay(ms) {
+    return new Promise(function wait(resolve) {
+      global.setTimeout(resolve, ms);
+    });
+  }
+
+  function readLiveTargetFrame() {
+    var doc =
+      global.document || null;
+
+    var frame =
+      doc
+        ? (
+            doc.getElementById(TARGET_FRAME_ID) ||
+            doc.querySelector('iframe[data-diagnostic-target="audralia"]') ||
+            doc.querySelector('iframe[src="' + TARGET_ROUTE + '"]')
+          )
+        : null;
 
     var result = {
       framePresent: Boolean(frame),
@@ -174,32 +306,47 @@
       receipt: null,
       canvasPresent: false,
       runtimeGlobalPresent: false,
-      readError: null
+      readError: null,
+      capturedAt: nowISO()
     };
 
-    if (!frame) return result;
+    if (!frame) {
+      return result;
+    }
 
     try {
-      var frameWindow = frame.contentWindow || null;
-      var frameDocument = frame.contentDocument || (frameWindow ? frameWindow.document : null);
+      var frameWindow =
+        frame.contentWindow || null;
 
-      result.sameOriginAccessible = Boolean(frameDocument);
-      result.documentLoaded = Boolean(
-        frameDocument &&
+      var frameDocument =
+        frame.contentDocument ||
         (
-          frameDocument.readyState === "interactive" ||
-          frameDocument.readyState === "complete"
-        )
-      );
+          frameWindow
+            ? frameWindow.document
+            : null
+        );
 
-      result.canvasPresent = Boolean(
-        frameDocument &&
-        (
-          frameDocument.querySelector("canvas[data-audralia-planet-runtime-canvas]") ||
-          frameDocument.querySelector("canvas[data-audralia-planet-fallback-canvas]") ||
-          frameDocument.querySelector("canvas")
-        )
-      );
+      result.sameOriginAccessible =
+        Boolean(frameDocument);
+
+      result.documentLoaded =
+        Boolean(
+          frameDocument &&
+          (
+            frameDocument.readyState === "interactive" ||
+            frameDocument.readyState === "complete"
+          )
+        );
+
+      result.canvasPresent =
+        Boolean(
+          frameDocument &&
+          (
+            frameDocument.querySelector("canvas[data-audralia-planet-runtime-canvas]") ||
+            frameDocument.querySelector("canvas[data-audralia-planet-fallback-canvas]") ||
+            frameDocument.querySelector("canvas")
+          )
+        );
 
       var runtime =
         frameWindow &&
@@ -209,18 +356,31 @@
           frameWindow.DGBAudraliaPlanetRoute
         );
 
-      result.runtimeGlobalPresent = Boolean(runtime);
+      result.runtimeGlobalPresent =
+        Boolean(runtime);
 
-      if (runtime && typeof runtime.getStatus === "function") {
-        result.runtimeStatus = clone(runtime.getStatus());
+      if (
+        runtime &&
+        typeof runtime.getStatus === "function"
+      ) {
+        result.runtimeStatus =
+          clone(runtime.getStatus());
       }
 
-      if (runtime && typeof runtime.getReceiptLight === "function") {
-        result.receiptLight = clone(runtime.getReceiptLight());
+      if (
+        runtime &&
+        typeof runtime.getReceiptLight === "function"
+      ) {
+        result.receiptLight =
+          clone(runtime.getReceiptLight());
       }
 
-      if (runtime && typeof runtime.getReceipt === "function") {
-        result.receipt = clone(runtime.getReceipt());
+      if (
+        runtime &&
+        typeof runtime.getReceipt === "function"
+      ) {
+        result.receipt =
+          clone(runtime.getReceipt());
       }
     } catch (error) {
       result.readError =
@@ -242,7 +402,8 @@
   }
 
   function extractRuntimeStatus(packet, liveFrame) {
-    var target = extractPacketTarget(packet);
+    var target =
+      extractPacketTarget(packet);
 
     return firstObject(
       liveFrame && liveFrame.runtimeStatus,
@@ -259,66 +420,87 @@
   }
 
   function evaluateSurface(packet, liveFrame) {
-    var target = extractPacketTarget(packet);
-    var runtimeStatus = extractRuntimeStatus(packet, liveFrame);
+    var target =
+      extractPacketTarget(packet);
 
-    var framePresent = firstBoolean(
-      liveFrame && liveFrame.framePresent,
-      target.framePresent
-    );
+    var runtimeStatus =
+      extractRuntimeStatus(packet, liveFrame);
 
-    var sameOriginAccessible = firstBoolean(
-      liveFrame && liveFrame.sameOriginAccessible,
-      target.sameOriginAccessible
-    );
+    var framePresent =
+      firstBoolean(
+        liveFrame && liveFrame.framePresent,
+        target.framePresent
+      );
 
-    var documentLoaded = firstBoolean(
-      liveFrame && liveFrame.documentLoaded,
-      target.documentLoaded
-    );
+    var sameOriginAccessible =
+      firstBoolean(
+        liveFrame && liveFrame.sameOriginAccessible,
+        target.sameOriginAccessible
+      );
 
-    var runtimeEvidenceAvailable = Boolean(
-      isObject(runtimeStatus) &&
-      Object.keys(runtimeStatus).length
-    );
+    var documentLoaded =
+      firstBoolean(
+        liveFrame && liveFrame.documentLoaded,
+        target.documentLoaded
+      );
 
-    var mounted = firstBoolean(
-      runtimeStatus.mounted,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.mounted
-    );
+    var runtimeEvidenceAvailable =
+      Boolean(
+        isObject(runtimeStatus) &&
+        Object.keys(runtimeStatus).length
+      );
 
-    var stageRectNonzero = firstBoolean(
-      runtimeStatus.stageRectNonzero,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.stageRectNonzero
-    );
+    var mounted =
+      firstBoolean(
+        runtimeStatus.mounted,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.mounted
+      );
 
-    var geometryReady = firstBoolean(
-      runtimeStatus.geometryReady,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.geometryReady
-    );
+    var stageRectNonzero =
+      firstBoolean(
+        runtimeStatus.stageRectNonzero,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.stageRectNonzero
+      );
 
-    var firstFrameDrawn = firstBoolean(
-      runtimeStatus.firstFrameDrawn,
-      runtimeStatus.firstFrameSubmitted,
-      runtimeStatus.firstFramePresented,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.firstFrameDrawn
-    );
+    var geometryReady =
+      firstBoolean(
+        runtimeStatus.geometryReady,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.geometryReady
+      );
 
-    var visiblePixelObserved = firstBoolean(
-      runtimeStatus.firstVisiblePixelObserved,
-      runtimeStatus.visiblePixelObserved,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.firstVisiblePixelObserved
-    );
+    var firstFrameDrawn =
+      firstBoolean(
+        runtimeStatus.firstFrameDrawn,
+        runtimeStatus.firstFrameSubmitted,
+        runtimeStatus.firstFramePresented,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.firstFrameDrawn
+      );
 
-    var fallbackActive = firstBoolean(
-      runtimeStatus.fallbackActive,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.fallbackActive
-    );
+    var visiblePixelObserved =
+      firstBoolean(
+        runtimeStatus.firstVisiblePixelObserved,
+        runtimeStatus.visiblePixelObserved,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.firstVisiblePixelObserved
+      );
 
-    var webGL = firstBoolean(
-      runtimeStatus.webGL,
-      runtimeStatus.statusDetail && runtimeStatus.statusDetail.webGL
-    );
+    var fallbackActive =
+      firstBoolean(
+        runtimeStatus.fallbackActive,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.fallbackActive
+      );
+
+    var webGL =
+      firstBoolean(
+        runtimeStatus.webGL,
+        runtimeStatus.statusDetail &&
+          runtimeStatus.statusDetail.webGL
+      );
 
     var fallbackVisible =
       fallbackActive === true &&
@@ -349,11 +531,147 @@
       primaryVisible: primaryVisible,
       fallbackVisible: fallbackVisible,
       surfaceTruthAdmitted: primaryVisible || fallbackVisible,
-      runtimeStatus: clone(runtimeStatus)
+      runtimeStatus: clone(runtimeStatus),
+      liveFrame: clone(liveFrame)
     };
   }
 
-  function createReceipt(status, completed, handoffEligible, summary, packet, observations, evidence, issues, owner) {
+  function surfaceReadyEnough(surface) {
+    return Boolean(
+      surface &&
+      surface.surfaceTruthAdmitted === true
+    );
+  }
+
+  function shouldContinuePolling(surface) {
+    if (!surface) {
+      return true;
+    }
+
+    if (surface.surfaceTruthAdmitted === true) {
+      return false;
+    }
+
+    if (surface.framePresent !== true) {
+      return true;
+    }
+
+    if (surface.sameOriginAccessible !== true) {
+      return false;
+    }
+
+    if (surface.documentLoaded !== true) {
+      return true;
+    }
+
+    if (surface.runtimeGlobalPresent !== true) {
+      return true;
+    }
+
+    if (surface.runtimeEvidenceAvailable !== true) {
+      return true;
+    }
+
+    if (surface.mounted !== true) {
+      return true;
+    }
+
+    if (surface.stageRectNonzero !== true) {
+      return true;
+    }
+
+    if (surface.geometryReady !== true) {
+      return true;
+    }
+
+    if (surface.firstFrameDrawn !== true) {
+      return true;
+    }
+
+    if (surface.visiblePixelObserved !== true) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function waitForSurface(packet) {
+    var startedAt =
+      Date.now();
+
+    var attempts =
+      [];
+
+    function sample() {
+      var liveFrame =
+        readLiveTargetFrame();
+
+      var surface =
+        evaluateSurface(packet, liveFrame);
+
+      attempts.push({
+        attempt: attempts.length + 1,
+        elapsedMs: Date.now() - startedAt,
+        capturedAt: nowISO(),
+        framePresent: surface.framePresent,
+        sameOriginAccessible: surface.sameOriginAccessible,
+        documentLoaded: surface.documentLoaded,
+        canvasPresent: surface.canvasPresent,
+        runtimeGlobalPresent: surface.runtimeGlobalPresent,
+        runtimeEvidenceAvailable: surface.runtimeEvidenceAvailable,
+        mounted: surface.mounted,
+        stageRectNonzero: surface.stageRectNonzero,
+        geometryReady: surface.geometryReady,
+        firstFrameDrawn: surface.firstFrameDrawn,
+        visiblePixelObserved: surface.visiblePixelObserved,
+        surfaceTruthAdmitted: surface.surfaceTruthAdmitted
+      });
+
+      if (surfaceReadyEnough(surface)) {
+        return Promise.resolve({
+          liveFrame: liveFrame,
+          surface: surface,
+          attempts: attempts,
+          waitCompleted: true,
+          waitReason: "SURFACE_TRUTH_ADMITTED",
+          elapsedMs: Date.now() - startedAt
+        });
+      }
+
+      if (
+        Date.now() - startedAt >= POLL_TIMEOUT_MS ||
+        shouldContinuePolling(surface) !== true
+      ) {
+        return Promise.resolve({
+          liveFrame: liveFrame,
+          surface: surface,
+          attempts: attempts,
+          waitCompleted: false,
+          waitReason:
+            Date.now() - startedAt >= POLL_TIMEOUT_MS
+              ? "POLL_TIMEOUT_REACHED"
+              : "NON_RETRYABLE_SURFACE_STATE",
+          elapsedMs: Date.now() - startedAt
+        });
+      }
+
+      return delay(POLL_INTERVAL_MS).then(sample);
+    }
+
+    return sample();
+  }
+
+  function createReceipt(
+    status,
+    completed,
+    handoffEligible,
+    summary,
+    packet,
+    observations,
+    evidence,
+    issues,
+    owner
+  ) {
     var receipt = {
       schema: RECEIPT_SCHEMA,
       cycleId: packet && packet.cycleId ? packet.cycleId : null,
@@ -361,6 +679,7 @@
       stationId: STATION_ID,
       fibonacci: FIBONACCI,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       status: status,
@@ -370,9 +689,18 @@
       observations: observations || [],
       evidence: evidence || [],
       issues: issues || [],
-      firstHeldCoordinate: status === "HOLD" ? "F8:CANVAS_SURFACE_TRUTH" : null,
-      firstFailedCoordinate: status === "FAIL" ? "F8:CANVAS_SURFACE_TRUTH" : null,
-      firstConflictCoordinate: status === "CONFLICT" ? "F8:CANVAS_SURFACE_TRUTH" : null,
+      firstHeldCoordinate:
+        status === "HOLD"
+          ? "F8:CANVAS_SURFACE_TRUTH"
+          : null,
+      firstFailedCoordinate:
+        status === "FAIL"
+          ? "F8:CANVAS_SURFACE_TRUTH"
+          : null,
+      firstConflictCoordinate:
+        status === "CONFLICT"
+          ? "F8:CANVAS_SURFACE_TRUTH"
+          : null,
       recommendedOwner: owner || {
         ownerType: "PUBLIC_AUDRALIA_RUNTIME",
         subjectId: "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME",
@@ -389,44 +717,73 @@
       receiptHash: null
     };
 
-    receipt.receiptHash = hash(receipt);
+    receipt.receiptHash =
+      hash(receipt);
 
     return receipt;
   }
 
-  function executeCycleStation(packet) {
-    packet = packet || {};
+  function buildReceiptFromWait(packet, waitResult) {
+    var surface =
+      waitResult.surface;
 
-    var liveFrame = readLiveTargetFrame();
-    var surface = evaluateSurface(packet, liveFrame);
+    var liveFrame =
+      waitResult.liveFrame;
 
     var observations = [
-      observation("CANVAS_SURFACE_TARGET_FRAME", "OBSERVED", {
-        framePresent: surface.framePresent,
-        sameOriginAccessible: surface.sameOriginAccessible,
-        documentLoaded: surface.documentLoaded,
-        canvasPresent: surface.canvasPresent,
-        runtimeGlobalPresent: surface.runtimeGlobalPresent
-      }),
+      observation(
+        "CANVAS_SURFACE_TARGET_FRAME",
+        "OBSERVED",
+        {
+          framePresent: surface.framePresent,
+          sameOriginAccessible: surface.sameOriginAccessible,
+          documentLoaded: surface.documentLoaded,
+          canvasPresent: surface.canvasPresent,
+          runtimeGlobalPresent: surface.runtimeGlobalPresent,
+          readError: liveFrame ? liveFrame.readError : null
+        }
+      ),
 
-      observation("CANVAS_SURFACE_RUNTIME_STATUS", "OBSERVED", {
-        runtimeEvidenceAvailable: surface.runtimeEvidenceAvailable,
-        mounted: surface.mounted,
-        stageRectNonzero: surface.stageRectNonzero,
-        geometryReady: surface.geometryReady,
-        webGL: surface.webGL,
-        fallbackActive: surface.fallbackActive,
-        firstFrameDrawn: surface.firstFrameDrawn,
-        visiblePixelObserved: surface.visiblePixelObserved
-      }),
+      observation(
+        "CANVAS_SURFACE_RUNTIME_STATUS",
+        "OBSERVED",
+        {
+          runtimeEvidenceAvailable: surface.runtimeEvidenceAvailable,
+          mounted: surface.mounted,
+          stageRectNonzero: surface.stageRectNonzero,
+          geometryReady: surface.geometryReady,
+          webGL: surface.webGL,
+          fallbackActive: surface.fallbackActive,
+          firstFrameDrawn: surface.firstFrameDrawn,
+          visiblePixelObserved: surface.visiblePixelObserved
+        }
+      ),
 
-      observation("CANVAS_SURFACE_TRUTH_CLASSIFICATION", "DERIVED", {
-        primaryVisible: surface.primaryVisible,
-        fallbackVisible: surface.fallbackVisible,
-        surfaceTruthAdmitted: surface.surfaceTruthAdmitted,
-        missingEvidenceDisposition: "HOLD",
-        syntheticPositiveEvidenceAllowed: false
-      })
+      observation(
+        "CANVAS_SURFACE_BOUNDED_WAIT",
+        "DERIVED",
+        {
+          pollIntervalMs: POLL_INTERVAL_MS,
+          pollTimeoutMs: POLL_TIMEOUT_MS,
+          attemptCount: waitResult.attempts.length,
+          elapsedMs: waitResult.elapsedMs,
+          waitCompleted: waitResult.waitCompleted,
+          waitReason: waitResult.waitReason,
+          attempts: waitResult.attempts
+        }
+      ),
+
+      observation(
+        "CANVAS_SURFACE_TRUTH_CLASSIFICATION",
+        "DERIVED",
+        {
+          primaryVisible: surface.primaryVisible,
+          fallbackVisible: surface.fallbackVisible,
+          surfaceTruthAdmitted: surface.surfaceTruthAdmitted,
+          missingEvidenceDisposition: "HOLD",
+          syntheticPositiveEvidenceAllowed: false
+        }
+      )
     ];
 
     var evidence = [
@@ -449,81 +806,104 @@
         id: "CANVAS_SURFACE_EVALUATION_HASH",
         kind: "DERIVED",
         hash: hash(surface)
+      },
+      {
+        id: "CANVAS_SURFACE_WAIT_ATTEMPT_HASH",
+        kind: "DERIVED",
+        hash: hash(waitResult.attempts)
       }
     ];
 
     var issues = [];
 
     if (surface.framePresent !== true) {
-      issues.push(issue(
-        "TARGET_FRAME_NOT_PRESENT",
-        "$.target.framePresent",
-        "The Audralia diagnostic target iframe was not present."
-      ));
+      issues.push(
+        issue(
+          "TARGET_FRAME_NOT_PRESENT",
+          "$.target.framePresent",
+          "The Audralia diagnostic target iframe was not present."
+        )
+      );
     }
 
     if (surface.sameOriginAccessible !== true) {
-      issues.push(issue(
-        "TARGET_FRAME_NOT_ACCESSIBLE",
-        "$.target.sameOriginAccessible",
-        "The Audralia target frame was not same-origin accessible."
-      ));
+      issues.push(
+        issue(
+          "TARGET_FRAME_NOT_ACCESSIBLE",
+          "$.target.sameOriginAccessible",
+          "The Audralia target frame was not same-origin accessible."
+        )
+      );
     }
 
     if (surface.documentLoaded !== true) {
-      issues.push(issue(
-        "TARGET_DOCUMENT_NOT_LOADED",
-        "$.target.documentLoaded",
-        "The Audralia target document was not loaded."
-      ));
+      issues.push(
+        issue(
+          "TARGET_DOCUMENT_NOT_LOADED",
+          "$.target.documentLoaded",
+          "The Audralia target document was not loaded before the bounded F8 wait ended."
+        )
+      );
     }
 
     if (surface.runtimeEvidenceAvailable !== true) {
-      issues.push(issue(
-        "TARGET_RUNTIME_EVIDENCE_UNAVAILABLE",
-        "$.target.targetRuntimeStatus",
-        "No target runtime status, receipt, or live runtime status was available."
-      ));
+      issues.push(
+        issue(
+          "TARGET_RUNTIME_EVIDENCE_UNAVAILABLE",
+          "$.target.targetRuntimeStatus",
+          "No target runtime status, receipt, or live runtime status was available before the bounded F8 wait ended."
+        )
+      );
     }
 
     if (surface.mounted !== true) {
-      issues.push(issue(
-        "PUBLIC_RUNTIME_NOT_MOUNTED",
-        "$.target.runtimeStatus.mounted",
-        "The public Audralia runtime has not reported mounted=true."
-      ));
+      issues.push(
+        issue(
+          "PUBLIC_RUNTIME_NOT_MOUNTED",
+          "$.target.runtimeStatus.mounted",
+          "The public Audralia runtime has not reported mounted=true."
+        )
+      );
     }
 
     if (surface.stageRectNonzero !== true) {
-      issues.push(issue(
-        "SURFACE_RECT_NONZERO_REQUIRED",
-        "$.target.runtimeStatus.stageRectNonzero",
-        "The public Audralia surface has not reported a nonzero rendering rectangle."
-      ));
+      issues.push(
+        issue(
+          "SURFACE_RECT_NONZERO_REQUIRED",
+          "$.target.runtimeStatus.stageRectNonzero",
+          "The public Audralia surface has not reported a nonzero rendering rectangle."
+        )
+      );
     }
 
     if (surface.geometryReady !== true) {
-      issues.push(issue(
-        "GEOMETRY_READY_REQUIRED",
-        "$.target.runtimeStatus.geometryReady",
-        "The public Audralia runtime has not reported geometryReady=true."
-      ));
+      issues.push(
+        issue(
+          "GEOMETRY_READY_REQUIRED",
+          "$.target.runtimeStatus.geometryReady",
+          "The public Audralia runtime has not reported geometryReady=true."
+        )
+      );
     }
 
     if (surface.firstFrameDrawn !== true) {
-      issues.push(issue(
-        "FIRST_FRAME_DRAWN_REQUIRED",
-        "$.target.runtimeStatus.firstFrameDrawn",
-        "The public Audralia runtime has not reported firstFrameDrawn=true."
-      ));
+      issues.push(
+        issue(
+          "FIRST_FRAME_DRAWN_REQUIRED",
+          "$.target.runtimeStatus.firstFrameDrawn",
+          "The public Audralia runtime has not reported firstFrameDrawn=true."
+        )
+      );
     }
 
     if (surface.visiblePixelObserved !== true) {
-      issues.push(issue(
-        "VISIBLE_PIXEL_OBSERVED_REQUIRED",
-        "$.target.runtimeStatus.firstVisiblePixelObserved",
-        "The public Audralia runtime has not reported visible-pixel evidence."
-      ));
+      issues.push(
+        issue(
+          "VISIBLE_PIXEL_OBSERVED_REQUIRED",
+          "$.target.runtimeStatus.firstVisiblePixelObserved",
+          "The public Audralia runtime has not reported visible-pixel evidence."
+        )
+      );
     }
 
     var owner = {
@@ -578,17 +958,85 @@
     );
   }
 
+  function executeCycleStation(packet) {
+    packet =
+      packet || {};
+
+    return waitForSurface(packet)
+      .then(function afterWait(waitResult) {
+        return buildReceiptFromWait(
+          packet,
+          waitResult
+        );
+      })
+      .catch(function onProbeError(error) {
+        return createReceipt(
+          "HOLD",
+          false,
+          false,
+          "CANVAS_SURFACE_TRUTH_HELD_PROBE_READ_ERROR",
+          packet,
+          [
+            observation(
+              "CANVAS_SURFACE_PROBE_ERROR",
+              "ERROR",
+              {
+                message:
+                  error && error.message
+                    ? error.message
+                    : String(error || "UNKNOWN_F8_PROBE_ERROR")
+              }
+            )
+          ],
+          [
+            {
+              id: "CANVAS_SURFACE_ERROR_HASH",
+              kind: "DERIVED",
+              hash: hash({
+                message:
+                  error && error.message
+                    ? error.message
+                    : String(error || "UNKNOWN_F8_PROBE_ERROR")
+              })
+            }
+          ],
+          [
+            issue(
+              "CANVAS_SURFACE_PROBE_READ_ERROR",
+              "$.f8",
+              error && error.message
+                ? error.message
+                : String(error || "UNKNOWN_F8_PROBE_ERROR")
+            )
+          ],
+          {
+            ownerType: "PUBLIC_AUDRALIA_RUNTIME",
+            subjectId: "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME",
+            contract: "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1",
+            file: "/showroom/globe/audralia/index.js",
+            component: "CANVAS_SURFACE_TRUTH"
+          }
+        );
+      });
+  }
+
   function getDefinitionReceipt() {
     return {
-      schema: "AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v1",
+      schema: REGISTRATION_RECEIPT_SCHEMA,
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       globalPath: "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH",
       status: "AVAILABLE",
+      boundedWait: {
+        enabled: true,
+        pollIntervalMs: POLL_INTERVAL_MS,
+        pollTimeoutMs: POLL_TIMEOUT_MS
+      },
       noClaims: clone(NO_CLAIMS),
       generatedAt: nowISO()
     };
@@ -601,6 +1049,7 @@
     CYCLE_POSITION: CYCLE_POSITION,
     FIBONACCI: FIBONACCI,
     CONTRACT: CONTRACT,
+    PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
     VERSION: VERSION,
     FILE: FILE,
 
@@ -608,6 +1057,7 @@
     cyclePosition: CYCLE_POSITION,
     fibonacci: FIBONACCI,
     contract: CONTRACT,
+    previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     file: FILE,
 
@@ -615,7 +1065,10 @@
 
     executeCycleStation: executeCycleStation,
     execute: executeCycleStation,
-    getDefinitionReceipt: getDefinitionReceipt
+    getDefinitionReceipt: getDefinitionReceipt,
+
+    readLiveTargetFrame: readLiveTargetFrame,
+    evaluateSurface: evaluateSurface
   };
 
   global.AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH = API;

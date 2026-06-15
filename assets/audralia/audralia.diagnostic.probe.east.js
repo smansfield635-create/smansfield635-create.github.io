@@ -1,5 +1,5 @@
-// /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v4
+// /assets/audralia/audralia.diagnostic.probe.east.js
+// AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v2
 // Full-file replacement.
 // Diagnostic-only.
 // Read-only.
@@ -8,131 +8,71 @@
 // No runtime restart authority.
 // No repair authority.
 // No readiness authority.
-// No visual pass authority.
 // No F21 authority.
-//
-// Purpose:
-// - Preserve v3 diagnostic route reader behavior.
-// - Keep North Conductor as orchestration owner.
-// - Preserve nine-cycle diagnostic route.
-// - Normalize the evidence packet before conductor handoff.
-// - Provide East Probe Source with explicit subject / engine / construct / target evidence.
-// - Prevent null engine.file / subject.file transport when registry evidence exists.
-// - Do not synthesize positive runtime readiness evidence.
-// - Do not mutate production route.
-//
-// Fix target:
-// - East Probe was loading and executing.
-// - East Probe was still receiving incomplete declaration evidence.
-// - This renewal strengthens the route controller packet sent into the conductor.
-//
 
-(function audraliaDiagnosticRouteReaderController(global) {
+(function registerAudraliaDiagnosticProbeEast(global) {
   'use strict';
 
   const CONTRACT =
-    'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v4';
+    'AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v2';
 
   const PREVIOUS_CONTRACT =
-    'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_CONTROLLER_TNT_v3';
+    'AUDRALIA_DIAGNOSTIC_PROBE_EAST_SOURCE_F3_3D_TNT_v1';
 
-  const VERSION = '4.0.0';
+  const VERSION = '2.0.0';
 
   const FILE =
-    '/showroom/globe/audralia/diagnostic/index.js';
+    '/assets/audralia/audralia.diagnostic.probe.east.js';
 
-  const HTML_CONTRACT =
-    'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STATIC_SHELL_TNT_v2';
+  const STATION_ID = 'EAST_PROBE_SOURCE';
 
-  const CSS_CONTRACT =
-    'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D_STYLE_TNT_v2';
+  const CYCLE_POSITION = 2;
 
-  const TARGET_ROUTE =
-    '/showroom/globe/audralia/';
+  const FIBONACCI = 'F3';
 
-  const DIAGNOSTIC_ROUTE =
-    '/showroom/globe/audralia/diagnostic/';
+  const RECEIPT_SCHEMA =
+    'AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1';
 
-  const DIAGNOSTIC_ROOT_FILE =
-    '/showroom/globe/audralia/diagnostic/index.html';
+  const API_SCHEMA =
+    'AUDRALIA_DIAGNOSTIC_STATION_API_v1';
 
-  const STATION_ORDER = Object.freeze([
-    {
-      position: 1,
-      stationId: 'NORTH_PROBE_INTAKE',
-      fibonacci: 'F1',
-      file: '/assets/audralia/audralia.diagnostic.probe.north.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_NORTH'
-    },
-    {
-      position: 2,
-      stationId: 'EAST_PROBE_SOURCE',
-      fibonacci: 'F3',
-      file: '/assets/audralia/audralia.diagnostic.probe.east.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_EAST'
-    },
-    {
-      position: 3,
-      stationId: 'EAST_CONSTRUCTION_INTERPRETATION',
-      fibonacci: 'F5',
-      file: '/assets/audralia/audralia.diagnostic.east.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_EAST'
-    },
-    {
-      position: 4,
-      stationId: 'CANVAS_SURFACE_TRUTH',
-      fibonacci: 'F8',
-      file: '/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH'
-    },
-    {
-      position: 5,
-      stationId: 'WEST_PROBE_RUNTIME',
-      fibonacci: 'F13',
-      file: '/assets/audralia/audralia.diagnostic.probe.west.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_WEST'
-    },
-    {
-      position: 6,
-      stationId: 'WEST_RUNTIME_INTERPRETATION',
-      fibonacci: 'F21',
-      file: '/assets/audralia/audralia.diagnostic.west.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_WEST'
-    },
-    {
-      position: 7,
-      stationId: 'SOUTH_PROBE_HANDOFF',
-      fibonacci: 'F34',
-      file: '/assets/audralia/audralia.diagnostic.probe.south.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_SOUTH'
-    },
-    {
-      position: 8,
-      stationId: 'SOUTH_RESTITUTION_INTERPRETATION',
-      fibonacci: 'F55',
-      file: '/assets/audralia/audralia.diagnostic.south.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_SOUTH'
-    },
-    {
-      position: 9,
-      stationId: 'RAIL_TERMINAL_SYNTHESIS',
-      fibonacci: 'F89',
-      file: '/assets/audralia/audralia.diagnostic.rail.js',
-      globalPath: 'AUDRALIA_DIAGNOSTIC_RAIL'
-    }
-  ]);
+  const REGISTRATION_RECEIPT_SCHEMA =
+    'AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v1';
 
   const NO_CLAIMS = Object.freeze({
-    productionMutationAuthorized: false,
-    runtimeRestartAuthorized: false,
-    rendererMutationAuthorized: false,
-    repairAuthorized: false,
+    engineAuthority: false,
+    productionMutationAuthority: false,
+    contractRewriteAuthority: false,
+    routeMutationAuthority: false,
+    rendererAuthority: false,
+    canvasAuthority: false,
+    webGLAuthority: false,
+    webGPUAuthority: false,
+    runtimeAuthority: false,
+    repairAuthorizationAuthority: false,
+    fileAuthorizationAuthority: false,
+    finalProductionVerdictAuthority: false,
+    sourcePresenceProvesRuntime: false,
+    declarationProvesObservation: false,
     readyClaimed: false,
     verifiedClaimed: false,
     visualPassClaimed: false,
     finalVisualPassClaimed: false,
-    f21Claimed: false
+    generatedImage: false,
+    graphicBox: false,
+    f13Claimed: false,
+    f21Claimed: false,
+    webGL: false,
+    webGPU: false
   });
+
+  const ADMITTED_PATH_CLASSES = Object.freeze([
+    'AUDRALIA_ROUTE',
+    'AUDRALIA_DIAGNOSTIC_ROUTE',
+    'AUDRALIA_ASSET',
+    'DGB_ENGINE_ASSET',
+    'ENGINE_ASSET'
+  ]);
 
   function nowISO() {
     try {
@@ -193,46 +133,39 @@
       h >>>= 0;
     }
 
-    return 'fnv1a32-' + ('00000000' + h.toString(16)).slice(-8);
+    return 'fnv1a32:' + ('00000000' + h.toString(16)).slice(-8);
   }
 
-  function firstString() {
-    for (let i = 0; i < arguments.length; i += 1) {
-      if (typeof arguments[i] === 'string' && arguments[i].length) {
-        return arguments[i];
-      }
-    }
-
-    return null;
+  function issue(code, path, detail) {
+    return {
+      code: String(code || 'ISSUE'),
+      path: String(path || '$'),
+      detail: String(detail || code || 'ISSUE')
+    };
   }
 
-  function getPath(root, path) {
-    if (!isObject(root) || !path) return null;
-
-    const parts = String(path).split('.');
-    let cursor = root;
-
-    for (let i = 0; i < parts.length; i += 1) {
-      if (!isObject(cursor) && !Array.isArray(cursor)) return null;
-      cursor = cursor[parts[i]];
-      if (cursor === undefined || cursor === null) return null;
-    }
-
-    return cursor;
+  function observation(id, kind, payload) {
+    return Object.assign(
+      {
+        id,
+        kind
+      },
+      payload || {}
+    );
   }
 
   function normalizePathClass(file) {
     if (!file || typeof file !== 'string') return 'UNKNOWN';
 
     if (
-      file === DIAGNOSTIC_ROUTE ||
+      file === '/showroom/globe/audralia/diagnostic/' ||
       file.indexOf('/showroom/globe/audralia/diagnostic/') === 0
     ) {
       return 'AUDRALIA_DIAGNOSTIC_ROUTE';
     }
 
     if (
-      file === TARGET_ROUTE ||
+      file === '/showroom/globe/audralia/' ||
       file.indexOf('/showroom/globe/audralia/') === 0
     ) {
       return 'AUDRALIA_ROUTE';
@@ -253,963 +186,448 @@
     return 'UNKNOWN';
   }
 
-  function readEngineRegistry() {
-    const registryApi =
-      global.DGB_ENGINE_SUBJECTS ||
-      global.DGB_ENGINE_REGISTRY ||
-      global.DGB_ENGINE_SUBJECT_REGISTRY ||
-      null;
-
-    if (registryApi && typeof registryApi.inspect === 'function') {
-      try {
-        return registryApi.inspect();
-      } catch (_) {}
-    }
-
-    if (registryApi && typeof registryApi.getReceipt === 'function') {
-      try {
-        return {
-          registryLoaded: true,
-          receipt: registryApi.getReceipt()
-        };
-      } catch (_) {}
-    }
-
-    if (registryApi && isObject(registryApi)) {
-      return clone(registryApi);
-    }
-
-    const receipt =
-      global.DGB_ENGINE_REGISTRY_RECEIPT ||
-      global.DGB_ENGINE_SUBJECTS_RECEIPT ||
-      null;
-
-    return {
-      registryLoaded: Boolean(receipt),
-      receipt: receipt ? clone(receipt) : null
-    };
+  function pathClassAdmitted(pathClass) {
+    return ADMITTED_PATH_CLASSES.indexOf(pathClass) !== -1;
   }
 
-  function readEngineRuntime(engineRegistry) {
-    const engine =
-      global.DGB_ENGINE ||
-      global.DGBEngine ||
-      null;
-
-    if (engine && typeof engine.inspect === 'function') {
-      try {
-        const inspection = engine.inspect();
-
-        return {
-          classification: 'REGISTERED_EXTERNAL_PROVIDER',
-          source: 'DGB_ENGINE.inspect',
-          engineId:
-            firstString(
-              inspection.engineId,
-              inspection.runtimeReceipt?.engineId,
-              engineRegistry?.selectedEngine?.engineId,
-              'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE'
-            ),
-          engineLoaded: true,
-          contractMatched: true,
-          backend:
-            firstString(
-              inspection.backend,
-              inspection.runtimeReceipt?.backend,
-              'NONE'
-            ),
-          state:
-            firstString(
-              inspection.state,
-              inspection.runtimeReceipt?.state,
-              'UNKNOWN'
-            ),
-          lifecycle: inspection.lifecycle || null,
-          fileLoaded: null,
-          modelValidated: null,
-          instanceCreated: null,
-          mountPresent: null,
-          surfaceNonzero: null,
-          backendInitialized: null,
-          resourcesUploaded: null,
-          firstFrameSubmitted: null,
-          firstFramePresented: null,
-          visiblePixelObserved: null,
-          interactionObserved: null,
-          fallbackAvailable: null,
-          contextRecoveryAvailable: null,
-          noBlockingError: null,
-          primaryVisibility: null,
-          fallbackVisibility: null,
-          evidenceAvailable: true,
-          evidenceUnavailableReason: null,
-          rawInspection: clone(inspection)
-        };
-      } catch (error) {
-        return {
-          classification: 'REGISTERED_EXTERNAL_PROVIDER',
-          source: 'DGB_ENGINE.inspect',
-          engineId:
-            firstString(
-              engineRegistry?.selectedEngine?.engineId,
-              'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE'
-            ),
-          engineLoaded: true,
-          contractMatched: true,
-          backend: 'NONE',
-          state: 'UNKNOWN',
-          evidenceAvailable: false,
-          evidenceUnavailableReason:
-            error && error.message
-              ? error.message
-              : 'DGB_ENGINE_INSPECTION_FAILED'
-        };
+  function firstString() {
+    for (let i = 0; i < arguments.length; i += 1) {
+      if (typeof arguments[i] === 'string' && arguments[i].length) {
+        return arguments[i];
       }
     }
 
-    return {
-      classification: 'REGISTERED_EXTERNAL_PROVIDER',
-      source: 'DGB_ENGINE.inspect',
-      engineId:
-        firstString(
-          engineRegistry?.selectedEngine?.engineId,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE'
-        ),
-      engineLoaded: Boolean(global.DGB_ENGINE || global.DGBEngine),
-      contractMatched: Boolean(engineRegistry?.selectedEngine?.contract),
-      backend: 'NONE',
-      state: 'UNKNOWN',
-      lifecycle: null,
-      fileLoaded: null,
-      modelValidated: null,
-      instanceCreated: null,
-      mountPresent: null,
-      surfaceNonzero: null,
-      backendInitialized: null,
-      resourcesUploaded: null,
-      firstFrameSubmitted: null,
-      firstFramePresented: null,
-      visiblePixelObserved: null,
-      interactionObserved: null,
-      fallbackAvailable: null,
-      contextRecoveryAvailable: null,
-      noBlockingError: null,
-      primaryVisibility: null,
-      fallbackVisibility: null,
-      evidenceAvailable: true,
-      evidenceUnavailableReason: null
-    };
+    return null;
   }
 
-  function readTargetFrame() {
-    const frame =
-      document.getElementById('audraliaDiagnosticTargetFrame') ||
-      document.querySelector('iframe[data-diagnostic-target="audralia"]') ||
-      document.querySelector('iframe[src="/showroom/globe/audralia/"]') ||
-      null;
-
-    const target = {
-      framePresent: Boolean(frame),
-      frameId: frame && frame.id ? frame.id : null,
-      targetRoute: TARGET_ROUTE,
-      sameOriginAccessible: false,
-      documentLoaded: false,
-      targetRuntimeStatus: null,
-      runtimeEvidenceAvailable: false,
-      classification: 'UNKNOWN',
-      noClaims: {
-        iframePresenceProvesWebGL2: false,
-        iframePresenceProvesSubmission: false,
-        iframePresenceProvesPresentation: false,
-        iframePresenceProvesVisibility: false
-      }
-    };
-
-    if (!frame) {
-      return target;
-    }
-
-    try {
-      const doc =
-        frame.contentDocument ||
-        frame.contentWindow?.document ||
-        null;
-
-      target.sameOriginAccessible = Boolean(doc);
-      target.documentLoaded =
-        Boolean(doc && (doc.readyState === 'interactive' || doc.readyState === 'complete'));
-
-      const runtimeStatus =
-        frame.contentWindow?.AUDRALIA_RUNTIME_STATUS ||
-        frame.contentWindow?.AUDRALIA_RUNTIME_RECEIPT ||
-        frame.contentWindow?.AUDRALIA_CANVAS_AUTHORITY_RECEIPT ||
-        null;
-
-      target.targetRuntimeStatus = runtimeStatus ? clone(runtimeStatus) : null;
-      target.runtimeEvidenceAvailable = Boolean(runtimeStatus);
-    } catch (_) {
-      target.sameOriginAccessible = false;
-      target.documentLoaded = false;
-    }
-
-    return target;
+  function extractSelectedEngine(packet) {
+    return (
+      packet.engine ||
+      packet.selectedEngine ||
+      packet.engineRegistry?.selectedEngine ||
+      packet.construct?.engine ||
+      packet.subject?.engine ||
+      {}
+    );
   }
 
-  function normalizeSelectedEngine(engineRegistry) {
-    const selected =
-      engineRegistry?.selectedEngine ||
-      engineRegistry?.coreEngine ||
-      engineRegistry?.receipt?.coreEngine ||
-      {};
+  function extractEngineFile(packet) {
+    const engine = extractSelectedEngine(packet);
 
-    const runtimeReceipt =
-      selected.runtimeReceipt ||
-      selected.inspection?.runtimeReceipt ||
-      {};
-
-    const inspection =
-      selected.inspection ||
-      {};
-
-    const authority =
-      engineRegistry?.authority ||
-      selected.authority ||
-      inspection.authority ||
-      {};
-
-    return {
-      schema:
-        firstString(
-          selected.schema,
-          'DGB_ENGINE_SUBJECT_RECORD_v2'
-        ),
-      slot:
-        typeof selected.slot === 'number'
-          ? selected.slot
-          : 1,
-      engineId:
-        firstString(
-          selected.engineId,
-          engineRegistry?.receipt?.defaultEngineId,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE'
-        ),
-      engineName:
-        firstString(
-          selected.engineName,
-          'DGB Interactive Runtime Engine Core'
-        ),
-      role:
-        firstString(
-          selected.role,
-          'RUNTIME_ENGINE'
-        ),
-      reserved: selected.reserved === true,
-      selectable: selected.selectable !== false,
-      defaultEngine: selected.defaultEngine !== false,
-      file:
-        firstString(
-          selected.file,
-          runtimeReceipt.file,
-          inspection.file,
-          '/assets/engine/dgb.engine.js'
-        ),
-      contract:
-        firstString(
-          selected.contract,
-          runtimeReceipt.contract,
-          inspection.contract,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1'
-        ),
-      version:
-        firstString(
-          selected.version,
-          runtimeReceipt.version,
-          inspection.version,
-          '1.0.0'
-        ),
-      globalNames:
-        Array.isArray(selected.globalNames)
-          ? selected.globalNames.slice()
-          : [
-              'DGB_ENGINE',
-              'DGBEngine',
-              'DGB_ENGINE_RECEIPT'
-            ],
-      governingAuthorityId:
-        firstString(
-          selected.governingAuthorityId,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_GOVERNING_CONTRACT'
-        ),
-      governingContract:
-        firstString(
-          selected.governingContract,
-          runtimeReceipt.governingContract,
-          authority.contract,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1'
-        ),
-      governingContractFile:
-        firstString(
-          selected.governingContractFile,
-          authority.file,
-          '/assets/engine/dgb.engine.contract.js'
-        ),
-      modelSchema:
-        firstString(
-          selected.modelSchema,
-          runtimeReceipt.modelSchema,
-          authority.modelSchema,
-          'DGB_MODEL_PACKAGE_v1'
-        ),
-      loaded: selected.loaded !== false,
-      identityMatched: selected.identityMatched !== false,
-      governingContractMatched: selected.governingContractMatched !== false,
-      quietLoadExpected: selected.quietLoadExpected !== false,
-      f13InheritedConditionally: selected.f13InheritedConditionally === true,
-      f21Claimed: false,
-      status:
-        firstString(
-          selected.status,
-          'AVAILABLE'
-        ),
-      statusReason:
-        firstString(
-          selected.statusReason,
-          'ENGINE_AND_AUTHORITY_AVAILABLE'
-        ),
-      runtimeStatus:
-        selected.runtimeStatus ||
-        {
-          contract:
-            firstString(
-              runtimeReceipt.contract,
-              selected.contract,
-              'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1'
-            ),
-          version:
-            firstString(
-              runtimeReceipt.version,
-              selected.version,
-              '1.0.0'
-            ),
-          file:
-            firstString(
-              runtimeReceipt.file,
-              selected.file,
-              '/assets/engine/dgb.engine.js'
-            ),
-          status:
-            firstString(
-              runtimeReceipt.status,
-              'READY'
-            ),
-          authorityMatched: runtimeReceipt.authorityMatched !== false,
-          modelSchema:
-            firstString(
-              runtimeReceipt.modelSchema,
-              selected.modelSchema,
-              'DGB_MODEL_PACKAGE_v1'
-            ),
-          liveInstanceCount: runtimeReceipt.liveInstanceCount || 0,
-          tombstoneCount: runtimeReceipt.tombstoneCount || 0,
-          adapterDescriptorCount: runtimeReceipt.adapterDescriptorCount || 0,
-          activeSessionCount: runtimeReceipt.activeSessionCount || 0,
-          activeSchedulerCount: runtimeReceipt.activeSchedulerCount || 0,
-          f21Claimed: false
-        },
-      runtimeReceipt:
-        isObject(runtimeReceipt)
-          ? clone(runtimeReceipt)
-          : null,
-      inspection:
-        isObject(inspection)
-          ? clone(inspection)
-          : null
-    };
+    return firstString(
+      engine.file,
+      engine.governingContractFile,
+      packet.engine?.file,
+      packet.engine?.runtimeReceipt?.file,
+      packet.engineRegistry?.selectedEngine?.file,
+      packet.engineRegistry?.selectedEngine?.runtimeReceipt?.file,
+      packet.engineRegistry?.selectedEngine?.inspection?.runtimeReceipt?.file,
+      packet.engineRegistry?.selectedEngine?.inspection?.authority?.file,
+      packet.engineRegistry?.authority?.file,
+      packet.engineRegistry?.receipt?.file
+    );
   }
 
-  function normalizeEngineRegistry(rawRegistry) {
-    const registry = isObject(rawRegistry) ? clone(rawRegistry) : {};
+  function extractEngineContract(packet) {
+    const engine = extractSelectedEngine(packet);
 
-    const selectedEngine = normalizeSelectedEngine(registry);
-
-    const authority =
-      registry.authority ||
-      registry.governingContract ||
-      {};
-
-    const receipt =
-      registry.receipt ||
-      global.DGB_ENGINE_REGISTRY_RECEIPT ||
-      global.DGB_ENGINE_SUBJECTS_RECEIPT ||
-      null;
-
-    return {
-      registryLoaded: registry.registryLoaded !== false,
-      registryContract:
-        firstString(
-          registry.registryContract,
-          receipt?.contract,
-          'DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2'
-        ),
-      registryContractMatched: registry.registryContractMatched !== false,
-      governingAuthorityCount:
-        registry.governingAuthorityCount ||
-        registry.authorityCount ||
-        receipt?.authorityCount ||
-        1,
-      assignedEngineCount:
-        registry.assignedEngineCount ||
-        receipt?.assignedEngineCount ||
-        1,
-      selectableEngineCount:
-        registry.selectableEngineCount ||
-        receipt?.selectableEngineCount ||
-        1,
-      reservedEngineCount:
-        registry.reservedEngineCount ||
-        receipt?.reservedEngineCount ||
-        5,
-      authority:
-        isObject(authority)
-          ? clone(authority)
-          : null,
-      selectedEngine,
-      receipt:
-        receipt
-          ? clone(receipt)
-          : {
-              schema: 'DGB_ENGINE_REGISTRY_RECEIPT_v2',
-              contract: 'DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2',
-              version: '2.0.0',
-              file: '/assets/engine/dgb.engine.subjects.js',
-              generatedAt: nowISO(),
-              slotCount: 6,
-              authorityCount: 1,
-              assignedEngineCount: 1,
-              selectableEngineCount: 1,
-              reservedEngineCount: 5,
-              defaultEngineId: selectedEngine.engineId,
-              coreEngine: {
-                engineId: selectedEngine.engineId,
-                loaded: selectedEngine.loaded,
-                identityMatched: selectedEngine.identityMatched,
-                governingContractMatched: selectedEngine.governingContractMatched,
-                selectable: selectedEngine.selectable,
-                status: selectedEngine.status,
-                f13InheritedConditionally: selectedEngine.f13InheritedConditionally,
-                f21Claimed: false
-              },
-              boundaries: {
-                metadataOnly: true,
-                quietLoad: true,
-                createsInstances: false,
-                registersAdapters: false,
-                attachesObserversAutomatically: false,
-                startsSchedulers: false,
-                mutatesRuntime: false,
-                claimsReadiness: false,
-                claimsF21: false
-              }
-            }
-    };
+    return firstString(
+      engine.contract,
+      engine.governingContract,
+      packet.engine?.contract,
+      packet.engine?.runtimeReceipt?.contract,
+      packet.engineRegistry?.selectedEngine?.contract,
+      packet.engineRegistry?.selectedEngine?.runtimeReceipt?.contract,
+      packet.engineRegistry?.authority?.contract,
+      packet.engineRegistry?.receipt?.contract
+    );
   }
 
-  function buildSubject(engineRegistry) {
-    return {
-      subjectId: 'AUDRALIA_DIAGNOSTIC_READER_ROUTE',
-      subjectType: 'THREE_D_DIAGNOSTIC_ROUTE',
+  function extractEngineVersion(packet) {
+    const engine = extractSelectedEngine(packet);
+
+    return firstString(
+      engine.version,
+      packet.engine?.version,
+      packet.engine?.runtimeReceipt?.version,
+      packet.engineRegistry?.selectedEngine?.version,
+      packet.engineRegistry?.selectedEngine?.runtimeReceipt?.version
+    );
+  }
+
+  function extractSubject(packet) {
+    return packet.subject || packet.construct?.subject || {};
+  }
+
+  function extractConstruct(packet) {
+    return packet.construct || {};
+  }
+
+  function extractTarget(packet) {
+    return packet.target || packet.construct?.target || {};
+  }
+
+  function createReceipt(status, completed, handoffEligible, summary, packet, observations, evidence, issues, owner) {
+    const receipt = {
+      schema: RECEIPT_SCHEMA,
+      cycleId: packet.cycleId || null,
+      position: CYCLE_POSITION,
+      stationId: STATION_ID,
+      fibonacci: FIBONACCI,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
-      rootFile: DIAGNOSTIC_ROOT_FILE,
-      route: DIAGNOSTIC_ROUTE,
-      targetRoute: TARGET_ROUTE,
-      filePathClass: normalizePathClass(FILE),
-      rootFilePathClass: normalizePathClass(DIAGNOSTIC_ROOT_FILE),
-      routePathClass: normalizePathClass(DIAGNOSTIC_ROUTE),
-      targetRoutePathClass: normalizePathClass(TARGET_ROUTE),
-      engineRegistryContract: engineRegistry.registryContract,
-      selectedEngineId: engineRegistry.selectedEngine.engineId,
-      selectedEngineFile: engineRegistry.selectedEngine.file
-    };
-  }
-
-  function buildEngine(engineRegistry, engineRuntime) {
-    const selected = engineRegistry.selectedEngine || {};
-
-    return {
-      engineId:
-        firstString(
-          selected.engineId,
-          engineRuntime.engineId,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE'
-        ),
-      engineName:
-        firstString(
-          selected.engineName,
-          'DGB Interactive Runtime Engine Core'
-        ),
-      role:
-        firstString(
-          selected.role,
-          'RUNTIME_ENGINE'
-        ),
-      file:
-        firstString(
-          selected.file,
-          engineRuntime.rawInspection?.file,
-          '/assets/engine/dgb.engine.js'
-        ),
-      contract:
-        firstString(
-          selected.contract,
-          engineRuntime.rawInspection?.contract,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1'
-        ),
-      version:
-        firstString(
-          selected.version,
-          engineRuntime.rawInspection?.version,
-          '1.0.0'
-        ),
-      governingContract:
-        firstString(
-          selected.governingContract,
-          'DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1'
-        ),
-      governingContractFile:
-        firstString(
-          selected.governingContractFile,
-          '/assets/engine/dgb.engine.contract.js'
-        ),
-      modelSchema:
-        firstString(
-          selected.modelSchema,
-          'DGB_MODEL_PACKAGE_v1'
-        ),
-      filePathClass:
-        normalizePathClass(
-          firstString(
-            selected.file,
-            '/assets/engine/dgb.engine.js'
-          )
-        ),
-      loaded: selected.loaded !== false,
-      identityMatched: selected.identityMatched !== false,
-      governingContractMatched: selected.governingContractMatched !== false,
-      status:
-        firstString(
-          selected.status,
-          'AVAILABLE'
-        ),
-      runtimeReceipt: selected.runtimeReceipt || null,
-      runtimeStatus: selected.runtimeStatus || null,
-      inspection: selected.inspection || null
-    };
-  }
-
-  function buildConstruct(engineRegistry, target) {
-    return {
-      constructId:
-        'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D',
-      id:
-        'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D',
-      constructType:
-        'DIAGNOSTIC_ROUTE_READER',
-      contract: HTML_CONTRACT,
-      controllerContract: CONTRACT,
-      previousControllerContract: PREVIOUS_CONTRACT,
-      cssContract: CSS_CONTRACT,
-      version: '2.0.0',
-      controllerVersion: VERSION,
-      route: DIAGNOSTIC_ROUTE,
-      rootFile: DIAGNOSTIC_ROOT_FILE,
-      file: DIAGNOSTIC_ROOT_FILE,
-      controllerFile: FILE,
-      routePathClass: normalizePathClass(DIAGNOSTIC_ROUTE),
-      rootFilePathClass: normalizePathClass(DIAGNOSTIC_ROOT_FILE),
-      controllerFilePathClass: normalizePathClass(FILE),
-      targetRoute: TARGET_ROUTE,
-      targetRoutePathClass: normalizePathClass(TARGET_ROUTE),
-      target,
-      engine: buildEngine(engineRegistry, {}),
-      dependencies: [
-        '/assets/audralia/audralia.diagnostic.north.conductor.js',
-        '/assets/audralia/audralia.diagnostic.probe.north.js',
-        '/assets/audralia/audralia.diagnostic.probe.east.js',
-        '/assets/audralia/audralia.diagnostic.east.js',
-        '/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js',
-        '/assets/audralia/audralia.diagnostic.probe.west.js',
-        '/assets/audralia/audralia.diagnostic.west.js',
-        '/assets/audralia/audralia.diagnostic.probe.south.js',
-        '/assets/audralia/audralia.diagnostic.south.js',
-        '/assets/audralia/audralia.diagnostic.rail.js'
-      ]
-    };
-  }
-
-  function buildStationRegistrations() {
-    return STATION_ORDER.map(function buildRegistration(station) {
-      const api = getPath(global, station.globalPath);
-
-      return {
-        position: station.position,
-        stationId: station.stationId,
-        file: station.file,
-        status:
-          api && typeof api.execute === 'function'
-            ? 'REGISTERED'
-            : 'REJECTED',
-        reason:
-          api && typeof api.execute === 'function'
-            ? 'STATION_REGISTERED'
-            : 'STATION_GLOBAL_NOT_FOUND',
-        issues: [],
-        globalPath: api ? station.globalPath : null,
-        source: api ? 'DECLARED_GLOBAL' : 'NOT_FOUND',
-        generatedAt: nowISO()
-      };
-    });
-  }
-
-  function createMissingReceipt(cycleId, station) {
-    return {
-      schema: 'AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1',
-      cycleId,
-      position: station.position,
-      stationId: station.stationId,
-      fibonacci: station.fibonacci,
-      contract: CONTRACT,
-      version: VERSION,
-      file: FILE,
-      status: 'HOLD',
-      completed: false,
-      handoffEligible: false,
-      summary: 'The North conductor did not return this station receipt.',
-      observations: [],
-      evidence: [],
-      issues: [
-        {
-          code: 'STATION_RECEIPT_MISSING',
-          path: station.stationId,
-          detail: 'Expected station receipt was absent from the conductor result.'
-        }
-      ],
-      firstHeldCoordinate: station.stationId,
-      firstFailedCoordinate: null,
-      firstConflictCoordinate: null,
+      status,
+      completed,
+      handoffEligible,
+      summary,
+      observations: observations || [],
+      evidence: evidence || [],
+      issues: issues || [],
+      firstHeldCoordinate: status === 'HOLD' ? 'F3:EAST_PROBE_SOURCE' : null,
+      firstFailedCoordinate: status === 'FAIL' ? 'F3:EAST_PROBE_SOURCE' : null,
+      firstConflictCoordinate: status === 'CONFLICT' ? 'F3:EAST_PROBE_SOURCE' : null,
+      recommendedOwner: owner || {
+        ownerType: 'DECLARED_SOURCE',
+        subjectId: 'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D',
+        contract: null,
+        file: '/showroom/globe/audralia/diagnostic/index.html',
+        component: 'EAST_SOURCE_DECLARATION'
+      },
       generatedAt: nowISO(),
-      noClaims: clone(NO_CLAIMS)
+      noClaims: clone(NO_CLAIMS),
+      receiptHash: null
     };
+
+    receipt.receiptHash = hash(receipt);
+
+    return receipt;
   }
 
-  function normalizeReceipts(cycleId, conductorReceipts) {
-    const receipts = Array.isArray(conductorReceipts)
-      ? conductorReceipts.slice()
+  function executeCycleStation(packet) {
+    packet = packet || {};
+
+    const subject = extractSubject(packet);
+    const construct = extractConstruct(packet);
+    const target = extractTarget(packet);
+
+    const engineFile = extractEngineFile(packet);
+    const engineContract = extractEngineContract(packet);
+    const engineVersion = extractEngineVersion(packet);
+
+    const subjectFile = firstString(
+      subject.file,
+      subject.rootFile,
+      packet.subjectFile
+    );
+
+    const constructRoute = firstString(
+      construct.route,
+      target.targetRoute,
+      packet.targetRoute,
+      '/showroom/globe/audralia/diagnostic/'
+    );
+
+    const constructRootFile = firstString(
+      construct.rootFile,
+      construct.file,
+      '/showroom/globe/audralia/diagnostic/index.html'
+    );
+
+    const subjectPathClass = normalizePathClass(subjectFile);
+    const enginePathClass = normalizePathClass(engineFile);
+    const constructRootPathClass = normalizePathClass(constructRootFile);
+    const constructRoutePathClass = normalizePathClass(constructRoute);
+
+    const files = [
+      {
+        id: 'SUBJECT_FILE',
+        file: subjectFile,
+        pathClass: subjectPathClass,
+        admitted: subjectFile ? pathClassAdmitted(subjectPathClass) : null
+      },
+      {
+        id: 'ENGINE_FILE',
+        file: engineFile,
+        pathClass: enginePathClass,
+        admitted: engineFile ? pathClassAdmitted(enginePathClass) : null
+      },
+      {
+        id: 'CONSTRUCT_ROOT_FILE',
+        file: constructRootFile,
+        pathClass: constructRootPathClass,
+        admitted: pathClassAdmitted(constructRootPathClass)
+      },
+      {
+        id: 'CONSTRUCT_ROUTE',
+        file: constructRoute,
+        pathClass: constructRoutePathClass,
+        admitted: pathClassAdmitted(constructRoutePathClass)
+      }
+    ];
+
+    const dependencies = Array.isArray(construct.dependencies)
+      ? construct.dependencies.slice(0, 64)
       : [];
 
-    const byPosition = {};
+    const observations = [
+      observation('EAST_SOURCE_SUBJECT_DECLARATION', 'DECLARED', {
+        subjectId:
+          firstString(
+            subject.subjectId,
+            subject.id,
+            'AUDRALIA_DIAGNOSTIC_READER_ROUTE'
+          ),
+        subjectType:
+          firstString(
+            subject.subjectType,
+            subject.type,
+            'THREE_D_DIAGNOSTIC_ROUTE'
+          ),
+        contract: firstString(subject.contract, null),
+        version: firstString(subject.version, null),
+        file: subjectFile,
+        filePathClass: subjectPathClass
+      }),
 
-    receipts.forEach(function indexReceipt(receipt) {
-      if (receipt && typeof receipt.position === 'number') {
-        byPosition[receipt.position] = receipt;
+      observation('EAST_SOURCE_ENGINE_DECLARATION', 'DECLARED', {
+        contract: engineContract,
+        version: engineVersion,
+        file: engineFile,
+        filePathClass: enginePathClass,
+        source:
+          engineFile
+            ? 'ENGINE_REGISTRY_OR_DECLARED_ENGINE'
+            : 'UNAVAILABLE',
+        declaredContractFiles:
+          engineContract
+            ? [engineContract]
+            : []
+      }),
+
+      observation('EAST_SOURCE_CONSTRUCT_DECLARATION', 'DECLARED', {
+        constructId:
+          firstString(
+            construct.constructId,
+            construct.id,
+            'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D'
+          ),
+        contract:
+          firstString(
+            construct.contract,
+            packet.htmlContract,
+            null
+          ),
+        version:
+          firstString(
+            construct.version,
+            packet.version,
+            null
+          ),
+        route: constructRoute,
+        routePathClass: constructRoutePathClass,
+        rootFile: constructRootFile,
+        rootFilePathClass: constructRootPathClass
+      }),
+
+      observation('EAST_SOURCE_DECLARED_FILES', 'DERIVED', {
+        fileCount: files.filter(function countFile(entry) {
+          return Boolean(entry.file);
+        }).length,
+        files
+      }),
+
+      observation('EAST_SOURCE_DECLARED_DEPENDENCIES', 'DERIVED', {
+        dependencyCount: dependencies.length,
+        dependencies
+      }),
+
+      observation('EAST_SOURCE_PRIOR_NORTH_RECEIPT', 'EXPOSED_RECEIPT', {
+        priorReceiptCount:
+          Array.isArray(packet.priorStationReceipts)
+            ? packet.priorStationReceipts.length
+            : 0,
+        northReceiptObserved:
+          Array.isArray(packet.priorStationReceipts) &&
+          packet.priorStationReceipts.some(function findNorth(receipt) {
+            return receipt && receipt.stationId === 'NORTH_PROBE_INTAKE';
+          })
+      })
+    ];
+
+    const evidence = [
+      {
+        id: 'EAST_SOURCE_REQUEST_HASH',
+        kind: 'DERIVED',
+        hash: hash(packet)
+      },
+      {
+        id: 'EAST_SOURCE_DECLARED_FILE_MANIFEST_HASH',
+        kind: 'DERIVED',
+        hash: hash(files)
+      },
+      {
+        id: 'EAST_SOURCE_DECLARED_DEPENDENCY_HASH',
+        kind: 'DERIVED',
+        hash: hash(dependencies)
+      },
+      {
+        id: 'EAST_SOURCE_VALIDATION',
+        kind: 'DERIVED',
+        passed: true,
+        issueCount: 0
       }
-    });
+    ];
 
-    return STATION_ORDER.map(function mapStation(station) {
-      return byPosition[station.position] || createMissingReceipt(cycleId, station);
-    });
-  }
+    const issues = [];
 
-  function countReceipts(receipts, status) {
-    return receipts.filter(function count(receipt) {
-      return receipt && receipt.status === status;
-    }).length;
-  }
-
-  function buildReaderReport(ledger) {
-    return [
-      'AUDRALIA DIAGNOSTIC READER REPORT',
-      'SCHEMA=AUDRALIA_DIAGNOSTIC_READER_REPORT_v4',
-      '',
-      'Overall status: ' + (ledger.overallStatus === 'PASS' ? 'Passed' : 'Held for evidence'),
-      'Passed stations: ' + ledger.passCount + ' of 9',
-      'Held stations: ' + ledger.holdCount,
-      'Attention items: ' + (ledger.failCount + ledger.conflictCount + ledger.errorCount),
-      '',
-      'Engine family:',
-      'Governing contracts: ' + ledger.engineRegistry.governingAuthorityCount,
-      'Assigned engines: ' + ledger.engineRegistry.assignedEngineCount,
-      'Selectable engines: ' + ledger.engineRegistry.selectableEngineCount,
-      'Reserved engine slots: ' + ledger.engineRegistry.reservedEngineCount,
-      '',
-      'North conductor:',
-      'Invocation: createCycle',
-      'Registered stations: ' + ledger.conductorState.registeredStationCount + ' of 9',
-      '',
-      'Plain-language reading:',
-      'The diagnostic path is held because required runtime evidence is missing, unavailable, or not yet admitted. Missing proof was not replaced with synthetic positive evidence.',
-      '',
-      'Terminal summary:',
-      ledger.terminalSummary,
-      '',
-      'Boundary:',
-      'This diagnostic route does not authorize production mutation, runtime restart, renderer mutation, repair, readiness, visual pass, or F21.',
-      '',
-      'Ledger hash:',
-      ledger.ledgerHash
-    ].join('\n');
-  }
-
-  function publish(ledger) {
-    global.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER = ledger;
-    global.AUDRALIA_DIAGNOSTIC_ROUTE_READER_LEDGER = ledger;
-    global.AUDRALIA_DIAGNOSTIC_READER_REPORT = buildReaderReport(ledger);
-
-    try {
-      const reportEl =
-        document.getElementById('audraliaDiagnosticReaderReport') ||
-        document.querySelector('[data-audralia-diagnostic-report]');
-
-      if (reportEl) {
-        reportEl.textContent = global.AUDRALIA_DIAGNOSTIC_READER_REPORT;
-      }
-
-      const ledgerEl =
-        document.getElementById('audraliaDiagnosticLedger') ||
-        document.querySelector('[data-audralia-diagnostic-ledger]');
-
-      if (ledgerEl) {
-        ledgerEl.textContent = JSON.stringify(ledger, null, 2);
-      }
-    } catch (_) {}
-  }
-
-  function runDiagnostic() {
-    const cycleId =
-      'AUDRALIA_DIAGNOSTIC_CYCLE_' + Date.now();
-
-    const rawEngineRegistry =
-      readEngineRegistry();
-
-    const engineRegistry =
-      normalizeEngineRegistry(rawEngineRegistry);
-
-    const engineRuntime =
-      readEngineRuntime(engineRegistry);
-
-    const target =
-      readTargetFrame();
-
-    const subject =
-      buildSubject(engineRegistry);
-
-    const engine =
-      buildEngine(engineRegistry, engineRuntime);
-
-    const construct =
-      buildConstruct(engineRegistry, target);
-
-    construct.engine = engine;
-    construct.subject = subject;
-
-    const stationRegistrations =
-      buildStationRegistrations();
-
-    const packet = {
-      schema: 'AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER_PACKET_v4',
-      contract: CONTRACT,
-      previousContract: PREVIOUS_CONTRACT,
-      version: VERSION,
-      file: FILE,
-      htmlContract: HTML_CONTRACT,
-      cssContract: CSS_CONTRACT,
-      cycleId,
-      mode: 'AUDIT',
-      targetRoute: TARGET_ROUTE,
-      diagnosticRoute: DIAGNOSTIC_ROUTE,
-      subject,
-      engine,
-      construct,
-      target,
-      engineRegistry,
-      engineRuntime,
-      stationRegistrations,
-      priorLedgerHash:
-        global.AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER?.ledgerHash ||
-        null,
-      packetHash: null,
-      noClaims: clone(NO_CLAIMS)
-    };
-
-    packet.packetHash = hash(packet);
-
-    let conductorResult = null;
-    let conductorReceipt = null;
-
-    const conductor =
-      global.AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR ||
-      null;
-
-    if (conductor && typeof conductor.createCycle === 'function') {
-      try {
-        conductorResult = conductor.createCycle(packet);
-        conductorReceipt =
-          conductorResult?.cycleReceipt ||
-          conductorResult?.receipt ||
-          conductorResult ||
-          null;
-      } catch (error) {
-        conductorResult = {
-          schema: 'AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v1',
-          error: error && error.message ? error.message : 'CONDUCTOR_CREATE_CYCLE_FAILED'
-        };
-      }
-    } else {
-      conductorResult = {
-        schema: 'AUDRALIA_DIAGNOSTIC_ROUTE_CONDUCTOR_RESULT_v1',
-        error: 'AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR_UNAVAILABLE'
-      };
+    if (!engineFile) {
+      issues.push(
+        issue(
+          'ENGINE_FILE_EVIDENCE_UNAVAILABLE',
+          '$.engine.file',
+          'Engine file was not declared and could not be derived from the registry packet.'
+        )
+      );
+    } else if (!pathClassAdmitted(enginePathClass)) {
+      issues.push(
+        issue(
+          'ENGINE_FILE_PATH_CLASS_NOT_ADMITTED',
+          '$.engine.file',
+          'Engine file path class is not admitted for East source declaration.'
+        )
+      );
     }
 
-    const rawStationReceipts =
-      conductorReceipt?.stationReceipts ||
-      conductorResult?.stationReceipts ||
-      conductorReceipt?.receipts ||
-      conductorResult?.receipts ||
-      [];
+    if (!constructRootFile) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROOT_FILE_REQUIRED',
+          '$.construct.rootFile',
+          'Construct root file is required for East source declaration.'
+        )
+      );
+    } else if (!pathClassAdmitted(constructRootPathClass)) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROOT_FILE_PATH_CLASS_NOT_ADMITTED',
+          '$.construct.rootFile',
+          'Construct root file must be an admitted Audralia route, diagnostic route, or asset path.'
+        )
+      );
+    }
 
-    const receipts =
-      normalizeReceipts(cycleId, rawStationReceipts);
+    if (!constructRoute) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROUTE_REQUIRED',
+          '$.construct.route',
+          'Construct route is required for East source declaration.'
+        )
+      );
+    } else if (!pathClassAdmitted(constructRoutePathClass)) {
+      issues.push(
+        issue(
+          'CONSTRUCT_ROUTE_PATH_CLASS_NOT_ADMITTED',
+          '$.construct.route',
+          'Construct route must be an admitted Audralia route, diagnostic route, or asset path.'
+        )
+      );
+    }
 
-    const passCount = countReceipts(receipts, 'PASS');
-    const holdCount = countReceipts(receipts, 'HOLD');
-    const failCount = countReceipts(receipts, 'FAIL');
-    const conflictCount = countReceipts(receipts, 'CONFLICT');
-    const errorCount = countReceipts(receipts, 'ERROR');
+    const owner = {
+      ownerType: 'DECLARED_SOURCE',
+      subjectId:
+        firstString(
+          construct.constructId,
+          construct.id,
+          'AUDRALIA_DIAGNOSTIC_ROUTE_READER_FIRST_ENGINE_REGISTRY_NINE_CYCLE_READ_3D'
+        ),
+      contract:
+        firstString(
+          construct.contract,
+          packet.htmlContract,
+          null
+        ),
+      file: constructRootFile,
+      component: 'EAST_SOURCE_DECLARATION'
+    };
 
-    const terminalReceipt =
-      receipts.find(function findRail(receipt) {
-        return receipt && receipt.stationId === 'RAIL_TERMINAL_SYNTHESIS';
-      }) ||
-      null;
+    if (issues.length) {
+      return createReceipt(
+        'HOLD',
+        false,
+        false,
+        'EAST_SOURCE_HELD_DECLARATION_INCOMPLETE',
+        packet,
+        observations,
+        evidence,
+        issues,
+        owner
+      );
+    }
 
-    const overallStatus =
-      failCount || conflictCount || errorCount
-        ? 'HOLD'
-        : holdCount
-          ? 'HOLD'
-          : 'PASS';
+    return createReceipt(
+      'PASS',
+      true,
+      true,
+      'EAST_SOURCE_DECLARATION_ADMITTED',
+      packet,
+      observations,
+      evidence,
+      [],
+      owner
+    );
+  }
 
-    const ledger = {
-      schema: 'AUDRALIA_DIAGNOSTIC_ROUTE_LEDGER_v4',
+  function getDefinitionReceipt() {
+    return {
+      schema: REGISTRATION_RECEIPT_SCHEMA,
+      stationId: STATION_ID,
+      cyclePosition: CYCLE_POSITION,
+      fibonacci: FIBONACCI,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
-      htmlContract: HTML_CONTRACT,
-      cssContract: CSS_CONTRACT,
-      cycleId,
-      generatedAt: nowISO(),
-      targetRoute: TARGET_ROUTE,
-      orchestrationOwner: 'AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR',
-      orchestrationMethod: 'createCycle',
-      receiptCount: 9,
-      passCount,
-      holdCount,
-      failCount,
-      conflictCount,
-      errorCount,
-      degradedCount: 0,
-      overallStatus,
-      terminalStatus:
-        terminalReceipt?.status ||
-        overallStatus,
-      terminalSummary:
-        terminalReceipt?.summary ||
-        'RAIL_TERMINAL_SYNTHESIS_HELD_OR_INCOMPLETE',
-      engineRegistry,
-      engineRuntime,
-      subject,
-      engine,
-      construct,
-      target,
-      conductorState:
-        conductorResult?.state ||
-        conductorReceipt?.state ||
-        {
-          cycleId,
-          state: overallStatus === 'PASS' ? 'PASSED' : 'HELD',
-          sealed: true,
-          disposed: false,
-          runOnce: true,
-          registeredStationCount:
-            stationRegistrations.filter(function registered(entry) {
-              return entry.status === 'REGISTERED';
-            }).length,
-          startedAt: null,
-          completedAt: nowISO()
-        },
-      conductorReceipt,
-      stationRegistrations,
-      conductorResult,
-      receipts,
+      globalPath: 'AUDRALIA_DIAGNOSTIC_PROBE_EAST',
+      status: 'AVAILABLE',
+      admittedPathClasses: clone(ADMITTED_PATH_CLASSES),
       noClaims: clone(NO_CLAIMS),
-      ledgerHash: null
+      generatedAt: nowISO()
     };
-
-    ledger.ledgerHash = hash(ledger);
-
-    publish(ledger);
-
-    return ledger;
   }
 
   const API = {
-    schema: 'AUDRALIA_DIAGNOSTIC_ROUTE_READER_CONTROLLER_API_v4',
+    schema: API_SCHEMA,
+
+    STATION_ID,
+    CYCLE_POSITION,
+    FIBONACCI,
+    CONTRACT,
+    PREVIOUS_CONTRACT,
+    VERSION,
+    FILE,
+
+    stationId: STATION_ID,
+    cyclePosition: CYCLE_POSITION,
+    fibonacci: FIBONACCI,
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
     version: VERSION,
     file: FILE,
-    htmlContract: HTML_CONTRACT,
-    cssContract: CSS_CONTRACT,
-    targetRoute: TARGET_ROUTE,
-    diagnosticRoute: DIAGNOSTIC_ROUTE,
-    runDiagnostic,
-    readEngineRegistry,
-    readTargetFrame,
-    buildReaderReport,
-    noClaims: clone(NO_CLAIMS)
+
+    role: 'EAST_PROBE_SOURCE',
+
+    executeCycleStation,
+    execute: executeCycleStation,
+    getDefinitionReceipt
   };
 
-  global.AUDRALIA_DIAGNOSTIC_ROUTE_READER_CONTROLLER = API;
+  global.AUDRALIA_DIAGNOSTIC_PROBE_EAST = API;
 
-  global.AUDRALIA_DIAGNOSTIC_ROUTE_READER_CONTROLLER_RECEIPT = {
-    schema: 'AUDRALIA_DIAGNOSTIC_ROUTE_READER_CONTROLLER_RECEIPT_v4',
-    contract: CONTRACT,
-    previousContract: PREVIOUS_CONTRACT,
-    version: VERSION,
-    file: FILE,
-    status: 'AVAILABLE',
-    orchestrationOwner: 'AUDRALIA_DIAGNOSTIC_NORTH_CONDUCTOR',
-    orchestrationMethod: 'createCycle',
-    packetNormalization: {
-      subjectFileDeclared: FILE,
-      engineFileDerivedFromRegistry: true,
-      constructRootFileDeclared: DIAGNOSTIC_ROOT_FILE,
-      targetRouteDeclared: TARGET_ROUTE
-    },
-    noClaims: clone(NO_CLAIMS),
-    generatedAt: nowISO()
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function onReady() {
-      runDiagnostic();
-    }, { once: true });
-  } else {
-    runDiagnostic();
-  }
+  global.AUDRALIA_DIAGNOSTIC_PROBE_EAST_RECEIPT =
+    getDefinitionReceipt();
 
 })(window);

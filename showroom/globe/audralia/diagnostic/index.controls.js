@@ -1,29 +1,36 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6
 // Full-file replacement.
+// Diagnostic-only.
 //
-// PREVIOUS CONTRACT:
-// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v4
+// Previous contract:
+// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5
 //
-// CONSTRUCTION BASIS:
-// - 10 STEPS OPERATIONAL TRACK
-// - RELATIONAL AUTHORITY AUDIT
-// - N.E.W.S. ALIGNMENT AUDIT
-// - FIBONACCI AUTHORITY / SEQUENCE AUDIT
-// - AMBIGUITY AUDIT
-// - RELATIONAL RETURN PASS
-// - BOUNDED CORRECTION SET
+// Purpose:
+// - Preserve the complete distributed diagnostic control-panel family.
+// - Actively bind the public Audralia route when the target is shown.
+// - Distinguish target visibility from target-route readiness.
+// - Prevent Nine-Cycle execution against about:blank or a mismatched route.
+// - Expose the existing target Window before Nine-Cycle-initiated navigation.
+// - Preserve one public Nine-Cycle Promise across target navigation.
+// - Release the deferred cycle only after the expected target route is observed.
+// - Resolve every accepted Nine-Cycle request with a final cycle receipt.
+// - Preserve established bridge-facing receipt schema identities.
+// - Publish bounded target-lifecycle evidence without claiming runtime truth.
 //
-// AUTHORITY:
+// Authority:
 // - F34 SOUTH_PROBE_HANDOFF
 // - F55 SOUTH_RESTITUTION_INTERPRETATION
 //
-// CONTROLS OWNS:
+// Owns:
 // - user-command observation;
 // - local selection and presentation state;
+// - target-frame activation and navigation initiation;
+// - target-frame load observation;
 // - report-command coordination;
 // - direct-check initiation;
-// - Nine-Cycle initiation;
+// - Nine-Cycle request gating and initiation;
+// - one active deferred Nine-Cycle Promise;
 // - overlapping-cycle prevention;
 // - controls-owned execution-lock state;
 // - preservation of raw engine receipts;
@@ -36,10 +43,12 @@
 // - controls-owned receipts;
 // - publication of controls requirements.
 //
-// CONTROLS DOES NOT OWN:
+// Does not own:
 // - canonical diagnostic truth;
 // - canonical Nine-Cycle construction;
 // - station-execution truth;
+// - public Audralia runtime mounting;
+// - production rendering;
 // - exact-nine judgment;
 // - restitution judgment;
 // - terminal engine verdict;
@@ -50,13 +59,13 @@
 // - whole-family synchronization certification;
 // - production repair authorization.
 //
-// UPSTREAM FREEZE:
+// Upstream freeze:
 // - /showroom/globe/audralia/diagnostic/index.js remains unchanged.
 // - /showroom/globe/audralia/diagnostic/index.inspection.lane.js remains unchanged.
 //
-// NO NEW FILES.
-// NO PATCHES.
-// NO COMPETING CONTROL API.
+// No new files.
+// No patches.
+// No competing control API.
 
 (function installAudraliaDistributedDiagnosticControls(global) {
   "use strict";
@@ -81,13 +90,13 @@
   }
 
   var CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5";
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6";
 
   var PREVIOUS_CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v4";
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5";
 
   var VERSION =
-    "5.0.0";
+    "6.0.0";
 
   var FILE =
     "/showroom/globe/audralia/diagnostic/index.controls.js";
@@ -124,6 +133,12 @@
 
   var CONTROL_REQUIREMENTS_SCHEMA =
     "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v1";
+
+  var TARGET_LIFECYCLE_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_TARGET_LIFECYCLE_STATE_v1";
+
+  var TARGET_PREPARATION_RECEIPT_SCHEMA =
+    "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v1";
 
   var ENGINE_GLOBAL_PATHS =
     Object.freeze([
@@ -174,6 +189,16 @@
       "observation",
       "cycle",
       "error"
+    ]);
+
+  var TARGET_LIFECYCLE_CLASSES =
+    Object.freeze([
+      "TARGET_FRAME_MISSING",
+      "TARGET_UNBOUND",
+      "TARGET_INACCESSIBLE",
+      "TARGET_ROUTE_MISMATCH",
+      "TARGET_LOADING",
+      "TARGET_READY"
     ]);
 
   var CANONICAL_CONTROL_IDS =
@@ -298,6 +323,8 @@
       canvasRepairAuthorized: false,
       controlsRepairAuthorized: false,
       routeRepairAuthorized: false,
+      publicRuntimeMountAuthorized: false,
+      publicRuntimeMutationAuthorized: false,
       readinessClaimed: false,
       visualPassClaimed: false,
       cyclePassClaimed: false,
@@ -306,6 +333,9 @@
       bridgeCompatibilityClaimed: false,
       runtimeOrderClaimed: false,
       familySynchronizationClaimed: false,
+      targetReadyProvesRuntimeReady: false,
+      targetRouteMatchProvesRuntimeReady: false,
+      targetLoadProvesRuntimeReady: false,
       f21Claimed: false,
       f89Claimed: false
     });
@@ -342,6 +372,8 @@
         "selectInstrumentChamber",
         "setTargetVisible",
         "setTargetExpanded",
+        "inspectTargetFrame",
+        "ensureTargetReady",
         "reloadTargetFrame",
         "applyReceiptFilter",
         "selectReceipt",
@@ -359,6 +391,7 @@
         "getCurrentReportReceipt",
         "getCurrentCycleReceipt",
         "getCycleRenderingState",
+        "getTargetLifecycleState",
         "getNormalizedReceipts",
         "getRequirements",
         "getReceipt"
@@ -383,6 +416,15 @@
 
       expectedEngineCycleReceiptSchema:
         ENGINE_CYCLE_RECEIPT_SCHEMA,
+
+      expectedTargetRoute:
+        TARGET_ROUTE,
+
+      targetFrameId:
+        TARGET_FRAME_ID,
+
+      targetPreparationOwner:
+        "INDEX_CONTROLS",
 
       certificationOwner:
         "INDEX_CONTROL_BRIDGE",
@@ -467,6 +509,38 @@
       lastReportCommandSource: null
     },
 
+    target: {
+      schema: TARGET_LIFECYCLE_SCHEMA,
+      lifecycleClass: "TARGET_UNBOUND",
+      framePresent: false,
+      frameId: TARGET_FRAME_ID,
+      expectedRoute: TARGET_ROUTE,
+      expectedRouteNormalized: normalizeRoutePath(TARGET_ROUTE),
+      declaredSrc: null,
+      observedRoute: null,
+      observedRouteNormalized: null,
+      routeObserved: false,
+      routeMatched: false,
+      sameOriginAccessible: null,
+      documentLoaded: false,
+      documentReadyState: null,
+      navigationPending: false,
+      loadObserved: false,
+      loadCount: 0,
+      navigationCount: 0,
+      pendingNineCycle: false,
+      pendingNineCycleRequestedAt: null,
+      deferredCycleReleaseCount: 0,
+      lastVisibilityReason: null,
+      lastVisibilityChangedAt: null,
+      lastNavigationReason: null,
+      lastNavigationStartedAt: null,
+      lastLoadObservedAt: null,
+      lastInspectedAt: null,
+      lastTargetError: null,
+      preparationReceipt: null
+    },
+
     report: {
       current: null,
       receipt: null,
@@ -478,6 +552,7 @@
 
     cycle: {
       running: false,
+      requested: false,
       executed: false,
       rawReceipt: null,
       rendering: null,
@@ -497,6 +572,13 @@
 
     lastAction: null,
     lastError: null
+  };
+
+  var activeCycleRequest = {
+    promise: null,
+    resolve: null,
+    settled: false,
+    createdAt: null
   };
 
   function deepFreezeLiteral(value, seen) {
@@ -564,6 +646,68 @@
       return new Date().toISOString();
     } catch (_error) {
       return null;
+    }
+  }
+
+  function normalizeRoutePath(value) {
+    var raw =
+      String(
+        value === null ||
+        value === undefined
+          ? ""
+          : value
+      ).trim();
+
+    if (!raw) {
+      return null;
+    }
+
+    if (raw === "about:blank") {
+      return "/blank/";
+    }
+
+    try {
+      var parsed =
+        new root.URL(
+          raw,
+          root.location && root.location.href
+            ? root.location.href
+            : "https://diamondgatebridge.com/"
+        );
+
+      var pathname =
+        parsed.pathname || "/";
+
+      if (pathname.charAt(0) !== "/") {
+        pathname =
+          "/" + pathname;
+      }
+
+      if (
+        pathname.length > 1 &&
+        pathname.charAt(pathname.length - 1) !== "/"
+      ) {
+        pathname += "/";
+      }
+
+      return pathname;
+    } catch (_error) {
+      var clean =
+        raw.split("#")[0].split("?")[0];
+
+      if (clean.charAt(0) !== "/") {
+        clean =
+          "/" + clean;
+      }
+
+      if (
+        clean.length > 1 &&
+        clean.charAt(clean.length - 1) !== "/"
+      ) {
+        clean += "/";
+      }
+
+      return clean;
     }
   }
 
@@ -1022,6 +1166,89 @@
       );
   }
 
+  function hasActiveCycleRequest() {
+    return Boolean(
+      activeCycleRequest.promise &&
+      activeCycleRequest.settled === false
+    );
+  }
+
+  function getActiveCyclePromise() {
+    return hasActiveCycleRequest()
+      ? activeCycleRequest.promise
+      : null;
+  }
+
+  function createActiveCycleRequest() {
+    if (hasActiveCycleRequest()) {
+      return activeCycleRequest.promise;
+    }
+
+    activeCycleRequest.settled =
+      false;
+
+    activeCycleRequest.createdAt =
+      nowIso();
+
+    activeCycleRequest.promise =
+      new Promise(function registerActiveCycleResolver(resolve) {
+        activeCycleRequest.resolve =
+          resolve;
+      });
+
+    return activeCycleRequest.promise;
+  }
+
+  function clearActiveCycleRequest() {
+    activeCycleRequest.promise =
+      null;
+
+    activeCycleRequest.resolve =
+      null;
+
+    activeCycleRequest.settled =
+      false;
+
+    activeCycleRequest.createdAt =
+      null;
+  }
+
+  function settleActiveCycleRequest(receipt) {
+    if (
+      !hasActiveCycleRequest() ||
+      !isFunction(activeCycleRequest.resolve)
+    ) {
+      return false;
+    }
+
+    var resolver =
+      activeCycleRequest.resolve;
+
+    var settledReceipt =
+      frozenClone(receipt);
+
+    activeCycleRequest.settled =
+      true;
+
+    activeCycleRequest.resolve =
+      null;
+
+    resolver(
+      settledReceipt
+    );
+
+    activeCycleRequest.promise =
+      null;
+
+    activeCycleRequest.settled =
+      false;
+
+    activeCycleRequest.createdAt =
+      null;
+
+    return true;
+  }
+
   function resolveFirst(paths) {
     var index;
     var value;
@@ -1412,6 +1639,522 @@
           error
         );
       });
+  }
+
+  function createTargetPreparationReceipt(reason) {
+    var target =
+      state.target;
+
+    var receipt = {
+      schema:
+        TARGET_PREPARATION_RECEIPT_SCHEMA,
+
+      receiptId:
+        "AUDRALIA_TARGET_PREPARATION_RECEIPT_" +
+        Date.now(),
+
+      controlsContract:
+        CONTRACT,
+
+      ownerType:
+        "DIAGNOSTIC_OBSERVATORY_TARGET_BINDING",
+
+      subjectId:
+        "AUDRALIA_DIAGNOSTIC_TARGET_FRAME",
+
+      file:
+        FILE,
+
+      component:
+        "TARGET_ROUTE_BINDING",
+
+      reason:
+        reason || null,
+
+      lifecycleClass:
+        target.lifecycleClass,
+
+      framePresent:
+        target.framePresent,
+
+      frameId:
+        target.frameId,
+
+      expectedRoute:
+        target.expectedRoute,
+
+      expectedRouteNormalized:
+        target.expectedRouteNormalized,
+
+      declaredSrc:
+        target.declaredSrc,
+
+      observedRoute:
+        target.observedRoute,
+
+      observedRouteNormalized:
+        target.observedRouteNormalized,
+
+      routeObserved:
+        target.routeObserved,
+
+      routeMatched:
+        target.routeMatched,
+
+      sameOriginAccessible:
+        target.sameOriginAccessible,
+
+      documentLoaded:
+        target.documentLoaded,
+
+      documentReadyState:
+        target.documentReadyState,
+
+      navigationPending:
+        target.navigationPending,
+
+      loadObserved:
+        target.loadObserved,
+
+      pendingNineCycle:
+        target.pendingNineCycle,
+
+      targetVisible:
+        state.ui.targetVisible,
+
+      observationLens:
+        state.ui.observationLens,
+
+      lastVisibilityReason:
+        target.lastVisibilityReason,
+
+      lastVisibilityChangedAt:
+        target.lastVisibilityChangedAt,
+
+      lastTargetError:
+        target.lastTargetError,
+
+      status:
+        target.lifecycleClass === "TARGET_READY"
+          ? "AVAILABLE"
+          : "HELD",
+
+      noClaims:
+        NO_CLAIMS,
+
+      generatedAt:
+        nowIso()
+    };
+
+    state.target.preparationReceipt =
+      deepFreeze(
+        clone(receipt)
+      );
+
+    return frozenClone(receipt);
+  }
+
+  function inspectTargetFrame(options) {
+    var settings =
+      options || {};
+
+    var frame =
+      byId(TARGET_FRAME_ID);
+
+    var observedRoute =
+      null;
+
+    var observedNormalized =
+      null;
+
+    var sameOriginAccessible =
+      null;
+
+    var documentLoaded =
+      false;
+
+    var documentReadyState =
+      null;
+
+    var readError =
+      null;
+
+    state.target.framePresent =
+      Boolean(frame);
+
+    state.target.declaredSrc =
+      frame
+        ? frame.getAttribute("src")
+        : null;
+
+    state.target.lastInspectedAt =
+      nowIso();
+
+    if (!frame) {
+      state.target.lifecycleClass =
+        "TARGET_FRAME_MISSING";
+
+      state.target.routeObserved =
+        false;
+
+      state.target.routeMatched =
+        false;
+
+      state.target.sameOriginAccessible =
+        null;
+
+      state.target.documentLoaded =
+        false;
+
+      state.target.documentReadyState =
+        null;
+
+      state.target.lastTargetError =
+        "TARGET_FRAME_NOT_FOUND";
+
+      createTargetPreparationReceipt(
+        settings.reason ||
+        "TARGET_FRAME_NOT_FOUND"
+      );
+
+      publishReceipt();
+
+      return frozenClone(
+        state.target
+      );
+    }
+
+    try {
+      if (
+        frame.contentWindow &&
+        frame.contentWindow.location
+      ) {
+        observedRoute =
+          frame.contentWindow.location.href ||
+          null;
+
+        sameOriginAccessible =
+          true;
+      }
+
+      if (
+        frame.contentDocument
+      ) {
+        documentReadyState =
+          frame.contentDocument.readyState ||
+          null;
+
+        documentLoaded =
+          documentReadyState === "interactive" ||
+          documentReadyState === "complete";
+      }
+    } catch (error) {
+      sameOriginAccessible =
+        false;
+
+      readError =
+        String(
+          error &&
+          error.message
+            ? error.message
+            : error
+        );
+    }
+
+    if (!observedRoute) {
+      try {
+        observedRoute =
+          frame.src ||
+          frame.getAttribute("src") ||
+          null;
+      } catch (_error) {
+        observedRoute =
+          frame.getAttribute("src") ||
+          null;
+      }
+    }
+
+    observedNormalized =
+      normalizeRoutePath(
+        observedRoute
+      );
+
+    state.target.observedRoute =
+      observedRoute;
+
+    state.target.observedRouteNormalized =
+      observedNormalized;
+
+    state.target.routeObserved =
+      Boolean(observedRoute);
+
+    state.target.routeMatched =
+      Boolean(
+        observedNormalized &&
+        observedNormalized ===
+          state.target.expectedRouteNormalized
+      );
+
+    state.target.sameOriginAccessible =
+      sameOriginAccessible;
+
+    state.target.documentLoaded =
+      documentLoaded;
+
+    state.target.documentReadyState =
+      documentReadyState;
+
+    state.target.lastTargetError =
+      readError;
+
+    if (
+      state.target.navigationPending &&
+      !state.target.routeMatched
+    ) {
+      state.target.lifecycleClass =
+        "TARGET_LOADING";
+    } else if (
+      sameOriginAccessible === false
+    ) {
+      state.target.lifecycleClass =
+        "TARGET_INACCESSIBLE";
+    } else if (
+      !observedRoute ||
+      observedRoute === "about:blank" ||
+      observedNormalized === "/blank/"
+    ) {
+      state.target.lifecycleClass =
+        "TARGET_UNBOUND";
+    } else if (
+      !state.target.routeMatched
+    ) {
+      state.target.lifecycleClass =
+        "TARGET_ROUTE_MISMATCH";
+    } else if (
+      !documentLoaded
+    ) {
+      state.target.lifecycleClass =
+        "TARGET_LOADING";
+    } else {
+      state.target.lifecycleClass =
+        "TARGET_READY";
+    }
+
+    if (
+      TARGET_LIFECYCLE_CLASSES.indexOf(
+        state.target.lifecycleClass
+      ) === -1
+    ) {
+      state.target.lifecycleClass =
+        "TARGET_ROUTE_MISMATCH";
+    }
+
+    createTargetPreparationReceipt(
+      settings.reason ||
+      "TARGET_INSPECTED"
+    );
+
+    publishReceipt();
+
+    return frozenClone(
+      state.target
+    );
+  }
+
+  function beginTargetNavigation(reason, forceReload) {
+    var frame =
+      byId(TARGET_FRAME_ID);
+
+    if (!frame) {
+      state.target.framePresent =
+        false;
+
+      state.target.lifecycleClass =
+        "TARGET_FRAME_MISSING";
+
+      state.target.lastTargetError =
+        "TARGET_FRAME_NOT_FOUND";
+
+      createTargetPreparationReceipt(
+        reason ||
+        "TARGET_FRAME_NOT_FOUND"
+      );
+
+      publishReceipt();
+
+      return false;
+    }
+
+    if (
+      state.target.navigationPending &&
+      forceReload !== true
+    ) {
+      return true;
+    }
+
+    state.target.framePresent =
+      true;
+
+    state.target.navigationPending =
+      true;
+
+    state.target.loadObserved =
+      false;
+
+    state.target.documentLoaded =
+      false;
+
+    state.target.documentReadyState =
+      null;
+
+    state.target.routeMatched =
+      false;
+
+    state.target.lifecycleClass =
+      "TARGET_LOADING";
+
+    state.target.lastTargetError =
+      null;
+
+    state.target.lastNavigationReason =
+      reason || "TARGET_NAVIGATION";
+
+    state.target.lastNavigationStartedAt =
+      nowIso();
+
+    state.target.navigationCount += 1;
+
+    try {
+      frame.src =
+        TARGET_ROUTE +
+        "?diagnosticReload=" +
+        Date.now();
+
+      createTargetPreparationReceipt(
+        reason ||
+        "TARGET_NAVIGATION_STARTED"
+      );
+
+      recordAction(
+        "targetNavigation.begin",
+        {
+          reason:
+            reason || null,
+          navigationCount:
+            state.target.navigationCount,
+          expectedRoute:
+            TARGET_ROUTE,
+          targetVisible:
+            state.ui.targetVisible,
+          observationLens:
+            state.ui.observationLens
+        }
+      );
+
+      publishReceipt();
+
+      return true;
+    } catch (error) {
+      state.target.navigationPending =
+        false;
+
+      state.target.lifecycleClass =
+        "TARGET_INACCESSIBLE";
+
+      state.target.lastTargetError =
+        String(
+          error &&
+          error.message
+            ? error.message
+            : error
+        );
+
+      createTargetPreparationReceipt(
+        "TARGET_NAVIGATION_THROW"
+      );
+
+      recordError(
+        "beginTargetNavigation",
+        error,
+        {
+          reason:
+            reason || null
+        }
+      );
+
+      return false;
+    }
+  }
+
+  function ensureTargetReady(options) {
+    var settings =
+      options || {};
+
+    var inspected =
+      inspectTargetFrame({
+        reason:
+          settings.reason ||
+          "ENSURE_TARGET_READY"
+      });
+
+    if (
+      inspected.lifecycleClass ===
+      "TARGET_READY"
+    ) {
+      return {
+        ready: true,
+        pending: false,
+        startedNavigation: false,
+        target:
+          inspected
+      };
+    }
+
+    if (
+      inspected.lifecycleClass ===
+      "TARGET_LOADING" &&
+      state.target.navigationPending
+    ) {
+      return {
+        ready: false,
+        pending: true,
+        startedNavigation: false,
+        target:
+          inspected
+      };
+    }
+
+    if (
+      inspected.lifecycleClass ===
+      "TARGET_FRAME_MISSING"
+    ) {
+      return {
+        ready: false,
+        pending: false,
+        startedNavigation: false,
+        target:
+          inspected
+      };
+    }
+
+    var started =
+      beginTargetNavigation(
+        settings.reason ||
+        "ENSURE_TARGET_READY",
+        settings.forceReload === true
+      );
+
+    return {
+      ready: false,
+      pending:
+        Boolean(started),
+      startedNavigation:
+        Boolean(started),
+      target:
+        frozenClone(
+          state.target
+        )
+    };
   }
 
   function validateReport(report) {
@@ -3013,6 +3756,11 @@
       logicalMappingScope:
         "RETURNED_RECEIPTS_ONLY",
 
+      targetLifecycle:
+        frozenClone(
+          state.target
+        ),
+
       createdAt:
         nowIso()
     };
@@ -3024,7 +3772,8 @@
 
     setDisabled(
       "runNineCycle",
-      state.cycle.running
+      state.cycle.running ||
+      state.target.navigationPending
     );
 
     var button =
@@ -3041,6 +3790,13 @@
       button.setAttribute(
         "data-cycle-running",
         state.cycle.running
+          ? "true"
+          : "false"
+      );
+
+      button.setAttribute(
+        "data-target-navigation-pending",
+        state.target.navigationPending
           ? "true"
           : "false"
       );
@@ -3295,6 +4051,10 @@
           renderingState.notReachedPositions,
         returnedReceiptMappingComplete:
           renderingState.returnedReceiptMappingComplete,
+        targetLifecycle:
+          frozenClone(
+            state.target
+          ),
         receipts:
           renderingState.stationReceipts
       })
@@ -3312,7 +4072,9 @@
                 renderingState.engineCycleStatus +
                 "."
               )
-            : "Nine-Cycle has not been executed."
+            : state.target.navigationPending
+              ? "Target navigation is pending before Nine-Cycle execution."
+              : "Nine-Cycle has not been executed."
         ),
 
       registrationSummaryUpdated:
@@ -3333,7 +4095,8 @@
             renderingState.coordinateConflictCount,
             "coordinate conflicts;",
             renderingState.unresolvedDeclarationCount,
-            "unresolved declarations"
+            "unresolved declarations;",
+            state.target.lifecycleClass
           ].join(" ")
         ),
 
@@ -3366,18 +4129,26 @@
     var cycleStatusUpdated =
       setText(
         "cycleStatus",
-        state.cycle.executed
-          ? "Cycle · " +
-            renderingState.engineCycleStatus
-          : "Cycle · Not Run"
+        state.cycle.running
+          ? "Cycle · Running"
+          : state.target.navigationPending
+            ? "Cycle · Target Loading"
+            : state.cycle.executed
+              ? "Cycle · " +
+                renderingState.engineCycleStatus
+              : "Cycle · Not Run"
       );
 
     if (cycleStatusUpdated) {
       setStatus(
         "cycleStatus",
-        state.cycle.executed
-          ? renderingState.engineCycleStatus
-          : "NOT_RUN"
+        state.cycle.running
+          ? "RUNNING"
+          : state.target.navigationPending
+            ? "HOLD"
+            : state.cycle.executed
+              ? renderingState.engineCycleStatus
+              : "NOT_RUN"
       );
 
       updatedTargetIds.push(
@@ -3394,14 +4165,30 @@
     if (chamber) {
       setStatus(
         chamber,
-        state.cycle.executed
-          ? renderingState.engineCycleStatus
-          : "NOT_RUN"
+        state.cycle.running
+          ? "RUNNING"
+          : state.target.navigationPending
+            ? "HOLD"
+            : state.cycle.executed
+              ? renderingState.engineCycleStatus
+              : "NOT_RUN"
       );
 
       chamber.setAttribute(
         "data-cycle-executed",
         state.cycle.executed
+          ? "true"
+          : "false"
+      );
+
+      chamber.setAttribute(
+        "data-target-lifecycle",
+        state.target.lifecycleClass
+      );
+
+      chamber.setAttribute(
+        "data-target-route-matched",
+        state.target.routeMatched
           ? "true"
           : "false"
       );
@@ -3561,6 +4348,11 @@
       certificationOwner:
         "INDEX_CONTROL_BRIDGE",
 
+      targetLifecycle:
+        frozenClone(
+          state.target
+        ),
+
       requiredTargetCount:
         CYCLE_TARGET_IDS.length,
 
@@ -3679,6 +4471,11 @@
       engineExactNineValidated:
         renderingState.engineExactNineValidated,
 
+      targetLifecycle:
+        frozenClone(
+          state.target
+        ),
+
       returnedReceiptMappingComplete:
         renderingState.returnedReceiptMappingComplete,
 
@@ -3743,7 +4540,8 @@
             }),
 
       cycleButtonLockReleased:
-        state.cycle.running === false,
+        state.cycle.running === false &&
+        state.target.navigationPending === false,
 
       renderedAt:
         nowIso(),
@@ -3887,6 +4685,11 @@
       requestedAt:
         nowIso(),
 
+      targetLifecycle:
+        frozenClone(
+          state.target
+        ),
+
       stationReceipts: [],
 
       source:
@@ -3909,7 +4712,53 @@
     return renderCommittedCycleChamber();
   }
 
+  function holdActiveCycleRequest(reason) {
+    var held =
+      createCycleHeldReceipt({
+        reason:
+          reason
+      });
+
+    state.target.pendingNineCycle =
+      false;
+
+    state.target.pendingNineCycleRequestedAt =
+      null;
+
+    state.cycle.requested =
+      false;
+
+    state.cycle.running =
+      false;
+
+    commitCycleReceipt(
+      held
+    );
+
+    setCycleRunning(false);
+
+    settleActiveCycleRequest(
+      held
+    );
+
+    refreshReceiptInventory();
+    publishReceipt();
+
+    return frozenClone(
+      held
+    );
+  }
+
   function finalizeCycleExecution() {
+    state.cycle.requested =
+      false;
+
+    state.target.pendingNineCycle =
+      false;
+
+    state.target.pendingNineCycleRequestedAt =
+      null;
+
     setCycleRunning(false);
 
     if (
@@ -3927,19 +4776,30 @@
     publishReceipt();
   }
 
-  function runNineCycle() {
+  function executeNineCycle() {
     if (state.cycle.running) {
-      toast(
-        "Nine-Cycle execution is already running.",
-        "HELD"
-      );
-
-      return Promise.resolve(
-        frozenClone(
-          state.cycle.rawReceipt
+      return (
+        getActiveCyclePromise() ||
+        Promise.resolve(
+          frozenClone(
+            state.cycle.rawReceipt
+          )
         )
       );
     }
+
+    if (!hasActiveCycleRequest()) {
+      createActiveCycleRequest();
+    }
+
+    state.target.pendingNineCycle =
+      false;
+
+    state.target.pendingNineCycleRequestedAt =
+      null;
+
+    state.cycle.requested =
+      true;
 
     setCycleRunning(true);
 
@@ -3964,14 +4824,22 @@
     );
 
     recordAction(
-      "runNineCycle.begin",
+      "executeNineCycle.begin",
       {
         category:
           state.ui.selectedCategory,
         audit:
           state.ui.selectedAudit,
         participant:
-          state.ui.selectedParticipant
+          state.ui.selectedParticipant,
+        targetLifecycle:
+          state.target.lifecycleClass,
+        targetRouteMatched:
+          state.target.routeMatched,
+        targetVisible:
+          state.ui.targetVisible,
+        observationLens:
+          state.ui.observationLens
       }
     );
 
@@ -3989,7 +4857,11 @@
             audit:
               state.ui.selectedAudit,
             participant:
-              state.ui.selectedParticipant
+              state.ui.selectedParticipant,
+            targetLifecycle:
+              frozenClone(
+                state.target
+              )
           }
         ],
         {
@@ -4062,7 +4934,7 @@
           );
 
           recordAction(
-            "runNineCycle.complete",
+            "executeNineCycle.complete",
             {
               status:
                 committed.status || null,
@@ -4085,6 +4957,10 @@
           toast(
             "Nine-Cycle receipt committed.",
             committed.status || "AVAILABLE"
+          );
+
+          settleActiveCycleRequest(
+            committed
           );
 
           return frozenClone(
@@ -4116,8 +4992,12 @@
           }
 
           recordError(
-            "runNineCycle",
+            "executeNineCycle",
             error
+          );
+
+          settleActiveCycleRequest(
+            held
           );
 
           return frozenClone(
@@ -4125,14 +5005,210 @@
           );
         });
 
-    return withFinalization(
+    withFinalization(
       execution,
       finalizeCycleExecution,
       {
         action:
-          "runNineCycle"
+          "executeNineCycle"
       }
     );
+
+    return getActiveCyclePromise() || execution;
+  }
+
+  function applyTargetVisibilityState(visible, reason) {
+    var normalizedVisible =
+      Boolean(visible);
+
+    var changed =
+      state.ui.targetVisible !==
+      normalizedVisible;
+
+    state.ui.targetVisible =
+      normalizedVisible;
+
+    state.target.lastVisibilityReason =
+      reason || "TARGET_VISIBILITY_STATE";
+
+    state.target.lastVisibilityChangedAt =
+      nowIso();
+
+    var button =
+      byId(
+        "toggleObservationTarget"
+      );
+
+    if (button) {
+      button.setAttribute(
+        "aria-expanded",
+        normalizedVisible
+          ? "true"
+          : "false"
+      );
+
+      button.textContent =
+        normalizedVisible
+          ? "Hide Target"
+          : "Show Target";
+    }
+
+    selectObservationLensLocal(
+      normalizedVisible
+        ? "window"
+        : "target"
+    );
+
+    if (changed) {
+      recordAction(
+        "targetVisibility.apply",
+        {
+          visible:
+            normalizedVisible,
+          reason:
+            reason || null,
+          observationLens:
+            state.ui.observationLens
+        }
+      );
+    } else {
+      publishReceipt();
+    }
+
+    return {
+      visible:
+        normalizedVisible,
+      changed:
+        changed,
+      observationLens:
+        state.ui.observationLens
+    };
+  }
+
+  function runNineCycle() {
+    if (hasActiveCycleRequest()) {
+      toast(
+        "Nine-Cycle execution is already active.",
+        "HELD"
+      );
+
+      return getActiveCyclePromise();
+    }
+
+    var publicCyclePromise =
+      createActiveCycleRequest();
+
+    state.cycle.requested =
+      true;
+
+    if (!state.ui.targetVisible) {
+      applyTargetVisibilityState(
+        true,
+        "NINE_CYCLE_TARGET_PREPARATION"
+      );
+    } else if (
+      state.ui.observationLens !==
+      "window"
+    ) {
+      applyTargetVisibilityState(
+        true,
+        "NINE_CYCLE_TARGET_WINDOW_SELECTION"
+      );
+    }
+
+    var readiness =
+      ensureTargetReady({
+        reason:
+          "NINE_CYCLE_REQUEST"
+      });
+
+    recordAction(
+      "runNineCycle.request",
+      {
+        readiness:
+          readiness.ready,
+        pending:
+          readiness.pending,
+        startedNavigation:
+          readiness.startedNavigation,
+        lifecycleClass:
+          state.target.lifecycleClass,
+        targetVisible:
+          state.ui.targetVisible,
+        observationLens:
+          state.ui.observationLens
+      }
+    );
+
+    if (readiness.ready) {
+      executeNineCycle();
+
+      return publicCyclePromise;
+    }
+
+    if (readiness.pending) {
+      state.target.pendingNineCycle =
+        true;
+
+      state.target.pendingNineCycleRequestedAt =
+        nowIso();
+
+      setText(
+        "controllerState",
+        "TARGET LOADING"
+      );
+
+      setStatus(
+        "controllerState",
+        "HELD"
+      );
+
+      setText(
+        "cycleStatus",
+        "Cycle · Target Loading"
+      );
+
+      setStatus(
+        "cycleStatus",
+        "HELD"
+      );
+
+      setCycleRunning(false);
+
+      renderCommittedCycleChamber();
+
+      createTargetPreparationReceipt(
+        "NINE_CYCLE_DEFERRED_TARGET_LOADING"
+      );
+
+      toast(
+        "Target loading. Nine-Cycle will continue after route confirmation.",
+        "HELD"
+      );
+
+      return publicCyclePromise;
+    }
+
+    holdActiveCycleRequest(
+      "TARGET_PREPARATION_UNAVAILABLE"
+    );
+
+    setText(
+      "controllerState",
+      "TARGET HELD"
+    );
+
+    setStatus(
+      "controllerState",
+      "HELD"
+    );
+
+    toast(
+      "Target preparation is held.",
+      "HELD"
+    );
+
+    return publicCyclePromise;
   }
 
   function forwardSelection(key, value) {
@@ -4746,33 +5822,40 @@
   }
 
   function setTargetVisible(visible) {
-    state.ui.targetVisible =
-      Boolean(visible);
-
-    var button =
-      byId(
-        "toggleObservationTarget"
+    var presentation =
+      applyTargetVisibilityState(
+        visible,
+        visible
+          ? "SHOW_TARGET"
+          : "HIDE_TARGET"
       );
 
-    if (button) {
-      button.setAttribute(
-        "aria-expanded",
-        state.ui.targetVisible
-          ? "true"
-          : "false"
-      );
+    if (presentation.visible) {
+      var readiness =
+        ensureTargetReady({
+          reason:
+            "SHOW_TARGET"
+        });
 
-      button.textContent =
-        state.ui.targetVisible
-          ? "Hide Target"
-          : "Show Target";
+      if (readiness.ready) {
+        toast(
+          "Target route available.",
+          "READY"
+        );
+      } else if (readiness.pending) {
+        toast(
+          "Target frame loading.",
+          "RUNNING"
+        );
+      } else {
+        toast(
+          "Target frame unavailable.",
+          "HELD"
+        );
+      }
     }
 
-    selectObservationLensLocal(
-      state.ui.targetVisible
-        ? "window"
-        : "target"
-    );
+    publishReceipt();
   }
 
   function setTargetExpanded(expanded) {
@@ -4808,28 +5891,34 @@
   }
 
   function reloadTargetFrame() {
-    var frame =
-      byId(TARGET_FRAME_ID);
-
-    if (!frame) {
-      recordError(
-        "reloadTargetFrame",
-        new Error(
-          "TARGET_FRAME_NOT_FOUND"
-        )
+    if (!state.ui.targetVisible) {
+      applyTargetVisibilityState(
+        true,
+        "EXPLICIT_TARGET_RELOAD"
       );
+    }
+
+    var started =
+      beginTargetNavigation(
+        "EXPLICIT_TARGET_RELOAD",
+        true
+      );
+
+    if (!started) {
+      if (hasActiveCycleRequest()) {
+        holdActiveCycleRequest(
+          "TARGET_RELOAD_UNAVAILABLE"
+        );
+      }
 
       return;
     }
 
-    frame.src =
-      TARGET_ROUTE +
-      "?diagnosticReload=" +
-      Date.now();
-
     recordAction(
       "reloadTargetFrame"
     );
+
+    setCycleRunning(false);
 
     toast(
       "Target frame reloading.",
@@ -5386,8 +6475,97 @@
     });
   }
 
+  function resetTargetLifecycle() {
+    state.target.lifecycleClass =
+      "TARGET_UNBOUND";
+
+    state.target.framePresent =
+      Boolean(
+        byId(TARGET_FRAME_ID)
+      );
+
+    state.target.declaredSrc =
+      state.target.framePresent
+        ? byId(TARGET_FRAME_ID).getAttribute("src")
+        : null;
+
+    state.target.observedRoute =
+      null;
+
+    state.target.observedRouteNormalized =
+      null;
+
+    state.target.routeObserved =
+      false;
+
+    state.target.routeMatched =
+      false;
+
+    state.target.sameOriginAccessible =
+      null;
+
+    state.target.documentLoaded =
+      false;
+
+    state.target.documentReadyState =
+      null;
+
+    state.target.navigationPending =
+      false;
+
+    state.target.loadObserved =
+      false;
+
+    state.target.pendingNineCycle =
+      false;
+
+    state.target.pendingNineCycleRequestedAt =
+      null;
+
+    state.target.lastVisibilityReason =
+      null;
+
+    state.target.lastVisibilityChangedAt =
+      null;
+
+    state.target.lastNavigationReason =
+      null;
+
+    state.target.lastNavigationStartedAt =
+      null;
+
+    state.target.lastLoadObservedAt =
+      null;
+
+    state.target.lastInspectedAt =
+      null;
+
+    state.target.lastTargetError =
+      null;
+
+    state.target.preparationReceipt =
+      null;
+  }
+
   function resetCyclePresentation() {
+    if (hasActiveCycleRequest()) {
+      var resetHeld =
+        createCycleHeldReceipt({
+          reason:
+            "CONTROL_CYCLE_RESET_BEFORE_EXECUTION"
+        });
+
+      settleActiveCycleRequest(
+        resetHeld
+      );
+    } else {
+      clearActiveCycleRequest();
+    }
+
     state.cycle.running =
+      false;
+
+    state.cycle.requested =
       false;
 
     state.cycle.executed =
@@ -5406,6 +6584,12 @@
       null;
 
     state.cycle.renderedAt =
+      null;
+
+    state.target.pendingNineCycle =
+      false;
+
+    state.target.pendingNineCycleRequestedAt =
       null;
 
     setCycleRunning(false);
@@ -5436,6 +6620,7 @@
       notify: false
     });
 
+    resetTargetLifecycle();
     resetCyclePresentation();
 
     closeAllSelectors();
@@ -5452,7 +6637,11 @@
       "cycle"
     );
 
-    setTargetVisible(false);
+    applyTargetVisibilityState(
+      false,
+      "RESET_WORKBENCH"
+    );
+
     setTargetExpanded(false);
 
     state.ui.receiptFilter =
@@ -5660,7 +6849,8 @@
           "registry",
           "engine",
           "report",
-          "control"
+          "control",
+          "target"
         ]
       )
     ) {
@@ -6168,6 +7358,13 @@
       "state.report.receipt"
     );
 
+    addExplicitReceipt(
+      output,
+      state.target.preparationReceipt,
+      "CONTROL_TARGET_PREPARATION",
+      "state.target.preparationReceipt"
+    );
+
     state.directReceipts.forEach(function addDirectReceipt(
       receipt,
       index
@@ -6260,6 +7457,15 @@
         ? "CONTROL_FALLBACK"
         : "DIAGNOSTIC_REPORT",
       "state.report.current",
+      output,
+      [],
+      0
+    );
+
+    walkReceiptCandidates(
+      state.target.preparationReceipt,
+      "CONTROL_TARGET_PREPARATION",
+      "state.target.preparationReceipt",
       output,
       [],
       0
@@ -7177,9 +8383,105 @@
   }
 
   function handleTargetFrameLoad() {
+    state.target.loadObserved =
+      true;
+
+    state.target.loadCount += 1;
+
+    state.target.lastLoadObservedAt =
+      nowIso();
+
+    state.target.navigationPending =
+      false;
+
+    var inspected =
+      inspectTargetFrame({
+        reason:
+          "TARGET_FRAME_LOAD"
+      });
+
     recordAction(
-      "targetFrameLoad"
+      "targetFrameLoad",
+      {
+        loadCount:
+          state.target.loadCount,
+        lifecycleClass:
+          inspected.lifecycleClass,
+        observedRoute:
+          inspected.observedRoute,
+        routeMatched:
+          inspected.routeMatched,
+        pendingNineCycle:
+          state.target.pendingNineCycle,
+        targetVisible:
+          state.ui.targetVisible,
+        observationLens:
+          state.ui.observationLens
+      }
     );
+
+    setCycleRunning(false);
+
+    if (
+      state.target.pendingNineCycle &&
+      inspected.lifecycleClass ===
+        "TARGET_READY"
+    ) {
+      state.target.deferredCycleReleaseCount += 1;
+
+      recordAction(
+        "targetFrameLoad.releaseDeferredNineCycle",
+        {
+          releaseCount:
+            state.target.deferredCycleReleaseCount
+        }
+      );
+
+      executeNineCycle();
+      return;
+    }
+
+    if (
+      state.target.pendingNineCycle &&
+      inspected.lifecycleClass !==
+        "TARGET_READY"
+    ) {
+      holdActiveCycleRequest(
+        "TARGET_LOAD_DID_NOT_CONFIRM_EXPECTED_ROUTE"
+      );
+
+      setText(
+        "controllerState",
+        "TARGET HELD"
+      );
+
+      setStatus(
+        "controllerState",
+        "HELD"
+      );
+
+      toast(
+        "Target route was not confirmed.",
+        "HELD"
+      );
+
+      return;
+    }
+
+    if (
+      inspected.lifecycleClass ===
+      "TARGET_READY"
+    ) {
+      toast(
+        "Target route available.",
+        "READY"
+      );
+    } else {
+      toast(
+        "Target load observed without route readiness.",
+        "HELD"
+      );
+    }
   }
 
   function bindEvents() {
@@ -7258,6 +8560,28 @@
 
         inspectionLaneExpectedContract:
           INSPECTION_LANE_CONTRACT,
+
+        targetLifecycle:
+          frozenClone(
+            state.target
+          ),
+
+        targetPreparationReceipt:
+          frozenClone(
+            state.target.preparationReceipt
+          ),
+
+        targetVisible:
+          state.ui.targetVisible,
+
+        observationLens:
+          state.ui.observationLens,
+
+        activeCycleRequestPresent:
+          hasActiveCycleRequest(),
+
+        activeCycleRequestCreatedAt:
+          activeCycleRequest.createdAt,
 
         controlManifestCount:
           state.controls.manifestCount,
@@ -7345,6 +8669,9 @@
 
         cycleRunning:
           state.cycle.running,
+
+        cycleRequested:
+          state.cycle.requested,
 
         cycleExecuted:
           state.cycle.executed,
@@ -7449,7 +8776,8 @@
               }),
 
         cycleButtonLockReleased:
-          state.cycle.running === false,
+          state.cycle.running === false &&
+          state.target.navigationPending === false,
 
         cycleRenderedAt:
           state.cycle.renderedAt,
@@ -7493,6 +8821,9 @@
         commandLifecycle: [
           "OBSERVE",
           "CONTEXT",
+          "EXPOSE_TARGET",
+          "PREPARE_TARGET",
+          "VERIFY_TARGET",
           "INVOKE",
           "RECEIVE",
           "COMMIT",
@@ -7562,6 +8893,9 @@
       ui:
         state.ui,
 
+      target:
+        state.target,
+
       report:
         state.report,
 
@@ -7573,6 +8907,13 @@
 
       cycle:
         state.cycle,
+
+      activeCycleRequest: {
+        present:
+          hasActiveCycleRequest(),
+        createdAt:
+          activeCycleRequest.createdAt
+      },
 
       normalizedReceipts:
         state.normalizedReceipts,
@@ -7711,6 +9052,12 @@
         setTargetExpanded:
           setTargetExpanded,
 
+        inspectTargetFrame:
+          inspectTargetFrame,
+
+        ensureTargetReady:
+          ensureTargetReady,
+
         reloadTargetFrame:
           reloadTargetFrame,
 
@@ -7775,6 +9122,13 @@
           function getCycleRenderingState() {
             return frozenClone(
               state.cycle.rendering
+            );
+          },
+
+        getTargetLifecycleState:
+          function getTargetLifecycleState() {
+            return frozenClone(
+              state.target
             );
           },
 
@@ -7846,11 +9200,34 @@
       "cycle"
     );
 
-    setTargetVisible(false);
+    state.ui.targetVisible =
+      false;
+
+    state.ui.targetExpanded =
+      false;
+
+    var targetButton =
+      byId("toggleObservationTarget");
+
+    if (targetButton) {
+      targetButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+      targetButton.textContent =
+        "Show Target";
+    }
+
     setTargetExpanded(false);
 
     state.ui.receiptFilter =
       "all";
+
+    inspectTargetFrame({
+      reason:
+        "INITIAL_TARGET_INSPECTION"
+    });
 
     renderCommittedCycleChamber();
   }
@@ -7891,6 +9268,16 @@
           state.engine.ready,
         normalizedReceiptCount:
           state.normalizedReceipts.length,
+        targetLifecycle:
+          state.target.lifecycleClass,
+        targetFramePresent:
+          state.target.framePresent,
+        targetRouteMatched:
+          state.target.routeMatched,
+        targetVisible:
+          state.ui.targetVisible,
+        observationLens:
+          state.ui.observationLens,
         localCycleTargetsMissing:
           state.cycle.localDomEvidence
             ? state.cycle.localDomEvidence.missingTargetIds

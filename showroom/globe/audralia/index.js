@@ -1,27 +1,13 @@
 // /showroom/globe/audralia/index.js
 // AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1
-// Full-file construction. 
-//
-// Purpose:
-// - Consume /assets/audralia/audralia.planet.js as the sole planet-geometry authority.
-// - Render Audralia as a native WebGL three-dimensional planet.
-// - Mount terrain, ocean, cloud, and atmosphere meshes into the public route.
-// - Provide responsive sizing, camera, lighting, motion, controls, fallback,
-//   context recovery, diagnostics, runtime evidence, and receipts.
-//
-// Owns:
-// - native WebGL runtime and GPU-resource lifecycle
-// - terrain, ocean, cloud, and atmosphere rendering
-// - camera, projection, lighting, idle rotation, drag, touch, pinch, wheel,
-//   keyboard, reset, pause, cloud visibility, and atmosphere visibility
-// - responsive canvas sizing and non-WebGL fallback
-// - mount, first-frame, visible-pixel, context, and runtime receipts
-//
-// Does not own:
-// - Audralia topology, continents, islands, elevation, coastlines, hydrology,
-//   summit locations, surface classes, materials hints, or world generation
-// - HTML shell structure, CSS presentation authority, adapter authority,
-//   F34/F55/F89/F144/F233, market judgment, North authority, or visual approval
+// Version: 1.1.0
+// Full-file replacement.
+// Previous contract: AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1
+// Previous version: 1.0.0
+// Renewal class: ADDITIVE_RUNTIME_EVIDENCE_RENEWAL
+// Visible runtime behavior, rendering, geometry, controls, and compatibility preserved.
+// Architecture-neutral runtime evidence only.
+// No synthetic F13 evidence or unsupported readiness claims.
 
 (function installAudraliaPlanetRuntime(root, doc) {
   "use strict";
@@ -29,8 +15,13 @@
   const CONTRACT = "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1";
   const RECEIPT = "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_RECEIPT_v1";
   const FILE = "/showroom/globe/audralia/index.js";
-  const VERSION = "1.0.0";
+  const VERSION = "1.1.0";
+  const PREVIOUS_CONTRACT = "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_TNT_v1";
+  const PREVIOUS_VERSION = "1.0.0";
+  const RENEWAL_CLASS = "ADDITIVE_RUNTIME_EVIDENCE_RENEWAL";
+  const RUNTIME_GLOBAL_NAME = "DGBAudraliaPlanetRuntime";
   const MODEL_ID = "audralia-planet-3d-g1";
+  const PRIMARY_RENDERER_BACKEND = "webgl";
 
   const STAGE_ID = "audraliaGlobeStage";
   const MOUNT_ID = "audraliaGlobeMount";
@@ -43,6 +34,38 @@
   const AXIAL_TILT = -0.19;
   const IDLE_DELAY = 2600;
   const AUTO_MOUNT_LIMIT = 160;
+
+  /*
+   * Evidence-state law:
+   *
+   * `state` describes how the value became admissible.
+   * Boolean falsity is carried by `value: false`; it is not a separate state.
+   *
+   * OBSERVED + false means false was directly observed.
+   * DECLARED + false means the implementation declares the condition absent
+   * by architecture.
+   * DERIVED + false means false was obtained through a bounded derivation.
+   * UNAVAILABLE and NOT_APPLICABLE carry value null.
+   */
+  const EVIDENCE_STATE = Object.freeze({
+    OBSERVED: "OBSERVED",
+    DECLARED: "DECLARED",
+    DERIVED: "DERIVED",
+    UNAVAILABLE: "UNAVAILABLE",
+    NOT_APPLICABLE: "NOT_APPLICABLE",
+    CONFLICT: "CONFLICT",
+    UNKNOWN: "UNKNOWN"
+  });
+
+  const EVIDENCE_KIND = Object.freeze({
+    RUNTIME_DECLARATION: "RUNTIME_DECLARATION",
+    DIRECT_RUNTIME_OBSERVATION: "DIRECT_RUNTIME_OBSERVATION",
+    DIRECT_GPU_OBSERVATION: "DIRECT_GPU_OBSERVATION",
+    DIRECT_DOM_OBSERVATION: "DIRECT_DOM_OBSERVATION",
+    DIRECT_RENDER_OBSERVATION: "DIRECT_RENDER_OBSERVATION",
+    BOUNDED_DERIVATION: "BOUNDED_DERIVATION",
+    DELEGATED_GEOMETRY_EVIDENCE: "DELEGATED_GEOMETRY_EVIDENCE"
+  });
 
   const COLORS = Object.freeze([
     [0.018, 0.075, 0.190],
@@ -144,6 +167,34 @@
 
     lastReceipt: null,
 
+    shaderCompileAttemptCount: 0,
+    shaderCompileSuccessCount: 0,
+    shaderCompileFailureCount: 0,
+
+    programLinkAttemptCount: 0,
+    programLinkSuccessCount: 0,
+    programLinkFailureCount: 0,
+
+    renderInvocationCount: 0,
+    renderSubmissionCount: 0,
+
+    firstRenderSubmissionObserved: false,
+
+    webGLFrameMatricesConstructed: false,
+    webGLViewProjectionExecuted: false,
+    fallbackViewTransformExecuted: false,
+    fallbackWorldRendered: false,
+
+    lastFrameMatricesAt: null,
+    lastViewProjectionExecutionAt: null,
+    lastFallbackViewTransformAt: null,
+    lastFallbackWorldRenderAt: null,
+
+    lastRenderInvocationAt: null,
+    lastRenderSubmissionAt: null,
+    lastDrawAt: null,
+    lastVisiblePresentationAt: null,
+
     publicSuperiorityClaim: false,
     publicComparisonClaimAllowed: false,
     generatedImage: false,
@@ -198,6 +249,182 @@
     }
   }
 
+  function freezeOwned(value, seen = new Set()) {
+    if (
+      value === null ||
+      (
+        typeof value !== "object" &&
+        typeof value !== "function"
+      ) ||
+      seen.has(value)
+    ) {
+      return value;
+    }
+
+    seen.add(value);
+
+    let names = [];
+
+    try {
+      names = Object.getOwnPropertyNames(value);
+    } catch (_error) {
+      names = [];
+    }
+
+    for (const name of names) {
+      try {
+        freezeOwned(value[name], seen);
+      } catch (_error) {}
+    }
+
+    try {
+      Object.freeze(value);
+    } catch (_error) {}
+
+    return value;
+  }
+
+  function evidenceRecord(
+    value,
+    evidenceState,
+    evidenceKind,
+    source,
+    options = {}
+  ) {
+    const record = {
+      value,
+      state: evidenceState,
+      evidenceKind,
+      source,
+      owner:
+        options.owner ||
+        RUNTIME_GLOBAL_NAME,
+      observedAt:
+        options.observedAt ||
+        null,
+      derivedFrom:
+        Array.isArray(options.derivedFrom)
+          ? options.derivedFrom.slice()
+          : [],
+      confidence:
+        options.confidence ||
+        "HIGH",
+      reason:
+        options.reason ||
+        null
+    };
+
+    return freezeOwned(record);
+  }
+
+  function declaredEvidence(
+    value,
+    source,
+    options = {}
+  ) {
+    return evidenceRecord(
+      value,
+      EVIDENCE_STATE.DECLARED,
+      EVIDENCE_KIND.RUNTIME_DECLARATION,
+      source,
+      options
+    );
+  }
+
+  function declaredFalseEvidence(
+    source,
+    reason,
+    options = {}
+  ) {
+    return declaredEvidence(
+      false,
+      source,
+      {
+        ...options,
+        reason
+      }
+    );
+  }
+
+  function observedEvidence(
+    value,
+    source,
+    observedAt,
+    options = {}
+  ) {
+    return evidenceRecord(
+      value,
+      EVIDENCE_STATE.OBSERVED,
+      options.evidenceKind ||
+        EVIDENCE_KIND.DIRECT_RUNTIME_OBSERVATION,
+      source,
+      {
+        ...options,
+        observedAt:
+          observedAt ||
+          state.updatedAt ||
+          state.installedAt
+      }
+    );
+  }
+
+  function derivedEvidence(
+    value,
+    source,
+    derivedFrom,
+    options = {}
+  ) {
+    return evidenceRecord(
+      value,
+      EVIDENCE_STATE.DERIVED,
+      EVIDENCE_KIND.BOUNDED_DERIVATION,
+      source,
+      {
+        ...options,
+        derivedFrom
+      }
+    );
+  }
+
+  function unavailableEvidence(
+    source,
+    reason,
+    options = {}
+  ) {
+    return evidenceRecord(
+      null,
+      EVIDENCE_STATE.UNAVAILABLE,
+      options.evidenceKind ||
+        EVIDENCE_KIND.DIRECT_RUNTIME_OBSERVATION,
+      source,
+      {
+        ...options,
+        confidence:
+          options.confidence ||
+          "HIGH",
+        reason
+      }
+    );
+  }
+
+  function notApplicableEvidence(
+    source,
+    reason,
+    options = {}
+  ) {
+    return evidenceRecord(
+      null,
+      EVIDENCE_STATE.NOT_APPLICABLE,
+      options.evidenceKind ||
+        EVIDENCE_KIND.RUNTIME_DECLARATION,
+      source,
+      {
+        ...options,
+        reason
+      }
+    );
+  }
+
   function event(type, detail = {}) {
     const entry = {
       type,
@@ -222,12 +449,10 @@
   function fail(scope, error) {
     const entry = {
       scope,
-
       message:
         error && error.message
           ? error.message
           : String(error),
-
       time: iso()
     };
 
@@ -628,9 +853,15 @@
   }
 
   function geometryAuthority() {
-    const authority =
-      root &&
-      root.DGBAudraliaPlanetGeometry;
+    let authority = null;
+
+    try {
+      authority =
+        root &&
+        root.DGBAudraliaPlanetGeometry;
+    } catch (_error) {
+      authority = null;
+    }
 
     return (
       authority &&
@@ -814,12 +1045,16 @@
     source,
     label
   ) {
+    state.shaderCompileAttemptCount += 1;
+
     const shader =
       gl.createShader(
         type
       );
 
     if (!shader) {
+      state.shaderCompileFailureCount += 1;
+
       throw new Error(
         `Unable to create ${label} shader.`
       );
@@ -847,6 +1082,8 @@
 
         `${label} shader failed.`;
 
+      state.shaderCompileFailureCount += 1;
+
       shaderFail(
         label,
         message
@@ -860,6 +1097,15 @@
         message
       );
     }
+
+    state.shaderCompileSuccessCount += 1;
+
+    event(
+      "AUDRALIA_PLANET_SHADER_COMPILED",
+      {
+        label
+      }
+    );
 
     return shader;
   }
@@ -886,10 +1132,14 @@
         `${label}:fragment`
       );
 
+    state.programLinkAttemptCount += 1;
+
     const linked =
       gl.createProgram();
 
     if (!linked) {
+      state.programLinkFailureCount += 1;
+
       throw new Error(
         `Unable to create ${label} program.`
       );
@@ -930,6 +1180,8 @@
 
         `${label} link failed.`;
 
+      state.programLinkFailureCount += 1;
+
       shaderFail(
         label,
         message
@@ -943,6 +1195,15 @@
         message
       );
     }
+
+    state.programLinkSuccessCount += 1;
+
+    event(
+      "AUDRALIA_PLANET_PROGRAM_LINKED",
+      {
+        label
+      }
+    );
 
     return linked;
   }
@@ -2298,6 +2559,12 @@
     const model =
       modelMatrix();
 
+    state.webGLFrameMatricesConstructed =
+      true;
+
+    state.lastFrameMatricesAt =
+      iso();
+
     return {
       model,
 
@@ -2319,6 +2586,37 @@
           state.distance
         ])
     };
+  }
+
+  /*
+   * Counters and timestamps are retained for every draw.
+   * A diagnostic event is emitted only for the first observed submission.
+   */
+  function recordDraw(name) {
+    const at = iso();
+    const firstSubmission =
+      state.renderSubmissionCount === 0;
+
+    state.drawCount += 1;
+    state.renderSubmissionCount += 1;
+    state.lastDrawAt = at;
+    state.lastRenderSubmissionAt = at;
+
+    if (firstSubmission) {
+      state.firstRenderSubmissionObserved =
+        true;
+
+      event(
+        "AUDRALIA_PLANET_FIRST_RENDER_SUBMISSION_OBSERVED",
+        {
+          mesh: name,
+          drawCount:
+            state.drawCount,
+          renderSubmissionCount:
+            state.renderSubmissionCount
+        }
+      );
+    }
   }
 
   function drawTerrain(
@@ -2417,7 +2715,7 @@
       0
     );
 
-    state.drawCount += 1;
+    recordDraw("terrain");
   }
 
   function drawShell(
@@ -2593,6 +2891,8 @@
       0
     );
 
+    recordDraw(name);
+
     gl.cullFace(
       gl.BACK
     );
@@ -2604,8 +2904,6 @@
     gl.disable(
       gl.BLEND
     );
-
-    state.drawCount += 1;
   }
 
   function visiblePixel() {
@@ -2661,6 +2959,9 @@
         state.firstVisiblePixelObserved =
           true;
 
+        state.lastVisiblePresentationAt =
+          iso();
+
         event(
           "AUDRALIA_PLANET_VISIBLE_PIXEL_OBSERVED",
           {
@@ -2699,6 +3000,9 @@
 
     const matrices =
       frameMatrices();
+
+    state.renderInvocationCount += 1;
+    state.lastRenderInvocationAt = iso();
 
     gl.viewport(
       0,
@@ -2745,6 +3049,12 @@
         "clouds"
       );
     }
+
+    state.webGLViewProjectionExecuted =
+      true;
+
+    state.lastViewProjectionExecutionAt =
+      iso();
 
     if (
       !state.firstFrameDrawn
@@ -2807,6 +3117,9 @@
     ) {
       return false;
     }
+
+    state.renderInvocationCount += 1;
+    state.lastRenderInvocationAt = iso();
 
     const width =
       state.width;
@@ -2931,6 +3244,9 @@
       radius * 2
     );
 
+    let fallbackGeometryAdmitted =
+      false;
+
     try {
       const authority =
         state.geometryAuthority ||
@@ -2943,8 +3259,17 @@
         );
 
       if (terrain) {
+        fallbackGeometryAdmitted =
+          true;
+
         const model =
           modelMatrix();
+
+        state.fallbackViewTransformExecuted =
+          true;
+
+        state.lastFallbackViewTransformAt =
+          iso();
 
         const points = [];
 
@@ -3120,6 +3445,38 @@
 
     context.fill();
 
+    const firstSubmission =
+      state.renderSubmissionCount === 0;
+
+    state.renderSubmissionCount += 1;
+    state.lastRenderSubmissionAt = iso();
+    state.lastDrawAt = state.lastRenderSubmissionAt;
+
+    if (firstSubmission) {
+      state.firstRenderSubmissionObserved =
+        true;
+
+      event(
+        "AUDRALIA_PLANET_FIRST_RENDER_SUBMISSION_OBSERVED",
+        {
+          rendererBackend:
+            "canvas2d-fallback",
+          renderSubmissionCount:
+            state.renderSubmissionCount
+        }
+      );
+    }
+
+    if (
+      fallbackGeometryAdmitted
+    ) {
+      state.fallbackWorldRendered =
+        true;
+
+      state.lastFallbackWorldRenderAt =
+        state.lastRenderSubmissionAt;
+    }
+
     if (
       !state.firstFrameDrawn
     ) {
@@ -3132,6 +3489,10 @@
 
     state.firstVisiblePixelObserved =
       true;
+
+    state.lastVisiblePresentationAt =
+      state.lastVisiblePresentationAt ||
+      iso();
 
     return true;
   }
@@ -4499,6 +4860,819 @@
     };
   }
 
+  function activeRendererBackend() {
+    if (
+      state.fallbackActive
+    ) {
+      return "canvas2d-fallback";
+    }
+
+    if (
+      state.gl &&
+      !state.contextLost
+    ) {
+      return "webgl";
+    }
+
+    return "unavailable";
+  }
+
+  function webGLEvidenceAvailable() {
+    return activeRendererBackend() ===
+      "webgl";
+  }
+
+  function programsPresent() {
+    return Boolean(
+      state.programs &&
+      state.programs.terrain &&
+      state.programs.terrain.program &&
+      state.programs.shell &&
+      state.programs.shell.program
+    );
+  }
+
+  function meshesPresent() {
+    return Boolean(
+      state.meshes &&
+      state.meshes.terrain &&
+      state.meshes.ocean &&
+      state.meshes.clouds &&
+      state.meshes.atmosphere
+    );
+  }
+
+  function architectureEvidence() {
+    const composedAt = iso();
+    const activeBackend =
+      activeRendererBackend();
+    const webGLActive =
+      activeBackend === "webgl";
+    const fallbackActive =
+      activeBackend ===
+      "canvas2d-fallback";
+
+    const geometryReady =
+      Boolean(
+        state.geometryPacket &&
+        state.geometryPacket.validation &&
+        state.geometryPacket.validation.passed === true
+      );
+
+    const shaderProgramsCompiled =
+      state.shaderCompileAttemptCount > 0 &&
+      state.shaderCompileFailureCount === 0 &&
+      state.shaderCompileSuccessCount ===
+        state.shaderCompileAttemptCount;
+
+    const shaderProgramsLinked =
+      state.programLinkAttemptCount > 0 &&
+      state.programLinkFailureCount === 0 &&
+      state.programLinkSuccessCount ===
+        state.programLinkAttemptCount;
+
+    const webGLPipelineOperational =
+      webGLActive &&
+      geometryReady &&
+      programsPresent() &&
+      meshesPresent() &&
+      shaderProgramsCompiled &&
+      shaderProgramsLinked &&
+      !state.contextLost;
+
+    const drawObserved =
+      state.drawCount > 0;
+
+    const renderInvocationObserved =
+      state.renderInvocationCount > 0;
+
+    const renderSubmissionObserved =
+      state.renderSubmissionCount > 0;
+
+    const visiblePresentationObserved =
+      state.firstFrameDrawn &&
+      state.firstVisiblePixelObserved;
+
+    const contextRetained =
+      webGLActive &&
+      !state.contextLost;
+
+    const webGLWorldPresent =
+      webGLActive &&
+      geometryReady &&
+      meshesPresent();
+
+    const fallbackWorldPresent =
+      fallbackActive &&
+      state.fallbackWorldRendered &&
+      state.firstFrameDrawn &&
+      state.firstVisiblePixelObserved;
+
+    const architectureNeutralWorldPresent =
+      webGLWorldPresent ||
+      fallbackWorldPresent;
+
+    const worldEvidenceSource =
+      webGLWorldPresent
+        ? "WEBGL_GEOMETRY_AND_GPU_MESHES"
+        : fallbackWorldPresent
+          ? "FALLBACK_GEOMETRY_AND_CANVAS_RENDERING"
+          : "UNAVAILABLE";
+
+    const identity = {
+      runtimeGlobalName:
+        declaredEvidence(
+          RUNTIME_GLOBAL_NAME,
+          "runtime-header-and-publication"
+        ),
+
+      primaryRendererBackend:
+        declaredEvidence(
+          PRIMARY_RENDERER_BACKEND,
+          "runtime-design"
+        ),
+
+      activeRendererBackend:
+        activeBackend === "unavailable"
+          ? unavailableEvidence(
+              "active-runtime-mode",
+              "No active renderer backend has been admitted."
+            )
+          : observedEvidence(
+              activeBackend,
+              activeBackend === "webgl"
+                ? "canvas.getContext(webgl)"
+                : "fallback-canvas-context",
+              state.updatedAt,
+              {
+                evidenceKind:
+                  activeBackend === "webgl"
+                    ? EVIDENCE_KIND.DIRECT_GPU_OBSERVATION
+                    : EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+              }
+            ),
+
+      modelId:
+        declaredEvidence(
+          MODEL_ID,
+          "runtime-header"
+        ),
+
+      runtimeContract:
+        declaredEvidence(
+          CONTRACT,
+          "runtime-header"
+        ),
+
+      runtimeReceiptSchema:
+        declaredEvidence(
+          RECEIPT,
+          "runtime-header"
+        ),
+
+      runtimeVersion:
+        declaredEvidence(
+          VERSION,
+          "runtime-header"
+        ),
+
+      runtimeFile:
+        declaredEvidence(
+          FILE,
+          "runtime-header"
+        ),
+
+      previousContract:
+        declaredEvidence(
+          PREVIOUS_CONTRACT,
+          "runtime-header"
+        ),
+
+      previousVersion:
+        declaredEvidence(
+          PREVIOUS_VERSION,
+          "runtime-header"
+        ),
+
+      renewalClass:
+        declaredEvidence(
+          RENEWAL_CLASS,
+          "runtime-header"
+        )
+    };
+
+    const world = {
+      sceneObjectPresent:
+        declaredFalseEvidence(
+          "runtime-architecture",
+          "This implementation does not use a named scene object."
+        ),
+
+      renderableWorldPresent:
+        architectureNeutralWorldPresent
+          ? observedEvidence(
+              true,
+              worldEvidenceSource,
+              webGLWorldPresent
+                ? state.lastRenderSubmissionAt
+                : state.lastFallbackWorldRenderAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DELEGATED_GEOMETRY_EVIDENCE,
+                derivedFrom:
+                  webGLWorldPresent
+                    ? [
+                        "geometryPacket.validation.passed",
+                        "state.meshes",
+                        "activeRendererBackend:webgl"
+                      ]
+                    : [
+                        "fallback geometry",
+                        "fallback canvas rendering",
+                        "visible presentation"
+                      ]
+              }
+            )
+          : unavailableEvidence(
+              "runtime-world-representation",
+              "No active backend has completed an admitted world representation."
+            ),
+
+      equivalentSceneRepresentationPresent:
+        architectureNeutralWorldPresent
+          ? derivedEvidence(
+              true,
+              "runtime-world-representation",
+              [
+                "renderableWorldPresent",
+                worldEvidenceSource
+              ],
+              {
+                reason:
+                  "The runtime presents an Audralia world without a named scene object."
+              }
+            )
+          : unavailableEvidence(
+              "runtime-world-representation",
+              "Equivalent scene representation has not been established."
+            ),
+
+      activeWorldEvidenceSource:
+        architectureNeutralWorldPresent
+          ? observedEvidence(
+              worldEvidenceSource,
+              "runtime-world-representation",
+              webGLWorldPresent
+                ? state.lastRenderSubmissionAt
+                : state.lastFallbackWorldRenderAt
+            )
+          : unavailableEvidence(
+              "runtime-world-representation",
+              "No backend-specific world source is active."
+            )
+    };
+
+    const webGLProjectionActive =
+      webGLActive &&
+      state.webGLFrameMatricesConstructed &&
+      state.webGLViewProjectionExecuted;
+
+    const fallbackViewActive =
+      fallbackActive &&
+      state.fallbackViewTransformExecuted;
+
+    const view = {
+      cameraObjectPresent:
+        declaredFalseEvidence(
+          "runtime-architecture",
+          "This implementation uses matrices and camera-position uniforms rather than a named camera object."
+        ),
+
+      projectionActive:
+        webGLActive
+          ? state.webGLFrameMatricesConstructed &&
+            state.webGLViewProjectionExecuted
+            ? observedEvidence(
+                true,
+                "frameMatrices-and-WebGL-uniform-execution",
+                state.lastViewProjectionExecutionAt,
+                {
+                  evidenceKind:
+                    EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION,
+                  derivedFrom: [
+                    "webGLFrameMatricesConstructed",
+                    "webGLViewProjectionExecuted"
+                  ]
+                }
+              )
+            : unavailableEvidence(
+                "frameMatrices-and-WebGL-uniform-execution",
+                "The WebGL projection path has not executed."
+              )
+          : fallbackActive
+            ? notApplicableEvidence(
+                "WebGL-perspective-projection",
+                "The fallback renderer does not use the WebGL perspective-matrix path."
+              )
+            : unavailableEvidence(
+                "runtime-projection",
+                "No active projection path has been admitted."
+              ),
+
+      viewTransformActive:
+        webGLActive
+          ? webGLProjectionActive
+            ? observedEvidence(
+                true,
+                "WebGL-model-view-projection-path",
+                state.lastViewProjectionExecutionAt,
+                {
+                  evidenceKind:
+                    EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+                }
+              )
+            : unavailableEvidence(
+                "WebGL-model-view-projection-path",
+                "The WebGL view path has not executed."
+              )
+          : fallbackActive
+            ? fallbackViewActive
+              ? observedEvidence(
+                  true,
+                  "fallback-modelMatrix-and-transform",
+                  state.lastFallbackViewTransformAt,
+                  {
+                    evidenceKind:
+                      EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+                  }
+                )
+              : unavailableEvidence(
+                  "fallback-modelMatrix-and-transform",
+                  "The fallback view-transform path has not executed."
+                )
+            : unavailableEvidence(
+                "runtime-view-transform",
+                "No active view-transform path has been admitted."
+              ),
+
+      equivalentViewAuthorityPresent:
+        webGLProjectionActive ||
+        fallbackViewActive
+          ? derivedEvidence(
+              true,
+              "runtime-view-authority",
+              webGLProjectionActive
+                ? [
+                    "webGLFrameMatricesConstructed",
+                    "webGLViewProjectionExecuted",
+                    "camera uniform participation"
+                  ]
+                : [
+                    "fallbackViewTransformExecuted",
+                    "modelMatrix",
+                    "transform"
+                  ],
+              {
+                reason:
+                  "The active backend executes view behavior without a named camera object."
+              }
+            )
+          : unavailableEvidence(
+              "runtime-view-authority",
+              "No executed view authority has been admitted."
+            ),
+
+      activeViewEvidenceSource:
+        webGLProjectionActive
+          ? observedEvidence(
+              "WEBGL_MODEL_VIEW_PROJECTION",
+              "runtime-view-authority",
+              state.lastViewProjectionExecutionAt
+            )
+          : fallbackViewActive
+            ? observedEvidence(
+                "FALLBACK_MODEL_TRANSFORM",
+                "runtime-view-authority",
+                state.lastFallbackViewTransformAt
+              )
+            : unavailableEvidence(
+                "runtime-view-authority",
+                "No backend-specific view source is active."
+              )
+    };
+
+    const renderState = {
+      materialObjectPresent:
+        declaredFalseEvidence(
+          "runtime-architecture",
+          "This implementation does not use named material objects."
+        ),
+
+      shaderStatePresent:
+        programsPresent()
+          ? observedEvidence(
+              true,
+              "state.programs",
+              state.updatedAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DIRECT_GPU_OBSERVATION
+              }
+            )
+          : webGLActive
+            ? unavailableEvidence(
+                "state.programs",
+                "WebGL exists but shader programs are not yet admitted."
+              )
+            : notApplicableEvidence(
+                "state.programs",
+                "WebGL shader state does not apply while fallback rendering is active."
+              ),
+
+      uniformStatePresent:
+        programsPresent() &&
+        state.webGLViewProjectionExecuted
+          ? observedEvidence(
+              true,
+              "program uniform locations and draw uniform writes",
+              state.lastViewProjectionExecutionAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DIRECT_GPU_OBSERVATION
+              }
+            )
+          : webGLActive
+            ? unavailableEvidence(
+                "program-uniform-state",
+                "Uniform-state execution has not been observed."
+              )
+            : notApplicableEvidence(
+                "program-uniform-state",
+                "WebGL uniform state does not apply to the active fallback renderer."
+              ),
+
+      proceduralRenderStatePresent:
+        renderInvocationObserved
+          ? observedEvidence(
+              true,
+              fallbackActive
+                ? "Canvas2D gradients colors clipping and transformed terrain points"
+                : "shader colors lighting blend depth and culling state",
+              state.lastRenderInvocationAt,
+              {
+                evidenceKind:
+                  webGLActive
+                    ? EVIDENCE_KIND.DIRECT_GPU_OBSERVATION
+                    : EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+              }
+            )
+          : unavailableEvidence(
+              "runtime-render-state",
+              "Procedural render-state participation has not executed."
+            )
+    };
+
+    const pipeline = {
+      shaderProgramCompiled:
+        webGLActive
+          ? state.shaderCompileAttemptCount > 0
+            ? observedEvidence(
+                shaderProgramsCompiled,
+                "WebGL COMPILE_STATUS",
+                state.updatedAt,
+                {
+                  evidenceKind:
+                    EVIDENCE_KIND.DIRECT_GPU_OBSERVATION,
+                  derivedFrom: [
+                    "shaderCompileAttemptCount",
+                    "shaderCompileSuccessCount",
+                    "shaderCompileFailureCount"
+                  ],
+                  reason:
+                    shaderProgramsCompiled
+                      ? null
+                      : "One or more shader compilation attempts failed."
+                }
+              )
+            : unavailableEvidence(
+                "WebGL COMPILE_STATUS",
+                "Shader compilation has not been attempted."
+              )
+          : notApplicableEvidence(
+              "WebGL COMPILE_STATUS",
+              "WebGL shader compilation does not apply while fallback rendering is active."
+            ),
+
+      shaderProgramLinked:
+        webGLActive
+          ? state.programLinkAttemptCount > 0
+            ? observedEvidence(
+                shaderProgramsLinked,
+                "WebGL LINK_STATUS",
+                state.updatedAt,
+                {
+                  evidenceKind:
+                    EVIDENCE_KIND.DIRECT_GPU_OBSERVATION,
+                  derivedFrom: [
+                    "programLinkAttemptCount",
+                    "programLinkSuccessCount",
+                    "programLinkFailureCount"
+                  ],
+                  reason:
+                    shaderProgramsLinked
+                      ? null
+                      : "One or more program link attempts failed."
+                }
+              )
+            : unavailableEvidence(
+                "WebGL LINK_STATUS",
+                "Program linking has not been attempted."
+              )
+          : notApplicableEvidence(
+              "WebGL LINK_STATUS",
+              "WebGL program linking does not apply while fallback rendering is active."
+            ),
+
+      pipelineOperational:
+        webGLActive
+          ? derivedEvidence(
+              webGLPipelineOperational,
+              "webgl-runtime-pipeline",
+              [
+                "geometryReady",
+                "programsPresent",
+                "meshesPresent",
+                "shaderProgramCompiled",
+                "shaderProgramLinked",
+                "contextLost"
+              ],
+              {
+                reason:
+                  webGLPipelineOperational
+                    ? null
+                    : "The complete WebGL execution path has not been admitted."
+              }
+            )
+          : fallbackActive
+            ? notApplicableEvidence(
+                "webgl-runtime-pipeline",
+                "The WebGL pipeline is not the active rendering path."
+              )
+            : unavailableEvidence(
+                "webgl-runtime-pipeline",
+                "No active rendering pipeline has been admitted."
+              )
+    };
+
+    const submission = {
+      drawCallRecorded:
+        drawObserved
+          ? observedEvidence(
+              true,
+              "gl.drawElements",
+              state.lastDrawAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DIRECT_GPU_OBSERVATION,
+                derivedFrom: [
+                  "drawCount"
+                ]
+              }
+            )
+          : fallbackActive
+            ? notApplicableEvidence(
+                "gl.drawElements",
+                "WebGL draw calls do not apply to the active fallback renderer."
+              )
+            : unavailableEvidence(
+                "gl.drawElements",
+                "No WebGL draw call has been recorded."
+              ),
+
+      renderInvocationRecorded:
+        renderInvocationObserved
+          ? observedEvidence(
+              true,
+              "drawWebGL-or-drawFallback",
+              state.lastRenderInvocationAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION,
+                derivedFrom: [
+                  "renderInvocationCount"
+                ]
+              }
+            )
+          : unavailableEvidence(
+              "drawWebGL-or-drawFallback",
+              "No render invocation has been recorded."
+            ),
+
+      renderSubmissionObserved:
+        renderSubmissionObserved
+          ? observedEvidence(
+              true,
+              fallbackActive
+                ? "fallback-canvas-render-completion"
+                : "gl.drawElements",
+              state.lastRenderSubmissionAt,
+              {
+                evidenceKind:
+                  fallbackActive
+                    ? EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+                    : EVIDENCE_KIND.DIRECT_GPU_OBSERVATION,
+                derivedFrom: [
+                  "renderSubmissionCount"
+                ]
+              }
+            )
+          : unavailableEvidence(
+              "render-submission",
+              "No render submission has been observed."
+            ),
+
+      firstRenderSubmissionObserved:
+        state.firstRenderSubmissionObserved
+          ? observedEvidence(
+              true,
+              "first-render-submission-transition",
+              state.lastRenderSubmissionAt
+            )
+          : unavailableEvidence(
+              "first-render-submission-transition",
+              "The first render submission has not been observed."
+            )
+    };
+
+    const presentation = {
+      frameDrawn:
+        state.firstFrameDrawn
+          ? observedEvidence(
+              true,
+              "firstFrameDrawn",
+              state.firstFrameAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+              }
+            )
+          : unavailableEvidence(
+              "firstFrameDrawn",
+              "No completed frame has been recorded."
+            ),
+
+      visiblePresentationObserved:
+        visiblePresentationObserved
+          ? derivedEvidence(
+              true,
+              "visible-presentation",
+              [
+                "firstFrameDrawn",
+                "firstVisiblePixelObserved"
+              ],
+              {
+                observedAt:
+                  state.lastVisiblePresentationAt,
+                reason:
+                  "Visible presentation requires both a completed frame and visible-pixel evidence."
+              }
+            )
+          : unavailableEvidence(
+              "visible-presentation",
+              "Visible presentation has not been fully observed."
+            ),
+
+      visiblePixelObserved:
+        state.firstVisiblePixelObserved
+          ? observedEvidence(
+              true,
+              fallbackActive
+                ? "fallback-canvas-draw"
+                : "WebGL readPixels",
+              state.lastVisiblePresentationAt,
+              {
+                evidenceKind:
+                  fallbackActive
+                    ? EVIDENCE_KIND.DIRECT_RENDER_OBSERVATION
+                    : EVIDENCE_KIND.DIRECT_GPU_OBSERVATION
+              }
+            )
+          : unavailableEvidence(
+              fallbackActive
+                ? "fallback-canvas-draw"
+                : "WebGL readPixels",
+              "No visible-pixel observation has been admitted."
+            )
+    };
+
+    const backendState = {
+      shaderErrorCount:
+        observedEvidence(
+          state.shaderErrors.length,
+          "state.shaderErrors",
+          state.updatedAt
+        ),
+
+      runtimeErrorCount:
+        observedEvidence(
+          state.errors.length,
+          "state.errors",
+          state.updatedAt
+        ),
+
+      contextRetained:
+        state.gl
+          ? observedEvidence(
+              contextRetained,
+              "webglcontextlost-state",
+              state.updatedAt,
+              {
+                evidenceKind:
+                  EVIDENCE_KIND.DIRECT_GPU_OBSERVATION,
+                reason:
+                  contextRetained
+                    ? null
+                    : "The WebGL context is currently lost or inactive."
+              }
+            )
+          : fallbackActive
+            ? notApplicableEvidence(
+                "webglcontextlost-state",
+                "WebGL context retention does not apply to the active fallback renderer."
+              )
+            : unavailableEvidence(
+                "webglcontextlost-state",
+                "No WebGL context has been admitted."
+              ),
+
+      fallbackActive:
+        observedEvidence(
+          state.fallbackActive,
+          "state.fallbackActive",
+          state.updatedAt,
+          {
+            evidenceKind:
+              EVIDENCE_KIND.DIRECT_RUNTIME_OBSERVATION
+          }
+        )
+    };
+
+    const provenance = {
+      runtimeOwner:
+        RUNTIME_GLOBAL_NAME,
+
+      geometryOwner:
+        "DGBAudraliaPlanetGeometry",
+
+      geometryEvidenceDelegated:
+        true,
+
+      rendererEvidenceOwned:
+        true,
+
+      namedSceneObjectDeclaredAbsent:
+        true,
+
+      namedCameraObjectDeclaredAbsent:
+        true,
+
+      namedMaterialObjectDeclaredAbsent:
+        true,
+
+      syntheticF13AliasesPublished:
+        false,
+
+      unavailableConvertedToFalse:
+        false,
+
+      falseEvidenceStateUsed:
+        false,
+
+      primaryRendererBackend:
+        PRIMARY_RENDERER_BACKEND,
+
+      activeRendererBackend:
+        activeBackend,
+
+      composedAt
+    };
+
+    return freezeOwned({
+      schema:
+        "AUDRALIA_G1_PUBLIC_3D_PLANET_RUNTIME_ARCHITECTURE_EVIDENCE_v1",
+      composedAt,
+      identity,
+      world,
+      view,
+      renderState,
+      pipeline,
+      submission,
+      presentation,
+      backendState,
+      provenance
+    });
+  }
+
   function getStatus() {
     const geometryReceipt =
       state.geometryAuthority &&
@@ -4511,6 +5685,9 @@
             .geometryAuthority
             .getReceiptLight()
         : null;
+
+    const evidence =
+      architectureEvidence();
 
     return {
       contract:
@@ -4527,6 +5704,27 @@
 
       modelId:
         MODEL_ID,
+
+      runtimeGlobalName:
+        RUNTIME_GLOBAL_NAME,
+
+      rendererBackend:
+        activeRendererBackend(),
+
+      primaryRendererBackend:
+        PRIMARY_RENDERER_BACKEND,
+
+      activeRendererBackend:
+        activeRendererBackend(),
+
+      previousContract:
+        PREVIOUS_CONTRACT,
+
+      previousVersion:
+        PREVIOUS_VERSION,
+
+      renewalClass:
+        RENEWAL_CLASS,
 
       installedAt:
         state.installedAt,
@@ -4657,6 +5855,69 @@
       drawCount:
         state.drawCount,
 
+      renderInvocationCount:
+        state.renderInvocationCount,
+
+      renderSubmissionCount:
+        state.renderSubmissionCount,
+
+      firstRenderSubmissionObserved:
+        state.firstRenderSubmissionObserved,
+
+      shaderCompileAttemptCount:
+        state.shaderCompileAttemptCount,
+
+      shaderCompileSuccessCount:
+        state.shaderCompileSuccessCount,
+
+      shaderCompileFailureCount:
+        state.shaderCompileFailureCount,
+
+      programLinkAttemptCount:
+        state.programLinkAttemptCount,
+
+      programLinkSuccessCount:
+        state.programLinkSuccessCount,
+
+      programLinkFailureCount:
+        state.programLinkFailureCount,
+
+      webGLFrameMatricesConstructed:
+        state.webGLFrameMatricesConstructed,
+
+      webGLViewProjectionExecuted:
+        state.webGLViewProjectionExecuted,
+
+      fallbackViewTransformExecuted:
+        state.fallbackViewTransformExecuted,
+
+      fallbackWorldRendered:
+        state.fallbackWorldRendered,
+
+      lastFrameMatricesAt:
+        state.lastFrameMatricesAt,
+
+      lastViewProjectionExecutionAt:
+        state.lastViewProjectionExecutionAt,
+
+      lastFallbackViewTransformAt:
+        state.lastFallbackViewTransformAt,
+
+      lastFallbackWorldRenderAt:
+        state.lastFallbackWorldRenderAt,
+
+      lastRenderInvocationAt:
+        state.lastRenderInvocationAt,
+
+      lastRenderSubmissionAt:
+        state.lastRenderSubmissionAt,
+
+      lastDrawAt:
+        state.lastDrawAt,
+
+      lastVisiblePresentationAt:
+        state.lastVisiblePresentationAt,
+
       lastFrameDurationMs:
         state.lastFrameDurationMs,
 
@@ -4681,6 +5942,9 @@
       autoMountAttempts:
         state.autoMountAttempts,
 
+      architectureEvidence:
+        evidence,
+
       publicSuperiorityClaim:
         false,
 
@@ -4698,8 +5962,11 @@
     };
   }
 
-  function receiptLight() {
+  function receiptLight(
+    suppliedStatus = null
+  ) {
     const status =
+      suppliedStatus ||
       getStatus();
 
     let receiptStatus =
@@ -4743,6 +6010,27 @@
 
       modelId:
         MODEL_ID,
+
+      runtimeGlobalName:
+        RUNTIME_GLOBAL_NAME,
+
+      rendererBackend:
+        status.activeRendererBackend,
+
+      primaryRendererBackend:
+        status.primaryRendererBackend,
+
+      activeRendererBackend:
+        status.activeRendererBackend,
+
+      previousContract:
+        PREVIOUS_CONTRACT,
+
+      previousVersion:
+        PREVIOUS_VERSION,
+
+      renewalClass:
+        RENEWAL_CLASS,
 
       status:
         receiptStatus,
@@ -4790,8 +6078,44 @@
       contextRestoreCount:
         status.contextRestoreCount,
 
+      shaderCompileAttemptCount:
+        status.shaderCompileAttemptCount,
+
+      shaderCompileSuccessCount:
+        status.shaderCompileSuccessCount,
+
+      shaderCompileFailureCount:
+        status.shaderCompileFailureCount,
+
+      programLinkAttemptCount:
+        status.programLinkAttemptCount,
+
+      programLinkSuccessCount:
+        status.programLinkSuccessCount,
+
+      programLinkFailureCount:
+        status.programLinkFailureCount,
+
+      renderInvocationCount:
+        status.renderInvocationCount,
+
+      renderSubmissionCount:
+        status.renderSubmissionCount,
+
+      firstRenderSubmissionObserved:
+        status.firstRenderSubmissionObserved,
+
+      drawCount:
+        status.drawCount,
+
+      shaderErrorCount:
+        status.shaderErrorCount,
+
       errorCount:
         status.errorCount,
+
+      architectureEvidence:
+        status.architectureEvidence,
 
       publicSuperiorityClaim:
         false,
@@ -4802,11 +6126,19 @@
   }
 
   function getReceipt() {
+    const status =
+      getStatus();
+
+    const light =
+      receiptLight(
+        status
+      );
+
     const receipt = {
-      ...receiptLight(),
+      ...light,
 
       statusDetail:
-        getStatus(),
+        status,
 
       viewState:
         viewState(),
@@ -4828,6 +6160,11 @@
                 .validation
             )
           : null,
+
+      evidenceProvenance:
+        status
+          .architectureEvidence
+          .provenance,
 
       shaderErrors:
         state.shaderErrors.map(
@@ -4866,12 +6203,15 @@
     );
   }
 
-  function publishData() {
+  function publishData(
+    suppliedStatus = null
+  ) {
     if (!doc) {
       return;
     }
 
     const status =
+      suppliedStatus ||
       getStatus();
 
     const targets = [
@@ -4897,6 +6237,36 @@
         target,
         "audraliaPlanetRuntimeReceipt",
         RECEIPT
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeVersion",
+        VERSION
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeGlobalName",
+        RUNTIME_GLOBAL_NAME
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetPrimaryRendererBackend",
+        PRIMARY_RENDERER_BACKEND
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetActiveRendererBackend",
+        status.activeRendererBackend
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRendererBackend",
+        status.rendererBackend
       );
 
       dataset(
@@ -4949,6 +6319,36 @@
 
       dataset(
         target,
+        "audraliaPlanetRuntimeRenderInvocationCount",
+        status.renderInvocationCount
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeRenderSubmissionCount",
+        status.renderSubmissionCount
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeDrawCount",
+        status.drawCount
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeShaderCompileSuccessCount",
+        status.shaderCompileSuccessCount
+      );
+
+      dataset(
+        target,
+        "audraliaPlanetRuntimeProgramLinkSuccessCount",
+        status.programLinkSuccessCount
+      );
+
+      dataset(
+        target,
         "audraliaPlanetRuntimeTerrainLevel",
         status.terrainLevel ||
         ""
@@ -4975,6 +6375,14 @@
   }
 
   function publish() {
+    const status =
+      getStatus();
+
+    const lightReceipt =
+      receiptLight(
+        status
+      );
+
     root.DGBAudraliaPlanetRuntime =
       api;
 
@@ -4985,10 +6393,10 @@
       api;
 
     root.AUDRALIA_PLANET_RUNTIME_RECEIPT =
-      receiptLight();
+      lightReceipt;
 
     root.AUDRALIA_PLANET_ROUTE_RECEIPT =
-      receiptLight();
+      lightReceipt;
 
     root.mountAudraliaPlanet =
       mount;
@@ -5023,14 +6431,16 @@
     root.__AUDRALIA_PLANET_RUNTIME_VISUAL_PASS_CLAIMED__ =
       false;
 
-    publishData();
+    publishData(
+      status
+    );
 
     emit(
       "audralia-planet-runtime-state",
-      receiptLight()
+      lightReceipt
     );
 
-    return receiptLight();
+    return lightReceipt;
   }
 
   const api = {
@@ -5043,11 +6453,34 @@
     version:
       VERSION,
 
+    previousContract:
+      PREVIOUS_CONTRACT,
+
+    previousVersion:
+      PREVIOUS_VERSION,
+
+    renewalClass:
+      RENEWAL_CLASS,
+
     file:
       FILE,
 
     modelId:
       MODEL_ID,
+
+    runtimeGlobalName:
+      RUNTIME_GLOBAL_NAME,
+
+    primaryRendererBackend:
+      PRIMARY_RENDERER_BACKEND,
+
+    get rendererBackend() {
+      return activeRendererBackend();
+    },
+
+    get activeRendererBackend() {
+      return activeRendererBackend();
+    },
 
     mount,
     autoMount,
@@ -5060,6 +6493,9 @@
 
     getViewState:
       viewState,
+
+    getArchitectureEvidence:
+      architectureEvidence,
 
     getStatus,
 
@@ -5117,6 +6553,18 @@
     ownsFinalVisualPassClaim:
       false,
 
+    namedSceneObjectUsed:
+      false,
+
+    namedCameraObjectUsed:
+      false,
+
+    namedMaterialObjectUsed:
+      false,
+
+    syntheticF13AliasesPublished:
+      false,
+
     publicSuperiorityClaim:
       false,
 
@@ -5146,8 +6594,20 @@
       contract:
         CONTRACT,
 
+      version:
+        VERSION,
+
+      previousVersion:
+        PREVIOUS_VERSION,
+
       modelId:
         MODEL_ID,
+
+      runtimeGlobalName:
+        RUNTIME_GLOBAL_NAME,
+
+      primaryRendererBackend:
+        PRIMARY_RENDERER_BACKEND,
 
       geometryAuthorityPresent:
         Boolean(

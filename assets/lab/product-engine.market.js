@@ -1,66 +1,25 @@
 // /assets/lab/product-engine.market.js
-// LAB_PRODUCT_ENGINE_MARKET_F144_ENGINE_MECHANICS_READINESS_CONDUCTOR_TNT_v2
-// Full-file replacement.
-// Product Engine Market F144 / readiness conductor / Market Clerk.
-// Purpose:
-// - Consume F89 Project Registry release packet from /assets/lab/product-engine.registry.js.
-// - Build deterministic market-readiness records from registry records, market inputs, file, route, contract, receipt, risk, demo, documentation, licensing, distribution, and implementation evidence.
-// - Bind directly to runtime-table v4 mechanics: RT3D-X10_Y19_Z144.
-// - Prepare F233 downstream return packet for /assets/lab/runtime-table.js.
-// - Preserve F34 -> F55 -> F89 -> F144 -> F233 sequence.
-// - Treat market/surpass language as internal target language only.
-// - Avoid rendering, generated image claims, WebGL claims, GraphicBox claims, public superiority claims, and final visual pass claims.
-// Does not own:
-// - F34 Product Engine authority
-// - F55 Expression authority
-// - F89 Registry authority
-// - North F21 latch
-// - Canvas F13 evidence
-// - actual rendering
-// - route orchestration
-// - planet truth
-// - material/elevation/hydrology truth
-// - generated image
-// - GraphicBox
-// - WebGL
-// - public superiority claim
-// - final visual pass claim
+// LAB_PRODUCT_ENGINE_MARKET_F144_REPLACEMENT_SHELL_v3
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAB_PRODUCT_ENGINE_MARKET_F144_ENGINE_MECHANICS_READINESS_CONDUCTOR_TNT_v2";
-  const RECEIPT = "LAB_PRODUCT_ENGINE_MARKET_F144_ENGINE_MECHANICS_READINESS_CONDUCTOR_RECEIPT_v2";
-  const PREVIOUS_CONTRACT = "LAB_PRODUCT_ENGINE_MARKET_F144_READINESS_CONDUCTOR_TNT_v1";
-  const BASELINE_CONTRACT = "LAB_PRODUCT_ENGINE_MARKET_BASELINE_v1";
-  const VERSION = "2026-06-08.lab-product-engine-market-f144-engine-mechanics-readiness-conductor-v2";
-
   const FILE = "/assets/lab/product-engine.market.js";
+  const CONTRACT = "LAB_PRODUCT_ENGINE_MARKET_F144_REPLACEMENT_SHELL_v3";
+  const RECEIPT = "LAB_PRODUCT_ENGINE_MARKET_F144_REPLACEMENT_SHELL_RECEIPT_v3";
+  const VERSION = "2026-06-22.f144-replacement-shell.v3";
+
   const NORTH_FILE = "/assets/lab/runtime-table.js";
-  const F34_PRODUCT_ENGINE_FILE = "/assets/lab/product-engine.js";
-  const F55_EXPRESSION_FILE = "/assets/lab/product-engine.ue5-expression.js";
-  const F89_REGISTRY_FILE = "/assets/lab/product-engine.registry.js";
-  const CANVAS_FILE = "/assets/hearth/hearth.canvas.js";
+  const F89_FILE = "/assets/lab/product-engine.registry.js";
 
   const root = typeof window !== "undefined" ? window : globalThis;
   const doc = root.document || null;
 
   const FIBONACCI = Object.freeze({
-    NORTH_LATCH: "F21",
-    PRODUCT_ENGINE: "F34",
-    UE5_EXPRESSION: "F55",
     PROJECT_REGISTRY: "F89",
     MARKET_READINESS: "F144",
-    DOWNSTREAM_RETURN: "F233"
-  });
-
-  const NEWS_GATES = Object.freeze({
-    NORTH: "NORTH",
-    PRODUCT: "PRODUCT_ENGINE",
-    EXPRESSION: "UE5_EXPRESSION",
-    REGISTRY: "PROJECT_REGISTRY",
-    MARKET: "MARKET_READINESS",
-    DOWNSTREAM: "DOWNSTREAM_RETURN"
+    DOWNSTREAM_RETURN: "F233",
+    NORTH_LATCH: "F21"
   });
 
   const STATUS = Object.freeze({
@@ -68,19 +27,7 @@
     ACTIVE: "ACTIVE",
     READY: "READY",
     DEGRADED: "DEGRADED",
-    BLOCKED: "BLOCKED",
-    COMPLETE: "COMPLETE"
-  });
-
-  const READINESS_BUCKETS = Object.freeze({
-    DEMO: "demo-readiness",
-    DOCUMENTATION: "documentation-readiness",
-    LICENSE: "license-readiness",
-    DISTRIBUTION: "distribution-readiness",
-    IMPLEMENTATION: "implementation-readiness",
-    RISK: "risk-boundary-readiness",
-    SUPPORT: "support-readiness",
-    MARKET_PACKAGE: "market-package-readiness"
+    REJECTED: "REJECTED"
   });
 
   const MECHANICAL_COORDINATE = Object.freeze({
@@ -94,23 +41,6 @@
     fibonacciStation: "MARKET_CLERK",
     mechanicalRole: "MARKET_READINESS_OUTPUT_MANIFOLD",
     clerkRole: "MARKET_CLERK",
-    chessRole: "KNIGHT",
-    mayJudge: false,
-    mayLatch: false,
-    mayRender: false,
-    mayClaimPublicSuperiority: false
-  });
-
-  const DOWNSTREAM_COORDINATE = Object.freeze({
-    coordinateId: "RT3D-X14_Y19_Z233",
-    enginePart: "MANIFOLD",
-    enginePartIndex: 14,
-    systemCategory: "NINETEEN_PART_SYSTEM",
-    systemCategoryIndex: 19,
-    fibonacciStage: FIBONACCI.DOWNSTREAM_RETURN,
-    fibonacciRank: 233,
-    fibonacciStation: "DOWNSTREAM_RETURN",
-    mechanicalRole: "F233_DOWNSTREAM_RETURN_PACKET",
     mayJudge: false,
     mayLatch: false,
     mayRender: false,
@@ -120,105 +50,73 @@
   const state = {
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
+
+    familyScope: "RUNTIME_REGISTRY_ROUTING_AND_EXPRESSION_PRECEDENT_REPLACEMENT_SHELL_FAMILY",
+    thisFamilyIsEntireDiagnosticEngine: false,
+    thisFamilyIsAllOfEngine1: false,
+    replacesEngines2Through4: false,
 
     marketEngineF144Active: true,
     marketEngineF144Only: true,
     marketClerkActive: true,
     marketReadinessConductorActive: true,
 
+    mechanicalCoordinate: MECHANICAL_COORDINATE,
     engineMechanicsPrimary: true,
     mathPrimary: true,
     architectureLabelsSecondary: true,
-    mechanicalCoordinate: MECHANICAL_COORDINATE,
-    downstreamCoordinate: DOWNSTREAM_COORDINATE,
 
-    f89RegistryObserved: false,
-    f89RegistryReleaseAccepted: false,
-    f89RegistryReleasePacket: null,
+    f89Observed: false,
+    f89Accepted: false,
+    f89Packet: null,
     f89Contract: "",
     f89Receipt: "",
-
-    registryGraphObserved: false,
-    registryGraphStatus: STATUS.HELD,
-    registryRecordCount: 0,
-    marketInputRecordCount: 0,
-    registryQualityScore: 0,
-    marketInputReadinessScore: 0,
 
     marketReadinessBuilt: false,
     marketReadinessReady: false,
     marketReadinessStatus: STATUS.HELD,
-    marketReadinessRecordCount: 0,
+    marketRecordCount: 0,
     marketReadyRecordCount: 0,
     marketDegradedRecordCount: 0,
-    marketBlockedRecordCount: 0,
+    marketHeldRecordCount: 0,
 
-    demoReadinessScore: 0,
-    documentationReadinessScore: 0,
-    licenseReadinessScore: 0,
-    distributionReadinessScore: 0,
-    implementationReadinessScore: 0,
-    riskBoundaryScore: 0,
-    supportReadinessScore: 0,
-    marketPackageScore: 0,
     marketReadinessScore: 0,
     marketTraceScore: 0,
     marketCoverageScore: 0,
     marketCoherenceScore: 0,
-
+    riskBoundaryScore: 0,
     internalMarketSurpassTargetScore: 0,
-    publicSuperiorityClaim: false,
-    publicComparisonClaimAllowed: false,
-    benchmarkRequiredBeforePublicClaim: true,
+
+    f233ReturnAuthorized: false,
+    f144PacketReady: false,
+    f233PacketReady: false,
+    f144ActivationStatus: STATUS.ACTIVE,
+    f144ActivationReason: "F144_ACTIVE_WAITING_F89_RELEASE",
+
+    activeFibonacci: FIBONACCI.MARKET_READINESS,
+    activeFibonacciRank: 144,
+    sourceFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
+    futureFibonacciGate: FIBONACCI.DOWNSTREAM_RETURN,
+    fibonacciSynchronizationScore: 0,
+    oneActiveGearAtATime: true,
 
     marketReadiness: {
       records: [],
       recordsById: {},
-      buckets: {},
-      package: {},
       riskBoundaries: [],
-      demoPlan: {},
-      licensePlan: {},
-      documentationPlan: {},
-      distributionPlan: {},
-      implementationPlan: {},
-      downstreamReturn: {},
+      package: {},
       buildId: "",
       builtAt: ""
     },
 
-    f233ReturnAuthorized: false,
-    f144ReleasePacketReady: false,
-    f233ReturnPacketReady: false,
-    f144ActivationStatus: STATUS.ACTIVE,
-    f144ActivationReason: "MARKET_F144_ACTIVE_WAITING_F89_REGISTRY_RELEASE",
-
-    northRuntimeReceiptAccepted: false,
-    northRuntimeReceiptPacket: null,
-    northRuntimeContract: "",
-    northRuntimeReceipt: "",
-
-    activeFibonacci: FIBONACCI.MARKET_READINESS,
-    activeFibonacciRank: 144,
-    activeNewsGate: NEWS_GATES.MARKET,
-    sourceFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
-    futureFibonacciGate: FIBONACCI.DOWNSTREAM_RETURN,
-    newsProtocolAligned: true,
-    fibonacciSynchronizationMetricActive: true,
-    fibonacciSynchronizationScore: 0,
-    oneActiveGearAtATime: true,
-
-    firstFailedCoordinate: "WAITING_F89_REGISTRY_RELEASE",
-    recommendedNextFile: F89_REGISTRY_FILE,
-    recommendedNextRenewalTarget: F89_REGISTRY_FILE,
-
     localEvents: [],
     errors: [],
 
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false,
+    benchmarkRequiredBeforePublicClaim: true,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -229,11 +127,7 @@
   };
 
   function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return "";
-    }
+    try { return new Date().toISOString(); } catch (_) { return ""; }
   }
 
   function isObject(value) {
@@ -244,9 +138,14 @@
     return typeof value === "function";
   }
 
+  function clone(value) {
+    if (!isObject(value) && !Array.isArray(value)) return value;
+    try { return JSON.parse(JSON.stringify(value)); }
+    catch (_) { return Array.isArray(value) ? value.slice() : { ...value }; }
+  }
+
   function safeString(value, fallback = "") {
-    if (value === undefined || value === null) return fallback;
-    return String(value);
+    return value === undefined || value === null ? fallback : String(value);
   }
 
   function safeNumber(value, fallback = 0) {
@@ -265,28 +164,12 @@
     return Math.max(min, Math.min(max, safeNumber(value, min)));
   }
 
-  function clonePlain(value) {
-    if (!isObject(value) && !Array.isArray(value)) return value;
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (_error) {
-      return Array.isArray(value) ? value.slice() : { ...value };
-    }
-  }
-
-  function trim(list, max = 180) {
-    if (Array.isArray(list) && list.length > max) {
-      list.splice(0, list.length - max);
-    }
-  }
-
   function makeId(value, fallback = "market-record") {
-    const raw = safeString(value || fallback, fallback)
+    return safeString(value || fallback, fallback)
       .trim()
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-    return raw || fallback;
+      .replace(/^-+|-+$/g, "") || fallback;
   }
 
   function setDataset(key, value) {
@@ -295,102 +178,49 @@
   }
 
   function readPath(path) {
-    const parts = String(path || "").split(".");
+    const parts = safeString(path).split(".");
     let cursor = root;
-
     for (const part of parts) {
       if (!cursor || cursor[part] === undefined || cursor[part] === null) return null;
       cursor = cursor[part];
     }
-
     return cursor || null;
   }
 
-  function setPath(path, value) {
-    const parts = String(path || "").split(".").filter(Boolean);
-    if (!parts.length) return false;
-
-    let cursor = root;
-    for (let index = 0; index < parts.length - 1; index += 1) {
-      const part = parts[index];
-      if (!cursor[part] || typeof cursor[part] !== "object") cursor[part] = {};
-      cursor = cursor[part];
-    }
-
-    cursor[parts[parts.length - 1]] = value;
-    return true;
-  }
-
-  function firstGlobal(names) {
-    for (const name of names || []) {
-      const found = readPath(name);
+  function firstGlobal(paths) {
+    for (const path of paths || []) {
+      const found = readPath(path);
       if (found) return found;
     }
     return null;
   }
 
-  function readReceipt(authority) {
-    if (!authority || !isObject(authority)) return {};
-
-    try {
-      if (isFunction(authority.getReceiptLight)) {
-        const receipt = authority.getReceiptLight();
-        if (isObject(receipt)) return receipt;
-      }
-
-      if (isFunction(authority.getReceipt)) {
-        const receipt = authority.getReceipt();
-        if (isObject(receipt)) return receipt;
-      }
-    } catch (error) {
-      return { error: error && error.message ? error.message : String(error) };
-    }
-
-    if (isObject(authority.receiptPacket)) return authority.receiptPacket;
-    if (isObject(authority.receipt)) return authority.receipt;
-    if (authority.contract || authority.receipt || authority.version) return authority;
-
-    return {};
-  }
-
   function recordLocal(event, detail = {}) {
-    const item = {
-      at: nowIso(),
-      event: safeString(event, "LOCAL_EVENT"),
-      detail: clonePlain(detail)
-    };
-
+    const item = { at: nowIso(), event: safeString(event), detail: clone(detail) };
     state.localEvents.push(item);
-    trim(state.localEvents);
+    if (state.localEvents.length > 180) state.localEvents.shift();
     state.updatedAt = item.at;
     updateDataset();
-
     return item;
   }
 
   function recordError(code, error, detail = {}) {
     const item = {
       at: nowIso(),
-      code: safeString(code, "MARKET_F144_ERROR"),
-      message: error && error.message ? String(error.message) : safeString(error),
-      detail: clonePlain(detail)
+      code: safeString(code, "F144_ERROR"),
+      message: safeString(error && error.message ? error.message : error),
+      detail: clone(detail)
     };
-
     state.errors.push(item);
-    trim(state.errors);
+    if (state.errors.length > 120) state.errors.shift();
     state.updatedAt = item.at;
     updateDataset();
-
     return item;
   }
 
   function detectForbiddenClaim(packet = {}) {
     const text = (() => {
-      try {
-        return JSON.stringify(packet || {});
-      } catch (_error) {
-        return String(packet || "");
-      }
+      try { return JSON.stringify(packet || {}); } catch (_) { return String(packet || ""); }
     })();
 
     return Boolean(
@@ -404,356 +234,157 @@
       text.includes('"graphicBox":true') ||
       text.includes('"webGL":true') ||
       text.includes('"visualPassClaimed":true') ||
-      text.includes('"publicSuperiorityClaim":true') ||
-      text.includes('"publicComparisonClaimAllowed":true') ||
-      text.includes("visualPassClaimed=true")
+      text.includes('"publicSuperiorityClaim":true')
     );
   }
 
-  function hasMeaningfulF89Release(packet = {}) {
-    if (!isObject(packet)) return false;
-
-    return Boolean(
-      packet.contract ||
-      packet.receipt ||
-      packet.packetType === "PROJECT_REGISTRY_F89_RELEASE_PACKET" ||
-      safeBool(packet.registryEngineF89Active, false) ||
-      safeBool(packet.f89ReleasePacketReady, false) ||
-      safeBool(packet.registryGraphBuilt, false) ||
-      Array.isArray(packet.marketInputs) ||
-      Array.isArray(packet.registryRecords)
-    );
-  }
-
-  function readF89RegistryAuthority() {
+  function readF89Authority() {
     return firstGlobal([
       "LAB_PRODUCT_ENGINE_REGISTRY",
       "LAB_PRODUCT_ENGINE_REGISTRY_F89",
       "PRODUCT_ENGINE_REGISTRY",
       "PROJECT_REGISTRY_CONDUCTOR",
-      "PROJECT_REGISTRY_F89_CONDUCTOR",
-      "REGISTRY_CLERK",
       "DEXTER_LAB.productEngineRegistry",
-      "DEXTER_LAB.productEngineRegistryF89",
-      "DEXTER_LAB.projectRegistryConductor",
-      "DEXTER_LAB.registryClerk",
-      "HEARTH.productEngineRegistry",
-      "HEARTH.productEngineRegistryF89",
-      "HEARTH.projectRegistryConductor",
-      "HEARTH.registryClerk"
+      "HEARTH.productEngineRegistry"
     ]);
   }
 
-  function readF89RegistryRelease() {
-    const authority = readF89RegistryAuthority();
+  function readF89Release() {
+    const authority = readF89Authority();
     if (!authority) return {};
-
     try {
-      if (isFunction(authority.composeF89ReleasePacket)) {
-        const packet = authority.composeF89ReleasePacket();
-        if (isObject(packet)) return packet;
-      }
-
+      if (isFunction(authority.composeF89ReleasePacket)) return authority.composeF89ReleasePacket() || {};
       if (isFunction(authority.getReceipt)) {
-        const receipt = authority.getReceipt();
-        if (isObject(receipt) && isObject(receipt.f89ReleasePacket)) return receipt.f89ReleasePacket;
+        const receipt = authority.getReceipt() || {};
+        return receipt.f89ReleasePacket || receipt;
       }
-
-      return readReceipt(authority);
+      return authority.receiptPacket || authority.receipt || authority;
     } catch (error) {
-      recordError("F89_REGISTRY_RELEASE_READ_FAILED", error);
+      recordError("F89_RELEASE_READ_FAILED", error);
       return {};
     }
   }
 
-  function validateF89RegistryRelease(packet = {}) {
-    const input = isObject(packet) ? packet : {};
-    const noForbiddenClaim = !detectForbiddenClaim(input);
-    const meaningful = hasMeaningfulF89Release(input);
-
-    const activeFibonacci = safeString(input.activeFibonacci || input.fibonacciStage || "");
-    const futureFibonacciGate = safeString(input.futureFibonacciGate || "");
-
-    const correctStage = Boolean(
-      !activeFibonacci ||
-      activeFibonacci === FIBONACCI.PROJECT_REGISTRY ||
-      activeFibonacci === "F89"
+  function hasMeaningfulF89Release(packet = {}) {
+    return Boolean(
+      isObject(packet) &&
+      (
+        packet.contract ||
+        packet.receipt ||
+        packet.packetType === "PROJECT_REGISTRY_F89_RELEASE_PACKET" ||
+        safeBool(packet.registryEngineF89Active, false) ||
+        safeBool(packet.f89ReleasePacketReady, false) ||
+        safeBool(packet.registryGraphBuilt, false) ||
+        Array.isArray(packet.marketInputs) ||
+        Array.isArray(packet.registryRecords) ||
+        (isObject(packet.registryGraph) && Array.isArray(packet.registryGraph.records))
+      )
     );
+  }
 
-    const correctFuture = Boolean(
-      !futureFibonacciGate ||
-      futureFibonacciGate === FIBONACCI.MARKET_READINESS ||
-      futureFibonacciGate === "F144"
-    );
-
-    const marketInputsAcceptable = Boolean(
-      Array.isArray(input.marketInputs) ||
-      Array.isArray(input.registryRecords) ||
-      isObject(input.registryGraph)
-    );
+  function validateF89Release(packet = {}) {
+    const active = safeString(packet.activeFibonacci || packet.fibonacciStage || "");
+    const future = safeString(packet.futureFibonacciGate || "");
 
     const accepted = Boolean(
-      noForbiddenClaim &&
-      meaningful &&
-      correctStage &&
-      correctFuture &&
-      marketInputsAcceptable
+      hasMeaningfulF89Release(packet) &&
+      !detectForbiddenClaim(packet) &&
+      (!active || active === FIBONACCI.PROJECT_REGISTRY || active === "F89") &&
+      (!future || future === FIBONACCI.MARKET_READINESS || future === "F144") &&
+      (
+        Array.isArray(packet.marketInputs) ||
+        Array.isArray(packet.registryRecords) ||
+        isObject(packet.registryGraph)
+      )
     );
-
-    let reason = "F89_REGISTRY_RELEASE_ACCEPTED";
-    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_F89_RELEASE";
-    else if (!meaningful) reason = "F89_RELEASE_NOT_MEANINGFUL";
-    else if (!correctStage) reason = "F89_RELEASE_WRONG_ACTIVE_FIBONACCI";
-    else if (!correctFuture) reason = "F89_RELEASE_WRONG_FUTURE_GATE";
-    else if (!marketInputsAcceptable) reason = "F89_RELEASE_MISSING_MARKET_INPUT_SOURCE";
 
     return {
       accepted,
-      reason,
-      noForbiddenClaim,
-      meaningful,
-      correctStage,
-      correctFuture,
-      marketInputsAcceptable,
-      input: clonePlain(input)
+      reason: accepted ? "F89_RELEASE_ACCEPTED" : "F89_RELEASE_REJECTED_OR_INCOMPLETE",
+      forbiddenClaimDetected: detectForbiddenClaim(packet),
+      input: clone(packet)
     };
   }
 
-  function acceptF89RegistryRelease(packet = {}) {
-    const validation = validateF89RegistryRelease(packet);
-
-    if (validation.accepted) {
-      state.f89RegistryObserved = true;
-      state.f89RegistryReleaseAccepted = true;
-      state.f89RegistryReleasePacket = clonePlain(packet);
-      state.f89Contract = safeString(packet.contract, "");
-      state.f89Receipt = safeString(packet.receipt, "");
-
-      state.registryGraphObserved = true;
-      state.registryGraphStatus = safeString(packet.registryGraphStatus || STATUS.READY, STATUS.READY);
-      state.registryRecordCount = safeNumber(packet.registryRecordCount, 0);
-      state.marketInputRecordCount = safeNumber(packet.marketInputRecordCount || (Array.isArray(packet.marketInputs) ? packet.marketInputs.length : 0), 0);
-      state.registryQualityScore = clamp(packet.registryQualityScore, 0, 100);
-      state.marketInputReadinessScore = clamp(packet.marketInputReadinessScore, 0, 100);
-
-      buildMarketReadiness(packet);
-    }
-
-    recordLocal("F89_REGISTRY_RELEASE_EVALUATED_BY_MARKET_F144", {
-      accepted: validation.accepted,
-      reason: validation.reason,
-      marketInputSourcePresent: validation.marketInputsAcceptable
-    });
-
-    computeFibonacciSynchronizationMetric();
-    publishGlobals();
-
-    return {
-      accepted: validation.accepted,
-      marketEngineF144ReceivedF89: true,
-      reason: validation.reason,
-      marketReadinessBuilt: state.marketReadinessBuilt,
-      marketReadinessReady: state.marketReadinessReady,
-      f233ReturnAuthorized: state.f233ReturnAuthorized,
-      recommendedNextFile: validation.accepted ? NORTH_FILE : F89_REGISTRY_FILE,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function receiveF89RegistryRelease(packet = {}) {
-    return acceptF89RegistryRelease(packet);
-  }
-
-  function submitF89RegistryRelease(packet = {}) {
-    return acceptF89RegistryRelease(packet);
-  }
-
-  function getF89MarketInputs(packet = state.f89RegistryReleasePacket || {}) {
+  function getF89MarketInputs(packet = state.f89Packet || {}) {
     if (Array.isArray(packet.marketInputs)) return packet.marketInputs;
-
-    if (isObject(packet.registryGraph) && Array.isArray(packet.registryGraph.marketInputs)) {
-      return packet.registryGraph.marketInputs;
-    }
-
     if (Array.isArray(packet.registryRecords)) return packet.registryRecords;
-
-    if (isObject(packet.registryGraph) && Array.isArray(packet.registryGraph.records)) {
-      return packet.registryGraph.records;
-    }
-
+    if (isObject(packet.registryGraph) && Array.isArray(packet.registryGraph.marketInputs)) return packet.registryGraph.marketInputs;
+    if (isObject(packet.registryGraph) && Array.isArray(packet.registryGraph.records)) return packet.registryGraph.records;
     return [];
-  }
-
-  function getF89RegistryRecords(packet = state.f89RegistryReleasePacket || {}) {
-    if (Array.isArray(packet.registryRecords)) return packet.registryRecords;
-
-    if (isObject(packet.registryGraph) && Array.isArray(packet.registryGraph.records)) {
-      return packet.registryGraph.records;
-    }
-
-    return [];
-  }
-
-  function scorePresence(value, weight) {
-    return value ? weight : 0;
   }
 
   function normalizeMarketInput(source = {}, index = 0) {
-    const id = makeId(source.id || source.recordId || source.registryRecordId || `market-input-${index + 1}`, `market-input-${index + 1}`);
-    const recordType = safeString(source.recordType || source.type || "market-input-record");
-
+    const id = makeId(source.id || source.recordId || source.registryRecordId || `market-input-${index + 1}`);
     const file = safeString(source.file || source.sourceFile || "");
     const route = safeString(source.route || "");
     const contract = safeString(source.contract || source.sourceContract || "");
     const receipt = safeString(source.receipt || source.sourceReceipt || "");
-    const sourceProductId = safeString(source.sourceProductId || source.productId || id);
 
     const traceReady = safeBool(source.traceReady, Boolean(file || route || contract || receipt));
     const registryReady = safeBool(source.registryReady, traceReady);
-    const baseScore = clamp(source.readinessScore ?? source.registryReadinessScore ?? source.marketInputReadinessScore ?? 0, 0, 100);
+    const baseScore = clamp(source.readinessScore ?? source.registryReadinessScore ?? 0, 0, 100);
 
-    const demoReadiness = clamp(
-      Math.round(
-        baseScore * 0.34 +
-        scorePresence(file || route, 18) +
-        scorePresence(contract || receipt, 16) +
-        scorePresence(registryReady, 18) +
-        scorePresence(traceReady, 14)
-      ),
+    const riskBoundaryScore = clamp(
+      (safeBool(source.publicSuperiorityClaim, false) ? 0 : 18) +
+      (safeBool(source.publicComparisonClaimAllowed, false) ? 0 : 18) +
+      (safeBool(source.generatedImage, false) ? 0 : 12) +
+      (safeBool(source.graphicBox, false) ? 0 : 12) +
+      (safeBool(source.webGL, false) ? 0 : 12) +
+      (safeBool(source.visualPassClaimed, false) ? 0 : 12) +
+      (traceReady ? 8 : 0) +
+      (registryReady ? 8 : 0),
       0,
       100
     );
 
-    const documentationReadiness = clamp(
-      Math.round(
-        scorePresence(contract, 24) +
-        scorePresence(receipt, 24) +
-        scorePresence(file || route, 18) +
-        baseScore * 0.24 +
-        scorePresence(traceReady, 10)
-      ),
-      0,
-      100
-    );
+    const demoScore = clamp(Math.round(baseScore * 0.35 + (file || route ? 20 : 0) + (traceReady ? 20 : 0) + (registryReady ? 20 : 0)), 0, 100);
+    const docsScore = clamp(Math.round(baseScore * 0.25 + (contract ? 25 : 0) + (receipt ? 25 : 0) + (file || route ? 15 : 0) + (traceReady ? 10 : 0)), 0, 100);
+    const licenseScore = clamp(Math.round(baseScore * 0.22 + (contract ? 34 : 0) + (receipt ? 22 : 0) + (registryReady ? 14 : 0) + (traceReady ? 8 : 0)), 0, 100);
+    const distributionScore = clamp(Math.round(baseScore * 0.25 + (file || route ? 28 : 0) + (receipt ? 18 : 0) + (registryReady ? 18 : 0) + (traceReady ? 11 : 0)), 0, 100);
+    const implementationScore = clamp(Math.round(baseScore * 0.25 + (file ? 22 : 0) + (route ? 16 : 0) + (contract ? 14 : 0) + (receipt ? 14 : 0) + (registryReady ? 9 : 0)), 0, 100);
 
-    const licenseReadiness = clamp(
+    const packageScore = clamp(
       Math.round(
-        scorePresence(contract, 34) +
-        scorePresence(receipt, 20) +
-        scorePresence(registryReady, 18) +
-        baseScore * 0.20 +
-        scorePresence(traceReady, 8)
-      ),
-      0,
-      100
-    );
-
-    const distributionReadiness = clamp(
-      Math.round(
-        scorePresence(file || route, 26) +
-        scorePresence(registryReady, 22) +
-        scorePresence(receipt, 16) +
-        baseScore * 0.24 +
-        scorePresence(traceReady, 12)
-      ),
-      0,
-      100
-    );
-
-    const implementationReadiness = clamp(
-      Math.round(
-        scorePresence(file, 22) +
-        scorePresence(route, 16) +
-        scorePresence(contract, 14) +
-        scorePresence(receipt, 14) +
-        baseScore * 0.26 +
-        scorePresence(registryReady, 8)
-      ),
-      0,
-      100
-    );
-
-    const riskBoundaryReadiness = clamp(
-      Math.round(
-        scorePresence(!source.publicSuperiorityClaim, 18) +
-        scorePresence(!source.publicComparisonClaimAllowed, 18) +
-        scorePresence(!source.generatedImage, 12) +
-        scorePresence(!source.graphicBox, 12) +
-        scorePresence(!source.webGL, 12) +
-        scorePresence(!source.visualPassClaimed, 12) +
-        scorePresence(traceReady, 8) +
-        scorePresence(registryReady, 8)
-      ),
-      0,
-      100
-    );
-
-    const supportReadiness = clamp(
-      Math.round(
-        scorePresence(traceReady, 18) +
-        scorePresence(registryReady, 18) +
-        scorePresence(contract, 16) +
-        scorePresence(receipt, 16) +
-        baseScore * 0.22 +
-        scorePresence(file || route, 10)
-      ),
-      0,
-      100
-    );
-
-    const marketPackageReadiness = clamp(
-      Math.round(
-        demoReadiness * 0.16 +
-        documentationReadiness * 0.16 +
-        licenseReadiness * 0.14 +
-        distributionReadiness * 0.14 +
-        implementationReadiness * 0.14 +
-        riskBoundaryReadiness * 0.14 +
-        supportReadiness * 0.12
+        demoScore * 0.16 +
+        docsScore * 0.16 +
+        licenseScore * 0.15 +
+        distributionScore * 0.15 +
+        implementationScore * 0.15 +
+        riskBoundaryScore * 0.15 +
+        (traceReady ? 8 : 0)
       ),
       0,
       100
     );
 
     const status =
-      marketPackageReadiness >= 84 && riskBoundaryReadiness >= 80
+      packageScore >= 84 && riskBoundaryScore >= 80
         ? STATUS.READY
-        : marketPackageReadiness >= 62 && riskBoundaryReadiness >= 70
+        : packageScore >= 62 && riskBoundaryScore >= 70
           ? STATUS.DEGRADED
           : STATUS.HELD;
 
     return {
       id,
-      marketInputId: id,
-      sourceRecordType: recordType,
-      sourceProductId,
+      sourceProductId: safeString(source.sourceProductId || source.productId || id),
       file,
       route,
       contract,
       receipt,
       traceReady,
       registryReady,
-
-      demoReadiness,
-      documentationReadiness,
-      licenseReadiness,
-      distributionReadiness,
-      implementationReadiness,
-      riskBoundaryReadiness,
-      supportReadiness,
-      marketPackageReadiness,
-
-      readinessScore: marketPackageReadiness,
+      demoScore,
+      documentationScore: docsScore,
+      licenseScore,
+      distributionScore,
+      implementationScore,
+      riskBoundaryScore,
+      packageScore,
+      readinessScore: packageScore,
       status,
-      bucket: status === STATUS.READY ? "READY_FOR_MARKET_PACKAGE" : status === STATUS.DEGRADED ? "DEGRADED_MARKET_PACKAGE" : "HELD_MARKET_PACKAGE",
-
-      tags: Array.isArray(source.tags) ? source.tags.slice() : [],
       deterministic: true,
       internalOnly: true,
-
       publicSuperiorityClaim: false,
       publicComparisonClaimAllowed: false,
       benchmarkRequiredBeforePublicClaim: true,
@@ -761,393 +392,67 @@
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-
-      createdAt: safeString(source.createdAt || nowIso()),
       updatedAt: nowIso()
     };
   }
 
-  function groupByBucket(records) {
-    const buckets = {
-      [READINESS_BUCKETS.DEMO]: [],
-      [READINESS_BUCKETS.DOCUMENTATION]: [],
-      [READINESS_BUCKETS.LICENSE]: [],
-      [READINESS_BUCKETS.DISTRIBUTION]: [],
-      [READINESS_BUCKETS.IMPLEMENTATION]: [],
-      [READINESS_BUCKETS.RISK]: [],
-      [READINESS_BUCKETS.SUPPORT]: [],
-      [READINESS_BUCKETS.MARKET_PACKAGE]: []
-    };
-
-    records.forEach((record) => {
-      buckets[READINESS_BUCKETS.DEMO].push({
-        id: record.id,
-        score: record.demoReadiness,
-        status: record.demoReadiness >= 80 ? STATUS.READY : record.demoReadiness >= 62 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.DOCUMENTATION].push({
-        id: record.id,
-        score: record.documentationReadiness,
-        status: record.documentationReadiness >= 80 ? STATUS.READY : record.documentationReadiness >= 62 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.LICENSE].push({
-        id: record.id,
-        score: record.licenseReadiness,
-        status: record.licenseReadiness >= 80 ? STATUS.READY : record.licenseReadiness >= 62 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.DISTRIBUTION].push({
-        id: record.id,
-        score: record.distributionReadiness,
-        status: record.distributionReadiness >= 80 ? STATUS.READY : record.distributionReadiness >= 62 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.IMPLEMENTATION].push({
-        id: record.id,
-        score: record.implementationReadiness,
-        status: record.implementationReadiness >= 80 ? STATUS.READY : record.implementationReadiness >= 62 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.RISK].push({
-        id: record.id,
-        score: record.riskBoundaryReadiness,
-        status: record.riskBoundaryReadiness >= 80 ? STATUS.READY : record.riskBoundaryReadiness >= 70 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.SUPPORT].push({
-        id: record.id,
-        score: record.supportReadiness,
-        status: record.supportReadiness >= 80 ? STATUS.READY : record.supportReadiness >= 62 ? STATUS.DEGRADED : STATUS.HELD
-      });
-
-      buckets[READINESS_BUCKETS.MARKET_PACKAGE].push({
-        id: record.id,
-        score: record.marketPackageReadiness,
-        status: record.status
-      });
-    });
-
-    return buckets;
-  }
-
   function average(records, field) {
     if (!records.length) return 0;
-    return clamp(
-      Math.round(records.reduce((sum, record) => sum + safeNumber(record[field], 0), 0) / records.length),
-      0,
-      100
-    );
+    return clamp(Math.round(records.reduce((sum, record) => sum + safeNumber(record[field], 0), 0) / records.length), 0, 100);
   }
 
-  function createDemoPlan(records) {
-    return {
-      planType: "DEMO_PLAN",
-      recordCount: records.length,
-      demoReadyCount: records.filter((record) => record.demoReadiness >= 80).length,
-      demoReadinessScore: average(records, "demoReadiness"),
-      demoMode: "internal deterministic walkthrough",
-      requiresRendering: false,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function createDocumentationPlan(records) {
-    return {
-      planType: "DOCUMENTATION_PLAN",
-      recordCount: records.length,
-      documentationReadyCount: records.filter((record) => record.documentationReadiness >= 80).length,
-      documentationReadinessScore: average(records, "documentationReadiness"),
-      requiredMaterials: ["contracts", "receipts", "file index", "route index", "risk boundary notes"],
-      publicComparisonClaimAllowed: false
-    };
-  }
-
-  function createLicensePlan(records) {
-    return {
-      planType: "LICENSE_PLAN",
-      recordCount: records.length,
-      licenseReadyCount: records.filter((record) => record.licenseReadiness >= 80).length,
-      licenseReadinessScore: average(records, "licenseReadiness"),
-      licenseMode: "internal license-preparation profile",
-      publicSuperiorityClaim: false,
-      benchmarkRequiredBeforePublicClaim: true
-    };
-  }
-
-  function createDistributionPlan(records) {
-    return {
-      planType: "DISTRIBUTION_PLAN",
-      recordCount: records.length,
-      distributionReadyCount: records.filter((record) => record.distributionReadiness >= 80).length,
-      distributionReadinessScore: average(records, "distributionReadiness"),
-      channelMode: "private package and route handoff",
-      publicLaunchClaim: false
-    };
-  }
-
-  function createImplementationPlan(records) {
-    return {
-      planType: "IMPLEMENTATION_PLAN",
-      recordCount: records.length,
-      implementationReadyCount: records.filter((record) => record.implementationReadiness >= 80).length,
-      implementationReadinessScore: average(records, "implementationReadiness"),
-      implementationMode: "engineering integration sequence",
-      downstreamTarget: NORTH_FILE
-    };
-  }
-
-  function createRiskBoundaries(records) {
+  function buildRiskBoundaries(records) {
     return [
-      {
-        boundary: "NO_PUBLIC_SUPERIORITY_CLAIM",
-        pass: true,
-        score: 100
-      },
-      {
-        boundary: "NO_PUBLIC_COMPARISON_WITHOUT_BENCHMARK",
-        pass: true,
-        score: 100
-      },
-      {
-        boundary: "NO_GENERATED_IMAGE_CLAIM",
-        pass: records.every((record) => !record.generatedImage),
-        score: records.every((record) => !record.generatedImage) ? 100 : 0
-      },
-      {
-        boundary: "NO_GRAPHICBOX_CLAIM",
-        pass: records.every((record) => !record.graphicBox),
-        score: records.every((record) => !record.graphicBox) ? 100 : 0
-      },
-      {
-        boundary: "NO_WEBGL_CLAIM",
-        pass: records.every((record) => !record.webGL),
-        score: records.every((record) => !record.webGL) ? 100 : 0
-      },
-      {
-        boundary: "NO_VISUAL_PASS_CLAIM",
-        pass: records.every((record) => !record.visualPassClaimed),
-        score: records.every((record) => !record.visualPassClaimed) ? 100 : 0
-      },
-      {
-        boundary: "TRACEABILITY_REQUIRED",
-        pass: records.some((record) => record.traceReady),
-        score: records.some((record) => record.traceReady) ? 100 : 0
-      }
+      { boundary: "NO_PUBLIC_SUPERIORITY_CLAIM", pass: true, score: 100 },
+      { boundary: "NO_PUBLIC_COMPARISON_WITHOUT_BENCHMARK", pass: true, score: 100 },
+      { boundary: "NO_GENERATED_IMAGE_CLAIM", pass: records.every((r) => !r.generatedImage), score: records.every((r) => !r.generatedImage) ? 100 : 0 },
+      { boundary: "NO_GRAPHICBOX_CLAIM", pass: records.every((r) => !r.graphicBox), score: records.every((r) => !r.graphicBox) ? 100 : 0 },
+      { boundary: "NO_WEBGL_CLAIM", pass: records.every((r) => !r.webGL), score: records.every((r) => !r.webGL) ? 100 : 0 },
+      { boundary: "NO_VISUAL_PASS_CLAIM", pass: records.every((r) => !r.visualPassClaimed), score: records.every((r) => !r.visualPassClaimed) ? 100 : 0 },
+      { boundary: "TRACEABILITY_REQUIRED", pass: records.some((r) => r.traceReady), score: records.some((r) => r.traceReady) ? 100 : 0 }
     ];
   }
 
-  function buildMarketPackage(records) {
-    return {
-      packageType: "F144_MARKET_READINESS_PACKAGE",
-      internalOnly: true,
-      recordCount: records.length,
-      readyRecordCount: records.filter((record) => record.status === STATUS.READY).length,
-      degradedRecordCount: records.filter((record) => record.status === STATUS.DEGRADED).length,
-      heldRecordCount: records.filter((record) => record.status === STATUS.HELD).length,
-      demoReadinessScore: average(records, "demoReadiness"),
-      documentationReadinessScore: average(records, "documentationReadiness"),
-      licenseReadinessScore: average(records, "licenseReadiness"),
-      distributionReadinessScore: average(records, "distributionReadiness"),
-      implementationReadinessScore: average(records, "implementationReadiness"),
-      riskBoundaryScore: average(records, "riskBoundaryReadiness"),
-      supportReadinessScore: average(records, "supportReadiness"),
-      marketPackageScore: average(records, "marketPackageReadiness"),
-      publicSuperiorityClaim: false,
-      publicComparisonClaimAllowed: false,
-      benchmarkRequiredBeforePublicClaim: true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
-  }
-
-  function buildMarketReadiness(packet = state.f89RegistryReleasePacket || {}, options = {}) {
-    const marketInputs = getF89MarketInputs(packet).map(normalizeMarketInput);
-    const registryRecords = getF89RegistryRecords(packet);
-
-    const recordsById = {};
-    marketInputs.forEach((record) => {
-      recordsById[record.id] = record;
-    });
-
-    const records = Object.values(recordsById).sort((a, b) => {
-      if (b.marketPackageReadiness !== a.marketPackageReadiness) return b.marketPackageReadiness - a.marketPackageReadiness;
-      return a.id.localeCompare(b.id);
-    });
-
-    const buckets = groupByBucket(records);
-    const riskBoundaries = createRiskBoundaries(records);
-    const packageProfile = buildMarketPackage(records);
-
-    state.marketReadiness = {
-      records,
-      recordsById,
-      buckets,
-      package: packageProfile,
-      riskBoundaries,
-      demoPlan: createDemoPlan(records),
-      licensePlan: createLicensePlan(records),
-      documentationPlan: createDocumentationPlan(records),
-      distributionPlan: createDistributionPlan(records),
-      implementationPlan: createImplementationPlan(records),
-      downstreamReturn: {},
-      registryRecords: clonePlain(registryRecords),
-      buildId: `f144-market-readiness-${records.length}-${registryRecords.length}`,
-      builtAt: nowIso()
-    };
-
-    state.marketReadinessBuilt = true;
-    state.marketReadinessRecordCount = records.length;
-    state.marketReadyRecordCount = records.filter((record) => record.status === STATUS.READY).length;
-    state.marketDegradedRecordCount = records.filter((record) => record.status === STATUS.DEGRADED).length;
-    state.marketBlockedRecordCount = records.filter((record) => record.status === STATUS.HELD || record.status === STATUS.BLOCKED).length;
-
-    computeMarketReadinessMetrics();
-
-    const allRiskPass = riskBoundaries.every((boundary) => boundary.pass);
-    state.marketReadinessReady = Boolean(
-      records.length > 0 &&
-      state.marketReadinessScore >= 80 &&
-      state.riskBoundaryScore >= 80 &&
-      allRiskPass
-    );
-
-    if (state.marketReadinessReady) {
-      state.marketReadinessStatus = STATUS.READY;
-      state.f233ReturnAuthorized = true;
-      state.f144ReleasePacketReady = true;
-      state.f233ReturnPacketReady = true;
-      state.f144ActivationStatus = STATUS.READY;
-      state.f144ActivationReason = "MARKET_F144_READY_FOR_F233_DOWNSTREAM_RETURN";
-      state.firstFailedCoordinate = "NONE_MARKET_F144_READY_F233_RETURN_AUTHORIZED";
-      state.recommendedNextFile = NORTH_FILE;
-      state.recommendedNextRenewalTarget = NORTH_FILE;
-    } else if (records.length > 0 && state.marketReadinessScore >= 62 && state.riskBoundaryScore >= 70) {
-      state.marketReadinessStatus = STATUS.DEGRADED;
-      state.f233ReturnAuthorized = true;
-      state.f144ReleasePacketReady = true;
-      state.f233ReturnPacketReady = true;
-      state.f144ActivationStatus = STATUS.DEGRADED;
-      state.f144ActivationReason = "MARKET_F144_DEGRADED_F233_RETURN_AVAILABLE_WITH_BOUNDARIES";
-      state.firstFailedCoordinate = "NONE_MARKET_F144_DEGRADED_F233_RETURN_AVAILABLE";
-      state.recommendedNextFile = NORTH_FILE;
-      state.recommendedNextRenewalTarget = NORTH_FILE;
-    } else {
-      state.marketReadinessStatus = STATUS.HELD;
-      state.f233ReturnAuthorized = false;
-      state.f144ReleasePacketReady = false;
-      state.f233ReturnPacketReady = false;
-      state.f144ActivationStatus = STATUS.HELD;
-      state.f144ActivationReason = "WAITING_F89_REGISTRY_RELEASE_OR_MARKET_READINESS";
-      state.firstFailedCoordinate = "WAITING_F89_REGISTRY_RELEASE_OR_MARKET_READINESS";
-      state.recommendedNextFile = F89_REGISTRY_FILE;
-      state.recommendedNextRenewalTarget = F89_REGISTRY_FILE;
-    }
-
-    state.marketReadiness.downstreamReturn = composeF233DownstreamReturnPacket({ preview: true });
-    computeFibonacciSynchronizationMetric();
-
-    if (options.silent !== true) {
-      recordLocal("MARKET_F144_READINESS_BUILT", {
-        recordCount: state.marketReadinessRecordCount,
-        marketReadinessStatus: state.marketReadinessStatus,
-        marketReadinessScore: state.marketReadinessScore,
-        riskBoundaryScore: state.riskBoundaryScore,
-        f233ReturnAuthorized: state.f233ReturnAuthorized
-      });
-    }
-
-    updateDataset();
-
-    return clonePlain(state.marketReadiness);
-  }
-
-  function computeMarketReadinessMetrics() {
+  function computeMarketMetrics() {
     const records = state.marketReadiness.records || [];
     const count = Math.max(1, records.length);
 
-    state.demoReadinessScore = average(records, "demoReadiness");
-    state.documentationReadinessScore = average(records, "documentationReadiness");
-    state.licenseReadinessScore = average(records, "licenseReadiness");
-    state.distributionReadinessScore = average(records, "distributionReadiness");
-    state.implementationReadinessScore = average(records, "implementationReadiness");
-    state.riskBoundaryScore = average(records, "riskBoundaryReadiness");
-    state.supportReadinessScore = average(records, "supportReadiness");
-    state.marketPackageScore = average(records, "marketPackageReadiness");
+    state.riskBoundaryScore = average(records, "riskBoundaryScore");
+    state.marketTraceScore = clamp(Math.round((records.filter((r) => r.traceReady).length / count) * 100), 0, 100);
+    state.marketCoverageScore = records.length ? 100 : 0;
 
-    const readyRatio = records.filter((record) => record.status === STATUS.READY).length / count;
-    const degradedRatio = records.filter((record) => record.status === STATUS.DEGRADED).length / count;
-    const blockedRatio = records.filter((record) => record.status === STATUS.HELD || record.status === STATUS.BLOCKED).length / count;
-
-    const bucketCoverage = [
-      state.demoReadinessScore > 0,
-      state.documentationReadinessScore > 0,
-      state.licenseReadinessScore > 0,
-      state.distributionReadinessScore > 0,
-      state.implementationReadinessScore > 0,
-      state.riskBoundaryScore > 0,
-      state.supportReadinessScore > 0,
-      state.marketPackageScore > 0
-    ].filter(Boolean).length / 8;
-
-    state.marketCoverageScore = clamp(Math.round(bucketCoverage * 100), 0, 100);
-
-    state.marketTraceScore = clamp(
-      Math.round((records.filter((record) => record.traceReady).length / count) * 100),
-      0,
-      100
-    );
+    const readyRatio = records.filter((r) => r.status === STATUS.READY).length / count;
+    const degradedRatio = records.filter((r) => r.status === STATUS.DEGRADED).length / count;
+    const heldRatio = records.filter((r) => r.status === STATUS.HELD).length / count;
 
     state.marketCoherenceScore = clamp(
-      Math.round(
-        (readyRatio * 52) +
-        (degradedRatio * 24) -
-        (blockedRatio * 38) +
-        (state.marketCoverageScore * 0.12) +
-        (state.marketTraceScore * 0.12) +
-        (state.riskBoundaryScore * 0.10)
-      ),
+      Math.round(readyRatio * 52 + degradedRatio * 24 - heldRatio * 38 + state.marketTraceScore * 0.14 + state.riskBoundaryScore * 0.14),
       0,
       100
     );
 
     state.marketReadinessScore = clamp(
       Math.round(
-        (state.marketPackageScore * 0.24) +
-        (state.marketCoherenceScore * 0.20) +
-        (state.riskBoundaryScore * 0.18) +
-        (state.marketCoverageScore * 0.14) +
-        (state.marketTraceScore * 0.12) +
-        (state.supportReadinessScore * 0.12)
+        average(records, "packageScore") * 0.30 +
+        state.marketCoherenceScore * 0.24 +
+        state.riskBoundaryScore * 0.20 +
+        state.marketTraceScore * 0.14 +
+        state.marketCoverageScore * 0.12
       ),
       0,
       100
     );
 
     state.internalMarketSurpassTargetScore = clamp(
-      Math.round(
-        (state.marketReadinessScore * 0.26) +
-        (state.marketPackageScore * 0.18) +
-        (state.registryQualityScore * 0.16) +
-        (state.marketInputReadinessScore * 0.14) +
-        (state.riskBoundaryScore * 0.14) +
-        (state.fibonacciSynchronizationScore * 0.12)
-      ),
+      Math.round(state.marketReadinessScore * 0.46 + state.riskBoundaryScore * 0.24 + state.fibonacciSynchronizationScore * 0.30),
       0,
       100
     );
 
     return {
       marketReadinessScore: state.marketReadinessScore,
-      marketPackageScore: state.marketPackageScore,
-      marketCoverageScore: state.marketCoverageScore,
       marketTraceScore: state.marketTraceScore,
+      marketCoverageScore: state.marketCoverageScore,
       marketCoherenceScore: state.marketCoherenceScore,
       riskBoundaryScore: state.riskBoundaryScore,
       internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
@@ -1156,13 +461,90 @@
     };
   }
 
-  function computeFibonacciSynchronizationMetric() {
+  function buildMarketReadiness(packet = state.f89Packet || {}, options = {}) {
+    const records = getF89MarketInputs(packet).map(normalizeMarketInput);
+    const recordsById = {};
+    records.forEach((record) => { recordsById[record.id] = record; });
+
+    const riskBoundaries = buildRiskBoundaries(records);
+
+    state.marketReadiness = {
+      records,
+      recordsById,
+      riskBoundaries,
+      package: {
+        packageType: "F144_MARKET_READINESS_PACKAGE",
+        internalOnly: true,
+        recordCount: records.length,
+        readyRecordCount: records.filter((r) => r.status === STATUS.READY).length,
+        degradedRecordCount: records.filter((r) => r.status === STATUS.DEGRADED).length,
+        heldRecordCount: records.filter((r) => r.status === STATUS.HELD).length,
+        publicSuperiorityClaim: false,
+        publicComparisonClaimAllowed: false,
+        benchmarkRequiredBeforePublicClaim: true,
+        generatedImage: false,
+        graphicBox: false,
+        webGL: false,
+        visualPassClaimed: false
+      },
+      buildId: `f144-market-${records.length}`,
+      builtAt: nowIso()
+    };
+
+    state.marketReadinessBuilt = true;
+    state.marketRecordCount = records.length;
+    state.marketReadyRecordCount = records.filter((r) => r.status === STATUS.READY).length;
+    state.marketDegradedRecordCount = records.filter((r) => r.status === STATUS.DEGRADED).length;
+    state.marketHeldRecordCount = records.filter((r) => r.status === STATUS.HELD).length;
+
+    computeMarketMetrics();
+
+    const riskPass = riskBoundaries.every((boundary) => boundary.pass);
+    if (records.length && state.marketReadinessScore >= 80 && state.riskBoundaryScore >= 80 && riskPass) {
+      state.marketReadinessReady = true;
+      state.marketReadinessStatus = STATUS.READY;
+      state.f233ReturnAuthorized = true;
+      state.f144PacketReady = true;
+      state.f233PacketReady = true;
+      state.f144ActivationStatus = STATUS.READY;
+      state.f144ActivationReason = "F144_READY_FOR_F233_DOWNSTREAM_RETURN";
+    } else if (records.length && state.marketReadinessScore >= 62 && state.riskBoundaryScore >= 70) {
+      state.marketReadinessReady = false;
+      state.marketReadinessStatus = STATUS.DEGRADED;
+      state.f233ReturnAuthorized = true;
+      state.f144PacketReady = true;
+      state.f233PacketReady = true;
+      state.f144ActivationStatus = STATUS.DEGRADED;
+      state.f144ActivationReason = "F144_DEGRADED_F233_RETURN_AVAILABLE";
+    } else {
+      state.marketReadinessReady = false;
+      state.marketReadinessStatus = STATUS.HELD;
+      state.f233ReturnAuthorized = false;
+      state.f144PacketReady = false;
+      state.f233PacketReady = false;
+      state.f144ActivationStatus = STATUS.HELD;
+      state.f144ActivationReason = "WAITING_F89_RELEASE_OR_MARKET_READINESS";
+    }
+
+    computeFibonacciSynchronization();
+
+    if (options.silent !== true) {
+      recordLocal("F144_MARKET_READINESS_BUILT", {
+        records: records.length,
+        status: state.marketReadinessStatus,
+        score: state.marketReadinessScore
+      });
+    }
+
+    updateDataset();
+    return clone(state.marketReadiness);
+  }
+
+  function computeFibonacciSynchronization() {
     const checks = [
-      state.newsProtocolAligned,
       state.oneActiveGearAtATime,
       state.activeFibonacci === FIBONACCI.MARKET_READINESS,
       state.activeFibonacciRank === 144,
-      state.activeNewsGate === NEWS_GATES.MARKET,
       state.sourceFibonacciGate === FIBONACCI.PROJECT_REGISTRY,
       state.futureFibonacciGate === FIBONACCI.DOWNSTREAM_RETURN,
       state.marketEngineF144Active,
@@ -1171,8 +553,11 @@
       state.engineMechanicsPrimary,
       state.mathPrimary,
       state.mechanicalCoordinate.coordinateId === "RT3D-X10_Y19_Z144",
-      state.f89RegistryReleaseAccepted || state.f89RegistryObserved,
+      state.f89Accepted || state.f89Observed,
       state.marketReadinessBuilt,
+      !state.thisFamilyIsEntireDiagnosticEngine,
+      !state.thisFamilyIsAllOfEngine1,
+      !state.replacesEngines2Through4,
       !state.publicSuperiorityClaim,
       !state.publicComparisonClaimAllowed,
       !state.generatedImage,
@@ -1181,83 +566,47 @@
       !state.visualPassClaimed
     ];
 
-    const passed = checks.filter(Boolean).length;
-    state.fibonacciSynchronizationScore = Math.round((passed / checks.length) * 100);
+    state.fibonacciSynchronizationScore = Math.round((checks.filter(Boolean).length / checks.length) * 100);
     state.updatedAt = nowIso();
-
-    computeMarketReadinessMetrics();
-
-    return {
-      score: state.fibonacciSynchronizationScore,
-      passed,
-      total: checks.length,
-      activeFibonacci: FIBONACCI.MARKET_READINESS,
-      activeFibonacciRank: 144,
-      activeNewsGate: NEWS_GATES.MARKET,
-      sourceFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
-      futureFibonacciGate: FIBONACCI.DOWNSTREAM_RETURN,
-      publicSuperiorityClaim: false
-    };
+    return { score: state.fibonacciSynchronizationScore, passed: checks.filter(Boolean).length, total: checks.length };
   }
 
-  function evaluateNewsAlignment() {
-    const metric = computeFibonacciSynchronizationMetric();
+  function acceptF89RegistryRelease(packet = {}) {
+    const validation = validateF89Release(packet);
+
+    if (validation.accepted) {
+      state.f89Observed = true;
+      state.f89Accepted = true;
+      state.f89Packet = clone(packet);
+      state.f89Contract = safeString(packet.contract);
+      state.f89Receipt = safeString(packet.receipt);
+      buildMarketReadiness(packet, { silent: true });
+    }
+
+    recordLocal("F89_RELEASE_EVALUATED_BY_F144", {
+      accepted: validation.accepted,
+      reason: validation.reason
+    });
+
+    computeFibonacciSynchronization();
+    publishGlobals();
 
     return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      newsAlignmentContract: "LAB_PRODUCT_ENGINE_MARKET_F144_NEWS_ALIGNMENT_PROTOCOL_v2",
-      newsAlignmentReceipt: "LAB_PRODUCT_ENGINE_MARKET_F144_NEWS_ALIGNMENT_PROTOCOL_RECEIPT_v2",
-      sequence: [
-        {
-          gate: NEWS_GATES.REGISTRY,
-          fibonacci: FIBONACCI.PROJECT_REGISTRY,
-          file: F89_REGISTRY_FILE,
-          ready: state.f89RegistryReleaseAccepted
-        },
-        {
-          gate: NEWS_GATES.MARKET,
-          fibonacci: FIBONACCI.MARKET_READINESS,
-          file: FILE,
-          ready: state.marketReadinessReady || state.marketReadinessStatus === STATUS.DEGRADED
-        },
-        {
-          gate: NEWS_GATES.DOWNSTREAM,
-          fibonacci: FIBONACCI.DOWNSTREAM_RETURN,
-          file: NORTH_FILE,
-          ready: state.f233ReturnAuthorized
-        }
-      ],
-      fibonacciSynchronizationScore: metric.score,
-      f144Status: state.f144ActivationStatus,
-      marketReadinessStatus: state.marketReadinessStatus,
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
+      accepted: validation.accepted,
+      reason: validation.reason,
+      marketReadinessBuilt: state.marketReadinessBuilt,
+      marketReadinessReady: state.marketReadinessReady,
+      f233ReturnAuthorized: state.f233ReturnAuthorized,
+      recommendedNextFile: validation.accepted ? NORTH_FILE : F89_FILE,
       generatedImage: false,
       graphicBox: false,
       webGL: false,
-      visualPassClaimed: false,
-      updatedAt: nowIso()
+      visualPassClaimed: false
     };
   }
 
-  function readNorthRuntimeAuthority() {
-    return firstGlobal([
-      "LAB_RUNTIME_TABLE",
-      "LAB_RUNTIME_TABLE_NORTH",
-      "RUNTIME_TABLE",
-      "HEARTH_NORTH_COMMAND_RUNTIME_TABLE",
-      "DEXTER_LAB.runtimeTable",
-      "DEXTER_LAB.cardinalRuntimeTableNorth",
-      "HEARTH.northCommandRuntimeTable",
-      "HEARTH.runtimeTable"
-    ]);
-  }
-
   function composeF144MarketReadinessPacket(extra = {}) {
-    const metric = computeFibonacciSynchronizationMetric();
-    const readyForF233 = Boolean(state.marketReadinessReady || state.marketReadinessStatus === STATUS.DEGRADED);
-
+    computeFibonacciSynchronization();
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1268,81 +617,33 @@
 
       activeFibonacci: FIBONACCI.MARKET_READINESS,
       activeFibonacciRank: 144,
-      activeNewsGate: NEWS_GATES.MARKET,
       sourceFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
       futureFibonacciGate: FIBONACCI.DOWNSTREAM_RETURN,
       futureFibonacciRank: 233,
 
-      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
-      downstreamCoordinate: clonePlain(DOWNSTREAM_COORDINATE),
-      engineMechanicsPrimary: true,
-      mathPrimary: true,
-      architectureLabelsSecondary: true,
+      familyScope: state.familyScope,
+      thisFamilyIsEntireDiagnosticEngine: false,
+      thisFamilyIsAllOfEngine1: false,
+      replacesEngines2Through4: false,
 
-      marketEngineF144Active: true,
-      marketEngineF144Only: true,
-      marketClerkActive: true,
-      marketReadinessConductorActive: true,
-
-      f89RegistryReleaseAccepted: state.f89RegistryReleaseAccepted,
-      f89Contract: state.f89Contract,
-      f89Receipt: state.f89Receipt,
-
-      registryGraphObserved: state.registryGraphObserved,
-      registryGraphStatus: state.registryGraphStatus,
-      registryRecordCount: state.registryRecordCount,
-      marketInputRecordCount: state.marketInputRecordCount,
-      registryQualityScore: state.registryQualityScore,
-      marketInputReadinessScore: state.marketInputReadinessScore,
-
+      mechanicalCoordinate: clone(MECHANICAL_COORDINATE),
       marketReadinessBuilt: state.marketReadinessBuilt,
       marketReadinessReady: state.marketReadinessReady,
       marketReadinessStatus: state.marketReadinessStatus,
-      marketReadinessRecordCount: state.marketReadinessRecordCount,
-      marketReadyRecordCount: state.marketReadyRecordCount,
-      marketDegradedRecordCount: state.marketDegradedRecordCount,
-      marketBlockedRecordCount: state.marketBlockedRecordCount,
-
-      demoReadinessScore: state.demoReadinessScore,
-      documentationReadinessScore: state.documentationReadinessScore,
-      licenseReadinessScore: state.licenseReadinessScore,
-      distributionReadinessScore: state.distributionReadinessScore,
-      implementationReadinessScore: state.implementationReadinessScore,
-      riskBoundaryScore: state.riskBoundaryScore,
-      supportReadinessScore: state.supportReadinessScore,
-      marketPackageScore: state.marketPackageScore,
       marketReadinessScore: state.marketReadinessScore,
+      riskBoundaryScore: state.riskBoundaryScore,
       marketTraceScore: state.marketTraceScore,
       marketCoverageScore: state.marketCoverageScore,
       marketCoherenceScore: state.marketCoherenceScore,
       internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-
-      marketReadiness: clonePlain(state.marketReadiness),
-      marketRecords: clonePlain(state.marketReadiness.records),
-      riskBoundaries: clonePlain(state.marketReadiness.riskBoundaries),
-      demoPlan: clonePlain(state.marketReadiness.demoPlan),
-      documentationPlan: clonePlain(state.marketReadiness.documentationPlan),
-      licensePlan: clonePlain(state.marketReadiness.licensePlan),
-      distributionPlan: clonePlain(state.marketReadiness.distributionPlan),
-      implementationPlan: clonePlain(state.marketReadiness.implementationPlan),
-
-      f233ReturnAuthorized: readyForF233,
-      f144ReleasePacketReady: readyForF233,
-      f233ReturnPacketReady: readyForF233,
+      marketReadiness: clone(state.marketReadiness),
+      f233ReturnAuthorized: state.f233ReturnAuthorized,
+      f144PacketReady: state.f144PacketReady,
+      f233PacketReady: state.f233PacketReady,
       f144ActivationStatus: state.f144ActivationStatus,
       f144ActivationReason: state.f144ActivationReason,
-
-      newsProtocolAligned: true,
-      fibonacciSynchronizationMetricActive: true,
-      fibonacciSynchronizationScore: metric.score,
-      oneActiveGearAtATime: true,
-
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-
-      detail: clonePlain(extra),
-
+      fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
+      detail: clone(extra),
       publicSuperiorityClaim: false,
       publicComparisonClaimAllowed: false,
       benchmarkRequiredBeforePublicClaim: true,
@@ -1355,8 +656,6 @@
   }
 
   function composeF233DownstreamReturnPacket(extra = {}) {
-    const readiness = composeF144MarketReadinessPacket(extra);
-
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
@@ -1367,26 +666,19 @@
 
       activeFibonacci: FIBONACCI.DOWNSTREAM_RETURN,
       activeFibonacciRank: 233,
-      activeNewsGate: NEWS_GATES.DOWNSTREAM,
       sourceFibonacciGate: FIBONACCI.MARKET_READINESS,
       futureFibonacciGate: FIBONACCI.NORTH_LATCH,
 
-      mechanicalCoordinate: clonePlain(DOWNSTREAM_COORDINATE),
-      sourceMechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
-
-      f144MarketReadinessPacket: readiness,
-      f144MarketReady: state.marketReadinessReady,
-      f144MarketDegradedReturnAvailable: state.marketReadinessStatus === STATUS.DEGRADED,
+      f144MarketReadinessPacket: composeF144MarketReadinessPacket(extra),
       f233ReturnAuthorized: state.f233ReturnAuthorized,
-      f233ReturnPacketReady: state.f233ReturnPacketReady,
+      f233PacketReady: state.f233PacketReady,
+      northRuntimeShouldAccept: Boolean(state.f233ReturnAuthorized || state.f233PacketReady),
 
-      northRuntimeShouldAccept: Boolean(state.f233ReturnAuthorized || state.f233ReturnPacketReady),
       recommendedNorthMethodOrder: [
         "receiveF233DownstreamReturnPacket",
         "acceptF144MarketReadinessPacket",
         "acceptSupportEnginePacket",
-        "receiveSupportEnginePacket",
-        "submitSupportEnginePacket"
+        "receiveSupportEnginePacket"
       ],
 
       publicSuperiorityClaim: false,
@@ -1400,185 +692,30 @@
     };
   }
 
-  function composeF144Receipt() {
-    return getReceipt();
-  }
-
-  function submitF144PacketToNorth(extra = {}) {
-    const north = readNorthRuntimeAuthority();
-
-    if (!north) {
-      return {
-        submitted: false,
-        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE",
-        recommendedNextFile: NORTH_FILE
-      };
-    }
-
-    const packet = composeF144MarketReadinessPacket(extra);
-
-    try {
-      if (isFunction(north.acceptF144MarketReadinessPacket)) {
-        return {
-          submitted: true,
-          method: "acceptF144MarketReadinessPacket",
-          response: clonePlain(north.acceptF144MarketReadinessPacket(packet))
-        };
-      }
-
-      if (isFunction(north.acceptSupportEnginePacket)) {
-        return {
-          submitted: true,
-          method: "acceptSupportEnginePacket",
-          response: clonePlain(north.acceptSupportEnginePacket(packet))
-        };
-      }
-
-      if (isFunction(north.receiveSupportEnginePacket)) {
-        return {
-          submitted: true,
-          method: "receiveSupportEnginePacket",
-          response: clonePlain(north.receiveSupportEnginePacket(packet))
-        };
-      }
-    } catch (error) {
-      recordError("F144_PACKET_SUBMISSION_TO_NORTH_FAILED", error);
-      return {
-        submitted: false,
-        reason: "F144_PACKET_SUBMISSION_TO_NORTH_FAILED"
-      };
-    }
-
-    return {
-      submitted: false,
-      reason: "NORTH_RUNTIME_TABLE_F144_INTAKE_UNAVAILABLE"
-    };
-  }
-
   function submitF233ReturnToNorth(extra = {}) {
-    const north = readNorthRuntimeAuthority();
-
-    if (!north) {
-      return {
-        submitted: false,
-        reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE",
-        recommendedNextFile: NORTH_FILE
-      };
-    }
+    const north = firstGlobal(["LAB_RUNTIME_TABLE", "RUNTIME_TABLE", "DEXTER_LAB.runtimeTable", "HEARTH.runtimeTable"]);
+    if (!north) return { submitted: false, reason: "NORTH_RUNTIME_TABLE_UNAVAILABLE" };
 
     const packet = composeF233DownstreamReturnPacket(extra);
-
     try {
-      if (isFunction(north.receiveF233DownstreamReturnPacket)) {
-        return {
-          submitted: true,
-          method: "receiveF233DownstreamReturnPacket",
-          response: clonePlain(north.receiveF233DownstreamReturnPacket(packet))
-        };
-      }
-
-      if (isFunction(north.acceptF144MarketReadinessPacket)) {
-        return {
-          submitted: true,
-          method: "acceptF144MarketReadinessPacket",
-          response: clonePlain(north.acceptF144MarketReadinessPacket(packet))
-        };
-      }
-
-      if (isFunction(north.acceptSupportEnginePacket)) {
-        return {
-          submitted: true,
-          method: "acceptSupportEnginePacket",
-          response: clonePlain(north.acceptSupportEnginePacket(packet))
-        };
-      }
-
-      if (isFunction(north.receiveSupportEnginePacket)) {
-        return {
-          submitted: true,
-          method: "receiveSupportEnginePacket",
-          response: clonePlain(north.receiveSupportEnginePacket(packet))
-        };
-      }
+      if (isFunction(north.receiveF233DownstreamReturnPacket)) return { submitted: true, response: clone(north.receiveF233DownstreamReturnPacket(packet)) };
+      if (isFunction(north.acceptF144MarketReadinessPacket)) return { submitted: true, response: clone(north.acceptF144MarketReadinessPacket(packet)) };
+      if (isFunction(north.acceptSupportEnginePacket)) return { submitted: true, response: clone(north.acceptSupportEnginePacket(packet)) };
+      if (isFunction(north.receiveSupportEnginePacket)) return { submitted: true, response: clone(north.receiveSupportEnginePacket(packet)) };
     } catch (error) {
-      recordError("F233_RETURN_SUBMISSION_TO_NORTH_FAILED", error);
-      return {
-        submitted: false,
-        reason: "F233_RETURN_SUBMISSION_TO_NORTH_FAILED"
-      };
+      recordError("F233_RETURN_TO_NORTH_FAILED", error);
+      return { submitted: false, reason: "F233_RETURN_TO_NORTH_FAILED" };
     }
 
-    return {
-      submitted: false,
-      reason: "NORTH_RUNTIME_TABLE_F233_INTAKE_UNAVAILABLE"
-    };
-  }
-
-  function validateNorthRuntimeReceipt(packet = {}) {
-    const input = isObject(packet) ? packet : {};
-    const noForbiddenClaim = !detectForbiddenClaim(input);
-
-    const northRecognized = Boolean(
-      safeBool(input.countyRuntimeEngineCenter, false) ||
-      safeBool(input.northTimingGovernor, false) ||
-      safeBool(input.f21Latched, false) ||
-      safeBool(input.f21EligibilityAccepted, false) ||
-      safeString(input.contract || "").includes("RUNTIME_TABLE") ||
-      safeString(input.receipt || "").includes("RUNTIME_TABLE")
-    );
-
-    const ok = Boolean(noForbiddenClaim && northRecognized);
-
-    let reason = "NORTH_RUNTIME_RECEIPT_ACCEPTED";
-    if (!noForbiddenClaim) reason = "FORBIDDEN_CLAIM_DETECTED_IN_NORTH_RECEIPT";
-    else if (!northRecognized) reason = "UNRECOGNIZED_NORTH_RUNTIME_RECEIPT";
-
-    return {
-      ok,
-      reason,
-      noForbiddenClaim,
-      northRecognized,
-      input: clonePlain(input)
-    };
-  }
-
-  function acceptNorthRuntimeReceipt(packet = {}) {
-    const validation = validateNorthRuntimeReceipt(packet);
-
-    state.northRuntimeReceiptAccepted = validation.ok;
-    state.northRuntimeReceiptPacket = clonePlain(packet);
-
-    if (validation.input.contract) state.northRuntimeContract = safeString(validation.input.contract);
-    if (validation.input.receipt) state.northRuntimeReceipt = safeString(validation.input.receipt);
-
-    recordLocal("NORTH_RUNTIME_RECEIPT_RECEIVED_BY_MARKET_F144", {
-      accepted: validation.ok,
-      reason: validation.reason,
-      contract: state.northRuntimeContract
-    });
-
-    publishGlobals();
-
-    return {
-      accepted: validation.ok,
-      marketF144ReceivedNorth: true,
-      reason: validation.reason,
-      recommendedNextFile: validation.ok ? NORTH_FILE : FILE,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false
-    };
+    return { submitted: false, reason: "NORTH_F233_INTAKE_METHOD_UNAVAILABLE" };
   }
 
   function getMechanicalCoordinatePacket() {
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
-      downstreamCoordinate: clonePlain(DOWNSTREAM_COORDINATE),
+      mechanicalCoordinate: clone(MECHANICAL_COORDINATE),
       runtimeCondition: `${MECHANICAL_COORDINATE.coordinateId}::ST_0`,
-      downstreamRuntimeCondition: `${DOWNSTREAM_COORDINATE.coordinateId}::ST_0`,
       enginePartDefinesFunction: true,
       fibonacciDefinesSequence: true,
       categoryDefinesScale: true,
@@ -1592,144 +729,40 @@
     };
   }
 
-  function getMarketReadiness() {
-    return clonePlain(state.marketReadiness);
-  }
-
-  function getMarketReadinessSummary() {
-    return {
-      contract: CONTRACT,
-      receipt: RECEIPT,
-      marketReadinessBuilt: state.marketReadinessBuilt,
-      marketReadinessReady: state.marketReadinessReady,
-      marketReadinessStatus: state.marketReadinessStatus,
-      marketReadinessRecordCount: state.marketReadinessRecordCount,
-      marketReadyRecordCount: state.marketReadyRecordCount,
-      marketDegradedRecordCount: state.marketDegradedRecordCount,
-      marketBlockedRecordCount: state.marketBlockedRecordCount,
-      demoReadinessScore: state.demoReadinessScore,
-      documentationReadinessScore: state.documentationReadinessScore,
-      licenseReadinessScore: state.licenseReadinessScore,
-      distributionReadinessScore: state.distributionReadinessScore,
-      implementationReadinessScore: state.implementationReadinessScore,
-      riskBoundaryScore: state.riskBoundaryScore,
-      supportReadinessScore: state.supportReadinessScore,
-      marketPackageScore: state.marketPackageScore,
-      marketReadinessScore: state.marketReadinessScore,
-      marketTraceScore: state.marketTraceScore,
-      marketCoverageScore: state.marketCoverageScore,
-      marketCoherenceScore: state.marketCoherenceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-      publicSuperiorityClaim: false,
-      publicComparisonClaimAllowed: false,
-      updatedAt: nowIso()
-    };
-  }
-
-  function getMarketRecords(bucket = "") {
-    const records = state.marketReadiness.records || [];
-    if (!bucket) return clonePlain(records);
-    return clonePlain(records.filter((record) => record.bucket === bucket));
-  }
-
-  function getRiskBoundaries() {
-    return clonePlain(state.marketReadiness.riskBoundaries || []);
-  }
-
-  function getReadinessBuckets() {
-    return clonePlain(state.marketReadiness.buckets || {});
-  }
-
-  function findMarketRecord(id) {
-    const key = makeId(id, "");
-    return clonePlain((state.marketReadiness.recordsById || {})[key] || null);
-  }
-
   function getReceiptLight() {
-    computeFibonacciSynchronizationMetric();
-
+    computeFibonacciSynchronization();
     return {
       contract: CONTRACT,
       receipt: RECEIPT,
-      previousContract: PREVIOUS_CONTRACT,
-      baselineContract: BASELINE_CONTRACT,
       version: VERSION,
       file: FILE,
-
+      familyScope: state.familyScope,
+      thisFamilyIsEntireDiagnosticEngine: false,
+      thisFamilyIsAllOfEngine1: false,
+      replacesEngines2Through4: false,
       marketEngineF144Active: true,
       marketEngineF144Only: true,
       marketClerkActive: true,
       marketReadinessConductorActive: true,
-
-      engineMechanicsPrimary: true,
-      mathPrimary: true,
-      architectureLabelsSecondary: true,
       mechanicalCoordinateId: MECHANICAL_COORDINATE.coordinateId,
-      enginePart: MECHANICAL_COORDINATE.enginePart,
-      systemCategory: MECHANICAL_COORDINATE.systemCategory,
-      fibonacciStation: MECHANICAL_COORDINATE.fibonacciStage,
-      mechanicalRole: MECHANICAL_COORDINATE.mechanicalRole,
-      chessRole: MECHANICAL_COORDINATE.chessRole,
-      downstreamCoordinateId: DOWNSTREAM_COORDINATE.coordinateId,
-
-      f89RegistryObserved: state.f89RegistryObserved,
-      f89RegistryReleaseAccepted: state.f89RegistryReleaseAccepted,
-      f89Contract: state.f89Contract,
-      f89Receipt: state.f89Receipt,
-
-      registryGraphObserved: state.registryGraphObserved,
-      registryGraphStatus: state.registryGraphStatus,
-      registryRecordCount: state.registryRecordCount,
-      marketInputRecordCount: state.marketInputRecordCount,
-      registryQualityScore: state.registryQualityScore,
-      marketInputReadinessScore: state.marketInputReadinessScore,
-
+      activeFibonacci: FIBONACCI.MARKET_READINESS,
+      activeFibonacciRank: 144,
+      sourceFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
+      futureFibonacciGate: FIBONACCI.DOWNSTREAM_RETURN,
+      f89Observed: state.f89Observed,
+      f89Accepted: state.f89Accepted,
       marketReadinessBuilt: state.marketReadinessBuilt,
       marketReadinessReady: state.marketReadinessReady,
       marketReadinessStatus: state.marketReadinessStatus,
-      marketReadinessRecordCount: state.marketReadinessRecordCount,
-      marketReadyRecordCount: state.marketReadyRecordCount,
-      marketDegradedRecordCount: state.marketDegradedRecordCount,
-      marketBlockedRecordCount: state.marketBlockedRecordCount,
-
-      demoReadinessScore: state.demoReadinessScore,
-      documentationReadinessScore: state.documentationReadinessScore,
-      licenseReadinessScore: state.licenseReadinessScore,
-      distributionReadinessScore: state.distributionReadinessScore,
-      implementationReadinessScore: state.implementationReadinessScore,
-      riskBoundaryScore: state.riskBoundaryScore,
-      supportReadinessScore: state.supportReadinessScore,
-      marketPackageScore: state.marketPackageScore,
+      marketRecordCount: state.marketRecordCount,
       marketReadinessScore: state.marketReadinessScore,
-      marketTraceScore: state.marketTraceScore,
-      marketCoverageScore: state.marketCoverageScore,
-      marketCoherenceScore: state.marketCoherenceScore,
-      internalMarketSurpassTargetScore: state.internalMarketSurpassTargetScore,
-
+      riskBoundaryScore: state.riskBoundaryScore,
       f233ReturnAuthorized: state.f233ReturnAuthorized,
-      f144ReleasePacketReady: state.f144ReleasePacketReady,
-      f233ReturnPacketReady: state.f233ReturnPacketReady,
+      f144PacketReady: state.f144PacketReady,
+      f233PacketReady: state.f233PacketReady,
       f144ActivationStatus: state.f144ActivationStatus,
       f144ActivationReason: state.f144ActivationReason,
-
-      northRuntimeReceiptAccepted: state.northRuntimeReceiptAccepted,
-      northRuntimeContract: state.northRuntimeContract,
-      northRuntimeReceipt: state.northRuntimeReceipt,
-
-      newsProtocolAligned: true,
-      fibonacciSynchronizationMetricActive: true,
       fibonacciSynchronizationScore: state.fibonacciSynchronizationScore,
-      activeFibonacci: FIBONACCI.MARKET_READINESS,
-      activeFibonacciRank: 144,
-      activeNewsGate: NEWS_GATES.MARKET,
-      sourceFibonacciGate: FIBONACCI.PROJECT_REGISTRY,
-      futureFibonacciGate: FIBONACCI.DOWNSTREAM_RETURN,
-      oneActiveGearAtATime: true,
-
-      firstFailedCoordinate: state.firstFailedCoordinate,
-      recommendedNextFile: state.recommendedNextFile,
-      recommendedNextRenewalTarget: state.recommendedNextRenewalTarget,
-
       publicSuperiorityClaim: false,
       publicComparisonClaimAllowed: false,
       benchmarkRequiredBeforePublicClaim: true,
@@ -1737,30 +770,22 @@
       graphicBox: false,
       webGL: false,
       visualPassClaimed: false,
-
       createdAt: state.createdAt,
       updatedAt: state.updatedAt || nowIso()
     };
   }
 
   function getReceipt() {
-    const light = getReceiptLight();
-
     return {
-      ...light,
-
-      marketF144Receipt: true,
-      marketClerkReceipt: true,
-
-      marketEngineOwns: [
+      ...getReceiptLight(),
+      owns: [
         "F144 market readiness output manifold",
         "F89 registry release consumption",
         "deterministic market readiness records",
-        "demo / documentation / license / distribution / implementation readiness",
         "risk boundary enforcement",
         "F233 downstream return packet"
       ],
-      marketEngineDoesNotOwn: [
+      doesNotOwn: [
         "F34 Product Engine authority",
         "F55 Expression authority",
         "F89 Registry authority",
@@ -1778,168 +803,41 @@
         "public superiority claim",
         "final visual pass claim"
       ],
-
-      gates: {
-        north: NORTH_FILE,
-        productEngine: F34_PRODUCT_ENGINE_FILE,
-        ue5Expression: F55_EXPRESSION_FILE,
-        registry: F89_REGISTRY_FILE,
-        market: FILE,
-        canvas: CANVAS_FILE
-      },
-
-      readinessBuckets: clonePlain(READINESS_BUCKETS),
-      fibonacciMap: clonePlain(FIBONACCI),
-      newsGates: clonePlain(NEWS_GATES),
-      mechanicalCoordinate: clonePlain(MECHANICAL_COORDINATE),
-      downstreamCoordinate: clonePlain(DOWNSTREAM_COORDINATE),
+      fibonacci: clone(FIBONACCI),
+      mechanicalCoordinate: clone(MECHANICAL_COORDINATE),
       mechanicalCoordinatePacket: getMechanicalCoordinatePacket(),
-
-      f89RegistryReleasePacket: clonePlain(state.f89RegistryReleasePacket),
-      marketReadiness: getMarketReadiness(),
-      marketReadinessSummary: getMarketReadinessSummary(),
-      marketRecords: getMarketRecords(),
-      readinessBucketRecords: getReadinessBuckets(),
-      riskBoundaries: getRiskBoundaries(),
-
-      marketReadinessMetrics: computeMarketReadinessMetrics(),
-      newsAlignment: evaluateNewsAlignment(),
+      f89Packet: clone(state.f89Packet),
+      marketReadiness: clone(state.marketReadiness),
+      marketReadinessMetrics: computeMarketMetrics(),
       f144MarketReadinessPacket: composeF144MarketReadinessPacket(),
       f233DownstreamReturnPacket: composeF233DownstreamReturnPacket(),
-      northRuntimeReceiptPacket: clonePlain(state.northRuntimeReceiptPacket),
-
-      localEvents: clonePlain(state.localEvents),
-      errors: clonePlain(state.errors),
-
-      publicSuperiorityClaim: false,
-      publicComparisonClaimAllowed: false,
-      benchmarkRequiredBeforePublicClaim: true,
-      generatedImage: false,
-      graphicBox: false,
-      webGL: false,
-      visualPassClaimed: false,
-      updatedAt: nowIso()
+      localEvents: clone(state.localEvents),
+      errors: clone(state.errors)
     };
   }
 
   function getReceiptText() {
-    const r = getReceipt();
-
-    const records = (r.marketRecords || []).map((record) => (
-      `- ${record.id} :: status=${record.status} :: score=${record.marketPackageReadiness} :: risk=${record.riskBoundaryReadiness} :: demo=${record.demoReadiness} :: docs=${record.documentationReadiness} :: license=${record.licenseReadiness} :: distribution=${record.distributionReadiness} :: implementation=${record.implementationReadiness}`
-    )).join("\n") || "- none";
-
-    const risk = (r.riskBoundaries || []).map((boundary) => (
-      `- ${boundary.boundary} :: pass=${boundary.pass} :: score=${boundary.score}`
-    )).join("\n") || "- none";
-
-    const events = (r.localEvents || []).slice(-48).map((item) => (
-      `- ${item.at} :: ${item.event} :: ${JSON.stringify(item.detail || {})}`
-    )).join("\n") || "- none";
-
-    const errors = (r.errors || []).map((item) => (
-      `- ${item.at} :: ${item.code} :: ${item.message}`
-    )).join("\n") || "- none";
-
+    const r = getReceiptLight();
     return [
-      "LAB_PRODUCT_ENGINE_MARKET_F144_ENGINE_MECHANICS_READINESS_CONDUCTOR_RECEIPT",
-      "",
+      "LAB_PRODUCT_ENGINE_MARKET_F144_REPLACEMENT_SHELL_RECEIPT",
       `contract=${r.contract}`,
       `receipt=${r.receipt}`,
-      `previousContract=${r.previousContract}`,
-      `baselineContract=${r.baselineContract}`,
       `version=${r.version}`,
       `file=${r.file}`,
-      "",
-      `marketEngineF144Active=${r.marketEngineF144Active}`,
-      `marketEngineF144Only=${r.marketEngineF144Only}`,
-      `marketClerkActive=${r.marketClerkActive}`,
-      `marketReadinessConductorActive=${r.marketReadinessConductorActive}`,
-      "",
-      `engineMechanicsPrimary=${r.engineMechanicsPrimary}`,
-      `mathPrimary=${r.mathPrimary}`,
-      `architectureLabelsSecondary=${r.architectureLabelsSecondary}`,
+      `familyScope=${r.familyScope}`,
+      `thisFamilyIsEntireDiagnosticEngine=${r.thisFamilyIsEntireDiagnosticEngine}`,
+      `thisFamilyIsAllOfEngine1=${r.thisFamilyIsAllOfEngine1}`,
+      `replacesEngines2Through4=${r.replacesEngines2Through4}`,
       `mechanicalCoordinateId=${r.mechanicalCoordinateId}`,
-      `enginePart=${r.enginePart}`,
-      `systemCategory=${r.systemCategory}`,
-      `fibonacciStation=${r.fibonacciStation}`,
-      `mechanicalRole=${r.mechanicalRole}`,
-      `chessRole=${r.chessRole}`,
-      `downstreamCoordinateId=${r.downstreamCoordinateId}`,
-      "",
-      `f89RegistryObserved=${r.f89RegistryObserved}`,
-      `f89RegistryReleaseAccepted=${r.f89RegistryReleaseAccepted}`,
-      `f89Contract=${r.f89Contract}`,
-      `f89Receipt=${r.f89Receipt}`,
-      "",
-      `registryGraphObserved=${r.registryGraphObserved}`,
-      `registryGraphStatus=${r.registryGraphStatus}`,
-      `registryRecordCount=${r.registryRecordCount}`,
-      `marketInputRecordCount=${r.marketInputRecordCount}`,
-      `registryQualityScore=${r.registryQualityScore}`,
-      `marketInputReadinessScore=${r.marketInputReadinessScore}`,
-      "",
-      `marketReadinessBuilt=${r.marketReadinessBuilt}`,
-      `marketReadinessReady=${r.marketReadinessReady}`,
-      `marketReadinessStatus=${r.marketReadinessStatus}`,
-      `marketReadinessRecordCount=${r.marketReadinessRecordCount}`,
-      `marketReadyRecordCount=${r.marketReadyRecordCount}`,
-      `marketDegradedRecordCount=${r.marketDegradedRecordCount}`,
-      `marketBlockedRecordCount=${r.marketBlockedRecordCount}`,
-      "",
-      `demoReadinessScore=${r.demoReadinessScore}`,
-      `documentationReadinessScore=${r.documentationReadinessScore}`,
-      `licenseReadinessScore=${r.licenseReadinessScore}`,
-      `distributionReadinessScore=${r.distributionReadinessScore}`,
-      `implementationReadinessScore=${r.implementationReadinessScore}`,
-      `riskBoundaryScore=${r.riskBoundaryScore}`,
-      `supportReadinessScore=${r.supportReadinessScore}`,
-      `marketPackageScore=${r.marketPackageScore}`,
-      `marketReadinessScore=${r.marketReadinessScore}`,
-      `marketTraceScore=${r.marketTraceScore}`,
-      `marketCoverageScore=${r.marketCoverageScore}`,
-      `marketCoherenceScore=${r.marketCoherenceScore}`,
-      `internalMarketSurpassTargetScore=${r.internalMarketSurpassTargetScore}`,
-      "",
-      `f233ReturnAuthorized=${r.f233ReturnAuthorized}`,
-      `f144ReleasePacketReady=${r.f144ReleasePacketReady}`,
-      `f233ReturnPacketReady=${r.f233ReturnPacketReady}`,
-      `f144ActivationStatus=${r.f144ActivationStatus}`,
-      `f144ActivationReason=${r.f144ActivationReason}`,
-      "",
-      `northRuntimeReceiptAccepted=${r.northRuntimeReceiptAccepted}`,
-      `northRuntimeContract=${r.northRuntimeContract}`,
-      `northRuntimeReceipt=${r.northRuntimeReceipt}`,
-      "",
-      `newsProtocolAligned=${r.newsProtocolAligned}`,
-      `fibonacciSynchronizationMetricActive=${r.fibonacciSynchronizationMetricActive}`,
-      `fibonacciSynchronizationScore=${r.fibonacciSynchronizationScore}`,
       `activeFibonacci=${r.activeFibonacci}`,
-      `activeFibonacciRank=${r.activeFibonacciRank}`,
-      `activeNewsGate=${r.activeNewsGate}`,
-      `sourceFibonacciGate=${r.sourceFibonacciGate}`,
-      `futureFibonacciGate=${r.futureFibonacciGate}`,
-      `oneActiveGearAtATime=${r.oneActiveGearAtATime}`,
-      "",
-      `firstFailedCoordinate=${r.firstFailedCoordinate}`,
-      `recommendedNextFile=${r.recommendedNextFile}`,
-      `recommendedNextRenewalTarget=${r.recommendedNextRenewalTarget}`,
-      "",
-      "MARKET_RECORDS",
-      records,
-      "",
-      "RISK_BOUNDARIES",
-      risk,
-      "",
-      "LOCAL_EVENTS",
-      events,
-      "",
-      "ERRORS",
-      errors,
-      "",
+      `f89Accepted=${r.f89Accepted}`,
+      `marketReadinessBuilt=${r.marketReadinessBuilt}`,
+      `marketReadinessStatus=${r.marketReadinessStatus}`,
+      `marketReadinessScore=${r.marketReadinessScore}`,
+      `riskBoundaryScore=${r.riskBoundaryScore}`,
+      `f233ReturnAuthorized=${r.f233ReturnAuthorized}`,
+      `fibonacciSynchronizationScore=${r.fibonacciSynchronizationScore}`,
       `publicSuperiorityClaim=${r.publicSuperiorityClaim}`,
-      `publicComparisonClaimAllowed=${r.publicComparisonClaimAllowed}`,
-      `benchmarkRequiredBeforePublicClaim=${r.benchmarkRequiredBeforePublicClaim}`,
       `generatedImage=${r.generatedImage}`,
       `graphicBox=${r.graphicBox}`,
       `webGL=${r.webGL}`,
@@ -1953,75 +851,16 @@
     setDataset("labProductEngineMarketContract", CONTRACT);
     setDataset("labProductEngineMarketReceipt", RECEIPT);
     setDataset("labProductEngineMarketVersion", VERSION);
-    setDataset("labProductEngineMarketFile", FILE);
-
-    setDataset("marketF144Active", "true");
     setDataset("marketF144Only", "true");
-    setDataset("marketClerkActive", "true");
-    setDataset("marketReadinessConductorActive", "true");
-
-    setDataset("marketEngineMechanicsPrimary", "true");
-    setDataset("marketMathPrimary", "true");
-    setDataset("marketArchitectureLabelsSecondary", "true");
     setDataset("marketMechanicalCoordinateId", MECHANICAL_COORDINATE.coordinateId);
-    setDataset("marketDownstreamCoordinateId", DOWNSTREAM_COORDINATE.coordinateId);
-    setDataset("marketEnginePart", MECHANICAL_COORDINATE.enginePart);
-    setDataset("marketSystemCategory", MECHANICAL_COORDINATE.systemCategory);
-    setDataset("marketFibonacciStation", MECHANICAL_COORDINATE.fibonacciStage);
-    setDataset("marketMechanicalRole", MECHANICAL_COORDINATE.mechanicalRole);
-    setDataset("marketChessRole", MECHANICAL_COORDINATE.chessRole);
-
-    setDataset("marketF89RegistryObserved", state.f89RegistryObserved);
-    setDataset("marketF89RegistryReleaseAccepted", state.f89RegistryReleaseAccepted);
-    setDataset("marketRegistryGraphObserved", state.registryGraphObserved);
-    setDataset("marketRegistryGraphStatus", state.registryGraphStatus);
-    setDataset("marketRegistryRecordCount", state.registryRecordCount);
-    setDataset("marketInputRecordCount", state.marketInputRecordCount);
-
     setDataset("marketReadinessBuilt", state.marketReadinessBuilt);
     setDataset("marketReadinessReady", state.marketReadinessReady);
     setDataset("marketReadinessStatus", state.marketReadinessStatus);
-    setDataset("marketReadinessRecordCount", state.marketReadinessRecordCount);
-    setDataset("marketReadyRecordCount", state.marketReadyRecordCount);
-    setDataset("marketDegradedRecordCount", state.marketDegradedRecordCount);
-    setDataset("marketBlockedRecordCount", state.marketBlockedRecordCount);
-
-    setDataset("marketDemoReadinessScore", state.demoReadinessScore);
-    setDataset("marketDocumentationReadinessScore", state.documentationReadinessScore);
-    setDataset("marketLicenseReadinessScore", state.licenseReadinessScore);
-    setDataset("marketDistributionReadinessScore", state.distributionReadinessScore);
-    setDataset("marketImplementationReadinessScore", state.implementationReadinessScore);
-    setDataset("marketRiskBoundaryScore", state.riskBoundaryScore);
-    setDataset("marketSupportReadinessScore", state.supportReadinessScore);
-    setDataset("marketPackageScore", state.marketPackageScore);
     setDataset("marketReadinessScore", state.marketReadinessScore);
-    setDataset("marketTraceScore", state.marketTraceScore);
-    setDataset("marketCoverageScore", state.marketCoverageScore);
-    setDataset("marketCoherenceScore", state.marketCoherenceScore);
-    setDataset("marketInternalSurpassTargetScore", state.internalMarketSurpassTargetScore);
-
+    setDataset("marketRiskBoundaryScore", state.riskBoundaryScore);
     setDataset("marketF233ReturnAuthorized", state.f233ReturnAuthorized);
-    setDataset("marketF144ReleasePacketReady", state.f144ReleasePacketReady);
-    setDataset("marketF233ReturnPacketReady", state.f233ReturnPacketReady);
-    setDataset("marketF144ActivationStatus", state.f144ActivationStatus);
-    setDataset("marketF144ActivationReason", state.f144ActivationReason);
-
-    setDataset("marketNewsProtocolAligned", "true");
-    setDataset("marketFibonacciSynchronizationMetricActive", "true");
     setDataset("marketFibonacciSynchronizationScore", state.fibonacciSynchronizationScore);
-    setDataset("marketActiveFibonacci", FIBONACCI.MARKET_READINESS);
-    setDataset("marketActiveFibonacciRank", "144");
-    setDataset("marketActiveNewsGate", NEWS_GATES.MARKET);
-    setDataset("marketSourceFibonacciGate", FIBONACCI.PROJECT_REGISTRY);
-    setDataset("marketFutureFibonacciGate", FIBONACCI.DOWNSTREAM_RETURN);
-
-    setDataset("marketFirstFailedCoordinate", state.firstFailedCoordinate);
-    setDataset("marketRecommendedNextFile", state.recommendedNextFile);
-    setDataset("marketRecommendedNextRenewalTarget", state.recommendedNextRenewalTarget);
-
     setDataset("marketPublicSuperiorityClaim", "false");
-    setDataset("marketPublicComparisonClaimAllowed", "false");
-    setDataset("marketBenchmarkRequiredBeforePublicClaim", "true");
     setDataset("generatedImage", "false");
     setDataset("graphicBox", "false");
     setDataset("webgl", "false");
@@ -2036,38 +875,25 @@
     root.LAB_PRODUCT_ENGINE_MARKET_F144 = api;
     root.PRODUCT_ENGINE_MARKET = api;
     root.MARKET_F144_READINESS_CONDUCTOR = api;
-    root.MARKET_READINESS_CONDUCTOR = api;
     root.MARKET_CLERK = api;
 
     root.DEXTER_LAB.productEngineMarket = api;
     root.DEXTER_LAB.productEngineMarketF144 = api;
     root.DEXTER_LAB.marketF144ReadinessConductor = api;
-    root.DEXTER_LAB.marketReadinessConductor = api;
-    root.DEXTER_LAB.marketClerk = api;
-
     root.HEARTH.productEngineMarket = api;
     root.HEARTH.productEngineMarketF144 = api;
     root.HEARTH.marketF144ReadinessConductor = api;
-    root.HEARTH.marketReadinessConductor = api;
-    root.HEARTH.marketClerk = api;
 
     const light = getReceiptLight();
-
     root.LAB_PRODUCT_ENGINE_MARKET_RECEIPT = light;
     root.LAB_PRODUCT_ENGINE_MARKET_F144_RECEIPT = light;
     root.PRODUCT_ENGINE_MARKET_RECEIPT = light;
-    root.MARKET_F144_READINESS_CONDUCTOR_RECEIPT = light;
-    root.MARKET_CLERK_RECEIPT = light;
-
-    root.DEXTER_LAB.productEngineMarketReceipt = light;
-    root.HEARTH.productEngineMarketReceipt = light;
 
     root.__LAB_PRODUCT_ENGINE_MARKET_LOADED__ = true;
     root.__LAB_PRODUCT_ENGINE_MARKET_CONTRACT__ = CONTRACT;
     root.__LAB_PRODUCT_ENGINE_MARKET_RECEIPT__ = RECEIPT;
     root.__LAB_PRODUCT_ENGINE_MARKET_F144_ONLY__ = true;
     root.__LAB_PRODUCT_ENGINE_MARKET_MECHANICAL_COORDINATE__ = MECHANICAL_COORDINATE.coordinateId;
-    root.__LAB_PRODUCT_ENGINE_MARKET_DOWNSTREAM_COORDINATE__ = DOWNSTREAM_COORDINATE.coordinateId;
     root.__LAB_PRODUCT_ENGINE_MARKET_PUBLIC_SUPERIORITY_CLAIM__ = false;
     root.__LAB_PRODUCT_ENGINE_MARKET_WEBGL__ = false;
     root.__LAB_PRODUCT_ENGINE_MARKET_VISUAL_PASS_CLAIMED__ = false;
@@ -2075,62 +901,49 @@
     updateDataset();
   }
 
-  const api = {
+  const api = Object.freeze({
     contract: CONTRACT,
     receipt: RECEIPT,
-    previousContract: PREVIOUS_CONTRACT,
-    baselineContract: BASELINE_CONTRACT,
     version: VERSION,
     file: FILE,
 
     FIBONACCI,
-    NEWS_GATES,
     STATUS,
-    READINESS_BUCKETS,
     MECHANICAL_COORDINATE,
-    DOWNSTREAM_COORDINATE,
 
-    readF89RegistryAuthority,
-    readF89RegistryRelease,
-    validateF89RegistryRelease,
+    readF89Authority,
+    readF89Release,
+    hasMeaningfulF89Release,
+    validateF89Release,
     acceptF89RegistryRelease,
-    receiveF89RegistryRelease,
-    submitF89RegistryRelease,
+    receiveF89RegistryRelease: acceptF89RegistryRelease,
+    submitF89RegistryRelease: acceptF89RegistryRelease,
 
     getF89MarketInputs,
-    getF89RegistryRecords,
     normalizeMarketInput,
-    groupByBucket,
-    createDemoPlan,
-    createDocumentationPlan,
-    createLicensePlan,
-    createDistributionPlan,
-    createImplementationPlan,
-    createRiskBoundaries,
-    buildMarketPackage,
     buildMarketReadiness,
+    buildRiskBoundaries,
+    computeMarketMetrics,
+    computeFibonacciSynchronization,
 
-    computeMarketReadinessMetrics,
-    computeFibonacciSynchronizationMetric,
-    evaluateNewsAlignment,
-
-    readNorthRuntimeAuthority,
     composeF144MarketReadinessPacket,
     composeF233DownstreamReturnPacket,
-    composeF144Receipt,
-    submitF144PacketToNorth,
+    composeF144Receipt: getReceipt,
     submitF233ReturnToNorth,
 
-    validateNorthRuntimeReceipt,
-    acceptNorthRuntimeReceipt,
-
     getMechanicalCoordinatePacket,
-    getMarketReadiness,
-    getMarketReadinessSummary,
-    getMarketRecords,
-    getRiskBoundaries,
-    getReadinessBuckets,
-    findMarketRecord,
+    getMarketReadiness: () => clone(state.marketReadiness),
+    getMarketReadinessSummary: () => ({
+      marketReadinessBuilt: state.marketReadinessBuilt,
+      marketReadinessReady: state.marketReadinessReady,
+      marketReadinessStatus: state.marketReadinessStatus,
+      marketRecordCount: state.marketRecordCount,
+      marketReadinessScore: state.marketReadinessScore,
+      riskBoundaryScore: state.riskBoundaryScore,
+      f233ReturnAuthorized: state.f233ReturnAuthorized
+    }),
+    getMarketRecords: () => clone(state.marketReadiness.records),
+    getRiskBoundaries: () => clone(state.marketReadiness.riskBoundaries),
 
     getReceiptLight,
     getReceipt,
@@ -2143,14 +956,9 @@
     marketClerkActive: true,
     marketReadinessConductorActive: true,
 
-    engineMechanicsPrimary: true,
-    mathPrimary: true,
-    architectureLabelsSecondary: true,
-
     ownsF144MarketReadinessOutputManifold: true,
     ownsF89RegistryReleaseConsumption: true,
     ownsDeterministicMarketReadinessRecords: true,
-    ownsDemoDocumentationLicenseDistributionImplementationReadiness: true,
     ownsRiskBoundaryEnforcement: true,
     ownsF233DownstreamReturnPacket: true,
 
@@ -2179,34 +987,29 @@
     webGL: false,
     visualPassClaimed: false,
 
-    get state() {
-      return state;
-    }
-  };
+    get state() { return state; }
+  });
 
   state.createdAt = nowIso();
   state.updatedAt = state.createdAt;
 
   try {
-    const f89Release = readF89RegistryRelease();
-    if (hasMeaningfulF89Release(f89Release)) {
-      acceptF89RegistryRelease(f89Release);
-    }
+    const f89 = readF89Release();
+    if (hasMeaningfulF89Release(f89)) acceptF89RegistryRelease(f89);
   } catch (error) {
-    recordError("INITIAL_F89_REGISTRY_RELEASE_READ_FAILED", error);
+    recordError("INITIAL_F89_RELEASE_READ_FAILED", error);
   }
 
   try {
-    computeFibonacciSynchronizationMetric();
+    computeFibonacciSynchronization();
   } catch (error) {
-    recordError("INITIAL_F144_SYNC_METRIC_FAILED", error);
+    recordError("INITIAL_F144_SYNC_FAILED", error);
   }
 
-  recordLocal("MARKET_F144_ENGINE_MECHANICS_READINESS_CONDUCTOR_LOADED", {
+  recordLocal("F144_REPLACEMENT_SHELL_LOADED", {
     file: FILE,
     contract: CONTRACT,
     mechanicalCoordinate: MECHANICAL_COORDINATE.coordinateId,
-    downstreamCoordinate: DOWNSTREAM_COORDINATE.coordinateId,
     targetFile: NORTH_FILE,
     publicSuperiorityClaim: false
   });

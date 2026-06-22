@@ -1,487 +1,223 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6
-// Full-file replacement.
-// Diagnostic-only.
-//
-// Previous contract:
-// - AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5
-//
-// Purpose:
-// - Preserve the complete distributed diagnostic control-panel family.
-// - Actively bind the public Audralia route when the target is shown.
-// - Distinguish target visibility from target-route readiness.
-// - Prevent Nine-Cycle execution against about:blank or a mismatched route.
-// - Expose the existing target Window before Nine-Cycle-initiated navigation.
-// - Preserve one public Nine-Cycle Promise across target navigation.
-// - Release the deferred cycle only after the expected target route is observed.
-// - Resolve every accepted Nine-Cycle request with a final cycle receipt.
-// - Preserve established bridge-facing receipt schema identities.
-// - Publish bounded target-lifecycle evidence without claiming runtime truth.
-//
-// Authority:
-// - F34 SOUTH_PROBE_HANDOFF
-// - F55 SOUTH_RESTITUTION_INTERPRETATION
-//
-// Owns:
-// - user-command observation;
-// - local selection and presentation state;
-// - target-frame activation and navigation initiation;
-// - target-frame load observation;
-// - report-command coordination;
-// - direct-check initiation;
-// - Nine-Cycle request gating and initiation;
-// - one active deferred Nine-Cycle Promise;
-// - overlapping-cycle prevention;
-// - controls-owned execution-lock state;
-// - preservation of raw engine receipts;
-// - visible placement of returned station receipts;
-// - controls-local DOM observation and update evidence;
-// - report-only reset;
-// - full-workbench reset coordination;
-// - receipt and archive presentation;
-// - controls public API;
-// - controls-owned receipts;
-// - publication of controls requirements.
-//
-// Does not own:
-// - canonical diagnostic truth;
-// - canonical Nine-Cycle construction;
-// - station-execution truth;
-// - public Audralia runtime mounting;
-// - production rendering;
-// - exact-nine judgment;
-// - restitution judgment;
-// - terminal engine verdict;
-// - cross-file alias certification;
-// - bridge compatibility;
-// - runtime script-order certification;
-// - controls-to-HTML relational certification;
-// - whole-family synchronization certification;
-// - production repair authorization.
-//
-// Upstream freeze:
-// - /showroom/globe/audralia/diagnostic/index.js remains unchanged.
-// - /showroom/globe/audralia/diagnostic/index.inspection.lane.js remains unchanged.
-//
-// No new files.
-// No patches.
-// No competing control API.
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v7
+// Full-file replacement. Diagnostic-only.
 
 (function installAudraliaDistributedDiagnosticControls(global) {
   "use strict";
 
-  var root =
-    global ||
-    (
-      typeof window !== "undefined"
-        ? window
-        : typeof globalThis !== "undefined"
-          ? globalThis
-          : this
-    );
+  var root = global || (typeof window !== "undefined" ? window : globalThis);
+  var doc = root && root.document ? root.document : null;
+  if (!doc) return;
 
-  var doc =
-    root && root.document
-      ? root.document
-      : null;
+  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v7";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6";
+  var VERSION = "7.0.0";
+  var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
+  var AUTHORITY = "F34_SOUTH_PROBE_HANDOFF_F55_SOUTH_RESTITUTION_INTERPRETATION";
 
-  if (!doc) {
-    return;
-  }
+  var ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
+  var INSPECTION_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v1";
+  var ENGINE_CYCLE_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v2";
+  var CONTROL_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v6";
+  var CYCLE_RENDERING_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v6";
+  var CONTROL_REQUIREMENTS_SCHEMA = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v2";
+  var TARGET_LIFECYCLE_SCHEMA = "AUDRALIA_DIAGNOSTIC_TARGET_LIFECYCLE_STATE_v2";
+  var TARGET_PREPARATION_RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v2";
+  var FALLBACK_REPORT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v4";
+  var FALLBACK_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v4";
 
-  var CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6";
+  var TARGET_ROUTE = "/showroom/globe/audralia/";
+  var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
 
-  var PREVIOUS_CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v5";
+  var ENGINE_PATHS = Object.freeze([
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
+    "AUDRALIA.diagnosticEngine",
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
+    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
+    "AUDRALIA.dropWithReadDiagnosticObservatory",
+    "AUDRALIA.diagnosticRouteController"
+  ]);
 
-  var VERSION =
-    "6.0.0";
+  var INSPECTION_PATHS = Object.freeze([
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE",
+    "AUDRALIA.diagnosticInspectionLane"
+  ]);
 
-  var FILE =
-    "/showroom/globe/audralia/diagnostic/index.controls.js";
+  var COMMANDS = Object.freeze([
+    "create",
+    "view",
+    "copy-readable",
+    "copy-packet",
+    "copy-raw",
+    "open-receipts",
+    "open-archive",
+    "reset"
+  ]);
 
-  var AUTHORITY =
-    "F34_SOUTH_PROBE_HANDOFF_F55_SOUTH_RESTITUTION_INTERPRETATION";
+  var RECEIPT_FILTERS = Object.freeze([
+    "all",
+    "participant",
+    "observation",
+    "cycle",
+    "error"
+  ]);
 
-  var ENGINE_CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v2";
+  var CONTROL_IDS = Object.freeze([
+    "returnToAudralia",
+    "toggleObservationTarget",
+    "reloadObservatory",
+    "createDeepArchive",
+    "resetWorkbench",
+    "auditOrbitButton",
+    "participantConstellationButton",
+    "categorySelectorButton",
+    "auditSelectorButton",
+    "createReport",
+    "runDirectCheck",
+    "runNineCycle",
+    "copyReadableReport",
+    "copyPacketReport",
+    "copyRawReport",
+    "addReportToArchive",
+    "resetCurrentReport",
+    "reportReadButton",
+    "reportPacketButton",
+    "reportRawButton",
+    "reportEvidenceButton",
+    "targetLensButton",
+    "runtimeLensButton",
+    "surfaceLensButton",
+    "targetWindowButton",
+    "expandTargetWindow",
+    "reloadTargetFrame",
+    "cycleChamberButton",
+    "registryChamberButton",
+    "receiptChamberButton",
+    "archiveChamberButton",
+    "boundaryChamberButton"
+  ]);
 
-  var INSPECTION_LANE_CONTRACT =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v1";
+  var CYCLE_TARGET_IDS = Object.freeze([
+    "cycleStatus",
+    "cycleChamber",
+    "cyclePreviewSummary",
+    "cycleRegistrationSummary",
+    "cyclePreflightSummary",
+    "cycleExecutionSummary",
+    "cycleMap",
+    "cycleLedgerOutput",
+    "cycleReceiptList"
+  ]);
 
-  var ENGINE_CYCLE_RECEIPT_SCHEMA =
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v2";
+  var STATIONS = Object.freeze([
+    Object.freeze({ position: 1, fibonacci: "F1", role: "NORTH_PROBE_INTAKE", direction: "NORTH" }),
+    Object.freeze({ position: 2, fibonacci: "F3", role: "EAST_PROBE_SOURCE", direction: "EAST" }),
+    Object.freeze({ position: 3, fibonacci: "F5", role: "EAST_CONSTRUCTION_INTERPRETATION", direction: "EAST" }),
+    Object.freeze({ position: 4, fibonacci: "F8", role: "CANVAS_SURFACE_TRUTH", direction: "CENTER" }),
+    Object.freeze({ position: 5, fibonacci: "F13", role: "WEST_PROBE_RUNTIME", direction: "WEST" }),
+    Object.freeze({ position: 6, fibonacci: "F21", role: "WEST_RUNTIME_INTERPRETATION", direction: "WEST" }),
+    Object.freeze({ position: 7, fibonacci: "F34", role: "SOUTH_PROBE_HANDOFF", direction: "SOUTH" }),
+    Object.freeze({ position: 8, fibonacci: "F55", role: "SOUTH_RESTITUTION_INTERPRETATION", direction: "SOUTH" }),
+    Object.freeze({ position: 9, fibonacci: "F89", role: "RAIL_TERMINAL_SYNTHESIS", direction: "RAIL" })
+  ]);
 
-  var TARGET_ROUTE =
-    "/showroom/globe/audralia/";
+  var NO_CLAIMS = Object.freeze({
+    productionMutationAuthorized: false,
+    runtimeRestartAuthorized: false,
+    rendererMutationAuthorized: false,
+    canvasRepairAuthorized: false,
+    controlsRepairAuthorized: false,
+    routeRepairAuthorized: false,
+    publicRuntimeMountAuthorized: false,
+    publicRuntimeMutationAuthorized: false,
+    readinessClaimed: false,
+    visualPassClaimed: false,
+    cyclePassClaimed: false,
+    exactNineIndependentlyClaimed: false,
+    restitutionIndependentlyClaimed: false,
+    bridgeCompatibilityClaimed: false,
+    runtimeOrderClaimed: false,
+    familySynchronizationClaimed: false,
+    targetReadyProvesRuntimeReady: false,
+    targetRouteMatchProvesRuntimeReady: false,
+    targetLoadProvesRuntimeReady: false,
+    f21Claimed: false,
+    f89Claimed: false
+  });
 
-  var TARGET_FRAME_ID =
-    "audraliaDiagnosticTargetFrame";
-
-  var FALLBACK_REPORT_SCHEMA =
-    "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v3";
-
-  var FALLBACK_RECEIPT_SCHEMA =
-    "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v3";
-
-  var CONTROL_RECEIPT_SCHEMA =
-    "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v5";
-
-  var CYCLE_RENDERING_RECEIPT_SCHEMA =
-    "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v5";
-
-  var CONTROL_REQUIREMENTS_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v1";
-
-  var TARGET_LIFECYCLE_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_TARGET_LIFECYCLE_STATE_v1";
-
-  var TARGET_PREPARATION_RECEIPT_SCHEMA =
-    "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v1";
-
-  var ENGINE_GLOBAL_PATHS =
-    Object.freeze([
-      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
-      "AUDRALIA.diagnosticEngine",
-      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
-      "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
-      "AUDRALIA.dropWithReadDiagnosticObservatory",
-      "AUDRALIA.diagnosticRouteController"
-    ]);
-
-  var INSPECTION_GLOBAL_PATHS =
-    Object.freeze([
-      "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE",
-      "AUDRALIA.diagnosticInspectionLane"
-    ]);
-
-  var HEALTHY_ENGINE_STATES =
-    Object.freeze([
-      "READY",
-      "AVAILABLE",
-      "ACTIVE"
-    ]);
-
-  var VALID_CYCLE_TERMINAL_STATUSES =
-    Object.freeze([
-      "COMMITTED",
-      "HELD",
-      "ERROR"
-    ]);
-
-  var DISTRIBUTED_COMMANDS =
-    Object.freeze([
-      "create",
-      "view",
-      "copy-readable",
-      "copy-packet",
-      "copy-raw",
-      "open-receipts",
-      "open-archive",
-      "reset"
-    ]);
-
-  var RECEIPT_FILTERS =
-    Object.freeze([
-      "all",
-      "participant",
-      "observation",
-      "cycle",
-      "error"
-    ]);
-
-  var TARGET_LIFECYCLE_CLASSES =
-    Object.freeze([
-      "TARGET_FRAME_MISSING",
-      "TARGET_UNBOUND",
-      "TARGET_INACCESSIBLE",
-      "TARGET_ROUTE_MISMATCH",
-      "TARGET_LOADING",
-      "TARGET_READY"
-    ]);
-
-  var CANONICAL_CONTROL_IDS =
-    Object.freeze([
-      "returnToAudralia",
-      "toggleObservationTarget",
-      "reloadObservatory",
-      "createDeepArchive",
-      "resetWorkbench",
-
-      "auditOrbitButton",
-      "participantConstellationButton",
-
-      "categorySelectorButton",
-      "auditSelectorButton",
-
+  var REQUIREMENTS = deepFreeze({
+    schema: CONTROL_REQUIREMENTS_SCHEMA,
+    controlsContract: CONTRACT,
+    previousControlsContract: PREVIOUS_CONTRACT,
+    expectedEngineContract: ENGINE_CONTRACT,
+    expectedInspectionLaneContract: INSPECTION_CONTRACT,
+    expectedEngineCycleReceiptSchema: ENGINE_CYCLE_RECEIPT_SCHEMA,
+    expectedTargetRoute: TARGET_ROUTE,
+    targetFrameId: TARGET_FRAME_ID,
+    requiredCycleTargetIds: CYCLE_TARGET_IDS.slice(),
+    requiredStationPositions: STATIONS.map(function (s) { return s.position; }),
+    presentationStationMap: STATIONS,
+    targetPreparationOwner: "INDEX_CONTROLS",
+    certificationOwner: "INDEX_CONTROL_BRIDGE",
+    controlsCertificationScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_EVIDENCE_ONLY",
+    publicApiRequirements: [
       "createReport",
       "runDirectCheck",
       "runNineCycle",
+      "viewCurrentReport",
       "copyReadableReport",
       "copyPacketReport",
       "copyRawReport",
+      "executeDistributedReportCommand",
+      "applyCommandContext",
+      "openReceiptChamber",
+      "openArchiveChamber",
       "addReportToArchive",
+      "createDeepArchive",
       "resetCurrentReport",
-
-      "reportReadButton",
-      "reportPacketButton",
-      "reportRawButton",
-      "reportEvidenceButton",
-
-      "targetLensButton",
-      "runtimeLensButton",
-      "surfaceLensButton",
-      "targetWindowButton",
-
-      "expandTargetWindow",
+      "resetWorkbench",
+      "selectCategory",
+      "selectAudit",
+      "selectParticipant",
+      "selectReportMode",
+      "selectObservationLens",
+      "selectInstrumentChamber",
+      "setTargetVisible",
+      "setTargetExpanded",
+      "inspectTargetFrame",
+      "ensureTargetReady",
       "reloadTargetFrame",
-
-      "cycleChamberButton",
-      "registryChamberButton",
-      "receiptChamberButton",
-      "archiveChamberButton",
-      "boundaryChamberButton"
-    ]);
-
-  var CYCLE_TARGET_IDS =
-    Object.freeze([
-      "cycleStatus",
-      "cycleChamber",
-      "cyclePreviewSummary",
-      "cycleRegistrationSummary",
-      "cyclePreflightSummary",
-      "cycleExecutionSummary",
-      "cycleMap",
-      "cycleLedgerOutput",
-      "cycleReceiptList"
-    ]);
-
-  var CANONICAL_CYCLE_STATIONS =
-    Object.freeze([
-      Object.freeze({
-        position: 1,
-        fibonacci: "F1",
-        role: "NORTH_PROBE_INTAKE",
-        direction: "NORTH"
-      }),
-      Object.freeze({
-        position: 2,
-        fibonacci: "F3",
-        role: "EAST_PROBE_SOURCE",
-        direction: "EAST"
-      }),
-      Object.freeze({
-        position: 3,
-        fibonacci: "F5",
-        role: "EAST_CONSTRUCTION_INTERPRETATION",
-        direction: "EAST"
-      }),
-      Object.freeze({
-        position: 4,
-        fibonacci: "F8",
-        role: "CANVAS_SURFACE_TRUTH",
-        direction: "CENTER"
-      }),
-      Object.freeze({
-        position: 5,
-        fibonacci: "F13",
-        role: "WEST_PROBE_RUNTIME",
-        direction: "WEST"
-      }),
-      Object.freeze({
-        position: 6,
-        fibonacci: "F21",
-        role: "WEST_RUNTIME_INTERPRETATION",
-        direction: "WEST"
-      }),
-      Object.freeze({
-        position: 7,
-        fibonacci: "F34",
-        role: "SOUTH_PROBE_HANDOFF",
-        direction: "SOUTH"
-      }),
-      Object.freeze({
-        position: 8,
-        fibonacci: "F55",
-        role: "SOUTH_RESTITUTION_INTERPRETATION",
-        direction: "SOUTH"
-      }),
-      Object.freeze({
-        position: 9,
-        fibonacci: "F89",
-        role: "RAIL_TERMINAL_SYNTHESIS",
-        direction: "RAIL"
-      })
-    ]);
-
-  var NO_CLAIMS =
-    Object.freeze({
-      productionMutationAuthorized: false,
-      runtimeRestartAuthorized: false,
-      rendererMutationAuthorized: false,
-      canvasRepairAuthorized: false,
-      controlsRepairAuthorized: false,
-      routeRepairAuthorized: false,
-      publicRuntimeMountAuthorized: false,
-      publicRuntimeMutationAuthorized: false,
-      readinessClaimed: false,
-      visualPassClaimed: false,
-      cyclePassClaimed: false,
-      exactNineIndependentlyClaimed: false,
-      restitutionIndependentlyClaimed: false,
-      bridgeCompatibilityClaimed: false,
-      runtimeOrderClaimed: false,
-      familySynchronizationClaimed: false,
-      targetReadyProvesRuntimeReady: false,
-      targetRouteMatchProvesRuntimeReady: false,
-      targetLoadProvesRuntimeReady: false,
-      f21Claimed: false,
-      f89Claimed: false
-    });
-
-  var CONTROL_REQUIREMENTS =
-    deepFreezeLiteral({
-      schema:
-        CONTROL_REQUIREMENTS_SCHEMA,
-
-      controlsContract:
-        CONTRACT,
-
-      publicApiRequirements: [
-        "createReport",
-        "runDirectCheck",
-        "runNineCycle",
-        "viewCurrentReport",
-        "copyReadableReport",
-        "copyPacketReport",
-        "copyRawReport",
-        "executeDistributedReportCommand",
-        "applyCommandContext",
-        "openReceiptChamber",
-        "openArchiveChamber",
-        "addReportToArchive",
-        "createDeepArchive",
-        "resetCurrentReport",
-        "resetWorkbench",
-        "selectCategory",
-        "selectAudit",
-        "selectParticipant",
-        "selectReportMode",
-        "selectObservationLens",
-        "selectInstrumentChamber",
-        "setTargetVisible",
-        "setTargetExpanded",
-        "inspectTargetFrame",
-        "ensureTargetReady",
-        "reloadTargetFrame",
-        "applyReceiptFilter",
-        "selectReceipt",
-        "inspectControls",
-        "inspectDistributedCommands",
-        "inspectInspectionLane",
-        "collectReceiptFamilies",
-        "refreshReceiptInventory",
-        "resolveEngine",
-        "closeAllSelectors",
-        "renderCycleChamber",
-        "refreshCycleChamber",
-        "getState",
-        "getCurrentReport",
-        "getCurrentReportReceipt",
-        "getCurrentCycleReceipt",
-        "getCycleRenderingState",
-        "getTargetLifecycleState",
-        "getNormalizedReceipts",
-        "getRequirements",
-        "getReceipt"
-      ],
-
-      requiredCycleTargetIds:
-        CYCLE_TARGET_IDS.slice(),
-
-      requiredStationPositions:
-        CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
-          return station.position;
-        }),
-
-      presentationStationMap:
-        CANONICAL_CYCLE_STATIONS,
-
-      expectedEngineContract:
-        ENGINE_CONTRACT,
-
-      expectedInspectionLaneContract:
-        INSPECTION_LANE_CONTRACT,
-
-      expectedEngineCycleReceiptSchema:
-        ENGINE_CYCLE_RECEIPT_SCHEMA,
-
-      expectedTargetRoute:
-        TARGET_ROUTE,
-
-      targetFrameId:
-        TARGET_FRAME_ID,
-
-      targetPreparationOwner:
-        "INDEX_CONTROLS",
-
-      certificationOwner:
-        "INDEX_CONTROL_BRIDGE",
-
-      controlsCertificationScope:
-        "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_EVIDENCE_ONLY",
-
-      noClaims:
-        NO_CLAIMS
-    });
-
-  var RECEIPT_FIELD_NAMES =
-    Object.freeze([
-      "receipt",
-      "receipts",
-      "receiptList",
-      "receiptMap",
-      "receiptRegistry",
-      "participantReceipts",
-      "inspectionReceipts",
-      "observationReceipts",
-      "directReceipts",
-      "cycleReceipts",
-      "stationReceipts",
-      "errors",
-      "errorList",
-      "archive",
-      "records",
-      "ledger",
-      "packets",
-      "entries"
-    ]);
+      "applyReceiptFilter",
+      "selectReceipt",
+      "inspectControls",
+      "inspectDistributedCommands",
+      "inspectInspectionLane",
+      "collectReceiptFamilies",
+      "refreshReceiptInventory",
+      "resolveEngine",
+      "closeAllSelectors",
+      "renderCycleChamber",
+      "refreshCycleChamber",
+      "getState",
+      "getCurrentReport",
+      "getCurrentReportReceipt",
+      "getCurrentCycleReceipt",
+      "getCycleRenderingState",
+      "getTargetLifecycleState",
+      "getNormalizedReceipts",
+      "getRequirements",
+      "getReceipt"
+    ],
+    noClaims: NO_CLAIMS
+  });
 
   var state = {
     initialized: false,
     initializedAt: null,
-
-    engine: {
-      resolved: false,
-      compatible: false,
-      ready: false,
-      path: null,
-      contract: null,
-      status: null,
-      reason: "ENGINE_NOT_RESOLVED"
-    },
-
-    inspectionLane: {
-      resolved: false,
-      path: null,
-      contract: null,
-      receiptPresent: false,
-      errorPresent: false
-    },
-
+    engine: emptyEngine("ENGINE_NOT_RESOLVED"),
+    inspectionLane: emptyInspection(),
     controls: {
-      manifestCount: CANONICAL_CONTROL_IDS.length,
+      manifestCount: CONTROL_IDS.length,
       discoveredCount: 0,
       missingCount: 0,
       missing: [],
@@ -490,7 +226,6 @@
       distributedDeclarationCount: 0,
       distributedDeclarations: []
     },
-
     ui: {
       leftOrbit: "audits",
       reportMode: "read",
@@ -508,8 +243,251 @@
       lastReportCommand: null,
       lastReportCommandSource: null
     },
+    target: emptyTarget(),
+    report: {
+      current: null,
+      receipt: null,
+      source: null,
+      fallbackHistory: []
+    },
+    directReceipts: [],
+    cycle: {
+      running: false,
+      requested: false,
+      executed: false,
+      rawReceipt: null,
+      rendering: null,
+      renderingReceipt: null,
+      localDomEvidence: null,
+      renderedAt: null
+    },
+    normalizedReceipts: [],
+    visibleReceipts: [],
+    actionCount: 0,
+    clickCount: 0,
+    createReportClickCount: 0,
+    distributedExecutionCount: 0,
+    errorCount: 0,
+    lastAction: null,
+    lastError: null
+  };
 
-    target: {
+  var activeCycle = {
+    promise: null,
+    resolve: null,
+    settled: false,
+    createdAt: null
+  };
+
+  function nowIso() {
+    try { return new Date().toISOString(); } catch (_e) { return null; }
+  }
+
+  function byId(id) {
+    return doc.getElementById(id);
+  }
+
+  function isFn(v) {
+    return typeof v === "function";
+  }
+
+  function isObj(v) {
+    return Boolean(v && typeof v === "object" && !Array.isArray(v));
+  }
+
+  function hasOwn(o, k) {
+    return Boolean(o && Object.prototype.hasOwnProperty.call(o, k));
+  }
+
+  function clone(v, seen) {
+    var memory = seen || [];
+    var out, keys;
+
+    if (v === null || v === undefined || typeof v === "string" || typeof v === "number" || typeof v === "boolean") return v;
+    if (typeof v === "bigint") return v.toString();
+    if (typeof v === "function") return { type: "Function", name: v.name || "anonymous" };
+    if (memory.indexOf(v) !== -1) return "[Circular]";
+
+    memory.push(v);
+
+    if (Array.isArray(v)) {
+      return v.map(function (x) { return clone(x, memory.slice()); });
+    }
+
+    out = {};
+    try { keys = Object.keys(v); } catch (_e) { return { unreadable: true }; }
+
+    keys.forEach(function (k) {
+      try { out[k] = clone(v[k], memory.slice()); } catch (_e) { out[k] = "[Unreadable]"; }
+    });
+
+    return out;
+  }
+
+  function deepFreeze(v, seen) {
+    var memory = seen || [];
+    if (!v || (typeof v !== "object" && typeof v !== "function")) return v;
+    if (memory.indexOf(v) !== -1) return v;
+    memory.push(v);
+    try {
+      Object.keys(v).forEach(function (k) { deepFreeze(v[k], memory); });
+      Object.freeze(v);
+    } catch (_e) {}
+    return v;
+  }
+
+  function frozenClone(v) {
+    return deepFreeze(clone(v));
+  }
+
+  function safeJson(v) {
+    try { return JSON.stringify(clone(v), null, 2); } catch (_e) { return String(v); }
+  }
+
+  function escapeHtml(v) {
+    return String(v === null || v === undefined ? "" : v)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function cssEscape(v) {
+    if (root.CSS && isFn(root.CSS.escape)) return root.CSS.escape(String(v));
+    return String(v).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  }
+
+  function token(v) {
+    return String(v === null || v === undefined ? "" : v)
+      .trim()
+      .toUpperCase()
+      .replace(/[\s\-]+/g, "_");
+  }
+
+  function fib(v) {
+    var t = token(v);
+    if (!t) return "";
+    if (/^\d+$/.test(t)) return "F" + t;
+    return t.charAt(0) === "F" ? t : "F" + t;
+  }
+
+  function normalizeRoutePath(v) {
+    var raw = String(v === null || v === undefined ? "" : v).trim();
+    if (!raw) return null;
+    if (raw === "about:blank") return "/blank/";
+    try {
+      var parsed = new root.URL(raw, root.location && root.location.href ? root.location.href : "https://diamondgatebridge.com/");
+      var path = parsed.pathname || "/";
+      if (path.charAt(0) !== "/") path = "/" + path;
+      if (path.length > 1 && path.charAt(path.length - 1) !== "/") path += "/";
+      return path;
+    } catch (_e) {
+      var clean = raw.split("#")[0].split("?")[0];
+      if (clean.charAt(0) !== "/") clean = "/" + clean;
+      if (clean.length > 1 && clean.charAt(clean.length - 1) !== "/") clean += "/";
+      return clean;
+    }
+  }
+
+  function readPath(path) {
+    var parts = String(path || "").split(".").filter(Boolean);
+    var cursor = root;
+    var i;
+
+    for (i = 0; i < parts.length; i += 1) {
+      if (cursor === null || cursor === undefined) return null;
+      try { cursor = cursor[parts[i]]; } catch (_e) { return null; }
+    }
+
+    return cursor === undefined ? null : cursor;
+  }
+
+  function resolveFirst(paths) {
+    var i, value;
+    for (i = 0; i < paths.length; i += 1) {
+      value = readPath(paths[i]);
+      if (value) return { path: paths[i], value: value };
+    }
+    return null;
+  }
+
+  function setText(id, value) {
+    var n = byId(id);
+    if (!n) return false;
+    n.textContent = value === null || value === undefined ? "" : String(value);
+    return true;
+  }
+
+  function setHtml(id, value) {
+    var n = byId(id);
+    if (!n) return false;
+    n.innerHTML = String(value || "");
+    return true;
+  }
+
+  function setHidden(id, hidden) {
+    var n = byId(id);
+    if (!n) return false;
+    n.hidden = Boolean(hidden);
+    return true;
+  }
+
+  function setDisabled(id, disabled) {
+    var n = byId(id);
+    if (!n) return false;
+    n.disabled = Boolean(disabled);
+    n.setAttribute("aria-disabled", disabled ? "true" : "false");
+    return true;
+  }
+
+  function setStatus(idOrNode, status) {
+    var n = typeof idOrNode === "string" ? byId(idOrNode) : idOrNode;
+    if (!n) return false;
+    n.setAttribute("data-status", token(status || "UNKNOWN"));
+    return true;
+  }
+
+  function toast(message, status) {
+    var n = byId("toast");
+    if (!n) return;
+    n.textContent = String(message || "");
+    n.setAttribute("data-status", token(status || "READY"));
+    n.classList.add("show");
+    n.classList.add("visible");
+    n.setAttribute("data-visible", "true");
+    if (toast._timer && root.clearTimeout) root.clearTimeout(toast._timer);
+    toast._timer = root.setTimeout(function () {
+      n.classList.remove("show");
+      n.classList.remove("visible");
+      n.setAttribute("data-visible", "false");
+    }, 2800);
+  }
+
+  function emptyEngine(reason) {
+    return {
+      resolved: false,
+      compatible: false,
+      ready: false,
+      path: null,
+      contract: null,
+      status: null,
+      reason: reason || "ENGINE_NOT_RESOLVED"
+    };
+  }
+
+  function emptyInspection() {
+    return {
+      resolved: false,
+      path: null,
+      contract: null,
+      receiptPresent: false,
+      errorPresent: false
+    };
+  }
+
+  function emptyTarget() {
+    return {
       schema: TARGET_LIFECYCLE_SCHEMA,
       lifecycleClass: "TARGET_UNBOUND",
       framePresent: false,
@@ -539,778 +517,47 @@
       lastInspectedAt: null,
       lastTargetError: null,
       preparationReceipt: null
-    },
-
-    report: {
-      current: null,
-      receipt: null,
-      source: null,
-      fallbackHistory: []
-    },
-
-    directReceipts: [],
-
-    cycle: {
-      running: false,
-      requested: false,
-      executed: false,
-      rawReceipt: null,
-      rendering: null,
-      renderingReceipt: null,
-      localDomEvidence: null,
-      renderedAt: null
-    },
-
-    normalizedReceipts: [],
-    visibleReceipts: [],
-
-    actionCount: 0,
-    clickCount: 0,
-    createReportClickCount: 0,
-    distributedExecutionCount: 0,
-    errorCount: 0,
-
-    lastAction: null,
-    lastError: null
-  };
-
-  var activeCycleRequest = {
-    promise: null,
-    resolve: null,
-    settled: false,
-    createdAt: null
-  };
-
-  function deepFreezeLiteral(value, seen) {
-    var memory =
-      seen || [];
-
-    if (
-      !value ||
-      (
-        typeof value !== "object" &&
-        typeof value !== "function"
-      )
-    ) {
-      return value;
-    }
-
-    if (memory.indexOf(value) !== -1) {
-      return value;
-    }
-
-    memory.push(value);
-
-    try {
-      Object.keys(value).forEach(function freezeLiteralChild(key) {
-        deepFreezeLiteral(
-          value[key],
-          memory
-        );
-      });
-
-      Object.freeze(value);
-    } catch (_error) {}
-
-    return value;
-  }
-
-  function byId(id) {
-    return doc.getElementById(id);
-  }
-
-  function isFunction(value) {
-    return typeof value === "function";
-  }
-
-  function isObject(value) {
-    return Boolean(
-      value &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    );
-  }
-
-  function hasOwn(owner, key) {
-    return Boolean(
-      owner &&
-      Object.prototype.hasOwnProperty.call(
-        owner,
-        key
-      )
-    );
-  }
-
-  function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (_error) {
-      return null;
-    }
-  }
-
-  function normalizeRoutePath(value) {
-    var raw =
-      String(
-        value === null ||
-        value === undefined
-          ? ""
-          : value
-      ).trim();
-
-    if (!raw) {
-      return null;
-    }
-
-    if (raw === "about:blank") {
-      return "/blank/";
-    }
-
-    try {
-      var parsed =
-        new root.URL(
-          raw,
-          root.location && root.location.href
-            ? root.location.href
-            : "https://diamondgatebridge.com/"
-        );
-
-      var pathname =
-        parsed.pathname || "/";
-
-      if (pathname.charAt(0) !== "/") {
-        pathname =
-          "/" + pathname;
-      }
-
-      if (
-        pathname.length > 1 &&
-        pathname.charAt(pathname.length - 1) !== "/"
-      ) {
-        pathname += "/";
-      }
-
-      return pathname;
-    } catch (_error) {
-      var clean =
-        raw.split("#")[0].split("?")[0];
-
-      if (clean.charAt(0) !== "/") {
-        clean =
-          "/" + clean;
-      }
-
-      if (
-        clean.length > 1 &&
-        clean.charAt(clean.length - 1) !== "/"
-      ) {
-        clean += "/";
-      }
-
-      return clean;
-    }
-  }
-
-  function clone(value, seen) {
-    var memory =
-      seen || [];
-
-    var output;
-    var keys;
-
-    if (
-      value === null ||
-      value === undefined ||
-      typeof value === "string" ||
-      typeof value === "number" ||
-      typeof value === "boolean"
-    ) {
-      return value;
-    }
-
-    if (typeof value === "bigint") {
-      return value.toString();
-    }
-
-    if (typeof value === "function") {
-      return {
-        type: "Function",
-        name: value.name || "anonymous"
-      };
-    }
-
-    if (memory.indexOf(value) !== -1) {
-      return "[Circular]";
-    }
-
-    memory.push(value);
-
-    if (Array.isArray(value)) {
-      return value.map(function cloneArrayEntry(entry) {
-        return clone(
-          entry,
-          memory.slice()
-        );
-      });
-    }
-
-    output = {};
-
-    try {
-      keys = Object.keys(value);
-    } catch (_error) {
-      return {
-        unreadable: true
-      };
-    }
-
-    keys.forEach(function cloneProperty(key) {
-      try {
-        output[key] =
-          clone(
-            value[key],
-            memory.slice()
-          );
-      } catch (_error) {
-        output[key] =
-          "[Unreadable]";
-      }
-    });
-
-    return output;
-  }
-
-  function deepFreeze(value, seen) {
-    var memory =
-      seen || [];
-
-    if (
-      !value ||
-      (
-        typeof value !== "object" &&
-        typeof value !== "function"
-      )
-    ) {
-      return value;
-    }
-
-    if (memory.indexOf(value) !== -1) {
-      return value;
-    }
-
-    memory.push(value);
-
-    try {
-      Object.keys(value).forEach(function freezeProperty(key) {
-        try {
-          deepFreeze(
-            value[key],
-            memory
-          );
-        } catch (_error) {}
-      });
-
-      Object.freeze(value);
-    } catch (_error) {}
-
-    return value;
-  }
-
-  function frozenClone(value) {
-    return deepFreeze(
-      clone(value)
-    );
-  }
-
-  function safeJson(value) {
-    try {
-      return JSON.stringify(
-        clone(value),
-        null,
-        2
-      );
-    } catch (_error) {
-      return String(value);
-    }
-  }
-
-  function escapeHtml(value) {
-    return String(
-      value === null ||
-      value === undefined
-        ? ""
-        : value
-    )
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-
-  function cssEscape(value) {
-    if (
-      root.CSS &&
-      isFunction(root.CSS.escape)
-    ) {
-      return root.CSS.escape(
-        String(value)
-      );
-    }
-
-    return String(value)
-      .replace(/\\/g, "\\\\")
-      .replace(/"/g, '\\"');
-  }
-
-  function normalizeToken(value) {
-    return String(
-      value === null ||
-      value === undefined
-        ? ""
-        : value
-    )
-      .trim()
-      .toUpperCase()
-      .replace(/[\s\-]+/g, "_");
-  }
-
-  function normalizeFibonacci(value) {
-    var token =
-      normalizeToken(value);
-
-    if (!token) {
-      return "";
-    }
-
-    if (/^\d+$/.test(token)) {
-      return "F" + token;
-    }
-
-    return token.charAt(0) === "F"
-      ? token
-      : "F" + token;
-  }
-
-  function declarationIsSupplied(value) {
-    return !(
-      value === null ||
-      value === undefined ||
-      String(value).trim() === ""
-    );
-  }
-
-  function readPath(path) {
-    var parts =
-      String(path || "")
-        .split(".")
-        .filter(Boolean);
-
-    var cursor =
-      root;
-
-    var index;
-
-    for (
-      index = 0;
-      index < parts.length;
-      index += 1
-    ) {
-      if (
-        cursor === null ||
-        cursor === undefined
-      ) {
-        return null;
-      }
-
-      try {
-        cursor =
-          cursor[parts[index]];
-      } catch (_error) {
-        return null;
-      }
-
-      if (
-        cursor === null ||
-        cursor === undefined
-      ) {
-        return null;
-      }
-    }
-
-    return cursor;
-  }
-
-  function setText(id, value) {
-    var node =
-      byId(id);
-
-    if (!node) {
-      return false;
-    }
-
-    node.textContent =
-      value === null ||
-      value === undefined
-        ? ""
-        : String(value);
-
-    return true;
-  }
-
-  function setHtml(id, value) {
-    var node =
-      byId(id);
-
-    if (!node) {
-      return false;
-    }
-
-    node.innerHTML =
-      String(value || "");
-
-    return true;
-  }
-
-  function setHidden(id, hidden) {
-    var node =
-      byId(id);
-
-    if (!node) {
-      return false;
-    }
-
-    node.hidden =
-      Boolean(hidden);
-
-    return true;
-  }
-
-  function setDisabled(id, disabled) {
-    var node =
-      byId(id);
-
-    if (!node) {
-      return false;
-    }
-
-    node.disabled =
-      Boolean(disabled);
-
-    node.setAttribute(
-      "aria-disabled",
-      disabled
-        ? "true"
-        : "false"
-    );
-
-    return true;
-  }
-
-  function setStatus(idOrNode, status) {
-    var node =
-      typeof idOrNode === "string"
-        ? byId(idOrNode)
-        : idOrNode;
-
-    if (!node) {
-      return false;
-    }
-
-    node.setAttribute(
-      "data-status",
-      String(status || "UNKNOWN")
-        .trim()
-        .toUpperCase()
-    );
-
-    return true;
-  }
-
-  function toast(message, status) {
-    var node =
-      byId("toast");
-
-    if (!node) {
-      return;
-    }
-
-    node.textContent =
-      String(message || "");
-
-    node.setAttribute(
-      "data-status",
-      String(status || "READY")
-        .trim()
-        .toUpperCase()
-    );
-
-    node.classList.add("show");
-    node.classList.add("visible");
-
-    node.setAttribute(
-      "data-visible",
-      "true"
-    );
-
-    if (
-      toast._timer &&
-      root.clearTimeout
-    ) {
-      root.clearTimeout(
-        toast._timer
-      );
-    }
-
-    toast._timer =
-      root.setTimeout(function hideToast() {
-        node.classList.remove("show");
-        node.classList.remove("visible");
-
-        node.setAttribute(
-          "data-visible",
-          "false"
-        );
-      }, 2800);
+    };
   }
 
   function recordAction(action, detail) {
     state.actionCount += 1;
-
-    state.lastAction = {
+    state.lastAction = deepFreeze({
       action: action,
-      detail:
-        clone(detail || null),
-      actionNumber:
-        state.actionCount,
-      occurredAt:
-        nowIso()
-    };
-
+      detail: clone(detail || null),
+      actionNumber: state.actionCount,
+      occurredAt: nowIso()
+    });
     publishReceipt();
   }
 
   function recordError(action, error, detail) {
     state.errorCount += 1;
-
-    state.lastError = {
+    state.lastError = deepFreeze({
       action: action,
-      message:
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
-        ),
-      detail:
-        clone(detail || null),
-      errorNumber:
-        state.errorCount,
-      occurredAt:
-        nowIso()
-    };
-
-    setText(
-      "controllerState",
-      "CONTROL ERROR"
-    );
-
-    setStatus(
-      "controllerState",
-      "ERROR"
-    );
-
+      message: String(error && error.message ? error.message : error),
+      detail: clone(detail || null),
+      errorNumber: state.errorCount,
+      occurredAt: nowIso()
+    });
+    setText("controllerState", "CONTROL ERROR");
+    setStatus("controllerState", "ERROR");
+    toast(state.lastError.message, "ERROR");
     publishReceipt();
-
-    toast(
-      state.lastError.message,
-      "ERROR"
-    );
-
-    return frozenClone(
-      state.lastError
-    );
-  }
-
-  function runFinalizer(finalizer, context) {
-    try {
-      finalizer();
-    } catch (error) {
-      recordError(
-        "finalizer",
-        error,
-        context || null
-      );
-    }
-  }
-
-  function withFinalization(promise, finalizer, context) {
-    return Promise.resolve(promise)
-      .then(
-        function finalizeResolved(value) {
-          runFinalizer(
-            finalizer,
-            context
-          );
-
-          return value;
-        },
-        function finalizeRejected(error) {
-          runFinalizer(
-            finalizer,
-            context
-          );
-
-          throw error;
-        }
-      );
-  }
-
-  function hasActiveCycleRequest() {
-    return Boolean(
-      activeCycleRequest.promise &&
-      activeCycleRequest.settled === false
-    );
-  }
-
-  function getActiveCyclePromise() {
-    return hasActiveCycleRequest()
-      ? activeCycleRequest.promise
-      : null;
-  }
-
-  function createActiveCycleRequest() {
-    if (hasActiveCycleRequest()) {
-      return activeCycleRequest.promise;
-    }
-
-    activeCycleRequest.settled =
-      false;
-
-    activeCycleRequest.createdAt =
-      nowIso();
-
-    activeCycleRequest.promise =
-      new Promise(function registerActiveCycleResolver(resolve) {
-        activeCycleRequest.resolve =
-          resolve;
-      });
-
-    return activeCycleRequest.promise;
-  }
-
-  function clearActiveCycleRequest() {
-    activeCycleRequest.promise =
-      null;
-
-    activeCycleRequest.resolve =
-      null;
-
-    activeCycleRequest.settled =
-      false;
-
-    activeCycleRequest.createdAt =
-      null;
-  }
-
-  function settleActiveCycleRequest(receipt) {
-    if (
-      !hasActiveCycleRequest() ||
-      !isFunction(activeCycleRequest.resolve)
-    ) {
-      return false;
-    }
-
-    var resolver =
-      activeCycleRequest.resolve;
-
-    var settledReceipt =
-      frozenClone(receipt);
-
-    activeCycleRequest.settled =
-      true;
-
-    activeCycleRequest.resolve =
-      null;
-
-    resolver(
-      settledReceipt
-    );
-
-    activeCycleRequest.promise =
-      null;
-
-    activeCycleRequest.settled =
-      false;
-
-    activeCycleRequest.createdAt =
-      null;
-
-    return true;
-  }
-
-  function resolveFirst(paths) {
-    var index;
-    var value;
-
-    for (
-      index = 0;
-      index < paths.length;
-      index += 1
-    ) {
-      value =
-        readPath(
-          paths[index]
-        );
-
-      if (value) {
-        return {
-          path:
-            paths[index],
-          value:
-            value
-        };
-      }
-    }
-
-    return null;
+    return frozenClone(state.lastError);
   }
 
   function inspectInspectionLane() {
-    var resolved =
-      resolveFirst(
-        INSPECTION_GLOBAL_PATHS
-      );
-
+    var r = resolveFirst(INSPECTION_PATHS);
     state.inspectionLane = {
-      resolved:
-        Boolean(resolved),
-      path:
-        resolved
-          ? resolved.path
-          : null,
-      contract:
-        resolved &&
-        resolved.value
-          ? (
-              resolved.value.CONTRACT ||
-              resolved.value.contract ||
-              null
-            )
-          : null,
-      receiptPresent:
-        Boolean(
-          root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT
-        ),
-      errorPresent:
-        Boolean(
-          root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__
-        )
+      resolved: Boolean(r),
+      path: r ? r.path : null,
+      contract: r && r.value ? (r.value.CONTRACT || r.value.contract || null) : null,
+      receiptPresent: Boolean(root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT),
+      errorPresent: Boolean(root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__)
     };
-
-    return frozenClone(
-      state.inspectionLane
-    );
+    publishReceipt();
+    return frozenClone(state.inspectionLane);
   }
 
   function deriveEngineStatus(engine, publicState) {
@@ -1321,132 +568,44 @@
       publicState && publicState.engineStatus,
       publicState && publicState.reportStatus
     ];
-
-    var index;
-
-    for (
-      index = 0;
-      index < candidates.length;
-      index += 1
-    ) {
-      if (
-        typeof candidates[index] === "string" &&
-        candidates[index].trim()
-      ) {
-        return candidates[index]
-          .trim()
-          .toUpperCase();
-      }
+    var i;
+    for (i = 0; i < candidates.length; i += 1) {
+      if (typeof candidates[i] === "string" && candidates[i].trim()) return token(candidates[i]);
     }
-
-    if (
-      publicState &&
-      publicState.initialized === true
-    ) {
-      return "READY";
-    }
-
+    if (publicState && publicState.initialized === true) return "READY";
     return "UNKNOWN";
   }
 
   function resolveEngine() {
-    var index;
-    var candidate;
-    var candidatePath;
-    var publicState;
-    var status;
-    var contract;
+    var i, candidate, path, contract, publicState, status;
 
-    state.engine = {
-      resolved: false,
-      compatible: false,
-      ready: false,
-      path: null,
-      contract: null,
-      status: null,
-      reason: "ENGINE_NOT_FOUND"
-    };
+    state.engine = emptyEngine("ENGINE_NOT_FOUND");
 
-    for (
-      index = 0;
-      index < ENGINE_GLOBAL_PATHS.length;
-      index += 1
-    ) {
-      candidatePath =
-        ENGINE_GLOBAL_PATHS[index];
+    for (i = 0; i < ENGINE_PATHS.length; i += 1) {
+      path = ENGINE_PATHS[i];
+      candidate = readPath(path);
 
-      candidate =
-        readPath(candidatePath);
+      if (!candidate || typeof candidate !== "object") continue;
 
-      if (
-        !candidate ||
-        typeof candidate !== "object"
-      ) {
+      contract = typeof candidate.CONTRACT === "string" ? candidate.CONTRACT : typeof candidate.contract === "string" ? candidate.contract : null;
+
+      state.engine.resolved = true;
+      state.engine.path = path;
+      state.engine.contract = contract;
+
+      if (contract !== ENGINE_CONTRACT) {
+        state.engine.reason = "ENGINE_CONTRACT_MISMATCH";
         continue;
       }
 
-      contract =
-        typeof candidate.CONTRACT === "string"
-          ? candidate.CONTRACT
-          : typeof candidate.contract === "string"
-            ? candidate.contract
-            : null;
+      state.engine.compatible = true;
 
-      state.engine.resolved =
-        true;
+      try { publicState = isFn(candidate.getState) ? candidate.getState() : null; } catch (_e) { publicState = null; }
 
-      state.engine.path =
-        candidatePath;
-
-      state.engine.contract =
-        contract;
-
-      if (
-        contract !==
-        ENGINE_CONTRACT
-      ) {
-        state.engine.reason =
-          "ENGINE_CONTRACT_MISMATCH";
-
-        continue;
-      }
-
-      state.engine.compatible =
-        true;
-
-      try {
-        publicState =
-          isFunction(candidate.getState)
-            ? candidate.getState()
-            : null;
-      } catch (_error) {
-        publicState =
-          null;
-      }
-
-      status =
-        deriveEngineStatus(
-          candidate,
-          publicState
-        );
-
-      state.engine.status =
-        status;
-
-      state.engine.ready =
-        HEALTHY_ENGINE_STATES.indexOf(
-          status
-        ) !== -1 &&
-        isFunction(
-          candidate.createReport
-        );
-
-      state.engine.reason =
-        state.engine.ready
-          ? "ENGINE_READY"
-          : isFunction(candidate.createReport)
-            ? "ENGINE_NOT_READY"
-            : "ENGINE_CREATE_REPORT_MISSING";
+      status = deriveEngineStatus(candidate, publicState);
+      state.engine.status = status;
+      state.engine.ready = ["READY", "AVAILABLE", "ACTIVE"].indexOf(status) !== -1 && isFn(candidate.createReport);
+      state.engine.reason = state.engine.ready ? "ENGINE_READY" : isFn(candidate.createReport) ? "ENGINE_NOT_READY" : "ENGINE_CREATE_REPORT_MISSING";
 
       if (state.engine.ready) {
         publishReceipt();
@@ -1455,1205 +614,377 @@
     }
 
     publishReceipt();
-
     return null;
   }
 
   function getCompatibleEngine() {
-    var engine =
-      resolveEngine();
-
-    if (engine) {
-      return engine;
+    var engine = resolveEngine();
+    var i, c;
+    if (engine) return engine;
+    for (i = 0; i < ENGINE_PATHS.length; i += 1) {
+      c = readPath(ENGINE_PATHS[i]);
+      if (c && typeof c === "object" && (c.CONTRACT || c.contract) === ENGINE_CONTRACT) return c;
     }
-
-    var index;
-    var candidate;
-    var contract;
-
-    for (
-      index = 0;
-      index < ENGINE_GLOBAL_PATHS.length;
-      index += 1
-    ) {
-      candidate =
-        readPath(
-          ENGINE_GLOBAL_PATHS[index]
-        );
-
-      if (
-        !candidate ||
-        typeof candidate !== "object"
-      ) {
-        continue;
-      }
-
-      contract =
-        candidate.CONTRACT ||
-        candidate.contract ||
-        null;
-
-      if (
-        contract ===
-        ENGINE_CONTRACT
-      ) {
-        return candidate;
-      }
-    }
-
     return null;
   }
 
-  function getInspectionLane() {
-    var resolved =
-      resolveFirst(
-        INSPECTION_GLOBAL_PATHS
-      );
-
-    return resolved
-      ? resolved.value
-      : null;
-  }
-
   function invokeEngine(methodName, args, options) {
-    var settings =
-      options || {};
-
-    var engine =
-      resolveEngine();
-
-    if (
-      !engine ||
-      !isFunction(engine[methodName])
-    ) {
-      if (isFunction(settings.fallback)) {
-        return Promise.resolve(
-          settings.fallback({
-            reason:
-              !engine
-                ? state.engine.reason
-                : "ENGINE_METHOD_MISSING",
-            methodName:
-              methodName
-          })
-        );
-      }
-
-      return Promise.resolve(
-        recordError(
-          methodName,
-          new Error(
-            !engine
-              ? state.engine.reason
-              : "ENGINE_METHOD_MISSING:" +
-                methodName
-          )
-        )
-      );
-    }
-
-    recordAction(
-      "invokeEngine." + methodName,
-      {
-        enginePath:
-          state.engine.path,
-        engineContract:
-          state.engine.contract
-      }
-    );
-
+    var settings = options || {};
+    var engine = resolveEngine();
     var result;
 
-    try {
-      result =
-        engine[methodName].apply(
-          engine,
-          Array.isArray(args)
-            ? args
-            : []
-        );
-    } catch (error) {
-      if (isFunction(settings.fallback)) {
-        return Promise.resolve(
-          settings.fallback({
-            reason:
-              "ENGINE_METHOD_THROW",
-            methodName:
-              methodName,
-            error:
-              error
-          })
-        );
+    if (!engine || !isFn(engine[methodName])) {
+      if (isFn(settings.fallback)) {
+        return Promise.resolve(settings.fallback({
+          reason: !engine ? state.engine.reason : "ENGINE_METHOD_MISSING",
+          methodName: methodName
+        }));
       }
-
-      return Promise.resolve(
-        recordError(
-          methodName,
-          error
-        )
-      );
+      return Promise.resolve(recordError(methodName, new Error(!engine ? state.engine.reason : "ENGINE_METHOD_MISSING:" + methodName)));
     }
 
-    return Promise.resolve(result)
-      .then(function engineResolved(value) {
-        if (
-          isFunction(settings.validate) &&
-          !settings.validate(value)
-        ) {
-          if (isFunction(settings.fallback)) {
-            return settings.fallback({
-              reason:
-                "ENGINE_RESULT_INVALID",
-              methodName:
-                methodName,
-              result:
-                clone(value)
-            });
-          }
+    recordAction("invokeEngine." + methodName, {
+      enginePath: state.engine.path,
+      engineContract: state.engine.contract
+    });
 
-          return recordError(
-            methodName,
-            new Error(
-              "ENGINE_RESULT_INVALID:" +
-                methodName
-            )
-          );
-        }
+    try {
+      result = engine[methodName].apply(engine, Array.isArray(args) ? args : []);
+    } catch (error) {
+      if (isFn(settings.fallback)) {
+        return Promise.resolve(settings.fallback({
+          reason: "ENGINE_METHOD_THROW",
+          methodName: methodName,
+          error: error
+        }));
+      }
+      return Promise.resolve(recordError(methodName, error));
+    }
 
-        return value;
-      })
-      .catch(function engineRejected(error) {
-        if (isFunction(settings.fallback)) {
+    return Promise.resolve(result).then(function (value) {
+      if (isFn(settings.validate) && !settings.validate(value)) {
+        if (isFn(settings.fallback)) {
           return settings.fallback({
-            reason:
-              "ENGINE_METHOD_REJECTED",
-            methodName:
-              methodName,
-            error:
-              error
+            reason: "ENGINE_RESULT_INVALID",
+            methodName: methodName,
+            result: clone(value)
           });
         }
-
-        return recordError(
-          methodName,
-          error
-        );
-      });
+        return recordError(methodName, new Error("ENGINE_RESULT_INVALID:" + methodName));
+      }
+      return value;
+    }, function (error) {
+      if (isFn(settings.fallback)) {
+        return settings.fallback({
+          reason: "ENGINE_METHOD_REJECTED",
+          methodName: methodName,
+          error: error
+        });
+      }
+      return recordError(methodName, error);
+    });
   }
 
   function createTargetPreparationReceipt(reason) {
-    var target =
-      state.target;
-
+    var t = state.target;
     var receipt = {
-      schema:
-        TARGET_PREPARATION_RECEIPT_SCHEMA,
-
-      receiptId:
-        "AUDRALIA_TARGET_PREPARATION_RECEIPT_" +
-        Date.now(),
-
-      controlsContract:
-        CONTRACT,
-
-      ownerType:
-        "DIAGNOSTIC_OBSERVATORY_TARGET_BINDING",
-
-      subjectId:
-        "AUDRALIA_DIAGNOSTIC_TARGET_FRAME",
-
-      file:
-        FILE,
-
-      component:
-        "TARGET_ROUTE_BINDING",
-
-      reason:
-        reason || null,
-
-      lifecycleClass:
-        target.lifecycleClass,
-
-      framePresent:
-        target.framePresent,
-
-      frameId:
-        target.frameId,
-
-      expectedRoute:
-        target.expectedRoute,
-
-      expectedRouteNormalized:
-        target.expectedRouteNormalized,
-
-      declaredSrc:
-        target.declaredSrc,
-
-      observedRoute:
-        target.observedRoute,
-
-      observedRouteNormalized:
-        target.observedRouteNormalized,
-
-      routeObserved:
-        target.routeObserved,
-
-      routeMatched:
-        target.routeMatched,
-
-      sameOriginAccessible:
-        target.sameOriginAccessible,
-
-      documentLoaded:
-        target.documentLoaded,
-
-      documentReadyState:
-        target.documentReadyState,
-
-      navigationPending:
-        target.navigationPending,
-
-      loadObserved:
-        target.loadObserved,
-
-      pendingNineCycle:
-        target.pendingNineCycle,
-
-      targetVisible:
-        state.ui.targetVisible,
-
-      observationLens:
-        state.ui.observationLens,
-
-      lastVisibilityReason:
-        target.lastVisibilityReason,
-
-      lastVisibilityChangedAt:
-        target.lastVisibilityChangedAt,
-
-      lastTargetError:
-        target.lastTargetError,
-
-      status:
-        target.lifecycleClass === "TARGET_READY"
-          ? "AVAILABLE"
-          : "HELD",
-
-      noClaims:
-        NO_CLAIMS,
-
-      generatedAt:
-        nowIso()
+      schema: TARGET_PREPARATION_RECEIPT_SCHEMA,
+      receiptId: "AUDRALIA_TARGET_PREPARATION_RECEIPT_" + Date.now(),
+      controlsContract: CONTRACT,
+      ownerType: "DIAGNOSTIC_OBSERVATORY_TARGET_BINDING",
+      subjectId: "AUDRALIA_DIAGNOSTIC_TARGET_FRAME",
+      file: FILE,
+      component: "TARGET_ROUTE_BINDING",
+      reason: reason || null,
+      lifecycleClass: t.lifecycleClass,
+      framePresent: t.framePresent,
+      frameId: t.frameId,
+      expectedRoute: t.expectedRoute,
+      expectedRouteNormalized: t.expectedRouteNormalized,
+      declaredSrc: t.declaredSrc,
+      observedRoute: t.observedRoute,
+      observedRouteNormalized: t.observedRouteNormalized,
+      routeObserved: t.routeObserved,
+      routeMatched: t.routeMatched,
+      sameOriginAccessible: t.sameOriginAccessible,
+      documentLoaded: t.documentLoaded,
+      documentReadyState: t.documentReadyState,
+      navigationPending: t.navigationPending,
+      loadObserved: t.loadObserved,
+      pendingNineCycle: t.pendingNineCycle,
+      targetVisible: state.ui.targetVisible,
+      observationLens: state.ui.observationLens,
+      lastVisibilityReason: t.lastVisibilityReason,
+      lastVisibilityChangedAt: t.lastVisibilityChangedAt,
+      lastTargetError: t.lastTargetError,
+      status: t.lifecycleClass === "TARGET_READY" ? "AVAILABLE" : "HELD",
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso()
     };
-
-    state.target.preparationReceipt =
-      deepFreeze(
-        clone(receipt)
-      );
-
+    state.target.preparationReceipt = deepFreeze(clone(receipt));
     return frozenClone(receipt);
   }
 
   function inspectTargetFrame(options) {
-    var settings =
-      options || {};
+    var settings = options || {};
+    var frame = byId(TARGET_FRAME_ID);
+    var observedRoute = null;
+    var observedNormalized = null;
+    var sameOrigin = null;
+    var loaded = false;
+    var readyState = null;
+    var readError = null;
 
-    var frame =
-      byId(TARGET_FRAME_ID);
-
-    var observedRoute =
-      null;
-
-    var observedNormalized =
-      null;
-
-    var sameOriginAccessible =
-      null;
-
-    var documentLoaded =
-      false;
-
-    var documentReadyState =
-      null;
-
-    var readError =
-      null;
-
-    state.target.framePresent =
-      Boolean(frame);
-
-    state.target.declaredSrc =
-      frame
-        ? frame.getAttribute("src")
-        : null;
-
-    state.target.lastInspectedAt =
-      nowIso();
+    state.target.framePresent = Boolean(frame);
+    state.target.declaredSrc = frame ? frame.getAttribute("src") : null;
+    state.target.lastInspectedAt = nowIso();
 
     if (!frame) {
-      state.target.lifecycleClass =
-        "TARGET_FRAME_MISSING";
-
-      state.target.routeObserved =
-        false;
-
-      state.target.routeMatched =
-        false;
-
-      state.target.sameOriginAccessible =
-        null;
-
-      state.target.documentLoaded =
-        false;
-
-      state.target.documentReadyState =
-        null;
-
-      state.target.lastTargetError =
-        "TARGET_FRAME_NOT_FOUND";
-
-      createTargetPreparationReceipt(
-        settings.reason ||
-        "TARGET_FRAME_NOT_FOUND"
-      );
-
+      state.target.lifecycleClass = "TARGET_FRAME_MISSING";
+      state.target.routeObserved = false;
+      state.target.routeMatched = false;
+      state.target.sameOriginAccessible = null;
+      state.target.documentLoaded = false;
+      state.target.documentReadyState = null;
+      state.target.lastTargetError = "TARGET_FRAME_NOT_FOUND";
+      createTargetPreparationReceipt(settings.reason || "TARGET_FRAME_NOT_FOUND");
       publishReceipt();
-
-      return frozenClone(
-        state.target
-      );
+      return frozenClone(state.target);
     }
 
     try {
-      if (
-        frame.contentWindow &&
-        frame.contentWindow.location
-      ) {
-        observedRoute =
-          frame.contentWindow.location.href ||
-          null;
-
-        sameOriginAccessible =
-          true;
+      if (frame.contentWindow && frame.contentWindow.location) {
+        observedRoute = frame.contentWindow.location.href || null;
+        sameOrigin = true;
       }
-
-      if (
-        frame.contentDocument
-      ) {
-        documentReadyState =
-          frame.contentDocument.readyState ||
-          null;
-
-        documentLoaded =
-          documentReadyState === "interactive" ||
-          documentReadyState === "complete";
+      if (frame.contentDocument) {
+        readyState = frame.contentDocument.readyState || null;
+        loaded = readyState === "interactive" || readyState === "complete";
       }
     } catch (error) {
-      sameOriginAccessible =
-        false;
-
-      readError =
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
-        );
+      sameOrigin = false;
+      readError = String(error && error.message ? error.message : error);
     }
 
     if (!observedRoute) {
-      try {
-        observedRoute =
-          frame.src ||
-          frame.getAttribute("src") ||
-          null;
-      } catch (_error) {
-        observedRoute =
-          frame.getAttribute("src") ||
-          null;
-      }
+      try { observedRoute = frame.src || frame.getAttribute("src") || null; } catch (_e) { observedRoute = frame.getAttribute("src") || null; }
     }
 
-    observedNormalized =
-      normalizeRoutePath(
-        observedRoute
-      );
+    observedNormalized = normalizeRoutePath(observedRoute);
 
-    state.target.observedRoute =
-      observedRoute;
+    state.target.observedRoute = observedRoute;
+    state.target.observedRouteNormalized = observedNormalized;
+    state.target.routeObserved = Boolean(observedRoute);
+    state.target.routeMatched = Boolean(observedNormalized && observedNormalized === state.target.expectedRouteNormalized);
+    state.target.sameOriginAccessible = sameOrigin;
+    state.target.documentLoaded = loaded;
+    state.target.documentReadyState = readyState;
+    state.target.lastTargetError = readError;
 
-    state.target.observedRouteNormalized =
-      observedNormalized;
-
-    state.target.routeObserved =
-      Boolean(observedRoute);
-
-    state.target.routeMatched =
-      Boolean(
-        observedNormalized &&
-        observedNormalized ===
-          state.target.expectedRouteNormalized
-      );
-
-    state.target.sameOriginAccessible =
-      sameOriginAccessible;
-
-    state.target.documentLoaded =
-      documentLoaded;
-
-    state.target.documentReadyState =
-      documentReadyState;
-
-    state.target.lastTargetError =
-      readError;
-
-    if (
-      state.target.navigationPending &&
-      !state.target.routeMatched
-    ) {
-      state.target.lifecycleClass =
-        "TARGET_LOADING";
-    } else if (
-      sameOriginAccessible === false
-    ) {
-      state.target.lifecycleClass =
-        "TARGET_INACCESSIBLE";
-    } else if (
-      !observedRoute ||
-      observedRoute === "about:blank" ||
-      observedNormalized === "/blank/"
-    ) {
-      state.target.lifecycleClass =
-        "TARGET_UNBOUND";
-    } else if (
-      !state.target.routeMatched
-    ) {
-      state.target.lifecycleClass =
-        "TARGET_ROUTE_MISMATCH";
-    } else if (
-      !documentLoaded
-    ) {
-      state.target.lifecycleClass =
-        "TARGET_LOADING";
+    if (state.target.navigationPending && !state.target.routeMatched) {
+      state.target.lifecycleClass = "TARGET_LOADING";
+    } else if (sameOrigin === false) {
+      state.target.lifecycleClass = "TARGET_INACCESSIBLE";
+    } else if (!observedRoute || observedRoute === "about:blank" || observedNormalized === "/blank/") {
+      state.target.lifecycleClass = "TARGET_UNBOUND";
+    } else if (!state.target.routeMatched) {
+      state.target.lifecycleClass = "TARGET_ROUTE_MISMATCH";
+    } else if (!loaded) {
+      state.target.lifecycleClass = "TARGET_LOADING";
     } else {
-      state.target.lifecycleClass =
-        "TARGET_READY";
+      state.target.lifecycleClass = "TARGET_READY";
     }
 
-    if (
-      TARGET_LIFECYCLE_CLASSES.indexOf(
-        state.target.lifecycleClass
-      ) === -1
-    ) {
-      state.target.lifecycleClass =
-        "TARGET_ROUTE_MISMATCH";
-    }
-
-    createTargetPreparationReceipt(
-      settings.reason ||
-      "TARGET_INSPECTED"
-    );
-
+    createTargetPreparationReceipt(settings.reason || "TARGET_INSPECTED");
     publishReceipt();
-
-    return frozenClone(
-      state.target
-    );
+    return frozenClone(state.target);
   }
 
   function beginTargetNavigation(reason, forceReload) {
-    var frame =
-      byId(TARGET_FRAME_ID);
+    var frame = byId(TARGET_FRAME_ID);
 
     if (!frame) {
-      state.target.framePresent =
-        false;
-
-      state.target.lifecycleClass =
-        "TARGET_FRAME_MISSING";
-
-      state.target.lastTargetError =
-        "TARGET_FRAME_NOT_FOUND";
-
-      createTargetPreparationReceipt(
-        reason ||
-        "TARGET_FRAME_NOT_FOUND"
-      );
-
+      state.target.framePresent = false;
+      state.target.lifecycleClass = "TARGET_FRAME_MISSING";
+      state.target.lastTargetError = "TARGET_FRAME_NOT_FOUND";
+      createTargetPreparationReceipt(reason || "TARGET_FRAME_NOT_FOUND");
       publishReceipt();
-
       return false;
     }
 
-    if (
-      state.target.navigationPending &&
-      forceReload !== true
-    ) {
-      return true;
-    }
+    if (state.target.navigationPending && forceReload !== true) return true;
 
-    state.target.framePresent =
-      true;
-
-    state.target.navigationPending =
-      true;
-
-    state.target.loadObserved =
-      false;
-
-    state.target.documentLoaded =
-      false;
-
-    state.target.documentReadyState =
-      null;
-
-    state.target.routeMatched =
-      false;
-
-    state.target.lifecycleClass =
-      "TARGET_LOADING";
-
-    state.target.lastTargetError =
-      null;
-
-    state.target.lastNavigationReason =
-      reason || "TARGET_NAVIGATION";
-
-    state.target.lastNavigationStartedAt =
-      nowIso();
-
+    state.target.framePresent = true;
+    state.target.navigationPending = true;
+    state.target.loadObserved = false;
+    state.target.documentLoaded = false;
+    state.target.documentReadyState = null;
+    state.target.routeMatched = false;
+    state.target.lifecycleClass = "TARGET_LOADING";
+    state.target.lastTargetError = null;
+    state.target.lastNavigationReason = reason || "TARGET_NAVIGATION";
+    state.target.lastNavigationStartedAt = nowIso();
     state.target.navigationCount += 1;
 
     try {
-      frame.src =
-        TARGET_ROUTE +
-        "?diagnosticReload=" +
-        Date.now();
-
-      createTargetPreparationReceipt(
-        reason ||
-        "TARGET_NAVIGATION_STARTED"
-      );
-
-      recordAction(
-        "targetNavigation.begin",
-        {
-          reason:
-            reason || null,
-          navigationCount:
-            state.target.navigationCount,
-          expectedRoute:
-            TARGET_ROUTE,
-          targetVisible:
-            state.ui.targetVisible,
-          observationLens:
-            state.ui.observationLens
-        }
-      );
-
+      frame.src = TARGET_ROUTE + "?diagnosticReload=" + Date.now();
+      createTargetPreparationReceipt(reason || "TARGET_NAVIGATION_STARTED");
+      recordAction("targetNavigation.begin", {
+        reason: reason || null,
+        navigationCount: state.target.navigationCount,
+        expectedRoute: TARGET_ROUTE,
+        targetVisible: state.ui.targetVisible,
+        observationLens: state.ui.observationLens
+      });
       publishReceipt();
-
       return true;
     } catch (error) {
-      state.target.navigationPending =
-        false;
-
-      state.target.lifecycleClass =
-        "TARGET_INACCESSIBLE";
-
-      state.target.lastTargetError =
-        String(
-          error &&
-          error.message
-            ? error.message
-            : error
-        );
-
-      createTargetPreparationReceipt(
-        "TARGET_NAVIGATION_THROW"
-      );
-
-      recordError(
-        "beginTargetNavigation",
-        error,
-        {
-          reason:
-            reason || null
-        }
-      );
-
+      state.target.navigationPending = false;
+      state.target.lifecycleClass = "TARGET_INACCESSIBLE";
+      state.target.lastTargetError = String(error && error.message ? error.message : error);
+      createTargetPreparationReceipt("TARGET_NAVIGATION_THROW");
+      recordError("beginTargetNavigation", error, { reason: reason || null });
       return false;
     }
   }
 
   function ensureTargetReady(options) {
-    var settings =
-      options || {};
+    var settings = options || {};
+    var inspected = inspectTargetFrame({ reason: settings.reason || "ENSURE_TARGET_READY" });
+    var started;
 
-    var inspected =
-      inspectTargetFrame({
-        reason:
-          settings.reason ||
-          "ENSURE_TARGET_READY"
-      });
-
-    if (
-      inspected.lifecycleClass ===
-      "TARGET_READY"
-    ) {
-      return {
-        ready: true,
-        pending: false,
-        startedNavigation: false,
-        target:
-          inspected
-      };
+    if (inspected.lifecycleClass === "TARGET_READY") {
+      return { ready: true, pending: false, startedNavigation: false, target: inspected };
     }
 
-    if (
-      inspected.lifecycleClass ===
-      "TARGET_LOADING" &&
-      state.target.navigationPending
-    ) {
-      return {
-        ready: false,
-        pending: true,
-        startedNavigation: false,
-        target:
-          inspected
-      };
+    if (inspected.lifecycleClass === "TARGET_LOADING" && state.target.navigationPending) {
+      return { ready: false, pending: true, startedNavigation: false, target: inspected };
     }
 
-    if (
-      inspected.lifecycleClass ===
-      "TARGET_FRAME_MISSING"
-    ) {
-      return {
-        ready: false,
-        pending: false,
-        startedNavigation: false,
-        target:
-          inspected
-      };
+    if (inspected.lifecycleClass === "TARGET_FRAME_MISSING") {
+      return { ready: false, pending: false, startedNavigation: false, target: inspected };
     }
 
-    var started =
-      beginTargetNavigation(
-        settings.reason ||
-        "ENSURE_TARGET_READY",
-        settings.forceReload === true
-      );
-
-    return {
-      ready: false,
-      pending:
-        Boolean(started),
-      startedNavigation:
-        Boolean(started),
-      target:
-        frozenClone(
-          state.target
-        )
-    };
+    started = beginTargetNavigation(settings.reason || "ENSURE_TARGET_READY", settings.forceReload === true);
+    return { ready: false, pending: Boolean(started), startedNavigation: Boolean(started), target: frozenClone(state.target) };
   }
 
   function validateReport(report) {
-    return Boolean(
-      isObject(report) &&
-      (
-        report.reportId ||
-        report.schema ||
-        report.READ ||
-        report.read
-      )
-    );
+    return Boolean(isObj(report) && (report.reportId || report.schema || report.READ || report.read));
   }
 
   function normalizeRead(report) {
-    var canonical =
-      report && report.READ
-        ? report.READ
-        : report && report.read
-          ? report.read
-          : null;
-
+    var r = report && report.READ ? report.READ : report && report.read ? report.read : null;
     return {
-      Result:
-        canonical && canonical.Result !== undefined
-          ? canonical.Result
-          : canonical && canonical.result !== undefined
-            ? canonical.result
-            : report && report.result !== undefined
-              ? report.result
-              : "A diagnostic report was created.",
-
-      Evidence:
-        canonical && Array.isArray(canonical.Evidence)
-          ? canonical.Evidence
-          : canonical && Array.isArray(canonical.evidence)
-            ? canonical.evidence
-            : report && Array.isArray(report.evidence)
-              ? report.evidence
-              : [],
-
-      Absence:
-        canonical && Array.isArray(canonical.Absence)
-          ? canonical.Absence
-          : canonical && Array.isArray(canonical.absence)
-            ? canonical.absence
-            : report && Array.isArray(report.absence)
-              ? report.absence
-              : [],
-
-      Direction:
-        canonical && Array.isArray(canonical.Direction)
-          ? canonical.Direction
-          : canonical && Array.isArray(canonical.direction)
-            ? canonical.direction
-            : report && Array.isArray(report.direction)
-              ? report.direction
-              : []
+      Result: r && r.Result !== undefined ? r.Result : r && r.result !== undefined ? r.result : "A diagnostic report was created.",
+      Evidence: r && Array.isArray(r.Evidence) ? r.Evidence : r && Array.isArray(r.evidence) ? r.evidence : [],
+      Absence: r && Array.isArray(r.Absence) ? r.Absence : r && Array.isArray(r.absence) ? r.absence : [],
+      Direction: r && Array.isArray(r.Direction) ? r.Direction : r && Array.isArray(r.direction) ? r.direction : []
     };
   }
 
-  function getEngineReport(engine) {
-    var report = null;
-
-    try {
-      if (
-        engine &&
-        isFunction(engine.getReport)
-      ) {
-        report =
-          engine.getReport();
-      }
-    } catch (_error) {}
-
-    if (!report) {
-      report =
-        root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT ||
-        null;
-    }
-
-    return report;
-  }
-
-  function getEngineReportReceipt(engine) {
-    var receipt = null;
-
-    try {
-      if (
-        engine &&
-        isFunction(engine.getReportReceipt)
-      ) {
-        receipt =
-          engine.getReportReceipt();
-      }
-    } catch (_error) {}
-
-    if (!receipt) {
-      receipt =
-        root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT ||
-        null;
-    }
-
-    return receipt;
-  }
-
-  function renderReadRegion(
-    id,
-    letter,
-    label,
-    headline,
-    entries
-  ) {
-    var values =
-      Array.isArray(entries)
-        ? entries
-        : [entries];
-
-    setHtml(
-      id,
-      "<header>" +
-        "<span>" +
-        escapeHtml(letter) +
-        "</span>" +
-        "<div>" +
-        "<p>" +
-        escapeHtml(label) +
-        "</p>" +
-        "<strong>" +
-        escapeHtml(headline) +
-        "</strong>" +
-        "</div>" +
-        "</header>" +
-        (
-          values.length > 1
-            ? "<ul>" +
-              values
-                .map(function renderEntry(entry) {
-                  return (
-                    "<li>" +
-                    escapeHtml(entry) +
-                    "</li>"
-                  );
-                })
-                .join("") +
-              "</ul>"
-            : "<p>" +
-              escapeHtml(
-                values[0] || ""
-              ) +
-              "</p>"
-        )
+  function renderReadRegion(id, letter, label, headline, entries) {
+    var values = Array.isArray(entries) ? entries : [entries];
+    setHtml(id,
+      "<header><span>" + escapeHtml(letter) + "</span><div><p>" +
+      escapeHtml(label) + "</p><strong>" + escapeHtml(headline) +
+      "</strong></div></header>" +
+      (values.length > 1
+        ? "<ul>" + values.map(function (e) { return "<li>" + escapeHtml(e) + "</li>"; }).join("") + "</ul>"
+        : "<p>" + escapeHtml(values[0] || "") + "</p>")
     );
   }
 
   function deriveReadableReport(report, receipt) {
-    var read =
-      normalizeRead(report);
-
+    var r = normalizeRead(report);
     return [
       "AUDRALIA DROP WITH READ DIAGNOSTIC REPORT",
-      "REPORT_ID=" +
-        String(
-          report.reportId || "UNKNOWN"
-        ),
-      "STATUS=" +
-        String(
-          report.status || "AVAILABLE"
-        ),
-      "CREATED_AT=" +
-        String(
-          report.createdAt || "UNKNOWN"
-        ),
-      receipt
-        ? "RECEIPT_ID=" +
-          String(
-            receipt.receiptId || "UNKNOWN"
-          )
-        : "RECEIPT_ID=UNAVAILABLE",
+      "REPORT_ID=" + String(report.reportId || "UNKNOWN"),
+      "STATUS=" + String(report.status || "AVAILABLE"),
+      "CREATED_AT=" + String(report.createdAt || "UNKNOWN"),
+      receipt ? "RECEIPT_ID=" + String(receipt.receiptId || "UNKNOWN") : "RECEIPT_ID=UNAVAILABLE",
       "",
       "RESULT",
-      String(read.Result),
+      String(r.Result),
       "",
       "EVIDENCE",
-      read.Evidence.length
-        ? read.Evidence
-            .map(function mapEvidence(entry) {
-              return "- " + entry;
-            })
-            .join("\n")
-        : "- No evidence entries were returned.",
+      r.Evidence.length ? r.Evidence.map(function (e) { return "- " + e; }).join("\n") : "- No evidence entries were returned.",
       "",
       "ABSENCE",
-      read.Absence.length
-        ? read.Absence
-            .map(function mapAbsence(entry) {
-              return "- " + entry;
-            })
-            .join("\n")
-        : "- No absence entries were returned.",
+      r.Absence.length ? r.Absence.map(function (e) { return "- " + e; }).join("\n") : "- No absence entries were returned.",
       "",
       "DIRECTION",
-      read.Direction.length
-        ? read.Direction
-            .map(function mapDirection(entry) {
-              return "- " + entry;
-            })
-            .join("\n")
-        : "- Inspect the report receipt."
+      r.Direction.length ? r.Direction.map(function (e) { return "- " + e; }).join("\n") : "- Inspect the report receipt."
     ].join("\n");
   }
 
-  function renderCommittedReport(report, receipt) {
-    var read =
-      normalizeRead(report);
-
-    var status =
-      String(
-        report.status || "AVAILABLE"
-      )
-        .trim()
-        .toUpperCase();
-
-    renderReadRegion(
-      "readResult",
-      "R",
-      "Result",
-      "Diagnostic report",
-      read.Result
-    );
-
-    renderReadRegion(
-      "readEvidence",
-      "E",
-      "Evidence",
-      "Bounded evidence",
-      read.Evidence.length
-        ? read.Evidence
-        : [
-            "No evidence entries were returned."
-          ]
-    );
-
-    renderReadRegion(
-      "readAbsence",
-      "A",
-      "Absence",
-      "Bounded absence",
-      read.Absence.length
-        ? read.Absence
-        : [
-            "No absence entries were returned."
-          ]
-    );
-
-    renderReadRegion(
-      "readDirection",
-      "D",
-      "Direction",
-      "Next diagnostic direction",
-      read.Direction.length
-        ? read.Direction
-        : [
-            "Inspect the report receipt."
-          ]
-    );
-
-    setText(
-      "reportStatus",
-      status
-    );
-
-    setStatus(
-      "reportStatus",
-      status
-    );
-
-    setText(
-      "reportTitle",
-      "Diagnostic Report"
-    );
-
-    setText(
-      "reportCreatedAt",
-      report.createdAt || nowIso()
-    );
-
-    setText(
-      "reportMeta",
-      [
-        report.reportId || "REPORT",
-        receipt && receipt.receiptId
-          ? receipt.receiptId
-          : "RECEIPT UNAVAILABLE"
-      ].join(" · ")
-    );
-
-    setText(
-      "packetOutput",
-      safeJson({
-        schema:
-          report.schema || null,
-        reportId:
-          report.reportId || null,
-        status:
-          report.status || null,
-        createdAt:
-          report.createdAt || null,
-        READ:
-          read,
-        receipt:
-          receipt || null
-      })
-    );
-
-    setText(
-      "rawOutput",
-      safeJson({
-        report:
-          report,
-        receipt:
-          receipt
-      })
-    );
-
-    setHtml(
-      "evidenceOutput",
-      read.Evidence.length
-        ? read.Evidence
-            .map(function renderEvidence(entry) {
-              return (
-                "<article>" +
-                  "<h3>Diagnostic Evidence</h3>" +
-                  "<p>" +
-                  escapeHtml(entry) +
-                  "</p>" +
-                  "</article>"
-              );
-            })
-            .join("")
-        : (
-            '<article class="empty-state">' +
-              "<h3>No evidence entries</h3>" +
-              "<p>The report did not include an evidence list.</p>" +
-              "</article>"
-          )
-    );
-
-    setDisabled(
-      "copyReadableReport",
-      false
-    );
-
-    setDisabled(
-      "copyPacketReport",
-      false
-    );
-
-    setDisabled(
-      "copyRawReport",
-      false
-    );
-
-    setDisabled(
-      "addReportToArchive",
-      state.report.source === "CONTROL_FALLBACK"
-    );
-
-    setText(
-      "dropReportState",
-      status
-    );
-
-    setStatus(
-      "dropReportCell",
-      status
-    );
-
-    setText(
-      "dropReportAvailableCount",
-      "1"
-    );
-
-    setText(
-      "dropReportHeldCount",
-      status === "HELD"
-        ? "1"
-        : "0"
-    );
-
-    setText(
-      "dropReportLastAction",
-      "Report created at " +
-        String(
-          report.createdAt || nowIso()
-        )
-    );
-
-    setText(
-      "controllerState",
-      state.report.source === "CONTROL_FALLBACK"
-        ? "ENGINE HELD"
-        : "REPORT READY"
-    );
-
-    setStatus(
-      "controllerState",
-      state.report.source === "CONTROL_FALLBACK"
-        ? "HELD"
-        : "READY"
-    );
-
-    selectReportModeLocal(
-      "read"
-    );
-
-    updateDistributedCommandAvailability();
-    refreshReceiptInventory();
-    publishReceipt();
-  }
-
   function commitReport(report, receipt, source) {
-    state.report.current =
-      deepFreeze(
-        clone(report)
-      );
+    var r = normalizeRead(report);
+    var status = token(report.status || "AVAILABLE");
 
-    state.report.receipt =
-      receipt
-        ? deepFreeze(
-            clone(receipt)
-          )
-        : null;
+    state.report.current = deepFreeze(clone(report));
+    state.report.receipt = receipt ? deepFreeze(clone(receipt)) : null;
+    state.report.source = source;
 
-    state.report.source =
-      source;
+    renderReadRegion("readResult", "R", "Result", "Diagnostic report", r.Result);
+    renderReadRegion("readEvidence", "E", "Evidence", "Bounded evidence", r.Evidence.length ? r.Evidence : ["No evidence entries were returned."]);
+    renderReadRegion("readAbsence", "A", "Absence", "Bounded absence", r.Absence.length ? r.Absence : ["No absence entries were returned."]);
+    renderReadRegion("readDirection", "D", "Direction", "Next diagnostic direction", r.Direction.length ? r.Direction : ["Inspect the report receipt."]);
 
-    renderCommittedReport(
-      state.report.current,
-      state.report.receipt
-    );
+    setText("reportStatus", status);
+    setStatus("reportStatus", status);
+    setText("reportTitle", "Diagnostic Report");
+    setText("reportCreatedAt", report.createdAt || nowIso());
+    setText("reportMeta", [report.reportId || "REPORT", receipt && receipt.receiptId ? receipt.receiptId : "RECEIPT UNAVAILABLE"].join(" · "));
+    setText("packetOutput", safeJson({ schema: report.schema || null, reportId: report.reportId || null, status: report.status || null, createdAt: report.createdAt || null, READ: r, receipt: receipt || null }));
+    setText("rawOutput", safeJson({ report: report, receipt: receipt }));
+    setHtml("evidenceOutput", r.Evidence.length
+      ? r.Evidence.map(function (e) { return "<article><h3>Diagnostic Evidence</h3><p>" + escapeHtml(e) + "</p></article>"; }).join("")
+      : '<article class="empty-state"><h3>No evidence entries</h3><p>The report did not include an evidence list.</p></article>');
 
-    return frozenClone(
-      state.report.current
-    );
+    setDisabled("copyReadableReport", false);
+    setDisabled("copyPacketReport", false);
+    setDisabled("copyRawReport", false);
+    setDisabled("addReportToArchive", source === "CONTROL_FALLBACK");
+
+    setText("dropReportState", status);
+    setStatus("dropReportCell", status);
+    setText("dropReportAvailableCount", "1");
+    setText("dropReportHeldCount", status === "HELD" ? "1" : "0");
+    setText("dropReportLastAction", "Report created at " + String(report.createdAt || nowIso()));
+    setText("controllerState", source === "CONTROL_FALLBACK" ? "ENGINE HELD" : "REPORT READY");
+    setStatus("controllerState", source === "CONTROL_FALLBACK" ? "HELD" : "READY");
+
+    selectReportModeLocal("read");
+    updateDistributedCommandAvailability();
+    refreshReceiptInventory({ publish: false });
+    publishReceipt();
+
+    return frozenClone(state.report.current);
   }
 
   function createFallbackReport(context) {
-    var reason =
-      context && context.reason
-        ? context.reason
-        : "ENGINE_UNAVAILABLE";
-
-    var errorMessage =
-      context &&
-      context.error &&
-      context.error.message
-        ? context.error.message
-        : null;
-
-    var createdAt =
-      nowIso();
-
+    var reason = context && context.reason ? context.reason : "ENGINE_UNAVAILABLE";
+    var createdAt = nowIso();
     var report = {
-      schema:
-        FALLBACK_REPORT_SCHEMA,
-
-      reportId:
-        "AUDRALIA_CONTROL_FALLBACK_" +
-        Date.now(),
-
-      status:
-        "HELD",
-
-      classification:
-        "CONTROL_FALLBACK_REPORT",
-
-      createdAt:
-        createdAt,
-
+      schema: FALLBACK_REPORT_SCHEMA,
+      reportId: "AUDRALIA_CONTROL_FALLBACK_" + Date.now(),
+      status: "HELD",
+      classification: "CONTROL_FALLBACK_REPORT",
+      createdAt: createdAt,
       READ: {
-        Result:
-          "The report command was received, but the authoritative diagnostic engine could not produce a healthy report.",
-
+        Result: "The report command was received, but the authoritative diagnostic engine could not produce a healthy report.",
         Evidence: [
           "A report command was received by the distributed control panel.",
           "Delegated command handling remained active.",
           "The control fallback READ path remained available.",
-          state.inspectionLane.resolved
-            ? "The bounded inspection lane was present."
-            : "The bounded inspection lane was not present."
+          state.inspectionLane.resolved ? "The bounded inspection lane was present." : "The bounded inspection lane was not present."
         ],
-
         Absence: [
           reason,
-          errorMessage ||
-            "No additional engine exception message was supplied.",
+          context && context.error && context.error.message ? context.error.message : "No additional engine exception message was supplied.",
           "Healthy engine-backed report construction was unavailable."
         ],
-
         Direction: [
           "Inspect the distributed control-panel receipt.",
           "Inspect the diagnostic-engine receipt.",
@@ -2661,746 +992,189 @@
           "Verify the current engine global and contract."
         ]
       },
-
-      engineResolution:
-        frozenClone(
-          state.engine
-        ),
-
-      inspectionLane:
-        frozenClone(
-          state.inspectionLane
-        ),
-
-      noClaims:
-        NO_CLAIMS
+      engineResolution: frozenClone(state.engine),
+      inspectionLane: frozenClone(state.inspectionLane),
+      noClaims: NO_CLAIMS
     };
-
     var receipt = {
-      schema:
-        FALLBACK_RECEIPT_SCHEMA,
-
-      receiptId:
-        "AUDRALIA_CONTROL_FALLBACK_RECEIPT_" +
-        Date.now(),
-
-      reportId:
-        report.reportId,
-
-      reportStatus:
-        "HELD",
-
-      status:
-        "HELD",
-
-      type:
-        "error",
-
-      groups: [
-        "observation",
-        "error"
-      ],
-
-      reason:
-        reason,
-
-      createdAt:
-        createdAt
+      schema: FALLBACK_RECEIPT_SCHEMA,
+      receiptId: "AUDRALIA_CONTROL_FALLBACK_RECEIPT_" + Date.now(),
+      reportId: report.reportId,
+      reportStatus: "HELD",
+      status: "HELD",
+      type: "error",
+      groups: ["observation", "error"],
+      reason: reason,
+      createdAt: createdAt
     };
-
-    state.report.fallbackHistory.push(
-      deepFreeze(
-        clone(report)
-      )
-    );
-
-    commitReport(
-      report,
-      receipt,
-      "CONTROL_FALLBACK"
-    );
-
-    recordAction(
-      "createFallbackReport",
-      {
-        reportId:
-          report.reportId,
-        receiptId:
-          receipt.receiptId,
-        reason:
-          reason
-      }
-    );
-
-    toast(
-      "Fallback READ report created.",
-      "HELD"
-    );
-
+    state.report.fallbackHistory.push(deepFreeze(clone(report)));
+    commitReport(report, receipt, "CONTROL_FALLBACK");
+    recordAction("createFallbackReport", { reportId: report.reportId, receiptId: receipt.receiptId, reason: reason });
+    toast("Fallback READ report created.", "HELD");
     return frozenClone(report);
   }
 
   function createReport(options) {
-    var settings =
-      options || {};
+    var settings = options || {};
+    setText("controllerState", "CREATING REPORT");
+    setStatus("controllerState", "RUNNING");
+    setText("reportStatus", "CREATING");
+    setStatus("reportStatus", "RUNNING");
 
-    setText(
-      "controllerState",
-      "CREATING REPORT"
-    );
+    recordAction("createReport.begin", {
+      category: state.ui.selectedCategory,
+      audit: state.ui.selectedAudit,
+      participant: state.ui.selectedParticipant,
+      source: settings.source || "CANONICAL_CONTROL",
+      command: settings.command || "create"
+    });
 
-    setStatus(
-      "controllerState",
-      "RUNNING"
-    );
+    return invokeEngine("createReport", [{
+      category: state.ui.selectedCategory,
+      audit: state.ui.selectedAudit,
+      participant: state.ui.selectedParticipant,
+      controlSource: settings.source || "CANONICAL_CONTROL",
+      controlCommand: settings.command || "create"
+    }], {
+      validate: validateReport,
+      fallback: createFallbackReport
+    }).then(function (result) {
+      var engine, report, receipt;
+      if (result && result.schema === FALLBACK_REPORT_SCHEMA) return result;
 
-    setText(
-      "reportStatus",
-      "CREATING"
-    );
+      engine = getCompatibleEngine();
+      report = validateReport(result) ? result : safeCall(engine, "getReport");
 
-    setStatus(
-      "reportStatus",
-      "RUNNING"
-    );
-
-    recordAction(
-      "createReport.begin",
-      {
-        category:
-          state.ui.selectedCategory,
-        audit:
-          state.ui.selectedAudit,
-        participant:
-          state.ui.selectedParticipant,
-        source:
-          settings.source || "CANONICAL_CONTROL",
-        command:
-          settings.command || "create"
+      if (!validateReport(report)) {
+        return createFallbackReport({ reason: "ENGINE_REPORT_UNAVAILABLE_AFTER_CREATE" });
       }
-    );
 
-    return invokeEngine(
-      "createReport",
-      [
-        {
-          category:
-            state.ui.selectedCategory,
-          audit:
-            state.ui.selectedAudit,
-          participant:
-            state.ui.selectedParticipant,
-          controlSource:
-            settings.source || "CANONICAL_CONTROL",
-          controlCommand:
-            settings.command || "create"
-        }
-      ],
-      {
-        validate:
-          validateReport,
+      receipt = safeCall(engine, "getReportReceipt") || root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT || null;
+      commitReport(report, receipt, "ENGINE");
 
-        fallback:
-          createFallbackReport
-      }
-    )
-      .then(function reportCreated(result) {
-        if (
-          result &&
-          result.schema ===
-            FALLBACK_REPORT_SCHEMA
-        ) {
-          if (settings.viewAfterCreate !== false) {
-            viewCurrentReport({
-              mode:
-                settings.mode || "read",
-              behavior:
-                settings.scrollBehavior || "smooth"
-            });
-          }
-
-          return result;
-        }
-
-        var engine =
-          getCompatibleEngine();
-
-        var report =
-          validateReport(result)
-            ? result
-            : getEngineReport(engine);
-
-        if (!validateReport(report)) {
-          return createFallbackReport({
-            reason:
-              "ENGINE_REPORT_UNAVAILABLE_AFTER_CREATE"
-          });
-        }
-
-        var receipt =
-          getEngineReportReceipt(
-            engine
-          );
-
-        commitReport(
-          report,
-          receipt,
-          "ENGINE"
-        );
-
-        recordAction(
-          "createReport.complete",
-          {
-            reportId:
-              report.reportId || null,
-            receiptId:
-              receipt &&
-              receipt.receiptId
-                ? receipt.receiptId
-                : null,
-            source:
-              settings.source || "CANONICAL_CONTROL"
-          }
-        );
-
-        toast(
-          "Diagnostic report created.",
-          "READY"
-        );
-
-        if (settings.viewAfterCreate !== false) {
-          viewCurrentReport({
-            mode:
-              settings.mode || "read",
-            behavior:
-              settings.scrollBehavior || "smooth"
-          });
-        }
-
-        return frozenClone(report);
+      recordAction("createReport.complete", {
+        reportId: report.reportId || null,
+        receiptId: receipt && receipt.receiptId ? receipt.receiptId : null,
+        source: settings.source || "CANONICAL_CONTROL"
       });
+
+      toast("Diagnostic report created.", "READY");
+
+      if (settings.viewAfterCreate !== false) {
+        viewCurrentReport({ mode: settings.mode || "read", behavior: settings.scrollBehavior || "smooth" });
+      }
+
+      return frozenClone(report);
+    });
   }
 
   function runDirectCheck() {
-    var role =
-      state.ui.selectedParticipant;
+    var role = state.ui.selectedParticipant;
 
-    if (
-      !role ||
-      role === "ALL"
-    ) {
-      setText(
-        "controllerState",
-        "DIRECT HELD"
-      );
-
-      setStatus(
-        "controllerState",
-        "HELD"
-      );
-
-      toast(
-        "Select a participant before direct execution.",
-        "HELD"
-      );
-
+    if (!role || role === "ALL") {
+      setText("controllerState", "DIRECT HELD");
+      setStatus("controllerState", "HELD");
+      toast("Select a participant before direct execution.", "HELD");
       return Promise.resolve(null);
     }
 
-    setText(
-      "controllerState",
-      "DIRECT CHECK"
-    );
+    setText("controllerState", "DIRECT CHECK");
+    setStatus("controllerState", "RUNNING");
 
-    setStatus(
-      "controllerState",
-      "RUNNING"
-    );
-
-    return invokeEngine(
-      "runDirect",
-      [
-        role,
-        {
-          source:
-            "CONTROL_PANEL",
-          requestedAt:
-            nowIso()
-        }
-      ],
-      {
-        validate:
-          function validDirectReceipt(value) {
-            return Boolean(value);
-          },
-
-        fallback:
-          function directFallback(context) {
-            setText(
-              "controllerState",
-              "DIRECT HELD"
-            );
-
-            setStatus(
-              "controllerState",
-              "HELD"
-            );
-
-            setText(
-              "dropDirectState",
-              "HELD"
-            );
-
-            setStatus(
-              "dropDirectCell",
-              "HELD"
-            );
-
-            setText(
-              "dropDirectHeldCount",
-              "1"
-            );
-
-            setText(
-              "dropDirectLastAction",
-              "Direct execution unavailable: " +
-                context.reason
-            );
-
-            return null;
-          }
+    return invokeEngine("runDirect", [role, { source: "CONTROL_PANEL", requestedAt: nowIso() }], {
+      validate: function (v) { return Boolean(v); },
+      fallback: function (context) {
+        setText("controllerState", "DIRECT HELD");
+        setStatus("controllerState", "HELD");
+        setText("dropDirectState", "HELD");
+        setStatus("dropDirectCell", "HELD");
+        setText("dropDirectHeldCount", "1");
+        setText("dropDirectLastAction", "Direct execution unavailable: " + context.reason);
+        return null;
       }
-    )
-      .then(function directComplete(receipt) {
-        if (!receipt) {
-          return null;
-        }
+    }).then(function (receipt) {
+      if (!receipt) return null;
 
-        state.directReceipts.push(
-          deepFreeze(
-            clone(receipt)
-          )
-        );
+      state.directReceipts.push(deepFreeze(clone(receipt)));
 
-        setText(
-          "dropDirectState",
-          receipt.status || "AVAILABLE"
-        );
+      setText("dropDirectState", receipt.status || "AVAILABLE");
+      setStatus("dropDirectCell", receipt.status || "AVAILABLE");
+      setText("dropDirectAvailableCount", receipt.status === "ERROR" ? "0" : "1");
+      setText("dropDirectHeldCount", receipt.status === "HELD" || receipt.status === "MISSING" ? "1" : "0");
+      setText("dropDirectLastAction", "Direct receipt created for " + role);
+      setText("controllerState", "DIRECT COMPLETE");
+      setStatus("controllerState", receipt.status || "AVAILABLE");
 
-        setStatus(
-          "dropDirectCell",
-          receipt.status || "AVAILABLE"
-        );
+      recordAction("runDirect.complete", { role: role, status: receipt.status || null });
+      refreshReceiptInventory({ publish: true });
 
-        setText(
-          "dropDirectAvailableCount",
-          receipt.status === "ERROR"
-            ? "0"
-            : "1"
-        );
-
-        setText(
-          "dropDirectHeldCount",
-          receipt.status === "HELD" ||
-          receipt.status === "MISSING"
-            ? "1"
-            : "0"
-        );
-
-        setText(
-          "dropDirectLastAction",
-          "Direct receipt created for " +
-            role
-        );
-
-        setText(
-          "controllerState",
-          "DIRECT COMPLETE"
-        );
-
-        setStatus(
-          "controllerState",
-          receipt.status || "AVAILABLE"
-        );
-
-        recordAction(
-          "runDirect.complete",
-          {
-            role:
-              role,
-            status:
-              receipt.status || null
-          }
-        );
-
-        refreshReceiptInventory();
-
-        return frozenClone(receipt);
-      });
+      return frozenClone(receipt);
+    });
   }
 
-  function getStationByPosition(value) {
-    var position =
-      Number(value);
-
-    if (
-      !Number.isInteger(position) ||
-      position < 1 ||
-      position > 9
-    ) {
-      return null;
-    }
-
-    return CANONICAL_CYCLE_STATIONS[
-      position - 1
-    ] || null;
+  function stationByPosition(v) {
+    var p = Number(v);
+    return Number.isInteger(p) && p >= 1 && p <= 9 ? STATIONS[p - 1] : null;
   }
 
-  function getStationByRole(value) {
-    var token =
-      normalizeToken(value);
-
-    if (!token) {
-      return null;
-    }
-
-    var index;
-
-    for (
-      index = 0;
-      index < CANONICAL_CYCLE_STATIONS.length;
-      index += 1
-    ) {
-      if (
-        CANONICAL_CYCLE_STATIONS[index].role ===
-        token
-      ) {
-        return CANONICAL_CYCLE_STATIONS[index];
-      }
-    }
-
+  function stationByRole(v) {
+    var t = token(v);
+    var i;
+    for (i = 0; i < STATIONS.length; i += 1) if (STATIONS[i].role === t) return STATIONS[i];
     return null;
   }
 
-  function getStationByFibonacci(value) {
-    var token =
-      normalizeFibonacci(value);
-
-    if (!token) {
-      return null;
-    }
-
-    var index;
-
-    for (
-      index = 0;
-      index < CANONICAL_CYCLE_STATIONS.length;
-      index += 1
-    ) {
-      if (
-        CANONICAL_CYCLE_STATIONS[index].fibonacci ===
-        token
-      ) {
-        return CANONICAL_CYCLE_STATIONS[index];
-      }
-    }
-
+  function stationByFibonacci(v) {
+    var f = fib(v);
+    var i;
+    for (i = 0; i < STATIONS.length; i += 1) if (STATIONS[i].fibonacci === f) return STATIONS[i];
     return null;
   }
 
-  function inspectCoordinateFamily(
-    record,
-    familyName,
-    keys,
-    resolver
-  ) {
+  function declarationSupplied(v) {
+    return !(v === null || v === undefined || String(v).trim() === "");
+  }
+
+  function resolveReceiptCoordinate(receipt) {
+    var r = isObj(receipt) ? receipt : {};
     var declarations = [];
-    var resolvedDeclarations = [];
-    var unresolvedDeclarations = [];
-    var resolvedPositions = [];
+    var positions = [];
+    var selected = null;
 
-    keys.forEach(function inspectKey(key) {
-      var value;
-      var station;
-      var declaration;
-
-      if (!hasOwn(record, key)) {
-        return;
-      }
-
-      value =
-        record[key];
-
-      if (!declarationIsSupplied(value)) {
-        return;
-      }
-
-      station =
-        resolver(value);
-
-      declaration = {
-        family:
-          familyName,
-        key:
-          key,
-        value:
-          value,
-        resolved:
-          Boolean(station),
-        station:
-          station,
-        resolvedPosition:
-          station
-            ? station.position
-            : null
-      };
-
-      declarations.push(
-        declaration
-      );
-
-      if (station) {
-        resolvedDeclarations.push(
-          declaration
-        );
-
-        if (
-          resolvedPositions.indexOf(
-            station.position
-          ) === -1
-        ) {
-          resolvedPositions.push(
-            station.position
-          );
-        }
-      } else {
-        unresolvedDeclarations.push(
-          declaration
-        );
-      }
-    });
-
-    return {
-      family:
-        familyName,
-
-      declared:
-        declarations.length > 0,
-
-      declarations:
-        declarations,
-
-      declarationCount:
-        declarations.length,
-
-      resolved:
-        resolvedDeclarations.length > 0,
-
-      resolvedDeclarations:
-        resolvedDeclarations,
-
-      resolvedDeclarationCount:
-        resolvedDeclarations.length,
-
-      unresolvedDeclarations:
-        unresolvedDeclarations,
-
-      unresolvedDeclarationCount:
-        unresolvedDeclarations.length,
-
-      firstResolvedStation:
-        resolvedDeclarations.length
-          ? resolvedDeclarations[0].station
-          : null,
-
-      firstDeclaredValue:
-        declarations.length
-          ? declarations[0].value
-          : null,
-
-      resolvedPositions:
-        resolvedPositions,
-
-      internalConflict:
-        resolvedPositions.length > 1
-    };
-  }
-
-  function resolveCycleReceiptCoordinates(receipt) {
-    var record =
-      isObject(receipt)
-        ? receipt
-        : {};
-
-    var positionFamily =
-      inspectCoordinateFamily(
-        record,
-        "position",
-        [
-          "cyclePosition",
-          "position"
-        ],
-        getStationByPosition
-      );
-
-    var stationFamily =
-      inspectCoordinateFamily(
-        record,
-        "station",
-        [
-          "stationId",
-          "role"
-        ],
-        getStationByRole
-      );
-
-    var fibonacciFamily =
-      inspectCoordinateFamily(
-        record,
-        "fibonacci",
-        [
-          "fibonacci"
-        ],
-        getStationByFibonacci
-      );
-
-    var families = [
-      positionFamily,
-      stationFamily,
-      fibonacciFamily
-    ];
-
-    var resolvedPositions = [];
-    var unresolvedDeclarations = [];
-    var allDeclarations = [];
-
-    families.forEach(function inspectFamily(family) {
-      allDeclarations =
-        allDeclarations.concat(
-          family.declarations
-        );
-
-      unresolvedDeclarations =
-        unresolvedDeclarations.concat(
-          family.unresolvedDeclarations
-        );
-
-      family.resolvedPositions.forEach(function addPosition(position) {
-        if (
-          resolvedPositions.indexOf(
-            position
-          ) === -1
-        ) {
-          resolvedPositions.push(
-            position
-          );
-        }
+    [
+      { family: "position", keys: ["cyclePosition", "position"], resolver: stationByPosition },
+      { family: "station", keys: ["stationId", "role"], resolver: stationByRole },
+      { family: "fibonacci", keys: ["fibonacci"], resolver: stationByFibonacci }
+    ].forEach(function (family) {
+      family.keys.forEach(function (key) {
+        var value, station;
+        if (!hasOwn(r, key) || !declarationSupplied(r[key])) return;
+        value = r[key];
+        station = family.resolver(value);
+        declarations.push({
+          family: family.family,
+          key: key,
+          value: value,
+          resolved: Boolean(station),
+          station: station,
+          resolvedPosition: station ? station.position : null
+        });
+        if (station && positions.indexOf(station.position) === -1) positions.push(station.position);
+        if (!selected && station) selected = station;
       });
     });
 
-    var selectedStation =
-      positionFamily.firstResolvedStation ||
-      stationFamily.firstResolvedStation ||
-      fibonacciFamily.firstResolvedStation ||
-      null;
-
-    var internalConflict =
-      families.some(function familyConflict(family) {
-        return family.internalConflict;
-      });
-
-    var crossFamilyConflict =
-      resolvedPositions.length > 1;
-
-    var noResolvableCoordinate =
-      !selectedStation;
-
-    var coordinateConflict =
-      unresolvedDeclarations.length > 0 ||
-      internalConflict ||
-      crossFamilyConflict ||
-      noResolvableCoordinate;
-
     return {
-      selectedStation:
-        selectedStation,
-
-      selectedPosition:
-        selectedStation
-          ? selectedStation.position
-          : null,
-
-      declarations:
-        allDeclarations,
-
-      declarationCount:
-        allDeclarations.length,
-
-      positionDeclared:
-        positionFamily.declared,
-
-      positionValue:
-        positionFamily.firstDeclaredValue,
-
-      positionResolved:
-        positionFamily.resolved,
-
-      positionStation:
-        positionFamily.firstResolvedStation,
-
-      positionDeclarations:
-        positionFamily.declarations,
-
-      stationDeclared:
-        stationFamily.declared,
-
-      stationValue:
-        stationFamily.firstDeclaredValue,
-
-      stationResolved:
-        stationFamily.resolved,
-
-      stationStation:
-        stationFamily.firstResolvedStation,
-
-      stationDeclarations:
-        stationFamily.declarations,
-
-      fibonacciDeclared:
-        fibonacciFamily.declared,
-
-      fibonacciValue:
-        fibonacciFamily.firstDeclaredValue,
-
-      fibonacciResolved:
-        fibonacciFamily.resolved,
-
-      fibonacciStation:
-        fibonacciFamily.firstResolvedStation,
-
-      fibonacciDeclarations:
-        fibonacciFamily.declarations,
-
-      unresolvedDeclarations:
-        unresolvedDeclarations,
-
-      unresolvedDeclarationCount:
-        unresolvedDeclarations.length,
-
-      resolvedPositions:
-        resolvedPositions,
-
-      internalConflict:
-        internalConflict,
-
-      crossFamilyConflict:
-        crossFamilyConflict,
-
-      noResolvableCoordinate:
-        noResolvableCoordinate,
-
-      coordinateConflict:
-        coordinateConflict
+      selectedStation: selected,
+      selectedPosition: selected ? selected.position : null,
+      declarations: declarations,
+      declarationCount: declarations.length,
+      unresolvedDeclarations: declarations.filter(function (d) { return !d.resolved; }),
+      unresolvedDeclarationCount: declarations.filter(function (d) { return !d.resolved; }).length,
+      resolvedPositions: positions,
+      crossFamilyConflict: positions.length > 1,
+      noResolvableCoordinate: !selected,
+      coordinateConflict: positions.length > 1 || !selected || declarations.some(function (d) { return !d.resolved; })
     };
   }
 
@@ -3409,5839 +1183,1533 @@
       receipt && receipt.stationReceipts,
       receipt && receipt.receipts,
       receipt && receipt.cycleReceipts,
+      receipt && receipt.normalizedReceipts,
       receipt && receipt.stations,
       receipt && receipt.ledger,
       receipt && receipt.entries
     ];
-
-    var index;
-
-    for (
-      index = 0;
-      index < candidates.length;
-      index += 1
-    ) {
-      if (Array.isArray(candidates[index])) {
-        return candidates[index].slice();
-      }
+    var i;
+    for (i = 0; i < candidates.length; i += 1) {
+      if (Array.isArray(candidates[i])) return candidates[i].slice();
     }
-
     return [];
   }
 
-  function deriveExactNineTriState(receipt) {
-    if (!receipt) {
-      return null;
-    }
-
-    if (
-      typeof receipt.exactNineValidated ===
-      "boolean"
-    ) {
-      return receipt.exactNineValidated;
-    }
-
-    if (
-      typeof receipt.exactNine ===
-      "boolean"
-    ) {
-      return receipt.exactNine;
-    }
-
-    if (
-      receipt.validation &&
-      typeof receipt.validation.exactNineValidated ===
-        "boolean"
-    ) {
-      return receipt.validation.exactNineValidated;
-    }
-
+  function exactNineTriState(receipt) {
+    if (!receipt) return null;
+    if (typeof receipt.exactNineValidated === "boolean") return receipt.exactNineValidated;
+    if (typeof receipt.exactNine === "boolean") return receipt.exactNine;
+    if (receipt.validation && typeof receipt.validation.exactNineValidated === "boolean") return receipt.validation.exactNineValidated;
     return null;
   }
 
-  function normalizeCycleReceipt(receipt, sourceIndex) {
-    var coordinates =
-      resolveCycleReceiptCoordinates(
-        receipt
-      );
-
-    var selected =
-      coordinates.selectedStation;
-
+  function normalizeCycleReceipt(receipt, index) {
+    var coord = resolveReceiptCoordinate(receipt);
+    var station = coord.selectedStation;
     return {
-      sourceIndex:
-        sourceIndex,
-
-      rawReceipt:
-        frozenClone(receipt),
-
-      receiptId:
-        receipt.receiptId ||
-        receipt.stationReceiptId ||
-        receipt.id ||
-        null,
-
-      status:
-        normalizeToken(
-          receipt.status ||
-          receipt.result ||
-          receipt.state ||
-          "UNKNOWN"
-        ),
-
-      role:
-        receipt.role ||
-        receipt.stationId ||
-        (
-          selected
-            ? selected.role
-            : null
-        ),
-
-      fibonacci:
-        receipt.fibonacci ||
-        (
-          selected
-            ? selected.fibonacci
-            : null
-        ),
-
-      position:
-        selected
-          ? selected.position
-          : null,
-
-      direction:
-        receipt.direction ||
-        (
-          selected
-            ? selected.direction
-            : null
-        ),
-
-      summary:
-        receipt.summary ||
-        receipt.message ||
-        receipt.result ||
-        null,
-
-      coordinates:
-        coordinates
+      sourceIndex: index,
+      rawReceipt: frozenClone(receipt),
+      receiptId: receipt && (receipt.receiptId || receipt.stationReceiptId || receipt.id) || null,
+      status: token(receipt && (receipt.status || receipt.result || receipt.state) || "UNKNOWN"),
+      role: receipt && (receipt.role || receipt.stationId) || (station ? station.role : null),
+      fibonacci: receipt && receipt.fibonacci || (station ? station.fibonacci : null),
+      position: station ? station.position : null,
+      direction: receipt && receipt.direction || (station ? station.direction : null),
+      summary: receipt && (receipt.summary || receipt.message || receipt.result) || null,
+      coordinates: coord
     };
   }
 
   function buildCycleRenderingState(rawReceipt) {
-    var stationReceipts =
-      extractCycleStationReceipts(
-        rawReceipt
-      );
-
-    var normalized =
-      stationReceipts.map(
-        normalizeCycleReceipt
-      );
-
+    var stationReceipts = extractCycleStationReceipts(rawReceipt);
+    var normalized = stationReceipts.map(normalizeCycleReceipt);
     var rows = {};
     var unmapped = [];
     var duplicates = [];
-    var coordinateConflicts = [];
-    var unresolvedDeclarations = [];
+    var conflicts = [];
+    var unresolved = [];
+    var mappedCount = 0;
 
-    CANONICAL_CYCLE_STATIONS.forEach(function initializeRow(station) {
-      rows[station.position] = {
-        station:
-          station,
+    STATIONS.forEach(function (s) {
+      rows[s.position] = {
+        station: s,
         receipts: [],
-        presentationStatus:
-          state.cycle.executed
-            ? "NOT_REACHED"
-            : "UNKNOWN",
-        coordinateConflict:
-          false,
-        duplicate:
-          false
+        presentationStatus: state.cycle.executed ? "NOT_REACHED" : "UNKNOWN",
+        coordinateConflict: false,
+        duplicate: false
       };
     });
 
-    normalized.forEach(function mapNormalized(entry) {
-      if (
-        entry.coordinates.coordinateConflict
-      ) {
-        coordinateConflicts.push(
-          entry
-        );
-      }
-
-      unresolvedDeclarations =
-        unresolvedDeclarations.concat(
-          entry.coordinates.unresolvedDeclarations.map(
-            function mapUnresolved(declaration) {
-              return {
-                sourceIndex:
-                  entry.sourceIndex,
-                receiptId:
-                  entry.receiptId,
-                family:
-                  declaration.family,
-                key:
-                  declaration.key,
-                value:
-                  declaration.value
-              };
-            }
-          )
-        );
-
+    normalized.forEach(function (entry) {
+      if (entry.coordinates.coordinateConflict) conflicts.push(entry);
+      unresolved = unresolved.concat(entry.coordinates.unresolvedDeclarations.map(function (d) {
+        return { sourceIndex: entry.sourceIndex, receiptId: entry.receiptId, family: d.family, key: d.key, value: d.value };
+      }));
       if (!entry.position) {
-        unmapped.push(
-          entry
-        );
-
+        unmapped.push(entry);
         return;
       }
-
-      rows[entry.position].receipts.push(
-        entry
-      );
+      rows[entry.position].receipts.push(entry);
+      mappedCount += 1;
     });
 
-    Object.keys(rows).forEach(function finalizeRow(key) {
-      var row =
-        rows[key];
-
-      if (!row.receipts.length) {
-        row.presentationStatus =
-          state.cycle.executed
-            ? "NOT_REACHED"
-            : "UNKNOWN";
-
-        return;
-      }
-
-      row.coordinateConflict =
-        row.receipts.some(function hasConflict(entry) {
-          return entry.coordinates.coordinateConflict;
-        });
-
-      row.duplicate =
-        row.receipts.length > 1;
-
-      if (row.duplicate) {
-        duplicates.push({
-          position:
-            row.station.position,
-          receiptCount:
-            row.receipts.length,
-          receipts:
-            row.receipts
-        });
-      }
-
-      row.presentationStatus =
-        row.duplicate ||
-        row.coordinateConflict
-          ? "CONFLICT"
-          : row.receipts[0].status ||
-            "AVAILABLE";
+    Object.keys(rows).forEach(function (k) {
+      var row = rows[k];
+      if (!row.receipts.length) return;
+      row.coordinateConflict = row.receipts.some(function (e) { return e.coordinates.coordinateConflict; });
+      row.duplicate = row.receipts.length > 1;
+      if (row.duplicate) duplicates.push({ position: row.station.position, receiptCount: row.receipts.length, receipts: row.receipts });
+      row.presentationStatus = row.duplicate || row.coordinateConflict ? "CONFLICT" : row.receipts[0].status || "AVAILABLE";
     });
-
-    var mappedReceiptCount =
-      normalized.length -
-      unmapped.length;
-
-    var renderedPositions =
-      Object.keys(rows)
-        .map(Number)
-        .filter(function keepRendered(position) {
-          return rows[position].receipts.length > 0;
-        });
-
-    var notReachedPositions =
-      Object.keys(rows)
-        .map(Number)
-        .filter(function keepNotReached(position) {
-          return (
-            rows[position].presentationStatus ===
-            "NOT_REACHED"
-          );
-        });
-
-    var returnedReceiptMappingComplete =
-      Boolean(
-        state.cycle.executed &&
-        unmapped.length === 0 &&
-        duplicates.length === 0 &&
-        coordinateConflicts.length === 0 &&
-        unresolvedDeclarations.length === 0
-      );
 
     return {
-      schema:
-        "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v5",
-
-      engineCycleStatus:
-        normalizeToken(
-          rawReceipt &&
-          rawReceipt.status
-            ? rawReceipt.status
-            : "UNKNOWN"
-        ),
-
-      engineCycleTerminalClass:
-        rawReceipt &&
-        (
-          rawReceipt.terminalClass ||
-          rawReceipt.classification ||
-          null
-        ),
-
-      engineExactNineValidated:
-        deriveExactNineTriState(
-          rawReceipt
-        ),
-
-      engineReceiptCount:
-        rawReceipt &&
-        Number.isFinite(
-          Number(rawReceipt.receiptCount)
-        )
-          ? Number(rawReceipt.receiptCount)
-          : normalized.length,
-
-      stationReceipts:
-        normalized,
-
-      rows:
-        rows,
-
-      mappedReceiptCount:
-        mappedReceiptCount,
-
-      unmappedReceiptCount:
-        unmapped.length,
-
-      unmappedReceipts:
-        unmapped,
-
-      duplicateCoordinateCount:
-        duplicates.length,
-
-      duplicateCoordinates:
-        duplicates,
-
-      coordinateConflictCount:
-        coordinateConflicts.length,
-
-      coordinateConflicts:
-        coordinateConflicts,
-
-      unresolvedDeclarationCount:
-        unresolvedDeclarations.length,
-
-      unresolvedDeclarations:
-        unresolvedDeclarations,
-
-      renderedPositions:
-        renderedPositions,
-
-      notReachedPositions:
-        notReachedPositions,
-
-      returnedReceiptMappingComplete:
-        returnedReceiptMappingComplete,
-
-      logicalMappingComplete:
-        returnedReceiptMappingComplete,
-
-      logicalMappingScope:
-        "RETURNED_RECEIPTS_ONLY",
-
-      targetLifecycle:
-        frozenClone(
-          state.target
-        ),
-
-      createdAt:
-        nowIso()
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v6",
+      engineCycleStatus: token(rawReceipt && rawReceipt.status ? rawReceipt.status : "UNKNOWN"),
+      engineCycleTerminalClass: rawReceipt && (rawReceipt.terminalClass || rawReceipt.classification || null),
+      engineExactNineValidated: exactNineTriState(rawReceipt),
+      engineReceiptCount: rawReceipt && Number.isFinite(Number(rawReceipt.receiptCount)) ? Number(rawReceipt.receiptCount) : normalized.length,
+      stationReceipts: normalized,
+      rows: rows,
+      mappedReceiptCount: mappedCount,
+      unmappedReceiptCount: unmapped.length,
+      unmappedReceipts: unmapped,
+      duplicateCoordinateCount: duplicates.length,
+      duplicateCoordinates: duplicates,
+      coordinateConflictCount: conflicts.length,
+      coordinateConflicts: conflicts,
+      unresolvedDeclarationCount: unresolved.length,
+      unresolvedDeclarations: unresolved,
+      renderedPositions: Object.keys(rows).map(Number).filter(function (p) { return rows[p].receipts.length > 0; }),
+      notReachedPositions: Object.keys(rows).map(Number).filter(function (p) { return rows[p].presentationStatus === "NOT_REACHED"; }),
+      returnedReceiptMappingComplete: Boolean(state.cycle.executed && unmapped.length === 0 && duplicates.length === 0 && conflicts.length === 0 && unresolved.length === 0),
+      logicalMappingComplete: Boolean(state.cycle.executed && unmapped.length === 0 && duplicates.length === 0 && conflicts.length === 0 && unresolved.length === 0),
+      logicalMappingScope: "RETURNED_RECEIPTS_ONLY",
+      targetLifecycle: frozenClone(state.target),
+      createdAt: nowIso()
     };
   }
 
   function setCycleRunning(running) {
-    state.cycle.running =
-      Boolean(running);
-
-    setDisabled(
-      "runNineCycle",
-      state.cycle.running ||
-      state.target.navigationPending
-    );
-
-    var button =
-      byId("runNineCycle");
-
-    if (button) {
-      button.setAttribute(
-        "aria-busy",
-        state.cycle.running
-          ? "true"
-          : "false"
-      );
-
-      button.setAttribute(
-        "data-cycle-running",
-        state.cycle.running
-          ? "true"
-          : "false"
-      );
-
-      button.setAttribute(
-        "data-target-navigation-pending",
-        state.target.navigationPending
-          ? "true"
-          : "false"
-      );
+    state.cycle.running = Boolean(running);
+    setDisabled("runNineCycle", state.cycle.running || state.target.navigationPending);
+    var b = byId("runNineCycle");
+    if (b) {
+      b.setAttribute("aria-busy", state.cycle.running ? "true" : "false");
+      b.setAttribute("data-cycle-running", state.cycle.running ? "true" : "false");
+      b.setAttribute("data-target-navigation-pending", state.target.navigationPending ? "true" : "false");
     }
-
     publishReceipt();
   }
 
-  function getCycleStationRow(position) {
-    return (
-      doc.querySelector(
-        '#cycleMap [data-position="' +
-          String(position) +
-          '"]'
-      ) ||
-      doc.querySelector(
-        '#cycleChamber [data-position="' +
-          String(position) +
-          '"]'
-      )
-    );
+  function cycleRow(position) {
+    return doc.querySelector('#cycleMap [data-position="' + String(position) + '"]') ||
+      doc.querySelector('#cycleChamber [data-position="' + String(position) + '"]');
   }
 
   function renderCycleRow(position, rowState) {
-    var row =
-      getCycleStationRow(
-        position
-      );
+    var row = cycleRow(position);
+    var status, statusNode, summaryNode, roleNode, fibNode;
+    var result = { position: position, found: Boolean(row), updated: false };
 
-    var result = {
-      position:
-        position,
-      found:
-        Boolean(row),
-      updated:
-        false
-    };
+    if (!row) return result;
 
-    if (!row) {
-      return result;
-    }
+    status = rowState.presentationStatus || "UNKNOWN";
 
-    var status =
-      rowState.presentationStatus ||
-      "UNKNOWN";
+    row.setAttribute("data-status", status);
+    row.setAttribute("data-position", String(position));
+    row.setAttribute("data-fibonacci", rowState.station.fibonacci);
+    row.setAttribute("data-role", rowState.station.role);
+    row.setAttribute("data-coordinate-conflict", rowState.coordinateConflict ? "true" : "false");
+    row.setAttribute("data-duplicate-coordinate", rowState.duplicate ? "true" : "false");
 
-    row.setAttribute(
-      "data-status",
-      status
-    );
-
-    row.setAttribute(
-      "data-position",
-      String(position)
-    );
-
-    row.setAttribute(
-      "data-fibonacci",
-      rowState.station.fibonacci
-    );
-
-    row.setAttribute(
-      "data-role",
-      rowState.station.role
-    );
-
-    row.setAttribute(
-      "data-coordinate-conflict",
-      rowState.coordinateConflict
-        ? "true"
-        : "false"
-    );
-
-    row.setAttribute(
-      "data-duplicate-coordinate",
-      rowState.duplicate
-        ? "true"
-        : "false"
-    );
-
-    var statusNode =
-      row.querySelector(
-        "[data-station-status]"
-      ) ||
-      row.querySelector(
-        "[data-status-value]"
-      ) ||
-      row.querySelector("b");
-
-    var summaryNode =
-      row.querySelector(
-        "[data-station-summary]"
-      ) ||
-      row.querySelector("small");
-
-    var roleNode =
-      row.querySelector(
-        "[data-station-role]"
-      );
-
-    var fibonacciNode =
-      row.querySelector(
-        "[data-station-fibonacci]"
-      );
+    statusNode = row.querySelector("[data-station-status]") || row.querySelector("[data-status-value]") || row.querySelector("b");
+    summaryNode = row.querySelector("[data-station-summary]") || row.querySelector("small");
+    roleNode = row.querySelector("[data-station-role]");
+    fibNode = row.querySelector("[data-station-fibonacci]");
 
     if (statusNode) {
-      statusNode.textContent =
-        status;
-
-      statusNode.setAttribute(
-        "data-status",
-        status
-      );
+      statusNode.textContent = status;
+      statusNode.setAttribute("data-status", status);
     }
-
-    if (roleNode) {
-      roleNode.textContent =
-        rowState.station.role;
-    }
-
-    if (fibonacciNode) {
-      fibonacciNode.textContent =
-        rowState.station.fibonacci;
-    }
+    if (roleNode) roleNode.textContent = rowState.station.role;
+    if (fibNode) fibNode.textContent = rowState.station.fibonacci;
 
     if (summaryNode) {
-      if (!rowState.receipts.length) {
-        summaryNode.textContent =
-          status === "NOT_REACHED"
-            ? "No station receipt returned after cycle execution."
-            : "Cycle not yet executed.";
-      } else if (rowState.duplicate) {
-        summaryNode.textContent =
-          String(rowState.receipts.length) +
-          " receipts declared this position; all are preserved.";
-      } else if (rowState.coordinateConflict) {
-        summaryNode.textContent =
-          "Receipt mapped with unresolved or contradictory coordinate evidence.";
-      } else {
-        summaryNode.textContent =
-          rowState.receipts[0].summary ||
-          rowState.receipts[0].receiptId ||
-          "Station receipt available.";
-      }
+      summaryNode.textContent = !rowState.receipts.length
+        ? status === "NOT_REACHED" ? "No station receipt returned after cycle execution." : "Cycle not yet executed."
+        : rowState.duplicate
+          ? String(rowState.receipts.length) + " receipts declared this position; all are preserved."
+          : rowState.coordinateConflict
+            ? "Receipt mapped with unresolved or contradictory coordinate evidence."
+            : rowState.receipts[0].summary || rowState.receipts[0].receiptId || "Station receipt available.";
     }
 
-    result.updated =
-      true;
-
+    result.updated = true;
     return result;
   }
 
-  function renderCycleReceiptList(renderingState) {
-    var entries =
-      renderingState.stationReceipts;
-
-    var html =
-      entries.length
-        ? entries
-            .map(function renderCycleReceipt(entry) {
-              return (
-                '<article data-cycle-receipt-position="' +
-                  escapeHtml(
-                    entry.position === null
-                      ? "UNMAPPED"
-                      : entry.position
-                  ) +
-                  '" data-status="' +
-                  escapeHtml(
-                    entry.coordinates.coordinateConflict
-                      ? "CONFLICT"
-                      : entry.status
-                  ) +
-                  '">' +
-                  "<h4>" +
-                  escapeHtml(
-                    entry.fibonacci ||
-                    "UNMAPPED"
-                  ) +
-                  " · " +
-                  escapeHtml(
-                    entry.role ||
-                    "UNRESOLVED STATION"
-                  ) +
-                  "</h4>" +
-                  "<p>" +
-                  escapeHtml(
-                    entry.coordinates.coordinateConflict
-                      ? "Coordinate conflict retained."
-                      : entry.status
-                  ) +
-                  "</p>" +
-                  (
-                    entry.receiptId
-                      ? "<small>" +
-                        escapeHtml(
-                          entry.receiptId
-                        ) +
-                        "</small>"
-                      : ""
-                  ) +
-                  "<pre>" +
-                  escapeHtml(
-                    safeJson({
-                      receipt:
-                        entry.rawReceipt,
-                      coordinateEvidence:
-                        entry.coordinates
-                    })
-                  ) +
-                  "</pre>" +
-                  "</article>"
-              );
-            })
-            .join("")
-        : (
-            '<article class="empty-state">' +
-              "<h4>No cycle receipts</h4>" +
-              "<p>Run the Nine-Cycle to populate this chamber.</p>" +
-              "</article>"
-          );
-
-    return setHtml(
-      "cycleReceiptList",
-      html
-    );
+  function renderCycleReceiptList(rs) {
+    return setHtml("cycleReceiptList", rs.stationReceipts.length
+      ? rs.stationReceipts.map(function (e) {
+          return '<article data-cycle-receipt-position="' +
+            escapeHtml(e.position === null ? "UNMAPPED" : e.position) +
+            '" data-status="' + escapeHtml(e.coordinates.coordinateConflict ? "CONFLICT" : e.status) + '">' +
+            "<h4>" + escapeHtml(e.fibonacci || "UNMAPPED") + " · " + escapeHtml(e.role || "UNRESOLVED STATION") + "</h4>" +
+            "<p>" + escapeHtml(e.coordinates.coordinateConflict ? "Coordinate conflict retained." : e.status) + "</p>" +
+            (e.receiptId ? "<small>" + escapeHtml(e.receiptId) + "</small>" : "") +
+            "<pre>" + escapeHtml(safeJson({ receipt: e.rawReceipt, coordinateEvidence: e.coordinates })) + "</pre>" +
+            "</article>";
+        }).join("")
+      : '<article class="empty-state"><h4>No cycle receipts</h4><p>Run the Nine-Cycle to populate this chamber.</p></article>');
   }
 
-  function renderCycleLedger(renderingState) {
-    return setText(
-      "cycleLedgerOutput",
-      safeJson({
-        engineCycleStatus:
-          renderingState.engineCycleStatus,
-        engineCycleTerminalClass:
-          renderingState.engineCycleTerminalClass,
-        engineExactNineValidated:
-          renderingState.engineExactNineValidated,
-        mappedReceiptCount:
-          renderingState.mappedReceiptCount,
-        unmappedReceiptCount:
-          renderingState.unmappedReceiptCount,
-        duplicateCoordinateCount:
-          renderingState.duplicateCoordinateCount,
-        coordinateConflictCount:
-          renderingState.coordinateConflictCount,
-        unresolvedDeclarationCount:
-          renderingState.unresolvedDeclarationCount,
-        renderedPositions:
-          renderingState.renderedPositions,
-        notReachedPositions:
-          renderingState.notReachedPositions,
-        returnedReceiptMappingComplete:
-          renderingState.returnedReceiptMappingComplete,
-        targetLifecycle:
-          frozenClone(
-            state.target
-          ),
-        receipts:
-          renderingState.stationReceipts
-      })
-    );
-  }
+  function observeAndUpdateCycleDom(rs) {
+    var found = [];
+    var updated = [];
+    var missing = [];
+    var rowResults;
+    var summaries;
+    var localComplete;
 
-  function renderCycleSummaryTargets(renderingState) {
+    CYCLE_TARGET_IDS.forEach(function (id) { byId(id) ? found.push(id) : missing.push(id); });
+
+    if (setText("cycleStatus", state.cycle.running ? "Cycle · Running" : state.target.navigationPending ? "Cycle · Target Loading" : state.cycle.executed ? "Cycle · " + rs.engineCycleStatus : "Cycle · Not Run")) {
+      setStatus("cycleStatus", state.cycle.running ? "RUNNING" : state.target.navigationPending ? "HELD" : state.cycle.executed ? rs.engineCycleStatus : "NOT_RUN");
+      updated.push("cycleStatus");
+    }
+
+    if (byId("cycleChamber")) {
+      setStatus("cycleChamber", state.cycle.running ? "RUNNING" : state.target.navigationPending ? "HELD" : state.cycle.executed ? rs.engineCycleStatus : "NOT_RUN");
+      byId("cycleChamber").setAttribute("data-cycle-executed", state.cycle.executed ? "true" : "false");
+      byId("cycleChamber").setAttribute("data-target-lifecycle", state.target.lifecycleClass);
+      byId("cycleChamber").setAttribute("data-target-route-matched", state.target.routeMatched ? "true" : "false");
+      updated.push("cycleChamber");
+    }
+
+    summaries = {
+      cyclePreviewSummary: state.cycle.executed ? "Engine cycle status: " + rs.engineCycleStatus + "." : state.target.navigationPending ? "Target navigation is pending before Nine-Cycle execution." : "Nine-Cycle has not been executed.",
+      cycleRegistrationSummary: [rs.mappedReceiptCount, "mapped", rs.unmappedReceiptCount, "unmapped"].join(" "),
+      cyclePreflightSummary: [rs.coordinateConflictCount, "coordinate conflicts;", rs.unresolvedDeclarationCount, "unresolved declarations;", state.target.lifecycleClass].join(" "),
+      cycleExecutionSummary: [rs.renderedPositions.length, "stations reached;", rs.notReachedPositions.length, "not reached"].join(" ")
+    };
+
+    Object.keys(summaries).forEach(function (id) { if (setText(id, summaries[id])) updated.push(id); });
+
+    rowResults = STATIONS.map(function (s) { return renderCycleRow(s.position, rs.rows[s.position]); });
+
+    if (byId("cycleMap") && rowResults.some(function (r) { return r.updated; })) updated.push("cycleMap");
+    if (setText("cycleLedgerOutput", safeJson({ engineCycleStatus: rs.engineCycleStatus, engineCycleTerminalClass: rs.engineCycleTerminalClass, engineExactNineValidated: rs.engineExactNineValidated, mappedReceiptCount: rs.mappedReceiptCount, unmappedReceiptCount: rs.unmappedReceiptCount, duplicateCoordinateCount: rs.duplicateCoordinateCount, coordinateConflictCount: rs.coordinateConflictCount, unresolvedDeclarationCount: rs.unresolvedDeclarationCount, renderedPositions: rs.renderedPositions, notReachedPositions: rs.notReachedPositions, returnedReceiptMappingComplete: rs.returnedReceiptMappingComplete, targetLifecycle: frozenClone(state.target), receipts: rs.stationReceipts }))) updated.push("cycleLedgerOutput");
+    if (renderCycleReceiptList(rs)) updated.push("cycleReceiptList");
+
+    updated = updated.filter(function (v, i, a) { return a.indexOf(v) === i; });
+
+    localComplete = Boolean(
+      found.length === CYCLE_TARGET_IDS.length &&
+      updated.length === CYCLE_TARGET_IDS.length &&
+      rowResults.filter(function (r) { return r.found; }).length === STATIONS.length &&
+      rowResults.filter(function (r) { return r.updated; }).length === STATIONS.length
+    );
+
     return {
-      previewSummaryUpdated:
-        setText(
-          "cyclePreviewSummary",
-          state.cycle.executed
-            ? (
-                "Engine cycle status: " +
-                renderingState.engineCycleStatus +
-                "."
-              )
-            : state.target.navigationPending
-              ? "Target navigation is pending before Nine-Cycle execution."
-              : "Nine-Cycle has not been executed."
-        ),
-
-      registrationSummaryUpdated:
-        setText(
-          "cycleRegistrationSummary",
-          [
-            renderingState.mappedReceiptCount,
-            "mapped",
-            renderingState.unmappedReceiptCount,
-            "unmapped"
-          ].join(" ")
-        ),
-
-      preflightSummaryUpdated:
-        setText(
-          "cyclePreflightSummary",
-          [
-            renderingState.coordinateConflictCount,
-            "coordinate conflicts;",
-            renderingState.unresolvedDeclarationCount,
-            "unresolved declarations;",
-            state.target.lifecycleClass
-          ].join(" ")
-        ),
-
-      executionSummaryUpdated:
-        setText(
-          "cycleExecutionSummary",
-          [
-            renderingState.renderedPositions.length,
-            "stations reached;",
-            renderingState.notReachedPositions.length,
-            "not reached"
-          ].join(" ")
-        )
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v6",
+      evidenceScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
+      certificationOwner: "INDEX_CONTROL_BRIDGE",
+      targetLifecycle: frozenClone(state.target),
+      requiredTargetCount: CYCLE_TARGET_IDS.length,
+      foundTargetCount: found.length,
+      updatedTargetCount: updated.length,
+      foundTargetIds: found,
+      updatedTargetIds: updated,
+      missingTargetIds: missing,
+      requiredStationRowCount: STATIONS.length,
+      foundStationRowCount: rowResults.filter(function (r) { return r.found; }).length,
+      updatedStationRowCount: rowResults.filter(function (r) { return r.updated; }).length,
+      missingStationPositions: rowResults.filter(function (r) { return !r.found; }).map(function (r) { return r.position; }),
+      localDomUpdateComplete: localComplete,
+      domSynchronizationComplete: localComplete,
+      familySynchronizationCertified: false,
+      observedAt: nowIso()
     };
   }
 
-  function observeAndUpdateCycleDom(renderingState) {
-    var foundTargetIds = [];
-    var updatedTargetIds = [];
-    var missingTargetIds = [];
-
-    CYCLE_TARGET_IDS.forEach(function inspectTarget(id) {
-      if (byId(id)) {
-        foundTargetIds.push(id);
-      } else {
-        missingTargetIds.push(id);
-      }
-    });
-
-    var cycleStatusUpdated =
-      setText(
-        "cycleStatus",
-        state.cycle.running
-          ? "Cycle · Running"
-          : state.target.navigationPending
-            ? "Cycle · Target Loading"
-            : state.cycle.executed
-              ? "Cycle · " +
-                renderingState.engineCycleStatus
-              : "Cycle · Not Run"
-      );
-
-    if (cycleStatusUpdated) {
-      setStatus(
-        "cycleStatus",
-        state.cycle.running
-          ? "RUNNING"
-          : state.target.navigationPending
-            ? "HOLD"
-            : state.cycle.executed
-              ? renderingState.engineCycleStatus
-              : "NOT_RUN"
-      );
-
-      updatedTargetIds.push(
-        "cycleStatus"
-      );
-    }
-
-    var chamber =
-      byId("cycleChamber");
-
-    var chamberStatusUpdated =
-      false;
-
-    if (chamber) {
-      setStatus(
-        chamber,
-        state.cycle.running
-          ? "RUNNING"
-          : state.target.navigationPending
-            ? "HOLD"
-            : state.cycle.executed
-              ? renderingState.engineCycleStatus
-              : "NOT_RUN"
-      );
-
-      chamber.setAttribute(
-        "data-cycle-executed",
-        state.cycle.executed
-          ? "true"
-          : "false"
-      );
-
-      chamber.setAttribute(
-        "data-target-lifecycle",
-        state.target.lifecycleClass
-      );
-
-      chamber.setAttribute(
-        "data-target-route-matched",
-        state.target.routeMatched
-          ? "true"
-          : "false"
-      );
-
-      chamberStatusUpdated =
-        true;
-
-      updatedTargetIds.push(
-        "cycleChamber"
-      );
-    }
-
-    var summaryResults =
-      renderCycleSummaryTargets(
-        renderingState
-      );
-
-    if (
-      summaryResults.previewSummaryUpdated
-    ) {
-      updatedTargetIds.push(
-        "cyclePreviewSummary"
-      );
-    }
-
-    if (
-      summaryResults.registrationSummaryUpdated
-    ) {
-      updatedTargetIds.push(
-        "cycleRegistrationSummary"
-      );
-    }
-
-    if (
-      summaryResults.preflightSummaryUpdated
-    ) {
-      updatedTargetIds.push(
-        "cyclePreflightSummary"
-      );
-    }
-
-    if (
-      summaryResults.executionSummaryUpdated
-    ) {
-      updatedTargetIds.push(
-        "cycleExecutionSummary"
-      );
-    }
-
-    var rowResults = [];
-
-    CANONICAL_CYCLE_STATIONS.forEach(function renderStation(station) {
-      rowResults.push(
-        renderCycleRow(
-          station.position,
-          renderingState.rows[
-            station.position
-          ]
-        )
-      );
-    });
-
-    var foundStationRowCount =
-      rowResults.filter(function rowFound(result) {
-        return result.found;
-      }).length;
-
-    var updatedStationRowCount =
-      rowResults.filter(function rowUpdated(result) {
-        return result.updated;
-      }).length;
-
-    var missingStationPositions =
-      rowResults
-        .filter(function missingRow(result) {
-          return !result.found;
-        })
-        .map(function mapMissingPosition(result) {
-          return result.position;
-        });
-
-    var cycleMapUpdated =
-      Boolean(
-        byId("cycleMap")
-      ) &&
-      updatedStationRowCount > 0;
-
-    if (cycleMapUpdated) {
-      updatedTargetIds.push(
-        "cycleMap"
-      );
-    }
-
-    var ledgerUpdated =
-      renderCycleLedger(
-        renderingState
-      );
-
-    if (ledgerUpdated) {
-      updatedTargetIds.push(
-        "cycleLedgerOutput"
-      );
-    }
-
-    var receiptListUpdated =
-      renderCycleReceiptList(
-        renderingState
-      );
-
-    if (receiptListUpdated) {
-      updatedTargetIds.push(
-        "cycleReceiptList"
-      );
-    }
-
-    var uniqueUpdatedTargetIds = [];
-
-    updatedTargetIds.forEach(function dedupeUpdatedTarget(id) {
-      if (
-        uniqueUpdatedTargetIds.indexOf(id) === -1
-      ) {
-        uniqueUpdatedTargetIds.push(id);
-      }
-    });
-
-    var allRequiredTargetsObserved =
-      foundTargetIds.length ===
-      CYCLE_TARGET_IDS.length;
-
-    var allRequiredTargetsLocallyUpdated =
-      uniqueUpdatedTargetIds.length ===
-      CYCLE_TARGET_IDS.length;
-
-    var allStationRowsObserved =
-      foundStationRowCount ===
-      CANONICAL_CYCLE_STATIONS.length;
-
-    var allStationRowsLocallyUpdated =
-      updatedStationRowCount ===
-      CANONICAL_CYCLE_STATIONS.length;
-
-    var localDomUpdateComplete =
-      Boolean(
-        allRequiredTargetsObserved &&
-        allRequiredTargetsLocallyUpdated &&
-        allStationRowsObserved &&
-        allStationRowsLocallyUpdated
-      );
-
-    return {
-      schema:
-        "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v5",
-
-      evidenceScope:
-        "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
-
-      certificationOwner:
-        "INDEX_CONTROL_BRIDGE",
-
-      targetLifecycle:
-        frozenClone(
-          state.target
-        ),
-
-      requiredTargetCount:
-        CYCLE_TARGET_IDS.length,
-
-      foundTargetCount:
-        foundTargetIds.length,
-
-      updatedTargetCount:
-        uniqueUpdatedTargetIds.length,
-
-      foundTargetIds:
-        foundTargetIds,
-
-      updatedTargetIds:
-        uniqueUpdatedTargetIds,
-
-      missingTargetIds:
-        missingTargetIds,
-
-      requiredStationRowCount:
-        CANONICAL_CYCLE_STATIONS.length,
-
-      foundStationRowCount:
-        foundStationRowCount,
-
-      updatedStationRowCount:
-        updatedStationRowCount,
-
-      missingStationPositions:
-        missingStationPositions,
-
-      cycleStatusUpdated:
-        cycleStatusUpdated,
-
-      chamberStatusUpdated:
-        chamberStatusUpdated,
-
-      previewSummaryUpdated:
-        summaryResults.previewSummaryUpdated,
-
-      registrationSummaryUpdated:
-        summaryResults.registrationSummaryUpdated,
-
-      preflightSummaryUpdated:
-        summaryResults.preflightSummaryUpdated,
-
-      executionSummaryUpdated:
-        summaryResults.executionSummaryUpdated,
-
-      cycleMapUpdated:
-        cycleMapUpdated,
-
-      ledgerUpdated:
-        ledgerUpdated,
-
-      receiptListUpdated:
-        receiptListUpdated,
-
-      allRequiredTargetsObserved:
-        allRequiredTargetsObserved,
-
-      allRequiredTargetsLocallyUpdated:
-        allRequiredTargetsLocallyUpdated,
-
-      allStationRowsObserved:
-        allStationRowsObserved,
-
-      allStationRowsLocallyUpdated:
-        allStationRowsLocallyUpdated,
-
-      localDomUpdateComplete:
-        localDomUpdateComplete,
-
-      domSynchronizationComplete:
-        localDomUpdateComplete,
-
-      familySynchronizationCertified:
-        false,
-
-      observedAt:
-        nowIso()
-    };
-  }
-
-  function createCycleRenderingReceipt(
-    renderingState,
-    localDomEvidence
-  ) {
+  function createCycleRenderingReceipt(rs, local) {
     return deepFreeze({
-      schema:
-        CYCLE_RENDERING_RECEIPT_SCHEMA,
-
-      receiptId:
-        "AUDRALIA_CYCLE_RENDERING_RECEIPT_" +
-        Date.now(),
-
-      controlsContract:
-        CONTRACT,
-
-      evidenceScope:
-        "CONTROLS_LOCAL_PRESENTATION_ONLY",
-
-      certificationOwner:
-        "INDEX_CONTROL_BRIDGE",
-
-      engineCycleReceiptSchema:
-        state.cycle.rawReceipt
-          ? state.cycle.rawReceipt.schema || null
-          : null,
-
-      engineCycleStatus:
-        renderingState.engineCycleStatus,
-
-      engineCycleTerminalClass:
-        renderingState.engineCycleTerminalClass,
-
-      engineExactNineValidated:
-        renderingState.engineExactNineValidated,
-
-      targetLifecycle:
-        frozenClone(
-          state.target
-        ),
-
-      returnedReceiptMappingComplete:
-        renderingState.returnedReceiptMappingComplete,
-
-      logicalMappingComplete:
-        renderingState.logicalMappingComplete,
-
-      logicalMappingScope:
-        renderingState.logicalMappingScope,
-
-      localDomUpdateComplete:
-        Boolean(
-          localDomEvidence &&
-          localDomEvidence.localDomUpdateComplete
-        ),
-
-      domSynchronizationComplete:
-        Boolean(
-          localDomEvidence &&
-          localDomEvidence.localDomUpdateComplete
-        ),
-
-      cycleChamberSynchronized:
-        null,
-
-      cycleChamberSynchronizationOwner:
-        "INDEX_CONTROL_BRIDGE",
-
-      familySynchronizationCertified:
-        false,
-
-      mappedReceiptCount:
-        renderingState.mappedReceiptCount,
-
-      unmappedReceiptCount:
-        renderingState.unmappedReceiptCount,
-
-      duplicateCoordinateCount:
-        renderingState.duplicateCoordinateCount,
-
-      coordinateConflictCount:
-        renderingState.coordinateConflictCount,
-
-      unresolvedDeclarationCount:
-        renderingState.unresolvedDeclarationCount,
-
-      renderedPositions:
-        renderingState.renderedPositions.slice(),
-
-      notReachedPositions:
-        renderingState.notReachedPositions.slice(),
-
-      missingCycleTargets:
-        localDomEvidence
-          ? localDomEvidence.missingTargetIds.slice()
-          : CYCLE_TARGET_IDS.slice(),
-
-      missingStationPositions:
-        localDomEvidence
-          ? localDomEvidence.missingStationPositions.slice()
-          : CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
-              return station.position;
-            }),
-
-      cycleButtonLockReleased:
-        state.cycle.running === false &&
-        state.target.navigationPending === false,
-
-      renderedAt:
-        nowIso(),
-
-      requirements:
-        CONTROL_REQUIREMENTS,
-
-      noClaims:
-        NO_CLAIMS
+      schema: CYCLE_RENDERING_RECEIPT_SCHEMA,
+      receiptId: "AUDRALIA_CYCLE_RENDERING_RECEIPT_" + Date.now(),
+      controlsContract: CONTRACT,
+      evidenceScope: "CONTROLS_LOCAL_PRESENTATION_ONLY",
+      certificationOwner: "INDEX_CONTROL_BRIDGE",
+      engineCycleReceiptSchema: state.cycle.rawReceipt ? state.cycle.rawReceipt.schema || null : null,
+      engineCycleStatus: rs.engineCycleStatus,
+      engineCycleTerminalClass: rs.engineCycleTerminalClass,
+      engineExactNineValidated: rs.engineExactNineValidated,
+      targetLifecycle: frozenClone(state.target),
+      returnedReceiptMappingComplete: rs.returnedReceiptMappingComplete,
+      logicalMappingComplete: rs.logicalMappingComplete,
+      logicalMappingScope: rs.logicalMappingScope,
+      localDomUpdateComplete: Boolean(local && local.localDomUpdateComplete),
+      domSynchronizationComplete: Boolean(local && local.localDomUpdateComplete),
+      cycleChamberSynchronized: null,
+      cycleChamberSynchronizationOwner: "INDEX_CONTROL_BRIDGE",
+      familySynchronizationCertified: false,
+      mappedReceiptCount: rs.mappedReceiptCount,
+      unmappedReceiptCount: rs.unmappedReceiptCount,
+      duplicateCoordinateCount: rs.duplicateCoordinateCount,
+      coordinateConflictCount: rs.coordinateConflictCount,
+      unresolvedDeclarationCount: rs.unresolvedDeclarationCount,
+      renderedPositions: rs.renderedPositions.slice(),
+      notReachedPositions: rs.notReachedPositions.slice(),
+      missingCycleTargets: local ? local.missingTargetIds.slice() : CYCLE_TARGET_IDS.slice(),
+      missingStationPositions: local ? local.missingStationPositions.slice() : STATIONS.map(function (s) { return s.position; }),
+      cycleButtonLockReleased: state.cycle.running === false && state.target.navigationPending === false,
+      renderedAt: nowIso(),
+      requirements: REQUIREMENTS,
+      noClaims: NO_CLAIMS
     });
   }
 
   function renderCommittedCycleChamber() {
-    var receipt =
-      state.cycle.rawReceipt ||
-      {
-        schema:
-          ENGINE_CYCLE_RECEIPT_SCHEMA,
-        status:
-          "NOT_RUN",
-        stationReceipts: []
-      };
+    var receipt = state.cycle.rawReceipt || { schema: ENGINE_CYCLE_RECEIPT_SCHEMA, status: "NOT_RUN", stationReceipts: [] };
+    var rs = buildCycleRenderingState(receipt);
+    var local = observeAndUpdateCycleDom(rs);
 
-    var renderingState =
-      buildCycleRenderingState(
-        receipt
-      );
+    state.cycle.rendering = deepFreeze(clone(rs));
+    state.cycle.localDomEvidence = deepFreeze(clone(local));
+    state.cycle.renderingReceipt = createCycleRenderingReceipt(rs, local);
+    state.cycle.renderedAt = state.cycle.renderingReceipt.renderedAt;
 
-    var localDomEvidence =
-      observeAndUpdateCycleDom(
-        renderingState
-      );
-
-    state.cycle.rendering =
-      deepFreeze(
-        clone(renderingState)
-      );
-
-    state.cycle.localDomEvidence =
-      deepFreeze(
-        clone(localDomEvidence)
-      );
-
-    state.cycle.renderingReceipt =
-      createCycleRenderingReceipt(
-        renderingState,
-        localDomEvidence
-      );
-
-    state.cycle.renderedAt =
-      state.cycle.renderingReceipt.renderedAt;
-
-    refreshReceiptInventory();
+    refreshReceiptInventory({ publish: false, render: false });
     publishReceipt();
 
     return frozenClone({
-      rendering:
-        state.cycle.rendering,
-      localDomEvidence:
-        state.cycle.localDomEvidence,
-      renderingReceipt:
-        state.cycle.renderingReceipt
+      rendering: state.cycle.rendering,
+      localDomEvidence: state.cycle.localDomEvidence,
+      renderingReceipt: state.cycle.renderingReceipt
     });
   }
 
-  function renderCycleChamber() {
-    return renderCommittedCycleChamber();
-  }
-
-  function refreshCycleChamber() {
-    return renderCommittedCycleChamber();
-  }
-
-  function validateCycleReceipt(value) {
-    if (!isObject(value)) {
-      return false;
-    }
-
-    var schema =
-      value.schema ||
-      value.receiptSchema ||
-      null;
-
-    var status =
-      normalizeToken(
-        value.status ||
-        value.state ||
-        value.result ||
-        ""
-      );
-
-    if (schema) {
-      return (
-        schema ===
-        ENGINE_CYCLE_RECEIPT_SCHEMA
-      );
-    }
-
-    var cycleSpecificEvidence =
-      Boolean(
-        Array.isArray(
-          value.stationReceipts
-        ) ||
-        Array.isArray(
-          value.cycleReceipts
-        ) ||
-        value.cycleReceiptId ||
-        value.exactNineValidated !== undefined ||
-        value.exactNine !== undefined ||
-        value.terminalClass
-      );
-
-    return Boolean(
-      VALID_CYCLE_TERMINAL_STATUSES.indexOf(
-        status
-      ) !== -1 &&
-      cycleSpecificEvidence
-    );
+  function validateCycleReceipt(v) {
+    var schema, status, evidence;
+    if (!isObj(v)) return false;
+    schema = v.schema || v.receiptSchema || null;
+    status = token(v.status || v.state || v.result || "");
+    if (schema) return schema === ENGINE_CYCLE_RECEIPT_SCHEMA;
+    evidence = Boolean(Array.isArray(v.stationReceipts) || Array.isArray(v.cycleReceipts) || v.cycleReceiptId || v.exactNineValidated !== undefined || v.exactNine !== undefined || v.terminalClass);
+    return Boolean(["COMMITTED", "HELD", "ERROR"].indexOf(status) !== -1 && evidence);
   }
 
   function createCycleHeldReceipt(context) {
     return {
-      schema:
-        ENGINE_CYCLE_RECEIPT_SCHEMA,
-
-      receiptId:
-        "AUDRALIA_CONTROL_CYCLE_HELD_" +
-        Date.now(),
-
-      status:
-        "HELD",
-
-      terminalClass:
-        "CONTROL_INTERFACE_HELD",
-
-      reason:
-        context && context.reason
-          ? context.reason
-          : "ENGINE_CYCLE_UNAVAILABLE",
-
-      requestedAt:
-        nowIso(),
-
-      targetLifecycle:
-        frozenClone(
-          state.target
-        ),
-
+      schema: ENGINE_CYCLE_RECEIPT_SCHEMA,
+      receiptId: "AUDRALIA_CONTROL_CYCLE_HELD_" + Date.now(),
+      status: "HELD",
+      terminalClass: "CONTROL_INTERFACE_HELD",
+      reason: context && context.reason ? context.reason : "ENGINE_CYCLE_UNAVAILABLE",
+      requestedAt: nowIso(),
+      targetLifecycle: frozenClone(state.target),
       stationReceipts: [],
-
-      source:
-        "CONTROL_PANEL",
-
-      noClaims:
-        NO_CLAIMS
+      source: "CONTROL_PANEL",
+      noClaims: NO_CLAIMS
     };
   }
 
+  function hasActiveCycle() {
+    return Boolean(activeCycle.promise && activeCycle.settled === false);
+  }
+
+  function createActiveCycle() {
+    if (hasActiveCycle()) return activeCycle.promise;
+    activeCycle.settled = false;
+    activeCycle.createdAt = nowIso();
+    activeCycle.promise = new Promise(function (resolve) { activeCycle.resolve = resolve; });
+    return activeCycle.promise;
+  }
+
+  function clearActiveCycle() {
+    activeCycle.promise = null;
+    activeCycle.resolve = null;
+    activeCycle.settled = false;
+    activeCycle.createdAt = null;
+  }
+
+  function settleActiveCycle(receipt) {
+    var resolver;
+    if (!hasActiveCycle() || !isFn(activeCycle.resolve)) return false;
+    resolver = activeCycle.resolve;
+    activeCycle.settled = true;
+    activeCycle.resolve = null;
+    resolver(frozenClone(receipt));
+    clearActiveCycle();
+    return true;
+  }
+
   function commitCycleReceipt(receipt) {
-    state.cycle.executed =
-      true;
-
-    state.cycle.rawReceipt =
-      deepFreeze(
-        clone(receipt)
-      );
-
+    state.cycle.executed = true;
+    state.cycle.rawReceipt = deepFreeze(clone(receipt));
     return renderCommittedCycleChamber();
   }
 
-  function holdActiveCycleRequest(reason) {
-    var held =
-      createCycleHeldReceipt({
-        reason:
-          reason
-      });
-
-    state.target.pendingNineCycle =
-      false;
-
-    state.target.pendingNineCycleRequestedAt =
-      null;
-
-    state.cycle.requested =
-      false;
-
-    state.cycle.running =
-      false;
-
-    commitCycleReceipt(
-      held
-    );
-
+  function finalizeCycleExecution() {
+    state.cycle.requested = false;
+    state.target.pendingNineCycle = false;
+    state.target.pendingNineCycleRequestedAt = null;
     setCycleRunning(false);
-
-    settleActiveCycleRequest(
-      held
-    );
-
-    refreshReceiptInventory();
+    if (state.cycle.rendering && state.cycle.localDomEvidence) {
+      state.cycle.renderingReceipt = createCycleRenderingReceipt(state.cycle.rendering, state.cycle.localDomEvidence);
+    }
+    refreshReceiptInventory({ publish: false });
     publishReceipt();
-
-    return frozenClone(
-      held
-    );
   }
 
-  function finalizeCycleExecution() {
-    state.cycle.requested =
-      false;
-
-    state.target.pendingNineCycle =
-      false;
-
-    state.target.pendingNineCycleRequestedAt =
-      null;
-
+  function holdActiveCycle(reason) {
+    var held = createCycleHeldReceipt({ reason: reason });
+    state.target.pendingNineCycle = false;
+    state.target.pendingNineCycleRequestedAt = null;
+    state.cycle.requested = false;
+    state.cycle.running = false;
+    commitCycleReceipt(held);
     setCycleRunning(false);
-
-    if (
-      state.cycle.rendering &&
-      state.cycle.localDomEvidence
-    ) {
-      state.cycle.renderingReceipt =
-        createCycleRenderingReceipt(
-          state.cycle.rendering,
-          state.cycle.localDomEvidence
-        );
-    }
-
-    refreshReceiptInventory();
-    publishReceipt();
+    settleActiveCycle(held);
+    refreshReceiptInventory({ publish: true });
+    return frozenClone(held);
   }
 
   function executeNineCycle() {
-    if (state.cycle.running) {
-      return (
-        getActiveCyclePromise() ||
-        Promise.resolve(
-          frozenClone(
-            state.cycle.rawReceipt
-          )
-        )
-      );
-    }
+    var execution;
 
-    if (!hasActiveCycleRequest()) {
-      createActiveCycleRequest();
-    }
+    if (state.cycle.running) return activeCycle.promise || Promise.resolve(frozenClone(state.cycle.rawReceipt));
+    if (!hasActiveCycle()) createActiveCycle();
 
-    state.target.pendingNineCycle =
-      false;
-
-    state.target.pendingNineCycleRequestedAt =
-      null;
-
-    state.cycle.requested =
-      true;
+    state.target.pendingNineCycle = false;
+    state.target.pendingNineCycleRequestedAt = null;
+    state.cycle.requested = true;
 
     setCycleRunning(true);
+    setText("controllerState", "NINE-CYCLE");
+    setStatus("controllerState", "RUNNING");
+    setText("cycleStatus", "Cycle · Running");
+    setStatus("cycleStatus", "RUNNING");
 
-    setText(
-      "controllerState",
-      "NINE-CYCLE"
-    );
+    recordAction("executeNineCycle.begin", {
+      category: state.ui.selectedCategory,
+      audit: state.ui.selectedAudit,
+      participant: state.ui.selectedParticipant,
+      targetLifecycle: state.target.lifecycleClass,
+      targetRouteMatched: state.target.routeMatched
+    });
 
-    setStatus(
-      "controllerState",
-      "RUNNING"
-    );
+    execution = invokeEngine("runNineCycle", [{
+      source: "CONTROL_PANEL",
+      requestedAt: nowIso(),
+      category: state.ui.selectedCategory,
+      audit: state.ui.selectedAudit,
+      participant: state.ui.selectedParticipant,
+      targetLifecycle: frozenClone(state.target)
+    }], {
+      validate: validateCycleReceipt,
+      fallback: createCycleHeldReceipt
+    }).then(function (receipt) {
+      var committed = validateCycleReceipt(receipt) ? receipt : createCycleHeldReceipt({ reason: "ENGINE_CYCLE_RESULT_INVALID" });
 
-    setText(
-      "cycleStatus",
-      "Cycle · Running"
-    );
-
-    setStatus(
-      "cycleStatus",
-      "RUNNING"
-    );
-
-    recordAction(
-      "executeNineCycle.begin",
-      {
-        category:
-          state.ui.selectedCategory,
-        audit:
-          state.ui.selectedAudit,
-        participant:
-          state.ui.selectedParticipant,
-        targetLifecycle:
-          state.target.lifecycleClass,
-        targetRouteMatched:
-          state.target.routeMatched,
-        targetVisible:
-          state.ui.targetVisible,
-        observationLens:
-          state.ui.observationLens
+      try {
+        commitCycleReceipt(committed);
+      } catch (error) {
+        recordError("commitCycleReceipt", error);
+        committed = createCycleHeldReceipt({ reason: "CONTROL_CYCLE_RENDERING_FAILURE" });
+        state.cycle.executed = true;
+        state.cycle.rawReceipt = deepFreeze(clone(committed));
       }
-    );
 
-    var execution =
-      invokeEngine(
-        "runNineCycle",
-        [
-          {
-            source:
-              "CONTROL_PANEL",
-            requestedAt:
-              nowIso(),
-            category:
-              state.ui.selectedCategory,
-            audit:
-              state.ui.selectedAudit,
-            participant:
-              state.ui.selectedParticipant,
-            targetLifecycle:
-              frozenClone(
-                state.target
-              )
-          }
-        ],
-        {
-          validate:
-            validateCycleReceipt,
+      setText("controllerState", token(committed.status) === "COMMITTED" ? "CYCLE COMMITTED" : "CYCLE COMPLETE");
+      setStatus("controllerState", committed.status || "AVAILABLE");
+      setText("cycleStatus", "Cycle · " + String(committed.status || "Available"));
+      setStatus("cycleStatus", committed.status || "AVAILABLE");
 
-          fallback:
-            createCycleHeldReceipt
-        }
-      )
-        .then(function cycleComplete(receipt) {
-          var committed =
-            validateCycleReceipt(receipt)
-              ? receipt
-              : createCycleHeldReceipt({
-                  reason:
-                    "ENGINE_CYCLE_RESULT_INVALID"
-                });
+      recordAction("executeNineCycle.complete", {
+        status: committed.status || null,
+        receiptCount: committed.receiptCount || extractCycleStationReceipts(committed).length,
+        returnedReceiptMappingComplete: state.cycle.rendering ? state.cycle.rendering.returnedReceiptMappingComplete : false,
+        localDomUpdateComplete: state.cycle.localDomEvidence ? state.cycle.localDomEvidence.localDomUpdateComplete : false
+      });
 
-          try {
-            commitCycleReceipt(
-              committed
-            );
-          } catch (error) {
-            recordError(
-              "commitCycleReceipt",
-              error
-            );
+      toast("Nine-Cycle receipt committed.", committed.status || "AVAILABLE");
+      settleActiveCycle(committed);
 
-            committed =
-              createCycleHeldReceipt({
-                reason:
-                  "CONTROL_CYCLE_RENDERING_FAILURE"
-              });
+      return frozenClone(committed);
+    }).catch(function (error) {
+      var held = createCycleHeldReceipt({ reason: "CONTROL_CYCLE_UNHANDLED_REJECTION" });
+      state.cycle.executed = true;
+      state.cycle.rawReceipt = deepFreeze(clone(held));
+      try { renderCommittedCycleChamber(); } catch (renderError) { recordError("renderCommittedCycleChamber", renderError); }
+      recordError("executeNineCycle", error);
+      settleActiveCycle(held);
+      return frozenClone(held);
+    }).then(function (value) {
+      finalizeCycleExecution();
+      return value;
+    }, function (error) {
+      finalizeCycleExecution();
+      throw error;
+    });
 
-            state.cycle.executed =
-              true;
-
-            state.cycle.rawReceipt =
-              deepFreeze(
-                clone(committed)
-              );
-          }
-
-          setText(
-            "controllerState",
-            normalizeToken(
-              committed.status
-            ) === "COMMITTED"
-              ? "CYCLE COMMITTED"
-              : "CYCLE COMPLETE"
-          );
-
-          setStatus(
-            "controllerState",
-            committed.status || "AVAILABLE"
-          );
-
-          setText(
-            "cycleStatus",
-            "Cycle · " +
-              String(
-                committed.status || "Available"
-              )
-          );
-
-          setStatus(
-            "cycleStatus",
-            committed.status || "AVAILABLE"
-          );
-
-          recordAction(
-            "executeNineCycle.complete",
-            {
-              status:
-                committed.status || null,
-              receiptCount:
-                committed.receiptCount ||
-                extractCycleStationReceipts(
-                  committed
-                ).length,
-              returnedReceiptMappingComplete:
-                state.cycle.rendering
-                  ? state.cycle.rendering.returnedReceiptMappingComplete
-                  : false,
-              localDomUpdateComplete:
-                state.cycle.localDomEvidence
-                  ? state.cycle.localDomEvidence.localDomUpdateComplete
-                  : false
-            }
-          );
-
-          toast(
-            "Nine-Cycle receipt committed.",
-            committed.status || "AVAILABLE"
-          );
-
-          settleActiveCycleRequest(
-            committed
-          );
-
-          return frozenClone(
-            committed
-          );
-        })
-        .catch(function cycleUnhandled(error) {
-          var held =
-            createCycleHeldReceipt({
-              reason:
-                "CONTROL_CYCLE_UNHANDLED_REJECTION"
-            });
-
-          state.cycle.executed =
-            true;
-
-          state.cycle.rawReceipt =
-            deepFreeze(
-              clone(held)
-            );
-
-          try {
-            renderCommittedCycleChamber();
-          } catch (renderError) {
-            recordError(
-              "renderCommittedCycleChamber",
-              renderError
-            );
-          }
-
-          recordError(
-            "executeNineCycle",
-            error
-          );
-
-          settleActiveCycleRequest(
-            held
-          );
-
-          return frozenClone(
-            held
-          );
-        });
-
-    withFinalization(
-      execution,
-      finalizeCycleExecution,
-      {
-        action:
-          "executeNineCycle"
-      }
-    );
-
-    return getActiveCyclePromise() || execution;
+    return activeCycle.promise || execution;
   }
 
   function applyTargetVisibilityState(visible, reason) {
-    var normalizedVisible =
-      Boolean(visible);
+    var v = Boolean(visible);
+    var changed = state.ui.targetVisible !== v;
+    var button;
 
-    var changed =
-      state.ui.targetVisible !==
-      normalizedVisible;
+    state.ui.targetVisible = v;
+    state.target.lastVisibilityReason = reason || "TARGET_VISIBILITY_STATE";
+    state.target.lastVisibilityChangedAt = nowIso();
 
-    state.ui.targetVisible =
-      normalizedVisible;
-
-    state.target.lastVisibilityReason =
-      reason || "TARGET_VISIBILITY_STATE";
-
-    state.target.lastVisibilityChangedAt =
-      nowIso();
-
-    var button =
-      byId(
-        "toggleObservationTarget"
-      );
-
+    button = byId("toggleObservationTarget");
     if (button) {
-      button.setAttribute(
-        "aria-expanded",
-        normalizedVisible
-          ? "true"
-          : "false"
-      );
-
-      button.textContent =
-        normalizedVisible
-          ? "Hide Target"
-          : "Show Target";
+      button.setAttribute("aria-expanded", v ? "true" : "false");
+      button.textContent = v ? "Hide Target" : "Show Target";
     }
 
-    selectObservationLensLocal(
-      normalizedVisible
-        ? "window"
-        : "target"
-    );
+    selectObservationLensLocal(v ? "window" : "target");
 
     if (changed) {
-      recordAction(
-        "targetVisibility.apply",
-        {
-          visible:
-            normalizedVisible,
-          reason:
-            reason || null,
-          observationLens:
-            state.ui.observationLens
-        }
-      );
+      recordAction("targetVisibility.apply", { visible: v, reason: reason || null, observationLens: state.ui.observationLens });
     } else {
       publishReceipt();
     }
 
-    return {
-      visible:
-        normalizedVisible,
-      changed:
-        changed,
-      observationLens:
-        state.ui.observationLens
-    };
+    return { visible: v, changed: changed, observationLens: state.ui.observationLens };
   }
 
   function runNineCycle() {
-    if (hasActiveCycleRequest()) {
-      toast(
-        "Nine-Cycle execution is already active.",
-        "HELD"
-      );
+    var promise, readiness;
 
-      return getActiveCyclePromise();
+    if (hasActiveCycle()) {
+      toast("Nine-Cycle execution is already active.", "HELD");
+      return activeCycle.promise;
     }
 
-    var publicCyclePromise =
-      createActiveCycleRequest();
+    promise = createActiveCycle();
+    state.cycle.requested = true;
 
-    state.cycle.requested =
-      true;
-
-    if (!state.ui.targetVisible) {
-      applyTargetVisibilityState(
-        true,
-        "NINE_CYCLE_TARGET_PREPARATION"
-      );
-    } else if (
-      state.ui.observationLens !==
-      "window"
-    ) {
-      applyTargetVisibilityState(
-        true,
-        "NINE_CYCLE_TARGET_WINDOW_SELECTION"
-      );
+    if (!state.ui.targetVisible || state.ui.observationLens !== "window") {
+      applyTargetVisibilityState(true, "NINE_CYCLE_TARGET_PREPARATION");
     }
 
-    var readiness =
-      ensureTargetReady({
-        reason:
-          "NINE_CYCLE_REQUEST"
-      });
+    readiness = ensureTargetReady({ reason: "NINE_CYCLE_REQUEST" });
 
-    recordAction(
-      "runNineCycle.request",
-      {
-        readiness:
-          readiness.ready,
-        pending:
-          readiness.pending,
-        startedNavigation:
-          readiness.startedNavigation,
-        lifecycleClass:
-          state.target.lifecycleClass,
-        targetVisible:
-          state.ui.targetVisible,
-        observationLens:
-          state.ui.observationLens
-      }
-    );
+    recordAction("runNineCycle.request", {
+      readiness: readiness.ready,
+      pending: readiness.pending,
+      startedNavigation: readiness.startedNavigation,
+      lifecycleClass: state.target.lifecycleClass,
+      targetVisible: state.ui.targetVisible,
+      observationLens: state.ui.observationLens
+    });
 
     if (readiness.ready) {
       executeNineCycle();
-
-      return publicCyclePromise;
+      return promise;
     }
 
     if (readiness.pending) {
-      state.target.pendingNineCycle =
-        true;
+      state.target.pendingNineCycle = true;
+      state.target.pendingNineCycleRequestedAt = nowIso();
 
-      state.target.pendingNineCycleRequestedAt =
-        nowIso();
-
-      setText(
-        "controllerState",
-        "TARGET LOADING"
-      );
-
-      setStatus(
-        "controllerState",
-        "HELD"
-      );
-
-      setText(
-        "cycleStatus",
-        "Cycle · Target Loading"
-      );
-
-      setStatus(
-        "cycleStatus",
-        "HELD"
-      );
+      setText("controllerState", "TARGET LOADING");
+      setStatus("controllerState", "HELD");
+      setText("cycleStatus", "Cycle · Target Loading");
+      setStatus("cycleStatus", "HELD");
 
       setCycleRunning(false);
-
       renderCommittedCycleChamber();
+      createTargetPreparationReceipt("NINE_CYCLE_DEFERRED_TARGET_LOADING");
 
-      createTargetPreparationReceipt(
-        "NINE_CYCLE_DEFERRED_TARGET_LOADING"
-      );
-
-      toast(
-        "Target loading. Nine-Cycle will continue after route confirmation.",
-        "HELD"
-      );
-
-      return publicCyclePromise;
+      toast("Target loading. Nine-Cycle will continue after route confirmation.", "HELD");
+      return promise;
     }
 
-    holdActiveCycleRequest(
-      "TARGET_PREPARATION_UNAVAILABLE"
-    );
+    holdActiveCycle("TARGET_PREPARATION_UNAVAILABLE");
+    setText("controllerState", "TARGET HELD");
+    setStatus("controllerState", "HELD");
+    toast("Target preparation is held.", "HELD");
 
-    setText(
-      "controllerState",
-      "TARGET HELD"
-    );
-
-    setStatus(
-      "controllerState",
-      "HELD"
-    );
-
-    toast(
-      "Target preparation is held.",
-      "HELD"
-    );
-
-    return publicCyclePromise;
+    return promise;
   }
 
-  function forwardSelection(key, value) {
-    var selection = {};
-
-    selection[key] =
-      value;
-
-    var engine =
-      getCompatibleEngine();
-
-    if (
-      engine &&
-      isFunction(engine.setSelection)
-    ) {
-      try {
-        engine.setSelection(
-          selection
-        );
-      } catch (error) {
-        recordError(
-          "setSelection." + key,
-          error,
-          selection
-        );
-      }
-    }
-
-    recordAction(
-      "setSelection." + key,
-      selection
-    );
+  function safeCall(owner, methodName) {
+    if (!owner || !isFn(owner[methodName])) return null;
+    try { return owner[methodName](); } catch (error) { recordError("safeCall." + methodName, error); return null; }
   }
 
-  function closeAllSelectors() {
-    var categoryButton =
-      byId("categorySelectorButton");
+  function resetCurrentReportLocal(options) {
+    var settings = options || {};
 
-    var categoryMenu =
-      byId("categorySelectorMenu");
+    state.report.current = null;
+    state.report.receipt = null;
+    state.report.source = null;
 
-    var auditButton =
-      byId("auditSelectorButton");
+    setText("reportStatus", "READY");
+    setStatus("reportStatus", "READY");
+    setText("reportTitle", "No report created");
+    setText("reportCreatedAt", "—");
+    setText("reportMeta", "Choose an audit and create a report.");
 
-    var auditMenu =
-      byId("auditSelectorMenu");
+    renderReadRegion("readResult", "R", "Result", "Observatory available", "Create a report to evaluate the selected audit.");
+    renderReadRegion("readEvidence", "E", "Evidence", "Control panel available", "The distributed control panel is bound.");
+    renderReadRegion("readAbsence", "A", "Absence", "No report yet", "No current report is displayed.");
+    renderReadRegion("readDirection", "D", "Direction", "Create the first report", "Use any Create Report command to inspect the current diagnostic state.");
 
-    if (categoryButton) {
-      categoryButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-    }
+    setText("packetOutput", "No report packet has been created.");
+    setText("rawOutput", "No raw report has been created.");
+    setHtml("evidenceOutput", '<article class="empty-state"><h3>No evidence report yet</h3><p>Create a report to collect current evidence.</p></article>');
 
-    if (categoryMenu) {
-      categoryMenu.hidden =
-        true;
-    }
+    setDisabled("copyReadableReport", true);
+    setDisabled("copyPacketReport", true);
+    setDisabled("copyRawReport", true);
+    setDisabled("addReportToArchive", true);
 
-    if (auditButton) {
-      auditButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-    }
+    setText("dropReportState", "READY");
+    setStatus("dropReportCell", "READY");
+    setText("dropReportAvailableCount", "1");
+    setText("dropReportHeldCount", "0");
+    setText("dropReportLastAction", "Create Report is available immediately.");
 
-    if (auditMenu) {
-      auditMenu.hidden =
-        true;
-    }
+    selectReportModeLocal("read");
+    updateDistributedCommandAvailability();
+    refreshReceiptInventory({ publish: false });
 
-    state.ui.categoryMenuOpen =
-      false;
-
-    state.ui.auditMenuOpen =
-      false;
+    if (settings.record !== false) recordAction("resetCurrentReport");
+    if (settings.notify !== false) toast("Current report reset.", "READY");
   }
 
-  function toggleSelector(buttonId, menuId, stateKey) {
-    var button =
-      byId(buttonId);
-
-    var menu =
-      byId(menuId);
-
-    if (
-      !button ||
-      !menu
-    ) {
-      recordError(
-        "toggleSelector",
-        new Error(
-          "SELECTOR_CONTROL_MISSING"
-        ),
-        {
-          buttonId:
-            buttonId,
-          menuId:
-            menuId
-        }
-      );
-
-      return;
-    }
-
-    var shouldOpen =
-      menu.hidden;
-
-    closeAllSelectors();
-
-    menu.hidden =
-      !shouldOpen;
-
-    button.setAttribute(
-      "aria-expanded",
-      shouldOpen
-        ? "true"
-        : "false"
-    );
-
-    state.ui[stateKey] =
-      shouldOpen;
-  }
-
-  function selectCategory(categoryId) {
-    if (!categoryId) {
-      return false;
-    }
-
-    var option =
-      doc.querySelector(
-        '[data-category-id="' +
-          cssEscape(categoryId) +
-          '"]'
-      );
-
-    if (!option) {
-      recordError(
-        "selectCategory",
-        new Error(
-          "UNSUPPORTED_CATEGORY:" +
-            categoryId
-        )
-      );
-
-      return false;
-    }
-
-    state.ui.selectedCategory =
-      categoryId;
-
-    closeAllSelectors();
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        "[data-category-id]"
-      )
-    ).forEach(function updateCategory(node) {
-      node.setAttribute(
-        "aria-selected",
-        node === option
-          ? "true"
-          : "false"
-      );
-    });
-
-    var title =
-      option.querySelector("strong");
-
-    setText(
-      "categorySelectorLabel",
-      title
-        ? title.textContent
-        : categoryId
-    );
-
-    setText(
-      "selectedCategoryLabel",
-      title
-        ? title.textContent
-        : categoryId
-    );
-
-    forwardSelection(
-      "category",
-      categoryId
-    );
-
-    return true;
-  }
-
-  function selectAudit(auditId) {
-    if (!auditId) {
-      return false;
-    }
-
-    var option =
-      doc.querySelector(
-        '[data-audit-id="' +
-          cssEscape(auditId) +
-          '"]'
-      );
-
-    if (!option) {
-      recordError(
-        "selectAudit",
-        new Error(
-          "UNSUPPORTED_AUDIT:" +
-            auditId
-        )
-      );
-
-      return false;
-    }
-
-    state.ui.selectedAudit =
-      auditId;
-
-    closeAllSelectors();
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        "[data-audit-id]"
-      )
-    ).forEach(function updateAudit(node) {
-      node.setAttribute(
-        "aria-selected",
-        node === option
-          ? "true"
-          : "false"
-      );
-    });
-
-    var title =
-      option.querySelector("strong");
-
-    var summary =
-      option.querySelector("span");
-
-    setText(
-      "auditSelectorLabel",
-      title
-        ? title.textContent
-        : auditId
-    );
-
-    setText(
-      "selectedAuditTitle",
-      title
-        ? title.textContent
-        : auditId
-    );
-
-    setText(
-      "selectedAuditSummary",
-      summary
-        ? summary.textContent
-        : "Selected audit."
-    );
-
-    forwardSelection(
-      "audit",
-      auditId
-    );
-
-    return true;
-  }
-
-  function selectParticipant(role) {
-    if (!role) {
-      return false;
-    }
-
-    var node =
-      doc.querySelector(
-        '[data-participant-role="' +
-          cssEscape(role) +
-          '"][role="button"]'
-      );
-
-    if (!node) {
-      recordError(
-        "selectParticipant",
-        new Error(
-          "UNSUPPORTED_PARTICIPANT:" +
-            role
-        )
-      );
-
-      return false;
-    }
-
-    state.ui.selectedParticipant =
-      role;
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        '[data-participant-role][role="button"]'
-      )
-    ).forEach(function updateParticipant(entry) {
-      entry.setAttribute(
-        "aria-selected",
-        entry === node
-          ? "true"
-          : "false"
-      );
-    });
-
-    setHtml(
-      "participantDetail",
-      "<h3>" +
-        escapeHtml(
-          node.querySelector("strong")
-            ? node.querySelector("strong").textContent
-            : role
-        ) +
-        "</h3>" +
-        "<p>Participant selected for report context and explicit diagnostic handoff.</p>"
-    );
-
-    forwardSelection(
-      "participant",
-      role
-    );
-
-    return true;
-  }
-
-  function selectLeftOrbitLocal(view) {
-    var normalized =
-      view === "participants"
-        ? "participants"
-        : "audits";
-
-    state.ui.leftOrbit =
-      normalized;
-
-    setHidden(
-      "auditOrbit",
-      normalized !== "audits"
-    );
-
-    setHidden(
-      "participantConstellation",
-      normalized !== "participants"
-    );
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        "[data-left-orbit-view]"
-      )
-    ).forEach(function updateButton(button) {
-      button.setAttribute(
-        "aria-selected",
-        button.getAttribute(
-          "data-left-orbit-view"
-        ) === normalized
-          ? "true"
-          : "false"
-      );
-    });
-  }
-
-  function selectReportModeLocal(mode) {
-    var normalized =
-      ["read", "packet", "raw", "evidence"]
-        .indexOf(mode) !== -1
-          ? mode
-          : "read";
-
-    state.ui.reportMode =
-      normalized;
-
-    [
-      "read",
-      "packet",
-      "raw",
-      "evidence"
-    ].forEach(function updateMode(entry) {
-      var capitalized =
-        entry.charAt(0).toUpperCase() +
-        entry.slice(1);
-
-      var button =
-        byId(
-          "report" +
-            capitalized +
-            "Button"
-        );
-
-      var panel =
-        byId(
-          "report" +
-            capitalized +
-            "Panel"
-        );
-
-      if (button) {
-        button.setAttribute(
-          "aria-selected",
-          entry === normalized
-            ? "true"
-            : "false"
-        );
-      }
-
-      if (panel) {
-        panel.hidden =
-          entry !== normalized;
-      }
-    });
-  }
-
-  function selectObservationLensLocal(lens) {
-    var normalized =
-      ["target", "runtime", "surface", "window"]
-        .indexOf(lens) !== -1
-          ? lens
-          : "target";
-
-    state.ui.observationLens =
-      normalized;
-
-    var map = {
-      target:
-        "targetLens",
-      runtime:
-        "runtimeLens",
-      surface:
-        "surfaceLens",
-      window:
-        "targetWindow"
-    };
-
-    Object.keys(map).forEach(function updateLens(key) {
-      var button =
-        doc.querySelector(
-          '[data-observation-lens="' +
-            key +
-            '"]'
-        );
-
-      var panel =
-        byId(map[key]);
-
-      if (button) {
-        button.setAttribute(
-          "aria-selected",
-          key === normalized
-            ? "true"
-            : "false"
-        );
-      }
-
-      if (panel) {
-        panel.hidden =
-          key !== normalized;
-      }
-    });
-  }
-
-  function selectInstrumentChamberLocal(chamber) {
-    var normalized =
-      chamber === "receipt"
-        ? "receipts"
-        : chamber;
-
-    if (
-      ["cycle", "registry", "receipts", "archive", "boundary"]
-        .indexOf(normalized) === -1
-    ) {
-      normalized =
-        "cycle";
-    }
-
-    state.ui.instrumentChamber =
-      normalized;
-
-    var map = {
-      cycle:
-        "cycleChamber",
-      registry:
-        "registryChamber",
-      receipts:
-        "receiptChamber",
-      archive:
-        "archiveChamber",
-      boundary:
-        "boundaryChamber"
-    };
-
-    Object.keys(map).forEach(function updateChamber(key) {
-      var button =
-        doc.querySelector(
-          '[data-instrument-chamber="' +
-            key +
-            '"]'
-        );
-
-      var panel =
-        byId(map[key]);
-
-      if (button) {
-        button.setAttribute(
-          "aria-selected",
-          key === normalized
-            ? "true"
-            : "false"
-        );
-      }
-
-      if (panel) {
-        panel.hidden =
-          key !== normalized;
-      }
-    });
-  }
-
-  function applyCommandContext(node) {
-    if (!node) {
-      return;
-    }
-
-    var requested = {
-      category:
-        node.getAttribute(
-          "data-report-category"
-        ),
-      audit:
-        node.getAttribute(
-          "data-report-audit"
-        ),
-      participant:
-        node.getAttribute(
-          "data-report-participant"
-        ),
-      chamber:
-        node.getAttribute(
-          "data-report-chamber"
-        ),
-      mode:
-        node.getAttribute(
-          "data-report-mode"
-        )
-    };
-
-    var applied = {
-      category: false,
-      audit: false,
-      participant: false,
-      chamber: false,
-      mode: false
-    };
-
-    if (requested.category) {
-      applied.category =
-        selectCategory(
-          requested.category
-        );
-    }
-
-    if (requested.audit) {
-      applied.audit =
-        selectAudit(
-          requested.audit
-        );
-    }
-
-    if (requested.participant) {
-      applied.participant =
-        selectParticipant(
-          requested.participant
-        );
-    }
-
-    if (requested.chamber) {
-      selectInstrumentChamberLocal(
-        requested.chamber
-      );
-
-      applied.chamber =
-        true;
-    }
-
-    if (requested.mode) {
-      selectReportModeLocal(
-        requested.mode
-      );
-
-      applied.mode =
-        true;
-    }
-
-    recordAction(
-      "applyCommandContext",
-      {
-        requested:
-          requested,
-        applied:
-          applied,
-        preservedSelection: {
-          category:
-            state.ui.selectedCategory,
-          audit:
-            state.ui.selectedAudit,
-          participant:
-            state.ui.selectedParticipant
-        }
-      }
-    );
-  }
-
-  function setTargetVisible(visible) {
-    var presentation =
-      applyTargetVisibilityState(
-        visible,
-        visible
-          ? "SHOW_TARGET"
-          : "HIDE_TARGET"
-      );
-
-    if (presentation.visible) {
-      var readiness =
-        ensureTargetReady({
-          reason:
-            "SHOW_TARGET"
-        });
-
-      if (readiness.ready) {
-        toast(
-          "Target route available.",
-          "READY"
-        );
-      } else if (readiness.pending) {
-        toast(
-          "Target frame loading.",
-          "RUNNING"
-        );
-      } else {
-        toast(
-          "Target frame unavailable.",
-          "HELD"
-        );
-      }
-    }
-
-    publishReceipt();
-  }
-
-  function setTargetExpanded(expanded) {
-    state.ui.targetExpanded =
-      Boolean(expanded);
-
-    var targetWindow =
-      byId("targetWindow");
-
-    var button =
-      byId("expandTargetWindow");
-
-    if (targetWindow) {
-      targetWindow.classList.toggle(
-        "is-expanded",
-        state.ui.targetExpanded
-      );
-    }
-
-    if (button) {
-      button.setAttribute(
-        "aria-pressed",
-        state.ui.targetExpanded
-          ? "true"
-          : "false"
-      );
-
-      button.textContent =
-        state.ui.targetExpanded
-          ? "Collapse"
-          : "Expand";
-    }
-  }
-
-  function reloadTargetFrame() {
-    if (!state.ui.targetVisible) {
-      applyTargetVisibilityState(
-        true,
-        "EXPLICIT_TARGET_RELOAD"
-      );
-    }
-
-    var started =
-      beginTargetNavigation(
-        "EXPLICIT_TARGET_RELOAD",
-        true
-      );
-
-    if (!started) {
-      if (hasActiveCycleRequest()) {
-        holdActiveCycleRequest(
-          "TARGET_RELOAD_UNAVAILABLE"
-        );
-      }
-
-      return;
-    }
-
-    recordAction(
-      "reloadTargetFrame"
-    );
+  function resetCyclePresentation() {
+    if (hasActiveCycle()) settleActiveCycle(createCycleHeldReceipt({ reason: "CONTROL_CYCLE_RESET_BEFORE_EXECUTION" }));
+    else clearActiveCycle();
+
+    state.cycle.running = false;
+    state.cycle.requested = false;
+    state.cycle.executed = false;
+    state.cycle.rawReceipt = null;
+    state.cycle.rendering = null;
+    state.cycle.renderingReceipt = null;
+    state.cycle.localDomEvidence = null;
+    state.cycle.renderedAt = null;
+    state.target.pendingNineCycle = false;
+    state.target.pendingNineCycleRequestedAt = null;
 
     setCycleRunning(false);
-
-    toast(
-      "Target frame reloading.",
-      "RUNNING"
-    );
+    renderCommittedCycleChamber();
   }
 
-  function currentReadableText() {
-    if (!state.report.current) {
-      return "";
+  function resetWorkbench() {
+    var engine = getCompatibleEngine();
+
+    if (engine && isFn(engine.resetWorkbench)) {
+      try { engine.resetWorkbench(); } catch (error) { recordError("resetWorkbench", error); }
     }
 
-    return deriveReadableReport(
-      state.report.current,
-      state.report.receipt
-    );
+    resetCurrentReportLocal({ record: false, notify: false });
+    state.target = emptyTarget();
+    resetCyclePresentation();
+    closeAllSelectors();
+    selectLeftOrbitLocal("audits");
+    selectObservationLensLocal("target");
+    selectInstrumentChamberLocal("cycle");
+    applyTargetVisibilityState(false, "RESET_WORKBENCH");
+    setTargetExpanded(false);
+    state.ui.receiptFilter = "all";
+    state.ui.selectedReceiptIndex = null;
+    refreshReceiptInventory({ publish: false });
+    recordAction("resetWorkbench");
+    toast("Diagnostic workbench reset.", "READY");
   }
 
-  function currentPacketText() {
-    var packetNode =
-      byId("packetOutput");
-
-    return packetNode
-      ? packetNode.textContent
-      : "";
+  function createDeepArchive() {
+    var engine = getCompatibleEngine();
+    var archive = safeCall(engine, "getArchive");
+    var merged;
+    if (!Array.isArray(archive)) archive = [];
+    merged = archive.concat(state.report.fallbackHistory.slice());
+    setText("archiveSessionCount", merged.length);
+    setText("archiveRawOutput", safeJson(merged));
+    selectInstrumentChamberLocal("archive");
+    recordAction("createDeepArchive", { engineRecordCount: archive.length, fallbackRecordCount: state.report.fallbackHistory.length });
+    refreshReceiptInventory({ publish: true });
+    return frozenClone(merged);
   }
 
-  function currentRawText() {
-    var rawNode =
-      byId("rawOutput");
-
-    return rawNode
-      ? rawNode.textContent
-      : "";
+  function openReceiptChamber() {
+    selectInstrumentChamberLocal("receipts");
+    refreshReceiptInventory({ publish: true });
+    scrollToId("instrumentDeck");
+    recordAction("openReceiptChamber");
   }
 
-  function fallbackCopy(text, successMessage) {
-    var area =
-      doc.createElement("textarea");
-
-    area.value =
-      text;
-
-    area.setAttribute(
-      "readonly",
-      "true"
-    );
-
-    area.style.position =
-      "fixed";
-
-    area.style.left =
-      "-9999px";
-
-    doc.body.appendChild(area);
-
-    area.select();
-
-    var copied =
-      false;
-
-    try {
-      copied =
-        doc.execCommand("copy");
-    } catch (_error) {
-      copied =
-        false;
-    }
-
-    doc.body.removeChild(area);
-
-    toast(
-      copied
-        ? successMessage || "Copied."
-        : "Copy unavailable.",
-      copied
-        ? "READY"
-        : "HELD"
-    );
-
-    return copied;
+  function openArchiveChamber() {
+    selectInstrumentChamberLocal("archive");
+    createDeepArchive();
+    scrollToId("instrumentDeck");
+    recordAction("openArchiveChamber");
   }
 
-  function copyText(text, successMessage) {
-    if (!text) {
-      toast(
-        "No current report is available to copy.",
-        "HELD"
-      );
-
-      return Promise.resolve(false);
-    }
-
-    if (
-      root.navigator &&
-      root.navigator.clipboard &&
-      isFunction(
-        root.navigator.clipboard.writeText
-      )
-    ) {
-      return root.navigator.clipboard
-        .writeText(text)
-        .then(function clipboardSuccess() {
-          toast(
-            successMessage || "Copied.",
-            "READY"
-          );
-
-          return true;
-        })
-        .catch(function clipboardFailure() {
-          return fallbackCopy(
-            text,
-            successMessage
-          );
-        });
-    }
-
-    return Promise.resolve(
-      fallbackCopy(
-        text,
-        successMessage
-      )
-    );
-  }
-
-  function copyReadableReport() {
-    recordAction(
-      "copyReadableReport"
-    );
-
-    return copyText(
-      currentReadableText(),
-      "Readable report copied."
-    );
-  }
-
-  function copyPacketReport() {
-    recordAction(
-      "copyPacketReport"
-    );
-
-    return copyText(
-      currentPacketText(),
-      "Report packet copied."
-    );
-  }
-
-  function copyRawReport() {
-    recordAction(
-      "copyRawReport"
-    );
-
-    return copyText(
-      currentRawText(),
-      "Raw report copied."
-    );
+  function scrollToId(id) {
+    var n = byId(id);
+    if (!n) return false;
+    try { n.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_e) {}
+    return true;
   }
 
   function viewCurrentReport(options) {
-    var settings =
-      options || {};
-
-    var chamber =
-      byId("reportChamber");
-
-    selectReportModeLocal(
-      settings.mode || "read"
-    );
+    var settings = options || {};
+    var chamber = byId("reportChamber");
+    selectReportModeLocal(settings.mode || "read");
 
     if (!chamber) {
-      recordError(
-        "viewCurrentReport",
-        new Error(
-          "REPORT_CHAMBER_NOT_FOUND"
-        )
-      );
-
+      recordError("viewCurrentReport", new Error("REPORT_CHAMBER_NOT_FOUND"));
       return false;
     }
 
-    chamber.setAttribute(
-      "tabindex",
-      "-1"
-    );
+    chamber.setAttribute("tabindex", "-1");
+    try { chamber.scrollIntoView({ behavior: settings.behavior === "auto" ? "auto" : "smooth", block: "start", inline: "nearest" }); }
+    catch (_e) { root.location.hash = "reportChamber"; }
 
-    try {
-      chamber.scrollIntoView({
-        behavior:
-          settings.behavior === "auto"
-            ? "auto"
-            : "smooth",
-        block:
-          "start",
-        inline:
-          "nearest"
-      });
-    } catch (_error) {
-      root.location.hash =
-        "reportChamber";
-    }
-
-    root.setTimeout(function focusReportChamber() {
-      try {
-        chamber.focus({
-          preventScroll: true
-        });
-      } catch (_error) {}
+    root.setTimeout(function () {
+      try { chamber.focus({ preventScroll: true }); } catch (_e) {}
     }, 220);
 
-    recordAction(
-      "viewCurrentReport",
-      {
-        reportPresent:
-          Boolean(
-            state.report.current
-          ),
-        mode:
-          state.ui.reportMode
-      }
-    );
+    recordAction("viewCurrentReport", { reportPresent: Boolean(state.report.current), mode: state.ui.reportMode });
 
-    if (!state.report.current) {
-      toast(
-        "Report chamber opened. Create a report to populate it.",
-        "HELD"
-      );
-    }
-
+    if (!state.report.current) toast("Report chamber opened. Create a report to populate it.", "HELD");
     return true;
   }
 
   function addReportToArchive() {
     if (!state.report.current) {
-      toast(
-        "No current report is available.",
-        "HELD"
-      );
-
+      toast("No current report is available.", "HELD");
       return;
     }
-
-    if (
-      state.report.source ===
-      "CONTROL_FALLBACK"
-    ) {
-      toast(
-        "Fallback reports are not committed to the engine archive.",
-        "HELD"
-      );
-
+    if (state.report.source === "CONTROL_FALLBACK") {
+      toast("Fallback reports are not committed to the engine archive.", "HELD");
       return;
     }
-
-    toast(
-      "The current engine report is available in the diagnostic archive.",
-      "READY"
-    );
-
-    recordAction(
-      "confirmReportArchived",
-      {
-        reportId:
-          state.report.current.reportId || null
-      }
-    );
+    toast("The current engine report is available in the diagnostic archive.", "READY");
+    recordAction("confirmReportArchived", { reportId: state.report.current.reportId || null });
   }
 
-  function safeCall(owner, methodName) {
-    if (
-      !owner ||
-      !isFunction(owner[methodName])
-    ) {
-      return null;
-    }
-
-    try {
-      return owner[methodName]();
-    } catch (error) {
-      recordError(
-        "safeCall." + methodName,
-        error
-      );
-
-      return null;
-    }
+  function currentReadableText() {
+    return state.report.current ? deriveReadableReport(state.report.current, state.report.receipt) : "";
   }
 
-  function createDeepArchive() {
-    var engine =
-      getCompatibleEngine();
-
-    var archive =
-      safeCall(
-        engine,
-        "getArchive"
-      );
-
-    if (!Array.isArray(archive)) {
-      archive = [];
+  function copyText(text, successMessage) {
+    var area, copied;
+    if (!text) {
+      toast("No current report is available to copy.", "HELD");
+      return Promise.resolve(false);
     }
 
-    var fallbackArchive =
-      state.report.fallbackHistory.slice();
-
-    var mergedArchive =
-      archive.concat(
-        fallbackArchive
-      );
-
-    setText(
-      "archiveSessionCount",
-      mergedArchive.length
-    );
-
-    setText(
-      "archiveRawOutput",
-      safeJson(
-        mergedArchive
-      )
-    );
-
-    selectInstrumentChamberLocal(
-      "archive"
-    );
-
-    recordAction(
-      "createDeepArchive",
-      {
-        engineRecordCount:
-          archive.length,
-        fallbackRecordCount:
-          fallbackArchive.length
-      }
-    );
-
-    refreshReceiptInventory();
-
-    return frozenClone(
-      mergedArchive
-    );
-  }
-
-  function openReceiptChamber() {
-    selectInstrumentChamberLocal(
-      "receipts"
-    );
-
-    refreshReceiptInventory();
-
-    var deck =
-      byId("instrumentDeck");
-
-    if (deck) {
-      try {
-        deck.scrollIntoView({
-          behavior:
-            "smooth",
-          block:
-            "start"
-        });
-      } catch (_error) {}
+    if (root.navigator && root.navigator.clipboard && isFn(root.navigator.clipboard.writeText)) {
+      return root.navigator.clipboard.writeText(text).then(function () {
+        toast(successMessage || "Copied.", "READY");
+        return true;
+      }, function () {
+        return fallbackCopy(text, successMessage);
+      });
     }
 
-    recordAction(
-      "openReceiptChamber"
-    );
-  }
+    return Promise.resolve(fallbackCopy(text, successMessage));
 
-  function openArchiveChamber() {
-    selectInstrumentChamberLocal(
-      "archive"
-    );
-
-    createDeepArchive();
-
-    var deck =
-      byId("instrumentDeck");
-
-    if (deck) {
-      try {
-        deck.scrollIntoView({
-          behavior:
-            "smooth",
-          block:
-            "start"
-        });
-      } catch (_error) {}
-    }
-
-    recordAction(
-      "openArchiveChamber"
-    );
-  }
-
-  function resetCurrentReportLocal(options) {
-    var settings =
-      options || {};
-
-    state.report.current =
-      null;
-
-    state.report.receipt =
-      null;
-
-    state.report.source =
-      null;
-
-    setText(
-      "reportStatus",
-      "READY"
-    );
-
-    setStatus(
-      "reportStatus",
-      "READY"
-    );
-
-    setText(
-      "reportTitle",
-      "No report created"
-    );
-
-    setText(
-      "reportCreatedAt",
-      "—"
-    );
-
-    setText(
-      "reportMeta",
-      "Choose an audit and create a report."
-    );
-
-    renderReadRegion(
-      "readResult",
-      "R",
-      "Result",
-      "Observatory available",
-      "Create a report to evaluate the selected audit."
-    );
-
-    renderReadRegion(
-      "readEvidence",
-      "E",
-      "Evidence",
-      "Control panel available",
-      "The distributed control panel is bound."
-    );
-
-    renderReadRegion(
-      "readAbsence",
-      "A",
-      "Absence",
-      "No report yet",
-      "No current report is displayed."
-    );
-
-    renderReadRegion(
-      "readDirection",
-      "D",
-      "Direction",
-      "Create the first report",
-      "Use any Create Report command to inspect the current diagnostic state."
-    );
-
-    setText(
-      "packetOutput",
-      "No report packet has been created."
-    );
-
-    setText(
-      "rawOutput",
-      "No raw report has been created."
-    );
-
-    setHtml(
-      "evidenceOutput",
-      '<article class="empty-state">' +
-        "<h3>No evidence report yet</h3>" +
-        "<p>Create a report to collect current evidence.</p>" +
-        "</article>"
-    );
-
-    setDisabled(
-      "copyReadableReport",
-      true
-    );
-
-    setDisabled(
-      "copyPacketReport",
-      true
-    );
-
-    setDisabled(
-      "copyRawReport",
-      true
-    );
-
-    setDisabled(
-      "addReportToArchive",
-      true
-    );
-
-    setText(
-      "dropReportState",
-      "READY"
-    );
-
-    setStatus(
-      "dropReportCell",
-      "READY"
-    );
-
-    setText(
-      "dropReportAvailableCount",
-      "1"
-    );
-
-    setText(
-      "dropReportHeldCount",
-      "0"
-    );
-
-    setText(
-      "dropReportLastAction",
-      "Create Report is available immediately."
-    );
-
-    selectReportModeLocal(
-      "read"
-    );
-
-    updateDistributedCommandAvailability();
-    refreshReceiptInventory();
-
-    if (settings.record !== false) {
-      recordAction(
-        "resetCurrentReport"
-      );
-    }
-
-    if (settings.notify !== false) {
-      toast(
-        "Current report reset.",
-        "READY"
-      );
+    function fallbackCopy(t, msg) {
+      area = doc.createElement("textarea");
+      area.value = t;
+      area.setAttribute("readonly", "true");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      doc.body.appendChild(area);
+      area.select();
+      copied = false;
+      try { copied = doc.execCommand("copy"); } catch (_e) { copied = false; }
+      doc.body.removeChild(area);
+      toast(copied ? msg || "Copied." : "Copy unavailable.", copied ? "READY" : "HELD");
+      return copied;
     }
   }
 
-  function resetCurrentReport() {
-    resetCurrentReportLocal({
-      record: true,
-      notify: true
-    });
+  function copyReadableReport() {
+    recordAction("copyReadableReport");
+    return copyText(currentReadableText(), "Readable report copied.");
   }
 
-  function resetTargetLifecycle() {
-    state.target.lifecycleClass =
-      "TARGET_UNBOUND";
-
-    state.target.framePresent =
-      Boolean(
-        byId(TARGET_FRAME_ID)
-      );
-
-    state.target.declaredSrc =
-      state.target.framePresent
-        ? byId(TARGET_FRAME_ID).getAttribute("src")
-        : null;
-
-    state.target.observedRoute =
-      null;
-
-    state.target.observedRouteNormalized =
-      null;
-
-    state.target.routeObserved =
-      false;
-
-    state.target.routeMatched =
-      false;
-
-    state.target.sameOriginAccessible =
-      null;
-
-    state.target.documentLoaded =
-      false;
-
-    state.target.documentReadyState =
-      null;
-
-    state.target.navigationPending =
-      false;
-
-    state.target.loadObserved =
-      false;
-
-    state.target.pendingNineCycle =
-      false;
-
-    state.target.pendingNineCycleRequestedAt =
-      null;
-
-    state.target.lastVisibilityReason =
-      null;
-
-    state.target.lastVisibilityChangedAt =
-      null;
-
-    state.target.lastNavigationReason =
-      null;
-
-    state.target.lastNavigationStartedAt =
-      null;
-
-    state.target.lastLoadObservedAt =
-      null;
-
-    state.target.lastInspectedAt =
-      null;
-
-    state.target.lastTargetError =
-      null;
-
-    state.target.preparationReceipt =
-      null;
+  function copyPacketReport() {
+    recordAction("copyPacketReport");
+    return copyText(byId("packetOutput") ? byId("packetOutput").textContent : "", "Report packet copied.");
   }
 
-  function resetCyclePresentation() {
-    if (hasActiveCycleRequest()) {
-      var resetHeld =
-        createCycleHeldReceipt({
-          reason:
-            "CONTROL_CYCLE_RESET_BEFORE_EXECUTION"
-        });
+  function copyRawReport() {
+    recordAction("copyRawReport");
+    return copyText(byId("rawOutput") ? byId("rawOutput").textContent : "", "Raw report copied.");
+  }
 
-      settleActiveCycleRequest(
-        resetHeld
-      );
-    } else {
-      clearActiveCycleRequest();
+  function setTargetVisible(visible) {
+    var p = applyTargetVisibilityState(visible, visible ? "SHOW_TARGET" : "HIDE_TARGET");
+    var readiness;
+    if (p.visible) {
+      readiness = ensureTargetReady({ reason: "SHOW_TARGET" });
+      toast(readiness.ready ? "Target route available." : readiness.pending ? "Target frame loading." : "Target frame unavailable.", readiness.ready ? "READY" : readiness.pending ? "RUNNING" : "HELD");
     }
+    publishReceipt();
+  }
 
-    state.cycle.running =
-      false;
+  function setTargetExpanded(expanded) {
+    var w = byId("targetWindow");
+    var b = byId("expandTargetWindow");
+    state.ui.targetExpanded = Boolean(expanded);
+    if (w) w.classList.toggle("is-expanded", state.ui.targetExpanded);
+    if (b) {
+      b.setAttribute("aria-pressed", state.ui.targetExpanded ? "true" : "false");
+      b.textContent = state.ui.targetExpanded ? "Collapse" : "Expand";
+    }
+  }
 
-    state.cycle.requested =
-      false;
-
-    state.cycle.executed =
-      false;
-
-    state.cycle.rawReceipt =
-      null;
-
-    state.cycle.rendering =
-      null;
-
-    state.cycle.renderingReceipt =
-      null;
-
-    state.cycle.localDomEvidence =
-      null;
-
-    state.cycle.renderedAt =
-      null;
-
-    state.target.pendingNineCycle =
-      false;
-
-    state.target.pendingNineCycleRequestedAt =
-      null;
-
+  function reloadTargetFrame() {
+    var started;
+    if (!state.ui.targetVisible) applyTargetVisibilityState(true, "EXPLICIT_TARGET_RELOAD");
+    started = beginTargetNavigation("EXPLICIT_TARGET_RELOAD", true);
+    if (!started) {
+      if (hasActiveCycle()) holdActiveCycle("TARGET_RELOAD_UNAVAILABLE");
+      return;
+    }
+    recordAction("reloadTargetFrame");
     setCycleRunning(false);
-
-    renderCommittedCycleChamber();
+    toast("Target frame reloading.", "RUNNING");
   }
 
-  function resetWorkbench() {
-    var engine =
-      getCompatibleEngine();
-
-    if (
-      engine &&
-      isFunction(engine.resetWorkbench)
-    ) {
-      try {
-        engine.resetWorkbench();
-      } catch (error) {
-        recordError(
-          "resetWorkbench",
-          error
-        );
-      }
+  function forwardSelection(key, value) {
+    var engine = getCompatibleEngine();
+    var selection = {};
+    selection[key] = value;
+    if (engine && isFn(engine.setSelection)) {
+      try { engine.setSelection(selection); } catch (error) { recordError("setSelection." + key, error, selection); }
     }
+    recordAction("setSelection." + key, selection);
+  }
 
-    resetCurrentReportLocal({
-      record: false,
-      notify: false
+  function closeAllSelectors() {
+    [
+      ["categorySelectorButton", "categorySelectorMenu", "categoryMenuOpen"],
+      ["auditSelectorButton", "auditSelectorMenu", "auditMenuOpen"]
+    ].forEach(function (x) {
+      if (byId(x[0])) byId(x[0]).setAttribute("aria-expanded", "false");
+      if (byId(x[1])) byId(x[1]).hidden = true;
+      state.ui[x[2]] = false;
     });
+  }
 
-    resetTargetLifecycle();
-    resetCyclePresentation();
-
+  function toggleSelector(buttonId, menuId, key) {
+    var b = byId(buttonId);
+    var m = byId(menuId);
+    var open;
+    if (!b || !m) {
+      recordError("toggleSelector", new Error("SELECTOR_CONTROL_MISSING"), { buttonId: buttonId, menuId: menuId });
+      return;
+    }
+    open = m.hidden;
     closeAllSelectors();
-
-    selectLeftOrbitLocal(
-      "audits"
-    );
-
-    selectObservationLensLocal(
-      "target"
-    );
-
-    selectInstrumentChamberLocal(
-      "cycle"
-    );
-
-    applyTargetVisibilityState(
-      false,
-      "RESET_WORKBENCH"
-    );
-
-    setTargetExpanded(false);
-
-    state.ui.receiptFilter =
-      "all";
-
-    state.ui.selectedReceiptIndex =
-      null;
-
-    refreshReceiptInventory();
-
-    recordAction(
-      "resetWorkbench"
-    );
-
-    toast(
-      "Diagnostic workbench reset.",
-      "READY"
-    );
+    m.hidden = !open;
+    b.setAttribute("aria-expanded", open ? "true" : "false");
+    state.ui[key] = open;
   }
 
-  function normalizeGroups(groups) {
-    var output = [];
-
-    (
-      Array.isArray(groups)
-        ? groups
-        : [groups]
-    ).forEach(function addGroup(group) {
-      var normalized =
-        String(group || "")
-          .trim()
-          .toLowerCase();
-
-      if (
-        RECEIPT_FILTERS.indexOf(normalized) !== -1 &&
-        normalized !== "all" &&
-        output.indexOf(normalized) === -1
-      ) {
-        output.push(normalized);
-      }
-    });
-
-    return output;
-  }
-
-  function containsAny(text, terms) {
-    var normalized =
-      String(text || "")
-        .toLowerCase();
-
-    return terms.some(function includesTerm(term) {
-      return normalized.indexOf(term) !== -1;
-    });
-  }
-
-  function deriveReceiptType(record, sourceHint, pathHint) {
-    var combined =
-      [
-        sourceHint,
-        pathHint,
-        record && record.type,
-        record && record.kind,
-        record && record.schema,
-        record && record.contract,
-        record && record.role,
-        record && record.station,
-        record && record.participantRole,
-        record && record.status
-      ]
-        .filter(Boolean)
-        .join(" ");
-
-    if (
-      containsAny(
-        combined,
-        [
-          "error",
-          "failed",
-          "failure",
-          "exception"
-        ]
-      )
-    ) {
-      return "error";
-    }
-
-    if (
-      containsAny(
-        combined,
-        [
-          "cycle",
-          "station",
-          "conductor",
-          "f1",
-          "f3",
-          "f5",
-          "f8",
-          "f13",
-          "f21",
-          "f34",
-          "f55",
-          "f89"
-        ]
-      )
-    ) {
-      return "cycle";
-    }
-
-    if (
-      containsAny(
-        combined,
-        [
-          "participant",
-          "direct",
-          "north",
-          "east",
-          "west",
-          "south",
-          "rail"
-        ]
-      )
-    ) {
-      return "participant";
-    }
-
-    return "observation";
-  }
-
-  function deriveReceiptGroups(record, type, sourceHint, pathHint) {
-    var groups = [];
-
-    var combined =
-      [
-        type,
-        sourceHint,
-        pathHint,
-        record && record.type,
-        record && record.kind,
-        record && record.schema,
-        record && record.contract,
-        record && record.role,
-        record && record.station,
-        record && record.participantRole,
-        record && record.status,
-        record && record.error,
-        record && record.message
-      ]
-        .filter(Boolean)
-        .join(" ");
-
-    if (
-      type === "participant" ||
-      containsAny(
-        combined,
-        [
-          "participant",
-          "direct",
-          "north",
-          "east",
-          "west",
-          "south",
-          "rail"
-        ]
-      )
-    ) {
-      groups.push(
-        "participant"
-      );
-    }
-
-    if (
-      type === "cycle" ||
-      containsAny(
-        combined,
-        [
-          "cycle",
-          "station",
-          "conductor",
-          "f1",
-          "f3",
-          "f5",
-          "f8",
-          "f13",
-          "f21",
-          "f34",
-          "f55",
-          "f89"
-        ]
-      )
-    ) {
-      groups.push(
-        "cycle"
-      );
-    }
-
-    if (
-      type === "observation" ||
-      containsAny(
-        combined,
-        [
-          "inspection",
-          "observation",
-          "surface",
-          "runtime",
-          "registry",
-          "engine",
-          "report",
-          "control",
-          "target"
-        ]
-      )
-    ) {
-      groups.push(
-        "observation"
-      );
-    }
-
-    if (
-      type === "error" ||
-      containsAny(
-        combined,
-        [
-          "error",
-          "failed",
-          "failure",
-          "exception",
-          "held",
-          "missing"
-        ]
-      )
-    ) {
-      groups.push(
-        "error"
-      );
-    }
-
-    if (!groups.length) {
-      groups.push(
-        "observation"
-      );
-    }
-
-    return normalizeGroups(
-      groups
-    );
-  }
-
-  function deriveReceiptId(record) {
-    if (!record || typeof record !== "object") {
-      return null;
-    }
-
-    return (
-      record.receiptId ||
-      record.id ||
-      record.reportReceiptId ||
-      record.cycleReceiptId ||
-      record.stationReceiptId ||
-      null
-    );
-  }
-
-  function deriveReportId(record) {
-    if (!record || typeof record !== "object") {
-      return null;
-    }
-
-    return (
-      record.reportId ||
-      (
-        record.report &&
-        record.report.reportId
-      ) ||
-      null
-    );
-  }
-
-  function deriveParticipantRole(record) {
-    if (!record || typeof record !== "object") {
-      return null;
-    }
-
-    return (
-      record.participantRole ||
-      record.role ||
-      record.participant ||
-      null
-    );
-  }
-
-  function deriveStation(record) {
-    if (!record || typeof record !== "object") {
-      return null;
-    }
-
-    return (
-      record.station ||
-      record.stationId ||
-      record.cycleStation ||
-      record.fibonacci ||
-      null
-    );
-  }
-
-  function deriveReceiptLabel(record, type, sourceHint, pathHint) {
-    if (
-      record &&
-      typeof record.label === "string" &&
-      record.label.trim()
-    ) {
-      return record.label.trim();
-    }
-
-    if (
-      record &&
-      typeof record.title === "string" &&
-      record.title.trim()
-    ) {
-      return record.title.trim();
-    }
-
-    if (
-      record &&
-      typeof record.schema === "string" &&
-      record.schema.trim()
-    ) {
-      return record.schema.trim();
-    }
-
-    return [
-      sourceHint || "Diagnostic",
-      type || "receipt",
-      pathHint || ""
-    ]
-      .filter(Boolean)
-      .join(" · ");
-  }
-
-  function deriveStableKey(entry) {
-    if (entry.receiptId) {
-      return (
-        "receipt:" +
-        entry.receiptId
-      );
-    }
-
-    return [
-      entry.sourceAuthority || "unknown",
-      entry.type || "unknown",
-      entry.participantRole || "",
-      entry.station || "",
-      entry.reportId || "",
-      entry.label || "",
-      safeJson(entry.record).slice(0, 240)
-    ].join("|");
-  }
-
-  function looksLikeReceipt(record, pathHint) {
-    if (
-      !record ||
-      typeof record !== "object" ||
-      Array.isArray(record)
-    ) {
+  function selectCategory(id) {
+    var option;
+    if (!id) return false;
+    option = doc.querySelector('[data-category-id="' + cssEscape(id) + '"]');
+    if (!option) {
+      recordError("selectCategory", new Error("UNSUPPORTED_CATEGORY:" + id));
       return false;
     }
+    state.ui.selectedCategory = id;
+    closeAllSelectors();
+    Array.prototype.slice.call(doc.querySelectorAll("[data-category-id]")).forEach(function (n) { n.setAttribute("aria-selected", n === option ? "true" : "false"); });
+    setText("categorySelectorLabel", option.querySelector("strong") ? option.querySelector("strong").textContent : id);
+    setText("selectedCategoryLabel", option.querySelector("strong") ? option.querySelector("strong").textContent : id);
+    forwardSelection("category", id);
+    return true;
+  }
 
-    if (
-      record.receiptId ||
-      record.reportReceiptId ||
-      record.cycleReceiptId ||
-      record.stationReceiptId
-    ) {
+  function selectAudit(id) {
+    var option, title, summary;
+    if (!id) return false;
+    option = doc.querySelector('[data-audit-id="' + cssEscape(id) + '"]');
+    if (!option) {
+      recordError("selectAudit", new Error("UNSUPPORTED_AUDIT:" + id));
+      return false;
+    }
+    state.ui.selectedAudit = id;
+    closeAllSelectors();
+    Array.prototype.slice.call(doc.querySelectorAll("[data-audit-id]")).forEach(function (n) { n.setAttribute("aria-selected", n === option ? "true" : "false"); });
+    title = option.querySelector("strong");
+    summary = option.querySelector("span");
+    setText("auditSelectorLabel", title ? title.textContent : id);
+    setText("selectedAuditTitle", title ? title.textContent : id);
+    setText("selectedAuditSummary", summary ? summary.textContent : "Selected audit.");
+    forwardSelection("audit", id);
+    return true;
+  }
+
+  function selectParticipant(role) {
+    var node;
+    if (!role) return false;
+    node = doc.querySelector('[data-participant-role="' + cssEscape(role) + '"][role="button"]');
+    if (!node) {
+      recordError("selectParticipant", new Error("UNSUPPORTED_PARTICIPANT:" + role));
+      return false;
+    }
+    state.ui.selectedParticipant = role;
+    Array.prototype.slice.call(doc.querySelectorAll('[data-participant-role][role="button"]')).forEach(function (n) { n.setAttribute("aria-selected", n === node ? "true" : "false"); });
+    setHtml("participantDetail", "<h3>" + escapeHtml(node.querySelector("strong") ? node.querySelector("strong").textContent : role) + "</h3><p>Participant selected for report context and explicit diagnostic handoff.</p>");
+    forwardSelection("participant", role);
+    return true;
+  }
+
+  function selectLeftOrbitLocal(view) {
+    var v = view === "participants" ? "participants" : "audits";
+    state.ui.leftOrbit = v;
+    setHidden("auditOrbit", v !== "audits");
+    setHidden("participantConstellation", v !== "participants");
+    Array.prototype.slice.call(doc.querySelectorAll("[data-left-orbit-view]")).forEach(function (b) {
+      b.setAttribute("aria-selected", b.getAttribute("data-left-orbit-view") === v ? "true" : "false");
+    });
+  }
+
+  function selectReportModeLocal(mode) {
+    var v = ["read", "packet", "raw", "evidence"].indexOf(mode) !== -1 ? mode : "read";
+    state.ui.reportMode = v;
+    ["read", "packet", "raw", "evidence"].forEach(function (m) {
+      var c = m.charAt(0).toUpperCase() + m.slice(1);
+      if (byId("report" + c + "Button")) byId("report" + c + "Button").setAttribute("aria-selected", m === v ? "true" : "false");
+      if (byId("report" + c + "Panel")) byId("report" + c + "Panel").hidden = m !== v;
+    });
+  }
+
+  function selectObservationLensLocal(lens) {
+    var v = ["target", "runtime", "surface", "window"].indexOf(lens) !== -1 ? lens : "target";
+    var map = { target: "targetLens", runtime: "runtimeLens", surface: "surfaceLens", window: "targetWindow" };
+    state.ui.observationLens = v;
+    Object.keys(map).forEach(function (k) {
+      var b = doc.querySelector('[data-observation-lens="' + k + '"]');
+      var p = byId(map[k]);
+      if (b) b.setAttribute("aria-selected", k === v ? "true" : "false");
+      if (p) p.hidden = k !== v;
+    });
+  }
+
+  function selectInstrumentChamberLocal(chamber) {
+    var v = chamber === "receipt" ? "receipts" : chamber;
+    var map = { cycle: "cycleChamber", registry: "registryChamber", receipts: "receiptChamber", archive: "archiveChamber", boundary: "boundaryChamber" };
+    if (!map[v]) v = "cycle";
+    state.ui.instrumentChamber = v;
+    Object.keys(map).forEach(function (k) {
+      var b = doc.querySelector('[data-instrument-chamber="' + k + '"]');
+      var p = byId(map[k]);
+      if (b) b.setAttribute("aria-selected", k === v ? "true" : "false");
+      if (p) p.hidden = k !== v;
+    });
+  }
+
+  function applyCommandContext(node) {
+    var r, applied;
+    if (!node) return;
+
+    r = {
+      category: node.getAttribute("data-report-category"),
+      audit: node.getAttribute("data-report-audit"),
+      participant: node.getAttribute("data-report-participant"),
+      chamber: node.getAttribute("data-report-chamber"),
+      mode: node.getAttribute("data-report-mode")
+    };
+
+    applied = {
+      category: r.category ? selectCategory(r.category) : false,
+      audit: r.audit ? selectAudit(r.audit) : false,
+      participant: r.participant ? selectParticipant(r.participant) : false,
+      chamber: false,
+      mode: false
+    };
+
+    if (r.chamber) {
+      selectInstrumentChamberLocal(r.chamber);
+      applied.chamber = true;
+    }
+
+    if (r.mode) {
+      selectReportModeLocal(r.mode);
+      applied.mode = true;
+    }
+
+    recordAction("applyCommandContext", { requested: r, applied: applied });
+  }
+
+  function executeDistributedReportCommand(target, command) {
+    if (!command) return false;
+
+    state.distributedExecutionCount += 1;
+    state.ui.lastReportCommand = command;
+    state.ui.lastReportCommandSource = target.getAttribute("data-report-source") || target.id || target.getAttribute("data-report-chamber") || "DISTRIBUTED_CONTROL";
+
+    applyCommandContext(target);
+    recordAction("distributedReportCommand", { command: command, source: state.ui.lastReportCommandSource, commandNumber: state.distributedExecutionCount });
+
+    if (command === "create") {
+      createReport({
+        source: state.ui.lastReportCommandSource,
+        command: command,
+        mode: target.getAttribute("data-report-mode") || "read",
+        viewAfterCreate: target.getAttribute("data-report-view-after-create") !== "false"
+      });
       return true;
     }
 
-    var schema =
-      String(
-        record.schema || ""
-      )
-        .toLowerCase();
+    if (command === "view") return viewCurrentReport({ mode: target.getAttribute("data-report-mode") || "read" });
+    if (command === "copy-readable") return Boolean(copyReadableReport());
+    if (command === "copy-packet") return Boolean(copyPacketReport());
+    if (command === "copy-raw") return Boolean(copyRawReport());
+    if (command === "open-receipts") { openReceiptChamber(); return true; }
+    if (command === "open-archive") { openArchiveChamber(); return true; }
+    if (command === "reset") { resetCurrentReportLocal({ record: true, notify: true }); return true; }
 
-    var contract =
-      String(
-        record.contract || ""
-      )
-        .toLowerCase();
-
-    var path =
-      String(pathHint || "")
-        .toLowerCase();
-
-    return (
-      schema.indexOf("receipt") !== -1 ||
-      contract.indexOf("receipt") !== -1 ||
-      path.indexOf("receipt") !== -1
-    );
+    return false;
   }
 
-  function createNormalizedReceipt(record, sourceAuthority, pathHint) {
-    var type =
-      deriveReceiptType(
-        record,
-        sourceAuthority,
-        pathHint
-      );
-
-    var entry = {
-      type:
-        type,
-      sourceAuthority:
-        sourceAuthority || "UNKNOWN",
-      label:
-        deriveReceiptLabel(
-          record,
-          type,
-          sourceAuthority,
-          pathHint
-        ),
-      record:
-        frozenClone(record),
-      groups:
-        deriveReceiptGroups(
-          record,
-          type,
-          sourceAuthority,
-          pathHint
-        ),
-      participantRole:
-        deriveParticipantRole(
-          record
-        ),
-      station:
-        deriveStation(
-          record
-        ),
-      reportId:
-        deriveReportId(
-          record
-        ),
-      receiptId:
-        deriveReceiptId(
-          record
-        ),
-      path:
-        pathHint || null
-    };
-
-    entry.stableKey =
-      deriveStableKey(
-        entry
-      );
-
-    return entry;
-  }
-
-  function walkReceiptCandidates(
-    value,
-    sourceAuthority,
-    pathHint,
-    output,
-    seen,
-    depth
-  ) {
-    var memory =
-      seen || [];
-
-    var level =
-      depth || 0;
-
-    if (
-      value === null ||
-      value === undefined ||
-      level > 7
-    ) {
-      return;
-    }
-
-    if (
-      typeof value !== "object"
-    ) {
-      return;
-    }
-
-    if (
-      memory.indexOf(value) !== -1
-    ) {
-      return;
-    }
-
-    memory.push(value);
-
-    if (Array.isArray(value)) {
-      value.forEach(function walkArrayEntry(entry, index) {
-        walkReceiptCandidates(
-          entry,
-          sourceAuthority,
-          pathHint +
-            "[" +
-            String(index) +
-            "]",
-          output,
-          memory.slice(),
-          level + 1
-        );
-      });
-
-      return;
-    }
-
-    if (
-      looksLikeReceipt(
-        value,
-        pathHint
-      )
-    ) {
-      output.push(
-        createNormalizedReceipt(
-          value,
-          sourceAuthority,
-          pathHint
-        )
-      );
-    }
-
-    Object.keys(value).forEach(function walkProperty(key) {
-      var child;
-
-      try {
-        child =
-          value[key];
-      } catch (_error) {
-        return;
-      }
-
-      if (
-        child === null ||
-        child === undefined ||
-        typeof child !== "object"
-      ) {
-        return;
-      }
-
-      var relevant =
-        RECEIPT_FIELD_NAMES.indexOf(key) !== -1 ||
-        containsAny(
-          key,
-          [
-            "receipt",
-            "archive",
-            "ledger",
-            "packet",
-            "record",
-            "error"
-          ]
-        );
-
-      if (
-        relevant ||
-        level < 2
-      ) {
-        walkReceiptCandidates(
-          child,
-          sourceAuthority,
-          pathHint
-            ? pathHint + "." + key
-            : key,
-          output,
-          memory.slice(),
-          level + 1
-        );
-      }
-    });
-  }
-
-  function addExplicitReceipt(
-    output,
-    record,
-    sourceAuthority,
-    pathHint
-  ) {
-    if (!record) {
-      return;
-    }
-
-    if (
-      Array.isArray(record)
-    ) {
-      record.forEach(function addExplicitArrayEntry(entry, index) {
-        addExplicitReceipt(
-          output,
-          entry,
-          sourceAuthority,
-          pathHint +
-            "[" +
-            String(index) +
-            "]"
-        );
-      });
-
-      return;
-    }
-
-    if (
-      typeof record === "object"
-    ) {
-      output.push(
-        createNormalizedReceipt(
-          record,
-          sourceAuthority,
-          pathHint
-        )
-      );
-    }
-  }
-
-  function dedupeReceipts(entries) {
-    var seen = Object.create(null);
-    var output = [];
-
-    entries.forEach(function dedupeEntry(entry) {
-      if (
-        !entry ||
-        !entry.stableKey
-      ) {
-        return;
-      }
-
-      if (seen[entry.stableKey]) {
-        return;
-      }
-
-      seen[entry.stableKey] =
-        true;
-
-      output.push(entry);
-    });
-
-    return output;
+  function normalizeDistributedCommand(target) {
+    var c = String(target.getAttribute("data-report-command") || "").trim().toLowerCase();
+    return COMMANDS.indexOf(c) !== -1 ? c : null;
   }
 
   function collectReceiptFamilies() {
     var output = [];
+    var engine = getCompatibleEngine();
+    var inspection = resolveFirst(INSPECTION_PATHS);
+    var inspectionApi = inspection ? inspection.value : null;
 
-    var engine =
-      getCompatibleEngine();
+    addReceipt(output, root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT || safeCall(inspectionApi, "getReceipt"), "INSPECTION_LANE", "inspection.receipt");
+    addReceipt(output, safeCall(engine, "getEngineReceipt"), "DIAGNOSTIC_ENGINE", "engine.receipt");
+    addReceipt(output, safeCall(engine, "getReportReceipt"), "DIAGNOSTIC_ENGINE", "engine.reportReceipt");
+    addReceipt(output, state.report.receipt, state.report.source === "CONTROL_FALLBACK" ? "CONTROL_FALLBACK" : "CONTROL_PANEL", "state.report.receipt");
+    addReceipt(output, state.target.preparationReceipt, "CONTROL_TARGET_PREPARATION", "state.target.preparationReceipt");
+    addReceipt(output, state.cycle.rawReceipt, "CONTROL_CYCLE_ENGINE_RECEIPT", "state.cycle.rawReceipt");
+    addReceipt(output, state.cycle.renderingReceipt, "CONTROL_CYCLE_RENDERING_RECEIPT", "state.cycle.renderingReceipt");
+    state.directReceipts.forEach(function (r, i) { addReceipt(output, r, "CONTROL_DIRECT", "state.directReceipts[" + i + "]"); });
+    if (state.lastError) addReceipt(output, state.lastError, "CONTROL_PANEL", "state.lastError");
 
-    var inspectionLane =
-      getInspectionLane();
-
-    var engineState =
-      safeCall(
-        engine,
-        "getState"
-      );
-
-    var engineReceipt =
-      safeCall(
-        engine,
-        "getEngineReceipt"
-      );
-
-    var reportReceipt =
-      safeCall(
-        engine,
-        "getReportReceipt"
-      );
-
-    var archive =
-      safeCall(
-        engine,
-        "getArchive"
-      );
-
-    var inspectionReceipt =
-      root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT ||
-      safeCall(
-        inspectionLane,
-        "getReceipt"
-      );
-
-    var inspectionState =
-      safeCall(
-        inspectionLane,
-        "getState"
-      );
-
-    addExplicitReceipt(
-      output,
-      inspectionReceipt,
-      "INSPECTION_LANE",
-      "inspectionLane.receipt"
-    );
-
-    addExplicitReceipt(
-      output,
-      engineReceipt,
-      "DIAGNOSTIC_ENGINE",
-      "engine.engineReceipt"
-    );
-
-    addExplicitReceipt(
-      output,
-      reportReceipt,
-      "DIAGNOSTIC_ENGINE",
-      "engine.reportReceipt"
-    );
-
-    addExplicitReceipt(
-      output,
-      state.report.receipt,
-      state.report.source === "CONTROL_FALLBACK"
-        ? "CONTROL_FALLBACK"
-        : "CONTROL_PANEL",
-      "state.report.receipt"
-    );
-
-    addExplicitReceipt(
-      output,
-      state.target.preparationReceipt,
-      "CONTROL_TARGET_PREPARATION",
-      "state.target.preparationReceipt"
-    );
-
-    state.directReceipts.forEach(function addDirectReceipt(
-      receipt,
-      index
-    ) {
-      addExplicitReceipt(
-        output,
-        receipt,
-        "CONTROL_DIRECT",
-        "state.directReceipts[" +
-          String(index) +
-          "]"
-      );
-    });
-
-    addExplicitReceipt(
-      output,
-      state.cycle.rawReceipt,
-      "CONTROL_CYCLE_ENGINE_RECEIPT",
-      "state.cycle.rawReceipt"
-    );
-
-    addExplicitReceipt(
-      output,
-      state.cycle.renderingReceipt,
-      "CONTROL_CYCLE_RENDERING_RECEIPT",
-      "state.cycle.renderingReceipt"
-    );
-
-    if (
-      root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__
-    ) {
-      addExplicitReceipt(
-        output,
-        {
-          schema:
-            "AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR_RECORD_v1",
-          status:
-            "ERROR",
-          error:
-            clone(
-              root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__
-            ),
-          observedAt:
-            nowIso()
-        },
-        "INSPECTION_LANE",
-        "inspectionLane.error"
-      );
-    }
-
-    if (state.lastError) {
-      addExplicitReceipt(
-        output,
-        state.lastError,
-        "CONTROL_PANEL",
-        "state.lastError"
-      );
-    }
-
-    walkReceiptCandidates(
-      inspectionState,
-      "INSPECTION_LANE",
-      "inspectionLane.state",
-      output,
-      [],
-      0
-    );
-
-    walkReceiptCandidates(
-      engineState,
-      "DIAGNOSTIC_ENGINE",
-      "engine.state",
-      output,
-      [],
-      0
-    );
-
-    walkReceiptCandidates(
-      archive,
-      "DIAGNOSTIC_ARCHIVE",
-      "engine.archive",
-      output,
-      [],
-      0
-    );
-
-    walkReceiptCandidates(
-      state.report.current,
-      state.report.source === "CONTROL_FALLBACK"
-        ? "CONTROL_FALLBACK"
-        : "DIAGNOSTIC_REPORT",
-      "state.report.current",
-      output,
-      [],
-      0
-    );
-
-    walkReceiptCandidates(
-      state.target.preparationReceipt,
-      "CONTROL_TARGET_PREPARATION",
-      "state.target.preparationReceipt",
-      output,
-      [],
-      0
-    );
-
-    walkReceiptCandidates(
-      state.cycle.rawReceipt,
-      "CONTROL_CYCLE_ENGINE_RECEIPT",
-      "state.cycle.rawReceipt",
-      output,
-      [],
-      0
-    );
-
-    walkReceiptCandidates(
-      state.cycle.renderingReceipt,
-      "CONTROL_CYCLE_RENDERING_RECEIPT",
-      "state.cycle.renderingReceipt",
-      output,
-      [],
-      0
-    );
-
-    state.report.fallbackHistory.forEach(function walkFallback(
-      report,
-      index
-    ) {
-      walkReceiptCandidates(
-        report,
-        "CONTROL_FALLBACK",
-        "state.report.fallbackHistory[" +
-          String(index) +
-          "]",
-        output,
-        [],
-        0
-      );
-    });
-
-    return dedupeReceipts(
-      output
-    );
+    return dedupe(output);
   }
 
-  function refreshReceiptInventory() {
-    state.normalizedReceipts =
-      collectReceiptFamilies();
+  function addReceipt(out, record, source, path) {
+    if (!record) return;
+    if (Array.isArray(record)) {
+      record.forEach(function (r, i) { addReceipt(out, r, source, path + "[" + i + "]"); });
+      return;
+    }
+    if (typeof record !== "object") return;
+    out.push(normalizeReceipt(record, source, path));
+  }
 
-    renderReceiptList();
-    publishReceipt();
+  function normalizeReceipt(record, source, path) {
+    var type = receiptType(record, source, path);
+    var entry = {
+      type: type,
+      sourceAuthority: source || "UNKNOWN",
+      label: record.label || record.title || record.schema || [source || "Diagnostic", type, path || ""].filter(Boolean).join(" · "),
+      record: frozenClone(record),
+      groups: receiptGroups(record, type, source, path),
+      participantRole: record.participantRole || record.role || record.participant || null,
+      station: record.station || record.stationId || record.cycleStation || record.fibonacci || null,
+      reportId: record.reportId || (record.report && record.report.reportId) || null,
+      receiptId: record.receiptId || record.id || record.reportReceiptId || record.cycleReceiptId || record.stationReceiptId || null,
+      path: path || null
+    };
+    entry.stableKey = entry.receiptId ? "receipt:" + entry.receiptId : [entry.sourceAuthority, entry.type, entry.participantRole || "", entry.station || "", entry.reportId || "", entry.label, safeJson(entry.record).slice(0, 240)].join("|");
+    return entry;
+  }
 
-    return frozenClone(
-      state.normalizedReceipts
-    );
+  function receiptType(record, source, path) {
+    var text = [source, path, record.type, record.kind, record.schema, record.contract, record.role, record.station, record.status].filter(Boolean).join(" ").toLowerCase();
+    if (/error|failed|failure|exception/.test(text)) return "error";
+    if (/cycle|station|conductor|f1|f3|f5|f8|f13|f21|f34|f55|f89/.test(text)) return "cycle";
+    if (/participant|direct|north|east|west|south|rail/.test(text)) return "participant";
+    return "observation";
+  }
+
+  function receiptGroups(record, type, source, path) {
+    var text = [type, source, path, record.type, record.kind, record.schema, record.contract, record.role, record.station, record.status, record.error, record.message].filter(Boolean).join(" ").toLowerCase();
+    var groups = [];
+    if (type === "participant" || /participant|direct|north|east|west|south|rail/.test(text)) groups.push("participant");
+    if (type === "cycle" || /cycle|station|conductor|f1|f3|f5|f8|f13|f21|f34|f55|f89/.test(text)) groups.push("cycle");
+    if (type === "observation" || /inspection|observation|surface|runtime|registry|engine|report|control|target/.test(text)) groups.push("observation");
+    if (type === "error" || /error|failed|failure|exception|held|missing/.test(text)) groups.push("error");
+    if (!groups.length) groups.push("observation");
+    return groups.filter(function (v, i, a) { return RECEIPT_FILTERS.indexOf(v) !== -1 && v !== "all" && a.indexOf(v) === i; });
+  }
+
+  function dedupe(entries) {
+    var seen = Object.create(null);
+    var out = [];
+    entries.forEach(function (e) {
+      if (!e || !e.stableKey || seen[e.stableKey]) return;
+      seen[e.stableKey] = true;
+      out.push(e);
+    });
+    return out;
+  }
+
+  function refreshReceiptInventory(options) {
+    var settings = options || {};
+    state.normalizedReceipts = collectReceiptFamilies();
+    if (settings.render !== false) renderReceiptList();
+    if (settings.publish !== false) publishReceipt();
+    return frozenClone(state.normalizedReceipts);
   }
 
   function renderReceiptList() {
-    var entries =
-      state.normalizedReceipts;
+    var filter = state.ui.receiptFilter;
+    var visible = filter === "all" ? state.normalizedReceipts : state.normalizedReceipts.filter(function (e) { return e.groups.indexOf(filter) !== -1; });
+    state.visibleReceipts = visible;
 
-    var filter =
-      state.ui.receiptFilter;
-
-    var visible =
-      filter === "all"
-        ? entries
-        : entries.filter(function filterReceipt(entry) {
-            return entry.groups.indexOf(
-              filter
-            ) !== -1;
-          });
-
-    state.visibleReceipts =
-      visible;
-
-    setHtml(
-      "receiptList",
-      visible.length
-        ? visible
-            .map(function renderReceipt(entry, index) {
-              return (
-                '<article tabindex="0" role="button" ' +
-                  'data-receipt-index="' +
-                  String(index) +
-                  '" data-receipt-type="' +
-                  escapeHtml(entry.type) +
-                  '">' +
-                  "<h4>" +
-                  escapeHtml(entry.label) +
-                  "</h4>" +
-                  "<p>" +
-                  escapeHtml(
-                    entry.sourceAuthority
-                  ) +
-                  " · " +
-                  escapeHtml(
-                    entry.groups.join(", ")
-                  ) +
-                  "</p>" +
-                  (
-                    entry.receiptId
-                      ? "<small>" +
-                        escapeHtml(
-                          entry.receiptId
-                        ) +
-                        "</small>"
-                      : ""
-                  ) +
-                  "</article>"
-              );
-            })
-            .join("")
-        : (
-            '<article class="empty-state">' +
-              "<h4>No matching receipts</h4>" +
-              "<p>No receipts match the selected filter.</p>" +
-              "</article>"
-          )
-    );
+    setHtml("receiptList", visible.length
+      ? visible.map(function (e, i) {
+          return '<article tabindex="0" role="button" data-receipt-index="' + i + '" data-receipt-type="' + escapeHtml(e.type) + '">' +
+            "<h4>" + escapeHtml(e.label) + "</h4><p>" + escapeHtml(e.sourceAuthority) + " · " + escapeHtml(e.groups.join(", ")) + "</p>" +
+            (e.receiptId ? "<small>" + escapeHtml(e.receiptId) + "</small>" : "") + "</article>";
+        }).join("")
+      : '<article class="empty-state"><h4>No matching receipts</h4><p>No receipts match the selected filter.</p></article>');
   }
 
   function applyReceiptFilter(filter) {
-    var normalized =
-      String(filter || "all")
-        .trim()
-        .toLowerCase();
-
-    if (
-      RECEIPT_FILTERS.indexOf(normalized) === -1
-    ) {
-      normalized =
-        "all";
-    }
-
-    state.ui.receiptFilter =
-      normalized;
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        "[data-receipt-filter]"
-      )
-    ).forEach(function updateFilter(button) {
-      button.setAttribute(
-        "aria-pressed",
-        button.getAttribute(
-          "data-receipt-filter"
-        ) === normalized
-          ? "true"
-          : "false"
-      );
+    var f = String(filter || "all").trim().toLowerCase();
+    if (RECEIPT_FILTERS.indexOf(f) === -1) f = "all";
+    state.ui.receiptFilter = f;
+    Array.prototype.slice.call(doc.querySelectorAll("[data-receipt-filter]")).forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-receipt-filter") === f ? "true" : "false");
     });
-
     renderReceiptList();
-
-    recordAction(
-      "applyReceiptFilter",
-      {
-        filter:
-          normalized
-      }
-    );
+    recordAction("applyReceiptFilter", { filter: f });
   }
 
   function selectReceipt(index) {
-    var entry =
-      state.visibleReceipts[index] ||
-      null;
-
-    state.ui.selectedReceiptIndex =
-      entry
-        ? index
-        : null;
-
+    var entry = state.visibleReceipts[index] || null;
+    state.ui.selectedReceiptIndex = entry ? index : null;
     if (!entry) {
-      setHtml(
-        "selectedReceiptDetail",
-        "<h4>Receipt unavailable</h4>" +
-          "<p>The selected receipt could not be resolved.</p>"
-      );
-
+      setHtml("selectedReceiptDetail", "<h4>Receipt unavailable</h4><p>The selected receipt could not be resolved.</p>");
       return;
     }
-
-    setHtml(
-      "selectedReceiptDetail",
-      "<h4>" +
-        escapeHtml(entry.label) +
-        "</h4>" +
-        "<p>" +
-        escapeHtml(
-          entry.sourceAuthority
-        ) +
-        "</p>" +
-        "<pre>" +
-        escapeHtml(
-          safeJson(entry.record)
-        ) +
-        "</pre>"
-    );
-
-    recordAction(
-      "selectReceipt",
-      {
-        index:
-          index,
-        type:
-          entry.type,
-        label:
-          entry.label,
-        receiptId:
-          entry.receiptId
-      }
-    );
+    setHtml("selectedReceiptDetail", "<h4>" + escapeHtml(entry.label) + "</h4><p>" + escapeHtml(entry.sourceAuthority) + "</p><pre>" + escapeHtml(safeJson(entry.record)) + "</pre>");
+    recordAction("selectReceipt", { index: index, type: entry.type, label: entry.label, receiptId: entry.receiptId });
   }
 
   function inspectDistributedCommands() {
-    var nodes =
-      Array.prototype.slice.call(
-        doc.querySelectorAll(
-          "[data-report-command]"
-        )
-      );
-
-    state.controls.distributedDeclarationCount =
-      nodes.length;
-
-    state.controls.distributedDeclarations =
-      nodes.map(function mapDistributedCommand(node) {
-        return {
-          id:
-            node.id || null,
-          command:
-            node.getAttribute(
-              "data-report-command"
-            ),
-          source:
-            node.getAttribute(
-              "data-report-source"
-            ),
-          category:
-            node.getAttribute(
-              "data-report-category"
-            ),
-          audit:
-            node.getAttribute(
-              "data-report-audit"
-            ),
-          participant:
-            node.getAttribute(
-              "data-report-participant"
-            ),
-          chamber:
-            node.getAttribute(
-              "data-report-chamber"
-            ),
-          mode:
-            node.getAttribute(
-              "data-report-mode"
-            )
-        };
-      });
-
+    var nodes = Array.prototype.slice.call(doc.querySelectorAll("[data-report-command]"));
+    state.controls.distributedDeclarationCount = nodes.length;
+    state.controls.distributedDeclarations = nodes.map(function (n) {
+      return {
+        id: n.id || null,
+        command: n.getAttribute("data-report-command"),
+        source: n.getAttribute("data-report-source"),
+        category: n.getAttribute("data-report-category"),
+        audit: n.getAttribute("data-report-audit"),
+        participant: n.getAttribute("data-report-participant"),
+        chamber: n.getAttribute("data-report-chamber"),
+        mode: n.getAttribute("data-report-mode")
+      };
+    });
     publishReceipt();
-
-    return frozenClone(
-      state.controls.distributedDeclarations
-    );
+    return frozenClone(state.controls.distributedDeclarations);
   }
 
   function updateDistributedCommandAvailability() {
-    var reportPresent =
-      Boolean(
-        state.report.current
-      );
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        '[data-report-command="copy-readable"],' +
-        '[data-report-command="copy-packet"],' +
-        '[data-report-command="copy-raw"]'
-      )
-    ).forEach(function updateCopyCommand(node) {
-      node.disabled =
-        !reportPresent;
-
-      node.setAttribute(
-        "aria-disabled",
-        reportPresent
-          ? "false"
-          : "true"
-      );
-
-      node.setAttribute(
-        "data-report-available",
-        reportPresent
-          ? "true"
-          : "false"
-      );
+    var present = Boolean(state.report.current);
+    Array.prototype.slice.call(doc.querySelectorAll('[data-report-command="copy-readable"],[data-report-command="copy-packet"],[data-report-command="copy-raw"]')).forEach(function (n) {
+      n.disabled = !present;
+      n.setAttribute("aria-disabled", present ? "false" : "true");
+      n.setAttribute("data-report-available", present ? "true" : "false");
     });
-
-    Array.prototype.slice.call(
-      doc.querySelectorAll(
-        '[data-report-command="view"]'
-      )
-    ).forEach(function updateViewCommand(node) {
-      node.setAttribute(
-        "data-report-available",
-        reportPresent
-          ? "true"
-          : "false"
-      );
+    Array.prototype.slice.call(doc.querySelectorAll('[data-report-command="view"]')).forEach(function (n) {
+      n.setAttribute("data-report-available", present ? "true" : "false");
     });
   }
 
   function inspectControls() {
     var missing = [];
-
-    CANONICAL_CONTROL_IDS.forEach(function inspectControl(id) {
-      if (!byId(id)) {
-        missing.push(id);
-      }
-    });
-
-    state.controls.discoveredCount =
-      CANONICAL_CONTROL_IDS.length -
-      missing.length;
-
-    state.controls.missing =
-      missing;
-
-    state.controls.missingCount =
-      missing.length;
-
-    state.controls.createReportPresent =
-      Boolean(
-        byId("createReport")
-      );
-
+    CONTROL_IDS.forEach(function (id) { if (!byId(id)) missing.push(id); });
+    state.controls.discoveredCount = CONTROL_IDS.length - missing.length;
+    state.controls.missing = missing;
+    state.controls.missingCount = missing.length;
+    state.controls.createReportPresent = Boolean(byId("createReport"));
     inspectDistributedCommands();
     updateDistributedCommandAvailability();
     publishReceipt();
-
-    return frozenClone(
-      state.controls
-    );
+    return frozenClone(state.controls);
   }
 
   function renderEngineState() {
     inspectInspectionLane();
-
-    var engine =
-      resolveEngine();
-
-    if (engine) {
-      setText(
-        "controllerState",
-        "REPORT READY"
-      );
-
-      setStatus(
-        "controllerState",
-        "READY"
-      );
-
-      setText(
-        "controllerContract",
-        CONTRACT
-      );
-
-      setText(
-        "dropReportState",
-        "READY"
-      );
-
-      setStatus(
-        "dropReportCell",
-        "READY"
-      );
-
-      setText(
-        "dropReportLastAction",
-        state.inspectionLane.resolved
-          ? "Distributed controls bound; inspection lane and engine available."
-          : "Distributed controls bound; engine available; inspection lane absent."
-      );
-
+    if (resolveEngine()) {
+      setText("controllerState", "REPORT READY");
+      setStatus("controllerState", "READY");
+      setText("controllerContract", CONTRACT);
+      setText("dropReportState", "READY");
+      setStatus("dropReportCell", "READY");
+      setText("dropReportLastAction", state.inspectionLane.resolved ? "Distributed controls bound; inspection lane and engine available." : "Distributed controls bound; engine available; inspection lane absent.");
       return;
     }
-
-    setText(
-      "controllerState",
-      "ENGINE HELD"
-    );
-
-    setStatus(
-      "controllerState",
-      "HELD"
-    );
-
-    setText(
-      "controllerContract",
-      CONTRACT
-    );
-
-    setText(
-      "dropReportState",
-      "READY"
-    );
-
-    setStatus(
-      "dropReportCell",
-      "READY"
-    );
-
-    setText(
-      "dropReportLastAction",
-      "Fallback READ report path available."
-    );
-  }
-
-  function normalizeDistributedCommand(target) {
-    var command =
-      String(
-        target.getAttribute(
-          "data-report-command"
-        ) || ""
-      )
-        .trim()
-        .toLowerCase();
-
-    return DISTRIBUTED_COMMANDS.indexOf(command) !== -1
-      ? command
-      : null;
-  }
-
-  function executeDistributedReportCommand(target, command) {
-    if (!command) {
-      return false;
-    }
-
-    state.distributedExecutionCount += 1;
-
-    state.ui.lastReportCommand =
-      command;
-
-    state.ui.lastReportCommandSource =
-      target.getAttribute(
-        "data-report-source"
-      ) ||
-      target.id ||
-      target.getAttribute(
-        "data-report-chamber"
-      ) ||
-      "DISTRIBUTED_CONTROL";
-
-    applyCommandContext(target);
-
-    recordAction(
-      "distributedReportCommand",
-      {
-        command:
-          command,
-        source:
-          state.ui.lastReportCommandSource,
-        commandNumber:
-          state.distributedExecutionCount
-      }
-    );
-
-    if (command === "create") {
-      createReport({
-        source:
-          state.ui.lastReportCommandSource,
-        command:
-          command,
-        mode:
-          target.getAttribute(
-            "data-report-mode"
-          ) || "read",
-        viewAfterCreate:
-          target.getAttribute(
-            "data-report-view-after-create"
-          ) !== "false"
-      });
-
-      return true;
-    }
-
-    if (command === "view") {
-      viewCurrentReport({
-        mode:
-          target.getAttribute(
-            "data-report-mode"
-          ) || "read"
-      });
-
-      return true;
-    }
-
-    if (command === "copy-readable") {
-      copyReadableReport();
-      return true;
-    }
-
-    if (command === "copy-packet") {
-      copyPacketReport();
-      return true;
-    }
-
-    if (command === "copy-raw") {
-      copyRawReport();
-      return true;
-    }
-
-    if (command === "open-receipts") {
-      openReceiptChamber();
-      return true;
-    }
-
-    if (command === "open-archive") {
-      openArchiveChamber();
-      return true;
-    }
-
-    if (command === "reset") {
-      resetCurrentReport();
-      return true;
-    }
-
-    return false;
+    setText("controllerState", "ENGINE HELD");
+    setStatus("controllerState", "HELD");
+    setText("controllerContract", CONTRACT);
+    setText("dropReportState", "READY");
+    setStatus("dropReportCell", "READY");
+    setText("dropReportLastAction", "Fallback READ report path available.");
   }
 
   function handleClick(event) {
-    var rawTarget =
-      event.target;
+    var raw = event.target;
+    var target, id, cmd;
+    if (!raw || !isFn(raw.closest)) return;
 
-    if (
-      !rawTarget ||
-      !isFunction(rawTarget.closest)
-    ) {
-      return;
-    }
-
-    var target =
-      rawTarget.closest(
-        "button, a[href], [role='button'], [role='tab'], [role='option']"
-      );
-
+    target = raw.closest("button, a[href], [role='button'], [role='tab'], [role='option']");
     if (!target) {
-      if (
-        !rawTarget.closest(
-          ".custom-selector"
-        )
-      ) {
-        closeAllSelectors();
-      }
-
+      if (!raw.closest(".custom-selector")) closeAllSelectors();
       return;
     }
 
     state.clickCount += 1;
+    id = target.id || "";
+    cmd = normalizeDistributedCommand(target);
 
-    var id =
-      target.id || "";
-
-    var distributedCommand =
-      normalizeDistributedCommand(
-        target
-      );
-
-    if (distributedCommand) {
+    if (cmd) {
       event.preventDefault();
-
-      executeDistributedReportCommand(
-        target,
-        distributedCommand
-      );
-
+      executeDistributedReportCommand(target, cmd);
       return;
     }
 
-    if (id === "createReport") {
-      event.preventDefault();
+    if (id === "createReport") { event.preventDefault(); state.createReportClickCount += 1; recordAction("createReportClickObserved", { clickNumber: state.createReportClickCount }); createReport({ source: "CANONICAL_CREATE_REPORT_BUTTON", command: "create", viewAfterCreate: false }); return; }
+    if (id === "runDirectCheck") { event.preventDefault(); runDirectCheck(); return; }
+    if (id === "runNineCycle") { event.preventDefault(); runNineCycle(); return; }
+    if (id === "copyReadableReport") { event.preventDefault(); copyReadableReport(); return; }
+    if (id === "copyPacketReport") { event.preventDefault(); copyPacketReport(); return; }
+    if (id === "copyRawReport") { event.preventDefault(); copyRawReport(); return; }
+    if (id === "addReportToArchive") { event.preventDefault(); addReportToArchive(); return; }
+    if (id === "resetCurrentReport") { event.preventDefault(); resetCurrentReportLocal({ record: true, notify: true }); return; }
+    if (id === "resetWorkbench") { event.preventDefault(); resetWorkbench(); return; }
+    if (id === "createDeepArchive") { event.preventDefault(); createDeepArchive(); return; }
+    if (id === "reloadObservatory") { event.preventDefault(); recordAction("reloadObservatory"); root.location.reload(); return; }
+    if (id === "toggleObservationTarget") { event.preventDefault(); setTargetVisible(!state.ui.targetVisible); return; }
+    if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded); return; }
+    if (id === "reloadTargetFrame") { event.preventDefault(); reloadTargetFrame(); return; }
+    if (id === "categorySelectorButton") { event.preventDefault(); toggleSelector("categorySelectorButton", "categorySelectorMenu", "categoryMenuOpen"); return; }
+    if (id === "auditSelectorButton") { event.preventDefault(); toggleSelector("auditSelectorButton", "auditSelectorMenu", "auditMenuOpen"); return; }
 
-      state.createReportClickCount += 1;
+    if (target.hasAttribute("data-category-id")) { event.preventDefault(); selectCategory(target.getAttribute("data-category-id")); return; }
+    if (target.hasAttribute("data-audit-id")) { event.preventDefault(); selectAudit(target.getAttribute("data-audit-id")); return; }
+    if (target.hasAttribute("data-participant-role") && target.getAttribute("role") === "button") { event.preventDefault(); selectParticipant(target.getAttribute("data-participant-role")); return; }
+    if (target.hasAttribute("data-left-orbit-view")) { event.preventDefault(); selectLeftOrbitLocal(target.getAttribute("data-left-orbit-view")); return; }
+    if (target.hasAttribute("data-report-mode")) { event.preventDefault(); selectReportModeLocal(target.getAttribute("data-report-mode")); return; }
+    if (target.hasAttribute("data-observation-lens")) { event.preventDefault(); selectObservationLensLocal(target.getAttribute("data-observation-lens")); return; }
+    if (target.hasAttribute("data-instrument-chamber")) { event.preventDefault(); selectInstrumentChamberLocal(target.getAttribute("data-instrument-chamber")); return; }
+    if (target.hasAttribute("data-receipt-filter")) { event.preventDefault(); applyReceiptFilter(target.getAttribute("data-receipt-filter")); return; }
+    if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(Number(target.getAttribute("data-receipt-index"))); return; }
 
-      recordAction(
-        "createReportClickObserved",
-        {
-          clickNumber:
-            state.createReportClickCount
-        }
-      );
-
-      createReport({
-        source:
-          "CANONICAL_CREATE_REPORT_BUTTON",
-        command:
-          "create",
-        viewAfterCreate:
-          false
-      });
-
-      return;
-    }
-
-    if (id === "runDirectCheck") {
-      event.preventDefault();
-      runDirectCheck();
-      return;
-    }
-
-    if (id === "runNineCycle") {
-      event.preventDefault();
-      runNineCycle();
-      return;
-    }
-
-    if (id === "copyReadableReport") {
-      event.preventDefault();
-      copyReadableReport();
-      return;
-    }
-
-    if (id === "copyPacketReport") {
-      event.preventDefault();
-      copyPacketReport();
-      return;
-    }
-
-    if (id === "copyRawReport") {
-      event.preventDefault();
-      copyRawReport();
-      return;
-    }
-
-    if (id === "addReportToArchive") {
-      event.preventDefault();
-      addReportToArchive();
-      return;
-    }
-
-    if (id === "resetCurrentReport") {
-      event.preventDefault();
-      resetCurrentReport();
-      return;
-    }
-
-    if (id === "resetWorkbench") {
-      event.preventDefault();
-      resetWorkbench();
-      return;
-    }
-
-    if (id === "createDeepArchive") {
-      event.preventDefault();
-      createDeepArchive();
-      return;
-    }
-
-    if (id === "reloadObservatory") {
-      event.preventDefault();
-
-      recordAction(
-        "reloadObservatory"
-      );
-
-      root.location.reload();
-      return;
-    }
-
-    if (id === "toggleObservationTarget") {
-      event.preventDefault();
-
-      setTargetVisible(
-        !state.ui.targetVisible
-      );
-
-      return;
-    }
-
-    if (id === "expandTargetWindow") {
-      event.preventDefault();
-
-      setTargetExpanded(
-        !state.ui.targetExpanded
-      );
-
-      return;
-    }
-
-    if (id === "reloadTargetFrame") {
-      event.preventDefault();
-      reloadTargetFrame();
-      return;
-    }
-
-    if (id === "categorySelectorButton") {
-      event.preventDefault();
-
-      toggleSelector(
-        "categorySelectorButton",
-        "categorySelectorMenu",
-        "categoryMenuOpen"
-      );
-
-      return;
-    }
-
-    if (id === "auditSelectorButton") {
-      event.preventDefault();
-
-      toggleSelector(
-        "auditSelectorButton",
-        "auditSelectorMenu",
-        "auditMenuOpen"
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-category-id"
-      )
-    ) {
-      event.preventDefault();
-
-      selectCategory(
-        target.getAttribute(
-          "data-category-id"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-audit-id"
-      )
-    ) {
-      event.preventDefault();
-
-      selectAudit(
-        target.getAttribute(
-          "data-audit-id"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-participant-role"
-      ) &&
-      target.getAttribute(
-        "role"
-      ) === "button"
-    ) {
-      event.preventDefault();
-
-      selectParticipant(
-        target.getAttribute(
-          "data-participant-role"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-left-orbit-view"
-      )
-    ) {
-      event.preventDefault();
-
-      selectLeftOrbitLocal(
-        target.getAttribute(
-          "data-left-orbit-view"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-report-mode"
-      )
-    ) {
-      event.preventDefault();
-
-      selectReportModeLocal(
-        target.getAttribute(
-          "data-report-mode"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-observation-lens"
-      )
-    ) {
-      event.preventDefault();
-
-      selectObservationLensLocal(
-        target.getAttribute(
-          "data-observation-lens"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-instrument-chamber"
-      )
-    ) {
-      event.preventDefault();
-
-      selectInstrumentChamberLocal(
-        target.getAttribute(
-          "data-instrument-chamber"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-receipt-filter"
-      )
-    ) {
-      event.preventDefault();
-
-      applyReceiptFilter(
-        target.getAttribute(
-          "data-receipt-filter"
-        )
-      );
-
-      return;
-    }
-
-    if (
-      target.hasAttribute(
-        "data-receipt-index"
-      )
-    ) {
-      event.preventDefault();
-
-      selectReceipt(
-        Number(
-          target.getAttribute(
-            "data-receipt-index"
-          )
-        )
-      );
-
-      return;
-    }
-
-    if (
-      !target.closest(
-        ".custom-selector"
-      )
-    ) {
-      closeAllSelectors();
-    }
+    if (!target.closest(".custom-selector")) closeAllSelectors();
   }
 
   function handleKeydown(event) {
-    var rawTarget =
-      event.target;
-
-    if (
-      !rawTarget ||
-      !isFunction(rawTarget.closest)
-    ) {
-      return;
-    }
-
-    var target =
-      rawTarget.closest(
-        "[role='button'], [role='option'], [role='tab']"
-      );
-
-    if (
-      target &&
-      (
-        event.key === "Enter" ||
-        event.key === " "
-      )
-    ) {
+    var raw = event.target;
+    var target;
+    if (!raw || !isFn(raw.closest)) return;
+    target = raw.closest("[role='button'], [role='option'], [role='tab']");
+    if (target && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
       target.click();
       return;
     }
-
     if (event.key === "Escape") {
       closeAllSelectors();
-
-      if (state.ui.targetExpanded) {
-        setTargetExpanded(false);
-      }
+      if (state.ui.targetExpanded) setTargetExpanded(false);
     }
   }
 
   function handleTargetFrameLoad() {
-    state.target.loadObserved =
-      true;
-
+    var inspected;
+    state.target.loadObserved = true;
     state.target.loadCount += 1;
+    state.target.lastLoadObservedAt = nowIso();
+    state.target.navigationPending = false;
 
-    state.target.lastLoadObservedAt =
-      nowIso();
+    inspected = inspectTargetFrame({ reason: "TARGET_FRAME_LOAD" });
 
-    state.target.navigationPending =
-      false;
-
-    var inspected =
-      inspectTargetFrame({
-        reason:
-          "TARGET_FRAME_LOAD"
-      });
-
-    recordAction(
-      "targetFrameLoad",
-      {
-        loadCount:
-          state.target.loadCount,
-        lifecycleClass:
-          inspected.lifecycleClass,
-        observedRoute:
-          inspected.observedRoute,
-        routeMatched:
-          inspected.routeMatched,
-        pendingNineCycle:
-          state.target.pendingNineCycle,
-        targetVisible:
-          state.ui.targetVisible,
-        observationLens:
-          state.ui.observationLens
-      }
-    );
+    recordAction("targetFrameLoad", {
+      loadCount: state.target.loadCount,
+      lifecycleClass: inspected.lifecycleClass,
+      observedRoute: inspected.observedRoute,
+      routeMatched: inspected.routeMatched,
+      pendingNineCycle: state.target.pendingNineCycle
+    });
 
     setCycleRunning(false);
 
-    if (
-      state.target.pendingNineCycle &&
-      inspected.lifecycleClass ===
-        "TARGET_READY"
-    ) {
+    if (state.target.pendingNineCycle && inspected.lifecycleClass === "TARGET_READY") {
       state.target.deferredCycleReleaseCount += 1;
-
-      recordAction(
-        "targetFrameLoad.releaseDeferredNineCycle",
-        {
-          releaseCount:
-            state.target.deferredCycleReleaseCount
-        }
-      );
-
+      recordAction("targetFrameLoad.releaseDeferredNineCycle", { releaseCount: state.target.deferredCycleReleaseCount });
       executeNineCycle();
       return;
     }
 
-    if (
-      state.target.pendingNineCycle &&
-      inspected.lifecycleClass !==
-        "TARGET_READY"
-    ) {
-      holdActiveCycleRequest(
-        "TARGET_LOAD_DID_NOT_CONFIRM_EXPECTED_ROUTE"
-      );
-
-      setText(
-        "controllerState",
-        "TARGET HELD"
-      );
-
-      setStatus(
-        "controllerState",
-        "HELD"
-      );
-
-      toast(
-        "Target route was not confirmed.",
-        "HELD"
-      );
-
+    if (state.target.pendingNineCycle && inspected.lifecycleClass !== "TARGET_READY") {
+      holdActiveCycle("TARGET_LOAD_DID_NOT_CONFIRM_EXPECTED_ROUTE");
+      setText("controllerState", "TARGET HELD");
+      setStatus("controllerState", "HELD");
+      toast("Target route was not confirmed.", "HELD");
       return;
     }
 
-    if (
-      inspected.lifecycleClass ===
-      "TARGET_READY"
-    ) {
-      toast(
-        "Target route available.",
-        "READY"
-      );
-    } else {
-      toast(
-        "Target load observed without route readiness.",
-        "HELD"
-      );
-    }
+    toast(inspected.lifecycleClass === "TARGET_READY" ? "Target route available." : "Target load observed without route readiness.", inspected.lifecycleClass === "TARGET_READY" ? "READY" : "HELD");
   }
 
   function bindEvents() {
-    doc.addEventListener(
-      "click",
-      handleClick
-    );
-
-    doc.addEventListener(
-      "keydown",
-      handleKeydown
-    );
-
-    var frame =
-      byId(TARGET_FRAME_ID);
-
-    if (frame) {
-      frame.addEventListener(
-        "load",
-        handleTargetFrameLoad
-      );
-    }
-
-    state.controls.delegatedEventsActive =
-      true;
+    doc.addEventListener("click", handleClick);
+    doc.addEventListener("keydown", handleKeydown);
+    if (byId(TARGET_FRAME_ID)) byId(TARGET_FRAME_ID).addEventListener("load", handleTargetFrameLoad);
+    state.controls.delegatedEventsActive = true;
   }
 
   function publishReceipt() {
-    var rendering =
-      state.cycle.rendering;
-
-    var localDomEvidence =
-      state.cycle.localDomEvidence;
-
-    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT =
-      deepFreeze({
-        schema:
-          CONTROL_RECEIPT_SCHEMA,
-
-        contract:
-          CONTRACT,
-
-        previousContract:
-          PREVIOUS_CONTRACT,
-
-        version:
-          VERSION,
-
-        file:
-          FILE,
-
-        authority:
-          AUTHORITY,
-
-        initialized:
-          state.initialized,
-
-        initializedAt:
-          state.initializedAt,
-
-        delegatedEventsActive:
-          state.controls.delegatedEventsActive,
-
-        engineLookupPaths:
-          ENGINE_GLOBAL_PATHS.slice(),
-
-        engine:
-          frozenClone(
-            state.engine
-          ),
-
-        inspectionLane:
-          frozenClone(
-            state.inspectionLane
-          ),
-
-        inspectionLaneExpectedContract:
-          INSPECTION_LANE_CONTRACT,
-
-        targetLifecycle:
-          frozenClone(
-            state.target
-          ),
-
-        targetPreparationReceipt:
-          frozenClone(
-            state.target.preparationReceipt
-          ),
-
-        targetVisible:
-          state.ui.targetVisible,
-
-        observationLens:
-          state.ui.observationLens,
-
-        activeCycleRequestPresent:
-          hasActiveCycleRequest(),
-
-        activeCycleRequestCreatedAt:
-          activeCycleRequest.createdAt,
-
-        controlManifestCount:
-          state.controls.manifestCount,
-
-        discoveredControlCount:
-          state.controls.discoveredCount,
-
-        missingControlCount:
-          state.controls.missingCount,
-
-        missingControls:
-          state.controls.missing.slice(),
-
-        createReportControlPresent:
-          state.controls.createReportPresent,
-
-        distributedDeclarationCount:
-          state.controls.distributedDeclarationCount,
-
-        distributedDeclarations:
-          frozenClone(
-            state.controls.distributedDeclarations
-          ),
-
-        distributedExecutionCount:
-          state.distributedExecutionCount,
-
-        lastReportCommand:
-          state.ui.lastReportCommand,
-
-        lastReportCommandSource:
-          state.ui.lastReportCommandSource,
-
-        currentSelection: {
-          category:
-            state.ui.selectedCategory,
-          audit:
-            state.ui.selectedAudit,
-          participant:
-            state.ui.selectedParticipant,
-          chamber:
-            state.ui.instrumentChamber,
-          reportMode:
-            state.ui.reportMode
-        },
-
-        currentReportId:
-          state.report.current
-            ? state.report.current.reportId || null
-            : null,
-
-        currentReportReceiptId:
-          state.report.receipt
-            ? state.report.receipt.receiptId || null
-            : null,
-
-        currentReportSource:
-          state.report.source,
-
-        reportAvailable:
-          Boolean(
-            state.report.current
-          ),
-
-        copyAvailable:
-          Boolean(
-            state.report.current
-          ),
-
-        fallbackReportCount:
-          state.report.fallbackHistory.length,
-
-        directReceiptCount:
-          state.directReceipts.length,
-
-        cycleReceiptPresent:
-          Boolean(
-            state.cycle.rawReceipt
-          ),
-
-        engineCycleReceiptPresent:
-          Boolean(
-            state.cycle.rawReceipt
-          ),
-
-        cycleRunning:
-          state.cycle.running,
-
-        cycleRequested:
-          state.cycle.requested,
-
-        cycleExecuted:
-          state.cycle.executed,
-
-        engineCycleStatus:
-          rendering
-            ? rendering.engineCycleStatus
-            : null,
-
-        engineCycleTerminalClass:
-          rendering
-            ? rendering.engineCycleTerminalClass
-            : null,
-
-        engineExactNineValidated:
-          rendering
-            ? rendering.engineExactNineValidated
-            : null,
-
-        returnedReceiptMappingComplete:
-          rendering
-            ? rendering.returnedReceiptMappingComplete
-            : false,
-
-        logicalMappingComplete:
-          rendering
-            ? rendering.logicalMappingComplete
-            : false,
-
-        logicalMappingScope:
-          rendering
-            ? rendering.logicalMappingScope
-            : "RETURNED_RECEIPTS_ONLY",
-
-        localDomUpdateComplete:
-          localDomEvidence
-            ? localDomEvidence.localDomUpdateComplete
-            : false,
-
-        domSynchronizationComplete:
-          localDomEvidence
-            ? localDomEvidence.localDomUpdateComplete
-            : false,
-
-        domSynchronizationScope:
-          "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
-
-        cycleChamberSynchronized:
-          null,
-
-        cycleChamberSynchronizationOwner:
-          "INDEX_CONTROL_BRIDGE",
-
-        familySynchronizationCertified:
-          false,
-
-        mappedReceiptCount:
-          rendering
-            ? rendering.mappedReceiptCount
-            : 0,
-
-        unmappedReceiptCount:
-          rendering
-            ? rendering.unmappedReceiptCount
-            : 0,
-
-        duplicateCoordinateCount:
-          rendering
-            ? rendering.duplicateCoordinateCount
-            : 0,
-
-        coordinateConflictCount:
-          rendering
-            ? rendering.coordinateConflictCount
-            : 0,
-
-        unresolvedDeclarationCount:
-          rendering
-            ? rendering.unresolvedDeclarationCount
-            : 0,
-
-        renderedPositions:
-          rendering
-            ? rendering.renderedPositions.slice()
-            : [],
-
-        notReachedPositions:
-          rendering
-            ? rendering.notReachedPositions.slice()
-            : [],
-
-        missingCycleTargets:
-          localDomEvidence
-            ? localDomEvidence.missingTargetIds.slice()
-            : CYCLE_TARGET_IDS.slice(),
-
-        missingStationPositions:
-          localDomEvidence
-            ? localDomEvidence.missingStationPositions.slice()
-            : CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
-                return station.position;
-              }),
-
-        cycleButtonLockReleased:
-          state.cycle.running === false &&
-          state.target.navigationPending === false,
-
-        cycleRenderedAt:
-          state.cycle.renderedAt,
-
-        cycleRenderingReceipt:
-          frozenClone(
-            state.cycle.renderingReceipt
-          ),
-
-        normalizedReceiptCount:
-          state.normalizedReceipts.length,
-
-        visibleReceiptCount:
-          state.visibleReceipts.length,
-
-        receiptFilter:
-          state.ui.receiptFilter,
-
-        actionCount:
-          state.actionCount,
-
-        clickCount:
-          state.clickCount,
-
-        createReportClickCount:
-          state.createReportClickCount,
-
-        errorCount:
-          state.errorCount,
-
-        lastAction:
-          frozenClone(
-            state.lastAction
-          ),
-
-        lastError:
-          frozenClone(
-            state.lastError
-          ),
-
-        commandLifecycle: [
-          "OBSERVE",
-          "CONTEXT",
-          "EXPOSE_TARGET",
-          "PREPARE_TARGET",
-          "VERIFY_TARGET",
-          "INVOKE",
-          "RECEIVE",
-          "COMMIT",
-          "RENDER",
-          "ENABLE",
-          "RECEIPT"
-        ],
-
-        newsAuthority: {
-          direction:
-            "SOUTH",
-          commandHandoff:
-            "F34",
-          restitution:
-            "F55"
-        },
-
-        presentationStationMap:
-          CANONICAL_CYCLE_STATIONS,
-
-        requirements:
-          CONTROL_REQUIREMENTS,
-
-        relationalCertificationOwner:
-          "INDEX_CONTROL_BRIDGE",
-
-        noClaims:
-          NO_CLAIMS,
-
-        generatedAt:
-          nowIso()
-      });
+    var rendering = state.cycle.rendering;
+    var local = state.cycle.localDomEvidence;
+
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = deepFreeze({
+      schema: CONTROL_RECEIPT_SCHEMA,
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      authority: AUTHORITY,
+      initialized: state.initialized,
+      initializedAt: state.initializedAt,
+      delegatedEventsActive: state.controls.delegatedEventsActive,
+      engineLookupPaths: ENGINE_PATHS.slice(),
+      engine: frozenClone(state.engine),
+      inspectionLane: frozenClone(state.inspectionLane),
+      inspectionLaneExpectedContract: INSPECTION_CONTRACT,
+      targetLifecycle: frozenClone(state.target),
+      targetPreparationReceipt: frozenClone(state.target.preparationReceipt),
+      targetVisible: state.ui.targetVisible,
+      observationLens: state.ui.observationLens,
+      activeCycleRequestPresent: hasActiveCycle(),
+      activeCycleRequestCreatedAt: activeCycle.createdAt,
+      controlManifestCount: state.controls.manifestCount,
+      discoveredControlCount: state.controls.discoveredCount,
+      missingControlCount: state.controls.missingCount,
+      missingControls: state.controls.missing.slice(),
+      createReportControlPresent: state.controls.createReportPresent,
+      distributedDeclarationCount: state.controls.distributedDeclarationCount,
+      distributedDeclarations: frozenClone(state.controls.distributedDeclarations),
+      distributedExecutionCount: state.distributedExecutionCount,
+      lastReportCommand: state.ui.lastReportCommand,
+      lastReportCommandSource: state.ui.lastReportCommandSource,
+      currentSelection: {
+        category: state.ui.selectedCategory,
+        audit: state.ui.selectedAudit,
+        participant: state.ui.selectedParticipant,
+        chamber: state.ui.instrumentChamber,
+        reportMode: state.ui.reportMode
+      },
+      currentReportId: state.report.current ? state.report.current.reportId || null : null,
+      currentReportReceiptId: state.report.receipt ? state.report.receipt.receiptId || null : null,
+      currentReportSource: state.report.source,
+      reportAvailable: Boolean(state.report.current),
+      copyAvailable: Boolean(state.report.current),
+      fallbackReportCount: state.report.fallbackHistory.length,
+      directReceiptCount: state.directReceipts.length,
+      cycleReceiptPresent: Boolean(state.cycle.rawReceipt),
+      engineCycleReceiptPresent: Boolean(state.cycle.rawReceipt),
+      cycleRunning: state.cycle.running,
+      cycleRequested: state.cycle.requested,
+      cycleExecuted: state.cycle.executed,
+      engineCycleStatus: rendering ? rendering.engineCycleStatus : null,
+      engineCycleTerminalClass: rendering ? rendering.engineCycleTerminalClass : null,
+      engineExactNineValidated: rendering ? rendering.engineExactNineValidated : null,
+      returnedReceiptMappingComplete: rendering ? rendering.returnedReceiptMappingComplete : false,
+      logicalMappingComplete: rendering ? rendering.logicalMappingComplete : false,
+      logicalMappingScope: rendering ? rendering.logicalMappingScope : "RETURNED_RECEIPTS_ONLY",
+      localDomUpdateComplete: local ? local.localDomUpdateComplete : false,
+      domSynchronizationComplete: local ? local.localDomUpdateComplete : false,
+      domSynchronizationScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
+      cycleChamberSynchronized: null,
+      cycleChamberSynchronizationOwner: "INDEX_CONTROL_BRIDGE",
+      familySynchronizationCertified: false,
+      mappedReceiptCount: rendering ? rendering.mappedReceiptCount : 0,
+      unmappedReceiptCount: rendering ? rendering.unmappedReceiptCount : 0,
+      duplicateCoordinateCount: rendering ? rendering.duplicateCoordinateCount : 0,
+      coordinateConflictCount: rendering ? rendering.coordinateConflictCount : 0,
+      unresolvedDeclarationCount: rendering ? rendering.unresolvedDeclarationCount : 0,
+      renderedPositions: rendering ? rendering.renderedPositions.slice() : [],
+      notReachedPositions: rendering ? rendering.notReachedPositions.slice() : [],
+      missingCycleTargets: local ? local.missingTargetIds.slice() : CYCLE_TARGET_IDS.slice(),
+      missingStationPositions: local ? local.missingStationPositions.slice() : STATIONS.map(function (s) { return s.position; }),
+      cycleButtonLockReleased: state.cycle.running === false && state.target.navigationPending === false,
+      cycleRenderedAt: state.cycle.renderedAt,
+      cycleRenderingReceipt: frozenClone(state.cycle.renderingReceipt),
+      normalizedReceiptCount: state.normalizedReceipts.length,
+      visibleReceiptCount: state.visibleReceipts.length,
+      receiptFilter: state.ui.receiptFilter,
+      actionCount: state.actionCount,
+      clickCount: state.clickCount,
+      createReportClickCount: state.createReportClickCount,
+      errorCount: state.errorCount,
+      lastAction: frozenClone(state.lastAction),
+      lastError: frozenClone(state.lastError),
+      commandLifecycle: ["OBSERVE", "CONTEXT", "EXPOSE_TARGET", "PREPARE_TARGET", "VERIFY_TARGET", "INVOKE", "RECEIVE", "COMMIT", "RENDER", "ENABLE", "RECEIPT"],
+      newsAuthority: { direction: "SOUTH", commandHandoff: "F34", restitution: "F55" },
+      presentationStationMap: STATIONS,
+      requirements: REQUIREMENTS,
+      relationalCertificationOwner: "INDEX_CONTROL_BRIDGE",
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso()
+    });
   }
 
   function getPublicState() {
     return frozenClone({
-      contract:
-        CONTRACT,
-
-      previousContract:
-        PREVIOUS_CONTRACT,
-
-      version:
-        VERSION,
-
-      file:
-        FILE,
-
-      authority:
-        AUTHORITY,
-
-      initialized:
-        state.initialized,
-
-      initializedAt:
-        state.initializedAt,
-
-      engine:
-        state.engine,
-
-      inspectionLane:
-        state.inspectionLane,
-
-      controls:
-        state.controls,
-
-      ui:
-        state.ui,
-
-      target:
-        state.target,
-
-      report:
-        state.report,
-
-      directReceipts:
-        state.directReceipts,
-
-      cycleReceipt:
-        state.cycle.rawReceipt,
-
-      cycle:
-        state.cycle,
-
-      activeCycleRequest: {
-        present:
-          hasActiveCycleRequest(),
-        createdAt:
-          activeCycleRequest.createdAt
-      },
-
-      normalizedReceipts:
-        state.normalizedReceipts,
-
-      actionCount:
-        state.actionCount,
-
-      clickCount:
-        state.clickCount,
-
-      createReportClickCount:
-        state.createReportClickCount,
-
-      distributedExecutionCount:
-        state.distributedExecutionCount,
-
-      errorCount:
-        state.errorCount,
-
-      lastAction:
-        state.lastAction,
-
-      lastError:
-        state.lastError,
-
-      requirements:
-        CONTROL_REQUIREMENTS
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
+      authority: AUTHORITY,
+      initialized: state.initialized,
+      initializedAt: state.initializedAt,
+      engine: state.engine,
+      inspectionLane: state.inspectionLane,
+      controls: state.controls,
+      ui: state.ui,
+      target: state.target,
+      report: state.report,
+      directReceipts: state.directReceipts,
+      cycleReceipt: state.cycle.rawReceipt,
+      cycle: state.cycle,
+      activeCycleRequest: { present: hasActiveCycle(), createdAt: activeCycle.createdAt },
+      normalizedReceipts: state.normalizedReceipts,
+      actionCount: state.actionCount,
+      clickCount: state.clickCount,
+      createReportClickCount: state.createReportClickCount,
+      distributedExecutionCount: state.distributedExecutionCount,
+      errorCount: state.errorCount,
+      lastAction: state.lastAction,
+      lastError: state.lastError,
+      requirements: REQUIREMENTS
     });
   }
 
   function publishApi() {
-    var api =
-      Object.freeze({
-        CONTRACT:
-          CONTRACT,
-
-        contract:
-          CONTRACT,
-
-        PREVIOUS_CONTRACT:
-          PREVIOUS_CONTRACT,
-
-        previousContract:
-          PREVIOUS_CONTRACT,
-
-        VERSION:
-          VERSION,
-
-        version:
-          VERSION,
-
-        FILE:
-          FILE,
-
-        file:
-          FILE,
-
-        AUTHORITY:
-          AUTHORITY,
-
-        authority:
-          AUTHORITY,
-
-        STATUS:
-          "READY",
-
-        status:
-          "READY",
-
-        createReport:
-          createReport,
-
-        runDirectCheck:
-          runDirectCheck,
-
-        runNineCycle:
-          runNineCycle,
-
-        viewCurrentReport:
-          viewCurrentReport,
-
-        copyReadableReport:
-          copyReadableReport,
-
-        copyPacketReport:
-          copyPacketReport,
-
-        copyRawReport:
-          copyRawReport,
-
-        executeDistributedReportCommand:
-          executeDistributedReportCommand,
-
-        applyCommandContext:
-          applyCommandContext,
-
-        openReceiptChamber:
-          openReceiptChamber,
-
-        openArchiveChamber:
-          openArchiveChamber,
-
-        addReportToArchive:
-          addReportToArchive,
-
-        createDeepArchive:
-          createDeepArchive,
-
-        resetCurrentReport:
-          resetCurrentReport,
-
-        resetWorkbench:
-          resetWorkbench,
-
-        selectCategory:
-          selectCategory,
-
-        selectAudit:
-          selectAudit,
-
-        selectParticipant:
-          selectParticipant,
-
-        selectReportMode:
-          selectReportModeLocal,
-
-        selectObservationLens:
-          selectObservationLensLocal,
-
-        selectInstrumentChamber:
-          selectInstrumentChamberLocal,
-
-        setTargetVisible:
-          setTargetVisible,
-
-        setTargetExpanded:
-          setTargetExpanded,
-
-        inspectTargetFrame:
-          inspectTargetFrame,
-
-        ensureTargetReady:
-          ensureTargetReady,
-
-        reloadTargetFrame:
-          reloadTargetFrame,
-
-        applyReceiptFilter:
-          applyReceiptFilter,
-
-        selectReceipt:
-          selectReceipt,
-
-        inspectControls:
-          inspectControls,
-
-        inspectDistributedCommands:
-          inspectDistributedCommands,
-
-        inspectInspectionLane:
-          inspectInspectionLane,
-
-        collectReceiptFamilies:
-          collectReceiptFamilies,
-
-        refreshReceiptInventory:
-          refreshReceiptInventory,
-
-        resolveEngine:
-          resolveEngine,
-
-        closeAllSelectors:
-          closeAllSelectors,
-
-        renderCycleChamber:
-          renderCycleChamber,
-
-        refreshCycleChamber:
-          refreshCycleChamber,
-
-        getState:
-          getPublicState,
-
-        getCurrentReport:
-          function getCurrentReport() {
-            return frozenClone(
-              state.report.current
-            );
-          },
-
-        getCurrentReportReceipt:
-          function getCurrentReportReceipt() {
-            return frozenClone(
-              state.report.receipt
-            );
-          },
-
-        getCurrentCycleReceipt:
-          function getCurrentCycleReceipt() {
-            return frozenClone(
-              state.cycle.rawReceipt
-            );
-          },
-
-        getCycleRenderingState:
-          function getCycleRenderingState() {
-            return frozenClone(
-              state.cycle.rendering
-            );
-          },
-
-        getTargetLifecycleState:
-          function getTargetLifecycleState() {
-            return frozenClone(
-              state.target
-            );
-          },
-
-        getNormalizedReceipts:
-          function getNormalizedReceipts() {
-            return frozenClone(
-              state.normalizedReceipts
-            );
-          },
-
-        getRequirements:
-          function getRequirements() {
-            return frozenClone(
-              CONTROL_REQUIREMENTS
-            );
-          },
-
-        getReceipt:
-          function getReceipt() {
-            return frozenClone(
-              root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT ||
-              null
-            );
-          }
-      });
-
-    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL =
-      api;
-
-    if (
-      !root.AUDRALIA ||
-      typeof root.AUDRALIA !== "object"
-    ) {
-      root.AUDRALIA = {};
-    }
-
-    root.AUDRALIA.dropWithReadControlPanel =
-      api;
-
-    root.AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS =
-      CONTROL_REQUIREMENTS;
-
-    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_LOADED__ =
-      true;
-
-    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_CONTRACT__ =
-      CONTRACT;
-
-    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_VERSION__ =
-      VERSION;
+    var api = Object.freeze({
+      CONTRACT: CONTRACT,
+      contract: CONTRACT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      VERSION: VERSION,
+      version: VERSION,
+      FILE: FILE,
+      file: FILE,
+      AUTHORITY: AUTHORITY,
+      authority: AUTHORITY,
+      STATUS: "READY",
+      status: "READY",
+      createReport: createReport,
+      runDirectCheck: runDirectCheck,
+      runNineCycle: runNineCycle,
+      viewCurrentReport: viewCurrentReport,
+      copyReadableReport: copyReadableReport,
+      copyPacketReport: copyPacketReport,
+      copyRawReport: copyRawReport,
+      executeDistributedReportCommand: executeDistributedReportCommand,
+      applyCommandContext: applyCommandContext,
+      openReceiptChamber: openReceiptChamber,
+      openArchiveChamber: openArchiveChamber,
+      addReportToArchive: addReportToArchive,
+      createDeepArchive: createDeepArchive,
+      resetCurrentReport: function () { return resetCurrentReportLocal({ record: true, notify: true }); },
+      resetWorkbench: resetWorkbench,
+      selectCategory: selectCategory,
+      selectAudit: selectAudit,
+      selectParticipant: selectParticipant,
+      selectReportMode: selectReportModeLocal,
+      selectObservationLens: selectObservationLensLocal,
+      selectInstrumentChamber: selectInstrumentChamberLocal,
+      setTargetVisible: setTargetVisible,
+      setTargetExpanded: setTargetExpanded,
+      inspectTargetFrame: inspectTargetFrame,
+      ensureTargetReady: ensureTargetReady,
+      reloadTargetFrame: reloadTargetFrame,
+      applyReceiptFilter: applyReceiptFilter,
+      selectReceipt: selectReceipt,
+      inspectControls: inspectControls,
+      inspectDistributedCommands: inspectDistributedCommands,
+      inspectInspectionLane: inspectInspectionLane,
+      collectReceiptFamilies: function () { return frozenClone(collectReceiptFamilies()); },
+      refreshReceiptInventory: refreshReceiptInventory,
+      resolveEngine: resolveEngine,
+      closeAllSelectors: closeAllSelectors,
+      renderCycleChamber: renderCommittedCycleChamber,
+      refreshCycleChamber: renderCommittedCycleChamber,
+      getState: getPublicState,
+      getCurrentReport: function () { return frozenClone(state.report.current); },
+      getCurrentReportReceipt: function () { return frozenClone(state.report.receipt); },
+      getCurrentCycleReceipt: function () { return frozenClone(state.cycle.rawReceipt); },
+      getCycleRenderingState: function () { return frozenClone(state.cycle.rendering); },
+      getTargetLifecycleState: function () { return frozenClone(state.target); },
+      getNormalizedReceipts: function () { return frozenClone(state.normalizedReceipts); },
+      getRequirements: function () { return frozenClone(REQUIREMENTS); },
+      getReceipt: function () { return frozenClone(root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT || null); }
+    });
+
+    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL = api;
+
+    if (!root.AUDRALIA || typeof root.AUDRALIA !== "object") root.AUDRALIA = {};
+    root.AUDRALIA.dropWithReadControlPanel = api;
+
+    root.AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS = REQUIREMENTS;
+
+    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_LOADED__ = true;
+    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_CONTRACT__ = CONTRACT;
+    root.__AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_VERSION__ = VERSION;
 
     return api;
   }
 
   function initializeLocalUiState() {
-    selectLeftOrbitLocal(
-      "audits"
-    );
+    selectLeftOrbitLocal("audits");
+    selectReportModeLocal("read");
+    selectObservationLensLocal("target");
+    selectInstrumentChamberLocal("cycle");
 
-    selectReportModeLocal(
-      "read"
-    );
+    state.ui.targetVisible = false;
+    state.ui.targetExpanded = false;
 
-    selectObservationLensLocal(
-      "target"
-    );
-
-    selectInstrumentChamberLocal(
-      "cycle"
-    );
-
-    state.ui.targetVisible =
-      false;
-
-    state.ui.targetExpanded =
-      false;
-
-    var targetButton =
-      byId("toggleObservationTarget");
-
-    if (targetButton) {
-      targetButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-      targetButton.textContent =
-        "Show Target";
+    if (byId("toggleObservationTarget")) {
+      byId("toggleObservationTarget").setAttribute("aria-expanded", "false");
+      byId("toggleObservationTarget").textContent = "Show Target";
     }
 
     setTargetExpanded(false);
+    state.ui.receiptFilter = "all";
 
-    state.ui.receiptFilter =
-      "all";
-
-    inspectTargetFrame({
-      reason:
-        "INITIAL_TARGET_INSPECTION"
-    });
-
+    inspectTargetFrame({ reason: "INITIAL_TARGET_INSPECTION" });
     renderCommittedCycleChamber();
   }
 
   function init() {
-    if (state.initialized) {
-      return;
-    }
+    if (state.initialized) return;
 
-    state.initialized =
-      true;
-
-    state.initializedAt =
-      nowIso();
+    state.initialized = true;
+    state.initializedAt = nowIso();
 
     bindEvents();
     publishApi();
@@ -9249,83 +2717,36 @@
     inspectInspectionLane();
     inspectControls();
     renderEngineState();
-    refreshReceiptInventory();
+    refreshReceiptInventory({ publish: false });
     updateDistributedCommandAvailability();
     publishReceipt();
 
-    recordAction(
-      "initialize",
-      {
-        delegatedEventsActive:
-          state.controls.delegatedEventsActive,
-        createReportControlPresent:
-          state.controls.createReportPresent,
-        distributedDeclarationCount:
-          state.controls.distributedDeclarationCount,
-        inspectionLanePresent:
-          state.inspectionLane.resolved,
-        engineReady:
-          state.engine.ready,
-        normalizedReceiptCount:
-          state.normalizedReceipts.length,
-        targetLifecycle:
-          state.target.lifecycleClass,
-        targetFramePresent:
-          state.target.framePresent,
-        targetRouteMatched:
-          state.target.routeMatched,
-        targetVisible:
-          state.ui.targetVisible,
-        observationLens:
-          state.ui.observationLens,
-        localCycleTargetsMissing:
-          state.cycle.localDomEvidence
-            ? state.cycle.localDomEvidence.missingTargetIds
-            : CYCLE_TARGET_IDS.slice(),
-        localCycleStationRowsMissing:
-          state.cycle.localDomEvidence
-            ? state.cycle.localDomEvidence.missingStationPositions
-            : CANONICAL_CYCLE_STATIONS.map(function mapPosition(station) {
-                return station.position;
-              }),
-        relationalCertificationOwner:
-          "INDEX_CONTROL_BRIDGE"
-      }
-    );
+    recordAction("initialize", {
+      delegatedEventsActive: state.controls.delegatedEventsActive,
+      createReportControlPresent: state.controls.createReportPresent,
+      distributedDeclarationCount: state.controls.distributedDeclarationCount,
+      inspectionLanePresent: state.inspectionLane.resolved,
+      engineReady: state.engine.ready,
+      normalizedReceiptCount: state.normalizedReceipts.length,
+      targetLifecycle: state.target.lifecycleClass,
+      targetFramePresent: state.target.framePresent,
+      targetRouteMatched: state.target.routeMatched,
+      targetVisible: state.ui.targetVisible,
+      observationLens: state.ui.observationLens,
+      localCycleTargetsMissing: state.cycle.localDomEvidence ? state.cycle.localDomEvidence.missingTargetIds : CYCLE_TARGET_IDS.slice(),
+      localCycleStationRowsMissing: state.cycle.localDomEvidence ? state.cycle.localDomEvidence.missingStationPositions : STATIONS.map(function (s) { return s.position; }),
+      relationalCertificationOwner: "INDEX_CONTROL_BRIDGE"
+    });
 
-    toast(
-      state.engine.ready
-        ? "Audralia distributed control panel bound."
-        : "Control panel bound; fallback READ path active.",
-      state.engine.ready
-        ? "READY"
-        : "HELD"
-    );
+    toast(state.engine.ready ? "Audralia distributed control panel bound." : "Control panel bound; fallback READ path active.", state.engine.ready ? "READY" : "HELD");
   }
 
-  var existing =
-    root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL;
+  var existing = root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL;
 
-  if (
-    existing &&
-    (
-      existing.CONTRACT === CONTRACT ||
-      existing.contract === CONTRACT
-    )
-  ) {
-    return;
-  }
+  if (existing && (existing.CONTRACT === CONTRACT || existing.contract === CONTRACT)) return;
 
-  if (
-    doc.readyState === "loading"
-  ) {
-    doc.addEventListener(
-      "DOMContentLoaded",
-      init,
-      {
-        once: true
-      }
-    );
+  if (doc.readyState === "loading") {
+    doc.addEventListener("DOMContentLoaded", init, { once: true });
   } else {
     init();
   }

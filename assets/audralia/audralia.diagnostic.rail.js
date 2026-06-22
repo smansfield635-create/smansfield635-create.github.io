@@ -1,24 +1,21 @@
 // /assets/audralia/audralia.diagnostic.rail.js
-// AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1
+// AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v2
 // Full-file replacement.
-// Quiet-load, dependency-free, 3D-native terminal diagnostic rail.
-// Implements Position 9 for the Audralia nine-cycle diagnostic conductor.
-// NORTH_RETURN terminal synthesis.
-// Consumes complete or interrupted cycle ledger.
-// Owns final diagnostic synthesis, READ classification, first-held/failed/conflict/error reporting,
-// restitution summary, and next-action recommendation.
-// Does not mutate, repair, authorize production, validate engine readiness, or claim visual pass.
+// Quiet-load, dependency-free, 3D-native diagnostic rail.
+// Position 9 terminal synthesis + engine bridge.
+// Bridges /assets/audralia diagnostic track with runtime/product engine receipts.
+// Does not mutate, repair, authorize production, validate readiness, render, or claim visual pass.
 
-(function audraliaDiagnosticRailTerminalSynthesisF893D(global) {
+(function audraliaDiagnosticRailEngineBridgeTerminalSynthesisF893D(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1";
-  var RECEIPT = "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_RECEIPT_v1";
-  var VERSION = "1.0.0";
-  var VERSION_LABEL =
-    "2026-06-14.audralia-diagnostic-rail-terminal-synthesis-f89-3d-v1";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v2";
+  var RECEIPT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_RECEIPT_v2";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1";
+  var VERSION = "2.0.0";
+  var VERSION_LABEL = "2026-06-22.audralia-diagnostic-rail-engine-bridge-terminal-synthesis-f89-3d-v2";
   var FILE = "/assets/audralia/audralia.diagnostic.rail.js";
 
   var STATION_ID = "RAIL_TERMINAL_SYNTHESIS";
@@ -28,6 +25,36 @@
 
   var REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v1";
   var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
+
+  var AUDRALIA_FILES = Object.freeze({
+    northConductor: "/assets/audralia/audralia.diagnostic.north.conductor.js",
+    east: "/assets/audralia/audralia.diagnostic.east.js",
+    west: "/assets/audralia/audralia.diagnostic.west.js",
+    south: "/assets/audralia/audralia.diagnostic.south.js",
+    rail: FILE,
+    planet: "/assets/audralia/audralia.planet.js",
+    probeNorth: "/assets/audralia/audralia.diagnostic.probe.north.js",
+    probeEast: "/assets/audralia/audralia.diagnostic.probe.east.js",
+    probeWest: "/assets/audralia/audralia.diagnostic.probe.west.js",
+    probeSouth: "/assets/audralia/audralia.diagnostic.probe.south.js",
+    probeCanvas: "/assets/audralia/audralia.diagnostic.probe.canvas.surface.js"
+  });
+
+  var ENGINE_FILES = Object.freeze({
+    runtimeNorth: "/assets/lab/runtime-table.js",
+    runtimeEast: "/assets/lab/runtime-table.east.js",
+    runtimeWest: "/assets/lab/runtime-table.west.js",
+    runtimeSouth: "/assets/lab/runtime-table.south.js",
+    productF34: "/assets/lab/product-engine.js",
+    expressionF55: "/assets/lab/product-engine.ue5-expression.js",
+    registryF89: "/assets/lab/product-engine.registry.js",
+    marketF144: "/assets/lab/product-engine.market.js",
+    dgbEngine: "/assets/engine/dgb.engine.js",
+    dgbContract: "/assets/engine/dgb.engine.contract.js",
+    dgbSubjects: "/assets/engine/dgb.engine.subjects.js",
+    worldEngine: "/assets/engine/diamond-gate-world-engine.js",
+    browserRender: "/assets/engine/diamond-gate-browser-render.js"
+  });
 
   var NO_CLAIMS = Object.freeze({
     engineAuthority: false,
@@ -49,7 +76,9 @@
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webGPU: false
+    webGPU: false,
+    publicSuperiorityClaim: false,
+    publicComparisonClaimAllowed: false
   });
 
   var LIMITS = Object.freeze({
@@ -74,6 +103,24 @@
     return proto === Object.prototype || proto === null;
   }
 
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+
+  function safeString(value, fallback) {
+    if (fallback === undefined) fallback = null;
+    if (value === undefined || value === null) return fallback;
+    return String(value).slice(0, LIMITS.maxStringLength);
+  }
+
+  function safeBool(value, fallback) {
+    if (fallback === undefined) fallback = false;
+    if (typeof value === "boolean") return value;
+    if (value === "true" || value === "1" || value === 1) return true;
+    if (value === "false" || value === "0" || value === 0) return false;
+    return fallback;
+  }
+
   function deepFreeze(value, seen) {
     if (!value || typeof value !== "object") return value;
     var memory = seen || [];
@@ -88,15 +135,9 @@
     return value;
   }
 
-  function issue(code, path, detail) {
-    return {
-      code: String(code || "ISSUE"),
-      path: String(path || "$"),
-      detail: String(detail || code || "ISSUE").slice(0, 512)
-    };
-  }
-
-  function clonePlain(value, seen) {
+  function clonePlain(value, seen, depth) {
+    if (depth === undefined) depth = 0;
+    if (depth > LIMITS.maxDepth) return null;
     if (value === null || typeof value === "string" || typeof value === "boolean") return value;
     if (isFiniteNumber(value)) return value;
     if (
@@ -116,15 +157,14 @@
 
     if (Array.isArray(value)) {
       return value.slice(0, LIMITS.maxArrayLength).map(function map(entry) {
-        return clonePlain(entry, memory);
+        return clonePlain(entry, memory, depth + 1);
       });
     }
 
     var output = {};
     Object.keys(value).slice(0, LIMITS.maxObjectKeys).forEach(function each(key) {
-      var safeKey = String(key).slice(0, LIMITS.maxStringLength);
-      try { output[safeKey] = clonePlain(value[key], memory); }
-      catch (_error) { output[safeKey] = null; }
+      try { output[String(key).slice(0, LIMITS.maxStringLength)] = clonePlain(value[key], memory, depth + 1); }
+      catch (_error) { output[String(key)] = null; }
     });
 
     return output;
@@ -145,7 +185,7 @@
   }
 
   function hash(value) {
-    var text = stableStringify(clonePlain(value, []));
+    var text = stableStringify(clonePlain(value, [], 0));
     var h = 0x811c9dc5;
     for (var i = 0; i < text.length; i += 1) {
       h ^= text.charCodeAt(i);
@@ -155,10 +195,77 @@
     return "fnv1a32:" + ("00000000" + h.toString(16)).slice(-8);
   }
 
-  function safeString(value, fallback) {
-    if (fallback === undefined) fallback = null;
-    if (typeof value !== "string") return fallback;
-    return value.slice(0, LIMITS.maxStringLength);
+  function issue(code, path, detail) {
+    return {
+      code: safeString(code || "ISSUE", "ISSUE"),
+      path: safeString(path || "$", "$"),
+      detail: safeString(detail || code || "ISSUE", "ISSUE").slice(0, 512)
+    };
+  }
+
+  function readPath(path) {
+    var parts = String(path || "").split(".");
+    var cursor = root;
+    for (var i = 0; i < parts.length; i += 1) {
+      if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
+      cursor = cursor[parts[i]];
+    }
+    return cursor || null;
+  }
+
+  function firstGlobal(names) {
+    for (var i = 0; i < names.length; i += 1) {
+      var found = readPath(names[i]);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  function readReceipt(authority) {
+    if (!authority || typeof authority !== "object") return {};
+
+    try {
+      if (isFunction(authority.getReceiptLight)) {
+        var light = authority.getReceiptLight();
+        if (light && typeof light === "object") return clonePlain(light, [], 0) || {};
+      }
+
+      if (isFunction(authority.getReceipt)) {
+        var full = authority.getReceipt();
+        if (full && typeof full === "object") return clonePlain(full, [], 0) || {};
+      }
+    } catch (error) {
+      return { error: error && error.message ? String(error.message) : String(error) };
+    }
+
+    if (authority.receipt || authority.contract || authority.version || authority.file) {
+      return clonePlain(authority, [], 0) || {};
+    }
+
+    return {};
+  }
+
+  function detectForbiddenClaim(packet) {
+    var text;
+    try { text = JSON.stringify(packet || {}); }
+    catch (_error) { text = String(packet || ""); }
+
+    return Boolean(
+      safeBool(packet && packet.generatedImage, false) ||
+      safeBool(packet && packet.graphicBox, false) ||
+      safeBool(packet && packet.webGL, false) ||
+      safeBool(packet && packet.webGPU, false) ||
+      safeBool(packet && packet.visualPassClaimed, false) ||
+      safeBool(packet && packet.finalVisualPassClaimed, false) ||
+      safeBool(packet && packet.publicSuperiorityClaim, false) ||
+      safeBool(packet && packet.publicComparisonClaimAllowed, false) ||
+      text.indexOf('"generatedImage":true') !== -1 ||
+      text.indexOf('"graphicBox":true') !== -1 ||
+      text.indexOf('"webGL":true') !== -1 ||
+      text.indexOf('"webGPU":true') !== -1 ||
+      text.indexOf('"visualPassClaimed":true') !== -1 ||
+      text.indexOf('"publicSuperiorityClaim":true') !== -1
+    );
   }
 
   function validatePlainData(value) {
@@ -166,7 +273,6 @@
 
     function walk(item, path, depth, seen) {
       if (issues.length >= LIMITS.maxIssues) return;
-
       if (depth > LIMITS.maxDepth) {
         issues.push(issue("DEPTH_LIMIT_EXCEEDED", path));
         return;
@@ -178,14 +284,10 @@
         item === undefined ||
         typeof item === "function" ||
         typeof item === "symbol" ||
-        typeof item === "bigint"
+        typeof item === "bigint" ||
+        typeof item === "number"
       ) {
         issues.push(issue("NON_PLAIN_VALUE_FORBIDDEN", path));
-        return;
-      }
-
-      if (typeof item === "number") {
-        issues.push(issue("NONFINITE_NUMBER_FORBIDDEN", path));
         return;
       }
 
@@ -211,7 +313,6 @@
           issues.push(issue("ARRAY_LIMIT_EXCEEDED", path));
           return;
         }
-
         item.forEach(function eachArray(entry, index) {
           walk(entry, path + "[" + index + "]", depth + 1, seen);
         });
@@ -244,10 +345,8 @@
   }
 
   function validateStationRequest(request) {
-    var issues = [];
     var plain = validatePlainData(request);
-
-    if (!plain.passed) issues = issues.concat(plain.issues);
+    var issues = plain.issues.slice();
 
     if (!isPlainObject(request)) {
       issues.push(issue("REQUEST_OBJECT_REQUIRED", "$"));
@@ -258,9 +357,7 @@
     if (request.position !== CYCLE_POSITION) issues.push(issue("REQUEST_POSITION_MISMATCH", "$.position"));
     if (request.stationId !== STATION_ID) issues.push(issue("REQUEST_STATION_ID_MISMATCH", "$.stationId"));
     if (!safeString(request.cycleId, "")) issues.push(issue("REQUEST_CYCLE_ID_REQUIRED", "$.cycleId"));
-    if (!Array.isArray(request.priorStationReceipts)) {
-      issues.push(issue("PRIOR_STATION_RECEIPTS_ARRAY_REQUIRED", "$.priorStationReceipts"));
-    }
+    if (!Array.isArray(request.priorStationReceipts)) issues.push(issue("PRIOR_STATION_RECEIPTS_ARRAY_REQUIRED", "$.priorStationReceipts"));
 
     return deepFreeze({
       passed: issues.length === 0,
@@ -282,14 +379,10 @@
   }
 
   function findReceipt(request, stationId) {
-    var receipts = Array.isArray(request.priorStationReceipts)
-      ? request.priorStationReceipts
-      : [];
-
+    var receipts = Array.isArray(request && request.priorStationReceipts) ? request.priorStationReceipts : [];
     for (var i = receipts.length - 1; i >= 0; i -= 1) {
       if (isPlainObject(receipts[i]) && receipts[i].stationId === stationId) return receipts[i];
     }
-
     return null;
   }
 
@@ -301,7 +394,7 @@
   }
 
   function summarizeReceipts(request) {
-    var receipts = Array.isArray(request.priorStationReceipts)
+    var receipts = Array.isArray(request && request.priorStationReceipts)
       ? request.priorStationReceipts.filter(isPlainObject)
       : [];
 
@@ -316,11 +409,6 @@
     var conflictCount = receipts.filter(function count(r) { return r.status === "CONFLICT"; }).length;
     var errorCount = receipts.filter(function count(r) { return r.status === "ERROR"; }).length;
 
-    var firstHeld = firstByStatus(receipts, "HOLD");
-    var firstFailed = firstByStatus(receipts, "FAIL");
-    var firstConflict = firstByStatus(receipts, "CONFLICT");
-    var firstError = firstByStatus(receipts, "ERROR");
-
     var terminalClass = "COMPLETE_DIAGNOSTIC_PATH";
     if (errorCount) terminalClass = "ERROR_INTERRUPTED_DIAGNOSTIC_PATH";
     else if (conflictCount) terminalClass = "CONFLICT_INTERRUPTED_DIAGNOSTIC_PATH";
@@ -334,7 +422,7 @@
     if (terminalClass.indexOf("ERROR") === 0) reportability = "REPORTABLE_ERROR_DIAGNOSTIC";
 
     return deepFreeze({
-      receipts: clonePlain(receipts, []),
+      receipts: clonePlain(receipts, [], 0),
       receiptCount: receipts.length,
       missingStations: missing,
       passCount: passCount,
@@ -342,10 +430,10 @@
       failCount: failCount,
       conflictCount: conflictCount,
       errorCount: errorCount,
-      firstHeld: clonePlain(firstHeld, []),
-      firstFailed: clonePlain(firstFailed, []),
-      firstConflict: clonePlain(firstConflict, []),
-      firstError: clonePlain(firstError, []),
+      firstHeld: clonePlain(firstByStatus(receipts, "HOLD"), [], 0),
+      firstFailed: clonePlain(firstByStatus(receipts, "FAIL"), [], 0),
+      firstConflict: clonePlain(firstByStatus(receipts, "CONFLICT"), [], 0),
+      firstError: clonePlain(firstByStatus(receipts, "ERROR"), [], 0),
       terminalClass: terminalClass,
       reportability: reportability
     });
@@ -361,10 +449,7 @@
   }
 
   function ownerFromReceipt(receipt) {
-    if (isPlainObject(receipt) && isPlainObject(receipt.recommendedOwner)) {
-      return clonePlain(receipt.recommendedOwner, []);
-    }
-
+    if (isPlainObject(receipt) && isPlainObject(receipt.recommendedOwner)) return clonePlain(receipt.recommendedOwner, [], 0);
     return {
       ownerType: "UNKNOWN",
       subjectId: null,
@@ -374,9 +459,94 @@
     };
   }
 
+  function engineAuthorities() {
+    return [
+      { id: "RUNTIME_NORTH", file: ENGINE_FILES.runtimeNorth, names: ["LAB_RUNTIME_TABLE", "LAB_RUNTIME_TABLE_NORTH", "RUNTIME_TABLE", "DEXTER_LAB.runtimeTable", "HEARTH.runtimeTable"] },
+      { id: "RUNTIME_EAST_F3", file: ENGINE_FILES.runtimeEast, names: ["LAB_RUNTIME_TABLE_EAST", "LAB_RUNTIME_TABLE_EAST_F3", "RUNTIME_TABLE_EAST", "EAST_INTAKE_VALVE", "DEXTER_LAB.runtimeTableEast", "HEARTH.runtimeTableEast"] },
+      { id: "RUNTIME_WEST_F5", file: ENGINE_FILES.runtimeWest, names: ["LAB_RUNTIME_TABLE_WEST", "LAB_RUNTIME_TABLE_WEST_F5", "RUNTIME_TABLE_WEST", "WEST_PRESSURE_VALVE", "DEXTER_LAB.runtimeTableWest", "HEARTH.runtimeTableWest"] },
+      { id: "RUNTIME_SOUTH_F8", file: ENGINE_FILES.runtimeSouth, names: ["LAB_RUNTIME_TABLE_SOUTH", "LAB_RUNTIME_TABLE_SOUTH_F8", "RUNTIME_TABLE_SOUTH", "SOUTH_PROOF_RETURN", "DEXTER_LAB.runtimeTableSouth", "HEARTH.runtimeTableSouth"] },
+      { id: "PRODUCT_F34", file: ENGINE_FILES.productF34, names: ["LAB_PRODUCT_ENGINE", "LAB_PRODUCT_ENGINE_F34", "PRODUCT_ENGINE", "PRODUCT_ENGINE_F34", "DEXTER_LAB.productEngine", "HEARTH.productEngine"] },
+      { id: "EXPRESSION_F55", file: ENGINE_FILES.expressionF55, names: ["LAB_PRODUCT_ENGINE_UE5_EXPRESSION", "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55", "PRODUCT_ENGINE_UE5_EXPRESSION", "DEXTER_LAB.productEngineUE5Expression", "HEARTH.productEngineUE5Expression"] },
+      { id: "REGISTRY_F89", file: ENGINE_FILES.registryF89, names: ["LAB_PRODUCT_ENGINE_REGISTRY", "LAB_PRODUCT_ENGINE_REGISTRY_F89", "PRODUCT_ENGINE_REGISTRY", "PROJECT_REGISTRY_CONDUCTOR", "DEXTER_LAB.productEngineRegistry", "HEARTH.productEngineRegistry"] },
+      { id: "MARKET_F144", file: ENGINE_FILES.marketF144, names: ["LAB_PRODUCT_ENGINE_MARKET", "LAB_PRODUCT_ENGINE_MARKET_F144", "PRODUCT_ENGINE_MARKET", "MARKET_F144_READINESS_CONDUCTOR", "DEXTER_LAB.productEngineMarket", "HEARTH.productEngineMarket"] },
+      { id: "DGB_ENGINE", file: ENGINE_FILES.dgbEngine, names: ["DGB_ENGINE", "DIAMOND_GATE_BRIDGE_ENGINE", "DEXTER_LAB.dgbEngine", "HEARTH.dgbEngine"] },
+      { id: "DGB_CONTRACT", file: ENGINE_FILES.dgbContract, names: ["DGB_ENGINE_CONTRACT", "DIAMOND_GATE_ENGINE_CONTRACT", "DEXTER_LAB.dgbEngineContract", "HEARTH.dgbEngineContract"] },
+      { id: "DGB_SUBJECTS", file: ENGINE_FILES.dgbSubjects, names: ["DGB_ENGINE_SUBJECTS", "DIAMOND_GATE_ENGINE_SUBJECTS", "DEXTER_LAB.dgbEngineSubjects", "HEARTH.dgbEngineSubjects"] },
+      { id: "WORLD_ENGINE", file: ENGINE_FILES.worldEngine, names: ["DIAMOND_GATE_WORLD_ENGINE", "DGB_WORLD_ENGINE", "DEXTER_LAB.worldEngine", "HEARTH.worldEngine"] },
+      { id: "BROWSER_RENDER", file: ENGINE_FILES.browserRender, names: ["DIAMOND_GATE_BROWSER_RENDER", "DGB_BROWSER_RENDER", "DEXTER_LAB.browserRender", "HEARTH.browserRender"] }
+    ];
+  }
+
+  function discoverEngineReceipts() {
+    var records = engineAuthorities().map(function map(def) {
+      var authority = firstGlobal(def.names);
+      var receipt = readReceipt(authority);
+      var present = Boolean(authority);
+      var forbidden = detectForbiddenClaim(receipt);
+
+      return {
+        id: def.id,
+        file: def.file,
+        present: present,
+        receiptObserved: Boolean(receipt && Object.keys(receipt).length),
+        contract: safeString(receipt.contract || receipt.CONTRACT || "", ""),
+        receipt: safeString(receipt.receipt || receipt.RECEIPT || "", ""),
+        version: safeString(receipt.version || receipt.VERSION || "", ""),
+        activeFibonacci: safeString(receipt.activeFibonacci || receipt.fibonacci || "", ""),
+        status: forbidden ? "FORBIDDEN_CLAIM" : present ? "OBSERVED" : "NOT_LOADED",
+        forbiddenClaimDetected: forbidden,
+        receiptHash: hash(receipt || {})
+      };
+    });
+
+    var presentCount = records.filter(function count(item) { return item.present; }).length;
+    var forbiddenCount = records.filter(function count(item) { return item.forbiddenClaimDetected; }).length;
+
+    return deepFreeze({
+      records: deepFreeze(records),
+      engineRecordCount: records.length,
+      enginePresentCount: presentCount,
+      engineMissingCount: records.length - presentCount,
+      forbiddenClaimCount: forbiddenCount,
+      bridgeStatus: forbiddenCount ? "BLOCKED_FORBIDDEN_CLAIM" : presentCount ? "OBSERVED_PARTIAL_OR_COMPLETE" : "NO_ENGINE_GLOBALS_OBSERVED",
+      hash: hash(records)
+    });
+  }
+
+  function buildBridgeReceipt(extra) {
+    var discovered = discoverEngineReceipts();
+    var receipt = {
+      contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      versionLabel: VERSION_LABEL,
+      file: FILE,
+      bridgeType: "AUDRALIA_DIAGNOSTIC_TRACK_TO_RUNTIME_AND_PRODUCT_ENGINE_BRIDGE",
+      stationId: STATION_ID,
+      cyclePosition: CYCLE_POSITION,
+      fibonacci: FIBONACCI,
+      news: NEWS,
+      audraliaFiles: AUDRALIA_FILES,
+      engineFiles: ENGINE_FILES,
+      discoveredEngines: discovered,
+      bridgeReadsOnly: true,
+      bridgeMutatesEngines: false,
+      bridgeAuthorizesReadiness: false,
+      bridgeAuthorizesProduction: false,
+      detail: clonePlain(extra || {}, [], 0),
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso()
+    };
+
+    receipt.bridgeHash = hash(receipt);
+    return deepFreeze(receipt);
+  }
+
   function executeCycleStation(request) {
     var validation = validateStationRequest(request);
     var summary = summarizeReceipts(request || {});
+    var engineBridge = discoverEngineReceipts();
 
     var primaryStop =
       summary.firstError ||
@@ -435,13 +605,21 @@
         id: "RAIL_READ_CLASSIFICATION",
         kind: "DERIVED",
         reportability: summary.reportability,
-        evidenceStatus:
-          status === "PASS" ? "ADMITTED_COMPLETE" : "LIMITED_OR_INTERRUPTED",
-        admissionStatus:
-          status === "PASS" ? "ADMITTED" : "HELD_OR_REJECTED",
+        evidenceStatus: status === "PASS" ? "ADMITTED_COMPLETE" : "LIMITED_OR_INTERRUPTED",
+        admissionStatus: status === "PASS" ? "ADMITTED" : "HELD_OR_REJECTED",
         diagnosticStatus: status,
         diagnosticPassProvesReady: false,
         railSynthesisProvesReadiness: false
+      },
+      {
+        id: "RAIL_ENGINE_BRIDGE_SUMMARY",
+        kind: "DERIVED",
+        bridgeStatus: engineBridge.bridgeStatus,
+        engineRecordCount: engineBridge.engineRecordCount,
+        enginePresentCount: engineBridge.enginePresentCount,
+        engineMissingCount: engineBridge.engineMissingCount,
+        forbiddenClaimCount: engineBridge.forbiddenClaimCount,
+        engineBridgeProvesReadiness: false
       },
       {
         id: "RAIL_RESTITUTION_SUMMARY",
@@ -459,77 +637,45 @@
       stationId: STATION_ID,
 
       contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
 
       status: status,
       completed: completed,
       handoffEligible: handoffEligible,
-
       summary: textSummary,
 
       observations: observations,
+      engineBridge: engineBridge,
 
       evidence: [
-        {
-          id: "RAIL_REQUEST_HASH",
-          kind: "DERIVED",
-          hash: hash(request || {})
-        },
-        {
-          id: "RAIL_LEDGER_HASH",
-          kind: "DERIVED",
-          hash: hash(summary.receipts)
-        },
-        {
-          id: "RAIL_SYNTHESIS_HASH",
-          kind: "DERIVED",
-          hash: hash(observations)
-        },
-        {
-          id: "RAIL_VALIDATION",
-          kind: "DERIVED",
-          passed: validation.passed,
-          issueCount: validation.issues.length
-        }
+        { id: "RAIL_REQUEST_HASH", kind: "DERIVED", hash: hash(request || {}) },
+        { id: "RAIL_LEDGER_HASH", kind: "DERIVED", hash: hash(summary.receipts) },
+        { id: "RAIL_SYNTHESIS_HASH", kind: "DERIVED", hash: hash(observations) },
+        { id: "RAIL_ENGINE_BRIDGE_HASH", kind: "DERIVED", hash: engineBridge.hash },
+        { id: "RAIL_VALIDATION", kind: "DERIVED", passed: validation.passed, issueCount: validation.issues.length }
       ],
 
       issues: validation.issues,
 
       firstHeldCoordinate:
         status === "HOLD"
-          ? (
-              primaryStop &&
-              primaryStop.firstHeldCoordinate
-                ? primaryStop.firstHeldCoordinate
-                : "F89:RAIL_TERMINAL_SYNTHESIS"
-            )
+          ? primaryStop && primaryStop.firstHeldCoordinate ? primaryStop.firstHeldCoordinate : "F89:RAIL_TERMINAL_SYNTHESIS"
           : null,
 
       firstFailedCoordinate:
         status === "FAIL"
-          ? (
-              primaryStop &&
-              primaryStop.firstFailedCoordinate
-                ? primaryStop.firstFailedCoordinate
-                : "F89:RAIL_TERMINAL_SYNTHESIS"
-            )
+          ? primaryStop && primaryStop.firstFailedCoordinate ? primaryStop.firstFailedCoordinate : "F89:RAIL_TERMINAL_SYNTHESIS"
           : null,
 
       firstConflictCoordinate:
         status === "CONFLICT"
-          ? (
-              primaryStop &&
-              primaryStop.firstConflictCoordinate
-                ? primaryStop.firstConflictCoordinate
-                : "F89:RAIL_TERMINAL_SYNTHESIS"
-            )
+          ? primaryStop && primaryStop.firstConflictCoordinate ? primaryStop.firstConflictCoordinate : "F89:RAIL_TERMINAL_SYNTHESIS"
           : null,
 
       recommendedOwner: owner,
-
-      generatedAt: nowIso(),
-      receiptHash: null,
 
       terminalSynthesis: {
         newsReturn: true,
@@ -541,7 +687,9 @@
         missingStations: summary.missingStations
       },
 
-      noClaims: NO_CLAIMS
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso(),
+      receiptHash: null
     };
 
     receipt.receiptHash = hash(receipt);
@@ -552,6 +700,7 @@
     var definition = {
       receipt: RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       versionLabel: VERSION_LABEL,
       file: FILE,
@@ -561,34 +710,41 @@
       news: NEWS,
       requestSchema: REQUEST_SCHEMA,
       receiptSchema: RECEIPT_SCHEMA,
+      role: "Position 9 terminal rail synthesis plus bridge between /assets/audralia diagnostic track and runtime/product engine receipts.",
+      quietLoad: true,
+      threeDimensionalNative: true,
+      northReturn: true,
+      engineBridge: true,
+      audraliaFiles: AUDRALIA_FILES,
+      engineFiles: ENGINE_FILES,
       exactInterface: [
         "CONTRACT",
+        "RECEIPT",
         "VERSION",
         "FILE",
         "STATION_ID",
         "CYCLE_POSITION",
         "getDefinitionReceipt",
-        "executeCycleStation"
+        "executeCycleStation",
+        "discoverEngineReceipts",
+        "buildBridgeReceipt",
+        "getStatus"
       ],
-      role:
-        "Position 9 terminal rail synthesis. NORTH_RETURN. READ classification, first-held/failed/conflict/error reporting, restitution summary, and next-action recommendation.",
-      quietLoad: true,
-      threeDimensionalNative: true,
-      northReturn: true,
       railSynthesisProvesReadiness: false,
       railSynthesisAuthorizesRepair: false,
-      noClaims: NO_CLAIMS
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso()
     };
 
     definition.definitionHash = hash(definition);
-    definition.generatedAt = nowIso();
-
     return deepFreeze(definition);
   }
 
   function getStatus() {
     return deepFreeze({
       contract: CONTRACT,
+      receipt: RECEIPT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       stationId: STATION_ID,
@@ -599,32 +755,7 @@
       loaded: true,
       readyForExplicitRegistration: true,
       threeDimensionalNative: true,
-      noClaims: NO_CLAIMS
-    });
-  }
-
-  function buildApi() {
-    return deepFreeze({
-      CONTRACT: CONTRACT,
-      RECEIPT: RECEIPT,
-      VERSION: VERSION,
-      VERSION_LABEL: VERSION_LABEL,
-      FILE: FILE,
-      STATION_ID: STATION_ID,
-      CYCLE_POSITION: CYCLE_POSITION,
-      FIBONACCI: FIBONACCI,
-      NEWS: NEWS,
-
-      getDefinitionReceipt: getDefinitionReceipt,
-      executeCycleStation: executeCycleStation,
-      getStatus: getStatus,
-
-      validateStationRequest: validateStationRequest,
-      clone: function exposedClone(value) {
-        return deepFreeze(clonePlain(value, []));
-      },
-      hash: hash,
-
+      engineBridge: true,
       noClaims: NO_CLAIMS
     });
   }
@@ -635,20 +766,51 @@
     return root[name];
   }
 
+  function buildApi() {
+    return deepFreeze({
+      CONTRACT: CONTRACT,
+      RECEIPT: RECEIPT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+      VERSION: VERSION,
+      VERSION_LABEL: VERSION_LABEL,
+      FILE: FILE,
+      STATION_ID: STATION_ID,
+      CYCLE_POSITION: CYCLE_POSITION,
+      FIBONACCI: FIBONACCI,
+      NEWS: NEWS,
+      AUDRALIA_FILES: AUDRALIA_FILES,
+      ENGINE_FILES: ENGINE_FILES,
+
+      getDefinitionReceipt: getDefinitionReceipt,
+      executeCycleStation: executeCycleStation,
+      getStatus: getStatus,
+
+      validateStationRequest: validateStationRequest,
+      discoverEngineReceipts: discoverEngineReceipts,
+      buildBridgeReceipt: buildBridgeReceipt,
+
+      clone: function exposedClone(value) {
+        return deepFreeze(clonePlain(value, [], 0));
+      },
+      hash: hash,
+
+      noClaims: NO_CLAIMS
+    });
+  }
+
   function publish(api) {
     if (!root || typeof root !== "object") return api;
 
     var existing = root.AUDRALIA_DIAGNOSTIC_RAIL;
-
-    if (existing && existing.CONTRACT !== CONTRACT) {
-      root.AUDRALIA_DIAGNOSTIC_RAIL_INSTALLATION_CONFLICT =
-        deepFreeze({
-          contract: CONTRACT,
-          file: FILE,
-          status: "CONFLICT",
-          reason: "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY",
-          generatedAt: nowIso()
-        });
+    if (existing && existing.CONTRACT && existing.CONTRACT !== CONTRACT && existing.CONTRACT !== PREVIOUS_CONTRACT) {
+      root.AUDRALIA_DIAGNOSTIC_RAIL_INSTALLATION_CONFLICT = deepFreeze({
+        contract: CONTRACT,
+        previousContract: PREVIOUS_CONTRACT,
+        file: FILE,
+        status: "CONFLICT",
+        reason: "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY",
+        generatedAt: nowIso()
+      });
       return api;
     }
 
@@ -658,10 +820,15 @@
     if (namespace) namespace.diagnosticRail = api;
 
     root.AUDRALIA_DIAGNOSTIC_RAIL_RECEIPT = getDefinitionReceipt();
+    root.AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_RECEIPT = buildBridgeReceipt();
 
     root.__AUDRALIA_DIAGNOSTIC_RAIL_LOADED__ = true;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_STATION_ID__ = STATION_ID;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_VERSION__ = VERSION;
+    root.__AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE__ = true;
+    root.__AUDRALIA_DIAGNOSTIC_RAIL_VISUAL_PASS_CLAIMED__ = false;
+    root.__AUDRALIA_DIAGNOSTIC_RAIL_WEBGL__ = false;
+    root.__AUDRALIA_DIAGNOSTIC_RAIL_PUBLIC_SUPERIORITY_CLAIM__ = false;
 
     return api;
   }

@@ -1,46 +1,55 @@
 // /assets/audralia/audralia.diagnostic.rail.js
-// AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v2
+// AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v3
 // Full-file replacement.
 // Quiet-load, dependency-free, 3D-native diagnostic rail.
 // Position 9 terminal synthesis + engine bridge.
-// Bridges /assets/audralia diagnostic track with runtime/product engine receipts.
+// Bridges /assets/audralia diagnostic track with runtime/product/DGB engine receipts.
 // Does not mutate, repair, authorize production, validate readiness, render, or claim visual pass.
 
-(function audraliaDiagnosticRailEngineBridgeTerminalSynthesisF893D(global) {
+(function audraliaDiagnosticRailEngineBridgeTerminalSynthesisF893DV3(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v2";
-  var RECEIPT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_RECEIPT_v2";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1";
-  var VERSION = "2.0.0";
-  var VERSION_LABEL = "2026-06-22.audralia-diagnostic-rail-engine-bridge-terminal-synthesis-f89-3d-v2";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v3";
+  var RECEIPT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_RECEIPT_v3";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE_TERMINAL_SYNTHESIS_F89_3D_TNT_v2";
+  var LEGACY_CONTRACT = "AUDRALIA_DIAGNOSTIC_RAIL_TERMINAL_SYNTHESIS_F89_3D_TNT_v1";
+
+  var VERSION = "3.0.0";
+  var VERSION_LABEL = "2026-06-22.audralia-diagnostic-rail-engine-bridge-terminal-synthesis-f89-3d-v3";
   var FILE = "/assets/audralia/audralia.diagnostic.rail.js";
 
   var STATION_ID = "RAIL_TERMINAL_SYNTHESIS";
   var CYCLE_POSITION = 9;
   var FIBONACCI = "F89";
-  var NEWS = "NORTH_RETURN";
+  var NEWS = "TERMINAL_RAIL";
+  var RETURN_DIRECTION = "NORTH_RETURN";
 
   var REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v1";
   var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
 
   var AUDRALIA_FILES = Object.freeze({
     northConductor: "/assets/audralia/audralia.diagnostic.north.conductor.js",
-    east: "/assets/audralia/audralia.diagnostic.east.js",
-    west: "/assets/audralia/audralia.diagnostic.west.js",
-    south: "/assets/audralia/audralia.diagnostic.south.js",
-    rail: FILE,
-    planet: "/assets/audralia/audralia.planet.js",
     probeNorth: "/assets/audralia/audralia.diagnostic.probe.north.js",
     probeEast: "/assets/audralia/audralia.diagnostic.probe.east.js",
+    east: "/assets/audralia/audralia.diagnostic.east.js",
+    probeCanvas: "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
     probeWest: "/assets/audralia/audralia.diagnostic.probe.west.js",
+    west: "/assets/audralia/audralia.diagnostic.west.js",
     probeSouth: "/assets/audralia/audralia.diagnostic.probe.south.js",
-    probeCanvas: "/assets/audralia/audralia.diagnostic.probe.canvas.surface.js"
+    south: "/assets/audralia/audralia.diagnostic.south.js",
+    southSurfacePointer: "/assets/audralia/audralia.diagnostic.south.surface.pointer.js",
+    rail: FILE,
+    planet: "/assets/audralia/audralia.planet.js"
   });
 
   var ENGINE_FILES = Object.freeze({
+    dgbContract: "/assets/engine/dgb.engine.contract.js",
+    dgbEngine: "/assets/engine/dgb.engine.js",
+    dgbSubjects: "/assets/engine/dgb.engine.subjects.js",
+    worldEngine: "/assets/engine/diamond-gate-world-engine.js",
+    browserRender: "/assets/engine/diamond-gate-browser-render.js",
     runtimeNorth: "/assets/lab/runtime-table.js",
     runtimeEast: "/assets/lab/runtime-table.east.js",
     runtimeWest: "/assets/lab/runtime-table.west.js",
@@ -48,12 +57,7 @@
     productF34: "/assets/lab/product-engine.js",
     expressionF55: "/assets/lab/product-engine.ue5-expression.js",
     registryF89: "/assets/lab/product-engine.registry.js",
-    marketF144: "/assets/lab/product-engine.market.js",
-    dgbEngine: "/assets/engine/dgb.engine.js",
-    dgbContract: "/assets/engine/dgb.engine.contract.js",
-    dgbSubjects: "/assets/engine/dgb.engine.subjects.js",
-    worldEngine: "/assets/engine/diamond-gate-world-engine.js",
-    browserRender: "/assets/engine/diamond-gate-browser-render.js"
+    marketF144: "/assets/lab/product-engine.market.js"
   });
 
   var NO_CLAIMS = Object.freeze({
@@ -69,6 +73,8 @@
     diagnosticPassProvesReady: false,
     railSynthesisProvesReadiness: false,
     railSynthesisAuthorizesRepair: false,
+    targetReadyProvesRuntimeReady: false,
+    bridgeObservedEnginesProveReadiness: false,
     readyClaimed: false,
     verifiedClaimed: false,
     visualPassClaimed: false,
@@ -140,13 +146,16 @@
     if (depth > LIMITS.maxDepth) return null;
     if (value === null || typeof value === "string" || typeof value === "boolean") return value;
     if (isFiniteNumber(value)) return value;
+
     if (
       value === undefined ||
-      typeof value === "number" ||
       typeof value === "function" ||
       typeof value === "symbol" ||
-      typeof value === "bigint"
-    ) return null;
+      typeof value === "bigint" ||
+      typeof value === "number"
+    ) {
+      return null;
+    }
 
     if (!value || typeof value !== "object") return null;
     if (!Array.isArray(value) && !isPlainObject(value)) return null;
@@ -163,8 +172,12 @@
 
     var output = {};
     Object.keys(value).slice(0, LIMITS.maxObjectKeys).forEach(function each(key) {
-      try { output[String(key).slice(0, LIMITS.maxStringLength)] = clonePlain(value[key], memory, depth + 1); }
-      catch (_error) { output[String(key)] = null; }
+      try {
+        output[String(key).slice(0, LIMITS.maxStringLength)] =
+          clonePlain(value[key], memory, depth + 1);
+      } catch (_error) {
+        output[String(key)] = null;
+      }
     });
 
     return output;
@@ -204,12 +217,14 @@
   }
 
   function readPath(path) {
-    var parts = String(path || "").split(".");
+    var parts = String(path || "").split(".").filter(Boolean);
     var cursor = root;
+
     for (var i = 0; i < parts.length; i += 1) {
       if (!cursor || cursor[parts[i]] === undefined || cursor[parts[i]] === null) return null;
-      cursor = cursor[parts[i]];
+      try { cursor = cursor[parts[i]]; } catch (_error) { return null; }
     }
+
     return cursor || null;
   }
 
@@ -234,11 +249,19 @@
         var full = authority.getReceipt();
         if (full && typeof full === "object") return clonePlain(full, [], 0) || {};
       }
+
+      if (isFunction(authority.getStatus)) {
+        var status = authority.getStatus();
+        if (status && typeof status === "object") return clonePlain(status, [], 0) || {};
+      }
     } catch (error) {
-      return { error: error && error.message ? String(error.message) : String(error) };
+      return {
+        status: "ERROR",
+        error: error && error.message ? String(error.message) : String(error)
+      };
     }
 
-    if (authority.receipt || authority.contract || authority.version || authority.file) {
+    if (authority.receipt || authority.RECEIPT || authority.contract || authority.CONTRACT || authority.version || authority.VERSION || authority.file || authority.FILE) {
       return clonePlain(authority, [], 0) || {};
     }
 
@@ -264,6 +287,7 @@
       text.indexOf('"webGL":true') !== -1 ||
       text.indexOf('"webGPU":true') !== -1 ||
       text.indexOf('"visualPassClaimed":true') !== -1 ||
+      text.indexOf('"finalVisualPassClaimed":true') !== -1 ||
       text.indexOf('"publicSuperiorityClaim":true') !== -1
     );
   }
@@ -273,6 +297,7 @@
 
     function walk(item, path, depth, seen) {
       if (issues.length >= LIMITS.maxIssues) return;
+
       if (depth > LIMITS.maxDepth) {
         issues.push(issue("DEPTH_LIMIT_EXCEEDED", path));
         return;
@@ -313,8 +338,9 @@
           issues.push(issue("ARRAY_LIMIT_EXCEEDED", path));
           return;
         }
+
         item.forEach(function eachArray(entry, index) {
-          walk(entry, path + "[" + index + "]", depth + 1, seen);
+          walk(entry, path + "[" + index + "]", depth + 1, seen.slice());
         });
         return;
       }
@@ -332,7 +358,7 @@
           return;
         }
 
-        walk(item[key], path + "." + key, depth + 1, seen);
+        walk(item[key], path + "." + key, depth + 1, seen.slice());
       });
     }
 
@@ -379,10 +405,14 @@
   }
 
   function findReceipt(request, stationId) {
-    var receipts = Array.isArray(request && request.priorStationReceipts) ? request.priorStationReceipts : [];
+    var receipts = Array.isArray(request && request.priorStationReceipts)
+      ? request.priorStationReceipts
+      : [];
+
     for (var i = receipts.length - 1; i >= 0; i -= 1) {
       if (isPlainObject(receipts[i]) && receipts[i].stationId === stationId) return receipts[i];
     }
+
     return null;
   }
 
@@ -449,7 +479,20 @@
   }
 
   function ownerFromReceipt(receipt) {
-    if (isPlainObject(receipt) && isPlainObject(receipt.recommendedOwner)) return clonePlain(receipt.recommendedOwner, [], 0);
+    if (isPlainObject(receipt) && isPlainObject(receipt.recommendedOwner)) {
+      return clonePlain(receipt.recommendedOwner, [], 0);
+    }
+
+    if (isPlainObject(receipt)) {
+      return {
+        ownerType: safeString(receipt.ownerType, "UNKNOWN"),
+        subjectId: safeString(receipt.stationId || receipt.subjectId, null),
+        contract: safeString(receipt.contract, null),
+        file: safeString(receipt.file, null),
+        component: safeString(receipt.component, null)
+      };
+    }
+
     return {
       ownerType: "UNKNOWN",
       subjectId: null,
@@ -461,19 +504,156 @@
 
   function engineAuthorities() {
     return [
-      { id: "RUNTIME_NORTH", file: ENGINE_FILES.runtimeNorth, names: ["LAB_RUNTIME_TABLE", "LAB_RUNTIME_TABLE_NORTH", "RUNTIME_TABLE", "DEXTER_LAB.runtimeTable", "HEARTH.runtimeTable"] },
-      { id: "RUNTIME_EAST_F3", file: ENGINE_FILES.runtimeEast, names: ["LAB_RUNTIME_TABLE_EAST", "LAB_RUNTIME_TABLE_EAST_F3", "RUNTIME_TABLE_EAST", "EAST_INTAKE_VALVE", "DEXTER_LAB.runtimeTableEast", "HEARTH.runtimeTableEast"] },
-      { id: "RUNTIME_WEST_F5", file: ENGINE_FILES.runtimeWest, names: ["LAB_RUNTIME_TABLE_WEST", "LAB_RUNTIME_TABLE_WEST_F5", "RUNTIME_TABLE_WEST", "WEST_PRESSURE_VALVE", "DEXTER_LAB.runtimeTableWest", "HEARTH.runtimeTableWest"] },
-      { id: "RUNTIME_SOUTH_F8", file: ENGINE_FILES.runtimeSouth, names: ["LAB_RUNTIME_TABLE_SOUTH", "LAB_RUNTIME_TABLE_SOUTH_F8", "RUNTIME_TABLE_SOUTH", "SOUTH_PROOF_RETURN", "DEXTER_LAB.runtimeTableSouth", "HEARTH.runtimeTableSouth"] },
-      { id: "PRODUCT_F34", file: ENGINE_FILES.productF34, names: ["LAB_PRODUCT_ENGINE", "LAB_PRODUCT_ENGINE_F34", "PRODUCT_ENGINE", "PRODUCT_ENGINE_F34", "DEXTER_LAB.productEngine", "HEARTH.productEngine"] },
-      { id: "EXPRESSION_F55", file: ENGINE_FILES.expressionF55, names: ["LAB_PRODUCT_ENGINE_UE5_EXPRESSION", "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55", "PRODUCT_ENGINE_UE5_EXPRESSION", "DEXTER_LAB.productEngineUE5Expression", "HEARTH.productEngineUE5Expression"] },
-      { id: "REGISTRY_F89", file: ENGINE_FILES.registryF89, names: ["LAB_PRODUCT_ENGINE_REGISTRY", "LAB_PRODUCT_ENGINE_REGISTRY_F89", "PRODUCT_ENGINE_REGISTRY", "PROJECT_REGISTRY_CONDUCTOR", "DEXTER_LAB.productEngineRegistry", "HEARTH.productEngineRegistry"] },
-      { id: "MARKET_F144", file: ENGINE_FILES.marketF144, names: ["LAB_PRODUCT_ENGINE_MARKET", "LAB_PRODUCT_ENGINE_MARKET_F144", "PRODUCT_ENGINE_MARKET", "MARKET_F144_READINESS_CONDUCTOR", "DEXTER_LAB.productEngineMarket", "HEARTH.productEngineMarket"] },
-      { id: "DGB_ENGINE", file: ENGINE_FILES.dgbEngine, names: ["DGB_ENGINE", "DIAMOND_GATE_BRIDGE_ENGINE", "DEXTER_LAB.dgbEngine", "HEARTH.dgbEngine"] },
-      { id: "DGB_CONTRACT", file: ENGINE_FILES.dgbContract, names: ["DGB_ENGINE_CONTRACT", "DIAMOND_GATE_ENGINE_CONTRACT", "DEXTER_LAB.dgbEngineContract", "HEARTH.dgbEngineContract"] },
-      { id: "DGB_SUBJECTS", file: ENGINE_FILES.dgbSubjects, names: ["DGB_ENGINE_SUBJECTS", "DIAMOND_GATE_ENGINE_SUBJECTS", "DEXTER_LAB.dgbEngineSubjects", "HEARTH.dgbEngineSubjects"] },
-      { id: "WORLD_ENGINE", file: ENGINE_FILES.worldEngine, names: ["DIAMOND_GATE_WORLD_ENGINE", "DGB_WORLD_ENGINE", "DEXTER_LAB.worldEngine", "HEARTH.worldEngine"] },
-      { id: "BROWSER_RENDER", file: ENGINE_FILES.browserRender, names: ["DIAMOND_GATE_BROWSER_RENDER", "DGB_BROWSER_RENDER", "DEXTER_LAB.browserRender", "HEARTH.browserRender"] }
+      {
+        id: "DGB_CONTRACT",
+        file: ENGINE_FILES.dgbContract,
+        names: [
+          "DGB_ENGINE_CONTRACT",
+          "DIAMOND_GATE_ENGINE_CONTRACT",
+          "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT",
+          "AUDRALIA_DGB_ENGINE_CONTRACT",
+          "DEXTER_LAB.dgbEngineContract",
+          "HEARTH.dgbEngineContract"
+        ]
+      },
+      {
+        id: "DGB_ENGINE",
+        file: ENGINE_FILES.dgbEngine,
+        names: [
+          "DGB_ENGINE",
+          "DIAMOND_GATE_BRIDGE_ENGINE",
+          "DGB_INTERACTIVE_RUNTIME_ENGINE",
+          "AUDRALIA_DGB_ENGINE",
+          "DEXTER_LAB.dgbEngine",
+          "HEARTH.dgbEngine"
+        ]
+      },
+      {
+        id: "DGB_SUBJECTS",
+        file: ENGINE_FILES.dgbSubjects,
+        names: [
+          "DGB_ENGINE_SUBJECTS",
+          "DIAMOND_GATE_ENGINE_SUBJECTS",
+          "DGB_ENGINE_AND_AUTHORITY_REGISTRY",
+          "AUDRALIA_DGB_ENGINE_SUBJECTS",
+          "DEXTER_LAB.dgbEngineSubjects",
+          "HEARTH.dgbEngineSubjects"
+        ]
+      },
+      {
+        id: "WORLD_ENGINE",
+        file: ENGINE_FILES.worldEngine,
+        names: [
+          "DIAMOND_GATE_WORLD_ENGINE",
+          "DGB_WORLD_ENGINE",
+          "DEXTER_LAB.worldEngine",
+          "HEARTH.worldEngine"
+        ]
+      },
+      {
+        id: "BROWSER_RENDER",
+        file: ENGINE_FILES.browserRender,
+        names: [
+          "DIAMOND_GATE_BROWSER_RENDER",
+          "DGB_BROWSER_RENDER",
+          "DEXTER_LAB.browserRender",
+          "HEARTH.browserRender"
+        ]
+      },
+      {
+        id: "RUNTIME_NORTH",
+        file: ENGINE_FILES.runtimeNorth,
+        names: [
+          "LAB_RUNTIME_TABLE",
+          "LAB_RUNTIME_TABLE_NORTH",
+          "RUNTIME_TABLE",
+          "DEXTER_LAB.runtimeTable",
+          "HEARTH.runtimeTable"
+        ]
+      },
+      {
+        id: "RUNTIME_EAST_F3",
+        file: ENGINE_FILES.runtimeEast,
+        names: [
+          "LAB_RUNTIME_TABLE_EAST",
+          "LAB_RUNTIME_TABLE_EAST_F3",
+          "RUNTIME_TABLE_EAST",
+          "EAST_INTAKE_VALVE",
+          "DEXTER_LAB.runtimeTableEast",
+          "HEARTH.runtimeTableEast"
+        ]
+      },
+      {
+        id: "RUNTIME_WEST_F5",
+        file: ENGINE_FILES.runtimeWest,
+        names: [
+          "LAB_RUNTIME_TABLE_WEST",
+          "LAB_RUNTIME_TABLE_WEST_F5",
+          "RUNTIME_TABLE_WEST",
+          "WEST_PRESSURE_VALVE",
+          "DEXTER_LAB.runtimeTableWest",
+          "HEARTH.runtimeTableWest"
+        ]
+      },
+      {
+        id: "RUNTIME_SOUTH_F8",
+        file: ENGINE_FILES.runtimeSouth,
+        names: [
+          "LAB_RUNTIME_TABLE_SOUTH",
+          "LAB_RUNTIME_TABLE_SOUTH_F8",
+          "RUNTIME_TABLE_SOUTH",
+          "SOUTH_PROOF_RETURN",
+          "DEXTER_LAB.runtimeTableSouth",
+          "HEARTH.runtimeTableSouth"
+        ]
+      },
+      {
+        id: "PRODUCT_F34",
+        file: ENGINE_FILES.productF34,
+        names: [
+          "LAB_PRODUCT_ENGINE",
+          "LAB_PRODUCT_ENGINE_F34",
+          "PRODUCT_ENGINE",
+          "PRODUCT_ENGINE_F34",
+          "DEXTER_LAB.productEngine",
+          "HEARTH.productEngine"
+        ]
+      },
+      {
+        id: "EXPRESSION_F55",
+        file: ENGINE_FILES.expressionF55,
+        names: [
+          "LAB_PRODUCT_ENGINE_UE5_EXPRESSION",
+          "LAB_PRODUCT_ENGINE_UE5_EXPRESSION_F55",
+          "PRODUCT_ENGINE_UE5_EXPRESSION",
+          "DEXTER_LAB.productEngineUE5Expression",
+          "HEARTH.productEngineUE5Expression"
+        ]
+      },
+      {
+        id: "REGISTRY_F89",
+        file: ENGINE_FILES.registryF89,
+        names: [
+          "LAB_PRODUCT_ENGINE_REGISTRY",
+          "LAB_PRODUCT_ENGINE_REGISTRY_F89",
+          "PRODUCT_ENGINE_REGISTRY",
+          "PROJECT_REGISTRY_CONDUCTOR",
+          "DEXTER_LAB.productEngineRegistry",
+          "HEARTH.productEngineRegistry"
+        ]
+      },
+      {
+        id: "MARKET_F144",
+        file: ENGINE_FILES.marketF144,
+        names: [
+          "LAB_PRODUCT_ENGINE_MARKET",
+          "LAB_PRODUCT_ENGINE_MARKET_F144",
+          "PRODUCT_ENGINE_MARKET",
+          "MARKET_F144_READINESS_CONDUCTOR",
+          "DEXTER_LAB.productEngineMarket",
+          "HEARTH.productEngineMarket"
+        ]
+      }
     ];
   }
 
@@ -492,6 +672,7 @@
         contract: safeString(receipt.contract || receipt.CONTRACT || "", ""),
         receipt: safeString(receipt.receipt || receipt.RECEIPT || "", ""),
         version: safeString(receipt.version || receipt.VERSION || "", ""),
+        statusToken: safeString(receipt.status || receipt.STATUS || "", ""),
         activeFibonacci: safeString(receipt.activeFibonacci || receipt.fibonacci || "", ""),
         status: forbidden ? "FORBIDDEN_CLAIM" : present ? "OBSERVED" : "NOT_LOADED",
         forbiddenClaimDetected: forbidden,
@@ -508,25 +689,34 @@
       enginePresentCount: presentCount,
       engineMissingCount: records.length - presentCount,
       forbiddenClaimCount: forbiddenCount,
-      bridgeStatus: forbiddenCount ? "BLOCKED_FORBIDDEN_CLAIM" : presentCount ? "OBSERVED_PARTIAL_OR_COMPLETE" : "NO_ENGINE_GLOBALS_OBSERVED",
+      bridgeStatus: forbiddenCount
+        ? "BLOCKED_FORBIDDEN_CLAIM"
+        : presentCount
+          ? "OBSERVED_PARTIAL_OR_COMPLETE"
+          : "NO_ENGINE_GLOBALS_OBSERVED",
+      readinessClaimed: false,
+      bridgeObservedEnginesProveReadiness: false,
       hash: hash(records)
     });
   }
 
   function buildBridgeReceipt(extra) {
     var discovered = discoverEngineReceipts();
+
     var receipt = {
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
       versionLabel: VERSION_LABEL,
       file: FILE,
-      bridgeType: "AUDRALIA_DIAGNOSTIC_TRACK_TO_RUNTIME_AND_PRODUCT_ENGINE_BRIDGE",
+      bridgeType: "AUDRALIA_DIAGNOSTIC_TRACK_TO_RUNTIME_PRODUCT_AND_DGB_ENGINE_BRIDGE",
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       news: NEWS,
+      returnDirection: RETURN_DIRECTION,
       audraliaFiles: AUDRALIA_FILES,
       engineFiles: ENGINE_FILES,
       discoveredEngines: discovered,
@@ -639,6 +829,7 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
       file: FILE,
 
@@ -662,23 +853,30 @@
 
       firstHeldCoordinate:
         status === "HOLD"
-          ? primaryStop && primaryStop.firstHeldCoordinate ? primaryStop.firstHeldCoordinate : "F89:RAIL_TERMINAL_SYNTHESIS"
+          ? primaryStop && primaryStop.firstHeldCoordinate
+            ? primaryStop.firstHeldCoordinate
+            : "F89:RAIL_TERMINAL_SYNTHESIS"
           : null,
 
       firstFailedCoordinate:
         status === "FAIL"
-          ? primaryStop && primaryStop.firstFailedCoordinate ? primaryStop.firstFailedCoordinate : "F89:RAIL_TERMINAL_SYNTHESIS"
+          ? primaryStop && primaryStop.firstFailedCoordinate
+            ? primaryStop.firstFailedCoordinate
+            : "F89:RAIL_TERMINAL_SYNTHESIS"
           : null,
 
       firstConflictCoordinate:
         status === "CONFLICT"
-          ? primaryStop && primaryStop.firstConflictCoordinate ? primaryStop.firstConflictCoordinate : "F89:RAIL_TERMINAL_SYNTHESIS"
+          ? primaryStop && primaryStop.firstConflictCoordinate
+            ? primaryStop.firstConflictCoordinate
+            : "F89:RAIL_TERMINAL_SYNTHESIS"
           : null,
 
       recommendedOwner: owner,
 
       terminalSynthesis: {
-        newsReturn: true,
+        news: NEWS,
+        returnDirection: RETURN_DIRECTION,
         northReturn: true,
         fibonacci: FIBONACCI,
         terminalClass: summary.terminalClass,
@@ -701,6 +899,7 @@
       receipt: RECEIPT,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
       versionLabel: VERSION_LABEL,
       file: FILE,
@@ -708,11 +907,13 @@
       cyclePosition: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       news: NEWS,
+      returnDirection: RETURN_DIRECTION,
       requestSchema: REQUEST_SCHEMA,
       receiptSchema: RECEIPT_SCHEMA,
-      role: "Position 9 terminal rail synthesis plus bridge between /assets/audralia diagnostic track and runtime/product engine receipts.",
+      role: "Position 9 terminal rail synthesis plus bridge between /assets/audralia diagnostic track and runtime/product/DGB engine receipts.",
       quietLoad: true,
       threeDimensionalNative: true,
+      terminalRail: true,
       northReturn: true,
       engineBridge: true,
       audraliaFiles: AUDRALIA_FILES,
@@ -724,6 +925,9 @@
         "FILE",
         "STATION_ID",
         "CYCLE_POSITION",
+        "FIBONACCI",
+        "NEWS",
+        "RETURN_DIRECTION",
         "getDefinitionReceipt",
         "executeCycleStation",
         "discoverEngineReceipts",
@@ -745,12 +949,15 @@
       contract: CONTRACT,
       receipt: RECEIPT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
       file: FILE,
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       news: NEWS,
+      returnDirection: RETURN_DIRECTION,
+      terminalRail: true,
       northReturn: true,
       loaded: true,
       readyForExplicitRegistration: true,
@@ -771,6 +978,7 @@
       CONTRACT: CONTRACT,
       RECEIPT: RECEIPT,
       PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+      LEGACY_CONTRACT: LEGACY_CONTRACT,
       VERSION: VERSION,
       VERSION_LABEL: VERSION_LABEL,
       FILE: FILE,
@@ -778,6 +986,7 @@
       CYCLE_POSITION: CYCLE_POSITION,
       FIBONACCI: FIBONACCI,
       NEWS: NEWS,
+      RETURN_DIRECTION: RETURN_DIRECTION,
       AUDRALIA_FILES: AUDRALIA_FILES,
       ENGINE_FILES: ENGINE_FILES,
 
@@ -802,15 +1011,24 @@
     if (!root || typeof root !== "object") return api;
 
     var existing = root.AUDRALIA_DIAGNOSTIC_RAIL;
-    if (existing && existing.CONTRACT && existing.CONTRACT !== CONTRACT && existing.CONTRACT !== PREVIOUS_CONTRACT) {
+
+    if (
+      existing &&
+      existing.CONTRACT &&
+      existing.CONTRACT !== CONTRACT &&
+      existing.CONTRACT !== PREVIOUS_CONTRACT &&
+      existing.CONTRACT !== LEGACY_CONTRACT
+    ) {
       root.AUDRALIA_DIAGNOSTIC_RAIL_INSTALLATION_CONFLICT = deepFreeze({
         contract: CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
+        legacyContract: LEGACY_CONTRACT,
         file: FILE,
         status: "CONFLICT",
         reason: "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY",
         generatedAt: nowIso()
       });
+
       return api;
     }
 
@@ -825,6 +1043,8 @@
     root.__AUDRALIA_DIAGNOSTIC_RAIL_LOADED__ = true;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_STATION_ID__ = STATION_ID;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_VERSION__ = VERSION;
+    root.__AUDRALIA_DIAGNOSTIC_RAIL_NEWS__ = NEWS;
+    root.__AUDRALIA_DIAGNOSTIC_RAIL_RETURN_DIRECTION__ = RETURN_DIRECTION;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_ENGINE_BRIDGE__ = true;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_VISUAL_PASS_CLAIMED__ = false;
     root.__AUDRALIA_DIAGNOSTIC_RAIL_WEBGL__ = false;

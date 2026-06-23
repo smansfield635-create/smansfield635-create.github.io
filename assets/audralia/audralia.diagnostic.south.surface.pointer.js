@@ -1,28 +1,33 @@
 // /assets/audralia/audralia.diagnostic.south.surface.pointer.js
-// AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v1
+// AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v2
 // Full-file replacement.
 // Quiet-load, dependency-free, 3D-native South auxiliary pointer.
 // Auxiliary to Position 8; does not create a new cycle position.
-// Owns restitution pointer extraction for 3D surface, host, route, engine,
-// owner-file, and continuation target references.
+// Reads renewed F55 v2, F34, F21, F8 current receipt grammars.
 // Does not mutate, repair, render, authorize files, or claim readiness.
 
-(function audraliaDiagnosticSouthSurfacePointerAuxiliary3D(global) {
+(function audraliaDiagnosticSouthSurfacePointerAuxiliary3DV2(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v1";
-  var RECEIPT = "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_RECEIPT_v1";
-  var VERSION = "1.0.0";
-  var VERSION_LABEL =
-    "2026-06-14.audralia-diagnostic-south-surface-pointer-auxiliary-3d-v1";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v2";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_TNT_v1";
+  var RECEIPT = "AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_AUXILIARY_3D_RECEIPT_v2";
+  var VERSION = "2.0.0";
   var FILE = "/assets/audralia/audralia.diagnostic.south.surface.pointer.js";
 
   var AUXILIARY_ROLE = "SOUTH_SURFACE_POINTER";
   var PARENT_POSITION = 8;
   var PARENT_STATION_ID = "SOUTH_RESTITUTION_INTERPRETATION";
   var CREATES_CYCLE_POSITION = false;
+
+  var LIMITS = Object.freeze({
+    maxStringLength: 12000,
+    maxArrayLength: 377,
+    maxObjectKeys: 233,
+    maxDepth: 13
+  });
 
   var NO_CLAIMS = Object.freeze({
     engineAuthority: false,
@@ -36,6 +41,7 @@
     finalProductionVerdictAuthority: false,
     pointerProvesRepair: false,
     pointerProvesReadiness: false,
+    pointerProvesDefect: false,
     readyClaimed: false,
     verifiedClaimed: false,
     visualPassClaimed: false,
@@ -67,7 +73,7 @@
     memory.push(value);
 
     try {
-      Object.keys(value).forEach(function each(key) {
+      Object.keys(value).forEach(function freezeKey(key) {
         deepFreeze(value[key], memory);
       });
       Object.freeze(value);
@@ -76,9 +82,14 @@
     return value;
   }
 
-  function clonePlain(value, seen) {
+  function clonePlain(value, seen, depth) {
+    var memory = seen || [];
+    var level = Number(depth) || 0;
+
+    if (level > LIMITS.maxDepth) return null;
     if (value === null || typeof value === "string" || typeof value === "boolean") return value;
     if (isFiniteNumber(value)) return value;
+
     if (
       value === undefined ||
       typeof value === "number" ||
@@ -89,24 +100,20 @@
 
     if (!value || typeof value !== "object") return null;
     if (!Array.isArray(value) && !isPlainObject(value)) return null;
-
-    var memory = seen || [];
     if (memory.indexOf(value) !== -1) return null;
+
     memory.push(value);
 
     if (Array.isArray(value)) {
-      return value.slice(0, 377).map(function map(entry) {
-        return clonePlain(entry, memory);
+      return value.slice(0, LIMITS.maxArrayLength).map(function map(entry) {
+        return clonePlain(entry, memory.slice(), level + 1);
       });
     }
 
     var output = {};
-    Object.keys(value).slice(0, 233).forEach(function each(key) {
-      try {
-        output[String(key).slice(0, 12000)] = clonePlain(value[key], memory);
-      } catch (_error) {
-        output[String(key).slice(0, 12000)] = null;
-      }
+    Object.keys(value).slice(0, LIMITS.maxObjectKeys).forEach(function each(key) {
+      output[String(key).slice(0, LIMITS.maxStringLength)] =
+        clonePlain(value[key], memory.slice(), level + 1);
     });
 
     return output;
@@ -127,7 +134,7 @@
   }
 
   function hash(value) {
-    var text = stableStringify(clonePlain(value, []));
+    var text = stableStringify(clonePlain(value, [], 0));
     var h = 0x811c9dc5;
 
     for (var i = 0; i < text.length; i += 1) {
@@ -142,11 +149,12 @@
   function safeString(value, fallback) {
     if (fallback === undefined) fallback = null;
     if (typeof value !== "string") return fallback;
-    return value.slice(0, 12000);
+    var text = value.slice(0, LIMITS.maxStringLength);
+    return text.length ? text : fallback;
   }
 
   function safeObject(value) {
-    return isPlainObject(value) ? clonePlain(value, []) : {};
+    return isPlainObject(value) ? clonePlain(value, [], 0) : {};
   }
 
   function findReceipt(packet, stationId) {
@@ -155,11 +163,10 @@
     if (Array.isArray(packet)) receipts = packet;
     else if (isPlainObject(packet) && Array.isArray(packet.stationReceipts)) receipts = packet.stationReceipts;
     else if (isPlainObject(packet) && Array.isArray(packet.priorStationReceipts)) receipts = packet.priorStationReceipts;
+    else if (isPlainObject(packet) && isPlainObject(packet.packet) && Array.isArray(packet.packet.stationReceipts)) receipts = packet.packet.stationReceipts;
 
     for (var i = receipts.length - 1; i >= 0; i -= 1) {
-      if (isPlainObject(receipts[i]) && receipts[i].stationId === stationId) {
-        return receipts[i];
-      }
+      if (isPlainObject(receipts[i]) && receipts[i].stationId === stationId) return receipts[i];
     }
 
     return null;
@@ -187,6 +194,16 @@
     return "NON_PATH_POINTER";
   }
 
+  function pointer(id, value, source, sourceField) {
+    return {
+      id: id,
+      value: value || null,
+      pointerClass: classifyPointer(value),
+      source: source,
+      sourceField: sourceField || null
+    };
+  }
+
   function composePointer(input) {
     var packet = safeObject(input);
 
@@ -195,95 +212,95 @@
     var westReceipt = findReceipt(packet, "WEST_RUNTIME_INTERPRETATION");
     var surfaceReceipt = findReceipt(packet, "CANVAS_SURFACE_TRUTH");
 
-    var restitutionTarget = extractObservation(
-      southReceipt,
-      "SOUTH_RESTITUTION_TARGET_INTERPRETATION"
-    );
+    var f55Owner = extractObservation(southReceipt, "SOUTH_RESTITUTION_OWNER_RECOMMENDATION");
+    var f55Target = extractObservation(southReceipt, "SOUTH_RESTITUTION_HANDOFF_TARGET_READ");
+    var f55Result = extractObservation(southReceipt, "SOUTH_RESTITUTION_CONTINUATION_CLASSIFICATION");
 
-    var ownerRecommendation = extractObservation(
-      southReceipt,
-      "SOUTH_RESTITUTION_OWNER_RECOMMENDATION"
-    );
-
-    var handoffTarget = extractObservation(
-      handoffReceipt,
-      "SOUTH_HANDOFF_TARGET_DECLARATION"
-    );
-
-    var westIdentity = extractObservation(
-      westReceipt,
-      "WEST_INTERPRETATION_SOURCE_TO_RUNTIME_IDENTITY"
-    );
-
-    var surfaceHost = extractObservation(
-      surfaceReceipt,
-      "SURFACE_3D_HOST_DECLARATION"
-    );
+    var f34Target = extractObservation(handoffReceipt, "SOUTH_HANDOFF_TARGET_DECLARATION");
+    var f21Identity = extractObservation(westReceipt, "WEST_INTERPRETATION_SOURCE_TO_RUNTIME_IDENTITY");
+    var f8Binding = extractObservation(surfaceReceipt, "CANVAS_SURFACE_TARGET_BINDING");
+    var f8Frame = extractObservation(surfaceReceipt, "CANVAS_SURFACE_TARGET_FRAME");
 
     var effectiveOwnerFile =
-      safeString(restitutionTarget && restitutionTarget.effectiveOwnerFile, null) ||
-      safeString(ownerRecommendation && ownerRecommendation.ownerFile, null) ||
-      safeString(ownerRecommendation && ownerRecommendation.recommendedFile, null) ||
-      safeString(handoffTarget && handoffTarget.restitutionCandidateFile, null) ||
-      safeString(handoffTarget && handoffTarget.targetFile, null);
+      safeString(f55Owner && f55Owner.effectiveOwnerFile, null) ||
+      safeString(f55Owner && f55Owner.ownerFile, null) ||
+      safeString(f55Owner && f55Owner.recommendedFile, null) ||
+      safeString(f55Target && f55Target.restitutionCandidateFile, null) ||
+      safeString(f55Target && f55Target.targetFile, null) ||
+      safeString(f34Target && f34Target.restitutionCandidateFile, null) ||
+      safeString(f34Target && f34Target.targetFile, null);
 
     var targetRoute =
-      safeString(handoffTarget && handoffTarget.targetRoute, null);
+      safeString(f55Target && f55Target.targetRoute, null) ||
+      safeString(f34Target && f34Target.targetRoute, null) ||
+      safeString(f8Binding && f8Binding.observedRouteNormalized, null) ||
+      safeString(f8Binding && f8Binding.expectedRouteNormalized, null);
 
     var engineFile =
-      safeString(westIdentity && westIdentity.declaredEngineFile, null);
+      safeString(f21Identity && f21Identity.declaredEngineFile, null);
 
     var engineContract =
-      safeString(westIdentity && westIdentity.declaredEngineContract, null);
+      safeString(f21Identity && f21Identity.declaredEngineContract, null);
 
-    var hostFile =
-      safeString(surfaceHost && surfaceHost.hostFile, null);
+    var surfaceFrameId =
+      safeString(f8Binding && f8Binding.frameId, null);
+
+    var runtimeGlobalName =
+      safeString(f8Frame && f8Frame.runtimeGlobalName, null);
 
     var pointers = [
-      {
-        id: "RESTITUTION_OWNER_FILE",
-        value: effectiveOwnerFile,
-        pointerClass: classifyPointer(effectiveOwnerFile),
-        source: "SOUTH_RESTITUTION_INTERPRETATION"
-      },
-      {
-        id: "HANDOFF_TARGET_ROUTE",
-        value: targetRoute,
-        pointerClass: classifyPointer(targetRoute),
-        source: "SOUTH_PROBE_HANDOFF"
-      },
-      {
-        id: "ENGINE_FILE",
-        value: engineFile,
-        pointerClass: classifyPointer(engineFile),
-        source: "WEST_RUNTIME_INTERPRETATION"
-      },
+      pointer("RESTITUTION_OWNER_FILE", effectiveOwnerFile, "SOUTH_RESTITUTION_INTERPRETATION", "effectiveOwnerFile"),
+      pointer("HANDOFF_TARGET_ROUTE", targetRoute, "SOUTH_HANDOFF_OR_F8_BINDING", "targetRoute"),
+      pointer("ENGINE_FILE", engineFile, "WEST_RUNTIME_INTERPRETATION", "declaredEngineFile"),
       {
         id: "ENGINE_CONTRACT",
         value: engineContract,
         pointerClass: engineContract ? "CONTRACT_POINTER" : "UNKNOWN",
-        source: "WEST_RUNTIME_INTERPRETATION"
+        source: "WEST_RUNTIME_INTERPRETATION",
+        sourceField: "declaredEngineContract"
       },
       {
-        id: "SURFACE_HOST_FILE",
-        value: hostFile,
-        pointerClass: classifyPointer(hostFile),
-        source: "CANVAS_SURFACE_TRUTH"
+        id: "TARGET_FRAME_ID",
+        value: surfaceFrameId,
+        pointerClass: surfaceFrameId ? "DOM_ID_POINTER" : "UNKNOWN",
+        source: "CANVAS_SURFACE_TRUTH",
+        sourceField: "frameId"
+      },
+      {
+        id: "RUNTIME_GLOBAL_NAME",
+        value: runtimeGlobalName,
+        pointerClass: runtimeGlobalName ? "GLOBAL_POINTER" : "UNKNOWN",
+        source: "CANVAS_SURFACE_TRUTH",
+        sourceField: "runtimeGlobalName"
       }
     ];
 
-    var usablePointers = pointers.filter(function filter(pointer) {
-      return Boolean(pointer.value);
+    var usablePointers = pointers.filter(function filter(entry) {
+      return Boolean(entry.value);
     });
 
-    var outOfScopePointers = usablePointers.filter(function filter(pointer) {
-      return pointer.pointerClass === "HEARTH_OUT_OF_SCOPE_POINTER";
+    var outOfScopePointers = usablePointers.filter(function filter(entry) {
+      return entry.pointerClass === "HEARTH_OUT_OF_SCOPE_POINTER";
     });
+
+    var primary =
+      effectiveOwnerFile ||
+      targetRoute ||
+      engineFile ||
+      engineContract ||
+      surfaceFrameId ||
+      runtimeGlobalName ||
+      null;
+
+    var status = "UNKNOWN";
+    if (usablePointers.length && !outOfScopePointers.length) status = "PASS";
+    else if (usablePointers.length) status = "HOLD";
 
     var receipt = {
-      schema: "AUDRALIA_DIAGNOSTIC_AUXILIARY_POINTER_RECEIPT_v1",
+      schema: "AUDRALIA_DIAGNOSTIC_AUXILIARY_POINTER_RECEIPT_v2",
       receipt: RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       auxiliaryRole: AUXILIARY_ROLE,
@@ -291,30 +308,41 @@
       parentStationId: PARENT_STATION_ID,
       createsCyclePosition: CREATES_CYCLE_POSITION,
 
-      status:
-        usablePointers.length && !outOfScopePointers.length
-          ? "PASS"
-          : usablePointers.length
-            ? "HELD"
-            : "UNKNOWN",
-
+      status: status,
       pointerCount: usablePointers.length,
       outOfScopePointerCount: outOfScopePointers.length,
+
+      sourceReceipts: {
+        southRestitutionObserved: Boolean(southReceipt),
+        southHandoffObserved: Boolean(handoffReceipt),
+        westInterpretationObserved: Boolean(westReceipt),
+        surfaceTruthObserved: Boolean(surfaceReceipt)
+      },
+
+      continuationClass:
+        f55Result && f55Result.continuationClass
+          ? safeString(f55Result.continuationClass, null)
+          : null,
+
+      railTerminalEligible:
+        f55Result && typeof f55Result.railTerminalEligible === "boolean"
+          ? f55Result.railTerminalEligible
+          : null,
 
       pointers: pointers,
       usablePointers: usablePointers,
       outOfScopePointers: outOfScopePointers,
 
-      recommendedPrimaryPointer: effectiveOwnerFile || targetRoute || engineFile || hostFile || null,
-      recommendedPrimaryPointerClass:
-        classifyPointer(effectiveOwnerFile || targetRoute || engineFile || hostFile || null),
+      recommendedPrimaryPointer: primary,
+      recommendedPrimaryPointerClass: classifyPointer(primary),
 
       pointerProvesRepair: false,
       pointerProvesReadiness: false,
+      pointerProvesDefect: false,
+      directionOnly: true,
 
       generatedAt: nowIso(),
       receiptHash: null,
-
       noClaims: NO_CLAIMS
     };
 
@@ -326,8 +354,8 @@
     var definition = {
       receipt: RECEIPT,
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
-      versionLabel: VERSION_LABEL,
       file: FILE,
       auxiliaryRole: AUXILIARY_ROLE,
       parentPosition: PARENT_POSITION,
@@ -336,21 +364,26 @@
       quietLoad: true,
       threeDimensionalNative: true,
       role:
-        "South auxiliary pointer for restitution target, owner-file, engine-file, route, and 3D surface-host references.",
+        "South auxiliary pointer for restitution target, owner-file, engine-file, route, target-frame, and runtime-global references.",
+      readsCurrentF55Grammar: true,
+      readsCurrentF34Grammar: true,
+      readsCurrentF21Grammar: true,
+      readsCurrentF8Grammar: true,
       pointerProvesRepair: false,
       pointerProvesReadiness: false,
-      noClaims: NO_CLAIMS
+      pointerProvesDefect: false,
+      noClaims: NO_CLAIMS,
+      generatedAt: nowIso()
     };
 
     definition.definitionHash = hash(definition);
-    definition.generatedAt = nowIso();
-
     return deepFreeze(definition);
   }
 
   function getStatus() {
     return deepFreeze({
       contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
       version: VERSION,
       file: FILE,
       auxiliaryRole: AUXILIARY_ROLE,
@@ -366,9 +399,9 @@
   function buildApi() {
     return deepFreeze({
       CONTRACT: CONTRACT,
+      PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
       RECEIPT: RECEIPT,
       VERSION: VERSION,
-      VERSION_LABEL: VERSION_LABEL,
       FILE: FILE,
       AUXILIARY_ROLE: AUXILIARY_ROLE,
       PARENT_POSITION: PARENT_POSITION,
@@ -379,11 +412,11 @@
       getDefinitionReceipt: getDefinitionReceipt,
       getStatus: getStatus,
 
+      classifyPointer: classifyPointer,
       clone: function exposedClone(value) {
-        return deepFreeze(clonePlain(value, []));
+        return deepFreeze(clonePlain(value, [], 0));
       },
       hash: hash,
-
       noClaims: NO_CLAIMS
     });
   }
@@ -399,13 +432,20 @@
 
     var existing = root.AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER;
 
-    if (existing && existing.CONTRACT !== CONTRACT) {
+    if (
+      existing &&
+      existing.CONTRACT &&
+      existing.CONTRACT !== CONTRACT &&
+      existing.CONTRACT !== PREVIOUS_CONTRACT
+    ) {
       root.AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_INSTALLATION_CONFLICT =
         deepFreeze({
           contract: CONTRACT,
+          previousContract: PREVIOUS_CONTRACT,
           file: FILE,
           status: "CONFLICT",
           reason: "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY",
+          existingContract: existing.CONTRACT || null,
           generatedAt: nowIso()
         });
       return api;
@@ -414,13 +454,23 @@
     root.AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER = api;
 
     var namespace = ensureNamespace("AUDRALIA");
-    if (namespace) namespace.diagnosticSouthSurfacePointer = api;
+
+    if (namespace) {
+      namespace.diagnosticSouthSurfacePointer = api;
+
+      if (!namespace.diagnostics || typeof namespace.diagnostics !== "object") {
+        namespace.diagnostics = {};
+      }
+
+      namespace.diagnostics.southSurfacePointer = api;
+    }
 
     root.AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_RECEIPT =
       getDefinitionReceipt();
 
     root.__AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_LOADED__ = true;
     root.__AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_VERSION__ = VERSION;
+    root.__AUDRALIA_DIAGNOSTIC_SOUTH_SURFACE_POINTER_CONTRACT__ = CONTRACT;
 
     return api;
   }

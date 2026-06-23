@@ -1,28 +1,58 @@
 // /showroom/globe/audralia/diagnostic/index.control.bridge.js
-// AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v10
+// AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v11
 // Full-file replacement.
-// Robust transactional diagnostic-control bridge.
-// Nonmutating verification. Alias install only on load. No automatic station execution.
+// DGB-aware relational diagnostic-control bridge.
+// Alias install on load only. Verification is explicit and nonmutating.
+// No station execution. No renderer repair. No readiness inflation.
 
-(function installAudraliaDiagnosticControlBridgeV10(global) {
+(function installAudraliaDiagnosticControlBridgeV11(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root && root.document ? root.document : null;
   if (!doc) return;
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v10";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v9";
-  var VERSION = "10.0.0";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v11";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v10";
+  var VERSION = "11.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.control.bridge.js";
-
-  var STATE_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_STATE_v3";
-  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_RECEIPT_v6";
   var SCOPE = "AUDRALIA_DIAGNOSTIC_CONTROL_FAMILY";
+
+  var STATE_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_STATE_v4";
+  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_RECEIPT_v7";
 
   var GLOBAL_API = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE";
   var GLOBAL_STATE = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE_STATE";
   var GLOBAL_RECEIPT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE_RECEIPT";
+
+  var DGB_CONTRACT =
+    "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
+  var DGB_CORE =
+    "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
+  var DGB_REGISTRY =
+    "DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2";
+  var DGB_MODEL_SCHEMA = "DGB_MODEL_PACKAGE_v1";
+
+  var STATUS = Object.freeze({
+    READY: "READY",
+    HELD: "HELD",
+    ERROR: "ERROR",
+    PENDING: "PENDING",
+    UNAVAILABLE: "UNAVAILABLE"
+  });
+
+  var PHASE = Object.freeze({
+    INSTALLING: "INSTALLING",
+    RELATIONAL_PENDING: "RELATIONAL_PENDING",
+    RELATIONAL_VERIFYING: "RELATIONAL_VERIFYING",
+    RELATIONAL_COMPLETE: "RELATIONAL_COMPLETE",
+    ERROR: "ERROR"
+  });
+
+  var MODE = Object.freeze({
+    INSTALL: "INSTALL",
+    VERIFY: "VERIFY"
+  });
 
   var NO_CLAIMS = Object.freeze({
     exactNineClaimed: false,
@@ -38,28 +68,9 @@
     webGL: false,
     webGPU: false,
     publicSuperiorityClaim: false,
-    publicComparisonClaimAllowed: false
-  });
-
-  var PHASE = Object.freeze({
-    INSTALLING: "INSTALLING",
-    RELATIONAL_PENDING: "RELATIONAL_PENDING",
-    RELATIONAL_VERIFYING: "RELATIONAL_VERIFYING",
-    RELATIONAL_COMPLETE: "RELATIONAL_COMPLETE",
-    ERROR: "ERROR"
-  });
-
-  var STATUS = Object.freeze({
-    READY: "READY",
-    HELD: "HELD",
-    ERROR: "ERROR",
-    PENDING: "PENDING",
-    UNAVAILABLE: "UNAVAILABLE"
-  });
-
-  var MODE = Object.freeze({
-    INSTALL: "INSTALL",
-    VERIFY: "VERIFY"
+    publicComparisonClaimAllowed: false,
+    f21Claimed: false,
+    f89Claimed: false
   });
 
   var REQUIREMENTS_GLOBAL = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS";
@@ -82,7 +93,7 @@
     "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT"
   ]);
 
-  var INTERPRETER_API_PATHS = Object.freeze([
+  var LEGACY_INTERPRETER_API_PATHS = Object.freeze([
     "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
     "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY",
     "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
@@ -91,24 +102,38 @@
     "AUDRALIA.diagnosticRouteController"
   ]);
 
+  var DGB_CONTRACT_PATHS = Object.freeze([
+    "DGB_ENGINE_CONTRACT",
+    "DGBEngineContract"
+  ]);
+
+  var DGB_CORE_PATHS = Object.freeze([
+    "DGB_ENGINE",
+    "DGBEngine"
+  ]);
+
+  var DGB_REGISTRY_PATHS = Object.freeze([
+    "DGB_ENGINE_SUBJECT_REGISTRY",
+    "DGBEngineSubjectRegistry"
+  ]);
+
+  var DGB_RECEIPT_PATHS = Object.freeze([
+    "DGB_ENGINE_RECEIPT"
+  ]);
+
+  var DGB_REGISTRY_RECEIPT_PATHS = Object.freeze([
+    "DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT"
+  ]);
+
   var RAIL_API_PATHS = Object.freeze([
     "AUDRALIA_DIAGNOSTIC_RAIL",
     "AUDRALIA.diagnosticRail"
   ]);
 
-  var ENGINE_API_PATHS = Object.freeze([
-    "LAB_RUNTIME_TABLE",
-    "LAB_RUNTIME_TABLE_NORTH",
-    "LAB_RUNTIME_TABLE_EAST",
-    "LAB_RUNTIME_TABLE_WEST",
-    "LAB_RUNTIME_TABLE_SOUTH",
-    "LAB_PRODUCT_ENGINE",
-    "LAB_PRODUCT_ENGINE_UE5_EXPRESSION",
-    "LAB_PRODUCT_ENGINE_REGISTRY",
-    "LAB_PRODUCT_ENGINE_MARKET"
-  ]);
-
   var REQUIRED_RUNTIME_ORDER = Object.freeze([
+    "dgb.engine.contract.js",
+    "dgb.engine.js",
+    "dgb.engine.subjects.js",
     "index.control.bridge.js",
     "index.inspection.lane.js",
     "index.js",
@@ -161,11 +186,12 @@
   var currentState = createState(MODE.INSTALL, 0);
 
   function nowIso() {
-    try { return new Date().toISOString(); } catch (_e) { return null; }
+    try { return new Date().toISOString(); } catch (_error) { return null; }
   }
 
   function isObjectLike(value) {
-    return Boolean(value !== null && value !== undefined && (typeof value === "object" || typeof value === "function"));
+    return Boolean(value !== null && value !== undefined &&
+      (typeof value === "object" || typeof value === "function"));
   }
 
   function isFunction(value) {
@@ -184,22 +210,31 @@
     ) return value;
 
     if (typeof value === "bigint") return String(value);
-    if (typeof value === "function") return { type: "Function", name: value.name || "anonymous" };
+    if (typeof value === "function") {
+      return { type: "Function", name: value.name || "anonymous" };
+    }
+
     if (visited.indexOf(value) !== -1) return "[Circular]";
 
     var nextSeen = visited.concat([value]);
 
     if (Array.isArray(value)) {
-      return value.slice(0, 377).map(function cloneEntry(entry) {
+      return value.slice(0, 377).map(function each(entry) {
         return cloneValue(entry, nextSeen);
       });
     }
 
     var output = {};
     try {
-      Object.keys(value).slice(0, 233).forEach(function cloneKey(key) {
-        try { output[key] = cloneValue(value[key], nextSeen); }
-        catch (error) { output[key] = { unreadable: true, message: String(error && error.message || error) }; }
+      Object.keys(value).slice(0, 233).forEach(function each(key) {
+        try {
+          output[key] = cloneValue(value[key], nextSeen);
+        } catch (error) {
+          output[key] = {
+            unreadable: true,
+            message: String(error && error.message || error)
+          };
+        }
       });
     } catch (_error) {
       return { unreadable: true };
@@ -212,10 +247,11 @@
     var visited = seen || [];
     if (!isObjectLike(value)) return value;
     if (visited.indexOf(value) !== -1) return value;
+
     var nextSeen = visited.concat([value]);
 
     try {
-      Object.keys(value).forEach(function freezeKey(key) {
+      Object.keys(value).forEach(function each(key) {
         freezeDeep(value[key], nextSeen);
       });
       Object.freeze(value);
@@ -234,8 +270,11 @@
 
     for (var i = 0; i < parts.length; i += 1) {
       if (cursor === null || cursor === undefined) return null;
-      try { cursor = cursor[parts[i]]; }
-      catch (_error) { return null; }
+      try {
+        cursor = cursor[parts[i]];
+      } catch (_error) {
+        return null;
+      }
     }
 
     return cursor === undefined ? null : cursor;
@@ -255,8 +294,31 @@
     catch (_error) { return null; }
   }
 
+  function readVersion(value) {
+    if (!value) return null;
+    try { return value.VERSION || value.version || null; }
+    catch (_error) { return null; }
+  }
+
+  function readReceipt(value) {
+    if (!value) return null;
+
+    try {
+      if (isFunction(value.getRegistryReceipt)) return value.getRegistryReceipt();
+      if (isFunction(value.getRuntimeReceipt)) return value.getRuntimeReceipt();
+      if (isFunction(value.getAuthorityReceipt)) return value.getAuthorityReceipt();
+      if (isFunction(value.getReceipt)) return value.getReceipt();
+      if (isFunction(value.getReceiptLight)) return value.getReceiptLight();
+    } catch (_error) {
+      return null;
+    }
+
+    return null;
+  }
+
   function describeNode(node) {
     if (!node) return null;
+
     return {
       tag: node.tagName || null,
       id: node.id || null,
@@ -382,7 +444,11 @@
       inspectionEvidence: createCorrespondenceState(),
       controlsLocalEvidence: createCorrespondenceState(),
       railEvidence: createCorrespondenceState(),
-      engineFamilyEvidence: createCorrespondenceState(),
+      legacyInterpreterEvidence: createCorrespondenceState(),
+      dgbContractEvidence: createCorrespondenceState(),
+      dgbCoreEvidence: createCorrespondenceState(),
+      dgbRegistryEvidence: createCorrespondenceState(),
+      dgbFamilyEvidence: createCorrespondenceState(),
       familySynchronization: createCorrespondenceState(),
       mandatoryCategories: [],
       passedMandatoryCategories: [],
@@ -449,7 +515,14 @@
   }
 
   function createMutationPlan(family, node) {
-    return { family: family, node: node, valid: true, mutations: [], conflicts: [], invalid: [] };
+    return {
+      family: family,
+      node: node,
+      valid: true,
+      mutations: [],
+      conflicts: [],
+      invalid: []
+    };
   }
 
   function addMutation(plan, type, name, value) {
@@ -474,7 +547,10 @@
 
     var sourceValue = trimmedAttribute(node, sourceAttribute);
     if (!sourceValue) {
-      addPlanInvalid(plan, "EMPTY_ALIAS_VALUE", { sourceAttribute: sourceAttribute, targetAttribute: targetAttribute });
+      addPlanInvalid(plan, "EMPTY_ALIAS_VALUE", {
+        sourceAttribute: sourceAttribute,
+        targetAttribute: targetAttribute
+      });
       return;
     }
 
@@ -497,7 +573,12 @@
   function captureMutationSnapshot(node, mutations) {
     return mutations.map(function capture(mutation) {
       if (mutation.type === "id") {
-        return { type: "id", name: "id", hadValue: Boolean(node.id), value: node.id || "" };
+        return {
+          type: "id",
+          name: "id",
+          hadValue: Boolean(node.id),
+          value: node.id || ""
+        };
       }
 
       return {
@@ -522,7 +603,10 @@
         if (entry.hadValue) node.setAttribute(entry.name, entry.value);
         else node.removeAttribute(entry.name);
       } catch (error) {
-        failures.push({ name: entry.name, message: error && error.message ? error.message : String(error) });
+        failures.push({
+          name: entry.name,
+          message: error && error.message ? error.message : String(error)
+        });
       }
     });
 
@@ -567,7 +651,9 @@
         appliedMutationCount: appliedMutationCount,
         plannedMutationCount: plan.mutations.length,
         rollbackRestored: true,
-        originalError: originalError && originalError.message ? originalError.message : String(originalError)
+        originalError: originalError && originalError.message
+          ? originalError.message
+          : String(originalError)
       },
       resolution: "HELD_TRANSACTION_DID_NOT_COMMIT"
     });
@@ -578,7 +664,9 @@
 
     if (!plan.valid) {
       metrics.blockedMutationCount += plan.mutations.length;
-      state.installationMutationHistory.blockedMutationCount += mode === MODE.INSTALL ? plan.mutations.length : 0;
+      if (mode === MODE.INSTALL) {
+        state.installationMutationHistory.blockedMutationCount += plan.mutations.length;
+      }
 
       plan.invalid.forEach(function publishInvalid(entry) {
         recordInvalid(state, plan.family, entry.code, plan.node, entry.detail);
@@ -600,7 +688,7 @@
 
     if (mode === MODE.VERIFY) {
       metrics.blockedMutationCount += plan.mutations.length;
-      plan.mutations.forEach(function recordMissing(mutation) {
+      plan.mutations.forEach(function missing(mutation) {
         recordConflict(state, plan.family, "AUTHORIZED_COMPATIBILITY_EXPRESSION_MISSING", plan.node, {
           type: mutation.type,
           name: mutation.name,
@@ -623,7 +711,10 @@
       metrics.heldNodeCount += 1;
       state.installationMutationHistory.transactionFailureCount += 1;
       state.installationMutationHistory.unresolvedTransactionCount += 1;
-      recordError(state, "MUTATION_SNAPSHOT_FAILURE", error, { family: plan.family, node: describeNode(plan.node) });
+      recordError(state, "MUTATION_SNAPSHOT_FAILURE", error, {
+        family: plan.family,
+        node: describeNode(plan.node)
+      });
       return;
     }
 
@@ -636,7 +727,13 @@
         appliedMutationCount += 1;
       });
     } catch (error) {
-      markRolledBackTransaction(state, plan, restoreMutationSnapshot(plan.node, snapshotList), error, appliedMutationCount);
+      markRolledBackTransaction(
+        state,
+        plan,
+        restoreMutationSnapshot(plan.node, snapshotList),
+        error,
+        appliedMutationCount
+      );
       return;
     }
 
@@ -647,15 +744,20 @@
   }
 
   function isEligibleParticipantAliasTarget(node) {
-    if (!node || node.nodeType !== 1) return { eligible: false, reason: "NOT_AN_ELEMENT" };
+    if (!node || node.nodeType !== 1) {
+      return { eligible: false, reason: "NOT_AN_ELEMENT" };
+    }
 
     var tag = String(node.tagName || "").toUpperCase();
+
     if (INELIGIBLE_PARTICIPANT_TAGS.indexOf(tag) !== -1) {
       return { eligible: false, reason: "INELIGIBLE_TAG", tag: tag };
     }
 
     if (node.hidden) return { eligible: false, reason: "HIDDEN_ATTRIBUTE", tag: tag };
-    if (node.getAttribute("aria-hidden") === "true") return { eligible: false, reason: "ARIA_HIDDEN", tag: tag };
+    if (node.getAttribute("aria-hidden") === "true") {
+      return { eligible: false, reason: "ARIA_HIDDEN", tag: tag };
+    }
 
     return { eligible: true, reason: null, tag: tag };
   }
@@ -669,15 +771,24 @@
       var plan = createMutationPlan("ids", node);
       var canonicalId = trimmedAttribute(node, "data-control-bridge-id");
 
-      if (!canonicalId) addPlanInvalid(plan, "EMPTY_ID_ALIAS", {});
-      else {
+      if (!canonicalId) {
+        addPlanInvalid(plan, "EMPTY_ID_ALIAS", {});
+      } else {
         var existing = doc.getElementById(canonicalId);
         if (existing && existing !== node) {
-          addPlanConflict(plan, "CANONICAL_ID_ALREADY_OWNED", { canonicalId: canonicalId, owner: describeNode(existing) });
+          addPlanConflict(plan, "CANONICAL_ID_ALREADY_OWNED", {
+            canonicalId: canonicalId,
+            owner: describeNode(existing)
+          });
         }
+
         if (node.id && node.id !== canonicalId) {
-          addPlanConflict(plan, "NODE_ALREADY_HAS_DIFFERENT_ID", { canonicalId: canonicalId, existingId: node.id });
+          addPlanConflict(plan, "NODE_ALREADY_HAS_DIFFERENT_ID", {
+            canonicalId: canonicalId,
+            existingId: node.id
+          });
         }
+
         if (!node.id) addMutation(plan, "id", "id", canonicalId);
       }
 
@@ -694,7 +805,10 @@
       var command = trimmedAttribute(node, "data-control-command");
 
       if (VALID_REPORT_COMMANDS.indexOf(command) === -1) {
-        addPlanInvalid(plan, "UNSUPPORTED_REPORT_COMMAND_ALIAS", { command: command, allowed: VALID_REPORT_COMMANDS.slice() });
+        addPlanInvalid(plan, "UNSUPPORTED_REPORT_COMMAND_ALIAS", {
+          command: command,
+          allowed: VALID_REPORT_COMMANDS.slice()
+        });
       }
 
       COMMAND_ATTRIBUTE_MAP.forEach(function inspect(mapping) {
@@ -702,7 +816,9 @@
       });
 
       if (node.id === "runDirectCheck" || node.id === "runNineCycle") {
-        addPlanConflict(plan, "EXPLICIT_EXECUTION_MISCLASSIFIED_AS_REPORT_COMMAND", { id: node.id });
+        addPlanConflict(plan, "EXPLICIT_EXECUTION_MISCLASSIFIED_AS_REPORT_COMMAND", {
+          id: node.id
+        });
       }
 
       applyMutationPlan(state, mode, plan);
@@ -727,16 +843,20 @@
 
       var participantRole = trimmedAttribute(node, "data-control-bridge-participant");
 
-      if (!participantRole) addPlanInvalid(plan, "EMPTY_PARTICIPANT_ALIAS", {});
-      else if (node.hasAttribute("data-participant-role")) {
+      if (!participantRole) {
+        addPlanInvalid(plan, "EMPTY_PARTICIPANT_ALIAS", {});
+      } else if (node.hasAttribute("data-participant-role")) {
         var observedRole = trimmedAttribute(node, "data-participant-role");
+
         if (observedRole !== participantRole) {
           addPlanConflict(plan, "PARTICIPANT_ROLE_ALIAS_CONFLICT", {
             expectedRole: participantRole,
             observedRole: observedRole
           });
         }
-      } else addMutation(plan, "attribute", "data-participant-role", participantRole);
+      } else {
+        addMutation(plan, "attribute", "data-participant-role", participantRole);
+      }
 
       applyMutationPlan(state, mode, plan);
     });
@@ -752,20 +872,29 @@
       var filter = trimmedAttribute(node, "data-control-bridge-receipt-filter").toLowerCase();
 
       if (VALID_RECEIPT_FILTERS.indexOf(filter) === -1) {
-        addPlanInvalid(plan, "UNSUPPORTED_RECEIPT_FILTER_ALIAS", { filter: filter, allowed: VALID_RECEIPT_FILTERS.slice() });
+        addPlanInvalid(plan, "UNSUPPORTED_RECEIPT_FILTER_ALIAS", {
+          filter: filter,
+          allowed: VALID_RECEIPT_FILTERS.slice()
+        });
       } else if (node.hasAttribute("data-receipt-filter")) {
         var observedFilter = trimmedAttribute(node, "data-receipt-filter").toLowerCase();
+
         if (observedFilter !== filter) {
-          addPlanConflict(plan, "RECEIPT_FILTER_ALIAS_CONFLICT", { expectedFilter: filter, observedFilter: observedFilter });
+          addPlanConflict(plan, "RECEIPT_FILTER_ALIAS_CONFLICT", {
+            expectedFilter: filter,
+            observedFilter: observedFilter
+          });
         }
-      } else addMutation(plan, "attribute", "data-receipt-filter", filter);
+      } else {
+        addMutation(plan, "attribute", "data-receipt-filter", filter);
+      }
 
       applyMutationPlan(state, mode, plan);
     });
   }
 
   function processViewAndChamberAliases(state, mode) {
-    VIEW_ATTRIBUTE_MAP.forEach(function mappingLoop(mapping) {
+    VIEW_ATTRIBUTE_MAP.forEach(function loop(mapping) {
       Array.prototype.slice.call(doc.querySelectorAll("[" + mapping.source + "]")).forEach(function process(node) {
         state.aliases[mapping.family].declaredNodeCount += 1;
         var plan = createMutationPlan(mapping.family, node);
@@ -800,7 +929,9 @@
       partial === 0
     );
 
-    state.aliasTranslationStatus = complete ? STATUS.READY : (rollbackFailures || partial ? STATUS.ERROR : STATUS.HELD);
+    state.aliasTranslationStatus = complete
+      ? STATUS.READY
+      : (rollbackFailures || partial ? STATUS.ERROR : STATUS.HELD);
 
     recordObservation(state, "ALIAS_TRANSLATION_EVALUATED", {
       status: state.aliasTranslationStatus,
@@ -818,6 +949,7 @@
 
   function evaluateInstallationMutationHistory(state) {
     var history = state.installationMutationHistory;
+
     history.status = (
       history.unauthorizedMutationCount === 0 &&
       history.partialMutationCount === 0 &&
@@ -827,6 +959,7 @@
 
   function evaluateCurrentRunMutationSafety(state) {
     var metrics = state.currentRunMutationMetrics;
+
     metrics.status = (
       metrics.completedMutationCount === 0 &&
       metrics.partialMutationCount === 0 &&
@@ -867,10 +1000,18 @@
         controlsContract: requirements.controlsContract || null,
         expectedEngineContract: requirements.expectedEngineContract || null,
         expectedInspectionLaneContract: requirements.expectedInspectionLaneContract || null,
-        publicApiRequirements: Array.isArray(requirements.publicApiRequirements) ? requirements.publicApiRequirements.slice() : [],
-        requiredCycleTargetIds: Array.isArray(requirements.requiredCycleTargetIds) ? requirements.requiredCycleTargetIds.slice() : [],
-        requiredStationPositions: Array.isArray(requirements.requiredStationPositions) ? requirements.requiredStationPositions.slice() : [],
-        presentationStationMap: Array.isArray(requirements.presentationStationMap) ? cloneValue(requirements.presentationStationMap) : []
+        publicApiRequirements: Array.isArray(requirements.publicApiRequirements)
+          ? requirements.publicApiRequirements.slice()
+          : [],
+        requiredCycleTargetIds: Array.isArray(requirements.requiredCycleTargetIds)
+          ? requirements.requiredCycleTargetIds.slice()
+          : [],
+        requiredStationPositions: Array.isArray(requirements.requiredStationPositions)
+          ? requirements.requiredStationPositions.slice()
+          : [],
+        presentationStationMap: Array.isArray(requirements.presentationStationMap)
+          ? cloneValue(requirements.presentationStationMap)
+          : []
       }
     };
 
@@ -886,6 +1027,7 @@
   function evaluateControlsApi(state, requirements) {
     var observations = observePathSet(CONTROLS_API_PATHS);
     var canonical = observations[0] ? observations[0].value : null;
+
     var requiredMethods = requirements && Array.isArray(requirements.publicApiRequirements)
       ? requirements.publicApiRequirements.slice()
       : [];
@@ -898,9 +1040,11 @@
       });
     }
 
-    var conflictingAliases = observations.filter(function observed(entry) {
-      return Boolean(entry.value && canonical && entry.value !== canonical);
-    }).map(function map(entry) { return entry.path; });
+    var conflictingAliases = observations
+      .filter(function observed(entry) {
+        return Boolean(entry.value && canonical && entry.value !== canonical);
+      })
+      .map(function map(entry) { return entry.path; });
 
     var observedContract = readContract(canonical);
     var expectedContract = requirements ? requirements.controlsContract || null : null;
@@ -947,7 +1091,9 @@
     state.aliasReferences = {
       status: conflictingAliases.length === 0 ? STATUS.READY : STATUS.HELD,
       complete: conflictingAliases.length === 0,
-      reason: conflictingAliases.length === 0 ? "CONTROLS_API_REFERENCES_CORRESPOND" : "CONTROLS_API_REFERENCES_CONFLICT",
+      reason: conflictingAliases.length === 0
+        ? "CONTROLS_API_REFERENCES_CORRESPOND"
+        : "CONTROLS_API_REFERENCES_CONFLICT",
       evidence: { conflictingAliases: conflictingAliases }
     };
   }
@@ -960,7 +1106,9 @@
     state.inspectionEvidence = {
       status: complete ? STATUS.READY : STATUS.UNAVAILABLE,
       complete: complete,
-      reason: complete ? "INSPECTION_AUTHORITY_AND_RECEIPT_OBSERVED" : "INSPECTION_AUTHORITY_OR_RECEIPT_UNAVAILABLE",
+      reason: complete
+        ? "INSPECTION_AUTHORITY_AND_RECEIPT_OBSERVED"
+        : "INSPECTION_AUTHORITY_OR_RECEIPT_UNAVAILABLE",
       evidence: {
         apiObserved: Boolean(api && api.value),
         apiPath: api ? api.path : null,
@@ -974,23 +1122,222 @@
 
   function observeAuthorityContract(paths) {
     var resolved = resolveFirst(paths);
+
     return {
       observed: Boolean(resolved && resolved.value),
       path: resolved ? resolved.path : null,
-      contract: resolved ? readContract(resolved.value) : null
+      contract: resolved ? readContract(resolved.value) : null,
+      version: resolved ? readVersion(resolved.value) : null,
+      receipt: resolved ? readReceipt(resolved.value) : null,
+      value: resolved ? resolved.value : null
+    };
+  }
+
+  function evaluateLegacyInterpreterEvidence(state, requirements) {
+    var interpreter = observeAuthorityContract(LEGACY_INTERPRETER_API_PATHS);
+    var expected = requirements ? requirements.expectedEngineContract || null : null;
+    var mismatch = Boolean(interpreter.observed && expected && interpreter.contract && interpreter.contract !== expected);
+
+    state.legacyInterpreterEvidence = {
+      status: interpreter.observed && !mismatch ? STATUS.READY : (interpreter.observed ? STATUS.HELD : STATUS.UNAVAILABLE),
+      complete: Boolean(interpreter.observed && !mismatch),
+      reason: interpreter.observed
+        ? mismatch
+          ? "LEGACY_INTERPRETER_CONTRACT_MISMATCH_IGNORED_WHEN_DGB_READY"
+          : "LEGACY_INTERPRETER_OBSERVED"
+        : "LEGACY_INTERPRETER_UNAVAILABLE",
+      evidence: {
+        observed: interpreter.observed,
+        path: interpreter.path,
+        observedContract: interpreter.contract,
+        expectedContract: expected,
+        mismatch: mismatch,
+        terminalForDgbFamily: false
+      }
+    };
+  }
+
+  function evaluateDgbContractEvidence(state) {
+    var authority = observeAuthorityContract(DGB_CONTRACT_PATHS);
+    var receiptGlobal = resolveFirst(["DGB_ENGINE_CONTRACT_RECEIPT"]);
+    var receipt = authority.receipt || (receiptGlobal ? receiptGlobal.value : null);
+
+    var ready = Boolean(
+      authority.observed &&
+      authority.contract === DGB_CONTRACT &&
+      receipt &&
+      receipt.ready === true &&
+      receipt.status === "READY" &&
+      receipt.modelSchema === DGB_MODEL_SCHEMA
+    );
+
+    state.dgbContractEvidence = {
+      status: ready ? STATUS.READY : (authority.observed ? STATUS.HELD : STATUS.UNAVAILABLE),
+      complete: ready,
+      reason: ready
+        ? "DGB_GOVERNING_CONTRACT_READY"
+        : !authority.observed
+          ? "DGB_GOVERNING_CONTRACT_UNAVAILABLE"
+          : authority.contract !== DGB_CONTRACT
+            ? "DGB_GOVERNING_CONTRACT_IDENTITY_MISMATCH"
+            : "DGB_GOVERNING_CONTRACT_RECEIPT_NOT_READY",
+      evidence: {
+        observed: authority.observed,
+        path: authority.path,
+        observedContract: authority.contract,
+        expectedContract: DGB_CONTRACT,
+        version: authority.version,
+        receiptObserved: Boolean(receipt),
+        receiptReady: Boolean(receipt && receipt.ready === true),
+        receiptStatus: receipt ? receipt.status || null : null,
+        modelSchema: receipt ? receipt.modelSchema || null : null,
+        expectedModelSchema: DGB_MODEL_SCHEMA
+      }
+    };
+  }
+
+  function evaluateDgbCoreEvidence(state) {
+    var core = observeAuthorityContract(DGB_CORE_PATHS);
+    var receiptGlobal = resolveFirst(DGB_RECEIPT_PATHS);
+    var receipt = core.receipt || (receiptGlobal ? receiptGlobal.value : null);
+
+    var authorityMatched = Boolean(receipt && receipt.authorityMatched === true);
+    var quietLoad = Boolean(!receipt || receipt.quietLoadPreserved !== false);
+    var f21Unclaimed = Boolean(!receipt || receipt.f21Claimed !== true);
+
+    var coherent = Boolean(
+      core.observed &&
+      core.contract === DGB_CORE &&
+      core.value &&
+      core.value.GOVERNING_CONTRACT === DGB_CONTRACT &&
+      core.value.MODEL_SCHEMA === DGB_MODEL_SCHEMA &&
+      authorityMatched &&
+      quietLoad &&
+      f21Unclaimed
+    );
+
+    state.dgbCoreEvidence = {
+      status: coherent ? STATUS.READY : (core.observed ? STATUS.HELD : STATUS.UNAVAILABLE),
+      complete: coherent,
+      reason: coherent
+        ? "DGB_RUNTIME_CORE_COHERENT"
+        : !core.observed
+          ? "DGB_RUNTIME_CORE_UNAVAILABLE"
+          : core.contract !== DGB_CORE
+            ? "DGB_RUNTIME_CORE_IDENTITY_MISMATCH"
+            : "DGB_RUNTIME_CORE_NOT_AUTHORITY_MATCHED",
+      evidence: {
+        observed: core.observed,
+        path: core.path,
+        observedContract: core.contract,
+        expectedContract: DGB_CORE,
+        version: core.version,
+        governingContract: core.value ? core.value.GOVERNING_CONTRACT || null : null,
+        expectedGoverningContract: DGB_CONTRACT,
+        modelSchema: core.value ? core.value.MODEL_SCHEMA || null : null,
+        expectedModelSchema: DGB_MODEL_SCHEMA,
+        receiptObserved: Boolean(receipt),
+        receiptStatus: receipt ? receipt.status || null : null,
+        authorityMatched: authorityMatched,
+        quietLoadPreserved: receipt ? receipt.quietLoadPreserved !== false : null,
+        f21Claimed: receipt ? receipt.f21Claimed === true : null
+      }
+    };
+  }
+
+  function evaluateDgbRegistryEvidence(state) {
+    var registry = observeAuthorityContract(DGB_REGISTRY_PATHS);
+    var receiptGlobal = resolveFirst(DGB_REGISTRY_RECEIPT_PATHS);
+    var receipt = registry.receipt || (receiptGlobal ? receiptGlobal.value : null);
+
+    var engine = receipt && receipt.coreEngine ? receipt.coreEngine : null;
+    var contract = receipt && receipt.governingContract ? receipt.governingContract : null;
+
+    var coherent = Boolean(
+      registry.observed &&
+      registry.contract === DGB_REGISTRY &&
+      receipt &&
+      receipt.contract === DGB_REGISTRY &&
+      receipt.slotCount === 6 &&
+      receipt.defaultEngineId === "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE" &&
+      contract &&
+      contract.loaded === true &&
+      contract.identityMatched === true &&
+      contract.validationPassed === true &&
+      contract.authorityReady === true &&
+      engine &&
+      engine.loaded === true &&
+      engine.identityMatched === true &&
+      engine.governingContractMatched === true &&
+      engine.f21Claimed !== true
+    );
+
+    state.dgbRegistryEvidence = {
+      status: coherent ? STATUS.READY : (registry.observed ? STATUS.HELD : STATUS.UNAVAILABLE),
+      complete: coherent,
+      reason: coherent
+        ? "DGB_SUBJECT_REGISTRY_COHERENT"
+        : !registry.observed
+          ? "DGB_SUBJECT_REGISTRY_UNAVAILABLE"
+          : registry.contract !== DGB_REGISTRY
+            ? "DGB_SUBJECT_REGISTRY_IDENTITY_MISMATCH"
+            : "DGB_SUBJECT_REGISTRY_RECEIPT_NOT_COHERENT",
+      evidence: {
+        observed: registry.observed,
+        path: registry.path,
+        observedContract: registry.contract,
+        expectedContract: DGB_REGISTRY,
+        version: registry.version,
+        receiptObserved: Boolean(receipt),
+        receiptContract: receipt ? receipt.contract || null : null,
+        slotCount: receipt ? receipt.slotCount || null : null,
+        defaultEngineId: receipt ? receipt.defaultEngineId || null : null,
+        governingContract: contract ? cloneValue(contract) : null,
+        coreEngine: engine ? cloneValue(engine) : null
+      }
+    };
+  }
+
+  function evaluateDgbFamilyEvidence(state) {
+    var complete = Boolean(
+      state.dgbContractEvidence.complete &&
+      state.dgbCoreEvidence.complete &&
+      state.dgbRegistryEvidence.complete
+    );
+
+    state.dgbFamilyEvidence = {
+      status: complete ? STATUS.READY : STATUS.HELD,
+      complete: complete,
+      reason: complete
+        ? "DGB_ENGINE_FAMILY_SYNCHRONIZED"
+        : "DGB_ENGINE_FAMILY_NOT_SYNCHRONIZED",
+      evidence: {
+        contractReady: Boolean(state.dgbContractEvidence.complete),
+        coreReady: Boolean(state.dgbCoreEvidence.complete),
+        registryReady: Boolean(state.dgbRegistryEvidence.complete),
+        legacyInterpreterMismatchIgnored: Boolean(
+          state.legacyInterpreterEvidence &&
+          state.legacyInterpreterEvidence.evidence &&
+          state.legacyInterpreterEvidence.evidence.mismatch === true &&
+          complete
+        ),
+        engineReadinessProven: false,
+        f21Claimed: false
+      }
     };
   }
 
   function evaluateContracts(state, requirements) {
     var controls = observeAuthorityContract(CONTROLS_API_PATHS);
     var inspection = observeAuthorityContract(INSPECTION_API_PATHS);
-    var interpreter = observeAuthorityContract(INTERPRETER_API_PATHS);
     var rail = observeAuthorityContract(RAIL_API_PATHS);
 
     var expected = {
       controls: requirements ? requirements.controlsContract || null : null,
       inspection: requirements ? requirements.expectedInspectionLaneContract || null : null,
-      interpreter: requirements ? requirements.expectedEngineContract || null : null,
+      dgbContract: DGB_CONTRACT,
+      dgbCore: DGB_CORE,
+      dgbRegistry: DGB_REGISTRY,
       bridge: CONTRACT,
       rail: null
     };
@@ -998,12 +1345,14 @@
     var observed = {
       controls: controls.contract,
       inspection: inspection.contract,
-      interpreter: interpreter.contract,
+      dgbContract: state.dgbContractEvidence.evidence.observedContract,
+      dgbCore: state.dgbCoreEvidence.evidence.observedContract,
+      dgbRegistry: state.dgbRegistryEvidence.evidence.observedContract,
       bridge: CONTRACT,
       rail: rail.contract
     };
 
-    var keys = ["controls", "inspection", "interpreter", "bridge"];
+    var keys = ["controls", "inspection", "dgbContract", "dgbCore", "dgbRegistry", "bridge"];
     var matching = [];
     var missing = [];
     var mismatched = [];
@@ -1015,7 +1364,11 @@
       }
 
       if (expected[key] && expected[key] !== observed[key]) {
-        mismatched.push({ authority: key, expected: expected[key], observed: observed[key] });
+        mismatched.push({
+          authority: key,
+          expected: expected[key],
+          observed: observed[key]
+        });
         return;
       }
 
@@ -1027,17 +1380,24 @@
     state.contracts = {
       status: complete ? STATUS.READY : (mismatched.length ? STATUS.HELD : STATUS.UNAVAILABLE),
       complete: complete,
-      reason: complete ? "FAMILY_CONTRACTS_CORRESPOND" : (mismatched.length ? "FAMILY_CONTRACT_MISMATCH" : "FAMILY_CONTRACT_UNAVAILABLE"),
+      reason: complete
+        ? "FAMILY_CONTRACTS_CORRESPOND"
+        : mismatched.length
+          ? "FAMILY_CONTRACT_MISMATCH"
+          : "FAMILY_CONTRACT_UNAVAILABLE",
       evidence: {
         expected: expected,
         observed: observed,
         matching: matching,
         missing: missing,
         mismatched: mismatched,
+        legacyInterpreter: state.legacyInterpreterEvidence.evidence,
         paths: {
           controls: controls.path,
           inspection: inspection.path,
-          interpreter: interpreter.path,
+          dgbContract: state.dgbContractEvidence.evidence.path,
+          dgbCore: state.dgbCoreEvidence.evidence.path,
+          dgbRegistry: state.dgbRegistryEvidence.evidence.path,
           rail: rail.path,
           bridge: FILE
         }
@@ -1104,12 +1464,16 @@
   }
 
   function collectStationRows() {
-    return Array.prototype.slice.call(doc.querySelectorAll("#cycleMap [data-position], #cycleChamber [data-position]"));
+    return Array.prototype.slice.call(
+      doc.querySelectorAll("#cycleMap [data-position], #cycleChamber [data-position]")
+    );
   }
 
   function evaluateStationMap(state, requirements) {
     var requiredPositions = requirements && Array.isArray(requirements.requiredStationPositions)
-      ? requirements.requiredStationPositions.map(Number).filter(function keep(value) { return Number.isInteger(value); })
+      ? requirements.requiredStationPositions.map(Number).filter(function keep(value) {
+          return Number.isInteger(value);
+        })
       : [];
 
     var presentationMap = requirements && Array.isArray(requirements.presentationStationMap)
@@ -1166,7 +1530,9 @@
         return;
       }
 
-      if (positionRows.length > 1) duplicate.push({ position: position, count: positionRows.length });
+      if (positionRows.length > 1) {
+        duplicate.push({ position: position, count: positionRows.length });
+      }
 
       var expected = expectedByPosition[position];
       if (!expected) return;
@@ -1178,11 +1544,19 @@
         var expectedRole = normalizeToken(expected.role);
 
         if (expectedFibonacci && observedFibonacci !== expectedFibonacci) {
-          fibonacciMismatch.push({ position: position, expected: expected.fibonacci, observed: row.getAttribute("data-fibonacci") });
+          fibonacciMismatch.push({
+            position: position,
+            expected: expected.fibonacci,
+            observed: row.getAttribute("data-fibonacci")
+          });
         }
 
         if (expectedRole && observedRole !== expectedRole) {
-          roleMismatch.push({ position: position, expected: expected.role, observed: row.getAttribute("data-role") });
+          roleMismatch.push({
+            position: position,
+            expected: expected.role,
+            observed: row.getAttribute("data-role")
+          });
         }
       });
     });
@@ -1220,11 +1594,14 @@
   }
 
   function collectPhysicalRuntimeOrder() {
-    return Array.prototype.slice.call(doc.querySelectorAll("script[src]")).map(scriptFileName).filter(Boolean);
+    return Array.prototype.slice.call(doc.querySelectorAll("script[src]"))
+      .map(scriptFileName)
+      .filter(Boolean);
   }
 
   function orderCorresponds(expected, observed) {
     var cursor = -1;
+
     return expected.every(function find(fileName) {
       var index = observed.indexOf(fileName, cursor + 1);
       if (index === -1) return false;
@@ -1246,15 +1623,27 @@
       return;
     }
 
-    var complete = orderCorresponds(REQUIRED_RUNTIME_ORDER, observed);
+    var dgbAwareOrder = orderCorresponds(REQUIRED_RUNTIME_ORDER, observed);
+    var fallbackOrder = orderCorresponds(
+      ["index.control.bridge.js", "index.inspection.lane.js", "index.js", "index.controls.js"],
+      observed
+    );
+
+    var complete = Boolean(dgbAwareOrder || fallbackOrder);
 
     state.runtimeOrder = {
       status: complete ? STATUS.READY : STATUS.HELD,
       complete: complete,
-      reason: complete ? "PHYSICAL_RUNTIME_ORDER_CORRESPONDS" : "PHYSICAL_RUNTIME_ORDER_DOES_NOT_CORRESPOND",
+      reason: complete
+        ? dgbAwareOrder
+          ? "DGB_PHYSICAL_RUNTIME_ORDER_CORRESPONDS"
+          : "LOCAL_CONTROL_RUNTIME_ORDER_CORRESPONDS_DGB_SCRIPT_ORDER_NOT_PHYSICALLY_VISIBLE"
+        : "PHYSICAL_RUNTIME_ORDER_DOES_NOT_CORRESPOND",
       evidence: {
         expectedRuntimeOrder: REQUIRED_RUNTIME_ORDER.slice(),
-        observedPhysicalOrder: observed
+        observedPhysicalOrder: observed,
+        dgbAwareOrder: dgbAwareOrder,
+        localControlOrder: fallbackOrder
       }
     };
   }
@@ -1345,38 +1734,6 @@
     };
   }
 
-  function evaluateEngineFamilyEvidence(state) {
-    var observed = ENGINE_API_PATHS.map(function inspect(path) {
-      var value = readPath(path);
-      return {
-        path: path,
-        observed: Boolean(value),
-        contract: readContract(value),
-        receiptObserved: Boolean(value && (isFunction(value.getReceipt) || isFunction(value.getReceiptLight))),
-        noRenderingClaim: Boolean(!value || (!value.generatedImage && !value.graphicBox && !value.webGL && !value.visualPassClaimed))
-      };
-    });
-
-    var observedCount = observed.filter(function count(entry) { return entry.observed; }).length;
-    var unsafeClaims = observed.filter(function unsafe(entry) { return entry.observed && !entry.noRenderingClaim; });
-
-    state.engineFamilyEvidence = {
-      status: unsafeClaims.length ? STATUS.HELD : (observedCount ? STATUS.READY : STATUS.UNAVAILABLE),
-      complete: Boolean(observedCount > 0 && unsafeClaims.length === 0),
-      reason: unsafeClaims.length
-        ? "ENGINE_FAMILY_RENDERING_OR_VISUAL_CLAIM_BOUNDARY_HELD"
-        : observedCount
-          ? "ENGINE_FAMILY_OBSERVED_WITH_BOUNDARIES"
-          : "ENGINE_FAMILY_UNAVAILABLE",
-      evidence: {
-        observedCount: observedCount,
-        expectedPathCount: ENGINE_API_PATHS.length,
-        observed: observed,
-        unsafeClaims: unsafeClaims
-      }
-    };
-  }
-
   function classifyMandatoryCategory(state, name, metric) {
     state.mandatoryCategories.push(name);
 
@@ -1415,7 +1772,7 @@
     classifyMandatoryCategory(state, "inspectionEvidence", state.inspectionEvidence);
     classifyMandatoryCategory(state, "controlsLocalEvidence", state.controlsLocalEvidence);
     classifyMandatoryCategory(state, "railEvidence", state.railEvidence);
-    classifyMandatoryCategory(state, "engineFamilyEvidence", state.engineFamilyEvidence);
+    classifyMandatoryCategory(state, "dgbFamilyEvidence", state.dgbFamilyEvidence);
 
     if (totalAliasMetric(state, "declaredNodeCount") > 0) {
       classifyMandatoryCategory(state, "aliasTranslation", {
@@ -1453,7 +1810,8 @@
         heldMandatoryCategories: state.heldMandatoryCategories.slice(),
         unavailableMandatoryCategories: state.unavailableMandatoryCategories.slice(),
         failedMandatoryCategories: state.failedMandatoryCategories.slice(),
-        familySynchronizationCertified: certified
+        familySynchronizationCertified: certified,
+        readinessClaimed: false
       }
     };
 
@@ -1543,7 +1901,11 @@
       inspectionEvidence: snapshot(state.inspectionEvidence),
       controlsLocalEvidence: snapshot(state.controlsLocalEvidence),
       railEvidence: snapshot(state.railEvidence),
-      engineFamilyEvidence: snapshot(state.engineFamilyEvidence),
+      legacyInterpreterEvidence: snapshot(state.legacyInterpreterEvidence),
+      dgbContractEvidence: snapshot(state.dgbContractEvidence),
+      dgbCoreEvidence: snapshot(state.dgbCoreEvidence),
+      dgbRegistryEvidence: snapshot(state.dgbRegistryEvidence),
+      dgbFamilyEvidence: snapshot(state.dgbFamilyEvidence),
       familySynchronization: snapshot(state.familySynchronization),
       mandatoryCategories: state.mandatoryCategories.slice(),
       passedMandatoryCategories: state.passedMandatoryCategories.slice(),
@@ -1554,6 +1916,7 @@
       controlsStateMutated: false,
       inspectionStateMutated: false,
       interpreterStateMutated: false,
+      dgbRuntimeMutated: false,
       htmlStructureCreated: false,
       scriptOrderMutated: false,
       cssMutated: false,
@@ -1602,13 +1965,17 @@
 
       evaluateControlsApi(state, requirements);
       evaluateInspectionEvidence(state);
+      evaluateLegacyInterpreterEvidence(state, requirements);
+      evaluateDgbContractEvidence(state);
+      evaluateDgbCoreEvidence(state);
+      evaluateDgbRegistryEvidence(state);
+      evaluateDgbFamilyEvidence(state);
       evaluateContracts(state, requirements);
       evaluateHtmlTargets(state, requirements);
       evaluateStationMap(state, requirements);
       evaluateRuntimeOrder(state);
       evaluateControlsLocalEvidence(state, requirements);
       evaluateRailEvidence(state);
-      evaluateEngineFamilyEvidence(state);
       evaluateCurrentRunMutationSafety(state);
       evaluateFamilySynchronization(state);
 
@@ -1676,7 +2043,14 @@
       status: currentState.overallStatus,
       relationalVerificationRun: currentState.relationalVerificationRun,
       relationalVerificationCount: currentState.relationalVerificationCount,
-      familySynchronizationCertified: Boolean(currentState.familySynchronization && currentState.familySynchronization.complete),
+      familySynchronizationCertified: Boolean(
+        currentState.familySynchronization &&
+        currentState.familySynchronization.complete
+      ),
+      dgbFamilyReady: Boolean(
+        currentState.dgbFamilyEvidence &&
+        currentState.dgbFamilyEvidence.complete
+      ),
       heldMandatoryCategories: currentState.heldMandatoryCategories.slice(),
       unavailableMandatoryCategories: currentState.unavailableMandatoryCategories.slice(),
       failedMandatoryCategories: currentState.failedMandatoryCategories.slice(),
@@ -1710,19 +2084,25 @@
     Object.defineProperty(api, "phase", {
       enumerable: true,
       configurable: false,
-      get: function getPhase() { return currentState.phase; }
+      get: function getPhase() {
+        return currentState.phase;
+      }
     });
 
     Object.defineProperty(api, "status", {
       enumerable: true,
       configurable: false,
-      get: function getStatus() { return currentState.overallStatus; }
+      get: function getStatus() {
+        return currentState.overallStatus;
+      }
     });
 
     Object.defineProperty(api, "relationalPending", {
       enumerable: true,
       configurable: false,
-      get: function getRelationalPending() { return currentState.phase === PHASE.RELATIONAL_PENDING; }
+      get: function getRelationalPending() {
+        return currentState.phase === PHASE.RELATIONAL_PENDING;
+      }
     });
 
     Object.defineProperty(api, "familySynchronizationCertified", {
@@ -1730,6 +2110,14 @@
       configurable: false,
       get: function getCertified() {
         return Boolean(currentState.familySynchronization && currentState.familySynchronization.complete);
+      }
+    });
+
+    Object.defineProperty(api, "dgbFamilyReady", {
+      enumerable: true,
+      configurable: false,
+      get: function getDgbFamilyReady() {
+        return Boolean(currentState.dgbFamilyEvidence && currentState.dgbFamilyEvidence.complete);
       }
     });
 
@@ -1748,6 +2136,7 @@
     root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_CONTRACT__ = CONTRACT;
     root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_VERSION__ = VERSION;
     root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_NO_VISUAL_CLAIM__ = true;
+    root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_DGB_AWARE__ = true;
 
     return api;
   }
@@ -1787,7 +2176,10 @@
   }
 
   var existing = root[GLOBAL_API];
-  if (existing && (existing.CONTRACT === CONTRACT || existing.contract === CONTRACT)) return;
+
+  if (existing && (existing.CONTRACT === CONTRACT || existing.contract === CONTRACT)) {
+    return;
+  }
 
   publishApi();
   performInitialInstallation();

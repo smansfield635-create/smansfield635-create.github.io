@@ -1,935 +1,303 @@
 // /assets/engine/dgb.engine.contract.js
 // DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1
-// New-file construction.
-//
-// Purpose:
-// - Define the machine-readable contract for the shared DGB Interactive Runtime Engine.
-// - Define DGB_MODEL_PACKAGE_v1, N.E.W.S. alignment, Fibonacci gates,
-//   SPEC, OPS, comparison, receipt, model, mesh, render-pass, fallback,
-//   ownership, lifecycle, and validation contracts.
-// - Prevent declaration-only readiness and model-specific renderer ownership.
-//
-// Owns:
-// - schemas, enums, normalization, structural validation, comparison,
-//   deterministic hashing, authority receipts, and contract helpers.
-//
-// Does not own:
-// - DOM, Canvas, WebGL, WebGPU, shaders, GPU buffers, rendering, input,
-//   route integration, model-specific geometry, Hearth verdicts, or North verdicts.
+// Full-file replacement.
 
-(function installDGBEngineContract(root) {
+(function installDGBEngineContract(global) {
   "use strict";
 
-  const CONTRACT =
+  var root =
+    global ||
+    (typeof window !== "undefined"
+      ? window
+      : typeof globalThis !== "undefined"
+        ? globalThis
+        : this);
+
+  var CONTRACT =
     "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
 
-  const HYBRID_AUTHORITY =
+  var HYBRID_AUTHORITY =
     "DGB_INTERACTIVE_RUNTIME_ENGINE_HYBRID_AUTHORITY_TNT_v1";
 
-  const FILE =
-    "/assets/engine/dgb.engine.contract.js";
+  var FILE = "/assets/engine/dgb.engine.contract.js";
+  var VERSION = "1.0.0";
 
-  const VERSION =
-    "1.0.0";
+  var MODEL_SCHEMA = "DGB_MODEL_PACKAGE_v1";
+  var SPEC_SCHEMA = "DGB_ENGINE_SPEC_v1";
+  var OPS_SCHEMA = "DGB_ENGINE_OPS_v1";
+  var COMPARISON_SCHEMA = "DGB_SPEC_OPS_COMPARISON_v1";
+  var RECEIPT_SCHEMA = "DGB_ENGINE_RECEIPT_v1";
+  var AUTHORITY_RECEIPT_SCHEMA =
+    "DGB_ENGINE_AUTHORITY_RECEIPT_v1";
+  var VALIDATION_SCHEMA =
+    "DGB_ENGINE_CONTRACT_AUTHORITY_VALIDATION_v1";
 
-  const SCHEMA =
-    Object.freeze({
-      MODEL:
-        "DGB_MODEL_PACKAGE_v1",
-
-      SPEC:
-        "DGB_ENGINE_SPEC_v1",
-
-      OPS:
-        "DGB_ENGINE_OPS_v1",
-
-      COMPARISON:
-        "DGB_SPEC_OPS_COMPARISON_v1",
-
-      RECEIPT:
-        "DGB_ENGINE_RECEIPT_v1",
-
-      INSTANCE_SPEC:
-        "DGB_ENGINE_INSTANCE_SPEC_v1"
+  function freeze(value) {
+    if (!value || typeof value !== "object") return value;
+    Object.keys(value).forEach(function each(key) {
+      freeze(value[key]);
     });
-
-  function makeEnum(values) {
-    return Object.freeze(
-      values.reduce(
-        (
-          output,
-          value
-        ) => {
-          output[value] =
-            value;
-
-          return output;
-        },
-        Object.create(null)
-      )
-    );
+    try {
+      Object.freeze(value);
+    } catch (_error) {}
+    return value;
   }
 
-  const ENUM =
-    Object.freeze({
-      NEWS_SOURCE_STATUS:
-        makeEnum([
-          "CURRENT",
-          "LEGACY",
-          "SUPERSEDED",
-          "CONFLICTING",
-          "UNKNOWN"
-        ]),
-
-      NEWS_ALIGNMENT_STATUS:
-        makeEnum([
-          "ALIGNED",
-          "PARTIAL",
-          "CONFLICT",
-          "HOLD",
-          "UNKNOWN"
-        ]),
-
-      NEWS_AUTHORITY_CLASS:
-        makeEnum([
-          "CANONICAL",
-          "GOVERNING",
-          "SUPPORTING",
-          "REFERENCE",
-          "LEGACY",
-          "UNKNOWN"
-        ]),
-
-      NEWS_DISPOSITION:
-        makeEnum([
-          "PRESERVE",
-          "RENEW",
-          "EXTRACT",
-          "RETIRE",
-          "HOLD"
-        ]),
-
-      INSTANCE_STATE:
-        makeEnum([
-          "DECLARED",
-          "LOADED",
-          "VALIDATED",
-          "CREATED",
-          "MOUNTED",
-          "INITIALIZED",
-          "UPLOADED",
-          "SUBMITTED",
-          "PRESENTED",
-          "VISIBLE",
-          "INTERACTIVE",
-          "VERIFIED",
-          "READY",
-          "PAUSED",
-          "HELD",
-          "DEGRADED",
-          "FALLBACK",
-          "CONTEXT_LOST",
-          "ERROR",
-          "DESTROYED"
-        ]),
-
-      COMPARISON_STATUS:
-        makeEnum([
-          "PASS",
-          "PARTIAL_PASS",
-          "HOLD",
-          "FAIL",
-          "CONFLICT",
-          "DEGRADED",
-          "UNVERIFIED"
-        ]),
-
-      BACKEND:
-        makeEnum([
-          "WEBGPU",
-          "WEBGL2",
-          "CANVAS2D",
-          "SVG",
-          "HTML",
-          "NONE"
-        ]),
-
-      PRIMITIVE:
-        makeEnum([
-          "TRIANGLES",
-          "LINES",
-          "POINTS"
-        ]),
-
-      INDEX_FORMAT:
-        makeEnum([
-          "UINT16",
-          "UINT32",
-          "NONE"
-        ]),
-
-      BUFFER_USAGE:
-        makeEnum([
-          "STATIC",
-          "DYNAMIC",
-          "STREAM"
-        ]),
-
-      BUFFER_CUSTODY:
-        makeEnum([
-          "BORROWED_READ_ONLY",
-          "COPIED_BY_ENGINE",
-          "TRANSFERRED_TO_ENGINE"
-        ]),
-
-      ATTRIBUTE_COMPONENT_TYPE:
-        makeEnum([
-          "FLOAT32",
-          "UINT8",
-          "INT8",
-          "UINT16",
-          "INT16",
-          "UINT32",
-          "INT32"
-        ]),
-
-      BLEND_MODE:
-        makeEnum([
-          "OPAQUE",
-          "ALPHA",
-          "ADDITIVE",
-          "PREMULTIPLIED_ALPHA",
-          "MULTIPLY",
-          "CUSTOM"
-        ]),
-
-      CULL_MODE:
-        makeEnum([
-          "NONE",
-          "BACK",
-          "FRONT"
-        ]),
-
-      FRONT_FACE:
-        makeEnum([
-          "CCW",
-          "CW"
-        ]),
-
-      DEPTH_COMPARE:
-        makeEnum([
-          "NEVER",
-          "LESS",
-          "LEQUAL",
-          "EQUAL",
-          "GEQUAL",
-          "GREATER",
-          "NOTEQUAL",
-          "ALWAYS"
-        ]),
-
-      FALLBACK_TYPE:
-        makeEnum([
-          "CANVAS2D",
-          "SVG",
-          "HTML",
-          "NONE"
-        ]),
-
-      INTERACTION_MODE:
-        makeEnum([
-          "NONE",
-          "DIRECT",
-          "EXTERNAL_DOM",
-          "HYBRID"
-        ]),
-
-      ANIMATION_MODE:
-        makeEnum([
-          "NONE",
-          "AXIS_ROTATION",
-          "ORBIT",
-          "TIMELINE",
-          "CUSTOM"
-        ]),
-
-      MODEL_CLASS:
-        makeEnum([
-          "OBJECT",
-          "PLANET",
-          "WORLD",
-          "ESTATE",
-          "ROOM",
-          "MAP",
-          "DIAGRAM",
-          "ARTIFACT",
-          "DOORWAY",
-          "CUSTOM"
-        ])
+  function makeEnum(values) {
+    var output = Object.create(null);
+    values.forEach(function each(value) {
+      output[value] = value;
     });
-
-  const FIBONACCI_GATE =
-    Object.freeze({
-      F13:
-        13,
-
-      F21:
-        21,
-
-      F34:
-        34,
-
-      F55:
-        55,
-
-      F89:
-        89,
-
-      F144:
-        144,
-
-      F233:
-        233
-    });
-
-  const FIBONACCI_SEQUENCE =
-    Object.freeze([
-      FIBONACCI_GATE.F13,
-      FIBONACCI_GATE.F21,
-      FIBONACCI_GATE.F34,
-      FIBONACCI_GATE.F55,
-      FIBONACCI_GATE.F89,
-      FIBONACCI_GATE.F144,
-      FIBONACCI_GATE.F233
-    ]);
-
-  const REQUIREMENT =
-    Object.freeze({
-      FILE_LOADED:
-        "fileLoaded",
-
-      CONTRACT_MATCHED:
-        "contractMatched",
-
-      MODEL_VALIDATED:
-        "modelValidated",
-
-      INSTANCE_CREATED:
-        "instanceCreated",
-
-      MOUNT_PRESENT:
-        "mountPresent",
-
-      SURFACE_NONZERO:
-        "surfaceNonzero",
-
-      BACKEND_INITIALIZED:
-        "backendInitialized",
-
-      RESOURCES_UPLOADED:
-        "resourcesUploaded",
-
-      FIRST_FRAME_SUBMITTED:
-        "firstFrameSubmitted",
-
-      FIRST_FRAME_PRESENTED:
-        "firstFramePresented",
-
-      VISIBLE_PIXEL_OBSERVED:
-        "visiblePixelObserved",
-
-      INTERACTION_OBSERVED:
-        "interactionObserved",
-
-      FALLBACK_AVAILABLE:
-        "fallbackAvailable",
-
-      CONTEXT_RECOVERY_AVAILABLE:
-        "contextRecoveryAvailable",
-
-      DISPOSAL_OBSERVED:
-        "disposalObserved",
-
-      NO_BLOCKING_ERROR:
-        "noBlockingError"
-    });
-
-  const FORBIDDEN =
-    Object.freeze({
-      GLOBAL_SINGLETON_DEPENDENCY:
-        "globalSingletonDependency",
-
-      ROUTE_SPECIFIC_ENGINE_DUPLICATION:
-        "routeSpecificEngineDuplication",
-
-      MODEL_OWNS_SHARED_RENDERING:
-        "modelOwnsSharedRendering",
-
-      PRODUCT_ENGINE_IN_FRAME_LOOP:
-        "productEngineInFrameLoop",
-
-      SPEC_COPIED_TO_OPS:
-        "specCopiedToOps",
-
-      SILENT_CONTEXT_LOSS:
-        "silentContextLoss",
-
-      SILENT_RESOURCE_LEAK:
-        "silentResourceLeak",
-
-      SILENT_BUFFER_MUTATION:
-        "silentBufferMutation"
-    });
-
-  const DEFAULT =
-    Object.freeze({
-      NEWS:
-        Object.freeze({
-          sourceStatus:
-            ENUM
-              .NEWS_SOURCE_STATUS
-              .CURRENT,
-
-          alignmentStatus:
-            ENUM
-              .NEWS_ALIGNMENT_STATUS
-              .ALIGNED,
-
-          authorityClass:
-            ENUM
-              .NEWS_AUTHORITY_CLASS
-              .SUPPORTING,
-
-          disposition:
-            ENUM
-              .NEWS_DISPOSITION
-              .PRESERVE,
-
-          source:
-            "",
-
-          notes:
-            Object.freeze([])
-        }),
-
-      FIBONACCI:
-        Object.freeze({
-          currentGate:
-            FIBONACCI_GATE.F13,
-
-          prerequisiteGate:
-            0,
-
-          nextGate:
-            FIBONACCI_GATE.F21,
-
-          synchronized:
-            true,
-
-          evidence:
-            Object.freeze([])
-        }),
-
-      OWNERSHIP:
-        Object.freeze({
-          ownsGeometry:
-            true,
-
-          ownsRendering:
-            false,
-
-          ownsInput:
-            false,
-
-          ownsFallback:
-            false,
-
-          ownsDiagnostics:
-            false,
-
-          ownsFinalVerdict:
-            false,
-
-          usesRendering:
-            true,
-
-          usesInput:
-            false,
-
-          usesFallback:
-            true,
-
-          usesDiagnostics:
-            true
-        }),
-
-      RENDER_STATE:
-        Object.freeze({
-          depthTest:
-            true,
-
-          depthWrite:
-            true,
-
-          depthCompare:
-            ENUM
-              .DEPTH_COMPARE
-              .LEQUAL,
-
-          blend:
-            ENUM
-              .BLEND_MODE
-              .OPAQUE,
-
-          cullMode:
-            ENUM
-              .CULL_MODE
-              .BACK,
-
-          frontFace:
-            ENUM
-              .FRONT_FACE
-              .CCW,
-
-          colorWrite:
-            Object.freeze([
-              true,
-              true,
-              true,
-              true
-            ])
-        })
-    });
-
-  const STATE_ORDER =
-    Object.freeze({
-      DECLARED:
-        0,
-
-      LOADED:
-        1,
-
-      VALIDATED:
-        2,
-
-      CREATED:
-        3,
-
-      MOUNTED:
-        4,
-
-      INITIALIZED:
-        5,
-
-      UPLOADED:
-        6,
-
-      SUBMITTED:
-        7,
-
-      PRESENTED:
-        8,
-
-      VISIBLE:
-        9,
-
-      INTERACTIVE:
-        10,
-
-      VERIFIED:
-        11,
-
-      READY:
-        11,
-
-      PAUSED:
-        11,
-
-      FALLBACK:
-        5,
-
-      HELD:
-        0,
-
-      DEGRADED:
-        0,
-
-      CONTEXT_LOST:
-        0,
-
-      ERROR:
-        0,
-
-      DESTROYED:
-        12
-    });
-
-  const REQUIREMENT_MINIMUM_STATE =
-    Object.freeze({
-      [REQUIREMENT.FILE_LOADED]:
-        ENUM
-          .INSTANCE_STATE
-          .LOADED,
-
-      [REQUIREMENT.CONTRACT_MATCHED]:
-        ENUM
-          .INSTANCE_STATE
-          .LOADED,
-
-      [REQUIREMENT.MODEL_VALIDATED]:
-        ENUM
-          .INSTANCE_STATE
-          .VALIDATED,
-
-      [REQUIREMENT.INSTANCE_CREATED]:
-        ENUM
-          .INSTANCE_STATE
-          .CREATED,
-
-      [REQUIREMENT.MOUNT_PRESENT]:
-        ENUM
-          .INSTANCE_STATE
-          .MOUNTED,
-
-      [REQUIREMENT.SURFACE_NONZERO]:
-        ENUM
-          .INSTANCE_STATE
-          .MOUNTED,
-
-      [REQUIREMENT.BACKEND_INITIALIZED]:
-        ENUM
-          .INSTANCE_STATE
-          .INITIALIZED,
-
-      [REQUIREMENT.RESOURCES_UPLOADED]:
-        ENUM
-          .INSTANCE_STATE
-          .UPLOADED,
-
-      [REQUIREMENT.FIRST_FRAME_SUBMITTED]:
-        ENUM
-          .INSTANCE_STATE
-          .SUBMITTED,
-
-      [REQUIREMENT.FIRST_FRAME_PRESENTED]:
-        ENUM
-          .INSTANCE_STATE
-          .PRESENTED,
-
-      [REQUIREMENT.VISIBLE_PIXEL_OBSERVED]:
-        ENUM
-          .INSTANCE_STATE
-          .VISIBLE,
-
-      [REQUIREMENT.INTERACTION_OBSERVED]:
-        ENUM
-          .INSTANCE_STATE
-          .INTERACTIVE,
-
-      [REQUIREMENT.FALLBACK_AVAILABLE]:
-        ENUM
-          .INSTANCE_STATE
-          .INITIALIZED,
-
-      [REQUIREMENT.CONTEXT_RECOVERY_AVAILABLE]:
-        ENUM
-          .INSTANCE_STATE
-          .INITIALIZED,
-
-      [REQUIREMENT.DISPOSAL_OBSERVED]:
-        ENUM
-          .INSTANCE_STATE
-          .DESTROYED,
-
-      [REQUIREMENT.NO_BLOCKING_ERROR]:
-        ENUM
-          .INSTANCE_STATE
-          .DECLARED
-    });
-
-  const ATTRIBUTE_SIZE_HINT =
-    Object.freeze({
-      POSITION:
-        3,
-
-      NORMAL:
-        3,
-
-      TANGENT:
-        4,
-
-      COLOR:
-        4,
-
-      UV:
-        2,
-
-      TEXCOORD_0:
-        2,
-
-      MATERIAL:
-        1,
-
-      MATERIAL_REGION:
-        1,
-
-      SURFACE:
-        1,
-
-      SURFACE_CLASS:
-        1,
-
-      FACET_ID:
-        1,
-
-      OBJECT_ID:
-        1,
-
-      POINT_SIZE:
-        1
-    });
-
-  const TYPED_ARRAY_COMPONENT =
-    new Map([
-      [
-        Float32Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .FLOAT32
-      ],
-
-      [
-        Uint8Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .UINT8
-      ],
-
-      [
-        Int8Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .INT8
-      ],
-
-      [
-        Uint16Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .UINT16
-      ],
-
-      [
-        Int16Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .INT16
-      ],
-
-      [
-        Uint32Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .UINT32
-      ],
-
-      [
-        Int32Array,
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-          .INT32
-      ]
-    ]);
-
-  function hasOwn(
-    object,
-    key
-  ) {
-    return Object
-      .prototype
-      .hasOwnProperty
-      .call(
-        object,
-        key
-      );
+    return freeze(output);
+  }
+
+  var ENUM = freeze({
+    SOURCE_STATUS: makeEnum([
+      "CURRENT",
+      "LEGACY",
+      "SUPERSEDED",
+      "CONFLICTING",
+      "UNKNOWN"
+    ]),
+    ALIGNMENT_STATUS: makeEnum([
+      "ALIGNED",
+      "PARTIAL",
+      "CONFLICT",
+      "HOLD",
+      "UNKNOWN"
+    ]),
+    AUTHORITY_CLASS: makeEnum([
+      "CANONICAL",
+      "GOVERNING",
+      "SUPPORTING",
+      "REFERENCE",
+      "LEGACY",
+      "UNKNOWN"
+    ]),
+    DISPOSITION: makeEnum([
+      "PRESERVE",
+      "RENEW",
+      "EXTRACT",
+      "RETIRE",
+      "HOLD"
+    ]),
+    STATE: makeEnum([
+      "DECLARED",
+      "LOADED",
+      "VALIDATED",
+      "CREATED",
+      "MOUNTED",
+      "INITIALIZED",
+      "UPLOADED",
+      "SUBMITTED",
+      "PRESENTED",
+      "VISIBLE",
+      "INTERACTIVE",
+      "VERIFIED",
+      "READY",
+      "PAUSED",
+      "HELD",
+      "DEGRADED",
+      "FALLBACK",
+      "CONTEXT_LOST",
+      "RECOVERING",
+      "ERROR",
+      "DESTROYED"
+    ]),
+    COMPARISON_STATUS: makeEnum([
+      "PASS",
+      "PARTIAL_PASS",
+      "HOLD",
+      "FAIL",
+      "CONFLICT",
+      "DEGRADED",
+      "UNVERIFIED"
+    ]),
+    BACKEND: makeEnum([
+      "WEBGPU",
+      "WEBGL2",
+      "CANVAS2D",
+      "SVG",
+      "HTML",
+      "NONE"
+    ]),
+    MODEL_CLASS: makeEnum([
+      "OBJECT",
+      "PLANET",
+      "WORLD",
+      "ESTATE",
+      "ROOM",
+      "MAP",
+      "DIAGRAM",
+      "ARTIFACT",
+      "DOORWAY",
+      "CUSTOM"
+    ]),
+    INTERACTION_MODE: makeEnum([
+      "NONE",
+      "DIRECT",
+      "EXTERNAL_DOM",
+      "HYBRID"
+    ]),
+    FALLBACK_TYPE: makeEnum([
+      "CANVAS2D",
+      "SVG",
+      "HTML",
+      "NONE"
+    ])
+  });
+
+  var FIBONACCI = freeze([13, 21, 34, 55, 89, 144, 233]);
+
+  var REQUIREMENT = freeze({
+    FILE_LOADED: "fileLoaded",
+    CONTRACT_MATCHED: "contractMatched",
+    MODEL_VALIDATED: "modelValidated",
+    INSTANCE_CREATED: "instanceCreated",
+    MOUNT_PRESENT: "mountPresent",
+    SURFACE_NONZERO: "surfaceNonzero",
+    BACKEND_INITIALIZED: "backendInitialized",
+    RESOURCES_UPLOADED: "resourcesUploaded",
+    FIRST_FRAME_SUBMITTED: "firstFrameSubmitted",
+    FIRST_FRAME_PRESENTED: "firstFramePresented",
+    VISIBLE_PIXEL_OBSERVED: "visiblePixelObserved",
+    INTERACTION_OBSERVED: "interactionObserved",
+    FALLBACK_AVAILABLE: "fallbackAvailable",
+    CONTEXT_RECOVERY_AVAILABLE: "contextRecoveryAvailable",
+    DISPOSAL_OBSERVED: "disposalObserved",
+    NO_BLOCKING_ERROR: "noBlockingError"
+  });
+
+  var FORBIDDEN = freeze({
+    GLOBAL_SINGLETON_DEPENDENCY: "globalSingletonDependency",
+    ROUTE_SPECIFIC_ENGINE_DUPLICATION:
+      "routeSpecificEngineDuplication",
+    MODEL_OWNS_SHARED_RENDERING: "modelOwnsSharedRendering",
+    PRODUCT_ENGINE_IN_FRAME_LOOP: "productEngineInFrameLoop",
+    SPEC_COPIED_TO_OPS: "specCopiedToOps",
+    SILENT_CONTEXT_LOSS: "silentContextLoss",
+    SILENT_RESOURCE_LEAK: "silentResourceLeak",
+    SILENT_BUFFER_MUTATION: "silentBufferMutation"
+  });
+
+  var STATE_ORDER = freeze({
+    DECLARED: 0,
+    LOADED: 1,
+    VALIDATED: 2,
+    CREATED: 3,
+    MOUNTED: 4,
+    INITIALIZED: 5,
+    UPLOADED: 6,
+    SUBMITTED: 7,
+    PRESENTED: 8,
+    VISIBLE: 9,
+    INTERACTIVE: 10,
+    VERIFIED: 11,
+    READY: 11,
+    PAUSED: 11,
+    FALLBACK: 5,
+    HELD: 0,
+    DEGRADED: 0,
+    CONTEXT_LOST: 0,
+    RECOVERING: 0,
+    ERROR: 0,
+    DESTROYED: 12
+  });
+
+  var REQUIREMENT_STATE = freeze({
+    fileLoaded: "LOADED",
+    contractMatched: "LOADED",
+    modelValidated: "VALIDATED",
+    instanceCreated: "CREATED",
+    mountPresent: "MOUNTED",
+    surfaceNonzero: "MOUNTED",
+    backendInitialized: "INITIALIZED",
+    resourcesUploaded: "UPLOADED",
+    firstFrameSubmitted: "SUBMITTED",
+    firstFramePresented: "PRESENTED",
+    visiblePixelObserved: "VISIBLE",
+    interactionObserved: "INTERACTIVE",
+    fallbackAvailable: "INITIALIZED",
+    contextRecoveryAvailable: "INITIALIZED",
+    disposalObserved: "DESTROYED",
+    noBlockingError: "DECLARED"
+  });
+
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function hasOwn(object, key) {
+    return Object.prototype.hasOwnProperty.call(Object(object), key);
   }
 
   function isObject(value) {
-    return (
-      value !==
-      null &&
-
-      typeof value ===
-      "object"
-    );
+    return Boolean(value && typeof value === "object");
   }
 
   function isPlainObject(value) {
-    if (!isObject(value)) {
-      return false;
-    }
+    if (!isObject(value) || Array.isArray(value)) return false;
+    var prototype = Object.getPrototypeOf(value);
+    return prototype === Object.prototype || prototype === null;
+  }
 
-    const prototype =
-      Object.getPrototypeOf(
-        value
-      );
-
-    return (
-      prototype ===
-      Object.prototype ||
-
-      prototype ===
-      null
-    );
+  function hasArrayBuffer() {
+    return typeof ArrayBuffer !== "undefined";
   }
 
   function isTypedArray(value) {
-    return (
-      ArrayBuffer.isView(
-        value
-      ) &&
-
-      !(
-        value instanceof
-        DataView
-      )
+    return Boolean(
+      value &&
+      hasArrayBuffer() &&
+      ArrayBuffer.isView &&
+      ArrayBuffer.isView(value) &&
+      !(typeof DataView !== "undefined" && value instanceof DataView)
     );
   }
 
-  function finiteNumber(value) {
-    return (
-      typeof value ===
-      "number" &&
-
-      Number.isFinite(
-        value
-      )
-    );
-  }
-
-  function stringValue(
-    value,
-    fallback
-  ) {
-    return (
-      typeof value ===
-        "string" &&
-
-      value.trim()
-    )
+  function stringValue(value, fallback) {
+    return typeof value === "string" && value.trim()
       ? value.trim()
       : fallback;
   }
 
-  function integerValue(
-    value,
-    fallback
-  ) {
-    const parsed =
-      Number(value);
-
-    return Number.isInteger(
-      parsed
-    )
-      ? parsed
-      : fallback;
+  function boolValue(value, fallback) {
+    return typeof value === "boolean" ? value : Boolean(fallback);
   }
 
-  function numberValue(
-    value,
-    fallback
-  ) {
-    const parsed =
-      Number(value);
-
-    return Number.isFinite(
-      parsed
-    )
-      ? parsed
-      : fallback;
+  function intValue(value, fallback) {
+    var parsed = Number(value);
+    return Number.isInteger(parsed) ? parsed : fallback;
   }
 
-  function booleanValue(
-    value,
-    fallback
-  ) {
-    return (
-      typeof value ===
-      "boolean"
-    )
-      ? value
-      : Boolean(
-          fallback
-        );
-  }
-
-  function enumValue(
-    enumeration,
-    value,
-    fallback
-  ) {
-    const normalized =
-      typeof value ===
-      "string"
-        ? value
-            .trim()
-            .toUpperCase()
-        : "";
-
-    return hasOwn(
-      enumeration,
-      normalized
-    )
-      ? enumeration[
-          normalized
-        ]
+  function enumValue(enumeration, value, fallback) {
+    var normalized =
+      typeof value === "string" ? value.trim().toUpperCase() : "";
+    return hasOwn(enumeration, normalized)
+      ? enumeration[normalized]
       : fallback;
   }
 
   function uniqueStrings(values) {
-    const output = [];
-    const seen =
-      new Set();
+    var output = [];
+    var seen = Object.create(null);
 
-    for (
-      const value of
-      Array.isArray(values)
-        ? values
-        : []
-    ) {
-      if (
-        typeof value !==
-        "string"
-      ) {
-        continue;
-      }
-
-      const normalized =
-        value.trim();
-
-      if (
-        !normalized ||
-        seen.has(normalized)
-      ) {
-        continue;
-      }
-
-      seen.add(
-        normalized
-      );
-
-      output.push(
-        normalized
-      );
-    }
+    (Array.isArray(values) ? values : []).forEach(function each(value) {
+      if (typeof value !== "string") return;
+      var normalized = value.trim();
+      if (!normalized || seen[normalized]) return;
+      seen[normalized] = true;
+      output.push(normalized);
+    });
 
     return output;
   }
 
-  function clone(
-    value,
-    seen
-  ) {
+  function clone(value, seen) {
     if (
       value === null ||
       value === undefined ||
@@ -942,142 +310,50 @@
       return value;
     }
 
-    if (
-      value instanceof
-      Date
-    ) {
-      return new Date(
-        value.getTime()
-      );
+    if (value instanceof Date) {
+      return new Date(value.getTime());
     }
 
-    if (
-      isTypedArray(
-        value
-      )
-    ) {
-      return new value.constructor(
-        value
-      );
-    }
-
-    if (
-      value instanceof
-      ArrayBuffer
-    ) {
-      return value.slice(0);
-    }
-
-    const memory =
-      seen ||
-      new WeakMap();
-
-    if (
-      memory.has(
-        value
-      )
-    ) {
-      return memory.get(
-        value
-      );
-    }
-
-    if (
-      Array.isArray(
-        value
-      )
-    ) {
-      const output = [];
-
-      memory.set(
-        value,
-        output
-      );
-
-      for (
-        const entry of
-        value
-      ) {
-        output.push(
-          clone(
-            entry,
-            memory
-          )
-        );
+    if (isTypedArray(value)) {
+      try {
+        return new value.constructor(value);
+      } catch (_error) {
+        return value;
       }
-
-      return output;
     }
 
-    const output = {};
-
-    memory.set(
-      value,
-      output
-    );
-
-    for (
-      const key of
-      Object.keys(value)
-    ) {
-      output[key] =
-        clone(
-          value[key],
-          memory
-        );
+    if (hasArrayBuffer() && value instanceof ArrayBuffer && value.slice) {
+      try {
+        return value.slice(0);
+      } catch (_error2) {
+        return value;
+      }
     }
+
+    var memory = seen || [];
+
+    if (memory.indexOf(value) !== -1) {
+      return "[Circular]";
+    }
+
+    memory.push(value);
+
+    if (Array.isArray(value)) {
+      return value.map(function map(entry) {
+        return clone(entry, memory.slice());
+      });
+    }
+
+    var output = {};
+
+    Object.keys(value).forEach(function each(key) {
+      output[key] = clone(value[key], memory.slice());
+    });
 
     return output;
   }
 
-  function deepFreeze(
-    value,
-    seen
-  ) {
-    if (
-      !isObject(value) ||
-      isTypedArray(value) ||
-      value instanceof
-        ArrayBuffer
-    ) {
-      return value;
-    }
-
-    const memory =
-      seen ||
-      new WeakSet();
-
-    if (
-      memory.has(
-        value
-      )
-    ) {
-      return value;
-    }
-
-    memory.add(
-      value
-    );
-
-    for (
-      const key of
-      Object.keys(value)
-    ) {
-      deepFreeze(
-        value[key],
-        memory
-      );
-    }
-
-    return Object.freeze(
-      value
-    );
-  }
-
-  function plain(
-    value,
-    seen
-  ) {
+  function plain(value, seen) {
     if (
       value === null ||
       value === undefined ||
@@ -1088,116 +364,56 @@
       return value;
     }
 
-    if (
-      typeof value ===
-      "bigint"
-    ) {
-      return value.toString();
-    }
+    if (typeof value === "bigint") return value.toString();
 
-    if (
-      typeof value ===
-      "function"
-    ) {
+    if (typeof value === "function") {
       return {
-        type:
-          "Function",
-
-        name:
-          value.name ||
-          "anonymous"
+        type: "Function",
+        name: value.name || "anonymous"
       };
     }
 
-    if (
-      value instanceof
-      Date
-    ) {
-      return value.toISOString();
-    }
+    if (value instanceof Date) return value.toISOString();
 
-    if (
-      isTypedArray(
-        value
-      )
-    ) {
+    if (isTypedArray(value)) {
       return {
         type:
-          value
-            .constructor
-            .name,
-
-        length:
-          value.length,
-
-        byteLength:
-          value.byteLength
+          value.constructor && value.constructor.name
+            ? value.constructor.name
+            : "TypedArray",
+        length: value.length || 0,
+        byteLength: value.byteLength || 0
       };
     }
 
-    if (
-      value instanceof
-      ArrayBuffer
-    ) {
+    if (hasArrayBuffer() && value instanceof ArrayBuffer) {
       return {
-        type:
-          "ArrayBuffer",
-
-        byteLength:
-          value.byteLength
+        type: "ArrayBuffer",
+        byteLength: value.byteLength || 0
       };
     }
 
-    const memory =
-      seen ||
-      new WeakSet();
+    var memory = seen || [];
 
-    if (
-      memory.has(
-        value
-      )
-    ) {
-      return "[Circular]";
+    if (memory.indexOf(value) !== -1) return "[Circular]";
+    memory.push(value);
+
+    if (Array.isArray(value)) {
+      return value.map(function map(entry) {
+        return plain(entry, memory.slice());
+      });
     }
 
-    memory.add(
-      value
-    );
+    var output = {};
 
-    if (
-      Array.isArray(
-        value
-      )
-    ) {
-      return value.map(
-        entry =>
-          plain(
-            entry,
-            memory
-          )
-      );
-    }
-
-    const output = {};
-
-    for (
-      const key of
-      Object.keys(value)
-    ) {
-      output[key] =
-        plain(
-          value[key],
-          memory
-        );
-    }
+    Object.keys(value).forEach(function each(key) {
+      output[key] = plain(value[key], memory.slice());
+    });
 
     return output;
   }
 
-  function stablePrepare(
-    value,
-    seen
-  ) {
+  function stablePrepare(value, seen) {
     if (
       value === null ||
       value === undefined ||
@@ -1208,4461 +424,1070 @@
       return value;
     }
 
-    if (
-      typeof value ===
-      "bigint"
-    ) {
-      return value.toString();
-    }
+    if (typeof value === "bigint") return value.toString();
+    if (typeof value === "function") return "[Function]";
 
-    if (
-      typeof value ===
-      "function"
-    ) {
-      return (
-        `[Function:${
-          value.name ||
-          "anonymous"
-        }]`
-      );
-    }
+    if (value instanceof Date) return value.toISOString();
 
-    if (
-      value instanceof
-      Date
-    ) {
-      return value.toISOString();
-    }
-
-    if (
-      isTypedArray(
-        value
-      )
-    ) {
+    if (isTypedArray(value)) {
       return {
-        __typedArray:
-          value
-            .constructor
-            .name,
-
-        length:
-          value.length,
-
-        values:
-          Array.from(
-            value
-          )
+        type:
+          value.constructor && value.constructor.name
+            ? value.constructor.name
+            : "TypedArray",
+        values: Array.prototype.slice.call(value)
       };
     }
 
-    if (
-      value instanceof
-      ArrayBuffer
-    ) {
+    if (hasArrayBuffer() && value instanceof ArrayBuffer) {
       return {
-        __arrayBuffer:
-          value.byteLength
+        type: "ArrayBuffer",
+        byteLength: value.byteLength || 0
       };
     }
 
-    const memory =
-      seen ||
-      new WeakSet();
+    var memory = seen || [];
 
-    if (
-      memory.has(
-        value
-      )
-    ) {
-      return "[Circular]";
+    if (memory.indexOf(value) !== -1) return "[Circular]";
+    memory.push(value);
+
+    if (Array.isArray(value)) {
+      return value.map(function map(entry) {
+        return stablePrepare(entry, memory.slice());
+      });
     }
 
-    memory.add(
-      value
-    );
+    var output = {};
 
-    if (
-      Array.isArray(
-        value
-      )
-    ) {
-      return value.map(
-        entry =>
-          stablePrepare(
-            entry,
-            memory
-          )
-      );
-    }
-
-    const output = {};
-
-    for (
-      const key of
-      Object
-        .keys(value)
-        .sort()
-    ) {
-      output[key] =
-        stablePrepare(
-          value[key],
-          memory
-        );
-    }
+    Object.keys(value)
+      .sort()
+      .forEach(function each(key) {
+        output[key] = stablePrepare(value[key], memory.slice());
+      });
 
     return output;
   }
 
-  function stableStringify(
-    value,
-    spacing
-  ) {
-    return JSON.stringify(
-      stablePrepare(
-        value
-      ),
-      null,
-      spacing ||
-      0
-    );
+  function stableStringify(value, spacing) {
+    return JSON.stringify(stablePrepare(value), null, spacing || 0);
   }
 
   function hash(value) {
-    const text =
-      stableStringify(
-        value
-      );
+    var text = stableStringify(value);
+    var result = 0x811c9dc5;
 
-    let result =
-      0x811c9dc5;
-
-    for (
-      let index = 0;
-      index <
-      text.length;
-      index += 1
-    ) {
-      result ^=
-        text.charCodeAt(
-          index
-        );
-
-      result =
-        Math.imul(
-          result,
-          0x01000193
-        ) >>>
-        0;
+    for (var index = 0; index < text.length; index += 1) {
+      result ^= text.charCodeAt(index);
+      result = Math.imul(result, 0x01000193) >>> 0;
     }
 
-    return (
-      `fnv1a32-${
-        result
-          .toString(16)
-          .padStart(
-            8,
-            "0"
-          )
-      }`
-    );
+    return "fnv1a32-" + ("00000000" + result.toString(16)).slice(-8);
   }
 
   function collector(scope) {
-    const checks = [];
-    const failures = [];
-    const warnings = [];
+    var checks = [];
+    var failures = [];
+    var warnings = [];
 
-    function add(
-      id,
-      passed,
-      expected,
-      actual,
-      detail,
-      severity
-    ) {
-      const entry = {
-        id:
-          `${scope}:${id}`,
-
-        passed:
-          Boolean(
-            passed
-          ),
-
-        severity:
-          severity ||
-          "error",
-
-        expected:
-          plain(
-            expected
-          ),
-
-        actual:
-          plain(
-            actual
-          ),
-
-        detail:
-          detail ||
-          ""
+    function add(id, passed, expected, actual, detail, severity) {
+      var entry = {
+        id: scope + ":" + id,
+        passed: Boolean(passed),
+        severity: severity || "error",
+        expected: plain(expected),
+        actual: plain(actual),
+        detail: detail || ""
       };
 
-      checks.push(
-        entry
-      );
+      checks.push(entry);
 
       if (!entry.passed) {
-        if (
-          entry.severity ===
-          "warning"
-        ) {
-          warnings.push(
-            entry
-          );
-        } else {
-          failures.push(
-            entry
-          );
-        }
+        if (entry.severity === "warning") warnings.push(entry);
+        else failures.push(entry);
       }
 
       return entry;
     }
 
     function result(extra) {
-      return deepFreeze({
-        scope,
-
-        passed:
-          failures.length ===
-          0,
-
-        checkCount:
-          checks.length,
-
-        passCount:
-          checks.filter(
-            check =>
-              check.passed
-          ).length,
-
-        warningCount:
-          warnings.length,
-
-        failCount:
-          failures.length,
-
-        checks:
-          clone(
-            checks
-          ),
-
-        warnings:
-          clone(
-            warnings
-          ),
-
-        failures:
-          clone(
-            failures
-          ),
-
-        ...(
-          extra ||
-          {}
+      return freeze(
+        Object.assign(
+          {
+            scope: scope,
+            passed: failures.length === 0,
+            checkCount: checks.length,
+            passCount: checks.filter(function filter(check) {
+              return check.passed;
+            }).length,
+            warningCount: warnings.length,
+            failCount: failures.length,
+            checks: clone(checks),
+            warnings: clone(warnings),
+            failures: clone(failures)
+          },
+          extra || {}
         )
-      });
+      );
     }
 
     return {
-      add,
-      result
+      add: add,
+      result: result
     };
   }
 
-  function previousGate(
-    currentGate
-  ) {
-    const index =
-      FIBONACCI_SEQUENCE.indexOf(
-        currentGate
-      );
-
-    return (
-      index >
-      0
-    )
-      ? FIBONACCI_SEQUENCE[
-          index -
-          1
-        ]
-      : 0;
+  function previousGate(currentGate) {
+    var index = FIBONACCI.indexOf(Number(currentGate));
+    return index > 0 ? FIBONACCI[index - 1] : 0;
   }
 
-  function nextGate(
-    currentGate
-  ) {
-    const index =
-      FIBONACCI_SEQUENCE.indexOf(
-        currentGate
-      );
-
-    return (
-      index >=
-        0 &&
-
-      index <
-        FIBONACCI_SEQUENCE.length -
-        1
-    )
-      ? FIBONACCI_SEQUENCE[
-          index +
-          1
-        ]
-      : currentGate;
+  function nextGate(currentGate) {
+    var index = FIBONACCI.indexOf(Number(currentGate));
+    return index >= 0 && index < FIBONACCI.length - 1
+      ? FIBONACCI[index + 1]
+      : Number(currentGate) || 13;
   }
 
   function normalizeNews(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
+    var source = isPlainObject(input) ? input : {};
 
-    return deepFreeze({
-      sourceStatus:
-        enumValue(
-          ENUM
-            .NEWS_SOURCE_STATUS,
-
-          source
-            .sourceStatus,
-
-          DEFAULT
-            .NEWS
-            .sourceStatus
-        ),
-
-      alignmentStatus:
-        enumValue(
-          ENUM
-            .NEWS_ALIGNMENT_STATUS,
-
-          source
-            .alignmentStatus,
-
-          DEFAULT
-            .NEWS
-            .alignmentStatus
-        ),
-
-      authorityClass:
-        enumValue(
-          ENUM
-            .NEWS_AUTHORITY_CLASS,
-
-          source
-            .authorityClass,
-
-          DEFAULT
-            .NEWS
-            .authorityClass
-        ),
-
-      disposition:
-        enumValue(
-          ENUM
-            .NEWS_DISPOSITION,
-
-          source
-            .disposition,
-
-          DEFAULT
-            .NEWS
-            .disposition
-        ),
-
-      source:
-        stringValue(
-          source.source,
-          ""
-        ),
-
-      notes:
-        uniqueStrings(
-          source.notes
-        )
+    return freeze({
+      sourceStatus: enumValue(
+        ENUM.SOURCE_STATUS,
+        source.sourceStatus,
+        ENUM.SOURCE_STATUS.CURRENT
+      ),
+      alignmentStatus: enumValue(
+        ENUM.ALIGNMENT_STATUS,
+        source.alignmentStatus,
+        ENUM.ALIGNMENT_STATUS.ALIGNED
+      ),
+      authorityClass: enumValue(
+        ENUM.AUTHORITY_CLASS,
+        source.authorityClass,
+        ENUM.AUTHORITY_CLASS.SUPPORTING
+      ),
+      disposition: enumValue(
+        ENUM.DISPOSITION,
+        source.disposition,
+        ENUM.DISPOSITION.PRESERVE
+      ),
+      source: stringValue(source.source, ""),
+      notes: uniqueStrings(source.notes)
     });
   }
 
   function normalizeFibonacci(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
+    var source = isPlainObject(input) ? input : {};
+    var proposed = intValue(source.currentGate || source.gate, 13);
+    var currentGate = FIBONACCI.indexOf(proposed) !== -1 ? proposed : 13;
 
-    const proposed =
-      integerValue(
-        source.currentGate,
-        DEFAULT
-          .FIBONACCI
-          .currentGate
-      );
-
-    const currentGate =
-      FIBONACCI_SEQUENCE.includes(
-        proposed
-      )
-        ? proposed
-        : DEFAULT
-            .FIBONACCI
-            .currentGate;
-
-    return deepFreeze({
-      currentGate,
-
-      prerequisiteGate:
-        integerValue(
-          source
-            .prerequisiteGate,
-
-          previousGate(
-            currentGate
-          )
-        ),
-
-      nextGate:
-        integerValue(
-          source.nextGate,
-
-          nextGate(
-            currentGate
-          )
-        ),
-
-      synchronized:
-        booleanValue(
-          source
-            .synchronized,
-
-          true
-        ),
-
-      evidence:
-        uniqueStrings(
-          source.evidence
-        )
+    return freeze({
+      gate: currentGate,
+      currentGate: currentGate,
+      prerequisiteGate: intValue(
+        source.prerequisiteGate,
+        previousGate(currentGate)
+      ),
+      nextGate: intValue(source.nextGate, nextGate(currentGate)),
+      synchronized: boolValue(source.synchronized, true),
+      evidence: uniqueStrings(source.evidence)
     });
   }
 
   function normalizeOwnership(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
-
-    const output = {};
-
-    for (
-      const [
-        key,
-        fallback
-      ] of
-      Object.entries(
-        DEFAULT.OWNERSHIP
-      )
-    ) {
-      output[key] =
-        booleanValue(
-          source[key],
-          fallback
-        );
-    }
-
-    return deepFreeze(
-      output
-    );
-  }
-
-  function componentType(data) {
-    return isTypedArray(
-      data
-    )
-      ? TYPED_ARRAY_COMPONENT.get(
-          data.constructor
-        ) ||
-        null
-      : null;
-  }
-
-  function normalizeAttribute(
-    name,
-    input
-  ) {
-    const source =
-      isTypedArray(input)
-        ? {
-            data:
-              input
-          }
-        : isPlainObject(input)
-          ? input
-          : {};
-
-    const semantic =
-      stringValue(
-        source.semantic,
-        String(
-          name ||
-          "CUSTOM"
-        )
-      ).toUpperCase();
-
-    const data =
-      source.data ||
-      null;
-
-    return {
-      semantic,
-
-      data,
-
-      size:
-        Math.max(
-          1,
-
-          Math.min(
-            4,
-
-            integerValue(
-              source.size,
-              ATTRIBUTE_SIZE_HINT[
-                semantic
-              ] ||
-              1
-            )
-          )
-        ),
-
-      componentType:
-        enumValue(
-          ENUM
-            .ATTRIBUTE_COMPONENT_TYPE,
-
-          source
-            .componentType,
-
-          componentType(
-            data
-          ) ||
-          ENUM
-            .ATTRIBUTE_COMPONENT_TYPE
-            .FLOAT32
-        ),
-
-      normalized:
-        booleanValue(
-          source.normalized,
-          false
-        ),
-
-      stride:
-        Math.max(
-          0,
-
-          integerValue(
-            source.stride,
-            0
-          )
-        ),
-
-      offset:
-        Math.max(
-          0,
-
-          integerValue(
-            source.offset,
-            0
-          )
-        ),
-
-      divisor:
-        Math.max(
-          0,
-
-          integerValue(
-            source.divisor,
-            0
-          )
-        ),
-
-      custody:
-        enumValue(
-          ENUM
-            .BUFFER_CUSTODY,
-
-          source.custody,
-
-          ENUM
-            .BUFFER_CUSTODY
-            .BORROWED_READ_ONLY
-        ),
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
-    };
-  }
-
-  function normalizeRenderState(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
-
-    const colorWrite =
-      Array.isArray(
-        source.colorWrite
-      ) &&
-      source
-        .colorWrite
-        .length ===
-        4
-        ? source
-            .colorWrite
-            .map(
-              Boolean
-            )
-        : DEFAULT
-            .RENDER_STATE
-            .colorWrite
-            .slice();
-
-    return {
-      depthTest:
-        booleanValue(
-          source.depthTest,
-          DEFAULT
-            .RENDER_STATE
-            .depthTest
-        ),
-
-      depthWrite:
-        booleanValue(
-          source.depthWrite,
-          DEFAULT
-            .RENDER_STATE
-            .depthWrite
-        ),
-
-      depthCompare:
-        enumValue(
-          ENUM
-            .DEPTH_COMPARE,
-
-          source
-            .depthCompare,
-
-          DEFAULT
-            .RENDER_STATE
-            .depthCompare
-        ),
-
-      blend:
-        enumValue(
-          ENUM.BLEND_MODE,
-          source.blend,
-          DEFAULT
-            .RENDER_STATE
-            .blend
-        ),
-
-      cullMode:
-        enumValue(
-          ENUM.CULL_MODE,
-          source.cullMode,
-          DEFAULT
-            .RENDER_STATE
-            .cullMode
-        ),
-
-      frontFace:
-        enumValue(
-          ENUM.FRONT_FACE,
-          source.frontFace,
-          DEFAULT
-            .RENDER_STATE
-            .frontFace
-        ),
-
-      colorWrite,
-
-      customBlend:
-        isPlainObject(
-          source.customBlend
-        )
-          ? clone(
-              source.customBlend
-            )
-          : null
-    };
-  }
-
-  function normalizeMesh(
-    input,
-    index
-  ) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
-
-    const attributes = {};
-
-    if (
-      isPlainObject(
-        source.attributes
-      )
-    ) {
-      for (
-        const [
-          name,
-          attribute
-        ] of
-        Object.entries(
-          source.attributes
-        )
-      ) {
-        attributes[
-          String(name)
-            .toUpperCase()
-        ] =
-          normalizeAttribute(
-            name,
-            attribute
-          );
-      }
-    }
-
-    const indices =
-      source.indices ||
-      null;
-
-    const indexed =
-      typeof source.indexed ===
-      "boolean"
-        ? source.indexed
-        : isTypedArray(
-            indices
-          );
-
-    return {
-      id:
-        stringValue(
-          source.id,
-          `mesh-${index}`
-        ),
-
-      label:
-        stringValue(
-          source.label,
-          ""
-        ),
-
-      primitive:
-        enumValue(
-          ENUM.PRIMITIVE,
-          source.primitive,
-          ENUM
-            .PRIMITIVE
-            .TRIANGLES
-        ),
-
-      indexed,
-
-      attributes,
-
-      indices,
-
-      indexFormat:
-        indexed
-          ? indices instanceof
-              Uint32Array
-            ? ENUM
-                .INDEX_FORMAT
-                .UINT32
-            : ENUM
-                .INDEX_FORMAT
-                .UINT16
-          : ENUM
-              .INDEX_FORMAT
-              .NONE,
-
-      vertexCount:
-        Math.max(
-          0,
-
-          integerValue(
-            source.vertexCount,
-            0
-          )
-        ),
-
-      indexCount:
-        Math.max(
-          0,
-
-          integerValue(
-            source.indexCount,
-            0
-          )
-        ),
-
-      instanceCount:
-        Math.max(
-          1,
-
-          integerValue(
-            source.instanceCount,
-            1
-          )
-        ),
-
-      usage:
-        enumValue(
-          ENUM.BUFFER_USAGE,
-          source.usage,
-          ENUM
-            .BUFFER_USAGE
-            .STATIC
-        ),
-
-      materialId:
-        stringValue(
-          source.materialId,
-          ""
-        ),
-
-      shaderId:
-        stringValue(
-          source.shaderId,
-          ""
-        ),
-
-      transparent:
-        booleanValue(
-          source.transparent,
-          false
-        ),
-
-      visible:
-        booleanValue(
-          source.visible,
-          true
-        ),
-
-      selectable:
-        booleanValue(
-          source.selectable,
-          false
-        ),
-
-      renderState:
-        normalizeRenderState(
-          source.renderState
-        ),
-
-      bounds:
-        isPlainObject(
-          source.bounds
-        )
-          ? clone(
-              source.bounds
-            )
-          : {},
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
-    };
-  }
-
-  function normalizeMaterial(
-    input,
-    index
-  ) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
-
-    return {
-      id:
-        stringValue(
-          source.id,
-          `material-${index}`
-        ),
-
-      label:
-        stringValue(
-          source.label,
-          ""
-        ),
-
-      family:
-        stringValue(
-          source.family,
-          "GENERIC"
-        ),
-
-      shaderId:
-        stringValue(
-          source.shaderId,
-          ""
-        ),
-
-      parameters:
-        isPlainObject(
-          source.parameters
-        )
-          ? clone(
-              source.parameters
-            )
-          : {},
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
-    };
-  }
-
-  function normalizeShader(
-    input,
-    index
-  ) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
-
-    return {
-      id:
-        stringValue(
-          source.id,
-          `shader-${index}`
-        ),
-
-      label:
-        stringValue(
-          source.label,
-          ""
-        ),
-
-      family:
-        stringValue(
-          source.family,
-          "GENERIC"
-        ),
-
-      backend:
-        source.backend
-          ? enumValue(
-              ENUM.BACKEND,
-              source.backend,
-              ENUM
-                .BACKEND
-                .WEBGL2
-            )
-          : null,
-
-      vertex:
-        source.vertex ||
-        null,
-
-      fragment:
-        source.fragment ||
-        null,
-
-      compute:
-        source.compute ||
-        null,
-
-      entryPoints:
-        isPlainObject(
-          source.entryPoints
-        )
-          ? clone(
-              source.entryPoints
-            )
-          : {},
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
-    };
-  }
-
-  function normalizePass(
-    input,
-    index
-  ) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
-
-    return {
-      id:
-        stringValue(
-          source.id,
-          `pass-${index}`
-        ),
-
-      label:
-        stringValue(
-          source.label,
-          ""
-        ),
-
-      order:
-        numberValue(
-          source.order,
-          index
-        ),
-
-      enabled:
-        booleanValue(
-          source.enabled,
-          true
-        ),
-
-      meshIds:
-        uniqueStrings(
-          source.meshIds
-        ),
-
-      materialIds:
-        uniqueStrings(
-          source.materialIds
-        ),
-
-      shaderId:
-        stringValue(
-          source.shaderId,
-          ""
-        ),
-
-      primitive:
-        source.primitive
-          ? enumValue(
-              ENUM.PRIMITIVE,
-              source.primitive,
-              ENUM
-                .PRIMITIVE
-                .TRIANGLES
-            )
-          : null,
-
-      state:
-        normalizeRenderState(
-          source.state ||
-          source.renderState
-        ),
-
-      repeat:
-        Math.max(
-          1,
-
-          integerValue(
-            source.repeat,
-            1
-          )
-        ),
-
-      dynamic:
-        booleanValue(
-          source.dynamic,
-          false
-        ),
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
-    };
+    var source = isPlainObject(input) ? input : {};
+
+    return freeze({
+      ownsGeometry: boolValue(source.ownsGeometry, true),
+      ownsRendering: boolValue(source.ownsRendering, false),
+      ownsInput: boolValue(source.ownsInput, false),
+      ownsFallback: boolValue(source.ownsFallback, false),
+      ownsDiagnostics: boolValue(source.ownsDiagnostics, false),
+      ownsFinalVerdict: boolValue(source.ownsFinalVerdict, false),
+      usesRendering: boolValue(source.usesRendering, true),
+      usesInput: boolValue(source.usesInput, false),
+      usesFallback: boolValue(source.usesFallback, true),
+      usesDiagnostics: boolValue(source.usesDiagnostics, true)
+    });
   }
 
   function normalizeSpec(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
+    var source = isPlainObject(input) ? input : {};
+    var backend = isPlainObject(source.backend) ? source.backend : {};
 
-    const backendSource =
-      isPlainObject(
-        source.backend
-      )
-        ? source.backend
-        : {};
-
-    return deepFreeze({
-      schema:
-        SCHEMA.SPEC,
-
-      required:
-        isPlainObject(
-          source.required
-        )
-          ? clone(
-              source.required
-            )
-          : {},
-
-      optional:
-        isPlainObject(
-          source.optional
-        )
-          ? clone(
-              source.optional
-            )
-          : {},
-
-      forbidden:
-        isPlainObject(
-          source.forbidden
-        )
-          ? clone(
-              source.forbidden
-            )
-          : {},
-
+    return freeze({
+      schema: source.schema || SPEC_SCHEMA,
+      required: isPlainObject(source.required)
+        ? clone(source.required)
+        : {},
+      optional: isPlainObject(source.optional)
+        ? clone(source.optional)
+        : {},
+      forbidden: isPlainObject(source.forbidden)
+        ? clone(source.forbidden)
+        : {},
       backend: {
-        preferred:
-          Array.isArray(
-            backendSource.preferred
-          )
-            ? backendSource
-                .preferred
-                .map(
-                  value =>
-                    enumValue(
-                      ENUM.BACKEND,
-                      value,
-                      ENUM
-                        .BACKEND
-                        .NONE
-                    )
-                )
-            : [
-                ENUM
-                  .BACKEND
-                  .WEBGPU,
-
-                ENUM
-                  .BACKEND
-                  .WEBGL2
-              ],
-
-        requiredAny:
-          Array.isArray(
-            backendSource.requiredAny
-          )
-            ? backendSource
-                .requiredAny
-                .map(
-                  value =>
-                    enumValue(
-                      ENUM.BACKEND,
-                      value,
-                      ENUM
-                        .BACKEND
-                        .NONE
-                    )
-                )
-            : [
-                ENUM
-                  .BACKEND
-                  .WEBGL2
-              ],
-
-        fallback:
-          Array.isArray(
-            backendSource.fallback
-          )
-            ? backendSource
-                .fallback
-                .map(
-                  value =>
-                    enumValue(
-                      ENUM.BACKEND,
-                      value,
-                      ENUM
-                        .BACKEND
-                        .NONE
-                    )
-                )
-            : [
-                ENUM
-                  .BACKEND
-                  .CANVAS2D,
-
-                ENUM
-                  .BACKEND
-                  .SVG,
-
-                ENUM
-                  .BACKEND
-                  .HTML
-              ]
+        preferred: (Array.isArray(backend.preferred)
+          ? backend.preferred
+          : ["WEBGPU", "WEBGL2"]
+        ).map(function map(value) {
+          return enumValue(ENUM.BACKEND, value, ENUM.BACKEND.NONE);
+        }),
+        requiredAny: (Array.isArray(backend.requiredAny)
+          ? backend.requiredAny
+          : ["WEBGL2"]
+        ).map(function map(value) {
+          return enumValue(ENUM.BACKEND, value, ENUM.BACKEND.NONE);
+        }),
+        fallback: (Array.isArray(backend.fallback)
+          ? backend.fallback
+          : ["CANVAS2D", "SVG", "HTML"]
+        ).map(function map(value) {
+          return enumValue(ENUM.BACKEND, value, ENUM.BACKEND.NONE);
+        })
       },
-
-      capabilities:
-        isPlainObject(
-          source.capabilities
-        )
-          ? clone(
-              source.capabilities
-            )
-          : {},
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
+      capabilities: isPlainObject(source.capabilities)
+        ? clone(source.capabilities)
+        : {},
+      metadata: isPlainObject(source.metadata)
+        ? clone(source.metadata)
+        : {}
     });
   }
 
   function normalizeOps(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
+    var source = isPlainObject(input) ? input : {};
 
-    return deepFreeze({
-      schema:
-        SCHEMA.OPS,
-
-      loaded:
-        booleanValue(
-          source.loaded,
-          false
-        ),
-
-      initialized:
-        booleanValue(
-          source.initialized,
-          false
-        ),
-
-      observed:
-        isPlainObject(
-          source.observed
-        )
-          ? clone(
-              source.observed
-            )
-          : {},
-
-      backend:
-        enumValue(
-          ENUM.BACKEND,
-          source.backend,
-          ENUM
-            .BACKEND
-            .NONE
-        ),
-
-      state:
-        enumValue(
-          ENUM.INSTANCE_STATE,
-          source.state,
-          ENUM
-            .INSTANCE_STATE
-            .DECLARED
-        ),
-
-      errors:
-        Array.isArray(
-          source.errors
-        )
-          ? clone(
-              source.errors
-            )
-          : [],
-
-      warnings:
-        Array.isArray(
-          source.warnings
-        )
-          ? clone(
-              source.warnings
-            )
-          : [],
-
-      metrics:
-        isPlainObject(
-          source.metrics
-        )
-          ? clone(
-              source.metrics
-            )
-          : {},
-
-      timestamps:
-        isPlainObject(
-          source.timestamps
-        )
-          ? clone(
-              source.timestamps
-            )
-          : {},
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
+    return freeze({
+      schema: source.schema || OPS_SCHEMA,
+      loaded: boolValue(source.loaded, false),
+      initialized: boolValue(source.initialized, false),
+      observed: isPlainObject(source.observed)
+        ? clone(source.observed)
+        : {},
+      backend: enumValue(
+        ENUM.BACKEND,
+        source.backend,
+        ENUM.BACKEND.NONE
+      ),
+      state: enumValue(
+        ENUM.STATE,
+        source.state,
+        ENUM.STATE.DECLARED
+      ),
+      errors: Array.isArray(source.errors) ? clone(source.errors) : [],
+      warnings: Array.isArray(source.warnings)
+        ? clone(source.warnings)
+        : [],
+      metrics: isPlainObject(source.metrics)
+        ? clone(source.metrics)
+        : {},
+      timestamps: isPlainObject(source.timestamps)
+        ? clone(source.timestamps)
+        : {},
+      metadata: isPlainObject(source.metadata)
+        ? clone(source.metadata)
+        : {}
     });
   }
 
-  function normalizeGeometry(input) {
-    const source =
-      isPlainObject(input)
+  function normalizeAttribute(name, input) {
+    var source = isTypedArray(input)
+      ? { data: input }
+      : isPlainObject(input)
         ? input
         : {};
 
-    return {
-      meshes:
-        Array.isArray(
-          source.meshes
-        )
-          ? source
-              .meshes
-              .map(
-                normalizeMesh
-              )
-          : [],
+    var semantic = stringValue(source.semantic, String(name || "CUSTOM"))
+      .toUpperCase();
 
-      bounds:
-        isPlainObject(
-          source.bounds
-        )
-          ? clone(
-              source.bounds
-            )
-          : {},
+    return freeze({
+      semantic: semantic,
+      data: source.data || null,
+      size: Math.max(1, Math.min(4, intValue(source.size, 3))),
+      normalized: boolValue(source.normalized, false),
+      stride: Math.max(0, intValue(source.stride, 0)),
+      offset: Math.max(0, intValue(source.offset, 0)),
+      divisor: Math.max(0, intValue(source.divisor, 0)),
+      custody: stringValue(source.custody, "BORROWED_READ_ONLY"),
+      metadata: isPlainObject(source.metadata) ? clone(source.metadata) : {}
+    });
+  }
 
-      anchors:
-        isPlainObject(
-          source.anchors
-        )
-          ? clone(
-              source.anchors
-            )
-          : {},
+  function normalizeMesh(input, index) {
+    var source = isPlainObject(input) ? input : {};
+    var attributes = {};
 
-      validation:
-        isPlainObject(
-          source.validation
-        )
-          ? clone(
-              source.validation
-            )
-          : {},
+    if (isPlainObject(source.attributes)) {
+      Object.keys(source.attributes).forEach(function each(key) {
+        attributes[String(key).toUpperCase()] =
+          normalizeAttribute(key, source.attributes[key]);
+      });
+    }
 
-      geometryHash:
-        stringValue(
-          source.geometryHash,
-          ""
-        ),
-
-      factory:
-        typeof source.factory ===
-        "function"
-          ? source.factory
-          : typeof source
-                .createGeometry ===
-              "function"
-            ? source
-                .createGeometry
-            : null,
-
-      provider:
-        source.provider ||
-        null,
-
-      deferred:
-        booleanValue(
-          source.deferred,
-          false
-        ),
-
-      bufferCustody:
-        enumValue(
-          ENUM
-            .BUFFER_CUSTODY,
-
-          source
-            .bufferCustody,
-
-          ENUM
-            .BUFFER_CUSTODY
-            .BORROWED_READ_ONLY
-        ),
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {}
-    };
+    return freeze({
+      id: stringValue(source.id, "mesh-" + index),
+      label: stringValue(source.label, ""),
+      primitive: stringValue(source.primitive, "TRIANGLES").toUpperCase(),
+      indexed:
+        typeof source.indexed === "boolean"
+          ? source.indexed
+          : isTypedArray(source.indices),
+      attributes: attributes,
+      indices: source.indices || null,
+      vertexCount: Math.max(0, intValue(source.vertexCount, 0)),
+      indexCount: Math.max(0, intValue(source.indexCount, 0)),
+      instanceCount: Math.max(1, intValue(source.instanceCount, 1)),
+      materialId: stringValue(source.materialId, ""),
+      shaderId: stringValue(source.shaderId, ""),
+      visible: boolValue(source.visible, true),
+      selectable: boolValue(source.selectable, false),
+      bounds: isPlainObject(source.bounds) ? clone(source.bounds) : {},
+      metadata: isPlainObject(source.metadata) ? clone(source.metadata) : {}
+    });
   }
 
   function normalizeModelPackage(input) {
-    const source =
-      isPlainObject(input)
-        ? input
-        : {};
+    var source = isPlainObject(input) ? input : {};
+    var identity = isPlainObject(source.identity) ? source.identity : {};
+    var geometry = isPlainObject(source.geometry) ? source.geometry : {};
+    var modelId = stringValue(
+      identity.modelId || source.modelId || source.id,
+      ""
+    );
 
-    const identitySource =
-      isPlainObject(
-        source.identity
-      )
-        ? source.identity
-        : {};
-
-    const modelId =
-      stringValue(
-        identitySource.modelId ||
-        source.modelId ||
-        source.id,
-
-        ""
-      );
-
-    const normalized = {
-      schema:
-        SCHEMA.MODEL,
-
+    var normalized = {
+      schema: MODEL_SCHEMA,
       identity: {
-        modelId,
-
-        modelClass:
-          enumValue(
-            ENUM.MODEL_CLASS,
-
-            identitySource
-              .modelClass ||
-            source.modelClass,
-
-            ENUM
-              .MODEL_CLASS
-              .CUSTOM
-          ),
-
-        contract:
-          stringValue(
-            identitySource
-              .contract ||
-            source.contract,
-
-            ""
-          ),
-
-        version:
-          stringValue(
-            identitySource
-              .version ||
-            source.version,
-
-            "0.0.0"
-          ),
-
-        label:
-          stringValue(
-            identitySource.label ||
-            source.label,
-
-            modelId
-          ),
-
-        route:
-          stringValue(
-            identitySource.route ||
-            source.route,
-
-            ""
-          )
+        modelId: modelId,
+        modelClass: enumValue(
+          ENUM.MODEL_CLASS,
+          identity.modelClass || source.modelClass,
+          ENUM.MODEL_CLASS.CUSTOM
+        ),
+        contract: stringValue(identity.contract || source.contract, ""),
+        version: stringValue(identity.version || source.version, "0.0.0"),
+        label: stringValue(identity.label || source.label, modelId),
+        route: stringValue(identity.route || source.route, "")
       },
-
-      ownership:
-        normalizeOwnership(
-          source.ownership
-        ),
-
-      news:
-        normalizeNews(
-          source.news
-        ),
-
-      fibonacci:
-        normalizeFibonacci(
-          source.fibonacci
-        ),
-
-      spec:
-        normalizeSpec(
-          source.spec
-        ),
-
-      geometry:
-        normalizeGeometry(
-          source.geometry
-        ),
-
-      materials:
-        Array.isArray(
-          source.materials
-        )
-          ? source
-              .materials
-              .map(
-                normalizeMaterial
-              )
+      ownership: normalizeOwnership(source.ownership),
+      news: normalizeNews(source.news),
+      fibonacci: normalizeFibonacci(source.fibonacci),
+      spec: normalizeSpec(source.spec),
+      geometry: {
+        meshes: Array.isArray(geometry.meshes)
+          ? geometry.meshes.map(normalizeMesh)
           : [],
-
-      shaders:
-        Array.isArray(
-          source.shaders
-        )
-          ? source
-              .shaders
-              .map(
-                normalizeShader
-              )
-          : [],
-
-      passes:
-        Array.isArray(
-          source.passes
-        )
-          ? source
-              .passes
-              .map(
-                normalizePass
-              )
-          : [],
-
-      camera:
-        isPlainObject(
-          source.camera
-        )
-          ? clone(
-              source.camera
-            )
-          : {},
-
-      lights:
-        Array.isArray(
-          source.lights
-        )
-          ? clone(
-              source.lights
-            )
-          : [],
-
-      animation:
-        isPlainObject(
-          source.animation
-        )
-          ? {
-              ...clone(
-                source.animation
-              ),
-
-              mode:
-                enumValue(
-                  ENUM
-                    .ANIMATION_MODE,
-
-                  source
-                    .animation
-                    .mode,
-
-                  ENUM
-                    .ANIMATION_MODE
-                    .NONE
-                )
-            }
-          : {
-              mode:
-                ENUM
-                  .ANIMATION_MODE
-                  .NONE
-            },
-
-      interaction:
-        isPlainObject(
-          source.interaction
-        )
-          ? {
-              ...clone(
-                source.interaction
-              ),
-
-              mode:
-                enumValue(
-                  ENUM
-                    .INTERACTION_MODE,
-
-                  source
-                    .interaction
-                    .mode,
-
-                  ENUM
-                    .INTERACTION_MODE
-                    .NONE
-                )
-            }
-          : {
-              mode:
-                ENUM
-                  .INTERACTION_MODE
-                  .NONE
-            },
-
-      fallback:
-        isPlainObject(
-          source.fallback
-        )
-          ? {
-              ...clone(
-                source.fallback
-              ),
-
-              type:
-                enumValue(
-                  ENUM
-                    .FALLBACK_TYPE,
-
-                  source
-                    .fallback
-                    .type,
-
-                  ENUM
-                    .FALLBACK_TYPE
-                    .NONE
-                )
-            }
-          : {
-              type:
-                ENUM
-                  .FALLBACK_TYPE
-                  .NONE
-            },
-
-      diagnostics:
-        isPlainObject(
-          source.diagnostics
-        )
-          ? clone(
-              source.diagnostics
-            )
-          : {},
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
+        bounds: isPlainObject(geometry.bounds) ? clone(geometry.bounds) : {},
+        anchors: isPlainObject(geometry.anchors) ? clone(geometry.anchors) : {},
+        geometryHash: stringValue(geometry.geometryHash, ""),
+        factory:
+          typeof geometry.factory === "function"
+            ? geometry.factory
+            : typeof geometry.createGeometry === "function"
+              ? geometry.createGeometry
+              : null,
+        provider: geometry.provider || null,
+        deferred: boolValue(geometry.deferred, false),
+        bufferCustody: stringValue(
+          geometry.bufferCustody,
+          "BORROWED_READ_ONLY"
+        ),
+        metadata: isPlainObject(geometry.metadata)
+          ? clone(geometry.metadata)
           : {}
+      },
+      materials: Array.isArray(source.materials)
+        ? clone(source.materials)
+        : [],
+      shaders: Array.isArray(source.shaders) ? clone(source.shaders) : [],
+      passes: Array.isArray(source.passes) ? clone(source.passes) : [],
+      camera: isPlainObject(source.camera) ? clone(source.camera) : {},
+      lights: Array.isArray(source.lights) ? clone(source.lights) : [],
+      animation: isPlainObject(source.animation)
+        ? clone(source.animation)
+        : { mode: "NONE" },
+      interaction: isPlainObject(source.interaction)
+        ? Object.assign(clone(source.interaction), {
+            mode: enumValue(
+              ENUM.INTERACTION_MODE,
+              source.interaction.mode,
+              ENUM.INTERACTION_MODE.NONE
+            )
+          })
+        : { mode: "NONE" },
+      fallback: isPlainObject(source.fallback)
+        ? Object.assign(clone(source.fallback), {
+            type: enumValue(
+              ENUM.FALLBACK_TYPE,
+              source.fallback.type,
+              ENUM.FALLBACK_TYPE.NONE
+            )
+          })
+        : { type: "NONE" },
+      diagnostics: isPlainObject(source.diagnostics)
+        ? clone(source.diagnostics)
+        : {},
+      metadata: isPlainObject(source.metadata) ? clone(source.metadata) : {}
     };
 
-    normalized.packageHash =
-      hash({
-        ...normalized,
-
-        packageHash:
-          undefined
-      });
-
-    return deepFreeze(
-      normalized
+    normalized.packageHash = hash(
+      Object.assign({}, normalized, { packageHash: undefined })
     );
+
+    return freeze(normalized);
   }
 
-  function validateAttribute(
-    name,
-    input
-  ) {
-    const attribute =
-      normalizeAttribute(
-        name,
-        input
-      );
-
-    const audit =
-      collector(
-        `attribute:${
-          attribute.semantic
-        }`
-      );
+  function validateAttribute(name, input) {
+    var attribute = normalizeAttribute(name, input);
+    var audit = collector("attribute:" + attribute.semantic);
 
     audit.add(
       "typed-array",
-
-      isTypedArray(
-        attribute.data
-      ),
-
+      isTypedArray(attribute.data),
       "TypedArray",
-
-      attribute.data &&
-      attribute
-        .data
-        .constructor
-        ? attribute
-            .data
-            .constructor
-            .name
+      attribute.data && attribute.data.constructor
+        ? attribute.data.constructor.name
         : typeof attribute.data,
-
-      "Renderable attributes must use typed arrays."
-    );
-
-    audit.add(
-      "component-type",
-
-      Boolean(
-        componentType(
-          attribute.data
-        )
-      ),
-
-      Object.values(
-        ENUM
-          .ATTRIBUTE_COMPONENT_TYPE
-      ),
-
-      componentType(
-        attribute.data
-      ),
-
-      "Attribute component type must be supported."
+      "Attribute data must be a typed array."
     );
 
     audit.add(
       "size",
-
-      Number.isInteger(
-        attribute.size
-      ) &&
-      attribute.size >=
-        1 &&
-      attribute.size <=
-        4,
-
+      Number.isInteger(attribute.size) &&
+        attribute.size >= 1 &&
+        attribute.size <= 4,
       "integer 1..4",
-
       attribute.size,
-
       "Attribute size must be between one and four."
     );
 
-    if (
-      isTypedArray(
-        attribute.data
-      )
-    ) {
+    if (isTypedArray(attribute.data)) {
       audit.add(
         "length-divisible",
-
-        attribute
-          .data
-          .length %
-          attribute.size ===
-          0,
-
-        `length divisible by ${
-          attribute.size
-        }`,
-
-        attribute
-          .data
-          .length,
-
-        "Attribute length must align with its component size."
+        attribute.data.length % attribute.size === 0,
+        "length divisible by size",
+        attribute.data.length,
+        "Attribute length must align with declared size."
       );
-
-      if (
-        attribute.data instanceof
-        Float32Array
-      ) {
-        let finite =
-          true;
-
-        for (
-          let index = 0;
-          index <
-          attribute
-            .data
-            .length;
-          index += 1
-        ) {
-          if (
-            !Number.isFinite(
-              attribute
-                .data[
-                index
-              ]
-            )
-          ) {
-            finite =
-              false;
-
-            break;
-          }
-        }
-
-        audit.add(
-          "finite-values",
-
-          finite,
-
-          true,
-
-          finite,
-
-          "Floating-point attributes may not contain NaN or Infinity."
-        );
-      }
     }
 
     return audit.result({
-      normalized:
-        deepFreeze(
-          attribute
-        ),
-
-      elementCount:
-        isTypedArray(
-          attribute.data
-        )
-          ? Math.floor(
-              attribute
-                .data
-                .length /
-              attribute.size
-            )
-          : 0
+      normalized: attribute,
+      elementCount: isTypedArray(attribute.data)
+        ? Math.floor(attribute.data.length / attribute.size)
+        : 0
     });
-  }
-
-  function primitiveDivisor(
-    primitive
-  ) {
-    if (
-      primitive ===
-      ENUM
-        .PRIMITIVE
-        .TRIANGLES
-    ) {
-      return 3;
-    }
-
-    if (
-      primitive ===
-      ENUM
-        .PRIMITIVE
-        .LINES
-    ) {
-      return 2;
-    }
-
-    return 1;
   }
 
   function validateMesh(input) {
-    const mesh =
-      normalizeMesh(
-        input,
-        0
-      );
+    var mesh = normalizeMesh(input, 0);
+    var audit = collector("mesh:" + mesh.id);
+    var vertexCount = mesh.vertexCount;
 
-    const audit =
-      collector(
-        `mesh:${mesh.id}`
-      );
-
-    const attributeResults = {};
-
-    audit.add(
-      "id",
-
-      Boolean(
-        mesh.id
-      ),
-
-      "non-empty string",
-
-      mesh.id,
-
-      "Every mesh requires a stable ID."
-    );
+    audit.add("id", Boolean(mesh.id), "non-empty", mesh.id, "Mesh requires ID.");
 
     audit.add(
       "position",
-
-      hasOwn(
-        mesh.attributes,
-        "POSITION"
-      ),
-
+      hasOwn(mesh.attributes, "POSITION"),
       true,
-
-      hasOwn(
-        mesh.attributes,
-        "POSITION"
-      ),
-
-      "Every renderable mesh requires a POSITION attribute."
+      hasOwn(mesh.attributes, "POSITION"),
+      "Renderable mesh requires POSITION."
     );
 
-    for (
-      const [
-        name,
-        attribute
-      ] of
-      Object.entries(
-        mesh.attributes
-      )
-    ) {
-      const result =
-        validateAttribute(
-          name,
-          attribute
-        );
-
-      attributeResults[
-        name
-      ] =
-        result;
+    Object.keys(mesh.attributes).forEach(function each(name) {
+      var result = validateAttribute(name, mesh.attributes[name]);
+      if (name === "POSITION" && result.elementCount > vertexCount) {
+        vertexCount = result.elementCount;
+      }
 
       audit.add(
-        `attribute-${name}`,
-
+        "attribute-" + name,
         result.passed,
-
         true,
-
         result.passed,
-
-        `Attribute ${name} must validate.`
+        "Attribute must validate."
       );
-    }
-
-    const inferredVertexCount =
-      attributeResults
-        .POSITION
-        ? attributeResults
-            .POSITION
-            .elementCount
-        : 0;
-
-    const vertexCount =
-      mesh.vertexCount ||
-      inferredVertexCount;
+    });
 
     audit.add(
       "vertex-count",
-
-      vertexCount >
-      0,
-
+      vertexCount > 0,
       "> 0",
-
       vertexCount,
-
-      "Mesh requires at least one vertex."
+      "Mesh requires vertices."
     );
-
-    for (
-      const [
-        name,
-        result
-      ] of
-      Object.entries(
-        attributeResults
-      )
-    ) {
-      if (
-        result.elementCount ===
-        0
-      ) {
-        continue;
-      }
-
-      const expected =
-        result
-          .normalized
-          .divisor >
-        0
-          ? mesh.instanceCount
-          : vertexCount;
-
-      audit.add(
-        `attribute-count-${name}`,
-
-        result.elementCount >=
-          expected,
-
-        `>= ${expected}`,
-
-        result.elementCount,
-
-        "Attribute count must cover its vertex or instance domain."
-      );
-    }
-
-    const divisor =
-      primitiveDivisor(
-        mesh.primitive
-      );
-
-    if (mesh.indexed) {
-      audit.add(
-        "index-type",
-
-        mesh.indices instanceof
-          Uint16Array ||
-
-        mesh.indices instanceof
-          Uint32Array,
-
-        "Uint16Array or Uint32Array",
-
-        mesh.indices &&
-        mesh
-          .indices
-          .constructor
-          ? mesh
-              .indices
-              .constructor
-              .name
-          : typeof mesh.indices,
-
-        "Indexed meshes require unsigned integer indices."
-      );
-
-      const indexCount =
-        mesh.indexCount ||
-        (
-          isTypedArray(
-            mesh.indices
-          )
-            ? mesh
-                .indices
-                .length
-            : 0
-        );
-
-      audit.add(
-        "index-count",
-
-        indexCount >
-        0,
-
-        "> 0",
-
-        indexCount,
-
-        "Indexed mesh requires indices."
-      );
-
-      audit.add(
-        "index-divisibility",
-
-        indexCount %
-          divisor ===
-          0,
-
-        `divisible by ${divisor}`,
-
-        indexCount,
-
-        "Index count must align with primitive topology."
-      );
-
-      if (
-        isTypedArray(
-          mesh.indices
-        ) &&
-        vertexCount >
-        0
-      ) {
-        let maximum =
-          0;
-
-        for (
-          let index = 0;
-          index <
-          mesh
-            .indices
-            .length;
-          index += 1
-        ) {
-          maximum =
-            Math.max(
-              maximum,
-              mesh
-                .indices[
-                index
-              ]
-            );
-        }
-
-        audit.add(
-          "index-range",
-
-          maximum <
-          vertexCount,
-
-          `< ${vertexCount}`,
-
-          maximum,
-
-          "Every index must resolve to an available vertex."
-        );
-      }
-    } else {
-      audit.add(
-        "vertex-divisibility",
-
-        vertexCount %
-          divisor ===
-          0,
-
-        `divisible by ${divisor}`,
-
-        vertexCount,
-
-        "Non-indexed vertex count must align with primitive topology."
-      );
-    }
 
     return audit.result({
-      normalized:
-        deepFreeze({
-          ...mesh,
-
-          vertexCount,
-
-          indexCount:
-            mesh.indexCount ||
-            (
-              isTypedArray(
-                mesh.indices
-              )
-                ? mesh
-                    .indices
-                    .length
-                : 0
-            )
-        }),
-
-      attributeResults
-    });
-  }
-
-  function validateRenderPass(
-    input,
-    context
-  ) {
-    const pass =
-      normalizePass(
-        input,
-        0
-      );
-
-    const source =
-      isPlainObject(
-        context
-      )
-        ? context
-        : {};
-
-    const meshIds =
-      new Set(
-        Array.isArray(
-          source.meshes
-        )
-          ? source
-              .meshes
-              .map(
-                item =>
-                  item.id
-              )
-          : []
-      );
-
-    const materialIds =
-      new Set(
-        Array.isArray(
-          source.materials
-        )
-          ? source
-              .materials
-              .map(
-                item =>
-                  item.id
-              )
-          : []
-      );
-
-    const shaderIds =
-      new Set(
-        Array.isArray(
-          source.shaders
-        )
-          ? source
-              .shaders
-              .map(
-                item =>
-                  item.id
-              )
-          : []
-      );
-
-    const audit =
-      collector(
-        `pass:${pass.id}`
-      );
-
-    audit.add(
-      "id",
-
-      Boolean(
-        pass.id
-      ),
-
-      "non-empty string",
-
-      pass.id,
-
-      "Every pass requires a stable ID."
-    );
-
-    audit.add(
-      "order",
-
-      finiteNumber(
-        pass.order
-      ),
-
-      "finite number",
-
-      pass.order,
-
-      "Pass order must be finite."
-    );
-
-    audit.add(
-      "mesh-selection",
-
-      pass.meshIds.length >
-      0,
-
-      "> 0 mesh IDs",
-
-      pass.meshIds.length,
-
-      "Every pass must select at least one mesh."
-    );
-
-    for (
-      const meshId of
-      pass.meshIds
-    ) {
-      audit.add(
-        `mesh-${meshId}`,
-
-        meshIds.size ===
-          0 ||
-
-        meshIds.has(
-          meshId
-        ),
-
-        true,
-
-        meshIds.has(
-          meshId
-        ),
-
-        `Unknown mesh reference: ${meshId}.`
-      );
-    }
-
-    for (
-      const materialId of
-      pass.materialIds
-    ) {
-      audit.add(
-        `material-${materialId}`,
-
-        materialIds.size ===
-          0 ||
-
-        materialIds.has(
-          materialId
-        ),
-
-        true,
-
-        materialIds.has(
-          materialId
-        ),
-
-        `Unknown material reference: ${materialId}.`
-      );
-    }
-
-    if (pass.shaderId) {
-      audit.add(
-        `shader-${pass.shaderId}`,
-
-        shaderIds.size ===
-          0 ||
-
-        shaderIds.has(
-          pass.shaderId
-        ),
-
-        true,
-
-        shaderIds.has(
-          pass.shaderId
-        ),
-
-        `Unknown shader reference: ${pass.shaderId}.`
-      );
-    }
-
-    return audit.result({
-      normalized:
-        deepFreeze(
-          pass
-        )
+      normalized: freeze(Object.assign({}, mesh, { vertexCount: vertexCount }))
     });
   }
 
   function validateSpec(input) {
-    const spec =
-      normalizeSpec(
-        input
-      );
-
-    const audit =
-      collector(
-        "spec"
-      );
-
-    audit.add(
-      "required",
-
-      isPlainObject(
-        spec.required
-      ),
-
-      true,
-
-      isPlainObject(
-        spec.required
-      ),
-
-      "SPEC.required must be an object."
-    );
-
-    audit.add(
-      "optional",
-
-      isPlainObject(
-        spec.optional
-      ),
-
-      true,
-
-      isPlainObject(
-        spec.optional
-      ),
-
-      "SPEC.optional must be an object."
-    );
-
-    audit.add(
-      "forbidden",
-
-      isPlainObject(
-        spec.forbidden
-      ),
-
-      true,
-
-      isPlainObject(
-        spec.forbidden
-      ),
-
-      "SPEC.forbidden must be an object."
-    );
+    var spec = normalizeSpec(input);
+    var audit = collector("spec");
 
     audit.add(
       "backend-required",
-
-      spec
-        .backend
-        .requiredAny
-        .length >
-        0 &&
-
-      !spec
-        .backend
-        .requiredAny
-        .includes(
-          ENUM
-            .BACKEND
-            .NONE
-        ),
-
+      spec.backend.requiredAny.length > 0 &&
+        spec.backend.requiredAny.indexOf("NONE") === -1,
       "at least one executable backend",
-
-      spec
-        .backend
-        .requiredAny,
-
-      "Required backend set may not be empty or NONE."
+      spec.backend.requiredAny,
+      "SPEC requires at least one executable backend."
     );
 
-    return audit.result({
-      normalized:
-        spec
-    });
+    return audit.result({ normalized: spec });
   }
 
   function validateOps(input) {
-    const ops =
-      normalizeOps(
-        input
-      );
-
-    const audit =
-      collector(
-        "ops"
-      );
+    var ops = normalizeOps(input);
+    var audit = collector("ops");
 
     audit.add(
-      "observed",
-
-      isPlainObject(
-        ops.observed
-      ),
-
+      "observed-object",
+      isPlainObject(ops.observed),
       true,
-
-      isPlainObject(
-        ops.observed
-      ),
-
+      isPlainObject(ops.observed),
       "OPS.observed must be an object."
     );
 
-    audit.add(
-      "errors",
-
-      Array.isArray(
-        ops.errors
-      ),
-
-      true,
-
-      Array.isArray(
-        ops.errors
-      ),
-
-      "OPS.errors must be an array."
-    );
-
-    audit.add(
-      "warnings",
-
-      Array.isArray(
-        ops.warnings
-      ),
-
-      true,
-
-      Array.isArray(
-        ops.warnings
-      ),
-
-      "OPS.warnings must be an array."
-    );
-
-    return audit.result({
-      normalized:
-        ops
-    });
-  }
-
-  function finiteVector(
-    value,
-    size
-  ) {
-    return (
-      (
-        Array.isArray(
-          value
-        ) ||
-        isTypedArray(
-          value
-        )
-      ) &&
-
-      value.length ===
-        size &&
-
-      Array
-        .from(value)
-        .every(
-          finiteNumber
-        )
-    );
-  }
-
-  function validateBounds(
-    bounds,
-    audit
-  ) {
-    if (
-      !isPlainObject(
-        bounds
-      ) ||
-      Object
-        .keys(bounds)
-        .length ===
-        0
-    ) {
-      audit.add(
-        "bounds",
-
-        false,
-
-        true,
-
-        false,
-
-        "Bounds are recommended for framing, visibility, and rejection.",
-
-        "warning"
-      );
-
-      return;
-    }
-
-    if (
-      hasOwn(
-        bounds,
-        "minimum"
-      )
-    ) {
-      audit.add(
-        "bounds-minimum",
-
-        finiteVector(
-          bounds.minimum,
-          3
-        ),
-
-        "finite vec3",
-
-        bounds.minimum,
-
-        "Bounds.minimum must be finite vec3."
-      );
-    }
-
-    if (
-      hasOwn(
-        bounds,
-        "maximum"
-      )
-    ) {
-      audit.add(
-        "bounds-maximum",
-
-        finiteVector(
-          bounds.maximum,
-          3
-        ),
-
-        "finite vec3",
-
-        bounds.maximum,
-
-        "Bounds.maximum must be finite vec3."
-      );
-    }
-
-    if (
-      hasOwn(
-        bounds,
-        "center"
-      )
-    ) {
-      audit.add(
-        "bounds-center",
-
-        finiteVector(
-          bounds.center,
-          3
-        ),
-
-        "finite vec3",
-
-        bounds.center,
-
-        "Bounds.center must be finite vec3."
-      );
-    }
-
-    if (
-      hasOwn(
-        bounds,
-        "radius"
-      )
-    ) {
-      audit.add(
-        "bounds-radius",
-
-        finiteNumber(
-          bounds.radius
-        ) &&
-        bounds.radius >=
-          0,
-
-        "finite number >= 0",
-
-        bounds.radius,
-
-        "Bounds.radius must be finite and nonnegative."
-      );
-    }
+    return audit.result({ normalized: ops });
   }
 
   function validateModelPackage(input) {
-    const model =
-      normalizeModelPackage(
-        input
-      );
-
-    const audit =
-      collector(
-        `model:${
-          model
-            .identity
-            .modelId ||
-          "unknown"
-        }`
-      );
+    var model = normalizeModelPackage(input);
+    var audit = collector("model:" + (model.identity.modelId || "unknown"));
 
     audit.add(
       "schema",
-
-      isPlainObject(
-        input
-      ) &&
-      input.schema ===
-        SCHEMA.MODEL,
-
-      SCHEMA.MODEL,
-
-      isPlainObject(
-        input
-      )
-        ? input.schema
-        : undefined,
-
+      isPlainObject(input) && input.schema === MODEL_SCHEMA,
+      MODEL_SCHEMA,
+      isPlainObject(input) ? input.schema : undefined,
       "Model package must explicitly declare DGB_MODEL_PACKAGE_v1."
     );
 
     audit.add(
       "model-id",
-
-      Boolean(
-        model
-          .identity
-          .modelId
-      ),
-
+      Boolean(model.identity.modelId),
       "non-empty string",
-
-      model
-        .identity
-        .modelId,
-
+      model.identity.modelId,
       "Model package requires modelId."
     );
 
     audit.add(
       "contract",
-
-      Boolean(
-        model
-          .identity
-          .contract
-      ),
-
+      Boolean(model.identity.contract),
       "non-empty string",
-
-      model
-        .identity
-        .contract,
-
+      model.identity.contract,
       "Model package requires contract."
     );
 
     audit.add(
-      "news-alignment",
-
-      model
-        .news
-        .sourceStatus !==
-        ENUM
-          .NEWS_SOURCE_STATUS
-          .CONFLICTING &&
-
-      model
-        .news
-        .alignmentStatus !==
-        ENUM
-          .NEWS_ALIGNMENT_STATUS
-          .CONFLICT &&
-
-      model
-        .news
-        .alignmentStatus !==
-        ENUM
-          .NEWS_ALIGNMENT_STATUS
-          .HOLD,
-
-      "non-conflicting source",
-
+      "news-admissible",
+      model.news.sourceStatus !== "CONFLICTING" &&
+        model.news.alignmentStatus !== "CONFLICT" &&
+        model.news.alignmentStatus !== "HOLD",
+      "non-conflicting NEWS",
       model.news,
-
-      "Conflicting or held source may not enter executable admission."
+      "Conflicting or held source cannot enter executable admission."
     );
 
     audit.add(
       "fibonacci-synchronized",
-
-      model
-        .fibonacci
-        .synchronized ===
-        true,
-
+      model.fibonacci.synchronized === true,
       true,
-
-      model
-        .fibonacci
-        .synchronized,
-
-      "Model must declare synchronized construction state."
+      model.fibonacci.synchronized,
+      "Model must declare synchronized Fibonacci state."
     );
 
     audit.add(
       "geometry-source",
-
-      model
-        .geometry
-        .meshes
-        .length >
-        0 ||
-
-      typeof model
-        .geometry
-        .factory ===
-        "function" ||
-
-      Boolean(
-        model
-          .geometry
-          .provider
-      ) ||
-
-      model
-        .geometry
-        .deferred,
-
-      "meshes, factory, provider, or deferred geometry",
-
+      model.geometry.meshes.length > 0 ||
+        typeof model.geometry.factory === "function" ||
+        Boolean(model.geometry.provider) ||
+        model.geometry.deferred,
+      "mesh, factory, provider, or deferred",
       {
-        meshCount:
-          model
-            .geometry
-            .meshes
-            .length,
-
-        factory:
-          typeof model
-            .geometry
-            .factory ===
-          "function",
-
-        provider:
-          Boolean(
-            model
-              .geometry
-              .provider
-          ),
-
-        deferred:
-          model
-            .geometry
-            .deferred
+        meshes: model.geometry.meshes.length,
+        factory: typeof model.geometry.factory === "function",
+        provider: Boolean(model.geometry.provider),
+        deferred: model.geometry.deferred
       },
-
-      "Model package must identify its geometry source."
+      "Model package must identify a geometry source."
     );
 
-    const meshIds =
-      new Set();
-
-    const meshResults = [];
-
-    for (
-      const mesh of
-      model
-        .geometry
-        .meshes
-    ) {
-      const result =
-        validateMesh(
-          mesh
-        );
-
-      meshResults.push(
-        result
-      );
-
+    model.geometry.meshes.forEach(function each(mesh) {
+      var result = validateMesh(mesh);
       audit.add(
-        `mesh-${mesh.id}`,
-
+        "mesh-" + mesh.id,
         result.passed,
-
         true,
-
         result.passed,
-
-        `Mesh ${mesh.id} must validate.`
+        "Mesh must validate."
       );
-
-      audit.add(
-        `mesh-id-${mesh.id}`,
-
-        !meshIds.has(
-          mesh.id
-        ),
-
-        true,
-
-        !meshIds.has(
-          mesh.id
-        ),
-
-        `Mesh ID ${mesh.id} must be unique.`
-      );
-
-      meshIds.add(
-        mesh.id
-      );
-    }
-
-    const materialIds =
-      new Set();
-
-    for (
-      const material of
-      model.materials
-    ) {
-      audit.add(
-        `material-id-${material.id}`,
-
-        Boolean(
-          material.id
-        ) &&
-
-        !materialIds.has(
-          material.id
-        ),
-
-        "unique non-empty string",
-
-        material.id,
-
-        "Material IDs must be unique."
-      );
-
-      materialIds.add(
-        material.id
-      );
-    }
-
-    const shaderIds =
-      new Set();
-
-    for (
-      const shader of
-      model.shaders
-    ) {
-      audit.add(
-        `shader-id-${shader.id}`,
-
-        Boolean(
-          shader.id
-        ) &&
-
-        !shaderIds.has(
-          shader.id
-        ),
-
-        "unique non-empty string",
-
-        shader.id,
-
-        "Shader IDs must be unique."
-      );
-
-      shaderIds.add(
-        shader.id
-      );
-    }
-
-    const passIds =
-      new Set();
-
-    const passResults = [];
-
-    for (
-      const pass of
-      model.passes
-    ) {
-      const result =
-        validateRenderPass(
-          pass,
-          {
-            meshes:
-              model
-                .geometry
-                .meshes,
-
-            materials:
-              model.materials,
-
-            shaders:
-              model.shaders
-          }
-        );
-
-      passResults.push(
-        result
-      );
-
-      audit.add(
-        `pass-${pass.id}`,
-
-        result.passed,
-
-        true,
-
-        result.passed,
-
-        `Pass ${pass.id} must validate.`
-      );
-
-      audit.add(
-        `pass-id-${pass.id}`,
-
-        !passIds.has(
-          pass.id
-        ),
-
-        true,
-
-        !passIds.has(
-          pass.id
-        ),
-
-        `Pass ID ${pass.id} must be unique.`
-      );
-
-      passIds.add(
-        pass.id
-      );
-    }
+    });
 
     audit.add(
       "passes",
-
-      model
-        .passes
-        .length >
-        0 ||
-
-      model
-        .geometry
-        .deferred,
-
+      model.passes.length > 0 || model.geometry.deferred,
       "> 0 or deferred",
-
-      model
-        .passes
-        .length,
-
-      "Executable models should declare ordered render passes.",
-
-      model
-        .geometry
-        .deferred
-        ? "warning"
-        : "error"
+      model.passes.length,
+      "Executable model should declare render passes.",
+      model.geometry.deferred ? "warning" : "error"
     );
-
-    validateBounds(
-      model
-        .geometry
-        .bounds,
-
-      audit
-    );
-
-    const specResult =
-      validateSpec(
-        model.spec
-      );
 
     audit.add(
-      "spec",
-
-      specResult.passed,
-
-      true,
-
-      specResult.passed,
-
-      "Model SPEC must validate."
+      "no-renderer-ownership",
+      model.ownership.ownsRendering === false,
+      false,
+      model.ownership.ownsRendering,
+      "Model may not own shared renderer."
     );
 
     audit.add(
       "no-final-verdict-ownership",
-
-      model
-        .ownership
-        .ownsFinalVerdict ===
-        false,
-
+      model.ownership.ownsFinalVerdict === false,
       false,
-
-      model
-        .ownership
-        .ownsFinalVerdict,
-
-      "Model may not own Hearth or North final verdict."
-    );
-
-    audit.add(
-      "no-shared-renderer-ownership",
-
-      model
-        .ownership
-        .ownsRendering ===
-        false,
-
-      false,
-
-      model
-        .ownership
-        .ownsRendering,
-
-      "Migrated model may not carry shared renderer ownership."
-    );
-
-    audit.add(
-      "geometry-hash",
-
-      Boolean(
-        model
-          .geometry
-          .geometryHash
-      ) ||
-
-      model
-        .geometry
-        .deferred,
-
-      true,
-
-      Boolean(
-        model
-          .geometry
-          .geometryHash
-      ),
-
-      "Deterministic geometry should publish geometryHash.",
-
-      "warning"
+      model.ownership.ownsFinalVerdict,
+      "Model may not own final verdict."
     );
 
     return audit.result({
-      normalized:
-        model,
-
-      modelHash:
-        model.packageHash,
-
-      meshResults,
-
-      passResults,
-
-      specResult
+      normalized: model,
+      modelHash: model.packageHash
     });
   }
 
-  function flattenLeaves(
-    value,
-    prefix,
-    output
-  ) {
-    const target =
-      output ||
-      [];
+  function flattenLeaves(value, prefix, output) {
+    var target = output || [];
+    var path = prefix || "";
 
-    const path =
-      prefix ||
-      "";
+    var operator =
+      isPlainObject(value) &&
+      ["equals", "oneOf", "present", "absent", "minimum", "maximum", "includes", "test"]
+        .some(function some(key) {
+          return hasOwn(value, key);
+        });
 
-    const operatorObject =
-      isPlainObject(
-        value
-      ) &&
-
-      [
-        "equals",
-        "oneOf",
-        "present",
-        "absent",
-        "minimum",
-        "maximum",
-        "includes",
-        "test"
-      ].some(
-        key =>
-          hasOwn(
-            value,
-            key
-          )
-      );
-
-    if (
-      isPlainObject(
-        value
-      ) &&
-      !operatorObject
-    ) {
-      const keys =
-        Object.keys(
-          value
-        );
-
-      if (
-        keys.length ===
-        0
-      ) {
-        target.push([
-          path,
-          value
-        ]);
-      } else {
-        for (
-          const key of
-          keys
-        ) {
-          flattenLeaves(
-            value[key],
-
-            path
-              ? `${path}.${key}`
-              : key,
-
-            target
-          );
-        }
-      }
-
+    if (isPlainObject(value) && !operator) {
+      var keys = Object.keys(value);
+      if (!keys.length) target.push([path, value]);
+      keys.forEach(function each(key) {
+        flattenLeaves(value[key], path ? path + "." + key : key, target);
+      });
       return target;
     }
 
-    target.push([
-      path,
-      value
-    ]);
-
+    target.push([path, value]);
     return target;
   }
 
-  function getPath(
-    object,
-    path
-  ) {
-    if (!path) {
-      return object;
-    }
+  function getPath(object, path) {
+    if (!path) return object;
 
-    return path
+    return String(path)
       .split(".")
-      .reduce(
-        (
-          current,
-          key
-        ) => {
-          return (
-            current ===
-              null ||
-
-            current ===
-              undefined
-          )
-            ? undefined
-            : current[key];
-        },
-
-        object
-      );
+      .reduce(function reduce(current, key) {
+        return current === null || current === undefined
+          ? undefined
+          : current[key];
+      }, object);
   }
 
-  function evaluateRequirement(
-    expected,
-    actual
-  ) {
-    if (
-      isPlainObject(
-        expected
-      )
-    ) {
-      if (
-        typeof expected.test ===
-        "function"
-      ) {
+  function evaluateRequirement(expected, actual) {
+    if (isPlainObject(expected)) {
+      if (typeof expected.test === "function") {
         try {
-          return Boolean(
-            expected.test(
-              actual
-            )
-          );
+          return Boolean(expected.test(actual));
         } catch (_error) {
           return false;
         }
       }
 
-      if (
-        hasOwn(
-          expected,
-          "present"
-        )
-      ) {
+      if (hasOwn(expected, "present")) {
         return expected.present
-          ? actual !==
-              undefined &&
-            actual !==
-              null
-          : actual ===
-              undefined ||
-            actual ===
-              null;
+          ? actual !== undefined && actual !== null
+          : actual === undefined || actual === null;
       }
 
-      if (
-        hasOwn(
-          expected,
-          "absent"
-        )
-      ) {
+      if (hasOwn(expected, "absent")) {
         return expected.absent
-          ? actual ===
-              undefined ||
-            actual ===
-              null ||
-            actual ===
-              false
+          ? actual === undefined || actual === null || actual === false
           : true;
       }
 
-      if (
-        hasOwn(
-          expected,
-          "equals"
-        )
-      ) {
-        return Object.is(
-          actual,
-          expected.equals
-        );
+      if (hasOwn(expected, "equals")) return Object.is(actual, expected.equals);
+
+      if (Array.isArray(expected.oneOf)) {
+        return expected.oneOf.some(function some(value) {
+          return Object.is(value, actual);
+        });
       }
 
-      if (
-        Array.isArray(
-          expected.oneOf
-        )
-      ) {
-        return expected
-          .oneOf
-          .some(
-            value =>
-              Object.is(
-                value,
-                actual
-              )
-          );
+      if (hasOwn(expected, "minimum")) {
+        return typeof actual === "number" && actual >= expected.minimum;
       }
 
-      if (
-        hasOwn(
-          expected,
-          "minimum"
-        ) &&
-        (
-          !finiteNumber(
-            actual
-          ) ||
-
-          actual <
-          expected.minimum
-        )
-      ) {
-        return false;
+      if (hasOwn(expected, "maximum")) {
+        return typeof actual === "number" && actual <= expected.maximum;
       }
 
-      if (
-        hasOwn(
-          expected,
-          "maximum"
-        ) &&
-        (
-          !finiteNumber(
-            actual
-          ) ||
-
-          actual >
-          expected.maximum
-        )
-      ) {
-        return false;
-      }
-
-      if (
-        hasOwn(
-          expected,
-          "includes"
-        )
-      ) {
-        return (
-          Array.isArray(
-            actual
-          ) &&
-
-          actual.includes(
-            expected.includes
-          )
-        );
+      if (hasOwn(expected, "includes")) {
+        return Array.isArray(actual) && actual.indexOf(expected.includes) !== -1;
       }
 
       return true;
     }
 
-    if (
-      expected ===
-      true
-    ) {
-      return actual ===
-        true;
+    if (expected === true) return actual === true;
+    if (expected === false) return actual === false;
+
+    if (Array.isArray(expected)) {
+      return expected.some(function some(value) {
+        return Object.is(value, actual);
+      });
     }
 
-    if (
-      expected ===
-      false
-    ) {
-      return actual ===
-        false;
-    }
+    return Object.is(expected, actual);
+  }
 
-    if (
-      Array.isArray(
-        expected
-      )
-    ) {
-      return expected.some(
-        value =>
-          Object.is(
-            value,
-            actual
-          )
-      );
-    }
+  function reachedRequirementState(path, state) {
+    var rootPath = String(path || "").split(".")[0];
+    var required = REQUIREMENT_STATE[rootPath];
 
-    return Object.is(
-      expected,
-      actual
+    if (!required) return false;
+
+    return (STATE_ORDER[state] || 0) >= (STATE_ORDER[required] || 0);
+  }
+
+  function compareSpecAndOps(specInput, opsInput) {
+    var spec = normalizeSpec(specInput);
+    var ops = normalizeOps(opsInput);
+
+    var actual = Object.assign(
+      {
+        loaded: ops.loaded,
+        initialized: ops.initialized,
+        backend: ops.backend,
+        state: ops.state,
+        errors: ops.errors,
+        warnings: ops.warnings,
+        metrics: ops.metrics,
+        timestamps: ops.timestamps,
+        metadata: ops.metadata,
+        observed: ops.observed
+      },
+      ops.observed
     );
-  }
 
-  function reachedRequirementState(
-    path,
-    state
-  ) {
-    const rootPath =
-      String(
-        path ||
-        ""
-      )
-        .split(".")[0];
+    var passed = [];
+    var held = [];
+    var failed = [];
+    var conflicts = [];
 
-    const requiredState =
-      REQUIREMENT_MINIMUM_STATE[
-        rootPath
-      ];
-
-    return requiredState
-      ? (
-          STATE_ORDER[state] ||
-          0
-        ) >=
-        (
-          STATE_ORDER[
-            requiredState
-          ] ||
-          0
-        )
-      : false;
-  }
-
-  function compareSpecAndOps(
-    specInput,
-    opsInput
-  ) {
-    const spec =
-      normalizeSpec(
-        specInput
-      );
-
-    const ops =
-      normalizeOps(
-        opsInput
-      );
-
-    const actual = {
-      loaded:
-        ops.loaded,
-
-      initialized:
-        ops.initialized,
-
-      backend:
-        ops.backend,
-
-      state:
-        ops.state,
-
-      errors:
-        ops.errors,
-
-      warnings:
-        ops.warnings,
-
-      metrics:
-        ops.metrics,
-
-      timestamps:
-        ops.timestamps,
-
-      metadata:
-        ops.metadata,
-
-      observed:
-        ops.observed,
-
-      ...ops.observed
-    };
-
-    const passed = [];
-    const held = [];
-    const failed = [];
-    const conflicts = [];
-
-    for (
-      const [
-        path,
-        expected
-      ] of
-      flattenLeaves(
-        spec.required
-      )
-    ) {
-      const observed =
-        getPath(
-          actual,
-          path
-        );
-
-      const entry = {
-        path,
-
-        expected:
-          plain(
-            expected
-          ),
-
-        observed:
-          plain(
-            observed
-          ),
-
-        category:
-          "required"
+    flattenLeaves(spec.required).forEach(function each(pair) {
+      var path = pair[0];
+      var expected = pair[1];
+      var observed = getPath(actual, path);
+      var entry = {
+        path: path,
+        expected: plain(expected),
+        observed: plain(observed),
+        category: "required"
       };
 
-      if (
-        evaluateRequirement(
-          expected,
-          observed
-        )
-      ) {
-        passed.push(
-          entry
-        );
+      if (evaluateRequirement(expected, observed)) {
+        passed.push(entry);
       } else if (
-        observed ===
-          undefined ||
-
-        observed ===
-          null ||
-
-        (
-          expected ===
-            true &&
-
-          observed ===
-            false &&
-
-          !reachedRequirementState(
-            path,
-            ops.state
-          )
-        )
+        observed === undefined ||
+        observed === null ||
+        (expected === true &&
+          observed === false &&
+          !reachedRequirementState(path, ops.state))
       ) {
-        held.push(
-          entry
-        );
+        held.push(entry);
       } else {
-        failed.push(
-          entry
-        );
+        failed.push(entry);
       }
-    }
+    });
 
-    for (
-      const [
-        path,
-        expected
-      ] of
-      flattenLeaves(
-        spec.forbidden
-      )
-    ) {
-      const observed =
-        getPath(
-          actual,
-          path
-        );
-
-      const entry = {
-        path,
-
-        expected:
-          plain(
-            expected
-          ),
-
-        observed:
-          plain(
-            observed
-          ),
-
-        category:
-          "forbidden"
+    flattenLeaves(spec.forbidden).forEach(function each(pair) {
+      var path = pair[0];
+      var expected = pair[1];
+      var observed = getPath(actual, path);
+      var entry = {
+        path: path,
+        expected: plain(expected),
+        observed: plain(observed),
+        category: "forbidden"
       };
 
-      if (
-        evaluateRequirement(
-          expected,
-          observed
-        )
-      ) {
-        conflicts.push(
-          entry
-        );
-      } else {
-        passed.push(
-          entry
-        );
-      }
-    }
+      if (evaluateRequirement(expected, observed)) conflicts.push(entry);
+      else passed.push(entry);
+    });
 
-    const backendEntry = {
-      path:
-        "backend",
-
-      expected:
-        clone(
-          spec
-            .backend
-            .requiredAny
-        ),
-
-      observed:
-        ops.backend,
-
-      category:
-        "backend"
+    var backendEntry = {
+      path: "backend",
+      expected: clone(spec.backend.requiredAny),
+      observed: ops.backend,
+      category: "backend"
     };
 
-    if (
-      spec
-        .backend
-        .requiredAny
-        .includes(
-          ops.backend
-        )
-    ) {
-      passed.push(
-        backendEntry
-      );
-    } else if (
-      ops.backend ===
-      ENUM
-        .BACKEND
-        .NONE
-    ) {
-      held.push(
-        backendEntry
-      );
+    if (spec.backend.requiredAny.indexOf(ops.backend) !== -1) {
+      passed.push(backendEntry);
+    } else if (ops.backend === "NONE") {
+      held.push(backendEntry);
     } else {
-      failed.push(
-        backendEntry
-      );
+      failed.push(backendEntry);
     }
 
-    let status =
-      ENUM
-        .COMPARISON_STATUS
-        .PASS;
+    var status = "PASS";
 
-    if (
-      conflicts.length >
-      0
-    ) {
-      status =
-        ENUM
-          .COMPARISON_STATUS
-          .CONFLICT;
-    } else if (
-      failed.length >
-      0
-    ) {
-      status =
-        ENUM
-          .COMPARISON_STATUS
-          .FAIL;
-    } else if (
-      held.length >
-      0
-    ) {
-      status =
-        passed.length >
-        0
-          ? ENUM
-              .COMPARISON_STATUS
-              .PARTIAL_PASS
-          : ENUM
-              .COMPARISON_STATUS
-              .HOLD;
-    } else if (
-      ops.errors.length >
-      0
-    ) {
-      status =
-        ENUM
-          .COMPARISON_STATUS
-          .DEGRADED;
-    }
+    if (conflicts.length) status = "CONFLICT";
+    else if (failed.length) status = "FAIL";
+    else if (held.length) status = passed.length ? "PARTIAL_PASS" : "HOLD";
+    else if (ops.errors.length) status = "DEGRADED";
 
-    return deepFreeze({
-      schema:
-        SCHEMA.COMPARISON,
-
-      status,
-
-      passed:
-        clone(
-          passed
-        ),
-
-      held:
-        clone(
-          held
-        ),
-
-      failed:
-        clone(
-          failed
-        ),
-
-      conflicts:
-        clone(
-          conflicts
-        ),
-
-      passCount:
-        passed.length,
-
-      heldCount:
-        held.length,
-
-      failCount:
-        failed.length,
-
-      conflictCount:
-        conflicts.length,
-
-      ready:
-        status ===
-          ENUM
-            .COMPARISON_STATUS
-            .PASS &&
-
-        ops.errors.length ===
-          0
+    return freeze({
+      schema: COMPARISON_SCHEMA,
+      status: status,
+      passed: clone(passed),
+      held: clone(held),
+      failed: clone(failed),
+      conflicts: clone(conflicts),
+      passCount: passed.length,
+      heldCount: held.length,
+      failCount: failed.length,
+      conflictCount: conflicts.length,
+      ready: status === "PASS" && ops.errors.length === 0
     });
   }
 
   function createDeclaredOps(overrides) {
-    const source =
-      isPlainObject(
-        overrides
-      )
-        ? overrides
-        : {};
+    var source = isPlainObject(overrides) ? overrides : {};
+    var observed = Object.assign(
+      {
+        fileLoaded: false,
+        contractMatched: false,
+        modelValidated: false,
+        instanceCreated: false,
+        mountPresent: false,
+        surfaceNonzero: false,
+        backendInitialized: false,
+        resourcesUploaded: false,
+        firstFrameSubmitted: false,
+        firstFramePresented: false,
+        visiblePixelObserved: false,
+        interactionObserved: false,
+        fallbackAvailable: false,
+        contextRecoveryAvailable: false,
+        disposalObserved: false,
+        noBlockingError: true
+      },
+      isPlainObject(source.observed) ? source.observed : {}
+    );
 
-    return normalizeOps({
-      ...source,
-
-      loaded:
-        booleanValue(
-          source.loaded,
-          false
-        ),
-
-      initialized:
-        booleanValue(
-          source.initialized,
-          false
-        ),
-
-      state:
-        source.state ||
-        ENUM
-          .INSTANCE_STATE
-          .DECLARED,
-
-      backend:
-        source.backend ||
-        ENUM
-          .BACKEND
-          .NONE,
-
-      observed: {
-        [REQUIREMENT.FILE_LOADED]:
-          false,
-
-        [REQUIREMENT.CONTRACT_MATCHED]:
-          false,
-
-        [REQUIREMENT.MODEL_VALIDATED]:
-          false,
-
-        [REQUIREMENT.INSTANCE_CREATED]:
-          false,
-
-        [REQUIREMENT.MOUNT_PRESENT]:
-          false,
-
-        [REQUIREMENT.SURFACE_NONZERO]:
-          false,
-
-        [REQUIREMENT.BACKEND_INITIALIZED]:
-          false,
-
-        [REQUIREMENT.RESOURCES_UPLOADED]:
-          false,
-
-        [REQUIREMENT.FIRST_FRAME_SUBMITTED]:
-          false,
-
-        [REQUIREMENT.FIRST_FRAME_PRESENTED]:
-          false,
-
-        [REQUIREMENT.VISIBLE_PIXEL_OBSERVED]:
-          false,
-
-        [REQUIREMENT.INTERACTION_OBSERVED]:
-          false,
-
-        [REQUIREMENT.FALLBACK_AVAILABLE]:
-          false,
-
-        [REQUIREMENT.CONTEXT_RECOVERY_AVAILABLE]:
-          false,
-
-        [REQUIREMENT.DISPOSAL_OBSERVED]:
-          false,
-
-        [REQUIREMENT.NO_BLOCKING_ERROR]:
-          true,
-
-        ...(
-          isPlainObject(
-            source.observed
-          )
-            ? source.observed
-            : {}
-        )
-      }
-    });
+    return normalizeOps(
+      Object.assign({}, source, {
+        loaded: boolValue(source.loaded, false),
+        initialized: boolValue(source.initialized, false),
+        backend: source.backend || "NONE",
+        state: source.state || "DECLARED",
+        observed: observed
+      })
+    );
   }
 
   function createInstanceSpec(options) {
-    const source =
-      isPlainObject(
-        options
-      )
-        ? options
-        : {};
+    var source = isPlainObject(options) ? options : {};
+    var interactionMode = enumValue(
+      ENUM.INTERACTION_MODE,
+      source.interactionMode,
+      "NONE"
+    );
 
-    const interactionMode =
-      enumValue(
-        ENUM
-          .INTERACTION_MODE,
+    var requiresInteraction =
+      typeof source.requiresInteraction === "boolean"
+        ? source.requiresInteraction
+        : interactionMode !== "NONE";
 
-        source
-          .interactionMode,
-
-        ENUM
-          .INTERACTION_MODE
-          .NONE
-      );
-
-    const requiresInteraction =
-      typeof source
-        .requiresInteraction ===
-      "boolean"
-        ? source
-            .requiresInteraction
-        : interactionMode !==
-          ENUM
-            .INTERACTION_MODE
-            .NONE;
-
-    const requiresFallback =
-      typeof source
-        .requiresFallback ===
-      "boolean"
-        ? source
-            .requiresFallback
+    var requiresFallback =
+      typeof source.requiresFallback === "boolean"
+        ? source.requiresFallback
         : true;
 
-    const requiredBackend =
-      Array.isArray(
-        source.requiredBackend
-      )
-        ? source.requiredBackend
-        : [
-            ENUM
-              .BACKEND
-              .WEBGL2
-          ];
+    var requiredBackend = Array.isArray(source.requiredBackend)
+      ? source.requiredBackend
+      : ["WEBGL2"];
 
-    return deepFreeze({
-      schema:
-        SCHEMA
-          .INSTANCE_SPEC,
-
-      required: {
-        [REQUIREMENT.FILE_LOADED]:
-          true,
-
-        [REQUIREMENT.CONTRACT_MATCHED]:
-          true,
-
-        [REQUIREMENT.MODEL_VALIDATED]:
-          true,
-
-        [REQUIREMENT.INSTANCE_CREATED]:
-          true,
-
-        [REQUIREMENT.MOUNT_PRESENT]:
-          true,
-
-        [REQUIREMENT.SURFACE_NONZERO]:
-          true,
-
-        [REQUIREMENT.BACKEND_INITIALIZED]:
-          true,
-
-        [REQUIREMENT.RESOURCES_UPLOADED]:
-          true,
-
-        [REQUIREMENT.FIRST_FRAME_SUBMITTED]:
-          true,
-
-        [REQUIREMENT.FIRST_FRAME_PRESENTED]:
-          true,
-
-        [REQUIREMENT.VISIBLE_PIXEL_OBSERVED]:
-          true,
-
-        [REQUIREMENT.NO_BLOCKING_ERROR]:
-          true,
-
-        ...(
-          requiresInteraction
-            ? {
-                [REQUIREMENT.INTERACTION_OBSERVED]:
-                  true
-              }
-            : {}
-        ),
-
-        ...(
-          requiresFallback
-            ? {
-                [REQUIREMENT.FALLBACK_AVAILABLE]:
-                  true
-              }
-            : {}
-        ),
-
-        ...(
-          isPlainObject(
-            source.required
-          )
-            ? source.required
-            : {}
-        )
+    var required = Object.assign(
+      {
+        fileLoaded: true,
+        contractMatched: true,
+        modelValidated: true,
+        instanceCreated: true,
+        mountPresent: true,
+        surfaceNonzero: true,
+        backendInitialized: true,
+        resourcesUploaded: true,
+        firstFrameSubmitted: true,
+        firstFramePresented: true,
+        visiblePixelObserved: true,
+        noBlockingError: true
       },
+      requiresInteraction ? { interactionObserved: true } : {},
+      requiresFallback ? { fallbackAvailable: true } : {},
+      isPlainObject(source.required) ? source.required : {}
+    );
 
-      optional: {
-        [REQUIREMENT.CONTEXT_RECOVERY_AVAILABLE]:
-          true,
-
-        [REQUIREMENT.DISPOSAL_OBSERVED]:
-          true,
-
-        ...(
-          isPlainObject(
-            source.optional
-          )
-            ? source.optional
-            : {}
-        )
+    var forbidden = Object.assign(
+      {
+        globalSingletonDependency: true,
+        routeSpecificEngineDuplication: true,
+        modelOwnsSharedRendering: true,
+        productEngineInFrameLoop: true,
+        specCopiedToOps: true,
+        silentContextLoss: true,
+        silentResourceLeak: true,
+        silentBufferMutation: true
       },
+      isPlainObject(source.forbidden) ? source.forbidden : {}
+    );
 
-      forbidden: {
-        [FORBIDDEN.GLOBAL_SINGLETON_DEPENDENCY]:
-          true,
-
-        [FORBIDDEN.ROUTE_SPECIFIC_ENGINE_DUPLICATION]:
-          true,
-
-        [FORBIDDEN.MODEL_OWNS_SHARED_RENDERING]:
-          true,
-
-        [FORBIDDEN.PRODUCT_ENGINE_IN_FRAME_LOOP]:
-          true,
-
-        [FORBIDDEN.SPEC_COPIED_TO_OPS]:
-          true,
-
-        [FORBIDDEN.SILENT_CONTEXT_LOSS]:
-          true,
-
-        [FORBIDDEN.SILENT_RESOURCE_LEAK]:
-          true,
-
-        [FORBIDDEN.SILENT_BUFFER_MUTATION]:
-          true,
-
-        ...(
-          isPlainObject(
-            source.forbidden
-          )
-            ? source.forbidden
-            : {}
-        )
-      },
-
+    return freeze({
+      schema: SPEC_SCHEMA,
+      required: required,
+      optional: Object.assign(
+        {
+          contextRecoveryAvailable: true,
+          disposalObserved: true
+        },
+        isPlainObject(source.optional) ? source.optional : {}
+      ),
+      forbidden: forbidden,
       backend: {
-        preferred:
-          Array.isArray(
-            source.preferredBackend
-          )
-            ? source
-                .preferredBackend
-                .map(
-                  value =>
-                    enumValue(
-                      ENUM.BACKEND,
-                      value,
-                      ENUM
-                        .BACKEND
-                        .NONE
-                    )
-                )
-            : [
-                ENUM
-                  .BACKEND
-                  .WEBGPU,
-
-                ENUM
-                  .BACKEND
-                  .WEBGL2
-              ],
-
-        requiredAny:
-          requiredBackend.map(
-            value =>
-              enumValue(
-                ENUM.BACKEND,
-                value,
-                ENUM
-                  .BACKEND
-                  .NONE
-              )
-          ),
-
-        fallback:
-          Array.isArray(
-            source.fallbackBackend
-          )
-            ? source
-                .fallbackBackend
-                .map(
-                  value =>
-                    enumValue(
-                      ENUM.BACKEND,
-                      value,
-                      ENUM
-                        .BACKEND
-                        .NONE
-                    )
-                )
-            : [
-                ENUM
-                  .BACKEND
-                  .CANVAS2D,
-
-                ENUM
-                  .BACKEND
-                  .SVG,
-
-                ENUM
-                  .BACKEND
-                  .HTML
-              ]
+        preferred: (Array.isArray(source.preferredBackend)
+          ? source.preferredBackend
+          : ["WEBGPU", "WEBGL2"]
+        ).map(function map(value) {
+          return enumValue(ENUM.BACKEND, value, "NONE");
+        }),
+        requiredAny: requiredBackend.map(function map(value) {
+          return enumValue(ENUM.BACKEND, value, "NONE");
+        }),
+        fallback: (Array.isArray(source.fallbackBackend)
+          ? source.fallbackBackend
+          : ["CANVAS2D", "SVG", "HTML"]
+        ).map(function map(value) {
+          return enumValue(ENUM.BACKEND, value, "NONE");
+        })
       },
-
-      capabilities:
-        isPlainObject(
-          source.capabilities
-        )
-          ? clone(
-              source.capabilities
-            )
-          : {},
-
-      metadata: {
-        interactionMode,
-
-        requiresInteraction,
-
-        requiresFallback,
-
-        ...(
-          isPlainObject(
-            source.metadata
-          )
-            ? clone(
-                source.metadata
-              )
-            : {}
-        )
-      }
+      capabilities: isPlainObject(source.capabilities)
+        ? clone(source.capabilities)
+        : {},
+      metadata: Object.assign(
+        {
+          interactionMode: interactionMode,
+          requiresInteraction: requiresInteraction,
+          requiresFallback: requiresFallback
+        },
+        isPlainObject(source.metadata) ? clone(source.metadata) : {}
+      )
     });
   }
 
-  function deriveReceiptState(
-    comparison,
-    ops
-  ) {
-    if (
-      ops.state ===
-      ENUM
-        .INSTANCE_STATE
-        .DESTROYED
-    ) {
+  function deriveReceiptState(comparison, ops) {
+    if (ops.state === "DESTROYED") {
+      return { state: "DESTROYED", status: "DESTROYED", ready: false };
+    }
+
+    if (ops.state === "CONTEXT_LOST") {
+      return { state: "CONTEXT_LOST", status: "CONTEXT_LOST", ready: false };
+    }
+
+    if (comparison.status === "CONFLICT") {
+      return { state: "HELD", status: "CONFLICT", ready: false };
+    }
+
+    if (comparison.status === "FAIL") {
       return {
-        state:
-          ENUM
-            .INSTANCE_STATE
-            .DESTROYED,
-
-        status:
-          "DESTROYED",
-
-        ready:
-          false
+        state: ops.errors.length ? "ERROR" : "DEGRADED",
+        status: ops.errors.length ? "ERROR" : "DEGRADED",
+        ready: false
       };
     }
 
     if (
-      ops.state ===
-      ENUM
-        .INSTANCE_STATE
-        .CONTEXT_LOST
+      comparison.status === "HOLD" ||
+      comparison.status === "PARTIAL_PASS"
     ) {
-      return {
-        state:
-          ENUM
-            .INSTANCE_STATE
-            .CONTEXT_LOST,
-
-        status:
-          "CONTEXT_LOST",
-
-        ready:
-          false
-      };
+      return { state: "HELD", status: "HELD", ready: false };
     }
 
-    if (
-      comparison.status ===
-      ENUM
-        .COMPARISON_STATUS
-        .CONFLICT
-    ) {
-      return {
-        state:
-          ENUM
-            .INSTANCE_STATE
-            .HELD,
-
-        status:
-          "CONFLICT",
-
-        ready:
-          false
-      };
+    if (comparison.ready) {
+      return { state: "VERIFIED", status: "READY", ready: true };
     }
 
-    if (
-      comparison.status ===
-      ENUM
-        .COMPARISON_STATUS
-        .FAIL
-    ) {
-      return {
-        state:
-          ops.errors.length >
-          0
-            ? ENUM
-                .INSTANCE_STATE
-                .ERROR
-            : ENUM
-                .INSTANCE_STATE
-                .DEGRADED,
-
-        status:
-          ops.errors.length >
-          0
-            ? "ERROR"
-            : "DEGRADED",
-
-        ready:
-          false
-      };
-    }
-
-    if (
-      comparison.status ===
-        ENUM
-          .COMPARISON_STATUS
-          .HOLD ||
-
-      comparison.status ===
-        ENUM
-          .COMPARISON_STATUS
-          .PARTIAL_PASS
-    ) {
-      return {
-        state:
-          ENUM
-            .INSTANCE_STATE
-            .HELD,
-
-        status:
-          "HELD",
-
-        ready:
-          false
-      };
-    }
-
-    if (
-      comparison.ready
-    ) {
-      return {
-        state:
-          ENUM
-            .INSTANCE_STATE
-            .VERIFIED,
-
-        status:
-          "READY",
-
-        ready:
-          true
-      };
-    }
-
-    return {
-      state:
-        ops.state,
-
-      status:
-        "UNVERIFIED",
-
-      ready:
-        false
-    };
+    return { state: ops.state, status: "UNVERIFIED", ready: false };
   }
 
   function composeReceipt(input) {
-    const source =
-      isPlainObject(
-        input
-      )
-        ? input
-        : {};
+    var source = isPlainObject(input) ? input : {};
+    var news = normalizeNews(source.news);
+    var fibonacci = normalizeFibonacci(source.fibonacci);
+    var spec = normalizeSpec(source.spec);
+    var ops = normalizeOps(source.ops);
+    var comparison = source.comparison
+      ? clone(source.comparison)
+      : compareSpecAndOps(spec, ops);
+    var derived = deriveReceiptState(comparison, ops);
+    var composedAt = stringValue(source.composedAt, nowIso());
 
-    const news =
-      normalizeNews(
-        source.news
-      );
-
-    const fibonacci =
-      normalizeFibonacci(
-        source.fibonacci
-      );
-
-    const spec =
-      normalizeSpec(
-        source.spec
-      );
-
-    const ops =
-      normalizeOps(
-        source.ops
-      );
-
-    const comparison =
-      source.comparison
-        ? clone(
-            source.comparison
-          )
-        : compareSpecAndOps(
-            spec,
-            ops
-          );
-
-    const derived =
-      deriveReceiptState(
-        comparison,
-        ops
-      );
-
-    const composedAt =
-      stringValue(
-        source.composedAt,
-        new Date()
-          .toISOString()
-      );
-
-    const core = {
-      schema:
-        SCHEMA.RECEIPT,
-
-      authority:
-        CONTRACT,
-
-      hybridAuthority:
-        HYBRID_AUTHORITY,
-
-      identity:
-        isPlainObject(
-          source.identity
-        )
-          ? clone(
-              source.identity
-            )
-          : {},
-
-      news,
-
-      fibonacci,
-
-      specHash:
-        hash(
-          spec
-        ),
-
-      opsHash:
-        hash(
-          ops
-        ),
-
-      comparisonHash:
-        hash(
-          comparison
-        ),
-
-      state:
-        derived.state,
-
-      status:
-        derived.status,
-
-      ready:
-        derived.ready,
-
-      comparison,
-
-      ops:
-        plain(
-          ops
-        ),
-
-      metadata:
-        isPlainObject(
-          source.metadata
-        )
-          ? clone(
-              source.metadata
-            )
-          : {},
-
-      composedAt
+    var core = {
+      schema: RECEIPT_SCHEMA,
+      contract: CONTRACT,
+      authority: CONTRACT,
+      hybridAuthority: HYBRID_AUTHORITY,
+      identity: isPlainObject(source.identity) ? clone(source.identity) : {},
+      news: news,
+      fibonacci: fibonacci,
+      specHash: hash(spec),
+      opsHash: hash(ops),
+      comparisonHash: hash(comparison),
+      state: derived.state,
+      status: derived.status,
+      ready: derived.ready,
+      comparison: comparison,
+      ops: plain(ops),
+      metadata: isPlainObject(source.metadata) ? clone(source.metadata) : {},
+      composedAt: composedAt
     };
 
-    return deepFreeze({
-      ...core,
-
-      receiptHash:
-        hash({
-          ...core,
-
-          composedAt:
-            undefined
-        })
-    });
+    return freeze(
+      Object.assign({}, core, {
+        receiptHash: hash(Object.assign({}, core, { composedAt: undefined }))
+      })
+    );
   }
 
   function assertModelPackage(input) {
-    const result =
-      validateModelPackage(
-        input
-      );
+    var result = validateModelPackage(input);
 
     if (!result.passed) {
-      const error =
-        new Error(
-          `[${CONTRACT}] Model package validation failed: ` +
-          result
-            .failures
-            .map(
-              entry =>
-                entry.id
-            )
+      var error = new Error(
+        "[" +
+          CONTRACT +
+          "] Model package validation failed: " +
+          result.failures
+            .map(function map(entry) {
+              return entry.id;
+            })
             .join(", ")
-        );
+      );
 
-      error.name =
-        "DGBModelPackageValidationError";
-
-      error.validation =
-        result;
-
+      error.name = "DGBModelPackageValidationError";
+      error.validation = result;
       throw error;
     }
 
@@ -5670,427 +1495,245 @@
   }
 
   function selfValidate() {
-    const audit =
-      collector(
-        "authority"
-      );
+    var audit = collector("authority");
+    var declared = createDeclaredOps();
+    var spec = createInstanceSpec({ interactionMode: "NONE" });
 
     audit.add(
       "model-schema",
-
-      SCHEMA.MODEL ===
+      MODEL_SCHEMA === "DGB_MODEL_PACKAGE_v1",
       "DGB_MODEL_PACKAGE_v1",
-
-      "DGB_MODEL_PACKAGE_v1",
-
-      SCHEMA.MODEL,
-
+      MODEL_SCHEMA,
       "Model schema must remain locked."
     );
 
     audit.add(
       "fibonacci-order",
-
-      FIBONACCI_SEQUENCE.every(
-        (
-          value,
-          index
-        ) =>
-          index ===
-            0 ||
-
-          value >
-          FIBONACCI_SEQUENCE[
-            index -
-            1
-          ]
-      ),
-
+      FIBONACCI.every(function every(value, index) {
+        return index === 0 || value > FIBONACCI[index - 1];
+      }),
       true,
-
-      FIBONACCI_SEQUENCE,
-
-      "Fibonacci gates must remain strictly increasing."
+      FIBONACCI,
+      "Fibonacci gates must be strictly increasing."
     );
-
-    audit.add(
-      "webgl2-baseline",
-
-      ENUM
-        .BACKEND
-        .WEBGL2 ===
-        "WEBGL2",
-
-      "WEBGL2",
-
-      ENUM
-        .BACKEND
-        .WEBGL2,
-
-      "WebGL 2 remains first verified GPU baseline."
-    );
-
-    audit.add(
-      "no-final-verdict",
-
-      DEFAULT
-        .OWNERSHIP
-        .ownsFinalVerdict ===
-        false,
-
-      false,
-
-      DEFAULT
-        .OWNERSHIP
-        .ownsFinalVerdict,
-
-      "Models may not own final verdict."
-    );
-
-    const declared =
-      createDeclaredOps();
 
     audit.add(
       "declared-not-ready",
-
-      declared.state ===
-        ENUM
-          .INSTANCE_STATE
-          .DECLARED &&
-
-      declared
-        .observed
-        .visiblePixelObserved ===
-        false,
-
+      declared.state === "DECLARED" &&
+        declared.observed.visiblePixelObserved === false,
       true,
-
       declared,
-
       "Declared OPS may not imply readiness."
     );
 
-    const spec =
-      createInstanceSpec({
-        interactionMode:
-          ENUM
-            .INTERACTION_MODE
-            .NONE
-      });
-
     audit.add(
       "visible-proof-required",
-
-      spec
-        .required
-        .visiblePixelObserved ===
-        true,
-
+      spec.required.visiblePixelObserved === true,
       true,
-
-      spec
-        .required
-        .visiblePixelObserved,
-
+      spec.required.visiblePixelObserved,
       "Standard readiness requires visible-pixel proof."
     );
 
     audit.add(
       "spec-ops-separated",
-
-      hash(
-        spec
-      ) !==
-      hash(
-        declared
-      ),
-
+      hash(spec) !== hash(declared),
       true,
-
-      hash(
-        spec
-      ) !==
-      hash(
-        declared
-      ),
-
+      hash(spec) !== hash(declared),
       "SPEC and OPS must remain distinct records."
     );
 
-    return audit.result();
+    return audit.result({ schema: VALIDATION_SCHEMA });
   }
 
-  const AUTHORITY_VALIDATION =
-    selfValidate();
+  var AUTHORITY_VALIDATION = selfValidate();
 
-  const AUTHORITY_RECEIPT =
-    deepFreeze({
-      schema:
-        SCHEMA.RECEIPT,
-
-      contract:
-        CONTRACT,
-
-      hybridAuthority:
-        HYBRID_AUTHORITY,
-
-      version:
-        VERSION,
-
-      file:
-        FILE,
-
-      modelSchema:
-        SCHEMA.MODEL,
-
-      specSchema:
-        SCHEMA.SPEC,
-
-      opsSchema:
-        SCHEMA.OPS,
-
-      receiptSchema:
-        SCHEMA.RECEIPT,
-
-      status:
-        AUTHORITY_VALIDATION
-          .passed
-          ? "READY"
-          : "INVALID",
-
-      ready:
-        AUTHORITY_VALIDATION
-          .passed,
-
-      fibonacciGate:
-        FIBONACCI_GATE.F13,
-
-      nextFibonacciGate:
-        FIBONACCI_GATE.F21,
-
-      ownsDOM:
-        false,
-
-      ownsCanvas:
-        false,
-
-      ownsWebGL:
-        false,
-
-      ownsWebGPU:
-        false,
-
-      ownsShaders:
-        false,
-
-      ownsBuffers:
-        false,
-
-      ownsInput:
-        false,
-
-      ownsModelGeometry:
-        false,
-
-      ownsFinalVerdict:
-        false,
-
-      validationPassCount:
-        AUTHORITY_VALIDATION
-          .passCount,
-
-      validationFailCount:
-        AUTHORITY_VALIDATION
-          .failCount,
-
-      contractHash:
-        hash({
-          contract:
-            CONTRACT,
-
-          hybridAuthority:
-            HYBRID_AUTHORITY,
-
-          version:
-            VERSION,
-
-          schemas:
-            SCHEMA,
-
-          fibonacci:
-            FIBONACCI_SEQUENCE,
-
-          backends:
-            Object.values(
-              ENUM.BACKEND
-            ),
-
-          primitives:
-            Object.values(
-              ENUM.PRIMITIVE
-            ),
-
-          states:
-            Object.values(
-              ENUM
-                .INSTANCE_STATE
-            )
-        })
-    });
+  var AUTHORITY_RECEIPT = freeze({
+    schema: AUTHORITY_RECEIPT_SCHEMA,
+    contract: CONTRACT,
+    authorityContract: CONTRACT,
+    hybridAuthority: HYBRID_AUTHORITY,
+    version: VERSION,
+    file: FILE,
+    modelSchema: MODEL_SCHEMA,
+    specSchema: SPEC_SCHEMA,
+    opsSchema: OPS_SCHEMA,
+    receiptSchema: RECEIPT_SCHEMA,
+    status: AUTHORITY_VALIDATION.passed ? "READY" : "INVALID",
+    ready: AUTHORITY_VALIDATION.passed,
+    authorityReady: AUTHORITY_VALIDATION.passed,
+    fibonacciGate: 13,
+    nextFibonacciGate: 21,
+    fibonacci: {
+      gate: 13,
+      currentGate: 13,
+      nextGate: 21
+    },
+    ownsDOM: false,
+    ownsCanvas: false,
+    ownsWebGL: false,
+    ownsWebGPU: false,
+    ownsShaders: false,
+    ownsBuffers: false,
+    ownsInput: false,
+    ownsModelGeometry: false,
+    ownsFinalVerdict: false,
+    validationPassCount: AUTHORITY_VALIDATION.passCount,
+    validationFailCount: AUTHORITY_VALIDATION.failCount,
+    generatedAt: nowIso(),
+    contractHash: hash({
+      contract: CONTRACT,
+      version: VERSION,
+      schemas: {
+        model: MODEL_SCHEMA,
+        spec: SPEC_SCHEMA,
+        ops: OPS_SCHEMA,
+        receipt: RECEIPT_SCHEMA
+      },
+      fibonacci: FIBONACCI,
+      requirements: REQUIREMENT,
+      forbidden: FORBIDDEN
+    })
+  });
 
   function getAuthorityReceipt() {
-    return clone(
-      AUTHORITY_RECEIPT
-    );
+    return clone(AUTHORITY_RECEIPT);
   }
 
   function getAuthorityValidation() {
-    return clone(
-      AUTHORITY_VALIDATION
-    );
+    return clone(AUTHORITY_VALIDATION);
   }
 
-  const API =
-    deepFreeze({
-      contract:
-        CONTRACT,
+  var API = freeze({
+    contract: CONTRACT,
+    hybridAuthority: HYBRID_AUTHORITY,
+    version: VERSION,
+    file: FILE,
 
-      hybridAuthority:
-        HYBRID_AUTHORITY,
+    schemas: freeze({
+      MODEL: MODEL_SCHEMA,
+      SPEC: SPEC_SCHEMA,
+      OPS: OPS_SCHEMA,
+      COMPARISON: COMPARISON_SCHEMA,
+      RECEIPT: RECEIPT_SCHEMA,
+      AUTHORITY_RECEIPT: AUTHORITY_RECEIPT_SCHEMA
+    }),
 
-      version:
-        VERSION,
+    enums: freeze({
+      ENUM: ENUM,
+      FIBONACCI: FIBONACCI,
+      REQUIREMENT: REQUIREMENT,
+      FORBIDDEN: FORBIDDEN
+    }),
 
-      file:
-        FILE,
+    clone: clone,
+    plain: plain,
+    deepFreeze: freeze,
+    stableStringify: stableStringify,
+    hash: hash,
 
-      schemas:
-        SCHEMA,
+    normalizeNews: normalizeNews,
+    normalizeFibonacci: normalizeFibonacci,
+    normalizeOwnership: normalizeOwnership,
+    normalizeAttribute: normalizeAttribute,
+    normalizeMesh: normalizeMesh,
+    normalizeSpec: normalizeSpec,
+    normalizeOps: normalizeOps,
+    normalizeModelPackage: normalizeModelPackage,
 
-      enums:
-        deepFreeze({
-          ...ENUM,
+    validateAttribute: validateAttribute,
+    validateMesh: validateMesh,
+    validateSpec: validateSpec,
+    validateOps: validateOps,
+    validateModelPackage: validateModelPackage,
+    assertModelPackage: assertModelPackage,
 
-          FIBONACCI_GATE,
+    compareSpecAndOps: compareSpecAndOps,
+    composeReceipt: composeReceipt,
+    createDeclaredOps: createDeclaredOps,
+    createInstanceSpec: createInstanceSpec,
 
-          REQUIREMENT,
+    previousFibonacciGate: previousGate,
+    nextFibonacciGate: nextGate,
 
-          FORBIDDEN
-        }),
+    getAuthorityReceipt: getAuthorityReceipt,
+    getAuthorityValidation: getAuthorityValidation
+  });
 
-      defaults:
-        DEFAULT,
+  function install() {
+    var canonical = root.DGB_ENGINE_CONTRACT || null;
+    var compat = root.DGBEngineContract || null;
 
-      clone,
+    if (canonical && compat && canonical !== compat) {
+      root.__DGB_ENGINE_CONTRACT_INSTALLATION_CONFLICT__ = freeze({
+        schema: "DGB_ENGINE_CONTRACT_INSTALLATION_CONFLICT_v1",
+        code: "GLOBAL_ALIAS_CONFLICT",
+        expectedContract: CONTRACT,
+        replacementPerformed: false,
+        generatedAt: nowIso()
+      });
+      return false;
+    }
 
-      plain,
+    var existing = canonical || compat;
 
-      deepFreeze,
+    if (existing) {
+      if (existing.contract !== CONTRACT) {
+        root.__DGB_ENGINE_CONTRACT_INSTALLATION_CONFLICT__ = freeze({
+          schema: "DGB_ENGINE_CONTRACT_INSTALLATION_CONFLICT_v1",
+          code: "CONTRACT_CONFLICT",
+          expectedContract: CONTRACT,
+          existingContract: existing.contract || null,
+          replacementPerformed: false,
+          generatedAt: nowIso()
+        });
+        return false;
+      }
 
-      stableStringify,
+      root.DGB_ENGINE_CONTRACT = existing;
+      root.DGBEngineContract = existing;
 
-      hash,
+      if (typeof module !== "undefined" && module.exports) {
+        module.exports = existing;
+      }
 
-      normalizeNews,
+      return true;
+    }
 
-      normalizeFibonacci,
+    root.DGB_ENGINE_CONTRACT = API;
+    root.DGBEngineContract = API;
+    root.DGB_ENGINE_CONTRACT_RECEIPT = getAuthorityReceipt();
+    root.__DGB_ENGINE_CONTRACT_LOADED__ = true;
+    root.__DGB_ENGINE_CONTRACT_VERSION__ = VERSION;
+    root.__DGB_ENGINE_CONTRACT_MODEL_SCHEMA__ = MODEL_SCHEMA;
 
-      normalizeOwnership,
+    if (typeof module !== "undefined" && module.exports) {
+      module.exports = API;
+    }
 
-      normalizeAttribute,
+    return true;
+  }
 
-      normalizeRenderState,
+  if (!AUTHORITY_VALIDATION.passed) {
+    root.__DGB_ENGINE_CONTRACT_AUTHORITY_INVALID__ =
+      AUTHORITY_VALIDATION;
 
-      normalizeMesh,
-
-      normalizeRenderPass:
-        normalizePass,
-
-      normalizeSpec,
-
-      normalizeOps,
-
-      normalizeModelPackage,
-
-      validateAttribute,
-
-      validateMesh,
-
-      validateRenderPass,
-
-      validateSpec,
-
-      validateOps,
-
-      validateModelPackage,
-
-      assertModelPackage,
-
-      compareSpecAndOps,
-
-      composeReceipt,
-
-      createDeclaredOps,
-
-      createInstanceSpec,
-
-      previousFibonacciGate:
-        previousGate,
-
-      nextFibonacciGate:
-        nextGate,
-
-      getAuthorityReceipt,
-
-      getAuthorityValidation
-    });
-
-  root.DGBEngineContract =
-    API;
-
-  root.DGB_ENGINE_CONTRACT =
-    API;
-
-  root.DGB_ENGINE_CONTRACT_RECEIPT =
-    AUTHORITY_RECEIPT;
-
-  root.__DGB_ENGINE_CONTRACT_LOADED__ =
-    true;
-
-  root.__DGB_ENGINE_CONTRACT_VERSION__ =
-    VERSION;
-
-  root.__DGB_ENGINE_CONTRACT_MODEL_SCHEMA__ =
-    SCHEMA.MODEL;
-
-  if (
-    !AUTHORITY_VALIDATION
-      .passed
-  ) {
     throw new Error(
-      `[${CONTRACT}] Authority self-validation failed: ` +
-      AUTHORITY_VALIDATION
-        .failures
-        .map(
-          entry =>
-            entry.id
-        )
-        .join(", ")
+      "[" +
+        CONTRACT +
+        "] Authority self-validation failed: " +
+        AUTHORITY_VALIDATION.failures
+          .map(function map(entry) {
+            return entry.id;
+          })
+          .join(", ")
     );
   }
 
-  if (
-    typeof module !==
-      "undefined" &&
-
-    module.exports
-  ) {
-    module.exports =
-      API;
-  }
+  install();
 })(
-  typeof window !==
-  "undefined"
+  typeof window !== "undefined"
     ? window
-    : globalThis
+    : typeof globalThis !== "undefined"
+      ? globalThis
+      : this
 );

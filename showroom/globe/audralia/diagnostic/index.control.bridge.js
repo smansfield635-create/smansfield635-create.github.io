@@ -1,36 +1,34 @@
 // /showroom/globe/audralia/diagnostic/index.control.bridge.js
-// AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v11
+// AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v12
 // Full-file replacement.
 // DGB-aware relational diagnostic-control bridge.
+// Fixes registry alias narrowing from v11.
+// Normalizes DGB registry receipts before judgment.
 // Alias install on load only. Verification is explicit and nonmutating.
-// No station execution. No renderer repair. No readiness inflation.
 
-(function installAudraliaDiagnosticControlBridgeV11(global) {
+(function installAudraliaDiagnosticControlBridgeV12(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root && root.document ? root.document : null;
   if (!doc) return;
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v11";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v10";
-  var VERSION = "11.0.0";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v12";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v11";
+  var VERSION = "12.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.control.bridge.js";
   var SCOPE = "AUDRALIA_DIAGNOSTIC_CONTROL_FAMILY";
 
-  var STATE_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_STATE_v4";
-  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_RECEIPT_v7";
+  var STATE_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_STATE_v5";
+  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_BRIDGE_RECEIPT_v8";
 
   var GLOBAL_API = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE";
   var GLOBAL_STATE = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE_STATE";
   var GLOBAL_RECEIPT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE_RECEIPT";
 
-  var DGB_CONTRACT =
-    "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
-  var DGB_CORE =
-    "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
-  var DGB_REGISTRY =
-    "DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2";
+  var DGB_CONTRACT = "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
+  var DGB_CORE = "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
+  var DGB_REGISTRY = "DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2";
   var DGB_MODEL_SCHEMA = "DGB_MODEL_PACKAGE_v1";
 
   var STATUS = Object.freeze({
@@ -49,10 +47,7 @@
     ERROR: "ERROR"
   });
 
-  var MODE = Object.freeze({
-    INSTALL: "INSTALL",
-    VERIFY: "VERIFY"
-  });
+  var MODE = Object.freeze({ INSTALL: "INSTALL", VERIFY: "VERIFY" });
 
   var NO_CLAIMS = Object.freeze({
     exactNineClaimed: false,
@@ -104,17 +99,24 @@
 
   var DGB_CONTRACT_PATHS = Object.freeze([
     "DGB_ENGINE_CONTRACT",
-    "DGBEngineContract"
+    "DGBEngineContract",
+    "DGB.engineContract"
   ]);
 
   var DGB_CORE_PATHS = Object.freeze([
     "DGB_ENGINE",
-    "DGBEngine"
+    "DGBEngine",
+    "DGB.engine"
   ]);
 
   var DGB_REGISTRY_PATHS = Object.freeze([
     "DGB_ENGINE_SUBJECT_REGISTRY",
-    "DGBEngineSubjectRegistry"
+    "DGBEngineSubjectRegistry",
+    "DGB_ENGINE_SUBJECTS",
+    "DGB.engineSubjects",
+    "DGB_ENGINE_REGISTRY",
+    "DGB.engineRegistry",
+    "DGBEngineRegistry"
   ]);
 
   var DGB_RECEIPT_PATHS = Object.freeze([
@@ -122,7 +124,9 @@
   ]);
 
   var DGB_REGISTRY_RECEIPT_PATHS = Object.freeze([
-    "DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT"
+    "DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT",
+    "DGB_ENGINE_SUBJECTS_RECEIPT",
+    "DGB_ENGINE_REGISTRY_RECEIPT"
   ]);
 
   var RAIL_API_PATHS = Object.freeze([
@@ -134,6 +138,13 @@
     "dgb.engine.contract.js",
     "dgb.engine.js",
     "dgb.engine.subjects.js",
+    "index.control.bridge.js",
+    "index.inspection.lane.js",
+    "index.js",
+    "index.controls.js"
+  ]);
+
+  var LOCAL_RUNTIME_ORDER = Object.freeze([
     "index.control.bridge.js",
     "index.inspection.lane.js",
     "index.js",
@@ -200,6 +211,7 @@
 
   function cloneValue(value, seen) {
     var visited = seen || [];
+    var output;
 
     if (
       value === null ||
@@ -216,20 +228,19 @@
 
     if (visited.indexOf(value) !== -1) return "[Circular]";
 
-    var nextSeen = visited.concat([value]);
+    visited = visited.concat([value]);
 
     if (Array.isArray(value)) {
       return value.slice(0, 377).map(function each(entry) {
-        return cloneValue(entry, nextSeen);
+        return cloneValue(entry, visited);
       });
     }
 
-    var output = {};
+    output = {};
     try {
       Object.keys(value).slice(0, 233).forEach(function each(key) {
-        try {
-          output[key] = cloneValue(value[key], nextSeen);
-        } catch (error) {
+        try { output[key] = cloneValue(value[key], visited); }
+        catch (error) {
           output[key] = {
             unreadable: true,
             message: String(error && error.message || error)
@@ -248,11 +259,11 @@
     if (!isObjectLike(value)) return value;
     if (visited.indexOf(value) !== -1) return value;
 
-    var nextSeen = visited.concat([value]);
+    visited = visited.concat([value]);
 
     try {
       Object.keys(value).forEach(function each(key) {
-        freezeDeep(value[key], nextSeen);
+        freezeDeep(value[key], visited);
       });
       Object.freeze(value);
     } catch (_error) {}
@@ -270,11 +281,8 @@
 
     for (var i = 0; i < parts.length; i += 1) {
       if (cursor === null || cursor === undefined) return null;
-      try {
-        cursor = cursor[parts[i]];
-      } catch (_error) {
-        return null;
-      }
+      try { cursor = cursor[parts[i]]; }
+      catch (_error) { return null; }
     }
 
     return cursor === undefined ? null : cursor;
@@ -307,18 +315,132 @@
       if (isFunction(value.getRegistryReceipt)) return value.getRegistryReceipt();
       if (isFunction(value.getRuntimeReceipt)) return value.getRuntimeReceipt();
       if (isFunction(value.getAuthorityReceipt)) return value.getAuthorityReceipt();
+      if (isFunction(value.getDefinitionReceipt)) return value.getDefinitionReceipt();
       if (isFunction(value.getReceipt)) return value.getReceipt();
       if (isFunction(value.getReceiptLight)) return value.getReceiptLight();
     } catch (_error) {
       return null;
     }
 
+    try {
+      return value.RECEIPT || value.receipt || null;
+    } catch (_error2) {
+      return null;
+    }
+  }
+
+  function firstValue(values) {
+    for (var i = 0; i < values.length; i += 1) {
+      if (values[i] !== null && values[i] !== undefined && values[i] !== "") return values[i];
+    }
     return null;
+  }
+
+  function normalizeRegistryReceipt(api, receipt) {
+    var raw = receipt || readReceipt(api) || {};
+    var contract =
+      firstValue([
+        raw.contract,
+        raw.CONTRACT,
+        readContract(api)
+      ]);
+
+    var slotCount =
+      firstValue([
+        raw.slotCount,
+        raw.subjectSlotCount,
+        raw.registrySlotCount,
+        raw.slots && raw.slots.length,
+        raw.subjects && raw.subjects.length
+      ]);
+
+    var defaultEngineId =
+      firstValue([
+        raw.defaultEngineId,
+        raw.defaultSubjectId,
+        raw.defaultRuntimeEngineId,
+        raw.engineId,
+        raw.coreEngine && raw.coreEngine.engineId,
+        raw.coreEngine && raw.coreEngine.id
+      ]);
+
+    var governing =
+      raw.governingContract ||
+      raw.contractAuthority ||
+      raw.authorityContract ||
+      raw.contractRecord ||
+      null;
+
+    var core =
+      raw.coreEngine ||
+      raw.runtimeEngine ||
+      raw.engine ||
+      raw.defaultEngine ||
+      null;
+
+    var governingReady = Boolean(
+      governing &&
+      (
+        governing.authorityReady === true ||
+        governing.ready === true ||
+        governing.status === "READY"
+      ) &&
+      (
+        governing.identityMatched === true ||
+        governing.contractMatched === true ||
+        governing.matched === true
+      ) &&
+      (
+        governing.validationPassed === true ||
+        governing.valid === true ||
+        governing.status === "READY"
+      )
+    );
+
+    var coreReady = Boolean(
+      core &&
+      (
+        core.loaded === true ||
+        core.ready === true ||
+        core.status === "READY"
+      ) &&
+      (
+        core.identityMatched === true ||
+        core.contractMatched === true ||
+        core.matched === true
+      ) &&
+      (
+        core.governingContractMatched === true ||
+        core.authorityMatched === true ||
+        core.contractMatched === true
+      ) &&
+      core.f21Claimed !== true
+    );
+
+    return freezeDeep({
+      raw: cloneValue(raw),
+      contract: contract,
+      slotCount: Number(slotCount),
+      defaultEngineId: defaultEngineId,
+      governingContract: governing ? cloneValue(governing) : null,
+      coreEngine: core ? cloneValue(core) : null,
+      governingReady: governingReady,
+      coreReady: coreReady,
+      hasSixSlots: Number(slotCount) === 6,
+      defaultEngineRecognized:
+        defaultEngineId === "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE" ||
+        defaultEngineId === "DGB_ENGINE_CORE" ||
+        defaultEngineId === "DGB_ENGINE" ||
+        defaultEngineId === "DGB_INTERACTIVE_RUNTIME_ENGINE",
+      f21Claimed: Boolean(
+        raw.f21Claimed === true ||
+        (core && core.f21Claimed === true)
+      )
+    });
   }
 
   function describeNode(node) {
     if (!node) return null;
-
     return {
       tag: node.tagName || null,
       id: node.id || null,
@@ -479,7 +601,6 @@
       state.aliases[family].conflictingNodeCount += 1;
       state.aliases[family].heldNodeCount += 1;
     }
-
     state.conflicts.push({
       code: code,
       family: family || "relational",
@@ -494,7 +615,6 @@
       state.aliases[family].invalidNodeCount += 1;
       state.aliases[family].heldNodeCount += 1;
     }
-
     state.conflicts.push({
       code: code,
       family: family || "relational",
@@ -515,14 +635,7 @@
   }
 
   function createMutationPlan(family, node) {
-    return {
-      family: family,
-      node: node,
-      valid: true,
-      mutations: [],
-      conflicts: [],
-      invalid: []
-    };
+    return { family: family, node: node, valid: true, mutations: [], conflicts: [], invalid: [] };
   }
 
   function addMutation(plan, type, name, value) {
@@ -573,14 +686,8 @@
   function captureMutationSnapshot(node, mutations) {
     return mutations.map(function capture(mutation) {
       if (mutation.type === "id") {
-        return {
-          type: "id",
-          name: "id",
-          hadValue: Boolean(node.id),
-          value: node.id || ""
-        };
+        return { type: "id", name: "id", hadValue: Boolean(node.id), value: node.id || "" };
       }
-
       return {
         type: "attribute",
         name: mutation.name,
@@ -592,24 +699,18 @@
 
   function restoreMutationSnapshot(node, snapshotList) {
     var failures = [];
-
     snapshotList.forEach(function restore(entry) {
       try {
         if (entry.type === "id") {
           node.id = entry.hadValue ? entry.value : "";
           return;
         }
-
         if (entry.hadValue) node.setAttribute(entry.name, entry.value);
         else node.removeAttribute(entry.name);
       } catch (error) {
-        failures.push({
-          name: entry.name,
-          message: error && error.message ? error.message : String(error)
-        });
+        failures.push({ name: entry.name, message: error && error.message ? error.message : String(error) });
       }
     });
-
     return { restored: failures.length === 0, failures: failures };
   }
 
@@ -651,9 +752,7 @@
         appliedMutationCount: appliedMutationCount,
         plannedMutationCount: plan.mutations.length,
         rollbackRestored: true,
-        originalError: originalError && originalError.message
-          ? originalError.message
-          : String(originalError)
+        originalError: originalError && originalError.message ? originalError.message : String(originalError)
       },
       resolution: "HELD_TRANSACTION_DID_NOT_COMMIT"
     });
@@ -664,9 +763,7 @@
 
     if (!plan.valid) {
       metrics.blockedMutationCount += plan.mutations.length;
-      if (mode === MODE.INSTALL) {
-        state.installationMutationHistory.blockedMutationCount += plan.mutations.length;
-      }
+      if (mode === MODE.INSTALL) state.installationMutationHistory.blockedMutationCount += plan.mutations.length;
 
       plan.invalid.forEach(function publishInvalid(entry) {
         recordInvalid(state, plan.family, entry.code, plan.node, entry.detail);
@@ -675,7 +772,6 @@
       plan.conflicts.forEach(function publishConflict(entry) {
         recordConflict(state, plan.family, entry.code, plan.node, entry.detail);
       });
-
       return;
     }
 
@@ -726,12 +822,12 @@
         else plan.node.setAttribute(mutation.name, mutation.value);
         appliedMutationCount += 1;
       });
-    } catch (error) {
+    } catch (error2) {
       markRolledBackTransaction(
         state,
         plan,
         restoreMutationSnapshot(plan.node, snapshotList),
-        error,
+        error2,
         appliedMutationCount
       );
       return;
@@ -744,9 +840,7 @@
   }
 
   function isEligibleParticipantAliasTarget(node) {
-    if (!node || node.nodeType !== 1) {
-      return { eligible: false, reason: "NOT_AN_ELEMENT" };
-    }
+    if (!node || node.nodeType !== 1) return { eligible: false, reason: "NOT_AN_ELEMENT" };
 
     var tag = String(node.tagName || "").toUpperCase();
 
@@ -755,9 +849,7 @@
     }
 
     if (node.hidden) return { eligible: false, reason: "HIDDEN_ATTRIBUTE", tag: tag };
-    if (node.getAttribute("aria-hidden") === "true") {
-      return { eligible: false, reason: "ARIA_HIDDEN", tag: tag };
-    }
+    if (node.getAttribute("aria-hidden") === "true") return { eligible: false, reason: "ARIA_HIDDEN", tag: tag };
 
     return { eligible: true, reason: null, tag: tag };
   }
@@ -771,9 +863,8 @@
       var plan = createMutationPlan("ids", node);
       var canonicalId = trimmedAttribute(node, "data-control-bridge-id");
 
-      if (!canonicalId) {
-        addPlanInvalid(plan, "EMPTY_ID_ALIAS", {});
-      } else {
+      if (!canonicalId) addPlanInvalid(plan, "EMPTY_ID_ALIAS", {});
+      else {
         var existing = doc.getElementById(canonicalId);
         if (existing && existing !== node) {
           addPlanConflict(plan, "CANONICAL_ID_ALREADY_OWNED", {
@@ -781,14 +872,12 @@
             owner: describeNode(existing)
           });
         }
-
         if (node.id && node.id !== canonicalId) {
           addPlanConflict(plan, "NODE_ALREADY_HAS_DIFFERENT_ID", {
             canonicalId: canonicalId,
             existingId: node.id
           });
         }
-
         if (!node.id) addMutation(plan, "id", "id", canonicalId);
       }
 
@@ -843,11 +932,9 @@
 
       var participantRole = trimmedAttribute(node, "data-control-bridge-participant");
 
-      if (!participantRole) {
-        addPlanInvalid(plan, "EMPTY_PARTICIPANT_ALIAS", {});
-      } else if (node.hasAttribute("data-participant-role")) {
+      if (!participantRole) addPlanInvalid(plan, "EMPTY_PARTICIPANT_ALIAS", {});
+      else if (node.hasAttribute("data-participant-role")) {
         var observedRole = trimmedAttribute(node, "data-participant-role");
-
         if (observedRole !== participantRole) {
           addPlanConflict(plan, "PARTICIPANT_ROLE_ALIAS_CONFLICT", {
             expectedRole: participantRole,
@@ -878,7 +965,6 @@
         });
       } else if (node.hasAttribute("data-receipt-filter")) {
         var observedFilter = trimmedAttribute(node, "data-receipt-filter").toLowerCase();
-
         if (observedFilter !== filter) {
           addPlanConflict(plan, "RECEIPT_FILTER_ALIAS_CONFLICT", {
             expectedFilter: filter,
@@ -929,9 +1015,7 @@
       partial === 0
     );
 
-    state.aliasTranslationStatus = complete
-      ? STATUS.READY
-      : (rollbackFailures || partial ? STATUS.ERROR : STATUS.HELD);
+    state.aliasTranslationStatus = complete ? STATUS.READY : (rollbackFailures || partial ? STATUS.ERROR : STATUS.HELD);
 
     recordObservation(state, "ALIAS_TRANSLATION_EVALUATED", {
       status: state.aliasTranslationStatus,
@@ -949,7 +1033,6 @@
 
   function evaluateInstallationMutationHistory(state) {
     var history = state.installationMutationHistory;
-
     history.status = (
       history.unauthorizedMutationCount === 0 &&
       history.partialMutationCount === 0 &&
@@ -959,7 +1042,6 @@
 
   function evaluateCurrentRunMutationSafety(state) {
     var metrics = state.currentRunMutationMetrics;
-
     metrics.status = (
       metrics.completedMutationCount === 0 &&
       metrics.partialMutationCount === 0 &&
@@ -1024,14 +1106,24 @@
     });
   }
 
+  function observeAuthorityContract(paths) {
+    var resolved = resolveFirst(paths);
+    return {
+      observed: Boolean(resolved && resolved.value),
+      path: resolved ? resolved.path : null,
+      contract: resolved ? readContract(resolved.value) : null,
+      version: resolved ? readVersion(resolved.value) : null,
+      receipt: resolved ? readReceipt(resolved.value) : null,
+      value: resolved ? resolved.value : null
+    };
+  }
+
   function evaluateControlsApi(state, requirements) {
     var observations = observePathSet(CONTROLS_API_PATHS);
     var canonical = observations[0] ? observations[0].value : null;
-
     var requiredMethods = requirements && Array.isArray(requirements.publicApiRequirements)
       ? requirements.publicApiRequirements.slice()
       : [];
-
     var missingMethods = [];
 
     if (canonical) {
@@ -1117,19 +1209,6 @@
         receiptPath: receipt ? receipt.path : null,
         receiptContract: receipt && receipt.value ? receipt.value.contract || null : null
       }
-    };
-  }
-
-  function observeAuthorityContract(paths) {
-    var resolved = resolveFirst(paths);
-
-    return {
-      observed: Boolean(resolved && resolved.value),
-      path: resolved ? resolved.path : null,
-      contract: resolved ? readContract(resolved.value) : null,
-      version: resolved ? readVersion(resolved.value) : null,
-      receipt: resolved ? readReceipt(resolved.value) : null,
-      value: resolved ? resolved.value : null
     };
   }
 
@@ -1248,28 +1327,20 @@
   function evaluateDgbRegistryEvidence(state) {
     var registry = observeAuthorityContract(DGB_REGISTRY_PATHS);
     var receiptGlobal = resolveFirst(DGB_REGISTRY_RECEIPT_PATHS);
-    var receipt = registry.receipt || (receiptGlobal ? receiptGlobal.value : null);
-
-    var engine = receipt && receipt.coreEngine ? receipt.coreEngine : null;
-    var contract = receipt && receipt.governingContract ? receipt.governingContract : null;
+    var normalized = normalizeRegistryReceipt(
+      registry.value,
+      registry.receipt || (receiptGlobal ? receiptGlobal.value : null)
+    );
 
     var coherent = Boolean(
       registry.observed &&
       registry.contract === DGB_REGISTRY &&
-      receipt &&
-      receipt.contract === DGB_REGISTRY &&
-      receipt.slotCount === 6 &&
-      receipt.defaultEngineId === "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE" &&
-      contract &&
-      contract.loaded === true &&
-      contract.identityMatched === true &&
-      contract.validationPassed === true &&
-      contract.authorityReady === true &&
-      engine &&
-      engine.loaded === true &&
-      engine.identityMatched === true &&
-      engine.governingContractMatched === true &&
-      engine.f21Claimed !== true
+      normalized.contract === DGB_REGISTRY &&
+      normalized.hasSixSlots &&
+      normalized.defaultEngineRecognized &&
+      normalized.governingReady &&
+      normalized.coreReady &&
+      normalized.f21Claimed !== true
     );
 
     state.dgbRegistryEvidence = {
@@ -1281,19 +1352,17 @@
           ? "DGB_SUBJECT_REGISTRY_UNAVAILABLE"
           : registry.contract !== DGB_REGISTRY
             ? "DGB_SUBJECT_REGISTRY_IDENTITY_MISMATCH"
-            : "DGB_SUBJECT_REGISTRY_RECEIPT_NOT_COHERENT",
+            : normalized.contract !== DGB_REGISTRY
+              ? "DGB_SUBJECT_REGISTRY_RECEIPT_CONTRACT_MISMATCH"
+              : "DGB_SUBJECT_REGISTRY_RECEIPT_NOT_COHERENT",
       evidence: {
         observed: registry.observed,
         path: registry.path,
         observedContract: registry.contract,
         expectedContract: DGB_REGISTRY,
         version: registry.version,
-        receiptObserved: Boolean(receipt),
-        receiptContract: receipt ? receipt.contract || null : null,
-        slotCount: receipt ? receipt.slotCount || null : null,
-        defaultEngineId: receipt ? receipt.defaultEngineId || null : null,
-        governingContract: contract ? cloneValue(contract) : null,
-        coreEngine: engine ? cloneValue(engine) : null
+        receiptObserved: Boolean(registry.receipt || receiptGlobal),
+        normalized: normalized
       }
     };
   }
@@ -1364,11 +1433,7 @@
       }
 
       if (expected[key] && expected[key] !== observed[key]) {
-        mismatched.push({
-          authority: key,
-          expected: expected[key],
-          observed: observed[key]
-        });
+        mismatched.push({ authority: key, expected: expected[key], observed: observed[key] });
         return;
       }
 
@@ -1407,12 +1472,10 @@
 
   function findDuplicateIds(ids) {
     var duplicates = [];
-
     ids.forEach(function inspect(id) {
       var nodes = doc.querySelectorAll('[id="' + escapeAttributeValue(id) + '"]');
       if (nodes.length > 1) duplicates.push({ id: id, count: nodes.length });
     });
-
     return duplicates;
   }
 
@@ -1530,9 +1593,7 @@
         return;
       }
 
-      if (positionRows.length > 1) {
-        duplicate.push({ position: position, count: positionRows.length });
-      }
+      if (positionRows.length > 1) duplicate.push({ position: position, count: positionRows.length });
 
       var expected = expectedByPosition[position];
       if (!expected) return;
@@ -1601,7 +1662,6 @@
 
   function orderCorresponds(expected, observed) {
     var cursor = -1;
-
     return expected.every(function find(fileName) {
       var index = observed.indexOf(fileName, cursor + 1);
       if (index === -1) return false;
@@ -1624,11 +1684,7 @@
     }
 
     var dgbAwareOrder = orderCorresponds(REQUIRED_RUNTIME_ORDER, observed);
-    var fallbackOrder = orderCorresponds(
-      ["index.control.bridge.js", "index.inspection.lane.js", "index.js", "index.controls.js"],
-      observed
-    );
-
+    var fallbackOrder = orderCorresponds(LOCAL_RUNTIME_ORDER, observed);
     var complete = Boolean(dgbAwareOrder || fallbackOrder);
 
     state.runtimeOrder = {
@@ -1641,6 +1697,7 @@
         : "PHYSICAL_RUNTIME_ORDER_DOES_NOT_CORRESPOND",
       evidence: {
         expectedRuntimeOrder: REQUIRED_RUNTIME_ORDER.slice(),
+        localRuntimeOrder: LOCAL_RUNTIME_ORDER.slice(),
         observedPhysicalOrder: observed,
         dgbAwareOrder: dgbAwareOrder,
         localControlOrder: fallbackOrder
@@ -2084,17 +2141,13 @@
     Object.defineProperty(api, "phase", {
       enumerable: true,
       configurable: false,
-      get: function getPhase() {
-        return currentState.phase;
-      }
+      get: function getPhase() { return currentState.phase; }
     });
 
     Object.defineProperty(api, "status", {
       enumerable: true,
       configurable: false,
-      get: function getStatus() {
-        return currentState.overallStatus;
-      }
+      get: function getStatus() { return currentState.overallStatus; }
     });
 
     Object.defineProperty(api, "relationalPending", {
@@ -2137,6 +2190,7 @@
     root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_VERSION__ = VERSION;
     root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_NO_VISUAL_CLAIM__ = true;
     root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_DGB_AWARE__ = true;
+    root.__AUDRALIA_DIAGNOSTIC_CONTROL_BRIDGE_REGISTRY_ALIAS_RENEWED__ = true;
 
     return api;
   }
@@ -2177,9 +2231,7 @@
 
   var existing = root[GLOBAL_API];
 
-  if (existing && (existing.CONTRACT === CONTRACT || existing.contract === CONTRACT)) {
-    return;
-  }
+  if (existing && (existing.CONTRACT === CONTRACT || existing.contract === CONTRACT)) return;
 
   publishApi();
   performInitialInstallation();

@@ -1,25 +1,30 @@
 // /showroom/globe/audralia/diagnostic/index.inspection.lane.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3
 // Full-file replacement.
 // Passive diagnostic inspection-lane authority only.
-// No canonical diagnostic-state ownership. No rendering ownership. No DOM event ownership.
-// No participant execution. No mutation. No report construction. No readiness claim.
+// No canonical diagnostic-state ownership. No rendering ownership.
+// No DOM event ownership. No participant execution. No mutation.
+// No report construction. No readiness claim.
 
-(function installAudraliaDiagnosticInspectionLane(global) {
+(function installAudraliaDiagnosticInspectionLaneV3(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root && root.document ? root.document : null;
 
-  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v1";
-  var VERSION = "2.0.0";
+  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v3";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2";
+  var VERSION = "3.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.inspection.lane.js";
 
-  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_RECEIPT_v2";
-  var INSPECTION_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_INSPECTION_v2";
-  var LANE_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_EVIDENCE_LANE_v2";
-  var ERROR_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_INSPECTION_ERROR_v2";
+  var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_RECEIPT_v3";
+  var INSPECTION_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_INSPECTION_v3";
+  var LANE_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_EVIDENCE_LANE_v3";
+  var ERROR_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_INSPECTION_ERROR_v3";
+
+  var CURRENT_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v3";
+  var CURRENT_CONTROLS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v8";
+  var CURRENT_BRIDGE_CONTRACT = "AUDRALIA_DIAGNOSTIC_RELATIONAL_CONTROL_COMPATIBILITY_BRIDGE_TNT_v11";
 
   var LIMITS = Object.freeze({
     maxDepth: 7,
@@ -30,8 +35,8 @@
     maxTotalString: 32768,
     maxPathSegments: 32,
     maxParticipants: 89,
-    maxAliases: 34,
-    maxMethods: 34,
+    maxAliases: 55,
+    maxMethods: 55,
     maxStatusMatches: 34,
     maxErrors: 89
   });
@@ -58,16 +63,15 @@
     runtimePassClaimed: false,
     rendererPassClaimed: false,
     cyclePassClaimed: false,
+    familySynchronizationClaimed: false,
+    bridgeCompatibilityClaimed: false,
     f21Claimed: false,
+    f89Claimed: false,
     webGL: false,
     webGPU: false,
     generatedImage: false,
     graphicBox: false
   });
-
-  var installedAt = nowIso();
-  var actionCount = 0;
-  var lastAction = null;
 
   var CONTROL_FAMILY_DEFAULTS = Object.freeze({
     bridgeAliases: Object.freeze([
@@ -90,13 +94,27 @@
       "AUDRALIA_DIAGNOSTIC_RAIL",
       "AUDRALIA.diagnosticRail"
     ]),
+    dgbAliases: Object.freeze([
+      "DGB_ENGINE",
+      "DGBEngine"
+    ]),
+    dgbContractAliases: Object.freeze([
+      "DGB_ENGINE_CONTRACT",
+      "DGBEngineContract"
+    ]),
     receiptAliases: Object.freeze([
       "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CONTROL_BRIDGE_RECEIPT",
       "AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT",
       "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_RECEIPT",
-      "AUDRALIA_DIAGNOSTIC_RAIL_RECEIPT"
+      "AUDRALIA_DIAGNOSTIC_RAIL_RECEIPT",
+      "DGB_ENGINE_RECEIPT",
+      "DGB_ENGINE_CONTRACT_RECEIPT"
     ])
   });
+
+  var installedAt = nowIso();
+  var actionCount = 0;
+  var lastAction = null;
 
   function nowIso() {
     try { return new Date().toISOString(); } catch (_error) { return null; }
@@ -116,9 +134,14 @@
     return Boolean(value && (typeof value === "object" || typeof value === "function"));
   }
 
+  function isFn(value) {
+    return typeof value === "function";
+  }
+
   function deepFreeze(value, seen) {
+    var memory;
     if (!isObjectLike(value)) return value;
-    var memory = seen || [];
+    memory = seen || [];
     if (memory.indexOf(value) !== -1) return value;
     memory.push(value);
     try {
@@ -126,7 +149,7 @@
         try { deepFreeze(value[key], memory); } catch (_error) {}
       });
       Object.freeze(value);
-    } catch (_error) {}
+    } catch (_error2) {}
     return value;
   }
 
@@ -136,11 +159,85 @@
     return text.length <= limit ? text : text.slice(0, limit) + "…";
   }
 
+  function tag(value) {
+    try { return Object.prototype.toString.call(value); } catch (_error) { return "[object Unknown]"; }
+  }
+
+  function isHost(value) {
+    var t;
+    if (!isObjectLike(value)) return false;
+    t = tag(value);
+    if (/\[object (Window|global|Document|HTMLDocument|Element|HTMLElement|HTMLCanvasElement|Location|Navigator)\]/.test(t)) return true;
+    try { if (root.Element && value instanceof root.Element) return true; } catch (_error) {}
+    try { if (root.Document && value instanceof root.Document) return true; } catch (_error2) {}
+    return false;
+  }
+
+  function summarizeHostObject(value) {
+    var t = tag(value);
+    var rect = null;
+    var loc;
+
+    if (/\[object (Window|global)\]/.test(t)) {
+      loc = safeReadHostProperty(value, "location");
+      return {
+        hostObject: true,
+        kind: "Window",
+        href: loc.ok && loc.value ? trimString(loc.value.href, 2048) : null,
+        pathname: loc.ok && loc.value ? trimString(loc.value.pathname, 1024) : null,
+        documentPresent: Boolean(safeReadHostProperty(value, "document").value)
+      };
+    }
+
+    if (/\[object (Document|HTMLDocument)\]/.test(t) || value.nodeType === 9) {
+      return {
+        hostObject: true,
+        kind: "Document",
+        readyState: safeReadHostProperty(value, "readyState").value || null,
+        title: trimString(safeReadHostProperty(value, "title").value || "", 1024)
+      };
+    }
+
+    if (value.nodeType === 1) {
+      try {
+        if (typeof value.getBoundingClientRect === "function") {
+          var r = value.getBoundingClientRect();
+          rect = {
+            width: Number(r.width || 0),
+            height: Number(r.height || 0),
+            nonzero: Number(r.width || 0) > 0 && Number(r.height || 0) > 0
+          };
+        }
+      } catch (_error) {}
+
+      return {
+        hostObject: true,
+        kind: "Element",
+        tagName: value.tagName || null,
+        id: value.id || null,
+        hidden: Boolean(value.hidden),
+        connected: Boolean(value.isConnected),
+        rect: rect
+      };
+    }
+
+    return { hostObject: true, kind: t.replace(/^\[object |\]$/g, "") };
+  }
+
   function clone(value, ctx) {
-    var context = ctx || { seen: [], totalString: 0, truncated: false, omitted: 0 };
+    var context = ctx || { seen: [], totalString: 0, truncated: false, omitted: 0, nodes: 0 };
+    var output;
+    var keys;
+    var limit;
+    var i;
+    var key;
+    var read;
+
     if (value === null || value === undefined) return value;
-    if (typeof value === "boolean" || typeof value === "number") return Number.isFinite(value) ? value : null;
+    if (typeof value === "boolean") return value;
+    if (typeof value === "number") return Number.isFinite(value) ? value : null;
     if (typeof value === "bigint") return String(value);
+
     if (typeof value === "string") {
       var remaining = Math.max(0, LIMITS.maxTotalString - context.totalString);
       var out = trimString(value, Math.min(LIMITS.maxString, remaining));
@@ -148,35 +245,58 @@
       if (out.length < value.length) context.truncated = true;
       return out;
     }
-    if (typeof value === "function") return { type: "Function", name: value.name || "anonymous" };
+
+    if (typeof value === "function") {
+      return { type: "Function", name: value.name || "anonymous" };
+    }
+
     if (!isObjectLike(value)) return null;
     if (context.seen.indexOf(value) !== -1) return "[Circular]";
+    if (context.nodes >= LIMITS.maxNodes) {
+      context.truncated = true;
+      context.omitted += 1;
+      return "[NodeLimit]";
+    }
+
+    context.nodes += 1;
     context.seen.push(value);
 
     if (isHost(value)) return summarizeHostObject(value);
 
-    var output = Array.isArray(value) ? [] : {};
-    var keys;
-    try { keys = Array.isArray(value) ? value.map(function (_, i) { return String(i); }) : Object.keys(value); }
-    catch (_error) { return { unreadable: true, reason: "OBJECT_KEYS_THROW" }; }
+    output = Array.isArray(value) ? [] : {};
 
-    var limit = Math.min(keys.length, Array.isArray(value) ? LIMITS.maxArray : LIMITS.maxKeys);
-    for (var i = 0; i < limit; i += 1) {
-      var key = keys[i];
-      var read = safeReadProperty(value, key, { allowAccessor: false, searchPrototype: false });
+    try {
+      keys = Array.isArray(value)
+        ? value.map(function (_entry, index) { return String(index); })
+        : Object.keys(value);
+    } catch (_error) {
+      return { unreadable: true, reason: "OBJECT_KEYS_THROW" };
+    }
+
+    limit = Math.min(keys.length, Array.isArray(value) ? LIMITS.maxArray : LIMITS.maxKeys);
+
+    for (i = 0; i < limit; i += 1) {
+      key = keys[i];
+      read = safeReadProperty(value, key, { allowAccessor: false, searchPrototype: false });
       if (!read.ok) output[key] = { unreadable: true, reason: "PROPERTY_READ_THROW", error: read.error };
       else if (read.blockedAccessor) output[key] = { unreadable: true, reason: "ACCESSOR_BLOCKED" };
       else output[key] = clone(read.value, context);
     }
+
     if (keys.length > limit) {
       context.truncated = true;
       context.omitted += keys.length - limit;
     }
+
     return output;
   }
 
   function frozenClone(value) {
     return deepFreeze(clone(value));
+  }
+
+  function safeJson(value) {
+    try { return JSON.stringify(clone(value), null, 2); } catch (_error) { return String(value); }
   }
 
   function makeError(action, error, detail, path, property) {
@@ -193,10 +313,6 @@
     });
   }
 
-  function safeJson(value) {
-    try { return JSON.stringify(clone(value), null, 2); } catch (_error) { return String(value); }
-  }
-
   function descriptorOf(object, key, options) {
     var config = options || {};
     var cursor = object;
@@ -211,22 +327,31 @@
       } catch (error) {
         return { ok: false, present: false, error: makeError("descriptorOf", error, null, null, key), depth: depth };
       }
+
       if (!searchPrototype) break;
-      try { cursor = Object.getPrototypeOf(cursor); } catch (error2) {
+
+      try { cursor = Object.getPrototypeOf(cursor); }
+      catch (error2) {
         return { ok: false, present: false, error: makeError("descriptorOf.prototype", error2, null, null, key), depth: depth };
       }
+
       depth += 1;
     }
+
     return { ok: true, present: false, descriptor: null, owner: null, depth: depth };
   }
 
   function safeReadProperty(object, key, options) {
+    var config;
+    var descriptor;
+
     if (object === null || object === undefined) {
       return { ok: true, present: false, value: null, blockedAccessor: false, error: null };
     }
 
-    var config = options || {};
-    var descriptor = descriptorOf(object, key, config);
+    config = options || {};
+    descriptor = descriptorOf(object, key, config);
+
     if (!descriptor.ok) return { ok: false, present: false, value: null, blockedAccessor: false, error: descriptor.error };
     if (!descriptor.present) return { ok: true, present: false, value: null, blockedAccessor: false, error: null };
 
@@ -261,13 +386,16 @@
 
   function safeReadPath(path, base, options) {
     var parts = Array.isArray(path) ? path.slice() : String(path || "").split(".").filter(Boolean);
+    var cursor = base || root;
+    var i;
+    var read;
+
     if (parts.length > LIMITS.maxPathSegments) {
       return { ok: false, present: false, value: null, blockedAccessor: false, error: makeError("safeReadPath", new Error("MAX_PATH_SEGMENTS_EXCEEDED"), { path: path }) };
     }
 
-    var cursor = base || root;
-    for (var i = 0; i < parts.length; i += 1) {
-      var read = safeReadProperty(cursor, parts[i], options || { allowAccessor: false, searchPrototype: true });
+    for (i = 0; i < parts.length; i += 1) {
+      read = safeReadProperty(cursor, parts[i], options || { allowAccessor: false, searchPrototype: true });
       if (!read.ok) return { ok: false, present: false, value: null, blockedAccessor: false, failedSegment: parts[i], error: read.error };
       if (!read.present) return { ok: true, present: false, value: null, blockedAccessor: false, failedSegment: parts[i], error: null };
       if (read.blockedAccessor) return { ok: true, present: true, value: null, blockedAccessor: true, failedSegment: parts[i], error: null };
@@ -279,18 +407,27 @@
 
   function resolveAlias(aliases, base) {
     var list = Array.isArray(aliases) ? aliases.slice(0, LIMITS.maxAliases) : [];
-    for (var i = 0; i < list.length; i += 1) {
-      var result = safeReadPath(list[i], base || root, { allowAccessor: false, searchPrototype: true });
-      if (result.ok && result.present && !result.blockedAccessor) return { found: true, alias: list[i], value: result.value, blockedAccessor: false, error: null };
+    var i;
+    var result;
+
+    for (i = 0; i < list.length; i += 1) {
+      result = safeReadPath(list[i], base || root, { allowAccessor: false, searchPrototype: true });
+      if (result.ok && result.present && !result.blockedAccessor) {
+        return { found: true, alias: list[i], value: result.value, blockedAccessor: false, error: null };
+      }
       if (result.blockedAccessor) return { found: false, alias: list[i], value: null, blockedAccessor: true, error: null };
       if (!result.ok) return { found: false, alias: list[i], value: null, blockedAccessor: false, error: result.error };
     }
+
     return { found: false, alias: null, value: null, blockedAccessor: false, error: null };
   }
 
   function readPrimitiveField(object, keys) {
-    for (var i = 0; i < keys.length; i += 1) {
-      var read = safeReadProperty(object, keys[i], { allowAccessor: false, searchPrototype: true });
+    var i;
+    var read;
+
+    for (i = 0; i < keys.length; i += 1) {
+      read = safeReadProperty(object, keys[i], { allowAccessor: false, searchPrototype: true });
       if (!read.ok) return { found: false, field: keys[i], value: null, blockedAccessor: false, error: read.error };
       if (read.present) {
         if (read.blockedAccessor) return { found: true, field: keys[i], value: null, blockedAccessor: true, error: null };
@@ -299,78 +436,36 @@
         }
       }
     }
+
     return { found: false, field: null, value: null, blockedAccessor: false, error: null };
   }
 
   function firstPresentField(object, keys) {
-    for (var i = 0; i < keys.length; i += 1) {
-      var read = safeReadProperty(object, keys[i], { allowAccessor: false, searchPrototype: true });
+    var i;
+    var read;
+
+    for (i = 0; i < keys.length; i += 1) {
+      read = safeReadProperty(object, keys[i], { allowAccessor: false, searchPrototype: true });
       if (!read.ok) return { found: false, field: keys[i], value: null, blockedAccessor: false, error: read.error };
       if (read.present) return { found: true, field: keys[i], value: read.blockedAccessor ? null : read.value, blockedAccessor: Boolean(read.blockedAccessor), error: null };
     }
+
     return { found: false, field: null, value: null, blockedAccessor: false, error: null };
   }
 
-  function tag(value) {
-    try { return Object.prototype.toString.call(value); } catch (_error) { return "[object Unknown]"; }
+  function contractOf(value) {
+    var read = readPrimitiveField(value, ["CONTRACT", "contract"]);
+    return read.found && !read.blockedAccessor ? read.value : null;
   }
 
-  function isHost(value) {
-    if (!isObjectLike(value)) return false;
-    var t = tag(value);
-    if (/\[object (Window|global|Document|HTMLDocument|Element|HTMLElement|HTMLCanvasElement|Location|Navigator)\]/.test(t)) return true;
-    try { if (root.Element && value instanceof root.Element) return true; } catch (_error) {}
-    try { if (root.Document && value instanceof root.Document) return true; } catch (_error2) {}
-    return false;
-  }
-
-  function summarizeHostObject(value) {
-    var t = tag(value);
-    if (/\[object (Window|global)\]/.test(t)) {
-      var loc = safeReadHostProperty(value, "location");
-      return {
-        hostObject: true,
-        kind: "Window",
-        href: loc.ok && loc.value ? trimString(loc.value.href, 2048) : null,
-        pathname: loc.ok && loc.value ? trimString(loc.value.pathname, 1024) : null,
-        documentPresent: Boolean(safeReadHostProperty(value, "document").value)
-      };
-    }
-
-    if (/\[object (Document|HTMLDocument)\]/.test(t) || value.nodeType === 9) {
-      return {
-        hostObject: true,
-        kind: "Document",
-        readyState: safeReadHostProperty(value, "readyState").value || null,
-        title: trimString(safeReadHostProperty(value, "title").value || "", 1024)
-      };
-    }
-
-    if (value.nodeType === 1) {
-      var rect = null;
-      try {
-        if (typeof value.getBoundingClientRect === "function") {
-          var r = value.getBoundingClientRect();
-          rect = { width: Number(r.width || 0), height: Number(r.height || 0), nonzero: Number(r.width || 0) > 0 && Number(r.height || 0) > 0 };
-        }
-      } catch (_error) {}
-      return {
-        hostObject: true,
-        kind: "Element",
-        tagName: value.tagName || null,
-        id: value.id || null,
-        hidden: Boolean(value.hidden),
-        connected: Boolean(value.isConnected),
-        rect: rect
-      };
-    }
-
-    return { hostObject: true, kind: t.replace(/^\[object |\]$/g, "") };
+  function statusOf(value) {
+    var read = readPrimitiveField(value, ["STATUS", "status"]);
+    return read.found && !read.blockedAccessor ? String(read.value || "").toUpperCase() : null;
   }
 
   function summarizeExternal(value) {
     var started = nowMs();
-    var context = { seen: [], totalString: 0, truncated: false, omitted: 0 };
+    var context = { seen: [], totalString: 0, truncated: false, omitted: 0, nodes: 0 };
     var summary = clone(value, context);
     return deepFreeze({
       schema: INSPECTION_SCHEMA,
@@ -380,7 +475,8 @@
         durationMs: Math.max(0, nowMs() - started),
         truncated: context.truncated,
         omittedCount: context.omitted,
-        totalStringBudget: context.totalString
+        totalStringBudget: context.totalString,
+        nodeCount: context.nodes
       },
       noClaims: NO_CLAIMS
     });
@@ -392,18 +488,24 @@
     var seen = [];
 
     function walk(node, path, depth) {
+      var statusRead;
+      var normalized;
+      var keys;
+
       if (!isObjectLike(node) || isHost(node) || depth > LIMITS.maxDepth || matches.length >= LIMITS.maxStatusMatches) return;
       if (seen.indexOf(node) !== -1) return;
       seen.push(node);
 
-      var statusRead = readPrimitiveField(node, ["status", "STATUS"]);
+      statusRead = readPrimitiveField(node, ["status", "STATUS", "overallStatus", "phase"]);
       if (statusRead.found && !statusRead.blockedAccessor) {
-        var normalized = String(statusRead.value || "").toUpperCase();
-        if (targets.indexOf(normalized) !== -1) matches.push({ path: path || "root", status: normalized, summary: summarizeExternal(node).summary });
+        normalized = String(statusRead.value || "").toUpperCase();
+        if (targets.indexOf(normalized) !== -1) {
+          matches.push({ path: path || "root", status: normalized, summary: summarizeExternal(node).summary });
+        }
       }
 
-      var keys;
       try { keys = Object.keys(node).slice(0, LIMITS.maxKeys); } catch (_error) { return; }
+
       keys.forEach(function (key) {
         var read = safeReadProperty(node, key, { allowAccessor: false, searchPrototype: false });
         if (read.ok && read.present && !read.blockedAccessor) walk(read.value, path ? path + "." + key : key, depth + 1);
@@ -418,12 +520,14 @@
     var available = [];
     var blocked = [];
     var errors = [];
+
     (methods || []).slice(0, LIMITS.maxMethods).forEach(function (method) {
       var read = safeReadProperty(value, method, { allowAccessor: false, searchPrototype: true });
       if (!read.ok) errors.push(read.error);
       else if (read.blockedAccessor) blocked.push(method);
       else if (read.present && typeof read.value === "function") available.push(method);
     });
+
     return { availableMethods: available, blockedMethods: blocked, errors: errors };
   }
 
@@ -432,18 +536,22 @@
     var methods = Array.isArray(entry && entry.methods) ? entry.methods.slice(0, LIMITS.maxMethods) : [];
     var resolution = resolveAlias(aliases, root);
     var callable = inspectCallableMethods(resolution.value, methods);
-    var contract = readPrimitiveField(resolution.value, ["CONTRACT", "contract"]);
+    var contract = contractOf(resolution.value);
     var version = readPrimitiveField(resolution.value, ["VERSION", "version"]);
-
+    var statusField = statusOf(resolution.value);
     var required = Boolean(entry && entry.required);
+    var expectedContract = entry && entry.expectedContract ? String(entry.expectedContract) : null;
+    var contractCorresponds = Boolean(!expectedContract || contract === expectedContract);
     var status = "UNKNOWN";
+
     if (resolution.error || callable.errors.length) status = "ERROR";
     else if (!resolution.found) status = required ? "MISSING" : "UNKNOWN";
+    else if (!contractCorresponds) status = "HELD";
     else if (!callable.availableMethods.length && typeof resolution.value !== "function") status = required ? "HELD" : "AVAILABLE";
     else status = "PASS";
 
     return deepFreeze({
-      schema: "AUDRALIA_BOUNDED_PARTICIPANT_METADATA_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_PARTICIPANT_METADATA_INSPECTION_v3",
       role: trimString(entry && entry.role, 256),
       label: trimString(entry && entry.label, 512),
       required: required,
@@ -454,8 +562,11 @@
       callable: Boolean(callable.availableMethods.length || typeof resolution.value === "function"),
       callableMethods: callable.availableMethods,
       blockedMethods: callable.blockedMethods,
-      contract: contract.found && !contract.blockedAccessor ? contract.value : null,
+      contract: contract,
+      expectedContract: expectedContract,
+      contractCorresponds: contractCorresponds,
       version: version.found && !version.blockedAccessor ? version.value : null,
+      publicStatus: statusField,
       status: status,
       errors: [].concat(resolution.error ? [resolution.error] : []).concat(callable.errors),
       observedAt: nowIso(),
@@ -468,12 +579,12 @@
     var entries = Array.isArray(manifest) ? manifest.slice(0, LIMITS.maxParticipants) : [];
     var records = entries.map(inspectParticipantRecord);
     var required = records.filter(function (r) { return r.required; });
-    var held = required.filter(function (r) { return !(r.available && r.callable); });
+    var held = required.filter(function (r) { return !(r.available && r.callable && r.contractCorresponds); });
     var errors = records.filter(function (r) { return r.status === "ERROR"; }).length;
     var status = errors ? "ERROR" : held.length ? "HELD" : records.length ? "PASS" : "MISSING";
 
     var result = deepFreeze({
-      schema: "AUDRALIA_BOUNDED_PARTICIPANT_METADATA_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_PARTICIPANT_METADATA_INSPECTION_v3",
       status: status,
       records: records,
       counts: {
@@ -483,7 +594,10 @@
         heldRequiredCount: held.length,
         errorCount: errors
       },
-      metrics: { durationMs: Math.max(0, nowMs() - started), truncated: Array.isArray(manifest) && manifest.length > LIMITS.maxParticipants },
+      metrics: {
+        durationMs: Math.max(0, nowMs() - started),
+        truncated: Array.isArray(manifest) && manifest.length > LIMITS.maxParticipants
+      },
       noClaims: NO_CLAIMS
     });
 
@@ -497,14 +611,15 @@
     var route = trimString(targetRoute || "/showroom/globe/audralia/", 2048);
     var errors = [];
     var frame = null;
+    var frameSummary = null;
+    var frameDocument = null;
+    var pathname = null;
+    var sameOrigin = false;
 
     try { frame = doc ? doc.getElementById(id) : null; }
     catch (error) { errors.push(makeError("inspectTargetFrame.getElementById", error, { frameId: id })); }
 
-    var frameSummary = frame ? summarizeHostObject(frame) : null;
-    var frameDocument = null;
-    var pathname = null;
-    var sameOrigin = false;
+    frameSummary = frame ? summarizeHostObject(frame) : null;
 
     if (frame) {
       var docRead = safeReadHostProperty(frame, "contentDocument");
@@ -516,13 +631,18 @@
       }
 
       if (frameDocument) {
-        try { pathname = frameDocument.defaultView && frameDocument.defaultView.location ? frameDocument.defaultView.location.pathname : null; }
-        catch (error2) { errors.push(makeError("inspectTargetFrame.pathname", error2)); }
+        try {
+          pathname = frameDocument.defaultView && frameDocument.defaultView.location
+            ? frameDocument.defaultView.location.pathname
+            : null;
+        } catch (error2) {
+          errors.push(makeError("inspectTargetFrame.pathname", error2));
+        }
       }
     }
 
     var result = deepFreeze({
-      schema: "AUDRALIA_BOUNDED_TARGET_FRAME_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_TARGET_FRAME_INSPECTION_v3",
       status: errors.length ? "AVAILABLE" : frame ? "PASS" : "MISSING",
       frameId: id,
       expectedRoute: route,
@@ -546,23 +666,27 @@
     var started = nowMs();
     var config = options || {};
     var source = targetWindow || root;
-    var aliases = config.runtimeAliases || ["AUDRALIA_RUNTIME", "AUDRALIA.runtime", "AUDRALIA_ENGINE", "AUDRALIA.engine", "AUDRALIA_CANVAS", "AUDRALIA.canvas"];
+    var aliases = config.runtimeAliases || ["AUDRALIA_RUNTIME", "AUDRALIA.runtime", "AUDRALIA_ENGINE", "AUDRALIA.engine", "AUDRALIA_CANVAS", "AUDRALIA.canvas", "DGB_ENGINE", "DGBEngine"];
     var selectors = config.mountSelectors || ["#audraliaCanvasMount", "#audraliaMount", "#globeMount", "canvas"];
     var runtimeResolution = resolveAlias(aliases, source);
     var runtime = runtimeResolution.value;
-
     var targetDocument = doc;
+    var mount = null;
+    var mountSelector = null;
+    var i;
+
     if (targetWindow) {
       var targetDocRead = safeReadHostProperty(targetWindow, "document");
       targetDocument = targetDocRead.ok ? targetDocRead.value : null;
     }
 
-    var mount = null;
-    var mountSelector = null;
     if (targetDocument && typeof targetDocument.querySelector === "function") {
-      for (var i = 0; i < selectors.length; i += 1) {
+      for (i = 0; i < selectors.length; i += 1) {
         try { mount = targetDocument.querySelector(selectors[i]); } catch (_error) {}
-        if (mount) { mountSelector = selectors[i]; break; }
+        if (mount) {
+          mountSelector = selectors[i];
+          break;
+        }
       }
     }
 
@@ -571,7 +695,7 @@
     var mounted = readPrimitiveField(runtime, ["mounted", "isMounted"]);
     var firstFrame = readPrimitiveField(runtime, ["firstFrame", "firstFrameRendered", "frameReady"]);
     var visiblePixel = readPrimitiveField(runtime, ["visiblePixel", "pixelVisible", "hasVisiblePixel"]);
-    var receiptField = firstPresentField(runtime, ["RECEIPT", "receipt"]);
+    var receiptField = firstPresentField(runtime, ["RECEIPT", "receipt", "DGB_ENGINE_RECEIPT"]);
 
     var errors = []
       .concat(runtimeResolution.error ? [runtimeResolution.error] : [])
@@ -582,7 +706,7 @@
       .concat(visiblePixel.error ? [visiblePixel.error] : []);
 
     var result = deepFreeze({
-      schema: "AUDRALIA_BOUNDED_RUNTIME_METADATA_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_RUNTIME_METADATA_INSPECTION_v3",
       status: errors.length ? "AVAILABLE" : runtimeResolution.found && mount ? "PASS" : runtimeResolution.found || mount ? "AVAILABLE" : "MISSING",
       runtimeAlias: runtimeResolution.alias,
       runtimeFound: runtimeResolution.found,
@@ -608,10 +732,10 @@
   }
 
   function normalizeCollection(value) {
-    if (!value) return [];
+    var out = [];
+    if (!value) return out;
     if (Array.isArray(value)) return value.slice(0, LIMITS.maxArray).map(function (item) { return summarizeExternal(item).summary; });
     if (isObjectLike(value)) {
-      var out = [];
       try {
         Object.keys(value).slice(0, LIMITS.maxArray).forEach(function (key) {
           out.push({ key: key, value: summarizeExternal(value[key]).summary });
@@ -619,7 +743,7 @@
       } catch (_error) {}
       return out;
     }
-    return [];
+    return out;
   }
 
   function inspectRegistry(registry) {
@@ -632,7 +756,7 @@
     };
 
     var result = {
-      schema: "AUDRALIA_BOUNDED_REGISTRY_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_REGISTRY_INSPECTION_v3",
       status: "MISSING",
       found: Boolean(registry),
       governingContracts: [],
@@ -657,6 +781,7 @@
       selectableEngines: result.selectableEngines.length,
       reservedSlots: result.reservedSlots.length
     };
+
     result.counts.total = result.counts.governingContracts + result.counts.assignedEngines + result.counts.selectableEngines + result.counts.reservedSlots;
     result.status = result.errors.length ? "AVAILABLE" : result.counts.total ? "PASS" : result.found ? "AVAILABLE" : "MISSING";
     result.metrics.durationMs = Math.max(0, nowMs() - started);
@@ -668,21 +793,22 @@
   function inspectEngineFamily(targetWindow) {
     var started = nowMs();
     var source = targetWindow || root;
-    var governing = resolveAlias(["DGB_ENGINE_CONTRACT", "DGB.engineContract"], source);
-    var runtime = resolveAlias(["DGB_ENGINE", "DGB.engine"], source);
+    var governing = resolveAlias(CONTROL_FAMILY_DEFAULTS.dgbContractAliases, source);
+    var runtime = resolveAlias(CONTROL_FAMILY_DEFAULTS.dgbAliases, source);
     var registry = resolveAlias(["DGB_ENGINE_SUBJECTS", "DGB.engineSubjects", "DGB_ENGINE_REGISTRY", "DGB.engineRegistry"], source);
     var registryInspection = inspectRegistry(registry.value);
-
     var foundCount = [governing.found, runtime.found, registry.found].filter(Boolean).length;
     var errors = [].concat(governing.error ? [governing.error] : []).concat(runtime.error ? [runtime.error] : []).concat(registry.error ? [registry.error] : []);
 
     var result = deepFreeze({
-      schema: "AUDRALIA_BOUNDED_ENGINE_FAMILY_INSPECTION_v2",
-      status: errors.length ? "AVAILABLE" : foundCount === 3 ? "PASS" : foundCount ? "AVAILABLE" : "MISSING",
+      schema: "AUDRALIA_BOUNDED_ENGINE_FAMILY_INSPECTION_v3",
+      status: errors.length ? "AVAILABLE" : foundCount >= 2 ? "PASS" : foundCount ? "AVAILABLE" : "MISSING",
       governingContractFound: governing.found,
       governingContractAlias: governing.alias,
+      governingContract: contractOf(governing.value),
       runtimeEngineFound: runtime.found,
       runtimeEngineAlias: runtime.alias,
+      runtimeContract: contractOf(runtime.value),
       registryFound: registry.found,
       registryAlias: registry.alias,
       registry: registryInspection,
@@ -718,11 +844,13 @@
     };
 
     if (!fieldRecord) return deepFreeze(result);
+
     if (fieldRecord.error) {
       result.status = "ERROR";
       result.errors.push(fieldRecord.error);
       return deepFreeze(result);
     }
+
     if (!fieldRecord.found || fieldRecord.blockedAccessor) {
       result.status = fieldRecord.blockedAccessor ? "HELD" : "MISSING";
       return deepFreeze(result);
@@ -730,7 +858,7 @@
 
     result.found = true;
     result.summary = summarizeExternal(fieldRecord.value).summary;
-    result.statusMatches = findStatuses(fieldRecord.value, ["HELD", "MISSING", "ERROR", "FAILED", "FAIL"]).matches;
+    result.statusMatches = findStatuses(fieldRecord.value, ["HELD", "MISSING", "ERROR", "FAILED", "FAIL", "CONFLICT"]).matches;
 
     try {
       if (isObjectLike(fieldRecord.value)) result.packetKeys = Object.keys(fieldRecord.value).slice(0, LIMITS.maxKeys);
@@ -741,7 +869,6 @@
     result.recommendedOwner = readPrimitiveField(fieldRecord.value, ["recommendedOwner", "owner"]).value;
     result.recommendedFile = readPrimitiveField(fieldRecord.value, ["recommendedFile", "file"]).value;
     result.recommendedAction = readPrimitiveField(fieldRecord.value, ["recommendedAction", "action"]).value;
-
     result.status = result.errors.length ? "AVAILABLE" : result.statusMatches.length ? "HELD" : "PASS";
     result.metrics.durationMs = Math.max(0, nowMs() - started);
 
@@ -760,20 +887,18 @@
     var value = resolution.value;
     var methods = participantRecord && Array.isArray(participantRecord.methods) ? participantRecord.methods : ["inspect", "probe", "run", "execute"];
     var callable = inspectCallableMethods(value, methods);
-    var contract = readPrimitiveField(value, ["CONTRACT", "contract"]);
-    var receipt = inspectPassiveField(firstPresentField(value, ["RECEIPT", "receipt"]), "receipt");
+    var contract = contractOf(value);
+    var receipt = inspectPassiveField(firstPresentField(value, ["RECEIPT", "receipt", "getReceipt"]), "receipt");
     var packet = inspectPassiveField(firstPresentField(value, ["PACKET", "packet"]), "packet");
-
     var forbiddenCallable = inspectCallableMethods(value, ["run", "execute", "runNineCycle", "registerStation", "register"]);
-
     var status = !resolution.found ? "MISSING" : receipt.status === "HELD" || packet.status === "HELD" ? "HELD" : "PASS";
 
     var result = deepFreeze({
-      schema: "AUDRALIA_BOUNDED_SURFACE_TRUTH_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_SURFACE_TRUTH_INSPECTION_v3",
       status: status,
       authorityFound: resolution.found,
       authorityAlias: resolution.alias,
-      contract: contract.found && !contract.blockedAccessor ? contract.value : null,
+      contract: contract,
       callable: Boolean(callable.availableMethods.length || typeof value === "function"),
       callableMethods: callable.availableMethods,
       forbiddenCallableMethodsObserved: forbiddenCallable.availableMethods,
@@ -790,22 +915,44 @@
 
   function inspectControlFamily(options) {
     var config = options || {};
+    var participants = [
+      {
+        role: "CONTROL_BRIDGE",
+        required: true,
+        aliases: config.bridgeAliases || CONTROL_FAMILY_DEFAULTS.bridgeAliases,
+        expectedContract: config.expectedBridgeContract || CURRENT_BRIDGE_CONTRACT,
+        methods: ["verifyRelationships", "getState", "getReceipt"]
+      },
+      {
+        role: "CONTROLS",
+        required: true,
+        aliases: config.controlsAliases || CONTROL_FAMILY_DEFAULTS.controlsAliases,
+        expectedContract: config.expectedControlsContract || CURRENT_CONTROLS_CONTRACT,
+        methods: ["getReceipt", "resolveEngine", "createReport", "runNineCycle"]
+      },
+      {
+        role: "INTERPRETER",
+        required: true,
+        aliases: config.interpreterAliases || CONTROL_FAMILY_DEFAULTS.interpreterAliases,
+        expectedContract: config.expectedEngineContract || CURRENT_ENGINE_CONTRACT,
+        methods: ["getReceipt", "getState", "createReport", "runNineCycle"]
+      },
+      {
+        role: "RAIL_TERMINAL_SYNTHESIS",
+        required: false,
+        aliases: config.railAliases || CONTROL_FAMILY_DEFAULTS.railAliases,
+        methods: ["executeCycleStation", "getDefinitionReceipt"]
+      }
+    ];
+
+    var participantInspection = inspectParticipants(participants);
     var bridge = resolveAlias(config.bridgeAliases || CONTROL_FAMILY_DEFAULTS.bridgeAliases, root);
     var controls = resolveAlias(config.controlsAliases || CONTROL_FAMILY_DEFAULTS.controlsAliases, root);
     var interpreter = resolveAlias(config.interpreterAliases || CONTROL_FAMILY_DEFAULTS.interpreterAliases, root);
     var rail = resolveAlias(config.railAliases || CONTROL_FAMILY_DEFAULTS.railAliases, root);
 
-    var participants = [
-      { role: "CONTROL_BRIDGE", required: true, aliases: config.bridgeAliases || CONTROL_FAMILY_DEFAULTS.bridgeAliases, methods: ["verifyRelationships", "getState", "getReceipt"] },
-      { role: "CONTROLS", required: true, aliases: config.controlsAliases || CONTROL_FAMILY_DEFAULTS.controlsAliases, methods: ["getReceipt"] },
-      { role: "INTERPRETER", required: true, aliases: config.interpreterAliases || CONTROL_FAMILY_DEFAULTS.interpreterAliases, methods: ["getReceipt"] },
-      { role: "RAIL_TERMINAL_SYNTHESIS", required: true, aliases: config.railAliases || CONTROL_FAMILY_DEFAULTS.railAliases, methods: ["executeCycleStation", "getDefinitionReceipt"] }
-    ];
-
-    var participantInspection = inspectParticipants(participants);
-
     var result = deepFreeze({
-      schema: "AUDRALIA_BOUNDED_CONTROL_FAMILY_INSPECTION_v2",
+      schema: "AUDRALIA_BOUNDED_CONTROL_FAMILY_INSPECTION_v3",
       status: participantInspection.status,
       bridgeFound: bridge.found,
       controlsFound: controls.found,
@@ -813,10 +960,13 @@
       railFound: rail.found,
       participants: participantInspection,
       contracts: {
-        bridge: readPrimitiveField(bridge.value, ["CONTRACT", "contract"]).value,
-        controls: readPrimitiveField(controls.value, ["CONTRACT", "contract"]).value,
-        interpreter: readPrimitiveField(interpreter.value, ["CONTRACT", "contract"]).value,
-        rail: readPrimitiveField(rail.value, ["CONTRACT", "contract"]).value
+        bridge: contractOf(bridge.value),
+        expectedBridge: config.expectedBridgeContract || CURRENT_BRIDGE_CONTRACT,
+        controls: contractOf(controls.value),
+        expectedControls: config.expectedControlsContract || CURRENT_CONTROLS_CONTRACT,
+        interpreter: contractOf(interpreter.value),
+        expectedInterpreter: config.expectedEngineContract || CURRENT_ENGINE_CONTRACT,
+        rail: contractOf(rail.value)
       },
       noExecutionPerformed: true,
       noClaims: NO_CLAIMS,
@@ -847,11 +997,12 @@
   function laneFromInspection(laneId, inspection) {
     var status = inspection && inspection.status ? inspection.status : "UNKNOWN";
     var laneStatus = status === "PASS" ? "COMPLETE" : status === "AVAILABLE" ? "AVAILABLE" : status === "HELD" ? "HELD" : status === "MISSING" ? "MISSING" : status === "ERROR" ? "ERROR" : "UNKNOWN";
+
     return makeLane(
       laneId,
       laneStatus,
       "Inspection lane " + laneId + " completed with status " + laneStatus + ".",
-      laneStatus === "COMPLETE" || laneStatus === "AVAILABLE" ? ["Bounded inspection record produced."] : [],
+      laneStatus === "COMPLETE" || laneStatus === "AVAILABLE" ? ["Bounded passive inspection record produced."] : [],
       laneStatus === "COMPLETE" ? [] : ["Complete bounded evidence was not established."],
       laneStatus === "COMPLETE" ? [] : ["Review normalized inspection data for held, missing, or error condition."],
       inspection,
@@ -862,19 +1013,47 @@
 
   function runLane(laneId, inspector, interpreter) {
     var started = nowMs();
+    var inspection;
+    var lane;
+    var err;
+
     try {
       if (typeof inspector !== "function") throw new Error("INSPECTOR_NOT_CALLABLE");
-      var inspection = inspector();
+
+      inspection = inspector();
+
       if (inspection && typeof inspection.then === "function") {
-        return makeLane(laneId, "HELD", "Async inspection result was not accepted.", [], ["ASYNC_EVIDENCE_NOT_ACCEPTED"], ["Provide synchronous passive metadata."], null, { durationMs: Math.max(0, nowMs() - started) }, []);
+        return makeLane(
+          laneId,
+          "HELD",
+          "Async inspection result was not accepted.",
+          [],
+          ["ASYNC_EVIDENCE_NOT_ACCEPTED"],
+          ["Provide synchronous passive metadata."],
+          null,
+          { durationMs: Math.max(0, nowMs() - started) },
+          []
+        );
       }
-      var lane = typeof interpreter === "function" ? interpreter(frozenClone(inspection)) : laneFromInspection(laneId, inspection);
+
+      lane = typeof interpreter === "function" ? interpreter(frozenClone(inspection)) : laneFromInspection(laneId, inspection);
       if (!lane || lane.schema !== LANE_SCHEMA) lane = laneFromInspection(laneId, inspection);
+
       recordAction("runLane", { laneId: laneId, status: lane.status });
       return lane;
     } catch (error) {
-      var err = makeError("runLane", error, { laneId: laneId });
-      return makeLane(laneId, "ERROR", "The bounded inspector encountered an exception.", [], [err.message], ["Inspect the normalized error without mutating target."], null, { durationMs: Math.max(0, nowMs() - started) }, [err]);
+      err = makeError("runLane", error, { laneId: laneId });
+      return makeLane(
+        laneId,
+        "ERROR",
+        "The bounded inspector encountered an exception.",
+        [],
+        [err.message],
+        ["Inspect the normalized error without mutating target."],
+        null,
+        { durationMs: Math.max(0, nowMs() - started) },
+        [err]
+      );
     }
   }
 
@@ -889,11 +1068,12 @@
     lanes.push(runLane("controlFamily", function () { return inspectControlFamily(config); }));
 
     var hasError = lanes.some(function (lane) { return lane.status === "ERROR"; });
+    var hasHeld = lanes.some(function (lane) { return lane.status === "HELD"; });
     var hasAvailable = lanes.some(function (lane) { return lane.status === "COMPLETE" || lane.status === "AVAILABLE"; });
 
     var result = deepFreeze({
       schema: INSPECTION_SCHEMA,
-      status: hasError ? (hasAvailable ? "AVAILABLE" : "ERROR") : hasAvailable ? "AVAILABLE" : "MISSING",
+      status: hasError ? (hasAvailable ? "AVAILABLE" : "ERROR") : hasHeld ? "HELD" : hasAvailable ? "AVAILABLE" : "MISSING",
       lanes: lanes,
       participants: lanes[0].data,
       target: lanes[1].data,
@@ -937,21 +1117,31 @@
       file: FILE,
       status: "READY",
       installedAt: installedAt,
-      role: "Passive bounded diagnostic inspection lane. Supplies guarded reads, host-object summaries, participant inspection, target-frame inspection, runtime metadata, engine-family inspection, control-family inspection, registry inspection, passive receipt/packet inspection, and lane normalization.",
+      currentExpectedContracts: {
+        bridge: CURRENT_BRIDGE_CONTRACT,
+        controls: CURRENT_CONTROLS_CONTRACT,
+        interpreter: CURRENT_ENGINE_CONTRACT
+      },
+      role: "Passive bounded diagnostic inspection lane. Supplies guarded reads, host-object summaries, participant inspection, target-frame inspection, runtime metadata, DGB engine-family inspection, Audralia control-family inspection, registry inspection, passive receipt/packet inspection, and lane normalization.",
       exactInterface: [
         "safeReadProperty",
         "safeReadPath",
         "summarizeExternal",
+        "summarizeHostObject",
+        "findStatuses",
         "inspectParticipants",
+        "inspectParticipant",
         "inspectTargetFrame",
         "inspectRuntime",
         "inspectEngineFamily",
         "inspectRegistry",
         "inspectSurfaceMetadata",
+        "inspectPassiveField",
         "inspectControlFamily",
         "inspectInitializationSafe",
         "runLane",
         "makeLane",
+        "getLimits",
         "getReceipt",
         "getDefinitionReceipt"
       ],
@@ -972,8 +1162,25 @@
       actionCount: actionCount,
       lastAction: frozenClone(lastAction),
       limits: LIMITS,
-      newsAlignment: { sourceDiscovery: "EAST", containment: "EAST", boundedInspection: "WEST" },
-      fibonacciAuthority: { sourceDiscovery: "F3", normalization: "F5", runtimeInspection: "F13" },
+      currentExpectedContracts: {
+        bridge: CURRENT_BRIDGE_CONTRACT,
+        controls: CURRENT_CONTROLS_CONTRACT,
+        interpreter: CURRENT_ENGINE_CONTRACT
+      },
+      newsAlignment: {
+        sourceDiscovery: "EAST",
+        containment: "EAST",
+        boundedInspection: "WEST",
+        relationalCompatibility: "SOUTH"
+      },
+      fibonacciAuthority: {
+        sourceDiscovery: "F3",
+        normalization: "F5",
+        runtimeInspection: "F13",
+        controlFamilyCompatibility: "F34",
+        noF21Claim: true,
+        noF89Claim: true
+      },
       noClaims: NO_CLAIMS
     });
   }
@@ -990,6 +1197,12 @@
       file: FILE,
       STATUS: "READY",
       status: "READY",
+
+      expectedContracts: Object.freeze({
+        bridge: CURRENT_BRIDGE_CONTRACT,
+        controls: CURRENT_CONTROLS_CONTRACT,
+        interpreter: CURRENT_ENGINE_CONTRACT
+      }),
 
       safeReadProperty: safeReadProperty,
       safeReadPath: safeReadPath,
@@ -1042,7 +1255,15 @@
   try {
     publishReceipt();
     publishApi();
-    recordAction("initialize", { contract: CONTRACT, previousContract: PREVIOUS_CONTRACT });
+    recordAction("initialize", {
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      expectedContracts: {
+        bridge: CURRENT_BRIDGE_CONTRACT,
+        controls: CURRENT_CONTROLS_CONTRACT,
+        interpreter: CURRENT_ENGINE_CONTRACT
+      }
+    });
   } catch (error) {
     root.__AUDRALIA_DIAGNOSTIC_INSPECTION_LANE_ERROR__ = deepFreeze({
       schema: ERROR_SCHEMA,

@@ -1,7 +1,6 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
 // AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v8
-// Full-file replacement. Diagnostic-control panel renewed for current DGB engine family.
-// Target lifecycle correction: about:blank with declared target src is pending/loading, not route mismatch.
+// Full-file replacement. Controls own UI binding. Diagnostic observatory engine owns report/cycle production.
 
 (function installAudraliaDistributedDiagnosticControlsV8(global) {
   "use strict";
@@ -15,6 +14,7 @@
   var VERSION = "8.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
 
+  var DIAGNOSTIC_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v4";
   var DGB_ENGINE_CONTRACT = "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
   var DGB_ENGINE_CONTRACT_AUTHORITY = "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
   var INSPECTION_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2";
@@ -27,18 +27,23 @@
   var TARGET_ROUTE = "/showroom/globe/audralia/";
   var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
 
-  var ENGINE_PATHS = Object.freeze([
+  var DIAGNOSTIC_ENGINE_PATHS = Object.freeze([
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
+    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
+    "AUDRALIA.diagnosticEngine",
+    "AUDRALIA.dropWithReadDiagnosticObservatory",
+    "AUDRALIA.diagnosticRouteController",
+    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY"
+  ]);
+
+  var DGB_EVIDENCE_PATHS = Object.freeze([
     "DGB_ENGINE",
     "DGBEngine",
     "AUDRALIA.dgbEngine",
     "AUDRALIA.runtimeEngine",
     "AUDRALIA.diagnosticRuntimeEngine",
     "AUDRALIA_DROP_WITH_READ_DGB_ENGINE",
-    "AUDRALIA_DROP_WITH_READ_RUNTIME_ENGINE",
-    "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
-    "AUDRALIA.diagnosticEngine",
-    "AUDRALIA_DIAGNOSTIC_ROUTE_CONTROLLER",
-    "AUDRALIA.diagnosticRouteController"
+    "AUDRALIA_DROP_WITH_READ_RUNTIME_ENGINE"
   ]);
 
   var INSPECTION_PATHS = Object.freeze([
@@ -237,11 +242,24 @@
       contract: null,
       status: null,
       reason: reason || "ENGINE_NOT_RESOLVED",
+      reportInterfacePresent: false,
+      cycleInterfacePresent: false,
+      receiptPresent: false
+    };
+  }
+
+  function emptyDgbEvidence(reason) {
+    return {
+      resolved: false,
+      compatible: false,
+      ready: false,
+      path: null,
+      contract: null,
+      status: null,
+      reason: reason || "DGB_EVIDENCE_NOT_RESOLVED",
       runtimeReceiptPresent: false,
       authorityReceiptPresent: false,
-      dgbRuntimeCompatible: false,
-      reportInterfacePresent: false,
-      cycleInterfacePresent: false
+      dgbRuntimeCompatible: false
     };
   }
 
@@ -276,6 +294,7 @@
     schema: CONTROL_REQUIREMENTS_SCHEMA,
     controlsContract: CONTRACT,
     previousControlsContract: PREVIOUS_CONTRACT,
+    expectedDiagnosticEngineContract: DIAGNOSTIC_ENGINE_CONTRACT,
     expectedEngineContract: DGB_ENGINE_CONTRACT,
     expectedEngineContractAuthority: DGB_ENGINE_CONTRACT_AUTHORITY,
     expectedInspectionLaneContract: INSPECTION_CONTRACT,
@@ -284,6 +303,9 @@
     requiredCycleTargetIds: CYCLE_TARGET_IDS.slice(),
     requiredStationPositions: STATIONS.map(function (s) { return s.position; }),
     presentationStationMap: STATIONS,
+    reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
+    cycleProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
+    dgbCoreRole: "EVIDENCE_RUNTIME_REGISTRY_ONLY",
     targetPreparationOwner: "INDEX_CONTROLS",
     certificationOwner: "INDEX_CONTROL_BRIDGE",
     controlsCertificationScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_EVIDENCE_ONLY",
@@ -297,8 +319,8 @@
       "ensureTargetReady", "reloadTargetFrame", "applyReceiptFilter",
       "selectReceipt", "inspectControls", "inspectDistributedCommands",
       "inspectInspectionLane", "collectReceiptFamilies", "refreshReceiptInventory",
-      "resolveEngine", "closeAllSelectors", "renderCycleChamber",
-      "refreshCycleChamber", "getState", "getCurrentReport",
+      "resolveDiagnosticEngine", "resolveDgbEvidence", "closeAllSelectors",
+      "renderCycleChamber", "refreshCycleChamber", "getState", "getCurrentReport",
       "getCurrentReportReceipt", "getCurrentCycleReceipt",
       "getCycleRenderingState", "getTargetLifecycleState",
       "getNormalizedReceipts", "getRequirements", "getReceipt"
@@ -309,7 +331,8 @@
   var state = {
     initialized: false,
     initializedAt: null,
-    engine: emptyEngine("ENGINE_NOT_RESOLVED"),
+    engine: emptyEngine("DIAGNOSTIC_ENGINE_NOT_RESOLVED"),
+    dgbEvidence: emptyDgbEvidence("DGB_EVIDENCE_NOT_RESOLVED"),
     inspectionLane: emptyInspection(),
     target: emptyTarget(),
     controls: {
@@ -332,6 +355,7 @@
       reportMode: "read",
       instrumentChamber: "cycle",
       observationLens: "target",
+      leftOrbitView: "audits",
       lastReportCommand: null,
       lastReportCommandSource: null
     },
@@ -385,88 +409,100 @@
     return frozenClone(state.inspectionLane);
   }
 
-  function deriveEngineStatus(engine, receipt, authority) {
+  function deriveStatus(api, receipt) {
     var candidates = [
-      engine && engine.STATUS,
-      engine && engine.status,
+      api && api.STATUS,
+      api && api.status,
       receipt && receipt.status,
-      authority && authority.status
+      receipt && receipt.apiStatus,
+      receipt && receipt.reportStatus
     ];
-
     for (var i = 0; i < candidates.length; i += 1) {
       if (typeof candidates[i] === "string" && candidates[i].trim()) return token(candidates[i]);
     }
-
-    if (receipt && receipt.authorityMatched === true) return "READY";
     return "UNKNOWN";
   }
 
-  function resolveEngine() {
-    var best = null;
+  function resolveDiagnosticEngine() {
+    var resolved = resolveFirst(DIAGNOSTIC_ENGINE_PATHS);
+    var api = resolved ? resolved.value : null;
+    var receipt = null;
+    var contract = api ? readContract(api) : null;
+    var status;
 
-    state.engine = emptyEngine("ENGINE_NOT_FOUND");
+    state.engine = emptyEngine("DIAGNOSTIC_ENGINE_NOT_FOUND");
 
-    for (var i = 0; i < ENGINE_PATHS.length; i += 1) {
-      var path = ENGINE_PATHS[i];
-      var candidate = readPath(path);
-      var contract;
-      var runtimeReceipt = null;
-      var authorityReceipt = null;
-      var status;
-
-      if (!candidate || typeof candidate !== "object") continue;
-
-      contract = readContract(candidate);
-
-      if (!best) {
-        best = { path: path, value: candidate, contract: contract };
-      }
-
-      if (contract !== DGB_ENGINE_CONTRACT) continue;
-
-      try { runtimeReceipt = isFn(candidate.getRuntimeReceipt) ? candidate.getRuntimeReceipt() : isFn(candidate.getReceipt) ? candidate.getReceipt() : null; } catch (_e1) {}
-      try { authorityReceipt = isFn(candidate.getAuthorityReceipt) ? candidate.getAuthorityReceipt() : null; } catch (_e2) {}
-
-      status = deriveEngineStatus(candidate, runtimeReceipt, authorityReceipt);
-
-      state.engine = {
-        resolved: true,
-        compatible: true,
-        ready: status === "READY",
-        path: path,
-        contract: contract,
-        status: status,
-        reason: status === "READY" ? "DGB_ENGINE_READY" : "DGB_ENGINE_OBSERVED_NOT_READY",
-        runtimeReceiptPresent: Boolean(runtimeReceipt),
-        authorityReceiptPresent: Boolean(authorityReceipt),
-        dgbRuntimeCompatible: true,
-        reportInterfacePresent: isFn(candidate.createReport),
-        cycleInterfacePresent: isFn(candidate.runNineCycle),
-        runtimeReceipt: frozenClone(runtimeReceipt),
-        authorityReceipt: frozenClone(authorityReceipt)
-      };
-
+    if (!api) {
       publishReceipt();
-      return candidate;
+      return null;
     }
 
-    if (best) {
-      state.engine = emptyEngine("ENGINE_CONTRACT_MISMATCH");
-      state.engine.resolved = true;
-      state.engine.path = best.path;
-      state.engine.contract = best.contract;
-    }
+    try {
+      if (isFn(api.getEngineReceipt)) receipt = api.getEngineReceipt();
+      else if (isFn(api.getReceipt)) receipt = api.getReceipt();
+    } catch (_e) {}
+
+    status = deriveStatus(api, receipt);
+
+    state.engine = {
+      resolved: true,
+      compatible: contract === DIAGNOSTIC_ENGINE_CONTRACT || Boolean(isFn(api.createReport) || isFn(api.runNineCycle)),
+      ready: status === "API_READY" || status === "READY" || status === "AVAILABLE",
+      path: resolved.path,
+      contract: contract,
+      status: status,
+      reason: "DIAGNOSTIC_ENGINE_OBSERVED",
+      reportInterfacePresent: isFn(api.createReport),
+      cycleInterfacePresent: isFn(api.runNineCycle),
+      receiptPresent: Boolean(receipt),
+      receipt: frozenClone(receipt)
+    };
 
     publishReceipt();
-    return null;
+    return api;
   }
 
-  function getCompatibleEngine() {
-    return resolveEngine();
+  function resolveDgbEvidence() {
+    var resolved = resolveFirst(DGB_EVIDENCE_PATHS);
+    var api = resolved ? resolved.value : null;
+    var receipt = null;
+    var authorityReceipt = null;
+    var contract = api ? readContract(api) : null;
+    var status;
+
+    state.dgbEvidence = emptyDgbEvidence("DGB_EVIDENCE_NOT_FOUND");
+
+    if (!api) {
+      publishReceipt();
+      return null;
+    }
+
+    try { receipt = isFn(api.getRuntimeReceipt) ? api.getRuntimeReceipt() : isFn(api.getReceipt) ? api.getReceipt() : null; } catch (_e1) {}
+    try { authorityReceipt = isFn(api.getAuthorityReceipt) ? api.getAuthorityReceipt() : null; } catch (_e2) {}
+
+    status = deriveStatus(api, receipt || authorityReceipt);
+
+    state.dgbEvidence = {
+      resolved: true,
+      compatible: contract === DGB_ENGINE_CONTRACT,
+      ready: status === "READY",
+      path: resolved.path,
+      contract: contract,
+      status: status,
+      reason: "DGB_EVIDENCE_ONLY",
+      runtimeReceiptPresent: Boolean(receipt),
+      authorityReceiptPresent: Boolean(authorityReceipt),
+      dgbRuntimeCompatible: contract === DGB_ENGINE_CONTRACT,
+      runtimeReceipt: frozenClone(receipt),
+      authorityReceipt: frozenClone(authorityReceipt)
+    };
+
+    publishReceipt();
+    return api;
   }
 
   function createFallbackReport(context) {
-    var reason = context && context.reason ? context.reason : state.engine.reason || "ENGINE_UNAVAILABLE";
+    var reason = context && context.reason ? context.reason : state.engine.reason || "DIAGNOSTIC_ENGINE_UNAVAILABLE";
     var createdAt = nowIso();
     var report = {
       schema: FALLBACK_REPORT_SCHEMA,
@@ -475,26 +511,26 @@
       classification: "CONTROL_FALLBACK_REPORT",
       createdAt: createdAt,
       READ: {
-        Result: "The report command was received, but the current DGB runtime did not expose an engine-backed diagnostic report producer.",
+        Result: "The report command was received, but the diagnostic observatory engine did not expose an available report producer.",
         Evidence: [
           "The distributed control panel received the command.",
-          "The renewed controls resolved the current DGB engine family before legacy observatory paths.",
-          state.engine.compatible ? "The DGB engine contract matched." : "The DGB engine contract did not match or was unavailable.",
+          "The renewed controls resolved the diagnostic observatory engine before DGB evidence/runtime paths.",
+          state.engine.resolved ? "A diagnostic engine path was observed." : "No diagnostic engine path was observed.",
           state.inspectionLane.resolved ? "The bounded inspection lane was present." : "The bounded inspection lane was unavailable."
         ],
         Absence: [
           reason,
-          "No readiness, visual pass, cycle pass, exact-nine pass, or family synchronization is claimed by this fallback report.",
-          "Engine-backed report construction remains unavailable until a report adapter or diagnostic engine facade is provided."
+          "DGB core remains evidence/runtime/registry only and was not used as report producer.",
+          "No readiness, visual pass, cycle pass, exact-nine pass, or family synchronization is claimed by this fallback report."
         ],
         Direction: [
           "Inspect AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT.",
-          "Inspect DGB_ENGINE.getRuntimeReceipt().",
-          "Inspect DGB_ENGINE.getAuthorityStatus().",
-          "If report production is required, provide a diagnostic report adapter/facade over the DGB runtime."
+          "Inspect AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT.",
+          "Inspect AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE.createReport."
         ]
       },
-      engineResolution: frozenClone(state.engine),
+      diagnosticEngineResolution: frozenClone(state.engine),
+      dgbEvidence: frozenClone(state.dgbEvidence),
       inspectionLane: frozenClone(state.inspectionLane),
       noClaims: NO_CLAIMS
     };
@@ -541,7 +577,7 @@
 
   function commitReport(report, receipt, source) {
     var read = normalizeRead(report);
-    var status = token(report.status || "AVAILABLE");
+    var status = token(report && report.status || "AVAILABLE");
 
     state.report.current = deepFreeze(clone(report));
     state.report.receipt = receipt ? deepFreeze(clone(receipt)) : null;
@@ -574,30 +610,46 @@
 
   function createReport(options) {
     var settings = options || {};
-    var engine = resolveEngine();
+    var engine = resolveDiagnosticEngine();
+    resolveDgbEvidence();
+
+    settings.category = settings.category || state.ui.selectedCategory;
+    settings.audit = settings.audit || state.ui.selectedAudit;
+    settings.participant = settings.participant || state.ui.selectedParticipant;
 
     recordAction("createReport.begin", {
       source: settings.source || "CONTROL_PANEL",
       command: settings.command || "create",
-      enginePath: state.engine.path,
-      engineContract: state.engine.contract
+      diagnosticEnginePath: state.engine.path,
+      diagnosticEngineContract: state.engine.contract
     });
+
+    if (engine && isFn(engine.setSelection)) {
+      try {
+        engine.setSelection({
+          category: settings.category,
+          audit: settings.audit,
+          participant: settings.participant
+        });
+      } catch (_e0) {}
+    }
 
     if (engine && isFn(engine.createReport)) {
       try {
         return Promise.resolve(engine.createReport(settings)).then(function (report) {
-          if (!isObj(report)) return createFallbackReport({ reason: "ENGINE_REPORT_RESULT_INVALID" });
-          var receipt = isFn(engine.getReportReceipt) ? engine.getReportReceipt() : null;
-          return commitReport(report, receipt, "ENGINE");
+          if (!isObj(report)) return createFallbackReport({ reason: "DIAGNOSTIC_ENGINE_REPORT_RESULT_INVALID" });
+          var receipt = null;
+          try { receipt = isFn(engine.getReportReceipt) ? engine.getReportReceipt() : null; } catch (_e1) {}
+          return commitReport(report, receipt, "DIAGNOSTIC_ENGINE");
         }, function (error) {
-          return createFallbackReport({ reason: "ENGINE_REPORT_REJECTED", error: error });
+          return createFallbackReport({ reason: "DIAGNOSTIC_ENGINE_REPORT_REJECTED", error: error });
         });
       } catch (error) {
-        return Promise.resolve(createFallbackReport({ reason: "ENGINE_REPORT_THROW", error: error }));
+        return Promise.resolve(createFallbackReport({ reason: "DIAGNOSTIC_ENGINE_REPORT_THROW", error: error }));
       }
     }
 
-    return Promise.resolve(createFallbackReport({ reason: state.engine.reason || "ENGINE_REPORT_INTERFACE_UNAVAILABLE" }));
+    return Promise.resolve(createFallbackReport({ reason: state.engine.reason || "DIAGNOSTIC_ENGINE_REPORT_INTERFACE_UNAVAILABLE" }));
   }
 
   function createCycleHeldReceipt(reason) {
@@ -606,8 +658,10 @@
       receiptId: "AUDRALIA_CONTROL_CYCLE_HELD_" + Date.now(),
       status: "HELD",
       terminalClass: "CONTROL_INTERFACE_HELD",
-      reason: reason || "DGB_ENGINE_DOES_NOT_EXPOSE_NINE_CYCLE",
+      reason: reason || "DIAGNOSTIC_ENGINE_DOES_NOT_EXPOSE_NINE_CYCLE",
       stationReceipts: [],
+      receipts: [],
+      normalizedReceipts: [],
       source: "CONTROL_PANEL",
       targetLifecycle: frozenClone(state.target),
       noClaims: NO_CLAIMS,
@@ -615,8 +669,38 @@
     };
   }
 
+  function extractStationReceipts(receipt) {
+    if (!receipt || typeof receipt !== "object") return [];
+    if (Array.isArray(receipt.stationReceipts)) return receipt.stationReceipts;
+    if (Array.isArray(receipt.normalizedReceipts)) return receipt.normalizedReceipts;
+    if (Array.isArray(receipt.receipts)) return receipt.receipts;
+    return [];
+  }
+
+  function normalizeReturnedReceipt(entry, index) {
+    var raw = isObj(entry) ? entry : {};
+    var station = STATIONS[index] || null;
+    var position = Number(raw.position || raw.cyclePosition || (station && station.position));
+    var role = raw.role || raw.stationId || (station && station.role) || null;
+    var fibonacci = raw.fibonacci || (station && station.fibonacci) || null;
+    var status = token(raw.status || (raw.completed ? "COMPLETE" : "AVAILABLE"));
+    return {
+      raw: frozenClone(raw),
+      position: Number.isFinite(position) ? position : null,
+      role: role,
+      stationId: role,
+      fibonacci: fibonacci,
+      status: status,
+      summary: raw.summary || raw.reason || raw.terminalClass || null
+    };
+  }
+
   function buildCycleRenderingState(receipt) {
+    var returned = extractStationReceipts(receipt).slice(0, 9).map(normalizeReturnedReceipt);
     var rows = {};
+    var mapped = [];
+    var unmapped = [];
+
     STATIONS.forEach(function (station) {
       rows[station.position] = {
         station: station,
@@ -625,21 +709,31 @@
       };
     });
 
+    returned.forEach(function (entry) {
+      if (rows[entry.position]) {
+        rows[entry.position].receipts.push(entry);
+        rows[entry.position].presentationStatus = entry.status || "AVAILABLE";
+        mapped.push(entry);
+      } else {
+        unmapped.push(entry);
+      }
+    });
+
     return {
       schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v8",
       engineCycleStatus: token(receipt && receipt.status || "UNKNOWN"),
       engineCycleTerminalClass: receipt && receipt.terminalClass || null,
-      stationReceipts: [],
+      stationReceipts: frozenClone(returned),
       rows: rows,
-      mappedReceiptCount: 0,
-      unmappedReceiptCount: 0,
+      mappedReceiptCount: mapped.length,
+      unmappedReceiptCount: unmapped.length,
       duplicateCoordinateCount: 0,
       coordinateConflictCount: 0,
       unresolvedDeclarationCount: 0,
-      renderedPositions: [],
-      notReachedPositions: STATIONS.map(function (station) { return station.position; }),
-      returnedReceiptMappingComplete: false,
-      logicalMappingComplete: false,
+      renderedPositions: mapped.map(function (entry) { return entry.position; }),
+      notReachedPositions: STATIONS.filter(function (station) { return !rows[station.position].receipts.length; }).map(function (station) { return station.position; }),
+      returnedReceiptMappingComplete: mapped.length === 9,
+      logicalMappingComplete: mapped.length === 9,
       logicalMappingScope: "RETURNED_RECEIPTS_ONLY",
       targetLifecycle: frozenClone(state.target),
       createdAt: nowIso()
@@ -656,10 +750,14 @@
     row.setAttribute("data-role", rowState.station.role);
 
     var statusNode = row.querySelector("[data-station-status]") || row.querySelector("[data-status-value]") || row.querySelector("b");
-    var summaryNode = row.querySelector("[data-station-summary]") || row.querySelector("small");
+    var summaryNode = row.querySelector("[data-station-summary]") || row.querySelector("p") || row.querySelector("small");
 
-    if (statusNode) statusNode.textContent = rowState.presentationStatus;
-    if (summaryNode) summaryNode.textContent = rowState.presentationStatus === "NOT_REACHED" ? "No station receipt returned." : "Cycle not executed.";
+    if (statusNode) statusNode.textContent = rowState.receipts.length ? rowState.station.role : rowState.presentationStatus;
+    if (summaryNode) {
+      summaryNode.textContent = rowState.receipts.length
+        ? (rowState.receipts[0].summary || rowState.presentationStatus)
+        : rowState.presentationStatus === "NOT_REACHED" ? "No station receipt returned." : "Cycle not executed.";
+    }
 
     return { position: position, found: true, updated: true };
   }
@@ -675,7 +773,13 @@
     setText("cycleStatus", state.cycle.executed ? "Cycle · " + rendering.engineCycleStatus : "Cycle · Not Run");
     setStatus("cycleStatus", state.cycle.executed ? rendering.engineCycleStatus : "NOT_RUN");
     setText("cycleLedgerOutput", safeJson(rendering));
-    setHtml("cycleReceiptList", '<article class="empty-state"><h4>No engine cycle receipts</h4><p>The current DGB runtime does not independently expose a Nine-Cycle receipt producer.</p></article>');
+    setHtml("cycleReceiptList", rendering.stationReceipts.length
+      ? rendering.stationReceipts.map(function (entry) {
+          return '<article><h4>' + escapeHtml((entry.fibonacci || "") + " · " + (entry.role || "Station")) +
+            '</h4><p>' + escapeHtml(entry.status || "UNKNOWN") +
+            '</p><small>' + escapeHtml(entry.summary || "Receipt returned.") + '</small></article>';
+        }).join("")
+      : '<article class="empty-state"><h4>No engine cycle receipts</h4><p>The diagnostic observatory engine did not return station receipts.</p></article>');
 
     state.cycle.rendering = deepFreeze(clone(rendering));
     state.cycle.localDomEvidence = deepFreeze({
@@ -708,33 +812,40 @@
   }
 
   function runNineCycle() {
-    var engine = resolveEngine();
+    var engine = resolveDiagnosticEngine();
+    resolveDgbEvidence();
 
     state.cycle.requested = true;
     state.cycle.running = true;
     setText("controllerState", "NINE-CYCLE");
     setStatus("controllerState", "RUNNING");
 
-    recordAction("runNineCycle.begin", { enginePath: state.engine.path, engineContract: state.engine.contract });
+    recordAction("runNineCycle.begin", { diagnosticEnginePath: state.engine.path, diagnosticEngineContract: state.engine.contract });
 
     if (engine && isFn(engine.runNineCycle)) {
       try {
-        return Promise.resolve(engine.runNineCycle({ source: "CONTROL_PANEL", requestedAt: nowIso() })).then(function (receipt) {
+        return Promise.resolve(engine.runNineCycle({
+          source: "CONTROL_PANEL",
+          requestedAt: nowIso(),
+          category: state.ui.selectedCategory,
+          audit: state.ui.selectedAudit,
+          participant: state.ui.selectedParticipant
+        })).then(function (receipt) {
           state.cycle.running = false;
           state.cycle.executed = true;
-          state.cycle.rawReceipt = deepFreeze(clone(receipt || createCycleHeldReceipt("ENGINE_EMPTY_CYCLE_RECEIPT")));
+          state.cycle.rawReceipt = deepFreeze(clone(receipt || createCycleHeldReceipt("DIAGNOSTIC_ENGINE_EMPTY_CYCLE_RECEIPT")));
           renderCommittedCycleChamber();
-          recordAction("runNineCycle.complete", { status: state.cycle.rawReceipt.status || null });
+          recordAction("runNineCycle.complete", { status: state.cycle.rawReceipt.status || null, terminalClass: state.cycle.rawReceipt.terminalClass || null });
           return frozenClone(state.cycle.rawReceipt);
         }, function (error) {
-          return holdCycle("ENGINE_CYCLE_REJECTED", error);
+          return holdCycle("DIAGNOSTIC_ENGINE_CYCLE_REJECTED", error);
         });
       } catch (error) {
-        return Promise.resolve(holdCycle("ENGINE_CYCLE_THROW", error));
+        return Promise.resolve(holdCycle("DIAGNOSTIC_ENGINE_CYCLE_THROW", error));
       }
     }
 
-    return Promise.resolve(holdCycle("DGB_ENGINE_DOES_NOT_EXPOSE_NINE_CYCLE"));
+    return Promise.resolve(holdCycle("DIAGNOSTIC_ENGINE_DOES_NOT_EXPOSE_NINE_CYCLE"));
   }
 
   function holdCycle(reason, error) {
@@ -749,7 +860,7 @@
   }
 
   function runDirectCheck() {
-    recordAction("runDirectCheck.held", { reason: "DIRECT_CHECK_NOT_EXPOSED_BY_DGB_RUNTIME" });
+    recordAction("runDirectCheck.held", { reason: "DIRECT_CHECK_NOT_EXPOSED_BY_CONTROLS" });
     setText("controllerState", "DIRECT HELD");
     setStatus("controllerState", "HELD");
     return Promise.resolve(null);
@@ -778,19 +889,6 @@
       state.target.documentLoaded = false;
       state.target.documentReadyState = null;
       state.target.lifecycleClass = "TARGET_FRAME_MISSING";
-      state.target.preparationReceipt = deepFreeze({
-        schema: "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v3",
-        receiptId: "AUDRALIA_TARGET_PREPARATION_RECEIPT_" + Date.now(),
-        controlsContract: CONTRACT,
-        targetLifecycle: state.target.lifecycleClass,
-        routeMatched: false,
-        declaredRouteMatched: false,
-        observedBlankWithDeclaredTarget: false,
-        documentLoaded: false,
-        navigationPending: state.target.navigationPending,
-        noClaims: NO_CLAIMS,
-        generatedAt: nowIso()
-      });
       publishReceipt();
       return frozenClone(state.target);
     }
@@ -864,15 +962,19 @@
   function setTargetVisible(visible) {
     state.ui.targetVisible = Boolean(visible);
     var button = byId("toggleObservationTarget");
+    var targetWindow = byId("targetWindow");
     if (button) button.setAttribute("aria-expanded", state.ui.targetVisible ? "true" : "false");
+    if (targetWindow) targetWindow.hidden = !state.ui.targetVisible;
     publishReceipt();
     if (state.ui.targetVisible) inspectTargetFrame();
   }
 
   function setTargetExpanded(expanded) {
     state.ui.targetExpanded = Boolean(expanded);
+    var button = byId("expandTargetWindow");
     var windowNode = byId("targetWindow");
     if (windowNode) windowNode.classList.toggle("is-expanded", state.ui.targetExpanded);
+    if (button) button.setAttribute("aria-pressed", state.ui.targetExpanded ? "true" : "false");
     publishReceipt();
   }
 
@@ -938,8 +1040,14 @@
     setText("reportStatus", "READY");
     setStatus("reportStatus", "READY");
     setText("reportTitle", "No report created");
+    setText("reportCreatedAt", "—");
+    setText("reportMeta", "Choose a category and audit, then create a report. Report availability does not certify runtime or family readiness.");
     setText("packetOutput", "No report packet has been created.");
     setText("rawOutput", "No raw report has been created.");
+    setDisabled("copyReadableReport", true);
+    setDisabled("copyPacketReport", true);
+    setDisabled("copyRawReport", true);
+    setDisabled("addReportToArchive", true);
     publishReceipt();
   }
 
@@ -953,8 +1061,15 @@
     recordAction("resetWorkbench");
   }
 
-  function openReceiptChamber() { refreshReceiptInventory({ publish: true, render: true }); }
-  function openArchiveChamber() { createDeepArchive(); }
+  function openReceiptChamber() {
+    activateInstrumentChamber("receipts");
+    refreshReceiptInventory({ publish: true, render: true });
+  }
+
+  function openArchiveChamber() {
+    activateInstrumentChamber("archive");
+    createDeepArchive();
+  }
 
   function applyCommandContext(node) {
     if (!node) return;
@@ -983,11 +1098,11 @@
 
   function normalizeReceipt(record, source, path) {
     return {
-      type: token(record && (record.type || record.status || "observation")).toLowerCase(),
+      type: token(record && (record.type || record.status || record.reportStatus || "observation")).toLowerCase(),
       sourceAuthority: source || "UNKNOWN",
       label: record && (record.label || record.title || record.schema || record.contract) || source || "Receipt",
       record: frozenClone(record),
-      receiptId: record && (record.receiptId || record.id || record.reportId) || null,
+      receiptId: record && (record.receiptId || record.id || record.reportId || record.cycleId) || null,
       path: path || null,
       groups: ["observation"].concat(record && /held|error|fail|missing/i.test(safeJson(record)) ? ["error"] : [])
     };
@@ -995,7 +1110,8 @@
 
   function collectReceiptFamilies() {
     var output = [];
-    var engine = getCompatibleEngine();
+    var engine = resolveDiagnosticEngine();
+    var dgb = resolveDgbEvidence();
     var inspection = resolveFirst(INSPECTION_PATHS);
     var inspectionApi = inspection ? inspection.value : null;
 
@@ -1006,8 +1122,11 @@
 
     add(root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_RECEIPT, "INSPECTION_LANE", "global.inspectionReceipt");
     add(inspectionApi && isFn(inspectionApi.getReceipt) ? inspectionApi.getReceipt() : null, "INSPECTION_LANE", "inspection.getReceipt");
-    add(engine && isFn(engine.getRuntimeReceipt) ? engine.getRuntimeReceipt() : null, "DGB_ENGINE", "engine.getRuntimeReceipt");
-    add(engine && isFn(engine.getAuthorityStatus) ? engine.getAuthorityStatus() : null, "DGB_ENGINE", "engine.getAuthorityStatus");
+    add(engine && isFn(engine.getEngineReceipt) ? engine.getEngineReceipt() : engine && isFn(engine.getReceipt) ? engine.getReceipt() : null, "DIAGNOSTIC_ENGINE", "diagnosticEngine.getReceipt");
+    add(engine && isFn(engine.getReportReceipt) ? engine.getReportReceipt() : null, "DIAGNOSTIC_ENGINE", "diagnosticEngine.getReportReceipt");
+    add(engine && isFn(engine.getCycleReceipt) ? engine.getCycleReceipt() : null, "DIAGNOSTIC_ENGINE", "diagnosticEngine.getCycleReceipt");
+    add(dgb && isFn(dgb.getRuntimeReceipt) ? dgb.getRuntimeReceipt() : null, "DGB_EVIDENCE", "dgb.getRuntimeReceipt");
+    add(dgb && isFn(dgb.getAuthorityStatus) ? dgb.getAuthorityStatus() : null, "DGB_EVIDENCE", "dgb.getAuthorityStatus");
     add(state.report.receipt, state.report.source || "CONTROL_PANEL", "state.report.receipt");
     add(state.target.preparationReceipt, "CONTROL_TARGET_PREPARATION", "state.target.preparationReceipt");
     add(state.cycle.rawReceipt, "CONTROL_CYCLE", "state.cycle.rawReceipt");
@@ -1017,10 +1136,23 @@
     return output;
   }
 
+  function receiptMatchesFilter(entry, filter) {
+    var f = String(filter || "all").toLowerCase();
+    var text = safeJson(entry).toLowerCase();
+    if (f === "all") return true;
+    if (f === "participant") return /participant|station|f1|f3|f5|f8|f13|f21|f34|f55|f89|north|east|west|south|rail/.test(text);
+    if (f === "observation") return /observation|inspection|target|runtime|engine|dgb/.test(text);
+    if (f === "cycle") return /cycle|nine|station|receiptcount|normalized/.test(text);
+    if (f === "error") return /error|held|fail|missing/.test(text);
+    return true;
+  }
+
   function refreshReceiptInventory(options) {
     var settings = options || {};
     state.normalizedReceipts = collectReceiptFamilies();
-    state.visibleReceipts = state.normalizedReceipts;
+    state.visibleReceipts = state.normalizedReceipts.filter(function (entry) {
+      return receiptMatchesFilter(entry, state.ui.receiptFilter);
+    });
 
     if (settings.render !== false) {
       setHtml("receiptList", state.visibleReceipts.length
@@ -1030,7 +1162,7 @@
               (entry.receiptId ? "<small>" + escapeHtml(entry.receiptId) + "</small>" : "") +
               "</article>";
           }).join("")
-        : '<article class="empty-state"><h4>No receipts</h4><p>No receipts are currently available.</p></article>');
+        : '<article class="empty-state"><h4>No receipts</h4><p>No receipts are currently available for this filter.</p></article>');
     }
 
     if (settings.publish !== false) publishReceipt();
@@ -1039,6 +1171,11 @@
 
   function applyReceiptFilter(filter) {
     state.ui.receiptFilter = String(filter || "all").toLowerCase();
+
+    Array.prototype.slice.call(doc.querySelectorAll("[data-receipt-filter]")).forEach(function (node) {
+      node.setAttribute("aria-pressed", node.getAttribute("data-receipt-filter") === state.ui.receiptFilter ? "true" : "false");
+    });
+
     refreshReceiptInventory({ publish: true, render: true });
   }
 
@@ -1049,6 +1186,95 @@
       ? "<h4>" + escapeHtml(entry.label) + "</h4><pre>" + escapeHtml(safeJson(entry.record)) + "</pre>"
       : "<h4>Receipt unavailable</h4>");
     publishReceipt();
+  }
+
+  function closeAllSelectors(except) {
+    Array.prototype.slice.call(doc.querySelectorAll(".selector-menu")).forEach(function (menu) {
+      if (except && menu === except) return;
+      menu.hidden = true;
+    });
+    Array.prototype.slice.call(doc.querySelectorAll(".custom-selector > button[aria-expanded]")).forEach(function (button) {
+      var controls = button.getAttribute("aria-controls");
+      if (except && controls && byId(controls) === except) return;
+      button.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function toggleSelector(selectorId) {
+    var selector = byId(selectorId);
+    if (!selector) return false;
+    var button = selector.querySelector("button[aria-controls]");
+    var menu = button ? byId(button.getAttribute("aria-controls")) : null;
+    if (!button || !menu) return false;
+    var willOpen = menu.hidden;
+    closeAllSelectors(menu);
+    menu.hidden = !willOpen;
+    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    return true;
+  }
+
+  function setEngineSelection() {
+    var engine = resolveDiagnosticEngine();
+    if (engine && isFn(engine.setSelection)) {
+      try {
+        engine.setSelection({
+          category: state.ui.selectedCategory,
+          audit: state.ui.selectedAudit,
+          participant: state.ui.selectedParticipant
+        });
+      } catch (_e) {}
+    }
+  }
+
+  function selectCategory(categoryId, label) {
+    state.ui.selectedCategory = categoryId || state.ui.selectedCategory;
+    setText("categorySelectorLabel", label || state.ui.selectedCategory);
+    Array.prototype.slice.call(doc.querySelectorAll("[data-category-id]")).forEach(function (node) {
+      node.setAttribute("aria-selected", node.getAttribute("data-category-id") === state.ui.selectedCategory ? "true" : "false");
+    });
+    setEngineSelection();
+    closeAllSelectors();
+    publishReceipt();
+  }
+
+  function selectAudit(auditId, label) {
+    state.ui.selectedAudit = auditId || state.ui.selectedAudit;
+    setText("auditSelectorLabel", label || state.ui.selectedAudit);
+    Array.prototype.slice.call(doc.querySelectorAll("[data-audit-id]")).forEach(function (node) {
+      node.setAttribute("aria-selected", node.getAttribute("data-audit-id") === state.ui.selectedAudit ? "true" : "false");
+    });
+    setEngineSelection();
+    closeAllSelectors();
+    publishReceipt();
+  }
+
+  function activatePanel(buttonSelector, panelAttribute, value, stateKey) {
+    var buttons = Array.prototype.slice.call(doc.querySelectorAll(buttonSelector));
+    buttons.forEach(function (button) {
+      var selected = button.getAttribute(panelAttribute) === value;
+      button.setAttribute("aria-selected", selected ? "true" : "false");
+      var panel = byId(button.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !selected;
+    });
+    state.ui[stateKey] = value;
+    publishReceipt();
+  }
+
+  function activateLeftOrbit(view) {
+    activatePanel("[data-left-orbit-view]", "data-left-orbit-view", view || "audits", "leftOrbitView");
+  }
+
+  function activateObservationLens(lens) {
+    activatePanel("[data-observation-lens]", "data-observation-lens", lens || "target", "observationLens");
+    if (lens === "window") setTargetVisible(true);
+  }
+
+  function activateInstrumentChamber(chamber) {
+    activatePanel("[data-instrument-chamber]", "data-instrument-chamber", chamber || "cycle", "instrumentChamber");
+  }
+
+  function activateReportMode(mode) {
+    activatePanel("[data-report-mode]", "data-report-mode", mode || "read", "reportMode");
   }
 
   function inspectDistributedCommands() {
@@ -1072,11 +1298,29 @@
     return frozenClone(state.controls);
   }
 
-  function closeAllSelectors() {}
+  function handleParticipantSelection(target) {
+    var node = target && isFn(target.closest) ? target.closest("[data-participant-role]") : null;
+    if (!node) return false;
+
+    state.ui.selectedParticipant = node.getAttribute("data-participant-role") || "ALL";
+
+    Array.prototype.slice.call(doc.querySelectorAll("[data-participant-role]")).forEach(function (entry) {
+      entry.setAttribute("aria-selected", entry === node ? "true" : "false");
+    });
+
+    setHtml("participantDetail",
+      "<h3>" + escapeHtml(state.ui.selectedParticipant) + "</h3>" +
+      "<p>Selected for direct-execution context only. Selection does not certify availability or execute the participant.</p>"
+    );
+
+    setEngineSelection();
+    publishReceipt();
+    return true;
+  }
 
   function handleClick(event) {
     var target = event.target && isFn(event.target.closest)
-      ? event.target.closest("button, a[href], [role='button'], [role='tab'], [role='option']")
+      ? event.target.closest("button, a[href], summary, [role='button'], [role='tab'], [role='option'], [data-participant-role]")
       : null;
     var id;
     var cmd;
@@ -1084,8 +1328,60 @@
     if (!target) return;
 
     state.clickCount += 1;
+
+    if (handleParticipantSelection(target)) {
+      event.preventDefault();
+      return;
+    }
+
     id = target.id || "";
     cmd = target.getAttribute("data-report-command");
+
+    if (target.getAttribute("data-left-orbit-view")) {
+      event.preventDefault();
+      activateLeftOrbit(target.getAttribute("data-left-orbit-view"));
+      return;
+    }
+
+    if (target.getAttribute("data-observation-lens")) {
+      event.preventDefault();
+      activateObservationLens(target.getAttribute("data-observation-lens"));
+      return;
+    }
+
+    if (target.getAttribute("data-instrument-chamber")) {
+      event.preventDefault();
+      activateInstrumentChamber(target.getAttribute("data-instrument-chamber"));
+      if (cmd) executeDistributedReportCommand(target, cmd);
+      return;
+    }
+
+    if (target.getAttribute("data-report-mode")) {
+      event.preventDefault();
+      activateReportMode(target.getAttribute("data-report-mode"));
+      return;
+    }
+
+    if (target.getAttribute("data-receipt-filter")) {
+      event.preventDefault();
+      applyReceiptFilter(target.getAttribute("data-receipt-filter"));
+      return;
+    }
+
+    if (target.getAttribute("data-category-id")) {
+      event.preventDefault();
+      selectCategory(target.getAttribute("data-category-id"), target.querySelector("strong") ? target.querySelector("strong").textContent : null);
+      return;
+    }
+
+    if (target.getAttribute("data-audit-id")) {
+      event.preventDefault();
+      selectAudit(target.getAttribute("data-audit-id"), target.querySelector("strong") ? target.querySelector("strong").textContent : null);
+      return;
+    }
+
+    if (id === "categorySelectorButton") { event.preventDefault(); toggleSelector("categorySelector"); return; }
+    if (id === "auditSelectorButton") { event.preventDefault(); toggleSelector("auditSelector"); return; }
 
     if (cmd) {
       event.preventDefault();
@@ -1106,11 +1402,18 @@
     if (id === "toggleObservationTarget") { event.preventDefault(); setTargetVisible(!state.ui.targetVisible); return; }
     if (id === "expandTargetWindow") { event.preventDefault(); setTargetExpanded(!state.ui.targetExpanded); return; }
     if (id === "reloadTargetFrame") { event.preventDefault(); reloadTargetFrame(); return; }
+    if (id === "reloadObservatory") { event.preventDefault(); root.location.reload(); return; }
     if (target.hasAttribute("data-receipt-index")) { event.preventDefault(); selectReceipt(target.getAttribute("data-receipt-index")); }
+  }
+
+  function handleDocumentClick(event) {
+    var insideSelector = event.target && isFn(event.target.closest) ? event.target.closest(".custom-selector") : null;
+    if (!insideSelector) closeAllSelectors();
   }
 
   function bindEvents() {
     doc.addEventListener("click", handleClick);
+    doc.addEventListener("click", handleDocumentClick);
     var frame = byId(TARGET_FRAME_ID);
     if (frame) frame.addEventListener("load", function () {
       state.target.navigationPending = false;
@@ -1130,8 +1433,10 @@
       initialized: state.initialized,
       initializedAt: state.initializedAt,
       delegatedEventsActive: state.controls.delegatedEventsActive,
-      engineLookupPaths: ENGINE_PATHS.slice(),
+      diagnosticEngineLookupPaths: DIAGNOSTIC_ENGINE_PATHS.slice(),
+      dgbEvidenceLookupPaths: DGB_EVIDENCE_PATHS.slice(),
       engine: frozenClone(state.engine),
+      dgbEvidence: frozenClone(state.dgbEvidence),
       inspectionLane: frozenClone(state.inspectionLane),
       targetLifecycle: frozenClone(state.target),
       controlManifestCount: CONTROL_IDS.length,
@@ -1163,6 +1468,9 @@
       lastError: frozenClone(state.lastError),
       presentationStationMap: STATIONS,
       requirements: REQUIREMENTS,
+      reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
+      cycleProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
+      dgbCoreRole: "EVIDENCE_RUNTIME_REGISTRY_ONLY",
       relationalCertificationOwner: "INDEX_CONTROL_BRIDGE",
       noClaims: NO_CLAIMS,
       generatedAt: nowIso()
@@ -1177,6 +1485,7 @@
       file: FILE,
       initialized: state.initialized,
       engine: state.engine,
+      dgbEvidence: state.dgbEvidence,
       inspectionLane: state.inspectionLane,
       target: state.target,
       controls: state.controls,
@@ -1227,7 +1536,9 @@
       inspectInspectionLane: inspectInspectionLane,
       collectReceiptFamilies: function () { return frozenClone(collectReceiptFamilies()); },
       refreshReceiptInventory: refreshReceiptInventory,
-      resolveEngine: resolveEngine,
+      resolveDiagnosticEngine: resolveDiagnosticEngine,
+      resolveDgbEvidence: resolveDgbEvidence,
+      resolveEngine: resolveDiagnosticEngine,
       closeAllSelectors: closeAllSelectors,
       renderCycleChamber: renderCommittedCycleChamber,
       refreshCycleChamber: renderCommittedCycleChamber,
@@ -1258,6 +1569,16 @@
     return api;
   }
 
+  function initializeUiState() {
+    activateLeftOrbit(state.ui.leftOrbitView);
+    activateObservationLens(state.ui.observationLens);
+    activateInstrumentChamber(state.ui.instrumentChamber);
+    activateReportMode(state.ui.reportMode);
+    applyReceiptFilter(state.ui.receiptFilter);
+    setTargetVisible(false);
+    setTargetExpanded(false);
+  }
+
   function init() {
     if (state.initialized) return;
 
@@ -1269,19 +1590,22 @@
     inspectInspectionLane();
     inspectTargetFrame({ source: "init" });
     inspectControls();
-    resolveEngine();
+    resolveDiagnosticEngine();
+    resolveDgbEvidence();
     renderCommittedCycleChamber();
+    initializeUiState();
     refreshReceiptInventory({ publish: false, render: true });
     publishReceipt();
 
     setText("controllerContract", CONTRACT);
-    setText("controllerState", state.engine.compatible ? "DGB ENGINE OBSERVED" : "ENGINE HELD");
-    setStatus("controllerState", state.engine.compatible ? "READY" : "HELD");
+    setText("controllerState", state.engine.resolved ? "DIAGNOSTIC ENGINE OBSERVED" : "ENGINE HELD");
+    setStatus("controllerState", state.engine.resolved ? "READY" : "HELD");
 
     recordAction("initialize", {
-      engineResolved: state.engine.resolved,
-      engineCompatible: state.engine.compatible,
-      engineReady: state.engine.ready,
+      diagnosticEngineResolved: state.engine.resolved,
+      diagnosticEngineCompatible: state.engine.compatible,
+      diagnosticEngineReady: state.engine.ready,
+      dgbEvidenceResolved: state.dgbEvidence.resolved,
       inspectionLaneResolved: state.inspectionLane.resolved,
       missingControls: state.controls.missing
     });

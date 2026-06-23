@@ -2,7 +2,7 @@
 // AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5
 // Full-file replacement.
 // Diagnostic observatory interpreter only.
-// Controls v10 remains the UI/router anchor.
+// Controls owns the UI/router anchor.
 // Passive inspection integration. Explicit conductor-only Nine-Cycle handoff.
 // Direct Check accepts runDirect(role, payload) and routes to matching participant when available.
 // No DOM event ownership. No production mutation. No repair authorization.

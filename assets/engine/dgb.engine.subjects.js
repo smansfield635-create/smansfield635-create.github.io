@@ -1,39 +1,7 @@
 // /assets/engine/dgb.engine.subjects.js
 // DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2
 // Full-file replacement.
-//
-// Purpose:
-// - Register the governing DGB engine contract as an authority record.
-// - Register the constructed DGB runtime core as Engine Slot 1.
-// - Reserve Engine Slots 2–6 without inventing identities.
-// - Inspect live globals without creating instances or runtime activity.
-// - Expose reader-safe and technical registry snapshots.
-// - Provide a future read-only observer attachment point.
-//
-// Owns:
-// - authority registry metadata;
-// - engine subject registry metadata;
-// - engine-slot identity;
-// - live binding inspection;
-// - registry receipts;
-// - observer attachment metadata.
-//
-// Does not own:
-// - governing contract behavior;
-// - engine runtime behavior;
-// - model validation;
-// - engine readiness;
-// - adapter execution;
-// - runtime instances;
-// - diagnostics;
-// - lifecycle mutation;
-// - renderer, input, or fallback implementation.
-//
-// Quiet load required.
-// No engine instances are created.
-// No adapters are registered.
-// No observers are attached automatically.
-// F21 remains unclaimed.
+// Identity-preserving production renewal.
 
 (function installDGBEngineSubjectRegistry(global) {
   "use strict";
@@ -50,23 +18,13 @@
     "DGB_ENGINE_AND_AUTHORITY_REGISTRY_SIX_SLOT_RUNTIME_BINDING_TNT_v2";
 
   var VERSION = "2.0.0";
-
   var FILE = "/assets/engine/dgb.engine.subjects.js";
 
-  var REGISTRY_SCHEMA =
-    "DGB_ENGINE_AND_AUTHORITY_REGISTRY_v2";
-
-  var AUTHORITY_SCHEMA =
-    "DGB_ENGINE_AUTHORITY_RECORD_v1";
-
-  var ENGINE_SCHEMA =
-    "DGB_ENGINE_SUBJECT_RECORD_v2";
-
-  var RECEIPT_SCHEMA =
-    "DGB_ENGINE_REGISTRY_RECEIPT_v2";
-
-  var OBSERVATION_SCHEMA =
-    "DGB_ENGINE_OBSERVATION_PACKET_v1";
+  var REGISTRY_SCHEMA = "DGB_ENGINE_AND_AUTHORITY_REGISTRY_v2";
+  var AUTHORITY_SCHEMA = "DGB_ENGINE_AUTHORITY_RECORD_v1";
+  var ENGINE_SCHEMA = "DGB_ENGINE_SUBJECT_RECORD_v2";
+  var RECEIPT_SCHEMA = "DGB_ENGINE_REGISTRY_RECEIPT_v2";
+  var OBSERVATION_SCHEMA = "DGB_ENGINE_OBSERVATION_PACKET_v1";
 
   var GOVERNING_CONTRACT =
     "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
@@ -74,19 +32,16 @@
   var CORE_CONTRACT =
     "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
 
-  var MODEL_SCHEMA =
-    "DGB_MODEL_PACKAGE_v1";
-
-  var CONTRACT_FILE =
-    "/assets/engine/dgb.engine.contract.js";
-
-  var CORE_FILE =
-    "/assets/engine/dgb.engine.js";
-
+  var MODEL_SCHEMA = "DGB_MODEL_PACKAGE_v1";
+  var CONTRACT_FILE = "/assets/engine/dgb.engine.contract.js";
+  var CORE_FILE = "/assets/engine/dgb.engine.js";
   var SLOT_COUNT = 6;
 
   var DEFAULT_ENGINE_ID =
     "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE";
+
+  var AUTHORITY_ID =
+    "DGB_INTERACTIVE_RUNTIME_ENGINE_GOVERNING_CONTRACT";
 
   var STATUS = Object.freeze({
     AVAILABLE: "AVAILABLE",
@@ -110,16 +65,12 @@
     try {
       return new Date().toISOString();
     } catch (_error) {
-      return "";
+      return null;
     }
   }
 
   function isObject(value) {
-    return Boolean(
-      value &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    );
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
   }
 
   function isFunction(value) {
@@ -137,23 +88,14 @@
       return value;
     }
 
-    if (typeof value === "bigint") {
-      return value.toString();
-    }
-
+    if (typeof value === "bigint") return String(value);
+    if (typeof value === "symbol") return String(value);
     if (typeof value === "function") {
-      return {
-        type: "Function",
-        name: value.name || "anonymous"
-      };
+      return { type: "Function", name: value.name || "anonymous" };
     }
 
     var memory = seen || [];
-
-    if (memory.indexOf(value) !== -1) {
-      return "[Circular]";
-    }
-
+    if (memory.indexOf(value) !== -1) return "[Circular]";
     memory.push(value);
 
     if (Array.isArray(value)) {
@@ -163,55 +105,34 @@
     }
 
     var output = {};
-
     Object.keys(value).forEach(function each(key) {
-      output[key] = clonePlain(
-        value[key],
-        memory.slice()
-      );
+      try {
+        output[key] = clonePlain(value[key], memory.slice());
+      } catch (_error) {
+        output[key] = null;
+      }
     });
 
     return output;
   }
 
   function deepFreeze(value, seen) {
-    if (
-      !value ||
-      (
-        typeof value !== "object" &&
-        typeof value !== "function"
-      )
-    ) {
+    if (!value || (typeof value !== "object" && typeof value !== "function")) {
       return value;
     }
 
     var memory = seen || [];
-
-    if (memory.indexOf(value) !== -1) {
-      return value;
-    }
-
+    if (memory.indexOf(value) !== -1) return value;
     memory.push(value);
 
-    Object.getOwnPropertyNames(value).forEach(
-      function freezeProperty(key) {
-        var child;
-
-        try {
-          child = value[key];
-        } catch (_error) {
-          child = null;
-        }
-
-        deepFreeze(child, memory);
-      }
-    );
-
     try {
+      Object.getOwnPropertyNames(value).forEach(function freezeKey(key) {
+        try {
+          deepFreeze(value[key], memory);
+        } catch (_error) {}
+      });
       Object.freeze(value);
-    } catch (_error) {
-      // Some host objects may reject freezing.
-    }
+    } catch (_error2) {}
 
     return value;
   }
@@ -232,20 +153,12 @@
         return item;
       }
 
-      if (typeof item === "bigint") {
-        return item.toString();
-      }
-
-      if (typeof item === "function") {
-        return "[Function]";
-      }
+      if (typeof item === "bigint") return String(item);
+      if (typeof item === "symbol") return String(item);
+      if (typeof item === "function") return "[Function]";
 
       var memory = seen || [];
-
-      if (memory.indexOf(item) !== -1) {
-        return "[Circular]";
-      }
-
+      if (memory.indexOf(item) !== -1) return "[Circular]";
       memory.push(item);
 
       if (Array.isArray(item)) {
@@ -255,15 +168,9 @@
       }
 
       var output = {};
-
-      Object.keys(item)
-        .sort()
-        .forEach(function each(key) {
-          output[key] = prepare(
-            item[key],
-            memory.slice()
-          );
-        });
+      Object.keys(item).sort().forEach(function each(key) {
+        output[key] = prepare(item[key], memory.slice());
+      });
 
       return output;
     }
@@ -275,306 +182,123 @@
     var text = stableStringify(value);
     var result = 0x811c9dc5;
 
-    for (
-      var index = 0;
-      index < text.length;
-      index += 1
-    ) {
+    for (var index = 0; index < text.length; index += 1) {
       result ^= text.charCodeAt(index);
-      result =
-        Math.imul(result, 0x01000193) >>> 0;
+      result = Math.imul(result, 0x01000193) >>> 0;
     }
 
-    return (
-      "fnv1a32-" +
-      ("00000000" + result.toString(16)).slice(-8)
-    );
+    return "fnv1a32-" + ("00000000" + result.toString(16)).slice(-8);
   }
 
   function discoverContractGlobal() {
-    var canonical =
-      root.DGB_ENGINE_CONTRACT || null;
+    var canonical = root.DGB_ENGINE_CONTRACT || null;
+    var compatibility = root.DGBEngineContract || null;
 
-    var compatibility =
-      root.DGBEngineContract || null;
-
-    if (
-      canonical &&
-      compatibility &&
-      canonical !== compatibility
-    ) {
-      return {
-        object: null,
-        status: STATUS.CONFLICT,
-        code: "CONTRACT_GLOBAL_CONFLICT"
-      };
+    if (canonical && compatibility && canonical !== compatibility) {
+      return { object: null, status: STATUS.CONFLICT, code: "CONTRACT_GLOBAL_CONFLICT" };
     }
 
-    var authority =
-      canonical || compatibility || null;
+    var authority = canonical || compatibility || null;
 
     if (!authority) {
-      return {
-        object: null,
-        status: STATUS.HELD,
-        code: "CONTRACT_NOT_LOADED"
-      };
+      return { object: null, status: STATUS.HELD, code: "CONTRACT_NOT_LOADED" };
     }
 
-    if (
-      authority.contract !== GOVERNING_CONTRACT
-    ) {
-      return {
-        object: authority,
-        status: STATUS.CONFLICT,
-        code: "CONTRACT_IDENTITY_MISMATCH"
-      };
+    if (authority.contract !== GOVERNING_CONTRACT) {
+      return { object: authority, status: STATUS.CONFLICT, code: "CONTRACT_IDENTITY_MISMATCH" };
     }
 
-    return {
-      object: authority,
-      status: STATUS.AVAILABLE,
-      code: "CONTRACT_DISCOVERED"
-    };
+    return { object: authority, status: STATUS.AVAILABLE, code: "CONTRACT_DISCOVERED" };
   }
 
   function discoverEngineGlobal() {
-    var canonical =
-      root.DGB_ENGINE || null;
+    var canonical = root.DGB_ENGINE || null;
+    var compatibility = root.DGBEngine || null;
 
-    var compatibility =
-      root.DGBEngine || null;
-
-    if (
-      canonical &&
-      compatibility &&
-      canonical !== compatibility
-    ) {
-      return {
-        object: null,
-        status: STATUS.CONFLICT,
-        code: "ENGINE_GLOBAL_CONFLICT"
-      };
+    if (canonical && compatibility && canonical !== compatibility) {
+      return { object: null, status: STATUS.CONFLICT, code: "ENGINE_GLOBAL_CONFLICT" };
     }
 
-    var engine =
-      canonical || compatibility || null;
+    var engine = canonical || compatibility || null;
 
     if (!engine) {
-      return {
-        object: null,
-        status: STATUS.HELD,
-        code: "ENGINE_NOT_LOADED"
-      };
+      return { object: null, status: STATUS.HELD, code: "ENGINE_NOT_LOADED" };
     }
 
-    if (
-      engine.CONTRACT !== CORE_CONTRACT
-    ) {
-      return {
-        object: engine,
-        status: STATUS.CONFLICT,
-        code: "ENGINE_IDENTITY_MISMATCH"
-      };
+    if (engine.CONTRACT !== CORE_CONTRACT) {
+      return { object: engine, status: STATUS.CONFLICT, code: "ENGINE_IDENTITY_MISMATCH" };
     }
 
-    return {
-      object: engine,
-      status: STATUS.AVAILABLE,
-      code: "ENGINE_DISCOVERED"
-    };
+    return { object: engine, status: STATUS.AVAILABLE, code: "ENGINE_DISCOVERED" };
   }
 
-  function readAuthorityReceipt(authority) {
-    if (
-      !authority ||
-      !isFunction(authority.getAuthorityReceipt)
-    ) {
-      return null;
-    }
-
+  function safeCall(target, methodName, fallback) {
+    if (!target || !isFunction(target[methodName])) return fallback || null;
     try {
-      return frozenClone(
-        authority.getAuthorityReceipt()
-      );
+      return frozenClone(target[methodName]());
     } catch (_error) {
-      return null;
-    }
-  }
-
-  function readAuthorityValidation(authority) {
-    if (
-      !authority ||
-      !isFunction(authority.getAuthorityValidation)
-    ) {
-      return null;
-    }
-
-    try {
-      return frozenClone(
-        authority.getAuthorityValidation()
-      );
-    } catch (_error) {
-      return null;
-    }
-  }
-
-  function readEngineStatus(engine) {
-    if (
-      !engine ||
-      !isFunction(engine.getStatus)
-    ) {
-      return null;
-    }
-
-    try {
-      return frozenClone(engine.getStatus());
-    } catch (_error) {
-      return null;
-    }
-  }
-
-  function readEngineReceipt(engine) {
-    if (!engine) {
-      return null;
-    }
-
-    try {
-      if (isFunction(engine.getRuntimeReceipt)) {
-        return frozenClone(
-          engine.getRuntimeReceipt()
-        );
-      }
-
-      if (isFunction(engine.getReceipt)) {
-        return frozenClone(engine.getReceipt());
-      }
-    } catch (_error) {
-      return null;
-    }
-
-    return null;
-  }
-
-  function readEngineInspection(engine) {
-    if (
-      !engine ||
-      !isFunction(engine.inspect)
-    ) {
-      return null;
-    }
-
-    try {
-      return frozenClone(
-        engine.inspect({
-          includeInstances: true,
-          includeTombstones: false,
-          includeAdapters: true,
-          includeDiagnostics: false
-        })
-      );
-    } catch (_error) {
-      return null;
+      return fallback || null;
     }
   }
 
   function buildAuthorityRecord() {
     var discovery = discoverContractGlobal();
     var authority = discovery.object;
-    var authorityReceipt =
-      readAuthorityReceipt(authority);
-    var authorityValidation =
-      readAuthorityValidation(authority);
 
-    var identityMatched =
-      Boolean(
-        authority &&
-        authority.contract ===
-          GOVERNING_CONTRACT
-      );
+    var authorityReceipt = safeCall(authority, "getAuthorityReceipt", null);
+    var authorityValidation = safeCall(authority, "getAuthorityValidation", null);
 
-    var validationPassed =
-      Boolean(
-        authorityValidation &&
-        authorityValidation.passed === true &&
-        Number(
-          authorityValidation.failCount || 0
-        ) === 0
-      );
+    var identityMatched = Boolean(authority && authority.contract === GOVERNING_CONTRACT);
 
-    var authorityReady =
-      Boolean(
-        authorityReceipt &&
-        authorityReceipt.ready === true &&
-        authorityReceipt.status === "READY"
-      );
+    var validationPassed = Boolean(
+      authorityValidation &&
+      authorityValidation.passed === true &&
+      Number(authorityValidation.failCount || 0) === 0
+    );
+
+    var authorityReady = Boolean(
+      authorityReceipt &&
+      authorityReceipt.ready === true &&
+      authorityReceipt.status === "READY"
+    );
 
     var status = discovery.status;
     var statusReason = discovery.code;
 
-    if (
-      discovery.status === STATUS.AVAILABLE &&
-      (!validationPassed || !authorityReady)
-    ) {
+    if (status === STATUS.AVAILABLE && (!validationPassed || !authorityReady)) {
       status = STATUS.HELD;
-      statusReason =
-        "CONTRACT_AUTHORITY_NOT_READY";
+      statusReason = "CONTRACT_AUTHORITY_NOT_READY";
     }
 
     return deepFreeze({
       schema: AUTHORITY_SCHEMA,
-
-      authorityId:
-        "DGB_INTERACTIVE_RUNTIME_ENGINE_GOVERNING_CONTRACT",
-
-      authorityName:
-        "DGB Interactive Runtime Engine Contract",
-
+      authorityId: AUTHORITY_ID,
+      authorityName: "DGB Interactive Runtime Engine Contract",
       role: ROLE.GOVERNING_CONTRACT,
-
       executableEngine: false,
-
       file: CONTRACT_FILE,
-
       contract: GOVERNING_CONTRACT,
-
       version:
-        authorityReceipt &&
-        authorityReceipt.version
+        authorityReceipt && authorityReceipt.version
           ? authorityReceipt.version
-          : authority &&
-              authority.version
+          : authority && authority.version
             ? authority.version
             : null,
-
       modelSchema: MODEL_SCHEMA,
-
       globals: [
         "DGB_ENGINE_CONTRACT",
         "DGBEngineContract",
         "DGB_ENGINE_CONTRACT_RECEIPT"
       ],
-
       loaded: Boolean(authority),
-
       identityMatched: identityMatched,
-
       validationPassed: validationPassed,
-
       authorityReady: authorityReady,
-
       status: status,
-
       statusReason: statusReason,
-
+      governsEngineIds: [DEFAULT_ENGINE_ID],
       receipt: authorityReceipt,
-
       validation: authorityValidation,
-
-      governsEngineIds: [
-        DEFAULT_ENGINE_ID
-      ],
-
       boundaries: {
         createsRuntimeInstances: false,
         executesRendering: false,
@@ -589,39 +313,44 @@
     });
   }
 
-  function buildPrimaryEngineRecord(
-    authorityRecord
-  ) {
+  function buildPrimaryEngineRecord(authorityRecord) {
     var discovery = discoverEngineGlobal();
     var engine = discovery.object;
-    var engineStatus = readEngineStatus(engine);
+
+    var engineStatus = safeCall(engine, "getStatus", null);
     var runtimeReceipt =
-      readEngineReceipt(engine);
-    var inspection =
-      readEngineInspection(engine);
+      safeCall(engine, "getRuntimeReceipt", null) ||
+      safeCall(engine, "getReceipt", null);
 
-    var identityMatched =
-      Boolean(
-        engine &&
-        engine.CONTRACT === CORE_CONTRACT
-      );
+    var inspection = null;
 
-    var governingContractMatched =
-      Boolean(
-        engineStatus &&
-        engineStatus.authorityMatched === true
-      );
+    if (engine && isFunction(engine.inspect)) {
+      try {
+        inspection = frozenClone(
+          engine.inspect({
+            includeInstances: true,
+            includeTombstones: false,
+            includeAdapters: true,
+            includeDiagnostics: false
+          })
+        );
+      } catch (_error) {
+        inspection = null;
+      }
+    }
+
+    var identityMatched = Boolean(engine && engine.CONTRACT === CORE_CONTRACT);
+
+    var governingContractMatched = Boolean(
+      engineStatus && engineStatus.authorityMatched === true
+    );
 
     var status = discovery.status;
     var statusReason = discovery.code;
 
-    if (
-      discovery.status === STATUS.AVAILABLE &&
-      !governingContractMatched
-    ) {
+    if (status === STATUS.AVAILABLE && !governingContractMatched) {
       status = STATUS.HELD;
-      statusReason =
-        "ENGINE_WAITING_FOR_GOVERNING_AUTHORITY";
+      statusReason = "ENGINE_WAITING_FOR_GOVERNING_AUTHORITY";
     }
 
     if (
@@ -630,165 +359,69 @@
       authorityRecord.authorityReady
     ) {
       status = STATUS.AVAILABLE;
-      statusReason =
-        "ENGINE_AND_AUTHORITY_AVAILABLE";
+      statusReason = "ENGINE_AND_AUTHORITY_AVAILABLE";
     }
 
     return deepFreeze({
       schema: ENGINE_SCHEMA,
-
       slot: 1,
-
       engineId: DEFAULT_ENGINE_ID,
-
-      engineName:
-        "DGB Interactive Runtime Engine Core",
-
+      engineName: "DGB Interactive Runtime Engine Core",
       role: ROLE.RUNTIME_ENGINE,
-
       reserved: false,
-
-      selectable: Boolean(
-        engine &&
-        identityMatched &&
-        governingContractMatched
-      ),
-
+      reservedEvidenceReadable: true,
+      reservedEvidencePresent: true,
+      selectable: Boolean(engine && identityMatched && governingContractMatched),
       defaultEngine: true,
-
       file: CORE_FILE,
-
       contract: CORE_CONTRACT,
-
-      version:
-        engine && engine.VERSION
-          ? engine.VERSION
-          : null,
-
-      globalNames: [
-        "DGB_ENGINE",
-        "DGBEngine",
-        "DGB_ENGINE_RECEIPT"
-      ],
-
-      governingAuthorityId:
-        authorityRecord.authorityId,
-
-      governingContract:
-        GOVERNING_CONTRACT,
-
-      governingContractFile:
-        CONTRACT_FILE,
-
+      version: engine && engine.VERSION ? engine.VERSION : null,
+      globalNames: ["DGB_ENGINE", "DGBEngine", "DGB_ENGINE_RECEIPT"],
+      governingAuthorityId: authorityRecord.authorityId,
+      governingContract: GOVERNING_CONTRACT,
+      governingContractFile: CONTRACT_FILE,
       modelSchema: MODEL_SCHEMA,
-
       loaded: Boolean(engine),
-
       identityMatched: identityMatched,
-
-      governingContractMatched:
-        governingContractMatched,
-
+      governingContractMatched: governingContractMatched,
       quietLoadExpected: true,
-
-      f13InheritedConditionally:
-        Boolean(
-          runtimeReceipt &&
-          runtimeReceipt
-            .f13InheritedConditionally === true
-        ),
-
-      f21Claimed:
-        Boolean(
-          runtimeReceipt &&
-          runtimeReceipt.f21Claimed === true
-        ),
-
+      f13InheritedConditionally: Boolean(
+        runtimeReceipt && runtimeReceipt.f13InheritedConditionally === true
+      ),
+      f21Claimed: Boolean(runtimeReceipt && runtimeReceipt.f21Claimed === true),
       status: status,
-
       statusReason: statusReason,
-
       runtimeStatus: engineStatus,
-
       runtimeReceipt: runtimeReceipt,
-
       inspection: inspection,
-
       observer: {
         requiredSchema: OBSERVATION_SCHEMA,
-
-        attached:
-          Boolean(
-            observerBindings[
-              DEFAULT_ENGINE_ID
-            ]
-          ),
-
-        status:
-          observerBindings[
-            DEFAULT_ENGINE_ID
-          ]
-            ? STATUS.AVAILABLE
-            : STATUS.HELD,
-
-        statusReason:
-          observerBindings[
-            DEFAULT_ENGINE_ID
-          ]
-            ? "OBSERVER_ATTACHED"
-            : "OBSERVER_NOT_ATTACHED"
+        attached: Boolean(observerBindings[DEFAULT_ENGINE_ID]),
+        status: observerBindings[DEFAULT_ENGINE_ID] ? STATUS.AVAILABLE : STATUS.HELD,
+        statusReason: observerBindings[DEFAULT_ENGINE_ID]
+          ? "OBSERVER_ATTACHED"
+          : "OBSERVER_NOT_ATTACHED"
       },
-
       capabilities: {
-        modelAdmission:
-          Boolean(
-            engine &&
-            isFunction(
-              engine.validateModelPackage
-            ) &&
-            isFunction(engine.createInstance)
-          ),
-
-        instanceInspection:
-          Boolean(
-            engine &&
-            isFunction(engine.listInstances) &&
-            isFunction(engine.inspectInstance)
-          ),
-
-        opsInspection:
-          Boolean(
-            engine &&
-            isFunction(engine.getOps)
-          ),
-
-        receiptInspection:
-          Boolean(
-            engine &&
-            isFunction(
-              engine.getInstanceReceipt
-            ) &&
-            (
-              isFunction(
-                engine.getRuntimeReceipt
-              ) ||
-              isFunction(engine.getReceipt)
-            )
-          ),
-
-        adapterRegistration:
-          Boolean(
-            engine &&
-            isFunction(engine.registerAdapter)
-          ),
-
-        observerSafeInspection:
-          Boolean(
-            engine &&
-            isFunction(engine.inspect)
-          )
+        modelAdmission: Boolean(
+          engine &&
+          isFunction(engine.validateModelPackage) &&
+          isFunction(engine.createInstance)
+        ),
+        instanceInspection: Boolean(
+          engine &&
+          isFunction(engine.listInstances) &&
+          isFunction(engine.inspectInstance)
+        ),
+        opsInspection: Boolean(engine && isFunction(engine.getOps)),
+        receiptInspection: Boolean(
+          engine &&
+          isFunction(engine.getInstanceReceipt) &&
+          (isFunction(engine.getRuntimeReceipt) || isFunction(engine.getReceipt))
+        ),
+        adapterRegistration: Boolean(engine && isFunction(engine.registerAdapter)),
+        observerSafeInspection: Boolean(engine && isFunction(engine.inspect))
       },
-
       boundaries: {
         registryCreatesInstances: false,
         registryStartsSchedulers: false,
@@ -803,72 +436,41 @@
   function buildReservedEngineRecord(slot) {
     return deepFreeze({
       schema: ENGINE_SCHEMA,
-
       slot: slot,
-
-      engineId:
-        "DGB_ENGINE_RESERVED_SLOT_" +
-        String(slot).padStart(2, "0"),
-
+      engineId: "DGB_ENGINE_RESERVED_SLOT_" + String(slot).padStart(2, "0"),
       engineName: null,
-
       role: ROLE.RESERVED_ENGINE_SLOT,
-
       reserved: true,
-
+      reservedEvidenceReadable: true,
+      reservedEvidencePresent: true,
       selectable: false,
-
       defaultEngine: false,
-
       file: null,
-
       contract: null,
-
       version: null,
-
       globalNames: [],
-
       governingAuthorityId: null,
-
       governingContract: null,
-
       governingContractFile: null,
-
       modelSchema: null,
-
       loaded: false,
-
       identityMatched: false,
-
       governingContractMatched: false,
-
       quietLoadExpected: true,
-
       f13InheritedConditionally: false,
-
       f21Claimed: false,
-
       status: STATUS.RESERVED,
-
-      statusReason:
-        "RESERVED_SLOT_NO_ENGINE_AUTHORITY_SUPPLIED",
-
+      statusReason: "RESERVED_SLOT_NO_ENGINE_AUTHORITY_SUPPLIED",
       runtimeStatus: null,
-
       runtimeReceipt: null,
-
       inspection: null,
-
       observer: {
         requiredSchema: OBSERVATION_SCHEMA,
         attached: false,
         status: STATUS.UNAVAILABLE,
-        statusReason:
-          "NO_ENGINE_ASSIGNED"
+        statusReason: "NO_ENGINE_ASSIGNED"
       },
-
       capabilities: {},
-
       boundaries: {
         registryCreatesInstances: false,
         registryStartsSchedulers: false,
@@ -892,67 +494,47 @@
       buildReservedEngineRecord(6)
     ];
 
-    var assignedEngines = engines.filter(
-      function filter(engine) {
-        return engine.reserved === false;
-      }
-    );
+    var assignedEngines = engines.filter(function filter(engine) {
+      return engine.reserved === false;
+    });
 
-    var selectableEngines = engines.filter(
-      function filter(engine) {
-        return engine.selectable === true;
-      }
-    );
+    var selectableEngines = engines.filter(function filter(engine) {
+      return engine.selectable === true;
+    });
 
-    var reservedEngines = engines.filter(
-      function filter(engine) {
-        return engine.reserved === true;
-      }
-    );
+    var reservedEngines = engines.filter(function filter(engine) {
+      return engine.reserved === true;
+    });
 
     var core = {
       schema: REGISTRY_SCHEMA,
-
       contract: CONTRACT,
-
       version: VERSION,
-
       file: FILE,
-
       generatedAt: nowIso(),
-
       slotCount: SLOT_COUNT,
-
-      defaultEngineId:
-        DEFAULT_ENGINE_ID,
-
+      defaultEngineId: DEFAULT_ENGINE_ID,
       authorityCount: 1,
-
-      assignedEngineCount:
-        assignedEngines.length,
-
-      selectableEngineCount:
-        selectableEngines.length,
-
-      reservedEngineCount:
-        reservedEngines.length,
-
+      assignedEngineCount: assignedEngines.length,
+      selectableEngineCount: selectableEngines.length,
+      reservedEngineCount: reservedEngines.length,
       authorities: [authority],
-
       engines: engines,
-
+      relationships: [
+        {
+          schema: "DGB_ENGINE_AUTHORITY_RELATIONSHIP_v1",
+          governingAuthorityId: authority.authorityId,
+          governedEngineId: DEFAULT_ENGINE_ID,
+          authorityIsEngine: false,
+          engineIsAuthority: false
+        }
+      ],
       relationship: {
-        governingAuthorityId:
-          authority.authorityId,
-
-        governedEngineId:
-          DEFAULT_ENGINE_ID,
-
+        governingAuthorityId: authority.authorityId,
+        governedEngineId: DEFAULT_ENGINE_ID,
         authorityIsEngine: false,
-
         engineIsAuthority: false
       },
-
       boundaries: {
         metadataOnly: true,
         quietLoad: true,
@@ -967,122 +549,75 @@
     };
 
     core.registryHash = hash(core);
-
     return deepFreeze(core);
   }
 
   var currentSnapshot = buildSnapshot();
 
-  function refresh() {
-    currentSnapshot = buildSnapshot();
-
-    root.DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT =
-      getRegistryReceipt();
-
-    root.__DGB_ENGINE_SUBJECT_REGISTRY_STATUS__ =
-      currentSnapshot.selectableEngineCount > 0
-        ? STATUS.AVAILABLE
-        : STATUS.HELD;
-
-    return getSnapshot();
-  }
-
   function getSnapshot() {
     return frozenClone(currentSnapshot);
   }
 
+  function refresh() {
+    currentSnapshot = buildSnapshot();
+
+    try {
+      root.DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT = getRegistryReceipt();
+      root.__DGB_ENGINE_SUBJECT_REGISTRY_STATUS__ =
+        currentSnapshot.selectableEngineCount > 0 ? STATUS.AVAILABLE : STATUS.HELD;
+    } catch (_error) {}
+
+    return getSnapshot();
+  }
+
   function listAuthorities() {
-    return frozenClone(
-      currentSnapshot.authorities
-    );
+    return frozenClone(currentSnapshot.authorities);
   }
 
   function getAuthority(authorityId) {
-    var normalized =
-      String(authorityId || "").trim();
+    var normalized = String(authorityId || "").trim();
 
-    var authority =
-      currentSnapshot.authorities.find(
-        function find(record) {
-          return (
-            record.authorityId === normalized
-          );
-        }
-      );
+    var authority = currentSnapshot.authorities.find(function find(record) {
+      return record.authorityId === normalized;
+    });
 
-    return authority
-      ? frozenClone(authority)
-      : null;
+    return authority ? frozenClone(authority) : null;
   }
 
   function listEngines(options) {
-    var settings =
-      isObject(options) ? options : {};
-
-    var includeReserved =
-      settings.includeReserved !== false;
-
-    var selectableOnly =
-      settings.selectableOnly === true;
+    var settings = isObject(options) ? options : {};
+    var includeReserved = settings.includeReserved !== false;
+    var selectableOnly = settings.selectableOnly === true;
 
     return frozenClone(
-      currentSnapshot.engines.filter(
-        function filter(engine) {
-          if (
-            !includeReserved &&
-            engine.reserved
-          ) {
-            return false;
-          }
-
-          if (
-            selectableOnly &&
-            !engine.selectable
-          ) {
-            return false;
-          }
-
-          return true;
-        }
-      )
+      currentSnapshot.engines.filter(function filter(engine) {
+        if (!includeReserved && engine.reserved) return false;
+        if (selectableOnly && !engine.selectable) return false;
+        return true;
+      })
     );
   }
 
   function getEngine(engineId) {
-    var normalized =
-      String(engineId || "").trim();
+    var normalized = String(engineId || "").trim();
 
-    var engine =
-      currentSnapshot.engines.find(
-        function find(record) {
-          return (
-            record.engineId === normalized
-          );
-        }
-      );
+    var engine = currentSnapshot.engines.find(function find(record) {
+      return record.engineId === normalized;
+    });
 
-    return engine
-      ? frozenClone(engine)
-      : null;
+    return engine ? frozenClone(engine) : null;
   }
 
   function getEngineBySlot(slot) {
     var numericSlot = Number(slot);
 
-    if (!Number.isInteger(numericSlot)) {
-      return null;
-    }
+    if (!Number.isInteger(numericSlot)) return null;
 
-    var engine =
-      currentSnapshot.engines.find(
-        function find(record) {
-          return record.slot === numericSlot;
-        }
-      );
+    var engine = currentSnapshot.engines.find(function find(record) {
+      return record.slot === numericSlot;
+    });
 
-    return engine
-      ? frozenClone(engine)
-      : null;
+    return engine ? frozenClone(engine) : null;
   }
 
   function getDefaultEngine() {
@@ -1098,30 +633,20 @@
 
   function getReservedSlots() {
     return frozenClone(
-      currentSnapshot.engines.filter(
-        function filter(engine) {
-          return engine.reserved === true;
-        }
-      )
+      currentSnapshot.engines.filter(function filter(engine) {
+        return engine.reserved === true;
+      })
     );
   }
 
   function normalizeObserver(observer) {
-    if (isFunction(observer)) {
-      return {
-        observe: observer
-      };
-    }
+    if (isFunction(observer)) return { observe: observer };
 
-    if (!isObject(observer)) {
-      return null;
-    }
+    if (!isObject(observer)) return null;
 
     if (
       !isFunction(observer.observe) &&
-      !isFunction(
-        observer.getObservationPacket
-      )
+      !isFunction(observer.getObservationPacket)
     ) {
       return null;
     }
@@ -1129,13 +654,9 @@
     return observer;
   }
 
-  function attachObserver(
-    engineId,
-    observer
-  ) {
+  function attachObserver(engineId, observer) {
     var engine = getEngine(engineId);
-    var normalized =
-      normalizeObserver(observer);
+    var normalized = normalizeObserver(observer);
 
     if (!engine) {
       return deepFreeze({
@@ -1162,17 +683,14 @@
       });
     }
 
-    observerBindings[engine.engineId] =
-      normalized;
-
+    observerBindings[engine.engineId] = normalized;
     refresh();
 
     return deepFreeze({
       ok: true,
       code: "OBSERVER_ATTACHED",
       engineId: engine.engineId,
-      observationSchema:
-        OBSERVATION_SCHEMA
+      observationSchema: OBSERVATION_SCHEMA
     });
   }
 
@@ -1188,7 +706,6 @@
     }
 
     delete observerBindings[engine.engineId];
-
     refresh();
 
     return deepFreeze({
@@ -1199,17 +716,10 @@
   }
 
   function hasObserver(engineId) {
-    return Boolean(
-      observerBindings[
-        String(engineId || "").trim()
-      ]
-    );
+    return Boolean(observerBindings[String(engineId || "").trim()]);
   }
 
-  function requestObservation(
-    engineId,
-    request
-  ) {
+  function requestObservation(engineId, request) {
     var engine = getEngine(engineId);
 
     if (!engine) {
@@ -1234,8 +744,7 @@
       );
     }
 
-    var observer =
-      observerBindings[engine.engineId];
+    var observer = observerBindings[engine.engineId];
 
     if (!observer) {
       return Promise.resolve(
@@ -1244,16 +753,14 @@
           status: STATUS.HELD,
           code: "OBSERVER_NOT_ATTACHED",
           engineId: engine.engineId,
-          requiredSchema:
-            OBSERVATION_SCHEMA
+          requiredSchema: OBSERVATION_SCHEMA
         })
       );
     }
 
-    var observe =
-      isFunction(observer.observe)
-        ? observer.observe
-        : observer.getObservationPacket;
+    var observe = isFunction(observer.observe)
+      ? observer.observe
+      : observer.getObservationPacket;
 
     try {
       return Promise.resolve(
@@ -1261,64 +768,45 @@
           observer,
           frozenClone(request || {}),
           getEngine(engine.engineId),
-          getAuthority(
-            engine.governingAuthorityId
-          )
+          getAuthority(engine.governingAuthorityId)
         )
-      )
-        .then(function observationReceived(
-          packet
-        ) {
-          if (!isObject(packet)) {
-            return deepFreeze({
-              ok: false,
-              status: STATUS.ERROR,
-              code:
-                "OBSERVATION_PACKET_INVALID",
-              engineId: engine.engineId
-            });
-          }
-
-          if (
-            packet.schema &&
-            packet.schema !== OBSERVATION_SCHEMA
-          ) {
-            return deepFreeze({
-              ok: false,
-              status: STATUS.CONFLICT,
-              code:
-                "OBSERVATION_SCHEMA_CONFLICT",
-              engineId: engine.engineId,
-              expectedSchema:
-                OBSERVATION_SCHEMA,
-              receivedSchema: packet.schema
-            });
-          }
-
-          return deepFreeze({
-            ok: true,
-            status: STATUS.AVAILABLE,
-            code:
-              "OBSERVATION_PACKET_RECEIVED",
-            engineId: engine.engineId,
-            packet: frozenClone(packet)
-          });
-        })
-        .catch(function observationRejected(
-          error
-        ) {
+      ).then(function observationReceived(packet) {
+        if (!isObject(packet)) {
           return deepFreeze({
             ok: false,
             status: STATUS.ERROR,
-            code: "OBSERVER_PROMISE_REJECTED",
-            engineId: engine.engineId,
-            detail: String(
-              error && error.message
-                ? error.message
-                : error
-            )
+            code: "OBSERVATION_PACKET_INVALID",
+            engineId: engine.engineId
           });
+        }
+
+        if (packet.schema && packet.schema !== OBSERVATION_SCHEMA) {
+          return deepFreeze({
+            ok: false,
+            status: STATUS.CONFLICT,
+            code: "OBSERVATION_SCHEMA_CONFLICT",
+            engineId: engine.engineId,
+            expectedSchema: OBSERVATION_SCHEMA,
+            receivedSchema: packet.schema
+          });
+        }
+
+        return deepFreeze({
+          ok: true,
+          status: STATUS.AVAILABLE,
+          code: "OBSERVATION_PACKET_RECEIVED",
+          engineId: engine.engineId,
+          packet: frozenClone(packet)
         });
+      }).catch(function observationRejected(error) {
+        return deepFreeze({
+          ok: false,
+          status: STATUS.ERROR,
+          code: "OBSERVER_PROMISE_REJECTED",
+          engineId: engine.engineId,
+          detail: String(error && error.message ? error.message : error)
+        });
+      });
     } catch (error) {
       return Promise.resolve(
         deepFreeze({
@@ -1326,241 +814,152 @@
           status: STATUS.ERROR,
           code: "OBSERVER_THROW",
           engineId: engine.engineId,
-          detail: String(
-            error && error.message
-              ? error.message
-              : error
-          )
+          detail: String(error && error.message ? error.message : error)
         })
       );
     }
   }
 
   function getRegistryReceipt() {
-    var authority =
-      currentSnapshot.authorities[0];
-
-    var engine =
-      currentSnapshot.engines[0];
+    var authority = currentSnapshot.authorities[0];
+    var engine = currentSnapshot.engines[0];
 
     return deepFreeze({
       schema: RECEIPT_SCHEMA,
-
       contract: CONTRACT,
-
       version: VERSION,
-
       file: FILE,
-
       generatedAt: nowIso(),
-
-      registryHash:
-        currentSnapshot.registryHash,
-
+      registryHash: currentSnapshot.registryHash,
       slotCount: SLOT_COUNT,
-
-      authorityCount:
-        currentSnapshot.authorityCount,
-
-      assignedEngineCount:
-        currentSnapshot.assignedEngineCount,
-
-      selectableEngineCount:
-        currentSnapshot.selectableEngineCount,
-
-      reservedEngineCount:
-        currentSnapshot.reservedEngineCount,
-
-      defaultEngineId:
-        DEFAULT_ENGINE_ID,
-
+      authorityCount: currentSnapshot.authorityCount,
+      engineCount: currentSnapshot.assignedEngineCount,
+      assignedEngineCount: currentSnapshot.assignedEngineCount,
+      selectableEngineCount: currentSnapshot.selectableEngineCount,
+      reservedEngineCount: currentSnapshot.reservedEngineCount,
+      defaultEngineId: DEFAULT_ENGINE_ID,
+      relationships: frozenClone(currentSnapshot.relationships),
       governingContract: {
-        authorityId:
-          authority.authorityId,
-
-        loaded:
-          authority.loaded,
-
-        identityMatched:
-          authority.identityMatched,
-
-        validationPassed:
-          authority.validationPassed,
-
-        authorityReady:
-          authority.authorityReady,
-
-        status:
-          authority.status
+        authorityId: authority.authorityId,
+        loaded: authority.loaded,
+        identityMatched: authority.identityMatched,
+        validationPassed: authority.validationPassed,
+        authorityReady: authority.authorityReady,
+        status: authority.status
       },
-
       coreEngine: {
         engineId: engine.engineId,
-
         loaded: engine.loaded,
-
-        identityMatched:
-          engine.identityMatched,
-
-        governingContractMatched:
-          engine.governingContractMatched,
-
-        selectable:
-          engine.selectable,
-
-        status:
-          engine.status,
-
-        f13InheritedConditionally:
-          engine.f13InheritedConditionally,
-
-        f21Claimed:
-          engine.f21Claimed
+        identityMatched: engine.identityMatched,
+        governingContractMatched: engine.governingContractMatched,
+        selectable: engine.selectable,
+        status: engine.status,
+        f13InheritedConditionally: engine.f13InheritedConditionally,
+        f21Claimed: engine.f21Claimed
       },
-
       quietLoad: {
         registryCreatedInstances: false,
         registryRegisteredAdapters: false,
         registryStartedSchedulers: false,
-        registryAttachedObservers:
-          Object.keys(observerBindings).length > 0
+        registryAttachedObservers: Object.keys(observerBindings).length > 0
       },
+      boundaries: currentSnapshot.boundaries
+    });
+  }
 
-      boundaries:
-        currentSnapshot.boundaries
+  function getStatus() {
+    return deepFreeze({
+      contract: CONTRACT,
+      version: VERSION,
+      file: FILE,
+      schema: REGISTRY_SCHEMA,
+      loaded: true,
+      slotCount: SLOT_COUNT,
+      authorityCount: currentSnapshot.authorityCount,
+      assignedEngineCount: currentSnapshot.assignedEngineCount,
+      selectableEngineCount: currentSnapshot.selectableEngineCount,
+      reservedEngineCount: currentSnapshot.reservedEngineCount,
+      status: currentSnapshot.selectableEngineCount > 0 ? STATUS.AVAILABLE : STATUS.HELD,
+      quietLoad: true,
+      registryCreatesInstances: false,
+      registryRegistersAdapters: false,
+      registryStartsSchedulers: false,
+      registryClaimsReadiness: false,
+      registryClaimsF21: false
     });
   }
 
   var API = deepFreeze({
     CONTRACT: CONTRACT,
-
     VERSION: VERSION,
-
     FILE: FILE,
-
     SCHEMA: REGISTRY_SCHEMA,
-
     AUTHORITY_SCHEMA: AUTHORITY_SCHEMA,
-
     ENGINE_SCHEMA: ENGINE_SCHEMA,
-
     RECEIPT_SCHEMA: RECEIPT_SCHEMA,
-
-    OBSERVATION_SCHEMA:
-      OBSERVATION_SCHEMA,
-
+    OBSERVATION_SCHEMA: OBSERVATION_SCHEMA,
     SLOT_COUNT: SLOT_COUNT,
-
-    DEFAULT_ENGINE_ID:
-      DEFAULT_ENGINE_ID,
-
+    DEFAULT_ENGINE_ID: DEFAULT_ENGINE_ID,
     STATUS: STATUS,
-
     ROLE: ROLE,
 
     refresh: refresh,
-
     getSnapshot: getSnapshot,
-
-    getRegistryReceipt:
-      getRegistryReceipt,
+    getRegistryReceipt: getRegistryReceipt,
+    getStatus: getStatus,
 
     listAuthorities: listAuthorities,
-
     getAuthority: getAuthority,
 
     listEngines: listEngines,
-
     getEngine: getEngine,
-
     getEngineBySlot: getEngineBySlot,
-
     getDefaultEngine: getDefaultEngine,
-
-    getSelectableEngines:
-      getSelectableEngines,
-
+    getSelectableEngines: getSelectableEngines,
     getReservedSlots: getReservedSlots,
 
     attachObserver: attachObserver,
-
     detachObserver: detachObserver,
-
     hasObserver: hasObserver,
-
-    requestObservation:
-      requestObservation
+    requestObservation: requestObservation
   });
 
-  var existing =
-    root.DGB_ENGINE_SUBJECT_REGISTRY;
+  var existing = root.DGB_ENGINE_SUBJECT_REGISTRY;
 
-  if (
-    existing &&
-    existing.CONTRACT &&
-    existing.CONTRACT !== CONTRACT
-  ) {
+  if (existing && existing.CONTRACT && existing.CONTRACT !== CONTRACT) {
     root.__DGB_ENGINE_SUBJECT_REGISTRY_CONFLICT__ =
       deepFreeze({
-        schema:
-          "DGB_ENGINE_SUBJECT_REGISTRY_INSTALLATION_CONFLICT_v1",
-
+        schema: "DGB_ENGINE_SUBJECT_REGISTRY_INSTALLATION_CONFLICT_v1",
         expectedContract: CONTRACT,
-
-        existingContract:
-          existing.CONTRACT,
-
+        existingContract: existing.CONTRACT,
         file: FILE,
-
         replacementPerformed: false,
-
         generatedAt: nowIso()
       });
 
     return;
   }
 
-  if (
-    existing &&
-    existing.CONTRACT === CONTRACT
-  ) {
-    root.DGBEngineSubjectRegistry =
-      existing;
+  if (existing && existing.CONTRACT === CONTRACT) {
+    root.DGBEngineSubjectRegistry = existing;
 
-    if (
-      typeof module !== "undefined" &&
-      module.exports
-    ) {
+    if (typeof module !== "undefined" && module.exports) {
       module.exports = existing;
     }
 
     return;
   }
 
-  root.DGB_ENGINE_SUBJECT_REGISTRY =
-    API;
+  root.DGB_ENGINE_SUBJECT_REGISTRY = API;
+  root.DGBEngineSubjectRegistry = API;
+  root.DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT = getRegistryReceipt();
 
-  root.DGBEngineSubjectRegistry =
-    API;
-
-  root.DGB_ENGINE_SUBJECT_REGISTRY_RECEIPT =
-    getRegistryReceipt();
-
-  root.__DGB_ENGINE_SUBJECT_REGISTRY_LOADED__ =
-    true;
-
-  root.__DGB_ENGINE_SUBJECT_REGISTRY_VERSION__ =
-    VERSION;
-
+  root.__DGB_ENGINE_SUBJECT_REGISTRY_LOADED__ = true;
+  root.__DGB_ENGINE_SUBJECT_REGISTRY_VERSION__ = VERSION;
   root.__DGB_ENGINE_SUBJECT_REGISTRY_STATUS__ =
-    currentSnapshot.selectableEngineCount > 0
-      ? STATUS.AVAILABLE
-      : STATUS.HELD;
+    currentSnapshot.selectableEngineCount > 0 ? STATUS.AVAILABLE : STATUS.HELD;
 
-  if (
-    typeof module !== "undefined" &&
-    module.exports
-  ) {
+  if (typeof module !== "undefined" && module.exports) {
     module.exports = API;
   }
 })(

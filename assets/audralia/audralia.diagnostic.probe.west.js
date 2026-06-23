@@ -1,17 +1,22 @@
 // /assets/audralia/audralia.diagnostic.probe.west.js
-// AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v3
+// AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v4
 // Full-file replacement.
 // Quiet-load, dependency-free, 3D-native West runtime evidence probe.
 // Diagnostic-only. Read-only. No mutation. No repair. No readiness claim.
+// Renews F13 v3 to canonical station receipt identity:
+// position, cyclePosition, stationId, role, fibonacci, status, completed,
+// handoffEligible, summary, recommendedOwner, recommendedFile,
+// recommendedAction, noClaims.
 
-(function audraliaDiagnosticProbeWestRuntimeF133DV3(global) {
+(function audraliaDiagnosticProbeWestRuntimeF133DV4(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v3";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v2";
-  var VERSION = "3.0.0";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v4";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v3";
+  var LEGACY_CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_WEST_RUNTIME_F13_3D_TNT_v2";
+  var VERSION = "4.0.0";
   var FILE = "/assets/audralia/audralia.diagnostic.probe.west.js";
 
   var STATION_ID = "WEST_PROBE_RUNTIME";
@@ -21,13 +26,15 @@
 
   var REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v1";
   var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
-  var API_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_API_v1";
-  var REGISTRATION_RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v1";
+  var API_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_API_v2";
+  var REGISTRATION_RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_REGISTRATION_RECEIPT_v2";
 
   var REQUIRED_PREDECESSOR = "CANVAS_SURFACE_TRUTH";
-  var CURRENT_F8_CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v4";
+  var CURRENT_F8_CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_CANVAS_SURFACE_TRUTH_F8_3D_TNT_v5";
+  var CURRENT_F8_FILE = "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js";
   var PUBLIC_RUNTIME_FILE = "/showroom/globe/audralia/index.js";
   var DIAGNOSTIC_ENGINE_FILE = "/showroom/globe/audralia/diagnostic/index.js";
+  var NEXT_STATION_FILE = "/assets/audralia/audralia.diagnostic.west.js";
 
   var NO_CLAIMS = Object.freeze({
     engineAuthority: false,
@@ -54,7 +61,9 @@
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webGPU: false
+    webGPU: false,
+    f21Claimed: false,
+    directionOnly: true
   });
 
   var RUNTIME_FIELDS = Object.freeze([
@@ -82,7 +91,7 @@
   ]);
 
   function nowISO() {
-    try { return new Date().toISOString(); } catch (_) { return null; }
+    try { return new Date().toISOString(); } catch (_error) { return null; }
   }
 
   function isObject(value) {
@@ -90,7 +99,7 @@
   }
 
   function clone(value) {
-    try { return JSON.parse(JSON.stringify(value)); } catch (_) { return null; }
+    try { return JSON.parse(JSON.stringify(value)); } catch (_error) { return null; }
   }
 
   function stableStringify(value) {
@@ -118,10 +127,15 @@
     return "fnv1a32:" + ("00000000" + h.toString(16)).slice(-8);
   }
 
-  function deepFreeze(value) {
+  function deepFreeze(value, seen) {
+    var memory = seen || [];
     if (!value || typeof value !== "object") return value;
-    Object.keys(value).forEach(function each(key) { deepFreeze(value[key]); });
-    try { Object.freeze(value); } catch (_) {}
+    if (memory.indexOf(value) !== -1) return value;
+    memory.push(value);
+    try {
+      Object.keys(value).forEach(function each(key) { deepFreeze(value[key], memory); });
+      Object.freeze(value);
+    } catch (_error) {}
     return value;
   }
 
@@ -129,13 +143,13 @@
     return {
       code: String(code || "ISSUE"),
       path: String(path || "$"),
-      detail: String(detail || code || "ISSUE")
+      detail: String(detail || code || "ISSUE").slice(0, 512)
     };
   }
 
   function observation(id, kind, payload) {
     var out = { id: id, kind: kind };
-    Object.keys(payload || {}).forEach(function each(key) { out[key] = payload[key]; });
+    Object.keys(payload || {}).forEach(function each(key) { out[key] = clone(payload[key]); });
     return out;
   }
 
@@ -184,11 +198,7 @@
     var binding = findObservation(receipt, "CANVAS_SURFACE_TARGET_BINDING");
 
     var pass = Boolean(receipt && receipt.status === "PASS" && receipt.handoffEligible === true);
-    var admitted = Boolean(
-      pass &&
-      classification &&
-      classification.surfaceTruthAdmitted === true
-    );
+    var admitted = Boolean(pass && classification && classification.surfaceTruthAdmitted === true);
 
     return {
       receiptObserved: Boolean(receipt),
@@ -271,18 +281,11 @@
       return "WEST_RUNTIME_PASS_SURFACE_ADMITTED_RUNTIME_DETAILS_UNAVAILABLE";
     }
 
-    if (
-      ledger.contextLost &&
-      ledger.contextLost.value === true
-    ) {
+    if (ledger.contextLost && ledger.contextLost.value === true) {
       return "WEST_RUNTIME_PASS_CONTEXT_LOSS_OBSERVED_FOR_F21_INTERPRETATION";
     }
 
-    if (
-      ledger.errorCount &&
-      typeof ledger.errorCount.value === "number" &&
-      ledger.errorCount.value > 0
-    ) {
+    if (ledger.errorCount && typeof ledger.errorCount.value === "number" && ledger.errorCount.value > 0) {
       return "WEST_RUNTIME_PASS_RUNTIME_ERRORS_OBSERVED_FOR_F21_INTERPRETATION";
     }
 
@@ -290,35 +293,56 @@
   }
 
   function createReceipt(status, completed, handoffEligible, summary, packet, observations, evidence, issues, owner, runtime) {
+    var finalOwner = owner || {
+      ownerType: "DIAGNOSTIC_PROBE",
+      subjectId: STATION_ID,
+      contract: CONTRACT,
+      file: FILE,
+      component: "WEST_RUNTIME_EVIDENCE_PROBE",
+      directionOnly: true,
+      provenCulprit: false
+    };
+
+    var recommendedFile = finalOwner.file || (status === "PASS" ? NEXT_STATION_FILE : CURRENT_F8_FILE);
+    var recommendedAction = status === "PASS"
+      ? "HANDOFF_TO_F21_RUNTIME_INTERPRETATION"
+      : "RESOLVE_F8_SURFACE_TRUTH_HANDOFF_BEFORE_F13";
+
     var receipt = {
       schema: RECEIPT_SCHEMA,
       cycleId: packet && packet.cycleId ? packet.cycleId : null,
+
       position: CYCLE_POSITION,
+      cyclePosition: CYCLE_POSITION,
       stationId: STATION_ID,
+      role: STATION_ID,
       fibonacci: FIBONACCI,
       news: NEWS,
+
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
       file: FILE,
+
       status: status,
       completed: completed === true,
       handoffEligible: handoffEligible === true,
       summary: summary,
+
       observations: observations || [],
       evidence: evidence || [],
       issues: issues || [],
       runtimeProbePacket: runtime || null,
+
       firstHeldCoordinate: status === "HOLD" ? "F13:WEST_PROBE_RUNTIME" : null,
       firstFailedCoordinate: status === "FAIL" ? "F13:WEST_PROBE_RUNTIME" : null,
       firstConflictCoordinate: status === "CONFLICT" ? "F13:WEST_PROBE_RUNTIME" : null,
-      recommendedOwner: owner || {
-        ownerType: "DIAGNOSTIC_PROBE",
-        subjectId: STATION_ID,
-        contract: CONTRACT,
-        file: FILE,
-        component: "WEST_RUNTIME_EVIDENCE_PROBE"
-      },
+
+      recommendedOwner: finalOwner,
+      recommendedFile: recommendedFile,
+      recommendedAction: recommendedAction,
+
       generatedAt: nowISO(),
       noClaims: clone(NO_CLAIMS),
       receiptHash: null
@@ -367,7 +391,9 @@
         admissionRecognized: surface.admissionRecognized,
         admissionClass: surface.admissionClass,
         receiptHash: surface.receiptHash,
-        receiptContract: surface.receiptContract
+        receiptContract: surface.receiptContract,
+        expectedF8Contract: CURRENT_F8_CONTRACT,
+        f8ContractCurrent: surface.receiptContract === CURRENT_F8_CONTRACT
       }),
       observation("WEST_RUNTIME_EVIDENCE_SOURCE", "DERIVED", {
         source: runtimeEvidence.source,
@@ -383,12 +409,14 @@
         westPassMeansEvidenceTransportOnly: true,
         runtimeHealthClaimed: false,
         readinessClaimed: false,
-        nextStationEligible: !hold
+        nextStationEligible: !hold,
+        runtimeEvidenceAdmitted: !hold,
+        runtimeEvidenceTransported: true
       })
     ];
 
     var runtimePacket = {
-      schema: "AUDRALIA_DIAGNOSTIC_RUNTIME_EVIDENCE_PACKET_F13_v1",
+      schema: "AUDRALIA_DIAGNOSTIC_RUNTIME_EVIDENCE_PACKET_F13_v2",
       contract: CONTRACT,
       source: runtimeEvidence.source,
       classification: classification,
@@ -397,6 +425,9 @@
       fieldLedger: clone(ledger),
       publicRuntimeFile: PUBLIC_RUNTIME_FILE,
       diagnosticEngineFile: DIAGNOSTIC_ENGINE_FILE,
+      nextStationFile: NEXT_STATION_FILE,
+      runtimeEvidenceAdmitted: !hold,
+      nextStationEligible: !hold,
       generatedAt: nowISO(),
       packetHash: null,
       noClaims: clone(NO_CLAIMS)
@@ -417,7 +448,7 @@
           ownerType: "DIAGNOSTIC_SURFACE_HANDOFF",
           subjectId: REQUIRED_PREDECESSOR,
           contract: CURRENT_F8_CONTRACT,
-          file: surface.receiptFile || "/assets/audralia/audralia.diagnostic.probe.canvas.surface.truth.js",
+          file: surface.receiptFile || CURRENT_F8_FILE,
           component: "F8_TO_F13_HANDOFF",
           directionOnly: true,
           provenCulprit: false
@@ -426,7 +457,7 @@
           ownerType: "DIAGNOSTIC_INTERPRETATION_NEXT_STATION",
           subjectId: "WEST_RUNTIME_INTERPRETATION",
           contract: null,
-          file: "/assets/audralia/audralia.diagnostic.west.js",
+          file: NEXT_STATION_FILE,
           component: "F21_RUNTIME_INTERPRETATION",
           directionOnly: true,
           provenCulprit: false
@@ -451,10 +482,12 @@
       schema: REGISTRATION_RECEIPT_SCHEMA,
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
+      position: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       news: NEWS,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
       file: FILE,
       globalPath: "AUDRALIA_DIAGNOSTIC_PROBE_WEST",
@@ -462,6 +495,23 @@
       conductorCompatible: true,
       requiresPredecessor: REQUIRED_PREDECESSOR,
       currentF8Contract: CURRENT_F8_CONTRACT,
+      currentF8File: CURRENT_F8_FILE,
+      canonicalReceiptIdentityComplete: true,
+      requiredReceiptFields: [
+        "position",
+        "cyclePosition",
+        "stationId",
+        "role",
+        "fibonacci",
+        "status",
+        "completed",
+        "handoffEligible",
+        "summary",
+        "recommendedOwner",
+        "recommendedFile",
+        "recommendedAction",
+        "noClaims"
+      ],
       probePassMeansEvidenceTransportOnly: true,
       interpretationDeferredToF21: true,
       noClaims: clone(NO_CLAIMS),
@@ -471,6 +521,7 @@
         version: VERSION,
         file: FILE,
         stationId: STATION_ID,
+        cyclePosition: CYCLE_POSITION,
         fields: RUNTIME_FIELDS
       })
     });
@@ -484,6 +535,7 @@
     NEWS: NEWS,
     CONTRACT: CONTRACT,
     PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+    LEGACY_CONTRACT: LEGACY_CONTRACT,
     VERSION: VERSION,
     FILE: FILE,
 
@@ -492,6 +544,7 @@
     fibonacci: FIBONACCI,
     contract: CONTRACT,
     previousContract: PREVIOUS_CONTRACT,
+    legacyContract: LEGACY_CONTRACT,
     version: VERSION,
     file: FILE,
     role: STATION_ID,

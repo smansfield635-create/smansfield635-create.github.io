@@ -1,25 +1,29 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10
-// Full-file replacement. Controls own UI binding. Diagnostic index.js owns report/direct/cycle production.
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11
+// Full-file replacement.
+// Controls own UI binding, target preparation, target lifecycle, and user-facing rendering.
+// Diagnostic index.js owns report/direct/cycle production.
+// Renews v10 with bounded active target-frame preparation before Nine-Cycle gate.
+// No production mutation. No readiness claim. No visual-pass claim. No cycle-pass claim.
 
-(function installAudraliaDistributedDiagnosticControlsV10(global) {
+(function installAudraliaDistributedDiagnosticControlsV11(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root && root.document ? root.document : null;
   if (!doc) return;
 
-  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v9";
-  var VERSION = "10.0.0";
+  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v11";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v10";
+  var VERSION = "11.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
 
-  var DIAGNOSTIC_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v4";
+  var DIAGNOSTIC_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5";
   var DGB_ENGINE_CONTRACT = "DGB_INTERACTIVE_RUNTIME_ENGINE_CORE_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
   var INSPECTION_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2";
 
-  var CONTROL_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v10";
-  var CONTROL_REQUIREMENTS_SCHEMA = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v6";
+  var CONTROL_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v11";
+  var CONTROL_REQUIREMENTS_SCHEMA = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v7";
   var FALLBACK_REPORT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v7";
   var FALLBACK_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v7";
 
@@ -27,6 +31,8 @@
   var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
   var MAX_PRESENTATION_JSON_CHARS = 18000;
   var TARGET_READY_RECHECK_DELAY_MS = 180;
+  var TARGET_LOAD_TIMEOUT_MS = 2400;
+  var TARGET_PREPARE_SETTLE_DELAY_MS = 80;
 
   var DIAGNOSTIC_ENGINE_PATHS = Object.freeze([
     "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
@@ -295,7 +301,10 @@
       firstObservedHref: null,
       lifecycleClass: "TARGET_UNBOUND",
       lastInspectedAt: null,
-      preparationReceipt: null
+      preparationReceipt: null,
+      preparationAttemptCount: 0,
+      lastPreparationMode: null,
+      lastPreparationOutcome: null
     };
   }
 
@@ -314,6 +323,7 @@
     dgbCoreRole: "EVIDENCE_RUNTIME_REGISTRY_ONLY",
     targetPreparationOwner: "INDEX_CONTROLS",
     targetLifecycleRequiredBeforeCycle: true,
+    boundedActiveTargetPreparationBeforeCycle: true,
     directCheckParticipantRequired: true,
     noClaims: NO_CLAIMS
   });
@@ -360,6 +370,31 @@
     lastAction: null,
     lastError: null
   };
+
+  function compactTargetLifecycle(target) {
+    var t = target || state.target || emptyTarget();
+    var observed = t.observedRoute || t.declaredSrc || null;
+
+    return {
+      loaded: Boolean(t.documentLoaded),
+      routeExpected: t.expectedRoute || TARGET_ROUTE,
+      routeObserved: t.observedRoute || null,
+      routeMatched: Boolean(t.routeMatched),
+      firstObservedHref: t.firstObservedHref || observed,
+      lifecycleClass: t.lifecycleClass || "TARGET_UNKNOWN",
+      documentReadyState: t.documentReadyState || null,
+      navigationPending: Boolean(t.navigationPending),
+      loadCount: Number(t.loadCount || 0),
+      preparationAttemptCount: Number(t.preparationAttemptCount || 0),
+      lastPreparationMode: t.lastPreparationMode || null,
+      lastPreparationOutcome: t.lastPreparationOutcome || null,
+      recommendedOwner: "CONTROL_PANEL",
+      recommendedFile: "index.controls.js",
+      recommendedAction: t.routeMatched && t.documentLoaded
+        ? "Proceed with diagnostic execution."
+        : "Prepare and observe target frame until loaded and route-matched before cycle execution."
+    };
+  }
 
   function publishReceipt() {
     root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT = deepFreeze({
@@ -546,28 +581,6 @@
     return frozenClone(state.inspectionLane);
   }
 
-  function compactTargetLifecycle(target) {
-    var t = target || state.target || emptyTarget();
-    var observed = t.observedRoute || t.declaredSrc || null;
-
-    return {
-      loaded: Boolean(t.documentLoaded),
-      routeExpected: t.expectedRoute || TARGET_ROUTE,
-      routeObserved: t.observedRoute || null,
-      routeMatched: Boolean(t.routeMatched),
-      firstObservedHref: t.firstObservedHref || observed,
-      lifecycleClass: t.lifecycleClass || "TARGET_UNKNOWN",
-      documentReadyState: t.documentReadyState || null,
-      navigationPending: Boolean(t.navigationPending),
-      loadCount: Number(t.loadCount || 0),
-      recommendedOwner: "CONTROL_PANEL",
-      recommendedFile: "index.controls.js",
-      recommendedAction: t.routeMatched && t.documentLoaded
-        ? "Proceed with diagnostic execution."
-        : "Delay diagnostic execution until target frame is loaded and route-matched."
-    };
-  }
-
   function inspectTargetFrame(options) {
     var settings = options || {};
     var frame = byId(TARGET_FRAME_ID);
@@ -632,9 +645,10 @@
     }
 
     state.target.preparationReceipt = deepFreeze({
-      schema: "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v5",
+      schema: "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v6",
       receiptId: "AUDRALIA_TARGET_PREPARATION_RECEIPT_" + Date.now(),
       controlsContract: CONTRACT,
+      previousControlsContract: PREVIOUS_CONTRACT,
       targetLifecycle: state.target.lifecycleClass,
       loaded: Boolean(state.target.documentLoaded),
       routeExpected: state.target.expectedRoute,
@@ -650,17 +664,148 @@
       observedRoute: state.target.observedRoute,
       observedRouteNormalized: state.target.observedRouteNormalized,
       navigationPending: state.target.navigationPending,
+      loadCount: state.target.loadCount,
+      preparationAttemptCount: state.target.preparationAttemptCount,
+      lastPreparationMode: state.target.lastPreparationMode,
+      lastPreparationOutcome: state.target.lastPreparationOutcome,
       recommendedOwner: "CONTROL_PANEL",
       recommendedFile: "index.controls.js",
       recommendedAction: state.target.routeMatched && state.target.documentLoaded
         ? "Proceed with diagnostic execution."
-        : "Delay diagnostic execution until target frame is loaded and route-matched.",
+        : "Prepare and observe target frame until loaded and route-matched before cycle execution.",
       noClaims: NO_CLAIMS,
       generatedAt: nowIso()
     });
 
     publishReceipt();
     return frozenClone(state.target);
+  }
+
+  function prepareTargetContainer() {
+    var targetWindow = byId("targetWindow");
+    if (targetWindow) {
+      targetWindow.hidden = false;
+      state.ui.targetVisible = true;
+      var button = byId("toggleObservationTarget");
+      if (button) button.setAttribute("aria-expanded", "true");
+    }
+    return Boolean(targetWindow);
+  }
+
+  function frameNeedsPreparation(frame, snapshot) {
+    var src = frame ? frame.getAttribute("src") : null;
+    var srcNormalized = normalizeRoutePath(src);
+    var snap = snapshot || state.target;
+    return Boolean(
+      !frame ||
+      !src ||
+      srcNormalized !== normalizeRoutePath(TARGET_ROUTE) ||
+      frame.getAttribute("loading") === "lazy" ||
+      snap.observedRouteNormalized === "/blank/" ||
+      snap.observedBlankWithDeclaredTarget ||
+      !snap.routeMatched
+    );
+  }
+
+  function waitForTargetLoadOrTimeout(frame, timeoutMs) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var timer = null;
+
+      function finish(mode) {
+        if (done) return;
+        done = true;
+        try { frame.removeEventListener("load", onLoad); } catch (_e) {}
+        if (timer) root.clearTimeout(timer);
+        resolve(mode);
+      }
+
+      function onLoad() {
+        state.target.navigationPending = false;
+        state.target.loadCount += 1;
+        finish("LOAD_EVENT");
+      }
+
+      if (!frame) {
+        resolve("FRAME_MISSING");
+        return;
+      }
+
+      try { frame.addEventListener("load", onLoad, { once: true }); }
+      catch (_e1) { frame.addEventListener("load", onLoad); }
+
+      timer = root.setTimeout(function () {
+        finish("TIMEOUT");
+      }, timeoutMs || TARGET_LOAD_TIMEOUT_MS);
+    });
+  }
+
+  function activelyPrepareTargetFrame(reason) {
+    var frame = byId(TARGET_FRAME_ID);
+    var before = inspectTargetFrame({ source: "activelyPrepareTargetFrame.before", reason: reason || null });
+    var needsPreparation = frameNeedsPreparation(frame, before);
+    var assigned = false;
+
+    prepareTargetContainer();
+
+    if (!frame) {
+      state.target.lastPreparationMode = "FRAME_MISSING";
+      state.target.lastPreparationOutcome = "TARGET_FRAME_MISSING";
+      publishReceipt();
+      return Promise.resolve({
+        prepared: false,
+        framePresent: false,
+        loadWaitMode: "FRAME_MISSING",
+        target: inspectTargetFrame({ source: "activelyPrepareTargetFrame.frameMissing" })
+      });
+    }
+
+    state.target.preparationAttemptCount += 1;
+    state.target.lastPreparationMode = needsPreparation ? "ACTIVE_PREPARE" : "OBSERVE_ONLY";
+    state.target.lastPreparationOutcome = "PENDING";
+    state.target.navigationPending = true;
+
+    try { frame.removeAttribute("loading"); } catch (_e0) {}
+    try { frame.loading = "eager"; } catch (_e1) {}
+
+    if (needsPreparation) {
+      try {
+        frame.setAttribute("src", TARGET_ROUTE);
+        assigned = true;
+      } catch (_e2) {
+        try {
+          frame.src = TARGET_ROUTE;
+          assigned = true;
+        } catch (_e3) {}
+      }
+    }
+
+    return delay(TARGET_PREPARE_SETTLE_DELAY_MS)
+      .then(function () {
+        return waitForTargetLoadOrTimeout(frame, TARGET_LOAD_TIMEOUT_MS);
+      })
+      .then(function (mode) {
+        var after = inspectTargetFrame({ source: "activelyPrepareTargetFrame.after", loadWaitMode: mode });
+        var compact = compactTargetLifecycle(after);
+
+        state.target.navigationPending = false;
+        state.target.lastPreparationOutcome = compact.loaded && compact.routeMatched
+          ? "TARGET_READY"
+          : mode === "TIMEOUT"
+            ? "TARGET_LOAD_TIMEOUT"
+            : "TARGET_NOT_READY";
+
+        inspectTargetFrame({ source: "activelyPrepareTargetFrame.final", loadWaitMode: mode });
+
+        return {
+          prepared: true,
+          assignedSrc: assigned,
+          framePresent: true,
+          loadWaitMode: mode,
+          target: frozenClone(state.target),
+          targetLifecycle: compactTargetLifecycle(state.target)
+        };
+      });
   }
 
   function ensureTargetReady() {
@@ -672,23 +817,43 @@
         ready: true,
         pending: false,
         attemptCount: 1,
+        preparationAttempted: false,
         target: first,
         targetLifecycle: firstCompact
       });
     }
 
-    return delay(TARGET_READY_RECHECK_DELAY_MS).then(function () {
-      var second = inspectTargetFrame({ source: "ensureTargetReady.second" });
-      var secondCompact = compactTargetLifecycle(second);
+    return activelyPrepareTargetFrame("NINE_CYCLE_GATE")
+      .then(function (prepared) {
+        var preparedCompact = compactTargetLifecycle(prepared.target || state.target);
 
-      return {
-        ready: secondCompact.loaded === true && secondCompact.routeMatched === true,
-        pending: second.lifecycleClass === "TARGET_LOADING" || second.lifecycleClass === "TARGET_NAVIGATION_PENDING",
-        attemptCount: 2,
-        target: second,
-        targetLifecycle: secondCompact
-      };
-    });
+        if (preparedCompact.loaded === true && preparedCompact.routeMatched === true) {
+          return {
+            ready: true,
+            pending: false,
+            attemptCount: 2,
+            preparationAttempted: true,
+            preparation: frozenClone(prepared),
+            target: frozenClone(state.target),
+            targetLifecycle: compactTargetLifecycle(state.target)
+          };
+        }
+
+        return delay(TARGET_READY_RECHECK_DELAY_MS).then(function () {
+          var finalTarget = inspectTargetFrame({ source: "ensureTargetReady.final" });
+          var finalCompact = compactTargetLifecycle(finalTarget);
+
+          return {
+            ready: finalCompact.loaded === true && finalCompact.routeMatched === true,
+            pending: finalTarget.lifecycleClass === "TARGET_LOADING" || finalTarget.lifecycleClass === "TARGET_NAVIGATION_PENDING",
+            attemptCount: 3,
+            preparationAttempted: true,
+            preparation: frozenClone(prepared),
+            target: finalTarget,
+            targetLifecycle: finalCompact
+          };
+        });
+      });
   }
 
   function createFallbackReport(context) {
@@ -976,7 +1141,7 @@
       targetReadinessAttemptCount: attemptCount || 1,
       recommendedOwner: "CONTROL_PANEL",
       recommendedFile: "index.controls.js",
-      recommendedAction: "Do not invoke F8 until controls observe target loaded and route-matched.",
+      recommendedAction: "Controls attempted bounded active target preparation before holding cycle. Inspect target lifecycle and iframe load eligibility.",
       noClaims: NO_CLAIMS,
       createdAt: nowIso()
     };
@@ -1033,7 +1198,7 @@
     });
 
     return {
-      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v10",
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v11",
       engineCycleStatus: token(receipt && receipt.status || "UNKNOWN"),
       engineCycleTerminalClass: receipt && receipt.terminalClass || null,
       stationReceipts: frozenClone(returned),
@@ -1090,7 +1255,7 @@
 
     state.cycle.rendering = deepFreeze(clone(rendering));
     state.cycle.localDomEvidence = deepFreeze({
-      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v10",
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v11",
       evidenceScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
       localDomUpdateComplete: rowResults.every(function (r) { return r.found && r.updated; }),
       missingStationPositions: rowResults.filter(function (r) { return !r.found; }).map(function (r) { return r.position; }),
@@ -1098,7 +1263,7 @@
       observedAt: nowIso()
     });
     state.cycle.renderingReceipt = deepFreeze({
-      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v10",
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v11",
       receiptId: "AUDRALIA_CYCLE_RENDERING_RECEIPT_" + Date.now(),
       controlsContract: CONTRACT,
       evidenceScope: "CONTROLS_LOCAL_PRESENTATION_ONLY",
@@ -1153,7 +1318,8 @@
         renderCommittedCycleChamber();
         recordAction("runNineCycle.held.targetNotReady", {
           terminalClass: held.terminalClass,
-          targetLifecycle: lifecycle
+          targetLifecycle: lifecycle,
+          preparationAttempted: targetReady.preparationAttempted === true
         });
         return frozenClone(held);
       }
@@ -1548,8 +1714,11 @@
   function reloadTargetFrame() {
     var frame = byId(TARGET_FRAME_ID);
     if (!frame) return false;
+    prepareTargetContainer();
     state.target.navigationPending = true;
     state.target.firstObservedHref = null;
+    try { frame.removeAttribute("loading"); } catch (_e0) {}
+    try { frame.loading = "eager"; } catch (_e1) {}
     frame.src = TARGET_ROUTE + "?diagnosticReload=" + Date.now();
     inspectTargetFrame({ navigationPending: true, source: "reloadTargetFrame" });
     recordAction("reloadTargetFrame");
@@ -1714,6 +1883,7 @@
       setTargetVisible: setTargetVisible,
       setTargetExpanded: setTargetExpanded,
       inspectTargetFrame: inspectTargetFrame,
+      activelyPrepareTargetFrame: activelyPrepareTargetFrame,
       ensureTargetReady: ensureTargetReady,
       reloadTargetFrame: reloadTargetFrame,
       applyReceiptFilter: applyReceiptFilter,

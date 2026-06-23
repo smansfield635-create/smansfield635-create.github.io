@@ -1,7 +1,8 @@
 // /assets/compass/compass.crystals.js
 // DGB_COMPASS_CRYSTALS_3D_RUNTIME_TNT_v1
-// Single-file WebGL crystal ornament runtime.
-// No Canvas2D fallback. No visual-pass claim.
+// Added file.
+// WebGL-only live 3D crystal ornament runtime.
+// No Canvas2D fallback. No diagnostic chamber. No visual-pass claim.
 
 (function installCompassCrystals(global, document) {
   "use strict";
@@ -10,7 +11,6 @@
   var VERSION = "1.0.0";
   var FILE = "/assets/compass/compass.crystals.js";
   var API_NAME = "DGBCompassCrystals";
-
   var HOST_SELECTOR = "[data-compass-crystal]";
   var MAX_DPR = 2;
 
@@ -67,10 +67,6 @@
     try { return new Date().toISOString(); } catch (_error) { return null; }
   }
 
-  function isFn(value) {
-    return typeof value === "function";
-  }
-
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, Number(value) || min));
   }
@@ -85,12 +81,9 @@
     if (state.errors.length > 21) state.errors.shift();
   }
 
-  function reducedMotion() {
+  function detectReducedMotion() {
     try {
-      return Boolean(
-        global.matchMedia &&
-        global.matchMedia("(prefers-reduced-motion: reduce)").matches
-      );
+      return Boolean(global.matchMedia && global.matchMedia("(prefers-reduced-motion: reduce)").matches);
     } catch (_error) {
       return false;
     }
@@ -153,6 +146,7 @@
 
   function makeGeometry(kind) {
     var top = [0, 0.92, 0];
+
     var table = [
       [-0.34, 0.36, 0.34],
       [0.34, 0.36, 0.34],
@@ -161,6 +155,7 @@
       [-0.34, 0.36, -0.34],
       [-0.48, 0.22, 0]
     ];
+
     var girdle = [
       [-0.70, -0.08, 0.42],
       [0, -0.16, 0.62],
@@ -169,13 +164,15 @@
       [0, -0.16, -0.62],
       [-0.72, -0.10, -0.40]
     ];
+
     var bottom = [0, -0.94, 0];
 
-    var palette = kind === "mission"
-      ? [[0.34, 1.0, 0.72], [0.08, 0.44, 0.36], [1.0, 0.86, 0.38]]
-      : kind === "path"
-        ? [[0.55, 0.86, 1.0], [0.12, 0.28, 0.78], [1.0, 0.78, 0.30]]
-        : [[0.86, 0.96, 1.0], [0.18, 0.46, 1.0], [1.0, 0.82, 0.36]];
+    var palette =
+      kind === "mission"
+        ? [[0.34, 1.0, 0.72], [0.08, 0.44, 0.36], [1.0, 0.86, 0.38]]
+        : kind === "path"
+          ? [[0.55, 0.86, 1.0], [0.12, 0.28, 0.78], [1.0, 0.78, 0.30]]
+          : [[0.86, 0.96, 1.0], [0.18, 0.46, 1.0], [1.0, 0.82, 0.36]];
 
     var positions = [];
     var normals = [];
@@ -211,11 +208,11 @@
     };
   }
 
-  function buffer(gl, data) {
-    var out = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, out);
+  function createBuffer(gl, data) {
+    var buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-    return out;
+    return buffer;
   }
 
   function m4Identity() {
@@ -229,6 +226,7 @@
 
   function m4Multiply(a, b) {
     var o = new Float32Array(16);
+
     for (var c = 0; c < 4; c += 1) {
       for (var r = 0; r < 4; r += 1) {
         o[c * 4 + r] =
@@ -238,6 +236,7 @@
           a[12 + r] * b[c * 4 + 3];
       }
     }
+
     return o;
   }
 
@@ -264,6 +263,7 @@
   function m4RotateX(a) {
     var c = Math.cos(a);
     var s = Math.sin(a);
+
     return new Float32Array([
       1, 0, 0, 0,
       0, c, s, 0,
@@ -275,6 +275,7 @@
   function m4RotateY(a) {
     var c = Math.cos(a);
     var s = Math.sin(a);
+
     return new Float32Array([
       c, 0, -s, 0,
       0, 1, 0, 0,
@@ -328,6 +329,7 @@
     try {
       var program = createProgram(gl);
       var geometry = makeGeometry(kind);
+
       var instance = {
         host: host,
         canvas: canvas,
@@ -337,9 +339,9 @@
         program: program,
         geometry: geometry,
         buffers: {
-          position: buffer(gl, geometry.positions),
-          normal: buffer(gl, geometry.normals),
-          color: buffer(gl, geometry.colors)
+          position: createBuffer(gl, geometry.positions),
+          normal: createBuffer(gl, geometry.normals),
+          color: createBuffer(gl, geometry.colors)
         },
         locations: {
           position: gl.getAttribLocation(program, "a_position"),
@@ -383,10 +385,7 @@
     instance.pixelWidth = Math.max(1, Math.floor(width * dpr));
     instance.pixelHeight = Math.max(1, Math.floor(height * dpr));
 
-    if (
-      instance.canvas.width !== instance.pixelWidth ||
-      instance.canvas.height !== instance.pixelHeight
-    ) {
+    if (instance.canvas.width !== instance.pixelWidth || instance.canvas.height !== instance.pixelHeight) {
       instance.canvas.width = instance.pixelWidth;
       instance.canvas.height = instance.pixelHeight;
     }
@@ -395,15 +394,16 @@
     instance.canvas.style.height = "100%";
   }
 
-  function bindAttribute(gl, location, bufferObject) {
+  function bindAttribute(gl, location, buffer) {
     if (location < 0) return;
-    gl.bindBuffer(gl.ARRAY_BUFFER, bufferObject);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.enableVertexAttribArray(location);
     gl.vertexAttribPointer(location, 3, gl.FLOAT, false, 0, 0);
   }
 
   function drawInstance(instance, time) {
     var gl = instance.gl;
+
     resizeInstance(instance);
 
     var aspect = instance.pixelWidth / Math.max(1, instance.pixelHeight);
@@ -452,17 +452,26 @@
 
   function start() {
     if (state.running || !state.instances.length) return false;
+
     state.running = true;
-    state.frameId = global.requestAnimationFrame ? global.requestAnimationFrame(frame) : 0;
+
+    if (global.requestAnimationFrame) {
+      state.frameId = global.requestAnimationFrame(frame);
+    }
+
     return true;
   }
 
   function stop() {
     state.running = false;
+
     if (state.frameId && global.cancelAnimationFrame) {
       global.cancelAnimationFrame(state.frameId);
     }
+
     state.frameId = 0;
+    publish();
+    return true;
   }
 
   function destroy() {
@@ -471,13 +480,16 @@
     state.instances.forEach(function (instance) {
       try {
         var gl = instance.gl;
+
         gl.deleteBuffer(instance.buffers.position);
         gl.deleteBuffer(instance.buffers.normal);
         gl.deleteBuffer(instance.buffers.color);
         gl.deleteProgram(instance.program);
+
         if (instance.canvas && instance.canvas.parentNode) {
           instance.canvas.parentNode.removeChild(instance.canvas);
         }
+
         instance.host.removeAttribute("data-compass-crystal-state");
       } catch (error) {
         recordError("DESTROY_INSTANCE", error);
@@ -488,8 +500,10 @@
     state.mountedCount = 0;
     state.webGLActive = false;
 
-    document.documentElement.removeAttribute("data-compass-crystals-webgl");
-    document.documentElement.removeAttribute("data-compass-crystals-runtime-loaded");
+    if (document && document.documentElement) {
+      document.documentElement.removeAttribute("data-compass-crystals-webgl");
+      document.documentElement.removeAttribute("data-compass-crystals-runtime-loaded");
+    }
 
     publish();
     return true;
@@ -498,7 +512,7 @@
   function init() {
     if (state.initialized || !document) return;
 
-    state.reducedMotion = reducedMotion();
+    state.reducedMotion = detectReducedMotion();
 
     var hosts = Array.prototype.slice.call(document.querySelectorAll(HOST_SELECTOR));
     state.hostCount = hosts.length;

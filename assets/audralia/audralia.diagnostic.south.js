@@ -1,20 +1,22 @@
 // /assets/audralia/audralia.diagnostic.south.js
-// AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v2
+// AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v3
 // Full-file replacement.
 // Quiet-load, dependency-free, 3D-native South restitution interpreter.
 // Position 8 / F55 / SOUTH_RESTITUTION_INTERPRETATION.
-// Consumes South handoff probe receipt.
+// Consumes renewed F34 South handoff probe receipt.
 // Does not repair, mutate production, authorize files, or claim readiness.
 
-(function audraliaDiagnosticSouthRestitutionInterpretationF553DV2(global) {
+(function audraliaDiagnosticSouthRestitutionInterpretationF553DV3(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
 
-  var CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v2";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v1";
-  var RECEIPT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_RECEIPT_v2";
-  var VERSION = "2.0.0";
+  var CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v3";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v2";
+  var LEGACY_CONTRACT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_TNT_v1";
+  var RECEIPT = "AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION_F55_3D_RECEIPT_v3";
+  var VERSION = "3.0.0";
+  var VERSION_LABEL = "2026-06-23.audralia-diagnostic-south-restitution-interpretation-f55-3d-v3";
   var FILE = "/assets/audralia/audralia.diagnostic.south.js";
 
   var STATION_ID = "SOUTH_RESTITUTION_INTERPRETATION";
@@ -24,6 +26,11 @@
 
   var REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v1";
   var RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_NINE_CYCLE_STATION_RECEIPT_v1";
+
+  var REQUIRED_PREDECESSOR = "SOUTH_PROBE_HANDOFF";
+  var CURRENT_F34_CONTRACT = "AUDRALIA_DIAGNOSTIC_PROBE_SOUTH_HANDOFF_F34_3D_TNT_v3";
+  var CURRENT_F34_FILE = "/assets/audralia/audralia.diagnostic.probe.south.js";
+  var RAIL_FILE = "/assets/audralia/audralia.diagnostic.rail.js";
 
   var LIMITS = Object.freeze({
     maxStringLength: 12000,
@@ -45,29 +52,34 @@
     finalProductionVerdictAuthority: false,
     restitutionInterpretationProvesRepair: false,
     restitutionInterpretationProvesReadiness: false,
+    restitutionOwnerProvesDefect: false,
     diagnosticPassProvesReady: false,
+    railTerminalEligibilityProvesReadiness: false,
     readyClaimed: false,
     verifiedClaimed: false,
     visualPassClaimed: false,
     finalVisualPassClaimed: false,
+    f21Claimed: false,
+    f89Claimed: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
-    webGPU: false
+    webGPU: false,
+    directionOnly: true
   });
 
   function nowIso() {
     try { return new Date().toISOString(); } catch (_error) { return null; }
   }
 
+  function isFiniteNumber(value) {
+    return typeof value === "number" && Number.isFinite(value);
+  }
+
   function isPlainObject(value) {
     if (!value || typeof value !== "object" || Array.isArray(value)) return false;
     var proto = Object.getPrototypeOf(value);
     return proto === Object.prototype || proto === null;
-  }
-
-  function isFiniteNumber(value) {
-    return typeof value === "number" && Number.isFinite(value);
   }
 
   function deepFreeze(value, seen) {
@@ -114,8 +126,12 @@
 
     var output = {};
     Object.keys(value).slice(0, LIMITS.maxObjectKeys).forEach(function each(key) {
-      output[String(key).slice(0, LIMITS.maxStringLength)] =
-        clonePlain(value[key], memory.slice(), level + 1);
+      try {
+        output[String(key).slice(0, LIMITS.maxStringLength)] =
+          clonePlain(value[key], memory.slice(), level + 1);
+      } catch (_error) {
+        output[String(key)] = null;
+      }
     });
 
     return output;
@@ -148,11 +164,17 @@
     return "fnv1a32:" + ("00000000" + h.toString(16)).slice(-8);
   }
 
+  function hashReceipt(receipt) {
+    var copy = clonePlain(receipt, [], 0);
+    if (isPlainObject(copy)) copy.receiptHash = null;
+    return hash(copy);
+  }
+
   function safeString(value, fallback) {
     if (fallback === undefined) fallback = null;
     if (typeof value !== "string") return fallback;
-    var text = value.slice(0, LIMITS.maxStringLength);
-    return text.length ? text : fallback;
+    var text = value.slice(0, LIMITS.maxStringLength).trim();
+    return text || fallback;
   }
 
   function safeObject(value) {
@@ -165,6 +187,29 @@
       path: String(path || "$"),
       detail: String(detail || code || "ISSUE").slice(0, 512)
     };
+  }
+
+  function firstString() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      if (typeof arguments[i] === "string" && arguments[i].trim()) {
+        return arguments[i].slice(0, LIMITS.maxStringLength).trim();
+      }
+    }
+    return null;
+  }
+
+  function firstObject() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      if (isPlainObject(arguments[i])) return clonePlain(arguments[i], [], 0);
+    }
+    return null;
+  }
+
+  function firstBoolean() {
+    for (var i = 0; i < arguments.length; i += 1) {
+      if (typeof arguments[i] === "boolean") return arguments[i];
+    }
+    return null;
   }
 
   function validatePlainData(value) {
@@ -264,7 +309,6 @@
     if (request.position !== CYCLE_POSITION) issues.push(issue("REQUEST_POSITION_MISMATCH", "$.position"));
     if (request.stationId !== STATION_ID) issues.push(issue("REQUEST_STATION_ID_MISMATCH", "$.stationId"));
     if (!safeString(request.cycleId, "")) issues.push(issue("REQUEST_CYCLE_ID_REQUIRED", "$.cycleId"));
-
     if (!Array.isArray(request.priorStationReceipts)) {
       issues.push(issue("PRIOR_STATION_RECEIPTS_ARRAY_REQUIRED", "$.priorStationReceipts"));
     }
@@ -302,13 +346,19 @@
   function declaredRestitution(request) {
     var construct = safeObject(request && request.construct);
     var engine = safeObject(request && request.engine);
+    var target = safeObject(request && request.target);
     var extensions = safeObject(request && request.extensions);
 
-    if (isPlainObject(construct.restitution)) return safeObject(construct.restitution);
-    if (isPlainObject(engine.restitution)) return safeObject(engine.restitution);
-    if (isPlainObject(extensions.restitution)) return safeObject(extensions.restitution);
-
-    return {};
+    return firstObject(
+      construct.restitution,
+      construct.southRestitution,
+      construct.returnPath,
+      engine.restitution,
+      target.restitution,
+      extensions.restitution,
+      extensions.southRestitution,
+      {}
+    );
   }
 
   function validOwnerFile(path) {
@@ -321,119 +371,231 @@
   }
 
   function classifyContinuation(mode, effectiveOwnerFile, handoffAdmitted) {
+    var m = String(mode || "AUDIT").toUpperCase();
+
     if (!handoffAdmitted) return "HOLD_FOR_HANDOFF_REVIEW";
-    if (mode === "CONTINUE") return "CONTINUE_ENGINE_SEQUENCE";
-    if (mode === "REPAIR") return "RESTITUTION_RECOMMENDED";
-    if (mode === "HOLD") return "HOLD_FOR_OWNER_REVIEW";
-    if (mode === "AUDIT") return "AUDIT_ONLY";
+    if (m === "CONTINUE") return "CONTINUE_TO_RAIL_SYNTHESIS";
+    if (m === "REPAIR") return "RESTITUTION_RECOMMENDED_DIRECTION_ONLY";
+    if (m === "HOLD") return "HOLD_FOR_OWNER_REVIEW";
+    if (m === "AUDIT") return "AUDIT_ONLY_RAIL_ELIGIBLE";
     if (effectiveOwnerFile) return "RESTITUTION_TARGET_AVAILABLE";
     return "OWNER_REVIEW_REQUIRED";
   }
 
-  function interpretRestitution(request, validation) {
-    var issues = validation.passed ? [] : validation.issues.slice();
+  function readF34Handoff(request) {
+    var receipt = findReceipt(request, REQUIRED_PREDECESSOR);
 
-    var southProbeReceipt = findReceipt(request, "SOUTH_PROBE_HANDOFF");
+    var admission = extractObservation(receipt, "SOUTH_HANDOFF_ADMISSIBILITY");
+    var target = extractObservation(receipt, "SOUTH_HANDOFF_TARGET_DECLARATION");
+    var packetIntegrity = extractObservation(receipt, "SOUTH_HANDOFF_PACKET_INTEGRITY");
+    var legacyPacket = extractObservation(receipt, "SOUTH_HANDOFF_PACKET_DECLARATION");
+    var admissionEvidence = extractObservation(receipt, "SOUTH_HANDOFF_ADMISSION");
 
-    var southProbePass = Boolean(
-      southProbeReceipt &&
-      southProbeReceipt.status === "PASS" &&
-      southProbeReceipt.handoffEligible === true
-    );
-
-    var handoffAdmission = extractObservation(southProbeReceipt, "SOUTH_HANDOFF_ADMISSIBILITY");
-    var handoffTarget = extractObservation(southProbeReceipt, "SOUTH_HANDOFF_TARGET_DECLARATION");
-    var handoffPacket = extractObservation(southProbeReceipt, "SOUTH_HANDOFF_PACKET_DECLARATION");
+    var receiptPass = Boolean(receipt && receipt.status === "PASS" && receipt.handoffEligible === true);
 
     var handoffAdmitted = Boolean(
-      southProbePass &&
-      handoffAdmission &&
-      handoffAdmission.handoffAdmitted === true &&
-      handoffAdmission.nextStationEligible === true
+      receiptPass &&
+      (
+        (admission && admission.handoffAdmitted === true) ||
+        (admissionEvidence && admissionEvidence.admitted === true)
+      ) &&
+      (
+        (admission && admission.nextStationEligible === true) ||
+        (admissionEvidence && admissionEvidence.admitted === true)
+      )
     );
 
-    var restitution = declaredRestitution(request);
+    var packetIntegrityValue = firstBoolean(
+      packetIntegrity && packetIntegrity.packetIntegrity,
+      admissionEvidence && admissionEvidence.packetIntegrity
+    );
 
-    var requestedMode = safeString(restitution.mode, "AUDIT");
-    var ownerType = safeString(restitution.ownerType, "DIAGNOSTIC_RESTITUTION_OWNER");
-    var ownerFile = safeString(restitution.ownerFile, null);
-    var ownerContract = safeString(restitution.ownerContract, null);
-    var ownerComponent = safeString(restitution.ownerComponent, null);
-    var recommendedFile = safeString(restitution.recommendedFile, null);
-    var recommendedAction = safeString(restitution.recommendedAction, null);
+    var provenanceContinuityValue = firstBoolean(
+      packetIntegrity && packetIntegrity.provenanceContinuity,
+      admissionEvidence && admissionEvidence.provenanceContinuity
+    );
 
-    var targetFile = handoffTarget ? safeString(handoffTarget.targetFile, null) : null;
-    var targetRoute = handoffTarget ? safeString(handoffTarget.targetRoute, null) : null;
-    var restitutionCandidateFile = handoffTarget ? safeString(handoffTarget.restitutionCandidateFile, null) : null;
-    var downstreamOwner = handoffTarget ? safeString(handoffTarget.downstreamOwner, null) : null;
+    var outputCompletenessValue = firstBoolean(
+      packetIntegrity && packetIntegrity.outputCompleteness,
+      admissionEvidence && admissionEvidence.outputCompleteness
+    );
 
-    var effectiveOwnerFile =
-      ownerFile ||
-      recommendedFile ||
-      restitutionCandidateFile ||
-      targetFile ||
-      targetRoute ||
-      null;
+    return deepFreeze({
+      receiptObserved: Boolean(receipt),
+      receipt: receipt ? clonePlain(receipt, [], 0) : null,
+      receiptPass: receiptPass,
+      receiptContract: receipt ? safeString(receipt.contract, null) : null,
+      receiptHash: receipt ? safeString(receipt.receiptHash, null) : null,
+      currentContractObserved: Boolean(receipt && receipt.contract === CURRENT_F34_CONTRACT),
+      admission: admission ? clonePlain(admission, [], 0) : null,
+      target: target ? clonePlain(target, [], 0) : null,
+      packetIntegrityObservation: packetIntegrity ? clonePlain(packetIntegrity, [], 0) : null,
+      legacyPacketObservation: legacyPacket ? clonePlain(legacyPacket, [], 0) : null,
+      admissionEvidence: admissionEvidence ? clonePlain(admissionEvidence, [], 0) : null,
+      handoffAdmitted: handoffAdmitted,
+      nextStationEligible: handoffAdmitted,
+      targetFile: firstString(
+        target && target.targetFile,
+        admissionEvidence && admissionEvidence.targetFile
+      ),
+      targetRoute: firstString(
+        target && target.targetRoute,
+        admissionEvidence && admissionEvidence.targetRoute
+      ),
+      restitutionCandidateFile: firstString(
+        target && target.restitutionCandidateFile,
+        target && target.southRestitutionFile
+      ),
+      downstreamOwner: firstString(
+        target && target.downstreamOwner,
+        "SOUTH_RESTITUTION_INTERPRETATION"
+      ),
+      packetKind: firstString(
+        packetIntegrity && packetIntegrity.packetKind,
+        legacyPacket && legacyPacket.packetKind,
+        "DIAGNOSTIC_HANDOFF_PACKET"
+      ),
+      returnMode: firstString(
+        packetIntegrity && packetIntegrity.returnMode,
+        legacyPacket && legacyPacket.returnMode,
+        "DIAGNOSTIC_RESTITUTION"
+      ),
+      packetIntegrity: packetIntegrityValue === true,
+      provenanceContinuity: provenanceContinuityValue === true,
+      outputCompleteness: outputCompletenessValue === true,
+      recognizedCurrentGrammar: Boolean(admission || target || packetIntegrity || admissionEvidence)
+    });
+  }
 
+  function interpretRestitution(request, validation) {
+    var issues = validation.passed ? [] : validation.issues.slice();
+    var f34 = readF34Handoff(request || {});
+    var restitution = declaredRestitution(request || {});
+
+    var requestedMode = firstString(restitution.mode, f34.returnMode, "AUDIT");
+    var ownerType = firstString(restitution.ownerType, "DIAGNOSTIC_RESTITUTION_OWNER");
+    var ownerContract = firstString(restitution.ownerContract, request && request.engine && request.engine.contract, null);
+    var ownerComponent = firstString(restitution.ownerComponent, "SOUTH_RESTITUTION_INTERPRETATION");
+
+    var recommendedFile = firstString(
+      restitution.recommendedFile,
+      restitution.ownerFile,
+      f34.restitutionCandidateFile,
+      f34.targetFile,
+      f34.targetRoute,
+      RAIL_FILE
+    );
+
+    var recommendedAction = firstString(
+      restitution.recommendedAction,
+      f34.handoffAdmitted ? "RAIL_TERMINAL_SYNTHESIS_REVIEW" : null,
+      "REVIEW_SOUTH_HANDOFF_RESTITUTION"
+    );
+
+    var effectiveOwnerFile = recommendedFile;
     var ownerFileValid = validOwnerFile(effectiveOwnerFile);
-    var continuationClass = classifyContinuation(requestedMode, effectiveOwnerFile, handoffAdmitted);
 
-    if (!southProbeReceipt) {
-      issues.push(issue("SOUTH_HANDOFF_RECEIPT_REQUIRED", "$.priorStationReceipts"));
-    } else if (!southProbePass) {
-      issues.push(issue("SOUTH_HANDOFF_RECEIPT_NOT_PASSING", "$.priorStationReceipts"));
+    if (!f34.receiptObserved) {
+      issues.push(issue("SOUTH_HANDOFF_RECEIPT_REQUIRED", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF"));
+    } else if (!f34.receiptPass) {
+      issues.push(issue("SOUTH_HANDOFF_RECEIPT_NOT_PASSING", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF"));
     }
 
-    if (!handoffAdmitted) {
+    if (!f34.recognizedCurrentGrammar) {
+      issues.push(issue("SOUTH_HANDOFF_GRAMMAR_NOT_RECOGNIZED", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF.observations"));
+    }
+
+    if (!f34.handoffAdmitted) {
       issues.push(issue("SOUTH_HANDOFF_NOT_ADMITTED", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF"));
     }
 
+    if (!f34.packetIntegrity) {
+      issues.push(issue("SOUTH_HANDOFF_PACKET_INTEGRITY_REQUIRED", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF.SOUTH_HANDOFF_PACKET_INTEGRITY"));
+    }
+
+    if (!f34.provenanceContinuity) {
+      issues.push(issue("SOUTH_HANDOFF_PROVENANCE_CONTINUITY_REQUIRED", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF.SOUTH_HANDOFF_PACKET_INTEGRITY"));
+    }
+
+    if (!f34.outputCompleteness) {
+      issues.push(issue("SOUTH_HANDOFF_OUTPUT_COMPLETENESS_REQUIRED", "$.priorStationReceipts.SOUTH_PROBE_HANDOFF.SOUTH_HANDOFF_PACKET_INTEGRITY"));
+    }
+
     if (!effectiveOwnerFile) {
-      issues.push(issue("RESTITUTION_OWNER_FILE_OR_TARGET_REQUIRED", "$.construct.restitution"));
+      issues.push(issue("RECOMMENDED_FILE_REQUIRED", "$.recommendedFile"));
     } else if (!ownerFileValid) {
-      issues.push(issue("RESTITUTION_OWNER_FILE_SCOPE_INVALID", "$.construct.restitution.ownerFile"));
+      issues.push(issue("RECOMMENDED_FILE_SCOPE_INVALID", "$.recommendedFile"));
     }
 
     var railTerminalEligible = Boolean(
       validation.passed &&
-      southProbePass &&
-      handoffAdmitted &&
+      f34.receiptPass &&
+      f34.handoffAdmitted &&
+      f34.packetIntegrity &&
+      f34.provenanceContinuity &&
+      f34.outputCompleteness &&
       effectiveOwnerFile &&
       ownerFileValid &&
       issues.length === 0
     );
 
+    var continuationClass = classifyContinuation(requestedMode, effectiveOwnerFile, f34.handoffAdmitted);
+
     var observations = [
       {
         id: "SOUTH_RESTITUTION_PRIOR_HANDOFF_STATUS",
         kind: "EXPOSED_RECEIPT",
-        southProbeReceiptObserved: Boolean(southProbeReceipt),
-        southProbePass: southProbePass,
-        handoffAdmitted: handoffAdmitted,
-        handoffReceiptHash: southProbeReceipt ? southProbeReceipt.receiptHash || null : null
+        southProbeReceiptObserved: f34.receiptObserved,
+        southProbeReceiptPass: f34.receiptPass,
+        southProbeReceiptContract: f34.receiptContract,
+        expectedSouthProbeContract: CURRENT_F34_CONTRACT,
+        southProbeContractCurrent: f34.currentContractObserved,
+        handoffAdmitted: f34.handoffAdmitted,
+        nextStationEligible: f34.nextStationEligible,
+        receiptHash: f34.receiptHash
+      },
+      {
+        id: "SOUTH_RESTITUTION_F34_GRAMMAR_READ",
+        kind: "DERIVED",
+        recognizedCurrentGrammar: f34.recognizedCurrentGrammar,
+        admissionObserved: Boolean(f34.admission),
+        targetObserved: Boolean(f34.target),
+        packetIntegrityObserved: Boolean(f34.packetIntegrityObservation),
+        legacyPacketObserved: Boolean(f34.legacyPacketObservation),
+        admissionEvidenceObserved: Boolean(f34.admissionEvidence)
       },
       {
         id: "SOUTH_RESTITUTION_HANDOFF_TARGET_READ",
         kind: "EXPOSED_RECEIPT",
-        targetFile: targetFile,
-        targetRoute: targetRoute,
-        restitutionCandidateFile: restitutionCandidateFile,
-        downstreamOwner: downstreamOwner,
-        handoffPacketKind: handoffPacket ? safeString(handoffPacket.packetKind, null) : null,
-        returnMode: handoffPacket ? safeString(handoffPacket.returnMode, null) : null
+        targetFile: f34.targetFile,
+        targetRoute: f34.targetRoute,
+        restitutionCandidateFile: f34.restitutionCandidateFile,
+        downstreamOwner: f34.downstreamOwner,
+        packetKind: f34.packetKind,
+        returnMode: f34.returnMode
+      },
+      {
+        id: "SOUTH_RESTITUTION_PACKET_CONTINUITY_READ",
+        kind: "DERIVED",
+        packetIntegrity: f34.packetIntegrity,
+        provenanceContinuity: f34.provenanceContinuity,
+        outputCompleteness: f34.outputCompleteness,
+        packetIntegrityProvesRuntimeReady: false,
+        provenanceContinuityProvesRuntimeReady: false,
+        outputCompletenessProvesRuntimeReady: false
       },
       {
         id: "SOUTH_RESTITUTION_OWNER_RECOMMENDATION",
         kind: "DERIVED",
         requestedMode: requestedMode,
         ownerType: ownerType,
-        ownerFile: ownerFile,
         ownerContract: ownerContract,
         ownerComponent: ownerComponent,
         recommendedFile: recommendedFile,
         recommendedAction: recommendedAction,
-        effectiveOwnerFile: effectiveOwnerFile,
-        ownerFileValid: ownerFileValid
+        ownerFileValid: ownerFileValid,
+        directionOnly: true,
+        restitutionOwnerProvesDefect: false
       },
       {
         id: "SOUTH_RESTITUTION_CONTINUATION_CLASSIFICATION",
@@ -442,17 +604,20 @@
         railTerminalEligible: railTerminalEligible,
         restitutionInterpretationProvesRepair: false,
         restitutionInterpretationProvesReadiness: false,
-        diagnosticPassProvesReady: false
+        diagnosticPassProvesReady: false,
+        f89Claimed: false
       }
     ];
 
     return deepFreeze({
+      f34: f34,
       observations: deepFreeze(observations),
       issues: deepFreeze(issues.slice(0, LIMITS.maxIssues)),
-      effectiveOwnerFile: effectiveOwnerFile,
       ownerType: ownerType,
       ownerContract: ownerContract,
-      ownerComponent: ownerComponent || "SOUTH_RESTITUTION_INTERPRETATION",
+      ownerComponent: ownerComponent,
+      recommendedFile: recommendedFile,
+      recommendedAction: recommendedAction,
       continuationClass: continuationClass,
       railTerminalEligible: railTerminalEligible,
       requestedMode: requestedMode
@@ -470,20 +635,39 @@
     var summary = status === "PASS"
       ? "SOUTH_RESTITUTION_INTERPRETATION_ADMITTED_FOR_RAIL_SYNTHESIS"
       : validation.passed
-        ? "SOUTH_RESTITUTION_HELD_OWNER_OR_TARGET_INCOMPLETE"
+        ? "SOUTH_RESTITUTION_HELD_HANDOFF_OR_OWNER_INCOMPLETE"
         : "SOUTH_RESTITUTION_HELD_REQUEST_INVALID";
+
+    var recommendedOwner = {
+      ownerType: restitution.ownerType,
+      subjectId:
+        request &&
+        request.construct &&
+        typeof request.construct.constructId === "string"
+          ? request.construct.constructId
+          : STATION_ID,
+      contract: restitution.ownerContract,
+      file: restitution.recommendedFile,
+      component: restitution.ownerComponent,
+      directionOnly: true,
+      recommendedOwnerProvesDefect: false
+    };
 
     var receipt = {
       schema: RECEIPT_SCHEMA,
       cycleId: safeString(request && request.cycleId, "UNKNOWN"),
       position: CYCLE_POSITION,
+      cyclePosition: CYCLE_POSITION,
       stationId: STATION_ID,
+      role: STATION_ID,
       fibonacci: FIBONACCI,
       news: NEWS,
 
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
+      versionLabel: VERSION_LABEL,
       file: FILE,
 
       status: status,
@@ -492,16 +676,26 @@
       summary: summary,
 
       observations: restitution.observations,
+      restitutionInterpretation: {
+        requestedMode: restitution.requestedMode,
+        continuationClass: restitution.continuationClass,
+        railTerminalEligible: restitution.railTerminalEligible,
+        recommendedFile: restitution.recommendedFile,
+        recommendedAction: restitution.recommendedAction,
+        f34ReceiptHash: restitution.f34.receiptHash || null
+      },
 
       evidence: [
         { id: "SOUTH_RESTITUTION_REQUEST_HASH", kind: "DERIVED", hash: hash(request || {}) },
+        { id: "SOUTH_RESTITUTION_F34_HASH", kind: "DERIVED", hash: hash(restitution.f34) },
         { id: "SOUTH_RESTITUTION_OBSERVATION_HASH", kind: "DERIVED", hash: hash(restitution.observations) },
         {
           id: "SOUTH_RESTITUTION_RESULT",
           kind: "DERIVED",
           railTerminalEligible: restitution.railTerminalEligible,
           continuationClass: restitution.continuationClass,
-          effectiveOwnerFile: restitution.effectiveOwnerFile,
+          recommendedFile: restitution.recommendedFile,
+          recommendedAction: restitution.recommendedAction,
           requestedMode: restitution.requestedMode
         },
         {
@@ -518,27 +712,16 @@
       firstFailedCoordinate: null,
       firstConflictCoordinate: null,
 
-      recommendedOwner: {
-        ownerType: restitution.ownerType,
-        subjectId:
-          request &&
-          request.construct &&
-          typeof request.construct.constructId === "string"
-            ? request.construct.constructId
-            : null,
-        contract: restitution.ownerContract,
-        file: restitution.effectiveOwnerFile,
-        component: restitution.ownerComponent,
-        directionOnly: true,
-        recommendedOwnerProvesDefect: false
-      },
+      recommendedOwner: recommendedOwner,
+      recommendedFile: restitution.recommendedFile,
+      recommendedAction: restitution.recommendedAction,
 
       generatedAt: nowIso(),
       receiptHash: null,
-      noClaims: NO_CLAIMS
+      noClaims: clonePlain(NO_CLAIMS, [], 0)
     };
 
-    receipt.receiptHash = hash(receipt);
+    receipt.receiptHash = hashReceipt(receipt);
     return deepFreeze(receipt);
   }
 
@@ -547,33 +730,46 @@
       receipt: RECEIPT,
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
+      versionLabel: VERSION_LABEL,
       file: FILE,
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
+      position: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       news: NEWS,
       requestSchema: REQUEST_SCHEMA,
       receiptSchema: RECEIPT_SCHEMA,
+      currentF34Contract: CURRENT_F34_CONTRACT,
+      currentF34File: CURRENT_F34_FILE,
+      railFile: RAIL_FILE,
       exactInterface: [
         "CONTRACT",
+        "PREVIOUS_CONTRACT",
         "VERSION",
         "FILE",
         "STATION_ID",
         "CYCLE_POSITION",
+        "FIBONACCI",
         "getDefinitionReceipt",
-        "executeCycleStation"
+        "executeCycleStation",
+        "getStatus"
       ],
       role:
-        "Position 8 South restitution interpreter for continuation classification, owner recommendation, and return-path preparation.",
+        "Position 8 South restitution interpreter for F34 handoff grammar, packet continuity, owner recommendation, rail-terminal eligibility, and return-path preparation.",
       quietLoad: true,
       threeDimensionalNative: true,
-      consumesSouthHandoffProbeReceipt: true,
+      consumesCurrentF34: true,
+      recognizesSouthHandoffPacketIntegrity: true,
+      returnsCanonicalReceiptIdentity: true,
+      returnsRecommendedFile: true,
+      returnsRecommendedAction: true,
       explicitRestitutionPacketRequired: false,
       canDeriveOwnerFromHandoffTarget: true,
       restitutionInterpretationProvesRepair: false,
       restitutionInterpretationProvesReadiness: false,
-      noClaims: NO_CLAIMS,
+      noClaims: clonePlain(NO_CLAIMS, [], 0),
       generatedAt: nowIso()
     };
 
@@ -585,16 +781,22 @@
     return deepFreeze({
       contract: CONTRACT,
       previousContract: PREVIOUS_CONTRACT,
+      legacyContract: LEGACY_CONTRACT,
       version: VERSION,
+      versionLabel: VERSION_LABEL,
       file: FILE,
       stationId: STATION_ID,
       cyclePosition: CYCLE_POSITION,
+      position: CYCLE_POSITION,
       fibonacci: FIBONACCI,
       news: NEWS,
       loaded: true,
       readyForExplicitRegistration: true,
+      conductorCompatible: true,
       threeDimensionalNative: true,
-      noClaims: NO_CLAIMS
+      consumesCurrentF34: true,
+      returnsCanonicalReceiptIdentity: true,
+      noClaims: clonePlain(NO_CLAIMS, [], 0)
     });
   }
 
@@ -606,22 +808,41 @@
 
   function buildApi() {
     return deepFreeze({
+      schema: "AUDRALIA_DIAGNOSTIC_STATION_API_v2",
+
       CONTRACT: CONTRACT,
       PREVIOUS_CONTRACT: PREVIOUS_CONTRACT,
+      LEGACY_CONTRACT: LEGACY_CONTRACT,
       RECEIPT: RECEIPT,
       VERSION: VERSION,
+      VERSION_LABEL: VERSION_LABEL,
       FILE: FILE,
       STATION_ID: STATION_ID,
       CYCLE_POSITION: CYCLE_POSITION,
       FIBONACCI: FIBONACCI,
       NEWS: NEWS,
+      CURRENT_F34_CONTRACT: CURRENT_F34_CONTRACT,
+      RAIL_FILE: RAIL_FILE,
+
+      stationId: STATION_ID,
+      role: STATION_ID,
+      cyclePosition: CYCLE_POSITION,
+      position: CYCLE_POSITION,
+      fibonacci: FIBONACCI,
+      news: NEWS,
+      contract: CONTRACT,
+      previousContract: PREVIOUS_CONTRACT,
+      version: VERSION,
+      file: FILE,
 
       getDefinitionReceipt: getDefinitionReceipt,
       executeCycleStation: executeCycleStation,
+      execute: executeCycleStation,
       getStatus: getStatus,
 
       validateStationRequest: validateStationRequest,
       interpretRestitution: interpretRestitution,
+      readF34Handoff: readF34Handoff,
       clone: function exposedClone(value) {
         return deepFreeze(clonePlain(value, [], 0));
       },
@@ -639,11 +860,13 @@
       existing &&
       existing.CONTRACT &&
       existing.CONTRACT !== CONTRACT &&
-      existing.CONTRACT !== PREVIOUS_CONTRACT
+      existing.CONTRACT !== PREVIOUS_CONTRACT &&
+      existing.CONTRACT !== LEGACY_CONTRACT
     ) {
       root.AUDRALIA_DIAGNOSTIC_SOUTH_INSTALLATION_CONFLICT = deepFreeze({
         contract: CONTRACT,
         previousContract: PREVIOUS_CONTRACT,
+        legacyContract: LEGACY_CONTRACT,
         file: FILE,
         status: "CONFLICT",
         reason: "PRIMARY_GLOBAL_OCCUPIED_BY_INCOMPATIBLE_AUTHORITY",
@@ -656,6 +879,7 @@
     root.AUDRALIA_DIAGNOSTIC_SOUTH = api;
     root.AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION = api;
     root.AUDRALIA_DIAGNOSTIC_SOUTH_INTERPRETATION = api;
+    root.AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_INTERPRETATION = api;
 
     var namespace = ensureNamespace("AUDRALIA");
 
@@ -668,9 +892,11 @@
 
       namespace.diagnostics.south = api;
       namespace.diagnostics.southInterpretation = api;
+      namespace.diagnostics.southRestitution = api;
     }
 
     root.AUDRALIA_DIAGNOSTIC_SOUTH_RECEIPT = getDefinitionReceipt();
+    root.AUDRALIA_DIAGNOSTIC_SOUTH_RESTITUTION_RECEIPT = getDefinitionReceipt();
 
     root.__AUDRALIA_DIAGNOSTIC_SOUTH_LOADED__ = true;
     root.__AUDRALIA_DIAGNOSTIC_SOUTH_STATION_ID__ = STATION_ID;

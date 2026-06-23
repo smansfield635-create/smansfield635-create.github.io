@@ -1,125 +1,37 @@
 /* /showroom/globe/audralia/diagnostic/index.css */
-/* AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v4 */
+/* AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v5 */
 /* Full-file replacement. */
 /*
 TARGET HTML:
-
-- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v10
+- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v11
 
 PREVIOUS CSS:
+- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v4
 
-- AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v3
+CONTROL TARGET:
+- AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6
 
 PURPOSE:
-
-- Renew the Audralia diagnostic presentation around HTML v10.
-- Preserve the established dark observatory and Mirrorland language.
-- Present Audralia, the 3D Engine System, Mirrorland, DROP, and READ through
-  compact native educational disclosures.
-- Express one lawful shared left-orbit tablist.
-- Keep Category, Audit, Create Report, and Copy Report prominent.
-- Keep secondary diagnostic controls compact until deliberately expanded.
-- Keep the Report Chamber visually authoritative.
-- Preserve normal document flow and bounded technical evidence.
-- Prevent clipping, page-level horizontal overflow, inaccessible hidden panels,
-  fixed-overlay dependency, and mobile bubble-wall behavior.
-- Preserve all functionally admissible geometry and responsive behavior from
-  CSS v3 without redesign.
-
-PRESENTATION STANDARD:
-
-- clear hierarchy;
-- readable typography;
-- responsive geometry;
-- visible selected, open, expanded, disabled, and status states;
-- bounded technical overflow;
-- keyboard focus visibility;
-- safe desktop, tablet, narrow-mobile, landscape, contrast, motion, and print
-  expression.
+- Renew the Audralia diagnostic presentation around HTML v11.
+- Preserve Audralia Dreamscape and the D-R-E-A-M educational sequence.
+- Preserve compact native disclosures, one lawful left-orbit tablist, one
+  authoritative Report Chamber, lower evidence chambers, target-frame
+  containment, and bounded technical evidence.
+- Align presentation with renewed controls v6 without claiming control,
+  runtime, visual, family, F21, or F89 verification.
+- Prevent page-level horizontal overflow, inaccessible clipping, duplicate
+  overlay dependency, and mobile bubble-wall behavior.
 
 CSS OWNS:
-
-- layout;
-- visual hierarchy;
-- geometry;
-- dimensions;
-- spacing;
-- responsive collapse;
-- overflow containment;
-- target-frame sizing;
-- focus presentation;
-- reduced-motion presentation;
-- contrast presentation;
-- print presentation.
+- layout, visual hierarchy, geometry, spacing, responsive collapse, overflow
+  containment, target-frame sizing, focus presentation, reduced-motion,
+  contrast, and print expression.
 
 CSS DOES NOT OWN:
-
-- diagnostic state;
-- hidden-state decisions;
-- event binding;
-- selection logic;
-- report construction;
-- participant execution;
-- direct execution;
-- nine-cycle execution;
-- archive construction;
-- receipt construction;
-- proof;
-- interpretation;
-- readiness claims;
-- visual-pass claims.
-
-N.E.W.S. / CENTER / RAIL:
-
-- North:
-  command crown, educational intake, visible diagnostic transition.
-- East:
-  compact construction, disclosures, selectors, bounded control surfaces.
-- Center:
-  Audralia target, F8 Surface Truth, contained target frame.
-- West:
-  Report Chamber, READ, observation, registry, receipts, raw evidence.
-- South:
-  context tabs, commands, disabled states, status restitution, toast.
-- Rail:
-  one authoritative report, one terminal evidence direction, F89 closure.
-
-FIBONACCI:
-
-- F1:
-  intake and page orientation.
-- F3:
-  source presentation.
-- F5:
-  responsive construction.
-- F8:
-  target and Surface Truth containment.
-- F13:
-  runtime observation.
-- F21:
-  READ interpretation.
-- F34:
-  control handoff.
-- F55:
-  action restitution and status return.
-- F89:
-  terminal report and cycle synthesis.
-
-AMBIGUITY CLOSURE:
-
-- compact does not mean tiny;
-- compact does not mean inaccessible;
-- native details own native open and closed containment;
-- [hidden] remains absolute;
-- observation controls and observation panels remain separate;
-- instrument controls and instrument panels remain separate;
-- status color is never the sole state signal;
-- page-level horizontal overflow is forbidden;
-- the target may expand locally but does not become an unclosable overlay;
-- participant inventory remains accessible without fixed-height clipping;
-- CSS does not simulate application state;
-- CSS-owned functional ambiguity is closed;
-- nonfunctional family metadata debt remains external and deferred.
+- diagnostic state, event binding, selection logic, report construction,
+  participant execution, direct execution, Nine-Cycle execution, archive
+  construction, receipt construction, proof, interpretation, readiness claims,
+  visual-pass claims, or family synchronization claims.
 */
 
 :root {
@@ -155,122 +67,51 @@ AMBIGUITY CLOSURE:
       rgba(2, 9, 21, 0.995) 100%
     );
 
-  --obs-panel-muted:
-    rgba(7, 20, 40, 0.76);
+  --obs-border: rgba(133, 194, 234, 0.21);
+  --obs-border-soft: rgba(133, 194, 234, 0.13);
+  --obs-border-strong: rgba(135, 217, 255, 0.52);
 
-  --obs-panel-glass:
-    rgba(5, 17, 35, 0.78);
+  --obs-text: #eff9ff;
+  --obs-text-muted: rgba(220, 239, 250, 0.78);
+  --obs-text-faint: rgba(193, 219, 237, 0.58);
+  --obs-focus: #c2f1ff;
 
-  --obs-border:
-    rgba(133, 194, 234, 0.21);
+  --lane-direct: #f2a65d;
+  --lane-direct-soft: rgba(242, 166, 93, 0.16);
+  --lane-report: #f4dc9d;
+  --lane-report-soft: rgba(244, 220, 157, 0.16);
+  --lane-observation: #79ddff;
+  --lane-observation-soft: rgba(121, 221, 255, 0.15);
+  --lane-participant: #b8a3ff;
+  --lane-participant-soft: rgba(184, 163, 255, 0.15);
 
-  --obs-border-soft:
-    rgba(133, 194, 234, 0.13);
+  --state-pass: #7ee0aa;
+  --state-hold: #e8bf6d;
+  --state-error: #ef818f;
+  --state-running: #7fc7ff;
+  --state-neutral: rgba(205, 226, 240, 0.72);
 
-  --obs-border-strong:
-    rgba(135, 217, 255, 0.52);
+  --read-result: #f6e6b8;
+  --read-evidence: #81dcff;
+  --read-absence: #ebbd67;
+  --read-direction: #c0a8ff;
 
-  --obs-text:
-    #eff9ff;
+  --obs-shadow: 0 26px 76px rgba(0, 0, 0, 0.5);
+  --obs-shadow-soft: 0 13px 34px rgba(0, 0, 0, 0.34);
+  --obs-shadow-tight: 0 8px 22px rgba(0, 0, 0, 0.3);
 
-  --obs-text-muted:
-    rgba(220, 239, 250, 0.78);
+  --obs-radius-xl: 30px;
+  --obs-radius-lg: 22px;
+  --obs-radius-md: 16px;
+  --obs-radius-sm: 11px;
 
-  --obs-text-faint:
-    rgba(193, 219, 237, 0.58);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
 
-  --obs-focus:
-    #c2f1ff;
-
-  --lane-direct:
-    #f2a65d;
-
-  --lane-direct-soft:
-    rgba(242, 166, 93, 0.16);
-
-  --lane-report:
-    #f4dc9d;
-
-  --lane-report-soft:
-    rgba(244, 220, 157, 0.16);
-
-  --lane-observation:
-    #79ddff;
-
-  --lane-observation-soft:
-    rgba(121, 221, 255, 0.15);
-
-  --lane-participant:
-    #b8a3ff;
-
-  --lane-participant-soft:
-    rgba(184, 163, 255, 0.15);
-
-  --state-pass:
-    #7ee0aa;
-
-  --state-hold:
-    #e8bf6d;
-
-  --state-error:
-    #ef818f;
-
-  --state-running:
-    #7fc7ff;
-
-  --state-neutral:
-    rgba(205, 226, 240, 0.72);
-
-  --read-result:
-    #f6e6b8;
-
-  --read-evidence:
-    #81dcff;
-
-  --read-absence:
-    #ebbd67;
-
-  --read-direction:
-    #c0a8ff;
-
-  --obs-shadow:
-    0 26px 76px rgba(0, 0, 0, 0.5);
-
-  --obs-shadow-soft:
-    0 13px 34px rgba(0, 0, 0, 0.34);
-
-  --obs-shadow-tight:
-    0 8px 22px rgba(0, 0, 0, 0.3);
-
-  --obs-radius-xl:
-    30px;
-
-  --obs-radius-lg:
-    22px;
-
-  --obs-radius-md:
-    16px;
-
-  --obs-radius-sm:
-    11px;
-
-  --safe-top:
-    env(safe-area-inset-top, 0px);
-
-  --safe-right:
-    env(safe-area-inset-right, 0px);
-
-  --safe-bottom:
-    env(safe-area-inset-bottom, 0px);
-
-  --safe-left:
-    env(safe-area-inset-left, 0px);
-
-  --content-width:
-    1640px;
-
-  --control-width:
-    33rem;
+  --content-width: 1640px;
+  --control-width: 33rem;
 
   --mono:
     ui-monospace,
@@ -549,9 +390,6 @@ NORTH — COMMAND CROWN
   min-height: 74px;
   padding: 10px 12px;
   border-radius: 22px;
-  box-shadow:
-    0 18px 52px rgba(0, 0, 0, 0.52),
-    0 0 0 1px rgba(125, 216, 255, 0.05);
 }
 
 .command-crown__identity {
@@ -694,8 +532,7 @@ NORTH — COMMAND CROWN
 .receipt-filters button,
 .custom-selector > button,
 .selector-menu button,
-.secondary-operation-grid button,
-.disclosure-selection-trigger {
+.secondary-operation-grid button {
   appearance: none;
   border: 1px solid rgba(139, 205, 243, 0.27);
   color: var(--obs-text-muted);
@@ -780,11 +617,6 @@ NORTH — COMMAND CROWN
   font-weight: 800;
   letter-spacing: 0.055em;
   text-transform: uppercase;
-  transition:
-    border-color 140ms ease,
-    color 140ms ease,
-    background 140ms ease,
-    box-shadow 140ms ease;
 }
 
 .command-utility-disclosure > summary::after {
@@ -828,7 +660,7 @@ NORTH — COMMAND CROWN
 }
 
 /* ============================================================
-NORTH / EAST — EDUCATIONAL DECK
+NORTH / EAST — EDUCATIONAL DECK / DREAM
 ============================================================ */
 
 .educational-deck {
@@ -875,8 +707,7 @@ NORTH / EAST — EDUCATIONAL DECK
 
 .educational-category-grid {
   display: grid;
-  grid-template-columns:
-    repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin-top: 24px;
 }
@@ -894,18 +725,12 @@ NORTH / EAST — EDUCATIONAL DECK
 .educational-category > summary {
   position: relative;
   display: grid;
-  grid-template-columns:
-    auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 12px;
   align-items: center;
   min-height: 9.25rem;
   padding: 17px;
   cursor: pointer;
-  transition:
-    border-color 140ms ease,
-    background 140ms ease,
-    color 140ms ease,
-    box-shadow 140ms ease;
 }
 
 .educational-category > summary::after {
@@ -1005,20 +830,17 @@ NORTH / EAST — EDUCATIONAL DECK
 
 .educational-category__content {
   display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(13rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   gap: 10px;
   padding: 15px;
 }
 
 .educational-category__content--engine {
-  grid-template-columns:
-    repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
 
 .educational-acronym-grid {
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .educational-category__content article {
@@ -1190,8 +1012,7 @@ EAST / SOUTH — DIAGNOSTIC CONTROL PAD
 
 .left-orbit-tablist {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   padding: 10px;
 }
@@ -1218,8 +1039,7 @@ EAST / SOUTH — DIAGNOSTIC CONTROL PAD
 
 .control-pad-primary-selectors {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1230,9 +1050,7 @@ EAST / SOUTH — DIAGNOSTIC CONTROL PAD
 
 .custom-selector > button {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
   width: 100%;
@@ -1341,8 +1159,7 @@ EAST / SOUTH — DIAGNOSTIC CONTROL PAD
 
 .control-pad-primary-actions {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   padding: 0 18px 18px;
 }
@@ -1498,8 +1315,7 @@ PARTICIPANT CONTEXT
 
 .participant-summary {
   display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   margin-top: 14px;
 }
@@ -1527,8 +1343,7 @@ PARTICIPANT CONTEXT
 
 .participant-list {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   max-height: 38rem;
   margin-top: 12px;
@@ -1540,9 +1355,7 @@ PARTICIPANT CONTEXT
 
 .participant-node {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
   min-width: 0;
@@ -1636,9 +1449,7 @@ SOUTH — COMPACT DISCLOSURES AND SECONDARY OPERATIONS
 .control-disclosure > summary {
   position: relative;
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
   min-height: 62px;
@@ -1711,14 +1522,12 @@ SOUTH — COMPACT DISCLOSURES AND SECONDARY OPERATIONS
 
 .instrument-control-grid {
   display: grid;
-  grid-template-columns:
-    repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .observation-control-grid {
   display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .observation-control-grid button,
@@ -1729,8 +1538,7 @@ SOUTH — COMPACT DISCLOSURES AND SECONDARY OPERATIONS
 
 .secondary-operation-grid {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 9px;
   padding: 12px;
 }
@@ -1837,8 +1645,7 @@ F55 — STATUS RESTITUTION
 
 .drop-status-rail {
   display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -1868,6 +1675,17 @@ F55 — STATUS RESTITUTION
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.drop-status-cell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.drop-status-cell header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .drop-status-cell--direct {
@@ -1922,17 +1740,6 @@ F55 — STATUS RESTITUTION
     );
 }
 
-.drop-status-cell > * {
-  position: relative;
-  z-index: 1;
-}
-
-.drop-status-cell header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .drop-letter {
   display: grid;
   place-items: center;
@@ -1984,8 +1791,7 @@ F55 — STATUS RESTITUTION
 
 .drop-status-cell dl {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
   margin: 0;
 }
@@ -2087,8 +1893,7 @@ WEST / RAIL — REPORT CHAMBER
 
 .report-state {
   display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: 9px;
   padding: 15px 20px;
   border-bottom: 1px solid var(--obs-border);
@@ -2137,8 +1942,7 @@ WEST / RAIL — REPORT CHAMBER
 
 .report-panel--read {
   display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -2358,17 +2162,14 @@ F13 / CENTER — OBSERVATION LENS AND TARGET WINDOW
 
 .observation-list {
   display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 8px;
   margin: 0;
 }
 
 .observation-list div {
   display: grid;
-  grid-template-columns:
-    minmax(7rem, 0.72fr)
-    minmax(0, 1.28fr);
+  grid-template-columns: minmax(7rem, 0.72fr) minmax(0, 1.28fr);
   gap: 10px;
   padding: 10px;
   border: 1px solid rgba(121, 221, 255, 0.14);
@@ -2436,7 +2237,7 @@ F13 / CENTER — OBSERVATION LENS AND TARGET WINDOW
 }
 
 /* ============================================================
-INSTRUMENT DECK
+INSTRUMENT DECK / LOWER CHAMBERS
 ============================================================ */
 
 .instrument-deck {
@@ -2528,14 +2329,12 @@ INSTRUMENT DECK
 
 .cycle-summary-grid,
 .registry-summary-grid {
-  grid-template-columns:
-    repeat(auto-fit, minmax(13rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
 }
 
 .registry-detail-grid,
 .archive-snapshot-grid {
-  grid-template-columns:
-    repeat(auto-fit, minmax(18rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
 }
 
 .cycle-receipt-list,
@@ -2543,13 +2342,11 @@ INSTRUMENT DECK
 .receipt-list,
 .archive-report-list,
 .archive-error-list {
-  grid-template-columns:
-    repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 }
 
 .boundary-manifest {
-  grid-template-columns:
-    repeat(auto-fit, minmax(13rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
 }
 
 .cycle-summary-grid article,
@@ -2609,8 +2406,7 @@ F89 — NINE-STATION SYNTHESIS
 
 .cycle-map {
   display: grid;
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 16px 0 0;
   padding: 0;
@@ -2619,9 +2415,7 @@ F89 — NINE-STATION SYNTHESIS
 
 .cycle-map li {
   display: grid;
-  grid-template-columns:
-    auto minmax(0, 1fr)
-    auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 9px;
   align-items: start;
   min-width: 0;
@@ -2822,8 +2616,7 @@ TABLET / COMPACT DESKTOP
   }
 
   .educational-category-grid {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .educational-category[open] {
@@ -2831,23 +2624,19 @@ TABLET / COMPACT DESKTOP
   }
 
   .participant-summary {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .participant-list {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .drop-status-rail {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cycle-map {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -2857,8 +2646,7 @@ MOBILE / SINGLE-COLUMN NORMAL FLOW
 
 @media (max-width: 899px) {
   .diagnostic-observatory {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "crown"
       "education"
@@ -2874,8 +2662,7 @@ MOBILE / SINGLE-COLUMN NORMAL FLOW
   }
 
   .command-crown {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     border-radius: 20px;
   }
 
@@ -2885,8 +2672,7 @@ MOBILE / SINGLE-COLUMN NORMAL FLOW
 
   .command-crown__actions {
     display: grid;
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .command-crown__actions > * {
@@ -2917,8 +2703,7 @@ MOBILE / SINGLE-COLUMN NORMAL FLOW
   }
 
   .educational-category-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .educational-category[open] {
@@ -2940,13 +2725,11 @@ MOBILE / SINGLE-COLUMN NORMAL FLOW
   }
 
   .report-panel--read {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .observation-list {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .target-frame-shell {
@@ -2984,8 +2767,7 @@ NARROW MOBILE
   }
 
   .command-crown__actions {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .educational-deck {
@@ -2997,8 +2779,7 @@ NARROW MOBILE
   }
 
   .educational-category-grid {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .educational-category,
@@ -3013,14 +2794,12 @@ NARROW MOBILE
   .educational-category__content,
   .educational-category__content--engine,
   .educational-acronym-grid {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .educational-transition {
     display: grid;
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .educational-transition > a {
@@ -3036,20 +2815,17 @@ NARROW MOBILE
   }
 
   .left-orbit-tablist {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .control-pad-primary-selectors,
   .control-pad-primary-actions,
   .secondary-operation-grid {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .control-disclosure > summary {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .control-disclosure > summary em {
@@ -3059,8 +2835,7 @@ NARROW MOBILE
 
   .observation-control-grid,
   .instrument-control-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .participant-summary,
@@ -3077,8 +2852,7 @@ NARROW MOBILE
   .archive-error-list,
   .boundary-manifest,
   .cycle-map {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .participant-list,
@@ -3088,8 +2862,7 @@ NARROW MOBILE
   }
 
   .observation-list div {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .instrument-chamber,
@@ -3149,13 +2922,11 @@ NARROW MOBILE
   .left-orbit-tablist,
   .observation-control-grid,
   .instrument-control-grid {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .drop-status-cell dl {
-    grid-template-columns:
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -3198,20 +2969,11 @@ ACCESSIBILITY PREFERENCES
 
 @media (prefers-contrast: more) {
   :root {
-    --obs-border:
-      rgba(229, 245, 255, 0.68);
-
-    --obs-border-soft:
-      rgba(229, 245, 255, 0.44);
-
-    --obs-border-strong:
-      rgba(246, 252, 255, 0.98);
-
-    --obs-text-muted:
-      rgba(247, 252, 255, 0.97);
-
-    --obs-text-faint:
-      rgba(234, 247, 255, 0.9);
+    --obs-border: rgba(229, 245, 255, 0.68);
+    --obs-border-soft: rgba(229, 245, 255, 0.44);
+    --obs-border-strong: rgba(246, 252, 255, 0.98);
+    --obs-text-muted: rgba(247, 252, 255, 0.97);
+    --obs-text-faint: rgba(234, 247, 255, 0.9);
   }
 
   .command-crown,
@@ -3303,8 +3065,7 @@ PRINT
   }
 
   .cycle-map {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .section-preface h2,
@@ -3340,13 +3101,16 @@ PRINT
 TERMINAL PRESENTATION CLOSURE:
 
 CSS CONTRACT:
-AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v4
+AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v5
 
 PREVIOUS CSS:
-AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v3
+AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_STYLE_TNT_v4
 
 HTML TARGET:
-AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v10
+AUDRALIA_MIRRORLAND_COMPACT_EDUCATIONAL_DIAGNOSTIC_CHAMBER_HTML_TNT_v11
+
+CONTROL TARGET:
+AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v6
 
 N.E.W.S. / CENTER / RAIL:
 NORTH   ALIGNED
@@ -3359,12 +3123,6 @@ RAIL    ALIGNED
 FIBONACCI:
 F1 / F3 / F5 / F8 / F13 / F21 / F34 / F55 / F89
 9 / 9 PRESENTATION AUTHORITIES EXPRESSED
-
-FUNCTIONAL CSS AMBIGUITIES:
-0
-
-NONFUNCTIONAL FAMILY DEBT:
-EXTERNAL / DEFERRED
 
 NORMAL DOCUMENT FLOW:
 PRESERVED
@@ -3382,6 +3140,9 @@ REPORT CHAMBER
 OBSERVATION LENS
 INSTRUMENT DECK
 
+DREAM:
+VISIBLE EDUCATIONAL SEQUENCE ONLY
+
 PARTICIPANT DOUBLE GATE:
 ABSENT
 
@@ -3389,10 +3150,7 @@ SHARED LEFT-ORBIT TABLIST:
 FIRST-CLASS
 
 TARGET FIXED OVERLAY:
-RETIRED
-
-HORIZONTAL NINE-STATION STRIP:
-RETIRED
+ABSENT
 
 PAGE HORIZONTAL OVERFLOW:
 FORBIDDEN
@@ -3406,6 +3164,6 @@ FORBIDDEN
 CSS APPLICATION-STATE OWNERSHIP:
 FORBIDDEN
 
-FUNCTIONAL FREEZE:
-PENDING POST-CRAFT 10-STEP AUDIT
+READINESS / VISUAL / F21 / F89 CLAIMS:
+NOT MADE
 */

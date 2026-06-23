@@ -1,17 +1,17 @@
 // /showroom/globe/audralia/diagnostic/index.controls.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v8
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v9
 // Full-file replacement. Controls own UI binding. Diagnostic observatory engine owns report/cycle production.
 
-(function installAudraliaDistributedDiagnosticControlsV8(global) {
+(function installAudraliaDistributedDiagnosticControlsV9(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root && root.document ? root.document : null;
   if (!doc) return;
 
-  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v8";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v7";
-  var VERSION = "8.0.0";
+  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v9";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_DISTRIBUTED_CONTROL_PANEL_TNT_v8";
+  var VERSION = "9.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.controls.js";
 
   var DIAGNOSTIC_ENGINE_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v4";
@@ -19,13 +19,14 @@
   var DGB_ENGINE_CONTRACT_AUTHORITY = "DGB_INTERACTIVE_RUNTIME_ENGINE_CONTRACT_NEWS_FIBONACCI_SPEC_OPS_TNT_v1";
   var INSPECTION_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_INSPECTION_LANE_TNT_v2";
 
-  var CONTROL_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v8";
-  var CONTROL_REQUIREMENTS_SCHEMA = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v4";
-  var FALLBACK_REPORT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v5";
-  var FALLBACK_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v5";
+  var CONTROL_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DISTRIBUTED_CONTROL_PANEL_RECEIPT_v9";
+  var CONTROL_REQUIREMENTS_SCHEMA = "AUDRALIA_DIAGNOSTIC_CONTROLS_REQUIREMENTS_MANIFEST_v5";
+  var FALLBACK_REPORT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_v6";
+  var FALLBACK_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_CONTROL_FALLBACK_REPORT_RECEIPT_v6";
 
   var TARGET_ROUTE = "/showroom/globe/audralia/";
   var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
+  var MAX_PRESENTATION_JSON_CHARS = 18000;
 
   var DIAGNOSTIC_ENGINE_PATHS = Object.freeze([
     "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE",
@@ -122,11 +123,11 @@
 
     memory = memory.concat([value]);
 
-    if (Array.isArray(value)) return value.map(function (entry) { return clone(entry, memory); });
+    if (Array.isArray(value)) return value.slice(0, 89).map(function (entry) { return clone(entry, memory); });
 
     out = {};
     try {
-      Object.keys(value).slice(0, 377).forEach(function (key) {
+      Object.keys(value).slice(0, 233).forEach(function (key) {
         try { out[key] = clone(value[key], memory); } catch (_e) { out[key] = "[Unreadable]"; }
       });
     } catch (_e2) {
@@ -152,6 +153,13 @@
 
   function safeJson(value) {
     try { return JSON.stringify(clone(value), null, 2); } catch (_e) { return String(value); }
+  }
+
+  function boundedJson(value) {
+    var text = safeJson(value);
+    if (text.length <= MAX_PRESENTATION_JSON_CHARS) return text;
+    return text.slice(0, MAX_PRESENTATION_JSON_CHARS) +
+      "\n\n/* AUDRALIA_BOUNDED_PRESENTATION_TRUNCATED: full receipt retained in runtime state; pasted user-facing output bounded. */";
   }
 
   function escapeHtml(value) {
@@ -284,6 +292,7 @@
       documentReadyState: null,
       navigationPending: false,
       loadCount: 0,
+      firstObservedHref: null,
       lifecycleClass: "TARGET_UNBOUND",
       lastInspectedAt: null,
       preparationReceipt: null
@@ -303,12 +312,13 @@
     requiredCycleTargetIds: CYCLE_TARGET_IDS.slice(),
     requiredStationPositions: STATIONS.map(function (s) { return s.position; }),
     presentationStationMap: STATIONS,
-    reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
-    cycleProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
+    reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
+    cycleProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
     dgbCoreRole: "EVIDENCE_RUNTIME_REGISTRY_ONLY",
     targetPreparationOwner: "INDEX_CONTROLS",
     certificationOwner: "INDEX_CONTROL_BRIDGE",
     controlsCertificationScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_EVIDENCE_ONLY",
+    targetLifecycleRequiredBeforeCycle: true,
     publicApiRequirements: [
       "createReport", "runDirectCheck", "runNineCycle", "viewCurrentReport",
       "copyReadableReport", "copyPacketReport", "copyRawReport",
@@ -451,7 +461,7 @@
       path: resolved.path,
       contract: contract,
       status: status,
-      reason: "DIAGNOSTIC_ENGINE_OBSERVED",
+      reason: "DIAGNOSTIC_ENGINE_INDEX_JS_OBSERVED",
       reportInterfacePresent: isFn(api.createReport),
       cycleInterfacePresent: isFn(api.runNineCycle),
       receiptPresent: Boolean(receipt),
@@ -489,7 +499,7 @@
       path: resolved.path,
       contract: contract,
       status: status,
-      reason: "DGB_EVIDENCE_ONLY",
+      reason: "DGB_EVIDENCE_ONLY_NOT_REPORT_OR_CYCLE_AUTHORITY",
       runtimeReceiptPresent: Boolean(receipt),
       authorityReceiptPresent: Boolean(authorityReceipt),
       dgbRuntimeCompatible: contract === DGB_ENGINE_CONTRACT,
@@ -570,7 +580,7 @@
       escapeHtml(label) + "</p><strong>" + escapeHtml(headline) +
       "</strong></div></header>" +
       (values.length > 1
-        ? "<ul>" + values.map(function (entry) { return "<li>" + escapeHtml(entry) + "</li>"; }).join("") + "</ul>"
+        ? "<ul>" + values.slice(0, 21).map(function (entry) { return "<li>" + escapeHtml(entry) + "</li>"; }).join("") + "</ul>"
         : "<p>" + escapeHtml(values[0] || "") + "</p>")
     );
   }
@@ -593,8 +603,19 @@
     setText("reportTitle", "Diagnostic Report");
     setText("reportCreatedAt", report.createdAt || nowIso());
     setText("reportMeta", [report.reportId || "REPORT", receipt && receipt.receiptId ? receipt.receiptId : "RECEIPT UNAVAILABLE"].join(" · "));
-    setText("packetOutput", safeJson({ report: report, receipt: receipt }));
-    setText("rawOutput", safeJson({ report: report, receipt: receipt }));
+    setText("packetOutput", boundedJson({ report: report, receipt: receipt }));
+    setText("rawOutput", boundedJson({
+      schema: "AUDRALIA_BOUNDED_USER_FACING_RAW_REPORT_VIEW_v1",
+      reportId: report.reportId || null,
+      reportStatus: report.status || null,
+      receiptId: receipt && receipt.receiptId ? receipt.receiptId : null,
+      receiptStatus: receipt && receipt.status ? receipt.status : null,
+      receiptTerminalClass: receipt && receipt.terminalClass ? receipt.terminalClass : null,
+      targetLifecycle: receipt && receipt.targetLifecycle ? receipt.targetLifecycle : null,
+      stationReceiptCount: receipt && Array.isArray(receipt.stationReceipts) ? receipt.stationReceipts.length : 0,
+      report: report,
+      receipt: receipt
+    }));
     setDisabled("copyReadableReport", false);
     setDisabled("copyPacketReport", false);
     setDisabled("copyRawReport", false);
@@ -652,9 +673,31 @@
     return Promise.resolve(createFallbackReport({ reason: state.engine.reason || "DIAGNOSTIC_ENGINE_REPORT_INTERFACE_UNAVAILABLE" }));
   }
 
+  function compactTargetLifecycle(target) {
+    var t = target || state.target || emptyTarget();
+    var observed = t.observedRoute || t.declaredSrc || null;
+
+    return {
+      loaded: Boolean(t.documentLoaded),
+      routeExpected: t.expectedRoute || TARGET_ROUTE,
+      routeObserved: t.observedRoute || null,
+      routeMatched: Boolean(t.routeMatched),
+      firstObservedHref: t.firstObservedHref || observed,
+      lifecycleClass: t.lifecycleClass || "TARGET_UNKNOWN",
+      documentReadyState: t.documentReadyState || null,
+      navigationPending: Boolean(t.navigationPending),
+      loadCount: Number(t.loadCount || 0),
+      recommendedOwner: "CONTROL_PANEL",
+      recommendedFile: "index.controls.js",
+      recommendedAction: t.routeMatched && t.documentLoaded
+        ? "Proceed with diagnostic cycle."
+        : "Delay diagnostic cycle until target frame is loaded and route-matched."
+    };
+  }
+
   function createCycleHeldReceipt(reason) {
     return {
-      schema: "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v3",
+      schema: "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v4",
       receiptId: "AUDRALIA_CONTROL_CYCLE_HELD_" + Date.now(),
       status: "HELD",
       terminalClass: "CONTROL_INTERFACE_HELD",
@@ -663,7 +706,27 @@
       receipts: [],
       normalizedReceipts: [],
       source: "CONTROL_PANEL",
-      targetLifecycle: frozenClone(state.target),
+      targetLifecycle: compactTargetLifecycle(state.target),
+      noClaims: NO_CLAIMS,
+      createdAt: nowIso()
+    };
+  }
+
+  function createTargetNotReadyCycleReceipt(targetLifecycle) {
+    return {
+      schema: "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v4",
+      receiptId: "AUDRALIA_CONTROL_CYCLE_HELD_" + Date.now(),
+      status: "HELD",
+      terminalClass: "TARGET_NOT_READY",
+      reason: "CONTROL_PANEL_HELD_CYCLE_BECAUSE_TARGET_FRAME_WAS_NOT_LOADED_AND_ROUTE_MATCHED",
+      stationReceipts: [],
+      receipts: [],
+      normalizedReceipts: [],
+      source: "CONTROL_PANEL",
+      targetLifecycle: frozenClone(targetLifecycle),
+      recommendedOwner: "CONTROL_PANEL",
+      recommendedFile: "index.controls.js",
+      recommendedAction: "Do not invoke F8 until controls observe target loaded and route-matched.",
       noClaims: NO_CLAIMS,
       createdAt: nowIso()
     };
@@ -720,7 +783,7 @@
     });
 
     return {
-      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v8",
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_STATE_v9",
       engineCycleStatus: token(receipt && receipt.status || "UNKNOWN"),
       engineCycleTerminalClass: receipt && receipt.terminalClass || null,
       stationReceipts: frozenClone(returned),
@@ -735,7 +798,7 @@
       returnedReceiptMappingComplete: mapped.length === 9,
       logicalMappingComplete: mapped.length === 9,
       logicalMappingScope: "RETURNED_RECEIPTS_ONLY",
-      targetLifecycle: frozenClone(state.target),
+      targetLifecycle: compactTargetLifecycle(state.target),
       createdAt: nowIso()
     };
   }
@@ -772,7 +835,7 @@
 
     setText("cycleStatus", state.cycle.executed ? "Cycle · " + rendering.engineCycleStatus : "Cycle · Not Run");
     setStatus("cycleStatus", state.cycle.executed ? rendering.engineCycleStatus : "NOT_RUN");
-    setText("cycleLedgerOutput", safeJson(rendering));
+    setText("cycleLedgerOutput", boundedJson(rendering));
     setHtml("cycleReceiptList", rendering.stationReceipts.length
       ? rendering.stationReceipts.map(function (entry) {
           return '<article><h4>' + escapeHtml((entry.fibonacci || "") + " · " + (entry.role || "Station")) +
@@ -783,7 +846,7 @@
 
     state.cycle.rendering = deepFreeze(clone(rendering));
     state.cycle.localDomEvidence = deepFreeze({
-      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v8",
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_LOCAL_DOM_EVIDENCE_v9",
       evidenceScope: "CONTROLS_LOCAL_OBSERVATION_AND_UPDATE_ONLY",
       localDomUpdateComplete: missingTargets.length === 0 && rowResults.every(function (r) { return r.found && r.updated; }),
       missingTargetIds: missingTargets,
@@ -792,7 +855,7 @@
       observedAt: nowIso()
     });
     state.cycle.renderingReceipt = deepFreeze({
-      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v8",
+      schema: "AUDRALIA_DROP_WITH_READ_CYCLE_RENDERING_RECEIPT_v9",
       receiptId: "AUDRALIA_CYCLE_RENDERING_RECEIPT_" + Date.now(),
       controlsContract: CONTRACT,
       evidenceScope: "CONTROLS_LOCAL_PRESENTATION_ONLY",
@@ -817,35 +880,60 @@
 
     state.cycle.requested = true;
     state.cycle.running = true;
-    setText("controllerState", "NINE-CYCLE");
+    setText("controllerState", "TARGET CHECK");
     setStatus("controllerState", "RUNNING");
 
-    recordAction("runNineCycle.begin", { diagnosticEnginePath: state.engine.path, diagnosticEngineContract: state.engine.contract });
+    recordAction("runNineCycle.begin", {
+      diagnosticEnginePath: state.engine.path,
+      diagnosticEngineContract: state.engine.contract
+    });
 
-    if (engine && isFn(engine.runNineCycle)) {
-      try {
-        return Promise.resolve(engine.runNineCycle({
-          source: "CONTROL_PANEL",
-          requestedAt: nowIso(),
-          category: state.ui.selectedCategory,
-          audit: state.ui.selectedAudit,
-          participant: state.ui.selectedParticipant
-        })).then(function (receipt) {
-          state.cycle.running = false;
-          state.cycle.executed = true;
-          state.cycle.rawReceipt = deepFreeze(clone(receipt || createCycleHeldReceipt("DIAGNOSTIC_ENGINE_EMPTY_CYCLE_RECEIPT")));
-          renderCommittedCycleChamber();
-          recordAction("runNineCycle.complete", { status: state.cycle.rawReceipt.status || null, terminalClass: state.cycle.rawReceipt.terminalClass || null });
-          return frozenClone(state.cycle.rawReceipt);
-        }, function (error) {
-          return holdCycle("DIAGNOSTIC_ENGINE_CYCLE_REJECTED", error);
+    return ensureTargetReady().then(function (targetReady) {
+      var lifecycle = targetReady.targetLifecycle;
+
+      if (!targetReady.ready) {
+        var held = createTargetNotReadyCycleReceipt(lifecycle);
+        state.cycle.running = false;
+        state.cycle.executed = true;
+        state.cycle.rawReceipt = deepFreeze(clone(held));
+        renderCommittedCycleChamber();
+        recordAction("runNineCycle.held.targetNotReady", {
+          terminalClass: held.terminalClass,
+          targetLifecycle: lifecycle
         });
-      } catch (error) {
-        return Promise.resolve(holdCycle("DIAGNOSTIC_ENGINE_CYCLE_THROW", error));
+        return frozenClone(held);
       }
-    }
 
-    return Promise.resolve(holdCycle("DIAGNOSTIC_ENGINE_DOES_NOT_EXPOSE_NINE_CYCLE"));
+      if (engine && isFn(engine.runNineCycle)) {
+        try {
+          return Promise.resolve(engine.runNineCycle({
+            source: "CONTROL_PANEL",
+            requestedAt: nowIso(),
+            category: state.ui.selectedCategory,
+            audit: state.ui.selectedAudit,
+            participant: state.ui.selectedParticipant,
+            targetLifecycle: lifecycle
+          })).then(function (receipt) {
+            state.cycle.running = false;
+            state.cycle.executed = true;
+            state.cycle.rawReceipt = deepFreeze(clone(receipt || createCycleHeldReceipt("DIAGNOSTIC_ENGINE_EMPTY_CYCLE_RECEIPT")));
+            renderCommittedCycleChamber();
+            recordAction("runNineCycle.complete", {
+              status: state.cycle.rawReceipt.status || null,
+              terminalClass: state.cycle.rawReceipt.terminalClass || null,
+              targetLifecycle: lifecycle
+            });
+            return frozenClone(state.cycle.rawReceipt);
+          }, function (error) {
+            return holdCycle("DIAGNOSTIC_ENGINE_CYCLE_REJECTED", error);
+          });
+        } catch (error) {
+          return Promise.resolve(holdCycle("DIAGNOSTIC_ENGINE_CYCLE_THROW", error));
+        }
+      }
+
+      return Promise.resolve(holdCycle("DIAGNOSTIC_ENGINE_DOES_NOT_EXPOSE_NINE_CYCLE"));
+    });
   }
 
   function holdCycle(reason, error) {
@@ -855,7 +943,7 @@
     state.cycle.executed = true;
     state.cycle.rawReceipt = deepFreeze(clone(receipt));
     renderCommittedCycleChamber();
-    recordAction("runNineCycle.held", { reason: reason });
+    recordAction("runNineCycle.held", { reason: reason, targetLifecycle: compactTargetLifecycle(state.target) });
     return frozenClone(receipt);
   }
 
@@ -905,6 +993,8 @@
 
     observedIsBlank = String(observedRoute || "").trim() === "about:blank";
 
+    if (!state.target.firstObservedHref && observedRoute) state.target.firstObservedHref = observedRoute;
+
     state.target.declaredSrcNormalized = declaredSrcNormalized;
     state.target.observedRoute = observedRoute;
     state.target.observedRouteNormalized = normalizeRoutePath(observedRoute);
@@ -928,11 +1018,15 @@
     }
 
     state.target.preparationReceipt = deepFreeze({
-      schema: "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v3",
+      schema: "AUDRALIA_DIAGNOSTIC_TARGET_PREPARATION_RECEIPT_v4",
       receiptId: "AUDRALIA_TARGET_PREPARATION_RECEIPT_" + Date.now(),
       controlsContract: CONTRACT,
       targetLifecycle: state.target.lifecycleClass,
+      loaded: Boolean(state.target.documentLoaded),
+      routeExpected: state.target.expectedRoute,
+      routeObserved: state.target.observedRoute,
       routeMatched: state.target.routeMatched,
+      firstObservedHref: state.target.firstObservedHref,
       declaredRouteMatched: state.target.declaredRouteMatched,
       observedBlankWithDeclaredTarget: state.target.observedBlankWithDeclaredTarget,
       documentLoaded: state.target.documentLoaded,
@@ -942,6 +1036,11 @@
       observedRoute: state.target.observedRoute,
       observedRouteNormalized: state.target.observedRouteNormalized,
       navigationPending: state.target.navigationPending,
+      recommendedOwner: "CONTROL_PANEL",
+      recommendedFile: "index.controls.js",
+      recommendedAction: state.target.routeMatched && state.target.documentLoaded
+        ? "Proceed with diagnostic cycle."
+        : "Delay diagnostic cycle until target frame is loaded and route-matched.",
       noClaims: NO_CLAIMS,
       generatedAt: nowIso()
     });
@@ -951,12 +1050,15 @@
   }
 
   function ensureTargetReady() {
-    var target = inspectTargetFrame();
-    return {
-      ready: target.lifecycleClass === "TARGET_READY",
-      pending: target.lifecycleClass === "TARGET_LOADING" || target.lifecycleClass === "TARGET_NAVIGATION_PENDING",
-      target: target
-    };
+    var first = inspectTargetFrame({ source: "ensureTargetReady.first" });
+    var compact = compactTargetLifecycle(first);
+
+    return Promise.resolve({
+      ready: compact.loaded === true && compact.routeMatched === true,
+      pending: first.lifecycleClass === "TARGET_LOADING" || first.lifecycleClass === "TARGET_NAVIGATION_PENDING",
+      target: first,
+      targetLifecycle: compact
+    });
   }
 
   function setTargetVisible(visible) {
@@ -982,6 +1084,7 @@
     var frame = byId(TARGET_FRAME_ID);
     if (!frame) return false;
     state.target.navigationPending = true;
+    state.target.firstObservedHref = null;
     frame.src = TARGET_ROUTE + "?diagnosticReload=" + Date.now();
     inspectTargetFrame({ navigationPending: true, source: "reloadTargetFrame" });
     recordAction("reloadTargetFrame");
@@ -1000,11 +1103,11 @@
       "",
       "RESULT", String(read.Result),
       "",
-      "EVIDENCE", read.Evidence.map(function (e) { return "- " + e; }).join("\n"),
+      "EVIDENCE", read.Evidence.slice(0, 21).map(function (e) { return "- " + e; }).join("\n"),
       "",
-      "ABSENCE", read.Absence.map(function (e) { return "- " + e; }).join("\n"),
+      "ABSENCE", read.Absence.slice(0, 21).map(function (e) { return "- " + e; }).join("\n"),
       "",
-      "DIRECTION", read.Direction.map(function (e) { return "- " + e; }).join("\n")
+      "DIRECTION", read.Direction.slice(0, 21).map(function (e) { return "- " + e; }).join("\n")
     ].join("\n");
   }
 
@@ -1028,7 +1131,7 @@
   function createDeepArchive() {
     var archive = collectReceiptFamilies();
     setText("archiveSessionCount", archive.length);
-    setText("archiveRawOutput", safeJson(archive));
+    setText("archiveRawOutput", boundedJson(archive));
     recordAction("createDeepArchive", { receiptCount: archive.length });
     return frozenClone(archive);
   }
@@ -1125,15 +1228,15 @@
     add(engine && isFn(engine.getEngineReceipt) ? engine.getEngineReceipt() : engine && isFn(engine.getReceipt) ? engine.getReceipt() : null, "DIAGNOSTIC_ENGINE", "diagnosticEngine.getReceipt");
     add(engine && isFn(engine.getReportReceipt) ? engine.getReportReceipt() : null, "DIAGNOSTIC_ENGINE", "diagnosticEngine.getReportReceipt");
     add(engine && isFn(engine.getCycleReceipt) ? engine.getCycleReceipt() : null, "DIAGNOSTIC_ENGINE", "diagnosticEngine.getCycleReceipt");
-    add(dgb && isFn(dgb.getRuntimeReceipt) ? dgb.getRuntimeReceipt() : null, "DGB_EVIDENCE", "dgb.getRuntimeReceipt");
-    add(dgb && isFn(dgb.getAuthorityStatus) ? dgb.getAuthorityStatus() : null, "DGB_EVIDENCE", "dgb.getAuthorityStatus");
+    add(dgb && isFn(dgb.getRuntimeReceipt) ? dgb.getRuntimeReceipt() : null, "DGB_EVIDENCE_ONLY", "dgb.getRuntimeReceipt");
+    add(dgb && isFn(dgb.getAuthorityStatus) ? dgb.getAuthorityStatus() : null, "DGB_EVIDENCE_ONLY", "dgb.getAuthorityStatus");
     add(state.report.receipt, state.report.source || "CONTROL_PANEL", "state.report.receipt");
     add(state.target.preparationReceipt, "CONTROL_TARGET_PREPARATION", "state.target.preparationReceipt");
     add(state.cycle.rawReceipt, "CONTROL_CYCLE", "state.cycle.rawReceipt");
     add(state.cycle.renderingReceipt, "CONTROL_CYCLE_RENDERING", "state.cycle.renderingReceipt");
     add(state.lastError, "CONTROL_PANEL", "state.lastError");
 
-    return output;
+    return output.slice(0, 34);
   }
 
   function receiptMatchesFilter(entry, filter) {
@@ -1183,7 +1286,7 @@
     var entry = state.visibleReceipts[Number(index)] || null;
     state.ui.selectedReceiptIndex = entry ? Number(index) : null;
     setHtml("selectedReceiptDetail", entry
-      ? "<h4>" + escapeHtml(entry.label) + "</h4><pre>" + escapeHtml(safeJson(entry.record)) + "</pre>"
+      ? "<h4>" + escapeHtml(entry.label) + "</h4><pre>" + escapeHtml(boundedJson(entry.record)) + "</pre>"
       : "<h4>Receipt unavailable</h4>");
     publishReceipt();
   }
@@ -1438,7 +1541,8 @@
       engine: frozenClone(state.engine),
       dgbEvidence: frozenClone(state.dgbEvidence),
       inspectionLane: frozenClone(state.inspectionLane),
-      targetLifecycle: frozenClone(state.target),
+      targetLifecycle: compactTargetLifecycle(state.target),
+      targetLifecycleFull: frozenClone(state.target),
       controlManifestCount: CONTROL_IDS.length,
       discoveredControlCount: state.controls.discoveredCount,
       missingControlCount: state.controls.missingCount,
@@ -1468,8 +1572,8 @@
       lastError: frozenClone(state.lastError),
       presentationStationMap: STATIONS,
       requirements: REQUIREMENTS,
-      reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
-      cycleProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE",
+      reportProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
+      cycleProducerOwner: "DIAGNOSTIC_OBSERVATORY_ENGINE_INDEX_JS",
       dgbCoreRole: "EVIDENCE_RUNTIME_REGISTRY_ONLY",
       relationalCertificationOwner: "INDEX_CONTROL_BRIDGE",
       noClaims: NO_CLAIMS,
@@ -1488,6 +1592,7 @@
       dgbEvidence: state.dgbEvidence,
       inspectionLane: state.inspectionLane,
       target: state.target,
+      targetLifecycle: compactTargetLifecycle(state.target),
       controls: state.controls,
       ui: state.ui,
       report: state.report,
@@ -1548,6 +1653,7 @@
       getCurrentCycleReceipt: function () { return frozenClone(state.cycle.rawReceipt); },
       getCycleRenderingState: function () { return frozenClone(state.cycle.rendering); },
       getTargetLifecycleState: function () { return frozenClone(state.target); },
+      getBoundedTargetLifecycle: function () { return frozenClone(compactTargetLifecycle(state.target)); },
       getNormalizedReceipts: function () { return frozenClone(state.normalizedReceipts); },
       getRequirements: function () { return frozenClone(REQUIREMENTS); },
       getReceipt: function () { return frozenClone(root.AUDRALIA_DROP_WITH_READ_CONTROL_PANEL_RECEIPT || null); },

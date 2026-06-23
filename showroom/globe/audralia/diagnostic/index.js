@@ -1,31 +1,34 @@
 // /showroom/globe/audralia/diagnostic/index.js
-// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v4
+// AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5
 // Full-file replacement.
 // Diagnostic observatory interpreter only.
+// Controls v10 remains the UI/router anchor.
 // Passive inspection integration. Explicit conductor-only Nine-Cycle handoff.
+// Direct Check accepts runDirect(role, payload) and routes to matching participant when available.
 // No DOM event ownership. No production mutation. No repair authorization.
-// API availability is not runtime readiness, visual readiness, cycle pass, WebGL, WebGPU, or F21 claim.
+// API availability is not runtime readiness, visual readiness, cycle pass, WebGL, WebGPU, F21, or F89 claim.
 
-(function installAudraliaDiagnosticEngineV4(global) {
+(function installAudraliaDiagnosticEngineV5(global) {
   "use strict";
 
   var root = global || (typeof window !== "undefined" ? window : globalThis);
   var doc = root && root.document ? root.document : null;
 
-  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v4";
-  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v3";
-  var VERSION = "4.0.0";
+  var CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v5";
+  var PREVIOUS_CONTRACT = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_OBSERVATORY_ENGINE_TNT_v4";
+  var VERSION = "5.0.0";
   var FILE = "/showroom/globe/audralia/diagnostic/index.js";
   var AUTHORITY = "AUDRALIA_DIAGNOSTIC_NEWS_FIBONACCI_AUTHORITY_ASSIGNMENT_v1";
 
-  var REPORT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_v4";
-  var REPORT_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT_v4";
-  var ENGINE_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT_v4";
-  var CYCLE_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v4";
-  var ARCHIVE_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ARCHIVE_v4";
-  var CYCLE_REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_CANONICAL_NINE_CYCLE_REQUEST_v3";
-  var STATION_REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v2";
-  var LANE_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_EVIDENCE_LANE_v2";
+  var REPORT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_v5";
+  var REPORT_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT_v5";
+  var ENGINE_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT_v5";
+  var CYCLE_RECEIPT_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT_v5";
+  var DIRECT_RECEIPT_SCHEMA = "AUDRALIA_DIAGNOSTIC_DIRECT_EXECUTION_RECEIPT_v5";
+  var ARCHIVE_SCHEMA = "AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ARCHIVE_v5";
+  var CYCLE_REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_CANONICAL_NINE_CYCLE_REQUEST_v4";
+  var STATION_REQUEST_SCHEMA = "AUDRALIA_DIAGNOSTIC_STATION_EXECUTION_REQUEST_v3";
+  var LANE_SCHEMA = "AUDRALIA_BOUNDED_DIAGNOSTIC_EVIDENCE_LANE_v3";
 
   var TARGET_ROUTE = "/showroom/globe/audralia/";
   var TARGET_FRAME_ID = "audraliaDiagnosticTargetFrame";
@@ -68,6 +71,7 @@
     rendererPassClaimed: false,
     cyclePassClaimed: false,
     f21Claimed: false,
+    f89Claimed: false,
     generatedImage: false,
     graphicBox: false,
     webGL: false,
@@ -75,15 +79,15 @@
   });
 
   var STATIONS = Object.freeze([
-    Object.freeze({ position: 1, fibonacci: "F1", stationId: "NORTH_PROBE_INTAKE", direction: "NORTH", aliases: ["AUDRALIA_DIAGNOSTIC_NORTH", "AUDRALIA.diagnosticNorth"], methods: ["executeCycleStation", "probe", "inspect", "run"] }),
-    Object.freeze({ position: 2, fibonacci: "F3", stationId: "EAST_PROBE_SOURCE", direction: "EAST", aliases: ["AUDRALIA_DIAGNOSTIC_PROBE_EAST", "AUDRALIA.diagnosticProbeEast"], methods: ["executeCycleStation", "probe", "inspect", "run"] }),
-    Object.freeze({ position: 3, fibonacci: "F5", stationId: "EAST_CONSTRUCTION_INTERPRETATION", direction: "EAST", aliases: ["AUDRALIA_DIAGNOSTIC_EAST", "AUDRALIA.diagnosticEast"], methods: ["executeCycleStation", "interpret", "construct", "run"] }),
-    Object.freeze({ position: 4, fibonacci: "F8", stationId: "CANVAS_SURFACE_TRUTH", direction: "CENTER", aliases: ["CANVAS_SURFACE_TRUTH", "AUDRALIA_CANVAS_SURFACE_TRUTH", "AUDRALIA.canvasSurfaceTruth"], methods: ["executeCycleStation", "inspect", "probe", "run"] }),
-    Object.freeze({ position: 5, fibonacci: "F13", stationId: "WEST_PROBE_RUNTIME", direction: "WEST", aliases: ["AUDRALIA_DIAGNOSTIC_PROBE_WEST", "AUDRALIA.diagnosticProbeWest"], methods: ["executeCycleStation", "probe", "inspect", "run"] }),
-    Object.freeze({ position: 6, fibonacci: "F21", stationId: "WEST_RUNTIME_INTERPRETATION", direction: "WEST", aliases: ["AUDRALIA_DIAGNOSTIC_WEST", "AUDRALIA.diagnosticWest"], methods: ["executeCycleStation", "interpret", "run"] }),
-    Object.freeze({ position: 7, fibonacci: "F34", stationId: "SOUTH_PROBE_HANDOFF", direction: "SOUTH", aliases: ["AUDRALIA_DIAGNOSTIC_PROBE_SOUTH", "AUDRALIA.diagnosticProbeSouth"], methods: ["executeCycleStation", "probe", "inspect", "run"] }),
-    Object.freeze({ position: 8, fibonacci: "F55", stationId: "SOUTH_RESTITUTION_INTERPRETATION", direction: "SOUTH", aliases: ["AUDRALIA_DIAGNOSTIC_SOUTH", "AUDRALIA.diagnosticSouth"], methods: ["executeCycleStation", "interpret", "restore", "run"] }),
-    Object.freeze({ position: 9, fibonacci: "F89", stationId: "RAIL_TERMINAL_SYNTHESIS", direction: "RAIL", aliases: ["AUDRALIA_DIAGNOSTIC_RAIL", "AUDRALIA.diagnosticRail"], methods: ["executeCycleStation", "synthesize", "run"] })
+    Object.freeze({ position: 1, fibonacci: "F1", stationId: "NORTH_PROBE_INTAKE", direction: "NORTH", aliases: ["AUDRALIA_DIAGNOSTIC_NORTH", "AUDRALIA.diagnosticNorth"], methods: ["executeCycleStation", "runDirect", "probe", "inspect", "run"] }),
+    Object.freeze({ position: 2, fibonacci: "F3", stationId: "EAST_PROBE_SOURCE", direction: "EAST", aliases: ["AUDRALIA_DIAGNOSTIC_PROBE_EAST", "AUDRALIA.diagnosticProbeEast"], methods: ["executeCycleStation", "runDirect", "probe", "inspect", "run"] }),
+    Object.freeze({ position: 3, fibonacci: "F5", stationId: "EAST_CONSTRUCTION_INTERPRETATION", direction: "EAST", aliases: ["AUDRALIA_DIAGNOSTIC_EAST", "AUDRALIA.diagnosticEast"], methods: ["executeCycleStation", "runDirect", "interpret", "construct", "run"] }),
+    Object.freeze({ position: 4, fibonacci: "F8", stationId: "CANVAS_SURFACE_TRUTH", direction: "CENTER", aliases: ["CANVAS_SURFACE_TRUTH", "AUDRALIA_CANVAS_SURFACE_TRUTH", "AUDRALIA.canvasSurfaceTruth"], methods: ["executeCycleStation", "runDirect", "inspect", "probe", "run"] }),
+    Object.freeze({ position: 5, fibonacci: "F13", stationId: "WEST_PROBE_RUNTIME", direction: "WEST", aliases: ["AUDRALIA_DIAGNOSTIC_PROBE_WEST", "AUDRALIA.diagnosticProbeWest"], methods: ["executeCycleStation", "runDirect", "probe", "inspect", "run"] }),
+    Object.freeze({ position: 6, fibonacci: "F21", stationId: "WEST_RUNTIME_INTERPRETATION", direction: "WEST", aliases: ["AUDRALIA_DIAGNOSTIC_WEST", "AUDRALIA.diagnosticWest"], methods: ["executeCycleStation", "runDirect", "interpret", "run"] }),
+    Object.freeze({ position: 7, fibonacci: "F34", stationId: "SOUTH_PROBE_HANDOFF", direction: "SOUTH", aliases: ["AUDRALIA_DIAGNOSTIC_PROBE_SOUTH", "AUDRALIA.diagnosticProbeSouth"], methods: ["executeCycleStation", "runDirect", "probe", "inspect", "run"] }),
+    Object.freeze({ position: 8, fibonacci: "F55", stationId: "SOUTH_RESTITUTION_INTERPRETATION", direction: "SOUTH", aliases: ["AUDRALIA_DIAGNOSTIC_SOUTH", "AUDRALIA.diagnosticSouth"], methods: ["executeCycleStation", "runDirect", "interpret", "restore", "run"] }),
+    Object.freeze({ position: 9, fibonacci: "F89", stationId: "RAIL_TERMINAL_SYNTHESIS", direction: "RAIL", aliases: ["AUDRALIA_DIAGNOSTIC_RAIL", "AUDRALIA.diagnosticRail"], methods: ["executeCycleStation", "runDirect", "synthesize", "run"] })
   ]);
 
   var CONDUCTOR_ALIASES = Object.freeze([
@@ -113,10 +117,12 @@
     reportStatus: "READY",
     currentReport: null,
     currentReceipt: null,
+    currentDirectReceipt: null,
     currentCycleRequest: null,
     currentCycleReceipt: null,
     reportsCreated: 0,
     directExecutions: 0,
+    directCompletions: 0,
     cycleExecutions: 0,
     cycleCommits: 0,
     archive: [],
@@ -249,6 +255,13 @@
     return null;
   }
 
+  function firstValue(values) {
+    for (var i = 0; i < values.length; i += 1) {
+      if (values[i] !== undefined && values[i] !== null && values[i] !== "") return values[i];
+    }
+    return null;
+  }
+
   function readReceipt(authority) {
     if (!authority) return null;
     try {
@@ -280,6 +293,30 @@
     try { return doc.getElementById(TARGET_FRAME_ID); } catch (_error) { return null; }
   }
 
+  function normalizeControlsTargetLifecycle(payload) {
+    var explicit = payload && payload.targetLifecycle && isObject(payload.targetLifecycle)
+      ? payload.targetLifecycle
+      : null;
+
+    if (!explicit) return null;
+
+    return freeze({
+      source: "CONTROL_PANEL",
+      loaded: Boolean(explicit.loaded),
+      routeExpected: safeText(explicit.routeExpected, TARGET_ROUTE),
+      routeObserved: safeText(explicit.routeObserved, null),
+      routeMatched: Boolean(explicit.routeMatched),
+      firstObservedHref: safeText(explicit.firstObservedHref, null),
+      lifecycleClass: safeText(explicit.lifecycleClass, "TARGET_UNKNOWN"),
+      documentReadyState: safeText(explicit.documentReadyState, null),
+      navigationPending: Boolean(explicit.navigationPending),
+      loadCount: Number(explicit.loadCount || 0),
+      recommendedOwner: safeText(explicit.recommendedOwner, null),
+      recommendedFile: safeText(explicit.recommendedFile, null),
+      recommendedAction: safeText(explicit.recommendedAction, null)
+    });
+  }
+
   function inspectTargetAccess() {
     var frame = getTargetFrame();
     var out = {
@@ -290,6 +327,7 @@
       documentLoaded: false,
       documentReadyState: null,
       documentPath: null,
+      documentHref: null,
       documentTitle: null,
       targetWindow: null,
       error: null
@@ -305,6 +343,7 @@
       out.documentReadyState = targetDoc && targetDoc.readyState ? String(targetDoc.readyState) : null;
       out.documentLoaded = out.documentReadyState === "complete" || out.documentReadyState === "interactive";
       out.documentPath = win && win.location ? String(win.location.pathname || "") : null;
+      out.documentHref = win && win.location ? String(win.location.href || "") : null;
       out.documentTitle = targetDoc && targetDoc.title ? String(targetDoc.title) : null;
     } catch (error) {
       out.error = normalizeError(error, "inspectTargetAccess");
@@ -379,7 +418,7 @@
     });
 
     return freeze({
-      schema: "AUDRALIA_DIAGNOSTIC_PRODUCT_ENGINE_CHAIN_PASSIVE_EVIDENCE_v2",
+      schema: "AUDRALIA_DIAGNOSTIC_PRODUCT_ENGINE_CHAIN_PASSIVE_EVIDENCE_v3",
       recordCount: records.length,
       records: records,
       observedAt: nowIso(),
@@ -398,13 +437,6 @@
       controlPanelContract: safeText(ds.controlPanelContract, null),
       bridgeContract: safeText(ds.controlBridgeContract, null)
     });
-  }
-
-  function firstValue(values) {
-    for (var i = 0; i < values.length; i += 1) {
-      if (values[i] !== undefined && values[i] !== null && values[i] !== "") return values[i];
-    }
-    return null;
   }
 
   function candidate(value, source) {
@@ -466,7 +498,7 @@
     var absenceFields = all.filter(function absent(r) { return !r.value; }).map(function map(r) { return r.field; });
 
     return freeze({
-      schema: "AUDRALIA_DIAGNOSTIC_BOUNDED_IDENTITY_PACKET_v3",
+      schema: "AUDRALIA_DIAGNOSTIC_BOUNDED_IDENTITY_PACKET_v4",
       subject: {
         subjectId: records.subjectId.value,
         subjectType: records.subjectType.value,
@@ -496,17 +528,30 @@
 
   function buildTargetPacket(payload, targetAccess, runtimeCandidate, receiptCandidate, statusCandidate) {
     var explicit = isObject(payload.target) ? payload.target : {};
+    var controlsLifecycle = normalizeControlsTargetLifecycle(payload);
     var receipt = receiptCandidate ? receiptCandidate.value : null;
     var status = statusCandidate ? statusCandidate.value : null;
 
+    var routeFromAccess = targetAccess && targetAccess.documentPath ? targetAccess.documentPath : null;
+    var routeObserved = controlsLifecycle && controlsLifecycle.routeObserved ? controlsLifecycle.routeObserved : routeFromAccess;
+
     return freeze({
-      route: safeText(explicit.route, targetAccess && targetAccess.documentPath ? targetAccess.documentPath : TARGET_ROUTE),
+      route: safeText(explicit.route, routeFromAccess || TARGET_ROUTE),
       frameId: safeText(explicit.frameId, TARGET_FRAME_ID),
       framePresent: firstValue([bool(explicit.framePresent), targetAccess ? targetAccess.framePresent : null, false]),
-      documentLoaded: firstValue([bool(explicit.documentLoaded), targetAccess ? targetAccess.documentLoaded : null, false]),
+      documentLoaded: firstValue([bool(explicit.documentLoaded), controlsLifecycle ? controlsLifecycle.loaded : null, targetAccess ? targetAccess.documentLoaded : null, false]),
       sameOriginAccessible: firstValue([bool(explicit.sameOriginAccessible), targetAccess ? targetAccess.sameOriginAccessible : null, false]),
-      documentReadyState: targetAccess ? targetAccess.documentReadyState : null,
+      documentReadyState: firstValue([explicit.documentReadyState, controlsLifecycle ? controlsLifecycle.documentReadyState : null, targetAccess ? targetAccess.documentReadyState : null]),
+      documentPath: routeFromAccess,
+      documentHref: targetAccess ? targetAccess.documentHref : null,
       documentTitle: targetAccess ? targetAccess.documentTitle : null,
+      controlsTargetLifecycle: frozenClone(controlsLifecycle),
+      controlsRouteExpected: controlsLifecycle ? controlsLifecycle.routeExpected : TARGET_ROUTE,
+      controlsRouteObserved: controlsLifecycle ? controlsLifecycle.routeObserved : null,
+      controlsRouteMatched: controlsLifecycle ? controlsLifecycle.routeMatched : false,
+      controlsLifecycleClass: controlsLifecycle ? controlsLifecycle.lifecycleClass : "NOT_PROVIDED",
+      routeObserved: routeObserved,
+      targetReadyForCycle: Boolean(controlsLifecycle && controlsLifecycle.loaded && controlsLifecycle.routeMatched),
       runtimeAlias: runtimeCandidate ? runtimeCandidate.alias : null,
       runtimeApiAvailable: Boolean(runtimeCandidate),
       runtimeReceipt: frozenClone(receipt),
@@ -534,11 +579,14 @@
     var identity = buildIdentity(explicit, targetAccess, runtimeCandidate, receiptCandidate, statusCandidate);
     var declarations = htmlDeclarations();
     var productChain = collectProductChainEvidence();
+    var controlsLifecycle = normalizeControlsTargetLifecycle(explicit);
 
     var request = {
       schema: CYCLE_REQUEST_SCHEMA,
       cycleId: safeText(explicit.cycleId || (explicit.cycle && explicit.cycle.cycleId), "audralia-nine-cycle-" + Math.random().toString(16).slice(2, 10)),
       mode: safeText(explicit.mode, "AUDIT"),
+      source: safeText(explicit.source, "DIAGNOSTIC_ENGINE"),
+      requestedAt: safeText(explicit.requestedAt, nowIso()),
       subject: identity.subject,
       engine: identity.engine,
       construct: {
@@ -552,6 +600,7 @@
         diagnosticEngineFile: FILE
       },
       target: buildTargetPacket(explicit, targetAccess, runtimeCandidate, receiptCandidate, statusCandidate),
+      controlsTargetLifecycle: frozenClone(controlsLifecycle),
       identity: identity,
       productEngineEvidence: productChain,
       diagnosticContext: {
@@ -563,6 +612,8 @@
       },
       evidenceProvenance: {
         explicitPayloadPresent: Object.keys(explicit).length > 0,
+        controlsTargetLifecyclePresent: Boolean(controlsLifecycle),
+        controlsTargetReadyForCycle: Boolean(controlsLifecycle && controlsLifecycle.loaded && controlsLifecycle.routeMatched),
         runtimeAlias: runtimeCandidate ? runtimeCandidate.alias : null,
         runtimeSource: runtimeCandidate ? runtimeCandidate.source : null,
         runtimeReceiptSource: receiptCandidate ? receiptCandidate.source : null,
@@ -610,6 +661,29 @@
     });
   }
 
+  function getParticipantManifest() {
+    return STATIONS.map(function map(station) {
+      return {
+        role: station.stationId,
+        label: station.stationId,
+        required: true,
+        cyclePosition: station.position,
+        fibonacci: station.fibonacci,
+        direction: station.direction,
+        aliases: station.aliases.slice(),
+        methods: station.methods.slice()
+      };
+    }).concat([{
+      role: "NORTH_CONDUCTOR",
+      label: "North Conductor",
+      required: true,
+      auxiliary: true,
+      direction: "NORTH",
+      aliases: CONDUCTOR_ALIASES.slice(),
+      methods: ["runNineCycle", "getReceipt", "getDefinitionReceipt"]
+    }]);
+  }
+
   function collectInspectionLanes() {
     var inspection = getInspectionLane();
 
@@ -650,36 +724,13 @@
       safeLane("controlFamily", function run() { return isFn(inspection.inspectControlFamily) ? inspection.inspectControlFamily() : { status: "MISSING" }; }),
       safeLane("productEngineChain", function run() {
         return {
-          schema: "AUDRALIA_PRODUCT_ENGINE_CHAIN_INSPECTION_v2",
+          schema: "AUDRALIA_PRODUCT_ENGINE_CHAIN_INSPECTION_v3",
           status: "AVAILABLE",
           evidence: collectProductChainEvidence(),
           noClaims: NO_CLAIMS
         };
       })
     ];
-  }
-
-  function getParticipantManifest() {
-    return STATIONS.map(function map(station) {
-      return {
-        role: station.stationId,
-        label: station.stationId,
-        required: true,
-        cyclePosition: station.position,
-        fibonacci: station.fibonacci,
-        direction: station.direction,
-        aliases: station.aliases.slice(),
-        methods: station.methods.slice()
-      };
-    }).concat([{
-      role: "NORTH_CONDUCTOR",
-      label: "North Conductor",
-      required: true,
-      auxiliary: true,
-      direction: "NORTH",
-      aliases: CONDUCTOR_ALIASES.slice(),
-      methods: ["runNineCycle", "getReceipt", "getDefinitionReceipt"]
-    }]);
   }
 
   function laneList(lanes, field) {
@@ -863,6 +914,217 @@
     });
   }
 
+  function normalizeRole(role, payload) {
+    if (typeof role === "string" && role.trim()) return role.trim();
+
+    if (isObject(role)) {
+      return safeText(role.role || role.participant || role.stationId || role.selectedParticipant, null);
+    }
+
+    if (isObject(payload)) {
+      return safeText(payload.role || payload.participant || payload.stationId || payload.selectedParticipant, null);
+    }
+
+    return null;
+  }
+
+  function normalizePayload(role, payload) {
+    if (isObject(payload)) return payload;
+    if (isObject(role)) return role;
+    return {};
+  }
+
+  function findStationByRole(role) {
+    var normalized = safeText(role, null);
+    if (!normalized || normalized === "ALL") return null;
+
+    for (var i = 0; i < STATIONS.length; i += 1) {
+      if (STATIONS[i].stationId === normalized || STATIONS[i].fibonacci === normalized || STATIONS[i].direction === normalized) return STATIONS[i];
+    }
+
+    return null;
+  }
+
+  function findParticipantApi(station) {
+    if (!station) return null;
+    for (var i = 0; i < station.aliases.length; i += 1) {
+      var found = firstGlobal([station.aliases[i]]);
+      if (found && found.value) return found;
+    }
+    return null;
+  }
+
+  function callParticipantDirect(station, found, payload) {
+    var api = found ? found.value : null;
+    if (!api) return null;
+
+    var request = {
+      schema: STATION_REQUEST_SCHEMA,
+      requestMode: "DIRECT_CHECK",
+      cycleId: payload.cycleId || "direct-" + Math.random().toString(16).slice(2, 10),
+      position: station.position,
+      fibonacci: station.fibonacci,
+      stationId: station.stationId,
+      role: station.stationId,
+      source: "DIAGNOSTIC_ENGINE",
+      payload: frozenClone(payload),
+      noClaims: NO_CLAIMS,
+      requestedAt: nowIso()
+    };
+
+    for (var i = 0; i < station.methods.length; i += 1) {
+      var method = station.methods[i];
+      if (isFn(api[method])) {
+        return {
+          method: method,
+          alias: found.path,
+          receipt: api[method](request)
+        };
+      }
+    }
+
+    return null;
+  }
+
+  function runDirect(role, payload) {
+    var normalizedPayload = normalizePayload(role, payload);
+    var selectedRole = normalizeRole(role, normalizedPayload) || state.selectedParticipant || "ALL";
+    var station = findStationByRole(selectedRole);
+
+    state.directExecutions += 1;
+
+    if (!station) {
+      var allHeld = freeze({
+        schema: DIRECT_RECEIPT_SCHEMA,
+        status: "HELD",
+        terminalClass: "DIRECT_ROLE_UNRESOLVED",
+        role: selectedRole,
+        reason: selectedRole === "ALL"
+          ? "DIRECT_CHECK_REQUIRES_SELECTED_PARTICIPANT_ROLE"
+          : "DIRECT_CHECK_ROLE_DID_NOT_MATCH_A_DECLARED_STATION",
+        payloadObserved: Boolean(normalizedPayload),
+        source: "DIAGNOSTIC_ENGINE",
+        recommendedOwner: "CONTROL_PANEL",
+        recommendedFile: "index.controls.js",
+        recommendedAction: "Pass selected participant role as runDirect(role, payload).",
+        noClaims: NO_CLAIMS,
+        createdAt: nowIso()
+      });
+
+      state.currentDirectReceipt = allHeld;
+      archive({ schema: ARCHIVE_SCHEMA, recordType: "DIRECT_EXECUTION_HELD", receipt: allHeld, archivedAt: nowIso() });
+      publishPublicReport();
+      publishEngineReceipt();
+      recordAction("runDirect.held", { role: selectedRole, terminalClass: allHeld.terminalClass });
+      return frozenClone(allHeld);
+    }
+
+    var found = findParticipantApi(station);
+    if (!found) {
+      var missing = freeze({
+        schema: DIRECT_RECEIPT_SCHEMA,
+        status: "HELD",
+        terminalClass: "DIRECT_PARTICIPANT_ABSENT",
+        role: selectedRole,
+        stationId: station.stationId,
+        fibonacci: station.fibonacci,
+        position: station.position,
+        reason: "DIRECT_PARTICIPANT_API_NOT_RESOLVED",
+        aliasesChecked: station.aliases.slice(),
+        source: "DIAGNOSTIC_ENGINE",
+        recommendedOwner: "DIAGNOSTIC_PARTICIPANT",
+        recommendedFile: null,
+        recommendedAction: "Load or expose the selected participant API before Direct Check.",
+        noClaims: NO_CLAIMS,
+        createdAt: nowIso()
+      });
+
+      state.currentDirectReceipt = missing;
+      archive({ schema: ARCHIVE_SCHEMA, recordType: "DIRECT_EXECUTION_HELD", receipt: missing, archivedAt: nowIso() });
+      publishPublicReport();
+      publishEngineReceipt();
+      recordAction("runDirect.held", { role: selectedRole, terminalClass: missing.terminalClass });
+      return frozenClone(missing);
+    }
+
+    try {
+      var called = callParticipantDirect(station, found, normalizedPayload);
+      if (!called) {
+        var notCallable = freeze({
+          schema: DIRECT_RECEIPT_SCHEMA,
+          status: "HELD",
+          terminalClass: "DIRECT_PARTICIPANT_NOT_CALLABLE",
+          role: selectedRole,
+          stationId: station.stationId,
+          fibonacci: station.fibonacci,
+          position: station.position,
+          participantAlias: found.path,
+          reason: "PARTICIPANT_API_PRESENT_WITHOUT_SUPPORTED_DIRECT_METHOD",
+          methodsChecked: station.methods.slice(),
+          source: "DIAGNOSTIC_ENGINE",
+          recommendedOwner: "DIAGNOSTIC_PARTICIPANT",
+          recommendedFile: null,
+          recommendedAction: "Expose one supported participant method for direct diagnostic check.",
+          noClaims: NO_CLAIMS,
+          createdAt: nowIso()
+        });
+
+        state.currentDirectReceipt = notCallable;
+        archive({ schema: ARCHIVE_SCHEMA, recordType: "DIRECT_EXECUTION_HELD", receipt: notCallable, archivedAt: nowIso() });
+        publishPublicReport();
+        publishEngineReceipt();
+        recordAction("runDirect.held", { role: selectedRole, terminalClass: notCallable.terminalClass });
+        return frozenClone(notCallable);
+      }
+
+      var complete = freeze({
+        schema: DIRECT_RECEIPT_SCHEMA,
+        status: "COMPLETE",
+        terminalClass: "DIRECT_PARTICIPANT_RETURNED",
+        role: selectedRole,
+        stationId: station.stationId,
+        fibonacci: station.fibonacci,
+        position: station.position,
+        participantAlias: called.alias,
+        method: called.method,
+        participantReceipt: frozenClone(called.receipt),
+        source: "DIAGNOSTIC_ENGINE",
+        noClaims: NO_CLAIMS,
+        createdAt: nowIso()
+      });
+
+      state.directCompletions += 1;
+      state.currentDirectReceipt = complete;
+      archive({ schema: ARCHIVE_SCHEMA, recordType: "DIRECT_EXECUTION", receipt: complete, archivedAt: nowIso() });
+      publishPublicReport();
+      publishEngineReceipt();
+      recordAction("runDirect.complete", { role: selectedRole, stationId: station.stationId, method: called.method });
+      return frozenClone(complete);
+    } catch (error) {
+      var failed = freeze({
+        schema: DIRECT_RECEIPT_SCHEMA,
+        status: "ERROR",
+        terminalClass: "DIRECT_PARTICIPANT_ERROR",
+        role: selectedRole,
+        stationId: station.stationId,
+        fibonacci: station.fibonacci,
+        position: station.position,
+        participantAlias: found.path,
+        error: normalizeError(error, "runDirect"),
+        source: "DIAGNOSTIC_ENGINE",
+        noClaims: NO_CLAIMS,
+        createdAt: nowIso()
+      });
+
+      state.currentDirectReceipt = failed;
+      archive({ schema: ARCHIVE_SCHEMA, recordType: "DIRECT_EXECUTION_ERROR", receipt: failed, archivedAt: nowIso() });
+      publishPublicReport();
+      publishEngineReceipt();
+      recordAction("runDirect.error", { role: selectedRole, stationId: station.stationId });
+      return frozenClone(failed);
+    }
+  }
+
   function normalizeStationReceipt(rawReceipt, index) {
     var raw = isObject(rawReceipt) ? rawReceipt : {};
     var expected = STATIONS[index] || null;
@@ -872,7 +1134,7 @@
     var status = safeText(raw.status, "UNKNOWN").toUpperCase();
 
     return freeze({
-      schema: "AUDRALIA_DIAGNOSTIC_NORMALIZED_STATION_RECEIPT_v3",
+      schema: "AUDRALIA_DIAGNOSTIC_NORMALIZED_STATION_RECEIPT_v4",
       position: Number.isFinite(position) ? position : null,
       cyclePosition: Number.isFinite(position) ? position : null,
       stationId: stationId,
@@ -950,6 +1212,10 @@
       owner = { ownerType: "DIAGNOSTIC_ENGINE", subjectId: DIAGNOSTIC_CONSTRUCT_ID, contract: CONTRACT, file: FILE, component: "CANONICAL_CYCLE_REQUEST_BUILDER" };
     }
 
+    if (!owner && missing.length) {
+      owner = { ownerType: "NORTH_CONDUCTOR_OR_PARTICIPANT", component: "NINE_CYCLE_HANDOFF", file: null };
+    }
+
     return freeze({
       firstHeldCoordinate: firstHeld ? firstHeld.firstHeldCoordinate || (firstHeld.fibonacci + ":" + firstHeld.stationId) : null,
       firstFailedCoordinate: firstFailed ? firstFailed.firstFailedCoordinate || (firstFailed.fibonacci + ":" + firstFailed.stationId) : null,
@@ -1008,6 +1274,16 @@
     return null;
   }
 
+  function classifyCycleTerminal(execution, normalized, exact, request) {
+    if (execution.mode === "CONDUCTOR_UNAVAILABLE") return "CONDUCTOR_UNAVAILABLE_TERMINAL";
+    if (exact.exactNineValidated) return "COMMITTED_EXACT_NINE";
+    if (request && request.target && request.target.controlsTargetLifecycle && request.target.controlsTargetLifecycle.loaded === false) return "TARGET_LIFECYCLE_HELD";
+    if (normalized.length === 0) return "PARTICIPANT_RECEIPTS_ABSENT";
+    if (normalized.length < 9) return "PARTICIPANT_RECEIPTS_INCOMPLETE";
+    if (normalized.some(function some(r) { return ["ERROR", "FAIL", "FAILED"].indexOf(String(r.status).toUpperCase()) !== -1; })) return "ERROR_TERMINAL";
+    return "REPORTABLE_LIMITED_DIAGNOSTIC";
+  }
+
   function runNineCycle(payload) {
     var request;
 
@@ -1049,12 +1325,7 @@
     var railReceipt = synthesizeRail(request, normalized);
     var exact = validateExactNine(normalized);
     var restitution = deriveRestitution(normalized, exact, request);
-
-    var terminalClass =
-      execution.mode === "CONDUCTOR_UNAVAILABLE" ? "CONDUCTOR_UNAVAILABLE_TERMINAL" :
-      exact.exactNineValidated ? "COMMITTED_EXACT_NINE" :
-      normalized.some(function some(r) { return ["ERROR", "FAIL", "FAILED"].indexOf(String(r.status).toUpperCase()) !== -1; }) ? "ERROR_TERMINAL" :
-      "REPORTABLE_LIMITED_DIAGNOSTIC";
+    var terminalClass = classifyCycleTerminal(execution, normalized, exact, request);
 
     var cycleReceipt = freeze({
       schema: CYCLE_RECEIPT_SCHEMA,
@@ -1062,6 +1333,7 @@
       terminalClass: terminalClass,
       executionMode: execution.mode,
       conductorAlias: execution.conductorAlias || null,
+      conductorAvailable: execution.mode === "NORTH_CONDUCTOR",
       cycleId: request.cycleId,
       requestHash: request.requestHash,
       receiptCount: rawReceipts.length,
@@ -1070,6 +1342,7 @@
       exactNineValidation: exact,
       sequentialFallbackAuthorized: false,
       internalStationExecutionAuthorized: false,
+      controlsTargetLifecycle: frozenClone(request.controlsTargetLifecycle),
       canonicalRequest: frozenClone(request),
       receipts: frozenClone(rawReceipts),
       normalizedReceipts: normalized,
@@ -1077,6 +1350,8 @@
       restitution: restitution,
       readinessClaimed: false,
       visualPassClaimed: false,
+      f21Claimed: false,
+      f89Claimed: false,
       repairAuthorized: false,
       noClaims: NO_CLAIMS,
       createdAt: nowIso()
@@ -1091,24 +1366,6 @@
     recordAction("runNineCycle", { cycleId: cycleReceipt.cycleId, status: cycleReceipt.status, terminalClass: cycleReceipt.terminalClass, exactNineValidated: cycleReceipt.exactNineValidated });
 
     return frozenClone(cycleReceipt);
-  }
-
-  function runDirect(role, payload) {
-    state.directExecutions += 1;
-    var receipt = freeze({
-      schema: "AUDRALIA_DIAGNOSTIC_DIRECT_EXECUTION_RECEIPT_v3",
-      role: role || null,
-      status: "HELD",
-      reason: "DIRECT_PARTICIPANT_EXECUTION_NOT_OWNED_BY_INTERPRETER",
-      payloadObserved: Boolean(payload),
-      noClaims: NO_CLAIMS,
-      createdAt: nowIso()
-    });
-
-    archive({ schema: ARCHIVE_SCHEMA, recordType: "DIRECT_EXECUTION_HELD", receipt: receipt, archivedAt: nowIso() });
-    recordAction("runDirect.held", { role: role || null, reason: receipt.reason });
-
-    return frozenClone(receipt);
   }
 
   function renderReport(report, receipt) {
@@ -1151,6 +1408,7 @@
   function publishPublicReport() {
     root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT = state.currentReport;
     root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_REPORT_RECEIPT = state.currentReceipt;
+    root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_DIRECT_RECEIPT = state.currentDirectReceipt;
     root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_CYCLE_RECEIPT = state.currentCycleReceipt;
   }
 
@@ -1168,6 +1426,7 @@
       reportStatus: state.reportStatus,
       reportsCreated: state.reportsCreated,
       directExecutions: state.directExecutions,
+      directCompletions: state.directCompletions,
       cycleExecutions: state.cycleExecutions,
       cycleCommits: state.cycleCommits,
       inspectionAuthorityAvailable: Boolean(getInspectionLane()),
@@ -1175,25 +1434,17 @@
       productEngineEvidenceAvailable: collectProductChainEvidence().recordCount > 0,
       currentReportId: state.currentReport ? state.currentReport.reportId : null,
       currentReceiptId: state.currentReceipt ? state.currentReceipt.receiptId : null,
+      currentDirectStatus: state.currentDirectReceipt ? state.currentDirectReceipt.status || null : null,
+      currentDirectTerminalClass: state.currentDirectReceipt ? state.currentDirectReceipt.terminalClass || null : null,
       currentCycleId: state.currentCycleReceipt ? state.currentCycleReceipt.cycleId || null : null,
       currentCycleStatus: state.currentCycleReceipt ? state.currentCycleReceipt.status || null : null,
+      currentCycleTerminalClass: state.currentCycleReceipt ? state.currentCycleReceipt.terminalClass || null : null,
       exactNineValidated: Boolean(state.currentCycleReceipt && state.currentCycleReceipt.exactNineValidated),
       archiveCount: state.archive.length,
       identityConflictCount: state.identityConflicts.length,
       identityAbsenceCount: state.identityAbsence.length,
       lastError: frozenClone(state.lastError),
       lastAction: frozenClone(state.lastAction),
-      newsAlignment: {
-        north: "F1_CANONICAL_REQUEST",
-        eastSource: "F3_DECLARED_IDENTITY",
-        eastConstruction: "F5_BOUNDED_NORMALIZATION",
-        center: "F8_TARGET_RUNTIME_HANDOFF",
-        westRuntime: "F13_RECEIPT_NORMALIZATION",
-        westInterpretation: "F21_LEDGER_INTERPRETATION_NO_F21_CLAIM",
-        southHandoff: "F34_BOUNDED_RETURN",
-        southRestitution: "F55_OWNER_FILE_DIRECTION",
-        rail: "F89_TERMINAL_SYNTHESIS"
-      },
       noClaims: NO_CLAIMS,
       publishedAt: nowIso()
     });
@@ -1201,6 +1452,7 @@
 
   function getReport() { return frozenClone(state.currentReport); }
   function getReportReceipt() { return frozenClone(state.currentReceipt); }
+  function getDirectReceipt() { return frozenClone(state.currentDirectReceipt); }
   function getCycleReceipt() { return frozenClone(state.currentCycleReceipt); }
   function getCycleRequest() { return frozenClone(state.currentCycleRequest); }
   function getEngineReceipt() { return frozenClone(root.AUDRALIA_DROP_WITH_READ_DIAGNOSTIC_ENGINE_RECEIPT || null); }
@@ -1221,6 +1473,7 @@
     state.reportStatus = "READY";
     state.currentReport = null;
     state.currentReceipt = null;
+    state.currentDirectReceipt = null;
     state.currentCycleRequest = null;
     state.currentCycleReceipt = null;
     state.lastError = null;
@@ -1249,6 +1502,14 @@
 
       createReport: createReport,
       runDirect: runDirect,
+      runDirectCheck: function runDirectCheck(payload) {
+        var p = isObject(payload) ? payload : {};
+        return runDirect(p.role || p.participant || state.selectedParticipant, p);
+      },
+      directCheck: function directCheck(payload) {
+        var p = isObject(payload) ? payload : {};
+        return runDirect(p.role || p.participant || state.selectedParticipant, p);
+      },
       runNineCycle: runNineCycle,
       buildCanonicalCycleRequest: buildCanonicalCycleRequest,
       normalizeStationReceipt: normalizeStationReceipt,
@@ -1261,6 +1522,7 @@
 
       getReport: getReport,
       getReportReceipt: getReportReceipt,
+      getDirectReceipt: getDirectReceipt,
       getCycleReceipt: getCycleReceipt,
       getCycleRequest: getCycleRequest,
       getEngineReceipt: getEngineReceipt,
@@ -1276,6 +1538,8 @@
       productionMutationAuthorized: false,
       readinessClaimed: false,
       visualPassClaimed: false,
+      f21Claimed: false,
+      f89Claimed: false,
       noClaims: NO_CLAIMS
     });
 

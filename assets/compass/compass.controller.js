@@ -1,15 +1,15 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass Generation Two — controller state machine with reveal support.
+   DGB Compass Generation Two — controller routing and reveal correction.
    Scope: compass.controller.js only.
-   Owns behavior, state transitions, panel population, explicit navigation, reveal copy population, and receipts.
-   Does not own WebGL geometry, buffers, camera, lighting, projection, render loop, CSS, or visual-pass claims.
+   Owns behavior, state transitions, panel population, explicit Enter navigation, route validation, reveal copy, and receipts.
+   Does not own WebGL geometry, buffers, camera, lighting, projection, render loop, CSS, HTML route membership, or visual-pass claims.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_TWO_CONTROLLER_TNT_v1",
+    id: "DGB_COMPASS_GENERATION_TWO_CONTROLLER_ROUTING_REVEAL_TNT_v1",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -39,7 +39,9 @@
     mode: MODES.COMPASS,
     selectedWing: "",
     selectedRoom: "",
+    selectedRoomLabel: "",
     activeRoute: "",
+    routeSource: "none",
     reducedMotion: false,
     lastAction: "init",
     held: false,
@@ -55,7 +57,11 @@
     mode: MODES.COMPASS,
     selectedWing: "",
     selectedRoom: "",
+    selectedRoomLabel: "",
+    selectedRoomRoute: "",
     activeRoutePresent: false,
+    enterEnabled: false,
+    routeSource: "none",
     panelStatus: "pending",
     returnStatus: "pending",
     lastAction: "init",
@@ -88,6 +94,8 @@
   }
 
   function emitReceipt(extra = {}) {
+    const enterEnabled = !!state.enterControl && state.enterControl.disabled === false;
+
     Object.assign(RECEIPT, {
       rootStatus: state.root ? "found" : "missing",
       wingCount: state.wings.length,
@@ -95,7 +103,11 @@
       mode: state.mode,
       selectedWing: state.selectedWing,
       selectedRoom: state.selectedRoom,
+      selectedRoomLabel: state.selectedRoomLabel,
+      selectedRoomRoute: state.activeRoute,
       activeRoutePresent: !!state.activeRoute,
+      enterEnabled,
+      routeSource: state.routeSource,
       panelStatus: state.panel ? "found" : "missing",
       returnStatus: state.returnControl ? "found" : "missing",
       lastAction: state.lastAction,
@@ -104,8 +116,9 @@
     }, extra);
 
     if (state.receiptSlot) {
-      state.receiptSlot.value = JSON.stringify(RECEIPT);
-      state.receiptSlot.textContent = JSON.stringify(RECEIPT);
+      const text = JSON.stringify(RECEIPT);
+      state.receiptSlot.value = text;
+      state.receiptSlot.textContent = text;
       state.receiptSlot.dataset.visualPassClaimed = "false";
     }
 
@@ -198,12 +211,28 @@
     return state.rooms.find((room) => room.roomId === roomId) || null;
   }
 
+  function getSelectedRoom() {
+    if (!state.selectedRoom) return null;
+    return findRoom(state.selectedRoom);
+  }
+
   function writeRootState() {
     state.root.dataset.compassMode = state.mode;
     state.root.dataset.selectedWing = state.selectedWing || "";
     state.root.dataset.selectedRoom = state.selectedRoom || "";
     state.root.dataset.reducedMotion = state.reducedMotion ? "true" : "false";
     state.root.dataset.visualPassClaimed = "false";
+  }
+
+  function clearRoute() {
+    state.activeRoute = "";
+    state.routeSource = "none";
+    state.selectedRoomLabel = "";
+  }
+
+  function setInvalidRoute(reason) {
+    state.activeRoute = "";
+    state.routeSource = reason || "invalid-room";
   }
 
   function updateVisibility() {
@@ -234,17 +263,26 @@
 
     if (state.mode === MODES.COMPASS) {
       setText(state.panelTitle, "Choose a wing");
-      setText(state.panelPurpose, "Open one direction of the estate.");
-      setText(state.panelRelationship, "Each wing reveals a hidden territory without showing the whole estate at once.");
+      setText(state.panelPurpose, "A navigation system for coherence.");
+      setText(state.panelRelationship, "Choose a direction. Explore a world. Open an instrument. Find what moves you forward.");
       setEnter(null);
       return;
     }
 
     if (state.mode === MODES.EXPANDED) {
       const wingEl = findWingElement(state.selectedWing);
-      const title = wingEl ? wingEl.dataset.title || wingEl.dataset.label || state.selectedWing : state.selectedWing;
-      const meaning = wingEl ? wingEl.dataset.wingMeaning || "Choose a room inside this wing." : "Choose a room inside this wing.";
-      const why = wingEl ? wingEl.dataset.wingWhy || "Return steps back to the full Compass." : "Return steps back to the full Compass.";
+      const title =
+        wingEl ? wingEl.dataset.title || wingEl.dataset.label || state.selectedWing : state.selectedWing;
+
+      const meaning =
+        wingEl && wingEl.dataset.wingMeaning
+          ? wingEl.dataset.wingMeaning
+          : "Choose a room inside this wing.";
+
+      const why =
+        wingEl && wingEl.dataset.wingWhy
+          ? wingEl.dataset.wingWhy
+          : "Return steps back to the full Compass.";
 
       setText(state.panelTitle, title);
       setText(state.panelPurpose, meaning);
@@ -254,14 +292,29 @@
     }
 
     if (state.mode === MODES.ROOM) {
-      const room = findRoom(state.selectedRoom);
+      const room = getSelectedRoom();
+
       if (!room) {
         setText(state.panelTitle, "Room unavailable");
         setText(state.panelPurpose, "The selected room could not be resolved.");
         setText(state.panelRelationship, "Return to the wing and choose again.");
         setEnter(null);
+        setInvalidRoute("invalid-room");
         return;
       }
+
+      if (!room.route) {
+        setText(state.panelTitle, room.label);
+        setText(state.panelPurpose, room.preview);
+        setText(state.panelRelationship, "This room has no verified route. Return and choose another room.");
+        setEnter(null);
+        setInvalidRoute("missing-route");
+        return;
+      }
+
+      state.selectedRoomLabel = room.label;
+      state.activeRoute = room.route;
+      state.routeSource = "html-room-declaration";
 
       setText(state.panelTitle, room.label);
       setText(state.panelPurpose, room.preview);
@@ -271,8 +324,6 @@
   }
 
   function setEnter(route, whyEnter = "") {
-    state.activeRoute = route || "";
-
     if (!state.enterControl) return;
 
     if (route) {
@@ -302,7 +353,7 @@
     state.mode = MODES.COMPASS;
     state.selectedWing = "";
     state.selectedRoom = "";
-    state.activeRoute = "";
+    clearRoute();
     commit(action);
   }
 
@@ -313,25 +364,42 @@
     state.mode = MODES.EXPANDED;
     state.selectedWing = normalized;
     state.selectedRoom = "";
-    state.activeRoute = "";
+    clearRoute();
     commit(action);
   }
 
   function enterRoomMode(roomId, action = "enter-room-mode") {
-    const room = findRoom(roomId);
-    if (!room) return;
+    const normalizedRoomId = String(roomId || "").trim();
+    const room = findRoom(normalizedRoomId);
+
+    if (!room) {
+      state.selectedRoom = "";
+      setInvalidRoute("invalid-room");
+      commit("room-selection-rejected-invalid-room");
+      return;
+    }
 
     if (!state.selectedWing) {
       state.selectedWing = room.wing;
     }
 
     if (room.wing !== state.selectedWing) {
+      setInvalidRoute("invalid-room-wing-mismatch");
+      commit("room-selection-rejected-wing-mismatch");
       return;
     }
 
     state.mode = MODES.ROOM;
     state.selectedRoom = room.roomId;
-    state.activeRoute = room.route;
+    state.selectedRoomLabel = room.label;
+
+    if (room.route) {
+      state.activeRoute = room.route;
+      state.routeSource = "html-room-declaration";
+    } else {
+      setInvalidRoute("missing-route");
+    }
+
     commit(action);
   }
 
@@ -339,7 +407,7 @@
     if (state.mode === MODES.ROOM) {
       state.mode = MODES.EXPANDED;
       state.selectedRoom = "";
-      state.activeRoute = "";
+      clearRoute();
       commit("return-room-to-wing");
       return;
     }
@@ -353,20 +421,36 @@
   }
 
   function navigateEnter() {
-    if (state.mode !== MODES.ROOM || !state.activeRoute) {
-      state.lastAction = "enter-held-no-active-route";
+    const room = getSelectedRoom();
+
+    if (
+      state.mode !== MODES.ROOM ||
+      !room ||
+      !room.route ||
+      state.activeRoute !== room.route ||
+      state.routeSource !== "html-room-declaration"
+    ) {
+      state.lastAction = "enter-held-invalid-or-missing-room-route";
+      if (!room) setInvalidRoute("invalid-room");
+      else if (!room.route) setInvalidRoute("missing-route");
+      else setInvalidRoute("route-mismatch");
+      setEnter(null);
       emitReceipt();
       return;
     }
 
     state.lastAction = "enter-navigation";
+    state.activeRoute = room.route;
+    state.selectedRoomLabel = room.label;
+    state.routeSource = "html-room-declaration";
     emitReceipt();
-    window.location.assign(state.activeRoute);
+    window.location.assign(room.route);
   }
 
   function bindEvents() {
     state.wings.forEach((wingEl) => {
-      wingEl.addEventListener("click", () => {
+      wingEl.addEventListener("click", (event) => {
+        event.preventDefault();
         enterExpandedMode(wingEl.dataset.wing, "wing-selected");
       });
     });
@@ -379,13 +463,15 @@
     });
 
     if (state.returnControl) {
-      state.returnControl.addEventListener("click", () => {
+      state.returnControl.addEventListener("click", (event) => {
+        event.preventDefault();
         returnStep();
       });
     }
 
     if (state.enterControl) {
-      state.enterControl.addEventListener("click", () => {
+      state.enterControl.addEventListener("click", (event) => {
+        event.preventDefault();
         navigateEnter();
       });
     }
@@ -414,10 +500,7 @@
     if (initialMode === MODES.ROOM && initialWing && findRoom(initialRoom)) {
       state.mode = MODES.ROOM;
       state.selectedWing = initialWing;
-      state.selectedRoom = initialRoom;
-      const room = findRoom(initialRoom);
-      state.activeRoute = room ? room.route : "";
-      commit("restore-room-mode");
+      enterRoomMode(initialRoom, "restore-room-mode");
       return;
     }
 
@@ -433,9 +516,21 @@
     globalThis.DGB_COMPASS_CONTROLLER = Object.freeze({
       contract: CONTRACT,
       receipt: () => Object.freeze({ ...RECEIPT }),
-      selectWing: (wing) => enterExpandedMode(wing, "api-select-wing"),
-      selectRoom: (roomId) => enterRoomMode(roomId, "api-select-room"),
+
+      selectWing: (wing) => {
+        enterExpandedMode(wing, "api-select-wing");
+      },
+
+      selectRoom: (roomId) => {
+        enterRoomMode(roomId, "api-select-room");
+      },
+
+      requestRoomSelection: (roomId) => {
+        enterRoomMode(roomId, "api-request-room-selection");
+      },
+
       returnStep,
+
       enter: navigateEnter
     });
   }

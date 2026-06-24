@@ -1,7 +1,7 @@
 /* /assets/compass/compass.crystals.js
    DGB Compass — Orbit Flower Traversal WebGL visualization layer.
    Scope: compass.crystals.js only.
-   Owns visualization, gesture detection, hit detection, and controller selection requests.
+   Owns visualization, protected scene gesture detection, hit detection, and controller selection requests.
    Does not own routes, route validation, navigation execution, labels, panel copy, CSS, or visual-pass claims.
 */
 
@@ -9,7 +9,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_ORBIT_FLOWER_TRAVERSAL_CRYSTALS_TNT_v1",
+    id: "DGB_COMPASS_ORBIT_FLOWER_GESTURE_ZONE_CRYSTALS_TNT_v2",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -77,7 +77,11 @@
     flowerExpandedObserved: false,
     renderLoopStatus: "pending",
     lastPointerAction: "none",
+    gestureType: "",
+    gestureDx: 0,
+    gestureDy: 0,
     lastSwipeAxis: "",
+    pointerCaptured: false,
     selectedVisualNodeId: "",
     selectedVisualNodeType: "",
     selectedVisualNodeWing: "",
@@ -91,6 +95,7 @@
   const state = {
     root: null,
     canvas: null,
+    surface: null,
     gl: null,
     program: null,
     attribs: null,
@@ -151,6 +156,17 @@
 
   function findCanvasMount(root) {
     return qs(["[data-compass-crystals-mount]", ".compass-scene__visual", ".compass-scene"]) || root;
+  }
+
+  function findGestureSurface(root, canvas) {
+    return (
+      canvas.closest("[data-compass-scene]") ||
+      canvas.closest(".compass-scene") ||
+      root.querySelector("[data-compass-scene]") ||
+      root.querySelector(".compass-scene") ||
+      canvas.parentElement ||
+      root
+    );
   }
 
   function ensureCanvas(mount) {
@@ -228,7 +244,7 @@
       float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.55;
       float light = uAmbientStrength + key * 0.85 + fill + rim;
       vec3 color = vColor * light * vProminence;
-      float alpha = clamp(0.26 + vProminence * 0.74, 0.16, 1.0);
+      float alpha = clamp(0.24 + vProminence * 0.76, 0.12, 1.0);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -451,9 +467,9 @@
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createCrystalMesh({
         segments: 6,
-        rx: 0.27,
-        rz: 0.20,
-        h: 0.46,
+        rx: 0.30,
+        rz: 0.22,
+        h: 0.50,
         crown: false,
         color: theme.color,
         irregularity: theme.irregularity * 0.55,
@@ -509,6 +525,7 @@
       }));
 
       const rooms = DEFAULT_ROOMS[wing];
+
       rooms.forEach((room, index) => {
         registry.set(room.id, node(room.id, "petal", {
           label: room.label,
@@ -552,16 +569,6 @@
     });
   }
 
-  function isSemanticInteractionTarget(target) {
-    return !!(
-      target &&
-      target.closest &&
-      target.closest(
-        "[data-compass-cardinal], [data-compass-wing], [data-compass-room], [data-compass-object='mirrorland'], [data-compass-return], [data-compass-return-to-orbit], [data-compass-enter], .compass-value-card, a, button"
-      )
-    );
-  }
-
   function wingPosition(wing) {
     switch (wing) {
       case "north": return [0, 1.42, -0.12];
@@ -584,25 +591,25 @@
 
   function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 0.88, 0.08],
-      [0.76, 0.42, 0.04],
-      [0.94, -0.14, 0.00],
-      [0.48, -0.76, 0.04],
-      [0, 0, 0.20]
+      [0, 0.96, 0.10],
+      [0.84, 0.48, 0.06],
+      [1.02, -0.14, 0.02],
+      [0.54, -0.84, 0.06],
+      [0, 0, 0.24]
     ];
 
     const map4 = [
-      [-0.68, 0.52, 0.04],
-      [0.68, 0.52, 0.04],
-      [-0.68, -0.52, 0.04],
-      [0.68, -0.52, 0.04]
+      [-0.76, 0.60, 0.06],
+      [0.76, 0.60, 0.06],
+      [-0.76, -0.60, 0.06],
+      [0.76, -0.60, 0.06]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 0.86, Math.sin(angle) * 0.58, 0.04];
+    return [Math.cos(angle) * 0.94, Math.sin(angle) * 0.64, 0.06];
   }
 
   function rotatePointForWing(point, wing) {
@@ -611,10 +618,10 @@
     const z = point[2];
 
     switch (wing) {
-      case "north": return [x, y + 0.38, z];
-      case "east": return [y + 0.38, -x, z];
-      case "south": return [-x, -y - 0.38, z];
-      case "west": return [-y - 0.38, x, z];
+      case "north": return [x, y + 0.40, z];
+      case "east": return [y + 0.40, -x, z];
+      case "south": return [-x, -y - 0.40, z];
+      case "west": return [-y - 0.40, x, z];
       default: return [x, y, z];
     }
   }
@@ -639,7 +646,9 @@
 
     if (!activeFlower) {
       setTarget(mirrorland, {
-        x: 0, y: 0, z: 0.04,
+        x: 0,
+        y: 0,
+        z: 0.04,
         sx: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
         sy: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
         sz: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
@@ -654,7 +663,9 @@
 
         n.visible = true;
         setTarget(n, {
-          x: p[0], y: p[1], z: focused ? 0.12 : p[2],
+          x: p[0],
+          y: p[1],
+          z: focused ? 0.12 : p[2],
           sx: focused ? 1.16 : 0.88,
           sy: focused ? 1.42 : 1.12,
           sz: focused ? 1.16 : 0.88,
@@ -667,10 +678,14 @@
     }
 
     setTarget(mirrorland, {
-      x: 0, y: 0, z: -0.30,
-      sx: 0.62, sy: 0.62, sz: 0.62,
-      prominence: 0.30,
-      rotationSpeed: 0.05
+      x: -1.72,
+      y: -1.22,
+      z: -1.46,
+      sx: 0.34,
+      sy: 0.34,
+      sz: 0.34,
+      prominence: 0.12,
+      rotationSpeed: 0.035
     });
 
     WINGS.forEach((wing) => {
@@ -679,12 +694,14 @@
       if (wing === state.selectedCardinal) {
         n.visible = true;
         setTarget(n, {
-          x: 0, y: 0, z: 0.16,
-          sx: 1.22,
-          sy: 1.52,
-          sz: 1.22,
-          prominence: 1.06,
-          rotationSpeed: 0.14 * n.rotationBias
+          x: 0,
+          y: 0,
+          z: 0.12,
+          sx: 0.64,
+          sy: 0.78,
+          sz: 0.64,
+          prominence: 0.68,
+          rotationSpeed: 0.10 * n.rotationBias
         });
         return;
       }
@@ -692,10 +709,14 @@
       const p = inactiveWingPosition(wing);
       n.visible = true;
       setTarget(n, {
-        x: p[0], y: p[1], z: p[2],
-        sx: 0.40, sy: 0.52, sz: 0.40,
-        prominence: 0.18,
-        rotationSpeed: 0.04 * n.rotationBias
+        x: p[0],
+        y: p[1],
+        z: p[2],
+        sx: 0.34,
+        sy: 0.44,
+        sz: 0.34,
+        prominence: 0.14,
+        rotationSpeed: 0.035 * n.rotationBias
       });
     });
 
@@ -709,12 +730,12 @@
       setTarget(n, {
         x: p[0],
         y: p[1],
-        z: selected ? 0.52 : p[2] + 0.10,
-        sx: selected ? 0.82 : 0.62,
-        sy: selected ? 0.82 : 0.62,
-        sz: selected ? 0.82 : 0.62,
-        prominence: selected ? 1.0 : 0.76,
-        rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
+        z: selected ? 0.62 : p[2] + 0.14,
+        sx: selected ? 1.00 : 0.78,
+        sy: selected ? 1.00 : 0.78,
+        sz: selected ? 1.00 : 0.78,
+        prominence: selected ? 1.12 : 0.86,
+        rotationSpeed: selected ? 0.17 * n.rotationBias : 0.11 * n.rotationBias
       });
     });
   }
@@ -881,27 +902,35 @@
     const absY = Math.abs(dy);
     const distance = Math.hypot(dx, dy);
 
-    if (distance <= GESTURE.maximumTapDistancePx) return { type: "tap" };
-    if (distance < GESTURE.minimumSwipeDistancePx) return { type: "ambiguous" };
+    if (distance <= GESTURE.maximumTapDistancePx) {
+      return { type: "tap", dx, dy };
+    }
+
+    if (distance < GESTURE.minimumSwipeDistancePx) {
+      return { type: "ambiguous", dx, dy };
+    }
 
     if (absX > absY * GESTURE.directionalDominanceRatio) {
-      return { type: "swipe", axis: "horizontal", raw: dx > 0 ? "swipeRight" : "swipeLeft" };
+      return { type: "swipe", axis: "horizontal", raw: dx > 0 ? "swipeRight" : "swipeLeft", dx, dy };
     }
 
     if (absY > absX * GESTURE.directionalDominanceRatio) {
-      return { type: "swipe", axis: "vertical", raw: dy > 0 ? "swipeDown" : "swipeUp" };
+      return { type: "swipe", axis: "vertical", raw: dy > 0 ? "swipeDown" : "swipeUp", dx, dy };
     }
 
-    return { type: "ambiguous" };
+    return { type: "ambiguous", dx, dy };
   }
 
-  function requestAxisSwipe(axis, raw) {
+  function requestAxisSwipe(axis, raw, gesture) {
     const api = globalThis.DGB_COMPASS_CONTROLLER;
     const available = !!api && typeof api.requestAxisSwipe === "function";
 
     if (!available) {
       emitReceipt({
         lastPointerAction: "controller-axis-api-unavailable",
+        gestureType: "swipe",
+        gestureDx: gesture ? gesture.dx : 0,
+        gestureDy: gesture ? gesture.dy : 0,
         lastSwipeAxis: axis,
         controllerRequest: "",
         controllerApiAvailable: false,
@@ -914,6 +943,9 @@
 
     emitReceipt({
       lastPointerAction: raw || "axis-swipe",
+      gestureType: "swipe",
+      gestureDx: gesture ? gesture.dx : 0,
+      gestureDy: gesture ? gesture.dy : 0,
       lastSwipeAxis: axis,
       controllerRequest: "requestAxisSwipe:" + axis,
       controllerApiAvailable: true,
@@ -921,9 +953,20 @@
     });
   }
 
-  function requestNodeSelection(nodeHit) {
+  function requestNodeSelection(nodeHit, gesture) {
     const api = globalThis.DGB_COMPASS_CONTROLLER;
-    if (!api || !nodeHit) return;
+
+    if (!api || !nodeHit) {
+      emitReceipt({
+        lastPointerAction: "controller-selection-api-unavailable",
+        gestureType: "tap",
+        gestureDx: gesture ? gesture.dx : 0,
+        gestureDy: gesture ? gesture.dy : 0,
+        controllerApiAvailable: false,
+        failureReason: "CONTROLLER_SELECTION_API_UNAVAILABLE"
+      });
+      return;
+    }
 
     let request = "";
     let ok = false;
@@ -948,6 +991,9 @@
 
     emitReceipt({
       lastPointerAction: ok ? "visual-node-selection-requested" : "controller-selection-api-unavailable",
+      gestureType: "tap",
+      gestureDx: gesture ? gesture.dx : 0,
+      gestureDy: gesture ? gesture.dy : 0,
       selectedVisualNodeId: nodeHit.id,
       selectedVisualNodeType: nodeHit.type,
       selectedVisualNodeWing: nodeHit.wing || "",
@@ -958,22 +1004,32 @@
     });
   }
 
+  function isSemanticInteractionTarget(target) {
+    return !!(
+      target &&
+      target.closest &&
+      target.closest(
+        "[data-compass-cardinal], [data-compass-wing], [data-compass-room], [data-compass-object='mirrorland'], [data-compass-return], [data-compass-return-to-orbit], [data-compass-enter], .compass-value-card, a, button"
+      )
+    );
+  }
+
   function findHit(event) {
     readControllerState();
     updateTargets();
     updateTransforms(0);
 
-    const surface = event.currentTarget;
+    const surface = state.surface || event.currentTarget;
     const rect = surface.getBoundingClientRect();
     const px = event.clientX - rect.left;
     const py = event.clientY - rect.top;
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(34, Math.min(62, rect.width * 0.07));
+    const hitRadius = Math.max(36, Math.min(68, rect.width * 0.075));
 
     state.registry.forEach((n) => {
-      if (!n.visible || n.transform.prominence < 0.14) return;
+      if (!n.visible || n.transform.prominence < 0.12) return;
 
       const screen = projectNode(n);
       if (!screen) return;
@@ -982,9 +1038,10 @@
       const dy = py - screen.y;
       const d = Math.hypot(dx, dy);
 
-      const localRadius = n.type === "mirrorland" || n.type === "cardinal"
-        ? hitRadius * 1.18
-        : hitRadius;
+      const localRadius =
+        n.type === "mirrorland" || n.type === "cardinal"
+          ? hitRadius * 1.2
+          : hitRadius * 1.08;
 
       if (d < bestDistance && d <= localRadius) {
         best = n;
@@ -998,30 +1055,67 @@
   function handlePointerDown(event) {
     if (state.failHeld) return;
 
-    if (isSemanticInteractionTarget(event.target)) {
-      state.pointer = null;
-      emitReceipt({
-        lastPointerAction: "semantic-control-ignored",
-        controllerRequest: "",
-        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
-        failureReason: null
-      });
-      return;
+    const pointerCaptured =
+      event.currentTarget &&
+      typeof event.currentTarget.setPointerCapture === "function";
+
+    if (pointerCaptured) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch (_) {
+        /* Non-fatal capture failure. */
+      }
     }
 
     state.pointer = {
       id: event.pointerId,
       x: event.clientX,
       y: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      semanticStart: isSemanticInteractionTarget(event.target),
+      swipeSuppressedTap: false,
+      thresholdCrossed: false,
+      pointerCaptured,
       time: performance.now()
     };
 
     emitReceipt({
       lastPointerAction: "pointer-down",
+      gestureType: "pending",
+      gestureDx: 0,
+      gestureDy: 0,
+      pointerCaptured,
       controllerRequest: "",
       controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
       failureReason: null
     });
+  }
+
+  function handlePointerMove(event) {
+    if (state.failHeld || !state.pointer || event.pointerId !== state.pointer.id) return;
+
+    const dx = event.clientX - state.pointer.x;
+    const dy = event.clientY - state.pointer.y;
+    const distance = Math.hypot(dx, dy);
+
+    state.pointer.lastX = event.clientX;
+    state.pointer.lastY = event.clientY;
+
+    if (distance >= GESTURE.minimumSwipeDistancePx) {
+      state.pointer.thresholdCrossed = true;
+      state.pointer.swipeSuppressedTap = true;
+      event.preventDefault();
+
+      emitReceipt({
+        lastPointerAction: "pointer-move-threshold-crossed",
+        gestureType: "swipe-pending",
+        gestureDx: dx,
+        gestureDy: dy,
+        pointerCaptured: state.pointer.pointerCaptured,
+        failureReason: null
+      });
+    }
   }
 
   function handlePointerUp(event) {
@@ -1029,34 +1123,41 @@
 
     if (event.pointerId !== state.pointer.id) {
       state.pointer = null;
-      emitReceipt({ lastPointerAction: "pointer-id-mismatch" });
+      emitReceipt({ lastPointerAction: "pointer-id-mismatch", gestureType: "cancelled" });
       return;
     }
 
-    if (isSemanticInteractionTarget(event.target)) {
-      state.pointer = null;
-      emitReceipt({
-        lastPointerAction: "semantic-control-ignored",
-        controllerRequest: "",
-        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
-        failureReason: null
-      });
-      return;
-    }
-
-    const gesture = classifyGesture(state.pointer, { x: event.clientX, y: event.clientY });
+    const pointer = state.pointer;
+    const gesture = classifyGesture(pointer, { x: event.clientX, y: event.clientY });
     state.pointer = null;
 
     if (gesture.type === "swipe") {
-      requestAxisSwipe(gesture.axis, gesture.raw);
+      event.preventDefault();
+      requestAxisSwipe(gesture.axis, gesture.raw, gesture);
       return;
     }
 
     if (gesture.type === "ambiguous") {
       emitReceipt({
         lastPointerAction: "ambiguous-gesture-no-action",
+        gestureType: "ambiguous",
+        gestureDx: gesture.dx,
+        gestureDy: gesture.dy,
         lastSwipeAxis: "",
         controllerRequest: "",
+        failureReason: null
+      });
+      return;
+    }
+
+    if (pointer.semanticStart || isSemanticInteractionTarget(event.target)) {
+      emitReceipt({
+        lastPointerAction: "semantic-tap-deferred-to-dom",
+        gestureType: "tap",
+        gestureDx: gesture.dx,
+        gestureDy: gesture.dy,
+        controllerRequest: "",
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
         failureReason: null
       });
       return;
@@ -1067,6 +1168,9 @@
     if (!hit) {
       emitReceipt({
         lastPointerAction: "tap-no-hit",
+        gestureType: "tap",
+        gestureDx: gesture.dx,
+        gestureDy: gesture.dy,
         selectedVisualNodeId: "",
         selectedVisualNodeType: "",
         selectedVisualNodeWing: "",
@@ -1078,7 +1182,16 @@
       return;
     }
 
-    requestNodeSelection(hit);
+    requestNodeSelection(hit, gesture);
+  }
+
+  function handlePointerCancel() {
+    state.pointer = null;
+    emitReceipt({
+      lastPointerAction: "pointer-cancelled",
+      gestureType: "cancelled",
+      failureReason: null
+    });
   }
 
   function resize() {
@@ -1174,17 +1287,20 @@
   }
 
   function bindPointerBridge() {
-    const surface =
-      state.canvas.closest(".compass-scene") ||
-      state.canvas.parentElement ||
-      state.root;
+    state.surface = findGestureSurface(state.root, state.canvas);
 
-    surface.addEventListener("pointerdown", handlePointerDown);
-    surface.addEventListener("pointerup", handlePointerUp);
-    surface.addEventListener("pointercancel", () => {
-      state.pointer = null;
-      emitReceipt({ lastPointerAction: "pointer-cancelled", failureReason: null });
-    });
+    if (!state.surface) {
+      hold("MISSING_COMPASS_GESTURE_SURFACE");
+      return;
+    }
+
+    state.surface.style.touchAction = "none";
+    state.surface.style.overscrollBehavior = "contain";
+
+    state.surface.addEventListener("pointerdown", handlePointerDown, { passive: false });
+    state.surface.addEventListener("pointermove", handlePointerMove, { passive: false });
+    state.surface.addEventListener("pointerup", handlePointerUp, { passive: false });
+    state.surface.addEventListener("pointercancel", handlePointerCancel, { passive: false });
   }
 
   function init() {

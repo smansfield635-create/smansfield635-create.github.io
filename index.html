@@ -1,11 +1,11 @@
 <!-- /index.html -->
-<!-- DGB_COMPASS_PAGE_REBUILD_TNT_v1 -->
+<!-- DGB_COMPASS_HOMEPAGE_CINEMATIC_REDESIGN_TNT_v2_1 -->
 <!doctype html>
 <html
   lang="en"
   data-route="/"
-  data-page="compass"
-  data-contract="DGB_COMPASS_PAGE_REBUILD_TNT_v1"
+  data-page="compass-homepage"
+  data-contract="DGB_COMPASS_HOMEPAGE_CINEMATIC_REDESIGN_TNT_v2_1"
 >
 <head>
   <meta charset="utf-8">
@@ -24,53 +24,47 @@
 
   <link
     rel="stylesheet"
-    href="/assets/compass/compass.css?v=DGB_COMPASS_PAGE_VISUAL_SYSTEM_TNT_v1"
+    href="/assets/compass/compass.css?v=DGB_COMPASS_CINEMATIC_VISUAL_SYSTEM_TNT_v2_1"
   >
 </head>
 
 <body>
-  <a class="skip" href="#compass-stage">
-    Skip to Compass
-  </a>
+  <a class="skip" href="#compass-stage">Skip to Compass</a>
 
-  <div class="shell">
-    <header class="site-header" aria-label="Diamond Gate Bridge header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true">DG</span>
+  <div class="compass-shell">
+    <header class="estate-header" aria-label="Diamond Gate Bridge">
+      <a class="estate-plaque" href="/" aria-label="Diamond Gate Bridge Compass">
+        <span class="estate-plaque__mark" aria-hidden="true">
+          <span>DG</span>
+        </span>
 
-        <span class="brand-copy">
+        <span class="estate-plaque__copy">
           <span>Diamond Gate Bridge</span>
           <strong>Estate Compass</strong>
         </span>
       </a>
-
-      <nav class="header-nav" aria-label="Primary navigation">
-        <a class="header-pill" href="/home/">Website</a>
-        <a class="header-pill" href="/showroom/">Mirrorland</a>
-        <a class="header-pill" href="/site-guide/">Guide</a>
-      </nav>
     </header>
 
     <main>
-      <section class="primary-actions" aria-label="Primary actions">
+      <section class="value-deck" aria-label="Primary estate actions">
         <a
-          class="primary-action"
+          class="value-object"
           href="/coherence-diagnostic/"
           data-compass-primary-route="/coherence-diagnostic/"
         >
-          <b>Immediate Assessment</b>
+          <b>Immediate Value</b>
           <strong>Coherence Diagnostic</strong>
-          <span>Use the public diagnostic assessment and get value immediately.</span>
+          <span>Take the public assessment and receive a useful read immediately.</span>
         </a>
 
         <a
-          class="primary-action"
+          class="value-object"
           href="/showroom/globe/hearth/jeeves/"
           data-compass-primary-route="/showroom/globe/hearth/jeeves/"
         >
-          <b>House Guide</b>
+          <b>House Intelligence</b>
           <strong>Talk to the House</strong>
-          <span>Speak with Jeeves and learn how to move through the estate.</span>
+          <span>Ask Jeeves where to go, what to study, and how the estate works.</span>
         </a>
       </section>
 
@@ -78,14 +72,17 @@
         <h1 id="compass-title">Choose your way in.</h1>
 
         <p>
-          The Compass orients the estate. Choose a wing, reveal its rooms,
-          then enter the part of Diamond Gate Bridge that matches why you came.
+          The Compass is the front navigation hall of Diamond Gate Bridge.
+          Choose a direction, reveal its rooms, and enter the part of the estate
+          that matches why you came.
         </p>
       </section>
 
       <section
         id="compass-stage"
         class="compass-stage"
+        data-compass-stage
+        data-compass-scene-state="startup"
         aria-label="Diamond Gate Bridge Compass"
       >
         <div class="compass-field">
@@ -93,8 +90,13 @@
             class="compass-object"
             type="button"
             data-compass-wing="north"
+            data-compass-label="North"
+            data-compass-title="Orientation Wing"
+            data-compass-purpose="Orientation, entry, guidance, identity, and philosophical grounding."
+            data-compass-relationship="The north wing helps visitors understand where they are and how to begin."
             data-compass-selected="false"
             data-compass-faded="false"
+            aria-pressed="false"
             aria-label="Open North Orientation Wing"
           >
             <span
@@ -109,8 +111,13 @@
             class="compass-object"
             type="button"
             data-compass-wing="east"
+            data-compass-label="East"
+            data-compass-title="World Wing"
+            data-compass-purpose="World study, planetary rooms, living environments, and Mirrorland bodies."
+            data-compass-relationship="The east wing opens the estate’s world-facing rooms."
             data-compass-selected="false"
             data-compass-faded="false"
+            aria-pressed="false"
             aria-label="Open East World Wing"
           >
             <span
@@ -125,8 +132,13 @@
             class="compass-object"
             type="button"
             data-compass-wing="south"
+            data-compass-label="South"
+            data-compass-title="Instrument Wing"
+            data-compass-purpose="Measurement, law, governance, diagnostics, and controls."
+            data-compass-relationship="The south wing holds the instruments that test, govern, and clarify the estate."
             data-compass-selected="false"
             data-compass-faded="false"
+            aria-pressed="false"
             aria-label="Open South Instrument Wing"
           >
             <span
@@ -141,8 +153,13 @@
             class="compass-object"
             type="button"
             data-compass-wing="west"
+            data-compass-label="West"
+            data-compass-title="Frontier Wing"
+            data-compass-purpose="Applied systems, future infrastructure, and workshop benches."
+            data-compass-relationship="The west wing is the workshop side of the estate, where future systems are tested."
             data-compass-selected="false"
             data-compass-faded="false"
+            aria-pressed="false"
             aria-label="Open West Frontier Wing"
           >
             <span
@@ -157,6 +174,7 @@
             class="compass-object compass-core"
             href="/showroom/"
             data-compass-core
+            data-compass-route="/showroom/"
             aria-label="Enter Mirrorland"
           >
             <span
@@ -172,98 +190,339 @@
             type="button"
             data-compass-room="compass-desk"
             data-compass-room-wing="north"
+            data-compass-position="north-1"
+            data-compass-wing-title="Orientation Wing"
+            data-compass-title="Compass Desk"
+            data-compass-purpose="Return to the front navigation hall."
+            data-compass-relationship="The estate orientation controller."
+            data-compass-route="/"
+            aria-pressed="false"
             hidden
           >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Compass Desk</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="guide-desk" data-compass-room-wing="north" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="guide-desk"
+            data-compass-room-wing="north"
+            data-compass-position="north-2"
+            data-compass-wing-title="Orientation Wing"
+            data-compass-title="Guide Desk"
+            data-compass-purpose="Learn how to move through the estate."
+            data-compass-relationship="The visitor instruction desk."
+            data-compass-route="/site-guide/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Guide Desk</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="front-door" data-compass-room-wing="north" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="front-door"
+            data-compass-room-wing="north"
+            data-compass-position="north-3"
+            data-compass-wing-title="Orientation Wing"
+            data-compass-title="Front Door"
+            data-compass-purpose="Cross the public threshold."
+            data-compass-relationship="The ordinary entry threshold."
+            data-compass-route="/door/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Front Door</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="about-sean" data-compass-room-wing="north" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="about-sean"
+            data-compass-room-wing="north"
+            data-compass-position="north-4"
+            data-compass-wing-title="Orientation Wing"
+            data-compass-title="About Sean"
+            data-compass-purpose="Meet the human mission behind the estate."
+            data-compass-relationship="The host portrait room."
+            data-compass-route="/about-this-underdog/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">About Sean</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="philosophy-library" data-compass-room-wing="north" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="philosophy-library"
+            data-compass-room-wing="north"
+            data-compass-position="north-5"
+            data-compass-wing-title="Orientation Wing"
+            data-compass-title="Philosophy Library"
+            data-compass-purpose="Enter the philosophical book path."
+            data-compass-relationship="The philosophical library."
+            data-compass-route="/nine-summits-of-love/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Philosophy Library</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="atlas-study" data-compass-room-wing="east" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="atlas-study"
+            data-compass-room-wing="east"
+            data-compass-position="east-1"
+            data-compass-wing-title="World Wing"
+            data-compass-title="Atlas Study"
+            data-compass-purpose="Study the estate’s worlds and planetary doors."
+            data-compass-relationship="The world atlas room."
+            data-compass-route="/showroom/globe/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Atlas Study</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="zionts" data-compass-room-wing="east" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="zionts"
+            data-compass-room-wing="east"
+            data-compass-position="east-2"
+            data-compass-wing-title="World Wing"
+            data-compass-title="ZIONTS"
+            data-compass-purpose="Enter ZIONTS, pronounced Zience."
+            data-compass-relationship="The reference-world room."
+            data-compass-route="/showroom/globe/earth/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">ZIONTS</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="audralia-conservatory" data-compass-room-wing="east" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="audralia-conservatory"
+            data-compass-room-wing="east"
+            data-compass-position="east-3"
+            data-compass-wing-title="World Wing"
+            data-compass-title="Audralia Conservatory"
+            data-compass-purpose="Enter Audralia as a constructive living-world path."
+            data-compass-relationship="The living-world conservatory."
+            data-compass-route="/showroom/globe/audralia/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Audralia</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="hearth" data-compass-room-wing="east" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="hearth"
+            data-compass-room-wing="east"
+            data-compass-position="east-4"
+            data-compass-wing-title="World Wing"
+            data-compass-title="Hearth"
+            data-compass-purpose="Study Hearth as a forming world."
+            data-compass-relationship="The Hearth world room."
+            data-compass-route="/showroom/globe/hearth/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Hearth</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="h-earth" data-compass-room-wing="east" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="h-earth"
+            data-compass-room-wing="east"
+            data-compass-position="east-5"
+            data-compass-wing-title="World Wing"
+            data-compass-title="H-Earth"
+            data-compass-purpose="Study the H-Earth experimental world path."
+            data-compass-relationship="The H-Earth annex."
+            data-compass-route="/showroom/globe/h-earth/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">H-Earth</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="the-lab" data-compass-room-wing="south" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="the-lab"
+            data-compass-room-wing="south"
+            data-compass-position="south-1"
+            data-compass-wing-title="Instrument Wing"
+            data-compass-title="The Lab"
+            data-compass-purpose="Inspect status, signals, and measurement results."
+            data-compass-relationship="The measurement room."
+            data-compass-route="/gauges/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">The Lab</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="law-library" data-compass-room-wing="south" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="law-library"
+            data-compass-room-wing="south"
+            data-compass-position="south-2"
+            data-compass-wing-title="Instrument Wing"
+            data-compass-title="Law Library"
+            data-compass-purpose="Study the rules and constraints that keep the estate coherent."
+            data-compass-relationship="The law room."
+            data-compass-route="/laws/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Law Library</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="council-room" data-compass-room-wing="south" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="council-room"
+            data-compass-room-wing="south"
+            data-compass-position="south-3"
+            data-compass-wing-title="Instrument Wing"
+            data-compass-title="Council Room"
+            data-compass-purpose="Review governance, responsibility, and decision structure."
+            data-compass-relationship="The governance room."
+            data-compass-route="/governance/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Council Room</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="control-cockpit" data-compass-room-wing="south" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="control-cockpit"
+            data-compass-room-wing="south"
+            data-compass-position="south-4"
+            data-compass-wing-title="Instrument Wing"
+            data-compass-title="Control Cockpit"
+            data-compass-purpose="Operate Audralia’s instrument-facing view."
+            data-compass-relationship="The control cockpit."
+            data-compass-route="/showroom/globe/audralia/disposition/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Control Cockpit</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="frontier-workshop-yard" data-compass-room-wing="west" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="frontier-workshop-yard"
+            data-compass-room-wing="west"
+            data-compass-position="west-1"
+            data-compass-wing-title="Frontier Wing"
+            data-compass-title="Frontier Workshop Yard"
+            data-compass-purpose="Enter the applied-systems testing yard."
+            data-compass-relationship="The workshop yard."
+            data-compass-route="/explore/frontier/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Frontier Yard</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="energy-bench" data-compass-room-wing="west" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="energy-bench"
+            data-compass-room-wing="west"
+            data-compass-position="west-2"
+            data-compass-wing-title="Frontier Wing"
+            data-compass-title="Energy Bench"
+            data-compass-purpose="Study future power, storage, plasma, solar support, and fusion constraints."
+            data-compass-relationship="The energy bench."
+            data-compass-route="/explore/frontier/energy/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Energy Bench</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="water-bench" data-compass-room-wing="west" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="water-bench"
+            data-compass-room-wing="west"
+            data-compass-position="west-3"
+            data-compass-wing-title="Frontier Wing"
+            data-compass-title="Water Bench"
+            data-compass-purpose="Study capture, treatment, routing, reuse, storage, and continuity."
+            data-compass-relationship="The water systems bench."
+            data-compass-route="/explore/frontier/water/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Water Bench</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="infrastructure-bay" data-compass-room-wing="west" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="infrastructure-bay"
+            data-compass-room-wing="west"
+            data-compass-position="west-4"
+            data-compass-wing-title="Frontier Wing"
+            data-compass-title="Infrastructure Bay"
+            data-compass-purpose="Study roads, supports, utilities, corridors, and load-bearing systems."
+            data-compass-relationship="The infrastructure bay."
+            data-compass-route="/explore/frontier/infrastructure/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Infrastructure Bay</span>
           </button>
 
-          <button class="compass-room" type="button" data-compass-room="vision-window" data-compass-room-wing="west" hidden>
+          <button
+            class="compass-room"
+            type="button"
+            data-compass-room="vision-window"
+            data-compass-room-wing="west"
+            data-compass-position="west-5"
+            data-compass-wing-title="Frontier Wing"
+            data-compass-title="Vision Window"
+            data-compass-purpose="Study horizon, future clarity, imagination, and long-range consequence."
+            data-compass-relationship="The vision window."
+            data-compass-route="/explore/frontier/vision/"
+            aria-pressed="false"
+            hidden
+          >
             <span class="compass-crystal-host" data-compass-crystal="room"></span>
             <span class="compass-object__label">Vision Window</span>
           </button>
@@ -275,28 +534,37 @@
         data-compass-room-panel
         aria-live="polite"
         aria-label="Compass room information"
+        hidden
       >
-        <p class="compass-panel__kicker">Estate Compass</p>
-        <h2>Choose a wing.</h2>
-        <p>
-          Select North, East, South, or West to reveal the rooms inside that
-          part of the estate.
-        </p>
+        <p class="compass-panel__kicker" data-compass-panel-wing></p>
+        <h2 data-compass-panel-title></h2>
+        <p data-compass-panel-purpose></p>
+        <p class="compass-panel__relationship" data-compass-panel-relationship></p>
+
+        <button
+          class="compass-enter"
+          type="button"
+          data-compass-enter
+          aria-disabled="true"
+          hidden
+        >
+          Enter Room
+        </button>
       </section>
     </main>
 
     <footer>
-      Diamond Gate Bridge · Compass · Mirrorland · North · East · South · West
+      Diamond Gate Bridge · Estate Compass · Mirrorland · North · East · South · West
     </footer>
   </div>
 
   <script
-    src="/assets/compass/compass.controller.js?v=DGB_COMPASS_CONTROLLER_ARCHITECTURE_v1"
+    src="/assets/compass/compass.controller.js?v=DGB_COMPASS_CONTROLLER_CINEMATIC_BOUNDARY_RESTRUCTURE_TNT_v2_1"
     defer
   ></script>
 
   <script
-    src="/assets/compass/compass.crystals.js?v=DGB_COMPASS_CRYSTALS_3D_RUNTIME_TNT_v1"
+    src="/assets/compass/compass.crystals.js?v=DGB_COMPASS_CRYSTALS_CINEMATIC_REDESIGN_TNT_v2_1"
     defer
   ></script>
 </body>

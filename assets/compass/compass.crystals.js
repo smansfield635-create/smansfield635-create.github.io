@@ -7,7 +7,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_COORDINATE_ORBIT_FLOWER_CRYSTALS_TNT_v2",
+    id: "DGB_COMPASS_COORDINATE_ORBIT_FLOWER_CRYSTALS_TNT_v3",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -81,6 +81,7 @@
     selectedCardinalObserved: "",
     selectedRoomObserved: "",
     flowerExpandedObserved: false,
+    semanticSyncStatus: "pending",
     renderLoopStatus: "pending",
     lastPointerAction: "none",
     gestureType: "",
@@ -253,11 +254,13 @@
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
+
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       const info = gl.getShaderInfoLog(shader) || "unknown shader error";
       gl.deleteShader(shader);
       throw new Error(info);
     }
+
     return shader;
   }
 
@@ -816,6 +819,81 @@
     };
   }
 
+  function semanticElementForNode(n) {
+    if (!state.root || !n) return null;
+
+    if (n.type === "mirrorland") {
+      return state.root.querySelector("[data-compass-object='mirrorland']");
+    }
+
+    if (n.type === "cardinal") {
+      return state.root.querySelector("[data-compass-cardinal][data-wing='" + n.wing + "']");
+    }
+
+    if (n.type === "petal") {
+      return state.root.querySelector("[data-compass-room][data-room-id='" + n.id + "']");
+    }
+
+    return null;
+  }
+
+  function sceneContains(el) {
+    return !!(state.surface && el && state.surface.contains(el));
+  }
+
+  function resetSemanticElement(el) {
+    if (!el) return;
+    el.style.opacity = "";
+    el.style.pointerEvents = "";
+    el.style.left = "";
+    el.style.top = "";
+    el.style.right = "";
+    el.style.bottom = "";
+    el.style.transform = "";
+    el.style.zIndex = "";
+  }
+
+  function syncSemanticNode(n) {
+    const el = semanticElementForNode(n);
+    if (!el || !sceneContains(el)) return;
+
+    const shouldShow = n.visible && n.transform.prominence >= 0.08;
+    const screen = shouldShow ? projectNode(n) : null;
+
+    if (!screen) {
+      el.style.opacity = "0";
+      el.style.pointerEvents = "none";
+      return;
+    }
+
+    const activeFlower = state.flowerExpanded && state.selectedCardinal;
+    const isSelectedAnchor = activeFlower && n.type === "cardinal" && n.wing === state.selectedCardinal;
+    const isFocusedCardinal = !activeFlower && n.type === "cardinal" && n.wing === (state.orbitFocus || "north");
+    const scale =
+      n.type === "mirrorland" ? 1 :
+      isSelectedAnchor ? 0.72 :
+      isFocusedCardinal ? 1.05 :
+      n.type === "cardinal" ? 0.88 :
+      0.92;
+
+    el.style.left = screen.x + "px";
+    el.style.top = screen.y + "px";
+    el.style.right = "auto";
+    el.style.bottom = "auto";
+    el.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+    el.style.opacity = String(Math.max(0, Math.min(1, n.transform.prominence)));
+    el.style.pointerEvents = n.transform.prominence >= 0.18 ? "auto" : "none";
+    el.style.zIndex = n.type === "petal" ? "5" : isSelectedAnchor ? "4" : "3";
+  }
+
+  function syncSemanticObjects() {
+    if (!state.surface || !state.root) return;
+
+    state.registry.forEach(syncSemanticNode);
+
+    emitReceipt({ semanticSyncStatus: "active" });
+  }
+
   function classifyGesture(start, end) {
     const dx = end.x - start.x;
     const dy = end.y - start.y;
@@ -1157,6 +1235,8 @@
 
     state.view = lookAt4([0, 0.72, cameraZ], [0, 0, 0], [0, 1, 0]);
     state.projection = perspective4(Math.PI / 4.6, aspect, 0.1, 40);
+
+    syncSemanticObjects();
 
     gl.useProgram(state.program);
     gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);

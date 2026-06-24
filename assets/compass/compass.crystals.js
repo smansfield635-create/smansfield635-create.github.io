@@ -1,6 +1,6 @@
 /* /assets/compass/compass.crystals.js
    DGB Compass Generation Two — compass-flower WebGL crystal visualization layer with map-plane swipe/tap disambiguation.
-   Scope: compass.crystals.js only.
+   Scope: compass.crystals.js only. 
 */
 
 (() => {

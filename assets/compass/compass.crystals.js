@@ -1,21 +1,23 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass Generation Two — compass-flower WebGL crystal visualization layer with map-plane swipe/tap disambiguation.
-   Scope: compass.crystals.js only. 
+   DGB Compass — Orbit Flower Traversal WebGL visualization layer.
+   Scope: compass.crystals.js only.
+   Owns visualization, gesture detection, hit detection, and controller selection requests.
+   Does not own routes, route validation, navigation execution, labels, panel copy, CSS, or visual-pass claims.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_COMPASS_FLOWER_SWIPE_TAP_TNT_v2",
+    id: "DGB_COMPASS_ORBIT_FLOWER_TRAVERSAL_CRYSTALS_TNT_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false,
-    fifthFileAuthorized: false,
-    owns: "single WebGL canvas visualization, compass-flower scene graph, crystal meshes, lighting, animation, room-node hit detection, swipe detection, controller selection requests, receipts",
-    doesNotOwn: "navigation, routes, route execution, semantic labels, controller state, HTML panel content, CSS layout authority"
+    fifthFileAuthorized: false
   });
+
+  const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
   const DEFAULT_ROOMS = Object.freeze({
     north: [
@@ -47,8 +49,6 @@
     ]
   });
 
-  const WINGS = Object.freeze(["north", "east", "south", "west"]);
-
   const WING_THEMES = Object.freeze({
     north: { color: [0.68, 0.86, 1.0], rx: 0.42, rz: 0.30, h: 0.84, elongation: 1.22, irregularity: 0.018, rotationBias: 0.95 },
     east: { color: [0.48, 0.94, 0.86], rx: 0.44, rz: 0.31, h: 0.82, elongation: 1.18, irregularity: 0.026, rotationBias: 1.05 },
@@ -71,15 +71,18 @@
     registryBuildStatus: "pending",
     visibleObjectCount: 0,
     currentModeObserved: "unknown",
+    orbitFocusObserved: "",
+    selectedCardinalObserved: "",
+    selectedRoomObserved: "",
+    flowerExpandedObserved: false,
     renderLoopStatus: "pending",
     lastPointerAction: "none",
-    lastSwipeDirection: "",
+    lastSwipeAxis: "",
     selectedVisualNodeId: "",
     selectedVisualNodeType: "",
     selectedVisualNodeWing: "",
     selectedVisualNodeCoordinate: "",
-    controllerSelectionRequested: false,
-    controllerDirectionRequested: false,
+    controllerRequest: "",
     controllerApiAvailable: false,
     failureReason: null,
     visualPassClaimed: false
@@ -95,8 +98,10 @@
     registry: new Map(),
     meshes: new Map(),
     mode: "COMPASS_MODE",
-    selectedWing: null,
-    selectedRoom: null,
+    orbitFocus: "",
+    selectedCardinal: "",
+    selectedRoom: "",
+    flowerExpanded: false,
     reducedMotion: false,
     width: 1,
     height: 1,
@@ -120,8 +125,8 @@
     }
 
     if (state.canvas) {
-      state.canvas.dataset.visualPassClaimed = "false";
       state.canvas.dataset.compassCrystalsReceipt = JSON.stringify(RECEIPT);
+      state.canvas.dataset.visualPassClaimed = "false";
     }
 
     globalThis.DGB_COMPASS_CRYSTALS_RECEIPT = Object.freeze({ ...RECEIPT });
@@ -141,24 +146,11 @@
   }
 
   function findRoot() {
-    return qs([
-      "[data-compass-root]",
-      "[data-dgb-compass]",
-      ".compass",
-      ".compass-shell",
-      "#compass",
-      "main"
-    ]) || document.body;
+    return qs(["[data-compass-root]", "#compass", "main"]) || document.body;
   }
 
   function findCanvasMount(root) {
-    return qs([
-      "[data-compass-crystals-mount]",
-      "[data-compass-canvas-mount]",
-      ".compass-crystals",
-      ".compass-visual",
-      ".compass-canvas"
-    ]) || root;
+    return qs(["[data-compass-crystals-mount]", ".compass-scene__visual", ".compass-scene"]) || root;
   }
 
   function ensureCanvas(mount) {
@@ -175,10 +167,10 @@
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
     canvas.style.pointerEvents = "none";
-    canvas.style.cursor = "default";
 
-    const computed = getComputedStyle(mount);
-    if (computed.position === "static") mount.style.position = "relative";
+    if (getComputedStyle(mount).position === "static") {
+      mount.style.position = "relative";
+    }
 
     mount.prepend(canvas);
     return canvas;
@@ -234,11 +226,9 @@
       float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
       float fill = max(dot(n, normalize(-uFillLightDirection)), 0.0) * 0.45;
       float rim = pow(max(dot(n, normalize(-uRimLightDirection)), 0.0), 2.0) * 0.55;
-
       float light = uAmbientStrength + key * 0.85 + fill + rim;
       vec3 color = vColor * light * vProminence;
-      float alpha = clamp(0.28 + vProminence * 0.72, 0.18, 1.0);
-
+      float alpha = clamp(0.26 + vProminence * 0.74, 0.16, 1.0);
       gl_FragColor = vec4(color, alpha);
     }
   `;
@@ -331,8 +321,8 @@
     const faces = [];
     const top = positions.push(v3(0, h * elongation, 0)) - 1;
     const bottom = positions.push(v3(0, -h, 0)) - 1;
-
     const equator = [];
+
     for (let i = 0; i < segments; i += 1) {
       const a = (Math.PI * 2 * i) / segments;
       const offset = artifactOffset(i, irregularity);
@@ -436,7 +426,7 @@
       segments: 12,
       rx: 0.66,
       rz: 0.48,
-      h: 1.06,
+      h: 1.02,
       crown: true,
       color: [0.72, 0.94, 1.0],
       irregularity: 0.012,
@@ -461,9 +451,9 @@
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createCrystalMesh({
         segments: 6,
-        rx: 0.25,
-        rz: 0.18,
-        h: 0.42,
+        rx: 0.27,
+        rz: 0.20,
+        h: 0.46,
         crown: false,
         color: theme.color,
         irregularity: theme.irregularity * 0.55,
@@ -471,18 +461,6 @@
         elongation: 1.08
       })));
     });
-
-    meshes.set("returnObject", buildGpuMesh(gl, createCrystalMesh({
-      segments: 6,
-      rx: 0.22,
-      rz: 0.16,
-      h: 0.34,
-      crown: false,
-      color: [1.0, 0.82, 0.54],
-      irregularity: 0.028,
-      warmth: 0.2,
-      elongation: 1.08
-    })));
 
     return meshes;
   }
@@ -500,26 +478,14 @@
       id,
       type,
       label: opts.label || id,
-      wing: opts.wing || null,
+      wing: opts.wing || "",
       roomIndex: opts.roomIndex || 0,
       coordinate: opts.coordinate || "",
       meshKey: opts.meshKey || type,
       rotationBias: opts.rotationBias || 1,
       visible: true,
-      transform: {
-        x: 0, y: 0, z: 0,
-        rx: 0, ry: 0, rz: 0,
-        sx: 1, sy: 1, sz: 1,
-        prominence: 1,
-        rotationSpeed: 0.25
-      },
-      target: {
-        x: 0, y: 0, z: 0,
-        rx: 0, ry: 0, rz: 0,
-        sx: 1, sy: 1, sz: 1,
-        prominence: 1,
-        rotationSpeed: 0.25
-      }
+      transform: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25 },
+      target: { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1, prominence: 1, rotationSpeed: 0.25 }
     };
   }
 
@@ -535,7 +501,7 @@
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
 
-      registry.set(wing, node(wing, "wing", {
+      registry.set(wing, node(wing, "cardinal", {
         label: wing.charAt(0).toUpperCase() + wing.slice(1),
         wing,
         meshKey: "wing-" + wing,
@@ -543,9 +509,8 @@
       }));
 
       const rooms = DEFAULT_ROOMS[wing];
-
       rooms.forEach((room, index) => {
-        registry.set(room.id, node(room.id, "room", {
+        registry.set(room.id, node(room.id, "petal", {
           label: room.label,
           wing,
           roomIndex: index,
@@ -556,41 +521,35 @@
       });
     });
 
-    registry.set("return", node("return", "returnObject", {
-      label: "Return",
-      meshKey: "returnObject",
-      rotationBias: 1.2
-    }));
-
     return registry;
   }
 
   function normalizeWing(value) {
-    if (!value) return null;
-    const v = String(value).toLowerCase();
-    return WINGS.includes(v) ? v : null;
+    const wing = String(value || "").trim().toLowerCase();
+    return WINGS.includes(wing) ? wing : "";
   }
 
   function readControllerState() {
     const root = state.root || document.documentElement;
     const ds = root.dataset || {};
-    const rawMode = ds.compassMode || ds.mode || document.body.dataset.compassMode || "COMPASS_MODE";
+    const rawMode = String(ds.compassMode || "COMPASS_MODE").toUpperCase();
 
-    let mode = String(rawMode).toUpperCase();
-    if (mode === "COMPASS") mode = "COMPASS_MODE";
-    if (mode === "EXPANDED") mode = "EXPANDED_MODE";
-    if (mode === "ROOM") mode = "ROOM_MODE";
-    if (!["COMPASS_MODE", "EXPANDED_MODE", "ROOM_MODE"].includes(mode)) mode = "COMPASS_MODE";
-
-    state.mode = mode;
-    state.selectedWing = normalizeWing(ds.selectedWing || ds.activeWing || document.body.dataset.selectedWing || null);
-    state.selectedRoom = ds.selectedRoom || ds.activeRoom || document.body.dataset.selectedRoom || null;
+    state.mode = rawMode;
+    state.orbitFocus = normalizeWing(ds.orbitFocus || ds.selectedCardinal || ds.selectedWing || "");
+    state.selectedCardinal = normalizeWing(ds.selectedCardinal || "");
+    state.selectedRoom = String(ds.selectedRoom || "");
+    state.flowerExpanded = ds.flowerExpanded === "true";
     state.reducedMotion =
       matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      ds.reducedMotion === "true" ||
-      document.body.dataset.reducedMotion === "true";
+      ds.reducedMotion === "true";
 
-    emitReceipt({ currentModeObserved: state.mode });
+    emitReceipt({
+      currentModeObserved: state.mode,
+      orbitFocusObserved: state.orbitFocus,
+      selectedCardinalObserved: state.selectedCardinal,
+      selectedRoomObserved: state.selectedRoom,
+      flowerExpandedObserved: state.flowerExpanded
+    });
   }
 
   function isSemanticInteractionTarget(target) {
@@ -598,13 +557,9 @@
       target &&
       target.closest &&
       target.closest(
-        "[data-compass-wing], [data-compass-room], [data-compass-return], [data-compass-enter], .compass-value-card, a, button"
+        "[data-compass-cardinal], [data-compass-wing], [data-compass-room], [data-compass-object='mirrorland'], [data-compass-return], [data-compass-return-to-orbit], [data-compass-enter], .compass-value-card, a, button"
       )
     );
-  }
-
-  function isBridgeModeActive() {
-    return state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE";
   }
 
   function wingPosition(wing) {
@@ -619,35 +574,35 @@
 
   function inactiveWingPosition(wing) {
     switch (wing) {
-      case "north": return [0, 1.78, -0.92];
-      case "east": return [2.18, 0, -0.92];
-      case "south": return [0, -1.78, -0.92];
-      case "west": return [-2.18, 0, -0.92];
-      default: return [0, 0, -0.92];
+      case "north": return [0, 1.82, -0.98];
+      case "east": return [2.22, 0, -0.98];
+      case "south": return [0, -1.82, -0.98];
+      case "west": return [-2.22, 0, -0.98];
+      default: return [0, 0, -0.98];
     }
   }
 
   function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 0.74, 0.02],
-      [0.64, 0.36, 0.00],
-      [0.80, -0.14, -0.02],
-      [0.42, -0.62, 0.00],
-      [0, 0, 0.16]
+      [0, 0.88, 0.08],
+      [0.76, 0.42, 0.04],
+      [0.94, -0.14, 0.00],
+      [0.48, -0.76, 0.04],
+      [0, 0, 0.20]
     ];
 
     const map4 = [
-      [-0.56, 0.44, 0.00],
-      [0.56, 0.44, 0.00],
-      [-0.56, -0.44, 0.00],
-      [0.56, -0.44, 0.00]
+      [-0.68, 0.52, 0.04],
+      [0.68, 0.52, 0.04],
+      [-0.68, -0.52, 0.04],
+      [0.68, -0.52, 0.04]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 0.74, Math.sin(angle) * 0.50, 0];
+    return [Math.cos(angle) * 0.86, Math.sin(angle) * 0.58, 0.04];
   }
 
   function rotatePointForWing(point, wing) {
@@ -656,10 +611,10 @@
     const z = point[2];
 
     switch (wing) {
-      case "north": return [x, y + 0.34, z];
-      case "east": return [y + 0.34, -x, z];
-      case "south": return [-x, -y - 0.34, z];
-      case "west": return [-y - 0.34, x, z];
+      case "north": return [x, y + 0.38, z];
+      case "east": return [y + 0.38, -x, z];
+      case "south": return [-x, -y - 0.38, z];
+      case "west": return [-y - 0.38, x, z];
       default: return [x, y, z];
     }
   }
@@ -669,106 +624,99 @@
   }
 
   function updateTargets() {
-    const selectedWing = state.selectedWing || "north";
-    const selectedRooms = DEFAULT_ROOMS[selectedWing] || [];
+    const focus = state.orbitFocus || "north";
+    const activeFlower = state.flowerExpanded && state.selectedCardinal;
+    const selectedRooms = DEFAULT_ROOMS[state.selectedCardinal || focus] || [];
     const selectedRoomId = state.selectedRoom;
 
     state.registry.forEach((n) => {
       n.visible = false;
-      setTarget(n, {
-        x: 0, y: 0, z: 0,
-        sx: 1, sy: 1, sz: 1,
-        prominence: 0,
-        rotationSpeed: 0.12
-      });
+      setTarget(n, { x: 0, y: 0, z: 0, sx: 1, sy: 1, sz: 1, prominence: 0, rotationSpeed: 0.10 });
     });
 
     const mirrorland = state.registry.get("mirrorland");
+    mirrorland.visible = true;
 
-    if (state.mode === "COMPASS_MODE") {
-      mirrorland.visible = true;
+    if (!activeFlower) {
       setTarget(mirrorland, {
-        x: 0, y: 0, z: 0.05,
-        sx: 1.18, sy: 1.18, sz: 1.18,
-        prominence: 1.0,
-        rotationSpeed: 0.13
+        x: 0, y: 0, z: 0.04,
+        sx: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
+        sy: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
+        sz: state.mode === "DESTINATION_MODE" ? 1.02 : 1.14,
+        prominence: 0.94,
+        rotationSpeed: 0.12
       });
 
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
         const p = wingPosition(wing);
+        const focused = wing === focus;
 
         n.visible = true;
         setTarget(n, {
-          x: p[0], y: p[1], z: p[2],
-          sx: 0.92, sy: 1.18, sz: 0.92,
-          prominence: 0.86,
-          rotationSpeed: 0.18 * n.rotationBias
+          x: p[0], y: p[1], z: focused ? 0.12 : p[2],
+          sx: focused ? 1.16 : 0.88,
+          sy: focused ? 1.42 : 1.12,
+          sz: focused ? 1.16 : 0.88,
+          prominence: focused ? 1.02 : 0.72,
+          rotationSpeed: focused ? 0.17 * n.rotationBias : 0.12 * n.rotationBias
         });
       });
+
+      return;
     }
 
-    if (state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE") {
-      mirrorland.visible = true;
-      setTarget(mirrorland, {
-        x: 0, y: 0, z: -0.18,
-        sx: 0.72, sy: 0.72, sz: 0.72,
-        prominence: 0.42,
-        rotationSpeed: 0.06
-      });
+    setTarget(mirrorland, {
+      x: 0, y: 0, z: -0.30,
+      sx: 0.62, sy: 0.62, sz: 0.62,
+      prominence: 0.30,
+      rotationSpeed: 0.05
+    });
 
-      WINGS.forEach((wing) => {
-        const n = state.registry.get(wing);
+    WINGS.forEach((wing) => {
+      const n = state.registry.get(wing);
 
-        if (wing === selectedWing) {
-          n.visible = true;
-          setTarget(n, {
-            x: 0, y: 0, z: 0.14,
-            sx: 1.02, sy: 1.32, sz: 1.02,
-            prominence: 1.0,
-            rotationSpeed: 0.14 * n.rotationBias
-          });
-          return;
-        }
-
-        const p = inactiveWingPosition(wing);
+      if (wing === state.selectedCardinal) {
         n.visible = true;
         setTarget(n, {
-          x: p[0], y: p[1], z: p[2],
-          sx: 0.44, sy: 0.58, sz: 0.44,
-          prominence: 0.22,
-          rotationSpeed: 0.045 * n.rotationBias
+          x: 0, y: 0, z: 0.16,
+          sx: 1.22,
+          sy: 1.52,
+          sz: 1.22,
+          prominence: 1.06,
+          rotationSpeed: 0.14 * n.rotationBias
         });
-      });
+        return;
+      }
 
-      selectedRooms.forEach((room, index) => {
-        const n = state.registry.get(room.id);
-        const base = roomPetalPosition(index, selectedRooms.length);
-        const p = rotatePointForWing(base, selectedWing);
-        const selected = state.mode === "ROOM_MODE" && selectedRoomId === room.id;
-
-        n.visible = true;
-        setTarget(n, {
-          x: p[0],
-          y: p[1],
-          z: selected ? 0.46 : p[2] + 0.10,
-          sx: selected ? 0.58 : 0.40,
-          sy: selected ? 0.58 : 0.40,
-          sz: selected ? 0.58 : 0.40,
-          prominence: selected ? 1.0 : state.mode === "ROOM_MODE" ? 0.32 : 0.72,
-          rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
-        });
+      const p = inactiveWingPosition(wing);
+      n.visible = true;
+      setTarget(n, {
+        x: p[0], y: p[1], z: p[2],
+        sx: 0.40, sy: 0.52, sz: 0.40,
+        prominence: 0.18,
+        rotationSpeed: 0.04 * n.rotationBias
       });
+    });
 
-      const ret = state.registry.get("return");
-      ret.visible = true;
-      setTarget(ret, {
-        x: -1.66, y: -1.18, z: 0.26,
-        sx: 0.44, sy: 0.44, sz: 0.44,
-        prominence: 0.88,
-        rotationSpeed: 0.22
+    selectedRooms.forEach((room, index) => {
+      const n = state.registry.get(room.id);
+      const base = roomPetalPosition(index, selectedRooms.length);
+      const p = rotatePointForWing(base, state.selectedCardinal);
+      const selected = selectedRoomId === room.id;
+
+      n.visible = true;
+      setTarget(n, {
+        x: p[0],
+        y: p[1],
+        z: selected ? 0.52 : p[2] + 0.10,
+        sx: selected ? 0.82 : 0.62,
+        sy: selected ? 0.82 : 0.62,
+        sz: selected ? 0.82 : 0.62,
+        prominence: selected ? 1.0 : 0.76,
+        rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
       });
-    }
+    });
   }
 
   function lerp(a, b, t) {
@@ -795,7 +743,7 @@
   }
 
   function identity4() {
-    return [1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1];
+    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
   }
 
   function multiply4(a, b) {
@@ -814,29 +762,33 @@
 
   function translate4(x, y, z) {
     const m = identity4();
-    m[12] = x; m[13] = y; m[14] = z;
+    m[12] = x;
+    m[13] = y;
+    m[14] = z;
     return m;
   }
 
   function scale4(x, y, z) {
     const m = identity4();
-    m[0] = x; m[5] = y; m[10] = z;
+    m[0] = x;
+    m[5] = y;
+    m[10] = z;
     return m;
   }
 
   function rotateX4(a) {
     const c = Math.cos(a), s = Math.sin(a);
-    return [1, 0, 0, 0,  0, c, s, 0,  0, -s, c, 0,  0, 0, 0, 1];
+    return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
   }
 
   function rotateY4(a) {
     const c = Math.cos(a), s = Math.sin(a);
-    return [c, 0, -s, 0,  0, 1, 0, 0,  s, 0, c, 0,  0, 0, 0, 1];
+    return [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1];
   }
 
   function rotateZ4(a) {
     const c = Math.cos(a), s = Math.sin(a);
-    return [c, s, 0, 0,  -s, c, 0, 0,  0, 0, 1, 0,  0, 0, 0, 1];
+    return [c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
   }
 
   function perspective4(fovy, aspect, near, far) {
@@ -922,101 +874,92 @@
     };
   }
 
-  function requestControllerDirectionSelection(direction) {
-    const api = globalThis.DGB_COMPASS_CONTROLLER;
-    const canRequest = !!api && (
-      typeof api.requestDirectionSelection === "function" ||
-      typeof api.selectWing === "function"
-    );
+  function classifyGesture(start, end) {
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+    const distance = Math.hypot(dx, dy);
 
-    if (!canRequest) {
+    if (distance <= GESTURE.maximumTapDistancePx) return { type: "tap" };
+    if (distance < GESTURE.minimumSwipeDistancePx) return { type: "ambiguous" };
+
+    if (absX > absY * GESTURE.directionalDominanceRatio) {
+      return { type: "swipe", axis: "horizontal", raw: dx > 0 ? "swipeRight" : "swipeLeft" };
+    }
+
+    if (absY > absX * GESTURE.directionalDominanceRatio) {
+      return { type: "swipe", axis: "vertical", raw: dy > 0 ? "swipeDown" : "swipeUp" };
+    }
+
+    return { type: "ambiguous" };
+  }
+
+  function requestAxisSwipe(axis, raw) {
+    const api = globalThis.DGB_COMPASS_CONTROLLER;
+    const available = !!api && typeof api.requestAxisSwipe === "function";
+
+    if (!available) {
       emitReceipt({
-        lastPointerAction: "controller-direction-api-unavailable",
-        lastSwipeDirection: direction,
-        controllerDirectionRequested: false,
-        controllerSelectionRequested: false,
+        lastPointerAction: "controller-axis-api-unavailable",
+        lastSwipeAxis: axis,
+        controllerRequest: "",
         controllerApiAvailable: false,
-        failureReason: "CONTROLLER_DIRECTION_API_UNAVAILABLE"
+        failureReason: "CONTROLLER_AXIS_API_UNAVAILABLE"
       });
       return;
     }
 
-    if (typeof api.requestDirectionSelection === "function") {
-      api.requestDirectionSelection(direction);
-    } else {
-      api.selectWing(direction);
-    }
+    api.requestAxisSwipe(axis);
 
     emitReceipt({
-      lastPointerAction: "swipe-direction-requested",
-      lastSwipeDirection: direction,
-      selectedVisualNodeId: "",
-      selectedVisualNodeType: "",
-      selectedVisualNodeWing: direction,
-      selectedVisualNodeCoordinate: "",
-      controllerDirectionRequested: true,
-      controllerSelectionRequested: false,
+      lastPointerAction: raw || "axis-swipe",
+      lastSwipeAxis: axis,
+      controllerRequest: "requestAxisSwipe:" + axis,
       controllerApiAvailable: true,
       failureReason: null
     });
   }
 
-  function requestControllerRoomSelection(roomId, nodeHit) {
+  function requestNodeSelection(nodeHit) {
     const api = globalThis.DGB_COMPASS_CONTROLLER;
-    const canRequest = !!api && (
-      typeof api.requestRoomSelection === "function" ||
-      typeof api.selectRoom === "function"
-    );
+    if (!api || !nodeHit) return;
 
-    if (!canRequest) {
-      emitReceipt({
-        lastPointerAction: "controller-room-api-unavailable",
-        selectedVisualNodeId: nodeHit ? nodeHit.id : "",
-        selectedVisualNodeType: nodeHit ? nodeHit.type : "",
-        selectedVisualNodeWing: nodeHit ? nodeHit.wing || "" : "",
-        selectedVisualNodeCoordinate: nodeHit ? nodeHit.coordinate || "" : "",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
-        controllerApiAvailable: false,
-        failureReason: "CONTROLLER_ROOM_API_UNAVAILABLE"
-      });
-      return;
+    let request = "";
+    let ok = false;
+
+    if (nodeHit.type === "mirrorland" && typeof api.requestMirrorlandSelection === "function") {
+      api.requestMirrorlandSelection();
+      request = "requestMirrorlandSelection";
+      ok = true;
     }
 
-    if (typeof api.requestRoomSelection === "function") {
-      api.requestRoomSelection(roomId);
-    } else {
-      api.selectRoom(roomId);
+    if (nodeHit.type === "cardinal" && typeof api.requestCardinalSelection === "function") {
+      api.requestCardinalSelection(nodeHit.wing);
+      request = "requestCardinalSelection:" + nodeHit.wing;
+      ok = true;
+    }
+
+    if (nodeHit.type === "petal" && typeof api.requestRoomSelection === "function") {
+      api.requestRoomSelection(nodeHit.id);
+      request = "requestRoomSelection:" + nodeHit.id;
+      ok = true;
     }
 
     emitReceipt({
-      lastPointerAction: "room-selection-requested",
-      lastSwipeDirection: "",
+      lastPointerAction: ok ? "visual-node-selection-requested" : "controller-selection-api-unavailable",
       selectedVisualNodeId: nodeHit.id,
       selectedVisualNodeType: nodeHit.type,
       selectedVisualNodeWing: nodeHit.wing || "",
       selectedVisualNodeCoordinate: nodeHit.coordinate || "",
-      controllerSelectionRequested: true,
-      controllerDirectionRequested: false,
-      controllerApiAvailable: true,
-      failureReason: null
+      controllerRequest: request,
+      controllerApiAvailable: ok,
+      failureReason: ok ? null : "CONTROLLER_SELECTION_API_UNAVAILABLE"
     });
   }
 
-  function findRoomHit(event) {
+  function findHit(event) {
     readControllerState();
-
-    if (!isBridgeModeActive()) {
-      emitReceipt({
-        lastPointerAction: "tap-ignored-compass-mode",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
-        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
-        failureReason: null
-      });
-      return null;
-    }
-
     updateTargets();
     updateTransforms(0);
 
@@ -1027,11 +970,10 @@
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(32, Math.min(54, rect.width * 0.062));
+    const hitRadius = Math.max(34, Math.min(62, rect.width * 0.07));
 
     state.registry.forEach((n) => {
-      if (n.type !== "room") return;
-      if (!n.visible || n.transform.prominence < 0.12) return;
+      if (!n.visible || n.transform.prominence < 0.14) return;
 
       const screen = projectNode(n);
       if (!screen) return;
@@ -1040,47 +982,17 @@
       const dy = py - screen.y;
       const d = Math.hypot(dx, dy);
 
-      if (d < bestDistance && d <= hitRadius) {
+      const localRadius = n.type === "mirrorland" || n.type === "cardinal"
+        ? hitRadius * 1.18
+        : hitRadius;
+
+      if (d < bestDistance && d <= localRadius) {
         best = n;
         bestDistance = d;
       }
     });
 
     return best;
-  }
-
-  function classifyGesture(start, end) {
-    const dx = end.x - start.x;
-    const dy = end.y - start.y;
-    const absX = Math.abs(dx);
-    const absY = Math.abs(dy);
-    const distance = Math.hypot(dx, dy);
-
-    if (distance <= GESTURE.maximumTapDistancePx) {
-      return { type: "tap" };
-    }
-
-    if (distance < GESTURE.minimumSwipeDistancePx) {
-      return { type: "ambiguous" };
-    }
-
-    if (absX > absY * GESTURE.directionalDominanceRatio) {
-      return {
-        type: "swipe",
-        direction: dx > 0 ? "east" : "west",
-        raw: dx > 0 ? "swipeRight" : "swipeLeft"
-      };
-    }
-
-    if (absY > absX * GESTURE.directionalDominanceRatio) {
-      return {
-        type: "swipe",
-        direction: dy > 0 ? "north" : "south",
-        raw: dy > 0 ? "swipeDown" : "swipeUp"
-      };
-    }
-
-    return { type: "ambiguous" };
   }
 
   function handlePointerDown(event) {
@@ -1090,8 +1002,7 @@
       state.pointer = null;
       emitReceipt({
         lastPointerAction: "semantic-control-ignored",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
+        controllerRequest: "",
         controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
         failureReason: null
       });
@@ -1102,14 +1013,12 @@
       id: event.pointerId,
       x: event.clientX,
       y: event.clientY,
-      target: event.target,
       time: performance.now()
     };
 
     emitReceipt({
       lastPointerAction: "pointer-down",
-      controllerSelectionRequested: false,
-      controllerDirectionRequested: false,
+      controllerRequest: "",
       controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
       failureReason: null
     });
@@ -1120,12 +1029,7 @@
 
     if (event.pointerId !== state.pointer.id) {
       state.pointer = null;
-      emitReceipt({
-        lastPointerAction: "pointer-id-mismatch",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
-        failureReason: null
-      });
+      emitReceipt({ lastPointerAction: "pointer-id-mismatch" });
       return;
     }
 
@@ -1133,62 +1037,48 @@
       state.pointer = null;
       emitReceipt({
         lastPointerAction: "semantic-control-ignored",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
+        controllerRequest: "",
         controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
         failureReason: null
       });
       return;
     }
 
-    const gesture = classifyGesture(state.pointer, {
-      x: event.clientX,
-      y: event.clientY
-    });
-
+    const gesture = classifyGesture(state.pointer, { x: event.clientX, y: event.clientY });
     state.pointer = null;
 
     if (gesture.type === "swipe") {
-      requestControllerDirectionSelection(gesture.direction);
-      emitReceipt({
-        lastPointerAction: gesture.raw,
-        lastSwipeDirection: gesture.direction,
-        controllerDirectionRequested: true,
-        controllerSelectionRequested: false,
-        failureReason: null
-      });
+      requestAxisSwipe(gesture.axis, gesture.raw);
       return;
     }
 
     if (gesture.type === "ambiguous") {
       emitReceipt({
         lastPointerAction: "ambiguous-gesture-no-action",
-        lastSwipeDirection: "",
-        controllerDirectionRequested: false,
-        controllerSelectionRequested: false,
+        lastSwipeAxis: "",
+        controllerRequest: "",
         failureReason: null
       });
       return;
     }
 
-    const hit = findRoomHit(event);
+    const hit = findHit(event);
+
     if (!hit) {
       emitReceipt({
-        lastPointerAction: "tap-no-room-hit",
-        lastSwipeDirection: "",
+        lastPointerAction: "tap-no-hit",
         selectedVisualNodeId: "",
         selectedVisualNodeType: "",
         selectedVisualNodeWing: "",
         selectedVisualNodeCoordinate: "",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
+        controllerRequest: "",
         controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
         failureReason: null
       });
       return;
     }
 
-    requestControllerRoomSelection(hit.id, hit);
+    requestNodeSelection(hit);
   }
 
   function resize() {
@@ -1206,7 +1096,6 @@
     state.pixelRatio = dpr;
     state.width = width;
     state.height = height;
-
     state.gl.viewport(0, 0, width, height);
   }
 
@@ -1294,12 +1183,7 @@
     surface.addEventListener("pointerup", handlePointerUp);
     surface.addEventListener("pointercancel", () => {
       state.pointer = null;
-      emitReceipt({
-        lastPointerAction: "pointer-cancelled",
-        controllerSelectionRequested: false,
-        controllerDirectionRequested: false,
-        failureReason: null
-      });
+      emitReceipt({ lastPointerAction: "pointer-cancelled", failureReason: null });
     });
   }
 
@@ -1312,7 +1196,6 @@
       emitReceipt({ canvasMountStatus: "found" });
 
       const gl = getGL(state.canvas);
-
       if (!gl) {
         emitReceipt({ webglContextStatus: "unavailable" });
         hold("WEBGL_CONTEXT_UNAVAILABLE");

@@ -1,15 +1,13 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass — Orbit Flower Traversal WebGL visualization layer.
+   DGB Compass — Coordinate Orbit Flower Traversal WebGL layer.
    Scope: compass.crystals.js only.
-   Owns visualization, visible orbit rotation, protected scene gesture detection, hit detection, and controller selection requests.
-   Does not own routes, route validation, navigation execution, labels, panel copy, CSS, or visual-pass claims.
 */
 
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_VISIBLE_ORBIT_ROTATION_CRYSTALS_TNT_v1",
+    id: "DGB_COMPASS_COORDINATE_ORBIT_FLOWER_CRYSTALS_TNT_v2",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -58,9 +56,9 @@
 
   const ORBIT_ANGLES = Object.freeze({
     north: 0,
-    east: -Math.PI / 2,
+    east: Math.PI / 2,
     south: Math.PI,
-    west: Math.PI / 2
+    west: -Math.PI / 2
   });
 
   const GESTURE = Object.freeze({
@@ -194,9 +192,7 @@
     canvas.style.inset = "0";
     canvas.style.pointerEvents = "none";
 
-    if (getComputedStyle(mount).position === "static") {
-      mount.style.position = "relative";
-    }
+    if (getComputedStyle(mount).position === "static") mount.style.position = "relative";
 
     mount.prepend(canvas);
     return canvas;
@@ -216,17 +212,14 @@
     attribute vec3 aPosition;
     attribute vec3 aNormal;
     attribute vec3 aColor;
-
     uniform mat4 uModel;
     uniform mat4 uView;
     uniform mat4 uProjection;
     uniform mat3 uNormalMatrix;
     uniform float uProminence;
-
     varying vec3 vNormal;
     varying vec3 vColor;
     varying float vProminence;
-
     void main() {
       vNormal = normalize(uNormalMatrix * aNormal);
       vColor = aColor;
@@ -237,16 +230,13 @@
 
   const fragmentShaderSource = `
     precision mediump float;
-
     varying vec3 vNormal;
     varying vec3 vColor;
     varying float vProminence;
-
     uniform vec3 uKeyLightDirection;
     uniform vec3 uFillLightDirection;
     uniform vec3 uRimLightDirection;
     uniform float uAmbientStrength;
-
     void main() {
       vec3 n = normalize(vNormal);
       float key = max(dot(n, normalize(-uKeyLightDirection)), 0.0);
@@ -263,13 +253,11 @@
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       const info = gl.getShaderInfoLog(shader) || "unknown shader error";
       gl.deleteShader(shader);
       throw new Error(info);
     }
-
     return shader;
   }
 
@@ -294,30 +282,16 @@
     return program;
   }
 
-  function v3(x, y, z) {
-    return [x, y, z];
-  }
-
-  function sub(a, b) {
-    return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-  }
-
+  function v3(x, y, z) { return [x, y, z]; }
+  function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
   function cross(a, b) {
-    return [
-      a[1] * b[2] - a[2] * b[1],
-      a[2] * b[0] - a[0] * b[2],
-      a[0] * b[1] - a[1] * b[0]
-    ];
+    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
   }
-
   function normalize(a) {
     const len = Math.hypot(a[0], a[1], a[2]) || 1;
     return [a[0] / len, a[1] / len, a[2] / len];
   }
-
-  function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  }
+  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
 
   function artifactOffset(index, irregularity) {
     if (!irregularity) return 1;
@@ -449,42 +423,25 @@
     const meshes = new Map();
 
     meshes.set("mirrorland", buildGpuMesh(gl, createCrystalMesh({
-      segments: 12,
-      rx: 0.66,
-      rz: 0.48,
-      h: 1.02,
-      crown: true,
-      color: [0.72, 0.94, 1.0],
-      irregularity: 0.012,
-      warmth: 0.08,
-      elongation: 1.03
+      segments: 12, rx: 0.66, rz: 0.48, h: 1.02, crown: true,
+      color: [0.72, 0.94, 1.0], irregularity: 0.012, warmth: 0.08, elongation: 1.03
     })));
 
     WINGS.forEach((wing) => {
       const theme = WING_THEMES[wing];
 
       meshes.set("wing-" + wing, buildGpuMesh(gl, createCrystalMesh({
-        segments: 8,
-        rx: theme.rx,
-        rz: theme.rz,
-        h: theme.h,
-        crown: true,
-        color: theme.color,
-        irregularity: theme.irregularity,
+        segments: 8, rx: theme.rx, rz: theme.rz, h: theme.h, crown: true,
+        color: theme.color, irregularity: theme.irregularity,
         warmth: wing === "south" || wing === "west" ? 0.16 : 0.06,
         elongation: theme.elongation
       })));
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createCrystalMesh({
-        segments: 6,
-        rx: 0.30,
-        rz: 0.22,
-        h: 0.50,
-        crown: false,
-        color: theme.color,
-        irregularity: theme.irregularity * 0.55,
+        segments: 6, rx: 0.34, rz: 0.25, h: 0.56, crown: false,
+        color: theme.color, irregularity: theme.irregularity * 0.55,
         warmth: wing === "south" || wing === "west" ? 0.12 : 0.04,
-        elongation: 1.08
+        elongation: 1.10
       })));
     });
 
@@ -492,10 +449,10 @@
   }
 
   function coordinateFor(index, count) {
-    const four = ["NW", "NE", "SW", "SE"];
-    const five = ["N", "NE", "E", "SE", "CENTER"];
-    if (count === 4) return four[index] || "";
+    const five = ["CROWN", "RIGHT FIELD", "LOWER RIGHT", "LOWER LEFT", "LEFT FIELD"];
+    const four = ["CROWN", "RIGHT FIELD", "ROOT", "LEFT FIELD"];
     if (count === 5) return five[index] || "";
+    if (count === 4) return four[index] || "";
     return String(index + 1);
   }
 
@@ -588,12 +545,7 @@
     const z = point[2] || 0;
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-
-    return [
-      x * c - y * s,
-      x * s + y * c,
-      z
-    ];
+    return [x * c - y * s, x * s + y * c, z];
   }
 
   function baseWingPosition(wing) {
@@ -610,36 +562,27 @@
     return rotate2D(baseWingPosition(wing), state.orbitAngle);
   }
 
-  function inactiveWingPosition(wing) {
-    const p = rotate2D(baseWingPosition(wing), state.orbitAngle);
-    return [p[0] * 1.22, p[1] * 1.22, -0.98];
-  }
-
   function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 1.02, 0.10],
-      [0.97, 0.32, 0.06],
-      [0.60, -0.84, 0.06],
-      [-0.60, -0.84, 0.06],
-      [-0.97, 0.32, 0.06]
+      [0, 1.18, 0.14],
+      [1.12, 0.36, 0.10],
+      [0.70, -0.98, 0.10],
+      [-0.70, -0.98, 0.10],
+      [-1.12, 0.36, 0.10]
     ];
 
     const map4 = [
-      [0, 0.96, 0.06],
-      [0.96, 0, 0.06],
-      [0, -0.96, 0.06],
-      [-0.96, 0, 0.06]
+      [0, 1.10, 0.12],
+      [1.10, 0, 0.10],
+      [0, -1.10, 0.10],
+      [-1.10, 0, 0.10]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 0.98, Math.sin(angle) * 0.98, 0.06];
-  }
-
-  function petalPositionForWing(point, wing) {
-    return rotate2D(point, ORBIT_ANGLES[wing] || 0);
+    return [Math.cos(angle) * 1.08, Math.sin(angle) * 1.08, 0.10];
   }
 
   function setTarget(n, t) {
@@ -679,12 +622,8 @@
 
     if (!activeFlower) {
       setTarget(mirrorland, {
-        x: 0,
-        y: 0,
-        z: 0.04,
-        sx: 1.14,
-        sy: 1.14,
-        sz: 1.14,
+        x: 0, y: 0, z: 0.04,
+        sx: 1.14, sy: 1.14, sz: 1.14,
         prominence: 0.94,
         rotationSpeed: 0.12
       });
@@ -711,14 +650,10 @@
     }
 
     setTarget(mirrorland, {
-      x: -1.72,
-      y: -1.22,
-      z: -1.46,
-      sx: 0.34,
-      sy: 0.34,
-      sz: 0.34,
-      prominence: 0.12,
-      rotationSpeed: 0.035
+      x: -1.72, y: -1.22, z: -1.46,
+      sx: 0.30, sy: 0.30, sz: 0.30,
+      prominence: 0.08,
+      rotationSpeed: 0.03
     });
 
     WINGS.forEach((wing) => {
@@ -727,55 +662,43 @@
       if (wing === state.selectedCardinal) {
         n.visible = true;
         setTarget(n, {
-          x: 0,
-          y: 0,
-          z: 0.12,
-          sx: 0.58,
-          sy: 0.70,
-          sz: 0.58,
-          prominence: 0.62,
-          rotationSpeed: 0.10 * n.rotationBias
+          x: 0, y: 0, z: 0.10,
+          sx: 0.50, sy: 0.62, sz: 0.50,
+          prominence: 0.52,
+          rotationSpeed: 0.08 * n.rotationBias
         });
         return;
       }
 
-      const p = inactiveWingPosition(wing);
-      n.visible = true;
+      n.visible = false;
       setTarget(n, {
-        x: p[0],
-        y: p[1],
-        z: p[2],
-        sx: 0.34,
-        sy: 0.44,
-        sz: 0.34,
-        prominence: 0.14,
-        rotationSpeed: 0.035 * n.rotationBias
+        x: 0, y: 0, z: -1.2,
+        sx: 0.18, sy: 0.18, sz: 0.18,
+        prominence: 0,
+        rotationSpeed: 0.02
       });
     });
 
     selectedRooms.forEach((room, index) => {
       const n = state.registry.get(room.id);
-      const base = roomPetalPosition(index, selectedRooms.length);
-      const p = petalPositionForWing(base, state.selectedCardinal);
+      const p = roomPetalPosition(index, selectedRooms.length);
       const selected = selectedRoomId === room.id;
 
       n.visible = true;
       setTarget(n, {
         x: p[0],
         y: p[1],
-        z: selected ? 0.64 : p[2] + 0.14,
-        sx: selected ? 1.04 : 0.82,
-        sy: selected ? 1.04 : 0.82,
-        sz: selected ? 1.04 : 0.82,
-        prominence: selected ? 1.12 : 0.88,
-        rotationSpeed: selected ? 0.17 * n.rotationBias : 0.11 * n.rotationBias
+        z: selected ? 0.68 : p[2] + 0.16,
+        sx: selected ? 1.12 : 0.92,
+        sy: selected ? 1.12 : 0.92,
+        sz: selected ? 1.12 : 0.92,
+        prominence: selected ? 1.16 : 0.92,
+        rotationSpeed: selected ? 0.18 * n.rotationBias : 0.12 * n.rotationBias
       });
     });
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
+  function lerp(a, b, t) { return a + (b - a) * t; }
 
   function updateTransforms(dt) {
     const speed = Math.min(1, dt * 6.5);
@@ -802,31 +725,23 @@
 
   function multiply4(a, b) {
     const out = new Array(16).fill(0);
-
     for (let r = 0; r < 4; r += 1) {
       for (let c = 0; c < 4; c += 1) {
-        for (let k = 0; k < 4; k += 1) {
-          out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
-        }
+        for (let k = 0; k < 4; k += 1) out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
       }
     }
-
     return out;
   }
 
   function translate4(x, y, z) {
     const m = identity4();
-    m[12] = x;
-    m[13] = y;
-    m[14] = z;
+    m[12] = x; m[13] = y; m[14] = z;
     return m;
   }
 
   function scale4(x, y, z) {
     const m = identity4();
-    m[0] = x;
-    m[5] = y;
-    m[10] = z;
+    m[0] = x; m[5] = y; m[10] = z;
     return m;
   }
 
@@ -848,57 +763,30 @@
   function perspective4(fovy, aspect, near, far) {
     const f = 1 / Math.tan(fovy / 2);
     const nf = 1 / (near - far);
-
-    return [
-      f / aspect, 0, 0, 0,
-      0, f, 0, 0,
-      0, 0, (far + near) * nf, -1,
-      0, 0, (2 * far * near) * nf, 0
-    ];
+    return [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, (2 * far * near) * nf, 0];
   }
 
   function lookAt4(eye, center, up) {
     const z = normalize(sub(eye, center));
     const x = normalize(cross(up, z));
     const y = cross(z, x);
-
-    return [
-      x[0], y[0], z[0], 0,
-      x[1], y[1], z[1], 0,
-      x[2], y[2], z[2], 0,
-      -dot(x, eye), -dot(y, eye), -dot(z, eye), 1
-    ];
+    return [x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -dot(x, eye), -dot(y, eye), -dot(z, eye), 1];
   }
 
   function normalMatrix3(model) {
-    return [
-      model[0], model[1], model[2],
-      model[4], model[5], model[6],
-      model[8], model[9], model[10]
-    ];
+    return [model[0], model[1], model[2], model[4], model[5], model[6], model[8], model[9], model[10]];
   }
 
   function modelMatrix(n) {
     const t = n.transform;
-
     return multiply4(
       translate4(t.x, t.y, t.z),
-      multiply4(
-        rotateZ4(t.rz),
-        multiply4(
-          rotateY4(t.ry),
-          multiply4(
-            rotateX4(t.rx),
-            scale4(t.sx, t.sy, t.sz)
-          )
-        )
-      )
+      multiply4(rotateZ4(t.rz), multiply4(rotateY4(t.ry), multiply4(rotateX4(t.rx), scale4(t.sx, t.sy, t.sz))))
     );
   }
 
   function transformPoint4(m, p) {
     const x = p[0], y = p[1], z = p[2], w = p[3];
-
     return [
       m[0] * x + m[4] * y + m[8] * z + m[12] * w,
       m[1] * x + m[5] * y + m[9] * z + m[13] * w,
@@ -935,13 +823,8 @@
     const absY = Math.abs(dy);
     const distance = Math.hypot(dx, dy);
 
-    if (distance <= GESTURE.maximumTapDistancePx) {
-      return { type: "tap", dx, dy };
-    }
-
-    if (distance < GESTURE.minimumSwipeDistancePx) {
-      return { type: "ambiguous", dx, dy };
-    }
+    if (distance <= GESTURE.maximumTapDistancePx) return { type: "tap", dx, dy };
+    if (distance < GESTURE.minimumSwipeDistancePx) return { type: "ambiguous", dx, dy };
 
     if (absX > absY * GESTURE.directionalDominanceRatio) {
       return { type: "swipe", axis: "horizontal", raw: dx > 0 ? "swipeRight" : "swipeLeft", dx, dy };
@@ -1041,9 +924,7 @@
     return !!(
       target &&
       target.closest &&
-      target.closest(
-        "[data-compass-cardinal], [data-compass-wing], [data-compass-room], [data-compass-object='mirrorland'], [data-compass-return], [data-compass-return-to-orbit], [data-compass-enter], .compass-value-card, a, button"
-      )
+      target.closest("[data-compass-cardinal], [data-compass-wing], [data-compass-room], [data-compass-object='mirrorland'], [data-compass-return], [data-compass-return-to-orbit], [data-compass-enter], .compass-value-card, a, button")
     );
   }
 
@@ -1059,7 +940,7 @@
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(36, Math.min(68, rect.width * 0.075));
+    const hitRadius = Math.max(40, Math.min(76, rect.width * 0.085));
 
     state.registry.forEach((n) => {
       if (!n.visible || n.transform.prominence < 0.12) return;
@@ -1073,8 +954,8 @@
 
       const localRadius =
         n.type === "mirrorland" || n.type === "cardinal"
-          ? hitRadius * 1.2
-          : hitRadius * 1.08;
+          ? hitRadius * 1.18
+          : hitRadius * 1.16;
 
       if (d < bestDistance && d <= localRadius) {
         best = n;
@@ -1088,27 +969,19 @@
   function handlePointerDown(event) {
     if (state.failHeld) return;
 
-    const pointerCaptured =
-      event.currentTarget &&
-      typeof event.currentTarget.setPointerCapture === "function";
+    const pointerCaptured = event.currentTarget && typeof event.currentTarget.setPointerCapture === "function";
 
     if (pointerCaptured) {
       try {
         event.currentTarget.setPointerCapture(event.pointerId);
-      } catch (_) {
-        /* Non-fatal capture failure. */
-      }
+      } catch (_) {}
     }
 
     state.pointer = {
       id: event.pointerId,
       x: event.clientX,
       y: event.clientY,
-      lastX: event.clientX,
-      lastY: event.clientY,
       semanticStart: isSemanticInteractionTarget(event.target),
-      swipeSuppressedTap: false,
-      thresholdCrossed: false,
       pointerCaptured,
       time: performance.now()
     };
@@ -1130,16 +1003,9 @@
 
     const dx = event.clientX - state.pointer.x;
     const dy = event.clientY - state.pointer.y;
-    const distance = Math.hypot(dx, dy);
 
-    state.pointer.lastX = event.clientX;
-    state.pointer.lastY = event.clientY;
-
-    if (distance >= GESTURE.minimumSwipeDistancePx) {
-      state.pointer.thresholdCrossed = true;
-      state.pointer.swipeSuppressedTap = true;
+    if (Math.hypot(dx, dy) >= GESTURE.minimumSwipeDistancePx) {
       event.preventDefault();
-
       emitReceipt({
         lastPointerAction: "pointer-move-threshold-crossed",
         gestureType: "swipe-pending",
@@ -1220,11 +1086,7 @@
 
   function handlePointerCancel() {
     state.pointer = null;
-    emitReceipt({
-      lastPointerAction: "pointer-cancelled",
-      gestureType: "cancelled",
-      failureReason: null
-    });
+    emitReceipt({ lastPointerAction: "pointer-cancelled", gestureType: "cancelled", failureReason: null });
   }
 
   function resize() {
@@ -1251,7 +1113,7 @@
     gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
   }
 
-  function drawNode(n, view, projection) {
+  function drawNode(n) {
     if (!n.visible && n.transform.prominence < 0.03) return;
 
     const gl = state.gl;
@@ -1265,8 +1127,8 @@
     const model = modelMatrix(n);
 
     gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
-    gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(view));
-    gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(projection));
+    gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(state.view));
+    gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(state.projection));
     gl.uniformMatrix3fv(state.uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
     gl.uniform1f(state.uniforms.prominence, Math.max(0, n.transform.prominence));
 
@@ -1292,11 +1154,9 @@
 
     const aspect = state.width / Math.max(1, state.height);
     const cameraZ = aspect < 0.8 ? 7.9 : 6.3;
-    const view = lookAt4([0, 0.72, cameraZ], [0, 0, 0], [0, 1, 0]);
-    const projection = perspective4(Math.PI / 4.6, aspect, 0.1, 40);
 
-    state.view = view;
-    state.projection = projection;
+    state.view = lookAt4([0, 0.72, cameraZ], [0, 0, 0], [0, 1, 0]);
+    state.projection = perspective4(Math.PI / 4.6, aspect, 0.1, 40);
 
     gl.useProgram(state.program);
     gl.uniform3f(state.uniforms.keyLightDirection, -0.4, -0.8, -0.7);
@@ -1308,7 +1168,7 @@
 
     state.registry.forEach((n) => {
       if (n.visible && n.transform.prominence > 0.04) visible += 1;
-      drawNode(n, view, projection);
+      drawNode(n);
     });
 
     emitReceipt({

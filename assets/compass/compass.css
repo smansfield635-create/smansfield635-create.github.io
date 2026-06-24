@@ -1,7 +1,7 @@
 /* /assets/compass/compass.css
-   DGB Compass Generation One — presentation layer.
+   DGB Compass Generation Two — presentation layer with capability and reveal support.
    Scope: compass.css only.
-   Owns atmosphere, layout, containment, layering, focus states, responsive behavior, and reduced-motion presentation.
+   Owns atmosphere, layout, containment, layering, focus states, responsive behavior, reduced-motion presentation, capability treatment, and compact reveal presentation.
    Does not own controller state transitions, navigation execution, WebGL geometry, route membership, or visual-pass claims.
 */
 
@@ -178,48 +178,107 @@ a:focus-visible {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(12px, 1.8vw, 18px);
-  max-width: 760px;
+  max-width: 820px;
 }
 
 .compass-value-card {
   position: relative;
   display: grid;
   gap: 8px;
-  padding: 16px 18px;
-  min-height: 96px;
-  border: 1px solid var(--compass-line);
+  padding: 18px 20px;
+  min-height: 122px;
+  border: 1px solid rgba(216, 184, 106, 0.24);
   border-radius: var(--compass-radius-md);
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
-    rgba(10, 14, 22, 0.54);
+    linear-gradient(135deg, rgba(216, 184, 106, 0.105), rgba(124, 185, 214, 0.055)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.018)),
+    rgba(10, 14, 22, 0.68);
   box-shadow:
-    0 16px 50px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 18px 56px rgba(0, 0, 0, 0.30),
+    0 0 34px rgba(124, 185, 214, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(14px);
+  overflow: hidden;
   transition:
     transform 220ms var(--compass-ease),
     border-color 220ms var(--compass-ease),
-    background 220ms var(--compass-ease);
+    background 220ms var(--compass-ease),
+    box-shadow 220ms var(--compass-ease);
+}
+
+.compass-value-card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  border: 1px solid rgba(216, 184, 106, 0.13);
+  border-radius: calc(var(--compass-radius-md) - 8px);
+}
+
+.compass-value-card::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(124, 185, 214, 0.92);
+  box-shadow:
+    0 0 18px rgba(124, 185, 214, 0.62),
+    0 0 40px rgba(216, 184, 106, 0.18);
+  opacity: 0.86;
 }
 
 .compass-value-card:hover {
   transform: translateY(-2px);
-  border-color: var(--compass-line-strong);
+  border-color: rgba(216, 184, 106, 0.52);
   background:
-    linear-gradient(135deg, rgba(216, 184, 106, 0.13), rgba(124, 185, 214, 0.055)),
-    rgba(10, 14, 22, 0.68);
+    linear-gradient(135deg, rgba(216, 184, 106, 0.16), rgba(124, 185, 214, 0.09)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.022)),
+    rgba(10, 14, 22, 0.76);
+  box-shadow:
+    0 22px 66px rgba(0, 0, 0, 0.36),
+    0 0 44px rgba(124, 185, 214, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.compass-value-card__eyebrow {
+  position: relative;
+  z-index: 1;
+  color: var(--compass-gold);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .compass-value-card__label {
-  color: rgba(255, 248, 224, 0.95);
-  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 248, 224, 0.97);
+  font-weight: 800;
   letter-spacing: 0.01em;
 }
 
 .compass-value-card__purpose {
+  position: relative;
+  z-index: 1;
   color: var(--compass-stone-dim);
   font-size: 0.92rem;
   line-height: 1.45;
+}
+
+.compass-value-card__action {
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  margin-top: 2px;
+  color: rgba(255, 248, 224, 0.88);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
 }
 
 .compass-scene {
@@ -313,7 +372,8 @@ a:focus-visible {
     opacity 220ms var(--compass-ease),
     transform 220ms var(--compass-ease),
     border-color 220ms var(--compass-ease),
-    background 220ms var(--compass-ease);
+    background 220ms var(--compass-ease),
+    box-shadow 220ms var(--compass-ease);
 }
 
 .compass-object span:first-child {
@@ -334,6 +394,10 @@ a:focus-visible {
   background:
     linear-gradient(135deg, rgba(216, 184, 106, 0.17), rgba(124, 185, 214, 0.08)),
     rgba(7, 10, 16, 0.54);
+  box-shadow:
+    0 16px 42px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(216, 184, 106, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
 }
 
 .compass-object[data-withdrawn="true"] {
@@ -417,13 +481,17 @@ a:focus-visible {
   transition:
     opacity 220ms var(--compass-ease),
     transform 220ms var(--compass-ease),
-    border-color 220ms var(--compass-ease);
+    border-color 220ms var(--compass-ease),
+    background 220ms var(--compass-ease);
 }
 
 [data-compass-room]:hover,
 [data-compass-room][data-active="true"] {
   border-color: var(--compass-line-strong);
   transform: translateY(-1px);
+  background:
+    linear-gradient(135deg, rgba(216, 184, 106, 0.12), rgba(124, 185, 214, 0.055)),
+    rgba(8, 13, 22, 0.68);
 }
 
 [data-compass-mode="COMPASS_MODE"] [data-compass-room] {
@@ -446,6 +514,18 @@ a:focus-visible {
     0 16px 60px rgba(0, 0, 0, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(16px);
+}
+
+[data-compass-mode="EXPANDED_MODE"] .compass-panel,
+[data-compass-mode="ROOM_MODE"] .compass-panel {
+  border-color: rgba(216, 184, 106, 0.30);
+  background:
+    linear-gradient(135deg, rgba(216, 184, 106, 0.09), rgba(124, 185, 214, 0.04)),
+    rgba(7, 10, 16, 0.70);
+  box-shadow:
+    0 18px 66px rgba(0, 0, 0, 0.34),
+    0 0 38px rgba(216, 184, 106, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .compass-panel__eyebrow {
@@ -474,6 +554,11 @@ a:focus-visible {
   line-height: 1.5;
 }
 
+[data-compass-mode="EXPANDED_MODE"] .compass-panel p,
+[data-compass-mode="ROOM_MODE"] .compass-panel p {
+  color: rgba(225, 218, 198, 0.68);
+}
+
 [data-compass-enter] {
   justify-self: start;
   min-width: 116px;
@@ -495,6 +580,13 @@ a:focus-visible {
   cursor: not-allowed;
   opacity: 0.45;
   filter: grayscale(0.45);
+}
+
+[data-compass-mode="ROOM_MODE"] [data-compass-enter]:not(:disabled) {
+  box-shadow:
+    0 16px 40px rgba(216, 184, 106, 0.24),
+    0 0 24px rgba(216, 184, 106, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .compass-receipts[hidden] {

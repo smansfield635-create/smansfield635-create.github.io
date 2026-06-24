@@ -1,7 +1,7 @@
 /* /assets/compass/compass.controller.js
-   DGB Compass Generation One — controller state machine.
+   DGB Compass Generation Two — controller state machine with reveal support.
    Scope: compass.controller.js only.
-   Owns behavior, state transitions, panel population, explicit navigation, and receipts.
+   Owns behavior, state transitions, panel population, explicit navigation, reveal copy population, and receipts.
    Does not own WebGL geometry, buffers, camera, lighting, projection, render loop, CSS, or visual-pass claims.
 */
 
@@ -9,7 +9,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_ONE_CONTROLLER_TNT_v1",
+    id: "DGB_COMPASS_GENERATION_TWO_CONTROLLER_TNT_v1",
     file: "/assets/compass/compass.controller.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -184,12 +184,14 @@
       route,
       purpose: el.dataset.purpose || "Open this estate room.",
       relationship: el.dataset.relationship || "Compass destination.",
+      preview: el.dataset.preview || el.dataset.purpose || "A room behind the selected Compass direction.",
+      whyEnter: el.dataset.whyEnter || "Enter to cross into this destination.",
       hidden: el.hidden
     };
   }
 
-  function roomsForWing(wing) {
-    return state.rooms.filter((room) => room.wing === wing);
+  function findWingElement(wing) {
+    return state.wings.find((el) => normalizeWing(el.dataset.wing) === wing) || null;
   }
 
   function findRoom(roomId) {
@@ -232,19 +234,21 @@
 
     if (state.mode === MODES.COMPASS) {
       setText(state.panelTitle, "Choose a wing");
-      setText(state.panelPurpose, "Select North, East, South, or West to reveal the estate rooms.");
-      setText(state.panelRelationship, "The Compass orients the visitor before navigation.");
+      setText(state.panelPurpose, "Open one direction of the estate.");
+      setText(state.panelRelationship, "Each wing reveals a hidden territory without showing the whole estate at once.");
       setEnter(null);
       return;
     }
 
     if (state.mode === MODES.EXPANDED) {
-      const wingEl = state.wings.find((el) => normalizeWing(el.dataset.wing) === state.selectedWing);
+      const wingEl = findWingElement(state.selectedWing);
       const title = wingEl ? wingEl.dataset.title || wingEl.dataset.label || state.selectedWing : state.selectedWing;
+      const meaning = wingEl ? wingEl.dataset.wingMeaning || "Choose a room inside this wing." : "Choose a room inside this wing.";
+      const why = wingEl ? wingEl.dataset.wingWhy || "Return steps back to the full Compass." : "Return steps back to the full Compass.";
 
       setText(state.panelTitle, title);
-      setText(state.panelPurpose, "Choose a room inside this wing.");
-      setText(state.panelRelationship, "Return steps back to the full Compass.");
+      setText(state.panelPurpose, meaning);
+      setText(state.panelRelationship, why);
       setEnter(null);
       return;
     }
@@ -260,13 +264,13 @@
       }
 
       setText(state.panelTitle, room.label);
-      setText(state.panelPurpose, room.purpose);
-      setText(state.panelRelationship, room.relationship);
-      setEnter(room.route);
+      setText(state.panelPurpose, room.preview);
+      setText(state.panelRelationship, room.whyEnter);
+      setEnter(room.route, room.whyEnter);
     }
   }
 
-  function setEnter(route) {
+  function setEnter(route, whyEnter = "") {
     state.activeRoute = route || "";
 
     if (!state.enterControl) return;
@@ -274,11 +278,15 @@
     if (route) {
       state.enterControl.disabled = false;
       state.enterControl.dataset.route = route;
+      state.enterControl.dataset.whyEnter = whyEnter || "";
       state.enterControl.setAttribute("aria-disabled", "false");
+      state.enterControl.setAttribute("aria-label", whyEnter || "Enter selected room");
     } else {
       state.enterControl.disabled = true;
       delete state.enterControl.dataset.route;
+      delete state.enterControl.dataset.whyEnter;
       state.enterControl.setAttribute("aria-disabled", "true");
+      state.enterControl.setAttribute("aria-label", "Enter");
     }
   }
 
@@ -346,7 +354,8 @@
 
   function navigateEnter() {
     if (state.mode !== MODES.ROOM || !state.activeRoute) {
-      emitReceipt({ lastAction: "enter-held-no-active-route" });
+      state.lastAction = "enter-held-no-active-route";
+      emitReceipt();
       return;
     }
 

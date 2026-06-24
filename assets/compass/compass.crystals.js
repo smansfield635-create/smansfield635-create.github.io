@@ -1,5 +1,5 @@
 /* /assets/compass/compass.crystals.js
-   DGB Compass Generation Two — true 3D WebGL crystal visualization layer with roomId selection bridge.
+   DGB Compass Generation Two — compass-flower WebGL crystal visualization layer.
    Scope: compass.crystals.js only.
    Owns visualization, visible room-node hit detection, coordinate placement, and controller selection requests.
    Does not own routes, route execution, semantic labels, controller state, HTML, CSS, or navigation.
@@ -9,13 +9,13 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_ROOM_ID_BRIDGE_TNT_v1_1",
+    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_COMPASS_FLOWER_TNT_v1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
     deploymentAuthorized: false,
     fifthFileAuthorized: false,
-    owns: "single WebGL canvas visualization, scene graph, crystal meshes, lighting, animation, room-node hit detection, controller selection requests, receipts",
+    owns: "single WebGL canvas visualization, compass-flower scene graph, crystal meshes, lighting, animation, room-node hit detection, controller selection requests, receipts",
     doesNotOwn: "navigation, routes, route execution, semantic labels, controller state, HTML panel content, CSS layout authority"
   });
 
@@ -52,10 +52,10 @@
   const WINGS = Object.freeze(["north", "east", "south", "west"]);
 
   const WING_THEMES = Object.freeze({
-    north: { color: [0.68, 0.86, 1.0], rx: 0.46, rz: 0.34, h: 0.94, elongation: 1.0, irregularity: 0.018, rotationBias: 0.95 },
-    east: { color: [0.48, 0.94, 0.86], rx: 0.50, rz: 0.37, h: 0.90, elongation: 1.04, irregularity: 0.026, rotationBias: 1.05 },
-    south: { color: [0.98, 0.76, 0.42], rx: 0.49, rz: 0.34, h: 0.88, elongation: 0.98, irregularity: 0.014, rotationBias: 0.88 },
-    west: { color: [0.88, 0.62, 0.50], rx: 0.51, rz: 0.36, h: 0.91, elongation: 1.08, irregularity: 0.038, rotationBias: 1.12 }
+    north: { color: [0.68, 0.86, 1.0], rx: 0.42, rz: 0.30, h: 0.84, elongation: 1.22, irregularity: 0.018, rotationBias: 0.95 },
+    east: { color: [0.48, 0.94, 0.86], rx: 0.44, rz: 0.31, h: 0.82, elongation: 1.18, irregularity: 0.026, rotationBias: 1.05 },
+    south: { color: [0.98, 0.76, 0.42], rx: 0.43, rz: 0.30, h: 0.80, elongation: 1.14, irregularity: 0.014, rotationBias: 0.88 },
+    west: { color: [0.88, 0.62, 0.50], rx: 0.45, rz: 0.31, h: 0.82, elongation: 1.24, irregularity: 0.038, rotationBias: 1.12 }
   });
 
   const RECEIPT = {
@@ -430,14 +430,14 @@
 
     meshes.set("mirrorland", buildGpuMesh(gl, createCrystalMesh({
       segments: 12,
-      rx: 0.74,
-      rz: 0.54,
-      h: 1.26,
+      rx: 0.66,
+      rz: 0.48,
+      h: 1.06,
       crown: true,
       color: [0.72, 0.94, 1.0],
       irregularity: 0.012,
       warmth: 0.08,
-      elongation: 1.05
+      elongation: 1.03
     })));
 
     WINGS.forEach((wing) => {
@@ -456,23 +456,23 @@
       })));
 
       meshes.set("room-" + wing, buildGpuMesh(gl, createCrystalMesh({
-        segments: 8,
-        rx: 0.33,
-        rz: 0.25,
-        h: 0.57,
+        segments: 6,
+        rx: 0.25,
+        rz: 0.18,
+        h: 0.42,
         crown: false,
         color: theme.color,
-        irregularity: theme.irregularity * 0.65,
+        irregularity: theme.irregularity * 0.55,
         warmth: wing === "south" || wing === "west" ? 0.12 : 0.04,
-        elongation: 1
+        elongation: 1.08
       })));
     });
 
     meshes.set("returnObject", buildGpuMesh(gl, createCrystalMesh({
       segments: 6,
-      rx: 0.24,
-      rz: 0.18,
-      h: 0.38,
+      rx: 0.22,
+      rz: 0.16,
+      h: 0.34,
       crown: false,
       color: [1.0, 0.82, 0.54],
       irregularity: 0.028,
@@ -607,35 +607,59 @@
 
   function wingPosition(wing) {
     switch (wing) {
-      case "north": return [0, 1.55, 0];
-      case "east": return [2.05, 0, 0];
-      case "south": return [0, -1.55, 0];
-      case "west": return [-2.05, 0, 0];
+      case "north": return [0, 1.42, -0.12];
+      case "east": return [1.82, 0, -0.12];
+      case "south": return [0, -1.42, -0.12];
+      case "west": return [-1.82, 0, -0.12];
       default: return [0, 0, 0];
     }
   }
 
-  function roomClusterPosition(index, count) {
+  function inactiveWingPosition(wing) {
+    switch (wing) {
+      case "north": return [0, 1.78, -0.92];
+      case "east": return [2.18, 0, -0.92];
+      case "south": return [0, -1.78, -0.92];
+      case "west": return [-2.18, 0, -0.92];
+      default: return [0, 0, -0.92];
+    }
+  }
+
+  function roomPetalPosition(index, count) {
     const map5 = [
-      [0, 1.08, -0.12],
-      [1.18, 0.58, -0.10],
-      [1.42, -0.28, -0.14],
-      [0.74, -1.00, -0.12],
-      [0, 0, 0.08]
+      [0, 0.74, 0.02],
+      [0.64, 0.36, 0.00],
+      [0.80, -0.14, -0.02],
+      [0.42, -0.62, 0.00],
+      [0, 0, 0.16]
     ];
 
     const map4 = [
-      [-0.98, 0.72, -0.12],
-      [0.98, 0.72, -0.12],
-      [-0.98, -0.72, -0.12],
-      [0.98, -0.72, -0.12]
+      [-0.56, 0.44, 0.00],
+      [0.56, 0.44, 0.00],
+      [-0.56, -0.44, 0.00],
+      [0.56, -0.44, 0.00]
     ];
 
     if (count === 5) return map5[index] || [0, 0, 0];
     if (count === 4) return map4[index] || [0, 0, 0];
 
     const angle = (Math.PI * 2 * index) / Math.max(count, 1) - Math.PI / 2;
-    return [Math.cos(angle) * 1.45, Math.sin(angle) * 0.92, -0.12];
+    return [Math.cos(angle) * 0.74, Math.sin(angle) * 0.50, 0];
+  }
+
+  function rotatePointForWing(point, wing) {
+    const x = point[0];
+    const y = point[1];
+    const z = point[2];
+
+    switch (wing) {
+      case "north": return [x, y + 0.34, z];
+      case "east": return [y + 0.34, -x, z];
+      case "south": return [-x, -y - 0.34, z];
+      case "west": return [-y - 0.34, x, z];
+      default: return [x, y, z];
+    }
   }
 
   function setTarget(n, t) {
@@ -653,7 +677,7 @@
         x: 0, y: 0, z: 0,
         sx: 1, sy: 1, sz: 1,
         prominence: 0,
-        rotationSpeed: 0.15
+        rotationSpeed: 0.12
       });
     });
 
@@ -662,10 +686,10 @@
     if (state.mode === "COMPASS_MODE") {
       mirrorland.visible = true;
       setTarget(mirrorland, {
-        x: 0, y: 0, z: 0,
-        sx: 1.45, sy: 1.45, sz: 1.45,
-        prominence: 1.08,
-        rotationSpeed: 0.16
+        x: 0, y: 0, z: 0.05,
+        sx: 1.18, sy: 1.18, sz: 1.18,
+        prominence: 1.0,
+        rotationSpeed: 0.13
       });
 
       WINGS.forEach((wing) => {
@@ -674,67 +698,73 @@
 
         n.visible = true;
         setTarget(n, {
-          x: p[0], y: p[1], z: p[2] - 0.15,
-          sx: 1, sy: 1, sz: 1,
+          x: p[0], y: p[1], z: p[2],
+          sx: 0.92, sy: 1.18, sz: 0.92,
           prominence: 0.86,
-          rotationSpeed: 0.22 * n.rotationBias
+          rotationSpeed: 0.18 * n.rotationBias
         });
       });
     }
 
     if (state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE") {
-      const parent = state.registry.get(selectedWing);
-
-      if (parent) {
-        parent.visible = true;
-        setTarget(parent, {
-          x: 0, y: 0, z: 0.15,
-          sx: 1.18, sy: 1.18, sz: 1.18,
-          prominence: 1.08,
-          rotationSpeed: 0.18 * parent.rotationBias
-        });
-      }
+      mirrorland.visible = true;
+      setTarget(mirrorland, {
+        x: 0, y: 0, z: -0.18,
+        sx: 0.72, sy: 0.72, sz: 0.72,
+        prominence: 0.42,
+        rotationSpeed: 0.06
+      });
 
       WINGS.forEach((wing) => {
-        if (wing === selectedWing) return;
-
         const n = state.registry.get(wing);
-        const p = wingPosition(wing);
 
+        if (wing === selectedWing) {
+          n.visible = true;
+          setTarget(n, {
+            x: 0, y: 0, z: 0.14,
+            sx: 1.02, sy: 1.32, sz: 1.02,
+            prominence: 1.0,
+            rotationSpeed: 0.14 * n.rotationBias
+          });
+          return;
+        }
+
+        const p = inactiveWingPosition(wing);
         n.visible = true;
         setTarget(n, {
-          x: p[0] * 1.35, y: p[1] * 1.35, z: -1.2,
-          sx: 0.62, sy: 0.62, sz: 0.62,
-          prominence: 0.28,
-          rotationSpeed: 0.06 * n.rotationBias
+          x: p[0], y: p[1], z: p[2],
+          sx: 0.44, sy: 0.58, sz: 0.44,
+          prominence: 0.22,
+          rotationSpeed: 0.045 * n.rotationBias
         });
       });
 
       selectedRooms.forEach((room, index) => {
         const n = state.registry.get(room.id);
-        const p = roomClusterPosition(index, selectedRooms.length);
+        const base = roomPetalPosition(index, selectedRooms.length);
+        const p = rotatePointForWing(base, selectedWing);
         const selected = state.mode === "ROOM_MODE" && selectedRoomId === room.id;
 
         n.visible = true;
         setTarget(n, {
           x: p[0],
           y: p[1],
-          z: selected ? 0.45 : p[2],
-          sx: selected ? 0.86 : 0.60,
-          sy: selected ? 0.86 : 0.60,
-          sz: selected ? 0.86 : 0.60,
-          prominence: selected ? 1.0 : state.mode === "ROOM_MODE" ? 0.38 : 0.78,
-          rotationSpeed: selected ? 0.18 * n.rotationBias : 0.12 * n.rotationBias
+          z: selected ? 0.46 : p[2] + 0.10,
+          sx: selected ? 0.58 : 0.40,
+          sy: selected ? 0.58 : 0.40,
+          sz: selected ? 0.58 : 0.40,
+          prominence: selected ? 1.0 : state.mode === "ROOM_MODE" ? 0.32 : 0.72,
+          rotationSpeed: selected ? 0.16 * n.rotationBias : 0.10 * n.rotationBias
         });
       });
 
       const ret = state.registry.get("return");
       ret.visible = true;
       setTarget(ret, {
-        x: -1.75, y: -1.15, z: 0.32,
-        sx: 0.52, sy: 0.52, sz: 0.52,
-        prominence: 0.92,
-        rotationSpeed: 0.28
+        x: -1.66, y: -1.18, z: 0.26,
+        sx: 0.44, sy: 0.44, sz: 0.44,
+        prominence: 0.88,
+        rotationSpeed: 0.22
       });
     }
   }
@@ -756,8 +786,8 @@
 
       if (!state.reducedMotion) {
         a.ry += dt * a.rotationSpeed;
-        a.rx += dt * a.rotationSpeed * 0.23;
-        a.rz += dt * a.rotationSpeed * 0.11;
+        a.rx += dt * a.rotationSpeed * 0.18;
+        a.rz += dt * a.rotationSpeed * 0.08;
       }
     });
   }
@@ -964,7 +994,7 @@
 
     let best = null;
     let bestDistance = Infinity;
-    const hitRadius = Math.max(38, Math.min(64, rect.width * 0.075));
+    const hitRadius = Math.max(32, Math.min(54, rect.width * 0.062));
 
     state.registry.forEach((n) => {
       if (n.type !== "room") return;
@@ -1064,9 +1094,9 @@
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     const aspect = state.width / Math.max(1, state.height);
-    const cameraZ = aspect < 0.8 ? 8.2 : 6.7;
-    const view = lookAt4([0, 0.82, cameraZ], [0, 0, 0], [0, 1, 0]);
-    const projection = perspective4(Math.PI / 4.5, aspect, 0.1, 40);
+    const cameraZ = aspect < 0.8 ? 7.9 : 6.3;
+    const view = lookAt4([0, 0.72, cameraZ], [0, 0, 0], [0, 1, 0]);
+    const projection = perspective4(Math.PI / 4.6, aspect, 0.1, 40);
 
     state.view = view;
     state.projection = projection;

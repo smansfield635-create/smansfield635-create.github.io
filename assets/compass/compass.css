@@ -1,41 +1,32 @@
 /* /assets/compass/compass.css */
-/* DGB_COMPASS_CINEMATIC_VISUAL_SYSTEM_TNT_v2_1 */
+/* DGB_COMPASS_GENERATION_ONE_VISUAL_TNT_v1 */
 /* FULL-FILE */
 
 :root{
   color-scheme:dark;
-
   --bg:#02040b;
   --ink:#fff4d8;
-  --muted:rgba(232,239,255,.72);
+  --muted:rgba(232,239,255,.74);
   --faint:rgba(232,239,255,.46);
-
   --gold:#f3c86f;
   --gold-2:#ffe8a3;
   --blue:#8dd8ff;
-  --green:#8ff0c3;
   --violet:#a88cff;
+  --green:#8ff0c3;
   --amber:#ffb45f;
-
-  --panel:rgba(5,10,24,.62);
-  --panel-strong:rgba(5,10,24,.84);
   --line:rgba(184,205,255,.16);
-  --line-gold:rgba(243,200,111,.36);
-
+  --panel:rgba(5,10,24,.68);
   --max:1180px;
-  --shadow:0 34px 120px rgba(0,0,0,.52);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html{
   min-width:320px;
   min-height:100%;
   overflow-x:hidden;
-  scroll-behavior:smooth;
   background:var(--bg);
+  scroll-behavior:smooth;
 }
 
 body{
@@ -43,25 +34,13 @@ body{
   min-width:320px;
   min-height:100vh;
   overflow-x:hidden;
-
   color:var(--ink);
-
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:
-    radial-gradient(circle at 50% -18%,rgba(243,200,111,.24),transparent 34rem),
-    radial-gradient(circle at 8% 24%,rgba(36,120,255,.20),transparent 30rem),
-    radial-gradient(circle at 92% 28%,rgba(168,140,255,.15),transparent 30rem),
-    radial-gradient(circle at 50% 82%,rgba(143,240,195,.09),transparent 34rem),
-    linear-gradient(180deg,#080d19 0%,#030713 54%,#010207 100%);
-
+    radial-gradient(circle at 50% -12%,rgba(243,200,111,.22),transparent 34rem),
+    radial-gradient(circle at 12% 22%,rgba(36,120,255,.20),transparent 32rem),
+    radial-gradient(circle at 88% 26%,rgba(168,140,255,.15),transparent 30rem),
+    linear-gradient(180deg,#080d19 0%,#030713 58%,#010207 100%);
   -webkit-font-smoothing:antialiased;
   text-rendering:geometricPrecision;
 }
@@ -72,46 +51,18 @@ body::before{
   inset:0;
   z-index:0;
   pointer-events:none;
-
+  opacity:.20;
   background-image:
-    radial-gradient(circle,rgba(255,255,255,.14) 0 1px,transparent 1.5px),
-    linear-gradient(rgba(141,216,255,.032) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(141,216,255,.032) 1px,transparent 1px);
-
-  background-size:
-    240px 280px,
-    62px 62px,
-    62px 62px;
-
-  opacity:.22;
-  mask-image:linear-gradient(180deg,rgba(0,0,0,.94),rgba(0,0,0,.36));
+    radial-gradient(circle,rgba(255,255,255,.20) 0 1px,transparent 1.6px),
+    linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
+  background-size:260px 300px,58px 58px,58px 58px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.35));
 }
 
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-
-  background:
-    radial-gradient(circle at 50% 18%,transparent 0 24rem,rgba(0,0,0,.12) 42rem,rgba(0,0,0,.34)),
-    linear-gradient(180deg,transparent,rgba(0,0,0,.18));
-
-  opacity:.9;
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-button{
-  font:inherit;
-}
-
-a:focus-visible,
-button:focus-visible{
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+a:focus-visible,button:focus-visible{
   outline:2px solid var(--gold-2);
   outline-offset:4px;
 }
@@ -120,88 +71,68 @@ button:focus-visible{
   position:absolute;
   left:-999px;
   top:8px;
-  z-index:100;
-  padding:.75rem 1rem;
+  z-index:50;
   border-radius:999px;
+  padding:.75rem 1rem;
   color:#05070d;
   background:var(--gold-2);
   font-weight:950;
 }
+.skip:focus{left:8px}
 
-.skip:focus{
-  left:8px;
-}
-
-.compass-shell{
+.compass-page{
   position:relative;
   z-index:2;
   width:min(var(--max),calc(100% - 28px));
   min-height:100vh;
   margin:0 auto;
   padding:max(16px,env(safe-area-inset-top)) 0 max(34px,env(safe-area-inset-bottom));
+  display:grid;
+  gap:1rem;
 }
 
-.estate-header{
+.compass-header{
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding:.65rem 0 1rem;
+  padding:.6rem 0 .25rem;
 }
 
 .estate-plaque{
   display:inline-flex;
   align-items:center;
   gap:.75rem;
-
   padding:.58rem .86rem;
-
-  border:1px solid rgba(243,200,111,.28);
+  border:1px solid rgba(243,200,111,.30);
   border-radius:999px;
-
   background:
-    radial-gradient(circle at 10% 0%,rgba(243,200,111,.11),transparent 7rem),
-    rgba(5,10,24,.56);
-
-  box-shadow:
-    0 1rem 2.5rem rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.07);
-
+    radial-gradient(circle at 10% 0%,rgba(243,200,111,.12),transparent 7rem),
+    rgba(5,10,24,.58);
+  box-shadow:0 1rem 2.5rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07);
   backdrop-filter:blur(12px);
 }
 
 .estate-plaque__mark{
-  width:2.65rem;
-  height:2.65rem;
-
+  width:2.6rem;
+  height:2.6rem;
   display:grid;
   place-items:center;
-
   border:1px solid rgba(243,200,111,.42);
-  border-radius:.85rem;
-
+  border-radius:.82rem;
   transform:rotate(45deg);
-
   background:
-    radial-gradient(circle at 32% 22%,rgba(255,255,255,.26),transparent 36%),
+    radial-gradient(circle at 32% 22%,rgba(255,255,255,.24),transparent 36%),
     linear-gradient(135deg,rgba(243,200,111,.22),rgba(8,16,36,.94));
-
-  box-shadow:
-    0 0 1.2rem rgba(243,200,111,.14),
-    inset 0 1px 0 rgba(255,255,255,.12);
+  box-shadow:0 0 1.2rem rgba(243,200,111,.14),inset 0 1px 0 rgba(255,255,255,.12);
 }
 
-.estate-plaque__mark span{
-  transform:rotate(-45deg);
+.estate-plaque__mark{
   font-weight:950;
   letter-spacing:.04em;
 }
+.estate-plaque__mark::first-letter{transform:rotate(-45deg)}
 
-.estate-plaque__copy{
-  display:grid;
-  gap:.08rem;
-}
-
-.estate-plaque__copy span{
+.estate-plaque small{
+  display:block;
   color:var(--muted);
   font-size:.62rem;
   font-weight:950;
@@ -209,84 +140,63 @@ button:focus-visible{
   text-transform:uppercase;
 }
 
-.estate-plaque__copy strong{
+.estate-plaque strong{
+  display:block;
   font-size:clamp(1rem,2vw,1.28rem);
   line-height:1;
   letter-spacing:-.035em;
 }
 
-main{
-  display:grid;
-  gap:1rem;
-}
-
-.value-deck{
+.compass-value-deck{
   width:min(52rem,100%);
   margin:0 auto;
-
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:.75rem;
 }
 
-.value-object{
+.compass-value{
   position:relative;
-  min-height:6.8rem;
-
+  min-height:6.35rem;
   display:grid;
   align-content:center;
-  gap:.28rem;
-
+  gap:.25rem;
   padding:1rem 1.05rem;
-
   overflow:hidden;
   border:1px solid rgba(243,200,111,.24);
-  border-radius:1.25rem;
-
+  border-radius:1.2rem;
   background:
     radial-gradient(circle at 14% 0%,rgba(243,200,111,.12),transparent 13rem),
     radial-gradient(circle at 86% 30%,rgba(141,216,255,.10),transparent 14rem),
     linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)),
     rgba(5,10,24,.58);
-
-  box-shadow:
-    0 1.2rem 3.2rem rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.07);
-
+  box-shadow:0 1.2rem 3.2rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07);
   backdrop-filter:blur(10px);
-
-  transition:
-    transform .18s ease,
-    border-color .18s ease,
-    filter .18s ease;
+  transition:transform .18s ease,border-color .18s ease,filter .18s ease;
 }
 
-.value-object::after{
+.compass-value::after{
   content:"";
   position:absolute;
   right:.9rem;
   top:.8rem;
-  width:2.8rem;
-  height:2.8rem;
-
+  width:2.65rem;
+  height:2.65rem;
   border:1px solid rgba(255,255,255,.16);
   border-radius:50%;
-
   background:
     radial-gradient(circle at 50% 50%,rgba(255,255,255,.32),transparent 15%),
     radial-gradient(circle at 50% 50%,rgba(141,216,255,.22),transparent 62%);
-
   opacity:.58;
 }
 
-.value-object:hover,
-.value-object:focus-visible{
+.compass-value:hover,.compass-value:focus-visible{
   transform:translateY(-3px);
   border-color:rgba(243,200,111,.52);
   filter:brightness(1.06);
 }
 
-.value-object b{
+.compass-value small{
   position:relative;
   z-index:2;
   color:var(--gold);
@@ -296,15 +206,15 @@ main{
   text-transform:uppercase;
 }
 
-.value-object strong{
+.compass-value strong{
   position:relative;
   z-index:2;
-  font-size:clamp(1.1rem,2.6vw,1.55rem);
+  font-size:clamp(1.08rem,2.6vw,1.5rem);
   line-height:1;
   letter-spacing:-.045em;
 }
 
-.value-object span{
+.compass-value span{
   position:relative;
   z-index:2;
   max-width:78%;
@@ -323,8 +233,7 @@ main{
 .compass-intro h1{
   margin:0;
   max-width:940px;
-
-  font-size:clamp(2.75rem,8vw,6.8rem);
+  font-size:clamp(2.75rem,8vw,6.6rem);
   line-height:.84;
   letter-spacing:-.09em;
   text-wrap:balance;
@@ -332,10 +241,8 @@ main{
 
 .compass-intro p{
   margin:0;
-  max-width:760px;
-
+  max-width:720px;
   color:var(--muted);
-
   font-size:clamp(.96rem,2.4vw,1.12rem);
   line-height:1.45;
   text-wrap:balance;
@@ -343,38 +250,20 @@ main{
 
 .compass-stage{
   position:relative;
-
   min-height:clamp(38rem,68vw,49rem);
-
   display:grid;
   place-items:center;
-
-  border:1px solid rgba(184,205,255,.15);
+  border:1px solid var(--line);
   border-radius:clamp(1.5rem,5vw,2.6rem);
-
   overflow:hidden;
   isolation:isolate;
-
   background:
     radial-gradient(circle at 50% 44%,rgba(243,200,111,.12),transparent 18rem),
     radial-gradient(circle at 22% 24%,rgba(141,216,255,.11),transparent 23rem),
     radial-gradient(circle at 82% 72%,rgba(168,140,255,.10),transparent 23rem),
     linear-gradient(180deg,rgba(255,255,255,.050),rgba(255,255,255,.014)),
     rgba(2,7,18,.66);
-
-  box-shadow:
-    var(--shadow),
-    inset 0 1px 0 rgba(255,255,255,.07);
-}
-
-.compass-stage[data-compass-scene-state="wing"],
-.compass-stage[data-compass-scene-state="room"]{
-  background:
-    radial-gradient(circle at 50% 44%,rgba(243,200,111,.15),transparent 18rem),
-    radial-gradient(circle at 22% 24%,rgba(141,216,255,.13),transparent 23rem),
-    radial-gradient(circle at 82% 72%,rgba(168,140,255,.13),transparent 23rem),
-    linear-gradient(180deg,rgba(255,255,255,.056),rgba(255,255,255,.018)),
-    rgba(2,7,18,.72);
+  box-shadow:0 34px 120px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.07);
 }
 
 .compass-stage::before{
@@ -383,16 +272,12 @@ main{
   inset:1rem;
   z-index:0;
   pointer-events:none;
-
   border:1px solid rgba(184,205,255,.09);
   border-radius:inherit;
-
   background:
-    linear-gradient(rgba(141,216,255,.040) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(141,216,255,.040) 1px,transparent 1px);
-
+    linear-gradient(rgba(141,216,255,.036) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(141,216,255,.036) 1px,transparent 1px);
   background-size:36px 36px;
-
   mask-image:radial-gradient(circle at center,black 10%,transparent 78%);
 }
 
@@ -402,226 +287,236 @@ main{
   inset:0;
   z-index:0;
   pointer-events:none;
-
   background:
     radial-gradient(circle at 50% 50%,transparent 0 16rem,rgba(0,0,0,.16) 27rem,rgba(0,0,0,.38)),
     linear-gradient(180deg,transparent,rgba(0,0,0,.12));
 }
 
-.compass-field{
+.compass-scene{
   position:relative;
   z-index:2;
-
   width:min(100%,58rem);
   min-height:clamp(34rem,58vw,42rem);
-
-  display:grid;
-  place-items:center;
-}
-
-.compass-object,
-.compass-room{
-  appearance:none;
-  position:absolute;
-
-  border:0;
-  padding:0;
-  margin:0;
-
-  color:var(--ink);
-  background:transparent;
-
-  cursor:pointer;
-
-  -webkit-tap-highlight-color:transparent;
-
-  transition:
-    opacity .24s ease,
-    transform .24s ease,
-    filter .24s ease;
 }
 
 .compass-object{
-  width:clamp(9rem,18vw,13.5rem);
+  appearance:none;
+  position:absolute;
+  width:clamp(8.8rem,17vw,13.2rem);
   aspect-ratio:1;
   display:grid;
   place-items:center;
-}
-
-.compass-object[data-compass-wing="north"]{
-  top:1%;
-  left:50%;
-  transform:translate(-50%,0);
-}
-
-.compass-object[data-compass-wing="east"]{
-  top:50%;
-  right:1%;
-  transform:translate(0,-50%);
-}
-
-.compass-object[data-compass-wing="south"]{
-  bottom:1%;
-  left:50%;
-  transform:translate(-50%,0);
-}
-
-.compass-object[data-compass-wing="west"]{
-  top:50%;
-  left:1%;
-  transform:translate(0,-50%);
-}
-
-.compass-core{
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-}
-
-.compass-object[data-compass-selected="true"]{
-  z-index:6;
-  filter:brightness(1.14) saturate(1.08);
-}
-
-.compass-object[data-compass-faded="true"]{
-  opacity:.32;
-  filter:saturate(.55) blur(.2px);
-}
-
-.compass-object:hover,
-.compass-object:focus-visible,
-.compass-room:hover,
-.compass-room:focus-visible{
-  filter:brightness(1.14) saturate(1.06);
-}
-
-.compass-crystal-host{
-  position:absolute;
-  inset:0;
-  z-index:1;
-
-  display:block;
-
-  pointer-events:none;
+  border:0;
+  padding:0;
+  margin:0;
+  color:var(--ink);
   background:transparent;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .24s ease,transform .24s ease,filter .24s ease;
+}
 
-  filter:
-    drop-shadow(0 1.3rem 1.4rem rgba(0,0,0,.38))
-    drop-shadow(0 0 1.2rem rgba(36,120,255,.24))
-    drop-shadow(0 0 .8rem rgba(243,200,111,.16));
+.compass-object[hidden]{display:none!important}
+
+.compass-object__orb{
+  position:absolute;
+  inset:10%;
+  display:block;
+  clip-path:polygon(50% 0%,76% 10%,100% 37%,88% 76%,50% 100%,12% 76%,0% 37%,24% 10%);
+  background:
+    radial-gradient(circle at 34% 22%,rgba(255,255,255,.46),transparent 18%),
+    linear-gradient(35deg,transparent 0 28%,rgba(255,255,255,.25) 29% 31%,transparent 32%),
+    conic-gradient(from 45deg,rgba(255,232,163,.32),rgba(141,216,255,.28),rgba(11,24,54,.88),rgba(168,140,255,.24),rgba(255,232,163,.32)),
+    linear-gradient(145deg,rgba(16,58,122,.86),rgba(4,8,21,.96));
+  box-shadow:
+    0 0 2rem rgba(36,120,255,.24),
+    0 1.4rem 2.4rem rgba(0,0,0,.44),
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1.8rem 2.5rem rgba(0,0,0,.30);
+  animation:compassOrbIdle 8s ease-in-out infinite;
+}
+
+.compass-object__orb::before{
+  content:"";
+  position:absolute;
+  inset:14%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,232,163,.24),transparent 62%);
+  filter:blur(.2rem);
 }
 
 .compass-object__label{
   position:relative;
   z-index:2;
-
-  max-width:72%;
-
+  max-width:78%;
   color:rgba(255,244,216,.98);
-
-  font-size:clamp(.70rem,1.35vw,.96rem);
+  font-size:clamp(.64rem,1.2vw,.92rem);
   font-weight:950;
-  letter-spacing:.11em;
+  letter-spacing:.10em;
   line-height:1.05;
   text-align:center;
   text-transform:uppercase;
-
-  text-shadow:
-    0 2px 12px rgba(0,0,0,.95),
-    0 0 10px rgba(0,28,90,.80);
-
+  text-shadow:0 2px 12px rgba(0,0,0,.95),0 0 10px rgba(0,28,90,.80);
   pointer-events:none;
 }
 
-.compass-core .compass-object__label{
-  color:var(--gold-2);
+.compass-object--mirrorland{
+  left:50%;
+  top:50%;
+  width:clamp(10.8rem,22vw,16rem);
+  transform:translate(-50%,-50%);
 }
 
-.compass-room{
+.compass-object--north{
+  left:50%;
+  top:3%;
+  transform:translate(-50%,0);
+}
+
+.compass-object--east{
+  right:3%;
+  top:50%;
+  transform:translate(0,-50%);
+}
+
+.compass-object--south{
+  left:50%;
+  bottom:3%;
+  transform:translate(-50%,0);
+}
+
+.compass-object--west{
+  left:3%;
+  top:50%;
+  transform:translate(0,-50%);
+}
+
+.compass-object--mirrorland .compass-object__orb{
+  background:
+    radial-gradient(circle at 34% 22%,rgba(255,255,255,.52),transparent 18%),
+    linear-gradient(35deg,transparent 0 28%,rgba(255,255,255,.28) 29% 31%,transparent 32%),
+    conic-gradient(from 45deg,rgba(255,232,163,.42),rgba(168,140,255,.30),rgba(7,18,48,.92),rgba(141,216,255,.24),rgba(255,232,163,.42)),
+    linear-gradient(145deg,rgba(83,62,150,.72),rgba(4,8,21,.98));
+  box-shadow:
+    0 0 2.8rem rgba(243,200,111,.22),
+    0 0 2rem rgba(168,140,255,.20),
+    0 1.6rem 2.8rem rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.20);
+}
+
+.compass-object--return{
+  left:50%;
+  top:87%;
+  width:clamp(5.2rem,9vw,7rem);
+  transform:translate(-50%,-50%);
+}
+
+.compass-object--return .compass-object__orb{
+  inset:18%;
+  opacity:.92;
+}
+
+[data-compass-mode="expanded"] .compass-object[data-compass-centered="true"],
+[data-compass-mode="room"] .compass-object[data-compass-centered="true"]{
+  left:50%;
+  top:45%;
+  right:auto;
+  bottom:auto;
+  z-index:6;
+  transform:translate(-50%,-50%) scale(1.06);
+  filter:brightness(1.12) saturate(1.08);
+}
+
+[data-compass-mode="expanded"] .compass-room,
+[data-compass-mode="room"] .compass-room{
+  width:clamp(6.1rem,11vw,8.2rem);
   z-index:5;
-
-  width:clamp(6.6rem,12vw,8.9rem);
-  aspect-ratio:1;
-
-  display:grid;
-  place-items:center;
-
-  opacity:0;
-  transform:translate(-50%,-50%) scale(.68);
 }
 
-.compass-room:not([hidden]){
-  opacity:1;
-  transform:translate(-50%,-50%) scale(1);
+[data-compass-mode="expanded"] .compass-room[data-compass-slot="1"],
+[data-compass-mode="room"] .compass-room[data-compass-slot="1"]{
+  left:31%;
+  top:28%;
+  transform:translate(-50%,-50%);
 }
 
-.compass-room[data-compass-selected="true"]{
-  z-index:7;
-  filter:brightness(1.17) saturate(1.08);
+[data-compass-mode="expanded"] .compass-room[data-compass-slot="2"],
+[data-compass-mode="room"] .compass-room[data-compass-slot="2"]{
+  left:69%;
+  top:28%;
+  transform:translate(-50%,-50%);
+}
+
+[data-compass-mode="expanded"] .compass-room[data-compass-slot="3"],
+[data-compass-mode="room"] .compass-room[data-compass-slot="3"]{
+  left:73%;
+  top:62%;
+  transform:translate(-50%,-50%);
+}
+
+[data-compass-mode="expanded"] .compass-room[data-compass-slot="4"],
+[data-compass-mode="room"] .compass-room[data-compass-slot="4"]{
+  left:50%;
+  top:73%;
+  transform:translate(-50%,-50%);
+}
+
+[data-compass-mode="expanded"] .compass-room[data-compass-slot="5"],
+[data-compass-mode="room"] .compass-room[data-compass-slot="5"]{
+  left:27%;
+  top:62%;
+  transform:translate(-50%,-50%);
+}
+
+.compass-object[data-compass-selected="true"]{
+  filter:brightness(1.15) saturate(1.1);
+}
+
+.compass-object[data-compass-selected="true"] .compass-object__orb{
+  box-shadow:
+    0 0 2.8rem rgba(243,200,111,.28),
+    0 0 2rem rgba(141,216,255,.20),
+    0 1.4rem 2.5rem rgba(0,0,0,.46),
+    inset 0 1px 0 rgba(255,255,255,.20);
+}
+
+.compass-object[data-compass-faded="true"]{
+  opacity:.34;
+  filter:saturate(.55) blur(.2px);
+}
+
+.compass-object:hover,
+.compass-object:focus-visible{
+  filter:brightness(1.15) saturate(1.08);
 }
 
 .compass-room .compass-object__label{
-  max-width:78%;
-  font-size:clamp(.48rem,.9vw,.66rem);
-  letter-spacing:.055em;
+  max-width:80%;
+  font-size:clamp(.45rem,.86vw,.62rem);
+  letter-spacing:.045em;
 }
-
-.compass-room[data-compass-position="north-1"]{left:29%;top:17%}
-.compass-room[data-compass-position="north-2"]{left:41%;top:10%}
-.compass-room[data-compass-position="north-3"]{left:59%;top:10%}
-.compass-room[data-compass-position="north-4"]{left:71%;top:17%}
-.compass-room[data-compass-position="north-5"]{left:50%;top:24%}
-
-.compass-room[data-compass-position="east-1"]{left:76%;top:28%}
-.compass-room[data-compass-position="east-2"]{left:86%;top:40%}
-.compass-room[data-compass-position="east-3"]{left:87%;top:56%}
-.compass-room[data-compass-position="east-4"]{left:78%;top:70%}
-.compass-room[data-compass-position="east-5"]{left:67%;top:50%}
-
-.compass-room[data-compass-position="south-1"]{left:37%;top:74%}
-.compass-room[data-compass-position="south-2"]{left:50%;top:84%}
-.compass-room[data-compass-position="south-3"]{left:63%;top:74%}
-.compass-room[data-compass-position="south-4"]{left:50%;top:66%}
-
-.compass-room[data-compass-position="west-1"]{left:24%;top:28%}
-.compass-room[data-compass-position="west-2"]{left:14%;top:40%}
-.compass-room[data-compass-position="west-3"]{left:13%;top:56%}
-.compass-room[data-compass-position="west-4"]{left:22%;top:70%}
-.compass-room[data-compass-position="west-5"]{left:33%;top:50%}
 
 .compass-panel{
   width:min(52rem,100%);
-  margin:-.2rem auto 0;
-
+  margin:-.15rem auto 0;
   display:grid;
   gap:.5rem;
-
   padding:1rem 1.05rem;
-
   border:1px solid rgba(184,205,255,.16);
   border-radius:1.3rem;
-
   background:
     radial-gradient(circle at 14% 0%,rgba(243,200,111,.10),transparent 14rem),
     linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)),
     rgba(5,10,24,.66);
-
-  box-shadow:
-    0 1.4rem 3.6rem rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.07);
-
+  box-shadow:0 1.4rem 3.6rem rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.07);
   backdrop-filter:blur(12px);
 }
 
-.compass-panel[hidden]{
-  display:none!important;
-}
+.compass-panel[hidden]{display:none!important}
 
-.compass-panel__kicker{
+.compass-panel [data-compass-panel-wing]{
   margin:0;
-
   color:var(--gold);
-
   font-size:.62rem;
   font-weight:950;
   letter-spacing:.14em;
@@ -630,9 +525,7 @@ main{
 
 .compass-panel h2{
   margin:0;
-
   color:var(--ink);
-
   font-size:clamp(1.32rem,3.6vw,2.25rem);
   line-height:1;
   letter-spacing:-.05em;
@@ -641,161 +534,80 @@ main{
 .compass-panel p{
   margin:0;
   max-width:760px;
-
   color:var(--muted);
-
   font-size:.94rem;
   line-height:1.5;
 }
 
-.compass-panel__relationship{
+.compass-panel [data-compass-panel-relationship]{
   padding:.65rem .8rem;
-
   border-left:2px solid rgba(243,200,111,.64);
   border-radius:0 .7rem .7rem 0;
-
   background:rgba(243,200,111,.055);
-
-  color:rgba(236,242,255,.84)!important;
+  color:rgba(236,242,255,.84);
 }
 
-.compass-enter{
+[data-compass-enter]{
   width:max-content;
   min-height:2.55rem;
-
   display:inline-flex;
   align-items:center;
   justify-content:center;
-
   margin-top:.2rem;
   padding:.62rem .95rem;
-
   border:1px solid rgba(243,200,111,.58);
   border-radius:999px;
-
   color:#060811;
   background:linear-gradient(135deg,var(--gold-2),var(--gold));
-
   font-size:.70rem;
   font-weight:950;
   letter-spacing:.10em;
   text-transform:uppercase;
-
   cursor:pointer;
-
   box-shadow:0 .85rem 1.8rem rgba(243,200,111,.13);
 }
 
-.compass-enter:hover,
-.compass-enter:focus-visible{
-  filter:brightness(1.06);
-}
+[data-compass-enter][hidden]{display:none!important}
 
-footer{
-  padding:1rem 0 0;
-
-  color:rgba(230,238,255,.40);
-
-  text-align:center;
-
-  font-size:.66rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
+@keyframes compassOrbIdle{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-.22rem) rotate(1.5deg)}
 }
 
 @media (max-width:820px){
-  .compass-shell{
-    width:min(var(--max),calc(100% - 22px));
-  }
-
-  .value-deck{
-    grid-template-columns:1fr;
-  }
-
-  .compass-stage{
-    min-height:44rem;
-  }
-
-  .compass-field{
-    min-height:40rem;
-  }
-
-  .compass-object{
-    width:clamp(7.3rem,25vw,10.2rem);
-  }
-
-  .compass-room{
-    width:clamp(5.3rem,18vw,7rem);
-  }
-
-  .value-object span{
-    max-width:86%;
-  }
+  .compass-page{width:min(var(--max),calc(100% - 22px))}
+  .compass-value-deck{grid-template-columns:1fr}
+  .compass-stage{min-height:43rem}
+  .compass-scene{min-height:39rem}
+  .compass-object{width:clamp(6.8rem,24vw,9.5rem)}
+  .compass-object--mirrorland{width:clamp(8.6rem,29vw,12rem)}
+  [data-compass-mode="expanded"] .compass-room,
+  [data-compass-mode="room"] .compass-room{width:clamp(5rem,17vw,6.5rem)}
+  .compass-value span{max-width:88%}
 }
 
 @media (max-width:560px){
-  .estate-plaque{
-    width:100%;
-    justify-content:flex-start;
-  }
-
-  .estate-plaque__mark{
-    width:2.45rem;
-    height:2.45rem;
-  }
-
-  .compass-intro h1{
-    font-size:clamp(2.35rem,13vw,4.3rem);
-  }
-
-  .compass-stage{
-    min-height:41rem;
-    border-radius:1.35rem;
-  }
-
-  .compass-field{
-    min-height:38rem;
-  }
-
-  .compass-object{
-    width:clamp(6.2rem,30vw,8rem);
-  }
-
-  .compass-room{
-    width:clamp(4.3rem,17vw,5.8rem);
-  }
-
-  .compass-object__label{
-    font-size:.60rem;
-    letter-spacing:.07em;
-  }
-
-  .compass-room .compass-object__label{
-    font-size:.41rem;
-    letter-spacing:.025em;
-  }
-
-  .compass-enter{
-    width:100%;
-  }
-}
-
-@media (max-width:390px){
-  .compass-stage{
-    min-height:39rem;
-  }
-
-  .compass-field{
-    min-height:36rem;
-  }
-
-  .compass-room{
-    width:4rem;
-  }
-
-  .compass-room .compass-object__label{
-    font-size:.36rem;
-  }
+  .estate-plaque{width:100%;justify-content:flex-start}
+  .compass-intro h1{font-size:clamp(2.35rem,13vw,4.3rem)}
+  .compass-stage{min-height:40rem;border-radius:1.35rem}
+  .compass-scene{min-height:37rem}
+  .compass-object{width:clamp(5.6rem,28vw,7.5rem)}
+  .compass-object--mirrorland{width:clamp(7.2rem,34vw,9.4rem)}
+  .compass-object__label{font-size:.56rem;letter-spacing:.06em}
+  .compass-room .compass-object__label{font-size:.36rem;letter-spacing:.02em}
+  [data-compass-mode="expanded"] .compass-room,
+  [data-compass-mode="room"] .compass-room{width:4.55rem}
+  [data-compass-mode="expanded"] .compass-room[data-compass-slot="1"],
+  [data-compass-mode="room"] .compass-room[data-compass-slot="1"]{left:26%;top:30%}
+  [data-compass-mode="expanded"] .compass-room[data-compass-slot="2"],
+  [data-compass-mode="room"] .compass-room[data-compass-slot="2"]{left:74%;top:30%}
+  [data-compass-mode="expanded"] .compass-room[data-compass-slot="3"],
+  [data-compass-mode="room"] .compass-room[data-compass-slot="3"]{left:77%;top:60%}
+  [data-compass-mode="expanded"] .compass-room[data-compass-slot="4"],
+  [data-compass-mode="room"] .compass-room[data-compass-slot="4"]{left:50%;top:72%}
+  [data-compass-mode="expanded"] .compass-room[data-compass-slot="5"],
+  [data-compass-mode="room"] .compass-room[data-compass-slot="5"]{left:23%;top:60%}
+  [data-compass-enter]{width:100%}
 }
 
 @media (prefers-reduced-motion:reduce){

@@ -9,7 +9,7 @@
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_ROOM_ID_BRIDGE_TNT_v1",
+    id: "DGB_COMPASS_GENERATION_TWO_CRYSTALS_ROOM_ID_BRIDGE_TNT_v1_1",
     file: "/assets/compass/compass.crystals.js",
     visualPassClaimed: false,
     productionAuthorized: false,
@@ -109,6 +109,7 @@
     if (state.root) {
       state.root.dataset.compassCrystalsReceipt = JSON.stringify(RECEIPT);
       state.root.dataset.compassCrystalsStatus = RECEIPT.failureReason ? "held" : "available";
+      state.root.dataset.visualPassClaimed = "false";
     }
 
     if (state.canvas) {
@@ -169,8 +170,8 @@
     canvas.style.height = "100%";
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
-    canvas.style.pointerEvents = "auto";
-    canvas.style.cursor = "pointer";
+    canvas.style.pointerEvents = "none";
+    canvas.style.cursor = "default";
 
     const computed = getComputedStyle(mount);
     if (computed.position === "static") mount.style.position = "relative";
@@ -485,8 +486,10 @@
   function coordinateFor(index, count) {
     const four = ["NW", "NE", "SW", "SE"];
     const five = ["N", "NE", "E", "SE", "CENTER"];
+
     if (count === 4) return four[index] || "";
     if (count === 5) return five[index] || "";
+
     return String(index + 1);
   }
 
@@ -561,6 +564,7 @@
 
   function normalizeWing(value) {
     if (!value) return null;
+
     const v = String(value).toLowerCase();
     return WINGS.includes(v) ? v : null;
   }
@@ -585,6 +589,20 @@
       document.body.dataset.reducedMotion === "true";
 
     emitReceipt({ currentModeObserved: state.mode });
+  }
+
+  function isSemanticInteractionTarget(target) {
+    return !!(
+      target &&
+      target.closest &&
+      target.closest(
+        "[data-compass-wing], [data-compass-room], [data-compass-return], [data-compass-enter], .compass-value-card, a, button"
+      )
+    );
+  }
+
+  function isBridgeModeActive() {
+    return state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE";
   }
 
   function wingPosition(wing) {
@@ -653,6 +671,7 @@
       WINGS.forEach((wing) => {
         const n = state.registry.get(wing);
         const p = wingPosition(wing);
+
         n.visible = true;
         setTarget(n, {
           x: p[0], y: p[1], z: p[2] - 0.15,
@@ -665,6 +684,7 @@
 
     if (state.mode === "EXPANDED_MODE" || state.mode === "ROOM_MODE") {
       const parent = state.registry.get(selectedWing);
+
       if (parent) {
         parent.visible = true;
         setTarget(parent, {
@@ -677,8 +697,10 @@
 
       WINGS.forEach((wing) => {
         if (wing === selectedWing) return;
+
         const n = state.registry.get(wing);
         const p = wingPosition(wing);
+
         n.visible = true;
         setTarget(n, {
           x: p[0] * 1.35, y: p[1] * 1.35, z: -1.2,
@@ -723,6 +745,7 @@
 
   function updateTransforms(dt) {
     const speed = Math.min(1, dt * 6.5);
+
     state.registry.forEach((n) => {
       const a = n.transform;
       const b = n.target;
@@ -745,6 +768,7 @@
 
   function multiply4(a, b) {
     const out = new Array(16).fill(0);
+
     for (let r = 0; r < 4; r += 1) {
       for (let c = 0; c < 4; c += 1) {
         for (let k = 0; k < 4; k += 1) {
@@ -752,6 +776,7 @@
         }
       }
     }
+
     return out;
   }
 
@@ -785,6 +810,7 @@
   function perspective4(fovy, aspect, near, far) {
     const f = 1 / Math.tan(fovy / 2);
     const nf = 1 / (near - far);
+
     return [
       f / aspect, 0, 0, 0,
       0, f, 0, 0,
@@ -816,6 +842,7 @@
 
   function modelMatrix(n) {
     const t = n.transform;
+
     return multiply4(
       translate4(t.x, t.y, t.z),
       multiply4(
@@ -833,6 +860,7 @@
 
   function transformPoint4(m, p) {
     const x = p[0], y = p[1], z = p[2], w = p[3];
+
     return [
       m[0] * x + m[4] * y + m[8] * z + m[12] * w,
       m[1] * x + m[5] * y + m[9] * z + m[13] * w,
@@ -904,11 +932,33 @@
   function handlePointerSelection(event) {
     if (!state.canvas || state.failHeld) return;
 
+    if (isSemanticInteractionTarget(event.target)) {
+      emitReceipt({
+        lastPointerAction: "semantic-control-ignored",
+        controllerSelectionRequested: false,
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
+        failureReason: null
+      });
+      return;
+    }
+
     readControllerState();
+
+    if (!isBridgeModeActive()) {
+      emitReceipt({
+        lastPointerAction: "pointer-ignored-compass-mode",
+        controllerSelectionRequested: false,
+        controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER,
+        failureReason: null
+      });
+      return;
+    }
+
     updateTargets();
     updateTransforms(0);
 
-    const rect = state.canvas.getBoundingClientRect();
+    const surface = event.currentTarget;
+    const rect = surface.getBoundingClientRect();
     const px = event.clientX - rect.left;
     const py = event.clientY - rect.top;
 
@@ -987,6 +1037,7 @@
     bindAttrib(gl, mesh.color, state.attribs.color, 3);
 
     const model = modelMatrix(n);
+
     gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
     gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(view));
     gl.uniformMatrix4fv(state.uniforms.projection, false, new Float32Array(projection));
@@ -1027,6 +1078,7 @@
     gl.uniform1f(state.uniforms.ambientStrength, 0.22);
 
     let visible = 0;
+
     state.registry.forEach((n) => {
       if (n.visible && n.transform.prominence > 0.04) visible += 1;
       drawNode(n, view, projection);
@@ -1042,8 +1094,16 @@
   }
 
   function bindPointerBridge() {
-    state.canvas.addEventListener("click", handlePointerSelection);
-    state.canvas.addEventListener("pointerdown", () => {
+    const surface =
+      state.canvas.closest(".compass-scene") ||
+      state.canvas.parentElement ||
+      state.root;
+
+    surface.addEventListener("click", handlePointerSelection);
+
+    surface.addEventListener("pointerdown", (event) => {
+      if (isSemanticInteractionTarget(event.target)) return;
+
       emitReceipt({
         lastPointerAction: "pointer-down",
         controllerApiAvailable: !!globalThis.DGB_COMPASS_CONTROLLER
@@ -1060,6 +1120,7 @@
       emitReceipt({ canvasMountStatus: "found" });
 
       const gl = getGL(state.canvas);
+
       if (!gl) {
         emitReceipt({ webglContextStatus: "unavailable" });
         hold("WEBGL_CONTEXT_UNAVAILABLE");
@@ -1081,6 +1142,7 @@
         normal: gl.getAttribLocation(state.program, "aNormal"),
         color: gl.getAttribLocation(state.program, "aColor")
       };
+
       state.uniforms = {
         model: gl.getUniformLocation(state.program, "uModel"),
         view: gl.getUniformLocation(state.program, "uView"),
@@ -1109,11 +1171,13 @@
       globalThis.DGB_COMPASS_CRYSTALS = Object.freeze({
         contract: CONTRACT,
         receipt: () => Object.freeze({ ...RECEIPT }),
+
         stop: () => {
           state.running = false;
           cancelAnimationFrame(state.raf);
           emitReceipt({ renderLoopStatus: "stopped" });
         },
+
         start: () => {
           if (!state.running && !state.failHeld) {
             state.running = true;
